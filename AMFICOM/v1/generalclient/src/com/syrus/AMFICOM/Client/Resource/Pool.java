@@ -167,7 +167,6 @@ public final class Pool {
 				result.addAll(ht.values());
 				result.trimToSize();
 			}
-			result.addAll(ht.values());
 		}
 		return result;
 }
