@@ -1,7 +1,6 @@
 /*
- * UIUtil.java
- * Created on 26.04.2004 11:47:57
- * 
+ * UIUtil.java Created on 26.04.2004 11:47:57
+ *  
  */
 package com.syrus.AMFICOM.Client.Schedule.UI;
 
@@ -17,22 +16,82 @@ import javax.swing.*;
  * @author Vladimir Dolzhenko
  */
 final public class UIUtil {
-	public static Insets nullInsets = new Insets(0, 0, 0, 0);
-	public static Insets inset1010 = new Insets(1, 0, 1, 0);
-	public static Icon plusIcon = UIUtil.getStringIcon("+");
-	public static Icon minusIcon = UIUtil.getStringIcon("-");
-	public static Icon calendarIcon = UIUtil.getStringIcon("^");
-	public static Icon timeIcon = UIUtil.getStringIcon("t");
 
-	public static Icon openFileIcon =
-		new ImageIcon(
-			Toolkit.getDefaultToolkit().getImage("images/openfile.gif"));
-	public static Icon deleteIcon =
-		new ImageIcon(
-			Toolkit.getDefaultToolkit().getImage("images/delete.gif"));
+	public static final Insets	INSET_NULL			= new Insets(0, 0, 0, 0);
+
+	public static final Insets	INSETS1010			= new Insets(1, 0, 1, 0);
+
+	public static final Icon	GENERAL_ICON		= new ImageIcon(
+															Toolkit
+																	.getDefaultToolkit()
+																	.getImage(
+																			"images/general.gif"));
+
+	public static final Icon	PLUS_ICON			= UIUtil.getStringIcon("+");
+
+	public static final Icon	MINUS_ICON			= UIUtil.getStringIcon("-");
+
+	public static final Icon	CALENDAR_ICON		= UIUtil.getStringIcon("^");
+
+	public static final Icon	TIME_ICON			= UIUtil.getStringIcon("t");
+
+	public static final Icon	OPEN_FILE_ICON		= new ImageIcon(
+															Toolkit
+																	.getDefaultToolkit()
+																	.getImage(
+																			"images/openfile.gif"));
+
+	public static final Icon	DELETE_ICON			= new ImageIcon(
+															Toolkit
+																	.getDefaultToolkit()
+																	.getImage(
+																			"images/delete.gif"));
+
+	public static final Icon	FOLDER_ICON			= new ImageIcon(
+															Toolkit
+																	.getDefaultToolkit()
+																	.getImage(
+																			"images/folder.gif"));
+
+	public static final Icon	TESTING_ICON		= new ImageIcon(
+															(Toolkit
+																	.getDefaultToolkit()
+																	.getImage(
+																			"images/testing.gif")
+																	.getScaledInstance(
+																			16,
+																			16,
+																			Image.SCALE_SMOOTH)));
+
+	public static final Icon	PORT_ICON			= new ImageIcon(
+															Toolkit
+																	.getDefaultToolkit()
+																	.getImage(
+																			"images/port.gif"));
+
+	public static final Icon	PATHMODE_ICON		= new ImageIcon(
+															Toolkit
+																	.getDefaultToolkit()
+																	.getImage(
+																			"images/pathmode.gif"));
+
+	public static final Cursor	WAIT_CURSOR			= new Cursor(
+															Cursor.WAIT_CURSOR);
+
+	public static final Cursor	DEFAULT_CURSOR		= new Cursor(
+															Cursor.DEFAULT_CURSOR);
+
+	public static final Cursor	CROSS_HAIR_CURSOR	= new Cursor(
+															Cursor.CROSSHAIR_CURSOR);
+	
+	public static final Font ARIAL_12_FONT = new Font("Arial", Font.PLAIN, 12);
+	public static final Font MONOSPACED_14_FONT = new Font("Monospaced", Font.BOLD, 14);
+
 	/**
-	 * create Icon with size 16x16 , and draw String on it   
-	 * @param s text which will draw on Icon
+	 * create Icon with size 16x16 , and draw String on it
+	 * 
+	 * @param s
+	 *            text which will draw on Icon
 	 * @return Icon
 	 */
 	public static Icon getStringIcon(String s) {
@@ -43,40 +102,44 @@ final public class UIUtil {
 		FontMetrics fm = g2d.getFontMetrics();
 		g2d.setBackground(Color.lightGray);
 		g2d.clearRect(0, 0, w, h);
-		Font font = new Font("Monospaced", Font.BOLD, 14);
+		Font font = MONOSPACED_14_FONT;
 		g2d.setFont(font);
 		g2d.setColor(Color.black);
 		g2d.drawString(s, w / 4, (h / 2 + fm.getHeight()) / 2);
 		Icon icon = new ImageIcon((Image) img);
 		return icon;
 	}
+
 	/**
-	 * set rigid dimenstion (min,max,preferred) size  for component 
+	 * set rigid dimenstion (min,max,preferred) size for component
+	 * 
 	 * @param component
 	 * @param dimension
 	 */
-	public static void setRigidSize(
-		JComponent component,
-		Dimension dimension) {
+	public static void setRigidSize(JComponent component, Dimension dimension) {
 		component.setPreferredSize(dimension);
 		component.setMaximumSize(dimension);
 		component.setMinimumSize(dimension);
 	}
+
 	/**
 	 * create JRadioButton with title and Action
-	 * @param title title for button
-	 * @param action 
+	 * 
+	 * @param title
+	 *            title for button
+	 * @param action
 	 * @return (min,max,preferred)
 	 */
-	public static JRadioButton createRadioButton(
-		final String title,
-		final Action action) {
+	public static JRadioButton createRadioButton(final String title,
+			final Action action) {
 		JRadioButton button = new JRadioButton(title);
 		button.addItemListener(new ItemListener() {
+
 			public void itemStateChanged(ItemEvent e) {
 				if (e.getStateChange() == ItemEvent.SELECTED) {
-					action.actionPerformed(
-						new ActionEvent(e, e.getID(), title));
+					action
+							.actionPerformed(new ActionEvent(e, e.getID(),
+									title));
 				}
 			}
 		});
