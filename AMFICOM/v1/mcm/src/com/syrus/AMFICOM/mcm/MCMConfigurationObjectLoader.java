@@ -1,5 +1,5 @@
 /*
- * $Id: MCMConfigurationObjectLoader.java,v 1.14 2004/11/24 08:57:31 max Exp $
+ * $Id: MCMConfigurationObjectLoader.java,v 1.15 2004/12/15 14:09:13 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -63,8 +63,8 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2004/11/24 08:57:31 $
- * @author $Author: max $
+ * @version $Revision: 1.15 $, $Date: 2004/12/15 14:09:13 $
+ * @author $Author: arseniy $
  * @module mcm_v1
  */
 
@@ -81,7 +81,8 @@ public final class MCMConfigurationObjectLoader extends DatabaseConfigurationObj
 		catch (ObjectNotFoundException onfe) {
 			Log.debugMessage("Characteristic type '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL07);
 			try {
-				characteristicType = CharacteristicType.getInstance(MeasurementControlModule.mServerRef.transmitCharacteristicType((Identifier_Transferable)id.getTransferable()));
+				characteristicType = new CharacteristicType(MeasurementControlModule.mServerRef.transmitCharacteristicType((Identifier_Transferable)id.getTransferable()));
+				characteristicType.insert();
 			}
 			catch (org.omg.CORBA.SystemException se) {
 				Log.errorException(se);
@@ -109,7 +110,8 @@ public final class MCMConfigurationObjectLoader extends DatabaseConfigurationObj
 		catch (ObjectNotFoundException onfe) {
 			Log.debugMessage("Equipment type '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL07);
 			try {
-				equipmentType = EquipmentType.getInstance(MeasurementControlModule.mServerRef.transmitEquipmentType((Identifier_Transferable)id.getTransferable()));
+				equipmentType = new EquipmentType(MeasurementControlModule.mServerRef.transmitEquipmentType((Identifier_Transferable)id.getTransferable()));
+				equipmentType.insert();
 			}
 			catch (org.omg.CORBA.SystemException se) {
 				Log.errorException(se);
@@ -137,7 +139,8 @@ public final class MCMConfigurationObjectLoader extends DatabaseConfigurationObj
 		catch (ObjectNotFoundException onfe) {
 			Log.debugMessage("Port type '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL07);
 			try {
-				portType = PortType.getInstance(MeasurementControlModule.mServerRef.transmitPortType((Identifier_Transferable)id.getTransferable()));
+				portType = new PortType(MeasurementControlModule.mServerRef.transmitPortType((Identifier_Transferable)id.getTransferable()));
+				portType.insert();
 			}
 			catch (org.omg.CORBA.SystemException se) {
 				Log.errorException(se);
@@ -165,7 +168,8 @@ public final class MCMConfigurationObjectLoader extends DatabaseConfigurationObj
 		catch (ObjectNotFoundException onfe) {
 			Log.debugMessage("Measurement port type '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL07);
 			try {
-				measurementPortType = MeasurementPortType.getInstance(MeasurementControlModule.mServerRef.transmitMeasurementPortType((Identifier_Transferable)id.getTransferable()));
+				measurementPortType = new MeasurementPortType(MeasurementControlModule.mServerRef.transmitMeasurementPortType((Identifier_Transferable)id.getTransferable()));
+				measurementPortType.insert();
 			}
 			catch (org.omg.CORBA.SystemException se) {
 				Log.errorException(se);
@@ -193,7 +197,8 @@ public final class MCMConfigurationObjectLoader extends DatabaseConfigurationObj
 		catch (ObjectNotFoundException onfe) {
 			Log.debugMessage("Characteristic '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL07);
 			try {
-				characteristic = Characteristic.getInstance(MeasurementControlModule.mServerRef.transmitCharacteristic((Identifier_Transferable)id.getTransferable()));
+				characteristic = new Characteristic(MeasurementControlModule.mServerRef.transmitCharacteristic((Identifier_Transferable)id.getTransferable()));
+				characteristic.insert();
 			}
 			catch (org.omg.CORBA.SystemException se) {
 				Log.errorException(se);
@@ -225,7 +230,8 @@ public final class MCMConfigurationObjectLoader extends DatabaseConfigurationObj
 		catch (ObjectNotFoundException onfe) {
 			Log.debugMessage("User '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL07);
 			try {
-				user = User.getInstance(MeasurementControlModule.mServerRef.transmitUser((Identifier_Transferable)id.getTransferable()));
+				user = new User(MeasurementControlModule.mServerRef.transmitUser((Identifier_Transferable)id.getTransferable()));
+				user.insert();
 			}
 			catch (org.omg.CORBA.SystemException se) {
 				Log.errorException(se);
@@ -253,7 +259,8 @@ public final class MCMConfigurationObjectLoader extends DatabaseConfigurationObj
 		catch (ObjectNotFoundException onfe) {
 			Log.debugMessage("Domain '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL07);
 			try {
-				domain = Domain.getInstance(MeasurementControlModule.mServerRef.transmitDomain((Identifier_Transferable)id.getTransferable()));
+				domain = new Domain(MeasurementControlModule.mServerRef.transmitDomain((Identifier_Transferable)id.getTransferable()));
+				domain.insert();
 			}
 			catch (org.omg.CORBA.SystemException se) {
 				Log.errorException(se);
@@ -281,7 +288,8 @@ public final class MCMConfigurationObjectLoader extends DatabaseConfigurationObj
 		catch (ObjectNotFoundException onfe) {
 			Log.debugMessage("Server '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL07);
 			try {
-				server = Server.getInstance(MeasurementControlModule.mServerRef.transmitServer((Identifier_Transferable)id.getTransferable()));
+				server = new Server(MeasurementControlModule.mServerRef.transmitServer((Identifier_Transferable)id.getTransferable()));
+				server.insert();
 			}
 			catch (org.omg.CORBA.SystemException se) {
 				Log.errorException(se);
@@ -309,7 +317,8 @@ public final class MCMConfigurationObjectLoader extends DatabaseConfigurationObj
 		catch (ObjectNotFoundException onfe) {
 			Log.debugMessage("MCM '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL07);
 			try {
-				mcm = MCM.getInstance(MeasurementControlModule.mServerRef.transmitMCM((Identifier_Transferable)id.getTransferable()));
+				mcm = new MCM(MeasurementControlModule.mServerRef.transmitMCM((Identifier_Transferable)id.getTransferable()));
+				mcm.insert();
 			}
 			catch (org.omg.CORBA.SystemException se) {
 				Log.errorException(se);
@@ -328,35 +337,36 @@ public final class MCMConfigurationObjectLoader extends DatabaseConfigurationObj
 		}
 		return mcm;
 	}
-    
-//    public Link loadLink(Identifier id) throws DatabaseException, CommunicationException {
-//        Link link = null;
-//        try {
-//            link = new Link(id);
-//        }
-//        catch (ObjectNotFoundException onfe) {
-//            Log.debugMessage("Link '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL07);
-//            try {
-//                link = Link.getInstance(MeasurementControlModule.mServerRef.transmitLink((Identifier_Transferable)id.getTransferable()));
-//            }
-//            catch (org.omg.CORBA.SystemException se) {
-//                Log.errorException(se);
-//                MeasurementControlModule.activateMServerReference();
-//                throw new CommunicationException("System exception -- " + se.getMessage(), se);
-//            }
-//            catch (AMFICOMRemoteException are) {
-//                if (are.error_code.equals(ErrorCode.ERROR_NOT_FOUND))
-//                    Log.errorMessage("Link '" + id + "' not found on server database");
-//                else
-//                    Log.errorMessage("Cannot retrieve Link '" + id + "' from server database -- " + are.message);
-//            }
-//            catch (CreateObjectException coe) {
-//                Log.errorException(coe);
-//            }
-//        }
-//        return link;
-//    }
-    
+
+//	public Link loadLink(Identifier id) throws DatabaseException, CommunicationException {
+//		Link link = null;
+//		try {
+//			link = new Link(id);
+//		}
+//		catch (ObjectNotFoundException onfe) {
+//			Log.debugMessage("Link '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL07);
+//			try {
+//				link = new Link(MeasurementControlModule.mServerRef.transmitLink((Identifier_Transferable)id.getTransferable()));
+//				link.insert();
+//			}
+//			catch (org.omg.CORBA.SystemException se) {
+//				Log.errorException(se);
+//				MeasurementControlModule.activateMServerReference();
+//				throw new CommunicationException("System exception -- " + se.getMessage(), se);
+//			}
+//			catch (AMFICOMRemoteException are) {
+//				if (are.error_code.equals(ErrorCode.ERROR_NOT_FOUND))
+//					Log.errorMessage("Link '" + id + "' not found on server database");
+//				else
+//					Log.errorMessage("Cannot retrieve Link '" + id + "' from server database -- " + are.message);
+//			}
+//			catch (CreateObjectException coe) {
+//				Log.errorException(coe);
+//			}
+//		}
+//		return link;
+//	}
+
 	public Equipment loadEquipment(Identifier id) throws RetrieveObjectException, CommunicationException {
 		Equipment equipment = null;
 		try {
@@ -365,7 +375,8 @@ public final class MCMConfigurationObjectLoader extends DatabaseConfigurationObj
 		catch (ObjectNotFoundException onfe) {
 			Log.debugMessage("Equipment '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL07);
 			try {
-				equipment = Equipment.getInstance(MeasurementControlModule.mServerRef.transmitEquipment((Identifier_Transferable)id.getTransferable()));
+				equipment = new Equipment(MeasurementControlModule.mServerRef.transmitEquipment((Identifier_Transferable)id.getTransferable()));
+				equipment.insert();
 			}
 			catch (org.omg.CORBA.SystemException se) {
 				Log.errorException(se);
@@ -393,7 +404,8 @@ public final class MCMConfigurationObjectLoader extends DatabaseConfigurationObj
 		catch (ObjectNotFoundException onfe) {
 			Log.debugMessage("Port '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL07);
 			try {
-				port = Port.getInstance(MeasurementControlModule.mServerRef.transmitPort((Identifier_Transferable)id.getTransferable()));
+				port = new Port(MeasurementControlModule.mServerRef.transmitPort((Identifier_Transferable)id.getTransferable()));
+				port.insert();
 			}
 			catch (org.omg.CORBA.SystemException se) {
 				Log.errorException(se);
@@ -421,7 +433,8 @@ public final class MCMConfigurationObjectLoader extends DatabaseConfigurationObj
 		catch (ObjectNotFoundException onfe) {
 			Log.debugMessage("Transmission path '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL07);
 			try {
-				transmissionPath = TransmissionPath.getInstance(MeasurementControlModule.mServerRef.transmitTransmissionPath((Identifier_Transferable)id.getTransferable()));
+				transmissionPath = new TransmissionPath(MeasurementControlModule.mServerRef.transmitTransmissionPath((Identifier_Transferable)id.getTransferable()));
+				transmissionPath.insert();
 			}
 			catch (org.omg.CORBA.SystemException se) {
 				Log.errorException(se);
@@ -449,7 +462,8 @@ public final class MCMConfigurationObjectLoader extends DatabaseConfigurationObj
 		catch (ObjectNotFoundException onfe) {
 			Log.debugMessage("KIS '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL07);
 			try {
-				kis = KIS.getInstance(MeasurementControlModule.mServerRef.transmitKIS((Identifier_Transferable)id.getTransferable()));
+				kis = new KIS(MeasurementControlModule.mServerRef.transmitKIS((Identifier_Transferable)id.getTransferable()));
+				kis.insert();
 			}
 			catch (org.omg.CORBA.SystemException se) {
 				Log.errorException(se);
@@ -477,7 +491,8 @@ public final class MCMConfigurationObjectLoader extends DatabaseConfigurationObj
 		catch (ObjectNotFoundException onfe) {
 			Log.debugMessage("Measurement port '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL07);
 			try {
-				measurementPort = MeasurementPort.getInstance(MeasurementControlModule.mServerRef.transmitMeasurementPort((Identifier_Transferable)id.getTransferable()));
+				measurementPort = new MeasurementPort(MeasurementControlModule.mServerRef.transmitMeasurementPort((Identifier_Transferable)id.getTransferable()));
+				measurementPort.insert();
 			}
 			catch (org.omg.CORBA.SystemException se) {
 				Log.errorException(se);
@@ -505,7 +520,8 @@ public final class MCMConfigurationObjectLoader extends DatabaseConfigurationObj
 		catch (ObjectNotFoundException onfe) {
 			Log.debugMessage("Monitored element '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL07);
 			try {
-				monitoredElement = MonitoredElement.getInstance(MeasurementControlModule.mServerRef.transmitMonitoredElement((Identifier_Transferable)id.getTransferable()));
+				monitoredElement = new MonitoredElement(MeasurementControlModule.mServerRef.transmitMonitoredElement((Identifier_Transferable)id.getTransferable()));
+				monitoredElement.insert();
 			}
 			catch (org.omg.CORBA.SystemException se) {
 				Log.errorException(se);
@@ -524,952 +540,974 @@ public final class MCMConfigurationObjectLoader extends DatabaseConfigurationObj
 		}
 		return monitoredElement;
 	}
-    
-	public List loadCharacteristics(List ids) throws DatabaseException,
-			CommunicationException {
+
+	public List loadCharacteristics(List ids) throws DatabaseException, CommunicationException {
 		CharacteristicDatabase database = (CharacteristicDatabase)ConfigurationDatabaseContext.getCharacteristicDatabase();
-        List list;
-        List copyOfList;
-        Characteristic characteristic;
-        try {
-            list = database.retrieveByIds(ids, null);
-            copyOfList = new LinkedList(list);
-            for (Iterator it = copyOfList.iterator(); it.hasNext();) {
-                Identifier id = ((StorableObject) it.next()).getId();
-                if(ids.contains(id)) it.remove();
-            }
-            for (Iterator it = copyOfList.iterator(); it.hasNext();) {
-                Identifier id = ((StorableObject) it.next()).getId();
-                Log.debugMessage("Characteristic '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL07);
-                try {
-                    characteristic = Characteristic.getInstance(MeasurementControlModule.mServerRef.transmitCharacteristic((Identifier_Transferable)id.getTransferable()));
-                    list.add(characteristic);
-                }
-                catch (org.omg.CORBA.SystemException se) {
-                    Log.errorException(se);
-                    MeasurementControlModule.activateMServerReference();
-                    throw new CommunicationException("System exception -- " + se.getMessage(), se);
-                }
-                catch (AMFICOMRemoteException are) {
-                    if (are.error_code.equals(ErrorCode.ERROR_NOT_FOUND))
-                        Log.errorMessage("Characteristic '" + id + "' not found on server database");
-                    else
-                        Log.errorMessage("Cannot retrieve characteristic '" + id + "' from server database -- " + are.message);
-                }
-                catch (CreateObjectException coe) {
-                    Log.errorException(coe);
-                }
-            }
-        } catch (IllegalDataException e) {
-            Log.errorMessage("MCMConfigurationObjectLoader.loadMeasurementSetups | Illegal Storable Object: " + e.getMessage());
-            throw new DatabaseException("MCMConfigurationObjectLoader.loadMeasurementSetups | Illegal Storable Object: " + e.getMessage());
-        }
-        return list;
-    }
-    
-	public List loadCharacteristicTypes(List ids) throws DatabaseException,
-			CommunicationException {
+		List list;
+		List copyOfList;
+		Characteristic characteristic;
+		try {
+			list = database.retrieveByIds(ids, null);
+			copyOfList = new LinkedList(list);
+			for (Iterator it = copyOfList.iterator(); it.hasNext();) {
+				Identifier id = ((StorableObject) it.next()).getId();
+				if(ids.contains(id))
+					it.remove();
+			}
+			for (Iterator it = copyOfList.iterator(); it.hasNext();) {
+				Identifier id = ((StorableObject) it.next()).getId();
+				Log.debugMessage("Characteristic '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL07);
+				try {
+					characteristic = new Characteristic(MeasurementControlModule.mServerRef.transmitCharacteristic((Identifier_Transferable)id.getTransferable()));
+					characteristic.insert();
+					list.add(characteristic);
+				}
+				catch (org.omg.CORBA.SystemException se) {
+					Log.errorException(se);
+					MeasurementControlModule.activateMServerReference();
+					throw new CommunicationException("System exception -- " + se.getMessage(), se);
+				}
+				catch (AMFICOMRemoteException are) {
+					if (are.error_code.equals(ErrorCode.ERROR_NOT_FOUND))
+						Log.errorMessage("Characteristic '" + id + "' not found on server database");
+					else
+						Log.errorMessage("Cannot retrieve characteristic '" + id + "' from server database -- " + are.message);
+				}
+				catch (CreateObjectException coe) {
+					Log.errorException(coe);
+				}
+			}
+		}
+		catch (IllegalDataException e) {
+			Log.errorMessage("MCMConfigurationObjectLoader.loadMeasurementSetups | Illegal Storable Object: " + e.getMessage());
+			throw new DatabaseException("MCMConfigurationObjectLoader.loadMeasurementSetups | Illegal Storable Object: " + e.getMessage());
+		}
+		return list;
+	}
+
+	public List loadCharacteristicTypes(List ids) throws DatabaseException, CommunicationException {
 		CharacteristicTypeDatabase database = (CharacteristicTypeDatabase)ConfigurationDatabaseContext.getCharacteristicTypeDatabase();
-        List list;
-        List copyOfList;
-        CharacteristicType characteristicType;
-        try {
-            list = database.retrieveByIds(ids, null);
-            copyOfList = new LinkedList(list);
-            for (Iterator it = copyOfList.iterator(); it.hasNext();) {
-                Identifier id = ((StorableObject) it.next()).getId();
-                if(ids.contains(id)) it.remove();
-            }
-            for (Iterator it = copyOfList.iterator(); it.hasNext();) {
-                Identifier id = ((StorableObject) it.next()).getId();
-                Log.debugMessage("Characteristic type '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL07);
-                try {
-                    characteristicType = CharacteristicType.getInstance(MeasurementControlModule.mServerRef.transmitCharacteristicType((Identifier_Transferable)id.getTransferable()));
-                    list.add(characteristicType);
-                }
-                catch (org.omg.CORBA.SystemException se) {
-                    Log.errorException(se);
-                    MeasurementControlModule.activateMServerReference();
-                    throw new CommunicationException("System exception -- " + se.getMessage(), se);
-                }
-                catch (AMFICOMRemoteException are) {
-                    if (are.error_code.equals(ErrorCode.ERROR_NOT_FOUND))
-                        Log.errorMessage("Characteristic type '" + id + "' not found on server database");
-                    else
-                        Log.errorMessage("Cannot retrieve characteristic type '" + id + "' from server database -- " + are.message);
-                }
-                catch (CreateObjectException coe) {
-                    Log.errorException(coe);
-                }
-                
-            }
-        } catch (IllegalDataException e) {
-            Log.errorMessage("MCMConfigurationObjectLoader.loadCharacteristicTypes | Illegal Storable Object: " + e.getMessage());
-            throw new DatabaseException("MCMConfigurationObjectLoader.loadCharacteristicTypes | Illegal Storable Object: " + e.getMessage());
-        }
-        return list;
+		List list;
+		List copyOfList;
+		CharacteristicType characteristicType;
+		try {
+			list = database.retrieveByIds(ids, null);
+			copyOfList = new LinkedList(list);
+			for (Iterator it = copyOfList.iterator(); it.hasNext();) {
+				Identifier id = ((StorableObject) it.next()).getId();
+				if(ids.contains(id))
+					it.remove();
+			}
+			for (Iterator it = copyOfList.iterator(); it.hasNext();) {
+				Identifier id = ((StorableObject) it.next()).getId();
+				Log.debugMessage("Characteristic type '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL07);
+				try {
+					characteristicType = new CharacteristicType(MeasurementControlModule.mServerRef.transmitCharacteristicType((Identifier_Transferable)id.getTransferable()));
+					characteristicType.insert();
+					list.add(characteristicType);
+				}
+				catch (org.omg.CORBA.SystemException se) {
+					Log.errorException(se);
+					MeasurementControlModule.activateMServerReference();
+					throw new CommunicationException("System exception -- " + se.getMessage(), se);
+				}
+				catch (AMFICOMRemoteException are) {
+					if (are.error_code.equals(ErrorCode.ERROR_NOT_FOUND))
+						Log.errorMessage("Characteristic type '" + id + "' not found on server database");
+					else
+						Log.errorMessage("Cannot retrieve characteristic type '" + id + "' from server database -- " + are.message);
+				}
+				catch (CreateObjectException coe) {
+					Log.errorException(coe);
+				}
+			}
+		}
+		catch (IllegalDataException e) {
+			Log.errorMessage("MCMConfigurationObjectLoader.loadCharacteristicTypes | Illegal Storable Object: " + e.getMessage());
+			throw new DatabaseException("MCMConfigurationObjectLoader.loadCharacteristicTypes | Illegal Storable Object: " + e.getMessage());
+		}
+		return list;
 	}
-    
-	public List loadDomains(List ids) throws DatabaseException,
-			CommunicationException {
+
+	public List loadDomains(List ids) throws DatabaseException, CommunicationException {
 		DomainDatabase database = (DomainDatabase)ConfigurationDatabaseContext.getDomainDatabase();
-        List list;
-        List copyOfList;
-        Domain domain;
-        try {
-            list = database.retrieveByIds(ids, null);
-            copyOfList = new LinkedList(list);
-            for (Iterator it = copyOfList.iterator(); it.hasNext();) {
-                Identifier id = ((StorableObject) it.next()).getId();
-                if(ids.contains(id)) it.remove();
-            }
-            for (Iterator it = copyOfList.iterator(); it.hasNext();) {
-                Identifier id = ((StorableObject) it.next()).getId();
-                Log.debugMessage("Domain '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL07);
-                try {
-                    domain = Domain.getInstance(MeasurementControlModule.mServerRef.transmitDomain((Identifier_Transferable)id.getTransferable()));
-                    list.add(domain);
-                }
-                catch (org.omg.CORBA.SystemException se) {
-                    Log.errorException(se);
-                    MeasurementControlModule.activateMServerReference();
-                    throw new CommunicationException("System exception -- " + se.getMessage(), se);
-                }
-                catch (AMFICOMRemoteException are) {
-                    if (are.error_code.equals(ErrorCode.ERROR_NOT_FOUND))
-                        Log.errorMessage("Domain '" + id + "' not found on server database");
-                    else
-                        Log.errorMessage("Cannot retrieve domain '" + id + "' from server database -- " + are.message);
-                }
-                catch (CreateObjectException coe) {
-                    Log.errorException(coe);
-                }
-            }
-        } catch (IllegalDataException e) {
-            Log.errorMessage("MCMConfigurationObjectLoader.loadDomains | Illegal Storable Object: " + e.getMessage());
-            throw new DatabaseException("MCMConfigurationObjectLoader.loadDomains | Illegal Storable Object: " + e.getMessage());
-        }
-        return list;
+		List list;
+		List copyOfList;
+		Domain domain;
+		try {
+			list = database.retrieveByIds(ids, null);
+			copyOfList = new LinkedList(list);
+			for (Iterator it = copyOfList.iterator(); it.hasNext();) {
+				Identifier id = ((StorableObject) it.next()).getId();
+				if(ids.contains(id))
+					it.remove();
+			}
+			for (Iterator it = copyOfList.iterator(); it.hasNext();) {
+				Identifier id = ((StorableObject) it.next()).getId();
+				Log.debugMessage("Domain '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL07);
+				try {
+					domain = new Domain(MeasurementControlModule.mServerRef.transmitDomain((Identifier_Transferable)id.getTransferable()));
+					domain.insert();
+					list.add(domain);
+				}
+				catch (org.omg.CORBA.SystemException se) {
+					Log.errorException(se);
+					MeasurementControlModule.activateMServerReference();
+					throw new CommunicationException("System exception -- " + se.getMessage(), se);
+				}
+				catch (AMFICOMRemoteException are) {
+					if (are.error_code.equals(ErrorCode.ERROR_NOT_FOUND))
+						Log.errorMessage("Domain '" + id + "' not found on server database");
+					else
+						Log.errorMessage("Cannot retrieve domain '" + id + "' from server database -- " + are.message);
+				}
+				catch (CreateObjectException coe) {
+					Log.errorException(coe);
+				}
+			}
+		}
+		catch (IllegalDataException e) {
+			Log.errorMessage("MCMConfigurationObjectLoader.loadDomains | Illegal Storable Object: " + e.getMessage());
+			throw new DatabaseException("MCMConfigurationObjectLoader.loadDomains | Illegal Storable Object: " + e.getMessage());
+		}
+		return list;
 	}
-    
-	public List loadEquipments(List ids) throws DatabaseException,
-			CommunicationException {
+
+	public List loadEquipments(List ids) throws DatabaseException, CommunicationException {
 		EquipmentDatabase database = (EquipmentDatabase)ConfigurationDatabaseContext.getEquipmentDatabase();
-        List list;
-        List copyOfList;
-        Equipment equipment;
-        try {
-            list = database.retrieveByIds(ids, null);
-            copyOfList = new LinkedList(list);
-            for (Iterator it = copyOfList.iterator(); it.hasNext();) {
-                Identifier id = ((StorableObject) it.next()).getId();
-                if(ids.contains(id)) it.remove();
-            }
-            for (Iterator it = copyOfList.iterator(); it.hasNext();) {
-                Identifier id = ((StorableObject) it.next()).getId();
-                Log.debugMessage("Equipment '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL07);
-                try {
-                    equipment = Equipment.getInstance(MeasurementControlModule.mServerRef.transmitEquipment((Identifier_Transferable)id.getTransferable()));
-                    list.add(equipment);
-                }
-                catch (org.omg.CORBA.SystemException se) {
-                    Log.errorException(se);
-                    MeasurementControlModule.activateMServerReference();
-                    throw new CommunicationException("System exception -- " + se.getMessage(), se);
-                }
-                catch (AMFICOMRemoteException are) {
-                    if (are.error_code.equals(ErrorCode.ERROR_NOT_FOUND))
-                        Log.errorMessage("Equipment '" + id + "' not found on server database");
-                    else
-                        Log.errorMessage("Cannot retrieve equipment '" + id + "' from server database -- " + are.message);
-                }
-            }
-        } catch (IllegalDataException e) {
-            Log.errorMessage("MCMConfigurationObjectLoader.loadEquipments | Illegal Storable Object: " + e.getMessage());
-            throw new DatabaseException("MCMConfigurationObjectLoader.loadEquipments | Illegal Storable Object: " + e.getMessage());
-        }
-        return list;
+		List list;
+		List copyOfList;
+		Equipment equipment;
+		try {
+			list = database.retrieveByIds(ids, null);
+			copyOfList = new LinkedList(list);
+			for (Iterator it = copyOfList.iterator(); it.hasNext();) {
+				Identifier id = ((StorableObject) it.next()).getId();
+				if(ids.contains(id))
+					it.remove();
+			}
+			for (Iterator it = copyOfList.iterator(); it.hasNext();) {
+				Identifier id = ((StorableObject) it.next()).getId();
+				Log.debugMessage("Equipment '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL07);
+				try {
+					equipment = new Equipment(MeasurementControlModule.mServerRef.transmitEquipment((Identifier_Transferable)id.getTransferable()));
+					equipment.insert();
+					list.add(equipment);
+				}
+				catch (org.omg.CORBA.SystemException se) {
+					Log.errorException(se);
+					MeasurementControlModule.activateMServerReference();
+					throw new CommunicationException("System exception -- " + se.getMessage(), se);
+				}
+				catch (AMFICOMRemoteException are) {
+					if (are.error_code.equals(ErrorCode.ERROR_NOT_FOUND))
+						Log.errorMessage("Equipment '" + id + "' not found on server database");
+					else
+						Log.errorMessage("Cannot retrieve equipment '" + id + "' from server database -- " + are.message);
+				}
+			}
+		}
+		catch (IllegalDataException e) {
+			Log.errorMessage("MCMConfigurationObjectLoader.loadEquipments | Illegal Storable Object: " + e.getMessage());
+			throw new DatabaseException("MCMConfigurationObjectLoader.loadEquipments | Illegal Storable Object: " + e.getMessage());
+		}
+		return list;
 	}
-    
-	public List loadEquipmentTypes(List ids) throws DatabaseException,
-			CommunicationException {
+
+	public List loadEquipmentTypes(List ids) throws DatabaseException, CommunicationException {
 		EquipmentTypeDatabase database = (EquipmentTypeDatabase)ConfigurationDatabaseContext.getEquipmentTypeDatabase();
-        List list;
-        List copyOfList;
-        EquipmentType equipmentType;
-        try {
-            list = database.retrieveByIds(ids, null);
-            copyOfList = new LinkedList(list);
-            for (Iterator it = copyOfList.iterator(); it.hasNext();) {
-                Identifier id = ((StorableObject) it.next()).getId();
-                if(ids.contains(id)) it.remove();
-            }
-            for (Iterator it = copyOfList.iterator(); it.hasNext();) {
-                Identifier id = ((StorableObject) it.next()).getId();
-                Log.debugMessage("Equipment type '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL07);
-                try {
-                    equipmentType = EquipmentType.getInstance(MeasurementControlModule.mServerRef.transmitEquipmentType((Identifier_Transferable)id.getTransferable()));
-                    list.add(equipmentType);
-                }
-                catch (org.omg.CORBA.SystemException se) {
-                    Log.errorException(se);
-                    MeasurementControlModule.activateMServerReference();
-                    throw new CommunicationException("System exception -- " + se.getMessage(), se);
-                }
-                catch (AMFICOMRemoteException are) {
-                    if (are.error_code.equals(ErrorCode.ERROR_NOT_FOUND))
-                        Log.errorMessage("Equipment type '" + id + "' not found on server database");
-                    else
-                        Log.errorMessage("Cannot retrieve equipment type '" + id + "' from server database -- " + are.message);
-                }
-            }
-        } catch (IllegalDataException e) {
-            Log.errorMessage("MCMConfigurationObjectLoader.loadEquipmentTypes | Illegal Storable Object: " + e.getMessage());
-            throw new DatabaseException("MCMConfigurationObjectLoader.loadEquipmentTypes | Illegal Storable Object: " + e.getMessage());
-        }
-        return list;
+		List list;
+		List copyOfList;
+		EquipmentType equipmentType;
+		try {
+			list = database.retrieveByIds(ids, null);
+			copyOfList = new LinkedList(list);
+			for (Iterator it = copyOfList.iterator(); it.hasNext();) {
+				Identifier id = ((StorableObject) it.next()).getId();
+				if(ids.contains(id))
+					it.remove();
+			}
+			for (Iterator it = copyOfList.iterator(); it.hasNext();) {
+				Identifier id = ((StorableObject) it.next()).getId();
+				Log.debugMessage("Equipment type '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL07);
+				try {
+					equipmentType = new EquipmentType(MeasurementControlModule.mServerRef.transmitEquipmentType((Identifier_Transferable)id.getTransferable()));
+					equipmentType.insert();
+					list.add(equipmentType);
+				}
+				catch (org.omg.CORBA.SystemException se) {
+					Log.errorException(se);
+					MeasurementControlModule.activateMServerReference();
+					throw new CommunicationException("System exception -- " + se.getMessage(), se);
+				}
+				catch (AMFICOMRemoteException are) {
+					if (are.error_code.equals(ErrorCode.ERROR_NOT_FOUND))
+						Log.errorMessage("Equipment type '" + id + "' not found on server database");
+					else
+						Log.errorMessage("Cannot retrieve equipment type '" + id + "' from server database -- " + are.message);
+				}
+			}
+		}
+		catch (IllegalDataException e) {
+			Log.errorMessage("MCMConfigurationObjectLoader.loadEquipmentTypes | Illegal Storable Object: " + e.getMessage());
+			throw new DatabaseException("MCMConfigurationObjectLoader.loadEquipmentTypes | Illegal Storable Object: " + e.getMessage());
+		}
+		return list;
 	}
-	
-	public List loadKISs(List ids) throws DatabaseException,
-			CommunicationException {
+
+	public List loadKISs(List ids) throws DatabaseException, CommunicationException {
 		KISDatabase database = (KISDatabase)ConfigurationDatabaseContext.getKISDatabase();
-        List list;
-        List copyOfList;
-        KIS kis;
-        try {
-            list = database.retrieveByIds(ids, null);
-            copyOfList = new LinkedList(list);
-            for (Iterator it = copyOfList.iterator(); it.hasNext();) {
-                Identifier id = ((StorableObject) it.next()).getId();
-                if(ids.contains(id)) it.remove();
-            }
-            for (Iterator it = copyOfList.iterator(); it.hasNext();) {
-                Identifier id = ((StorableObject) it.next()).getId();
-                Log.debugMessage("KIS '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL07);
-                try {
-                    kis = KIS.getInstance(MeasurementControlModule.mServerRef.transmitKIS((Identifier_Transferable)id.getTransferable()));
-                    list.add(kis);
-                }
-                catch (org.omg.CORBA.SystemException se) {
-                    Log.errorException(se);
-                    MeasurementControlModule.activateMServerReference();
-                    throw new CommunicationException("System exception -- " + se.getMessage(), se);
-                }
-                catch (AMFICOMRemoteException are) {
-                    if (are.error_code.equals(ErrorCode.ERROR_NOT_FOUND))
-                        Log.errorMessage("KIS '" + id + "' not found on server database");
-                    else
-                        Log.errorMessage("Cannot retrieve KIS '" + id + "' from server database -- " + are.message);
-                }
-            }
-        } catch (IllegalDataException e) {
-            Log.errorMessage("MCMConfigurationObjectLoader.loadKISs | Illegal Storable Object: " + e.getMessage());
-            throw new DatabaseException("MCMConfigurationObjectLoader.loadKISs | Illegal Storable Object: " + e.getMessage());
-        }
-        return list;
+		List list;
+		List copyOfList;
+		KIS kis;
+		try {
+			list = database.retrieveByIds(ids, null);
+			copyOfList = new LinkedList(list);
+			for (Iterator it = copyOfList.iterator(); it.hasNext();) {
+				Identifier id = ((StorableObject) it.next()).getId();
+				if(ids.contains(id))
+					it.remove();
+			}
+			for (Iterator it = copyOfList.iterator(); it.hasNext();) {
+				Identifier id = ((StorableObject) it.next()).getId();
+				Log.debugMessage("KIS '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL07);
+				try {
+					kis = new KIS(MeasurementControlModule.mServerRef.transmitKIS((Identifier_Transferable)id.getTransferable()));
+					kis.insert();
+					list.add(kis);
+				}
+				catch (org.omg.CORBA.SystemException se) {
+					Log.errorException(se);
+					MeasurementControlModule.activateMServerReference();
+					throw new CommunicationException("System exception -- " + se.getMessage(), se);
+				}
+				catch (AMFICOMRemoteException are) {
+					if (are.error_code.equals(ErrorCode.ERROR_NOT_FOUND))
+						Log.errorMessage("KIS '" + id + "' not found on server database");
+					else
+						Log.errorMessage("Cannot retrieve KIS '" + id + "' from server database -- " + are.message);
+				}
+			}
+		}
+		catch (IllegalDataException e) {
+			Log.errorMessage("MCMConfigurationObjectLoader.loadKISs | Illegal Storable Object: " + e.getMessage());
+			throw new DatabaseException("MCMConfigurationObjectLoader.loadKISs | Illegal Storable Object: " + e.getMessage());
+		}
+		return list;
 	}
-    
-	public List loadMCMs(List ids) throws DatabaseException,
-			CommunicationException {
+
+	public List loadMCMs(List ids) throws DatabaseException, CommunicationException {
 		MCMDatabase database = (MCMDatabase)ConfigurationDatabaseContext.getMCMDatabase();
-        List list;
-        List copyOfList;
-        MCM mcm;
-        try {
-            list = database.retrieveByIds(ids, null);
-            copyOfList = new LinkedList(list);
-            for (Iterator it = copyOfList.iterator(); it.hasNext();) {
-                Identifier id = ((StorableObject) it.next()).getId();
-                if(ids.contains(id)) it.remove();
-            }
-            for (Iterator it = copyOfList.iterator(); it.hasNext();) {
-                Identifier id = ((StorableObject) it.next()).getId();
-                Log.debugMessage("MCM '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL07);
-                try {
-                    mcm = MCM.getInstance(MeasurementControlModule.mServerRef.transmitMCM((Identifier_Transferable)id.getTransferable()));
-                    list.add(mcm);
-                }
-                catch (org.omg.CORBA.SystemException se) {
-                    Log.errorException(se);
-                    MeasurementControlModule.activateMServerReference();
-                    throw new CommunicationException("System exception -- " + se.getMessage(), se);
-                }
-                catch (AMFICOMRemoteException are) {
-                    if (are.error_code.equals(ErrorCode.ERROR_NOT_FOUND))
-                        Log.errorMessage("MCM '" + id + "' not found on server database");
-                    else
-                        Log.errorMessage("Cannot retrieve MCM '" + id + "' from server database -- " + are.message);
-                }
-                catch (CreateObjectException coe) {
-                    Log.errorException(coe);
-                }
-            }
-        } catch (IllegalDataException e) {
-            Log.errorMessage("MCMConfigurationObjectLoader.loadKISs | Illegal Storable Object: " + e.getMessage());
-            throw new DatabaseException("MCMConfigurationObjectLoader.loadKISs | Illegal Storable Object: " + e.getMessage());
-        }
-        return list;
+		List list;
+		List copyOfList;
+		MCM mcm;
+		try {
+			list = database.retrieveByIds(ids, null);
+			copyOfList = new LinkedList(list);
+			for (Iterator it = copyOfList.iterator(); it.hasNext();) {
+				Identifier id = ((StorableObject) it.next()).getId();
+				if(ids.contains(id))
+					it.remove();
+			}
+			for (Iterator it = copyOfList.iterator(); it.hasNext();) {
+				Identifier id = ((StorableObject) it.next()).getId();
+				Log.debugMessage("MCM '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL07);
+				try {
+					mcm = new MCM(MeasurementControlModule.mServerRef.transmitMCM((Identifier_Transferable)id.getTransferable()));
+					mcm.insert();
+					list.add(mcm);
+				}
+				catch (org.omg.CORBA.SystemException se) {
+					Log.errorException(se);
+					MeasurementControlModule.activateMServerReference();
+					throw new CommunicationException("System exception -- " + se.getMessage(), se);
+				}
+				catch (AMFICOMRemoteException are) {
+					if (are.error_code.equals(ErrorCode.ERROR_NOT_FOUND))
+						Log.errorMessage("MCM '" + id + "' not found on server database");
+					else
+						Log.errorMessage("Cannot retrieve MCM '" + id + "' from server database -- " + are.message);
+				}
+				catch (CreateObjectException coe) {
+					Log.errorException(coe);
+				}
+			}
+		}
+		catch (IllegalDataException e) {
+			Log.errorMessage("MCMConfigurationObjectLoader.loadKISs | Illegal Storable Object: " + e.getMessage());
+			throw new DatabaseException("MCMConfigurationObjectLoader.loadKISs | Illegal Storable Object: " + e.getMessage());
+		}
+		return list;
 	}
-    
-	public List loadMeasurementPorts(List ids) throws DatabaseException,
-			CommunicationException {
+
+	public List loadMeasurementPorts(List ids) throws DatabaseException, CommunicationException {
 		MeasurementPortDatabase database = (MeasurementPortDatabase)ConfigurationDatabaseContext.getMeasurementPortDatabase();
-        List list;
-        List copyOfList;
-        MeasurementPort measurementPort;
-        try {
-            list = database.retrieveByIds(ids, null);
-            copyOfList = new LinkedList(list);
-            for (Iterator it = copyOfList.iterator(); it.hasNext();) {
-                Identifier id = ((StorableObject) it.next()).getId();
-                if(ids.contains(id)) it.remove();
-            }
-            for (Iterator it = copyOfList.iterator(); it.hasNext();) {
-                Identifier id = ((StorableObject) it.next()).getId();
-                Log.debugMessage("Measurement port '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL07);
-                try {
-                    measurementPort = MeasurementPort.getInstance(MeasurementControlModule.mServerRef.transmitMeasurementPort((Identifier_Transferable)id.getTransferable()));
-                    list.add(measurementPort);
-                }
-                catch (org.omg.CORBA.SystemException se) {
-                    Log.errorException(se);
-                    MeasurementControlModule.activateMServerReference();
-                    throw new CommunicationException("System exception -- " + se.getMessage(), se);
-                }
-                catch (AMFICOMRemoteException are) {
-                    if (are.error_code.equals(ErrorCode.ERROR_NOT_FOUND))
-                        Log.errorMessage("Measurement port '" + id + "' not found on server database");
-                    else
-                        Log.errorMessage("Cannot retrieve measurement port '" + id + "' from server database -- " + are.message);
-                }
-            }
-        } catch (IllegalDataException e) {
-            Log.errorMessage("MCMConfigurationObjectLoader.loadMeasurementPorts | Illegal Storable Object: " + e.getMessage());
-            throw new DatabaseException("MCMConfigurationObjectLoader.loadMeasurementPorts | Illegal Storable Object: " + e.getMessage());
-        }
-        return list;
-    }
-    
-	public List loadMeasurementPortTypes(List ids) throws DatabaseException,
-			CommunicationException {
+		List list;
+		List copyOfList;
+		MeasurementPort measurementPort;
+		try {
+			list = database.retrieveByIds(ids, null);
+			copyOfList = new LinkedList(list);
+			for (Iterator it = copyOfList.iterator(); it.hasNext();) {
+				Identifier id = ((StorableObject) it.next()).getId();
+				if(ids.contains(id))
+					it.remove();
+			}
+			for (Iterator it = copyOfList.iterator(); it.hasNext();) {
+				Identifier id = ((StorableObject) it.next()).getId();
+				Log.debugMessage("Measurement port '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL07);
+				try {
+					measurementPort = new MeasurementPort(MeasurementControlModule.mServerRef.transmitMeasurementPort((Identifier_Transferable)id.getTransferable()));
+					measurementPort.insert();
+					list.add(measurementPort);
+				}
+				catch (org.omg.CORBA.SystemException se) {
+					Log.errorException(se);
+					MeasurementControlModule.activateMServerReference();
+					throw new CommunicationException("System exception -- " + se.getMessage(), se);
+				}
+				catch (AMFICOMRemoteException are) {
+					if (are.error_code.equals(ErrorCode.ERROR_NOT_FOUND))
+						Log.errorMessage("Measurement port '" + id + "' not found on server database");
+					else
+						Log.errorMessage("Cannot retrieve measurement port '" + id + "' from server database -- " + are.message);
+				}
+			}
+		}
+		catch (IllegalDataException e) {
+			Log.errorMessage("MCMConfigurationObjectLoader.loadMeasurementPorts | Illegal Storable Object: " + e.getMessage());
+			throw new DatabaseException("MCMConfigurationObjectLoader.loadMeasurementPorts | Illegal Storable Object: " + e.getMessage());
+		}
+		return list;
+	}
+
+	public List loadMeasurementPortTypes(List ids) throws DatabaseException, CommunicationException {
 		MeasurementPortTypeDatabase database = (MeasurementPortTypeDatabase)ConfigurationDatabaseContext.getMeasurementPortTypeDatabase();
-        List list;
-        List copyOfList;
-        MeasurementPortType measurementPortType;
-        try {
-            list = database.retrieveByIds(ids, null);
-            copyOfList = new LinkedList(list);
-            for (Iterator it = copyOfList.iterator(); it.hasNext();) {
-                Identifier id = ((StorableObject) it.next()).getId();
-                if(ids.contains(id)) it.remove();
-            }
-            for (Iterator it = copyOfList.iterator(); it.hasNext();) {
-                Identifier id = ((StorableObject) it.next()).getId();
-                Log.debugMessage("Measurement port type '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL07);
-                try {
-                    measurementPortType = MeasurementPortType.getInstance(MeasurementControlModule.mServerRef.transmitMeasurementPortType((Identifier_Transferable)id.getTransferable()));
-                    list.add(measurementPortType);
-                }
-                catch (org.omg.CORBA.SystemException se) {
-                    Log.errorException(se);
-                    MeasurementControlModule.activateMServerReference();
-                    throw new CommunicationException("System exception -- " + se.getMessage(), se);
-                }
-                catch (AMFICOMRemoteException are) {
-                    if (are.error_code.equals(ErrorCode.ERROR_NOT_FOUND))
-                        Log.errorMessage("Measurement port type '" + id + "' not found on server database");
-                    else
-                        Log.errorMessage("Cannot retrieve measurement port type '" + id + "' from server database -- " + are.message);
-                }
-                catch (CreateObjectException coe) {
-                    Log.errorException(coe);
-                }
-            }
-        } catch (IllegalDataException e) {
-            Log.errorMessage("MCMConfigurationObjectLoader.loadMeasurementPortTypes | Illegal Storable Object: " + e.getMessage());
-            throw new DatabaseException("MCMConfigurationObjectLoader.loadMeasurementPortTypes | Illegal Storable Object: " + e.getMessage());
-        }
-        return list;
+		List list;
+		List copyOfList;
+		MeasurementPortType measurementPortType;
+		try {
+			list = database.retrieveByIds(ids, null);
+			copyOfList = new LinkedList(list);
+			for (Iterator it = copyOfList.iterator(); it.hasNext();) {
+				Identifier id = ((StorableObject) it.next()).getId();
+				if(ids.contains(id))
+					it.remove();
+			}
+			for (Iterator it = copyOfList.iterator(); it.hasNext();) {
+				Identifier id = ((StorableObject) it.next()).getId();
+				Log.debugMessage("Measurement port type '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL07);
+				try {
+					measurementPortType = new MeasurementPortType(MeasurementControlModule.mServerRef.transmitMeasurementPortType((Identifier_Transferable)id.getTransferable()));
+					measurementPortType.insert();
+					list.add(measurementPortType);
+				}
+				catch (org.omg.CORBA.SystemException se) {
+					Log.errorException(se);
+					MeasurementControlModule.activateMServerReference();
+					throw new CommunicationException("System exception -- " + se.getMessage(), se);
+				}
+				catch (AMFICOMRemoteException are) {
+					if (are.error_code.equals(ErrorCode.ERROR_NOT_FOUND))
+						Log.errorMessage("Measurement port type '" + id + "' not found on server database");
+					else
+						Log.errorMessage("Cannot retrieve measurement port type '" + id + "' from server database -- " + are.message);
+				}
+				catch (CreateObjectException coe) {
+					Log.errorException(coe);
+				}
+			}
+		}
+		catch (IllegalDataException e) {
+			Log.errorMessage("MCMConfigurationObjectLoader.loadMeasurementPortTypes | Illegal Storable Object: " + e.getMessage());
+			throw new DatabaseException("MCMConfigurationObjectLoader.loadMeasurementPortTypes | Illegal Storable Object: " + e.getMessage());
+		}
+		return list;
 	}
-    
-	public List loadMonitoredElements(List ids) throws DatabaseException,
-			CommunicationException {
+
+	public List loadMonitoredElements(List ids) throws DatabaseException, CommunicationException {
 		MonitoredElementDatabase database = (MonitoredElementDatabase)ConfigurationDatabaseContext.getMonitoredElementDatabase();
-        List list;
-        List copyOfList;
-        MonitoredElement monitoredElement;
-        try {
-            list = database.retrieveByIds(ids, null);
-            copyOfList = new LinkedList(list);
-            for (Iterator it = copyOfList.iterator(); it.hasNext();) {
-                Identifier id = ((StorableObject) it.next()).getId();
-                if(ids.contains(id)) it.remove();
-            }
-            for (Iterator it = copyOfList.iterator(); it.hasNext();) {
-                Identifier id = ((StorableObject) it.next()).getId();
-                Log.debugMessage("Monitored element '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL07);
-                try {
-                    monitoredElement = MonitoredElement.getInstance(MeasurementControlModule.mServerRef.transmitMonitoredElement((Identifier_Transferable)id.getTransferable()));
-                    list.add(monitoredElement);
-                }
-                catch (org.omg.CORBA.SystemException se) {
-                    Log.errorException(se);
-                    MeasurementControlModule.activateMServerReference();
-                    throw new CommunicationException("System exception -- " + se.getMessage(), se);
-                }
-                catch (AMFICOMRemoteException are) {
-                    if (are.error_code.equals(ErrorCode.ERROR_NOT_FOUND))
-                        Log.errorMessage("Monitored element '" + id + "' not found on server database");
-                    else
-                        Log.errorMessage("Cannot retrieve monitored element '" + id + "' from server database -- " + are.message);
-                }
-                catch (CreateObjectException coe) {
-                    Log.errorException(coe);
-                }
-            }
-        } catch (IllegalDataException e) {
-            Log.errorMessage("MCMConfigurationObjectLoader.loadMonitoredElements | Illegal Storable Object: " + e.getMessage());
-            throw new DatabaseException("MCMConfigurationObjectLoader.loadMonitoredElements | Illegal Storable Object: " + e.getMessage());
-        }
-        return list;
-    }
-    
-	public List loadPorts(List ids) throws DatabaseException,
-			CommunicationException {
+		List list;
+		List copyOfList;
+		MonitoredElement monitoredElement;
+		try {
+			list = database.retrieveByIds(ids, null);
+			copyOfList = new LinkedList(list);
+			for (Iterator it = copyOfList.iterator(); it.hasNext();) {
+				Identifier id = ((StorableObject) it.next()).getId();
+				if(ids.contains(id))
+					it.remove();
+			}
+			for (Iterator it = copyOfList.iterator(); it.hasNext();) {
+				Identifier id = ((StorableObject) it.next()).getId();
+				Log.debugMessage("Monitored element '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL07);
+				try {
+					monitoredElement = new MonitoredElement(MeasurementControlModule.mServerRef.transmitMonitoredElement((Identifier_Transferable)id.getTransferable()));
+					monitoredElement.insert();
+					list.add(monitoredElement);
+				}
+				catch (org.omg.CORBA.SystemException se) {
+					Log.errorException(se);
+					MeasurementControlModule.activateMServerReference();
+					throw new CommunicationException("System exception -- " + se.getMessage(), se);
+				}
+				catch (AMFICOMRemoteException are) {
+					if (are.error_code.equals(ErrorCode.ERROR_NOT_FOUND))
+						Log.errorMessage("Monitored element '" + id + "' not found on server database");
+					else
+						Log.errorMessage("Cannot retrieve monitored element '" + id + "' from server database -- " + are.message);
+				}
+				catch (CreateObjectException coe) {
+					Log.errorException(coe);
+				}
+			}
+		}
+		catch (IllegalDataException e) {
+			Log.errorMessage("MCMConfigurationObjectLoader.loadMonitoredElements | Illegal Storable Object: " + e.getMessage());
+			throw new DatabaseException("MCMConfigurationObjectLoader.loadMonitoredElements | Illegal Storable Object: " + e.getMessage());
+		}
+		return list;
+	}
+
+	public List loadPorts(List ids) throws DatabaseException, CommunicationException {
 		PortDatabase database = (PortDatabase)ConfigurationDatabaseContext.getPortDatabase();
-        List list;
-        List copyOfList;
-        Port port;
-        try {
-            list = database.retrieveByIds(ids, null);
-            copyOfList = new LinkedList(list);
-            for (Iterator it = copyOfList.iterator(); it.hasNext();) {
-                Identifier id = ((StorableObject) it.next()).getId();
-                if(ids.contains(id)) it.remove();
-            }
-            for (Iterator it = copyOfList.iterator(); it.hasNext();) {
-                Identifier id = ((StorableObject) it.next()).getId();
-                Log.debugMessage("Port '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL07);
-                try {
-                    port = Port.getInstance(MeasurementControlModule.mServerRef.transmitPort((Identifier_Transferable)id.getTransferable()));
-                    list.add(port);
-                }
-                catch (org.omg.CORBA.SystemException se) {
-                    Log.errorException(se);
-                    MeasurementControlModule.activateMServerReference();
-                    throw new CommunicationException("System exception -- " + se.getMessage(), se);
-                }
-                catch (AMFICOMRemoteException are) {
-                    if (are.error_code.equals(ErrorCode.ERROR_NOT_FOUND))
-                        Log.errorMessage("Port '" + id + "' not found on server database");
-                    else
-                        Log.errorMessage("Cannot retrieve port '" + id + "' from server database -- " + are.message);
-                }
-                catch (CreateObjectException coe) {
-                    Log.errorException(coe);
-                }
-            }
-        } catch (IllegalDataException e) {
-            Log.errorMessage("MCMConfigurationObjectLoader.loadPorts | Illegal Storable Object: " + e.getMessage());
-            throw new DatabaseException("MCMConfigurationObjectLoader.loadPorts | Illegal Storable Object: " + e.getMessage());
-        }
-        return list;
-    }
-    
-	public List loadPortTypes(List ids) throws DatabaseException,
-			CommunicationException {
+		List list;
+		List copyOfList;
+		Port port;
+		try {
+			list = database.retrieveByIds(ids, null);
+			copyOfList = new LinkedList(list);
+			for (Iterator it = copyOfList.iterator(); it.hasNext();) {
+				Identifier id = ((StorableObject) it.next()).getId();
+				if(ids.contains(id))
+					it.remove();
+			}
+			for (Iterator it = copyOfList.iterator(); it.hasNext();) {
+				Identifier id = ((StorableObject) it.next()).getId();
+				Log.debugMessage("Port '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL07);
+				try {
+					port = new Port(MeasurementControlModule.mServerRef.transmitPort((Identifier_Transferable)id.getTransferable()));
+					port.insert();
+					list.add(port);
+				}
+				catch (org.omg.CORBA.SystemException se) {
+					Log.errorException(se);
+					MeasurementControlModule.activateMServerReference();
+					throw new CommunicationException("System exception -- " + se.getMessage(), se);
+				}
+				catch (AMFICOMRemoteException are) {
+					if (are.error_code.equals(ErrorCode.ERROR_NOT_FOUND))
+						Log.errorMessage("Port '" + id + "' not found on server database");
+					else
+						Log.errorMessage("Cannot retrieve port '" + id + "' from server database -- " + are.message);
+				}
+				catch (CreateObjectException coe) {
+					Log.errorException(coe);
+				}
+			}
+		}
+		catch (IllegalDataException e) {
+			Log.errorMessage("MCMConfigurationObjectLoader.loadPorts | Illegal Storable Object: " + e.getMessage());
+			throw new DatabaseException("MCMConfigurationObjectLoader.loadPorts | Illegal Storable Object: " + e.getMessage());
+		}
+		return list;
+	}
+
+	public List loadPortTypes(List ids) throws DatabaseException, CommunicationException {
 		PortTypeDatabase database = (PortTypeDatabase)ConfigurationDatabaseContext.getPortTypeDatabase();
-        List list;
-        List copyOfList;
-        PortType portType;
-        try {
-            list = database.retrieveByIds(ids, null);
-            copyOfList = new LinkedList(list);
-            for (Iterator it = copyOfList.iterator(); it.hasNext();) {
-                Identifier id = ((StorableObject) it.next()).getId();
-                if(ids.contains(id)) it.remove();
-            }
-            for (Iterator it = copyOfList.iterator(); it.hasNext();) {
-                Identifier id = ((StorableObject) it.next()).getId();
-                Log.debugMessage("Port type '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL07);
-                try {
-                    portType = PortType.getInstance(MeasurementControlModule.mServerRef.transmitPortType((Identifier_Transferable)id.getTransferable()));
-                    list.add(portType);
-                }
-                catch (org.omg.CORBA.SystemException se) {
-                    Log.errorException(se);
-                    MeasurementControlModule.activateMServerReference();
-                    throw new CommunicationException("System exception -- " + se.getMessage(), se);
-                }
-                catch (AMFICOMRemoteException are) {
-                    if (are.error_code.equals(ErrorCode.ERROR_NOT_FOUND))
-                        Log.errorMessage("Port type '" + id + "' not found on server database");
-                    else
-                        Log.errorMessage("Cannot retrieve port type '" + id + "' from server database -- " + are.message);
-                }
-                catch (CreateObjectException coe) {
-                    Log.errorException(coe);
-                }
-            }
-        } catch (IllegalDataException e) {
-            Log.errorMessage("MCMConfigurationObjectLoader.loadPortTypes | Illegal Storable Object: " + e.getMessage());
-            throw new DatabaseException("MCMConfigurationObjectLoader.loadPortTypes | Illegal Storable Object: " + e.getMessage());
-        }
-        return list;
+		List list;
+		List copyOfList;
+		PortType portType;
+		try {
+			list = database.retrieveByIds(ids, null);
+			copyOfList = new LinkedList(list);
+			for (Iterator it = copyOfList.iterator(); it.hasNext();) {
+				Identifier id = ((StorableObject) it.next()).getId();
+				if(ids.contains(id))
+					it.remove();
+			}
+			for (Iterator it = copyOfList.iterator(); it.hasNext();) {
+				Identifier id = ((StorableObject) it.next()).getId();
+				Log.debugMessage("Port type '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL07);
+				try {
+					portType = new PortType(MeasurementControlModule.mServerRef.transmitPortType((Identifier_Transferable)id.getTransferable()));
+					portType.insert();
+					list.add(portType);
+				}
+				catch (org.omg.CORBA.SystemException se) {
+					Log.errorException(se);
+					MeasurementControlModule.activateMServerReference();
+					throw new CommunicationException("System exception -- " + se.getMessage(), se);
+				}
+				catch (AMFICOMRemoteException are) {
+					if (are.error_code.equals(ErrorCode.ERROR_NOT_FOUND))
+						Log.errorMessage("Port type '" + id + "' not found on server database");
+					else
+						Log.errorMessage("Cannot retrieve port type '" + id + "' from server database -- " + are.message);
+				}
+				catch (CreateObjectException coe) {
+					Log.errorException(coe);
+				}
+			}
+		}
+		catch (IllegalDataException e) {
+			Log.errorMessage("MCMConfigurationObjectLoader.loadPortTypes | Illegal Storable Object: " + e.getMessage());
+			throw new DatabaseException("MCMConfigurationObjectLoader.loadPortTypes | Illegal Storable Object: " + e.getMessage());
+		}
+		return list;
 	}
-    
-	public List loadServers(List ids) throws DatabaseException,
-			CommunicationException {
+
+	public List loadServers(List ids) throws DatabaseException, CommunicationException {
 		ServerDatabase database = (ServerDatabase)ConfigurationDatabaseContext.getServerDatabase();
-        List list;
-        List copyOfList;
-        Server server;
-        try {
-            list = database.retrieveByIds(ids, null);
-            copyOfList = new LinkedList(list);
-            for (Iterator it = copyOfList.iterator(); it.hasNext();) {
-                Identifier id = ((StorableObject) it.next()).getId();
-                if(ids.contains(id)) it.remove();
-            }
-            for (Iterator it = copyOfList.iterator(); it.hasNext();) {
-                Identifier id = ((StorableObject) it.next()).getId();
-                Log.debugMessage("Server '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL07);
-                try {
-                    server = Server.getInstance(MeasurementControlModule.mServerRef.transmitServer((Identifier_Transferable)id.getTransferable()));
-                    list.add(server);
-                }
-                catch (org.omg.CORBA.SystemException se) {
-                    Log.errorException(se);
-                    MeasurementControlModule.activateMServerReference();
-                    throw new CommunicationException("System exception -- " + se.getMessage(), se);
-                }
-                catch (AMFICOMRemoteException are) {
-                    if (are.error_code.equals(ErrorCode.ERROR_NOT_FOUND))
-                        Log.errorMessage("Server '" + id + "' not found on server database");
-                    else
-                        Log.errorMessage("Cannot retrieve Server '" + id + "' from server database -- " + are.message);
-                }
-                catch (CreateObjectException coe) {
-                    Log.errorException(coe);
-                }
-            }
-        } catch (IllegalDataException e) {
-            Log.errorMessage("MCMConfigurationObjectLoader.loadServers | Illegal Storable Object: " + e.getMessage());
-            throw new DatabaseException("MCMConfigurationObjectLoader.loadServers | Illegal Storable Object: " + e.getMessage());
-        }
-        return list;
+		List list;
+		List copyOfList;
+		Server server;
+		try {
+			list = database.retrieveByIds(ids, null);
+			copyOfList = new LinkedList(list);
+			for (Iterator it = copyOfList.iterator(); it.hasNext();) {
+				Identifier id = ((StorableObject) it.next()).getId();
+				if(ids.contains(id))
+					it.remove();
+			}
+			for (Iterator it = copyOfList.iterator(); it.hasNext();) {
+				Identifier id = ((StorableObject) it.next()).getId();
+				Log.debugMessage("Server '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL07);
+				try {
+					server = new Server(MeasurementControlModule.mServerRef.transmitServer((Identifier_Transferable)id.getTransferable()));
+					server.insert();
+					list.add(server);
+				}
+				catch (org.omg.CORBA.SystemException se) {
+					Log.errorException(se);
+					MeasurementControlModule.activateMServerReference();
+					throw new CommunicationException("System exception -- " + se.getMessage(), se);
+				}
+				catch (AMFICOMRemoteException are) {
+					if (are.error_code.equals(ErrorCode.ERROR_NOT_FOUND))
+						Log.errorMessage("Server '" + id + "' not found on server database");
+					else
+						Log.errorMessage("Cannot retrieve Server '" + id + "' from server database -- " + are.message);
+				}
+				catch (CreateObjectException coe) {
+					Log.errorException(coe);
+				}
+			}
+		}
+		catch (IllegalDataException e) {
+			Log.errorMessage("MCMConfigurationObjectLoader.loadServers | Illegal Storable Object: " + e.getMessage());
+			throw new DatabaseException("MCMConfigurationObjectLoader.loadServers | Illegal Storable Object: " + e.getMessage());
+		}
+		return list;
 	}
-    
-	public List loadTransmissionPaths(List ids) throws DatabaseException,
-			CommunicationException {
+
+	public List loadTransmissionPaths(List ids) throws DatabaseException, CommunicationException {
 		TransmissionPathDatabase database = (TransmissionPathDatabase)ConfigurationDatabaseContext.getTransmissionPathDatabase();
-        List list;
-        List copyOfList;
-        TransmissionPath transmissionPath;
-        try {
-            list = database.retrieveByIds(ids, null);
-            copyOfList = new LinkedList(list);
-            for (Iterator it = copyOfList.iterator(); it.hasNext();) {
-                Identifier id = ((StorableObject) it.next()).getId();
-                if(ids.contains(id)) it.remove();
-            }
-            for (Iterator it = copyOfList.iterator(); it.hasNext();) {
-                Identifier id = ((StorableObject) it.next()).getId();
-                Log.debugMessage("Transmission path '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL07);
-                try {
-                    transmissionPath = TransmissionPath.getInstance(MeasurementControlModule.mServerRef.transmitTransmissionPath((Identifier_Transferable)id.getTransferable()));
-                    list.add(transmissionPath);
-                }
-                catch (org.omg.CORBA.SystemException se) {
-                    Log.errorException(se);
-                    MeasurementControlModule.activateMServerReference();
-                    throw new CommunicationException("System exception -- " + se.getMessage(), se);
-                }
-                catch (AMFICOMRemoteException are) {
-                    if (are.error_code.equals(ErrorCode.ERROR_NOT_FOUND))
-                        Log.errorMessage("Transmission path '" + id + "' not found on server database");
-                    else
-                        Log.errorMessage("Cannot retrieve transmission path '" + id + "' from server database -- " + are.message);
-                }
-            }
-        } catch (IllegalDataException e) {
-            Log.errorMessage("MCMConfigurationObjectLoader.loadTransmissionPaths | Illegal Storable Object: " + e.getMessage());
-            throw new DatabaseException("MCMConfigurationObjectLoader.loadTransmissionPaths | Illegal Storable Object: " + e.getMessage());
-        }
-        return list;
+		List list;
+		List copyOfList;
+		TransmissionPath transmissionPath;
+		try {
+			list = database.retrieveByIds(ids, null);
+			copyOfList = new LinkedList(list);
+			for (Iterator it = copyOfList.iterator(); it.hasNext();) {
+				Identifier id = ((StorableObject) it.next()).getId();
+				if(ids.contains(id))
+					it.remove();
+			}
+			for (Iterator it = copyOfList.iterator(); it.hasNext();) {
+				Identifier id = ((StorableObject) it.next()).getId();
+				Log.debugMessage("Transmission path '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL07);
+				try {
+					transmissionPath = new TransmissionPath(MeasurementControlModule.mServerRef.transmitTransmissionPath((Identifier_Transferable)id.getTransferable()));
+					transmissionPath.insert();
+					list.add(transmissionPath);
+				}
+				catch (org.omg.CORBA.SystemException se) {
+					Log.errorException(se);
+					MeasurementControlModule.activateMServerReference();
+					throw new CommunicationException("System exception -- " + se.getMessage(), se);
+				}
+				catch (AMFICOMRemoteException are) {
+					if (are.error_code.equals(ErrorCode.ERROR_NOT_FOUND))
+						Log.errorMessage("Transmission path '" + id + "' not found on server database");
+					else
+						Log.errorMessage("Cannot retrieve transmission path '" + id + "' from server database -- " + are.message);
+				}
+			}
+		}
+		catch (IllegalDataException e) {
+			Log.errorMessage("MCMConfigurationObjectLoader.loadTransmissionPaths | Illegal Storable Object: " + e.getMessage());
+			throw new DatabaseException("MCMConfigurationObjectLoader.loadTransmissionPaths | Illegal Storable Object: " + e.getMessage());
+		}
+		return list;
 	}
-    
-	public List loadUsers(List ids) throws DatabaseException,
-			CommunicationException {
+
+	public List loadUsers(List ids) throws DatabaseException, CommunicationException {
 		UserDatabase database = (UserDatabase)ConfigurationDatabaseContext.getUserDatabase();
-        List list;
-        List copyOfList;
-        User user;
-        try {
-            list = database.retrieveByIds(ids, null);
-            copyOfList = new LinkedList(list);
-            for (Iterator it = copyOfList.iterator(); it.hasNext();) {
-                Identifier id = ((StorableObject) it.next()).getId();
-                if(ids.contains(id)) it.remove();
-            }
-            for (Iterator it = copyOfList.iterator(); it.hasNext();) {
-                Identifier id = ((StorableObject) it.next()).getId();
-                Log.debugMessage("User '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL07);
-                try {
-                    user = User.getInstance(MeasurementControlModule.mServerRef.transmitUser((Identifier_Transferable)id.getTransferable()));
-                    list.add(user);
-                }
-                catch (org.omg.CORBA.SystemException se) {
-                    Log.errorException(se);
-                    MeasurementControlModule.activateMServerReference();
-                    throw new CommunicationException("System exception -- " + se.getMessage(), se);
-                }
-                catch (AMFICOMRemoteException are) {
-                    if (are.error_code.equals(ErrorCode.ERROR_NOT_FOUND))
-                        Log.errorMessage("User '" + id + "' not found on server database");
-                    else
-                        Log.errorMessage("Cannot retrieve user '" + id + "' from server database -- " + are.message);
-                }
-                catch (CreateObjectException coe) {
-                    Log.errorException(coe);
-                }
-            }
-        } catch (IllegalDataException e) {
-            Log.errorMessage("MCMConfigurationObjectLoader.loadUsers | Illegal Storable Object: " + e.getMessage());
-            throw new DatabaseException("MCMConfigurationObjectLoader.loadUsers | Illegal Storable Object: " + e.getMessage());
-        }
-        return list;
+		List list;
+		List copyOfList;
+		User user;
+		try {
+			list = database.retrieveByIds(ids, null);
+			copyOfList = new LinkedList(list);
+			for (Iterator it = copyOfList.iterator(); it.hasNext();) {
+				Identifier id = ((StorableObject) it.next()).getId();
+				if(ids.contains(id))
+					it.remove();
+			}
+			for (Iterator it = copyOfList.iterator(); it.hasNext();) {
+				Identifier id = ((StorableObject) it.next()).getId();
+				Log.debugMessage("User '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL07);
+				try {
+					user = new User(MeasurementControlModule.mServerRef.transmitUser((Identifier_Transferable)id.getTransferable()));
+					user.insert();
+					list.add(user);
+				}
+				catch (org.omg.CORBA.SystemException se) {
+					Log.errorException(se);
+					MeasurementControlModule.activateMServerReference();
+					throw new CommunicationException("System exception -- " + se.getMessage(), se);
+				}
+				catch (AMFICOMRemoteException are) {
+					if (are.error_code.equals(ErrorCode.ERROR_NOT_FOUND))
+						Log.errorMessage("User '" + id + "' not found on server database");
+					else
+						Log.errorMessage("Cannot retrieve user '" + id + "' from server database -- " + are.message);
+				}
+				catch (CreateObjectException coe) {
+					Log.errorException(coe);
+				}
+			}
+		}
+		catch (IllegalDataException e) {
+			Log.errorMessage("MCMConfigurationObjectLoader.loadUsers | Illegal Storable Object: " + e.getMessage());
+			throw new DatabaseException("MCMConfigurationObjectLoader.loadUsers | Illegal Storable Object: " + e.getMessage());
+		}
+		return list;
 	}
-	
-    public java.util.Set refresh(java.util.Set s) {
+
+	public java.util.Set refresh(java.util.Set s) {
 //       TODO method isn't complete
-        throw new UnsupportedOperationException("method isn't complete");
-    }
-    
-    public void saveCharacteristicType(CharacteristicType characteristicType, boolean force) throws DatabaseException, CommunicationException {
-//		 TODO method isn't complete
 		throw new UnsupportedOperationException("method isn't complete");
-		}
+	}
 
-		public void saveEquipmentType(EquipmentType equipmentType, boolean force) throws DatabaseException, CommunicationException {
+	public void saveCharacteristicType(CharacteristicType characteristicType, boolean force) throws DatabaseException, CommunicationException {
 //		 TODO method isn't complete
 		throw new UnsupportedOperationException("method isn't complete");
-		}		
-		
-		public void savePortType(PortType portType, boolean force) throws DatabaseException, CommunicationException {
-//		 TODO method isn't complete
-		throw new UnsupportedOperationException("method isn't complete");
-		}
+	}
 
-		public void saveMeasurementPortType(MeasurementPortType measurementPortType, boolean force) throws DatabaseException, CommunicationException {
+	public void saveEquipmentType(EquipmentType equipmentType, boolean force) throws DatabaseException, CommunicationException {
 //		 TODO method isn't complete
 		throw new UnsupportedOperationException("method isn't complete");
-		}
-        
-		public void saveTransmissionPathType(
-				TransmissionPathType transmissionPathType, boolean force)
-				throws VersionCollisionException, DatabaseException,
-				CommunicationException {
+	}
+
+	public void savePortType(PortType portType, boolean force) throws DatabaseException, CommunicationException {
+//		 TODO method isn't complete
+		throw new UnsupportedOperationException("method isn't complete");
+	}
+
+	public void saveMeasurementPortType(MeasurementPortType measurementPortType, boolean force) throws DatabaseException, CommunicationException {
+//		 TODO method isn't complete
+		throw new UnsupportedOperationException("method isn't complete");
+	}
+
+	public void saveTransmissionPathType(TransmissionPathType transmissionPathType, boolean force)
+			throws VersionCollisionException, DatabaseException, CommunicationException {
 			// TODO Auto-generated method stub
 
-		}
+	}
 
-		public void saveCharacteristic(Characteristic characteristic, boolean force) throws DatabaseException, CommunicationException {
+	public void saveCharacteristic(Characteristic characteristic, boolean force) throws DatabaseException, CommunicationException {
 //		 TODO method isn't complete
 		throw new UnsupportedOperationException("method isn't complete");
-		}
+	}
 
 //			public void savePermissionAttributes(PermissionAttributes permissionAttributes, boolean force) throws DatabaseException, CommunicationException {
 //		 TODO method isn't complete
 //		throw new UnsupportedOperationException("method isn't complete");
 //		}
 
-		public void saveUser(User user, boolean force) throws DatabaseException, CommunicationException {
+	public void saveUser(User user, boolean force) throws DatabaseException, CommunicationException {
 //		 TODO method isn't complete
 		throw new UnsupportedOperationException("method isn't complete");
-		}
+	}
 
-		public void saveDomain(Domain domain, boolean force) throws DatabaseException, CommunicationException {
+	public void saveDomain(Domain domain, boolean force) throws DatabaseException, CommunicationException {
 //		 TODO method isn't complete
 		throw new UnsupportedOperationException("method isn't complete");
-		}
+	}
 
-		public void saveServer(Server server, boolean force) throws DatabaseException, CommunicationException {
+	public void saveServer(Server server, boolean force) throws DatabaseException, CommunicationException {
 //		 TODO method isn't complete
 		throw new UnsupportedOperationException("method isn't complete");
-		}
+	}
 
-		public void saveMCM(MCM mcm, boolean force) throws DatabaseException, CommunicationException {
+	public void saveMCM(MCM mcm, boolean force) throws DatabaseException, CommunicationException {
 //		 TODO method isn't complete
 		throw new UnsupportedOperationException("method isn't complete");
-		}
+	}
 
-		public void saveEquipment(Equipment equipment, boolean force) throws DatabaseException, CommunicationException {
+	public void saveEquipment(Equipment equipment, boolean force) throws DatabaseException, CommunicationException {
 //		 TODO method isn't complete
 		throw new UnsupportedOperationException("method isn't complete");
-		}
+	}
 
-		public void savePort(Port port, boolean force) throws DatabaseException, CommunicationException {
+	public void savePort(Port port, boolean force) throws DatabaseException, CommunicationException {
 //		 TODO method isn't complete
 		throw new UnsupportedOperationException("method isn't complete");
-		}
+	}
 
-		public void saveTransmissionPath(TransmissionPath transmissionPath, boolean force) throws DatabaseException, CommunicationException {
+	public void saveTransmissionPath(TransmissionPath transmissionPath, boolean force) throws DatabaseException, CommunicationException {
 //		 TODO method isn't complete
 		throw new UnsupportedOperationException("method isn't complete");
-		}
+	}
 
-		public void saveKIS(KIS kis, boolean force) throws DatabaseException, CommunicationException {
+	public void saveKIS(KIS kis, boolean force) throws DatabaseException, CommunicationException {
 //		 TODO method isn't complete
 		throw new UnsupportedOperationException("method isn't complete");
-		}
+	}
 
-		public void saveMeasurementPort(MeasurementPort measurementPort, boolean force) throws DatabaseException, CommunicationException {
+	public void saveMeasurementPort(MeasurementPort measurementPort, boolean force) throws DatabaseException, CommunicationException {
 //		 TODO method isn't complete
 		throw new UnsupportedOperationException("method isn't complete");
-		}
+	}
 
-		public void saveMonitoredElement(MonitoredElement monitoredElement, boolean force) throws DatabaseException, CommunicationException {
+	public void saveMonitoredElement(MonitoredElement monitoredElement, boolean force) throws DatabaseException, CommunicationException {
 //		 TODO method isn't complete
 		throw new UnsupportedOperationException("method isn't complete");
-		}
+	}
 
-		public void saveCharacteristicTypes(List list, boolean force) throws DatabaseException, CommunicationException {
+	public void saveCharacteristicTypes(List list, boolean force) throws DatabaseException, CommunicationException {
 //		 TODO method isn't complete
 		throw new UnsupportedOperationException("method isn't complete");
-		}
+	}
 
-		public void saveEquipmentTypes(List list, boolean force) throws DatabaseException, CommunicationException {
+	public void saveEquipmentTypes(List list, boolean force) throws DatabaseException, CommunicationException {
 //		 TODO method isn't complete
 		throw new UnsupportedOperationException("method isn't complete");
-		}
+	}
 
-		public void savePortTypes(List list, boolean force) throws DatabaseException, CommunicationException {
+	public void savePortTypes(List list, boolean force) throws DatabaseException, CommunicationException {
 //		 TODO method isn't complete
 		throw new UnsupportedOperationException("method isn't complete");
-		}
+	}
 
-		public void saveMeasurementPortTypes(List list, boolean force) throws DatabaseException, CommunicationException {
+	public void saveMeasurementPortTypes(List list, boolean force) throws DatabaseException, CommunicationException {
 //		 TODO method isn't complete
 		throw new UnsupportedOperationException("method isn't complete");
-		}
-        
-		public void saveTransmissionPathTypes(List list, boolean force)
-				throws VersionCollisionException, DatabaseException,
-				CommunicationException {
+	}
+
+	public void saveTransmissionPathTypes(List list, boolean force)
+			throws VersionCollisionException, DatabaseException, CommunicationException {
 			// TODO Auto-generated method stub
 
-		}
+	}
 
-		public void saveCharacteristics(List list, boolean force) throws DatabaseException, CommunicationException {
+	public void saveCharacteristics(List list, boolean force) throws DatabaseException, CommunicationException {
 //		 TODO method isn't complete
 		throw new UnsupportedOperationException("method isn't complete");
-		}
+	}
 
 //			public void savePermissionAttributes(PermissionAttributes permissionAttributes, boolean force) throws DatabaseException, CommunicationException {
 //		 TODO method isn't complete
 //		throw new UnsupportedOperationException("method isn't complete");
 //		}
 
-		public void saveUsers(List list, boolean force) throws DatabaseException, CommunicationException {
+	public void saveUsers(List list, boolean force) throws DatabaseException, CommunicationException {
 //		 TODO method isn't complete
 		throw new UnsupportedOperationException("method isn't complete");
-		}
+	}
 
-		public void saveDomains(List list, boolean force) throws DatabaseException, CommunicationException {
+	public void saveDomains(List list, boolean force) throws DatabaseException, CommunicationException {
 //		 TODO method isn't complete
 		throw new UnsupportedOperationException("method isn't complete");
-		}
+	}
 
-		public void saveServers(List list, boolean force) throws DatabaseException, CommunicationException {
+	public void saveServers(List list, boolean force) throws DatabaseException, CommunicationException {
 //		 TODO method isn't complete
 		throw new UnsupportedOperationException("method isn't complete");
-		}
+	}
 
-		public void saveMCMs(List list, boolean force) throws DatabaseException, CommunicationException {
+	public void saveMCMs(List list, boolean force) throws DatabaseException, CommunicationException {
 //		 TODO method isn't complete
 		throw new UnsupportedOperationException("method isn't complete");
-		}
+	}
 
-		public void saveEquipments(List list, boolean force) throws DatabaseException, CommunicationException {
+	public void saveEquipments(List list, boolean force) throws DatabaseException, CommunicationException {
 //		 TODO method isn't complete
 		throw new UnsupportedOperationException("method isn't complete");
-		}
+	}
 
-		public void savePorts(List list, boolean force) throws DatabaseException, CommunicationException {
+	public void savePorts(List list, boolean force) throws DatabaseException, CommunicationException {
 //		 TODO method isn't complete
 		throw new UnsupportedOperationException("method isn't complete");
-		}
+	}
 
-		public void saveTransmissionPaths(List list, boolean force) throws DatabaseException, CommunicationException {
+	public void saveTransmissionPaths(List list, boolean force) throws DatabaseException, CommunicationException {
 //		 TODO method isn't complete
 		throw new UnsupportedOperationException("method isn't complete");
-		}
+	}
 
-		public void saveKISs(List list, boolean force) throws DatabaseException, CommunicationException {
+	public void saveKISs(List list, boolean force) throws DatabaseException, CommunicationException {
 //		 TODO method isn't complete
 		throw new UnsupportedOperationException("method isn't complete");
-		}
+	}
 
-		public void saveMeasurementPorts(List list, boolean force) throws DatabaseException, CommunicationException {
+	public void saveMeasurementPorts(List list, boolean force) throws DatabaseException, CommunicationException {
 //		 TODO method isn't complete
 		throw new UnsupportedOperationException("method isn't complete");
-		}
+	}
 
-		public void saveMonitoredElements(List list, boolean force) throws DatabaseException, CommunicationException {
+	public void saveMonitoredElements(List list, boolean force) throws DatabaseException, CommunicationException {
 //		 TODO method isn't complete
 		throw new UnsupportedOperationException("method isn't complete");
-		}
+	}
 
 		/* Load Configuration StorableObject but argument ids */
-		public List loadCharacteristicTypesButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException {
+	public List loadCharacteristicTypesButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException {
 //			 TODO method isn't complete
-			throw new UnsupportedOperationException("method isn't complete");
-			}
+		throw new UnsupportedOperationException("method isn't complete");
+	}
 
-		public List loadEquipmentTypesButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException {
+	public List loadEquipmentTypesButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException {
 //			 TODO method isn't complete
-			throw new UnsupportedOperationException("method isn't complete");
-		}
+		throw new UnsupportedOperationException("method isn't complete");
+	}
 		
 		
-		public List loadPortTypesButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException {
+	public List loadPortTypesButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException {
 //			 TODO method isn't complete
-			throw new UnsupportedOperationException("method isn't complete");
-		}
+		throw new UnsupportedOperationException("method isn't complete");
+	}
 
-		public List loadMeasurementPortTypesButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException {
+	public List loadMeasurementPortTypesButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException {
 //			 TODO method isn't complete
-			throw new UnsupportedOperationException("method isn't complete");
-		}		
+		throw new UnsupportedOperationException("method isn't complete");
+	}		
 
-		public List loadCharacteristicsButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException {
+	public List loadCharacteristicsButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException {
 //			 TODO method isn't complete
-			throw new UnsupportedOperationException("method isn't complete");
-		}
+		throw new UnsupportedOperationException("method isn't complete");
+	}
 
 //			  PermissionAttributes loadPermissionAttributesButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException {
 //			 TODO method isn't complete
 //			throw new UnsupportedOperationException("method isn't complete");
 //			}
 
-		public List loadUsersButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException {
+	public List loadUsersButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException {
 //			 TODO method isn't complete
-			throw new UnsupportedOperationException("method isn't complete");
-		}
+		throw new UnsupportedOperationException("method isn't complete");
+	}
 
-		public List loadDomainsButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException {
+	public List loadDomainsButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException {
 //			 TODO method isn't complete
-			throw new UnsupportedOperationException("method isn't complete");
-		}
+		throw new UnsupportedOperationException("method isn't complete");
+	}
 
-		public List loadServersButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException {
+	public List loadServersButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException {
 //			 TODO method isn't complete
-			throw new UnsupportedOperationException("method isn't complete");
-		}
+		throw new UnsupportedOperationException("method isn't complete");
+	}
 
-		public List loadMCMsButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException {
+	public List loadMCMsButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException {
 //			 TODO method isn't complete
-			throw new UnsupportedOperationException("method isn't complete");
-		}
+		throw new UnsupportedOperationException("method isn't complete");
+	}
 
-		public List loadEquipmentsButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException {
+	public List loadEquipmentsButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException {
 //			 TODO method isn't complete
-			throw new UnsupportedOperationException("method isn't complete");
-		}
+		throw new UnsupportedOperationException("method isn't complete");
+	}
 
-		public List loadPortsButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException {
+	public List loadPortsButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException {
 //			 TODO method isn't complete
-			throw new UnsupportedOperationException("method isn't complete");
-		}
+		throw new UnsupportedOperationException("method isn't complete");
+	}
 
-		public List loadTransmissionPathsButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException {
+	public List loadTransmissionPathsButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException {
 //			 TODO method isn't complete
-			throw new UnsupportedOperationException("method isn't complete");
-		}
+		throw new UnsupportedOperationException("method isn't complete");
+	}
 
-		public List loadKISsButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException {
+	public List loadKISsButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException {
 //			 TODO method isn't complete
-			throw new UnsupportedOperationException("method isn't complete");
-		}
+		throw new UnsupportedOperationException("method isn't complete");
+	}
 
-		public List loadMeasurementPortsButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException {
+	public List loadMeasurementPortsButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException {
 //			 TODO method isn't complete
-			throw new UnsupportedOperationException("method isn't complete");
-		}
+		throw new UnsupportedOperationException("method isn't complete");
+	}
 
-		public List loadMonitoredElementsButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException {
+	public List loadMonitoredElementsButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException {
 //			 TODO method isn't complete
-			throw new UnsupportedOperationException("method isn't complete");
-		}
+		throw new UnsupportedOperationException("method isn't complete");
+	}
 
-		public List loadLinkTypes(List ids) throws DatabaseException, CommunicationException {
+	public List loadLinkTypes(List ids) throws DatabaseException, CommunicationException {
 //           TODO method isn't complete
-            throw new UnsupportedOperationException("method isn't complete");
-		}
+		throw new UnsupportedOperationException("method isn't complete");
+	}
 
-
-		public List loadLinks(List ids) throws DatabaseException, CommunicationException {
+	public List loadLinks(List ids) throws DatabaseException, CommunicationException {
 //           TODO method isn't complete
-            throw new UnsupportedOperationException("method isn't complete");
-		}
+		throw new UnsupportedOperationException("method isn't complete");
+	}
 
-		public List loadLinkTypesButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException {
+	public List loadLinkTypesButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException {
 //           TODO method isn't complete
-            throw new UnsupportedOperationException("method isn't complete");
-		}
+		throw new UnsupportedOperationException("method isn't complete");
+	}
 
-		public List loadLinksButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException {
+	public List loadLinksButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException {
 //           TODO method isn't complete
-            throw new UnsupportedOperationException("method isn't complete");
-		}
+		throw new UnsupportedOperationException("method isn't complete");
+	}
 
-	
-		public void saveLinkType(LinkType linkType, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException {
+	public void saveLinkType(LinkType linkType, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException {
 //           TODO method isn't complete
-            throw new UnsupportedOperationException("method isn't complete");
-		}
-	
-		public void saveLink(Link link, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException {
+		throw new UnsupportedOperationException("method isn't complete");
+	}
+
+	public void saveLink(Link link, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException {
 //           TODO method isn't complete
-            throw new UnsupportedOperationException("method isn't complete");
-		}
+		throw new UnsupportedOperationException("method isn't complete");
+	}
 
-		public void saveLinkTypes(List list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException {
+	public void saveLinkTypes(List list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException {
 //           TODO method isn't complete
-            throw new UnsupportedOperationException("method isn't complete");
-		}
+		throw new UnsupportedOperationException("method isn't complete");
+	}
 
-		public void saveLinks(List list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException {
+	public void saveLinks(List list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException {
 //           TODO method isn't complete
-            throw new UnsupportedOperationException("method isn't complete");
-		}
+		throw new UnsupportedOperationException("method isn't complete");
+	}
 
-		public List loadTransmissionPathTypes(List ids) throws DatabaseException, CommunicationException {
+	public List loadTransmissionPathTypes(List ids) throws DatabaseException, CommunicationException {
 //           TODO method isn't complete
-            throw new UnsupportedOperationException("method isn't complete");
-		}
+		throw new UnsupportedOperationException("method isn't complete");
+	}
 
-
-		public List loadTransmissionPathTypesButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException {
+	public List loadTransmissionPathTypesButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException {
 //           TODO method isn't complete
-            throw new UnsupportedOperationException("method isn't complete");
-		}
+		throw new UnsupportedOperationException("method isn't complete");
+	}
 
-		public LinkType loadLinkType(Identifier id) throws DatabaseException, CommunicationException {
+	public LinkType loadLinkType(Identifier id) throws DatabaseException, CommunicationException {
 //           TODO method isn't complete
-            throw new UnsupportedOperationException("method isn't complete");
-		}
+		throw new UnsupportedOperationException("method isn't complete");
+	}
 
-		public TransmissionPathType loadTransmissionPathType(Identifier id) throws DatabaseException, CommunicationException {
+	public TransmissionPathType loadTransmissionPathType(Identifier id) throws DatabaseException, CommunicationException {
 //           TODO method isn't complete
-            throw new UnsupportedOperationException("method isn't complete");
-		}
+		throw new UnsupportedOperationException("method isn't complete");
+	}
 
-
-		public Link loadLink(Identifier id) throws DatabaseException, CommunicationException {
+	public Link loadLink(Identifier id) throws DatabaseException, CommunicationException {
 //           TODO method isn't complete
-            throw new UnsupportedOperationException("method isn't complete");
-		}
+		throw new UnsupportedOperationException("method isn't complete");
+	}
 
 }

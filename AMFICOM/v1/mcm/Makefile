@@ -41,7 +41,7 @@ $(LIBNAME_INTERFACE):	.corba
 	$(CP) $(LIBNAME_INTERFACE) $(LIBDIR)
 
 .head:	.mach
-	$(JAVAH) $(JAVAH_FLAGS) \
+#	$(JAVAH) $(JAVAH_FLAGS) \
 		-d $(TRANSCEIVER_DIR) \
 		com.syrus.AMFICOM.mcm.Transceiver
 	$(JAVAH) $(JAVAH_FLAGS) \
@@ -118,7 +118,7 @@ cleanmach:
 .PHONY:	cleanhead
 cleanhead:
 	$(RM) \
-		$(TRANSCEIVER_DIR)/com_syrus_AMFICOM_mcm_TransmissionManager.h \
+		$(TRANSCEIVER_DIR)/com_syrus_AMFICOM_mcm_TCPKISConnection.h \
 		$(DADARA_DIR)/com_syrus_AMFICOM_mcm_DadaraAnalysisManager.h
 	$(RM) .head
 	

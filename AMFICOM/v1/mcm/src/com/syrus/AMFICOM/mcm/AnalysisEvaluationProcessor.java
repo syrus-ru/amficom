@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisEvaluationProcessor.java,v 1.12 2004/08/31 15:35:23 bob Exp $
+ * $Id: AnalysisEvaluationProcessor.java,v 1.13 2004/12/15 14:09:13 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,12 +9,8 @@
 package com.syrus.AMFICOM.mcm;
 
 import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.NewIdentifierPool;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.IllegalObjectEntityException;
-import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.event.corba.AlarmLevel;
 import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
 import com.syrus.AMFICOM.measurement.AnalysisType;
@@ -27,13 +23,11 @@ import com.syrus.AMFICOM.measurement.Analysis;
 import com.syrus.AMFICOM.measurement.Evaluation;
 import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.AMFICOM.measurement.Result;
-import com.syrus.AMFICOM.measurement.corba.Analysis_Transferable;
-import com.syrus.AMFICOM.measurement.corba.Evaluation_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2004/08/31 15:35:23 $
- * @author $Author: bob $
+ * @version $Revision: 1.13 $, $Date: 2004/12/15 14:09:13 $
+ * @author $Author: arseniy $
  * @module mcm_v1
  */
 
@@ -87,24 +81,13 @@ public abstract class AnalysisEvaluationProcessor {
 		if (criteriaSet == null)
 			throw new AnalysisException("Criteria set is NULL");
 
-		Identifier analysisId = null;
 		try {
-			analysisId = NewIdentifierPool.getGeneratedIdentifier(ObjectEntities.ANALYSIS_ENTITY_CODE, 10);
-		}
-		catch (IllegalObjectEntityException ioee) {
-			throw new AnalysisException("Cannot generate identifier for analysis", ioee);
-		}
-		catch (AMFICOMRemoteException are) {
-			throw new AnalysisException("Cannot generate identifier for analysis -- " + are.message);
-		}
-
-		try {
-			Analysis analysis = Analysis.createInstance(analysisId,
-																		 MeasurementControlModule.iAm.getUserId(),
+			Analysis analysis = Analysis.createInstance(MeasurementControlModule.iAm.getUserId(),
 																		 analysisType,
 																		 monitoredElementId,
-															 criteriaSet);			
-			return Analysis.getInstance((Analysis_Transferable) analysis.getTransferable());
+																		 criteriaSet);
+			analysis.insert();
+			return analysis;
 		}
 		catch (CreateObjectException coe) {
 			throw new AnalysisException("Cannot create analysis", coe);
@@ -117,24 +100,13 @@ public abstract class AnalysisEvaluationProcessor {
 		if (thresholdSet == null)
 			throw new EvaluationException("Threshold set is NULL");
 
-		Identifier evaluationId = null;
 		try {
-			evaluationId = NewIdentifierPool.getGeneratedIdentifier(ObjectEntities.EVALUATION_ENTITY_CODE, 10);
-		}
-		catch (IllegalObjectEntityException ioee) {
-			throw new EvaluationException("Cannot generate identifier for evaluation", ioee);
-		}
-		catch (AMFICOMRemoteException are) {
-			throw new EvaluationException("Cannot generate identifier for evaluation -- " + are.message);
-		}
-
-		try {
-			Evaluation evaluation = Evaluation.createInstance(evaluationId,
-																			 MeasurementControlModule.iAm.getUserId(),
+			Evaluation evaluation = Evaluation.createInstance(MeasurementControlModule.iAm.getUserId(),
 																			 evaluationType,
 																			 monitoredElementId,
 																			 thresholdSet);
-			return Evaluation.getInstance((Evaluation_Transferable)evaluation.getTransferable());
+			evaluation.insert();
+			return evaluation;
 		}
 		catch (CreateObjectException coe) {
 			throw new EvaluationException("Cannot create evaluation", coe);
@@ -168,14 +140,12 @@ public abstract class AnalysisEvaluationProcessor {
 		SetParameter[] arParameters = analysisManager.analyse();
 		Result analysisResult;
 		try {
-			Identifier analysisResultId = NewIdentifierPool.getGeneratedIdentifier(ObjectEntities.RESULT_ENTITY_CODE, 10);
-			analysisResult = analysis.createResult(analysisResultId,
-																						 MeasurementControlModule.iAm.getUserId(),
+			analysisResult = analysis.createResult(MeasurementControlModule.iAm.getUserId(),
 																						 measurementResult.getMeasurement(),
 																						 AlarmLevel.ALARM_LEVEL_NONE,
 																						 arParameters);
 		}
-		catch (Exception coe) {
+		catch (CreateObjectException coe) {
 			Log.errorException(coe);
 			analysisResult = null;
 		}
@@ -183,14 +153,12 @@ public abstract class AnalysisEvaluationProcessor {
 		SetParameter[] erParameters = evaluationManager.evaluate();
 		Result evaluationResult;
 		try {
-			Identifier evaluationResultId = NewIdentifierPool.getGeneratedIdentifier(ObjectEntities.RESULT_ENTITY_CODE, 10);
-			evaluationResult = evaluation.createResult(evaluationResultId,
-																								 MeasurementControlModule.iAm.getUserId(),
+			evaluationResult = evaluation.createResult(MeasurementControlModule.iAm.getUserId(),
 																								 measurementResult.getMeasurement(),
 																								 evaluationManager.getAlarmLevel(),
 																								 erParameters);
 		}
-		catch (Exception coe) {
+		catch (CreateObjectException coe) {
 			Log.errorException(coe);
 			evaluationResult = null;
 		}

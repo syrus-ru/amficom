@@ -1,5 +1,5 @@
 /*
- * $Id: DadaraAnalysisManager.java,v 1.18 2004/11/24 16:40:41 arseniy Exp $
+ * $Id: DadaraAnalysisManager.java,v 1.19 2004/12/15 14:09:13 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,8 +12,6 @@ import java.util.Map;
 import java.util.HashMap;
 import java.io.IOException;
 import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.NewIdentifierPool;
-import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.analysis.dadara.ReflectogramEvent;
 import com.syrus.AMFICOM.analysis.dadara.Threshold;
@@ -40,7 +38,7 @@ import java.text.SimpleDateFormat;
 import java.io.FileOutputStream;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2004/11/24 16:40:41 $
+ * @version $Revision: 1.19 $, $Date: 2004/12/15 14:09:13 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -235,13 +233,6 @@ Log.debugMessage("$$$$$$$$$ Number of events == " + revents.length + "; tmp.leng
 			}
 		}
 //******************
-		Identifier identifier;
-		try {
-			identifier = NewIdentifierPool.getGeneratedIdentifier(ObjectEntities.RESULTPARAMETER_ENTITY_CODE, 10);
-		}
-		catch (Exception e) {
-			throw new AnalysisException("Cannot generate identifier for events array -- " + e.getMessage(), e);
-		}
 
 		ParameterType parTypEventArray = null;
 		try {
@@ -252,9 +243,7 @@ Log.debugMessage("$$$$$$$$$ Number of events == " + revents.length + "; tmp.leng
 		}
 		SetParameter[] arParameters = new SetParameter[1];
 		try {
-			arParameters[0] = new SetParameter(identifier,
-																				 parTypEventArray,
-																				 ReflectogramEvent.toByteArray(revents));
+			arParameters[0] = SetParameter.createInstance(parTypEventArray, ReflectogramEvent.toByteArray(revents));
 		}
 		catch (Exception e) {
 			throw new AnalysisException("Cannot create parametrer -- " + e.getMessage(), e);
@@ -302,13 +291,7 @@ Log.debugMessage("$$$$$$$$$ Number of events == " + revents.length + "; tmp.leng
 					this.alarmLevel = AlarmLevel.ALARM_LEVEL_HARD;
 					break;
 				}
-			Identifier identifier;
-			try {
-				identifier = NewIdentifierPool.getGeneratedIdentifier(ObjectEntities.RESULTPARAMETER_ENTITY_CODE, 10);
-			}
-			catch (Exception e) {
-				throw new EvaluationException("Cannot generate identifier for events array -- " + e.getMessage(), e);
-			}
+
 			ParameterType parTypAlarmArray = null;
 			try {
 				parTypAlarmArray = (ParameterType)MeasurementStorableObjectPool.getStorableObject((Identifier)outParameterTypeIds.get(CODENAME_DADARA_ALARM_ARRAY), true);
@@ -318,9 +301,7 @@ Log.debugMessage("$$$$$$$$$ Number of events == " + revents.length + "; tmp.leng
 			}
 			erParameters = new SetParameter[1];
 			try {
-				erParameters[0] = new SetParameter(identifier,
-																					 parTypAlarmArray,
-																					 ReflectogramAlarm.toByteArray(ralarms));
+				erParameters[0] = SetParameter.createInstance(parTypAlarmArray, ReflectogramAlarm.toByteArray(ralarms));
 			}
 			catch (Exception e) {
 				throw new EvaluationException("Cannot create parametrer -- " + e.getMessage(), e);

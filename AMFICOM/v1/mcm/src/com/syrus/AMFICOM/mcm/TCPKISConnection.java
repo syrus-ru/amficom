@@ -16,7 +16,11 @@ public class TCPKISConnection implements KISConnection {
 	private short kisTCPPort;
 	private int kisTCPSocket;
 	
-	private KISReport kisReport; 
+	private KISReport kisReport;
+
+	static {
+		System.loadLibrary("mcmtransceiver");
+	}
 
 	public TCPKISConnection(KIS kis) {
 		this.kisId = kis.getId();
@@ -141,5 +145,5 @@ public class TCPKISConnection implements KISConnection {
 	 * @param timeout
 	 * @return true on success, false on failure.
 	 */
-	public native boolean receiveKISReportFromSocket(long timeout);
+	public native boolean receiveKISReportFromSocket(long timewait);
 }

@@ -1,5 +1,5 @@
 /*
- * $Id: MCMMeasurementObjectLoader.java,v 1.11 2004/11/19 23:09:30 arseniy Exp $
+ * $Id: MCMMeasurementObjectLoader.java,v 1.12 2004/12/15 14:09:13 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -54,7 +54,7 @@ import com.syrus.AMFICOM.measurement.TestDatabase;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2004/11/19 23:09:30 $
+ * @version $Revision: 1.12 $, $Date: 2004/12/15 14:09:13 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -69,7 +69,8 @@ public final class MCMMeasurementObjectLoader extends DatabaseMeasurementObjectL
 		catch (ObjectNotFoundException onfe) {
 			Log.debugMessage("ParameterType '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL08);
 			try {
-				parameterType = ParameterType.getInstance(MeasurementControlModule.mServerRef.transmitParameterType((Identifier_Transferable)id.getTransferable()));
+				parameterType = new ParameterType(MeasurementControlModule.mServerRef.transmitParameterType((Identifier_Transferable)id.getTransferable()));
+				parameterType.insert();
 			}
 			catch (org.omg.CORBA.SystemException se) {
 				Log.errorException(se);
@@ -97,7 +98,8 @@ public final class MCMMeasurementObjectLoader extends DatabaseMeasurementObjectL
 		catch (ObjectNotFoundException onfe) {
 			Log.debugMessage("MeasurementType '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL08);
 			try {
-				measurementType = MeasurementType.getInstance(MeasurementControlModule.mServerRef.transmitMeasurementType((Identifier_Transferable)id.getTransferable()));
+				measurementType = new MeasurementType(MeasurementControlModule.mServerRef.transmitMeasurementType((Identifier_Transferable)id.getTransferable()));
+				measurementType.insert();
 			}
 			catch (org.omg.CORBA.SystemException se) {
 				Log.errorException(se);
@@ -125,7 +127,8 @@ public final class MCMMeasurementObjectLoader extends DatabaseMeasurementObjectL
 		catch (ObjectNotFoundException onfe) {
 			Log.debugMessage("AnalysisType '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL08);
 			try {
-				analysisType = AnalysisType.getInstance(MeasurementControlModule.mServerRef.transmitAnalysisType((Identifier_Transferable)id.getTransferable()));
+				analysisType = new AnalysisType(MeasurementControlModule.mServerRef.transmitAnalysisType((Identifier_Transferable)id.getTransferable()));
+				analysisType.insert();
 			}
 			catch (org.omg.CORBA.SystemException se) {
 				Log.errorException(se);
@@ -153,7 +156,8 @@ public final class MCMMeasurementObjectLoader extends DatabaseMeasurementObjectL
 		catch (ObjectNotFoundException onfe) {
 			Log.debugMessage("EvaluationType '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL08);
 			try {
-				evaluationType = EvaluationType.getInstance(MeasurementControlModule.mServerRef.transmitEvaluationType((Identifier_Transferable)id.getTransferable()));
+				evaluationType = new EvaluationType(MeasurementControlModule.mServerRef.transmitEvaluationType((Identifier_Transferable)id.getTransferable()));
+				evaluationType.insert();
 			}
 			catch (org.omg.CORBA.SystemException se) {
 				Log.errorException(se);
@@ -181,7 +185,8 @@ public final class MCMMeasurementObjectLoader extends DatabaseMeasurementObjectL
 		catch (ObjectNotFoundException onfe) {
 			Log.debugMessage("Set '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL08);
 			try {
-				set = Set.getInstance(MeasurementControlModule.mServerRef.transmitSet((Identifier_Transferable)id.getTransferable()));
+				set = new Set(MeasurementControlModule.mServerRef.transmitSet((Identifier_Transferable)id.getTransferable()));
+				set.insert();
 			}
 			catch (org.omg.CORBA.SystemException se) {
 				Log.errorException(se);
@@ -202,7 +207,7 @@ public final class MCMMeasurementObjectLoader extends DatabaseMeasurementObjectL
 	}
 
 	public Modeling loadModeling(Identifier id) throws DatabaseException, CommunicationException {
-		throw new UnsupportedOperationException("MCMMeasurementObjectLoader.loadModeling | mcm doesn't need in modeling");		
+		throw new UnsupportedOperationException("MCMMeasurementObjectLoader.loadModeling | MCM doesn't need in modeling");		
 	}
 
 	public MeasurementSetup loadMeasurementSetup(Identifier id) throws RetrieveObjectException, CommunicationException {
@@ -213,7 +218,8 @@ public final class MCMMeasurementObjectLoader extends DatabaseMeasurementObjectL
 		catch (ObjectNotFoundException onfe) {
 			Log.debugMessage("MeasurementSetup '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL08);
 			try {
-				measurementSetup = MeasurementSetup.getInstance(MeasurementControlModule.mServerRef.transmitMeasurementSetup((Identifier_Transferable)id.getTransferable()));
+				measurementSetup = new MeasurementSetup(MeasurementControlModule.mServerRef.transmitMeasurementSetup((Identifier_Transferable)id.getTransferable()));
+				measurementSetup.insert();
 			}
 			catch (org.omg.CORBA.SystemException se) {
 				Log.errorException(se);
@@ -242,6 +248,7 @@ public final class MCMMeasurementObjectLoader extends DatabaseMeasurementObjectL
 			Log.debugMessage("TemporalPattern '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL08);
 			try {
 				temporalPattern = new TemporalPattern(MeasurementControlModule.mServerRef.transmitTemporalPattern((Identifier_Transferable)id.getTransferable()));
+				temporalPattern.insert();
 			}
 			catch (org.omg.CORBA.SystemException se) {
 				Log.errorException(se);
@@ -289,7 +296,8 @@ public final class MCMMeasurementObjectLoader extends DatabaseMeasurementObjectL
 				Identifier id = ((StorableObject) it.next()).getId();
 				Log.debugMessage("AnalysisType '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL08);
 				try {
-					analysisType = AnalysisType.getInstance(MeasurementControlModule.mServerRef.transmitAnalysisType((Identifier_Transferable)id.getTransferable()));
+					analysisType = new AnalysisType(MeasurementControlModule.mServerRef.transmitAnalysisType((Identifier_Transferable)id.getTransferable()));
+					analysisType.insert();
 					list.add(analysisType);
 				}
 				catch (org.omg.CORBA.SystemException se) {
@@ -343,7 +351,8 @@ public final class MCMMeasurementObjectLoader extends DatabaseMeasurementObjectL
 				Identifier id = ((StorableObject) it.next()).getId();
 				Log.debugMessage("EvaluationType '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL08);
 				try {
-					evaluationType = EvaluationType.getInstance(MeasurementControlModule.mServerRef.transmitEvaluationType((Identifier_Transferable)id.getTransferable()));
+					evaluationType = new EvaluationType(MeasurementControlModule.mServerRef.transmitEvaluationType((Identifier_Transferable)id.getTransferable()));
+					evaluationType.insert();
 					list.add(evaluationType);
 				}
 				catch (org.omg.CORBA.SystemException se) {
@@ -401,7 +410,8 @@ public final class MCMMeasurementObjectLoader extends DatabaseMeasurementObjectL
 				Identifier id = ((StorableObject) it.next()).getId();
 				Log.debugMessage("MeasurementSetup '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL08);
 				try {
-					measurementSetup = MeasurementSetup.getInstance(MeasurementControlModule.mServerRef.transmitMeasurementSetup((Identifier_Transferable)id.getTransferable()));
+					measurementSetup = new MeasurementSetup(MeasurementControlModule.mServerRef.transmitMeasurementSetup((Identifier_Transferable)id.getTransferable()));
+					measurementSetup.insert();
 					list.add(measurementSetup);
 				}
 				catch (org.omg.CORBA.SystemException se) {
@@ -444,7 +454,8 @@ public final class MCMMeasurementObjectLoader extends DatabaseMeasurementObjectL
 				Identifier id = ((StorableObject) it.next()).getId();
 				Log.debugMessage("MeasurementType '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL08);
 				try {
-					measurementType = MeasurementType.getInstance(MeasurementControlModule.mServerRef.transmitMeasurementType((Identifier_Transferable)id.getTransferable()));
+					measurementType = new MeasurementType(MeasurementControlModule.mServerRef.transmitMeasurementType((Identifier_Transferable)id.getTransferable()));
+					measurementType.insert();
 					list.add(measurementType);
 				}
 				catch (org.omg.CORBA.SystemException se) {
@@ -487,7 +498,8 @@ public final class MCMMeasurementObjectLoader extends DatabaseMeasurementObjectL
 				Identifier id = ((StorableObject) it.next()).getId();
 				Log.debugMessage("ParameterType '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL08);
 				try {
-					parameterType = ParameterType.getInstance(MeasurementControlModule.mServerRef.transmitParameterType((Identifier_Transferable)id.getTransferable()));
+					parameterType = new ParameterType(MeasurementControlModule.mServerRef.transmitParameterType((Identifier_Transferable)id.getTransferable()));
+					parameterType.insert();
 					list.add(parameterType);
 				}
 				catch (org.omg.CORBA.SystemException se) {
@@ -541,7 +553,8 @@ public final class MCMMeasurementObjectLoader extends DatabaseMeasurementObjectL
 				Identifier id = ((StorableObject) it.next()).getId();
 				Log.debugMessage("Set '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL08);
 				try {
-					set = Set.getInstance(MeasurementControlModule.mServerRef.transmitSet((Identifier_Transferable)id.getTransferable()));
+					set = new Set(MeasurementControlModule.mServerRef.transmitSet((Identifier_Transferable)id.getTransferable()));
+					set.insert();
 					list.add(set);
 				}
 				catch (org.omg.CORBA.SystemException se) {
@@ -585,6 +598,7 @@ public final class MCMMeasurementObjectLoader extends DatabaseMeasurementObjectL
 				Log.debugMessage("TemporalPattern '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL08);
 				try {
 					temporalPattern = new TemporalPattern(MeasurementControlModule.mServerRef.transmitTemporalPattern((Identifier_Transferable)id.getTransferable()));
+					temporalPattern.insert();
 					list.add(temporalPattern);
 				}
 				catch (org.omg.CORBA.SystemException se) {

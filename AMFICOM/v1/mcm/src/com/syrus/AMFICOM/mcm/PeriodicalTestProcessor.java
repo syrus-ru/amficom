@@ -1,5 +1,5 @@
 /*
- * $Id: PeriodicalTestProcessor.java,v 1.30 2004/12/07 18:59:52 arseniy Exp $
+ * $Id: PeriodicalTestProcessor.java,v 1.31 2004/12/15 14:09:13 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,20 +13,15 @@ import java.util.List;
 import java.util.Iterator;
 import java.util.LinkedList;
 import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.NewIdentifierPool;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
-import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
-import com.syrus.AMFICOM.general.corba.ErrorCode;
-import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
 import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.AMFICOM.measurement.Measurement;
 import com.syrus.AMFICOM.measurement.TemporalPattern;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.30 $, $Date: 2004/12/07 18:59:52 $
+ * @version $Revision: 1.31 $, $Date: 2004/12/15 14:09:13 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -93,45 +88,19 @@ public class PeriodicalTestProcessor extends TestProcessor {
 				}
 				else {
 					if (this.currentTimeStamp.getTime() <= System.currentTimeMillis()) {
-						try {
-							measurementId = NewIdentifierPool.getGeneratedIdentifier(ObjectEntities.MEASUREMENT_ENTITY_CODE, 10);
-						}
-						catch (IllegalObjectEntityException ioee) {
-							Log.errorException(ioee);
-							Log.debugMessage("Aborting test '" + super.test.getId().toString() + "' because cannot create identifier for measurement", Log.DEBUGLEVEL03);
-							this.abort();
-						}
-						catch (AMFICOMRemoteException are) {
-							if (are.error_code.value() == ErrorCode._ERROR_ILLEGAL_OBJECT_ENTITY) {
-								Log.errorMessage("Server nothing knows about entity '" + ObjectEntities.MEASUREMENT_ENTITY + "', code " + ObjectEntities.MEASUREMENT_ENTITY_CODE);
-								this.abort();
-							}
-							else {
-								Log.errorMessage("Server cannot generate identifier -- " + are.message + "; sleepeng cause of fall");
-								MeasurementControlModule.resetMServerConnection();
-								super.fallCode = FALL_CODE_CREATE_IDENTIFIER;
-								super.sleepCauseOfFall();
-							}
-						}	//catch
 
-						if (measurementId != null) {
-							try {
-								Log.debugMessage("Creating measurement '" + measurementId + "'", Log.DEBUGLEVEL07);
-								measurement = super.test.createMeasurement(measurementId,
-																													 MeasurementControlModule.iAm.getUserId(),
-																													 this.currentTimeStamp);
-								MeasurementStorableObjectPool.putStorableObject(measurement);
-								super.clearFalls();
-							}
-							catch (CreateObjectException coe) {
-								Log.errorException(coe);
+						try {
+							measurement = super.test.createMeasurement(MeasurementControlModule.iAm.getUserId(), this.currentTimeStamp);
+							super.clearFalls();
+						}
+						catch (CreateObjectException coe) {
+							Log.errorException(coe);
+							if (coe.getCause() instanceof IllegalObjectEntityException)
+								super.fallCode = FALL_CODE_CREATE_IDENTIFIER;
+							else
 								super.fallCode = FALL_CODE_CREATE_MEASUREMENT;
-								super.sleepCauseOfFall();
-							}
-							catch (IllegalObjectEntityException ioee) {
-								Log.errorException(ioee);
-							}
-						}	//if (measurementId != null)
+							super.sleepCauseOfFall();
+						}
 
 						if (measurement != null) {
 							super.transceiver.addMeasurement(measurement, this);

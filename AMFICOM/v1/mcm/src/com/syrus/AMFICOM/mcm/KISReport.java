@@ -1,5 +1,5 @@
 /*
- * $Id: KISReport.java,v 1.21 2004/11/24 16:40:41 arseniy Exp $
+ * $Id: KISReport.java,v 1.22 2004/12/15 14:09:13 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,11 +11,8 @@ package com.syrus.AMFICOM.mcm;
 import java.util.Map;
 import java.util.HashMap;
 import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.NewIdentifierPool;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
-import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.measurement.MeasurementDatabaseContext;
 import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
 import com.syrus.AMFICOM.measurement.ParameterType;
@@ -24,12 +21,11 @@ import com.syrus.AMFICOM.measurement.ParameterTypeDatabase;
 import com.syrus.AMFICOM.measurement.SetParameter;
 import com.syrus.AMFICOM.measurement.Measurement;
 import com.syrus.AMFICOM.measurement.Result;
-import com.syrus.AMFICOM.measurement.corba.Result_Transferable;
 import com.syrus.AMFICOM.event.corba.AlarmLevel;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.21 $, $Date: 2004/11/24 16:40:41 $
+ * @version $Revision: 1.22 $, $Date: 2004/12/15 14:09:13 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -62,26 +58,20 @@ public class KISReport implements ParameterTypeCodenames {
 			ParameterType parameterType;
 			for (int i = 0; i < parameters.length; i++) {
 				parameterType = (ParameterType)MeasurementStorableObjectPool.getStorableObject((Identifier)outParameterTypeIds.get(this.parameterCodenames[i]), true);
-				parameters[i] = new SetParameter(NewIdentifierPool.getGeneratedIdentifier(ObjectEntities.RESULTPARAMETER_ENTITY_CODE, 20),
-																				 parameterType,
-																				 this.parameterValues[i]);
+				parameters[i] = SetParameter.createInstance(parameterType, this.parameterValues[i]);
 			}
 
-			Result result = measurement.createResult(NewIdentifierPool.getGeneratedIdentifier(ObjectEntities.RESULT_ENTITY_CODE, 10),
-																			MeasurementControlModule.iAm.getUserId(),
+			Result result = measurement.createResult(MeasurementControlModule.iAm.getUserId(),
 																			null,
 																			AlarmLevel.ALARM_LEVEL_NONE,							
-																			parameters);			
-			return Result.getInstance((Result_Transferable)result.getTransferable());
-		}
-		catch (IllegalObjectEntityException ioee) {
-			throw new MeasurementException(ioee.getMessage(), MeasurementException.IDENTIFIER_GENERATION_FAILED_CODE, ioee);
+																			parameters);
+			result.insert();
+			return result;
 		}
 		catch (ApplicationException ae) {
+			if (ae.getCause() instanceof IllegalObjectEntityException)
+				throw new MeasurementException(ae.getMessage(), MeasurementException.IDENTIFIER_GENERATION_FAILED_CODE, ae);
 			throw new MeasurementException(ae.getMessage(), MeasurementException.DATABASE_CALL_FAILED_CODE, ae);
-		}
-		catch (AMFICOMRemoteException are) {
-			throw new MeasurementException("Cannot generate identifier: " + are.message, MeasurementException.IDENTIFIER_GENERATION_FAILED_CODE, are);
 		}
 	}
 

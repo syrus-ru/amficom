@@ -11,7 +11,6 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
-import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.configuration.KIS;
 import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
 import com.syrus.AMFICOM.measurement.Measurement;
@@ -151,7 +150,7 @@ public class Transceiver extends SleepButWorkThread {
 									super.clearFalls();
 								}
 								catch (MeasurementException me) {
-									if (me.getCause() instanceof AMFICOMRemoteException) {
+									if (me.getCode() == MeasurementException.IDENTIFIER_GENERATION_FAILED_CODE) {
 										Log.debugMessage("Transceiver.run | Cannot obtain identifier -- trying to wait", Log.DEBUGLEVEL05);
 										MeasurementControlModule.resetMServerConnection();
 										super.fallCode = FALL_CODE_GENERATE_IDENTIFIER;
@@ -174,12 +173,12 @@ public class Transceiver extends SleepButWorkThread {
 							else {
 								Log.errorMessage("Transceiver.run | Cannot find test processor for measurement '" + measurementId + "'");
 								this.throwAwayKISReport();
-							}
+							}// else if (testProcessor != null)
 						}// if (measurement != null)
 						else {
 							Log.errorMessage("Transceiver.run | Cannot find measurement for id '" + measurementId + "'");
 							this.throwAwayKISReport();
-						}
+						}// else if (measurement != null)
 					}// else if (this.kisReport == null)
 
 				}// if (this.kisConnection.isEstablished())
@@ -214,16 +213,16 @@ public class Transceiver extends SleepButWorkThread {
 			case FALL_CODE_NO_ERROR:
 				break;
 			case FALL_CODE_ESTABLISH_CONNECTION:
-				Log.errorMessage("Transceiver.run | Many errors while establishing connection");
+				Log.errorMessage("Transceiver.processFall | Many errors while establishing connection");
 				break;
 			case FALL_CODE_TRANSMIT_MEASUREMENT:
 				this.removeMeasurement();
 				break;
 			case FALL_CODE_RECEIVE_KIS_REPORT:
-				Log.errorMessage("Transceiver.run | Many errors while readig KIS report");
+				Log.errorMessage("Transceiver.processFall | Many errors while readig KIS report");
 				break;
 			case FALL_CODE_GENERATE_IDENTIFIER:
-				Log.errorMessage("Transceiver.run | Cannot generate identifier");
+				Log.errorMessage("Transceiver.processFall | Cannot generate identifier");
 				this.throwAwayKISReport();
 				break;
 		default:

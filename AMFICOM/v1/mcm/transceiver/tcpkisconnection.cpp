@@ -12,7 +12,7 @@
 #define FIELDNAME_KIS_REPORT "kisReport"
 
 
-jobject create_kis_report_from_result_segment(ResultSegment* result_segment);
+jobject create_kis_report(JNIEnv *env, ResultSegment* result_segment);
 
 
 JNIEXPORT jint JNICALL Java_com_syrus_AMFICOM_mcm_TCPKISConnection_establishSocketConnection(JNIEnv *env, jobject obj) {
@@ -132,18 +132,17 @@ JNIEXPORT jboolean JNICALL Java_com_syrus_AMFICOM_mcm_TCPKISConnection_transmitM
 	return r ? JNI_TRUE : JNI_FALSE;
 }
 
-JNIEXPORT jboolean JNICALL Java_com_syrus_AMFICOM_mcm_TCPKISConnection_receiveKISReportFromSocket(JNIEnv *env, jobject obj) {
+JNIEXPORT jboolean JNICALL Java_com_syrus_AMFICOM_mcm_TCPKISConnection_receiveKISReportFromSocket(JNIEnv *env, jobject obj, jlong jtimewait) {
 	jclass cls = env->GetObjectClass(obj);
 	jfieldID fid;
 
-	fid = env->GetFieldID(cls, FIELDNAME_INITIAL_TIME_TO_SLEEP, "J");
-	int timeout = (int)(env->GetLongField(obj, fid) / 1000);
+	int timeout = (int)(jtimewait / 1000);
 
 	fid = env->GetFieldID(cls, FIELDNAME_KIS_TCP_SOCKET, "I");
 	SOCKET kis_socket = (SOCKET)env->GetIntField(obj, fid);
 
 	Segment* segment = NULL;
-	int r = receive_segment(kis_socket, timeout, segment);
+	int r = receive_segment(kis_socket, timeout, segment, 0);
 
 	if (r == 0)
 		return JNI_TRUE;
@@ -153,7 +152,7 @@ JNIEXPORT jboolean JNICALL Java_com_syrus_AMFICOM_mcm_TCPKISConnection_receiveKI
 		switch (segment->getType()) {
 			case SEGMENT_RESULT:
 				printf("Received result segment\n");
-				j_kis_report = create_kis_report_from_result_segment((ResultSegment*)segment);
+				j_kis_report = create_kis_report(env, (ResultSegment*)segment);
 				fid = env->GetFieldID(cls, FIELDNAME_KIS_REPORT, "Lcom/syrus/AMFICOM/mcm/KISReport;");
 				env->SetObjectField(obj, fid, j_kis_report);
 			default:
@@ -166,7 +165,7 @@ JNIEXPORT jboolean JNICALL Java_com_syrus_AMFICOM_mcm_TCPKISConnection_receiveKI
 	return JNI_FALSE;
 }
 
-jobject create_kis_report_from_result_segment(JNIEnv *env, ResultSegment* result_segment) {
+jobject create_kis_report(JNIEnv *env, ResultSegment* result_segment) {
 	char* measurement_id = result_segment->getMeasurementId()->getData();
 	jstring j_measurement_id = env->NewStringUTF(measurement_id);
 

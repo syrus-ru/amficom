@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementControlModule.java,v 1.46 2004/12/07 18:59:52 arseniy Exp $
+ * $Id: MeasurementControlModule.java,v 1.47 2004/12/15 14:09:13 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,7 +18,7 @@ import java.util.Iterator;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.SleepButWorkThread;
 import com.syrus.AMFICOM.general.CORBAServer;
-import com.syrus.AMFICOM.general.NewIdentifierPool;
+import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
@@ -42,7 +42,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.46 $, $Date: 2004/12/07 18:59:52 $
+ * @version $Revision: 1.47 $, $Date: 2004/12/15 14:09:13 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -162,7 +162,7 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 		prepareResultList();
 
 		/*	Initialize pool of Identifiers*/
-		NewIdentifierPool.init(mServerRef);
+		IdentifierPool.init(mServerRef);
 
 		/*	Create map of test processors*/
 		testProcessors = Collections.synchronizedMap(new HashMap());
@@ -255,7 +255,7 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 
 	protected static void resetMServerConnection() {
 		activateMServerReference();
-		NewIdentifierPool.setIdentifierGeneratorServer(mServerRef);
+		IdentifierPool.setIdentifierGeneratorServer(mServerRef);
 	}
 
 	private static void activateKISConnectionManager() {
@@ -568,7 +568,7 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 
 				Equipment_Transferable eqT = mServerRef.transmitEquipment(kisT.equipment_id);
 				try {
-					Equipment.getInstance(eqT);
+					(new Equipment(eqT)).insert();
 				}
 				catch (CreateObjectException coe) {
 					Log.errorException(coe);
@@ -577,7 +577,7 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 				for (int j = 0; j < eqT.port_ids.length; j++) {
 					portT = mServerRef.transmitPort(eqT.port_ids[j]);
 					try {
-						Port.getInstance(portT);
+						(new Port(portT)).insert();
 					}
 					catch (CreateObjectException coe) {
 						Log.errorException(coe);
@@ -588,7 +588,7 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 				 *  and subsequent information. Disregard now	*/
 
 				try {
-					KIS.getInstance(kisT);
+					(new KIS(kisT)).insert();
 				}
 				catch (CreateObjectException coe) {
 					Log.errorException(coe);
@@ -598,7 +598,7 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 				for (int j = 0; j < kisT.measurement_port_ids.length; j++) {
 					mportT = mServerRef.transmitMeasurementPort(kisT.measurement_port_ids[j]);
 					try {
-						MeasurementPort.getInstance(mportT);
+						(new MeasurementPort(mportT)).insert();
 					}
 					catch (CreateObjectException coe) {
 						Log.errorException(coe);
@@ -613,14 +613,14 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 					for (int k = 0; k < mesT[j].monitored_domain_member_ids.length; k++) {
 						tpT = mServerRef.transmitTransmissionPath(mesT[j].monitored_domain_member_ids[k]);
 						try {
-							TransmissionPath.getInstance(tpT);
+							(new TransmissionPath(tpT)).insert();
 						}
 						catch (CreateObjectException coe) {
 							Log.errorException(coe);
 						}
 					}
 					try {
-						MonitoredElement.getInstance(mesT[j]);
+						(new MonitoredElement(mesT[j])).insert();
 					}
 					catch (CreateObjectException coe) {
 						Log.errorException(coe);
