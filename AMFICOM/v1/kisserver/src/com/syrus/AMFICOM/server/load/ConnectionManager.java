@@ -5,7 +5,11 @@ import java.sql.DriverManager;
 import java.sql.Connection;
 import sqlj.runtime.ref.DefaultContext;
 
-public class ConnectionManager extends Object {
+/**
+ * @deprecated Use {@link com.syrus.AMFICOM.server.ConnectionManager} from the
+ *             servermisc_v1 module instead.
+ */
+public class ConnectionManager {
 	DefaultContext m_ctx;
 
 	String connectString;

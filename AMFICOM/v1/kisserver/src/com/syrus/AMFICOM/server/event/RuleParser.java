@@ -13,7 +13,7 @@ public class RuleParser {
 
 	public RuleParser(String logic)	{
 		this.logic = logic;
-    this.parseRule();
+		this.parseRule();
 	}
 
 	private void parseRule() {
@@ -54,7 +54,7 @@ public class RuleParser {
 //		int endIndex = str.indexOf(d[0], startIndex);
 		int endIndex = str.length();
 
-		for (int i = 0; i< d.length; i++)
+		for (int i = 0; i < d.length; i++)
 			if ((str.indexOf(d[i], startIndex) > 0) && str.indexOf(d[i], startIndex) < endIndex)
 				endIndex = str.indexOf(d[i], startIndex);
 		return str.substring(startIndex, endIndex);
