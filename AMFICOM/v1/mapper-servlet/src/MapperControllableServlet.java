@@ -6,13 +6,26 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import java.awt.Color;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.io.FileOutputStream;
+import java.io.PrintStream;
+import java.net.URISyntaxException;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 // MapInfo classes
+import com.mapinfo.dp.Attribute;
+import com.mapinfo.dp.Feature;
+import com.mapinfo.dp.FeatureSet;
+import com.mapinfo.dp.QueryParams;
+import com.mapinfo.dp.TableInfo;
 import com.mapinfo.mapj.MapJ;
 import com.mapinfo.mapj.FeatureLayer;
 import com.mapinfo.mapj.LayerType;
@@ -27,7 +40,7 @@ import com.mapinfo.xmlprot.mxtj.ImageRequestComposer;
 
 /**
  * @author $Author: peskovsky $
- * @version $Revision: 1.4 $, $Date: 2005/02/14 14:29:31 $
+ * @version $Revision: 1.5 $, $Date: 2005/03/03 17:38:26 $
  * @module mapper-servlet
  */
 public class MapperControllableServlet
@@ -55,7 +68,7 @@ public class MapperControllableServlet
 	private boolean toDebug = false;
 
 	private MapJ mapJObject = null;
-
+	
 	// Define constants to control various rendering options
 	public static final int NUM_OF_COLORS = 256;
 	public static final Color BACKGROUND_COLOR = Color.WHITE;
@@ -82,8 +95,8 @@ public class MapperControllableServlet
 	{
 		super.init(config);
 
-		log("\n\n========New session (" +
-			 new Date(System.currentTimeMillis()).toString() + ")========\n\n");
+		log("\n\n========Servlet started at " +
+			 new Date(System.currentTimeMillis()).toString() + "========\n\n");
 
 		log("MCS - Initializing parameters...");
 
@@ -139,11 +152,27 @@ public class MapperControllableServlet
 	public void service(HttpServletRequest req, HttpServletResponse resp) throws
 		IOException
 	{
-		// Draw the map and encode the URL
-		log("MCS - Got URL..." + req.getRequestURI());
 		log("MCS - Creating ObjectOutputStream...");
 		ObjectOutputStream oos = new ObjectOutputStream(resp.getOutputStream());
-
+		
+		String queryString = null;
+		try
+		{
+			// Draw the map and encode the URL
+			java.net.URI uri = new java.net.URI (
+					req.getRequestURL() + "?" + req.getQueryString());
+			
+			queryString = uri.getQuery();
+			log("MCS - decoded query: " + queryString);
+		}
+		catch (URISyntaxException e)
+		{
+			writeNLogError(MapperControllableServlet.ERROR_INVALID_PARAMETERS, oos);
+			return;
+		}
+		
+		Map requestParameters = this.searchParameters(queryString);
+		
 		if (this.mapJObject == null)
 		{
 			this.mapJObject = this.initMapJ();
@@ -151,67 +180,79 @@ public class MapperControllableServlet
 
 		try
 		{
-			//Setting size of picture to return
-			int width = Integer.parseInt(req.getParameter(ServletCommandNames.
-				WIDTH));
-			log("MCS - width = " + Integer.toString(width));
-			int height = Integer.parseInt(req.getParameter(ServletCommandNames.
-				HEIGHT));
-			log("MCS - height = " + Integer.toString(height));
-
-			log("MCS - Setting device bounds");
-
-			this.mapJObject.setDeviceBounds(new DoubleRect(0, 0, width, height));
-			if (! ( (width > 0) && (height > 0)))
+			//Getting command name
+			String commandName = this.getParameter(requestParameters,ServletCommandNames.COMMAND_NAME);
+			log("MCS - commandName = " + commandName);
+			
+			if (commandName.equals(ServletCommandNames.CN_RENDER_IMAGE))			
 			{
+				//Setting size of picture to return
+				int width = Integer.parseInt(this.getParameter(requestParameters,ServletCommandNames.
+					PAR_WIDTH));
+				log("MCS - width = " + Integer.toString(width));
+				int height = Integer.parseInt(this.getParameter(requestParameters,ServletCommandNames.PAR_HEIGHT));
+				log("MCS - height = " + Integer.toString(height));
+	
+				log("MCS - Setting device bounds");
+	
+				this.mapJObject.setDeviceBounds(new DoubleRect(0, 0, width, height));
+				if (! ( (width > 0) && (height > 0)))
+				{
+					writeNLogError(MapperControllableServlet.ERROR_INVALID_PARAMETERS, oos);
+					return;
+				}
+	
+				//Setting zoom and center point
+				double centerX = Double.parseDouble(this.getParameter(requestParameters,
+					ServletCommandNames.PAR_CENTER_X));
+				log("MCS - centerX = " + Double.toString(centerX));
+				double centerY = Double.parseDouble(this.getParameter(requestParameters,
+					ServletCommandNames.PAR_CENTER_Y));
+				log("MCS - centerY = " + Double.toString(centerY));
+				double zoom = Double.parseDouble(this.getParameter(requestParameters,
+					ServletCommandNames.PAR_ZOOM_FACTOR));
+				log("MCS - zoom = " + Double.toString(zoom));
+	
+				log("MCS - Setting center");
+				setCenter(new DoublePoint(centerX, centerY));
+				log("MCS - Setting scale");
+				setScale(zoom);
+	
+				//Getting layers' parameters
+				for (int i = 0; ; i++)
+				{
+					String lvString = this.getParameter(requestParameters,ServletCommandNames.PAR_LAYER_VISIBLE +
+																  Integer.toString(i));
+					String lvvString = this.getParameter(requestParameters,ServletCommandNames.PAR_LAYER_LABELS_VISIBLE +
+																	Integer.toString(i));
+	
+					if (lvString == null)
+						break;
+	
+					boolean layerVisible = (Integer.parseInt(lvString) > 0) ? true : false; // to hold request parameter
+					boolean layerLabelsVisible = (Integer.parseInt(lvvString) > 0) ? true : false; // to hold request parameter
+	
+					log("MCS - " + "layer's Index/Visible/Labels" + " = " + i +
+						 " / " + layerVisible + " / " + layerLabelsVisible);
+	
+					setLayerVisibility(i, layerVisible, layerLabelsVisible);
+				}
+	
+				log("MCS - Rendering map");
+				writeMap(oos);
+			}
+			
+			else if (commandName.equals(ServletCommandNames.CN_SEARCH_NAME))			
+			{
+				//Setting size of picture to return
+				String nameToSearch = this.getParameter(requestParameters,ServletCommandNames.PAR_NAME_TO_SEARCH);
+				log("MCS - nameToSearch = " + nameToSearch);
+				
+				writeNamesNCenters(nameToSearch,oos);
+			}
+			else
 				writeNLogError(MapperControllableServlet.ERROR_INVALID_PARAMETERS, oos);
-				return;
-			}
-
-			//Setting zoom and center point
-			double centerX = Double.parseDouble(req.getParameter(
-				ServletCommandNames.
-				CENTER_X));
-			log("MCS - centerX = " + Double.toString(centerX));
-			double centerY = Double.parseDouble(req.getParameter(
-				ServletCommandNames.
-				CENTER_Y));
-			log("MCS - centerY = " + Double.toString(centerY));
-			double zoom = Double.parseDouble(req.getParameter(
-				ServletCommandNames.ZOOM_FACTOR));
-			log("MCS - zoom = " + Double.toString(zoom));
-
-			log("MCS - Setting center");
-			setCenter(new DoublePoint(centerX, centerY));
-			log("MCS - Setting scale");
-			setScale(zoom);
-
-			//Getting layers' parameters
-			for (int i = 0; ; i++)
-			{
-				String lvString = req.getParameter(ServletCommandNames.
-															  LAYER_VISIBLE +
-															  Integer.toString(i));
-				String lvvString = req.getParameter(ServletCommandNames.
-																LAYER_LABELS_VISIBLE +
-																Integer.toString(i));
-
-				if (lvString == null)
-					break;
-
-				boolean layerVisible = (Integer.parseInt(lvString) > 0) ? true : false; // to hold request parameter
-				boolean layerLabelsVisible = (Integer.parseInt(lvvString) > 0) ? true : false; // to hold request parameter
-
-				log("MCS - " + "layer's Index/Visible/Labels" + " = " + i +
-					 " / " + layerVisible + " / " + layerLabelsVisible);
-
-				setLayerVisibility(i, layerVisible, layerLabelsVisible);
-			}
-
-			log("MCS - Rendering map");
-			writeMap(oos);
 		}
-
 		catch (NullPointerException npExc)
 		{
 			writeNLogError(MapperControllableServlet.ERROR_NO_PARAMETERS, oos);
@@ -352,6 +393,150 @@ public class MapperControllableServlet
 		}
 	}
 
+	public void writeNamesNCenters(String nameToSearch,ObjectOutputStream oos)
+	{
+		log ("MCS - entered writeNamesNCenters");
+		Iterator layersIt = this.mapJObject.getLayers().iterator(
+				LayerType.FEATURE);
+		
+		log ("MCS - got layers Iterator");		
+		for(;layersIt.hasNext();)
+		{
+			FeatureLayer currLayer = (FeatureLayer )layersIt.next();
+
+			log ("MCS - searching at FeatureLayer: " + currLayer.getName());	
+			
+			try
+			{
+				// Названия всех колонок - чтобы достать инфу об объекте
+				// Может они и не понадобятся!!!!!!!!
+				List allColumnNames = new ArrayList();
+				
+				TableInfo tableInfo = currLayer.getTableInfo();
+				log ("MCS - got TableInfo");
+
+/*				for(int i = 0; i < tableInfo.getColumnCount(); i++)
+				{
+					allColumnNames.add(tableInfo.getColumnName(i));
+					log ("MCS - column name: " + tableInfo.getColumnName(i));					
+				}
+
+				log ("MCS - got names for columns data for which we should get");*/
+				
+				
+				// Название колонки с надписями
+				List labelColumnsList = currLayer.getLabelProperties().getLabelColumns();
+				
+				log ("MCS - got label columns' list.");
+				
+				if (labelColumnsList.isEmpty())
+					continue;
+				
+				String labelColumnName = (String )labelColumnsList.get(0);
+				
+				log ("MCS - got labels' column name: " + labelColumnName);
+				
+				// Её индекс в TableInfo
+				int labelColumnIndex = currLayer.getTableInfo().getColumnIndex(
+						labelColumnName);
+
+				log ("MCS - got labels' column index: " + labelColumnIndex);
+				
+				// Поиск для "лэйбловой колонки"
+				
+//				FeatureSet fs = currLayer.searchByAttribute(
+//						allColumnNames,
+//						labelColumnName,
+//						new Attribute(nameToSearch),
+//						QueryParams.ALL_PARAMS);
+
+			allColumnNames.add(labelColumnName);
+				
+			FeatureSet fs = currLayer.searchByAttribute(
+					allColumnNames,
+					labelColumnName,
+					new Attribute(nameToSearch),
+					null);
+
+				log ("MCS - got feature set");
+				
+				Feature feature = null;
+				// Loop until FeatureSet.getNextFeature() returns null
+				while((feature = fs.getNextFeature()) != null)
+				{
+					String featureName = feature.getAttribute(0).getString();
+					log ("MCS - got feature name: " + featureName);
+					
+					DoublePoint featureCentre = feature.getGeometry().getBounds().center();
+					
+					oos.writeDouble(featureCentre.x);
+					oos.writeDouble(featureCentre.y);					
+					oos.writeObject(featureName);
+				}
+				
+				log ("MCS - results for the layer succesfully wrote.");				
+			}
+			catch(Exception exc)
+			{
+				try
+				{
+					FileOutputStream logFOS = new FileOutputStream("mcs_log.txt", true);
+					PrintStream ps = new PrintStream(logFOS);
+					String dateString = (new Date( System.currentTimeMillis())).toString() + "  ";
+					logFOS.write(dateString.getBytes());
+					exc.printStackTrace(ps);					
+					logFOS.close();
+				} catch (FileNotFoundException e)
+				{
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IOException e)
+				{
+					// TODO Auto-generated catch block
+				}
+		
+
+				log("Error occured while searching at layer \"" +	currLayer.getName() + "\"");
+			}
+		}
+	}
+
+	private Map searchParameters(String uriString)
+	{
+		Map result = new HashMap();
+		
+		int lastParamEndIndex = -1;
+		for (;;)
+		{
+			int dividerIndex = uriString.indexOf('=',lastParamEndIndex);
+			String paramName = uriString.substring(lastParamEndIndex + 1,dividerIndex);
+			lastParamEndIndex = uriString.indexOf('&',dividerIndex);
+			
+			String paramValue = null;
+			
+			if (lastParamEndIndex < 0)
+			{
+				paramValue = uriString.substring(dividerIndex + 1,uriString.length());
+				result.put(paramName,paramValue);
+				break;
+			}
+
+			paramValue = uriString.substring(dividerIndex + 1,lastParamEndIndex);
+			result.put(paramName,paramValue);
+		}
+		
+		return result;
+	}
+	
+	private String getParameter(Map table, String paramName)
+	{
+		Object paramValue = table.get(paramName);
+		if (paramValue != null)
+			return (String) paramValue;
+		
+		return null;
+	}
+	
 	public void log(String msg)
 	{
 		if (!this.toDebug)
@@ -359,9 +544,10 @@ public class MapperControllableServlet
 
 		try
 		{
-			FileOutputStream fos = new FileOutputStream("mcs_log.txt", true);
-			fos.write( (msg + "\n").getBytes());
-			fos.close();
+			FileOutputStream logFOS = new FileOutputStream("mcs_log.txt", true);
+			String dateString = (new Date( System.currentTimeMillis())).toString();
+			logFOS.write((dateString + "  " + msg + "\n").getBytes());
+			logFOS.close();
 		}
 		catch (IOException exc)
 		{
