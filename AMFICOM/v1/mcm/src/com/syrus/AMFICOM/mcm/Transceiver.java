@@ -1,5 +1,5 @@
 /*
- * $Id: Transceiver.java,v 1.25 2004/10/15 11:17:30 bob Exp $
+ * $Id: Transceiver.java,v 1.26 2004/10/17 14:18:46 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,7 +27,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.25 $, $Date: 2004/10/15 11:17:30 $
+ * @version $Revision: 1.26 $, $Date: 2004/10/17 14:18:46 $
  * @author $Author: bob $
  * @module mcm_v1
  */
@@ -113,6 +113,16 @@ public class Transceiver extends SleepButWorkThread {
 		      if (! this.measurementQueue.isEmpty()) {
 					measurement = (Measurement)this.measurementQueue.get(0);
 					measurementId = measurement.getId();
+					Log.debugMessage("Try to transmit '" + measurement.getId().toString() + "', \n\t"
+									 + "'" + measurement.getType().getCodename() + "', \n\t"
+									 + "'" + measurement.getLocalAddress() + "'.", Log.DEBUGLEVEL07);
+					Log.debugMessage(" ParameterTypeCodenames(" + measurement.getSetup().getParameterTypeCodenames().length 
+									 + ") : ParameterValues(" + measurement.getSetup().getParameterValues().length + ")", Log.DEBUGLEVEL07);
+					for(int i=0;i<measurement.getSetup().getParameterTypeCodenames().length;i++){
+						Log.debugMessage('\'' + measurement.getSetup().getParameterTypeCodenames()[i] + "':'"+
+										 new String(measurement.getSetup().getParameterValues()[i]) +'\'', Log.DEBUGLEVEL07);
+					}
+					
 					if (this.transmit(
 									  this.socket,
 									  measurement.getId().toString(),
@@ -197,14 +207,16 @@ public class Transceiver extends SleepButWorkThread {
 						this.throwAwayKISReport();
 					}
 						
-					try {
-						sleep(super.initialTimeToSleep);
-					}
-					catch (InterruptedException ie) {
-						Log.errorException(ie);
-					}					
 				}	//else if (this.kisReport == null)
-	      	} // else if (this.socket == -1)	      
+	      	} // else if (this.socket == -1)
+	      
+			try {
+				sleep(super.initialTimeToSleep);
+			}
+			catch (InterruptedException ie) {
+				Log.errorException(ie);
+			}				
+
 		}	//while
 	}
 

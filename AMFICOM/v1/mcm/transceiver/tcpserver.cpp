@@ -1,10 +1,6 @@
 #include "com_syrus_AMFICOM_mcm_TCPServer.h"
 #include "etcp.h"
 
-#ifndef TIMEOUT
-#define TIMEOUT 5
-#endif
-
 /*
  * Java native method declaration :
  * public native int getListeningSocket(String hostName, String serviceName);
@@ -65,7 +61,6 @@ JNIEXPORT jint JNICALL Java_com_syrus_AMFICOM_mcm_TCPServer_getConnectedSocket(
 	if(retval)	{				
 		int kis_id_size;
 		int recvResult = recv(accepted_socket, (char *)&kis_id_size, sizeof(int), 0);
-		/* TODO pp code - refactor !!! */		 
 		if (recvResult != sizeof(int))
 			cout << "Connection failed while reading KIS_ID_SIZE from socket "
 				 << accepted_socket << "\n";
@@ -87,10 +82,10 @@ JNIEXPORT jint JNICALL Java_com_syrus_AMFICOM_mcm_TCPServer_getConnectedSocket(
 					cout << "for KIS, id = \"" << (char *)kis_id << "\"\n";	
 			
 			    jobject kisId = env->NewStringUTF(kis_id);
-			    env->SetObjectArrayElement(objects, 0, kisId);	    
-			    
-			    delete[] kis_id;
+			    env->SetObjectArrayElement(objects, 0, kisId);	    		    			    
 			}
+			
+			delete[] kis_id;
 		}
 	}
 	
@@ -118,8 +113,7 @@ JNIEXPORT void JNICALL Java_com_syrus_AMFICOM_mcm_TCPServer_shutdownServer
 
 	try
 	{
-		for (int i = 0; i < l; i++)
-		{
+		for (int i = 0; i < l; i++){
 			closeExt((int)lcSocketsToClose[i]);
 			cout << "Socket " << lcSocketsToClose[i] << " shutdowned.\n";
 		}
@@ -129,4 +123,5 @@ JNIEXPORT void JNICALL Java_com_syrus_AMFICOM_mcm_TCPServer_shutdownServer
 	{
 		cout << "Exception raised while shutdowning sockets.\n";
 	}
+	delete[]	lcSocketsToClose;
 }

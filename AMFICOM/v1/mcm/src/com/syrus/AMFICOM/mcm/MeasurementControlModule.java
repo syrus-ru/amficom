@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementControlModule.java,v 1.34 2004/10/15 15:38:13 bob Exp $
+ * $Id: MeasurementControlModule.java,v 1.35 2004/10/17 14:18:46 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -45,7 +45,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.34 $, $Date: 2004/10/15 15:38:13 $
+ * @version $Revision: 1.35 $, $Date: 2004/10/17 14:18:46 $
  * @author $Author: bob $
  * @module mcm_v1
  */
@@ -104,23 +104,8 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 	public MeasurementControlModule() {
 		super(ApplicationProperties.getInt(KEY_TICK_TIME, TICK_TIME) * 1000, ApplicationProperties.getInt(KEY_MAX_FALLS, MAX_FALLS));
 		this.forwardProcessing = ApplicationProperties.getInt(KEY_FORWARD_PROCESSING, FORWARD_PROCESSING)*1000;
-		this.running = true;
+		this.running = true;		
 		
-		String hostName = null;
-		String port = ApplicationProperties.getString(KEY_TCP_PORT, String.valueOf(7500) );	
-		
-		try {
-			hostName = InetAddress.getLocalHost().getHostAddress();			
-			TCPServer tcpServer = new TCPServer(hostName,port);
-			new Thread(tcpServer).start();			
-		}catch (UnknownHostException e) {
-			Log.errorMessage("Failed get local host ip ");
-			Log.errorException(e);
-		} 
-		catch (UnknownServiceException e) {
-			Log.errorMessage("Failed creating TCPServer at service " + hostName + ':' + port);
-			Log.errorException(e);
-		}
 	}
 
 	public static void main(String[] args) {
@@ -192,7 +177,7 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 		} catch (Throwable t) {
 			t.printStackTrace();
 		}
-	}
+	}	
 
 	private static void establishDatabaseConnection() {
 		String dbHostName = ApplicationProperties.getString(KEY_DB_HOST_NAME, Application.getInternetAddress());
@@ -211,12 +196,21 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 	private static void activateKISTransceivers()
 	{
 	  transceivers = new Hashtable();
-//	  try {
-//		hostName = InetAddress.getLocalHost().getCanonicalHostName();
-//	  } catch (UnknownHostException e) {		
-//		Log.errorException(e);
-//	  }
-
+	  String hostName = null;
+		String port = ApplicationProperties.getString(KEY_TCP_PORT, String.valueOf(7500) );	
+		
+		try {
+			hostName = InetAddress.getLocalHost().getHostAddress();			
+			TCPServer tcpServer = new TCPServer(hostName,port);
+			new Thread(tcpServer).start();			
+		}catch (UnknownHostException e) {
+			Log.errorMessage("Failed get local host ip ");
+			Log.errorException(e);
+		} 
+		catch (UnknownServiceException e) {
+			Log.errorMessage("Failed creating TCPServer at service " + hostName + ':' + port);
+			Log.errorException(e);
+		}
 /*
     try
     {

@@ -29,7 +29,6 @@ public class TCPServer extends SleepButWorkThread {
 	}
 
 	public static int getSocketForKisID(Identifier kisId) {
-		Log.debugMessage("TCPServer.getSocketForKisID | try get kis for " + kisId, Log.DEBUGLEVEL05);
 		Integer socket = (Integer) TCPServer.kissockets.get(kisId);
 		if (socket == null)
 			return -1;
@@ -88,12 +87,11 @@ public class TCPServer extends SleepButWorkThread {
 				}
 			
 				try {
-				Log.debugMessage("TCPServer.sleep(1000)", Log.DEBUGLEVEL05);
-				Thread.interrupted();
-				Thread.sleep(1000);
-				} catch (InterruptedException ie) {
-					Log.errorMessage("Thread has been interrupted");
+					sleep(super.initialTimeToSleep);
 				}
+				catch (InterruptedException ie) {
+					Log.errorException(ie);
+				}	
 			}			
 	}
 

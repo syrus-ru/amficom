@@ -3,6 +3,10 @@
 
 #include <iostream.h>
 
+#ifndef TIMEOUT
+#define TIMEOUT 5
+#endif
+
 #ifdef _WIN32
 #include <winsock2.h>
 typedef unsigned int socklen_t;
