@@ -62,3 +62,4 @@ void KISInfoSegment::parseSegment() {
 
 	//...?
 }
+
