@@ -1,5 +1,5 @@
 /*
- * $Id: LinkedIdsConditionImpl.java,v 1.8 2005/02/24 09:16:12 bob Exp $
+ * $Id: LinkedIdsConditionImpl.java,v 1.9 2005/03/05 21:36:54 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,7 +9,6 @@
 package com.syrus.AMFICOM.administration;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Iterator;
 
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -17,21 +16,22 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/02/24 09:16:12 $
- * @author $Author: bob $
+ * @version $Revision: 1.9 $, $Date: 2005/03/05 21:36:54 $
+ * @author $Author: arseniy $
  * @module admin_v1
  */
 final class LinkedIdsConditionImpl extends com.syrus.AMFICOM.general.LinkedIdsCondition {
 
-	private LinkedIdsConditionImpl(Collection linkedIds, Short entityCode) {
+	private LinkedIdsConditionImpl(Collection linkedIds, Short linkedEntityCode, Short entityCode) {
 		this.linkedIds = linkedIds;
+		this.linkedEntityCode = linkedEntityCode.shortValue();
 		this.entityCode = entityCode;
 	}
-
-	private LinkedIdsConditionImpl(Identifier identifier, Short entityCode) {
-		this.linkedIds = Collections.singletonList(identifier);
-		this.entityCode = entityCode;
-	}
+//
+//	private LinkedIdsConditionImpl(Identifier identifier, Short entityCode) {
+//		this.linkedIds = Collections.singletonList(identifier);
+//		this.entityCode = entityCode;
+//	}
 
 	private boolean checkDomain(DomainMember domainMember) throws ApplicationException {
 		Domain dmDomain = (Domain) AdministrationStorableObjectPool.getStorableObject(domainMember.getDomainId(), true);
@@ -55,10 +55,7 @@ final class LinkedIdsConditionImpl extends com.syrus.AMFICOM.general.LinkedIdsCo
 		switch (this.entityCode.shortValue()) {
 			case ObjectEntities.MCM_ENTITY_CODE:
 				MCM mcm = (MCM) object;
-				/* if linked ids is kiss id */
-				condition = super.conditionTest(mcm.getKISIds());
-				if (!condition)
-					condition = this.checkDomain(mcm);
+				condition = this.checkDomain(mcm);
 				break;
 			case ObjectEntities.DOMAIN_ENTITY_CODE:
 				Domain domain = (Domain) object;
