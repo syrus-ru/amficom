@@ -1,5 +1,5 @@
 /*
- * $Id: ClientConfigurationObjectLoader.java,v 1.4 2004/11/23 15:04:09 max Exp $
+ * $Id: ClientConfigurationObjectLoader.java,v 1.5 2004/11/24 08:51:25 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,27 +15,6 @@ import java.util.List;
 import java.util.Set;
 
 import com.syrus.AMFICOM.cmserver.corba.CMServer;
-import com.syrus.AMFICOM.configuration.Characteristic;
-import com.syrus.AMFICOM.configuration.CharacteristicType;
-import com.syrus.AMFICOM.configuration.ConfigurationObjectLoader;
-import com.syrus.AMFICOM.configuration.Domain;
-import com.syrus.AMFICOM.configuration.Equipment;
-import com.syrus.AMFICOM.configuration.EquipmentType;
-import com.syrus.AMFICOM.configuration.KIS;
-import com.syrus.AMFICOM.configuration.KISType;
-import com.syrus.AMFICOM.configuration.Link;
-import com.syrus.AMFICOM.configuration.LinkType;
-import com.syrus.AMFICOM.configuration.LinkedIdsCondition;
-import com.syrus.AMFICOM.configuration.MCM;
-import com.syrus.AMFICOM.configuration.MeasurementPort;
-import com.syrus.AMFICOM.configuration.MeasurementPortType;
-import com.syrus.AMFICOM.configuration.MonitoredElement;
-import com.syrus.AMFICOM.configuration.Port;
-import com.syrus.AMFICOM.configuration.PortType;
-import com.syrus.AMFICOM.configuration.Server;
-import com.syrus.AMFICOM.configuration.TransmissionPath;
-import com.syrus.AMFICOM.configuration.TransmissionPathType;
-import com.syrus.AMFICOM.configuration.User;
 import com.syrus.AMFICOM.configuration.corba.AbstractLinkTypeSort;
 import com.syrus.AMFICOM.configuration.corba.AbstractLinkType_Transferable;
 import com.syrus.AMFICOM.configuration.corba.AccessIdentifier_Transferable;
@@ -46,7 +25,6 @@ import com.syrus.AMFICOM.configuration.corba.DomainCondition_Transferable;
 import com.syrus.AMFICOM.configuration.corba.Domain_Transferable;
 import com.syrus.AMFICOM.configuration.corba.EquipmentType_Transferable;
 import com.syrus.AMFICOM.configuration.corba.Equipment_Transferable;
-import com.syrus.AMFICOM.configuration.corba.KISType_Transferable;
 import com.syrus.AMFICOM.configuration.corba.KIS_Transferable;
 import com.syrus.AMFICOM.configuration.corba.LinkType_Transferable;
 import com.syrus.AMFICOM.configuration.corba.Link_Transferable;
@@ -80,7 +58,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.4 $, $Date: 2004/11/23 15:04:09 $
+ * @version $Revision: 1.5 $, $Date: 2004/11/24 08:51:25 $
  * @author $Author: max $
  * @module generalclient_v1
  */
@@ -197,21 +175,6 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
             throw new CommunicationException(msg, e);
         }
 	}
-    
-    public KISType loadKISType(Identifier id) throws RetrieveObjectException, CommunicationException {
-        try {
-            return new KISType(this.server.transmitKISType((Identifier_Transferable) id
-                    .getTransferable(), accessIdentifierTransferable));
-        } catch (CreateObjectException e) {
-            String msg = "ClientConfigurationObjectLoader.loadKISType | new KISType(" + id.toString()
-                    + ")";
-            throw new RetrieveObjectException(msg, e);
-        } catch (AMFICOMRemoteException e) {
-            String msg = "ClientConfigurationObjectLoader.loadKISType | server.transmitKISType("
-                    + id.toString() + ")";
-            throw new CommunicationException(msg, e);
-        }
-    }
     
     /* (non-Javadoc)
 	 * @see com.syrus.AMFICOM.configuration.ConfigurationObjectLoader#loadTransmissionPathType(com.syrus.AMFICOM.general.Identifier)
@@ -736,54 +699,6 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
         }
 	}
 
-	public List loadKISTypes(List ids) throws DatabaseException,
-			CommunicationException {
-		try {
-            Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
-            int i = 0;
-            for (Iterator it = ids.iterator(); it.hasNext(); i++) {
-                Identifier id = (Identifier) it.next();
-                identifierTransferables[i] = (Identifier_Transferable) id.getTransferable();
-            }
-            KISType_Transferable[] transferables = this.server
-                    .transmitKISTypes(identifierTransferables,
-                                    accessIdentifierTransferable);
-            List list = new ArrayList(transferables.length);
-            for (int j = 0; j < transferables.length; j++) {
-                list.add(new KISType(transferables[j]));
-            }
-            return list;
-        } catch (CreateObjectException e) {
-            throw new RetrieveObjectException(e);
-        } catch (AMFICOMRemoteException e) {
-            throw new CommunicationException(e);
-        }
-	}
-        
-	public List loadKISTypesButIds(StorableObjectCondition condition, List ids)
-			throws DatabaseException, CommunicationException {
-		try {
-            Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
-            int i = 0;
-            for (Iterator it = ids.iterator(); it.hasNext(); i++) {
-                Identifier id = (Identifier) it.next();
-                identifierTransferables[i] = (Identifier_Transferable) id.getTransferable();
-            }
-            KISType_Transferable[] transferables = this.server
-                    .transmitKISTypesButIds(identifierTransferables,
-                                    accessIdentifierTransferable);
-            List list = new ArrayList(transferables.length);
-            for (int j = 0; j < transferables.length; j++) {
-                list.add(new KISType(transferables[j]));
-            }
-            return list;
-        } catch (CreateObjectException e) {
-            throw new RetrieveObjectException(e);
-        } catch (AMFICOMRemoteException e) {
-            throw new CommunicationException(e);
-        }
-	}
-
 	public List loadTransmissionPathTypes(List ids) throws DatabaseException,
 			CommunicationException {
 		try {
@@ -1096,21 +1011,7 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
          }
      }
      
-     public void saveKISType(KISType kisType, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException{
-        KISType_Transferable transferables = (KISType_Transferable) kisType.getTransferable();         
-        try {
-            this.server.receiveKISType(transferables, force, accessIdentifierTransferable);         
-        } catch (AMFICOMRemoteException e) {
-            String msg = "ClientConfigurationObjectLoader.saveKISType ";
-            
-            if (e.error_code.equals(ErrorCode.ERROR_VERSION_COLLISION))
-               throw new VersionCollisionException(msg, e);
-            
-            throw new CommunicationException(msg, e);       
-        }
-    }
-    
-	public void saveCableThreadType(CableThreadType cableThreadType,
+     public void saveCableThreadType(CableThreadType cableThreadType,
 			boolean force) throws VersionCollisionException, DatabaseException,
 			CommunicationException {
         CableThreadType_Transferable transferables = (CableThreadType_Transferable) cableThreadType.getTransferable();         
@@ -1444,25 +1345,7 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
          }
      }
      
-     public void saveKISTypes(List list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException{
-        KISType_Transferable[] transferables = new KISType_Transferable[list.size()];
-        int i=0;
-        for (Iterator it = list.iterator(); it.hasNext();i++) {
-            transferables[i] = (KISType_Transferable)( (KISType)it.next() ).getTransferable();                        
-        }
-        try {
-            this.server.receiveKISTypes(transferables, force, accessIdentifierTransferable);         
-        } catch (AMFICOMRemoteException e) {
-           String msg = "ClientConfigurationObjectLoader.saveKISType ";
-           
-           if (e.error_code.equals(ErrorCode.ERROR_VERSION_COLLISION))
-               throw new VersionCollisionException(msg, e);
-           
-           throw new CommunicationException(msg, e);       
-        }
-     }
-
-	public void saveLinks(List list, boolean force)
+     public void saveLinks(List list, boolean force)
 			throws VersionCollisionException, DatabaseException,
 			CommunicationException {
 		Link_Transferable[] transferables = new Link_Transferable[list.size()];
