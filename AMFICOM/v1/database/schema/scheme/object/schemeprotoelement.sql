@@ -1,4 +1,4 @@
--- $Id: schemeprotoelement.sql,v 1.2 2005/02/08 14:08:58 bass Exp $
+-- $Id: schemeprotoelement.sql,v 1.3 2005/02/10 08:47:55 bass Exp $
 
 CREATE TABLE "SchemeProtoElement" (
 	id VARCHAR2(32 CHAR) NOT NULL,
@@ -38,6 +38,10 @@ CREATE TABLE "SchemeProtoElement" (
 		REFERENCES "SchemeProtoGroup"(id) ON DELETE CASCADE,
 	CONSTRAINT schemeprotoelement_prnt_spe_fk FOREIGN KEY(parent_scheme_proto_element_id)
 		REFERENCES "SchemeProtoElement"(id) ON DELETE CASCADE,
+--
+	-- Boolean XOR: only one of parent_scheme_proto_group_id and
+	-- parent_scheme_proto_element_id may be defined, and only one may be
+	-- null.
 	CONSTRAINT schemeprotoelement_prnt_chk CHECK
 		((parent_scheme_proto_group_id iS NULL
 		AND parent_scheme_proto_element_id iS NOT NULL)

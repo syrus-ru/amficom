@@ -1,4 +1,4 @@
--- $Id: schemeelement.sql,v 1.2 2005/02/08 14:08:58 bass Exp $
+-- $Id: schemeelement.sql,v 1.3 2005/02/10 08:47:55 bass Exp $
 
 CREATE TABLE "SchemeElement" (
 	id VARCHAR2(32 CHAR) NOT NULL,
@@ -51,6 +51,12 @@ CREATE TABLE "SchemeElement" (
 	CONSTRAINT schemeelement_prnt_schmlmnt_fk FOREIGN KEY(parent_scheme_element_id)
 		REFERENCES "SchemeElement"(id) ON DELETE CASCADE,
 --
+	-- Boolean OR: equipment_type_id and equipment_id may be both nulls.
+	CONSTRAINT schemeelement_equipmnt_chk CHECK
+		((equipment_type_id IS NULL)
+		OR (equipment_id IS NULL)),
+	-- Boolean XOR: only one of parent_scheme_id and
+	-- parent_scheme_element_id may be defined, and only one may be null.
 	CONSTRAINT schemeelement_prnt_chk CHECK
 		((parent_scheme_id IS NULL
 		AND parent_scheme_element_id IS NOT NULL)

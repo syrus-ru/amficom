@@ -1,4 +1,25 @@
--- $Id: DROP.sql,v 1.3 2005/02/08 14:08:58 bass Exp $
+-- $Id: DROP.sql,v 1.4 2005/02/10 08:47:55 bass Exp $
+
+-- 09. SchemeCablePort
+PROMPT 09. Dropping table "SchemeCablePort"...;
+DROP TABLE "SchemeCablePort";
+DROP SEQUENCE "SchemeCablePort_Seq";
+
+-- 08. SchemePort
+PROMPT 08. Dropping table "SchemePort"...;
+DROP TABLE "SchemePort";
+DROP SEQUENCE "SchemePort_Seq";
+
+-- 07. SchemeDevice
+PROMPT 07. Dropping table "SchemeDevice"...;
+DROP TABLE "SchemeDevice";
+DROP SEQUENCE "SchemeDevice_Seq";
+
+-- 06. SchemeMonitoringSolution
+PROMPT 06. Dropping table "SchemeMonitoringSolution"...;
+ALTER TABLE "Scheme" DROP CONSTRAINT scheme_schm_monitoring_sltn_fk;
+DROP TABLE "SchemeMonitoringSolution";
+DROP SEQUENCE "SchemeMonitoringSolution_Seq";
 
 -- 05. SchemeOptimizeInfo
 PROMPT 05. Dropping table "SchemeOptimizeInfo"...;
