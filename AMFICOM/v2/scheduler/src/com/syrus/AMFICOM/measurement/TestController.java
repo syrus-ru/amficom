@@ -1,5 +1,5 @@
 /*
- * $Id: TestController.java,v 1.1.2.1 2004/10/19 09:58:31 bob Exp $
+ * $Id: TestController.java,v 1.1.2.2 2004/10/19 10:12:49 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,7 +26,7 @@ import com.syrus.AMFICOM.measurement.corba.TestStatus;
 import com.syrus.AMFICOM.measurement.corba.TestTemporalType;
 
 /**
- * @version $Revision: 1.1.2.1 $, $Date: 2004/10/19 09:58:31 $
+ * @version $Revision: 1.1.2.2 $, $Date: 2004/10/19 10:12:49 $
  * @author $Author: bob $
  * @module module
  */
@@ -137,7 +137,7 @@ public class TestController implements ObjectResourceController {
 		if (object instanceof Test) {
 			Test test = (Test) object;
 			if (key.equals(KEY_TEMPORAL_TYPE))
-				value = test.getTemporalType(); //$NON-NLS-1$
+				value = this.temporalTypeMap.get(test.getTemporalType()); //$NON-NLS-1$
 			else if (key.equals(KEY_KIS))
 				try {
 					MeasurementPort mp = (MeasurementPort)ConfigurationStorableObjectPool.getStorableObject(test.getMonitoredElement().getMeasurementPortId(), true);
@@ -170,7 +170,7 @@ public class TestController implements ObjectResourceController {
 			else if (key.equals(KEY_START_TIME))
 				value = test.getStartTime(); //$NON-NLS-1$
 			else if (key.equals(KEY_STATUS))
-				value = test.getStatus(); //$NON-NLS-1$
+				value = this.statusMap.get(test.getStatus()); //$NON-NLS-1$
 		}
 		return value;
 	}
