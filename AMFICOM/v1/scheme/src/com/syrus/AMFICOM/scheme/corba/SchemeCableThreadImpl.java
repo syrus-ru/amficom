@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeCableThreadImpl.java,v 1.17 2005/03/10 15:06:08 bass Exp $
+ * $Id: SchemeCableThreadImpl.java,v 1.18 2005/03/10 15:18:01 bass Exp $
  * Copyright ¿ 2004 Syrus Systems. Dept. of Science & Technology. Project:
  * AMFICOM.
  */
@@ -11,14 +11,13 @@ import com.syrus.AMFICOM.configuration.corba.*;
 import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.general.corba.*;
 import com.syrus.AMFICOM.general.corba.StorableObject;
-import com.syrus.AMFICOM.scheme.CharacteristicSeqContainer;
 import com.syrus.util.logging.ErrorHandler;
 import java.util.*;
 import java.util.Collection;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.17 $, $Date: 2005/03/10 15:06:08 $
+ * @version $Revision: 1.18 $, $Date: 2005/03/10 15:18:01 $
  * @module scheme_v1
  */
 final class SchemeCableThreadImpl extends SchemeCableThread implements
