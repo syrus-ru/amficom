@@ -1,5 +1,5 @@
 /*
-* $Id: SiteNodeWrapper.java,v 1.2 2005/01/26 07:54:08 bob Exp $
+* $Id: SiteNodeWrapper.java,v 1.3 2005/01/27 06:23:59 bob Exp $
 *
 * Copyright © 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -24,7 +24,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/01/26 07:54:08 $
+ * @version $Revision: 1.3 $, $Date: 2005/01/27 06:23:59 $
  * @author $Author: bob $
  * @module map_v1
  */
@@ -148,13 +148,13 @@ public class SiteNodeWrapper implements Wrapper {
 		if (object instanceof SiteNode) {
 			SiteNode siteNode = (SiteNode) object;
 			if (key.equals(COLUMN_NAME))
-				siteNode.setName0((String) value);
+				siteNode.setName((String) value);
 			else if (key.equals(COLUMN_DESCRIPTION))
-				siteNode.setDescription0((String) value);
+				siteNode.setDescription((String) value);
 			else if (key.equals(COLUMN_LONGITUDE))
-				siteNode.setLongitude0(Double.parseDouble((String)value)); 
+				siteNode.setLongitude(Double.parseDouble((String)value)); 
 			else if (key.equals(COLUMN_LATIUDE))
-				siteNode.setLatitude0(Double.parseDouble((String)value));
+				siteNode.setLatitude(Double.parseDouble((String)value));
 			else if (key.equals(COLUMN_IMAGE_ID))
 				siteNode.setImageId(new Identifier((String)value));
 			else if (key.equals(COLUMN_SITE_NODE_TYPE_ID))
@@ -177,7 +177,7 @@ public class SiteNodeWrapper implements Wrapper {
 					for (Iterator it = characteristicIdStr.iterator(); it.hasNext();) 
 						characteristicIds.add(new Identifier((String) it.next()));
 					try {
-						siteNode.setCharacteristics0(GeneralStorableObjectPool.getStorableObjects(characteristicIds, true));
+						siteNode.setCharacteristics(GeneralStorableObjectPool.getStorableObjects(characteristicIds, true));
 					} catch (DatabaseException e) {
 						Log.errorMessage("SiteNodeWrapper.setValue | key '" + key + "' caught " + e.getMessage());
 					} catch (CommunicationException e) {

@@ -1,5 +1,5 @@
 /*
-* $Id: SiteNodeTypeWrapper.java,v 1.1 2005/01/26 08:59:41 bob Exp $
+* $Id: SiteNodeTypeWrapper.java,v 1.2 2005/01/27 06:23:59 bob Exp $
 *
 * Copyright © 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -24,7 +24,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/01/26 08:59:41 $
+ * @version $Revision: 1.2 $, $Date: 2005/01/27 06:23:59 $
  * @author $Author: bob $
  * @module map_v1
  */
@@ -147,7 +147,7 @@ public class SiteNodeTypeWrapper implements Wrapper {
 					for (Iterator it = characteristicIdStr.iterator(); it.hasNext();) 
 						characteristicIds.add(new Identifier((String) it.next()));
 					try {
-						siteNodeType.setCharacteristics0(GeneralStorableObjectPool.getStorableObjects(characteristicIds, true));
+						siteNodeType.setCharacteristics(GeneralStorableObjectPool.getStorableObjects(characteristicIds, true));
 					} catch (DatabaseException e) {
 						Log.errorMessage("SiteNodeTypeWrapper.setValue | key '" + key + "' caught " + e.getMessage());
 					} catch (CommunicationException e) {

@@ -1,5 +1,5 @@
 /*
-* $Id: CollectorWrapper.java,v 1.2 2005/01/25 11:58:48 bob Exp $
+* $Id: CollectorWrapper.java,v 1.3 2005/01/27 06:23:59 bob Exp $
 *
 * Copyright © 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -24,7 +24,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/01/25 11:58:48 $
+ * @version $Revision: 1.3 $, $Date: 2005/01/27 06:23:59 $
  * @author $Author: bob $
  * @module map_v1
  */
@@ -124,16 +124,16 @@ public class CollectorWrapper implements Wrapper {
 		if (object instanceof Collector) {
 			Collector collector = (Collector) object;
 			if (key.equals(COLUMN_NAME))
-				collector.setName0((String)value);
+				collector.setName((String)value);
 			else if (key.equals(COLUMN_DESCRIPTION))
-				collector.setDescription0((String)value);
+				collector.setDescription((String)value);
 			else if (key.equals(COLUMN_CHARACTERISTIC_ID)) {
 				List characteristicIdStr = (List)value;
 				List characteristicIds = new ArrayList(characteristicIdStr.size());
 				for (Iterator it = characteristicIdStr.iterator(); it.hasNext();) 
 					characteristicIds.add(new Identifier((String) it.next()));
 				try {
-					collector.setCharacteristics0(GeneralStorableObjectPool.getStorableObjects(characteristicIds, true));
+					collector.setCharacteristics(GeneralStorableObjectPool.getStorableObjects(characteristicIds, true));
 				} catch (DatabaseException e) {
 					Log.errorMessage("CollectorWrapper.setValue | key '" + key + "' caught " + e.getMessage());
 				} catch (CommunicationException e) {
@@ -146,7 +146,7 @@ public class CollectorWrapper implements Wrapper {
 				for (Iterator it = physicalLinkIdStr.iterator(); it.hasNext();) 
 					physicalLinkIds.add(new Identifier((String) it.next()));
 				try {
-					collector.setCharacteristics0(MapStorableObjectPool.getStorableObjects(physicalLinkIds, true));
+					collector.setCharacteristics(MapStorableObjectPool.getStorableObjects(physicalLinkIds, true));
 				} catch (DatabaseException e) {
 					Log.errorMessage("CollectorWrapper.setValue | key '" + key + "' caught " + e.getMessage());
 				} catch (CommunicationException e) {

@@ -1,5 +1,5 @@
 /*
-* $Id: NodeLinkWrapper.java,v 1.2 2005/01/25 14:35:59 bob Exp $
+* $Id: NodeLinkWrapper.java,v 1.3 2005/01/27 06:23:59 bob Exp $
 *
 * Copyright © 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -24,7 +24,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/01/25 14:35:59 $
+ * @version $Revision: 1.3 $, $Date: 2005/01/27 06:23:59 $
  * @author $Author: bob $
  * @module map_v1
  */
@@ -129,10 +129,10 @@ public class NodeLinkWrapper implements Wrapper {
 		if (object instanceof NodeLink) {
 			NodeLink nodeLink = (NodeLink) object;
 			if (key.equals(COLUMN_NAME))
-				nodeLink.setName0((String) value);
+				nodeLink.setName((String) value);
 			else if (key.equals(COLUMN_PHYSICAL_LINK_ID))
 				try {
-					nodeLink.setPhysicalLink0((PhysicalLink) MapStorableObjectPool.getStorableObject(new Identifier((String)value), true));
+					nodeLink.setPhysicalLink((PhysicalLink) MapStorableObjectPool.getStorableObject(new Identifier((String)value), true));
 				} catch (DatabaseException e) {
 					Log.errorMessage("NodeLinkWrapper.setValue | key '" + key + "' caught " + e.getMessage());
 				} catch (CommunicationException e) {
@@ -141,7 +141,7 @@ public class NodeLinkWrapper implements Wrapper {
 
 			else if (key.equals(COLUMN_START_NODE_ID))
 				try {
-					nodeLink.setStartNode0((AbstractNode) MapStorableObjectPool.getStorableObject(new Identifier((String)value), true));
+					nodeLink.setStartNode((AbstractNode) MapStorableObjectPool.getStorableObject(new Identifier((String)value), true));
 				} catch (DatabaseException e) {
 					Log.errorMessage("NodeLinkWrapper.setValue | key '" + key + "' caught " + e.getMessage());
 				} catch (CommunicationException e) {
@@ -149,21 +149,21 @@ public class NodeLinkWrapper implements Wrapper {
 				}
 			else if (key.equals(COLUMN_END_NODE_ID))
 				try {
-					nodeLink.setEndNode0((AbstractNode) MapStorableObjectPool.getStorableObject(new Identifier((String)value), true));
+					nodeLink.setEndNode((AbstractNode) MapStorableObjectPool.getStorableObject(new Identifier((String)value), true));
 				} catch (DatabaseException e) {
 					Log.errorMessage("NodeLinkWrapper.setValue | key '" + key + "' caught " + e.getMessage());
 				} catch (CommunicationException e) {
 					Log.errorMessage("NodeLinkWrapper.setValue | key '" + key + "' caught " + e.getMessage());
 				}
 			else if (key.equals(COLUMN_LENGTH))
-				nodeLink.setLength0(Double.parseDouble((String)value));
+				nodeLink.setLength(Double.parseDouble((String)value));
 			else if (key.equals(COLUMN_CHARACTERISTIC_ID)) {
 				List characteristicIdStr = (List)value;
 				List characteristicIds = new ArrayList(characteristicIdStr.size());
 				for (Iterator it = characteristicIdStr.iterator(); it.hasNext();) 
 					characteristicIds.add(new Identifier((String) it.next()));
 				try {
-					nodeLink.setCharacteristics0(GeneralStorableObjectPool.getStorableObjects(characteristicIds, true));
+					nodeLink.setCharacteristics(GeneralStorableObjectPool.getStorableObjects(characteristicIds, true));
 				} catch (DatabaseException e) {
 					Log.errorMessage("MarkWrapper.setValue | key '" + key + "' caught " + e.getMessage());
 				} catch (CommunicationException e) {

@@ -1,5 +1,5 @@
 /*
-* $Id: PhysicalLinkTypeWrapper.java,v 1.1 2005/01/25 14:58:41 bob Exp $
+* $Id: PhysicalLinkTypeWrapper.java,v 1.2 2005/01/27 06:23:59 bob Exp $
 *
 * Copyright © 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -24,7 +24,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/01/25 14:58:41 $
+ * @version $Revision: 1.2 $, $Date: 2005/01/27 06:23:59 $
  * @author $Author: bob $
  * @module map_v1
  */
@@ -132,22 +132,22 @@ public class PhysicalLinkTypeWrapper implements Wrapper {
 		if (object instanceof PhysicalLinkType) {
 			PhysicalLinkType physicalLinkType = (PhysicalLinkType) object;
 			if (key.equals(COLUMN_CODENAME))
-				physicalLinkType.setCodename0((String)value);			
+				physicalLinkType.setCodename((String)value);			
 			else if (key.equals(COLUMN_NAME))
-				physicalLinkType.setName0((String)value);
+				physicalLinkType.setName((String)value);
 			else if (key.equals(COLUMN_DESCRIPTION))
-				physicalLinkType.setDescription0((String)value);
+				physicalLinkType.setDescription((String)value);
 			else if (key.equals(COLUMN_DIMENSION_X))
-				physicalLinkType.setBindingDimension0(new IntDimension(Integer.parseInt((String)value), physicalLinkType.getBindingDimension().getHeight()));
+				physicalLinkType.setBindingDimension(new IntDimension(Integer.parseInt((String)value), physicalLinkType.getBindingDimension().getHeight()));
 			else if (key.equals(COLUMN_DIMENSION_Y))
-				physicalLinkType.setBindingDimension0(new IntDimension(physicalLinkType.getBindingDimension().getWidth(), Integer.parseInt((String)value)));
+				physicalLinkType.setBindingDimension(new IntDimension(physicalLinkType.getBindingDimension().getWidth(), Integer.parseInt((String)value)));
 			else if (key.equals(COLUMN_CHARACTERISTIC_ID)) {
 					List characteristicIdStr = (List)value;
 					List characteristicIds = new ArrayList(characteristicIdStr.size());
 					for (Iterator it = characteristicIdStr.iterator(); it.hasNext();) 
 						characteristicIds.add(new Identifier((String) it.next()));
 					try {
-						physicalLinkType.setCharacteristics0(GeneralStorableObjectPool.getStorableObjects(characteristicIds, true));
+						physicalLinkType.setCharacteristics(GeneralStorableObjectPool.getStorableObjects(characteristicIds, true));
 					} catch (DatabaseException e) {
 						Log.errorMessage("PhysicalLinkTypeWrapper.setValue | key '" + key + "' caught " + e.getMessage());
 					} catch (CommunicationException e) {

@@ -1,5 +1,5 @@
 /*
-* $Id: TopologicalNodeWrapper.java,v 1.1 2005/01/26 07:54:25 bob Exp $
+* $Id: TopologicalNodeWrapper.java,v 1.2 2005/01/27 06:23:59 bob Exp $
 *
 * Copyright © 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -24,7 +24,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/01/26 07:54:25 $
+ * @version $Revision: 1.2 $, $Date: 2005/01/27 06:23:59 $
  * @author $Author: bob $
  * @module map_v1
  */
@@ -139,13 +139,13 @@ public class TopologicalNodeWrapper implements Wrapper {
 		if (object instanceof TopologicalNode) {
 			TopologicalNode topologicalNode = (TopologicalNode) object;
 			if (key.equals(COLUMN_NAME))
-				topologicalNode.setName0((String) value);
+				topologicalNode.setName((String) value);
 			else if (key.equals(COLUMN_DESCRIPTION))
-				topologicalNode.setDescription0((String) value);
+				topologicalNode.setDescription((String) value);
 			else if (key.equals(COLUMN_LONGITUDE))
-				topologicalNode.setLongitude0(Double.parseDouble((String)value)); 
+				topologicalNode.setLongitude(Double.parseDouble((String)value)); 
 			else if (key.equals(COLUMN_LATIUDE))
-				topologicalNode.setLatitude0(Double.parseDouble((String)value));
+				topologicalNode.setLatitude(Double.parseDouble((String)value));
 			else if (key.equals(COLUMN_ACTIVE))
 				topologicalNode.setActive(Boolean.valueOf((String)value).booleanValue());
 			else if (key.equals(NodeLinkWrapper.COLUMN_PHYSICAL_LINK_ID))				
@@ -162,7 +162,7 @@ public class TopologicalNodeWrapper implements Wrapper {
 					for (Iterator it = characteristicIdStr.iterator(); it.hasNext();) 
 						characteristicIds.add(new Identifier((String) it.next()));
 					try {
-						topologicalNode.setCharacteristics0(GeneralStorableObjectPool.getStorableObjects(characteristicIds, true));
+						topologicalNode.setCharacteristics(GeneralStorableObjectPool.getStorableObjects(characteristicIds, true));
 					} catch (DatabaseException e) {
 						Log.errorMessage("TopologicalNodeWrapper.setValue | key '" + key + "' caught " + e.getMessage());
 					} catch (CommunicationException e) {

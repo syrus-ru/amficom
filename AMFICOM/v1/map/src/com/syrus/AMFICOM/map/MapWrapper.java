@@ -1,5 +1,5 @@
 /*
- * $Id: MapWrapper.java,v 1.1 2005/01/25 11:58:24 bob Exp $
+ * $Id: MapWrapper.java,v 1.2 2005/01/27 06:23:59 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,7 +22,7 @@ import com.syrus.AMFICOM.general.Wrapper;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/01/25 11:58:24 $
+ * @version $Revision: 1.2 $, $Date: 2005/01/27 06:23:59 $
  * @author $Author: bob $
  * @module map_v1
  */
@@ -152,15 +152,15 @@ public class MapWrapper implements Wrapper {
 		if (object instanceof Map) {
 			Map map = (Map) object;
 			if (key.equals(COLUMN_NAME))
-				map.setName0((String) value);
+				map.setName((String) value);
 			else if (key.equals(COLUMN_DESCRIPTION))
-				map.setDescription0((String) value);
+				map.setDescription((String) value);
 			else if (key.equals(COLUMN_DOMAIN_ID))
-				map.setDomainId0(new Identifier((String) value));
+				map.setDomainId(new Identifier((String) value));
 			else if (key.equals(LINK_COLUMN_COLLECTOR_ID))
 				try {
 					map
-							.setCollectors0(MapStorableObjectPool.getStorableObjects(castStringListToId((List) value),
+							.setCollectors(MapStorableObjectPool.getStorableObjects(castStringListToId((List) value),
 								true));
 				} catch (DatabaseException e) {
 					Log.errorMessage("MapWrapper.setValue | key '" + key + "' caught " + e.getMessage());
@@ -170,7 +170,7 @@ public class MapWrapper implements Wrapper {
 
 			else if (key.equals(LINK_COLUMN_MARK_ID))
 				try {
-					map.setMarks0(MapStorableObjectPool.getStorableObjects(castStringListToId((List) value), true));
+					map.setMarks(MapStorableObjectPool.getStorableObjects(castStringListToId((List) value), true));
 				} catch (DatabaseException e) {
 					Log.errorMessage("MapWrapper.setValue | key '" + key + "' caught " + e.getMessage());
 				} catch (CommunicationException e) {
@@ -178,7 +178,7 @@ public class MapWrapper implements Wrapper {
 				}
 			else if (key.equals(LINK_COLUMN_NODE_LINK_ID))
 				try {
-					map.setNodeLinks0(MapStorableObjectPool.getStorableObjects(castStringListToId((List) value), true));
+					map.setNodeLinks(MapStorableObjectPool.getStorableObjects(castStringListToId((List) value), true));
 				} catch (DatabaseException e) {
 					Log.errorMessage("MapWrapper.setValue | key '" + key + "' caught " + e.getMessage());
 				} catch (CommunicationException e) {
@@ -186,7 +186,7 @@ public class MapWrapper implements Wrapper {
 				}
 			else if (key.equals(LINK_COLUMN_PHYSICAL_LINK_ID))
 				try {
-					map.setPhysicalLinks0(MapStorableObjectPool.getStorableObjects(castStringListToId((List) value),
+					map.setPhysicalLinks(MapStorableObjectPool.getStorableObjects(castStringListToId((List) value),
 						true));
 				} catch (DatabaseException e) {
 					Log.errorMessage("MapWrapper.setValue | key '" + key + "' caught " + e.getMessage());
@@ -195,7 +195,7 @@ public class MapWrapper implements Wrapper {
 				}
 			else if (key.equals(LINK_COLUMN_SITE_NODE_ID))
 				try {
-					map.setSiteNodes0(MapStorableObjectPool.getStorableObjects(castStringListToId((List) value), true));
+					map.setSiteNodes(MapStorableObjectPool.getStorableObjects(castStringListToId((List) value), true));
 				} catch (DatabaseException e) {
 					Log.errorMessage("MapWrapper.setValue | key '" + key + "' caught " + e.getMessage());
 				} catch (CommunicationException e) {
@@ -203,7 +203,7 @@ public class MapWrapper implements Wrapper {
 				}
 			else if (key.equals(LINK_COLUMN_TOPOLOGICAL_NODE_ID))
 				try {
-					map.setTopologicalNodes0(MapStorableObjectPool.getStorableObjects(castStringListToId((List) value),
+					map.setTopologicalNodes(MapStorableObjectPool.getStorableObjects(castStringListToId((List) value),
 						true));
 				} catch (DatabaseException e) {
 					Log.errorMessage("MapWrapper.setValue | key '" + key + "' caught " + e.getMessage());

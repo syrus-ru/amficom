@@ -1,5 +1,5 @@
 /*
-* $Id: PhysicalLinkWrapper.java,v 1.1 2005/01/25 14:36:58 bob Exp $
+* $Id: PhysicalLinkWrapper.java,v 1.2 2005/01/27 06:23:59 bob Exp $
 *
 * Copyright © 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -24,7 +24,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/01/25 14:36:58 $
+ * @version $Revision: 1.2 $, $Date: 2005/01/27 06:23:59 $
  * @author $Author: bob $
  * @module map_v1
  */
@@ -153,26 +153,26 @@ public class PhysicalLinkWrapper implements Wrapper {
 		if (object instanceof PhysicalLink) {
 			PhysicalLink physicalLink = (PhysicalLink) object;
 			if (key.equals(COLUMN_NAME))
-				physicalLink.setName0((String) value);
+				physicalLink.setName((String) value);
 			else if (key.equals(COLUMN_DESCRIPTION))
-				physicalLink.setDescription0((String) value);
+				physicalLink.setDescription((String) value);
 			else if (key.equals(COLUMN_PHYSICAL_LINK_TYPE_ID))
 				try {
-					physicalLink.setPhysicalLinkType0((PhysicalLinkType) MapStorableObjectPool.getStorableObject(new Identifier((String)value), true));
+					physicalLink.setPhysicalLinkType((PhysicalLinkType) MapStorableObjectPool.getStorableObject(new Identifier((String)value), true));
 				} catch (DatabaseException e) {
 					Log.errorMessage("PhysicalLinkWrapper.setValue | key '" + key + "' caught " + e.getMessage());
 				} catch (CommunicationException e) {
 					Log.errorMessage("PhysicalLinkWrapper.setValue | key '" + key + "' caught " + e.getMessage());
 				}
 				else if (key.equals(COLUMN_CITY))
-					physicalLink.setCity0((String)value);
+					physicalLink.setCity((String)value);
 				else if (key.equals(COLUMN_STREET))
-					physicalLink.setStreet0((String)value);
+					physicalLink.setStreet((String)value);
 				else if (key.equals(COLUMN_BUILDING))
-					physicalLink.setBuilding0((String)value);
+					physicalLink.setBuilding((String)value);
 			else if (key.equals(COLUMN_START_NODE_ID))
 				try {
-					physicalLink.setStartNode0((AbstractNode) MapStorableObjectPool.getStorableObject(new Identifier((String)value), true));
+					physicalLink.setStartNode((AbstractNode) MapStorableObjectPool.getStorableObject(new Identifier((String)value), true));
 				} catch (DatabaseException e) {
 					Log.errorMessage("PhysicalLinkWrapper.setValue | key '" + key + "' caught " + e.getMessage());
 				} catch (CommunicationException e) {
@@ -180,7 +180,7 @@ public class PhysicalLinkWrapper implements Wrapper {
 				}
 			else if (key.equals(COLUMN_END_NODE_ID))
 				try {
-					physicalLink.setEndNode0((AbstractNode) MapStorableObjectPool.getStorableObject(new Identifier((String)value), true));
+					physicalLink.setEndNode((AbstractNode) MapStorableObjectPool.getStorableObject(new Identifier((String)value), true));
 				} catch (DatabaseException e) {
 					Log.errorMessage("PhysicalLinkWrapper.setValue | key '" + key + "' caught " + e.getMessage());
 				} catch (CommunicationException e) {
@@ -192,7 +192,7 @@ public class PhysicalLinkWrapper implements Wrapper {
 					for (Iterator it = characteristicIdStr.iterator(); it.hasNext();) 
 						characteristicIds.add(new Identifier((String) it.next()));
 					try {
-						physicalLink.setCharacteristics0(GeneralStorableObjectPool.getStorableObjects(characteristicIds, true));
+						physicalLink.setCharacteristics(GeneralStorableObjectPool.getStorableObjects(characteristicIds, true));
 					} catch (DatabaseException e) {
 						Log.errorMessage("PhysicalLinkWrapper.setValue | key '" + key + "' caught " + e.getMessage());
 					} catch (CommunicationException e) {

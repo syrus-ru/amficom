@@ -1,5 +1,5 @@
 /*
-* $Id: MarkWrapper.java,v 1.2 2005/01/25 14:35:59 bob Exp $
+* $Id: MarkWrapper.java,v 1.3 2005/01/27 06:23:59 bob Exp $
 *
 * Copyright © 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -24,7 +24,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/01/25 14:35:59 $
+ * @version $Revision: 1.3 $, $Date: 2005/01/27 06:23:59 $
  * @author $Author: bob $
  * @module map_v1
  */
@@ -147,36 +147,36 @@ public class MarkWrapper implements Wrapper {
 		if (object instanceof Mark) {
 			Mark mark = (Mark) object;
 			if (key.equals(COLUMN_NAME))
-				mark.setName0((String) value);
+				mark.setName((String) value);
 			else if (key.equals(COLUMN_DESCRIPTION))
-				mark.setDescription0((String) value);
+				mark.setDescription((String) value);
 			else if (key.equals(COLUMN_LONGITUDE))
-				mark.setLongitude0(Double.parseDouble((String)value)); 
+				mark.setLongitude(Double.parseDouble((String)value)); 
 			else if (key.equals(COLUMN_LATIUDE))
-				mark.setLatitude0(Double.parseDouble((String)value));
+				mark.setLatitude(Double.parseDouble((String)value));
 			else if (key.equals(COLUMN_PHYSICAL_LINK_ID))
 				try {
-					mark.setPhysicalLink0((PhysicalLink) MapStorableObjectPool.getStorableObject(new Identifier((String)value), true));
+					mark.setPhysicalLink((PhysicalLink) MapStorableObjectPool.getStorableObject(new Identifier((String)value), true));
 				} catch (DatabaseException e) {
 					Log.errorMessage("MarkWrapper.setValue | key '" + key + "' caught " + e.getMessage());
 				} catch (CommunicationException e) {
 					Log.errorMessage("MarkWrapper.setValue | key '" + key + "' caught " + e.getMessage());
 				}
 			else if (key.equals(COLUMN_DISTANCE))
-				mark.setDistance0(Double.parseDouble((String)value));
+				mark.setDistance(Double.parseDouble((String)value));
 			else if (key.equals(COLUMN_CITY))
-				mark.setCity0((String)value);
+				mark.setCity((String)value);
 			else if (key.equals(COLUMN_STREET))
-				mark.setStreet0((String)value);
+				mark.setStreet((String)value);
 			else if (key.equals(COLUMN_BUILDING))
-				mark.setBuilding0((String)value);
+				mark.setBuilding((String)value);
 			else if (key.equals(COLUMN_CHARACTERISTIC_ID)) {
 				List characteristicIdStr = (List)value;
 				List characteristicIds = new ArrayList(characteristicIdStr.size());
 				for (Iterator it = characteristicIdStr.iterator(); it.hasNext();) 
 					characteristicIds.add(new Identifier((String) it.next()));
 				try {
-					mark.setCharacteristics0(GeneralStorableObjectPool.getStorableObjects(characteristicIds, true));
+					mark.setCharacteristics(GeneralStorableObjectPool.getStorableObjects(characteristicIds, true));
 				} catch (DatabaseException e) {
 					Log.errorMessage("MarkWrapper.setValue | key '" + key + "' caught " + e.getMessage());
 				} catch (CommunicationException e) {
