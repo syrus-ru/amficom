@@ -228,7 +228,7 @@ public class ElementsPanel extends UgoPanel
 		if (proto != null)
 		{
 			SchemeProtoElement new_proto = (SchemeProtoElement) proto.clone();
-			insertCell(new_proto.schemeCellImpl().getData(), false, p);
+			insertCell(new_proto.getSchemeCell().getData(), false, p);
 		}
 	}
 

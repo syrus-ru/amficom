@@ -1,5 +1,5 @@
 /*
- * $Id: CableChannelingItem.java,v 1.3 2005/03/11 17:26:59 bass Exp $
+ * $Id: CableChannelingItem.java,v 1.4 2005/03/15 17:47:57 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,10 +16,10 @@ import java.util.*;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.3 $, $Date: 2005/03/11 17:26:59 $
+ * @version $Revision: 1.4 $, $Date: 2005/03/15 17:47:57 $
  * @module scheme_v1
  */
-public final class CableChannelingItem extends CloneableStorableObject implements
+public final class CableChannelingItem extends AbstractCloneableStorableObject implements
 		Namable, Describable, ComSyrusAmficomMapCableChannelingItem {
 
 	protected Identifier endSiteNodeId = null;
@@ -122,65 +122,9 @@ public final class CableChannelingItem extends CloneableStorableObject implement
 	}
 
 	/**
-	 * @see com.syrus.AMFICOM.general.StorableObject#getCreated()
-	 */
-	public Date getCreated() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @see com.syrus.AMFICOM.general.StorableObject#getCreatorId()
-	 */
-	public Identifier getCreatorId() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
 	 * @see com.syrus.AMFICOM.general.StorableObject#getDependencies()
 	 */
 	public List getDependencies() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @see com.syrus.AMFICOM.general.StorableObject#getHeaderTransferable()
-	 */
-	public StorableObject_Transferable getHeaderTransferable() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @see Identifiable#getId()
-	 */
-	public Identifier getId() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @see StorableObject#getModified()
-	 */
-	public Date getModified() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @see StorableObject#getModifierId()
-	 */
-	public Identifier getModifierId() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @see StorableObject#getVersion()
-	 */
-	public long getVersion() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @see StorableObject#isChanged()
-	 */
-	public boolean isChanged() {
 		throw new UnsupportedOperationException();
 	}
 

@@ -70,16 +70,12 @@ public class SchemeNewCommand extends VoidCommand
 
 		Scheme scheme = Scheme.createInstance();
 		scheme.name("Новая схема");
-		try {
-			Identifier domain_id = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).
-					getAccessIdentifier().domain_id);
-			Domain domain = (Domain)AdministrationStorableObjectPool.getStorableObject(
-					domain_id, true);
-			scheme.domainImpl(domain);
-		}
-		catch (ApplicationException ex) {
-			ex.printStackTrace();
-		}
+
+		final Identifier domainId = new Identifier(
+				((RISDSessionInfo) aContext
+						.getSessionInterface())
+						.getAccessIdentifier().domain_id);
+		scheme.setDomainId(domainId);
 
 		aContext.getDispatcher().notify(new SchemeElementsEvent(this, scheme,
 				SchemeElementsEvent.OPEN_PRIMARY_SCHEME_EVENT));

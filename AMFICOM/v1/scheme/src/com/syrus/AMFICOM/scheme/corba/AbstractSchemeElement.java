@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractSchemeElement.java,v 1.3 2005/03/11 17:26:58 bass Exp $
+ * $Id: AbstractSchemeElement.java,v 1.4 2005/03/15 17:47:57 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,10 +18,10 @@ import java.util.Date;
  * {@link AbstractSchemeElement}instead.
  * 
  * @author $Author: bass $
- * @version $Revision: 1.3 $, $Date: 2005/03/11 17:26:58 $
+ * @version $Revision: 1.4 $, $Date: 2005/03/15 17:47:57 $
  * @module scheme_v1
  */
-public abstract class AbstractSchemeElement extends CloneableStorableObject implements
+public abstract class AbstractSchemeElement extends AbstractCloneableStorableObject implements
 		Namable, Describable, Characterizable {
 	protected Identifier characteristicIds[] = null;
 

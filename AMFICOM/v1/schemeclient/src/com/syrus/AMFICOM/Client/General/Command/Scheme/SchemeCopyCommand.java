@@ -62,22 +62,18 @@ public class SchemeCopyCommand extends VoidCommand
 		}
 
 		scheme = (Scheme) scheme.clone();
-		scheme.ugoCellImpl().setData((List)ugo_graph.getArchiveableState(ugo_graph.getRoots()));
-		scheme.schemeCellImpl().setData((List)graph.getArchiveableState(graph.getRoots()));
+		scheme.getUgoCell().setData((List)ugo_graph.getArchiveableState(ugo_graph.getRoots()));
+		scheme.getSchemeCell().setData((List)graph.getArchiveableState(graph.getRoots()));
 
 		scheme.name(sd.name);
 		scheme.description(sd.description);
 //		scheme.created = System.currentTimeMillis();
-		try {
-			Identifier domain_id = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).
-					getAccessIdentifier().domain_id);
-			Domain domain = (Domain)AdministrationStorableObjectPool.getStorableObject(
-					domain_id, true);
-			scheme.domainImpl(domain);
-		}
-		catch (ApplicationException ex) {
-			ex.printStackTrace();
-		}
+
+		final Identifier domainId = new Identifier(
+				((RISDSessionInfo) aContext
+						.getSessionInterface())
+						.getAccessIdentifier().domain_id);
+		scheme.setDomainId(domainId);
 
 //		if (!res)
 //		{

@@ -307,8 +307,10 @@ public class CableLinkTypeFibrePanel extends GeneralPanel {
 					String name = tfNameText.getText();
 					if (name.equals("")) {
 						if (old_num > 0) {
-							CableThreadType ctt = (CableThreadType) clt.getCableThreadTypes()
-									.get(0);
+							CableThreadType ctt = (CableThreadType) clt
+									.getCableThreadTypes()
+									.iterator()
+									.next();
 							name = ctt.getName();
 						} else
 							name = "fiber";

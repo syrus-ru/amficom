@@ -110,11 +110,11 @@ public class SchemeProtoGroupsTreeModel extends ObjectResourceTreeModel
 					if (group.parentSchemeProtoGroup() == null)
 					{
 						ImageIcon icon;
-						if (group.symbol() == null)
+						if (group.getSymbol() == null)
 							icon = new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/folder.gif"));
 						else
 							icon = new ImageIcon(Toolkit.getDefaultToolkit().createImage(
-									group.symbolImpl().getImage()).getScaledInstance(16, 16, Image.SCALE_SMOOTH));
+									group.getSymbol().getImage()).getScaledInstance(16, 16, Image.SCALE_SMOOTH));
 						vec.add(new ObjectResourceTreeNode(group, group.name(), true, icon,
 								group.schemeProtoGroups().length == 0));
 					}
@@ -128,11 +128,11 @@ public class SchemeProtoGroupsTreeModel extends ObjectResourceTreeModel
 			{
 				SchemeProtoGroup group = parent_group.schemeProtoGroups()[i];
 				ImageIcon icon;
-				if (group.symbol() == null)
+				if (group.getSymbol() == null)
 					icon = new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/folder.gif"));
 				else
 					icon = new ImageIcon(Toolkit.getDefaultToolkit().createImage(
-							group.symbolImpl().getImage()).getScaledInstance(16, 16, Image.SCALE_SMOOTH));
+							group.getSymbol().getImage()).getScaledInstance(16, 16, Image.SCALE_SMOOTH));
 				vec.add(new ObjectResourceTreeNode(group, group.name(), true, icon,
 						group.schemeProtoGroups().length == 0));
 			}

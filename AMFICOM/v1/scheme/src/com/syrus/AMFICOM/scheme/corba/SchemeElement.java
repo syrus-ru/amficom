@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeElement.java,v 1.3 2005/03/11 17:26:58 bass Exp $
+ * $Id: SchemeElement.java,v 1.4 2005/03/15 17:47:57 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,12 +16,13 @@ import com.syrus.AMFICOM.map.*;
 import com.syrus.AMFICOM.map.corba.SiteNode_Transferable;
 import com.syrus.AMFICOM.resource.*;
 import com.syrus.AMFICOM.resource.corba.ImageResource_Transferable;
+import com.syrus.AMFICOM.scheme.SchemeCellContainer;
 import com.syrus.util.Log;
 import java.util.*;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.3 $, $Date: 2005/03/11 17:26:58 $
+ * @version $Revision: 1.4 $, $Date: 2005/03/15 17:47:57 $
  * @module scheme_v1
  */
 public final class SchemeElement extends AbstractSchemeElement implements
@@ -197,47 +198,10 @@ public final class SchemeElement extends AbstractSchemeElement implements
 		throw new UnsupportedOperationException();
 	}
 
-	public Date getCreated() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @see StorableObject#getCreatorId()
-	 */
-	public Identifier getCreatorId() {
-		throw new UnsupportedOperationException();
-	}
-
 	/**
 	 * @see StorableObject#getDependencies()
 	 */
 	public List getDependencies() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @see StorableObject#getHeaderTransferable()
-	 */
-	public StorableObject_Transferable getHeaderTransferable() {
-		throw new UnsupportedOperationException();
-	}
-
-	public Identifier getId() {
-		throw new UnsupportedOperationException();
-	}
-
-	public Date getModified() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @see StorableObject#getModifierId()
-	 */
-	public Identifier getModifierId() {
-		throw new UnsupportedOperationException();
-	}
-
-	public long getVersion() {
 		throw new UnsupportedOperationException();
 	}
 
@@ -246,13 +210,6 @@ public final class SchemeElement extends AbstractSchemeElement implements
 	}
 
 	public void internalScheme(Scheme internalScheme) {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @see StorableObject#isChanged()
-	 */
-	public boolean isChanged() {
 		throw new UnsupportedOperationException();
 	}
 
@@ -318,31 +275,18 @@ public final class SchemeElement extends AbstractSchemeElement implements
 		throw new UnsupportedOperationException();
 	}
 
-	public ImageResource_Transferable schemeCell() {
-		throw new UnsupportedOperationException();
-	}
-
 	/**
-	 * @param newSchemeCell
-	 * @see com.syrus.AMFICOM.resource.SchemeCellContainer#schemeCell(com.syrus.AMFICOM.resource.corba.ImageResource_Transferable)
+	 * @see com.syrus.AMFICOM.scheme.SchemeCellContainer#getSchemeCell()
 	 */
-	public void schemeCell(
-			com.syrus.AMFICOM.resource.corba.ImageResource_Transferable newSchemeCell) {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @see com.syrus.AMFICOM.resource.SchemeCellContainer#schemeCellImpl()
-	 */
-	public SchemeImageResource schemeCellImpl() {
+	public SchemeImageResource getSchemeCell() {
 		throw new UnsupportedOperationException();
 	}
 
 	/**
 	 * @param schemeCellImpl
-	 * @see com.syrus.AMFICOM.resource.SchemeCellContainer#schemeCellImpl(SchemeImageResource)
+	 * @see com.syrus.AMFICOM.scheme.SchemeCellContainer#setSchemeCell(SchemeImageResource)
 	 */
-	public void schemeCellImpl(SchemeImageResource schemeCellImpl) {
+	public void setSchemeCell(SchemeImageResource schemeCellImpl) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -428,54 +372,33 @@ public final class SchemeElement extends AbstractSchemeElement implements
 		throw new UnsupportedOperationException();
 	}
 
-	public ImageResource_Transferable symbol() {
-		throw new UnsupportedOperationException();
-	}
-
-	public void symbol(ImageResource_Transferable symbol) {
-		throw new UnsupportedOperationException();
-	}
-
 	/**
-	 * @see com.syrus.AMFICOM.resource.SchemeSymbolContainer#symbolImpl()
+	 * @see com.syrus.AMFICOM.scheme.SchemeSymbolContainer#getSymbol()
 	 */
-	public BitmapImageResource symbolImpl() {
+	public BitmapImageResource getSymbol() {
 		throw new UnsupportedOperationException();
 	}
 
 	/**
 	 * @param symbolImpl
-	 * @see com.syrus.AMFICOM.resource.SchemeSymbolContainer#symbolImpl(BitmapImageResource)
+	 * @see com.syrus.AMFICOM.scheme.SchemeSymbolContainer#setSymbol(BitmapImageResource)
 	 */
-	public void symbolImpl(BitmapImageResource symbolImpl) {
-		throw new UnsupportedOperationException();
-	}
-
-	public ImageResource_Transferable ugoCell() {
+	public void setSymbol(BitmapImageResource symbolImpl) {
 		throw new UnsupportedOperationException();
 	}
 
 	/**
-	 * @param newUgoCell
-	 * @see com.syrus.AMFICOM.resource.SchemeCellContainer#ugoCell(com.syrus.AMFICOM.resource.corba.ImageResource_Transferable)
+	 * @see com.syrus.AMFICOM.scheme.SchemeCellContainer#getUgoCell()
 	 */
-	public void ugoCell(
-			com.syrus.AMFICOM.resource.corba.ImageResource_Transferable newUgoCell) {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @see com.syrus.AMFICOM.resource.SchemeCellContainer#ugoCellImpl()
-	 */
-	public SchemeImageResource ugoCellImpl() {
+	public SchemeImageResource getUgoCell() {
 		throw new UnsupportedOperationException();
 	}
 
 	/**
 	 * @param ugoCellImpl
-	 * @see com.syrus.AMFICOM.resource.SchemeCellContainer#ugoCellImpl(SchemeImageResource)
+	 * @see com.syrus.AMFICOM.scheme.SchemeCellContainer#setUgoCell(SchemeImageResource)
 	 */
-	public void ugoCellImpl(final SchemeImageResource ugoCellImpl) {
+	public void setUgoCell(final SchemeImageResource ugoCellImpl) {
 		throw new UnsupportedOperationException();
 	}
 

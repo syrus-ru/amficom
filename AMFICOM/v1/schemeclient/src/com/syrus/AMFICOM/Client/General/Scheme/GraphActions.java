@@ -983,7 +983,7 @@ public class GraphActions
 
 			if (!group.getSchemeElementId().equals(""))
 			{
-				List v = se.ugoCellImpl().getData();
+				List v = se.getUgoCell().getData();
 				if (se.schemeElements().length != 0 ||
 						(v != null && v.size() != 0 && ((Object[])v.get(0)).length != 0))
 						{

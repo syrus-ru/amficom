@@ -475,10 +475,10 @@ public class SchemeTreeModel implements TreeDataModel
 				{
 					SchemeProtoGroup map_group = parent_group.schemeProtoGroups()[i];
 					ImageIcon icon;
-					if (map_group.symbol() == null)
+					if (map_group.getSymbol() == null)
 						icon = new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/folder.gif"));
 					else
-						icon = new ImageIcon(Toolkit.getDefaultToolkit().createImage(map_group.symbolImpl().getImage())
+						icon = new ImageIcon(Toolkit.getDefaultToolkit().createImage(map_group.getSymbol().getImage())
 																 .getScaledInstance(16, 16, Image.SCALE_SMOOTH));
 
 					vec.add(new StorableObjectTreeNode(map_group, map_group.name(), icon,

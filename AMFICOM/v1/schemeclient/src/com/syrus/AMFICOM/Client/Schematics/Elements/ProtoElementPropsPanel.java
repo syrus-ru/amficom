@@ -249,9 +249,9 @@ public class ProtoElementPropsPanel extends JPanel
 		manufacturerTextField.setCaretPosition(0);
 		ugoNameTextField.setCaretPosition(0);
 
-		if (proto.symbol() != null)
+		if (proto.getSymbol() != null)
 		{
-			BitmapImageResource ir = proto.symbolImpl();
+			BitmapImageResource ir = proto.getSymbol();
 
 			ImageIcon icon = null;
 			if (ir != null)
@@ -321,8 +321,8 @@ public class ProtoElementPropsPanel extends JPanel
 	void ugoIconButton_actionPerformed()
 	{
 		ImagesDialog frame = new ImagesDialog(aContext);
-		if (proto.symbol() != null)
-			frame.setImageResource(proto.symbolImpl());
+		if (proto.getSymbol() != null)
+			frame.setImageResource(proto.getSymbol());
 
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		Dimension frameSize = frame.getSize();
@@ -342,7 +342,7 @@ public class ProtoElementPropsPanel extends JPanel
 			if (icon.getIconWidth() > 20 || icon.getIconHeight() > 20)
 				icon = new ImageIcon (icon.getImage().getScaledInstance(20,	20,	Image.SCALE_SMOOTH));
 			ugoIconButton.setIcon(icon);
-			proto.symbolImpl(ir);
+			proto.setSymbol(ir);
 
 			aContext.getDispatcher().notify(new SchemeElementsEvent(proto.getId(), icon, SchemeElementsEvent.UGO_ICON_UPDATE_EVENT));
 		}

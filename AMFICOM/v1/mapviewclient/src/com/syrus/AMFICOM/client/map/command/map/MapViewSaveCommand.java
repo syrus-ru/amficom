@@ -1,5 +1,5 @@
 /*
- * $Id: MapViewSaveCommand.java,v 1.15 2005/02/25 13:49:16 krupenn Exp $
+ * $Id: MapViewSaveCommand.java,v 1.16 2005/03/15 17:48:43 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -35,8 +35,8 @@ import com.syrus.AMFICOM.scheme.corba.Scheme;
 
 /**
  * Класс используется для сохранения топологической схемы на сервере
- * @author $Author: krupenn $
- * @version $Revision: 1.15 $, $Date: 2005/02/25 13:49:16 $
+ * @author $Author: bass $
+ * @version $Revision: 1.16 $, $Date: 2005/03/15 17:48:43 $
  * @module mapviewclietn_v1
  */
 public class MapViewSaveCommand extends VoidCommand
@@ -88,7 +88,7 @@ public class MapViewSaveCommand extends VoidCommand
 			for(Iterator it = this.mapView.getSchemes().iterator(); it.hasNext();)
 			{
 				Scheme scheme = (Scheme )it.next();
-				scheme.mapImpl(this.mapView.getMap());
+				scheme.setMap(this.mapView.getMap());
 				try
 				{
 					SchemeStorableObjectPool.flush(true);// save scheme

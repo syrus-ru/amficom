@@ -1,5 +1,5 @@
 /*
- * $Id: Scheme.java,v 1.3 2005/03/11 17:26:58 bass Exp $
+ * $Id: Scheme.java,v 1.4 2005/03/15 17:47:57 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,34 +8,27 @@
 
 package com.syrus.AMFICOM.scheme.corba;
 
-import com.syrus.AMFICOM.administration.*;
-import com.syrus.AMFICOM.administration.corba.Domain_Transferable;
+import com.syrus.AMFICOM.administration.AbstractCloneableDomainMember;
 import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.general.corba.*;
-import com.syrus.AMFICOM.map.*;
 import com.syrus.AMFICOM.map.Map;
-import com.syrus.AMFICOM.map.corba.Map_Transferable;
 import com.syrus.AMFICOM.resource.*;
-import com.syrus.AMFICOM.resource.corba.ImageResource_Transferable;
+import com.syrus.AMFICOM.scheme.SchemeCellContainer;
 import com.syrus.AMFICOM.scheme.corba.SchemePackage.Type;
-import com.syrus.util.Log;
 import java.util.*;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.3 $, $Date: 2005/03/11 17:26:58 $
+ * @version $Revision: 1.4 $, $Date: 2005/03/15 17:47:57 $
  * @module scheme_v1
  */
-public final class Scheme extends CloneableStorableObject implements Namable,
-		Describable, SchemeCellContainer,
-		ComSyrusAmficomAdministrationScheme, ComSyrusAmficomMapScheme {
-
-	/**
-	 * Value is assigned automatically.
-	 */
-	protected Identifier domainId = null;
+public final class Scheme extends AbstractCloneableDomainMember implements Namable,
+		Describable, SchemeCellContainer {
+	protected String description = null;
 
 	protected Identifier mapId = null;
+
+	protected String name = null;
 
 	protected Identifier schemeCableLinkIds[] = null;
 
@@ -52,13 +45,9 @@ public final class Scheme extends CloneableStorableObject implements Namable,
 
 	protected Identifier symbolId = null;
 
-	protected String thisDescription = null;
-
 	protected int thisHeight = 0;
 
 	protected String thisLabel = null;
-
-	protected String thisName = null;
 
 	protected Type thisType = null;
 
@@ -69,14 +58,54 @@ public final class Scheme extends CloneableStorableObject implements Namable,
 	 */
 	protected Identifier ugoCellId = null;
 
-	Scheme(Identifier id) {
+	Scheme(final Identifier id) {
 		super(id);
 	}
 
-	Scheme(final Identifier id, final Date created,
-			final Date modified, final Identifier creatorId,
-			final Identifier modifierId, final long version) {
-		super(id, created, modified, creatorId, modifierId, version);
+	/**
+	 * @param description can be null.
+	 */
+	Scheme(final Identifier id, final Date created, final Date modified,
+			final Identifier creatorId,
+			final Identifier modifierId, final long version,
+			final Identifier domainId, final String name,
+			final String description) {
+		super(id, created, modified, creatorId, modifierId, version,
+				domainId);
+		assert name != null;
+		this.name = name;
+		this.description = description;
+	}
+
+	/**
+	 * @deprecated Use {@link #createInstance(Identifier, Identifier, String, String)}
+	 *             instead.
+	 */
+	public static Scheme createInstance() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @param description can be null.
+	 */
+	public static Scheme createInstance(final Identifier creatorId,
+			final Identifier domainId,
+			final String name,
+			final String description)
+			throws CreateObjectException {
+		try {
+			final Date created = new Date();
+			final Scheme scheme = new Scheme(
+					IdentifierPool
+							.getGeneratedIdentifier(ObjectEntities.SCHEME_ENTITY_CODE),
+					created, created, creatorId, creatorId,
+					0L, domainId, name, description);
+			scheme.changed = true;
+			return scheme;
+		} catch (final IllegalObjectEntityException ioee) {
+			throw new CreateObjectException(
+					"Scheme.createInstance | cannot generate identifier ", ioee); //$NON-NLS-1$
+		}
 	}
 
 	public Object clone() {
@@ -96,76 +125,41 @@ public final class Scheme extends CloneableStorableObject implements Namable,
 	}
 
 	/**
-	 * @see com.syrus.AMFICOM.administration.ComSyrusAmficomAdministrationScheme#domain()
-	 */
-	public Domain_Transferable domain() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @param newDomain
-	 * @see com.syrus.AMFICOM.administration.ComSyrusAmficomAdministrationScheme#domain(com.syrus.AMFICOM.administration.corba.Domain_Transferable)
-	 */
-	public void domain(Domain_Transferable newDomain) {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @see com.syrus.AMFICOM.administration.ComSyrusAmficomAdministrationScheme#domainImpl()
-	 */
-	public Domain domainImpl() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @param newDomainImpl
-	 * @see com.syrus.AMFICOM.administration.ComSyrusAmficomAdministrationScheme#domainImpl(com.syrus.AMFICOM.administration.Domain)
-	 */
-	public void domainImpl(Domain newDomainImpl) {
-		throw new UnsupportedOperationException();
-	}
-
-	public Date getCreated() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @see StorableObject#getCreatorId()
-	 */
-	public Identifier getCreatorId() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
 	 * @see StorableObject#getDependencies()
 	 */
 	public List getDependencies() {
 		throw new UnsupportedOperationException();
 	}
 
-	/**
-	 * @see StorableObject#getHeaderTransferable()
-	 */
-	public StorableObject_Transferable getHeaderTransferable() {
-		throw new UnsupportedOperationException();
-	}
-
-	public Identifier getId() {
-		throw new UnsupportedOperationException();
-	}
-
-	public Date getModified() {
+	public Map getMap() {
 		throw new UnsupportedOperationException();
 	}
 
 	/**
-	 * @see StorableObject#getModifierId()
+	 * @see com.syrus.AMFICOM.scheme.SchemeCellContainer#getSchemeCell()
 	 */
-	public Identifier getModifierId() {
+	public SchemeImageResource getSchemeCell() {
 		throw new UnsupportedOperationException();
 	}
 
-	public long getVersion() {
+	/**
+	 * @see com.syrus.AMFICOM.scheme.SchemeSymbolContainer#getSymbol()
+	 */
+	public BitmapImageResource getSymbol() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @see com.syrus.AMFICOM.general.TransferableObject#getTransferable()
+	 */
+	public Object getTransferable() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @see com.syrus.AMFICOM.scheme.SchemeCellContainer#getUgoCell()
+	 */
+	public SchemeImageResource getUgoCell() {
 		throw new UnsupportedOperationException();
 	}
 
@@ -177,48 +171,11 @@ public final class Scheme extends CloneableStorableObject implements Namable,
 		throw new UnsupportedOperationException();
 	}
 
-	/**
-	 * @see StorableObject#isChanged()
-	 */
-	public boolean isChanged() {
-		throw new UnsupportedOperationException();
-	}
-
 	public String label() {
 		throw new UnsupportedOperationException();
 	}
 
 	public void label(String label) {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @see com.syrus.AMFICOM.map.ComSyrusAmficomMapScheme#map()
-	 */
-	public Map_Transferable map() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @param map
-	 * @see com.syrus.AMFICOM.map.ComSyrusAmficomMapScheme#map(Map_Transferable)
-	 */
-	public void map(final Map_Transferable map) {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @see com.syrus.AMFICOM.map.ComSyrusAmficomMapScheme#mapImpl()
-	 */
-	public Map mapImpl() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @param map
-	 * @see com.syrus.AMFICOM.map.ComSyrusAmficomMapScheme#mapImpl(Map)
-	 */
-	public void mapImpl(final Map map) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -235,34 +192,6 @@ public final class Scheme extends CloneableStorableObject implements Namable,
 	}
 
 	public void schemeCableLinks(SchemeCableLink[] schemeCableLinks) {
-		throw new UnsupportedOperationException();
-	}
-
-	public ImageResource_Transferable schemeCell() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @param newSchemeCell
-	 * @see com.syrus.AMFICOM.resource.SchemeCellContainer#schemeCell(com.syrus.AMFICOM.resource.corba.ImageResource_Transferable)
-	 */
-	public void schemeCell(
-			com.syrus.AMFICOM.resource.corba.ImageResource_Transferable newSchemeCell) {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @see com.syrus.AMFICOM.resource.SchemeCellContainer#schemeCellImpl()
-	 */
-	public SchemeImageResource schemeCellImpl() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @param schemeCellImpl
-	 * @see com.syrus.AMFICOM.resource.SchemeCellContainer#schemeCellImpl(SchemeImageResource)
-	 */
-	public void schemeCellImpl(SchemeImageResource schemeCellImpl) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -291,26 +220,31 @@ public final class Scheme extends CloneableStorableObject implements Namable,
 		throw new UnsupportedOperationException();
 	}
 
-	public ImageResource_Transferable symbol() {
-		throw new UnsupportedOperationException();
-	}
-
-	public void symbol(ImageResource_Transferable symbol) {
+	public void setMap(final Map map) {
 		throw new UnsupportedOperationException();
 	}
 
 	/**
-	 * @see com.syrus.AMFICOM.resource.SchemeSymbolContainer#symbolImpl()
+	 * @param schemeCellImpl
+	 * @see com.syrus.AMFICOM.scheme.SchemeCellContainer#setSchemeCell(SchemeImageResource)
 	 */
-	public BitmapImageResource symbolImpl() {
+	public void setSchemeCell(SchemeImageResource schemeCellImpl) {
 		throw new UnsupportedOperationException();
 	}
 
 	/**
 	 * @param symbolImpl
-	 * @see com.syrus.AMFICOM.resource.SchemeSymbolContainer#symbolImpl(BitmapImageResource)
+	 * @see com.syrus.AMFICOM.scheme.SchemeSymbolContainer#setSymbol(BitmapImageResource)
 	 */
-	public void symbolImpl(BitmapImageResource symbolImpl) {
+	public void setSymbol(BitmapImageResource symbolImpl) {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @param ugoCellImpl
+	 * @see com.syrus.AMFICOM.scheme.SchemeCellContainer#setUgoCell(SchemeImageResource)
+	 */
+	public void setUgoCell(SchemeImageResource ugoCellImpl) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -326,34 +260,6 @@ public final class Scheme extends CloneableStorableObject implements Namable,
 		throw new UnsupportedOperationException();
 	}
 
-	public ImageResource_Transferable ugoCell() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @param newUgoCell
-	 * @see com.syrus.AMFICOM.resource.SchemeCellContainer#ugoCell(com.syrus.AMFICOM.resource.corba.ImageResource_Transferable)
-	 */
-	public void ugoCell(
-			com.syrus.AMFICOM.resource.corba.ImageResource_Transferable newUgoCell) {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @see com.syrus.AMFICOM.resource.SchemeCellContainer#ugoCellImpl()
-	 */
-	public SchemeImageResource ugoCellImpl() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @param ugoCellImpl
-	 * @see com.syrus.AMFICOM.resource.SchemeCellContainer#ugoCellImpl(SchemeImageResource)
-	 */
-	public void ugoCellImpl(SchemeImageResource ugoCellImpl) {
-		throw new UnsupportedOperationException();
-	}
-
 	public int width() {
 		throw new UnsupportedOperationException();
 	}
@@ -363,34 +269,19 @@ public final class Scheme extends CloneableStorableObject implements Namable,
 	}
 
 	/**
-	 * @see com.syrus.AMFICOM.general.TransferableObject#getTransferable()
+	 * @param description can be null.
 	 */
-	public Object getTransferable() {
-		throw new UnsupportedOperationException();
-	}
-
-	public static Scheme createInstance(final Identifier creatorId)
-			throws CreateObjectException {
-		assert creatorId != null;
-		try {
-			final Date created = new Date();
-			final Scheme scheme = new Scheme(
-					IdentifierPool
-							.getGeneratedIdentifier(ObjectEntities.SCHEME_ENTITY_CODE),
-					created, created, creatorId, creatorId,
-					0L);
-			scheme.changed = true;
-			return scheme;
-		} catch (final IllegalObjectEntityException ioee) {
-			throw new CreateObjectException(
-					"Scheme.createInstance | cannot generate identifier ", ioee); //$NON-NLS-1$
-		}
-	}
-
-	/**
-	 * @deprecated Use {@link #createInstance(Identifier)}instead.
-	 */
-	public static Scheme createInstance() {
-		throw new UnsupportedOperationException();
+	protected synchronized void setAttributes(final Date created,
+			  final Date modified,
+			  final Identifier creatorId,
+			  final Identifier modifierId,
+			  final long version,
+			  final Identifier domainId,
+			  final String name,
+			  final String description) {
+		assert name != null;
+		super.setAttributes(created, modified, creatorId, modifierId, version, domainId);
+		this.name = name;
+		this.description = description;
 	}
 }

@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeTreeModel.java,v 1.2 2005/03/14 13:37:39 stas Exp $
+ * $Id: SchemeTreeModel.java,v 1.3 2005/03/15 17:49:10 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,8 +9,8 @@
 package com.syrus.AMFICOM.client_.scheme.ui;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.2 $, $Date: 2005/03/14 13:37:39 $
+ * @author $Author: bass $
+ * @version $Revision: 1.3 $, $Date: 2005/03/15 17:49:10 $
  * @module schemeclient_v1
  */
 
@@ -460,10 +460,10 @@ public class SchemeTreeModel implements SOTreeDataModel
 				{
 					SchemeProtoGroup map_group = parent_group.schemeProtoGroups()[i];
 					ImageIcon icon;
-					if (map_group.symbol() == null)
+					if (map_group.getSymbol() == null)
 						icon = new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/folder.gif"));
 					else
-						icon = new ImageIcon(Toolkit.getDefaultToolkit().createImage(map_group.symbolImpl().getImage())
+						icon = new ImageIcon(Toolkit.getDefaultToolkit().createImage(map_group.getSymbol().getImage())
 																 .getScaledInstance(16, 16, Image.SCALE_SMOOTH));
 
 					vec.add(new SOMutableNode(this, map_group, map_group.schemeProtoGroups().length != 0 || map_group.schemeProtoElements().length != 0));

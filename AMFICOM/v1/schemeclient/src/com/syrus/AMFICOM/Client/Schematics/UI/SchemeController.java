@@ -7,6 +7,7 @@ import com.syrus.AMFICOM.Client.General.Lang.LangModelSchematics;
 import com.syrus.AMFICOM.administration.*;
 import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
 import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
+import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.scheme.corba.Scheme;
 
@@ -64,7 +65,19 @@ public final class SchemeController implements ObjectResourceController
 			result = sc.name();
 		}
 		else if (key.equals(KEY_DOMAIN)) {
-			result = sc.domainImpl().getName();
+			try
+			{
+				result = ((Domain) (AdministrationStorableObjectPool
+						.getStorableObject(sc
+								.getDomainId(),
+								true)))
+						.getName();
+			}
+			catch (final ApplicationException ae)
+			{
+				ae.printStackTrace();
+				result = null;
+			}
 		}
 		else if (key.equals(KEY_USER)) {
 			try {

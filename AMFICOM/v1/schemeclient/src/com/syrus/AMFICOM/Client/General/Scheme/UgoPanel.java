@@ -426,7 +426,7 @@ public class UgoPanel extends JPanel
 	{
 		Scheme scheme = getGraph().getScheme();
 		if (scheme != null)
-			scheme.ugoCellImpl().setData((List)getGraph().getArchiveableState(getGraph().getRoots()));
+			scheme.getUgoCell().setData((List)getGraph().getArchiveableState(getGraph().getRoots()));
 		return scheme;
 	}
 
@@ -434,7 +434,7 @@ public class UgoPanel extends JPanel
 	{
 		SchemeElement scheme_element = getGraph().getSchemeElement();
 		if (scheme_element != null)
-			scheme_element.schemeCellImpl().setData((List)getGraph().getArchiveableState(getGraph().getRoots()));
+			scheme_element.getSchemeCell().setData((List)getGraph().getArchiveableState(getGraph().getRoots()));
 		return scheme_element;
 	}
 

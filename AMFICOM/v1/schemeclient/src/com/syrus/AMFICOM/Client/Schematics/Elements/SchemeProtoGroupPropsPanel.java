@@ -127,10 +127,10 @@ public class SchemeProtoGroupPropsPanel extends JPanel
 //		isKisCheckBox.setSelected(scheme_proto.is_visual);
 
 		ImageIcon icon;
-		if (scheme_proto.symbol() == null)
+		if (scheme_proto.getSymbol() == null)
 			icon = new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/folder.gif"));
 		else
-			icon = new ImageIcon(Toolkit.getDefaultToolkit().createImage(scheme_proto.symbolImpl().
+			icon = new ImageIcon(Toolkit.getDefaultToolkit().createImage(scheme_proto.getSymbol().
 					getImage()).getScaledInstance(50, 50, Image.SCALE_SMOOTH));
 
 		imageButton.setIcon(icon);
@@ -177,7 +177,7 @@ public class SchemeProtoGroupPropsPanel extends JPanel
 
 		scheme_proto.name(mapProtoNameTextField.getText());
 		scheme_proto.description(groupDescrTextArea.getText());
-		scheme_proto.symbolImpl(image);
+		scheme_proto.setSymbol(image);
 	}
 }
 

@@ -92,7 +92,7 @@ class CableLayoutReportTableModel extends DividableTableModel
 					report.getName(),
 					CreateReportException.poolObjNotExists);
 
-		Map map = scheme.mapImpl();
+		Map map = scheme.getMap();
 		if(map == null)
 			throw new CreateReportException(
 					report.getName(),

@@ -114,7 +114,7 @@ class DeleteAction extends AbstractAction
 								"Вы действительно хотите удалить условное графическое обозначение схемы?", "Подтверждение", JOptionPane.YES_NO_CANCEL_OPTION);
 						if (ret == JOptionPane.CANCEL_OPTION || ret == JOptionPane.NO_OPTION)
 							return;
-						panel.getGraph().getScheme().ugoCell(null);
+						panel.getGraph().getScheme().setUgoCell(null);
 					}
 					new_cells.add(cells[i]);
 				}
@@ -481,7 +481,7 @@ class GroupSEAction extends AbstractAction
 			graph.getGraphLayoutCache().insert(new Object[] { group }, viewMap, null, map, null);
 			graph.setSelectionCell(group);
 
-			scheme_el.schemeCellImpl().setData((List)graph.getArchiveableState(new Object[]{group}));
+			scheme_el.getSchemeCell().setData((List)graph.getArchiveableState(new Object[]{group}));
 		}
 	}
 }
@@ -617,7 +617,7 @@ class GroupAction extends AbstractAction
 			graph.getGraphLayoutCache().insert(new Object[] { group }, viewMap, null, map, null);
 			graph.setSelectionCell(group);
 
-			proto.schemeCellImpl().setData((List)graph.getArchiveableState(new Object[]{group}));
+			proto.getSchemeCell().setData((List)graph.getArchiveableState(new Object[]{group}));
 		}
 	}
 }
@@ -950,7 +950,7 @@ class CreateUgoAction
 			if (old_proto != null)
 			{
 				proto.setCharacteristics(old_proto.getCharacteristics());
-				proto.symbol(old_proto.symbol());
+				proto.setSymbol(old_proto.getSymbol());
 				proto.label(old_proto.label());
 //				proto.scheme_proto_group = old_proto.scheme_proto_group;
 				proto.name(old_proto.name());
@@ -1056,7 +1056,7 @@ class CreateUgoAction
 				{
 //					((DeviceCell)child).getSchemeDevice().schemePorts() = new ArrayList();
 //					((DeviceCell)child).getSchemeDevice().cableports = new ArrayList();
-					if (proto.symbol() != null)
+					if (proto.getSymbol() != null)
 					for (Enumeration en = old_dev.children(); en.hasMoreElements();)
 					{
 						Object ch = en.nextElement();
@@ -1078,7 +1078,7 @@ class CreateUgoAction
 		if (proto.devices().length == 0)
 			proto.devices(cloned_proto.devices());
 		group.setProtoElementId(proto.getId());
-		proto.ugoCellImpl().setData((List)graph.getArchiveableState(cells));
+		proto.getUgoCell().setData((List)graph.getArchiveableState(cells));
 		graph.setSelectionCells(new Object[0]);
 		//Notifier.selectionNotify(graph.dispatcher, cells, true);
 	}
@@ -1316,19 +1316,19 @@ class CreateSchemeUgoAction
 			}
 		}
 
-		scheme.ugoCellImpl().setData(createSchemeUgo());
+		scheme.getUgoCell().setData(createSchemeUgo());
 
 		Object[] cells = graph.getRoots();
 		DeviceGroup group = (DeviceGroup)cells[0];
 		group.setSchemeId(scheme.getId());
-		if (scheme.symbol() != null)
+		if (scheme.getSymbol() != null)
 		{
 			for (Enumeration en = group.children(); en.hasMoreElements();)
 			{
 				Object child = en.nextElement();
 				if (child instanceof DeviceCell)
 				{
-					BitmapImageResource ir = scheme.symbolImpl();
+					BitmapImageResource ir = scheme.getSymbol();
 					if (ir != null)
 					{
 						ImageIcon icon = new ImageIcon(ir.getImage());
@@ -1588,7 +1588,7 @@ class HierarchyUpAction extends AbstractAction
 			{
 				graph.setSelectionCells(new Object[0]);
 				graph.getModel().remove(graph.getDescendants(graph.getAll()));
-				cells = graph.setFromArchivedState(proto.schemeCellImpl().getData());
+				cells = graph.setFromArchivedState(proto.getSchemeCell().getData());
 			//proto.extended_state = true;
 			}
 		}

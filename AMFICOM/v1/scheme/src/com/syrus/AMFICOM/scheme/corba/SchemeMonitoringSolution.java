@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeMonitoringSolution.java,v 1.3 2005/03/11 17:26:58 bass Exp $
+ * $Id: SchemeMonitoringSolution.java,v 1.4 2005/03/15 17:47:57 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,10 +14,10 @@ import java.util.*;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.3 $, $Date: 2005/03/11 17:26:58 $
+ * @version $Revision: 1.4 $, $Date: 2005/03/15 17:47:57 $
  * @module scheme_v1
  */
-public final class SchemeMonitoringSolution extends CloneableStorableObject implements
+public final class SchemeMonitoringSolution extends AbstractCloneableStorableObject implements
 		Namable, Describable {
 
 	protected Identifier schemeId = null;
@@ -59,54 +59,10 @@ public final class SchemeMonitoringSolution extends CloneableStorableObject impl
 		throw new UnsupportedOperationException();
 	}
 
-	public Date getCreated() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @see Object#getCreatorId()
-	 */
-	public Identifier getCreatorId() {
-		throw new UnsupportedOperationException();
-	}
-
 	/**
 	 * @see StorableObject#getDependencies()
 	 */
 	public List getDependencies() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @see StorableObject#getHeaderTransferable()
-	 */
-	public StorableObject_Transferable getHeaderTransferable() {
-		throw new UnsupportedOperationException();
-	}
-
-	public Identifier getId() {
-		throw new UnsupportedOperationException();
-	}
-
-	public Date getModified() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @see StorableObject#getModifierId()
-	 */
-	public Identifier getModifierId() {
-		throw new UnsupportedOperationException();
-	}
-
-	public long getVersion() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @see StorableObject#isChanged()
-	 */
-	public boolean isChanged() {
 		throw new UnsupportedOperationException();
 	}
 

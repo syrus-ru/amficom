@@ -1,5 +1,5 @@
 /*
- * $Id: DomainMember.java,v 1.4 2005/02/10 13:55:47 bob Exp $
+ * $Id: DomainMember.java,v 1.5 2005/03/15 17:46:56 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,13 +9,14 @@
 package com.syrus.AMFICOM.administration;
 
 import java.util.Date;
+import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/02/10 13:55:47 $
- * @author $Author: bob $
+ * @version $Revision: 1.5 $, $Date: 2005/03/15 17:46:56 $
+ * @author $Author: bass $
  * @module administration_v1
  */
 
@@ -36,42 +37,41 @@ public abstract class DomainMember extends StorableObject {
 		this.domainId = domainId;
 	}
 
-	protected DomainMember(Identifier id,
-				 Date created,
-				 Date modified,
-				 Identifier creatorId,
-				 Identifier modifierId,
-				 long version,
-				 Identifier domainId) {
-		super(id,
-			  created,
-			  modified,
-			  creatorId,
-			  modifierId,
-			  version);
+	protected DomainMember(final Identifier id,
+			final Date created,
+			final Date modified,
+			final Identifier creatorId,
+			final Identifier modifierId,
+			final long version,
+			final Identifier domainId) {
+		super(id, created, modified, creatorId, modifierId, version);
+		assert domainId != null;
 		this.domainId = domainId;
 	}
 
-	public Identifier getDomainId() {
+	public final Identifier getDomainId() {
 		return this.domainId;
 	}
 	
-	protected void setDomainId0(Identifier domainId) {
+	protected final void setDomainId0(final Identifier domainId) {
+		assert domainId.getMajor() == ObjectEntities.DOMAIN_ENTITY_CODE;
 		this.domainId = domainId;
 	}
 	
-	public void setDomainId(Identifier domainId) {
+	public final void setDomainId(final Identifier domainId) {
 		this.setDomainId0(domainId);
 		super.changed = true;
 	}
 
-	protected synchronized void setAttributes(	Date created,
-												Date modified,
-												Identifier creatorId,
-												Identifier modifierId,
-												long version,
-												Identifier domainId) {
-		super.setAttributes(created, modified, creatorId, modifierId, version);
+	protected final synchronized void setAttributes(final Date created,
+			final Date modified,
+			final Identifier creatorId,
+			final Identifier modifierId,
+			final long version,
+			final Identifier domainId) {
+		assert domainId != null;
+		super.setAttributes(created, modified, creatorId, modifierId,
+				version);
 		this.domainId = domainId;
 	}
 }

@@ -150,7 +150,7 @@ public class UgoTabbedPane extends JPanel implements OperationListener
 		graph.setScheme(sch);
 		GraphActions.clearGraph(graph);
 
-		graph.copyFromArchivedState(sch.ugoCellImpl().getData(), new java.awt.Point(0, 0));
+		graph.copyFromArchivedState(sch.getUgoCell().getData(), new java.awt.Point(0, 0));
 		graph.selectionNotify();
 	}
 

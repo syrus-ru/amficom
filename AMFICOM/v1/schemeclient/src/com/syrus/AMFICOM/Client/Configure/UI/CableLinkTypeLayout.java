@@ -1,5 +1,5 @@
 /*
- * $Id: CableLinkTypeLayout.java,v 1.2 2005/03/01 07:17:58 stas Exp $
+ * $Id: CableLinkTypeLayout.java,v 1.3 2005/03/15 17:49:10 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,8 +24,8 @@ import com.syrus.AMFICOM.configuration.CableThreadType;
 import com.syrus.AMFICOM.scheme.SchemeUtils;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.2 $, $Date: 2005/03/01 07:17:58 $
+ * @author $Author: bass $
+ * @version $Revision: 1.3 $, $Date: 2005/03/15 17:49:10 $
  * @module schemeclient_v1
  */
 
@@ -73,7 +73,7 @@ public class CableLinkTypeLayout implements OperationListener {
 		createFibers(nModules, type.getCableThreadTypes());
 	}
 
-	private void createFibers(int nModules, List fibers) {
+	private void createFibers(int nModules, final Collection fibers) {
 		int nFibers = fibers.size();
 		int moduleFibers = nFibers / nModules;
 		int additionalFibers = nFibers - (nModules * moduleFibers);

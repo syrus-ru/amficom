@@ -211,8 +211,8 @@ public class SchemePanel extends ElementsPanel
 				//SchemeElement element = new SchemeElement(proto, dataSource);
 				Arrays.asList(getGraph().getScheme().schemeElements()).add(element);
 
-				element.schemeCell(proto.schemeCell());
-				element.ugoCell(proto.ugoCell());
+				element.setSchemeCell(proto.getSchemeCell());
+				element.setUgoCell(proto.getUgoCell());
 
 				DeviceGroup clone = (DeviceGroup)clones.get(cells[0]);
 				clone.setSchemeElementId(element.getId());
@@ -231,7 +231,7 @@ public class SchemePanel extends ElementsPanel
 //		sch.schemeCell(null);
 //		sch.ugoCell(null);
 //		sch.unpack();
-		graph.copyFromArchivedState(sch.schemeCellImpl().getData(), new Point(0, 0));
+		graph.copyFromArchivedState(sch.getSchemeCell().getData(), new Point(0, 0));
 //		graph.setGraphChanged(false);
 		graph.selectionNotify();
 		graph.setActualSize(new Dimension(sch.width() == 0 ? 840 : sch.width(),
@@ -250,7 +250,7 @@ public class SchemePanel extends ElementsPanel
 			else if (getGraph().getSchemeElement() != null)
 				scheme_el.scheme(getGraph().getSchemeElement().scheme());
 
-			insertSchemeElement(scheme_el, proto.schemeCellImpl().getData(), proto.ugoCellImpl().getData(), p);
+			insertSchemeElement(scheme_el, proto.getSchemeCell().getData(), proto.getUgoCell().getData(), p);
 
 			repaint();
 		}
@@ -261,7 +261,7 @@ public class SchemePanel extends ElementsPanel
 //		SchemeGraph graph = getGraph();
 		Scheme scheme = graph.getScheme();
 		if (scheme != null)
-			scheme.schemeCellImpl().setData((List)graph.getArchiveableState(graph.getRoots()));
+			scheme.getSchemeCell().setData((List)graph.getArchiveableState(graph.getRoots()));
 		return scheme;
 	}
 
@@ -275,11 +275,11 @@ public class SchemePanel extends ElementsPanel
 
 	void insertScheme (Scheme sch)
 	{
-		if (sch.ugoCell() != null)
+		if (sch.getUgoCell() != null)
 		{
-			Map clones = getGraph().copyFromArchivedState(sch.ugoCellImpl().getData(), new Point(0, 0));
+			Map clones = getGraph().copyFromArchivedState(sch.getUgoCell().getData(), new Point(0, 0));
 			//graph.setFromArchivedState(scheme.serializable_ugo);
-			List v = sch.ugoCellImpl().getData();
+			List v = sch.getUgoCell().getData();
 			Object[] cells = (Object[]) v.get(0);
 
 			if (cells.length == 1 && cells[0] instanceof DeviceGroup)
@@ -290,7 +290,7 @@ public class SchemePanel extends ElementsPanel
 				element.name(sch.name());
 				element.description(sch.description());
 				Arrays.asList(getGraph().getScheme().schemeElements()).add(element);
-				element.schemeCell(sch.ugoCell());
+				element.setSchemeCell(sch.getUgoCell());
 
 				DeviceGroup clone = (DeviceGroup)clones.get(cells[0]);
 				clone.setSchemeElementId(element.getId());

@@ -91,7 +91,7 @@ public class SchemeSaveCommand extends VoidCommand
 					return;
 			}
 		}
-		else if (scheme.ugoCell() == null)
+		else if (scheme.getUgoCell() == null)
 		{
 			int ret = JOptionPane.showConfirmDialog(Environment.getActiveWindow(), "Схему нельзя будет включить в другую схему,\nт.к. не создано условное графическое обозначение схемы.\nПродолжить сохранение?", "Предупреждение", JOptionPane.YES_NO_OPTION);
 			if (ret == JOptionPane.NO_OPTION || ret == JOptionPane.CANCEL_OPTION)
@@ -121,27 +121,23 @@ public class SchemeSaveCommand extends VoidCommand
 		scheme.description(sd.description);
 		scheme.type(sd.type);
 //		scheme.created = System.currentTimeMillis();
-		try {
-			Identifier domain_id = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).
-					getAccessIdentifier().domain_id);
-			Domain domain = (Domain)AdministrationStorableObjectPool.getStorableObject(
-					domain_id, true);
-			scheme.domainImpl(domain);
-		}
-		catch (ApplicationException ex) {
-			ex.printStackTrace();
-		}
 
-		scheme.schemeCellImpl().setData((List)graph.getArchiveableState(graph.getRoots()));
+		final Identifier domainId = new Identifier(
+				((RISDSessionInfo) aContext
+						.getSessionInterface())
+						.getAccessIdentifier().domain_id);
+		scheme.setDomainId(domainId);
+
+		scheme.getSchemeCell().setData((List)graph.getArchiveableState(graph.getRoots()));
 		if (graph.getScheme().equals(ugograph.getScheme()))
 		{
-			scheme.ugoCellImpl().setData((List)ugograph.getArchiveableState(ugograph.getRoots()));
+			scheme.getUgoCell().setData((List)ugograph.getArchiveableState(ugograph.getRoots()));
 			ugoTab.setGraphChanged(false);
 		}
 		else
 //		if (scheme.ugoCell() == null)
 		{
-			scheme.ugoCellImpl().setData((List)new SchemeGraph(new DefaultGraphModel(), new ApplicationContext()).getArchiveableState());
+			scheme.getUgoCell().setData((List)new SchemeGraph(new DefaultGraphModel(), new ApplicationContext()).getArchiveableState());
 		}
 
 //		if (!res)

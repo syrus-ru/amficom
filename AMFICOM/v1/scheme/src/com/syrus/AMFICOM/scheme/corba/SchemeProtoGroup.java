@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeProtoGroup.java,v 1.3 2005/03/11 17:26:58 bass Exp $
+ * $Id: SchemeProtoGroup.java,v 1.4 2005/03/15 17:47:57 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,6 +12,7 @@ import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.general.corba.*;
 import com.syrus.AMFICOM.resource.*;
 import com.syrus.AMFICOM.resource.corba.ImageResource_Transferable;
+import com.syrus.AMFICOM.scheme.SchemeSymbolContainer;
 import com.syrus.util.Log;
 import java.util.*;
 
@@ -19,10 +20,10 @@ import java.util.*;
  * #01 in hierarchy.
  * 
  * @author $Author: bass $
- * @version $Revision: 1.3 $, $Date: 2005/03/11 17:26:58 $
+ * @version $Revision: 1.4 $, $Date: 2005/03/15 17:47:57 $
  * @module scheme_v1
  */
-public final class SchemeProtoGroup extends CloneableStorableObject implements Namable,
+public final class SchemeProtoGroup extends AbstractCloneableStorableObject implements Namable,
 		Describable, SchemeSymbolContainer {
 
 	private static final Identifier EMPTY_DEPENDENCIES[] = new Identifier[0];
@@ -90,20 +91,6 @@ public final class SchemeProtoGroup extends CloneableStorableObject implements N
 		this.thisDescription = description;
 	}
 
-	/**
-	 * @see StorableObject#getCreated()
-	 */
-	public Date getCreated() {
-		return this.delegate.getCreated();
-	}
-
-	/**
-	 * @see StorableObject#getCreatorId()
-	 */
-	public Identifier getCreatorId() {
-		return this.delegate.getCreatorId();
-	}
-
 	public List getDependencies() {
 		return Arrays.asList(getDependenciesAsArray());
 	}
@@ -153,50 +140,6 @@ public final class SchemeProtoGroup extends CloneableStorableObject implements N
 					localOwnDependenciesLength);
 			return this.cachedDependencies;
 		}
-	}
-
-	/**
-	 * @see StorableObject#getHeaderTransferable()
-	 */
-	public StorableObject_Transferable getHeaderTransferable() {
-		return this.delegate.getHeaderTransferable();
-	}
-
-	/**
-	 * @see Identifiable#getId()
-	 */
-	public Identifier getId() {
-		return this.delegate.getId();
-	}
-
-	/**
-	 * @see StorableObject#getModified()
-	 */
-	public Date getModified() {
-		return this.delegate.getModified();
-	}
-
-	/**
-	 * @see StorableObject#getModifierId()
-	 */
-	public Identifier getModifierId() {
-		return this.delegate.getModifierId();
-	}
-
-	/**
-	 * @see StorableObject#getVersion()
-	 */
-	public long getVersion() {
-		return this.delegate.getVersion();
-	}
-
-	/**
-	 * Getter for <code>changed</code> property.
-	 * 
-	 * @see StorableObject#isChanged()
-	 */
-	public boolean isChanged() {
-		return this.delegate.isChanged();
 	}
 
 	/**
@@ -278,28 +221,17 @@ public final class SchemeProtoGroup extends CloneableStorableObject implements N
 	}
 
 	/**
-	 * @see com.syrus.AMFICOM.resource.SchemeSymbolContainer#symbol()
+	 * @see com.syrus.AMFICOM.scheme.SchemeSymbolContainer#getSymbol()
 	 */
-	public ImageResource_Transferable symbol() {
-		throw new UnsupportedOperationException();
-	}
-
-	public void symbol(ImageResource_Transferable symbol) {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @see com.syrus.AMFICOM.resource.SchemeSymbolContainer#symbolImpl()
-	 */
-	public BitmapImageResource symbolImpl() {
+	public BitmapImageResource getSymbol() {
 		throw new UnsupportedOperationException();
 	}
 
 	/**
 	 * @param symbolImpl
-	 * @see com.syrus.AMFICOM.resource.SchemeSymbolContainer#symbolImpl(BitmapImageResource)
+	 * @see com.syrus.AMFICOM.scheme.SchemeSymbolContainer#setSymbol(BitmapImageResource)
 	 */
-	public void symbolImpl(BitmapImageResource symbolImpl) {
+	public void setSymbol(BitmapImageResource symbolImpl) {
 		throw new UnsupportedOperationException();
 	}
 

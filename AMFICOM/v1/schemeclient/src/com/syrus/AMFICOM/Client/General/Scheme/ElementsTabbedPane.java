@@ -29,7 +29,7 @@ public class ElementsTabbedPane extends UgoTabbedPane
 		SchemeGraph graph = getPanel().getGraph();
 		graph.setScheme(null);
 		graph.setSchemeElement(se);
-		graph.copyFromArchivedState(se.schemeCellImpl().getData(), new java.awt.Point(0, 0));
+		graph.copyFromArchivedState(se.getSchemeCell().getData(), new java.awt.Point(0, 0));
 		graph.selectionNotify();
 	}
 

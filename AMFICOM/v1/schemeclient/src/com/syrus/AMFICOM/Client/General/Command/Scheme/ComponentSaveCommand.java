@@ -40,9 +40,9 @@ public class ComponentSaveCommand extends VoidCommand
 				System.out.println("Error! Equipment_type_id is empty.");
 				return;
 			}
-			proto.schemeCellImpl().setData((List)cell_graph.getArchiveableState(cell_graph.getRoots()));
+			proto.getSchemeCell().setData((List)cell_graph.getArchiveableState(cell_graph.getRoots()));
 			//GraphActions.setResizable(ugo_graph, ugo_graph.getAll(), false);
-			proto.ugoCellImpl().setData((List)ugo_graph.getArchiveableState(ugo_graph.getRoots()));
+			proto.getUgoCell().setData((List)ugo_graph.getArchiveableState(ugo_graph.getRoots()));
 
 			SaveComponentDialog frame = new SaveComponentDialog(aContext);
 			frame.init(proto);
@@ -73,9 +73,9 @@ public class ComponentSaveCommand extends VoidCommand
 						return;
 					}
 
-					proto.schemeCellImpl().setData((List)cell_graph.getArchiveableState(cell_graph.getRoots()));
+					proto.getSchemeCell().setData((List)cell_graph.getArchiveableState(cell_graph.getRoots()));
 					//GraphActions.setResizable(ugo_graph, ugo_graph.getAll(), false);
-					proto.ugoCellImpl().setData((List)ugo_graph.getArchiveableState(ugo_graph.getRoots()));
+					proto.getUgoCell().setData((List)ugo_graph.getArchiveableState(ugo_graph.getRoots()));
 
 					SaveComponentDialog frame = new SaveComponentDialog(aContext);
 					frame.init(proto);

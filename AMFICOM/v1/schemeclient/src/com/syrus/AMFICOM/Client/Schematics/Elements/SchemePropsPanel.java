@@ -200,9 +200,9 @@ public class SchemePropsPanel extends JPanel
 
 //		scheme.schemeType = (String)schemeTypeComboBox.getSelectedItem();
 
-		if (scheme.symbol() != null)
+		if (scheme.getSymbol() != null)
 		{
-			BitmapImageResource ir = scheme.symbolImpl();
+			BitmapImageResource ir = scheme.getSymbol();
 			ImageIcon icon = new ImageIcon(ir.getImage());
 			if (icon.getIconHeight() < 20 && icon.getIconWidth() < 20)
 				ugoIconButton.setIcon(icon);
@@ -215,8 +215,8 @@ public class SchemePropsPanel extends JPanel
 	void ugoIconButton_actionPerformed()
 	{
 		ImagesDialog frame = new ImagesDialog(aContext);
-		if (scheme.symbol() != null)
-			frame.setImageResource(scheme.symbolImpl());
+		if (scheme.getSymbol() != null)
+			frame.setImageResource(scheme.getSymbol());
 
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		Dimension frameSize = frame.getSize();
@@ -236,7 +236,7 @@ public class SchemePropsPanel extends JPanel
 			if (icon.getIconWidth() > 20 || icon.getIconHeight() > 20)
 				icon = new ImageIcon (icon.getImage().getScaledInstance(20,	20,	Image.SCALE_SMOOTH));
 			ugoIconButton.setIcon(icon);
-			scheme.symbolImpl(ir);
+			scheme.setSymbol(ir);
 
 			dispatcher.notify(new SchemeElementsEvent(scheme, icon, SchemeElementsEvent.UGO_ICON_UPDATE_EVENT));
 		}

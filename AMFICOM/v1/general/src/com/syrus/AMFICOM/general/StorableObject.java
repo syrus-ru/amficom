@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObject.java,v 1.41 2005/03/11 17:26:28 bass Exp $
+ * $Id: StorableObject.java,v 1.42 2005/03/15 17:46:14 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,7 +18,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.41 $, $Date: 2005/03/11 17:26:28 $
+ * @version $Revision: 1.42 $, $Date: 2005/03/15 17:46:14 $
  * @module general_v1
  */
 public abstract class StorableObject implements Identifiable, TransferableObject, Serializable {
@@ -60,7 +60,14 @@ public abstract class StorableObject implements Identifiable, TransferableObject
 	 * @param modifierId
 	 * @param version
 	 */
-	protected StorableObject(final Identifier id, final Date created, final Date modified, final Identifier creatorId, final Identifier modifierId, final long version) {
+	protected StorableObject(final Identifier id,
+			final Date created,
+			final Date modified,
+			final Identifier creatorId,
+			final Identifier modifierId,
+			final long version) {
+		assert id != null && created != null && modified != null
+				&& creatorId != null && modifierId != null;
 		this.id = id;
 		this.created = created;
 		this.modified = modified;
@@ -97,31 +104,23 @@ public abstract class StorableObject implements Identifiable, TransferableObject
 //	 */
 //	public abstract void insert() throws CreateObjectException;
 
-	/**
-	 * @see com.syrus.AMFICOM.general.corba.StorableObject#getCreated()
-	 */
-	public Date getCreated() {
+	public final Date getCreated() {
 		return this.created;
 	}
 
-	/**
-	 * @see com.syrus.AMFICOM.general.corba.StorableObject#getCreatorId()
-	 */
-	public Identifier getCreatorId() {
+	public final Identifier getCreatorId() {
 		return this.creatorId;
 	}
 
 	/**
 	 * Will be overridden by descendants.
-	 *
-	 * @see com.syrus.AMFICOM.general.corba.StorableObject#getDependencies()
 	 */
 	public abstract List getDependencies();
 
 	/**
-	 * Returns structure to be transmitted via CORBA.
-	 *
-	 * @see com.syrus.AMFICOM.general.corba.StorableObject#getDependencies()
+	 * Returns structure to be transmitted via CORBA. Should be declared
+	 * final as soon as <code>Marker</code>, <code>UnboundLink</code> and
+	 * <code>UnboundNode</code> stop overriding it.
 	 */
 	public StorableObject_Transferable getHeaderTransferable() {
 		return new StorableObject_Transferable((Identifier_Transferable) this.id.getTransferable(),
@@ -136,7 +135,7 @@ public abstract class StorableObject implements Identifiable, TransferableObject
 	 * This method called only when client succesfully updated object
 	 * @param sot
 	 */
-	public void updateFromHeaderTransferable(StorableObject_Transferable sot) {
+	public final void updateFromHeaderTransferable(StorableObject_Transferable sot) {
 		this.modified = new Date(sot.modified);
 		this.modifierId = new Identifier(sot.modifier_id);
 		if (this.version != sot.version)
@@ -147,42 +146,31 @@ public abstract class StorableObject implements Identifiable, TransferableObject
 	/**
 	 * @see Identifiable#getId()
 	 */
-	public Identifier getId() {
+	public final Identifier getId() {
 		return this.id;
 	}
 
-	/**
-	 * @see com.syrus.AMFICOM.general.corba.StorableObject#getModified()
-	 */
-	public Date getModified() {
+	public final Date getModified() {
 		return this.modified;
 	}
 
-	/**
-	 * @see com.syrus.AMFICOM.general.corba.StorableObject#getModifierId()
-	 */
-	public Identifier getModifierId() {
+	public final Identifier getModifierId() {
 		return this.modifierId;
 	}
 
-	/**
-	 * @see com.syrus.AMFICOM.general.corba.StorableObject#getVersion()
-	 */
-	public long getVersion() {
+	public final long getVersion() {
 		return this.version;
 	}
 
 	/**
 	 * Returns <code>true</code> if object was changed locally (with respect
 	 * to server).
-	 *
-	 * @see com.syrus.AMFICOM.general.corba.StorableObject#isChanged()
 	 */
-	public boolean isChanged() {
+	public final boolean isChanged() {
 		return this.changed;
 	}
 
-	protected void setUpdated(Identifier modifierId) {
+	protected final void setUpdated(Identifier modifierId) {
 		this.savedModified = this.modified;
 		this.savedModifierId = this.modifierId;
 		this.savedVersion = this.version;
@@ -193,13 +181,13 @@ public abstract class StorableObject implements Identifiable, TransferableObject
 		this.changed = false;
 	}
 
-	protected void cleanupUpdate() {
+	protected final void cleanupUpdate() {
 		this.savedModified = null;
 		this.savedModifierId = null;
 		this.savedVersion = VERSION_ILLEGAL;
 	}
 
-	protected void rollbackUpdate() {
+	protected final void rollbackUpdate() {
 		if (this.savedModified == null || this.savedModifierId == null || this.savedVersion == VERSION_ILLEGAL) {
 			Log.errorMessage("Cannot rollback update of object: '" + this.id + "', entity: '" + ObjectEntities.codeToString(this.id.getMajor())
 					+ "' -- saved values are in illegal states!");
@@ -214,7 +202,7 @@ public abstract class StorableObject implements Identifiable, TransferableObject
 		this.cleanupUpdate();
 	}
 
-	private void incrementVersion() {
+	private final void incrementVersion() {
 		if (this.version < Long.MAX_VALUE) {
 			this.version++;
 			if (this.version == VERSION_ILLEGAL)
@@ -224,13 +212,13 @@ public abstract class StorableObject implements Identifiable, TransferableObject
 			this.version = Long.MIN_VALUE;
 	}
 
-	public boolean hasNewerVersion(long version1) {
+	public final boolean hasNewerVersion(long version1) {
 		if (Math.abs(this.version - version1) < (Long.MAX_VALUE - Long.MIN_VALUE) / 2)
 			return (this.version > version1);
 		return (this.version < version1);
 	}
 
-	public boolean hasOlderVersion(long version1) {
+	public final boolean hasOlderVersion(long version1) {
 		if (Math.abs(this.version - version1) < (Long.MAX_VALUE - Long.MIN_VALUE) / 2)
 			return (this.version < version1);
 		return (this.version > version1);
@@ -243,7 +231,13 @@ public abstract class StorableObject implements Identifiable, TransferableObject
 	 * @param modifierId
 	 * @param version
 	 */
-	protected synchronized void setAttributes(Date created, Date modified, Identifier creatorId, Identifier modifierId, long version) {
+	protected final synchronized void setAttributes(final Date created,
+			final Date modified,
+			final Identifier creatorId,
+			final Identifier modifierId,
+			final long version) {
+		assert created != null && modified != null && creatorId != null
+				&& modifierId != null;
 		this.created = created;
 		this.modified = modified;
 		this.creatorId = creatorId;

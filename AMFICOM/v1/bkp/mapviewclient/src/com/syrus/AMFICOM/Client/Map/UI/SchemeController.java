@@ -14,9 +14,11 @@ import java.util.Date;
 import java.util.List;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
+import com.syrus.AMFICOM.administration.*;
 import com.syrus.AMFICOM.administration.AdministrationStorableObjectPool;
 import com.syrus.AMFICOM.administration.User;
 import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
+import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.scheme.corba.Scheme;
 
@@ -77,7 +79,18 @@ public final class SchemeController implements ObjectResourceController
 		else
 		if (key.equals(KEY_DOMAIN))
 		{
-			result = sc.domainImpl();
+			try
+			{
+				result = AdministrationStorableObjectPool
+						.getStorableObject(sc
+								.getDomainId(),
+								true);
+			}
+			catch (final ApplicationException ae)
+			{
+				ae.printStackTrace();
+				result = null;
+			}
 		}
 		else
 		if (key.equals(KEY_USER))
@@ -95,12 +108,12 @@ public final class SchemeController implements ObjectResourceController
 		else
 		if (key.equals(KEY_CREATED))
 		{
-			result = sdf.format(new Date(sc.getCreated()));
+			result = sdf.format(sc.getCreated());
 		}
 		else
 		if (key.equals(KEY_MODIFIED))
 		{
-			result = sdf.format(new Date(sc.getModified()));
+			result = sdf.format(sc.getModified());
 		}
 		return result;
 	}

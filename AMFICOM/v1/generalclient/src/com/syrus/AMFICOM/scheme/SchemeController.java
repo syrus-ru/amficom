@@ -109,7 +109,7 @@ public final class SchemeController implements ObjectResourceController
 			else if (key.equals(COLUMN_TYPE))
 				result = Integer.toString(scheme.type().value());
 			else if (key.equals(COLUMN_SYMBOL_ID))
-				result = scheme.symbolImpl().getId().getIdentifierString();
+				result = scheme.getSymbol().getId().getIdentifierString();
 			else if (key.equals(COLUMN_WIDTH))
 				result = Integer.toString(scheme.width());
 			else if (key.equals(COLUMN_HEIGHT))
@@ -141,13 +141,13 @@ public final class SchemeController implements ObjectResourceController
 			else if (key.equals(COLUMN_MONITORING_SOLUTION_ID))
 				result = scheme.schemeMonitoringSolution().getId().getIdentifierString();
 			else if (key.equals(COLUMN_SCHEME_CELL_ID))
-				result = scheme.schemeCellImpl().getId().getIdentifierString();
+				result = scheme.getSchemeCell().getId().getIdentifierString();
 			else if (key.equals(COLUMN_UGO_CELL_ID))
-				result = scheme.ugoCellImpl().getId().getIdentifierString();
+				result = scheme.getUgoCell().getId().getIdentifierString();
 			else if (key.equals(COLUMN_DOMAIN_ID))
-				result = scheme.domainImpl().getId().getIdentifierString();
+				result = scheme.getDomainId().getIdentifierString();
 			else if (key.equals(COLUMN_MAP_ID))
-				result = scheme.mapImpl().getId().getIdentifierString();
+				result = scheme.getMap().getId().getIdentifierString();
 		}
 		return result;
 	}

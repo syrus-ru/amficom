@@ -102,7 +102,7 @@ public final class SchemeElementController implements ObjectResourceController
 			else if (key.equals(COLUMN_LABEL))
 				result = element.label();
 			else if (key.equals(COLUMN_SYMBOL_ID))
-				result = element.symbolImpl().getId().getIdentifierString();
+				result = element.getSymbol().getId().getIdentifierString();
 			else if (key.equals(COLUMN_EQUIPMENT_ID))
 				result = element.equipmentImpl().getId().getIdentifierString();
 			else if (key.equals(COLUMN_EQUIPMENT_TYPE_ID))
@@ -142,9 +142,9 @@ public final class SchemeElementController implements ObjectResourceController
 				result = res;
 			}
 			else if (key.equals(COLUMN_SCHEME_CELL_ID))
-				result = element.schemeCellImpl().getId().getIdentifierString();
+				result = element.getSchemeCell().getId().getIdentifierString();
 			else if (key.equals(COLUMN_UGO_CELL_ID))
-				result = element.ugoCellImpl().getId().getIdentifierString();
+				result = element.getUgoCell().getId().getIdentifierString();
 			else if (key.equals(COLUMN_CHARACTERISTICS)) {
 				List res = new ArrayList(element.getCharacteristics().size());
 				for (Iterator it = element.getCharacteristics().iterator(); it.hasNext(); ) {

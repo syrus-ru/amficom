@@ -74,7 +74,7 @@ public class SchemeSaveAsCommand extends VoidCommand
 					return;
 			}
 		}
-		else if (scheme.ugoCell() == null)
+		else if (scheme.getUgoCell() == null)
 		{
 			int ret = JOptionPane.showConfirmDialog(Environment.getActiveWindow(), "Схему нельзя будет включить в другую схему,\nт.к. не создано условное графическое обозначение схемы.\nПродолжить сохранение?", "Предупреждение", JOptionPane.YES_NO_OPTION);
 			if (ret == JOptionPane.NO_OPTION || ret == JOptionPane.CANCEL_OPTION)
@@ -102,7 +102,7 @@ public class SchemeSaveAsCommand extends VoidCommand
 			SchemeElement se = scheme.schemeElements()[i];
 			if (se.schemeElements().length != 0)
 			{
-				SchemePanel.copySchemeElementFromArchivedState_virtual(se.schemeCellImpl().getData());
+				SchemePanel.copySchemeElementFromArchivedState_virtual(se.getSchemeCell().getData());
 			}
 		}
 
@@ -110,15 +110,15 @@ public class SchemeSaveAsCommand extends VoidCommand
 
 		UgoPanel.assignClonedIds(graph.getAll());
 
-		scheme.schemeCellImpl().setData((List)graph.getArchiveableState(graph.getRoots()));
+		scheme.getSchemeCell().setData((List)graph.getArchiveableState(graph.getRoots()));
 		if (graph.getScheme().equals(ugograph.getScheme()))
 		{
 			UgoPanel.assignClonedIds(ugograph.getAll());
-			scheme.ugoCellImpl().setData((List)ugograph.getArchiveableState(ugograph.getRoots()));
+			scheme.getUgoCell().setData((List)ugograph.getArchiveableState(ugograph.getRoots()));
 			ugoTab.setGraphChanged(false);
 		}
 		else
-			SchemePanel.copySchemeElementFromArchivedState_virtual(scheme.schemeCellImpl().getData());
+			SchemePanel.copySchemeElementFromArchivedState_virtual(scheme.getSchemeCell().getData());
 
 //		if (!res)
 //		{
@@ -130,16 +130,13 @@ public class SchemeSaveAsCommand extends VoidCommand
 		scheme.name(sd.name);
 		scheme.description(sd.description);
 		scheme.type(sd.type);
-		try {
-			Identifier domain_id = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).
-					getAccessIdentifier().domain_id);
-			Domain domain = (Domain)AdministrationStorableObjectPool.getStorableObject(
-					domain_id, true);
-			scheme.domainImpl(domain);
-		}
-		catch (ApplicationException ex) {
-			ex.printStackTrace();
-		}
+
+		final Identifier domainId = new Identifier(
+				((RISDSessionInfo) aContext
+						.getSessionInterface())
+						.getAccessIdentifier().domain_id);
+		scheme.setDomainId(domainId);
+
 		try {
 			SchemeStorableObjectPool.putStorableObject(scheme);
 
