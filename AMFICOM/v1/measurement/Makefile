@@ -36,7 +36,7 @@ $(LIBNAME): .mach
 		$(SRCDIR)/com/syrus/AMFICOM/resource/measurement_ru.properties \
 		$(CLASSDIR)/com/syrus/AMFICOM/resource/
 	$(JAR) -cf $@ \
-		-C $(CLASSDIR) com
+		-C $(CLASSDIR) com/syrus/AMFICOM/event -C $(CLASSDIR) com/syrus/AMFICOM/measurement -C $(CLASSDIR) com/syrus/AMFICOM/resource
 
 .mach:	.corba .ora $(CLASSDIR)
 	$(JAVAC) $(JAVACFLAGS) \
@@ -82,7 +82,10 @@ $(LIBNAME): .mach
 		$(SRCDIR)/com/syrus/AMFICOM/measurement/StringFieldCondition.java \
 		$(SRCDIR)/com/syrus/AMFICOM/measurement/ResultCondition.java \
 		$(SRCDIR)/com/syrus/AMFICOM/measurement/ResultSortCondition.java \
-		$(SRCDIR)/com/syrus/AMFICOM/measurement/MeasurementSetupCondition.java 
+		$(SRCDIR)/com/syrus/AMFICOM/measurement/MeasurementSetupCondition.java \
+		$(SRCDIR)/com/syrus/AMFICOM/measurement/ClientMeasurementObjectLoader.java \
+		$(SRCDIR)/com/syrus/AMFICOM/measurement/ClientConfigurationObjectLoader.java 
+
 	touch $@
 
 .ora:	$(CLASSDIR)
@@ -98,11 +101,13 @@ $(LIBNAME): .mach
 .corba:	$(CLASSDIR)
 	$(IDLJ) $(IDLJFLAGS) $(IDLDIR)/event.idl
 	$(IDLJ) $(IDLJFLAGS) $(IDLDIR)/measurement.idl
+	$(IDLJ) $(IDLJFLAGS) $(IDLDIR)/cmserver.idl
 	$(JAVAC) $(JAVACFLAGS) $(JAVAC_WARNOFF_FLAG) \
 		-classpath $(APPCLASSPATH) \
 		-sourcepath $(SRCDIR) \
 		$(SRCDIR)/com/syrus/AMFICOM/event/corba/*.java \
-		$(SRCDIR)/com/syrus/AMFICOM/measurement/corba/*.java
+		$(SRCDIR)/com/syrus/AMFICOM/measurement/corba/*.java \
+		$(SRCDIR)/com/syrus/AMFICOM/cmserver/corba/*.java
 	touch $@
 
 $(CLASSDIR):

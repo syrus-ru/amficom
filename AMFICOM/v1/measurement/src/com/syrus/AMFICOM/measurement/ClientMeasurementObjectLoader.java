@@ -1,5 +1,5 @@
 /*
- * $Id: ClientMeasurementObjectLoader.java,v 1.1 2004/10/19 15:19:40 bass Exp $
+ * $Id: ClientMeasurementObjectLoader.java,v 1.2 2004/10/20 07:51:40 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -45,8 +45,8 @@ import com.syrus.AMFICOM.measurement.corba.Test_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2004/10/19 15:19:40 $
- * @author $Author: bass $
+ * @version $Revision: 1.2 $, $Date: 2004/10/20 07:51:40 $
+ * @author $Author: bob $
  * @module cmserver_v1
  */
 
@@ -262,14 +262,14 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 
 	public List loadAnalyses(List ids) throws DatabaseException, CommunicationException {
         try {
-            Identifier_Transferable[] identifier_Transferables = new Identifier_Transferable[ids.size()];
+            Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
             int i = 0;
             for (Iterator it = ids.iterator(); it.hasNext(); i++) {
                 Identifier id = (Identifier) it.next();
-                identifier_Transferables[i] = (Identifier_Transferable) id.getTransferable();
+                identifierTransferables[i] = (Identifier_Transferable) id.getTransferable();
             }
             Analysis_Transferable[] transferables = this.server
-                    .transmitAnalyses(identifier_Transferables, accessIdentifierTransferable);
+                    .transmitAnalyses(identifierTransferables, accessIdentifierTransferable);
             List list = new ArrayList(transferables.length);
             for (int j = 0; j < transferables.length; j++) {
                 list.add(new Analysis(transferables[j]));
@@ -285,20 +285,20 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
     public List loadAnalysesButIds(StorableObjectCondition storableObjectCondition, List ids ) throws DatabaseException,
             CommunicationException {
         try {
-            Identifier_Transferable[] identifier_Transferables = new Identifier_Transferable[ids.size()];
+            Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
             Analysis_Transferable[] transferables;
             int i = 0;
             for (Iterator it = ids.iterator(); it.hasNext(); i++) {
                 Identifier id = (Identifier) it.next();
-                identifier_Transferables[i] = (Identifier_Transferable) id.getTransferable();
+                identifierTransferables[i] = (Identifier_Transferable) id.getTransferable();
             }
             if (storableObjectCondition instanceof DomainCondition) {
                 transferables = this.server
-                        .transmitAnalysesButIdsCondition(identifier_Transferables, accessIdentifierTransferable,
+                        .transmitAnalysesButIdsCondition(identifierTransferables, accessIdentifierTransferable,
                                                          (DomainCondition_Transferable)storableObjectCondition.getTransferable());                
             } else {
                 transferables = this.server
-                        .transmitAnalysesButIds(identifier_Transferables, accessIdentifierTransferable);
+                        .transmitAnalysesButIds(identifierTransferables, accessIdentifierTransferable);
                 if (storableObjectCondition != null && !(storableObjectCondition instanceof DomainCondition)) {
                     Log.errorMessage("ClientMeasurementObjectLoader.loadAnalysesButIds | " +
                             "Class '" + storableObjectCondition.getClass().getName() + "' is not instanse of DomainCondition");
@@ -318,14 +318,14 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
         
 	public List loadAnalysisTypes(List ids) throws DatabaseException, CommunicationException {
 		try {
-			Identifier_Transferable[] identifier_Transferables = new Identifier_Transferable[ids.size()];
+			Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
 			int i = 0;
 			for (Iterator it = ids.iterator(); it.hasNext(); i++) {
 				Identifier id = (Identifier) it.next();
-				identifier_Transferables[i] = (Identifier_Transferable) id.getTransferable();
+				identifierTransferables[i] = (Identifier_Transferable) id.getTransferable();
 			}
 			AnalysisType_Transferable[] transferables = this.server
-					.transmitAnalysisTypes(identifier_Transferables, accessIdentifierTransferable);
+					.transmitAnalysisTypes(identifierTransferables, accessIdentifierTransferable);
 			List list = new ArrayList(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
 				list.add(new AnalysisType(transferables[j]));
@@ -341,21 +341,21 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
     public List loadAnalysisTypesButIds(StorableObjectCondition storableObjectCondition, List ids ) throws DatabaseException,
             CommunicationException {
         try {
-            Identifier_Transferable[] identifier_Transferables = new Identifier_Transferable[ids.size()];
+            Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
             AnalysisType_Transferable[] transferables;
             int i = 0;
             for (Iterator it = ids.iterator(); it.hasNext(); i++) {
                 Identifier id = (Identifier) it.next();
-                identifier_Transferables[i] = (Identifier_Transferable) id.getTransferable();
+                identifierTransferables[i] = (Identifier_Transferable) id.getTransferable();
             }
             if (storableObjectCondition instanceof LinkedIdsCondition) {
                 
                 transferables = this.server
-                .transmitAnalysisTypesButIdsCondition(identifier_Transferables, accessIdentifierTransferable,
+                .transmitAnalysisTypesButIdsCondition(identifierTransferables, accessIdentifierTransferable,
                                          (LinkedIdsCondition_Transferable) storableObjectCondition.getTransferable());                
             } else {
                 transferables = this.server
-                        .transmitAnalysisTypesButIds(identifier_Transferables, accessIdentifierTransferable);
+                        .transmitAnalysisTypesButIds(identifierTransferables, accessIdentifierTransferable);
                 if (storableObjectCondition != null && !(storableObjectCondition instanceof LinkedIdsCondition)) {
                     Log.errorMessage("ClientMeasurementObjectLoader.loadAnalysisTypesButIds | " +
                             "Class '" + storableObjectCondition.getClass().getName() + "' is not instanse of LinkedIdsCondition");
@@ -375,14 +375,14 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 
 	public List loadEvaluations(List ids) throws DatabaseException, CommunicationException {
         try {
-            Identifier_Transferable[] identifier_Transferables = new Identifier_Transferable[ids.size()];
+            Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
             int i = 0;
             for (Iterator it = ids.iterator(); it.hasNext(); i++) {
                 Identifier id = (Identifier) it.next();
-                identifier_Transferables[i] = (Identifier_Transferable) id.getTransferable();
+                identifierTransferables[i] = (Identifier_Transferable) id.getTransferable();
             }
             Evaluation_Transferable[] transferables = this.server
-                    .transmitEvaluations(identifier_Transferables, accessIdentifierTransferable);
+                    .transmitEvaluations(identifierTransferables, accessIdentifierTransferable);
             List list = new ArrayList(transferables.length);
             for (int j = 0; j < transferables.length; j++) {
                 list.add(new Evaluation(transferables[j]));
@@ -397,23 +397,23 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
     
     public List loadEvaluationsButIds(StorableObjectCondition storableObjectCondition, List ids) throws DatabaseException, CommunicationException {
         try {
-            Identifier_Transferable[] identifier_Transferables = new Identifier_Transferable[ids.size()];
+            Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
             Evaluation_Transferable[] transferables;
             int i = 0;
             for (Iterator it = ids.iterator(); it.hasNext(); i++) {
                 Identifier id = (Identifier) it.next();
-                identifier_Transferables[i] = (Identifier_Transferable) id.getTransferable();
+                identifierTransferables[i] = (Identifier_Transferable) id.getTransferable();
             }
             if (storableObjectCondition instanceof DomainCondition) {
                 
                 transferables = this.server
-                .transmitEvaluationsButIdsCondition(identifier_Transferables,
+                .transmitEvaluationsButIdsCondition(identifierTransferables,
                                          accessIdentifierTransferable,
                                          (DomainCondition_Transferable)storableObjectCondition.getTransferable());
                 
             } else {
                 transferables = this.server
-                .transmitEvaluationsButIds(identifier_Transferables,
+                .transmitEvaluationsButIds(identifierTransferables,
                                          accessIdentifierTransferable);
                 if (storableObjectCondition != null && !(storableObjectCondition instanceof DomainCondition)) {
                     Log.errorMessage("ClientMeasurementObjectLoader.loadEvaluationsButIds | " +
@@ -434,14 +434,14 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 
 	public List loadEvaluationTypes(List ids) throws DatabaseException, CommunicationException {
 		try {
-			Identifier_Transferable[] identifier_Transferables = new Identifier_Transferable[ids.size()];
+			Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
 			int i = 0;
 			for (Iterator it = ids.iterator(); it.hasNext(); i++) {
 				Identifier id = (Identifier) it.next();
-				identifier_Transferables[i] = (Identifier_Transferable) id.getTransferable();
+				identifierTransferables[i] = (Identifier_Transferable) id.getTransferable();
 			}
 			EvaluationType_Transferable[] transferables = this.server
-					.transmitEvaluationTypes(identifier_Transferables, accessIdentifierTransferable);
+					.transmitEvaluationTypes(identifierTransferables, accessIdentifierTransferable);
 			List list = new ArrayList(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
 				list.add(new EvaluationType(transferables[j]));
@@ -456,23 +456,23 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
     
     public List loadEvaluationTypesButIds(StorableObjectCondition storableObjectCondition, List ids) throws DatabaseException, CommunicationException {
         try {
-            Identifier_Transferable[] identifier_Transferables = new Identifier_Transferable[ids.size()];
+            Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
             EvaluationType_Transferable[] transferables;
             int i = 0;
             for (Iterator it = ids.iterator(); it.hasNext(); i++) {
                 Identifier id = (Identifier) it.next();
-                identifier_Transferables[i] = (Identifier_Transferable) id.getTransferable();
+                identifierTransferables[i] = (Identifier_Transferable) id.getTransferable();
             }
             if (storableObjectCondition instanceof LinkedIdsCondition) {
                 
                 transferables = this.server
-                .transmitEvaluationTypesButIdsCondition(identifier_Transferables,
+                .transmitEvaluationTypesButIdsCondition(identifierTransferables,
                                          accessIdentifierTransferable,
                                          (LinkedIdsCondition_Transferable) storableObjectCondition.getTransferable());
                 
             } else {
                 transferables = this.server
-                .transmitEvaluationTypesButIds(identifier_Transferables,
+                .transmitEvaluationTypesButIds(identifierTransferables,
                                          accessIdentifierTransferable);
                 if (storableObjectCondition != null && !(storableObjectCondition instanceof LinkedIdsCondition)) {
                     Log.errorMessage("ClientMeasurementObjectLoader.loadEvaluationTypesButIds | " +
@@ -493,15 +493,15 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 
 	public List loadMeasurements(List ids) throws DatabaseException, CommunicationException {
 		try {
-			Identifier_Transferable[] identifier_Transferables = new Identifier_Transferable[ids.size()];
+			Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
 			int i = 0;
 			for (Iterator it = ids.iterator(); it.hasNext(); i++) {
 				Identifier id = (Identifier) it.next();
-				identifier_Transferables[i] = (Identifier_Transferable) id.getTransferable();
+				identifierTransferables[i] = (Identifier_Transferable) id.getTransferable();
 			}
 			            
             Measurement_Transferable[] transferables = this.server
-					.transmitMeasurements(identifier_Transferables, accessIdentifierTransferable);
+					.transmitMeasurements(identifierTransferables, accessIdentifierTransferable);
 			List list = new ArrayList(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
 				list.add(new Measurement(transferables[j]));
@@ -516,26 +516,26 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
     
     public List loadMeasurementsButIds(StorableObjectCondition storableObjectCondition, List ids) throws DatabaseException, CommunicationException {
         try {
-            Identifier_Transferable[] identifier_Transferables = new Identifier_Transferable[ids.size()];
+            Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
             Measurement_Transferable[] transferables;
             int i = 0;
             for (Iterator it = ids.iterator(); it.hasNext(); i++) {
                 Identifier id = (Identifier) it.next();
-                identifier_Transferables[i] = (Identifier_Transferable) id.getTransferable();
+                identifierTransferables[i] = (Identifier_Transferable) id.getTransferable();
             }
             if (storableObjectCondition instanceof DomainCondition) {
                 transferables = this.server
-                        .transmitMeasurementsButIdsDomainCondition(identifier_Transferables,
+                        .transmitMeasurementsButIdsDomainCondition(identifierTransferables,
                                                                    accessIdentifierTransferable,
                                                                    (DomainCondition_Transferable)storableObjectCondition.getTransferable());
             } else if (storableObjectCondition instanceof LinkedIdsCondition) {
                 transferables = this.server
-                        .transmitMeasurementsButIdsLinkedCondition(identifier_Transferables,
+                        .transmitMeasurementsButIdsLinkedCondition(identifierTransferables,
                                             accessIdentifierTransferable,
                                             (LinkedIdsCondition_Transferable) storableObjectCondition.getTransferable());
             } else {
                 transferables = this.server
-                        .transmitMeasurementsButIds(identifier_Transferables,
+                        .transmitMeasurementsButIds(identifierTransferables,
                                                     accessIdentifierTransferable);
                 if (storableObjectCondition != null && ( !(storableObjectCondition instanceof DomainCondition) || !(storableObjectCondition instanceof DomainCondition)) ) {
                     Log.errorMessage("ClientMeasurementObjectLoader.loadMeasurementsButIds | " +
@@ -557,14 +557,14 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 
 	public List loadModelings(List ids) throws DatabaseException, CommunicationException {
 		try {
-			Identifier_Transferable[] identifier_Transferables = new Identifier_Transferable[ids.size()];
+			Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
 			int i = 0;
 			for (Iterator it = ids.iterator(); it.hasNext(); i++) {
 				Identifier id = (Identifier) it.next();
-				identifier_Transferables[i] = (Identifier_Transferable) id.getTransferable();
+				identifierTransferables[i] = (Identifier_Transferable) id.getTransferable();
 			}
 			Modeling_Transferable[] transferables = this.server
-					.transmitModelings(identifier_Transferables,
+					.transmitModelings(identifierTransferables,
 									accessIdentifierTransferable);
 			List list = new ArrayList(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
@@ -580,23 +580,23 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
     
     public List loadModelingsButIds(StorableObjectCondition storableObjectCondition, List ids) throws DatabaseException, CommunicationException {
         try {
-            Identifier_Transferable[] identifier_Transferables = new Identifier_Transferable[ids.size()];
+            Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
             Modeling_Transferable[] transferables;
             int i = 0;
             for (Iterator it = ids.iterator(); it.hasNext(); i++) {
                 Identifier id = (Identifier) it.next();
-                identifier_Transferables[i] = (Identifier_Transferable) id.getTransferable();
+                identifierTransferables[i] = (Identifier_Transferable) id.getTransferable();
             }
             if (storableObjectCondition instanceof DomainCondition) {
                 
                 transferables = this.server
-                .transmitModelingsButIdsCondition(identifier_Transferables,
+                .transmitModelingsButIdsCondition(identifierTransferables,
                                          accessIdentifierTransferable,
                                          (DomainCondition_Transferable)storableObjectCondition.getTransferable());
                 
             } else {
                 transferables = this.server
-                .transmitModelingsButIds(identifier_Transferables,
+                .transmitModelingsButIds(identifierTransferables,
                                          accessIdentifierTransferable);
                 if (storableObjectCondition != null && !(storableObjectCondition instanceof DomainCondition)) {
                     Log.errorMessage("ClientMeasurementObjectLoader.loadModelingsButIds | " +
@@ -617,14 +617,14 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 	
 	public List loadMeasurementSetups(List ids) throws DatabaseException, CommunicationException {
 		try {
-			Identifier_Transferable[] identifier_Transferables = new Identifier_Transferable[ids.size()];
+			Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
 			int i = 0;
 			for (Iterator it = ids.iterator(); it.hasNext(); i++) {
 				Identifier id = (Identifier) it.next();
-				identifier_Transferables[i] = (Identifier_Transferable) id.getTransferable();
+				identifierTransferables[i] = (Identifier_Transferable) id.getTransferable();
 			}
 			MeasurementSetup_Transferable[] transferables = this.server
-					.transmitMeasurementSetups(identifier_Transferables,
+					.transmitMeasurementSetups(identifierTransferables,
 									accessIdentifierTransferable);
 			List list = new ArrayList(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
@@ -640,28 +640,28 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
     
     public List loadMeasurementSetupsButIds(StorableObjectCondition storableObjectCondition, List ids) throws DatabaseException, CommunicationException {
         try {
-            Identifier_Transferable[] identifier_Transferables = new Identifier_Transferable[ids.size()];
+            Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
             MeasurementSetup_Transferable[] transferables = null;
             int i = 0;
             for (Iterator it = ids.iterator(); it.hasNext(); i++) {
                 Identifier id = (Identifier) it.next();
-                identifier_Transferables[i] = (Identifier_Transferable) id.getTransferable();
+                identifierTransferables[i] = (Identifier_Transferable) id.getTransferable();
             }
             if (storableObjectCondition instanceof MeasurementSetupCondition) {
                 MeasurementSetupCondition measurementSetupCondition = (MeasurementSetupCondition)storableObjectCondition;
                 transferables = this.server
-                            .transmitMeasurementSetupsButIdsMeasurementSetupCondition(identifier_Transferables,
+                            .transmitMeasurementSetupsButIdsMeasurementSetupCondition(identifierTransferables,
                                                              accessIdentifierTransferable,
                                                              (MeasurementSetupCondition_Transferable) measurementSetupCondition.getTransferable());               
             } else if (storableObjectCondition instanceof LinkedIdsCondition){
                 LinkedIdsCondition linkedIdsCondition = (LinkedIdsCondition)storableObjectCondition;
                 transferables = this.server
-                            .transmitMeasurementSetupsButIdsLinkedCondition(identifier_Transferables,
+                            .transmitMeasurementSetupsButIdsLinkedCondition(identifierTransferables,
                                                              accessIdentifierTransferable,
                                                              (LinkedIdsCondition_Transferable) linkedIdsCondition.getTransferable());
             } else {
                 transferables = this.server
-                        .transmitMeasurementSetupsButIds(identifier_Transferables,
+                        .transmitMeasurementSetupsButIds(identifierTransferables,
                                                          accessIdentifierTransferable);
                 if (storableObjectCondition != null && ( !(storableObjectCondition instanceof DomainCondition) || !(storableObjectCondition instanceof DomainCondition)) ) {
                     Log.errorMessage("ClientMeasurementObjectLoader.loadMeasurementsButIds | " +
@@ -687,14 +687,14 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 
 	public List loadMeasurementTypes(List ids) throws DatabaseException, CommunicationException {
 		try {
-			Identifier_Transferable[] identifier_Transferables = new Identifier_Transferable[ids.size()];
+			Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
 			int i = 0;
 			for (Iterator it = ids.iterator(); it.hasNext(); i++) {
 				Identifier id = (Identifier) it.next();
-				identifier_Transferables[i] = (Identifier_Transferable) id.getTransferable();
+				identifierTransferables[i] = (Identifier_Transferable) id.getTransferable();
 			}
 			MeasurementType_Transferable[] transferables = this.server
-					.transmitMeasurementTypes(identifier_Transferables,
+					.transmitMeasurementTypes(identifierTransferables,
 									accessIdentifierTransferable);
 			List list = new ArrayList(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
@@ -710,14 +710,14 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
     
     public List loadMeasurementTypesButIds(StorableObjectCondition storableObjectCondition, List ids) throws DatabaseException, CommunicationException {
         try {
-            Identifier_Transferable[] identifier_Transferables = new Identifier_Transferable[ids.size()];
+            Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
             int i = 0;
             for (Iterator it = ids.iterator(); it.hasNext(); i++) {
                 Identifier id = (Identifier) it.next();
-                identifier_Transferables[i] = (Identifier_Transferable) id.getTransferable();
+                identifierTransferables[i] = (Identifier_Transferable) id.getTransferable();
             }
             MeasurementType_Transferable[] transferables = this.server
-                    .transmitMeasurementTypesButIds(identifier_Transferables,
+                    .transmitMeasurementTypesButIds(identifierTransferables,
                                     accessIdentifierTransferable);
             List list = new ArrayList(transferables.length);
             for (int j = 0; j < transferables.length; j++) {
@@ -733,14 +733,14 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 
 	public List loadParameterTypes(List ids) throws DatabaseException, CommunicationException {
 		try {
-			Identifier_Transferable[] identifier_Transferables = new Identifier_Transferable[ids.size()];
+			Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
 			int i = 0;
 			for (Iterator it = ids.iterator(); it.hasNext(); i++) {
 				Identifier id = (Identifier) it.next();
-				identifier_Transferables[i] = (Identifier_Transferable) id.getTransferable();
+				identifierTransferables[i] = (Identifier_Transferable) id.getTransferable();
 			}
 			ParameterType_Transferable[] transferables = this.server
-					.transmitParameterTypes(identifier_Transferables, accessIdentifierTransferable);
+					.transmitParameterTypes(identifierTransferables, accessIdentifierTransferable);
 			List list = new ArrayList(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
 				list.add(new ParameterType(transferables[j]));
@@ -755,14 +755,14 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
     
     public List loadParameterTypesButIds(StorableObjectCondition storableObjectCondition, List ids) throws DatabaseException, CommunicationException {
         try {
-            Identifier_Transferable[] identifier_Transferables = new Identifier_Transferable[ids.size()];
+            Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
             int i = 0;
             for (Iterator it = ids.iterator(); it.hasNext(); i++) {
                 Identifier id = (Identifier) it.next();
-                identifier_Transferables[i] = (Identifier_Transferable) id.getTransferable();
+                identifierTransferables[i] = (Identifier_Transferable) id.getTransferable();
             }
             ParameterType_Transferable[] transferables = this.server
-                    .transmitParameterTypesButIds(identifier_Transferables, accessIdentifierTransferable);
+                    .transmitParameterTypesButIds(identifierTransferables, accessIdentifierTransferable);
             List list = new ArrayList(transferables.length);
             for (int j = 0; j < transferables.length; j++) {
                 list.add(new ParameterType(transferables[j]));
@@ -777,13 +777,13 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 
 	public List loadResults(List ids) throws DatabaseException, CommunicationException {
 		try {
-			Identifier_Transferable[] identifier_Transferables = new Identifier_Transferable[ids.size()];
+			Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
 			int i = 0;
 			for (Iterator it = ids.iterator(); it.hasNext(); i++) {
 				Identifier id = (Identifier) it.next();
-				identifier_Transferables[i] = (Identifier_Transferable) id.getTransferable();
+				identifierTransferables[i] = (Identifier_Transferable) id.getTransferable();
 			}
-			Result_Transferable[] transferables = this.server.transmitResults(identifier_Transferables,
+			Result_Transferable[] transferables = this.server.transmitResults(identifierTransferables,
 											accessIdentifierTransferable);
 			List list = new ArrayList(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
@@ -799,27 +799,27 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
     
     public List loadResultsButIds(StorableObjectCondition storableObjectCondition, List ids) throws DatabaseException, CommunicationException {
         try {
-            Identifier_Transferable[] identifier_Transferables = new Identifier_Transferable[ids.size()];
+            Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
             Result_Transferable[] transferables;
             int i = 0;            
             for (Iterator it = ids.iterator(); it.hasNext(); i++) {
                 Identifier id = (Identifier) it.next();
-                identifier_Transferables[i] = (Identifier_Transferable) id.getTransferable();
+                identifierTransferables[i] = (Identifier_Transferable) id.getTransferable();
             }
             if (storableObjectCondition instanceof DomainCondition) {
                 
-                transferables = this.server.transmitResultsButIdsDomainCondition(identifier_Transferables,
+                transferables = this.server.transmitResultsButIdsDomainCondition(identifierTransferables,
                                                                                  accessIdentifierTransferable,
                                                                                  (DomainCondition_Transferable) storableObjectCondition.getTransferable());
             
             } else if (storableObjectCondition instanceof LinkedIdsCondition) {
             
-                transferables = this.server.transmitResultsButIdsLinkedCondition(identifier_Transferables,
+                transferables = this.server.transmitResultsButIdsLinkedCondition(identifierTransferables,
                                                                                  accessIdentifierTransferable,
                                                                                  (LinkedIdsCondition_Transferable) storableObjectCondition.getTransferable());
         
             } else {
-                transferables = this.server.transmitResultsButIds(identifier_Transferables,
+                transferables = this.server.transmitResultsButIds(identifierTransferables,
                         accessIdentifierTransferable);
                 
                 if (storableObjectCondition != null && !(storableObjectCondition instanceof DomainCondition)) {
@@ -842,13 +842,13 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 
 	public List loadSets(List ids) throws DatabaseException, CommunicationException {
 		try {
-			Identifier_Transferable[] identifier_Transferables = new Identifier_Transferable[ids.size()];
+			Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
 			int i = 0;
 			for (Iterator it = ids.iterator(); it.hasNext(); i++) {
 				Identifier id = (Identifier) it.next();
-				identifier_Transferables[i] = (Identifier_Transferable) id.getTransferable();
+				identifierTransferables[i] = (Identifier_Transferable) id.getTransferable();
 			}
-			Set_Transferable[] transferables = this.server.transmitSets(identifier_Transferables,
+			Set_Transferable[] transferables = this.server.transmitSets(identifierTransferables,
 											accessIdentifierTransferable);
 			List list = new ArrayList(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
@@ -864,19 +864,19 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
     
     public List loadSetsButIds(StorableObjectCondition storableObjectCondition, List ids) throws DatabaseException, CommunicationException {
         try {
-            Identifier_Transferable[] identifier_Transferables = new Identifier_Transferable[ids.size()];
+            Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
             Set_Transferable[] transferables;
             int i = 0;
             for (Iterator it = ids.iterator(); it.hasNext(); i++) {
                 Identifier id = (Identifier) it.next();
-                identifier_Transferables[i] = (Identifier_Transferable) id.getTransferable();
+                identifierTransferables[i] = (Identifier_Transferable) id.getTransferable();
             }
             if (storableObjectCondition instanceof DomainCondition) {
-                transferables = this.server.transmitSetsButIdsCondition(identifier_Transferables,
+                transferables = this.server.transmitSetsButIdsCondition(identifierTransferables,
                         accessIdentifierTransferable,
                         (DomainCondition_Transferable) storableObjectCondition.getTransferable() );
             } else {
-                transferables = this.server.transmitSetsButIds(identifier_Transferables,
+                transferables = this.server.transmitSetsButIds(identifierTransferables,
                         accessIdentifierTransferable);
                 if (storableObjectCondition != null && !(storableObjectCondition instanceof DomainCondition)) {
                     Log.errorMessage("ClientMeasurementObjectLoader.loadSetsButIds | " +
@@ -897,14 +897,14 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 
 	public List loadTemporalPatterns(List ids) throws DatabaseException, CommunicationException {
 		try {
-			Identifier_Transferable[] identifier_Transferables = new Identifier_Transferable[ids.size()];
+			Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
 			int i = 0;
 			for (Iterator it = ids.iterator(); it.hasNext(); i++) {
 				Identifier id = (Identifier) it.next();
-				identifier_Transferables[i] = (Identifier_Transferable) id.getTransferable();
+				identifierTransferables[i] = (Identifier_Transferable) id.getTransferable();
 			}
 			TemporalPattern_Transferable[] transferables = this.server
-					.transmitTemporalPatterns(identifier_Transferables,
+					.transmitTemporalPatterns(identifierTransferables,
 									accessIdentifierTransferable);
 			List list = new ArrayList(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
@@ -920,14 +920,14 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
     
     public List loadTemporalPatternsButIds(StorableObjectCondition storableObjectCondition, List ids) throws DatabaseException, CommunicationException {
         try {
-            Identifier_Transferable[] identifier_Transferables = new Identifier_Transferable[ids.size()];
+            Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
             int i = 0;
             for (Iterator it = ids.iterator(); it.hasNext(); i++) {
                 Identifier id = (Identifier) it.next();
-                identifier_Transferables[i] = (Identifier_Transferable) id.getTransferable();
+                identifierTransferables[i] = (Identifier_Transferable) id.getTransferable();
             }
             TemporalPattern_Transferable[] transferables = this.server
-                    .transmitTemporalPatternsButIds(identifier_Transferables,
+                    .transmitTemporalPatternsButIds(identifierTransferables,
                                     accessIdentifierTransferable);
             List list = new ArrayList(transferables.length);
             for (int j = 0; j < transferables.length; j++) {
@@ -943,13 +943,13 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 
 	public List loadTests(List ids) throws DatabaseException, CommunicationException {
 		try {
-			Identifier_Transferable[] identifier_Transferables = new Identifier_Transferable[ids.size()];
+			Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
 			int i = 0;
 			for (Iterator it = ids.iterator(); it.hasNext(); i++) {
 				Identifier id = (Identifier) it.next();
-				identifier_Transferables[i] = (Identifier_Transferable) id.getTransferable();
+				identifierTransferables[i] = (Identifier_Transferable) id.getTransferable();
 			}
-			Test_Transferable[] transferables = this.server.transmitTests(identifier_Transferables,
+			Test_Transferable[] transferables = this.server.transmitTests(identifierTransferables,
 											accessIdentifierTransferable);
 			List list = new ArrayList(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
@@ -965,19 +965,19 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
     
     public List loadTestsButIds(StorableObjectCondition storableObjectCondition, List ids) throws DatabaseException, CommunicationException {
         try {
-            Identifier_Transferable[] identifier_Transferables = new Identifier_Transferable[ids.size()];
+            Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
             Test_Transferable[] transferables;
             int i = 0;
             for (Iterator it = ids.iterator(); it.hasNext(); i++) {
                 Identifier id = (Identifier) it.next();
-                identifier_Transferables[i] = (Identifier_Transferable) id.getTransferable();
+                identifierTransferables[i] = (Identifier_Transferable) id.getTransferable();
             }
             if (storableObjectCondition instanceof TemporalCondition) {
-                transferables = this.server.transmitTestsButIdsCondition(identifier_Transferables,
+                transferables = this.server.transmitTestsButIdsCondition(identifierTransferables,
                         accessIdentifierTransferable,
                         (TemporalCondition_Transferable) storableObjectCondition.getTransferable());                
             } else {
-                transferables = this.server.transmitTestsButIds(identifier_Transferables,
+                transferables = this.server.transmitTestsButIds(identifierTransferables,
                         accessIdentifierTransferable);
                 if (storableObjectCondition != null && !(storableObjectCondition instanceof TemporalCondition)) {
                     Log.errorMessage("ClientMeasurementObjectLoader.loadResultsButIds | " +

@@ -1,5 +1,5 @@
 /*
- * $Id: ClientConfigurationObjectLoader.java,v 1.1 2004/10/19 15:19:40 bass Exp $
+ * $Id: ClientConfigurationObjectLoader.java,v 1.2 2004/10/20 07:51:40 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -44,6 +44,7 @@ import com.syrus.AMFICOM.configuration.corba.MonitoredElement_Transferable;
 import com.syrus.AMFICOM.configuration.corba.PortType_Transferable;
 import com.syrus.AMFICOM.configuration.corba.Port_Transferable;
 import com.syrus.AMFICOM.configuration.corba.Server_Transferable;
+import com.syrus.AMFICOM.configuration.corba.StringFieldCondition_Transferable;
 import com.syrus.AMFICOM.configuration.corba.TransmissionPath_Transferable;
 import com.syrus.AMFICOM.configuration.corba.User_Transferable;
 import com.syrus.AMFICOM.general.CommunicationException;
@@ -60,8 +61,8 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.1 $, $Date: 2004/10/19 15:19:40 $
- * @author $Author: bass $
+ * @version $Revision: 1.2 $, $Date: 2004/10/20 07:51:40 $
+ * @author $Author: bob $
  * @module cmserver_v1
  */
 
@@ -77,9 +78,7 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
 
 	public static void setAccessIdentifierTransferable(AccessIdentifier_Transferable accessIdentifier_Transferable) {
 		accessIdentifierTransferable = accessIdentifier_Transferable;
-	}
-
-	
+	}	
     
     public CharacteristicType loadCharacteristicType(Identifier id) throws RetrieveObjectException,
 			CommunicationException {
@@ -317,14 +316,14 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
 
 	public List loadCharacteristics(List ids) throws DatabaseException, CommunicationException {
         try {
-            Identifier_Transferable[] identifier_Transferables = new Identifier_Transferable[ids.size()];
+            Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
             int i = 0;
             for (Iterator it = ids.iterator(); it.hasNext(); i++) {
                 Identifier id = (Identifier) it.next();
-                identifier_Transferables[i] = (Identifier_Transferable) id.getTransferable();
+                identifierTransferables[i] = (Identifier_Transferable) id.getTransferable();
             }
             Characteristic_Transferable[] transferables = this.server
-                    .transmitCharacteristics(identifier_Transferables,
+                    .transmitCharacteristics(identifierTransferables,
                                     accessIdentifierTransferable);
             List list = new ArrayList(transferables.length);
             for (int j = 0; j < transferables.length; j++) {
@@ -340,14 +339,14 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
 
 	public List loadCharacteristicTypes(List ids) throws DatabaseException, CommunicationException {
         try {
-            Identifier_Transferable[] identifier_Transferables = new Identifier_Transferable[ids.size()];
+            Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
             int i = 0;
             for (Iterator it = ids.iterator(); it.hasNext(); i++) {
                 Identifier id = (Identifier) it.next();
-                identifier_Transferables[i] = (Identifier_Transferable) id.getTransferable();
+                identifierTransferables[i] = (Identifier_Transferable) id.getTransferable();
             }
             CharacteristicType_Transferable[] transferables = this.server
-                    .transmitCharacteristicTypes(identifier_Transferables,
+                    .transmitCharacteristicTypes(identifierTransferables,
                                     accessIdentifierTransferable);
             List list = new ArrayList(transferables.length);
             for (int j = 0; j < transferables.length; j++) {
@@ -363,14 +362,14 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
 
 	public List loadDomains(List ids) throws DatabaseException, CommunicationException {
         try {
-            Identifier_Transferable[] identifier_Transferables = new Identifier_Transferable[ids.size()];
+            Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
             int i = 0;
             for (Iterator it = ids.iterator(); it.hasNext(); i++) {
                 Identifier id = (Identifier) it.next();
-                identifier_Transferables[i] = (Identifier_Transferable) id.getTransferable();
+                identifierTransferables[i] = (Identifier_Transferable) id.getTransferable();
             }
             Domain_Transferable[] transferables = this.server
-                    .transmitDomains(identifier_Transferables,
+                    .transmitDomains(identifierTransferables,
                                     accessIdentifierTransferable);
             List list = new ArrayList(transferables.length);
             for (int j = 0; j < transferables.length; j++) {
@@ -386,14 +385,14 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
 
 	public List loadEquipments(List ids) throws DatabaseException, CommunicationException {
         try {
-            Identifier_Transferable[] identifier_Transferables = new Identifier_Transferable[ids.size()];
+            Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
             int i = 0;
             for (Iterator it = ids.iterator(); it.hasNext(); i++) {
                 Identifier id = (Identifier) it.next();
-                identifier_Transferables[i] = (Identifier_Transferable) id.getTransferable();
+                identifierTransferables[i] = (Identifier_Transferable) id.getTransferable();
             }
             Equipment_Transferable[] transferables = this.server
-                    .transmitEquipments(identifier_Transferables,
+                    .transmitEquipments(identifierTransferables,
                                     accessIdentifierTransferable);
             List list = new ArrayList(transferables.length);
             for (int j = 0; j < transferables.length; j++) {
@@ -409,14 +408,14 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
 
 	public List loadEquipmentTypes(List ids) throws DatabaseException, CommunicationException {
         try {
-            Identifier_Transferable[] identifier_Transferables = new Identifier_Transferable[ids.size()];
+            Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
             int i = 0;
             for (Iterator it = ids.iterator(); it.hasNext(); i++) {
                 Identifier id = (Identifier) it.next();
-                identifier_Transferables[i] = (Identifier_Transferable) id.getTransferable();
+                identifierTransferables[i] = (Identifier_Transferable) id.getTransferable();
             }
             EquipmentType_Transferable[] transferables = this.server
-                    .transmitEquipmentTypes(identifier_Transferables,
+                    .transmitEquipmentTypes(identifierTransferables,
                                     accessIdentifierTransferable);
             List list = new ArrayList(transferables.length);
             for (int j = 0; j < transferables.length; j++) {
@@ -432,14 +431,14 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
 
 	public List loadKISs(List ids) throws DatabaseException, CommunicationException {
         try {
-            Identifier_Transferable[] identifier_Transferables = new Identifier_Transferable[ids.size()];
+            Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
             int i = 0;
             for (Iterator it = ids.iterator(); it.hasNext(); i++) {
                 Identifier id = (Identifier) it.next();
-                identifier_Transferables[i] = (Identifier_Transferable) id.getTransferable();
+                identifierTransferables[i] = (Identifier_Transferable) id.getTransferable();
             }
             KIS_Transferable[] transferables = this.server
-                    .transmitKISs(identifier_Transferables,
+                    .transmitKISs(identifierTransferables,
                                     accessIdentifierTransferable);
             List list = new ArrayList(transferables.length);
             for (int j = 0; j < transferables.length; j++) {
@@ -455,14 +454,14 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
 
 	public List loadMCMs(List ids) throws DatabaseException, CommunicationException {
         try {
-            Identifier_Transferable[] identifier_Transferables = new Identifier_Transferable[ids.size()];
+            Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
             int i = 0;
             for (Iterator it = ids.iterator(); it.hasNext(); i++) {
                 Identifier id = (Identifier) it.next();
-                identifier_Transferables[i] = (Identifier_Transferable) id.getTransferable();
+                identifierTransferables[i] = (Identifier_Transferable) id.getTransferable();
             }
             MCM_Transferable[] transferables = this.server
-                    .transmitMCMs(identifier_Transferables,
+                    .transmitMCMs(identifierTransferables,
                                     accessIdentifierTransferable);
             List list = new ArrayList(transferables.length);
             for (int j = 0; j < transferables.length; j++) {
@@ -478,14 +477,14 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
 
 	public List loadMeasurementPorts(List ids) throws DatabaseException, CommunicationException {
         try {
-            Identifier_Transferable[] identifier_Transferables = new Identifier_Transferable[ids.size()];
+            Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
             int i = 0;
             for (Iterator it = ids.iterator(); it.hasNext(); i++) {
                 Identifier id = (Identifier) it.next();
-                identifier_Transferables[i] = (Identifier_Transferable) id.getTransferable();
+                identifierTransferables[i] = (Identifier_Transferable) id.getTransferable();
             }
             MeasurementPort_Transferable[] transferables = this.server
-                    .transmitMeasurementPorts(identifier_Transferables,
+                    .transmitMeasurementPorts(identifierTransferables,
                                     accessIdentifierTransferable);
             List list = new ArrayList(transferables.length);
             for (int j = 0; j < transferables.length; j++) {
@@ -501,14 +500,14 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
 
 	public List loadMeasurementPortTypes(List ids) throws DatabaseException, CommunicationException {
         try {
-            Identifier_Transferable[] identifier_Transferables = new Identifier_Transferable[ids.size()];
+            Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
             int i = 0;
             for (Iterator it = ids.iterator(); it.hasNext(); i++) {
                 Identifier id = (Identifier) it.next();
-                identifier_Transferables[i] = (Identifier_Transferable) id.getTransferable();
+                identifierTransferables[i] = (Identifier_Transferable) id.getTransferable();
             }
             MeasurementPortType_Transferable[] transferables = this.server
-                    .transmitMeasurementPortTypes(identifier_Transferables,
+                    .transmitMeasurementPortTypes(identifierTransferables,
                                     accessIdentifierTransferable);
             List list = new ArrayList(transferables.length);
             for (int j = 0; j < transferables.length; j++) {
@@ -524,14 +523,14 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
 
 	public List loadMonitoredElements(List ids) throws DatabaseException, CommunicationException {
 		try {
-			Identifier_Transferable[] identifier_Transferables = new Identifier_Transferable[ids.size()];
+			Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
 			int i = 0;
 			for (Iterator it = ids.iterator(); it.hasNext(); i++) {
 				Identifier id = (Identifier) it.next();
-				identifier_Transferables[i] = (Identifier_Transferable) id.getTransferable();
+				identifierTransferables[i] = (Identifier_Transferable) id.getTransferable();
 			}
 			MonitoredElement_Transferable[] transferables = this.server
-					.transmitMonitoredElements(identifier_Transferables,
+					.transmitMonitoredElements(identifierTransferables,
 									accessIdentifierTransferable);
 			List list = new ArrayList(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
@@ -547,14 +546,14 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
 
 	public List loadPorts(List ids) throws DatabaseException, CommunicationException {
         try {
-            Identifier_Transferable[] identifier_Transferables = new Identifier_Transferable[ids.size()];
+            Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
             int i = 0;
             for (Iterator it = ids.iterator(); it.hasNext(); i++) {
                 Identifier id = (Identifier) it.next();
-                identifier_Transferables[i] = (Identifier_Transferable) id.getTransferable();
+                identifierTransferables[i] = (Identifier_Transferable) id.getTransferable();
             }
             Port_Transferable[] transferables = this.server
-                    .transmitPorts(identifier_Transferables,
+                    .transmitPorts(identifierTransferables,
                                     accessIdentifierTransferable);
             List list = new ArrayList(transferables.length);
             for (int j = 0; j < transferables.length; j++) {
@@ -570,14 +569,14 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
 
 	public List loadPortTypes(List ids) throws DatabaseException, CommunicationException {
         try {
-            Identifier_Transferable[] identifier_Transferables = new Identifier_Transferable[ids.size()];
+            Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
             int i = 0;
             for (Iterator it = ids.iterator(); it.hasNext(); i++) {
                 Identifier id = (Identifier) it.next();
-                identifier_Transferables[i] = (Identifier_Transferable) id.getTransferable();
+                identifierTransferables[i] = (Identifier_Transferable) id.getTransferable();
             }
             PortType_Transferable[] transferables = this.server
-                    .transmitPortTypes(identifier_Transferables,
+                    .transmitPortTypes(identifierTransferables,
                                     accessIdentifierTransferable);
             List list = new ArrayList(transferables.length);
             for (int j = 0; j < transferables.length; j++) {
@@ -593,14 +592,14 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
 
 	public List loadServers(List ids) throws DatabaseException, CommunicationException {
         try {
-            Identifier_Transferable[] identifier_Transferables = new Identifier_Transferable[ids.size()];
+            Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
             int i = 0;
             for (Iterator it = ids.iterator(); it.hasNext(); i++) {
                 Identifier id = (Identifier) it.next();
-                identifier_Transferables[i] = (Identifier_Transferable) id.getTransferable();
+                identifierTransferables[i] = (Identifier_Transferable) id.getTransferable();
             }
             Server_Transferable[] transferables = this.server
-                    .transmitServers(identifier_Transferables,
+                    .transmitServers(identifierTransferables,
                                     accessIdentifierTransferable);
             List list = new ArrayList(transferables.length);
             for (int j = 0; j < transferables.length; j++) {
@@ -616,14 +615,14 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
 
 	public List loadTransmissionPaths(List ids) throws DatabaseException, CommunicationException {
         try {
-            Identifier_Transferable[] identifier_Transferables = new Identifier_Transferable[ids.size()];
+            Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
             int i = 0;
             for (Iterator it = ids.iterator(); it.hasNext(); i++) {
                 Identifier id = (Identifier) it.next();
-                identifier_Transferables[i] = (Identifier_Transferable) id.getTransferable();
+                identifierTransferables[i] = (Identifier_Transferable) id.getTransferable();
             }
             TransmissionPath_Transferable[] transferables = this.server
-                    .transmitTransmissionPaths(identifier_Transferables,
+                    .transmitTransmissionPaths(identifierTransferables,
                                     accessIdentifierTransferable);
             List list = new ArrayList(transferables.length);
             for (int j = 0; j < transferables.length; j++) {
@@ -639,14 +638,14 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
 
 	public List loadUsers(List ids) throws DatabaseException, CommunicationException {
         try {
-            Identifier_Transferable[] identifier_Transferables = new Identifier_Transferable[ids.size()];
+            Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
             int i = 0;
             for (Iterator it = ids.iterator(); it.hasNext(); i++) {
                 Identifier id = (Identifier) it.next();
-                identifier_Transferables[i] = (Identifier_Transferable) id.getTransferable();
+                identifierTransferables[i] = (Identifier_Transferable) id.getTransferable();
             }
             User_Transferable[] transferables = this.server
-                    .transmitUsers(identifier_Transferables,
+                    .transmitUsers(identifierTransferables,
                                     accessIdentifierTransferable);
             List list = new ArrayList(transferables.length);
             for (int j = 0; j < transferables.length; j++) {
@@ -1150,14 +1149,14 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
 
     public List loadCharacteristicTypesButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException {
         try {
-            Identifier_Transferable[] identifier_Transferables = new Identifier_Transferable[ids.size()];
+            Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
             int i = 0;
             for (Iterator it = ids.iterator(); it.hasNext(); i++) {
                 Identifier id = (Identifier) it.next();
-                identifier_Transferables[i] = (Identifier_Transferable) id.getTransferable();
+                identifierTransferables[i] = (Identifier_Transferable) id.getTransferable();
             }
             CharacteristicType_Transferable[] transferables = this.server
-                    .transmitCharacteristicTypesButIds(identifier_Transferables,
+                    .transmitCharacteristicTypesButIds(identifierTransferables,
                                     accessIdentifierTransferable);
             List list = new ArrayList(transferables.length);
             for (int j = 0; j < transferables.length; j++) {
@@ -1173,14 +1172,14 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
 
     public List loadEquipmentTypesButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException {
         try {
-            Identifier_Transferable[] identifier_Transferables = new Identifier_Transferable[ids.size()];
+            Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
             int i = 0;
             for (Iterator it = ids.iterator(); it.hasNext(); i++) {
                 Identifier id = (Identifier) it.next();
-                identifier_Transferables[i] = (Identifier_Transferable) id.getTransferable();
+                identifierTransferables[i] = (Identifier_Transferable) id.getTransferable();
             }
             EquipmentType_Transferable[] transferables = this.server
-                    .transmitEquipmentTypesButIds(identifier_Transferables,
+                    .transmitEquipmentTypesButIds(identifierTransferables,
                                     accessIdentifierTransferable);
             List list = new ArrayList(transferables.length);
             for (int j = 0; j < transferables.length; j++) {
@@ -1194,19 +1193,16 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
         }
     }
 
-    /* (non-Javadoc)
-     * @see com.syrus.AMFICOM.configuration.ConfigurationObjectLoader#loadPortTypesButIds(com.syrus.AMFICOM.general.StorableObjectCondition, java.util.List)
-     */
     public List loadPortTypesButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException {
         try {
-            Identifier_Transferable[] identifier_Transferables = new Identifier_Transferable[ids.size()];
+            Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
             int i = 0;
             for (Iterator it = ids.iterator(); it.hasNext(); i++) {
                 Identifier id = (Identifier) it.next();
-                identifier_Transferables[i] = (Identifier_Transferable) id.getTransferable();
+                identifierTransferables[i] = (Identifier_Transferable) id.getTransferable();
             }
             PortType_Transferable[] transferables = this.server
-                    .transmitPortTypesButIds(identifier_Transferables,
+                    .transmitPortTypesButIds(identifierTransferables,
                                     accessIdentifierTransferable);
             List list = new ArrayList(transferables.length);
             for (int j = 0; j < transferables.length; j++) {
@@ -1222,14 +1218,14 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
 
     public List loadMeasurementPortTypesButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException {
         try {
-            Identifier_Transferable[] identifier_Transferables = new Identifier_Transferable[ids.size()];
+            Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
             int i = 0;
             for (Iterator it = ids.iterator(); it.hasNext(); i++) {
                 Identifier id = (Identifier) it.next();
-                identifier_Transferables[i] = (Identifier_Transferable) id.getTransferable();
+                identifierTransferables[i] = (Identifier_Transferable) id.getTransferable();
             }
             MeasurementPortType_Transferable[] transferables = this.server
-                    .transmitMeasurementPortTypesButIds(identifier_Transferables,
+                    .transmitMeasurementPortTypesButIds(identifierTransferables,
                                     accessIdentifierTransferable);
             List list = new ArrayList(transferables.length);
             for (int j = 0; j < transferables.length; j++) {
@@ -1243,19 +1239,16 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
         }
     }
 
-    /* (non-Javadoc)
-     * @see com.syrus.AMFICOM.configuration.ConfigurationObjectLoader#loadCharacteristicsButIds(com.syrus.AMFICOM.general.StorableObjectCondition, java.util.List)
-     */
     public List loadCharacteristicsButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException {
         try {
-            Identifier_Transferable[] identifier_Transferables = new Identifier_Transferable[ids.size()];
+            Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
             int i = 0;
             for (Iterator it = ids.iterator(); it.hasNext(); i++) {
                 Identifier id = (Identifier) it.next();
-                identifier_Transferables[i] = (Identifier_Transferable) id.getTransferable();
+                identifierTransferables[i] = (Identifier_Transferable) id.getTransferable();
             }
             Characteristic_Transferable[] transferables = this.server
-                    .transmitCharacteristicsButIds(identifier_Transferables,
+                    .transmitCharacteristicsButIds(identifierTransferables,
                                     accessIdentifierTransferable);
             List list = new ArrayList(transferables.length);
             for (int j = 0; j < transferables.length; j++) {
@@ -1271,19 +1264,24 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
 
     public List loadUsersButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException {
         try {
-            Identifier_Transferable[] identifier_Transferables = new Identifier_Transferable[ids.size()];
+            Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
             int i = 0;
             for (Iterator it = ids.iterator(); it.hasNext(); i++) {
                 Identifier id = (Identifier) it.next();
-                identifier_Transferables[i] = (Identifier_Transferable) id.getTransferable();
+                identifierTransferables[i] = (Identifier_Transferable) id.getTransferable();
             }
-            User_Transferable[] transferables = this.server
-                    .transmitUsersButIds(identifier_Transferables,
-                                    accessIdentifierTransferable);
-            List list = new ArrayList(transferables.length);
-            for (int j = 0; j < transferables.length; j++) {
-                list.add(new User(transferables[j]));
-            }
+            List list = null;
+            if (condition instanceof StringFieldCondition){
+            	StringFieldCondition stringFieldCondition = (StringFieldCondition)condition;
+            	User_Transferable[] transferables = this.server
+                .transmitUsersButIdsCondition(identifierTransferables,
+						  accessIdentifierTransferable,
+						  (StringFieldCondition_Transferable)stringFieldCondition.getTransferable());
+                list = new ArrayList(transferables.length);
+                for (int j = 0; j < transferables.length; j++) {
+                    list.add(new User(transferables[j]));
+                }
+            } 
             return list;
         } catch (CreateObjectException e) {
             throw new RetrieveObjectException(e);
@@ -1294,22 +1292,22 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
 
     public List loadDomainsButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException {
         try {
-            Identifier_Transferable[] identifier_Transferables = new Identifier_Transferable[ids.size()];
+            Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
             Domain_Transferable[] transferables;
             int i = 0;
             for (Iterator it = ids.iterator(); it.hasNext(); i++) {
                 Identifier id = (Identifier) it.next();
-                identifier_Transferables[i] = (Identifier_Transferable) id.getTransferable();
+                identifierTransferables[i] = (Identifier_Transferable) id.getTransferable();
             }
             if (condition instanceof DomainCondition) {
                 transferables = this.server
-                        .transmitDomainsButIdsCondition(identifier_Transferables,
+                        .transmitDomainsButIdsCondition(identifierTransferables,
                                                                    accessIdentifierTransferable,
                                                                    (DomainCondition_Transferable)condition.getTransferable());
             
             } else {
                 transferables = this.server
-                        .transmitDomainsButIds(identifier_Transferables,
+                        .transmitDomainsButIds(identifierTransferables,
                                                     accessIdentifierTransferable);
                 if (condition != null && !(condition instanceof DomainCondition) ) {
                     Log.errorMessage("ClientMeasurementObjectLoader.loadMeasurementsButIds | " +
@@ -1330,26 +1328,23 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
         }
     }
 
-    /* (non-Javadoc)
-     * @see com.syrus.AMFICOM.configuration.ConfigurationObjectLoader#loadServersButIds(com.syrus.AMFICOM.general.StorableObjectCondition, java.util.List)
-     */
     public List loadServersButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException {
         try {
-            Identifier_Transferable[] identifier_Transferables = new Identifier_Transferable[ids.size()];
+            Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
             Server_Transferable[] transferables;
             int i = 0;
             for (Iterator it = ids.iterator(); it.hasNext(); i++) {
                 Identifier id = (Identifier) it.next();
-                identifier_Transferables[i] = (Identifier_Transferable) id.getTransferable();
+                identifierTransferables[i] = (Identifier_Transferable) id.getTransferable();
             }
             if (condition instanceof DomainCondition) {
                 transferables = this.server
-                        .transmitServersButIdsCondition(identifier_Transferables,
+                        .transmitServersButIdsCondition(identifierTransferables,
                                                                    accessIdentifierTransferable,
                                                                    (DomainCondition_Transferable)condition.getTransferable());            
             } else {
                 transferables = this.server
-                        .transmitServersButIds(identifier_Transferables,
+                        .transmitServersButIds(identifierTransferables,
                                                     accessIdentifierTransferable);
                 if (condition != null && !(condition instanceof DomainCondition) ) {
                     Log.errorMessage("ClientMeasurementObjectLoader.loadMeasurementPortsButIds | " +
@@ -1371,22 +1366,22 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
 
     public List loadMCMsButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException {
         try {
-            Identifier_Transferable[] identifier_Transferables = new Identifier_Transferable[ids.size()];
+            Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
             MCM_Transferable[] transferables;
             int i = 0;
             for (Iterator it = ids.iterator(); it.hasNext(); i++) {
                 Identifier id = (Identifier) it.next();
-                identifier_Transferables[i] = (Identifier_Transferable) id.getTransferable();
+                identifierTransferables[i] = (Identifier_Transferable) id.getTransferable();
             }
             if (condition instanceof DomainCondition) {
                 transferables = this.server
-                        .transmitMCMsButIdsCondition(identifier_Transferables,
+                        .transmitMCMsButIdsCondition(identifierTransferables,
                                                                    accessIdentifierTransferable,
                                                                    (DomainCondition_Transferable)condition.getTransferable());
             
             } else {
                 transferables = this.server
-                        .transmitMCMsButIds(identifier_Transferables,
+                        .transmitMCMsButIds(identifierTransferables,
                                                     accessIdentifierTransferable);
                 if (condition != null && !(condition instanceof DomainCondition) ) {
                     Log.errorMessage("ClientMeasurementObjectLoader.loadMCMsButIds | " +
@@ -1408,22 +1403,22 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
 
     public List loadEquipmentsButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException {
         try {
-            Identifier_Transferable[] identifier_Transferables = new Identifier_Transferable[ids.size()];
+            Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
             Equipment_Transferable[] transferables;
             int i = 0;
             for (Iterator it = ids.iterator(); it.hasNext(); i++) {
                 Identifier id = (Identifier) it.next();
-                identifier_Transferables[i] = (Identifier_Transferable) id.getTransferable();
+                identifierTransferables[i] = (Identifier_Transferable) id.getTransferable();
             }
             if (condition instanceof DomainCondition) {
                 transferables = this.server
-                        .transmitEquipmentsButIdsCondition(identifier_Transferables,
+                        .transmitEquipmentsButIdsCondition(identifierTransferables,
                                                                    accessIdentifierTransferable,
                                                                    (DomainCondition_Transferable)condition.getTransferable());
             
             } else {
                 transferables = this.server
-                        .transmitEquipmentsButIds(identifier_Transferables,
+                        .transmitEquipmentsButIds(identifierTransferables,
                                                     accessIdentifierTransferable);
                 if (condition != null && !(condition instanceof DomainCondition) ) {
                     Log.errorMessage("ClientMeasurementObjectLoader.loadEquipmentsButIds | " +
@@ -1445,21 +1440,21 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
 
     public List loadPortsButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException {
         try {
-            Identifier_Transferable[] identifier_Transferables = new Identifier_Transferable[ids.size()];
+            Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
             Port_Transferable[] transferables;
             int i = 0;
             for (Iterator it = ids.iterator(); it.hasNext(); i++) {
                 Identifier id = (Identifier) it.next();
-                identifier_Transferables[i] = (Identifier_Transferable) id.getTransferable();
+                identifierTransferables[i] = (Identifier_Transferable) id.getTransferable();
             }
             if (condition instanceof DomainCondition) {
                 transferables = this.server
-                        .transmitPortsButIdsCondition(identifier_Transferables,
+                        .transmitPortsButIdsCondition(identifierTransferables,
                                                                    accessIdentifierTransferable,
                                                                    (DomainCondition_Transferable)condition.getTransferable());            
             } else {
                 transferables = this.server
-                        .transmitPortsButIds(identifier_Transferables,
+                        .transmitPortsButIds(identifierTransferables,
                                                     accessIdentifierTransferable);
                 if (condition != null && !(condition instanceof DomainCondition) ) {
                     Log.errorMessage("ClientMeasurementObjectLoader.loadMeasurementPortsButIds | " +
@@ -1480,21 +1475,21 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
 
     public List loadTransmissionPathsButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException {
         try {
-            Identifier_Transferable[] identifier_Transferables = new Identifier_Transferable[ids.size()];
+            Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
             TransmissionPath_Transferable[] transferables;
             int i = 0;
             for (Iterator it = ids.iterator(); it.hasNext(); i++) {
                 Identifier id = (Identifier) it.next();
-                identifier_Transferables[i] = (Identifier_Transferable) id.getTransferable();
+                identifierTransferables[i] = (Identifier_Transferable) id.getTransferable();
             }
             if (condition instanceof DomainCondition) {
                 transferables = this.server
-                        .transmitTransmissionPathsButIdsCondition(identifier_Transferables,
+                        .transmitTransmissionPathsButIdsCondition(identifierTransferables,
                                                                    accessIdentifierTransferable,
                                                                    (DomainCondition_Transferable)condition.getTransferable());            
             } else {
                 transferables = this.server
-                        .transmitTransmissionPathsButIds(identifier_Transferables,
+                        .transmitTransmissionPathsButIds(identifierTransferables,
                                                     accessIdentifierTransferable);
                 if (condition != null && !(condition instanceof DomainCondition) ) {
                     Log.errorMessage("ClientMeasurementObjectLoader.loadMeasurementPortsButIds | " +
@@ -1515,22 +1510,22 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
     
     public List loadKISsButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException {
         try {
-            Identifier_Transferable[] identifier_Transferables = new Identifier_Transferable[ids.size()];
+            Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
             KIS_Transferable[] transferables;
             int i = 0;
             for (Iterator it = ids.iterator(); it.hasNext(); i++) {
                 Identifier id = (Identifier) it.next();
-                identifier_Transferables[i] = (Identifier_Transferable) id.getTransferable();
+                identifierTransferables[i] = (Identifier_Transferable) id.getTransferable();
             }
             if (condition instanceof DomainCondition) {
                 transferables = this.server
-                        .transmitKISsButIdsCondition(identifier_Transferables,
+                        .transmitKISsButIdsCondition(identifierTransferables,
                                                                    accessIdentifierTransferable,
                                                                    (DomainCondition_Transferable)condition.getTransferable());
             
             } else {
                 transferables = this.server
-                        .transmitKISsButIds(identifier_Transferables,
+                        .transmitKISsButIds(identifierTransferables,
                                                     accessIdentifierTransferable);
                 if (condition != null && !(condition instanceof DomainCondition) ) {
                     Log.errorMessage("ClientMeasurementObjectLoader.loadKISButIds | " +
@@ -1553,21 +1548,21 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
 
     public List loadMeasurementPortsButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException {
         try {
-            Identifier_Transferable[] identifier_Transferables = new Identifier_Transferable[ids.size()];
+            Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
             MeasurementPort_Transferable[] transferables;
             int i = 0;
             for (Iterator it = ids.iterator(); it.hasNext(); i++) {
                 Identifier id = (Identifier) it.next();
-                identifier_Transferables[i] = (Identifier_Transferable) id.getTransferable();
+                identifierTransferables[i] = (Identifier_Transferable) id.getTransferable();
             }
             if (condition instanceof DomainCondition) {
                 transferables = this.server
-                        .transmitMeasurementPortsButIdsCondition(identifier_Transferables,
+                        .transmitMeasurementPortsButIdsCondition(identifierTransferables,
                                                                    accessIdentifierTransferable,
                                                                    (DomainCondition_Transferable)condition.getTransferable());            
             } else {
                 transferables = this.server
-                        .transmitMeasurementPortsButIds(identifier_Transferables,
+                        .transmitMeasurementPortsButIds(identifierTransferables,
                                                     accessIdentifierTransferable);
                 if (condition != null && !(condition instanceof DomainCondition) ) {
                     Log.errorMessage("ClientMeasurementObjectLoader.loadMeasurementPortsButIds | " +
@@ -1587,26 +1582,23 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
         }
     }
 
-    /* (non-Javadoc)
-     * @see com.syrus.AMFICOM.configuration.ConfigurationObjectLoader#loadMonitoredElementsButIds(com.syrus.AMFICOM.general.StorableObjectCondition, java.util.List)
-     */
     public List loadMonitoredElementsButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException {
         try {
-            Identifier_Transferable[] identifier_Transferables = new Identifier_Transferable[ids.size()];
+            Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
             MonitoredElement_Transferable[] transferables;
             int i = 0;
             for (Iterator it = ids.iterator(); it.hasNext(); i++) {
                 Identifier id = (Identifier) it.next();
-                identifier_Transferables[i] = (Identifier_Transferable) id.getTransferable();
+                identifierTransferables[i] = (Identifier_Transferable) id.getTransferable();
             }
             if (condition instanceof DomainCondition) {
                 transferables = this.server
-                        .transmitMonitoredElementsButIdsCondition(identifier_Transferables,
+                        .transmitMonitoredElementsButIdsCondition(identifierTransferables,
                                                                    accessIdentifierTransferable,
                                                                    (DomainCondition_Transferable)condition.getTransferable());            
             } else {
                 transferables = this.server
-                        .transmitMonitoredElementsButIds(identifier_Transferables,
+                        .transmitMonitoredElementsButIds(identifierTransferables,
                                                     accessIdentifierTransferable);
                 if (condition != null && !(condition instanceof DomainCondition) ) {
                     Log.errorMessage("ClientMeasurementObjectLoader.loadMeasurementPortsButIds | " +
