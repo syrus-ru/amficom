@@ -1,5 +1,5 @@
 /*
- * $Id: event.idl,v 1.7 2005/01/28 15:16:32 arseniy Exp $
+ * $Id: event.idl,v 1.8 2005/02/02 15:10:30 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -20,7 +20,7 @@ module event {
 module corba {
 
 ////////////////// MeasurementEvent //////////////////
-
+/*
 	enum MeasurementEventSort {
 		TEST_STATUS_CHANGED,
 		NEW_MEASUREMENT_GENERATED,
@@ -54,7 +54,7 @@ module corba {
 	abstract interface ConfigurationEventListener {
 		void event_notification(in ConfigurationEvent event);
 	};
-
+*/
 /////////////////////// Event ////////////////////////
 
 	struct EventType_Transferable {
@@ -68,25 +68,30 @@ module corba {
 
 	typedef sequence <EventType_Transferable> EventTypeSeq_Transferable;
 
+
+
 	struct EventParameter_Transferable {
 		general::corba::Identifier_Transferable id;
 		general::corba::Identifier_Transferable type_id;
 		enum EventParameterSort {
-			SORT_NUMBER,
-			SORT_STRING,
-			SORT_RAW
+			PARAMETER_SORT_NUMBER,
+			PARAMETER_SORT_STRING,
+			PARAMETER_SORT_RAW
 		} sort;
 		union EventParameterValue switch (EventParameterSort) {
-			case SORT_NUMBER:
+			case PARAMETER_SORT_NUMBER:
 				long value_number;
-			case SORT_STRING:
+			case PARAMETER_SORT_STRING:
 				wstring value_string;
-			case SORT_RAW:
+			case PARAMETER_SORT_RAW:
 				sequence <octet> value_raw;
 		} value;
 	};
 
-	typedef sequence <EventParameter_Transferable> EventParameterSeq_Transferable;
+	struct EventSource_Transferable {
+		general::corba::Identifier_Transferable id;
+		general::corba::Identifier_Transferable source_id;
+	};
 
 	enum EventStatus {
 		EVENT_STATUS_GENERATED,
@@ -100,11 +105,11 @@ module corba {
 		EventStatus status;
 		general::corba::WString256 description;
 
-		EventParameterSeq_Transferable parameters;
+		sequence <EventParameter_Transferable> parameters;
+		sequence <EventSource_Transferable> event_sources;
 	};
 
-	typedef sequence <Event_Transferable> EventSeq_Transferable;
-
+/*
 /////////////////////// Alarm ////////////////////////
 
 	struct AlarmType_Transferable {
@@ -140,7 +145,7 @@ module corba {
 	};
 
 	typedef sequence <Alarm_Transferable> AlarmSeq_Transferable;
-
+*/
 };
 };
 };
