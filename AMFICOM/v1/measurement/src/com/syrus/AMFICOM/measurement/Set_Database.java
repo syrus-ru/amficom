@@ -16,6 +16,11 @@ import com.syrus.AMFICOM.general.StorableObject_Database;
 import com.syrus.AMFICOM.general.ObjectEntities;
 
 public class Set_Database extends StorableObject_Database {
+	
+//	 sort NUMBER(2, 0) NOT NULL,
+	public static final String	COLUMN_SORT			= "sort";
+//	 description VARCHAR2(256),
+	public static final String	COLUMN_DESCRIPTION	= "description";
 
 	private Set fromStorableObject(StorableObject storableObject) throws Exception {
 		if (storableObject instanceof Set)
@@ -32,16 +37,19 @@ public class Set_Database extends StorableObject_Database {
 	}
 
 	private void retrieveSet(Set set) throws Exception {
-		String set_id_str = set.getId().toString();
-		String sql = "SELECT "
-			+ DatabaseDate.toQuerySubString("created") + ", " 
-			+ DatabaseDate.toQuerySubString("modified") + ", "
-			+ "creator_id, "
-			+ "modifier_id, "
-			+ "sort, "
-			+ "description"
-			+ " FROM " + ObjectEntities.SET_ENTITY
-			+ " WHERE id = " + set_id_str;
+		String set_id_str = set.getId().toSQLString();
+		String sql = SQL_SELECT
+			+ DatabaseDate.toQuerySubString(COLUMN_CREATED) + COMMA 
+			+ DatabaseDate.toQuerySubString(COLUMN_MODIFIED) + COMMA
+			+ COLUMN_CREATOR_ID + COMMA
+			+ COLUMN_MODIFIER_ID + COMMA
+			+ COLUMN_SORT + COMMA
+			+ COLUMN_DESCRIPTION 
+			+ SQL_FROM 
+			+ ObjectEntities.SET_ENTITY
+			+ SQL_WHERE
+			+ COLUMN_ID	+ EQUALS
+			+ set_id_str;
 		Statement statement = null;
 		ResultSet resultSet = null;
 		try {
@@ -49,12 +57,18 @@ public class Set_Database extends StorableObject_Database {
 			Log.debugMessage("Set_Database.retrieveSet | Trying: " + sql, Log.DEBUGLEVEL05);
 			resultSet = statement.executeQuery(sql);
 			if (resultSet.next()) {
-				String description = resultSet.getString("description");
-				set.setAttributes(DatabaseDate.fromQuerySubString(resultSet, "created"),
-													DatabaseDate.fromQuerySubString(resultSet, "modified"),
-													new Identifier(resultSet.getLong("creator_id")),
-													new Identifier(resultSet.getLong("modifier_id")),
-													resultSet.getInt("sort"),
+				String description = resultSet.getString(COLUMN_DESCRIPTION);
+				set.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
+													DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
+													/**
+													 * @todo when change DB Identifier model ,change getString() to getLong()
+													 */												
+													new Identifier(resultSet.getLong(COLUMN_CREATOR_ID)),
+													/**
+													 * @todo when change DB Identifier model ,change getString() to getLong()
+													 */
+													new Identifier(resultSet.getLong(COLUMN_MODIFIER_ID)),
+													resultSet.getInt(COLUMN_SORT),
 													(description != null)?description:"");
 			}
 			else

@@ -15,12 +15,14 @@ import com.syrus.util.database.DatabaseDate;
 
 public class AnalysisType_Database extends StorableObject_Database {
 
-	public static final String	MODE_IN				= "IN";
-	public static final String	MODE_CRITERION		= "CRI";
-	public static final String	MODE_OUT			= "OUT";
+	public static final String	MODE_IN							= "IN";
+	public static final String	MODE_CRITERION					= "CRI";
+	public static final String	MODE_OUT						= "OUT";
 
-	public static final String	COLUMN_CODENAME		= "codename";
-	public static final String	COLUMN_DESCRIPTION	= "description";	
+	public static final String	COLUMN_CODENAME					= "codename";
+	public static final String	COLUMN_DESCRIPTION				= "description";	
+	
+	public static final String	LINK_COLUMN_ANALYSIS_TYPE_ID 	= "analysis_type_id";
 
 	private AnalysisType fromStorableObject(StorableObject storableObject) throws Exception {
 		if (storableObject instanceof AnalysisType)
@@ -101,13 +103,13 @@ public class AnalysisType_Database extends StorableObject_Database {
 		String sql;
 		{
 			StringBuffer buffer = new StringBuffer(SQL_SELECT);
-			buffer.append("parameter_type_id");
+			buffer.append(LINK_COLUMN_PARAMETER_TYPE_ID);
 			buffer.append(COMMA);
-			buffer.append("parameter_mode");
+			buffer.append(LINK_COLUMN_PARAMETER_MODE);
 			buffer.append(SQL_FROM);
 			buffer.append(ObjectEntities.ANATYPPARTYPLINK_ENTITY);
 			buffer.append(SQL_WHERE);
-			buffer.append("analysis_type_id");
+			buffer.append(LINK_COLUMN_ANALYSIS_TYPE_ID);
 			buffer.append(EQUALS);
 			buffer.append( analysis_type_id_str);
 			sql = buffer.toString();
@@ -124,8 +126,8 @@ public class AnalysisType_Database extends StorableObject_Database {
 				/**
 				 * @todo when change DB Identifier model ,change getString() to getLong()
 				 */
-				parameter_mode = resultSet.getString("parameter_mode");
-				parameter_type_id_code = resultSet.getString("parameter_type_id");
+				parameter_mode = resultSet.getString(LINK_COLUMN_PARAMETER_MODE);
+				parameter_type_id_code = resultSet.getString(LINK_COLUMN_PARAMETER_TYPE_ID);
 				if (parameter_mode.equals(MODE_IN))
 					in_par_typs.add(new Identifier(parameter_type_id_code));
 				else if (parameter_mode.equals(MODE_CRITERION))
@@ -188,22 +190,23 @@ public class AnalysisType_Database extends StorableObject_Database {
 
 	private void insertAnalysisType(AnalysisType analysisType) throws Exception {
 		String analysis_type_id_str = analysisType.getId().toSQLString();
-		String sql = "INSERT INTO " + ObjectEntities.ANALYSISTYPE_ENTITY + " (" 
+		String sql = SQL_INSERT_INTO 
+			+ ObjectEntities.ANALYSISTYPE_ENTITY + OPEN_BRACKET 
 			+ COLUMN_ID + COMMA 
 			+ COLUMN_CREATED + COMMA 
 			+ COLUMN_MODIFIED + COMMA 
 			+ COLUMN_CREATOR_ID + COMMA 
 			+ COLUMN_MODIFIER_ID + COMMA
 			+ COLUMN_CODENAME + COMMA 
-			+ COLUMN_DESCRIPTION 
-			+ ") VALUES ("
+			+ COLUMN_DESCRIPTION
+			+ CLOSE_BRACKET + SQL_VALUES + OPEN_BRACKET			
 			+ analysis_type_id_str + COMMA
 			+ DatabaseDate.toUpdateSubString(analysisType.getCreated()) + COMMA
 			+ DatabaseDate.toUpdateSubString(analysisType.getModified()) + COMMA
 			+ analysisType.getCreatorId().toString() + COMMA 
-			+ analysisType.getModifierId().toString() + ", '"
-			+ analysisType.getCodename() + "', '" 
-			+ analysisType.getDescription() + "')";
+			+ analysisType.getModifierId().toString() + COMMA + APOSTOPHE
+			+ analysisType.getCodename() + APOSTOPHE + COMMA + APOSTOPHE 
+			+ analysisType.getDescription() + APOSTOPHE + CLOSE_BRACKET;
 		Statement statement = null;
 		try {
 			statement = connection.createStatement();
