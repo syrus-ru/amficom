@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectXMLDriver.java,v 1.13 2005/02/07 11:27:39 bob Exp $
+ * $Id: StorableObjectXMLDriver.java,v 1.14 2005/02/07 13:44:02 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -48,7 +48,7 @@ import com.syrus.util.Log;
 /**
  * XML Driver for storable object package, one per package.
  * 
- * @version $Revision: 1.13 $, $Date: 2005/02/07 11:27:39 $
+ * @version $Revision: 1.14 $, $Date: 2005/02/07 13:44:02 $
  * @author $Author: bob $
  * @module general_v1
  */
@@ -62,9 +62,8 @@ public class StorableObjectXMLDriver {
 	public StorableObjectXMLDriver(final File path, final String packageName) {
 		if (path.exists()) {
 			if (path.isDirectory()) {
-				this.fileName =  path.getAbsolutePath() + File.separatorChar + packageName + ".xml";
-			}
-			else {
+				this.fileName = path.getAbsolutePath() + File.separatorChar + packageName + ".xml";
+			} else {
 				this.fileName = path.getParent();
 			}
 		} else {
@@ -78,14 +77,15 @@ public class StorableObjectXMLDriver {
 		this.packageName = packageName;
 		this.parseXmlFile(false);
 	}
-	
+
 	public void putObjectMap(final Identifier identifier, final Map objects) throws IllegalDataException {
 		this.deleteObject(identifier);
 		Element element = this.doc.createElement(identifier.getIdentifierString());
 		for (Iterator it = objects.keySet().iterator(); it.hasNext();) {
 			String key = (String) it.next();
 			Object obj = objects.get(key);
-			this.addObject(element, key, obj);
+			if (obj != null)
+				this.addObject(element, key, obj);
 
 		}
 		this.root.appendChild(element);
@@ -128,32 +128,47 @@ public class StorableObjectXMLDriver {
 		String className = ObjectGroupEntities.getPackageName(id.getMajor()) + "."
 				+ ObjectGroupEntities.getGroupName(id.getMajor()).replaceAll("Group$", "") + "StorableObjectPool";
 		try {
+			Log.debugMessage("StorableObjectXMLDriver.reflectStorableObject | className " + className, Log.INFO);
 			Class clazz = Class.forName(className);
+			Log.debugMessage("StorableObjectXMLDriver.reflectStorableObject | className " + clazz.getName(), Log.INFO);
 			Method method = clazz.getMethod("getStorableObject", new Class[] { Identifier.class, boolean.class});
 			storableObject = (StorableObject) method.invoke(null, new Object[] { id, Boolean.TRUE});
+			Log.debugMessage("StorableObjectXMLDriver.reflectStorableObject | id "
+					+ storableObject.getId().getIdentifierString(), Log.INFO);
 
 		} catch (ClassNotFoundException e) {
 			throw new IllegalDataException("StorableObjectXMLDriver.reflectStorableObject | Class " + className //$NON-NLS-1$
 					+ " not found on the classpath - " + e.getMessage());
 		} catch (SecurityException e) {
-			throw new IllegalDataException("StorableObjectXMLDriver.reflectStorableObject | Caught " + e.getMessage());
+			throw new IllegalDataException("StorableObjectXMLDriver.reflectStorableObject | Caught SecurityException "
+					+ e.getMessage());
 		} catch (NoSuchMethodException e) {
 			throw new IllegalDataException("StorableObjectXMLDriver.reflectStorableObject | Class " + className //$NON-NLS-1$
 					+ " haven't getStorableObject static method - " + e.getMessage());
 		} catch (IllegalArgumentException e) {
-			throw new IllegalDataException("StorableObjectXMLDriver.reflectStorableObject | Caught " + e.getMessage());
+			throw new IllegalDataException(
+											"StorableObjectXMLDriver.reflectStorableObject | Caught IllegalArgumentException "
+													+ e.getMessage());
 		} catch (IllegalAccessException e) {
-			throw new IllegalDataException("StorableObjectXMLDriver.reflectStorableObject | Caught " + e.getMessage());
+			throw new IllegalDataException(
+											"StorableObjectXMLDriver.reflectStorableObject | Caught IllegalAccessException "
+													+ e.getMessage());
 		} catch (InvocationTargetException e) {
-			throw new IllegalDataException("StorableObjectXMLDriver.reflectStorableObject | Caught " + e.getMessage());
+			Throwable targetException = e.getTargetException();
+			throw new IllegalDataException(
+											"StorableObjectXMLDriver.reflectStorableObject | Caught InvocationTargetException "
+													+ targetException.getMessage(), targetException);
 		}
 		return storableObject;
 	}
 
 	private Object parse(Node node) throws IllegalDataException {
-//		Log.debugMessage("StorableObjectXMLDriver.parse | node name:" + node.getNodeName(), Log.INFO);
+		// Log.debugMessage("StorableObjectXMLDriver.parse | node name:" +
+		// node.getNodeName(), Log.INFO);
 		Object object = null;
 		NamedNodeMap attributes = node.getAttributes();
+		if (attributes == null)
+			return object;
 		if (attributes.getLength() > 0) {
 			Node namedItem = attributes.getNamedItem("className");
 			String className = namedItem.getNodeValue();
@@ -192,6 +207,8 @@ public class StorableObjectXMLDriver {
 		if (className.equals(StorableObject.class.getName())) {
 			Identifier identifier = new Identifier(value);
 			object = this.reflectStorableObject(identifier);
+		} else if (className.equals(Boolean.class.getName())) {
+			object = new Boolean(value);
 		} else if (className.equals(Identifier.class.getName())) {
 			object = new Identifier(value);
 		} else if (className.equals(Date.class.getName())) {
@@ -232,7 +249,11 @@ public class StorableObjectXMLDriver {
 
 	private void addObject(Node node, String key, Object object) {
 		Element element = this.doc.createElement(key);
-		String className = object.getClass().getName();
+		if (object == null) {
+			Log.errorMessage("StorableObjectXMLDriver.addObject | key : " + key + " , value is 'null'");
+			return;
+		}
+		String className = object.getClass().getName();		
 		if (object instanceof StorableObject) {
 			StorableObject storableObject = (StorableObject) object;
 			String string = storableObject.getId().getIdentifierString();
@@ -247,6 +268,10 @@ public class StorableObjectXMLDriver {
 		} else if (object instanceof Date) {
 			Date date = (Date) object;
 			Text text = this.doc.createTextNode(Long.toString(date.getTime()));
+			element.appendChild(text);
+		} else if (object instanceof Boolean) {
+			Boolean boolean1 = (Boolean) object;
+			Text text = this.doc.createTextNode(boolean1.toString());
 			element.appendChild(text);
 		} else if (object instanceof Integer) {
 			Integer integer = (Integer) object;
@@ -295,7 +320,7 @@ public class StorableObjectXMLDriver {
 				this.addObject(element, key2, map.get(key2));
 			}
 		} else {
-			Log.errorMessage("StorableObjectXMLDriver.convertToString | unsupported class value : "
+			Log.errorMessage("StorableObjectXMLDriver.addObject | unsupported class value : "
 					+ object.getClass().getName());
 			String string = object.toString();
 			Text text = this.doc.createTextNode(string);
