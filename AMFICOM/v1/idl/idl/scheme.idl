@@ -1,17 +1,17 @@
 /*
- * $Id: scheme.idl,v 1.10 2004/09/15 11:22:21 krupenn Exp $
+ * $Id: scheme.idl,v 1.11 2004/10/04 13:22:09 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
  * Проект: АМФИКОМ.
  */
 
-#ifndef _scheme_idl_
-#define _scheme_idl_
+#ifndef SCHEME_IDL
+#define SCHEME_IDL
+
+#include <streams.idl>
 
 #include "general.idl"
-#include "network.idl"
-#include "streams.idl"
 
 module com
 {
@@ -34,10 +34,13 @@ module Scheme
 		wstring portTypeId;
 		wstring portId;
 
+#ifdef SERVER
+		boolean isMeasurementPort;
+#endif
 		wstring measurementPortTypeId;
 		wstring measurementPortId;
 		wstring directionType;
-		
+
 		General::ElementAttributeSeq_Transferable attributes;
 	};
 	typedef sequence <SchemePort_Transferable> SchemePortSeq_Transferable;
@@ -52,6 +55,9 @@ module Scheme
 		wstring cablePortTypeId;
 		wstring cablePortId;
 
+#ifdef SERVER
+		boolean isMeasurementPort;
+#endif
 		wstring measurementPortTypeId;
 		wstring measurementPortId;
 		wstring directionType;
@@ -77,7 +83,9 @@ module Scheme
 		SchemePortSeq_Transferable ports;
 		SchemeCablePortSeq_Transferable cableports;
 		General::ElementAttributeSeq_Transferable attributes;
+#ifndef SERVER
 		PortThreadMapSeq_Transferable portmap;
+#endif
 	};
 	typedef sequence <SchemeDevice_Transferable> SchemeDeviceSeq_Transferable;
 
@@ -89,12 +97,16 @@ module Scheme
 		wstring targetPortId;
 		wstring linkTypeId;
 		wstring linkId;
+#ifndef SERVER
 		wstring schemeId;
+#endif
 		wstring physicalLength;
 		wstring opticalLength;
-		
+
+#ifndef SERVER
 		wstring siteId;
-		
+#endif
+
 		General::ElementAttributeSeq_Transferable attributes;
 	};
 	typedef sequence <SchemeLink_Transferable> SchemeLinkSeq_Transferable;
@@ -104,7 +116,9 @@ module Scheme
 		wstring id;
 		wstring name;
 		wstring linkTypeId;
+#ifndef SERVER
 		wstring cableLinkId;
+#endif
 		wstring threadId;
 		General::ElementAttributeSeq_Transferable attributes;
 	};
@@ -132,26 +146,37 @@ module Scheme
 		wstring targetPortId;
 		wstring cableLinkTypeId;
 		wstring cableLinkId;
+#ifndef SERVER
 		wstring schemeId;
+#endif
 		wstring physicalLength;
 		wstring opticalLength;
 		SchemeCableThreadSeq_Transferable cableThreads;
 
 		General::ElementAttributeSeq_Transferable attributes;
-		
+
+#ifndef SERVER
 		CableChannelingItemSeq_Transferable channeling;
+#endif
 	};
 	typedef sequence <SchemeCableLink_Transferable> SchemeCableLinkSeq_Transferable;
 
 	struct PathElement_Transferable
 	{
 		long n;
+#ifdef SERVER
+		boolean isCable;
+		wstring linkId;
+#else
 		long type;
 		wstring elementId;
+#endif
 		wstring threadId;
+#ifndef SERVER
 		wstring startPortId;
 		wstring endPortId;
 		wstring schemeId;
+#endif
 	};
 	typedef sequence <PathElement_Transferable> PathElementSeq_Transferable;
 
@@ -196,21 +221,30 @@ module Scheme
 		wstring name;
 		wstring protoElementId;
 		wstring equipmentId;
+#ifndef SERVER
 		wstring kisId;
+#endif
 		SchemeDeviceSeq_Transferable devices;
 		SchemeLinkSeq_Transferable links;
 		::CORBA::WStringSeq elementIds;
 
+#ifndef SERVER
 		wstring internalSchemeId;
+#endif
 		wstring schemeId;
+#ifdef SERVER
+		boolean isScheme;
+#endif
 
 		wstring description;
 		::CORBA::OctetSeq ugocell;
 		::CORBA::OctetSeq schemecell;
 
+#ifndef SERVER
 		wstring siteId;
-		
+
 		wstring imageId;
+#endif
 
 		General::ElementAttributeSeq_Transferable attributes;
 	};
@@ -243,7 +277,11 @@ module Scheme
 		SchemeLinkSeq_Transferable links;
 		SchemeCableLinkSeq_Transferable cableLinks;
 
+#ifdef SERVER
+		SchemePathSeq_Transferable paths;
+#else
 		SchemeMonitoringSolution_Transferable solution;
+#endif
 
 		::CORBA::WStringSeq elementIds;
 
@@ -255,10 +293,12 @@ module Scheme
 		long width;
 		long height;
 		::CORBA::OctetSeq clonez;
-		
+
+#ifndef SERVER
 		wstring mapId;
 
 		wstring imageId;
+#endif
 	};
 	typedef sequence <Scheme_Transferable> SchemeSeq_Transferable;
 
@@ -266,15 +306,19 @@ module Scheme
 	{
 		wstring id;
 		wstring name;
+#ifndef SERVER
 		wstring description;
 		wstring symbolId;
+#endif
 
 		wstring parentId;
 
 		long long modified;
 
+#ifndef SERVER
 		wstring peClass;
 		boolean peIsKis;
+#endif
 
 		::CORBA::WStringSeq groupIds;
 		::CORBA::WStringSeq peIds;
