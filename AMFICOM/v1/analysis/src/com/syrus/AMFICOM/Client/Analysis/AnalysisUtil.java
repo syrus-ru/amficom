@@ -5,14 +5,11 @@ import java.util.*;
 
 import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.analysis.dadara.*;
-import com.syrus.AMFICOM.configuration.*;
-import com.syrus.AMFICOM.configuration.corba.*;
 import com.syrus.AMFICOM.general.*;
-import com.syrus.AMFICOM.general.corba.DataType;
 import com.syrus.AMFICOM.general.corba.StringFieldSort;
 import com.syrus.AMFICOM.measurement.*;
 import com.syrus.AMFICOM.measurement.Set;
-import com.syrus.AMFICOM.measurement.StringFieldCondition;
+import com.syrus.AMFICOM.general.StringFieldCondition;
 import com.syrus.AMFICOM.measurement.corba.SetSort;
 import com.syrus.io.*;
 import com.syrus.util.ByteArray;
