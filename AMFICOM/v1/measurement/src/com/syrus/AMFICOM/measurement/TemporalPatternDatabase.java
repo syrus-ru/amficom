@@ -1,5 +1,5 @@
 /*
- * $Id: TemporalPatternDatabase.java,v 1.30 2004/12/29 15:19:02 arseniy Exp $
+ * $Id: TemporalPatternDatabase.java,v 1.31 2005/01/21 14:39:19 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,7 +35,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.30 $, $Date: 2004/12/29 15:19:02 $
+ * @version $Revision: 1.31 $, $Date: 2005/01/21 14:39:19 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -69,7 +69,7 @@ public class TemporalPatternDatabase extends StorableObjectDatabase {
 	}	
 
 	protected String getUpdateMultiplySQLValues(int mode) {
-		if (updateMultiplySQLValues == null){	
+		if (updateMultiplySQLValues == null) {	
 			updateMultiplySQLValues = super.getUpdateMultiplySQLValues(mode) + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION;
@@ -130,10 +130,11 @@ public class TemporalPatternDatabase extends StorableObjectDatabase {
 			+ OPEN_BRACKET
 			+ this.getColumns(MODE_INSERT)
 			+ CLOSE_BRACKET + SQL_VALUES + OPEN_BRACKET
-			+ getUpdateMultiplySQLValues(MODE_INSERT)
+			+ this.getUpdateMultiplySQLValues(MODE_INSERT)
 			+ CLOSE_BRACKET;
 			preparedStatement = connection.prepareStatement(sql);
-		} finally {
+		}
+		finally {
 			DatabaseConnection.releaseConnection(connection);
 		}
 		return preparedStatement;

@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementTypeDatabase.java,v 1.53 2005/01/20 15:45:28 arseniy Exp $
+ * $Id: MeasurementTypeDatabase.java,v 1.54 2005/01/21 14:39:19 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,6 +22,7 @@ import java.util.Map;
 
 import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 import com.syrus.AMFICOM.configuration.MeasurementPortType;
+import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
@@ -44,7 +45,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.53 $, $Date: 2005/01/20 15:45:28 $
+ * @version $Revision: 1.54 $, $Date: 2005/01/21 14:39:19 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -148,17 +149,17 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 			Log.debugMessage("MeasurementTypeDatabase.retrieveParameterType | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql);
 			String parameterMode;
-			Identifier parameterTypeIdCode;
+			Identifier parameterTypeId;
 			while (resultSet.next()) {
 				parameterMode = resultSet.getString(LINK_COLUMN_PARAMETER_MODE);
-				parameterTypeIdCode = DatabaseIdentifier.getIdentifier(resultSet, LINK_COLUMN_PARAMETER_TYPE_ID);
+				parameterTypeId = DatabaseIdentifier.getIdentifier(resultSet, LINK_COLUMN_PARAMETER_TYPE_ID);
 				if (parameterMode.equals(MODE_IN))
-					inParTyps.add((ParameterType) MeasurementStorableObjectPool.getStorableObject(parameterTypeIdCode, true));
+					inParTyps.add((ParameterType) GeneralStorableObjectPool.getStorableObject(parameterTypeId, true));
 				else
 					if (parameterMode.equals(MODE_OUT))
-						outParTyps.add((ParameterType) MeasurementStorableObjectPool.getStorableObject(parameterTypeIdCode, true));
+						outParTyps.add((ParameterType) GeneralStorableObjectPool.getStorableObject(parameterTypeId, true));
 					else
-						Log.errorMessage("MeasurementTypeDatabase.retrieveParameterTypes | ERROR: Unknown parameter mode '" + parameterMode + "' for parameterTypeId " + parameterTypeIdCode);
+						Log.errorMessage("MeasurementTypeDatabase.retrieveParameterTypes | ERROR: Unknown parameter mode '" + parameterMode + "' for parameterTypeId " + parameterTypeId);
 			}
 		}
 		catch (SQLException sqle) {
@@ -179,14 +180,15 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 			}
 			catch (SQLException sqle1) {
 				Log.errorException(sqle1);
-			} finally{
+			}
+			finally {
 				DatabaseConnection.releaseConnection(connection);
 			}
 		}
+
 		((ArrayList)inParTyps).trimToSize();
 		((ArrayList)outParTyps).trimToSize();
-		measurementType.setParameterTypes(inParTyps,
-																			outParTyps);
+		measurementType.setParameterTypes(inParTyps, outParTyps);
 	}
 
   private void retrieveParameterTypesByOneQuery(List measurementTypes) throws RetrieveObjectException {
@@ -213,7 +215,7 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 					sql.append(LINK_COLUMN_MEASUREMENT_TYPE_ID);
 					sql.append(SQL_IN);
 					sql.append(OPEN_BRACKET);
-				}                   
+				}
 			}
 		}
 		sql.append(CLOSE_BRACKET);
@@ -221,69 +223,58 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
     Statement statement = null;
 		ResultSet resultSet = null;
 		Connection connection = DatabaseConnection.getConnection();
-
 		try {
 			statement = connection.createStatement();
 			Log.debugMessage("MeasurementTypeDatabase.retrieveParameterTypesByOneQuery | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql.toString());
+
+			Map inParameterTypesMap = new HashMap();
+			Map outParameterTypesMap = new HashMap();
 			String parameterMode;
 			Identifier parameterTypeId;
-			Map inParametersMap = new HashMap();
-			Map outParametersMap = new HashMap();
+			Identifier measurementTypeId;
+			List inParameterTypes;
+			List outParameterTypes;
 			while (resultSet.next()) {
-				MeasurementType measurementType = null;
-				Identifier measurementTypeId = DatabaseIdentifier.getIdentifier(resultSet, LINK_COLUMN_MEASUREMENT_TYPE_ID);
-				for (Iterator it = measurementTypes.iterator(); it.hasNext();) {
-					MeasurementType measurementTypeToCompare = (MeasurementType) it.next();
-					if (measurementTypeToCompare.getId().equals(measurementTypeId)){
-						measurementType = measurementTypeToCompare;
-						break;
-					}                   
-				}
-
-        if (measurementType == null) {
-					String mesg = "MeasurementTypeDatabase.retrieveParameterTypesByOneQuery | Cannot found corresponding entry for '" + measurementTypeId +"'" ;
-					throw new RetrieveObjectException(mesg);
-				}
-
-        parameterMode = resultSet.getString(LINK_COLUMN_PARAMETER_MODE);
+				parameterMode = resultSet.getString(LINK_COLUMN_PARAMETER_MODE);
 				parameterTypeId = DatabaseIdentifier.getIdentifier(resultSet, LINK_COLUMN_PARAMETER_TYPE_ID);
-				ParameterType parameterType;
+				measurementTypeId = DatabaseIdentifier.getIdentifier(resultSet, LINK_COLUMN_MEASUREMENT_TYPE_ID);
+
 				if (parameterMode.equals(MODE_IN)) {
-					parameterType = ((ParameterType) MeasurementStorableObjectPool.getStorableObject(parameterTypeId, true));
-					List inParameters = (List)inParametersMap.get(measurementTypeId);
-					if (inParameters == null) {
-						inParameters = new ArrayList();
-						inParametersMap.put(measurementTypeId, inParameters);
-					}               
-					inParameters.add(parameterType);
+					inParameterTypes = (List)inParameterTypesMap.get(measurementTypeId);
+					if (inParameterTypes == null) {
+						inParameterTypes = new ArrayList();
+						inParameterTypesMap.put(measurementTypeId, inParameterTypes);
+					}
+					inParameterTypes.add(GeneralStorableObjectPool.getStorableObject(parameterTypeId, true));
 				}
 				else
 					if (parameterMode.equals(MODE_OUT)) {
-						parameterType = ((ParameterType) MeasurementStorableObjectPool.getStorableObject(parameterTypeId, true));
-						List outParameters = (List)outParametersMap.get(measurementTypeId);
-						if (outParameters == null) {
-							outParameters = new ArrayList();
-							outParametersMap.put(measurementTypeId, outParameters);
+						outParameterTypes = (List)outParameterTypesMap.get(measurementTypeId);
+						if (outParameterTypes == null) {
+							outParameterTypes = new ArrayList();
+							outParameterTypesMap.put(measurementTypeId, outParameterTypes);
 						}
+						outParameterTypes.add(GeneralStorableObjectPool.getStorableObject(parameterTypeId, true));
 					}
-					else {
-						Log.errorMessage("MeasurementTypeDatabase.retrieveParameterTypesByOneQuery | ERROR: Unknown parameter mode for parameterTypeId " + parameterTypeId);
-					}            
+					else
+						Log.errorMessage("MeasurementTypeDatabase.retrieveParameterTypes | ERROR: Unknown parameter mode '" + parameterMode + "' for parameterTypeId '" + parameterTypeId + "' of measurement type '" + measurementTypeId + "'");
+
 			}
 
-			for (Iterator iter = measurementTypes.iterator(); iter.hasNext();) {
-				MeasurementType measurementType = (MeasurementType) iter.next();
-				Identifier measurementTypeId = measurementType.getId();
+			MeasurementType measurementType;
+			for (Iterator it = measurementTypes.iterator(); it.hasNext();) {
+				measurementType = (MeasurementType)it.next();
+				measurementTypeId = measurementType.getId();
+				inParameterTypes = (List)inParameterTypesMap.get(measurementTypeId);
+				outParameterTypes = (List)outParameterTypesMap.get(measurementTypeId);
 
-				List inParameterpTypes = (List)inParametersMap.get(measurementTypeId);
-				List outParameterpTypes = (List)inParametersMap.get(measurementTypeId);
-
-				measurementType.setParameterTypes(inParameterpTypes, outParameterpTypes);
+				measurementType.setParameterTypes(inParameterTypes, outParameterTypes);
 			}
+
 		}
 		catch (SQLException sqle) {
-			String mesg = "MeasurementTypeDatabase.retrieveParameterTypesByOneQuery | Cannot retrieve parameter type ids for analysis types -- " + sqle.getMessage();
+			String mesg = "MeasurementTypeDatabase.retrieveParameterTypesByOneQuery | Cannot retrieve parameter type ids for measurement types -- " + sqle.getMessage();
 			throw new RetrieveObjectException(mesg, sqle);
 		}
 		catch (ApplicationException ae) {
@@ -402,40 +393,30 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 			statement = connection.createStatement();
 			Log.debugMessage("MeasurementDatabase.retrieveMeasurementPortTypesByOneQuery | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql);
-			Map measurementPortTypeMap = new HashMap();
+
+			Map measurementPortTypesMap = new HashMap();
+			Identifier measurementPortTypeId;
+			Identifier measurementTypeId;
+			List measurementPortTypes;
 			while (resultSet.next()) {
-				MeasurementType measurementType = null;
-				Identifier measurementTypeId = DatabaseIdentifier.getIdentifier(resultSet, LINK_COLUMN_MEASUREMENT_TYPE_ID);
-				for (Iterator it = measurementTypes.iterator(); it.hasNext();) {
-					MeasurementType measurementTypeToCompare = (MeasurementType) it.next();
-					if (measurementTypeToCompare.getId().equals(measurementTypeId)) {
-						measurementType = measurementTypeToCompare;
-						break;
-					}
-				}
+				measurementPortTypeId = DatabaseIdentifier.getIdentifier(resultSet, LINK_COLUMN_MEASUREMENT_PORT_TYPE_ID);
+				measurementTypeId = DatabaseIdentifier.getIdentifier(resultSet, LINK_COLUMN_MEASUREMENT_TYPE_ID);
 
-        if (measurementType == null) {
-					String mesg = "MeasurementDatabase.retrieveMeasurementPortTypesByOneQuery | Cannot found corresponding entry for '" + measurementTypeId +"'" ;
-					throw new RetrieveObjectException(mesg);
-				}
-
-        Identifier measurementPortTypeId = DatabaseIdentifier.getIdentifier(resultSet, LINK_COLUMN_MEASUREMENT_PORT_TYPE_ID);
-				MeasurementPortType measurementPortType = (MeasurementPortType) ConfigurationStorableObjectPool.getStorableObject(measurementPortTypeId, true);
-				List measurementPortTypes = (List)measurementPortTypeMap.get(measurementTypeId);
+				measurementPortTypes = (List) measurementPortTypesMap.get(measurementTypeId);
 				if (measurementPortTypes == null) {
 					measurementPortTypes = new ArrayList();
-					measurementPortTypeMap.put(measurementTypeId, measurementPortTypes);
+					measurementPortTypesMap.put(measurementTypeId, measurementPortTypes);
 				}
-				measurementPortTypes.add(measurementPortType);
+				measurementPortTypes.add((MeasurementPortType) ConfigurationStorableObjectPool.getStorableObject(measurementPortTypeId, true));
 			}
 
-      for (Iterator iter = measurementTypes.iterator(); iter.hasNext();) {
-				MeasurementType measurementType = (MeasurementType) iter.next();
-				Identifier measurementTypeId = measurementType.getId();
+			MeasurementType measurementType;
+			for (Iterator it = measurementTypes.iterator(); it.hasNext();) {
+				measurementType = (MeasurementType) it.next();
+				measurementTypeId = measurementType.getId();
+				measurementPortTypes = (List) measurementPortTypesMap.get(measurementTypeId);
 
-				List measurementPortTypes = (List)measurementPortTypeMap.get(measurementTypeId);
-
-				measurementType.setMeasurementPortTypes(measurementPortTypes);
+				measurementType.setMeasurementPortTypes0(measurementPortTypes);
 			}
 
 		}
@@ -690,7 +671,7 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 		}
 
 		if ((list == null) || (list.isEmpty()))
-			throw new ObjectNotFoundException("No analysis type with codename: '" + codename + "'");
+			throw new ObjectNotFoundException("No measurement type with codename: '" + codename + "'");
 
 		return (MeasurementType) list.get(0);
 	}

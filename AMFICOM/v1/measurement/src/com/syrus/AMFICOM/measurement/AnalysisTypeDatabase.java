@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisTypeDatabase.java,v 1.51 2005/01/20 15:45:28 arseniy Exp $
+ * $Id: AnalysisTypeDatabase.java,v 1.52 2005/01/21 14:39:19 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -20,6 +20,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
@@ -41,7 +42,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.51 $, $Date: 2005/01/20 15:45:28 $
+ * @version $Revision: 1.52 $, $Date: 2005/01/21 14:39:19 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -142,23 +143,23 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 			Log.debugMessage("AnalysisTypeDatabase.retrieveParameterTypes | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql);
 			String parameterMode;
-			Identifier parameterTypeIdCode;
+			Identifier parameterTypeId;
 			while (resultSet.next()) {
 				parameterMode = resultSet.getString(LINK_COLUMN_PARAMETER_MODE);
-				parameterTypeIdCode = DatabaseIdentifier.getIdentifier(resultSet, LINK_COLUMN_PARAMETER_TYPE_ID);
+				parameterTypeId = DatabaseIdentifier.getIdentifier(resultSet, LINK_COLUMN_PARAMETER_TYPE_ID);
 				if (parameterMode.equals(MODE_IN))
-					inParTyps.add((ParameterType) MeasurementStorableObjectPool.getStorableObject(parameterTypeIdCode, true));
+					inParTyps.add((ParameterType) GeneralStorableObjectPool.getStorableObject(parameterTypeId, true));
 					else
 						if (parameterMode.equals(MODE_CRITERION))
-							criteriaParTyps.add((ParameterType) MeasurementStorableObjectPool.getStorableObject(parameterTypeIdCode, true));
+							criteriaParTyps.add((ParameterType) GeneralStorableObjectPool.getStorableObject(parameterTypeId, true));
 						else
 							if (parameterMode.equals(MODE_ETALON))
-								etalonParTyps.add((ParameterType) MeasurementStorableObjectPool.getStorableObject(parameterTypeIdCode, true));
+								etalonParTyps.add((ParameterType) GeneralStorableObjectPool.getStorableObject(parameterTypeId, true));
 							else
 								if (parameterMode.equals(MODE_OUT))
-									outParTyps.add((ParameterType) MeasurementStorableObjectPool.getStorableObject(parameterTypeIdCode, true));
+									outParTyps.add((ParameterType) GeneralStorableObjectPool.getStorableObject(parameterTypeId, true));
 								else
-									Log .errorMessage("AnalysisTypeDatabase.retrieveParameterTypes | ERROR: Unknown parameter mode '" + parameterMode + "' for parameterTypeId " + parameterTypeIdCode);
+									Log .errorMessage("AnalysisTypeDatabase.retrieveParameterTypes | ERROR: Unknown parameter mode '" + parameterMode + "' for parameterTypeId " + parameterTypeId);
 			}
 		}
 		catch (SQLException sqle) {
@@ -179,10 +180,12 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 			}
 			catch (SQLException sqle1) {
 				Log.errorException(sqle1);
-			} finally{
+			}
+			finally {
 				DatabaseConnection.releaseConnection(connection);
 			}
 		}
+
 		((ArrayList)inParTyps).trimToSize();
 		((ArrayList)criteriaParTyps).trimToSize();
 		((ArrayList)etalonParTyps).trimToSize();
@@ -225,90 +228,78 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 		Statement statement = null;
 		ResultSet resultSet = null;
 		Connection connection = DatabaseConnection.getConnection();
-
 		try {
 			statement = connection.createStatement();
 			Log.debugMessage("AnalysisTypeDatabase.retrieveParameterTypesByOneQuery | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql.toString());
+
+			Map inParameterTypesMap = new HashMap();
+			Map criteriaParameterTypesMap = new HashMap();
+			Map etalonParameterTypesMap = new HashMap();
+			Map outParameterTypesMap = new HashMap();
 			String parameterMode;
 			Identifier parameterTypeId;
-			Map inParametersMap = new HashMap();
-			Map criteriaParametersMap = new HashMap();
-			Map etalonParametersMap = new HashMap();
-			Map outParametersMap = new HashMap();
+			Identifier analysisTypeId;
+			List inParameterTypes;
+			List criteriaParameterTypes;
+			List etalonParameterTypes;
+			List outParameterTypes;
 			while (resultSet.next()) {
-				AnalysisType analysisType = null;
-				Identifier analysisTypeId = DatabaseIdentifier.getIdentifier(resultSet, LINK_COLUMN_ANALYSIS_TYPE_ID);
-				for (Iterator it = analysisTypes.iterator(); it.hasNext();) {
-					AnalysisType analysisTypeToCompare = (AnalysisType) it.next();
-					if (analysisTypeToCompare.getId().equals(analysisTypeId)){
-						analysisType = analysisTypeToCompare;
-						break;
-					}
-				}
-
-        if (analysisType == null) {
-					String mesg = "AnalysisTypeDatabase.retrieveParameterTypesByOneQuery | Cannot found corresponding entry for '" + analysisTypeId +"'" ;
-					throw new RetrieveObjectException(mesg);
-				}
-
 				parameterMode = resultSet.getString(LINK_COLUMN_PARAMETER_MODE);
 				parameterTypeId = DatabaseIdentifier.getIdentifier(resultSet, LINK_COLUMN_PARAMETER_TYPE_ID);
-				ParameterType parameterType;
+				analysisTypeId = DatabaseIdentifier.getIdentifier(resultSet, LINK_COLUMN_ANALYSIS_TYPE_ID);
+
 				if (parameterMode.equals(MODE_IN)) {
-					parameterType = ((ParameterType) MeasurementStorableObjectPool.getStorableObject(parameterTypeId, true));
-					List inParameters = (List)inParametersMap.get(analysisTypeId);
-					if (inParameters == null) {
-						inParameters = new ArrayList();
-						inParametersMap.put(analysisTypeId, inParameters);
+					inParameterTypes = (List)inParameterTypesMap.get(analysisTypeId);
+					if (inParameterTypes == null) {
+						inParameterTypes = new ArrayList();
+						inParameterTypesMap.put(analysisTypeId, inParameterTypes);
 					}
-					inParameters.add(parameterType);
+					inParameterTypes.add(GeneralStorableObjectPool.getStorableObject(parameterTypeId, true));
 				}
 				else
 					if (parameterMode.equals(MODE_CRITERION)) {
-						parameterType = ((ParameterType) MeasurementStorableObjectPool.getStorableObject(parameterTypeId, true));
-						List criteriaParameters = (List)criteriaParametersMap.get(analysisTypeId);
-						if (criteriaParameters == null) {
-							criteriaParameters = new ArrayList();
-							criteriaParametersMap.put(analysisTypeId, criteriaParameters);
+						criteriaParameterTypes = (List)criteriaParameterTypesMap.get(analysisTypeId);
+						if (criteriaParameterTypes == null) {
+							criteriaParameterTypes = new ArrayList();
+							criteriaParameterTypesMap.put(analysisTypeId, criteriaParameterTypes);
 						}
-						criteriaParameters.add(parameterType);
+						criteriaParameterTypes.add(GeneralStorableObjectPool.getStorableObject(parameterTypeId, true));
 					}
 					else
 						if (parameterMode.equals(MODE_ETALON)) {
-							parameterType = ((ParameterType) MeasurementStorableObjectPool.getStorableObject(parameterTypeId, true));
-							List etalonParameters = (List)etalonParametersMap.get(analysisTypeId);
-							if (etalonParameters == null) {
-								etalonParameters = new ArrayList();
-								etalonParametersMap.put(analysisTypeId, etalonParameters);
+							etalonParameterTypes = (List)etalonParameterTypesMap.get(analysisTypeId);
+							if (etalonParameterTypes == null) {
+								etalonParameterTypes = new ArrayList();
+								etalonParameterTypesMap.put(analysisTypeId, etalonParameterTypes);
 							}
-							etalonParameters.add(parameterType);
+							etalonParameterTypes.add(GeneralStorableObjectPool.getStorableObject(parameterTypeId, true));
 						}
 						else
 							if (parameterMode.equals(MODE_OUT)) {
-								parameterType = ((ParameterType) MeasurementStorableObjectPool.getStorableObject(parameterTypeId, true));
-								List outParameters = (List)outParametersMap.get(analysisTypeId);
-								if (outParameters == null) {
-									outParameters = new ArrayList();
-									outParametersMap.put(analysisTypeId, outParameters);
+								outParameterTypes = (List)outParameterTypesMap.get(analysisTypeId);
+								if (outParameterTypes == null) {
+									outParameterTypes = new ArrayList();
+									outParameterTypesMap.put(analysisTypeId, outParameterTypes);
 								}
+								outParameterTypes.add(GeneralStorableObjectPool.getStorableObject(parameterTypeId, true));
 							}
-							else {
-								Log .errorMessage("AnalysisTypeDatabase.retrieveParameterTypes | ERROR: Unknown parameter mode for parameterTypeId " + parameterTypeId);
-							}
+							else
+								Log.errorMessage("AnalysisTypeDatabase.retrieveParameterTypes | ERROR: Unknown parameter mode '" + parameterMode + "' for parameterTypeId '" + parameterTypeId + "' of analysis type '" + analysisTypeId + "'");
 			}
 
-			for (Iterator iter = analysisTypes.iterator(); iter.hasNext();) {
-				AnalysisType analysisType = (AnalysisType) iter.next();
-				Identifier analysisTypeId = analysisType.getId();
+			AnalysisType analysisType;
+			for (Iterator it = analysisTypes.iterator(); it.hasNext();) {
+				analysisType = (AnalysisType)it.next();
+				analysisTypeId = analysisType.getId();
+				inParameterTypes = (List)inParameterTypesMap.get(analysisTypeId);
+				criteriaParameterTypes = (List)criteriaParameterTypesMap.get(analysisTypeId);
+				etalonParameterTypes = (List)etalonParameterTypesMap.get(analysisTypeId);
+				outParameterTypes = (List)outParameterTypesMap.get(analysisTypeId);
 
-				List inParameterpTypes = (List)inParametersMap.get(analysisTypeId);
-				List criteriaParameterpTypes = (List)criteriaParametersMap.get(analysisTypeId);
-				List etalonParameterpTypes = (List)etalonParametersMap.get(analysisTypeId);
-				List outParameterpTypes = (List)inParametersMap.get(analysisTypeId);
-
-        analysisType.setParameterTypes(inParameterpTypes, criteriaParameterpTypes, etalonParameterpTypes, outParameterpTypes);
+				analysisType.setParameterTypes(inParameterTypes, criteriaParameterTypes, etalonParameterTypes, outParameterTypes);
 			}
+
 		}
 		catch (SQLException sqle) {
 			String mesg = "AnalysisTypeDatabase.retrieveParameterTypes | Cannot retrieve parameter type ids for analysis types -- " + sqle.getMessage();
@@ -539,10 +530,10 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 		else
 			list = this.retrieveByIdsOneQuery(ids, condition);
 
-		retrieveParameterTypesByOneQuery(list);
+		this.retrieveParameterTypesByOneQuery(list);
 
-		return list;		
-	}	
+		return list;
+	}
 
 	protected int setEntityForPreparedStatement(StorableObject storableObject, PreparedStatement preparedStatement, int mode)
 			throws IllegalDataException, UpdateObjectException {

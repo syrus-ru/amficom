@@ -1,5 +1,5 @@
 /*
- * $Id: ModelingTypeDatabase.java,v 1.5 2005/01/20 15:45:28 arseniy Exp $
+ * $Id: ModelingTypeDatabase.java,v 1.6 2005/01/21 14:39:19 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,6 +8,7 @@
 
 package com.syrus.AMFICOM.measurement;
 
+import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -41,7 +42,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/01/20 15:45:28 $
+ * @version $Revision: 1.6 $, $Date: 2005/01/21 14:39:19 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -157,17 +158,17 @@ public class ModelingTypeDatabase extends StorableObjectDatabase {
 			Log.debugMessage("ModelingTypeDatabase.retrieveParameterTypes | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql);
 			String parameterMode;			
-			Identifier parameterTypeIdCode;
+			Identifier parameterTypeId;
 			while (resultSet.next()) {
 				parameterMode = resultSet.getString(LINK_COLUMN_PARAMETER_MODE);
-				parameterTypeIdCode = DatabaseIdentifier.getIdentifier(resultSet, LINK_COLUMN_PARAMETER_TYPE_ID);
+				parameterTypeId = DatabaseIdentifier.getIdentifier(resultSet, LINK_COLUMN_PARAMETER_TYPE_ID);
 				if (parameterMode.equals(MODE_IN))
-					inParTyps.add((ParameterType) MeasurementStorableObjectPool.getStorableObject(parameterTypeIdCode, true));
+					inParTyps.add((ParameterType) GeneralStorableObjectPool.getStorableObject(parameterTypeId, true));
 				else
 					if (parameterMode.equals(MODE_OUT))
-						outParTyps.add((ParameterType) MeasurementStorableObjectPool.getStorableObject(parameterTypeIdCode, true));
+						outParTyps.add((ParameterType) GeneralStorableObjectPool.getStorableObject(parameterTypeId, true));
 					else
-						Log.errorMessage("ModelingTypeDatabase.retrieveParameterTypes | ERROR: Unknown parameter mode '" + parameterMode + "' for parameterTypeId " + parameterTypeIdCode);
+						Log.errorMessage("ModelingTypeDatabase.retrieveParameterTypes | ERROR: Unknown parameter mode '" + parameterMode + "' for parameterTypeId " + parameterTypeId);
 			}
 		}
 		catch (SQLException sqle) {
@@ -189,10 +190,11 @@ public class ModelingTypeDatabase extends StorableObjectDatabase {
 			catch (SQLException sqle1) {
 				Log.errorException(sqle1);
 			}
-			finally{
+			finally {
 				DatabaseConnection.releaseConnection(connection);
 			}
 		}
+
 		((ArrayList)inParTyps).trimToSize();
 		((ArrayList)outParTyps).trimToSize();
 		modelingType.setParameterTypes(inParTyps,
@@ -236,64 +238,53 @@ public class ModelingTypeDatabase extends StorableObjectDatabase {
 			statement = connection.createStatement();
 			Log.debugMessage("ModelingTypeDatabase.retrieveParameterTypesByOneQuery | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql.toString());
+
+			Map inParameterTypesMap = new HashMap();
+			Map outParameterTypesMap = new HashMap();
 			String parameterMode;
-			Identifier parameterTypeIdCode;
-			Map inParametersMap = new HashMap();
-			Map outParametersMap = new HashMap();
+			Identifier parameterTypeId;
+			Identifier modelingTypeId;
+			List inParameterTypes;
+			List outParameterTypes;
 			while (resultSet.next()) {
-				ModelingType modelingType = null;
-				Identifier modelingTypeId = DatabaseIdentifier.getIdentifier(resultSet, LINK_COLUMN_MODELING_TYPE_ID);
-				for (Iterator it = modelingTypes.iterator(); it.hasNext();) {
-					ModelingType modelingTypeToCompare = (ModelingType) it.next();
-					if (modelingTypeToCompare.getId().equals(modelingTypeId)) {
-						modelingType = modelingTypeToCompare;
-						break;
-					}
-				}
-
-				if (modelingType == null) {
-					String mesg = "ModelingTypeDatabase.retrieveParameterTypesByOneQuery | Cannot found corresponding entry for '" + modelingTypeId + "'";
-					throw new RetrieveObjectException(mesg);
-				}
-
 				parameterMode = resultSet.getString(LINK_COLUMN_PARAMETER_MODE);
-				parameterTypeIdCode = DatabaseIdentifier.getIdentifier(resultSet, LINK_COLUMN_PARAMETER_TYPE_ID);
-				ParameterType parameterType;
+				parameterTypeId = DatabaseIdentifier.getIdentifier(resultSet, LINK_COLUMN_PARAMETER_TYPE_ID);
+				modelingTypeId = DatabaseIdentifier.getIdentifier(resultSet, LINK_COLUMN_MODELING_TYPE_ID);
+
 				if (parameterMode.equals(MODE_IN)) {
-					parameterType = ((ParameterType) MeasurementStorableObjectPool.getStorableObject(parameterTypeIdCode, true));
-					List inParameters = (List)inParametersMap.get(modelingTypeId);
-					if (inParameters == null) {
-						inParameters = new ArrayList();
-						inParametersMap.put(modelingTypeId, inParameters);
+					inParameterTypes = (List)inParameterTypesMap.get(modelingTypeId);
+					if (inParameterTypes == null) {
+						inParameterTypes = new ArrayList();
+						inParameterTypesMap.put(modelingTypeId, inParameterTypes);
 					}
-					inParameters.add(parameterType);
+					inParameterTypes.add(GeneralStorableObjectPool.getStorableObject(parameterTypeId, true));
 				}
 				else
 					if (parameterMode.equals(MODE_OUT)) {
-						parameterType = ((ParameterType) MeasurementStorableObjectPool.getStorableObject(parameterTypeIdCode, true));
-						List outParameters = (List)outParametersMap.get(modelingTypeId);
-						if (outParameters == null) {
-							outParameters = new ArrayList();
-							outParametersMap.put(modelingTypeId, outParameters);
+						outParameterTypes = (List)outParameterTypesMap.get(modelingTypeId);
+						if (outParameterTypes == null) {
+							outParameterTypes = new ArrayList();
+							outParameterTypesMap.put(modelingTypeId, outParameterTypes);
 						}
+						outParameterTypes.add(GeneralStorableObjectPool.getStorableObject(parameterTypeId, true));
 					}
-					else {
-						Log .errorMessage("ModelingTypeDatabase.retrieveParameterTypes | ERROR: Unknown parameter mode for parameterTypeId " + parameterTypeIdCode);
-					}
+					else
+						Log.errorMessage("ModelingTypeDatabase.retrieveParameterTypes | ERROR: Unknown parameter mode '" + parameterMode + "' for parameterTypeId '" + parameterTypeId + "' of modeling type '" + modelingTypeId + "'");
 			}
 
+			ModelingType modelingType;
 			for (Iterator it = modelingTypes.iterator(); it.hasNext();) {
-				ModelingType modelingType = (ModelingType) it.next();
-				Identifier modelingTypeId = modelingType.getId();
+				modelingType = (ModelingType)it.next();
+				modelingTypeId = modelingType.getId();
+				inParameterTypes = (List)inParameterTypesMap.get(modelingTypeId);
+				outParameterTypes = (List)outParameterTypesMap.get(modelingTypeId);
 
-				List inParameterpTypes = (List)inParametersMap.get(modelingTypeId);
-				List outParameterpTypes = (List)inParametersMap.get(modelingTypeId);
-
-        modelingType.setParameterTypes(inParameterpTypes, outParameterpTypes);
+				modelingType.setParameterTypes(inParameterTypes, outParameterTypes);
 			}
+
 		}
 		catch (SQLException sqle) {
-			String mesg = "ModelingTypeDatabase.retrieveParameterTypes | Cannot retrieve parameter type ids for analysis types -- " + sqle.getMessage();
+			String mesg = "ModelingTypeDatabase.retrieveParameterTypes | Cannot retrieve parameter type ids for modeling types -- " + sqle.getMessage();
 			throw new RetrieveObjectException(mesg, sqle);
 		}
 		catch (ApplicationException ae) {
@@ -413,7 +404,7 @@ public class ModelingTypeDatabase extends StorableObjectDatabase {
 
 	public void update(StorableObject storableObject, int updateKind, Object obj)
 			throws IllegalDataException, VersionCollisionException, UpdateObjectException {
-//		EvaluationType evaluationType = this.fromStorableObject(storableObject);
+//		ModelingType modelingType = this.fromStorableObject(storableObject);
 		switch (updateKind) {
 			case UPDATE_CHECK:
 				super.checkAndUpdateEntity(storableObject, false);

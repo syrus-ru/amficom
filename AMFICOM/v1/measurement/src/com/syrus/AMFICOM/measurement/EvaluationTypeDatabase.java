@@ -1,5 +1,5 @@
 /*
- * $Id: EvaluationTypeDatabase.java,v 1.47 2005/01/20 15:45:28 arseniy Exp $
+ * $Id: EvaluationTypeDatabase.java,v 1.48 2005/01/21 14:39:19 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -20,6 +20,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
@@ -41,7 +42,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.47 $, $Date: 2005/01/20 15:45:28 $
+ * @version $Revision: 1.48 $, $Date: 2005/01/21 14:39:19 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -157,23 +158,23 @@ public class EvaluationTypeDatabase extends StorableObjectDatabase {
 			Log.debugMessage("EvaluationTypeDatabase.retrieveParameterTypes | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql);
 			String parameterMode;			
-			Identifier parameterTypeIdCode;
+			Identifier parameterTypeId;
 			while (resultSet.next()) {
 				parameterMode = resultSet.getString(LINK_COLUMN_PARAMETER_MODE);
-				parameterTypeIdCode = DatabaseIdentifier.getIdentifier(resultSet, LINK_COLUMN_PARAMETER_TYPE_ID);
+				parameterTypeId = DatabaseIdentifier.getIdentifier(resultSet, LINK_COLUMN_PARAMETER_TYPE_ID);
 				if (parameterMode.equals(MODE_IN))
-					inParTyps.add((ParameterType) MeasurementStorableObjectPool.getStorableObject(parameterTypeIdCode, true));
+					inParTyps.add((ParameterType) GeneralStorableObjectPool.getStorableObject(parameterTypeId, true));
 				else
 					if (parameterMode.equals(MODE_THRESHOLD))
-						thresholdParTyps.add((ParameterType) MeasurementStorableObjectPool.getStorableObject(parameterTypeIdCode, true));
+						thresholdParTyps.add((ParameterType) GeneralStorableObjectPool.getStorableObject(parameterTypeId, true));
 					else
 						if (parameterMode.equals(MODE_ETALON))
-							etalonParTyps.add((ParameterType) MeasurementStorableObjectPool.getStorableObject(parameterTypeIdCode, true));
+							etalonParTyps.add((ParameterType) GeneralStorableObjectPool.getStorableObject(parameterTypeId, true));
 						else
 							if (parameterMode.equals(MODE_OUT))
-								outParTyps.add((ParameterType) MeasurementStorableObjectPool.getStorableObject(parameterTypeIdCode, true));
+								outParTyps.add((ParameterType) GeneralStorableObjectPool.getStorableObject(parameterTypeId, true));
 							else
-								Log.errorMessage("EvaluationTypeDatabase.retrieveParameterTypes | ERROR: Unknown parameter mode '" + parameterMode + "' for parameterTypeId " + parameterTypeIdCode);
+								Log.errorMessage("EvaluationTypeDatabase.retrieveParameterTypes | ERROR: Unknown parameter mode '" + parameterMode + "' for parameterTypeId " + parameterTypeId);
 			}
 		}
 		catch (SQLException sqle) {
@@ -195,10 +196,11 @@ public class EvaluationTypeDatabase extends StorableObjectDatabase {
 			catch (SQLException sqle1) {
 				Log.errorException(sqle1);
 			}
-			finally{
+			finally {
 				DatabaseConnection.releaseConnection(connection);
 			}
 		}
+
 		((ArrayList)inParTyps).trimToSize();
 		((ArrayList)thresholdParTyps).trimToSize();
 		((ArrayList)etalonParTyps).trimToSize();
@@ -246,88 +248,77 @@ public class EvaluationTypeDatabase extends StorableObjectDatabase {
 			statement = connection.createStatement();
 			Log.debugMessage("EvaluationTypeDatabase.retrieveParameterTypesByOneQuery | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql.toString());
+
+			Map inParameterTypesMap = new HashMap();
+			Map thresholdParameterTypesMap = new HashMap();
+			Map etalonParameterTypesMap = new HashMap();
+			Map outParameterTypesMap = new HashMap();
 			String parameterMode;
-			Identifier parameterTypeIdCode;
-			Map inParametersMap = new HashMap();
-			Map thresholdParametersMap = new HashMap();
-			Map etalonParametersMap = new HashMap();
-			Map outParametersMap = new HashMap();
+			Identifier parameterTypeId;
+			Identifier evaluationTypeId;
+			List inParameterTypes;
+			List thresholdParameterTypes;
+			List etalonParameterTypes;
+			List outParameterTypes;
 			while (resultSet.next()) {
-				EvaluationType evaluationType = null;
-				Identifier evaluationTypeId = DatabaseIdentifier.getIdentifier(resultSet, LINK_COLUMN_EVALUATION_TYPE_ID);
-				for (Iterator it = evaluationTypes.iterator(); it.hasNext();) {
-					EvaluationType evaluationTypeToCompare = (EvaluationType) it.next();
-					if (evaluationTypeToCompare.getId().equals(evaluationTypeId)) {
-						evaluationType = evaluationTypeToCompare;
-						break;
-					}
-				}
+				parameterMode = resultSet.getString(LINK_COLUMN_PARAMETER_MODE);
+				parameterTypeId = DatabaseIdentifier.getIdentifier(resultSet, LINK_COLUMN_PARAMETER_TYPE_ID);
+				evaluationTypeId = DatabaseIdentifier.getIdentifier(resultSet, LINK_COLUMN_EVALUATION_TYPE_ID);
 
-        if (evaluationType == null) {
-					String mesg = "EvaluationTypeDatabase.retrieveParameterTypesByOneQuery | Cannot found corresponding entry for '" + evaluationTypeId + "'" ;
-					throw new RetrieveObjectException(mesg);
-				}
-
-        parameterMode = resultSet.getString(LINK_COLUMN_PARAMETER_MODE);
-				parameterTypeIdCode = DatabaseIdentifier.getIdentifier(resultSet, LINK_COLUMN_PARAMETER_TYPE_ID);
-				ParameterType parameterType;
 				if (parameterMode.equals(MODE_IN)) {
-					parameterType = ((ParameterType) MeasurementStorableObjectPool.getStorableObject(parameterTypeIdCode, true));
-					List inParameters = (List)inParametersMap.get(evaluationTypeId);
-					if (inParameters == null) {
-						inParameters = new ArrayList();
-						inParametersMap.put(evaluationTypeId, inParameters);
+					inParameterTypes = (List)inParameterTypesMap.get(evaluationTypeId);
+					if (inParameterTypes == null) {
+						inParameterTypes = new ArrayList();
+						inParameterTypesMap.put(evaluationTypeId, inParameterTypes);
 					}
-					inParameters.add(parameterType);
+					inParameterTypes.add(GeneralStorableObjectPool.getStorableObject(parameterTypeId, true));
 				}
 				else
 					if (parameterMode.equals(MODE_THRESHOLD)) {
-						parameterType = ((ParameterType) MeasurementStorableObjectPool.getStorableObject(parameterTypeIdCode, true));
-						List thresholdParameters = (List)thresholdParametersMap.get(evaluationTypeId);
-						if (thresholdParameters == null) {
-							thresholdParameters = new ArrayList();
-							thresholdParametersMap.put(evaluationTypeId, thresholdParameters);
+						thresholdParameterTypes = (List)thresholdParameterTypesMap.get(evaluationTypeId);
+						if (thresholdParameterTypes == null) {
+							thresholdParameterTypes = new ArrayList();
+							thresholdParameterTypesMap.put(evaluationTypeId, thresholdParameterTypes);
 						}
-						thresholdParameters.add(parameterType);
+						thresholdParameterTypes.add(GeneralStorableObjectPool.getStorableObject(parameterTypeId, true));
 					}
 					else
 						if (parameterMode.equals(MODE_ETALON)) {
-							parameterType = ((ParameterType) MeasurementStorableObjectPool.getStorableObject(parameterTypeIdCode, true));
-							List etalonParameters = (List)etalonParametersMap.get(evaluationTypeId);
-							if (etalonParameters == null) {
-								etalonParameters = new ArrayList();
-								etalonParametersMap.put(evaluationTypeId, etalonParameters);
+							etalonParameterTypes = (List)etalonParameterTypesMap.get(evaluationTypeId);
+							if (etalonParameterTypes == null) {
+								etalonParameterTypes = new ArrayList();
+								etalonParameterTypesMap.put(evaluationTypeId, etalonParameterTypes);
 							}
-							etalonParameters.add(parameterType);
+							etalonParameterTypes.add(GeneralStorableObjectPool.getStorableObject(parameterTypeId, true));
 						}
 						else
 							if (parameterMode.equals(MODE_OUT)) {
-								parameterType = ((ParameterType) MeasurementStorableObjectPool.getStorableObject(parameterTypeIdCode, true));
-								List outParameters = (List)outParametersMap.get(evaluationTypeId);
-								if (outParameters == null) {
-									outParameters = new ArrayList();
-									outParametersMap.put(evaluationTypeId, outParameters);
+								outParameterTypes = (List)outParameterTypesMap.get(evaluationTypeId);
+								if (outParameterTypes == null) {
+									outParameterTypes = new ArrayList();
+									outParameterTypesMap.put(evaluationTypeId, outParameterTypes);
 								}
+								outParameterTypes.add(GeneralStorableObjectPool.getStorableObject(parameterTypeId, true));
 							}
-							else {
-								Log .errorMessage("EvaluationTypeDatabase.retrieveParameterTypes | ERROR: Unknown parameter mode for parameterTypeId " + parameterTypeIdCode);
-							}
+							else
+								Log.errorMessage("EvaluationTypeDatabase.retrieveParameterTypes | ERROR: Unknown parameter mode '" + parameterMode + "' for parameterTypeId '" + parameterTypeId + "' of evaluation type '" + evaluationTypeId + "'");
 			}
 
+			EvaluationType evaluationType;
 			for (Iterator it = evaluationTypes.iterator(); it.hasNext();) {
-				EvaluationType evaluationType = (EvaluationType) it.next();
-				Identifier evaluationTypeId = evaluationType.getId();
+				evaluationType = (EvaluationType)it.next();
+				evaluationTypeId = evaluationType.getId();
+				inParameterTypes = (List)inParameterTypesMap.get(evaluationTypeId);
+				thresholdParameterTypes = (List)thresholdParameterTypesMap.get(evaluationTypeId);
+				etalonParameterTypes = (List)etalonParameterTypesMap.get(evaluationTypeId);
+				outParameterTypes = (List)outParameterTypesMap.get(evaluationTypeId);
 
-				List inParameterpTypes = (List)inParametersMap.get(evaluationTypeId);
-				List thresholdParameterpTypes = (List)thresholdParametersMap.get(evaluationTypeId);
-				List etalonParameterpTypes = (List)etalonParametersMap.get(evaluationTypeId);
-				List outParameterpTypes = (List)inParametersMap.get(evaluationTypeId);
+				evaluationType.setParameterTypes(inParameterTypes, thresholdParameterTypes, etalonParameterTypes, outParameterTypes);
+			}
 
-        evaluationType.setParameterTypes(inParameterpTypes, thresholdParameterpTypes, etalonParameterpTypes, outParameterpTypes);
-			}            
 		}
 		catch (SQLException sqle) {
-			String mesg = "EvaluationTypeDatabase.retrieveParameterTypes | Cannot retrieve parameter type ids for analysis types -- " + sqle.getMessage();
+			String mesg = "EvaluationTypeDatabase.retrieveParameterTypes | Cannot retrieve parameter type ids for evaluation types -- " + sqle.getMessage();
 			throw new RetrieveObjectException(mesg, sqle);
 		}
 		catch (ApplicationException ae) {
