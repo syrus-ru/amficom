@@ -1,5 +1,5 @@
 /*
- * $Id: ParameterTypeDatabase.java,v 1.7 2005/02/07 14:54:31 arseniy Exp $
+ * $Id: ParameterTypeDatabase.java,v 1.8 2005/02/10 18:57:34 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,22 +18,22 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/02/07 14:54:31 $
+ * @version $Revision: 1.8 $, $Date: 2005/02/10 18:57:34 $
  * @author $Author: arseniy $
  * @module general_v1
  */
 
 public class ParameterTypeDatabase extends StorableObjectDatabase  {
-	
-	public static final int CHARACTER_NUMBER_OF_RECORDS = 15;
-	
+
+	private static final int CHARACTER_NUMBER_OF_RECORDS = 15;
+
 	private static String columns;
 	private static String updateMultiplySQLValues;
-	
+
 	protected String getEnityName() {
 		return ObjectEntities.PARAMETERTYPE_ENTITY;
 	}
-	
+
 	protected String getColumns(int mode) {
 		if (columns == null){
 			columns = super.getColumns(mode) + COMMA
@@ -79,22 +79,28 @@ public class ParameterTypeDatabase extends StorableObjectDatabase  {
 	}
 
 	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
-		throws IllegalDataException, RetrieveObjectException, SQLException {
-		ParameterType parameterType = (storableObject == null) ? 
-					new ParameterType(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID), null, null, null, null, DataType._DATA_TYPE_RAW) : 
-					this.fromStorableObject(storableObject);
+			throws IllegalDataException, RetrieveObjectException, SQLException {
+		ParameterType parameterType = (storableObject == null)
+				? new ParameterType(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
+						null,
+						0,
+						null,
+						null,
+						null,
+						DataType._DATA_TYPE_RAW)
+				: this.fromStorableObject(storableObject);
 		parameterType.setAttributes(DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_CREATED),
-									DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
-									DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
-									DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
-									DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_CODENAME)),
-									DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_DESCRIPTION)),
-									DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_NAME)),
-									resultSet.getInt(ParameterTypeWrapper.COLUMN_DATA_TYPE));
+				DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
+				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
+				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
+				resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION),
+				DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_CODENAME)),
+				DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_DESCRIPTION)),
+				DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_NAME)),
+				resultSet.getInt(ParameterTypeWrapper.COLUMN_DATA_TYPE));
 		return parameterType;
 	}
 
-	
 	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
 //		ParameterType parameterType = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
@@ -102,40 +108,39 @@ public class ParameterTypeDatabase extends StorableObjectDatabase  {
 				return null;
 		}
 	}	
-	
+
 	public void insert(StorableObject storableObject) throws IllegalDataException, CreateObjectException {
 		ParameterType parameterType = this.fromStorableObject(storableObject);
 		this.insertEntity(parameterType);
 	}	
-	
-	
+
+
 	public void insert(List storableObjects) throws IllegalDataException, CreateObjectException {
 		this.insertEntities(storableObjects);
 	}	
 
-	public void update(StorableObject storableObject, int updateKind, Object obj) throws IllegalDataException, VersionCollisionException, UpdateObjectException {
+	public void update(StorableObject storableObject, Identifier modifierId, int updateKind) throws IllegalDataException, VersionCollisionException, UpdateObjectException {
 //		ParameterType parameterType = this.fromStorableObject(storableObject);
 		switch (updateKind) {
 			case UPDATE_CHECK:
-				super.checkAndUpdateEntity(storableObject, false);
+				super.checkAndUpdateEntity(storableObject, modifierId, false);
 				break;
-			case UPDATE_FORCE:					
+			case UPDATE_FORCE:
 			default:
-				super.checkAndUpdateEntity(storableObject, true);		
+				super.checkAndUpdateEntity(storableObject, modifierId, true);
 				return;
 		}
 	}
-	
-	
-	public void update(List storableObjects, int updateKind, Object arg) throws IllegalDataException,
+
+	public void update(List storableObjects, Identifier modifierId, int updateKind) throws IllegalDataException,
 			VersionCollisionException, UpdateObjectException {
 		switch (updateKind) {
 			case UPDATE_CHECK:
-				super.checkAndUpdateEntities(storableObjects, false);
+				super.checkAndUpdateEntities(storableObjects, modifierId, false);
 				break;
-			case UPDATE_FORCE:					
+			case UPDATE_FORCE:
 			default:
-				super.checkAndUpdateEntities(storableObjects, true);		
+				super.checkAndUpdateEntities(storableObjects, modifierId, true);
 				return;
 		}
 	}
