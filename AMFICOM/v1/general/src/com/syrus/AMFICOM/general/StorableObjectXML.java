@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectXML.java,v 1.4 2005/01/25 08:06:53 bob Exp $
+ * $Id: StorableObjectXML.java,v 1.5 2005/01/26 09:03:06 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,7 +26,7 @@ import java.util.Map;
  * and belong to the same package
  * (i.g. {@link com.syrus.AMFICOM.general.CharacteristicWrapper} for {@link com.syrus.AMFICOM.general.Characteristic}) which must have static getInstance method.
  * 
- * @version $Revision: 1.4 $, $Date: 2005/01/25 08:06:53 $
+ * @version $Revision: 1.5 $, $Date: 2005/01/26 09:03:06 $
  * @author $Author: bob $
  * @module general_v1
  */
@@ -80,6 +80,7 @@ public class StorableObjectXML {
 			String key = (String) it.next();
 			wrapper.setValue(storableObject, key, objectMap.get(key));
 		}
+		storableObject.resetVersion();
 		return storableObject;
 	}
 
