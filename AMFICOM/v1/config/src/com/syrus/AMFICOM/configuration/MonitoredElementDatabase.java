@@ -8,25 +8,28 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObject;
-import com.syrus.AMFICOM.general.StorableObject_Database;
+import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.ObjectNotFoundException;
+import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.RetrieveObjectException;
 
-public class MonitoredElement_Database extends StorableObject_Database {
+public class MonitoredElementDatabase extends StorableObjectDatabase {
 
-	private MonitoredElement fromStorableObject(StorableObject storableObject) throws Exception {
+	private MonitoredElement fromStorableObject(StorableObject storableObject) throws IllegalDataException {
 		if (storableObject instanceof MonitoredElement)
 			return (MonitoredElement)storableObject;
-		else
-			throw new Exception("MonitoredElement_Database.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
+		throw new IllegalDataException("MonitoredElement_Database.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
 	}
 
-	public void retrieve(StorableObject storableObject) throws Exception {
+	public void retrieve(StorableObject storableObject) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
 		MonitoredElement monitoredElement = this.fromStorableObject(storableObject);
 		this.retrieveMonitoredElement(monitoredElement);
 	}
 
-	private void retrieveMonitoredElement(MonitoredElement monitoredElement) throws Exception {
-		String me_id_str = monitoredElement.getId().toString();
+	private void retrieveMonitoredElement(MonitoredElement monitoredElement) throws ObjectNotFoundException, RetrieveObjectException {
+		String meIdStr = monitoredElement.getId().toString();
 		String sql = "SELECT "
 			+ DatabaseDate.toQuerySubString("created") + ", "
 			+ DatabaseDate.toQuerySubString("modified") + ", "
@@ -36,7 +39,7 @@ public class MonitoredElement_Database extends StorableObject_Database {
 			+ "kis_id, "
 			+ "local_address"
 			+ " FROM " + ObjectEntities.ME_ENTITY
-			+ " WHERE id = " + me_id_str;
+			+ " WHERE id = " + meIdStr;
 		Statement statement = null;
 		ResultSet resultSet = null;
 		try {
@@ -46,17 +49,17 @@ public class MonitoredElement_Database extends StorableObject_Database {
 			if (resultSet.next())
 				monitoredElement.setAttributes(DatabaseDate.fromQuerySubString(resultSet, "created"),
 																			 DatabaseDate.fromQuerySubString(resultSet, "modified"),
-																			 new Identifier(resultSet.getLong("creator_id")),
-																			 new Identifier(resultSet.getLong("modifier_id")),
-																			 new Identifier(resultSet.getLong("domain_id")),
-																			 new Identifier(resultSet.getLong("kis_id")),
+																			 new Identifier(resultSet.getString("creator_id")),
+																			 new Identifier(resultSet.getString("modifier_id")),
+																			 new Identifier(resultSet.getString("domain_id")),
+																			 new Identifier(resultSet.getString("kis_id")),
 																			 resultSet.getString("local_address"));
 			else
-				throw new Exception("No such monitored element: " + me_id_str);
+				throw new ObjectNotFoundException("No such monitored element: " + meIdStr);
 		}
 		catch (SQLException sqle) {
-			String mesg = "MonitoredElement_Database.retrieve | Cannot retrieve monitored element " + me_id_str;
-			throw new Exception(mesg, sqle);
+			String mesg = "MonitoredElement_Database.retrieve | Cannot retrieve monitored element " + meIdStr;
+			throw new RetrieveObjectException(mesg, sqle);
 		}
 		finally {
 			try {
@@ -71,7 +74,7 @@ public class MonitoredElement_Database extends StorableObject_Database {
 		}
 	}
 
-	public Object retrieveObject(StorableObject storableObject, int retrieve_kind, Object arg) throws Exception {
+	public Object retrieveObject(StorableObject storableObject, int retrieve_kind, Object arg) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException{
 		MonitoredElement monitoredElement = this.fromStorableObject(storableObject);
 		switch (retrieve_kind) {
 			default:
@@ -79,12 +82,12 @@ public class MonitoredElement_Database extends StorableObject_Database {
 		}
 	}
 
-	public void insert(StorableObject storableObject) throws Exception {
+	public void insert(StorableObject storableObject) throws IllegalDataException, CreateObjectException {
 		MonitoredElement monitoredElement = this.fromStorableObject(storableObject);
 		try {
 			this.insertMonitoredElement(monitoredElement);
 		}
-		catch (Exception e) {
+		catch (CreateObjectException coe) {
 			try {
 				connection.rollback();
 			}
@@ -92,7 +95,7 @@ public class MonitoredElement_Database extends StorableObject_Database {
 				Log.errorMessage("Exception in rolling back");
 				Log.errorException(sqle);
 			}
-			throw e;
+			throw coe;
 		}
 		try {
 			connection.commit();
@@ -103,12 +106,12 @@ public class MonitoredElement_Database extends StorableObject_Database {
 		}
 	}
 
-	private void insertMonitoredElement(MonitoredElement monitoredElement) throws Exception {
-		String me_id_str = monitoredElement.getId().toString();
+	private void insertMonitoredElement(MonitoredElement monitoredElement) throws CreateObjectException {
+		String meIdStr = monitoredElement.getId().toString();
 		String sql = "INSERT INTO " + ObjectEntities.ME_ENTITY
 			+ " (id, created, modified, creator_id, modifier_id, domain_id, kis_id, local_address)"
 			+ " VALUES ("
-			+ me_id_str + ", "
+			+ meIdStr + ", "
 			+ DatabaseDate.toUpdateSubString(monitoredElement.getCreated()) + ", "
 			+ DatabaseDate.toUpdateSubString(monitoredElement.getModified()) + ", "
 			+ monitoredElement.getCreatorId().toString() + ", "
@@ -124,8 +127,8 @@ public class MonitoredElement_Database extends StorableObject_Database {
 			statement.executeUpdate(sql);
 		}
 		catch (SQLException sqle) {
-			String mesg = "MonitoredElement_Database.insert | Cannot insert monitored element " + me_id_str;
-			throw new Exception(mesg, sqle);
+			String mesg = "MonitoredElement_Database.insert | Cannot insert monitored element " + meIdStr;
+			throw new CreateObjectException(mesg, sqle);
 		}
 		finally {
 			try {
@@ -137,7 +140,7 @@ public class MonitoredElement_Database extends StorableObject_Database {
 		}
 	}
 
-	public void update(StorableObject storableObject, int update_kind, Object obj) throws Exception {
+	public void update(StorableObject storableObject, int update_kind, Object obj) throws IllegalDataException, CreateObjectException {
 		MonitoredElement monitoredElement = this.fromStorableObject(storableObject);
 		switch (update_kind) {
 			default:

@@ -7,17 +7,16 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObject;
-import com.syrus.AMFICOM.general.StorableObject_Database;
+import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.configuration.corba.CharacteristicSort;
 
-public class Characteristic_Database extends StorableObject_Database {
+public class CharacteristicDatabase extends StorableObjectDatabase {
 
 	private Characteristic fromStorableObject(StorableObject storableObject) throws Exception {
 		if (storableObject instanceof Characteristic)
 			return (Characteristic)storableObject;
-		else
-			throw new Exception("Characteristic_Database.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
+		throw new Exception("Characteristic_Database.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
 	}
 
 	public void retrieve(StorableObject storableObject) throws Exception {
@@ -26,7 +25,7 @@ public class Characteristic_Database extends StorableObject_Database {
 	}
 
 	private void retrieveCharacteristic(Characteristic characteristic) throws Exception {
-		String c_id_str = characteristic.getId().toString();
+		String cIdStr = characteristic.getId().toString();
 		String sql = "SELECT "
 			+ DatabaseDate.toQuerySubString("created") + ", "
 			+ DatabaseDate.toQuerySubString("modified") + ", "
@@ -45,7 +44,7 @@ public class Characteristic_Database extends StorableObject_Database {
 			+ "link_id, "
 			+ "cable_link_id, "
 			+ " FROM " + ObjectEntities.CHARACTERISTIC_ENTITY
-			+ " WHERE id = " + c_id_str;
+			+ " WHERE id = " + cIdStr;
 		Statement statement = null;
 		ResultSet resultSet = null;
 		try {
@@ -93,10 +92,10 @@ public class Characteristic_Database extends StorableObject_Database {
 																		 characterized_id);
 			}
 			else
-				throw new Exception("No such characteristic: " + c_id_str);
+				throw new Exception("No such characteristic: " + cIdStr);
 		}
 		catch (SQLException sqle) {
-			String mesg = "Characteristic_Database.retrieve | Cannot retrieve characteristic " + c_id_str;
+			String mesg = "Characteristic_Database.retrieve | Cannot retrieve characteristic " + cIdStr;
 			throw new Exception(mesg, sqle);
 		}
 		finally {
@@ -145,12 +144,12 @@ public class Characteristic_Database extends StorableObject_Database {
 	}
 
 	private void insertCharacteristic(Characteristic characteristic) throws Exception {
-		String c_id_str = characteristic.getId().toString();
+		String cIdStr = characteristic.getId().toString();
 		int sort = characteristic.getSort().value();
 		String sql = "INSERT INTO " + ObjectEntities.CHARACTERISTIC_ENTITY
 			+ " (id, created, modified, creator_id, modifier_id, type_id, sort, name, description, value, equipment_id, port_id, cable_port_id, measurement_port_id, monitoring_port_id, link_id, cable_link_id)"
 			+ " VALUES ("
-			+ c_id_str + ", "
+			+ cIdStr + ", "
 			+ DatabaseDate.toUpdateSubString(characteristic.getCreated()) + ", "
 			+ DatabaseDate.toUpdateSubString(characteristic.getModified()) + ", "
 			+ characteristic.getCreatorId().toString() + ", "
@@ -160,28 +159,28 @@ public class Characteristic_Database extends StorableObject_Database {
 			+ characteristic.getName() + "', '"
 			+ characteristic.getDescription() + "', '"
 			+ characteristic.getValue() + "', ";
-		String characterized_id_str = characteristic.getCharacterizedId().toString();
+		String characterizedIdStr = characteristic.getCharacterizedId().toString();
 		switch (sort) {
 			case CharacteristicSort._CHARACTERISTIC_SORT_EQUIPMENT:
-				sql += characterized_id_str + ", 0, 0, 0, 0, 0, 0";
+				sql += characterizedIdStr + ", 0, 0, 0, 0, 0, 0";
 				break;
 			case CharacteristicSort._CHARACTERISTIC_SORT_PORT:
-				sql += "0, " + characterized_id_str + ", 0, 0, 0, 0, 0";
+				sql += "0, " + characterizedIdStr + ", 0, 0, 0, 0, 0";
 				break;
 			case CharacteristicSort._CHARACTERISTIC_SORT_CABLEPORT:
-				sql += "0, 0, " + characterized_id_str + ", 0, 0, 0, 0";
+				sql += "0, 0, " + characterizedIdStr + ", 0, 0, 0, 0";
 				break;
 			case CharacteristicSort._CHARACTERISTIC_SORT_MEASUREMENTPORT:
-				sql += "0, 0, 0, " + characterized_id_str + ", 0, 0, 0";
+				sql += "0, 0, 0, " + characterizedIdStr + ", 0, 0, 0";
 				break;
 			case CharacteristicSort._CHARACTERISTIC_SORT_MONITORINGPORT:
-				sql += "0, 0, 0, 0, " + characterized_id_str + ", 0, 0";
+				sql += "0, 0, 0, 0, " + characterizedIdStr + ", 0, 0";
 				break;
 			case CharacteristicSort._CHARACTERISTIC_SORT_LINK:
-				sql += "0, 0, 0, 0, 0, " + characterized_id_str + ", 0";
+				sql += "0, 0, 0, 0, 0, " + characterizedIdStr + ", 0";
 				break;
 			case CharacteristicSort._CHARACTERISTIC_SORT_CABLELINK:
-				sql += "0, 0, 0, 0, 0, 0, " + characterized_id_str;
+				sql += "0, 0, 0, 0, 0, 0, " + characterizedIdStr;
 				break;
 		}
 		sql += ")";
@@ -192,7 +191,7 @@ public class Characteristic_Database extends StorableObject_Database {
 			statement.executeUpdate(sql);
 		}
 		catch (SQLException sqle) {
-			String mesg = "Characteristic_Database.insert | Cannot insert characteristic " + c_id_str;
+			String mesg = "Characteristic_Database.insert | Cannot insert characteristic " + cIdStr;
 			throw new Exception(mesg, sqle);
 		}
 		finally {

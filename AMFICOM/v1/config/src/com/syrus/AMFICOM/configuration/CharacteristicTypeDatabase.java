@@ -7,16 +7,15 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObject;
-import com.syrus.AMFICOM.general.StorableObject_Database;
+import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.ObjectEntities;
 
-public class CharacteristicType_Database extends StorableObject_Database {
+public class CharacteristicTypeDatabase extends StorableObjectDatabase {
 
 	private CharacteristicType fromStorableObject(StorableObject storableObject) throws Exception {
 		if (storableObject instanceof CharacteristicType)
 			return (CharacteristicType)storableObject;
-		else
-			throw new Exception("CharacteristicType_Database.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
+		throw new Exception("CharacteristicTypeDatabase.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
 	}
 
 	public void retrieve(StorableObject storableObject) throws Exception {
@@ -25,7 +24,7 @@ public class CharacteristicType_Database extends StorableObject_Database {
 	}
 
 	private void retrieveCharacteristicType(CharacteristicType characteristicType) throws Exception {
-		String ct_id_str = characteristicType.getId().toString();
+		String ctIdStr = characteristicType.getId().toString();
 		String sql = "SELECT "
 			+ DatabaseDate.toQuerySubString("created") + ", "
 			+ DatabaseDate.toQuerySubString("modified") + ", "
@@ -37,12 +36,12 @@ public class CharacteristicType_Database extends StorableObject_Database {
 			+ "is_editable, "
 			+ "is_visible"
 			+ " FROM " + ObjectEntities.CHARACTERISTICTYPE_ENTITY
-			+ " WHERE id = " + ct_id_str;
+			+ " WHERE id = " + ctIdStr;
 		Statement statement = null;
 		ResultSet resultSet = null;
 		try {
 			statement = connection.createStatement();
-			Log.debugMessage("CharacteristicType_Database.retrieve | Trying: " + sql, Log.DEBUGLEVEL05);
+			Log.debugMessage("CharacteristicTypeDatabase.retrieve | Trying: " + sql, Log.DEBUGLEVEL05);
 			resultSet = statement.executeQuery(sql);
 			if (resultSet.next())
 				characteristicType.setAttributes(DatabaseDate.fromQuerySubString(resultSet, "created"),
@@ -55,10 +54,10 @@ public class CharacteristicType_Database extends StorableObject_Database {
 																				 (resultSet.getInt("is_editable") == 0)?false:true,
 																				 (resultSet.getInt("is_visible") == 0)?false:true);
 			else
-				throw new Exception("No such characteristic type: " + ct_id_str);
+				throw new Exception("No such characteristic type: " + ctIdStr);
 		}
 		catch (SQLException sqle) {
-			String mesg = "CharacteristicType_Database.retrieve | Cannot retrieve characteristic type " + ct_id_str;
+			String mesg = "CharacteristicTypeDatabase.retrieve | Cannot retrieve characteristic type " + ctIdStr;
 			throw new Exception(mesg, sqle);
 		}
 		finally {
