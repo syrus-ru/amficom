@@ -1,5 +1,5 @@
 /*
- * $Id: ServerProcessMessageFrame.java,v 1.2 2004/12/23 11:48:29 bass Exp $
+ * $Id: ServerProcessMessageFrame.java,v 1.3 2004/12/23 11:59:51 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import javax.swing.*;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2004/12/23 11:48:29 $
+ * @version $Revision: 1.3 $, $Date: 2004/12/23 11:59:51 $
  * @module serverprocess
  */
 public final class ServerProcessMessageFrame extends JFrame implements LogWriter
@@ -141,32 +141,11 @@ public final class ServerProcessMessageFrame extends JFrame implements LogWriter
 			if (selectedProcessNames.size() == 0)
 				selectedProcessNames.addAll(ServerProcessName.PROCESS_NAMES);
 
-			if (selectedProcessNames.contains(ServerProcessName.ID_KISTRACER))
-			{
-				tabbedPane.addTab(kisTracePanel.getName(), kisTracePanel);
-				kisTracer = new KISTracer(kisTracePanel);
-				kisTracer.start();
-			}
-
 			if (selectedProcessNames.contains(ServerProcessName.ID_ALERTER))
 			{
 				tabbedPane.addTab(alertPanel.getName(), alertPanel);
 				alerter = new Alerter(alertPanel);
 				alerter.start();
-			}
-
-			if (selectedProcessNames.contains(ServerProcessName.ID_REPORTER))
-			{
-				tabbedPane.addTab(reportPanel.getName(), reportPanel);
-				reporter = new Reporter(reportPanel);
-				reporter.start();
-			}
-
-			if (selectedProcessNames.contains(ServerProcessName.ID_SCHEDULER))
-			{
-				tabbedPane.addTab(schedulePanel.getName(), schedulePanel);
-				scheduler = new Scheduler(schedulePanel);
-				scheduler.start();
 			}
 
 			if (selectedProcessNames.contains(ServerProcessName.ID_USERTRACER))
@@ -194,28 +173,10 @@ public final class ServerProcessMessageFrame extends JFrame implements LogWriter
 	{
 		System.out.println("Server Process is shutting down...");
 
-		if (selectedProcessNames.contains(ServerProcessName.ID_KISTRACER))
-		{
-			kisTracer.stopRunning();
-			kisTracePanel.closeLog();
-		}
-
 		if (selectedProcessNames.contains(ServerProcessName.ID_ALERTER))
 		{
 			alerter.stopRunning();
 			alertPanel.closeLog();
-		}
-
-		if (selectedProcessNames.contains(ServerProcessName.ID_REPORTER))
-		{
-			reporter.stopRunning();
-			reportPanel.closeLog();
-		}
-
-		if (selectedProcessNames.contains(ServerProcessName.ID_SCHEDULER))
-		{
-			scheduler.stopRunning();
-			schedulePanel.closeLog();
 		}
 
 		if (selectedProcessNames.contains(ServerProcessName.ID_USERTRACER))
