@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementControlModuleSetup.java,v 1.2 2005/03/23 19:09:52 arseniy Exp $
+ * $Id: MeasurementControlModuleSetup.java,v 1.3 2005/03/23 20:43:01 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,6 +34,9 @@ import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectConditionBuilder;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
+import com.syrus.AMFICOM.measurement.MeasurementDatabaseContext;
+import com.syrus.AMFICOM.measurement.MeasurementType;
+import com.syrus.AMFICOM.measurement.corba.MeasurementType_Transferable;
 import com.syrus.AMFICOM.mserver.corba.MServer;
 import com.syrus.AMFICOM.mserver.corba.MServerHelper;
 import com.syrus.util.Application;
@@ -42,7 +45,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/03/23 19:09:52 $
+ * @version $Revision: 1.3 $, $Date: 2005/03/23 20:43:01 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -197,6 +200,21 @@ public class MeasurementControlModuleSetup {
 			for (int i = 0; i < transmissionPathsT.length; i++)
 				transmissionPaths.add(new TransmissionPath(transmissionPathsT[i]));
 			ConfigurationDatabaseContext.getTransmissionPathDatabase().insert(transmissionPaths);
+
+			//Measurement Types
+			ids = new HashSet(measurementPorts.size());
+			MeasurementPort measurementPort;
+			for (Iterator it = measurementPorts.iterator(); it.hasNext();) {
+				measurementPort = (MeasurementPort) it.next();
+				ids.add(measurementPort.getType().getId());
+			}
+			lic = new LinkedIdsCondition(ids, ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE);
+			MeasurementType_Transferable[] measurementTypesT = mServerRef.transmitMeasurementTypesButIdsByCondition(new Identifier_Transferable[0],
+					StorableObjectConditionBuilder.getConditionTransferable(lic));
+			Collection measurementTypes = new HashSet(measurementTypesT.length);
+			for (int i = 0; i < measurementTypesT.length; i++)
+				measurementTypes.add(new MeasurementType(measurementTypesT[i]));
+			MeasurementDatabaseContext.getMeasurementTypeDatabase().insert(measurementTypes);
 
 		}
 		catch (Exception e) {
