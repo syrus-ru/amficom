@@ -120,7 +120,7 @@ public class ElementsNavigatorPanel extends JPanel implements OperationListener
 
 			delMapGroupButton.setEnabled(false);
 			if (selectedObject instanceof SchemeProtoGroup &&
-					((SchemeProtoGroup)selectedObject).group_ids.isEmpty() &&
+					((SchemeProtoGroup)selectedObject).groupIds.isEmpty() &&
 					((SchemeProtoGroup)selectedObject).getProtoIds().isEmpty())
 				delMapGroupButton.setEnabled(true);
 			else if (selectedObject instanceof SchemeProtoGroup &&
@@ -173,10 +173,10 @@ public class ElementsNavigatorPanel extends JPanel implements OperationListener
 			{
 				aContext.getDataSourceInterface().RemoveMapProtoGroups(new String[] {group.getId()});
 				Pool.remove(SchemeProtoGroup.typ, group.getId());
-				if (group.parent_id != null && !group.parent_id.equals(""))
+				if (group.parentId != null && !group.parentId.equals(""))
 				{
-					SchemeProtoGroup parent_group = (SchemeProtoGroup)Pool.get(SchemeProtoGroup.typ, group.parent_id);
-					parent_group.group_ids.remove(group.getId());
+					SchemeProtoGroup parent_group = (SchemeProtoGroup)Pool.get(SchemeProtoGroup.typ, group.parentId);
+					parent_group.groupIds.remove(group.getId());
 				}
 				dispatcher.notify(new TreeListSelectionEvent(SchemeProtoGroup.typ, TreeListSelectionEvent.REFRESH_EVENT));
 			}
@@ -230,17 +230,17 @@ public class ElementsNavigatorPanel extends JPanel implements OperationListener
 			if (ret == JOptionPane.YES_OPTION)
 			{
 				ProtoElement proto = (ProtoElement)selectedObject;
-				String proto_id = proto.getId();
+				String protoId = proto.getId();
 
-				aContext.getDataSourceInterface().RemoveSchemeProtos(new String[] {proto_id});
+				aContext.getDataSourceInterface().RemoveSchemeProtos(new String[] {protoId});
 
 				Map hash = Pool.getMap(SchemeProtoGroup.typ);
 				for (Iterator it = hash.values().iterator(); it.hasNext();)
 				{
 					SchemeProtoGroup map_proto = (SchemeProtoGroup)it.next();
-					if (map_proto.getProtoIds().contains(proto_id))
+					if (map_proto.getProtoIds().contains(protoId))
 					{
-						map_proto.getProtoIds().remove(proto_id);
+						map_proto.getProtoIds().remove(protoId);
 						dispatcher.notify(new TreeListSelectionEvent(map_proto.getTyp(), TreeListSelectionEvent.REFRESH_EVENT));
 					}
 				}
@@ -255,10 +255,10 @@ public class ElementsNavigatorPanel extends JPanel implements OperationListener
 			if (ret == JOptionPane.YES_OPTION)
 			{
 				Scheme scheme = (Scheme)selectedObject;
-				String scheme_id = scheme.getId();
+				String schemeId = scheme.getId();
 
-				aContext.getDataSourceInterface().RemoveScheme(scheme_id);
-				Pool.remove(Scheme.typ, scheme_id);
+				aContext.getDataSourceInterface().RemoveScheme(schemeId);
+				Pool.remove(Scheme.typ, schemeId);
 
 				dispatcher.notify(new SchemeElementsEvent(this, scheme, SchemeElementsEvent.CLOSE_SCHEME_EVENT));
 				dispatcher.notify(new TreeListSelectionEvent(Scheme.typ, TreeListSelectionEvent.REFRESH_EVENT));

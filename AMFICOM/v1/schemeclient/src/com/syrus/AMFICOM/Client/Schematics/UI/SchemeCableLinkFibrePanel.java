@@ -126,7 +126,7 @@ public class SchemeCableLinkFibrePanel extends GeneralPanel
 		if(cl != null)
 		{
 			ObjectResourceSorter sorter = SchemeCableThread.getDefaultSorter();
-			sorter.setDataSet(cl.cable_threads);
+			sorter.setDataSet(cl.cableThreads);
 			LinksList.setContents(sorter.default_sort());
 		}
 	}
@@ -146,7 +146,7 @@ public class SchemeCableLinkFibrePanel extends GeneralPanel
 
 			clt.id = this.linksIdField.getText();
 			clt.name = this.linksNameField.getText();
-			clt.link_type_id = (String )this.linksTypeBox.getSelected();
+			clt.linkTypeId = (String )this.linksTypeBox.getSelected();
 		}
 		catch(Exception ex)
 		{
@@ -166,7 +166,7 @@ public class SchemeCableLinkFibrePanel extends GeneralPanel
 			linksNameField.setCaretPosition(0);
 			this.linksNameField.setText(clt.getName());
 			linksNameField.setCaretPosition(0);
-			this.linksTypeBox.setSelected(clt.link_type_id);
+			this.linksTypeBox.setSelected(clt.linkTypeId);
 		}
 	}
 }

@@ -10,7 +10,7 @@ import com.syrus.AMFICOM.Client.General.Filter.*;
 import com.syrus.AMFICOM.Client.General.Lang.*;
 import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.Resource.*;
-import com.syrus.AMFICOM.Client.Resource.ISM.AccessPort;
+import com.syrus.AMFICOM.Client.Resource.ISM.MeasurementPort;
 import com.syrus.AMFICOM.Client.Resource.ISMDirectory.*;
 import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.*;
 import com.syrus.AMFICOM.Client.Resource.Scheme.*;
@@ -86,7 +86,7 @@ public class SchemeTreeModel extends ObjectResourceTreeModel
 							s.equals(CableLinkType.typ) ||
 							s.equals(PortType.typ) ||
 							s.equals(CablePortType.typ) ||
-							s.equals(AccessPortType.typ) ||
+							s.equals(MeasurementPortType.typ) ||
 							s.equals(TransmissionPathType.typ))
 				return new ObjectResourceCatalogActionModel(
 						ObjectResourceCatalogActionModel.PANEL,
@@ -100,7 +100,7 @@ public class SchemeTreeModel extends ObjectResourceTreeModel
 							s.equals(SchemePath.typ) ||
 							s.equals(SchemePort.typ) ||
 							s.equals(SchemeCablePort.typ) ||
-							s.equals(AccessPort.typ) ||
+							s.equals(MeasurementPort.typ) ||
 							s.equals(Scheme.typ) ||
 							s.equals(SchemeElement.typ))
 				return new ObjectResourceCatalogActionModel(
@@ -153,10 +153,10 @@ public class SchemeTreeModel extends ObjectResourceTreeModel
 //				return KISType.class;
 			if(s.equals(TransmissionPathType.typ))
 				return TransmissionPathType.class;
-			if(s.equals(AccessPortType.typ))
-				return AccessPortType.class;
+			if(s.equals(MeasurementPortType.typ))
+				return MeasurementPortType.class;
 
-			if(s.equals("scheme_types"))
+			if(s.equals("schemeTypes"))
 				return String.class;
 			if(s.equals(Scheme.NETWORK) ||
 				 s.equals(Scheme.CABLESUBNETWORK) ||
@@ -170,7 +170,7 @@ public class SchemeTreeModel extends ObjectResourceTreeModel
 		}
 		else if (node.getObject() instanceof SchemeProtoGroup)
 		{
-			if (!((SchemeProtoGroup)node.getObject()).group_ids.isEmpty())
+			if (!((SchemeProtoGroup)node.getObject()).groupIds.isEmpty())
 				return SchemeProtoGroup.class;
 			else
 				return SchemeProtoGroup.class;
@@ -197,7 +197,7 @@ public class SchemeTreeModel extends ObjectResourceTreeModel
 						new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/folder.gif"))));
 				vec.add(new ObjectResourceTreeNode (SchemeProtoGroup.typ, "Компоненты сети", true,
 						new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/folder.gif"))));
-				ObjectResourceTreeNode sch = new ObjectResourceTreeNode ("scheme_types", "Схемы", true,
+				ObjectResourceTreeNode sch = new ObjectResourceTreeNode ("schemeTypes", "Схемы", true,
 						new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/folder.gif")));
 				vec.add(sch);
 				registerSearchableNode(Scheme.typ, sch);
@@ -220,10 +220,10 @@ public class SchemeTreeModel extends ObjectResourceTreeModel
 			else if(s.equals("jdirectory"))
 			{
 //				vec.add(new ObjectResourceTreeNode(KISType.typ, LangModelConfig.getString("menuJDirKISText"), true));
-				vec.add(new ObjectResourceTreeNode(AccessPortType.typ, LangModelConfig.getString("menuJDirAccessPointText"), true));
+				vec.add(new ObjectResourceTreeNode(MeasurementPortType.typ, LangModelConfig.getString("menuJDirAccessPointText"), true));
 				vec.add(new ObjectResourceTreeNode(TransmissionPathType.typ, LangModelConfig.getString("menuJDirPathText"), true));
 			}
-			else if(s.equals("scheme_types"))
+			else if(s.equals("schemeTypes"))
 			{
 				Map ht = new HashMap();
 				if (Pool.getMap(Scheme.typ) != null)
@@ -235,7 +235,7 @@ public class SchemeTreeModel extends ObjectResourceTreeModel
 					for (Iterator it = dSet.values().iterator(); it.hasNext();)
 					{
 						Scheme sch = (Scheme)it.next();
-						ht.put(sch.scheme_type, sch.scheme_type);
+						ht.put(sch.schemeType, sch.schemeType);
 					}
 					for (Iterator it = ht.keySet().iterator(); it.hasNext();)
 					{
@@ -266,7 +266,7 @@ public class SchemeTreeModel extends ObjectResourceTreeModel
 					for(Iterator it = sorter.default_sort().iterator(); it.hasNext();)
 					{
 						Scheme sc = (Scheme )it.next();
-						if (sc.scheme_type.equals(s))
+						if (sc.schemeType.equals(s))
 						{
 							vec.add(new ObjectResourceTreeNode(sc, sc.getName(), true,
 								new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/scheme.gif"))));
@@ -413,20 +413,20 @@ public class SchemeTreeModel extends ObjectResourceTreeModel
 					}
 				}
 			}
-			else if(s.equals(AccessPortType.typ))
+			else if(s.equals(MeasurementPortType.typ))
 			{
-				if (Pool.getMap(AccessPortType.typ) != null)
+				if (Pool.getMap(MeasurementPortType.typ) != null)
 				{
-					Map dSet = Pool.getMap(AccessPortType.typ);
+					Map dSet = Pool.getMap(MeasurementPortType.typ);
 
 //					ObjectResourceFilter filter = new ObjectResourceDomainFilter(dsi.getSession().getDomainId());
 //					dSet = filter.filter(dSet);
-					ObjectResourceSorter sorter = AccessPortType.getDefaultSorter();
+					ObjectResourceSorter sorter = MeasurementPortType.getDefaultSorter();
 					sorter.setDataSet(dSet);
 
 					for(Iterator it = sorter.default_sort().iterator(); it.hasNext();)
 					{
-						AccessPortType apt = (AccessPortType)it.next();
+						MeasurementPortType apt = (MeasurementPortType)it.next();
 						ObjectResourceTreeNode n = new ObjectResourceTreeNode(apt, apt.getName(), true, true);
 						vec.add(n);
 					}
@@ -440,7 +440,7 @@ public class SchemeTreeModel extends ObjectResourceTreeModel
 					for (Iterator it = map_groups.values().iterator(); it.hasNext();)
 					{
 						SchemeProtoGroup map_group = (SchemeProtoGroup)it.next();
-						if (map_group.parent_id.equals(""))
+						if (map_group.parentId.equals(""))
 						{
 							ImageIcon icon;
 							if (map_group.getImageID().equals(""))
@@ -449,7 +449,7 @@ public class SchemeTreeModel extends ObjectResourceTreeModel
 								icon = new ImageIcon(ImageCatalogue.get(map_group.getImageID()).getImage()
 										.getScaledInstance(16, 16, Image.SCALE_SMOOTH));
 							vec.add(new ObjectResourceTreeNode(map_group, map_group.getName(), true, icon,
-									map_group.group_ids.isEmpty() && map_group.getProtoIds().isEmpty()));
+									map_group.groupIds.isEmpty() && map_group.getProtoIds().isEmpty()));
 						}
 					}
 			}
@@ -492,7 +492,7 @@ public class SchemeTreeModel extends ObjectResourceTreeModel
 				else if (parent instanceof SchemeElement)
 				{
 					SchemeElement el = (SchemeElement)parent;
-					for (Iterator it = el.element_ids.iterator(); it.hasNext();)
+					for (Iterator it = el.elementIds.iterator(); it.hasNext();)
 					{
 						SchemeElement element = (SchemeElement)Pool.get(SchemeElement.typ, (String)it.next());
 						if (element != null)
@@ -506,7 +506,7 @@ public class SchemeTreeModel extends ObjectResourceTreeModel
 					for(Iterator it = sorter.default_sort().iterator(); it.hasNext();)
 					{
 						SchemeElement element = (SchemeElement)it.next();
-						if (!element.links.isEmpty() || !element.element_ids.isEmpty())
+						if (!element.links.isEmpty() || !element.elementIds.isEmpty())
 							vec.add(new ObjectResourceTreeNode(element, element.getName(), true, false));
 						else
 							vec.add(new ObjectResourceTreeNode(element, element.getName(), true, true));
@@ -554,7 +554,7 @@ public class SchemeTreeModel extends ObjectResourceTreeModel
 			{
 				Scheme parent = (Scheme)((ObjectResourceTreeNode)node.getParent()).getObject();
 				ObjectResourceSorter sorter = SchemePath.getSorter();
-				sorter.setDataSet(parent.paths);
+				sorter.setDataSet(parent.solution.paths);
 				for(Iterator it = sorter.default_sort().iterator(); it.hasNext();)
 				{
 					SchemePath path = (SchemePath)it.next();
@@ -567,8 +567,8 @@ public class SchemeTreeModel extends ObjectResourceTreeModel
 			if(node.getObject() instanceof SchemeProtoGroup)
 			{
 				SchemeProtoGroup parent_group = (SchemeProtoGroup)node.getObject();
-				Iterator it = parent_group.group_ids.iterator();
-				for (int i = 0; i < parent_group.group_ids.size(); i++)
+				Iterator it = parent_group.groupIds.iterator();
+				for (int i = 0; i < parent_group.groupIds.size(); i++)
 				{
 					SchemeProtoGroup map_group = (SchemeProtoGroup)Pool.get(SchemeProtoGroup.typ, (String)it.next());
 					ImageIcon icon;
@@ -578,7 +578,7 @@ public class SchemeTreeModel extends ObjectResourceTreeModel
 						icon = new ImageIcon(ImageCatalogue.get(map_group.getImageID()).getImage()
 								.getScaledInstance(16, 16, Image.SCALE_SMOOTH));
 					vec.add(new ObjectResourceTreeNode(map_group, map_group.getName(), true, icon,
-							map_group.group_ids.isEmpty() && map_group.getProtoIds().isEmpty()));
+							map_group.groupIds.isEmpty() && map_group.getProtoIds().isEmpty()));
 				}
 				if (vec.isEmpty())
 				{
@@ -628,7 +628,7 @@ public class SchemeTreeModel extends ObjectResourceTreeModel
 					vec.add(new ObjectResourceTreeNode(SchemeLink.typ, "Линии", true));
 				if (!s.cablelinks.isEmpty())
 					vec.add(new ObjectResourceTreeNode(SchemeCableLink.typ, "Кабели", true));
-				if (!s.paths.isEmpty())
+				if (!s.solution.paths.isEmpty())
 					vec.add(new ObjectResourceTreeNode(SchemePath.typ, "Пути", true));
 			}
 			else if(node.getObject() instanceof SchemeElement)
@@ -649,7 +649,7 @@ public class SchemeTreeModel extends ObjectResourceTreeModel
 				}
 				else
 				{
-					if (!schel.element_ids.isEmpty())
+					if (!schel.elementIds.isEmpty())
 						vec.add(new ObjectResourceTreeNode(SchemeElement.typ, "Вложенные элементы", true));
 				 if (!schel.links.isEmpty())
 						vec.add(new ObjectResourceTreeNode(SchemeLink.typ, "Линии", true));

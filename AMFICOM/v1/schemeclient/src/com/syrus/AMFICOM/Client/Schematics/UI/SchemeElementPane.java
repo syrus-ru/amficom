@@ -46,24 +46,19 @@ public class SchemeElementPane extends PropertiesPanel
 
 	public void setObjectResource(ObjectResource or)
 	{
-		this.se = (SchemeElement )or;
+		this.se = (SchemeElement)or;
 
-		Equipment eq = (Equipment)Pool.get("kisequipment", se.equipment_id);
-		if (eq == null)
-			return;
-		is_kis = eq.is_kis;
-
-		if (is_kis)
+		if (se.kis != null)
 		{
 			removeAll();
 			add(kisPane, BorderLayout.CENTER);
-			kisPane.setObjectResource(eq);
+			kisPane.setObjectResource(se);
 		}
 		else
 		{
 			removeAll();
 			add(eqPane, BorderLayout.CENTER);
-			eqPane.setObjectResource(eq);
+			eqPane.setObjectResource(se);
 		}
 	}
 

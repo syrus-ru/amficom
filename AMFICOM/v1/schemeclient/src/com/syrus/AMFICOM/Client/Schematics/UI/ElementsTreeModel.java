@@ -66,7 +66,7 @@ public class ElementsTreeModel extends ObjectResourceTreeModel
 							s.equals(CableLinkType.typ) ||
 							s.equals(PortType.typ) ||
 							s.equals(CablePortType.typ) ||
-							s.equals(AccessPortType.typ) ||
+							s.equals(MeasurementPortType.typ) ||
 							s.equals(TransmissionPathType.typ))
 				return new ObjectResourceCatalogActionModel(
 				ObjectResourceCatalogActionModel.PANEL,
@@ -108,12 +108,12 @@ public class ElementsTreeModel extends ObjectResourceTreeModel
 //				return KISType.class;
 			if(s.equals(TransmissionPathType.typ))
 				return TransmissionPathType.class;
-			if(s.equals(AccessPortType.typ))
-				return AccessPortType.class;
+			if(s.equals(MeasurementPortType.typ))
+				return MeasurementPortType.class;
 		}
 		else if (node.getObject() instanceof SchemeProtoGroup)
 		{
-			if (!((SchemeProtoGroup)node.getObject()).group_ids.isEmpty())
+			if (!((SchemeProtoGroup)node.getObject()).groupIds.isEmpty())
 				return SchemeProtoGroup.class;
 			else
 				return ProtoElement.class;
@@ -155,7 +155,7 @@ public class ElementsTreeModel extends ObjectResourceTreeModel
 			else if(s.equals("jdirectory"))
 			{
 //				vec.add(new ObjectResourceTreeNode(KISType.typ, LangModelConfig.getString("menuJDirKISText"), true));
-				vec.add(new ObjectResourceTreeNode(AccessPortType.typ, LangModelConfig.getString("menuJDirAccessPointText"), true));
+				vec.add(new ObjectResourceTreeNode(MeasurementPortType.typ, LangModelConfig.getString("menuJDirAccessPointText"), true));
 				vec.add(new ObjectResourceTreeNode(TransmissionPathType.typ, LangModelConfig.getString("menuJDirPathText"), true));
 			}
 /*			else if(s.equals(EquipmentType.typ))
@@ -297,20 +297,20 @@ public class ElementsTreeModel extends ObjectResourceTreeModel
 					}
 				}
 			}
-			else if(s.equals(AccessPortType.typ))
+			else if(s.equals(MeasurementPortType.typ))
 			{
-				if (Pool.getMap(AccessPortType.typ) != null)
+				if (Pool.getMap(MeasurementPortType.typ) != null)
 				{
-					Map dSet = Pool.getMap(AccessPortType.typ);
+					Map dSet = Pool.getMap(MeasurementPortType.typ);
 
 //					ObjectResourceFilter filter = new ObjectResourceDomainFilter(dsi.getSession().getDomainId());
 //					dSet = filter.filter(dSet);
-					ObjectResourceSorter sorter = AccessPortType.getDefaultSorter();
+					ObjectResourceSorter sorter = MeasurementPortType.getDefaultSorter();
 					sorter.setDataSet(dSet);
 
 					for(Iterator it = sorter.default_sort().iterator(); it.hasNext();)
 					{
-						AccessPortType apt = (AccessPortType)it.next();
+						MeasurementPortType apt = (MeasurementPortType)it.next();
 						ObjectResourceTreeNode n = new ObjectResourceTreeNode(apt, apt.getName(), true, true);
 						vec.add(n);
 					}
@@ -324,7 +324,7 @@ public class ElementsTreeModel extends ObjectResourceTreeModel
 					for (Iterator it = map_groups.values().iterator(); it.hasNext();)
 					{
 						SchemeProtoGroup map_group = (SchemeProtoGroup)it.next();
-						if (map_group.parent_id.equals(""))
+						if (map_group.parentId.equals(""))
 						{
 							ImageIcon icon;
 							if (map_group.getImageID().equals(""))
@@ -333,7 +333,7 @@ public class ElementsTreeModel extends ObjectResourceTreeModel
 								icon = new ImageIcon(ImageCatalogue.get(map_group.getImageID()).getImage()
 										.getScaledInstance(16, 16, Image.SCALE_SMOOTH));
 							vec.add(new ObjectResourceTreeNode(map_group, map_group.getName(), true, icon,
-									map_group.group_ids.isEmpty() && map_group.getProtoIds().isEmpty()));
+									map_group.groupIds.isEmpty() && map_group.getProtoIds().isEmpty()));
 						}
 					}
 			}
@@ -343,8 +343,8 @@ public class ElementsTreeModel extends ObjectResourceTreeModel
 			if(node.getObject() instanceof SchemeProtoGroup)
 			{
 				SchemeProtoGroup parent_group = (SchemeProtoGroup)node.getObject();
-				Iterator it = parent_group.group_ids.iterator();
-				for (int i = 0; i < parent_group.group_ids.size(); i++)
+				Iterator it = parent_group.groupIds.iterator();
+				for (int i = 0; i < parent_group.groupIds.size(); i++)
 				{
 					SchemeProtoGroup map_group = (SchemeProtoGroup)Pool.get(SchemeProtoGroup.typ, (String)it.next());
 					ImageIcon icon;
@@ -354,7 +354,7 @@ public class ElementsTreeModel extends ObjectResourceTreeModel
 						icon = new ImageIcon(ImageCatalogue.get(map_group.getImageID()).getImage()
 								.getScaledInstance(16, 16, Image.SCALE_SMOOTH));
 					vec.add(new ObjectResourceTreeNode(map_group, map_group.getName(), true, icon,
-							map_group.group_ids.isEmpty() && map_group.getProtoIds().isEmpty()));
+							map_group.groupIds.isEmpty() && map_group.getProtoIds().isEmpty()));
 				}
 				if (vec.isEmpty())
 				{
