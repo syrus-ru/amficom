@@ -5,9 +5,9 @@ import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelSchematics;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelConfig;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.Scheme.SchemeGraph;
-import com.syrus.AMFICOM.Client.General.Scheme.SchemePanel;
-import com.syrus.AMFICOM.Client.General.Scheme.SchemePanelNoEdition;
+import com.syrus.AMFICOM.Client.Schematics.General.SchemeGraph;
+import com.syrus.AMFICOM.Client.Schematics.General.SchemePanel;
+import com.syrus.AMFICOM.Client.Schematics.General.SchemePanelNoEdition;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourceDisplayModel;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourceTableModel;
 import com.syrus.AMFICOM.Client.Map.UI.MapChooserDialog;
@@ -156,7 +156,7 @@ public class SchemeViewOpenCommand extends VoidCommand
 		{
 			super(dataSource);
 		}
-		
+
 		public void jbInit() throws Exception
 		{
 			super.jbInit();
