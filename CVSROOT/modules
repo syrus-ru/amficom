@@ -72,3 +72,5 @@ map	map
 config	config
 #M	jdbc	Client-side JDBC connection stub
 jdbc	jdbc
+#M	main	Main module
+main	main
