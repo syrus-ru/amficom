@@ -18,8 +18,8 @@ import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
  * Abstract class for JLabel and simple Component (witch extends JLabel)
  * rendering at JTable
  * 
- * @version $Revision: 1.5 $, $Date: 2004/11/26 07:35:10 $
- * @author $Author: bob $
+ * @version $Revision: 1.6 $, $Date: 2004/12/30 12:32:57 $
+ * @author $Author: krupenn $
  * @module generalclient_v1
  */
 public abstract class AbstractLabelCellRenderer extends JLabel implements TableCellRenderer {
@@ -91,8 +91,11 @@ public abstract class AbstractLabelCellRenderer extends JLabel implements TableC
 		} else if (tableModel instanceof ObjPropertyTableModel) {
 			ObjPropertyTableModel model = (ObjPropertyTableModel) tableModel;
 			obj = model.getObject();
-			colId = model.controller.getKey(mColIndex);
-			customRendering(table, obj, model.controller, colId);
+			if(mColIndex == 1) // 'property' field
+			{
+				colId = model.controller.getKey(rowIndex);
+				customRendering(table, obj, model.controller, colId);
+			}
 		}
 
 		Color color = super.getBackground();

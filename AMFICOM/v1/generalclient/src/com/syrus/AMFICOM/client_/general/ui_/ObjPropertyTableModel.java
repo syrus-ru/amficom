@@ -1,22 +1,25 @@
 
 package com.syrus.AMFICOM.client_.general.ui_;
 
+import com.syrus.AMFICOM.Client.General.Lang.LangModel;
+import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
+
 import java.util.Iterator;
 import java.util.Map;
 
 import javax.swing.table.AbstractTableModel;
 
-import com.syrus.AMFICOM.Client.Resource.ObjectResource;
-import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
-
 /**
- * @version $Revision: 1.2 $, $Date: 2004/12/22 13:25:16 $
+ * @version $Revision: 1.3 $, $Date: 2004/12/30 12:32:57 $
  * @author $Author: krupenn $
  * @module generalclient_v1
  */
 public class ObjPropertyTableModel extends AbstractTableModel {
 
 	private static final long		serialVersionUID	= 4007513055820570639L;
+
+	public static final String KEY_PROPERTY = "Property";
+	public static final String KEY_VALUE = "Value";
 
 	/**
 	 * ObjectResourceController of Model (ObjectResource) will be used for
@@ -50,10 +53,20 @@ public class ObjPropertyTableModel extends AbstractTableModel {
 	/**
 	 * override {@link AbstractTableModel#getColumnClass(int)}method
 	 */
-	public Class getColumnClass(int columnIndex) {
-		String key = this.controller.getKey(columnIndex);
-		return this.controller.getPropertyClass(key);
+	public Class getColumnClass(int columnIndex) 
+	{
+		Class clazz;
+		if(columnIndex == 0)
+			clazz = String.class;
+		else
+			clazz = Object.class;
+		return clazz;
 	}
+
+//	public Class getColumnClass(int columnIndex) {
+//		String key = this.controller.getKey(columnIndex);
+//		return this.controller.getPropertyClass(key);
+//	}
 
 	/**
 	 * override {@link javax.swing.table.TableModel#getColumnCount()}method
@@ -62,10 +75,23 @@ public class ObjPropertyTableModel extends AbstractTableModel {
 		return 2;
 	}
 
-	public String getColumnName(int columnIndex) {
-		String key = this.controller.getKey(columnIndex);
-		return this.controller.getName(key);
+	public String getColumnName(int columnIndex) 
+	{
+		String name = "";
+
+		if(columnIndex == 0)
+			name = LangModel.getString(KEY_PROPERTY);
+		else
+		if(columnIndex == 1)
+			name = LangModel.getString(KEY_VALUE);
+
+		return name;
 	}
+
+//	public String getColumnName(int columnIndex) {
+//		String key = this.controller.getKey(columnIndex);
+//		return this.controller.getName(key);
+//	}
 
 	public Object getObject() {
 		return this.object;
