@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseLinkedIdsConditionImpl.java,v 1.5 2005/02/10 08:41:10 max Exp $
+ * $Id: DatabaseLinkedIdsConditionImpl.java,v 1.6 2005/02/14 11:21:55 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,8 +15,8 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/02/10 08:41:10 $
- * @author $Author: max $
+ * @version $Revision: 1.6 $, $Date: 2005/02/14 11:21:55 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 public class DatabaseLinkedIdsConditionImpl extends AbstractDatabaseLinkedIdsCondition {
@@ -29,12 +29,12 @@ public class DatabaseLinkedIdsConditionImpl extends AbstractDatabaseLinkedIdsCon
 		StringBuffer query = new StringBuffer();
 		switch (super.condition.getEntityCode().shortValue()) {
 		case ObjectEntities.ANALYSISTYPE_ENTITY_CODE:
-			query.append(super.getLinkedQuery(AnalysisTypeDatabase.LINK_COLUMN_ANALYSIS_TYPE_ID,
+			query.append(super.getLinkedQuery(AnalysisTypeWrapper.LINK_COLUMN_ANALYSIS_TYPE_ID,
 					StorableObjectWrapper.LINK_COLUMN_PARAMETER_TYPE_ID,
 					ObjectEntities.ANATYPPARTYPLINK_ENTITY));
 			break;
 		case ObjectEntities.EVALUATIONTYPE_ENTITY_CODE:
-			query.append(getLinkedQuery(EvaluationTypeDatabase.LINK_COLUMN_EVALUATION_TYPE_ID, 
+			query.append(getLinkedQuery(EvaluationTypeWrapper.LINK_COLUMN_EVALUATION_TYPE_ID, 
 					StorableObjectWrapper.LINK_COLUMN_PARAMETER_TYPE_ID,
 					ObjectEntities.EVATYPPARTYPLINK_ENTITY));
 			break;
