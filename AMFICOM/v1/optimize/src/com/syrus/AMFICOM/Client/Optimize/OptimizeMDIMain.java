@@ -853,6 +853,7 @@ public class OptimizeMDIMain extends JFrame implements OperationListener
 		aModel.enable("menuSessionOptions");
 		aModel.enable("menuSessionChangePassword");
 		aModel.enable("menuSessionDomain");
+    aModel.enable("menuReport");    
 		aModel.fireModelChanged("");
 
 	    mainToolBar.open_scheme.setEnabled(true);
@@ -884,6 +885,7 @@ public class OptimizeMDIMain extends JFrame implements OperationListener
     aModel.disable("menuSchemeSaveAs");
     aModel.disable("menuLoadSm");
     aModel.disable("menuClearScheme");
+    aModel.disable("menuReport");    
     aModel.fireModelChanged("");
 
     mainToolBar.open_scheme.setEnabled(false);

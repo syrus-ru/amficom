@@ -1,5 +1,6 @@
 package com.syrus.AMFICOM.Client.Optimize.Report;
 
+import com.syrus.AMFICOM.Client.General.Report.AMTReport;
 import com.syrus.AMFICOM.Client.General.Report.APOReportModel;
 
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
@@ -30,6 +31,8 @@ import javax.swing.JComponent;
 
 import java.util.Vector;
 
+import com.syrus.AMFICOM.Client.Analysis.Report.EvaluationTableReport;
+import com.syrus.AMFICOM.Client.Analysis.Report.EvaluationGraphPanel;
 
 public class OptimizationReportModel extends APOReportModel
 {
@@ -230,7 +233,9 @@ public class OptimizationReportModel extends APOReportModel
 	{
 		if (rp.field.equals(SchemeReportModel.scheme))
 			return -1;
-		else if (rp.field.equals(MapReportModel.rep_topology))
+		else if (   rp.field.equals(MapReportModel.rep_topology)
+              ||rp.field.equals(OptimizationReportModel.iterationsHistory)
+              ||rp.field.equals(OptimizationReportModel.nodesOptimizeProperties))              
 			return 0;
 
 		return 1;
@@ -307,10 +312,27 @@ public class OptimizationReportModel extends APOReportModel
 					rt.findROforReport(rp));
 		}
 
+		else if (rp.field.equals(OptimizationReportModel.optimizationParams)
+           ||rp.field.equals(OptimizationReportModel.solution))
+		{
+      EvaluationTableReport etr = new EvaluationTableReport(rp,divisionsNumber);
+			returnValue = new ReportResultsTablePanel(
+					etr.columnModel,
+					etr.tableModel,
+					rt.findROforReport(rp));
+		}
+
+		else if (rp.field.equals(OptimizationReportModel.nodesOptimizeProperties)
+           ||rp.field.equals(OptimizationReportModel.iterationsHistory))
+		{
+			returnValue = new EvaluationGraphPanel(rt.findROforReport(rp));
+		}
+
 		return returnValue;
 	}
 
-	public void setData(ReportTemplate rt,Object data)
+	public void setData(ReportTemplate rt,AMTReport data)
 	{
+    super.setData(rt,data);
 	};
 }

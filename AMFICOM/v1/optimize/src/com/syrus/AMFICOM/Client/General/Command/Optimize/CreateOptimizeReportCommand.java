@@ -46,33 +46,37 @@ public class CreateOptimizeReportCommand extends VoidCommand
     if (mainFrame == null)
       return;
 
+    OptimizationReportModel orm = new OptimizationReportModel();
     AMTReport aReport = new AMTReport();
     
 //		aReport.addRecord(OptimizationReportModel.sourceData,null);
-		aReport.addRecord(SchemeReportModel.scheme,null);
-		aReport.addRecord(MapReportModel.rep_topology,null);
+		aReport.addRecord(
+      orm.getLangForField(SchemeReportModel.scheme),
+      mainFrame.schemeFrame.schemePanel.scheme.getId());
+      
+//		aReport.addRecord(MapReportModel.rep_topology,null);
 //		aReport.addRecord(OptimizationReportModel.equipFeatures,null);
 //		aReport.addRecord(OptimizationReportModel.optimizeResults,null);
 //		aReport.addRecord(OptimizationReportModel.cost,null);
 
     if (mainFrame.iterHistFrame != null)
     	aReport.addRecord(
-        OptimizationReportModel.iterationsHistory,
+        orm.getLangForField(OptimizationReportModel.iterationsHistory),
         mainFrame.iterHistFrame.getItHistPanel());
 
     if (mainFrame.paramsFrame != null)        
       aReport.addRecord(
-        OptimizationReportModel.optimizationParams,
+        orm.getLangForField(OptimizationReportModel.optimizationParams),
         mainFrame.paramsFrame.getTableModelForReport());
 
     if (mainFrame.solutionFrame != null)                
       aReport.addRecord(
-        OptimizationReportModel.solution,
+        orm.getLangForField(OptimizationReportModel.solution),
         mainFrame.solutionFrame.getTableModelForReport());
     
     if (mainFrame.nodesModeFrame != null)                
       aReport.addRecord(
-        OptimizationReportModel.nodesOptimizeProperties,
+        orm.getLangForField(OptimizationReportModel.nodesOptimizeProperties),
         mainFrame.nodesModeFrame.getNodesOptimizePanel());
       
 		new OpenTypedTemplateCommand(aContext, ReportTemplate.rtt_Optimization,

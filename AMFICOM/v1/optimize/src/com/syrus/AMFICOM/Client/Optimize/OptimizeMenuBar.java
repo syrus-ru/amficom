@@ -240,8 +240,9 @@ public class OptimizeMenuBar extends JMenuBar	implements ApplicationModelListene
 		menuOptimizeStop.addActionListener(actionAdapter);
 
 		menuReport.setText(LangModelOptimize.getString("menuReportText"));
-		menuReportCreate.setText(LangModelOptimize.getString("menuReportCreateText"));
-	    menuReportCreate.setName("menuReportCreate");
+	  menuReport.setName("menuReport");		
+    menuReportCreate.setText(LangModelOptimize.getString("menuReportCreateText"));
+	  menuReportCreate.setName("menuReportCreate");
 		menuReportCreate.addActionListener(actionAdapter);
 
 		
@@ -347,7 +348,7 @@ public class OptimizeMenuBar extends JMenuBar	implements ApplicationModelListene
 		this.add(menuScheme);
 		this.add(menuView);
 		this.add(menuOptimize);
-		//this.add(menuReport); меню по созданию отчётов пока не добавляем
+		this.add(menuReport);
 		this.add(menuHelp);
 	}
 	//--------------------------------------------------------------------------------------------------------------
