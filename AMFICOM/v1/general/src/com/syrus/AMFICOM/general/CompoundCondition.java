@@ -1,5 +1,5 @@
 /*
-* $Id: CompoundCondition.java,v 1.8 2005/02/03 14:56:50 bob Exp $
+* $Id: CompoundCondition.java,v 1.9 2005/02/03 15:35:03 max Exp $
 *
 * Copyright ¿ 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -28,8 +28,8 @@ import com.syrus.util.corba.JavaSoftORBUtil;
  * Compound condition such as (A & B), (A | B) , (A ^ B)
  * where A and B is conditions (they can be also compound condition too)
  *  
- * @version $Revision: 1.8 $, $Date: 2005/02/03 14:56:50 $
- * @author $Author: bob $
+ * @version $Revision: 1.9 $, $Date: 2005/02/03 15:35:03 $
+ * @author $Author: max $
  * @module general_v1
  */
 public class CompoundCondition implements StorableObjectCondition {
@@ -57,7 +57,10 @@ public class CompoundCondition implements StorableObjectCondition {
 	
 	public CompoundCondition(StorableObjectCondition firstCondition, 
 	                         CompoundConditionSort operation, 
-	                         StorableObjectCondition secondCondition) {
+	                         StorableObjectCondition secondCondition) throws CreateObjectException {
+		if(firstCondition.getEntityCode().intValue() != secondCondition.getEntityCode().intValue()) {
+			throw new CreateObjectException("Unable to create CompoundCondition for conditions with different entity codes");
+		}
 		this.firstCondition = firstCondition;
 		this.operation = operation.value();
 		this.secondCondition = secondCondition;
