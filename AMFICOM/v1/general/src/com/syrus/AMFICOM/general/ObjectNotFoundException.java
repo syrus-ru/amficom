@@ -10,6 +10,7 @@ package com.syrus.AMFICOM.general;
  * @author Vladimir Dolzhenko
  */
 public class ObjectNotFoundException extends Exception {
+	private static final long serialVersionUID = 8931150523740838625L;
 
 	public ObjectNotFoundException() {
 		super();		

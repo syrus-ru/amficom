@@ -10,6 +10,7 @@ package com.syrus.AMFICOM.general;
  * @author Vladimir Dolzhenko
  */
 public class IllegalDataException extends Exception {
+	private static final long serialVersionUID = -2728886523594799410L;
 
 	/**
 	 * @param message

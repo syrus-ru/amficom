@@ -10,6 +10,7 @@ package com.syrus.AMFICOM.general;
  * @author Vladimir Dolzhenko
  */
 public class VersionCollisionException extends Exception {
+	static final long serialVersionUID = -3847337178607890353L;
 
 	public VersionCollisionException() {
 		super();

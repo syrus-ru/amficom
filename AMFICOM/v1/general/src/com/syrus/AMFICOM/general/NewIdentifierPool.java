@@ -1,5 +1,5 @@
 /*
- * $Id: NewIdentifierPool.java,v 1.1 2004/07/21 11:02:12 arseniy Exp $
+ * $Id: NewIdentifierPool.java,v 1.2 2004/07/21 13:33:11 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,6 +12,9 @@ import java.util.Map;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.ArrayList;
+import com.syrus.AMFICOM.general.corba.IdentifierGeneratorServer;
+import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
+import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.util.Log;
 
 /**
@@ -22,10 +25,18 @@ import com.syrus.util.Log;
  
 public class NewIdentifierPool {
 	public static final int DEFAULT_ENTITY_POOL_SIZE = 10;
+	public static final int MAX_ENTITY_POOL_SIZE = 10;
 
 	private static Map entityIdentifierPools;
+	private static IdentifierGeneratorServer igServer;
 	
-	static {
+	private NewIdentifierPool() {
+		// nothing
+	}
+	
+	public static void init(IdentifierGeneratorServer igServer1) {
+		igServer = igServer1;
+
 		entityIdentifierPools = new Hashtable(100);
 
 		createEntityIdentifierPool(ObjectEntities.SET_ENTITY);
@@ -40,28 +51,31 @@ public class NewIdentifierPool {
 		createEntityIdentifierPool(ObjectEntities.TEMPORALPATTERN_ENTITY);
 	}
 	
-	private NewIdentifierPool() {
-		// nothing
-	}
-	
-	public static Identifier getId(String entity) throws IllegalObjectEntityException {
+	public static Identifier getGeneratedIdentifier(String entity, int preferredRangeSize) throws IllegalObjectEntityException, AMFICOMRemoteException {
 		List entityIdPool = (List)entityIdentifierPools.get(entity);
 		if (entityIdPool != null) {
-			if (! entityIdPool.isEmpty()) {
-				Identifier identifier = (Identifier)entityIdPool.remove(0);
-				return identifier;
-			}
-			else
-				;
+			if (entityIdPool.isEmpty())
+				updateIdentifierPool(entity, preferredRangeSize);
+
+			Identifier identifier = (Identifier)entityIdPool.remove(0);
+			return identifier;
 		}
 		else
 			throw new IllegalObjectEntityException("Identifier pool for entity '" + entity + "' not found", IllegalObjectEntityException.NULL_ENTITY_CODE);
 	}
-	
-	public static void updateIdentifierPool(String entity, int size) throws IllegalObjectEntityException {
+		
+	public static void updateIdentifierPool(String entity, int size) throws IllegalObjectEntityException, AMFICOMRemoteException {
 		List entityIdPool = (List)entityIdentifierPools.get(entity);
 		if (entityIdPool != null) {
-			
+			if (size <= 1) {
+				Identifier identifier = new Identifier(igServer.getGeneratedIdentifier(entity));
+				entityIdPool.add(identifier);
+			}
+			else {
+				Identifier_Transferable[] idst = igServer.getGeneratedIdentifierRange(entity, (size < MAX_ENTITY_POOL_SIZE)?size:MAX_ENTITY_POOL_SIZE);
+				for (int i = 0; i < idst.length; i++)
+					entityIdPool.add(new Identifier(idst[i]));
+			}
 		}
 		else
 			throw new IllegalObjectEntityException("Identifier pool for entity '" + entity + "' not found", IllegalObjectEntityException.NULL_ENTITY_CODE);
