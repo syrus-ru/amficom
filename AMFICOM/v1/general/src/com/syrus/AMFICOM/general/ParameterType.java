@@ -1,5 +1,5 @@
 /*
- * $Id: ParameterType.java,v 1.6 2005/02/10 12:51:50 arseniy Exp $
+ * $Id: ParameterType.java,v 1.7 2005/02/10 13:40:52 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,7 +29,7 @@ import com.syrus.AMFICOM.general.corba.ParameterType_Transferable;
 import com.syrus.util.HashCodeGenerator;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/02/10 12:51:50 $
+ * @version $Revision: 1.7 $, $Date: 2005/02/10 13:40:52 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -107,14 +107,17 @@ public class ParameterType extends StorableObjectType {
 			throw new IllegalArgumentException("Argument is 'null'");		
 
 		try {
-			return new ParameterType(IdentifierPool.getGeneratedIdentifier(ObjectEntities.PARAMETERTYPE_ENTITY_CODE),
-							 creatorId,
-							 0L,
-							 codename,
-							 description,
-							 name,
-							 dataType.value());
-		} catch (IllegalObjectEntityException e) {
+			ParameterType parameterType = new ParameterType(IdentifierPool.getGeneratedIdentifier(ObjectEntities.PARAMETERTYPE_ENTITY_CODE),
+					creatorId,
+					0L,
+					codename,
+					description,
+					name,
+					dataType.value());
+			parameterType.setChanged();
+			return parameterType;
+		}
+		catch (IllegalObjectEntityException e) {
 			throw new CreateObjectException("ParameterType.createInstance | cannot generate identifier ", e);
 		}
 	}
