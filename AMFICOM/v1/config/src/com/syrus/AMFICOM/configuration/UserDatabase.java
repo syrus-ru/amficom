@@ -1,5 +1,5 @@
 /*
- * $Id: UserDatabase.java,v 1.11 2004/09/08 11:20:58 bob Exp $
+ * $Id: UserDatabase.java,v 1.12 2004/09/08 12:03:23 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,7 +11,6 @@ package com.syrus.AMFICOM.configuration;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.List;
 
 import com.syrus.AMFICOM.general.Identifier;
@@ -28,7 +27,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2004/09/08 11:20:58 $
+ * @version $Revision: 1.12 $, $Date: 2004/09/08 12:03:23 $
  * @author $Author: bob $
  * @module configuration_v1
  */
