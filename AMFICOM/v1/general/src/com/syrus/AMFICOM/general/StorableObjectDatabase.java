@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectDatabase.java,v 1.114 2005/03/04 19:50:01 bass Exp $
+ * $Id: StorableObjectDatabase.java,v 1.115 2005/03/05 21:24:03 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,8 +33,8 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.114 $, $Date: 2005/03/04 19:50:01 $
- * @author $Author: bass $
+ * @version $Revision: 1.115 $, $Date: 2005/03/05 21:24:03 $
+ * @author $Author: arseniy $
  * @module general_v1
  */
 
@@ -390,7 +390,7 @@ public abstract class StorableObjectDatabase {
 		if (ids == null || ids.isEmpty())
 			return this.retrieveByIds(null, null);
 
-		StringBuffer stringBuffer = this.idsEnumerationString(ids, StorableObjectWrapper.COLUMN_ID, false);
+		StringBuffer stringBuffer = idsEnumerationString(ids, StorableObjectWrapper.COLUMN_ID, false);
 		if ((condition != null) && (condition.length() > 0)) {
 			if (stringBuffer.length() != 0)
 				stringBuffer.append(SQL_AND);
@@ -419,6 +419,17 @@ public abstract class StorableObjectDatabase {
 		return collection;
 	}
 
+	public Collection retrieveAll() throws RetrieveObjectException {
+		Collection objects = null;
+		try {
+			objects = this.retrieveByIds(null, null);
+		}
+		catch (IllegalDataException ide) {
+			throw new RetrieveObjectException(ide);
+		}
+		return objects;
+	}
+
 	/**
 	 * retrive storable objects by identifiers and additional condition
 	 * @param ids List&lt;{@link Identifier}&gt; or List&lt;{@link Identifiable}&gt;
@@ -433,7 +444,7 @@ public abstract class StorableObjectDatabase {
 		if ( (ids != null) && (!ids.isEmpty())) {
 			stringBuffer.append(SQL_AND);
 			stringBuffer.append(OPEN_BRACKET);
-			stringBuffer.append(this.idsEnumerationString(ids, StorableObjectWrapper.COLUMN_ID, true));
+			stringBuffer.append(idsEnumerationString(ids, StorableObjectWrapper.COLUMN_ID, true));
 			stringBuffer.append(CLOSE_BRACKET);
 		}
 
@@ -497,7 +508,7 @@ public abstract class StorableObjectDatabase {
 				+ linkedIdColumnName
 				+ SQL_FROM + tableName
 				+ SQL_WHERE);
-		sql.append(this.idsEnumerationString(storableObjects, idColumnName, true));
+		sql.append(idsEnumerationString(storableObjects, idColumnName, true));
 
 		Statement statement = null;
 		ResultSet resultSet = null;
@@ -1127,8 +1138,7 @@ public abstract class StorableObjectDatabase {
 	 * @throws IllegalDataException
 	 */
 	protected void updateLinkedEntities(Map idLinkedIdMap, String tableName, String idColumnName, String linkedIdColumnName)
-			throws UpdateObjectException,
-				IllegalDataException {
+			throws UpdateObjectException {
 		if (idLinkedIdMap == null || idLinkedIdMap.isEmpty())
 			return;
 
@@ -1137,7 +1147,12 @@ public abstract class StorableObjectDatabase {
 				+ linkedIdColumnName
 				+ SQL_FROM + tableName
 				+ SQL_WHERE);
-		sql.append(this.idsEnumerationString(idLinkedIdMap.keySet(), idColumnName, true));
+		try {
+			sql.append(idsEnumerationString(idLinkedIdMap.keySet(), idColumnName, true));
+		}
+		catch (IllegalDataException ide) {
+			throw new UpdateObjectException(ide);
+		}
 
 		Map dbLinkedObjIdsMap = new HashMap();
 		Identifier id;
@@ -1256,12 +1271,18 @@ public abstract class StorableObjectDatabase {
 		}
 	}
 
-	public void delete(Collection objects) throws IllegalDataException {
+	public void delete(Collection objects) {
 		if ((objects == null) || (objects.isEmpty()))
 			return;
 
 		StringBuffer stringBuffer = new StringBuffer(SQL_DELETE_FROM + this.getEnityName() + SQL_WHERE);
-		stringBuffer.append(this.idsEnumerationString(objects, StorableObjectWrapper.COLUMN_ID, true));
+		try {
+			stringBuffer.append(idsEnumerationString(objects, StorableObjectWrapper.COLUMN_ID, true));
+		}
+		catch (IllegalDataException ide) {
+			Log.errorException(ide);
+			return;
+		}
 		String sql = stringBuffer.toString();
 
 		Statement statement = null;
@@ -1289,8 +1310,7 @@ public abstract class StorableObjectDatabase {
 		}
 	}
 
-	private void deleteLinkedEntityIds(Map idLinkedObjectIdsMap, String tableName, String idColumnName, String linkedIdColumnName)
-			throws IllegalDataException {
+	private void deleteLinkedEntityIds(Map idLinkedObjectIdsMap, String tableName, String idColumnName, String linkedIdColumnName) {
 		if (idLinkedObjectIdsMap == null || idLinkedObjectIdsMap.isEmpty())
 			return;
 
@@ -1298,14 +1318,20 @@ public abstract class StorableObjectDatabase {
 
 		Identifier id;
 		List linkedObjIds;
-		for (Iterator it = idLinkedObjectIdsMap.keySet().iterator(); it.hasNext();) {
-			id = (Identifier) it.next();
-			linkedObjIds = (List) idLinkedObjectIdsMap.get(id);
+		try {
+			for (Iterator it = idLinkedObjectIdsMap.keySet().iterator(); it.hasNext();) {
+				id = (Identifier) it.next();
+				linkedObjIds = (List) idLinkedObjectIdsMap.get(id);
 
-			sql.append(SQL_OR + OPEN_BRACKET + idColumnName + EQUALS + DatabaseIdentifier.toSQLString(id) + SQL_AND + OPEN_BRACKET);
-			sql.append(this.idsEnumerationString(linkedObjIds, linkedIdColumnName, true));
-			sql.append(CLOSE_BRACKET);
-			sql.append(CLOSE_BRACKET);
+				sql.append(SQL_OR + OPEN_BRACKET + idColumnName + EQUALS + DatabaseIdentifier.toSQLString(id) + SQL_AND + OPEN_BRACKET);
+				sql.append(idsEnumerationString(linkedObjIds, linkedIdColumnName, true));
+				sql.append(CLOSE_BRACKET);
+				sql.append(CLOSE_BRACKET);
+			}
+		}
+		catch (IllegalDataException ide) {
+			Log.errorException(ide);
+			return;
 		}
 
 		Statement statement = null;
@@ -1349,7 +1375,7 @@ public abstract class StorableObjectDatabase {
 	 * @return String for "WHERE" subclause of SQL query 
 	 * @throws IllegalDataException
 	 */
-	protected StringBuffer idsEnumerationString(Collection objects, String idColumn, boolean inList) throws IllegalDataException {
+	protected static StringBuffer idsEnumerationString(Collection objects, String idColumn, boolean inList) throws IllegalDataException {
 		if (objects == null || objects.isEmpty())
 			return null;
 
@@ -1366,7 +1392,7 @@ public abstract class StorableObjectDatabase {
 				if (object instanceof Identifiable)
 					id = ((Identifiable) object).getId();
 				else
-					throw new IllegalDataException(this.getEnityName() + "Database.listIdsString | Object "
+					throw new IllegalDataException("StorableObjectDatabase.listIdsString | Object "
 							+ object.getClass().getName()
 							+ " isn't Identifier or Identifiable");
 
