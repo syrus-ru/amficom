@@ -1,5 +1,5 @@
 /*-
- * $Id: ArchiveChildrenFactory.java,v 1.2 2005/04/04 07:20:20 bob Exp $
+ * $Id: ArchiveChildrenFactory.java,v 1.3 2005/04/06 11:23:46 bob Exp $
  *
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,15 +25,12 @@ import com.syrus.AMFICOM.Client.Resource.ResourceKeys;
 import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 import com.syrus.AMFICOM.configuration.MonitoredElement;
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.CompoundCondition;
-import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.OperationSort;
-import com.syrus.AMFICOM.general.corba.CompoundCondition_TransferablePackage.CompoundConditionSort;
 import com.syrus.AMFICOM.logic.ChildrenFactory;
 import com.syrus.AMFICOM.logic.IconPopulatableItem;
 import com.syrus.AMFICOM.logic.Item;
@@ -47,10 +44,11 @@ import com.syrus.AMFICOM.measurement.TestWrapper;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
 import com.syrus.AMFICOM.scheme.SchemePath;
 import com.syrus.AMFICOM.scheme.SchemeStorableObjectPool;
+import com.syrus.util.Log;
 import com.syrus.util.WrapperComparator;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/04/04 07:20:20 $
+ * @version $Revision: 1.3 $, $Date: 2005/04/06 11:23:46 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module analysis_v1
@@ -180,7 +178,9 @@ public class ArchiveChildrenFactory implements ChildrenFactory {
 				}
 			} else if (s.equals(DATES)) {
 				calendar.setTime(initialDate);
-				while (calendar.getTime().before(new Date(System.currentTimeMillis()))) {
+				Date date = new Date(System.currentTimeMillis());
+				while (calendar.getTime().before(date)) {
+					calendar.set(Calendar.DAY_OF_MONTH, 1);
 					Date time = calendar.getTime();
 					PopulatableItem item2 = new PopulatableItem();
 					item2.setObject(time);
@@ -191,7 +191,9 @@ public class ArchiveChildrenFactory implements ChildrenFactory {
 				}
 			} else if (s.equals(ALARMS)) {
 				calendar.setTime(initialDate);
-				while (calendar.getTime().before(new Date(System.currentTimeMillis()))) {
+				Date date = new Date(System.currentTimeMillis());
+				while (calendar.getTime().before(date)) {
+					calendar.set(Calendar.DAY_OF_MONTH, 1);
 					Date time = calendar.getTime();
 					PopulatableItem item2 = new PopulatableItem();
 					item2.setObject(time);
@@ -320,56 +322,46 @@ public class ArchiveChildrenFactory implements ChildrenFactory {
 			}
 		} else if (nodeObject instanceof Date) {
 			Date startDate = (Date) nodeObject;
+			Log.debugMessage("ArchiveChildrenFactory.populate | startDate is " + startDate, Log.FINEST);
 			calendar.setTime(startDate);
 			calendar.add(Calendar.MONTH, 1);
+			calendar.add(Calendar.SECOND, -1);
 			Date endDate = calendar.getTime();
-
+			Log.debugMessage("ArchiveChildrenFactory.populate | endDate is " + endDate, Log.FINEST);
 			Item parent = item.getParent();
 			Object parentObject = parent.getObject();
 			if (parentObject.equals(DATES)) {
+				StorableObjectCondition condition;
 				TypicalCondition condition1 = new TypicalCondition(startDate, endDate,
 																	OperationSort.OPERATION_IN_RANGE,
 																	ObjectEntities.TEST_ENTITY_CODE,
 																	TestWrapper.COLUMN_END_TIME);
+				//*/
+				condition = condition1;
+				/*/
 				TypicalCondition condition2 = new TypicalCondition(startDate, endDate,
 																	OperationSort.OPERATION_IN_RANGE,
 																	ObjectEntities.TEST_ENTITY_CODE,
 																	TestWrapper.COLUMN_START_TIME);
-				StorableObjectCondition condition;
 				try {
-					condition = new CompoundCondition(condition1, CompoundConditionSort.OR, condition2);
+					condition = new CompoundCondition(condition1, CompoundConditionSort.AND, condition2);
 				} catch (CreateObjectException e) {
 					// it's cannot be occur
 					throw new UnsupportedOperationException();
 				}
-				try {					
-					Collection tests = MeasurementStorableObjectPool.getStorableObjectsByCondition(condition, true);
-					/* TODO its must be at pool code */
-					List list = new LinkedList();
-					for (Iterator iter = tests.iterator(); iter.hasNext();) {
-						Test test = (Test) iter.next();
-						Identifier id = test.getId();
-						boolean found = false;
-						for (Iterator iterator = list.iterator(); iterator.hasNext();) {
-							Test test2 = (Test) iterator.next();
-							if (test2.getId().equals(id)) {
-								found = true;
-								break;
-							}
-						}
-						if (!found) {
-							list.add(test);
-						}
-					}
+				//*/
+				try {
+					Set tests = MeasurementStorableObjectPool.getStorableObjectsByCondition(condition, true);
+					List list = new LinkedList(tests);
 
-					
 					Collections.sort(list, new WrapperComparator(TestWrapper.getInstance(),
 																	TestWrapper.COLUMN_START_TIME));
+					SimpleDateFormat sdf = (SimpleDateFormat) UIManager.get(ResourceKeys.SIMPLE_DATE_FORMAT);
 					for (Iterator it = list.iterator(); it.hasNext();) {
 						Test test = (Test) it.next();
 						PopulatableItem item2 = new PopulatableItem();
 						item2.setObject(test);
-						item2.setName(test.getDescription());
+						item2.setName(sdf.format(test.getStartTime()));
 						item2.setChildrenFactory(this);
 						item.addChild(item2);
 					}
