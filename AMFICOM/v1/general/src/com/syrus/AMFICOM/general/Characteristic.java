@@ -1,5 +1,5 @@
 /*
- * $Id: Characteristic.java,v 1.13 2005/02/11 09:29:27 bob Exp $
+ * $Id: Characteristic.java,v 1.14 2005/02/14 09:09:37 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,8 +17,8 @@ import com.syrus.AMFICOM.general.corba.Characteristic_Transferable;
 import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/02/11 09:29:27 $
- * @author $Author: bob $
+ * @version $Revision: 1.14 $, $Date: 2005/02/14 09:09:37 $
+ * @author $Author: arseniy $
  * @module general_v1
  */
 
@@ -140,16 +140,6 @@ public class Characteristic extends StorableObject implements TypedObject {
 		}
 		catch (IllegalObjectEntityException e) {
 			throw new CreateObjectException("Characteristic.createInstance | cannot generate identifier ", e);
-		}
-	}
-
-	public void insert() throws CreateObjectException {
-		try {
-			if (this.characteristicDatabase != null)
-				this.characteristicDatabase.update(this, this.creatorId, StorableObjectDatabase.UPDATE_FORCE);
-		}
-		catch (ApplicationException ae) {
-			throw new CreateObjectException(ae.getMessage(), ae);
 		}
 	}
 
