@@ -138,6 +138,30 @@ cleancorba:
 install: $(LIBNAME)
 	$(CP) $(LIBNAME) $(LIBDIR)
 
+
+
+
+#### Test ####
+
+TESTDIR = test
+TESTSOURCES := com/syrus/AMFICOM/measurement/CommonMeasurementTest.java \
+	com/syrus/AMFICOM/measurement/TestSet.java
+
+JUNITCLASSPATH = /mnt/d/eclipse/3.1M4/plugins/org.junit_3.8.1/junit.jar
+
+.PHONY:	test
+test: $(LIBNAME)
+	$(JAVAC) $(JAVACFLAGS) \
+		-classpath $(LIBNAME):$(APPCLASSPATH):../general_v1/classes:$(JUNITCLASSPATH) \
+		$(addprefix $(TESTDIR)/,$(TESTSOURCES))
+
+.PHONY:	cleantest
+cleantest:
+	$(RM) $(addprefix $(CLASSDIR)/,$(subst .java,*.class,$(TESTSOURCES)))
+
+
+
+
 #### Archive ####
 .PHONY:	arch
 arch:
