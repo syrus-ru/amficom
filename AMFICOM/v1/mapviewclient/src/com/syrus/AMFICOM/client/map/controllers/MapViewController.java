@@ -1,5 +1,5 @@
 /**
- * $Id: MapViewController.java,v 1.7 2005/02/01 14:35:56 krupenn Exp $
+ * $Id: MapViewController.java,v 1.8 2005/02/01 14:38:42 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -63,7 +63,7 @@ import com.syrus.AMFICOM.mapview.UnboundLink;
  * прокладке кабелей и положении узлов и других топологических объектов.
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.7 $, $Date: 2005/02/01 14:35:56 $
+ * @version $Revision: 1.8 $, $Date: 2005/02/01 14:38:42 $
  * @module mapviewclient_v1
  */
 public final class MapViewController
@@ -626,4 +626,59 @@ public final class MapViewController
 		cmd.setLogicalNetLayer(logicalNetLayer);
 		cmd.execute();
 	}
+
+/* from SiteNode
+
+	//Возвращяет длинну линий внутри данного узла,
+	//пересчитанную на коэффициент топологической привязки
+	public PathElement countPhysicalLength(SchemePath sp, PathElement pe, Enumeration pathelements)
+	{
+		physical_length = 0.0;
+
+		if(this.elementId == null || this.elementId.equals(""))
+			return pe;
+		SchemeElement se = (SchemeElement )Pool.get(SchemeElement.typ, this.elementId);
+
+		Vector vec = new Vector();
+		Enumeration e = se.getAllSchemesLinks();
+		for(;e.hasMoreElements();)
+			vec.add(e.nextElement());
+
+		for(;;)
+		{
+			if(pe.is_cable)
+			{
+				SchemeCableLink schemeCableLink =
+						(SchemeCableLink)Pool.get(SchemeCableLink.typ, pe.linkId);
+				if(schemeCableLink == null)
+				{
+					System.out.println("Something wrong... - schemeCableLink == null");
+					return pe;
+				}
+				if(!vec.contains(schemeCableLink))
+					return pe;
+				physical_length += schemeCableLink.getPhysicalLength();
+			}
+			else
+			{
+				SchemeLink schemeLink =
+						(SchemeLink )Pool.get(SchemeLink.typ, pe.linkId);
+				if(schemeLink == null)
+				{
+					System.out.println("Something wrong... - schemeLink == null");
+					return pe;
+				}
+				if(!vec.contains(schemeLink))
+					return pe;
+				physical_length += schemeLink.getPhysicalLength();
+			}
+			if(pathelements.hasMoreElements())
+				pe = (PathElement )pathelements.nextElement();
+			else
+				return null;
+		}
+
+		return pe;//stub
+	}
+*/	
 }
