@@ -1,5 +1,5 @@
 /*
- * $Id: UserDatabase.java,v 1.2 2005/01/24 10:43:40 bob Exp $
+ * $Id: UserDatabase.java,v 1.3 2005/01/31 11:00:47 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,7 +31,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/01/24 10:43:40 $
+ * @version $Revision: 1.3 $, $Date: 2005/01/31 11:00:47 $
  * @author $Author: bob $
  * @module administration_v1
  */
@@ -58,7 +58,7 @@ public class UserDatabase extends StorableObjectDatabase {
 	}
 	
 	protected String getEnityName() {		
-		return ObjectEntities.USER_ENTITY;
+		return '"' + ObjectEntities.USER_ENTITY + '"';
 	}	
 
 	protected String getColumns(int mode) {		

@@ -1,5 +1,5 @@
 /*
- * $Id: SetDatabase.java,v 1.49 2005/01/26 10:57:57 arseniy Exp $
+ * $Id: SetDatabase.java,v 1.50 2005/01/31 11:01:05 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -47,19 +47,12 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.49 $, $Date: 2005/01/26 10:57:57 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.50 $, $Date: 2005/01/31 11:01:05 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
 public class SetDatabase extends StorableObjectDatabase {
-
-	public static final String	COLUMN_SORT			= "sort";
-	public static final String	COLUMN_DESCRIPTION	= "description";	
-	public static final String LINK_COLUMN_SET_ID	= "set_id";
-	public static final String LINK_COLUMN_ME_ID 	= "monitored_element_id";
-	public static final String LINK_COLUMN_TYPE_ID	= "type_id";
-	public static final String LINK_COLUMN_VALUE	= "value";
 
 	public static final int CHARACTER_NUMBER_OF_RECORDS = 1;
 
@@ -67,14 +60,14 @@ public class SetDatabase extends StorableObjectDatabase {
 	private static String updateMultiplySQLValues;    
 
 	protected String getEnityName() {
-		return ObjectEntities.SET_ENTITY;
+		return '"' + ObjectEntities.SET_ENTITY + '"';
 	}
 
 	protected String getColumns(int mode) {
 		if (columns == null) {
 			columns = super.getColumns(mode) + COMMA
-				+ COLUMN_SORT  + COMMA
-				+ COLUMN_DESCRIPTION;
+				+ SetWrapper.COLUMN_SORT  + COMMA
+				+ SetWrapper.COLUMN_DESCRIPTION;
 		}
 		return columns;
 	}
@@ -129,12 +122,12 @@ public class SetDatabase extends StorableObjectDatabase {
 		Set set = (storableObject == null) ?
 				new Set(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID), null, 0, null, null, null) :			
 				this.fromStorableObject(storableObject);
-		String description = DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_DESCRIPTION));
+		String description = DatabaseString.fromQuerySubString(resultSet.getString(SetWrapper.COLUMN_DESCRIPTION));
 		set.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
 						  DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
 						  DatabaseIdentifier.getIdentifier(resultSet, COLUMN_CREATOR_ID),
 						  DatabaseIdentifier.getIdentifier(resultSet, COLUMN_MODIFIER_ID),
-						  resultSet.getInt(COLUMN_SORT),
+						  resultSet.getInt(SetWrapper.COLUMN_SORT),
 						  (description != null) ? description : "");
 		return set;
 	}
@@ -145,12 +138,12 @@ public class SetDatabase extends StorableObjectDatabase {
 		String setIdStr = DatabaseIdentifier.toSQLString(set.getId());
 		String sql = SQL_SELECT
 			+ COLUMN_ID + COMMA			
-			+ LINK_COLUMN_TYPE_ID + COMMA
-			+ LINK_COLUMN_VALUE
+			+ SetWrapper.LINK_COLUMN_TYPE_ID + COMMA
+			+ SetWrapper.LINK_COLUMN_VALUE
 			+ SQL_FROM
 			+ ObjectEntities.SETPARAMETER_ENTITY
 			+ SQL_WHERE
-			+ LINK_COLUMN_SET_ID +EQUALS
+			+ SetWrapper.LINK_COLUMN_SET_ID +EQUALS
 			+ setIdStr;
 		Statement statement = null;
 		ResultSet resultSet = null;
@@ -163,14 +156,14 @@ public class SetDatabase extends StorableObjectDatabase {
 			ParameterType parameterType;
 			while (resultSet.next()) {
 				try {
-					parameterType = (ParameterType)MeasurementStorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, LINK_COLUMN_TYPE_ID), true);
+					parameterType = (ParameterType)MeasurementStorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, SetWrapper.LINK_COLUMN_TYPE_ID), true);
 				}
 				catch (ApplicationException ae) {
 					throw new RetrieveObjectException(ae);
 				}
 				parameter = new SetParameter(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID),
 											 parameterType,
-											 ByteArrayDatabase.toByteArray(resultSet.getBlob(LINK_COLUMN_VALUE)));
+											 ByteArrayDatabase.toByteArray(resultSet.getBlob(SetWrapper.LINK_COLUMN_VALUE)));
 				parameters.add(parameter);
 			}
 		}
@@ -202,9 +195,9 @@ public class SetDatabase extends StorableObjectDatabase {
 			return;
 
 		StringBuffer sql = new StringBuffer(SQL_SELECT + COLUMN_ID + COMMA
-				+ LINK_COLUMN_TYPE_ID + COMMA + LINK_COLUMN_VALUE + COMMA
-				+ LINK_COLUMN_SET_ID + SQL_FROM + ObjectEntities.SETPARAMETER_ENTITY
-				+ SQL_WHERE + LINK_COLUMN_SET_ID + SQL_IN + OPEN_BRACKET);
+				+ SetWrapper.LINK_COLUMN_TYPE_ID + COMMA + SetWrapper.LINK_COLUMN_VALUE + COMMA
+				+ SetWrapper.LINK_COLUMN_SET_ID + SQL_FROM + ObjectEntities.SETPARAMETER_ENTITY
+				+ SQL_WHERE + SetWrapper.LINK_COLUMN_SET_ID + SQL_IN + OPEN_BRACKET);
 		int i = 1;
 		for (Iterator it = sets.iterator(); it.hasNext(); i++) {
 			Set set = (Set) it.next();
@@ -215,7 +208,7 @@ public class SetDatabase extends StorableObjectDatabase {
 				else {
 					sql.append(CLOSE_BRACKET);
 					sql.append(SQL_OR);
-					sql.append(LINK_COLUMN_SET_ID);
+					sql.append(SetWrapper.LINK_COLUMN_SET_ID);
 					sql.append(SQL_IN);
 					sql.append(OPEN_BRACKET);
 				}
@@ -238,15 +231,15 @@ public class SetDatabase extends StorableObjectDatabase {
 			List setParameters;
 			while (resultSet.next()) {
 				try {
-					parameterType = (ParameterType) GeneralStorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, LINK_COLUMN_TYPE_ID), true);
+					parameterType = (ParameterType) GeneralStorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, SetWrapper.LINK_COLUMN_TYPE_ID), true);
 				}
 				catch (ApplicationException ae) {
 					throw new RetrieveObjectException(ae);
 				}
 				parameter = new SetParameter(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID),
 														parameterType,
-														ByteArrayDatabase.toByteArray(resultSet.getBlob(LINK_COLUMN_VALUE)));
-				setId = DatabaseIdentifier.getIdentifier(resultSet, LINK_COLUMN_SET_ID);
+														ByteArrayDatabase.toByteArray(resultSet.getBlob(SetWrapper.LINK_COLUMN_VALUE)));
+				setId = DatabaseIdentifier.getIdentifier(resultSet, SetWrapper.LINK_COLUMN_SET_ID);
 				setParameters = (List) setParametersMap.get(setId);
 				if (setParameters == null) {
 					setParameters = new ArrayList();
@@ -292,9 +285,9 @@ public class SetDatabase extends StorableObjectDatabase {
 		if ((sets == null) || (sets.isEmpty()))
 			return;
 
-		StringBuffer sql = new StringBuffer(SQL_SELECT + LINK_COLUMN_ME_ID + COMMA
-				+ LINK_COLUMN_SET_ID + SQL_FROM + ObjectEntities.SETMELINK_ENTITY
-				+ SQL_WHERE + LINK_COLUMN_SET_ID + SQL_IN + OPEN_BRACKET);
+		StringBuffer sql = new StringBuffer(SQL_SELECT + SetWrapper.LINK_COLUMN_ME_ID + COMMA
+				+ SetWrapper.LINK_COLUMN_SET_ID + SQL_FROM + ObjectEntities.SETMELINK_ENTITY
+				+ SQL_WHERE + SetWrapper.LINK_COLUMN_SET_ID + SQL_IN + OPEN_BRACKET);
 		int i = 1;
 		for (Iterator it = sets.iterator(); it.hasNext(); i++) {
 			Set set = (Set) it.next();
@@ -305,7 +298,7 @@ public class SetDatabase extends StorableObjectDatabase {
 				else {
 					sql.append(CLOSE_BRACKET);
 					sql.append(SQL_OR);
-					sql.append(LINK_COLUMN_SET_ID);
+					sql.append(SetWrapper.LINK_COLUMN_SET_ID);
 					sql.append(SQL_IN);
 					sql.append(OPEN_BRACKET);
 				}
@@ -325,13 +318,13 @@ public class SetDatabase extends StorableObjectDatabase {
 			Identifier setId;
 			List meIds;
 			while (resultSet.next()) {
-				setId = DatabaseIdentifier.getIdentifier(resultSet, LINK_COLUMN_SET_ID);
+				setId = DatabaseIdentifier.getIdentifier(resultSet, SetWrapper.LINK_COLUMN_SET_ID);
 				meIds = (List) meLinkMap.get(setId);
 				if (meIds == null) {
 					meIds = new ArrayList();
 					meLinkMap.put(setId, meIds);
 				}
-				meIds.add(DatabaseIdentifier.getIdentifier(resultSet, LINK_COLUMN_ME_ID));
+				meIds.add(DatabaseIdentifier.getIdentifier(resultSet, SetWrapper.LINK_COLUMN_ME_ID));
 
 				Set set;
 				for (Iterator it = sets.iterator(); it.hasNext();) {
@@ -403,9 +396,9 @@ public class SetDatabase extends StorableObjectDatabase {
 			+ ObjectEntities.SETPARAMETER_ENTITY
 			+ OPEN_BRACKET
 			+ COLUMN_ID  + COMMA
-			+ LINK_COLUMN_TYPE_ID + COMMA
-			+ LINK_COLUMN_SET_ID + COMMA
-			+ LINK_COLUMN_VALUE + CLOSE_BRACKET
+			+ SetWrapper.LINK_COLUMN_TYPE_ID + COMMA
+			+ SetWrapper.LINK_COLUMN_SET_ID + COMMA
+			+ SetWrapper.LINK_COLUMN_VALUE + CLOSE_BRACKET
 			+ SQL_VALUES 
 			+ OPEN_BRACKET
 			+ QUESTION + COMMA
@@ -431,7 +424,7 @@ public class SetDatabase extends StorableObjectDatabase {
 				ByteArrayDatabase.saveAsBlob(setParameters[i].getValue(),
 											 connection,
 											 ObjectEntities.SETPARAMETER_ENTITY,
-											 LINK_COLUMN_VALUE,
+											 SetWrapper.LINK_COLUMN_VALUE,
 											 COLUMN_ID + EQUALS + DatabaseIdentifier.toSQLString(parameterId));
 			}
 			connection.commit();
@@ -460,8 +453,8 @@ public class SetDatabase extends StorableObjectDatabase {
 		String sql = SQL_INSERT_INTO 
 			+ ObjectEntities.SETMELINK_ENTITY
 			+ OPEN_BRACKET
-			+ LINK_COLUMN_SET_ID + COMMA 
-			+ LINK_COLUMN_ME_ID 
+			+ SetWrapper.LINK_COLUMN_SET_ID + COMMA 
+			+ SetWrapper.LINK_COLUMN_ME_ID 
 			+ CLOSE_BRACKET
 			+ SQL_VALUES + OPEN_BRACKET
 			+ QUESTION + COMMA
@@ -553,8 +546,8 @@ public class SetDatabase extends StorableObjectDatabase {
 		String sql = SQL_INSERT_INTO 
 			+ ObjectEntities.SETMELINK_ENTITY
 			+ OPEN_BRACKET
-			+ LINK_COLUMN_SET_ID + COMMA
-			+ LINK_COLUMN_ME_ID
+			+ SetWrapper.LINK_COLUMN_SET_ID + COMMA
+			+ SetWrapper.LINK_COLUMN_ME_ID
 			+ CLOSE_BRACKET
 			+ SQL_VALUES
 			+ OPEN_BRACKET			
@@ -593,10 +586,10 @@ public class SetDatabase extends StorableObjectDatabase {
 		String sql = SQL_DELETE_FROM 
 					+ ObjectEntities.SETMELINK_ENTITY
 					+ SQL_WHERE 
-					+ LINK_COLUMN_SET_ID + EQUALS
+					+ SetWrapper.LINK_COLUMN_SET_ID + EQUALS
 					+ setIdStr
 					+ SQL_AND
-					+ LINK_COLUMN_ME_ID + EQUALS
+					+ SetWrapper.LINK_COLUMN_ME_ID + EQUALS
 					+ meIdStr;
 		Statement statement = null;
 		Connection connection = DatabaseConnection.getConnection();
@@ -669,12 +662,12 @@ public class SetDatabase extends StorableObjectDatabase {
 			statement.executeUpdate(SQL_DELETE_FROM
 									+ ObjectEntities.SETMELINK_ENTITY
 									+ SQL_WHERE
-									+ LINK_COLUMN_SET_ID + EQUALS
+									+ SetWrapper.LINK_COLUMN_SET_ID + EQUALS
 									+ setIdStr);
 			statement.executeUpdate(SQL_DELETE_FROM 
 									+ ObjectEntities.SETPARAMETER_ENTITY
 									+ SQL_WHERE
-									+ LINK_COLUMN_SET_ID + EQUALS
+									+ SetWrapper.LINK_COLUMN_SET_ID + EQUALS
 									+ setIdStr);									
 			statement.executeUpdate(SQL_DELETE_FROM 
 									+ ObjectEntities.SET_ENTITY
@@ -725,8 +718,8 @@ public class SetDatabase extends StorableObjectDatabase {
 		List list = null;
 
 		String condition = COLUMN_ID + SQL_IN + OPEN_BRACKET + SQL_SELECT
-				+ LINK_COLUMN_SET_ID + SQL_FROM + ObjectEntities.SETMELINK_ENTITY
-				+ SQL_WHERE + LINK_COLUMN_ME_ID + SQL_IN + OPEN_BRACKET + SQL_SELECT
+				+ SetWrapper.LINK_COLUMN_SET_ID + SQL_FROM + ObjectEntities.SETMELINK_ENTITY
+				+ SQL_WHERE + SetWrapper.LINK_COLUMN_ME_ID + SQL_IN + OPEN_BRACKET + SQL_SELECT
 				+ COLUMN_ID + SQL_FROM + ObjectEntities.ME_ENTITY + SQL_WHERE
 				+ DomainMember.COLUMN_DOMAIN_ID + EQUALS
 				+ DatabaseIdentifier.toSQLString(domain.getId()) + CLOSE_BRACKET
