@@ -10,7 +10,7 @@ import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelSchematics;
 import com.syrus.AMFICOM.Client.General.Model.*;
-import com.syrus.AMFICOM.Client.General.Scheme.*;
+import com.syrus.AMFICOM.Client.Schematics.General.*;
 import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.Resource.Scheme.*;
 
@@ -125,6 +125,7 @@ public class SchemeSaveAsCommand extends VoidCommand
 
 		scheme.name = sd.name;
 		scheme.description = sd.description;
+		scheme.scheme_type = sd.type;
 		scheme.created = System.currentTimeMillis();
 		scheme.created_by = dataSource.getSession().getUserId();
 		scheme.modified_by = dataSource.getSession().getUserId();
@@ -182,6 +183,7 @@ class SaveDialog extends JDialog
 
 	public String name = "";
 	public String description = "";
+	public String type = Scheme.NETWORK;
 
 	public int retCode = 0;
 
@@ -258,6 +260,7 @@ class SaveDialog extends JDialog
 		retCode = 1;
 		name = panel.getSchemeName();
 		description = panel.getSchemeDescription();
+		type = panel.getSchemeType();
 		dispose();
 	}
 }

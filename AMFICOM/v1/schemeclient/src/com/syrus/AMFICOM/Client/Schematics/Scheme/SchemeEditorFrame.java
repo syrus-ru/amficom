@@ -5,7 +5,7 @@ import javax.swing.JOptionPane;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.General.Command.Scheme.SchemeSaveCommand;
-import com.syrus.AMFICOM.Client.General.Scheme.SchemePanel;
+import com.syrus.AMFICOM.Client.Schematics.General.SchemePanel;
 import com.syrus.AMFICOM.Client.Resource.Scheme.Scheme;
 
 public class SchemeEditorFrame extends SchemeViewerFrame

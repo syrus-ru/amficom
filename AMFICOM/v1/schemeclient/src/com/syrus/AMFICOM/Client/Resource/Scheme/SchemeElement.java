@@ -1,33 +1,16 @@
 package com.syrus.AMFICOM.Client.Resource.Scheme;
 
-import java.awt.datatransfer.DataFlavor;
-import java.awt.datatransfer.Transferable;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.Serializable;
-import java.util.Enumeration;
-import java.util.Hashtable;
-import java.util.Vector;
-import java.util.zip.GZIPInputStream;
-import java.util.zip.GZIPOutputStream;
+import java.awt.datatransfer.*;
+import java.io.*;
+import java.util.*;
+import java.util.zip.*;
 
-import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
-import com.syrus.AMFICOM.Client.Resource.MyDataFlavor;
-import com.syrus.AMFICOM.Client.Resource.ObjectResource;
-import com.syrus.AMFICOM.Client.Resource.ObjectResourceModel;
-import com.syrus.AMFICOM.Client.Resource.Pool;
-import com.syrus.AMFICOM.Client.Resource.ResourceUtil;
-import com.syrus.AMFICOM.Client.Resource.Map.MapProtoElement;
-import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.EquipmentType;
-import com.syrus.AMFICOM.Client.Resource.SchemeDirectory.ProtoElement;
-
-import com.syrus.AMFICOM.CORBA.Scheme.ElementAttribute_Transferable;
-import com.syrus.AMFICOM.CORBA.Scheme.SchemeDevice_Transferable;
-import com.syrus.AMFICOM.CORBA.Scheme.SchemeElement_Transferable;
-import com.syrus.AMFICOM.CORBA.Scheme.SchemeLink_Transferable;
+import com.syrus.AMFICOM.CORBA.Scheme.*;
+import com.syrus.AMFICOM.Client.General.UI.*;
+import com.syrus.AMFICOM.Client.Resource.*;
+import com.syrus.AMFICOM.Client.Resource.Map.*;
+import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.*;
+import com.syrus.AMFICOM.Client.Resource.SchemeDirectory.*;
 
 public class SchemeElement extends ObjectResource
 		implements Transferable, Serializable
@@ -200,6 +183,16 @@ public class SchemeElement extends ObjectResource
 	public ObjectResourceModel getModel()
 	{
 		return new SchemeElementModel(this);
+	}
+
+	public static ObjectResourceDisplayModel getDefaultDisplayModel()
+	{
+		return new StubDisplayModel(new String[] { "name" }, new String[] { "name" });
+	}
+
+	public static PropertiesPanel getPropertyPane()
+	{
+		return new SchemeElementPane();
 	}
 
 	public Enumeration getChildElements()

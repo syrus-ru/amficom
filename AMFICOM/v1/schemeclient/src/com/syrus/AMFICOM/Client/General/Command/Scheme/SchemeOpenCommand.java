@@ -2,21 +2,16 @@ package com.syrus.AMFICOM.Client.General.Command.Scheme;
 
 import java.awt.event.ActionEvent;
 
+import javax.swing.JOptionPane;
+
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.Event.SchemeElementsEvent;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.Scheme.GraphActions;
-import com.syrus.AMFICOM.Client.General.Scheme.SchemeGraph;
-import com.syrus.AMFICOM.Client.General.UI.ObjectResourceDisplayModel;
-import com.syrus.AMFICOM.Client.General.UI.ObjectResourceTableModel;
-import com.syrus.AMFICOM.Client.Resource.ObjectResourceSorter;
-import com.syrus.AMFICOM.Client.Resource.DataSet;
-import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
-import com.syrus.AMFICOM.Client.Resource.Pool;
-import com.syrus.AMFICOM.Client.Resource.Scheme.Scheme;
-import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeDisplayModel;
-
+import com.syrus.AMFICOM.Client.General.Model.*;
+import com.syrus.AMFICOM.Client.Schematics.General.*;
+import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.Map.UI.MapChooserDialog;
+import com.syrus.AMFICOM.Client.Resource.*;
+import com.syrus.AMFICOM.Client.Resource.Scheme.*;
 
 public class SchemeOpenCommand extends VoidCommand
 {
@@ -67,6 +62,15 @@ public class SchemeOpenCommand extends VoidCommand
 			scheme.serializable_cell = null;
 			scheme.serializable_ugo = null;
 			scheme.unpack();
+
+			if (scheme.serializable_cell == null)
+			{
+				JOptionPane.showMessageDialog(
+						Environment.getActiveWindow(),
+						"Ошибка открытия схемы " + scheme.getName(),
+						"Ошибка",
+						JOptionPane.OK_OPTION);
+			}
 			//graph.setSchemeFromArchivedState(scheme.serializable_cell);
 		//	graph.copyFromArchivedState(scheme.serializable_cell, new java.awt.Point(0, 0));
 //			graph.updatePathsAtScheme(new Vector());

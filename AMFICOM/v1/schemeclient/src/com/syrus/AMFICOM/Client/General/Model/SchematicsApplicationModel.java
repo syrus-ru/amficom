@@ -55,6 +55,7 @@ public class SchematicsApplicationModel extends ApplicationModel
 		add("menuWindowArrange");
 		add("menuWindowTree");
 		add("menuWindowScheme");
+		add("menuWindowCatalog");
 		add("menuWindowUgo");
 		add("menuWindowProps");
 		add("menuWindowList");

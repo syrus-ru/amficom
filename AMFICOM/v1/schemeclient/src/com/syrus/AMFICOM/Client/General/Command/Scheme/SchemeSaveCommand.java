@@ -10,10 +10,10 @@ import com.syrus.AMFICOM.Client.General.Event.SchemeElementsEvent;
 import com.syrus.AMFICOM.Client.General.Event.TreeListSelectionEvent;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
-import com.syrus.AMFICOM.Client.General.Scheme.GraphActions;
-import com.syrus.AMFICOM.Client.General.Scheme.SchemeGraph;
-import com.syrus.AMFICOM.Client.General.Scheme.SchemePanel;
-import com.syrus.AMFICOM.Client.General.Scheme.UgoPanel;
+import com.syrus.AMFICOM.Client.Schematics.General.GraphActions;
+import com.syrus.AMFICOM.Client.Schematics.General.SchemeGraph;
+import com.syrus.AMFICOM.Client.Schematics.General.SchemePanel;
+import com.syrus.AMFICOM.Client.Schematics.General.UgoPanel;
 import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
 import com.syrus.AMFICOM.Client.Resource.MyUtil;
 import com.syrus.AMFICOM.Client.Resource.Pool;
@@ -85,6 +85,7 @@ public class SchemeSaveCommand extends VoidCommand
 
 		scheme.name = sd.name;
 		scheme.description = sd.description;
+		scheme.scheme_type = sd.type;
 		if (scheme.getId().equals(""))
 			scheme.id = dataSource.GetUId(Scheme.typ);
 

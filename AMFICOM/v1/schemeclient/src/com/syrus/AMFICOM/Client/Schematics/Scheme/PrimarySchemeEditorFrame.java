@@ -4,8 +4,8 @@ import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
 import com.syrus.AMFICOM.Client.General.Event.SchemeElementsEvent;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelSchematics;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.Scheme.SchemePanel;
-import com.syrus.AMFICOM.Client.General.Scheme.UgoPanel;
+import com.syrus.AMFICOM.Client.Schematics.General.SchemePanel;
+import com.syrus.AMFICOM.Client.Schematics.General.UgoPanel;
 import com.syrus.AMFICOM.Client.Resource.Scheme.Scheme;
 
 public class PrimarySchemeEditorFrame extends //SchemeViewerFrame

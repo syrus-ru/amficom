@@ -240,6 +240,7 @@ public class ProtoElementPropsPanel extends JPanel
 		manufacturerTextField.setEnabled(b);
 		ugoNameTextField.setEnabled(b);
 		ugoIconButton.setEnabled(b);
+		assignEqtButton.setEnabled(b);
 	}
 
 	public void init(ProtoElement proto, DataSourceInterface dataSource, boolean show_is_kis)

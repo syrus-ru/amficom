@@ -10,8 +10,8 @@ import com.syrus.AMFICOM.Client.General.Report.ObjectsReport;
 import com.syrus.AMFICOM.Client.General.Report.RenderingObject;
 import com.syrus.AMFICOM.Client.General.Report.CreateReportException;
 
-import com.syrus.AMFICOM.Client.General.Scheme.SchemePanelNoEdition;
-import com.syrus.AMFICOM.Client.General.Scheme.SchemeGraph;
+import com.syrus.AMFICOM.Client.Schematics.General.SchemePanelNoEdition;
+import com.syrus.AMFICOM.Client.Schematics.General.SchemeGraph;
 import com.syrus.AMFICOM.Client.Resource.Scheme.Scheme;
 import com.syrus.AMFICOM.Client.Resource.Pool;
 

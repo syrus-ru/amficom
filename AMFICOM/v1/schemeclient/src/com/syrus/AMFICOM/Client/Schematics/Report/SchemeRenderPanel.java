@@ -13,7 +13,7 @@ import javax.swing.JPanel;
 
 import com.syrus.AMFICOM.Client.General.Report.RenderingObject;
 import com.syrus.AMFICOM.Client.General.Report.CreateReportException;
-import com.syrus.AMFICOM.Client.General.Scheme.SchemeGraph;
+import com.syrus.AMFICOM.Client.Schematics.General.SchemeGraph;
 
 
 public class SchemeRenderPanel extends JPanel

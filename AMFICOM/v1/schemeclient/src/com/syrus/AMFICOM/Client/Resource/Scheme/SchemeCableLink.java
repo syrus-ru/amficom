@@ -13,7 +13,8 @@ import com.syrus.AMFICOM.Client.Resource.MyDataFlavor;
 import com.syrus.AMFICOM.Client.Resource.ObjectResource;
 import com.syrus.AMFICOM.Client.Resource.ObjectResourceModel;
 import com.syrus.AMFICOM.Client.Resource.Pool;
-import com.syrus.AMFICOM.Client.Resource.ResourceUtil;
+import com.syrus.AMFICOM.Client.General.UI.*;
+import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalLinkProtoElement;
 import com.syrus.AMFICOM.Client.Resource.Network.CableLink;
 
@@ -75,6 +76,16 @@ public class SchemeCableLink extends ObjectResource
 	public ObjectResourceModel getModel()
 	{
 		return new SchemeCableLinkModel(this);
+	}
+
+	public static ObjectResourceDisplayModel getDefaultDisplayModel()
+	{
+		return new StubDisplayModel(new String[] { "name" }, new String[] { "name" });
+	}
+
+	public static PropertiesPanel getPropertyPane()
+	{
+		return new SchemeCableLinkPane();
 	}
 
 	public String getDomainId()

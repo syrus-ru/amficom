@@ -1,84 +1,25 @@
 package com.syrus.AMFICOM.Client.Schematics.Scheme;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.SystemColor;
-import java.awt.Toolkit;
-import java.awt.event.ComponentEvent;
-import java.awt.event.WindowEvent;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.awt.*;
+import java.awt.event.*;
+import java.text.*;
+import java.util.*;
 
-import javax.swing.BorderFactory;
-import javax.swing.ImageIcon;
-import javax.swing.JDesktopPane;
-import javax.swing.JFrame;
-import javax.swing.JInternalFrame;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JViewport;
+import javax.swing.*;
 
-import com.syrus.AMFICOM.Client.General.Checker;
-import com.syrus.AMFICOM.Client.General.ConnectionInterface;
-import com.syrus.AMFICOM.Client.General.SessionInterface;
-import com.syrus.AMFICOM.Client.General.Command.ExitCommand;
-import com.syrus.AMFICOM.Client.General.Command.Scheme.ArrangeWindowCommand;
-import com.syrus.AMFICOM.Client.General.Command.Scheme.SchemeFromFileCommand;
-import com.syrus.AMFICOM.Client.General.Command.Scheme.SchemeToFileCommand;
-import com.syrus.AMFICOM.Client.General.Command.Scheme.InsertToCatalogCommand;
-import com.syrus.AMFICOM.Client.General.Command.Scheme.PathAddLinkCommand;
-import com.syrus.AMFICOM.Client.General.Command.Scheme.PathCancelCommand;
-import com.syrus.AMFICOM.Client.General.Command.Scheme.PathDeleteCommand;
-import com.syrus.AMFICOM.Client.General.Command.Scheme.PathEditCommand;
-import com.syrus.AMFICOM.Client.General.Command.Scheme.PathNewCommand;
-import com.syrus.AMFICOM.Client.General.Command.Scheme.PathRemoveLinkCommand;
-import com.syrus.AMFICOM.Client.General.Command.Scheme.PathSaveCommand;
-import com.syrus.AMFICOM.Client.General.Command.Scheme.PathSetEndCommand;
-import com.syrus.AMFICOM.Client.General.Command.Scheme.PathSetStartCommand;
-import com.syrus.AMFICOM.Client.General.Command.Scheme.PathUpdateLinkCommand;
-import com.syrus.AMFICOM.Client.General.Command.Scheme.SchemeNewCommand;
-import com.syrus.AMFICOM.Client.General.Command.Scheme.SchemeOpenCommand;
-import com.syrus.AMFICOM.Client.General.Command.Scheme.SchemeSaveAsCommand;
-import com.syrus.AMFICOM.Client.General.Command.Scheme.SchemeSaveCommand;
-import com.syrus.AMFICOM.Client.General.Command.Scheme.ShowFrameCommand;
-import com.syrus.AMFICOM.Client.General.Command.Session.SessionChangePasswordCommand;
-import com.syrus.AMFICOM.Client.General.Command.Session.SessionCloseCommand;
-import com.syrus.AMFICOM.Client.General.Command.Session.SessionConnectionCommand;
-import com.syrus.AMFICOM.Client.General.Command.Session.SessionDomainCommand;
-import com.syrus.AMFICOM.Client.General.Command.Session.SessionOpenCommand;
-import com.syrus.AMFICOM.Client.General.Command.Session.SessionOptionsCommand;
-import com.syrus.AMFICOM.Client.General.Event.CatalogNavigateEvent;
-import com.syrus.AMFICOM.Client.General.Event.ContextChangeEvent;
-import com.syrus.AMFICOM.Client.General.Event.CreatePathEvent;
-import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
-import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
-import com.syrus.AMFICOM.Client.General.Event.OperationListener;
-import com.syrus.AMFICOM.Client.General.Event.SchemeNavigateEvent;
-import com.syrus.AMFICOM.Client.General.Event.TreeListSelectionEvent;
-import com.syrus.AMFICOM.Client.General.Lang.LangModel;
-import com.syrus.AMFICOM.Client.General.Lang.LangModelSchematics;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationModel;
-import com.syrus.AMFICOM.Client.General.Model.Environment;
-import com.syrus.AMFICOM.Client.General.Scheme.ElementsPanel;
-import com.syrus.AMFICOM.Client.General.Scheme.SchemeGraph;
-import com.syrus.AMFICOM.Client.General.Scheme.SchemePanel;
-import com.syrus.AMFICOM.Client.General.Scheme.UgoPanel;
-import com.syrus.AMFICOM.Client.General.UI.StatusBarModel;
-import com.syrus.AMFICOM.Client.General.UI.WindowArranger;
-import com.syrus.AMFICOM.Client.Resource.ConfigDataSourceImage;
-import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
-import com.syrus.AMFICOM.Client.Resource.MapDataSourceImage;
-import com.syrus.AMFICOM.Client.Resource.Pool;
-import com.syrus.AMFICOM.Client.Resource.SchemeDataSourceImage;
-import com.syrus.AMFICOM.Client.Resource.Scheme.Scheme;
-import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeElement;
-
-import com.syrus.AMFICOM.Client.Schematics.Elements.ElementsListFrame;
-import com.syrus.AMFICOM.Client.Schematics.Elements.PropsFrame;
-import com.syrus.AMFICOM.Client.Schematics.UI.ElementsNavigatorPanel;
-import com.syrus.AMFICOM.Client.Schematics.UI.SchemeTreeModel;
+import com.syrus.AMFICOM.Client.General.*;
+import com.syrus.AMFICOM.Client.General.Command.*;
+import com.syrus.AMFICOM.Client.General.Command.Scheme.*;
+import com.syrus.AMFICOM.Client.General.Command.Session.*;
+import com.syrus.AMFICOM.Client.General.Event.*;
+import com.syrus.AMFICOM.Client.General.Lang.*;
+import com.syrus.AMFICOM.Client.General.Model.*;
+import com.syrus.AMFICOM.Client.Schematics.General.*;
+import com.syrus.AMFICOM.Client.General.UI.*;
+import com.syrus.AMFICOM.Client.Resource.*;
+import com.syrus.AMFICOM.Client.Resource.Scheme.*;
+import com.syrus.AMFICOM.Client.Schematics.Elements.*;
+import com.syrus.AMFICOM.Client.Schematics.UI.*;
 
 public class SchemeEditorMainFrame extends JFrame
 																				implements OperationListener
@@ -274,6 +215,7 @@ public class SchemeEditorMainFrame extends JFrame
 		aModel.setCommand("menuWindowArrange", new ArrangeWindowCommand(new SchemeEditorWindowArranger(this)));
 		aModel.setCommand("menuWindowTree", new ShowFrameCommand(desktopPane, treeFrame));
 		aModel.setCommand("menuWindowScheme", new ShowFrameCommand(desktopPane, editorFrame));
+		aModel.setCommand("menuWindowCatalog", new ShowCatalogFrameCommand(aContext, desktopPane));
 		aModel.setCommand("menuWindowUgo", new ShowFrameCommand(desktopPane, ugoFrame));
 		aModel.setCommand("menuWindowProps", new ShowFrameCommand(desktopPane, propsFrame));
 		aModel.setCommand("menuWindowList", new ShowFrameCommand(desktopPane, elementsListFrame));
@@ -621,6 +563,7 @@ public class SchemeEditorMainFrame extends JFrame
 		aModel.setEnabled("menuWindowArrange", true);
 		aModel.setEnabled("menuWindowTree", true);
 		aModel.setEnabled("menuWindowScheme", true);
+		aModel.setEnabled("menuWindowCatalog", true);
 		aModel.setEnabled("menuWindowUgo", true);
 		aModel.setEnabled("menuWindowProps", true);
 		aModel.setEnabled("menuWindowList", true);
@@ -696,6 +639,7 @@ public class SchemeEditorMainFrame extends JFrame
 		aModel.setEnabled("menuWindowArrange", false);
 		aModel.setEnabled("menuWindowTree", false);
 		aModel.setEnabled("menuWindowScheme", false);
+		aModel.setEnabled("menuWindowCatalog", false);
 		aModel.setEnabled("menuWindowUgo", false);
 		aModel.setEnabled("menuWindowProps", false);
 		aModel.setEnabled("menuWindowList", false);
@@ -770,9 +714,17 @@ class SchemeEditorWindowArranger extends WindowArranger
 	public void arrange()
 	{
 		SchemeEditorMainFrame f = (SchemeEditorMainFrame)mainframe;
-
 		int w = f.desktopPane.getSize().width;
 		int h = f.desktopPane.getSize().height;
+
+		ObjectResourceCatalogFrame catalogFrame = null;
+		JInternalFrame[] frames = f.desktopPane.getAllFrames();
+		for (int i = 0; i < frames.length; i++)
+			if (frames[i] instanceof ObjectResourceCatalogFrame)
+			{
+				catalogFrame = (ObjectResourceCatalogFrame)frames[i];
+				break;
+			}
 
 //		f.editorFrame.setVisible(true);
 //		f.ugoFrame.setVisible(true);
@@ -785,18 +737,24 @@ class SchemeEditorWindowArranger extends WindowArranger
 		normalize(f.elementsListFrame);
 		normalize(f.propsFrame);
 		normalize(f.treeFrame);
+		if (catalogFrame != null)
+			normalize(catalogFrame);
 
 		f.editorFrame.setSize(3*w/5, h);
 		f.ugoFrame.setSize(w/5, 2 * h / 5);
 		f.elementsListFrame.setSize(w/5, 3 * h / 10);
 		f.propsFrame.setSize(w/5, 3 * h / 10);
 		f.treeFrame.setSize(w/5, h);
+		if (catalogFrame != null)
+			catalogFrame.setSize(3*w/5, h);
 
 		f.editorFrame.setLocation(w/5, 0);
 		f.ugoFrame.setLocation(4*w/5, 3 * h / 5);
 		f.elementsListFrame.setLocation(4*w/5, 0);
 		f.propsFrame.setLocation(4*w/5, 3*h/10);
 		f.treeFrame.setLocation(0, 0);
+		if (catalogFrame != null)
+			catalogFrame.setLocation(w/5, 0);
 	}
 }
 

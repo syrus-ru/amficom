@@ -287,4 +287,9 @@ public class SchemePropsPanel extends JPanel
 	{
 		return schemeDescrTextArea.getText();
 	}
+
+	public String getSchemeType()
+	{
+		return scheme_types[schemeTypeComboBox.getSelectedIndex()];
+	}
 }

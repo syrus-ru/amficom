@@ -5,7 +5,7 @@ import javax.swing.JOptionPane;
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
-import com.syrus.AMFICOM.Client.General.Scheme.SchemeGraph;
+import com.syrus.AMFICOM.Client.Schematics.General.SchemeGraph;
 import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
 
 public class ComponentNewCommand extends VoidCommand

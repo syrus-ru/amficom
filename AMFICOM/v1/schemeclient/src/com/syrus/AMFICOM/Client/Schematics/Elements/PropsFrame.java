@@ -32,7 +32,7 @@ import com.syrus.AMFICOM.Client.General.Event.SchemeNavigateEvent;
 import com.syrus.AMFICOM.Client.General.Event.TreeDataSelectionEvent;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelSchematics;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.Scheme.DeviceGroup;
+import com.syrus.AMFICOM.Client.Schematics.General.DeviceGroup;
 import com.syrus.AMFICOM.Client.General.UI.FixedSizeEditableTableModel;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourceTreeModel;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourceTreeNode;
@@ -374,6 +374,8 @@ public class PropsFrame extends JInternalFrame
 				return;
 			}
 			TreeDataSelectionEvent ev = (TreeDataSelectionEvent) ae;
+			if (ev.getDataClass() == null)
+				return;
 			if (ev.getDataClass().equals(ProtoElement.class))
 			{
 				if (ev.getSelectionNumber() != -1)

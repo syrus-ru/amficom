@@ -54,6 +54,7 @@ public class LangModelSchematics_ru extends LangModelSchematics
 		{ "menuWindowArrangeText", "Упорядочить окна"},
 		{ "menuWindowTreeText", "Список компонентов"},
 		{ "menuWindowSchemeText", "Схема"},
+		{ "menuWindowCatalogText", "Каталог"},
 		{ "menuWindowElementsText", "Компонент"},
 		{ "menuWindowUgoText", "УГО"},
 		{ "menuWindowPropsText", "Характеристики"},

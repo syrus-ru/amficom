@@ -53,6 +53,7 @@ public class SchemeEditorMenuBar extends JMenuBar implements ApplicationModelLis
 	JMenuItem menuWindowArrange = new JMenuItem();
 	JMenuItem menuWindowTree = new JMenuItem();
 	JMenuItem menuWindowScheme = new JMenuItem();
+	JMenuItem menuWindowCatalog = new JMenuItem();
 	JMenuItem menuWindowUgo = new JMenuItem();
 	JMenuItem menuWindowProps = new JMenuItem();
 	JMenuItem menuWindowList = new JMenuItem();
@@ -215,6 +216,9 @@ public class SchemeEditorMenuBar extends JMenuBar implements ApplicationModelLis
 		menuWindowScheme.setText(LangModelSchematics.Text("menuWindowScheme"));
 		menuWindowScheme.setName("menuWindowScheme");
 		menuWindowScheme.addActionListener(actionAdapter);
+		menuWindowCatalog.setText(LangModelSchematics.Text("menuWindowCatalog"));
+		menuWindowCatalog.setName("menuWindowCatalog");
+		menuWindowCatalog.addActionListener(actionAdapter);
 		menuWindowUgo.setText(LangModelSchematics.Text("menuWindowUgo"));
 		menuWindowUgo.setName("menuWindowUgo");
 		menuWindowUgo.addActionListener(actionAdapter);
@@ -232,6 +236,7 @@ public class SchemeEditorMenuBar extends JMenuBar implements ApplicationModelLis
 		menuWindow.add(menuWindowUgo);
 		menuWindow.add(menuWindowProps);
 		menuWindow.add(menuWindowList);
+		menuWindow.add(menuWindowCatalog);
 
 		add(menuSession);
 		add(menuScheme);
@@ -308,6 +313,8 @@ public class SchemeEditorMenuBar extends JMenuBar implements ApplicationModelLis
 		menuWindowTree.setEnabled(aModel.isEnabled("menuWindowTree"));
 		menuWindowScheme.setVisible(aModel.isVisible("menuWindowScheme"));
 		menuWindowScheme.setEnabled(aModel.isEnabled("menuWindowScheme"));
+		menuWindowCatalog.setVisible(aModel.isVisible("menuWindowCatalog"));
+		menuWindowCatalog.setEnabled(aModel.isEnabled("menuWindowCatalog"));
 		menuWindowUgo.setVisible(aModel.isVisible("menuWindowUgo"));
 		menuWindowUgo.setEnabled(aModel.isEnabled("menuWindowUgo"));
 		menuWindowProps.setVisible(aModel.isVisible("menuWindowProps"));

@@ -1,4 +1,4 @@
-package com.syrus.AMFICOM.Client.General.Scheme;
+package com.syrus.AMFICOM.Client.Schematics.General;
 
 import java.awt.BorderLayout;
 import java.awt.Color;

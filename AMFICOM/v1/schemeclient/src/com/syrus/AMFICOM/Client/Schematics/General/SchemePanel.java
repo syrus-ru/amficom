@@ -1,4 +1,4 @@
-package com.syrus.AMFICOM.Client.General.Scheme;
+package com.syrus.AMFICOM.Client.Schematics.General;
 
 import java.awt.Component;
 import java.awt.Point;

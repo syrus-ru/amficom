@@ -18,11 +18,11 @@ import com.syrus.AMFICOM.Client.General.Event.SchemeNavigateEvent;
 import com.syrus.AMFICOM.Client.General.Event.TreeDataSelectionEvent;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelSchematics;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.Scheme.CablePortCell;
-import com.syrus.AMFICOM.Client.General.Scheme.DefaultCableLink;
-import com.syrus.AMFICOM.Client.General.Scheme.DefaultLink;
-import com.syrus.AMFICOM.Client.General.Scheme.PortCell;
-import com.syrus.AMFICOM.Client.General.Scheme.SchemePanel;
+import com.syrus.AMFICOM.Client.Schematics.General.CablePortCell;
+import com.syrus.AMFICOM.Client.Schematics.General.DefaultCableLink;
+import com.syrus.AMFICOM.Client.Schematics.General.DefaultLink;
+import com.syrus.AMFICOM.Client.Schematics.General.PortCell;
+import com.syrus.AMFICOM.Client.Schematics.General.SchemePanel;
 import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.Client.Resource.Map.MapProtoElement;
 import com.syrus.AMFICOM.Client.Resource.Scheme.PathElement;
@@ -275,6 +275,8 @@ public class ElementsListFrame extends JInternalFrame implements OperationListen
 			if (mode == CREATING_PATH)
 					return;
 			TreeDataSelectionEvent ev = (TreeDataSelectionEvent) ae;
+			if (ev.getDataClass() == null)
+				return;
 			if (ev.getDataClass().equals(ProtoElement.class))
 			{
 				if (ev.getSelectionNumber() != -1)
