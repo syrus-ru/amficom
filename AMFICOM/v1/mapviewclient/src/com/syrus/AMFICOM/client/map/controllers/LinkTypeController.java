@@ -1,5 +1,5 @@
 /**
- * $Id: LinkTypeController.java,v 1.11 2005/02/22 11:00:14 krupenn Exp $
+ * $Id: LinkTypeController.java,v 1.12 2005/03/04 14:36:09 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -32,7 +32,9 @@ import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.CharacteristicType;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.EquivalentCondition;
+import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
@@ -47,7 +49,7 @@ import com.syrus.AMFICOM.map.PhysicalLinkType;
 /**
  * Контроллер типа линейного элемента карты.
  * @author $Author: krupenn $
- * @version $Revision: 1.11 $, $Date: 2005/02/22 11:00:14 $
+ * @version $Revision: 1.12 $, $Date: 2005/03/04 14:36:09 $
  * @module mapviewclient_v1
  */
 public final class LinkTypeController extends AbstractLinkController
@@ -239,9 +241,17 @@ public final class LinkTypeController extends AbstractLinkController
 						true,
 						true);
 				linkType.addCharacteristic(ea);
+				GeneralStorableObjectPool.putStorableObject(ea);
+				GeneralStorableObjectPool.flush(true);
 			}
 			catch (CreateObjectException e)
 			{
+				e.printStackTrace();
+				return;
+			} catch(IllegalObjectEntityException e) {
+				e.printStackTrace();
+				return;
+			} catch (ApplicationException e) {
 				e.printStackTrace();
 				return;
 			}
@@ -296,9 +306,17 @@ public final class LinkTypeController extends AbstractLinkController
 						true,
 						true);
 				linkType.addCharacteristic(ea);
+				GeneralStorableObjectPool.putStorableObject(ea);
+				GeneralStorableObjectPool.flush(true);
 			}
 			catch (CreateObjectException e)
 			{
+				e.printStackTrace();
+				return;
+			} catch(IllegalObjectEntityException e) {
+				e.printStackTrace();
+				return;
+			} catch (ApplicationException e) {
 				e.printStackTrace();
 				return;
 			}
@@ -373,9 +391,17 @@ public final class LinkTypeController extends AbstractLinkController
 						true,
 						true);
 				linkType.addCharacteristic(ea);
+				GeneralStorableObjectPool.putStorableObject(ea);
+				GeneralStorableObjectPool.flush(true);
 			}
 			catch (CreateObjectException e)
 			{
+				e.printStackTrace();
+				return;
+			} catch(IllegalObjectEntityException e) {
+				e.printStackTrace();
+				return;
+			} catch (ApplicationException e) {
 				e.printStackTrace();
 				return;
 			}
@@ -442,9 +468,17 @@ public final class LinkTypeController extends AbstractLinkController
 						true,
 						true);
 				linkType.addCharacteristic(ea);
+				GeneralStorableObjectPool.putStorableObject(ea);
+				GeneralStorableObjectPool.flush(true);
 			}
 			catch (CreateObjectException e)
 			{
+				e.printStackTrace();
+				return;
+			} catch(IllegalObjectEntityException e) {
+				e.printStackTrace();
+				return;
+			} catch (ApplicationException e) {
 				e.printStackTrace();
 				return;
 			}
@@ -512,9 +546,17 @@ public final class LinkTypeController extends AbstractLinkController
 						true,
 						true);
 				linkType.addCharacteristic(ea);
+				GeneralStorableObjectPool.putStorableObject(ea);
+				GeneralStorableObjectPool.flush(true);
 			}
 			catch (CreateObjectException e)
 			{
+				e.printStackTrace();
+				return;
+			} catch(IllegalObjectEntityException e) {
+				e.printStackTrace();
+				return;
+			} catch (ApplicationException e) {
 				e.printStackTrace();
 				return;
 			}
@@ -591,6 +633,7 @@ public final class LinkTypeController extends AbstractLinkController
 			ltc.setColor(userId, pType, LinkTypeController.getLineColor(codename));
 
 			MapStorableObjectPool.putStorableObject(pType);
+			MapStorableObjectPool.flush(true);
 			return pType;
 		}
 		catch (Exception e)

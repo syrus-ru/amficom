@@ -1,5 +1,5 @@
 /**
- * $Id: AbstractLinkController.java,v 1.12 2005/03/02 12:31:39 krupenn Exp $
+ * $Id: AbstractLinkController.java,v 1.13 2005/03/04 14:36:09 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -24,6 +24,7 @@ import com.syrus.AMFICOM.general.CharacteristicType;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
@@ -36,7 +37,7 @@ import com.syrus.AMFICOM.map.MapElement;
 /**
  * Контроллер линейного элемента карты.
  * @author $Author: krupenn $
- * @version $Revision: 1.12 $, $Date: 2005/03/02 12:31:39 $
+ * @version $Revision: 1.13 $, $Date: 2005/03/04 14:36:09 $
  * @module mapviewclient_v1
  */
 public abstract class AbstractLinkController extends AbstractMapElementController
@@ -104,6 +105,7 @@ public abstract class AbstractLinkController extends AbstractMapElementControlle
 					dataType.value(),
 					sort);
 			GeneralStorableObjectPool.putStorableObject(type);
+			GeneralStorableObjectPool.flush(true);
 			return type;
 		}
 		catch (ApplicationException e)
@@ -162,9 +164,17 @@ public abstract class AbstractLinkController extends AbstractMapElementControlle
 						true,
 						true);
 				mapElement.addCharacteristic(ea);
+				GeneralStorableObjectPool.putStorableObject(ea);
+				GeneralStorableObjectPool.flush(true);
 			}
 			catch (CreateObjectException e)
 			{
+				e.printStackTrace();
+				return;
+			} catch(IllegalObjectEntityException e) {
+				e.printStackTrace();
+				return;
+			} catch (ApplicationException e) {
 				e.printStackTrace();
 				return;
 			}
@@ -221,9 +231,17 @@ public abstract class AbstractLinkController extends AbstractMapElementControlle
 						true,
 						true);
 				mapElement.addCharacteristic(ea);
+				GeneralStorableObjectPool.putStorableObject(ea);
+				GeneralStorableObjectPool.flush(true);
 			}
 			catch (CreateObjectException e)
 			{
+				e.printStackTrace();
+				return;
+			} catch(IllegalObjectEntityException e) {
+				e.printStackTrace();
+				return;
+			} catch (ApplicationException e) {
 				e.printStackTrace();
 				return;
 			}
@@ -301,9 +319,17 @@ public abstract class AbstractLinkController extends AbstractMapElementControlle
 						true,
 						true);
 				mapElement.addCharacteristic(ea);
+				GeneralStorableObjectPool.putStorableObject(ea);
+				GeneralStorableObjectPool.flush(true);
 			}
 			catch (CreateObjectException e)
 			{
+				e.printStackTrace();
+				return;
+			} catch(IllegalObjectEntityException e) {
+				e.printStackTrace();
+				return;
+			} catch (ApplicationException e) {
 				e.printStackTrace();
 				return;
 			}
@@ -360,9 +386,17 @@ public abstract class AbstractLinkController extends AbstractMapElementControlle
 						true,
 						true);
 				mapElement.addCharacteristic(ea);
+				GeneralStorableObjectPool.putStorableObject(ea);
+				GeneralStorableObjectPool.flush(true);
 			}
 			catch (CreateObjectException e)
 			{
+				e.printStackTrace();
+				return;
+			} catch(IllegalObjectEntityException e) {
+				e.printStackTrace();
+				return;
+			} catch (ApplicationException e) {
 				e.printStackTrace();
 				return;
 			}
@@ -419,9 +453,17 @@ public abstract class AbstractLinkController extends AbstractMapElementControlle
 						true,
 						true);
 				mapElement.addCharacteristic(ea);
+				GeneralStorableObjectPool.putStorableObject(ea);
+				GeneralStorableObjectPool.flush(true);
 			}
 			catch (CreateObjectException e)
 			{
+				e.printStackTrace();
+				return;
+			} catch(IllegalObjectEntityException e) {
+				e.printStackTrace();
+				return;
+			} catch (ApplicationException e) {
 				e.printStackTrace();
 				return;
 			}
