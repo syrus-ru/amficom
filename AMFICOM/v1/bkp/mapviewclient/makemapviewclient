@@ -1,10 +1,12 @@
 HOME=.
 LIB=$(HOME)\..\AMFICOMCommon
 LIBSRC=$(HOME)\..\AMFICOMCommon\src
+LIBDOC=$(HOME)\..\AMFICOMCommon\javadoc
 EXTLIB=d:\lib91
 ORACLE_HOME=d:\oracle\ora91
 SRC=$(HOME)\src
 CLASSES=$(HOME)\classes
+JAVADOCDIR=$(HOME)\javadoc
 JAVA_HOME=d:\java\j2sdk1.4.1_03
 
 JIKES= d:\java\jikes-1.21\bin\jikes.exe
@@ -31,6 +33,7 @@ COMPILER=$(JAVAC)
 TARGET=$(LIB)\mapviewclient.jar
 TARGET_CLASS_LIST=src_mapviewclient.txt
 TARGET_SRC=$(LIBSRC)\mapviewclientsource.jar
+TARGET_JAVADOC=$(LIBDOC)\mapviewdoc.jar
 
 SERVERCP=$(LIB)\corbaportable.jar;$(LIB)\corba.jar
 CLIENTCP=$(LIB)\util.jar;$(LIB)\filter.jar;$(LIB)\configuration.jar;$(LIB)\general.jar;$(LIB)\generalclient.jar;$(LIB)\administrate.jar;$(LIB)\configureclient.jar;$(LIB)\mapclient.jar;$(LIB)\scheme.jar
@@ -45,17 +48,21 @@ CLASSPATH=$(SERVERCP);$(CLIENTCP);$(LAYOUTCP);$(REPORTCP);$(JGRAPHCP);$(SPATIALC
 
 .PHONY:	$(TARGET)
 
-$(TARGET):	clean impl jar
+$(TARGET):	clean impl javadoc jar
 
 jar:
 	$(JAR) -cf $(TARGET) -C $(CLASSES) com
 	$(JAR) -cf $(TARGET_SRC) -C $(SRC) com
+	$(JAR) -cf $(TARGET_JAVADOC) -C $(JAVADOCDIR) .
 
 impl:
 	$(COMPILER) -d $(CLASSES) \
 		-classpath $(CLASSPATH) \
 		-sourcepath $(SRC) \
 		@$(TARGET_CLASS_LIST)
+
+javadoc:
+	$(JAVADOC) com
 
 clean:
 	rm -rf $(CLASSES)\com
