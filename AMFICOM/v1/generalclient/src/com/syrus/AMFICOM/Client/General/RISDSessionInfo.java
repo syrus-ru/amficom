@@ -53,7 +53,7 @@ import org.omg.PortableServer.*;
 import org.omg.PortableServer.POAManagerPackage.AdapterInactive;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2004/07/16 11:04:07 $
+ * @version $Revision: 1.4 $, $Date: 2004/07/16 11:05:46 $
  * @author $Author: krupenn $
  */
 public class RISDSessionInfo extends SessionInterface {
@@ -290,7 +290,7 @@ public class RISDSessionInfo extends SessionInterface {
 			 */
 			accessIdentity = accessIdentityHolder.value;
 			
-			setDomainId(com.syrus.AMFICOM.Client.Model.Environment.getDomainId());
+			setDomainId(com.syrus.AMFICOM.Client.General.Model.Environment.getDomainId());
 
 			logRecord = new LogRecord(Level.CONFIG, "accessIdentity information:" + ((accessIdentity == null) ? ("\n\taccessIdentity: null") : ("\n\tstarted: " + accessIdentity.started + "\n\tdomain_id: " + accessIdentity.domain_id + "\n\tsess_id: " + accessIdentity.sess_id + "\n\tuser_id: " + accessIdentity.user_id + "\n\tusername: " + accessIdentity.username)));
 			logRecord.setSourceClassName(getClass().getName());
