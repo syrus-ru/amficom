@@ -1,34 +1,31 @@
-package com.syrus.AMFICOM.Client.General.Report;
-
-import javax.swing.*;
-import javax.swing.event.ListSelectionListener;
-import javax.swing.event.ListSelectionEvent;
-
-import java.awt.*;
-import java.awt.event.ActionEvent;
-
-import java.util.Hashtable;
-import java.util.Enumeration;
-
-import com.syrus.AMFICOM.Client.Resource.Pool;
-import com.syrus.AMFICOM.Client.Resource.ReportDataSourceImage;
-import com.syrus.AMFICOM.Client.General.UI.ObjectResourceListBox;
-
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.Model.Environment;
-
-import com.syrus.AMFICOM.Client.General.Lang.LangModelReport;
-
-/**
- * <p>Title: </p>
- * <p>Description: Диалог, используемый другими модулями для
- * открытия шаблонов определённого типа</p>
- * <p>Copyright: Copyright (c) 2003</p>
- * <p>Company: Syrus Systems</p>
- * @author Песковский Пётр
- * @version 1.0
+/*
+ * $Id: SelectTypeTemplateWindow.java,v 1.6 2004/09/27 08:22:56 bass Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ
  */
 
+package com.syrus.AMFICOM.Client.General.Report;
+
+import com.syrus.AMFICOM.Client.General.Lang.LangModelReport;
+import com.syrus.AMFICOM.Client.General.Model.*;
+import com.syrus.AMFICOM.Client.General.UI.ObjectResourceListBox;
+import com.syrus.AMFICOM.Client.Resource.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.util.*;
+import javax.swing.*;
+import javax.swing.event.*;
+
+/**
+ * Диалог, используемый другими модулями для
+ * открытия шаблонов определённого типа.
+ *
+ * @author $Author: bass $
+ * @version $Revision: 1.6 $, $Date: 2004/09/27 08:22:56 $
+ * @module generalclient_v1
+ */
 public class SelectTypeTemplateWindow extends JDialog
 {
 	public ReportTemplateImplementationPanel rtiPanel = null;
@@ -156,22 +153,16 @@ public class SelectTypeTemplateWindow extends JDialog
 
 	private void setListContents()
 	{
-		Pool.removeHash(ReportTemplate.typ);
-
-		new ReportDataSourceImage(
-				aContext.getDataSourceInterface()).LoadReportTemplates();
-
-		Hashtable rtHash = Pool.getHash(ReportTemplate.typ);
-		if (rtHash == null)
-			return;
-
-		Enumeration rtEnum = rtHash.elements();
-		while (rtEnum.hasMoreElements())
-		{
-			ReportTemplate curRT = (ReportTemplate) rtEnum.nextElement();
-			if (curRT.templateType.equals(this.templateType))
-				this.templatesList.add(curRT);
-		}
+		Pool.removeMap(ReportTemplate.typ);
+		new ReportDataSourceImage(aContext.getDataSource()).LoadReportTemplates();
+		Map map = Pool.getMap(ReportTemplate.typ);
+		if (map != null)
+			for (Iterator iterator = map.values().iterator(); iterator.hasNext();)
+			{
+				ReportTemplate curRT = (ReportTemplate) iterator.next();
+				if (curRT.templateType.equals(this.templateType))
+					this.templatesList.add(curRT);
+			}
 	}
 
 	void viewButton_actionPerformed(ActionEvent e)
