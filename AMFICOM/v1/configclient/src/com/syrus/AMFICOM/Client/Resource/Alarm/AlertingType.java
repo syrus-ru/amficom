@@ -130,7 +130,7 @@ public class AlertingType extends StubResource
     for (int i = 0; i < number; i++)
 	{
       result[i] = new AlertingType(ids[i], names[i]);
-	  Pool.put(AlertingType.typ, result[i].getId(), result[i]);
+	  Pool.put(AlertingType.type, result[i].getId(), result[i]);
 	}
     return result;
   }
