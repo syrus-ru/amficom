@@ -1,5 +1,5 @@
 /*
- * $Id: TestResourceListTest.java,v 1.1 2004/10/06 14:48:18 bob Exp $
+ * $Id: TestResourceListTest.java,v 1.2 2004/10/07 06:00:41 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,7 +29,7 @@ import com.syrus.AMFICOM.client_.resource.TestResourceController;
 
 /**
  * @author $Author: bob $
- * @version $Revision: 1.1 $, $Date: 2004/10/06 14:48:18 $
+ * @version $Revision: 1.2 $, $Date: 2004/10/07 06:00:41 $
  * @module general_v1
  */
 public class TestResourceListTest {
@@ -56,11 +56,13 @@ public class TestResourceListTest {
 		ObjList objList = new ObjList(listModel); 
 
 		JPanel panel = new JPanel(new GridLayout(0, 1));
-		Dimension d = new Dimension(100,20);
+		Dimension d = new Dimension(100,100);
 		objList.setPreferredSize(d);
 		panel.add(objList);
 
-		//objList.setSelectedItem(tr2);
+		
+		objList.setSelectedValue(tr2, true);
+		//objList.setSelectedItem(tr2);		
 		//comboBox.setSelectedIndex(1);
 
 		frame.getContentPane().add(panel);		
