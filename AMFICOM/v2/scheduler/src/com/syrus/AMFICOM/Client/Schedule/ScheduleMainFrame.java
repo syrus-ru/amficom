@@ -11,6 +11,7 @@ import com.syrus.AMFICOM.Client.General.*;
 import com.syrus.AMFICOM.Client.General.Command.*;
 import com.syrus.AMFICOM.Client.General.Command.Session.*;
 import com.syrus.AMFICOM.Client.General.Event.*;
+import com.syrus.AMFICOM.Client.General.Lang.LangModelScheduler;
 import com.syrus.AMFICOM.Client.General.Lang.LangModel;
 import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.General.UI.*;
@@ -61,7 +62,7 @@ public class ScheduleMainFrame extends JFrame implements OperationListener {
 
 		setContentPane(mainPanel);
 		setResizable(true);
-		setTitle(I18N.getString("Scheduling_AMFICOM"));
+		setTitle(LangModelScheduler.getString("Scheduling_AMFICOM"));
 		setJMenuBar(menuBar);
 
 		mainPanel.setLayout(new BorderLayout());
@@ -394,7 +395,7 @@ public class ScheduleMainFrame extends JFrame implements OperationListener {
 		DataSourceInterface dataSource = aContext.getDataSourceInterface();
 
 		aContext.getDispatcher().notify(
-				new StatusMessageEvent(I18N.getString("Loading_BD")));
+				new StatusMessageEvent(LangModelScheduler.getString("Loading_BD")));
 		//		new SurveyDataSourceImage(dataSource).LoadParameterTypes();
 		//		new SurveyDataSourceImage(dataSource).LoadTestTypes();
 		//		new SurveyDataSourceImage(dataSource).LoadAnalysisTypes();
@@ -410,7 +411,7 @@ public class ScheduleMainFrame extends JFrame implements OperationListener {
 		sdsi.LoadEvaluationTypes();
 
 		aContext.getDispatcher().notify(
-				new StatusMessageEvent(I18N.getString("Loding_BD_finished")));
+				new StatusMessageEvent(LangModelScheduler.getString("Loding_BD_finished")));
 
 		treeFrame.init();
 
