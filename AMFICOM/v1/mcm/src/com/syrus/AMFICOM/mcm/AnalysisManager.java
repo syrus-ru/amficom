@@ -45,8 +45,8 @@ public abstract class AnalysisManager {
 
 			Result result = null; 
 			try {
-				analysis.createResult(null,//MeasurementControlModule.getNewIdentifier(ObjectEntities.RESULT_ENTITY),
-															null,//MeasurementControlModule.iAm.getUserId(),
+				analysis.createResult(MeasurementControlModule.getNewIdentifier(ObjectEntities.RESULT_ENTITY),
+															MeasurementControlModule.iAm.getUserId(),
 															measurementResult.getMeasurement(),
 															AlarmLevel.ALARM_LEVEL_NONE,
 															arParameters);

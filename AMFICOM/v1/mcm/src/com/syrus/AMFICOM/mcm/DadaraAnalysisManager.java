@@ -204,7 +204,7 @@ Log.debugMessage("$$$$$$$$$ Number of events == " + revents.length + "; tmp.leng
 			}
 		}
 //******************
-		Identifier identifier = null;//MeasurementControlModule.getNewIdentifier(ObjectEntities.RESULTPARAMETER_ENTITY);
+		Identifier identifier = MeasurementControlModule.getNewIdentifier(ObjectEntities.RESULTPARAMETER_ENTITY);
 		ParameterType parTypEventArray = (ParameterType)outParameterTypes.get(CODENAME_DADARA_EVENT_ARRAY);
 		if (parTypEventArray == null)
 			throw new AnalysisException("Cannot find in output map parameter type of codename: '" + CODENAME_DADARA_EVENT_ARRAY + "'");
