@@ -1,5 +1,5 @@
 /*
- * $Id: LogicalTreeUI.java,v 1.10 2005/03/28 07:43:57 bob Exp $
+ * $Id: LogicalTreeUI.java,v 1.11 2005/03/30 14:13:23 bob Exp $
  *
  * Copyright ? 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,11 +17,13 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
 import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.EventObject;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -43,25 +45,29 @@ import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.UIDefaults;
 import javax.swing.UIManager;
+import javax.swing.event.CellEditorListener;
 import javax.swing.event.TreeExpansionEvent;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.event.TreeWillExpandListener;
 import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.ExpandVetoException;
+import javax.swing.tree.TreeCellEditor;
 import javax.swing.tree.TreeCellRenderer;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/03/28 07:43:57 $
+ * @version $Revision: 1.11 $, $Date: 2005/03/30 14:13:23 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module filter_v1
  */
 public class LogicalTreeUI implements SelectionListener, AddDeleteItems {
 
-	protected static Hashtable					renderers ;
+	protected static Hashtable	renderers;
+
+	protected static Hashtable	editors;
 	
 	public class ItemTreeCellRenderer  extends JComponent implements TreeCellRenderer {		
 		
@@ -129,6 +135,101 @@ public class LogicalTreeUI implements SelectionListener, AddDeleteItems {
 		}
 	}
 	
+	public class ItemTreeCellEditor implements TreeCellEditor {
+
+		TreeCellEditor	cellEditor;
+		JTree			tree1;
+
+		public ItemTreeCellEditor(JTree tree) {
+			this.tree1 = tree;
+		}
+
+		public Component getTreeCellEditorComponent(JTree tree2,
+													Object value,
+													boolean isSelected,
+													boolean expanded,
+													boolean leaf,
+													int row) {
+			if (this.cellEditor != null)
+				return this.cellEditor.getTreeCellEditorComponent(tree2, value, isSelected, expanded, leaf, row);
+			return null;
+		}
+
+		public void cancelCellEditing() {
+			if (this.cellEditor != null)
+				this.cellEditor.cancelCellEditing();
+			clearEditor();
+		}
+
+		public boolean stopCellEditing() {
+			boolean b = false;
+			if (this.cellEditor != null)
+				b = this.cellEditor.stopCellEditing();
+			clearEditor();
+			return b;
+		}
+
+		public Object getCellEditorValue() {
+			if (this.cellEditor != null)
+				return this.cellEditor.getCellEditorValue();
+			return null;
+		}
+
+		public boolean isCellEditable(EventObject anEvent) {
+			if (!this.tree1.isEditable())
+				return false;
+			if (anEvent != null) {
+				if (anEvent.getSource() instanceof JTree) {
+					if (anEvent instanceof MouseEvent) {
+						TreePath path = this.tree1.getPathForLocation(((MouseEvent) anEvent).getX(),
+							((MouseEvent) anEvent).getY());
+						Object value = path.getLastPathComponent();
+						if (value != null) {
+							Class clazz = value.getClass();
+							this.cellEditor = (TreeCellEditor) editors.get(clazz);
+							while (this.cellEditor == null && !clazz.equals(Object.class)) {
+								Class[] interfaces = clazz.getInterfaces();
+								for (int i = 0; i < interfaces.length; i++) {
+									this.cellEditor = (TreeCellEditor) editors.get(interfaces[i]);
+									if (this.cellEditor != null)
+										break;
+								}
+								if (this.cellEditor == null) {
+									clazz = clazz.getSuperclass();
+									this.cellEditor = (TreeCellEditor) editors.get(clazz);
+								}
+							}
+						}
+					}
+				}
+			}
+			if (this.cellEditor != null)
+				return this.cellEditor.isCellEditable(anEvent);
+			return false;
+		}
+
+		public boolean shouldSelectCell(EventObject anEvent) {
+			if (this.cellEditor != null)
+				return this.cellEditor.shouldSelectCell(anEvent);
+			return false;
+		}
+
+		public void addCellEditorListener(CellEditorListener l) {
+			if (this.cellEditor != null)
+				this.cellEditor.addCellEditorListener(l);
+		}
+
+		public void removeCellEditorListener(CellEditorListener l) {
+			if (this.cellEditor != null)
+				this.cellEditor.removeCellEditorListener(l);
+		}
+
+		public void clearEditor() {
+			this.cellEditor = null;
+		}
+	}
+
+	
 	private static final Insets	NULL_INSETS	= new Insets(0, 0, 0, 0);
 
 	private static Icon getStringIcon(	String s,
@@ -176,6 +277,10 @@ public class LogicalTreeUI implements SelectionListener, AddDeleteItems {
 			});			
 			
 		}
+		if (editors == null) {
+			editors = new UIDefaults();
+		}
+
 	}
 
 	public void addItem(Item item) {
@@ -184,6 +289,10 @@ public class LogicalTreeUI implements SelectionListener, AddDeleteItems {
 	
 	public void setRenderer(Class clazz, TreeCellRenderer treeCellRenderer) {
 		renderers.put(clazz, treeCellRenderer);
+	}
+	
+	public void setEditor(Class clazz, TreeCellEditor treeCellEditor) {
+		editors.put(clazz, treeCellEditor);
 	}
 
 	public void addItem(Item parentItem,
@@ -239,14 +348,20 @@ public class LogicalTreeUI implements SelectionListener, AddDeleteItems {
 	 */
 	public void expandAll(boolean expand) {
 		// Traverse tree from root
-		if (this.rootItem != null)
-			expandAll(new TreePath(this.rootItem), null, expand);
+		if (this.rootItem != null) {
+			TreePath path = new TreePath(this.rootItem);
+			this.expandAll(path, null, expand);
+			this.expandAll(path, null, expand);
+		}
 	}
 
 	public void expandAll(Item item) {
 		// Traverse tree from root
-		if (this.rootItem != null)
-			expandAll(new TreePath(this.rootItem), item, true);
+		if (this.rootItem != null) {
+			TreePath path = new TreePath(this.rootItem);
+			this.expandAll(path, item, true);
+			this.expandAll(path, item, true);
+		}
 	}
 
 	public JPanel getPanel() {
@@ -317,6 +432,10 @@ public class LogicalTreeUI implements SelectionListener, AddDeleteItems {
 
 		return this.panel;
 	}
+	
+	public ItemTreeModel getTreeModel() {
+		return this.treeModel;
+	}
 
 	public JTree getTree() {
 		if (this.tree == null) {
@@ -370,6 +489,7 @@ public class LogicalTreeUI implements SelectionListener, AddDeleteItems {
 			});
 
 			this.tree.setCellRenderer(new ItemTreeCellRenderer());
+			this.tree.setCellEditor(new ItemTreeCellEditor(this.tree));
 		}
 		return this.tree;
 	}
@@ -475,6 +595,9 @@ public class LogicalTreeUI implements SelectionListener, AddDeleteItems {
 		Item node = (Item) parent.getLastPathComponent();
 		if (item != null && node.equals(item)){
 			return;
+		}
+		if (node instanceof Populatable) {
+			((Populatable)(node)).populate();
 		}
 		List children = node.getChildren();
 		for (Iterator it = children.iterator(); it.hasNext();) {
