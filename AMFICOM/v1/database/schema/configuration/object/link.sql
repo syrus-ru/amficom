@@ -8,6 +8,7 @@ CREATE TABLE Equipment (
  domain_id VARCHAR2(32),
 --
  type_id VARCHAR2(32) NOT NULL,
+ sort NUMBER(2,0),
 --
  name VARCHAR2(64) NOT NULL,
  description VARCHAR2(256),
@@ -15,6 +16,9 @@ CREATE TABLE Equipment (
  inventory_no VARCHAR2(64),
  supplier VARCHAR2(64),
  supplier_code VARCHAR2(64),
+ link_id VARCHAR2(32),
+ color VARCHAR(32),
+ mark VARCHAR(32),
 --
  CONSTRAINT linkp_pk PRIMARY KEY (id),
  CONSTRAINT linkp_creator_fk FOREIGN KEY (creator_id)
