@@ -1,5 +1,5 @@
 /*
- * $Id: FilterExpression_yo.java,v 1.3 2004/06/11 10:33:33 peskovsky Exp $
+ * $Id: FilterExpressionBase.java,v 1.1 2004/06/17 10:23:05 krupenn Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,10 +12,10 @@ import java.io.*;
 import java.util.Vector;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2004/06/11 10:33:33 $
+ * @version $Revision: 1.1 $, $Date: 2004/06/17 10:23:05 $
  * @module filter_v1
  */
-public class FilterExpression_yo implements FilterExpressionInterface
+public class FilterExpressionBase implements FilterExpressionInterface
 {
 	private static final long serialVersionUID = 01L;
 

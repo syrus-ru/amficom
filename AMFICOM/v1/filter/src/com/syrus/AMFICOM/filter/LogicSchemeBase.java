@@ -1,5 +1,5 @@
 /*
- * $Id: LogicScheme_yo.java,v 1.4 2004/06/11 10:33:33 peskovsky Exp $
+ * $Id: LogicSchemeBase.java,v 1.1 2004/06/17 10:23:05 krupenn Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,10 +12,10 @@ import java.io.*;
 import java.util.*;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2004/06/11 10:33:33 $
+ * @version $Revision: 1.1 $, $Date: 2004/06/17 10:23:05 $
  * @module filter_v1
  */
-public class LogicScheme_yo implements Serializable
+public class LogicSchemeBase implements Serializable
 {
 	public Vector schemeElements = new Vector();
 	public Vector finishedLinks = new Vector();
@@ -26,9 +26,9 @@ public class LogicScheme_yo implements Serializable
 	public int schemeWidth = 0;
 	public int schemeHeight = 0;
 
-	protected LogicSchemeElement_yo treeResult = null;
+	protected LogicSchemeElementBase treeResult = null;
 
-	public LogicScheme_yo(Filter filter)
+	public LogicSchemeBase(Filter filter)
 	{
 		this.filter = filter;
 //		restoreSchemeByText();
@@ -44,9 +44,9 @@ public class LogicScheme_yo implements Serializable
 		Vector schemeEls = new Vector();
 		for (int i = 0; i < schemeElements.size(); i++)
 		{
-			LogicSchemeElement_yo se = (LogicSchemeElement_yo )schemeElements.get(i);
+			LogicSchemeElementBase se = (LogicSchemeElementBase)schemeElements.get(i);
 
-			if (se.type.equals(LogicSchemeElement_yo.t_condition))
+			if (se.type.equals(LogicSchemeElementBase.t_condition))
 			{
 				schemeEls.add(se);
 				se.out.getLinks().clear();
@@ -56,7 +56,7 @@ public class LogicScheme_yo implements Serializable
 		schemeElements = schemeEls;
 
 		treeResult = createLogicSchemeElement(
-				LogicSchemeElement_yo.t_result,
+				LogicSchemeElementBase.t_result,
 				null,
 				"",
 				300,
@@ -65,10 +65,10 @@ public class LogicScheme_yo implements Serializable
 
 		schemeElements.add(treeResult);
 
-		LogicSchemeElement_yo andElem = createLogicSchemeElement(
-				LogicSchemeElement_yo.t_operand,
+		LogicSchemeElementBase andElem = createLogicSchemeElement(
+				LogicSchemeElementBase.t_operand,
 				null,
-				LogicSchemeElement_yo.ot_and,
+				LogicSchemeElementBase.ot_and,
 				150,
 				50,
 				this);
@@ -77,28 +77,28 @@ public class LogicScheme_yo implements Serializable
 
 		for (int i = 0; i < schemeElements.size() - 2; i++)
 		{
-			LogicSchemeElement_yo se = (LogicSchemeElement_yo )schemeElements.get(i);
+			LogicSchemeElementBase se = (LogicSchemeElementBase)schemeElements.get(i);
 			tryToAddLink(se.out, andElem.input);
 		}
 		tryToAddLink(andElem.out, treeResult.input);
 
 		for (int i = 0; i < schemeElements.size(); i++)
 		{
-			LogicSchemeElement_yo se = (LogicSchemeElement_yo )schemeElements.get(i);
-			if (se.type.equals(LogicSchemeElement_yo.t_condition))
+			LogicSchemeElementBase se = (LogicSchemeElementBase)schemeElements.get(i);
+			if (se.type.equals(LogicSchemeElementBase.t_condition))
 			{
 				se.x = 5;
-				se.y = 5 + (LogicSchemeElement_yo.height + 3) * i;
+				se.y = 5 + (LogicSchemeElementBase.height + 3) * i;
 			}
 		}
 	}
 
 	//Определяем какому объекту принадлежит точка
-	public ProSchemeElement_yo identifyObject (int x, int y)
+	public ProSchemeElementBase identifyObject (int x, int y)
 	{
 		for (int i = 0; i < activeZones.size(); i++)
 		{
-			ElementsActiveZone_yo az = (ElementsActiveZone_yo )activeZones.get(i);
+			ElementsActiveZoneBase az = (ElementsActiveZoneBase)activeZones.get(i);
 			if ((az.owner.x + az.x < x) && (x < az.owner.x + az.x + az.size) &&
 				(az.owner.y + az.y < y) && (y < az.owner.y + az.y + az.size))
 				return az;
@@ -106,16 +106,16 @@ public class LogicScheme_yo implements Serializable
 
 		for (int i = 0; i < finishedLinks.size(); i++)
 		{
-			FinishedLink_yo fl = (FinishedLink_yo )finishedLinks.get(i);
+			FinishedLinkBase fl = (FinishedLinkBase)finishedLinks.get(i);
 			if (fl.tryToSelect(x,y))
 				return fl;
 		}
 
 		for (int i = 0; i < schemeElements.size(); i++)
 		{
-			LogicSchemeElement_yo se = (LogicSchemeElement_yo )schemeElements.get(i);
-			if ((se.x < x) && (x < se.x + LogicSchemeElement_yo.width) &&
-				(se.y < y) && (y < se.y + LogicSchemeElement_yo.height))
+			LogicSchemeElementBase se = (LogicSchemeElementBase)schemeElements.get(i);
+			if ((se.x < x) && (x < se.x + LogicSchemeElementBase.width) &&
+				(se.y < y) && (y < se.y + LogicSchemeElementBase.height))
 				return se;
 		}
 
@@ -123,28 +123,28 @@ public class LogicScheme_yo implements Serializable
 	}
 
 	//Добавление связи между эл-тами
-	public void tryToAddLink (ElementsActiveZone_yo from, ElementsActiveZone_yo to)
+	public void tryToAddLink (ElementsActiveZoneBase from, ElementsActiveZoneBase to)
 	{
 		if (from.zoneType.equals(to.zoneType))
 			return;
 
-		if (from.owner.type.equals(LogicSchemeElement_yo.t_result) &&
+		if (from.owner.type.equals(LogicSchemeElementBase.t_result) &&
 				from.getLinks().size() == 1)
 			return;
 
-		if (to.owner.type.equals(LogicSchemeElement_yo.t_result) &&
+		if (to.owner.type.equals(LogicSchemeElementBase.t_result) &&
 				to.getLinks().size() == 1)
 			return;
 
 		for (int i = 0; i < finishedLinks.size(); i++)
 		{
-			FinishedLink_yo fl = (FinishedLink_yo )finishedLinks.get(i);
+			FinishedLinkBase fl = (FinishedLinkBase)finishedLinks.get(i);
 			if (fl.az1.equals(from) && fl.az2.equals(to) ||
 				fl.az2.equals(from) && fl.az1.equals(to))
 			return;
 		}
 
-		FinishedLink_yo fl = createFinishedLink(from, to);
+		FinishedLinkBase fl = createFinishedLink(from, to);
 		finishedLinks.add (fl);
 		from.addLink(fl);
 		to.addLink(fl);
@@ -157,8 +157,8 @@ public class LogicScheme_yo implements Serializable
 
 		for (int i = 0; i < schemeElements.size(); i++)
 		{
-			LogicSchemeElement_yo se = (LogicSchemeElement_yo )schemeElements.get(i);
-			if (se.type.equals(LogicSchemeElement_yo.t_condition))
+			LogicSchemeElementBase se = (LogicSchemeElementBase)schemeElements.get(i);
+			if (se.type.equals(LogicSchemeElementBase.t_condition))
 				result++;
 		}
 
@@ -180,7 +180,7 @@ public class LogicScheme_yo implements Serializable
 
 		for (int i = 0; i < activeZones.size(); i++)
 		{
-			ElementsActiveZone_yo curActiveZone = (ElementsActiveZone_yo )activeZones.get(i);
+			ElementsActiveZoneBase curActiveZone = (ElementsActiveZoneBase)activeZones.get(i);
 			if (curActiveZone.getLinks().size() == 0)
 				return false;
 		}
@@ -188,18 +188,18 @@ public class LogicScheme_yo implements Serializable
 	}
 
 	//Добавление/удаление элементов
-	public void deleteElement(ProSchemeElement_yo element)
+	public void deleteElement(ProSchemeElementBase element)
 	{
 		if (element == null)
 			return;
 
-		if (element.getTyp().equals(LogicSchemeElement_yo.TYP))
+		if (element.getTyp().equals(LogicSchemeElementBase.TYP))
 		{
-			LogicSchemeElement_yo se = (LogicSchemeElement_yo )element;
+			LogicSchemeElementBase se = (LogicSchemeElementBase)element;
 
 			for (int i = 0; i < finishedLinks.size(); i++)
 			{
-				FinishedLink_yo fl = (FinishedLink_yo )finishedLinks.get(i);
+				FinishedLinkBase fl = (FinishedLinkBase)finishedLinks.get(i);
 
 				if (se.input != null)
 					if (fl.az1.equals(se.input) || fl.az2.equals(se.input))
@@ -229,9 +229,9 @@ public class LogicScheme_yo implements Serializable
 			schemeElements.remove(se);
 		}
 
-		if (element.getTyp().equals(FinishedLink_yo.TYP))
+		if (element.getTyp().equals(FinishedLinkBase.TYP))
 		{
-			FinishedLink_yo fl = (FinishedLink_yo )element;
+			FinishedLinkBase fl = (FinishedLinkBase)element;
 			fl.az1.removeLink(fl);
 			fl.az2.removeLink(fl);
 			finishedLinks.remove(fl);
@@ -243,13 +243,13 @@ public class LogicScheme_yo implements Serializable
 		int maxY = 0;
 		for (int i = 0; i < schemeElements.size(); i++)
 		{
-			LogicSchemeElement_yo lse = (LogicSchemeElement_yo )schemeElements.get(i);
+			LogicSchemeElementBase lse = (LogicSchemeElementBase)schemeElements.get(i);
 			if (lse.y > maxY)
 				maxY = lse.y;
 		}
 
-		LogicSchemeElement_yo se = createLogicSchemeElement(
-			LogicSchemeElement_yo.t_condition,
+		LogicSchemeElementBase se = createLogicSchemeElement(
+			LogicSchemeElementBase.t_condition,
 			fe,
 			Integer.toString(fe.getListID()),
 			5,
@@ -262,10 +262,10 @@ public class LogicScheme_yo implements Serializable
 	public void replaceFilterExpression(FilterExpressionInterface fe_old, FilterExpressionInterface fe_new)
 	{
 		int ind = -1;
-		LogicSchemeElement_yo lse = null;
+		LogicSchemeElementBase lse = null;
 		for (ind = schemeElements.size() - 1; ind >= 0 ; ind--)
 		{
-			lse = (LogicSchemeElement_yo )schemeElements.get(ind);
+			lse = (LogicSchemeElementBase)schemeElements.get(ind);
 			if (lse.operandType.equals(Integer.toString(fe_old.getListID())))
 //			if (lse.filterExpression.equals(fe_old))
 				break;
@@ -281,7 +281,7 @@ public class LogicScheme_yo implements Serializable
 	{
 		for (int i = 0; i < schemeElements.size(); i++)
 		{
-			LogicSchemeElement_yo se = (LogicSchemeElement_yo )schemeElements.get(i);
+			LogicSchemeElementBase se = (LogicSchemeElementBase)schemeElements.get(i);
 
 			if (se.operandType.equals(Integer.toString(fe.getListID())))
 			{
@@ -303,9 +303,9 @@ public class LogicScheme_yo implements Serializable
 		Vector result = new Vector();
 		for (int i = 0; i < schemeElements.size(); i++)
 		{
-			LogicSchemeElement_yo se = (LogicSchemeElement_yo )schemeElements.get(i);
+			LogicSchemeElementBase se = (LogicSchemeElementBase)schemeElements.get(i);
 
-			if (se.type.equals(LogicSchemeElement_yo.t_condition))
+			if (se.type.equals(LogicSchemeElementBase.t_condition))
 				result.add(se.filterExpression);
 		}
 
@@ -314,17 +314,17 @@ public class LogicScheme_yo implements Serializable
 
 	FilterExpressionInterface createFilterExpression()
 	{
-		return new FilterExpression_yo();
+		return new FilterExpressionBase();
 	}
 
-	public ElementsActiveZone_yo createElementsActiveZone(
-			LogicSchemeElement_yo owner,
+	public ElementsActiveZoneBase createElementsActiveZone(
+			LogicSchemeElementBase owner,
 			String zoneType,
 			int size,
 			int x,
 			int y)
 	{
-		return new ElementsActiveZone_yo(
+		return new ElementsActiveZoneBase(
 				owner,
 				zoneType,
 				size,
@@ -332,20 +332,20 @@ public class LogicScheme_yo implements Serializable
 				y);
 	}
 
-	public FinishedLink_yo createFinishedLink(ElementsActiveZone_yo from, ElementsActiveZone_yo to)
+	public FinishedLinkBase createFinishedLink(ElementsActiveZoneBase from, ElementsActiveZoneBase to)
 	{
-		return new FinishedLink_yo(from, to);
+		return new FinishedLinkBase(from, to);
 	}
 
-	public LogicSchemeElement_yo createLogicSchemeElement(
+	public LogicSchemeElementBase createLogicSchemeElement(
 			String type,
 			FilterExpressionInterface fe,
 			String operandType,
 			int itsX,
 			int itsY,
-			LogicScheme_yo ls)
+			LogicSchemeBase ls)
 	{
-		return new LogicSchemeElement_yo(
+		return new LogicSchemeElementBase(
 				type,
 				fe,
 				operandType,
@@ -365,9 +365,9 @@ public class LogicScheme_yo implements Serializable
 		return ok;
 	}
 
-	private boolean passesConstraints(Object or, LogicSchemeElement_yo top)
+	private boolean passesConstraints(Object or, LogicSchemeElementBase top)
 	{
-		if (top.type.equals(LogicSchemeElement_yo.t_condition))
+		if (top.type.equals(LogicSchemeElementBase.t_condition))
 			return filter.expression(top.filterExpression, or);
 
 		LinkedList allTopLinks = top.input.getLinks();
@@ -375,21 +375,21 @@ public class LogicScheme_yo implements Serializable
 		boolean result = true;
 		for (int i = 0; i < allTopLinks.size(); i++)
 		{
-			FinishedLink_yo fl = (FinishedLink_yo )allTopLinks.get(i);
+			FinishedLinkBase fl = (FinishedLinkBase)allTopLinks.get(i);
 
-			LogicSchemeElement_yo curInputElement = null;
-			if (fl.az1.zoneType.equals(ElementsActiveZone_yo.zt_out))
+			LogicSchemeElementBase curInputElement = null;
+			if (fl.az1.zoneType.equals(ElementsActiveZoneBase.zt_out))
 				curInputElement = fl.az1.owner;
-			if (fl.az1.zoneType.equals(ElementsActiveZone_yo.zt_in))
+			if (fl.az1.zoneType.equals(ElementsActiveZoneBase.zt_in))
 				curInputElement = fl.az2.owner;
 
 			if (i == 0)
 				result = passesConstraints(or, curInputElement);
 			else
 			{
-				if (top.operandType.equals(LogicSchemeElement_yo.ot_and))
+				if (top.operandType.equals(LogicSchemeElementBase.ot_and))
 					result = result && passesConstraints(or, curInputElement);
-				if (top.operandType.equals(LogicSchemeElement_yo.ot_or))
+				if (top.operandType.equals(LogicSchemeElementBase.ot_or))
 				result = result || passesConstraints(or, curInputElement);
 			}
 		}
@@ -405,10 +405,10 @@ public class LogicScheme_yo implements Serializable
 		return "N/A";
 	}
 
-	private String getLogicFor(LogicSchemeElement_yo top)
+	private String getLogicFor(LogicSchemeElementBase top)
 	{
-		if (top.type.equals(LogicSchemeElement_yo.t_condition))
-			return "\"" + LogicSchemeElement_yo.string(LogicSchemeElement_yo.t_condition) + " " + top.filterExpression.getListID() + "\"";
+		if (top.type.equals(LogicSchemeElementBase.t_condition))
+			return "\"" + LogicSchemeElementBase.string(LogicSchemeElementBase.t_condition) + " " + top.filterExpression.getListID() + "\"";
 
 		LinkedList allTopLinks = top.input.getLinks();
 
@@ -416,18 +416,18 @@ public class LogicScheme_yo implements Serializable
 
 		for (int i = 0; i < allTopLinks.size(); i++)
 		{
-			FinishedLink_yo fl = (FinishedLink_yo )allTopLinks.get(i);
+			FinishedLinkBase fl = (FinishedLinkBase)allTopLinks.get(i);
 
-			LogicSchemeElement_yo curInputElement = null;
-			if (fl.az1.zoneType.equals(ElementsActiveZone_yo.zt_out))
+			LogicSchemeElementBase curInputElement = null;
+			if (fl.az1.zoneType.equals(ElementsActiveZoneBase.zt_out))
 				curInputElement = fl.az1.owner;
-			if (fl.az1.zoneType.equals(ElementsActiveZone_yo.zt_in))
+			if (fl.az1.zoneType.equals(ElementsActiveZoneBase.zt_in))
 				curInputElement = fl.az2.owner;
 
 			if (i == 0)
 				result = getLogicFor(curInputElement);
 			else
-				result = result + " " + LogicSchemeElement_yo.string(top.operandType) + " " + getLogicFor(curInputElement);
+				result = result + " " + LogicSchemeElementBase.string(top.operandType) + " " + getLogicFor(curInputElement);
 		}
 
 		if (top != treeResult)
@@ -444,7 +444,7 @@ public class LogicScheme_yo implements Serializable
 		schemeElements.removeAllElements();
 
 		treeResult = createLogicSchemeElement(
-				LogicSchemeElement_yo.t_result,
+				LogicSchemeElementBase.t_result,
 				null,
 				"",
 				0,
@@ -459,7 +459,7 @@ public class LogicScheme_yo implements Serializable
 //		setSchemeCoords();
 	}
 
-	private LogicSchemeElement_yo getSchemeFromLogic(
+	private LogicSchemeElementBase getSchemeFromLogic(
 			String expression,
 			List filterExpressions)
 	{
@@ -474,8 +474,8 @@ public class LogicScheme_yo implements Serializable
 			//если в строке только запись типа "Condition N"
 			FilterExpressionInterface fe = getFEforListID(filterExpressions, conditionNumber);
 
-			LogicSchemeElement_yo se = createLogicSchemeElement(
-					LogicSchemeElement_yo.t_condition,
+			LogicSchemeElementBase se = createLogicSchemeElement(
+					LogicSchemeElementBase.t_condition,
 					fe,
 					Integer.toString(fe.getListID()),
 					0, //Задаём координаты (0,0) их будем устанавливать,
@@ -491,8 +491,8 @@ public class LogicScheme_yo implements Serializable
 
 			findHighestPriorityOperators(expression, operatorFound, positions);
 
-			LogicSchemeElement_yo se = createLogicSchemeElement(
-					LogicSchemeElement_yo.t_operand,
+			LogicSchemeElementBase se = createLogicSchemeElement(
+					LogicSchemeElementBase.t_operand,
 					null,
 					operatorFound,
 					0,
@@ -509,7 +509,7 @@ public class LogicScheme_yo implements Serializable
 
 				String subStringI = expression.substring(curIndex, posI);
 
-				LogicSchemeElement_yo se1 = getSchemeFromLogic(subStringI, filterExpressions);
+				LogicSchemeElementBase se1 = getSchemeFromLogic(subStringI, filterExpressions);
 				schemeElements.add(se1);
 				tryToAddLink(se1.out, se.input);
 
@@ -548,7 +548,7 @@ public class LogicScheme_yo implements Serializable
 
 	private int getCondition (String expression)
 	{
-		if (expression.substring(0,8).equals("\"" + LogicSchemeElement_yo.string(LogicSchemeElement_yo.t_condition)) &&
+		if (expression.substring(0,8).equals("\"" + LogicSchemeElementBase.string(LogicSchemeElementBase.t_condition)) &&
 			(expression.charAt(expression.length()) == '\"'))
 		{
 			int condIndex = Integer.parseInt(
@@ -575,14 +575,14 @@ public class LogicScheme_yo implements Serializable
 
 			if (bracketCount == 0)
 			{
-				if (expression.substring(i, LogicSchemeElement_yo.string(LogicSchemeElement_yo.ot_and).length()).equals(LogicSchemeElement_yo.string(LogicSchemeElement_yo.ot_and)))
+				if (expression.substring(i, LogicSchemeElementBase.string(LogicSchemeElementBase.ot_and).length()).equals(LogicSchemeElementBase.string(LogicSchemeElementBase.ot_and)))
 				{
-					operatorFound = LogicSchemeElement_yo.string(LogicSchemeElement_yo.ot_and);
+					operatorFound = LogicSchemeElementBase.string(LogicSchemeElementBase.ot_and);
 					positions.add(new Integer(i));
 				}
-				if (expression.substring(i, LogicSchemeElement_yo.string(LogicSchemeElement_yo.ot_or).length()).equals(LogicSchemeElement_yo.string(LogicSchemeElement_yo.ot_or)))
+				if (expression.substring(i, LogicSchemeElementBase.string(LogicSchemeElementBase.ot_or).length()).equals(LogicSchemeElementBase.string(LogicSchemeElementBase.ot_or)))
 				{
-					operatorFound = LogicSchemeElement_yo.string(LogicSchemeElement_yo.ot_or);
+					operatorFound = LogicSchemeElementBase.string(LogicSchemeElementBase.ot_or);
 					positions.add(new Integer(i));
 				}
 			}
@@ -601,19 +601,19 @@ public class LogicScheme_yo implements Serializable
 		return null;
 	}
 
-	protected int findDistanceFromResult(LogicSchemeElement_yo se)
+	protected int findDistanceFromResult(LogicSchemeElementBase se)
 	{
-		if (se.type.equals(LogicSchemeElement_yo.t_result))
+		if (se.type.equals(LogicSchemeElementBase.t_result))
 			return 0;
 
 		for (int i = 0; i < finishedLinks.size(); i++)
 		{
-			FinishedLink_yo fl = (FinishedLink_yo )finishedLinks.get(i);
+			FinishedLinkBase fl = (FinishedLinkBase)finishedLinks.get(i);
 
-			if ((fl.az1.owner == se) && (fl.az1.zoneType.equals(ElementsActiveZone_yo.zt_out)))
+			if ((fl.az1.owner == se) && (fl.az1.zoneType.equals(ElementsActiveZoneBase.zt_out)))
 				return findDistanceFromResult(fl.az2.owner) + 1;
 
-			if ((fl.az2.owner == se) && (fl.az2.zoneType.equals(ElementsActiveZone_yo.zt_out)))
+			if ((fl.az2.owner == se) && (fl.az2.zoneType.equals(ElementsActiveZoneBase.zt_out)))
 				return findDistanceFromResult(fl.az1.owner) + 1;
 		}
 		return 0;
@@ -625,8 +625,8 @@ public class LogicScheme_yo implements Serializable
 		Vector filterExpressions = new Vector();
 		for (int i = 0; i < schemeElements.size(); i++)
 		{
-			LogicSchemeElement_yo se = (LogicSchemeElement_yo )schemeElements.get(i);
-			if (se.type.equals(LogicSchemeElement_yo.t_condition))
+			LogicSchemeElementBase se = (LogicSchemeElementBase)schemeElements.get(i);
+			if (se.type.equals(LogicSchemeElementBase.t_condition))
 				filterExpressions.add(se.filterExpression);
 		}
 		out.writeInt(filterExpressions.size());

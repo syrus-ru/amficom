@@ -1,5 +1,5 @@
 /*
- * $Id: LogicSchemeElement_yo.java,v 1.2 2004/06/08 15:31:57 bass Exp $
+ * $Id: LogicSchemeElementBase.java,v 1.1 2004/06/17 10:23:05 krupenn Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,10 +9,10 @@
 package com.syrus.AMFICOM.filter;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2004/06/08 15:31:57 $
+ * @version $Revision: 1.1 $, $Date: 2004/06/17 10:23:05 $
  * @module filter_v1
  */
-public class LogicSchemeElement_yo extends ProSchemeElement_yo
+public class LogicSchemeElementBase extends ProSchemeElementBase
 {
 	/**
 	 * Value: {@value}
@@ -35,14 +35,14 @@ public class LogicSchemeElement_yo extends ProSchemeElement_yo
 	public static int width = 120;
 	public static int height = 20;
 
-	public ElementsActiveZone_yo out = null;
-	public ElementsActiveZone_yo input = null;
+	public ElementsActiveZoneBase out = null;
+	public ElementsActiveZoneBase input = null;
 
 	public String type = "";
 	public String operandType = "";
 	public FilterExpressionInterface filterExpression = null;
 
-	LogicScheme_yo logicScheme = null;
+	LogicSchemeBase logicScheme = null;
 
 	/**
 	 * @deprecated Use {@link #string(String)} instead.
@@ -60,26 +60,26 @@ public class LogicSchemeElement_yo extends ProSchemeElement_yo
 		return operandType;
 	}
 
-	public LogicSchemeElement_yo(
+	public LogicSchemeElementBase(
 			String type,
 			FilterExpressionInterface filterExpression,
 			String operandType,
 			int x,
 			int y,
-			LogicScheme_yo logicScheme)
+			LogicSchemeBase logicScheme)
 	{
-		if (!((type.equals(LogicSchemeElement_yo.t_condition)) ||
-			(type.equals(LogicSchemeElement_yo.t_operand)) ||
-			(type.equals(LogicSchemeElement_yo.t_result))))
+		if (!((type.equals(LogicSchemeElementBase.t_condition)) ||
+			(type.equals(LogicSchemeElementBase.t_operand)) ||
+			(type.equals(LogicSchemeElementBase.t_result))))
 		{
 			System.out.print("Scheme element should have one of these" +
 					   "types: Condition, Operand or Result!!");
 			return;
 		}
 
-		if ((type.equals(LogicSchemeElement_yo.t_operand)) &&
-			!((operandType.equals(LogicSchemeElement_yo.ot_and)) ||
-			(operandType.equals(LogicSchemeElement_yo.ot_or))))
+		if ((type.equals(LogicSchemeElementBase.t_operand)) &&
+			!((operandType.equals(LogicSchemeElementBase.ot_and)) ||
+			(operandType.equals(LogicSchemeElementBase.ot_or))))
 		{
 			System.out.print("Operand should be AND or OR");
 			return;
@@ -105,28 +105,28 @@ public class LogicSchemeElement_yo extends ProSchemeElement_yo
 		int azX = 0;
 		int azY = 0;
 
-		if (type.equals(LogicSchemeElement_yo.t_operand)
-				|| type.equals(LogicSchemeElement_yo.t_condition))
+		if (type.equals(LogicSchemeElementBase.t_operand)
+				|| type.equals(LogicSchemeElementBase.t_condition))
 		{
 			azX = width - 12;
 			azY = 5;
 			out = logicScheme.createElementsActiveZone(
 					this,
-					ElementsActiveZone_yo.zt_out,
+					ElementsActiveZoneBase.zt_out,
 					10,
 					azX,
 					azY);
 			logicScheme.activeZones.add(out);
 		}
 
-		if (type.equals(LogicSchemeElement_yo.t_operand)
-				|| type.equals(LogicSchemeElement_yo.t_result))
+		if (type.equals(LogicSchemeElementBase.t_operand)
+				|| type.equals(LogicSchemeElementBase.t_result))
 		{
 			azX = 2;
 			azY = 4;
 			input = logicScheme.createElementsActiveZone(
 					this,
-					ElementsActiveZone_yo.zt_in,
+					ElementsActiveZoneBase.zt_in,
 					12,
 					azX,
 					azY);

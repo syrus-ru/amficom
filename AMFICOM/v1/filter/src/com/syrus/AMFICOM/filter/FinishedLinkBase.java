@@ -1,5 +1,5 @@
 /*
- * $Id: FinishedLink_yo.java,v 1.2 2004/06/08 15:31:57 bass Exp $
+ * $Id: FinishedLinkBase.java,v 1.1 2004/06/17 10:23:05 krupenn Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,10 +9,10 @@
 package com.syrus.AMFICOM.filter;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2004/06/08 15:31:57 $
+ * @version $Revision: 1.1 $, $Date: 2004/06/17 10:23:05 $
  * @module filter_v1
  */
-public class FinishedLink_yo extends ProSchemeElement_yo
+public class FinishedLinkBase extends ProSchemeElementBase
 {
 	/**
 	 * Value: {@value}
@@ -25,10 +25,10 @@ public class FinishedLink_yo extends ProSchemeElement_yo
 	 */
 	public static final String typ = TYP;
 
-	public ElementsActiveZone_yo az1 = null;
-	public ElementsActiveZone_yo az2 = null;
+	public ElementsActiveZoneBase az1 = null;
+	public ElementsActiveZoneBase az2 = null;
 
-	public FinishedLink_yo(ElementsActiveZone_yo az1, ElementsActiveZone_yo az2)
+	public FinishedLinkBase(ElementsActiveZoneBase az1, ElementsActiveZoneBase az2)
 	{
 		this.az1 = az1;
 		this.az2 = az2;
