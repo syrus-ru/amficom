@@ -1,5 +1,5 @@
 /*
- * $Id: MCMMeasurementObjectLoader.java,v 1.18 2005/03/10 15:23:06 arseniy Exp $
+ * $Id: MCMMeasurementObjectLoader.java,v 1.19 2005/03/18 18:27:04 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -43,7 +43,7 @@ import com.syrus.AMFICOM.measurement.TemporalPatternDatabase;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2005/03/10 15:23:06 $
+ * @version $Revision: 1.19 $, $Date: 2005/03/18 18:27:04 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -179,7 +179,7 @@ final class MCMMeasurementObjectLoader extends DatabaseMeasurementObjectLoader {
 	}
 
 	public Modeling loadModeling(Identifier id) throws DatabaseException, CommunicationException {
-		throw new UnsupportedOperationException("MCMMeasurementObjectLoader.loadModeling | MCM doesn't need in modeling");
+		throw new UnsupportedOperationException("MCMMeasurementObjectLoader.loadModeling | MCM doesn't need in modeling (load modeling '" + id + "'");
 	}
 
 	public MeasurementSetup loadMeasurementSetup(Identifier id) throws RetrieveObjectException, CommunicationException {
@@ -355,7 +355,8 @@ final class MCMMeasurementObjectLoader extends DatabaseMeasurementObjectLoader {
 	}
 
 	public Collection loadModelings(Collection ids) throws DatabaseException, CommunicationException {
-		throw new UnsupportedOperationException("MCMMeasurementObjectLoader.loadModelings | mcm doesn't need in modeling");
+		throw new UnsupportedOperationException("MCMMeasurementObjectLoader.loadModelings | mcm doesn't need in modeling (load "
+				+ ((ids != null) ? Integer.toString(ids.size()) : "NULL") + " modelings");
 	}
 
 	public Collection loadMeasurementSetups(Collection ids) throws DatabaseException, CommunicationException {
