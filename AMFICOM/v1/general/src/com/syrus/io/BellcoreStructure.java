@@ -1,5 +1,5 @@
 /*
- * $Id: BellcoreStructure.java,v 1.2 2004/10/27 15:20:42 stas Exp $
+ * $Id: BellcoreStructure.java,v 1.3 2004/10/29 09:39:31 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Ќаучно-технический центр.
@@ -13,8 +13,8 @@ import java.util.Date;
 import com.syrus.AMFICOM.general.Identifier;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2004/10/27 15:20:42 $
- * @author $Author: stas $
+ * @version $Revision: 1.3 $, $Date: 2004/10/29 09:39:31 $
+ * @author $Author: max $
  * @module general_v1
  */
 public class BellcoreStructure // extends ObjectResource
@@ -43,15 +43,15 @@ public class BellcoreStructure // extends ObjectResource
 
 
 	// экземпл€ры классов, представл€ющих собой пол€ данных в формате bellcore
-	Map map;
-	GenParams genParams;
-	SupParams supParams;
-	FxdParams fxdParams;
-	KeyEvents keyEvents;
-	LnkParams lnkParams;
-	DataPts dataPts;
-	Cksum cksum;
-	Special[] special;
+	public Map map;
+	public GenParams genParams;
+	public SupParams supParams;
+	public FxdParams fxdParams;
+	public KeyEvents keyEvents;
+	public LnkParams lnkParams;
+	public DataPts dataPts;
+	public Cksum cksum;
+	public Special[] special;
 
 	public String title = "";
 	public String schemePathId;
