@@ -1,5 +1,5 @@
 /**
- * $Id: MapEditorMainFrame.java,v 1.23 2005/03/01 15:43:32 krupenn Exp $
+ * $Id: MapEditorMainFrame.java,v 1.24 2005/03/04 14:34:53 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -10,6 +10,8 @@
 
 package com.syrus.AMFICOM.Client.Map.Editor;
 
+import com.syrus.AMFICOM.Client.Map.Command.Map.MapAddMapCommand;
+import com.syrus.AMFICOM.Client.Map.Command.Map.MapRemoveMapCommand;
 import java.awt.AWTEvent;
 import java.awt.BorderLayout;
 import java.awt.Component;
@@ -93,7 +95,7 @@ import com.syrus.AMFICOM.mapview.MapView;
  * 
  * 
  * 
- * @version $Revision: 1.23 $, $Date: 2005/03/01 15:43:32 $
+ * @version $Revision: 1.24 $, $Date: 2005/03/04 14:34:53 $
  * @module mapviewclient_v1
  * @author $Author: krupenn $
  */
@@ -351,6 +353,14 @@ public class MapEditorMainFrame extends JFrame
 				new MapEditorSaveMapAsCommand(
 						this.desktopPane, 
 						this.aContext));
+		aModel.setCommand("menuMapAddMap", 
+				new MapAddMapCommand(
+						this.desktopPane, 
+						this.aContext));
+		aModel.setCommand("menuMapRemoveMap", 
+				new MapRemoveMapCommand(
+					this.desktopPane, 
+					this.aContext));
 		aModel.setCommand("menuMapExport", 
 				new MapExportCommand(
 						this.desktopPane, 

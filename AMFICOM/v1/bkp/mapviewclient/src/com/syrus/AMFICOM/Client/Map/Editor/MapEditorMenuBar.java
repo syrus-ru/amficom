@@ -1,5 +1,5 @@
 /**
- * $Id: MapEditorMenuBar.java,v 1.10 2005/02/07 16:09:26 krupenn Exp $
+ * $Id: MapEditorMenuBar.java,v 1.11 2005/03/04 14:34:53 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -28,7 +28,7 @@ import javax.swing.JMenuItem;
 
 /**
  * Панель меню модуля "Редактор топологических схем".
- * @version $Revision: 1.10 $, $Date: 2005/02/07 16:09:26 $
+ * @version $Revision: 1.11 $, $Date: 2005/03/04 14:34:53 $
  * @module mapviewclient_v1
  * @author $Author: krupenn $
  */
@@ -51,6 +51,8 @@ public class MapEditorMenuBar extends JMenuBar
 	JMenuItem menuMapClose = new JMenuItem();
 	JMenuItem menuMapSave = new JMenuItem();
 	JMenuItem menuMapSaveAs = new JMenuItem();
+	JMenuItem menuMapAddMap = new JMenuItem();
+	JMenuItem menuMapRemoveMap = new JMenuItem();
 	JMenuItem menuMapExport = new JMenuItem();
 	JMenuItem menuMapImport = new JMenuItem();
 
@@ -186,6 +188,12 @@ public class MapEditorMenuBar extends JMenuBar
 		this.menuMapSaveAs.setText(LangModelMap.getString("menuMapSaveAs"));
 		this.menuMapSaveAs.setName("menuMapSaveAs");
 		this.menuMapSaveAs.addActionListener(actionAdapter);
+		this.menuMapAddMap.setText(LangModelMap.getString("menuMapAddMap"));
+		this.menuMapAddMap.setName("menuMapAddMap");
+		this.menuMapAddMap.addActionListener(actionAdapter);
+		this.menuMapRemoveMap.setText(LangModelMap.getString("menuMapRemoveMap"));
+		this.menuMapRemoveMap.setName("menuMapRemoveMap");
+		this.menuMapRemoveMap.addActionListener(actionAdapter);
 		this.menuMapExport.setText(LangModelMap.getString("menuMapExport"));
 		this.menuMapExport.setName("menuMapExport");
 		this.menuMapExport.addActionListener(actionAdapter);
@@ -280,6 +288,9 @@ public class MapEditorMenuBar extends JMenuBar
 		this.menuMap.add(this.menuMapSave);
 		this.menuMap.add(this.menuMapSaveAs);
 		this.menuMap.add(this.menuMapClose);
+		this.menuMap.addSeparator();
+		this.menuMap.add(this.menuMapAddMap);
+		this.menuMap.add(this.menuMapRemoveMap);
 		this.menuMap.addSeparator();
 		this.menuMap.add(this.menuMapExport);
 		this.menuMap.add(this.menuMapImport);
@@ -393,6 +404,12 @@ public class MapEditorMenuBar extends JMenuBar
 
 		this.menuMapSaveAs.setVisible(this.aModel.isVisible("menuMapSaveAs"));
 		this.menuMapSaveAs.setEnabled(this.aModel.isEnabled("menuMapSaveAs"));
+
+		this.menuMapAddMap.setVisible(this.aModel.isVisible("menuMapAddMap"));
+		this.menuMapAddMap.setEnabled(this.aModel.isEnabled("menuMapAddMap"));
+
+		this.menuMapRemoveMap.setVisible(this.aModel.isVisible("menuMapRemoveMap"));
+		this.menuMapRemoveMap.setEnabled(this.aModel.isEnabled("menuMapRemoveMap"));
 
 		this.menuMapExport.setVisible(this.aModel.isVisible("menuMapExport"));
 		this.menuMapExport.setEnabled(this.aModel.isEnabled("menuMapExport"));
