@@ -4,7 +4,7 @@ TRANSCEIVER=./transceiver
 DADARA=./dadara
 LIB=../lib
 
-ORBCLASSPATH=$(ORACLE_HOME)/lib/aurora_client.jar:$(ORACLE_HOME)/lib/vbjorb.jar:$(ORACLE_HOME)/lib/vbjapp.jar
+ORBCLASSPATH=$(ORACLE_HOME)/javavm/lib/aurora.zip:$(ORACLE_HOME)/javavm/lib/aurora_client_orbdep.jar:$(ORACLE_HOME)/javavm/lib/aurora_client_orbindep.jar:$(ORACLE_HOME)/lib/vbjorb.jar:$(ORACLE_HOME)/lib/vbjapp.jar
 APPCLASSPATH=$(LIB)/kisserver.jar:$(LIB)/ServerInterface_General.jar:$(LIB)/util.jar:$(LIB)/dadara.jar
 
 JAVAC=javac

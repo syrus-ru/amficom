@@ -14,8 +14,8 @@ int dbg_suppress_cf_messages=0;
 #endif
 
 JNIEXPORT jdoubleArray JNICALL 
-Java_com_syrus_AMFICOM_analysis_AnalysisManager_analyse(JNIEnv* env, jclass obj,
-//Java_com_syrus_AMFICOM_analysis_dadara_DadaraAnalysisManager_ana(JNIEnv* env, jobject obj,
+//Java_com_syrus_AMFICOM_analysis_AnalysisManager_analyse(JNIEnv* env, jclass obj,
+Java_com_syrus_AMFICOM_analysis_dadara_DadaraAnalysisManager_ana(JNIEnv* env, jobject obj,
 	jint waveletType,             //type of the WaveLet transformation applied.
 	jdoubleArray y,               //the refl. itself
 	jdouble delta_x,              //dx

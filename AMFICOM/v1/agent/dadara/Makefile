@@ -21,17 +21,20 @@ OBJS=dadara.o \
 $(OUT):	$(OBJS)
 	$(CC) -o $(OUT) $(OBJS) $(LFLAGS)
 
-dadara.o:
-	$(CC) -c -I$(JAVA_HOME)/include -I$(JAVA_HOME)/include/linux $(shell root-config --cflags) $(CFLAGS) -o $@ dadara.cpp
+dadara.o:	dadara.cpp
+	$(CC) -c -I$(JAVA_HOME)/include -I$(JAVA_HOME)/include/linux $(shell root-config --cflags) $(CFLAGS) -o $@ $<
+
+TFitter.o:	TFitter.cxx
+	$(CC) -c $(CFLAGS) $(shell root-config --cflags) $<
+
+TMinuit.o:	TMinuit.cxx
+	$(CC) -c $(CFLAGS) $(shell root-config --cflags) $<
+
+Fitter.o:	Fitter.cpp
+	$(CC) -c $(CFLAGS) $(shell root-config --cflags) $<
 
 .cpp.o:
 	$(CC) -c $(CFLAGS) -o $@ $<
-
-TFitter.o:
-	$(CC) -c $(CFLAGS) $(shell root-config --cflags) TFitter.cxx
-
-TMinuit.o:
-	$(CC) -c $(CFLAGS) $(shell root-config --cflags) TMinuit.cxx
 
 
 .PHONY: clean arch

@@ -9,8 +9,8 @@
 
 #ifdef DEBUG_INITIAL_ANALYSIS
 #include <stdio.h>
-//#include <time.h>
-//#include <sys/time.h>
+#include <time.h>
+#include <sys/time.h>
 #endif
 
 //////////////////////////////////////////////////////////////////////
@@ -32,7 +32,7 @@ InitialAnalysis::InitialAnalysis(
 	int nonReflectiveSize)		//характерная длина неотражательного события
 {
 #ifdef DEBUG_INITIAL_ANALYSIS
-	/*timeval tv;
+	timeval tv;
 	gettimeofday(&tv, NULL);
 	tm* t = localtime(&tv.tv_sec);
 	int size = 9 + 15 + 1 + 14 + 1 + 3 + 1;
@@ -40,8 +40,8 @@ InitialAnalysis::InitialAnalysis(
 	sprintf(filename, ".//logs//%04d%02d%02d%02d%02d%02d-InitialAnalysis.log", 1900 + t->tm_year, 1 + t->tm_mon, t->tm_mday, t->tm_hour, t->tm_min, t->tm_sec);
 	filename[size - 1] = 0;
 	this->str = fopen(filename, "a");
-	delete[] filename;*/
-	this->str = fopen("c:\\ia.log", "w");
+	delete[] filename;
+
 	fprintf (this->str, "*** InitialAnalysis::InitialAnalysis: data=%p, data_length=%d\n",
 		data,data_length);
 #endif

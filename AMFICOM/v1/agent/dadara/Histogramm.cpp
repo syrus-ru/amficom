@@ -2,7 +2,6 @@
 //
 //////////////////////////////////////////////////////////////////////
 
-#include "stdafx.h"
 #include "Histogramm.h"
 
 //////////////////////////////////////////////////////////////////////
@@ -38,7 +37,7 @@ void Histogramm::init(double* data, int data_length, int start, int end)
 	double deriv_delta = (up_limit - down_limit) / (double)nBins;
 
 	int N;
-	for (i = max(0, start); i <= min (end, data_length-1); i++)
+	for (int i = max(0, start); i <= min (end, data_length-1); i++)
 	{
 		N = (int)((data[i] - down_limit) / deriv_delta + 0.5);
 		if (N >= 0 && N < nBins)
