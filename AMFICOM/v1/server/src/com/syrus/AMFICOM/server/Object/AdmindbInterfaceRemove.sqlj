@@ -1,0 +1,87 @@
+package com.syrus.AMFICOM.server.Object;
+
+import sqlj.runtime.*;
+import sqlj.runtime.ref.*;
+import java.sql.*;
+
+import java.util.Vector;
+
+import com.syrus.AMFICOM.CORBA.*;
+import com.syrus.AMFICOM.CORBA.Admin.*;
+import com.syrus.AMFICOM.CORBA.Resource.*;
+
+import com.syrus.AMFICOM.server.*;
+
+public class AdmindbInterfaceRemove
+{
+	protected AdmindbInterfaceRemove()
+	{
+	}
+
+	static public int removeServers(String[] serverseq)
+	{
+		int i;
+		for(i = serverseq.length - 1; i >= 0; i--)
+		{
+			try
+			{
+				#sql { delete from AMFICOM.SERVERS
+					where ID = :(serverseq[i]) };
+
+				#sql { commit };
+			}
+			catch(SQLException e)
+			{
+				System.out.println("Error deleting server: " + e.getMessage());
+				e.printStackTrace();
+				return Constants.ERROR_DELETING;
+			}
+		}
+		return Constants.ERROR_NO_ERROR;
+	}
+
+	static public int removeClients(String[] clientseq)
+	{
+		int i;
+		for(i = clientseq.length - 1; i >= 0; i--)
+		{
+			try
+			{
+				#sql { delete from AMFICOM.CLIENTS
+					where ID = :(clientseq[i]) };
+
+				#sql { commit };
+			}
+			catch(SQLException e)
+			{
+				System.out.println("Error deleting client: " + e.getMessage());
+				e.printStackTrace();
+				return Constants.ERROR_DELETING;
+			}
+		}
+		return Constants.ERROR_NO_ERROR;
+	}
+
+	static public int removeAgents(String[] agentseq)
+	{
+		int i;
+		for(i = agentseq.length - 1; i >= 0; i--)
+		{
+			try
+			{
+				#sql { delete from AMFICOM.AGENTS
+					where ID = :(agentseq[i]) };
+
+				#sql { commit };
+			}
+			catch(SQLException e)
+			{
+				System.out.println("Error deleting agent: " + e.getMessage());
+				e.printStackTrace();
+				return Constants.ERROR_DELETING;
+			}
+		}
+		return Constants.ERROR_NO_ERROR;
+	}
+}
+

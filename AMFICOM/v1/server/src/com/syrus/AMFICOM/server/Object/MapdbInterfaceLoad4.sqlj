@@ -1,0 +1,708 @@
+
+// Copyright (c) Syrus Systems 2000 Syrus Systems
+package com.syrus.AMFICOM.server.Object;
+
+import sqlj.runtime.*;
+import sqlj.runtime.ref.*;
+import java.sql.*;
+import oracle.sql.*;
+import java.text.*;
+import oracle.jdbc.driver.*;
+
+import java.util.Vector;
+
+import com.syrus.AMFICOM.CORBA.*;
+import com.syrus.AMFICOM.CORBA.Map.*;
+import com.syrus.AMFICOM.CORBA.Scheme.*;
+import com.syrus.AMFICOM.CORBA.Resource.*;
+
+import com.syrus.AMFICOM.server.*;
+
+public class MapdbInterfaceLoad4 extends Object
+{
+	protected MapdbInterfaceLoad4()
+	{
+	}
+
+	static public Vector loadAttributes(
+			String elementAttributeTable,
+			String elementAttributeField,
+			String element_id)
+	{
+		String It_e_id = "";
+		String It_attribute_id = "";
+		String It_attribute_type_id = "";
+		String It_attribute_value = "";
+		String It_attribute_name = "";
+
+		boolean It_is_editable = true;
+		boolean It_is_visible = true;
+
+		Vector vector2 = new Vector();
+		ElementAttributeIterator eaIt = null;
+
+		String qry = "select ID, ATTRIBUTE_TYPE_ID, VALUE, IS_EDITABLE, IS_VISIBLE " +
+							"from AMFICOM." + elementAttributeTable +
+								" where " + elementAttributeField +
+								" = '" + element_id + "'";
+
+//		System.out.println("Executing " + qry);
+
+		try
+		{
+			#sql
+			{
+				BEGIN
+					open :OUT eaIt for :qry;
+				END;
+			};
+
+			while (eaIt.next())
+			{
+				try { It_attribute_id = eaIt.id(); }
+				catch(SQLException e) { }
+				if(It_attribute_id == null) It_attribute_id = "";
+				try { It_attribute_type_id = eaIt.attribute_type_id(); }
+				catch(SQLException e) { }
+				if(It_attribute_type_id == null) It_attribute_type_id = "";
+				try { It_attribute_value = eaIt.value(); }
+				catch(SQLException e) { }
+				if(It_attribute_value == null) It_attribute_value = "";
+				try { It_is_editable = (eaIt.is_editable() == 1)? true : false; }
+				catch(SQLException e) { }
+				try { It_is_visible = (eaIt.is_visible() == 1)? true : false; }
+				catch(SQLException e) { }
+
+				try
+				{
+					#sql {
+						select NAME into :It_attribute_name
+						from AMFICOM.ELEMENTATTRIBUTETYPES
+						where ID = :It_attribute_type_id };
+
+					if(It_attribute_name == null)
+						It_attribute_name = "";
+
+					ElementAttribute_Transferable ea =
+						new ElementAttribute_Transferable(
+							It_attribute_id,
+							It_attribute_name,
+							It_attribute_value,
+							It_attribute_type_id,
+							It_is_editable,
+							It_is_visible);
+						vector2.addElement(ea);
+				}
+				catch(SQLException e)
+				{
+					System.out.println("could not get attribute " + It_e_id + ": " + e.getMessage());
+					e.printStackTrace();
+				}
+			}// while(eaIt)
+			eaIt.close();
+		}
+		catch(SQLException e)
+		{
+			if(eaIt != null) try {
+			eaIt.close();
+			}catch(Exception exe) {}
+			System.out.println("could not get attributes for element " + element_id + ": " + e.getMessage());
+			e.printStackTrace();
+		}
+		finally
+		{
+			try {
+				eaIt.close();
+			}catch(Exception exe) {}
+		}
+		
+
+		return vector2;
+	}
+
+	static public Vector loadMapElementIds(
+			String elementAttributeTable,
+			String map_id)
+	{
+		Vector vector2 = new Vector();
+		IdIterator idIt = null;
+		String It_id = "";
+
+		String qry = "select ID " +
+						"from AMFICOM." + elementAttributeTable +
+							" where MAP_ID = '" + map_id + "'";
+
+//		System.out.println("Executing " + qry);
+
+		try
+		{
+			#sql
+			{
+				BEGIN
+					open :OUT idIt for :qry;
+				END;
+			};
+
+			while (idIt.next())
+			{
+				try { vector2.addElement(idIt.id()); }
+				catch(SQLNullException e) { }
+//				try { It_id = idIt.id(); }
+//  				catch(SQLException e) { }
+//				if(It_id == null) It_id = "";
+
+//				vector2.add(It_id);
+			}
+			idIt.close();
+		}
+		catch(SQLException e)
+		{
+			if(idIt != null) try {
+			idIt.close();
+			}catch(Exception exe) {}
+			System.out.println("could not get elements for map " + map_id + ": " + e.getMessage());
+			e.printStackTrace();
+		}
+		finally
+		{
+			try {
+				idIt.close();
+			}catch(Exception exe) {}
+		}
+		
+
+		return vector2;
+	}
+
+	static public Vector loadMapElementIds2(
+			String elementAttributeTable,
+			String elementAttributeField,
+			String map_id)
+	{
+		Vector vector2 = new Vector();
+		IdIterator idIt = null;
+		String It_id = "";
+
+		String qry = "select " + elementAttributeField +
+						" from AMFICOM." + elementAttributeTable +
+							" where MAP_ID = '" + map_id + "'";
+
+//		System.out.println("Executing " + qry);
+
+		ConnectionContext connCtx = DefaultContext.getDefaultContext();
+		Statement statement = null;
+		OracleResultSet resultset = null;
+
+		try
+		{
+			statement = connCtx.getConnection().createStatement();
+			resultset = (OracleResultSet )statement.executeQuery(qry);
+			while(resultset.next())
+			{
+				vector2.addElement(resultset.getString(elementAttributeField));
+			}
+			resultset.close();
+		}
+		catch(SQLException sqlexception1)
+		{
+			if(resultset != null) try {
+			resultset.close();
+			}catch(Exception exe) {}
+			System.out.println("could not get elements for map " + map_id + ": " + sqlexception1.getMessage());
+			sqlexception1.printStackTrace();
+		}
+		finally
+		{
+			try
+			{
+				if(resultset != null)
+					resultset.close();
+				resultset = null;
+				if(statement != null)
+					statement.close();
+				statement = null;
+			}
+			catch(SQLException _ex) { }
+		}
+
+		return vector2;
+	}
+
+	static public Vector loadMapElementIdsNonISM(
+			String elementAttributeTable,
+			String map_id)
+	{
+		Vector vector2 = new Vector();
+		IdIterator idIt = null;
+		String It_id = "";
+
+		String qry = "select ID " +
+						"from AMFICOM." + elementAttributeTable +
+							" where MAP_ID = '" + map_id + "' " +
+							" and ISM_MAP_ID is null";
+
+//		System.out.println("Executing " + qry);
+
+		try
+		{
+			#sql
+			{
+				BEGIN
+					open :OUT idIt for :qry;
+				END;
+			};
+
+			while (idIt.next())
+			{
+				try { vector2.addElement(idIt.id()); }
+				catch(SQLNullException e) { }
+//				try { It_id = idIt.id(); }
+//  				catch(SQLException e) { }
+//				if(It_id == null) It_id = "";
+
+//				vector2.add(It_id);
+			}
+			idIt.close();
+		}
+		catch(SQLException e)
+		{
+			if(idIt != null) try {
+			idIt.close();
+			}catch(Exception exe) {}
+			System.out.println("could not get elements for map " + map_id + ": " + e.getMessage());
+			e.printStackTrace();
+		}
+		finally
+		{
+			try {
+				idIt.close();
+			}catch(Exception exe) {}
+		}
+		
+
+		return vector2;
+	}
+
+	static public Vector loadISMMapElementIds(
+			String elementAttributeTable,
+			String map_id)
+	{
+		Vector vector2 = new Vector();
+		IdIterator idIt = null;
+		String It_id = "";
+
+		String qry = "select ID " +
+						"from AMFICOM." + elementAttributeTable +
+							" where ISM_MAP_ID = '" + map_id + "'";
+
+//		System.out.println("Executing " + qry);
+
+		try
+		{
+			#sql
+			{
+				BEGIN
+					open :OUT idIt for :qry;
+				END;
+			};
+
+			while (idIt.next())
+			{
+				try { vector2.addElement(idIt.id()); }
+				catch(SQLNullException e) { }
+//				try { It_id = idIt.id(); }
+//  				catch(SQLException e) { }
+//				if(It_id == null) It_id = "";
+
+//				vector2.add(It_id);
+			}
+			idIt.close();
+		}
+		catch(SQLException e)
+		{
+			if(idIt != null) try {
+			idIt.close();
+			}catch(Exception exe) {}
+			System.out.println("could not get elements for ISM map " + map_id + ": " + e.getMessage());
+			e.printStackTrace();
+		}
+		finally
+		{
+			try {
+				idIt.close();
+			}catch(Exception exe) {}
+		}
+		
+
+		return vector2;
+	}
+
+	static public int reloadAttributes(
+			String[] map_ids,
+			Vector vector)
+	{
+		int count;
+		int mapcount = map_ids.length;
+//		Vector vector = new Vector();
+		String current_map_id = "";
+		ElementAttribute_Transferable[] attributes;
+		IdIterator idIt = null;
+		Vector vector2;
+		Vector vector3;
+		int i;
+		int ai;
+
+		for(int j = 0; j < mapcount; j++)
+		{
+			current_map_id = (String) map_ids[j];
+
+			vector2 = loadMapElementIds("MAPEQUIPMENTELEMENTS", current_map_id);
+			for(i = vector2.size() - 1; i >= 0; i--)
+			{
+				String e_id = (String )vector2.get(i);
+				vector3 = loadAttributes(
+						"MAPEQUIPMENTELEMENTATTRIBUTES",
+						"MAP_EQUIPMENT_ELEMENT_ID",
+						e_id);
+
+				for(ai = vector3.size() - 1; ai >= 0; ai--)
+					vector.add(vector3.get(ai));
+			}
+
+			vector2 = loadMapElementIds("MAPKISELEMENTS", current_map_id);
+			for(i = vector2.size() - 1; i >= 0; i--)
+			{
+				String e_id = (String )vector2.get(i);
+				vector3 = loadAttributes(
+						"MAPKISELEMENTATTRIBUTES",
+						"MAP_KIS_ELEMENT_ID",
+						e_id);
+
+				for(ai = vector3.size() - 1; ai >= 0; ai--)
+					vector.add(vector3.get(ai));
+			}
+
+			vector2 = loadMapElementIds("MAPPHYSICALNODEELEMENTS", current_map_id);
+			for(i = vector2.size() - 1; i >= 0; i--)
+			{
+				String e_id = (String )vector2.get(i);
+				vector3 = loadAttributes(
+						"MAPPHYSICALNODEELEMENTATTRIBUT",
+						"MAP_PHYSICAL_NODE_ELEMENT_ID",
+						e_id);
+
+				for(ai = vector3.size() - 1; ai >= 0; ai--)
+					vector.add(vector3.get(ai));
+			}
+
+			vector2 = loadMapElementIds("MAPPHYSICALLINKELEMENTS", current_map_id);
+			for(i = vector2.size() - 1; i >= 0; i--)
+			{
+				String e_id = (String )vector2.get(i);
+				vector3 = loadAttributes(
+						"MAPPHYSICALLINKELEMENTATTRIBUT",
+						"MAP_PHYSICAL_LINK_ELEMENT_ID",
+						e_id);
+
+				for(ai = vector3.size() - 1; ai >= 0; ai--)
+					vector.add(vector3.get(ai));
+			}
+
+			vector2 = loadMapElementIds("MAPPATHELEMENTS", current_map_id);
+			for(i = vector2.size() - 1; i >= 0; i--)
+			{
+				String e_id = (String )vector2.get(i);
+				vector3 = loadAttributes(
+						"MAPPATHELEMENTATTRIBUTES",
+						"MAP_PATH_ELEMENT_ID",
+						e_id);
+
+				for(ai = vector3.size() - 1; ai >= 0; ai--)
+					vector.add(vector3.get(ai));
+			}
+
+		}
+
+//		attributes = new ElementAttribute_Transferable[vector.size()];
+//		vector.copyInto(attributes);
+
+//		attrseq.value = attributes;
+
+		return Constants.ERROR_NO_ERROR;
+
+	}
+
+	static public int reloadISMAttributes(
+			String[] ism_map_ids,
+			Vector vector)
+	{
+		int count;
+		int mapcount = ism_map_ids.length;
+//		Vector vector = new Vector();
+		String current_ism_map_id = "";
+		String current_map_id = "";
+		ElementAttribute_Transferable[] attributes;
+		IdIterator idIt = null;
+		Vector vector2;
+		Vector vector3;
+		int i;
+		int ai;
+
+		for(int j = 0; j < mapcount; j++)
+		{
+			current_ism_map_id = (String) ism_map_ids[j];
+
+			try
+			{
+				#sql { select MAP_ID into :current_map_id from ISMMAPCONTEXTS
+					where ID = :current_ism_map_id };
+
+				int r = reloadAttributes(new String[] { current_map_id }, vector);
+			}
+			catch(Exception ex)
+			{
+
+			}
+
+			vector2 = loadISMMapElementIds("MAPKISELEMENTS", current_ism_map_id);
+			for(i = vector2.size() - 1; i >= 0; i--)
+			{
+				String e_id = (String )vector2.get(i);
+				vector3 = loadAttributes(
+						"MAPKISELEMENTATTRIBUTES",
+						"MAP_KIS_ELEMENT_ID",
+						e_id);
+
+				for(ai = vector3.size() - 1; ai >= 0; ai--)
+					vector.add(vector3.get(ai));
+			}
+
+			vector2 = loadISMMapElementIds("MAPPATHELEMENTS", current_ism_map_id);
+			for(i = vector2.size() - 1; i >= 0; i--)
+			{
+				String e_id = (String )vector2.get(i);
+				vector3 = loadAttributes(
+						"MAPPATHELEMENTATTRIBUTES",
+						"MAP_PATH_ELEMENT_ID",
+						e_id);
+
+				for(ai = vector3.size() - 1; ai >= 0; ai--)
+					vector.add(vector3.get(ai));
+			}
+
+		}
+
+//		attributes = new ElementAttribute_Transferable[vector.size()];
+//		vector.copyInto(attributes);
+
+//		attrseq.value = attributes;
+
+		return Constants.ERROR_NO_ERROR;
+
+	}
+
+	static public int loadAttributeTypes(
+			ElementAttributeTypeSeq_TransferableHolder atypeseq)
+	{
+		String It_id = "";
+		String It_name = "";
+		String It_value_type_id = "";
+		String It_default_value = "";
+
+		boolean It_is_editable = true;
+		boolean It_is_visible = true;
+
+		long It_modified = 0;
+
+		Vector vector = new Vector();
+
+		ElementAttributeType_Transferable ch_t;
+		ElementAttributeType_Transferable[] ch_ts;
+		ElementAttributeTypeIterator chIt = null;
+		Vector vector2;
+
+		try
+		{
+			#sql chIt = { select
+						ID,
+						NAME,
+						VALUE_TYPE,
+						DEFAULT_VALUE,
+						IS_EDITABLE,
+						IS_VISIBLE,
+						MODIFIED
+					from AMFICOM.ELEMENTATTRIBUTETYPES
+			};
+
+			while (chIt.next())
+			{
+				try { It_id = chIt.id(); }
+				catch(SQLException e) { }
+				if(It_id == null) It_id = "";
+				try { It_name = chIt.name(); }
+				catch(SQLException e) { }
+				if(It_name == null) It_name = "";
+				try { It_value_type_id = chIt.value_type(); }
+				catch(SQLException e) { }
+				if(It_value_type_id == null) It_value_type_id = "";
+				try { It_default_value = chIt.default_value(); }
+				catch(SQLException e) { }
+				if(It_default_value == null) It_default_value = "";
+				try { It_is_editable = (chIt.is_editable() == 1)? true : false; }
+				catch(SQLException e) { }
+				try { It_is_visible = (chIt.is_visible() == 1)? true : false; }
+				catch(SQLException e) { }
+				try { It_modified = chIt.modified().getTime(); }
+				catch(SQLException e) { }
+
+				ch_t = new ElementAttributeType_Transferable(
+					It_id,
+					It_name,
+					It_value_type_id,
+					It_default_value,
+					It_is_editable,
+					It_is_visible,
+					It_modified);
+
+				vector.add(ch_t);
+			}// while(chIt)
+			chIt.close();
+			ch_ts = new ElementAttributeType_Transferable[vector.size()];
+			vector.copyInto(ch_ts);
+			atypeseq.value = ch_ts;
+
+		}
+		catch(SQLException e)
+		{
+			if(chIt != null) try {
+			chIt.close();
+			}catch(Exception exe) {}
+			System.out.println("error loading attribute types: " + e.getMessage());
+			e.printStackTrace();
+			return Constants.ERROR_LOADING;
+		}
+		finally
+		{
+			try {
+				chIt.close();
+			}catch(Exception exe) {}
+		}
+		
+		return Constants.ERROR_NO_ERROR;
+	}
+
+	static public int loadAttributeTypes(
+			String[] ids,
+			ElementAttributeTypeSeq_TransferableHolder atypeseq)
+	{
+		String It_id = "";
+		String It_name = "";
+		String It_value_type_id = "";
+		String It_default_value = "";
+
+		boolean It_is_editable = true;
+		boolean It_is_visible = true;
+
+		long It_modified = 0;
+
+		Vector vector = new Vector();
+
+		ElementAttributeType_Transferable ch_t;
+		ElementAttributeType_Transferable[] ch_ts;
+		ElementAttributeTypeIterator chIt = null;
+		Vector vector2;
+
+		Vector loadvec = new Vector();
+		for(int i = 0; i < ids.length; i++)
+			loadvec.add(ids[i]);
+		try
+		{
+			#sql chIt = { select
+						ID,
+						NAME,
+						VALUE_TYPE,
+						DEFAULT_VALUE,
+						IS_EDITABLE,
+						IS_VISIBLE,
+						MODIFIED
+					from AMFICOM.ELEMENTATTRIBUTETYPES
+			};
+
+			while (chIt.next())
+			{
+				if(! loadvec.contains(chIt.id()))
+					continue;
+
+				try { It_id = chIt.id(); }
+				catch(SQLException e) { }
+				if(It_id == null) It_id = "";
+				try { It_name = chIt.name(); }
+				catch(SQLException e) { }
+				if(It_name == null) It_name = "";
+				try { It_value_type_id = chIt.value_type(); }
+				catch(SQLException e) { }
+				if(It_value_type_id == null) It_value_type_id = "";
+				try { It_default_value = chIt.default_value(); }
+				catch(SQLException e) { }
+				if(It_default_value == null) It_default_value = "";
+				try { It_is_editable = (chIt.is_editable() == 1)? true : false; }
+				catch(SQLException e) { }
+				try { It_is_visible = (chIt.is_visible() == 1)? true : false; }
+				catch(SQLException e) { }
+				try { It_modified = chIt.modified().getTime(); }
+				catch(SQLException e) { }
+
+				ch_t = new ElementAttributeType_Transferable(
+					It_id,
+					It_name,
+					It_value_type_id,
+					It_default_value,
+					It_is_editable,
+					It_is_visible,
+					It_modified);
+
+				vector.add(ch_t);
+			}// while(chIt)
+			chIt.close();
+			ch_ts = new ElementAttributeType_Transferable[vector.size()];
+			vector.copyInto(ch_ts);
+			atypeseq.value = ch_ts;
+
+		}
+		catch(SQLException e)
+		{
+			if(chIt != null) try {
+			chIt.close();
+			}catch(Exception exe) {}
+			System.out.println("error loading attribute types: " + e.getMessage());
+			e.printStackTrace();
+			return Constants.ERROR_LOADING;
+		}
+		finally
+		{
+			try {
+				chIt.close();
+			}catch(Exception exe) {}
+		}
+		
+		return Constants.ERROR_NO_ERROR;
+	}
+
+	#sql public static iterator IdIterator ( String id );
+	#sql public static iterator ElementAttributeIterator (
+		String id,
+		String attribute_type_id,
+		String value,
+		int is_editable,
+		int is_visible );
+
+	#sql public static iterator ElementAttributeTypeIterator (
+		String id,
+		String name,
+		String value_type,
+		String default_value,
+		int is_editable,
+		int is_visible,
+		Timestamp modified );
+}
+

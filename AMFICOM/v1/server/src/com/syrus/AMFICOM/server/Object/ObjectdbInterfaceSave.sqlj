@@ -1,0 +1,467 @@
+package com.syrus.AMFICOM.server.Object;
+
+import sqlj.runtime.*;
+import sqlj.runtime.ref.*;
+import java.sql.*;
+
+import oracle.sql.*;
+
+import java.util.Vector;
+
+import com.syrus.io.*;
+import com.syrus.util.*;
+import com.syrus.util.database.*;
+
+import com.syrus.AMFICOM.CORBA.*;
+import com.syrus.AMFICOM.CORBA.Admin.*;
+import com.syrus.AMFICOM.CORBA.Resource.*;
+
+import com.syrus.AMFICOM.server.*;
+
+public class ObjectdbInterfaceSave
+{
+	protected ObjectdbInterfaceSave()
+	{
+	}
+
+	static public int saveObjectPermission(ObjectPermissionAttributes_Transferable opa)
+	{
+		try
+		{
+			#sql
+			{
+				insert into AMFICOM.OBJECTPERMISSIONS(
+						ID,
+						RWX,
+						OWNER_ID,
+						NAME,
+						CODENAME,
+
+						CREATED,
+						CREATED_BY,
+						MODIFIED,
+						MODIFIED_BY,
+
+						WHYREJECTED)
+					values(
+						:(opa.id),
+						:(opa.rwx),
+						:(opa.owner_id),
+						:(opa.name),
+						:(opa.codename),
+
+						SYSDATE,
+						:(opa.owner_id),
+						SYSDATE,
+						:(opa.owner_id),
+
+						:(opa.whyRejected) )
+			};
+			#sql { commit };
+		}
+		catch(SQLException e)
+		{
+			System.out.println("exec exists - updating...");
+			try
+			{
+				#sql
+				{
+					update AMFICOM.OBJECTPERMISSIONS set
+						RWX = :(opa.rwx),
+						OWNER_ID = :(opa.owner_id),
+						NAME = :(opa.name),
+						CODENAME = :(opa.codename),
+
+						MODIFIED = SYSDATE,
+						MODIFIED_BY = :(opa.modified_by),
+
+						WHYREJECTED = :(opa.whyRejected)
+					where ID = :(opa.id)
+				};
+				#sql { commit };
+			}
+			catch(SQLException ex)
+			{
+				System.out.println("could not save exec: " + ex.getMessage());
+				ex.printStackTrace();
+				return Constants.ERROR_SAVING;
+			}
+		}
+		try
+		{
+			#sql {
+				delete from AMFICOM.OBJECTPERMISSIONGROUPS
+					where OBJECT_PERMISSION_ID = :(opa.id)
+			};
+			for(int j = opa.group_ids.length - 1; j >= 0; j--)
+			{
+				String id_v = ResourcedbInterface.getUId("operatorgrouplink");
+				#sql
+				{ insert into AMFICOM.OBJECTPERMISSIONGROUPS(ID, OBJECT_PERMISSION_ID, GROUP_ID)
+					values(:id_v, :(opa.id), :(opa.group_ids[j]) )
+				};
+			}
+			#sql { commit };
+		}
+		catch(SQLException e)
+		{
+			System.out.println("error generating exec-group link: " + e.getMessage());
+			e.printStackTrace();
+		}
+		catch(Exception ex)
+		{
+			System.out.println("error generating exec-group link: " + ex.getMessage());
+		}
+		try
+		{
+			#sql {
+				delete from AMFICOM.OBJECTPERMISSIONCATEGORIES
+					where OBJECT_PERMISSION_ID = :(opa.id)
+			};
+			for(int j = opa.category_ids.length - 1; j >= 0; j--)
+			{
+				String id_v = ResourcedbInterface.getUId("operatorcategorylink");
+				#sql
+				{ insert into AMFICOM.OBJECTPERMISSIONCATEGORIES(ID, OBJECT_PERMISSION_ID, CATEGORY_ID)
+					values(:id_v, :(opa.id), :(opa.category_ids[j]) )
+				};
+			}
+			#sql { commit };
+		}
+		catch(SQLException e)
+		{
+			System.out.println("error generating exec category: " + e.getMessage());
+			e.printStackTrace();
+		}
+		catch(Exception ex)
+		{
+			System.out.println("error generating exec category: " + ex.getMessage());
+		}
+		return Constants.ERROR_NO_ERROR;
+	}
+
+	static public int saveDomainLinks(String domain_id, String[] ids)
+	{
+		try
+		{
+			#sql {
+				delete from AMFICOM.DOMAINLINKS
+					where DOMAIN_ID = :domain_id
+			};
+			for(int j = ids.length - 1; j >= 0; j--)
+			{
+				#sql
+				{ insert into AMFICOM.DOMAINLINKS(DOMAIN_ID, INNER_DOMAIN_ID)
+					values(:domain_id, :(ids[j]) )
+				};
+			}
+			#sql { commit };
+		}
+		catch(SQLException e)
+		{
+			System.out.println("error saveDomainLinks: " + e.getMessage());
+			e.printStackTrace();
+		}
+		catch(Exception ex)
+		{
+			System.out.println("error saveDomainLinks: " + ex.getMessage());
+		}
+		return Constants.ERROR_NO_ERROR;
+	}
+
+	static public int saveDomains(Domain_Transferable[] domainseq)
+	{
+		int i;
+		int len;
+
+		len = domainseq.length;
+		for (i = 0; i < len; i++)
+		{
+			System.out.println("save domain id " + domainseq[i].id +
+					" name " + domainseq[i].name +
+					" codename " + domainseq[i].codename +
+					" descr " + domainseq[i].description +
+					" domain " + domainseq[i].domain_id +
+					" owner " + domainseq[i].owner_id);
+			try
+			{
+				#sql
+				{
+					insert into AMFICOM.DOMAINS(
+							ID,
+							NAME,
+							CODENAME,
+							DESCRIPTION,
+							CREATED,
+							CREATED_BY,
+							MODIFIED,
+							MODIFIED_BY,
+							OWNER_ID,
+							DOMAIN_ID)
+					values(
+						:(domainseq[i].id),
+						:(domainseq[i].name),
+						:(domainseq[i].codename),
+						:(domainseq[i].description),
+						SYSDATE,
+						:(domainseq[i].owner_id),
+						SYSDATE,
+						:(domainseq[i].owner_id),
+						:(domainseq[i].owner_id),
+						:(domainseq[i].domain_id) )
+				};
+				#sql { commit };
+
+				String id2 = ResourcedbInterface.getUId("resultset");
+				Timestamp active_start_time = new Timestamp(System.currentTimeMillis());
+
+				long active_period = 2592000000L;
+				Timestamp active_end_time = new Timestamp(active_start_time.getTime() + active_period);
+
+				#sql { insert into resultsets(
+						ID,
+						NAME,
+						COMMENTS,
+						DOMAIN_ID,
+						ACTIVE,
+						PERIOD,
+						CREATED,
+						MODIFIED,
+						START_TIME,
+						END_TIME)
+					values(
+						:id2,
+						:id2,
+						'',
+						:(domainseq[i].id),
+						1,
+						:active_period,
+						SYSDATE,
+						SYSDATE,
+						:active_start_time,
+						:active_end_time)
+				};
+				#sql { commit };
+			}
+			catch(SQLException e)
+			{
+				System.out.println("domain exists - updating...");
+				try
+				{
+					#sql
+					{
+						update AMFICOM.DOMAINS set
+								NAME = :(domainseq[i].name),
+								CODENAME = :(domainseq[i].codename),
+								DESCRIPTION = :(domainseq[i].description),
+								MODIFIED = SYSDATE,
+								MODIFIED_BY = :(domainseq[i].modified_by),
+								OWNER_ID = :(domainseq[i].owner_id),
+								DOMAIN_ID = :(domainseq[i].domain_id)
+							where ID = :(domainseq[i].id)
+					};
+					#sql { commit };
+				}
+				catch(SQLException ex)
+				{
+					System.out.println("could not save domain: " + ex.getMessage());
+					e.printStackTrace();
+					return Constants.ERROR_SAVING;
+				}
+			}
+			saveDomainLinks(domainseq[i].id, domainseq[i].domain_ids);
+			saveObjectPermission(domainseq[i].permissions);
+			try
+			{
+				#sql { update AMFICOM.DOMAINS
+					set OBJECT_PERMISSION_ID = :(domainseq[i].permissions.id)
+					where ID = :(domainseq[i].id)
+				};
+				#sql { commit };
+			}
+			catch(SQLException e)
+			{
+			}
+		}
+		return Constants.ERROR_NO_ERROR;
+	}
+
+	static public int saveExecs(CommandPermissionAttributes_Transferable[] execseq)
+	{
+		int i;
+		int len;
+
+		len = execseq.length;
+		for (i = 0; i < len; i++)
+		{
+			try
+			{
+				#sql
+				{
+					insert into AMFICOM.EXECS(
+							ID,
+							RWX,
+							OWNER_ID,
+							NAME,
+							CODENAME,
+
+							CREATED,
+							CREATED_BY,
+							MODIFIED,
+							MODIFIED_BY,
+
+							WHYREJECTED)
+						values(
+							:(execseq[i].id),
+							:(execseq[i].rwx),
+							:(execseq[i].owner_id),
+							:(execseq[i].name),
+							:(execseq[i].codename),
+
+							SYSDATE,
+							:(execseq[i].owner_id),
+							SYSDATE,
+							:(execseq[i].owner_id),
+
+							:(execseq[i].whyRejected) )
+				};
+				#sql { commit };
+			}
+			catch(SQLException e)
+			{
+				System.out.println("exec exists - updating...");
+				try
+				{
+					#sql
+					{
+						update AMFICOM.EXECS set
+							RWX = :(execseq[i].rwx),
+							OWNER_ID = :(execseq[i].owner_id),
+							NAME = :(execseq[i].name),
+							CODENAME = :(execseq[i].codename),
+
+							MODIFIED = SYSDATE,
+							MODIFIED_BY = :(execseq[i].modified_by),
+
+							WHYREJECTED = :(execseq[i].whyRejected)
+						where ID = :(execseq[i].id)
+					};
+					#sql { commit };
+				}
+				catch(SQLException ex)
+				{
+					System.out.println("could not save exec: " + ex.getMessage());
+					ex.printStackTrace();
+					return Constants.ERROR_SAVING;
+				}
+			}
+			try
+			{
+				#sql {
+					delete from AMFICOM.EXECGROUPS
+						where EXEC_ID = :(execseq[i].id)
+				};
+				for(int j = execseq[i].group_ids.length - 1; j >= 0; j--)
+				{
+					String id_v = ResourcedbInterface.getUId("operatorgrouplink");
+					#sql
+					{ insert into AMFICOM.EXECGROUPS(ID, EXEC_ID, GROUP_ID)
+						values(:id_v, :(execseq[i].id), :(execseq[i].group_ids[j]) )
+					};
+				}
+				#sql { commit };
+			}
+			catch(SQLException e)
+			{
+				System.out.println("error generating exec-group link: " + e.getMessage());
+				e.printStackTrace();
+			}
+			catch(Exception ex)
+			{
+				System.out.println("error generating exec-group link: " + ex.getMessage());
+			}
+			try
+			{
+				#sql {
+					delete from AMFICOM.EXECCATEGORIES
+						where EXEC_ID = :(execseq[i].id)
+				};
+				for(int j = execseq[i].category_ids.length - 1; j >= 0; j--)
+				{
+					String id_v = ResourcedbInterface.getUId("operatorcategorylink");
+					#sql
+					{ insert into AMFICOM.EXECCATEGORIES(ID, EXEC_ID, CATEGORY_ID)
+						values(:id_v, :(execseq[i].id), :(execseq[i].category_ids[j]) )
+					};
+				}
+				#sql { commit };
+			}
+			catch(SQLException e)
+			{
+				System.out.println("error generating exec category: " + e.getMessage());
+				e.printStackTrace();
+			}
+			catch(Exception ex)
+			{
+				System.out.println("error generating exec category: " + ex.getMessage());
+			}
+		}
+		return Constants.ERROR_NO_ERROR;
+	}
+
+	static public int saveUsers(User_Transferable[] userseq)
+	{
+		int i;
+		int len;
+
+		len = userseq.length;
+		for (i = 0; i < len; i++)
+		{
+			System.out.println("save user id (" + userseq[i].id + ") type (" + userseq[i].type + ") login (" + userseq[i].login + ") object_id (" + userseq[i].object_id + ")");
+			if(userseq[i].type.equals("operatorprofile"))
+			{
+				try
+				{
+					#sql
+					{
+						insert into AMFICOM.USERS(
+								ID,
+								LOGIN,
+								TYPE,
+								OPERATOR_ID)
+						values(
+							:(userseq[i].id),
+							:(userseq[i].login),
+							:(userseq[i].type),
+							:(userseq[i].object_id) )
+					};
+					#sql { commit };
+				}
+				catch(Exception e)
+				{
+					System.out.println("user exists - updating...");
+					try
+					{
+						#sql
+						{ update AMFICOM.USERS set
+								LOGIN = :(userseq[i].login),
+								TYPE = :(userseq[i].type),
+								OPERATOR_ID = :(userseq[i].object_id)
+							where Id = :(userseq[i].id)
+						};
+						#sql { commit };
+					}
+					catch(SQLException ex)
+					{
+						System.out.println("could not save user: " + ex.getMessage());
+						ex.printStackTrace();
+						return Constants.ERROR_SAVING;
+					}
+				}
+			}
+		}
+		return Constants.ERROR_NO_ERROR;
+	}
+
+}
+

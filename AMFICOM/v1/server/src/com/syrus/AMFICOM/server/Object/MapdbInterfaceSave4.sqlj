@@ -1,0 +1,385 @@
+
+// Copyright (c) Syrus Systems 2000 Syrus Systems
+package com.syrus.AMFICOM.server.Object;
+
+import sqlj.runtime.*;
+import sqlj.runtime.ref.*;
+import java.sql.*;
+import oracle.sql.*;
+import java.text.*;
+
+import java.util.Vector;
+
+import com.syrus.AMFICOM.CORBA.*;
+import com.syrus.AMFICOM.CORBA.Map.*;
+import com.syrus.AMFICOM.CORBA.Scheme.*;
+import com.syrus.AMFICOM.CORBA.Resource.*;
+
+import com.syrus.AMFICOM.server.*;
+
+public class MapdbInterfaceSave4 extends Object
+{
+	protected MapdbInterfaceSave4()
+	{
+	}
+
+	static public int saveJMaps(ISMMapContext_Transferable[] mapseq)
+	{
+		int i;
+		int j;
+		int len;
+		int count = 0;
+
+		String id = "";
+		len = mapseq.length;
+		for (i = 0; i < len; i++)
+		{
+			try
+			{
+				#sql {
+					select count(*) into :count from AMFICOM.ISMMAPCONTEXTS
+						where ID = :(mapseq[i].id)
+				};
+				if(count == 0)
+				{
+//					System.out.println("ism map " + mapseq[i].id + " not found in database");
+					throw new SQLException("do insert!");
+				}
+				System.out.println("update ism map " + mapseq[i].id);
+				try
+				{
+					#sql {
+						update AMFICOM.ISMMAPCONTEXTS
+							set
+								NAME = :(mapseq[i].name),
+								CODENAME = :(mapseq[i].codename),
+								DESCRIPTION = :(mapseq[i].description),
+								MODIFIED = SYSDATE,
+								MODIFIED_BY = :(mapseq[i].user_id),
+								DOMAIN_ID = :(mapseq[i].domain_id),
+								MAP_ID = :(mapseq[i].map_id),
+								OWNER_ID = :(mapseq[i].user_id)
+							where ID = :(mapseq[i].id)
+					};
+				}
+				catch(SQLException e)
+				{
+					System.out.println("error saVing ISM maps: " + e.getMessage());
+					e.printStackTrace();
+					return Constants.ERROR_UPDATING;
+				}
+				#sql { commit };
+			}
+			catch(SQLException e)
+			{
+				System.out.println("insert new ISM map " + mapseq[i].id);
+				try
+				{
+					#sql {
+						insert into AMFICOM.ISMMAPCONTEXTS(
+								ID,
+								NAME,
+								CODENAME,
+								DESCRIPTION,
+								CREATED,
+								CREATED_BY,
+								MODIFIED,
+								MODIFIED_BY,
+								DOMAIN_ID,
+								OWNER_ID,
+								MAP_ID)
+							values(
+								 :(mapseq[i].id),
+								 :(mapseq[i].name),
+								 :(mapseq[i].codename),
+								 :(mapseq[i].description),
+								 SYSDATE,
+								 :(mapseq[i].user_id),
+								 SYSDATE,
+								 :(mapseq[i].user_id),
+								 :(mapseq[i].domain_id),
+								 :(mapseq[i].user_id),
+								 :(mapseq[i].map_id) )
+					};
+					#sql { commit };
+				}
+				catch(SQLException ex)
+				{
+					System.out.println("error saVing ISM maps: " + ex.getMessage());
+					ex.printStackTrace();
+					return Constants.ERROR_SAVING;
+				}
+			}
+		}
+		return Constants.ERROR_NO_ERROR;
+	}
+
+	static public int saveJMapKISs(MapKISElement_Transferable[] kisseq)
+	{
+		int i;
+		int j;
+		int len;
+		int len2;
+		String id = "";
+		int count = 0;
+
+		len = kisseq.length;
+		for (i = 0; i < len; i++)
+		{
+			try
+			{
+				#sql {
+					select count(*) into :count from AMFICOM.MAPKISELEMENTS
+						where ID = :(kisseq[i].id)
+				};
+				if(count == 0)
+				{
+//					System.out.println("kis " + kisseq[i].id + " not found in database");
+					throw new SQLException("do insert!");
+				}
+				System.out.println("update KIS element " + kisseq[i].id);
+/*				
+				try
+				{
+					#sql {
+						update AMFICOM.MAPKISELEMENTS
+							set
+								SCHEME_KIS_ELEMENT_ID = :(kisseq[i].scheme_kis_element_id),
+								OWNER_ID = :(kisseq[i].owner_id),
+								LATITUDE = :(kisseq[i].latitude),
+								NAME = :(kisseq[i].name),
+								SYMBOL_ID = :(kisseq[i].symbol_id),
+								TYPE_ID = :(kisseq[i].type_id),
+								DESCRIPTION = :(kisseq[i].description),
+								LONGITUDE = :(kisseq[i].longitude),
+								CODENAME = :(kisseq[i].codename),
+								ID = :(kisseq[i].id),
+								MAP_ID = :(kisseq[i].map_id),
+								ISM_MAP_ID = :(kisseq[i].ism_map_id),
+								KIS_ID = :(kisseq[i].KIS_id),
+								KIS_TYPE_ID = :(kisseq[i].KIS_type_id)
+							where ID = :(kisseq[i].id)
+					};
+					#sql { commit };
+				}
+				catch(SQLException e)
+				{
+					System.out.println("error saVing KIS elements: " + e.getMessage());
+					e.printStackTrace();
+					return Constants.ERROR_UPDATING;
+				}
+*/
+			}
+			catch(SQLException e)
+			{
+				System.out.println("insert new KIS element " + kisseq[i].id);
+/*
+				try
+				{
+					#sql {
+						insert into AMFICOM.MAPKISELEMENTS(
+								SCHEME_KIS_ELEMENT_ID,
+								OWNER_ID,
+								LATITUDE,
+								NAME,
+								SYMBOL_ID,
+								TYPE_ID,
+								DESCRIPTION,
+								LONGITUDE,
+								CODENAME,
+								ID,
+								MAP_ID,
+								ISM_MAP_ID,
+								KIS_ID,
+								KIS_TYPE_ID)
+							values(
+								:(kisseq[i].scheme_kis_element_id),
+								:(kisseq[i].owner_id),
+								:(kisseq[i].latitude),
+								:(kisseq[i].name),
+								:(kisseq[i].symbol_id),
+								:(kisseq[i].type_id),
+								:(kisseq[i].description),
+								:(kisseq[i].longitude),
+								:(kisseq[i].codename),
+								:(kisseq[i].id),
+								:(kisseq[i].map_id),
+								:(kisseq[i].ism_map_id),
+								:(kisseq[i].KIS_id),
+								:(kisseq[i].KIS_type_id) )
+					};
+					#sql { commit };
+				}
+				catch(SQLException ex)
+				{
+					System.out.println("error saVing KIS elements: " + ex.getMessage());
+					ex.printStackTrace();
+					return Constants.ERROR_SAVING;
+				}
+*/
+			}
+			MapdbInterfaceSave3.saveAttributes(
+					"MAPKISELEMENTATTRIBUTES",
+					"MAP_KIS_ELEMENT_ID",
+					kisseq[i].id,
+					kisseq[i].attributes);
+		}
+		return Constants.ERROR_NO_ERROR;
+	}
+
+	static public int saveJMapPaths(MapPathElement_Transferable[] pathseq)
+	{
+		int i;
+		int j;
+		int len;
+		int len2;
+		int count = 0;
+
+		String id = "";
+		len = pathseq.length;
+		for (i = 0; i < len; i++)
+		{
+			try
+			{
+				#sql {
+					select count(*) into :count from AMFICOM.MAPPATHELEMENTS
+						where ID = :(pathseq[i].id)
+				};
+				if(count == 0)
+				{
+//					System.out.println("path " + pathseq[i].id + " not found in database");
+					throw new SQLException("do insert!");
+				}
+				System.out.println("update path " + pathseq[i].id);
+				try
+				{
+					#sql {
+						update AMFICOM.MAPPATHELEMENTS
+							set
+								DESCRIPTION = :(pathseq[i].description),
+								END_NODE_ID = :(pathseq[i].endNode_id),
+								START_NODE_ID = :(pathseq[i].startNode_id),
+								NAME = :(pathseq[i].name),
+								OWNER_ID = :(pathseq[i].owner_id),
+								TYPE_ID = :(pathseq[i].type_id),
+								MAP_ID = :(pathseq[i].map_id),
+								ISM_MAP_ID = :(pathseq[i].ism_map_id),
+								PATH_ID = :(pathseq[i].path_id)
+							where ID = :(pathseq[i].id)
+					};
+					#sql { commit };
+				}
+				catch(SQLException e)
+				{
+					System.out.println("error saVing paths: " + e.getMessage());
+					e.printStackTrace();
+					return Constants.ERROR_UPDATING;
+				}
+			}
+			catch(SQLException e)
+			{
+				System.out.println("insert new path " + pathseq[i].id);
+				try
+				{
+					#sql {
+						insert into AMFICOM.MAPPATHELEMENTS(
+								DESCRIPTION,
+								ID,
+								END_NODE_ID,
+								START_NODE_ID,
+								NAME,
+								OWNER_ID,
+								TYPE_ID,
+								MAP_ID,
+								ISM_MAP_ID,
+								PATH_ID)
+							values(
+								:(pathseq[i].description),
+								:(pathseq[i].id),
+								:(pathseq[i].endNode_id),
+								:(pathseq[i].startNode_id),
+								:(pathseq[i].name),
+								:(pathseq[i].owner_id),
+								:(pathseq[i].type_id),
+								:(pathseq[i].map_id),
+								:(pathseq[i].ism_map_id),
+								:(pathseq[i].path_id) )
+					};
+					#sql { commit };
+				}
+				catch(SQLException ex)
+				{
+					System.out.println("error saVing paths: " + ex.getMessage());
+					ex.printStackTrace();
+					return Constants.ERROR_SAVING;
+				}
+			}
+			MapdbInterfaceSave3.saveAttributes(
+					"MAPPATHELEMENTATTRIBUTES",
+					"MAP_PATH_ELEMENT_ID",
+					pathseq[i].id,
+					pathseq[i].attributes);
+
+			len2 = pathseq[i].physicalLink_ids.length;
+			for(j = 0; j < len2; j++)
+			{
+				String pl_id;
+				try
+				{
+					#sql {
+						select ID into :pl_id from AMFICOM.MAPPATHLINKS
+							where PATH_ID = :(pathseq[i].id)
+								and PHYSICAL_LINK_ID = :(pathseq[i].physicalLink_ids[j])
+					};
+					System.out.println("update path link " + pathseq[i].id);
+					try
+					{
+						#sql {
+							update AMFICOM.MAPPATHLINKS
+								set
+									PHYSICAL_LINK_ID = :(pathseq[i].physicalLink_ids[j])
+								where ID = :pl_id
+						};
+						#sql { commit };
+					}
+					catch(SQLException exx)
+					{
+						System.out.println("error saVing path link: " + exx.getMessage());
+						exx.printStackTrace();
+					}
+				}
+				catch(SQLException ex)
+				{
+					System.out.println("insert path link: " + ex.getMessage());
+					try
+					{
+						String mpl_s = ResourcedbInterface.getUId("mappathlink");
+						#sql {
+							insert into AMFICOM.MAPPATHLINKS(
+									ID,
+									PATH_ID,
+									PHYSICAL_LINK_ID)
+								values(
+									:mpl_s,
+									:(pathseq[i].id),
+									:(pathseq[i].physicalLink_ids[j]) )
+						};
+						#sql { commit };
+					}
+					catch(SQLException exx)
+					{
+						System.out.println("error saVing path link: " + exx.getMessage());
+						exx.printStackTrace();
+					}
+					catch(Exception exxx)
+					{
+						System.out.println("error generating path link: " + exxx.getMessage());
+					}
+				}
+			}//for (path links)
+		}// for (paths)
+		return Constants.ERROR_NO_ERROR;
+	}
+
+}
+
