@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectCondition.java,v 1.1 2004/09/30 14:34:56 bob Exp $
+ * $Id: StorableObjectCondition.java,v 1.2 2004/10/03 12:44:19 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,16 +9,17 @@ package com.syrus.AMFICOM.general;
 
 
 /**
- * @version $Revision: 1.1 $, $Date: 2004/09/30 14:34:56 $
+ * @version $Revision: 1.2 $, $Date: 2004/10/03 12:44:19 $
  * @author $Author: bob $
  * @module general_v1
  */
 public interface StorableObjectCondition {
 
-	public boolean isConditionTrue(Object object) throws ApplicationException;	
+	boolean isConditionTrue(Object object) throws ApplicationException;	
 
-	public Short getEntityCode();
+	Short getEntityCode();
 	
-	public void setEntityCode(Short entityCode);
+	void setEntityCode(Short entityCode);
 	
+	Object getTransferable();
 }
