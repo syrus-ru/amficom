@@ -9,6 +9,7 @@ import com.syrus.AMFICOM.Client.General.Lang.LangModelOptimize;
 import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.Resource.Map.*;
 import com.syrus.AMFICOM.Client.General.Command.Optimize.*;
+import javax.swing.table.TableModel;
 
 // это окно,  в котором отображаются некоторые свойства выбранного на карте элемента
 // оборудования (в основном по поводу размещения в нём КИС)
@@ -72,8 +73,8 @@ public class NodesOptimizePropertiesFrame extends JInternalFrame implements Oper
 		}
 	}
 	//-------------------------------------------------------------------------------------
-  public OptimizeElementPanel getNodesOptimizePanel()
+  public TableModel getTableForReport()
   {
-    return panel;
+    return panel.getTableModel();
   }
 }

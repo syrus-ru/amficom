@@ -14,6 +14,7 @@ import com.syrus.AMFICOM.Client.General.Report.ObjectsReport;
 import com.syrus.AMFICOM.Client.General.Report.ReportResultsTablePanel;
 import com.syrus.AMFICOM.Client.General.Report.RenderingObject;
 import com.syrus.AMFICOM.Client.General.Report.CreateReportException;
+import com.syrus.AMFICOM.Client.General.Report.ObjectResourceDivList;
 
 import com.syrus.AMFICOM.Client.Resource.Scheme.Scheme;
 import com.syrus.AMFICOM.Client.Resource.Pool;
@@ -234,8 +235,7 @@ public class OptimizationReportModel extends APOReportModel
 		if (rp.field.equals(SchemeReportModel.scheme))
 			return -1;
 		else if (   rp.field.equals(MapReportModel.rep_topology)
-              ||rp.field.equals(OptimizationReportModel.iterationsHistory)
-              ||rp.field.equals(OptimizationReportModel.nodesOptimizeProperties))              
+              ||rp.field.equals(OptimizationReportModel.iterationsHistory))
 			return 0;
 
 		return 1;
@@ -322,10 +322,21 @@ public class OptimizationReportModel extends APOReportModel
 					rt.findROforReport(rp));
 		}
 
-		else if (rp.field.equals(OptimizationReportModel.nodesOptimizeProperties)
-           ||rp.field.equals(OptimizationReportModel.iterationsHistory))
+		else if (rp.field.equals(OptimizationReportModel.nodesOptimizeProperties))
 		{
-			returnValue = new EvaluationGraphPanel(rt.findROforReport(rp));
+      ObjectResourceDivList ordl = new ObjectResourceDivList(rp,divisionsNumber);
+			returnValue = new ReportResultsTablePanel(
+					ordl.columnModel,
+					ordl.tableModel,
+					rt.findROforReport(rp));
+		}
+
+		else if (rp.field.equals(OptimizationReportModel.iterationsHistory))
+		{
+			returnValue = (JComponent)rp.getReserve();
+      RenderingObject ro = rt.findROforReport(rp);
+      returnValue.setSize(ro.width,ro.height);
+      returnValue.setPreferredSize(returnValue.getSize());
 		}
 
 		return returnValue;

@@ -11,6 +11,7 @@ import com.syrus.AMFICOM.Client.Optimize.UI.*;
 import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.Resource.Scheme.*;
 import com.syrus.AMFICOM.Client.General.Command.Optimize.*;
+import javax.swing.table.TableModel;
 
 // панель, на которой находится jComboBox со списком
 // видов элементов и таблица элементов с полями "Название" и "Наличие КИС"
@@ -157,4 +158,8 @@ public class OptimizeElementPanel extends JPanel implements OperationListener
     }
   }
   //--------------------------------------------------------------------------------------------------------------
+  public TableModel getTableModel()
+  {
+    return tablePane.getTable().getModel();
+  }
 }

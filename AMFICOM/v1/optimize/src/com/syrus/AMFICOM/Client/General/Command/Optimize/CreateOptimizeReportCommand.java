@@ -77,7 +77,7 @@ public class CreateOptimizeReportCommand extends VoidCommand
     if (mainFrame.nodesModeFrame != null)                
       aReport.addRecord(
         orm.getLangForField(OptimizationReportModel.nodesOptimizeProperties),
-        mainFrame.nodesModeFrame.getNodesOptimizePanel());
+        mainFrame.nodesModeFrame.getTableForReport());
       
 		new OpenTypedTemplateCommand(aContext, ReportTemplate.rtt_Optimization,
 																 aReport).execute();
