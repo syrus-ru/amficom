@@ -104,12 +104,12 @@ public class MeasurementSetup extends StorableObject {
 		//super(PoolId.getId(ObjectEntities.MS_ENTITY));
 		super(id);
 		setParameterSet(parameterSet);
-		setCriteriaSet(criteriaSet);
-		setThresholdSet(thresholdSet);
-		setEtalon(etalon);
-		setDescription(description);
-		setMeasurementDuration(measurementDuration);
-		setMonitoredElementIds(monitoredElementIds);
+		this.criteriaSet = criteriaSet;
+		this.thresholdSet = thresholdSet;
+		this.etalon = etalon;
+		this.description = description;
+		this.measurementDuration = measurementDuration;
+		this.monitoredElementIds = monitoredElementIds;
 	}
 
 	public boolean isAttachedToMonitoredElement(Identifier monitoredElementId) {

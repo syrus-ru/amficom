@@ -65,7 +65,7 @@ public class MeasurementType extends ActionType {
 		//super(PoolId.getId(ObjectEntities.MEASUREMENTTYPE_ENTITY));
 		super(id);
 		setInParameterTypes(inParameterTypes);
-		setOutParameterTypes(outParameterTypes);
+		this.outParameterTypes = outParameterTypes;
 	}
 
 	public Object getTransferable() {

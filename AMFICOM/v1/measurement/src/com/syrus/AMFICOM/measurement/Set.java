@@ -83,9 +83,9 @@ public class Set extends StorableObject {
 		//super(PoolId.getId(ObjectEntities.SET_ENTITY));
 		super(id);
 		setSort(sort);
-		setDescription(description);
-		setParameters((SetParameter[])parameters.toArray());
-		setMonitoredElementIds(monitoredElementIds);
+		this.description = description;
+		this.parameters = (SetParameter[])parameters.toArray();
+		this.monitoredElementIds = monitoredElementIds;
 		
 	}
 

@@ -74,9 +74,9 @@ public class EvaluationType extends ActionType {
 		super(id);
 		//super(PoolId.getId(ObjectEntities.EVALUATIONTYPE_ENTITY));
 		setInParameterTypes(inParameterTypes);
-		setThresholdParameterTypes(thresholdParameterTypes);
-		setEtalonParameterTypes(etalonParameterTypes);
-		setOutParameterTypes(outParameterTypes);
+		this.thresholdParameterTypes = thresholdParameterTypes;
+		this.etalonParameterTypes = etalonParameterTypes;
+		this.outParameterTypes = outParameterTypes;
 	}
 
 	public Object getTransferable() {

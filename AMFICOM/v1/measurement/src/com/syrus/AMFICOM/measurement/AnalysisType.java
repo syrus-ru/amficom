@@ -65,8 +65,8 @@ public class AnalysisType extends ActionType {
 		super(id);
 		//super(PoolId.getId(ObjectEntities.ANALYSISTYPE_ENTITY));
 		setInParameterTypes(inParameterTypes);
-		setCriteriaParameterTypes(criteriaParameterTypes);
-		setOutParameterTypes(outParameterTypes);
+		this.criteriaParameterTypes = criteriaParameterTypes;		
+		this.outParameterTypes = outParameterTypes;
 	}
 
 	public Object getTransferable() {
