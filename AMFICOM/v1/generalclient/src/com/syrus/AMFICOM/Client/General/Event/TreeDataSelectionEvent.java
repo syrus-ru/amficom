@@ -13,6 +13,9 @@ public class TreeDataSelectionEvent extends OperationEvent
 	Collection collection;
 
 	public Object param = null;
+	/**
+	 * @deprecated use use getter accessor for this field
+	 */
 	public Object selectedObject = null;
 
 	public static final String type = "treedataselectionevent";
@@ -50,6 +53,9 @@ public class TreeDataSelectionEvent extends OperationEvent
 	 */
 	public DataSet getDataSet()
 	{
+		if (this.dataSet==null){
+			this.dataSet = new DataSet(this.collection.iterator());
+		}
 		return this.dataSet;
 	}
 	
@@ -65,5 +71,11 @@ public class TreeDataSelectionEvent extends OperationEvent
 	public int getSelectionNumber()
 	{
 		return this.selected;
+	}
+	/**
+	 * @return Returns the selectedObject.
+	 */
+	public Object getSelectedObject() {
+		return this.selectedObject;
 	}
 }

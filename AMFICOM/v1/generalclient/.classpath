@@ -2,16 +2,22 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="var" path="ORACLE_HOME/lib/jdev-rt.zip"/>
 	<classpathentry kind="var" path="AMFICOM_HOME/lib/administrate.jar"/>
 	<classpathentry kind="var" path="AMFICOM_HOME/lib/util.jar"/>
-	<classpathentry kind="var" path="ORACLE_HOME/javavm/lib/aurora_client_orbdep.jar"/>
-	<classpathentry kind="var" path="ORACLE_HOME/vbroker4/lib/vbjorb.jar"/>
 	<classpathentry kind="src" path="/idl_v1"/>
-	<classpathentry kind="var" path="AMFICOM_HOME/lib/jfreechartK.jar"/>
-	<classpathentry kind="var" path="AMFICOM_HOME/lib/corba_portable.jar"/>
 	<classpathentry kind="src" path="/filter_v1"/>
-	<classpathentry kind="var" path="AMFICOM_HOME/lib/kunststoff.jar"/>
-	<classpathentry kind="var" path="ORACLE_HOME/javavm/lib/aurora_client_orbindep.jar"/>
+	<classpathentry kind="var" path="AMFICOM_HOME/lib/external/activation.jar"/>
+	<classpathentry kind="var" path="AMFICOM_HOME/lib/external/aurora_client_orbdep.jar"/>
+	<classpathentry kind="var" path="AMFICOM_HOME/lib/external/aurora_client_orbindep.jar"/>
+	<classpathentry kind="var" path="AMFICOM_HOME/lib/external/jfreechartK.jar"/>
+	<classpathentry kind="var" path="AMFICOM_HOME/lib/external/jgraphpad.jar"/>
+	<classpathentry kind="var" path="AMFICOM_HOME/lib/external/junit.jar"/>
+	<classpathentry kind="var" path="AMFICOM_HOME/lib/external/kunststoff.jar"/>
+	<classpathentry kind="var" path="AMFICOM_HOME/lib/external/layout.jar"/>
+	<classpathentry kind="var" path="AMFICOM_HOME/lib/external/mail.jar"/>
+	<classpathentry kind="var" path="AMFICOM_HOME/lib/external/ofx.spatialfx.jar"/>
+	<classpathentry kind="var" path="AMFICOM_HOME/lib/external/vbjapp.jar"/>
+	<classpathentry kind="var" path="AMFICOM_HOME/lib/external/vbjorb.jar"/>
+	<classpathentry kind="var" path="AMFICOM_HOME/lib/corbaportable-common.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

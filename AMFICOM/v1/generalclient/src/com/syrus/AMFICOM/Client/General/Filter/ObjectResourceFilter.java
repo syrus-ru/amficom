@@ -46,7 +46,7 @@ public abstract class ObjectResourceFilter implements Filter
 
 	public String getId()
 	{
-		return id;
+		return this.id;
 	}
 
 	public boolean expression(FilterExpressionInterface expr, Object or)
@@ -76,33 +76,33 @@ public abstract class ObjectResourceFilter implements Filter
 
 	public void addCriterium(FilterExpressionInterface expr)
 	{
-		expr.setListID(lastListID++);
-		logicScheme.addFilterExpression(expr);
+		expr.setListID(this.lastListID++);
+		this.logicScheme.addFilterExpression(expr);
 //		criteria.add(expr);
 	}
 
 	public void removeCriterium(FilterExpressionInterface expr)
 	{
-		lastListID--;
-		logicScheme.removeFilterExpression(expr);
+		this.lastListID--;
+		this.logicScheme.removeFilterExpression(expr);
 //		criteria.remove(expr);
 	}
 
 	public void replaceCriterium(FilterExpressionInterface fe_old, FilterExpressionInterface fe_new)
 	{
-		logicScheme.replaceFilterExpression(fe_old, fe_new);
+		this.logicScheme.replaceFilterExpression(fe_old, fe_new);
 	}
 
 	public void clearCriteria()
 	{
-		lastListID = 1;
-		logicScheme.clearFilterExpressions();
+		this.lastListID = 1;
+		this.logicScheme.clearFilterExpressions();
 //		criteria = new Vector();
 	}
 
 	public Vector getCriteria()
 	{
-		return logicScheme.getFilterExpressions();
+		return this.logicScheme.getFilterExpressions();
 //		return criteria;
 	}
 
@@ -112,7 +112,7 @@ public abstract class ObjectResourceFilter implements Filter
 		for(Enumeration e = dataSet.elements(); e.hasMoreElements();)
 		{
 			ObjectResource or = (ObjectResource )e.nextElement();
-			if (logicScheme.passesAllConstraints(or) == false)
+			if (this.logicScheme.passesAllConstraints(or) == false)
 				ds.remove(or);
 /*
 			for(Enumeration e2 = criteria.elements(); e2.hasMoreElements();)
@@ -133,7 +133,7 @@ public abstract class ObjectResourceFilter implements Filter
 	public void filtrate(Collection col){		
 		for(Iterator it=col.iterator();it.hasNext();){
 			ObjectResource or = (ObjectResource)it.next();
-			if (this.logicScheme.passesAllConstraints(or) == false){
+			if (!this.logicScheme.passesAllConstraints(or)){
 				col.remove(or);
 				it=col.iterator();
 			}
@@ -149,7 +149,7 @@ public abstract class ObjectResourceFilter implements Filter
 		output.clear();
 		for(Iterator it=input.iterator();it.hasNext();){
 			ObjectResource or = (ObjectResource)it.next();
-			if (this.logicScheme.passesAllConstraints(or) == false){
+			if (this.logicScheme.passesAllConstraints(or)){
 				output.add(or);
 			}
 		}	
@@ -173,9 +173,10 @@ public abstract class ObjectResourceFilter implements Filter
 	 */
 	public void filtrate(Map map){		
 		for(Iterator it=map.keySet().iterator();it.hasNext();){
-			ObjectResource or = (ObjectResource)map.get(it.next());
-			if (this.logicScheme.passesAllConstraints(or) == false){
-				map.remove(or);
+			Object key = it.next();
+			ObjectResource or = (ObjectResource)map.get(key);
+			if (!this.logicScheme.passesAllConstraints(or)){
+				map.remove(key);
 				it=map.keySet().iterator();
 			}
 		}
@@ -191,7 +192,7 @@ public abstract class ObjectResourceFilter implements Filter
 		for(Iterator it=input.keySet().iterator();it.hasNext();){
 			Object key = it.next();
 			ObjectResource or = (ObjectResource)input.get(key);
-			if (this.logicScheme.passesAllConstraints(or) == false){
+			if (this.logicScheme.passesAllConstraints(or)){
 				output.put(key,or);
 			}
 		}

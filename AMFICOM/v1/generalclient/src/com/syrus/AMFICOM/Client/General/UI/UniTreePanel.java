@@ -347,9 +347,9 @@ public class UniTreePanel extends JPanel
 		if (node == null)
 			return;
 
-		Vector res = new Vector();
+		java.util.List res = new ArrayList();
 		Class cl = null;
-		DataSet data = new DataSet();
+		//DataSet data = new DataSet();
 		ObjectResourceCatalogActionModel orcam = null;
 		int n = 0;
 		Object selectedObject = node.getObject();
@@ -381,9 +381,10 @@ public class UniTreePanel extends JPanel
 							node.add(tn);
 							if(!tn.isFinal())
 								tn.add(new ObjectResourceTreeNode("", "", true));
-							if (((ObjectResourceTreeNode)tn).getObject() instanceof ObjectResource)
+							Object obj = tn.getObject();
+							if (obj instanceof ObjectResource)
 							{
-								res.add( ((ObjectResourceTreeNode)tn).getObject() );
+								res.add( obj );
 							}
 //				tn.add(stubNode);
 						}
@@ -394,9 +395,10 @@ public class UniTreePanel extends JPanel
 						for (; en.hasMoreElements();)
 						{
 							ObjectResourceTreeNode tn = (ObjectResourceTreeNode ) en.nextElement();
-							if (((ObjectResourceTreeNode)tn).getObject() instanceof ObjectResource)
+							Object obj = tn.getObject();
+							if (obj instanceof ObjectResource)
 							{
-								res.add( ((ObjectResourceTreeNode)tn).getObject() );
+								res.add( obj );
 							}
 //				tn.add(stubNode);
 						}
@@ -407,7 +409,7 @@ public class UniTreePanel extends JPanel
 //					if (res.isEmpty())
 //						return;
 
-			data = new DataSet (res);
+			//data = new DataSet (res);
 			cl = otm.getNodeChildClass(node);
 			orcam = otm.getNodeActionModel(node);
 			n = -1;
@@ -431,15 +433,15 @@ public class UniTreePanel extends JPanel
 //					if (res.isEmpty())
 //						return;
 
-			data = new DataSet (res);
+			//data = new DataSet (res);
 			cl = otm.getNodeChildClass(parent);
 			orcam = otm.getNodeActionModel(parent);
 //					cl = node.getClass();
 			selectedObject = node.getObject();
-			n =	data.indexOf(selectedObject);
+			n =	res.indexOf(selectedObject);
 		}
 
-		TreeDataSelectionEvent event = new TreeDataSelectionEvent(this, data, cl, n, selectedObject);
+		TreeDataSelectionEvent event = new TreeDataSelectionEvent(this, res, cl, n, selectedObject);
 		event.param = orcam;
 
 //				System.out.println("ORTreePanel notify " + dispatcher + " with event " + event);
@@ -491,8 +493,8 @@ public class UniTreePanel extends JPanel
 
 		ObjectResourceTreeNode fc = (ObjectResourceTreeNode )tn.getFirstChild();
 
-		Object obj = ((ObjectResourceTreeNode )fc).getObject();
-		if (obj instanceof String && ((String)obj).equals(""))
+		Object obj = fc.getObject();
+		if (obj instanceof String && ((String)obj).length()==0)
 		{
 			this.setCursor(new Cursor(Cursor.WAIT_CURSOR));
 			tn.removeAllChildren();

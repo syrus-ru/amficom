@@ -14,6 +14,7 @@ import java.awt.event.ActionListener;
 
 import java.util.Enumeration;
 import java.util.Hashtable;
+import java.util.Iterator;
 import java.util.Vector;
 
 import javax.swing.DefaultComboBoxModel;
@@ -196,6 +197,23 @@ public class ObjectResourceComboBox extends AComboBox
 			for(; enum.hasMoreElements();)
 			{
 				ObjectResource or = (ObjectResource )enum.nextElement();
+				vec.addElement(or);
+			}
+		if(shownull)
+			vec.add(stubResource);
+
+		if(doRestrict)
+			restrictContents();
+        setModel(new DefaultComboBoxModel(vec));
+	}
+	
+	public void setContents(Iterator it, boolean shownull)
+	{
+		vec = new Vector();
+		if(it != null)
+			for(; it.hasNext();)
+			{
+				ObjectResource or = (ObjectResource )it.next();
 				vec.addElement(or);
 			}
 		if(shownull)

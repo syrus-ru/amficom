@@ -47,6 +47,9 @@ import java.util.Hashtable;
 import java.util.Vector;
 import java.util.*;
 
+/**
+ * @deprecated use Collection, Map according to the task 
+ */
 public class DataSet extends Object
 {
 	private ArrayList objects = new ArrayList();
