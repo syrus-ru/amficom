@@ -1,5 +1,5 @@
 /*
- * $Id: ModelTraceManager.java,v 1.21 2005/03/14 14:31:05 saa Exp $
+ * $Id: ModelTraceManager.java,v 1.22 2005/03/15 13:39:08 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ import com.syrus.AMFICOM.analysis.CoreAnalysisManager;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.21 $, $Date: 2005/03/14 14:31:05 $
+ * @version $Revision: 1.22 $, $Date: 2005/03/15 13:39:08 $
  * @module
  */
 public class ModelTraceManager
@@ -28,7 +28,7 @@ public class ModelTraceManager
 	private static final long SIGNATURE_THRESH = 3353620050119193102L;
 	public static final String CODENAME = "ModelTraceManager";
 
-	private SimpleReflectogramEventImpl[] se; // not null //; was must be kept in sync with re
+	private SimpleReflectogramEventImpl[] se; // not null
 	private ModelFunction mf;
 	private int traceLength;
 	private ModelTrace[] thMTCache = null;
