@@ -9,3 +9,6 @@ classes
 .corba
 .ora
 .mach
+.classpath
+.project
+.settings
