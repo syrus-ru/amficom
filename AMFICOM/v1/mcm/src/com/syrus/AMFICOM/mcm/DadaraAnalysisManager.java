@@ -1,5 +1,5 @@
 /*
- * $Id: DadaraAnalysisManager.java,v 1.7 2004/07/21 18:43:32 arseniy Exp $
+ * $Id: DadaraAnalysisManager.java,v 1.8 2004/07/27 15:43:58 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,9 +12,11 @@ import java.util.Map;
 import java.util.Hashtable;
 import java.io.IOException;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.NewIdentifierPool;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.analysis.dadara.ReflectogramEvent;
 import com.syrus.AMFICOM.analysis.dadara.Threshold;
 import com.syrus.AMFICOM.analysis.dadara.ReflectogramComparer;
@@ -37,7 +39,7 @@ import java.text.SimpleDateFormat;
 import java.io.FileOutputStream;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2004/07/21 18:43:32 $
+ * @version $Revision: 1.8 $, $Date: 2004/07/27 15:43:58 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -58,7 +60,6 @@ public class DadaraAnalysisManager implements AnalysisManager, EvaluationManager
 	public static final String CODENAME_DADARA_THRESHOLDS = "dadara_thresholds";
 	public static final String CODENAME_DADARA_ALARM_ARRAY = "dadara_alarm_array";
 
-	private static Map inParameterTypes;
 	private static Map outParameterTypes;
 
 	private Map parameters;
@@ -72,20 +73,6 @@ public class DadaraAnalysisManager implements AnalysisManager, EvaluationManager
       Log.errorMessage(ule.getMessage());
     }
 
-		inParameterTypes = new Hashtable(13);
-		addInParameterType(CODENAME_REFLECTOGRAMMA);
-		addInParameterType(CODENAME_DADARA_TACTIC);
-		addInParameterType(CODENAME_DADARA_EVENT_SIZE);
-		addInParameterType(CODENAME_DADARA_CONN_FALL_PARAMS);
-		addInParameterType(CODENAME_DADARA_MIN_LEVEL);
-		addInParameterType(CODENAME_DADARA_MAX_LEVEL_NOISE);
-		addInParameterType(CODENAME_DADARA_MIN_LEVEL_TO_FIND_END);
-		addInParameterType(CODENAME_DADARA_MIN_WELD);
-		addInParameterType(CODENAME_DADARA_MIN_CONNECTOR);
-		addInParameterType(CODENAME_DADARA_STRATEGY);
-		addInParameterType(CODENAME_DADARA_EVENT_ARRAY);
-		addInParameterType(CODENAME_DADARA_ETALON_EVENT_ARRAY);
-		addInParameterType(CODENAME_DADARA_THRESHOLDS);
 		outParameterTypes = new Hashtable(2);
 		addOutParameterType(CODENAME_DADARA_EVENT_ARRAY);
 		addOutParameterType(CODENAME_DADARA_ALARM_ARRAY);
@@ -235,15 +222,25 @@ Log.debugMessage("$$$$$$$$$ Number of events == " + revents.length + "; tmp.leng
 			}
 		}
 //******************
-		Identifier identifier = MeasurementControlModule.getNewIdentifier(ObjectEntities.RESULTPARAMETER_ENTITY);
+		Identifier identifier;
+		try {
+			identifier = NewIdentifierPool.getGeneratedIdentifier(ObjectEntities.RESULTPARAMETER_ENTITY, 10);
+		}
+		catch (Exception e) {
+			throw new AnalysisException("Cannot generate identifier for events array -- " + e.getMessage(), e);
+		}
 		ParameterType parTypEventArray = (ParameterType)outParameterTypes.get(CODENAME_DADARA_EVENT_ARRAY);
 		if (parTypEventArray == null)
 			throw new AnalysisException("Cannot find in output map parameter type of codename: '" + CODENAME_DADARA_EVENT_ARRAY + "'");
 		SetParameter[] arParameters = new SetParameter[1];
-		arParameters[0] = new SetParameter(identifier,
-																			 parTypEventArray.getId(),
-																			 ReflectogramEvent.toByteArray(revents));
-
+		try {
+			arParameters[0] = new SetParameter(identifier,
+																				 parTypEventArray.getId(),
+																				 ReflectogramEvent.toByteArray(revents));
+		}
+		catch (Exception e) {
+			throw new AnalysisException("Cannot create parametrer -- " + e.getMessage(), e);
+		}
 		this.addSetParameters(arParameters);
 
 		return arParameters;
@@ -289,14 +286,25 @@ Log.debugMessage("$$$$$$$$$ Number of events == " + revents.length + "; tmp.leng
 					this.alarmLevel = AlarmLevel.ALARM_LEVEL_HARD;
 					break;
 				}
-			Identifier identifier = MeasurementControlModule.getNewIdentifier(ObjectEntities.RESULTPARAMETER_ENTITY);
+			Identifier identifier;
+			try {
+				identifier = NewIdentifierPool.getGeneratedIdentifier(ObjectEntities.RESULTPARAMETER_ENTITY, 10);
+			}
+			catch (Exception e) {
+				throw new EvaluationException("Cannot generate identifier for events array -- " + e.getMessage(), e);
+			}
 			ParameterType parTypAlarmArray = (ParameterType)outParameterTypes.get(CODENAME_DADARA_ALARM_ARRAY);
 			if (parTypAlarmArray == null)
 				throw new EvaluationException("Cannot find in output map parameter type of codename: '" + CODENAME_DADARA_ALARM_ARRAY + "'");
 			erParameters = new SetParameter[1];
-			erParameters[0] = new SetParameter(identifier,
-																				 parTypAlarmArray.getId(),
-																				 ReflectogramAlarm.toByteArray(ralarms));
+			try {
+				erParameters[0] = new SetParameter(identifier,
+																					 parTypAlarmArray.getId(),
+																					 ReflectogramAlarm.toByteArray(ralarms));
+			}
+			catch (Exception e) {
+				throw new EvaluationException("Cannot create parametrer -- " + e.getMessage(), e);
+			}
 		}
 		else {
 			this.alarmLevel = AlarmLevel.ALARM_LEVEL_NONE;
@@ -316,33 +324,14 @@ Log.debugMessage("$$$$$$$$$ Number of events == " + revents.length + "; tmp.leng
 	}
 
 	private void addParameter(SetParameter parameter) throws AnalysisException {
-		Identifier parTypId = parameter.getTypeId();
-		ParameterType parTyp = (ParameterType)inParameterTypes.get(parTypId);
-		if (parTyp != null) {
-			String parTypCodename = parTyp.getCodename();
-			if (!this.parameters.containsKey(parTypCodename))
-				this.parameters.put(parTypCodename, parameter.getValue());
+		String codename = parameter.getCodename();
+		if (codename != null) {
+			if (!this.parameters.containsKey(codename))
+				this.parameters.put(codename, parameter.getValue());
 			else
-				Log.errorMessage("Parameter of codename '" + parTypCodename + "' already added to map; id: '" + parameter.getId() + "'");
+				Log.errorMessage("Parameter of codename '" + codename + "' already added to map; id: '" + parameter.getId() + "'");
 		}
-		throw new AnalysisException("Cannot find in input map parameter type of id: '" + parTypId + "'");
-	}
-
-	private static void addInParameterType(String codename) {
-		try {
-			ParameterType parTyp = ParameterTypeDatabase.retrieveForCodename(codename);
-			Identifier parTypId = parTyp.getId();
-			if (!inParameterTypes.containsKey(parTypId))
-				inParameterTypes.put(parTypId, parTyp);
-			else
-				Log.errorMessage("Input parameter type of codename '" + codename + "' and id '" + parTypId.toString() + "' already added to map");
-		}
-		catch (RetrieveObjectException roe) {
-			Log.errorException(roe);
-		}
-		catch (ObjectNotFoundException onfe) {
-			Log.errorException(onfe);
-		}
+		throw new AnalysisException("Codename of parameter: '" + parameter.getId() + "' is NULL");
 	}
 
 	private static void addOutParameterType(String codename) {

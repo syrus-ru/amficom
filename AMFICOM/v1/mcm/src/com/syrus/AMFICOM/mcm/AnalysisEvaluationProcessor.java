@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisEvaluationProcessor.java,v 1.4 2004/07/21 18:43:32 arseniy Exp $
+ * $Id: AnalysisEvaluationProcessor.java,v 1.5 2004/07/27 15:43:58 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,7 +29,7 @@ import com.syrus.AMFICOM.measurement.SetParameter;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2004/07/21 18:43:32 $
+ * @version $Revision: 1.5 $, $Date: 2004/07/27 15:43:58 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -38,17 +38,6 @@ public abstract class AnalysisEvaluationProcessor {
 	private static final String CODENAME_ANALYSIS_TYPE_DADARA = "dadara";
 	private static final String CODENAME_EVALUATION_TYPE_DADARA = "dadara"; 
 
-	private static Map analysisTypes;
-	private static Map evaluationTypes;
-
-	static {
-		analysisTypes = new Hashtable(1);
-		addAnalysisType(CODENAME_ANALYSIS_TYPE_DADARA);
-
-		evaluationTypes = new Hashtable(1);
-		addEvaluationType(CODENAME_EVALUATION_TYPE_DADARA);
-	}
-
 	public static Result[] analyseAndEvaluate(Result measurementResult,
 																						Analysis analysis,
 																						Evaluation evaluation,
@@ -56,31 +45,22 @@ public abstract class AnalysisEvaluationProcessor {
 		AnalysisManager analysisManager;
 		EvaluationManager evaluationManager;
 
-		Identifier analysisTypeId = analysis.getTypeId();
-		AnalysisType analysisType = (AnalysisType)analysisTypes.get(analysisTypeId);
-		if (analysisType == null)
-			throw new AnalysisException("Cannot find analysis of type '" + analysisTypeId.toString() + "'");
-
-		Identifier evaluationTypeId = evaluation.getTypeId();
-		EvaluationType evaluationType = (EvaluationType)evaluationTypes.get(evaluationTypeId);
-		if (evaluationType == null)
-			throw new EvaluationException("Cannot find evaluation of type '" + evaluationTypeId.toString() + "'");
-
-		String analysisTypeCodename = analysisType.getCodename();
-		String evaluationTypeCodename = evaluationType.getCodename();
-		if (analysisTypeCodename.equals(CODENAME_ANALYSIS_TYPE_DADARA)) {
+		String analysisCodename = analysis.getCodename();
+		String evaluationCodename = evaluation.getCodename();
+		
+		if (analysisCodename.equals(CODENAME_ANALYSIS_TYPE_DADARA)) {
 			analysisManager = new DadaraAnalysisManager(measurementResult,
 																									analysis,
 																									evaluation,
 																									etalon);
-			if (evaluationTypeCodename.equals(CODENAME_EVALUATION_TYPE_DADARA)) {
+			if (evaluationCodename.equals(CODENAME_EVALUATION_TYPE_DADARA)) {
 				evaluationManager = (EvaluationManager)analysisManager;
 			}
 			else
-				throw new EvaluationException("Evaluation for codename '" + evaluationTypeCodename + "' not implemented");
+				throw new EvaluationException("Evaluation for codename '" + evaluationCodename + "' not implemented");
 		}
 		else
-			throw new AnalysisException("Analysis for codename '" + analysisTypeCodename + "' not implemented");
+			throw new AnalysisException("Analysis for codename '" + analysisCodename + "' not implemented");
 
 		SetParameter[] arParameters = analysisManager.analyse();
 		Result analysisResult;
@@ -135,37 +115,4 @@ public abstract class AnalysisEvaluationProcessor {
 //																Set etalon) throws EvaluationException {
 //	}
 
-	private static void addAnalysisType(String codename) {
-		try {
-			AnalysisType analysisType = AnalysisTypeDatabase.retrieveForCodename(codename);
-			Identifier analysisTypeId = analysisType.getId();
-			if (!analysisTypes.containsKey(analysisTypeId))
-				analysisTypes.put(analysisTypeId, analysisType);
-			else
-				Log.errorMessage("Analysis type of codename '" + codename + "' and id '" + analysisTypeId.toString() + "' already added to map");
-		}
-		catch (RetrieveObjectException roe) {
-			Log.errorException(roe);
-		}
-		catch (ObjectNotFoundException onfe) {
-			Log.errorException(onfe);
-		}
-	}
-
-	private static void addEvaluationType(String codename) {
-		try {
-			EvaluationType evaluationType = EvaluationTypeDatabase.retrieveForCodename(codename);
-			Identifier evaluationTypeId = evaluationType.getId();
-			if (!evaluationTypes.containsKey(evaluationTypeId))
-				evaluationTypes.put(evaluationTypeId, evaluationType);
-			else
-				Log.errorMessage("Evaluation type of codename '" + codename + "' and id '" + evaluationTypeId.toString() + "' already added to map");
-		}
-		catch (RetrieveObjectException roe) {
-			Log.errorException(roe);
-		}
-		catch (ObjectNotFoundException onfe) {
-			Log.errorException(onfe);
-		}
-	}
 }
