@@ -1,5 +1,5 @@
 /*
- * $Id: CMAdministrationTransmit.java,v 1.8 2005/02/25 09:16:07 bob Exp $
+ * $Id: CMAdministrationTransmit.java,v 1.9 2005/03/29 20:24:27 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,11 +8,10 @@
 
 package com.syrus.AMFICOM.cmserver;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 
 import com.syrus.AMFICOM.administration.AdministrationStorableObjectPool;
@@ -24,13 +23,13 @@ import com.syrus.AMFICOM.administration.corba.Domain_Transferable;
 import com.syrus.AMFICOM.administration.corba.MCM_Transferable;
 import com.syrus.AMFICOM.administration.corba.Server_Transferable;
 import com.syrus.AMFICOM.administration.corba.User_Transferable;
+import com.syrus.AMFICOM.general.AccessIdentity;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.general.EquivalentCondition;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
@@ -47,627 +46,570 @@ import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/02/25 09:16:07 $
- * @author $Author: bob $
+ * @version $Revision: 1.9 $, $Date: 2005/03/29 20:24:27 $
+ * @author $Author: arseniy $
  * @module cmserver_v1
  */
 
 public abstract class CMAdministrationTransmit extends CMGeneralTransmit {
 
-	private static final long	serialVersionUID	= 5322471674445475587L;
+	private static final long serialVersionUID = 5322471674445475587L;
 
-	public User_Transferable transmitUser(	Identifier_Transferable id_Transferable,
-											AccessIdentifier_Transferable accessIdentifier)
-			throws AMFICOMRemoteException {
-		Identifier id = new Identifier(id_Transferable);
-		Log.debugMessage("CMAdministrationTransmit.User | require " + id.toString(), Log.DEBUGLEVEL07);
+	public User_Transferable transmitUser(Identifier_Transferable identifier_Transferable,
+			AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
+		AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
+		Identifier id = new Identifier(identifier_Transferable);
+		Log.debugMessage("CMAdministrationTransmit.transmitUser | require '" + id.toString()
+				+ "' for user '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
 		try {
 			User user = (User) AdministrationStorableObjectPool.getStorableObject(id, true);
 			return (User_Transferable) user.getTransferable();
-		} catch (ObjectNotFoundException onfe) {
+		}
+		catch (ObjectNotFoundException onfe) {
 			Log.errorException(onfe);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_NOT_FOUND, CompletionStatus.COMPLETED_YES, onfe
-					.getMessage());
-		} catch (RetrieveObjectException roe) {
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_NOT_FOUND, CompletionStatus.COMPLETED_YES, onfe.getMessage());
+		}
+		catch (RetrieveObjectException roe) {
 			Log.errorException(roe);
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, roe.getMessage());
-		} catch (CommunicationException ce) {
+		}
+		catch (CommunicationException ce) {
 			Log.errorException(ce);
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ce.getMessage());
-		} catch (DatabaseException de) {
+		}
+		catch (DatabaseException de) {
 			Log.errorException(de);
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, de.getMessage());
-		} catch (Throwable t) {
+		}
+		catch (Throwable t) {
 			Log.errorException(t);
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
 		}
 	}
 
-	public Domain_Transferable transmitDomain(	Identifier_Transferable identifier_Transferable,
-												AccessIdentifier_Transferable accessIdentifier)
-			throws AMFICOMRemoteException {
+	public Domain_Transferable transmitDomain(Identifier_Transferable identifier_Transferable,
+			AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
+		AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
 		Identifier id = new Identifier(identifier_Transferable);
-		Log.debugMessage("CMAdministrationTransmit.transmitDomain | require " + id.toString(), Log.DEBUGLEVEL07);
+		Log.debugMessage("CMAdministrationTransmit.transmitDomain | require '" + id.toString()
+				+ "' for user '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
 		try {
 			Domain domain = (Domain) AdministrationStorableObjectPool.getStorableObject(id, true);
 			return (Domain_Transferable) domain.getTransferable();
-		} catch (ObjectNotFoundException onfe) {
+		}
+		catch (ObjectNotFoundException onfe) {
 			Log.errorException(onfe);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_NOT_FOUND, CompletionStatus.COMPLETED_YES, onfe
-					.getMessage());
-		} catch (RetrieveObjectException roe) {
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_NOT_FOUND, CompletionStatus.COMPLETED_YES, onfe.getMessage());
+		}
+		catch (RetrieveObjectException roe) {
 			Log.errorException(roe);
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, roe.getMessage());
-		} catch (CommunicationException ce) {
+		}
+		catch (CommunicationException ce) {
 			Log.errorException(ce);
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ce.getMessage());
-		} catch (DatabaseException de) {
+		}
+		catch (DatabaseException de) {
 			Log.errorException(de);
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, de.getMessage());
-		} catch (Throwable t) {
+		}
+		catch (Throwable t) {
 			Log.errorException(t);
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
 		}
 	}
 
-	public Server_Transferable transmitServer(	Identifier_Transferable id_Transferable,
-												AccessIdentifier_Transferable accessIdentifier)
-			throws AMFICOMRemoteException {
-		Identifier id = new Identifier(id_Transferable);
-		Log.debugMessage("CMAdministrationTransmit.Server | require " + id.toString(), Log.DEBUGLEVEL07);
+	public Server_Transferable transmitServer(Identifier_Transferable identifier_Transferable,
+			AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
+		AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
+		Identifier id = new Identifier(identifier_Transferable);
+		Log.debugMessage("CMAdministrationTransmit.transmitServer | require '" + id.toString()
+				+ "' for user '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
 		try {
 			Server server = (Server) AdministrationStorableObjectPool.getStorableObject(id, true);
 			return (Server_Transferable) server.getTransferable();
-		} catch (ObjectNotFoundException onfe) {
+		}
+		catch (ObjectNotFoundException onfe) {
 			Log.errorException(onfe);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_NOT_FOUND, CompletionStatus.COMPLETED_YES, onfe
-					.getMessage());
-		} catch (RetrieveObjectException roe) {
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_NOT_FOUND, CompletionStatus.COMPLETED_YES, onfe.getMessage());
+		}
+		catch (RetrieveObjectException roe) {
 			Log.errorException(roe);
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, roe.getMessage());
-		} catch (CommunicationException ce) {
+		}
+		catch (CommunicationException ce) {
 			Log.errorException(ce);
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ce.getMessage());
-		} catch (DatabaseException de) {
+		}
+		catch (DatabaseException de) {
 			Log.errorException(de);
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, de.getMessage());
-		} catch (Throwable t) {
+		}
+		catch (Throwable t) {
 			Log.errorException(t);
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
 		}
 	}
 
-	public MCM_Transferable transmitMCM(Identifier_Transferable id_Transferable,
-										AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
-		Identifier id = new Identifier(id_Transferable);
-		Log.debugMessage("CMAdministrationTransmit.MCM | require " + id.toString(), Log.DEBUGLEVEL07);
+	public MCM_Transferable transmitMCM(Identifier_Transferable identifier_Transferable,
+			AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
+		AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
+		Identifier id = new Identifier(identifier_Transferable);
+		Log.debugMessage("CMAdministrationTransmit.transmitMCM | require '" + id.toString()
+				+ "' for user '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
 		try {
 			MCM mcm = (MCM) AdministrationStorableObjectPool.getStorableObject(id, true);
 			return (MCM_Transferable) mcm.getTransferable();
-		} catch (ObjectNotFoundException onfe) {
+		}
+		catch (ObjectNotFoundException onfe) {
 			Log.errorException(onfe);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_NOT_FOUND, CompletionStatus.COMPLETED_YES, onfe
-					.getMessage());
-		} catch (RetrieveObjectException roe) {
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_NOT_FOUND, CompletionStatus.COMPLETED_YES, onfe.getMessage());
+		}
+		catch (RetrieveObjectException roe) {
 			Log.errorException(roe);
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, roe.getMessage());
-		} catch (CommunicationException ce) {
+		}
+		catch (CommunicationException ce) {
 			Log.errorException(ce);
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ce.getMessage());
-		} catch (DatabaseException de) {
+		}
+		catch (DatabaseException de) {
 			Log.errorException(de);
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, de.getMessage());
-		} catch (Throwable t) {
+		}
+		catch (Throwable t) {
 			Log.errorException(t);
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
 		}
 	}
 
-	public User_Transferable[] transmitUsers(	Identifier_Transferable[] ids_Transferable,
-												AccessIdentifier_Transferable accessIdentifier)
+
+
+
+
+
+	public User_Transferable[] transmitUsers(Identifier_Transferable[] identifier_Transferables,
+			AccessIdentifier_Transferable accessIdentifier)
 			throws AMFICOMRemoteException {
+		AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
+		Log.debugMessage("CMAdministrationTransmit.transmitUsers | requiered " + identifier_Transferables.length
+				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
+
+		Collection ids = new HashSet(identifier_Transferables.length);
+		for (int i = 0; i < identifier_Transferables.length; i++)
+			ids.add(new Identifier(identifier_Transferables[i]));
+
+		Collection objects = null;
 		try {
-			Identifier domainId = new Identifier(accessIdentifier.domain_id);
-			Log.debugMessage("CMAdministrationTransmit.transmitUsers | requiere "
-					+ (ids_Transferable.length == 0 ? "all" : Integer.toString(ids_Transferable.length))
-					+ " item(s) in domain: " + domainId.toString(), Log.DEBUGLEVEL07);
-			Collection collection;
-			if (ids_Transferable.length > 0) {
-				List idsList = new ArrayList(ids_Transferable.length);
-				for (int i = 0; i < ids_Transferable.length; i++)
-					idsList.add(new Identifier(ids_Transferable[i]));
-				collection = AdministrationStorableObjectPool.getStorableObjects(idsList, true);
-			} else
-				collection = AdministrationStorableObjectPool.getStorableObjectsByCondition(
-					new EquivalentCondition(ObjectEntities.USER_ENTITY_CODE), true);
-
-			User_Transferable[] transferables = new User_Transferable[collection.size()];
-			int i = 0;
-			for (Iterator it = collection.iterator(); it.hasNext(); i++) {
-				User user = (User) it.next();
-				transferables[i] = (User_Transferable) user.getTransferable();
-			}
-			return transferables;
-
-		} catch (RetrieveObjectException roe) {
-			Log.errorException(roe);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, roe.getMessage());
-		} catch (IllegalDataException ide) {
-			Log.errorException(ide);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ide.getMessage());
-		} catch (IllegalObjectEntityException ioee) {
-			Log.errorException(ioee);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ioee.getMessage());
-		} catch (ApplicationException e) {
-			Log.errorException(e);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, e.getMessage());
-		} catch (Throwable t) {
-			Log.errorException(t);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
+			objects = AdministrationStorableObjectPool.getStorableObjects(ids, true);
 		}
+		catch (ApplicationException ae) {
+			Log.errorException(ae);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ae.getMessage());
+		}
+
+		User_Transferable[] transferables = new User_Transferable[objects.size()];
+		int i = 0;
+		User user;
+		for (Iterator it = objects.iterator(); it.hasNext(); i++) {
+			user = (User) it.next();
+			transferables[i] = (User_Transferable) user.getTransferable();
+		}
+		return transferables;
 	}
 
-	public User_Transferable[] transmitUsersButIdsCondition(Identifier_Transferable[] ids_Transferable,
-															AccessIdentifier_Transferable accessIdentifier,
-															StorableObjectCondition_Transferable condition_Transferable)
+	public Domain_Transferable[] transmitDomains(Identifier_Transferable[] identifier_Transferables,
+			AccessIdentifier_Transferable accessIdentifier)
 			throws AMFICOMRemoteException {
+		AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
+		Log.debugMessage("CMAdministrationTransmit.transmitDomains | requiered " + identifier_Transferables.length
+				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
+
+		Collection ids = new HashSet(identifier_Transferables.length);
+		for (int i = 0; i < identifier_Transferables.length; i++)
+			ids.add(new Identifier(identifier_Transferables[i]));
+
+		Collection objects = null;
 		try {
-			Identifier domainId = new Identifier(accessIdentifier.domain_id);
-			Log.debugMessage("CMAdministrationTransmit.transmitUsersButIds | requiere "
-					+ (ids_Transferable.length == 0 ? "all" : Integer.toString(ids_Transferable.length))
-					+ " item(s) in domain: " + domainId.toString(), Log.DEBUGLEVEL07);
-			Collection collection;
-			StorableObjectCondition condition = StorableObjectConditionBuilder.restoreCondition(condition_Transferable);
-			if (ids_Transferable.length > 0) {
-				List idsList = new ArrayList(ids_Transferable.length);
-				for (int i = 0; i < ids_Transferable.length; i++)
-					idsList.add(new Identifier(ids_Transferable[i]));
-				collection = AdministrationStorableObjectPool.getStorableObjectsByConditionButIds(idsList, condition, true);
-			} else {
-				collection = AdministrationStorableObjectPool.getStorableObjectsByCondition(condition, true);
-			}
-
-			User_Transferable[] transferables = new User_Transferable[collection.size()];
-			int i = 0;
-			for (Iterator it = collection.iterator(); it.hasNext(); i++) {
-				User user = (User) it.next();
-				transferables[i] = (User_Transferable) user.getTransferable();
-			}
-			return transferables;
-
-		} catch (RetrieveObjectException roe) {
-			Log.errorException(roe);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, roe.getMessage());
-		} catch (IllegalDataException ide) {
-			Log.errorException(ide);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ide.getMessage());
-		} catch (IllegalObjectEntityException ioee) {
-			Log.errorException(ioee);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ioee.getMessage());
-		} catch (ApplicationException e) {
-			Log.errorException(e);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, e.getMessage());
-		} catch (Throwable t) {
-			Log.errorException(t);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
+			objects = AdministrationStorableObjectPool.getStorableObjects(ids, true);
 		}
+		catch (ApplicationException ae) {
+			Log.errorException(ae);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ae.getMessage());
+		}
+
+		Domain_Transferable[] transferables = new Domain_Transferable[objects.size()];
+		int i = 0;
+		Domain domain;
+		for (Iterator it = objects.iterator(); it.hasNext(); i++) {
+			domain = (Domain) it.next();
+			transferables[i] = (Domain_Transferable) domain.getTransferable();
+		}
+		return transferables;
 	}
 
-	public Domain_Transferable[] transmitDomainsButIds(	Identifier_Transferable[] ids_Transferable,
-														AccessIdentifier_Transferable accessIdentifier)
+	public Server_Transferable[] transmitServers(Identifier_Transferable[] identifier_Transferables,
+			AccessIdentifier_Transferable accessIdentifier)
 			throws AMFICOMRemoteException {
+		AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
+		Log.debugMessage("CMAdministrationTransmit.transmitServers | requiered " + identifier_Transferables.length
+				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
+
+		Collection ids = new HashSet(identifier_Transferables.length);
+		for (int i = 0; i < identifier_Transferables.length; i++)
+			ids.add(new Identifier(identifier_Transferables[i]));
+
+		Collection objects = null;
 		try {
-			Identifier domainId = new Identifier(accessIdentifier.domain_id);
-			Log.debugMessage("CMAdministrationTransmit.transmitDomainsButIds | requiere "
-					+ (ids_Transferable.length == 0 ? "all" : Integer.toString(ids_Transferable.length))
-					+ " item(s) in domain: " + domainId.toString(), Log.DEBUGLEVEL07);
-			Collection collection;
-			if (ids_Transferable.length > 0) {
-				List idsList = new ArrayList(ids_Transferable.length);
-				for (int i = 0; i < ids_Transferable.length; i++)
-					idsList.add(new Identifier(ids_Transferable[i]));
-				collection = AdministrationStorableObjectPool.getStorableObjectsByConditionButIds(idsList,
-					new EquivalentCondition(ObjectEntities.DOMAIN_ENTITY_CODE), true);
-			} else
-				collection = AdministrationStorableObjectPool.getStorableObjectsByCondition(
-					new EquivalentCondition(ObjectEntities.DOMAIN_ENTITY_CODE), true);
-
-			Domain_Transferable[] transferables = new Domain_Transferable[collection.size()];
-			int i = 0;
-			for (Iterator it = collection.iterator(); it.hasNext(); i++) {
-				Domain domain2 = (Domain) it.next();
-				transferables[i] = (Domain_Transferable) domain2.getTransferable();
-			}
-			return transferables;
-
-		} catch (RetrieveObjectException roe) {
-			Log.errorException(roe);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, roe.getMessage());
-		} catch (IllegalDataException ide) {
-			Log.errorException(ide);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ide.getMessage());
-		} catch (IllegalObjectEntityException ioee) {
-			Log.errorException(ioee);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ioee.getMessage());
-		} catch (ApplicationException e) {
-			Log.errorException(e);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, e.getMessage());
-		} catch (Throwable t) {
-			Log.errorException(t);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
+			objects = AdministrationStorableObjectPool.getStorableObjects(ids, true);
 		}
+		catch (ApplicationException ae) {
+			Log.errorException(ae);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ae.getMessage());
+		}
+
+		Server_Transferable[] transferables = new Server_Transferable[objects.size()];
+		int i = 0;
+		Server server;
+		for (Iterator it = objects.iterator(); it.hasNext(); i++) {
+			server = (Server) it.next();
+			transferables[i] = (Server_Transferable) server.getTransferable();
+		}
+		return transferables;
 	}
 
-	public Domain_Transferable[] transmitDomainsButIdsCondition(Identifier_Transferable[] ids_Transferable,
-																AccessIdentifier_Transferable accessIdentifier,
-																StorableObjectCondition_Transferable condition_Transferable)
+	public MCM_Transferable[] transmitMCMs(Identifier_Transferable[] identifier_Transferables,
+			AccessIdentifier_Transferable accessIdentifier)
 			throws AMFICOMRemoteException {
-		Log.debugMessage("CMAdministrationTransmit.transmitDomainsButIdsCondition | requiere "
-				+ (ids_Transferable.length == 0 ? "all" : Integer.toString(ids_Transferable.length)) + " item(s) ",
-			Log.DEBUGLEVEL07);
+		AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
+		Log.debugMessage("CMAdministrationTransmit.transmitMCMs | requiered " + identifier_Transferables.length
+				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
+
+		Collection ids = new HashSet(identifier_Transferables.length);
+		for (int i = 0; i < identifier_Transferables.length; i++)
+			ids.add(new Identifier(identifier_Transferables[i]));
+
+		Collection objects = null;
 		try {
-			Collection collection;
-			StorableObjectCondition condition = StorableObjectConditionBuilder.restoreCondition(condition_Transferable);
-			if (ids_Transferable.length > 0) {
-				List idsList = new ArrayList(ids_Transferable.length);
-				for (int i = 0; i < ids_Transferable.length; i++)
-					idsList.add(new Identifier(ids_Transferable[i]));
-				collection = AdministrationStorableObjectPool.getStorableObjectsByConditionButIds(idsList, condition, true);
-			} else
-				collection = AdministrationStorableObjectPool.getStorableObjectsByCondition(condition, true);
-
-			Domain_Transferable[] transferables = new Domain_Transferable[collection.size()];
-			int i = 0;
-			for (Iterator it = collection.iterator(); it.hasNext(); i++) {
-				Domain domain2 = (Domain) it.next();
-				transferables[i] = (Domain_Transferable) domain2.getTransferable();
-			}
-			return transferables;
-
-		} catch (RetrieveObjectException roe) {
-			Log.errorException(roe);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, roe.getMessage());
-		} catch (IllegalDataException ide) {
-			Log.errorException(ide);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ide.getMessage());
-		} catch (IllegalObjectEntityException ioee) {
-			Log.errorException(ioee);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ioee.getMessage());
-		} catch (ApplicationException e) {
-			Log.errorException(e);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, e.getMessage());
-		} catch (Throwable t) {
-			Log.errorException(t);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
+			objects = AdministrationStorableObjectPool.getStorableObjects(ids, true);
 		}
+		catch (ApplicationException ae) {
+			Log.errorException(ae);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ae.getMessage());
+		}
+
+		MCM_Transferable[] transferables = new MCM_Transferable[objects.size()];
+		int i = 0;
+		MCM mcm;
+		for (Iterator it = objects.iterator(); it.hasNext(); i++) {
+			mcm = (MCM) it.next();
+			transferables[i] = (MCM_Transferable) mcm.getTransferable();
+		}
+		return transferables;
 	}
 
-	public Server_Transferable[] transmitServers(	Identifier_Transferable[] ids_Transferable,
-													AccessIdentifier_Transferable accessIdentifier)
-			throws AMFICOMRemoteException {
+
+
+
+
+	public User_Transferable[] transmitUsersButIds(Identifier_Transferable[] identifier_Transferables,
+			AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
+		AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
+		Log.debugMessage("CMAdministrationTransmit.transmitUsersButIds | All, but " + identifier_Transferables.length
+				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
+
+		Collection ids = new HashSet(identifier_Transferables.length);
+		for (int i = 0; i < identifier_Transferables.length; i++)
+			ids.add(new Identifier(identifier_Transferables[i]));
+
+		Collection objects = null;
 		try {
-			Identifier domainId = new Identifier(accessIdentifier.domain_id);
-			Log.debugMessage("CMAdministrationTransmit.transmitServers | requiere "
-					+ (ids_Transferable.length == 0 ? "all" : Integer.toString(ids_Transferable.length))
-					+ " item(s) in domain: " + domainId.toString(), Log.DEBUGLEVEL07);
-			Collection collection;
-			if (ids_Transferable.length > 0) {
-				List idsList = new ArrayList(ids_Transferable.length);
-				for (int i = 0; i < ids_Transferable.length; i++)
-					idsList.add(new Identifier(ids_Transferable[i]));
-				collection = AdministrationStorableObjectPool.getStorableObjects(idsList, true);
-			} else
-				collection = AdministrationStorableObjectPool.getStorableObjectsByCondition(
-					new EquivalentCondition(ObjectEntities.SERVER_ENTITY_CODE), true);
-
-			Server_Transferable[] transferables = new Server_Transferable[collection.size()];
-			int i = 0;
-			for (Iterator it = collection.iterator(); it.hasNext(); i++) {
-				Server server = (Server) it.next();
-				transferables[i] = (Server_Transferable) server.getTransferable();
-			}
-			return transferables;
-
-		} catch (RetrieveObjectException roe) {
-			Log.errorException(roe);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, roe.getMessage());
-		} catch (IllegalDataException ide) {
-			Log.errorException(ide);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ide.getMessage());
-		} catch (IllegalObjectEntityException ioee) {
-			Log.errorException(ioee);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ioee.getMessage());
-		} catch (ApplicationException e) {
-			Log.errorException(e);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, e.getMessage());
-		} catch (Throwable t) {
-			Log.errorException(t);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
+			objects = AdministrationStorableObjectPool.getStorableObjectsByConditionButIds(ids,
+					new EquivalentCondition(ObjectEntities.USER_ENTITY_CODE),
+					true);
 		}
+		catch (ApplicationException ae) {
+			Log.errorException(ae);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ae.getMessage());
+		}
+
+		User_Transferable[] transferables = new User_Transferable[objects.size()];
+		int i = 0;
+		User user;
+		for (Iterator it = objects.iterator(); it.hasNext(); i++) {
+			user = (User) it.next();
+			transferables[i] = (User_Transferable) user.getTransferable();
+		}
+		return transferables;
 	}
 
-	public Server_Transferable[] transmitServersButIds(	Identifier_Transferable[] ids_Transferable,
-														AccessIdentifier_Transferable accessIdentifier)
-			throws AMFICOMRemoteException {
+	public Domain_Transferable[] transmitDomainsButIds(Identifier_Transferable[] identifier_Transferables,
+			AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
+		AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
+		Log.debugMessage("CMAdministrationTransmit.transmitDomainsButIds | All, but " + identifier_Transferables.length
+				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
+
+		Collection ids = new HashSet(identifier_Transferables.length);
+		for (int i = 0; i < identifier_Transferables.length; i++)
+			ids.add(new Identifier(identifier_Transferables[i]));
+
+		Collection objects = null;
 		try {
-			Identifier domainId = new Identifier(accessIdentifier.domain_id);
-			Log.debugMessage("CMAdministrationTransmit.transmitServersButIds | requiere "
-					+ (ids_Transferable.length == 0 ? "all" : Integer.toString(ids_Transferable.length))
-					+ " item(s) in domain: " + domainId.toString(), Log.DEBUGLEVEL07);
-			Collection collection;
-			if (ids_Transferable.length > 0) {
-				List idsList = new ArrayList(ids_Transferable.length);
-				for (int i = 0; i < ids_Transferable.length; i++)
-					idsList.add(new Identifier(ids_Transferable[i]));
-				collection = AdministrationStorableObjectPool.getStorableObjectsByConditionButIds(idsList,
-					new EquivalentCondition(ObjectEntities.SERVER_ENTITY_CODE), true);
-			} else
-				collection = AdministrationStorableObjectPool.getStorableObjectsByCondition(
-					new EquivalentCondition(ObjectEntities.SERVER_ENTITY_CODE), true);
-
-			Server_Transferable[] transferables = new Server_Transferable[collection.size()];
-			int i = 0;
-			for (Iterator it = collection.iterator(); it.hasNext(); i++) {
-				Server server = (Server) it.next();
-				transferables[i] = (Server_Transferable) server.getTransferable();
-			}
-			return transferables;
-
-		} catch (RetrieveObjectException roe) {
-			Log.errorException(roe);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, roe.getMessage());
-		} catch (IllegalDataException ide) {
-			Log.errorException(ide);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ide.getMessage());
-		} catch (IllegalObjectEntityException ioee) {
-			Log.errorException(ioee);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ioee.getMessage());
-		} catch (ApplicationException e) {
-			Log.errorException(e);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, e.getMessage());
-		} catch (Throwable t) {
-			Log.errorException(t);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
+			objects = AdministrationStorableObjectPool.getStorableObjectsByConditionButIds(ids,
+					new EquivalentCondition(ObjectEntities.DOMAIN_ENTITY_CODE),
+					true);
 		}
+		catch (ApplicationException ae) {
+			Log.errorException(ae);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ae.getMessage());
+		}
+
+		Domain_Transferable[] transferables = new Domain_Transferable[objects.size()];
+		int i = 0;
+		Domain domain;
+		for (Iterator it = objects.iterator(); it.hasNext(); i++) {
+			domain = (Domain) it.next();
+			transferables[i] = (Domain_Transferable) domain.getTransferable();
+		}
+		return transferables;
 	}
 
-	public Server_Transferable[] transmitServersButIdsCondition(Identifier_Transferable[] ids_Transferable,
-																AccessIdentifier_Transferable accessIdentifier,
-																StorableObjectCondition_Transferable condition_Transferable)
-			throws AMFICOMRemoteException {
-		Log.debugMessage("CMAdministrationTransmit.transmitServersButIdsCondition | requiere "
-				+ (ids_Transferable.length == 0 ? "all" : Integer.toString(ids_Transferable.length)) + " item(s)",
-			Log.DEBUGLEVEL07);
+	public Server_Transferable[] transmitServersButIds(Identifier_Transferable[] identifier_Transferables,
+			AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
+		AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
+		Log.debugMessage("CMAdministrationTransmit.transmitServersButIds | All, but " + identifier_Transferables.length
+				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
+
+		Collection ids = new HashSet(identifier_Transferables.length);
+		for (int i = 0; i < identifier_Transferables.length; i++)
+			ids.add(new Identifier(identifier_Transferables[i]));
+
+		Collection objects = null;
 		try {
-			Collection collection;
-			StorableObjectCondition condition = StorableObjectConditionBuilder.restoreCondition(condition_Transferable);
-			if (ids_Transferable.length > 0) {
-				List idsList = new ArrayList(ids_Transferable.length);
-				for (int i = 0; i < ids_Transferable.length; i++)
-					idsList.add(new Identifier(ids_Transferable[i]));
-				collection = AdministrationStorableObjectPool.getStorableObjectsByConditionButIds(idsList, condition, true);
-			} else
-				collection = AdministrationStorableObjectPool.getStorableObjectsByCondition(condition, true);
-
-			Server_Transferable[] transferables = new Server_Transferable[collection.size()];
-			int i = 0;
-			for (Iterator it = collection.iterator(); it.hasNext(); i++) {
-				Server server = (Server) it.next();
-				transferables[i] = (Server_Transferable) server.getTransferable();
-			}
-			return transferables;
-
-		} catch (RetrieveObjectException roe) {
-			Log.errorException(roe);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, roe.getMessage());
-		} catch (IllegalDataException ide) {
-			Log.errorException(ide);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ide.getMessage());
-		} catch (IllegalObjectEntityException ioee) {
-			Log.errorException(ioee);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ioee.getMessage());
-		} catch (ApplicationException e) {
-			Log.errorException(e);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, e.getMessage());
-		} catch (Throwable t) {
-			Log.errorException(t);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
+			objects = AdministrationStorableObjectPool.getStorableObjectsByConditionButIds(ids,
+					new EquivalentCondition(ObjectEntities.SERVER_ENTITY_CODE),
+					true);
 		}
+		catch (ApplicationException ae) {
+			Log.errorException(ae);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ae.getMessage());
+		}
+
+		Server_Transferable[] transferables = new Server_Transferable[objects.size()];
+		int i = 0;
+		Server server;
+		for (Iterator it = objects.iterator(); it.hasNext(); i++) {
+			server = (Server) it.next();
+			transferables[i] = (Server_Transferable) server.getTransferable();
+		}
+		return transferables;
 	}
 
-	public MCM_Transferable[] transmitMCMs(	Identifier_Transferable[] ids_Transferable,
-											AccessIdentifier_Transferable accessIdentifier)
-			throws AMFICOMRemoteException {
+	public MCM_Transferable[] transmitMCMsButIds(Identifier_Transferable[] identifier_Transferables,
+			AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
+		AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
+		Log.debugMessage("CMAdministrationTransmit.transmitMCMsButIds | All, but " + identifier_Transferables.length
+				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
+
+		Collection ids = new HashSet(identifier_Transferables.length);
+		for (int i = 0; i < identifier_Transferables.length; i++)
+			ids.add(new Identifier(identifier_Transferables[i]));
+
+		Collection objects = null;
 		try {
-			Identifier domainId = new Identifier(accessIdentifier.domain_id);
-			Log.debugMessage("CMAdministrationTransmit.transmitMCMs | requiere "
-					+ (ids_Transferable.length == 0 ? "all" : Integer.toString(ids_Transferable.length))
-					+ " item(s) in domain: " + domainId.toString(), Log.DEBUGLEVEL07);
-			Collection collection;
-			if (ids_Transferable.length > 0) {
-				List idsList = new ArrayList(ids_Transferable.length);
-				for (int i = 0; i < ids_Transferable.length; i++)
-					idsList.add(new Identifier(ids_Transferable[i]));
-				collection = AdministrationStorableObjectPool.getStorableObjects(idsList, true);
-			} else
-				collection = AdministrationStorableObjectPool.getStorableObjectsByCondition(
-					new EquivalentCondition(ObjectEntities.MCM_ENTITY_CODE), true);
-
-			MCM_Transferable[] transferables = new MCM_Transferable[collection.size()];
-			int i = 0;
-			for (Iterator it = collection.iterator(); it.hasNext(); i++) {
-				MCM mcm = (MCM) it.next();
-				transferables[i] = (MCM_Transferable) mcm.getTransferable();
-			}
-			return transferables;
-
-		} catch (RetrieveObjectException roe) {
-			Log.errorException(roe);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, roe.getMessage());
-		} catch (IllegalDataException ide) {
-			Log.errorException(ide);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ide.getMessage());
-		} catch (IllegalObjectEntityException ioee) {
-			Log.errorException(ioee);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ioee.getMessage());
-		} catch (ApplicationException e) {
-			Log.errorException(e);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, e.getMessage());
-		} catch (Throwable t) {
-			Log.errorException(t);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
+			objects = AdministrationStorableObjectPool.getStorableObjectsByConditionButIds(ids,
+					new EquivalentCondition(ObjectEntities.MCM_ENTITY_CODE),
+					true);
 		}
+		catch (ApplicationException ae) {
+			Log.errorException(ae);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ae.getMessage());
+		}
+
+		MCM_Transferable[] transferables = new MCM_Transferable[objects.size()];
+		int i = 0;
+		MCM mcm;
+		for (Iterator it = objects.iterator(); it.hasNext(); i++) {
+			mcm = (MCM) it.next();
+			transferables[i] = (MCM_Transferable) mcm.getTransferable();
+		}
+		return transferables;
 	}
 
-	public MCM_Transferable[] transmitMCMsButIds(	Identifier_Transferable[] ids_Transferable,
-													AccessIdentifier_Transferable accessIdentifier)
-			throws AMFICOMRemoteException {
+
+
+
+
+
+	public User_Transferable[] transmitUsersButIdsCondition(Identifier_Transferable[] identifier_Transferables,
+			AccessIdentifier_Transferable accessIdentifier,
+			StorableObjectCondition_Transferable condition_Transferable) throws AMFICOMRemoteException {
+		AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
+		Log.debugMessage("CMAdministrationTransmit.transmitUsersButIdsCondition | All, but " + identifier_Transferables.length
+				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
+
+		Collection ids = new HashSet(identifier_Transferables.length);
+		for (int i = 0; i < identifier_Transferables.length; i++)
+			ids.add(new Identifier(identifier_Transferables[i]));
+
+		StorableObjectCondition condition = null;
 		try {
-			Identifier domainId = new Identifier(accessIdentifier.domain_id);
-			Log.debugMessage("CMAdministrationTransmit.transmitMCMsButIds | requiere "
-					+ (ids_Transferable.length == 0 ? "all" : Integer.toString(ids_Transferable.length))
-					+ " item(s) in domain: " + domainId.toString(), Log.DEBUGLEVEL07);
-			Collection collection;
-			if (ids_Transferable.length > 0) {
-				List idsList = new ArrayList(ids_Transferable.length);
-				for (int i = 0; i < ids_Transferable.length; i++)
-					idsList.add(new Identifier(ids_Transferable[i]));
-				collection = AdministrationStorableObjectPool.getStorableObjectsByConditionButIds(idsList,
-					new EquivalentCondition(ObjectEntities.MCM_ENTITY_CODE), true);
-			} else
-				collection = AdministrationStorableObjectPool.getStorableObjectsByCondition(
-					new EquivalentCondition(ObjectEntities.MCM_ENTITY_CODE), true);
-
-			MCM_Transferable[] transferables = new MCM_Transferable[collection.size()];
-			int i = 0;
-			for (Iterator it = collection.iterator(); it.hasNext(); i++) {
-				MCM mcm = (MCM) it.next();
-				transferables[i] = (MCM_Transferable) mcm.getTransferable();
-			}
-			return transferables;
-
-		} catch (RetrieveObjectException roe) {
-			Log.errorException(roe);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, roe.getMessage());
-		} catch (IllegalDataException ide) {
-			Log.errorException(ide);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ide.getMessage());
-		} catch (IllegalObjectEntityException ioee) {
-			Log.errorException(ioee);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ioee.getMessage());
-		} catch (ApplicationException e) {
-			Log.errorException(e);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, e.getMessage());
-		} catch (Throwable t) {
-			Log.errorException(t);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
+			condition = StorableObjectConditionBuilder.restoreCondition(condition_Transferable);
 		}
+		catch (IllegalDataException ide) {
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_ILLEGAL_DATA,
+					CompletionStatus.COMPLETED_NO,
+					"Cannot restore condition -- " + ide.getMessage());
+		}
+
+		Collection objects = null;
+		try {
+			objects = AdministrationStorableObjectPool.getStorableObjectsByConditionButIds(ids, condition, true);
+		}
+		catch (ApplicationException ae) {
+			Log.errorException(ae);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ae.getMessage());
+		}
+
+		User_Transferable[] transferables = new User_Transferable[objects.size()];
+		int i = 0;
+		User user;
+		for (Iterator it = objects.iterator(); it.hasNext(); i++) {
+			user = (User) it.next();
+			transferables[i] = (User_Transferable) user.getTransferable();
+		}
+		return transferables;
 	}
 
-	public MCM_Transferable[] transmitMCMsButIdsCondition(	Identifier_Transferable[] ids_Transferable,
-															AccessIdentifier_Transferable accessIdentifier,
-															StorableObjectCondition_Transferable condition_Transferable)
-			throws AMFICOMRemoteException {
-		Log.debugMessage("CMAdministrationTransmit.transmitMCMsButIdsCondition | requiere "
-				+ (ids_Transferable.length == 0 ? "all" : Integer.toString(ids_Transferable.length)) + " item(s) ",
-			Log.DEBUGLEVEL07);
+	public Domain_Transferable[] transmitDomainsButIdsCondition(Identifier_Transferable[] identifier_Transferables,
+			AccessIdentifier_Transferable accessIdentifier,
+			StorableObjectCondition_Transferable condition_Transferable) throws AMFICOMRemoteException {
+		AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
+		Log.debugMessage("CMAdministrationTransmit.transmitDomainsButIdsCondition | All, but " + identifier_Transferables.length
+				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
+
+		Collection ids = new HashSet(identifier_Transferables.length);
+		for (int i = 0; i < identifier_Transferables.length; i++)
+			ids.add(new Identifier(identifier_Transferables[i]));
+
+		StorableObjectCondition condition = null;
 		try {
-			Collection collection;
-			StorableObjectCondition condition = StorableObjectConditionBuilder.restoreCondition(condition_Transferable);
-			if (ids_Transferable.length > 0) {
-				List idsList = new ArrayList(ids_Transferable.length);
-				for (int i = 0; i < ids_Transferable.length; i++)
-					idsList.add(new Identifier(ids_Transferable[i]));
-				collection = AdministrationStorableObjectPool.getStorableObjectsByConditionButIds(idsList, condition, true);
-			} else
-				collection = AdministrationStorableObjectPool.getStorableObjectsByCondition(condition, true);
-
-			MCM_Transferable[] transferables = new MCM_Transferable[collection.size()];
-			int i = 0;
-			for (Iterator it = collection.iterator(); it.hasNext(); i++) {
-				MCM mcm = (MCM) it.next();
-				transferables[i] = (MCM_Transferable) mcm.getTransferable();
-			}
-			return transferables;
-
-		} catch (RetrieveObjectException roe) {
-			Log.errorException(roe);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, roe.getMessage());
-		} catch (IllegalDataException ide) {
-			Log.errorException(ide);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ide.getMessage());
-		} catch (IllegalObjectEntityException ioee) {
-			Log.errorException(ioee);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ioee.getMessage());
-		} catch (ApplicationException e) {
-			Log.errorException(e);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, e.getMessage());
-		} catch (Throwable t) {
-			Log.errorException(t);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
+			condition = StorableObjectConditionBuilder.restoreCondition(condition_Transferable);
 		}
+		catch (IllegalDataException ide) {
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_ILLEGAL_DATA,
+					CompletionStatus.COMPLETED_NO,
+					"Cannot restore condition -- " + ide.getMessage());
+		}
+
+		Collection objects = null;
+		try {
+			objects = AdministrationStorableObjectPool.getStorableObjectsByConditionButIds(ids, condition, true);
+		}
+		catch (ApplicationException ae) {
+			Log.errorException(ae);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ae.getMessage());
+		}
+
+		Domain_Transferable[] transferables = new Domain_Transferable[objects.size()];
+		int i = 0;
+		Domain domain;
+		for (Iterator it = objects.iterator(); it.hasNext(); i++) {
+			domain = (Domain) it.next();
+			transferables[i] = (Domain_Transferable) domain.getTransferable();
+		}
+		return transferables;
 	}
 
-	public Domain_Transferable[] transmitDomains(	Identifier_Transferable[] identifier_Transferables,
-													AccessIdentifier_Transferable accessIdentifier)
-			throws AMFICOMRemoteException {
-		List idsList = new ArrayList();
+	public Server_Transferable[] transmitServersButIdsCondition(Identifier_Transferable[] identifier_Transferables,
+			AccessIdentifier_Transferable accessIdentifier,
+			StorableObjectCondition_Transferable condition_Transferable) throws AMFICOMRemoteException {
+		AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
+		Log.debugMessage("CMAdministrationTransmit.transmitServersButIdsCondition | All, but " + identifier_Transferables.length
+				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
 
-		Log.debugMessage("CMAdministrationTransmit.transmitDomains | requiere "
-				+ (identifier_Transferables.length == 0 ? "all" : Integer.toString(identifier_Transferables.length))
-				+ " item(s)", Log.DEBUGLEVEL07);
+		Collection ids = new HashSet(identifier_Transferables.length);
+		for (int i = 0; i < identifier_Transferables.length; i++)
+			ids.add(new Identifier(identifier_Transferables[i]));
+
+		StorableObjectCondition condition = null;
 		try {
-			Collection collection = null;
-			if (identifier_Transferables.length > 0) {
-				for (int i = 0; i < identifier_Transferables.length; i++)
-					idsList.add(new Identifier(identifier_Transferables[i]));
-				collection = AdministrationStorableObjectPool.getStorableObjects(idsList, true);
-			}
-
-			if (collection == null)
-				collection = AdministrationStorableObjectPool.getStorableObjectsByCondition(
-					new EquivalentCondition(ObjectEntities.DOMAIN_ENTITY_CODE), true);
-
-			int i = 0;
-			Domain_Transferable[] transferables = new Domain_Transferable[collection.size()];
-			for (Iterator it = collection.iterator(); it.hasNext(); i++) {
-				Domain domain2 = (Domain) it.next();
-				transferables[i] = (Domain_Transferable) domain2.getTransferable();
-
-			}
-
-			return transferables;
-		} catch (ObjectNotFoundException onfe) {
-			Log.errorException(onfe);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_NOT_FOUND, CompletionStatus.COMPLETED_YES, onfe
-					.getMessage());
-		} catch (RetrieveObjectException roe) {
-			Log.errorException(roe);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, roe.getMessage());
-		} catch (CommunicationException ce) {
-			Log.errorException(ce);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ce.getMessage());
-		} catch (DatabaseException de) {
-			Log.errorException(de);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, de.getMessage());
-		} catch (IllegalDataException ide) {
-			Log.errorException(ide);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ide.getMessage());
-		} catch (IllegalObjectEntityException ioee) {
-			Log.errorException(ioee);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ioee.getMessage());
-		} catch (ApplicationException e) {
-			Log.errorException(e);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, e.getMessage());
-		} catch (Throwable t) {
-			Log.errorException(t);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
+			condition = StorableObjectConditionBuilder.restoreCondition(condition_Transferable);
 		}
+		catch (IllegalDataException ide) {
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_ILLEGAL_DATA,
+					CompletionStatus.COMPLETED_NO,
+					"Cannot restore condition -- " + ide.getMessage());
+		}
+
+		Collection objects = null;
+		try {
+			objects = AdministrationStorableObjectPool.getStorableObjectsByConditionButIds(ids, condition, true);
+		}
+		catch (ApplicationException ae) {
+			Log.errorException(ae);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ae.getMessage());
+		}
+
+		Server_Transferable[] transferables = new Server_Transferable[objects.size()];
+		int i = 0;
+		Server server;
+		for (Iterator it = objects.iterator(); it.hasNext(); i++) {
+			server = (Server) it.next();
+			transferables[i] = (Server_Transferable) server.getTransferable();
+		}
+		return transferables;
 	}
+
+	public MCM_Transferable[] transmitMCMsButIdsCondition(Identifier_Transferable[] identifier_Transferables,
+			AccessIdentifier_Transferable accessIdentifier,
+			StorableObjectCondition_Transferable condition_Transferable) throws AMFICOMRemoteException {
+		AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
+		Log.debugMessage("CMAdministrationTransmit.transmitMCMsButIdsCondition | All, but " + identifier_Transferables.length
+				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
+
+		Collection ids = new HashSet(identifier_Transferables.length);
+		for (int i = 0; i < identifier_Transferables.length; i++)
+			ids.add(new Identifier(identifier_Transferables[i]));
+
+		StorableObjectCondition condition = null;
+		try {
+			condition = StorableObjectConditionBuilder.restoreCondition(condition_Transferable);
+		}
+		catch (IllegalDataException ide) {
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_ILLEGAL_DATA,
+					CompletionStatus.COMPLETED_NO,
+					"Cannot restore condition -- " + ide.getMessage());
+		}
+
+		Collection objects = null;
+		try {
+			objects = AdministrationStorableObjectPool.getStorableObjectsByConditionButIds(ids, condition, true);
+		}
+		catch (ApplicationException ae) {
+			Log.errorException(ae);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ae.getMessage());
+		}
+
+		MCM_Transferable[] transferables = new MCM_Transferable[objects.size()];
+		int i = 0;
+		MCM mcm;
+		for (Iterator it = objects.iterator(); it.hasNext(); i++) {
+			mcm = (MCM) it.next();
+			transferables[i] = (MCM_Transferable) mcm.getTransferable();
+		}
+		return transferables;
+	}
+
+
+
+
 
 	// Refresh objects from a pool
 	public Identifier_Transferable[] transmitRefreshedAdministrationObjects(StorableObject_Transferable[] storableObjects_Transferables,
 			AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
+		AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
+		Log.debugMessage("Refreshing for user '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
 		try {
 			Map storableObjectsTMap = new HashMap();
 			for (int i = 0; i < storableObjects_Transferables.length; i++)
