@@ -97,7 +97,7 @@ public class AMFICOMServer
 			strs.set(_output);
 //			System.out.println("()fnOutReport(" + strs.length + ")");
 			ServerTrafficReporter.fnOutReport("OUT: ", strs.length);
-//			ServerTrafficReporter.fnStrReport("elapsed time: " + starttm - endtm + " ms");
+			ServerTrafficReporter.fnStrReport("elapsed time: " + String.valueOf(starttm - endtm) + " ms");
 			ServerTrafficReporter.fnReportEnd();
 		}
 		}

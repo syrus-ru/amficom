@@ -121,7 +121,7 @@ public class TestDatadbInterfaceLoad
 		String It_data_type = "";
 		String It_action_id = "";
 		BLOB It_value;
-		OctetSequenceHolder osh;
+		octetSeqHolder osh;
 
 		Vector vector2 = new Vector();
 		TestTypeArgumentIterator argIt = null;
@@ -157,7 +157,7 @@ public class TestDatadbInterfaceLoad
 				catch(SQLException e) { }
 				if(It_parameter_type_id == null) It_parameter_type_id = "";
 
-				osh = new OctetSequenceHolder();
+				osh = new octetSeqHolder();
 				osh.value = new byte[0];
 				try
 				{

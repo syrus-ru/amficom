@@ -671,7 +671,7 @@ public class SchemedbInterfaceLoad
 			try { It_height = sIt.height(); }
 			catch(SQLException e) { }
 			try {
-				OctetSequenceHolder osh = new OctetSequenceHolder();
+				octetSeqHolder osh = new octetSeqHolder();
 				if(ResourcedbInterface.GetBlob(sIt.clonez(), osh) == 0)
 					It_clonez = osh.value;
                 else

@@ -85,12 +85,12 @@ public class TestImages
 		String filename;
 		String source_string;
 		BLOB blob;
-		OctetSequenceHolder osh;
+		octetSeqHolder osh;
 		len = image_ids.size();
 		for(i = 0; i < len; i++)
 		{
 			String im_id = (String )image_ids.get(i);
-			osh = new OctetSequenceHolder();
+			osh = new octetSeqHolder();
 			System.out.println("loading image: " + im_id);
 			try
 			{
@@ -124,7 +124,7 @@ public class TestImages
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static public int GetImage(BLOB blob, OctetSequenceHolder octseqh)
+	static public int GetImage(BLOB blob, octetSeqHolder octseqh)
 //			throws SQLError
 	{
 	try

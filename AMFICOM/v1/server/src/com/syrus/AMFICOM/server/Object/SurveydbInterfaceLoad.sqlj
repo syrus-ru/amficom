@@ -194,7 +194,7 @@ public class SurveydbInterfaceLoad
 		String It_action_id = "";
 		BLOB It_value;
 		byte[] val = new byte[0];
-		OctetSequenceHolder osh;
+		octetSeqHolder osh;
 
 		Vector vector2 = new Vector();
 		ResultParameterIterator paramIt = null;
@@ -209,7 +209,7 @@ public class SurveydbInterfaceLoad
 
 			while (paramIt.next())
 			{
-				osh = new OctetSequenceHolder();
+				osh = new octetSeqHolder();
 				osh.value = new byte[0];
 
 				try { It_id = paramIt.id(); }
@@ -488,7 +488,7 @@ System.out.println("Zaebali ");
 		String It_action_id = "";
 		BLOB It_value;
 		byte[] val = new byte[0];
-		OctetSequenceHolder osh;
+		octetSeqHolder osh;
 
 		ClientParameter_Transferable arg;
 		ClientParameter_Transferable args[] = new ClientParameter_Transferable[0];
@@ -523,7 +523,7 @@ System.out.println("Zaebali ");
 				catch(SQLException e) { }
 				if(It_parameter_type_id == null) It_parameter_type_id = "";
 
-				osh = new OctetSequenceHolder();
+				osh = new octetSeqHolder();
 				osh.value = new byte[0];
 
 				try
