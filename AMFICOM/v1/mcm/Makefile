@@ -1,6 +1,7 @@
 MODULE_NAME = mcm_v1
 
 LIBNAME = $(subst _v1,,$(MODULE_NAME)).jar
+LIBNAME_INTERFACE= $(subst _v1,_interface,$(MODULE_NAME)).jar
 ARCHFILE = $(subst _v1,,$(MODULE_NAME)).tar.gz
 
 INCIDLDIR=../idl_v1/idl
@@ -13,8 +14,6 @@ DADARA_DIR=./dadara
 
 APPCLASSPATH = $(LIBDIR)/util.jar:$(LIBDIR)/general.jar:$(LIBDIR)/configuration.jar:$(LIBDIR)/measurement.jar:$(LIBDIR)/dadara.jar
 
-IDL2JAVAFLAGS = -strict -I$(INCIDLDIR)
-
 JAVAH=javah
 JAVAH_FLAGS = \
 	-classpath $(APPCLASSPATH):$(CLASSDIR) \
@@ -26,9 +25,29 @@ $(call checkenve,ORACLE_HOME)
 $(call checkenve,IDL2JAVA)
 
 
+IDL2JAVA=$(JAVA_HOME)/bin/idlj
+IDL2JAVAFLAGS = \
+	-fall \
+	-i $(IDLDIR) \
+	-i $(INCIDLDIR) \
+	-td $(SRCDIR) \
+	-v
+
+
+all: $(LIBNAME) $(LIBNAME_INTERFACE)
+
 $(LIBNAME): .mach
 	$(JAR) -cf $@ \
 		-C $(CLASSDIR) com
+
+$(LIBNAME_INTERFACE):	.corba
+	$(JAR) -cf $@ \
+		-C $(CLASSDIR) com/syrus/AMFICOM/mcm/corba/MCM.class \
+		-C $(CLASSDIR) com/syrus/AMFICOM/mcm/corba/MCMOperations.class \
+		-C $(CLASSDIR) com/syrus/AMFICOM/mcm/corba/_MCMStub.class \
+		-C $(CLASSDIR) com/syrus/AMFICOM/mcm/corba/MCMHelper.class \
+		-C $(CLASSDIR) com/syrus/AMFICOM/mcm/corba/MCMHolder.class
+
 
 .head:	.mach
 	$(JAVAH) $(JAVAH_FLAGS) \
