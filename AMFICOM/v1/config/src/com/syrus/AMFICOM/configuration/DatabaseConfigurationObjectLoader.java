@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseConfigurationObjectLoader.java,v 1.28 2005/02/02 08:05:05 bob Exp $
+ * $Id: DatabaseConfigurationObjectLoader.java,v 1.29 2005/02/03 20:16:46 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,8 +26,8 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.28 $, $Date: 2005/02/02 08:05:05 $
- * @author $Author: bob $
+ * @version $Revision: 1.29 $, $Date: 2005/02/03 20:16:46 $
+ * @author $Author: arseniy $
  * @module config_v1
  */
 
@@ -629,7 +629,7 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
 
 	public void saveCableLinkTypes(List list, boolean force) throws VersionCollisionException, DatabaseException,
 			CommunicationException {
-		StorableObjectDatabase database = this.getDatabase(ObjectEntities.CABLE_LINKTYPE_ENTITY_CODE);
+		StorableObjectDatabase database = this.getDatabase(ObjectEntities.CABLELINKTYPE_ENTITY_CODE);
 		try {
 			database.update(list, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK,
 				null);
@@ -681,7 +681,7 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
 
 	public void saveCableThreads(List list, boolean force) throws VersionCollisionException, DatabaseException,
 			CommunicationException {
-		StorableObjectDatabase database = this.getDatabase(ObjectEntities.CABLE_THREAD_ENTITY_CODE);
+		StorableObjectDatabase database = this.getDatabase(ObjectEntities.CABLETHREAD_ENTITY_CODE);
 		try {
 			database.update(list, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK,
 				null);
@@ -1395,7 +1395,7 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
 	private StorableObjectDatabase getDatabase(short entityCode) {
 		StorableObjectDatabase database = null;
 		switch (entityCode) {
-			case ObjectEntities.CABLE_LINKTYPE_ENTITY_CODE:
+			case ObjectEntities.CABLELINKTYPE_ENTITY_CODE:
 				database = ConfigurationDatabaseContext.getCableLinkTypeDatabase();
 				break;
 			case ObjectEntities.CABLETHREADTYPE_ENTITY_CODE:
@@ -1415,7 +1415,7 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
 			case ObjectEntities.TRANSPATHTYPE_ENTITY_CODE:
 				database = ConfigurationDatabaseContext.getTransmissionPathTypeDatabase();
 				break;
-			case ObjectEntities.CABLE_THREAD_ENTITY_CODE:
+			case ObjectEntities.CABLETHREAD_ENTITY_CODE:
 				database = ConfigurationDatabaseContext.getCableThreadDatabase();
 				break;
 			case ObjectEntities.EQUIPMENT_ENTITY_CODE:

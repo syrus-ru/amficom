@@ -1,5 +1,5 @@
 /*
- * $Id: CableThreadDatabase.java,v 1.8 2005/02/03 14:38:06 arseniy Exp $
+ * $Id: CableThreadDatabase.java,v 1.9 2005/02/03 20:16:19 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,7 +31,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/02/03 14:38:06 $
+ * @version $Revision: 1.9 $, $Date: 2005/02/03 20:16:19 $
  * @author $Author: arseniy $
  * @module config_v1
  */
@@ -47,7 +47,7 @@ public class CableThreadDatabase extends StorableObjectDatabase  {
     }
     
     protected String getEnityName() {
-        return ObjectEntities.CABLE_THREAD_ENTITY;
+        return ObjectEntities.CABLETHREAD_ENTITY;
     }
     
     protected String getColumns(int mode) {
