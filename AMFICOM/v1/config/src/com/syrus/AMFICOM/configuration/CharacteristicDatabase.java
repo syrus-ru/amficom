@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicDatabase.java,v 1.43 2004/11/30 09:45:39 max Exp $
+ * $Id: CharacteristicDatabase.java,v 1.44 2004/11/30 09:54:08 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -40,8 +40,8 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.configuration.corba.CharacteristicSort;
 
 /**
- * @version $Revision: 1.43 $, $Date: 2004/11/30 09:45:39 $
- * @author $Author: max $
+ * @version $Revision: 1.44 $, $Date: 2004/11/30 09:54:08 $
+ * @author $Author: bob $
  * @module configuration_v1
  */
 
@@ -424,22 +424,7 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
                 }
     		}
             //  insert or update
-            for (Iterator it = characteristics.iterator(); it.hasNext();) {
-    			Characteristic characteristic = (Characteristic) it.next();
-                Characteristic dbCharacteristic = (Characteristic) databaseIdCharacteristics.get(characteristic.getId());
-                //  insert
-                if (dbCharacteristic == null) {
-                	this.insert(characteristic);
-                    continue;
-                }
-                //  update
-                boolean areIdsEqual = characteristic.getModifierId().equals(dbCharacteristic.getModifierId());
-                boolean areDatesEqual = Math.abs(storableObject.getModified().getTime() 
-                        - dbCharacteristic.getModified().getTime()) < 1000;
-                if (!(areIdsEqual && areDatesEqual)) {
-                	this.update(characteristic, UPDATE_FORCE, null);
-                }
-            }
+            super.checkAndUpdateEntities(characteristics, true);            
         } catch (SQLException sqle) {
             String mesg = "CharacteristicDatabase.updateCharacteristics | SQLException: " + sqle.getMessage();
             throw new UpdateObjectException(mesg, sqle);
@@ -452,10 +437,13 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
         } catch (RetrieveObjectException roe) {
             String mesg = "CharacteristicDatabase.updateCharacteristics | RetrieveObjectException: " + roe.getMessage();
             throw new UpdateObjectException(mesg, roe);
-        }catch(CreateObjectException coe) {
-            String mesg = "CharacteristicDatabase.updateCharacteristics | CreateObjectException: " + coe.getMessage();
-            throw new UpdateObjectException(mesg, coe);
         }
         
+	}
+	
+	public void updateCharacteristics(List storableObjects) throws UpdateObjectException {
+		/**
+		 * TODO: implement method
+		 */
 	}
 }
