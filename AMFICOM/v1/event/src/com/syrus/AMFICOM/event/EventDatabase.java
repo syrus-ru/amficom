@@ -1,5 +1,5 @@
 /*
- * $Id: EventDatabase.java,v 1.1 2004/12/29 14:05:16 arseniy Exp $
+ * $Id: EventDatabase.java,v 1.2 2004/12/29 14:18:14 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,7 +29,7 @@ import com.syrus.util.database.DatabaseString;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2004/12/29 14:05:16 $
+ * @version $Revision: 1.2 $, $Date: 2004/12/29 14:18:14 $
  * @author $Author: arseniy $
  * @module event_v1
  */
@@ -39,8 +39,6 @@ public class EventDatabase extends StorableObjectDatabase {
 	public static final String COLUMN_TYPE_ID = "type_id";
 	public static final String COLUMN_STATUS = "status";
 	public static final String COLUMN_DESCRIPTION = "description";
-
-	private static final int SIZE_DESCRIPTION_COLUMN = 256;
 
 	private static String columns;
 
