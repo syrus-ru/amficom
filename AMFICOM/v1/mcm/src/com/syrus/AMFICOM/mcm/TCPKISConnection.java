@@ -90,14 +90,16 @@ public class TCPKISConnection implements KISConnection {
 		Identifier measurementId  = measurement.getId();
 		Log.debugMessage("TCPKISConnection.transmitMeasurement | Transmitting measurement '" + measurementId + "' to KIS '" + this.kisId + "'", Log.DEBUGLEVEL07);
 		if (this.transmitMeasurementBySocket(measurementId.toString(),
-								measurement.getType().getCodename(),
-								measurement.getLocalAddress(),
-								measurement.getSetup().getParameterTypeCodenames(),
-								measurement.getSetup().getParameterValues(),
-								timewait))
-			Log.debugMessage("TCPKISConnection.transmitMeasurement | Transmitted measurement '" + measurementId + "' to KIS '" + this.kisId + "'", Log.DEBUGLEVEL07);
+				measurement.getType().getCodename(),
+				measurement.getLocalAddress(),
+				measurement.getSetup().getParameterTypeCodenames(),
+				measurement.getSetup().getParameterValues(),
+				timewait))
+			Log.debugMessage("TCPKISConnection.transmitMeasurement | Transmitted measurement '" + measurementId
+					+ "' to KIS '" + this.kisId + "'", Log.DEBUGLEVEL07);
 		else
-			throw new CommunicationException("TCPKISConnection.transmitMeasurement | Cannot transmit measurement '" + measurementId + "' to KIS '" + this.kisId + "'");
+			throw new CommunicationException("TCPKISConnection.transmitMeasurement | Cannot transmit measurement '"
+					+ measurementId + "' to KIS '" + this.kisId + "'");
 	}
 
 	public synchronized KISReport receiveKISReport(long timewait) throws CommunicationException {
