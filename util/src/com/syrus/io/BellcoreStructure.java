@@ -1,5 +1,5 @@
 /*
- * $Id: BellcoreStructure.java,v 1.5 2004/10/13 07:05:56 stas Exp $
+ * $Id: BellcoreStructure.java,v 1.6 2004/10/18 14:01:56 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,8 +8,10 @@
 
 package com.syrus.io;
 
+import com.syrus.AMFICOM.general.Identifier;
+
 /**
- * @version $Revision: 1.5 $, $Date: 2004/10/13 07:05:56 $
+ * @version $Revision: 1.6 $, $Date: 2004/10/18 14:01:56 $
  * @author $Author: stas $
  * @module util
  */
@@ -49,8 +51,9 @@ public class BellcoreStructure // extends ObjectResource
 	public Special[] special;
 
 	public String title = "";
-	public String testSetupId = "";
-	public String monitoredElementId = "";
+	public String schemePathId;
+	public Identifier measurementId;
+	public Identifier monitoredElementId;
 
 	public void addField (int type)
 	{
