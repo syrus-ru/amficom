@@ -405,8 +405,8 @@ void BreakL_ChangeByThresh (ModelF &mf, ThreshDXArray &taX, ThreshDYArray &taY, 
 		thX[j].leftMode = leftMode;
 		thX[j].x0 = taX.getX0(j);
 		thX[j].x1 = taX.getX1(j);
-		thX[j].dxL = leftMode ? taX.getDX(j, key) : taX.getDX(j, conjKey);
-		thX[j].dxR = leftMode ? taX.getDX(j, conjKey) : taX.getDX(j, key);
+		thX[j].dxL = leftMode ? -taX.getDX(j, key) : taX.getDX(j, conjKey);
+		thX[j].dxR = leftMode ? -taX.getDX(j, conjKey) : taX.getDX(j, key);
 	}
 	for (j = 0; j < thNpY; j++)
 	{

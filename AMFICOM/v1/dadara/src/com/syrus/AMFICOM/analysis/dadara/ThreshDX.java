@@ -1,5 +1,5 @@
 /*
- * $Id: ThreshDX.java,v 1.1 2005/02/21 13:39:33 saa Exp $
+ * $Id: ThreshDX.java,v 1.2 2005/02/22 09:16:52 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,7 +13,7 @@ import java.io.IOException;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.1 $, $Date: 2005/02/21 13:39:33 $
+ * @version $Revision: 1.2 $, $Date: 2005/02/22 09:16:52 $
  * @module
  */
 public class ThreshDX extends Thresh
@@ -25,11 +25,12 @@ public class ThreshDX extends Thresh
 	{
 	}
 
-	protected ThreshDX(int eventId, int xMin, int xMax, boolean isRise, int dx)
+	protected ThreshDX(int eventId, int xMin, int xMax, boolean isRise)
 	{
 		super(eventId, eventId, xMin, xMax);
+		int dx = isRise ? -1 : +1;
 		this.isRise = isRise;
-		dX = new int[] { dx, 2 * dx, dx, 2 * dx };
+		dX = new int[] { dx, 2 * dx, -dx, -2 * dx };
 	}
 
 	protected void readSpecificFromDIS(DataInputStream dis) throws IOException

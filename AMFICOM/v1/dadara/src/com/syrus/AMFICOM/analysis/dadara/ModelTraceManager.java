@@ -1,5 +1,5 @@
 /*
- * $Id: ModelTraceManager.java,v 1.9 2005/02/21 15:51:50 saa Exp $
+ * $Id: ModelTraceManager.java,v 1.10 2005/02/22 09:16:52 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ import com.syrus.AMFICOM.analysis.CoreAnalysisManager;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.9 $, $Date: 2005/02/21 15:51:50 $
+ * @version $Revision: 1.10 $, $Date: 2005/02/22 09:16:52 $
  * @module
  */
 public class ModelTraceManager
@@ -73,11 +73,16 @@ public class ModelTraceManager
 				last.xMax = evEnd;
 				last.eventId1 = i;
 				break;
-			case SimpleReflectogramEvent.GAIN: // fall through
+			case SimpleReflectogramEvent.GAIN:
+				last.xMax = evBegin;
+				last.eventId1 = i;
+				thresholds.add(new ThreshDX(i, evBegin, evEnd, true));
+				thresholds.add(last = new ThreshDY(i, false, evEnd, evEnd));
+				break;
 			case SimpleReflectogramEvent.LOSS:
 				last.xMax = evBegin;
 				last.eventId1 = i;
-				thresholds.add(new ThreshDX(i, evBegin, evEnd, false, 1)); // FIXME: isRise = ?
+				thresholds.add(new ThreshDX(i, evBegin, evEnd, false));
 				thresholds.add(last = new ThreshDY(i, false, evEnd, evEnd));
 				break;
 			case SimpleReflectogramEvent.REFLECTIVE:
@@ -87,9 +92,9 @@ public class ModelTraceManager
 				evEnd = pos[2];
 				last.xMax = evBegin;
 				last.eventId1 = i;
-				thresholds.add(new ThreshDX(i, evBegin, evCenter, true, 1));
+				thresholds.add(new ThreshDX(i, evBegin, evCenter, true));
 				thresholds.add(new ThreshDY(i, true, evCenter, evCenter));
-				thresholds.add(new ThreshDX(i, evCenter, evEnd, false, 1));
+				thresholds.add(new ThreshDX(i, evCenter, evEnd, false));
 				thresholds.add(last = new ThreshDY(i, false, evEnd, evEnd));
 				//System.err.println("REFLECTIVE: event #" + i + " begin=" + evBegin + " center=" + evCenter + " end=" + evEnd);
 				break;
@@ -494,16 +499,62 @@ public class ModelTraceManager
 	protected ThreshDX[] tDX;
 	protected ThreshDY[] tDY;
 
-	public class ThresholdHandle // DY only; tDY numbering
+	public interface ThresholdHandle
+	{
+		public void moveBy(double dx, double dy);
+		public int getX();
+		public double getY();
+	}
+
+	protected class ThresholdHandleDX
+	implements ThresholdHandle 
+	{
+		private ThreshDX th;
+		private int key;
+		private double dxFrac = 0; // сохраняем дробную часть dx, еще не доставленную до th 
+		protected int posX;
+		protected double posY;
+		protected ThresholdHandleDX(int thId, int key, int posX, double posY)
+		{
+			this.th = tDX[thId];
+			this.key = key;
+			this.posX = posX;
+			this.posY = posY;
+		}
+		public void moveBy(double dx, double dy) // dy is ignored
+		{
+			dxFrac += dx;
+			dx = Math.round(dxFrac);
+			dxFrac -= dx;
+			//System.err.println("THDX: moveBy: dx=" + dx + "; dy=" + dy);
+			invalidateThMTByKey(key);
+			posX += dx;
+			th.dX[key] += dx;
+		}
+		public int getX()
+		{
+			return posX;
+		}
+		public double getY()
+		{
+			return posY;
+		}
+	}
+
+	protected class ThresholdHandleDY
+	implements ThresholdHandle 
 	{
 		private ThreshDY th;
 		private int key;
+		private double dyGrid; // точность представления dy
+		private double dyFrac; // сохраненная дробная часть порога, не ложащаяся на сетку  1/1000 дБ
 		protected int posX;
 		protected double posY;
-		protected ThresholdHandle(int thId, int key, int posX, double posY)
+		protected ThresholdHandleDY(int thId, int key, int posX, double posY, double dyGrid)
 		{
 			this.th = tDY[thId];
 			this.key = key;
+			this.dyGrid = dyGrid;
 			int posMin = th.xMin;
 			int posMax = th.xMax;
 			if (th.typeL && thId > 0 && thId < tDY.length - 1)
@@ -513,7 +564,6 @@ public class ModelTraceManager
 				posMax = tDY[thId + 1].xMin;
 				if (posMin < posMax)
 				{
-//					System.err.println("initial posMin=" + posMin + " posMax=" + posMax);
 					// получаем интересующий нас участок кривой
 					int x0 = posMin;
 					double[] yArr = getThresholdMT(key).getYArray(x0, posMax - posMin + 1);
@@ -524,7 +574,6 @@ public class ModelTraceManager
 					double yRVal = getThresholdY(key, posMax);
 					double yLCut = yLVal + (yMax - yLVal) * level;
 					double yRCut = yRVal + (yMax - yRVal) * level;
-//					System.err.println("yMax=" + yMax + " yLCut=" + yLCut + " yRCut=" + yRCut);
 					// определяем начало и конец максимума по выбранному уровню
 					int i;
 					for (i = posMin; i <= posMax; i++)
@@ -545,8 +594,6 @@ public class ModelTraceManager
 						posMax = th.xMax;
 				}
 			}
-//			System.err.println("ThresholdHandle(): id=" + thId + " type=" + th.typeId + " X=" + posX + " Lold=" + th.xMin + " Rold=" + th.xMax
-//				+ " L=" + posMin + " R=" + posMax);
 			if (posX < posMin)
 				posX = posMin;
 			if (posX > posMax)
@@ -554,9 +601,15 @@ public class ModelTraceManager
 			this.posX = posX;
 			this.posY = posY;
 		}
-		public void moveBy(int dx, double dy)
+		public void moveBy(double dx, double dy) // dx is ignored
 		{
-			// dx is ignored now
+			// привязка к сетке указанного шага (тип., 0.001 дБ)
+			if (dyGrid > 0)
+			{
+				dyFrac += dy;
+				dy = Math.round(dyFrac / dyGrid) * dyGrid;
+				dyFrac -= dy;
+			}
 			invalidateThMTByKey(key);
 			posY += dy;
 			th.values[key] += dy;
@@ -571,10 +624,23 @@ public class ModelTraceManager
 		}
 	}
 
-	// определяем, к какому порогу лучше относится данная точка
+	// определяем, к какому DX-порогу относится данная точка,
+	// или не относится ни к одному (return -1)
+	// FIXME: плохой алгоритм - не учитывает реального хода кривой; оттого, кстати, и key не используется
+	private int getNearestThreshDXByX(int key, int x)
+	{
+		for (int i = 0; i < tDX.length; i++)
+		{
+			if (x >= tDX[i].xMin + tDX[i].dX[key] && x <= tDX[i].xMax + tDX[i].dX[key])
+				return i;
+		}
+		return -1;
+	}
+
+	// определяем, к какому DY-порогу лучше относится данная точка
 	// при выборе между A и A граница порога - посередине между порогами,
-	// при выборе между A и L - по уровню Y = (Y_A + Y_L)/2 
-	private int getNearestThreshByX(int key, int x)
+	// при выборе между A и L - по уровню Y = (Y_A + Y_L)/2
+	private int getNearestThreshDYByX(int key, int x)
 	{
 		for (int i = 0; i < tDY.length - 1; i++)
 		{
@@ -583,9 +649,10 @@ public class ModelTraceManager
 			if (x > nextBegin)
 				continue;
 			int separator;
-			if (tDY[i].typeL == false && tDY[i + 1].typeL == false)
+			boolean isAtoL = tDY[i].typeL || tDY[i + 1].typeL;
+			if (isAtoL == false)
 			{
-				// между порогами, A-A
+				// между порогами A-A или DX-DX
 				// устанавливаем границу раздела посередине
 				separator = (thisEnd + nextBegin) / 2;
 			}
@@ -601,7 +668,6 @@ public class ModelTraceManager
 				for (int k = 0; k < N; k++)
 					if (yArr[k] <= median ^ median <= yArr[0])
 						separator++;
-				//System.err.println("getNearestThreshByX: i=" + i + " x=" + x + " thisEnd=" + thisEnd + " nextBegin=" + nextBegin + " separator=" + separator);
 			}
 			if (x < separator)
 			{
@@ -615,32 +681,6 @@ public class ModelTraceManager
 	private ArrayList getAllThreshByNEvent(int nEvent)
 	{
 		ArrayList ret = new ArrayList();
-		/*
-		for (int i = 0; i < tL.length; i++)
-		{
-			if (tL[i].eventId == -1 && nEvent == 0
-					|| tL[i].eventId == nEvent)
-				ret.add(tL[i]);
-		}
-		// если это линейное событие без собственных порогов,
-		// то надо выбрать покрывающий его порог
-		if (ret.size() == 0)
-		{
-			for (int i = 1; i < tL.length; i++)
-				if (tL[i].eventId > nEvent)
-				{
-					ret.add(tL[i - 1]);
-					break;
-				}
-		}*/
-		/*
-		for (int i = 0; i < tL.length; i++)
-		{
-			if (tL[i].xMax >= se[nEvent].getBegin()
-					&& tL[i].xMin <= se[nEvent].getEnd())
-				ret.add(tL[i]);
-		}
-		*/
 		for (int i = 0; i < tL.length; i++)
 		{
 			if (tL[i].eventId0 <= nEvent && tL[i].eventId1 >= nEvent)
@@ -741,9 +781,21 @@ public class ModelTraceManager
 			return null;
 
 		double bestY = getThresholdY(bestKey, bestX);
-		int thId = getNearestThreshByX(bestKey, bestX);
-		ThresholdHandle handle = new ThresholdHandle(thId, bestKey, bestX, bestY);
-		handle.posY = getThresholdY(bestKey, handle.posX);
-		return handle;
+
+		System.out.println("Button = " + button);
+		if (button == 0)
+		{
+			int thId = getNearestThreshDYByX(bestKey, bestX);
+			ThresholdHandleDY handle = new ThresholdHandleDY(thId, bestKey, bestX, bestY, 0.001);
+			handle.posY = getThresholdY(bestKey, handle.posX);
+			return handle;
+		}
+		else
+		{
+			int thId = getNearestThreshDXByX(bestKey, bestX);
+			ThresholdHandleDX handle = new ThresholdHandleDX(thId, bestKey, bestX, bestY);
+			handle.posY = getThresholdY(bestKey, handle.posX);
+			return handle;
+		}
 	}
 }
