@@ -234,7 +234,7 @@ public class PathBuilder
 			newPE = PathElement.createInstance();
 			newPE.type(Type.SCHEME_ELEMENT);
 			newPE.abstractSchemeElement(se);
-			newPE.scheme(se.scheme());
+			newPE.scheme(se.getParentScheme());
 			newPE.sequentialNumber(pe.sequentialNumber() + 1);
 			newPE.startAbstractSchemePort(pe.endAbstractSchemePort());
 
@@ -344,7 +344,7 @@ public class PathBuilder
 			newPE = PathElement.createInstance();
 			newPE.type(Type.SCHEME_ELEMENT);
 			newPE.abstractSchemeElement(se);
-			newPE.scheme(se.scheme());
+			newPE.scheme(se.getParentScheme());
 			newPE.sequentialNumber(1);
 			if (accessPorts == 1)
 				newPE.endAbstractSchemePort(port);
@@ -402,7 +402,7 @@ public class PathBuilder
 		PathElement newPE = PathElement.createInstance();
 		newPE.type(Type.SCHEME_LINK);
 		newPE.abstractSchemeElement(link);
-		newPE.scheme(link.scheme());
+		newPE.scheme(link.getParentScheme());
 		newPE.sequentialNumber(number);
 
 		if (port.equals(link.sourceSchemePort()))
@@ -489,7 +489,7 @@ public class PathBuilder
 		newPE.type(Type.SCHEME_CABLE_LINK);
 		newPE.abstractSchemeElement(link);
 		newPE.schemeCableThread(thread);
-		newPE.scheme(link.scheme());
+		newPE.scheme(link.getParentScheme());
 		newPE.sequentialNumber(number);
 
 		if (port.equals(link.sourceSchemeCablePort()))

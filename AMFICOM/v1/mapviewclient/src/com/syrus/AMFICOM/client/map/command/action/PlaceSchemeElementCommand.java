@@ -1,5 +1,5 @@
 /**
- * $Id: PlaceSchemeElementCommand.java,v 1.14 2005/03/16 12:54:57 bass Exp $
+ * $Id: PlaceSchemeElementCommand.java,v 1.15 2005/03/22 17:35:16 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -30,7 +30,7 @@ import com.syrus.AMFICOM.scheme.SchemeElement;
  * или по координатам
  * 
  * @author $Author: bass $
- * @version $Revision: 1.14 $, $Date: 2005/03/16 12:54:57 $
+ * @version $Revision: 1.15 $, $Date: 2005/03/22 17:35:16 $
  * @module mapviewclient_v1
  */
 public class PlaceSchemeElementCommand extends MapActionCommandBundle
@@ -114,7 +114,7 @@ public class PlaceSchemeElementCommand extends MapActionCommandBundle
 					this.site = this.unbound;
 				}
 				
-				this.logicalNetLayer.getMapViewController().scanCables(this.schemeElement.scheme());
+				this.logicalNetLayer.getMapViewController().scanCables(this.schemeElement.getParentScheme());
 			}
 			// операция закончена - оповестить слушателей
 			this.logicalNetLayer.sendMapEvent(new MapEvent(this, MapEvent.MAP_CHANGED));

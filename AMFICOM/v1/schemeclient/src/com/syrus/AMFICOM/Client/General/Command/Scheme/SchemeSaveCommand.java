@@ -117,7 +117,7 @@ public class SchemeSaveCommand extends VoidCommand
 
 		scheme.setName(sd.name);
 		scheme.setDescription(sd.description);
-		scheme.type(sd.type);
+		scheme.setSchemeKind(sd.type);
 //		scheme.created = System.currentTimeMillis();
 
 		final Identifier domainId = new Identifier(

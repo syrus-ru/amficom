@@ -17,7 +17,7 @@ import com.syrus.AMFICOM.general.corba.*;
 import com.syrus.AMFICOM.measurement.*;
 import com.syrus.AMFICOM.scheme.*;
 import com.syrus.AMFICOM.scheme.SchemeStorableObjectPool;
-import com.syrus.AMFICOM.scheme.corba.SchemePackage.Type;
+import com.syrus.AMFICOM.scheme.corba.SchemeKind;
 
 public class SchemeTreeModel implements TreeDataModel
 {
@@ -25,10 +25,10 @@ public class SchemeTreeModel implements TreeDataModel
 	StorableObjectTreeNode root = new StorableObjectTreeNode("root", "Сеть",
 			new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/folder.gif")));
 
-	private static Type[] schemeTypes = new Type[] {
-		Type.NETWORK,
-		Type.BUILDING,
-		Type.CABLE_SUBNETWORK
+	private static SchemeKind[] schemeTypes = new SchemeKind[] {
+		SchemeKind.NETWORK,
+		SchemeKind.BUILDING,
+		SchemeKind.CABLE_SUBNETWORK
 	};
 
 	public SchemeTreeModel(ApplicationContext aContext)
@@ -76,11 +76,11 @@ public class SchemeTreeModel implements TreeDataModel
 			if(s.equals("MeasurementPortType"))
 				return MeasurementPortType.class;
 			if(s.equals("schemeTypes"))
-				return Type.class;
+				return SchemeKind.class;
 			if(s.equals("MeasurementType"))
 				return MeasurementType.class;
 		}
-		else if (node.getUserObject() instanceof Type)
+		else if (node.getUserObject() instanceof SchemeKind)
 			return Scheme.class;
 		else if (node.getUserObject() instanceof SchemeProtoGroup)
 		{
@@ -153,7 +153,7 @@ public class SchemeTreeModel implements TreeDataModel
 			if(s.equals("schemeTypes"))
 				return null;
 		}
-		else if (node.getUserObject() instanceof Type)
+		else if (node.getUserObject() instanceof SchemeKind)
 			return SchemeController.getInstance();
 		else if (node.getUserObject() instanceof SchemeProtoGroup)
 		{
@@ -224,10 +224,10 @@ public class SchemeTreeModel implements TreeDataModel
 				{
 					String type;
 					switch (schemeTypes[i].value()) {
-						case Type._NETWORK:
+						case SchemeKind._NETWORK:
 							type = LangModelSchematics.getString("NETWORK");
 							break;
-						case Type._CABLE_SUBNETWORK:
+						case SchemeKind._CABLE_SUBNETWORK:
 							type = LangModelSchematics.getString("CABLE_SUBNETWORK");
 							break;
 						default:
@@ -355,9 +355,9 @@ public class SchemeTreeModel implements TreeDataModel
 			{
 				Scheme parent = (Scheme)((StorableObjectTreeNode)node.getParent()).getUserObject();
 				List ds = new LinkedList();
-				for (int i = 0; i < parent.schemeElements().length; i++)
+				for (int i = 0; i < parent.getSchemeElementsAsArray().length; i++)
 				{
-					SchemeElement el = parent.schemeElements()[i];
+					SchemeElement el = parent.getSchemeElementsAsArray()[i];
 					if (el.internalScheme() != null)
 						ds.add(el.internalScheme());
 				}
@@ -378,9 +378,9 @@ public class SchemeTreeModel implements TreeDataModel
 				if (parent instanceof Scheme)
 				{
 					Scheme scheme = (Scheme)parent;
-					for (int i = 0; i < scheme.schemeElements().length; i++)
+					for (int i = 0; i < scheme.getSchemeElementsAsArray().length; i++)
 					{
-						SchemeElement element = scheme.schemeElements()[i];
+						SchemeElement element = scheme.getSchemeElementsAsArray()[i];
 						if (element.internalScheme() == null)
 							ds.add(element);
 					}
@@ -408,9 +408,9 @@ public class SchemeTreeModel implements TreeDataModel
 				if (parent instanceof Scheme)
 				{
 					Scheme scheme = (Scheme)parent;
-					for(int i = 0; i < scheme.schemeLinks().length; i++)
+					for(int i = 0; i < scheme.getSchemeLinksAsArray().length; i++)
 					{
-						SchemeLink link = scheme.schemeLinks()[i];
+						SchemeLink link = scheme.getSchemeLinksAsArray()[i];
 						vec.add(new StorableObjectTreeNode(link, link.getName(), true));
 					}
 				}
@@ -427,27 +427,27 @@ public class SchemeTreeModel implements TreeDataModel
 			else if (s.equals("SchemeCableLink"))
 			{
 				Scheme parent = (Scheme)((StorableObjectTreeNode)node.getParent()).getUserObject();
-				for(int i = 0; i < parent.schemeCableLinks().length; i++)
+				for(int i = 0; i < parent.getSchemeCableLinksAsArray().length; i++)
 				{
-					SchemeCableLink link = parent.schemeCableLinks()[i];
+					SchemeCableLink link = parent.getSchemeCableLinksAsArray()[i];
 					vec.add(new StorableObjectTreeNode(link, link.getName(), true));
 				}
 			}
 			else if (s.equals("SchemePath"))
 			{
 				Scheme parent = (Scheme)((StorableObjectTreeNode)node.getParent()).getUserObject();
-				for(int i = 0; i < parent.schemeMonitoringSolution().schemePaths().length; i++)
+				for(int i = 0; i < parent.getCurrentSchemeMonitoringSolution().schemePaths().length; i++)
 				{
-					SchemePath path = parent.schemeMonitoringSolution().schemePaths()[i];
+					SchemePath path = parent.getCurrentSchemeMonitoringSolution().schemePaths()[i];
 					vec.add(new StorableObjectTreeNode(path, path.getName(), true));
 				}
 			}
 		}
 		else
 		{
-			if(node.getUserObject() instanceof Type)
+			if(node.getUserObject() instanceof SchemeKind)
 			{
-				Type type = (Type)node.getUserObject();
+				SchemeKind type = (SchemeKind)node.getUserObject();
 				TypicalCondition condition = new TypicalCondition(
 						String.valueOf(type.value()),
 						OperationSort.OPERATION_EQUALS,
@@ -498,22 +498,22 @@ public class SchemeTreeModel implements TreeDataModel
 			else if(node.getUserObject() instanceof Scheme)
 			{
 				Scheme s = (Scheme)node.getUserObject();
-				if (s.schemeElements().length != 0)
+				if (s.getSchemeElementsAsArray().length != 0)
 				{
 					boolean has_schemes = false;
 					boolean has_elements = false;
-					for (int i = 0; i < s.schemeElements().length; i++)
+					for (int i = 0; i < s.getSchemeElementsAsArray().length; i++)
 					{
-						SchemeElement el = s.schemeElements()[i];
+						SchemeElement el = s.getSchemeElementsAsArray()[i];
 						if (el.internalScheme() == null)
 						{
 							has_elements = true;
 							break;
 						}
 					}
-					for (int i = 0; i < s.schemeElements().length; i++)
+					for (int i = 0; i < s.getSchemeElementsAsArray().length; i++)
 					{
-						SchemeElement el = s.schemeElements()[i];
+						SchemeElement el = s.getSchemeElementsAsArray()[i];
 						if (el.internalScheme() != null)
 						{
 							has_schemes = true;
@@ -525,11 +525,11 @@ public class SchemeTreeModel implements TreeDataModel
 					if (has_elements)
 						vec.add(new StorableObjectTreeNode("SchemeElement", "Узлы", true));
 				}
-				if (s.schemeLinks().length != 0)
+				if (s.getSchemeLinksAsArray().length != 0)
 					vec.add(new StorableObjectTreeNode("SchemeLink", "Линии", true));
-				if (s.schemeCableLinks().length != 0)
+				if (s.getSchemeCableLinksAsArray().length != 0)
 					vec.add(new StorableObjectTreeNode("SchemeCableLink", "Кабели", true));
-				if (s.schemeMonitoringSolution().schemePaths().length != 0)
+				if (s.getCurrentSchemeMonitoringSolution().schemePaths().length != 0)
 					vec.add(new StorableObjectTreeNode("SchemePath", "Пути", true));
 			}
 			else if(node.getUserObject() instanceof SchemeElement)
@@ -538,9 +538,9 @@ public class SchemeTreeModel implements TreeDataModel
 				if (schel.internalScheme() != null)
 				{
 					Scheme scheme = schel.internalScheme();
-					for (int i = 0; i < scheme.schemeElements().length; i++)
+					for (int i = 0; i < scheme.getSchemeElementsAsArray().length; i++)
 					{
-						SchemeElement element = scheme.schemeElements()[i];
+						SchemeElement element = scheme.getSchemeElementsAsArray()[i];
 						if (element.internalScheme() == null)
 						{
 							if (element.schemeLinks().length != 0 || element.schemeElements().length != 0)

@@ -964,7 +964,7 @@ public class GraphActions
 						{
 							aContext.getDispatcher().notify(new OperationEvent(sc.getId(), 0, "addschemeevent"));
 
-							if (se != null && se.alarmed())
+							if (se != null && se.isAlarmed())
 								aContext.getDispatcher().notify(new SchemeElementsEvent(this,
 										se, SchemeElementsEvent.CREATE_ALARMED_LINK_EVENT));
 						}
@@ -992,7 +992,7 @@ public class GraphActions
 							{
 								aContext.getDispatcher().notify(new OperationEvent(se.getId(), 0, "addschemeelementevent"));
 
-								if (se.alarmed())
+								if (se.isAlarmed())
 									aContext.getDispatcher().notify(new SchemeElementsEvent(this,
 											se, SchemeElementsEvent.CREATE_ALARMED_LINK_EVENT));
 							}

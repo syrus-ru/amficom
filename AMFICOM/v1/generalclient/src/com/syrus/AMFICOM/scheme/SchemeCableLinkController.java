@@ -79,7 +79,7 @@ public final class SchemeCableLinkController implements ObjectResourceController
 			else if (key.equals(COLUMN_PHYSICAL_LENGTH))
 				result = Double.toString(link.physicalLength());
 			else if (key.equals(COLUMN_SCHEME_ID))
-				result = link.scheme().getId().getIdentifierString();
+				result = link.getParentScheme().getId().getIdentifierString();
 			else if (key.equals(COLUMN_SCHEME_CABLE_THREADS)) {
 				SchemeCableThread[] threads = link.schemeCableThreads();
 				List res = new ArrayList(threads.length);

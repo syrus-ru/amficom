@@ -19,16 +19,16 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.corba.*;
 import com.syrus.AMFICOM.scheme.*;
 import com.syrus.AMFICOM.scheme.SchemeStorableObjectPool;
-import com.syrus.AMFICOM.scheme.corba.SchemePackage.Type;
+import com.syrus.AMFICOM.scheme.corba.SchemeKind;
 
 public class SchemeOpenTreeModel extends ObjectResourceTreeModel
 {
 	ApplicationContext aContext;
 
-	private static Type[] schemeTypes = new Type[] {
-		Type.NETWORK,
-		Type.BUILDING,
-		Type.CABLE_SUBNETWORK
+	private static SchemeKind[] schemeTypes = new SchemeKind[] {
+		SchemeKind.NETWORK,
+		SchemeKind.BUILDING,
+		SchemeKind.CABLE_SUBNETWORK
 	};
 
 	public SchemeOpenTreeModel(ApplicationContext aContext)
@@ -69,9 +69,9 @@ public class SchemeOpenTreeModel extends ObjectResourceTreeModel
 		{
 			String s = (String )node.getObject();
 			if(s.equals("root"))
-				return Type.class;
+				return SchemeKind.class;
 		}
-		else if (node.getObject() instanceof Type)
+		else if (node.getObject() instanceof SchemeKind)
 			return Scheme.class;
 		return null;
 	}
@@ -83,7 +83,7 @@ public class SchemeOpenTreeModel extends ObjectResourceTreeModel
 			if (s.equals("root"))
 				return null;
 		}
-		else if (node.getObject() instanceof Type)
+		else if (node.getObject() instanceof SchemeKind)
 			return SchemeController.getInstance();
 		return null;
 	}
@@ -100,10 +100,10 @@ public class SchemeOpenTreeModel extends ObjectResourceTreeModel
 				for (int i = 0; i < schemeTypes.length; i++)
 				{
 					switch (schemeTypes[i].value()) {
-						case Type._NETWORK:
+						case SchemeKind._NETWORK:
 							type = LangModelSchematics.getString("NETWORK");
 							break;
-						case Type._CABLE_SUBNETWORK:
+						case SchemeKind._CABLE_SUBNETWORK:
 							type = LangModelSchematics.getString("CABLE_SUBNETWORK");
 							break;
 						default:
@@ -117,9 +117,9 @@ public class SchemeOpenTreeModel extends ObjectResourceTreeModel
 		}
 		else
 		{
-			if(node.getObject() instanceof Type)
+			if(node.getObject() instanceof SchemeKind)
 			{
-				Type type = (Type)node.getObject();
+				SchemeKind type = (SchemeKind)node.getObject();
 				TypicalCondition condition = new TypicalCondition(
 					String.valueOf(type.value()),
 					OperationSort.OPERATION_EQUALS,

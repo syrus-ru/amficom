@@ -1,5 +1,6 @@
 package com.syrus.AMFICOM.scheme;
 
+import java.util.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -101,41 +102,35 @@ public final class SchemeController implements ObjectResourceController
 			else if (key.equals(COLUMN_NAME))
 				result = scheme.getName();
 			else if (key.equals(COLUMN_LABEL))
-				result = scheme.label();
+				result = scheme.getLabel();
 			else if (key.equals(COLUMN_TYPE))
-				result = Integer.toString(scheme.type().value());
+				result = Integer.toString(scheme.getSchemeKind().value());
 			else if (key.equals(COLUMN_SYMBOL_ID))
 				result = scheme.getSymbol().getId().getIdentifierString();
 			else if (key.equals(COLUMN_WIDTH))
-				result = Integer.toString(scheme.width());
+				result = Integer.toString(scheme.getWidth());
 			else if (key.equals(COLUMN_HEIGHT))
-				result = Integer.toString(scheme.height());
+				result = Integer.toString(scheme.getHeight());
 			else if (key.equals(COLUMN_SCHEME_ELEMENT_IDS)) {
-				SchemeElement[] elements = scheme.schemeElements();
-				List res = new ArrayList(elements.length);
-				for (int i = 0; i < elements.length; i++) {
-					res.add(elements[i].getId().getIdentifierString());
-				}
-				result = res;
-			}
-			else if (key.equals(COLUMN_SCHEME_LINK_IDS)) {
-				SchemeLink[] links = scheme.schemeLinks();
-				List res = new ArrayList(links.length);
-				for (int i = 0; i < links.length; i++) {
-					res.add(links[i].getId().getIdentifierString());
-				}
-				result = res;
-			}
-			else if (key.equals(COLUMN_SCHEME_CABLE_LINK_IDS)) {
-				SchemeCableLink[] links = scheme.schemeCableLinks();
-				List res = new ArrayList(links.length);
-				for (int i = 0; i < links.length; i++) {
-					res.add(links[i].getId().getIdentifierString());
-				}
-				result = res;
-			}
-			else if (key.equals(COLUMN_MONITORING_SOLUTION_ID))
-				result = scheme.schemeMonitoringSolution().getId().getIdentifierString();
+				final Collection schemeElements = scheme.getSchemeElements();
+				final Collection schemeElementIds = new ArrayList(schemeElements.size());
+				for (final Iterator schemeElementIterator = schemeElements.iterator(); schemeElementIterator.hasNext();)
+					schemeElementIds.add(((SchemeElement) schemeElementIterator.next()).getId().getIdentifierString());
+				result = schemeElementIds;
+			} else if (key.equals(COLUMN_SCHEME_LINK_IDS)) {
+				final Collection schemeLinks = scheme.getSchemeLinks();
+				final Collection schemeLinkIds = new ArrayList(schemeLinks.size());
+				for (final Iterator schemeLinkIterator = schemeLinks.iterator(); schemeLinkIterator.hasNext();)
+					schemeLinkIds.add(((SchemeLink) schemeLinkIterator.next()).getId().getIdentifierString());
+				result = schemeLinkIds;
+			} else if (key.equals(COLUMN_SCHEME_CABLE_LINK_IDS)) {
+				final Collection schemeCableLinks = scheme.getSchemeCableLinks();
+				final Collection schemeCableLinkIds = new ArrayList(schemeCableLinks.size());
+				for (final Iterator schemeCableLinkIterator = schemeCableLinks.iterator(); schemeCableLinkIterator.hasNext();)
+					schemeCableLinkIds.add(((SchemeCableLink) schemeCableLinkIterator.next()).getId().getIdentifierString());
+				result = schemeCableLinkIds;
+			} else if (key.equals(COLUMN_MONITORING_SOLUTION_ID))
+				result = scheme.getCurrentSchemeMonitoringSolution().getId().getIdentifierString();
 			else if (key.equals(COLUMN_SCHEME_CELL_ID))
 				result = scheme.getSchemeCell().getId().getIdentifierString();
 			else if (key.equals(COLUMN_UGO_CELL_ID))

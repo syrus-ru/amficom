@@ -1,5 +1,5 @@
 /**
- * $Id: LogicalNetLayer.java,v 1.53 2005/03/17 12:29:50 peskovsky Exp $
+ * $Id: LogicalNetLayer.java,v 1.54 2005/03/22 17:35:16 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -77,8 +77,8 @@ import com.syrus.AMFICOM.scheme.PathDecomposer;
  * 
  * 
  * 
- * @author $Author: peskovsky $
- * @version $Revision: 1.53 $, $Date: 2005/03/17 12:29:50 $
+ * @author $Author: bass $
+ * @version $Revision: 1.54 $, $Date: 2005/03/22 17:35:16 $
  * @module mapviewclient_v2
  */
 public abstract class LogicalNetLayer implements MapCoordinatesConverter
@@ -918,19 +918,19 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 				if(me instanceof SchemeElement)
 				{
 					getMapViewController().scanElement((SchemeElement )me);
-					getMapViewController().scanCables(((SchemeElement )me).scheme());
+					getMapViewController().scanCables(((SchemeElement )me).getParentScheme());
 				}
 				else
 				if(me instanceof SchemeCableLink)
 				{
 					getMapViewController().scanCable((SchemeCableLink )me);
-					getMapViewController().scanPaths(((SchemeCableLink )me).scheme());
+					getMapViewController().scanPaths(((SchemeCableLink )me).getParentScheme());
 				}
 				else
 				if(me instanceof CablePath)
 				{
 					getMapViewController().scanCable(((CablePath)me).getSchemeCableLink());
-					getMapViewController().scanPaths(((CablePath)me).getSchemeCableLink().scheme());
+					getMapViewController().scanPaths(((CablePath)me).getSchemeCableLink().getParentScheme());
 				}
 				else
 				if(me instanceof SiteNode)

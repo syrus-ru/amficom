@@ -94,7 +94,7 @@ class DeleteAction extends AbstractAction
 							return;
 						if (panel.getGraph().getScheme() != null)
 						{
-							Arrays.asList(panel.getGraph().getScheme().schemeElements()).remove(element);
+							Arrays.asList(panel.getGraph().getScheme().getSchemeElementsAsArray()).remove(element);
 							if (element.getEquipment() != null)
 								ConfigurationStorableObjectPool.delete(element.getEquipment().getId());
 							SchemeStorableObjectPool.delete(element.getId());
@@ -124,7 +124,7 @@ class DeleteAction extends AbstractAction
 					SchemeActions.disconnectSchemeCableLink (graph, (DefaultCableLink)cells[i], true);
 					SchemeActions.disconnectSchemeCableLink (graph, (DefaultCableLink)cells[i], false);
 					if (panel.getGraph().getScheme() != null)
-						Arrays.asList(panel.getGraph().getScheme().schemeCableLinks()).remove(link);
+						Arrays.asList(panel.getGraph().getScheme().getSchemeCableLinksAsArray()).remove(link);
 					if (link.getLink() != null) {
 							ConfigurationStorableObjectPool.delete(link.getLink().getId());
 						}
@@ -143,7 +143,7 @@ class DeleteAction extends AbstractAction
 					SchemeActions.disconnectSchemeLink (graph, (DefaultLink)cells[i], false);
 
 					if (panel.getGraph().getScheme() != null)
-						Arrays.asList(panel.getGraph().getScheme().schemeLinks()).remove(link);
+						Arrays.asList(panel.getGraph().getScheme().getSchemeLinksAsArray()).remove(link);
 					if(panel.getGraph().getSchemeElement() != null)
 						Arrays.asList(panel.getGraph().getSchemeElement().schemeLinks()).remove(link);
 					if (link.getLink() != null)
@@ -396,11 +396,11 @@ class GroupSEAction extends AbstractAction
 
 			if (graph.getScheme() != null)
 			{
-				List elements = Arrays.asList(graph.getScheme().schemeElements());
+				List elements = Arrays.asList(graph.getScheme().getSchemeElementsAsArray());
 				if (!elements.contains(scheme_el))
 				{
 					elements.add(scheme_el);
-					scheme_el.scheme(graph.getScheme());
+					scheme_el.setParentScheme(graph.getScheme());
 				}
 			}
 
@@ -1108,8 +1108,8 @@ class SetBackgroundSizeAction extends AbstractAction
 		Scheme scheme = panel.getGraph().getScheme();
 		if (f.init(scheme))
 		{
-			scheme.width(f.newsize.width);
-			scheme.height(f.newsize.height);
+			scheme.setWidth(f.newsize.width);
+			scheme.setHeight(f.newsize.height);
 			aContext.getDispatcher().notify(new SchemeElementsEvent(this, graph, SchemeElementsEvent.SCHEME_CHANGED_EVENT));
 			graph.setActualSize(f.newsize);
 			graph.update();
@@ -1232,7 +1232,7 @@ class CreateSchemeUgoAction
 		Rectangle bounds = new Rectangle(
 				graph.snap(new Point(grid*2, grid*2)),//oldrect.x, oldrect.y
 				graph.snap(new Dimension(grid*4, grid*(max+1))));
-		DefaultGraphCell cell = GraphActions.CreateDeviceAction(graph, scheme.label(), bounds, false, Color.black);
+		DefaultGraphCell cell = GraphActions.CreateDeviceAction(graph, scheme.getLabel(), bounds, false, Color.black);
 		graph.setSelectionCell(cell);
 		for (int i = 0; i < blockports_out.size(); i++)
 		{

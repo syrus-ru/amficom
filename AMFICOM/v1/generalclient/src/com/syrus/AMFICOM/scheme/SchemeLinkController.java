@@ -101,7 +101,7 @@ public final class SchemeLinkController implements ObjectResourceController
 			else if (key.equals(COLUMN_PHYSICAL_LENGTH))
 				result = Double.toString(link.physicalLength());
 			else if (key.equals(COLUMN_SCHEME_ID))
-				result = link.scheme().getId().getIdentifierString();
+				result = link.getParentScheme().getId().getIdentifierString();
 			else if (key.equals(COLUMN_CHARACTERISTICS)) {
 				List res = new ArrayList(link.getCharacteristics().size());
 				for (Iterator it = link.getCharacteristics().iterator(); it.hasNext(); ) {

@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeTreeModel.java,v 1.6 2005/03/18 19:23:40 bass Exp $
+ * $Id: SchemeTreeModel.java,v 1.7 2005/03/22 17:33:47 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,7 +10,7 @@ package com.syrus.AMFICOM.client_.scheme.ui;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.6 $, $Date: 2005/03/18 19:23:40 $
+ * @version $Revision: 1.7 $, $Date: 2005/03/22 17:33:47 $
  * @module schemeclient_v1
  */
 
@@ -30,13 +30,13 @@ import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.general.corba.OperationSort;
 import com.syrus.AMFICOM.measurement.*;
 import com.syrus.AMFICOM.scheme.*;
-import com.syrus.AMFICOM.scheme.corba.SchemePackage.Type;
+import com.syrus.AMFICOM.scheme.corba.SchemeKind;
 
 public class SchemeTreeModel implements SOTreeDataModel {
 	ApplicationContext aContext;
 
-	private static Type[] schemeTypes = new Type[] { Type.NETWORK, Type.BUILDING,
-			Type.CABLE_SUBNETWORK };
+	private static SchemeKind[] schemeTypes = new SchemeKind[] { SchemeKind.NETWORK, SchemeKind.BUILDING,
+			SchemeKind.CABLE_SUBNETWORK };
 
 	public SchemeTreeModel(ApplicationContext aContext) {
 		this.aContext = aContext;
@@ -53,7 +53,7 @@ public class SchemeTreeModel implements SOTreeDataModel {
 				return Constants.SCHEME_ICON;
 			return Constants.CATALOG_ICON;
 		}
-		if (node.getUserObject() instanceof Type)
+		if (node.getUserObject() instanceof SchemeKind)
 			return Constants.CATALOG_ICON;
 		return null;
 	}
@@ -85,21 +85,21 @@ public class SchemeTreeModel implements SOTreeDataModel {
 				return Constants.TEXT_MEASUREMENTPORT_TYPE;
 			if (s.equals(Constants.MEASUREMENT_TYPE))
 				return Constants.TEXT_MEASUREMENT_TYPE;
-			if (s.equals(Type.NETWORK))
+			if (s.equals(SchemeKind.NETWORK))
 				return Constants.TEXT_SCHEME_TYPE_NETWORK;
-			if (s.equals(Type.BUILDING))
+			if (s.equals(SchemeKind.BUILDING))
 				return Constants.TEXT_SCHEME_TYPE_BUILDING;
-			if (s.equals(Type.CABLE_SUBNETWORK))
+			if (s.equals(SchemeKind.CABLE_SUBNETWORK))
 				return Constants.TEXT_SCHEME_TYPE_CABLE;
 		}
-		if (node.getUserObject() instanceof Type) {
-			Type type = (Type)node.getUserObject();
+		if (node.getUserObject() instanceof SchemeKind) {
+			SchemeKind type = (SchemeKind)node.getUserObject();
 			switch (type.value()) {
-			case Type._NETWORK:
+			case SchemeKind._NETWORK:
 				return Constants.TEXT_SCHEME_TYPE_NETWORK;
-			case Type._CABLE_SUBNETWORK:
+			case SchemeKind._CABLE_SUBNETWORK:
 				return Constants.TEXT_SCHEME_TYPE_CABLE;
-			case Type._BUILDING:
+			case SchemeKind._BUILDING:
 				return Constants.TEXT_SCHEME_TYPE_BUILDING;
 			default:
 				throw new UnsupportedOperationException("Unknown scheme type");
@@ -170,7 +170,7 @@ public class SchemeTreeModel implements SOTreeDataModel {
 				return null;
 			return null;
 		}
-		if (node.getUserObject() instanceof Type)
+		if (node.getUserObject() instanceof SchemeKind)
 			return SchemeController.getInstance();
 		if (node.getUserObject() instanceof LinkType)
 			return LinkTypeController.getInstance();
@@ -367,8 +367,8 @@ public class SchemeTreeModel implements SOTreeDataModel {
 			else if (s.equals(Constants.SCHEME)) {
 				Scheme parent = (Scheme) ((SONode) node.getParent()).getUserObject();
 				List ds = new LinkedList();
-				for (int i = 0; i < parent.schemeElements().length; i++) {
-					SchemeElement el = parent.schemeElements()[i];
+				for (int i = 0; i < parent.getSchemeElementsAsArray().length; i++) {
+					SchemeElement el = parent.getSchemeElementsAsArray()[i];
 					if (el.internalScheme() != null)
 						ds.add(el.internalScheme());
 				}
@@ -385,8 +385,8 @@ public class SchemeTreeModel implements SOTreeDataModel {
 				List ds = new LinkedList();
 				if (parent instanceof Scheme) {
 					Scheme scheme = (Scheme) parent;
-					for (int i = 0; i < scheme.schemeElements().length; i++) {
-						SchemeElement element = scheme.schemeElements()[i];
+					for (int i = 0; i < scheme.getSchemeElementsAsArray().length; i++) {
+						SchemeElement element = scheme.getSchemeElementsAsArray()[i];
 						if (element.internalScheme() == null)
 							ds.add(element);
 					}
@@ -413,8 +413,8 @@ public class SchemeTreeModel implements SOTreeDataModel {
 				Object parent = ((SONode) node.getParent()).getUserObject();
 				if (parent instanceof Scheme) {
 					Scheme scheme = (Scheme) parent;
-					for (int i = 0; i < scheme.schemeLinks().length; i++) {
-						SchemeLink link = scheme.schemeLinks()[i];
+					for (int i = 0; i < scheme.getSchemeLinksAsArray().length; i++) {
+						SchemeLink link = scheme.getSchemeLinksAsArray()[i];
 						if (!contents.contains(link))
 							node.add(new SOMutableNode(this, link, false));
 					}
@@ -430,24 +430,24 @@ public class SchemeTreeModel implements SOTreeDataModel {
 			} 
 			else if (s.equals(Constants.SCHEME_CABLELINK)) {
 				Scheme parent = (Scheme) ((SONode) node.getParent()).getUserObject();
-				for (int i = 0; i < parent.schemeCableLinks().length; i++) {
-					SchemeCableLink link = parent.schemeCableLinks()[i];
+				for (int i = 0; i < parent.getSchemeCableLinksAsArray().length; i++) {
+					SchemeCableLink link = parent.getSchemeCableLinksAsArray()[i];
 					if (!contents.contains(link))
 						node.add(new SOMutableNode(this, link, false));
 				}
 			} 
 			else if (s.equals(Constants.SCHEME_PATH)) {
 				Scheme parent = (Scheme) ((SONode) node.getParent()).getUserObject();
-				for (int i = 0; i < parent.schemeMonitoringSolution().schemePaths().length; i++) {
-					SchemePath path = parent.schemeMonitoringSolution().schemePaths()[i];
+				for (int i = 0; i < parent.getCurrentSchemeMonitoringSolution().schemePaths().length; i++) {
+					SchemePath path = parent.getCurrentSchemeMonitoringSolution().schemePaths()[i];
 					if (!contents.contains(path))
 						node.add(new SOMutableNode(this, path, false));
 				}
 			}
 		} 
 		else {
-			if (node.getUserObject() instanceof Type) {
-				Type type = (Type) node.getUserObject();
+			if (node.getUserObject() instanceof SchemeKind) {
+				SchemeKind type = (SchemeKind) node.getUserObject();
 				TypicalCondition condition = new TypicalCondition(String.valueOf(type
 						.value()), OperationSort.OPERATION_EQUALS,
 						ObjectEntities.SCHEME_ENTITY_CODE,
@@ -493,18 +493,18 @@ public class SchemeTreeModel implements SOTreeDataModel {
 			} 
 			else if (node.getUserObject() instanceof Scheme) {
 				Scheme s = (Scheme) node.getUserObject();
-				if (s.schemeElements().length != 0) {
+				if (s.getSchemeElementsAsArray().length != 0) {
 					boolean has_schemes = false;
 					boolean has_elements = false;
-					for (int i = 0; i < s.schemeElements().length; i++) {
-						SchemeElement el = s.schemeElements()[i];
+					for (int i = 0; i < s.getSchemeElementsAsArray().length; i++) {
+						SchemeElement el = s.getSchemeElementsAsArray()[i];
 						if (el.internalScheme() == null) {
 							has_elements = true;
 							break;
 						}
 					}
-					for (int i = 0; i < s.schemeElements().length; i++) {
-						SchemeElement el = s.schemeElements()[i];
+					for (int i = 0; i < s.getSchemeElementsAsArray().length; i++) {
+						SchemeElement el = s.getSchemeElementsAsArray()[i];
 						if (el.internalScheme() != null) {
 							has_schemes = true;
 							break;
@@ -519,15 +519,15 @@ public class SchemeTreeModel implements SOTreeDataModel {
 							node.add(new SOMutableNode(this, Constants.SCHEME_ELEMENT));
 					}
 				}
-				if (s.schemeLinks().length != 0) {
+				if (s.getSchemeLinksAsArray().length != 0) {
 					if (!contents.contains(Constants.SCHEME_LINK))
 						node.add(new SOMutableNode(this, Constants.SCHEME_LINK));
 				}
-				if (s.schemeCableLinks().length != 0) {
+				if (s.getSchemeCableLinksAsArray().length != 0) {
 					if (!contents.contains(Constants.SCHEME_CABLELINK))
 						node.add(new SOMutableNode(this, Constants.SCHEME_CABLELINK));
 				}
-				if (s.schemeMonitoringSolution().schemePaths().length != 0) {
+				if (s.getCurrentSchemeMonitoringSolution().schemePaths().length != 0) {
 					if (!contents.contains(Constants.SCHEME_PATH))
 						node.add(new SOMutableNode(this, Constants.SCHEME_PATH));
 				}
@@ -536,8 +536,8 @@ public class SchemeTreeModel implements SOTreeDataModel {
 				SchemeElement schel = (SchemeElement) node.getUserObject();
 				if (schel.internalScheme() != null) {
 					Scheme scheme = schel.internalScheme();
-					for (int i = 0; i < scheme.schemeElements().length; i++) {
-						SchemeElement element = scheme.schemeElements()[i];
+					for (int i = 0; i < scheme.getSchemeElementsAsArray().length; i++) {
+						SchemeElement element = scheme.getSchemeElementsAsArray()[i];
 						if (element.internalScheme() == null) {
 							if (!contents.contains(element))
 								node.add(new SOMutableNode(this, element, (element.schemeLinks().length != 0 || element.schemeElements().length != 0)));

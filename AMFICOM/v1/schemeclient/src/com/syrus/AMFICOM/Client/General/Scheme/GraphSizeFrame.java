@@ -111,21 +111,21 @@ class GraphSizeFrame extends JDialog
 		fixComboBox.addItem("A3 (420μμ x 297μμ)");
 		fixComboBox.addItem("A4 (210μμ x 297μμ)");
 
-		if (scheme.width() == Constants.A0.width && scheme.height() == Constants.A0.height)
+		if (scheme.getWidth() == Constants.A0.width && scheme.getHeight() == Constants.A0.height)
 			fixComboBox.setSelectedIndex(0);
-		else if (scheme.width() == Constants.A1.width && scheme.height() == Constants.A1.height)
+		else if (scheme.getWidth() == Constants.A1.width && scheme.getHeight() == Constants.A1.height)
 			fixComboBox.setSelectedIndex(1);
-		else if (scheme.width() == Constants.A2.width && scheme.height() == Constants.A2.height)
+		else if (scheme.getWidth() == Constants.A2.width && scheme.getHeight() == Constants.A2.height)
 			fixComboBox.setSelectedIndex(2);
-		else if (scheme.width() == Constants.A3.width && scheme.height() == Constants.A3.height)
+		else if (scheme.getWidth() == Constants.A3.width && scheme.getHeight() == Constants.A3.height)
 			fixComboBox.setSelectedIndex(3);
-		else if (scheme.width() == Constants.A4.width && scheme.height() == Constants.A4.height)
+		else if (scheme.getWidth() == Constants.A4.width && scheme.getHeight() == Constants.A4.height)
 			fixComboBox.setSelectedIndex(4);
 		else
 		{
 			arbRButton.doClick();
-			xsizeTextField.setText(String.valueOf(Math.round((scheme.width() * 10) / 40d)));
-			ysizeTextField.setText(String.valueOf(Math.round((scheme.height() * 10) / 40.067)));
+			xsizeTextField.setText(String.valueOf(Math.round((scheme.getWidth() * 10) / 40d)));
+			ysizeTextField.setText(String.valueOf(Math.round((scheme.getHeight() * 10) / 40.067)));
 		}
 
 		setVisible(true);

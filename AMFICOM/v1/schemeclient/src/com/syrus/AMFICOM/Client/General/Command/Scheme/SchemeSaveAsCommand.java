@@ -16,7 +16,7 @@ import com.syrus.AMFICOM.Client.Schematics.Elements.SchemePropsPanel;
 import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.scheme.*;
 import com.syrus.AMFICOM.scheme.SchemeStorableObjectPool;
-import com.syrus.AMFICOM.scheme.corba.SchemePackage.Type;
+import com.syrus.AMFICOM.scheme.corba.SchemeKind;
 
 public class SchemeSaveAsCommand extends VoidCommand
 {
@@ -96,9 +96,9 @@ public class SchemeSaveAsCommand extends VoidCommand
 //		ComponentSaveCommand.saveTypes(aContext.getDataSourceInterface(), false);
 		scheme = (Scheme) scheme.clone();
 
-		for (int i = 0; i < scheme.schemeElements().length; i++)
+		for (int i = 0; i < scheme.getSchemeElementsAsArray().length; i++)
 		{
-			SchemeElement se = scheme.schemeElements()[i];
+			SchemeElement se = scheme.getSchemeElementsAsArray()[i];
 			if (se.schemeElements().length != 0)
 			{
 				SchemePanel.copySchemeElementFromArchivedState_virtual(se.getSchemeCell().getData());
@@ -128,7 +128,7 @@ public class SchemeSaveAsCommand extends VoidCommand
 
 		scheme.setName(sd.name);
 		scheme.setDescription(sd.description);
-		scheme.type(sd.type);
+		scheme.setSchemeKind(sd.type);
 
 		final Identifier domainId = new Identifier(
 				((RISDSessionInfo) aContext
@@ -171,7 +171,7 @@ class SaveDialog extends JDialog
 
 	public String name = "";
 	public String description = "";
-	public Type type = Type.NETWORK;
+	public SchemeKind type = SchemeKind.NETWORK;
 
 	public int retCode = 0;
 
@@ -207,7 +207,7 @@ class SaveDialog extends JDialog
 		panel = new SchemePropsPanel(aContext, dispatcher, show_ugo);
 		panel.setSchemeName(initialName);
 		panel.setSchemeDescription(scheme.getDescription());
-		panel.setSchemeType(scheme.type());
+		panel.setSchemeType(scheme.getSchemeKind());
 	//	panel.init(graph.scheme, aContext.getDataSourceInterface());
 		getContentPane().setLayout(new BorderLayout());
 		getContentPane().add(panel, BorderLayout.CENTER);

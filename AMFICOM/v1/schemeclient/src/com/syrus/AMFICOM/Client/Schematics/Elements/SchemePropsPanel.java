@@ -10,7 +10,7 @@ import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.client_.general.ui_.*;
 import com.syrus.AMFICOM.Client.General.UI.AComboBox;
 import com.syrus.AMFICOM.scheme.Scheme;
-import com.syrus.AMFICOM.scheme.corba.SchemePackage.Type;
+import com.syrus.AMFICOM.scheme.corba.SchemeKind;
 import com.syrus.AMFICOM.resource.*;
 
 public class SchemePropsPanel extends JPanel
@@ -38,11 +38,11 @@ public class SchemePropsPanel extends JPanel
 //		Scheme.CARDCAGE
 	};
 
-	static Type[] schemeTypes = new Type[]
+	static SchemeKind[] schemeTypes = new SchemeKind[]
 	{
-		Type.NETWORK,
-		Type.CABLE_SUBNETWORK,
-		Type.BUILDING,
+		SchemeKind.NETWORK,
+		SchemeKind.CABLE_SUBNETWORK,
+		SchemeKind.BUILDING,
 //		Scheme.FLOOR,
 //		Scheme.ROOM,
 //		Scheme.RACK,
@@ -160,8 +160,8 @@ public class SchemePropsPanel extends JPanel
 			{
 				if (scheme == null)
 					return;
-				scheme.label(ugoNameTextField.getText());
-				dispatcher.notify(new SchemeElementsEvent(scheme, scheme.label(), SchemeElementsEvent.UGO_TEXT_UPDATE_EVENT));
+				scheme.setLabel(ugoNameTextField.getText());
+				dispatcher.notify(new SchemeElementsEvent(scheme, scheme.getLabel(), SchemeElementsEvent.UGO_TEXT_UPDATE_EVENT));
 			}
 			public void keyPressed(KeyEvent ae)
 					{}
@@ -174,7 +174,7 @@ public class SchemePropsPanel extends JPanel
 					return;
 				if (e.getStateChange() == ItemEvent.SELECTED)
 				{
-					scheme.type(schemeTypes[schemeTypeComboBox.getSelectedIndex()]);
+					scheme.setSchemeKind(schemeTypes[schemeTypeComboBox.getSelectedIndex()]);
 				}
 			}
 		});
@@ -186,12 +186,12 @@ public class SchemePropsPanel extends JPanel
 		schemeNameTextField.setText(scheme.getName());
 		schemeNameTextField.setCaretPosition(0);
 		schemeDescrTextArea.setText(scheme.getDescription());
-		ugoNameTextField.setText(scheme.label());
+		ugoNameTextField.setText(scheme.getLabel());
 		ugoNameTextField.setCaretPosition(0);
 
 		for (int i = 0; i < schemeTypes.length; i++)
 		{
-			if (schemeTypes[i].equals(scheme.type()))
+			if (schemeTypes[i].equals(scheme.getSchemeKind()))
 			{
 				schemeTypeComboBox.setSelectedIndex(i);
 				break;
@@ -271,20 +271,20 @@ public class SchemePropsPanel extends JPanel
 		schemeDescrTextArea.setText(description);
 	}
 	
-	public Type getSchemeType()
+	public SchemeKind getSchemeType()
 	{
 		return schemeTypes[schemeTypeComboBox.getSelectedIndex()];
 	}
 	
-	public void setSchemeType(Type type)
+	public void setSchemeType(SchemeKind type)
 	{
 		String typeString;
 		switch (type.value())
 		{
-			case Type._NETWORK:
+			case SchemeKind._NETWORK:
 				typeString = LangModelSchematics.getString("NETWORK");
 				break;
-			case Type._CABLE_SUBNETWORK:
+			case SchemeKind._CABLE_SUBNETWORK:
 				typeString = LangModelSchematics.getString("CABLE_SUBNETWORK");
 				break;
 			default:

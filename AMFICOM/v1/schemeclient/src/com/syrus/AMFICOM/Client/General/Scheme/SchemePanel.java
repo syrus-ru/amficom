@@ -125,7 +125,7 @@ public class SchemePanel extends ElementsPanel
 				else if (cl.equals(SchemeElement.class))
 				{
 					SchemeElement se = (SchemeElement)ds.get(ev.getSelectionNumber());
-					if (Arrays.asList(getGraph().getScheme().schemeElements()).contains(se))
+					if (Arrays.asList(getGraph().getScheme().getSchemeElementsAsArray()).contains(se))
 					{
 						Object cell = SchemeActions.findSchemeElementById(getGraph(), se.getId());
 						SchemeGraph.skip_notify = true;
@@ -136,7 +136,7 @@ public class SchemePanel extends ElementsPanel
 				else if (cl.equals(SchemeLink.class))
 				{
 					SchemeLink l = (SchemeLink)ds.get(ev.getSelectionNumber());
-					if (Arrays.asList(getGraph().getScheme().schemeLinks()).contains(l))
+					if (Arrays.asList(getGraph().getScheme().getSchemeLinksAsArray()).contains(l))
 					{
 						Object cell = SchemeActions.findSchemeLinkById(getGraph(), l.getId());
 						SchemeGraph.skip_notify = true;
@@ -147,7 +147,7 @@ public class SchemePanel extends ElementsPanel
 				else if (cl.equals(SchemeCableLink.class))
 				{
 					SchemeCableLink l = (SchemeCableLink)ds.get(ev.getSelectionNumber());
-					if (Arrays.asList(getGraph().getScheme().schemeCableLinks()).contains(l))
+					if (Arrays.asList(getGraph().getScheme().getSchemeCableLinksAsArray()).contains(l))
 					{
 						Object cell = SchemeActions.findSchemeCableLinkById(getGraph(), l.getId());
 						SchemeGraph.skip_notify = true;
@@ -210,7 +210,7 @@ public class SchemePanel extends ElementsPanel
 				//EquipmentType eqt = (EquipmentType)Pool.get(EquipmentType.typ, proto.equipment_type_id);
 
 				//SchemeElement element = new SchemeElement(proto, dataSource);
-				Arrays.asList(getGraph().getScheme().schemeElements()).add(element);
+				Arrays.asList(getGraph().getScheme().getSchemeElementsAsArray()).add(element);
 
 				element.setSchemeCell(proto.getSchemeCell());
 				element.setUgoCell(proto.getUgoCell());
@@ -235,8 +235,8 @@ public class SchemePanel extends ElementsPanel
 		graph.copyFromArchivedState(sch.getSchemeCell().getData(), new Point(0, 0));
 //		graph.setGraphChanged(false);
 		graph.selectionNotify();
-		graph.setActualSize(new Dimension(sch.width() == 0 ? 840 : sch.width(),
-				sch.height() == 0 ? 1190 : sch.height()));
+		graph.setActualSize(new Dimension(sch.getWidth() == 0 ? 840 : sch.getWidth(),
+				sch.getHeight() == 0 ? 1190 : sch.getHeight()));
 		//assignClonedIds(clones);
 	}
 
@@ -247,9 +247,9 @@ public class SchemePanel extends ElementsPanel
 			SchemeElement scheme_el = SchemeElement.createInstance();
 
 			if (getGraph().getScheme() != null)
-				scheme_el.scheme(getGraph().getScheme());
+				scheme_el.setParentScheme(getGraph().getScheme());
 			else if (getGraph().getSchemeElement() != null)
-				scheme_el.scheme(getGraph().getSchemeElement().scheme());
+				scheme_el.setParentScheme(getGraph().getSchemeElement().getParentScheme());
 
 			insertSchemeElement(scheme_el, proto.getSchemeCell().getData(), proto.getUgoCell().getData(), p);
 
@@ -287,10 +287,10 @@ public class SchemePanel extends ElementsPanel
 			{
 				SchemeElement element = SchemeElement.createInstance();
 				element.internalScheme(sch);
-				element.scheme(getGraph().getScheme());
+				element.setParentScheme(getGraph().getScheme());
 				element.setName(sch.getName());
 				element.setDescription(sch.getDescription());
-				Arrays.asList(getGraph().getScheme().schemeElements()).add(element);
+				Arrays.asList(getGraph().getScheme().getSchemeElementsAsArray()).add(element);
 				element.setSchemeCell(sch.getUgoCell());
 
 				DeviceGroup clone = (DeviceGroup)clones.get(cells[0]);
@@ -306,7 +306,7 @@ public class SchemePanel extends ElementsPanel
 
 	public void removeAllPathsFromScheme()
 	{
-		getGraph().getScheme().schemeMonitoringSolution().schemePaths(new SchemePath[0]);
+		getGraph().getScheme().getCurrentSchemeMonitoringSolution().schemePaths(new SchemePath[0]);
 	}
 
 	public boolean updatePathsAtScheme(Collection paths)
@@ -319,12 +319,12 @@ public class SchemePanel extends ElementsPanel
 
 	public void removePathFromScheme(SchemePath path)
 	{
-		Arrays.asList(getGraph().getScheme().schemeMonitoringSolution().schemePaths()).remove(path);
+		Arrays.asList(getGraph().getScheme().getCurrentSchemeMonitoringSolution().schemePaths()).remove(path);
 	}
 
 	public void insertPathToScheme(SchemePath path)
 	{
-		List paths = Arrays.asList(getGraph().getScheme().schemeMonitoringSolution().schemePaths());
+		List paths = Arrays.asList(getGraph().getScheme().getCurrentSchemeMonitoringSolution().schemePaths());
 		if (!paths.contains(path))
 			paths.add(path);
 		editing_path = null;

@@ -14,7 +14,7 @@ import com.jgraph.graph.Port;
 import com.jgraph.plaf.GraphUI;
 import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.scheme.corba.SchemePackage.Type;
+import com.syrus.AMFICOM.scheme.corba.SchemeKind;
 import com.syrus.AMFICOM.scheme.*;
 import com.syrus.AMFICOM.scheme.SchemeUtils;
 
@@ -212,7 +212,7 @@ public class SchemeGraph extends GPGraph
 	{
 		if (group.getScheme() == null)
 			return false;
-		if (group.getScheme().type().equals(Type.CABLE_SUBNETWORK))
+		if (group.getScheme().getSchemeKind().equals(SchemeKind.CABLE_SUBNETWORK))
 			return true;
 		return false;
 	}
@@ -852,8 +852,8 @@ public class SchemeGraph extends GPGraph
 								fromScreen(new Point(current)));
 
 						boolean inserted = false;
-						Arrays.asList(getScheme().schemeCableLinks()).add(link);
-						if (!getScheme().type().equals(Type.CABLE_SUBNETWORK))
+						Arrays.asList(getScheme().getSchemeCableLinksAsArray()).add(link);
+						if (!getScheme().getSchemeKind().equals(SchemeKind.CABLE_SUBNETWORK))
 						{
 							if (link.sourceSchemeCablePort() != null)
 							{
@@ -862,9 +862,9 @@ public class SchemeGraph extends GPGraph
 								if (se.internalScheme() != null)
 								{
 									Scheme source_scheme = se.internalScheme();
-									if (source_scheme.type().equals(Type.CABLE_SUBNETWORK))
+									if (source_scheme.getSchemeKind().equals(SchemeKind.CABLE_SUBNETWORK))
 									{
-										link.scheme(source_scheme);
+										link.setParentScheme(source_scheme);
 //										source_scheme.cablelinks.add(link);
 										inserted = true;
 									}
@@ -877,9 +877,9 @@ public class SchemeGraph extends GPGraph
 								if (se.internalScheme() != null)
 								{
 									Scheme target_scheme = se.internalScheme();
-									if (target_scheme.type().equals(Type.CABLE_SUBNETWORK))
+									if (target_scheme.getSchemeKind().equals(SchemeKind.CABLE_SUBNETWORK))
 									{
-										link.scheme(target_scheme);
+										link.setParentScheme(target_scheme);
 //										target_scheme.cablelinks.add(link);
 										inserted = true;
 									}
@@ -888,7 +888,7 @@ public class SchemeGraph extends GPGraph
 						}
 						if (!inserted)
 						{
-							link.scheme(getScheme());
+							link.setParentScheme(getScheme());
 //							getScheme().cablelinks.add(link);
 						}
 
@@ -908,13 +908,13 @@ public class SchemeGraph extends GPGraph
 
 						if (getScheme() != null)
 						{
-							Arrays.asList(getScheme().schemeLinks()).add(link);
-							link.scheme(getScheme());
+							Arrays.asList(getScheme().getSchemeLinksAsArray()).add(link);
+							link.setParentScheme(getScheme());
 						}
 						else if (getSchemeElement() != null)
 						{
 							Arrays.asList(getSchemeElement().schemeLinks()).add(link);
-							link.scheme(getSchemeElement().scheme());
+							link.setParentScheme(getSchemeElement().getParentScheme());
 						}
 
 						event.consume();

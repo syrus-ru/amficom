@@ -84,7 +84,7 @@ class CableLayoutReportTableModel extends DividableTableModel
 					report.getName(),
 					CreateReportException.poolObjNotExists);
 
-		Scheme scheme = scLink.scheme();
+		Scheme scheme = scLink.getParentScheme();
 		if(scheme == null)
 			throw new CreateReportException(
 					report.getName(),
