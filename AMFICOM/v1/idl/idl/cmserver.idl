@@ -11,7 +11,9 @@ module AMFICOM {
 module cmserver {
 module corba {
 
-	interface CMServer : com::syrus::AMFICOM::general::corba::IdentifierGeneratorServer {
+	interface CMServer:
+		::com::syrus::AMFICOM::general::corba::NameResolver,
+		::com::syrus::AMFICOM::general::corba::IdentifierGeneratorServer {
 /////////////////////////////////////////// Characteristic Recieve ////////////////////////////////////////////
 		void receiveCharacteristic(in com::syrus::AMFICOM::configuration::corba::Characteristic_Transferable characteristic_Transferable,
 								  in boolean force, 	

@@ -1,5 +1,5 @@
 /*
- * $Id: general.idl,v 1.19 2004/10/04 13:33:18 bass Exp $
+ * $Id: general.idl,v 1.20 2004/10/15 11:33:23 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -60,6 +60,20 @@ module corba {
 		ErrorCode error_code;
 		CompletionStatus completion_status;
 		wstring message;
+	};
+
+	abstract interface NameResolver {
+		wstring<64> lookupDomainName(in string<32> id) raises (AMFICOMRemoteException);
+
+		string<32> lookupUserLogin(in string<32> id) raises (AMFICOMRemoteException);
+
+		wstring<64> lookupUserName(in string<32> id) raises (AMFICOMRemoteException);
+
+		string<32> reverseLookupDomainName(in wstring<64> domainName) raises (AMFICOMRemoteException);
+
+		string<32> reverseLookupUserLogin(in string<32> userLogin) raises (AMFICOMRemoteException);
+
+		string<32> reverseLookupUserName(in wstring<64> userName) raises (AMFICOMRemoteException);
 	};
 
 //	abstract
