@@ -93,4 +93,3 @@ int operator != (const ByteArray& ba1, const ByteArray& ba2) {
 			return 1;
 	return 0;
 }
-
