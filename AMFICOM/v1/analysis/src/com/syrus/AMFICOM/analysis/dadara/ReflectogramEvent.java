@@ -1,3 +1,11 @@
+/**
+ * ReflectogramEvent.java
+ * 
+ * @version $Revision: 1.6 $, $Date: 2004/12/10 08:42:30 $
+ * @author $Author: saa $
+ * @module general_v1
+ */
+
 /*
  * Два варианта создания объектов:
  * 1. Native-код AnalysisManager'а
@@ -56,7 +64,7 @@ public class ReflectogramEvent //implements Cloneable
 	// для нел. событий - на основе значений р/г в конечных точках
 	private double yB; // Y в точке begin
 	private double yE; // Y в точке end
-	
+
 	// XXX
 	// аппроксимации с учетом смежных событий на основе calcMutualParameters
 	// для лин. события - по его собств. аппрокс.,
