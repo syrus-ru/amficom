@@ -1,5 +1,5 @@
 /*
- * $Id: LinkedIdsConditionImpl.java,v 1.1 2005/01/14 18:07:08 arseniy Exp $
+ * $Id: LinkedIdsConditionImpl.java,v 1.2 2005/02/07 10:00:25 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,8 +16,8 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/01/14 18:07:08 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.2 $, $Date: 2005/02/07 10:00:25 $
+ * @author $Author: bob $
  * @module config_v1
  */
 class LinkedIdsConditionImpl extends com.syrus.AMFICOM.general.LinkedIdsCondition {
@@ -33,20 +33,17 @@ class LinkedIdsConditionImpl extends com.syrus.AMFICOM.general.LinkedIdsConditio
 	}
 
 	public boolean isConditionTrue(Object object) throws ApplicationException {
-		boolean condition = false;
-		switch (this.entityCode.shortValue()) {
-			default:
-				throw new UnsupportedOperationException("entityCode " + ObjectEntities.codeToString(this.entityCode.shortValue()) + " is unknown for this condition");
-		}
-
-		//return condition;
+//		switch (this.entityCode.shortValue()) {
+//			default:
+				throw new UnsupportedOperationException("LinkedIdsConditionImpl.isConditionTrue | entityCode " + ObjectEntities.codeToString(this.entityCode.shortValue()) + " is unknown for this condition");
+//		}
 	}
 
 	public void setEntityCode(Short entityCode) {
-		switch (entityCode.shortValue()) {
-			default:
-				throw new UnsupportedOperationException("entityCode " + ObjectEntities.codeToString(entityCode.shortValue()) + " is unknown for this condition");
-		}
+//		switch (entityCode.shortValue()) {
+//			default:
+				throw new UnsupportedOperationException("LinkedIdsConditionImpl.setEntityCode | entityCode " + ObjectEntities.codeToString(entityCode.shortValue()) + " is unknown for this condition");
+//		}
 	}
 	
 	
