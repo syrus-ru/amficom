@@ -9,6 +9,8 @@ CREATE TABLE KIS (
  type_id VARCHAR2(32) NOT NULL,
  name VARCHAR2(64) NOT NULL,
  description VARCHAR2(256),
+ hostname VARCHAR2(64),
+ port NUMBER(5,0),
  equipment_id varchar2(32) NOT NULL,
  mcm_id VARCHAR2(32) NOT NULL,
 --

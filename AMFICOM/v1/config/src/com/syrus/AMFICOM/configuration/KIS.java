@@ -1,5 +1,5 @@
 /*
- * $Id: KIS.java,v 1.26 2004/11/12 10:25:32 bob Exp $
+ * $Id: KIS.java,v 1.27 2004/11/15 09:50:47 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,7 +27,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.configuration.corba.KIS_Transferable;
 
 /**
- * @version $Revision: 1.26 $, $Date: 2004/11/12 10:25:32 $
+ * @version $Revision: 1.27 $, $Date: 2004/11/15 09:50:47 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -41,6 +41,8 @@ public class KIS extends DomainMember implements TypedObject {
 	private Identifier mcmId;
 	private String name;
 	private String description;
+	private String hostname;
+	private int port;
 	
 	private List measurementPortIds;	//List <MeasurementPort>
 
@@ -65,6 +67,8 @@ public class KIS extends DomainMember implements TypedObject {
 		this.mcmId = new Identifier(kt.mcm_id);
 		this.name = kt.name;
 		this.description = kt.description;
+		this.hostname = kt.hostname;
+		this.port = kt.port;
 
 		this.measurementPortIds = new ArrayList(kt.measurement_port_ids.length);
 		for (int i = 0; i < kt.measurement_port_ids.length; i++)
@@ -81,21 +85,25 @@ public class KIS extends DomainMember implements TypedObject {
 	}
 	
 	protected KIS(Identifier id,
-							Identifier creatorId,
-							Identifier domainId,
-							String name,
-							String description,
-                            KISType type,
-							Identifier equipmentId,
-							Identifier mcmId) {
+				  Identifier creatorId,
+				  Identifier domainId,
+				  String name,
+				  String description,
+				  String hostname,
+				  int port,
+				  KISType type,
+				  Identifier equipmentId,
+				  Identifier mcmId) {
 		super(id,
-					new Date(System.currentTimeMillis()),
-					new Date(System.currentTimeMillis()),
-					creatorId,
-					creatorId,
-					domainId);
+			  new Date(System.currentTimeMillis()),
+			  new Date(System.currentTimeMillis()),
+			  creatorId,
+			  creatorId,
+			  domainId);
 		this.name = name;
 		this.description = description;
+		this.hostname = hostname;
+		this.port = port;
 		this.equipmentId = equipmentId;
         this.type = type;
 		this.mcmId = mcmId;
@@ -115,18 +123,22 @@ public class KIS extends DomainMember implements TypedObject {
 	 * @return
 	 */
 	public static KIS createInstance(Identifier id,
-																	 Identifier creatorId,
-																	 Identifier domainId,
-																	 String name,
-																	 String description,
-                                                                     KISType type,
-																	 Identifier equipmentId,
-																	 Identifier mcmId){
+									 Identifier creatorId,
+									 Identifier domainId,
+									 String name,
+									 String description,
+									 String hostname,
+									 int port,
+									 KISType type,
+									 Identifier equipmentId,
+									 Identifier mcmId){
 		return new KIS(id,
 									 creatorId,
 									 domainId,
 									 name,
 									 description,
+									 hostname,
+									 port,
                                      type,
 									 equipmentId,
 									 mcmId);
@@ -158,6 +170,8 @@ public class KIS extends DomainMember implements TypedObject {
 									(Identifier_Transferable)super.domainId.getTransferable(),
 									new String(this.name),
 									new String(this.description),
+									this.hostname,
+									this.port,
 									(Identifier_Transferable)this.type.getId().getTransferable(),
 									(Identifier_Transferable)this.equipmentId.getTransferable(),
 									(Identifier_Transferable)this.mcmId.getTransferable(),
@@ -170,6 +184,14 @@ public class KIS extends DomainMember implements TypedObject {
 
 	public String getDescription() {
 		return this.description;
+	}
+	
+	public String getHostName(){
+		return this.hostname;
+	}
+	
+	public int getPort(){
+		return this.port;
 	}
     
     public StorableObjectType getType() {       
@@ -198,22 +220,26 @@ public class KIS extends DomainMember implements TypedObject {
 	}
 
 	protected synchronized void setAttributes(Date created,
-																						Date modified,
-																						Identifier creatorId,
-																						Identifier modifierId,
-																						Identifier domainId,
-																						String name,
-																						String description,
-                                                                                        KISType type,
-																						Identifier equipmentId,
-																						Identifier mcmId) {
+											  Date modified,
+											  Identifier creatorId,
+											  Identifier modifierId,
+											  Identifier domainId,
+											  String name,
+											  String description,
+											  String hostname,
+											  int port,
+											  KISType type,
+											  Identifier equipmentId,
+											  Identifier mcmId) {
 		super.setAttributes(created,
-												modified,
-												creatorId,
-												modifierId,
-												domainId);
+							modified,
+							creatorId,
+							modifierId,
+							domainId);
 		this.name = name;
 		this.description = description;
+		this.hostname = hostname;
+		this.port = port;
         this.type = type;
 		this.equipmentId = equipmentId;
 		this.mcmId = mcmId;

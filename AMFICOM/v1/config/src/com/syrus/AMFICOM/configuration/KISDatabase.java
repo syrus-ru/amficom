@@ -1,5 +1,5 @@
 /*
- * $Id: KISDatabase.java,v 1.31 2004/11/10 15:23:51 bob Exp $
+ * $Id: KISDatabase.java,v 1.32 2004/11/15 09:50:47 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -38,21 +38,25 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.31 $, $Date: 2004/11/10 15:23:51 $
+ * @version $Revision: 1.32 $, $Date: 2004/11/15 09:50:47 $
  * @author $Author: bob $
  * @module configuration_v1
  */
 
 public class KISDatabase extends StorableObjectDatabase {
 	// table :: kis
-  // description VARCHAR2(256),
-  public static final String COLUMN_DESCRIPTION   = "description";
+	// description VARCHAR2(256),
+	public static final String COLUMN_DESCRIPTION   = "description";
 	// name VARCHAR2(64) NOT NULL,
-	public static final String COLUMN_NAME  = "name";
+	public static final String COLUMN_NAME  		= "name";
+	// hostname VARCHAR2(64),
+	public static final String COLUMN_HOSTNAME  	= "hostname";
+	// port NUMBER(5,0),
+	public static final String COLUMN_PORT  		= "port";
 	// equipment_id Identifier NOT NULL
-	public static final String COLUMN_EQUIPMENT_ID = "equipment_id";
+	public static final String COLUMN_EQUIPMENT_ID 	= "equipment_id";
 	// mcm_id Identifier NOT NULL
-	public static final String COLUMN_MCM_ID = "mcm_id";
+	public static final String COLUMN_MCM_ID 		= "mcm_id";
 	
     public static final String COLUMN_TYPE_ID       = "type_id";
     
@@ -78,6 +82,8 @@ public class KISDatabase extends StorableObjectDatabase {
                 + COLUMN_TYPE_ID + COMMA
 				+ COLUMN_NAME + COMMA
 				+ COLUMN_DESCRIPTION + COMMA
+				+ COLUMN_HOSTNAME + COMMA
+				+ COLUMN_PORT + COMMA
 				+ COLUMN_EQUIPMENT_ID + COMMA
 				+ COLUMN_MCM_ID;
 		}
@@ -89,6 +95,8 @@ public class KISDatabase extends StorableObjectDatabase {
 			updateMultiplySQLValues = super.getUpdateMultiplySQLValues() + COMMA
 				+ QUESTION + COMMA
                 + QUESTION + COMMA
+				+ QUESTION + COMMA
+				+ QUESTION + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
@@ -105,6 +113,8 @@ public class KISDatabase extends StorableObjectDatabase {
 	        + kis.getType().getId().toSQLString() + COMMA
 			+ APOSTOPHE + DatabaseString.toQuerySubString(kis.getName()) + APOSTOPHE + COMMA
 			+ APOSTOPHE + DatabaseString.toQuerySubString(kis.getDescription()) + APOSTOPHE + COMMA
+			+ APOSTOPHE + kis.getHostName() + APOSTOPHE + COMMA
+			+ kis.getPort() + COMMA
 			+ kis.getEquipmentId().toSQLString() + COMMA
 			+ kis.getMCMId().toSQLString();
 		return sql;
@@ -130,6 +140,8 @@ public class KISDatabase extends StorableObjectDatabase {
             preparedStatement.setString( ++i, kis.getType().getId().getCode());            
             preparedStatement.setString( ++i, kis.getName());
             preparedStatement.setString( ++i, kis.getDescription());
+            preparedStatement.setString( ++i, kis.getHostName());
+            preparedStatement.setInt( ++i, kis.getPort());
             preparedStatement.setString( ++i, equipmentId != null ? equipmentId.getCode() : "");
             preparedStatement.setString( ++i, mcmId != null ? mcmId.getCode() : "");            
         } catch (SQLException sqle) {
@@ -147,7 +159,7 @@ public class KISDatabase extends StorableObjectDatabase {
 			/**
 			 * @todo when change DB Identifier model ,change getString() to getLong()
 			 */
-			kis = new KIS(new Identifier(resultSet.getString(COLUMN_ID)), null, null, null, null, null, null, null);			
+			kis = new KIS(new Identifier(resultSet.getString(COLUMN_ID)), null, null, null, null, null, 0, null, null, null);			
 		}
 		KISType kisType;
         try {
@@ -172,6 +184,8 @@ public class KISDatabase extends StorableObjectDatabase {
 							new Identifier(resultSet.getString(DomainMember.COLUMN_DOMAIN_ID)),													
 							DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_NAME)),
 							DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_DESCRIPTION)),
+							resultSet.getString(COLUMN_HOSTNAME),
+							resultSet.getInt(COLUMN_PORT),
                             kisType,
 							/**
 								* @todo when change DB Identifier model ,change getString() to getLong()
