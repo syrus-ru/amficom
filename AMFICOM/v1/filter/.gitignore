@@ -19,3 +19,4 @@ Makefile.inc
 .sqlj
 .project
 .classpath
+.settings
