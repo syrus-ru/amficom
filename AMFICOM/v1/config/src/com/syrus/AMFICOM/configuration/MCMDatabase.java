@@ -1,5 +1,5 @@
 /*
- * $Id: MCMDatabase.java,v 1.9 2004/08/10 19:01:09 arseniy Exp $
+ * $Id: MCMDatabase.java,v 1.10 2004/08/11 14:28:48 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,7 +26,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2004/08/10 19:01:09 $
+ * @version $Revision: 1.10 $, $Date: 2004/08/11 14:28:48 $
  * @author $Author: arseniy $
  * @module configuration_v1
  */
@@ -162,6 +162,7 @@ public class MCMDatabase extends StorableObjectDatabase {
 				Log.errorException(sqle1);
 			}
 		}
+		mcm.setKISIds(kisIds);
 	}
 
 	public Object retrieveObject(StorableObject storableObject, int retrieve_kind, Object arg)
