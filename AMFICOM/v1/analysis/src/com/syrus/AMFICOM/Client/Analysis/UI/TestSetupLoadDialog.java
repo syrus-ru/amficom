@@ -9,8 +9,8 @@ import javax.swing.*;
 
 import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Model.*;
-import com.syrus.AMFICOM.Client.General.UI.*;
-import com.syrus.AMFICOM.Client.Resource.*;
+import com.syrus.AMFICOM.Client.Resource.Pool;
+import com.syrus.AMFICOM.client_.general.ui_.tree.*;
 import com.syrus.AMFICOM.configuration.*;
 import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.measurement.*;
@@ -20,7 +20,7 @@ import com.syrus.io.BellcoreStructure;
 public class TestSetupLoadDialog extends JDialog implements OperationListener
 {
 	public int ret_code = 0;
-	public ObjectResource resource;
+	public Object resource;
 
 	private Dispatcher dispatcher = new Dispatcher();
 	private ApplicationContext aContext;
@@ -112,7 +112,7 @@ public class TestSetupLoadDialog extends JDialog implements OperationListener
 			{
 				okButton.setEnabled(true);
 				data = ev.getList();
-				resource = (ObjectResource)data.get(ev.getSelectionNumber());
+				resource = data.get(ev.getSelectionNumber());
 			}
 			else
 			{
@@ -230,9 +230,9 @@ class TestSetupTreeModel extends ObjectResourceTreeModel
 							}
 						}
 
-						ObjectResourceSorter sorter = StubResource.getDefaultSorter();
-						sorter.setDataSet(testsHt);
-						for(Iterator it = sorter.default_sort().iterator(); it.hasNext(); )
+//						ObjectResourceSorter sorter = StubResource.getDefaultSorter();
+//						sorter.setDataSet(testsHt);
+						for(Iterator it = testsHt.iterator(); it.hasNext(); )
 						{
 							MeasurementSetup t = (MeasurementSetup)it.next();
 							ortn = new ObjectResourceTreeNode(t, t.getDescription(), true, true);

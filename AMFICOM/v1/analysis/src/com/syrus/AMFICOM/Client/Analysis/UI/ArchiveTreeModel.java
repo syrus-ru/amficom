@@ -8,7 +8,7 @@ import java.awt.*;
 import javax.swing.ImageIcon;
 
 import com.syrus.AMFICOM.Client.General.Filter.*;
-import com.syrus.AMFICOM.Client.Resource.*;
+import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.Client.Resource.Scheme.SchemePath;
 import com.syrus.AMFICOM.client_.general.ui_.tree.*;
 import com.syrus.AMFICOM.configuration.*;
@@ -174,9 +174,9 @@ public class ArchiveTreeModel extends ObjectResourceTreeModel
 				{
 					ObjectResourceFilter filter = new ObjectResourceDomainFilter(domain.getId().getIdentifierString());
 					paths = filter.filter(paths);
-					ObjectResourceSorter sorter = SchemePath.getSorter();
-					sorter.setDataSet(paths);
-					paths = sorter.default_sort();
+//					ObjectResourceSorter sorter = SchemePath.getSorter();
+//					sorter.setDataSet(paths);
+//					paths = sorter.default_sort();
 					for(Iterator it = paths.iterator(); it.hasNext();)
 					{
 						SchemePath path = (SchemePath)it.next();

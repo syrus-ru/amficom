@@ -87,7 +87,6 @@ public class AnalysisUtil
 		}
 
 		return CharacteristicType.createInstance(
-				IdentifierPool.generateId(ObjectEntities.CHARACTERISTICTYPE_ENTITY_CODE),
 				userId,
 				codename,
 				"",
