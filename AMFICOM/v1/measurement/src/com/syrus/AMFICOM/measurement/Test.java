@@ -1,5 +1,5 @@
 /*
- * $Id: Test.java,v 1.37 2004/08/19 12:46:52 arseniy Exp $
+ * $Id: Test.java,v 1.38 2004/08/19 12:47:57 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,7 +8,6 @@
 
 package com.syrus.AMFICOM.measurement;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.ArrayList;
@@ -37,8 +36,8 @@ import com.syrus.AMFICOM.measurement.corba.TestTimeStamps_TransferablePackage.Co
 import com.syrus.AMFICOM.measurement.corba.TestTimeStamps_TransferablePackage.PeriodicalTestTimeStamps;
 
 /**
- * @version $Revision: 1.37 $, $Date: 2004/08/19 12:46:52 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.38 $, $Date: 2004/08/19 12:47:57 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
@@ -566,12 +565,9 @@ public class Test extends StorableObject {
 	}
 	
 	public boolean equals(Object obj) {
-		boolean equals = (this == obj);
-		SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yy HH:mm:ss");
+		boolean equals = (this == obj);		
 		if ((!equals) && (obj instanceof Test)){
 			Test test = (Test)obj;
-			System.out.println(sdf.format(test.getStartTime()));
-			System.out.println(sdf.format(getStartTime()));
 			if (	(test.id.equals(this.id)) &&
 					HashCodeGenerator.equalsDate(this.created,test.created) &&
 					(this.creatorId.equals(test.creatorId))&&
