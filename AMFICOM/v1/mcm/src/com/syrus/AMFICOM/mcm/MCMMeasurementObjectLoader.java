@@ -1,5 +1,5 @@
 /*
- * $Id: MCMMeasurementObjectLoader.java,v 1.20 2005/03/22 16:09:43 arseniy Exp $
+ * $Id: MCMMeasurementObjectLoader.java,v 1.21 2005/03/23 15:16:34 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,268 +10,68 @@ package com.syrus.AMFICOM.mcm;
 
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.LinkedList;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CommunicationException;
+import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
-import com.syrus.AMFICOM.general.StorableObject;
-import com.syrus.AMFICOM.general.StorableObjectDatabase;
-import com.syrus.AMFICOM.general.VersionCollisionException;
+import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.general.corba.ErrorCode;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.AnalysisType;
-import com.syrus.AMFICOM.measurement.AnalysisTypeDatabase;
 import com.syrus.AMFICOM.measurement.DatabaseMeasurementObjectLoader;
 import com.syrus.AMFICOM.measurement.EvaluationType;
-import com.syrus.AMFICOM.measurement.EvaluationTypeDatabase;
 import com.syrus.AMFICOM.measurement.MeasurementDatabaseContext;
 import com.syrus.AMFICOM.measurement.MeasurementSetup;
-import com.syrus.AMFICOM.measurement.MeasurementSetupDatabase;
 import com.syrus.AMFICOM.measurement.MeasurementType;
-import com.syrus.AMFICOM.measurement.MeasurementTypeDatabase;
 import com.syrus.AMFICOM.measurement.Modeling;
+import com.syrus.AMFICOM.measurement.ModelingType;
 import com.syrus.AMFICOM.measurement.Set;
-import com.syrus.AMFICOM.measurement.SetDatabase;
 import com.syrus.AMFICOM.measurement.TemporalPattern;
-import com.syrus.AMFICOM.measurement.TemporalPatternDatabase;
 import com.syrus.AMFICOM.measurement.Test;
+import com.syrus.AMFICOM.measurement.corba.AnalysisType_Transferable;
+import com.syrus.AMFICOM.measurement.corba.EvaluationType_Transferable;
+import com.syrus.AMFICOM.measurement.corba.MeasurementSetup_Transferable;
+import com.syrus.AMFICOM.measurement.corba.MeasurementType_Transferable;
+import com.syrus.AMFICOM.measurement.corba.Set_Transferable;
+import com.syrus.AMFICOM.measurement.corba.TemporalPattern_Transferable;
 import com.syrus.AMFICOM.measurement.corba.TestStatus;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.20 $, $Date: 2005/03/22 16:09:43 $
+ * @version $Revision: 1.21 $, $Date: 2005/03/23 15:16:34 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
 final class MCMMeasurementObjectLoader extends DatabaseMeasurementObjectLoader {
 
-	public MeasurementType loadMeasurementType(Identifier id) throws RetrieveObjectException, CommunicationException {
-		MeasurementType measurementType = null;
+	public MeasurementType loadMeasurementType(Identifier id)
+			throws RetrieveObjectException, CommunicationException, ObjectNotFoundException, CreateObjectException {
 		try {
-			measurementType = new MeasurementType(id);
+			return new MeasurementType(id);
 		}
-		catch (ObjectNotFoundException onfe) {
-			Log.debugMessage("MeasurementType '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL08);
-			try {
-				measurementType = new MeasurementType(MeasurementControlModule.mServerRef.transmitMeasurementType((Identifier_Transferable) id.getTransferable()));
-				MeasurementDatabaseContext.getMeasurementTypeDatabase().update(measurementType, null, StorableObjectDatabase.UPDATE_FORCE);
-			}
-			catch (org.omg.CORBA.SystemException se) {
-				Log.errorException(se);
-				MeasurementControlModule.activateMServerReference();
-				throw new CommunicationException("System exception -- " + se.getMessage(), se);
-			}
-			catch (AMFICOMRemoteException are) {
-				String mesg = null;
-				if (are.error_code.equals(ErrorCode.ERROR_NOT_FOUND))
-					mesg = "Measurement type '" + id + "' not found on server database";
-				else
-					mesg = "Cannot retrieve measurement type '" + id + "' from server database -- " + are.message;
-				Log.errorMessage(mesg);
-				throw new RetrieveObjectException(mesg);
-			}
-			catch (ApplicationException ae) {
-				throw new RetrieveObjectException(ae);
-			}
-		}
-		return measurementType;
-	}
+		catch (ObjectNotFoundException e) {
+			Log.debugMessage("MeasurementType '" + id + "' not found in database; trying to load from MServer", Log.DEBUGLEVEL08);
+			com.syrus.AMFICOM.mserver.corba.MServer mServerRef = MeasurementControlModule.mServerRef;
+			if (mServerRef != null) {
 
-	public AnalysisType loadAnalysisType(Identifier id) throws RetrieveObjectException, CommunicationException {
-		AnalysisType analysisType = null;
-		try {
-			analysisType = new AnalysisType(id);
-		}
-		catch (ObjectNotFoundException onfe) {
-			Log.debugMessage("AnalysisType '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL08);
-			try {
-				analysisType = new AnalysisType(MeasurementControlModule.mServerRef.transmitAnalysisType((Identifier_Transferable) id.getTransferable()));
-				MeasurementDatabaseContext.getAnalysisTypeDatabase().update(analysisType, null, StorableObjectDatabase.UPDATE_FORCE);
-			}
-			catch (org.omg.CORBA.SystemException se) {
-				Log.errorException(se);
-				MeasurementControlModule.activateMServerReference();
-				throw new CommunicationException("System exception -- " + se.getMessage(), se);
-			}
-			catch (AMFICOMRemoteException are) {
-				String mesg = null;
-				if (are.error_code.equals(ErrorCode.ERROR_NOT_FOUND))
-					mesg = "Analysis type '" + id + "' not found on server database";
-				else
-					mesg = "Cannot retrieve analysis type '" + id + "' from server database -- " + are.message;
-				Log.errorMessage(mesg);
-				throw new RetrieveObjectException(mesg);
-			}
-			catch (ApplicationException ae) {
-				throw new RetrieveObjectException(ae);
-			}
-		}
-		return analysisType;
-	}
-
-	public EvaluationType loadEvaluationType(Identifier id) throws RetrieveObjectException, CommunicationException {
-		EvaluationType evaluationType = null;
-		try {
-			evaluationType = new EvaluationType(id);
-		}
-		catch (ObjectNotFoundException onfe) {
-			Log.debugMessage("EvaluationType '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL08);
-			try {
-				evaluationType = new EvaluationType(MeasurementControlModule.mServerRef.transmitEvaluationType((Identifier_Transferable) id.getTransferable()));
-				MeasurementDatabaseContext.getEvaluationTypeDatabase().update(evaluationType, null, StorableObjectDatabase.UPDATE_FORCE);
-			}
-			catch (org.omg.CORBA.SystemException se) {
-				Log.errorException(se);
-				MeasurementControlModule.activateMServerReference();
-				throw new CommunicationException("System exception -- " + se.getMessage(), se);
-			}
-			catch (AMFICOMRemoteException are) {
-				String mesg = null;
-				if (are.error_code.equals(ErrorCode.ERROR_NOT_FOUND))
-					mesg = "Evaluation type '" + id + "' not found on server database";
-				else
-					mesg = "Cannot retrieve evaluation type '" + id + "' from server database -- " + are.message;
-				Log.errorMessage(mesg);
-				throw new RetrieveObjectException(mesg);
-			}
-			catch (ApplicationException ae) {
-				throw new RetrieveObjectException(ae);
-			}
-		}
-		return evaluationType;
-	}
-
-	public Set loadSet(Identifier id) throws RetrieveObjectException, CommunicationException {
-		Set set = null;
-		try {
-			set = new Set(id);
-		}
-		catch (ObjectNotFoundException onfe) {
-			Log.debugMessage("Set '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL08);
-			try {
-				set = new Set(MeasurementControlModule.mServerRef.transmitSet((Identifier_Transferable) id.getTransferable()));
-				MeasurementDatabaseContext.getSetDatabase().update(set, null, StorableObjectDatabase.UPDATE_FORCE);
-			}
-			catch (org.omg.CORBA.SystemException se) {
-				Log.errorException(se);
-				MeasurementControlModule.activateMServerReference();
-				throw new CommunicationException("System exception -- " + se.getMessage(), se);
-			}
-			catch (AMFICOMRemoteException are) {
-				String mesg = null;
-				if (are.error_code.equals(ErrorCode.ERROR_NOT_FOUND))
-					mesg = "Set '" + id + "' not found on server database";
-				else
-					mesg = "Cannot retrieve set '" + id + "' from server database -- " + are.message;
-				Log.errorMessage(mesg);
-				throw new RetrieveObjectException(mesg);
-			}
-			catch (ApplicationException ae) {
-				throw new RetrieveObjectException(ae);
-			}
-		}
-		return set;
-	}
-
-	public Modeling loadModeling(Identifier id) throws DatabaseException, CommunicationException {
-		throw new UnsupportedOperationException("MCMMeasurementObjectLoader.loadModeling | MCM doesn't need in modeling (load modeling '" + id + "'");
-	}
-
-	public MeasurementSetup loadMeasurementSetup(Identifier id) throws RetrieveObjectException, CommunicationException {
-		MeasurementSetup measurementSetup = null;
-		try {
-			measurementSetup = new MeasurementSetup(id);
-		}
-		catch (ObjectNotFoundException onfe) {
-			Log.debugMessage("MeasurementSetup '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL08);
-			try {
-				measurementSetup = new MeasurementSetup(MeasurementControlModule.mServerRef.transmitMeasurementSetup((Identifier_Transferable) id.getTransferable()));
-				MeasurementDatabaseContext.getMeasurementSetupDatabase().update(measurementSetup, null, StorableObjectDatabase.UPDATE_FORCE);
-			}
-			catch (org.omg.CORBA.SystemException se) {
-				Log.errorException(se);
-				MeasurementControlModule.activateMServerReference();
-				throw new CommunicationException("System exception -- " + se.getMessage(), se);
-			}
-			catch (AMFICOMRemoteException are) {
-				String mesg = null;
-				if (are.error_code.equals(ErrorCode.ERROR_NOT_FOUND))
-					mesg = "Measurement setup '" + id + "' not found on server database";
-				else
-					mesg = "Cannot retrieve measurement setup '" + id + "' from server database -- " + are.message;
-				Log.errorMessage(mesg);
-				throw new RetrieveObjectException(mesg);
-			}
-			catch (ApplicationException ae) {
-				throw new RetrieveObjectException(ae);
-			}
-		}
-		return measurementSetup;
-	}
-
-	public TemporalPattern loadTemporalPattern(Identifier id) throws RetrieveObjectException, CommunicationException {
-		TemporalPattern temporalPattern = null;
-		try {
-			temporalPattern = new TemporalPattern(id);
-		}
-		catch (ObjectNotFoundException onfe) {
-			Log.debugMessage("TemporalPattern '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL08);
-			try {
-				temporalPattern = new TemporalPattern(MeasurementControlModule.mServerRef.transmitTemporalPattern((Identifier_Transferable) id.getTransferable()));
-				MeasurementDatabaseContext.getTemporalPatternDatabase().update(temporalPattern, null, StorableObjectDatabase.UPDATE_FORCE);
-			}
-			catch (org.omg.CORBA.SystemException se) {
-				Log.errorException(se);
-				MeasurementControlModule.activateMServerReference();
-				throw new CommunicationException("System exception -- " + se.getMessage(), se);
-			}
-			catch (AMFICOMRemoteException are) {
-				String mesg = null;
-				if (are.error_code.equals(ErrorCode.ERROR_NOT_FOUND))
-					mesg = "TemporalPattern '" + id + "' not found on server database";
-				else
-					mesg = "Cannot retrieve temporal pattern '" + id + "' from server database -- " + are.message;
-				Log.errorMessage(mesg);
-				throw new RetrieveObjectException(mesg);
-			}
-			catch (ApplicationException ae) {
-				throw new RetrieveObjectException(ae);
-			}
-		}
-		return temporalPattern;
-	}
-
-
-
-
-
-	public Collection loadAnalysisTypes(Collection ids) throws DatabaseException, CommunicationException {
-		AnalysisTypeDatabase database = (AnalysisTypeDatabase) MeasurementDatabaseContext.getAnalysisTypeDatabase();
-		Collection collection;
-		Collection copyOfList;
-		Collection loadedObjects = new LinkedList();
-		AnalysisType analysisType;
-		try {
-			collection = database.retrieveByIdsByCondition(ids, null);
-			copyOfList = new LinkedList(collection);
-			for (Iterator it = copyOfList.iterator(); it.hasNext();) {
-				Identifier id = ((StorableObject) it.next()).getId();
-				if (ids.contains(id))
-					it.remove();
-			}
-			for (Iterator it = copyOfList.iterator(); it.hasNext();) {
-				Identifier id = ((StorableObject) it.next()).getId();
-				Log.debugMessage("AnalysisType '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL08);
 				try {
-					analysisType = new AnalysisType(MeasurementControlModule.mServerRef.transmitAnalysisType((Identifier_Transferable) id.getTransferable()));
-					collection.add(analysisType);
-					loadedObjects.add(analysisType);
+					MeasurementType_Transferable transferable = mServerRef.transmitMeasurementType((Identifier_Transferable) id.getTransferable());
+					MeasurementType measurementType = new MeasurementType(transferable);
+
+					try {
+						MeasurementDatabaseContext.getMeasurementTypeDatabase().insert(measurementType);
+					}
+					catch (ApplicationException ae) {
+						Log.errorException(ae);
+					}
+
+					return measurementType;
 				}
 				catch (org.omg.CORBA.SystemException se) {
 					Log.errorException(se);
@@ -279,51 +79,40 @@ final class MCMMeasurementObjectLoader extends DatabaseMeasurementObjectLoader {
 					throw new CommunicationException("System exception -- " + se.getMessage(), se);
 				}
 				catch (AMFICOMRemoteException are) {
-					String mesg = null;
-					if (are.error_code.equals(ErrorCode.ERROR_NOT_FOUND))
-						mesg = "Analysis type '" + id + "' not found on server database";
-					else
-						mesg = "Cannot retrieve analysis type '" + id + "' from server database -- " + are.message;
-					Log.errorMessage(mesg);
-					throw new RetrieveObjectException(mesg);
+					if (are.error_code.value() == ErrorCode._ERROR_NOT_FOUND)
+						throw new ObjectNotFoundException("MeasurementType '" + id + "' not found in MServer database");
+					throw new RetrieveObjectException("Cannot retrieve MeasurementType '" + id + "' from MServer database -- " + are.message);
 				}
 			}
-			try {
-				database.update(loadedObjects, null, StorableObjectDatabase.UPDATE_FORCE);
-			}
-			catch (VersionCollisionException vce) {
-				//This never be caught
-				Log.errorException(vce);
-			}
+			String mesg = "Remote reference for server is null; will try to reactivate it";
+			Log.errorMessage(mesg);
+			MeasurementControlModule.activateMServerReference();
+			throw new CommunicationException(mesg);
 		}
-		catch (IllegalDataException e) {
-			Log.errorMessage("MCMMeasurementObjectLoader.loadEvaluations | Illegal Storable Object: " + e.getMessage());
-			throw new DatabaseException("MCMMeasurementObjectLoader.loadEvaluations | Illegal Storable Object: " + e.getMessage());
-		}
-		return collection;
 	}
 
-	public Collection loadEvaluationTypes(Collection ids) throws DatabaseException, CommunicationException {
-		EvaluationTypeDatabase database = (EvaluationTypeDatabase) MeasurementDatabaseContext.getEvaluationTypeDatabase();
-		Collection collection;
-		Collection copyOfList;
-		Collection loadedObjects = new LinkedList();
-		EvaluationType evaluationType;
+	public AnalysisType loadAnalysisType(Identifier id)
+			throws RetrieveObjectException, CommunicationException, ObjectNotFoundException, CreateObjectException {
 		try {
-			collection = database.retrieveByIdsByCondition(ids, null);
-			copyOfList = new LinkedList(collection);
-			for (Iterator it = copyOfList.iterator(); it.hasNext();) {
-				Identifier id = ((StorableObject) it.next()).getId();
-				if (ids.contains(id))
-					it.remove();
-			}
-			for (Iterator it = copyOfList.iterator(); it.hasNext();) {
-				Identifier id = ((StorableObject) it.next()).getId();
-				Log.debugMessage("EvaluationType '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL08);
+			return new AnalysisType(id);
+		}
+		catch (ObjectNotFoundException e) {
+			Log.debugMessage("AnalysisType '" + id + "' not found in database; trying to load from MServer", Log.DEBUGLEVEL08);
+			com.syrus.AMFICOM.mserver.corba.MServer mServerRef = MeasurementControlModule.mServerRef;
+			if (mServerRef != null) {
+
 				try {
-					evaluationType = new EvaluationType(MeasurementControlModule.mServerRef.transmitEvaluationType((Identifier_Transferable) id.getTransferable()));
-					collection.add(evaluationType);
-					loadedObjects.add(evaluationType);
+					AnalysisType_Transferable transferable = mServerRef.transmitAnalysisType((Identifier_Transferable) id.getTransferable());
+					AnalysisType analysisType = new AnalysisType(transferable);
+
+					try {
+						MeasurementDatabaseContext.getAnalysisTypeDatabase().insert(analysisType);
+					}
+					catch (ApplicationException ae) {
+						Log.errorException(ae);
+					}
+
+					return analysisType;
 				}
 				catch (org.omg.CORBA.SystemException se) {
 					Log.errorException(se);
@@ -331,56 +120,40 @@ final class MCMMeasurementObjectLoader extends DatabaseMeasurementObjectLoader {
 					throw new CommunicationException("System exception -- " + se.getMessage(), se);
 				}
 				catch (AMFICOMRemoteException are) {
-					String mesg = null;
-					if (are.error_code.equals(ErrorCode.ERROR_NOT_FOUND))
-						mesg = "Evaluation type '" + id + "' not found on server database";
-					else
-						mesg = "Cannot retrieve evaluation type '" + id + "' from server database -- " + are.message;
-					Log.errorMessage(mesg);
-					throw new RetrieveObjectException(mesg);
+					if (are.error_code.value() == ErrorCode._ERROR_NOT_FOUND)
+						throw new ObjectNotFoundException("AnalysisType '" + id + "' not found in MServer database");
+					throw new RetrieveObjectException("Cannot retrieve AnalysisType '" + id + "' from MServer database -- " + are.message);
 				}
 			}
-			try {
-				database.update(loadedObjects, null, StorableObjectDatabase.UPDATE_FORCE);
-			}
-			catch (VersionCollisionException vce) {
-				//This never be caught
-				Log.errorException(vce);
-			}
+			String mesg = "Remote reference for server is null; will try to reactivate it";
+			Log.errorMessage(mesg);
+			MeasurementControlModule.activateMServerReference();
+			throw new CommunicationException(mesg);
 		}
-		catch (IllegalDataException e) {
-			Log.errorMessage("MCMMeasurementObjectLoader.loadEvaluationType | Illegal Storable Object: " + e.getMessage());
-			throw new DatabaseException("MCMMeasurementObjectLoader.loadEvaluationType | Illegal Storable Object: " + e.getMessage());
-		}
-		return collection;
 	}
 
-	public Collection loadModelings(Collection ids) throws DatabaseException, CommunicationException {
-		throw new UnsupportedOperationException("MCMMeasurementObjectLoader.loadModelings | mcm doesn't need in modeling (load "
-				+ ((ids != null) ? Integer.toString(ids.size()) : "NULL") + " modelings");
-	}
-
-	public Collection loadMeasurementSetups(Collection ids) throws DatabaseException, CommunicationException {
-		MeasurementSetupDatabase database = (MeasurementSetupDatabase) MeasurementDatabaseContext.getMeasurementSetupDatabase();
-		Collection collection;
-		Collection copyOfList;
-		Collection loadedObjects = new LinkedList();
-		MeasurementSetup measurementSetup;
+	public EvaluationType loadEvaluationType(Identifier id)
+			throws RetrieveObjectException, CommunicationException, ObjectNotFoundException, CreateObjectException {
 		try {
-			collection = database.retrieveByIdsByCondition(ids, null);
-			copyOfList = new LinkedList(collection);
-			for (Iterator it = copyOfList.iterator(); it.hasNext();) {
-				Identifier id = ((StorableObject) it.next()).getId();
-				if (ids.contains(id))
-					it.remove();
-			}
-			for (Iterator it = copyOfList.iterator(); it.hasNext();) {
-				Identifier id = ((StorableObject) it.next()).getId();
-				Log.debugMessage("MeasurementSetup '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL08);
+			return new EvaluationType(id);
+		}
+		catch (ObjectNotFoundException e) {
+			Log.debugMessage("EvaluationType '" + id + "' not found in database; trying to load from MServer", Log.DEBUGLEVEL08);
+			com.syrus.AMFICOM.mserver.corba.MServer mServerRef = MeasurementControlModule.mServerRef;
+			if (mServerRef != null) {
+
 				try {
-					measurementSetup = new MeasurementSetup(MeasurementControlModule.mServerRef.transmitMeasurementSetup((Identifier_Transferable) id.getTransferable()));
-					collection.add(measurementSetup);
-					loadedObjects.add(measurementSetup);
+					EvaluationType_Transferable transferable = mServerRef.transmitEvaluationType((Identifier_Transferable) id.getTransferable());
+					EvaluationType evaluationType = new EvaluationType(transferable);
+
+					try {
+						MeasurementDatabaseContext.getEvaluationTypeDatabase().insert(evaluationType);
+					}
+					catch (ApplicationException ae) {
+						Log.errorException(ae);
+					}
+
+					return evaluationType;
 				}
 				catch (org.omg.CORBA.SystemException se) {
 					Log.errorException(se);
@@ -388,51 +161,40 @@ final class MCMMeasurementObjectLoader extends DatabaseMeasurementObjectLoader {
 					throw new CommunicationException("System exception -- " + se.getMessage(), se);
 				}
 				catch (AMFICOMRemoteException are) {
-					String mesg = null;
-					if (are.error_code.equals(ErrorCode.ERROR_NOT_FOUND))
-						mesg = "Measurement setup '" + id + "' not found on server database";
-					else
-						mesg = "Cannot retrieve measurement setup '" + id + "' from server database -- " + are.message;
-					Log.errorMessage(mesg);
-					throw new RetrieveObjectException(mesg);
+					if (are.error_code.value() == ErrorCode._ERROR_NOT_FOUND)
+						throw new ObjectNotFoundException("EvaluationType '" + id + "' not found in MServer database");
+					throw new RetrieveObjectException("Cannot retrieve EvaluationType '" + id + "' from MServer database -- " + are.message);
 				}
 			}
-			try {
-				database.update(loadedObjects, null, StorableObjectDatabase.UPDATE_FORCE);
-			}
-			catch (VersionCollisionException vce) {
-				//This never be caught
-				Log.errorException(vce);
-			}
+			String mesg = "Remote reference for server is null; will try to reactivate it";
+			Log.errorMessage(mesg);
+			MeasurementControlModule.activateMServerReference();
+			throw new CommunicationException(mesg);
 		}
-		catch (IllegalDataException e) {
-			Log.errorMessage("MCMMeasurementObjectLoader.loadMeasurementSetups | Illegal Storable Object: " + e.getMessage());
-			throw new DatabaseException("MCMMeasurementObjectLoader.loadMeasurementSetups | Illegal Storable Object: " + e.getMessage());
-		}
-		return collection;
 	}
 
-	public Collection loadMeasurementTypes(Collection ids) throws DatabaseException, CommunicationException {
-		MeasurementTypeDatabase database = (MeasurementTypeDatabase) MeasurementDatabaseContext.getMeasurementTypeDatabase();
-		Collection collection;
-		Collection copyOfList;
-		Collection loadedObjects = new LinkedList();
-		MeasurementType measurementType;
+	public Set loadSet(Identifier id)
+			throws RetrieveObjectException, CommunicationException, ObjectNotFoundException, CreateObjectException {
 		try {
-			collection = database.retrieveByIdsByCondition(ids, null);
-			copyOfList = new LinkedList(collection);
-			for (Iterator it = copyOfList.iterator(); it.hasNext();) {
-				Identifier id = ((StorableObject) it.next()).getId();
-				if (ids.contains(id))
-					it.remove();
-			}
-			for (Iterator it = copyOfList.iterator(); it.hasNext();) {
-				Identifier id = ((StorableObject) it.next()).getId();
-				Log.debugMessage("MeasurementType '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL08);
+			return new Set(id);
+		}
+		catch (ObjectNotFoundException e) {
+			Log.debugMessage("Set '" + id + "' not found in database; trying to load from MServer", Log.DEBUGLEVEL08);
+			com.syrus.AMFICOM.mserver.corba.MServer mServerRef = MeasurementControlModule.mServerRef;
+			if (mServerRef != null) {
+
 				try {
-					measurementType = new MeasurementType(MeasurementControlModule.mServerRef.transmitMeasurementType((Identifier_Transferable) id.getTransferable()));
-					collection.add(measurementType);
-					loadedObjects.add(measurementType);
+					Set_Transferable transferable = mServerRef.transmitSet((Identifier_Transferable) id.getTransferable());
+					Set set = new Set(transferable);
+
+					try {
+						MeasurementDatabaseContext.getSetDatabase().insert(set);
+					}
+					catch (ApplicationException ae) {
+						Log.errorException(ae);
+					}
+
+					return set;
 				}
 				catch (org.omg.CORBA.SystemException se) {
 					Log.errorException(se);
@@ -440,51 +202,40 @@ final class MCMMeasurementObjectLoader extends DatabaseMeasurementObjectLoader {
 					throw new CommunicationException("System exception -- " + se.getMessage(), se);
 				}
 				catch (AMFICOMRemoteException are) {
-					String mesg = null;
-					if (are.error_code.equals(ErrorCode.ERROR_NOT_FOUND))
-						mesg = "Measurement type '" + id + "' not found on server database";
-					else
-						mesg = "Cannot retrieve measurement type '" + id + "' from server database -- " + are.message;
-					Log.errorMessage(mesg);
-					throw new RetrieveObjectException(mesg);
+					if (are.error_code.value() == ErrorCode._ERROR_NOT_FOUND)
+						throw new ObjectNotFoundException("Set '" + id + "' not found in MServer database");
+					throw new RetrieveObjectException("Cannot retrieve Set '" + id + "' from MServer database -- " + are.message);
 				}
 			}
-			try {
-				database.update(loadedObjects, null, StorableObjectDatabase.UPDATE_FORCE);
-			}
-			catch (VersionCollisionException vce) {
-				//This never be caught
-				Log.errorException(vce);
-			}
+			String mesg = "Remote reference for server is null; will try to reactivate it";
+			Log.errorMessage(mesg);
+			MeasurementControlModule.activateMServerReference();
+			throw new CommunicationException(mesg);
 		}
-		catch (IllegalDataException e) {
-			Log.errorMessage("MCMMeasurementObjectLoader.loadMeasurementTypes | Illegal Storable Object: " + e.getMessage());
-			throw new DatabaseException("MCMMeasurementObjectLoader.loadMeasurementTypes | Illegal Storable Object: " + e.getMessage());
-		}
-		return collection;
 	}
 
-	public Collection loadSets(Collection ids) throws DatabaseException, CommunicationException {
-		SetDatabase database = (SetDatabase) MeasurementDatabaseContext.getSetDatabase();
-		Collection collection;
-		Collection copyOfList;
-		Collection loadedObjects = new LinkedList();
-		Set set;
+	public MeasurementSetup loadMeasurementSetup(Identifier id)
+			throws RetrieveObjectException, CommunicationException, ObjectNotFoundException, CreateObjectException {
 		try {
-			collection = database.retrieveByIdsByCondition(ids, null);
-			copyOfList = new LinkedList(collection);
-			for (Iterator it = copyOfList.iterator(); it.hasNext();) {
-				Identifier id = ((StorableObject) it.next()).getId();
-				if (ids.contains(id))
-					it.remove();
-			}
-			for (Iterator it = copyOfList.iterator(); it.hasNext();) {
-				Identifier id = ((StorableObject) it.next()).getId();
-				Log.debugMessage("Set '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL08);
+			return new MeasurementSetup(id);
+		}
+		catch (ObjectNotFoundException e) {
+			Log.debugMessage("MeasurementSetup '" + id + "' not found in database; trying to load from MServer", Log.DEBUGLEVEL08);
+			com.syrus.AMFICOM.mserver.corba.MServer mServerRef = MeasurementControlModule.mServerRef;
+			if (mServerRef != null) {
+
 				try {
-					set = new Set(MeasurementControlModule.mServerRef.transmitSet((Identifier_Transferable) id.getTransferable()));
-					collection.add(set);
-					loadedObjects.add(set);
+					MeasurementSetup_Transferable transferable = mServerRef.transmitMeasurementSetup((Identifier_Transferable) id.getTransferable());
+					MeasurementSetup measurementSetup = new MeasurementSetup(transferable);
+
+					try {
+						MeasurementDatabaseContext.getMeasurementSetupDatabase().insert(measurementSetup);
+					}
+					catch (ApplicationException ae) {
+						Log.errorException(ae);
+					}
+
+					return measurementSetup;
 				}
 				catch (org.omg.CORBA.SystemException se) {
 					Log.errorException(se);
@@ -492,51 +243,40 @@ final class MCMMeasurementObjectLoader extends DatabaseMeasurementObjectLoader {
 					throw new CommunicationException("System exception -- " + se.getMessage(), se);
 				}
 				catch (AMFICOMRemoteException are) {
-					String mesg = null;
-					if (are.error_code.equals(ErrorCode.ERROR_NOT_FOUND))
-						mesg = "Set '" + id + "' not found on server database";
-					else
-						mesg = "Cannot retrieve set '" + id + "' from server database -- " + are.message;
-					Log.errorMessage(mesg);
-					throw new RetrieveObjectException(mesg);
+					if (are.error_code.value() == ErrorCode._ERROR_NOT_FOUND)
+						throw new ObjectNotFoundException("MeasurementSetup '" + id + "' not found in MServer database");
+					throw new RetrieveObjectException("Cannot retrieve MeasurementSetup '" + id + "' from MServer database -- " + are.message);
 				}
 			}
-			try {
-				database.update(loadedObjects, null, StorableObjectDatabase.UPDATE_FORCE);
-			}
-			catch (VersionCollisionException vce) {
-				//This never be caught
-				Log.errorException(vce);
-			}
+			String mesg = "Remote reference for server is null; will try to reactivate it";
+			Log.errorMessage(mesg);
+			MeasurementControlModule.activateMServerReference();
+			throw new CommunicationException(mesg);
 		}
-		catch (IllegalDataException e) {
-			Log.errorMessage("MCMMeasurementObjectLoader.loadSets | Illegal Storable Object: " + e.getMessage());
-			throw new DatabaseException("MCMMeasurementObjectLoader.loadSets | Illegal Storable Object: " + e.getMessage());
-		}
-		return collection;
 	}
 
-	public Collection loadTemporalPatterns(Collection ids) throws DatabaseException, CommunicationException {
-		TemporalPatternDatabase database = (TemporalPatternDatabase) MeasurementDatabaseContext.getTemporalPatternDatabase();
-		Collection collection;
-		Collection copyOfList;
-		Collection loadedObjects = new LinkedList();
-		TemporalPattern temporalPattern;
+	public TemporalPattern loadTemporalPattern(Identifier id)
+			throws RetrieveObjectException, CommunicationException, ObjectNotFoundException, CreateObjectException {
 		try {
-			collection = database.retrieveByIdsByCondition(ids, null);
-			copyOfList = new LinkedList(collection);
-			for (Iterator it = copyOfList.iterator(); it.hasNext();) {
-				Identifier id = ((StorableObject) it.next()).getId();
-				if (ids.contains(id))
-					it.remove();
-			}
-			for (Iterator it = copyOfList.iterator(); it.hasNext();) {
-				Identifier id = ((StorableObject) it.next()).getId();
-				Log.debugMessage("TemporalPattern '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL08);
+			return new TemporalPattern(id);
+		}
+		catch (ObjectNotFoundException e) {
+			Log.debugMessage("TemporalPattern '" + id + "' not found in database; trying to load from MServer", Log.DEBUGLEVEL08);
+			com.syrus.AMFICOM.mserver.corba.MServer mServerRef = MeasurementControlModule.mServerRef;
+			if (mServerRef != null) {
+
 				try {
-					temporalPattern = new TemporalPattern(MeasurementControlModule.mServerRef.transmitTemporalPattern((Identifier_Transferable) id.getTransferable()));
-					collection.add(temporalPattern);
-					loadedObjects.add(temporalPattern);
+					TemporalPattern_Transferable transferable = mServerRef.transmitTemporalPattern((Identifier_Transferable) id.getTransferable());
+					TemporalPattern temporalPattern = new TemporalPattern(transferable);
+
+					try {
+						MeasurementDatabaseContext.getTemporalPatternDatabase().insert(temporalPattern);
+					}
+					catch (ApplicationException ae) {
+						Log.errorException(ae);
+					}
+
+					return temporalPattern;
 				}
 				catch (org.omg.CORBA.SystemException se) {
 					Log.errorException(se);
@@ -544,31 +284,72 @@ final class MCMMeasurementObjectLoader extends DatabaseMeasurementObjectLoader {
 					throw new CommunicationException("System exception -- " + se.getMessage(), se);
 				}
 				catch (AMFICOMRemoteException are) {
-					String mesg = null;
-					if (are.error_code.equals(ErrorCode.ERROR_NOT_FOUND))
-						mesg = "TemporalPattern '" + id + "' not found on server database";
-					else
-						mesg = "Cannot retrieve temporal pattern '" + id + "' from server database -- " + are.message;
-					Log.errorMessage(mesg);
-					throw new RetrieveObjectException(mesg);
+					if (are.error_code.value() == ErrorCode._ERROR_NOT_FOUND)
+						throw new ObjectNotFoundException("TemporalPattern '" + id + "' not found in MServer database");
+					throw new RetrieveObjectException("Cannot retrieve TemporalPattern '" + id + "' from MServer database -- " + are.message);
 				}
 			}
-			try {
-				database.update(loadedObjects, null, StorableObjectDatabase.UPDATE_FORCE);
-			}
-			catch (VersionCollisionException vce) {
-				//This never be caught
-				Log.errorException(vce);
-			}
+			String mesg = "Remote reference for server is null; will try to reactivate it";
+			Log.errorMessage(mesg);
+			MeasurementControlModule.activateMServerReference();
+			throw new CommunicationException(mesg);
 		}
-		catch (IllegalDataException e) {
-			Log.errorMessage("MCMMeasurementObjectLoader.loadTemporalPatterns | Illegal Storable Object: " + e.getMessage());
-			throw new DatabaseException("MCMMeasurementObjectLoader.loadTemporalPatterns | Illegal Storable Object: " + e.getMessage());
-		}
-		return collection;
 	}
-	
-	
+
+
+
+
+	public Collection loadAnalysisTypes(Collection ids) throws ApplicationException {
+		throw new UnsupportedOperationException("Method not implemented, ids: " + ids);
+	}
+
+	public Collection loadEvaluationTypes(Collection ids) throws ApplicationException {
+		throw new UnsupportedOperationException("Method not implemented, ids: " + ids);
+	}
+
+	public Collection loadMeasurementSetups(Collection ids) throws ApplicationException {
+		throw new UnsupportedOperationException("Method not implemented, ids: " + ids);
+	}
+
+	public Collection loadMeasurementTypes(Collection ids) throws ApplicationException {
+		throw new UnsupportedOperationException("Method not implemented, ids: " + ids);
+	}
+
+	public Collection loadSets(Collection ids) throws ApplicationException {
+		throw new UnsupportedOperationException("Method not implemented, ids: " + ids);
+	}
+
+	public Collection loadTemporalPatterns(Collection ids) throws ApplicationException {
+		throw new UnsupportedOperationException("Method not implemented, ids: " + ids);
+	}
+
+	public Collection loadAnalysisTypesButIds(StorableObjectCondition condition, Collection ids) throws ApplicationException {
+		throw new UnsupportedOperationException("Method not implemented, ids: " + ids + ", condition: " + condition);
+	}
+
+	public Collection loadEvaluationTypesButIds(StorableObjectCondition condition, Collection ids) throws ApplicationException {
+		throw new UnsupportedOperationException("Method not implemented, ids: " + ids + ", condition: " + condition);
+	}
+
+	public Collection loadMeasurementTypesButIds(StorableObjectCondition condition, Collection ids) throws ApplicationException {
+		throw new UnsupportedOperationException("Method not implemented, ids: " + ids + ", condition: " + condition);
+	}
+
+	public Collection loadMeasurementSetupsButIds(StorableObjectCondition condition, Collection ids) throws ApplicationException {
+		throw new UnsupportedOperationException("Method not implemented, ids: " + ids + ", condition: " + condition);
+	}
+
+	public Collection loadSetsButIds(StorableObjectCondition condition, Collection ids) throws ApplicationException {
+		throw new UnsupportedOperationException("Method not implemented, ids: " + ids + ", condition: " + condition);
+	}
+
+	public Collection loadTemporalPatternsButIds(StorableObjectCondition condition, Collection ids) throws ApplicationException {
+		throw new UnsupportedOperationException("Method not implemented, ids: " + ids + ", condition: " + condition);
+	}
+
+
+
+
 	/**
 	 * This method actually updates status of test, nothing more
 	 */
@@ -611,4 +392,128 @@ final class MCMMeasurementObjectLoader extends DatabaseMeasurementObjectLoader {
 			throw new CommunicationException("System exception -- " + se.getMessage(), se);
 		}
 	}
+
+
+
+
+	/*
+	 * MCM do not need in all below methods
+	 * */
+
+	public ModelingType loadModelingType(Identifier id) throws ApplicationException {
+		throw new UnsupportedOperationException("MCM doesn't need in modeling type, id: " + id);
+	}
+
+	public Modeling loadModeling(Identifier id) throws DatabaseException, CommunicationException {
+		throw new UnsupportedOperationException("MCM doesn't need in modeling, id: " + id);
+	}
+
+
+
+
+
+	public Collection loadModelingTypes(Collection ids) throws ApplicationException {
+		throw new UnsupportedOperationException("MCM doesn't need in modeling type, ids: " + ids);
+	}
+
+	public Collection loadModelings(Collection ids) throws ApplicationException {
+		throw new UnsupportedOperationException("MCM doesn't need in modeling, ids: " + ids);
+	}
+
+
+
+
+	
+	public Collection loadModelingTypesButIds(StorableObjectCondition condition, Collection ids) throws ApplicationException {
+		throw new UnsupportedOperationException("MCM doesn't need in modeling type, ids: " + ids + ", condition: " + condition);
+	}
+
+	public Collection loadModelingsButIds(StorableObjectCondition condition, Collection ids) throws ApplicationException {
+		throw new UnsupportedOperationException("MCM doesn't need in modeling, ids: " + ids + ", condition: " + condition);
+	}
+
+	
+
+
+
+	public void saveAnalysisType(AnalysisType analysisType, boolean force) throws ApplicationException {
+		throw new UnsupportedOperationException("Method not implemented, analysisType: " + analysisType + ", force: " + force);
+	}
+
+	public void saveEvaluationType(EvaluationType evaluationType, boolean force) throws ApplicationException {
+		throw new UnsupportedOperationException("Method not implemented, evaluationType: " + evaluationType + ", force: " + force);
+	}
+
+	public void saveMeasurementType(MeasurementType measurementType, boolean force) throws ApplicationException {
+		throw new UnsupportedOperationException("Method not implemented, measurementType: " + measurementType + ", force: " + force);
+	}
+	
+	public void saveModelingType(ModelingType modelingType, boolean force) throws ApplicationException {
+		throw new UnsupportedOperationException("Method not implemented, modelingType: " + modelingType + ", force: " + force);
+	}
+
+	public void saveMeasurementSetup(MeasurementSetup measurementSetup, boolean force) throws ApplicationException {
+		throw new UnsupportedOperationException("Method not implemented, measurementSetup: " + measurementSetup + ", force: " + force);
+	}
+	
+	public void saveSet(Set set, boolean force) throws ApplicationException {
+		throw new UnsupportedOperationException("Method not implemented, set: " + set + ", force: " + force);
+	}
+	
+	public void saveModeling(Modeling modeling, boolean force) throws ApplicationException {
+		throw new UnsupportedOperationException("Method not implemented, modeling: " + modeling + ", force: " + force);
+	}
+	
+	public void saveTemporalPattern(TemporalPattern temporalPattern, boolean force) throws ApplicationException {
+		throw new UnsupportedOperationException("Method not implemented, temporalPattern: " + temporalPattern + ", force: " + force);
+	}
+
+
+
+
+	public void saveAnalysisTypes(Collection objects, boolean force) throws ApplicationException {
+		throw new UnsupportedOperationException("Method not implemented, collection: " + objects + ", force: " + force);
+	}
+	
+	public void saveEvaluationTypes(Collection objects, boolean force) throws ApplicationException {
+		throw new UnsupportedOperationException("Method not implemented, collection: " + objects + ", force: " + force);
+	}
+	
+	public void saveMeasurementSetups(Collection objects, boolean force) throws ApplicationException {
+		throw new UnsupportedOperationException("Method not implemented, collection: " + objects + ", force: " + force);
+	}
+	
+	public void saveMeasurementTypes(Collection objects, boolean force) throws ApplicationException {
+		throw new UnsupportedOperationException("Method not implemented, collection: " + objects + ", force: " + force);
+	}
+	
+	public void saveModelings(Collection objects, boolean force) throws ApplicationException {
+		throw new UnsupportedOperationException("Method not implemented, collection: " + objects + ", force: " + force);
+	}
+	
+	public void saveSets(Collection objects, boolean force) throws ApplicationException {
+		throw new UnsupportedOperationException("Method not implemented, collection: " + objects + ", force: " + force);
+	}
+	
+	public void saveTemporalPatterns(Collection objects, boolean force) throws ApplicationException {
+		throw new UnsupportedOperationException("Method not implemented, collection: " + objects + ", force: " + force);
+	}
+
+
+
+
+	public java.util.Set refresh(java.util.Set storableObjects) throws ApplicationException {
+		throw new UnsupportedOperationException("Method not implemented, objects: " + storableObjects);
+	}
+
+
+
+
+	public void delete(Collection objects) throws IllegalDataException {
+		throw new UnsupportedOperationException("Method not implemented, objects: " + objects);
+	}
+	public void delete(Identifier id) throws IllegalDataException {
+		throw new UnsupportedOperationException("Method not implemented, id: " + id);
+	}
+
 }
