@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectDatabase.java,v 1.10 2004/08/27 15:15:07 bob Exp $
+ * $Id: StorableObjectDatabase.java,v 1.11 2004/08/31 15:29:51 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,7 +14,7 @@ import java.util.List;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2004/08/27 15:15:07 $
+ * @version $Revision: 1.11 $, $Date: 2004/08/31 15:29:51 $
  * @author $Author: bob $
  * @module general_v1
  */
@@ -45,6 +45,7 @@ public abstract class StorableObjectDatabase {
 	public static final String	SQL_FROM				= " FROM ";
 	public static final String	SQL_INSERT_INTO	= " INSERT INTO ";
 	public static final String	SQL_IN					= " IN ";
+	public static final String	SQL_NULL 				= " NULL ";
 	public static final String	SQL_OR					= " OR ";
 	public static final String	SQL_ORDER_BY		= " ORDER BY ";
 	public static final String	SQL_SELECT			= " SELECT ";
