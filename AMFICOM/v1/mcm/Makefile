@@ -1,23 +1,23 @@
-MODULE_NAME = mcm_v1
+MODULE_NAME := mcm_v1
 
-LIBNAME = $(subst _v1,,$(MODULE_NAME)).jar
-LIBNAME_INTERFACE= $(subst _v1,_interface,$(MODULE_NAME)).jar
-ARCHFILE = $(subst _v1,,$(MODULE_NAME)).tar.gz
+LIBNAME := $(subst _v1,,$(MODULE_NAME)).jar
+LIBNAME_INTERFACE := $(subst _v1,_interface,$(MODULE_NAME)).jar
+ARCHFILE := $(subst _v1,,$(MODULE_NAME)).tar.gz
 
-IDLDIR=../idl_v1/idl
+IDLDIR := ../idl_v1/idl
 
-HOST=mongol
-SERVICE_NAME=mongol
+HOST := mongol
+SERVICE_NAME := mongol
 
-TRANSCEIVER_DIR=./transceiver
-DADARA_DIR=./dadara
+TRANSCEIVER_DIR := ./transceiver
+DADARA_DIR := ./dadara
 
 include ../tools/Makefile.inc
 
-APPCLASSPATH = $(LIBDIR)/mserver_interface.jar:$(LIBDIR)/util.jar:$(LIBDIR)/general.jar:$(LIBDIR)/configuration.jar:$(LIBDIR)/measurement.jar:$(LIBDIR)/dadara.jar
+APPCLASSPATH := $(LIBDIR)/mserver_interface.jar:$(LIBDIR)/util.jar:$(LIBDIR)/general.jar:$(LIBDIR)/configuration.jar:$(LIBDIR)/measurement.jar:$(LIBDIR)/dadara.jar
 
-JAVAH=javah
-JAVAH_FLAGS = \
+JAVAH := javah
+JAVAH_FLAGS := \
 	-classpath $(APPCLASSPATH):$(CLASSDIR) \
 	-force
 
@@ -27,7 +27,7 @@ $(call checkenve,ORACLE_HOME)
 
 all: $(LIBNAME) $(LIBNAME_INTERFACE)
 
-$(LIBNAME): .mach
+$(LIBNAME):	.mach
 	$(JAR) -cf $@ \
 		-C $(CLASSDIR) com
 
@@ -44,9 +44,6 @@ $(LIBNAME_INTERFACE):	.corba
 	$(JAVAH) $(JAVAH_FLAGS) \
 		-d $(TRANSCEIVER_DIR) \
 		com.syrus.AMFICOM.mcm.TCPKISConnection
-	$(JAVAH) $(JAVAH_FLAGS) \
-		-d $(DADARA_DIR) \
-		com.syrus.AMFICOM.mcm.DadaraAnalysisManager
 	touch $@
 
 .mach:	.corba $(CLASSDIR)
@@ -121,4 +118,4 @@ arch:
 		$(SRCDIR)/com/syrus/AMFICOM/mcm/*.java
 
 lib: $(LIBNAME)
-	$(CP) $(LIBNAME) $(LIBDIR)	
+	$(CP) $(LIBNAME) $(LIBDIR)
