@@ -1,22 +1,30 @@
+/*
+ * $Id: CommandPermissionAttributesPanel.java,v 1.6 2004/09/27 13:17:07 bass Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ
+ */
+
 package com.syrus.AMFICOM.Client.Administrate.Object.UI;
 
-import java.text.*;
-import java.util.*;
-
-import javax.swing.*;
-
 import com.syrus.AMFICOM.Client.General.Model.*;
-import com.syrus.AMFICOM.Client.General.UI.*;
-import com.syrus.AMFICOM.Client.Resource.*;
+import com.syrus.AMFICOM.Client.General.UI.GeneralPanel;
 import com.syrus.AMFICOM.Client.Resource.Object.*;
-import oracle.jdeveloper.layout.*;
-import javax.swing.border.*;
-import java.awt.GridBagLayout;
-import java.awt.GridBagConstraints;
-import java.awt.Insets;
-import java.awt.Dimension;
+import com.syrus.AMFICOM.Client.Resource.ObjectResource;
+import java.awt.*;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import javax.swing.*;
+import javax.swing.border.TitledBorder;
+import oracle.jdeveloper.layout.VerticalFlowLayout;
 
-public class CommandPermissionAttributesPanel extends GeneralPanel//PropertiesPanel
+/**
+ * @author $Author: bass $
+ * @version $Revision: 1.6 $, $Date: 2004/09/27 13:17:07 $
+ * @module generalclient_v1
+ */
+public class CommandPermissionAttributesPanel extends GeneralPanel//ObjectResourcePropertiesPane
 {
   public CommandPermissionAttributes cpa;
   SimpleDateFormat sdf = new SimpleDateFormat();
@@ -206,8 +214,4 @@ public class CommandPermissionAttributesPanel extends GeneralPanel//PropertiesPa
   {
     return cpa;
   }
-
-
-
-
 }

@@ -1,19 +1,28 @@
+/*
+ * $Id: DomainPaneAdmin.java,v 1.7 2004/09/27 13:14:56 bass Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ
+ */
+
 package com.syrus.AMFICOM.Client.Administrate.Object.UI;
 
-import java.awt.*;
-import java.util.ArrayList;
-import java.util.Date;
-
-import javax.swing.*;
-
-import com.syrus.AMFICOM.Client.General.*;
-import com.syrus.AMFICOM.Client.General.Model.*;
+import com.syrus.AMFICOM.Client.General.Checker;
+import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.Resource.Object.*;
+import java.awt.*;
+import java.util.*;
+import javax.swing.*;
 
-
-public class DomainPaneAdmin extends PropertiesPanel
+/**
+ * @author $Author: bass $
+ * @version $Revision: 1.7 $, $Date: 2004/09/27 13:14:56 $
+ * @module generalclient_v1
+ */
+public class DomainPaneAdmin extends JPanel implements ObjectResourcePropertiesPane
 {
   public ApplicationContext aContext = new ApplicationContext();
   NewUpDater updater;
@@ -92,7 +101,7 @@ public class DomainPaneAdmin extends PropertiesPanel
 
     if(domain.opa.id.equals("") || domain.opa.id == null)
     {
-      domain.opa.id = aContext.getDataSourceInterface().GetUId(ObjectPermissionAttributes.typ);
+      domain.opa.id = aContext.getDataSource().GetUId(ObjectPermissionAttributes.typ);
     }
     domain.updateLocalFromTransferable();
     ddp.setObjectResource(or);
@@ -129,7 +138,7 @@ public class DomainPaneAdmin extends PropertiesPanel
     updater.updateDomain(domain, false);
     Pool.put(Domain.typ, domain.id, domain);
 
-    this.aContext.getDataSourceInterface().SaveDomain(domain.id);
+    this.aContext.getDataSource().SaveDomain(domain.id);
 
     setData(domain);
 
@@ -157,7 +166,7 @@ public class DomainPaneAdmin extends PropertiesPanel
       return false;
     }
     this.showTheWindow(true);
-    DataSourceInterface dataSource = aContext.getDataSourceInterface();
+    DataSourceInterface dataSource = aContext.getDataSource();
     domain = new Domain();
 
     domain.id = dataSource.GetUId(Domain.typ);
@@ -185,7 +194,7 @@ public class DomainPaneAdmin extends PropertiesPanel
     Pool.put(Domain.typ, domain.id, domain);
 
     setData(domain);
-    this.aContext.getDataSourceInterface().SaveDomain(domain.id);
+    this.aContext.getDataSource().SaveDomain(domain.id);
 
     return true;
   }
@@ -205,7 +214,7 @@ public class DomainPaneAdmin extends PropertiesPanel
       String[] s = new String[1];
       s[0] = domain.id;
       Pool.put(Domain.typ, domain.id, domain);
-      this.aContext.getDataSourceInterface().RemoveDomain(s);
+      this.aContext.getDataSource().RemoveDomain(s);
       Pool.remove(domain);
       return true;
     }

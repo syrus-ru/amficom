@@ -1,20 +1,30 @@
+/*
+ * $Id: DomainPaneConfig.java,v 1.4 2004/09/27 13:12:09 bass Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ.
+ */
+
 package com.syrus.AMFICOM.Client.Administrate.Object.UI;
 
-import java.awt.*;
-import java.util.ArrayList;
-import java.util.Date;
-
-import javax.swing.*;
-
-import com.syrus.AMFICOM.Client.General.*;
-import com.syrus.AMFICOM.Client.General.Model.*;
+import com.syrus.AMFICOM.Client.General.Checker;
+import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.Resource.Object.*;
+import java.awt.*;
+import java.util.*;
+import javax.swing.*;
 
+/**
+ * @author $Author: bass $
+ * @version $Revision: 1.4 $, $Date: 2004/09/27 13:12:09 $
+ * @module generalclient_v1
+ */
+public final class DomainPaneConfig extends JPanel implements ObjectResourcePropertiesPane {
+	private static DomainPaneConfig instance = null;
 
-public class DomainPaneConfig extends PropertiesPanel
-{
   public ApplicationContext aContext = new ApplicationContext();
   NewUpDater updater;
 
@@ -24,40 +34,29 @@ public class DomainPaneConfig extends PropertiesPanel
   JTabbedPane jtp = new JTabbedPane();
   DomainDomainPanel ddp = new DomainDomainPanel();
   DomainGeneralPanel dgp = new DomainGeneralPanel();
-//  ObjectPermissionAttributesPanel opap = new ObjectPermissionAttributesPanel();
 
-  public DomainPaneConfig()
-  {
-    super();
-    try
-    {
-      jbInit();
-    }
-    catch (Exception e)
-    {
-      e.printStackTrace();
-    }
-  }
+	/**
+	 * @deprecated Use {@link #getInstance()} instead.
+	 */
+	public DomainPaneConfig() {
+		jbInit();
+	}
 
-  public DomainPaneConfig(Domain domain)
-  {
-    this();
-    setObjectResource(domain);
-  }
+	/**
+	 * @deprecated Use {@link #getInstance()} instead.
+	 */
+	public DomainPaneConfig(Domain domain) {
+		this();
+		setObjectResource(domain);
+	}
 
-  private void jbInit() throws Exception
-  {
-    this.setPreferredSize(new Dimension(500, 500));
-    this.setLayout(borderLayout1);
-    this.add(jtp, BorderLayout.CENTER);
-
-//    opap.enableExecutingEditing(false);
-
-    jtp.add(dgp.getName(), dgp);
-    jtp.add(ddp.getName(), ddp);
-//    jtp.add(opap.getName(), opap);
-
-  }
+	private void jbInit() {
+		this.setPreferredSize(new Dimension(500, 500));
+		this.setLayout(borderLayout1);
+		this.add(jtp, BorderLayout.CENTER);
+		jtp.add(dgp.getName(), dgp);
+		jtp.add(ddp.getName(), ddp);
+	}
 
   public ObjectResource getObjectResource()
   {
@@ -91,7 +90,7 @@ public class DomainPaneConfig extends PropertiesPanel
 
     if(domain.opa.id.equals("") || domain.opa.id == null)
     {
-      domain.opa.id = aContext.getDataSourceInterface().GetUId(ObjectPermissionAttributes.typ);
+      domain.opa.id = aContext.getDataSource().GetUId(ObjectPermissionAttributes.typ);
     }
     domain.updateLocalFromTransferable();
     ddp.setObjectResource(or);
@@ -128,7 +127,7 @@ public class DomainPaneConfig extends PropertiesPanel
     updater.updateDomain(domain, false);
     Pool.put(Domain.typ, domain.id, domain);
 
-    this.aContext.getDataSourceInterface().SaveDomain(domain.id);
+    this.aContext.getDataSource().SaveDomain(domain.id);
 
     setData(domain);
 
@@ -156,7 +155,7 @@ public class DomainPaneConfig extends PropertiesPanel
       return false;
     }
     this.showTheWindow(true);
-    DataSourceInterface dataSource = aContext.getDataSourceInterface();
+    DataSourceInterface dataSource = aContext.getDataSource();
     domain = new Domain();
 
     domain.id = dataSource.GetUId(Domain.typ);
@@ -184,7 +183,7 @@ public class DomainPaneConfig extends PropertiesPanel
     Pool.put(Domain.typ, domain.id, domain);
 
     setData(domain);
-    this.aContext.getDataSourceInterface().SaveDomain(domain.id);
+    this.aContext.getDataSource().SaveDomain(domain.id);
 
     return true;
   }
@@ -204,7 +203,7 @@ public class DomainPaneConfig extends PropertiesPanel
       String[] s = new String[1];
       s[0] = domain.id;
       Pool.put(Domain.typ, domain.id, domain);
-      this.aContext.getDataSourceInterface().RemoveDomain(s);
+      this.aContext.getDataSource().RemoveDomain(s);
       Pool.remove(domain);
       return true;
     }
@@ -228,11 +227,6 @@ public class DomainPaneConfig extends PropertiesPanel
     this.aContext = aContext;
     this.user = (User)Pool.get(User.typ,
                                aContext.getSessionInterface().getUserId());
-//    opap.setContext(aContext);
-//    this.dispatcher = this.aContext.getDispatcher();
-
-//    this.dispatcher.register(this, Domain.typ+"updated");
-
     this.updater = new NewUpDater(this.aContext);
   }
 
@@ -243,4 +237,13 @@ public class DomainPaneConfig extends PropertiesPanel
     this.jtp.setVisible(key);
     repaint();
   }
+
+	public static DomainPaneConfig getInstance() {
+		if (instance == null)
+			synchronized (DomainPaneConfig.class) {
+				if (instance == null)
+					instance = new DomainPaneConfig();
+			}
+		return instance;
+	}
 }
