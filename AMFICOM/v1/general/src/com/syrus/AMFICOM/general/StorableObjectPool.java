@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectPool.java,v 1.53 2005/03/31 15:13:31 bob Exp $
+ * $Id: StorableObjectPool.java,v 1.54 2005/03/31 15:58:38 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,8 +27,8 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.53 $, $Date: 2005/03/31 15:13:31 $
- * @author $Author: bob $
+ * @version $Revision: 1.54 $, $Date: 2005/03/31 15:58:38 $
+ * @author $Author: arseniy $
  * @module general_v1
  */
 public abstract class StorableObjectPool {
@@ -350,11 +350,12 @@ public abstract class StorableObjectPool {
 		return storableObject;
 	}
 
-	protected StorableObject getStorableObjectImpl(	final Identifier objectId,
-													final boolean useLoader) throws ApplicationException {
+	protected StorableObject getStorableObjectImpl(final Identifier objectId, final boolean useLoader) throws ApplicationException {
 		if (objectId != null) {
 			/* do not load deleted objects */
-			if (this.deletedIds != null && this.deletedIds.contains(objectId)) { return null; }
+			if (this.deletedIds != null && this.deletedIds.contains(objectId)) {
+				return null;
+			}
 
 			short objectEntityCode = objectId.getMajor();
 			LRUMap objectPool = (LRUMap) this.objectPoolMap.get(new Short(objectEntityCode));
@@ -365,25 +366,24 @@ public abstract class StorableObjectPool {
 					if (storableObject != null)
 						try {
 							this.putStorableObjectImpl(storableObject);
-						} catch (IllegalObjectEntityException ioee) {
+						}
+						catch (IllegalObjectEntityException ioee) {
 							Log.errorException(ioee);
 						}
 				}
 				return storableObject;
 			}
 
-			Log.errorMessage(this.selfGroupName
-					+ "StorableObjectPool.getStorableObjectImpl | Cannot find object pool for objectId: '"
+			Log.errorMessage(this.selfGroupName + "StorableObjectPool.getStorableObjectImpl | Cannot find object pool for objectId: '"
 					+ objectId.toString() + "' entity code: '" + ObjectEntities.codeToString(objectEntityCode) + "'");
 			for (Iterator it = this.objectPoolMap.keySet().iterator(); it.hasNext();) {
 				final Short entityCode = (Short) it.next();
 				Log.debugMessage(this.selfGroupName + "StorableObjectPool.getStorableObjectImpl | available "
 						+ ObjectEntities.codeToString(entityCode) + " / " + entityCode, Log.DEBUGLEVEL05);
 			}
-		} else {
-			Log
-					.errorMessage(this.selfGroupName
-							+ "StorableObjectPool.getStorableObjectImpl | NULL identifier supplied");
+		}
+		else {
+			Log.errorMessage(this.selfGroupName + "StorableObjectPool.getStorableObjectImpl | NULL identifier supplied");
 		}
 		return null;
 	}
@@ -583,8 +583,7 @@ public abstract class StorableObjectPool {
 	 *            a non-null pure java storable object.
 	 * @throws IllegalObjectEntityException
 	 */
-	protected StorableObject putStorableObjectImpl(final StorableObject storableObject)
-			throws IllegalObjectEntityException {
+	protected StorableObject putStorableObjectImpl(final StorableObject storableObject) throws IllegalObjectEntityException {
 		// */
 		assert storableObject != null;
 		/*
@@ -595,11 +594,13 @@ public abstract class StorableObjectPool {
 			return null;
 		Short entityCode = new Short(objectId.getMajor());
 		LRUMap objectPool = (LRUMap) this.objectPoolMap.get(entityCode);
-		if (objectPool != null) { return (StorableObject) objectPool.put(objectId, storableObject); }
+		if (objectPool != null) {
+			return (StorableObject) objectPool.put(objectId, storableObject);
+		}
 		throw new IllegalObjectEntityException(this.selfGroupName
 				+ "StorableObjectPool.putStorableObject | Illegal object entity: '"
-				+ ObjectEntities.codeToString(entityCode) + "'",
-												IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
+				+ ObjectEntities.codeToString(entityCode)
+				+ "'", IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
 	}
 
 	/**
