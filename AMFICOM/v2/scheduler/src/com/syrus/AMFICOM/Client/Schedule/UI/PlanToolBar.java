@@ -1,31 +1,58 @@
 package com.syrus.AMFICOM.Client.Schedule.UI;
 
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.GridLayout;
+import java.awt.Point;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.image.BufferedImage;
-import java.util.*;
+import java.util.Calendar;
+import java.util.Date;
 
-import javax.swing.*;
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JSpinner;
+import javax.swing.SwingConstants;
+import javax.swing.WindowConstants;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
 import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
 import com.syrus.AMFICOM.Client.General.Filter.FilterDialog;
-import com.syrus.AMFICOM.Client.General.Filter.ObjectResourceFilter;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelSchedule;
-import com.syrus.AMFICOM.Client.General.Model.*;
+import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
+import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.General.Report.ReportBuilder;
-import com.syrus.AMFICOM.Client.General.UI.*;
+import com.syrus.AMFICOM.Client.General.UI.AComboBox;
+import com.syrus.AMFICOM.Client.General.UI.CalendarUI;
+import com.syrus.AMFICOM.Client.General.UI.DateSpinner;
+import com.syrus.AMFICOM.Client.General.UI.TimeSpinner;
 import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
-import com.syrus.AMFICOM.Client.Schedule.Filter.TestFilter;
 import com.syrus.AMFICOM.Client.Scheduler.General.UIStorage;
 
 class PlanToolBar extends JPanel {
 
+	private static final long	serialVersionUID	= -1251916980092015668L;
+
 	private class FlashIcon implements Icon {
 
-		private static final int	H		= TestLine.MINIMAL_WIDTH;
+		//private static final int	H		= TestLine.MINIMAL_WIDTH;
 		private static final int	W		= TestLine.MINIMAL_WIDTH;
 
 		private boolean				flash	= false;
@@ -184,42 +211,42 @@ class PlanToolBar extends JPanel {
 		this.filterButton.setFocusable(false);
 		this.filterButton.setIcon(UIStorage.FILTER_ICON);
 		this.filterButton.setToolTipText(LangModelSchedule.getString("Filtration")); //$NON-NLS-1$
-		this.filterButton.addActionListener(new ActionListener() {
-
-			public void actionPerformed(ActionEvent e) {
-				ObjectResourceFilter filter = ((SchedulerModel) aContext.getApplicationModel()).getFilter();
-				TestFilter orf = (TestFilter) filter.clone();
-				
-				/**
-				 * FIXME recast without create new instance of FilterDialog
-				 */
-				//if (PlanToolBar.this.filterDialog == null) {
-					PlanToolBar.this.filterDialog = new FilterDialog(orf, aContext);
-					Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-					Dimension frameSize = PlanToolBar.this.filterDialog.getSize();
-					frameSize.width = 450;
-					frameSize.height = frameSize.height + 20;
-					PlanToolBar.this.filterDialog.setSize(frameSize);
-
-					if (frameSize.height > screenSize.height)
-						frameSize.height = screenSize.height;
-					if (frameSize.width > screenSize.width)
-						frameSize.width = screenSize.width;
-					PlanToolBar.this.filterDialog.setLocation((screenSize.width - frameSize.width) / 2,
-																(screenSize.height - frameSize.height) / 2);
-				//}
-				//else PlanToolBar.this.filterDialog.setF
-				PlanToolBar.this.filterDialog.pack();
-
-				PlanToolBar.this.filterDialog.setModal(true);
-				PlanToolBar.this.filterDialog.setVisible(true);
-				PlanToolBar.this.filterDialog.setFilter(orf);
-
-				if (PlanToolBar.this.filterDialog.retcode == FilterDialog.RETURN_CODE_OK) {					
-					((SchedulerModel) aContext.getApplicationModel()).setFilter(orf);
-				}
-			}
-		});
+//		this.filterButton.addActionListener(new ActionListener() {
+//
+//			public void actionPerformed(ActionEvent e) {
+//				ObjectResourceFilter filter = ((SchedulerModel) aContext.getApplicationModel()).getFilter();
+//				TestFilter orf = (TestFilter) filter.clone();
+//				
+//				/**
+//				 * FIXME recast without create new instance of FilterDialog
+//				 */
+//				//if (PlanToolBar.this.filterDialog == null) {
+//					PlanToolBar.this.filterDialog = new FilterDialog(orf, aContext);
+//					Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+//					Dimension frameSize = PlanToolBar.this.filterDialog.getSize();
+//					frameSize.width = 450;
+//					frameSize.height = frameSize.height + 20;
+//					PlanToolBar.this.filterDialog.setSize(frameSize);
+//
+//					if (frameSize.height > screenSize.height)
+//						frameSize.height = screenSize.height;
+//					if (frameSize.width > screenSize.width)
+//						frameSize.width = screenSize.width;
+//					PlanToolBar.this.filterDialog.setLocation((screenSize.width - frameSize.width) / 2,
+//																(screenSize.height - frameSize.height) / 2);
+//				//}
+//				//else PlanToolBar.this.filterDialog.setF
+//				PlanToolBar.this.filterDialog.pack();
+//
+//				PlanToolBar.this.filterDialog.setModal(true);
+//				PlanToolBar.this.filterDialog.setVisible(true);
+//				PlanToolBar.this.filterDialog.setFilter(orf);
+//
+//				if (PlanToolBar.this.filterDialog.retcode == FilterDialog.RETURN_CODE_OK) {					
+//					((SchedulerModel) aContext.getApplicationModel()).setFilter(orf);
+//				}
+//			}
+//		});
 
 		UIStorage.setRigidSize(this.zoomOutButton, UIStorage.BUTTON_SIZE);
 		this.zoomOutButton.setFocusable(false);
@@ -327,7 +354,10 @@ class PlanToolBar extends JPanel {
 		this.applyButton.setMargin(UIStorage.INSET_NULL);
 
 		box.add(Box.createHorizontalGlue());
-		box.add(this.filterButton);
+		/**
+		 * @TODO add when TestFilter've been updated
+		 */
+		// box.add(this.filterButton);
 		box.add(Box.createHorizontalGlue());
 		box.add(this.zoomInButton);
 		box.add(this.zoomOutButton);

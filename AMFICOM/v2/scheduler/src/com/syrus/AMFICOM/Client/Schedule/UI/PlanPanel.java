@@ -12,11 +12,14 @@ import com.syrus.AMFICOM.Client.General.Model.*;
 
 import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
 import com.syrus.AMFICOM.Client.Scheduler.General.UIStorage;
+import com.syrus.AMFICOM.configuration.MonitoredElement;
 import com.syrus.AMFICOM.measurement.Test;
 
 import oracle.jdeveloper.layout.*;
 
 public class PlanPanel extends JPanel implements OperationListener {
+
+	private static final long	serialVersionUID	= 1032754807376863494L;
 
 	private static class Step {
 
@@ -305,13 +308,14 @@ public class PlanPanel extends JPanel implements OperationListener {
 							if (this.testLines.containsKey(test.getMonitoredElement().getId()))
 								testLine = (TestLine) this.testLines.get(test.getMonitoredElement().getId());
 							else {
-								String meName = Pool.getName(MonitoredElement.typ, test.getMonitoredElementId());
+								MonitoredElement monitoredElement = test.getMonitoredElement();
+								//String meName = Pool.getName(MonitoredElement.typ, test.getMonitoredElementId());
 								testLine = new TestLine(this.aContext,
 								//parent.getViewport(),
-														meName, this.scaleStart.getTime(), this.scaleEnd.getTime(),
+														monitoredElement.getName(), this.scaleStart.getTime(), this.scaleEnd.getTime(),
 														this.margin / 2);
 								testLine.setPreferredSize(new Dimension(0, 20));
-								this.testLines.put(test.getMonitoredElement().getId(), testLine);
+								this.testLines.put(monitoredElement.getId(), testLine);
 								add(testLine);
 							}
 							testLine.addTest(test);
@@ -650,15 +654,15 @@ public class PlanPanel extends JPanel implements OperationListener {
 	private void updateTest(Test test) {
 		TestLine testLine;
 		//System.out.println("updateTest:" + test.getId());
-		if (this.testLines.containsKey(test.getMonitoredElement().getId()))
-			testLine = (TestLine) this.testLines.get(test.getMonitoredElement().getId());
+		MonitoredElement monitoredElement = test.getMonitoredElement();		
+		if (this.testLines.containsKey(monitoredElement.getId()))
+			testLine = (TestLine) this.testLines.get(monitoredElement.getId());
 		else {
-			String meName = Pool.getName(MonitoredElement.typ, test.getMonitoredElementId());
 			testLine = new TestLine(this.aContext,
 			//parent.getViewport(),
-									meName, this.scaleStart.getTime(), this.scaleEnd.getTime(), this.margin / 2);
+									monitoredElement.getName(), this.scaleStart.getTime(), this.scaleEnd.getTime(), this.margin / 2);
 			testLine.setPreferredSize(new Dimension(0, 25));
-			this.testLines.put(test.getMonitoredElement().getId(), testLine);
+			this.testLines.put(monitoredElement.getId(), testLine);
 		}
 		testLine.addTest(test);
 		add(testLine);

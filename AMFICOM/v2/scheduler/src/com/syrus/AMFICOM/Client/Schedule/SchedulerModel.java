@@ -6,12 +6,15 @@
 
 package com.syrus.AMFICOM.Client.Schedule;
 
+import java.awt.Component;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+
+import javax.swing.JOptionPane;
 
 import com.syrus.AMFICOM.Client.General.SessionInterface;
 import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
@@ -26,7 +29,6 @@ import com.syrus.AMFICOM.Client.General.Model.ApplicationModel;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourceTreeModel;
 import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
-import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.Client.Survey.General.ConstStorage;
 import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 import com.syrus.AMFICOM.configuration.Domain;
@@ -43,7 +45,7 @@ import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
 import com.syrus.AMFICOM.measurement.MeasurementType;
 import com.syrus.AMFICOM.measurement.TemporalPattern;
 import com.syrus.AMFICOM.measurement.Test;
-import com.syrus.AMFICOM.measurement.TestCondition;
+import com.syrus.AMFICOM.measurement.TemporalCondition;
 import com.syrus.AMFICOM.measurement.corba.TestReturnType;
 import com.syrus.AMFICOM.measurement.corba.TestTemporalType;
 
@@ -419,7 +421,7 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 
 		this.allTests = MeasurementStorableObjectPool
 				.getStorableObjectsByCondition(
-								new TestCondition(
+								new TemporalCondition(
 											(Domain) ConfigurationStorableObjectPool
 													.getStorableObject(
 																this.aContext
@@ -453,31 +455,34 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 
 	private void commitChanges() {
 
+		/**
+		 * FIXME remove deleted tests
+		 */
 		// remove tests
-		if (unsavedTest != null) {
-			java.util.List deleteTests = new ArrayList();
-			for (Iterator it = unsavedTest.keySet().iterator(); it.hasNext();) {
-				Object key = it.next();
-				Test test = (Test) unsavedTest.get(key);
-				if (test.getDeleted() != 0) {
-					String testId = test.getId();
-					if (test.getStatus().value() != TestStatus._TEST_STATUS_SCHEDULED)
-						deleteTests.add(testId);
-					TestRequest treq = (TestRequest) Pool
-							.get(TestRequest.TYPE, test.getRequestId());
-					//System.out.println("removing test:" +
-					// testId + " from
-					// testRequest:" + treq.getId());
-					treq.removeTest(test);
-					Pool.remove(Test.TYPE, testId);
-					it.remove();
-				}
-
-			}
-			String[] deleteTestIds = (String[]) deleteTests.toArray(new String[deleteTests.size()]);
-			dataSource.RemoveTests(deleteTestIds);
-
-		}
+//		if (unsavedTest != null) {
+//			java.util.List deleteTests = new ArrayList();
+//			for (Iterator it = unsavedTest.keySet().iterator(); it.hasNext();) {
+//				Object key = it.next();
+//				Test test = (Test) unsavedTest.get(key);
+//				if (test.getDeleted() != 0) {
+//					Identifier testId = test.getId();
+//					if (test.getStatus().value() != TestStatus._TEST_STATUS_SCHEDULED)
+//						deleteTests.add(testId);
+//					TestRequest treq = (TestRequest) Pool
+//							.get(TestRequest.TYPE, test.getRequestId());
+//					//System.out.println("removing test:" +
+//					// testId + " from
+//					// testRequest:" + treq.getId());
+//					treq.removeTest(test);
+//					Pool.remove(Test.TYPE, testId);
+//					it.remove();
+//				}
+//
+//			}
+//			String[] deleteTestIds = (String[]) deleteTests.toArray(new String[deleteTests.size()]);
+//			this.dataSource.RemoveTests(deleteTestIds);
+//
+//		}
 
 		MeasurementStorableObjectPool.flush(true);
 		this.aContext.getDispatcher().notify(new OperationEvent("", 0, SchedulerModel.COMMAND_TEST_SAVED_OK));
@@ -624,5 +629,10 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 			this.domainCondition.setEntityCode(new Short(entityCode));
 		}
 		return this.domainCondition;
+	}
+	
+	public static void showErrorMessage(Component component, Exception exc){
+		JOptionPane.showMessageDialog(component, exc.getMessage(), LangModelSchedule.getString("Error"),
+										JOptionPane.OK_OPTION);
 	}
 }

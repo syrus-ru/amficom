@@ -1,3 +1,4 @@
+
 package com.syrus.AMFICOM.Client.Schedule.UI;
 
 import java.awt.*;
@@ -5,40 +6,43 @@ import javax.swing.*;
 import javax.swing.event.*;
 import java.util.*;
 
-import com.syrus.AMFICOM.Client.Resource.*;
-import com.syrus.AMFICOM.Client.Resource.ISM.*;
-import com.syrus.AMFICOM.Client.General.UI.*;
-import com.syrus.AMFICOM.Client.Resource.Test.*;
-import com.syrus.AMFICOM.Client.Resource.Result.*;
 import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
 import com.syrus.AMFICOM.Client.Scheduler.General.UIStorage;
 import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelSchedule;
 import com.syrus.AMFICOM.Client.General.Model.*;
+import com.syrus.AMFICOM.client_.general.ui_.ObjList;
+import com.syrus.AMFICOM.client_.general.ui_.ObjListModel;
+import com.syrus.AMFICOM.configuration.MonitoredElement;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
+import com.syrus.AMFICOM.measurement.Test;
+import com.syrus.AMFICOM.measurement.TestController;
 
 /**
- * @author ??? , Vladimir Dolzhenko
+ * @author ??? 
+ * @author Vladimir Dolzhenko
  */
 
 public class TestRequestPanel extends JPanel implements OperationListener {
+	
+	private TestRequest		testRequest;
 
-	private TestRequest			testRequest;
+	private JTextField		nameTextField	= new JTextField();
 
-	private JTextField			nameTextField	= new JTextField();
+	private JTextField		ownerTextField	= new JTextField();
 
-	private JTextField			ownerTextField	= new JTextField();
+	private JTextField		typeTextField	= new JTextField();
 
-	private JTextField			typeTextField	= new JTextField();
+	ObjList				testList	= new ObjList( TestController.getInstance(), null, TestController.KEY_TEST_OBJECT);
 
-	ObjectResourceListBox		testList		= new ObjectResourceListBox();
-
-	Hashtable					tests;
+	Hashtable			tests;
 
 	private ApplicationContext	aContext;
 
-	Dispatcher					dispatcher;
+	Dispatcher			dispatcher;
 
-	boolean						skip			= false;
+	boolean				skip		= false;
 
 	//	private String kisId;
 	//private String meId;
@@ -103,7 +107,8 @@ public class TestRequestPanel extends JPanel implements OperationListener {
 				//System.out.println("ListSelectionListener");
 				if ((e.getValueIsAdjusting()) || TestRequestPanel.this.skip)
 					return;
-				MonitoredElement me = (MonitoredElement) TestRequestPanel.this.testList.getSelectedObjectResource();
+				MonitoredElement me = ((Test)TestRequestPanel.this.testList
+						.getSelectedValue()).getMonitoredElement();
 				if (me == null) {
 					//					TestRequestPanel.this.dispatcher.notify(new
 					// TestUpdateEvent(this, null,
@@ -115,7 +120,10 @@ public class TestRequestPanel extends JPanel implements OperationListener {
 						Test test = (Test) TestRequestPanel.this.tests.get(me.getId());
 						if (test != null)
 							TestRequestPanel.this.dispatcher
-									.notify(new TestUpdateEvent(this, test, TestUpdateEvent.TEST_SELECTED_EVENT));
+									.notify(new TestUpdateEvent(
+													this,
+													test,
+													TestUpdateEvent.TEST_SELECTED_EVENT));
 					}
 					TestRequestPanel.this.skip = false;
 				}
@@ -131,14 +139,13 @@ public class TestRequestPanel extends JPanel implements OperationListener {
 		this.dispatcher.register(this, SchedulerModel.COMMAND_REMOVE_TEST);
 
 	}
-	
-	public void unregisterDispatcher(){
+
+	public void unregisterDispatcher() {
 		this.dispatcher.unregister(this, SchedulerModel.COMMAND_DATA_REQUEST);
 		this.dispatcher.unregister(this, TestUpdateEvent.TYPE);
 		this.dispatcher.unregister(this, SchedulerModel.COMMAND_CLEAN);
-		this.dispatcher.unregister(this, SchedulerModel.COMMAND_REMOVE_TEST);		
+		this.dispatcher.unregister(this, SchedulerModel.COMMAND_REMOVE_TEST);
 	}
-	
 
 	public void operationPerformed(OperationEvent ae) {
 		String commandName = ae.getActionCommand();
@@ -147,8 +154,9 @@ public class TestRequestPanel extends JPanel implements OperationListener {
 		if (commandName.equalsIgnoreCase(SchedulerModel.COMMAND_DATA_REQUEST)) {
 			TestRequest testRequest = getParameters();
 
-			this.dispatcher.notify(new OperationEvent(testRequest == null ? (Object) "" : (Object) testRequest, //$NON-NLS-1$
-														0, SchedulerModel.COMMAND_SEND_DATA));
+			this.dispatcher.notify(new OperationEvent(testRequest == null
+					? (Object) "" : (Object) testRequest, //$NON-NLS-1$
+									0, SchedulerModel.COMMAND_SEND_DATA));
 		} else if (commandName.equals(SchedulerModel.COMMAND_CHANGE_KIS)) {
 			//kisId = (String) obj;
 			//System.out.println("kisId:" + kisId);
@@ -169,9 +177,9 @@ public class TestRequestPanel extends JPanel implements OperationListener {
 			//toCreate = false;
 		} else if (commandName.equals(TestUpdateEvent.TYPE)) {
 			//System.out.println(testList.getSelected().getClass().getName());
-//			TestUpdateEvent tue = (TestUpdateEvent) ae;
-//			Test test = tue.test;
-//			setTest(test);
+			//			TestUpdateEvent tue = (TestUpdateEvent) ae;
+			//			Test test = tue.test;
+			//			setTest(test);
 		} else if (commandName.equals(SchedulerModel.COMMAND_CHANGE_TEST_TYPE)) {
 			//			String testTypeId = (String) obj;
 			//			TestType testType = (TestType) Pool.get(TestType.typ,
@@ -182,8 +190,8 @@ public class TestRequestPanel extends JPanel implements OperationListener {
 			cleanAllFields();
 		} else if (commandName.equals(SchedulerModel.COMMAND_REMOVE_TEST)) {
 			Test test = (Test) ae.getSource();
-			MonitoredElement me = (MonitoredElement) Pool.get(MonitoredElement.typ, test.getMonitoredElementId());
-			this.testList.remove(me);
+			MonitoredElement me = test.getMonitoredElement();
+			((ObjListModel) this.testList.getModel()).removeElement(me);
 			if (this.testList.getModel().getSize() == 0)
 				cleanAllFields();
 
@@ -202,36 +210,45 @@ public class TestRequestPanel extends JPanel implements OperationListener {
 	}
 
 	public TestRequest getParameters() {
-		//System.out.println(getClass().getName() + " getParameters()"); //$NON-NLS-1$
+		//System.out.println(getClass().getName() + "
+		// getParameters()"); //$NON-NLS-1$
 		DataSourceInterface dsi = this.aContext.getDataSourceInterface();
-		// if test request have saved tests , create new testRequest for new
+		// if test request have saved tests , create new testRequest for
+		// new
 		// test
 		// if request contains only unsaved tests , add new test to it
 		boolean needNewReq = false;
 		if (this.testRequest == null)
 			needNewReq = true;
 		else {
-		//	System.out.println("current TestRequest:" + this.testRequest.getId()); //$NON-NLS-1$
+			//	System.out.println("current TestRequest:" +
+			// this.testRequest.getId()); //$NON-NLS-1$
 			java.util.List list = this.testRequest.getTestIds();
 			for (Iterator it = list.iterator(); it.hasNext();) {
 				String testId = (String) it.next();
 				Test test = (Test) Pool.get(Test.TYPE, testId);
-	//			System.out.println("testId:" + testId); //$NON-NLS-1$
+				//			System.out.println("testId:" + testId);
+				// //$NON-NLS-1$
 				if ((!test.isChanged()) && (testId.length() > 0)) {
-	//				System.out.println("saved test exists,"); //$NON-NLS-1$
+					//				System.out.println("saved test
+					// exists,"); //$NON-NLS-1$
 					needNewReq = true;
 					break;
 				}
 			}
 			//			if ((!needNewReq) && (toCreate)) {
-			//				for (int i = 0; i < testRequest.unsavedTest.size(); i++) {
+			//				for (int i = 0; i < testRequest.unsavedTest.size();
+			// i++) {
 			//					Test t = (Test) testRequest.unsavedTest.get(i);
 			//					if ((t.getKisId().equals(kisId))
 			//							&& (t.getMonitoredElementId().equals(meId))) {
 			//						System.out
-			//								.println("test with the same KIS & ME exists," //$NON-NLS-1$
-			//										+ t.getKisId() + "," + kisId + "/" //$NON-NLS-1$ //$NON-NLS-2$
-			//										+ t.getMonitoredElementId() + "," + meId); //$NON-NLS-1$
+			//								.println("test with the same KIS & ME exists,"
+			// //$NON-NLS-1$
+			//										+ t.getKisId() + "," + kisId + "/" //$NON-NLS-1$
+			// //$NON-NLS-2$
+			//										+ t.getMonitoredElementId() + "," + meId);
+			// //$NON-NLS-1$
 			//						needNewReq = true;
 			//						break;
 			//					}
@@ -240,12 +257,14 @@ public class TestRequestPanel extends JPanel implements OperationListener {
 		}
 
 		if (needNewReq) {
-		//	System.out.println("new TestRequest required");
+			//	System.out.println("new TestRequest required");
 			this.testRequest = new TestRequest(dsi.GetUId(TestRequest.TYPE));
-		//	System.out.println("set treqId:" + this.testRequest.getId());
+			//	System.out.println("set treqId:" +
+			// this.testRequest.getId());
 			this.testRequest.setName(LangModelSchedule.getString("Test created at") + " "
 					+ UIStorage.SDF.format(new Date(System.currentTimeMillis())));
-			//System.out.println("set name:" + this.testRequest.getName());
+			//System.out.println("set name:" +
+			// this.testRequest.getName());
 			this.testRequest.setUserId(this.aContext.getSessionInterface().getUserId());
 			//testRequest = newTestRequest;
 			this.testRequest.setChanged(true);
@@ -281,14 +300,17 @@ public class TestRequestPanel extends JPanel implements OperationListener {
 			String treqId = test.getRequestId();
 			TestRequest treq = (TestRequest) Pool.get(TestRequest.TYPE, treqId);
 			setTestRequest(treq);
-			MonitoredElement me = (MonitoredElement) Pool.get(MonitoredElement.typ, test.getMonitoredElementId());
+			MonitoredElement me = test.getMonitoredElement();
 			if (me != null) {
-				this.testList.setSelected(me);
-				//System.out.println("setSelected:" + me.getId());
-			} // else System.out.println("tried setSelected me==null");
+				this.testList.setSelectedValue(me, true);
+				//System.out.println("setSelected:" +
+				// me.getId());
+			} // else System.out.println("tried setSelected
+			  // me==null");
 			//			ListModel lm = testList.getModel();
 			//			for (int i = 0; i < lm.getSize(); i++) {
-			//				MonitoredElement m = (MonitoredElement) lm.getElementAt(i);
+			//				MonitoredElement m = (MonitoredElement)
+			// lm.getElementAt(i);
 			//				System.out.println(i + "\t" + m.id);
 			//				if (m.id.equals(me.id)) {
 			//					System.out.println("select:" + i);
@@ -316,42 +338,15 @@ public class TestRequestPanel extends JPanel implements OperationListener {
 		this.tests = new Hashtable();
 		Hashtable ht = new Hashtable();
 		String type = ""; //$NON-NLS-1$
-		//for (Enumeration enum = treq.test_ids.elements();
-		// enum.hasMoreElements();)
 		java.util.List list = testRequest.getTestIds();
-		//System.out.println("list.size():" + list.size());
 		for (Iterator it = list.iterator(); it.hasNext();) {
-			String testId = (String) it.next();
-			//System.out.println("testId:" + testId);
-			Test tst = (Test) Pool.get(Test.TYPE, testId);
-			//if (!tst.isChanged()) {
-			//System.out.println("test:" + tst.getId() + "\t" + tst.getName());
-			// //$NON-NLS-1$ //$NON-NLS-2$
-			MonitoredElement me = (MonitoredElement) Pool.get(MonitoredElement.typ, tst.getMonitoredElementId());
-			//System.out.println("me:" + me.getId() + "\t" +
-			// me.element_name);
-			ht.put(me.getId(), me);
+			Identifier testId = (Identifier) it.next();
+			Test tst = (Test) MeasurementStorableObjectPool.getStorableObject(testId, true);
+			type = tst.getMeasurementType().getDescription();
+			MonitoredElement me = tst.getMonitoredElement();
+			((ObjListModel) this.testList.getModel()).addElement(me);
 			this.tests.put(me.getId(), tst);
-
-			type = Pool.getName(TestType.typ, tst.getTestTypeId());
-			//}
 		}
-		//		System.out.println("testRequest.unsavedTest.size():" //$NON-NLS-1$
-		//				+ testRequest.unsavedTest.size());
-		//		for (int i = 0; i < testRequest.unsavedTest.size(); i++) {
-		//			Test tst = (Test) testRequest.unsavedTest.get(i);
-		//			MonitoredElement me = (MonitoredElement) Pool.get(
-		//					MonitoredElement.TYPE, tst.getMonitoredElementId());
-		//			System.out.println("me:" + me.getId() + "\t" + me.element_name);
-		// //$NON-NLS-1$ //$NON-NLS-2$
-		//			ht.put(me.getId(), me);
-		//			tests.put(me.getId(), tst);
-		//			type = Pool.getName(TestType.TYPE, tst.getTestTypeId());
-		//			System.out.println("type:" + type + "\t" + tst.getTestTypeId());
-		// //$NON-NLS-1$ //$NON-NLS-2$
-		//		}
-		this.testList.setContents(ht);
-		//testList.setSelected(test);
 		this.typeTextField.setText(type);
 		this.typeTextField.setCaretPosition(0);
 		this.skip = false;

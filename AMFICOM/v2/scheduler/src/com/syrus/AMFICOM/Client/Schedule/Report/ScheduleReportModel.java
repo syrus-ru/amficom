@@ -1,15 +1,23 @@
 package com.syrus.AMFICOM.Client.Schedule.Report;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JComponent;
 
-import com.syrus.AMFICOM.Client.General.Lang.*;
+import com.syrus.AMFICOM.Client.General.Lang.LangModelReport;
+import com.syrus.AMFICOM.Client.General.Lang.LangModelSchedule;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.Report.*;
-import com.syrus.AMFICOM.Client.General.Scheme.UgoPanel;
-import com.syrus.AMFICOM.Client.Resource.*;
-import com.syrus.AMFICOM.Client.Resource.Scheme.Scheme;
+import com.syrus.AMFICOM.Client.General.Report.AMTReport;
+import com.syrus.AMFICOM.Client.General.Report.APOReportModel;
+import com.syrus.AMFICOM.Client.General.Report.CreateReportException;
+import com.syrus.AMFICOM.Client.General.Report.JPanelRenderer;
+import com.syrus.AMFICOM.Client.General.Report.ObjectResourceDivList;
+import com.syrus.AMFICOM.Client.General.Report.ObjectsReport;
+import com.syrus.AMFICOM.Client.General.Report.ReportResultsTablePanel;
+import com.syrus.AMFICOM.Client.General.Report.ReportTemplate;
+import com.syrus.AMFICOM.Client.Resource.ConfigDataSourceImage;
+import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
 
 public class ScheduleReportModel extends APOReportModel
 {
@@ -44,10 +52,6 @@ public class ScheduleReportModel extends APOReportModel
 //		Scheme scheme = (Scheme)Pool.get(Scheme.typ,reserve_str);
 //		return ":" + scheme.name;
     return reserve_str;
-	}
-
-	public ScheduleReportModel()
-	{
 	}
 
 	public List getAvailableReports()

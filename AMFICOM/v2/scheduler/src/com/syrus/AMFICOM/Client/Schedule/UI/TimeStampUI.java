@@ -9,6 +9,7 @@ import java.util.LinkedList;
 import javax.swing.*;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModelSchedule;
+import com.syrus.AMFICOM.Client.Scheduler.General.UIStorage;
 import com.syrus.AMFICOM.measurement.TemporalPattern;
 import com.syrus.AMFICOM.measurement.TemporalPattern.TimeLine;
 
@@ -24,63 +25,59 @@ import com.syrus.AMFICOM.measurement.TemporalPattern.TimeLine;
  */
 public class TimeStampUI {
 
-	public static final Insets		NULL_INSETS		= new Insets(0, 0, 0, 0);
+	public static final Insets			NULL_INSETS				= new Insets(0, 0, 0, 0);
 
-	public static final String[]		SHORT_DAY_OF_WEEK_NAMES	= new String[] {
-			LangModelSchedule.getString("mon"), LangModelSchedule.getString("tue"),
-			LangModelSchedule.getString("wed"), LangModelSchedule.getString("thu"),
-			LangModelSchedule.getString("fri"), LangModelSchedule.getString("sat"),
-			LangModelSchedule.getString("sun")		};
+	public static final String[]		SHORT_DAY_OF_WEEK_NAMES	= new String[] { LangModelSchedule.getString("mon"),
+			LangModelSchedule.getString("tue"), LangModelSchedule.getString("wed"), LangModelSchedule.getString("thu"),
+			LangModelSchedule.getString("fri"), LangModelSchedule.getString("sat"), LangModelSchedule.getString("sun")};
 
-	public static final String[]		SHORT_MONTH_NAMES	= new String[] {
-			LangModelSchedule.getString("jan"), LangModelSchedule.getString("feb"),
-			LangModelSchedule.getString("mar"), LangModelSchedule.getString("apr"),
-			LangModelSchedule.getString("may"), LangModelSchedule.getString("jun"),
-			LangModelSchedule.getString("jul"), LangModelSchedule.getString("aug"),
-			LangModelSchedule.getString("sep"), LangModelSchedule.getString("oct"),
+	public static final String[]		SHORT_MONTH_NAMES		= new String[] { LangModelSchedule.getString("jan"),
+			LangModelSchedule.getString("feb"), LangModelSchedule.getString("mar"), LangModelSchedule.getString("apr"),
+			LangModelSchedule.getString("may"), LangModelSchedule.getString("jun"), LangModelSchedule.getString("jul"),
+			LangModelSchedule.getString("aug"), LangModelSchedule.getString("sep"), LangModelSchedule.getString("oct"),
 			LangModelSchedule.getString("nov"), LangModelSchedule.getString("dec")};
 
-	private static final String		MINPANEL_EXTENDED	= "extended";			//$NON-NLS-1$
+	private static final String			MINPANEL_EXTENDED		= "extended";												//$NON-NLS-1$
 
-	private static final String		MINPANEL_NORMAL		= "normal";			//$NON-NLS-1$
+	private static final String			MINPANEL_NORMAL			= "normal";												//$NON-NLS-1$
 
 	private TemporalPattern.TimeLine	timeLine;
 
-	private JCheckBox			eachDayCheckBox;
+	private JCheckBox					eachDayCheckBox;
 
-	private JFrame				mainFrame;
+	private JFrame						mainFrame;
 
-	JSpinner				hourSpinnder;
+	JSpinner							hourSpinnder;
 
-	JCheckBox				hourCheckBox;
+	JCheckBox							hourCheckBox;
 
-	JToggleButton[]				hoursToggleButton;
+	JToggleButton[]						hoursToggleButton;
 
-	JCheckBox				minuteCheckBox;
+	JCheckBox							minuteCheckBox;
 
-	JSpinner				minuteSpinnder;
+	JSpinner							minuteSpinnder;
 
-	JCheckBox				minExtendedCheckBox;
+	JCheckBox							minExtendedCheckBox;
 
-	JToggleButton[]				minutesToggleButton;
+	JToggleButton[]						minutesToggleButton;
 
-	JToggleButton[]				normalMinToggleButton;
+	JToggleButton[]						normalMinToggleButton;
 
-	JCheckBox				dayCheckBox;
+	JCheckBox							dayCheckBox;
 
-	JSpinner				daySpinnder;
+	JSpinner							daySpinnder;
 
-	JToggleButton[]				daysToggleButton;
+	JToggleButton[]						daysToggleButton;
 
-	JToggleButton[]				weekToggleButton;
+	JToggleButton[]						weekToggleButton;
 
-	JCheckBox				monthCheckBox;
+	JCheckBox							monthCheckBox;
 
-	JSpinner				monthSpinnder;
+	JSpinner							monthSpinnder;
 
-	JToggleButton[]				monthToggleButton;
+	JToggleButton[]						monthToggleButton;
 
-	private static final Dimension		PANE_DIMENSION		= new Dimension(390, 400);
+	private static final Dimension		PANE_DIMENSION			= new Dimension(390, 400);
 
 	//	private static final Dimension PANEL_DIMENSION = new Dimension(420,
 	//			400);
@@ -90,12 +87,36 @@ public class TimeStampUI {
 	}
 
 	public JSplitPane getPane() {
-		JPanel duringDayPanel = new JPanel(new GridBagLayout());
+		final JPanel duringDayPanel = new JPanel(new GridBagLayout());
 
 		GridBagConstraints gbc = new GridBagConstraints();
 		gbc.fill = GridBagConstraints.NONE;
 		gbc.anchor = GridBagConstraints.FIRST_LINE_START;
 		gbc.weighty = 0.0;
+
+		final JButton checkButton = new JButton(LangModelSchedule.getString("Check"));
+		checkButton.setMargin(UIStorage.INSET_NULL);
+		checkButton.addActionListener(new ActionListener() {
+
+			public void actionPerformed(ActionEvent e) {
+				TemporalPattern pattern = TemporalPattern.createInstance(null, null, null,
+
+				new String[] { getTemplate()});
+				String description;
+				int type = JOptionPane.INFORMATION_MESSAGE;
+				try {
+					description = pattern.toString();
+				} catch (IllegalArgumentException iae) {
+					description = LangModelSchedule.getString("Some paremeters are not set.");
+					type = JOptionPane.ERROR_MESSAGE;
+				}
+
+				pattern = null;
+				JOptionPane.showMessageDialog(duringDayPanel, description, null, type);
+			}
+		});
+		gbc.gridwidth = GridBagConstraints.REMAINDER;
+		duringDayPanel.add(checkButton, gbc);
 
 		this.eachDayCheckBox = new JCheckBox(LangModelSchedule.getString("each_day"), false); //$NON-NLS-1$
 		gbc.gridwidth = GridBagConstraints.REMAINDER;
@@ -227,15 +248,13 @@ public class TimeStampUI {
 				if (checkBox.isSelected()) {
 					for (int i = 0; i < TimeStampUI.this.normalMinToggleButton.length; i++) {
 						TimeStampUI.this.minutesToggleButton[i * 5]
-								.setSelected(TimeStampUI.this.normalMinToggleButton[i]
-										.isSelected());
+								.setSelected(TimeStampUI.this.normalMinToggleButton[i].isSelected());
 					}
 					cl.show(minPanel, MINPANEL_EXTENDED);
 				} else {
 					for (int i = 0; i < TimeStampUI.this.normalMinToggleButton.length; i++) {
 						TimeStampUI.this.normalMinToggleButton[i]
-								.setSelected(TimeStampUI.this.minutesToggleButton[i * 5]
-										.isSelected());
+								.setSelected(TimeStampUI.this.minutesToggleButton[i * 5].isSelected());
 					}
 					cl.show(minPanel, MINPANEL_NORMAL);
 				}
@@ -358,8 +377,7 @@ public class TimeStampUI {
 		gbc.gridwidth = GridBagConstraints.REMAINDER;
 		duringMonthPanel.add(new JLabel(), gbc);
 
-		final JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, duringMonthPanel,
-								duringDayPanel);
+		final JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, duringMonthPanel, duringDayPanel);
 		splitPane.setOneTouchExpandable(true);
 		splitPane.setDividerLocation(180);
 		this.eachDayCheckBox.addActionListener(new ActionListener() {
@@ -413,8 +431,7 @@ public class TimeStampUI {
 				final String template = timeLine.getTemplate();
 				JSplitPane pane = demo.getPane();
 				demo.setTimeLine(timeLine);
-				int result = JOptionPane.showConfirmDialog(frame, pane, "Time Line",
-										JOptionPane.OK_CANCEL_OPTION);
+				int result = JOptionPane.showConfirmDialog(frame, pane, "Time Line", JOptionPane.OK_CANCEL_OPTION);
 				if (result == JOptionPane.OK_OPTION) {
 					System.out.println("was:" + template);
 					timeStamp.removeTemplate(template);
@@ -491,6 +508,7 @@ public class TimeStampUI {
 	public String getTemplate() {
 		StringBuffer template = new StringBuffer();
 		boolean needComma = false;
+
 		if (this.minuteCheckBox.isSelected()) {
 			needComma = true;
 			template.append("*");
@@ -499,13 +517,23 @@ public class TimeStampUI {
 				template.append("/");
 				template.append(del);
 			}
+			for (int i = 0; i < this.minutesToggleButton.length; i++) {
+				if ((this.minutesToggleButton[i].isSelected()) && (i % del == 0)) {
+					this.minutesToggleButton[i].setSelected(false);
+				}
+			}
+			for (int i = 0; i < this.normalMinToggleButton.length; i++) {
+				if ((this.normalMinToggleButton[i].isSelected()) && ((i * 5) % del == 0)) {
+					this.normalMinToggleButton[i].setSelected(false);
+				}
+			}
 		}
 		if (this.minExtendedCheckBox.isSelected()) {
 			for (int i = 0; i < this.minutesToggleButton.length; i++) {
 				int start = i;
 				int end = i;
 				if (this.minutesToggleButton[i].isSelected()) {
-					for (int j = i + 1 ; j < this.minutesToggleButton.length; j++) {
+					for (int j = i + 1; j < this.minutesToggleButton.length; j++) {
 						if (!this.minutesToggleButton[j].isSelected()) {
 							end = j - 1;
 							break;
@@ -513,9 +541,10 @@ public class TimeStampUI {
 					}
 					if (needComma)
 						template.append(",");
-					if (start == end)
+
+					if (start == end) {
 						template.append(start);
-					else {
+					} else {
 						template.append(start);
 						template.append("-");
 						template.append(end);
@@ -545,6 +574,11 @@ public class TimeStampUI {
 				template.append("/");
 				template.append(del);
 			}
+			for (int i = 0; i < this.hoursToggleButton.length; i++) {
+				if ((this.hoursToggleButton[i].isSelected()) && (i % del == 0)) {
+					this.hoursToggleButton[i].setSelected(false);
+				}
+			}
 		}
 		for (int i = 0; i < this.hoursToggleButton.length; i++) {
 			int start = i;
@@ -558,9 +592,9 @@ public class TimeStampUI {
 				}
 				if (needComma)
 					template.append(",");
-				if (start == end)
+				if (start == end) {
 					template.append(start);
-				else {
+				} else {
 					template.append(start);
 					template.append("-");
 					template.append(end);
@@ -584,6 +618,12 @@ public class TimeStampUI {
 					template.append("/");
 					template.append(del);
 				}
+				for (int i = 0; i < this.daysToggleButton.length; i++) {
+					if ((this.daysToggleButton[i].isSelected()) && (i + 1 % del == 0)) {
+						this.daysToggleButton[i].setSelected(false);
+					}
+				}
+
 			}
 			for (int i = 0; i < this.daysToggleButton.length; i++) {
 				int start = i;
@@ -595,14 +635,15 @@ public class TimeStampUI {
 							break;
 						}
 					}
+
 					if (needComma)
 						template.append(",");
-					if (start == end)
+					if (start == end) {
 						template.append(start + 1);
-					else {
+					} else {
 						template.append(start + 1);
 						template.append("-");
-						template.append(end + 1);
+						template.append(end);
 						i = end;
 					}
 					needComma = true;
@@ -620,6 +661,12 @@ public class TimeStampUI {
 					template.append("/");
 					template.append(del);
 				}
+				for (int i = 0; i < this.monthToggleButton.length; i++) {
+					if ((this.monthToggleButton[i].isSelected()) && (i % del == 0)) {
+						this.monthToggleButton[i].setSelected(false);
+					}
+				}
+
 			}
 
 			for (int i = 0; i < this.monthToggleButton.length; i++) {
@@ -632,11 +679,12 @@ public class TimeStampUI {
 							break;
 						}
 					}
+
 					if (needComma)
 						template.append(",");
-					if (start == end)
+					if (start == end) {
 						template.append(start);
-					else {
+					} else {
 						template.append(start);
 						template.append("-");
 						template.append(end);
@@ -665,7 +713,7 @@ public class TimeStampUI {
 
 	/**
 	 * @param timeLine
-	 *                The timeLine to set.
+	 *            The timeLine to set.
 	 */
 	public void setTimeLine(TemporalPattern.TimeLine timeLine) {
 		this.timeLine = timeLine;

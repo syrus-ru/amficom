@@ -360,11 +360,11 @@ public class ScheduleMainFrame extends JFrame implements OperationListener {
 		//		new SurveyDataSourceImage(dataSource).LoadModelingTypes();
 		//		new SchemeDataSourceImage(dataSource).LoadAttributeTypes();
 
-		new SchemeDataSourceImage(dataSource).LoadISMDirectory();
-		SurveyDataSourceImage sdsi = new SurveyDataSourceImage(dataSource);
-		sdsi.LoadTestTypes();
-		sdsi.LoadAnalysisTypes();
-		sdsi.LoadEvaluationTypes();
+//		new SchemeDataSourceImage(dataSource).LoadISMDirectory();
+//		SurveyDataSourceImage sdsi = new SurveyDataSourceImage(dataSource);
+//		sdsi.LoadTestTypes();
+//		sdsi.LoadAnalysisTypes();
+//		sdsi.LoadEvaluationTypes();
 
 		this.aContext.getDispatcher()
 				.notify(

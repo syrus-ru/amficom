@@ -27,11 +27,11 @@ public class WindowCommand implements Command {
 		return new WindowCommand(this.source);
 	}
 
-	public void commit_execute() {
+	public void commitExecute() {
 		//		 nothing
 	}
 
-	public void commit_undo() {
+	public void commitUndo() {
 		//		 nothing
 	}
 
@@ -83,4 +83,22 @@ public class WindowCommand implements Command {
 
 	}
 
+	
+	/* (non-Javadoc)
+	 * @see com.syrus.AMFICOM.Client.General.Command.Command#getPrevious()
+	 */
+	public Command getPrevious() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	
+	
+	/* (non-Javadoc)
+	 * @see com.syrus.AMFICOM.Client.General.Command.Command#setPrevious(com.syrus.AMFICOM.Client.General.Command.Command)
+	 */
+	public void setPrevious(Command previous) {
+		// TODO Auto-generated method stub
+
+	}
 }

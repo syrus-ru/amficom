@@ -3,20 +3,34 @@ package com.syrus.AMFICOM.Client.Schedule.UI;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
-import java.awt.event.*;
-import java.util.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 
-import javax.swing.*;
+import javax.swing.JLabel;
 
 import com.syrus.AMFICOM.CORBA.Constant.AlarmTypeConstants;
 import com.syrus.AMFICOM.CORBA.General.TestStatus;
 import com.syrus.AMFICOM.CORBA.Survey.ElementaryTestAlarm;
-import com.syrus.AMFICOM.Client.General.Event.*;
-import com.syrus.AMFICOM.Client.General.Model.*;
-import com.syrus.AMFICOM.Client.Resource.*;
+import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
+import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
+import com.syrus.AMFICOM.Client.General.Event.OperationListener;
+import com.syrus.AMFICOM.Client.General.Event.TestUpdateEvent;
+import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
+import com.syrus.AMFICOM.Client.General.Model.Environment;
+import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.Client.Resource.Alarm.Alarm;
 import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
 import com.syrus.AMFICOM.Client.Scheduler.General.UIStorage;
+import com.syrus.AMFICOM.general.CommunicationException;
+import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
 import com.syrus.AMFICOM.measurement.Test;
@@ -195,10 +209,10 @@ public class TestLine extends JLabel implements ActionListener, OperationListene
 		flashUnsavedTest();
 	}
 
-	public void addTest(Identifier id) {
+	public void addTest(Identifier id) throws DatabaseException, CommunicationException {
 		Test test = (Test) MeasurementStorableObjectPool.getStorableObject(id, true);
 		if (test != null)
-			addTest(test);
+			addTest(test);		
 	}
 
 	public void addTest(Test test) {
@@ -457,7 +471,8 @@ public class TestLine extends JLabel implements ActionListener, OperationListene
 			case TestTemporalType._TEST_TEMPORAL_TYPE_PERIODICAL:
 
 				List times = test.getTemporalPattern().getTimes(test.getStartTime(),test.getEndTime());
-				for (Iterator timeIt = times.iterator(); timeIt.hasNext();) {
+				int i = 0;
+				for (Iterator timeIt = times.iterator(); timeIt.hasNext();i++) {
 					Date time = (Date) timeIt.next();
 					long t = time.getTime();
 					if (testAlarms.length > 0) {
