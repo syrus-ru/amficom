@@ -86,7 +86,7 @@ public class KISMeasurementPortsPanel extends GeneralPanel
 		if(element.rtu() != null)
 		{
 			try {
-				List portIds = element.rtuImpl().getMeasurementPortIds();
+				Collection portIds = element.rtuImpl().getMeasurementPortIds();
 				Collection ports = ConfigurationStorableObjectPool.getStorableObjects(portIds, true);
 				portBox.addElements(ports);
 			}
