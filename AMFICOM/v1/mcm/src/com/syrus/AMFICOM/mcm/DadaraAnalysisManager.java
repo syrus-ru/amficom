@@ -1,5 +1,5 @@
 /*
- * $Id: DadaraAnalysisManager.java,v 1.6 2004/07/21 08:26:06 arseniy Exp $
+ * $Id: DadaraAnalysisManager.java,v 1.7 2004/07/21 18:43:32 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -37,9 +37,9 @@ import java.text.SimpleDateFormat;
 import java.io.FileOutputStream;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2004/07/21 08:26:06 $
+ * @version $Revision: 1.7 $, $Date: 2004/07/21 18:43:32 $
  * @author $Author: arseniy $
- * @module 
+ * @module mcm_v1
  */
 
 public class DadaraAnalysisManager implements AnalysisManager, EvaluationManager {

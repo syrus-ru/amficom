@@ -1,5 +1,5 @@
 /*
- * $Id: Transceiver.java,v 1.7 2004/07/21 08:26:06 arseniy Exp $
+ * $Id: Transceiver.java,v 1.8 2004/07/21 18:43:32 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -21,9 +21,9 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2004/07/21 08:26:06 $
+ * @version $Revision: 1.8 $, $Date: 2004/07/21 18:43:32 $
  * @author $Author: arseniy $
- * @module 
+ * @module mcm_v1
  */
 
 public class Transceiver extends Thread {

@@ -1,5 +1,5 @@
 /*
- * $Id: KISReport.java,v 1.6 2004/07/21 08:26:06 arseniy Exp $
+ * $Id: KISReport.java,v 1.7 2004/07/21 18:43:32 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,65 +9,88 @@
 package com.syrus.AMFICOM.mcm;
 
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.NewIdentifierPool;
+import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
+import com.syrus.AMFICOM.measurement.ParameterType;
+import com.syrus.AMFICOM.measurement.ParameterTypeDatabase;
+import com.syrus.AMFICOM.measurement.SetParameter;
 import com.syrus.AMFICOM.measurement.Measurement;
 import com.syrus.AMFICOM.measurement.Result;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
 import com.syrus.AMFICOM.event.corba.AlarmLevel;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2004/07/21 08:26:06 $
+ * @version $Revision: 1.7 $, $Date: 2004/07/21 18:43:32 $
  * @author $Author: arseniy $
- * @module 
+ * @module mcm_v1
  */
 
 public class KISReport {
 	private Identifier measurementId;
-	private Identifier[] parameterTypeIds;
+	private String[] parameterCodenames;
 	private byte[][] parameterValues;
 
 	public KISReport(String measurementIdStr,
-									 String[] parameterTypeIdsStr,
+									 String[] parameterCodenames,
 									 byte[][] parameterValues) {
 		this.measurementId = new Identifier(measurementIdStr);
-		this.parameterTypeIds = new Identifier[parameterTypeIdsStr.length];
-		for (int i = 0; i < this.parameterTypeIds.length; i++)
-			this.parameterTypeIds[i] = new Identifier(parameterTypeIdsStr[i]);
+		this.parameterCodenames = parameterCodenames;
 		this.parameterValues = parameterValues;
 	}
 
-	public Result createResult(Measurement measurement) throws Exception {
+	public Result createResult(Measurement measurement) throws IllegalDataException, MeasurementException {
 		if (!measurement.getId().equals(this.measurementId))
-			throw new Exception("KISReport | Alien measurement: identifier '" + measurement.getId().toString() + "' != my '" + this.measurementId.toString() + "'");
+			throw new IllegalDataException("KISReport | Alien measurement: identifier '" + measurement.getId().toString() + "' != my '" + this.measurementId.toString() + "'");
 
-		Identifier[] parameterIds = new Identifier[this.parameterTypeIds.length];
-		for (int i = 0; i < parameterIds.length; i++)
-			parameterIds[i] = MeasurementControlModule.createIdentifier("parameter");
+		try {
+			SetParameter[] parameters = new SetParameter[this.parameterCodenames.length];
+			for (int i = 0; i < parameters.length; i++) {
+				parameters[i] = new SetParameter(NewIdentifierPool.getGeneratedIdentifier(ObjectEntities.RESULTPARAMETER_ENTITY, 20),
+																				 this.parameterCodenames[i],
+																				 this.parameterValues[i]);
+			}
 
-		Result result = measurement.createResult(MeasurementControlModule.createIdentifier("result"),
-																						 MeasurementControlModule.iAm.getUserId(),
-																						 null,
-																						 AlarmLevel.ALARM_LEVEL_NONE,
-																						 parameterIds,
-																						 this.parameterTypeIds,
-																						 this.parameterValues);
-		return result;
+			Result result = measurement.createResult(NewIdentifierPool.getGeneratedIdentifier(ObjectEntities.RESULT_ENTITY, 10),
+																							 MeasurementControlModule.iAm.getUserId(),
+																							 null,
+																							 AlarmLevel.ALARM_LEVEL_NONE,
+																							 parameters);
+			return result;
+		}
+		catch (AMFICOMRemoteException are) {
+			throw new MeasurementException("Cannot generate identifier: " + are.message, MeasurementException.IDENTIFIER_GENERATION_FAILED_CODE, are);
+		}
+		catch (Exception e) {
+			throw new MeasurementException("Cannot create result: " + e.getMessage(), MeasurementException.DATABASE_CALL_FAILED_CODE, e);
+		}
 	}
 
-	public Result createResult() throws Exception {
-		Measurement measurement = new Measurement(this.measurementId);
+	public Result createResult() throws MeasurementException {
+		try {
+			Measurement measurement = new Measurement(this.measurementId);
 
-		Identifier[] parameterIds = new Identifier[this.parameterTypeIds.length];
-		for (int i = 0; i < parameterIds.length; i++)
-			parameterIds[i] = MeasurementControlModule.createIdentifier("parameter");
+			SetParameter[] parameters = new SetParameter[this.parameterCodenames.length];
+			for (int i = 0; i < parameters.length; i++) {
+				parameters[i] = new SetParameter(NewIdentifierPool.getGeneratedIdentifier(ObjectEntities.RESULTPARAMETER_ENTITY, 20),
+																				 this.parameterCodenames[i],
+																				 this.parameterValues[i]);
+			}
 
-		Result result = measurement.createResult(MeasurementControlModule.createIdentifier("result"),
-																						 MeasurementControlModule.iAm.getUserId(),
-																						 null,
-																						 AlarmLevel.ALARM_LEVEL_NONE,
-																						 parameterIds,
-																						 this.parameterTypeIds,
-																						 this.parameterValues);
-		return result;
+			Result result = measurement.createResult(NewIdentifierPool.getGeneratedIdentifier(ObjectEntities.RESULT_ENTITY, 10),
+																							 MeasurementControlModule.iAm.getUserId(),
+																							 null,
+																							 AlarmLevel.ALARM_LEVEL_NONE,
+																							 parameters);
+			return result;
+		}
+		catch (AMFICOMRemoteException are) {
+			throw new MeasurementException("Cannot generate identifier: " + are.message, MeasurementException.IDENTIFIER_GENERATION_FAILED_CODE, are);
+		}
+		catch (Exception e) {
+			throw new MeasurementException("Cannot create result: " + e.getMessage(), MeasurementException.DATABASE_CALL_FAILED_CODE, e);
+		}
 	}
 
 	public Identifier getMeasurementId() {

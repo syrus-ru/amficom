@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisEvaluationProcessor.java,v 1.3 2004/07/21 08:26:05 arseniy Exp $
+ * $Id: AnalysisEvaluationProcessor.java,v 1.4 2004/07/21 18:43:32 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,6 +12,7 @@ import java.util.Map;
 import java.util.Hashtable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.NewIdentifierPool;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
@@ -28,9 +29,9 @@ import com.syrus.AMFICOM.measurement.SetParameter;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2004/07/21 08:26:05 $
+ * @version $Revision: 1.4 $, $Date: 2004/07/21 18:43:32 $
  * @author $Author: arseniy $
- * @module 
+ * @module mcm_v1
  */
 
 public abstract class AnalysisEvaluationProcessor {
@@ -83,30 +84,30 @@ public abstract class AnalysisEvaluationProcessor {
 
 		SetParameter[] arParameters = analysisManager.analyse();
 		Result analysisResult;
-		Identifier analysisResultId = MeasurementControlModule.getNewIdentifier(ObjectEntities.RESULT_ENTITY);
 		try {
+			Identifier analysisResultId = NewIdentifierPool.getGeneratedIdentifier(ObjectEntities.RESULT_ENTITY, 10);
 			analysisResult = analysis.createResult(analysisResultId,
 																						 MeasurementControlModule.iAm.getUserId(),
 																						 measurementResult.getMeasurement(),
 																						 AlarmLevel.ALARM_LEVEL_NONE,
 																						 arParameters);
 		}
-		catch (CreateObjectException coe) {
+		catch (Exception coe) {
 			Log.errorException(coe);
 			analysisResult = null;
 		}
 			
 		SetParameter[] erParameters = evaluationManager.evaluate();
 		Result evaluationResult;
-		Identifier evaluationResultId = MeasurementControlModule.getNewIdentifier(ObjectEntities.RESULT_ENTITY);
 		try {
+			Identifier evaluationResultId = NewIdentifierPool.getGeneratedIdentifier(ObjectEntities.RESULT_ENTITY, 10);
 			evaluationResult = evaluation.createResult(evaluationResultId,
 																								 MeasurementControlModule.iAm.getUserId(),
 																								 measurementResult.getMeasurement(),
 																								 evaluationManager.getAlarmLevel(),
 																								 erParameters);
 		}
-		catch (CreateObjectException coe) {
+		catch (Exception coe) {
 			Log.errorException(coe);
 			evaluationResult = null;
 		}

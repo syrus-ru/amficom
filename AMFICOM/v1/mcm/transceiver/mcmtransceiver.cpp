@@ -48,15 +48,15 @@ JNIEXPORT jboolean JNICALL Java_com_syrus_AMFICOM_mcm_Transceiver_transmit(JNIEn
 	memcpy(buffer, jbuffer, l);
 	env->ReleaseStringUTFChars(j_id, jbuffer);
 	ByteArray* bmeasurement_id = new ByteArray(l, buffer);
-//measurement_type_id
-	fid = env->GetFieldID(measurement_class, "typeId", "Ljava/lang/String;");
-	jstring j_measurement_type_id = (jstring)env->GetObjectField(j_measurement, fid);
-	l = env->GetStringUTFLength(j_measurement_type_id);
+//measurement_codename
+	fid = env->GetFieldID(measurement_class, "codename", "Ljava/lang/String;");
+	jstring j_measurement_codename = (jstring)env->GetObjectField(j_measurement, fid);
+	l = env->GetStringUTFLength(j_measurement_codename);
 	buffer = new char[l];
-	jbuffer = env->GetStringUTFChars(j_measurement_type_id, NULL);
+	jbuffer = env->GetStringUTFChars(j_measurement_codename, NULL);
 	memcpy(buffer, jbuffer, l);
-	env->ReleaseStringUTFChars(j_measurement_type_id, jbuffer);
-	ByteArray* bmeasurement_type_id = new ByteArray(l, buffer);
+	env->ReleaseStringUTFChars(j_measurement_codename, jbuffer);
+	ByteArray* bmeasurement_codename = new ByteArray(l, buffer);
 //local_address
 	fid = env->GetFieldID(measurement_class, "localAddress", "Ljava/lang/String;");
 	jstring j_local_address = (jstring)env->GetObjectField(j_measurement, fid);
@@ -86,19 +86,19 @@ JNIEXPORT jboolean JNICALL Java_com_syrus_AMFICOM_mcm_Transceiver_transmit(JNIEn
 	Parameter** parameters = new Parameter*[parameters_length];
 	jobject j_parameter;
 	jclass set_parameter_class;
-	jstring j_parameter_type_id;
+	jstring j_parameter_codename;
 	jbyteArray j_value;
 	for (jsize s = 0; s < parameters_length; s++) {
 		j_parameter = env->GetObjectArrayElement(j_parameters, s);
 		set_parameter_class = env->GetObjectClass(j_parameter);
 
-		fid = env->GetFieldID(set_parameter_class, "typeId", "Ljava/lang/String;");
-		j_parameter_type_id = (jstring)env->GetObjectField(j_parameter, fid);
-		l = env->GetStringUTFLength(j_parameter_type_id);
+		fid = env->GetFieldID(set_parameter_class, "codename", "Ljava/lang/String;");
+		j_parameter_codename = (jstring)env->GetObjectField(j_parameter, fid);
+		l = env->GetStringUTFLength(j_parameter_codename);
 		buffer = new char[l];
-		jbuffer = env->GetStringUTFChars(j_parameter_type_id, NULL);
+		jbuffer = env->GetStringUTFChars(j_parameter_codename, NULL);
 		memcpy(buffer, jbuffer, l);
-		env->ReleaseStringUTFChars(j_parameter_type_id, jbuffer);
+		env->ReleaseStringUTFChars(j_parameter_codename, jbuffer);
 		ByteArray* bpar_name = new ByteArray(l, buffer);
 
 		fid = env->GetFieldID(set_parameter_class, "value", "[B");
@@ -117,7 +117,7 @@ JNIEXPORT jboolean JNICALL Java_com_syrus_AMFICOM_mcm_Transceiver_transmit(JNIEn
 	env->DeleteLocalRef(j_parameters);
 	
 	MeasurementSegment* measurementSegment = new MeasurementSegment(bmeasurement_id,
-									bmeasurement_type_id,
+									bmeasurement_codename,
 									blocal_address,
 									parameters_length,
 									parameters);
@@ -257,11 +257,11 @@ JNIEXPORT jobject JNICALL Java_com_syrus_AMFICOM_mcm_Transceiver_receive(JNIEnv 
 	jsize parnumber = (jsize)resultSegment->getParnumber();
 	Parameter** parameters = resultSegment->getParameters();
 
-	jobjectArray j_par_type_ids = (jobjectArray)env->NewObjectArray(parnumber, env->FindClass("java/lang/String"), NULL);
+	jobjectArray j_par_codenames = (jobjectArray)env->NewObjectArray(parnumber, env->FindClass("java/lang/String"), NULL);
 	jobjectArray j_par_values =  (jobjectArray)env->NewObjectArray(parnumber, env->FindClass("[B"), NULL);
 	jbyteArray jpar_value;
 	for (jsize s = 0; s < parnumber; s++) {
-		env->SetObjectArrayElement(j_par_type_ids, s, env->NewStringUTF(parameters[s]->getName()->getData()));
+		env->SetObjectArrayElement(j_par_codenames, s, env->NewStringUTF(parameters[s]->getName()->getData()));
 		jpar_value = env->NewByteArray(parameters[s]->getValue()->getLength());
 		env->SetByteArrayRegion(jpar_value, 0, parameters[s]->getValue()->getLength(), (jbyte*)parameters[s]->getValue()->getData());
 		env->SetObjectArrayElement(j_par_values, s, jpar_value);
@@ -273,7 +273,7 @@ JNIEXPORT jobject JNICALL Java_com_syrus_AMFICOM_mcm_Transceiver_receive(JNIEnv 
 	jclass kis_report_class = env->FindClass("com/syrus/AMFICOM/mcm/KISReport");
 	jmethodID constructor_id = env->GetMethodID(kis_report_class, "<init>", "(Ljava/lang/String;[Ljava/lang/String;[[B)V");
 	jobject j_kis_report = env->NewObject(kis_report_class, constructor_id, j_measurement_id,
-										j_par_type_ids,
+										j_par_codenames,
 										j_par_values);
 	return j_kis_report;
 }

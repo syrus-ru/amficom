@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseSetup.java,v 1.3 2004/07/21 08:26:06 arseniy Exp $
+ * $Id: DatabaseSetup.java,v 1.4 2004/07/21 18:43:32 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,9 +26,9 @@ import com.syrus.AMFICOM.measurement.TemporalPatternDatabase;
 import com.syrus.AMFICOM.measurement.TestDatabase;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2004/07/21 08:26:06 $
+ * @version $Revision: 1.4 $, $Date: 2004/07/21 18:43:32 $
  * @author $Author: arseniy $
- * @module 
+ * @module mcm_v1
  */
 
 public abstract class DatabaseSetup {

@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementControlModule.java,v 1.10 2004/07/21 08:26:06 arseniy Exp $
+ * $Id: MeasurementControlModule.java,v 1.11 2004/07/21 18:43:32 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,9 +34,9 @@ import com.syrus.util.corba.CORBAServer;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2004/07/21 08:26:06 $
+ * @version $Revision: 1.11 $, $Date: 2004/07/21 18:43:32 $
  * @author $Author: arseniy $
- * @module 
+ * @module mcm_v1
  */
 
 public class MeasurementControlModule extends Thread {
@@ -160,22 +160,22 @@ public class MeasurementControlModule extends Thread {
 	}
 
 	private static void startTestProcessor(Test test) {
-		TestProcessor testProcessor = null;
-		switch (test.getTemporalType().value()) {
-			case TestTemporalType._TEST_TEMPORAL_TYPE_ONETIME:
-				testProcessor = new OnetimeTestProcessor(test);
-				break;
-			case TestTemporalType._TEST_TEMPORAL_TYPE_PERIODICAL:
-				testProcessor = new PeriodicalTestProcessor(test);
-				break;
-			case TestTemporalType._TEST_TEMPORAL_TYPE_CONTINUOUS:
-				testProcessor = new ContinuousTestProcessor(test);
-				break;
-			default:
-				Log.errorMessage("Incorrect temporal type " + test.getTemporalType().value() + " of test '" + test.getId().toString() + "'");
-		}
-		testProcessors.put(test.getId(), testProcessor);
-		testProcessor.start();
+//		TestProcessor testProcessor = null;
+//		switch (test.getTemporalType().value()) {
+//			case TestTemporalType._TEST_TEMPORAL_TYPE_ONETIME:
+//				testProcessor = new OnetimeTestProcessor(test);
+//				break;
+//			case TestTemporalType._TEST_TEMPORAL_TYPE_PERIODICAL:
+//				testProcessor = new PeriodicalTestProcessor(test);
+//				break;
+//			case TestTemporalType._TEST_TEMPORAL_TYPE_CONTINUOUS:
+//				testProcessor = new ContinuousTestProcessor(test);
+//				break;
+//			default:
+//				Log.errorMessage("Incorrect temporal type " + test.getTemporalType().value() + " of test '" + test.getId().toString() + "'");
+//		}
+//		testProcessors.put(test.getId(), testProcessor);
+//		testProcessor.start();
 	}
 
 	protected static Identifier getNewIdentifier(String entity) {
@@ -184,28 +184,28 @@ public class MeasurementControlModule extends Thread {
 	}
 
 	public void shutdown() {/*!!	Need synchronization	*/
-		this.running = false;
-
-		Enumeration enumeration = ((Hashtable)testProcessors).elements();
-		while (enumeration.hasMoreElements())
-			((TestProcessor)enumeration.nextElement()).abort();
-
-		testList.clear();
-		resultList.clear();
-		testProcessors.clear();
-
-		enumeration = ((Hashtable)transceivers).elements();
-		while (enumeration.hasMoreElements())
-			((Transceiver)enumeration.nextElement()).shutdown();
-		transceivers.clear();
-
-		try {
-			corbaServer.shutdown();
-		}
-		catch (Exception e) {
-			Log.errorException(e);
-		}
-		DatabaseConnection.closeConnection();
+//		this.running = false;
+//
+//		Enumeration enumeration = ((Hashtable)testProcessors).elements();
+//		while (enumeration.hasMoreElements())
+//			((TestProcessor)enumeration.nextElement()).abort();
+//
+//		testList.clear();
+//		resultList.clear();
+//		testProcessors.clear();
+//
+//		enumeration = ((Hashtable)transceivers).elements();
+//		while (enumeration.hasMoreElements())
+//			((Transceiver)enumeration.nextElement()).shutdown();
+//		transceivers.clear();
+//
+//		try {
+//			corbaServer.shutdown();
+//		}
+//		catch (Exception e) {
+//			Log.errorException(e);
+//		}
+//		DatabaseConnection.closeConnection();
 	}
 
 	private static void establishDatabaseConnection() {
@@ -222,17 +222,17 @@ public class MeasurementControlModule extends Thread {
 	}
 
 	private static void activateKISTransceivers() {
-		List kiss = iAm.getKISs();
-		transceivers = new Hashtable(kiss.size());
-		Identifier kisId;
-		Transceiver transceiver;
-		for (Iterator it = kiss.iterator(); it.hasNext();) {
-			kisId = ((KIS)it.next()).getId();
-			transceiver = new Transceiver(kisId.toString());
-			transceiver.start();
-			transceivers.put(kisId, transceiver);
-			Log.debugMessage("Started transceiver for kis '" + kisId.toString() + "'", Log.DEBUGLEVEL03);
-		}
+//		List kiss = iAm.getKISs();
+//		transceivers = new Hashtable(kiss.size());
+//		Identifier kisId;
+//		Transceiver transceiver;
+//		for (Iterator it = kiss.iterator(); it.hasNext();) {
+//			kisId = ((KIS)it.next()).getId();
+//			transceiver = new Transceiver(kisId.toString());
+//			transceiver.start();
+//			transceivers.put(kisId, transceiver);
+//			Log.debugMessage("Started transceiver for kis '" + kisId.toString() + "'", Log.DEBUGLEVEL03);
+//		}
 	}
 
 	private static void prepareTestList() {

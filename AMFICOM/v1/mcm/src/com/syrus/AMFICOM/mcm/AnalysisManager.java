@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisManager.java,v 1.8 2004/07/21 08:26:06 arseniy Exp $
+ * $Id: AnalysisManager.java,v 1.9 2004/07/21 18:43:32 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,9 +11,9 @@ package com.syrus.AMFICOM.mcm;
 import com.syrus.AMFICOM.measurement.SetParameter;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2004/07/21 08:26:06 $
+ * @version $Revision: 1.9 $, $Date: 2004/07/21 18:43:32 $
  * @author $Author: arseniy $
- * @module 
+ * @module mcm_v1
  */
 
 public interface AnalysisManager {
