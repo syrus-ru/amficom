@@ -1,5 +1,5 @@
 /*
- * $Id: CableThreadTypeDatabase.java,v 1.27 2005/03/11 10:17:12 bob Exp $
+ * $Id: CableThreadTypeDatabase.java,v 1.28 2005/03/16 16:36:09 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,8 +28,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.27 $, $Date: 2005/03/11 10:17:12 $
- * @author $Author: bob $
+ * @version $Revision: 1.28 $, $Date: 2005/03/16 16:36:09 $
+ * @author $Author: bass $
  * @module config_v1
  */
 
@@ -101,26 +101,29 @@ public class CableThreadTypeDatabase extends StorableObjectDatabase {
 		CableThreadType cableThreadType = storableObject == null ? null : this.fromStorableObject(storableObject);
 		if (cableThreadType == null){
 			cableThreadType = new CableThreadType(DatabaseIdentifier.getIdentifier(resultSet,
-				StorableObjectWrapper.COLUMN_ID), null, 0L, null, null, null, 0, null);			
+				StorableObjectWrapper.COLUMN_ID), null, 0L, null, null, null, 0, null, null);			
 		}
-        LinkType linkType;
-        try {
-            linkType = (LinkType)ConfigurationStorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, CableThreadTypeWrapper.COLUMN_LINK_TYPE_ID), true);
-        }
-        catch (ApplicationException ae) {
-            throw new RetrieveObjectException(ae);
-        }
+		LinkType linkType;
+		CableLinkType cableLinkType;
+		try {
+			linkType = (LinkType) ConfigurationStorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, CableThreadTypeWrapper.COLUMN_LINK_TYPE_ID), true);
+			cableLinkType = (CableLinkType) ConfigurationStorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, CableThreadTypeWrapper.COLUMN_CABLE_LINK_TYPE_ID), true);
+		}
+		catch (final ApplicationException ae) {
+			throw new RetrieveObjectException(ae);
+		}
         
 		cableThreadType.setAttributes(DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_CREATED),
-									DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),									
-									DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
-									DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
-									resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION),
-									DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_CODENAME)),
-									DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_DESCRIPTION)),
-                                    DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_NAME)),
-									resultSet.getInt(CableThreadTypeWrapper.COLUMN_COLOR),
-									linkType);
+				DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),									
+				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
+				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
+				resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION),
+				DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_CODENAME)),
+				DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_DESCRIPTION)),
+				DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_NAME)),
+				resultSet.getInt(CableThreadTypeWrapper.COLUMN_COLOR),
+				linkType,
+				cableLinkType);
 
 		
 		return cableThreadType;

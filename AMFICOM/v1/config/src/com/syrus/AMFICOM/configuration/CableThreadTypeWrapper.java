@@ -1,5 +1,5 @@
 /*
- * $Id: CableThreadTypeWrapper.java,v 1.5 2005/02/03 08:37:00 bob Exp $
+ * $Id: CableThreadTypeWrapper.java,v 1.6 2005/03/16 16:36:09 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,8 +16,8 @@ import java.util.List;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/02/03 08:37:00 $
- * @author $Author: bob $
+ * @version $Revision: 1.6 $, $Date: 2005/03/16 16:36:09 $
+ * @author $Author: bass $
  * @module configuration_v1
  */
 public final class CableThreadTypeWrapper implements StorableObjectWrapper {
@@ -30,6 +30,9 @@ public final class CableThreadTypeWrapper implements StorableObjectWrapper {
 
 	// cable_link_type_id VARCHAR2(32),
 	public static final String				COLUMN_LINK_TYPE_ID	= "link_type_id";
+
+	// cable_link_type_id VARCHAR2(32),
+	public static final String				COLUMN_CABLE_LINK_TYPE_ID	= "cable_link_type_id";
 
 	private static CableThreadTypeWrapper	instance;
 

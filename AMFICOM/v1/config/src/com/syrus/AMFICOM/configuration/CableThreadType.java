@@ -1,5 +1,5 @@
 /*
- * $Id: CableThreadType.java,v 1.21 2005/02/14 09:15:45 arseniy Exp $
+ * $Id: CableThreadType.java,v 1.22 2005/03/16 16:36:09 bass Exp $
  *
  * Copyright ø 2004 Syrus Systems.
  * Ó¡’ﬁŒœ-‘≈»Œ…ﬁ≈”À…  √≈Œ‘“.
@@ -8,6 +8,7 @@
 
 package com.syrus.AMFICOM.configuration;
 
+import java.util.*;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -27,12 +28,17 @@ import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.21 $, $Date: 2005/02/14 09:15:45 $
- * @author $Author: arseniy $
+ * <code>CableThreadType</code>, among other fields, contain references to
+ * {@link LinkType} and {@link CableLinkType}. While the former is a type of
+ * optical fiber (or an <i>abstract </i> optical fiber), the latter is a type of
+ * cable (or an <i>abstract </i> cable containing this thread).
+ *
+ * @version $Revision: 1.22 $, $Date: 2005/03/16 16:36:09 $
+ * @author $Author: bass $
  * @module config_v1
  */
 
-public class CableThreadType extends StorableObjectType {
+public final class CableThreadType extends StorableObjectType {
 
 	/**
 	 * Comment for <code>serialVersionUID</code>
@@ -41,110 +47,128 @@ public class CableThreadType extends StorableObjectType {
 
 	private String name;
 	private int color;
-	private LinkType type;
+	private LinkType linkType;
+	private CableLinkType cableLinkType;
 
 	private StorableObjectDatabase	cableThreadTypeDatabase;
 
-	public CableThreadType(Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
+	public CableThreadType(final Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
 		super(id);
 
 		this.cableThreadTypeDatabase = ConfigurationDatabaseContext.cableThreadTypeDatabase;
 		try {
 			this.cableThreadTypeDatabase.retrieve(this);
 		}
-		catch (IllegalDataException ide) {
+		catch (final IllegalDataException ide) {
 			throw new RetrieveObjectException(ide.getMessage(), ide);
 		}
 	}
 
-	public CableThreadType(CableThreadType_Transferable ctt) throws CreateObjectException {
-		super(ctt.header, new String(ctt.codename), new String(ctt.description));
-		this.name = ctt.name;
-		this.color = ctt.color;
+	public CableThreadType(final CableThreadType_Transferable transferable)
+			throws CreateObjectException {
+		super(transferable.header, transferable.codename,
+				transferable.description);
+		this.name = transferable.name;
+		this.color = transferable.color;
 		try {
-			this.type = (LinkType) ConfigurationStorableObjectPool.getStorableObject(new Identifier(ctt.linkTypeId), true);
-		}
-		catch (ApplicationException ae) {
+			this.linkType = (LinkType) ConfigurationStorableObjectPool
+					.getStorableObject(
+							new Identifier(
+									transferable.linkTypeId),
+							true);
+			this.cableLinkType = (CableLinkType) ConfigurationStorableObjectPool
+					.getStorableObject(
+							new Identifier(
+									transferable.cableLinkTypeId),
+							true);
+		} catch (final ApplicationException ae) {
 			throw new CreateObjectException(ae);
 		}
 
 		this.cableThreadTypeDatabase = ConfigurationDatabaseContext.cableThreadTypeDatabase;
 	}
 
-	protected CableThreadType(Identifier id,
-	                          Identifier creatorId,
-	                          long version,
-	                          String codename,
-	                          String description,
-	                          String name,
-	                          int color,
-	                          LinkType linkType) {
+	protected CableThreadType(final Identifier id,
+			final Identifier creatorId,
+			final long version,
+			final String codename,
+			final String description,
+			final String name,
+			final int color,
+			final LinkType linkType,
+			final CableLinkType cableLinkType) {
 		super(id, 
-			new Date(System.currentTimeMillis()), 
-			new Date(System.currentTimeMillis()), 
+			new Date(), 
+			new Date(), 
 			creatorId, 
 			creatorId,
 			version,
 			codename, 
 			description);
+
 		this.name = name;
-				this.color = color;
-		this.type = linkType;
+		this.color = color;
+		this.linkType = linkType;
+		this.cableLinkType = cableLinkType;
 
 		this.cableThreadTypeDatabase = ConfigurationDatabaseContext.cableThreadTypeDatabase;
-
 	}
 
 	/**
 	 * create new instance for client
 	 * @throws CreateObjectException
 	 */
-	public static CableThreadType createInstance(Identifier creatorId,
-													String codename,
-													String description,
-													String name,
-													int color,
-													LinkType linkType) throws CreateObjectException {
-
-		if (creatorId == null || codename == null || description == null ||
-				name == null || linkType == null)
-			throw new IllegalArgumentException("Argument is 'null'");
+	public static CableThreadType createInstance(final Identifier creatorId,
+			final String codename,
+			final String description,
+			final String name,
+			final int color,
+			final LinkType linkType,
+			final CableLinkType cableLinkType) throws CreateObjectException {
+		assert creatorId != null && codename != null
+				&& description != null && name != null
+				&& linkType != null && cableLinkType != null;
+//		assert color != java.awt.Color.ÛÂÚÔ_‚ıÚÔ_Ì·ÏÈÓÔ˜˘Í;
 		try {
 			CableThreadType cableThreadType = new CableThreadType(IdentifierPool.getGeneratedIdentifier(ObjectEntities.CABLETHREADTYPE_ENTITY_CODE), 
-				creatorId, 
-				0L,
-				codename, 
-				description, 
-				name, 
-				color, 
-				linkType);
+					creatorId, 
+					0L,
+					codename, 
+					description, 
+					name, 
+					color, 
+					linkType,
+					cableLinkType);
 			cableThreadType.changed = true;
 			return cableThreadType;
-		} catch (IllegalObjectEntityException e) {
-			throw new CreateObjectException("CableThreadType.createInstance | cannot generate identifier ", e);
+		} catch (final IllegalObjectEntityException ioee) {
+			throw new CreateObjectException(
+					"CableThreadType.createInstance | cannot generate identifier ",
+					ioee);
 		}
-
 	}
 
 	public Object getTransferable() {
 		return new CableThreadType_Transferable(super.getHeaderTransferable(),
-										 super.codename,
-										 (super.description != null) ? super.description : "",
-																				 (this.name != null) ? this.name : "",
-																				 this.color,
-										 (Identifier_Transferable) this.type.getId().getTransferable());
+				super.codename,
+				super.description != null ? super.description : "",
+				this.name != null ? this.name : "",
+				this.color,
+				(Identifier_Transferable) this.linkType.getId().getTransferable(),
+				(Identifier_Transferable) this.cableLinkType.getId().getTransferable());
 	}
 
-	protected synchronized void setAttributes(	Date created,
-												Date modified,
-												Identifier creatorId,
-												Identifier modifierId,
-												long version,
-												String codename,
-												String description,
-												String name,
-												int color,
-												LinkType linkType) {
+	protected synchronized void setAttributes(final Date created,
+			final Date modified,
+			final Identifier creatorId,
+			final Identifier modifierId,
+			final long version,
+			final String codename,
+			final String description,
+			final String name,
+			final int color,
+			final LinkType linkType,
+			final CableLinkType cableLinkType) {
 		super.setAttributes(created, 
 			modified, 
 			creatorId, 
@@ -153,15 +177,20 @@ public class CableThreadType extends StorableObjectType {
 			codename, 
 			description);
 		this.name = name;
-				this.color = color;
-		this.type = linkType;
+		this.color = color;
+		this.linkType = linkType;
+		this.cableLinkType = cableLinkType;
 	}
 
 	public LinkType getLinkType() {
-		return this.type;
+		return this.linkType;
 	}
 
-	public void setColor(int color) {
+	public CableLinkType getCableLinkType() {
+		return this.cableLinkType;
+	}
+
+	public void setColor(final int color) {
 		this.color = color;
 		super.changed = true;
 	}
@@ -174,17 +203,28 @@ public class CableThreadType extends StorableObjectType {
 		return this.name;
 	}
 
-	public void setName(String name) {
+	public void setName(final String name) {
+		assert name != null;
 		this.name = name;
 		super.changed = true;
 	}
 
-	public void setLinkType(LinkType type) {
-		this.type = type;
+	public void setLinkType(final LinkType linkType) {
+		assert linkType != null;
+		this.linkType = linkType;
 		super.changed = true;
 	}
-	public List getDependencies() {
-		return Collections.singletonList(this.type);
+
+	public void setCableLinkType(final CableLinkType cableLinkType) {
+		assert cableLinkType != null;
+		this.cableLinkType = cableLinkType;
+		super.changed = true;
 	}
 
+	public List getDependencies() {
+		final List dependencies = new ArrayList(2);
+		dependencies.add(this.linkType);
+		dependencies.add(this.cableLinkType);
+		return Collections.unmodifiableList(dependencies);
+	}
 }
