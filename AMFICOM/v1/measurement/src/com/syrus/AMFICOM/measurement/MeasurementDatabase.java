@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementDatabase.java,v 1.37 2004/11/10 15:24:02 bob Exp $
+ * $Id: MeasurementDatabase.java,v 1.38 2004/11/11 11:09:41 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -40,7 +40,7 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
 
 /**
- * @version $Revision: 1.37 $, $Date: 2004/11/10 15:24:02 $
+ * @version $Revision: 1.38 $, $Date: 2004/11/11 11:09:41 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -208,6 +208,12 @@ public class MeasurementDatabase extends StorableObjectDatabase {
 									 */
 									new Identifier(resultSet.getString(COLUMN_TEST_ID)));
 		return measurement;
+	}
+	
+	protected String retrieveQuery(String condition) {
+		String query = super.retrieveQuery(condition);
+		query = query.replaceFirst(COLUMN_START_TIME, DatabaseDate.toQuerySubString(COLUMN_START_TIME));
+		return query;
 	}
 
 	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {

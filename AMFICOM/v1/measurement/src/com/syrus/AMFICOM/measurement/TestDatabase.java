@@ -1,5 +1,5 @@
 /*
- * $Id: TestDatabase.java,v 1.45 2004/11/10 15:24:02 bob Exp $
+ * $Id: TestDatabase.java,v 1.46 2004/11/11 11:09:41 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -51,7 +51,7 @@ import com.syrus.AMFICOM.configuration.MeasurementPortDatabase;
 import com.syrus.AMFICOM.configuration.KISDatabase;
 
 /**
- * @version $Revision: 1.45 $, $Date: 2004/11/10 15:24:02 $
+ * @version $Revision: 1.46 $, $Date: 2004/11/11 11:09:41 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -140,6 +140,13 @@ public class TestDatabase extends StorableObjectDatabase {
 			+ APOSTOPHE + DatabaseString.toQuerySubString(test.getDescription()) + APOSTOPHE;
 	}
 	
+	
+	protected String retrieveQuery(String condition) {
+		String query = super.retrieveQuery(condition);
+		query = query.replaceFirst(COLUMN_START_TIME, DatabaseDate.toQuerySubString(COLUMN_START_TIME));
+		query = query.replaceFirst(COLUMN_END_TIME, DatabaseDate.toQuerySubString(COLUMN_END_TIME));
+		return query;
+	}
 	
 	protected int setEntityForPreparedStatement(StorableObject storableObject, PreparedStatement preparedStatement)
 			throws IllegalDataException, UpdateObjectException {
