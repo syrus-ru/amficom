@@ -1,5 +1,5 @@
 /*
- * $Id: Test.java,v 1.38 2004/08/19 12:47:57 bob Exp $
+ * $Id: Test.java,v 1.39 2004/08/19 13:08:46 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -36,7 +36,7 @@ import com.syrus.AMFICOM.measurement.corba.TestTimeStamps_TransferablePackage.Co
 import com.syrus.AMFICOM.measurement.corba.TestTimeStamps_TransferablePackage.PeriodicalTestTimeStamps;
 
 /**
- * @version $Revision: 1.38 $, $Date: 2004/08/19 12:47:57 $
+ * @version $Revision: 1.39 $, $Date: 2004/08/19 13:08:46 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -574,9 +574,9 @@ public class Test extends StorableObject {
 					HashCodeGenerator.equalsDate(this.modified,test.modified) &&
 					(this.modifierId.equals(test.modifierId))&&					
 					( ((test.getStartTime() == null) && (getStartTime() == null) ) 
-							|| (test.getStartTime().getTime()==getStartTime().getTime()) ) &&
+							|| (Math.abs(test.getStartTime().getTime()-getStartTime().getTime())<1000) ) &&
 					( ((test.getEndTime() == null) && (getEndTime() == null) ) 
-							|| (test.getEndTime().getTime()==getEndTime().getTime()) ) &&
+							|| (Math.abs(test.getEndTime().getTime()-getEndTime().getTime())<1000) ) &&
 					(test.getTemporalType().equals(getTemporalType())) &&
 					( ((test.getTemporalPatternId()==null) && (getTemporalPatternId() == null)) 
 							|| (test.getTemporalPatternId().equals(getTemporalPatternId())) ) &&
