@@ -1,5 +1,5 @@
 /**
- * $Id: CenterSelectionCommand.java,v 1.2 2004/09/21 14:59:20 krupenn Exp $
+ * $Id: CenterSelectionCommand.java,v 1.3 2004/09/29 15:15:40 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -28,7 +28,7 @@ import java.util.LinkedList;
  * 
  * 
  * 
- * @version $Revision: 1.2 $, $Date: 2004/09/21 14:59:20 $
+ * @version $Revision: 1.3 $, $Date: 2004/09/29 15:15:40 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -63,63 +63,83 @@ public class CenterSelectionCommand extends VoidCommand
 
 		MapElement me;
 
-		// список, который будет хранить центры выделенных объектов
-		LinkedList lis = new LinkedList();
+		int count = 0;
+		Point2D.Double point = new Point2D.Double(0.0, 0.0);
 
 		for(Iterator it = logicalNetLayer.getMapView().getMap().getNodes().iterator(); it.hasNext();)
 		{
 			me = (MapElement )it.next();
 			if(me.isSelected())
-				lis.add(me.getAnchor());
+			{
+				Point2D.Double an = me.getAnchor();
+				point.x += an.x;
+				point.y += an.y;
+				count ++;
+			}
 		}
 
 		for(Iterator it = logicalNetLayer.getMapView().getMarkers().iterator(); it.hasNext();)
 		{
 			me = (MapElement )it.next();
 			if(me.isSelected())
-				lis.add(me.getAnchor());
+			{
+				Point2D.Double an = me.getAnchor();
+				point.x += an.x;
+				point.y += an.y;
+				count ++;
+			}
 		}
 
 		for(Iterator it = logicalNetLayer.getMapView().getMap().getNodeLinks().iterator(); it.hasNext();)
 		{
 			me = (MapElement )it.next();
 			if(me.isSelected())
-				lis.add(me.getAnchor());
+			{
+				Point2D.Double an = me.getAnchor();
+				point.x += an.x;
+				point.y += an.y;
+				count ++;
+			}
 		}
 
 		for(Iterator it = logicalNetLayer.getMapView().getMap().getPhysicalLinks().iterator(); it.hasNext();)
 		{
 			me = (MapElement )it.next();
 			if(me.isSelected())
-				lis.add(me.getAnchor());
+			{
+				Point2D.Double an = me.getAnchor();
+				point.x += an.x;
+				point.y += an.y;
+				count ++;
+			}
 		}
 
 		for(Iterator it = logicalNetLayer.getMapView().getCablePaths().iterator(); it.hasNext();)
 		{
 			me = (MapElement )it.next();
 			if(me.isSelected())
-				lis.add(me.getAnchor());
+			{
+				Point2D.Double an = me.getAnchor();
+				point.x += an.x;
+				point.y += an.y;
+				count ++;
+			}
 		}
 
 		for(Iterator it = logicalNetLayer.getMapView().getMeasurementPaths().iterator(); it.hasNext();)
 		{
 			me = (MapElement )it.next();
 			if(me.isSelected())
-				lis.add(me.getAnchor());
+			{
+				Point2D.Double an = me.getAnchor();
+				point.x += an.x;
+				point.y += an.y;
+				count ++;
+			}
 		}
 
-		// ГМТ центров выделенных элементов
-		Point2D.Double point = new Point2D.Double(0.0, 0.0);
-		
-		for(Iterator it = lis.iterator(); it.hasNext();)
-		{
-			Point2D.Double pt = (Point2D.Double )it.next();
-
-			point.x += pt.x;
-			point.y += pt.y;
-		}
-		point.x /= lis.size();
-		point.y /= lis.size();
+		point.x /= count;
+		point.y /= count;
 		
 		logicalNetLayer.setCenter(point);
 
