@@ -21,7 +21,7 @@ public class SchemeCableLink extends StubResource
 	public SchemeCableLink_Transferable transferable;
 
 	public String id = "";
-	public String name = "";
+	private String name = "";
 	public String source_port_id = "";
 	public String target_port_id = "";
 	public String cable_link_id = "";
@@ -134,7 +134,7 @@ public class SchemeCableLink extends StubResource
 		for (int i = 0; i < transferable.cable_threads.length; i++)
 			cable_threads.add(new SchemeCableThread(transferable.cable_threads[i]));
 
-		attributes = new HashMap();
+		attributes = new HashMap(transferable.attributes.length);
 		for(int i = 0; i < transferable.attributes.length; i++)
 			attributes.put(transferable.attributes[i].type_id, new ElementAttribute(transferable.attributes[i]));
 	}
