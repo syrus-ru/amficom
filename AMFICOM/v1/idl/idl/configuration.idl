@@ -193,6 +193,8 @@ module corba {
 
 		wstring name;
 		wstring description;
+		com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable characteristic_ids;
+
 	};
 
 ///////////////////////// Equipment ///////////////////////
