@@ -25,9 +25,9 @@ public class ThresholdsPanel extends ReflectogramEventsPanel
 	protected static Color warningThresholdColor = new Color(255, 220, 0);
 	protected static Color alarmThresholdColor = new Color(255, 150, 60);
 
-	public ThresholdsPanel(ResizableLayeredPanel panel, Dispatcher dispatcher, double y[], double delta_x)
+	public ThresholdsPanel(ResizableLayeredPanel panel, Dispatcher dispatcher, double y[], double deltaX)
 	{
-		super (panel, dispatcher, y, delta_x);
+		super (panel, dispatcher, y, deltaX);
 		
 		try
 		{
@@ -52,7 +52,7 @@ public class ThresholdsPanel extends ReflectogramEventsPanel
 			//WorkWithReflectoEventsArray.shiftDataToEtalon(ep, super.ep);
 			this.et_ep = ep;
 
-			max_et_y = ReflectogramMath.getMaximum(ep);//max_y;//
+			max_et_y = ReflectogramMath.getMaximum(ep);//maxY;//
 
 			if (c_event >= ep.length)
 				c_event = ep.length - 1;
@@ -147,16 +147,16 @@ public class ThresholdsPanel extends ReflectogramEventsPanel
 
 			if (!isRbutton)
 				et_ep[c_event].getThreshold().changeThresholdBy(
-						(double) (tmppos.y - currpos.y) / scale_y,
-						(double) (tmppos.x - currpos.x) / scale_x,
+						(double) (tmppos.y - currpos.y) / scaleY,
+						(double) (tmppos.x - currpos.x) / scaleX,
 						0, 0,
 						et_ep[c_event], c_threshold);
 			if (isRbutton
 					&& (et_ep[c_event].getThresholdType() == ReflectogramEvent.CONNECTOR))
 				et_ep[c_event].getThreshold().changeThresholdBy(
 						0, 0,
-						(double) (tmppos.x - currpos.x) / scale_x,
-						(double) (tmppos.y - currpos.y) / scale_y,
+						(double) (tmppos.x - currpos.x) / scaleX,
+						(double) (tmppos.y - currpos.y) / scaleY,
 						et_ep[c_event], c_threshold);
 
 			//long t2 = System.currentTimeMillis();

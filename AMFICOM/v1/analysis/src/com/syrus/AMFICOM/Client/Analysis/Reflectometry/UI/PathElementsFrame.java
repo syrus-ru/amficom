@@ -46,7 +46,7 @@ public class PathElementsFrame extends AnalysisFrame
 		if (bs == null)
 			return;
 
-		double delta_x = bs.getResolution();
+		double deltaX = bs.getResolution();
 		double[] y = bs.getTraceData();
 
 		if (id.equals("primarytrace") || id.equals("modeledtrace"))
@@ -87,7 +87,7 @@ public class PathElementsFrame extends AnalysisFrame
 				setTitle(LangModelAnalyse.getString("analysisTitle"));
 			}
 
-			p = new PathElementsPanel((PathElementsLayeredPanel)panel, dispatcher, y, delta_x);
+			p = new PathElementsPanel((PathElementsLayeredPanel)panel, dispatcher, y, deltaX);
 			((PathElementsPanel)p).updEvents(id);
 			((PathElementsPanel)p).updateNoiseLevel();
 			((PathElementsPanel)p).draw_noise_level = true;
@@ -96,7 +96,7 @@ public class PathElementsFrame extends AnalysisFrame
 				((PathElementsPanel)p).setPath(path);
 		}
 		else
-			p = new SimpleGraphPanel(y, delta_x);
+			p = new SimpleGraphPanel(y, deltaX);
 		p.setColorModel(id);
 		((PathElementsLayeredPanel)panel).addGraphPanel(p);
 		((PathElementsLayeredPanel)panel).updPaintingMode();

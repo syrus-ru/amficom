@@ -14,7 +14,7 @@ import com.syrus.io.*;
 public class OpticalAlarmDescriptor extends AlarmDescriptor
 {
 	ReflectogramAlarm []ra;
-	double delta_x;
+	private double deltaX;
 
 	public OpticalAlarmDescriptor(Alarm alarm)
 	{
@@ -56,7 +56,7 @@ public class OpticalAlarmDescriptor extends AlarmDescriptor
 					return;
 				}
 
-				delta_x = bs.getResolution();
+				deltaX = bs.getResolution();
 
 				SetParameter[] parameters = res.getParameters();
 				for(int i = 0; i < parameters.length; i++)
@@ -68,7 +68,7 @@ public class OpticalAlarmDescriptor extends AlarmDescriptor
 						ra = ReflectogramAlarm.fromByteArray(param.getValue());
 						for(int j = 0; j < ra.length; j++)
 						{
-							add(new OpticalAlarmDescriptorEvent(test.getMonitoredElement().getId(), delta_x, ra[i]));
+							add(new OpticalAlarmDescriptorEvent(test.getMonitoredElement().getId(), deltaX, ra[i]));
 						}
 						break;
 					}
@@ -95,7 +95,7 @@ public class OpticalAlarmDescriptor extends AlarmDescriptor
 //				return;
 //			}
 
-//			delta_x = 1;
+//			deltaX = 1;
 
 //			new SurveyDataSourceImage(dataSource).GetTestResult(id);
 
@@ -124,7 +124,7 @@ public class OpticalAlarmDescriptor extends AlarmDescriptor
 //			if (bs == null)
 //				 return;
 //
-//			delta_x = bs.getDeltaX();
+//			deltaX = bs.getDeltaX();
 /*
 			for(Enumeration en = tas.arguments.elements(); en.hasMoreElements();)
 			{
@@ -133,7 +133,7 @@ public class OpticalAlarmDescriptor extends AlarmDescriptor
 				{
 					try
 					{
-						delta_x = new ByteArray(param.value).toDouble();
+						deltaX = new ByteArray(param.value).toDouble();
 					}
 					catch (IOException ex)
 					{
@@ -166,7 +166,7 @@ public class OpticalAlarmDescriptor extends AlarmDescriptor
 //				{
 //					ra = ReflectogramAlarm.fromByteArray(param.getValue());
 //					for(int i = 0; i < ra.length; i++)
-//						add(new OpticalAlarmDescriptorEvent(test.getMonitoredElementId(), delta_x, ra[i]));
+//						add(new OpticalAlarmDescriptorEvent(test.getMonitoredElementId(), deltaX, ra[i]));
 //					break;
 //				}
 //			}

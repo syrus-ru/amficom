@@ -58,8 +58,8 @@ public class MapMarkersLayeredPanel extends TraceEventsLayeredPanel implements O
 								 (mne.getSchemePathId() != null && mne.getSchemePathId().equals(((MapMarkersPanel)panel).scheme_path_id)))
 						{
 
-//							double d = WorkWithReflectoArray.getDistanceTillLastSplash(panel.y, panel.delta_x, 1);
-//							mne.spd.setMeasurement (new LengthParameters (((MapMarkersPanel)panel).ep, panel.delta_x, "", d));
+//							double d = WorkWithReflectoArray.getDistanceTillLastSplash(panel.y, panel.deltaX, 1);
+//							mne.spd.setMeasurement (new LengthParameters (((MapMarkersPanel)panel).ep, panel.deltaX, "", d));
 //							double dist = mne.spd.getMeasuredDistance(mne.distance);
 							double dist = mne.getDistance();
 							Marker m = ((MapMarkersPanel)panel).createMarker("", dist);

@@ -33,9 +33,9 @@ public class AnalysisPanel extends MapMarkersPanel
 
 	protected Color markerColor;
 
-	public AnalysisPanel(AnalysisLayeredPanel panel, Dispatcher dispatcher, double y[], double delta_x)
+	public AnalysisPanel(AnalysisLayeredPanel panel, Dispatcher dispatcher, double y[], double deltaX)
 	{
-		super (panel, dispatcher, y, delta_x);
+		super (panel, dispatcher, y, deltaX);
 
 		start_y = MathRef.getLinearStartPoint(y);
 
@@ -123,7 +123,7 @@ public class AnalysisPanel extends MapMarkersPanel
 				if (reflection_analysis)
 				{
 					if(Math.abs(currpos.x-index2coord(lines[1].point[0])) < mouse_coupling &&
-						 Math.abs(currpos.y-(int)((max_y - y[lines[1].point[0]] - top)*scale_y)) < mouse_coupling)
+						 Math.abs(currpos.y-(int)((maxY - y[lines[1].point[0]] - top)*scaleY)) < mouse_coupling)
 					{
 						moving_point = 3;
 						setCursor(new Cursor(Cursor.HAND_CURSOR));
@@ -242,7 +242,7 @@ public class AnalysisPanel extends MapMarkersPanel
 
 						int y1 = lindraw(lines[0].factor[0], lines[0].factor[1], lines[0].point[0]);
 						int y2 = lindraw(lines[0].factor[0], lines[0].factor[1], lines[0].point[1]);
-						int y3 = (int)((max_y - y[lines[1].point[0]] - top)*scale_y);
+						int y3 = (int)((maxY - y[lines[1].point[0]] - top)*scaleY);
 
 						parent.repaint(x, Math.min(Math.min(y1, y2), y3),
 													 x2 - x, Math.max(Math.max(y1, y2), y3));
@@ -398,20 +398,20 @@ public class AnalysisPanel extends MapMarkersPanel
 			}
 			if (loss_analysis || reflection_analysis)
 			{
-				mInfo.a_attfactor = -(1000d * lines[0].factor[0] / delta_x);
+				mInfo.a_attfactor = -(1000d * lines[0].factor[0] / deltaX);
 				mInfo.a_cumulative_loss = start_y - y[mInfo.a_pos];
 			}
 			else
 				mInfo.a_type = MarkersInfo.NOANALYSIS;
 
 			mInfo.a_pos = m.pos;
-			mInfo.a_pos_m = m.pos * delta_x;
+			mInfo.a_pos_m = m.pos * deltaX;
 		}
 		else if (m.equals(markerB)) // update marker B
 		{
 			mInfo.b_activeEvent = marker_to_event();
 			mInfo.b_pos = m.pos;
-			mInfo.b_pos_m = m.pos * delta_x;
+			mInfo.b_pos_m = m.pos * deltaX;
 		}
 	}
 
@@ -484,11 +484,11 @@ public class AnalysisPanel extends MapMarkersPanel
 		int l = Math.min(mInfo.a_pos, mInfo.b_pos);
 		int r = Math.max(mInfo.a_pos, mInfo.b_pos);
 		mInfo.a_b_distance = r - l;
-		mInfo.a_b_distance_m = mInfo.a_b_distance * delta_x;
+		mInfo.a_b_distance_m = mInfo.a_b_distance * deltaX;
 		mInfo.a_b_loss = y[l] - y[r];
 		mInfo.a_b_attenuation = 1000d * (mInfo.a_b_loss) / mInfo.a_b_distance_m;
 		double lsa[] = MathRef.calcLSA(y, l, r);
-		mInfo.lsa_attenuation = -1000d * lsa[0] / delta_x;
+		mInfo.lsa_attenuation = -1000d * lsa[0] / deltaX;
 		mInfo.a_b_orl = MathRef.calcORL(y, l, r);
 		moved_here = true;
 		dispatcher.notify(new RefUpdateEvent(mInfo, RefUpdateEvent.MARKER_MOVED_EVENT));
@@ -568,14 +568,14 @@ public class AnalysisPanel extends MapMarkersPanel
 		}
 
 		if ((lines[1].point[0] > start) && (lines[1].point[0] < end))
-			g.drawOval(index2coord(lines[1].point[0])-4, (int)((max_y - y[lines[1].point[0]] - top)*scale_y)-5, 8, 8);
+			g.drawOval(index2coord(lines[1].point[0])-4, (int)((maxY - y[lines[1].point[0]] - top)*scaleY)-5, 8, 8);
 
 		((Graphics2D) g).setStroke(DEFAULT_STROKE);
 	}
 
 	int lindraw(double a, double b, int x)
 	{
-		return (int)((max_y - a*x-b - top)*scale_y - 1);
+		return (int)((maxY - a*x-b - top)*scaleY - 1);
 	}
 }
 

@@ -30,9 +30,9 @@ public class HistogrammPanel extends ScaledGraphPanel
 
 	private boolean move_level = false;
 
-	public HistogrammPanel(ResizableLayeredPanel panel, double[] y, double delta_x)
+	public HistogrammPanel(ResizableLayeredPanel panel, double[] y, double deltaX)
 	{
-		super(panel, y, delta_x);
+		super(panel, y, deltaX);
 		inversed_y = false;
 		grid_shift_x = down_limit;
 
@@ -57,7 +57,7 @@ public class HistogrammPanel extends ScaledGraphPanel
 			derivative[i] = -derivative[i];
 
 		//Normalizing of the derivative to the dimension db/km
-		double tmp = 1000./(double)event_size/delta_x;
+		double tmp = 1000./(double)event_size/deltaX;
 		for (int i = 0; i < derivative.length; i++)
 			derivative[i] = derivative[i]*tmp;
 	}
@@ -91,8 +91,8 @@ public class HistogrammPanel extends ScaledGraphPanel
 			else
 				g.setColor(Color.gray);
 
-			g.fillRect((int)(i * scale_x + 1), (int)((max_y - y[i+start] - top) * scale_y - 1),
-								 (int)(scale_x+1), (int)((max_y - bottom) * scale_y + 1));
+			g.fillRect((int)(i * scaleX + 1), (int)((maxY - y[i+start] - top) * scaleY - 1),
+								 (int)(scaleX+1), (int)((maxY - bottom) * scaleY + 1));
 		}
 	}
 
@@ -102,8 +102,8 @@ public class HistogrammPanel extends ScaledGraphPanel
 		((Graphics2D) g).setStroke(GAUSS_STROKE);
 
 		for (int i= Math.max(0, -start); i < Math.min (end + 1, gauss.length) - start - 1; i++)
-			g.drawLine((int)(i*scale_x+1), (int)((max_y - gauss[i+start] - top) * scale_y - 1),
-								 (int)((i+1)*scale_x+1), (int)((max_y - gauss[i+start+1] - top) * scale_y - 1));
+			g.drawLine((int)(i*scaleX+1), (int)((maxY - gauss[i+start] - top) * scaleY - 1),
+								 (int)((i+1)*scaleX+1), (int)((maxY - gauss[i+start+1] - top) * scaleY - 1));
 
 		((Graphics2D) g).setStroke(DEFAULT_STROKE);
 	}
@@ -114,8 +114,8 @@ public class HistogrammPanel extends ScaledGraphPanel
 		((Graphics2D) g).setStroke(THRESHOLD_STROKE);
 
 		for (int i= Math.max(0, -start); i < Math.min (end + 1, threshold.length) - start - 1; i++)
-			g.drawLine((int)(i*scale_x+1), (int)((max_y - threshold[i+start] - top) * scale_y - 1),
-								 (int)((i+1)*scale_x+1), (int)((max_y - threshold[i+start+1] - top) * scale_y - 1));
+			g.drawLine((int)(i*scaleX+1), (int)((maxY - threshold[i+start] - top) * scaleY - 1),
+								 (int)((i+1)*scaleX+1), (int)((maxY - threshold[i+start+1] - top) * scaleY - 1));
 
 		((Graphics2D) g).setStroke(DEFAULT_STROKE);
 	}
@@ -125,13 +125,13 @@ public class HistogrammPanel extends ScaledGraphPanel
 		g.setColor(Color.RED);
 		int jw = getWidth();
 
-		g.drawLine(10, (int)((max_y - level - top) * scale_y - 1),
-							 jw - 10, (int)((max_y - level - top) * scale_y - 1));
+		g.drawLine(10, (int)((maxY - level - top) * scaleY - 1),
+							 jw - 10, (int)((maxY - level - top) * scaleY - 1));
 
 		g.setColor(scaleDigitColor);
 		g.drawString(String.valueOf(MathRef.round_2(level)),
 								 jw - 30,
-								 (int)((max_y - level - top) * scale_y - 4));
+								 (int)((maxY - level - top) * scaleY - 4));
 	}
 
 	protected void this_mousePressed(MouseEvent e)
@@ -140,7 +140,7 @@ public class HistogrammPanel extends ScaledGraphPanel
 		currpos = e.getPoint();
 
 		if (SwingUtilities.isRightMouseButton(e) ||
-				Math.abs(currpos.y-(int)((max_y - level - top)*scale_y)) < mouse_coupling)
+				Math.abs(currpos.y-(int)((maxY - level - top)*scaleY)) < mouse_coupling)
 		{
 			move_level = true;
 			level = coord2value(currpos.y);
@@ -184,16 +184,16 @@ public class HistogrammPanel extends ScaledGraphPanel
 		y = histo.init(derivative, start, end);
 		int max_index = histo.getMaximumIndex();
 
-		init(y, delta_x);
+		init(y, deltaX);
 		gauss = CoreAnalysisManager.calcGaussian(y, max_index);
 		threshold = CoreAnalysisManager.calcThresholdCurve(y, max_index);
 
 		for (int i = 0; i < y.length; i++)
 		{
-			y[i] /= max_y;
-			gauss[i] /= max_y;
+			y[i] /= maxY;
+			gauss[i] /= maxY;
 		}
-		max_y = 1;
-		min_y = 0;
+		maxY = 1;
+		minY = 0;
 	}
 }

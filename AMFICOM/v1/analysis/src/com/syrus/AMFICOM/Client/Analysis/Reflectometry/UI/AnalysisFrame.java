@@ -90,13 +90,13 @@ public class AnalysisFrame extends ScalableFrame implements OperationListener
 			}
 			if (rce.OPEN_ETALON)
 			{
-				String et_id = (String)rce.getSource();
-				addEtalon(et_id);
+				String etId = (String)rce.getSource();
+				addEtalon(etId);
 			}
 			if (rce.CLOSE_ETALON)
 			{
-				String et_id = (String)rce.getSource();
-				removeEtalon(et_id);
+				String etId = (String)rce.getSource();
+				removeEtalon(etId);
 			}
 		}
 	}
@@ -115,7 +115,7 @@ public class AnalysisFrame extends ScalableFrame implements OperationListener
 		if (bs == null)
 			return;
 
-		double delta_x = bs.getResolution();
+		double deltaX = bs.getResolution();
 		double[] y = bs.getTraceData();
 
 		if (id.equals("primarytrace") || id.equals("modeledtrace"))
@@ -131,13 +131,13 @@ public class AnalysisFrame extends ScalableFrame implements OperationListener
 				setTitle(LangModelAnalyse.getString("analysisTitle"));
 			}
 
-			p = new AnalysisPanel((AnalysisLayeredPanel)panel, dispatcher, y, delta_x);
+			p = new AnalysisPanel((AnalysisLayeredPanel)panel, dispatcher, y, deltaX);
 			((AnalysisPanel)p).updEvents(id);
 			((AnalysisPanel)p).updateNoiseLevel();
 			((AnalysisPanel)p).draw_noise_level = true;
 		}
 		else
-			p = new SimpleGraphPanel(y, delta_x);
+			p = new SimpleGraphPanel(y, deltaX);
 		p.setColorModel(id);
 		((AnalysisLayeredPanel)panel).addGraphPanel(p);
 		((AnalysisLayeredPanel)panel).updPaintingMode();
@@ -180,7 +180,7 @@ public class AnalysisFrame extends ScalableFrame implements OperationListener
 				return;
 
 			int n = 0;
-			double delta_x = 0;
+			double deltaX = 0;
 
 //			Measurement m = null;
 //			try
@@ -207,16 +207,16 @@ public class AnalysisFrame extends ScalableFrame implements OperationListener
 					ParameterType type = (ParameterType)params[i].getType();
 					if (type.getCodename().equals(ParameterTypeCodenames.TRACE_RESOLUTION))
 					{
-						delta_x = new ByteArray(params[i].getValue()).toDouble();
+						deltaX = new ByteArray(params[i].getValue()).toDouble();
 					}
 					if (type.getCodename().equals(ParameterTypeCodenames.TRACE_LENGTH))
 					{
 						len = new ByteArray(params[i].getValue()).toDouble();
 					}
 				}
-				if (delta_x == 0 || len == 0)
+				if (deltaX == 0 || len == 0)
 					return;
-				n = (int)(len * 1000 / delta_x);
+				n = (int)(len * 1000 / deltaX);
 
 				SimpleGraphPanel oldpanel = (SimpleGraphPanel)traces.get(id);
 				if (oldpanel != null)
@@ -234,7 +234,7 @@ public class AnalysisFrame extends ScalableFrame implements OperationListener
 						for (int j = ep[i].getBegin(); j <= ep[i].getEnd() && j < n; j++)
 							y[j] = ep[i].refAmplitude(j);
 					}
-					SimpleGraphPanel epPanel = new SimpleGraphPanel(y, delta_x);
+					SimpleGraphPanel epPanel = new SimpleGraphPanel(y, deltaX);
 					epPanel.setColorModel(AnalysisUtil.ETALON);
 					((ScalableLayeredPanel)panel).addGraphPanel(epPanel);
 					panel.updScale2fit();
@@ -248,9 +248,9 @@ public class AnalysisFrame extends ScalableFrame implements OperationListener
 		}
 	}
 
-	public void removeEtalon(String et_id)
+	public void removeEtalon(String etId)
 	{
-		SimpleGraphPanel epPanel = (SimpleGraphPanel)traces.get(et_id);
+		SimpleGraphPanel epPanel = (SimpleGraphPanel)traces.get(etId);
 		panel.removeGraphPanel(epPanel);
 	}
 }

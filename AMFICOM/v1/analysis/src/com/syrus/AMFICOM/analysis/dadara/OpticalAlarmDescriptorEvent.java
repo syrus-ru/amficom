@@ -13,24 +13,25 @@ public class OpticalAlarmDescriptorEvent extends AlarmDescriptorEvent
 	public static final int hardCut = 10;
 	public static final int hardShift = 11;
 	public static final int hardWholeShift = 12;
-	int alarmType = 0;
 
 	public static final String weld = "weld";
 	public static final String linear = "linear";
 	public static final String connector = "connector";
 
+	private int alarmType = 0;
+
 	private String referenceEventType;
 	private String message = "Внимание! На трассе повреждение!";
 
-	public ReflectogramAlarm ra;
-	public double delta_x;
-	public double dE;
+	private ReflectogramAlarm ra;
+	private double deltaX;
+	private double dE;
 
-	public OpticalAlarmDescriptorEvent(Identifier me_id, double delta_x, ReflectogramAlarm ra)
+	public OpticalAlarmDescriptorEvent(Identifier me_id, double deltaX, ReflectogramAlarm ra)
 	{
 		super(me_id, "", "");
 		this.ra = ra;
-		this.delta_x = delta_x;
+		this.deltaX = deltaX;
 
 		dE = (int )(ra.refAmplChangeValue * 1000) / 1000.;
 		if(ra.getEventType() == ReflectogramEvent.WELD)
@@ -177,7 +178,7 @@ public class OpticalAlarmDescriptorEvent extends AlarmDescriptorEvent
 
 	public double getEventCoord()
 	{
-		return ra.alarmPointCoord * delta_x;
+		return ra.alarmPointCoord * deltaX;
 	}
 
 	public double getNearestEventDistance(double d)
@@ -198,42 +199,42 @@ public class OpticalAlarmDescriptorEvent extends AlarmDescriptorEvent
 
 	public double getNearestEventDistance()
 	{
-		return getNearestEventDistance(ra.alarmPointCoord * delta_x);
+		return getNearestEventDistance(ra.alarmPointCoord * deltaX);
 //		double d;
 //		if(isLeftNearest())
 //			d = ra.leftReflectoEventCoord - ra.alarmPointCoord;
 //		else
 //			d = ra.rightReflectoEventCoord - ra.alarmPointCoord;
-//		return (Math.abs(d) * delta_x) / 1000d;
+//		return (Math.abs(d) * deltaX) / 1000d;
 	}
 
 	public double getOtherEventDistance()
 	{
-		return getOtherEventDistance(ra.alarmPointCoord * delta_x);
+		return getOtherEventDistance(ra.alarmPointCoord * deltaX);
 //		double d;
 //		if(isLeftNearest())
 //			d = ra.rightReflectoEventCoord - ra.alarmPointCoord;
 //		else
 //			d = ra.leftReflectoEventCoord - ra.alarmPointCoord;
-//		return (Math.abs(d) * delta_x) / 1000d;
+//		return (Math.abs(d) * deltaX) / 1000d;
 	}
 
 	public double getNearestEventCoord()
 	{
-		return getPathDecompositor().getOpticalDistanceFromStart(getNearestEvent(ra.alarmPointCoord * delta_x))[0];
+		return getPathDecompositor().getOpticalDistanceFromStart(getNearestEvent(ra.alarmPointCoord * deltaX))[0];
 //		if(isLeftNearest())
-//			return (ra.leftReflectoEventCoord * delta_x) / 1000d;
+//			return (ra.leftReflectoEventCoord * deltaX) / 1000d;
 //		else
-//			return (ra.rightReflectoEventCoord * delta_x) / 1000d;
+//			return (ra.rightReflectoEventCoord * deltaX) / 1000d;
 	}
 
 	public double getOtherEventCoord()
 	{
-		return getPathDecompositor().getOpticalDistanceFromStart(getOtherEvent(ra.alarmPointCoord * delta_x))[0];
+		return getPathDecompositor().getOpticalDistanceFromStart(getOtherEvent(ra.alarmPointCoord * deltaX))[0];
 //		if(isLeftNearest())
-//			return (ra.rightReflectoEventCoord * delta_x) / 1000d;
+//			return (ra.rightReflectoEventCoord * deltaX) / 1000d;
 //		else
-//			return (ra.leftReflectoEventCoord * delta_x) / 1000d;
+//			return (ra.leftReflectoEventCoord * deltaX) / 1000d;
 	}
 //
 //	public boolean isLeftNearest()
@@ -303,7 +304,7 @@ public class OpticalAlarmDescriptorEvent extends AlarmDescriptorEvent
 	{
 		StringBuffer s = new StringBuffer();
 		s.append("Внимание! На участке тестирования обнаружено несоответствие!\nКоордината несоответствия: ");
-		s.append(MathRef.round_3(ra.alarmPointCoord * delta_x / 1000.));
+		s.append(MathRef.round_3(ra.alarmPointCoord * deltaX / 1000.));
 		s.append(" км.\nОтклонение от эталона: ");
 		s.append(dE);
 		s.append(" дБ.\nТип события: ");
@@ -324,7 +325,7 @@ public class OpticalAlarmDescriptorEvent extends AlarmDescriptorEvent
 	{
 		StringBuffer s = new StringBuffer();
 		s.append("Внимание! На участке тестирования обнаружено повреждение!\nКоордината повреждения: ");
-		s.append(MathRef.round_3(ra.alarmPointCoord * delta_x / 1000.));
+		s.append(MathRef.round_3(ra.alarmPointCoord * deltaX / 1000.));
 		s.append(" км.\nОтклонение от эталона: ");
 		s.append(dE);
 		s.append(" дБ.\nТип события: ");
@@ -346,7 +347,7 @@ public class OpticalAlarmDescriptorEvent extends AlarmDescriptorEvent
 	{
 		StringBuffer s = new StringBuffer();
 		s.append("Внимание! На участке тестирования обнаружено несоответствие!\nКоордината несоответствия: ");
-		s.append(MathRef.round_3(ra.alarmPointCoord * delta_x / 1000d));
+		s.append(MathRef.round_3(ra.alarmPointCoord * deltaX / 1000d));
 		s.append(" км.\nОтклонение от эталона: ");
 		s.append(dE);
 		s.append(" дБ.\nТип события: ");
@@ -366,7 +367,7 @@ public class OpticalAlarmDescriptorEvent extends AlarmDescriptorEvent
 	{
 		StringBuffer s = new StringBuffer();
 		s.append("Внимание! На участке тестирования обнаружено повреждение!\nКоордината повреждения: ");
-		s.append(MathRef.round_3(ra.alarmPointCoord * delta_x / 1000d));
+		s.append(MathRef.round_3(ra.alarmPointCoord * deltaX / 1000d));
 				s.append(" км.\nОтклонение от эталона: ");
 		s.append(dE);
 		s.append(" дБ.\nТип события: ");
@@ -386,7 +387,7 @@ public class OpticalAlarmDescriptorEvent extends AlarmDescriptorEvent
 	{
 		StringBuffer s = new StringBuffer();
 		s.append("Внимание! На участке тестирования возможно повреждение.\nКоордината несоответствия: ");
-		s.append(MathRef.round_3(ra.alarmPointCoord * delta_x / 1000d));
+		s.append(MathRef.round_3(ra.alarmPointCoord * deltaX / 1000d));
 		s.append(" км.\nОтклонение от эталона: ");
 		s.append(dE);
 		s.append(" дБ.\nТип события: ");

@@ -21,7 +21,7 @@ public class InitialAnalysisCommand extends VoidCommand {
 		BellcoreStructure bs = (BellcoreStructure)Pool.get("bellcorestructure", "primarytrace");
 		if (bs != null)
 		{
-			//double delta_x = bs.getResolution();
+			//double deltaX = bs.getResolution();
 			double[] y = bs.getTraceData();
 
 			double[] params = (double[]) Pool.get(OT_analysisparameters,
@@ -45,7 +45,7 @@ public class InitialAnalysisCommand extends VoidCommand {
 
 			// фитировка нужна для определения вспомогательных парметров
 //	        ep = AnalysisManager.fitTrace(
-//	            y, delta_x, ep, (int)params[6], meanAttenuation[0]);
+//	            y, deltaX, ep, (int)params[6], meanAttenuation[0]);
 
 	        RefAnalysis a = new RefAnalysis();
 			a.decode(y, ep);

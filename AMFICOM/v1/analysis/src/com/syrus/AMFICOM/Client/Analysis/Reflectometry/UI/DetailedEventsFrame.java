@@ -342,7 +342,7 @@ public class DetailedEventsFrame extends JInternalFrame
 		{
 			return;
 		}
-		double delta_x = data_[0].getDeltaX();
+		double deltaX = data_[0].getDeltaX();
 		
 		// ищем парное событие
 		ReflectogramComparer rComp = new ReflectogramComparer(null, data_, etalon, null);
@@ -409,7 +409,7 @@ public class DetailedEventsFrame extends JInternalFrame
 		{
 			double lossDiff  = dataEvent.getMLoss() - etalonEvent.getMLoss();
 			double widthDiff = dataEvent.getWidth0() - etalonEvent.getWidth0();
-			double locationDiff = (dataEvent.getBegin() - etalonEvent.getBegin()) * delta_x; // изменено с середины события на начало
+			double locationDiff = (dataEvent.getBegin() - etalonEvent.getBegin()) * deltaX; // изменено с середины события на начало
 
 			lossDiff        = ((int)(lossDiff*1000.))/1000.;
 			widthDiff       = ((int)(widthDiff*1.))/1.;	// точность 1 м

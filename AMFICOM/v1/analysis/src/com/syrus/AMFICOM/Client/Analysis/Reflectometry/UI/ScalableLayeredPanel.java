@@ -92,14 +92,14 @@ public class ScalableLayeredPanel extends ResizableLayeredPanel
 		{
 			SimpleGraphPanel panel = (SimpleGraphPanel)jLayeredPane.getComponent(i);
 
-			double factor_x = (panel.y.length*panel.delta_x)/(maxLength*maxDeltaX/scale_x);
-			double factor_y = ((double)(panel.max_y - panel.min_y))/((double)maxY/scale_y);
+			double factor_x = (panel.y.length*panel.deltaX)/(maxLength*maxDeltaX/scale_x);
+			double factor_y = ((double)(panel.maxY - panel.minY))/((double)maxY/scale_y);
 
 			panel.setGraphBounds(
 					((int) (panel.y.length * hposition / (hsize * factor_x))),
 					(int) (panel.y.length * (hposition + hwidth) / (hsize * factor_x)) + 1);
-			panel.top = ((double)((panel.max_y - panel.min_y) * vposition) / (vsize * factor_y));
-			panel.bottom = ((double)((panel.max_y - panel.min_y) * (vsize - vposition - vheight)) / (vsize * factor_y));
+			panel.top = ((double)((panel.maxY - panel.minY) * vposition) / (vsize * factor_y));
+			panel.bottom = ((double)((panel.maxY - panel.minY) * (vsize - vposition - vheight)) / (vsize * factor_y));
 		}
 		jLayeredPane.repaint();
 	}
@@ -135,30 +135,30 @@ public class ScalableLayeredPanel extends ResizableLayeredPanel
 		verticalBar.setMinimum(0);
 		verticalMax = vheight;
 
-		double max_trace_length = 0;
-		double max_delta_x = 0;
-		double max_trace_amplitude = 0;
+		double maxTraceLength = 0;
+		double maxDeltaX = 0;
+		double maxTraceAmplitude = 0;
 
 		for(int i=0; i<jLayeredPane.getComponentCount(); i++)
 		{
 			SimpleGraphPanel panel = (SimpleGraphPanel)jLayeredPane.getComponent(i);
-			if((panel.max_y - panel.min_y) > max_trace_amplitude)
+			if((panel.maxY - panel.minY) > maxTraceAmplitude)
 			{
-				max_trace_amplitude = panel.max_y - panel.min_y;
-				scale_y = (double)(jLayeredPane.getHeight()) / max_trace_amplitude;
+				maxTraceAmplitude = panel.maxY - panel.minY;
+				scale_y = (double)(jLayeredPane.getHeight()) / maxTraceAmplitude;
 			}
 
-			if(panel.y.length*panel.delta_x > max_trace_length)
+			if(panel.y.length*panel.deltaX > maxTraceLength)
 			{
-				max_trace_length = panel.y.length*panel.delta_x;
-				max_delta_x = panel.delta_x;
+				maxTraceLength = panel.y.length*panel.deltaX;
+				maxDeltaX = panel.deltaX;
 				scale_x = (double)(jLayeredPane.getWidth()) / (double)(panel.y.length);
 			}
 		}
 
-		maxY = max_trace_amplitude * scale_y;
-		maxLength = max_trace_length * scale_x/ max_delta_x;
-		maxDeltaX = max_delta_x;
+		maxY = maxTraceAmplitude * scale_y;
+		maxLength = maxTraceLength * scale_x/ maxDeltaX;
+		this.maxDeltaX = maxDeltaX;
 
 		for(int i=0; i<jLayeredPane.getComponentCount(); i++)
 		{
@@ -199,35 +199,35 @@ public class ScalableLayeredPanel extends ResizableLayeredPanel
 		}
 		int ix = (int)((end - start) * indent_x);
 
-		double _scale_x = activePanel.scale_x;
-		double _scale_y = activePanel.scale_y;
+		double _scale_x = activePanel.scaleX;
+		double _scale_y = activePanel.scaleY;
 		double sc_x = ((double)(jLayeredPane.getWidth()) / (double)(end - start + 2*ix));
 		double sc_y = ((double)(jLayeredPane.getHeight()) / (max - min + 2*iy));
 
 		updScale (sc_x/_scale_x, sc_y/_scale_y, 0.5, 0.5);
 
 		horizontalBar.setMinimum(-5);
-		horizontalBar.setValue((int)(horizontalMax * ((double)(start - ix)  * activePanel.delta_x) / (maxLength*maxDeltaX/scale_x)));
+		horizontalBar.setValue((int)(horizontalMax * ((double)(start - ix)  * activePanel.deltaX) / (maxLength*maxDeltaX/scale_x)));
 		verticalBar.setMinimum(-5);
-		verticalBar.setValue((int)(verticalMax * ((activePanel.max_y - max - iy) / ((double)maxY/scale_y))));
+		verticalBar.setValue((int)(verticalMax * ((activePanel.maxY - max - iy) / ((double)maxY/scale_y))));
 	}
 
 	void updScale2fit_panel(SimpleGraphPanel panel)
 	{
-		double factor_x = (panel.y.length*panel.delta_x)/(maxLength*maxDeltaX/scale_x);
-		double factor_y = (panel.max_y - panel.min_y)/(maxY/scale_y);
+		double factor_x = (panel.y.length*panel.deltaX)/(maxLength*maxDeltaX/scale_x);
+		double factor_y = (panel.maxY - panel.minY)/(maxY/scale_y);
 
-		panel.scale_x = factor_x*((double)(jLayeredPane.getWidth()) / (double)(panel.y.length));
-		panel.scale_y = factor_y*((double)(jLayeredPane.getHeight()) / (panel.max_y - panel.min_y));
+		panel.scaleX = factor_x*((double)(jLayeredPane.getWidth()) / (double)(panel.y.length));
+		panel.scaleY = factor_y*((double)(jLayeredPane.getHeight()) / (panel.maxY - panel.minY));
 		//panel.updateScale((double)(jLayeredPane.getWidth())*factor_x,  (double)(jLayeredPane.getHeight()*factor_y));
 		//panel.setSize(new Dimension (jLayeredPane.getWidth(), jLayeredPane.getHeight()));
 		panel.setSize(jLayeredPane.getSize());
 	}
 
 	public void updScale (double kx, // коэфиициент ресайза по иксу
-												double ky, // по игреку
-												double rx, // положение точки вокруг которой делается ресайз относительно
-												double ry) // ширины/высоты окна (очевидно может изменяться в пределах [0, 1])
+			double ky, // по игреку
+			double rx, // положение точки вокруг которой делается ресайз относительно
+			double ry) // ширины/высоты окна (очевидно может изменяться в пределах [0, 1])
 	{
 		horizontalMax *= kx;
 		verticalMax *= ky;
@@ -259,8 +259,8 @@ public class ScalableLayeredPanel extends ResizableLayeredPanel
 		for(int i=0; i<jLayeredPane.getComponentCount(); i++)
 		{
 			SimpleGraphPanel panel = (SimpleGraphPanel)jLayeredPane.getComponent(i);
-			panel.scale_x *=kx;
-			panel.scale_y *=ky;
+			panel.scaleX *=kx;
+			panel.scaleY *=ky;
 		}
 
 		bar_adjustmentValueChanged ();

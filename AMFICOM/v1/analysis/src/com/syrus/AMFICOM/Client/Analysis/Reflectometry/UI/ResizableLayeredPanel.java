@@ -121,8 +121,8 @@ public class ResizableLayeredPanel extends JPanel
 		for(int i=0; i<jLayeredPane.getComponentCount(); i++)
 		{
 			SimpleGraphPanel panel = (SimpleGraphPanel)jLayeredPane.getComponent(i);
-			panel.scale_x *= kx;
-			panel.scale_y *= ky;
+			panel.scaleX *= kx;
+			panel.scaleY *= ky;
 			panel.setSize(new Dimension (jLayeredPane.getWidth(), jLayeredPane.getHeight()));
 		}
 		jLayeredPane.repaint();
@@ -144,8 +144,8 @@ public class ResizableLayeredPanel extends JPanel
 		for(int i=0; i<jLayeredPane.getComponentCount(); i++)
 		{
 			SimpleGraphPanel panel = (SimpleGraphPanel)jLayeredPane.getComponent(i);
-			panel.scale_x = ((double)(jLayeredPane.getWidth()) / (double)(panel.y.length));
-			panel.scale_y = ((double)(jLayeredPane.getHeight()) / (panel.max_y - panel.min_y));
+			panel.scaleX = ((double)(jLayeredPane.getWidth()) / (double)(panel.y.length));
+			panel.scaleY = ((double)(jLayeredPane.getHeight()) / (panel.maxY - panel.minY));
 			panel.setSize(new Dimension (jLayeredPane.getWidth(), jLayeredPane.getHeight()));
 		}
 		jLayeredPane.repaint();
@@ -178,8 +178,8 @@ public class ResizableLayeredPanel extends JPanel
 		int ix = (int)((end - start) * indent_x);
 		//double iy = (max - min) * indent_y;
 
-		panel.scale_x = ((double)(jLayeredPane.getWidth()) / (end - start + 2*ix));
-		panel.scale_y = ((double)(jLayeredPane.getHeight()) / (max - min + 2*iy));
+		panel.scaleX = ((double)(jLayeredPane.getWidth()) / (end - start + 2*ix));
+		panel.scaleY = ((double)(jLayeredPane.getHeight()) / (max - min + 2*iy));
 		panel.setSize(new Dimension (jLayeredPane.getWidth(), jLayeredPane.getHeight()));
 
 		_width = jLayeredPane.getWidth();
@@ -189,8 +189,8 @@ public class ResizableLayeredPanel extends JPanel
 			panel.setGraphBounds(start - ix, end + ix - start + ix);
 		else
 			panel.setGraphBounds(start - ix, end + ix);
-		panel.top = panel.max_y - max - iy;
-		panel.bottom = min - panel.min_y - iy;
+		panel.top = panel.maxY - max - iy;
+		panel.bottom = min - panel.minY - iy;
 
 		jLayeredPane.repaint();
 	}

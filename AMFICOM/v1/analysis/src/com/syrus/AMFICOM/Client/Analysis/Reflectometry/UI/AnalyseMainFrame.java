@@ -721,17 +721,17 @@ public class AnalyseMainFrame extends JFrame
 	void updFrames(String id)
 	{
 		BellcoreStructure bs = (BellcoreStructure)Pool.get("bellcorestructure", id);
-		double delta_x = bs.getResolution();
+		double deltaX = bs.getResolution();
 //		double[] y = bs.getTraceData();
 
 		double[] filtered = ((RefAnalysis)Pool.get("refanalysis", id)).filtered;
 		double[] noise = ((RefAnalysis)Pool.get("refanalysis", id)).noise;
 		//double[] normalyzed = ((RefAnalysis)Pool.get("refanalysis", id)).normalyzed;
 
-		noiseFrame.setGraph(noise, delta_x, false, id);
+		noiseFrame.setGraph(noise, deltaX, false, id);
 		noiseFrame.updScales();
 		noiseFrame.setVisible(true);
-		filteredFrame.setGraph(filtered, delta_x, true, id);
+		filteredFrame.setGraph(filtered, deltaX, true, id);
 		filteredFrame.updScales();
 		filteredFrame.setVisible(true);
 	}

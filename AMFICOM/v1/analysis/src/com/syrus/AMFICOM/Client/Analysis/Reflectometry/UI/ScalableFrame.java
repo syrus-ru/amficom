@@ -58,17 +58,17 @@ public class ScalableFrame extends SimpleResizableFrame
 		}
 	}
 
-	public void setGraph (double[] y, double delta_x, boolean is_reversed_y, String id)
+	public void setGraph (double[] y, double deltaX, boolean isReversedY, String id)
 	{
-		TraceEventsPanel p = new TraceEventsPanel((ScalableLayeredPanel)panel, y, delta_x);
-		setGraph (p, is_reversed_y, id);
+		TraceEventsPanel p = new TraceEventsPanel((ScalableLayeredPanel)panel, y, deltaX);
+		setGraph (p, isReversedY, id);
 	}
 
-	public void setGraph (ScaledGraphPanel p, boolean is_reversed_y, String id)
+	public void setGraph (ScaledGraphPanel p, boolean isReversedY, String id)
 	{
 		panels = new HashMap();
 		panels.put(id, p);
-		super.setGraph(p, is_reversed_y, id);
+		super.setGraph(p, isReversedY, id);
 		p.select_by_mouse = true;
 	}
 }

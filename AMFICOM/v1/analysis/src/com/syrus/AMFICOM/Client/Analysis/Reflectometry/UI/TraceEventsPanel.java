@@ -19,11 +19,11 @@ public class TraceEventsPanel extends ScaledGraphPanel
 	protected Color noiseColor;
 	protected Color endColor;
 
-	public TraceEventsPanel(ResizableLayeredPanel panel, double[] y, double delta_x)
+	public TraceEventsPanel(ResizableLayeredPanel panel, double[] y, double deltaX)
 	{
-		super (panel, y, delta_x);
+		super (panel, y, deltaX);
 
-		Kx = delta_x / 1000d;
+		Kx = deltaX / 1000d;
 		Ky = 1;
 	}
 
@@ -86,8 +86,8 @@ public class TraceEventsPanel extends ScaledGraphPanel
 
 				for (int i = events[j].first_point - start; i <= Math.min (end, events[j].last_point) - start; i++)
 				{
-					g.drawLine((int)(i*scale_x+1), (int)((max_y - y[i+start] - top) * scale_y),
-										 (int)((i+1)*scale_x+1), (int)((max_y - y[i+start+1] - top) * scale_y));
+					g.drawLine((int)(i*scaleX+1), (int)((maxY - y[i+start] - top) * scaleY),
+										 (int)((i+1)*scaleX+1), (int)((maxY - y[i+start+1] - top) * scaleY));
 				}
 			}
 		}
@@ -95,7 +95,7 @@ public class TraceEventsPanel extends ScaledGraphPanel
 		g.setColor(noiseColor);
 		if (events[events.length-1].last_point < end)
 			for (int i =  events[events.length-1].last_point - start; i< Math.min (end, y.length - start - 1); i++)
-				g.drawLine((int)(i*scale_x+1), (int)((max_y - y[i+start] - top) * scale_y - 1),
-									 (int)((i+1)*scale_x+1), (int)((max_y - y[i+start+1] - top) * scale_y - 1));
+				g.drawLine((int)(i*scaleX+1), (int)((maxY - y[i+start] - top) * scaleY - 1),
+									 (int)((i+1)*scaleX+1), (int)((maxY - y[i+start+1] - top) * scaleY - 1));
 	}
 }

@@ -67,27 +67,27 @@ public class SimpleResizableFrame extends JInternalFrame
 		return getTitle();
 	}
 
-	public void setGraph (double[] y, double delta_x, boolean is_reversed_y, double Kx, double Ky, String id)
+	public void setGraph (double[] y, double deltaX, boolean isReversedY, double Kx, double Ky, String id)
 	{
-		setGraph (y, delta_x, is_reversed_y, id);
+		setGraph (y, deltaX, isReversedY, id);
 		panel.setScalesCoeffs(Kx, Ky);
 	}
 
-	public void setGraph (double[] y, double delta_x, boolean is_reversed_y, String id)
+	public void setGraph (double[] y, double deltaX, boolean isReversedY, String id)
 	{
-		ScaledGraphPanel p = new ScaledGraphPanel (panel, y, delta_x);
+		ScaledGraphPanel p = new ScaledGraphPanel (panel, y, deltaX);
 		p.setColorModel(id);
-		p.inversed_y = is_reversed_y;
+		p.inversed_y = isReversedY;
 
 		panel.setGraphPanel(p);
 		repaint();
 	}
 
-	public void setGraph (SimpleGraphPanel p, boolean is_reversed_y, String id)
+	public void setGraph (SimpleGraphPanel p, boolean isReversedY, String id)
 	{
 		p.setColorModel(id);
 		panel.setGraphPanel(p);
-		panel.setInversedY(is_reversed_y);
+		panel.setInversedY(isReversedY);
 		repaint();
 	}
 

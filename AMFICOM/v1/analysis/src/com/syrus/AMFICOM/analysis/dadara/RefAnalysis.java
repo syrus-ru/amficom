@@ -1,8 +1,5 @@
 package com.syrus.AMFICOM.analysis.dadara;
 
-//import com.syrus.AMFICOM.Client.Analysis.MathRef;
-//import com.syrus.AMFICOM.Client.Resource.Pool;
-
 public class RefAnalysis
 {
 	public TraceEvent[] events;
@@ -22,19 +19,19 @@ public class RefAnalysis
 		if(re.length == 0)
 			return;
 
-		double max_y = 0; // XXX: saa: is 0 good for min/max? shall we use y[0] instead?
-		double min_y = 0;
+		double maxY = 0; // XXX: saa: is 0 good for min/max? shall we use y[0] instead?
+		double minY = 0;
 		for (int i = 0; i < y.length; i++)
 		{
-			if (max_y < y[i])
-				max_y = y[i];
-			if (min_y > y[i])
-				min_y = y[i];
+			if (maxY < y[i])
+				maxY = y[i];
+			if (minY > y[i])
+				minY = y[i];
 		}
-		double top = max_y - min_y;
+		double top = maxY - minY;
 
 		int type;
-		int last_point = re[re.length-1].getBegin(); // getBegin: changed acc. to Stas-2004-10 (was: getEnd)
+		int lastPoint = re[re.length-1].getBegin(); // getBegin: changed acc. to Stas-2004-10 (was: getEnd)
 		double Po = 0;
 
 		for (int i = 0; i < re.length; i++)
@@ -162,26 +159,26 @@ public class RefAnalysis
 			}
 		}
 
-		double max_noise = 0.;
+		double maxNoise = 0.;
 		boolean b = false;
 		for(int i = re[re.length - 1].getEnd(); i < y.length; i++)
 		{
-			if (y[i] == min_y)
+			if (y[i] == minY)
 				b = true;
-			if(b && max_noise < y[i])
-				max_noise = y[i];
+			if(b && maxNoise < y[i])
+				maxNoise = y[i];
 		}
 		overallStats = new TraceEvent(TraceEvent.OVERALL_STATS, 0, re[re.length-1].getBegin());
 		overallStats.data = new double[5];
-		overallStats.data[0] = max_y - Po;
-		overallStats.data[1] = max_y - y[last_point];
-		overallStats.data[2] = (max_y - max_noise * 0.98);
-		overallStats.data[3] = (max_y - Po);
+		overallStats.data[0] = maxY - Po;
+		overallStats.data[1] = maxY - y[lastPoint];
+		overallStats.data[2] = (maxY - maxNoise * 0.98);
+		overallStats.data[3] = (maxY - Po);
 		overallStats.data[4] = re.length;
 
 		filtered = new double[y.length];
 		noise = new double[y.length];
-		max_noise = 0;
+		maxNoise = 0;
 
 
 //		noise = (double[])Pool.get("doublearray", "noise");
@@ -198,21 +195,21 @@ public class RefAnalysis
   for(int i = 0; i < re.length; i++)
 		{
 			// for(int j = re[i].getBegin(); j < y.length; j++) -- changed just because was too slow -- saa
-	int pos_from = re[i].getBegin();
-	int pos_to = re[i].getEnd();
-	for(int j = pos_from; j < pos_to; j++)
+	int posFrom = re[i].getBegin();
+	int posTo = re[i].getEnd();
+	for(int j = posFrom; j < posTo; j++)
 			{
-				if(j < last_point) // XXX: saa: I think there should be '<='
+				if(j < lastPoint) // XXX: saa: I think there should be '<='
 				{
 					filtered[j] = Math.max(0, re[i].refAmplitude(j));
 					noise[j] = Math.abs(y[j] - filtered[j]);
-					if (noise[j] > max_noise)
-						max_noise = noise[j];
+					if (noise[j] > maxNoise)
+						maxNoise = noise[j];
 				}
 				else
 				{
 					filtered[j] = y[j];
-					noise[j] = max_noise;
+					noise[j] = maxNoise;
 				}
 			}
 		}

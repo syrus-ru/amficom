@@ -73,10 +73,10 @@ public class HistogrammFrame extends ScalableFrame implements OperationListener
 			if (bs == null)
 				return;
 
-			double delta_x = bs.getResolution();
+			double deltaX = bs.getResolution();
 			double[] y = bs.getTraceData();
 
-			p = new HistogrammPanel(panel, y, delta_x);
+			p = new HistogrammPanel(panel, y, deltaX);
 			p.setColorModel(id);
 			((ScalableLayeredPanel)panel).addGraphPanel(p);
 			panel.updScale2fit();

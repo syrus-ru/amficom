@@ -58,7 +58,7 @@ public class MinuitAnalyseCommand extends VoidCommand
 		{
 			Environment.getActiveWindow().setCursor(new Cursor(Cursor.WAIT_CURSOR));
 
-			//double delta_x = bs.getResolution();
+			//double deltaX = bs.getResolution();
 			double[] y = bs.getTraceData();
 
 			double[] params = (double[])Pool.get(OT_analysisparameters, OID_minuitanalysis);
@@ -77,7 +77,7 @@ public class MinuitAnalyseCommand extends VoidCommand
 
 	  //for (int i = 0; i < 2; i++) // FIXIT
 	  //ep = AnalysisManager.fitTrace(
-	  //   y, delta_x, ep, (int)params[6], meanAttenuation[0]);
+	  //   y, deltaX, ep, (int)params[6], meanAttenuation[0]);
 
 	  //System.out.println("MinuitAnalysis.execute(): completed analyseTrace+fitTrace at dt/ms " + (System.currentTimeMillis()-t0));
 

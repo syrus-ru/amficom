@@ -111,9 +111,9 @@ public class EventsFrame extends ATableFrame
 			}
 			if(rce.OPEN_ETALON)
 			{
-				String et_id = (String)rce.getSource();
-				if(et_id != null)
-					etalon = (ReflectogramEvent [])Pool.get("eventparams", et_id);
+				String etId = (String)rce.getSource();
+				if(etId != null)
+					etalon = (ReflectogramEvent [])Pool.get("eventparams", etId);
 				else
 					etalon = null;
 

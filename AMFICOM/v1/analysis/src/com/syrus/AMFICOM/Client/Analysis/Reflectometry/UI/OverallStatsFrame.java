@@ -241,14 +241,14 @@ public class OverallStatsFrame extends ATableFrame
 			tabbedPane.setEnabledAt(1, false);
 			return;
 		}
-		double delta_x = data[0].getDeltaX()/1000.;
+		double deltaX = data[0].getDeltaX()/1000.;
 
 		ReflectogramEvent []data_ = ReflectogramMath.alignClone(data, etalon);
 
 		double maximalDeviation = ReflectogramComparer.getMaximalDeviation(etalon, data_);
 		double meanDeviation = ReflectogramComparer.getMeanDeviation(etalon, data_);
-		double etalonLength = ReflectogramMath.getLastSplash(etalon)*delta_x;
-		double dataLength = ReflectogramMath.getLastSplash(data_)*delta_x;
+		double etalonLength = ReflectogramMath.getLastSplash(etalon)*deltaX;
+		double dataLength = ReflectogramMath.getLastSplash(data_)*deltaX;
 		double lossDifference = ReflectogramComparer.getLossDifference(etalon, data_);
 
 		wctModel.setValueAt(String.valueOf(MathRef.round_3(dataLength))+ " " + LangModelAnalyse.getString("km"), 0, 1);

@@ -8,7 +8,7 @@ public class ShortReflectogramEvent
 
 	public float attenuation; // defined for all three types
 	public float aLet;        // defined for connector only
-	public float A1;          // defined for all three types
+	public float a1;          // defined for all three types
 
 	public ShortReflectogramEvent(ReflectogramEvent re)
 	{
@@ -32,13 +32,13 @@ public class ShortReflectogramEvent
 		this.type = (short)re.getEventType();
 			 if(re.getEventType() == ReflectogramEvent.CONNECTOR)
 			 {
-				 this.A1 = (float)re.getAsympY0();
+				 this.a1 = (float)re.getAsympY0();
 				 this.aLet = (float)re.getALet();
 				 this.attenuation = (float)(re.getAsympY0() - re.getAsympY1());
 			 }
 			 else if(re.getEventType() == ReflectogramEvent.WELD)
 			 {
-				 this.A1 = (float)re.getAsympY0();
+				 this.a1 = (float)re.getAsympY0();
 				 this.aLet = 0f;
 				 //this.attenuation = (float)re.boost_weld;// + (float)((re.end - re.begin)*re.b_weld);
 				 // changed by Stas
@@ -46,7 +46,7 @@ public class ShortReflectogramEvent
 			 }
 			 else
 			 {
-				 this.A1 = (float)re.getAsympY0();
+				 this.a1 = (float)re.getAsympY0();
 				 this.aLet = 0f;
 				 this.attenuation = (float)re.getMLoss();
 			 }

@@ -2,35 +2,35 @@ package com.syrus.AMFICOM.analysis.dadara;
 
 public class Histogramm
 {
-	private double up_limit;
-	private double down_limit;
+	private double upLimit;
+	private double downLimit;
 	private int nBins;
 	private double[] histo;
 
-	public Histogramm(double down_limit, double up_limit, int nBins)
+	public Histogramm(double downLimit, double upLimit, int nBins)
 	{
-		if (down_limit > up_limit)
+		if (downLimit > upLimit)
 		{
-			double tmp = down_limit;
-			down_limit = up_limit;
-			up_limit = tmp;
+			double tmp = downLimit;
+			downLimit = upLimit;
+			upLimit = tmp;
 		}
-		this.up_limit = up_limit;
-		this.down_limit = down_limit;
+		this.upLimit = upLimit;
+		this.downLimit = downLimit;
 		this.nBins	= nBins;
 	}
 
 	public double[] init(double[] data, int start, int end)
 	{
 		histo = new double[nBins];
-		double deriv_delta = (up_limit - down_limit) / (double)nBins;
+		double derivDelta = (upLimit - downLimit) / (double)nBins;
 
-		int N;
+		int n;
 		for (int i = Math.max(0, start); i <= Math.min (end, data.length-1); i++)
 		{
-			N = (int)Math.round((data[i] - down_limit) / deriv_delta);
-			if (N >= 0 && N < nBins)
-				histo[N]++;
+			n = (int)Math.round((data[i] - downLimit) / derivDelta);
+			if (n >= 0 && n < nBins)
+				histo[n]++;
 		}
 		return histo;
 	}
@@ -51,7 +51,7 @@ public class Histogramm
 	public double getMaximumValue()
 	{
 		int max = getMaximumIndex();
-		return down_limit + (double)(up_limit - down_limit) / (double)nBins * max;
+		return downLimit + (double)(upLimit - downLimit) / (double)nBins * max;
 	}
 
 	public double[] getHistogramm()

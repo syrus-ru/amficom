@@ -71,13 +71,13 @@ public class ThresholdsFrame extends SimpleResizableFrame implements OperationLi
 			}
 			if (rce.OPEN_ETALON)
 			{
-				String et_id = (String)rce.getSource();
-				addEtalon(et_id);
+				String etId = (String)rce.getSource();
+				addEtalon(etId);
 			}
 			if (rce.CLOSE_ETALON)
 			{
-				String et_id = (String)rce.getSource();
-				removeEtalon(et_id);
+				String etId = (String)rce.getSource();
+				removeEtalon(etId);
 			}
 		}
 	}
@@ -93,7 +93,7 @@ public class ThresholdsFrame extends SimpleResizableFrame implements OperationLi
 		else
 		{
 			int n = 0;
-			double delta_x = 0;
+			double deltaX = 0;
 
 //			Measurement m = null;
 //			try
@@ -120,16 +120,16 @@ public class ThresholdsFrame extends SimpleResizableFrame implements OperationLi
 					ParameterType type = (ParameterType)params[i].getType();
 					if (type.getCodename().equals(ParameterTypeCodenames.TRACE_RESOLUTION))
 					{
-						delta_x = new ByteArray(params[i].getValue()).toDouble();
+						deltaX = new ByteArray(params[i].getValue()).toDouble();
 					}
 					if (type.getCodename().equals(ParameterTypeCodenames.TRACE_LENGTH))
 					{
 						len = new ByteArray(params[i].getValue()).toDouble();
 					}
 				}
-				if (delta_x == 0 || len == 0)
+				if (deltaX == 0 || len == 0)
 					return;
-				n = (int)(len * 1000 / delta_x);
+				n = (int)(len * 1000 / deltaX);
 
 				SimpleGraphPanel oldpanel = (SimpleGraphPanel)traces.get(id);
 				if (oldpanel != null)
@@ -147,7 +147,7 @@ public class ThresholdsFrame extends SimpleResizableFrame implements OperationLi
 						for (int j = ep[i].getBegin(); j <= ep[i].getEnd() && j < n; j++)
 							y[j] = ep[i].refAmplitude(j);
 					}
-					SimpleGraphPanel epPanel = new SimpleGraphPanel(y, delta_x);
+					SimpleGraphPanel epPanel = new SimpleGraphPanel(y, deltaX);
 					epPanel.setColorModel(AnalysisUtil.ETALON);
 					((ScalableLayeredPanel)panel).addGraphPanel(epPanel);
 					panel.updScale2fit();
@@ -161,9 +161,9 @@ public class ThresholdsFrame extends SimpleResizableFrame implements OperationLi
 		}
 	}
 
-	void removeEtalon(String et_id)
+	void removeEtalon(String etId)
 	{
-		SimpleGraphPanel epPanel = (SimpleGraphPanel)traces.get(et_id);
+		SimpleGraphPanel epPanel = (SimpleGraphPanel)traces.get(etId);
 		panel.removeGraphPanel(epPanel);
 	}
 
@@ -175,12 +175,12 @@ public class ThresholdsFrame extends SimpleResizableFrame implements OperationLi
 		BellcoreStructure bs = (BellcoreStructure)Pool.get("bellcorestructure", id);
 		bellcoreTraces.put(id, bs);
 
-		double delta_x = bs.getResolution();
+		double deltaX = bs.getResolution();
 		double[] y = bs.getTraceData();
 
 		if (id.equals("primarytrace") || id.equals("modeledtrace"))
 		{
-			p = new ThresholdsPanel((ThresholdsLayeredPanel)panel, dispatcher, y, delta_x);
+			p = new ThresholdsPanel((ThresholdsLayeredPanel)panel, dispatcher, y, deltaX);
 			ReflectogramEvent[] ep = ((ReflectogramEvent[])Pool.get("eventparams", id));
 			((ThresholdsPanel)p).updateEvents(ep);
 			((ThresholdsPanel)p).updEvents(id);
@@ -189,7 +189,7 @@ public class ThresholdsFrame extends SimpleResizableFrame implements OperationLi
 		}
 		else
 		{
-			p = new SimpleGraphPanel(y, delta_x);
+			p = new SimpleGraphPanel(y, deltaX);
 		}
 		p.setWeakColors(true);
 

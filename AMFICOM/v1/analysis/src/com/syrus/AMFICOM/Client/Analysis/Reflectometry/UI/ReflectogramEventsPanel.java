@@ -28,9 +28,9 @@ public class ReflectogramEventsPanel extends TraceEventsPanel
 	protected Color modeledColor;
 	protected Color minLevelColor;
 
-	public ReflectogramEventsPanel(ResizableLayeredPanel panel, Dispatcher dispatcher, double[] y, double delta_x)
+	public ReflectogramEventsPanel(ResizableLayeredPanel panel, Dispatcher dispatcher, double[] y, double deltaX)
 	{
-		super (panel, y, delta_x);
+		super (panel, y, deltaX);
 		init_module(dispatcher);
 	}
 
@@ -108,7 +108,7 @@ public class ReflectogramEventsPanel extends TraceEventsPanel
 			if (coord2index(currpos.x) > y.length)
 				return;
 
-			if(Math.abs(currpos.y-(int)((min_trace_level.doubleValue() - top) * scale_y - 1)) < mouse_coupling)
+			if(Math.abs(currpos.y-(int)((min_trace_level.doubleValue() - top) * scaleY - 1)) < mouse_coupling)
 			{
 				moving_level = true;
 				setCursor(new Cursor(Cursor.N_RESIZE_CURSOR));
@@ -138,7 +138,7 @@ public class ReflectogramEventsPanel extends TraceEventsPanel
 			upd_currpos(e);
 
 			double pos = min_trace_level.doubleValue();
-			pos += (currpos.y - tmppos.y)/scale_y;
+			pos += (currpos.y - tmppos.y)/scaleY;
 			min_trace_level = new Double(pos);
 			parent.repaint();
 			dispatcher.notify(new RefUpdateEvent(min_trace_level, RefUpdateEvent.MIN_TRACE_LEVEL_CHANGED_EVENT));
@@ -183,7 +183,7 @@ public class ReflectogramEventsPanel extends TraceEventsPanel
 		int jw = getWidth();
 		((Graphics2D) g).setStroke(SELECTION_STROKE);
 		g.setColor(scaleColor.darker());
-		int h = (int)((noise_level - top) * scale_y - 1);
+		int h = (int)((noise_level - top) * scaleY - 1);
 		g.drawLine(0, h, jw, h);
 		((Graphics2D) g).setStroke(DEFAULT_STROKE);
 		g.drawString("Уровень шумов", jw - 87, h - 1);
@@ -194,8 +194,8 @@ public class ReflectogramEventsPanel extends TraceEventsPanel
 		int jw = getWidth();
 		((Graphics2D) g).setStroke(SELECTION_STROKE);
 		g.setColor(minLevelColor);
-		g.drawLine(0, (int)((min_trace_level.doubleValue() - top) * scale_y - 1),
-							 jw, (int)((min_trace_level.doubleValue() - top) * scale_y - 1));
+		g.drawLine(0, (int)((min_trace_level.doubleValue() - top) * scaleY - 1),
+							 jw, (int)((min_trace_level.doubleValue() - top) * scaleY - 1));
 		((Graphics2D) g).setStroke(DEFAULT_STROKE);
 	}
 	
@@ -210,8 +210,8 @@ public class ReflectogramEventsPanel extends TraceEventsPanel
 			if ((alarms[j].alarmPointCoord < end) && (alarms[j].alarmEndPointCoord > start))
 				for (int i = Math.max(0, alarms[j].alarmPointCoord - start); i < Math.min (end, alarms[j].alarmEndPointCoord) - start; i++)
 				{
-					g.drawLine((int)(i*scale_x+1), (int)((max_y - y[i+start] - top) * scale_y - 1),
-					(int)((i+1)*scale_x+1), (int)((max_y - y[i+start+1] - top) * scale_y - 1));
+					g.drawLine((int)(i*scaleX+1), (int)((maxY - y[i+start] - top) * scaleY - 1),
+					(int)((i+1)*scaleX+1), (int)((maxY - y[i+start+1] - top) * scaleY - 1));
 				}
 		}
 	}
@@ -229,8 +229,8 @@ public class ReflectogramEventsPanel extends TraceEventsPanel
 		        int[] yArr = new int[len];
 		        for (int i = i_from; i <= i_to; i++)
 		        {
-		            xArr[i - i_from] = (int)(i * scale_x + 1);
-		            yArr[i - i_from] = (int)((max_y - re.refAmplitude(i + start) - top) * scale_y);
+		            xArr[i - i_from] = (int)(i * scaleX + 1);
+		            yArr[i - i_from] = (int)((maxY - re.refAmplitude(i + start) - top) * scaleY);
 		        }
 		        g.drawPolyline(xArr, yArr, len);
 		    }
@@ -239,8 +239,8 @@ public class ReflectogramEventsPanel extends TraceEventsPanel
 		    int i_to = Math.min (end, re.getEnd() - 1) - start;
 			for (int i = i_from; i <= i_to; i++)
 			{
-				g.drawLine((int)(i*scale_x+1), (int)((max_y - re.refAmplitude(i+start) - top) * scale_y),
-						   (int)((i+1)*scale_x+1), (int)((max_y - re.refAmplitude(i+start+1) - top) * scale_y));
+				g.drawLine((int)(i*scaleX+1), (int)((maxY - re.refAmplitude(i+start) - top) * scaleY),
+						   (int)((i+1)*scaleX+1), (int)((maxY - re.refAmplitude(i+start+1) - top) * scaleY));
 			}
 			*/
 		}
@@ -252,8 +252,8 @@ public class ReflectogramEventsPanel extends TraceEventsPanel
 		if (i == reL.getEnd() - start && i <= end - start && i >= 0)
 		{
 			g.drawLine(
-					(int )(i*scale_x+1), (int )((max_y - reL.refAmplitude(i+start) - top)*scale_y),
-					(int )(i*scale_x+1), (int )((max_y - reR.refAmplitude(i+start) - top)*scale_y));
+					(int )(i*scaleX+1), (int )((maxY - reL.refAmplitude(i+start) - top)*scaleY),
+					(int )(i*scaleX+1), (int )((maxY - reR.refAmplitude(i+start) - top)*scaleY));
 		}
 	}
 
@@ -305,8 +305,8 @@ public class ReflectogramEventsPanel extends TraceEventsPanel
 				int i_end = Math.min (end, ep[j].getEnd()) - start;
 				for (int i = i_begin; i < i_end; i++)
 				{
-					g.drawLine((int)(i*scale_x+1), (int)((max_y - y[i+start] - top) * scale_y),
-					        (int)((i+1)*scale_x+1), (int)((max_y - y[i+start+1] - top) * scale_y));
+					g.drawLine((int)(i*scaleX+1), (int)((maxY - y[i+start] - top) * scaleY),
+					        (int)((i+1)*scaleX+1), (int)((maxY - y[i+start+1] - top) * scaleY));
 				}
 			}
 		}
@@ -316,7 +316,7 @@ public class ReflectogramEventsPanel extends TraceEventsPanel
 		int i_end = Math.min (end, y.length - start - 1);
 		if (ep[ep.length-1].getEnd() < end)
 			for (int i = i_begin; i < i_end; i++)
-				g.drawLine((int)(i*scale_x+1), (int)((max_y - y[i+start] - top) * scale_y),
-					(int)((i+1)*scale_x+1), (int)((max_y - y[i+start+1] - top) * scale_y));
+				g.drawLine((int)(i*scaleX+1), (int)((maxY - y[i+start] - top) * scaleY),
+					(int)((i+1)*scaleX+1), (int)((maxY - y[i+start+1] - top) * scaleY));
 	}
 }

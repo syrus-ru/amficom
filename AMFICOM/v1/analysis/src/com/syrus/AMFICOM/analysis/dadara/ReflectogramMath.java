@@ -210,10 +210,10 @@ public class ReflectogramMath
 
 	public static int getNonReflectiveEventSize(double[] data, int pulsewidth, double refraction, double resolution)
 	{
-		double first_level = 0.25;
-		double second_level = 1.75;
-		int first_point = 0;
-		int second_point = 1;
+		double firstLevel = 0.25;
+		double secondLevel = 1.75;
+		int firstPoint = 0;
+		int secondPoint = 1;
 		int maxIndex = 4;
 
 		for (int i = 0; i < Math.min(300, data.length); i++)
@@ -221,19 +221,19 @@ public class ReflectogramMath
 				maxIndex = i;
 
 		for(int i = maxIndex; i < data.length; i++)
-			if(data[i] < data[maxIndex] - first_level)
+			if(data[i] < data[maxIndex] - firstLevel)
 			{
-				first_point = i;
+				firstPoint = i;
 				break;
 			}
 
-		for(int i = first_point + 1; i < data.length; i++)
-			if(data[i] < data[maxIndex] - second_level)
+		for(int i = firstPoint + 1; i < data.length; i++)
+			if(data[i] < data[maxIndex] - secondLevel)
 			{
-				second_point = i;
+				secondPoint = i;
 				break;
 			}
-		double[] d = MathRef.linearize2point(data, first_point, second_point);
+		double[] d = MathRef.linearize2point(data, firstPoint, secondPoint);
 		double eventSize = - 3d / d[0] + 150d / refraction * (double)pulsewidth / 1000d / resolution;
 		if(eventSize < 2)
 			eventSize = 2;

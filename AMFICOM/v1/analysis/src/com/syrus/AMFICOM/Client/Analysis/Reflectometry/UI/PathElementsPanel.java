@@ -31,9 +31,9 @@ public class PathElementsPanel extends AnalysisPanel
 	PathElement endPE;
 	PathElement activePE;
 
-	public PathElementsPanel(PathElementsLayeredPanel panel, Dispatcher dispatcher, double y[], double delta_x)
+	public PathElementsPanel(PathElementsLayeredPanel panel, Dispatcher dispatcher, double y[], double deltaX)
 	{
-		super(panel, dispatcher, y, delta_x);
+		super(panel, dispatcher, y, deltaX);
 	}
 
 	public void setPath(SchemePath path)
@@ -41,9 +41,9 @@ public class PathElementsPanel extends AnalysisPanel
 		this.path = path;
 		decompositor = new PathDecompositor(path);
 //		if (events != null)
-//			decompositor.setTotalOpticalLength(events[events.length - 1].last_point * delta_x);
+//			decompositor.setTotalOpticalLength(events[events.length - 1].last_point * deltaX);
 //		else if (ep != null)
-//			decompositor.setTotalOpticalLength(ep[ep.length - 1].end * delta_x);
+//			decompositor.setTotalOpticalLength(ep[ep.length - 1].end * deltaX);
 	}
 
 	protected void setGraphBounds(int start, int end)
@@ -52,10 +52,10 @@ public class PathElementsPanel extends AnalysisPanel
 
 		if (path != null)
 		{
-			startPE = decompositor.getPathElementByOpticalDistance(start * delta_x);
+			startPE = decompositor.getPathElementByOpticalDistance(start * deltaX);
 			if (decompositor.hasPreviousPathElement(startPE))
 				startPE = decompositor.getPreviousPathElement(startPE);
-			endPE = decompositor.getPathElementByOpticalDistance(end * delta_x);
+			endPE = decompositor.getPathElementByOpticalDistance(end * deltaX);
 			if (decompositor.hasNextPathElement(endPE))
 				endPE = decompositor.getNextPathElement(endPE);
 		}
@@ -71,7 +71,7 @@ public class PathElementsPanel extends AnalysisPanel
 			if (currpos.y < 10)
 			{
 				setting_active_pe = true;
-				double optd = delta_x * coord2index(currpos.x);
+				double optd = deltaX * coord2index(currpos.x);
 				activePE = decompositor.getPathElementByOpticalDistance(optd);
 				return;
 			}
@@ -122,8 +122,8 @@ public class PathElementsPanel extends AnalysisPanel
 					g.setColor(Color.BLUE);
 
 				double[] d = decompositor.getOpticalDistanceFromStart(pe);
-				int st = index2coord((int)Math.round(d[0] / delta_x));
-				int en = index2coord((int)Math.round(d[1] / delta_x));
+				int st = index2coord((int)Math.round(d[0] / deltaX));
+				int en = index2coord((int)Math.round(d[1] / deltaX));
 				g.drawLine(st, 3, st, 5);
 				g.drawLine(st, 5, en, 5);
 				g.drawLine(en, 5, en, 3);

@@ -14,25 +14,25 @@ public class SimpleGraphPanel extends JPanel
 	protected boolean weakColor;
 
 	protected double[] y; // array of graphic points
-	protected double delta_x;  // range between two neighbour points
-	protected double max_y, min_y; // maximum & minimum value of graph
-	protected double scale_x, scale_y; // scales, used to resize graphic
+	protected double deltaX;  // range between two neighbour points
+	protected double maxY, minY; // maximum & minimum value of graph
+	protected double scaleX, scaleY; // scales, used to resize graphic
 
 	protected int start = 0; // номер начальной точки
 	protected int end = 0; // номер конечной точки
 	protected double top = 0; // столько находится за пределами экрана вверху (в единицах измерения - для рефлектограммы дБ)
 	protected double bottom = 0; // столько находится за пределами экрана внизу (в единицах измерения - для рефлектограммы дБ)
 
-	public SimpleGraphPanel (double[] y, double delta_x, Color color)
+	public SimpleGraphPanel (double[] y, double deltaX, Color color)
 	{
-		init (y, delta_x);
+		init (y, deltaX);
 		setDefaultScales();
 		traceColor = correctColor(color);
 	}
 
-	public SimpleGraphPanel (double[] y, double delta_x)
+	public SimpleGraphPanel (double[] y, double deltaX)
 	{
-		init (y, delta_x);
+		init (y, deltaX);
 		setDefaultScales();
 	}
 	
@@ -41,22 +41,22 @@ public class SimpleGraphPanel extends JPanel
 	    this.weakColor = weakColors;
 	}
 	
-	public void init (double[] y, double delta_x)
+	public void init (double[] y, double deltaX)
 	{
-		this.delta_x = delta_x;
+		this.deltaX = deltaX;
 		if (y == null)
 			y = new double[2];
 		else
 			this.y = y;
 
-		min_y = y[0];
-		max_y = y[0];
+		minY = y[0];
+		maxY = y[0];
 		for (int i = 1; i < y.length; i++)
 		{
-			if (y[i] < min_y)
-				min_y = y[i];
-			else if (y[i] > max_y)
-				max_y = y[i];
+			if (y[i] < minY)
+				minY = y[i];
+			else if (y[i] > maxY)
+				maxY = y[i];
 		}
 	}
 
@@ -71,8 +71,8 @@ public class SimpleGraphPanel extends JPanel
 		Dimension dim = getSize();
 		double kx = d.getWidth() / dim.getWidth();
 		double ky = d.getHeight() / dim.getHeight();
-		scale_x *= kx;
-		scale_y *= ky;
+		scaleX *= kx;
+		scaleY *= ky;
 		super.setSize(d);
 	}
 
@@ -83,8 +83,8 @@ public class SimpleGraphPanel extends JPanel
 		bottom = 0;
 
 		// default values of scales - fitted to panel size
-		scale_x = (double)getWidth() / (double)y.length;
-		scale_y = (double)getHeight() / (max_y - min_y);
+		scaleX = (double)getWidth() / (double)y.length;
+		scaleY = (double)getHeight() / (maxY - minY);
 	}
 
 	public void setColorModel(String color_id)
@@ -125,8 +125,8 @@ public class SimpleGraphPanel extends JPanel
 		g.setColor(traceColor);
 
 		for (int i= Math.max(0, -start); i< Math.min (end + 1, y.length) - start - 1; i++)
-			g.drawLine((int)(i*scale_x+1), (int)((max_y - y[i+start] - top) * scale_y),
-								 (int)((i+1)*scale_x+1), (int)((max_y - y[i+start+1] - top) * scale_y));
+			g.drawLine((int)(i*scaleX+1), (int)((maxY - y[i+start] - top) * scaleY),
+								 (int)((i+1)*scaleX+1), (int)((maxY - y[i+start+1] - top) * scaleY));
 	}
 
 	public void paint(Graphics g)

@@ -10,7 +10,7 @@ public class AlarmMessage
 	public static final int hardCut = 10;
 	public static final int hardShift = 11;
 	public static final int hardWholeShift = 12;
-	int alarmType = 0;
+	private int alarmType = 0;
 
 	public static final String weld = "weld";
 	public static final String linear = "linear";
@@ -19,15 +19,15 @@ public class AlarmMessage
 	private String referenceEventType;
 	private String message = "Внимание! На трассе повреждение!";
 
-	ReflectogramAlarm ra;
-	double delta_x;
-	double dE;
+	private ReflectogramAlarm ra;
+	private double deltaX;
+	private double dE;
 
 //----------------------------------
-	public AlarmMessage(double delta_x, ReflectogramAlarm ra)
+	public AlarmMessage(double deltaX, ReflectogramAlarm ra)
 	{
 		this.ra = ra;
-		this.delta_x = delta_x;
+		this.deltaX = deltaX;
 
 		dE = (int)(ra.refAmplChangeValue*1000)/1000.;
 		if(ra.getEventType() == ReflectogramEvent.WELD)
@@ -78,9 +78,9 @@ public class AlarmMessage
 	}
 /*
 //----------------------------------
-	public AlarmMessage(int coord, double delta_x, int alarmType, double dE, String referenceEventType)
+	public AlarmMessage(int coord, double deltaX, int alarmType, double dE, String referenceEventType)
 	{
-		this(((double)coord)*delta_x, alarmType, dE, referenceEventType);
+		this(((double)coord)*deltaX, alarmType, dE, referenceEventType);
 	}
 
 /*
@@ -117,14 +117,14 @@ public class AlarmMessage
 	private String getSoftCutMessage()
 	{
 		String s = "Внимание! На участке тестирования обнаружено несоответствие! \n";
-		s = s+"Координата несоответствия: "+ (int)(ra.alarmPointCoord*delta_x)/1000. + " км. \n";
+		s = s+"Координата несоответствия: "+ (int)(ra.alarmPointCoord*deltaX)/1000. + " км. \n";
 		s = s+"Отклонение от эталона: "+ dE +" дБ. \n";
 		s = s+"Тип события: " + referenceEventType + "\n";
 		if(ra.getEventType() != ReflectogramEvent.CONNECTOR)
 		{
-			s = s+"Координаты ближайших отражательных событий: " + ra.leftReflectoEventCoord * delta_x / 1000. +
-					" км; " + ra.rightReflectoEventCoord * delta_x / 1000. + " км \n";
-			s = s+"Расстояние до ближайщего отражательного события " + ra.nearestReflectoEventDistance * delta_x / 1000. + " км \n";
+			s = s+"Координаты ближайших отражательных событий: " + ra.leftReflectoEventCoord * deltaX / 1000. +
+					" км; " + ra.rightReflectoEventCoord * deltaX / 1000. + " км \n";
+			s = s+"Расстояние до ближайщего отражательного события " + ra.nearestReflectoEventDistance * deltaX / 1000. + " км \n";
 		}
 		s = s+"Характер несоответствия: локальные потери. \n";
 		s = s+"Резюме: Отклонение не превышает предельно допустимого значения. \n";
@@ -137,14 +137,14 @@ public class AlarmMessage
 	private String getHardCutMessage()
 	{
 		String s = "Внимание! На участке тестирования обнаружено повреждение! \n";
-		s = s+"Координата повреждения: "+(int)(ra.alarmPointCoord*delta_x)/1000. + " км. \n";
+		s = s+"Координата повреждения: "+(int)(ra.alarmPointCoord*deltaX)/1000. + " км. \n";
 		s = s+"Отклонение от эталона: " + dE + " дБ. \n";
 		s = s+"Тип события: " + referenceEventType + "\n";
 		if(ra.getEventType() != ReflectogramEvent.CONNECTOR)
 		{
-			s = s+"Координаты ближайших отражательных событий: " + ra.leftReflectoEventCoord * delta_x / 1000. +
-					" км; " + ra.rightReflectoEventCoord * delta_x / 1000. + " км \n";
-			s = s+"Расстояние до ближайщего отражательного события " + ra.nearestReflectoEventDistance * delta_x / 1000. + " км \n";
+			s = s+"Координаты ближайших отражательных событий: " + ra.leftReflectoEventCoord * deltaX / 1000. +
+					" км; " + ra.rightReflectoEventCoord * deltaX / 1000. + " км \n";
+			s = s+"Расстояние до ближайщего отражательного события " + ra.nearestReflectoEventDistance * deltaX / 1000. + " км \n";
 		}
 		s = s+"Характер повреждния: обрыв или значительные локальные потери. \n";
 		s = s+"Резюме: Отклонение превышает предельно допустимого значения.\n";
@@ -158,14 +158,14 @@ public class AlarmMessage
 	private String getSoftShiftMessage()
 	{
 		String s = "Внимание! На участке тестирования обнаружено несоответствие! \n";
-		s = s+"Координата несоответствия: "+(int)(ra.alarmPointCoord*delta_x)/1000. + " км. \n";
+		s = s+"Координата несоответствия: "+(int)(ra.alarmPointCoord*deltaX)/1000. + " км. \n";
 		s = s+"Отклонение от эталона: "+ dE + " дБ.\n";
 		s = s+"Тип события: " + referenceEventType + "\n";
 		if(ra.getEventType() != ReflectogramEvent.CONNECTOR)
 		{
-			s = s+"Координаты ближайших отражательных событий: " + ra.leftReflectoEventCoord * delta_x / 1000. +
-					" км; " + ra.rightReflectoEventCoord * delta_x / 1000. + " км \n";
-			s = s+"Расстояние до ближайщего отражательного события " + ra.nearestReflectoEventDistance * delta_x / 1000. + " км \n";
+			s = s+"Координаты ближайших отражательных событий: " + ra.leftReflectoEventCoord * deltaX / 1000. +
+					" км; " + ra.rightReflectoEventCoord * deltaX / 1000. + " км \n";
+			s = s+"Расстояние до ближайщего отражательного события " + ra.nearestReflectoEventDistance * deltaX / 1000. + " км \n";
 		}
 		s = s+"Характер несоответствия: локальное усиление. \n";
 		s = s+"Резюме: Отклонение не превышает предельно допустимого значения.\n";
@@ -177,14 +177,14 @@ public class AlarmMessage
 	private String getHardShiftMessage()
 	{
 		String s = "Внимание! На участке тестирования обнаружено повреждение! \n";
-		s = s+"Координата повреждения: "+(int)(ra.alarmPointCoord*delta_x)/1000. + " км. \n";
+		s = s+"Координата повреждения: "+(int)(ra.alarmPointCoord*deltaX)/1000. + " км. \n";
 		s = s+"Отклонение от эталона: " + dE + " дБ.\n";
 		s = s+"Тип события: " + referenceEventType + "\n";
 		if(ra.getEventType() != ReflectogramEvent.CONNECTOR)
 		{
-			s = s+"Координаты ближайших отражательных событий: " + ra.leftReflectoEventCoord * delta_x / 1000. +
-					" км; " + ra.rightReflectoEventCoord * delta_x / 1000. + " км \n";
-			s = s+"Расстояние до ближайщего отражательного события " + ra.nearestReflectoEventDistance * delta_x / 1000. + " км \n";
+			s = s+"Координаты ближайших отражательных событий: " + ra.leftReflectoEventCoord * deltaX / 1000. +
+					" км; " + ra.rightReflectoEventCoord * deltaX / 1000. + " км \n";
+			s = s+"Расстояние до ближайщего отражательного события " + ra.nearestReflectoEventDistance * deltaX / 1000. + " км \n";
 		}
 		s = s+"Характер повреждения: значительное локальное усиление \n";
 		s = s+"Резюме: Отклонение превышает предельно допустимое значение.\n";
@@ -196,14 +196,14 @@ public class AlarmMessage
 	private String getEmptyAlarmMessage()
 	{
 		String s = "Внимание! На участке тестирования возможно повреждение. \n";
-		s = s+"Координата несоответствия: " +(int)(ra.alarmPointCoord*delta_x)/1000. + " км. \n";
+		s = s+"Координата несоответствия: " +(int)(ra.alarmPointCoord*deltaX)/1000. + " км. \n";
 		s = s+"Отклонение от эталона: " + dE + " дБ. \n";
 		s = s+"Тип события: " + referenceEventType + "\n";
 		if(ra.getEventType() != ReflectogramEvent.CONNECTOR)
 		{
-			s = s+"Координаты ближайших отражательных событий: " + ra.leftReflectoEventCoord * delta_x / 1000. +
-					" км; " + ra.rightReflectoEventCoord * delta_x / 1000. + " км \n";
-			s = s+"Расстояние до ближайщего отражательного события " + ra.nearestReflectoEventDistance * delta_x / 1000. + " км \n";
+			s = s+"Координаты ближайших отражательных событий: " + ra.leftReflectoEventCoord * deltaX / 1000. +
+					" км; " + ra.rightReflectoEventCoord * deltaX / 1000. + " км \n";
+			s = s+"Расстояние до ближайщего отражательного события " + ra.nearestReflectoEventDistance * deltaX / 1000. + " км \n";
 		}
 		s = s+"Характер возможного повреждения: неизвестен. \n";
 		s = s+"Резюме: Для суждения о повреждении необходима дополнительная информация. \n";

@@ -286,9 +286,9 @@ public class AnalysisUtil
 
 		if(bsEt!=null && events!=null)
 		{
-			double delta_x = bsEt.getResolution();
+			double deltaX = bsEt.getResolution();
 			for(int i=0; i<events.length; i++)
-				events[i].setDeltaX(delta_x);
+				events[i].setDeltaX(deltaX);
 		}
 	}
 
@@ -458,8 +458,8 @@ public class AnalysisUtil
 			{
 				try
 				{
-					Double min_level = new Double(new ByteArray(params[i].getValue()).toDouble());
-					Pool.put("min_trace_level", "primarytrace", min_level);
+					Double minLevel = new Double(new ByteArray(params[i].getValue()).toDouble());
+					Pool.put("min_trace_level", "primarytrace", minLevel);
 				}
 				catch (IOException ex)
 				{
