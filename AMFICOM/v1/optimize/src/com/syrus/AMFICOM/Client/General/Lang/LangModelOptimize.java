@@ -1,19 +1,18 @@
 package com.syrus.AMFICOM.Client.General.Lang;
 
-import java.util.Vector;
-import java.awt.Component;
-import java.lang.reflect.Field;
-
+import java.text.DateFormatSymbols;
 import java.util.Locale;
 import java.util.ResourceBundle;
-import java.util.ListResourceBundle;
-import java.text.DateFormatSymbols;
+import java.util.Vector;
+import java.util.MissingResourceException;
 
-import com.syrus.AMFICOM.Client.General.Lang.*;
-import com.syrus.AMFICOM.Client.General.Command.Optimize.*;
-
-public class LangModelOptimize  
+public class LangModelOptimize
 {
+	private static final String BUNDLE_NAME =
+		"com.syrus.AMFICOM.Client.General.Lang.optimize";
+	private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle
+		.getBundle(BUNDLE_NAME);
+
 	static public Locale locale;
 	static public String language;
 	static public String country;
@@ -26,109 +25,40 @@ public class LangModelOptimize
 		symbols = new DateFormatSymbols(locale);
 	}
 
-	static public void initialize()
+	public static String getString(String keyName)
 	{
-		//initialize("com.syrus.AMFICOM.Client.General.Lang.LangModelOptimize");
-	}
-
-	static public void initialize(String rb)
-	{
-		System.out.println("initialize lang - " + rb);
-		resourceBundle = new String(rb);
-		setLangModel("ru", "");
-	}
-
-	static public Vector getLangModels()
-	{
-
-		Vector vec = new Vector();
-		return vec;
-	}
-
-	static public boolean setLangModel(String l, String c)
-	{
-		language = l;
-		country = c;
+		//System.out.println("keyName:" + keyName);
+		keyName = keyName.replaceAll(" ", "_");
+		String string = null;
 		try
 		{
-			locale = new Locale(language, country);
-			lang = ResourceBundle.getBundle(
-					resourceBundle,
-					locale);
-			System.out.println("initialize locale - " + locale.toString());
-			symbols = new DateFormatSymbols(locale);
+			string = RESOURCE_BUNDLE.getString(keyName);
 		}
-		catch(Exception e)
-		{
-			System.out.println(e);
-			e.printStackTrace();
-			return false;
-		}
-		return true;
-	}
-
-	static public String Text(String componentName)
-	{
-		return getComponentText(lang, componentName);
-	}
-
-	static public String ToolTip(String componentName)
-	{
-		return getComponentToolTip(lang, componentName);
-	}
-
-	static public String getComponentText(
-			ResourceBundle lang,
-			String componentName)
-	{
-		return String(componentName + "Text");
-	}
-
-	static public String getComponentToolTip(
-			ResourceBundle lang,
-			String componentName)
-	{
-		return String(componentName + "ToolTip");
-	}
-
-	static public String String(String keyName)
-	{
-		return String(lang, keyName);
-	}
-
-	static public String String(ResourceBundle lang, String keyName)
-	{
-		try
-		{
-			return lang.getString(keyName);
-		}
-		catch(java.util.MissingResourceException mre)
+		catch (MissingResourceException e)
 		{
 			try
 			{
-				Locale loc2 = lang.getLocale();
-				Locale loc;
-				if(loc2.getCountry() != null && !(loc2.getCountry().equals("")))
-					loc = new Locale(loc2.getLanguage(), "");
-				else
-				if(loc2.getLanguage() != null && !(loc2.getLanguage().equals("")))
-					loc = new Locale("", "");
-				else
-					throw mre;
-				ResourceBundle lang2 =
-						ResourceBundle.getBundle(resourceBundle, loc);
-				return String(lang2, keyName);
+				string = RESOURCE_BUNDLE.getString(keyName + "Text");
 			}
-			catch(Exception e)
+			catch (MissingResourceException mre)
 			{
-				System.out.println(e);
-				return "ERROR key!" + keyName;
+				try
+				{
+					throw new Exception("key '"
+											  + keyName + "Text"
+											  + "' "
+											  + "not found");
+				}
+				catch (Exception exc)
+				{
+					exc.printStackTrace();
+				}
+			}
+			catch (Exception exc)
+			{
+				exc.printStackTrace();
 			}
 		}
-		catch(Exception e)
-		{
-			System.out.println(e);
-			return "ERROR key!" + keyName;
-		}
+		return string;
 	}
 }

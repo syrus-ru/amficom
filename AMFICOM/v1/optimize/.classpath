@@ -32,5 +32,16 @@
 	<classpathentry kind="var" path="AMFICOM_HOME/libs/survey.jar"/>
 	<classpathentry kind="var" path="AMFICOM_HOME/libs/syruspatch.jar"/>
 	<classpathentry kind="var" path="AMFICOM_HOME/libs/util.jar"/>
+	<classpathentry kind="lib" path="D:/Java/libs/external/jfreechartK.jar"/>
+	<classpathentry kind="lib" path="D:/Java/libs/external/vbjapp.jar"/>
+	<classpathentry kind="lib" path="D:/Java/libs/external/vbjorb.jar"/>
+	<classpathentry kind="lib" path="D:/Java/libs/external/aurora_client_orbdep.jar"/>
+	<classpathentry kind="lib" path="D:/Java/libs/external/aurora_client_orbindep.jar"/>
+	<classpathentry kind="lib" path="D:/Java/libs/external/ofx.spatialfx.jar"/>
+	<classpathentry kind="lib" path="D:/Java/libs/external/activation.jar"/>
+	<classpathentry kind="lib" path="D:/Java/libs/external/junit.jar"/>
+	<classpathentry kind="lib" path="D:/Java/libs/external/jgraphpad.jar"/>
+	<classpathentry kind="lib" path="D:/Java/libs/external/layout.jar"/>
+	<classpathentry kind="lib" path="D:/Java/libs/external/kunststoff.jar"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>
