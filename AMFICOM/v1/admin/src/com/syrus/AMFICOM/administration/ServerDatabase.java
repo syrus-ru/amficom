@@ -1,5 +1,5 @@
 /*
- * $Id: ServerDatabase.java,v 1.18 2005/03/05 09:37:52 arseniy Exp $
+ * $Id: ServerDatabase.java,v 1.19 2005/03/05 21:35:39 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,38 +14,28 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
-import com.syrus.AMFICOM.general.CharacteristicDatabase;
-import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.CharacterizableDatabase;
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
-import com.syrus.AMFICOM.general.GeneralDatabaseContext;
-import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
-import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
-import com.syrus.AMFICOM.general.UpdateObjectException;
-import com.syrus.AMFICOM.general.VersionCollisionException;
-import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2005/03/05 09:37:52 $
+ * @version $Revision: 1.19 $, $Date: 2005/03/05 21:35:39 $
  * @author $Author: arseniy $
  * @module administration_v1
  */
 
-public class ServerDatabase extends StorableObjectDatabase {
+public class ServerDatabase extends CharacterizableDatabase {
 
 	protected static final int SIZE_HOSTNAME_COLUMN = 64;
 
@@ -94,13 +84,6 @@ public class ServerDatabase extends StorableObjectDatabase {
 			+ APOSTOPHE + DatabaseString.toQuerySubString(server.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTOPHE + COMMA
 			+ APOSTOPHE + DatabaseString.toQuerySubString(server.getHostName(), SIZE_HOSTNAME_COLUMN) + APOSTOPHE + COMMA
 			+ DatabaseIdentifier.toSQLString(server.getUserId());
-	}
-
-	public void retrieve(StorableObject storableObject) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
-		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(GeneralDatabaseContext.getCharacteristicDatabase());
-		Server server = this.fromStorableObject(storableObject);
-		this.retrieveEntity(server);
-		server.setCharacteristics0(characteristicDatabase.retrieveCharacteristics(server.getId(), CharacteristicSort.CHARACTERISTIC_SORT_SERVER));
 	}
 
 	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
@@ -194,90 +177,4 @@ public class ServerDatabase extends StorableObjectDatabase {
 		return mcmIds;
 	}
 
-	public void insert(StorableObject storableObject) throws IllegalDataException, CreateObjectException {
-		Server server = this.fromStorableObject(storableObject);
-		this.insertEntity(server);
-		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(GeneralDatabaseContext.getCharacteristicDatabase());
-		try {
-			characteristicDatabase.updateCharacteristics(server);
-		}
-		catch (UpdateObjectException e) {
-			throw new CreateObjectException(e);
-		}
-	}
-
-	public void insert(Collection storableObjects) throws IllegalDataException, CreateObjectException {
-		insertEntities(storableObjects);
-		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(GeneralDatabaseContext.getCharacteristicDatabase());
-		try {
-			characteristicDatabase.updateCharacteristics(storableObjects);
-		}
-		catch (UpdateObjectException e) {
-			throw new CreateObjectException(e);
-		}
-	}
-
-	public void update(StorableObject storableObject, Identifier modifierId, int updateKind)
-			throws VersionCollisionException, UpdateObjectException {
-		switch (updateKind) {
-			case UPDATE_CHECK:
-				super.checkAndUpdateEntity(storableObject, modifierId, false);
-				break;
-			case UPDATE_FORCE:
-			default:
-				super.checkAndUpdateEntity(storableObject, modifierId, true);
-		}
-		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase) GeneralDatabaseContext.getCharacteristicDatabase();
-		characteristicDatabase.updateCharacteristics(storableObject);
-	}
-
-	public void update(Collection storableObjects, Identifier modifierId, int updateKind)
-			throws VersionCollisionException, UpdateObjectException {
-		switch (updateKind) {
-			case UPDATE_CHECK:
-				super.checkAndUpdateEntities(storableObjects, modifierId, false);
-				break;
-			case UPDATE_FORCE:
-			default:
-				super.checkAndUpdateEntities(storableObjects, modifierId, true);
-		}
-		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase) GeneralDatabaseContext.getCharacteristicDatabase();
-		characteristicDatabase.updateCharacteristics(storableObjects);
-	}	
-
-	public Collection retrieveByIds(Collection ids, String condition) throws IllegalDataException, RetrieveObjectException {
-		Collection objects = null; 
-		if ((ids == null) || (ids.isEmpty()))
-			objects = this.retrieveByIdsOneQuery(null, condition);
-		else
-			objects = this.retrieveByIdsOneQuery(ids, condition);
-
-		if (objects != null) {
-			CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(GeneralDatabaseContext.getCharacteristicDatabase());
-			Map characteristicMap = characteristicDatabase.retrieveCharacteristicsByOneQuery(objects,
-					CharacteristicSort.CHARACTERISTIC_SORT_SERVER);
-			if (characteristicMap != null)
-				for (Iterator iter = objects.iterator(); iter.hasNext();) {
-					Server server = (Server) iter.next();
-					List characteristics = (List) characteristicMap.get(server.getId());
-					server.setCharacteristics0(characteristics);
-				}
-		}
-		return objects;
-	}
-
-//	private List retrieveButIdsByDomain(Collection ids, Domain domain) throws RetrieveObjectException {
-//		List list = null;
-//
-//    String condition = DomainMember.COLUMN_DOMAIN_ID + EQUALS + DatabaseIdentifier.toSQLString(domain.getId());
-//
-//    try {
-//			list = retrieveButIds(ids, condition);
-//		}
-//		catch (IllegalDataException ide) {
-//			Log.debugMessage("ServerDatabase.retrieveButIdsByDomain | Error: " + ide.getMessage(), Log.DEBUGLEVEL09);
-//		}
-//
-//    return list;
-//	}
 }
