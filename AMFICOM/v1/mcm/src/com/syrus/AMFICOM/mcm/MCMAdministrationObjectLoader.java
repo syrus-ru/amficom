@@ -1,5 +1,5 @@
 /*
-* $Id: MCMAdministrationObjectLoader.java,v 1.6 2005/03/22 16:46:45 arseniy Exp $
+* $Id: MCMAdministrationObjectLoader.java,v 1.7 2005/03/22 17:13:38 arseniy Exp $
 *
 * Copyright © 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -9,8 +9,10 @@
 package com.syrus.AMFICOM.mcm;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.Set;
 
 import com.syrus.AMFICOM.administration.AdministrationDatabaseContext;
 import com.syrus.AMFICOM.administration.DatabaseAdministrationObjectLoader;
@@ -35,6 +37,7 @@ import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
+import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
@@ -44,7 +47,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/03/22 16:46:45 $
+ * @version $Revision: 1.7 $, $Date: 2005/03/22 17:13:38 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -217,213 +220,99 @@ final class MCMAdministrationObjectLoader extends DatabaseAdministrationObjectLo
 
 
 
-
-	public Collection loadUsers(Collection ids) throws DatabaseException, CommunicationException {
-		UserDatabase database = (UserDatabase)AdministrationDatabaseContext.getUserDatabase();
-		Collection collection;
-		Collection copyOfList;
-		Collection loadedObjects = new LinkedList();
-		User user;
-		try {
-			collection = database.retrieveByIdsByCondition(ids, null);
-			copyOfList = new LinkedList(collection);
-			for (Iterator it = copyOfList.iterator(); it.hasNext();) {
-				Identifier id = ((StorableObject) it.next()).getId();
-				if(ids.contains(id))
-					it.remove();
-			}
-			for (Iterator it = copyOfList.iterator(); it.hasNext();) {
-				Identifier id = ((StorableObject) it.next()).getId();
-				Log.debugMessage("User '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL07);
-				try {
-					user = new User(MeasurementControlModule.mServerRef.transmitUser((Identifier_Transferable)id.getTransferable()));
-					collection.add(user);
-					loadedObjects.add(user);
-				}
-				catch (org.omg.CORBA.SystemException se) {
-					Log.errorException(se);
-					MeasurementControlModule.activateMServerReference();
-					throw new CommunicationException("System exception -- " + se.getMessage(), se);
-				}
-				catch (AMFICOMRemoteException are) {
-					String mesg = null;
-					if (are.error_code.equals(ErrorCode.ERROR_NOT_FOUND))
-						mesg = "User '" + id + "' not found on server database";
-					else
-						mesg = "Cannot retrieve user '" + id + "' from server database -- " + are.message;
-					Log.errorMessage(mesg);
-					throw new RetrieveObjectException(mesg);
-				}
-			}
-			try {
-				database.update(loadedObjects, null, StorableObjectDatabase.UPDATE_FORCE);
-			}
-			catch (VersionCollisionException vce) {
-				//This never be caught
-				Log.errorException(vce);
-			}
-		}
-		catch (IllegalDataException e) {
-			Log.errorMessage("MCMConfigurationObjectLoader.loadUsers | Illegal Storable Object: " + e.getMessage());
-			throw new DatabaseException("MCMConfigurationObjectLoader.loadUsers | Illegal Storable Object: " + e.getMessage());
-		}
-		return collection;
+	/*
+	 * MCM do not need in all below methods
+	 * */
+	public Collection loadUsers(Collection ids) throws ApplicationException {
+		throw new UnsupportedOperationException("Method not implemented, ids: " + ids);
 	}
 
-	public Collection loadDomains(Collection ids) throws DatabaseException, CommunicationException {
-		DomainDatabase database = (DomainDatabase) AdministrationDatabaseContext.getDomainDatabase();
-		Collection collection;
-		Collection copyOfList;
-		Collection loadedObjects = new LinkedList();
-		Domain domain;
-		try {
-			collection = database.retrieveByIdsByCondition(ids, null);
-			copyOfList = new LinkedList(collection);
-			for (Iterator it = copyOfList.iterator(); it.hasNext();) {
-				Identifier id = ((StorableObject) it.next()).getId();
-				if (ids.contains(id))
-					it.remove();
-			}
-			for (Iterator it = copyOfList.iterator(); it.hasNext();) {
-				Identifier id = ((StorableObject) it.next()).getId();
-				Log.debugMessage("Domain '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL07);
-				try {
-					domain = new Domain(MeasurementControlModule.mServerRef.transmitDomain((Identifier_Transferable) id.getTransferable()));
-					collection.add(domain);
-					loadedObjects.add(domain);
-				}
-				catch (org.omg.CORBA.SystemException se) {
-					Log.errorException(se);
-					MeasurementControlModule.activateMServerReference();
-					throw new CommunicationException("System exception -- " + se.getMessage(), se);
-				}
-				catch (AMFICOMRemoteException are) {
-					String mesg = null;
-					if (are.error_code.equals(ErrorCode.ERROR_NOT_FOUND))
-						mesg = "Domain '" + id + "' not found on server database";
-					else
-						mesg = "Cannot retrieve domain '" + id + "' from server database -- " + are.message;
-					Log.errorMessage(mesg);
-					throw new RetrieveObjectException(mesg);
-				}
-			}
-			try {
-				database.update(loadedObjects, null, StorableObjectDatabase.UPDATE_FORCE);
-			}
-			catch (VersionCollisionException vce) {
-				//This never be caught
-				Log.errorException(vce);
-			}
-		}
-		catch (IllegalDataException e) {
-			Log.errorMessage("MCMConfigurationObjectLoader.loadDomains | Illegal Storable Object: " + e.getMessage());
-			throw new DatabaseException("MCMConfigurationObjectLoader.loadDomains | Illegal Storable Object: " + e.getMessage());
-		}
-		return collection;
+	public Collection loadUsersButIds(StorableObjectCondition condition, Collection ids) throws ApplicationException {
+		throw new UnsupportedOperationException("Method not implemented, ids: " + ids + ", condition: " + condition);
 	}
 
-	public Collection loadServers(Collection ids) throws DatabaseException, CommunicationException {
-		ServerDatabase database = (ServerDatabase) AdministrationDatabaseContext.getServerDatabase();
-		Collection collection;
-		Collection copyOfList;
-		Collection loadedObjects = new LinkedList();
-		Server server;
-		try {
-			collection = database.retrieveByIdsByCondition(ids, null);
-			copyOfList = new LinkedList(collection);
-			for (Iterator it = copyOfList.iterator(); it.hasNext();) {
-				Identifier id = ((StorableObject) it.next()).getId();
-				if (ids.contains(id))
-					it.remove();
-			}
-			for (Iterator it = copyOfList.iterator(); it.hasNext();) {
-				Identifier id = ((StorableObject) it.next()).getId();
-				Log.debugMessage("Server '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL07);
-				try {
-					server = new Server(MeasurementControlModule.mServerRef.transmitServer((Identifier_Transferable) id.getTransferable()));
-					collection.add(server);
-					loadedObjects.add(server);
-				}
-				catch (org.omg.CORBA.SystemException se) {
-					Log.errorException(se);
-					MeasurementControlModule.activateMServerReference();
-					throw new CommunicationException("System exception -- " + se.getMessage(), se);
-				}
-				catch (AMFICOMRemoteException are) {
-					String mesg = null;
-					if (are.error_code.equals(ErrorCode.ERROR_NOT_FOUND))
-						mesg = "Server '" + id + "' not found on server database";
-					else
-						mesg = "Cannot retrieve Server '" + id + "' from server database -- " + are.message;
-					Log.errorMessage(mesg);
-					throw new RetrieveObjectException(mesg);
-				}
-			}
-			try {
-				database.update(loadedObjects, null, StorableObjectDatabase.UPDATE_FORCE);
-			}
-			catch (VersionCollisionException vce) {
-				//This never be caught
-				Log.errorException(vce);
-			}
-		}
-		catch (IllegalDataException e) {
-			Log.errorMessage("MCMConfigurationObjectLoader.loadServers | Illegal Storable Object: " + e.getMessage());
-			throw new DatabaseException("MCMConfigurationObjectLoader.loadServers | Illegal Storable Object: " + e.getMessage());
-		}
-		return collection;
+	public Collection loadDomains(Collection ids) throws ApplicationException {
+		throw new UnsupportedOperationException("Method not implemented, ids: " + ids);
 	}
 
-	public Collection loadMCMs(Collection ids) throws DatabaseException, CommunicationException {
-		MCMDatabase database = (MCMDatabase) AdministrationDatabaseContext.getMCMDatabase();
-		Collection collection;
-		Collection copyOfList;
-		Collection loadedObjects = new LinkedList();
-		MCM mcm;
-		try {
-			collection = database.retrieveByIdsByCondition(ids, null);
-			copyOfList = new LinkedList(collection);
-			for (Iterator it = copyOfList.iterator(); it.hasNext();) {
-				Identifier id = ((StorableObject) it.next()).getId();
-				if (ids.contains(id))
-					it.remove();
-			}
-			for (Iterator it = copyOfList.iterator(); it.hasNext();) {
-				Identifier id = ((StorableObject) it.next()).getId();
-				Log.debugMessage("MCM '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL07);
-				try {
-					mcm = new MCM(MeasurementControlModule.mServerRef.transmitMCM((Identifier_Transferable) id.getTransferable()));
-					collection.add(mcm);
-					loadedObjects.add(mcm);
-				}
-				catch (org.omg.CORBA.SystemException se) {
-					Log.errorException(se);
-					MeasurementControlModule.activateMServerReference();
-					throw new CommunicationException("System exception -- " + se.getMessage(), se);
-				}
-				catch (AMFICOMRemoteException are) {
-					String mesg = null;
-					if (are.error_code.equals(ErrorCode.ERROR_NOT_FOUND))
-						mesg = "MCM '" + id + "' not found on server database";
-					else
-						mesg = "Cannot retrieve MCM '" + id + "' from server database -- " + are.message;
-					Log.errorMessage(mesg);
-					throw new RetrieveObjectException(mesg);
-				}
-			}
-			try {
-				database.update(loadedObjects, null, StorableObjectDatabase.UPDATE_FORCE);
-			}
-			catch (VersionCollisionException vce) {
-				//This never be caught
-				Log.errorException(vce);
-			}
-		}
-		catch (IllegalDataException e) {
-			Log.errorMessage("MCMConfigurationObjectLoader.loadKISs | Illegal Storable Object: " + e.getMessage());
-			throw new DatabaseException("MCMConfigurationObjectLoader.loadKISs | Illegal Storable Object: " + e.getMessage());
-		}
-		return collection;
+	public Collection loadDomainsButIds(StorableObjectCondition condition, Collection ids) throws ApplicationException {
+		throw new UnsupportedOperationException("Method not implemented, ids: " + ids + ", condition: " + condition);
+	}
+
+	public Collection loadServers(Collection ids) throws ApplicationException {
+		throw new UnsupportedOperationException("Method not implemented, ids: " + ids);
+	}
+
+	public Collection loadServersButIds(StorableObjectCondition condition, Collection ids) throws ApplicationException {
+		throw new UnsupportedOperationException("Method not implemented, ids: " + ids + ", condition: " + condition);
+	}
+
+	public Collection loadMCMs(Collection ids) throws ApplicationException {
+		throw new UnsupportedOperationException("Method not implemented, ids: " + ids);
+	}
+
+	public Collection loadMCMsButIds(StorableObjectCondition condition, Collection ids) throws ApplicationException {
+		throw new UnsupportedOperationException("Method not implemented, ids: " + ids + ", condition: " + condition);
+	}
+
+
+
+
+
+	public void saveUser(User user, boolean force) throws ApplicationException {
+		throw new UnsupportedOperationException("Method not implemented, user: " + user.getId() + ", force: " + force);
+	}
+
+	public void saveDomain(Domain domain, boolean force) throws ApplicationException {
+		throw new UnsupportedOperationException("Method not implemented, domain: " + domain.getId() + ", force: " + force);
+	}
+
+	public void saveServer(Server server, boolean force) throws ApplicationException {
+		throw new UnsupportedOperationException("Method not implemented, server: " + server.getId() + ", force: " + force);
+	}
+
+	public void saveMCM(MCM mcm, boolean force) throws ApplicationException {
+		throw new UnsupportedOperationException("Method not implemented, mcm: " + mcm.getId() + ", force: " + force);
+	}
+
+
+
+
+
+	public void saveUsers(Collection collection, boolean force) throws ApplicationException {
+		throw new UnsupportedOperationException("Method not implemented, collection: " + collection + ", force: " + force);
+	}
+
+	public void saveDomains(Collection collection, boolean force) throws ApplicationException {
+		throw new UnsupportedOperationException("Method not implemented, collection: " + collection + ", force: " + force);
+	}
+
+	public void saveServers(Collection collection, boolean force) throws ApplicationException {
+		throw new UnsupportedOperationException("Method not implemented, collection: " + collection + ", force: " + force);
+	}
+
+	public void saveMCMs(Collection collection, boolean force) throws ApplicationException {
+		throw new UnsupportedOperationException("Method not implemented, collection: " + collection + ", force: " + force);
+	}
+
+
+
+
+
+	public Set refresh(Set storableObjects) throws ApplicationException {
+		throw new UnsupportedOperationException("Method not implemented, objects: " + storableObjects);
+	}
+
+
+
+
+
+	public void delete(Collection objects) throws IllegalDataException {
+		throw new UnsupportedOperationException("Method not implemented, objects: " + objects);
+	}
+
+	public void delete(Identifier id) throws IllegalDataException {
+		throw new UnsupportedOperationException("Method not implemented, id: " + id);
 	}
 
 }
