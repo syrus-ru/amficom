@@ -1,5 +1,5 @@
 /**
- * $Id: MapNavigateEvent.java,v 1.5 2004/10/18 07:50:26 krupenn Exp $
+ * $Id: MapNavigateEvent.java,v 1.6 2004/10/18 13:21:08 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -9,13 +9,14 @@
 */
 
 package com.syrus.AMFICOM.Client.General.Event;
+import com.syrus.AMFICOM.general.Identifier;
 
 /**
  * Событие выделения/снятия выделения элемента(-ов) карты 
  * 
  * 
  * 
- * @version $Revision: 1.5 $, $Date: 2004/10/18 07:50:26 $
+ * @version $Revision: 1.6 $, $Date: 2004/10/18 13:21:08 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -28,72 +29,82 @@ public class MapNavigateEvent extends MapEvent
 	 * @param distance
 	 * @param spd
 	 */
-	public static final long MAP_MARKER_CREATED_EVENT = 0x00000001;
+	public static final int MAP_MARKER_CREATED_EVENT = 1;
 	/**
 	 * Пользователь удалил маркер
 	 * @param markerId
 	 */
-	public static final long MAP_MARKER_DELETED_EVENT = 0x00000002;
+	public static final int MAP_MARKER_DELETED_EVENT = 2;
+	/**
+	 * Пользователь выделил маркер
+	 * @param markerId
+	 */
+	public static final int MAP_MARKER_SELECTED_EVENT = 3;
 	/**
 	 * Пользователь передвинул маркер
 	 * @param markerId
 	 * @param distance
 	 */
-	public static final long MAP_MARKER_MOVED_EVENT = 0x00000004;
+	public static final int MAP_MARKER_MOVED_EVENT = 4;
 	/**
 	 * Маркер был создан вне карты (например, в окне рефлектограмм)
 	 * @param markerId
 	 * @param distance
 	 */
-	public static final long DATA_MARKER_CREATED_EVENT = 0x00000008;
+	public static final int DATA_MARKER_CREATED_EVENT = 5;
+	/**
+	 * Маркер был выделен вне карты (например, в окне рефлектограмм)
+	 * @param markerId
+	 */
+	public static final int DATA_MARKER_SELECTED_EVENT = 6;
 	/**
 	 * Маркер был удален вне карты (например, в окне рефлектограмм)
 	 * @param markerId
 	 */
-	public static final long DATA_MARKER_DELETED_EVENT = 0x00000010;
+	public static final int DATA_MARKER_DELETED_EVENT = 7;
 	/**
 	 * @param markerId
 	 * @param distance
 	 * Маркер был передвинут вне карты (например, в окне рефлектограмм)
 	 */
-	public static final long DATA_MARKER_MOVED_EVENT = 0x00000020;
+	public static final int DATA_MARKER_MOVED_EVENT = 8;
 	/**
 	 * Маркер события был создан вне карты (например, в окне рефлектограмм)
 	 * @param markerId
 	 * @param distance
 	 */
-	public static final long DATA_EVENTMARKER_CREATED_EVENT = 0x00000040;
+	public static final int DATA_EVENTMARKER_CREATED_EVENT = 9;
 	/**
 	 * Маркер события был удален вне карты (например, в окне рефлектограмм)
 	 * @param markerId
 	 */
-	public static final long DATA_EVENTMARKER_DELETED_EVENT = 0x00000080;
+	public static final int DATA_EVENTMARKER_DELETED_EVENT = 10;
 	/**
 	 * Маркер сигнала тревоги был создан вне карты (например, в окне рефлектограмм)
 	 * @param markerId
 	 * @param distance
 	 */
-	public static final long DATA_ALARMMARKER_CREATED_EVENT = 0x00000100;
+	public static final int DATA_ALARMMARKER_CREATED_EVENT = 11;
 	/**
 	 * Маркер сигнала тревоги был удален вне карты (например, в окне рефлектограмм)
 	 * @param markerId
 	 */
-	public static final long DATA_ALARMMARKER_DELETED_EVENT = 0x00000200;
+	public static final int DATA_ALARMMARKER_DELETED_EVENT = 12;
 	/**
 	 * Элемент выделен
 	 * @param source
 	 */
-	public static final long MAP_ELEMENT_SELECTED_EVENT = 0x00000400;
+	public static final int MAP_ELEMENT_SELECTED_EVENT = 13;
 	/**
 	 * Снято выбеление элемента
 	 * @param source
 	 */
-	public static final long MAP_ELEMENT_DESELECTED_EVENT = 0x00000800;
+	public static final int MAP_ELEMENT_DESELECTED_EVENT = 14;
 
 	/**
 	 * Тип события
 	 */
-	protected long mapEventType;
+	protected int mapEventType;
 
 	/**
 	 * Идентификатор маркера
@@ -113,7 +124,7 @@ public class MapNavigateEvent extends MapEvent
 	/**
 	 * Идентификаторы исследуемого объекта
 	 */
-    protected String meId;
+    protected Identifier meId;
 	
 	/**
 	 * Идентификатор схемной Линии
@@ -129,7 +140,7 @@ public class MapNavigateEvent extends MapEvent
 
 	public MapNavigateEvent(
 			Object source,
-			long mapEventType)
+			int mapEventType)
 	{
 		super(source, MAP_NAVIGATE);
 		this.mapEventType = mapEventType;
@@ -137,11 +148,11 @@ public class MapNavigateEvent extends MapEvent
 	
 	public MapNavigateEvent(
 			Object source,
-			long mapEventType,
+			int mapEventType,
 			String markerId,
 			double distance,
 			String schemePathId,
-			String meId)
+			Identifier meId)
 	{
 		super(source, MAP_NAVIGATE);
         this.markerId = markerId;
@@ -152,11 +163,11 @@ public class MapNavigateEvent extends MapEvent
 
 	public MapNavigateEvent(
 			Object source,
-			long typ,
+			int typ,
 			String markerId,
 			double distance,
 			String schemePathId,
-			String meId,
+			Identifier meId,
 			String schemePathElementId)
 	{
 		this(source, typ, markerId, distance, schemePathId, meId);
@@ -193,12 +204,12 @@ public class MapNavigateEvent extends MapEvent
 		return schemePathId;
 	}
 
-	public void setMeId(String meId)
+	public void setMeId(Identifier meId)
 	{
 		this.meId = meId;
 	}
 
-	public String getMeId()
+	public Identifier getMeId()
 	{
 		return meId;
 	}
@@ -243,6 +254,11 @@ public class MapNavigateEvent extends MapEvent
 		return mapEventType == MAP_MARKER_DELETED_EVENT;
 	}
 
+	public boolean isMapMarkerSelected()
+	{
+		return mapEventType == MAP_MARKER_SELECTED_EVENT;
+	}
+
 	public boolean isMapMarkerMoved()
 	{
 		return mapEventType == MAP_MARKER_MOVED_EVENT;
@@ -256,6 +272,11 @@ public class MapNavigateEvent extends MapEvent
 	public boolean isDataMarkerDeleted()
 	{
 		return mapEventType == DATA_MARKER_DELETED_EVENT;
+	}
+
+	public boolean isDataMarkerSelected()
+	{
+		return mapEventType == DATA_MARKER_SELECTED_EVENT;
 	}
 
 	public boolean isDataMarkerMoved()
