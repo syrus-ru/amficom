@@ -537,7 +537,10 @@ public class DataSourceImage
 	protected ResourceDescriptor_Transferable[] GetDescriptors(String type)
 	{
 		if(!(di.getSession() instanceof RISDSessionInfo))
-			return null;
+			return new ResourceDescriptor_Transferable[] {
+					new ResourceDescriptor_Transferable(
+							"id", System.currentTimeMillis())
+				};
 			
 		RISDSessionInfo si = (RISDSessionInfo )di.getSession();
 		
@@ -573,7 +576,10 @@ public class DataSourceImage
 	protected ResourceDescriptor_Transferable[] GetDomainDescriptors(String type)
 	{
 		if(!(di.getSession() instanceof RISDSessionInfo))
-			return null;
+			return new ResourceDescriptor_Transferable[] {
+					new ResourceDescriptor_Transferable(
+							"id", System.currentTimeMillis())
+				};
 			
 		RISDSessionInfo si = (RISDSessionInfo )di.getSession();
 		
@@ -608,7 +614,10 @@ public class DataSourceImage
 	protected ResourceDescriptor_Transferable[] GetDescriptorsByIds(String type, String[] ids)
 	{
 		if(!(di.getSession() instanceof RISDSessionInfo))
-			return null;
+			return new ResourceDescriptor_Transferable[] {
+					new ResourceDescriptor_Transferable(
+							"id", System.currentTimeMillis())
+				};
 			
 		RISDSessionInfo si = (RISDSessionInfo )di.getSession();
 		
@@ -643,7 +652,8 @@ public class DataSourceImage
 	protected ResourceDescriptor_Transferable GetDescriptor(String type, String id)
 	{
 		if(!(di.getSession() instanceof RISDSessionInfo))
-			return null;
+			return new ResourceDescriptor_Transferable(
+							"id", System.currentTimeMillis());
 			
 		RISDSessionInfo si = (RISDSessionInfo )di.getSession();
 		
