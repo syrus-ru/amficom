@@ -17,6 +17,11 @@ public class LangModelMeasurement {
 
 	private static final ResourceBundle	RESOURCE_BUNDLE		= ResourceBundle
 																	.getBundle(BUNDLE_NAME);
+	
+	private LangModelMeasurement(){
+		//nothing
+	}
+	
 	public static String getString(String keyName) {
 		keyName = keyName.replaceAll(" ", "_");
 		String string;
