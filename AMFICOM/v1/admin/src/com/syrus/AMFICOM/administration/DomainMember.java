@@ -1,5 +1,5 @@
 /*
- * $Id: DomainMember.java,v 1.6 2005/03/16 16:35:12 bass Exp $
+ * $Id: DomainMember.java,v 1.7 2005/03/28 16:03:58 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,8 +15,8 @@ import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/03/16 16:35:12 $
- * @author $Author: bass $
+ * @version $Revision: 1.7 $, $Date: 2005/03/28 16:03:58 $
+ * @author $Author: bob $
  * @module administration_v1
  */
 
@@ -68,7 +68,6 @@ public abstract class DomainMember extends StorableObject {
 			final Identifier modifierId,
 			final long version,
 			final Identifier domainId) {
-		assert domainId != null;
 		super.setAttributes(created, modified, creatorId, modifierId,
 				version);
 		this.domainId = domainId;
