@@ -1,5 +1,5 @@
 /*
- * $Id: LinkedIdsCondition.java,v 1.17 2005/03/10 19:32:13 arseniy Exp $
+ * $Id: LinkedIdsCondition.java,v 1.18 2005/03/16 17:06:20 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -64,8 +64,8 @@ import com.syrus.util.Log;
  * {@link #isNeedMore(Collection)}and {@link #setEntityCode(Short)}.</li>
  * </ul>
  * 
- * @author $Author: arseniy $
- * @version $Revision: 1.17 $, $Date: 2005/03/10 19:32:13 $
+ * @author $Author: bob $
+ * @version $Revision: 1.18 $, $Date: 2005/03/16 17:06:20 $
  * @module general_v1
  */
 public class LinkedIdsCondition implements StorableObjectCondition {
@@ -354,7 +354,7 @@ public class LinkedIdsCondition implements StorableObjectCondition {
 		this.delegate.linkedIds = Collections.singletonList(linkedId);
 	}
 
-	public Map sort(Collection linkIds) {
+	protected Map sort(Collection linkIds) {
 		Map codeIdsMap = new Hashtable();
 		for (Iterator it = linkIds.iterator(); it.hasNext();) {
 			Identifier id = (Identifier) it.next();
@@ -369,11 +369,7 @@ public class LinkedIdsCondition implements StorableObjectCondition {
 		return codeIdsMap;		
 	}
 
-	public boolean conditionTest(Collection params) {		
-		return this.conditionTest(params, this.linkedIds);
-	}
-
-	public boolean conditionTest(Collection params, Collection links) {
+	protected boolean conditionTest(Collection params) {
 		if (params != null) {
 			for (Iterator it = params.iterator(); it.hasNext();) {
 				Object object = it.next();
@@ -384,7 +380,7 @@ public class LinkedIdsCondition implements StorableObjectCondition {
 					if (object instanceof Identifiable)
 						id = ((Identifiable) object).getId();
 				if (id != null)
-					for (Iterator iterator = links.iterator(); iterator.hasNext();) {
+					for (Iterator iterator = this.linkedIds.iterator(); iterator.hasNext();) {
 						Identifier id2 = null;
 						object = iterator.next();
 						if (object instanceof Identifier)
@@ -402,7 +398,7 @@ public class LinkedIdsCondition implements StorableObjectCondition {
 		return false;
 	}
 
-	public boolean conditionTest(Identifier paramId) {
+	protected boolean conditionTest(Identifier paramId) {
 		if (paramId != null) {
 			for (Iterator it = this.linkedIds.iterator(); it.hasNext();) {
 				Identifier id = (Identifier) it.next();
