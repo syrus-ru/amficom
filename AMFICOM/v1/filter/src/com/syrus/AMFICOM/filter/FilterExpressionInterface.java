@@ -1,28 +1,40 @@
+/*
+ * $Id: FilterExpressionInterface.java,v 1.2 2004/06/08 15:31:57 bass Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ.
+ */
+
 package com.syrus.AMFICOM.filter;
 
-import java.util.Vector;
 import java.io.*;
+import java.util.Vector;
 
-public interface FilterExpressionInterface 
+/**
+ * @version $Revision: 1.2 $, $Date: 2004/06/08 15:31:57 $
+ * @module filter_v1
+ */
+public interface FilterExpressionInterface
 {
-	public static String NUMERIC_EXPRESSION = "numeric";
-	public static String STRING_EXPRESSION = "string";
-	public static String RANGE_EXPRESSION = "range";
-	public static String TIME_EXPRESSION = "time";
-	public static String LIST_EXPRESSION = "list";
+	String NUMERIC_EXPRESSION = "numeric";
+	String STRING_EXPRESSION = "string";
+	String RANGE_EXPRESSION = "range";
+	String TIME_EXPRESSION = "time";
+	String LIST_EXPRESSION = "list";
 
-	public String getName();
-	public String getId();
-	public Vector getVec();
-	public int getListID();
+	String getName();
+	String getId();
+	Vector getVec();
+	int getListID();
 
-	public void setName(String n);
-	public void setId(String i);
-	public void setVec(Vector v);
-	public void setListID(int l);
+	void setName(String n);
+	void setId(String i);
+	void setVec(Vector v);
+	void setListID(int l);
 
-	public void writeObject(java.io.ObjectOutputStream out)
+	void writeObject(ObjectOutputStream out)
 		throws IOException;
-	public void readObject(java.io.ObjectInputStream in)
+	void readObject(ObjectInputStream in)
 		throws IOException, ClassNotFoundException;
 }

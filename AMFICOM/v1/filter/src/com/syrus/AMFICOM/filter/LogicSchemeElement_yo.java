@@ -1,12 +1,33 @@
+/*
+ * $Id: LogicSchemeElement_yo.java,v 1.2 2004/06/08 15:31:57 bass Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ.
+ */
+
 package com.syrus.AMFICOM.filter;
 
+/**
+ * @version $Revision: 1.2 $, $Date: 2004/06/08 15:31:57 $
+ * @module filter_v1
+ */
 public class LogicSchemeElement_yo extends ProSchemeElement_yo
 {
-	static public String typ = "Filter scheme object";
-  
+	/**
+	 * Value: {@value}
+	 */
+	public static final String TYP = "Filter scheme object";
+
+	/**
+	 * Value: {@value}
+	 * @deprecated Use {@link #TYP} instead.
+	 */
+	public static final String typ = TYP;
+
 	public static String t_condition = "label_condition";
 	public static String t_operand = "label_operand";
-	public static String t_result = "label_result";  
+	public static String t_result = "label_result";
 
 	public static String ot_and = "label_and";
 	public static String ot_or = "label_or";
@@ -23,25 +44,36 @@ public class LogicSchemeElement_yo extends ProSchemeElement_yo
 
 	LogicScheme_yo logicScheme = null;
 
-	static public String String(String operandType)
+	/**
+	 * @deprecated Use {@link #string(String)} instead.
+	 */
+	public static String String(String operandType) {
+		return string(operandType);
+	}
+
+	public static String string(String operandType)
 	{
+		/*
+		 * ???: if something is unimplemented, there should be a comment with
+		 *      an explanation.
+		 */
 		return operandType;
 	}
-	
+
 	public LogicSchemeElement_yo(
 			String type,
-            FilterExpressionInterface fe,
-            String operandType,
-            int itsX,
-            int itsY,
-            LogicScheme_yo ls)
+			FilterExpressionInterface filterExpression,
+			String operandType,
+			int x,
+			int y,
+			LogicScheme_yo logicScheme)
 	{
 		if (!((type.equals(LogicSchemeElement_yo.t_condition)) ||
 			(type.equals(LogicSchemeElement_yo.t_operand)) ||
 			(type.equals(LogicSchemeElement_yo.t_result))))
 		{
 			System.out.print("Scheme element should have one of these" +
-                       "types: Condition, Operand or Result!!");
+					   "types: Condition, Operand or Result!!");
 			return;
 		}
 
@@ -54,51 +86,51 @@ public class LogicSchemeElement_yo extends ProSchemeElement_yo
 		}
 
 		this.type = type;
-		this.filterExpression = fe;
+		this.filterExpression = filterExpression;
 		this.operandType = operandType;
-		this.x = itsX;
-		this.y = itsY;
-		this.logicScheme = ls;
+		this.x = x;
+		this.y = y;
+		this.logicScheme = logicScheme;
 
 		setActiveZones();
 	}
 
 	public String getTyp()
 	{
-		return typ;
+		return TYP;
 	}
 
 	private void setActiveZones()
 	{
 		int azX = 0;
 		int azY = 0;
-	
-		if (this.type.equals(LogicSchemeElement_yo.t_operand) ||
-			this.type.equals(LogicSchemeElement_yo.t_condition))
+
+		if (type.equals(LogicSchemeElement_yo.t_operand)
+				|| type.equals(LogicSchemeElement_yo.t_condition))
 		{
-			azX = this.width - 12;
+			azX = width - 12;
 			azY = 5;
-			out = this.logicScheme.createElementsActiveZone(
+			out = logicScheme.createElementsActiveZone(
 					this,
 					ElementsActiveZone_yo.zt_out,
 					10,
 					azX,
 					azY);
-			this.logicScheme.activeZones.add(out);
+			logicScheme.activeZones.add(out);
 		}
 
-		if (this.type.equals(LogicSchemeElement_yo.t_operand) ||
-			this.type.equals(LogicSchemeElement_yo.t_result))
+		if (type.equals(LogicSchemeElement_yo.t_operand)
+				|| type.equals(LogicSchemeElement_yo.t_result))
 		{
 			azX = 2;
 			azY = 4;
-			input = this.logicScheme.createElementsActiveZone(
+			input = logicScheme.createElementsActiveZone(
 					this,
 					ElementsActiveZone_yo.zt_in,
 					12,
 					azX,
 					azY);
-			this.logicScheme.activeZones.add(input);
+			logicScheme.activeZones.add(input);
 		}
 	}
 }

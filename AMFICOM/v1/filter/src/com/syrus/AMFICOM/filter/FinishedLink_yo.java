@@ -1,8 +1,30 @@
+/*
+ * $Id: FinishedLink_yo.java,v 1.2 2004/06/08 15:31:57 bass Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ.
+ */
+
 package com.syrus.AMFICOM.filter;
 
+/**
+ * @version $Revision: 1.2 $, $Date: 2004/06/08 15:31:57 $
+ * @module filter_v1
+ */
 public class FinishedLink_yo extends ProSchemeElement_yo
 {
-	static String typ = "Filter link";
+	/**
+	 * Value: {@value}
+	 */
+	public static final String TYP = "Filter link";
+
+	/**
+	 * Value: {@value}
+	 * @deprecated Use {@link #TYP} instead.
+	 */
+	public static final String typ = TYP;
+
 	public ElementsActiveZone_yo az1 = null;
 	public ElementsActiveZone_yo az2 = null;
 
@@ -14,7 +36,7 @@ public class FinishedLink_yo extends ProSchemeElement_yo
 
 	public String getTyp()
 	{
-		return typ;
+		return TYP;
 	}
 
 	public boolean tryToSelect(int x, int y)
