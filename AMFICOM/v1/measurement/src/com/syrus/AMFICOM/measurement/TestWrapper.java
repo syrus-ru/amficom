@@ -1,5 +1,5 @@
 /*
- * $Id: TestWrapper.java,v 1.1 2005/01/28 08:20:26 bob Exp $
+ * $Id: TestWrapper.java,v 1.2 2005/02/01 06:38:49 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,21 +12,16 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 
 import com.syrus.AMFICOM.configuration.MonitoredElement;
-import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.Wrapper;
 import com.syrus.AMFICOM.measurement.corba.TestReturnType;
 import com.syrus.AMFICOM.measurement.corba.TestStatus;
 import com.syrus.AMFICOM.measurement.corba.TestTemporalType;
-import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/01/28 08:20:26 $
+ * @version $Revision: 1.2 $, $Date: 2005/02/01 06:38:49 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -51,9 +46,7 @@ public class TestWrapper implements Wrapper {
 
 	private TestWrapper() {
 		// empty private constructor
-		String[] keysArray = new String[] { StorableObjectDatabase.COLUMN_ID, StorableObjectDatabase.COLUMN_CREATED,
-				StorableObjectDatabase.COLUMN_CREATOR_ID, StorableObjectDatabase.COLUMN_MODIFIED,
-				StorableObjectDatabase.COLUMN_MODIFIER_ID, COLUMN_TEMPORAL_TYPE, COLUMN_START_TIME, COLUMN_END_TIME,
+		String[] keysArray = new String[] { COLUMN_TEMPORAL_TYPE, COLUMN_START_TIME, COLUMN_END_TIME,
 				COLUMN_TEMPORAL_PATTERN_ID, COLUMN_MEASUREMENT_TYPE_ID, COLUMN_ANALYSIS_TYPE_ID,
 				COLUMN_EVALUATION_TYPE_ID, COLUMN_STATUS, COLUMN_MONITORED_ELEMENT_ID, COLUMN_RETURN_TYPE,
 				COLUMN_DESCRIPTION, LINK_COLMN_MEASUREMENT_SETUP_ID};
@@ -79,22 +72,12 @@ public class TestWrapper implements Wrapper {
 	public Object getValue(final Object object, final String key) {
 		if (object instanceof Test) {
 			Test test = (Test) object;
-			if (key.equals(StorableObjectDatabase.COLUMN_ID))
-				return test.getId().toString();
-			if (key.equals(StorableObjectDatabase.COLUMN_CREATED))
-				return test.getCreated().toString();
-			if (key.equals(StorableObjectDatabase.COLUMN_CREATOR_ID))
-				return test.getCreatorId().getIdentifierString();
-			if (key.equals(StorableObjectDatabase.COLUMN_MODIFIED))
-				return test.getModified().toString();
-			if (key.equals(StorableObjectDatabase.COLUMN_MODIFIER_ID))
-				return test.getModifierId().getIdentifierString();
 			if (key.equals(COLUMN_TEMPORAL_TYPE))
-				return Integer.toString(test.getTemporalType().value());
+				return new Integer(test.getTemporalType().value());
 			if (key.equals(COLUMN_START_TIME))
-				return Long.toString(test.getStartTime().getTime());
+				return test.getStartTime();
 			if (key.equals(COLUMN_END_TIME))
-				return Long.toString(test.getEndTime().getTime());
+				return test.getEndTime();
 			if (key.equals(COLUMN_TEMPORAL_PATTERN_ID))
 				return test.getTemporalPattern();
 			if (key.equals(COLUMN_MEASUREMENT_TYPE_ID))
@@ -104,11 +87,11 @@ public class TestWrapper implements Wrapper {
 			if (key.equals(COLUMN_EVALUATION_TYPE_ID))
 				return test.getEvaluationType();
 			if (key.equals(COLUMN_STATUS))
-				return Integer.toString(test.getStatus().value());
+				return new Integer(test.getStatus().value());
 			if (key.equals(COLUMN_MONITORED_ELEMENT_ID))
 				return test.getMonitoredElement();
 			if (key.equals(COLUMN_RETURN_TYPE))
-				return Integer.toString(test.getReturnType().value());
+				return new Integer(test.getReturnType().value());
 			if (key.equals(COLUMN_DESCRIPTION))
 				return test.getDescription();
 			if (key.equals(LINK_COLMN_MEASUREMENT_SETUP_ID))
@@ -125,59 +108,29 @@ public class TestWrapper implements Wrapper {
 		if (object instanceof Test) {
 			Test test = (Test) object;
 			if (key.equals(COLUMN_TEMPORAL_TYPE))
-				test.setTemporalType(TestTemporalType.from_int(Integer.parseInt((String) value)));
+				test.setTemporalType(TestTemporalType.from_int(((Integer) value).intValue()));
 			else if (key.equals(COLUMN_START_TIME))
 				test.setStartTime(new Date(Long.parseLong((String) value)));
 			else if (key.equals(COLUMN_END_TIME))
 				test.setEndTime(new Date(Long.parseLong((String) value)));
 			else if (key.equals(COLUMN_TEMPORAL_PATTERN_ID))
-				try {
-					test.setTemporalPattern((TemporalPattern) MeasurementStorableObjectPool.getStorableObject(
-						new Identifier((String) value), true));
-				} catch (ApplicationException e) {
-					Log.errorMessage("TestWrapper.setValue | key '" + key + "' caught " + e.getMessage());
-				}
+				test.setTemporalPattern((TemporalPattern) value);
 			else if (key.equals(COLUMN_MEASUREMENT_TYPE_ID))
-				try {
-					test.setMeasurementType((MeasurementType) MeasurementStorableObjectPool.getStorableObject(
-						new Identifier((String) value), true));
-				} catch (ApplicationException e) {
-					Log.errorMessage("TestWrapper.setValue | key '" + key + "' caught " + e.getMessage());
-				}
+				test.setMeasurementType((MeasurementType) value);
 			else if (key.equals(COLUMN_ANALYSIS_TYPE_ID))
-				try {
-					test.setAnalysisType((AnalysisType) MeasurementStorableObjectPool.getStorableObject(
-						new Identifier((String) value), true));
-				} catch (ApplicationException e) {
-					Log.errorMessage("TestWrapper.setValue | key '" + key + "' caught " + e.getMessage());
-				}
+				test.setAnalysisType((AnalysisType) value);
 			else if (key.equals(COLUMN_EVALUATION_TYPE_ID))
-				try {
-					test.setEvaluationType((EvaluationType) MeasurementStorableObjectPool.getStorableObject(
-						new Identifier((String) value), true));
-				} catch (ApplicationException e) {
-					Log.errorMessage("TestWrapper.setValue | key '" + key + "' caught " + e.getMessage());
-				}
+				test.setEvaluationType((EvaluationType) value);
 			else if (key.equals(COLUMN_STATUS))
-				test.setStatus(TestStatus.from_int(Integer.parseInt((String) value)));
+				test.setStatus(TestStatus.from_int(((Integer) value).intValue()));
 			else if (key.equals(COLUMN_MONITORED_ELEMENT_ID))
-				try {
-					test.setMonitoredElement((MonitoredElement) MeasurementStorableObjectPool.getStorableObject(
-						new Identifier((String) value), true));
-				} catch (ApplicationException e) {
-					Log.errorMessage("TestWrapper.setValue | key '" + key + "' caught " + e.getMessage());
-				}
+				test.setMonitoredElement((MonitoredElement) value);
 			else if (key.equals(COLUMN_RETURN_TYPE))
-				test.setReturnType(TestReturnType.from_int(Integer.parseInt((String) value)));
+				test.setReturnType(TestReturnType.from_int(((Integer) value).intValue()));
 			else if (key.equals(COLUMN_DESCRIPTION))
 				test.setDescription((String) value);
-			else if (key.equals(LINK_COLMN_MEASUREMENT_SETUP_ID)) {
-				List msIdStr = (List) value;
-				List msIds = new ArrayList(msIdStr.size());
-				for (Iterator it = msIdStr.iterator(); it.hasNext();)
-					msIds.add(new Identifier((String) it.next()));
-				test.setMeasurementSetupIds0(msIds);
-			}
+			else if (key.equals(LINK_COLMN_MEASUREMENT_SETUP_ID))
+				test.setMeasurementSetupIds((List) value);
 		}
 	}
 

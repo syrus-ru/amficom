@@ -1,5 +1,5 @@
 /*
- * $Id: EvaluationTypeWrapper.java,v 1.1 2005/01/27 14:11:06 bob Exp $
+ * $Id: EvaluationTypeWrapper.java,v 1.2 2005/02/01 06:38:49 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,18 +11,12 @@ package com.syrus.AMFICOM.measurement;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 
-import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
-import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.Wrapper;
-import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/01/27 14:11:06 $
+ * @version $Revision: 1.2 $, $Date: 2005/02/01 06:38:49 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -42,10 +36,8 @@ public class EvaluationTypeWrapper implements Wrapper {
 
 	private EvaluationTypeWrapper() {
 		// empty private constructor
-		String[] keysArray = new String[] { StorableObjectDatabase.COLUMN_ID, StorableObjectDatabase.COLUMN_CREATED,
-				StorableObjectDatabase.COLUMN_CREATOR_ID, StorableObjectDatabase.COLUMN_MODIFIED,
-				StorableObjectDatabase.COLUMN_MODIFIER_ID, COLUMN_CODENAME, COLUMN_DESCRIPTION, MODE_IN, MODE_OUT,
-				MODE_THRESHOLD, MODE_ETALON};
+		String[] keysArray = new String[] { COLUMN_CODENAME, COLUMN_DESCRIPTION, MODE_IN, MODE_OUT, MODE_THRESHOLD,
+				MODE_ETALON};
 
 		this.keys = Collections.unmodifiableList(new ArrayList(Arrays.asList(keysArray)));
 	}
@@ -68,16 +60,6 @@ public class EvaluationTypeWrapper implements Wrapper {
 	public Object getValue(final Object object, final String key) {
 		if (object instanceof EvaluationType) {
 			EvaluationType evaluationType = (EvaluationType) object;
-			if (key.equals(StorableObjectDatabase.COLUMN_ID))
-				return evaluationType.getId().toString();
-			if (key.equals(StorableObjectDatabase.COLUMN_CREATED))
-				return evaluationType.getCreated().toString();
-			if (key.equals(StorableObjectDatabase.COLUMN_CREATOR_ID))
-				return evaluationType.getCreatorId().getIdentifierString();
-			if (key.equals(StorableObjectDatabase.COLUMN_MODIFIED))
-				return evaluationType.getModified().toString();
-			if (key.equals(StorableObjectDatabase.COLUMN_MODIFIER_ID))
-				return evaluationType.getModifierId().getIdentifierString();
 			if (key.equals(COLUMN_CODENAME))
 				return evaluationType.getCodename();
 			if (key.equals(COLUMN_DESCRIPTION))
@@ -106,51 +88,14 @@ public class EvaluationTypeWrapper implements Wrapper {
 				evaluationType.setCodename((String) value);
 			else if (key.equals(COLUMN_DESCRIPTION))
 				evaluationType.setDescription((String) value);
-			else if (key.equals(MODE_IN)) {
-				List paramTypeIdStr = (List) value;
-				List paramTypeIds = new ArrayList(paramTypeIdStr.size());
-				for (Iterator it = paramTypeIdStr.iterator(); it.hasNext();)
-					paramTypeIds.add(new Identifier((String) it.next()));
-				try {
-					evaluationType
-							.setInParameterTypes(GeneralStorableObjectPool.getStorableObjects(paramTypeIds, true));
-				} catch (ApplicationException e) {
-					Log.errorMessage("EvaluationTypeWrapper.setValue | key '" + key + "' caught " + e.getMessage());
-				}
-			} else if (key.equals(MODE_OUT)) {
-				List paramTypeIdStr = (List) value;
-				List paramTypeIds = new ArrayList(paramTypeIdStr.size());
-				for (Iterator it = paramTypeIdStr.iterator(); it.hasNext();)
-					paramTypeIds.add(new Identifier((String) it.next()));
-				try {
-					evaluationType.setOutParameterTypes(GeneralStorableObjectPool
-							.getStorableObjects(paramTypeIds, true));
-				} catch (ApplicationException e) {
-					Log.errorMessage("EvaluationTypeWrapper.setValue | key '" + key + "' caught " + e.getMessage());
-				}
-			} else if (key.equals(MODE_THRESHOLD)) {
-				List paramTypeIdStr = (List) value;
-				List paramTypeIds = new ArrayList(paramTypeIdStr.size());
-				for (Iterator it = paramTypeIdStr.iterator(); it.hasNext();)
-					paramTypeIds.add(new Identifier((String) it.next()));
-				try {
-					evaluationType.setThresholdParameterTypes(GeneralStorableObjectPool.getStorableObjects(
-						paramTypeIds, true));
-				} catch (ApplicationException e) {
-					Log.errorMessage("EvaluationTypeWrapper.setValue | key '" + key + "' caught " + e.getMessage());
-				}
-			} else if (key.equals(MODE_ETALON)) {
-				List paramTypeIdStr = (List) value;
-				List paramTypeIds = new ArrayList(paramTypeIdStr.size());
-				for (Iterator it = paramTypeIdStr.iterator(); it.hasNext();)
-					paramTypeIds.add(new Identifier((String) it.next()));
-				try {
-					evaluationType.setEtalonParameterTypes(GeneralStorableObjectPool.getStorableObjects(paramTypeIds,
-						true));
-				} catch (ApplicationException e) {
-					Log.errorMessage("EvaluationTypeWrapper.setValue | key '" + key + "' caught " + e.getMessage());
-				}
-			}
+			else if (key.equals(MODE_IN))
+				evaluationType.setInParameterTypes((List) value);
+			else if (key.equals(MODE_OUT))
+				evaluationType.setOutParameterTypes((List) value);
+			else if (key.equals(MODE_THRESHOLD))
+				evaluationType.setThresholdParameterTypes((List) value);
+			else if (key.equals(MODE_ETALON))
+				evaluationType.setEtalonParameterTypes((List) value);
 		}
 	}
 

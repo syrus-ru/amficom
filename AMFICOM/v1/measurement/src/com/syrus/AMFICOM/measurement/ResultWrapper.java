@@ -1,5 +1,5 @@
 /*
- * $Id: ResultWrapper.java,v 1.1 2005/01/28 06:51:13 bob Exp $
+ * $Id: ResultWrapper.java,v 1.2 2005/02/01 06:38:49 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,15 +13,11 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.Wrapper;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
-import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/01/28 06:51:13 $
+ * @version $Revision: 1.2 $, $Date: 2005/02/01 06:38:49 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -46,9 +42,7 @@ public class ResultWrapper implements Wrapper {
 
 	private ResultWrapper() {
 		// empty private constructor
-		String[] keysArray = new String[] { StorableObjectDatabase.COLUMN_ID, StorableObjectDatabase.COLUMN_CREATED,
-				StorableObjectDatabase.COLUMN_CREATOR_ID, StorableObjectDatabase.COLUMN_MODIFIED,
-				StorableObjectDatabase.COLUMN_MODIFIER_ID, COLUMN_ACTION_ID, COLUMN_SORT};
+		String[] keysArray = new String[] { COLUMN_ACTION_ID, COLUMN_SORT};
 
 		this.keys = Collections.unmodifiableList(new ArrayList(Arrays.asList(keysArray)));
 	}
@@ -71,16 +65,6 @@ public class ResultWrapper implements Wrapper {
 	public Object getValue(final Object object, final String key) {
 		if (object instanceof Result) {
 			Result result = (Result) object;
-			if (key.equals(StorableObjectDatabase.COLUMN_ID))
-				return result.getId().toString();
-			if (key.equals(StorableObjectDatabase.COLUMN_CREATED))
-				return result.getCreated().toString();
-			if (key.equals(StorableObjectDatabase.COLUMN_CREATOR_ID))
-				return result.getCreatorId().getIdentifierString();
-			if (key.equals(StorableObjectDatabase.COLUMN_MODIFIED))
-				return result.getModified().toString();
-			if (key.equals(StorableObjectDatabase.COLUMN_MODIFIER_ID))
-				return result.getModifierId().getIdentifierString();
 			if (key.equals(COLUMN_ACTION_ID))
 				return result.getAction().getId();
 			if (key.equals(COLUMN_SORT))
@@ -98,13 +82,9 @@ public class ResultWrapper implements Wrapper {
 		if (object instanceof Result) {
 			Result result = (Result) object;
 			if (key.equals(COLUMN_ACTION_ID))
-				try {
-					result.setAction((Action) MeasurementStorableObjectPool.getStorableObject(new Identifier((String)value),true));
-				} catch (ApplicationException e) {
-					Log.errorMessage("ResultWrapper.setValue | key '" + key + "' caught " + e.getMessage());
-				}
+				result.setAction((Action) value);
 			else if (key.equals(COLUMN_SORT))
-				result.setSort(ResultSort.from_int(Integer.parseInt((String)value)));
+				result.setSort(ResultSort.from_int(((Integer) value).intValue()));
 		}
 	}
 

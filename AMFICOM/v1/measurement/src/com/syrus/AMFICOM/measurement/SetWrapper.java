@@ -1,5 +1,5 @@
 /*
- * $Id: SetWrapper.java,v 1.1 2005/01/31 11:27:32 bob Exp $
+ * $Id: SetWrapper.java,v 1.2 2005/02/01 06:38:49 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,21 +12,15 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
-import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ParameterType;
-import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.Wrapper;
-import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/01/31 11:27:32 $
+ * @version $Revision: 1.2 $, $Date: 2005/02/01 06:38:49 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -50,9 +44,7 @@ public class SetWrapper implements Wrapper {
 
 	private SetWrapper() {
 		// empty private constructor
-		String[] keysArray = new String[] { StorableObjectDatabase.COLUMN_ID, StorableObjectDatabase.COLUMN_CREATED,
-				StorableObjectDatabase.COLUMN_CREATOR_ID, StorableObjectDatabase.COLUMN_MODIFIED,
-				StorableObjectDatabase.COLUMN_MODIFIER_ID, COLUMN_SORT, COLUMN_DESCRIPTION, LINK_COLUMN_ME_ID,
+		String[] keysArray = new String[] { COLUMN_SORT, COLUMN_DESCRIPTION, LINK_COLUMN_ME_ID,
 				LINK_COLUMN_SET_PARAMETERS};
 
 		this.keys = Collections.unmodifiableList(new ArrayList(Arrays.asList(keysArray)));
@@ -76,18 +68,8 @@ public class SetWrapper implements Wrapper {
 	public Object getValue(final Object object, final String key) {
 		if (object instanceof Set) {
 			Set set = (Set) object;
-			if (key.equals(StorableObjectDatabase.COLUMN_ID))
-				return set.getId();
-			if (key.equals(StorableObjectDatabase.COLUMN_CREATED))
-				return Long.toString(set.getCreated().getTime());
-			if (key.equals(StorableObjectDatabase.COLUMN_CREATOR_ID))
-				return set.getCreatorId();
-			if (key.equals(StorableObjectDatabase.COLUMN_MODIFIED))
-				return Long.toString(set.getModified().getTime());
-			if (key.equals(StorableObjectDatabase.COLUMN_MODIFIER_ID))
-				return set.getModifierId();
 			if (key.equals(COLUMN_SORT))
-				return Integer.toString(set.getSort().value());
+				return new Integer(set.getSort().value());
 			if (key.equals(COLUMN_DESCRIPTION))
 				return set.getDescription();
 			if (key.equals(LINK_COLUMN_ME_ID))
@@ -98,14 +80,7 @@ public class SetWrapper implements Wrapper {
 				for (int i = 0; i < parameters.length; i++) {
 					values.put(LINK_COLUMN_SET_PARAMETER_ID + i, parameters[i].getId());
 					values.put(LINK_COLUMN_TYPE_ID + i, parameters[i].getType());
-
-					byte[] bs = parameters[i].getValue();
-					StringBuffer buffer = new StringBuffer();
-					for (int j = 0; j < bs.length; j++) {
-						String s = Integer.toString(bs[j] & 0xFF, 16);
-						buffer.append((s.length() == 1 ? "0": "") + s);
-					}
-					values.put(LINK_COLUMN_VALUE + i, buffer.toString());
+					values.put(LINK_COLUMN_VALUE + i, parameters[i].getValue());
 
 				}
 				return values;
@@ -122,38 +97,21 @@ public class SetWrapper implements Wrapper {
 		if (object instanceof Set) {
 			Set set = (Set) object;
 			if (key.equals(COLUMN_SORT))
-				set.setSort(Integer.parseInt((String) value));
+				set.setSort(((Integer) value).intValue());
 			else if (key.equals(COLUMN_DESCRIPTION))
 				set.setDescription((String) value);
 			else if (key.equals(LINK_COLUMN_ME_ID)) {
-				List meIdStr = (List) value;
-				List meIds = new ArrayList(meIdStr.size());
-				for (Iterator it = meIdStr.iterator(); it.hasNext();)
-					meIds.add(new Identifier((String) it.next()));
-				try {
-					set.setMonitoredElementIds(ConfigurationStorableObjectPool.getStorableObjects(meIds, true));
-				} catch (ApplicationException e) {
-					Log.errorMessage("SetWrapper.setValue | key '" + key + "' caught " + e.getMessage());
-				}
+				set.setMonitoredElementIds((List) value);
 			} else if (key.equals(LINK_COLUMN_SET_PARAMETERS)) {
 				Map setParameterMap = (Map) value;
 				/* there is 3*N keys for N SetParameter */
 				SetParameter[] setParameters = new SetParameter[setParameterMap.size() / 3];
 				for (int i = 0; i < setParameters.length; i++) {
-					try {
-						Identifier parameterId = new Identifier((String) setParameterMap
-								.get(LINK_COLUMN_SET_PARAMETER_ID + i));
-						ParameterType parameterType = (ParameterType) GeneralStorableObjectPool.getStorableObject(
-							new Identifier((String) setParameterMap.get(LINK_COLUMN_TYPE_ID + i)), true);
-						
-						String valueStr = (String)setParameterMap.get(LINK_COLUMN_VALUE + i);
-						byte[] setParameterValue =  new byte[valueStr.length() / 2];
-						for (int j = 0; j < setParameterValue.length; j++) 
-							setParameterValue[j] = (byte) ((char)Integer.parseInt(valueStr.substring(2*j, 2*(j+1)), 16));
-						setParameters[i] = new SetParameter(parameterId, parameterType, setParameterValue);
-					} catch (ApplicationException e) {
-						Log.errorMessage("SetWrapper.setValue | key '" + key + "' caught " + e.getMessage());
-					}
+					Identifier parameterId = (Identifier) setParameterMap.get(LINK_COLUMN_SET_PARAMETER_ID + i);
+					ParameterType parameterType = (ParameterType) setParameterMap.get(LINK_COLUMN_TYPE_ID + i);
+					byte[] setParameterValue = (byte[]) setParameterMap.get(LINK_COLUMN_VALUE + i);
+					setParameters[i] = new SetParameter(parameterId, parameterType, setParameterValue);
+
 				}
 				set.setParameters(setParameters);
 			}

@@ -1,5 +1,5 @@
 /*
- * $Id: ModelingTypeWrapper.java,v 1.1 2005/01/28 09:40:05 bob Exp $
+ * $Id: ModelingTypeWrapper.java,v 1.2 2005/02/01 06:38:49 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,18 +11,12 @@ package com.syrus.AMFICOM.measurement;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 
-import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
-import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.Wrapper;
-import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/01/28 09:40:05 $
+ * @version $Revision: 1.2 $, $Date: 2005/02/01 06:38:49 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -40,9 +34,7 @@ public class ModelingTypeWrapper implements Wrapper {
 
 	private ModelingTypeWrapper() {
 		// empty private constructor
-		String[] keysArray = new String[] { StorableObjectDatabase.COLUMN_ID, StorableObjectDatabase.COLUMN_CREATED,
-				StorableObjectDatabase.COLUMN_CREATOR_ID, StorableObjectDatabase.COLUMN_MODIFIED,
-				StorableObjectDatabase.COLUMN_MODIFIER_ID, COLUMN_CODENAME, COLUMN_DESCRIPTION, MODE_IN, MODE_OUT};
+		String[] keysArray = new String[] { COLUMN_CODENAME, COLUMN_DESCRIPTION, MODE_IN, MODE_OUT};
 
 		this.keys = Collections.unmodifiableList(new ArrayList(Arrays.asList(keysArray)));
 	}
@@ -65,16 +57,6 @@ public class ModelingTypeWrapper implements Wrapper {
 	public Object getValue(final Object object, final String key) {
 		if (object instanceof ModelingType) {
 			ModelingType modelingType = (ModelingType) object;
-			if (key.equals(StorableObjectDatabase.COLUMN_ID))
-				return modelingType.getId().toString();
-			if (key.equals(StorableObjectDatabase.COLUMN_CREATED))
-				return modelingType.getCreated().toString();
-			if (key.equals(StorableObjectDatabase.COLUMN_CREATOR_ID))
-				return modelingType.getCreatorId().getIdentifierString();
-			if (key.equals(StorableObjectDatabase.COLUMN_MODIFIED))
-				return modelingType.getModified().toString();
-			if (key.equals(StorableObjectDatabase.COLUMN_MODIFIER_ID))
-				return modelingType.getModifierId().getIdentifierString();
 			if (key.equals(COLUMN_CODENAME))
 				return modelingType.getCodename();
 			if (key.equals(COLUMN_DESCRIPTION))
@@ -98,27 +80,10 @@ public class ModelingTypeWrapper implements Wrapper {
 				modelingType.setCodename((String) value);
 			else if (key.equals(COLUMN_DESCRIPTION))
 				modelingType.setDescription((String) value);
-			else if (key.equals(MODE_IN)) {
-				List paramTypeIdStr = (List) value;
-				List paramTypeIds = new ArrayList(paramTypeIdStr.size());
-				for (Iterator it = paramTypeIdStr.iterator(); it.hasNext();)
-					paramTypeIds.add(new Identifier((String) it.next()));
-				try {
-					modelingType.setInParameterTypes(GeneralStorableObjectPool.getStorableObjects(paramTypeIds, true));
-				} catch (ApplicationException e) {
-					Log.errorMessage("ModelingTypeWrapper.setValue | key '" + key + "' caught " + e.getMessage());
-				}
-			} else if (key.equals(MODE_OUT)) {
-				List paramTypeIdStr = (List) value;
-				List paramTypeIds = new ArrayList(paramTypeIdStr.size());
-				for (Iterator it = paramTypeIdStr.iterator(); it.hasNext();)
-					paramTypeIds.add(new Identifier((String) it.next()));
-				try {
-					modelingType.setOutParameterTypes(GeneralStorableObjectPool.getStorableObjects(paramTypeIds, true));
-				} catch (ApplicationException e) {
-					Log.errorMessage("ModelingTypeWrapper.setValue | key '" + key + "' caught " + e.getMessage());
-				}
-			}
+			else if (key.equals(MODE_IN))
+				modelingType.setInParameterTypes((List) value);
+			else if (key.equals(MODE_OUT))
+				modelingType.setOutParameterTypes((List) value);
 		}
 	}
 

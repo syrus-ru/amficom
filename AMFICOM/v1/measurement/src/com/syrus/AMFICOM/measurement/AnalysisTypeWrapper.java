@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisTypeWrapper.java,v 1.2 2005/01/27 14:11:23 bob Exp $
+ * $Id: AnalysisTypeWrapper.java,v 1.3 2005/02/01 06:38:49 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,18 +11,12 @@ package com.syrus.AMFICOM.measurement;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 
-import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
-import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.Wrapper;
-import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/01/27 14:11:23 $
+ * @version $Revision: 1.3 $, $Date: 2005/02/01 06:38:49 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -42,10 +36,8 @@ public class AnalysisTypeWrapper implements Wrapper {
 
 	private AnalysisTypeWrapper() {
 		// empty private constructor
-		String[] keysArray = new String[] { StorableObjectDatabase.COLUMN_ID, StorableObjectDatabase.COLUMN_CREATED,
-				StorableObjectDatabase.COLUMN_CREATOR_ID, StorableObjectDatabase.COLUMN_MODIFIED,
-				StorableObjectDatabase.COLUMN_MODIFIER_ID, COLUMN_CODENAME, COLUMN_DESCRIPTION, MODE_IN, MODE_OUT,
-				MODE_CRITERION, MODE_ETALON};
+		String[] keysArray = new String[] { COLUMN_CODENAME, COLUMN_DESCRIPTION, MODE_IN, MODE_OUT, MODE_CRITERION,
+				MODE_ETALON};
 
 		this.keys = Collections.unmodifiableList(new ArrayList(Arrays.asList(keysArray)));
 	}
@@ -68,16 +60,6 @@ public class AnalysisTypeWrapper implements Wrapper {
 	public Object getValue(final Object object, final String key) {
 		if (object instanceof AnalysisType) {
 			AnalysisType analysisType = (AnalysisType) object;
-			if (key.equals(StorableObjectDatabase.COLUMN_ID))
-				return analysisType.getId().toString();
-			if (key.equals(StorableObjectDatabase.COLUMN_CREATED))
-				return analysisType.getCreated().toString();
-			if (key.equals(StorableObjectDatabase.COLUMN_CREATOR_ID))
-				return analysisType.getCreatorId().getIdentifierString();
-			if (key.equals(StorableObjectDatabase.COLUMN_MODIFIED))
-				return analysisType.getModified().toString();
-			if (key.equals(StorableObjectDatabase.COLUMN_MODIFIER_ID))
-				return analysisType.getModifierId().getIdentifierString();
 			if (key.equals(COLUMN_CODENAME))
 				return analysisType.getCodename();
 			if (key.equals(COLUMN_DESCRIPTION))
@@ -106,49 +88,14 @@ public class AnalysisTypeWrapper implements Wrapper {
 				analysisType.setCodename((String) value);
 			else if (key.equals(COLUMN_DESCRIPTION))
 				analysisType.setDescription((String) value);
-			else if (key.equals(MODE_IN)) {
-				List paramTypeIdStr = (List) value;
-				List paramTypeIds = new ArrayList(paramTypeIdStr.size());
-				for (Iterator it = paramTypeIdStr.iterator(); it.hasNext();)
-					paramTypeIds.add(new Identifier((String) it.next()));
-				try {
-					analysisType.setInParameterTypes(GeneralStorableObjectPool.getStorableObjects(paramTypeIds, true));
-				} catch (ApplicationException e) {
-					Log.errorMessage("AnalysisTypeWrapper.setValue | key '" + key + "' caught " + e.getMessage());
-				}
-			} else if (key.equals(MODE_OUT)) {
-				List paramTypeIdStr = (List) value;
-				List paramTypeIds = new ArrayList(paramTypeIdStr.size());
-				for (Iterator it = paramTypeIdStr.iterator(); it.hasNext();)
-					paramTypeIds.add(new Identifier((String) it.next()));
-				try {
-					analysisType.setOutParameterTypes(GeneralStorableObjectPool.getStorableObjects(paramTypeIds, true));
-				} catch (ApplicationException e) {
-					Log.errorMessage("AnalysisTypeWrapper.setValue | key '" + key + "' caught " + e.getMessage());
-				}
-			} else if (key.equals(MODE_CRITERION)) {
-				List paramTypeIdStr = (List) value;
-				List paramTypeIds = new ArrayList(paramTypeIdStr.size());
-				for (Iterator it = paramTypeIdStr.iterator(); it.hasNext();)
-					paramTypeIds.add(new Identifier((String) it.next()));
-				try {
-					analysisType.setCriteriaParameterTypes(GeneralStorableObjectPool.getStorableObjects(paramTypeIds,
-						true));
-				} catch (ApplicationException e) {
-					Log.errorMessage("AnalysisTypeWrapper.setValue | key '" + key + "' caught " + e.getMessage());
-				}
-			} else if (key.equals(MODE_ETALON)) {
-				List paramTypeIdStr = (List) value;
-				List paramTypeIds = new ArrayList(paramTypeIdStr.size());
-				for (Iterator it = paramTypeIdStr.iterator(); it.hasNext();)
-					paramTypeIds.add(new Identifier((String) it.next()));
-				try {
-					analysisType.setEtalonParameterTypes(GeneralStorableObjectPool.getStorableObjects(paramTypeIds,
-						true));
-				} catch (ApplicationException e) {
-					Log.errorMessage("AnalysisTypeWrapper.setValue | key '" + key + "' caught " + e.getMessage());
-				}
-			}
+			else if (key.equals(MODE_IN))
+				analysisType.setInParameterTypes((List) value);
+			else if (key.equals(MODE_OUT))
+				analysisType.setOutParameterTypes((List) value);
+			else if (key.equals(MODE_CRITERION))
+				analysisType.setCriteriaParameterTypes((List) value);
+			else if (key.equals(MODE_ETALON))
+				analysisType.setEtalonParameterTypes((List) value);
 		}
 	}
 
@@ -166,8 +113,7 @@ public class AnalysisTypeWrapper implements Wrapper {
 	}
 
 	public Class getPropertyClass(String key) {
-		if (key.equals(MODE_IN) || key.equals(MODE_OUT)
-				|| key.equals(MODE_CRITERION) || key.equals(MODE_ETALON))
+		if (key.equals(MODE_IN) || key.equals(MODE_OUT) || key.equals(MODE_CRITERION) || key.equals(MODE_ETALON))
 			return List.class;
 		return String.class;
 	}

@@ -1,5 +1,5 @@
 /*
- * $Id: ModelingWrapper.java,v 1.1 2005/01/28 10:28:21 bob Exp $
+ * $Id: ModelingWrapper.java,v 1.2 2005/02/01 06:38:49 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,14 +13,11 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.Wrapper;
-import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/01/28 10:28:21 $
+ * @version $Revision: 1.2 $, $Date: 2005/02/01 06:38:49 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -37,10 +34,8 @@ public class ModelingWrapper implements Wrapper {
 
 	private ModelingWrapper() {
 		// empty private constructor
-		String[] keysArray = new String[] { StorableObjectDatabase.COLUMN_ID, StorableObjectDatabase.COLUMN_CREATED,
-				StorableObjectDatabase.COLUMN_CREATOR_ID, StorableObjectDatabase.COLUMN_MODIFIED,
-				StorableObjectDatabase.COLUMN_MODIFIER_ID, COLUMN_TYPE_ID, COLUMN_MONITORED_ELEMENT_ID,
-				COLUMN_ARGUMENT_SET_ID, COLUMN_NAME};
+		String[] keysArray = new String[] { COLUMN_TYPE_ID, COLUMN_MONITORED_ELEMENT_ID, COLUMN_ARGUMENT_SET_ID,
+				COLUMN_NAME};
 
 		this.keys = Collections.unmodifiableList(new ArrayList(Arrays.asList(keysArray)));
 	}
@@ -63,16 +58,6 @@ public class ModelingWrapper implements Wrapper {
 	public Object getValue(final Object object, final String key) {
 		if (object instanceof Modeling) {
 			Modeling modeling = (Modeling) object;
-			if (key.equals(StorableObjectDatabase.COLUMN_ID))
-				return modeling.getId().toString();
-			if (key.equals(StorableObjectDatabase.COLUMN_CREATED))
-				return modeling.getCreated().toString();
-			if (key.equals(StorableObjectDatabase.COLUMN_CREATOR_ID))
-				return modeling.getCreatorId().getIdentifierString();
-			if (key.equals(StorableObjectDatabase.COLUMN_MODIFIED))
-				return modeling.getModified().toString();
-			if (key.equals(StorableObjectDatabase.COLUMN_MODIFIER_ID))
-				return modeling.getModifierId().getIdentifierString();
 			if (key.equals(COLUMN_TYPE_ID))
 				return modeling.getType();
 			if (key.equals(COLUMN_MONITORED_ELEMENT_ID))
@@ -93,21 +78,11 @@ public class ModelingWrapper implements Wrapper {
 		if (object instanceof Modeling) {
 			Modeling modeling = (Modeling) object;
 			if (key.equals(COLUMN_TYPE_ID))
-				try {
-					modeling.setType((ActionType) MeasurementStorableObjectPool.getStorableObject(
-						new Identifier((String) value), true));
-				} catch (ApplicationException e) {
-					Log.errorMessage("ModelingWrapper.setValue | key '" + key + "' caught " + e.getMessage());
-				}
+				modeling.setType((ActionType) value);
 			else if (key.equals(COLUMN_MONITORED_ELEMENT_ID))
-				modeling.setMonitoredElementId(new Identifier((String) value));
+				modeling.setMonitoredElementId((Identifier) value);
 			else if (key.equals(COLUMN_ARGUMENT_SET_ID))
-				try {
-					modeling.setArgumentSet((Set) MeasurementStorableObjectPool.getStorableObject(
-						new Identifier((String) value), true));
-				} catch (ApplicationException e) {
-					Log.errorMessage("ModelingWrapper.setValue | key '" + key + "' caught " + e.getMessage());
-				}
+				modeling.setArgumentSet((Set) value);
 			else if (key.equals(COLUMN_NAME))
 				modeling.setName((String) value);
 		}

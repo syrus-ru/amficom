@@ -1,5 +1,5 @@
 /*
- * $Id: TemporalPatternWrapper.java,v 1.1 2005/01/27 16:24:40 bob Exp $
+ * $Id: TemporalPatternWrapper.java,v 1.2 2005/02/01 06:38:49 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,11 +14,10 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
-import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.Wrapper;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/01/27 16:24:40 $
+ * @version $Revision: 1.2 $, $Date: 2005/02/01 06:38:49 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -33,9 +32,7 @@ public class TemporalPatternWrapper implements Wrapper {
 
 	private TemporalPatternWrapper() {
 		// empty private constructor
-		String[] keysArray = new String[] { StorableObjectDatabase.COLUMN_ID, StorableObjectDatabase.COLUMN_CREATED,
-				StorableObjectDatabase.COLUMN_CREATOR_ID, StorableObjectDatabase.COLUMN_MODIFIED,
-				StorableObjectDatabase.COLUMN_MODIFIER_ID, COLUMN_DESCRIPTION, COLUMN_VALUE};
+		String[] keysArray = new String[] { COLUMN_DESCRIPTION, COLUMN_VALUE};
 
 		this.keys = Collections.unmodifiableList(new ArrayList(Arrays.asList(keysArray)));
 	}
@@ -58,16 +55,6 @@ public class TemporalPatternWrapper implements Wrapper {
 	public Object getValue(final Object object, final String key) {
 		if (object instanceof TemporalPattern) {
 			TemporalPattern temporalPattern = (TemporalPattern) object;
-			if (key.equals(StorableObjectDatabase.COLUMN_ID))
-				return temporalPattern.getId().toString();
-			if (key.equals(StorableObjectDatabase.COLUMN_CREATED))
-				return temporalPattern.getCreated().toString();
-			if (key.equals(StorableObjectDatabase.COLUMN_CREATOR_ID))
-				return temporalPattern.getCreatorId().getIdentifierString();
-			if (key.equals(StorableObjectDatabase.COLUMN_MODIFIED))
-				return temporalPattern.getModified().toString();
-			if (key.equals(StorableObjectDatabase.COLUMN_MODIFIER_ID))
-				return temporalPattern.getModifierId().getIdentifierString();
 			if (key.equals(COLUMN_DESCRIPTION))
 				return temporalPattern.getDescription();
 			if (key.equals(COLUMN_VALUE))
