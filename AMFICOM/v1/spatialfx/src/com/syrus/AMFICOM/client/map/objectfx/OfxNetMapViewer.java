@@ -1,5 +1,5 @@
 /**
- * $Id: OfxNetMapViewer.java,v 1.3 2005/02/22 14:45:17 krupenn Exp $
+ * $Id: OfxNetMapViewer.java,v 1.4 2005/02/24 08:36:50 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -45,7 +45,7 @@ import javax.swing.ToolTipManager;
 
 /**
  * 
- * @version $Revision: 1.3 $, $Date: 2005/02/22 14:45:17 $
+ * @version $Revision: 1.4 $, $Date: 2005/02/24 08:36:50 $
  * @author $Author: krupenn $
  * @module spatialfx_v1
  */
@@ -65,16 +65,6 @@ public class OfxNetMapViewer extends NetMapViewer
 
 	protected JPanel visualComponent = null;
 
-//	public JComponent getJComponent()
-//	{
-//		return null;
-//	}
-//	
-//	public Component getComponent()
-//	{
-//		return this.jMapViewer;
-//	}
-	
 	public JMapViewer getJMapViewer()
 	{
 		return this.mapConnection.getJMapViewer();
@@ -132,6 +122,10 @@ public class OfxNetMapViewer extends NetMapViewer
 
 			this.ttm = ToolTipManager.sharedInstance();
 			this.ttm.registerComponent(this.mttp);
+
+			SxMapViewer anSxMapViewer = jMapViewer.getSxMapViewer();
+	
+			anSxMapViewer.addLayer( "Network layer", this.logicalNetLayer.spatialLayer);
 		}
 		catch(Exception e)
 		{
@@ -168,7 +162,6 @@ public class OfxNetMapViewer extends NetMapViewer
 		return this.mapConnection;
 	}
 
-	//Установить карту
 	public void setConnection(MapConnection conn)
 		throws MapDataException
 	{
@@ -182,14 +175,8 @@ public class OfxNetMapViewer extends NetMapViewer
 		{
 			this.mapConnection = (OfxConnection )conn;
 			
-			if(conn != null)
-			{
-				SxMapViewer anSxMapViewer = this.mapConnection.getJMapViewer().getSxMapViewer();
-	
-				anSxMapViewer.addLayer( "Network layer", this.logicalNetLayer.spatialLayer);
-			}
 		}
-		catch (SxMapLayerException e)
+		catch (ClassCastException e)
 		{
 			throw new MapDataException(e);
 		}
