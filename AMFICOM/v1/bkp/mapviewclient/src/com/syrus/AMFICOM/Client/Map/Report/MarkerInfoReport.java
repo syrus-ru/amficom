@@ -6,12 +6,12 @@ import com.syrus.AMFICOM.Client.General.Report.DividableTableColumnModel;
 import com.syrus.AMFICOM.Client.General.Report.DividableTableModel;
 import com.syrus.AMFICOM.Client.General.Report.ObjectsReport;
 import com.syrus.AMFICOM.Client.General.Report.ReportData;
-import com.syrus.AMFICOM.Client.Resource.Map.IntPoint;
-import com.syrus.AMFICOM.Client.Resource.Map.Map;
-import com.syrus.AMFICOM.Client.Resource.Map.MapNodeProtoElement;
-import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalLinkElement;
-import com.syrus.AMFICOM.Client.Resource.Map.MapPipePathElement;
-import com.syrus.AMFICOM.Client.Resource.Map.MapSiteNodeElement;
+import com.syrus.AMFICOM.map.IntPoint;
+import com.syrus.AMFICOM.map.Map;
+import com.syrus.AMFICOM.map.SiteNodeType;
+import com.syrus.AMFICOM.map.PhysicalLink;
+import com.syrus.AMFICOM.map.Collector;
+import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapCablePathElement;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapMarker;
 import com.syrus.AMFICOM.Client.Resource.MapView.MarkerController;
@@ -105,9 +105,9 @@ class MarkerInfoReportTableModel extends DividableTableModel
     tableData[0][curCCI] = "";
     tableData[1][curCCI++] = "";
 
-    MapPhysicalLinkElement physicalLink = (MapPhysicalLinkElement )Pool.get(
-			MapPhysicalLinkElement.typ,
-			marker.getNodeLink().getPhysicalLinkId());
+    PhysicalLink physicalLink = (PhysicalLink )Pool.get(
+			PhysicalLink.typ,
+			marker.getNodeLink().getPhysicalLink().getId());
 
     if (physicalLink == null)
 		throw new CreateReportException(
@@ -115,7 +115,7 @@ class MarkerInfoReportTableModel extends DividableTableModel
 				CreateReportException.poolObjNotExists);
       
     Map map = physicalLink.getMap(); //Возможно лажа!!
-    MapPipePathElement pipePath =  map.getCollector(physicalLink);
+    Collector pipePath =  map.getCollector(physicalLink);
     if (pipePath != null)
     {
       tableData[0][curCCI] = LangModelMap.getString("Collector");
@@ -146,12 +146,12 @@ class MarkerInfoReportTableModel extends DividableTableModel
 
   private String getSiteFullName(Map map,String id)
   {
-      MapSiteNodeElement siteNode = map.getMapSiteNodeElement(id);
+      SiteNode siteNode = map.getMapSiteNodeElement(id);
       if (siteNode == null)
         return null;
         
-      MapNodeProtoElement nodeProto = (MapNodeProtoElement) Pool.get(
-        MapNodeProtoElement.typ,
+      SiteNodeType nodeProto = (SiteNodeType) Pool.get(
+        SiteNodeType.typ,
         siteNode.getMapProtoId());
         
       if (nodeProto == null)

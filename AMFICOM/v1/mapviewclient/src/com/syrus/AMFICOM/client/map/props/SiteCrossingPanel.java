@@ -1,31 +1,32 @@
 package com.syrus.AMFICOM.Client.Map.Props;
 
-import com.syrus.AMFICOM.Client.Resource.Map.MapNodeElement;
-import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalLinkElement;
-import com.syrus.AMFICOM.Client.Resource.Map.MapSiteNodeElement;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapCablePathElement;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapUnboundLinkElement;
+import com.syrus.AMFICOM.map.AbstractNode;
+import com.syrus.AMFICOM.map.PhysicalLink;
+import com.syrus.AMFICOM.map.SiteNode;
+
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-
-import java.awt.Paint;
 import java.awt.Point;
 import java.awt.Stroke;
 import java.awt.geom.Arc2D;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
+
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+
 import javax.swing.JPanel;
-import java.util.Iterator;
 
 public class SiteCrossingPanel extends JPanel 
 {
-	MapSiteNodeElement site;
+	SiteNode site;
 	
 	public static final int WELL_RADIUS = 50;
 	public static final int ARROW_LENGTH = 20;
@@ -52,7 +53,7 @@ public class SiteCrossingPanel extends JPanel
 	{
 	}
 
-	public void setSite(MapSiteNodeElement site)
+	public void setSite(SiteNode site)
 	{
 		this.site = site;
 		this.cpath = null;
@@ -82,7 +83,7 @@ public class SiteCrossingPanel extends JPanel
 		{
 			for(Iterator it = cpath.getLinks().iterator(); it.hasNext();)
 			{
-				MapPhysicalLinkElement link = (MapPhysicalLinkElement )it.next();
+				PhysicalLink link = (PhysicalLink)it.next();
 				if(tunnels.contains(link))
 				{
 					if(index1 == -1)
@@ -148,7 +149,7 @@ public class SiteCrossingPanel extends JPanel
 			double added = 2 * Math.PI / cnt;
 			for (int i = 0; i < cnt; i++) 
 			{
-				drawTunnel(g2, centerx, centery, a, (MapPhysicalLinkElement )it.next(), arc);
+				drawTunnel(g2, centerx, centery, a, (PhysicalLink)it.next(), arc);
 				a += added;
 			}
 		}
@@ -204,7 +205,7 @@ public class SiteCrossingPanel extends JPanel
 			int centerx, 
 			int centery, 
 			double a, 
-			MapPhysicalLinkElement link,
+			PhysicalLink link,
 			Arc2D arc)
 	{
 		double sinA = Math.sin(a);
@@ -279,7 +280,7 @@ public class SiteCrossingPanel extends JPanel
 				(int )(arrowendx - SPIKE_LENGTH * Math.cos(a - 0.2)), 
 				(int )(arrowendy - SPIKE_LENGTH * Math.sin(a - 0.2)));
 
-		MapNodeElement node = link.getOtherNode(site);
+		AbstractNode node = link.getOtherNode(site);
 		
 		String text = "к узлу \"" + node.getName() + "\"";
 

@@ -1,5 +1,5 @@
 /**
- * $Id: SiteNodeController.java,v 1.2 2004/12/08 16:20:22 krupenn Exp $
+ * $Id: SiteNodeController.java,v 1.3 2004/12/22 16:38:42 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -26,13 +26,15 @@ import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.util.HashMap;
 import javax.swing.ImageIcon;
+import com.syrus.AMFICOM.map.MapElement;
+import com.syrus.AMFICOM.map.SiteNode;
 
 /**
  * элемент карты - узел 
  * 
  * 
  * 
- * @version $Revision: 1.2 $, $Date: 2004/12/08 16:20:22 $
+ * @version $Revision: 1.3 $, $Date: 2004/12/22 16:38:42 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -54,9 +56,9 @@ public class SiteNodeController extends AbstractNodeController
 
 	public void paint (MapElement me, Graphics g, Rectangle2D.Double visibleBounds)
 	{
-		if(!(me instanceof MapSiteNodeElement))
+		if(!(me instanceof SiteNode))
 			return;
-		MapSiteNodeElement site = (MapSiteNodeElement )me;
+		SiteNode site = (SiteNode)me;
 
 		if(!isElementVisible(site, visibleBounds))
 			return;

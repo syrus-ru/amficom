@@ -1,5 +1,5 @@
 /**
- * $Id: MapToolBar.java,v 1.11 2004/12/07 17:05:54 krupenn Exp $
+ * $Id: MapToolBar.java,v 1.12 2004/12/22 16:38:42 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -18,7 +18,7 @@ import com.syrus.AMFICOM.Client.General.Model.MapApplicationModel;
 import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
 
 import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
-import com.syrus.AMFICOM.Client.Resource.Map.DoublePoint;
+import com.syrus.AMFICOM.map.DoublePoint;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Image;
@@ -46,7 +46,7 @@ import java.awt.event.KeyEvent;
  * 
  * 
  * 
- * @version $Revision: 1.11 $, $Date: 2004/12/07 17:05:54 $
+ * @version $Revision: 1.12 $, $Date: 2004/12/22 16:38:42 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see

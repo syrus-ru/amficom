@@ -1,5 +1,5 @@
 /**
- * $Id: MarkerController.java,v 1.2 2004/12/08 16:20:22 krupenn Exp $
+ * $Id: MarkerController.java,v 1.3 2004/12/22 16:38:43 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -19,8 +19,9 @@ import com.syrus.AMFICOM.Client.Map.MapCoordinatesConverter;
 import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
 
 import com.syrus.AMFICOM.Client.Resource.Map.*;
-import com.syrus.AMFICOM.Client.Resource.Scheme.PathDecompositor;
-import com.syrus.AMFICOM.Client.Resource.Scheme.PathElement;
+import com.syrus.AMFICOM.scheme.PathDecompositor;
+import com.syrus.AMFICOM.scheme.SchemeUtils;
+import com.syrus.AMFICOM.scheme.corba.PathElement;
 import java.awt.BasicStroke;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -34,13 +35,18 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 import javax.swing.ImageIcon;
+import com.syrus.AMFICOM.map.AbstractNode;
+import com.syrus.AMFICOM.map.MapElement;
+import com.syrus.AMFICOM.map.SiteNode;
+import com.syrus.AMFICOM.map.NodeLink;
+import com.syrus.AMFICOM.map.DoublePoint;
 
 /**
  * элемент карты - узел 
  * 
  * 
  * 
- * @version $Revision: 1.2 $, $Date: 2004/12/08 16:20:22 $
+ * @version $Revision: 1.3 $, $Date: 2004/12/22 16:38:43 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -53,10 +59,7 @@ public class MarkerController extends AbstractNodeController
 	public static final String IMAGE_NAME = "marker";
 	public static final String IMAGE_PATH = "images/marker.gif";
 
-	static
-	{
-		MapPropertiesManager.setOriginalImage(IMAGE_NAME, new ImageIcon(IMAGE_PATH).getImage());
-	}
+	private static boolean needInit = true;
 
 	private static MarkerController instance = null;
 	
@@ -90,6 +93,17 @@ public class MarkerController extends AbstractNodeController
 		return s1;
 	}
 
+	public void paint(MapElement me, Graphics g, Rectangle2D.Double visibleBounds)
+	{
+		if(needInit)
+		{
+			MapPropertiesManager.setOriginalImage(
+				getLogicalNetLayer().getImageId(IMAGE_NAME, IMAGE_PATH),
+				new ImageIcon(IMAGE_PATH).getImage());
+		}
+		super.paint(me, g, visibleBounds);
+	}
+
 	/**
 	 * returns distance from nodelink starting node to marker's anchor
 	 * in geographical coordinates
@@ -120,18 +134,18 @@ public class MarkerController extends AbstractNodeController
 
 	public double getPhysicalDistanceFromLeft(MapMarker marker)
 	{
-		MapSiteNodeElement left = marker.getLeft();
+		SiteNode left = marker.getLeft();
 		double kd = marker.getCablePath().getKd();
 		double dist = startToThis(marker);
 
-		MapNodeElement node = marker.getStartNode();
+		AbstractNode node = marker.getStartNode();
 		List nodeLinks = marker.getCablePath().getSortedNodeLinks();
 		for(ListIterator lit = nodeLinks.listIterator(nodeLinks.indexOf(marker.getNodeLink())); lit.hasPrevious();)
 		{
-			MapNodeLinkElement nl = (MapNodeLinkElement )lit.previous();
+			NodeLink nl = (NodeLink)lit.previous();
 			if(nl != marker.getNodeLink())
 				dist += nl.getLengthLt();
-			if(node instanceof MapSiteNodeElement)
+			if(node instanceof SiteNode)
 				break;
 		}
 		return dist * kd;
@@ -139,18 +153,18 @@ public class MarkerController extends AbstractNodeController
 
 	public double getPhysicalDistanceFromFight(MapMarker marker)
 	{
-		MapSiteNodeElement left = marker.getRight();
+		SiteNode left = marker.getRight();
 		double kd = marker.getCablePath().getKd();
 		double dist = endToThis(marker);
 
-		MapNodeElement node = marker.getEndNode();
+		AbstractNode node = marker.getEndNode();
 		List nodeLinks = marker.getCablePath().getSortedNodeLinks();
 		for(ListIterator lit = nodeLinks.listIterator(nodeLinks.indexOf(marker.getNodeLink())); lit.hasNext();)
 		{
-			MapNodeLinkElement nl = (MapNodeLinkElement )lit.next();
+			NodeLink nl = (NodeLink)lit.next();
 			if(nl != marker.getNodeLink())
 				dist += nl.getLengthLt();
-			if(node instanceof MapSiteNodeElement)
+			if(node instanceof SiteNode)
 				break;
 		}
 		return dist * kd;
@@ -235,7 +249,7 @@ public class MarkerController extends AbstractNodeController
 		if(marker.spd == null)
 			return getFromStartLengthLf(marker);
 		else
-			return marker.spd.getOpticalDistanceByPhysical(getFromStartLengthLf(marker));
+			return marker.spd.getOpticalDistance(getFromStartLengthLf(marker));
 	}
 
 	public void moveToFromStartLo(MapMarker marker, double dist)
@@ -243,7 +257,7 @@ public class MarkerController extends AbstractNodeController
 		if(marker.spd == null)
 			moveToFromStartLf(marker, dist);
 		else
-			moveToFromStartLf(marker, marker.spd.getPhysicalDistanceByOptical(dist));
+			moveToFromStartLf(marker, marker.spd.getPhysicalDistance(dist));
 	}
 
 	//Передвинуть в точку на заданном расстоянии от начала (физ)
@@ -259,10 +273,11 @@ public class MarkerController extends AbstractNodeController
 		double pathLength = 0;
 		double localDistance = 0.0;
 
-		for(Iterator it = marker.getMeasurementPath().getSchemePath().links.iterator(); it.hasNext();)
+		PathElement []pes = marker.getMeasurementPath().getSchemePath().links();
+		for(int i = 0; i < pes.length; i++)
 		{
-			PathElement pe = (PathElement )it.next();
-			double d = pe.getPhysicalLength();
+			PathElement pe = (PathElement )pes[i];
+			double d = SchemeUtils.getPhysicalLength(pe);
 			if(pathLength + d > marker.distance)
 			{
 				me = marker.getMeasurementPath().getMapElement(pe);
@@ -284,7 +299,7 @@ public class MarkerController extends AbstractNodeController
 			}
 			else
 			{
-				setRelativeToNode(marker, (MapNodeElement )me);
+				setRelativeToNode(marker, (AbstractNode)me);
 			}
 		}
 	}
@@ -294,15 +309,15 @@ public class MarkerController extends AbstractNodeController
 	 * to current cable path
 	 * 
 	 */
-	public void setRelativeToNode(MapMarker marker, MapNodeElement node)
+	public void setRelativeToNode(MapMarker marker, AbstractNode node)
 	{
 		marker.setStartNode(node);
 		
-		MapNodeLinkElement nl = null;
+		NodeLink nl = null;
 		
 		for(Iterator it = node.getNodeLinks().iterator(); it.hasNext();)
 		{
-			MapNodeLinkElement nlink = (MapNodeLinkElement )it.next();
+			NodeLink nlink = (NodeLink)it.next();
 			if(nl == null 
 				|| marker.getMeasurementPath().getSortedNodeLinks().indexOf(nl)
 					> marker.getMeasurementPath().getSortedNodeLinks().indexOf(nlink))
@@ -330,15 +345,15 @@ public class MarkerController extends AbstractNodeController
 		double topologicalDistance = physicalDistance / kd;
 		double cumulativeDistance = 0.0;
 		
-		MapNodeElement sn = marker.getCablePath().getStartNode();
-		MapNodeElement on = marker.getCablePath().getEndNode();
+		AbstractNode sn = marker.getCablePath().getStartNode();
+		AbstractNode on = marker.getCablePath().getEndNode();
 		if(marker.getCablePath().getSortedNodes().indexOf(sn) > marker.getCablePath().getSortedNodes().indexOf(on))
 			sn = on;
 		
 		// serch for a node link
 		for(Iterator it = marker.getCablePath().getSortedNodeLinks().iterator(); it.hasNext();)
 		{
-			MapNodeLinkElement nl = (MapNodeLinkElement )it.next();
+			NodeLink nl = (NodeLink)it.next();
 			if(cumulativeDistance + nl.getLengthLt() > topologicalDistance)
 			{
 				marker.setNodeLink(nl);
@@ -535,7 +550,7 @@ public class MarkerController extends AbstractNodeController
 				MapNavigateEvent.MAP_MARKER_CREATED_EVENT,
 				marker.getId(),
 				getFromStartLengthLf(marker),
-				marker.getMeasurementPath().getSchemePath().getId(),
+				marker.getMeasurementPath().getSchemePath().id(),
 				marker.getMeId()));
 	}
 
@@ -548,7 +563,7 @@ public class MarkerController extends AbstractNodeController
 				MapNavigateEvent.MAP_MARKER_DELETED_EVENT,
 				marker.getId(),
 				0.0D,
-				marker.getMeasurementPath().getSchemePath().getId(),
+				marker.getMeasurementPath().getSchemePath().id(),
 				marker.getMeId()) );
 	}
 
@@ -561,7 +576,7 @@ public class MarkerController extends AbstractNodeController
 				MapNavigateEvent.MAP_MARKER_MOVED_EVENT,
 				marker.getId(),
 				getFromStartLengthLo(marker),
-				marker.getMeasurementPath().getSchemePath().getId(),
+				marker.getMeasurementPath().getSchemePath().id(),
 				marker.getMeId()) );
 	}
 

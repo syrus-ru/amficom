@@ -8,8 +8,8 @@ package com.syrus.AMFICOM.Client.Map.Props;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
-import com.syrus.AMFICOM.Client.Resource.Map.DoublePoint;
-import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalNodeElement;
+import com.syrus.AMFICOM.map.DoublePoint;
+import com.syrus.AMFICOM.map.TopologicalNode;
 import com.syrus.AMFICOM.Client.Resource.MiscUtil;
 
 import java.awt.geom.Point2D;
@@ -18,6 +18,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import com.syrus.AMFICOM.map.Map;
+import com.syrus.AMFICOM.map.PhysicalLink;
 
 public final class MapPhysicalNodePropertiesController 
 		implements MapElementPropertiesController 
@@ -66,7 +68,7 @@ public final class MapPhysicalNodePropertiesController
 	public Object getValue(final Object object, final String key)
 	{
 		Object result = null;
-		MapPhysicalNodeElement node = (MapPhysicalNodeElement )object;
+		TopologicalNode node = (TopologicalNode)object;
 
 		if (key.equals(PROPERTY_NAME))
 		{
@@ -86,7 +88,7 @@ public final class MapPhysicalNodePropertiesController
 		if (key.equals(PROPERTY_PHYSICAL_LINK_ID))
 		{
 			// remove .getName()
-			result = node.getMap().getPhysicalLink(node.getPhysicalLinkId()).getName();
+			result = node.getPhysicalLink().getName();
 		}
 
 		return result;
@@ -99,7 +101,7 @@ public final class MapPhysicalNodePropertiesController
 
 	public void setValue(Object object, final String key, final Object value)
 	{
-		MapPhysicalNodeElement node = (MapPhysicalNodeElement )object;
+		TopologicalNode node = (TopologicalNode)object;
 
 		if (key.equals(PROPERTY_NAME))
 		{

@@ -1,5 +1,5 @@
 /**
- * $Id: CreatePhysicalNodeCommandAtomic.java,v 1.6 2004/12/07 17:05:54 krupenn Exp $
+ * $Id: CreatePhysicalNodeCommandAtomic.java,v 1.7 2004/12/22 16:38:40 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -13,13 +13,15 @@ package com.syrus.AMFICOM.Client.Map.Command.Action;
 
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
-import com.syrus.AMFICOM.Client.Resource.Map.DoublePoint;
-import com.syrus.AMFICOM.Client.Resource.Map.MapNodeElement;
-import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalNodeElement;
+import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.map.DoublePoint;
+import com.syrus.AMFICOM.map.AbstractNode;
+import com.syrus.AMFICOM.map.TopologicalNode;
 import com.syrus.AMFICOM.Client.Resource.Map.TopologicalNodeController;
 import com.syrus.AMFICOM.Client.Resource.Pool;
 
 import java.awt.geom.Point2D;
+import com.syrus.AMFICOM.map.Map;
 
 /**
  * создание топологического узла, внесение его в пул и на карту - 
@@ -27,7 +29,7 @@ import java.awt.geom.Point2D;
  * 
  * 
  * 
- * @version $Revision: 1.6 $, $Date: 2004/12/07 17:05:54 $
+ * @version $Revision: 1.7 $, $Date: 2004/12/22 16:38:40 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -35,7 +37,7 @@ import java.awt.geom.Point2D;
 public class CreatePhysicalNodeCommandAtomic extends MapActionCommand
 {
 	/** создаваемый топологический узел */
-	MapPhysicalNodeElement node;
+	TopologicalNode node;
 	
 	/** географические координаты узла */
 	DoublePoint point;
@@ -46,7 +48,7 @@ public class CreatePhysicalNodeCommandAtomic extends MapActionCommand
 		this.point = point;
 	}
 	
-	public MapPhysicalNodeElement getNode()
+	public TopologicalNode getNode()
 	{
 		return this.node;
 	}
@@ -61,13 +63,14 @@ public class CreatePhysicalNodeCommandAtomic extends MapActionCommand
 
 		DataSourceInterface dataSource = aContext.getDataSource();
 		
-		node = new MapPhysicalNodeElement(
-				dataSource.GetUId( MapPhysicalNodeElement.typ),
-				null,
-				point,
-				logicalNetLayer.getMapView().getMap());
-
-		Pool.put(MapPhysicalNodeElement.typ, node.getId(), node);
+		try
+		{
+			node = TopologicalNode.createInstance(logicalNetLayer.getMapView().getMap(), point);
+		}
+		catch (CreateObjectException e)
+		{
+			e.printStackTrace();
+		}
 
 		TopologicalNodeController tnc = (TopologicalNodeController )getLogicalNetLayer().getMapViewController().getController(node);
 
@@ -83,12 +86,10 @@ public class CreatePhysicalNodeCommandAtomic extends MapActionCommand
 	public void redo()
 	{
 		logicalNetLayer.getMapView().getMap().addNode(node);
-		Pool.put(MapPhysicalNodeElement.typ, node.getId(), node);
 	}
 	
 	public void undo()
 	{
 		logicalNetLayer.getMapView().getMap().removeNode(node);
-		Pool.remove(MapPhysicalNodeElement.typ, node.getId());
 	}
 }

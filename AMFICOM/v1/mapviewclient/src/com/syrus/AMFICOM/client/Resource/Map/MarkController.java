@@ -1,5 +1,5 @@
 /**
- * $Id: MarkController.java,v 1.2 2004/12/08 16:20:22 krupenn Exp $
+ * $Id: MarkController.java,v 1.3 2004/12/22 16:38:42 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,22 +11,24 @@
 
 package com.syrus.AMFICOM.Client.Resource.Map;
 
-import com.syrus.AMFICOM.Client.General.Lang.LangModel;
-import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
 import com.syrus.AMFICOM.Client.Map.MapCoordinatesConverter;
 import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.map.AbstractNode;
+import com.syrus.AMFICOM.map.DoublePoint;
+import com.syrus.AMFICOM.map.MapElement;
 
+import com.syrus.AMFICOM.map.Mark;
 import java.awt.BasicStroke;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Point;
-import java.awt.Rectangle;
-import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
-import java.util.HashMap;
+
 import java.util.Iterator;
 import java.util.List;
+
 import javax.swing.ImageIcon;
 
 /**
@@ -34,7 +36,7 @@ import javax.swing.ImageIcon;
  * 
  * 
  * 
- * @version $Revision: 1.2 $, $Date: 2004/12/08 16:20:22 $
+ * @version $Revision: 1.3 $, $Date: 2004/12/22 16:38:42 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -44,10 +46,10 @@ public final class MarkController extends AbstractNodeController
 	public static final String IMAGE_NAME = "mark";
 	public static final String IMAGE_PATH = "images/mark.gif";
 
-	static
-	{
-		MapPropertiesManager.setOriginalImage(IMAGE_NAME, new ImageIcon(IMAGE_PATH).getImage());
-	}
+//	static
+//	{
+//		MapPropertiesManager.setOriginalImage(IMAGE_NAME, new ImageIcon(IMAGE_PATH).getImage());
+//	}
 
 	private static MarkController instance = null;
 	
@@ -62,11 +64,20 @@ public final class MarkController extends AbstractNodeController
 		return instance;
 	}
 
+	public Image getImage(AbstractNode node)
+	{
+		Identifier imageId = getLogicalNetLayer().getImageId(IMAGE_NAME, IMAGE_PATH);
+		if(MapPropertiesManager.getImage(imageId) == null)
+			MapPropertiesManager.setOriginalImage(imageId, new ImageIcon(IMAGE_PATH).getImage());
+		node.setImageId(imageId);
+		return super.getImage(node);
+	}
+
 	public void paint (MapElement me, Graphics g, Rectangle2D.Double visibleBounds)
 	{
-		if(!(me instanceof MapMarkElement))
+		if(!(me instanceof Mark))
 			return;
-		MapMarkElement mark = (MapMarkElement )me;
+		Mark mark = (Mark )me;
 
 		if(!isElementVisible(mark, visibleBounds))
 			return;
@@ -108,13 +119,13 @@ public final class MarkController extends AbstractNodeController
 				p.y - 2 );
 	}
 
-	public void updateSizeInDoubleLt(MapMarkElement mark)
+	public void updateSizeInDoubleLt(Mark mark)
 	{
 		MapCoordinatesConverter converter = getLogicalNetLayer();
 		
-		mark.getLink().sortNodes();
+		mark.getPhysicalLink().sortNodes();
 		
-		List nodes = mark.getLink().getSortedNodes();
+		List nodes = mark.getPhysicalLink().getSortedNodes();
 		
 		DoublePoint from;
 		DoublePoint to = mark.getLocation();
@@ -125,30 +136,30 @@ public final class MarkController extends AbstractNodeController
 		else
 			from = mark.getNodeLink().getEndNode().getLocation();
 
-		mark.sizeInDoubleLt = converter.distance(from, to);
+		mark.setSizeInDoubleLt(converter.distance(from, to));
 	}
 
 	/**
 	 * Передвинуть в точку на заданной расстоянии от начала
 	 */
-	public void moveToFromStartLt(MapMarkElement mark, double topologicalDistance)
+	public void moveToFromStartLt(Mark mark, double topologicalDistance)
 	{
 		MapCoordinatesConverter converter = getLogicalNetLayer();
 
-		mark.getLink().sortNodeLinks();
+		mark.getPhysicalLink().sortNodeLinks();
 		
-		mark.setStartNode(mark.getLink().getStartNode());
+		mark.setStartNode(mark.getPhysicalLink().getStartNode());
 
-		if ( topologicalDistance > mark.getLink().getLengthLt())
+		if ( topologicalDistance > mark.getPhysicalLink().getLengthLt())
 		{
-			topologicalDistance = mark.getLink().getLengthLt();
+			topologicalDistance = mark.getPhysicalLink().getLengthLt();
 		}
 
-		mark.distance = topologicalDistance;
+		mark.setDistance(topologicalDistance);
 
 		double cumulativeDistance = 0;
 		
-		for(Iterator it = mark.getLink().getNodeLinks().iterator(); it.hasNext();)
+		for(Iterator it = mark.getPhysicalLink().getNodeLinks().iterator(); it.hasNext();)
 		{
 			mark.setNodeLink((MapNodeLinkElement )it.next());
 			NodeLinkController nlc = (NodeLinkController )getLogicalNetLayer().getMapViewController().getController(mark.getNodeLink());
@@ -175,7 +186,7 @@ public final class MarkController extends AbstractNodeController
 	 * adjust marker position accurding to topological distance relative
 	 * to current node link (which comprises startNode and endNode)
 	 */
-	public void adjustPosition(MapMarkElement mark, double screenDistance)
+	public void adjustPosition(Mark mark, double screenDistance)
 	{
 		MapCoordinatesConverter converter = getLogicalNetLayer();
 

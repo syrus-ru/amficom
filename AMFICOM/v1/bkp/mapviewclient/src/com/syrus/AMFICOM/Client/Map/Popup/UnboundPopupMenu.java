@@ -3,9 +3,9 @@ package com.syrus.AMFICOM.Client.Map.Popup;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.Map.Command.Action.BindUnboundNodeToSiteCommandBundle;
 import com.syrus.AMFICOM.Client.Map.Command.Action.DeleteNodeCommandBundle;
-import com.syrus.AMFICOM.Client.Resource.Map.MapElement;
-import com.syrus.AMFICOM.Client.Resource.Map.MapNodeProtoElement;
-import com.syrus.AMFICOM.Client.Resource.Map.MapSiteNodeElement;
+import com.syrus.AMFICOM.map.MapElement;
+import com.syrus.AMFICOM.map.SiteNodeType;
+import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapUnboundNodeElement;
 
 import java.awt.event.ActionEvent;
@@ -41,7 +41,7 @@ public class UnboundPopupMenu extends MapPopupMenu
 		return instance;
 	}
 	
-	public void setMapElement(MapElement me)
+	public void setElement(Object me)
 	{
 		this.unbound = (MapUnboundNodeElement )me;
 	}
@@ -89,7 +89,7 @@ public class UnboundPopupMenu extends MapPopupMenu
 
 	private void bind()
 	{
-		MapSiteNodeElement site = super.selectSiteNode();
+		SiteNode site = super.selectSiteNode();
 		if(site != null)
 		{
 			BindUnboundNodeToSiteCommandBundle command = new BindUnboundNodeToSiteCommandBundle(unbound, site);
@@ -103,7 +103,7 @@ public class UnboundPopupMenu extends MapPopupMenu
 
 	private void generateSite()
 	{
-		MapNodeProtoElement proto = super.selectNodeProto();
+		SiteNodeType proto = super.selectNodeProto();
 		if(proto != null)
 		{
 			super.convertUnboundNodeToSite(unbound, proto);

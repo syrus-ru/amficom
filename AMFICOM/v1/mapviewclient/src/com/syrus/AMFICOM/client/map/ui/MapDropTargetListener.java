@@ -1,5 +1,5 @@
 /**
- * $Id: MapDropTargetListener.java,v 1.7 2004/12/07 17:05:54 krupenn Exp $
+ * $Id: MapDropTargetListener.java,v 1.8 2004/12/22 16:38:42 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -18,13 +18,13 @@ import com.syrus.AMFICOM.Client.Map.Command.Action.MoveSelectionCommandBundle;
 import com.syrus.AMFICOM.Client.Map.Command.Action.PlaceSchemeCableLinkCommand;
 import com.syrus.AMFICOM.Client.Map.Command.Action.PlaceSchemeElementCommand;
 import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
-import com.syrus.AMFICOM.Client.Resource.Map.MapNodeProtoElement;
-import com.syrus.AMFICOM.Client.Resource.Map.MapSiteNodeElement;
+import com.syrus.AMFICOM.map.SiteNodeType;
+import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapCablePathElement;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapUnboundNodeElement;
 import com.syrus.AMFICOM.Client.Resource.ObjectResource;
-import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeCableLink;
-import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeElement;
+import com.syrus.AMFICOM.scheme.corba.SchemeCableLink;
+import com.syrus.AMFICOM.scheme.corba.SchemeElement;
 
 import java.awt.Point;
 import java.awt.datatransfer.DataFlavor;
@@ -43,7 +43,7 @@ import javax.swing.JOptionPane;
  * 
  * 
  * 
- * @version $Revision: 1.7 $, $Date: 2004/12/07 17:05:54 $
+ * @version $Revision: 1.8 $, $Date: 2004/12/22 16:38:42 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -72,7 +72,7 @@ public final class MapDropTargetListener implements DropTargetListener
 			{
 				if (df[0].getHumanPresentableName().equals("ElementLabel"))
 				{
-					MapNodeProtoElement mpe = (MapNodeProtoElement )transferable.getTransferData(df[0]);
+					SiteNodeType mpe = (SiteNodeType)transferable.getTransferData(df[(0)]);
 
 					mapElementDropped(mpe, point);
 				}
@@ -114,7 +114,7 @@ public final class MapDropTargetListener implements DropTargetListener
 
 	}
 
-	protected void mapElementDropped(MapNodeProtoElement mpe, Point point)
+	protected void mapElementDropped(SiteNodeType mpe, Point point)
 	{
 		CreateSiteCommandAtomic cmd = new CreateSiteCommandAtomic(mpe, point);
 		cmd.setLogicalNetLayer(logicalNetLayer);
@@ -124,7 +124,7 @@ public final class MapDropTargetListener implements DropTargetListener
 
 	protected void schemeElementDropped(SchemeElement se, Point point)
 	{
-		MapSiteNodeElement site = logicalNetLayer.getMapView().findElement(se);
+		SiteNode site = logicalNetLayer.getMapView().findElement(se);
 		if(site != null)
 		{
 			if(site instanceof MapUnboundNodeElement)
@@ -161,7 +161,7 @@ public final class MapDropTargetListener implements DropTargetListener
 		}
 		else
 		{
-			MapSiteNodeElement[] mne = logicalNetLayer.getMapView().getSideNodes(scl);
+			SiteNode[] mne = logicalNetLayer.getMapView().getSideNodes(scl);
 	
 			if(mne[0] == null || mne[1] == null)
 			{

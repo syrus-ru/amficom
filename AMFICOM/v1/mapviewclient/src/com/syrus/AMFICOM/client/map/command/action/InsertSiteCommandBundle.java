@@ -1,5 +1,5 @@
 /**
- * $Id: InsertSiteCommandBundle.java,v 1.4 2004/12/07 17:05:54 krupenn Exp $
+ * $Id: InsertSiteCommandBundle.java,v 1.5 2004/12/22 16:38:40 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -14,25 +14,26 @@ import com.syrus.AMFICOM.Client.General.Event.MapEvent;
 import com.syrus.AMFICOM.Client.General.Event.MapNavigateEvent;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.General.Model.MapApplicationModel;
-import com.syrus.AMFICOM.Client.Resource.Map.Map;
-import com.syrus.AMFICOM.Client.Resource.Map.MapElementState;
-import com.syrus.AMFICOM.Client.Resource.Map.MapNodeLinkElement;
-import com.syrus.AMFICOM.Client.Resource.Map.MapNodeProtoElement;
-import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalLinkElement;
-import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalNodeElement;
-import com.syrus.AMFICOM.Client.Resource.Map.MapPipePathElement;
-import com.syrus.AMFICOM.Client.Resource.Map.MapSiteNodeElement;
+import com.syrus.AMFICOM.map.Map;
+import com.syrus.AMFICOM.map.MapElementState;
+import com.syrus.AMFICOM.map.NodeLink;
+import com.syrus.AMFICOM.map.SiteNodeType;
+import com.syrus.AMFICOM.map.PhysicalLink;
+import com.syrus.AMFICOM.map.TopologicalNode;
+import com.syrus.AMFICOM.map.Collector;
+import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.Client.Resource.Map.SiteNodeController;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapCablePathElement;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapUnboundLinkElement;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapView;
 
 import java.util.Iterator;
+import com.syrus.AMFICOM.map.PhysicalLinkBinding;
 
 /**
  * вставить сетевой узел вместо топологического узла
  * 
- * @version $Revision: 1.4 $, $Date: 2004/12/07 17:05:54 $
+ * @version $Revision: 1.5 $, $Date: 2004/12/22 16:38:40 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -42,34 +43,34 @@ public class InsertSiteCommandBundle extends MapActionCommandBundle
 	/**
 	 * топологтический узел
 	 */
-	MapPhysicalNodeElement node;
+	TopologicalNode node;
 	
 	/**
 	 * новый сетевой узел
 	 */
-	MapSiteNodeElement site;
+	SiteNode site;
 	
 	/**
 	 * тип создаваемого сетевого узла
 	 */
-	MapNodeProtoElement proto;
+	SiteNodeType proto;
 	
 	/**
 	 * линия, на которой находится топологический узел
 	 */
-	MapPhysicalLinkElement link;
+	PhysicalLink link;
 
 	/**
 	 * новая линия (если старая разделяется на 2 части)
 	 */
-	MapPhysicalLinkElement newLink = null;
+	PhysicalLink newLink = null;
 
 	
 	Map map;
 	
 	public InsertSiteCommandBundle(
-			MapPhysicalNodeElement node,
-			MapNodeProtoElement proto)
+			TopologicalNode node,
+			SiteNodeType proto)
 	{
 		this.proto = proto;
 		this.node = node;
@@ -89,7 +90,7 @@ public class InsertSiteCommandBundle extends MapActionCommandBundle
 		
 		map = logicalNetLayer.getMapView().getMap();
 		
-		link = map.getPhysicalLink(node.getPhysicalLinkId());
+		link = node.getPhysicalLink();
 		
 		// создать новый узел
 		site = super.createSite(
@@ -104,7 +105,7 @@ public class InsertSiteCommandBundle extends MapActionCommandBundle
 		// обновить концевые узлы фрагментов
 		for(Iterator it = node.getNodeLinks().iterator(); it.hasNext();)
 		{
-			MapNodeLinkElement mnle = (MapNodeLinkElement )it.next();
+			NodeLink mnle = (NodeLink)it.next();
 
 			MapElementState nls = mnle.getState();
 
@@ -135,10 +136,10 @@ public class InsertSiteCommandBundle extends MapActionCommandBundle
 				newLink = super.createUnboundLink(link.getStartNode(), site);
 			else
 				newLink = super.createPhysicalLink(link.getStartNode(), site);
-			newLink.setProto(link.getProto());
-			MapPipePathElement collector = map.getCollector(link);
+			newLink.setType(link.getType());
+			Collector collector = map.getCollector(link);
 			if(collector != null)
-				collector.addLink(newLink);
+				collector.addPhysicalLink(newLink);
 
 			super.moveNodeLinks(link, newLink, true, site, null);
 			link.setStartNode(site);

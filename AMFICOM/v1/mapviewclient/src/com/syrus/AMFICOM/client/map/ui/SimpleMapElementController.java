@@ -1,15 +1,17 @@
 package com.syrus.AMFICOM.Client.Map.UI;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModel;
-import com.syrus.AMFICOM.Client.Resource.Map.MapElement;
-import com.syrus.AMFICOM.Client.Resource.Map.MapLinkProtoElement;
-import com.syrus.AMFICOM.Client.Resource.Map.MapNodeProtoElement;
-import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalLinkElement;
-import com.syrus.AMFICOM.Client.Resource.Map.MapSiteNodeElement;
+import com.syrus.AMFICOM.map.MapElement;
+import com.syrus.AMFICOM.map.PhysicalLinkType;
+import com.syrus.AMFICOM.map.SiteNodeType;
+import com.syrus.AMFICOM.map.PhysicalLink;
+import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.Client.Resource.ObjectResource;
 import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -61,30 +63,70 @@ public final class SimpleMapElementController implements ObjectResourceControlle
 		Object result = null;
 		if (object instanceof MapElement) 
 		{
-			MapElement me = (MapElement )object;
+			MapElement me = (MapElement)object;
 			if (key.equals(KEY_NAME))
 				result = ((ObjectResource )object).getName();
 			else
 			if (key.equals(KEY_TYPE))
 			{
-				if(me instanceof MapSiteNodeElement)
+				if(me instanceof SiteNode)
 				{
-					MapNodeProtoElement mnpe = (MapNodeProtoElement )Pool.get(
-							MapNodeProtoElement.typ, 
-							((MapSiteNodeElement )me).getMapProtoId());
+					SiteNodeType mnpe = (SiteNodeType )(((SiteNode)me).getType());
 					result = mnpe.getName();
 				}
 				else
-				if(me instanceof MapPhysicalLinkElement)
+				if(me instanceof PhysicalLink)
 				{
-					MapLinkProtoElement mlpe = (MapLinkProtoElement )Pool.get(
-							MapLinkProtoElement.typ, 
-							((MapPhysicalLinkElement )me).getMapProtoId());
+					PhysicalLinkType mlpe = (PhysicalLinkType )(((PhysicalLink)me).getType());
 					result = mlpe.getName();
 				}
 				else
 					result = 
 						LangModel.getString("node" + ((ObjectResource )object).getTyp());
+			}
+		}
+		else
+		{
+			if (key.equals(KEY_NAME))
+			{
+				Class clazz = object.getClass();
+				String methodName = "getName";
+				String name = "";
+				try
+				{
+					Method method = clazz.getMethod(methodName, new Class[0]);
+					name = (String )(method.invoke(object, new Object[0]));
+					result = name;
+				}
+				catch (InvocationTargetException iae)
+				{
+				}
+				catch (IllegalAccessException iae)
+				{
+				}
+				catch (NoSuchMethodException nsme)
+				{
+				}
+				
+				if(result == null)
+				{
+					methodName = "name";
+					try
+					{
+						Method method = clazz.getMethod(methodName, new Class[0]);
+						name = (String )(method.invoke(object, new Object[0]));
+						result = name;
+					}
+					catch (InvocationTargetException iae)
+					{
+					}
+					catch (IllegalAccessException iae)
+					{
+					}
+					catch (NoSuchMethodException nsme)
+					{
+					}
+				}
 			}
 		}
 		return result;

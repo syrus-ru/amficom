@@ -1,5 +1,5 @@
 /**
- * $Id: MapEditorRemoveSchemeFromViewCommand.java,v 1.3 2004/10/19 10:41:03 krupenn Exp $
+ * $Id: MapEditorRemoveSchemeFromViewCommand.java,v 1.4 2004/12/22 16:38:40 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -21,7 +21,7 @@ import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.Map.UI.MapFrame;
 import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
-import com.syrus.AMFICOM.Client.Resource.Scheme.Scheme;
+import com.syrus.AMFICOM.scheme.corba.Scheme;
 
 import javax.swing.JOptionPane;
 
@@ -30,7 +30,7 @@ import javax.swing.JOptionPane;
  * 
  * 
  * 
- * @version $Revision: 1.3 $, $Date: 2004/10/19 10:41:03 $
+ * @version $Revision: 1.4 $, $Date: 2004/12/22 16:38:40 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -81,7 +81,7 @@ public class MapEditorRemoveSchemeFromViewCommand extends VoidCommand
 
 		if(JOptionPane.showConfirmDialog(
 				Environment.getActiveWindow(),
-				"Убрать схему \'" + sch.getName() + "\' из вида?",
+				"Убрать схему \'" + sch.name() + "\' из вида?",
 				"",
 				JOptionPane.NO_OPTION | JOptionPane.YES_OPTION,
 				JOptionPane.QUESTION_MESSAGE) == JOptionPane.NO_OPTION)

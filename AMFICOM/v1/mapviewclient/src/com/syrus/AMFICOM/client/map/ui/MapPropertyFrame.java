@@ -1,5 +1,5 @@
 /**
- * $Id: MapPropertyFrame.java,v 1.9 2004/11/01 15:40:10 krupenn Exp $
+ * $Id: MapPropertyFrame.java,v 1.10 2004/12/22 16:38:42 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -19,13 +19,13 @@ import com.syrus.AMFICOM.Client.General.Event.OperationListener;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.Map.Props.MapPropsManager;
-import com.syrus.AMFICOM.Client.Resource.Map.Map;
-import com.syrus.AMFICOM.Client.Resource.Map.MapElement;
+import com.syrus.AMFICOM.map.Map;
+import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapView;
 import com.syrus.AMFICOM.Client.Resource.ObjectResource;
 import com.syrus.AMFICOM.client_.general.ui_.ObjectResourcePropertiesController;
-import com.syrus.AMFICOM.client_.general.ui_.ObjectResourcePropertiesTable;
-import com.syrus.AMFICOM.client_.general.ui_.ObjectResourcePropertiesTableModel;
+import com.syrus.AMFICOM.client_.general.ui_.ObjPropertyTable;
+import com.syrus.AMFICOM.client_.general.ui_.ObjPropertyTableModel;
 
 import java.awt.BorderLayout;
 import java.awt.SystemColor;
@@ -42,7 +42,7 @@ import javax.swing.event.TableModelListener;
  * 
  * 
  * 
- * @version $Revision: 1.9 $, $Date: 2004/11/01 15:40:10 $
+ * @version $Revision: 1.10 $, $Date: 2004/12/22 16:38:42 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -52,11 +52,11 @@ public final class MapPropertyFrame extends JInternalFrame
 {
 	public ApplicationContext aContext;
 
-	ObjectResourcePropertiesTable table = null;
-	ObjectResourcePropertiesTableModel model = null;
+	ObjPropertyTable table = null;
+	ObjPropertyTableModel model = null;
 	ObjectResourcePropertiesController controller = null;
 	
-	ObjectResource or;
+	Object or;
 
 	JScrollPane scrollPane = new JScrollPane();
 
@@ -118,16 +118,16 @@ public final class MapPropertyFrame extends JInternalFrame
 
 	public void initialize()
 	{
-		model = new ObjectResourcePropertiesTableModel(controller);
-		table = new ObjectResourcePropertiesTable(model);
+		model = new ObjPropertyTableModel(controller, null);
+		table = new ObjPropertyTable(model);
 		model.addTableModelListener(this);
 	}
 
-	public void setObjectResource(ObjectResource or)
+	public void setObject(Object or)
 	{
 		this.or = or;
 		controller = MapPropsManager.getPropertiesController((MapElement )or);
-		model.setObjectResource(or);
+		model.setObject(or);
 		model.setController(controller);
 		table.updateUI();
 	}
@@ -139,9 +139,9 @@ public final class MapPropertyFrame extends JInternalFrame
 			MapNavigateEvent mne = (MapNavigateEvent )oe;
 			if(mne.isMapElementSelected())
 			{
-				ObjectResource me = (ObjectResource )mne.getSource();
+				Object me = mne.getSource();
 				doNotify = false;
-				setObjectResource(me);
+				setObject(me);
 				doNotify = true;
 			}
 		}

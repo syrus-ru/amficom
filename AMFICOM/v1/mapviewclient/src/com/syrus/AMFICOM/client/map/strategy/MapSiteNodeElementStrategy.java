@@ -1,5 +1,5 @@
 /**
- * $Id: MapSiteNodeElementStrategy.java,v 1.5 2004/11/16 17:31:17 krupenn Exp $
+ * $Id: MapSiteNodeElementStrategy.java,v 1.6 2004/12/22 16:38:41 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -20,8 +20,8 @@ import com.syrus.AMFICOM.Client.Map.Command.Action.MoveFixedDistanceCommand;
 import com.syrus.AMFICOM.Client.Map.Command.Action.MoveSelectionCommandBundle;
 import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
 import com.syrus.AMFICOM.Client.Map.MapState;
-import com.syrus.AMFICOM.Client.Resource.Map.MapElement;
-import com.syrus.AMFICOM.Client.Resource.Map.MapSiteNodeElement;
+import com.syrus.AMFICOM.map.MapElement;
+import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapSelection;
 
 import java.awt.Point;
@@ -34,7 +34,7 @@ import javax.swing.SwingUtilities;
  * 
  * 
  * 
- * @version $Revision: 1.5 $, $Date: 2004/11/16 17:31:17 $
+ * @version $Revision: 1.6 $, $Date: 2004/12/22 16:38:41 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -44,7 +44,7 @@ public final class MapSiteNodeElementStrategy implements  MapStrategy
 	LogicalNetLayer logicalNetLayer;
 	ApplicationContext aContext;
 
-	MapSiteNodeElement site;
+	SiteNode site;
 	Command command;
 
 	private static MapSiteNodeElementStrategy instance = new MapSiteNodeElementStrategy();
@@ -60,7 +60,7 @@ public final class MapSiteNodeElementStrategy implements  MapStrategy
 	
 	public void setMapElement(MapElement me)
 	{
-		this.site = (MapSiteNodeElement )me;
+		this.site = (SiteNode)me;
 	}
 
 	public void setLogicalNetLayer(LogicalNetLayer logicalNetLayer)

@@ -1,5 +1,5 @@
 /**
- * $Id: MapSchemeTreeModel.java,v 1.5 2004/11/02 17:01:24 krupenn Exp $
+ * $Id: MapSchemeTreeModel.java,v 1.6 2004/12/22 16:38:42 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -18,12 +18,10 @@ import com.syrus.AMFICOM.Client.Resource.MapView.MapView;
 import com.syrus.AMFICOM.Client.Resource.ObjectResource;
 import com.syrus.AMFICOM.Client.Resource.ObjectResourceSorter;
 import com.syrus.AMFICOM.Client.Resource.Pool;
-import com.syrus.AMFICOM.Client.Resource.Scheme.Scheme;
-import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeCableLink;
-import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeElement;
-import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeLink;
-import com.syrus.AMFICOM.Client.Resource.Scheme.SchemePath;
+import com.syrus.AMFICOM.scheme.SchemeUtils;
+import com.syrus.AMFICOM.scheme.corba.*;
 
+import com.syrus.AMFICOM.scheme.corba.SchemePackage.Type;
 import java.awt.Color;
 import java.awt.Image;
 import java.awt.Toolkit;
@@ -83,13 +81,19 @@ import javax.swing.ImageIcon;
  *             		|____ (*) "path1"
  *             		|____ (*) "path2"
  * 
- * @version $Revision: 1.5 $, $Date: 2004/11/02 17:01:24 $
+ * @version $Revision: 1.6 $, $Date: 2004/12/22 16:38:42 $
  * @module
  * @author $Author: krupenn $
  * @see
  */
 public class MapSchemeTreeModel extends ObjectResourceTreeModel
 {
+	public static final String SCHEME_BRANCH = "scheme";
+	public static final String ELEMENT_BRANCH = "schemeelement";
+	public static final String LINK_BRANCH = "schemelink";
+	public static final String CABLE_BRANCH = "schemecablelink";
+	public static final String PATH_BRANCH = "schemepath";
+
 	DataSourceInterface dsi;
 	MapView mv;
 
@@ -142,15 +146,15 @@ public class MapSchemeTreeModel extends ObjectResourceTreeModel
 		if(node.getObject() instanceof String)
 		{
 			String s = (String )node.getObject();
-			if(s.equals(Scheme.typ))
+			if(s.equals(SCHEME_BRANCH))
 				return Scheme.class;
-			if(s.equals(SchemeElement.typ))
+			if(s.equals(ELEMENT_BRANCH))
 				return SchemeElement.class;
-			if(s.equals(SchemeLink.typ))
+			if(s.equals(LINK_BRANCH))
 				return SchemeLink.class;
-			if(s.equals(SchemeCableLink.typ))
+			if(s.equals(CABLE_BRANCH))
 				return SchemeCableLink.class;
-			if(s.equals(SchemePath.typ))
+			if(s.equals(PATH_BRANCH))
 				return SchemePath.class;
 		}
 		else if (node.getObject() instanceof Scheme)
@@ -170,40 +174,35 @@ public class MapSchemeTreeModel extends ObjectResourceTreeModel
 		{
 			String s = (String )node.getObject();
 			ObjectResource os;
-			if (s.equals(Scheme.typ))
+			if (s.equals(SCHEME_BRANCH))
 			{
 				Scheme parsc = (Scheme )parent.getObject();
 				List ds = new LinkedList();
-				for (Iterator it = parsc.elements.iterator(); it.hasNext();)
+				for (int i  = 0; i < parsc.schemeElements().length; i++)
 				{
-					SchemeElement el = (SchemeElement)it.next();
-					if (!el.getInternalSchemeId().equals(""))
+					SchemeElement el = (SchemeElement)parsc.schemeElements()[i];
+					if (el.internalScheme() != null)
 					{
 						ds.add(el);
-//						Scheme sc = (Scheme )Pool.get(Scheme.typ, el.getInternalSchemeId());
-//						if (sc != null)
-//							ds.add(sc);
 					}
 				}
 				
 				if (ds.size() > 0)
 				{
-					ObjectResourceSorter sorter = Scheme.getSorter();
-					sorter.setDataSet(ds);
-					for(Iterator it = sorter.default_sort().iterator(); it.hasNext();)
+					for(Iterator it = ds.iterator(); it.hasNext();)
 					{
 //						Scheme sc = (Scheme )it.next();
 						SchemeElement el = (SchemeElement )it.next();
-						Scheme sc = (Scheme )Pool.get(Scheme.typ, el.getInternalSchemeId());
+						Scheme sc = el.internalScheme();
 
-						if(	!sc.schemeType.equals(Scheme.CABLESUBNETWORK) )
+						if(	sc.type().value() != Type._CABLE_SUBNETWORK)
 						{
 							if(parent.isTopological())
 							{
 								nod = new MapSchemeTreeNode(
 //									sc, 
 									el,
-									sc.getName(), 
+									sc.name(), 
 									true,
 									new ImageIcon(Toolkit
 										.getDefaultToolkit()
@@ -219,7 +218,7 @@ public class MapSchemeTreeModel extends ObjectResourceTreeModel
 								nod = new MapSchemeTreeNode(
 //									sc,
 									el,
-									sc.getName(), 
+									sc.name(), 
 									true,
 									new ImageIcon(Toolkit
 										.getDefaultToolkit()
@@ -243,7 +242,7 @@ public class MapSchemeTreeModel extends ObjectResourceTreeModel
 							nod = new MapSchemeTreeNode(
 //									sc, 
 									el,
-									sc.getName(), 
+									sc.name(), 
 									true,
 									ii);
 							nod.setTopological(parent.isTopological());
@@ -253,13 +252,13 @@ public class MapSchemeTreeModel extends ObjectResourceTreeModel
 				}
 			}
 			else 
-			if (s.equals(SchemeElement.typ))
+			if (s.equals(ELEMENT_BRANCH))
 			{
 				Object par = parent.getObject();
 				List ds = new LinkedList();
 				if (par instanceof Scheme
 					|| (par instanceof SchemeElement
-						&& ((SchemeElement )par).getInternalSchemeId().length() != 0)
+						&& ((SchemeElement )par).internalScheme() != null)
 					)
 				{
 					Scheme scheme;
@@ -268,22 +267,22 @@ public class MapSchemeTreeModel extends ObjectResourceTreeModel
 					else
 					{
 						SchemeElement el = (SchemeElement )par;
-						scheme = (Scheme )Pool.get(Scheme.typ, el.getInternalSchemeId());
+						scheme = el.internalScheme();
 					}
 					
-					for (Iterator it = scheme.elements.iterator(); it.hasNext();)
+					for (int i = 0; i < scheme.schemeElements().length; i++)
 					{
-						SchemeElement element = (SchemeElement )it.next();
-						if (element.getInternalSchemeId().equals(""))
+						SchemeElement element = (SchemeElement )scheme.schemeElements()[i];
+						if (element.internalScheme() == null)
 							ds.add(element);
 					}
 				}
 				else if (par instanceof SchemeElement)
 				{
 					SchemeElement el = (SchemeElement )par;
-					for (Iterator it = el.elementIds.iterator(); it.hasNext();)
+					for (int i = 0; i < el.schemeElements().length; i++)
 					{
-						SchemeElement element = (SchemeElement)Pool.get(SchemeElement.typ, (String)it.next());
+						SchemeElement element = (SchemeElement)el.schemeElements()[i];
 						if (element != null)
 							ds.add(element);
 					}
@@ -291,19 +290,17 @@ public class MapSchemeTreeModel extends ObjectResourceTreeModel
 				
 				if (ds.size() > 0)
 				{
-					ObjectResourceSorter sorter = SchemeElement.getSorter();
-					sorter.setDataSet(ds);
-					for(Iterator it = sorter.default_sort().iterator(); it.hasNext();)
+					for(Iterator it = ds.iterator(); it.hasNext();)
 					{
 						SchemeElement element = (SchemeElement)it.next();
-						boolean isFinal = (element.links.isEmpty() || element.elementIds.isEmpty());
+						boolean isFinal = (element.schemeLinks().length == 0 || element.schemeElements().length == 0);
 
-						if (element.getInternalSchemeId().equals("")
+						if (element.internalScheme() == null
 							&& parent.isTopological())
 						{
 							nod = new MapSchemeTreeNode(
 									element, 
-									element.getName(), 
+									element.name(), 
 									true, 
 									new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/placedelement.gif")),
 									isFinal);
@@ -312,7 +309,7 @@ public class MapSchemeTreeModel extends ObjectResourceTreeModel
 						else
 							nod = new MapSchemeTreeNode(
 									element, 
-									element.getName(), 
+									element.name(), 
 									true, 
 									new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/device.gif")),
 									isFinal);
@@ -320,12 +317,12 @@ public class MapSchemeTreeModel extends ObjectResourceTreeModel
 					}
 				}
 			}
-			else if (s.equals(SchemeLink.typ))
+			else if (s.equals(LINK_BRANCH))
 			{
 				Object par = parent.getObject();
 				if (par instanceof Scheme
 					|| (par instanceof SchemeElement
-						&& ((SchemeElement )par).getInternalSchemeId().length() != 0)
+						&& ((SchemeElement )par).internalScheme() != null)
 					)
 				{
 					Scheme scheme;
@@ -334,30 +331,26 @@ public class MapSchemeTreeModel extends ObjectResourceTreeModel
 					else
 					{
 						SchemeElement el = (SchemeElement )par;
-						scheme = (Scheme )Pool.get(Scheme.typ, el.getInternalSchemeId());
+						scheme = el.internalScheme();
 					}
 					
-					ObjectResourceSorter sorter = SchemeLink.getSorter();
-					sorter.setDataSet(scheme.links);
-					for(Iterator it = sorter.default_sort().iterator(); it.hasNext();)
+					for(int i = 0 ; i < scheme.schemeLinks().length; i++)
 					{
-						SchemeLink link = (SchemeLink )it.next();
-						vec.add(new MapSchemeTreeNode(link, link.getName(), true, true));
+						SchemeLink link = (SchemeLink )scheme.schemeLinks()[i];
+						vec.add(new MapSchemeTreeNode(link, link.name(), true, true));
 					}
 				}
 				else if (par instanceof SchemeElement)
 				{
 					SchemeElement el = (SchemeElement )par;
-					ObjectResourceSorter sorter = SchemeLink.getSorter();
-					sorter.setDataSet(el.links);
-					for(Iterator it = sorter.default_sort().iterator(); it.hasNext();)
+					for(int i = 0; i < el.schemeLinks().length; i++)
 					{
-						SchemeLink link = (SchemeLink )it.next();
-						vec.add(new MapSchemeTreeNode(link, link.getName(), true, true));
+						SchemeLink link = (SchemeLink )el.schemeLinks()[i];
+						vec.add(new MapSchemeTreeNode(link, link.name(), true, true));
 					}
 				}
 			}
-			else if (s.equals(SchemeCableLink.typ))
+			else if (s.equals(CABLE_BRANCH))
 			{
 				Scheme parsc;
 
@@ -366,19 +359,17 @@ public class MapSchemeTreeModel extends ObjectResourceTreeModel
 				else
 				{
 					SchemeElement el = (SchemeElement )parent.getObject();
-					parsc = (Scheme )Pool.get(Scheme.typ, el.getInternalSchemeId());
+					parsc = el.internalScheme();
 				}
 					
-				ObjectResourceSorter sorter = SchemeCableLink.getSorter();
-				sorter.setDataSet(parsc.cablelinks);
-				for(Iterator it = sorter.default_sort().iterator(); it.hasNext();)
+				for(int i = 0 ; i < parsc.schemeCableLinks().length; i++)
 				{
-					SchemeCableLink link = (SchemeCableLink )it.next();
+					SchemeCableLink link = (SchemeCableLink )parsc.schemeCableLinks()[i];
 					if(parent.isTopological())
 					{
 						nod = new MapSchemeTreeNode(
 								link, 
-								link.getName(), 
+								link.name(), 
 								true, 
 								new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/linkmode.gif")),
 								true);
@@ -388,14 +379,14 @@ public class MapSchemeTreeModel extends ObjectResourceTreeModel
 					{
 						nod = new MapSchemeTreeNode(
 								link, 
-								link.getName(), 
+								link.name(), 
 								true,
 								true);
 					}
 					vec.add(nod);
 				}
 			}
-			else if (s.equals(SchemePath.typ))
+			else if (s.equals(PATH_BRANCH))
 			{
 				Scheme parsc;
 
@@ -404,19 +395,17 @@ public class MapSchemeTreeModel extends ObjectResourceTreeModel
 				else
 				{
 					SchemeElement el = (SchemeElement )parent.getObject();
-					parsc = (Scheme )Pool.get(Scheme.typ, el.getInternalSchemeId());
+					parsc = el.internalScheme();
 				}
 					
-				ObjectResourceSorter sorter = SchemePath.getSorter();
-				sorter.setDataSet(parsc.getTopologicalPaths());
-				for(Iterator it = sorter.default_sort().iterator(); it.hasNext();)
+				for(Iterator it = SchemeUtils.getTopologicalPaths(parsc).iterator(); it.hasNext();)
 				{
 					SchemePath path = (SchemePath )it.next();
 					if(parent.isTopological())
 					{
 						nod = new MapSchemeTreeNode(
 								path, 
-								path.getName(), 
+								path.name(), 
 								true, 
 								new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/pathmode.gif")),
 								true);
@@ -426,7 +415,7 @@ public class MapSchemeTreeModel extends ObjectResourceTreeModel
 					{
 						nod = new MapSchemeTreeNode(
 								path, 
-								path.getName(), 
+								path.name(), 
 								true, 
 								true);
 					}
@@ -439,16 +428,14 @@ public class MapSchemeTreeModel extends ObjectResourceTreeModel
 			if(node.getObject() instanceof MapView)
 			{
 				List schemes = mv.getSchemes();
-				ObjectResourceSorter sorter = Scheme.getSorter();
-				sorter.setDataSet(schemes);
-	
-				for(Iterator it = sorter.default_sort().iterator(); it.hasNext();)
+
+				for(Iterator it = schemes.iterator(); it.hasNext();)
 				{
 					Scheme sc = (Scheme )it.next();
 
 					nod = new MapSchemeTreeNode(
 							sc, 
-							sc.getName(), 
+							sc.name(), 
 							true,
 							new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/scheme.gif")));
 /*
@@ -470,7 +457,7 @@ public class MapSchemeTreeModel extends ObjectResourceTreeModel
 			else
 			if(node.getObject() instanceof Scheme
 				|| (node.getObject() instanceof SchemeElement
-					&& ((SchemeElement )(node.getObject())).getInternalSchemeId().length() != 0)
+					&& ((SchemeElement )(node.getObject())).internalScheme() != null)
 				)
 			{
 				Scheme s;
@@ -479,27 +466,27 @@ public class MapSchemeTreeModel extends ObjectResourceTreeModel
 				else
 				{
 					SchemeElement el = (SchemeElement )node.getObject();
-					s = (Scheme )Pool.get(Scheme.typ, el.getInternalSchemeId());
+					s = el.internalScheme();
 				}
 
-				if (!s.elements.isEmpty())
+				if (s.schemeElements().length != 0)
 				{
 					boolean hasSchemes = false;
 					boolean hasElements = false;
-					for (Iterator it = s.elements.iterator(); it.hasNext();)
+					for (int i = 0; i < s.schemeElements().length; i++)
 					{
-						SchemeElement el = (SchemeElement )it.next();
-						if (el.getInternalSchemeId().length() == 0)
+						SchemeElement el = (SchemeElement )s.schemeElements()[i];
+						if (el.internalScheme() == null)
 						{
 							hasElements = true;
 							break;
 						}
 					}
 					
-					for (Iterator it = s.elements.iterator(); it.hasNext();)
+					for (int i = 0; i < s.schemeElements().length; i++)
 					{
-						SchemeElement el = (SchemeElement )it.next();
-						if (el.getInternalSchemeId().length() != 0)
+						SchemeElement el = (SchemeElement )s.schemeElements()[i];
+						if (el.internalScheme() != null)
 						{
 							hasSchemes = true;
 							break;
@@ -507,31 +494,31 @@ public class MapSchemeTreeModel extends ObjectResourceTreeModel
 					}
 					
 					if (hasSchemes)
-						vec.add(new MapSchemeTreeNode(Scheme.typ, "Вложенные схемы", true));
+						vec.add(new MapSchemeTreeNode(SCHEME_BRANCH, "Вложенные схемы", true));
 					if (hasElements)
-						vec.add(new MapSchemeTreeNode(SchemeElement.typ, "Вложенные элементы", true));
+						vec.add(new MapSchemeTreeNode(ELEMENT_BRANCH, "Вложенные элементы", true));
 				}
-				if (!s.links.isEmpty())
-					vec.add(new MapSchemeTreeNode(SchemeLink.typ, "Линии", true));
-				if (!s.cablelinks.isEmpty())
-					vec.add(new MapSchemeTreeNode(SchemeCableLink.typ, "Кабели", true));
-				if (!s.getTopologicalPaths().isEmpty())
-					vec.add(new MapSchemeTreeNode(SchemePath.typ, "Пути", true));
+				if (s.schemeLinks().length != 0)
+					vec.add(new MapSchemeTreeNode(LINK_BRANCH, "Линии", true));
+				if (s.schemeCableLinks().length != 0)
+					vec.add(new MapSchemeTreeNode(CABLE_BRANCH, "Кабели", true));
+				if (!SchemeUtils.getTopologicalPaths(s).isEmpty())
+					vec.add(new MapSchemeTreeNode(PATH_BRANCH, "Пути", true));
 			}
 			else if(node.getObject() instanceof SchemeElement)
 			{
 				SchemeElement schel = (SchemeElement )node.getObject();
-				if (!schel.getInternalSchemeId().equals(""))
+				if (schel.internalScheme() != null)
 				{
-					Scheme scheme = (Scheme)Pool.get(Scheme.typ, schel.getInternalSchemeId());
-					for (Iterator it = scheme.elements.iterator(); it.hasNext();)
+					Scheme scheme = schel.internalScheme();
+					for (int i = 0 ; i < scheme.schemeElements().length; i++)
 					{
-						SchemeElement element = (SchemeElement)it.next();
-						if (element.getInternalSchemeId().equals(""))
+						SchemeElement element = (SchemeElement)scheme.schemeElements()[i];
+						if (element.internalScheme() == null)
 						{
 							vec.add(new MapSchemeTreeNode(
 									element, 
-									element.getName(), 
+									element.name(), 
 									true, 
 									new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/device.gif")), 
 									true));
@@ -540,7 +527,7 @@ public class MapSchemeTreeModel extends ObjectResourceTreeModel
 						{
 							vec.add(new MapSchemeTreeNode(
 									element, 
-									element.getName(), 
+									element.name(), 
 									true,
 									new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/scheme.gif")), 
 									true));
@@ -549,10 +536,10 @@ public class MapSchemeTreeModel extends ObjectResourceTreeModel
 				}
 				else
 				{
-					if (!schel.elementIds.isEmpty())
-						vec.add(new MapSchemeTreeNode(SchemeElement.typ, "Вложенные элементы", true));
-				 if (!schel.links.isEmpty())
-						vec.add(new MapSchemeTreeNode(SchemeLink.typ, "Линии", true));
+					if (schel.schemeElements().length != 0)
+						vec.add(new MapSchemeTreeNode(ELEMENT_BRANCH, "Вложенные элементы", true));
+				 if (schel.schemeLinks().length != 0)
+						vec.add(new MapSchemeTreeNode(LINK_BRANCH, "Линии", true));
 				}
 			}
 		}

@@ -1,10 +1,9 @@
 package com.syrus.AMFICOM.Client.Map.Props;
 
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.UI.ObjectResourcePropertiesPane;
+import com.syrus.AMFICOM.client_.general.ui_.ObjectResourcePropertiesPane;
 import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
-import com.syrus.AMFICOM.Client.Resource.Map.MapSiteNodeElement;
-import com.syrus.AMFICOM.Client.Resource.ObjectResource;
+import com.syrus.AMFICOM.map.SiteNode;
 
 import java.awt.BorderLayout;
 
@@ -19,7 +18,7 @@ public final class MapSitePane
 	private MapSiteGeneralPanel gPanel = new MapSiteGeneralPanel();
 	private MapSiteBindPanel bPanel = new MapSiteBindPanel();
 
-	private MapSiteNodeElement site;
+	private SiteNode site;
 
 	private LogicalNetLayer lnl;
 
@@ -68,17 +67,17 @@ public final class MapSitePane
 		tabbedPane.add(bPanel.getName(), bPanel);
 	}
 
-	public ObjectResource getObjectResource()
+	public Object getObject()
 	{
 		return site;
 	}
 
-	public void setObjectResource(ObjectResource or)
+	public void setObject(Object or)
 	{
-		this.site = (MapSiteNodeElement )or;
+		this.site = (SiteNode)or;
 
-		gPanel.setObjectResource(site);
-		bPanel.setObjectResource(site);
+		gPanel.setObject(site);
+		bPanel.setObject(site);
 	}
 
 	public void setContext(ApplicationContext aContext)

@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import com.syrus.AMFICOM.map.AbstractNode;
 
 public final class MapUnboundLinkPropertiesController 
 		implements MapElementPropertiesController 

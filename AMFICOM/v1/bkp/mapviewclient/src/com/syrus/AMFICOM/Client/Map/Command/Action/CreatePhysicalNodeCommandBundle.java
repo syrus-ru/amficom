@@ -1,5 +1,5 @@
 /**
- * $Id: CreatePhysicalNodeCommandBundle.java,v 1.5 2004/12/07 17:05:54 krupenn Exp $
+ * $Id: CreatePhysicalNodeCommandBundle.java,v 1.6 2004/12/22 16:38:40 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -13,13 +13,13 @@ package com.syrus.AMFICOM.Client.Map.Command.Action;
 import com.syrus.AMFICOM.Client.General.Event.MapEvent;
 import com.syrus.AMFICOM.Client.General.Event.MapNavigateEvent;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
-import com.syrus.AMFICOM.Client.Resource.Map.DoublePoint;
-import com.syrus.AMFICOM.Client.Resource.Map.Map;
-import com.syrus.AMFICOM.Client.Resource.Map.MapElementState;
-import com.syrus.AMFICOM.Client.Resource.Map.MapNodeElement;
-import com.syrus.AMFICOM.Client.Resource.Map.MapNodeLinkElement;
-import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalLinkElement;
-import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalNodeElement;
+import com.syrus.AMFICOM.map.DoublePoint;
+import com.syrus.AMFICOM.map.Map;
+import com.syrus.AMFICOM.map.MapElementState;
+import com.syrus.AMFICOM.map.AbstractNode;
+import com.syrus.AMFICOM.map.NodeLink;
+import com.syrus.AMFICOM.map.PhysicalLink;
+import com.syrus.AMFICOM.map.TopologicalNode;
 
 import java.awt.Point;
 import java.awt.geom.Point2D;
@@ -30,7 +30,7 @@ import java.awt.geom.Point2D;
  * два других фрагмента, разделенные новывм топологичсеским узлом. Команда
  * состоит из последовательности атомарных действий
  * 
- * @version $Revision: 1.5 $, $Date: 2004/12/07 17:05:54 $
+ * @version $Revision: 1.6 $, $Date: 2004/12/22 16:38:40 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -40,7 +40,7 @@ public class CreatePhysicalNodeCommandBundle extends MapActionCommandBundle
 	/**
 	 * Выбранный фрагмент линии
 	 */
-	MapNodeLinkElement nodeLink;
+	NodeLink nodeLink;
 	
 	Map map;
 	
@@ -50,7 +50,7 @@ public class CreatePhysicalNodeCommandBundle extends MapActionCommandBundle
 	Point point;
 
 	public CreatePhysicalNodeCommandBundle(
-			MapNodeLinkElement nodeLink,
+			NodeLink nodeLink,
 			Point point)
 	{
 		super();
@@ -71,22 +71,21 @@ public class CreatePhysicalNodeCommandBundle extends MapActionCommandBundle
 		map = logicalNetLayer.getMapView().getMap();
 
 		// получить линию связи, которой принадлежит фрагмент
-		MapPhysicalLinkElement physicalLink = 
-			map.getPhysicalLink( nodeLink.getPhysicalLinkId());
+		PhysicalLink physicalLink = nodeLink.getPhysicalLink();
 	
 		// создать новый активный топологический узел
-		MapPhysicalNodeElement node = createPhysicalNode(coordinatePoint);
+		TopologicalNode node = createPhysicalNode(coordinatePoint);
 		changePhysicalNodeActivity(node, true);
 
 		// взять начальный и конечный узлы фрагмента
-		MapNodeElement startNode = nodeLink.getStartNode();
-		MapNodeElement endNode = nodeLink.getEndNode();
+		AbstractNode startNode = nodeLink.getStartNode();
+		AbstractNode endNode = nodeLink.getEndNode();
 
 		// разбить фрагмент на две части - т.е. создать два новых фрагмента
-		MapNodeLinkElement link1 = createNodeLink(startNode, node);
-		link1.setPhysicalLinkId(physicalLink.getId());
-		MapNodeLinkElement link2 = createNodeLink(node, endNode);
-		link2.setPhysicalLinkId(physicalLink.getId());
+		NodeLink link1 = createNodeLink(startNode, node);
+		link1.setPhysicalLink(physicalLink);
+		NodeLink link2 = createNodeLink(node, endNode);
+		link2.setPhysicalLink(physicalLink);
 
 		// удаляется старый фрагмент с карты
 		removeNodeLink(nodeLink);	

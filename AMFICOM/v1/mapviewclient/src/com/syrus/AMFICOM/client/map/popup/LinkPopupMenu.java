@@ -4,9 +4,9 @@ import com.syrus.AMFICOM.Client.General.Event.MapEvent;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.General.Model.MapApplicationModel;
 import com.syrus.AMFICOM.Client.Map.Command.Action.CreateMarkCommandAtomic;
-import com.syrus.AMFICOM.Client.Resource.Map.MapElement;
-import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalLinkElement;
-import com.syrus.AMFICOM.Client.Resource.Map.MapPipePathElement;
+import com.syrus.AMFICOM.map.MapElement;
+import com.syrus.AMFICOM.map.PhysicalLink;
+import com.syrus.AMFICOM.map.Collector;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -16,6 +16,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import javax.swing.JMenuItem;
+import com.syrus.AMFICOM.map.Map;
 
 public final class LinkPopupMenu extends MapPopupMenu 
 {
@@ -27,7 +28,7 @@ public final class LinkPopupMenu extends MapPopupMenu
 	private JMenuItem newCollectorMenuItem = new JMenuItem();
 	private JMenuItem removeCollectorMenuItem = new JMenuItem();
 
-	private MapPhysicalLinkElement link;
+	private PhysicalLink link;
 	
 	private static LinkPopupMenu instance = new LinkPopupMenu();
 
@@ -49,11 +50,11 @@ public final class LinkPopupMenu extends MapPopupMenu
 		return instance;
 	}
 	
-	public void setMapElement(MapElement me)
+	public void setElement(Object me)
 	{
-		this.link = (MapPhysicalLinkElement )me;
+		this.link = (PhysicalLink)me;
 
-		MapPipePathElement collector = logicalNetLayer.getMapView().getMap().getCollector(link);
+		Collector collector = logicalNetLayer.getMapView().getMap().getCollector(link);
 		addToCollectorMenuItem.setVisible(collector == null);
 		newCollectorMenuItem.setVisible(collector == null);
 		removeCollectorMenuItem.setVisible(collector != null);
@@ -172,7 +173,7 @@ public final class LinkPopupMenu extends MapPopupMenu
 
 	private void newCollector()
 	{
-		MapPipePathElement collector = super.createCollector();
+		Collector collector = super.createCollector();
 		if(collector != null)
 		{
 			super.addLinkToCollector(collector, link);
@@ -185,7 +186,7 @@ public final class LinkPopupMenu extends MapPopupMenu
 
 	private void addToCollector()
 	{
-		MapPipePathElement collector = super.selectCollector();
+		Collector collector = super.selectCollector();
 		if(collector != null)
 		{
 			super.addLinkToCollector(collector, link);
@@ -198,7 +199,7 @@ public final class LinkPopupMenu extends MapPopupMenu
 
 	private void removeFromCollector()
 	{
-		MapPipePathElement collector = logicalNetLayer.getMapView().getMap().getCollector(link);
+		Collector collector = logicalNetLayer.getMapView().getMap().getCollector(link);
 		if(collector != null)
 		{
 			super.removeLinkFromCollector(collector, link);
@@ -213,11 +214,11 @@ public final class LinkPopupMenu extends MapPopupMenu
 	{
 		getLogicalNetLayer().deselectAll();
 
-		MapPipePathElement collector = logicalNetLayer.getMapView().getMap().getCollector(link);
+		Collector collector = logicalNetLayer.getMapView().getMap().getCollector(link);
 		if(collector != null)
 		{
 			List list = new LinkedList();
-			list.addAll(collector.getLinks());
+			list.addAll(collector.getPhysicalLinks());
 			super.removeLinksFromCollector(collector, list);
 			super.removeCollector(collector);
 

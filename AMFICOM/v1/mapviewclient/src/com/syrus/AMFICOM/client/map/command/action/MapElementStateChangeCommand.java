@@ -1,5 +1,5 @@
 /**
- * $Id: MapElementStateChangeCommand.java,v 1.3 2004/10/18 15:33:00 krupenn Exp $
+ * $Id: MapElementStateChangeCommand.java,v 1.4 2004/12/22 16:38:40 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -12,15 +12,15 @@
 package com.syrus.AMFICOM.Client.Map.Command.Action;
 
 import com.syrus.AMFICOM.Client.General.Model.Environment;
-import com.syrus.AMFICOM.Client.Resource.Map.MapElement;
-import com.syrus.AMFICOM.Client.Resource.Map.MapElementState;
+import com.syrus.AMFICOM.map.MapElement;
+import com.syrus.AMFICOM.map.MapElementState;
 
 /**
  * атомарна€ команда изменени€ состо€ни€ элемента карты 
  * 
  * 
  * 
- * @version $Revision: 1.3 $, $Date: 2004/10/18 15:33:00 $
+ * @version $Revision: 1.4 $, $Date: 2004/12/22 16:38:40 $
  * @module
  * @author $Author: krupenn $
  * @see

@@ -1,5 +1,5 @@
 /**
- * $Id: MapOpenCommand.java,v 1.7 2004/10/20 10:14:39 krupenn Exp $
+ * $Id: MapOpenCommand.java,v 1.8 2004/12/22 16:38:40 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -21,13 +21,22 @@ import com.syrus.AMFICOM.Client.General.UI.ObjectResourceChooserDialog;
 import com.syrus.AMFICOM.Client.Map.UI.MapController;
 import com.syrus.AMFICOM.Client.Map.UI.MapFrame;
 import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
-import com.syrus.AMFICOM.Client.Resource.Map.Map;
+import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
+import com.syrus.AMFICOM.configuration.Domain;
+import com.syrus.AMFICOM.configuration.DomainCondition;
+import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.CommunicationException;
+import com.syrus.AMFICOM.general.DatabaseException;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.Client.Resource.MapDataSourceImage;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapView;
 import com.syrus.AMFICOM.Client.Resource.ObjectResource;
 import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.client_.general.ui_.ObjectResourceTableModel;
 
+import com.syrus.AMFICOM.map.MapStorableObjectPool;
 import java.util.List;
 
 import javax.swing.JDesktopPane;
@@ -37,7 +46,7 @@ import javax.swing.JDesktopPane;
  * 
  * 
  * 
- * @version $Revision: 1.7 $, $Date: 2004/10/20 10:14:39 $
+ * @version $Revision: 1.8 $, $Date: 2004/12/22 16:38:40 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -84,14 +93,41 @@ public class MapOpenCommand extends VoidCommand
 				StatusMessageEvent.STATUS_MESSAGE,
 				LangModelMap.getString("MapOpening")));
 
-		new MapDataSourceImage(dataSource).loadMaps();
+//		StorableObjectContidion 
+		List maps;
+		try
+		{
+			Domain domain = (Domain )ConfigurationStorableObjectPool.getStorableObject(
+				new Identifier(
+					aContext.getSessionInterface().getAccessIdentifier().domain_id), 
+				false);
 
-		ObjectResourceChooserDialog mcd = new ObjectResourceChooserDialog(MapController.getInstance(), Map.typ);
+			DomainCondition condition = new DomainCondition(
+					domain,
+					ObjectEntities.MAP_ENTITY_CODE);
+			maps = MapStorableObjectPool.getStorableObjectsByCondition(condition, true);
+		}
+		catch (CommunicationException e)
+		{
+			e.printStackTrace();
+			return;
+		}
+		catch (DatabaseException e)
+		{
+			e.printStackTrace();
+			return;
+		}
+		catch (ApplicationException e)
+		{
+			e.printStackTrace();
+			return;
+		}
+
+		ObjectResourceChooserDialog mcd = new ObjectResourceChooserDialog(MapController.getInstance(), ObjectEntities.MAP_ENTITY);
 
 		mcd.setCanDelete(canDelete);
 
-		List ms = Pool.getList(Map.typ);
-		mcd.setContents(ms);
+		mcd.setContents(maps);
 
 		// отфильтровываем по домену
 		ObjectResourceTableModel ortm = mcd.getTableModel();
@@ -123,13 +159,11 @@ public class MapOpenCommand extends VoidCommand
 				MapViewNewCommand cmd = new MapViewNewCommand(mapFrame, aContext);
 				cmd.execute();
 				MapView mv = cmd.mv;
-				mv.setMap((Map )mcd.getReturnObject());
+				mv.setMap((Map)mcd.getReturnObject());
 
 				MapView mapView = mapFrame.getMapView();
-				Pool.remove(MapView.typ, mapView.getId());
 		
 				Map map = mapView.getMap();
-				Pool.remove(Map.typ, map.getId());
 		
 				mapFrame.setMapView(mv);
 				setResult(Command.RESULT_OK);

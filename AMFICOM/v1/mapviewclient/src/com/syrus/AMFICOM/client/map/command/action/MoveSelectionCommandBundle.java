@@ -1,5 +1,5 @@
 /**
- * $Id: MoveSelectionCommandBundle.java,v 1.5 2004/12/07 17:05:54 krupenn Exp $
+ * $Id: MoveSelectionCommandBundle.java,v 1.6 2004/12/22 16:38:40 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -13,14 +13,15 @@ package com.syrus.AMFICOM.Client.Map.Command.Action;
 
 import com.syrus.AMFICOM.Client.General.Event.MapEvent;
 import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
-import com.syrus.AMFICOM.Client.Resource.Map.DoublePoint;
-import com.syrus.AMFICOM.Client.Resource.Map.MapMarkElement;
-import com.syrus.AMFICOM.Client.Resource.Map.MapNodeElement;
+import com.syrus.AMFICOM.map.DoublePoint;
+import com.syrus.AMFICOM.map.Mark;
+import com.syrus.AMFICOM.map.AbstractNode;
 
 import java.awt.Point;
 import java.awt.geom.Point2D;
 
 import java.util.Iterator;
+import com.syrus.AMFICOM.map.Map;
 
 /**
  * Перемещение объектов по карте. Команда является пучком команд 
@@ -28,7 +29,7 @@ import java.util.Iterator;
  * 
  * 
  * 
- * @version $Revision: 1.5 $, $Date: 2004/12/07 17:05:54 $
+ * @version $Revision: 1.6 $, $Date: 2004/12/22 16:38:40 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -147,12 +148,12 @@ public class MoveSelectionCommandBundle extends MapActionCommandBundle
 
 		while (e.hasNext() )
 		{
-			MapNodeElement node = (MapNodeElement )e.next();
+			AbstractNode node = (AbstractNode)e.next();
 			if (node.isSelected())
 			{
-				if(node instanceof MapMarkElement)
+				if(node instanceof Mark)
 				{
-					MapMarkElement mme = (MapMarkElement )node;
+					Mark mme = (Mark)node;
 					super.add(new MoveMarkCommand(mme));
 				}
 				super.add(new MoveNodeCommand(node));

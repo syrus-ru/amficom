@@ -4,13 +4,17 @@ import com.syrus.AMFICOM.Client.General.Lang.LangModel;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.UI.ImagesDialog;
-import com.syrus.AMFICOM.Client.General.UI.ObjectResourcePropertiesPane;
+import com.syrus.AMFICOM.client_.general.ui_.ObjectResourcePropertiesPane;
 import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
 import com.syrus.AMFICOM.Client.Resource.ImageCatalogue;
 import com.syrus.AMFICOM.Client.Resource.ImageResource;
-import com.syrus.AMFICOM.Client.Resource.Map.MapNodeProtoElement;
-import com.syrus.AMFICOM.Client.Resource.ObjectResource;
+import com.syrus.AMFICOM.general.CommunicationException;
+import com.syrus.AMFICOM.general.DatabaseException;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.map.SiteNodeType;
 
+import com.syrus.AMFICOM.resource.AbstractImageResource;
+import com.syrus.AMFICOM.resource.ResourceStorableObjectPool;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
@@ -38,11 +42,12 @@ public final class MapProtoPane
 	private JLabel descLabel = new JLabel();
 	private JTextArea descTextArea = new JTextArea();
 
-	MapNodeProtoElement proto;
+	SiteNodeType proto;
 
 	private LogicalNetLayer lnl;
 
-	String imageId;
+	Identifier imageId;
+
 	private JLabel imageLabel = new JLabel();
 	private JPanel imagePanel = new JPanel();
 	private JButton imageButton = new JButton();
@@ -114,14 +119,14 @@ public final class MapProtoPane
 		this.add(descTextArea, com.syrus.AMFICOM.Client.General.UI.ReusedGridBagConstraints.get(1, 3, 1, 1, 1.0, 1.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, null, 0, 0));
 	}
 
-	public ObjectResource getObjectResource()
+	public Object getObject()
 	{
 		return null;
 	}
 
-	public void setObjectResource(ObjectResource objectResource)
+	public void setObject(Object objectResource)
 	{
-		proto = (MapNodeProtoElement )objectResource;
+		proto = (SiteNodeType)objectResource;
 		if(proto == null)
 		{
 			nameTextField.setEnabled(false);
@@ -129,7 +134,7 @@ public final class MapProtoPane
 			descTextArea.setEnabled(false);
 			descTextArea.setText("");
 
-			imageId = "";
+			imageId = null;
 			imagePanel.removeAll();
 			imageButton.setEnabled(false);
 		}
@@ -142,8 +147,28 @@ public final class MapProtoPane
 
 			imageId = proto.getImageId();
 			imagePanel.removeAll();
-			ImageResource ir = ImageCatalogue.get(imageId);
-			imagePanel.add(new JLabel(new ImageIcon(ir.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH))));
+
+			Image im;
+			try
+			{
+				AbstractImageResource imageResource = (AbstractImageResource )
+					ResourceStorableObjectPool.getStorableObject(imageId, true);
+
+				ImageIcon icon = new ImageIcon(imageResource.getImage());
+				im = icon.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
+			}
+			catch (CommunicationException e)
+			{
+				e.printStackTrace();
+				return;
+			}
+			catch (DatabaseException e)
+			{
+				e.printStackTrace();
+				return;
+			}
+
+			imagePanel.add(new JLabel(new ImageIcon(im)));
 			imagePanel.revalidate();
 			imageButton.setEnabled(true);
 		}
@@ -157,7 +182,23 @@ public final class MapProtoPane
 	private void changeImage()
 	{
 		ImagesDialog frame = new ImagesDialog(aContext);
-		frame.setImageResource(ImageCatalogue.get(imageId));
+		
+		try
+		{
+			AbstractImageResource imageResource = (AbstractImageResource )
+				ResourceStorableObjectPool.getStorableObject(imageId, true);
+			frame.setImageResource(imageResource);
+		}
+		catch (CommunicationException e)
+		{
+			e.printStackTrace();
+			return;
+		}
+		catch (DatabaseException e)
+		{
+			e.printStackTrace();
+			return;
+		}
 
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		Dimension frameSize = frame.getSize();
@@ -171,9 +212,11 @@ public final class MapProtoPane
 		if(frame.ret_code == 1)
 		{
 			imagePanel.removeAll();
-			ImageResource ir = frame.getImageResource();
+			AbstractImageResource ir = frame.getImageResource();
 			imageId = ir.getId();
-			imagePanel.add(new JLabel(new ImageIcon(ir.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH))));
+			ImageIcon icon = new ImageIcon(ir.getImage());
+			Image im = icon.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
+			imagePanel.add(new JLabel(new ImageIcon(im)));
 			imagePanel.revalidate();
 		}
 	}

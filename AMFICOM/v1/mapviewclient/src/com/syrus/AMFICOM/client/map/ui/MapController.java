@@ -1,7 +1,11 @@
 package com.syrus.AMFICOM.Client.Map.UI;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
-import com.syrus.AMFICOM.Client.Resource.Map.Map;
+import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
+import com.syrus.AMFICOM.general.CommunicationException;
+import com.syrus.AMFICOM.general.DatabaseException;
+import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.Client.Resource.Object.Domain;
 import com.syrus.AMFICOM.Client.Resource.Object.User;
 import com.syrus.AMFICOM.Client.Resource.Pool;
@@ -64,7 +68,7 @@ public final class MapController implements ObjectResourceController
 	public Object getValue(final Object object, final String key)
 	{
 		Object result = null;
-		Map map = (Map )object;
+		Map map = (Map)object;
 		if (key.equals(KEY_NAME))
 		{
 			result = map.getName();
@@ -72,22 +76,44 @@ public final class MapController implements ObjectResourceController
 		else
 		if (key.equals(KEY_DOMAIN))
 		{
-			result = Pool.get(Domain.typ, map.getDomainId());
+			try
+			{
+				result = ConfigurationStorableObjectPool.getStorableObject(map.getDomainId(), false);
+			}
+			catch (CommunicationException e)
+			{
+				result = "";
+			}
+			catch (DatabaseException e)
+			{
+				result = "";
+			}
 		}
 		else
 		if (key.equals(KEY_USER))
 		{
-			result = Pool.get(User.typ, map.getUserId());
+			try
+			{
+				result = ConfigurationStorableObjectPool.getStorableObject(map.getCreatorId(), false);
+			}
+			catch (CommunicationException e)
+			{
+				result = "";
+			}
+			catch (DatabaseException e)
+			{
+				result = "";
+			}
 		}
 		else
 		if (key.equals(KEY_CREATED))
 		{
-			result = sdf.format(new Date(map.getCreated()));
+			result = sdf.format(map.getCreated());
 		}
 		else
 		if (key.equals(KEY_MODIFIED))
 		{
-			result = sdf.format(new Date(map.getModified()));
+			result = sdf.format(map.getModified());
 		}
 		return result;
 	}

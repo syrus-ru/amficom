@@ -1,5 +1,5 @@
 /**
- * $Id: MoveNodeCommand.java,v 1.4 2004/12/07 17:05:54 krupenn Exp $
+ * $Id: MoveNodeCommand.java,v 1.5 2004/12/22 16:38:40 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -13,8 +13,8 @@ package com.syrus.AMFICOM.Client.Map.Command.Action;
 
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
-import com.syrus.AMFICOM.Client.Resource.Map.DoublePoint;
-import com.syrus.AMFICOM.Client.Resource.Map.MapNodeElement;
+import com.syrus.AMFICOM.map.DoublePoint;
+import com.syrus.AMFICOM.map.AbstractNode;
 
 import java.awt.geom.Point2D;
 
@@ -23,7 +23,7 @@ import java.awt.geom.Point2D;
  * 
  * 
  * 
- * @version $Revision: 1.4 $, $Date: 2004/12/07 17:05:54 $
+ * @version $Revision: 1.5 $, $Date: 2004/12/22 16:38:40 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -48,9 +48,9 @@ public class MoveNodeCommand extends MapActionCommand
 	/**
 	 * перемещаемый элемент
 	 */	
-	MapNodeElement node;
+	AbstractNode node;
 
-	public MoveNodeCommand(MapNodeElement node)
+	public MoveNodeCommand(AbstractNode node)
 	{
 		super(MapActionCommand.ACTION_MOVE_SELECTION);
 		this.node = node;

@@ -1,5 +1,5 @@
 /**
- * $Id: MapViewController.java,v 1.1 2004/12/07 17:05:54 krupenn Exp $
+ * $Id: MapViewController.java,v 1.2 2004/12/22 16:38:43 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -18,6 +18,13 @@ import java.awt.geom.Rectangle2D;
 import com.syrus.AMFICOM.Client.Resource.Map.*;
 
 import java.util.HashMap;
+import com.syrus.AMFICOM.map.TopologicalNode;
+import com.syrus.AMFICOM.map.Mark;
+import com.syrus.AMFICOM.map.Collector;
+import com.syrus.AMFICOM.map.MapElement;
+import com.syrus.AMFICOM.map.SiteNode;
+import com.syrus.AMFICOM.map.NodeLink;
+import com.syrus.AMFICOM.map.PhysicalLink;
 
 /**
  * Класс используется для хранения и информации по канализационной
@@ -25,7 +32,7 @@ import java.util.HashMap;
  * 
  * 
  * 
- * @version $Revision: 1.1 $, $Date: 2004/12/07 17:05:54 $
+ * @version $Revision: 1.2 $, $Date: 2004/12/22 16:38:43 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -52,17 +59,17 @@ public final class MapViewController
 
 	static
 	{
-		ctlMap.put(MapPhysicalNodeElement.class,
+		ctlMap.put(com.syrus.AMFICOM.map.TopologicalNode.class,
 			TopologicalNodeController.getInstance());
-		ctlMap.put(MapSiteNodeElement.class,
+		ctlMap.put(com.syrus.AMFICOM.map.SiteNode.class,
 			SiteNodeController.getInstance());
-		ctlMap.put(MapNodeLinkElement.class,
+		ctlMap.put(com.syrus.AMFICOM.map.NodeLink.class,
 			NodeLinkController.getInstance());
-		ctlMap.put(MapPhysicalLinkElement.class,
+		ctlMap.put(com.syrus.AMFICOM.map.PhysicalLink.class,
 			PhysicalLinkController.getInstance());
-		ctlMap.put(MapMarkElement.class,
+		ctlMap.put(com.syrus.AMFICOM.map.Mark.class,
 			MarkController.getInstance());
-		ctlMap.put(MapPipePathElement.class,
+		ctlMap.put(com.syrus.AMFICOM.map.Collector.class,
 			CollectorController.getInstance());
 
 		ctlMap.put(MapCablePathElement.class,

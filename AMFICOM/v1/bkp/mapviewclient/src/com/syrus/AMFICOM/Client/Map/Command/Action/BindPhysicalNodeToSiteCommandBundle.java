@@ -1,5 +1,5 @@
 /**
- * $Id: BindPhysicalNodeToSiteCommandBundle.java,v 1.8 2004/10/26 13:32:01 krupenn Exp $
+ * $Id: BindPhysicalNodeToSiteCommandBundle.java,v 1.9 2004/12/22 16:38:39 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -13,12 +13,12 @@ package com.syrus.AMFICOM.Client.Map.Command.Action;
 
 import com.syrus.AMFICOM.Client.General.Event.MapEvent;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
-import com.syrus.AMFICOM.Client.Resource.Map.Map;
-import com.syrus.AMFICOM.Client.Resource.Map.MapNodeElement;
-import com.syrus.AMFICOM.Client.Resource.Map.MapNodeLinkElement;
-import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalLinkElement;
-import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalNodeElement;
-import com.syrus.AMFICOM.Client.Resource.Map.MapSiteNodeElement;
+import com.syrus.AMFICOM.map.Map;
+import com.syrus.AMFICOM.map.AbstractNode;
+import com.syrus.AMFICOM.map.NodeLink;
+import com.syrus.AMFICOM.map.PhysicalLink;
+import com.syrus.AMFICOM.map.TopologicalNode;
+import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapCablePathElement;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapUnboundLinkElement;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapView;
@@ -31,7 +31,7 @@ import java.util.Iterator;
  *  принадлежит данный узел, делится на 2 части
  * 
  * 
- * @version $Revision: 1.8 $, $Date: 2004/10/26 13:32:01 $
+ * @version $Revision: 1.9 $, $Date: 2004/12/22 16:38:39 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -41,22 +41,22 @@ public class BindPhysicalNodeToSiteCommandBundle extends MapActionCommandBundle
 	/**
 	 * Перетаскиваемый узел
 	 */
-	MapPhysicalNodeElement node;
+	TopologicalNode node;
 	
 	/** Узел, к которому привязывается топологический узел */
-	MapSiteNodeElement site;
+	SiteNode site;
 
 	/** 
 	 * узел, находящийся "слева" от перетаскиваемого узла на той же линии,
 	 * что и перетаскиваемый узел
 	 */
-	MapNodeElement node1 = null;
+	AbstractNode node1 = null;
 
 	/** 
 	 * узел, находящийся "справа" от перетаскиваемого узла на той же линии,
 	 * что и перетаскиваемый узел
 	 */
-	MapNodeElement node2 = null;
+	AbstractNode node2 = null;
 
 	/**
 	 * Вид, на котором производится операция
@@ -69,8 +69,8 @@ public class BindPhysicalNodeToSiteCommandBundle extends MapActionCommandBundle
 	Map map;
 
 	public BindPhysicalNodeToSiteCommandBundle(
-			MapPhysicalNodeElement node, 
-			MapSiteNodeElement site)
+			TopologicalNode node, 
+			SiteNode site)
 	{
 		this.node = node;
 		this.site = site;
@@ -87,13 +87,13 @@ public class BindPhysicalNodeToSiteCommandBundle extends MapActionCommandBundle
 		mapView = logicalNetLayer.getMapView();
 		map = mapView.getMap();
 
-		MapPhysicalLinkElement link = map.getPhysicalLink(node.getPhysicalLinkId());
+		PhysicalLink link = node.getPhysicalLink();
 
 		// находим "ливый" и "правый" узлы, одновременно обновляем
 		// концевые узлы фрагментов
 		for(Iterator it = node.getNodeLinks().iterator(); it.hasNext();)
 		{
-			MapNodeLinkElement mnle = (MapNodeLinkElement )it.next();
+			NodeLink mnle = (NodeLink)it.next();
 
 			if(node1 == null)
 				node1 = mnle.getOtherNode(node);
@@ -118,7 +118,7 @@ public class BindPhysicalNodeToSiteCommandBundle extends MapActionCommandBundle
 
 		// создается вторая линия
 		MapUnboundLinkElement newLink = super.createUnboundLink(link.getStartNode(), site);
-		newLink.setProto(link.getProto());
+		newLink.setType(link.getType());
 
 		// single cpath, as long as link is UnboundLink
 		MapCablePathElement cpath = (MapCablePathElement )(mapView.getCablePaths(link).get(0));

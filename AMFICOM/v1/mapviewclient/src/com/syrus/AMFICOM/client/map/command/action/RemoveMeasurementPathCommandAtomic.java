@@ -1,5 +1,5 @@
 /**
- * $Id: RemoveMeasurementPathCommandAtomic.java,v 1.4 2004/10/19 10:07:43 krupenn Exp $
+ * $Id: RemoveMeasurementPathCommandAtomic.java,v 1.5 2004/12/22 16:38:40 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -20,7 +20,7 @@ import com.syrus.AMFICOM.Client.Resource.Pool;
  * 
  * 
  * 
- * @version $Revision: 1.4 $, $Date: 2004/10/19 10:07:43 $
+ * @version $Revision: 1.5 $, $Date: 2004/12/22 16:38:40 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -49,19 +49,16 @@ public class RemoveMeasurementPathCommandAtomic extends MapActionCommand
 				"execute()");
 
 		logicalNetLayer.getMapView().removeMeasurementPath(mp);
-		Pool.remove(MapMeasurementPathElement.typ, mp.getId());
 	}
 
 	public void redo()
 	{
 		logicalNetLayer.getMapView().removeMeasurementPath(mp);
-		Pool.remove(MapMeasurementPathElement.typ, mp.getId());
 	}
 
 	public void undo()
 	{
 		logicalNetLayer.getMapView().addMeasurementPath(mp);
-		Pool.put(MapMeasurementPathElement.typ, mp.getId(), mp);
 	}
 }
 

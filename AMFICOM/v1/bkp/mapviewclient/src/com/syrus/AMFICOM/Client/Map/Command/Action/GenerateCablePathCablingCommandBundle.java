@@ -1,5 +1,5 @@
 /**
- * $Id: GenerateCablePathCablingCommandBundle.java,v 1.9 2004/12/07 17:05:54 krupenn Exp $
+ * $Id: GenerateCablePathCablingCommandBundle.java,v 1.10 2004/12/22 16:38:40 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -13,11 +13,11 @@ package com.syrus.AMFICOM.Client.Map.Command.Action;
 
 import com.syrus.AMFICOM.Client.General.Event.MapEvent;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
-import com.syrus.AMFICOM.Client.Resource.Map.Map;
-import com.syrus.AMFICOM.Client.Resource.Map.MapNodeLinkElement;
-import com.syrus.AMFICOM.Client.Resource.Map.MapNodeProtoElement;
-import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalLinkElement;
-import com.syrus.AMFICOM.Client.Resource.Map.MapSiteNodeElement;
+import com.syrus.AMFICOM.map.Map;
+import com.syrus.AMFICOM.map.NodeLink;
+import com.syrus.AMFICOM.map.SiteNodeType;
+import com.syrus.AMFICOM.map.PhysicalLink;
+import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapCablePathElement;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapUnboundLinkElement;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapUnboundNodeElement;
@@ -26,6 +26,7 @@ import com.syrus.AMFICOM.Client.Resource.MapView.MapView;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import com.syrus.AMFICOM.map.PhysicalLinkBinding;
 
 /**
  *   оманда генерации тоннелей в соответствии с прохождением кабел€.
@@ -35,7 +36,7 @@ import java.util.List;
  * 
  * 
  * 
- * @version $Revision: 1.9 $, $Date: 2004/12/07 17:05:54 $
+ * @version $Revision: 1.10 $, $Date: 2004/12/22 16:38:40 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -50,7 +51,7 @@ public class GenerateCablePathCablingCommandBundle extends MapActionCommandBundl
 	/**
 	 * тип узлов дл€ генерации вместо неприв€занных элементов
 	 */
-	MapNodeProtoElement proto;
+	SiteNodeType proto;
 
 	/**
 	 *  арта, на которой производитс€ операци€
@@ -61,7 +62,7 @@ public class GenerateCablePathCablingCommandBundle extends MapActionCommandBundl
 
 	public GenerateCablePathCablingCommandBundle(
 			MapCablePathElement path, 
-			MapNodeProtoElement proto)
+			SiteNodeType proto)
 	{
 		this.path = path;
 		this.proto = proto;
@@ -80,8 +81,8 @@ public class GenerateCablePathCablingCommandBundle extends MapActionCommandBundl
 		
 		// дл€ последующего цикла необходима последовательность
 		// узлов от начального к конечному
-		MapSiteNodeElement startsite = (MapSiteNodeElement )path.getStartNode();
-		MapSiteNodeElement endsite = null;
+		SiteNode startsite = (SiteNode)path.getStartNode();
+		SiteNode endsite = null;
 		
 		// проверить, что узел €вл€етс€ сетевым узлом (если это неприв€занный
 		// элемент, сгенерировать на его месте сетевой узел)
@@ -95,13 +96,13 @@ public class GenerateCablePathCablingCommandBundle extends MapActionCommandBundl
 		// по неприв€занным лини€м генерировать тоннели
 		for(Iterator it = list.iterator(); it.hasNext();)
 		{
-			MapPhysicalLinkElement link = (MapPhysicalLinkElement )it.next();
+			PhysicalLink link = (PhysicalLink)it.next();
 
 			// перейти к следующему узлу
 			if(startsite == link.getEndNode())
-				endsite = (MapSiteNodeElement )link.getStartNode();
+				endsite = (SiteNode)link.getStartNode();
 			else
-				endsite = (MapSiteNodeElement )link.getEndNode();
+				endsite = (SiteNode)link.getEndNode();
 
 			// проверить, что узел €вл€етс€ сетевым узлом (если это неприв€занный
 			// элемент, сгенерировать на его месте сетевой узел)
@@ -118,8 +119,8 @@ public class GenerateCablePathCablingCommandBundle extends MapActionCommandBundl
 				// фрагменты перенос€тс€ в новый сгенерированный тоннель
 				for(Iterator it2 = un.getNodeLinks().iterator(); it2.hasNext();)
 				{
-					MapNodeLinkElement mnle = (MapNodeLinkElement )it2.next();
-					mnle.setPhysicalLinkId(link.getId());
+					NodeLink mnle = (NodeLink)it2.next();
+					mnle.setPhysicalLink(link);
 					link.addNodeLink(mnle);
 				}
 				path.addLink(link);
@@ -137,9 +138,9 @@ public class GenerateCablePathCablingCommandBundle extends MapActionCommandBundl
 	 * если он €вл€етс€ неприв€занным элементом, сгенерировать на его месте
 	 * сетевой узел
 	 */
-	private MapSiteNodeElement checkSite(MapSiteNodeElement site)
+	private SiteNode checkSite(SiteNode site)
 	{
-		MapSiteNodeElement site2 = site;
+		SiteNode site2 = site;
 		if(site instanceof MapUnboundNodeElement)
 		{
 			CreateSiteCommandAtomic command = 

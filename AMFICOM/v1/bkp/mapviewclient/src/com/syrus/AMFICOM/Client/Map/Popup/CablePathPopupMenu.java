@@ -3,10 +3,10 @@ package com.syrus.AMFICOM.Client.Map.Popup;
 import com.syrus.AMFICOM.Client.General.Lang.LangModel;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
-import com.syrus.AMFICOM.Client.General.UI.ObjectResourcePropertiesDialog;
+import com.syrus.AMFICOM.client_.general.ui_.ObjectResourcePropertiesDialog;
 import com.syrus.AMFICOM.Client.Map.Props.MapCablePathPane;
-import com.syrus.AMFICOM.Client.Resource.Map.MapElement;
-import com.syrus.AMFICOM.Client.Resource.Map.MapNodeProtoElement;
+import com.syrus.AMFICOM.map.MapElement;
+import com.syrus.AMFICOM.map.SiteNodeType;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapCablePathElement;
 
 import com.syrus.AMFICOM.Client.Resource.MapView.MapUnboundLinkElement;
@@ -47,7 +47,7 @@ public class CablePathPopupMenu extends MapPopupMenu
 		return instance;
 	}
 	
-	public void setMapElement(MapElement me)
+	public void setElement(Object me)
 	{
 		this.path = (MapCablePathElement )me;
 		
@@ -146,7 +146,7 @@ public class CablePathPopupMenu extends MapPopupMenu
 
 	private void generateCabling()
 	{
-		MapNodeProtoElement proto = super.selectNodeProto();
+		SiteNodeType proto = super.selectNodeProto();
 		if(proto != null)
 		{
 			super.generatePathCabling(path, proto);

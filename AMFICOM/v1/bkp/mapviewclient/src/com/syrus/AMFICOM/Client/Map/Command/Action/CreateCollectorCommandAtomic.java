@@ -1,5 +1,5 @@
 /**
- * $Id: CreateCollectorCommandAtomic.java,v 1.3 2004/10/18 15:33:00 krupenn Exp $
+ * $Id: CreateCollectorCommandAtomic.java,v 1.4 2004/12/22 16:38:39 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -13,8 +13,10 @@ package com.syrus.AMFICOM.Client.Map.Command.Action;
 
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
-import com.syrus.AMFICOM.Client.Resource.Map.MapPipePathElement;
+import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.map.Collector;
 import com.syrus.AMFICOM.Client.Resource.Pool;
+import com.syrus.AMFICOM.map.Map;
 
 /**
  * создание коллектора, внесение его в пул и на карту - 
@@ -22,7 +24,7 @@ import com.syrus.AMFICOM.Client.Resource.Pool;
  * 
  * 
  * 
- * @version $Revision: 1.3 $, $Date: 2004/10/18 15:33:00 $
+ * @version $Revision: 1.4 $, $Date: 2004/12/22 16:38:39 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -30,7 +32,7 @@ import com.syrus.AMFICOM.Client.Resource.Pool;
 public class CreateCollectorCommandAtomic extends MapActionCommand
 {
 	/** коллектор */
-	MapPipePathElement collector;
+	Collector collector;
 
 	/** название */
 	String name;
@@ -41,7 +43,7 @@ public class CreateCollectorCommandAtomic extends MapActionCommand
 		this.name = name;
 	}
 	
-	public MapPipePathElement getCollector()
+	public Collector getCollector()
 	{
 		return collector;
 	}
@@ -55,12 +57,16 @@ public class CreateCollectorCommandAtomic extends MapActionCommand
 				"execute()");
 		DataSourceInterface dataSource = aContext.getDataSource();
 		
-		collector = new MapPipePathElement(
-				dataSource.GetUId( MapPipePathElement.typ ),
-				name,
-				logicalNetLayer.getMapView().getMap());
-		
-		Pool.put(MapPipePathElement.typ, collector.getId(), collector);
+		try
+		{
+			collector = Collector.createInstance(
+					logicalNetLayer.getMapView().getMap(),
+					name);
+		}
+		catch (CreateObjectException e)
+		{
+			e.printStackTrace();
+		}
 
 		logicalNetLayer.getMapView().getMap().addCollector(collector);
 	}
@@ -68,13 +74,11 @@ public class CreateCollectorCommandAtomic extends MapActionCommand
 	public void redo()
 	{
 		logicalNetLayer.getMapView().getMap().addCollector(collector);
-		Pool.put(MapPipePathElement.typ, collector.getId(), collector);
 	}
 	
 	public void undo()
 	{
 		logicalNetLayer.getMapView().getMap().removeCollector(collector);
-		Pool.remove(MapPipePathElement.typ, collector.getId());
 	}
 }
 

@@ -5,37 +5,29 @@ import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.Report.AMTReport;
 import com.syrus.AMFICOM.Client.General.Report.ReportTemplate;
-import com.syrus.AMFICOM.Client.Map.Report.MapReportModel;
+//import com.syrus.AMFICOM.Client.Map.Report.MapReportModel;
 import com.syrus.AMFICOM.Client.Map.UI.MapFrame;
-import com.syrus.AMFICOM.Client.Resource.Map.MapElement;
-import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalLinkElement;
-import com.syrus.AMFICOM.Client.Resource.Map.MapPipePathElement;
-import com.syrus.AMFICOM.Client.Resource.Map.MapSiteNodeElement;
+import com.syrus.AMFICOM.map.MapElement;
+import com.syrus.AMFICOM.map.PhysicalLink;
+import com.syrus.AMFICOM.map.Collector;
+import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapCablePathElement;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapMarker;
 
 public class CreateMapReportCommand extends VoidCommand
 {
 	ApplicationContext aContext;
-	AMTReport aReport = new AMTReport();
-	MapReportModel mrm = new MapReportModel();
+//	AMTReport aReport = new AMTReport();
+//	MapReportModel mrm = new MapReportModel();
 
 	public CreateMapReportCommand(ApplicationContext aContext)
 	{
 		this.aContext = aContext;
 	}
 
-	public Object clone()
-	{
-		CreateMapReportCommand rc = new CreateMapReportCommand(aContext);
-		rc.aReport = this.aReport;
-		rc.mrm = this.mrm;
-   
-		return rc;
-	}
-
 	public void execute()
 	{
+/*
 		aReport.addRecord(
 			  mrm.getLangForField(MapReportModel.topology),
 			  MapFrame.getMapMainFrame().getMapViewer().getMapShot());
@@ -49,7 +41,7 @@ public class CreateMapReportCommand extends VoidCommand
 			  element);
 		}
 		else
-		if(element instanceof MapPhysicalLinkElement)
+		if(element instanceof PhysicalLink)
 		{
 			aReport.addRecord(
 			  mrm.getLangForField(MapReportModel.tunnelCableList),
@@ -63,14 +55,14 @@ public class CreateMapReportCommand extends VoidCommand
 			  element);
 		}
 		else
-		if(element instanceof MapSiteNodeElement)
+		if(element instanceof SiteNode)
 		{
 			aReport.addRecord(
 			  mrm.getLangForField(MapReportModel.shaftInfo),
 			  element);
 		}
 		else
-		if(element instanceof MapPipePathElement)
+		if(element instanceof Collector)
 		{
 			aReport.addRecord(
 			  mrm.getLangForField(MapReportModel.collectorInfo),
@@ -82,6 +74,7 @@ public class CreateMapReportCommand extends VoidCommand
 				ReportTemplate.rtt_Map,
 				aReport);
 		ottc.execute();
+*/
 	}
 }
 

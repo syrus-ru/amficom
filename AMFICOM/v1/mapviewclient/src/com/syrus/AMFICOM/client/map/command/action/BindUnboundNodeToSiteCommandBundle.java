@@ -1,5 +1,5 @@
 /**
- * $Id: BindUnboundNodeToSiteCommandBundle.java,v 1.7 2004/10/27 15:46:23 krupenn Exp $
+ * $Id: BindUnboundNodeToSiteCommandBundle.java,v 1.8 2004/12/22 16:38:39 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -13,16 +13,16 @@ package com.syrus.AMFICOM.Client.Map.Command.Action;
 
 import com.syrus.AMFICOM.Client.General.Event.MapEvent;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
-import com.syrus.AMFICOM.Client.Resource.Map.Map;
-import com.syrus.AMFICOM.Client.Resource.Map.MapElementState;
-import com.syrus.AMFICOM.Client.Resource.Map.MapNodeLinkElement;
-import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalLinkElement;
-import com.syrus.AMFICOM.Client.Resource.Map.MapSiteNodeElement;
+import com.syrus.AMFICOM.map.Map;
+import com.syrus.AMFICOM.map.MapElementState;
+import com.syrus.AMFICOM.map.NodeLink;
+import com.syrus.AMFICOM.map.PhysicalLink;
+import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapCablePathElement;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapMeasurementPathElement;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapUnboundNodeElement;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapView;
-import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeElement;
+import com.syrus.AMFICOM.scheme.corba.SchemeElement;
 
 import java.util.Iterator;
 import java.util.List;
@@ -32,7 +32,7 @@ import java.util.List;
  * 
  * 
  * 
- * @version $Revision: 1.7 $, $Date: 2004/10/27 15:46:23 $
+ * @version $Revision: 1.8 $, $Date: 2004/12/22 16:38:39 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -47,7 +47,7 @@ public class BindUnboundNodeToSiteCommandBundle extends MapActionCommandBundle
 	/**
 	 * узел
 	 */
-	MapSiteNodeElement site;
+	SiteNode site;
 
 	/**
 	 * Карта, на которой производится операция
@@ -56,7 +56,7 @@ public class BindUnboundNodeToSiteCommandBundle extends MapActionCommandBundle
 
 	public BindUnboundNodeToSiteCommandBundle(
 			MapUnboundNodeElement unbound, 
-			MapSiteNodeElement site)
+			SiteNode site)
 	{
 		this.unbound = unbound;
 		this.site = site;
@@ -99,9 +99,8 @@ public class BindUnboundNodeToSiteCommandBundle extends MapActionCommandBundle
 		//При привязывании меняются концевые узлы линий и фрагментов линий
 		for(Iterator it = unbound.getNodeLinks().iterator(); it.hasNext();)
 		{
-			MapNodeLinkElement nodeLink = (MapNodeLinkElement )it.next();
-			MapPhysicalLinkElement physicalLink = map
-					.getPhysicalLink(nodeLink.getPhysicalLinkId());
+			NodeLink nodeLink = (NodeLink)it.next();
+			PhysicalLink physicalLink = nodeLink.getPhysicalLink();
 
 			MapElementState pls = nodeLink.getState();
 					
@@ -125,7 +124,7 @@ public class BindUnboundNodeToSiteCommandBundle extends MapActionCommandBundle
 		super.removeNode(unbound);
 
 		SchemeElement se = unbound.getSchemeElement();
-		se.siteId = site.getId();
+		se.siteNodeImpl(site);
 
 		logicalNetLayer.sendMapEvent(new MapEvent(this, MapEvent.MAP_CHANGED));
 	}

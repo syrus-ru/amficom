@@ -215,6 +215,7 @@ public class RISDMapViewDataSource
 		}
 	}
 */	
+/*
 	public void loadMapViews(String[] ids)
 	{
 		if(getSession() == null)
@@ -360,5 +361,5 @@ public class RISDMapViewDataSource
 			return;
 		}
 	}
-
+*/
 }

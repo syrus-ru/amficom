@@ -1,5 +1,5 @@
 /**
- * $Id: PlaceSchemeCableLinkCommand.java,v 1.7 2004/11/25 13:00:49 krupenn Exp $
+ * $Id: PlaceSchemeCableLinkCommand.java,v 1.8 2004/12/22 16:38:40 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -13,22 +13,23 @@ package com.syrus.AMFICOM.Client.Map.Command.Action;
 import com.syrus.AMFICOM.Client.General.Event.MapEvent;
 import com.syrus.AMFICOM.Client.General.Event.MapNavigateEvent;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
-import com.syrus.AMFICOM.Client.Resource.Map.Map;
-import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalLinkElement;
-import com.syrus.AMFICOM.Client.Resource.Map.MapSiteNodeElement;
+import com.syrus.AMFICOM.map.Map;
+import com.syrus.AMFICOM.map.PhysicalLink;
+import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapCablePathElement;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapUnboundLinkElement;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapView;
-import com.syrus.AMFICOM.Client.Resource.Scheme.CableChannelingItem;
-import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeCableLink;
+import com.syrus.AMFICOM.scheme.corba.CableChannelingItem;
+import com.syrus.AMFICOM.scheme.corba.SchemeCableLink;
 
 import java.util.Iterator;
 import java.util.List;
+import com.syrus.AMFICOM.map.PhysicalLinkBinding;
 
 /**
  * Разместить кабель на карте.
  * 
- * @version $Revision: 1.7 $, $Date: 2004/11/25 13:00:49 $
+ * @version $Revision: 1.8 $, $Date: 2004/12/22 16:38:40 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -38,12 +39,12 @@ public class PlaceSchemeCableLinkCommand extends MapActionCommandBundle
 	/**
 	 * начальный узел кабельного пути
 	 */
-	MapSiteNodeElement startNode = null;
+	SiteNode startNode = null;
 	
 	/**
 	 * конечный узел кабельного пути
 	 */
-	MapSiteNodeElement endNode = null;
+	SiteNode endNode = null;
 
 	/**
 	 * создаваемый кабельный путь
@@ -76,7 +77,7 @@ public class PlaceSchemeCableLinkCommand extends MapActionCommandBundle
 		mapView = logicalNetLayer.getMapView();
 		map = mapView.getMap();
 		
-		MapSiteNodeElement[] mne = mapView.getSideNodes(scl);
+		SiteNode[] mne = mapView.getSideNodes(scl);
 		
 		startNode = mne[0];
 		endNode = mne[1];
@@ -91,17 +92,17 @@ public class PlaceSchemeCableLinkCommand extends MapActionCommandBundle
 
 		cablePath = super.createCablePath(scl, startNode, endNode);
 
-		List ccis = (List )scl.channelingItems;
+//		List ccis = (List )scl.channelingItems;
 
 		// идем по всем узлам кабельного пути от начального
-		MapSiteNodeElement bufferStartSite = startNode;
+		SiteNode bufferStartSite = startNode;
 
 		// цикл по элементам привязки кабеля.
-		for(Iterator it = ccis.iterator(); it.hasNext();)
+		for(int i = 0; i < scl.cableChannelingItems().length; i++)
 		{
-			CableChannelingItem cci = (CableChannelingItem )it.next();
-			MapSiteNodeElement smsne = map.getMapSiteNodeElement(cci.startSiteId);
-			MapSiteNodeElement emsne = map.getMapSiteNodeElement(cci.endSiteId);
+			CableChannelingItem cci = (CableChannelingItem )scl.cableChannelingItems()[i];
+			SiteNode smsne = cci.startSiteNodeImpl();
+			SiteNode emsne = cci.endSiteNodeImpl();
 
 			// если элемент привязки не соответствует топологической схеме
 			// (один из узлов привязки не нанесен на карту) то элемент
@@ -143,7 +144,7 @@ public class PlaceSchemeCableLinkCommand extends MapActionCommandBundle
 			// в противном случае привязать кабель к существующей линии
 			{
 				
-				MapPhysicalLinkElement link = map.getPhysicalLink(cci.physicalLinkId);
+				PhysicalLink link = cci.physicalLinkImpl();
 				
 				// если линия не существует, опустить данный элемент привязки
 				if(link == null)
@@ -155,9 +156,9 @@ public class PlaceSchemeCableLinkCommand extends MapActionCommandBundle
 				else
 				{
 					link.getBinding().add(cablePath);
-					if(cci.row_x != -1
-						&& cci.place_y != -1)
-						link.getBinding().bind(cablePath, cci.row_x, cci.place_y);
+					if(cci.rowX() != -1
+						&& cci.placeY() != -1)
+						link.getBinding().bind(cablePath, cci.rowX(), cci.placeY());
 		
 					cablePath.addLink(link);
 				}

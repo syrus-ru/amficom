@@ -1,5 +1,5 @@
 /**
- * $Id: MapViewNewCommand.java,v 1.7 2004/10/26 13:32:01 krupenn Exp $
+ * $Id: MapViewNewCommand.java,v 1.8 2004/12/22 16:38:40 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -19,7 +19,8 @@ import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.Map.UI.MapFrame;
-import com.syrus.AMFICOM.Client.Resource.Map.Map;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapView;
 import com.syrus.AMFICOM.Client.Resource.Pool;
 
@@ -28,7 +29,7 @@ import com.syrus.AMFICOM.Client.Resource.Pool;
  * 
  * 
  * 
- * @version $Revision: 1.7 $, $Date: 2004/10/26 13:32:01 $
+ * @version $Revision: 1.8 $, $Date: 2004/12/22 16:38:40 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -62,29 +63,36 @@ public class MapViewNewCommand extends VoidCommand
 					LangModelMap.getString("MapNew")));
 		mv = new MapView();
 
-		mv.setId(aContext.getDataSource().GetUId(MapView.typ));
-		mv.setDomainId(aContext.getSessionInterface().getDomainId());
 		mv.setName(LangModelMap.getString("New"));
 
-		Map mc = new Map();
-		mc.setId(aContext.getDataSource().GetUId(Map.typ));
-		mc.setDomainId(aContext.getSessionInterface().getDomainId());
-		mc.setUserId(aContext.getSessionInterface().getUserId());
-//		Pool.put( mc.getTyp(), mc.getId(), mc);
+		Map mc;
+		try
+		{
+			mc = Map.createInstance(
+				new Identifier(aContext.getSessionInterface().getAccessIdentifier().user_id), 
+				"", 
+				"");
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+			return;
+		}
+
+		mc.setDomainId(
+				new Identifier(aContext.getSessionInterface().getAccessIdentifier().domain_id));
+
 		mv.setMap(mc);
 
 		setResult(Command.RESULT_OK);
-//		Pool.put( MapView.typ, mv.getId(), mv);
 		if (mapFrame != null)
 		{
 			mv.setLogicalNetLayer(mapFrame.getMapViewer().getLogicalNetLayer());
 
 			MapView mapView = mapFrame.getMapView();
-			Pool.remove(MapView.typ, mapView.getId());
 	
 			Map map = mapView.getMap();
-			Pool.remove(Map.typ, map.getId());
-	
+
 			mapFrame.setMapView(mv);
 			mapFrame.setTitle( LangModelMap.getString("Map") + " - " + mv.getName());
 		}

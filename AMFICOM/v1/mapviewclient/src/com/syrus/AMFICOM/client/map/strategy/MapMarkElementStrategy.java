@@ -1,5 +1,5 @@
 /**
- * $Id: MapMarkElementStrategy.java,v 1.9 2004/12/08 16:20:22 krupenn Exp $
+ * $Id: MapMarkElementStrategy.java,v 1.10 2004/12/22 16:38:41 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -18,26 +18,27 @@ import com.syrus.AMFICOM.Client.Map.Command.Action.MoveMarkCommand;
 import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
 import com.syrus.AMFICOM.Client.Map.MapCoordinatesConverter;
 import com.syrus.AMFICOM.Client.Map.MapState;
-import com.syrus.AMFICOM.Client.Resource.Map.Map;
-import com.syrus.AMFICOM.Client.Resource.Map.MapElement;
-import com.syrus.AMFICOM.Client.Resource.Map.MapMarkElement;
-import com.syrus.AMFICOM.Client.Resource.Map.MapNodeElement;
-import com.syrus.AMFICOM.Client.Resource.Map.MapNodeLinkElement;
+import com.syrus.AMFICOM.map.Map;
+import com.syrus.AMFICOM.map.MapElement;
+import com.syrus.AMFICOM.map.Mark;
+import com.syrus.AMFICOM.map.AbstractNode;
+import com.syrus.AMFICOM.map.NodeLink;
 import com.syrus.AMFICOM.Client.Resource.Map.MarkController;
-import com.syrus.AMFICOM.Client.Resource.Map.MotionDescriptor;
+import com.syrus.AMFICOM.Client.Map.UI.MotionDescriptor;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapSelection;
 
 import java.awt.Point;
 import java.awt.event.MouseEvent;
 
 import javax.swing.SwingUtilities;
+import com.syrus.AMFICOM.map.PhysicalLink;
 
 /**
  * Стратегия управления метки на физической линии
  * 
  * 
  * 
- * @version $Revision: 1.9 $, $Date: 2004/12/08 16:20:22 $
+ * @version $Revision: 1.10 $, $Date: 2004/12/22 16:38:41 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -48,7 +49,7 @@ public final class MapMarkElementStrategy implements  MapStrategy
 	Point point;
 	ApplicationContext aContext;
 	
-	MapMarkElement mark;
+	Mark mark;
 	MoveMarkCommand command;
 
 	private static MapMarkElementStrategy instance = new MapMarkElementStrategy();
@@ -64,7 +65,7 @@ public final class MapMarkElementStrategy implements  MapStrategy
 	
 	public void setMapElement(MapElement me)
 	{
-		this.mark = (MapMarkElement )me;
+		this.mark = (Mark)me;
 	}
 	
 	public void setLogicalNetLayer(LogicalNetLayer logicalNetLayer)
@@ -122,9 +123,9 @@ public final class MapMarkElementStrategy implements  MapStrategy
 				if (aContext.getApplicationModel().isEnabled(
 						MapApplicationModel.ACTION_EDIT_MAP))
 				{
-					MapNodeLinkElement nodeLink = mark.getNodeLink();
-					MapNodeElement sn = mark.getStartNode();
-					MapNodeElement en = nodeLink.getOtherNode(sn);
+					NodeLink nodeLink = mark.getNodeLink();
+					AbstractNode sn = mark.getStartNode();
+					AbstractNode en = nodeLink.getOtherNode(sn);
 
 					//Рисование о пределение координат маркера происходит путм проецирования координат
 					//курсора на линию на которой маркер находится
@@ -142,7 +143,7 @@ public final class MapMarkElementStrategy implements  MapStrategy
 
 					while(lengthFromStartNode > md.nodeLinkLength)
 					{
-						nodeLink = mark.getLink().nextNodeLink(nodeLink);
+						nodeLink = mark.getPhysicalLink().nextNodeLink(nodeLink);
 						if(nodeLink == null)
 							lengthFromStartNode = md.nodeLinkLength;
 						else
@@ -169,7 +170,7 @@ public final class MapMarkElementStrategy implements  MapStrategy
 					}
 					while(lengthFromStartNode < 0)
 					{
-						nodeLink = mark.getLink().previousNodeLink(mark.getNodeLink());
+						nodeLink = mark.getPhysicalLink().previousNodeLink(mark.getNodeLink());
 						if(nodeLink == null)
 							lengthFromStartNode = 0;
 						else

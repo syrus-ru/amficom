@@ -1,11 +1,11 @@
 package com.syrus.AMFICOM.Client.Map.Strategy;
 
-import com.syrus.AMFICOM.Client.Resource.Map.MapElement;
-import com.syrus.AMFICOM.Client.Resource.Map.MapMarkElement;
-import com.syrus.AMFICOM.Client.Resource.Map.MapNodeLinkElement;
-import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalLinkElement;
-import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalNodeElement;
-import com.syrus.AMFICOM.Client.Resource.Map.MapSiteNodeElement;
+import com.syrus.AMFICOM.map.MapElement;
+import com.syrus.AMFICOM.map.Mark;
+import com.syrus.AMFICOM.map.NodeLink;
+import com.syrus.AMFICOM.map.PhysicalLink;
+import com.syrus.AMFICOM.map.TopologicalNode;
+import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapAlarmMarker;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapCablePathElement;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapEventMarker;
@@ -32,19 +32,19 @@ public final class MapStrategyManager
 			MapCablePathElementStrategy.getInstance());
 		strategyMap.put(MapEventMarker.class,
 			MapEventMarkerStrategy.getInstance());
-		strategyMap.put(MapMarkElement.class,
+		strategyMap.put(com.syrus.AMFICOM.map.Mark.class,
 			MapMarkElementStrategy.getInstance());
-		strategyMap.put(MapNodeLinkElement.class,
+		strategyMap.put(com.syrus.AMFICOM.map.NodeLink.class,
 			MapNodeLinkElementStrategy.getInstance());
 		strategyMap.put(MapMarker.class,
 			MapMarkerStrategy.getInstance());
 		strategyMap.put(com.syrus.AMFICOM.Client.Resource.MapView.MapMeasurementPathElement.class,
 			MapPathElementStrategy.getInstance());
-		strategyMap.put(MapPhysicalLinkElement.class,
+		strategyMap.put(com.syrus.AMFICOM.map.PhysicalLink.class,
 			MapPhysicalLinkElementStrategy.getInstance());
-		strategyMap.put(MapPhysicalNodeElement.class,
+		strategyMap.put(com.syrus.AMFICOM.map.TopologicalNode.class,
 			MapPhysicalNodeElementStrategy.getInstance());
-		strategyMap.put(MapSiteNodeElement.class,
+		strategyMap.put(com.syrus.AMFICOM.map.SiteNode.class,
 			MapSiteNodeElementStrategy.getInstance());
 		strategyMap.put(MapUnboundNodeElement.class,
 			MapUnboundNodeElementStrategy.getInstance());

@@ -8,8 +8,8 @@ package com.syrus.AMFICOM.Client.Map.Props;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
-import com.syrus.AMFICOM.Client.Resource.Map.MapLinkProtoElement;
-import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalLinkElement;
+import com.syrus.AMFICOM.map.PhysicalLinkType;
+import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.Client.Resource.Map.PhysicalLinkController;
 import com.syrus.AMFICOM.Client.Resource.MiscUtil;
 import com.syrus.AMFICOM.Client.Resource.Pool;
@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import com.syrus.AMFICOM.map.AbstractNode;
 
 public final class MapPhysicalLinkPropertiesController 
 		implements MapElementPropertiesController 
@@ -70,7 +71,7 @@ public final class MapPhysicalLinkPropertiesController
 	public Object getValue(final Object object, final String key)
 	{
 		Object result = null;
-		MapPhysicalLinkElement link = (MapPhysicalLinkElement )object;
+		PhysicalLink link = (PhysicalLink)object;
 
 		PhysicalLinkController plc = (PhysicalLinkController )PhysicalLinkController.getInstance();
 
@@ -82,7 +83,7 @@ public final class MapPhysicalLinkPropertiesController
 		if (key.equals(PROPERTY_PROTO_ID))
 		{
 			// remove .getName()
-			result = ((MapLinkProtoElement )Pool.get(MapLinkProtoElement.typ, link.getMapProtoId())).getName();
+			result = ((PhysicalLinkType )link.getType()).getName();
 		}
 		else
 		if (key.equals(PROPERTY_TOPOLOGICAL_LENGTH))
@@ -129,7 +130,7 @@ public final class MapPhysicalLinkPropertiesController
 
 	public void setValue(Object object, final String key, final Object value)
 	{
-		MapPhysicalLinkElement link = (MapPhysicalLinkElement )object;
+		PhysicalLink link = (PhysicalLink)object;
 
 		if (key.equals(PROPERTY_NAME))
 		{

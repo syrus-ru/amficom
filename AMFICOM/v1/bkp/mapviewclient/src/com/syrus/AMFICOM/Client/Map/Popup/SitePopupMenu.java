@@ -3,8 +3,8 @@ package com.syrus.AMFICOM.Client.Map.Popup;
 import com.syrus.AMFICOM.Client.General.Event.MapEvent;
 import com.syrus.AMFICOM.Client.General.Event.MapNavigateEvent;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
-import com.syrus.AMFICOM.Client.Resource.Map.MapElement;
-import com.syrus.AMFICOM.Client.Resource.Map.MapSiteNodeElement;
+import com.syrus.AMFICOM.map.MapElement;
+import com.syrus.AMFICOM.map.SiteNode;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -16,7 +16,7 @@ public final class SitePopupMenu extends MapPopupMenu
 	private JMenuItem removeMenuItem = new JMenuItem();
 	private JMenuItem propertiesMenuItem = new JMenuItem();
 	
-	private MapSiteNodeElement site;
+	private SiteNode site;
 
 	private static SitePopupMenu instance = new SitePopupMenu();
 
@@ -38,9 +38,9 @@ public final class SitePopupMenu extends MapPopupMenu
 		return instance;
 	}
 	
-	public void setMapElement(MapElement me)
+	public void setElement(Object me)
 	{
-		this.site = (MapSiteNodeElement )me;
+		this.site = (SiteNode)me;
 	}
 
 	private void jbInit() 

@@ -1,5 +1,5 @@
 /**
- * $Id: CreateNodeLinkCommandBundle.java,v 1.5 2004/12/07 17:05:54 krupenn Exp $
+ * $Id: CreateNodeLinkCommandBundle.java,v 1.6 2004/12/22 16:38:40 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -14,15 +14,15 @@ package com.syrus.AMFICOM.Client.Map.Command.Action;
 import com.syrus.AMFICOM.Client.General.Event.MapEvent;
 import com.syrus.AMFICOM.Client.General.Event.MapNavigateEvent;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
-import com.syrus.AMFICOM.Client.Resource.Map.DoublePoint;
-import com.syrus.AMFICOM.Client.Resource.Map.Map;
-import com.syrus.AMFICOM.Client.Resource.Map.MapElement;
-import com.syrus.AMFICOM.Client.Resource.Map.MapElementState;
-import com.syrus.AMFICOM.Client.Resource.Map.MapNodeElement;
-import com.syrus.AMFICOM.Client.Resource.Map.MapNodeLinkElement;
-import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalLinkElement;
-import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalNodeElement;
-import com.syrus.AMFICOM.Client.Resource.Map.MapSiteNodeElement;
+import com.syrus.AMFICOM.map.DoublePoint;
+import com.syrus.AMFICOM.map.Map;
+import com.syrus.AMFICOM.map.MapElement;
+import com.syrus.AMFICOM.map.MapElementState;
+import com.syrus.AMFICOM.map.AbstractNode;
+import com.syrus.AMFICOM.map.NodeLink;
+import com.syrus.AMFICOM.map.PhysicalLink;
+import com.syrus.AMFICOM.map.TopologicalNode;
+import com.syrus.AMFICOM.map.SiteNode;
 
 import java.awt.Point;
 import java.awt.geom.Point2D;
@@ -38,7 +38,7 @@ import java.util.LinkedList;
  * данная команда
  * 
  * 
- * @version $Revision: 1.5 $, $Date: 2004/12/07 17:05:54 $
+ * @version $Revision: 1.6 $, $Date: 2004/12/22 16:38:40 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -52,7 +52,7 @@ public class CreateNodeLinkCommandBundle extends MapActionCommandBundle
 	public static final String END_POINT = "endpoint";
 
 	/** Начальный узел фрагмента */
-	MapNodeElement startNode;
+	AbstractNode startNode;
 	
 	Map map;
 	
@@ -63,7 +63,7 @@ public class CreateNodeLinkCommandBundle extends MapActionCommandBundle
 	 * 
 	 * @param startNode
 	 */
-	public CreateNodeLinkCommandBundle(MapNodeElement startNode)
+	public CreateNodeLinkCommandBundle(AbstractNode startNode)
 	{
 		super();
 		this.startNode = startNode;
@@ -94,22 +94,22 @@ public class CreateNodeLinkCommandBundle extends MapActionCommandBundle
 	
 		Map map = logicalNetLayer.getMapView().getMap();
 	
-		MapNodeElement endNode = null;
-		MapPhysicalLinkElement physicalLink = null;
-		MapNodeLinkElement nodeLink = null;
+		AbstractNode endNode = null;
+		PhysicalLink physicalLink = null;
+		NodeLink nodeLink = null;
 
 		DoublePoint mapEndPoint = logicalNetLayer.convertScreenToMap(endPoint);
 
 		// если в конечной точке уже есть элемент, проверяем, какой это узел
 		if ( curElementAtPoint != null
-			&& curElementAtPoint instanceof MapNodeElement)
+			&& curElementAtPoint instanceof AbstractNode)
 		{
-			endNode = (MapNodeElement )curElementAtPoint;
+			endNode = (AbstractNode)curElementAtPoint;
 
 			// конечный элемент - топологический узел
-			if(endNode instanceof MapPhysicalNodeElement)
+			if(endNode instanceof TopologicalNode)
 			{
-				MapPhysicalNodeElement mpne = (MapPhysicalNodeElement )endNode;
+				TopologicalNode mpne = (TopologicalNode)endNode;
 		
 				// если он активный, то есть находится в середине другой линии,
 				// то в той же точке создается новый
@@ -136,32 +136,32 @@ public class CreateNodeLinkCommandBundle extends MapActionCommandBundle
 		nodeLink = super.createNodeLink(startNode, endNode);
 
 		//Далее в зависимости от того какая комбинация startNode и endNode
-		if (startNode instanceof MapSiteNodeElement 
-			&& endNode instanceof MapSiteNodeElement )
+		if (startNode instanceof SiteNode 
+			&& endNode instanceof SiteNode )
 		{
 			// создается новая физическая линия из одного фрагмента
 			
 			physicalLink = super.createPhysicalLink(startNode, endNode);
 			physicalLink.addNodeLink( nodeLink);
-			nodeLink.setPhysicalLinkId(physicalLink.getId());
+			nodeLink.setPhysicalLink(physicalLink);
 		}//if ( MapSiteNodeElement && MapSiteNodeElement)
 		else
-		if ( startNode instanceof MapSiteNodeElement
-			&& endNode instanceof MapPhysicalNodeElement )
+		if ( startNode instanceof SiteNode
+			&& endNode instanceof TopologicalNode )
 		{
-			MapPhysicalNodeElement mpne = (MapPhysicalNodeElement )endNode;
+			TopologicalNode mpne = (TopologicalNode)endNode;
 
 			// Если у конечного узла два входящих фрагмента (включая только 
 			// что созданный), то есть фрагмент пририсован к существующей линии,
 			// то замкнуть эту линию
 			if(endNode.getNodeLinks().size() == 2)
 			{
-				physicalLink = map.getPhysicalLink(mpne.getPhysicalLinkId());
+				physicalLink = mpne.getPhysicalLink();
 
 				MapElementState pls = physicalLink.getState();
 
 				physicalLink.addNodeLink(nodeLink);
-				nodeLink.setPhysicalLinkId(physicalLink.getId());
+				nodeLink.setPhysicalLink(physicalLink);
 
 				// Коррекция начального и конечного узлов линии
 				if(physicalLink.getEndNode() == mpne)
@@ -175,23 +175,23 @@ public class CreateNodeLinkCommandBundle extends MapActionCommandBundle
 			{
 				physicalLink = super.createPhysicalLink(startNode, endNode);
 				physicalLink.addNodeLink( nodeLink);
-				nodeLink.setPhysicalLinkId(physicalLink.getId());
+				nodeLink.setPhysicalLink(physicalLink);
 			}
 		}//if ( MapSiteNodeElement && MapPhysicalNodeElement )
 		else
-		if ( startNode instanceof MapPhysicalNodeElement
-			&& endNode instanceof MapSiteNodeElement )
+		if ( startNode instanceof TopologicalNode
+			&& endNode instanceof SiteNode )
 		{
 			// существующая физическая линия завершается на узле site
 
-			MapPhysicalNodeElement mpne = (MapPhysicalNodeElement )startNode;
+			TopologicalNode mpne = (TopologicalNode)startNode;
 
-			physicalLink = map.getPhysicalLink(mpne.getPhysicalLinkId());
+			physicalLink = mpne.getPhysicalLink();
 
 			MapElementState pls = physicalLink.getState();
 
 			physicalLink.addNodeLink(nodeLink);
-			nodeLink.setPhysicalLinkId(physicalLink.getId());
+			nodeLink.setPhysicalLink(physicalLink);
 
 			super.changePhysicalNodeActivity(mpne, true);
 
@@ -205,19 +205,19 @@ public class CreateNodeLinkCommandBundle extends MapActionCommandBundle
 		else
 		// Когда соединяются две линии, в одну из линий переносятся фрагменты 
 		// другой, которая удаляется
-		if ( startNode instanceof MapPhysicalNodeElement 
-			&& endNode instanceof MapPhysicalNodeElement )
+		if ( startNode instanceof TopologicalNode 
+			&& endNode instanceof TopologicalNode )
 		{
-			MapPhysicalNodeElement smpne = (MapPhysicalNodeElement )startNode;
-			MapPhysicalNodeElement empne = (MapPhysicalNodeElement )endNode;
+			TopologicalNode smpne = (TopologicalNode)startNode;
+			TopologicalNode empne = (TopologicalNode)endNode;
 
-			physicalLink = map.getPhysicalLink(smpne.getPhysicalLinkId());
-			MapPhysicalLinkElement emple = map.getPhysicalLink(empne.getPhysicalLinkId());
+			physicalLink = smpne.getPhysicalLink();
+			PhysicalLink emple = empne.getPhysicalLink();
 
 			MapElementState pls = physicalLink.getState();
 
 			physicalLink.addNodeLink(nodeLink);
-			nodeLink.setPhysicalLinkId(physicalLink.getId());
+			nodeLink.setPhysicalLink(physicalLink);
 
 			super.changePhysicalNodeActivity(smpne, true);
 
@@ -240,10 +240,10 @@ public class CreateNodeLinkCommandBundle extends MapActionCommandBundle
 				// Перенос фрагментов линии из одной линии в другую
 				for(Iterator it = nodeLinksToMove.iterator(); it.hasNext();)
 				{
-					MapNodeLinkElement mnle = (MapNodeLinkElement )it.next();
+					NodeLink mnle = (NodeLink)it.next();
 					emple.removeNodeLink(mnle);
 					physicalLink.addNodeLink(mnle);
-					mnle.setPhysicalLinkId(physicalLink.getId());
+					mnle.setPhysicalLink(physicalLink);
 				}			
 			
 				// Коррекция начального и конечного узлов линии

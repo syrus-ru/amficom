@@ -1,5 +1,5 @@
 /**
- * $Id: MapToolTippedPanel.java,v 1.2 2004/12/07 17:05:54 krupenn Exp $
+ * $Id: MapToolTippedPanel.java,v 1.3 2004/12/22 16:38:42 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -12,7 +12,7 @@ package com.syrus.AMFICOM.Client.Map.UI;
 
 import com.syrus.AMFICOM.Client.Map.MapState;
 import com.syrus.AMFICOM.Client.Map.NetMapViewer;
-import com.syrus.AMFICOM.Client.Resource.Map.MapElement;
+import com.syrus.AMFICOM.map.MapElement;
 
 import java.awt.Container;
 import java.awt.GraphicsConfiguration;
@@ -34,7 +34,7 @@ import javax.swing.JToolTip;
  * 
  * 
  * 
- * @version $Revision: 1.2 $, $Date: 2004/12/07 17:05:54 $
+ * @version $Revision: 1.3 $, $Date: 2004/12/22 16:38:42 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -129,7 +129,7 @@ public class MapToolTippedPanel extends JComponent
  * возникающих событий мыши родительскому объекту
  * 
  * 
- * @version $Revision: 1.2 $, $Date: 2004/12/07 17:05:54 $
+ * @version $Revision: 1.3 $, $Date: 2004/12/22 16:38:42 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see

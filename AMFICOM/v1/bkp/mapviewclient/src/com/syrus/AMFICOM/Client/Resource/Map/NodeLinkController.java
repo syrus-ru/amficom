@@ -1,5 +1,5 @@
 /**
- * $Id: NodeLinkController.java,v 1.2 2004/12/08 16:20:22 krupenn Exp $
+ * $Id: NodeLinkController.java,v 1.3 2004/12/22 16:38:42 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -14,16 +14,13 @@ package com.syrus.AMFICOM.Client.Resource.Map;
 import com.syrus.AMFICOM.Client.General.Lang.LangModel;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
-import com.syrus.AMFICOM.Client.General.UI.LineComboBox;
-import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
 import com.syrus.AMFICOM.Client.Map.MapCoordinatesConverter;
 import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
-import com.syrus.AMFICOM.Client.Resource.Pool;
-import com.syrus.AMFICOM.configuration.Characteristic;
-import com.syrus.AMFICOM.configuration.CharacteristicType;
-import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
-import com.syrus.AMFICOM.configuration.corba.CharacteristicTypeSort;
-import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.map.AbstractNode;
+import com.syrus.AMFICOM.map.DoublePoint;
+import com.syrus.AMFICOM.map.MapElement;
+import com.syrus.AMFICOM.map.NodeLink;
+
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics;
@@ -33,6 +30,7 @@ import java.awt.Polygon;
 import java.awt.Rectangle;
 import java.awt.Stroke;
 import java.awt.geom.Rectangle2D;
+
 import java.util.HashMap;
 
 /**
@@ -40,7 +38,7 @@ import java.util.HashMap;
  * 
  * 
  * 
- * @version $Revision: 1.2 $, $Date: 2004/12/08 16:20:22 $
+ * @version $Revision: 1.3 $, $Date: 2004/12/22 16:38:42 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -63,6 +61,49 @@ public final class NodeLinkController extends AbstractLinkController
 		if(instance == null)
 			instance = new NodeLinkController();
 		return instance;
+	}
+
+	public String getToolTipText(MapElement me)
+	{
+		if(! (me instanceof NodeLink))
+			return null;
+
+		NodeLink link = (NodeLink )me;
+		
+		String s1 = link.getName();
+		String s2 = "";
+		String s3 = "";
+		try
+		{
+			AbstractNode smne = link.getStartNode();
+			s2 =  ":\n" 
+				+ "   " 
+				+ LangModelMap.getString("From") 
+				+ " " 
+				+ smne.getName() 
+				+ " [" 
+				+ LangModel.getString("node" + smne.getClass().getName()) 
+				+ "]";
+			AbstractNode emne = link.getEndNode();
+			s3 = "\n" 
+				+ "   " 
+				+ LangModelMap.getString("To") 
+				+ " " 
+				+ emne.getName() 
+				+ " [" 
+				+ LangModel.getString("node" + emne.getClass().getName()) 
+				+ "]";
+		}
+		catch(Exception e)
+		{
+			Environment.log(
+				Environment.LOG_LEVEL_FINER, 
+				"method call", 
+				getClass().getName(), 
+				"getToolTipText()", 
+				e);
+		}
+		return s1 + s2 + s3;
 	}
 
 	public boolean isSelectionVisible(MapElement me)
@@ -95,7 +136,7 @@ public final class NodeLinkController extends AbstractLinkController
 	/**
 	 * получить границы элемента
 	 */
-	public Rectangle getLabelBox(MapNodeLinkElement nodeLink)
+	public Rectangle getLabelBox(NodeLink nodeLink)
 	{
 		Rectangle rect = (Rectangle )labelBoxContainer.get(nodeLink);
 		if(rect == null)
@@ -331,7 +372,7 @@ public final class NodeLinkController extends AbstractLinkController
 	}
 
 	public boolean isMouseOnThisObjectsLabel(
-			MapNodeLinkElement nodeLink, 
+			NodeLink nodeLink, 
 			Point currentMousePoint)
 	{
 		return getLabelBox(nodeLink).contains(currentMousePoint);
@@ -340,22 +381,22 @@ public final class NodeLinkController extends AbstractLinkController
 	/**
 	 * обновить топологическую длину линии по координатам концевых узлов
 	 */	
-	public void updateLengthLt(MapNodeLinkElement nodeLink)
+	public void updateLengthLt(NodeLink nodeLink)
 	{
 		MapCoordinatesConverter converter = getLogicalNetLayer();
 
 		if(converter != null)
-			nodeLink.lengthLt = converter.distance(
+			nodeLink.setLength(converter.distance(
 					nodeLink.getStartNode().getLocation(), 
-					nodeLink.getEndNode().getLocation());
+					nodeLink.getEndNode().getLocation()));
 	}
 
 	/**
 	 * установить дистанцию от противоположного узла
 	 */
-	public void setSizeFrom(MapNodeLinkElement nodeLink, MapNodeElement node, double dist)
+	public void setSizeFrom(NodeLink nodeLink, AbstractNode node, double dist)
 	{
-		MapNodeElement oppositeNode = 
+		AbstractNode oppositeNode = 
 			(nodeLink.getStartNode().equals(node)) 
 					? nodeLink.getEndNode() 
 					: nodeLink.getStartNode();
@@ -374,7 +415,7 @@ public final class NodeLinkController extends AbstractLinkController
 		updateLengthLt(nodeLink);
 	}
 
-	public double getScreenLength(MapNodeLinkElement nodeLink)
+	public double getScreenLength(NodeLink nodeLink)
 	{
 		MapCoordinatesConverter converter = getLogicalNetLayer();
 		
@@ -388,7 +429,7 @@ public final class NodeLinkController extends AbstractLinkController
 
 	protected double[] slope = new double[2];
 	
-	public double[] calcScreenSlope(MapNodeLinkElement nodeLink)
+	public double[] calcScreenSlope(NodeLink nodeLink)
 	{
 		MapCoordinatesConverter converter = getLogicalNetLayer();
 		

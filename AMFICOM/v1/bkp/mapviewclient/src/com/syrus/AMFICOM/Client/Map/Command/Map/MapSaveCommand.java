@@ -1,5 +1,5 @@
 /*
- * $Id: MapSaveCommand.java,v 1.6 2004/10/26 13:32:01 krupenn Exp $
+ * $Id: MapSaveCommand.java,v 1.7 2004/12/22 16:38:40 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -17,13 +17,19 @@ import com.syrus.AMFICOM.Client.General.Lang.LangModel;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
-import com.syrus.AMFICOM.Client.General.UI.ObjectResourcePropertiesDialog;
+import com.syrus.AMFICOM.client_.general.ui_.ObjectResourcePropertiesDialog;
 import com.syrus.AMFICOM.Client.Map.Props.MapPanel;
 import com.syrus.AMFICOM.Client.Map.UI.MapFrame;
 import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
 
-import com.syrus.AMFICOM.Client.Resource.Map.Map;
+import com.syrus.AMFICOM.general.CommunicationException;
+import com.syrus.AMFICOM.general.DatabaseException;
+import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.IllegalObjectEntityException;
+import com.syrus.AMFICOM.general.VersionCollisionException;
+import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.Client.Resource.Pool;
+import com.syrus.AMFICOM.map.MapStorableObjectPool;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 
@@ -32,7 +38,7 @@ import java.awt.Toolkit;
  * 
  * 
  * 
- * @version $Revision: 1.6 $, $Date: 2004/10/26 13:32:01 $
+ * @version $Revision: 1.7 $, $Date: 2004/12/22 16:38:40 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -94,9 +100,34 @@ public class MapSaveCommand extends VoidCommand
 //			aContext.getDispatcher().notify(new StatusMessageEvent(
 //					StatusMessageEvent.STATUS_PROGRESS_BAR, 
 //					true));
-			Pool.put( Map.typ, map.getId(), map);
-			dataSource.RemoveFromMap(map.getId());
-			dataSource.SaveMap(map.getId());
+			try
+			{
+				MapStorableObjectPool.putStorableObject(map);
+			}
+			catch (IllegalObjectEntityException e)
+			{
+				e.printStackTrace();
+			}
+			try
+			{
+				MapStorableObjectPool.flush(true); // save
+			}
+			catch (VersionCollisionException e)
+			{
+				e.printStackTrace();
+			}
+			catch (IllegalDataException e)
+			{
+				e.printStackTrace();
+			}
+			catch (CommunicationException e)
+			{
+				e.printStackTrace();
+			}
+			catch (DatabaseException e)
+			{
+				e.printStackTrace();
+			}
 //			aContext.getDispatcher().notify(new StatusMessageEvent(
 //					StatusMessageEvent.STATUS_PROGRESS_BAR, 
 //					false));

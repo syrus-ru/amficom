@@ -2,8 +2,8 @@ package com.syrus.AMFICOM.Client.Map.Popup;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.Map.Command.Action.BindUnboundLinkToPhysicalLinkCommandBundle;
-import com.syrus.AMFICOM.Client.Resource.Map.MapElement;
-import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalLinkElement;
+import com.syrus.AMFICOM.map.MapElement;
+import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapUnboundLinkElement;
 
 import com.syrus.AMFICOM.Client.Resource.MapView.MapUnboundNodeElement;
@@ -39,7 +39,7 @@ public class UnboundLinkPopupMenu extends MapPopupMenu
 		return instance;
 	}
 	
-	public void setMapElement(MapElement me)
+	public void setElement(Object me)
 	{
 		this.unbound = (MapUnboundLinkElement )me;
 		generateMenuItem.setVisible( !(unbound.getStartNode() instanceof MapUnboundNodeElement)
@@ -70,7 +70,7 @@ public class UnboundLinkPopupMenu extends MapPopupMenu
 
 	private void bind()
 	{
-		MapPhysicalLinkElement link = super.selectPhysicalLinkAt(unbound);
+		PhysicalLink link = super.selectPhysicalLinkAt(unbound);
 		if(link != null)
 		{
 			BindUnboundLinkToPhysicalLinkCommandBundle command = new BindUnboundLinkToPhysicalLinkCommandBundle(unbound, link);

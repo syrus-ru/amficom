@@ -1,5 +1,5 @@
 /**
- * $Id: ViewMapElementsBarCommand.java,v 1.5 2004/10/19 14:10:03 krupenn Exp $
+ * $Id: ViewMapElementsBarCommand.java,v 1.6 2004/12/22 16:38:40 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -15,7 +15,8 @@ import com.syrus.AMFICOM.Client.General.Command.Command;
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.Map.UI.MapElementsBarFrame;
-import com.syrus.AMFICOM.Client.Resource.MapDataSourceImage;
+/**todo*/		
+//import com.syrus.AMFICOM.Client.Resource.MapDataSourceImage;
 
 import java.awt.Dimension;
 
@@ -27,7 +28,7 @@ import javax.swing.JDesktopPane;
  * 
  * 
  * 
- * @version $Revision: 1.5 $, $Date: 2004/10/19 14:10:03 $
+ * @version $Revision: 1.6 $, $Date: 2004/12/22 16:38:40 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -52,8 +53,9 @@ public class ViewMapElementsBarCommand extends VoidCommand
 	{
 		if(aContext.getDataSource() == null)
 			return;
-		
-		new MapDataSourceImage(aContext.getDataSource()).loadProtoElements();
+
+/**todo*/		
+//		new MapDataSourceImage(aContext.getDataSource()).loadProtoElements();
 			
 		frame = null;
 		for(int i = 0; i < desktop.getComponents().length; i++)

@@ -11,8 +11,8 @@ import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.Scheme.GraphActions;
 import com.syrus.AMFICOM.Client.General.Scheme.SchemeGraph;
 import com.syrus.AMFICOM.Client.General.Scheme.UgoPanel;
-import com.syrus.AMFICOM.Client.Resource.Map.IntPoint;
-import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalLinkBinding;
+import com.syrus.AMFICOM.map.IntPoint;
+import com.syrus.AMFICOM.map.PhysicalLinkBinding;
 import com.syrus.AMFICOM.Client.Resource.ObjectResource;
 
 import java.awt.Color;
@@ -22,6 +22,7 @@ import java.awt.Rectangle;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import com.syrus.AMFICOM.map.IntDimension;
 
 public class TunnelLayout implements OperationListener
 {
@@ -31,7 +32,7 @@ public class TunnelLayout implements OperationListener
 	private static final int SPACE = 2;
 	private int m, n;
 	
-	MapPhysicalLinkBinding binding;
+	PhysicalLinkBinding binding;
 	
 	EllipseCell[][] cells;
 
@@ -111,13 +112,13 @@ public class TunnelLayout implements OperationListener
 		}
 	}
 
-	public void setBinding(MapPhysicalLinkBinding binding)
+	public void setBinding(PhysicalLinkBinding binding)
 	{
 		this.binding = binding;
 		if(binding == null)
 			setDimension(0, 0);
 		else
-			setDimension(binding.getDimension().width, binding.getDimension().height);
+			setDimension(binding.getDimension().getWidth(), binding.getDimension().getHeight());
 		updateElements();
 	}
 
@@ -142,7 +143,7 @@ public class TunnelLayout implements OperationListener
 			}
 	}
 
-	public void setActiveElement(ObjectResource or)
+	public void setActiveElement(Object or)
 	{
 		removeSelection();
 		activeCoordinates = binding.getBinding(or);

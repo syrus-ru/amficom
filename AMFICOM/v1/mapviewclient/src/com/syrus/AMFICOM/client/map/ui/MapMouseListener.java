@@ -1,5 +1,5 @@
 /**
- * $Id: MapMouseListener.java,v 1.15 2004/12/07 17:05:54 krupenn Exp $
+ * $Id: MapMouseListener.java,v 1.16 2004/12/22 16:38:42 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -23,13 +23,13 @@ import com.syrus.AMFICOM.Client.Map.Popup.MapPopupMenu;
 import com.syrus.AMFICOM.Client.Map.Popup.MapPopupMenuManager;
 import com.syrus.AMFICOM.Client.Map.Strategy.MapStrategy;
 import com.syrus.AMFICOM.Client.Map.Strategy.MapStrategyManager;
-import com.syrus.AMFICOM.Client.Resource.Map.DoublePoint;
-import com.syrus.AMFICOM.Client.Resource.Map.MapElement;
+import com.syrus.AMFICOM.map.DoublePoint;
+import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapElementController;
-import com.syrus.AMFICOM.Client.Resource.Map.MapNodeElement;
-import com.syrus.AMFICOM.Client.Resource.Map.MapNodeLinkElement;
-import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalNodeElement;
-import com.syrus.AMFICOM.Client.Resource.Map.MapSiteNodeElement;
+import com.syrus.AMFICOM.map.AbstractNode;
+import com.syrus.AMFICOM.map.NodeLink;
+import com.syrus.AMFICOM.map.TopologicalNode;
+import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.Client.Resource.Map.NodeLinkController;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapSelection;
 import com.syrus.AMFICOM.Client.Resource.MapView.VoidMapElement;
@@ -53,7 +53,7 @@ import javax.swing.SwingUtilities;
  * 
  * 
  * 
- * @version $Revision: 1.15 $, $Date: 2004/12/07 17:05:54 $
+ * @version $Revision: 1.16 $, $Date: 2004/12/22 16:38:42 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -137,11 +137,11 @@ public final class MapMouseListener implements MouseListener
 					// fall throuth
 				case MapState.NO_OPERATION:
 					if(logicalNetLayer.getCurrentMapElement() != null)
-						if(logicalNetLayer.getCurrentMapElement() instanceof MapNodeElement)
+						if(logicalNetLayer.getCurrentMapElement() instanceof AbstractNode)
 							if(mapState.getShowMode() == MapState.SHOW_NODE_LINK)
 						{
-							MapNodeElement node = (MapNodeElement )logicalNetLayer.getCurrentMapElement();
-							MapNodeLinkElement nodelink = logicalNetLayer.getEditedNodeLink(me.getPoint());
+							AbstractNode node = (AbstractNode)logicalNetLayer.getCurrentMapElement();
+							NodeLink nodelink = logicalNetLayer.getEditedNodeLink(me.getPoint());
 							if(nodelink != null)
 								if(nodelink.getStartNode().equals(node)
 									|| nodelink.getEndNode().equals(node))
@@ -212,7 +212,7 @@ public final class MapMouseListener implements MouseListener
 						if(contextMenu != null)
 						{
 							contextMenu.setLogicalNetLayer(logicalNetLayer);
-							contextMenu.setMapElement(mapElement);
+							contextMenu.setElement(mapElement);
 							contextMenu.setPoint(me.getPoint());
 							JPopupMenu popup = (JPopupMenu )contextMenu;
 							popup.show(

@@ -1,5 +1,5 @@
 /**
- * $Id: PlaceSchemeElementCommand.java,v 1.6 2004/12/07 17:05:54 krupenn Exp $
+ * $Id: PlaceSchemeElementCommand.java,v 1.7 2004/12/22 16:38:40 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -14,15 +14,15 @@ import com.syrus.AMFICOM.Client.General.Event.MapEvent;
 import com.syrus.AMFICOM.Client.General.Event.MapNavigateEvent;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.General.Model.MapApplicationModel;
-import com.syrus.AMFICOM.Client.Resource.Map.DoublePoint;
-import com.syrus.AMFICOM.Client.Resource.Map.Map;
-import com.syrus.AMFICOM.Client.Resource.Map.MapElement;
-import com.syrus.AMFICOM.Client.Resource.Map.MapSiteNodeElement;
+import com.syrus.AMFICOM.map.DoublePoint;
+import com.syrus.AMFICOM.map.Map;
+import com.syrus.AMFICOM.map.MapElement;
+import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapUnboundNodeElement;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapView;
 import com.syrus.AMFICOM.Client.Resource.Pool;
-import com.syrus.AMFICOM.Client.Resource.Scheme.Scheme;
-import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeElement;
+import com.syrus.AMFICOM.scheme.corba.Scheme;
+import com.syrus.AMFICOM.scheme.corba.SchemeElement;
 
 import java.awt.Point;
 import java.awt.geom.Point2D;
@@ -31,7 +31,7 @@ import java.awt.geom.Point2D;
  * –азместить c[tvysq элемент на карте в соответствии с прив€зкой
  * или по координатам
  * 
- * @version $Revision: 1.6 $, $Date: 2004/12/07 17:05:54 $
+ * @version $Revision: 1.7 $, $Date: 2004/12/22 16:38:40 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -41,7 +41,7 @@ public class PlaceSchemeElementCommand extends MapActionCommandBundle
 	/**
 	 * –азмещеный узел
 	 */
-	MapSiteNodeElement site = null;
+	SiteNode site = null;
 	
 	/**
 	 * созданный неприв€занный элемент
@@ -106,11 +106,11 @@ public class PlaceSchemeElementCommand extends MapActionCommandBundle
 		{
 			MapElement me = logicalNetLayer.getMapElementAtPoint(point);
 			
-			if(me instanceof MapSiteNodeElement
+			if(me instanceof SiteNode
 				&& !(me instanceof MapUnboundNodeElement))
 			{
-				site = (MapSiteNodeElement )me;
-				se.siteId = site.getId();
+				site = (SiteNode )me;
+				se.siteNodeImpl(site);
 			}
 			else
 			{
@@ -118,7 +118,7 @@ public class PlaceSchemeElementCommand extends MapActionCommandBundle
 				site = unbound;
 			}
 			
-			mapView.scanCables((Scheme )Pool.get(Scheme.typ, se.getSchemeId()));
+			mapView.scanCables(se.scheme());
 		}
 
 		// операци€ закончена - оповестить слушателей

@@ -1,5 +1,5 @@
 /*
- * Название: $Id: AMFICOMSearchPanel.java,v 1.4 2004/10/19 11:48:28 krupenn Exp $
+ * Название: $Id: AMFICOMSearchPanel.java,v 1.5 2004/12/22 16:38:41 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -15,8 +15,8 @@ import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.Map.Command.Navigate.CenterSelectionCommand;
 import com.syrus.AMFICOM.Client.Map.UI.MapFrame;
 import com.syrus.AMFICOM.Client.Map.UI.SimpleMapElementController;
-import com.syrus.AMFICOM.Client.Resource.Map.Map;
-import com.syrus.AMFICOM.Client.Resource.Map.MapElement;
+import com.syrus.AMFICOM.map.Map;
+import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapView;
 import com.syrus.AMFICOM.Client.Resource.ObjectResource;
 import com.syrus.AMFICOM.client_.general.ui_.ObjectResourceTable;
@@ -49,7 +49,7 @@ import javax.swing.table.JTableHeader;
  * 
  * 
  * 
- * @version $Revision: 1.4 $, $Date: 2004/10/19 11:48:28 $
+ * @version $Revision: 1.5 $, $Date: 2004/12/22 16:38:41 $
  * @author $Author: krupenn $
  * @see
  */
@@ -283,7 +283,7 @@ import javax.swing.table.JTableHeader;
 		int[] selection = table.getSelectedRows();
 		for (int i = 0; i < selection.length; i++)
 		{
-			MapElement mapE = (MapElement )model.getObject(selection[i]);
+			MapElement mapE = (MapElement)model.getObject(selection[(i)]);
 			mapE.setSelected(true);
 		}
 

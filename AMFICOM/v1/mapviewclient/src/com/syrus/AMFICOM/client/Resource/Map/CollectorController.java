@@ -1,5 +1,5 @@
 /**
- * $Id: CollectorController.java,v 1.2 2004/12/08 16:20:22 krupenn Exp $
+ * $Id: CollectorController.java,v 1.3 2004/12/22 16:38:42 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -18,12 +18,16 @@ import com.syrus.AMFICOM.Client.General.UI.LineComboBox;
 import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
 import com.syrus.AMFICOM.Client.Map.MapCoordinatesConverter;
 import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
+import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.configuration.Characteristic;
 import com.syrus.AMFICOM.configuration.CharacteristicType;
 import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 import com.syrus.AMFICOM.configuration.corba.CharacteristicTypeSort;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.map.AbstractNode;
+import com.syrus.AMFICOM.map.Collector;
+import com.syrus.AMFICOM.map.MapElement;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics;
@@ -41,7 +45,7 @@ import java.util.Iterator;
  * 
  * 
  * 
- * @version $Revision: 1.2 $, $Date: 2004/12/08 16:20:22 $
+ * @version $Revision: 1.3 $, $Date: 2004/12/22 16:38:42 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -61,6 +65,16 @@ public final class CollectorController extends AbstractLinkController
 		return instance;
 	}
 
+	public String getToolTipText(MapElement me)
+	{
+		if(! (me instanceof Collector))
+			return null;
+
+		Collector link = (Collector )me;
+		
+		return link.getName();
+	}
+
 	public boolean isSelectionVisible(MapElement me)
 	{
 		throw new UnsupportedOperationException();
@@ -75,7 +89,7 @@ public final class CollectorController extends AbstractLinkController
 
 		
 		boolean vis = false;
-		for(Iterator it = collector.getLinks().iterator(); it.hasNext();)
+		for(Iterator it = collector.getPhysicalLinks().iterator(); it.hasNext();)
 		{
 			MapPhysicalLinkElement link = (MapPhysicalLinkElement )it.next();
 			PhysicalLinkController plc = (PhysicalLinkController )getLogicalNetLayer().getMapViewController().getController(link);
@@ -108,7 +122,7 @@ public final class CollectorController extends AbstractLinkController
 				stroke.getDashPhase());
 		Color color = getColor(collector);
 
-		for(Iterator it = collector.getLinks().iterator(); it.hasNext();)
+		for(Iterator it = collector.getPhysicalLinks().iterator(); it.hasNext();)
 		{
 			MapPhysicalLinkElement link = (MapPhysicalLinkElement )it.next();
 			PhysicalLinkController plc = (PhysicalLinkController )getLogicalNetLayer().getMapViewController().getController(link);

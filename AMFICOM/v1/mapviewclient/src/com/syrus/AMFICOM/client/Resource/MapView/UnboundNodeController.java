@@ -1,5 +1,5 @@
 /**
- * $Id: UnboundNodeController.java,v 1.1 2004/12/07 17:05:54 krupenn Exp $
+ * $Id: UnboundNodeController.java,v 1.2 2004/12/22 16:38:43 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -16,7 +16,7 @@ import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
 import com.syrus.AMFICOM.Client.Map.MapCoordinatesConverter;
 import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
 
-import com.syrus.AMFICOM.Client.Resource.Map.MapElement;
+import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapElementController;
 import com.syrus.AMFICOM.Client.Resource.Map.SiteNodeController;
 import java.awt.BasicStroke;
@@ -35,7 +35,7 @@ import javax.swing.ImageIcon;
  * 
  * 
  * 
- * @version $Revision: 1.1 $, $Date: 2004/12/07 17:05:54 $
+ * @version $Revision: 1.2 $, $Date: 2004/12/22 16:38:43 $
  * @module
  * @author $Author: krupenn $
  * @see

@@ -5,20 +5,29 @@ import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourceComboBox;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourceListBox;
-import com.syrus.AMFICOM.Client.General.UI.ObjectResourcePropertiesPane;
+import com.syrus.AMFICOM.Client.Map.UI.SimpleMapElementController;
+import com.syrus.AMFICOM.client_.general.ui_.ObjComboBox;
+import com.syrus.AMFICOM.client_.general.ui_.ObjectResourcePropertiesPane;
 import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
-import com.syrus.AMFICOM.Client.Resource.Map.DoublePoint;
-import com.syrus.AMFICOM.Client.Resource.Map.Map;
+import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
+import com.syrus.AMFICOM.configuration.Domain;
+import com.syrus.AMFICOM.configuration.DomainCondition;
+import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.CommunicationException;
+import com.syrus.AMFICOM.general.DatabaseException;
+import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.StorableObjectCondition;
+import com.syrus.AMFICOM.map.DoublePoint;
+import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapView;
 import com.syrus.AMFICOM.Client.Resource.MapView.VoidMapElement;
-import com.syrus.AMFICOM.Client.Resource.Object.Domain;
-import com.syrus.AMFICOM.Client.Resource.ObjectResource;
 
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.geom.Point2D;
 
+import java.util.List;
 import javax.swing.Box;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -34,9 +43,9 @@ public class MapViewPanel
 	private JLabel nameLabel = new JLabel();
 	private JTextField nameTextField = new JTextField();
 	private JLabel mapLabel = new JLabel();
-	private ObjectResourceComboBox mapComboBox = new ObjectResourceComboBox(Map.typ);
+	private ObjComboBox mapComboBox = null;
 	private JLabel domainLabel = new JLabel();
-	private ObjectResourceComboBox domainComboBox = new ObjectResourceComboBox(Domain.typ);
+	private ObjComboBox domainComboBox = null;
 
 	private JLabel longLabel = new JLabel();
 	private JTextField longTextField = new JTextField();
@@ -75,6 +84,12 @@ public class MapViewPanel
 
 	private void jbInit()
 	{
+		SimpleMapElementController controller = 
+				SimpleMapElementController.getInstance();
+
+		domainComboBox = new ObjComboBox(controller, SimpleMapElementController.KEY_NAME);
+		mapComboBox = new ObjComboBox(controller, SimpleMapElementController.KEY_NAME);
+
 		this.setLayout(gridBagLayout1);
 		this.setName(LangModel.getString("Properties"));
 
@@ -125,12 +140,12 @@ public class MapViewPanel
 		domainComboBox.setEnabled(false);
 	}
 
-	public ObjectResource getObjectResource()
+	public Object getObject()
 	{
 		return null;
 	}
 
-	public void setObjectResource(ObjectResource objectResource)
+	public void setObject(Object objectResource)
 	{
 		if(objectResource instanceof VoidMapElement)
 		{
@@ -138,6 +153,9 @@ public class MapViewPanel
 		}
 		else
 			view = (MapView )objectResource;
+
+		domainComboBox.removeAll();
+		mapComboBox.removeAll();
 
 		if(view == null)
 		{
@@ -161,8 +179,56 @@ public class MapViewPanel
 			nameTextField.setEnabled(true);
 			nameTextField.setText(view.getName());
 
-			mapComboBox.setSelected(view.getMap());
-			domainComboBox.setSelected(view.getDomainId());
+			Domain domain = null;
+			List domains = null;
+
+			StorableObjectCondition condition = 
+				new DomainCondition(null, ObjectEntities.DOMAIN_ENTITY_CODE);
+			try
+			{
+				domains = ConfigurationStorableObjectPool.getStorableObjectsByCondition(
+						condition,
+						true);
+			}
+			catch (ApplicationException e)
+			{
+				e.printStackTrace();
+			}
+
+			try
+			{
+				domain = (Domain )ConfigurationStorableObjectPool.getStorableObject(
+						view.getDomainId(),
+						false);
+			}
+			catch (CommunicationException e)
+			{
+				e.printStackTrace();
+			}
+			catch (DatabaseException e)
+			{
+				e.printStackTrace();
+			}
+
+			domainComboBox.addElements(domains);
+			domainComboBox.setSelectedItem(domain);
+
+			List maps = null;
+
+			StorableObjectCondition domainCondition = 
+				new DomainCondition(domain, ObjectEntities.MAP_ENTITY_CODE);
+			try
+			{
+				maps = ConfigurationStorableObjectPool.getStorableObjectsByCondition(
+						domainCondition,
+						true);
+			}
+			catch (ApplicationException e)
+			{
+				e.printStackTrace();
+			}
+			mapComboBox.addElements(maps);
+			mapComboBox.setSelectedItem(view.getMap());
 
 			descTextArea.setEnabled(true);
 			descTextArea.setText(view.getDescription());

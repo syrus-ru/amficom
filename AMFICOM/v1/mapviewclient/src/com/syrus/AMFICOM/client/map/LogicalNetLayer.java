@@ -1,5 +1,5 @@
 /**
- * $Id: LogicalNetLayer.java,v 1.26 2004/12/08 16:20:22 krupenn Exp $
+ * $Id: LogicalNetLayer.java,v 1.27 2004/12/22 16:38:39 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -29,20 +29,28 @@ import com.syrus.AMFICOM.Client.Map.Command.Action.MoveSelectionCommandBundle;
 import com.syrus.AMFICOM.Client.Resource.ImageCatalogue;
 import com.syrus.AMFICOM.Client.Resource.ImageResource;
 import com.syrus.AMFICOM.Client.Resource.Map.AbstractNodeController;
-import com.syrus.AMFICOM.Client.Resource.Map.DoublePoint;
-import com.syrus.AMFICOM.Client.Resource.Map.IntDimension;
+import com.syrus.AMFICOM.Client.Resource.Map.NodeTypeController;
+import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.StorableObjectCondition;
+import com.syrus.AMFICOM.general.StringFieldCondition;
+import com.syrus.AMFICOM.general.corba.StringFieldSort;
+import com.syrus.AMFICOM.map.DoublePoint;
+import com.syrus.AMFICOM.map.IntDimension;
 import com.syrus.AMFICOM.Client.Resource.Map.LinkTypeController;
-import com.syrus.AMFICOM.Client.Resource.Map.Map;
-import com.syrus.AMFICOM.Client.Resource.Map.MapElement;
+import com.syrus.AMFICOM.map.Map;
+import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapElementController;
-import com.syrus.AMFICOM.Client.Resource.Map.MapLinkProtoElement;
-import com.syrus.AMFICOM.Client.Resource.Map.MapMarkElement;
-import com.syrus.AMFICOM.Client.Resource.Map.MapNodeElement;
-import com.syrus.AMFICOM.Client.Resource.Map.MapNodeLinkElement;
-import com.syrus.AMFICOM.Client.Resource.Map.MapNodeProtoElement;
-import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalLinkElement;
-import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalNodeElement;
-import com.syrus.AMFICOM.Client.Resource.Map.MapSiteNodeElement;
+import com.syrus.AMFICOM.map.MapStorableObjectPool;
+import com.syrus.AMFICOM.map.PhysicalLinkType;
+import com.syrus.AMFICOM.map.Mark;
+import com.syrus.AMFICOM.map.AbstractNode;
+import com.syrus.AMFICOM.map.NodeLink;
+import com.syrus.AMFICOM.map.SiteNodeType;
+import com.syrus.AMFICOM.map.PhysicalLink;
+import com.syrus.AMFICOM.map.TopologicalNode;
+import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.Client.Resource.Map.NodeLinkController;
 import com.syrus.AMFICOM.Client.Resource.Map.SiteNodeController;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapAlarmMarker;
@@ -56,12 +64,9 @@ import com.syrus.AMFICOM.Client.Resource.MapView.MapViewController;
 import com.syrus.AMFICOM.Client.Resource.MapView.MarkerController;
 import com.syrus.AMFICOM.Client.Resource.MapView.VoidMapElement;
 import com.syrus.AMFICOM.Client.Resource.Pool;
-import com.syrus.AMFICOM.Client.Resource.Scheme.PathDecompositor;
-import com.syrus.AMFICOM.Client.Resource.Scheme.Scheme;
-import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeCableLink;
-import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeElement;
+import com.syrus.AMFICOM.scheme.PathDecompositor;
+import com.syrus.AMFICOM.scheme.corba.*;
 
-import com.syrus.AMFICOM.Client.Resource.Scheme.SchemePath;
 import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 import com.syrus.AMFICOM.configuration.MonitoredElement;
 import com.syrus.AMFICOM.configuration.TransmissionPath;
@@ -69,6 +74,9 @@ import com.syrus.AMFICOM.configuration.corba.MonitoredElementSort;
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.resource.FileImageResource;
+import com.syrus.AMFICOM.resource.ResourceStorableObjectPool;
+import com.syrus.AMFICOM.resource.corba.ImageResource_TransferablePackage.ImageResourceDataPackage.ImageResourceSort;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Cursor;
@@ -82,17 +90,19 @@ import java.awt.event.MouseEvent;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+import javax.swing.ImageIcon;
 
 /**
  * Управляет отображением логической структуры сети.
  * 
  * 
  * 
- * @version $Revision: 1.26 $, $Date: 2004/12/08 16:20:22 $
+ * @version $Revision: 1.27 $, $Date: 2004/12/22 16:38:39 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -143,18 +153,18 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 	/**
 	 * фиксированный элемент
 	 */
-	protected MapNodeElement fixedNode = null;
+	protected AbstractNode fixedNode = null;
 
 	protected List fixedNodeList = new LinkedList();
 
 	/**
 	 * Текущий тип создаваемых физических линий
 	 */
-	protected MapLinkProtoElement currentPen = null;
+	protected PhysicalLinkType currentPen = null;
 
-	protected MapNodeProtoElement unboundProto = null;
+	protected SiteNodeType unboundProto = null;
 
-	protected MapLinkProtoElement unboundLinkProto = null;
+	protected PhysicalLinkType unboundLinkProto = null;
 	
 	/**
 	 * Текущая точка курсора мыши на карте (в экранных координатах)
@@ -306,7 +316,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 			Iterator en =  getMapView().getMap().getNodes().iterator();
 			while (en.hasNext())
 			{
-				MapNodeElement curNode = (MapNodeElement )en.next();
+				AbstractNode curNode = (AbstractNode)en.next();
 				((AbstractNodeController )getMapViewController().getController(curNode)).updateScaleCoefficient(curNode);
 //				curNode.setScaleCoefficient(sF);
 			}
@@ -647,8 +657,8 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 			}
 			for(Iterator it = elementsToDisplay.iterator(); it.hasNext();)
 			{
-				MapPhysicalLinkElement mple = 
-					(MapPhysicalLinkElement )it.next();
+				PhysicalLink mple = 
+					(PhysicalLink)it.next();
 				getMapViewController().getController(mple).paint(mple, g, visibleBounds);
 //				mple.paint(g, visibleBounds);
 			}
@@ -667,8 +677,8 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 			}
 			for(Iterator it = elementsToDisplay.iterator(); it.hasNext();)
 			{
-				MapPhysicalLinkElement mple = 
-					(MapPhysicalLinkElement )it.next();
+				PhysicalLink mple = 
+					(PhysicalLink)it.next();
 				getMapViewController().getController(mple).paint(mple, g, visibleBounds);
 //				mple.paint(g, visibleBounds);
 			}
@@ -679,8 +689,8 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 			e = getMapView().getMap().getPhysicalLinks().iterator();
 			while (e.hasNext())
 			{
-				MapPhysicalLinkElement mple = 
-					(MapPhysicalLinkElement )e.next();
+				PhysicalLink mple = 
+					(PhysicalLink)e.next();
 				getMapViewController().getController(mple).paint(mple, g, visibleBounds);
 //				mple.paint(g, visibleBounds);
 			}
@@ -691,7 +701,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 			e = getMapView().getMap().getNodeLinks().iterator();
 			while (e.hasNext())
 			{
-				MapNodeLinkElement curNodeLink = (MapNodeLinkElement )e.next();
+				NodeLink curNodeLink = (NodeLink)e.next();
 				getMapViewController().getController(curNodeLink).paint(curNodeLink, g, visibleBounds);
 //				curNodeLink.paint(p, visibleBounds);
 			}
@@ -711,8 +721,8 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 		Iterator e = getMapView().getMap().getNodes().iterator();
 		while (e.hasNext())
 		{
-			MapNodeElement curNode = (MapNodeElement )e.next();
-			if(curNode instanceof MapPhysicalNodeElement)
+			AbstractNode curNode = (AbstractNode)e.next();
+			if(curNode instanceof TopologicalNode)
 			{
 				if(showNodes)
 				{
@@ -797,7 +807,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 		Iterator e = getMapView().getMap().getSelectedElements().iterator();
 		while (e.hasNext())
 		{
-			MapElement el = (MapElement )e.next();
+			MapElement el = (MapElement)e.next();
 			getMapViewController().getController(el).paint(el, g, visibleBounds);
 //			el.paint(pg, visibleBounds);
 		}
@@ -813,13 +823,11 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 
 		if(ae.getActionCommand().equals(MapEvent.MAP_VIEW_CHANGED))
 		{
-			getMapView().setChanged(true);
+//			getMapView().setChanged(true);
 		}
 		else
 		if(ae.getActionCommand().equals(MapEvent.MAP_CHANGED))
 		{
-			getMapView().getMap().setChanged(true);
-
 			Set selectedElements = getMapView().getMap().getSelectedElements();
 			if(selectedElements.size() > 1)
 			{
@@ -841,7 +849,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 			{
 //				if(getCurrentMapElement() instanceof MapSelection)
 //				{
-					MapElement me = (MapElement )selectedElements.iterator().next();
+					MapElement me = (MapElement)selectedElements.iterator().next();
 					setCurrentMapElement(me);
 					this.sendMapEvent(new MapEvent(me, MapEvent.MAP_ELEMENT_SELECTED));
 //				}
@@ -864,24 +872,24 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 			if(me instanceof SchemeElement)
 			{
 				getMapView().scanElement((SchemeElement )me);
-				getMapView().scanCables((Scheme )Pool.get(Scheme.typ, ((SchemeElement )me).getSchemeId()));
+				getMapView().scanCables(((SchemeElement )me).scheme());
 			}
 			else
 			if(me instanceof SchemeCableLink)
 			{
 				getMapView().scanCable((SchemeCableLink )me);
-				getMapView().scanPaths((Scheme )Pool.get(Scheme.typ, ((SchemeCableLink )me).getSchemeId()));
+				getMapView().scanPaths(((SchemeCableLink )me).scheme());
 			}
 			else
 			if(me instanceof MapCablePathElement)
 			{
 				getMapView().scanCable(((MapCablePathElement )me).getSchemeCableLink());
-				getMapView().scanPaths((Scheme )Pool.get(Scheme.typ, ((MapCablePathElement )me).getSchemeCableLink().getSchemeId()));
+				getMapView().scanPaths(((MapCablePathElement )me).getSchemeCableLink().scheme());
 			}
 			else
-			if(me instanceof MapSiteNodeElement)
+			if(me instanceof SiteNode)
 			{
-				MapSiteNodeElement site = (MapSiteNodeElement )me;
+				SiteNode site = (SiteNode)me;
 				SiteNodeController snc = (SiteNodeController )getMapViewController().getController(site);
 				snc.updateScaleCoefficient(site);
 			}
@@ -1056,7 +1064,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 			{
 				if(performProcessing)
 				{
-					MapElement me = (MapElement )mne.getSource();
+					MapElement me = (MapElement)mne.getSource();
 					if(me != null)
 						me.setSelected(true);
 				}
@@ -1066,7 +1074,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 			{
 				if(performProcessing)
 				{
-					MapElement me = (MapElement )mne.getSource();
+					MapElement me = (MapElement)mne.getSource();
 					if(me != null)
 						me.setSelected(false);
 				}
@@ -1086,7 +1094,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 			{
 				try 
 				{
-					MapElement me = (MapElement )data.get(n);
+					MapElement me = (MapElement)data.get(n);
 					me.setSelected(true);
 					repaint(false);
 				} 
@@ -1100,7 +1108,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 		{
 			if(ae.getSource() instanceof MapElement)
 			{
-				MapElement me = (MapElement )ae.getSource();
+				MapElement me = (MapElement)ae.getSource();
 				me.setSelected(true);
 				repaint(false);
 			} 
@@ -1117,7 +1125,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 	
 					for(int i = 0; i < ses.length; i++)
 					{
-						MapSiteNodeElement site = getMapView().findElement(ses[i]);
+						SiteNode site = getMapView().findElement(ses[i]);
 						if(site != null)
 							site.setSelected(true);
 					}
@@ -1152,7 +1160,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 	
 					for(int i = 0; i < ses.length; i++)
 					{
-						MapSiteNodeElement site = getMapView().findElement(ses[i]);
+						SiteNode site = getMapView().findElement(ses[i]);
 						if(site != null)
 							site.setSelected(false);
 					}
@@ -1287,7 +1295,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 	/**
 	 * Получить текущий фиксированный элемент
 	 */
-	public MapNodeElement getFixedNode()
+	public AbstractNode getFixedNode()
 	{
 		return fixedNode;
 	}
@@ -1319,18 +1327,18 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 
 		if(getMapState().getOperationMode() == MapState.NO_OPERATION)
 		{
-			boolean canFixDist = (curMapElement instanceof MapPhysicalNodeElement)
-				|| (curMapElement instanceof MapSiteNodeElement);
+			boolean canFixDist = (curMapElement instanceof TopologicalNode)
+				|| (curMapElement instanceof SiteNode);
 			if(getContext().getApplicationModel().isEnabled(
 				MapApplicationModel.OPERATION_MOVE_FIXED) != canFixDist)
 			{
 				if(canFixDist)
 				{
-					fixedNode = (MapNodeElement )curMapElement;
+					fixedNode = (AbstractNode)curMapElement;
 					fixedNodeList.clear();
 					for(Iterator it = fixedNode.getNodeLinks().iterator(); it.hasNext();)
 					{
-						MapNodeLinkElement mnle = (MapNodeLinkElement )it.next();
+						NodeLink mnle = (NodeLink)it.next();
 						fixedNodeList.add(mnle.getOtherNode(fixedNode));
 					}
 				}
@@ -1368,7 +1376,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 		Iterator e = mapView.getAllElements().iterator();
 		while (e.hasNext())
 		{
-			MapElement mapElement = (MapElement )e.next();
+			MapElement mapElement = (MapElement)e.next();
 			MapElementController controller = getMapViewController().getController(mapElement);
 //			if(mapElement.isVisible(visibleBounds))
 			if(controller.isElementVisible(mapElement, visibleBounds))
@@ -1376,7 +1384,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 			{
 				curME = mapElement;
 			
-				if ( mapElement instanceof MapNodeLinkElement)
+				if ( mapElement instanceof NodeLink)
 				{
 					//Здесь смотрим по флагу linkState что делать
 					if ( showMode == MapState.SHOW_NODE_LINK)
@@ -1385,44 +1393,41 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 					else
 					if ( showMode == MapState.SHOW_PHYSICAL_LINK)
 					{
-						curME = map.getPhysicalLink( 
-							((MapNodeLinkElement )mapElement).getPhysicalLinkId());
+						curME = ((NodeLink)mapElement).getPhysicalLink();
 					}
 					else
 					if ( showMode == MapState.SHOW_CABLE_PATH)
 					{
-						Iterator it = mapView.getCablePaths((MapNodeLinkElement )mapElement).iterator();
+						Iterator it = mapView.getCablePaths((NodeLink)mapElement).iterator();
 						if(it.hasNext())
 						{
 							curME = (MapCablePathElement)it.next();
 						}
 						else
 						{
-							curME = map.getPhysicalLink( 
-								((MapNodeLinkElement )mapElement).getPhysicalLinkId());
+							curME = ((NodeLink)mapElement).getPhysicalLink();
 						}
 					}
 					else
 					if ( showMode == MapState.SHOW_MEASUREMENT_PATH)
 					{
-						Iterator it = mapView.getMeasurementPaths((MapNodeLinkElement )mapElement).iterator();
+						Iterator it = mapView.getMeasurementPaths((NodeLink)mapElement).iterator();
 						if(it.hasNext())
 						{
 							curME = (MapMeasurementPathElement )it.next();
 						}
 						else
 						{
-							curME = map.getPhysicalLink( 
-								((MapNodeLinkElement )mapElement).getPhysicalLinkId());
+							curME = ((NodeLink)mapElement).getPhysicalLink();
 						}
 					}
 				}
 				else
-				if ( mapElement instanceof MapPhysicalLinkElement)
+				if ( mapElement instanceof PhysicalLink)
 				{
 					if ( showMode == MapState.SHOW_CABLE_PATH)
 					{
-						Iterator it = mapView.getCablePaths((MapPhysicalLinkElement )mapElement).iterator();
+						Iterator it = mapView.getCablePaths((PhysicalLink)mapElement).iterator();
 						if(it.hasNext())
 						{
 							curME = (MapCablePathElement)it.next();
@@ -1431,7 +1436,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 					else
 					if ( showMode == MapState.SHOW_MEASUREMENT_PATH)
 					{
-						Iterator it = mapView.getMeasurementPaths((MapPhysicalLinkElement )mapElement).iterator();
+						Iterator it = mapView.getMeasurementPaths((PhysicalLink)mapElement).iterator();
 						if(it.hasNext())
 						{
 							curME = (MapMeasurementPathElement )it.next();
@@ -1454,7 +1459,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 		Iterator e = getMapView().getAllElements().iterator();
 		while ( e.hasNext())
 		{
-			MapElement mapElement = (MapElement )e.next();
+			MapElement mapElement = (MapElement)e.next();
 			mapElement.setSelected(false);
 		}
 		getMapView().getMap().clearSelection();
@@ -1471,7 +1476,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 
 		while(e.hasNext())
 		{
-			MapElement curElement = (MapElement )e.next();
+			MapElement curElement = (MapElement)e.next();
 			curElement.setSelected(true);
 		}
 	}
@@ -1511,7 +1516,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 
 		while (e.hasNext())
 		{
-			MapElement curElement = (MapElement )e.next();
+			MapElement curElement = (MapElement)e.next();
 			if (curElement.isSelected())
 			{
 				return false;
@@ -1524,7 +1529,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 	 * Получить MapNodeLinkElement, для которого булет произволиться
 	 * редактирование длины, по коордитате на карте
 	 */
-	public MapNodeLinkElement getEditedNodeLink(Point point)
+	public NodeLink getEditedNodeLink(Point point)
 	{
 		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "getEditedNodeLink(" + point + ")");
 		
@@ -1533,7 +1538,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 		Iterator e = getMapView().getMap().getNodeLinks().iterator();
 		while (e.hasNext())
 		{
-			MapNodeLinkElement mapElement = (MapNodeLinkElement )e.next();
+			NodeLink mapElement = (NodeLink)e.next();
 			if(nlc == null)
 				nlc = (NodeLinkController )getMapViewController().getController(mapElement);
 			if (nlc.isMouseOnThisObjectsLabel(mapElement, point))
@@ -1544,7 +1549,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 		return null;
 	}
 	
-	public void setNodeLinkSizeFrom(MapNodeLinkElement nodelink, MapNodeElement node, double dist)
+	public void setNodeLinkSizeFrom(NodeLink nodelink, AbstractNode node, double dist)
 	{
 		DoublePoint anchor1 = node.getLocation();
 		
@@ -1600,236 +1605,223 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 		sendMapEvent(new MapEvent(this, MapEvent.MAP_CHANGED));
 	}
 	
-	public MapLinkProtoElement getPen()
+	public PhysicalLinkType getPen()
 	{
 		if(currentPen == null)
 			currentPen = getDefaultPen();
 		return currentPen;
 	}
 	
-	public MapNodeProtoElement getUnboundProto()
+	public SiteNodeType getUnboundProto()
 	{
 		if(unboundProto == null)
 			unboundProto = getDefaultUnboundProto();
 		return unboundProto;
 	}
 	
-	public MapLinkProtoElement getUnboundPen()
+	public PhysicalLinkType getUnboundPen()
 	{
 		if(unboundLinkProto == null)
 			unboundLinkProto = getDefaultCable();
 		return unboundLinkProto;
 	}
 	
-	public void setPen(MapLinkProtoElement pen)
+	public void setPen(PhysicalLinkType pen)
 	{
 		this.currentPen = pen;
 	}
 
-	protected MapNodeProtoElement getDefaultUnboundProto()
+	public Identifier getImageId(String codename, String filename)
 	{
-		MapNodeProtoElement mnpe = null;
-		
-		mnpe = (MapNodeProtoElement )Pool.get(MapNodeProtoElement.typ, MapNodeProtoElement.UNBOUND);
-		if(mnpe == null)
+		try 
 		{
-			ImageCatalogue.add(
-				"unbound",
-				new ImageResource("unbound", "unbound", "images/unbound.gif"));
+			StringFieldCondition condition = new StringFieldCondition(
+				String.valueOf(ImageResourceSort._FILE),
+				ObjectEntities.IMAGE_RESOURCE_ENTITY_CODE,
+				StringFieldSort.STRINGSORT_INTEGER);
+			List bitMaps = ResourceStorableObjectPool.getStorableObjectsByCondition(condition, true);
 
-			mnpe = new MapNodeProtoElement(
-				MapNodeProtoElement.UNBOUND,
-				LangModelMap.getString("UnboundElement"),
-				true,
-				"unbound",
-				"desc");
-			Pool.put(MapNodeProtoElement.typ, mnpe.getId(), mnpe);
+			for (Iterator it = bitMaps.iterator(); it.hasNext(); ) 
+			{
+				FileImageResource ir = (FileImageResource )it.next();
+				if(ir.getCodename().equals(codename))
+					return ir.getId();
+				
+			}
 		}
-		
-		return mnpe;
+		catch (ApplicationException ex) 
+		{
+			ex.printStackTrace();
+		}
+		try
+		{
+			FileImageResource ir = FileImageResource.createInstance(
+				this.getMapView().getMap().getCreatorId(),
+				filename);
+			return ir.getId();
+		}
+		catch (CreateObjectException e)
+		{
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	public SiteNodeType getSiteNodeType(
+			String codename)
+	{
+		StorableObjectCondition pTypeCondition = new StringFieldCondition(
+			codename,
+			ObjectEntities.SITE_NODE_TYPE_ENTITY_CODE,
+			StringFieldSort.STRINGSORT_BASE);
+
+		try
+		{
+			List pTypes =
+				MapStorableObjectPool.getStorableObjectsByCondition(pTypeCondition, true);
+			for (Iterator it = pTypes.iterator(); it.hasNext();)
+			{
+				SiteNodeType type = (SiteNodeType )it.next();
+				if (type.getCodename().equals(codename))
+					return type;
+			}
+		}
+		catch(ApplicationException ex)
+		{
+			System.err.println("Exception searching ParameterType. Creating new one.");
+			ex.printStackTrace();
+		}
+
+		try
+		{
+			return SiteNodeType.createInstance(
+				this.getMapView().getMap().getCreatorId(),
+				codename,
+				LangModelMap.getString(codename + "Type"),
+				"",
+				getImageId(codename, NodeTypeController.getImageFileName(codename)),
+				true);
+		}
+		catch (Exception e)
+		{
+			return null;
+		}
+	}
+
+	public PhysicalLinkType getPhysicalLinkType(
+			String codename)
+	{
+		StorableObjectCondition pTypeCondition = new StringFieldCondition(
+			codename,
+			ObjectEntities.PHYSICAL_LINK_TYPE_ENTITY_CODE,
+			StringFieldSort.STRINGSORT_BASE);
+
+		try
+		{
+			List pTypes =
+				MapStorableObjectPool.getStorableObjectsByCondition(pTypeCondition, true);
+			for (Iterator it = pTypes.iterator(); it.hasNext();)
+			{
+				PhysicalLinkType type = (PhysicalLinkType )it.next();
+				if (type.getCodename().equals(codename))
+					return type;
+			}
+		}
+		catch(ApplicationException ex)
+		{
+			System.err.println("Exception searching ParameterType. Creating new one.");
+			ex.printStackTrace();
+		}
+
+		try
+		{
+			LinkTypeController ltc = (LinkTypeController )LinkTypeController.getInstance();
+			ltc.setLogicalNetLayer(this);
+
+			PhysicalLinkType pType = PhysicalLinkType.createInstance(
+				this.getMapView().getMap().getCreatorId(),
+				codename,
+				LangModelMap.getString(codename + "Type"),
+				"",
+				LinkTypeController.getBindDimension(codename));
+
+			ltc.setLineSize(pType, LinkTypeController.getLineThickness(codename));
+			ltc.setColor(pType, LinkTypeController.getLineColor(codename));
+			return pType;
+		}
+		catch (Exception e)
+		{
+			return null;
+		}
+	}
+
+	protected SiteNodeType getDefaultUnboundProto()
+	{
+		return getSiteNodeType(SiteNodeType.UNBOUND);
 	}
 
 	public List getPens()
 	{
-		MapLinkProtoElement mlpe = null;
-		
-		LinkTypeController ltc = (LinkTypeController )LinkTypeController.getInstance();
-		ltc.setLogicalNetLayer(this);
-		
-		mlpe = (MapLinkProtoElement )Pool.get(MapLinkProtoElement.typ, MapLinkProtoElement.TUNNEL);
-		if(mlpe == null)
-		{
-			mlpe = new MapLinkProtoElement(
-				MapLinkProtoElement.TUNNEL,
-				LangModelMap.getString("Tunnel"),
-				"desc",
-				new IntDimension(3, 4));
-			ltc.setLineSize(mlpe, 2);
-			ltc.setColor(mlpe, Color.BLACK);
-			Pool.put(MapLinkProtoElement.typ, mlpe.getId(), mlpe);
-		}
-		
-		mlpe = (MapLinkProtoElement )Pool.get(MapLinkProtoElement.typ, MapLinkProtoElement.COLLECTIOR);
-		if(mlpe == null)
-		{
-			mlpe = new MapLinkProtoElement(
-				MapLinkProtoElement.COLLECTIOR,
-				LangModelMap.getString("CollectorFragment"),
-				"desc",
-				new IntDimension(2, 6));
-			ltc.setLineSize(mlpe, 4);
-			ltc.setColor(mlpe, Color.DARK_GRAY);
-			Pool.put(MapLinkProtoElement.typ, mlpe.getId(), mlpe);
-		}
 
-		List list = new LinkedList();
-		
-		for(Iterator it = Pool.getList(MapLinkProtoElement.typ).iterator(); it.hasNext();)
+		PhysicalLinkType mlpe = null;
+
+		mlpe = getPhysicalLinkType(PhysicalLinkType.TUNNEL);
+		mlpe = getPhysicalLinkType(PhysicalLinkType.COLLECTOR);
+
+		List list = null;
+		try
 		{
-			try
-			{
-				mlpe = (MapLinkProtoElement )it.next();
-				list.add(mlpe);
-			}
-			catch(Exception e)
-			{
-				System.out.println(e.getMessage());
-			}
+			list =
+				MapStorableObjectPool.getStorableObjectsByConditionButIds(null, null, true);
+
+			list.remove(getUnboundPen());
 		}
-		list.remove(getUnboundPen());
+		catch(Exception e)
+		{
+			list = new LinkedList();
+		}
 		
 		return list;
 	}
 	
-	protected MapLinkProtoElement getDefaultPen()
+	protected PhysicalLinkType getDefaultPen()
 	{
-		return (MapLinkProtoElement )Pool.get(MapLinkProtoElement.typ, MapLinkProtoElement.TUNNEL);
+		return getPhysicalLinkType(PhysicalLinkType.TUNNEL);
 	}
 
-	protected MapLinkProtoElement getDefaultCable()
+	protected PhysicalLinkType getDefaultCable()
 	{
-		MapLinkProtoElement mlpe = null;
-
-		LinkTypeController ltc = (LinkTypeController )LinkTypeController.getInstance();
-		ltc.setLogicalNetLayer(this);
-		
-		mlpe = (MapLinkProtoElement )Pool.get(MapLinkProtoElement.typ, MapLinkProtoElement.UNBOUND);
-		if(mlpe == null)
-		{
-			mlpe = new MapLinkProtoElement(
-				MapLinkProtoElement.UNBOUND,
-				LangModelMap.getString("Unbound"),
-				"desc",
-				new IntDimension(0, 0));
-			ltc.setLineSize(mlpe, 1);
-			ltc.setColor(mlpe, Color.RED);
-			Pool.put(MapLinkProtoElement.typ, mlpe.getId(), mlpe);
-		}
-		
-		return mlpe;
+		return getPhysicalLinkType(PhysicalLinkType.UNBOUND);
 	}
 
 	public List getTopologicalProtos()
 	{
-		MapNodeProtoElement mnpe = null;
+		SiteNodeType mnpe = null;
 		
-		mnpe = (MapNodeProtoElement )Pool.get(MapNodeProtoElement.typ, MapNodeProtoElement.ATS);
-		if(mnpe == null)
-		{
-			ImageCatalogue.add(
-				"ats",
-				new ImageResource("ats", "ats", "images/ats.gif"));
-
-			mnpe = new MapNodeProtoElement(
-				MapNodeProtoElement.ATS,
-				LangModelMap.getString("Ats"),
-				true,
-				"ats",
-				"description");
-			Pool.put(MapNodeProtoElement.typ, mnpe.getId(), mnpe);
-		}
-
-		mnpe = (MapNodeProtoElement )Pool.get(MapNodeProtoElement.typ, MapNodeProtoElement.BUILDING);
-		if(mnpe == null)
-		{
-			ImageCatalogue.add(
-				"building",
-				new ImageResource("building", "building", "images/building.gif"));
-
-			mnpe = new MapNodeProtoElement(
-				MapNodeProtoElement.BUILDING,
-				LangModelMap.getString("Building"),
-				true,
-				"building",
-				"description");
-			Pool.put(MapNodeProtoElement.typ, mnpe.getId(), mnpe);
-		}
-
-		mnpe = (MapNodeProtoElement )Pool.get(MapNodeProtoElement.typ, MapNodeProtoElement.PIQUET);
-		if(mnpe == null)
-		{
-			ImageCatalogue.add(
-				"piquet",
-				new ImageResource("piquet", "piquet", "images/piquet.gif"));
-
-			mnpe = new MapNodeProtoElement(
-				MapNodeProtoElement.PIQUET,
-				LangModelMap.getString("Piquet"),
-				true,
-				"piquet",
-				"description");
-			Pool.put(MapNodeProtoElement.typ, mnpe.getId(), mnpe);
-		}
-
-		mnpe = (MapNodeProtoElement )Pool.get(MapNodeProtoElement.typ, MapNodeProtoElement.WELL);
-		if(mnpe == null)
-		{
-			ImageCatalogue.add(
-				"well",
-				new ImageResource("well", "well", "images/well.gif"));
-
-			mnpe = new MapNodeProtoElement(
-				MapNodeProtoElement.WELL,
-				LangModelMap.getString("Well"),
-				true,
-				"well",
-				"description");
-			Pool.put(MapNodeProtoElement.typ, mnpe.getId(), mnpe);
-		}
-
-		mnpe = (MapNodeProtoElement )Pool.get(MapNodeProtoElement.typ, MapNodeProtoElement.CABLE_INLET);
-		if(mnpe == null)
-		{
-			ImageCatalogue.add(
-				"cableinlet",
-				new ImageResource("cableinlet", "cableinlet", "images/cableinlet.gif"));
-
-			mnpe = new MapNodeProtoElement(
-				MapNodeProtoElement.CABLE_INLET,
-				LangModelMap.getString("CableInlet"),
-				true,
-				"cableinlet",
-				"description");
-			Pool.put(MapNodeProtoElement.typ, mnpe.getId(), mnpe);
-		}
+		mnpe = getSiteNodeType(SiteNodeType.ATS);
+		mnpe = getSiteNodeType(SiteNodeType.BUILDING);
+		mnpe = getSiteNodeType(SiteNodeType.PIQUET);
+		mnpe = getSiteNodeType(SiteNodeType.WELL);
+		mnpe = getSiteNodeType(SiteNodeType.CABLE_INLET);
 
 		List list = new LinkedList();
-		
-		for(Iterator it = Pool.getList(MapNodeProtoElement.typ).iterator(); it.hasNext();)
+		try
 		{
-			try
+			List list2 =
+				MapStorableObjectPool.getStorableObjectsByConditionButIds(null, null, true);
+
+			for(Iterator it = list2.iterator(); it.hasNext();)
 			{
-				mnpe = (MapNodeProtoElement )it.next();
+				mnpe = (SiteNodeType )it.next();
 				if(mnpe.isTopological())
 					list.add(mnpe);
 			}
-			catch(Exception e)
-			{
-				System.out.println(e.getMessage());
-			}
 		}
-		list.remove(getUnboundProto());
+		catch(Exception e)
+		{
+		}
 		
+		list.remove(getUnboundProto());
 		return list;
 	}
 

@@ -1,5 +1,5 @@
 /**
- * $Id: MapElementLabel.java,v 1.3 2004/12/07 17:05:54 krupenn Exp $
+ * $Id: MapElementLabel.java,v 1.4 2004/12/22 16:38:42 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,8 +11,9 @@
 
 package com.syrus.AMFICOM.Client.Map.UI;
 
+import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
 import com.syrus.AMFICOM.Client.Map.Popup.ProtoPopupMenu;
-import com.syrus.AMFICOM.Client.Resource.Map.MapNodeProtoElement;
+import com.syrus.AMFICOM.map.SiteNodeType;
 
 import com.syrus.AMFICOM.Client.Resource.Map.NodeTypeController;
 import java.awt.Color;
@@ -43,7 +44,7 @@ import javax.swing.border.EtchedBorder;
  * 
  * 
  * 
- * @version $Revision: 1.3 $, $Date: 2004/12/07 17:05:54 $
+ * @version $Revision: 1.4 $, $Date: 2004/12/22 16:38:42 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -55,9 +56,11 @@ public class MapElementLabel extends JLabel
 			DragGestureListener,
 			Transferable
 {
+	public static final String DATA_FLAVOUR = "ElementLabel";
+
 	DragSource dragSource = null;
 	protected int type;
-	MapNodeProtoElement proto = null;
+	SiteNodeType proto = null;
 	NodeTypeController ntc;
 	boolean enable = false;
 
@@ -70,7 +73,7 @@ public class MapElementLabel extends JLabel
 
 	final static int ELEMENT_DIMENSION = 30;
 
-	public MapElementLabel(MapNodeProtoElement proto)
+	public MapElementLabel(SiteNodeType proto)
 	{
 		this.proto = proto;
 		this.ntc = (NodeTypeController )NodeTypeController.getInstance();
@@ -95,7 +98,8 @@ public class MapElementLabel extends JLabel
 
 	public void updateIcon()
 	{
-		ImageIcon icon = new ImageIcon(ntc.getImage(proto).getScaledInstance(
+		ImageIcon icon = new ImageIcon(
+				MapPropertiesManager.getImage(proto.getImageId()).getScaledInstance(
 				ELEMENT_DIMENSION, 
 				ELEMENT_DIMENSION, 
 				Image.SCALE_SMOOTH));
@@ -127,7 +131,7 @@ public class MapElementLabel extends JLabel
 	public void dragGestureRecognized( DragGestureEvent event)
 	{
 		if (enable)
-			dragSource.startDrag (event, DragSource.DefaultMoveDrop, proto, this);
+			dragSource.startDrag (event, DragSource.DefaultMoveDrop, this, this);
 	}
 
 	public void mouseClicked(MouseEvent e)
@@ -137,7 +141,7 @@ public class MapElementLabel extends JLabel
 			ProtoPopupMenu menu = ProtoPopupMenu.getInstance();
 			menu.setLogicalNetLayer(MapFrame.getMapMainFrame().getMapViewer().getLogicalNetLayer());
 			menu.setElementLabel(this);
-			menu.setMapElement(proto);
+			menu.setElement(proto);
 			menu.show(this, e.getPoint().x, e.getPoint().y);
 		}
 	}
@@ -166,7 +170,7 @@ public class MapElementLabel extends JLabel
 
 	public Object getTransferData(DataFlavor flavor)
 	{
-		if (flavor.getHumanPresentableName() == "ElementLabel")
+		if (flavor.getHumanPresentableName().equals(DATA_FLAVOUR))
 		{
 //			System.out.println("The type is " + sElement.getType());
 			return proto;
@@ -176,7 +180,7 @@ public class MapElementLabel extends JLabel
 
 	public DataFlavor[] getTransferDataFlavors()
 	{
-		DataFlavor dataFlavor = new DataFlavor(this.getClass(), "ElementLabel");
+		DataFlavor dataFlavor = new DataFlavor(this.getClass(), DATA_FLAVOUR);
 		System.out.println("dataFlavor " + dataFlavor.getHumanPresentableName());
 		DataFlavor[] dfs = new DataFlavor[2];
 		dfs[0] = dataFlavor;
@@ -187,40 +191,10 @@ public class MapElementLabel extends JLabel
 
 	public boolean isDataFlavorSupported(DataFlavor flavor)
 	{
-		System.out.println("support DataFlavor " + (flavor.getHumanPresentableName() == "ElementLabel"));
-		return (flavor.getHumanPresentableName() == "ElementLabel");
-	}
-/*
-	public Color getDefaultElementLineBorderColor ()
-	{
-		return defaultElementLineBorderColor;
+		System.out.println("support DataFlavor " + (flavor.getHumanPresentableName().equals(DATA_FLAVOUR)));
+		return (flavor.getHumanPresentableName().equals(DATA_FLAVOUR));
 	}
 
-	public void setDefaultElementLineBorderColor (Color color)
-	{
-		defaultElementLineBorderColor = color;
-	}
-
-	public Color getMouseEnterLineBorederColor ()
-	{
-		return mouseEnterLineBorederColor;
-	}
-
-	public void setMouseEnterLineBorederColor (Color color)
-	{
-		mouseEnterLineBorederColor = color;
-	}
-
-	public int getMouseEnterLineBorederThickness ()
-	{
-		return mouseEnterLineBorederThickness;
-	}
-
-	public void setMouseEnterLineBorederThickness (int size)
-	{
-		mouseEnterLineBorederThickness = size;
-	}
-*/
 	public void setEnabled(boolean b)
 	{
 		enable = b;

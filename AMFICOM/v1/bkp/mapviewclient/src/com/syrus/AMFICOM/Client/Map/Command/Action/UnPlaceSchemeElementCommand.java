@@ -1,5 +1,5 @@
 /**
- * $Id: UnPlaceSchemeElementCommand.java,v 1.4 2004/10/19 10:07:43 krupenn Exp $
+ * $Id: UnPlaceSchemeElementCommand.java,v 1.5 2004/12/22 16:38:40 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -12,17 +12,17 @@ package com.syrus.AMFICOM.Client.Map.Command.Action;
 
 import com.syrus.AMFICOM.Client.General.Event.MapEvent;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
-import com.syrus.AMFICOM.Client.Resource.Map.MapSiteNodeElement;
+import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapUnboundNodeElement;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapView;
 import com.syrus.AMFICOM.Client.Resource.Pool;
-import com.syrus.AMFICOM.Client.Resource.Scheme.Scheme;
-import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeElement;
+import com.syrus.AMFICOM.scheme.corba.Scheme;
+import com.syrus.AMFICOM.scheme.corba.SchemeElement;
 
 /**
  * убрать привязку схемного элемента с карты
  * 
- * @version $Revision: 1.4 $, $Date: 2004/10/19 10:07:43 $
+ * @version $Revision: 1.5 $, $Date: 2004/12/22 16:38:40 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -32,12 +32,12 @@ public class UnPlaceSchemeElementCommand extends MapActionCommandBundle
 	/**
 	 * Выбранный фрагмент линии
 	 */
-	MapSiteNodeElement node = null;
+	SiteNode node = null;
 	SchemeElement se = null;
 
 	MapView mapView;
 
-	public UnPlaceSchemeElementCommand(MapSiteNodeElement node, SchemeElement se)
+	public UnPlaceSchemeElementCommand(SiteNode node, SchemeElement se)
 	{
 		super();
 		this.node = node;
@@ -57,9 +57,9 @@ public class UnPlaceSchemeElementCommand extends MapActionCommandBundle
 		if(node instanceof MapUnboundNodeElement)
 			super.removeNode(node);
 
-		se.siteId = "";
+		se.siteNodeImpl(null);
 
-		mapView.scanCables((Scheme )Pool.get(Scheme.typ, se.getSchemeId()));
+		mapView.scanCables(se.scheme());
 
 		// операция закончена - оповестить слушателей
 		logicalNetLayer.sendMapEvent(new MapEvent(this, MapEvent.MAP_CHANGED));

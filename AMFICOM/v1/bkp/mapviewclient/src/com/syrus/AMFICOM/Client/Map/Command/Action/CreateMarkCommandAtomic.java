@@ -1,5 +1,5 @@
 /**
- * $Id: CreateMarkCommandAtomic.java,v 1.4 2004/12/07 17:05:54 krupenn Exp $
+ * $Id: CreateMarkCommandAtomic.java,v 1.5 2004/12/22 16:38:39 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -12,18 +12,19 @@ package com.syrus.AMFICOM.Client.Map.Command.Action;
 
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.General.Model.MapApplicationModel;
-import com.syrus.AMFICOM.Client.Resource.Map.DoublePoint;
+import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.map.DoublePoint;
 import com.syrus.AMFICOM.Client.Resource.Map.MarkController;
 import com.syrus.AMFICOM.Client.Resource.Map.NodeLinkController;
 import com.syrus.AMFICOM.Client.Resource.Pool;
 
 import com.syrus.AMFICOM.Client.General.Event.MapEvent;
 import com.syrus.AMFICOM.Client.General.Event.MapNavigateEvent;
-import com.syrus.AMFICOM.Client.Resource.Map.Map;
-import com.syrus.AMFICOM.Client.Resource.Map.MapMarkElement;
-import com.syrus.AMFICOM.Client.Resource.Map.MapNodeElement;
-import com.syrus.AMFICOM.Client.Resource.Map.MapNodeLinkElement;
-import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalLinkElement;
+import com.syrus.AMFICOM.map.Map;
+import com.syrus.AMFICOM.map.Mark;
+import com.syrus.AMFICOM.map.AbstractNode;
+import com.syrus.AMFICOM.map.NodeLink;
+import com.syrus.AMFICOM.map.PhysicalLink;
 
 import java.awt.Point;
 import java.awt.geom.Point2D;
@@ -33,7 +34,7 @@ import java.util.Iterator;
 /**
  * Команда создания метки на линии
  * 
- * @version $Revision: 1.4 $, $Date: 2004/12/07 17:05:54 $
+ * @version $Revision: 1.5 $, $Date: 2004/12/22 16:38:39 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -43,12 +44,12 @@ public class CreateMarkCommandAtomic extends MapActionCommand
 	/**
 	 * созданный элемент метки
 	 */
-	MapMarkElement mark;
+	Mark mark;
 
 	/**
 	 * Выбранный фрагмент линии
 	 */
-	MapPhysicalLinkElement link;
+	PhysicalLink link;
 	
 	Map map;
 	
@@ -63,7 +64,7 @@ public class CreateMarkCommandAtomic extends MapActionCommand
 	Point point;
 
 	public CreateMarkCommandAtomic(
-			MapPhysicalLinkElement link,
+			PhysicalLink link,
 			Point point)
 	{
 		super(MapActionCommand.ACTION_DRAW_NODE);
@@ -87,11 +88,11 @@ public class CreateMarkCommandAtomic extends MapActionCommand
 
 		link.sortNodeLinks();
 		distance = 0.0;
-		MapNodeElement node = link.getStartNode();
+		AbstractNode node = link.getStartNode();
 
 		for(Iterator it = link.getNodeLinks().iterator(); it.hasNext();)
 		{
-			MapNodeLinkElement mnle = (MapNodeLinkElement )it.next();
+			NodeLink mnle = (NodeLink)it.next();
 
 			NodeLinkController nlc = (NodeLinkController )getLogicalNetLayer().getMapViewController().getController(mnle);
 
@@ -113,13 +114,15 @@ public class CreateMarkCommandAtomic extends MapActionCommand
 				node = mnle.getStartNode();
 		}
 
-		mark = new MapMarkElement(
-				aContext.getDataSource().GetUId(MapMarkElement.typ),
-				map, 
-				link, 
-				distance);
+		try
+		{
+			mark = Mark.createInstance(link, distance);
+		}
+		catch (CreateObjectException e)
+		{
+			e.printStackTrace();
+		}
 
-		Pool.put(MapMarkElement.typ, mark.getId(), mark);
 		map.addNode(mark);
 
 		MarkController mc = (MarkController )getLogicalNetLayer().getMapViewController().getController(mark);
@@ -137,12 +140,10 @@ public class CreateMarkCommandAtomic extends MapActionCommand
 	public void undo()
 	{
 		map.removeNode(mark);
-		Pool.remove(MapMarkElement.typ, mark.getId());
 	}
 	
 	public void redo()
 	{
 		map.addNode(mark);
-		Pool.put(MapMarkElement.typ, mark.getId(), mark);
 	}
 }

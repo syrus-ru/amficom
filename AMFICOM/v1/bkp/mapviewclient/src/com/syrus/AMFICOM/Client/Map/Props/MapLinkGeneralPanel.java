@@ -4,24 +4,28 @@ import com.syrus.AMFICOM.Client.General.Lang.LangModel;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourceComboBox;
-import com.syrus.AMFICOM.Client.General.UI.ObjectResourcePropertiesPane;
+import com.syrus.AMFICOM.Client.Map.UI.SimpleMapElementController;
+import com.syrus.AMFICOM.client_.general.ui_.ObjComboBox;
+import com.syrus.AMFICOM.client_.general.ui_.ObjectResourcePropertiesPane;
 import com.syrus.AMFICOM.Client.General.UI.ReusedGridBagConstraints;
 import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
-import com.syrus.AMFICOM.Client.Resource.Map.IntDimension;
-import com.syrus.AMFICOM.Client.Resource.Map.MapLinkProtoElement;
-import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalLinkElement;
-import com.syrus.AMFICOM.Client.Resource.Map.MapSiteNodeElement;
-import com.syrus.AMFICOM.Client.Resource.ObjectResource;
+import com.syrus.AMFICOM.map.IntDimension;
+import com.syrus.AMFICOM.map.PhysicalLinkType;
+import com.syrus.AMFICOM.map.PhysicalLink;
+import com.syrus.AMFICOM.map.SiteNode;
 
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 
+import java.util.List;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import com.syrus.AMFICOM.map.Map;
+import com.syrus.AMFICOM.map.PhysicalLinkBinding;
 
 public class MapLinkGeneralPanel
 		extends JPanel 
@@ -31,14 +35,14 @@ public class MapLinkGeneralPanel
 	private GridBagLayout gridBagLayout1 = new GridBagLayout();
 	private JTextField nameTextField = new JTextField();
 	private JLabel typeLabel = new JLabel();
-	private ObjectResourceComboBox typeComboBox = new ObjectResourceComboBox(MapLinkProtoElement.typ);
+	private ObjComboBox typeComboBox = null;
 	private JLabel descLabel = new JLabel();
 	private JTextArea descTextArea = new JTextArea();
 
 	private JLabel startLabel = new JLabel();
-	private ObjectResourceComboBox startComboBox = new ObjectResourceComboBox(MapSiteNodeElement.typ);
+	private ObjComboBox startComboBox = null;
 	private JLabel endLabel = new JLabel();
-	private ObjectResourceComboBox endComboBox = new ObjectResourceComboBox(MapSiteNodeElement.typ);
+	private ObjComboBox endComboBox = null;
 
 	private JPanel addressPanel = new JPanel();
 	private JLabel cityLabel = new JLabel();
@@ -50,7 +54,7 @@ public class MapLinkGeneralPanel
 	private JLabel addressLabel = new JLabel();
 	private GridBagLayout gridBagLayout2 = new GridBagLayout();
 
-	MapPhysicalLinkElement link;
+	PhysicalLink link;
 
 	private LogicalNetLayer lnl;
 
@@ -85,6 +89,13 @@ public class MapLinkGeneralPanel
 
 	private void jbInit()
 	{
+		SimpleMapElementController controller = 
+				SimpleMapElementController.getInstance();
+
+		typeComboBox = new ObjComboBox(controller, SimpleMapElementController.KEY_NAME);
+		startComboBox = new ObjComboBox(controller, SimpleMapElementController.KEY_NAME);
+		endComboBox = new ObjComboBox(controller, SimpleMapElementController.KEY_NAME);
+
 		this.setLayout(gridBagLayout1);
 		this.setName(LangModel.getString("Properties"));
 
@@ -147,14 +158,17 @@ public class MapLinkGeneralPanel
 		endComboBox.setEnabled(false);
 	}
 
-	public ObjectResource getObjectResource()
+	public Object getObject()
 	{
 		return null;
 	}
 
-	public void setObjectResource(ObjectResource objectResource)
+	public void setObject(Object objectResource)
 	{
-		link = (MapPhysicalLinkElement )objectResource;
+		link = (PhysicalLink)objectResource;
+
+		typeComboBox.removeAll();
+
 		if(link == null)
 		{
 			nameTextField.setEnabled(false);
@@ -174,15 +188,20 @@ public class MapLinkGeneralPanel
 		{
 			nameTextField.setEnabled(true);
 			nameTextField.setText(link.getName());
+
+			List protos = getLogicalNetLayer().getPens();
+			
 			typeComboBox.setEnabled(true);
-			typeComboBox.setSelected(link.getMapProtoId());
+			typeComboBox.addElements(protos);
+			typeComboBox.setSelectedItem(link.getType());
+
 			descTextArea.setEnabled(true);
 			descTextArea.setText(link.getDescription());
 
-			startComboBox.setContents(link.getMap().getMapSiteNodeElements(), false);
-			startComboBox.setSelected(link.getStartNode());
-			endComboBox.setContents(link.getMap().getMapSiteNodeElements(), false);
-			endComboBox.setSelected(link.getEndNode());
+			startComboBox.addElements(link.getMap().getSiteNodes());
+			startComboBox.setSelectedItem(link.getStartNode());
+			endComboBox.addElements(link.getMap().getSiteNodes());
+			endComboBox.setSelectedItem(link.getEndNode());
 
 			mTextField.setText(String.valueOf(link.getBinding().getDimension().width));
 			nTextField.setText(String.valueOf(link.getBinding().getDimension().height));
@@ -202,7 +221,7 @@ public class MapLinkGeneralPanel
 		try 
 		{
 			link.setName(nameTextField.getText());
-			link.setMapProtoId(typeComboBox.getSelectedId());
+			link.setType((PhysicalLinkType )typeComboBox.getSelectedItem());
 			link.setDescription(descTextArea.getText());
 
 			link.setCity(cityTextField.getText());

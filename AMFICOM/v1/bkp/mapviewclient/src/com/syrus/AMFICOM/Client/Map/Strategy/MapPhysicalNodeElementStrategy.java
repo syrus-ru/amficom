@@ -1,5 +1,5 @@
 /**
- * $Id: MapPhysicalNodeElementStrategy.java,v 1.8 2004/12/07 17:05:54 krupenn Exp $
+ * $Id: MapPhysicalNodeElementStrategy.java,v 1.9 2004/12/22 16:38:41 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -21,11 +21,11 @@ import com.syrus.AMFICOM.Client.Map.Command.Action.MoveFixedDistanceCommand;
 import com.syrus.AMFICOM.Client.Map.Command.Action.MoveSelectionCommandBundle;
 import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
 import com.syrus.AMFICOM.Client.Map.MapState;
-import com.syrus.AMFICOM.Client.Resource.Map.Map;
-import com.syrus.AMFICOM.Client.Resource.Map.MapElement;
-import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalLinkElement;
-import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalNodeElement;
-import com.syrus.AMFICOM.Client.Resource.Map.MapSiteNodeElement;
+import com.syrus.AMFICOM.map.Map;
+import com.syrus.AMFICOM.map.MapElement;
+import com.syrus.AMFICOM.map.PhysicalLink;
+import com.syrus.AMFICOM.map.TopologicalNode;
+import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.Client.Resource.Map.SiteNodeController;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapSelection;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapUnboundLinkElement;
@@ -43,7 +43,7 @@ import javax.swing.SwingUtilities;
  * 
  * 
  * 
- * @version $Revision: 1.8 $, $Date: 2004/12/07 17:05:54 $
+ * @version $Revision: 1.9 $, $Date: 2004/12/22 16:38:41 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -53,7 +53,7 @@ public final class MapPhysicalNodeElementStrategy implements  MapStrategy
 	LogicalNetLayer logicalNetLayer;
 	ApplicationContext aContext;
 
-	MapPhysicalNodeElement node;
+	TopologicalNode node;
 	Command command;
 
 	private static MapPhysicalNodeElementStrategy instance = new MapPhysicalNodeElementStrategy();
@@ -69,7 +69,7 @@ public final class MapPhysicalNodeElementStrategy implements  MapStrategy
 	
 	public void setMapElement(MapElement me)
 	{
-		this.node = (MapPhysicalNodeElement )me;
+		this.node = (TopologicalNode)me;
 	}
 
 	public void setLogicalNetLayer(LogicalNetLayer logicalNetLayer)
@@ -147,9 +147,9 @@ public final class MapPhysicalNodeElementStrategy implements  MapStrategy
 					node.setCanBind(false);
 					
 
-					for(Iterator it = logicalNetLayer.getMapView().getMap().getMapSiteNodeElements().iterator(); it.hasNext();)
+					for(Iterator it = logicalNetLayer.getMapView().getMap().getSiteNodes().iterator(); it.hasNext();)
 					{
-						MapSiteNodeElement sit = (MapSiteNodeElement )it.next();
+						SiteNode sit = (SiteNode)it.next();
 
 						SiteNodeController snc = (SiteNodeController )logicalNetLayer.getMapViewController().getController(sit);
 
@@ -186,14 +186,14 @@ public final class MapPhysicalNodeElementStrategy implements  MapStrategy
 					logicalNetLayer.getCommandList().execute();
 					command = null;
 
-					MapPhysicalLinkElement link = map.getPhysicalLink(node.getPhysicalLinkId());
+					PhysicalLink link = node.getPhysicalLink();
 					if(link instanceof MapUnboundLinkElement)
 					{
 						if(node.isCanBind())
 						{
-							for(Iterator it = logicalNetLayer.getMapView().getMap().getMapSiteNodeElements().iterator(); it.hasNext();)
+							for(Iterator it = logicalNetLayer.getMapView().getMap().getSiteNodes().iterator(); it.hasNext();)
 							{
-								MapSiteNodeElement site = (MapSiteNodeElement )it.next();
+								SiteNode site = (SiteNode)it.next();
 								SiteNodeController snc = (SiteNodeController )logicalNetLayer.getMapViewController().getController(site);
 								if(!(site instanceof MapUnboundNodeElement))
 									if(snc.isMouseOnElement(site, point))

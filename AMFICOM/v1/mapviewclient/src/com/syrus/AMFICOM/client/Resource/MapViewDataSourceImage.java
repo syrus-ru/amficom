@@ -1,5 +1,5 @@
 /**
- * $Id: MapViewDataSourceImage.java,v 1.2 2004/09/21 14:59:20 krupenn Exp $
+ * $Id: MapViewDataSourceImage.java,v 1.3 2004/12/22 16:38:42 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -12,7 +12,7 @@
 package com.syrus.AMFICOM.Client.Resource;
 
 import com.syrus.AMFICOM.CORBA.Resource.ResourceDescriptor_Transferable;
-import com.syrus.AMFICOM.Client.Resource.Map.Map;
+import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapView;
 
 import java.util.Vector;
@@ -25,7 +25,7 @@ import java.util.Vector;
  *           на наличие необходимых объектов, и в случае их отсутствия
  *           они подгружаются с сервера
  * 
- * @version $Revision: 1.2 $, $Date: 2004/09/21 14:59:20 $
+ * @version $Revision: 1.3 $, $Date: 2004/12/22 16:38:42 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -40,7 +40,7 @@ public class MapViewDataSourceImage extends DataSourceImage
 	{
 		super(di);
 	}
-
+/*
 	public void loadMapViews()
 	{
 		ResourceDescriptor_Transferable[] desc = GetDomainDescriptors(MapView.typ);
@@ -55,7 +55,7 @@ public class MapViewDataSourceImage extends DataSourceImage
 
 		load(ImageResource.typ, ImageCatalogue.getHash());
 		load(MapView.typ);
-		Vector ids = filter(Map.typ, desc, true);
+		Vector ids = filter(MapView.typ, desc, true);
 		if(ids.size() > 0)
 		{
 			if(this.di instanceof RISDMapViewDataSource)
@@ -70,6 +70,6 @@ public class MapViewDataSourceImage extends DataSourceImage
 			save(ImageResource.typ, ImageCatalogue.getHash());
 		}
 	}
-	
+*/	
 }
 

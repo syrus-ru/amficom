@@ -1,5 +1,5 @@
 /**
- * $Id: MoveFixedDistanceCommand.java,v 1.3 2004/12/07 17:05:54 krupenn Exp $
+ * $Id: MoveFixedDistanceCommand.java,v 1.4 2004/12/22 16:38:40 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -13,8 +13,8 @@ package com.syrus.AMFICOM.Client.Map.Command.Action;
 
 import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
 
-import com.syrus.AMFICOM.Client.Resource.Map.DoublePoint;
-import com.syrus.AMFICOM.Client.Resource.Map.MapNodeElement;
+import com.syrus.AMFICOM.map.DoublePoint;
+import com.syrus.AMFICOM.map.AbstractNode;
 import java.awt.Point;
 import java.awt.geom.Point2D;
 
@@ -25,15 +25,15 @@ import java.awt.geom.Point2D;
  * 
  * 
  * 
- * @version $Revision: 1.3 $, $Date: 2004/12/07 17:05:54 $
+ * @version $Revision: 1.4 $, $Date: 2004/12/22 16:38:40 $
  * @module
  * @author $Author: krupenn $
  * @see
  */
 public class MoveFixedDistanceCommand extends MoveSelectionCommandBundle
 {
-	MapNodeElement fixedNode;
-	MapNodeElement movedNode;
+	AbstractNode fixedNode;
+	AbstractNode movedNode;
 	DoublePoint fixedPoint;
 	DoublePoint projectedPoint;
 	double fixedDistance;
@@ -41,7 +41,7 @@ public class MoveFixedDistanceCommand extends MoveSelectionCommandBundle
 	Point fp;
 	double fd;
 
-	public MoveFixedDistanceCommand(Point point, MapNodeElement fixedNode, MapNodeElement movedNode)
+	public MoveFixedDistanceCommand(Point point, AbstractNode fixedNode, AbstractNode movedNode)
 	{
 		super(point);
 		this.fixedNode = fixedNode;

@@ -1,5 +1,5 @@
 /*
- * $Id: MapExportCommand.java,v 1.5 2004/12/07 17:05:54 krupenn Exp $
+ * $Id: MapExportCommand.java,v 1.6 2004/12/22 16:38:40 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -14,8 +14,8 @@ import com.syrus.AMFICOM.Client.General.Command.Command;
 import com.syrus.AMFICOM.Client.General.Command.ExportCommand;
 import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
 import com.syrus.AMFICOM.Client.Map.UI.MapFrame;
-import com.syrus.AMFICOM.Client.Resource.Map.Map;
-import com.syrus.AMFICOM.Client.Resource.Map.MapElement;
+import com.syrus.AMFICOM.map.Map;
+import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.Client.Resource.ObjectResource;
 
 import java.io.File;
@@ -28,7 +28,7 @@ import java.util.Iterator;
  * самого окна карты. При этом в азголовке окна отображается информация о том,
  * что активной карты нет, и карта центрируется по умолчанию
  * 
- * @version $Revision: 1.5 $, $Date: 2004/12/07 17:05:54 $
+ * @version $Revision: 1.6 $, $Date: 2004/12/22 16:38:40 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -62,7 +62,7 @@ public class MapExportCommand extends ExportCommand
         System.out.println("Closing map");
 
 		Map map = mapFrame.getMap();
-		String[][] exportColumns;
+		String[][] exportColumns = null;
 		
 		String fileName = super.openFileForWriting(MapPropertiesManager.getLastDirectory());
 		if(fileName == null)
@@ -71,7 +71,7 @@ public class MapExportCommand extends ExportCommand
 		super.open(fileName);
 		
 		super.startObject(MAP_TYPE);
-		exportColumns = map.getExportColumns();
+//		exportColumns = map.getExportColumns();
 		for (int i = 0; i < exportColumns.length; i++) 
 		{
 			super.put(exportColumns[i][0], exportColumns[i][1]);
@@ -80,9 +80,9 @@ public class MapExportCommand extends ExportCommand
 
 		for(Iterator it = map.getAllElements().iterator(); it.hasNext();)
 		{
-			MapElement me = (MapElement )it.next();
-			super.startObject(((ObjectResource )me).getTyp());
-			exportColumns = me.getExportColumns();
+			MapElement me = (MapElement)it.next();
+//			super.startObject(((ObjectResource )me).getTyp());
+//			exportColumns = me.getExportColumns();
 			for (int i = 0; i < exportColumns.length; i++) 
 			{
 				super.put(exportColumns[i][0], exportColumns[i][1]);

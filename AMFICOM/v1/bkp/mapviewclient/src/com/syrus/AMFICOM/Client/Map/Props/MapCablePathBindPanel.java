@@ -3,21 +3,22 @@ package com.syrus.AMFICOM.Client.Map.Props;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourceComboBox;
-import com.syrus.AMFICOM.Client.General.UI.ObjectResourcePropertiesPane;
+import com.syrus.AMFICOM.Client.Map.UI.SimpleMapElementController;
+import com.syrus.AMFICOM.client_.general.ui_.ObjComboBox;
+import com.syrus.AMFICOM.client_.general.ui_.ObjectResourcePropertiesPane;
 import com.syrus.AMFICOM.Client.General.UI.ReusedGridBagConstraints;
 import com.syrus.AMFICOM.Client.Map.Command.Action.CreateUnboundLinkCommandBundle;
 import com.syrus.AMFICOM.Client.Map.Command.Action.RemoveUnboundLinkCommandBundle;
 import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
-import com.syrus.AMFICOM.Client.Resource.Map.MapLinkProtoElement;
-import com.syrus.AMFICOM.Client.Resource.Map.MapNodeElement;
-import com.syrus.AMFICOM.Client.Resource.Map.MapNodeLinkElement;
-import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalLinkElement;
-import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalNodeElement;
-import com.syrus.AMFICOM.Client.Resource.Map.MapSiteNodeElement;
+import com.syrus.AMFICOM.map.PhysicalLinkType;
+import com.syrus.AMFICOM.map.AbstractNode;
+import com.syrus.AMFICOM.map.NodeLink;
+import com.syrus.AMFICOM.map.PhysicalLink;
+import com.syrus.AMFICOM.map.TopologicalNode;
+import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapCablePathElement;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapUnboundLinkElement;
-import com.syrus.AMFICOM.Client.Resource.ObjectResource;
-import com.syrus.AMFICOM.Client.Resource.Scheme.CableChannelingItem;
+import com.syrus.AMFICOM.scheme.corba.CableChannelingItem;
 import com.syrus.AMFICOM.client_.general.ui_.ObjectResourceTable;
 import com.syrus.AMFICOM.client_.general.ui_.ObjectResourceTableModel;
 
@@ -39,6 +40,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import com.syrus.AMFICOM.map.Map;
+import com.syrus.AMFICOM.map.PhysicalLinkBinding;
 
 public final class MapCablePathBindPanel
 		extends JPanel 
@@ -76,8 +79,8 @@ public final class MapCablePathBindPanel
 	private JLabel startLinkLabel = new JLabel();
 	private JLabel startNodeToLabel = new JLabel();
 	private JTextField startNodeTextField = new JTextField();
-	private ObjectResourceComboBox startLinkComboBox = new ObjectResourceComboBox(MapPhysicalLinkElement.typ, true);
-	private ObjectResourceComboBox startNodeToComboBox = new ObjectResourceComboBox(MapSiteNodeElement.typ, true);
+	private ObjComboBox startLinkComboBox = null;
+	private ObjComboBox startNodeToComboBox = null;
 
 	private JPanel endPanel = new JPanel();
 	private JLabel endNodeTitleLabel = new JLabel();
@@ -85,19 +88,21 @@ public final class MapCablePathBindPanel
 	private JLabel endLinkLabel = new JLabel();
 	private JLabel endNodeToLabel = new JLabel();
 	private JTextField endNodeTextField = new JTextField();
-	private ObjectResourceComboBox endLinkComboBox = new ObjectResourceComboBox(MapPhysicalLinkElement.typ, true);
-	private ObjectResourceComboBox endNodeToComboBox = new ObjectResourceComboBox(MapSiteNodeElement.typ, true);
+	private ObjComboBox endLinkComboBox = null;
+	private ObjComboBox endNodeToComboBox = null;
 
-	private MapNodeElement startNode;
-	private MapNodeElement endNode;
+	private AbstractNode startNode;
+	private AbstractNode endNode;
 	
-	private MapPhysicalLinkElement startLastBound;
+	private PhysicalLink startLastBound;
 	private int startAvailableLinksCount;
-	private MapPhysicalLinkElement endLastBound;
+	private PhysicalLink endLastBound;
 	private int endAvailableLinksCount;
 	
 	// holds original list of cable path links
 	private List links = new LinkedList();
+	
+	private String stubObject = "";
 	
 	public MapCablePathBindPanel()
 	{
@@ -130,6 +135,14 @@ public final class MapCablePathBindPanel
 
 	private void jbInit()
 	{
+		SimpleMapElementController controller = 
+				SimpleMapElementController.getInstance();
+
+		startLinkComboBox = new ObjComboBox(controller, SimpleMapElementController.KEY_NAME);
+		startNodeToComboBox = new ObjComboBox(controller, SimpleMapElementController.KEY_NAME);
+		endLinkComboBox = new ObjComboBox(controller, SimpleMapElementController.KEY_NAME);
+		endNodeToComboBox = new ObjComboBox(controller, SimpleMapElementController.KEY_NAME);
+
 		this.setLayout(gridBagLayout1);
 		this.setName(LangModelMap.getString("LinkBinding"));
 		titleLabel.setText(LangModelMap.getString("LinkBinding"));
@@ -141,22 +154,22 @@ public final class MapCablePathBindPanel
 					if(!MapCablePathBindPanel.this.doChanges)
 						return;
 
-					ObjectResource mle = (ObjectResource )startLinkComboBox.getSelectedObjectResource();
-					ObjectResource mle2 = (ObjectResource )endLinkComboBox.getSelectedObjectResource();
-					boolean flag = (mle instanceof MapPhysicalLinkElement) || (mle2 instanceof MapPhysicalLinkElement);
+					Object mle = startLinkComboBox.getSelectedItem();
+					Object mle2 = endLinkComboBox.getSelectedItem();
+					boolean flag = (mle instanceof PhysicalLink) || (mle2 instanceof PhysicalLink);
 					bindButton.setEnabled(flag);
 					bindChainButton.setEnabled(flag);
 					
 					MapCablePathBindPanel.this.doChanges = false;
-					if(mle instanceof MapPhysicalLinkElement)
+					if(mle instanceof PhysicalLink)
 					{
-						MapPhysicalLinkElement pl = (MapPhysicalLinkElement )mle;
-						startNodeToComboBox.setSelected(pl.getOtherNode(startNode));
+						PhysicalLink pl = (PhysicalLink)mle;
+						startNodeToComboBox.setSelectedItem(pl.getOtherNode(startNode));
 					}
-					if(mle2 instanceof MapPhysicalLinkElement)
+					if(mle2 instanceof PhysicalLink)
 					{
-						MapPhysicalLinkElement pl = (MapPhysicalLinkElement )mle2;
-						endNodeToComboBox.setSelected(pl.getOtherNode(endNode));
+						PhysicalLink pl = (PhysicalLink)mle2;
+						endNodeToComboBox.setSelectedItem(pl.getOtherNode(endNode));
 					}
 					MapCablePathBindPanel.this.doChanges = true;
 				}
@@ -171,22 +184,22 @@ public final class MapCablePathBindPanel
 					if(!MapCablePathBindPanel.this.doChanges)
 						return;
 
-					ObjectResource mle = (ObjectResource )startNodeToComboBox.getSelectedObjectResource();
-					ObjectResource mle2 = (ObjectResource )endNodeToComboBox.getSelectedObjectResource();
-					boolean flag = (mle instanceof MapSiteNodeElement) || (mle2 instanceof MapSiteNodeElement);
+					Object mle = startNodeToComboBox.getSelectedItem();
+					Object mle2 = endNodeToComboBox.getSelectedItem();
+					boolean flag = (mle instanceof SiteNode) || (mle2 instanceof SiteNode);
 					bindButton.setEnabled(flag);
 					bindChainButton.setEnabled(flag);
 
 					MapCablePathBindPanel.this.doChanges = false;
-					if(mle instanceof MapSiteNodeElement)
+					if(mle instanceof SiteNode)
 					{
-						MapSiteNodeElement s = (MapSiteNodeElement )mle;
-						startLinkComboBox.setSelected(s.getMap().getPhysicalLink(startNode, s));
+						SiteNode s = (SiteNode)mle;
+						startLinkComboBox.setSelectedItem(s.getMap().getPhysicalLink(startNode, s));
 					}
-					if(mle2 instanceof MapSiteNodeElement)
+					if(mle2 instanceof SiteNode)
 					{
-						MapSiteNodeElement s = (MapSiteNodeElement )mle2;
-						endLinkComboBox.setSelected(s.getMap().getPhysicalLink(endNode, s));
+						SiteNode s = (SiteNode)mle2;
+						endLinkComboBox.setSelectedItem(s.getMap().getPhysicalLink(endNode, s));
 					}
 					MapCablePathBindPanel.this.doChanges = true;
 				}
@@ -287,12 +300,12 @@ public final class MapCablePathBindPanel
 		endNodeTextField.setEnabled(false);
 	}
 
-	public ObjectResource getObjectResource()
+	public Object getObject()
 	{
 		return null;
 	}
 
-	public void setObjectResource(ObjectResource objectResource)
+	public void setObject(Object objectResource)
 	{
 		path = (MapCablePathElement )objectResource;
 
@@ -350,15 +363,15 @@ public final class MapCablePathBindPanel
 		startAvailableLinksCount = smnelinks.size();
 		for(Iterator it = smnelinks.iterator(); it.hasNext();)
 		{
-			MapPhysicalLinkElement mle = (MapPhysicalLinkElement )it.next();
-			if(mle.getMapProtoId().equals(MapLinkProtoElement.UNBOUND))
+			PhysicalLink mle = (PhysicalLink)it.next();
+			if(mle.getType().equals(getLogicalNetLayer().getPhysicalLinkType(PhysicalLinkType.UNBOUND)))
 			{
 				it.remove();
 				startAvailableLinksCount--;
 			}
 			else
-			if(mle.getStartNode() instanceof MapPhysicalNodeElement
-				|| mle.getEndNode() instanceof MapPhysicalNodeElement)
+			if(mle.getStartNode() instanceof TopologicalNode
+				|| mle.getEndNode() instanceof TopologicalNode)
 					it.remove();
 			else
 			{
@@ -375,15 +388,15 @@ public final class MapCablePathBindPanel
 		endAvailableLinksCount = emnelinks.size();
 		for(Iterator it = emnelinks.iterator(); it.hasNext();)
 		{
-			MapPhysicalLinkElement mle = (MapPhysicalLinkElement )it.next();
-			if(mle.getMapProtoId().equals(MapLinkProtoElement.UNBOUND))
+			PhysicalLink mle = (PhysicalLink)it.next();
+			if(mle.getType().equals(getLogicalNetLayer().getPhysicalLinkType(PhysicalLinkType.UNBOUND)))
 			{
 				it.remove();
 				endAvailableLinksCount--;
 			}
 			else
-			if(mle.getStartNode() instanceof MapPhysicalNodeElement
-				|| mle.getEndNode() instanceof MapPhysicalNodeElement)
+			if(mle.getStartNode() instanceof TopologicalNode
+				|| mle.getEndNode() instanceof TopologicalNode)
 					it.remove();
 			else
 			{
@@ -391,16 +404,26 @@ public final class MapCablePathBindPanel
 			}
 		}
 
-		startLinkComboBox.setContents(smnelinks, true);
-		startLinkComboBox.setSelected(null);
-		endLinkComboBox.setContents(emnelinks, true);
-		endLinkComboBox.setSelected(null);
+		startLinkComboBox.removeAll();
+		startLinkComboBox.addItem(stubObject);
+		startLinkComboBox.addElements(smnelinks);
+		startLinkComboBox.setSelectedItem(stubObject);
 
-		startNodeToComboBox.setContents(smnenodes, true);
-		startNodeToComboBox.setSelected(null);
-		endNodeToComboBox.setContents(emnenodes, true);
-		endNodeToComboBox.setSelected(null);
-		
+		endLinkComboBox.removeAll();
+		endLinkComboBox.addItem(stubObject);
+		endLinkComboBox.addElements(emnelinks);
+		endLinkComboBox.setSelectedItem(stubObject);
+
+		startNodeToComboBox.removeAll();
+		startNodeToComboBox.addItem(stubObject);
+		startNodeToComboBox.addElements(smnenodes);
+		startNodeToComboBox.setSelectedItem(stubObject);
+
+		endNodeToComboBox.removeAll();
+		endNodeToComboBox.addItem(stubObject);
+		endNodeToComboBox.addElements(emnenodes);
+		endNodeToComboBox.setSelectedItem(stubObject);
+
 		startLinkComboBox.setEnabled(!startNode.equals(path.getEndNode()));
 		endLinkComboBox.setEnabled(!endNode.equals(path.getStartNode()));
 		startNodeToComboBox.setEnabled(startLinkComboBox.isEnabled());
@@ -412,8 +435,8 @@ public final class MapCablePathBindPanel
 	 */
 	private void removeBinding()
 	{
-		MapPhysicalLinkElement link = (MapPhysicalLinkElement )model.getObject(table.getSelectedRow());
-		MapPhysicalLinkElement previous = path.previousLink(link);
+		PhysicalLink link = (PhysicalLink)model.getObject(table.getSelectedRow());
+		PhysicalLink previous = path.previousLink(link);
 		if(link instanceof MapUnboundLinkElement)
 		{
 			if(link.getStartNode().equals(link.getEndNode()))
@@ -431,7 +454,7 @@ public final class MapCablePathBindPanel
 				&& previous instanceof MapUnboundLinkElement)
 			{
 				CableChannelingItem cci = (CableChannelingItem )path.getBinding().get(link);
-				MapNodeElement removedNode = link.getMap().getMapSiteNodeElement(cci.startSiteId);
+				AbstractNode removedNode = cci.startSiteNodeImpl();
 			
 				if(previous.getEndNode().equals(removedNode))
 					previous.setEndNode(link.getOtherNode(removedNode));
@@ -441,7 +464,7 @@ public final class MapCablePathBindPanel
 					
 				for(Iterator it = previous.getNodeLinksAt(removedNode).iterator(); it.hasNext();)
 				{
-					MapNodeLinkElement nl = (MapNodeLinkElement )it.next();
+					NodeLink nl = (NodeLink)it.next();
 					if(nl.getEndNode().equals(removedNode))
 						nl.setEndNode(link.getOtherNode(removedNode));
 					else
@@ -497,9 +520,9 @@ public final class MapCablePathBindPanel
 	}
 	
 	private void addLinkBinding(
-			MapPhysicalLinkElement link, 
+			PhysicalLink link, 
 			MapUnboundLinkElement unbound, 
-			MapNodeElement fromSite)
+			AbstractNode fromSite)
 	{
 		if(link.getOtherNode(fromSite).equals(unbound.getOtherNode(fromSite)))
 		{
@@ -525,7 +548,7 @@ public final class MapCablePathBindPanel
 
 			for(Iterator it = unbound.getNodeLinksAt(fromSite).iterator(); it.hasNext();)
 			{
-				MapNodeLinkElement nl = (MapNodeLinkElement )it.next();
+				NodeLink nl = (NodeLink)it.next();
 				if(nl.getStartNode().equals(fromSite))
 					nl.setStartNode(link.getOtherNode(fromSite));
 				else
@@ -538,12 +561,12 @@ public final class MapCablePathBindPanel
 
 	private void addBinding()
 	{
-		MapPhysicalLinkElement selectedStartLink;
-		MapPhysicalLinkElement selectedEndLink;
+		PhysicalLink selectedStartLink;
+		PhysicalLink selectedEndLink;
 	
 		try
 		{
-			selectedStartLink = (MapPhysicalLinkElement )startLinkComboBox.getSelectedObjectResource();
+			selectedStartLink = (PhysicalLink )startLinkComboBox.getSelectedItem();
 			
 			MapUnboundLinkElement unbound = (MapUnboundLinkElement )path.nextLink(startLastBound);
 
@@ -558,7 +581,7 @@ public final class MapCablePathBindPanel
 
 		try
 		{
-			selectedEndLink = (MapPhysicalLinkElement )endLinkComboBox.getSelectedObjectResource();
+			selectedEndLink = (PhysicalLink )endLinkComboBox.getSelectedItem();
 			
 			if(!selectedEndLink.equals(selectedStartLink))
 			{
@@ -592,8 +615,8 @@ public final class MapCablePathBindPanel
 				ComboBoxModel cbmodel = startLinkComboBox.getModel();
 				for (int i = 0; i < cbmodel.getSize(); i++) 
 				{
-					ObjectResource or = (ObjectResource )cbmodel.getElementAt(i);
-					if(or.getId().length() != 0)
+					Object or = (Object )cbmodel.getElementAt(i);
+					if(!or.equals(stubObject))
 					{
 						cbmodel.setSelectedItem(or);
 						break;
@@ -607,8 +630,8 @@ public final class MapCablePathBindPanel
 				ComboBoxModel cbmodel = endLinkComboBox.getModel();
 				for (int i = 0; i < cbmodel.getSize(); i++) 
 				{
-					ObjectResource or = (ObjectResource )cbmodel.getElementAt(i);
-					if(or.getId().length() != 0)
+					Object or = (Object )cbmodel.getElementAt(i);
+					if(!or.equals(stubObject))
 					{
 						cbmodel.setSelectedItem(or);
 						break;
@@ -652,7 +675,6 @@ public final class MapCablePathBindPanel
 
 	public boolean cancel()
 	{
-//		path.setLinks(links);
 		return false;
 	}
 }

@@ -1,5 +1,5 @@
 /**
- * $Id: BindUnboundLinkToPhysicalLinkCommandBundle.java,v 1.3 2004/10/20 10:14:39 krupenn Exp $
+ * $Id: BindUnboundLinkToPhysicalLinkCommandBundle.java,v 1.4 2004/12/22 16:38:39 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -13,11 +13,12 @@ package com.syrus.AMFICOM.Client.Map.Command.Action;
 
 import com.syrus.AMFICOM.Client.General.Event.MapEvent;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
-import com.syrus.AMFICOM.Client.Resource.Map.Map;
-import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalLinkElement;
+import com.syrus.AMFICOM.map.Map;
+import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapCablePathElement;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapUnboundLinkElement;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapView;
+import com.syrus.AMFICOM.map.PhysicalLinkBinding;
 
 /**
  *  команда привязывания непривязанной линии к тоннелю. концевые узлы
@@ -25,7 +26,7 @@ import com.syrus.AMFICOM.Client.Resource.MapView.MapView;
  * 
  * 
  * 
- * @version $Revision: 1.3 $, $Date: 2004/10/20 10:14:39 $
+ * @version $Revision: 1.4 $, $Date: 2004/12/22 16:38:39 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -40,7 +41,7 @@ public class BindUnboundLinkToPhysicalLinkCommandBundle extends MapActionCommand
 	/**
 	 * тоннель
 	 */
-	MapPhysicalLinkElement link;
+	PhysicalLink link;
 	
 	/**
 	 * Карта, на которой производится операция
@@ -49,7 +50,7 @@ public class BindUnboundLinkToPhysicalLinkCommandBundle extends MapActionCommand
 
 	public BindUnboundLinkToPhysicalLinkCommandBundle(
 		MapUnboundLinkElement unbound, 
-		MapPhysicalLinkElement link)
+		PhysicalLink link)
 	{
 		this.unbound = unbound;
 		this.link = link;

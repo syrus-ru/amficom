@@ -3,11 +3,11 @@ package com.syrus.AMFICOM.Client.Map.Popup;
 import com.syrus.AMFICOM.Client.General.Event.MapEvent;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.Map.Command.Action.DeleteSelectionCommand;
-import com.syrus.AMFICOM.Client.Resource.Map.MapElement;
-import com.syrus.AMFICOM.Client.Resource.Map.MapNodeProtoElement;
-import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalLinkElement;
-import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalNodeElement;
-import com.syrus.AMFICOM.Client.Resource.Map.MapPipePathElement;
+import com.syrus.AMFICOM.map.MapElement;
+import com.syrus.AMFICOM.map.SiteNodeType;
+import com.syrus.AMFICOM.map.PhysicalLink;
+import com.syrus.AMFICOM.map.TopologicalNode;
+import com.syrus.AMFICOM.map.Collector;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapCablePathElement;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapSelection;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapUnboundLinkElement;
@@ -21,6 +21,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import javax.swing.JMenuItem;
+import com.syrus.AMFICOM.map.Map;
 
 public final class SelectionPopupMenu extends MapPopupMenu 
 {
@@ -49,7 +50,7 @@ public final class SelectionPopupMenu extends MapPopupMenu
 		}
 	}
 	
-	public void setMapElement(MapElement me)
+	public void setElement(Object me)
 	{
 		this.selection = (MapSelection )me;
 
@@ -147,12 +148,12 @@ public final class SelectionPopupMenu extends MapPopupMenu
 
 	private void insertSite()
 	{
-		MapNodeProtoElement proto = super.selectNodeProto();
+		SiteNodeType proto = super.selectNodeProto();
 		if(proto != null)
 		{
 			for(Iterator it = selection.getElements().iterator(); it.hasNext();)
 			{
-				MapPhysicalNodeElement node = (MapPhysicalNodeElement )it.next();
+				TopologicalNode node = (TopologicalNode)it.next();
 
 				super.insertSiteInPlaceOfANode(node, proto);
 			}
@@ -163,14 +164,14 @@ public final class SelectionPopupMenu extends MapPopupMenu
 
 	private void generateCabling()
 	{
-		MapNodeProtoElement proto = super.selectNodeProto();
+		SiteNodeType proto = super.selectNodeProto();
 
 		if(proto != null)
 		{
 			List nodesToBind = new LinkedList();
 			for(Iterator it = selection.getElements().iterator(); it.hasNext();)
 			{
-				MapElement me = (MapElement )it.next();
+				MapElement me = (MapElement)it.next();
 				if(me instanceof MapUnboundNodeElement)
 				{
 					nodesToBind.add(me);
@@ -190,7 +191,7 @@ public final class SelectionPopupMenu extends MapPopupMenu
 			List alreadyBound = new LinkedList();
 			for(Iterator it = selection.getElements().iterator(); it.hasNext();)
 			{
-				MapElement me = (MapElement )it.next();
+				MapElement me = (MapElement)it.next();
 				if(me instanceof MapCablePathElement)
 				{
 					MapCablePathElement path = (MapCablePathElement )me;
@@ -216,7 +217,7 @@ public final class SelectionPopupMenu extends MapPopupMenu
 
 	private void newCollector()
 	{
-		MapPipePathElement collector = super.createCollector();
+		Collector collector = super.createCollector();
 		if(collector != null)
 		{
 			super.addLinksToCollector(collector, selection.getElements());
@@ -229,7 +230,7 @@ public final class SelectionPopupMenu extends MapPopupMenu
 
 	private void addToCollector()
 	{
-		MapPipePathElement collector = super.selectCollector();
+		Collector collector = super.selectCollector();
 		if(collector != null)
 		{
 			super.addLinksToCollector(collector, selection.getElements());
@@ -244,8 +245,8 @@ public final class SelectionPopupMenu extends MapPopupMenu
 	{
 		for(Iterator it = selection.getElements().iterator(); it.hasNext();)
 		{
-			MapPhysicalLinkElement link = (MapPhysicalLinkElement )it.next();
-			MapPipePathElement collector = logicalNetLayer.getMapView().getMap().getCollector(link);
+			PhysicalLink link = (PhysicalLink)it.next();
+			Collector collector = logicalNetLayer.getMapView().getMap().getCollector(link);
 			if(collector != null)
 			{
 				super.removeLinkFromCollector(collector, link);
@@ -261,11 +262,11 @@ public final class SelectionPopupMenu extends MapPopupMenu
 	{
 		for(Iterator it = selection.getElements().iterator(); it.hasNext();)
 		{
-			MapPhysicalLinkElement link = (MapPhysicalLinkElement )it.next();
-			MapPipePathElement collector = logicalNetLayer.getMapView().getMap().getCollector(link);
+			PhysicalLink link = (PhysicalLink)it.next();
+			Collector collector = logicalNetLayer.getMapView().getMap().getCollector(link);
 			if(collector != null)
 			{
-				super.removeLinksFromCollector(collector, collector.getLinks());
+				super.removeLinksFromCollector(collector, collector.getPhysicalLinks());
 				super.removeCollector(collector);
 			}
 		}

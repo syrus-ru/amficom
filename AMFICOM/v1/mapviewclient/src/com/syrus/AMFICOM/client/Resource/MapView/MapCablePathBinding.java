@@ -2,16 +2,22 @@ package com.syrus.AMFICOM.Client.Resource.MapView;
 
 import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
 import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
-import com.syrus.AMFICOM.Client.Resource.Map.MapNodeElement;
-import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalLinkElement;
-import com.syrus.AMFICOM.Client.Resource.Scheme.CableChannelingItem;
+import com.syrus.AMFICOM.general.IllegalObjectEntityException;
+import com.syrus.AMFICOM.map.AbstractNode;
+import com.syrus.AMFICOM.map.PhysicalLink;
 
+import com.syrus.AMFICOM.map.SiteNode;
+import com.syrus.AMFICOM.scheme.SchemeStorableObjectPool;
+import com.syrus.AMFICOM.scheme.corba.CableChannelingItem;
+import com.syrus.AMFICOM.scheme.corba.CableChannelingItemDefaultFactory;
 import java.util.HashMap;
 import java.util.Iterator;
 
 public final class MapCablePathBinding extends HashMap
 {
 	private MapCablePathElement cablePath;
+	
+	private static CableChannelingItemDefaultFactory cciFactory = new CableChannelingItemDefaultFactory();
 	
 	public MapCablePathBinding(MapCablePathElement cablePath)
 	{
@@ -24,18 +30,18 @@ public final class MapCablePathBinding extends HashMap
 		this.cablePath = mcpb.getCablePath();
 	}
 
-	public CableChannelingItem getCCI(MapNodeElement node)
+	public CableChannelingItem getCCI(AbstractNode node)
 	{
 		for(Iterator it = super.values().iterator(); it.hasNext();)
 		{
 			CableChannelingItem cci = (CableChannelingItem )it.next();
-			if(cci.startSiteId.equals(node.getId()))
+			if(cci.startSiteNodeImpl().equals(node))
 				return cci;
 		}
 		return null;
 	}
 	
-	public CableChannelingItem getCCI(MapPhysicalLinkElement link)
+	public CableChannelingItem getCCI(PhysicalLink link)
 	{
 		return (CableChannelingItem )(super.get(link));
 	}
@@ -43,29 +49,36 @@ public final class MapCablePathBinding extends HashMap
 	public Object get(Object key)
 	{
 		Object entry = null;
-		if(key instanceof MapPhysicalLinkElement)
+		if(key instanceof PhysicalLink)
 			entry = super.get(key);
 		else
-		if(key instanceof MapNodeElement)
-			entry = this.getCCI((MapNodeElement )key);
+		if(key instanceof AbstractNode)
+			entry = this.getCCI((AbstractNode)key);
 		return entry;
 	}
 
-	public static CableChannelingItem generateCCI(
-			MapPhysicalLinkElement link, 
-			DataSourceInterface dataSource)
+	public static CableChannelingItem generateCCI(PhysicalLink link)
 	{
-		CableChannelingItem cci = new CableChannelingItem(
-			dataSource.GetUId(CableChannelingItem.typ));
-		cci.startSiteId = link.getStartNode().getId();
+		CableChannelingItem cci = cciFactory.newInstance();
+		cci.startSiteNodeImpl((SiteNode )link.getStartNode());
 		if(! (link instanceof MapUnboundLinkElement))
 		{
-			cci.startSpare = MapPropertiesManager.getSpareLength();
-			cci.physicalLinkId = link.getId();
-			cci.endSpare = MapPropertiesManager.getSpareLength();
+			cci.startSpare(MapPropertiesManager.getSpareLength());
+			cci.physicalLinkImpl(link);
+			cci.endSpare(MapPropertiesManager.getSpareLength());
 		}
-		cci.endSiteId = link.getEndNode().getId();
+		cci.endSiteNodeImpl((SiteNode )link.getEndNode());
 		
+		try
+		{
+			SchemeStorableObjectPool.putStorableObject(cci);
+		}
+		catch (IllegalObjectEntityException e)
+		{
+			e.printStackTrace();
+			return null;
+		}
+
 		return cci;
 	}
 

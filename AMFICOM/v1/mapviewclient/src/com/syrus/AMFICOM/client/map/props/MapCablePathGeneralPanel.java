@@ -4,11 +4,12 @@ import com.syrus.AMFICOM.Client.General.Lang.LangModel;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourceComboBox;
-import com.syrus.AMFICOM.Client.General.UI.ObjectResourcePropertiesPane;
+import com.syrus.AMFICOM.Client.Map.UI.SimpleMapElementController;
+import com.syrus.AMFICOM.client_.general.ui_.ObjComboBox;
+import com.syrus.AMFICOM.client_.general.ui_.ObjectResourcePropertiesPane;
 import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapCablePathElement;
-import com.syrus.AMFICOM.Client.Resource.ObjectResource;
-import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeCableLink;
+import com.syrus.AMFICOM.scheme.corba.SchemeCableLink;
 
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
@@ -28,7 +29,7 @@ public class MapCablePathGeneralPanel
 	private GridBagLayout gridBagLayout1 = new GridBagLayout();
 	private JTextField nameTextField = new JTextField();
 	private JLabel cableLabel = new JLabel();
-	private ObjectResourceComboBox cableComboBox = new ObjectResourceComboBox(SchemeCableLink.typ);
+	private ObjComboBox cableComboBox = null;
 	private JLabel descLabel = new JLabel();
 	private JTextArea descTextArea = new JTextArea();
 
@@ -61,6 +62,11 @@ public class MapCablePathGeneralPanel
 
 	private void jbInit()
 	{
+		SimpleMapElementController controller = 
+				SimpleMapElementController.getInstance();
+
+		cableComboBox = new ObjComboBox(controller, SimpleMapElementController.KEY_NAME);
+
 		this.setLayout(gridBagLayout1);
 		this.setName(LangModel.getString("Properties"));
 
@@ -83,14 +89,17 @@ public class MapCablePathGeneralPanel
 		this.add(descTextArea, new GridBagConstraints(1, 2, 1, 1, 1.0, 1.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
 	}
 
-	public ObjectResource getObjectResource()
+	public Object getObject()
 	{
 		return null;
 	}
 
-	public void setObjectResource(ObjectResource objectResource)
+	public void setObject(Object objectResource)
 	{
 		path = (MapCablePathElement)objectResource;
+		
+		cableComboBox.removeAll();
+		
 		if(path == null)
 		{
 			nameTextField.setEnabled(false);
@@ -104,7 +113,8 @@ public class MapCablePathGeneralPanel
 			nameTextField.setEnabled(true);
 			nameTextField.setText(path.getName());
 			cableComboBox.setEnabled(true);
-			cableComboBox.setSelected(path.getSchemeCableLink());
+			cableComboBox.addItem(path.getSchemeCableLink());
+			cableComboBox.setSelectedItem(path.getSchemeCableLink());
 			descTextArea.setEnabled(true);
 			descTextArea.setText(path.getDescription());
 		}

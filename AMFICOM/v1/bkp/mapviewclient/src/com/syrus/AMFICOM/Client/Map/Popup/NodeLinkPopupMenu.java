@@ -1,8 +1,8 @@
 package com.syrus.AMFICOM.Client.Map.Popup;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
-import com.syrus.AMFICOM.Client.Resource.Map.MapElement;
-import com.syrus.AMFICOM.Client.Resource.Map.MapNodeLinkElement;
+import com.syrus.AMFICOM.map.MapElement;
+import com.syrus.AMFICOM.map.NodeLink;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -13,7 +13,7 @@ public final class NodeLinkPopupMenu extends MapPopupMenu
 {
 	private JMenuItem removeMenuItem = new JMenuItem();
 	
-	private MapNodeLinkElement link;
+	private NodeLink link;
 	
 	private static NodeLinkPopupMenu instance = new NodeLinkPopupMenu();
 
@@ -35,9 +35,9 @@ public final class NodeLinkPopupMenu extends MapPopupMenu
 		return instance;
 	}
 	
-	public void setMapElement(MapElement me)
+	public void setElement(Object me)
 	{
-		this.link = (MapNodeLinkElement )me;
+		this.link = (NodeLink )me;
 	}
 
 	private void jbInit()

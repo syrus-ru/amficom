@@ -5,9 +5,9 @@ import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.General.Model.MapApplicationModel;
 import com.syrus.AMFICOM.Client.Map.Command.Action.CreateMarkCommandAtomic;
 import com.syrus.AMFICOM.Client.Map.Command.Action.CreateMarkerCommandAtomic;
-import com.syrus.AMFICOM.Client.Resource.Map.MapElement;
-import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalLinkElement;
-import com.syrus.AMFICOM.Client.Resource.Map.MapPipePathElement;
+import com.syrus.AMFICOM.map.MapElement;
+import com.syrus.AMFICOM.map.PhysicalLink;
+import com.syrus.AMFICOM.map.Collector;
 
 import com.syrus.AMFICOM.Client.Resource.MapView.MapMeasurementPathElement;
 import java.awt.event.ActionEvent;
@@ -45,7 +45,7 @@ public final class MeasurementPathPopupMenu extends MapPopupMenu
 		return instance;
 	}
 	
-	public void setMapElement(MapElement me)
+	public void setElement(Object me)
 	{
 		this.path = (MapMeasurementPathElement )me;
 

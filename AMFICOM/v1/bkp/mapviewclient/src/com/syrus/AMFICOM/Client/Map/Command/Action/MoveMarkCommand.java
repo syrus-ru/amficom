@@ -1,5 +1,5 @@
 /**
- * $Id: MoveMarkCommand.java,v 1.4 2004/12/07 17:05:54 krupenn Exp $
+ * $Id: MoveMarkCommand.java,v 1.5 2004/12/22 16:38:40 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -14,8 +14,8 @@ package com.syrus.AMFICOM.Client.Map.Command.Action;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
-import com.syrus.AMFICOM.Client.Resource.Map.DoublePoint;
-import com.syrus.AMFICOM.Client.Resource.Map.MapMarkElement;
+import com.syrus.AMFICOM.map.DoublePoint;
+import com.syrus.AMFICOM.map.Mark;
 
 import com.syrus.AMFICOM.Client.Resource.Map.MarkController;
 import java.awt.geom.Point2D;
@@ -26,7 +26,7 @@ import java.awt.geom.Point2D;
  * 
  * 
  * 
- * @version $Revision: 1.4 $, $Date: 2004/12/07 17:05:54 $
+ * @version $Revision: 1.5 $, $Date: 2004/12/22 16:38:40 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -42,11 +42,11 @@ public class MoveMarkCommand extends MapActionCommand
 	DoublePoint location;
 	double distance;
 
-	MapMarkElement mark;
+	Mark mark;
 	
 	MarkController mc;
 
-	public MoveMarkCommand(MapMarkElement mark)
+	public MoveMarkCommand(Mark mark)
 	{
 		super(MapActionCommand.ACTION_DRAW_NODE);
 		this.mark = mark;

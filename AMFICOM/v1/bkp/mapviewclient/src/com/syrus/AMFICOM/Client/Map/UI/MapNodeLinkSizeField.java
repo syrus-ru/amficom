@@ -1,5 +1,5 @@
 /**
- * $Id: MapNodeLinkSizeField.java,v 1.3 2004/12/01 10:55:32 krupenn Exp $
+ * $Id: MapNodeLinkSizeField.java,v 1.4 2004/12/22 16:38:42 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -13,8 +13,8 @@ package com.syrus.AMFICOM.Client.Map.UI;
 
 import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
 import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
-import com.syrus.AMFICOM.Client.Resource.Map.MapNodeElement;
-import com.syrus.AMFICOM.Client.Resource.Map.MapNodeLinkElement;
+import com.syrus.AMFICOM.map.AbstractNode;
+import com.syrus.AMFICOM.map.NodeLink;
 
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
@@ -30,7 +30,7 @@ import javax.swing.JTextField;
  * 
  * 
  * 
- * @version $Revision: 1.3 $, $Date: 2004/12/01 10:55:32 $
+ * @version $Revision: 1.4 $, $Date: 2004/12/22 16:38:42 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -38,13 +38,13 @@ import javax.swing.JTextField;
 public final class MapNodeLinkSizeField extends JTextField 
 {
 	LogicalNetLayer lnl;
-	MapNodeLinkElement nodelink;
-	MapNodeElement node;
+	NodeLink nodelink;
+	AbstractNode node;
 	
 	public MapNodeLinkSizeField(
 			LogicalNetLayer lnl,
-			MapNodeLinkElement nodelink,
-			MapNodeElement node)
+			NodeLink nodelink,
+			AbstractNode node)
 	{
 		super();
 		this.lnl = lnl;

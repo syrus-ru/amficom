@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import com.syrus.AMFICOM.map.DoublePoint;
 
 public final class MapMarkerPropertiesController 
 		implements MapElementPropertiesController 

@@ -8,7 +8,7 @@ package com.syrus.AMFICOM.Client.Map.Props;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
-import com.syrus.AMFICOM.Client.Resource.Map.MapPipePathElement;
+import com.syrus.AMFICOM.map.Collector;
 import com.syrus.AMFICOM.Client.Resource.MiscUtil;
 
 import java.util.ArrayList;
@@ -61,7 +61,7 @@ public final class MapCollectorPropertiesController
 	public Object getValue(final Object object, final String key)
 	{
 		Object result = null;
-		MapPipePathElement path = (MapPipePathElement )object;
+		Collector path = (Collector)object;
 
 		if (key.equals(PROPERTY_NAME))
 		{
@@ -84,7 +84,7 @@ public final class MapCollectorPropertiesController
 
 	public void setValue(Object object, final String key, final Object value)
 	{
-		MapPipePathElement path = (MapPipePathElement )object;
+		Collector path = (Collector)object;
 
 		if (key.equals(PROPERTY_NAME))
 		{

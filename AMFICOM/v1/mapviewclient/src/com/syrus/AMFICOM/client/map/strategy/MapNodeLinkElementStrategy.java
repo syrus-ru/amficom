@@ -1,5 +1,5 @@
 /**
- * $Id: MapNodeLinkElementStrategy.java,v 1.4 2004/12/07 17:05:54 krupenn Exp $
+ * $Id: MapNodeLinkElementStrategy.java,v 1.5 2004/12/22 16:38:41 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -17,8 +17,8 @@ import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.Map.Command.Action.CreatePhysicalNodeCommandBundle;
 import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
 import com.syrus.AMFICOM.Client.Map.MapState;
-import com.syrus.AMFICOM.Client.Resource.Map.MapElement;
-import com.syrus.AMFICOM.Client.Resource.Map.MapNodeLinkElement;
+import com.syrus.AMFICOM.map.MapElement;
+import com.syrus.AMFICOM.map.NodeLink;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapSelection;
 
 import java.awt.event.MouseEvent;
@@ -30,7 +30,7 @@ import javax.swing.SwingUtilities;
  * 
  * 
  * 
- * @version $Revision: 1.4 $, $Date: 2004/12/07 17:05:54 $
+ * @version $Revision: 1.5 $, $Date: 2004/12/22 16:38:41 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -40,7 +40,7 @@ public final class MapNodeLinkElementStrategy implements  MapStrategy
 	LogicalNetLayer logicalNetLayer;
 	ApplicationContext aContext;
 	
-	MapNodeLinkElement nodeLink;
+	NodeLink nodeLink;
 
 	Command command;
 
@@ -57,7 +57,7 @@ public final class MapNodeLinkElementStrategy implements  MapStrategy
 	
 	public void setMapElement(MapElement me)
 	{
-		this.nodeLink = (MapNodeLinkElement )me;
+		this.nodeLink = (NodeLink)me;
 	}
 
 	public void setLogicalNetLayer(LogicalNetLayer logicalNetLayer)

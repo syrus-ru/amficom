@@ -1,5 +1,5 @@
 /**
- * $Id: MeasurementPathController.java,v 1.2 2004/12/08 16:20:22 krupenn Exp $
+ * $Id: MeasurementPathController.java,v 1.3 2004/12/22 16:38:43 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -19,7 +19,8 @@ import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
 import com.syrus.AMFICOM.Client.Map.MapCoordinatesConverter;
 import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
 import com.syrus.AMFICOM.Client.Resource.Map.AbstractLinkController;
-import com.syrus.AMFICOM.Client.Resource.Map.MapElement;
+import com.syrus.AMFICOM.map.AbstractNode;
+import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapElementController;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapCablePathElement;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapMeasurementPathElement;
@@ -46,7 +47,7 @@ import java.util.Iterator;
  * 
  * 
  * 
- * @version $Revision: 1.2 $, $Date: 2004/12/08 16:20:22 $
+ * @version $Revision: 1.3 $, $Date: 2004/12/22 16:38:43 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -95,6 +96,49 @@ public final class MeasurementPathController extends AbstractLinkController
 			}
 		}
 		return vis;
+	}
+
+	public String getToolTipText(MapElement me)
+	{
+		if(! (me instanceof MapMeasurementPathElement))
+			return null;
+
+		MapMeasurementPathElement mpath = (MapMeasurementPathElement )me;
+		
+		String s1 = mpath.getName();
+		String s2 = "";
+		String s3 = "";
+		try
+		{
+			AbstractNode smne = mpath.getStartNode();
+			s2 =  ":\n" 
+				+ "   " 
+				+ LangModelMap.getString("From") 
+				+ " " 
+				+ smne.getName() 
+				+ " [" 
+				+ LangModel.getString("node" + smne.getClass().getName()) 
+				+ "]";
+			AbstractNode emne = mpath.getEndNode();
+			s3 = "\n" 
+				+ "   " 
+				+ LangModelMap.getString("To") 
+				+ " " 
+				+ emne.getName() 
+				+ " [" 
+				+ LangModel.getString("node" + emne.getClass().getName()) 
+				+ "]";
+		}
+		catch(Exception e)
+		{
+			Environment.log(
+				Environment.LOG_LEVEL_FINER, 
+				"method call", 
+				getClass().getName(), 
+				"getToolTipText()", 
+				e);
+		}
+		return s1 + s2 + s3;
 	}
 
 	public void paint (MapElement me, Graphics g, Rectangle2D.Double visibleBounds)

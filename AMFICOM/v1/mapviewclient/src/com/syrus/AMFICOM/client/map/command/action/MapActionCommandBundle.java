@@ -1,5 +1,5 @@
 /**
- * $Id: MapActionCommandBundle.java,v 1.10 2004/12/07 17:05:54 krupenn Exp $
+ * $Id: MapActionCommandBundle.java,v 1.11 2004/12/22 16:38:40 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -14,35 +14,36 @@ package com.syrus.AMFICOM.Client.Map.Command.Action;
 import com.syrus.AMFICOM.Client.General.Command.CommandBundle;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
-import com.syrus.AMFICOM.Client.Resource.Map.DoublePoint;
-import com.syrus.AMFICOM.Client.Resource.Map.MapElement;
-import com.syrus.AMFICOM.Client.Resource.Map.MapElementState;
-import com.syrus.AMFICOM.Client.Resource.Map.MapNodeElement;
-import com.syrus.AMFICOM.Client.Resource.Map.MapNodeLinkElement;
-import com.syrus.AMFICOM.Client.Resource.Map.MapNodeProtoElement;
-import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalLinkElement;
-import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalNodeElement;
-import com.syrus.AMFICOM.Client.Resource.Map.MapSiteNodeElement;
+import com.syrus.AMFICOM.map.DoublePoint;
+import com.syrus.AMFICOM.map.MapElement;
+import com.syrus.AMFICOM.map.MapElementState;
+import com.syrus.AMFICOM.map.AbstractNode;
+import com.syrus.AMFICOM.map.NodeLink;
+import com.syrus.AMFICOM.map.SiteNodeType;
+import com.syrus.AMFICOM.map.PhysicalLink;
+import com.syrus.AMFICOM.map.TopologicalNode;
+import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapCablePathElement;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapMeasurementPathElement;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapUnboundLinkElement;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapUnboundNodeElement;
-import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeCableLink;
-import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeElement;
-import com.syrus.AMFICOM.Client.Resource.Scheme.SchemePath;
+import com.syrus.AMFICOM.scheme.corba.SchemeCableLink;
+import com.syrus.AMFICOM.scheme.corba.SchemeElement;
+import com.syrus.AMFICOM.scheme.corba.SchemePath;
 
 import java.awt.geom.Point2D;
 
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import com.syrus.AMFICOM.map.PhysicalLinkBinding;
 
 /**
  *  
  * 
  * 
  * 
- * @version $Revision: 1.10 $, $Date: 2004/12/07 17:05:54 $
+ * @version $Revision: 1.11 $, $Date: 2004/12/22 16:38:40 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -80,7 +81,7 @@ public class MapActionCommandBundle extends CommandBundle
 	/**
 	 * Создается сетевой узел
 	 */
-	protected MapSiteNodeElement createSite(DoublePoint point,  MapNodeProtoElement proto)
+	protected SiteNode createSite(DoublePoint point,  SiteNodeType proto)
 	{
 		CreateSiteCommandAtomic cmd = new CreateSiteCommandAtomic(proto, point);
 		cmd.setLogicalNetLayer(logicalNetLayer);
@@ -104,7 +105,7 @@ public class MapActionCommandBundle extends CommandBundle
 	/**
 	 * Создается топологический конечный узел в неактивном состоянии
 	 */
-	protected MapPhysicalNodeElement createPhysicalNode(DoublePoint point)
+	protected TopologicalNode createPhysicalNode(DoublePoint point)
 	{
 		CreatePhysicalNodeCommandAtomic cmd = new CreatePhysicalNodeCommandAtomic(point);
 		cmd.setLogicalNetLayer(logicalNetLayer);
@@ -116,9 +117,9 @@ public class MapActionCommandBundle extends CommandBundle
 	/**
 	 * Создается фрагмент линии, не включенный ни в какую линию
 	 */
-	protected MapNodeLinkElement createNodeLink(
-			MapNodeElement startNode,
-			MapNodeElement endNode)
+	protected NodeLink createNodeLink(
+			AbstractNode startNode,
+			AbstractNode endNode)
 	{
 		CreateNodeLinkCommandAtomic cmd = new CreateNodeLinkCommandAtomic(startNode, endNode);
 		cmd.setLogicalNetLayer(logicalNetLayer);
@@ -130,9 +131,9 @@ public class MapActionCommandBundle extends CommandBundle
 	/**
 	 * Создается элемент линии связи
 	 */
-	protected MapPhysicalLinkElement createPhysicalLink(
-			MapNodeElement startNode,
-			MapNodeElement endNode)
+	protected PhysicalLink createPhysicalLink(
+			AbstractNode startNode,
+			AbstractNode endNode)
 	{
 		CreatePhysicalLinkCommandAtomic cmd = new CreatePhysicalLinkCommandAtomic(startNode, endNode);
 		cmd.setLogicalNetLayer(logicalNetLayer);
@@ -146,8 +147,8 @@ public class MapActionCommandBundle extends CommandBundle
 	 */
 	protected MapCablePathElement createCablePath(
 			SchemeCableLink scl,
-			MapNodeElement startNode,
-			MapNodeElement endNode)
+			AbstractNode startNode,
+			AbstractNode endNode)
 	{
 		CreateCablePathCommandAtomic cmd = new CreateCablePathCommandAtomic(scl, startNode, endNode);
 		cmd.setLogicalNetLayer(logicalNetLayer);
@@ -172,8 +173,8 @@ public class MapActionCommandBundle extends CommandBundle
 	 */
 	protected MapMeasurementPathElement createMeasurementPath(
 			SchemePath path,
-			MapNodeElement startNode,
-			MapNodeElement endNode)
+			AbstractNode startNode,
+			AbstractNode endNode)
 	{
 		CreateMeasurementPathCommandAtomic cmd = new CreateMeasurementPathCommandAtomic(path, startNode, endNode);
 		cmd.setLogicalNetLayer(logicalNetLayer);
@@ -197,8 +198,8 @@ public class MapActionCommandBundle extends CommandBundle
 	 * Создается непривязанная линия
 	 */
 	protected MapUnboundLinkElement createUnboundLink(
-			MapNodeElement startNode,
-			MapNodeElement endNode)
+			AbstractNode startNode,
+			AbstractNode endNode)
 	{
 		CreateUnboundLinkCommandAtomic cmd = new CreateUnboundLinkCommandAtomic(startNode, endNode);
 		cmd.setLogicalNetLayer(logicalNetLayer);
@@ -211,14 +212,14 @@ public class MapActionCommandBundle extends CommandBundle
 	 * Создается непривязанная линия, состоящая из одного фрагмента
 	 */
 	protected MapUnboundLinkElement createUnboundLinkWithNodeLink(
-			MapNodeElement startNode,
-			MapNodeElement endNode)
+			AbstractNode startNode,
+			AbstractNode endNode)
 	{
 		MapUnboundLinkElement unbound = this.createUnboundLink(startNode, endNode);
 
-		MapNodeLinkElement nodeLink = this.createNodeLink(startNode, endNode);
+		NodeLink nodeLink = this.createNodeLink(startNode, endNode);
 		unbound.addNodeLink(nodeLink);
-		nodeLink.setPhysicalLinkId(unbound.getId());
+		nodeLink.setPhysicalLink(unbound);
 		
 		return unbound;
 	}
@@ -227,7 +228,7 @@ public class MapActionCommandBundle extends CommandBundle
 	/**
 	 * Удаляется линия связи
 	 */
-	protected void removePhysicalLink(MapPhysicalLinkElement mple)
+	protected void removePhysicalLink(PhysicalLink mple)
 	{
 		RemovePhysicalLinkCommandAtomic cmd = new RemovePhysicalLinkCommandAtomic(mple);
 		cmd.setLogicalNetLayer(logicalNetLayer);
@@ -238,7 +239,7 @@ public class MapActionCommandBundle extends CommandBundle
 	/**
 	 * Удаляется фрагмент линии
 	 */
-	protected void removeNodeLink(MapNodeLinkElement mple)
+	protected void removeNodeLink(NodeLink mple)
 	{
 		RemoveNodeLinkCommandAtomic cmd = new RemoveNodeLinkCommandAtomic(mple);
 		cmd.setLogicalNetLayer(logicalNetLayer);
@@ -249,7 +250,7 @@ public class MapActionCommandBundle extends CommandBundle
 	/**
 	 * Удаляется точечный объект
 	 */
-	protected void removeNode(MapNodeElement mne)
+	protected void removeNode(AbstractNode mne)
 	{
 		RemoveNodeCommandAtomic cmd = new RemoveNodeCommandAtomic(mne);
 		cmd.setLogicalNetLayer(logicalNetLayer);
@@ -260,7 +261,7 @@ public class MapActionCommandBundle extends CommandBundle
 	/**
 	 * Изменение статуса топологического узла
 	 */
-	protected void changePhysicalNodeActivity(MapPhysicalNodeElement mpne, boolean active)
+	protected void changePhysicalNodeActivity(TopologicalNode mpne, boolean active)
 	{
 		ChangePhysicalNodeActivityCommandAtomic cmd = new ChangePhysicalNodeActivityCommandAtomic(mpne, active);
 		cmd.setLogicalNetLayer(logicalNetLayer);
@@ -290,15 +291,15 @@ public class MapActionCommandBundle extends CommandBundle
 		sortedNodes.addAll(link.getSortedNodes());
 		for(Iterator it2 = sortedNodes.iterator(); it2.hasNext();)
 		{
-			MapNodeElement node = (MapNodeElement )it2.next();
-			if(node instanceof MapPhysicalNodeElement)
+			AbstractNode node = (AbstractNode)it2.next();
+			if(node instanceof TopologicalNode)
 				this.removeNode(node);
 		}
 		List sortedNodeLinks = new LinkedList();
 		sortedNodeLinks.addAll(link.getNodeLinks());
 		for(Iterator it3 = sortedNodeLinks.iterator(); it3.hasNext();)
 		{
-			this.removeNodeLink((MapNodeLinkElement )it3.next());
+			this.removeNodeLink((NodeLink)it3.next());
 		}
 	}
 
@@ -310,7 +311,7 @@ public class MapActionCommandBundle extends CommandBundle
 	{
 		for(Iterator it = cablePath.getLinks().iterator(); it.hasNext();)
 		{
-			MapPhysicalLinkElement link = (MapPhysicalLinkElement )it.next();
+			PhysicalLink link = (PhysicalLink)it.next();
 			if(link instanceof MapUnboundLinkElement)
 			{
 				this.removeUnboundLink((MapUnboundLinkElement )link);
@@ -344,19 +345,19 @@ public class MapActionCommandBundle extends CommandBundle
 	 * @param secondConditionalNodeExit
 	 * @return 
 	 */
-	protected MapNodeElement moveNodeLinks(
-		MapPhysicalLinkElement link, 
-		MapPhysicalLinkElement newLink,
+	protected AbstractNode moveNodeLinks(
+		PhysicalLink link, 
+		PhysicalLink newLink,
 		boolean registerStateChange,
-		MapNodeElement firstConditionalNodeExit,
-		MapNodeElement secondConditionalNodeExit)
+		AbstractNode firstConditionalNodeExit,
+		AbstractNode secondConditionalNodeExit)
 	{
-		MapNodeElement foundNode = null;
+		AbstractNode foundNode = null;
 		MapElementState state = null;
 		
 		// определить начальный узел и начальный фрагмент физической линии
-		MapNodeLinkElement startNodeLink = link.getStartNodeLink();
-		MapNodeElement startNode = link.getStartNode();
+		NodeLink startNodeLink = link.getStartNodeLink();
+		AbstractNode startNode = link.getStartNode();
 
 		// неявный цикл по фракментам линии - перекидывать фрагменты в новую 
 		// физическую линию. движемся по фрагментам от первого пока не
@@ -370,7 +371,7 @@ public class MapActionCommandBundle extends CommandBundle
 			if(registerStateChange)
 				state = startNodeLink.getState();
 			
-			startNodeLink.setPhysicalLinkId(newLink.getId());
+			startNodeLink.setPhysicalLink(newLink);
 			
 			if(registerStateChange)
 				this.registerStateChange(

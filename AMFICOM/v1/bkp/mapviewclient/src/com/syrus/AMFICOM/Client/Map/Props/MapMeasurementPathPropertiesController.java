@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import com.syrus.AMFICOM.map.AbstractNode;
 
 public final class MapMeasurementPathPropertiesController 
 		implements MapElementPropertiesController 
@@ -85,7 +86,7 @@ public final class MapMeasurementPathPropertiesController
 			if (key.equals(PROPERTY_SCHEME_PATH_ID))
 			{
 				// remove .getName()
-				result = path.getSchemePath().getName();
+				result = path.getSchemePath().name();
 			}
 			else
 			if (key.equals(PROPERTY_TOPOLOGICAL_LENGTH))

@@ -1,5 +1,5 @@
 /**
- * $Id: MapView.java,v 1.23 2004/12/08 16:20:22 krupenn Exp $
+ * $Id: MapView.java,v 1.24 2004/12/22 16:38:43 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -10,7 +10,6 @@
 
 package com.syrus.AMFICOM.Client.Resource.MapView;
 
-import com.syrus.AMFICOM.CORBA.Map.MapView_Transferable;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.Map.Command.Action.PlaceSchemeCableLinkCommand;
 import com.syrus.AMFICOM.Client.Map.Command.Action.PlaceSchemeElementCommand;
@@ -20,36 +19,28 @@ import com.syrus.AMFICOM.Client.Map.Command.Action.UnPlaceSchemeCableLinkCommand
 import com.syrus.AMFICOM.Client.Map.Command.Action.UnPlaceSchemeElementCommand;
 import com.syrus.AMFICOM.Client.Map.Command.Action.UnPlaceSchemePathCommand;
 import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
-import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
-import com.syrus.AMFICOM.Client.Resource.Map.DoublePoint;
-import com.syrus.AMFICOM.Client.Resource.Map.Map;
-import com.syrus.AMFICOM.Client.Resource.Map.MapElement;
-import com.syrus.AMFICOM.Client.Resource.Map.MapNodeElement;
-import com.syrus.AMFICOM.Client.Resource.Map.MapNodeLinkElement;
-import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalLinkElement;
-import com.syrus.AMFICOM.Client.Resource.Map.MapSiteNodeElement;
-import com.syrus.AMFICOM.Client.Resource.Pool;
-import com.syrus.AMFICOM.Client.Resource.Scheme.Scheme;
-import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeCableLink;
-import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeElement;
-import com.syrus.AMFICOM.Client.Resource.Scheme.SchemePath;
-import com.syrus.AMFICOM.Client.Resource.StubResource;
-
 import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
+import com.syrus.AMFICOM.configuration.Equipment;
 import com.syrus.AMFICOM.configuration.MonitoredElement;
 import com.syrus.AMFICOM.configuration.TransmissionPath;
 import com.syrus.AMFICOM.configuration.corba.MonitoredElementSort;
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.general.Identifier;
-import java.awt.geom.Point2D;
+import com.syrus.AMFICOM.map.AbstractNode;
+import com.syrus.AMFICOM.map.DoublePoint;
+import com.syrus.AMFICOM.map.Map;
+import com.syrus.AMFICOM.map.MapElement;
+import com.syrus.AMFICOM.map.NodeLink;
+import com.syrus.AMFICOM.map.PhysicalLink;
+import com.syrus.AMFICOM.map.SiteNode;
+import com.syrus.AMFICOM.scheme.SchemeUtils;
+import com.syrus.AMFICOM.scheme.corba.*;
 
-import java.io.IOException;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.io.Serializable;
 
 /**
  * Класс используется для хранения объектов, отображаемых на 
@@ -60,28 +51,24 @@ import java.io.Serializable;
  * 
  * 
  * 
- * @version $Revision: 1.23 $, $Date: 2004/12/08 16:20:22 $
+ * @version $Revision: 1.24 $, $Date: 2004/12/22 16:38:43 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
  */
-public final class MapView extends StubResource implements Serializable
+public final class MapView
 {
 	private static final long serialVersionUID = 01L;
-	public static final String typ = "mapview";
 
-	protected MapView_Transferable transferable;
-
-	protected String id;
+	protected Identifier id;
 	protected String name = "Без названия";
 	protected String description;
-	protected String domainId;
+	protected Identifier domainId;
 	protected long created;
 	protected long modified;
-	protected String createdBy;
-	protected String modifiedBy;
+	protected Identifier createdBy;
+	protected Identifier modifiedBy;
 
-	protected String mapId = "";
 	protected List schemeIds = new LinkedList();
 	protected double scale = 0.00001;
 	protected double longitude = 0.0;
@@ -90,6 +77,8 @@ public final class MapView extends StubResource implements Serializable
 	protected LogicalNetLayer logicalNetLayer = null;
 	
 	protected boolean isOpened = false;
+
+	protected boolean changed = false;
 
 	protected Map map;
 	protected List schemes = new LinkedList();
@@ -112,8 +101,6 @@ public final class MapView extends StubResource implements Serializable
 				"MapView(" + logical + ")");
 		setLogicalNetLayer(logical);
 		created = System.currentTimeMillis();
-
-		transferable = new MapView_Transferable();
 	}
 
 	/**
@@ -128,131 +115,6 @@ public final class MapView extends StubResource implements Serializable
 				"MapView()");
 		setLogicalNetLayer(null);
 		created = System.currentTimeMillis();
-
-		transferable = new MapView_Transferable();
-	}
-
-	/**
-	 * Используется для создания элемента при подгрузке из базы данных
-	 */
-	public MapView(MapView_Transferable transferable)
-	{
-		Environment.log(
-				Environment.LOG_LEVEL_FINER, 
-				"constructor call", 
-				getClass().getName(), 
-				"MapView(" + transferable + ")");
-		this.transferable = transferable;
-		setLocalFromTransferable();
-	}
-
-/*	public Object clone(DataSourceInterface dataSource)
-	{
-		Environment.log(
-				Environment.LOG_LEVEL_FINER, 
-				"method call", 
-				getClass().getName(), 
-				"clone(" + dataSource + ")");
-		
-		MapView mv = new MapView();
-		mv.id = dataSource.GetUId(com.syrus.AMFICOM.Client.Resource.MapView.MapView.typ);
-		mv.name = name + "(copy)";
-
-		mv.description = description;
-		mv.domainId = domainId;
-		mv.mapId = mapId;
-		mv.schemeIds = new LinkedList();
-		for(Iterator it = schemes.iterator(); it.hasNext();)
-			mv.schemeIds.add(((Scheme )it.next()).getId());
-
-		mv.createdBy = dataSource.getSession().getUserId();
-		mv.modified = mv.created;
-		mv.modifiedBy = mv.createdBy;
-
-		mv.scale = scale;
-		mv.longitude = longitude;
-		mv.latitude = latitude;
-
-		mv.markers = new LinkedList();
-
-		Pool.put(MapView.typ, mv.getId(), mv);
-		
-		return mv;
-	}
-*/
-	/**
-	 * Восстановление локальных переменных класса при подгрузке из базы данных
-	 */
-	public void setLocalFromTransferable()
-	{
-		Environment.log(
-				Environment.LOG_LEVEL_FINER, 
-				"method call", 
-				getClass().getName(), 
-				"setLocalFromTransferable()");
-		int i;
-		int count;
-
-		id = transferable.id;
-		name = transferable.name;
-		domainId = transferable.domainId;
-		created = transferable.created;
-		modified = transferable.modified;
-		modifiedBy = transferable.modifiedBy;
-		createdBy = transferable.createdBy;
-
-		description = transferable.description;
-
-		scale = transferable.scale;
-		longitude = Double.parseDouble( transferable.longitude);
-		latitude = Double.parseDouble( transferable.latitude);
-
-		count = transferable.schemeIds.length;
-		schemeIds = new LinkedList();
-		for(i = 0; i < count; i++)
-			schemeIds.add(transferable.schemeIds[i]);
-	}
-
-	/**
-	 * Установка полей в transferable по значениям локальных переменных
-	 * для сохранения в базе данных
-	 */
-	public void setTransferableFromLocal()
-	{
-		Environment.log(
-				Environment.LOG_LEVEL_FINER, 
-				"method call", 
-				getClass().getName(), 
-				"setTransferableFromLocal()");
-		
-		transferable.id = id;
-		transferable.name = name;
-		transferable.domainId = domainId;
-		transferable.description = description;
-		transferable.modified = System.currentTimeMillis();
-		transferable.modifiedBy = modifiedBy;
-		transferable.createdBy = createdBy;
-
-		transferable.scale = scale;
-		transferable.longitude = String.valueOf(longitude);
-		transferable.latitude = String.valueOf(latitude);
-
-		schemeIds = new LinkedList();
-		
-		for(Iterator it = schemes.iterator(); it.hasNext();)
-		{
-			Scheme sch = (Scheme )it.next();
-			schemeIds.add(sch.getId());
-		}
-		transferable.schemeIds = (String [])schemeIds.toArray(new String[schemeIds.size()]);
-	}
-
-	/**
-	 * 
-	 */
-	public String getTyp()
-	{
-		return typ;
 	}
 
 	/**
@@ -271,12 +133,12 @@ public final class MapView extends StubResource implements Serializable
 	/**
 	 * геттер
 	 */
-	public String getId()
+	public Identifier getId()
 	{
 		return id;
 	}
 	
-	public void setId(String id)
+	public void setId(Identifier id)
 	{
 		this.id = id;
 	}
@@ -284,12 +146,12 @@ public final class MapView extends StubResource implements Serializable
 	/**
 	 * геттер
 	 */
-	public String getDomainId()
+	public Identifier getDomainId()
 	{
 		return domainId;
 	}
 	
-	public void setDomainId(String domainId)
+	public void setDomainId(Identifier domainId)
 	{
 		this.domainId = domainId;
 	}
@@ -310,8 +172,6 @@ public final class MapView extends StubResource implements Serializable
 	public void setMap(Map mc)
 	{
 		this.map = mc;
-		if(map != null)
-			mapId = mc.getId();
 	}
 	
 	public List getSchemes()
@@ -319,34 +179,6 @@ public final class MapView extends StubResource implements Serializable
 		return this.schemes;
 	}
 	
-	/**
-	 * Используется для обновления содержимого локальных переменных по 
-	 * значениям, полученным из transferable
-	 */
-	public void updateLocalFromTransferable()
-	{
-		Environment.log(
-				Environment.LOG_LEVEL_FINER, 
-				"method call", 
-				getClass().getName(), 
-				"updateLocalFromTransferable()");
-
-		map = (Map )Pool.get(Map.typ, mapId);
-		
-		schemes = new LinkedList();
-
-		for(Iterator it = schemeIds.iterator(); it.hasNext();)
-			addScheme((Scheme )Pool.get(Scheme.typ, (String )it.next()));
-	}
-
-	/**
-	 * получить объект для сохранения в базе данных
-	 */
-	public Object getTransferable()
-	{
-		return transferable;
-	}
-
 	private static final String PROPERTY_PANE_CLASS_NAME = 
 			"com.syrus.AMFICOM.Client.Map.Props.MapViewPanel";
 
@@ -487,24 +319,29 @@ public final class MapView extends StubResource implements Serializable
 
 	public void scanElement(SchemeElement schemeElement)
 	{
-		MapSiteNodeElement node = findElement(schemeElement);
+		SiteNode node = findElement(schemeElement);
 		if(node == null)
 		{
-			if(schemeElement.getLong() != 0.0D
-				|| schemeElement.getLat() != 0.0D)
+			if(schemeElement.equipmentImpl() != null)
 			{
-				placeElement(
-					schemeElement, 
-					new DoublePoint(
-						schemeElement.getLong(), 
-						schemeElement.getLat()));
+				Equipment equipment = schemeElement.equipmentImpl();
+				if(equipment.getLongitude() != 0.0D
+					|| equipment.getLatitude() != 0.0D)
+				{
+					placeElement(
+						schemeElement, 
+						new DoublePoint(
+							equipment.getLongitude(), 
+							equipment.getLatitude()));
+				}
 			}
 		}
 	}
 	
 	public void scanElements(Scheme scheme)
 	{
-		for(Iterator it = scheme.getTopologicalElements().iterator(); it.hasNext();)
+		
+		for(Iterator it = SchemeUtils.getTopologicalElements(scheme).iterator(); it.hasNext();)
 		{
 			SchemeElement element = (SchemeElement )it.next();
 			scanElement(element);
@@ -514,7 +351,7 @@ public final class MapView extends StubResource implements Serializable
 
 	public void scanCable(SchemeCableLink schemeCableLink)
 	{
-		MapSiteNodeElement[] mne = getSideNodes(schemeCableLink);
+		SiteNode[] mne = getSideNodes(schemeCableLink);
 		MapCablePathElement cp = findCablePath(schemeCableLink);
 		if(cp == null)
 		{
@@ -538,7 +375,7 @@ public final class MapView extends StubResource implements Serializable
 	
 	public void scanCables(Scheme scheme)
 	{
-		for(Iterator it = scheme.getTopologicalCableLinks().iterator(); it.hasNext();)
+		for(Iterator it = SchemeUtils.getTopologicalCableLinks(scheme).iterator(); it.hasNext();)
 		{
 			SchemeCableLink scl = (SchemeCableLink )it.next();
 			scanCable(scl);
@@ -548,7 +385,7 @@ public final class MapView extends StubResource implements Serializable
 
 	public void scanPath(SchemePath schemePath)
 	{
-		MapSiteNodeElement[] mne = getSideNodes(schemePath);
+		SiteNode[] mne = getSideNodes(schemePath);
 		MapMeasurementPathElement mp = findMeasurementPath(schemePath);
 		if(mp == null)
 		{
@@ -572,7 +409,7 @@ public final class MapView extends StubResource implements Serializable
 
 	public void scanPaths(Scheme scheme)
 	{
-		for(Iterator it = scheme.getTopologicalPaths().iterator(); it.hasNext();)
+		for(Iterator it = SchemeUtils.getTopologicalPaths(scheme).iterator(); it.hasNext();)
 		{
 			SchemePath path = (SchemePath )it.next();
 			scanPath(path);
@@ -581,7 +418,7 @@ public final class MapView extends StubResource implements Serializable
 
 	public void removePaths(Scheme scheme)
 	{
-		Collection schemePaths = scheme.getTopologicalPaths();
+		Collection schemePaths = SchemeUtils.getTopologicalPaths(scheme);
 		for(Iterator it = schemePaths.iterator(); it.hasNext();)
 		{
 			SchemePath path = (SchemePath )it.next();
@@ -595,7 +432,7 @@ public final class MapView extends StubResource implements Serializable
 
 	public void removeCables(Scheme scheme)
 	{
-		Collection schemeCables = scheme.getTopologicalCableLinks();
+		Collection schemeCables = SchemeUtils.getTopologicalCableLinks(scheme);
 		for(Iterator it = schemeCables.iterator(); it.hasNext();)
 		{
 			SchemeCableLink scl = (SchemeCableLink )it.next();
@@ -609,11 +446,11 @@ public final class MapView extends StubResource implements Serializable
 
 	public void removeElements(Scheme scheme)
 	{
-		Collection schemeElements = scheme.getTopologicalElements();
+		Collection schemeElements = SchemeUtils.getTopologicalElements(scheme);
 		for(Iterator it = schemeElements.iterator(); it.hasNext();)
 		{
 			SchemeElement se = (SchemeElement )it.next();
-			MapSiteNodeElement site = findElement(se);
+			SiteNode site = findElement(se);
 			if(site != null)
 			{
 				if(site instanceof MapUnboundNodeElement)
@@ -637,7 +474,7 @@ public final class MapView extends StubResource implements Serializable
 		cmd.execute();
 	}
 
-	public void unplaceElement(MapSiteNodeElement node, SchemeElement se)
+	public void unplaceElement(SiteNode node, SchemeElement se)
 	{
 		UnPlaceSchemeElementCommand cmd = new UnPlaceSchemeElementCommand(node, se);
 		cmd.setLogicalNetLayer(logicalNetLayer);
@@ -686,7 +523,7 @@ public final class MapView extends StubResource implements Serializable
 	 */
 	public void correctStartEndNodes(MapCablePathElement mcpe, SchemeCableLink scl)
 	{
-		MapSiteNodeElement[] mne = getSideNodes(scl);
+		SiteNode[] mne = getSideNodes(scl);
 		if(mne[0] != null && mne[1] != null)
 		{
 			mcpe.setStartNode(mne[0]);
@@ -698,7 +535,7 @@ public final class MapView extends StubResource implements Serializable
 	 * поле сделано статическим, чтобы каждый раз при вызове метода 
 	 * getSideNodes не создавался новый массив ссылок
 	 */
-	private static MapSiteNodeElement[] linkSideNodes = new MapSiteNodeElement[2];
+	private static SiteNode[] linkSideNodes = new SiteNode[2];
 	
 	/**
 	 * Возвращает массив из двух топологических элементов, в которых 
@@ -710,7 +547,7 @@ public final class MapView extends StubResource implements Serializable
 	 * 	linkSideNodes[0] - начальный узел
 	 *  linkSideNodes[1] - конечный узел
 	 */
-	public MapSiteNodeElement[] getSideNodes(SchemeCableLink scl)
+	public SiteNode[] getSideNodes(SchemeCableLink scl)
 	{
 		linkSideNodes[0] = null;
 		linkSideNodes[1] = null;
@@ -719,14 +556,18 @@ public final class MapView extends StubResource implements Serializable
 			for(Iterator it = getSchemes().iterator(); it.hasNext();)
 			{
 				Scheme sch = (Scheme )it.next();
-				if(sch.getTopologicalCableLinks().contains(scl))
+				if(SchemeUtils.getTopologicalCableLinks(sch).contains(scl))
 				{
-					SchemeElement se = sch.getTopologicalElement(
-							sch.getSchemeElementByCablePort(scl.sourcePortId));
+					SchemeElement se = 
+						SchemeUtils.getTopologicalElement(
+							sch,
+							SchemeUtils.getSchemeElementByDevice(sch, scl.sourceAbstractSchemePort().schemeDevice()));
 					linkSideNodes[0] = findElement(se);
 
-					SchemeElement se2 = sch.getTopologicalElement(
-							sch.getSchemeElementByCablePort(scl.targetPortId));
+					SchemeElement se2 = 
+						SchemeUtils.getTopologicalElement(
+							sch,
+							SchemeUtils.getSchemeElementByDevice(sch, scl.targetAbstractSchemePort().schemeDevice()));
 					linkSideNodes[1] = findElement(se2);
 					break;
 				}
@@ -740,7 +581,7 @@ public final class MapView extends StubResource implements Serializable
 		return linkSideNodes;
 	}
 	
-	public MapSiteNodeElement[] getSideNodes(SchemePath path)
+	public SiteNode[] getSideNodes(SchemePath path)
 	{
 		linkSideNodes[0] = null;
 		linkSideNodes[1] = null;
@@ -749,14 +590,16 @@ public final class MapView extends StubResource implements Serializable
 			for(Iterator it = getSchemes().iterator(); it.hasNext();)
 			{
 				Scheme sch = (Scheme )it.next();
-				if(sch.getTopologicalPaths().contains(path))
+				if(SchemeUtils.getTopologicalPaths(sch).contains(path))
 				{
-					SchemeElement se = sch.getTopologicalElement(
-							sch.getSchemeElementByDevice(path.startDeviceId));
+					SchemeElement se = SchemeUtils.getTopologicalElement(
+							sch,
+							path.startDevice());
 					linkSideNodes[0] = findElement(se);
 
-					SchemeElement se2 = sch.getTopologicalElement(
-							sch.getSchemeElementByDevice(path.endDeviceId));
+					SchemeElement se2 = SchemeUtils.getTopologicalElement(
+							sch,
+							path.endDevice());
 					linkSideNodes[1] = findElement(se2);
 					break;
 				}
@@ -776,18 +619,18 @@ public final class MapView extends StubResource implements Serializable
 	 * @return 
 	 * 	null если элемент не найден
 	 */
-	public MapSiteNodeElement findElement(SchemeElement se)
+	public SiteNode findElement(SchemeElement se)
 	{
-
-		for(Iterator it = getMap().getMapSiteNodeElements().iterator(); it.hasNext();)
+		if(se == null)
+			return null;
+		for(Iterator it = getMap().getSiteNodes().iterator(); it.hasNext();)
 		{
-			MapSiteNodeElement node = (MapSiteNodeElement )it.next();
+			SiteNode node = (SiteNode )it.next();
 			if(node instanceof MapUnboundNodeElement)
 				if(((MapUnboundNodeElement)node).getSchemeElement().equals(se))
 					return node;
-			if(se != null
-				&& se.siteId != null
-				&& se.siteId.equals(node.getId()))
+			if(se.siteNodeImpl() != null
+				&& se.siteNodeImpl().equals(node))
 						return node;
 		}
 		return null;
@@ -857,7 +700,7 @@ public final class MapView extends StubResource implements Serializable
 //		removedElements.add(ob);
 	}
 
-	public List getCablePaths(MapPhysicalLinkElement mple)
+	public List getCablePaths(PhysicalLink mple)
 	{
 		Environment.log(
 				Environment.LOG_LEVEL_FINER, 
@@ -875,7 +718,7 @@ public final class MapView extends StubResource implements Serializable
 		return returnVector;
 	}
 
-	public List getCablePaths(MapNodeElement mne)
+	public List getCablePaths(AbstractNode mne)
 	{
 		Environment.log(
 				Environment.LOG_LEVEL_FINER, 
@@ -894,7 +737,7 @@ public final class MapView extends StubResource implements Serializable
 		return returnVector;
 	}
 
-	public List getCablePaths(MapNodeLinkElement mnle)
+	public List getCablePaths(NodeLink mnle)
 	{
 		Environment.log(
 				Environment.LOG_LEVEL_FINER, 
@@ -969,7 +812,7 @@ public final class MapView extends StubResource implements Serializable
 		return returnVector;
 	}
 
-	public List getMeasurementPaths(MapPhysicalLinkElement mple)
+	public List getMeasurementPaths(PhysicalLink mple)
 	{
 		Environment.log(
 				Environment.LOG_LEVEL_FINER, 
@@ -994,7 +837,7 @@ public final class MapView extends StubResource implements Serializable
 		return returnVector;
 	}
 
-	public List getMeasurementPaths(MapNodeElement mne)
+	public List getMeasurementPaths(AbstractNode mne)
 	{
 		Environment.log(
 				Environment.LOG_LEVEL_FINER, 
@@ -1020,7 +863,7 @@ public final class MapView extends StubResource implements Serializable
 		return returnVector;
 	}
 
-	public List getMeasurementPaths(MapNodeLinkElement mnle)
+	public List getMeasurementPaths(NodeLink mnle)
 	{
 		Environment.log(
 				Environment.LOG_LEVEL_FINER, 
@@ -1063,7 +906,7 @@ public final class MapView extends StubResource implements Serializable
 					for(Iterator it = getMeasurementPaths().iterator(); it.hasNext();)
 					{
 						MapMeasurementPathElement mp = (MapMeasurementPathElement )it.next();
-						if(mp.getSchemePath().path.equals(tp))
+						if(mp.getSchemePath().pathImpl().equals(tp))
 						{
 							path = mp;
 							break;
@@ -1144,7 +987,7 @@ public final class MapView extends StubResource implements Serializable
 	/**
 	 * Получить маркер по ID
 	 */
-	public MapMarker getMarker(String markerID)
+	public MapMarker getMarker(Identifier markerID)
 	{
 		Environment.log(
 				Environment.LOG_LEVEL_FINER, 
@@ -1180,21 +1023,21 @@ public final class MapView extends StubResource implements Serializable
 		e = getCablePaths().iterator();
 		while (e.hasNext())
 		{
-			MapElement mapElement = (MapElement )e.next();
+			MapElement mapElement = (MapElement)e.next();
 			returnVector.add( mapElement);
 		}
 
 		e = getMeasurementPaths().iterator();
 		while (e.hasNext())
 		{
-			MapElement mapElement = (MapElement )e.next();
+			MapElement mapElement = (MapElement)e.next();
 			returnVector.add( mapElement);
 		}
 
 		e = markers.iterator();
 		while (e.hasNext())
 		{
-			MapElement mapElement = (MapElement )e.next();
+			MapElement mapElement = (MapElement)e.next();
 			returnVector.add( mapElement);
 		}
 
@@ -1215,7 +1058,7 @@ public final class MapView extends StubResource implements Serializable
 		Iterator e = getAllElements().iterator();
 		while ( e.hasNext())
 		{
-			MapElement mapElement = (MapElement )e.next();
+			MapElement mapElement = (MapElement)e.next();
 			mapElement.setSelected(false);
 		}
 		getMap().clearSelection();
@@ -1229,67 +1072,6 @@ public final class MapView extends StubResource implements Serializable
 	{
 		removeMarkers();
 	}
-
-	private void writeObject(java.io.ObjectOutputStream out) throws IOException
-	{
-		Environment.log(
-				Environment.LOG_LEVEL_FINER, 
-				"method call", 
-				getClass().getName(), 
-				"writeObject(out)");
-		
-		out.writeObject(id);
-		out.writeObject(name);
-		out.writeObject(description);
-		out.writeObject(domainId);
-		out.writeLong(created);
-		out.writeObject(createdBy);
-		out.writeLong(modified);
-		out.writeObject(modifiedBy);
-		out.writeObject(getMap().getId());
-
-		schemeIds = new LinkedList();
-		
-		for(Iterator it = schemes.iterator(); it.hasNext();)
-		{
-			Scheme sch = (Scheme )it.next();
-			schemeIds.add(sch.getId());
-		}
-
-		out.writeObject(schemeIds);
-		out.writeDouble(scale);
-		out.writeDouble(longitude);
-		out.writeDouble(latitude);
-	}
-
-	private void readObject(java.io.ObjectInputStream in)
-			throws IOException, ClassNotFoundException
-	{
-		Environment.log(
-				Environment.LOG_LEVEL_FINER, 
-				"method call", 
-				getClass().getName(), 
-				"readObject(in)");
-		
-		id = (String )in.readObject();
-		name = (String )in.readObject();
-		description = (String )in.readObject();
-		domainId = (String )in.readObject();
-		created = in.readLong();
-		createdBy = (String )in.readObject();
-		modified = in.readLong();
-		modifiedBy = (String )in.readObject();
-		mapId = (String )in.readObject();
-		schemeIds = (List )in.readObject();
-		scale = in.readDouble();
-		longitude = in.readDouble();
-		latitude = in.readDouble();
-
-		transferable = new MapView_Transferable();
-
-		updateLocalFromTransferable();
-	}
-
 	public void setDescription(String description)
 	{
 		this.description = description;
@@ -1301,7 +1083,7 @@ public final class MapView extends StubResource implements Serializable
 		return description;
 	}
 
-	public String getCreatedBy()
+	public Identifier getCreatedBy()
 	{
 		return createdBy;
 	}
@@ -1310,6 +1092,18 @@ public final class MapView extends StubResource implements Serializable
 	public long getCreated()
 	{
 		return created;
+	}
+
+
+	public void setChanged(boolean changed)
+	{
+		this.changed = changed;
+	}
+
+
+	public boolean isChanged()
+	{
+		return changed;
 	}
 
 /* from SiteNode
@@ -1366,5 +1160,40 @@ public final class MapView extends StubResource implements Serializable
 		return pe;//stub
 	}
 */	
+
+/*	public Object clone(DataSourceInterface dataSource)
+	{
+		Environment.log(
+				Environment.LOG_LEVEL_FINER, 
+				"method call", 
+				getClass().getName(), 
+				"clone(" + dataSource + ")");
+		
+		MapView mv = new MapView();
+		mv.id = dataSource.GetUId(com.syrus.AMFICOM.Client.Resource.MapView.MapView.typ);
+		mv.name = name + "(copy)";
+
+		mv.description = description;
+		mv.domainId = domainId;
+		mv.mapId = mapId;
+		mv.schemeIds = new LinkedList();
+		for(Iterator it = schemes.iterator(); it.hasNext();)
+			mv.schemeIds.add(((Scheme )it.next()).getId());
+
+		mv.createdBy = dataSource.getSession().getUserId();
+		mv.modified = mv.created;
+		mv.modifiedBy = mv.createdBy;
+
+		mv.scale = scale;
+		mv.longitude = longitude;
+		mv.latitude = latitude;
+
+		mv.markers = new LinkedList();
+
+		Pool.put(MapView.typ, mv.getId(), mv);
+		
+		return mv;
+	}
+*/
 
 }

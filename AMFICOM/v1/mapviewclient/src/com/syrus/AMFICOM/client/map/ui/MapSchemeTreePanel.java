@@ -16,10 +16,14 @@ import com.syrus.AMFICOM.Client.General.UI.UniTreePanel;
 import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapView;
 import com.syrus.AMFICOM.Client.Resource.Pool;
-import com.syrus.AMFICOM.Client.Resource.Scheme.Scheme;
-import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeCableLink;
-import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeElement;
-import com.syrus.AMFICOM.Client.Resource.Scheme.SchemePath;
+import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
+import com.syrus.AMFICOM.configuration.Domain;
+import com.syrus.AMFICOM.configuration.DomainCondition;
+import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.scheme.SchemeStorableObjectPool;
+import com.syrus.AMFICOM.scheme.corba.*;
 import com.syrus.AMFICOM.Client.Resource.SchemeDataSourceImage;
 import com.syrus.AMFICOM.client_.general.ui_.ObjectResourceTableModel;
 
@@ -300,12 +304,29 @@ public final class MapSchemeTreePanel extends JPanel
 				StatusMessageEvent.STATUS_MESSAGE,
 				LangModelMap.getString("MapOpening")));
 
-		new SchemeDataSourceImage(dataSource).LoadSchemes();
+		ObjectResourceChooserDialog mcd = new ObjectResourceChooserDialog(
+				SchemeController.getInstance(), 
+				ObjectEntities.SCHEME_ENTITY);
 
-		ObjectResourceChooserDialog mcd = new ObjectResourceChooserDialog(SchemeController.getInstance(), Scheme.typ);
-
-		List ss = Pool.getList(Scheme.typ);
-		mcd.setContents(ss);
+	
+		try
+		{
+			Identifier domainId = new Identifier(
+				aContext.getSessionInterface().getAccessIdentifier().domain_id);
+			Domain domain = (Domain )ConfigurationStorableObjectPool.getStorableObject(
+					domainId,
+					false);
+			DomainCondition condition = new DomainCondition(
+				domain,
+				ObjectEntities.SCHEME_ENTITY_CODE);
+			List ss = SchemeStorableObjectPool.getStorableObjectsByCondition(condition, true);
+			mcd.setContents(ss);
+		}
+		catch (ApplicationException e)
+		{
+			e.printStackTrace();
+			return;
+		}
 
 		// отфильтровываем по домену
 		ObjectResourceTableModel ortm = mcd.getTableModel();

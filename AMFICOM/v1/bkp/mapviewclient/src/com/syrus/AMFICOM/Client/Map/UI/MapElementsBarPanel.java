@@ -1,5 +1,5 @@
 /**
- * $Id: MapElementsBarPanel.java,v 1.4 2004/10/19 11:48:28 krupenn Exp $
+ * $Id: MapElementsBarPanel.java,v 1.5 2004/12/22 16:38:42 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -12,7 +12,7 @@
 package com.syrus.AMFICOM.Client.Map.UI;
 
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.Resource.Map.MapNodeProtoElement;
+import com.syrus.AMFICOM.map.SiteNodeType;
 
 import java.awt.FlowLayout;
 
@@ -25,7 +25,7 @@ import javax.swing.JPanel;
  * 
  * 
  * 
- * @version $Revision: 1.4 $, $Date: 2004/10/19 11:48:28 $
+ * @version $Revision: 1.5 $, $Date: 2004/12/22 16:38:42 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -60,7 +60,7 @@ public final class MapElementsBarPanel extends JPanel
 	public void setProtoElements()
 	{
 		MapElementLabel mel;
-		MapNodeProtoElement mpe;
+		SiteNodeType mpe;
 
 		this.removeAll();
 		
@@ -68,7 +68,7 @@ public final class MapElementsBarPanel extends JPanel
 		
 		for(Iterator it = elements.iterator(); it.hasNext();)
 		{
-			mpe = (MapNodeProtoElement )it.next();
+			mpe = (SiteNodeType)it.next();
 			mel = new MapElementLabel(mpe);
 			mel.setToolTipText( mpe.getName());
 			this.add(mel);

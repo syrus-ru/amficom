@@ -6,11 +6,11 @@ import com.syrus.AMFICOM.Client.General.Report.DividableTableColumnModel;
 import com.syrus.AMFICOM.Client.General.Report.DividableTableModel;
 import com.syrus.AMFICOM.Client.General.Report.ObjectsReport;
 import com.syrus.AMFICOM.Client.General.Report.ReportData;
-import com.syrus.AMFICOM.Client.Resource.Map.Map;
-import com.syrus.AMFICOM.Client.Resource.Map.MapNodeProtoElement;
-import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalLinkElement;
-import com.syrus.AMFICOM.Client.Resource.Map.MapPipePathElement;
-import com.syrus.AMFICOM.Client.Resource.Map.MapSiteNodeElement;
+import com.syrus.AMFICOM.map.Map;
+import com.syrus.AMFICOM.map.SiteNodeType;
+import com.syrus.AMFICOM.map.PhysicalLink;
+import com.syrus.AMFICOM.map.Collector;
+import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.Client.Resource.Scheme.CableChannelingItem;
 import com.syrus.AMFICOM.Client.Resource.Scheme.Scheme;
@@ -110,15 +110,15 @@ class CableLayoutReportTableModel extends DividableTableModel
       {
         String tunnelInfo = "";
         
-        MapPhysicalLinkElement physicalLink = (MapPhysicalLinkElement) Pool.get(
-          MapPhysicalLinkElement.typ,
+        PhysicalLink physicalLink = (PhysicalLink) Pool.get(
+          PhysicalLink.typ,
           chanellingItem.physicalLinkId);
           
         if (physicalLink == null)
           throw new CreateReportException(report.getName(),CreateReportException.poolObjNotExists);
         
         //Тип и имя тоннеля
-        MapPipePathElement pipePath =  map.getCollector(physicalLink);
+        Collector pipePath =  map.getCollector(physicalLink);
         if (pipePath != null)
           tunnelInfo += LangModelMap.getString("Collector") + pipePath.getName();
         else
@@ -156,12 +156,12 @@ class CableLayoutReportTableModel extends DividableTableModel
 
   private String getSiteFullName(Map map,String id)
   {
-      MapSiteNodeElement siteNode = map.getMapSiteNodeElement(id);
+      SiteNode siteNode = map.getMapSiteNodeElement(id);
       if (siteNode == null)
         return null;
         
-      MapNodeProtoElement nodeProto = (MapNodeProtoElement) Pool.get(
-        MapNodeProtoElement.typ,
+      SiteNodeType nodeProto = (SiteNodeType) Pool.get(
+        SiteNodeType.typ,
         siteNode.getMapProtoId());
         
       if (nodeProto == null)

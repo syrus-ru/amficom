@@ -1,5 +1,5 @@
 /**
- * $Id: MapViewOpenCommand.java,v 1.6 2004/10/26 13:32:01 krupenn Exp $
+ * $Id: MapViewOpenCommand.java,v 1.7 2004/12/22 16:38:40 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -17,11 +17,19 @@ import com.syrus.AMFICOM.Client.General.Event.StatusMessageEvent;
 import com.syrus.AMFICOM.Client.General.Lang.LangModel;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.UI.ObjectResourceChooserDialog;
+import com.syrus.AMFICOM.client_.general.ui_.ObjectResourceChooserDialog;
 import com.syrus.AMFICOM.Client.Map.UI.MapFrame;
 import com.syrus.AMFICOM.Client.Map.UI.MapViewController;
 import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
-import com.syrus.AMFICOM.Client.Resource.Map.Map;
+import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
+import com.syrus.AMFICOM.configuration.Domain;
+import com.syrus.AMFICOM.configuration.DomainCondition;
+import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.CommunicationException;
+import com.syrus.AMFICOM.general.DatabaseException;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.Client.Resource.MapDataSourceImage;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapView;
 import com.syrus.AMFICOM.Client.Resource.MapViewDataSourceImage;
@@ -29,6 +37,7 @@ import com.syrus.AMFICOM.Client.Resource.ObjectResource;
 import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.client_.general.ui_.ObjectResourceTableModel;
 
+import com.syrus.AMFICOM.map.MapStorableObjectPool;
 import java.util.List;
 
 import javax.swing.JDesktopPane;
@@ -38,7 +47,7 @@ import javax.swing.JDesktopPane;
  * 
  * 
  * 
- * @version $Revision: 1.6 $, $Date: 2004/10/26 13:32:01 $
+ * @version $Revision: 1.7 $, $Date: 2004/12/22 16:38:40 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -49,7 +58,7 @@ public class MapViewOpenCommand extends VoidCommand
 	ApplicationContext aContext;
 	JDesktopPane desktop;
 
-	protected ObjectResource retObj;
+	protected Object retObj;
 
 	protected boolean canDelete = false;
 
@@ -69,7 +78,7 @@ public class MapViewOpenCommand extends VoidCommand
 		this.canDelete = flag;
 	}
 	
-	public ObjectResource getReturnObject()
+	public Object getReturnObject()
 	{
 		return this.retObj;
 	}
@@ -85,13 +94,38 @@ public class MapViewOpenCommand extends VoidCommand
 				StatusMessageEvent.STATUS_MESSAGE,
 				LangModelMap.getString("MapOpening")));
 
-		new MapDataSourceImage(dataSource).loadMaps();
-		new MapViewDataSourceImage(dataSource).loadMapViews();
+		List mvs;
+		try
+		{
+			Domain domain = (Domain )ConfigurationStorableObjectPool.getStorableObject(
+				new Identifier(
+					aContext.getSessionInterface().getAccessIdentifier().domain_id), 
+				false);
 
-		ObjectResourceChooserDialog mcd = new ObjectResourceChooserDialog(MapViewController.getInstance(), MapView.typ);
+			DomainCondition condition = new DomainCondition(
+					domain,
+					ObjectEntities.MAP_ENTITY_CODE);// ObjectEntities.MAP_VIEW_ENTITY_CODE
+			mvs = MapStorableObjectPool.getStorableObjectsByCondition(condition, true);
+		}
+		catch (CommunicationException e)
+		{
+			e.printStackTrace();
+			return;
+		}
+		catch (DatabaseException e)
+		{
+			e.printStackTrace();
+			return;
+		}
+		catch (ApplicationException e)
+		{
+			e.printStackTrace();
+			return;
+		}
+
+		ObjectResourceChooserDialog mcd = new ObjectResourceChooserDialog(MapViewController.getInstance(), ObjectEntities.MAP_ENTITY);//ObjectEntities.MAP_VIEW_ENTITY
 		mcd.setCanDelete(canDelete);
 
-		List mvs = Pool.getList(MapView.typ);
 		mcd.setContents(mvs);
 
 		// отфильтровываем по домену
@@ -123,12 +157,8 @@ public class MapViewOpenCommand extends VoidCommand
 			else
 			{
 				MapView mapView = mapFrame.getMapView();
-				if(mapView != null)
-					Pool.remove(MapView.typ, mapView.getId());
 		
 				Map map = mapView.getMap();
-				if(map != null)
-					Pool.remove(Map.typ, map.getId());
 		
 				mapFrame.setMapView((MapView)mcd.getReturnObject());
 				setResult(Command.RESULT_OK);

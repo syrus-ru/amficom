@@ -1,5 +1,5 @@
 /**
- * $Id: MapUnboundNodeElementStrategy.java,v 1.7 2004/12/07 17:05:54 krupenn Exp $
+ * $Id: MapUnboundNodeElementStrategy.java,v 1.8 2004/12/22 16:38:42 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -19,8 +19,8 @@ import com.syrus.AMFICOM.Client.Map.Command.Action.BindUnboundNodeToSiteCommandB
 import com.syrus.AMFICOM.Client.Map.Command.Action.MoveSelectionCommandBundle;
 import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
 import com.syrus.AMFICOM.Client.Map.MapState;
-import com.syrus.AMFICOM.Client.Resource.Map.MapElement;
-import com.syrus.AMFICOM.Client.Resource.Map.MapSiteNodeElement;
+import com.syrus.AMFICOM.map.MapElement;
+import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.Client.Resource.Map.SiteNodeController;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapSelection;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapUnboundNodeElement;
@@ -31,13 +31,14 @@ import java.awt.event.MouseEvent;
 import java.util.Iterator;
 
 import javax.swing.SwingUtilities;
+import com.syrus.AMFICOM.map.Map;
 
 /**
  * Стратегия управления узлом
  * 
  * 
  * 
- * @version $Revision: 1.7 $, $Date: 2004/12/07 17:05:54 $
+ * @version $Revision: 1.8 $, $Date: 2004/12/22 16:38:42 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -132,9 +133,9 @@ public final class MapUnboundNodeElementStrategy implements  MapStrategy
 
 				unbound.setCanBind(false);
 				
-				for(Iterator it = logicalNetLayer.getMapView().getMap().getMapSiteNodeElements().iterator(); it.hasNext();)
+				for(Iterator it = logicalNetLayer.getMapView().getMap().getSiteNodes().iterator(); it.hasNext();)
 				{
-					MapSiteNodeElement sit = (MapSiteNodeElement )it.next();
+					SiteNode sit = (SiteNode)it.next();
 					SiteNodeController snc = (SiteNodeController )logicalNetLayer.getMapViewController().getController(sit);
 					if(!(sit instanceof MapUnboundNodeElement))
 						if(snc.isMouseOnElement(sit, point))
@@ -163,9 +164,9 @@ public final class MapUnboundNodeElementStrategy implements  MapStrategy
 					
 					if(unbound.getCanBind())
 					{
-						for(Iterator it = logicalNetLayer.getMapView().getMap().getMapSiteNodeElements().iterator(); it.hasNext();)
+						for(Iterator it = logicalNetLayer.getMapView().getMap().getSiteNodes().iterator(); it.hasNext();)
 						{
-							MapSiteNodeElement site = (MapSiteNodeElement )it.next();
+							SiteNode site = (SiteNode)it.next();
 							SiteNodeController snc = (SiteNodeController )logicalNetLayer.getMapViewController().getController(site);
 							if(!(site instanceof MapUnboundNodeElement))
 								if(snc.isMouseOnElement(site, point))

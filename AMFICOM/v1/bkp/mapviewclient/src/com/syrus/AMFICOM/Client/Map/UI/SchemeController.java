@@ -7,10 +7,11 @@
 package com.syrus.AMFICOM.Client.Map.UI;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
-import com.syrus.AMFICOM.Client.Resource.Object.Domain;
-import com.syrus.AMFICOM.Client.Resource.Object.User;
 import com.syrus.AMFICOM.Client.Resource.Pool;
-import com.syrus.AMFICOM.Client.Resource.Scheme.Scheme;
+import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
+import com.syrus.AMFICOM.configuration.User;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.scheme.corba.Scheme;
 import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
 
 import java.text.SimpleDateFormat;
@@ -73,27 +74,35 @@ public final class SchemeController implements ObjectResourceController
 		Scheme sc = (Scheme )object;
 		if (key.equals(KEY_NAME))
 		{
-			result = sc.getName();
+			result = sc.name();
 		}
 		else
 		if (key.equals(KEY_DOMAIN))
 		{
-			result = Pool.getName(Domain.typ, sc.getDomainId());
+			result = sc.domainImpl();
 		}
 		else
 		if (key.equals(KEY_USER))
 		{
-			result = Pool.getName(User.typ, sc.createdBy);
+			try
+			{
+				Identifier id = new Identifier(sc.creatorId().getTransferable());
+				result = (User )ConfigurationStorableObjectPool.getStorableObject(id, false);
+			}
+			catch (Exception e)
+			{
+				e.printStackTrace();
+			}
 		}
 		else
 		if (key.equals(KEY_CREATED))
 		{
-			result = sdf.format(new Date(sc.created));
+			result = sdf.format(new Date(sc.created()));
 		}
 		else
 		if (key.equals(KEY_MODIFIED))
 		{
-			result = sdf.format(new Date(sc.getModified()));
+			result = sdf.format(new Date(sc.modified()));
 		}
 		return result;
 	}

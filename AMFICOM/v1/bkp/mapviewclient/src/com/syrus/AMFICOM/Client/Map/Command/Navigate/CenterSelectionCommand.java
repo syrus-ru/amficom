@@ -1,5 +1,5 @@
 /**
- * $Id: CenterSelectionCommand.java,v 1.6 2004/12/07 17:05:54 krupenn Exp $
+ * $Id: CenterSelectionCommand.java,v 1.7 2004/12/22 16:38:40 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -14,12 +14,13 @@ package com.syrus.AMFICOM.Client.Map.Command.Navigate;
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationModel;
 import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
-import com.syrus.AMFICOM.Client.Resource.Map.DoublePoint;
-import com.syrus.AMFICOM.Client.Resource.Map.MapElement;
+import com.syrus.AMFICOM.map.DoublePoint;
+import com.syrus.AMFICOM.map.MapElement;
 
 import java.awt.geom.Point2D;
 
 import java.util.Iterator;
+import com.syrus.AMFICOM.map.Map;
 
 /**
  * ÷ентрировать геометрическое место точек, €вл€ющих собой центры 
@@ -27,7 +28,7 @@ import java.util.Iterator;
  * 
  * 
  * 
- * @version $Revision: 1.6 $, $Date: 2004/12/07 17:05:54 $
+ * @version $Revision: 1.7 $, $Date: 2004/12/22 16:38:40 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -67,7 +68,7 @@ public class CenterSelectionCommand extends VoidCommand
 
 		for(Iterator it = logicalNetLayer.getMapView().getMap().getNodes().iterator(); it.hasNext();)
 		{
-			me = (MapElement )it.next();
+			me = (MapElement)it.next();
 			if(me.isSelected())
 			{
 				DoublePoint an = me.getLocation();
@@ -79,7 +80,7 @@ public class CenterSelectionCommand extends VoidCommand
 
 		for(Iterator it = logicalNetLayer.getMapView().getMarkers().iterator(); it.hasNext();)
 		{
-			me = (MapElement )it.next();
+			me = (MapElement)it.next();
 			if(me.isSelected())
 			{
 				DoublePoint an = me.getLocation();
@@ -91,7 +92,7 @@ public class CenterSelectionCommand extends VoidCommand
 
 		for(Iterator it = logicalNetLayer.getMapView().getMap().getNodeLinks().iterator(); it.hasNext();)
 		{
-			me = (MapElement )it.next();
+			me = (MapElement)it.next();
 			if(me.isSelected())
 			{
 				DoublePoint an = me.getLocation();
@@ -103,7 +104,7 @@ public class CenterSelectionCommand extends VoidCommand
 
 		for(Iterator it = logicalNetLayer.getMapView().getMap().getPhysicalLinks().iterator(); it.hasNext();)
 		{
-			me = (MapElement )it.next();
+			me = (MapElement)it.next();
 			if(me.isSelected())
 			{
 				DoublePoint an = me.getLocation();
@@ -115,7 +116,7 @@ public class CenterSelectionCommand extends VoidCommand
 
 		for(Iterator it = logicalNetLayer.getMapView().getCablePaths().iterator(); it.hasNext();)
 		{
-			me = (MapElement )it.next();
+			me = (MapElement)it.next();
 			if(me.isSelected())
 			{
 				DoublePoint an = me.getLocation();
@@ -127,7 +128,7 @@ public class CenterSelectionCommand extends VoidCommand
 
 		for(Iterator it = logicalNetLayer.getMapView().getMeasurementPaths().iterator(); it.hasNext();)
 		{
-			me = (MapElement )it.next();
+			me = (MapElement)it.next();
 			if(me.isSelected())
 			{
 				DoublePoint an = me.getLocation();

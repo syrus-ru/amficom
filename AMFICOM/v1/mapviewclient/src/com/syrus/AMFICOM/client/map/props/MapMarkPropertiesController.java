@@ -8,8 +8,8 @@ package com.syrus.AMFICOM.Client.Map.Props;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
-import com.syrus.AMFICOM.Client.Resource.Map.DoublePoint;
-import com.syrus.AMFICOM.Client.Resource.Map.MapMarkElement;
+import com.syrus.AMFICOM.map.DoublePoint;
+import com.syrus.AMFICOM.map.Mark;
 import com.syrus.AMFICOM.Client.Resource.MiscUtil;
 
 import java.awt.geom.Point2D;
@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import com.syrus.AMFICOM.map.PhysicalLink;
 
 public final class MapMarkPropertiesController 
 		implements MapElementPropertiesController 
@@ -66,7 +67,7 @@ public final class MapMarkPropertiesController
 	public Object getValue(final Object object, final String key)
 	{
 		Object result = null;
-		MapMarkElement mark = (MapMarkElement )object;
+		Mark mark = (Mark)object;
 
 		if (key.equals(PROPERTY_NAME))
 		{
@@ -86,7 +87,7 @@ public final class MapMarkPropertiesController
 		if (key.equals(PROPERTY_PHYSICAL_LINK_ID))
 		{
 			// remove .getName()
-			result = mark.getLink().getName();
+			result = mark.getPhysicalLink().getName();
 		}
 
 		return result;
@@ -101,7 +102,7 @@ public final class MapMarkPropertiesController
 
 	public void setValue(Object object, final String key, final Object value)
 	{
-		MapMarkElement node = (MapMarkElement )object;
+		Mark node = (Mark)object;
 
 		if (key.equals(PROPERTY_NAME))
 		{

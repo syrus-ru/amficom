@@ -4,24 +4,21 @@ import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.Scheme.UgoPanel;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourceListBox;
-import com.syrus.AMFICOM.Client.General.UI.ObjectResourcePropertiesPane;
+import com.syrus.AMFICOM.client_.general.ui_.ObjectResourcePropertiesPane;
 import com.syrus.AMFICOM.Client.General.UI.ReusedGridBagConstraints;
 import com.syrus.AMFICOM.Client.Map.Command.Action.CreateUnboundLinkCommandBundle;
 import com.syrus.AMFICOM.Client.Map.Command.Action.RemoveUnboundLinkCommandBundle;
 import com.syrus.AMFICOM.Client.Map.Command.Action.UnPlaceSchemeCableLinkCommand;
 import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
-import com.syrus.AMFICOM.Client.Resource.Map.MapNodeElement;
-import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalLinkElement;
-import com.syrus.AMFICOM.Client.Resource.Map.MapSiteNodeElement;
+import com.syrus.AMFICOM.map.AbstractNode;
+import com.syrus.AMFICOM.map.PhysicalLink;
+import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapCablePathElement;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapUnboundLinkElement;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapView;
-import com.syrus.AMFICOM.Client.Resource.ObjectResource;
 import com.syrus.AMFICOM.Client.Resource.Pool;
-import com.syrus.AMFICOM.Client.Resource.Scheme.CableChannelingItem;
-import com.syrus.AMFICOM.Client.Resource.Scheme.Scheme;
-import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeCableLink;
-import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeElement;
+import com.syrus.AMFICOM.scheme.SchemeUtils;
+import com.syrus.AMFICOM.scheme.corba.*;
 
 import java.awt.Component;
 import java.awt.GridBagConstraints;
@@ -48,6 +45,8 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreeSelectionModel;
+import com.syrus.AMFICOM.map.Map;
+import com.syrus.AMFICOM.map.PhysicalLinkBinding;
 
 public final class MapSiteBindPanel 
 		extends JPanel 
@@ -55,7 +54,7 @@ public final class MapSiteBindPanel
 {
 	private GridBagLayout gridBagLayout1 = new GridBagLayout();
 
-	private MapSiteNodeElement site;
+	private SiteNode site;
 
 	private LogicalNetLayer lnl;
 
@@ -127,7 +126,7 @@ public final class MapSiteBindPanel
 			{
 				public void actionPerformed(ActionEvent e)
 				{
-//					ObjectResource or = elementsList.getSelectedObjectResource();
+//					Object or = elementsList.getSelectedObjectResource();
 //					bind(or);
 				}
 			});
@@ -162,7 +161,7 @@ public final class MapSiteBindPanel
 		crossingScrollPane.setVisible(true);
 	}
 
-	public ObjectResource getObjectResource()
+	public Object getObject()
 	{
 		return null;
 	}
@@ -171,7 +170,7 @@ public final class MapSiteBindPanel
 	{
 		MapView mapView = getLogicalNetLayer().getMapView();
 
-		se.siteId = "";
+		se.siteNodeImpl(null);
 		for (int i = 0; i < elementsBranch.getChildCount(); i++) 
 		{
 			DefaultMutableTreeNode node = (DefaultMutableTreeNode )elementsBranch.getChildAt(i);
@@ -218,12 +217,12 @@ public final class MapSiteBindPanel
 		List pathLinks = cablePath.getLinks();
 		List siteLinks = mapView.getMap().getPhysicalLinksAt(site);
 
-		MapPhysicalLinkElement linkRight = null;
-		MapPhysicalLinkElement linkLeft = null;
+		PhysicalLink linkRight = null;
+		PhysicalLink linkLeft = null;
 
 		for(Iterator it = pathLinks.iterator(); it.hasNext();)
 		{
-			MapPhysicalLinkElement mple = (MapPhysicalLinkElement )it.next();
+			PhysicalLink mple = (PhysicalLink)it.next();
 			if(siteLinks.contains(mple))
 			{
 				if(linkLeft == null)
@@ -304,7 +303,7 @@ public final class MapSiteBindPanel
 			if(element instanceof SchemeElement)
 			{
 				SchemeElement se = (SchemeElement )element;
-				schemePanel.getGraph().setSchemeElement(se);
+//				schemePanel.getGraph().setSchemeElement(se);
 				crossingScrollPane.setVisible(false);
 				schemePanel.setVisible(true);
 				sen = true;
@@ -321,7 +320,7 @@ public final class MapSiteBindPanel
 
 				crossingPanel.setCable(mapView.findCablePath(scl));
 
-				MapNodeElement mne[] = mapView.getSideNodes(scl);
+				AbstractNode mne[] = mapView.getSideNodes(scl);
 				sen = !(mne[0].equals(site)) && !(mne[1].equals(site));
 			}
 			else
@@ -340,9 +339,9 @@ public final class MapSiteBindPanel
 		unbindButton.setEnabled(sen);
 	}
 
-	public void setObjectResource(ObjectResource objectResource)
+	public void setObject(Object objectResource)
 	{
-		site = (MapSiteNodeElement )objectResource;
+		site = (SiteNode)objectResource;
 		createTree(site);
 		schemePanel.getGraph().removeAll();
 		crossingPanel.setSite(site);
@@ -420,7 +419,7 @@ public final class MapSiteBindPanel
 		root.add(cablesBranch);
 	}
 
-	private DefaultMutableTreeNode createTree(MapSiteNodeElement site)
+	private DefaultMutableTreeNode createTree(SiteNode site)
 	{
 		this.
 		elementsBranch.removeAllChildren();
@@ -436,7 +435,7 @@ public final class MapSiteBindPanel
 			for(Iterator it = mapView.getSchemes().iterator(); it.hasNext();)
 			{
 				Scheme scheme = (Scheme )it.next();
-				schemeElements.addAll(scheme.getTopLevelElements());
+				schemeElements.addAll(SchemeUtils.getTopLevelElements(scheme));
 			}
 			List cableElementsTransit = mapView.getCablePaths(site);
 			List cableElementsDropped = new LinkedList();
@@ -456,7 +455,7 @@ public final class MapSiteBindPanel
 				for(Iterator it = schemeElements.iterator(); it.hasNext();)
 				{
 					SchemeElement se = (SchemeElement )it.next();
-					if(se.siteId.equals(site.getId()))
+					if(se.siteNodeImpl().equals(site.getId()))
 					{
 						elementNode = new DefaultMutableTreeNode(se);
 						elementsBranch.add(elementNode);
@@ -489,7 +488,7 @@ public final class MapSiteBindPanel
 	
 	private boolean startsAt(SchemeCableLink scl, SchemeElement se)
 	{
-		return se.getCablePort(scl.sourcePortId) != null
-			|| se.getCablePort(scl.targetPortId) != null;
+		return SchemeUtils.getCablePorts(se).contains(scl.sourceSchemeCablePort())
+			|| SchemeUtils.getCablePorts(se).contains(scl.targetSchemeCablePort());
 	}
 }

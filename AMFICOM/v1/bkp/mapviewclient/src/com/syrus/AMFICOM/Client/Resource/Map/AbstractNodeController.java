@@ -1,5 +1,5 @@
 /**
- * $Id: AbstractNodeController.java,v 1.2 2004/12/08 16:20:22 krupenn Exp $
+ * $Id: AbstractNodeController.java,v 1.3 2004/12/22 16:38:42 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -25,13 +25,16 @@ import java.awt.Rectangle;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.util.HashMap;
+import com.syrus.AMFICOM.map.AbstractNode;
+import com.syrus.AMFICOM.map.MapElement;
+import com.syrus.AMFICOM.map.DoublePoint;
 
 /**
  * элемент карты - узел 
  * 
  * 
  * 
- * @version $Revision: 1.2 $, $Date: 2004/12/08 16:20:22 $
+ * @version $Revision: 1.3 $, $Date: 2004/12/22 16:38:42 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -89,9 +92,9 @@ public abstract class AbstractNodeController implements MapElementController
 	 */
 	public void updateScaleCoefficient(MapElement me)
 	{
-		if(!(me instanceof MapNodeElement))
+		if(!(me instanceof AbstractNode))
 			return;
-		MapNodeElement node = (MapNodeElement )me;
+		AbstractNode node = (AbstractNode)me;
 
 		double scaleCoefficient = getLogicalNetLayer().getDefaultScale() 
 				/ getLogicalNetLayer().getCurrentScale();
@@ -118,7 +121,7 @@ public abstract class AbstractNodeController implements MapElementController
 	/**
 	 * получить границы элемента
 	 */
-	public Rectangle getBounds(MapNodeElement node)
+	public Rectangle getBounds(AbstractNode node)
 	{
 		Rectangle rect = (Rectangle )boundsContainer.get(node);
 		if(rect == null)
@@ -132,7 +135,7 @@ public abstract class AbstractNodeController implements MapElementController
 	/**
 	 * установить границы элемента
 	 */
-	public void setBounds(MapNodeElement node, Rectangle rect)
+	public void setBounds(AbstractNode node, Rectangle rect)
 	{
 		boundsContainer.put(node, rect);
 	}
@@ -140,30 +143,30 @@ public abstract class AbstractNodeController implements MapElementController
 	/**
 	 * получить пиктограмму элемента
 	 */
-	public Image getImage(MapNodeElement node)
+	public Image getImage(AbstractNode node)
 	{
 		return MapPropertiesManager.getScaledImage(node.getImageId());
 	}
 	
-	public Image getAlarmedImage(MapNodeElement node)
+	public Image getAlarmedImage(AbstractNode node)
 	{
 		return getImage(node);
 	}
 
 	public boolean isElementVisible(MapElement me, Rectangle2D.Double visibleBounds)
 	{
-		if(!(me instanceof MapNodeElement))
+		if(!(me instanceof AbstractNode))
 			return false;
-		MapNodeElement node = (MapNodeElement )me;
+		AbstractNode node = (AbstractNode)me;
 		anchorContainer.setLocation(node.getLocation().getX(), node.getLocation().getY());
 		return visibleBounds.contains(anchorContainer);
 	}
 
 	public void paint (MapElement me, Graphics g, Rectangle2D.Double visibleBounds)
 	{
-		if(!(me instanceof MapNodeElement))
+		if(!(me instanceof AbstractNode))
 			return;
-		MapNodeElement node = (MapNodeElement )me;
+		AbstractNode node = (AbstractNode)me;
 
 		if(!isElementVisible(node, visibleBounds))
 			return;
@@ -220,10 +223,10 @@ public abstract class AbstractNodeController implements MapElementController
 
 	public boolean isMouseOnElement(MapElement me, Point currentMousePoint)
 	{
-		if(!(me instanceof MapNodeElement))
+		if(!(me instanceof AbstractNode))
 			return false;
 
-		MapNodeElement node = (MapNodeElement )me;
+		AbstractNode node = (AbstractNode)me;
 
 		MapCoordinatesConverter converter = getLogicalNetLayer();
 		
@@ -245,10 +248,10 @@ public abstract class AbstractNodeController implements MapElementController
 
 	public String getToolTipText(MapElement me)
 	{
-		if(!(me instanceof MapNodeElement))
+		if(!(me instanceof AbstractNode))
 			return null;
 
-		MapNodeElement node = (MapNodeElement )me;
+		AbstractNode node = (AbstractNode)me;
 
 		String s1 = node.getName();
 

@@ -3,15 +3,7 @@ package com.syrus.AMFICOM.Client.Resource;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.General.SessionInterface;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapView;
-import com.syrus.AMFICOM.Client.Resource.Scheme.PathElement;
-import com.syrus.AMFICOM.Client.Resource.Scheme.Scheme;
-import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeCableLink;
-import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeCablePort;
-import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeDevice;
-import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeElement;
-import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeLink;
-import com.syrus.AMFICOM.Client.Resource.Scheme.SchemePath;
-import com.syrus.AMFICOM.Client.Resource.Scheme.SchemePort;
+import com.syrus.AMFICOM.scheme.corba.*;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -36,7 +28,7 @@ public class EmptyMapViewDataSource
 	{
 		super(si);
 	}
-
+/*
 	public void LoadSchemes(Vector ids)
 	{
 		LoadSchemes();
@@ -632,5 +624,5 @@ public class EmptyMapViewDataSource
 		{
 		}
 	}
-
+*/
 }

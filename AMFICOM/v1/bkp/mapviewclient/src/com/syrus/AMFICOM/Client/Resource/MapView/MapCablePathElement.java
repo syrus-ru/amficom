@@ -1,5 +1,5 @@
 /**
- * $Id: MapCablePathElement.java,v 1.20 2004/12/08 16:20:22 krupenn Exp $
+ * $Id: MapCablePathElement.java,v 1.21 2004/12/22 16:38:42 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -11,43 +11,70 @@
 
 package com.syrus.AMFICOM.Client.Resource.MapView;
 
-import com.syrus.AMFICOM.Client.Resource.Map.IntPoint;
-import com.syrus.AMFICOM.Client.Resource.Map.MapLinkElement;
-import com.syrus.AMFICOM.Client.Resource.Map.MapNodeElement;
-import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalLinkElement;
-import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalNodeElement;
-import com.syrus.AMFICOM.Client.Resource.Map.MapSiteNodeElement;
+import com.syrus.AMFICOM.configuration.Characteristic;
+import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IdentifierGenerationException;
+import com.syrus.AMFICOM.general.IllegalObjectEntityException;
+import com.syrus.AMFICOM.general.LocalIdentifierGenerator;
+import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.map.DoublePoint;
+import com.syrus.AMFICOM.map.IntPoint;
+import com.syrus.AMFICOM.map.MapElement;
+import com.syrus.AMFICOM.map.AbstractNode;
+import com.syrus.AMFICOM.map.MapElementState;
+import com.syrus.AMFICOM.map.PhysicalLink;
+import com.syrus.AMFICOM.map.TopologicalNode;
+import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.Client.Resource.Pool;
-import com.syrus.AMFICOM.Client.Resource.Scheme.CableChannelingItem;
-import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeCableLink;
+import com.syrus.AMFICOM.scheme.corba.CableChannelingItem;
+import com.syrus.AMFICOM.scheme.corba.SchemeCableLink;
 
 import java.io.IOException;
 import java.io.Serializable;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
+import com.syrus.AMFICOM.map.Map;
 
 /**
  * элемент пути 
  * 
  * 
  * 
- * @version $Revision: 1.20 $, $Date: 2004/12/08 16:20:22 $
+ * @version $Revision: 1.21 $, $Date: 2004/12/22 16:38:42 $
  * @module
  * @author $Author: krupenn $
  * @see
  */
-public class MapCablePathElement extends MapLinkElement implements Serializable
+public class MapCablePathElement implements MapElement
 {
 	private static final long serialVersionUID = 02L;
 
-	/**
-	 * @deprecated
-	 */	
-	public static final String typ = "mapcablepathelement";
+	protected Identifier id;
+
+	protected String	name;
+
+	protected String	description;
+
+	protected List		characteristics;
+
+
+	protected transient boolean selected = false;
+
+	protected transient boolean alarmState = false;
+
+	protected transient boolean removed = false;
+
+	protected transient Map map = null;
+
+	private AbstractNode					startNode;
+	private AbstractNode					endNode;
+
 
 	protected List sortedNodes = new LinkedList();
 	protected List sortedNodeLinks = new LinkedList();
@@ -75,29 +102,190 @@ public class MapCablePathElement extends MapLinkElement implements Serializable
 
 	public MapCablePathElement(
 			SchemeCableLink schemeCableLink,
-			String id, 
-			MapNodeElement stNode, 
-			MapNodeElement eNode, 
+			Identifier id, 
+			AbstractNode stNode, 
+			AbstractNode eNode, 
 			MapView mapView)
 	{
 		this.mapView = mapView;
 
 		this.setId(id);
-		this.setName(schemeCableLink.getName());
+		this.setName(schemeCableLink.name());
 		if(mapView != null)
 		{
-			mapViewId = mapView.getId();
 			map = mapView.getMap();
-			if(map != null)
-				mapId = map.getId();
 		}
 		this.setStartNode(stNode);
 		this.setEndNode(eNode);
-		attributes = new HashMap();
+		this.characteristics = new LinkedList();
 		
 		binding = new MapCablePathBinding(this);
 
 		setSchemeCableLink(schemeCableLink);
+	}
+
+	public static MapCablePathElement createInstance(
+			SchemeCableLink schemeCableLink,
+			AbstractNode stNode, 
+			AbstractNode eNode, 
+			MapView mapView)
+		throws CreateObjectException 
+	{
+		if (stNode == null || mapView == null || eNode == null || schemeCableLink == null)
+			throw new IllegalArgumentException("Argument is 'null'");
+		
+		try
+		{
+			Identifier ide =
+				LocalIdentifierGenerator.generateIdentifier(ObjectEntities.SITE_NODE_ENTITY_CODE);
+			return new MapCablePathElement(
+				schemeCableLink,
+				ide,
+				stNode, 
+				eNode, 
+				mapView);
+		}
+		catch (IdentifierGenerationException e)
+		{
+			throw new CreateObjectException("MapCablePathElement.createInstance | cannot generate identifier ", e);
+		}
+		catch (IllegalObjectEntityException e) 
+		{
+			throw new CreateObjectException("MapCablePathElement.createInstance | cannot generate identifier ", e);
+		}
+	}
+
+	public AbstractNode getEndNode() 
+	{
+		return this.endNode;
+	}
+	
+	public void setEndNode(AbstractNode endNode) 
+	{
+		this.endNode = endNode;
+		nodeLinksSorted = false;
+	}
+	
+	public AbstractNode getStartNode() 
+	{
+		return this.startNode;
+	}
+	
+	public void setStartNode(AbstractNode startNode) 
+	{
+		this.startNode = startNode;
+		nodeLinksSorted = false;
+	}
+	
+	public List getCharacteristics() 
+	{
+		return Collections.unmodifiableList(this.characteristics);
+	}
+
+	public void addCharacteristic(Characteristic ch)
+	{
+		this.characteristics.add(ch);
+	}
+
+	public void removeCharacteristic(Characteristic ch)
+	{
+		this.characteristics.remove(ch);
+	}
+	
+	public void setId(Identifier id)
+	{
+		this.id = id;
+	}
+	
+	public Identifier getId()
+	{
+		return id;
+	}
+
+	public String getName() 
+	{
+		return this.name;
+	}
+
+	public void setName(String name) 
+	{
+		this.name = name;
+	}
+
+	public String getDescription() 
+	{
+		return this.description;
+	}
+
+	public void setDescription(String description) 
+	{
+		this.description = description;
+	}
+
+	public Map getMap()
+	{
+		return map;
+	}
+
+	public void setMap(Map map)
+	{
+		this.map = map;
+	}
+
+	public boolean isSelected()
+	{
+		return selected;
+	}
+
+	public void setSelected(boolean selected)
+	{
+		this.selected = selected;
+		getMap().setSelected(this, selected);
+	}
+
+	public void setAlarmState(boolean alarmState)
+	{
+		this.alarmState = alarmState;
+	}
+
+	public boolean getAlarmState()
+	{
+		return alarmState;
+	}
+
+	public DoublePoint getLocation()
+	{
+		int count = 0;
+		DoublePoint point = new DoublePoint(0.0, 0.0);
+
+		for(Iterator it = getLinks().iterator(); it.hasNext();)
+		{
+			PhysicalLink link = (PhysicalLink )it.next();
+			DoublePoint an = link.getLocation();
+			point.x += an.x;
+			point.y += an.y;
+			count ++;
+		}
+		point.x /= count;
+		point.y /= count;
+		
+		return point;
+	}
+
+
+	public void setLocation(DoublePoint location)
+	{
+		throw new UnsupportedOperationException();
+	}
+
+	public boolean isRemoved()
+	{
+		return removed;
+	}
+
+	public void setRemoved(boolean removed)
+	{
+		this.removed = removed;
 	}
 
 	public void setMapView(MapView mapView)
@@ -110,68 +298,13 @@ public class MapCablePathElement extends MapLinkElement implements Serializable
 		return this.mapView;
 	}
 
-	//этот класс используетс€ дл€ востановлени€ данных из базы
-	/**
-	 * @deprecated
-	 */
-	public void setLocalFromTransferable()
+	public AbstractNode getOtherNode(AbstractNode node)
 	{
-	}
-
-	//этот класс используетс€ дл€ отпрвки данных в базу
-	/**
-	 * @deprecated
-	 */
-	public void setTransferableFromLocal()
-	{
-	}
-
-	/**
-	 * @deprecated
-	 */
-	public String getTyp()
-	{
-		return typ;
-	}
-
-	public void setName(String name)
-	{
-		this.name = name;
-	}
-
-	public String getName()
-	{
-		return name;
-	}
-	
-	public void setId(String id)
-	{
-		this.id = id;
-	}
-
-	public String getId()
-	{
-		return id;
-	}
-
-	//»спользуетс€ дл€ загрузкт данных из базы
-	/**
-	 * @deprecated
-	 */
-	public void updateLocalFromTransferable()
-	{
-		this.startNode = (MapNodeElement )
-				Pool.get(MapSiteNodeElement.typ, startNodeId);
-		if(this.startNode == null)
-			this.startNode = (MapNodeElement )
-					Pool.get(MapPhysicalNodeElement.typ, startNodeId);
-
-		this.endNode = (MapNodeElement )
-				Pool.get(MapSiteNodeElement.typ, endNodeId);
-		if(this.endNode == null)
-			this.endNode = (MapNodeElement )
-					Pool.get(MapPhysicalNodeElement.typ, endNodeId);
-		this.mapView = (MapView)Pool.get(MapView.typ, this.mapViewId);
+		if ( this.getEndNode().equals(node) )
+			return getStartNode();
+		if ( this.getStartNode().equals(node) )
+			return getEndNode();
+		return null;
 	}
 
 	private static final String PROPERTY_PANE_CLASS_NAME = 
@@ -185,32 +318,12 @@ public class MapCablePathElement extends MapLinkElement implements Serializable
 	public void setSchemeCableLink(SchemeCableLink schemeCableLink)
 	{
 		this.schemeCableLink = schemeCableLink;
-		this.setName(schemeCableLink.getName());
+		this.setName(schemeCableLink.name());
 	}
 
 	public SchemeCableLink getSchemeCableLink()
 	{
 		return schemeCableLink;
-	}
-
-	public void setStartNode(MapNodeElement startNode)
-	{
-		super.setStartNode(startNode);
-		nodeLinksSorted = false;
-	}
-	
-	public void setEndNode(MapNodeElement endNode)
-	{
-		super.setEndNode(endNode);
-		nodeLinksSorted = false;
-	}
-
-	/**
-	 * @deprecated
-	 */
-	public Object getTransferable()
-	{
-		return null;
 	}
 
 	//¬озвращает топологическую длинну в метрах
@@ -220,7 +333,7 @@ public class MapCablePathElement extends MapLinkElement implements Serializable
 		Iterator e = getLinks().iterator();
 		while( e.hasNext())
 		{
-			MapPhysicalLinkElement link = (MapPhysicalLinkElement )e.next();
+			PhysicalLink link = (PhysicalLink)e.next();
 			if(! (link instanceof MapUnboundLinkElement))
 				length = length + link.getLengthLt();
 		}
@@ -229,22 +342,22 @@ public class MapCablePathElement extends MapLinkElement implements Serializable
 
 	public double getLengthLf()
 	{
-		return schemeCableLink.getPhysicalLength();
+		return schemeCableLink.physicalLength();
 	}
 
 	public double getLengthLo()
 	{
-		return schemeCableLink.getOpticalLength();
+		return schemeCableLink.opticalLength();
 	}
 
 	public void setLengthLf(double len)
 	{
-		schemeCableLink.setPhysicalLength(len);
+		schemeCableLink.physicalLength(len);
 	}
 
 	public void setLengthLo(double len)
 	{
-		schemeCableLink.setOpticalLength(len);
+		schemeCableLink.opticalLength(len);
 	}
 
 	/**
@@ -252,7 +365,7 @@ public class MapCablePathElement extends MapLinkElement implements Serializable
 	 */
 	public double getKd()
 	{
-		double phLen = schemeCableLink.getPhysicalLength();
+		double phLen = schemeCableLink.physicalLength();
 		if(phLen == 0.0D)
 			return 1.0;
 		double topLen = getLengthLt();
@@ -280,7 +393,7 @@ public class MapCablePathElement extends MapLinkElement implements Serializable
 		
 		for(Iterator it = list.iterator(); it.hasNext();)
 		{
-			this.addLink((MapPhysicalLinkElement)it.next());
+			this.addLink((PhysicalLink)it.next());
 		}
 	}
 
@@ -288,7 +401,7 @@ public class MapCablePathElement extends MapLinkElement implements Serializable
 	/**
 	 * ¬нимание! концевые точки линии не обновл€ютс€
 	 */
-	public void removeLink(MapPhysicalLinkElement link)
+	public void removeLink(PhysicalLink link)
 	{
 		links.remove(link);
 //		int index = getBinding().
@@ -299,30 +412,10 @@ public class MapCablePathElement extends MapLinkElement implements Serializable
 	/**
 	 * ¬нимание! концевые точки линии не обновл€ютс€
 	 */
-	public void addLink(MapPhysicalLinkElement addLink)
+	public void addLink(PhysicalLink addLink)
 	{
-//		MapNodeElement stNode = addLink.getStartNode();
-//		MapNodeElement enNode = addLink.getEndNode();
-//
-//		MapNodeElement bufferNode = getStartNode();
-//		
-//		ListIterator lit = getLinks().iterator();
-//		for(; lit.hasNext();)
-//		{
-//			MapPhysicalLinkElement link = (MapPhysicalLinkElement )lit.next();
-//			if(link.getStartNode().equals(stNode)
-//				|| link.getStartNode().equals(enNode)
-//				|| link.getEndNode().equals(stNode)
-//				|| link.getEndNode().equals(enNode))
-//			{
-//				break;
-//			}
-//		}
-//		lit.add(addLink);
 		links.add(addLink);
-		binding.put(addLink, MapCablePathBinding.generateCCI(
-				addLink,
-				this.getMapView().getLogicalNetLayer().getContext().getDataSource()));
+		binding.put(addLink, MapCablePathBinding.generateCCI(addLink));
 		linksSorted = false;
 		nodeLinksSorted = false;
 		sortLinks();
@@ -332,7 +425,7 @@ public class MapCablePathElement extends MapLinkElement implements Serializable
 	{
 		if(!linksSorted)
 		{
-			MapNodeElement smne = this.getStartNode();
+			AbstractNode smne = this.getStartNode();
 			List origvec = new LinkedList();
 			origvec.addAll(getLinks());
 			List vec = new LinkedList();
@@ -343,7 +436,7 @@ public class MapCablePathElement extends MapLinkElement implements Serializable
 				boolean canSort = false;
 				for(Iterator it = origvec.iterator(); it.hasNext();)
 				{
-					MapPhysicalLinkElement link = (MapPhysicalLinkElement )it.next();
+					PhysicalLink link = (PhysicalLink)it.next();
 
 					if(link.getStartNode().equals(smne))
 					{
@@ -351,8 +444,8 @@ public class MapCablePathElement extends MapLinkElement implements Serializable
 						it.remove();
 						smne = link.getEndNode();
 						CableChannelingItem cci = getBinding().getCCI(link);
-						cci.startSiteId = link.getStartNode().getId();
-						cci.endSiteId = link.getEndNode().getId();
+						cci.startSiteNodeImpl((SiteNode )link.getStartNode());
+						cci.endSiteNodeImpl((SiteNode )link.getEndNode());
 						canSort = true;
 						break;
 					}
@@ -363,8 +456,8 @@ public class MapCablePathElement extends MapLinkElement implements Serializable
 						it.remove();
 						smne = link.getStartNode();
 						CableChannelingItem cci = getBinding().getCCI(link);
-						cci.startSiteId = link.getEndNode().getId();
-						cci.endSiteId = link.getStartNode().getId();
+						cci.startSiteNodeImpl((SiteNode )link.getEndNode());
+						cci.endSiteNodeImpl((SiteNode )link.getStartNode());
 						canSort = true;
 						break;
 					}
@@ -379,36 +472,36 @@ public class MapCablePathElement extends MapLinkElement implements Serializable
 		}
 	}
 
-	public MapPhysicalLinkElement nextLink(MapPhysicalLinkElement link)
+	public PhysicalLink nextLink(PhysicalLink link)
 	{
-		MapPhysicalLinkElement ret = null;
+		PhysicalLink ret = null;
 		if(link == null)
 		{
 			if(getLinks().size() != 0)
-				ret = (MapPhysicalLinkElement )getLinks().get(0);
+				ret = (PhysicalLink)getLinks().get(0);
 		}
 		else
 		{
 			int index = getLinks().indexOf(link);
 			if(index != getLinks().size() - 1 && index != -1)
-				ret = (MapPhysicalLinkElement )getLinks().get(index + 1);
+				ret = (PhysicalLink)getLinks().get(index + 1);
 		}
 		return ret;
 	}
 
-	public MapPhysicalLinkElement previousLink(MapPhysicalLinkElement link)
+	public PhysicalLink previousLink(PhysicalLink link)
 	{
-		MapPhysicalLinkElement ret = null;
+		PhysicalLink ret = null;
 		if(link == null)
 		{
 			if(getLinks().size() != 0)
-				ret = (MapPhysicalLinkElement )getLinks().get(getLinks().size() - 1);
+				ret = (PhysicalLink)getLinks().get(getLinks().size() - 1);
 		}
 		else
 		{
 			int index = getLinks().indexOf(link);
 			if(index > 0)
-				ret = (MapPhysicalLinkElement )getLinks().get(index - 1);
+				ret = (PhysicalLink)getLinks().get(index - 1);
 		}
 		return ret;
 	}
@@ -443,11 +536,11 @@ public class MapCablePathElement extends MapLinkElement implements Serializable
 			List vec = new LinkedList();
 			List nodevec = new LinkedList();
 
-			MapNodeElement node = getStartNode();
+			AbstractNode node = getStartNode();
 
 			for(Iterator it = pl.iterator(); it.hasNext();)
 			{
-				MapPhysicalLinkElement link = (MapPhysicalLinkElement )it.next();
+				PhysicalLink link = (PhysicalLink)it.next();
 				
 				link.sortNodeLinks();
 				
@@ -472,15 +565,6 @@ public class MapCablePathElement extends MapLinkElement implements Serializable
 				// to avoid duplicate entry
 				nodevec.remove(node);
 			}
-//				for(Iterator it2 = link.getSortedNodes().iterator(); it2.hasNext();)
-//				{
-//					MapNodeElement mne = (MapNodeElement )it2.next();
-//
-//					// avoid duplicate nodes - do not add last node in list
-//					if(it2.hasNext())
-//						nodevec.add(mne);
-//				}
-			
 			// add last node
 			nodevec.add(getEndNode());
 				
@@ -490,47 +574,10 @@ public class MapCablePathElement extends MapLinkElement implements Serializable
 		}
 	}
 
-	/**
-	 * @deprecated
-	 */
-	private void writeObject(java.io.ObjectOutputStream out) throws IOException
-	{
-		out.writeObject(id);
-		out.writeObject(name);
-		out.writeObject(description);
-
-		startNodeId = getStartNode().getId();
-		endNodeId = getEndNode().getId();
-
-		out.writeObject(startNodeId);
-		out.writeObject(endNodeId);
-
-		out.writeObject(attributes);
-	}
-
-	/**
-	 * @deprecated
-	 */
-	private void readObject(java.io.ObjectInputStream in)
-			throws IOException, ClassNotFoundException
-	{
-		id = (String )in.readObject();
-		name = (String )in.readObject();
-		description = (String )in.readObject();
-		startNodeId = (String )in.readObject();
-		endNodeId = (String )in.readObject();
-		attributes = (HashMap )in.readObject();
-
-//		updateLocalFromTransferable();
-
-		Pool.put(getTyp(), getId(), this);
-		Pool.put("serverimage", getId(), this);
-	}
-
-	public IntPoint getBindingPosition(MapPhysicalLinkElement link)
+	public IntPoint getBindingPosition(PhysicalLink link)
 	{
 		CableChannelingItem cci = (CableChannelingItem )getBinding().get(link);
-		return new IntPoint(cci.row_x, cci.place_y);
+		return new IntPoint(cci.rowX(), cci.placeY());
 	}
 
 	public void setBinding(MapCablePathBinding binding)
@@ -543,12 +590,12 @@ public class MapCablePathElement extends MapLinkElement implements Serializable
 		return binding;
 	}
 
-	public MapNodeElement getStartUnboundNode()
+	public AbstractNode getStartUnboundNode()
 	{
-		MapNodeElement bufferSite = getStartNode();
+		AbstractNode bufferSite = getStartNode();
 		for(Iterator it = getLinks().iterator(); it.hasNext();)
 		{
-			MapPhysicalLinkElement link = (MapPhysicalLinkElement )it.next();
+			PhysicalLink link = (PhysicalLink)it.next();
 			if(link instanceof MapUnboundLinkElement)
 				break;
 			bufferSite = link.getOtherNode(bufferSite);
@@ -556,12 +603,12 @@ public class MapCablePathElement extends MapLinkElement implements Serializable
 		return bufferSite;
 	}
 	
-	public MapNodeElement getEndUnboundNode()
+	public AbstractNode getEndUnboundNode()
 	{
-		MapNodeElement bufferSite = getEndNode();
+		AbstractNode bufferSite = getEndNode();
 		for(ListIterator it = getLinks().listIterator(getLinks().size()); it.hasPrevious();)
 		{
-			MapPhysicalLinkElement link = (MapPhysicalLinkElement )it.previous();
+			PhysicalLink link = (PhysicalLink)it.previous();
 			if(link instanceof MapUnboundLinkElement)
 				break;
 			bufferSite = link.getOtherNode(bufferSite);
@@ -569,13 +616,13 @@ public class MapCablePathElement extends MapLinkElement implements Serializable
 		return bufferSite;
 	}
 	
-	public MapPhysicalLinkElement getStartLastBoundLink()
+	public PhysicalLink getStartLastBoundLink()
 	{
-		MapPhysicalLinkElement link = null;
+		PhysicalLink link = null;
 
 		for(Iterator it = getLinks().iterator(); it.hasNext();)
 		{
-			MapPhysicalLinkElement link2 = (MapPhysicalLinkElement )it.next();
+			PhysicalLink link2 = (PhysicalLink)it.next();
 			if(link2 instanceof MapUnboundLinkElement)
 				break;
 			link = link2;
@@ -584,13 +631,13 @@ public class MapCablePathElement extends MapLinkElement implements Serializable
 		return link;
 	}
 
-	public MapPhysicalLinkElement getEndLastBoundLink()
+	public PhysicalLink getEndLastBoundLink()
 	{
-		MapPhysicalLinkElement link = null;
+		PhysicalLink link = null;
 
 		for(ListIterator it = getLinks().listIterator(getLinks().size()); it.hasPrevious();)
 		{
-			MapPhysicalLinkElement link2 = (MapPhysicalLinkElement )it.previous();
+			PhysicalLink link2 = (PhysicalLink)it.previous();
 			if(link2 instanceof MapUnboundLinkElement)
 				break;
 			link = link2;
@@ -599,4 +646,13 @@ public class MapCablePathElement extends MapLinkElement implements Serializable
 		return link;
 	}
 
+	public MapElementState getState()
+	{
+		throw new UnsupportedOperationException();
+	}
+
+	public void revert(MapElementState state)
+	{
+		throw new UnsupportedOperationException();
+	}
 }

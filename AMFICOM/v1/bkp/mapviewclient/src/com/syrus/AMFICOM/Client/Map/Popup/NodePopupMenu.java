@@ -1,9 +1,9 @@
 package com.syrus.AMFICOM.Client.Map.Popup;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
-import com.syrus.AMFICOM.Client.Resource.Map.MapElement;
-import com.syrus.AMFICOM.Client.Resource.Map.MapNodeProtoElement;
-import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalNodeElement;
+import com.syrus.AMFICOM.map.MapElement;
+import com.syrus.AMFICOM.map.SiteNodeType;
+import com.syrus.AMFICOM.map.TopologicalNode;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -15,7 +15,7 @@ public final class NodePopupMenu extends MapPopupMenu
 	private JMenuItem placeSiteMenuItem = new JMenuItem();
 	private JMenuItem removeMenuItem = new JMenuItem();
 	
-	private MapPhysicalNodeElement node;
+	private TopologicalNode node;
 
 	private static NodePopupMenu instance = new NodePopupMenu();
 
@@ -37,9 +37,9 @@ public final class NodePopupMenu extends MapPopupMenu
 		return instance;
 	}
 	
-	public void setMapElement(MapElement me)
+	public void setElement(Object me)
 	{
-		this.node = (MapPhysicalNodeElement )me;
+		this.node = (TopologicalNode )me;
 	}
 
 	private void jbInit()
@@ -79,7 +79,7 @@ public final class NodePopupMenu extends MapPopupMenu
 	
 	private void placeSite()
 	{
-		MapNodeProtoElement proto = super.selectNodeProto();
+		SiteNodeType proto = super.selectNodeProto();
 		if(proto != null)
 		{
 			super.insertSiteInPlaceOfANode(node, proto);

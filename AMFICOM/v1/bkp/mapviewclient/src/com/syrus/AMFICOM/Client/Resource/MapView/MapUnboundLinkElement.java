@@ -1,5 +1,5 @@
 /**
- * $Id: MapUnboundLinkElement.java,v 1.9 2004/12/08 16:20:22 krupenn Exp $
+ * $Id: MapUnboundLinkElement.java,v 1.10 2004/12/22 16:38:42 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,37 +11,76 @@
 
 package com.syrus.AMFICOM.Client.Resource.MapView;
 
-import com.syrus.AMFICOM.Client.Resource.Map.Map;
-import com.syrus.AMFICOM.Client.Resource.Map.MapLinkProtoElement;
-import com.syrus.AMFICOM.Client.Resource.Map.MapNodeElement;
-import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalLinkElement;
+import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IdentifierGenerationException;
+import com.syrus.AMFICOM.general.IllegalObjectEntityException;
+import com.syrus.AMFICOM.general.LocalIdentifierGenerator;
+import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
+import com.syrus.AMFICOM.map.AbstractNode;
+import com.syrus.AMFICOM.map.Map;
+import com.syrus.AMFICOM.map.PhysicalLink;
+import com.syrus.AMFICOM.map.PhysicalLinkType;
 
-import java.io.Serializable;
+import java.util.Date;
+import java.util.List;
 
 /**
  * элемент линии 
  * 
  * 
  * 
- * @version $Revision: 1.9 $, $Date: 2004/12/08 16:20:22 $
+ * @version $Revision: 1.10 $, $Date: 2004/12/22 16:38:42 $
  * @module
  * @author $Author: krupenn $
  * @see
  */
 
 //MapPhysicalPathElement
-public class MapUnboundLinkElement extends MapPhysicalLinkElement implements Serializable
+public class MapUnboundLinkElement extends PhysicalLink
 {
 	protected MapCablePathElement cablePath;
 	
 	public MapUnboundLinkElement(
-			String id,
-			MapNodeElement stNode, 
-			MapNodeElement eNode, 
+			Identifier id,
+			AbstractNode stNode, 
+			AbstractNode eNode, 
 			Map map,
-			MapLinkProtoElement proto)
+			PhysicalLinkType proto)
 	{
-		super(id, stNode, eNode, map, proto);
+		super(id, map.getCreatorId(), id.toString(), "", proto, stNode, eNode, "", "", "", 0, 0, true, true);
+	}
+
+	public static MapUnboundLinkElement createInstance(
+			AbstractNode stNode, 
+			AbstractNode eNode, 
+			Map map,
+			PhysicalLinkType proto)
+		throws CreateObjectException 
+	{
+		if (stNode == null || map == null || eNode == null || proto == null)
+			throw new IllegalArgumentException("Argument is 'null'");
+		
+		try
+		{
+			Identifier ide =
+				LocalIdentifierGenerator.generateIdentifier(ObjectEntities.SITE_NODE_ENTITY_CODE);
+			return new MapUnboundLinkElement(
+				ide,
+				stNode, 
+				eNode, 
+				map,
+				proto);
+		}
+		catch (IdentifierGenerationException e)
+		{
+			throw new CreateObjectException("MapUnboundLinkElement.createInstance | cannot generate identifier ", e);
+		}
+		catch (IllegalObjectEntityException e) 
+		{
+			throw new CreateObjectException("MapUnboundLinkElement.createInstance | cannot generate identifier ", e);
+		}
 	}
 
 	private static final String PROPERTY_PANE_CLASS_NAME = 
@@ -62,4 +101,27 @@ public class MapUnboundLinkElement extends MapPhysicalLinkElement implements Ser
 	{
 		return cablePath;
 	}
+
+////////////////////////////////////////////////////////////////////////////////
+
+	public void insert() throws CreateObjectException
+	{
+		throw new UnsupportedOperationException();
+	}
+
+	public List getDependencies()
+	{
+		throw new UnsupportedOperationException();
+	}
+
+	public StorableObject_Transferable getHeaderTransferable()
+	{
+		throw new UnsupportedOperationException();
+	}
+
+	public Object getTransferable()
+	{
+		throw new UnsupportedOperationException();
+	}
+
 }

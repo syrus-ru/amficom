@@ -1,5 +1,5 @@
 /**
- * $Id: UnPlaceSchemeCableLinkCommand.java,v 1.4 2004/11/25 13:00:49 krupenn Exp $
+ * $Id: UnPlaceSchemeCableLinkCommand.java,v 1.5 2004/12/22 16:38:40 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -12,16 +12,19 @@ package com.syrus.AMFICOM.Client.Map.Command.Action;
 
 import com.syrus.AMFICOM.Client.General.Event.MapEvent;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
-import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalLinkElement;
+import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapCablePathElement;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapUnboundLinkElement;
-import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeCableLink;
+import com.syrus.AMFICOM.scheme.corba.CableChannelingItem;
+import com.syrus.AMFICOM.scheme.corba.SchemeCableLink;
 import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * убрать кабельный путь с привязкой из карты
  * 
- * @version $Revision: 1.4 $, $Date: 2004/11/25 13:00:49 $
+ * @version $Revision: 1.5 $, $Date: 2004/12/22 16:38:40 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -45,15 +48,19 @@ public class UnPlaceSchemeCableLinkCommand extends MapActionCommandBundle
 				"execute()");
 
 		SchemeCableLink scl = cablePath.getSchemeCableLink();
-		scl.channelingItems.clear();
+		scl.cableChannelingItems(null);//.clear();
+		
+		List ccis = new LinkedList();
 
 		for(Iterator it = cablePath.getLinks().iterator(); it.hasNext();)
 		{
-			MapPhysicalLinkElement link = (MapPhysicalLinkElement )it.next();
+			PhysicalLink link = (PhysicalLink)it.next();
 			if(link instanceof MapUnboundLinkElement)
 				continue;
-			scl.channelingItems.add(cablePath.getBinding().getCCI(link));
+			ccis.add(cablePath.getBinding().getCCI(link));
+//			scl.channelingItems.add(cablePath.getBinding().getCCI(link));
 		}
+		scl.cableChannelingItems((CableChannelingItem [])ccis.toArray(new CableChannelingItem [0]));
 
 		super.removeCablePathLinks(cablePath);
 

@@ -3,18 +3,20 @@ package com.syrus.AMFICOM.Client.Map.Props;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourceListBox;
-import com.syrus.AMFICOM.Client.General.UI.ObjectResourcePropertiesPane;
+import com.syrus.AMFICOM.Client.Map.UI.SimpleMapElementController;
+import com.syrus.AMFICOM.client_.general.ui_.ObjList;
+import com.syrus.AMFICOM.client_.general.ui_.ObjListModel;
+import com.syrus.AMFICOM.client_.general.ui_.ObjectResourcePropertiesPane;
 import com.syrus.AMFICOM.Client.General.UI.ReusedGridBagConstraints;
 import com.syrus.AMFICOM.Client.Map.Command.Action.CreateUnboundLinkCommandBundle;
 import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
-import com.syrus.AMFICOM.Client.Resource.Map.IntPoint;
-import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalLinkBinding;
-import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalLinkElement;
+import com.syrus.AMFICOM.map.IntPoint;
+import com.syrus.AMFICOM.map.PhysicalLinkBinding;
+import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapCablePathElement;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapUnboundLinkElement;
-import com.syrus.AMFICOM.Client.Resource.ObjectResource;
 
-import com.syrus.AMFICOM.Client.Resource.Scheme.CableChannelingItem;
+import com.syrus.AMFICOM.scheme.corba.CableChannelingItem;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Point;
@@ -44,12 +46,12 @@ public final class MapLinkBindPanel
 {
 	private GridBagLayout gridBagLayout1 = new GridBagLayout();
 
-	private MapPhysicalLinkElement link;
+	private PhysicalLink link;
 	
 	private LogicalNetLayer lnl;
 
 	private JLabel titleLabel = new JLabel();
-	private ObjectResourceListBox cableList = new ObjectResourceListBox();
+	private ObjList cableList = null;
 
 	private TunnelLayout tunnelLayout = null;
 
@@ -109,6 +111,12 @@ public final class MapLinkBindPanel
 
 	private void jbInit()
 	{
+		SimpleMapElementController controller = 
+				SimpleMapElementController.getInstance();
+
+		cableList = new ObjList(controller, SimpleMapElementController.KEY_NAME);
+
+
 		this.setLayout(gridBagLayout1);
 		this.setName(LangModelMap.getString("LinkBinding"));
 		titleLabel.setText(LangModelMap.getString("LinkBinding"));
@@ -119,7 +127,7 @@ public final class MapLinkBindPanel
 					if(processSelection)
 					{
 						processSelection = false;
-						ObjectResource or = cableList.getSelectedObjectResource();
+						Object or = cableList.getSelectedValue();
 						cableSelected(or);
 						bindButton.setEnabled(or != null);
 						unbindButton.setEnabled(or != null);
@@ -133,7 +141,7 @@ public final class MapLinkBindPanel
 				public void actionPerformed(ActionEvent e)
 				{
 					setBindMode(bindButton.isSelected());
-//					ObjectResource or = cableList.getSelectedObjectResource();
+//					Object or = cableList.getSelectedObjectResource();
 //					bind(or);
 				}
 			});
@@ -142,7 +150,7 @@ public final class MapLinkBindPanel
 			{
 				public void actionPerformed(ActionEvent e)
 				{
-					ObjectResource or = cableList.getSelectedObjectResource();
+					Object or = cableList.getSelectedValue();
 					unbind(or);
 				}
 			});
@@ -212,15 +220,15 @@ public final class MapLinkBindPanel
 		unbindButton.setEnabled(false);
 	}
 
-	public ObjectResource getObjectResource()
+	public Object getObject()
 	{
 		return null;
 	}
 
-	public void setObjectResource(ObjectResource objectResource)
+	public void setObject(Object objectResource)
 	{
 		cableList.removeAll();
-		link = (MapPhysicalLinkElement )objectResource;
+		link = (PhysicalLink)objectResource;
 		if(link == null)
 		{
 			cableList.setEnabled(false);
@@ -229,17 +237,14 @@ public final class MapLinkBindPanel
 		else
 		{
 			cableList.setEnabled(true);
-			MapPhysicalLinkBinding binding = link.getBinding();
+			PhysicalLinkBinding binding = link.getBinding();
 
 			tunnelLayout.setBinding(binding);
 
 			List list = binding.getBindObjects();
 			if(list != null)
 			{
-				for(Iterator it = list.iterator(); it.hasNext();)
-				{
-					cableList.add((ObjectResource )it.next());
-				}
+				cableList.addElements(list);
 			}
 
 		}
@@ -249,7 +254,7 @@ public final class MapLinkBindPanel
 	{
 	}
 
-	public void cableSelected(ObjectResource or)
+	public void cableSelected(Object or)
 	{
 		tunnelLayout.setActiveElement(or);
 	}
@@ -261,14 +266,14 @@ public final class MapLinkBindPanel
 			processSelection = false;
 			if(bindButton.isSelected())
 			{
-				ObjectResource or = cableList.getSelectedObjectResource();
+				Object or = cableList.getSelectedValue();
 				bind(or);
 				bindButton.setSelected(false);
 				setBindMode(false);
 			}
 			else
 			{
-				MapPhysicalLinkBinding binding = link.getBinding();
+				PhysicalLinkBinding binding = link.getBinding();
 				List list = binding.getBindObjects();
 				if(list != null)
 				{
@@ -280,7 +285,7 @@ public final class MapLinkBindPanel
 						if(position.x == col
 							&& position.y == row)
 						{
-							cableList.setSelected(cp);
+							cableList.setSelectedValue(cp, true);
 						}
 					}
 				}
@@ -289,17 +294,17 @@ public final class MapLinkBindPanel
 		}
 	}
 
-	public void bind(ObjectResource or)
+	public void bind(Object or)
 	{
-		MapPhysicalLinkBinding binding = link.getBinding();
+		PhysicalLinkBinding binding = link.getBinding();
 		IntPoint pt = tunnelLayout.getActiveCoordinates();
 		if(pt != null)
 		{
 			binding.bind(or, pt.x, pt.y);
 			MapCablePathElement cp = (MapCablePathElement )or;
 			CableChannelingItem cci = (CableChannelingItem )(cp.getBinding().get(link));
-			cci.row_x = pt.x;
-			cci.place_y = pt.y;
+			cci.rowX(pt.x);
+			cci.placeY(pt.y);
 			tunnelLayout.updateElements();
 		}
 	}
@@ -318,7 +323,7 @@ public final class MapLinkBindPanel
 		}
 	}
 
-	public void unbind(ObjectResource or)
+	public void unbind(Object or)
 	{
 		MapCablePathElement path = (MapCablePathElement )or;
 
@@ -335,7 +340,7 @@ public final class MapLinkBindPanel
 		path.addLink(unbound);
 		link.getBinding().remove(path);
 		
-		cableList.remove(path);
+		((ObjListModel )cableList.getModel()).removeElement(path);
 
 		tunnelLayout.updateElements();
 	}

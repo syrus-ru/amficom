@@ -12,12 +12,13 @@ import com.syrus.AMFICOM.CORBA.General.TestStatus;
 
 public class ObjectResourceLabel extends JLabel implements Comparable 
 {
-	private ObjectResource or;
+	private Object or;
 	private int	status;
 
-	public ObjectResourceLabel(ObjectResource or) 
+	public ObjectResourceLabel(Object or, String text) 
 	{
-		super((or == null) ? "" : or.getName());
+		super(text);
+		this.or = or;
 		setOpaque(true);
 	}
 
@@ -32,7 +33,7 @@ public class ObjectResourceLabel extends JLabel implements Comparable
 		return result;
 	}
 
-	public ObjectResource getOR()
+	public Object getOR()
 	{
 		return or;
 	}

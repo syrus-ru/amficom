@@ -1,5 +1,5 @@
 /**
- * $Id: MapPenBarPanel.java,v 1.2 2004/10/19 11:48:28 krupenn Exp $
+ * $Id: MapPenBarPanel.java,v 1.3 2004/12/22 16:38:42 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -14,7 +14,7 @@ package com.syrus.AMFICOM.Client.Map.UI;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourceComboBox;
 import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
-import com.syrus.AMFICOM.Client.Resource.Map.MapLinkProtoElement;
+import com.syrus.AMFICOM.map.PhysicalLinkType;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -30,7 +30,7 @@ import javax.swing.JPanel;
  * 
  * 
  * 
- * @version $Revision: 1.2 $, $Date: 2004/10/19 11:48:28 $
+ * @version $Revision: 1.3 $, $Date: 2004/12/22 16:38:42 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -95,7 +95,7 @@ public final class MapPenBarPanel extends JPanel
 	{
 		if(logicalNetLayer == null)
 			return;
-		MapLinkProtoElement mpe = (MapLinkProtoElement )penComboBox.getSelectedObjectResource();
+		PhysicalLinkType mpe = (PhysicalLinkType)penComboBox.getSelectedObjectResource();
 		logicalNetLayer.setPen(mpe);
 	}
 }

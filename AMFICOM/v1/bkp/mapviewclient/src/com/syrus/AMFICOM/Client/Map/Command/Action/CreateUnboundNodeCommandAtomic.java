@@ -1,5 +1,5 @@
 /**
- * $Id: CreateUnboundNodeCommandAtomic.java,v 1.4 2004/12/07 17:05:54 krupenn Exp $
+ * $Id: CreateUnboundNodeCommandAtomic.java,v 1.5 2004/12/22 16:38:40 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -13,13 +13,14 @@ package com.syrus.AMFICOM.Client.Map.Command.Action;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.General.Model.MapApplicationModel;
 import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
-import com.syrus.AMFICOM.Client.Resource.Map.DoublePoint;
-import com.syrus.AMFICOM.Client.Resource.Map.Map;
-import com.syrus.AMFICOM.Client.Resource.Map.MapSiteNodeElement;
+import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.map.DoublePoint;
+import com.syrus.AMFICOM.map.Map;
+import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapUnboundNodeElement;
 import com.syrus.AMFICOM.Client.Resource.MapView.UnboundNodeController;
 import com.syrus.AMFICOM.Client.Resource.Pool;
-import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeElement;
+import com.syrus.AMFICOM.scheme.corba.SchemeElement;
 
 import java.awt.geom.Point2D;
 
@@ -27,7 +28,7 @@ import java.awt.geom.Point2D;
  * –азместить сетевой элемент на карте. используетс€ при переносе 
  * (drag/drop), в точке point (в экранных координатах)
  * 
- * @version $Revision: 1.4 $, $Date: 2004/12/07 17:05:54 $
+ * @version $Revision: 1.5 $, $Date: 2004/12/22 16:38:40 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -79,31 +80,35 @@ public class CreateUnboundNodeCommandAtomic extends MapActionCommand
 	
 		map = logicalNetLayer.getMapView().getMap();
 
-		// создать новый узел
-		unbound = new MapUnboundNodeElement(
-			se,
-			dataSource.GetUId(MapSiteNodeElement.typ),
-			coordinatePoint,
-			map,
-			logicalNetLayer.getUnboundProto());
+		try
+		{
+			// создать новый узел
+			unbound = MapUnboundNodeElement.createInstance(
+				se,
+				coordinatePoint,
+				map,
+				logicalNetLayer.getUnboundProto());
+		}
+		catch (CreateObjectException e)
+		{
+			e.printStackTrace();
+			return;
+		}
 	
 		UnboundNodeController unc = (UnboundNodeController )getLogicalNetLayer().getMapViewController().getController(unbound);
 
 		unc.updateScaleCoefficient(unbound);
 	
-		Pool.put(MapSiteNodeElement.typ, unbound.getId(), unbound);
 		map.addNode(unbound);
 	}
 	
 	public void undo()
 	{
 		map.removeNode(unbound);
-		Pool.remove(MapSiteNodeElement.typ, unbound.getId());
 	}
 	
 	public void redo()
 	{
 		map.addNode(unbound);
-		Pool.put(MapSiteNodeElement.typ, unbound.getId(), unbound);
 	}
 }

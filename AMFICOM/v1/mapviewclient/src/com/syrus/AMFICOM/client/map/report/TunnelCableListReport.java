@@ -6,10 +6,10 @@ import com.syrus.AMFICOM.Client.General.Report.DividableTableColumnModel;
 import com.syrus.AMFICOM.Client.General.Report.DividableTableModel;
 import com.syrus.AMFICOM.Client.General.Report.ObjectsReport;
 import com.syrus.AMFICOM.Client.General.Report.ReportData;
-import com.syrus.AMFICOM.Client.Resource.Map.IntPoint;
-import com.syrus.AMFICOM.Client.Resource.Map.Map;
-import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalLinkElement;
-import com.syrus.AMFICOM.Client.Resource.Map.MapPipePathElement;
+import com.syrus.AMFICOM.map.IntPoint;
+import com.syrus.AMFICOM.map.Map;
+import com.syrus.AMFICOM.map.PhysicalLink;
+import com.syrus.AMFICOM.map.Collector;
 import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeCableLink;
 
@@ -57,8 +57,8 @@ class TunnelCableListReportTableModel extends DividableTableModel
 		if (physicalLink_id == null)
 			throw new CreateReportException(report.getName(),CreateReportException.cantImplement);
 
-		MapPhysicalLinkElement physicalLink =
-      (MapPhysicalLinkElement)Pool.get(MapPhysicalLinkElement.typ,physicalLink_id);
+		PhysicalLink physicalLink =
+      (PhysicalLink)Pool.get(PhysicalLink.typ,physicalLink_id);
       
 		if (physicalLink == null)
 			throw new CreateReportException(report.getName(),CreateReportException.poolObjNotExists);
@@ -72,7 +72,7 @@ class TunnelCableListReportTableModel extends DividableTableModel
     Map map = physicalLink.getMap(); //Возможно лажа!!
 
     String fullLinkName = "";
-    MapPipePathElement pipePath = map.getCollector(physicalLink);
+    Collector pipePath = map.getCollector(physicalLink);
     if (pipePath != null)
       fullLinkName += LangModelMap.getString("Collector") + pipePath.getName();
     else

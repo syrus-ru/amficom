@@ -1,5 +1,5 @@
 /**
- * $Id: MapFrame.java,v 1.13 2004/12/07 17:05:54 krupenn Exp $
+ * $Id: MapFrame.java,v 1.14 2004/12/22 16:38:42 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -42,11 +42,19 @@ import com.syrus.AMFICOM.Client.Map.MapConnection;
 import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
 import com.syrus.AMFICOM.Client.Map.MapState;
 import com.syrus.AMFICOM.Client.Map.NetMapViewer;
-import com.syrus.AMFICOM.Client.Resource.Map.DoublePoint;
-import com.syrus.AMFICOM.Client.Resource.Map.Map;
+import com.syrus.AMFICOM.general.CommunicationException;
+import com.syrus.AMFICOM.general.DatabaseException;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.IllegalObjectEntityException;
+import com.syrus.AMFICOM.general.VersionCollisionException;
+import com.syrus.AMFICOM.map.DoublePoint;
+import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapView;
 
-import com.syrus.AMFICOM.Client.Resource.Scheme.Scheme;
+import com.syrus.AMFICOM.scheme.SchemeStorableObjectPool;
+import com.syrus.AMFICOM.scheme.corba.Scheme;
+import com.syrus.AMFICOM.map.MapStorableObjectPool;
 import java.awt.BorderLayout;
 import java.awt.Image;
 import java.awt.Toolkit;
@@ -71,7 +79,7 @@ import javax.swing.event.InternalFrameEvent;
  * 
  * 
  * 
- * @version $Revision: 1.13 $, $Date: 2004/12/07 17:05:54 $
+ * @version $Revision: 1.14 $, $Date: 2004/12/22 16:38:42 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -330,7 +338,7 @@ public class MapFrame extends JInternalFrame
 				String di = aContext.getSessionInterface().getDomainId();
 				if(getMapView() == null)
 					return;
-				String di2 = getMapView().getDomainId();
+				Identifier di2 = getMapView().getDomainId();
 				if(!di.equals(di2))
 				{
 					setMapView(null);
@@ -341,7 +349,7 @@ public class MapFrame extends JInternalFrame
 		else
 		if(ae.getActionCommand().equals(MapEvent.MAP_VIEW_CENTER_CHANGED))
 		{
-			DoublePoint p = (DoublePoint )ae.getSource();
+			DoublePoint p = (DoublePoint)ae.getSource();
 			mapToolBar.showLatLong(p.x, p.y);
 		}
 		else
@@ -476,7 +484,34 @@ public class MapFrame extends JInternalFrame
 			else
 			if(ret == JOptionPane.YES_OPTION)
 			{
-				getContext().getDataSource().SaveMap(map.getId());
+				try
+				{
+					MapStorableObjectPool.putStorableObject(map);
+				}
+				catch (IllegalObjectEntityException e)
+				{
+					e.printStackTrace();
+				}
+				try
+				{
+					MapStorableObjectPool.flush(true);//save map
+				}
+				catch (VersionCollisionException e)
+				{
+					e.printStackTrace();
+				}
+				catch (IllegalDataException e)
+				{
+					e.printStackTrace();
+				}
+				catch (CommunicationException e)
+				{
+					e.printStackTrace();
+				}
+				catch (DatabaseException e)
+				{
+					e.printStackTrace();
+				}
 				canClose = true;
 			}
 			else
@@ -502,7 +537,7 @@ public class MapFrame extends JInternalFrame
 		if(mapView.isChanged())
 		{
 			String message = "Объект " + mapView.getName() 
-				+ " [" + LangModel.getString("node" + MapView.typ) + "] "
+				+ " [" + LangModel.getString("nodemapview") + "] "
 				+ "изменен. Сохранить?";
 				
 			String title = "Сохранение объекта";
@@ -525,12 +560,31 @@ public class MapFrame extends JInternalFrame
 			else
 			if(ret == JOptionPane.YES_OPTION)
 			{
-				getContext().getDataSource().SaveMapView(mapView.getId());
+//				getContext().getDataSource().SaveMapView(mapView.getId());
 				for(Iterator it = mapView.getSchemes().iterator(); it.hasNext();)
 				{
 					Scheme scheme = (Scheme )it.next();
-					if(scheme.isChanged())
-						getContext().getDataSource().SaveScheme(scheme.getId());
+					if(scheme.changed())
+						try
+						{
+							SchemeStorableObjectPool.flush(true);// save scheme
+						}
+						catch (VersionCollisionException e)
+						{
+							e.printStackTrace();
+						}
+						catch (IllegalDataException e)
+						{
+							e.printStackTrace();
+						}
+						catch (CommunicationException e)
+						{
+							e.printStackTrace();
+						}
+						catch (DatabaseException e)
+						{
+							e.printStackTrace();
+						}
 				}
 				canClose = true;
 			}

@@ -4,15 +4,16 @@ import com.syrus.AMFICOM.Client.General.Lang.LangModel;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourceComboBox;
-import com.syrus.AMFICOM.Client.General.UI.ObjectResourcePropertiesPane;
+import com.syrus.AMFICOM.Client.Map.UI.SimpleMapElementController;
+import com.syrus.AMFICOM.client_.general.ui_.ObjComboBox;
+import com.syrus.AMFICOM.client_.general.ui_.ObjectResourcePropertiesPane;
 import com.syrus.AMFICOM.Client.General.UI.ReusedGridBagConstraints;
 import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
 import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
-import com.syrus.AMFICOM.Client.Resource.Map.DoublePoint;
-import com.syrus.AMFICOM.Client.Resource.Map.MapNodeProtoElement;
-import com.syrus.AMFICOM.Client.Resource.Map.MapSiteNodeElement;
+import com.syrus.AMFICOM.map.DoublePoint;
+import com.syrus.AMFICOM.map.SiteNodeType;
+import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.Client.Resource.Map.SiteNodeController;
-import com.syrus.AMFICOM.Client.Resource.ObjectResource;
 
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
@@ -20,6 +21,7 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.geom.Point2D;
 
+import java.util.List;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
@@ -34,7 +36,7 @@ public class MapSiteGeneralPanel
 	private JLabel nameLabel = new JLabel();
 	private JTextField nameTextField = new JTextField();
 	private JLabel typeLabel = new JLabel();
-	private ObjectResourceComboBox typeComboBox = new ObjectResourceComboBox(MapNodeProtoElement.typ);
+	private ObjComboBox typeComboBox = null;
 
 	private JLabel longLabel = new JLabel();
 	private JTextField longTextField = new JTextField();
@@ -54,7 +56,7 @@ public class MapSiteGeneralPanel
 	private JLabel addressLabel = new JLabel();
 	private GridBagLayout gridBagLayout2 = new GridBagLayout();
 
-	MapSiteNodeElement site;
+	SiteNode site;
 
 	private LogicalNetLayer lnl;
 
@@ -83,6 +85,11 @@ public class MapSiteGeneralPanel
 
 	private void jbInit()
 	{
+		SimpleMapElementController controller = 
+				SimpleMapElementController.getInstance();
+
+		typeComboBox = new ObjComboBox(controller, SimpleMapElementController.KEY_NAME);
+
 		this.setLayout(gridBagLayout1);
 		this.setName(LangModel.getString("Properties"));
 
@@ -128,14 +135,17 @@ public class MapSiteGeneralPanel
 		this.add(descTextArea, ReusedGridBagConstraints.get(1, 5, 1, 1, 1.0, 1.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, null, 0, 0));
 	}
 
-	public ObjectResource getObjectResource()
+	public Object getObject()
 	{
 		return null;
 	}
 
-	public void setObjectResource(ObjectResource objectResource)
+	public void setObject(Object objectResource)
 	{
-		site = (MapSiteNodeElement )objectResource;
+		site = (SiteNode)objectResource;
+		
+		typeComboBox.removeAll();
+
 		if(site == null)
 		{
 			nameTextField.setEnabled(false);
@@ -157,8 +167,13 @@ public class MapSiteGeneralPanel
 		{
 			nameTextField.setEnabled(true);
 			nameTextField.setText(site.getName());
+
+			List protos = getLogicalNetLayer().getTopologicalProtos();
+			
 			typeComboBox.setEnabled(true);
-			typeComboBox.setSelected(site.getMapProtoId());
+			typeComboBox.addElements(protos);
+			typeComboBox.setSelectedItem(site.getType());
+
 			descTextArea.setEnabled(true);
 			descTextArea.setText(site.getDescription());
 
@@ -182,7 +197,7 @@ public class MapSiteGeneralPanel
 		try 
 		{
 			site.setName(nameTextField.getText());
-			site.setMapProtoId(typeComboBox.getSelectedId());
+			site.setType((SiteNodeType )typeComboBox.getSelectedItem());
 			site.setDescription(descTextArea.getText());
 			
 //			LogicalNetLayer lnl = (LogicalNetLayer )(site.getMap().getConverter());

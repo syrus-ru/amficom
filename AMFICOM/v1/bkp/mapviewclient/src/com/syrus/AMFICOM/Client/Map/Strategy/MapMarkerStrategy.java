@@ -1,5 +1,5 @@
 /**
- * $Id: MapMarkerStrategy.java,v 1.10 2004/12/08 16:20:22 krupenn Exp $
+ * $Id: MapMarkerStrategy.java,v 1.11 2004/12/22 16:38:41 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -17,11 +17,11 @@ import com.syrus.AMFICOM.Client.General.Model.MapApplicationModel;
 import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
 import com.syrus.AMFICOM.Client.Map.MapCoordinatesConverter;
 import com.syrus.AMFICOM.Client.Map.MapState;
-import com.syrus.AMFICOM.Client.Resource.Map.Map;
-import com.syrus.AMFICOM.Client.Resource.Map.MapElement;
-import com.syrus.AMFICOM.Client.Resource.Map.MapNodeElement;
-import com.syrus.AMFICOM.Client.Resource.Map.MapNodeLinkElement;
-import com.syrus.AMFICOM.Client.Resource.Map.MotionDescriptor;
+import com.syrus.AMFICOM.map.Map;
+import com.syrus.AMFICOM.map.MapElement;
+import com.syrus.AMFICOM.map.AbstractNode;
+import com.syrus.AMFICOM.map.NodeLink;
+import com.syrus.AMFICOM.Client.Map.UI.MotionDescriptor;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapMarker;
 
 import com.syrus.AMFICOM.Client.Resource.MapView.MapSelection;
@@ -35,7 +35,7 @@ import javax.swing.SwingUtilities;
  * 
  * 
  * 
- * @version $Revision: 1.10 $, $Date: 2004/12/08 16:20:22 $
+ * @version $Revision: 1.11 $, $Date: 2004/12/22 16:38:41 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -115,9 +115,9 @@ public final class MapMarkerStrategy implements  MapStrategy
 				if ( logicalNetLayer.getContext().getApplicationModel().isEnabled(
 							MapApplicationModel.ACTION_USE_MARKER))
 				{
-					MapNodeLinkElement nodeLink = marker.getNodeLink();
-					MapNodeElement sn = marker.getStartNode();
-					MapNodeElement en = marker.getEndNode();
+					NodeLink nodeLink = marker.getNodeLink();
+					AbstractNode sn = marker.getStartNode();
+					AbstractNode en = marker.getEndNode();
 
 					//Рисование о пределение координат маркера происходит путм проецирования координат
 					//курсора на линию на которой маркер находится

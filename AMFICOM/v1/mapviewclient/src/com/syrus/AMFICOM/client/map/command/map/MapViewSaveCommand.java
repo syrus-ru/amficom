@@ -1,5 +1,5 @@
 /*
- * $Id: MapViewSaveCommand.java,v 1.8 2004/10/29 14:59:52 krupenn Exp $
+ * $Id: MapViewSaveCommand.java,v 1.9 2004/12/22 16:38:40 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -17,14 +17,20 @@ import com.syrus.AMFICOM.Client.General.Lang.LangModel;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
-import com.syrus.AMFICOM.Client.General.UI.ObjectResourcePropertiesDialog;
+import com.syrus.AMFICOM.client_.general.ui_.ObjectResourcePropertiesDialog;
 import com.syrus.AMFICOM.Client.Map.Props.MapViewPanel;
 import com.syrus.AMFICOM.Client.Map.UI.MapFrame;
 import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
 
 import com.syrus.AMFICOM.Client.Resource.MapView.MapView;
 import com.syrus.AMFICOM.Client.Resource.Pool;
-import com.syrus.AMFICOM.Client.Resource.Scheme.Scheme;
+import com.syrus.AMFICOM.general.CommunicationException;
+import com.syrus.AMFICOM.general.DatabaseException;
+import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.VersionCollisionException;
+import com.syrus.AMFICOM.map.MapStorableObjectPool;
+import com.syrus.AMFICOM.scheme.SchemeStorableObjectPool;
+import com.syrus.AMFICOM.scheme.corba.Scheme;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.util.Iterator;
@@ -34,7 +40,7 @@ import java.util.Iterator;
  * 
  * 
  * 
- * @version $Revision: 1.8 $, $Date: 2004/10/29 14:59:52 $
+ * @version $Revision: 1.9 $, $Date: 2004/12/22 16:38:40 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -101,21 +107,80 @@ public class MapViewSaveCommand extends VoidCommand
 					StatusMessageEvent.STATUS_MESSAGE,
 					LangModelMap.getString("MapSaving")));
 
-			Pool.put( MapView.typ, mapView.getId(), mapView);
-			dataSource.SaveMapView(mapView.getId());
-			
-			for(Iterator it = mapView.getSchemes().iterator(); it.hasNext();)
+//			MapStorableObjectPool.putStorableObject(mapView);
+			try
 			{
-				Scheme scheme = (Scheme )it.next();
-				scheme.setMap(mapView.getMap());
-				dataSource.SaveScheme(scheme.getId());
+				MapStorableObjectPool.flush(true);// save mapview
+			}
+			catch (VersionCollisionException e)
+			{
+				e.printStackTrace();
+			}
+			catch (IllegalDataException e)
+			{
+				e.printStackTrace();
+			}
+			catch (CommunicationException e)
+			{
+				e.printStackTrace();
+			}
+			catch (DatabaseException e)
+			{
+				e.printStackTrace();
 			}
 			
 			for(Iterator it = mapView.getSchemes().iterator(); it.hasNext();)
 			{
 				Scheme scheme = (Scheme )it.next();
-				if(scheme.isChanged())
-					dataSource.SaveScheme(scheme.getId());
+				scheme.mapImpl(mapView.getMap());
+				try
+				{
+					SchemeStorableObjectPool.flush(true);// save scheme
+				}
+				catch (VersionCollisionException e)
+				{
+					e.printStackTrace();
+				}
+				catch (IllegalDataException e)
+				{
+					e.printStackTrace();
+				}
+				catch (CommunicationException e)
+				{
+					e.printStackTrace();
+				}
+				catch (DatabaseException e)
+				{
+					e.printStackTrace();
+				}
+			}
+			
+			for(Iterator it = mapView.getSchemes().iterator(); it.hasNext();)
+			{
+				Scheme scheme = (Scheme )it.next();
+				if(scheme.changed())
+				{
+					try
+					{
+						SchemeStorableObjectPool.flush(true);// save scheme
+					}
+					catch (VersionCollisionException e)
+					{
+						e.printStackTrace();
+					}
+					catch (IllegalDataException e)
+					{
+						e.printStackTrace();
+					}
+					catch (CommunicationException e)
+					{
+						e.printStackTrace();
+					}
+					catch (DatabaseException e)
+					{
+						e.printStackTrace();
+					}
+				}
 			}
 
 			aContext.getDispatcher().notify(new StatusMessageEvent(

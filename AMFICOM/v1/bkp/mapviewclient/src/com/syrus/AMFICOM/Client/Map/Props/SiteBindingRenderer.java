@@ -1,8 +1,8 @@
 package com.syrus.AMFICOM.Client.Map.Props;
 
-import com.syrus.AMFICOM.Client.Resource.Map.MapSiteNodeElement;
-import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeCableLink;
-import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeElement;
+import com.syrus.AMFICOM.map.SiteNode;
+import com.syrus.AMFICOM.scheme.corba.SchemeCableLink;
+import com.syrus.AMFICOM.scheme.corba.SchemeElement;
 import java.awt.Component;
 import javax.swing.JTree;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -10,7 +10,7 @@ import javax.swing.tree.DefaultTreeCellRenderer;
 
 class SiteBindingRenderer extends DefaultTreeCellRenderer 
 {
-	MapSiteNodeElement site;
+	SiteNode site;
 
     public SiteBindingRenderer()//MapSiteNodeElement site) 
 	{
@@ -38,12 +38,12 @@ class SiteBindingRenderer extends DefaultTreeCellRenderer
 		Object uo = node.getUserObject();
 		if(uo instanceof SchemeElement)
 		{
-			super.setText(((SchemeElement )uo).getName());
+			super.setText(((SchemeElement )uo).name());
 		}
 		else
 		if(uo instanceof SchemeCableLink)
 		{
-			super.setText(((SchemeCableLink )uo).getName());
+			super.setText(((SchemeCableLink )uo).name());
 		}
 
         return this;

@@ -1,5 +1,5 @@
 /**
- * $Id: CableController.java,v 1.2 2004/12/08 16:20:22 krupenn Exp $
+ * $Id: CableController.java,v 1.3 2004/12/22 16:38:42 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -19,13 +19,12 @@ import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
 import com.syrus.AMFICOM.Client.Map.MapCoordinatesConverter;
 import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
 import com.syrus.AMFICOM.Client.Resource.Map.AbstractLinkController;
-import com.syrus.AMFICOM.Client.Resource.Map.DoublePoint;
-import com.syrus.AMFICOM.Client.Resource.Map.MapElement;
+import com.syrus.AMFICOM.map.DoublePoint;
+import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapElementController;
-import com.syrus.AMFICOM.Client.Resource.Map.MapLinkElement;
-import com.syrus.AMFICOM.Client.Resource.Map.MapNodeElement;
-import com.syrus.AMFICOM.Client.Resource.Map.MapNodeLinkElement;
-import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalLinkElement;
+import com.syrus.AMFICOM.map.AbstractNode;
+import com.syrus.AMFICOM.map.NodeLink;
+import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.Client.Resource.Map.NodeLinkController;
 import com.syrus.AMFICOM.Client.Resource.Map.PhysicalLinkController;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapCablePathElement;
@@ -53,7 +52,7 @@ import java.util.Iterator;
  * 
  * 
  * 
- * @version $Revision: 1.2 $, $Date: 2004/12/08 16:20:22 $
+ * @version $Revision: 1.3 $, $Date: 2004/12/22 16:38:42 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -107,7 +106,7 @@ public final class CableController extends AbstractLinkController
 		boolean vis = false;
 		for(Iterator it = cpath.getLinks().iterator(); it.hasNext();)
 		{
-			MapPhysicalLinkElement link = (MapPhysicalLinkElement )it.next();
+			PhysicalLink link = (PhysicalLink)it.next();
 			PhysicalLinkController plc = (PhysicalLinkController )getLogicalNetLayer().getMapViewController().getController(link);
 			if(plc.isElementVisible(link, visibleBounds))
 			{
@@ -116,6 +115,49 @@ public final class CableController extends AbstractLinkController
 			}
 		}
 		return vis;
+	}
+
+	public String getToolTipText(MapElement me)
+	{
+		if(! (me instanceof MapCablePathElement))
+			return null;
+
+		MapCablePathElement cpath = (MapCablePathElement )me;
+		
+		String s1 = cpath.getName();
+		String s2 = "";
+		String s3 = "";
+		try
+		{
+			AbstractNode smne = cpath.getStartNode();
+			s2 =  ":\n" 
+				+ "   " 
+				+ LangModelMap.getString("From") 
+				+ " " 
+				+ smne.getName() 
+				+ " [" 
+				+ LangModel.getString("node" + smne.getClass().getName()) 
+				+ "]";
+			AbstractNode emne = cpath.getEndNode();
+			s3 = "\n" 
+				+ "   " 
+				+ LangModelMap.getString("To") 
+				+ " " 
+				+ emne.getName() 
+				+ " [" 
+				+ LangModel.getString("node" + emne.getClass().getName()) 
+				+ "]";
+		}
+		catch(Exception e)
+		{
+			Environment.log(
+				Environment.LOG_LEVEL_FINER, 
+				"method call", 
+				getClass().getName(), 
+				"getToolTipText()", 
+				e);
+		}
+		return s1 + s2 + s3;
 	}
 
 	public void paint (MapElement me, Graphics g, Rectangle2D.Double visibleBounds)
@@ -148,7 +190,7 @@ public final class CableController extends AbstractLinkController
 
 		for(Iterator it = cpath.getLinks().iterator(); it.hasNext();)
 		{
-			MapPhysicalLinkElement link = (MapPhysicalLinkElement )it.next();
+			PhysicalLink link = (PhysicalLink)it.next();
 			PhysicalLinkController plc = (PhysicalLinkController )getLogicalNetLayer().getMapViewController().getController(link);
 			plc.paint(link, g, visibleBounds, stroke, color, selectionVisible);
 		}
@@ -166,7 +208,7 @@ public final class CableController extends AbstractLinkController
 
 		for(Iterator it = cpath.getLinks().iterator(); it.hasNext();)
 		{
-			MapPhysicalLinkElement link = (MapPhysicalLinkElement )it.next();
+			PhysicalLink link = (PhysicalLink)it.next();
 			PhysicalLinkController plc = (PhysicalLinkController )getLogicalNetLayer().getMapViewController().getController(link);
 			if(plc.isMouseOnElement(link, currentMousePoint))
 				return true;
@@ -178,11 +220,11 @@ public final class CableController extends AbstractLinkController
 	{
 		double distance = 0.0;
 
-		MapNodeElement node = cpath.getStartNode();
+		AbstractNode node = cpath.getStartNode();
 		cpath.sortNodeLinks();
 		for(Iterator it = cpath.getSortedNodeLinks().iterator(); it.hasNext();)
 		{
-			MapNodeLinkElement mnle = (MapNodeLinkElement )it.next();
+			NodeLink mnle = (NodeLink)it.next();
 			NodeLinkController nlc = (NodeLinkController )getLogicalNetLayer().getMapViewController().getController(mnle);
 			if(nlc.isMouseOnElement(mnle, pt))
 			{
@@ -211,32 +253,32 @@ public final class CableController extends AbstractLinkController
 		return getDistanceFromStartLt(cpath, pt) * kd;
 	}
 
-	public int getLineSize (MapLinkElement link)
+	public int getLineSize (MapElement link)
 	{
 		return MapPropertiesManager.getUnboundThickness();
 	}
 
-	public String getStyle (MapLinkElement link)
+	public String getStyle (MapElement link)
 	{
 		return MapPropertiesManager.getStyle();
 	}
 
-	public Stroke getStroke (MapLinkElement link)
+	public Stroke getStroke (MapElement link)
 	{
 		return MapPropertiesManager.getStroke();
 	}
 
-	public Color getColor(MapLinkElement link)
+	public Color getColor(MapElement link)
 	{
 		return MapPropertiesManager.getUnboundLinkColor();
 	}
 
-	public Color getAlarmedColor(MapLinkElement link)
+	public Color getAlarmedColor(MapElement link)
 	{
 		return MapPropertiesManager.getAlarmedColor();
 	}
 
-	public int getAlarmedLineSize (MapLinkElement link)
+	public int getAlarmedLineSize (MapElement link)
 	{
 		return MapPropertiesManager.getAlarmedThickness();
 	}

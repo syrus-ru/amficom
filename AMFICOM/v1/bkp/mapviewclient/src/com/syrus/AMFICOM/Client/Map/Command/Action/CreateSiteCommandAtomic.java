@@ -1,5 +1,5 @@
 /**
- * $Id: CreateSiteCommandAtomic.java,v 1.5 2004/12/07 17:05:54 krupenn Exp $
+ * $Id: CreateSiteCommandAtomic.java,v 1.6 2004/12/22 16:38:40 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -15,10 +15,11 @@ import com.syrus.AMFICOM.Client.General.Event.MapNavigateEvent;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.General.Model.MapApplicationModel;
 import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
-import com.syrus.AMFICOM.Client.Resource.Map.DoublePoint;
-import com.syrus.AMFICOM.Client.Resource.Map.Map;
-import com.syrus.AMFICOM.Client.Resource.Map.MapNodeProtoElement;
-import com.syrus.AMFICOM.Client.Resource.Map.MapSiteNodeElement;
+import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.map.DoublePoint;
+import com.syrus.AMFICOM.map.Map;
+import com.syrus.AMFICOM.map.SiteNodeType;
+import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.Client.Resource.Map.SiteNodeController;
 import com.syrus.AMFICOM.Client.Resource.Pool;
 
@@ -29,7 +30,7 @@ import java.awt.geom.Point2D;
  * –азместить сетевой элемент на карте. используетс€ при переносе 
  * (drag/drop), в точке point (в экранных координатах)
  * 
- * @version $Revision: 1.5 $, $Date: 2004/12/07 17:05:54 $
+ * @version $Revision: 1.6 $, $Date: 2004/12/22 16:38:40 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -39,10 +40,10 @@ public class CreateSiteCommandAtomic extends MapActionCommand
 	/**
 	 * создаваемый узел
 	 */
-	MapSiteNodeElement site;
+	SiteNode site;
 	
 	/** тип создаваемого элемента */
-	MapNodeProtoElement proto;
+	SiteNodeType proto;
 	
 	Map map;
 	
@@ -58,7 +59,7 @@ public class CreateSiteCommandAtomic extends MapActionCommand
 	DoublePoint coordinatePoint = null;
 
 	public CreateSiteCommandAtomic(
-			MapNodeProtoElement proto,
+			SiteNodeType proto,
 			DoublePoint dpoint)
 	{
 		super(MapActionCommand.ACTION_DRAW_NODE);
@@ -67,7 +68,7 @@ public class CreateSiteCommandAtomic extends MapActionCommand
 	}
 
 	public CreateSiteCommandAtomic(
-			MapNodeProtoElement proto,
+			SiteNodeType proto,
 			Point point)
 	{
 		super(MapActionCommand.ACTION_DRAW_NODE);
@@ -75,7 +76,7 @@ public class CreateSiteCommandAtomic extends MapActionCommand
 		this.point = point;
 	}
 
-	public MapSiteNodeElement getSite()
+	public SiteNode getSite()
 	{
 		return site;
 	}
@@ -100,17 +101,22 @@ public class CreateSiteCommandAtomic extends MapActionCommand
 		map = logicalNetLayer.getMapView().getMap();
 
 		// создать новый узел
-		site = new MapSiteNodeElement(
-				dataSource.GetUId( MapSiteNodeElement.typ),
-				coordinatePoint,
-				map,
-				proto);
+		try
+		{
+			site = SiteNode.createInstance(
+					coordinatePoint,
+					map,
+					proto);
+		}
+		catch (CreateObjectException e)
+		{
+			e.printStackTrace();
+		}
 
 		SiteNodeController snc = (SiteNodeController )getLogicalNetLayer().getMapViewController().getController(site);
 		
 		snc.updateScaleCoefficient(site);
 
-		Pool.put(MapSiteNodeElement.typ, site.getId(), site);
 		map.addNode(site);
 		
 		// операци€ закончена - оповестить слушателей
@@ -126,12 +132,10 @@ public class CreateSiteCommandAtomic extends MapActionCommand
 	public void undo()
 	{
 		map.removeNode(site);
-		Pool.remove(MapSiteNodeElement.typ, site.getId());
 	}
 	
 	public void redo()
 	{
 		map.addNode(site);
-		Pool.put(MapSiteNodeElement.typ, site.getId(), site);
 	}
 }

@@ -2,8 +2,8 @@ package com.syrus.AMFICOM.Client.Map.Popup;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.Map.Command.Action.CreateSiteCommandAtomic;
-import com.syrus.AMFICOM.Client.Resource.Map.MapElement;
-import com.syrus.AMFICOM.Client.Resource.Map.MapNodeProtoElement;
+import com.syrus.AMFICOM.map.MapElement;
+import com.syrus.AMFICOM.map.SiteNodeType;
 import com.syrus.AMFICOM.Client.Resource.MapView.VoidMapElement;
 
 import java.awt.event.ActionEvent;
@@ -37,7 +37,7 @@ public class VoidElementPopupMenu extends MapPopupMenu
 		return instance;
 	}
 	
-	public void setMapElement(MapElement me)
+	public void setElement(Object me)
 	{
 	}
 	
@@ -71,7 +71,7 @@ public class VoidElementPopupMenu extends MapPopupMenu
 
 	private void addSite()
 	{
-		MapNodeProtoElement proto = super.selectNodeProto();
+		SiteNodeType proto = super.selectNodeProto();
 		
 		if(proto != null)
 		{

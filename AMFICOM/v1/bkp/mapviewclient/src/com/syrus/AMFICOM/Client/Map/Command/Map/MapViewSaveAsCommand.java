@@ -1,5 +1,5 @@
 /*
- * $Id: MapViewSaveAsCommand.java,v 1.6 2004/12/08 16:20:22 krupenn Exp $
+ * $Id: MapViewSaveAsCommand.java,v 1.7 2004/12/22 16:38:40 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -17,13 +17,18 @@ import com.syrus.AMFICOM.Client.General.Lang.LangModel;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
-import com.syrus.AMFICOM.Client.General.UI.ObjectResourcePropertiesDialog;
+import com.syrus.AMFICOM.client_.general.ui_.ObjectResourcePropertiesDialog;
 import com.syrus.AMFICOM.Client.Map.Props.MapViewPanel;
 import com.syrus.AMFICOM.Client.Map.UI.MapFrame;
 import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapView;
 import com.syrus.AMFICOM.Client.Resource.Pool;
 
+import com.syrus.AMFICOM.general.CommunicationException;
+import com.syrus.AMFICOM.general.DatabaseException;
+import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.VersionCollisionException;
+import com.syrus.AMFICOM.map.MapStorableObjectPool;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 
@@ -33,7 +38,7 @@ import java.awt.Toolkit;
  * 
  * 
  * 
- * @version $Revision: 1.6 $, $Date: 2004/12/08 16:20:22 $
+ * @version $Revision: 1.7 $, $Date: 2004/12/22 16:38:40 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -90,9 +95,27 @@ public class MapViewSaveAsCommand extends VoidCommand
 
 		if ( dialog.ifAccept())
 		{
-			Pool.put( MapView.typ, mv2.getId(), mv2);
-			
-			dataSource.SaveMapView(mv2.getId());
+//			MapStorableObjectPool.putStorableObject(mv2);
+			try
+			{
+				MapStorableObjectPool.flush(true);// save mapview
+			}
+			catch (VersionCollisionException e)
+			{
+				e.printStackTrace();
+			}
+			catch (IllegalDataException e)
+			{
+				e.printStackTrace();
+			}
+			catch (CommunicationException e)
+			{
+				e.printStackTrace();
+			}
+			catch (DatabaseException e)
+			{
+				e.printStackTrace();
+			}
 	
 			if (mapFrame != null)
 			{

@@ -3,6 +3,7 @@ import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.geom.Rectangle2D;
+import com.syrus.AMFICOM.map.MapElement;
 
 public interface MapElementController 
 {

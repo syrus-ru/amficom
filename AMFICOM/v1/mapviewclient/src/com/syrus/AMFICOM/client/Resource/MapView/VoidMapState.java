@@ -1,6 +1,6 @@
 package com.syrus.AMFICOM.Client.Resource.MapView;
 
-import com.syrus.AMFICOM.Client.Resource.Map.MapElementState;
+import com.syrus.AMFICOM.map.MapElementState;
 
 public class VoidMapState extends MapElementState 
 {

@@ -8,13 +8,14 @@ package com.syrus.AMFICOM.Client.Map.Props;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
-import com.syrus.AMFICOM.Client.Resource.Map.MapNodeElement;
+import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.Client.Resource.MapView.CableController;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapCablePathElement;
 import com.syrus.AMFICOM.Client.Resource.MiscUtil;
 
-import com.syrus.AMFICOM.Client.Resource.Scheme.Scheme;
-import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeCableLink;
+import com.syrus.AMFICOM.scheme.SchemeUtils;
+import com.syrus.AMFICOM.scheme.corba.Scheme;
+import com.syrus.AMFICOM.scheme.corba.SchemeCableLink;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.util.ArrayList;
@@ -93,7 +94,7 @@ public final class MapCablePathPropertiesController
 		if (key.equals(PROPERTY_SCHEME_CABLE_ID))
 		{
 			// remove .getName
-			result = path.getSchemeCableLink().getName();
+			result = path.getSchemeCableLink().name();
 		}
 		else
 		if (key.equals(PROPERTY_TOPOLOGICAL_LENGTH))
@@ -200,10 +201,10 @@ public final class MapCablePathPropertiesController
 			for(Iterator it = cpath.getMapView().getSchemes().iterator(); it.hasNext();)
 			{
 				Scheme scheme = (Scheme )it.next();
-				for(Iterator it2 = scheme.getAllCableLinks().iterator(); it2.hasNext();)
+				for(Iterator it2 = SchemeUtils.getAllCableLinks(scheme).iterator(); it2.hasNext();)
 				{
 					SchemeCableLink scl = (SchemeCableLink )it2.next();
-					schemeCableLinks.put(new ObjectResourceLabel(scl), scl);
+					schemeCableLinks.put(new ObjectResourceLabel(scl, scl.name()), scl);
 				}
 			}
 			result = schemeCableLinks;
@@ -214,10 +215,10 @@ public final class MapCablePathPropertiesController
 		{
 			nodes.clear();
 			MapCablePathElement cpath = (MapCablePathElement )object;
-			for(Iterator it = cpath.getMap().getMapSiteNodeElements().iterator(); it.hasNext();)
+			for(Iterator it = cpath.getMap().getSiteNodes().iterator(); it.hasNext();)
 			{
-				MapNodeElement node = (MapNodeElement )it.next();
-				nodes.put(new ObjectResourceLabel(node), node);
+				AbstractNode node = (AbstractNode)it.next();
+				nodes.put(new ObjectResourceLabel(node, node.getName()), node);
 			}
 			result = nodes;
 		}

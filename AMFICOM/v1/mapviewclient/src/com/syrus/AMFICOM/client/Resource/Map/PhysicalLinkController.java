@@ -1,5 +1,5 @@
 /**
- * $Id: PhysicalLinkController.java,v 1.2 2004/12/08 16:20:22 krupenn Exp $
+ * $Id: PhysicalLinkController.java,v 1.3 2004/12/22 16:38:42 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -24,6 +24,11 @@ import com.syrus.AMFICOM.configuration.CharacteristicType;
 import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 import com.syrus.AMFICOM.configuration.corba.CharacteristicTypeSort;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.map.AbstractNode;
+import com.syrus.AMFICOM.map.MapElement;
+import com.syrus.AMFICOM.map.NodeLink;
+import com.syrus.AMFICOM.map.PhysicalLink;
+import com.syrus.AMFICOM.map.PhysicalLinkType;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics;
@@ -41,7 +46,7 @@ import java.util.Iterator;
  * 
  * 
  * 
- * @version $Revision: 1.2 $, $Date: 2004/12/08 16:20:22 $
+ * @version $Revision: 1.3 $, $Date: 2004/12/22 16:38:42 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -61,6 +66,49 @@ public class PhysicalLinkController extends AbstractLinkController
 		return instance;
 	}
 
+	public String getToolTipText(MapElement me)
+	{
+		if(! (me instanceof PhysicalLink))
+			return null;
+
+		PhysicalLink link = (PhysicalLink )me;
+		
+		String s1 = link.getName();
+		String s2 = "";
+		String s3 = "";
+		try
+		{
+			AbstractNode smne = link.getStartNode();
+			s2 =  ":\n" 
+				+ "   " 
+				+ LangModelMap.getString("From") 
+				+ " " 
+				+ smne.getName() 
+				+ " [" 
+				+ LangModel.getString("node" + smne.getClass().getName()) 
+				+ "]";
+			AbstractNode emne = link.getEndNode();
+			s3 = "\n" 
+				+ "   " 
+				+ LangModelMap.getString("To") 
+				+ " " 
+				+ emne.getName() 
+				+ " [" 
+				+ LangModel.getString("node" + emne.getClass().getName()) 
+				+ "]";
+		}
+		catch(Exception e)
+		{
+			Environment.log(
+				Environment.LOG_LEVEL_FINER, 
+				"method call", 
+				getClass().getName(), 
+				"getToolTipText()", 
+				e);
+		}
+		return s1 + s2 + s3;
+	}
+
 	public boolean isSelectionVisible(MapElement me)
 	{
 		if(! (me instanceof MapPhysicalLinkElement))
@@ -69,7 +117,7 @@ public class PhysicalLinkController extends AbstractLinkController
 		MapPhysicalLinkElement link = (MapPhysicalLinkElement )me;
 
 		return link.isSelected() 
-			|| link.selectionVisible;
+			|| link.isSelectionVisible();
 	}
 
 	public boolean isElementVisible(MapElement me, Rectangle2D.Double visibleBounds)
@@ -117,7 +165,7 @@ public class PhysicalLinkController extends AbstractLinkController
 	}
 
 	public void paint(
-			MapPhysicalLinkElement link,
+			PhysicalLink link,
 			Graphics g, 
 			Rectangle2D.Double visibleBounds, 
 			Stroke stroke, 
@@ -135,7 +183,7 @@ public class PhysicalLinkController extends AbstractLinkController
 			showName = true;
 		}
 
-		link.selectionVisible = selectionVisible;
+		link.setSelectionVisible(selectionVisible);
 		for(Iterator it = link.getNodeLinks().iterator(); it.hasNext();)
 		{
 			MapNodeLinkElement nodelink = (MapNodeLinkElement )it.next();
@@ -181,11 +229,11 @@ public class PhysicalLinkController extends AbstractLinkController
 		}
 	}
 
-	public void updateLengthLt(MapPhysicalLinkElement link)
+	public void updateLengthLt(PhysicalLink link)
 	{
 		for(Iterator it = link.getNodeLinks().iterator(); it.hasNext();)
 		{
-			MapNodeLinkElement nodeLink = (MapNodeLinkElement )it.next();
+			NodeLink nodeLink = (NodeLink )it.next();
 			NodeLinkController nlc = (NodeLinkController )getLogicalNetLayer().getMapViewController().getController(nodeLink);
 			nlc.updateLengthLt(nodeLink);
 		}
@@ -214,110 +262,126 @@ public class PhysicalLinkController extends AbstractLinkController
 	/**
 	 * Получить толщину линии
 	 */
-	public int getLineSize (MapLinkElement link)
+	public int getLineSize (MapElement link)
 	{
 		if(! (link instanceof MapPhysicalLinkElement))
 			return MapPropertiesManager.getThickness();
 
 		MapPhysicalLinkElement plink = (MapPhysicalLinkElement )link;
 
-		LinkTypeController ltc = (LinkTypeController )LinkTypeController.getInstance();
-		return ltc.getLineSize(plink.getProto());
-//		Characteristic ea = (Characteristic )link.attributes.get("thickness");
-//		if(ea == null)
-//			return MapPropertiesManager.getThickness();
-//		return Integer.parseInt(ea.getValue());
+		CharacteristicType cType = getCharacteristicType(link.getMap().getCreatorId(), ATTRIBUTE_THICKNESS);
+		Characteristic ea = (Characteristic )getCharacteristic(link, cType);
+		if(ea != null)
+			return Integer.parseInt(ea.getValue());
+		else
+		{
+			LinkTypeController ltc = (LinkTypeController )LinkTypeController.getInstance();
+			return ltc.getLineSize((PhysicalLinkType )plink.getType());
+		}
 	}
 
 	/**
 	 * Получить вид линии
 	 */
-	public String getStyle (MapLinkElement link)
+	public String getStyle (MapElement link)
 	{
 		if(! (link instanceof MapPhysicalLinkElement))
 			return MapPropertiesManager.getStyle();
 
 		MapPhysicalLinkElement plink = (MapPhysicalLinkElement )link;
 
-		LinkTypeController ltc = (LinkTypeController )LinkTypeController.getInstance();
-		return ltc.getStyle(plink.getProto());
-//		Characteristic ea = (Characteristic )link.attributes.get("style");
-//		if(ea == null)
-//			return MapPropertiesManager.getStyle();
-//		return ea.getValue();
+		CharacteristicType cType = getCharacteristicType(link.getMap().getCreatorId(), ATTRIBUTE_STYLE);
+		Characteristic ea = (Characteristic )getCharacteristic(link, cType);
+		if(ea != null)
+			return ea.getValue();
+		else
+		{
+			LinkTypeController ltc = (LinkTypeController )LinkTypeController.getInstance();
+			return ltc.getStyle((PhysicalLinkType )plink.getType());
+		}
 	}
 
 	/**
 	 * Получить стиль линии
 	 */
-	public Stroke getStroke (MapLinkElement link)
+	public Stroke getStroke (MapElement link)
 	{
 		if(! (link instanceof MapPhysicalLinkElement))
 			return MapPropertiesManager.getStroke();
 
 		MapPhysicalLinkElement plink = (MapPhysicalLinkElement )link;
 
-		LinkTypeController ltc = (LinkTypeController )LinkTypeController.getInstance();
-		return ltc.getStroke(plink.getProto());
-//		Characteristic ea = (Characteristic )link.attributes.get("style");
-//		if(ea == null)
-//			return MapPropertiesManager.getStroke();
-//
-//		return LineComboBox.getStrokeByType(ea.getValue());
-
+		CharacteristicType cType = getCharacteristicType(link.getMap().getCreatorId(), ATTRIBUTE_STYLE);
+		Characteristic ea = (Characteristic )getCharacteristic(link, cType);
+		if(ea != null)
+			return LineComboBox.getStrokeByType(ea.getValue());
+		else
+		{
+			LinkTypeController ltc = (LinkTypeController )LinkTypeController.getInstance();
+			return ltc.getStroke((PhysicalLinkType )plink.getType());
+		}
 	}
 
 	/**
 	 * Получить цвет
 	 */
-	public Color getColor(MapLinkElement link)
+	public Color getColor(MapElement link)
 	{
 		if(! (link instanceof MapPhysicalLinkElement))
 			return MapPropertiesManager.getColor();
 
 		MapPhysicalLinkElement plink = (MapPhysicalLinkElement )link;
 
-		LinkTypeController ltc = (LinkTypeController )LinkTypeController.getInstance();
-		return ltc.getColor(plink.getProto());
-//		Characteristic ea = (Characteristic )link.attributes.get("color");
-//		if(ea == null)
-//			return MapPropertiesManager.getColor();
-//		return new Color(Integer.parseInt(ea.getValue()));
+		CharacteristicType cType = getCharacteristicType(link.getMap().getCreatorId(), ATTRIBUTE_COLOR);
+		Characteristic ea = (Characteristic )getCharacteristic(link, cType);
+		if(ea != null)
+			return new Color(Integer.parseInt(ea.getValue()));
+		else
+		{
+			LinkTypeController ltc = (LinkTypeController )LinkTypeController.getInstance();
+			return ltc.getColor((PhysicalLinkType )plink.getType());
+		}
 	}
 
 	/**
 	 * получить цвет при наличии сигнала тревоги
 	 */
-	public Color getAlarmedColor(MapLinkElement link)
+	public Color getAlarmedColor(MapElement link)
 	{
 		if(! (link instanceof MapPhysicalLinkElement))
 			return MapPropertiesManager.getAlarmedColor();
 
 		MapPhysicalLinkElement plink = (MapPhysicalLinkElement )link;
 
-		LinkTypeController ltc = (LinkTypeController )LinkTypeController.getInstance();
-		return ltc.getAlarmedColor(plink.getProto());
-//		Characteristic ea = (Characteristic )link.attributes.get("alarmed_color");
-//		if(ea == null)
-//			return MapPropertiesManager.getAlarmedColor();
-//		return new Color(Integer.parseInt(ea.getValue()));
+		CharacteristicType cType = getCharacteristicType(link.getMap().getCreatorId(), ATTRIBUTE_COLOR);
+		Characteristic ea = (Characteristic )getCharacteristic(link, cType);
+		if(ea != null)
+			return new Color(Integer.parseInt(ea.getValue()));
+		else
+		{
+			LinkTypeController ltc = (LinkTypeController )LinkTypeController.getInstance();
+			return ltc.getAlarmedColor((PhysicalLinkType )plink.getType());
+		}
 	}
 
 	/**
 	 * получить толщину линии при наличи сигнала тревоги
 	 */
-	public int getAlarmedLineSize (MapLinkElement link)
+	public int getAlarmedLineSize (MapElement link)
 	{
 		if(! (link instanceof MapPhysicalLinkElement))
 			return MapPropertiesManager.getAlarmedThickness();
 
 		MapPhysicalLinkElement plink = (MapPhysicalLinkElement )link;
 
-		LinkTypeController ltc = (LinkTypeController )LinkTypeController.getInstance();
-		return ltc.getAlarmedLineSize(plink.getProto());
-//		Characteristic ea = (Characteristic )link.attributes.get("alarmed_thickness");
-//		if(ea == null)
-//			return MapPropertiesManager.getAlarmedThickness();
-//		return Integer.parseInt(ea.getValue());
+		CharacteristicType cType = getCharacteristicType(link.getMap().getCreatorId(), ATTRIBUTE_ALARMED_THICKNESS);
+		Characteristic ea = (Characteristic )getCharacteristic(link, cType);
+		if(ea != null)
+			return Integer.parseInt(ea.getValue());
+		else
+		{
+			LinkTypeController ltc = (LinkTypeController )LinkTypeController.getInstance();
+			return ltc.getAlarmedLineSize((PhysicalLinkType )plink.getType());
+		}
 	}
 }

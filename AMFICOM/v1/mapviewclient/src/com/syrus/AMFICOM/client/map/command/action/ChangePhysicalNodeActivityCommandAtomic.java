@@ -1,5 +1,5 @@
 /**
- * $Id: ChangePhysicalNodeActivityCommandAtomic.java,v 1.3 2004/10/18 15:33:00 krupenn Exp $
+ * $Id: ChangePhysicalNodeActivityCommandAtomic.java,v 1.4 2004/12/22 16:38:39 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -12,14 +12,14 @@
 package com.syrus.AMFICOM.Client.Map.Command.Action;
 
 import com.syrus.AMFICOM.Client.General.Model.Environment;
-import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalNodeElement;
+import com.syrus.AMFICOM.map.TopologicalNode;
 
 /**
  * Изменение активности топологического узла - атомарное действие
  * 
  * 
  * 
- * @version $Revision: 1.3 $, $Date: 2004/10/18 15:33:00 $
+ * @version $Revision: 1.4 $, $Date: 2004/12/22 16:38:39 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -27,7 +27,7 @@ import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalNodeElement;
 public class ChangePhysicalNodeActivityCommandAtomic extends MapActionCommand
 {
 	/** узел */
-	MapPhysicalNodeElement node;
+	TopologicalNode node;
 	
 	/**
 	 * новое состояние активности узла
@@ -35,7 +35,7 @@ public class ChangePhysicalNodeActivityCommandAtomic extends MapActionCommand
 	boolean active;
 	
 	public ChangePhysicalNodeActivityCommandAtomic(
-			MapPhysicalNodeElement mpne, 
+			TopologicalNode mpne, 
 			boolean active)
 	{
 		super(MapActionCommand.ACTION_DROP_LINE);
@@ -43,7 +43,7 @@ public class ChangePhysicalNodeActivityCommandAtomic extends MapActionCommand
 		this.active = active;
 	}
 	
-	public MapPhysicalNodeElement getNode()
+	public TopologicalNode getNode()
 	{
 		return node;
 	}

@@ -1,5 +1,5 @@
 /**
- * $Id: TopologicalNodeController.java,v 1.2 2004/12/08 16:20:22 krupenn Exp $
+ * $Id: TopologicalNodeController.java,v 1.3 2004/12/22 16:38:42 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -26,13 +26,15 @@ import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.util.HashMap;
 import javax.swing.ImageIcon;
+import com.syrus.AMFICOM.map.TopologicalNode;
+import com.syrus.AMFICOM.map.MapElement;
 
 /**
  * элемент карты - узел 
  * 
  * 
  * 
- * @version $Revision: 1.2 $, $Date: 2004/12/08 16:20:22 $
+ * @version $Revision: 1.3 $, $Date: 2004/12/22 16:38:42 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -49,11 +51,7 @@ public class TopologicalNodeController extends AbstractNodeController
 	public static final String CLOSED_NODE_IMAGE = "images/node.gif";
 	public static final String OPEN_NODE_IMAGE = "images/void.gif";
 
-	static
-	{
-		MapPropertiesManager.setOriginalImage(OPEN_NODE, new ImageIcon(OPEN_NODE_IMAGE).getImage());
-		MapPropertiesManager.setOriginalImage(CLOSED_NODE, new ImageIcon(CLOSED_NODE_IMAGE).getImage());
-	}
+	private static boolean needInit = true;
 
 	private static TopologicalNodeController instance = null;
 	
@@ -83,11 +81,30 @@ public class TopologicalNodeController extends AbstractNodeController
 		return MAX_BOUNDS;
 	}
 
+	public void setActive(TopologicalNode node, boolean active)
+	{
+		node.setActive(active);
+		if(active)
+			node.setImageId(getLogicalNetLayer().getImageId(CLOSED_NODE, CLOSED_NODE_IMAGE));
+		else
+			node.setImageId(getLogicalNetLayer().getImageId(OPEN_NODE, OPEN_NODE_IMAGE));
+	}
+
 	public void paint (MapElement me, Graphics g, Rectangle2D.Double visibleBounds)
 	{
-		if(!(me instanceof MapPhysicalNodeElement))
+		if(needInit)
+		{
+			MapPropertiesManager.setOriginalImage(
+				getLogicalNetLayer().getImageId(OPEN_NODE, OPEN_NODE_IMAGE),
+				new ImageIcon(OPEN_NODE_IMAGE).getImage());
+			MapPropertiesManager.setOriginalImage(
+				getLogicalNetLayer().getImageId(CLOSED_NODE, CLOSED_NODE_IMAGE), 
+				new ImageIcon(CLOSED_NODE_IMAGE).getImage());
+		}
+
+		if(!(me instanceof TopologicalNode))
 			return;
-		MapPhysicalNodeElement node = (MapPhysicalNodeElement )me;
+		TopologicalNode node = (TopologicalNode)me;
 
 		if(!isElementVisible(node, visibleBounds))
 			return;

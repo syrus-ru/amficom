@@ -8,13 +8,16 @@ package com.syrus.AMFICOM.Client.Map.Props;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
-import com.syrus.AMFICOM.Client.Resource.Map.MapNodeLinkElement;
+import com.syrus.AMFICOM.map.NodeLink;
 import com.syrus.AMFICOM.Client.Resource.MiscUtil;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import com.syrus.AMFICOM.map.Map;
+import com.syrus.AMFICOM.map.AbstractNode;
+import com.syrus.AMFICOM.map.PhysicalLink;
 
 public final class MapNodeLinkPropertiesController 
 		implements MapElementPropertiesController 
@@ -64,7 +67,7 @@ public final class MapNodeLinkPropertiesController
 	public Object getValue(final Object object, final String key)
 	{
 		Object result = null;
-		MapNodeLinkElement nodeLink = (MapNodeLinkElement )object;
+		NodeLink nodeLink = (NodeLink)object;
 
 		if (key.equals(PROPERTY_NAME))
 		{
@@ -91,7 +94,7 @@ public final class MapNodeLinkPropertiesController
 		if (key.equals(PROPERTY_PHYSICAL_LINK_ID))
 		{
 			// remove .getName()
-			result = nodeLink.getMap().getPhysicalLink(nodeLink.getPhysicalLinkId()).getName();
+			result = nodeLink.getPhysicalLink().getName();
 		}
 
 		return result;
@@ -106,7 +109,7 @@ public final class MapNodeLinkPropertiesController
 
 	public void setValue(Object object, final String key, final Object value)
 	{
-		MapNodeLinkElement nodeLink = (MapNodeLinkElement )object;
+		NodeLink nodeLink = (NodeLink)object;
 
 		if (key.equals(PROPERTY_NAME))
 		{

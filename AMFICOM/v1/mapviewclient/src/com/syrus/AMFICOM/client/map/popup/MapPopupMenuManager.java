@@ -1,11 +1,11 @@
 package com.syrus.AMFICOM.Client.Map.Popup;
 
-import com.syrus.AMFICOM.Client.Resource.Map.MapElement;
-import com.syrus.AMFICOM.Client.Resource.Map.MapMarkElement;
-import com.syrus.AMFICOM.Client.Resource.Map.MapNodeLinkElement;
-import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalLinkElement;
-import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalNodeElement;
-import com.syrus.AMFICOM.Client.Resource.Map.MapSiteNodeElement;
+import com.syrus.AMFICOM.map.MapElement;
+import com.syrus.AMFICOM.map.Mark;
+import com.syrus.AMFICOM.map.NodeLink;
+import com.syrus.AMFICOM.map.PhysicalLink;
+import com.syrus.AMFICOM.map.TopologicalNode;
+import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapCablePathElement;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapMarker;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapMeasurementPathElement;
@@ -28,17 +28,17 @@ public final class MapPopupMenuManager
 	{
 		popupMap.put(MapCablePathElement.class,
 			CablePathPopupMenu.getInstance());
-		popupMap.put(MapPhysicalLinkElement.class,
+		popupMap.put(com.syrus.AMFICOM.map.PhysicalLink.class,
 			LinkPopupMenu.getInstance());
-		popupMap.put(MapMarkElement.class,
+		popupMap.put(com.syrus.AMFICOM.map.Mark.class,
 			MarkPopupMenu.getInstance());
-		popupMap.put(MapNodeLinkElement.class,
+		popupMap.put(com.syrus.AMFICOM.map.NodeLink.class,
 			NodeLinkPopupMenu.getInstance());
-		popupMap.put(MapPhysicalNodeElement.class,
+		popupMap.put(com.syrus.AMFICOM.map.TopologicalNode.class,
 			NodePopupMenu.getInstance());
 		popupMap.put(MapSelection.class,
 			SelectionPopupMenu.getInstance());
-		popupMap.put(MapSiteNodeElement.class,
+		popupMap.put(com.syrus.AMFICOM.map.SiteNode.class,
 			SitePopupMenu.getInstance());
 		popupMap.put(MapUnboundNodeElement.class,
 			UnboundPopupMenu.getInstance());

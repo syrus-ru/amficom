@@ -13,6 +13,9 @@ import com.syrus.AMFICOM.Client.Resource.Object.User;
 import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
 
+import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
+import com.syrus.AMFICOM.general.CommunicationException;
+import com.syrus.AMFICOM.general.DatabaseException;
 import java.text.SimpleDateFormat;
 
 import java.util.ArrayList;
@@ -78,12 +81,34 @@ public final class MapViewController implements ObjectResourceController
 		else
 		if (key.equals(KEY_DOMAIN))
 		{
-			result = Pool.get(Domain.typ, view.getDomainId());
+			try
+			{
+				result = ConfigurationStorableObjectPool.getStorableObject(view.getDomainId(), false);
+			}
+			catch (CommunicationException e)
+			{
+				e.printStackTrace();
+			}
+			catch (DatabaseException e)
+			{
+				e.printStackTrace();
+			}
 		}
 		else
 		if (key.equals(KEY_USER))
 		{
-			result = Pool.get(User.typ, view.getCreatedBy());
+			try
+			{
+				result = ConfigurationStorableObjectPool.getStorableObject(view.getCreatedBy(), false);
+			}
+			catch (CommunicationException e)
+			{
+				e.printStackTrace();
+			}
+			catch (DatabaseException e)
+			{
+				e.printStackTrace();
+			}
 		}
 		else
 		if (key.equals(KEY_CREATED))

@@ -1,5 +1,5 @@
 /**
- * $Id: MapSelection.java,v 1.12 2004/12/08 16:20:22 krupenn Exp $
+ * $Id: MapSelection.java,v 1.13 2004/12/22 16:38:42 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -16,23 +16,31 @@ import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
 import com.syrus.AMFICOM.Client.Resource.Map.*;
 import com.syrus.AMFICOM.Client.Resource.StubResource;
 
+import com.syrus.AMFICOM.configuration.Characteristic;
+import com.syrus.AMFICOM.general.Identifier;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import com.syrus.AMFICOM.map.Map;
+import com.syrus.AMFICOM.map.TopologicalNode;
+import com.syrus.AMFICOM.map.MapElementState;
+import com.syrus.AMFICOM.map.MapElement;
+import com.syrus.AMFICOM.map.PhysicalLink;
+import com.syrus.AMFICOM.map.DoublePoint;
 
 /**
  * набор выбранных элементов 
  * 
  * 
  * 
- * @version $Revision: 1.12 $, $Date: 2004/12/08 16:20:22 $
+ * @version $Revision: 1.13 $, $Date: 2004/12/22 16:38:42 $
  * @module
  * @author $Author: krupenn $
  * @see
  * @todo copy/paste, properties
  */
-public final class MapSelection extends StubResource
+public final class MapSelection
     implements MapElement 
 {
 	protected List elements = new LinkedList();
@@ -72,6 +80,16 @@ public final class MapSelection extends StubResource
 	
 	public void setRemoved(boolean removed)
 	{
+	}
+
+	public void setAlarmState(boolean alarmState)
+	{
+		throw new UnsupportedOperationException();
+	}
+
+	public boolean getAlarmState()
+	{
+		throw new UnsupportedOperationException();
 	}
 
 	public void clear()
@@ -114,7 +132,7 @@ public final class MapSelection extends StubResource
 		location.y = 0.0D;
 		for(Iterator it = elements.iterator(); it.hasNext();)
 		{
-			me = (MapElement )it.next();
+			me = (MapElement)it.next();
 			DoublePoint pt = me.getLocation();
 
 			location.x += pt.x;
@@ -135,8 +153,8 @@ public final class MapSelection extends StubResource
 
 		for(Iterator it = elements.iterator(); it.hasNext();)
 		{
-			MapElement me = (MapElement )it.next();
-			if(! (me instanceof MapPhysicalNodeElement))
+			MapElement me = (MapElement)it.next();
+			if(! (me instanceof TopologicalNode))
 				physicalNodeSelection = false;
 			if(! (me instanceof MapUnboundNodeElement))
 				unboundNodeSelection = false;
@@ -148,7 +166,7 @@ public final class MapSelection extends StubResource
 				! (me instanceof MapUnboundLinkElement) &&
 				! (me instanceof MapCablePathElement))
 				unboundSelection = false;
-			if(! (me instanceof MapPhysicalLinkElement))
+			if(! (me instanceof PhysicalLink))
 				physicalLinkSelection = false;
 		}
 	}
@@ -171,12 +189,12 @@ public final class MapSelection extends StubResource
 	{
 	}
 
-	public String getId()
+	public Identifier getId()
 	{
-		return "selection";
+		throw new UnsupportedOperationException();
 	}
 
-	public void setId(String id)
+	public void setId(Identifier id)
 	{
 		throw new UnsupportedOperationException();
 	}
@@ -187,6 +205,21 @@ public final class MapSelection extends StubResource
 	}
 
 	public void setName(String name)
+	{
+		throw new UnsupportedOperationException();
+	}
+
+	public List getCharacteristics() 
+	{
+		throw new UnsupportedOperationException();
+	}
+
+	public void addCharacteristic(Characteristic ch)
+	{
+		throw new UnsupportedOperationException();
+	}
+
+	public void removeCharacteristic(Characteristic ch)
 	{
 		throw new UnsupportedOperationException();
 	}

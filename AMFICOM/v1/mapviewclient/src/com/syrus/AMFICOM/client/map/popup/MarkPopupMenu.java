@@ -1,8 +1,8 @@
 package com.syrus.AMFICOM.Client.Map.Popup;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
-import com.syrus.AMFICOM.Client.Resource.Map.MapElement;
-import com.syrus.AMFICOM.Client.Resource.Map.MapMarkElement;
+import com.syrus.AMFICOM.map.MapElement;
+import com.syrus.AMFICOM.map.Mark;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -13,7 +13,7 @@ public final class MarkPopupMenu extends MapPopupMenu
 {
 	private JMenuItem removeMenuItem = new JMenuItem();
 	
-	private MapMarkElement mark;
+	private Mark mark;
 	
 	private static MarkPopupMenu instance = new MarkPopupMenu();
 
@@ -35,9 +35,9 @@ public final class MarkPopupMenu extends MapPopupMenu
 		return instance;
 	}
 	
-	public void setMapElement(MapElement me)
+	public void setElement(Object me)
 	{
-		this.mark = (MapMarkElement )me;
+		this.mark = (Mark)me;
 	}
 
 	private void jbInit()

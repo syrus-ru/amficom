@@ -1,5 +1,5 @@
 /*
- * $Id: MapEditorOpenMapCommand.java,v 1.4 2004/10/20 10:14:39 krupenn Exp $
+ * $Id: MapEditorOpenMapCommand.java,v 1.5 2004/12/22 16:38:40 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -20,7 +20,7 @@ import com.syrus.AMFICOM.Client.Map.Editor.MapEditorMainFrame;
 import com.syrus.AMFICOM.Client.Map.UI.MapElementsFrame;
 import com.syrus.AMFICOM.Client.Map.UI.MapFrame;
 import com.syrus.AMFICOM.Client.Map.UI.MapPropertyFrame;
-import com.syrus.AMFICOM.Client.Resource.Map.Map;
+import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapView;
 import javax.swing.JDesktopPane;
 
@@ -30,7 +30,7 @@ import javax.swing.JDesktopPane;
  * пользователь выбрал MapContext, открывается окно карты и сопутствующие окна
  * и MapContext передается в окно карты
  * 
- * @version $Revision: 1.4 $, $Date: 2004/10/20 10:14:39 $
+ * @version $Revision: 1.5 $, $Date: 2004/12/22 16:38:40 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see MapOpenCommand
@@ -82,7 +82,7 @@ public class MapEditorOpenMapCommand extends VoidCommand
 		
 		if (moc.getResult() == Command.RESULT_OK)
 		{
-			map = (Map )moc.getReturnObject();
+			map = (Map)moc.getReturnObject();
 			if(MapFrame.getMapMainFrame() != null)
 				mapView = MapFrame.getMapMainFrame().getMapView();
 

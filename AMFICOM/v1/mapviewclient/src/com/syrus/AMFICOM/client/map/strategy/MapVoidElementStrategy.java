@@ -1,5 +1,5 @@
 /**
- * $Id: MapVoidElementStrategy.java,v 1.10 2004/12/07 17:05:54 krupenn Exp $
+ * $Id: MapVoidElementStrategy.java,v 1.11 2004/12/22 16:38:42 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -15,11 +15,11 @@ import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
 import com.syrus.AMFICOM.Client.Map.MapState;
-import com.syrus.AMFICOM.Client.Resource.Map.Map;
-import com.syrus.AMFICOM.Client.Resource.Map.MapElement;
-import com.syrus.AMFICOM.Client.Resource.Map.MapNodeElement;
-import com.syrus.AMFICOM.Client.Resource.Map.MapNodeLinkElement;
-import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalLinkElement;
+import com.syrus.AMFICOM.map.Map;
+import com.syrus.AMFICOM.map.MapElement;
+import com.syrus.AMFICOM.map.AbstractNode;
+import com.syrus.AMFICOM.map.NodeLink;
+import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapSelection;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapView;
 import com.syrus.AMFICOM.Client.Resource.MapView.VoidMapElement;
@@ -38,7 +38,7 @@ import javax.swing.SwingUtilities;
  * 
  * 
  * 
- * @version $Revision: 1.10 $, $Date: 2004/12/07 17:05:54 $
+ * @version $Revision: 1.11 $, $Date: 2004/12/22 16:38:42 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -134,7 +134,7 @@ public final class MapVoidElementStrategy implements  MapStrategy
 		//Пробегаем и смотрим вхотит ли в область MapNodeElement
 		while (e.hasNext())
 		{
-			MapNodeElement node = (MapNodeElement )e.next();
+			AbstractNode node = (AbstractNode)e.next();
 //			if(node.isVisible(visibleBounds))
 			{
 				Point p = logicalNetLayer.convertMapToScreen(node.getLocation());
@@ -153,7 +153,7 @@ public final class MapVoidElementStrategy implements  MapStrategy
 			//Пробегаем и смотрим вхотит ли в область nodeLink
 			while (e.hasNext() )
 			{
-				MapNodeLinkElement nodeLink = (MapNodeLinkElement )e.next();
+				NodeLink nodeLink = (NodeLink)e.next();
 				if (
 					selectionRect.contains(
 						logicalNetLayer.convertMapToScreen(
@@ -175,11 +175,11 @@ public final class MapVoidElementStrategy implements  MapStrategy
 		{
 			for(Iterator it = logicalNetLayer.getMapView().getMap().getPhysicalLinks().iterator(); it.hasNext();)
 			{
-				MapPhysicalLinkElement link = (MapPhysicalLinkElement )it.next();
+				PhysicalLink link = (PhysicalLink)it.next();
 				boolean select = true;
 				for(Iterator it2 = link.getNodeLinks().iterator(); it2.hasNext();)
 				{
-					MapNodeLinkElement nodeLink = (MapNodeLinkElement )it2.next();
+					NodeLink nodeLink = (NodeLink)it2.next();
 					if (! (
 						selectionRect.contains(
 							logicalNetLayer.convertMapToScreen(
@@ -198,7 +198,7 @@ public final class MapVoidElementStrategy implements  MapStrategy
 		Set selection = logicalNetLayer.getSelectedElements();
 		if(selection.size() == 1)
 		{
-			MapElement me = (MapElement )selection.iterator().next();
+			MapElement me = (MapElement)selection.iterator().next();
 			logicalNetLayer.setCurrentMapElement(me);
 		}
 		else

@@ -1,5 +1,5 @@
 /**
- * $Id: MapSelectionElementStrategy.java,v 1.5 2004/12/01 10:55:32 krupenn Exp $
+ * $Id: MapSelectionElementStrategy.java,v 1.6 2004/12/22 16:38:41 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -18,7 +18,7 @@ import com.syrus.AMFICOM.Client.General.Model.MapApplicationModel;
 import com.syrus.AMFICOM.Client.Map.Command.Action.MoveSelectionCommandBundle;
 import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
 import com.syrus.AMFICOM.Client.Map.MapState;
-import com.syrus.AMFICOM.Client.Resource.Map.MapElement;
+import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.Client.Resource.MapView.*;
 
 import java.awt.Point;
@@ -31,7 +31,7 @@ import javax.swing.SwingUtilities;
  * 
  * 
  * 
- * @version $Revision: 1.5 $, $Date: 2004/12/01 10:55:32 $
+ * @version $Revision: 1.6 $, $Date: 2004/12/22 16:38:41 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -106,7 +106,7 @@ public final class MapSelectionElementStrategy implements  MapStrategy
 							if(sel.getElements().size() == 1)
 							{
 								logicalNetLayer.setCurrentMapElement(
-									(MapElement )sel.getElements().get(0));
+									(MapElement)sel.getElements().get(0));
 							}
 						}//if(mel.isSelected()
 						else

@@ -1,5 +1,5 @@
 /**
- * $Id: VoidMapElement.java,v 1.8 2004/12/08 16:20:22 krupenn Exp $
+ * $Id: VoidMapElement.java,v 1.9 2004/12/22 16:38:43 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,30 +11,26 @@
 
 package com.syrus.AMFICOM.Client.Resource.MapView;
 
-import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
-import com.syrus.AMFICOM.Client.Resource.Map.DoublePoint;
-import com.syrus.AMFICOM.Client.Resource.Map.Map;
-import com.syrus.AMFICOM.Client.Resource.Map.MapElement;
-import com.syrus.AMFICOM.Client.Resource.Map.MapElementState;
-import com.syrus.AMFICOM.Client.Resource.ObjectResourceModel;
-import com.syrus.AMFICOM.Client.Resource.StubResource;
+import com.syrus.AMFICOM.configuration.Characteristic;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.map.DoublePoint;
+import com.syrus.AMFICOM.map.Map;
+import com.syrus.AMFICOM.map.MapElement;
+import com.syrus.AMFICOM.map.MapElementState;
 
-import java.awt.Graphics;
-import java.awt.Point;
-import java.awt.geom.Point2D;
-import java.awt.geom.Rectangle2D;
+import java.util.List;
 
 /**
  * Пустой элемент 
  * 
  * 
  * 
- * @version $Revision: 1.8 $, $Date: 2004/12/08 16:20:22 $
+ * @version $Revision: 1.9 $, $Date: 2004/12/22 16:38:43 $
  * @module
  * @author $Author: krupenn $
  * @see
  */
-public final class VoidMapElement extends StubResource implements MapElement 
+public final class VoidMapElement implements MapElement 
 {
 	protected MapView mapView;
 	
@@ -82,12 +78,22 @@ public final class VoidMapElement extends StubResource implements MapElement
 		throw new UnsupportedOperationException();
 	}
 
-	public String getId()
+	public void setAlarmState(boolean alarmState)
 	{
 		throw new UnsupportedOperationException();
 	}
 
-	public void setId(String id)
+	public boolean getAlarmState()
+	{
+		throw new UnsupportedOperationException();
+	}
+
+	public Identifier getId()
+	{
+		throw new UnsupportedOperationException();
+	}
+
+	public void setId(Identifier id)
 	{
 		throw new UnsupportedOperationException();
 	}
@@ -120,6 +126,21 @@ public final class VoidMapElement extends StubResource implements MapElement
 	public MapView getMapView()
 	{
 		return mapView;
+	}
+
+	public List getCharacteristics() 
+	{
+		throw new UnsupportedOperationException();
+	}
+
+	public void addCharacteristic(Characteristic ch)
+	{
+		throw new UnsupportedOperationException();
+	}
+
+	public void removeCharacteristic(Characteristic ch)
+	{
+		throw new UnsupportedOperationException();
 	}
 
 	public String getToolTipText()

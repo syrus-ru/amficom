@@ -1,5 +1,5 @@
 /**
- * $Id: DeletePhysicalLinkCommandBundle.java,v 1.4 2004/10/18 15:33:00 krupenn Exp $
+ * $Id: DeletePhysicalLinkCommandBundle.java,v 1.5 2004/12/22 16:38:40 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -13,11 +13,11 @@ package com.syrus.AMFICOM.Client.Map.Command.Action;
 
 import com.syrus.AMFICOM.Client.General.Event.MapEvent;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
-import com.syrus.AMFICOM.Client.Resource.Map.Map;
-import com.syrus.AMFICOM.Client.Resource.Map.MapNodeElement;
-import com.syrus.AMFICOM.Client.Resource.Map.MapNodeLinkElement;
-import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalLinkElement;
-import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalNodeElement;
+import com.syrus.AMFICOM.map.Map;
+import com.syrus.AMFICOM.map.AbstractNode;
+import com.syrus.AMFICOM.map.NodeLink;
+import com.syrus.AMFICOM.map.PhysicalLink;
+import com.syrus.AMFICOM.map.TopologicalNode;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapCablePathElement;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapUnboundLinkElement;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapView;
@@ -32,7 +32,7 @@ import java.util.List;
  * состоит из последовательности атомарных действий
  * 
  * 
- * @version $Revision: 1.4 $, $Date: 2004/10/18 15:33:00 $
+ * @version $Revision: 1.5 $, $Date: 2004/12/22 16:38:40 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -42,14 +42,14 @@ public class DeletePhysicalLinkCommandBundle extends MapActionCommandBundle
 	/**
 	 * Удаляемый фрагмент
 	 */
-	MapPhysicalLinkElement link;
+	PhysicalLink link;
 	
 	/**
 	 * Карта
 	 */
 	Map map;
 
-	public DeletePhysicalLinkCommandBundle(MapPhysicalLinkElement link)
+	public DeletePhysicalLinkCommandBundle(PhysicalLink link)
 	{
 		super();
 		this.link = link;
@@ -80,10 +80,10 @@ public class DeletePhysicalLinkCommandBundle extends MapActionCommandBundle
 		/// удаляются все топологические узлы линии
 		for(Iterator it = link.getSortedNodes().iterator(); it.hasNext();)
 		{
-			MapNodeElement ne = (MapNodeElement )it.next();
-			if(ne instanceof MapPhysicalNodeElement)
+			AbstractNode ne = (AbstractNode)it.next();
+			if(ne instanceof TopologicalNode)
 			{
-				MapPhysicalNodeElement node = (MapPhysicalNodeElement )ne;
+				TopologicalNode node = (TopologicalNode)ne;
 				super.removeNode(node);
 			}
 		}
@@ -91,7 +91,7 @@ public class DeletePhysicalLinkCommandBundle extends MapActionCommandBundle
 		// удаляются все фрагменты линии
 		for(Iterator it = link.getNodeLinks().iterator(); it.hasNext();)
 		{
-			MapNodeLinkElement nodeLink = (MapNodeLinkElement )it.next();
+			NodeLink nodeLink = (NodeLink)it.next();
 			super.removeNodeLink(nodeLink);
 		}
 		

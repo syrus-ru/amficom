@@ -1,5 +1,5 @@
 /*
- * $Id: MapEditorCloseMapCommand.java,v 1.4 2004/10/20 10:14:39 krupenn Exp $
+ * $Id: MapEditorCloseMapCommand.java,v 1.5 2004/12/22 16:38:40 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -18,7 +18,7 @@ import com.syrus.AMFICOM.Client.General.Lang.LangModel;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.Map.Command.Map.MapCloseCommand;
 import com.syrus.AMFICOM.Client.Map.Editor.MapEditorMainFrame;
-import com.syrus.AMFICOM.Client.Resource.Map.Map;
+import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapView;
 import javax.swing.JOptionPane;
 
@@ -28,7 +28,7 @@ import javax.swing.JOptionPane;
  * класс использует команду MapCloseCommand для закрытия карты, после чего
  * генерирует событие закрытия
  * 
- * @version $Revision: 1.4 $, $Date: 2004/10/20 10:14:39 $
+ * @version $Revision: 1.5 $, $Date: 2004/12/22 16:38:40 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see MapCloseCommand

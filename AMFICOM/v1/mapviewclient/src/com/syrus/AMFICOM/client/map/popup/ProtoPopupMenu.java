@@ -2,8 +2,8 @@ package com.syrus.AMFICOM.Client.Map.Popup;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.Map.UI.MapElementLabel;
-import com.syrus.AMFICOM.Client.Resource.Map.MapElement;
-import com.syrus.AMFICOM.Client.Resource.Map.MapNodeProtoElement;
+import com.syrus.AMFICOM.map.MapElement;
+import com.syrus.AMFICOM.map.SiteNodeType;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -15,7 +15,7 @@ public final class ProtoPopupMenu extends MapPopupMenu
 	private JMenuItem removeMenuItem = new JMenuItem();
 	private JMenuItem propertiesMenuItem = new JMenuItem();
 	
-	private MapNodeProtoElement proto;
+	private SiteNodeType proto;
 	
 	private MapElementLabel lab;
 
@@ -39,9 +39,9 @@ public final class ProtoPopupMenu extends MapPopupMenu
 		return instance;
 	}
 	
-	public void setMapElement(MapElement me)
+	public void setElement(Object me)
 	{
-		this.proto = (MapNodeProtoElement )me;
+		this.proto = (SiteNodeType )me;
 	}
 
 	public void setElementLabel(MapElementLabel lab)

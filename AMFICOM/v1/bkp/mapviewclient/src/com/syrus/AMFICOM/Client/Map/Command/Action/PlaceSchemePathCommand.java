@@ -1,5 +1,5 @@
 /**
- * $Id: PlaceSchemePathCommand.java,v 1.5 2004/11/01 15:40:10 krupenn Exp $
+ * $Id: PlaceSchemePathCommand.java,v 1.6 2004/12/22 16:38:40 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -13,21 +13,18 @@ package com.syrus.AMFICOM.Client.Map.Command.Action;
 import com.syrus.AMFICOM.Client.General.Event.MapEvent;
 import com.syrus.AMFICOM.Client.General.Event.MapNavigateEvent;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
-import com.syrus.AMFICOM.Client.Resource.Map.Map;
-import com.syrus.AMFICOM.Client.Resource.Map.MapNodeLinkElement;
-import com.syrus.AMFICOM.Client.Resource.Map.MapSiteNodeElement;
+import com.syrus.AMFICOM.map.Map;
+import com.syrus.AMFICOM.map.NodeLink;
+import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapCablePathElement;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapMeasurementPathElement;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapUnboundLinkElement;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapView;
 import com.syrus.AMFICOM.Client.Resource.Pool;
-import com.syrus.AMFICOM.Client.Resource.Scheme.PathElement;
-import com.syrus.AMFICOM.Client.Resource.Scheme.Scheme;
-import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeCableLink;
-import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeElement;
-import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeLink;
-import com.syrus.AMFICOM.Client.Resource.Scheme.SchemePath;
+import com.syrus.AMFICOM.scheme.SchemeUtils;
+import com.syrus.AMFICOM.scheme.corba.*;
 
+import com.syrus.AMFICOM.scheme.corba.PathElementPackage.Type;
 import java.awt.Point;
 
 import java.util.Iterator;
@@ -36,7 +33,7 @@ import java.util.Iterator;
  * Разместить элемент типа mpe на карте. используется при переносе 
  * (drag/drop), в точке point (в экранных координатах)
  * 
- * @version $Revision: 1.5 $, $Date: 2004/11/01 15:40:10 $
+ * @version $Revision: 1.6 $, $Date: 2004/12/22 16:38:40 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -46,12 +43,12 @@ public class PlaceSchemePathCommand extends MapActionCommandBundle
 	/**
 	 * Выбранный фрагмент линии
 	 */
-	MapSiteNodeElement startNode = null;
-	MapSiteNodeElement endNode = null;
+	SiteNode startNode = null;
+	SiteNode endNode = null;
 
 	MapMeasurementPathElement mPath = null;
 	MapUnboundLinkElement unbound = null;
-	MapNodeLinkElement nodeLink;
+	NodeLink nodeLink;
 
 	SchemePath path = null;
 	
@@ -79,9 +76,9 @@ public class PlaceSchemePathCommand extends MapActionCommandBundle
 
 		mapView = logicalNetLayer.getMapView();
 		map = mapView.getMap();
-		Scheme scheme = (Scheme )Pool.get(Scheme.typ, path.getSchemeId());
+		Scheme scheme = path.scheme();
 		
-		MapSiteNodeElement[] mne = mapView.getSideNodes(path);
+		SiteNode[] mne = mapView.getSideNodes(path);
 		
 		startNode = mne[0];
 		endNode = mne[1];
@@ -93,40 +90,40 @@ public class PlaceSchemePathCommand extends MapActionCommandBundle
 		// если путь уже есть, все его составляющие наносятся заново
 			super.removeMeasurementPathCables(mPath);
 
-		for(Iterator it = path.links.iterator(); it.hasNext();)
+		for(int i = 0; i < path.links().length; i++)
 		{
-			PathElement pe = (PathElement )it.next();
-			if(pe.getType() == PathElement.SCHEME_ELEMENT)
+			PathElement pe = (PathElement )path.links()[i];
+			switch(pe.type().value())
 			{
-				SchemeElement se = (SchemeElement )pe.getSchemeElement();
-				MapSiteNodeElement site = mapView.findElement(se);
+				case Type._SCHEME_ELEMENT:
+					SchemeElement se = (SchemeElement )pe.abstractSchemeElement();
+				SiteNode site = mapView.findElement(se);
 				if(site != null)
 				{
 //					mPath.addCablePath(site);
 				}
-			}
-			else
-			if(pe.getType() == PathElement.LINK)
-			{
-				SchemeLink link = (SchemeLink )pe.getSchemeLink();
-				SchemeElement sse = scheme.getSchemeElementByPort(link.sourcePortId);
-				SchemeElement ese = scheme.getSchemeElementByPort(link.targetPortId);
-				MapSiteNodeElement ssite = mapView.findElement(sse);
-				MapSiteNodeElement esite = mapView.findElement(ese);
-				if(ssite == esite)
-				{
-//					mPath.addCablePath(ssite);
-				}
-			}
-			else
-			if(pe.getType() == PathElement.CABLE_LINK)
-			{
-				SchemeCableLink clink = (SchemeCableLink )pe.getSchemeCableLink();
-				MapCablePathElement cp = mapView.findCablePath(clink);
-				if(cp != null)
-				{
-//					mPath.addCablePath(cp);
-				}
+					break;
+				case Type._SCHEME_LINK:
+					SchemeLink link = (SchemeLink )pe.abstractSchemeElement();
+					SchemeElement sse = SchemeUtils.getSchemeElementByDevice(scheme, link.sourceSchemePort().schemeDevice());
+					SchemeElement ese = SchemeUtils.getSchemeElementByDevice(scheme, link.targetSchemePort().schemeDevice());
+					SiteNode ssite = mapView.findElement(sse);
+					SiteNode esite = mapView.findElement(ese);
+					if(ssite == esite)
+					{
+	//					mPath.addCablePath(ssite);
+					}
+					break;
+				case Type._SCHEME_CABLE_LINK:
+					SchemeCableLink clink = (SchemeCableLink )pe.abstractSchemeElement();
+					MapCablePathElement cp = mapView.findCablePath(clink);
+					if(cp != null)
+					{
+	//					mPath.addCablePath(cp);
+					}
+					break;
+				default:
+					throw new UnsupportedOperationException();
 			}
 		}
 

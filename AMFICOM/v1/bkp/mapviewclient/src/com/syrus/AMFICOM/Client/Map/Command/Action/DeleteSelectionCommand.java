@@ -1,5 +1,5 @@
 /**
- * $Id: DeleteSelectionCommand.java,v 1.9 2004/12/08 16:20:22 krupenn Exp $
+ * $Id: DeleteSelectionCommand.java,v 1.10 2004/12/22 16:38:40 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -16,11 +16,11 @@ import com.syrus.AMFICOM.Client.General.Event.MapNavigateEvent;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
 import com.syrus.AMFICOM.Client.Map.MapState;
-import com.syrus.AMFICOM.Client.Resource.Map.Map;
-import com.syrus.AMFICOM.Client.Resource.Map.MapElement;
-import com.syrus.AMFICOM.Client.Resource.Map.MapNodeElement;
-import com.syrus.AMFICOM.Client.Resource.Map.MapNodeLinkElement;
-import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalLinkElement;
+import com.syrus.AMFICOM.map.Map;
+import com.syrus.AMFICOM.map.MapElement;
+import com.syrus.AMFICOM.map.AbstractNode;
+import com.syrus.AMFICOM.map.NodeLink;
+import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapCablePathElement;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapUnboundLinkElement;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapView;
@@ -35,7 +35,7 @@ import java.util.LinkedList;
  * 
  * 
  * 
- * @version $Revision: 1.9 $, $Date: 2004/12/08 16:20:22 $
+ * @version $Revision: 1.10 $, $Date: 2004/12/22 16:38:40 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -67,22 +67,22 @@ public class DeleteSelectionCommand extends MapActionCommandBundle
 
 		for(Iterator it = logicalNetLayer.getSelectedElements().iterator(); it.hasNext();)
 		{
-			MapElement me = (MapElement )it.next();
-			if(me instanceof MapNodeElement)
+			MapElement me = (MapElement)it.next();
+			if(me instanceof AbstractNode)
 			{
 				nodesToDelete.add(me);
 			}
 			else
-			if(me instanceof MapNodeLinkElement
+			if(me instanceof NodeLink
 				&& showMode == MapState.SHOW_NODE_LINK)
 			{
-				MapNodeLinkElement nodeLink = (MapNodeLinkElement )me;
-				MapPhysicalLinkElement link = nodeLink.getPhysicalLink();
+				NodeLink nodeLink = (NodeLink)me;
+				PhysicalLink link = nodeLink.getPhysicalLink();
 				if(!(link instanceof MapUnboundLinkElement))
 					nodeLinksToDelete.add(nodeLink);
 			}
 			else
-			if(me instanceof MapPhysicalLinkElement
+			if(me instanceof PhysicalLink
 				&& showMode == MapState.SHOW_PHYSICAL_LINK)
 			{
 				if(! (me instanceof MapUnboundLinkElement))
@@ -173,7 +173,7 @@ public class DeleteSelectionCommand extends MapActionCommandBundle
 		while (e.hasNext())
 		{
 			DeletePhysicalLinkCommandBundle command = new DeletePhysicalLinkCommandBundle(
-					(MapPhysicalLinkElement )e.next());
+					(PhysicalLink)e.next());
 			command.setLogicalNetLayer(logicalNetLayer);
 			add(command);
 		}
@@ -183,7 +183,7 @@ public class DeleteSelectionCommand extends MapActionCommandBundle
 		while (e.hasNext())
 		{
 			DeleteNodeLinkCommandBundle command = new DeleteNodeLinkCommandBundle(
-					(MapNodeLinkElement )e.next());
+					(NodeLink)e.next());
 			command.setLogicalNetLayer(logicalNetLayer);
 			add(command);
 		}
@@ -193,7 +193,7 @@ public class DeleteSelectionCommand extends MapActionCommandBundle
 		while (e.hasNext())
 		{
 			DeleteNodeCommandBundle command = new DeleteNodeCommandBundle(
-					(MapNodeElement )e.next());
+					(AbstractNode)e.next());
 			command.setLogicalNetLayer(logicalNetLayer);
 			add(command);
 		}

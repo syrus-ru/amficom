@@ -8,10 +8,10 @@ package com.syrus.AMFICOM.Client.Map.Props;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
-import com.syrus.AMFICOM.Client.Resource.Map.DoublePoint;
-import com.syrus.AMFICOM.Client.Resource.Map.MapElement;
-import com.syrus.AMFICOM.Client.Resource.Map.MapNodeProtoElement;
-import com.syrus.AMFICOM.Client.Resource.Map.MapSiteNodeElement;
+import com.syrus.AMFICOM.map.DoublePoint;
+import com.syrus.AMFICOM.map.MapElement;
+import com.syrus.AMFICOM.map.SiteNodeType;
+import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.Client.Resource.MiscUtil;
 import com.syrus.AMFICOM.Client.Resource.Pool;
 
@@ -69,7 +69,7 @@ public final class MapSiteNodePropertiesController
 	public Object getValue(final Object object, final String key)
 	{
 		Object result = null;
-		MapSiteNodeElement site = (MapSiteNodeElement )object;
+		SiteNode site = (SiteNode)object;
 
 		if (key.equals(PROPERTY_NAME))
 		{
@@ -79,7 +79,7 @@ public final class MapSiteNodePropertiesController
 		if (key.equals(PROPERTY_PROTO_ID))
 		{
 			// remove .getName()
-			result = ((MapNodeProtoElement )Pool.get(MapNodeProtoElement.typ, site.getMapProtoId())).getName();
+			result = ((SiteNodeType )site.getType()).getName();
 		}
 		else
 		if (key.equals(PROPERTY_LATITUDE))
@@ -106,7 +106,7 @@ public final class MapSiteNodePropertiesController
 
 	public void setValue(Object object, final String key, final Object value)
 	{
-		MapSiteNodeElement site = (MapSiteNodeElement )object;
+		SiteNode site = (SiteNode)object;
 
 		if (key.equals(PROPERTY_NAME))
 		{
@@ -115,7 +115,7 @@ public final class MapSiteNodePropertiesController
 		else
 		if (key.equals(PROPERTY_PROTO_ID))
 		{
-			site.setMapProtoId(((MapElement )value).getId());
+			site.setType((SiteNodeType)value);
 		}
 		else
 		if (key.equals(PROPERTY_LATITUDE))

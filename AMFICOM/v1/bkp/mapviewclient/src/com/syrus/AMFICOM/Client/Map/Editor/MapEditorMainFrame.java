@@ -1,5 +1,5 @@
 /**
- * $Id: MapEditorMainFrame.java,v 1.10 2004/12/07 17:05:54 krupenn Exp $
+ * $Id: MapEditorMainFrame.java,v 1.11 2004/12/22 16:38:40 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -63,7 +63,7 @@ import com.syrus.AMFICOM.Client.Map.UI.MapFrame;
 import com.syrus.AMFICOM.Client.Map.UI.MapPropertyFrame;
 import com.syrus.AMFICOM.Client.Map.UI.MapSchemeTreeFrame;
 import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
-import com.syrus.AMFICOM.Client.Resource.Map.Map;
+import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapView;
 import com.syrus.AMFICOM.Client.Resource.Object.Domain;
 import com.syrus.AMFICOM.Client.Resource.ObjectResource;
@@ -98,7 +98,7 @@ import javax.swing.JViewport;
  * 
  * 
  * 
- * @version $Revision: 1.10 $, $Date: 2004/12/07 17:05:54 $
+ * @version $Revision: 1.11 $, $Date: 2004/12/22 16:38:40 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see

@@ -1,5 +1,5 @@
 /**
- * $Id: MapMarker.java,v 1.20 2004/12/08 16:20:22 krupenn Exp $
+ * $Id: MapMarker.java,v 1.21 2004/12/22 16:38:42 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,15 +11,25 @@
 
 package com.syrus.AMFICOM.Client.Resource.MapView;
 
-import com.syrus.AMFICOM.Client.Resource.Map.DoublePoint;
-import com.syrus.AMFICOM.Client.Resource.Map.MapElementState;
-import com.syrus.AMFICOM.Client.Resource.Map.MapNodeElement;
-import com.syrus.AMFICOM.Client.Resource.Map.MapNodeLinkElement;
-import com.syrus.AMFICOM.Client.Resource.Map.MapSiteNodeElement;
-import com.syrus.AMFICOM.Client.Resource.Scheme.PathDecompositor;
+import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IdentifierGenerationException;
+import com.syrus.AMFICOM.general.IllegalObjectEntityException;
+import com.syrus.AMFICOM.general.LocalIdentifierGenerator;
+import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
+import com.syrus.AMFICOM.map.AbstractNode;
+import com.syrus.AMFICOM.map.DoublePoint;
+import com.syrus.AMFICOM.map.MapElement;
+import com.syrus.AMFICOM.map.MapElementState;
+import com.syrus.AMFICOM.map.NodeLink;
+import com.syrus.AMFICOM.map.SiteNode;
+import com.syrus.AMFICOM.scheme.PathDecompositor;
 
-import java.util.HashMap;
+import java.lang.UnsupportedOperationException;
+
+import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
 
@@ -44,42 +54,35 @@ import java.util.ListIterator;
  * 
  * 
  * 
- * @version $Revision: 1.20 $, $Date: 2004/12/08 16:20:22 $
+ * @version $Revision: 1.21 $, $Date: 2004/12/22 16:38:42 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
  */
 
-public class MapMarker extends MapNodeElement
+public class MapMarker extends AbstractNode implements MapElement
 {
 	private static final long serialVersionUID = 02L;
 	
 	/**
 	 * @deprecated
 	 */
-	public static final String typ = "mapmarker";
-
-	/**
-	 * @deprecated
-	 */
 	public static final String IMAGE_NAME = "marker";
 
+
 	protected Identifier meId;
+
 	protected double distance = 0.0;
-
-	protected MapView mapView;
-	
-
-	protected MapMeasurementPathElement measurementPath;
-
-	protected PathDecompositor spd = null;
 
 	protected Object descriptor;
 
+	protected MapView mapView;
+	protected MapMeasurementPathElement measurementPath;
+	protected PathDecompositor spd = null;
 	protected MapCablePathElement cpath;
-	protected MapNodeLinkElement nodeLink;
-	protected MapNodeElement startNode;
-	protected MapNodeElement endNode;
+	protected NodeLink nodeLink;
+	protected AbstractNode startNode;
+	protected AbstractNode endNode;
 
 	/**
 	 * Создание маркера пользователем на карте
@@ -92,11 +95,11 @@ public class MapMarker extends MapNodeElement
 	 * @param path
 	 */
 	public MapMarker(
-			String id, 
+			Identifier id, 
 			MapView mapView,
-			MapNodeElement startNode,
-			MapNodeElement endNode,
-			MapNodeLinkElement mnle,
+			AbstractNode startNode,
+			AbstractNode endNode,
+			NodeLink mnle,
 			MapMeasurementPathElement path,
 			DoublePoint dpoint)
 	{
@@ -106,6 +109,42 @@ public class MapMarker extends MapNodeElement
 		this.endNode = endNode;
 		this.nodeLink = mnle;
 		setLocation(dpoint);
+	}
+
+	public static MapMarker createInstance(
+			MapView mapView,
+			AbstractNode startNode,
+			AbstractNode endNode,
+			NodeLink mnle,
+			MapMeasurementPathElement path,
+			DoublePoint dpoint)
+		throws CreateObjectException 
+	{
+		if (startNode == null || mapView == null || endNode == null
+				|| path == null || dpoint == null)
+			throw new IllegalArgumentException("Argument is 'null'");
+		
+		try
+		{
+			Identifier ide =
+				LocalIdentifierGenerator.generateIdentifier(ObjectEntities.SITE_NODE_ENTITY_CODE);
+			return new MapMarker(
+				ide,
+				mapView,
+				startNode,
+				endNode,
+				mnle,
+				path,
+				dpoint);
+		}
+		catch (IllegalObjectEntityException e)
+		{
+			throw new CreateObjectException("MapMarker.createInstance | cannot generate identifier ", e);
+		}
+		catch (IdentifierGenerationException e) 
+		{
+			throw new CreateObjectException("MapMarker.createInstance | cannot generate identifier ", e);
+		}
 	}
 
 	/**
@@ -119,47 +158,72 @@ public class MapMarker extends MapNodeElement
 	 * @param meId
 	 */
 	public MapMarker(
-			String id, 
+			Identifier id, 
 			MapView mapView,
 			double opticalDistance, 
 			MapMeasurementPathElement path,
 			Identifier meId)
 	{
-		this.setId(id);
-		this.setName(id);
+		super(id);
+
+		long time = System.currentTimeMillis();
+		super.created = new Date(time);
+		super.modified = new Date(time);
+		super.creatorId = mapView.getMap().getCreatorId();
+		super.modifierId = super.creatorId;
+		super.name = id.toString();
+		super.description = "";
+		super.location = new DoublePoint(0.0, 0.0);
+
 		this.mapView = mapView;
 		this.meId = meId;
 		if(mapView != null)
 		{
 			this.map = mapView.getMap();
-			super.setMap(map);
+			setMap(map);
 		}
-		this.setImageId(IMAGE_NAME);
+//		this.setImageId(IMAGE_NAME);
 
 		this.measurementPath = path;
 		this.startNode = measurementPath.getStartNode();
 		
-		attributes = new HashMap();
-
 		spd = new PathDecompositor(measurementPath.getSchemePath());
-
-		location = new DoublePoint(0.0, 0.0);
-
-//		moveToFromStartLo(opticalDistance);
 	}
 
-	/**
-	 * @deprecated
-	 */
-	public String getTyp()
+	public static MapMarker createInstance(
+			MapView mapView,
+			double opticalDistance, 
+			MapMeasurementPathElement path,
+			Identifier meId)
+		throws CreateObjectException 
 	{
-		return typ;
+		if (meId == null || mapView == null || path == null)
+			throw new IllegalArgumentException("Argument is 'null'");
+		
+		try
+		{
+			Identifier ide =
+				LocalIdentifierGenerator.generateIdentifier(ObjectEntities.SITE_NODE_ENTITY_CODE);
+			return new MapMarker(
+				ide,
+				mapView,
+				opticalDistance, 
+				path,
+				meId);
+		}
+		catch (IdentifierGenerationException e)
+		{
+			throw new CreateObjectException("MapMarker.createInstance | cannot generate identifier ", e);
+		}
+		catch (IllegalObjectEntityException e) 
+		{
+			throw new CreateObjectException("MapMarker.createInstance | cannot generate identifier ", e);
+		}
 	}
 
-	public void setLocation(DoublePoint aLocation)
+	public void setId(Identifier id)
 	{
-		super.setLocation(aLocation);
-//		distance = this.getFromStartLengthLo();
+		super.id = id;
 	}
 
 	public void setMapView(MapView mapView)
@@ -179,192 +243,61 @@ public class MapMarker extends MapNodeElement
 		return PROPERTY_PANE_CLASS_NAME;
 	}
 	
-//	public Point2D.Double getAnchor()
-//	{
-/*
-		Vector nl = transmissionPath.sortNodeLinks();
-		if ( anchor != bufferAnchor )
-		{
-			LogicalNetLayer lnl = getLogicalNetLayer();
-
-			//Рисование о пределение координат маркера происходит путм проецирования координат
-			//курсора	на линию на которой маркер находится
-			double startNodeX = lnl.convertLongLatToScreen(startNode.getAnchor()).x;
-			double startNodeY = lnl.convertLongLatToScreen(startNode.getAnchor()).y;
-
-			double endNodeX = lnl.convertLongLatToScreen(endNode.getAnchor()).x;
-			double endNodeY = lnl.convertLongLatToScreen(endNode.getAnchor()).y;
-
-			double nodeLinkLength =  Math.sqrt( 
-					(endNodeX - startNodeX) * (endNodeX - startNodeX) +
-					(endNodeY - startNodeY) * (endNodeY - startNodeY) );
-
-			double thisX = lnl.convertLongLatToScreen(anchor).x;
-			double thisY = lnl.convertLongLatToScreen(anchor).y;
-
-			double lengthFromStartNode = Math.sqrt( 
-					(thisX - startNodeX) * (thisX - startNodeX) +
-					(thisY - startNodeY) * (thisY - startNodeY) );
-
-			double cos_b =  (endNodeY - startNodeY) / nodeLinkLength;
-			double sin_b =  (endNodeX - startNodeX) / nodeLinkLength;
-
-			if ( lengthFromStartNode > nodeLinkLength )
-			{
-//				int i1 = nl.indexOf(nodeLink);
-
-				if(nodeLinkIndex < nl.size() - 1)
-				{
-					nodeLinkIndex++;
-					MapNodeLinkElement mnle = (MapNodeLinkElement) nl.get(nodeLinkIndex);
-					startNode = endNode;
-					nodeLink = mnle;
-					endNode = getMap().getOtherNodeOfNodeLink(mnle, startNode);
-					lengthFromStartNode -= nodeLinkLength;
-				}
-				lengthFromStartNode = nodeLinkLength;
-			}
-			else
-			if ( lengthFromStartNode < 0 )
-			{
-//				int i1 = nl.indexOf(nodeLink);
-
-				if(nodeLinkIndex > 0)
-				{
-					nodeLinkIndex--;
-					MapNodeLinkElement mnle = (MapNodeLinkElement) nl.get(nodeLinkIndex);
-					endNode = startNode;
-					nodeLink = mnle;
-					startNode = getMap().getOtherNodeOfNodeLink(mnle, endNode);
-					lengthFromStartNode += getNodeLinkScreenLength(mnle);
-				}
-				lengthFromStartNode = 0;
-			}
-
-			anchor = lnl.convertScreenToLongLat(new Point(
-				(int)Math.round(startNodeX + sin_b * lengthFromStartNode ),
-				(int)Math.round(startNodeY + cos_b * lengthFromStartNode ) ) );
-			bufferAnchor = anchor;
-		}// if ( anchor != bufferAnchor )
-*/
-//		return anchor;
-//	}
-/*
-	public MotionDescriptor getMotionDescriptor(Point point)
-	{
-		MapCoordinatesConverter converter = getMap().getConverter();
-
-		//Рисование о пределение координат маркера происходит путм проецирования координат
-		//курсора	на линию на которой маркер находится
-
-		double startNodeX = converter.convertMapToScreen(startNode.getAnchor()).x;
-		double startNodeY = converter.convertMapToScreen(startNode.getAnchor()).y;
-
-		double endNodeX = converter.convertMapToScreen(endNode.getAnchor()).x;
-		double endNodeY = converter.convertMapToScreen(endNode.getAnchor()).y;
-
-		double nodeLinkLength = Math.sqrt( 
-			(endNodeX - startNodeX) * (endNodeX - startNodeX) +
-			(endNodeY - startNodeY) * (endNodeY - startNodeY) );
-
-		double thisX = converter.convertMapToScreen(getAnchor()).x;
-		double thisY = converter.convertMapToScreen(getAnchor()).y;
-
-		double lengthFromStartNode = Math.sqrt( 
-			(thisX - startNodeX) * (thisX - startNodeX) +
-			(thisY - startNodeY) * (thisY - startNodeY) );
-
-		double sinB =  (endNodeY - startNodeY) / nodeLinkLength;
-
-		double cosB =  (endNodeX - startNodeX) / nodeLinkLength;
-
-		double mousePointX = point.x;
-		double mousePointY = point.y;
-
-		double lengthThisToMousePoint = Math.sqrt( 
-			(mousePointX - thisX) * (mousePointX - thisX) +
-			(mousePointY - thisY) * (mousePointY - thisY) );
-
-		double cosA = (lengthThisToMousePoint == 0 ) ? 0.0 :
-			(	(endNodeX - startNodeX) * (mousePointX - thisX) + 
-				(endNodeY - startNodeY) * (mousePointY - thisY) ) /
-			( nodeLinkLength * lengthThisToMousePoint );
-
-		lengthFromStartNode = lengthFromStartNode + cosA * lengthThisToMousePoint;
-		
-		return new MotionDescriptor(
-			converter.convertMapToScreen(startNode.getAnchor()),
-			converter.convertMapToScreen(endNode.getAnchor()),
-			converter.convertMapToScreen(getAnchor()),
-			point);
-	}
-*/
-
 	public double getOpticalDistanceFromStart()
 	{
 		return 0.0;
 	}
 
-	public MapNodeLinkElement previousNodeLink()
+	public NodeLink previousNodeLink()
 	{
-		MapNodeLinkElement nl;
+		NodeLink nl;
 		int index = measurementPath.getSortedNodeLinks().indexOf(nodeLink);
 		if(index == 0)
 			nl = null;
 		else
-			nl = (MapNodeLinkElement )(measurementPath.getSortedNodeLinks().get(index - 1));
+			nl = (NodeLink)(measurementPath.getSortedNodeLinks().get(index - 1));
 		return nl;
 	}
 
-	public MapNodeLinkElement nextNodeLink()
+	public NodeLink nextNodeLink()
 	{
-		MapNodeLinkElement nl;
+		NodeLink nl;
 		int index = measurementPath.getSortedNodeLinks().indexOf(nodeLink);
 		if(index == measurementPath.getSortedNodeLinks().size() - 1)
 			nl = null;
 		else
-			nl = (MapNodeLinkElement )(measurementPath.getSortedNodeLinks().get(index + 1));
+			nl = (NodeLink)(measurementPath.getSortedNodeLinks().get(index + 1));
 		return nl;
 	}
 
-	public MapSiteNodeElement getLeft()
+	public SiteNode getLeft()
 	{
 		List nodes = cpath.getSortedNodes();
-		MapNodeElement node = null;
+		AbstractNode node = null;
 		for(ListIterator lit = nodes.listIterator(nodes.indexOf(startNode)); lit.hasPrevious();)
 		{
-			node = (MapNodeElement )lit.previous();
-			if(node instanceof MapSiteNodeElement)
+			node = (AbstractNode)lit.previous();
+			if(node instanceof SiteNode)
 				break;
 			node = null;
 		}
-		return (MapSiteNodeElement )node;
+		return (SiteNode)node;
 	}
 
-	public MapSiteNodeElement getRight()
+	public SiteNode getRight()
 	{
 		List nodes = cpath.getSortedNodes();
-		MapNodeElement node = null;
+		AbstractNode node = null;
 		for(ListIterator lit = nodes.listIterator(nodes.indexOf(endNode) - 1); lit.hasNext();)
 		{
-			node = (MapNodeElement )lit.next();
-			if(node instanceof MapSiteNodeElement)
+			node = (AbstractNode)lit.next();
+			if(node instanceof SiteNode)
 				break;
 			node = null;
 		}
-		return (MapSiteNodeElement )node;
+		return (SiteNode)node;
 	}
 
-
-	public MapElementState getState()
-	{
-		throw new UnsupportedOperationException();
-	}
-
-	public void revert(MapElementState state)
-	{
-		throw new UnsupportedOperationException();
-	}
 
 	public void setMeasurementPath(MapMeasurementPathElement measurementPath)
 	{
@@ -375,16 +308,6 @@ public class MapMarker extends MapNodeElement
 	public MapMeasurementPathElement getMeasurementPath()
 	{
 		return measurementPath;
-	}
-
-	public String[][] getExportColumns()
-	{
-		throw new UnsupportedOperationException();
-	}
-
-	public void setColumn(String field, String value)
-	{
-		throw new UnsupportedOperationException();
 	}
 
 	public void setDescriptor(Object descriptor)
@@ -408,37 +331,37 @@ public class MapMarker extends MapNodeElement
 		this.spd = spd;
 	}
 
-	public void setNodeLink(MapNodeLinkElement nodeLink)
+	public void setNodeLink(NodeLink nodeLink)
 	{
 		this.nodeLink = nodeLink;
 	}
 
 
-	public MapNodeLinkElement getNodeLink()
+	public NodeLink getNodeLink()
 	{
 		return nodeLink;
 	}
 
 
-	public void setStartNode(MapNodeElement startNode)
+	public void setStartNode(AbstractNode startNode)
 	{
 		this.startNode = startNode;
 	}
 
 
-	public MapNodeElement getStartNode()
+	public AbstractNode getStartNode()
 	{
 		return startNode;
 	}
 
 
-	public void setEndNode(MapNodeElement endNode)
+	public void setEndNode(AbstractNode endNode)
 	{
 		this.endNode = endNode;
 	}
 
 
-	public MapNodeElement getEndNode()
+	public AbstractNode getEndNode()
 	{
 		return endNode;
 	}
@@ -460,5 +383,176 @@ public class MapMarker extends MapNodeElement
 	{
 		return meId;
 	}
+
+	public MapElementState getState()
+	{
+		throw new UnsupportedOperationException();
+	}
+
+	public void revert(MapElementState state)
+	{
+		throw new UnsupportedOperationException();
+	}
+
+	public String[][] getExportColumns()
+	{
+		throw new UnsupportedOperationException();
+	}
+
+	public void setColumn(String field, String value)
+	{
+		throw new UnsupportedOperationException();
+	}
+
+////////////////////////////////////////////////////////////////////////////////
+
+	public void insert() throws CreateObjectException
+	{
+		throw new UnsupportedOperationException();
+	}
+
+	public List getDependencies()
+	{
+		throw new UnsupportedOperationException();
+	}
+
+	public StorableObject_Transferable getHeaderTransferable()
+	{
+		throw new UnsupportedOperationException();
+	}
+
+	public Object getTransferable()
+	{
+		throw new UnsupportedOperationException();
+	}
+
+//	public List getCharacteristics() 
+//	{
+//		return Collections.unmodifiableList(this.characteristics);
+//	}
+//
+//	public void addCharacteristic(Characteristic ch)
+//	{
+//		this.characteristics.add(ch);
+//	}
+//
+//	public void removeCharacteristic(Characteristic ch)
+//	{
+//		this.characteristics.remove(ch);
+//	}
+//	
+//	public void setId(Identifier id)
+//	{
+//		this.id = id;
+//	}
+//	
+//	public Identifier getId()
+//	{
+//		return id;
+//	}
+//
+//	public String getName() 
+//	{
+//		return this.name;
+//	}
+//
+//	public void setName(String name) 
+//	{
+//		this.name = name;
+//	}
+//
+//	public String getDescription() 
+//	{
+//		return this.description;
+//	}
+//
+//	public void setDescription(String description) 
+//	{
+//		this.description = description;
+//	}
+//
+//	public Identifier getImageId() 
+//	{
+//		return this.imageId;
+//	}
+//	
+//	public void setImageId(Identifier imageId) 
+//	{
+//		this.imageId = imageId;
+//	}
+//	
+//	public Map getMap()
+//	{
+//		return map;
+//	}
+//
+//	public void setMap(Map map)
+//	{
+//		this.map = map;
+//	}
+//
+//	public boolean isSelected()
+//	{
+//		return selected;
+//	}
+//
+//	public void setSelected(boolean selected)
+//	{
+//		this.selected = selected;
+//		getMap().setSelected(this, selected);
+//	}
+//
+//	public void setAlarmState(boolean alarmState)
+//	{
+//		this.alarmState = alarmState;
+//	}
+//
+//	public boolean getAlarmState()
+//	{
+//		return alarmState;
+//	}
+//
+//	public DoublePoint getLocation()
+//	{
+//		return new DoublePoint(location.x, location.y);
+//	}
+//
+//	public void setLocation(DoublePoint location)
+//	{
+//		this.location.x = location.x;
+//		this.location.y = location.y;
+//	}
+//
+//	public boolean isRemoved()
+//	{
+//		return removed;
+//	}
+//
+//	public void setRemoved(boolean removed)
+//	{
+//		this.removed = removed;
+//	}
+
+//	protected Identifier id;
+//
+//	protected String	name;
+//
+//	protected String	description;
+//
+//	protected Identifier imageId;
+//
+//	protected List		characteristics;
+//
+//	protected DoublePoint location = new DoublePoint(0, 0);
+//
+//
+//	protected transient boolean selected = false;
+//
+//	protected transient boolean alarmState = false;
+//
+//	protected transient boolean removed = false;
+//
+//	protected transient Map map = null;
+
 
 }

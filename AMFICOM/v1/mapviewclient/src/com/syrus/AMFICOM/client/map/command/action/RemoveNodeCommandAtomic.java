@@ -1,5 +1,5 @@
 /**
- * $Id: RemoveNodeCommandAtomic.java,v 1.4 2004/11/01 15:40:10 krupenn Exp $
+ * $Id: RemoveNodeCommandAtomic.java,v 1.5 2004/12/22 16:38:40 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -12,31 +12,32 @@
 package com.syrus.AMFICOM.Client.Map.Command.Action;
 
 import com.syrus.AMFICOM.Client.General.Model.Environment;
-import com.syrus.AMFICOM.Client.Resource.Map.MapNodeElement;
+import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapMarker;
 import com.syrus.AMFICOM.Client.Resource.Pool;
+import com.syrus.AMFICOM.map.Map;
 
 /**
  * удаление узла из карты - атомарное действие 
  * 
  * 
  * 
- * @version $Revision: 1.4 $, $Date: 2004/11/01 15:40:10 $
+ * @version $Revision: 1.5 $, $Date: 2004/12/22 16:38:40 $
  * @module
  * @author $Author: krupenn $
  * @see
  */
 public class RemoveNodeCommandAtomic extends MapActionCommand
 {
-	MapNodeElement node;
+	AbstractNode node;
 	
-	public RemoveNodeCommandAtomic(MapNodeElement node)
+	public RemoveNodeCommandAtomic(AbstractNode node)
 	{
 		super(MapActionCommand.ACTION_DROP_LINE);
 		this.node = node;
 	}
 	
-	public MapNodeElement getNode()
+	public AbstractNode getNode()
 	{
 		return node;
 	}
@@ -54,19 +55,16 @@ public class RemoveNodeCommandAtomic extends MapActionCommand
 		{
 			logicalNetLayer.getMapView().removeMarker((MapMarker )node);
 		}
-		Pool.remove(node.getTyp(), node.getId());
 	}
 	
 	public void redo()
 	{
 		logicalNetLayer.getMapView().getMap().removeNode(node);
-		Pool.remove(node.getTyp(), node.getId());
 	}
 	
 	public void undo()
 	{
 		logicalNetLayer.getMapView().getMap().addNode(node);
-		Pool.put(node.getTyp(), node.getId(), node);
 	}
 }
 

@@ -1,5 +1,5 @@
 /**
- * $Id: AbstractLinkController.java,v 1.1 2004/12/07 17:05:54 krupenn Exp $
+ * $Id: AbstractLinkController.java,v 1.2 2004/12/22 16:38:42 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,33 +11,47 @@
 
 package com.syrus.AMFICOM.Client.Resource.Map;
 
-import com.syrus.AMFICOM.Client.General.Lang.LangModel;
-import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
-import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.General.UI.LineComboBox;
 import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
 import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
-import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.configuration.Characteristic;
 import com.syrus.AMFICOM.configuration.CharacteristicType;
-import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 import com.syrus.AMFICOM.configuration.corba.CharacteristicTypeSort;
+import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.StorableObjectCondition;
+import com.syrus.AMFICOM.general.StringFieldCondition;
+import com.syrus.AMFICOM.general.corba.DataType;
+import com.syrus.AMFICOM.general.corba.StringFieldSort;
+import com.syrus.AMFICOM.map.MapElement;
+import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
+
 import java.awt.Color;
 import java.awt.Stroke;
+
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * линейный элемента карты 
  * 
  * 
  * 
- * @version $Revision: 1.1 $, $Date: 2004/12/07 17:05:54 $
+ * @version $Revision: 1.2 $, $Date: 2004/12/22 16:38:42 $
  * @module
  * @author $Author: krupenn $
  * @see
  */
 public abstract class AbstractLinkController implements MapElementController
 {
+	public static final String ATTRIBUTE_THICKNESS = "thickness";
+	public static final String ATTRIBUTE_COLOR = "color";
+	public static final String ATTRIBUTE_STYLE = "style";
+	public static final String ATTRIBUTE_ALARMED_THICKNESS = "alarmed_thckness";
+	public static final String ATTRIBUTE_ALARMED_COLOR = "alarmed_color";
+
 	protected LogicalNetLayer lnl;
 
 	public void setLogicalNetLayer(LogicalNetLayer lnl)
@@ -52,68 +66,92 @@ public abstract class AbstractLinkController implements MapElementController
 
 	public abstract boolean isSelectionVisible(MapElement me);
 
-	public String getToolTipText(MapElement me)
+	public static CharacteristicType getCharacteristicType(
+			Identifier userId, 
+			String codename)
 	{
-		if(! (me instanceof MapLinkElement))
-			return null;
+		CharacteristicTypeSort sort = CharacteristicTypeSort.CHARACTERISTICTYPESORT_VISUAL;
+		DataType dataType = DataType.DATA_TYPE_STRING;
 
-		MapLinkElement link = (MapLinkElement )me;
-		
-		String s1 = link.getName();
-		String s2 = "";
-		String s3 = "";
+		StorableObjectCondition pTypeCondition = new StringFieldCondition(
+			codename,
+			ObjectEntities.CHARACTERISTICTYPE_ENTITY_CODE,
+			StringFieldSort.STRINGSORT_BASE);
+
 		try
 		{
-			MapNodeElement smne = link.getStartNode();
-			s2 =  ":\n" 
-				+ "   " 
-				+ LangModelMap.getString("From") 
-				+ " " 
-				+ smne.getName() 
-				+ " [" 
-				+ LangModel.getString("node" + smne.getTyp()) 
-				+ "]";
-			MapNodeElement emne = link.getEndNode();
-			s3 = "\n" 
-				+ "   " 
-				+ LangModelMap.getString("To") 
-				+ " " 
-				+ emne.getName() 
-				+ " [" 
-				+ LangModel.getString("node" + emne.getTyp()) 
-				+ "]";
+			List pTypes =
+				MeasurementStorableObjectPool.getStorableObjectsByCondition(pTypeCondition, true);
+			for (Iterator it = pTypes.iterator(); it.hasNext();)
+			{
+				CharacteristicType type = (CharacteristicType )it.next();
+				if (type.getCodename().equals(codename))
+					return type;
+			}
 		}
-		catch(Exception e)
+		catch(ApplicationException ex)
 		{
-			Environment.log(
-				Environment.LOG_LEVEL_FINER, 
-				"method call", 
-				getClass().getName(), 
-				"getToolTipText()", 
-				e);
+			System.err.println("Exception searching ParameterType. Creating new one.");
+			ex.printStackTrace();
 		}
-		return s1 + s2 + s3;
+
+		try
+		{
+			return CharacteristicType.createInstance(
+					userId,
+					codename,
+					"",
+					dataType.value(),
+					sort);
+		}
+		catch (CreateObjectException e)
+		{
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	public static Characteristic getCharacteristic(
+			MapElement me, 
+			CharacteristicType cType)
+	{
+		for(Iterator it = me.getCharacteristics().iterator(); it.hasNext();)
+		{
+			Characteristic ch = (Characteristic )it.next();
+			if(ch.getType().equals(cType))
+				return ch;
+		}
+		return null;
 	}
 
 	/**
 	 * Установить толщину линии
 	 */
-	public void setLineSize (MapLinkElement link, int size)
+	public void setLineSize (MapElement link, int size)
 	{
-		Characteristic ea = (Characteristic )link.attributes.get("thickness");
+		CharacteristicType cType = getCharacteristicType(link.getMap().getCreatorId(), ATTRIBUTE_THICKNESS);
+		Characteristic ea = (Characteristic )getCharacteristic(link, cType);
 		if(ea == null)
 		{
-//			CharacteristicType eat = (CharacteristicType )Pool.get(
-//					CharacteristicType.typ, 
-//					"thickness");
-//			if(eat == null)
-//				return;
-//			ea = new Characteristic(
-//					"attr" + System.currentTimeMillis(),
-//					eat.getName(),
-//					String.valueOf(size),
-//					"thickness");
-			link.attributes.put("thickness", ea);
+			try
+			{
+				ea = Characteristic.createInstance(
+						link.getMap().getCreatorId(),
+						cType,
+						"",
+						"",
+						CharacteristicTypeSort._CHARACTERISTICTYPESORT_VISUAL,
+						"",
+						link.getId(),
+						true,
+						true);
+				link.addCharacteristic(ea);
+			}
+			catch (CreateObjectException e)
+			{
+				e.printStackTrace();
+				return;
+			}
 		}
 		ea.setValue(String.valueOf(size));
 	}
@@ -121,9 +159,10 @@ public abstract class AbstractLinkController implements MapElementController
 	/**
 	 * Получить толщину линии
 	 */
-	public int getLineSize (MapLinkElement link)
+	public int getLineSize (MapElement link)
 	{
-		Characteristic ea = (Characteristic )link.attributes.get("thickness");
+		CharacteristicType cType = getCharacteristicType(link.getMap().getCreatorId(), ATTRIBUTE_THICKNESS);
+		Characteristic ea = (Characteristic )getCharacteristic(link, cType);
 		if(ea == null)
 			return MapPropertiesManager.getThickness();
 		return Integer.parseInt(ea.getValue());
@@ -132,22 +171,31 @@ public abstract class AbstractLinkController implements MapElementController
 	/**
 	 * Установить вид линии
 	 */
-	public void setStyle (MapLinkElement link, String style)
+	public void setStyle (MapElement link, String style)
 	{
-		Characteristic ea = (Characteristic )link.attributes.get("style");
+		CharacteristicType cType = getCharacteristicType(link.getMap().getCreatorId(), ATTRIBUTE_STYLE);
+		Characteristic ea = (Characteristic )getCharacteristic(link, cType);
 		if(ea == null)
 		{
-//			CharacteristicType eat = (CharacteristicType )Pool.get(
-//					CharacteristicType.typ,
-//					"style");
-//			if(eat == null)
-//				return;
-//			ea = new Characteristic(
-//					"attr" + System.currentTimeMillis(),
-//					eat.getName(),
-//					style,
-//					"style");
-			link.attributes.put("style", ea);
+			try
+			{
+				ea = Characteristic.createInstance(
+						link.getMap().getCreatorId(),
+						cType,
+						"",
+						"",
+						CharacteristicTypeSort._CHARACTERISTICTYPESORT_VISUAL,
+						"",
+						link.getId(),
+						true,
+						true);
+				link.addCharacteristic(ea);
+			}
+			catch (CreateObjectException e)
+			{
+				e.printStackTrace();
+				return;
+			}
 		}
 		ea.setValue(style);
 	}
@@ -155,9 +203,10 @@ public abstract class AbstractLinkController implements MapElementController
 	/**
 	 * Получить вид линии
 	 */
-	public String getStyle (MapLinkElement link)
+	public String getStyle (MapElement link)
 	{
-		Characteristic ea = (Characteristic )link.attributes.get("style");
+		CharacteristicType cType = getCharacteristicType(link.getMap().getCreatorId(), ATTRIBUTE_STYLE);
+		Characteristic ea = (Characteristic )getCharacteristic(link, cType);
 		if(ea == null)
 			return MapPropertiesManager.getStyle();
 		return ea.getValue();
@@ -166,35 +215,44 @@ public abstract class AbstractLinkController implements MapElementController
 	/**
 	 * Получить стиль линии
 	 */
-	public Stroke getStroke (MapLinkElement link)
+	public Stroke getStroke (MapElement link)
 	{
-		Characteristic ea = (Characteristic )link.attributes.get("style");
+		CharacteristicType cType = getCharacteristicType(link.getMap().getCreatorId(), ATTRIBUTE_STYLE);
+		Characteristic ea = (Characteristic )getCharacteristic(link, cType);
 		if(ea == null)
 			return MapPropertiesManager.getStroke();
 
 		return LineComboBox.getStrokeByType(ea.getValue());
-
 	}
 
 	/**
 	 * Установить цвет
 	 */
-	public void setColor (MapLinkElement link, Color color)
+	public void setColor (MapElement link, Color color)
 	{
-		Characteristic ea = (Characteristic )link.attributes.get("color");
+		CharacteristicType cType = getCharacteristicType(link.getMap().getCreatorId(), ATTRIBUTE_COLOR);
+		Characteristic ea = (Characteristic )getCharacteristic(link, cType);
 		if(ea == null)
 		{
-//			CharacteristicType eat = (CharacteristicType )Pool.get(
-//					CharacteristicType.typ,
-//					"color");
-//			if(eat == null)
-//				return;
-//			ea = new Characteristic(
-//					"attr" + System.currentTimeMillis(),
-//					eat.getName(),
-//					String.valueOf(color.getRGB()),
-//					"color");
-			link.attributes.put("color", ea);
+			try
+			{
+				ea = Characteristic.createInstance(
+						link.getMap().getCreatorId(),
+						cType,
+						"",
+						"",
+						CharacteristicTypeSort._CHARACTERISTICTYPESORT_VISUAL,
+						"",
+						link.getId(),
+						true,
+						true);
+				link.addCharacteristic(ea);
+			}
+			catch (CreateObjectException e)
+			{
+				e.printStackTrace();
+				return;
+			}
 		}
 		ea.setValue(String.valueOf(color.getRGB()));
 	}
@@ -202,9 +260,10 @@ public abstract class AbstractLinkController implements MapElementController
 	/**
 	 * Получить цвет
 	 */
-	public Color getColor(MapLinkElement link)
+	public Color getColor(MapElement link)
 	{
-		Characteristic ea = (Characteristic )link.attributes.get("color");
+		CharacteristicType cType = getCharacteristicType(link.getMap().getCreatorId(), ATTRIBUTE_COLOR);
+		Characteristic ea = (Characteristic )getCharacteristic(link, cType);
 		if(ea == null)
 			return MapPropertiesManager.getColor();
 		return new Color(Integer.parseInt(ea.getValue()));
@@ -213,22 +272,31 @@ public abstract class AbstractLinkController implements MapElementController
 	/**
 	 * установить цвет при наличии сигнала тревоги
 	 */
-	public void setAlarmedColor (MapLinkElement link, Color color)
+	public void setAlarmedColor (MapElement link, Color color)
 	{
-		Characteristic ea = (Characteristic )link.attributes.get("alarmed_color");
+		CharacteristicType cType = getCharacteristicType(link.getMap().getCreatorId(), ATTRIBUTE_ALARMED_COLOR);
+		Characteristic ea = (Characteristic )getCharacteristic(link, cType);
 		if(ea == null)
 		{
-//			CharacteristicType eat = (CharacteristicType )Pool.get(
-//					CharacteristicType.typ,
-//					"alarmed_color");
-//			if(eat == null)
-//				return;
-//			ea = new Characteristic(
-//					"attr" + System.currentTimeMillis(),
-//					eat.getName(),
-//					String.valueOf(color.getRGB()),
-//					"alarmed_color");
-			link.attributes.put("alarmed_color", ea);
+			try
+			{
+				ea = Characteristic.createInstance(
+						link.getMap().getCreatorId(),
+						cType,
+						"",
+						"",
+						CharacteristicTypeSort._CHARACTERISTICTYPESORT_VISUAL,
+						"",
+						link.getId(),
+						true,
+						true);
+				link.addCharacteristic(ea);
+			}
+			catch (CreateObjectException e)
+			{
+				e.printStackTrace();
+				return;
+			}
 		}
 		ea.setValue(String.valueOf(color.getRGB()));
 	}
@@ -236,9 +304,10 @@ public abstract class AbstractLinkController implements MapElementController
 	/**
 	 * получить цвет при наличии сигнала тревоги
 	 */
-	public Color getAlarmedColor(MapLinkElement link)
+	public Color getAlarmedColor(MapElement link)
 	{
-		Characteristic ea = (Characteristic )link.attributes.get("alarmed_color");
+		CharacteristicType cType = getCharacteristicType(link.getMap().getCreatorId(), ATTRIBUTE_ALARMED_COLOR);
+		Characteristic ea = (Characteristic )getCharacteristic(link, cType);
 		if(ea == null)
 			return MapPropertiesManager.getAlarmedColor();
 		return new Color(Integer.parseInt(ea.getValue()));
@@ -247,22 +316,31 @@ public abstract class AbstractLinkController implements MapElementController
 	/**
 	 * установить толщину линии при наличи сигнала тревоги
 	 */
-	public void setAlarmedLineSize (MapLinkElement link, int size)
+	public void setAlarmedLineSize (MapElement link, int size)
 	{
-		Characteristic ea = (Characteristic )link.attributes.get("alarmed_thickness");
+		CharacteristicType cType = getCharacteristicType(link.getMap().getCreatorId(), ATTRIBUTE_ALARMED_THICKNESS);
+		Characteristic ea = (Characteristic )getCharacteristic(link, cType);
 		if(ea == null)
 		{
-//			CharacteristicType eat = (CharacteristicType )CharacteristicType.get(
-//					CharacteristicType.typ, 
-//					"alarmed_thickness");
-//			if(eat == null)
-//				return;
-//			ea = new Characteristic(
-//					"attr" + System.currentTimeMillis());
-//					eat.getName(),
-//					String.valueOf(size),
-//					"alarmed_thickness");
-			link.attributes.put("alarmed_thickness", ea);
+			try
+			{
+				ea = Characteristic.createInstance(
+						link.getMap().getCreatorId(),
+						cType,
+						"",
+						"",
+						CharacteristicTypeSort._CHARACTERISTICTYPESORT_VISUAL,
+						"",
+						link.getId(),
+						true,
+						true);
+				link.addCharacteristic(ea);
+			}
+			catch (CreateObjectException e)
+			{
+				e.printStackTrace();
+				return;
+			}
 		}
 		ea.setValue(String.valueOf(size));
 	}
@@ -270,9 +348,10 @@ public abstract class AbstractLinkController implements MapElementController
 	/**
 	 * получить толщину линии при наличи сигнала тревоги
 	 */
-	public int getAlarmedLineSize (MapLinkElement link)
+	public int getAlarmedLineSize (MapElement link)
 	{
-		Characteristic ea = (Characteristic )link.attributes.get("alarmed_thickness");
+		CharacteristicType cType = getCharacteristicType(link.getMap().getCreatorId(), ATTRIBUTE_ALARMED_THICKNESS);
+		Characteristic ea = (Characteristic )getCharacteristic(link, cType);
 		if(ea == null)
 			return MapPropertiesManager.getAlarmedThickness();
 		return Integer.parseInt(ea.getValue());

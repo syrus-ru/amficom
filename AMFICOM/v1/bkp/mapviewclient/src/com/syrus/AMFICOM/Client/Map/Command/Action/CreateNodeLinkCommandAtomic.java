@@ -1,5 +1,5 @@
 /**
- * $Id: CreateNodeLinkCommandAtomic.java,v 1.4 2004/10/18 15:33:00 krupenn Exp $
+ * $Id: CreateNodeLinkCommandAtomic.java,v 1.5 2004/12/22 16:38:40 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -13,9 +13,11 @@ package com.syrus.AMFICOM.Client.Map.Command.Action;
 
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
-import com.syrus.AMFICOM.Client.Resource.Map.MapNodeElement;
-import com.syrus.AMFICOM.Client.Resource.Map.MapNodeLinkElement;
+import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.map.AbstractNode;
+import com.syrus.AMFICOM.map.NodeLink;
 import com.syrus.AMFICOM.Client.Resource.Pool;
+import com.syrus.AMFICOM.map.Map;
 
 /**
  * создание фрагмента линии связи, внесение ее в пул и на карту - 
@@ -23,7 +25,7 @@ import com.syrus.AMFICOM.Client.Resource.Pool;
  * 
  * 
  * 
- * @version $Revision: 1.4 $, $Date: 2004/10/18 15:33:00 $
+ * @version $Revision: 1.5 $, $Date: 2004/12/22 16:38:40 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -33,21 +35,21 @@ public class CreateNodeLinkCommandAtomic extends MapActionCommand
 	/**
 	 * создаваемый фрагмент линии
 	 */
-	MapNodeLinkElement nodeLink;
+	NodeLink nodeLink;
 	
-	MapNodeElement startNode;
-	MapNodeElement endNode;
+	AbstractNode startNode;
+	AbstractNode endNode;
 	
 	public CreateNodeLinkCommandAtomic(		
-			MapNodeElement startNode,
-			MapNodeElement endNode)
+			AbstractNode startNode,
+			AbstractNode endNode)
 	{
 		super(MapActionCommand.ACTION_DRAW_LINE);
 		this.startNode = startNode;
 		this.endNode = endNode;
 	}
 	
-	public MapNodeLinkElement getNodeLink()
+	public NodeLink getNodeLink()
 	{
 		return nodeLink;
 	}
@@ -62,12 +64,14 @@ public class CreateNodeLinkCommandAtomic extends MapActionCommand
 
 		DataSourceInterface dataSource = aContext.getDataSource();
 
-		nodeLink = new MapNodeLinkElement( 
-				dataSource.GetUId( MapNodeLinkElement.typ),
-				startNode, 
-				endNode, 
-				logicalNetLayer.getMapView().getMap());
-		Pool.put(MapNodeLinkElement.typ, nodeLink.getId(), nodeLink);
+		try
+		{
+			nodeLink = NodeLink.createInstance(startNode, endNode);
+		}
+		catch (CreateObjectException e)
+		{
+			e.printStackTrace();
+		}
 
 		logicalNetLayer.getMapView().getMap().addNodeLink(nodeLink);
 	}
@@ -75,13 +79,11 @@ public class CreateNodeLinkCommandAtomic extends MapActionCommand
 	public void redo()
 	{
 		logicalNetLayer.getMapView().getMap().addNodeLink(nodeLink);
-		Pool.put(MapNodeLinkElement.typ, nodeLink.getId(), nodeLink);
 	}
 	
 	public void undo()
 	{
 		logicalNetLayer.getMapView().getMap().removeNodeLink(nodeLink);
-		Pool.remove(MapNodeLinkElement.typ, nodeLink.getId());
 	}
 }
 

@@ -1,10 +1,9 @@
 package com.syrus.AMFICOM.Client.Map.Props;
 
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.UI.ObjectResourcePropertiesPane;
+import com.syrus.AMFICOM.client_.general.ui_.ObjectResourcePropertiesPane;
 import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
-import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalLinkElement;
-import com.syrus.AMFICOM.Client.Resource.ObjectResource;
+import com.syrus.AMFICOM.map.PhysicalLink;
 
 import java.awt.BorderLayout;
 
@@ -20,7 +19,7 @@ public final class MapLinkPane
 	MapLinkGeneralPanel gPanel = new MapLinkGeneralPanel();
 	MapLinkBindPanel bPanel = new MapLinkBindPanel();
 
-	MapPhysicalLinkElement maplink;
+	PhysicalLink maplink;
 
 	private LogicalNetLayer lnl;
 
@@ -46,10 +45,10 @@ public final class MapLinkPane
 		return instance;
 	}
 
-	public MapLinkPane(MapPhysicalLinkElement maplink)
+	public MapLinkPane(PhysicalLink maplink)
 	{
 		this();
-		setObjectResource(maplink);
+		setObject(maplink);
 	}
 	
 	public void setLogicalNetLayer(LogicalNetLayer lnl)
@@ -75,17 +74,17 @@ public final class MapLinkPane
 		tabbedPane.add(bPanel.getName(), bPanel);
 	}
 
-	public ObjectResource getObjectResource()
+	public Object getObject()
 	{
 		return maplink;
 	}
 
-	public void setObjectResource(ObjectResource or)
+	public void setObject(Object or)
 	{
-		this.maplink = (MapPhysicalLinkElement )or;
+		this.maplink = (PhysicalLink)or;
 
-		gPanel.setObjectResource(maplink);
-		bPanel.setObjectResource(maplink);
+		gPanel.setObject(maplink);
+		bPanel.setObject(maplink);
 	}
 
 	public void setContext(ApplicationContext aContext)

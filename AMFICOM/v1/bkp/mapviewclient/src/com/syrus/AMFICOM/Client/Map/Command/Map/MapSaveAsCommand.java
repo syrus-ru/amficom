@@ -1,5 +1,5 @@
 /*
- * $Id: MapSaveAsCommand.java,v 1.9 2004/12/08 16:20:22 krupenn Exp $
+ * $Id: MapSaveAsCommand.java,v 1.10 2004/12/22 16:38:40 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -17,13 +17,21 @@ import com.syrus.AMFICOM.Client.General.Lang.LangModel;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
-import com.syrus.AMFICOM.Client.General.UI.ObjectResourcePropertiesDialog;
+import com.syrus.AMFICOM.client_.general.ui_.ObjectResourcePropertiesDialog;
 import com.syrus.AMFICOM.Client.Map.Props.MapPanel;
 import com.syrus.AMFICOM.Client.Map.UI.MapFrame;
 import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
-import com.syrus.AMFICOM.Client.Resource.Map.Map;
+import com.syrus.AMFICOM.general.CommunicationException;
+import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.DatabaseException;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.IllegalObjectEntityException;
+import com.syrus.AMFICOM.general.VersionCollisionException;
+import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.Client.Resource.Pool;
 
+import com.syrus.AMFICOM.map.MapStorableObjectPool;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 
@@ -33,7 +41,7 @@ import java.awt.Toolkit;
  * 
  * 
  * 
- * @version $Revision: 1.9 $, $Date: 2004/12/08 16:20:22 $
+ * @version $Revision: 1.10 $, $Date: 2004/12/22 16:38:40 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -69,15 +77,21 @@ public class MapSaveAsCommand extends VoidCommand
 			
 		Map mc = mapFrame.getMapView().getMap();
 
-		Map mc2 = new Map();
-/*
-		mc2.domainId = mc.domainId;
-		mc2.userId = aContext.getSessionInterface().getUserId();
-		mc2.description = mc.description;
-		mc2.created_by = mc2.userId;
-		mc2.modified = mc2.created;
-		mc2.modified_by = mc2.userId;
-*/
+		Identifier userId = new Identifier(
+			aContext.getSessionInterface().getAccessIdentifier().user_id);
+
+		Map mc2;
+
+		try
+		{
+			mc2 = Map.createInstance(userId, mc.getName() + "(Copy)", "");
+		}
+		catch (CreateObjectException e)
+		{
+			e.printStackTrace();
+			return;
+		}
+
 		aContext.getDispatcher().notify(new StatusMessageEvent(
 				StatusMessageEvent.STATUS_MESSAGE,
 				LangModelMap.getString("MapContextSaving")));
@@ -117,8 +131,34 @@ public class MapSaveAsCommand extends VoidCommand
 				Pool.removeHash(MapPropertiesManager.MAP_CLONED_IDS);
 			}
 */
-			Pool.put( mc2.getTyp(), mc2.getId(), mc2);
-			dataSource.SaveMap(mc2.getId());
+			try
+			{
+				MapStorableObjectPool.putStorableObject(mc2);
+			}
+			catch (IllegalObjectEntityException e)
+			{
+				e.printStackTrace();
+			}
+			try
+			{
+				MapStorableObjectPool.flush(true);// save mc2
+			}
+			catch (VersionCollisionException e)
+			{
+				e.printStackTrace();
+			}
+			catch (IllegalDataException e)
+			{
+				e.printStackTrace();
+			}
+			catch (CommunicationException e)
+			{
+				e.printStackTrace();
+			}
+			catch (DatabaseException e)
+			{
+				e.printStackTrace();
+			}
 
 			if (mapFrame != null)
 			{
