@@ -61,7 +61,7 @@ public class SchemeProtoGroupsTreeModel extends ObjectResourceTreeModel
 		if (node.getObject() instanceof SchemeProtoGroup)
 		{
 			SchemeProtoGroup parent_group = (SchemeProtoGroup)node.getObject();
-			if (parent_group.schemeProtoElements().length != 0)
+			if (!parent_group.getSchemeProtoElements().isEmpty())
 				return SchemeProtoGroup.class;
 		}
 		else if (node.getObject() instanceof SchemeProtoGroup)
@@ -74,7 +74,7 @@ public class SchemeProtoGroupsTreeModel extends ObjectResourceTreeModel
 		if (node.getObject() instanceof SchemeProtoGroup)
 		{
 			SchemeProtoGroup parent_group = (SchemeProtoGroup)node.getObject();
-			if (parent_group.schemeProtoElements().length != 0)
+			if (!parent_group.getSchemeProtoElements().isEmpty())
 				return null;
 			/**
 			 * @todo write SchemeProtoGroupController
@@ -107,7 +107,7 @@ public class SchemeProtoGroupsTreeModel extends ObjectResourceTreeModel
 				for (Iterator it = groups.iterator(); it.hasNext(); )
 				{
 					SchemeProtoGroup group = (SchemeProtoGroup)it.next();
-					if (group.parentSchemeProtoGroup() == null)
+					if (group.getParentSchemeProtoGroup() == null)
 					{
 						ImageIcon icon;
 						if (group.getSymbol() == null)
@@ -116,7 +116,7 @@ public class SchemeProtoGroupsTreeModel extends ObjectResourceTreeModel
 							icon = new ImageIcon(Toolkit.getDefaultToolkit().createImage(
 									group.getSymbol().getImage()).getScaledInstance(16, 16, Image.SCALE_SMOOTH));
 						vec.add(new ObjectResourceTreeNode(group, group.getName(), true, icon,
-								group.schemeProtoGroups().length == 0));
+								group.getSchemeProtoGroups().isEmpty()));
 					}
 				}
 			}
@@ -124,9 +124,8 @@ public class SchemeProtoGroupsTreeModel extends ObjectResourceTreeModel
 		else if(node.getObject() instanceof SchemeProtoGroup)
 		{
 			SchemeProtoGroup parent_group = (SchemeProtoGroup)node.getObject();
-			for (int i = 0; i < parent_group.schemeProtoGroups().length; i++)
-			{
-				SchemeProtoGroup group = parent_group.schemeProtoGroups()[i];
+			for (final Iterator schemeProtoGroupIterator = parent_group.getSchemeProtoGroups().iterator(); schemeProtoGroupIterator.hasNext();) {
+				final SchemeProtoGroup group = (SchemeProtoGroup) schemeProtoGroupIterator.next();
 				ImageIcon icon;
 				if (group.getSymbol() == null)
 					icon = new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/folder.gif"));
@@ -134,7 +133,7 @@ public class SchemeProtoGroupsTreeModel extends ObjectResourceTreeModel
 					icon = new ImageIcon(Toolkit.getDefaultToolkit().createImage(
 							group.getSymbol().getImage()).getScaledInstance(16, 16, Image.SCALE_SMOOTH));
 				vec.add(new ObjectResourceTreeNode(group, group.getName(), true, icon,
-						group.schemeProtoGroups().length == 0));
+						group.getSchemeProtoGroups().isEmpty()));
 			}
 		}
 	}

@@ -121,7 +121,7 @@ public class SchemeProtoGroupNavigatorPanel extends JPanel implements OperationL
 				if (dse.getSelectionNumber() != -1)
 				{
 					SchemeProtoGroup group = (SchemeProtoGroup)dse.getList().get(dse.getSelectionNumber());
-					if (group.schemeProtoElements().length == 0)
+					if (group.getSchemeProtoElements().isEmpty())
 						createMapGroupButton.setEnabled(true);
 				}
 				else
@@ -134,8 +134,8 @@ public class SchemeProtoGroupNavigatorPanel extends JPanel implements OperationL
 
 			delMapGroupButton.setEnabled(false);
 			if (selectedObject instanceof SchemeProtoGroup &&
-					((SchemeProtoGroup)selectedObject).schemeProtoGroups().length == 0 &&
-					((SchemeProtoGroup)selectedObject).schemeProtoElements().length == 0)
+					((SchemeProtoGroup)selectedObject).getSchemeProtoGroups().isEmpty() &&
+					((SchemeProtoGroup)selectedObject).getSchemeProtoElements().isEmpty())
 				delMapGroupButton.setEnabled(true);
 		}
 	}
@@ -161,13 +161,12 @@ public class SchemeProtoGroupNavigatorPanel extends JPanel implements OperationL
 			{
 				SchemeProtoGroup parent_group = (SchemeProtoGroup) selectedObject;
 				new_group = SchemeProtoGroup.createInstance(
-						userId, ret, parent_group);
-				Arrays.asList(parent_group.schemeProtoGroups())
-						.add(new_group);
+						userId, ret, "", null, parent_group);
+				parent_group.addSchemeProtoGroup(new_group);
 			}
 			else
 				new_group = SchemeProtoGroup.createInstance(
-						userId, ret, null);
+						userId, ret, "", null, null);
 
 			SchemeStorableObjectPool.putStorableObject(new_group);
 			dispatcher.notify(new TreeListSelectionEvent("",
@@ -202,14 +201,10 @@ public class SchemeProtoGroupNavigatorPanel extends JPanel implements OperationL
 					JOptionPane.YES_NO_OPTION);
 			if (ret == JOptionPane.YES_OPTION)
 			{
-				try {
-					SchemeStorableObjectPool.delete(group.getId());
-				}
-				catch (ApplicationException ex) {
-					ex.printStackTrace();
-				}
-				if (group.parentSchemeProtoGroup() != null)
-					Arrays.asList(group.parentSchemeProtoGroup().schemeProtoGroups()).remove(group);
+				SchemeStorableObjectPool.delete(group.getId());
+				final SchemeProtoGroup parentSchemeProtoGroup = group.getParentSchemeProtoGroup();
+				if (parentSchemeProtoGroup != null)
+					parentSchemeProtoGroup.removeSchemeProtoGroup(group);
 			}
 			else
 				return;

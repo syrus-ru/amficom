@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeTreeModel.java,v 1.5 2005/03/17 14:45:36 stas Exp $
+ * $Id: SchemeTreeModel.java,v 1.6 2005/03/18 19:23:40 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,8 +9,8 @@
 package com.syrus.AMFICOM.client_.scheme.ui;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.5 $, $Date: 2005/03/17 14:45:36 $
+ * @author $Author: bass $
+ * @version $Revision: 1.6 $, $Date: 2005/03/18 19:23:40 $
  * @module schemeclient_v1
  */
 
@@ -186,7 +186,7 @@ public class SchemeTreeModel implements SOTreeDataModel {
 			return MeasurementTypeController.getInstance();
 
 		if (node.getUserObject() instanceof SchemeProtoGroup) {
-			if (((SchemeProtoGroup) node.getUserObject()).schemeProtoGroups().length != 0)
+			if (!((SchemeProtoGroup) node.getUserObject()).getSchemeProtoGroups().isEmpty())
 				return null;
 			/**
 			 * @todo write SchemeProtoGroupController return
@@ -468,8 +468,8 @@ public class SchemeTreeModel implements SOTreeDataModel {
 			}
 			if (node.getUserObject() instanceof SchemeProtoGroup) {
 				SchemeProtoGroup parent_group = (SchemeProtoGroup) node.getUserObject();
-				for (int i = 0; i < parent_group.schemeProtoGroups().length; i++) {
-					SchemeProtoGroup map_group = parent_group.schemeProtoGroups()[i];
+				for (final Iterator schemeProtoGroupIterator = parent_group.getSchemeProtoGroups().iterator(); schemeProtoGroupIterator.hasNext();) {
+					final SchemeProtoGroup map_group = (SchemeProtoGroup) schemeProtoGroupIterator.next();
 					ImageIcon icon;
 					if (map_group.getSymbol() == null) {
 						icon = new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/folder.gif"));
@@ -480,14 +480,14 @@ public class SchemeTreeModel implements SOTreeDataModel {
 								Image.SCALE_SMOOTH));
 					}
 					if (!contents.contains(map_group))
-						node.add(new SOMutableNode(this, map_group, map_group.schemeProtoGroups().length != 0	|| map_group.schemeProtoElements().length != 0));
+						node.add(new SOMutableNode(this, map_group, !map_group.getSchemeProtoGroups().isEmpty() || !map_group.getSchemeProtoElements().isEmpty()));
 				}
-				if (parent_group.schemeProtoGroups().length == 0) {
-					for (int i = 0; i < parent_group.schemeProtoElements().length; i++) {
-						SchemeProtoElement proto = parent_group.schemeProtoElements()[i];
-						// proto.parent(parent_group);
-						if (!contents.contains(proto))
-							node.add(new SOMutableNode(this, proto, false));
+				if (parent_group.getSchemeProtoGroups().isEmpty()) {
+					for (final Iterator schemeProtoElementIterator = parent_group.getSchemeProtoElements().iterator(); schemeProtoElementIterator.hasNext();) {
+						final SchemeProtoElement schemeProtoElement = (SchemeProtoElement) schemeProtoElementIterator.next();
+						// schemeProtoElement.parent(parent_group);
+						if (! contents.contains(schemeProtoElement))
+							node.add(new SOMutableNode(this, schemeProtoElement, false));
 					}
 				}
 			} 

@@ -119,9 +119,6 @@ public class SaveComponentDialog extends JDialog
 
 		//ComponentSaveCommand.saveTypes(aContext.getDataSourceInterface(), false);
 
-		List protos = Arrays.asList(scheme_proto.schemeProtoElements());
-		if (!protos.contains(proto))
-			protos.add(proto);
 		proto.parent(scheme_proto);
 
 		proto.setName(componentPanel.getProtoName());

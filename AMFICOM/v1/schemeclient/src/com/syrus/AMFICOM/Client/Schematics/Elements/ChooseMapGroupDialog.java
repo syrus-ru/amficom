@@ -165,7 +165,7 @@ public class ChooseMapGroupDialog extends JDialog implements OperationListener
 		if (selectedObject instanceof SchemeProtoGroup)
 		{
 			SchemeProtoGroup group = (SchemeProtoGroup)selectedObject;
-			if (group.schemeProtoGroups().length == 0)
+			if (group.getSchemeProtoGroups().isEmpty())
 			{
 				retCode = OK;
 				dispose();

@@ -142,7 +142,7 @@ public class ElementsTreeModel extends ObjectResourceTreeModel
 		}
 		else if (node.getObject() instanceof SchemeProtoGroup)
 		{
-			if (((SchemeProtoGroup)node.getObject()).schemeProtoGroups().length != 0)
+			if (!((SchemeProtoGroup)node.getObject()).getSchemeProtoGroups().isEmpty())
 				return SchemeProtoGroup.class;
 			return SchemeProtoElement.class;
 		}
@@ -177,7 +177,7 @@ public class ElementsTreeModel extends ObjectResourceTreeModel
 		}
 		else if (node.getObject() instanceof SchemeProtoGroup)
 		{
-			if (((SchemeProtoGroup)node.getObject()).schemeProtoGroups().length != 0)
+			if (!((SchemeProtoGroup)node.getObject()).getSchemeProtoGroups().isEmpty())
 				return null;
 			/**
 			 * @todo write SchemeProtoGroupController
@@ -351,9 +351,8 @@ public class ElementsTreeModel extends ObjectResourceTreeModel
 			if(node.getObject() instanceof SchemeProtoGroup)
 			{
 				SchemeProtoGroup parent_group = (SchemeProtoGroup)node.getObject();
-				for (int i = 0; i < parent_group.schemeProtoGroups().length; i++)
-				{
-					SchemeProtoGroup map_group = parent_group.schemeProtoGroups()[i];
+				for (final Iterator schemeProtoGroupIterator = parent_group.getSchemeProtoGroups().iterator(); schemeProtoGroupIterator.hasNext();) {
+					final SchemeProtoGroup map_group = (SchemeProtoGroup) schemeProtoGroupIterator.next();
 					ImageIcon icon;
 					if (map_group.getSymbol() == null)
 						icon = new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/folder.gif"));
@@ -363,15 +362,17 @@ public class ElementsTreeModel extends ObjectResourceTreeModel
 																 getScaledInstance(16, 16, Image.SCALE_SMOOTH));
 
 					vec.add(new ObjectResourceTreeNode(map_group, map_group.getName(), true, icon,
-							map_group.schemeProtoGroups().length == 0 && map_group.schemeProtoElements().length == 0));
+							map_group.getSchemeProtoGroups().isEmpty() && map_group.getSchemeProtoElements().isEmpty()));
 				}
 				if (vec.isEmpty())
 				{
-					for (int i = 0; i < parent_group.schemeProtoElements().length; i++)
-					{
-						SchemeProtoElement proto = parent_group.schemeProtoElements()[i];
-//						proto.scheme_proto_group = parent_group;
-						vec.add(new ObjectResourceTreeNode(proto, proto.getName().length() == 0 ? "Без названия" : proto.getName(), true, true));
+					for (final Iterator schemeProtoElementIterator = parent_group.getSchemeProtoElements().iterator(); schemeProtoElementIterator.hasNext();) {
+						SchemeProtoElement schemeProtoElement = (SchemeProtoElement) schemeProtoElementIterator.next();
+//						schemeProtoElement.scheme_proto_group = parent_group;
+						/**
+						 * @todo name cannot be empty (i. e. of length 0).
+						 */
+						vec.add(new ObjectResourceTreeNode(schemeProtoElement, schemeProtoElement.getName().length() == 0 ? "Без названия" : schemeProtoElement.getName(), true, true));
 					}
 				}
 			}

@@ -1,8 +1,5 @@
 package com.syrus.AMFICOM.Client.Schematics.Elements;
 
-import java.util.*;
-import java.util.List;
-
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
@@ -17,6 +14,8 @@ import com.syrus.AMFICOM.resource.*;
 
 public class ProtoElementPropsPanel extends JPanel
 {
+	private static final long serialVersionUID = 3257848770678239539L;
+
 	JPanel compPanel;
 	JPanel cl2Panel;
 	JTextField mapProtoTextField = new JTextField();
@@ -33,8 +32,8 @@ public class ProtoElementPropsPanel extends JPanel
 	String undoUgoName;
 	SchemeProtoGroup undo_scheme_proto;
 
-	SchemeProtoElement proto;
-	SchemeProtoGroup scheme_proto;
+	SchemeProtoElement schemeProtoElement;
+	private SchemeProtoGroup schemeProtoGroup;
 	EquipmentType eqt;
 	ApplicationContext aContext;
 
@@ -163,10 +162,10 @@ public class ProtoElementPropsPanel extends JPanel
 					{ }
 			public void keyReleased(KeyEvent ae)
 			{
-				if (eqt == null || proto == null)
+				if (eqt == null || ProtoElementPropsPanel.this.schemeProtoElement == null)
 					return;
 				eqt.setName(nameTextField.getText());
-				proto.setName(nameTextField.getText());
+				ProtoElementPropsPanel.this.schemeProtoElement.setName(nameTextField.getText());
 			}
 			public void keyPressed(KeyEvent ae)
 					{}
@@ -203,10 +202,10 @@ public class ProtoElementPropsPanel extends JPanel
 					{ }
 			public void keyReleased(KeyEvent ae)
 			{
-				if (proto == null)
+				if (ProtoElementPropsPanel.this.schemeProtoElement == null)
 					return;
-				proto.label(ugoNameTextField.getText());
-				aContext.getDispatcher().notify(new SchemeElementsEvent(proto.getId(), proto.label(), SchemeElementsEvent.UGO_TEXT_UPDATE_EVENT));
+				ProtoElementPropsPanel.this.schemeProtoElement.label(ugoNameTextField.getText());
+				aContext.getDispatcher().notify(new SchemeElementsEvent(ProtoElementPropsPanel.this.schemeProtoElement.getId(), ProtoElementPropsPanel.this.schemeProtoElement.label(), SchemeElementsEvent.UGO_TEXT_UPDATE_EVENT));
 			}
 			public void keyPressed(KeyEvent ae)
 					{}
@@ -227,18 +226,18 @@ public class ProtoElementPropsPanel extends JPanel
 
 	public void init(SchemeProtoElement proto, boolean show_is_kis)
 	{
-		this.proto = proto;
-		this.scheme_proto = proto.parent();
+		this.schemeProtoElement = proto;
+		this.schemeProtoGroup = proto.parent();
 
 		if (show_is_kis)
 			compPanel.add(cl2Panel, BorderLayout.SOUTH);
 
 		eqt = proto.getEquipmentType();
 
-		if (scheme_proto == null)
+		if (this.schemeProtoGroup == null)
 			mapProtoTextField.setText("");
 		else
-			mapProtoTextField.setText(scheme_proto.getName());
+			mapProtoTextField.setText(this.schemeProtoGroup.getName());
 		mapProtoTextField.setCaretPosition(0);
 		mapProtoTextField.setEnabled(false);
 
@@ -267,7 +266,7 @@ public class ProtoElementPropsPanel extends JPanel
 			}
 		}
 
-		undo_scheme_proto = scheme_proto;
+		undo_scheme_proto = this.schemeProtoGroup;
 		undoType = eqt.getName();
 		undoDescription = eqt.getDescription();
 		undoManufacturer = eqt.getManufacturer();
@@ -301,12 +300,12 @@ public class ProtoElementPropsPanel extends JPanel
 			eqt.setDescription(undoDescription);
 			eqt.setManufacturer(undoManufacturer);
 		}
-		if (proto != null)
+		if (this.schemeProtoElement != null)
 		{
-			proto.label(undoUgoName);
-			proto.parent(undo_scheme_proto);
+			this.schemeProtoElement.label(undoUgoName);
+			this.schemeProtoElement.parent(undo_scheme_proto);
 		}
-		scheme_proto = undo_scheme_proto;
+		this.schemeProtoGroup = undo_scheme_proto;
 	}
 
 	public String getProtoName()
@@ -316,14 +315,14 @@ public class ProtoElementPropsPanel extends JPanel
 
 	public SchemeProtoGroup getSchemeProtoGroup()
 	{
-		return scheme_proto;
+		return this.schemeProtoGroup;
 	}
 
 	void ugoIconButton_actionPerformed()
 	{
 		ImagesDialog frame = new ImagesDialog(aContext);
-		if (proto.getSymbol() != null)
-			frame.setImageResource(proto.getSymbol());
+		if (this.schemeProtoElement.getSymbol() != null)
+			frame.setImageResource(this.schemeProtoElement.getSymbol());
 
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		Dimension frameSize = frame.getSize();
@@ -343,9 +342,9 @@ public class ProtoElementPropsPanel extends JPanel
 			if (icon.getIconWidth() > 20 || icon.getIconHeight() > 20)
 				icon = new ImageIcon (icon.getImage().getScaledInstance(20,	20,	Image.SCALE_SMOOTH));
 			ugoIconButton.setIcon(icon);
-			proto.setSymbol(ir);
+			this.schemeProtoElement.setSymbol(ir);
 
-			aContext.getDispatcher().notify(new SchemeElementsEvent(proto.getId(), icon, SchemeElementsEvent.UGO_ICON_UPDATE_EVENT));
+			aContext.getDispatcher().notify(new SchemeElementsEvent(this.schemeProtoElement.getId(), icon, SchemeElementsEvent.UGO_ICON_UPDATE_EVENT));
 		}
 	}
 
@@ -353,7 +352,7 @@ public class ProtoElementPropsPanel extends JPanel
 	{
 //		EquipmentType eqt = new ChooseEqtDialog().init();
 //		if (eqt != null)
-//			proto.equipmentTypeImpl(eqt);
+//			schemeProtoElement.equipmentTypeImpl(eqt);
 
 	}
 
@@ -363,14 +362,9 @@ public class ProtoElementPropsPanel extends JPanel
 		int ret = newMapProtoDialog.showDialog();
 		if (ret == ChooseMapGroupDialog.OK)
 		{
-			if (proto.parent() != null)
-				Arrays.asList(proto.parent().schemeProtoElements()).remove(proto);
-			scheme_proto = newMapProtoDialog.getSelectedElement();
-			List protos = Arrays.asList(scheme_proto.schemeProtoGroups());
-			if (!protos.contains(proto))
-				protos.add(proto);
-			proto.parent(scheme_proto);
-			mapProtoTextField.setText(scheme_proto.getName());
+			this.schemeProtoGroup = newMapProtoDialog.getSelectedElement();
+			this.schemeProtoElement.parent(this.schemeProtoGroup);
+			mapProtoTextField.setText(this.schemeProtoGroup.getName());
 			mapProtoTextField.setCaretPosition(0);
 		}
 	}

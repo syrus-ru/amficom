@@ -97,12 +97,7 @@ class DeleteAction extends AbstractAction
 							Arrays.asList(panel.getGraph().getScheme().schemeElements()).remove(element);
 							if (element.getEquipment() != null)
 								ConfigurationStorableObjectPool.delete(element.getEquipment().getId());
-							try {
-								SchemeStorableObjectPool.delete(element.getId());
-							}
-							catch (ApplicationException ex) {
-								ex.printStackTrace();
-							}
+							SchemeStorableObjectPool.delete(element.getId());
 						}
 					}
 					/**
@@ -133,12 +128,7 @@ class DeleteAction extends AbstractAction
 					if (link.getLink() != null) {
 							ConfigurationStorableObjectPool.delete(link.getLink().getId());
 						}
-					try {
-						SchemeStorableObjectPool.delete(link.getId());
-					}
-					catch (ApplicationException ex) {
-						ex.printStackTrace();
-					}
+					SchemeStorableObjectPool.delete(link.getId());
 					new_cells.add(cells[i]);
 				}
 				else if (cells[i] instanceof DefaultLink)
@@ -161,12 +151,7 @@ class DeleteAction extends AbstractAction
 						link.setLink(null);
 						ConfigurationStorableObjectPool.delete(link.getLink().getId());
 					}
-					try {
-						SchemeStorableObjectPool.delete(link.getId());
-					}
-					catch (ApplicationException ex) {
-						ex.printStackTrace();
-					}
+					SchemeStorableObjectPool.delete(link.getId());
 					new_cells.add(cells[i]);
 				}
 				else if (cells[i] instanceof BlockPortCell)
@@ -187,12 +172,7 @@ class DeleteAction extends AbstractAction
 						if (port.getPort() != null) {
 							ConfigurationStorableObjectPool.delete(port.getPort().getId());
 						}
-						try {
-							SchemeStorableObjectPool.delete(port.getId());
-						}
-						catch (ApplicationException ex) {
-							ex.printStackTrace();
-						}
+						SchemeStorableObjectPool.delete(port.getId());
 						new_cells.add(cells[i]);
 						for (Enumeration en = ((PortCell)cells[i]).children(); en.hasMoreElements();)
 						{
@@ -216,12 +196,7 @@ class DeleteAction extends AbstractAction
 						if (port.getPort() != null) {
 							ConfigurationStorableObjectPool.delete(port.getPort().getId());
 						}
-						try {
-							SchemeStorableObjectPool.delete(port.getId());
-						}
-						catch (ApplicationException ex) {
-							ex.printStackTrace();
-						}
+						SchemeStorableObjectPool.delete(port.getId());
 						new_cells.add(cells[i]);
 						for (Enumeration en = ((CablePortCell)cells[i]).children(); en.hasMoreElements();)
 						{
