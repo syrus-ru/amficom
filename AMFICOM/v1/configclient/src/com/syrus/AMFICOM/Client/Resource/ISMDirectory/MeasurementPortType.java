@@ -1,71 +1,80 @@
-package com.syrus.AMFICOM.Client.Resource.NetworkDirectory;
+package com.syrus.AMFICOM.Client.Resource.ISMDirectory;
 
 import java.io.*;
 import java.util.*;
 
 import com.syrus.AMFICOM.CORBA.General.Characteristic_Transferable;
-import com.syrus.AMFICOM.CORBA.NetworkDirectory.EquipmentType_Transferable;
+import com.syrus.AMFICOM.CORBA.ISMDirectory.MeasurementPortType_Transferable;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourceDisplayModel;
 import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.Resource.Network.Characteristic;
 
-public class EquipmentType extends StubResource implements Serializable
+public class MeasurementPortType extends StubResource implements Serializable
 {
-	private static final long serialVersionUID = 02L;
-	public static final String typ = "equipmenttype";
+	private static final long serialVersionUID = 01L;
+	public static final String typ = "accessporttype";
 
-	public EquipmentType_Transferable transferable;
+	private MeasurementPortType_Transferable transferable;
 
 	public String id = "";
 	public String name = "";
-	public String eqClass = "";
 	public String description = "";
-	public String manufacturer = "";
-	public String manufacturerCode = "";
-	public String imageId = "";
-	public long modified = 0;
-//	public transient boolean is_modified = false;
+	public String accessType = "";
+	public long modified;
+
+	public Collection testTypeIds = new ArrayList();
 
 	public Map characteristics = new HashMap();
 
-	public EquipmentType()
+	public MeasurementPortType()
 	{
-		transferable = new EquipmentType_Transferable();
+		transferable = new MeasurementPortType_Transferable();
 	}
 
-	public EquipmentType(EquipmentType_Transferable transferable)
+	public MeasurementPortType(MeasurementPortType_Transferable transferable)
 	{
 		this.transferable = transferable;
 		setLocalFromTransferable();
 	}
 
-	public EquipmentType(
+	public MeasurementPortType(
 			String id,
 			String name,
-			String codename,
-			String eqClass,
-			String description)
+			String description,
+			String access_type)
 	{
 		this.id = id;
 		this.name = name;
-		this.eqClass = eqClass;
 		this.description = description;
+		this.accessType = access_type;
 
-		transferable = new EquipmentType_Transferable();
+		transferable = new MeasurementPortType_Transferable();
+	}
+
+	public ObjectResourceModel getModel()
+	{
+		return new MeasurementPortTypeModel(this);
+	}
+
+	public static ObjectResourceDisplayModel getDefaultDisplayModel()
+	{
+		return new MeasurementPortTypeDisplayModel();
+	}
+
+	public String getPropertyPaneClassName()
+	{
+		return "com.syrus.AMFICOM.Client.Configure.UI.AccessPortTypePane";
 	}
 
 	public void setLocalFromTransferable()
 	{
 		id = transferable.id;
 		name = transferable.name;
-		eqClass = transferable.eqClass;
 		description = transferable.description;
-
-		manufacturer = transferable.manufacturer;
-//		manufacturerCode = transferable.manufacturer_code;
-
-		imageId = transferable.imageId;
+		accessType = transferable.accessType;
 		modified = transferable.modified;
+
+		MiscUtil.addToCollection(testTypeIds, transferable.testTypeIds);
 
 //		for(int i = 0; i < transferable.characteristics.length; i++)
 //			characteristics.put(transferable.characteristics[i].id, new Characteristic(transferable.characteristics[i]));
@@ -78,21 +87,18 @@ public class EquipmentType extends StubResource implements Serializable
 	{
 		transferable.id = id;
 		transferable.name = name;
-		transferable.eqClass = eqClass;
 		transferable.description = description;
-
-		transferable.manufacturer = manufacturer;
-//		transferable.manufacturer = manufacturerCode;
-
-		transferable.imageId = imageId;
+		transferable.accessType = accessType;
 		transferable.modified = modified;
+
+		transferable.testTypeIds = (String[])testTypeIds.toArray(new String[testTypeIds.size()]);
 
 		int l = this.characteristics.size();
 		int i = 0;
 		transferable.characteristics = new Characteristic_Transferable[l];
 		for(Iterator it = characteristics.values().iterator(); it.hasNext();)
 		{
-			Characteristic ch = (Characteristic)it.next();
+			Characteristic ch = (Characteristic )it.next();
 			ch.setTransferableFromLocal();
 			transferable.characteristics[i++] = ch.transferable;
 		}
@@ -132,52 +138,14 @@ public class EquipmentType extends StubResource implements Serializable
 		return modified;
 	}
 
-	public ObjectResourceModel getModel()
-	{
-		return new EquipmentTypeModel(this);
-	}
-
-	public static ObjectResourceDisplayModel getDefaultDisplayModel()
-	{
-		return new EquipmentTypeDisplayModel();
-	}
-
-	public String getPropertyPaneClassName()
-	{
-		return "com.syrus.AMFICOM.Client.Configure.UI.EquipmentTypePane";
-	}
-
-	public Object clone()
-	{
-		EquipmentType eqt = new EquipmentType();
-//		eqt.is_modified = true;
-
-		eqt.transferable = new EquipmentType_Transferable();
-
-		eqt.id = id;
-		eqt.name = name;
-		eqt.eqClass = eqClass;
-		eqt.description = description;
-		eqt.manufacturer = manufacturer;
-		eqt.manufacturerCode = manufacturerCode;
-		eqt.imageId =  imageId;
-		eqt.modified = modified;
-
-		eqt.characteristics = new Hashtable(characteristics.size());
-
-		return eqt;
-	}
-
 	private void writeObject(java.io.ObjectOutputStream out) throws IOException
 	{
 		out.writeObject(id);
 		out.writeObject(name);
-		out.writeObject(eqClass);
 		out.writeObject(description);
-		out.writeObject(manufacturer);
-		out.writeObject(manufacturerCode);
-		out.writeObject(imageId);
+		out.writeObject(accessType);
 		out.writeLong(modified);
+		out.writeObject(testTypeIds);
 		out.writeObject(characteristics);
 	}
 
@@ -186,14 +154,12 @@ public class EquipmentType extends StubResource implements Serializable
 	{
 		id = (String )in.readObject();
 		name = (String )in.readObject();
-		eqClass = (String )in.readObject();
 		description = (String )in.readObject();
-		manufacturer = (String )in.readObject();
-		manufacturerCode = (String )in.readObject();
-		imageId = (String )in.readObject();
+		accessType = (String )in.readObject();
 		modified = in.readLong();
+		testTypeIds = (Collection )in.readObject();
 		characteristics = (Map )in.readObject();
 
-		transferable = new EquipmentType_Transferable();
+		transferable = new MeasurementPortType_Transferable();
 	}
 }

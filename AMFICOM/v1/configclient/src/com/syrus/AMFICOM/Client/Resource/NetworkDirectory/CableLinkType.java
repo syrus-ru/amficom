@@ -1,47 +1,11 @@
-//////////////////////////////////////////////////////////////////////////////
-// *                                                                      * //
-// * Syrus Systems                                                        * //
-// * Департамент Системных Исследований и Разработок                      * //
-// *                                                                      * //
-// * Проект: АМФИКОМ - система Автоматизированного Многофункционального   * //
-// *         Интеллектуального Контроля и Объектного Мониторинга          * //
-// *                                                                      * //
-// *         реализация Интегрированной Системы Мониторинга               * //
-// *                                                                      * //
-// * Название: Реализация серверной части интерфейса прототипа РИСД       * //
-// *           (включает реализацию пакета pmServer и класса pmRISDImpl)  * //
-// * Тип: Java 1.2.2                                                      * //
-// *                                                                      * //
-// * Автор: Крупенников А.В.                                              * //
-// *                                                                      * //
-// * Версия: 0.1                                                          * //
-// * От: 22 jan 2002                                                      * //
-// * Расположение: ISM\prog\java\AMFICOMConfigure\com\syrus\AMFICOM\      * //
-// *        Client\Resource\NetworkDirectory\LinkType.java                * //
-// *                                                                      * //
-// * Среда разработки: Oracle JDeveloper 3.2.2 (Build 915)                * //
-// *                                                                      * //
-// * Компилятор: Oracle javac (Java 2 SDK, Standard Edition, ver 1.2.2)   * //
-// *                                                                      * //
-// * Статус: разработка                                                   * //
-// *                                                                      * //
-// * Изменения:                                                           * //
-// *  Кем         Верс   Когда      Комментарии                           * //
-// * -----------  ----- ---------- -------------------------------------- * //
-// *                                                                      * //
-// * Описание:                                                            * //
-// *                                                                      * //
-//////////////////////////////////////////////////////////////////////////////
-
 package com.syrus.AMFICOM.Client.Resource.NetworkDirectory;
 
 import java.io.*;
 import java.util.*;
 
-import com.syrus.AMFICOM.CORBA.Network.Characteristic_Transferable;
+import com.syrus.AMFICOM.CORBA.General.Characteristic_Transferable;
 import com.syrus.AMFICOM.CORBA.NetworkDirectory.*;
-import com.syrus.AMFICOM.Client.Configure.UI.CableLinkTypePane;
-import com.syrus.AMFICOM.Client.General.UI.*;
+import com.syrus.AMFICOM.Client.General.UI.ObjectResourceDisplayModel;
 import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.Resource.Network.Characteristic;
 
@@ -54,23 +18,18 @@ public class CableLinkType extends StubResource implements Serializable
 
 	public String id = "";
 	public String name = "";
-	public String codename = "";
 	public String description = "";
-	public String year = "";
-	public String standard = "";
-	public String link_class = "";
+	public String linkClass = "";
 	public String manufacturer = "";
-	public String manufacturer_code = "";
-	public boolean is_holder;
+	public String manufacturerCode = "";
 
-	public transient boolean is_modified = false;
+//	public transient boolean is_modified = false;
 
-	public String image_id = "";
+	public String imageId = "";
 	public long modified;
 
 	public Map characteristics = new HashMap();
-
-	public List cable_threads = new ArrayList();
+	public List cableThreads = new ArrayList();
 
 	public CableLinkType()
 	{
@@ -97,20 +56,15 @@ public class CableLinkType extends StubResource implements Serializable
 	{
 		id = transferable.id;
 		name = transferable.name;
-		codename = transferable.codename;
-//		description = transferable.description;
-//		year = transferable.year;
-//		standard = transferable.standard;
-		link_class = transferable.link_class;
+		description = transferable.description;
+		linkClass = transferable.linkClass;
 		manufacturer = transferable.manufacturer;
-		manufacturer_code = transferable.manufacturer_code;
-//		is_holder = transferable.is_holder;
-
-		image_id = transferable.image_id;
+		manufacturerCode = transferable.manufacturerCode;
+		imageId = transferable.imageId;
 		modified = transferable.modified;
 
-		for (int i = 0; i < transferable.cable_threads.length; i++)
-			cable_threads.add(new CableTypeThread(transferable.cable_threads[i]));
+		for (int i = 0; i < transferable.cableThreads.length; i++)
+			cableThreads.add(new CableTypeThread(transferable.cableThreads[i]));
 
 		for(int i = 0; i < transferable.characteristics.length; i++)
 			characteristics.put(transferable.characteristics[i].type_id, new Characteristic(transferable.characteristics[i]));
@@ -120,26 +74,21 @@ public class CableLinkType extends StubResource implements Serializable
 	{
 		transferable.id = id;
 		transferable.name = name;
-		transferable.codename = codename;
-//		transferable.description = description;
-//		transferable.year = year;
-//		transferable.standard = standard;
-		transferable.link_class = link_class;
+		transferable.description = description;
+		transferable.linkClass = linkClass;
 		transferable.manufacturer = manufacturer;
-		transferable.manufacturer_code = manufacturer_code;
-//		transferable.is_holder = is_holder;
-
-		transferable.image_id = image_id;
+		transferable.manufacturerCode = manufacturerCode;
+		transferable.imageId = imageId;
 		transferable.modified = modified;
 
-		transferable.cable_threads = new CableTypeThread_Transferable[cable_threads.size()];
+		transferable.cableThreads = new CableTypeThread_Transferable[cableThreads.size()];
 
 		int counter = 0;
-		for (Iterator it = cable_threads.iterator(); it.hasNext();)
+		for (Iterator it = cableThreads.iterator(); it.hasNext();)
 		{
 			CableTypeThread thread = (CableTypeThread)it.next();
 			thread.setTransferableFromLocal();
-			transferable.cable_threads[counter++] = (CableTypeThread_Transferable)thread.getTransferable();
+			transferable.cableThreads[counter++] = (CableTypeThread_Transferable)thread.getTransferable();
 		}
 
 		int l = this.characteristics.size();
@@ -206,15 +155,14 @@ public class CableLinkType extends StubResource implements Serializable
 	{
 		out.writeObject(id);
 		out.writeObject(name);
-		out.writeObject(codename);
-		out.writeObject(link_class);
+		out.writeObject(linkClass);
 		out.writeObject(manufacturer);
-		out.writeObject(manufacturer_code);
-		out.writeObject(image_id);
+		out.writeObject(manufacturerCode);
+		out.writeObject(imageId);
 		out.writeLong(modified);
 		out.writeObject(characteristics);
 
-		out.writeObject(cable_threads);
+		out.writeObject(cableThreads);
 	}
 
 	private void readObject(java.io.ObjectInputStream in)
@@ -222,15 +170,14 @@ public class CableLinkType extends StubResource implements Serializable
 	{
 		id = (String )in.readObject();
 		name = (String )in.readObject();
-		codename = (String )in.readObject();
-		link_class = (String )in.readObject();
+		linkClass = (String )in.readObject();
 		manufacturer = (String )in.readObject();
-		manufacturer_code = (String )in.readObject();
-		image_id = (String )in.readObject();
+		manufacturerCode = (String )in.readObject();
+		imageId = (String )in.readObject();
 		modified = in.readLong();
 		characteristics = (Map )in.readObject();
 
-		cable_threads = (List )in.readObject();
+		cableThreads = (List )in.readObject();
 
 		transferable = new CableLinkType_Transferable();
 	}

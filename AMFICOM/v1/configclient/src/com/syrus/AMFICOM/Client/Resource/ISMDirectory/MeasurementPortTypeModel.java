@@ -1,14 +1,14 @@
-package com.syrus.AMFICOM.Client.Resource.NetworkDirectory;
+package com.syrus.AMFICOM.Client.Resource.ISMDirectory;
 
 import java.util.Map;
 
 import com.syrus.AMFICOM.Client.Resource.ObjectResource;
 import com.syrus.AMFICOM.Client.Resource.Network.CatalogElementModel;
 
-public class PortTypeModel extends CatalogElementModel
+public class MeasurementPortTypeModel extends CatalogElementModel
 {
-	private PortType portType;
-	public PortTypeModel(PortType portType)
+	private MeasurementPortType portType;
+	public MeasurementPortTypeModel(MeasurementPortType portType)
 	{
 		super(portType);
 		this.portType = portType;
@@ -20,6 +20,8 @@ public class PortTypeModel extends CatalogElementModel
 			return portType.id;
 		if(col_id.equals("name"))
 			return portType.name;
+		if(col_id.equals("description"))
+			return portType.description;
 		return "";
 	}
 

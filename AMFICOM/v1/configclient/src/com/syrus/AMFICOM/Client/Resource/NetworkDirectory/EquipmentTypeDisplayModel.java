@@ -61,7 +61,7 @@ public class EquipmentTypeDisplayModel extends StubDisplayModel
 	 if(col_id.equals("name"))
 		return new TextFieldEditor(eqType.getName());
 	 if(col_id.equals("eq_class_id"))
-		return new TextFieldEditor(eqType.eq_class);
+		return new TextFieldEditor(eqType.eqClass);
 	 return null;
 	}
 

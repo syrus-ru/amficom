@@ -1,66 +1,26 @@
-//////////////////////////////////////////////////////////////////////////////
-// *                                                                      * //
-// * Syrus Systems                                                        * //
-// * Департамент Системных Исследований и Разработок                      * //
-// *                                                                      * //
-// * Проект: АМФИКОМ - система Автоматизированного Многофункционального   * //
-// *         Интеллектуального Контроля и Объектного Мониторинга          * //
-// *                                                                      * //
-// *         реализация Интегрированной Системы Мониторинга               * //
-// *                                                                      * //
-// * Название: описание типов сетевых портов                              * //
-// *                                                                      * //
-// * Тип: Java 1.2.2                                                      * //
-// *                                                                      * //
-// * Автор: Крупенников А.В.                                              * //
-// *                                                                      * //
-// * Версия: 0.2                                                          * //
-// * От: 22 jan 2002                                                      * //
-// * Расположение: ISM\prog\java\AMFICOMConfigure\com\syrus\AMFICOM\      * //
-// *        Client\Resource\NetworkDirectory\PortType.java                * //
-// *                                                                      * //
-// * Среда разработки: Oracle JDeveloper 3.2.2 (Build 915)                * //
-// *                                                                      * //
-// * Компилятор: Oracle javac (Java 2 SDK, Standard Edition, ver 1.2.2)   * //
-// *                                                                      * //
-// * Статус: разработка                                                   * //
-// *                                                                      * //
-// * Изменения:                                                           * //
-// *  Кем         Верс   Когда      Комментарии                           * //
-// * -----------  ----- ---------- -------------------------------------- * //
-// *                                                                      * //
-// * Описание:                                                            * //
-// *                                                                      * //
-//////////////////////////////////////////////////////////////////////////////
-
 package com.syrus.AMFICOM.Client.Resource.NetworkDirectory;
 
 import java.io.*;
 import java.util.*;
 
-import com.syrus.AMFICOM.CORBA.Network.Characteristic_Transferable;
+import com.syrus.AMFICOM.CORBA.General.Characteristic_Transferable;
 import com.syrus.AMFICOM.CORBA.NetworkDirectory.CablePortType_Transferable;
-import com.syrus.AMFICOM.Client.Configure.UI.CablePortTypePane;
-import com.syrus.AMFICOM.Client.General.UI.*;
+import com.syrus.AMFICOM.Client.General.UI.ObjectResourceDisplayModel;
 import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.Resource.Network.Characteristic;
 
 public class CablePortType extends StubResource implements Serializable
 {
-	private static final long serialVersionUID = 01L;
+	private static final long serialVersionUID = 02L;
 	public static final String typ = "cableporttype";
 
 	public CablePortType_Transferable transferable;
 
 	public String id = "";
 	public String name = "";
-	public String codename = "";
 	public String description = "";
-	public String year = "";
-	public String body = "";
-	public String standard = "";
-	public String interface_id = "";
-	public String p_class = "";
+	public String interfaceId = "";
+	public String pClass = "";
 	public long modified = 0;
 
 	public transient boolean is_modified = false;
@@ -81,21 +41,13 @@ public class CablePortType extends StubResource implements Serializable
 	public CablePortType(
 			String id,
 			String name,
-			String codename,
 			String description,
-			String year,
-			String body,
-			String standard,
 			String interface_id)
 	{
 		this.id = id;
 		this.name = name;
-		this.codename = codename;
 		this.description = description;
-		this.year = year;
-		this.body = body;
-		this.standard = standard;
-		transferable.interface_id = interface_id;
+		transferable.interfaceId = interface_id;
 
 		transferable = new CablePortType_Transferable();
 	}
@@ -104,14 +56,10 @@ public class CablePortType extends StubResource implements Serializable
 	{
 		id = transferable.id;
 		name = transferable.name;
-		codename = transferable.codename;
 		description = transferable.description;
-		year = transferable.year;
-		body = transferable.body;
-		standard = transferable.standard;
-		interface_id = transferable.interface_id;
+		interfaceId = transferable.interfaceId;
 		modified = transferable.modified;
-		p_class = transferable.p_class;
+		pClass = transferable.pClass;
 
 //		for(int i = 0; i < transferable.characteristics.length; i++)
 //			characteristics.put(transferable.characteristics[i].id, new Characteristic(transferable.characteristics[i]));
@@ -124,14 +72,10 @@ public class CablePortType extends StubResource implements Serializable
 	{
 		transferable.id = id;
 		transferable.name = name;
-		transferable.codename = codename;
 		transferable.description = description;
-		transferable.year = year;
-		transferable.body = body;
-		transferable.standard = standard;
-		transferable.interface_id = interface_id;
+		transferable.interfaceId = interfaceId;
 		transferable.modified = modified;
-		transferable.p_class = p_class;
+		transferable.pClass = pClass;
 
 		int l = this.characteristics.size();
 		int i = 0;
@@ -188,27 +132,18 @@ public class CablePortType extends StubResource implements Serializable
 		return new CablePortTypeDisplayModel();
 	}
 
-	public static PropertiesPanel getPropertyPane()
+	public String getPropertyPaneClassName()
 	{
-		return new CablePortTypePane();
-	}
-
-	public static String getPropertyPaneClassName()
-	{
-		return "com.syrus.AMFICOM.Client.Configure.UI.PortTypePane";
+		return "com.syrus.AMFICOM.Client.Configure.UI.CablePortTypePane";
 	}
 
 	private void writeObject(java.io.ObjectOutputStream out) throws IOException
 	{
 		out.writeObject(id);
 		out.writeObject(name);
-		out.writeObject(codename);
 		out.writeObject(description);
-		out.writeObject(year);
-		out.writeObject(body);
-		out.writeObject(standard);
-		out.writeObject(interface_id);
-		out.writeObject(p_class);
+		out.writeObject(interfaceId);
+		out.writeObject(pClass);
 		out.writeLong(modified);
 		out.writeObject(characteristics);
 	}
@@ -218,13 +153,9 @@ public class CablePortType extends StubResource implements Serializable
 	{
 		id = (String )in.readObject();
 		name = (String )in.readObject();
-		codename = (String )in.readObject();
 		description = (String )in.readObject();
-		year = (String )in.readObject();
-		body = (String )in.readObject();
-		standard = (String )in.readObject();
-		interface_id = (String )in.readObject();
-		p_class = (String )in.readObject();
+		interfaceId = (String )in.readObject();
+		pClass = (String )in.readObject();
 		modified = in.readLong();
 		characteristics = (Map )in.readObject();
 

@@ -2,7 +2,6 @@ package com.syrus.AMFICOM.Client.Resource.NetworkDirectory;
 
 import java.io.*;
 
-import com.syrus.AMFICOM.CORBA.Network.Characteristic_Transferable;
 import com.syrus.AMFICOM.CORBA.NetworkDirectory.CableTypeThread_Transferable;
 import com.syrus.AMFICOM.Client.Resource.StubResource;
 
@@ -16,7 +15,7 @@ public class CableTypeThread extends StubResource implements Serializable
 	public String name = "";
 	public String color = "";
 	public String mark = "";
-	public String link_type_id = "";
+	public String linkTypeId = "";
 
 	public CableTypeThread()
 	{
@@ -35,7 +34,7 @@ public class CableTypeThread extends StubResource implements Serializable
 		name = transferable.name;
 		color = transferable.color;
 		mark = transferable.mark;
-		link_type_id = transferable.link_type_id;
+		linkTypeId = transferable.linkTypeId;
 	}
 
 	public void setTransferableFromLocal()
@@ -44,8 +43,7 @@ public class CableTypeThread extends StubResource implements Serializable
 		transferable.name = name;
 		transferable.color = color;
 		transferable.mark = mark;
-		transferable.link_type_id = link_type_id;
-		transferable.characteristics = new Characteristic_Transferable[0];
+		transferable.linkTypeId = linkTypeId;
 	}
 
 	public String getTyp()
@@ -72,11 +70,6 @@ public class CableTypeThread extends StubResource implements Serializable
 	{
 	}
 
-	public String getPropertyPaneClassName()
-	{
-		return "";
-	}
-
 	public Object getTransferable()
 	{
 		return transferable;
@@ -88,7 +81,7 @@ public class CableTypeThread extends StubResource implements Serializable
 		out.writeObject(name);
 		out.writeObject(color);
 		out.writeObject(mark);
-		out.writeObject(link_type_id);
+		out.writeObject(linkTypeId);
 	}
 
 	private void readObject(java.io.ObjectInputStream in)
@@ -98,11 +91,9 @@ public class CableTypeThread extends StubResource implements Serializable
 		name = (String )in.readObject();
 		color = (String )in.readObject();
 		mark = (String )in.readObject();
-		link_type_id = (String )in.readObject();
+		linkTypeId = (String )in.readObject();
 
-//		characteristics = new Hashtable();
 		transferable = new CableTypeThread_Transferable();
-//		transferable.characteristics = new Characteristic_Transferable[0];
 	}
 }
 
