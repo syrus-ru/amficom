@@ -1,5 +1,5 @@
 /**
- * $Id: MapViewController.java,v 1.6 2005/02/01 13:29:56 krupenn Exp $
+ * $Id: MapViewController.java,v 1.7 2005/02/01 14:35:56 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -63,7 +63,7 @@ import com.syrus.AMFICOM.mapview.UnboundLink;
  * прокладке кабелей и положении узлов и других топологических объектов.
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.6 $, $Date: 2005/02/01 13:29:56 $
+ * @version $Revision: 1.7 $, $Date: 2005/02/01 14:35:56 $
  * @module mapviewclient_v1
  */
 public final class MapViewController
@@ -284,6 +284,43 @@ public final class MapViewController
 			1.0D,
 			1.0D,
 			map);
+	}
+
+	/**
+	 * Получить топологический путь по идентификатору измерительного элемента.
+	 * @param meId идентификатор измерительного элемента
+	 * @return топологический путь
+	 * @throws com.syrus.AMFICOM.general.CommunicationException 
+	 *  см. {@link ConfigurationStorableObjectPool#getStorableObject(Identifier, boolean)}
+	 * @throws com.syrus.AMFICOM.general.DatabaseException
+	 *  см. {@link ConfigurationStorableObjectPool#getStorableObject(Identifier, boolean)}
+	 */
+	public MeasurementPath getMeasurementPathByMonitoredElementId(Identifier meId)
+		throws CommunicationException, DatabaseException
+	{
+		MeasurementPath path = null;
+		MonitoredElement me = (MonitoredElement )
+			ConfigurationStorableObjectPool.getStorableObject(meId, true);
+		if(me.getSort().equals(MonitoredElementSort.MONITOREDELEMENT_SORT_TRANSMISSION_PATH))
+		{
+			Identifier tpId = (Identifier )(me.getMonitoredDomainMemberIds().get(0));
+			TransmissionPath tp = (TransmissionPath )
+				ConfigurationStorableObjectPool.getStorableObject(tpId, true);
+			if(tp != null)
+			{
+				for(Iterator it = mapView.getMeasurementPaths().iterator(); it.hasNext();)
+				{
+					MeasurementPath mp = (MeasurementPath)it.next();
+					if(mp.getSchemePath().pathImpl().equals(tp))
+					{
+						path = mp;
+						break;
+					}
+				}
+			}
+		}
+
+		return path;
 	}
 
 	/**

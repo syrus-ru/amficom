@@ -1,5 +1,5 @@
 /**
- * $Id: LogicalNetLayer.java,v 1.40 2005/02/01 11:34:55 krupenn Exp $
+ * $Id: LogicalNetLayer.java,v 1.41 2005/02/01 14:35:56 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -82,7 +82,7 @@ import java.util.Set;
  * 
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.40 $, $Date: 2005/02/01 11:34:55 $
+ * @version $Revision: 1.41 $, $Date: 2005/02/01 14:35:56 $
  * @module mapviewclient_v2
  */
 public abstract class LogicalNetLayer implements MapCoordinatesConverter
@@ -944,7 +944,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 				MeasurementPath path;
 				try
 				{
-					path = mapView.getMeasurementPathByMonitoredElementId(mne.getMeId());
+					path = getMapViewController().getMeasurementPathByMonitoredElementId(mne.getMeId());
 				}
 				catch (CommunicationException e)
 				{
@@ -978,7 +978,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 				MeasurementPath path;
 				try
 				{
-					path = mapView.getMeasurementPathByMonitoredElementId(mne.getMeId());
+					path = getMapViewController().getMeasurementPathByMonitoredElementId(mne.getMeId());
 				}
 				catch (CommunicationException e)
 				{
@@ -1013,7 +1013,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 				MeasurementPath path;
 				try
 				{
-					path = mapView.getMeasurementPathByMonitoredElementId(mne.getMeId());
+					path = getMapViewController().getMeasurementPathByMonitoredElementId(mne.getMeId());
 				}
 				catch (CommunicationException e)
 				{

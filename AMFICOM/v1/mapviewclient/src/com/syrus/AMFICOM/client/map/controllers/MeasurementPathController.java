@@ -1,5 +1,5 @@
 /**
- * $Id: MeasurementPathController.java,v 1.4 2005/02/01 11:34:56 krupenn Exp $
+ * $Id: MeasurementPathController.java,v 1.5 2005/02/01 14:35:56 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -14,6 +14,13 @@ package com.syrus.AMFICOM.Client.Map.Controllers;
 import com.syrus.AMFICOM.Client.General.Lang.LangModel;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
+import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
+import com.syrus.AMFICOM.configuration.MonitoredElement;
+import com.syrus.AMFICOM.configuration.TransmissionPath;
+import com.syrus.AMFICOM.configuration.corba.MonitoredElementSort;
+import com.syrus.AMFICOM.general.CommunicationException;
+import com.syrus.AMFICOM.general.DatabaseException;
+import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.mapview.CablePath;
 import com.syrus.AMFICOM.mapview.MapView;
 import com.syrus.AMFICOM.mapview.MeasurementPath;
@@ -39,7 +46,7 @@ import java.util.Iterator;
 /**
  * Контроллер топологическиго пути.
  * @author $Author: krupenn $
- * @version $Revision: 1.4 $, $Date: 2005/02/01 11:34:56 $
+ * @version $Revision: 1.5 $, $Date: 2005/02/01 14:35:56 $
  * @module mapviewclient_v1
  */
 public final class MeasurementPathController extends AbstractLinkController
@@ -260,6 +267,44 @@ public final class MeasurementPathController extends AbstractLinkController
 			default:
 				throw new UnsupportedOperationException();
 		}
+		return me;
+	}
+
+	public Identifier getMonitoredElementId(MeasurementPath path)
+	{
+		Identifier meid = null;
+		MonitoredElement me = getMonitoredElement(path);
+		if(me != null)
+			meid = me.getId();
+		return meid;
+	}
+
+	public MonitoredElement getMonitoredElement(MeasurementPath path)
+	{
+		MonitoredElement me = null;
+		try
+		{
+			TransmissionPath tp = path.getSchemePath().pathImpl();
+
+			me = (MonitoredElement )
+				ConfigurationStorableObjectPool.getStorableObject(
+						(Identifier )(tp.getMonitoredElementIds().get(0)), 
+						true);
+
+		}
+		catch (CommunicationException e)
+		{
+			e.printStackTrace();
+		}
+		catch (DatabaseException e)
+		{
+			e.printStackTrace();
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+
 		return me;
 	}
 

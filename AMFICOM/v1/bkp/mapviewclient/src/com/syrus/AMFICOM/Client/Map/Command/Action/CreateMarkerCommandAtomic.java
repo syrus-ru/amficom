@@ -1,5 +1,5 @@
 /**
- * $Id: CreateMarkerCommandAtomic.java,v 1.11 2005/02/01 11:34:56 krupenn Exp $
+ * $Id: CreateMarkerCommandAtomic.java,v 1.12 2005/02/01 14:35:56 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -12,6 +12,7 @@ package com.syrus.AMFICOM.Client.Map.Command.Action;
 
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.General.Model.MapApplicationModel;
+import com.syrus.AMFICOM.Client.Map.Controllers.MeasurementPathController;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
@@ -42,7 +43,7 @@ import com.syrus.AMFICOM.Client.Map.Controllers.MapViewController;
 /**
  * Команда создания метки на линии
  * 
- * @version $Revision: 1.11 $, $Date: 2005/02/01 11:34:56 $
+ * @version $Revision: 1.12 $, $Date: 2005/02/01 14:35:56 $
  * @module map_v2
  * @author $Author: krupenn $
  */
@@ -100,7 +101,8 @@ public class CreateMarkerCommandAtomic extends MapActionCommand
 		{
 			NodeLink mnle = (NodeLink)it.next();
 
-			NodeLinkController nlc = (NodeLinkController)getLogicalNetLayer().getMapViewController().getController(mnle);
+			NodeLinkController nlc = (NodeLinkController )getLogicalNetLayer().getMapViewController().getController(mnle);
+			MeasurementPathController mpc = (MeasurementPathController )getLogicalNetLayer().getMapViewController().getController(path);
 
 			if(nlc.isMouseOnElement(mnle, point))
 			{
@@ -114,6 +116,7 @@ public class CreateMarkerCommandAtomic extends MapActionCommand
 							mnle.getOtherNode(node),
 							mnle,
 							path,
+							mpc.getMonitoredElement(path).getId(),
 							dpoint);
 
 					mapView.addMarker(marker);
