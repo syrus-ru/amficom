@@ -1,5 +1,5 @@
 /*
- * $Id: GeneralStorableObjectPool.java,v 1.9 2005/02/18 17:46:18 arseniy Exp $
+ * $Id: GeneralStorableObjectPool.java,v 1.10 2005/02/22 11:12:11 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,8 +16,8 @@ import java.util.Set;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/02/18 17:46:18 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.10 $, $Date: 2005/02/22 11:12:11 $
+ * @author $Author: bob $
  * @module general_v1
  */
 
@@ -40,7 +40,7 @@ public final class GeneralStorableObjectPool extends StorableObjectPool {
 	}
 
 	private GeneralStorableObjectPool(Class cacheMapClass) {
-		super(cacheMapClass);
+		super(ObjectGroupEntities.GENERAL_GROUP_CODE, cacheMapClass);
 	}
 
 	public static void init(GeneralObjectLoader gObjectLoader1, final int size) {
