@@ -32,7 +32,7 @@ public class ModelingReportModel extends ESAPEReportModel
 	}
 	public String getObjectsName()
 	{
-		return LangModelReport.String("label_repModelingResults");
+		return LangModelReport.getString("label_repModelingResults");
 	}
 
 	public String getLangForField(String field)
@@ -41,7 +41,7 @@ public class ModelingReportModel extends ESAPEReportModel
 		try
 		{
 			if (field.equals(ESAPEReportModel.model_params))
-				strToReturn = LangModelModel.String(field);
+				strToReturn = LangModelModel.getString(field);
 			else
 				strToReturn = LangModelAnalyse.String(field);
 		}

@@ -81,21 +81,21 @@ public class SaveModelingCommand extends VoidCommand
 
 		String s = inicialName;
 		Modeling m = new Modeling(modelingId);
-		m.name = s;
-		m.type_id = "dadara";
+		m.setName(s);
+		m.setTypeId("dadara");
 
 		String path_id = (String)Pool.get("activecontext", "activepathid");
 
-		m.scheme_path_id = path_id;
-		m.user_id = aContext.getSessionInterface().getUserId();
-		m.domain_id = aContext.getSessionInterface().getDomainId();
+		m.setSchemePathId(path_id);
+		m.setUserId(aContext.getSessionInterface().getUserId());
+		m.setDomainId(aContext.getSessionInterface().getDomainId());
 		Pool.put("modeling", m.getId(), m);
 
-		ModelingType mt = (ModelingType)Pool.get(ModelingType.typ, m.type_id);
+		ModelingType mt = (ModelingType)Pool.get(ModelingType.typ, m.getTypeId());
 		Result r = new Result(m.getId(), "modeling", "", aContext.getSessionInterface().getUserId(), dataSource.GetUId("result"));
 		ActionParameterType apt;
-		apt = (ActionParameterType )mt.sorted_parameters.get("reflectogramm");
-		Pool.put(apt.typ, apt.id, apt);
+		apt = (ActionParameterType )mt.getSortedParameters().get("reflectogramm");
+		Pool.put(apt.typ, apt.getId(), apt);
 
 //    GlobalParameterType gpt = new GlobalParameterType();
 		Parameter resparam1 = new Parameter(
@@ -112,7 +112,7 @@ public class SaveModelingCommand extends VoidCommand
 
 
 
-		Pool.put("result", r.id, r);
+		Pool.put("result", r.getId(), r);
 
 		dataSource.SaveModeling(m.getId(), r.getId());
 

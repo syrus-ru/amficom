@@ -3,7 +3,7 @@ package com.syrus.AMFICOM.Client.General.Command.Prediction;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Enumeration;
+import java.util.*;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -107,8 +107,8 @@ public class LoadTraceFromDatabaseCommand extends VoidCommand
 			return;
 		}
 
-		dataSource.LoadEtalons(new String[] {ts.etalon_id});
-		Etalon et = (Etalon)Pool.get(Etalon.typ, ts.etalon_id);
+		dataSource.LoadEtalons(new String[] {ts.getEthalonId()});
+		Etalon et = (Etalon)Pool.get(Etalon.typ, ts.getEthalonId());
 		if(et == null)
 		{
 			String error = "Ошибка загрузки эталона.\n";
@@ -120,16 +120,16 @@ public class LoadTraceFromDatabaseCommand extends VoidCommand
 		ReflectogramEvent []re = null;
 		ShortReflectogramEvent []sre = null;
 
-		for(Enumeration e = et.etalon_parameters.elements(); e.hasMoreElements(); )
+		for(Iterator it = et.getEthalonParameterList().iterator(); it.hasNext(); )
 		{
-			Parameter p = (Parameter)e.nextElement();
-			if(p.codename.equals("reflectogramm"))
+			Parameter p = (Parameter)it.next();
+			if(p.getCodename().equals("reflectogramm"))
 			{
-				bs = new BellcoreReader().getData(p.value);
+				bs = new BellcoreReader().getData(p.getValue());
 			}
-			else if(p.codename.equals("dadara_etalon_event_array"))
+			else if(p.getCodename().equals("dadara_etalon_event_array"))
 			{
-				re = ReflectogramEvent.fromByteArray(p.value);
+				re = ReflectogramEvent.fromByteArray(p.getValue());
 				sre = new ShortReflectogramEvent[re.length];
 				for(int i=0; i<re.length; i++)
 				{
@@ -148,9 +148,9 @@ public class LoadTraceFromDatabaseCommand extends VoidCommand
 
 		SimpleDateFormat sdf_ = new java.text.SimpleDateFormat("dd.MM.yyyy");
 
-		bs.title = "Состояние на " + sdf_.format(new Date(et.created));
+		bs.title = "Состояние на " + sdf_.format(new Date(et.getCreated()));
 		ReflectoEventContainer statEtalon =
-				new ReflectoEventContainer(path_id, sre, re, bs, et.created); //???
+				new ReflectoEventContainer(path_id, sre, re, bs, et.getCreated()); //???
 
 
 
@@ -162,12 +162,12 @@ public class LoadTraceFromDatabaseCommand extends VoidCommand
 			analysisResult = (Result)Pool.get(Result.typ, analysisResultIds[i]);
 			if(analysisResult != null)
 			{
-				for (Enumeration e = analysisResult.parameters.elements();e.hasMoreElements();)
+				for (Iterator it = analysisResult.getParameterList().iterator(); it.hasNext();)
 				{
-					Parameter param = (Parameter)e.nextElement();
-					if(param.gpt != null && param.gpt.id != null && param.gpt.id.equals("dadara_event_array"))
+					Parameter param = (Parameter)it.next();
+					if(param.getGpt() != null && param.getGpt().getId() != null && param.getGpt().getId().equals("dadara_event_array"))
 					{
-						re = ReflectogramEvent.fromByteArray(param.value);
+						re = ReflectogramEvent.fromByteArray(param.getValue());
 						if(re != null)
 						{
 							sre = new ShortReflectogramEvent[re.length];

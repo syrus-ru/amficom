@@ -61,14 +61,14 @@ public class ModelMainToolBar extends JToolBar implements ApplicationModelListen
 		sessionOpen.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/open_session.gif").getScaledInstance(16, 16, Image.SCALE_SMOOTH)));
 		sessionOpen.setMaximumSize(buttonSize);
 		sessionOpen.setPreferredSize(buttonSize);
-		sessionOpen.setToolTipText(LangModelModel.ToolTip("menuSessionOpen"));
+		sessionOpen.setToolTipText(LangModelModel.getString("menuSessionOpen"));
 		sessionOpen.setName("menuSessionOpen");
 		sessionOpen.addActionListener(actionAdapter);
 
 //    sessionClose.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/close_session2.gif").getScaledInstance(16, 16, Image.SCALE_SMOOTH)));
 //    sessionClose.setMaximumSize(buttonSize);
 //    sessionClose.setPreferredSize(buttonSize);
-//    sessionClose.setToolTipText(LangModelModel.ToolTip("menuSessionClose"));
+//    sessionClose.setToolTipText(LangModelModel.getString("menuSessionClose"));
 //    sessionClose.setName("menuSessionClose");
 //    sessionClose.addActionListener(actionAdapter);
 
@@ -76,21 +76,21 @@ public class ModelMainToolBar extends JToolBar implements ApplicationModelListen
 				.getScaledInstance(16, 16, Image.SCALE_SMOOTH)));
 		menuViewMapOpen.setMaximumSize(buttonSize);
 		menuViewMapOpen.setPreferredSize(buttonSize);
-		menuViewMapOpen.setToolTipText(LangModelModel.ToolTip("menuViewMapOpen"));
+		menuViewMapOpen.setToolTipText(LangModelModel.getString("menuViewMapOpen"));
 		menuViewMapOpen.setName("menuViewMapOpen");
 		menuViewMapOpen.addActionListener(actionAdapter);
 
 		menuViewModelLoad.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/download_model.gif").getScaledInstance(16, 16, Image.SCALE_SMOOTH)));
 		menuViewModelLoad.setMaximumSize(buttonSize);
 		menuViewModelLoad.setPreferredSize(buttonSize);
-		menuViewModelLoad.setToolTipText(LangModelModel.ToolTip("menuViewModelLoad"));
+		menuViewModelLoad.setToolTipText(LangModelModel.getString("menuViewModelLoad"));
 		menuViewModelLoad.setName("menuViewModelLoad");
 		menuViewModelLoad.addActionListener(actionAdapter);
 
 		menuViewSchemeOpen.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/main/schematics_mini.gif").getScaledInstance(16, 16, Image.SCALE_SMOOTH)));
 		menuViewSchemeOpen.setMaximumSize(buttonSize);
 		menuViewSchemeOpen.setPreferredSize(buttonSize);
-		menuViewSchemeOpen.setToolTipText(LangModelModel.ToolTip("menuViewSchemeOpen"));
+		menuViewSchemeOpen.setToolTipText(LangModelModel.getString("menuViewSchemeOpen"));
 		menuViewSchemeOpen.setName("menuViewSchemeOpen");
 		menuViewSchemeOpen.addActionListener(actionAdapter);
 
@@ -132,14 +132,14 @@ public class ModelMainToolBar extends JToolBar implements ApplicationModelListen
 		saveModel.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/save.gif").getScaledInstance(16, 16, Image.SCALE_SMOOTH)));
 		saveModel.setMaximumSize(buttonSize);
 		saveModel.setPreferredSize(buttonSize);
-		saveModel.setToolTipText(LangModelModel.ToolTip("menuViewModelSave"));
+		saveModel.setToolTipText(LangModelModel.getString("menuViewModelSave"));
 		saveModel.setName("menuViewModelSave");
 		saveModel.addActionListener(actionAdapter);
 
 		performModeling.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/perform_analysis.gif").getScaledInstance(16, 16, Image.SCALE_SMOOTH)));
 		performModeling.setMaximumSize(buttonSize);
 		performModeling.setPreferredSize(buttonSize);
-		performModeling.setToolTipText(LangModelModel.ToolTip("menuViewPerformModeling"));
+		performModeling.setToolTipText(LangModelModel.getString("menuViewPerformModeling"));
 		performModeling.setName("menuViewPerformModeling");
 		performModeling.addActionListener(actionAdapter);
 

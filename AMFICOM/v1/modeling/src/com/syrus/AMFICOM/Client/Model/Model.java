@@ -33,11 +33,11 @@ public class Model
 	public static void main(String[] args)
 	{
 		Environment.initialize();
-		LangModelModel.initialize();
-		LangModelAnalyse.initialize();
-		LangModelSchematics.initialize();
-		LangModelConfig.initialize();
-		com.syrus.AMFICOM.Client.General.Lang.LangModelReport.initialize();
+//		LangModelModel.initialize();
+//		LangModelAnalyse.initialize();
+//		LangModelSchematics.initialize();
+//		LangModelConfig.initialize();
+//		com.syrus.AMFICOM.Client.General.Lang.LangModelReport.initialize();
 
 		try
 		{

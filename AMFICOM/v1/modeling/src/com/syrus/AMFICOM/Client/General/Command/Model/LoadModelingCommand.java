@@ -2,6 +2,7 @@ package com.syrus.AMFICOM.Client.General.Command.Model;
 
 import javax.swing.JOptionPane;
 
+import java.util.*;
 import com.syrus.AMFICOM.Client.General.Checker;
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.Command.Analysis.InitialAnalysisCommand;
@@ -106,12 +107,12 @@ public class LoadModelingCommand extends VoidCommand
 
 		BellcoreStructure bs = null;
 
-		java.util.Enumeration enum = res.parameters.elements();
-		while (enum.hasMoreElements())
+		Iterator it = res.getParameterList().iterator();
+		while (it.hasNext())
 		{
-			Parameter param = (Parameter)enum.nextElement();
-			if (param.gpt.id.equals("reflectogramm"))
-				bs = new BellcoreReader().getData(param.value);
+			Parameter param = (Parameter)it.next();
+			if (param.getGpt().getId().equals("reflectogramm"))
+				bs = new BellcoreReader().getData(param.getValue());
 		}
 		if (bs == null)
 			return;
@@ -120,9 +121,9 @@ public class LoadModelingCommand extends VoidCommand
 		Pool.put("bellcorestructure", "primarytrace", bs);
 
 
-		if(Pool.get(Modeling.typ, res.modeling_id) != null)
+		if(Pool.get(Modeling.typ, res.getModelingId()) != null)
 		{
-			String path_id = ((Modeling)Pool.get(Modeling.typ, res.modeling_id)).scheme_path_id;
+			String path_id = ((Modeling)Pool.get(Modeling.typ, res.getModelingId())).getSchemePathId();
 			Pool.put("activecontext", "activepathid", path_id);
 		}
 

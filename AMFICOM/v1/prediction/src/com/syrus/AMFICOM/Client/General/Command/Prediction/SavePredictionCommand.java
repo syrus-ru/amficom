@@ -99,25 +99,25 @@ public class SavePredictionCommand extends VoidCommand
 
 		Modeling m = new Modeling(dataSource.GetUId(Modeling.typ));
 
-		m.name = bs.title;
+		m.setName(bs.title);
 
-		m.type_id = "optprognosis";
-		m.domain_id = dataSource.getSession().getDomainId();
+		m.setTypeId("optprognosis");
+		m.setDomainId(dataSource.getSession().getDomainId());
 
 		long predictionTime = ((Long)Pool.get("predictionTime", bs.title)).longValue();
 
 
 //		String path_id = (String)Pool.get("activecontext", "activepathid");
 
-		m.scheme_path_id = refStat.getPathID();
-		m.user_id = aContext.getSessionInterface().getUserId();
-		m.modified = new Date().getTime();
+		m.setSchemePathId(refStat.getPathID());
+		m.setUserId(aContext.getSessionInterface().getUserId());
+		m.setModified(new Date().getTime());
 		m.setTransferableFromLocal();
 
-		ModelingType mt = (ModelingType)Pool.get(ModelingType.typ, m.type_id);
+		ModelingType mt = (ModelingType)Pool.get(ModelingType.typ, m.getTypeId());
 		ActionParameterType apt;
 
-		apt = (ActionParameterType )mt.sorted_arguments.get("time_start");
+		apt = (ActionParameterType )mt.getSortedArguments().get("time_start");
 		try
 		{
 			Parameter resparam3 = new Parameter(
@@ -134,7 +134,7 @@ public class SavePredictionCommand extends VoidCommand
 			ex.printStackTrace();
 		}
 
-		apt = (ActionParameterType )mt.sorted_arguments.get("time_end");
+		apt = (ActionParameterType )mt.getSortedArguments().get("time_end");
 		try
 		{
 			Parameter resparam4 = new Parameter(
@@ -155,7 +155,7 @@ public class SavePredictionCommand extends VoidCommand
 		Pool.put(Modeling.typ, m.getId(), m);
 
 		Result r = new Result(m.getId(), "modeling", "", aContext.getSessionInterface().getUserId(), dataSource.GetUId("result"));
-		apt = (ActionParameterType )mt.sorted_parameters.get("reflectogramm");
+		apt = (ActionParameterType )mt.getSortedParameters().get("reflectogramm");
 		Parameter resparam1 = new Parameter(
 				dataSource.GetUId(Parameter.typ),
 				apt.getId(),
@@ -165,7 +165,7 @@ public class SavePredictionCommand extends VoidCommand
 		resparam1.setTransferableFromLocal();
 		r.addParameter(resparam1);
 
-		apt = (ActionParameterType )mt.sorted_parameters.get("time");
+		apt = (ActionParameterType )mt.getSortedParameters().get("time");
 
 
 		try
@@ -184,7 +184,7 @@ public class SavePredictionCommand extends VoidCommand
 			ex.printStackTrace();
 		}
 
-		Pool.put("result", r.id, r);
+		Pool.put("result", r.getId(), r);
 
 		dataSource.SaveModeling(m.getId(), r.getId());
 

@@ -28,7 +28,7 @@ import com.syrus.AMFICOM.Client.Resource.Map.MapContext;
 import com.syrus.AMFICOM.Client.Resource.Scheme.*;
 
 import com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.*;
-import com.syrus.AMFICOM.Client.Configure.Map.*;
+import com.syrus.AMFICOM.Client.Map.*;
 import com.syrus.AMFICOM.Client.Schematics.Elements.*;
 import com.syrus.AMFICOM.Client.Schematics.Scheme.SchemeViewerFrame;
 import com.syrus.io.*;
@@ -103,7 +103,7 @@ public class ModelMDIMain extends JFrame implements OperationListener
 	{
 		enableEvents(AWTEvent.WINDOW_EVENT_MASK);
 		setContentPane(mainPanel);
-		this.setTitle(LangModelModel.String("AppTitle"));
+		this.setTitle(LangModelModel.getString("AppTitle"));
 		this.addComponentListener(new ModelMDIMain_this_componentAdapter(this));
 		this.addWindowListener(new java.awt.event.WindowAdapter()
 		{
@@ -185,10 +185,10 @@ public class ModelMDIMain extends JFrame implements OperationListener
 		statusBar.setWidth("user", 100);
 		statusBar.setWidth("time", 50);
 
-		statusBar.setText("status", LangModel.String("statusReady"));
-		statusBar.setText("server", LangModel.String("statusNoConnection"));
-		statusBar.setText("session", LangModel.String("statusNoSession"));
-		statusBar.setText("user", LangModel.String("statusNoUser"));
+		statusBar.setText("status", LangModel.getString("statusReady"));
+		statusBar.setText("server", LangModel.getString("statusNoConnection"));
+		statusBar.setText("session", LangModel.getString("statusNoSession"));
+		statusBar.setText("user", LangModel.getString("statusNoUser"));
 		statusBar.setText("time", " ");
 		statusBar.organize();
 
@@ -598,7 +598,7 @@ public class ModelMDIMain extends JFrame implements OperationListener
 				SchemePanelNoEdition panel = new SchemePanelNoEdition(aContext);
 				graph = panel.getGraph();
 				schemeFrame.getContentPane().add(panel, BorderLayout.CENTER);
-				schemeFrame.setTitle(LangModelModel.String("elementsMainTitle"));
+				schemeFrame.setTitle(LangModelModel.getString("elementsMainTitle"));
 				schemeFrame.setFrameIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/general.gif")));
 				desktopPane.add(schemeFrame);
 
@@ -723,7 +723,7 @@ public class ModelMDIMain extends JFrame implements OperationListener
 
 					setSessionOpened();
 
-					statusBar.setText("status", LangModel.String("statusReady"));
+					statusBar.setText("status", LangModel.getString("statusReady"));
 					statusBar.setText("session", sdf.format(new Date(aContext.getSessionInterface().getLogonTime())));
 					statusBar.setText("user", aContext.getSessionInterface().getUser());
 				}
@@ -737,9 +737,9 @@ public class ModelMDIMain extends JFrame implements OperationListener
 
 					setSessionClosed();
 
-					statusBar.setText("status", LangModel.String("statusReady"));
-					statusBar.setText("session", LangModel.String("statusNoSession"));
-					statusBar.setText("user", LangModel.String("statusNoUser"));
+					statusBar.setText("status", LangModel.getString("statusReady"));
+					statusBar.setText("session", LangModel.getString("statusNoSession"));
+					statusBar.setText("user", LangModel.getString("statusNoUser"));
 				}
 			}
 			if(cce.CONNECTION_OPENED)
@@ -749,7 +749,7 @@ public class ModelMDIMain extends JFrame implements OperationListener
 				{
 					setConnectionOpened();
 
-					statusBar.setText("status", LangModel.String("statusReady"));
+					statusBar.setText("status", LangModel.getString("statusReady"));
 					statusBar.setText("server", aContext.getConnectionInterface().getServiceURL());
 				}
 			}
@@ -758,11 +758,11 @@ public class ModelMDIMain extends JFrame implements OperationListener
 				ConnectionInterface cci = (ConnectionInterface)cce.getSource();
 				if(aContext.getConnectionInterface().equals(cci))
 				{
-					statusBar.setText("status", LangModel.String("statusError"));
-					statusBar.setText("server", LangModel.String("statusConnectionError"));
+					statusBar.setText("status", LangModel.getString("statusError"));
+					statusBar.setText("server", LangModel.getString("statusConnectionError"));
 
-					statusBar.setText("status", LangModel.String("statusDisconnected"));
-					statusBar.setText("server", LangModel.String("statusNoConnection"));
+					statusBar.setText("status", LangModel.getString("statusDisconnected"));
+					statusBar.setText("server", LangModel.getString("statusNoConnection"));
 
 					setConnectionClosed();
 				}
@@ -772,8 +772,8 @@ public class ModelMDIMain extends JFrame implements OperationListener
 				ConnectionInterface cci = (ConnectionInterface)cce.getSource();
 				if(aContext.getConnectionInterface().equals(cci))
 				{
-					statusBar.setText("status", LangModel.String("statusError"));
-					statusBar.setText("server", LangModel.String("statusConnectionError"));
+					statusBar.setText("status", LangModel.getString("statusError"));
+					statusBar.setText("server", LangModel.getString("statusConnectionError"));
 
 					setConnectionFailed();
 				}

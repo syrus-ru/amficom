@@ -54,7 +54,7 @@ public class RefModelParamsFrame extends ATableFrame
 	private void jbInit() throws Exception
 	{
 		setFrameIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/general.gif")));
-		setTitle(LangModelModel.String("ParamsTitle"));
+		setTitle(LangModelModel.getString("ParamsTitle"));
 		setClosable(true);
 		setDefaultCloseOperation(JInternalFrame.HIDE_ON_CLOSE);
 		setIconifiable(true);
@@ -85,7 +85,7 @@ public class RefModelParamsFrame extends ATableFrame
 
 	public String getReportTitle()
 	{
-		return LangModelModel.String("ParamsTitle");
+		return LangModelModel.getString("ParamsTitle");
 	}
 
 	public TableModel getTableModel()
