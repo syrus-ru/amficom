@@ -1,5 +1,5 @@
 /**
- * $Id: NodeTypeController.java,v 1.4 2005/01/12 14:23:19 krupenn Exp $
+ * $Id: NodeTypeController.java,v 1.5 2005/01/13 15:15:53 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -44,7 +44,7 @@ import java.util.*;
  * 
  * 
  * 
- * @version $Revision: 1.4 $, $Date: 2005/01/12 14:23:19 $
+ * @version $Revision: 1.5 $, $Date: 2005/01/13 15:15:53 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -210,11 +210,11 @@ public class NodeTypeController extends AbstractNodeController
 		Identifier creatorId = new Identifier(
 			aContext.getSessionInterface().getAccessIdentifier().user_id);
 
-		topologicalProtos.add(NodeTypeController.getSiteNodeType(creatorId, SiteNodeType.ATS));
-		topologicalProtos.add(NodeTypeController.getSiteNodeType(creatorId, SiteNodeType.BUILDING));
-		topologicalProtos.add(NodeTypeController.getSiteNodeType(creatorId, SiteNodeType.PIQUET));
-		topologicalProtos.add(NodeTypeController.getSiteNodeType(creatorId, SiteNodeType.WELL));
-		topologicalProtos.add(NodeTypeController.getSiteNodeType(creatorId, SiteNodeType.CABLE_INLET));
+		mnpe = NodeTypeController.getSiteNodeType(creatorId, SiteNodeType.ATS);
+		mnpe = NodeTypeController.getSiteNodeType(creatorId, SiteNodeType.BUILDING);
+		mnpe = NodeTypeController.getSiteNodeType(creatorId, SiteNodeType.PIQUET);
+		mnpe = NodeTypeController.getSiteNodeType(creatorId, SiteNodeType.WELL);
+		mnpe = NodeTypeController.getSiteNodeType(creatorId, SiteNodeType.CABLE_INLET);
 
 		StorableObjectCondition pTypeCondition = new StringFieldCondition(
 			"",

@@ -1,5 +1,5 @@
 /**
- * $Id: LogicalNetLayer.java,v 1.33 2005/01/12 15:32:34 krupenn Exp $
+ * $Id: LogicalNetLayer.java,v 1.34 2005/01/13 15:15:27 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -103,7 +103,7 @@ import javax.swing.ImageIcon;
  * 
  * 
  * 
- * @version $Revision: 1.33 $, $Date: 2005/01/12 15:32:34 $
+ * @version $Revision: 1.34 $, $Date: 2005/01/13 15:15:27 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -881,6 +881,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 					this.sendMapEvent(new MapEvent(getCurrentMapElement(), MapEvent.MAP_ELEMENT_SELECTED));
 //				}
 			}
+			updateZoom();
 			repaint(false);
 		}
 		else
