@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectPool.java,v 1.47 2005/03/23 20:26:00 arseniy Exp $
+ * $Id: StorableObjectPool.java,v 1.48 2005/03/28 16:48:06 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,8 +27,8 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.47 $, $Date: 2005/03/23 20:26:00 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.48 $, $Date: 2005/03/28 16:48:06 $
+ * @author $Author: bob $
  * @module general_v1
  */
 public abstract class StorableObjectPool {
@@ -408,7 +408,7 @@ public abstract class StorableObjectPool {
 		LRUMap objectPool = (LRUMap) this.objectPoolMap.get(entityCode);
 
 		assert objectPool != null : "Cannot find object pool for entity code " + condition.getEntityCode()
-				+ ", entity: '" + ObjectEntities.codeToString(entityCode);
+				+ ", entity: '" + ObjectEntities.codeToString(entityCode) + " , condition class:" + condition.getClass().getName();
 
 		collection = new LinkedList();
 		for (Iterator it = objectPool.iterator(); it.hasNext();) {
