@@ -1,0 +1,2 @@
+@@equipment
+@@monitoredelement
