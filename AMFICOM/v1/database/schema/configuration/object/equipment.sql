@@ -10,6 +10,7 @@ CREATE TABLE Equipment (
  type_id VARCHAR2(32) NOT NULL,
  name VARCHAR2(64) NOT NULL,
  description VARCHAR2(256),
+ sort NUMBER(2) NOT NULL,
  latitude VARCHAR2(10),
  longitude VARCHAR2(10),
  hw_serial VARCHAR2(256),
