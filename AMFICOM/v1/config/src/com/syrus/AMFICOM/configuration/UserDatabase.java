@@ -1,5 +1,5 @@
 /*
- * $Id: UserDatabase.java,v 1.5 2004/08/10 13:07:50 arseniy Exp $
+ * $Id: UserDatabase.java,v 1.6 2004/08/10 13:11:09 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,7 +26,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2004/08/10 13:07:50 $
+ * @version $Revision: 1.6 $, $Date: 2004/08/10 13:11:09 $
  * @author $Author: arseniy $
  * @module configuration_v1
  */
@@ -218,9 +218,9 @@ public class UserDatabase extends StorableObjectDatabase {
 
 			preparedStatement.setInt(7, user.getSort().value());
 			
-			preparedStatement.setString(7, user.getName());
+			preparedStatement.setString(8, user.getName());
 			
-			preparedStatement.setString(8, user.getDescription());			
+			preparedStatement.setString(9, user.getDescription());			
 			
 										
 			Log.debugMessage("UserDatabase.insert | Trying: " + sql, Log.DEBUGLEVEL05);
