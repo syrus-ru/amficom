@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectDatabase.java,v 1.44 2004/11/15 12:43:41 arseniy Exp $
+ * $Id: StorableObjectDatabase.java,v 1.45 2004/11/16 09:30:17 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -24,10 +24,11 @@ import java.util.regex.Pattern;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
+import com.syrus.util.database.DatabaseIdentifier;
 
 /**
- * @version $Revision: 1.44 $, $Date: 2004/11/15 12:43:41 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.45 $, $Date: 2004/11/16 09:30:17 $
+ * @author $Author: bob $
  * @module general_v1
  */
 
@@ -84,6 +85,7 @@ public abstract class StorableObjectDatabase {
 	
 	private static String columns;
 	private static String updateMultiplySQLValues;
+	private static String retrieveQuery;
 
 	public StorableObjectDatabase() {
 		//connection = DatabaseConnection.getConnection();
@@ -314,13 +316,20 @@ public abstract class StorableObjectDatabase {
 	}
 
 	protected String retrieveQuery(final String condition){
-		StringBuffer buffer = new StringBuffer(SQL_SELECT);
-		String cols = this.getColumns();
-		cols = cols.replaceFirst(COLUMN_CREATED, DatabaseDate.toQuerySubString(COLUMN_CREATED));
-		cols = cols.replaceFirst(COLUMN_MODIFIED, DatabaseDate.toQuerySubString(COLUMN_MODIFIED));
-		buffer.append(cols);
-		buffer.append(SQL_FROM);
-		buffer.append(this.getEnityName());
+		
+		
+		StringBuffer buffer;
+		if (retrieveQuery == null){
+			buffer = new StringBuffer(SQL_SELECT);
+			String cols = this.getColumns();
+			cols = cols.replaceFirst(COLUMN_CREATED, DatabaseDate.toQuerySubString(COLUMN_CREATED));
+			cols = cols.replaceFirst(COLUMN_MODIFIED, DatabaseDate.toQuerySubString(COLUMN_MODIFIED));
+			buffer.append(cols);
+			buffer.append(SQL_FROM);
+			buffer.append(this.getEnityName());
+			retrieveQuery = buffer.toString();
+		} else
+			buffer = new StringBuffer(retrieveQuery);
 		if (condition != null && condition.trim().length() > 0){
 			buffer.append(SQL_WHERE);
 			buffer.append(condition);
@@ -332,20 +341,11 @@ public abstract class StorableObjectDatabase {
 								PreparedStatement preparedStatement)
 			throws IllegalDataException, UpdateObjectException{
 		try {
-			/**
-			 * @todo when change DB Identifier model ,change setString() to setLong()
-			 */
-			preparedStatement.setString(1, storableObject.getId().getCode());
+			DatabaseIdentifier.setIdentifier(preparedStatement, 1 , storableObject.getId());
 			preparedStatement.setTimestamp(2, new Timestamp(storableObject.getCreated().getTime()));
 			preparedStatement.setTimestamp(3, new Timestamp(storableObject.getModified().getTime()));
-			/**
-			 * @todo when change DB Identifier model ,change setString() to setLong()
-			 */
-			preparedStatement.setString(4, storableObject.getCreatorId().getCode());
-			/**
-			 * @todo when change DB Identifier model ,change setString() to setLong()
-			 */
-			preparedStatement.setString(5, storableObject.getModifierId().getCode());
+			DatabaseIdentifier.setIdentifier(preparedStatement, 4 , storableObject.getCreatorId());
+			DatabaseIdentifier.setIdentifier(preparedStatement, 5 , storableObject.getModifierId());
 		} catch (SQLException sqle) {
 			throw new UpdateObjectException(getEnityName() + "Database.setEntityForPreparedStatement | Error " + sqle.getMessage(), sqle);
 		}
@@ -725,11 +725,11 @@ public abstract class StorableObjectDatabase {
 			sql = retrieveQuery(buffer.toString());
 		}
 
-		PreparedStatement stmt = null;
+		PreparedStatement ptmt = null;
 		ResultSet resultSet = null;
 		Connection connection = DatabaseConnection.getConnection();
 		try {
-			stmt = connection.prepareStatement(sql.toString());
+			ptmt = connection.prepareStatement(sql.toString());
 			for (Iterator it = ids.iterator(); it.hasNext();) {
 				Object object = it.next();
 				Identifier id = null;
@@ -740,20 +740,15 @@ public abstract class StorableObjectDatabase {
 				else throw new IllegalDataException("StorableObjectDatabase.retriveByIdsPreparedStatement | Object " + 
 													object.getClass().getName() 
 													+ " isn't Identifier or Identified");
-				String idStr = id.getIdentifierString();
-				/**
-				 * @todo when change DB Identifier model ,change
-				 *       setString() to setLong()
-				 */				
-				stmt.setString(1, idStr);
-				resultSet = stmt.executeQuery();
+				DatabaseIdentifier.setIdentifier(ptmt, 1 , id);
+				resultSet = ptmt.executeQuery();
 				if (resultSet.next()) {
 					StorableObject storableObject = updateEntityFromResultSet(null, resultSet);
 					result.add(storableObject);
 				} else {
 					Log.errorMessage(this.getEnityName()
 							+ "Database.retriveByIdsPreparedStatement | No such "
-							+ this.getEnityName() + " : " + idStr);
+							+ this.getEnityName() + " : " + id.getIdentifierString());
 				}
 
 			}
@@ -763,11 +758,11 @@ public abstract class StorableObjectDatabase {
 			throw new RetrieveObjectException(mesg, sqle);
 		} finally {
 			try {
-				if (stmt != null)
-					stmt.close();
-				if (stmt != null)
-					stmt.close();
-				stmt = null;
+				if (ptmt != null)
+					ptmt.close();
+				if (ptmt != null)
+					ptmt.close();
+				ptmt = null;
 				resultSet = null;				
 			} catch (SQLException sqle1) {
 				Log.errorException(sqle1);
@@ -877,10 +872,7 @@ public abstract class StorableObjectDatabase {
 				StorableObject storableObject = (StorableObject) it.next();
 				storableObjectIdCode = storableObject.getId().getCode();
 				int i = this.setEntityForPreparedStatement(storableObject, preparedStatement);
-				/**
-				 * @todo when change DB Identifier model ,change setString() to setLong()
-				 */
-				preparedStatement.setString(++i, storableObject.getId().getCode());
+				DatabaseIdentifier.setIdentifier(preparedStatement, ++i, storableObject.getId());
 				
 				Log.debugMessage(this.getEnityName() + "Database.updateEntities | Inserting  "
 						+ this.getEnityName() + " " + storableObjectIdCode, Log.DEBUGLEVEL09);
