@@ -85,7 +85,6 @@ public class NewMapViewCommand extends VoidCommand
 		if(frame == null)
 		{
 			System.out.println("Starting MAP frame");
-			LangModelMap.initialize();
 			frame = new MapMainFrame(panelElements, aC);
 			Pool.put("environment", "mapmainframe", frame);
 		}

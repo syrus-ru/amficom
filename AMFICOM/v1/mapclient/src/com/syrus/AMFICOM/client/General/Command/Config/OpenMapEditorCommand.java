@@ -72,9 +72,6 @@ public class OpenMapEditorCommand extends VoidCommand
 
         System.out.println("Starting Map Editor window");
 
-		LangModelConfig.initialize();
-		LangModelMap.initialize();
-		LangModelSchematics.initialize();
 		new com.syrus.AMFICOM.Client.Map.Editor.MapEditor(new DefaultMapEditorApplicationModelFactory());
 /*
 		try

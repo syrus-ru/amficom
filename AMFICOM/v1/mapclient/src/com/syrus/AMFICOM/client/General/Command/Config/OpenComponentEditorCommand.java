@@ -70,7 +70,6 @@ public class OpenComponentEditorCommand extends VoidCommand
 
         System.out.println("Starting Component Editor window");
 
-		LangModelSchematics.initialize();
 		new com.syrus.AMFICOM.Client.Schematics.Elements.ElementsEditor(new DefaultSchematicsApplicationModelFactory());
 /*
 		try

@@ -47,8 +47,6 @@ public class MapEditor
 		{
 			e.printStackTrace();
 		}
-		LangModelConfig.initialize();
-		LangModelMap.initialize();
 		new MapEditor(new DefaultMapEditorApplicationModelFactory());
 	}
 }

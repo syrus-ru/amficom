@@ -68,7 +68,6 @@ public class OpenSchemeEditorCommand extends VoidCommand
 
         System.out.println("Starting Scheme Editor window");
 
-		LangModelSchematics.initialize();
 		new com.syrus.AMFICOM.Client.Schematics.Scheme.SchemeEditor(new DefaultSchematicsApplicationModelFactory());
 /*
 		try

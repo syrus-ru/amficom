@@ -34,7 +34,6 @@ src\com\syrus\AMFICOM\Client\General\Command\MapNav\ZoomInCommand.java
 src\com\syrus\AMFICOM\Client\General\Command\MapNav\ZoomOutCommand.java
 src\com\syrus\AMFICOM\Client\General\Command\MapNav\ZoomToPointCommand.java
 src\com\syrus\AMFICOM\Client\General\Lang\LangModelMap.java
-src\com\syrus\AMFICOM\Client\General\Lang\LangModelMap_ru.java
 src\com\syrus\AMFICOM\Client\General\Model\DefaultMapApplicationModelFactory.java
 src\com\syrus\AMFICOM\Client\General\Model\DefaultMapEditorApplicationModelFactory.java
 src\com\syrus\AMFICOM\Client\General\Model\MapApplicationModel.java

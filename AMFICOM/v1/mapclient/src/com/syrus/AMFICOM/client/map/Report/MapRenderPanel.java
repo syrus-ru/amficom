@@ -63,7 +63,6 @@ public class MapRenderPanel extends JPanel
 		aC.setApplicationModel(new MapReportApplicationModelFactory().create());
 		aC.setDispatcher(new Dispatcher());
 		Vector panelElements = new Vector();
-		LangModelMap.initialize();
 
 		aC.setSessionInterface(SessionInterface.getActiveSession());
 		aC.setConnectionInterface(ConnectionInterface.getActiveConnection());

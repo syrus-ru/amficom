@@ -23,8 +23,6 @@ public class MapEditorRun
 		{
 			e.printStackTrace();
 		}
-		LangModelConfig.initialize();
-		LangModelMap.initialize();
 		new MapEditor(new DefaultMapEditorApplicationModelFactory());
 	}
 }
