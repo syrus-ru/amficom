@@ -43,19 +43,19 @@ public class TestFilter extends ObjectResourceFilter
 		if(col_id == null)
 			return "";
 		if(col_id.equals("kis"))
-			return LangModelSchedule.String("ORKIS");
+			return LangModelSchedule.getString("ORKIS");
 		if(col_id.equals("mone"))
-			return LangModelSchedule.String("ORPath1");
+			return LangModelSchedule.getString("ORPath1");
 		if(col_id.equals("test_type"))
-			return LangModelSchedule.String("ORTestType");
+			return LangModelSchedule.getString("ORTestType");
 		if(col_id.equals("temp_type"))
-			return LangModelSchedule.String("labelTimeTestType");
+			return LangModelSchedule.getString("labelTimeTestType");
 		if(col_id.equals("status"))
-			return LangModelSchedule.String("labelStatus");
+			return LangModelSchedule.getString("labelStatus");
 		if(col_id.equals("time"))
-			return LangModelSchedule.String("labelTtimeTest");
+			return LangModelSchedule.getString("labelTtimeTest");
 		if(col_id.equals("alarm"))
-			return LangModelSchedule.String("labelAlarm");
+			return LangModelSchedule.getString("labelAlarm");
 		return "";
 	}
 

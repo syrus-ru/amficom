@@ -504,7 +504,7 @@ public class SurveyMDIMain extends JFrame implements OperationListener {
 			aModel.setEnabled("menuVisualizeMapClose", false);
 			aModel.fireModelChanged("");
 
-			if (myalarmTread != null) myalarmTread.stop();
+			if (myalarmTread != null) myalarmTread.stop_running();
 			myalarmTread = null;
 		} else if (ae.getActionCommand().equals(SchemeElementsEvent.type)) {
 			SchemeElementsEvent sev = (SchemeElementsEvent) ae;

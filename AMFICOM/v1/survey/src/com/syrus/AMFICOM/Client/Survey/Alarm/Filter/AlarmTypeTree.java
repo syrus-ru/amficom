@@ -12,7 +12,7 @@ import javax.swing.*;
 
 public class AlarmTypeTree extends FilterTree
 {
-	FilterTreeNode root = new FilterTreeNode(LangModelSurvey.String("labelRoot"), "root");
+	FilterTreeNode root = new FilterTreeNode(LangModelSurvey.getString("Root"), "root");
 
 	public AlarmTypeTree()
 	{

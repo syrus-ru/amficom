@@ -9,10 +9,10 @@ import javax.swing.*;
 public class StatusTree extends FilterTree
 {
 	ApplicationContext aContext;
-	FilterTreeNode root = new FilterTreeNode(LangModelSchedule.String("labelRoot"), "ROOT");
-	FilterTreeNode a1 = new FilterTreeNode(LangModelSchedule.String("labelDone"), "COMPLETED");
-	FilterTreeNode a2 = new FilterTreeNode(LangModelSchedule.String("labelDoing"), "PROCESSING");
-	FilterTreeNode a3 = new FilterTreeNode(LangModelSchedule.String("labelReadyToDo"), "SCHEDULED");
+	FilterTreeNode root = new FilterTreeNode(LangModelSchedule.getString("Root"), "ROOT");
+	FilterTreeNode a1 = new FilterTreeNode(LangModelSchedule.getString("Done"), "COMPLETED");
+	FilterTreeNode a2 = new FilterTreeNode(LangModelSchedule.getString("Doing"), "PROCESSING");
+	FilterTreeNode a3 = new FilterTreeNode(LangModelSchedule.getString("ReadyToDo"), "SCHEDULED");
 
 	public StatusTree()
 	{

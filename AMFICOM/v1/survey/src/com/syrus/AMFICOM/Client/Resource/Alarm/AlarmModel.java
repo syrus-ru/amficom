@@ -4,6 +4,7 @@ import java.util.*;
 import java.text.*;
 
 import com.syrus.AMFICOM.CORBA.Alarm.*;
+import com.syrus.AMFICOM.CORBA.General.AlarmStatus;
 import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.Resource.ISM.*;
 import com.syrus.AMFICOM.Client.General.UI.*;
@@ -35,7 +36,17 @@ public class AlarmModel extends ObjectResourceModel
 			if(col_id.equals("source_name"))
 				s = Pool.getName(EventSource.typ, alarm.source_id);
 			if(col_id.equals("status"))
-				s = LangModelSurvey.String("label" + String.valueOf(alarm.status));
+			{
+				if(alarm.status.equals(AlarmStatus.ALARM_STATUS_GENERATED))
+					s = LangModelSurvey.getString("New");
+				else
+				if(alarm.status.equals(AlarmStatus.ALARM_STATUS_ASSIGNED))
+					s = LangModelSurvey.getString("Assigned");
+				else
+				if(alarm.status.equals(AlarmStatus.ALARM_STATUS_FIXED))
+					s = LangModelSurvey.getString("Fixed");
+//				s = LangModelSurvey.String("label" + String.valueOf(alarm.status));
+			}
 			if(col_id.equals("generated"))
 				s = sdf.format(new Date(alarm.generated));
 			if(col_id.equals("alarm_type_name"))

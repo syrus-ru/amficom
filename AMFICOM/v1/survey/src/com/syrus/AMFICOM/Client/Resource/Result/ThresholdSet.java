@@ -48,6 +48,8 @@ public class ThresholdSet extends ObjectResource implements Serializable {
 
 	public ThresholdSet(ClientThresholdSet_Transferable transferable) {
 		this.transferable = transferable;
+		this.thresholds = new Vector();
+		this.thresholdList = new ArrayList();
 		setLocalFromTransferable();
 	}
 

@@ -12,7 +12,7 @@ import javax.swing.*;
 public class TestTypeTree extends FilterTree
 {
 	ApplicationContext aContext;
-	FilterTreeNode root = new FilterTreeNode(LangModelSchedule.String("labelRoot"), "");
+	FilterTreeNode root = new FilterTreeNode(LangModelSchedule.getString("Root"), "");
 
 	public TestTypeTree()
 	{

@@ -9,10 +9,10 @@ import javax.swing.*;
 public class TempTypeTree extends FilterTree
 {
 	ApplicationContext aContext;
-	FilterTreeNode root = new FilterTreeNode(LangModelSchedule.String("labelRoot"), "ROOT");
-	FilterTreeNode a1 = new FilterTreeNode(LangModelSchedule.String("labelOnetime"), "ONETIME");
-	FilterTreeNode a2 = new FilterTreeNode(LangModelSchedule.String("labelTimeTable"), "TIMETABLE");
-	FilterTreeNode a3 = new FilterTreeNode(LangModelSchedule.String("labelPeriod"), "PERIODICAL");
+	FilterTreeNode root = new FilterTreeNode(LangModelSchedule.getString("Root"), "ROOT");
+	FilterTreeNode a1 = new FilterTreeNode(LangModelSchedule.getString("Onetime"), "ONETIME");
+	FilterTreeNode a2 = new FilterTreeNode(LangModelSchedule.getString("TimeTable"), "TIMETABLE");
+	FilterTreeNode a3 = new FilterTreeNode(LangModelSchedule.getString("Period"), "PERIODICAL");
 
 	public TempTypeTree()
 	{

@@ -14,7 +14,7 @@ import javax.swing.*;
 public class KISTree extends FilterTree
 {
 	ApplicationContext aContext;
-	FilterTreeNode root = new FilterTreeNode(LangModelSchedule.String("labelRoot"), "");
+	FilterTreeNode root = new FilterTreeNode(LangModelSchedule.getString("Root"), "");
 
 	public KISTree()
 	{
@@ -37,8 +37,8 @@ public class KISTree extends FilterTree
 				AccessPort ap = (AccessPort )enu.nextElement();
 				FilterTreeNode portnode = new FilterTreeNode(ap.getName(), ap.getId());
 				kisnode.add(portnode);
-				FilterTreeNode vol_ = new FilterTreeNode(LangModelSchedule.String("ORMones"), "mone");
-				FilterTreeNode tt_ = new FilterTreeNode(LangModelSchedule.String("ORTestTypes"), "testtypes");
+				FilterTreeNode vol_ = new FilterTreeNode(LangModelSchedule.getString("ORMones"), "mone");
+				FilterTreeNode tt_ = new FilterTreeNode(LangModelSchedule.getString("ORTestTypes"), "testtypes");
 				portnode.add(vol_);
 				portnode.add(tt_);
 				DataSet daSet = new DataSet(Pool.getHash(MonitoredElement.typ));

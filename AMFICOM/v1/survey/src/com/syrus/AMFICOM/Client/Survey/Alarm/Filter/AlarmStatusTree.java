@@ -8,10 +8,10 @@ import javax.swing.*;
 
 public class AlarmStatusTree extends FilterTree
 {
-	FilterTreeNode root = new FilterTreeNode(LangModelSurvey.String("labelRoot"), "root");
-	FilterTreeNode a1 = new FilterTreeNode(LangModelSurvey.String("labelALARM_STATUS_GENERATED"), "GENERATED");
-	FilterTreeNode a2 = new FilterTreeNode(LangModelSurvey.String("labelALARM_STATUS_ASSIGNED"), "ASSIGNED");
-	FilterTreeNode a3 = new FilterTreeNode(LangModelSurvey.String("labelALARM_STATUS_FIXED"), "FIXED");
+	FilterTreeNode root = new FilterTreeNode(LangModelSurvey.getString("Root"), "root");
+	FilterTreeNode a1 = new FilterTreeNode(LangModelSurvey.getString("New"), "GENERATED");
+	FilterTreeNode a2 = new FilterTreeNode(LangModelSurvey.getString("Assigned"), "ASSIGNED");
+	FilterTreeNode a3 = new FilterTreeNode(LangModelSurvey.getString("Fixed"), "FIXED");
 
 	public AlarmStatusTree()
 	{

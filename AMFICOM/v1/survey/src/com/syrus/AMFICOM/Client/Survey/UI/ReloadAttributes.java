@@ -33,7 +33,7 @@ public class ReloadAttributes
 	int timeInterval = 5000;
 	MapMainFrame mmf;
 
-	private boolean is_running = true;
+	private volatile boolean is_running = true;
 
 	public ReloadAttributes(MapMainFrame mmf)
 	{

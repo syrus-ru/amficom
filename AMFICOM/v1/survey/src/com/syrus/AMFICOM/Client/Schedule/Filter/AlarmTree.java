@@ -9,9 +9,9 @@ import javax.swing.*;
 public class AlarmTree extends FilterTree
 {
 	ApplicationContext aContext;
-	FilterTreeNode root = new FilterTreeNode(LangModelSchedule.String("labelRoot"), "root");
-	FilterTreeNode a1 = new FilterTreeNode(LangModelSchedule.String("labelAlarmTest"), "alarm");
-	FilterTreeNode a2 = new FilterTreeNode(LangModelSchedule.String("labelNoAlarmTest"), "noalarm");
+	FilterTreeNode root = new FilterTreeNode(LangModelSchedule.getString("Root"), "root");
+	FilterTreeNode a1 = new FilterTreeNode(LangModelSchedule.getString("AlarmTest"), "alarm");
+	FilterTreeNode a2 = new FilterTreeNode(LangModelSchedule.getString("NoAlarmTest"), "noalarm");
 
 	public AlarmTree()
 	{

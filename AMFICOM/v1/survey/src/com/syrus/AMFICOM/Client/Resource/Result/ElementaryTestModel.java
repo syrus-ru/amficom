@@ -46,13 +46,13 @@ public class ElementaryTestModel extends ObjectResourceModel {
 				switch(etest.status.value())
 				{
 					case TestStatus._TEST_STATUS_PROCESSING:
-						s = LangModelSchedule.String("labelDoing");
+						s = LangModelSchedule.getString("labelDoing");
 						break;
 					case TestStatus._TEST_STATUS_COMPLETED:
-						s = LangModelSchedule.String("labelDone");
+						s = LangModelSchedule.getString("labelDone");
 						break;
 					case TestStatus._TEST_STATUS_SCHEDULED:
-						s = LangModelSchedule.String("labelReadyToDo");
+						s = LangModelSchedule.getString("labelReadyToDo");
 						break;
 				}
 			}

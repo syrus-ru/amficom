@@ -10,7 +10,6 @@ import com.syrus.AMFICOM.Client.General.Event.OperationListener;
 import com.syrus.AMFICOM.Client.General.Event.TreeDataSelectionEvent;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelSurvey;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationModel;
 import com.syrus.AMFICOM.Client.General.UI.GeneralTableModel;
 import com.syrus.AMFICOM.Client.Resource.Alarm.Alarm;
 import com.syrus.AMFICOM.Client.Resource.Alarm.SystemEvent;
@@ -124,29 +123,12 @@ public class ResultFrame extends JInternalFrame implements OperationListener
 	public void setContext(ApplicationContext aContext)
 	{
 		this.aContext = aContext;
-		if(aContext.getApplicationModel() == null)
-			aContext.setApplicationModel(new ApplicationModel());
-		setModel(aContext.getApplicationModel());
 		dataSource = aContext.getDataSourceInterface();
 	}
 
 	public ApplicationContext getContext()
 	{
 		return aContext;
-	}
-
-	public void setModel(ApplicationModel aModel)
-	{
-//		toolBar.setModel(aModel);
-//		menuBar.setModel(aModel);
-//		aModel.addListener(menuBar);
-//		aModel.addListener(toolBar);
-//		aModel.fireModelChanged("");
-	}
-
-	public ApplicationModel getModel()
-	{
-		return aContext.getApplicationModel();
 	}
 
 	public Dispatcher getInternalDispatcher()
@@ -156,17 +138,10 @@ public class ResultFrame extends JInternalFrame implements OperationListener
 
 	public void init_module()
 	{
-		ApplicationModel aModel = aContext.getApplicationModel();
 		internal_dispatcher = aContext.getDispatcher();
 
 		internal_dispatcher.register(this, "activecontextevent");
 		internal_dispatcher.register(this, TreeDataSelectionEvent.type);
-//		System.out.println("register " + internal_dispatcher);
-
-//		Environment.the_dispatcher.register(this, "contextchange");
-
-//		aModel.setCommand("menuFileOpen", new FileOpenCommand(internal_dispatcher));
-//		aContext.getDataSourceInterface().GetResults();
 	}
 
 	public Result add_on_result1;
@@ -795,7 +770,7 @@ public class ResultFrame extends JInternalFrame implements OperationListener
 		this.setClosable(true);
 		this.setMaximizable(true);
 		this.setIconifiable(true);
-		this.setTitle(LangModelSurvey.String("Results"));
+		this.setTitle(LangModelSurvey.getString("Results"));
 		this.addInternalFrameListener(new javax.swing.event.InternalFrameAdapter()
 		{
 			public void internalFrameOpened(InternalFrameEvent e)
@@ -822,13 +797,13 @@ public class ResultFrame extends JInternalFrame implements OperationListener
 		jTabbedPane1.setBorder(BorderFactory.createEmptyBorder());
 
 		tModelPar = new GeneralTableModel(
-				new String[] {LangModelSurvey.String("Input_parameter"),
-				LangModelSurvey.String("Value")},
+				new String[] {LangModelSurvey.getString("Input_parameter"),
+				LangModelSurvey.getString("Value")},
 				new String[] {"11", "11"},
 				0);
 		tModelRes = new GeneralTableModel(
-				new String[] {LangModelSurvey.String("Output_parameter"),
-				LangModelSurvey.String("Value")},
+				new String[] {LangModelSurvey.getString("Output_parameter"),
+				LangModelSurvey.getString("Value")},
 				new String[] {"22", "22"},
 				0);
 
