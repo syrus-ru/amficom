@@ -1,5 +1,5 @@
 /*
- * $Id: LogicalTreeUI.java,v 1.9 2005/03/25 16:35:02 bob Exp $
+ * $Id: LogicalTreeUI.java,v 1.10 2005/03/28 07:43:57 bob Exp $
  *
  * Copyright ? 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,6 +22,7 @@ import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -31,28 +32,63 @@ import javax.swing.BoxLayout;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JToggleButton;
 import javax.swing.JTree;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingUtilities;
+import javax.swing.UIDefaults;
 import javax.swing.UIManager;
+import javax.swing.event.TreeExpansionEvent;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
+import javax.swing.event.TreeWillExpandListener;
 import javax.swing.tree.DefaultTreeCellRenderer;
+import javax.swing.tree.ExpandVetoException;
+import javax.swing.tree.TreeCellRenderer;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/03/25 16:35:02 $
+ * @version $Revision: 1.10 $, $Date: 2005/03/28 07:43:57 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module filter_v1
  */
 public class LogicalTreeUI implements SelectionListener, AddDeleteItems {
 
-	private class ItemTreeCellRenderer extends DefaultTreeCellRenderer {
+	protected static Hashtable					renderers ;
+	
+	public class ItemTreeCellRenderer  extends JComponent implements TreeCellRenderer {		
+		
+		private static final long	serialVersionUID	= 3762536732536615220L;
+
+		public Component getTreeCellRendererComponent(	JTree tree1,
+														Object value,
+														boolean selected,
+														boolean expanded,
+														boolean leaf,
+														int row,
+														boolean hasFocus) {
+			Class clazz = value.getClass();
+			TreeCellRenderer cellRenderer = (TreeCellRenderer) renderers.get(clazz);
+			if (cellRenderer != null)
+				return cellRenderer.getTreeCellRendererComponent(tree1, value, selected, expanded, leaf, row, hasFocus);
+			clazz = clazz.getSuperclass();
+			cellRenderer = (TreeCellRenderer) renderers.get(clazz);
+			if (cellRenderer == null)
+				cellRenderer = (TreeCellRenderer) renderers.get(Item.class);
+			return cellRenderer.getTreeCellRendererComponent(tree1, value, selected, expanded, leaf, row, hasFocus);
+		}
+	}
+	
+	private class ItemTreeLabelCellRenderer extends DefaultTreeCellRenderer {
+
+		private static final long	serialVersionUID	= 3618132364363184434L;
 
 		public Component getTreeCellRendererComponent(	JTree tree1,
 														Object value,
@@ -72,7 +108,28 @@ public class LogicalTreeUI implements SelectionListener, AddDeleteItems {
 			return treeCellRendererComponent;
 		}
 	}
-	private static final Insets	nullInsets	= new Insets(0, 0, 0, 0);
+	
+	public class ItemCheckBoxTreeCellRenderer  extends JCheckBox implements TreeCellRenderer {
+
+		private static final long	serialVersionUID	= 3256721779866415415L;
+
+		public Component getTreeCellRendererComponent(	JTree tree1,
+														Object value,
+														boolean selected,
+														boolean expanded,
+														boolean leaf,
+														int row,
+														boolean hasFocus) {
+			Item item = (Item)value;
+			setText(item.getName());
+			this.setForeground(tree1.getForeground());
+			this.setBackground(tree1.getBackground());
+			this.setSelected(selected);
+			return this;
+		}
+	}
+	
+	private static final Insets	NULL_INSETS	= new Insets(0, 0, 0, 0);
 
 	private static Icon getStringIcon(	String s,
 										int angle) {
@@ -108,10 +165,25 @@ public class LogicalTreeUI implements SelectionListener, AddDeleteItems {
 
 	public LogicalTreeUI(Item rootItem) {
 		this.setRootItem(rootItem);
+		if (renderers == null) {
+			renderers = new UIDefaults();
+			
+			renderers.put(Item.class, new UIDefaults.LazyValue() {
+
+				public Object createValue(UIDefaults arg0) {
+					return new ItemCheckBoxTreeCellRenderer();
+				}
+			});			
+			
+		}
 	}
 
 	public void addItem(Item item) {
 		this.addItem(null, item);
+	}
+	
+	public void setRenderer(Class clazz, TreeCellRenderer treeCellRenderer) {
+		renderers.put(clazz, treeCellRenderer);
 	}
 
 	public void addItem(Item parentItem,
@@ -181,9 +253,13 @@ public class LogicalTreeUI implements SelectionListener, AddDeleteItems {
 		if (this.panel == null) {
 			this.panel = new JPanel(new GridBagLayout());
 
+			JScrollPane scrollPane = new JScrollPane(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
+					ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+			scrollPane.getViewport().add(this.getTree());
+
 			JButton expandButton = new JButton(getStringIcon("v", 0));
 			expandButton.setToolTipText("expand all");
-			expandButton.setMargin(nullInsets);
+			expandButton.setMargin(NULL_INSETS);
 
 			expandButton.addActionListener(new ActionListener() {
 
@@ -194,7 +270,7 @@ public class LogicalTreeUI implements SelectionListener, AddDeleteItems {
 
 			JButton collapseButton = new JButton(getStringIcon("v", 180));
 			collapseButton.setToolTipText("collapse all");
-			collapseButton.setMargin(nullInsets);
+			collapseButton.setMargin(NULL_INSETS);
 
 			collapseButton.addActionListener(new ActionListener() {
 
@@ -203,15 +279,28 @@ public class LogicalTreeUI implements SelectionListener, AddDeleteItems {
 				}
 			});
 
+			JToggleButton toggleButton = new JToggleButton("sort", this.treeModel.isAllwaysSort());
+
+			toggleButton.addActionListener(new ActionListener() {
+
+				public void actionPerformed(ActionEvent e) {
+					JToggleButton button = (JToggleButton) e.getSource();
+					LogicalTreeUI.this.treeModel.setAllwaysSort(button.isSelected());
+
+				}
+			});
+
+			toggleButton.setToolTipText("always sort");
+			toggleButton.setMargin(NULL_INSETS);
+			
 			Box box = new Box(BoxLayout.X_AXIS);
+//			box.add(Box.createGlue());
+			box.add(toggleButton);
 			box.add(Box.createGlue());
 			box.add(expandButton);
 			box.add(collapseButton);
 
-			JScrollPane scrollPane = new JScrollPane(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
-														ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-			scrollPane.getViewport().add(this.getTree());
-
+			
 			GridBagConstraints gbc = new GridBagConstraints();
 
 			gbc.fill = GridBagConstraints.BOTH;
@@ -223,7 +312,7 @@ public class LogicalTreeUI implements SelectionListener, AddDeleteItems {
 			gbc.weighty = 1.0;
 			gbc.gridheight = GridBagConstraints.RELATIVE;
 			this.panel.add(scrollPane, gbc);
-			expandButton.doClick();
+			collapseButton.doClick();
 		}
 
 		return this.panel;
@@ -261,6 +350,22 @@ public class LogicalTreeUI implements SelectionListener, AddDeleteItems {
 					for (int i = 0; i < LogicalTreeUI.this.selectionListeners.length; i++) {
 						LogicalTreeUI.this.selectionListeners[i].selectedItems(items);
 					}
+				}
+			});
+			
+			this.tree.addTreeWillExpandListener(new TreeWillExpandListener() {
+
+				public void treeWillCollapse(TreeExpansionEvent event) throws ExpandVetoException {
+					// TODO Auto-generated method stub
+
+				}
+
+				public void treeWillExpand(TreeExpansionEvent event) throws ExpandVetoException {
+					TreePath path = event.getPath();
+					Object lastPathComponent = path.getLastPathComponent();
+					if (lastPathComponent instanceof Populatable) {
+						((Populatable) lastPathComponent).populate();
+					}					
 				}
 			});
 
@@ -368,8 +473,9 @@ public class LogicalTreeUI implements SelectionListener, AddDeleteItems {
 							boolean expand) {
 		// Traverse children
 		Item node = (Item) parent.getLastPathComponent();
-		if (item != null && node.equals(item))
+		if (item != null && node.equals(item)){
 			return;
+		}
 		List children = node.getChildren();
 		for (Iterator it = children.iterator(); it.hasNext();) {
 			Item n = (Item) it.next();
