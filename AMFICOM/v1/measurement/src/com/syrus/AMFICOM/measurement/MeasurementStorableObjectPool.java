@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementStorableObjectPool.java,v 1.17 2004/09/23 10:15:20 bob Exp $
+ * $Id: MeasurementStorableObjectPool.java,v 1.18 2004/09/23 13:14:57 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,6 +8,8 @@
 
 package com.syrus.AMFICOM.measurement;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -31,7 +33,7 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2004/09/23 10:15:20 $
+ * @version $Revision: 1.18 $, $Date: 2004/09/23 13:14:57 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -65,7 +67,8 @@ public class MeasurementStorableObjectPool {
 
 	private static final int RESULTPARAMETER_OBJECT_POOL_SIZE = 4;
 
-	private static final int TEMPORALPATTERN_OBJECT_POOL_SIZE = 2;
+	private static final int TEMPORALPATTERN_OBJECT_POOL_SIZE = 2;	
+	
 
 	private static Map objectPoolMap; /*
 									   * Map <String objectEntity, LRUMap
@@ -73,10 +76,28 @@ public class MeasurementStorableObjectPool {
 									   */
 
 	private static MeasurementObjectLoader mObjectLoader;
+	private static Class cacheMapClass = LRUMap.class;
 
 	private MeasurementStorableObjectPool() {
 	}
 
+	/**
+	 * 
+	 * @param mObjectLoader1
+	 * @param cacheClass class must extend LRUMap 
+	 * @param size
+	 */
+	public static void init(MeasurementObjectLoader mObjectLoader1, Class cacheClass, final int size) {
+		Class clazz = null;
+		try {
+			clazz = Class.forName(cacheClass.getName());
+		} catch (ClassNotFoundException e) {
+			// empty
+		}
+		if (clazz != null)
+			cacheMapClass = clazz;
+		init(mObjectLoader1, size);
+	}
 	
 	public static void init(MeasurementObjectLoader mObjectLoader1, final int size) {
 		objectPoolMap = Collections.synchronizedMap(new Hashtable(size));
@@ -129,8 +150,36 @@ public class MeasurementStorableObjectPool {
 	}
 
 	private static void addObjectPool(short objectEntityCode, int poolSize) {
-		LRUMap objectPool = new LRUMap(poolSize);
-		objectPoolMap.put(new Short(objectEntityCode), objectPool);
+		try {
+			// LRUMap objectPool = new LRUMap(poolSize);
+			Constructor constructor = cacheMapClass.getConstructor(new Class[] { int.class});
+			Object obj = constructor
+					.newInstance(new Object[] { new Integer(poolSize)});
+			if (obj instanceof LRUMap){
+				LRUMap objectPool = (LRUMap)obj;
+			objectPoolMap.put(new Short(objectEntityCode), objectPool);
+			} else 
+				throw new UnsupportedOperationException("CacheMapClass " + cacheMapClass.getName() 
+														  + " must extends LRUMap");
+		} catch (SecurityException e) {
+			throw new UnsupportedOperationException("CacheMapClass " + cacheMapClass.getName() 
+													  + " SecurityException " + e.getMessage());
+		} catch (IllegalArgumentException e) {
+			throw new UnsupportedOperationException("CacheMapClass " + cacheMapClass.getName() 
+													  + " IllegalArgumentException " + e.getMessage());
+		} catch (NoSuchMethodException e) {
+			throw new UnsupportedOperationException("CacheMapClass " + cacheMapClass.getName() 
+													  + " NoSuchMethodException " + e.getMessage());
+		} catch (InstantiationException e) {
+			throw new UnsupportedOperationException("CacheMapClass " + cacheMapClass.getName() 
+													  + " InstantiationException " + e.getMessage());
+		} catch (IllegalAccessException e) {
+			throw new UnsupportedOperationException("CacheMapClass " + cacheMapClass.getName() 
+													  + " IllegalAccessException " + e.getMessage());
+		} catch (InvocationTargetException e) {
+			throw new UnsupportedOperationException("CacheMapClass " + cacheMapClass.getName() 
+													  + " InvocationTargetException " + e.getMessage());
+		}
 	}
 
 	public static StorableObject getStorableObject(Identifier objectId,
