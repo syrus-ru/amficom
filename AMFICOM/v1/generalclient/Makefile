@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.7 2004/07/06 13:50:59 bass Exp $
+# $Id: Makefile,v 1.8 2004/07/25 12:05:23 bob Exp $
 #
 # vim:set ft=make:
 #
@@ -76,7 +76,7 @@ SQLJFLAGS = \
 	-user "$(USER)" \
 	-warn=all
 
-include Makefile.inc
+include ../tools/Makefile.inc
 $(call checkenve,JAVA_HOME)
 $(call checkenve,ORACLE_HOME)
 $(call checkenve,IDL2JAVA)
