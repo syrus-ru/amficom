@@ -1,5 +1,5 @@
 /**
- * $Id: LogicalNetLayer.java,v 1.46 2005/02/18 12:19:44 krupenn Exp $
+ * $Id: LogicalNetLayer.java,v 1.47 2005/02/25 12:52:38 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -34,6 +34,7 @@ import com.syrus.AMFICOM.Client.Map.Controllers.MarkerController;
 import com.syrus.AMFICOM.Client.Map.Controllers.NodeLinkController;
 import com.syrus.AMFICOM.Client.Map.Controllers.NodeTypeController;
 import com.syrus.AMFICOM.Client.Map.Controllers.SiteNodeController;
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.mapview.AlarmMarker;
 import com.syrus.AMFICOM.mapview.CablePath;
 import com.syrus.AMFICOM.mapview.EventMarker;
@@ -82,7 +83,7 @@ import java.util.Set;
  * 
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.46 $, $Date: 2005/02/18 12:19:44 $
+ * @version $Revision: 1.47 $, $Date: 2005/02/25 12:52:38 $
  * @module mapviewclient_v2
  */
 public abstract class LogicalNetLayer implements MapCoordinatesConverter
@@ -967,12 +968,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 					{
 						path = getMapViewController().getMeasurementPathByMonitoredElementId(mne.getMeId());
 					}
-					catch (CommunicationException e)
-					{
-						e.printStackTrace();
-						return;
-					}
-					catch (DatabaseException e)
+					catch (ApplicationException e)
 					{
 						e.printStackTrace();
 						return;
@@ -1002,12 +998,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 					{
 						path = getMapViewController().getMeasurementPathByMonitoredElementId(mne.getMeId());
 					}
-					catch (CommunicationException e)
-					{
-						e.printStackTrace();
-						return;
-					}
-					catch (DatabaseException e)
+					catch (ApplicationException e)
 					{
 						e.printStackTrace();
 						return;
@@ -1038,12 +1029,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 					{
 						path = getMapViewController().getMeasurementPathByMonitoredElementId(mne.getMeId());
 					}
-					catch (CommunicationException e)
-					{
-						e.printStackTrace();
-						return;
-					}
-					catch (DatabaseException e)
+					catch (ApplicationException e)
 					{
 						e.printStackTrace();
 						return;

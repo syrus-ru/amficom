@@ -1,5 +1,5 @@
 /**
- * $Id: MapViewController.java,v 1.15 2005/02/22 17:53:55 krupenn Exp $
+ * $Id: MapViewController.java,v 1.16 2005/02/25 12:52:38 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -10,6 +10,7 @@
 
 package com.syrus.AMFICOM.Client.Map.Controllers;
 
+import com.syrus.AMFICOM.general.ApplicationException;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.geom.Rectangle2D;
@@ -53,7 +54,7 @@ import com.syrus.AMFICOM.scheme.corba.SchemePath;
  * Класс используется для управления информацией о канализационной
  * прокладке кабелей и положении узлов и других топологических объектов.
  * @author $Author: krupenn $
- * @version $Revision: 1.15 $, $Date: 2005/02/22 17:53:55 $
+ * @version $Revision: 1.16 $, $Date: 2005/02/25 12:52:38 $
  * @module mapviewclient_v1
  */
 public final class MapViewController
@@ -247,7 +248,7 @@ public final class MapViewController
 	 *  см. {@link ConfigurationStorableObjectPool#getStorableObject(Identifier, boolean)}
 	 */
 	public MeasurementPath getMeasurementPathByMonitoredElementId(Identifier meId)
-		throws CommunicationException, DatabaseException
+		throws ApplicationException
 	{
 		MeasurementPath path = null;
 		MonitoredElement me = (MonitoredElement )
