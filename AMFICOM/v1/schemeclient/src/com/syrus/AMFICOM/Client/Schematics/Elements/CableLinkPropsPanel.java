@@ -399,7 +399,7 @@ public class CableLinkPropsPanel extends JPanel
 				for (int j = 0; j < old_num; j++)
 					links[i].schemeCableThreads()[j].cableThreadTypeImpl((CableThreadType)it.next());
 				for (int j = old_num; j < num; j++) {
-					SchemeCableThread newct = SchemeStorableObjectFactory.createSchemeCableThread();
+					SchemeCableThread newct = SchemeCableThread.createInstance();
 					CableThreadType type = (CableThreadType)it.next();
 					newct.cableThreadTypeImpl(type);
 					newct.name(String.valueOf(j));

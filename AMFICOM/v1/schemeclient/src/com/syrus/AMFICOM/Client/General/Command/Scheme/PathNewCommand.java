@@ -16,7 +16,6 @@ import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.corba.CharacteristicTypeSort;
 import com.syrus.AMFICOM.general.corba.DataType;
 import com.syrus.AMFICOM.scheme.corba.SchemePath;
-import com.syrus.AMFICOM.scheme.corba.SchemeStorableObjectFactory;
 
 public class PathNewCommand extends VoidCommand
 {
@@ -39,7 +38,7 @@ public class PathNewCommand extends VoidCommand
 		SchemeGraph graph = pane.getPanel().getGraph();
 		if (graph.getScheme() == null)
 			return;
-		SchemePath path = SchemeStorableObjectFactory.createPath();
+		SchemePath path = SchemePath.createInstance();
 		path.scheme(graph.getScheme());
 		graph.setCurrentPath(path);
 

@@ -1,5 +1,5 @@
 /*
- * $Id: Identifier.java,v 1.21 2005/03/01 13:59:24 bass Exp $
+ * $Id: Identifier.java,v 1.22 2005/03/11 17:26:28 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,18 +18,14 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
  * its respective <code>creatorId</code> and <code>modifierId</code>. But
  * there&apos;s a particular task of <code>id</code> handling.
  *
- * @version $Revision: 1.21 $, $Date: 2005/03/01 13:59:24 $
+ * @version $Revision: 1.22 $, $Date: 2005/03/11 17:26:28 $
  * @author $Author: bass $
  * @module general_v1
  */
 public class Identifier implements
 		Comparable,
-		Cloneable,
 		TransferableObject,
 		Serializable {
-	/**
-	 * @see com.syrus.AMFICOM.general.corba.Identifier#SEPARATOR
-	 */
 	public static final char SEPARATOR = '_';
 
 	private static final long serialVersionUID = 1721559813677093072L;
@@ -54,23 +50,6 @@ public class Identifier implements
 		this.major = major;
 		this.minor = minor;
 		this.identifierString = ObjectEntities.codeToString(this.major) + SEPARATOR + Long.toString(this.minor);
-	}
-
-	/**
-	 * @see Object#clone()
-	 * @deprecated See notice about <code>Identifier</code> immutability.
-	 */
-	public Object clone() {
-		Identifier id = null;
-		try {
-			id = (Identifier)super.clone();
-		}
-		catch(CloneNotSupportedException e) {
-			e.printStackTrace();
-		}
-		id.major = this.major;
-		id.identifierString = new String(this.identifierString);
-		return id;
 	}
 
 	/**
@@ -101,23 +80,14 @@ public class Identifier implements
 		return ret;
 	}
 
-	/**
-	 * @see com.syrus.AMFICOM.general.corba.Identifier#getIdentifierString()
-	 */
 	public String getIdentifierString() {
 		return this.identifierString; 
 	}
 
-	/**
-	 * @see com.syrus.AMFICOM.general.corba.Identifier#getMajor()
-	 */
 	public short getMajor() {
 		return this.major;
 	}
 
-	/**
-	 * @see com.syrus.AMFICOM.general.corba.Identifier#getMinor()
-	 */
 	public long getMinor() {
 		return this.minor;
 	}
@@ -134,9 +104,6 @@ public class Identifier implements
 		return ret;
 	}
 
-	/**
-	 * @see com.syrus.AMFICOM.general.corba.Identifier#toHexString()
-	 */
 	public String toHexString() {
 		throw new UnsupportedOperationException();
 	}

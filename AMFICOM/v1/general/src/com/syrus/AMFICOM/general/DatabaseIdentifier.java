@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseIdentifier.java,v 1.7 2005/03/04 19:13:37 bass Exp $
+ * $Id: DatabaseIdentifier.java,v 1.8 2005/03/11 17:26:28 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,7 +17,7 @@ import java.sql.SQLException;
  * DB Identifier wrapper.
  * Main purpose is to hide Identifier implementation and DB representation of it.
  *
- * @version $Revision: 1.7 $, $Date: 2005/03/04 19:13:37 $
+ * @version $Revision: 1.8 $, $Date: 2005/03/11 17:26:28 $
  * @author $Author: bass $
  * @module general_v1
  */
@@ -46,10 +46,6 @@ public class DatabaseIdentifier {
 			: null;
 	}
 	
-	/**
-	 * @todo If you're changing this in order to make use of numeric identifiers,
-	 * you must also change {@link #toSQLString(com.syrus.AMFICOM.general.corba.Identifier)} 
-	 */
 	public static String toSQLString(final Identifier id) {
 		return StorableObjectDatabase.APOSTOPHE
 			+ (id != null ? id.getIdentifierString() : "")

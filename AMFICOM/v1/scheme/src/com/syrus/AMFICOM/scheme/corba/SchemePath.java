@@ -1,5 +1,5 @@
 /*
- * $Id: SchemePath.java,v 1.2 2005/03/10 15:06:08 bass Exp $
+ * $Id: SchemePath.java,v 1.3 2005/03/11 17:26:58 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,24 +12,31 @@ import com.syrus.AMFICOM.configuration.*;
 import com.syrus.AMFICOM.configuration.corba.*;
 import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.general.corba.*;
-import com.syrus.AMFICOM.general.corba.StorableObject;
 import com.syrus.util.Log;
 import java.util.*;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.2 $, $Date: 2005/03/10 15:06:08 $
+ * @version $Revision: 1.3 $, $Date: 2005/03/11 17:26:58 $
  * @module scheme_v1
  */
-public final class SchemePath extends StorableObject implements Namable, Describable, Characterizable, ComSyrusAmficomConfigurationSchemePath {
-	private static final long serialVersionUID = 3978988764901029432L;
+public final class SchemePath extends CloneableStorableObject implements Namable,
+		Describable, Characterizable,
+		ComSyrusAmficomConfigurationSchemePath {
 	protected Identifier _typeId = null;
+
 	protected Identifier characteristicIds[] = null;
+
 	protected Identifier endDeviceId = null;
+
 	protected Identifier links[] = null;
+
 	protected Identifier pathId = null;
+
 	protected Identifier schemeId = null;
+
 	protected Identifier startDeviceId = null;
+
 	protected String thisDescription = null;
 
 	protected String thisName = null;
@@ -40,6 +47,7 @@ public final class SchemePath extends StorableObject implements Namable, Describ
 	protected SchemePath(final Identifier id) {
 		super(id);
 	}
+
 	/**
 	 * @param id
 	 * @param created
@@ -48,7 +56,9 @@ public final class SchemePath extends StorableObject implements Namable, Describ
 	 * @param modifierId
 	 * @param version
 	 */
-	protected SchemePath(final Identifier id, final Date created, final Date modified, final Identifier creatorId, final Identifier modifierId, final long version) {
+	protected SchemePath(final Identifier id, final Date created,
+			final Date modified, final Identifier creatorId,
+			final Identifier modifierId, final long version) {
 		super(id, created, modified, creatorId, modifierId, version);
 	}
 
@@ -61,16 +71,11 @@ public final class SchemePath extends StorableObject implements Namable, Describ
 	}
 
 	public Object clone() {
-		try {
-			final SchemePath schemePath = (SchemePath) super.clone();
-			/**
-			 * @todo Update the newly created object.
-			 */
-			return schemePath;
-		} catch (final CloneNotSupportedException cnse) {
-			Log.debugException(cnse, Log.SEVERE);
-			return null;
-		}
+		final SchemePath schemePath = (SchemePath) super.clone();
+		/**
+		 * @todo Update the newly created object.
+		 */
+		return schemePath;
 	}
 
 	public String description() {
@@ -121,7 +126,7 @@ public final class SchemePath extends StorableObject implements Namable, Describ
 	/**
 	 * @see StorableObject#getDependencies()
 	 */
-	public Identifier[] getDependencies() {
+	public List getDependencies() {
 		throw new UnsupportedOperationException();
 	}
 
@@ -152,7 +157,7 @@ public final class SchemePath extends StorableObject implements Namable, Describ
 	}
 
 	/**
-	 * @see IStorableObject#isChanged()
+	 * @see StorableObject#isChanged()
 	 */
 	public boolean isChanged() {
 		throw new UnsupportedOperationException();
@@ -229,15 +234,6 @@ public final class SchemePath extends StorableObject implements Namable, Describ
 	}
 
 	/**
-	 * @param storableObjectFactory
-	 * @param changed
-	 * @see IStorableObject#setChanged(StorableObjectFactory, boolean)
-	 */
-	public void setChanged(final StorableObjectFactory storableObjectFactory, final boolean changed) {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
 	 * @param characteristics
 	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics(java.util.Collection)
 	 */
@@ -289,6 +285,38 @@ public final class SchemePath extends StorableObject implements Namable, Describ
 	 * @see com.syrus.AMFICOM.configuration.ComSyrusAmficomConfigurationSchemePath#typeImpl(com.syrus.AMFICOM.configuration.TransmissionPathType)
 	 */
 	public void typeImpl(TransmissionPathType newTypeImpl) {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @see com.syrus.AMFICOM.general.TransferableObject#getTransferable()
+	 */
+	public Object getTransferable() {
+		throw new UnsupportedOperationException();
+	}
+
+	public static SchemePath createInstance(final Identifier creatorId)
+			throws CreateObjectException {
+		assert creatorId != null;
+		try {
+			final Date created = new Date();
+			final SchemePath schemePath = new SchemePath(
+					IdentifierPool
+							.getGeneratedIdentifier(ObjectEntities.SCHEME_PATH_ENTITY_CODE),
+					created, created, creatorId, creatorId,
+					0L);
+			schemePath.changed = true;
+			return schemePath;
+		} catch (final IllegalObjectEntityException ioee) {
+			throw new CreateObjectException(
+					"SchemePath.createInstance | cannot generate identifier ", ioee); //$NON-NLS-1$
+		}
+	}
+
+	/**
+	 * @deprecated Use {@link #createInstance(Identifier)} instead.
+	 */
+	public static SchemePath createInstance() {
 		throw new UnsupportedOperationException();
 	}
 }

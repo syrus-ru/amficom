@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeProtoElement.java,v 1.2 2005/03/10 15:06:08 bass Exp $
+ * $Id: SchemeProtoElement.java,v 1.3 2005/03/11 17:26:59 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,7 +12,6 @@ import com.syrus.AMFICOM.configuration.*;
 import com.syrus.AMFICOM.configuration.corba.EquipmentType_Transferable;
 import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.general.corba.*;
-import com.syrus.AMFICOM.general.corba.StorableObject;
 import com.syrus.AMFICOM.resource.*;
 import com.syrus.AMFICOM.resource.corba.ImageResource_Transferable;
 import com.syrus.util.Log;
@@ -20,32 +19,41 @@ import java.util.*;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.2 $, $Date: 2005/03/10 15:06:08 $
+ * @version $Revision: 1.3 $, $Date: 2005/03/11 17:26:59 $
  * @module scheme_v1
  */
-public final class SchemeProtoElement extends StorableObject implements Namable, Describable, SchemeCellContainer, Characterizable, ComSyrusAmficomConfigurationSchemeProtoElement {
+public final class SchemeProtoElement extends CloneableStorableObject implements
+		Namable, Describable, SchemeCellContainer, Characterizable,
+		ComSyrusAmficomConfigurationSchemeProtoElement {
 
-	private static final long serialVersionUID = 3258411712091862070L;
 	protected Identifier characteristicIds[] = null;
+
 	protected Identifier deviceIds[] = null;
+
 	protected Identifier equipmentTypeId = null;
+
 	protected Identifier linkIds[] = null;
+
 	protected Identifier parentId = null;
+
 	protected Identifier protoElementIds[] = null;
 
- /**
- 						 * Takes non-null value at pack time.
- 						 */
+	/**
+	 * Takes non-null value at pack time.
+	 */
 	protected Identifier schemeCellId = null;
+
 	protected Identifier symbolId = null;
+
 	protected String thisDescription = null;
+
 	protected String thisLabel = null;
 
 	protected String thisName = null;
 
- /**
- 						 * Takes non-null value at pack time.
- 						 */
+	/**
+	 * Takes non-null value at pack time.
+	 */
 	protected Identifier ugoCellId = null;
 
 	/**
@@ -54,6 +62,7 @@ public final class SchemeProtoElement extends StorableObject implements Namable,
 	protected SchemeProtoElement(Identifier id) {
 		super(id);
 	}
+
 	/**
 	 * @param id
 	 * @param created
@@ -62,7 +71,9 @@ public final class SchemeProtoElement extends StorableObject implements Namable,
 	 * @param modifierId
 	 * @param version
 	 */
-	protected SchemeProtoElement(Identifier id, Date created, Date modified, Identifier creatorId, Identifier modifierId, long version) {
+	protected SchemeProtoElement(Identifier id, Date created,
+			Date modified, Identifier creatorId,
+			Identifier modifierId, long version) {
 		super(id, created, modified, creatorId, modifierId, version);
 	}
 
@@ -75,16 +86,12 @@ public final class SchemeProtoElement extends StorableObject implements Namable,
 	}
 
 	public Object clone() {
-		try {
-			final SchemeProtoElement schemeProtoElement = (SchemeProtoElement) super.clone();
-			/**
-			 * @todo Update the newly created object.
-			 */
-			return schemeProtoElement;
-		} catch (final CloneNotSupportedException cnse) {
-			Log.debugException(cnse, Log.SEVERE);
-			return null;
-		}
+		final SchemeProtoElement schemeProtoElement = (SchemeProtoElement) super
+				.clone();
+		/**
+		 * @todo Update the newly created object.
+		 */
+		return schemeProtoElement;
 	}
 
 	public String description() {
@@ -162,7 +169,7 @@ public final class SchemeProtoElement extends StorableObject implements Namable,
 	/**
 	 * @see StorableObject#getDependencies()
 	 */
-	public Identifier[] getDependencies() {
+	public List getDependencies() {
 		throw new UnsupportedOperationException();
 	}
 
@@ -193,7 +200,7 @@ public final class SchemeProtoElement extends StorableObject implements Namable,
 	}
 
 	/**
-	 * @see IStorableObject#isChanged()
+	 * @see StorableObject#isChanged()
 	 */
 	public boolean isChanged() {
 		throw new UnsupportedOperationException();
@@ -270,7 +277,8 @@ public final class SchemeProtoElement extends StorableObject implements Namable,
 	 * @param newSchemeCell
 	 * @see com.syrus.AMFICOM.resource.SchemeCellContainer#schemeCell(com.syrus.AMFICOM.resource.corba.ImageResource_Transferable)
 	 */
-	public void schemeCell(com.syrus.AMFICOM.resource.corba.ImageResource_Transferable newSchemeCell) {
+	public void schemeCell(
+			com.syrus.AMFICOM.resource.corba.ImageResource_Transferable newSchemeCell) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -286,15 +294,6 @@ public final class SchemeProtoElement extends StorableObject implements Namable,
 	 * @see com.syrus.AMFICOM.resource.SchemeCellContainer#schemeCellImpl(SchemeImageResource)
 	 */
 	public void schemeCellImpl(SchemeImageResource schemeCellImpl) {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @param storableObjectFactory
-	 * @param changed
-	 * @see IStorableObject#setChanged(StorableObjectFactory, boolean)
-	 */
-	public void setChanged(final StorableObjectFactory storableObjectFactory, final boolean changed) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -345,7 +344,8 @@ public final class SchemeProtoElement extends StorableObject implements Namable,
 	 * @param newUgoCell
 	 * @see com.syrus.AMFICOM.resource.SchemeCellContainer#ugoCell(com.syrus.AMFICOM.resource.corba.ImageResource_Transferable)
 	 */
-	public void ugoCell(com.syrus.AMFICOM.resource.corba.ImageResource_Transferable newUgoCell) {
+	public void ugoCell(
+			com.syrus.AMFICOM.resource.corba.ImageResource_Transferable newUgoCell) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -361,6 +361,38 @@ public final class SchemeProtoElement extends StorableObject implements Namable,
 	 * @see com.syrus.AMFICOM.resource.SchemeCellContainer#ugoCellImpl(SchemeImageResource)
 	 */
 	public void ugoCellImpl(SchemeImageResource ugoCellImpl) {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @see com.syrus.AMFICOM.general.TransferableObject#getTransferable()
+	 */
+	public Object getTransferable() {
+		throw new UnsupportedOperationException();
+	}
+
+	public static SchemeProtoElement createInstance(final Identifier creatorId)
+			throws CreateObjectException {
+		assert creatorId != null;
+		try {
+			final Date created = new Date();
+			final SchemeProtoElement schemeProtoElement = new SchemeProtoElement(
+					IdentifierPool
+							.getGeneratedIdentifier(ObjectEntities.SCHEME_PROTO_ELEMENT_ENTITY_CODE),
+					created, created, creatorId, creatorId,
+					0L);
+			schemeProtoElement.changed = true;
+			return schemeProtoElement;
+		} catch (final IllegalObjectEntityException ioee) {
+			throw new CreateObjectException(
+					"SchemeProtoElement.createInstance | cannot generate identifier ", ioee); //$NON-NLS-1$
+		}
+	}
+
+	/**
+	 * @deprecated Use {@link #createInstance(Identifier)}instead.
+	 */
+	public static SchemeProtoElement createInstance() {
 		throw new UnsupportedOperationException();
 	}
 }

@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeStorableObjectPool.java,v 1.7 2005/03/10 06:58:50 bass Exp $
+ * $Id: SchemeStorableObjectPool.java,v 1.8 2005/03/11 17:26:59 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,13 +9,11 @@
 package com.syrus.AMFICOM.scheme;
 
 import com.syrus.AMFICOM.general.*;
-import com.syrus.AMFICOM.general.corba.*;
-import com.syrus.AMFICOM.general.corba.StorableObject;
 import java.util.*;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.7 $, $Date: 2005/03/10 06:58:50 $
+ * @version $Revision: 1.8 $, $Date: 2005/03/11 17:26:59 $
  * @todo Move to corba subpackage.
  * @module scheme_v1
  */
@@ -48,7 +46,7 @@ public final class SchemeStorableObjectPool extends StorableObjectPool {
 		throw new UnsupportedOperationException();
 	}
 
-	public static IStorableObject getStorableObject(final Identifier objectId, final boolean useLoader)
+	public static StorableObject getStorableObject(final Identifier objectId, final boolean useLoader)
 			throws DatabaseException, CommunicationException {
 		throw new UnsupportedOperationException();
 	}
@@ -80,7 +78,7 @@ public final class SchemeStorableObjectPool extends StorableObjectPool {
 //		throw new UnsupportedOperationException();
 //	}
 
-	public static StorableObject putStorableObject(final IStorableObject iStorableObject)
+	public static StorableObject putStorableObject(final StorableObject iStorableObject)
 			throws IllegalObjectEntityException {
 		throw new UnsupportedOperationException();
 	}

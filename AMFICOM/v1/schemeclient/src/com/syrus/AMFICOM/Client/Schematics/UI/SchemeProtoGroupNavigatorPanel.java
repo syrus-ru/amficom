@@ -142,31 +142,53 @@ public class SchemeProtoGroupNavigatorPanel extends JPanel implements OperationL
 
 	void createMapGroupButton_actionPerformed()
 	{
-		String ret = JOptionPane.showInputDialog(Environment.getActiveWindow(), "Название:", "Новая группа", JOptionPane.QUESTION_MESSAGE);
-		if (ret == null || ret.equals(""))
-			return;
-		
-		Identifier userId = new Identifier(((RISDSessionInfo) aContext.getSessionInterface()).getAccessIdentifier().user_id); 
-
-		SchemeProtoGroup new_group;
-		if (selectedObject instanceof SchemeProtoGroup)
+		try
 		{
-			SchemeProtoGroup parent_group = (SchemeProtoGroup)selectedObject;
-			new_group = SchemeStorableObjectFactory.newSchemeProtoGroup(
-					userId, ret, parent_group);
-			Arrays.asList(parent_group.schemeProtoGroups()).add(new_group);
-		}
-		else
-			new_group = SchemeStorableObjectFactory.newSchemeProtoGroup(
-					userId, ret, null);
+			String ret = JOptionPane.showInputDialog(Environment
+					.getActiveWindow(), "Название:",
+					"Новая группа",
+					JOptionPane.QUESTION_MESSAGE);
+			if (ret == null || ret.length() == 0)
+				return;
 
-		try {
+			Identifier userId = new Identifier(
+					((RISDSessionInfo) aContext
+							.getSessionInterface())
+							.getAccessIdentifier().user_id);
+
+			SchemeProtoGroup new_group;
+			if (selectedObject instanceof SchemeProtoGroup)
+			{
+				SchemeProtoGroup parent_group = (SchemeProtoGroup) selectedObject;
+				new_group = SchemeProtoGroup.createInstance(
+						userId, ret, parent_group);
+				Arrays.asList(parent_group.schemeProtoGroups())
+						.add(new_group);
+			}
+			else
+				new_group = SchemeProtoGroup.createInstance(
+						userId, ret, null);
+
 			SchemeStorableObjectPool.putStorableObject(new_group);
+			dispatcher.notify(new TreeListSelectionEvent("",
+					TreeListSelectionEvent.REFRESH_EVENT));
 		}
-		catch (IllegalObjectEntityException ex) {
-			ex.printStackTrace();
+		catch (final IllegalObjectEntityException ioee)
+		{
+			/**
+			 * @todo Introduce more substantial error handling
+			 *       instead of just printing stack trace.
+			 */
+			ioee.printStackTrace();
 		}
-		dispatcher.notify(new TreeListSelectionEvent("", TreeListSelectionEvent.REFRESH_EVENT));
+		catch (final CreateObjectException coe)
+		{
+			/**
+			 * @todo Introduce more substantial error handling
+			 *       instead of just printing stack trace.
+			 */
+			coe.printStackTrace();
+		}
 	}
 
 	void delMapGroupButton_actionPerformed()

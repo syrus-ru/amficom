@@ -68,7 +68,7 @@ public class SchemeNewCommand extends VoidCommand
 		}
 		*/
 
-		Scheme scheme = SchemeStorableObjectFactory.createScheme();
+		Scheme scheme = Scheme.createInstance();
 		scheme.name("Новая схема");
 		try {
 			Identifier domain_id = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).

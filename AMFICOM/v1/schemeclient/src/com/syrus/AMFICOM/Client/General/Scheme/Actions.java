@@ -414,7 +414,7 @@ class GroupSEAction extends AbstractAction
 					graph.setSchemeElement(null);
 			}
 			else
-				scheme_el = SchemeStorableObjectFactory.createSchemeElement();
+				scheme_el = SchemeElement.createInstance();
 
 			group.setSchemeElementId(scheme_el.getId());
 			group.setProtoElementId(scheme_el.schemeProtoElement().getId());
@@ -448,9 +448,9 @@ class GroupSEAction extends AbstractAction
 					{
 						SchemeElement sel = null;
 						if (((DeviceGroup)cells[i]).getProtoElement() != null)
-							sel = SchemeStorableObjectFactory.createSchemeElement(((DeviceGroup)cells[i]).getProtoElement());
+							sel = SchemeElement.createInstance(((DeviceGroup)cells[i]).getProtoElement());
 						else
-							sel = SchemeStorableObjectFactory.createSchemeElement();
+							sel = SchemeElement.createInstance();
 						java.util.List schemeElements = Arrays.asList(scheme_el.schemeElements());
 						if (!schemeElements.contains(sel))
 							schemeElements.add(sel);
@@ -579,7 +579,7 @@ class GroupAction extends AbstractAction
 			catch (CreateObjectException ex) {
 				ex.printStackTrace();
 			}
-			SchemeProtoElement proto = SchemeStorableObjectFactory.createSchemeProtoElement();
+			SchemeProtoElement proto = SchemeProtoElement.createInstance();
 			proto.equipmentTypeImpl(eqt);
 			try {
 				ConfigurationStorableObjectPool.putStorableObject(eqt);
@@ -856,7 +856,7 @@ class CreateTopLevelElementAction extends AbstractAction
 		else
 		{
 			Identifier user_id = new Identifier(((RISDSessionInfo)graph.aContext.getSessionInterface()).getAccessIdentifier().user_id);
-			proto = SchemeStorableObjectFactory.createSchemeProtoElement();
+			proto = SchemeProtoElement.createInstance();
 			EquipmentType eqt = null;
 			try {
 				eqt = EquipmentType.createInstance(
@@ -879,7 +879,7 @@ class CreateTopLevelElementAction extends AbstractAction
 			for (int i = 0; i < _links.length; i++)
 				links.add(_links[i].getSchemeLink());
 
-			SchemeDevice new_dev = SchemeStorableObjectFactory.createSchemeDevice();
+			SchemeDevice new_dev = SchemeDevice.createInstance();
 			List cablePorts = new ArrayList();
 			List ports = new ArrayList();
 			for (Iterator it = blockports_in.iterator(); it.hasNext();)

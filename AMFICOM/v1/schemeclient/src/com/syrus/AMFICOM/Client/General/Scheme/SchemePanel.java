@@ -243,7 +243,7 @@ public class SchemePanel extends ElementsPanel
 	{
 		if (proto != null)
 		{
-			SchemeElement scheme_el = SchemeStorableObjectFactory.createSchemeElement();
+			SchemeElement scheme_el = SchemeElement.createInstance();
 
 			if (getGraph().getScheme() != null)
 				scheme_el.scheme(getGraph().getScheme());
@@ -284,7 +284,7 @@ public class SchemePanel extends ElementsPanel
 
 			if (cells.length == 1 && cells[0] instanceof DeviceGroup)
 			{
-				SchemeElement element = SchemeStorableObjectFactory.createSchemeElement();
+				SchemeElement element = SchemeElement.createInstance();
 				element.internalScheme(sch);
 				element.scheme(getGraph().getScheme());
 				element.name(sch.name());

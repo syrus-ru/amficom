@@ -1,5 +1,5 @@
 /*
- * $Id: Scheme.java,v 1.2 2005/03/10 15:06:08 bass Exp $
+ * $Id: Scheme.java,v 1.3 2005/03/11 17:26:58 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,72 +10,81 @@ package com.syrus.AMFICOM.scheme.corba;
 
 import com.syrus.AMFICOM.administration.*;
 import com.syrus.AMFICOM.administration.corba.Domain_Transferable;
-import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.general.corba.*;
 import com.syrus.AMFICOM.map.*;
+import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.corba.Map_Transferable;
 import com.syrus.AMFICOM.resource.*;
 import com.syrus.AMFICOM.resource.corba.ImageResource_Transferable;
 import com.syrus.AMFICOM.scheme.corba.SchemePackage.Type;
 import com.syrus.util.Log;
-import java.util.Date;
-
+import java.util.*;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.2 $, $Date: 2005/03/10 15:06:08 $
+ * @version $Revision: 1.3 $, $Date: 2005/03/11 17:26:58 $
  * @module scheme_v1
  */
-public final class Scheme extends StorableObject implements Namable, Describable, SchemeCellContainer, ComSyrusAmficomAdministrationScheme, ComSyrusAmficomMapScheme {
+public final class Scheme extends CloneableStorableObject implements Namable,
+		Describable, SchemeCellContainer,
+		ComSyrusAmficomAdministrationScheme, ComSyrusAmficomMapScheme {
 
-	private static final long serialVersionUID = 3546639914939594546L;
+	/**
+	 * Value is assigned automatically.
+	 */
+	protected Identifier domainId = null;
 
- /**
- 						 * Value is assigned automatically.
- 						 */
-  protected Identifier domainId = null;
-  protected Identifier mapId = null;
-  protected Identifier schemeCableLinkIds[] = null;
+	protected Identifier mapId = null;
 
- /**
- 						 * Takes non-null value at pack time.
- 						 */
-  protected Identifier schemeCellId = null;
-  protected Identifier schemeElementIds[] = null;
-  protected Identifier schemeLinkIds[] = null;
-  protected Identifier schemeMonitoringSolutionId = null;
-  protected Identifier symbolId = null;
-  protected String thisDescription = null;
-  protected int thisHeight = 0;
-  protected String thisLabel = null;
-  protected String thisName = null;
-  protected Type thisType = null;
-  protected int thisWidth = 0;
+	protected Identifier schemeCableLinkIds[] = null;
 
- /**
- 						 * Takes non-null value at pack time.
- 						 */
-  protected Identifier ugoCellId = null;
+	/**
+	 * Takes non-null value at pack time.
+	 */
+	protected Identifier schemeCellId = null;
 
-	protected Scheme(Identifier id) {
+	protected Identifier schemeElementIds[] = null;
+
+	protected Identifier schemeLinkIds[] = null;
+
+	protected Identifier schemeMonitoringSolutionId = null;
+
+	protected Identifier symbolId = null;
+
+	protected String thisDescription = null;
+
+	protected int thisHeight = 0;
+
+	protected String thisLabel = null;
+
+	protected String thisName = null;
+
+	protected Type thisType = null;
+
+	protected int thisWidth = 0;
+
+	/**
+	 * Takes non-null value at pack time.
+	 */
+	protected Identifier ugoCellId = null;
+
+	Scheme(Identifier id) {
 		super(id);
 	}
 
-	protected Scheme(final Identifier id, final Date created, final Date modified, final Identifier creatorId, final Identifier modifierId, final long version) {
+	Scheme(final Identifier id, final Date created,
+			final Date modified, final Identifier creatorId,
+			final Identifier modifierId, final long version) {
 		super(id, created, modified, creatorId, modifierId, version);
 	}
 
 	public Object clone() {
-		try {
-			final Scheme scheme = (Scheme) super.clone();
-			/**
-			 * @todo Update the newly created object.
-			 */
-			return scheme;
-		} catch (final CloneNotSupportedException cnse) {
-			Log.debugException(cnse, Log.SEVERE);
-			return null;
-		}
+		final Scheme scheme = (Scheme) super.clone();
+		/**
+		 * @todo Update the newly created object.
+		 */
+		return scheme;
 	}
 
 	public String description() {
@@ -130,7 +139,7 @@ public final class Scheme extends StorableObject implements Namable, Describable
 	/**
 	 * @see StorableObject#getDependencies()
 	 */
-	public Identifier[] getDependencies() {
+	public List getDependencies() {
 		throw new UnsupportedOperationException();
 	}
 
@@ -169,7 +178,7 @@ public final class Scheme extends StorableObject implements Namable, Describable
 	}
 
 	/**
-	 * @see IStorableObject#isChanged()
+	 * @see StorableObject#isChanged()
 	 */
 	public boolean isChanged() {
 		throw new UnsupportedOperationException();
@@ -237,7 +246,8 @@ public final class Scheme extends StorableObject implements Namable, Describable
 	 * @param newSchemeCell
 	 * @see com.syrus.AMFICOM.resource.SchemeCellContainer#schemeCell(com.syrus.AMFICOM.resource.corba.ImageResource_Transferable)
 	 */
-	public void schemeCell(com.syrus.AMFICOM.resource.corba.ImageResource_Transferable newSchemeCell) {
+	public void schemeCell(
+			com.syrus.AMFICOM.resource.corba.ImageResource_Transferable newSchemeCell) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -278,15 +288,6 @@ public final class Scheme extends StorableObject implements Namable, Describable
 
 	public void schemeMonitoringSolution(
 			SchemeMonitoringSolution schemeMonitoringSolution) {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @param storableObjectFactory
-	 * @param changed
-	 * @see IStorableObject#setChanged(StorableObjectFactory, boolean)
-	 */
-	public void setChanged(final StorableObjectFactory storableObjectFactory, final boolean changed) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -333,7 +334,8 @@ public final class Scheme extends StorableObject implements Namable, Describable
 	 * @param newUgoCell
 	 * @see com.syrus.AMFICOM.resource.SchemeCellContainer#ugoCell(com.syrus.AMFICOM.resource.corba.ImageResource_Transferable)
 	 */
-	public void ugoCell(com.syrus.AMFICOM.resource.corba.ImageResource_Transferable newUgoCell) {
+	public void ugoCell(
+			com.syrus.AMFICOM.resource.corba.ImageResource_Transferable newUgoCell) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -357,6 +359,38 @@ public final class Scheme extends StorableObject implements Namable, Describable
 	}
 
 	public void width(int width) {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @see com.syrus.AMFICOM.general.TransferableObject#getTransferable()
+	 */
+	public Object getTransferable() {
+		throw new UnsupportedOperationException();
+	}
+
+	public static Scheme createInstance(final Identifier creatorId)
+			throws CreateObjectException {
+		assert creatorId != null;
+		try {
+			final Date created = new Date();
+			final Scheme scheme = new Scheme(
+					IdentifierPool
+							.getGeneratedIdentifier(ObjectEntities.SCHEME_ENTITY_CODE),
+					created, created, creatorId, creatorId,
+					0L);
+			scheme.changed = true;
+			return scheme;
+		} catch (final IllegalObjectEntityException ioee) {
+			throw new CreateObjectException(
+					"Scheme.createInstance | cannot generate identifier ", ioee); //$NON-NLS-1$
+		}
+	}
+
+	/**
+	 * @deprecated Use {@link #createInstance(Identifier)}instead.
+	 */
+	public static Scheme createInstance() {
 		throw new UnsupportedOperationException();
 	}
 }

@@ -1,5 +1,5 @@
 /**
- * $Id: CableController.java,v 1.8 2005/03/01 15:43:01 krupenn Exp $
+ * $Id: CableController.java,v 1.9 2005/03/11 17:27:33 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -36,13 +36,12 @@ import com.syrus.AMFICOM.mapview.MeasurementPath;
 import com.syrus.AMFICOM.mapview.UnboundLink;
 import com.syrus.AMFICOM.scheme.SchemeStorableObjectPool;
 import com.syrus.AMFICOM.scheme.corba.CableChannelingItem;
-import com.syrus.AMFICOM.scheme.corba.SchemeStorableObjectFactory;
 
 /**
  * Контроллер кабеля.
  * 
- * @author $Author: krupenn $
- * @version $Revision: 1.8 $, $Date: 2005/03/01 15:43:01 $
+ * @author $Author: bass $
+ * @version $Revision: 1.9 $, $Date: 2005/03/11 17:27:33 $
  * @module mapviewclient_v1
  */
 public final class CableController extends AbstractLinkController
@@ -261,7 +260,7 @@ public final class CableController extends AbstractLinkController
 	 */
 	public static CableChannelingItem generateCCI(PhysicalLink link)
 	{
-		CableChannelingItem cci = SchemeStorableObjectFactory.createCableChannelingItem();
+		CableChannelingItem cci = CableChannelingItem.createInstance();
 		cci.startSiteNodeImpl((SiteNode )link.getStartNode());
 		if(! (link instanceof UnboundLink))
 		{

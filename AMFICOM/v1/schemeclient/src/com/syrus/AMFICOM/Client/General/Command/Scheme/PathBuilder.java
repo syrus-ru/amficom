@@ -231,7 +231,7 @@ public class PathBuilder
 
 			PathElement pe = (PathElement)lit.previous();
 
-			newPE = SchemeStorableObjectFactory.createPathElement();
+			newPE = PathElement.createInstance();
 			newPE.type(Type.SCHEME_ELEMENT);
 			newPE.abstractSchemeElement(se);
 			newPE.scheme(se.scheme());
@@ -341,7 +341,7 @@ public class PathBuilder
 				JOptionPane.showMessageDialog(Environment.getActiveWindow(), "У начального устройства должен быть тестовый порт\nс которого должен начинаться маршрут тестирования", "Ошибка", JOptionPane.OK_OPTION);
 				return null;
 			}
-			newPE = SchemeStorableObjectFactory.createPathElement();
+			newPE = PathElement.createInstance();
 			newPE.type(Type.SCHEME_ELEMENT);
 			newPE.abstractSchemeElement(se);
 			newPE.scheme(se.scheme());
@@ -399,7 +399,7 @@ public class PathBuilder
 		if (it.hasPrevious())
 			number = ((PathElement)it.previous()).sequentialNumber() + 1;
 
-		PathElement newPE = SchemeStorableObjectFactory.createPathElement();
+		PathElement newPE = PathElement.createInstance();
 		newPE.type(Type.SCHEME_LINK);
 		newPE.abstractSchemeElement(link);
 		newPE.scheme(link.scheme());
@@ -485,7 +485,7 @@ public class PathBuilder
 		if (it.hasPrevious())
 			number = ((PathElement)it.previous()).sequentialNumber() + 1;
 
-		PathElement newPE = SchemeStorableObjectFactory.createPathElement();
+		PathElement newPE = PathElement.createInstance();
 		newPE.type(Type.SCHEME_CABLE_LINK);
 		newPE.abstractSchemeElement(link);
 		newPE.schemeCableThread(thread);
