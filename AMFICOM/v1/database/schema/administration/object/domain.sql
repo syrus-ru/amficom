@@ -1,6 +1,6 @@
--- $Id: domain.sql,v 1.6 2005/01/31 14:25:49 arseniy Exp $
+-- $Id: domain.sql,v 1.7 2005/02/02 13:25:22 arseniy Exp $
 
-CREATE TABLE domain (
+CREATE TABLE Domain (
  id VARCHAR2(32),
 --
  created DATE NOT NULL,
@@ -27,5 +27,5 @@ CREATE TABLE domain (
   REFERENCES "User" (id) ON DELETE CASCADE
 );
 
-CREATE SEQUENCE domain_seq ORDER;
+CREATE SEQUENCE Domain_seq ORDER;
 
