@@ -1,5 +1,5 @@
 /*
- * $Id: LogicalSchemeUI.java,v 1.12 2005/03/21 08:41:34 bob Exp $
+ * $Id: LogicalSchemeUI.java,v 1.13 2005/03/21 15:04:23 bob Exp $
  *
  * Copyright ? 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -33,7 +33,7 @@ import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/03/21 08:41:34 $
+ * @version $Revision: 1.13 $, $Date: 2005/03/21 15:04:23 $
  * @author $Author: bob $
  * @module filter_v1
  */
@@ -96,6 +96,11 @@ public class LogicalSchemeUI extends JComponent implements MouseListener, MouseM
 	private AddDeleteItems[]	addDeleteItems		= new AddDeleteItems[0];
 
 	public LogicalSchemeUI(Item rootItem) {
+		if (!rootItem.isService()) {
+			Item rootItem2 = new ServiceItem();
+			rootItem2.addChild(rootItem);
+			rootItem = rootItem2;
+		}
 		this.rootServiceItem = new ViewItem(rootItem);
 		this.addMouseListener(this);
 		this.addMouseMotionListener(this);

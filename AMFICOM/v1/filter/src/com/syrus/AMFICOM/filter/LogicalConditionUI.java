@@ -1,5 +1,5 @@
 /*
- * $Id: LogicalConditionUI.java,v 1.9 2005/03/21 13:04:06 bob Exp $
+ * $Id: LogicalConditionUI.java,v 1.10 2005/03/21 15:04:23 bob Exp $
  *
  * Copyright ? 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,7 +30,7 @@ import com.syrus.AMFICOM.logic.LogicalTreeUI;
 import com.syrus.AMFICOM.logic.ServiceItem;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/03/21 13:04:06 $
+ * @version $Revision: 1.10 $, $Date: 2005/03/21 15:04:23 $
  * @author $Author: bob $
  * @module filter_v1
  */
@@ -154,7 +154,6 @@ public class LogicalConditionUI {
 		}
 		splitPane.setOneTouchExpandable(false);
 		splitPane.setResizeWeight(0.2);
-		this.populateRootItem();
 		return splitPane;
 	}
 
@@ -189,7 +188,7 @@ public class LogicalConditionUI {
 	private Item getRootItem() {
 		if (this.rootItem == null) {
 			this.rootItem = new ServiceItem();
-
+			this.populateRootItem();
 		}
 		return this.rootItem;
 	}
