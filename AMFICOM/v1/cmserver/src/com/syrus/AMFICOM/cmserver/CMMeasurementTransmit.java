@@ -1,5 +1,5 @@
 /*
- * $Id: CMMeasurementTransmit.java,v 1.7 2005/02/15 09:31:47 arseniy Exp $
+ * $Id: CMMeasurementTransmit.java,v 1.8 2005/02/15 09:56:38 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,7 +15,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import com.syrus.AMFICOM.general.corba.AccessIdentifier_Transferable;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.DatabaseException;
@@ -29,6 +28,7 @@ import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
+import com.syrus.AMFICOM.general.corba.AccessIdentifier_Transferable;
 import com.syrus.AMFICOM.general.corba.CompletionStatus;
 import com.syrus.AMFICOM.general.corba.ErrorCode;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
@@ -66,7 +66,7 @@ import com.syrus.AMFICOM.measurement.corba.Test_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/02/15 09:31:47 $
+ * @version $Revision: 1.8 $, $Date: 2005/02/15 09:56:38 $
  * @author $Author: arseniy $
  * @module cmserver_v1
  */
@@ -2283,21 +2283,22 @@ public abstract class CMMeasurementTransmit extends CMConfigurationTransmit {
 			Map storableObjectsTMap = new HashMap();
 			for (int i = 0; i < storableObjects_Transferables.length; i++)
 				storableObjectsTMap.put(new Identifier(storableObjects_Transferables[i].id), storableObjects_Transferables[i]);
-			
+
 			MeasurementStorableObjectPool.refresh();
 			Collection storableObjects = MeasurementStorableObjectPool.getStorableObjects(storableObjectsTMap.keySet(), true);
 			for (Iterator it = storableObjects.iterator(); it.hasNext();) {
 				StorableObject so = (StorableObject) it.next();
 				StorableObject_Transferable sot = (StorableObject_Transferable) storableObjectsTMap.get(so.getId());
 				//Remove objects with older versions as well as objects with the same versions -- not only with older ones!
-				if (! so.hasNewerVersion(sot.version))
+				if (!so.hasNewerVersion(sot.version))
 					it.remove();
 			}
-			
+
 			int i = 0;
 			Identifier_Transferable[] idsT = new Identifier_Transferable[storableObjects.size()];
 			for (Iterator it = storableObjects.iterator(); it.hasNext(); i++)
 				idsT[i] = (Identifier_Transferable) ((StorableObject) it.next()).getId().getTransferable();
+			Log.debugMessage("CMServer.transmitRefreshedMeasurementObjects | return " + idsT.length + " item(s)", Log.DEBUGLEVEL05);
 			return idsT;
 		}
 		catch (CommunicationException ce) {
