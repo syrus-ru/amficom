@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseMeasurementObjectLoader.java,v 1.22 2004/10/20 09:02:13 max Exp $
+ * $Id: DatabaseMeasurementObjectLoader.java,v 1.23 2004/11/17 09:32:55 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,12 +8,16 @@
 
 package com.syrus.AMFICOM.measurement;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.UpdateObjectException;
@@ -21,7 +25,7 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.22 $, $Date: 2004/10/20 09:02:13 $
+ * @version $Revision: 1.23 $, $Date: 2004/11/17 09:32:55 $
  * @author $Author: max $
  * @module measurement_v1
  */
@@ -415,6 +419,70 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 		}
 		return list;
 	}
+    
+    public java.util.Set refresh(java.util.Set storableObjects) throws CommunicationException, DatabaseException {
+        List soIds = new ArrayList();
+        short entityCode = 0;
+        for (Iterator it = storableObjects.iterator(); it.hasNext();) {
+            StorableObject so = (StorableObject) it.next();
+            soIds.add(so.getId());      
+        }
+        for (Iterator it = storableObjects.iterator(); it.hasNext();) {
+            StorableObject so = (StorableObject) it.next();            
+            so.getId().getMajor();
+        }
+        List loadedSo = null;
+        try {
+        	switch (entityCode) {
+                case ObjectEntities.PARAMETERTYPE_ENTITY_CODE:
+                    loadedSo = loadParameterTypes(soIds);
+                    break;
+                case ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE:
+                    loadedSo = loadMeasurementTypes(soIds);
+                    break;
+                case ObjectEntities.ANALYSISTYPE_ENTITY_CODE:
+                    loadedSo = loadAnalysisTypes(soIds);
+                    break;
+                case ObjectEntities.EVALUATIONTYPE_ENTITY_CODE:
+                    loadedSo = loadEvaluationTypes(soIds);
+                    break;
+                case ObjectEntities.SET_ENTITY_CODE:
+                    loadedSo = loadSets(soIds);
+                    break;
+                case ObjectEntities.MODELING_ENTITY_CODE:
+                    loadedSo = loadModelings(soIds);
+                    break;
+                case ObjectEntities.MS_ENTITY_CODE:
+                    loadedSo = loadMeasurementSetups(soIds);
+                    break;
+                case ObjectEntities.ANALYSIS_ENTITY_CODE:
+                    loadedSo = loadAnalyses(soIds);
+                    break;
+                case ObjectEntities.EVALUATION_ENTITY_CODE:
+                    loadedSo = loadEvaluations(soIds);
+                    break;
+                case ObjectEntities.MEASUREMENT_ENTITY_CODE:
+                    loadedSo = loadMeasurements(soIds);
+                    break;
+                case ObjectEntities.TEST_ENTITY_CODE:
+                    loadedSo = loadTests(soIds);
+                    break;
+                case ObjectEntities.RESULT_ENTITY_CODE:
+                    loadedSo = loadResults(soIds);
+                    break;
+                case ObjectEntities.TEMPORALPATTERN_ENTITY_CODE:
+                    loadedSo = loadTemporalPatterns(soIds);
+                    break;
+                default:
+                    Log.errorMessage("DatabaseConfigurationObjectLoader.refresh | Unknown entity: "
+                            + entityCode);                
+            }
+            return (java.util.Set)loadedSo;
+        } catch (DatabaseException e) {
+            Log.errorMessage("DatabaseConfigurationObjectLoader.refresh | DatabaseException: " + e.getMessage());
+            throw new DatabaseException("DatabaseConfigurationObjectLoader.refresh | DatabaseException: " + e.getMessage());
+        }
+    }
 
 	
 	public void saveParameterType(ParameterType parameterType, boolean force) throws DatabaseException, CommunicationException {
