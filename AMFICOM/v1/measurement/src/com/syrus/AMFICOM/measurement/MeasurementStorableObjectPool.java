@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementStorableObjectPool.java,v 1.52 2004/11/18 12:25:00 bob Exp $
+ * $Id: MeasurementStorableObjectPool.java,v 1.53 2004/11/18 14:07:58 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -36,7 +36,7 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.52 $, $Date: 2004/11/18 12:25:00 $
+ * @version $Revision: 1.53 $, $Date: 2004/11/18 14:07:58 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -83,6 +83,7 @@ public class MeasurementStorableObjectPool {
 	private static Class			cacheMapClass				= LRUMap.class;
 
 	private MeasurementStorableObjectPool() {
+		// empty
 	}
 
 	/**
@@ -119,10 +120,12 @@ public class MeasurementStorableObjectPool {
 		addObjectPool(ObjectEntities.MS_ENTITY_CODE, size);
 		addObjectPool(ObjectEntities.MEASUREMENT_ENTITY_CODE, size);
 		addObjectPool(ObjectEntities.ANALYSIS_ENTITY_CODE, size);
-		addObjectPool(ObjectEntities.EVALUATION_ENTITY_CODE, size);
-		addObjectPool(ObjectEntities.TEMPORALPATTERN_ENTITY_CODE, size);
+		addObjectPool(ObjectEntities.EVALUATION_ENTITY_CODE, size);		
 		addObjectPool(ObjectEntities.TEST_ENTITY_CODE, size);
+		addObjectPool(ObjectEntities.TEMPORALPATTERN_ENTITY_CODE, size);
 		addObjectPool(ObjectEntities.RESULT_ENTITY_CODE, size);
+		
+		polulatePools();
 	}
 
 	public static void init(MeasurementObjectLoader mObjectLoader1) {
@@ -140,10 +143,12 @@ public class MeasurementStorableObjectPool {
 		addObjectPool(ObjectEntities.MS_ENTITY_CODE, MS_OBJECT_POOL_SIZE);
 		addObjectPool(ObjectEntities.MEASUREMENT_ENTITY_CODE, MEASUREMENT_OBJECT_POOL_SIZE);
 		addObjectPool(ObjectEntities.ANALYSIS_ENTITY_CODE, ANALYSIS_OBJECT_POOL_SIZE);
-		addObjectPool(ObjectEntities.EVALUATION_ENTITY_CODE, EVALUATION_OBJECT_POOL_SIZE);
-		addObjectPool(ObjectEntities.TEMPORALPATTERN_ENTITY_CODE, TEMPORALPATTERN_OBJECT_POOL_SIZE);
+		addObjectPool(ObjectEntities.EVALUATION_ENTITY_CODE, EVALUATION_OBJECT_POOL_SIZE);		
 		addObjectPool(ObjectEntities.TEST_ENTITY_CODE, TEST_OBJECT_POOL_SIZE);
+		addObjectPool(ObjectEntities.TEMPORALPATTERN_ENTITY_CODE, TEMPORALPATTERN_OBJECT_POOL_SIZE);
 		addObjectPool(ObjectEntities.RESULT_ENTITY_CODE, RESULT_OBJECT_POOL_SIZE);
+		
+		polulatePools();
 	}
 
 	public static void serializePool() {
@@ -167,18 +172,6 @@ public class MeasurementStorableObjectPool {
 			else {
 				throw new UnsupportedOperationException("CacheMapClass " + cacheMapClass.getName() + " must extends LRUMap");
 			}
-			List keys = LRUMapSaver.load(ObjectEntities.codeToString(objectEntityCode));
-			if (keys == null)
-				return;
-
-      getStorableObjects(keys, true);
-		}
-		catch (CommunicationException e) {
-			Log.errorException(e);
-			Log.errorMessage("MeasurementStorableObjectPool.addObjectPool | Error: " + e.getMessage());
-        } catch (DatabaseException e) {
-            Log.errorException(e);
-            Log.errorMessage("MeasurementStorableObjectPool.addObjectPool | Error: " + e.getMessage());
 		} catch (IllegalArgumentException e) {
 			throw new UnsupportedOperationException("CacheMapClass " + cacheMapClass.getName()
 					+ " IllegalArgumentException " + e.getMessage());
@@ -195,6 +188,23 @@ public class MeasurementStorableObjectPool {
 			throw new UnsupportedOperationException("CacheMapClass " + cacheMapClass.getName()
 					+ " InvocationTargetException " + e.getMessage());
 		}
+	}
+	
+	private static void polulatePools(){
+		try{
+			for (Iterator it = objectPoolMap.keySet().iterator(); it.hasNext();) {
+				short objectEntityCode = ((Short) it.next()).shortValue();
+				List keys = LRUMapSaver.load(ObjectEntities.codeToString(objectEntityCode));
+		        if (keys != null)
+		        	getStorableObjects(keys, true);				
+			}
+		} catch (CommunicationException e) {
+            Log.errorException(e);
+            Log.errorMessage("MeasurementStorableObjectPool.polulatePools | Error: " + e.getMessage());
+        } catch (DatabaseException e) {
+            Log.errorException(e);
+            Log.errorMessage("MeasurementStorableObjectPool.polulatePools | Error: " + e.getMessage());
+        }
 	}
     
     public static void refresh() throws DatabaseException, CommunicationException {        
@@ -285,20 +295,17 @@ public class MeasurementStorableObjectPool {
 							list = new LinkedList();
 						list.add(storableObject);
 					}				
-					if (storableObject == null) {
-						if (useLoader) {
-							if (objectQueueMap == null)
-								objectQueueMap = new HashMap();
-							List objectQueue = (List) objectQueueMap.get(entityCode);
-							if (objectQueue == null) {
-								objectQueue = new LinkedList();
-								objectQueueMap.put(entityCode, objectQueue);
-							}
-							objectQueue.add(objectId);
+					if (storableObject == null && useLoader) {
+						if (objectQueueMap == null)
+							objectQueueMap = new HashMap();
+						List objectQueue = (List) objectQueueMap.get(entityCode);
+						if (objectQueue == null) {
+							objectQueue = new LinkedList();
+							objectQueueMap.put(entityCode, objectQueue);
 						}
+						objectQueue.add(objectId);						
 					}
-				}
-				else {
+				} else {
 					Log.errorMessage("MeasurementStorableObjectPool.getStorableObjects | Cannot find object pool for objectId: '"
 							+ objectId.toString()
 							+ "' entity code: '"
@@ -307,8 +314,7 @@ public class MeasurementStorableObjectPool {
 				}
 			}
 
-		}
-		else {
+		} else {
 			Log.errorMessage("MeasurementStorableObjectPool.getStorableObjects | NULL list of identifiers supplied");
 		}
 
