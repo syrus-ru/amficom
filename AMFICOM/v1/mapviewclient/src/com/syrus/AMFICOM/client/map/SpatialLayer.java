@@ -1,5 +1,5 @@
 /**
- * $Id: SpatialLayer.java,v 1.3 2005/02/07 16:09:25 krupenn Exp $
+ * $Id: SpatialLayer.java,v 1.4 2005/03/02 12:37:45 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -16,9 +16,9 @@ import java.awt.Component;
  * Слой географической карты. Реализация пренадлежит используемой системе ГИС.
  * Текущее использование - управление отображением слоев
  * @author $Author: krupenn $
- * @version $Revision: 1.3 $, $Date: 2005/02/07 16:09:25 $
+ * @version $Revision: 1.4 $, $Date: 2005/03/02 12:37:45 $
  * @module mapviewclient_v1
- * @see com.syrus.AMFICOM.Client.Map.Setup.LayersPanel
+ * @see com.syrus.AMFICOM.Client.Map.Operations.LayersPanel
  */
 public interface SpatialLayer 
 {

@@ -1,5 +1,5 @@
 /**
- * $Id: NetMapViewer.java,v 1.9 2005/02/25 13:49:16 krupenn Exp $
+ * $Id: NetMapViewer.java,v 1.10 2005/03/02 12:37:35 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -26,11 +26,11 @@ import com.syrus.AMFICOM.Client.General.Model.Environment;
  * для формата операции отображения.
  * Для того, чтобы получить компонент, содержащий в себе отображение 
  * картографии, следует вызвать метод {@link #getVisualComponent()}
+ * <br> реализация com.syrus.AMFICOM.Client.Map.ObjectFX.OfxNetMapViewer 
+ * <br> реализация com.syrus.AMFICOM.Client.Map.Mapinfo.MapInfoNetMapViewer
  * @author $Author: krupenn $
- * @version $Revision: 1.9 $, $Date: 2005/02/25 13:49:16 $
+ * @version $Revision: 1.10 $, $Date: 2005/03/02 12:37:35 $
  * @module mapviewclient_v1
- * @see com.syrus.AMFICOM.Client.Map.ObjectFX.OfxNetMapViewer 
- * @see com.syrus.AMFICOM.Client.Map.Mapinfo.MapInfoNetMapViewer
  */
 public abstract class NetMapViewer 
 {
@@ -73,9 +73,8 @@ public abstract class NetMapViewer
 	 * соединиться с хранилищем картографической информации. Для реализации
 	 * других специфических действий по отображению топографической информации
 	 * следует переопределить этот метод
-	 * 
-	 * @see com.syrus.AMFICOM.Client.Map.ObjectFX.OfxNetMapViewer#init() 
-	 * @see com.syrus.AMFICOM.Client.Map.Mapinfo.MapInfoNetMapViewer#init()
+	 * <br> реализация com.syrus.AMFICOM.Client.Map.ObjectFX.OfxNetMapViewer.init() 
+	 * <br> реализация com.syrus.AMFICOM.Client.Map.Mapinfo.MapInfoNetMapViewer.init()
 	 */	
 	public void init()
 		throws MapDataException
