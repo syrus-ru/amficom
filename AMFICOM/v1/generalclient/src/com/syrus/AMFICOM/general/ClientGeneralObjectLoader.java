@@ -1,5 +1,5 @@
 /*
- * $Id: ClientGeneralObjectLoader.java,v 1.7 2005/02/21 11:11:15 bob Exp $
+ * $Id: ClientGeneralObjectLoader.java,v 1.8 2005/02/25 09:16:15 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,16 +18,13 @@ import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.general.corba.AccessIdentifier_Transferable;
 import com.syrus.AMFICOM.general.corba.CharacteristicType_Transferable;
 import com.syrus.AMFICOM.general.corba.Characteristic_Transferable;
-import com.syrus.AMFICOM.general.corba.CompoundCondition_Transferable;
 import com.syrus.AMFICOM.general.corba.ErrorCode;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
-import com.syrus.AMFICOM.general.corba.LinkedIdsCondition_Transferable;
 import com.syrus.AMFICOM.general.corba.ParameterType_Transferable;
-import com.syrus.AMFICOM.general.corba.StorableObjectCondition_Transferable;
 import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/02/21 11:11:15 $
+ * @version $Revision: 1.8 $, $Date: 2005/02/25 09:16:15 $
  * @author $Author: bob $
  * @module generalclient_v1
  */
@@ -43,17 +40,6 @@ public class ClientGeneralObjectLoader implements GeneralObjectLoader {
 		return  (AccessIdentifier_Transferable) SessionContext.getAccessIdentity().getTransferable();
 	}
 
-	private StorableObjectCondition_Transferable getConditionTransferable(StorableObjectCondition condition) {
-		StorableObjectCondition_Transferable condition_Transferable = new StorableObjectCondition_Transferable();
-		Object transferable = condition.getTransferable();
-		if (condition instanceof LinkedIdsCondition) {
-			condition_Transferable.linkedIdsCondition((LinkedIdsCondition_Transferable) transferable);
-		} else if (condition instanceof CompoundCondition) {
-			condition_Transferable.compoundCondition((CompoundCondition_Transferable) transferable);
-		}
-		return condition_Transferable;
-	}
-	
 	public ParameterType loadParameterType(Identifier id) throws RetrieveObjectException, CommunicationException {
 		try {
 			return new ParameterType(this.server.transmitParameterType((Identifier_Transferable) id.getTransferable(),
@@ -164,7 +150,7 @@ public class ClientGeneralObjectLoader implements GeneralObjectLoader {
 			}
 
 			ParameterType_Transferable[] transferables = this.server.transmitParameterTypesButIdsCondition(
-				identifierTransferables, getAccessIdentifierTransferable(), this.getConditionTransferable(condition));
+				identifierTransferables, getAccessIdentifierTransferable(), StorableObjectConditionBuilder.getConditionTransferable(condition));
 			Collection list = new ArrayList(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
 				list.add(new ParameterType(transferables[j]));
@@ -206,7 +192,7 @@ public class ClientGeneralObjectLoader implements GeneralObjectLoader {
 				identifierTransferables[i] = (Identifier_Transferable) id.getTransferable();
 			}
 			Characteristic_Transferable[] transferables = this.server.transmitCharacteristicsButIdsCondition(
-				identifierTransferables, getAccessIdentifierTransferable(), this.getConditionTransferable(condition));
+				identifierTransferables, getAccessIdentifierTransferable(), StorableObjectConditionBuilder.getConditionTransferable(condition));
 			Collection list = new ArrayList(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
 				list.add(new Characteristic(transferables[j]));

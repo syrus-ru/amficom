@@ -1,5 +1,5 @@
 /*
- * $Id: CMGeneralReceive.java,v 1.10 2005/02/24 15:21:32 arseniy Exp $
+ * $Id: CMGeneralReceive.java,v 1.11 2005/02/25 09:16:07 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,21 +17,15 @@ import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.CharacteristicDatabase;
 import com.syrus.AMFICOM.general.CharacteristicType;
 import com.syrus.AMFICOM.general.CharacteristicTypeDatabase;
-import com.syrus.AMFICOM.general.CompoundCondition;
 import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.EquivalentCondition;
 import com.syrus.AMFICOM.general.GeneralDatabaseContext;
 import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
-import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ParameterType;
 import com.syrus.AMFICOM.general.ParameterTypeDatabase;
 import com.syrus.AMFICOM.general.StorableObject;
-import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
-import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
@@ -41,46 +35,18 @@ import com.syrus.AMFICOM.general.corba.Characteristic_Transferable;
 import com.syrus.AMFICOM.general.corba.CompletionStatus;
 import com.syrus.AMFICOM.general.corba.ErrorCode;
 import com.syrus.AMFICOM.general.corba.ParameterType_Transferable;
-import com.syrus.AMFICOM.general.corba.StorableObjectCondition_Transferable;
 import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
-import com.syrus.AMFICOM.general.corba.StorableObjectCondition_TransferablePackage.StorableObjectConditionSort;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/02/24 15:21:32 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.11 $, $Date: 2005/02/25 09:16:07 $
+ * @author $Author: bob $
  * @module cmserver_v1
  */
 
 public abstract class CMGeneralReceive extends CMServerPOA {
 
-	private static final long	serialVersionUID	= 4217287655251415892L;
-
-	protected StorableObjectCondition restoreCondition(StorableObjectCondition_Transferable transferable)
-			throws IllegalDataException {
-		StorableObjectCondition condition = null;
-		switch (transferable.discriminator().value()) {
-			case StorableObjectConditionSort._COMPOUND:
-				condition = new CompoundCondition(transferable.compoundCondition());
-				break;
-			case StorableObjectConditionSort._LINKED_IDS:
-				condition = new LinkedIdsCondition(transferable.linkedIdsCondition());
-				break;
-			case StorableObjectConditionSort._TYPICAL:
-				condition = new TypicalCondition(transferable.typicalCondition());
-				break;
-			case StorableObjectConditionSort._EQUIVALENT:
-				condition = new EquivalentCondition(transferable.equialentCondition());
-				break;
-			default:
-				String msg = "CMGeneralReceive.restoreCondition | condition class " + transferable.getClass().getName()
-						+ " is not suppoted";
-				Log.errorMessage(msg);
-				throw new IllegalDataException(msg);
-
-		}
-		return condition;
-	}
+	private static final long	serialVersionUID	= 4217287655251415892L;	
 
 	protected StorableObject_Transferable[] getListHeaders(List storableObjects) {
 		StorableObject_Transferable[] headers = new StorableObject_Transferable[storableObjects.size()];

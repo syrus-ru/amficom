@@ -1,5 +1,5 @@
 /*
- * $Id: CMConfigurationTransmit.java,v 1.9 2005/02/22 10:49:47 bob Exp $
+ * $Id: CMConfigurationTransmit.java,v 1.10 2005/02/25 09:16:07 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -60,6 +60,7 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
+import com.syrus.AMFICOM.general.StorableObjectConditionBuilder;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.general.corba.AccessIdentifier_Transferable;
 import com.syrus.AMFICOM.general.corba.CompletionStatus;
@@ -70,7 +71,7 @@ import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/02/22 10:49:47 $
+ * @version $Revision: 1.10 $, $Date: 2005/02/25 09:16:07 $
  * @author $Author: bob $
  * @module cmserver_v1
  */
@@ -150,7 +151,7 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 			throws AMFICOMRemoteException {
 		try {
 			Identifier domainId = new Identifier(accessIdentifier.domain_id);
-			StorableObjectCondition condition = this.restoreCondition(condition_Transferable);
+			StorableObjectCondition condition = StorableObjectConditionBuilder.restoreCondition(condition_Transferable);
 			Log.debugMessage("CMConfigurationTransmit.transmitCableLinkTypesButIdsCondition | require "
 					+ (ids_Transferable.length == 0 ? "all" : Integer.toString(ids_Transferable.length))
 					+ " item(s) in domain: " + domainId.toString(), Log.DEBUGLEVEL07);
@@ -222,7 +223,7 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 			throws AMFICOMRemoteException {
 		try {
 			Identifier domainId = new Identifier(accessIdentifier.domain_id);
-			StorableObjectCondition condition = this.restoreCondition(condition_Transferable);
+			StorableObjectCondition condition = StorableObjectConditionBuilder.restoreCondition(condition_Transferable);
 			Log.debugMessage("CMConfigurationTransmit.transmitCableThreadButIdsCondition | require "
 					+ (ids_Transferable.length == 0 ? "all" : Integer.toString(ids_Transferable.length))
 					+ " item(s) in domain: " + domainId.toString(), Log.DEBUGLEVEL07);
@@ -427,7 +428,7 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 			throws AMFICOMRemoteException {
 		try {
 			Identifier domainId = new Identifier(accessIdentifier.domain_id);
-			StorableObjectCondition condition = this.restoreCondition(condition_Transferable);
+			StorableObjectCondition condition = StorableObjectConditionBuilder.restoreCondition(condition_Transferable);
 			Log.debugMessage("CMConfigurationTransmit.transmitCableThreadTypesButIds | require "
 					+ (ids_Transferable.length == 0 ? "all" : Integer.toString(ids_Transferable.length))
 					+ " item(s) in domain: " + domainId.toString(), Log.DEBUGLEVEL07);
@@ -472,7 +473,7 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 			throws AMFICOMRemoteException {
 		try {
 			Identifier domainId = new Identifier(accessIdentifier.domain_id);
-			StorableObjectCondition condition = this.restoreCondition(condition_Transferable);
+			StorableObjectCondition condition = StorableObjectConditionBuilder.restoreCondition(condition_Transferable);
 			Log.debugMessage("CMConfigurationTransmit.transmitCableThreadTypesButIdsCondition | require "
 					+ (ids_Transferable.length == 0 ? "all" : Integer.toString(ids_Transferable.length))
 					+ " item(s) in domain: " + domainId.toString(), Log.DEBUGLEVEL07);
@@ -636,7 +637,7 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 			Log.DEBUGLEVEL07);
 		try {
 			Collection collection;
-			StorableObjectCondition condition = this.restoreCondition(condition_Transferable);
+			StorableObjectCondition condition = StorableObjectConditionBuilder.restoreCondition(condition_Transferable);
 			if (ids_Transferable.length > 0) {
 				List idsList = new ArrayList(ids_Transferable.length);
 				for (int i = 0; i < ids_Transferable.length; i++)
@@ -913,7 +914,7 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 			Log.DEBUGLEVEL07);
 		try {
 			Collection collection;
-			StorableObjectCondition condition = this.restoreCondition(condition_Transferable);
+			StorableObjectCondition condition = StorableObjectConditionBuilder.restoreCondition(condition_Transferable);
 			if (ids_Transferable.length > 0) {
 				List idsList = new ArrayList(ids_Transferable.length);
 				for (int i = 0; i < ids_Transferable.length; i++)
@@ -1308,7 +1309,7 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 			Log.DEBUGLEVEL07);
 		try {
 			Collection collection;
-			StorableObjectCondition condition = this.restoreCondition(condition_Transferable);
+			StorableObjectCondition condition = StorableObjectConditionBuilder.restoreCondition(condition_Transferable);
 			if (ids_Transferable.length > 0) {
 				List idsList = new ArrayList(ids_Transferable.length);
 				for (int i = 0; i < ids_Transferable.length; i++)
@@ -1602,7 +1603,7 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 			Log.DEBUGLEVEL07);
 		try {
 			Collection collection;
-			StorableObjectCondition condition = this.restoreCondition(condition_Transferable);
+			StorableObjectCondition condition = StorableObjectConditionBuilder.restoreCondition(condition_Transferable);
 			if (ids_Transferable.length > 0) {
 				List idsList = new ArrayList(ids_Transferable.length);
 				for (int i = 0; i < ids_Transferable.length; i++)
@@ -1764,7 +1765,7 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 			Log.DEBUGLEVEL07);
 		try {
 			Collection collection;
-			StorableObjectCondition condition = this.restoreCondition(condition_Transferable);
+			StorableObjectCondition condition = StorableObjectConditionBuilder.restoreCondition(condition_Transferable);
 			if (ids_Transferable.length > 0) {
 				List idsList = new ArrayList(ids_Transferable.length);
 				for (int i = 0; i < ids_Transferable.length; i++)
@@ -2097,7 +2098,7 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 			Log.DEBUGLEVEL07);
 		try {
 			Collection collection;
-			StorableObjectCondition condition = this.restoreCondition(condition_Transferable);
+			StorableObjectCondition condition = StorableObjectConditionBuilder.restoreCondition(condition_Transferable);
 			if (ids_Transferable.length > 0) {
 				List idsList = new ArrayList(ids_Transferable.length);
 				for (int i = 0; i < ids_Transferable.length; i++)

@@ -1,5 +1,5 @@
 /*
- * $Id: CMMeasurementTransmit.java,v 1.9 2005/02/25 08:35:07 bob Exp $
+ * $Id: CMMeasurementTransmit.java,v 1.10 2005/02/25 09:16:07 bob Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,6 +27,7 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
+import com.syrus.AMFICOM.general.StorableObjectConditionBuilder;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.general.corba.AccessIdentifier_Transferable;
 import com.syrus.AMFICOM.general.corba.CompletionStatus;
@@ -64,7 +65,7 @@ import com.syrus.AMFICOM.measurement.corba.Test_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/02/25 08:35:07 $
+ * @version $Revision: 1.10 $, $Date: 2005/02/25 09:16:07 $
  * @author $Author: bob $
  * @module cmserver_v1
  */
@@ -234,7 +235,7 @@ public abstract class CMMeasurementTransmit extends CMConfigurationTransmit {
 				+ " item(s) ", Log.DEBUGLEVEL07);
 		try {
 			Collection collection = null;
-			StorableObjectCondition condition = this.restoreCondition(condition_Transferable);
+			StorableObjectCondition condition = StorableObjectConditionBuilder.restoreCondition(condition_Transferable);
 			if (identifier_Transferables.length > 0) {
 				List idsList = new ArrayList(identifier_Transferables.length);
 				for (int i = 0; i < identifier_Transferables.length; i++)
@@ -683,7 +684,7 @@ public abstract class CMMeasurementTransmit extends CMConfigurationTransmit {
 				+ " item(s) ", Log.DEBUGLEVEL07);
 		try {
 			Collection collection = null;
-			StorableObjectCondition condition = this.restoreCondition(condition_Transferable);
+			StorableObjectCondition condition = StorableObjectConditionBuilder.restoreCondition(condition_Transferable);
 			if (identifier_Transferables.length > 0) {
 				List idsList = new ArrayList(identifier_Transferables.length);
 				for (int i = 0; i < identifier_Transferables.length; i++)
@@ -831,7 +832,7 @@ public abstract class CMMeasurementTransmit extends CMConfigurationTransmit {
 				+ " item(s) ", Log.DEBUGLEVEL07);
 		try {
 			Collection collection;
-			StorableObjectCondition condition = this.restoreCondition(condition_Transferable);
+			StorableObjectCondition condition = StorableObjectConditionBuilder.restoreCondition(condition_Transferable);
 			if (identifier_Transferables.length > 0) {
 				List idsList = new ArrayList(identifier_Transferables.length);
 				for (int i = 0; i < identifier_Transferables.length; i++)
@@ -978,7 +979,7 @@ public abstract class CMMeasurementTransmit extends CMConfigurationTransmit {
 						+ (identifier_Transferables.length == 0 ? "all" : Integer
 								.toString(identifier_Transferables.length)) + " item(s) ", Log.DEBUGLEVEL07);
 			Collection collection = null;
-			StorableObjectCondition condition = this.restoreCondition(condition_Transferable);
+			StorableObjectCondition condition = StorableObjectConditionBuilder.restoreCondition(condition_Transferable);
 			if (identifier_Transferables.length > 0) {
 				List idsList = new ArrayList(identifier_Transferables.length);
 				for (int i = 0; i < identifier_Transferables.length; i++)
@@ -1123,7 +1124,7 @@ public abstract class CMMeasurementTransmit extends CMConfigurationTransmit {
 				+ " item(s) ", Log.DEBUGLEVEL07);
 		try {
 			Collection collection;
-			StorableObjectCondition condition = this.restoreCondition(condition_Transferable);
+			StorableObjectCondition condition = StorableObjectConditionBuilder.restoreCondition(condition_Transferable);
 			if (identifier_Transferables.length > 0) {
 				List idsList = new ArrayList(identifier_Transferables.length);
 				for (int i = 0; i < identifier_Transferables.length; i++)
@@ -1324,7 +1325,7 @@ public abstract class CMMeasurementTransmit extends CMConfigurationTransmit {
 				for (int i = 0; i < ids.length; i++)
 					idsList.add(new Identifier(ids[i]));
 
-				collection = MeasurementStorableObjectPool.getStorableObjectsByConditionButIds(idsList, this
+				collection = MeasurementStorableObjectPool.getStorableObjectsByConditionButIds(idsList, StorableObjectConditionBuilder
 						.restoreCondition(condition_Transferable), true);
 
 			} else
@@ -1368,7 +1369,7 @@ public abstract class CMMeasurementTransmit extends CMConfigurationTransmit {
 				+ " item(s) ", Log.DEBUGLEVEL07);
 		try {
 			Collection collection;
-			StorableObjectCondition condition = this.restoreCondition(storableObjectCondition_Transferable);
+			StorableObjectCondition condition = StorableObjectConditionBuilder.restoreCondition(storableObjectCondition_Transferable);
 			if (identifier_Transferables.length > 0) {
 				List idsList = new ArrayList(identifier_Transferables.length);
 				for (int i = 0; i < identifier_Transferables.length; i++)
@@ -1509,7 +1510,7 @@ public abstract class CMMeasurementTransmit extends CMConfigurationTransmit {
 				+ " item(s) ", Log.DEBUGLEVEL07);
 		try {
 			Collection collection;
-			StorableObjectCondition condition = this.restoreCondition(condition_Transferable);
+			StorableObjectCondition condition = StorableObjectConditionBuilder.restoreCondition(condition_Transferable);
 			if (identifier_Transferables.length > 0) {
 				List idsList = new ArrayList(identifier_Transferables.length);
 				for (int i = 0; i < identifier_Transferables.length; i++)
@@ -1652,7 +1653,7 @@ public abstract class CMMeasurementTransmit extends CMConfigurationTransmit {
 				+ " item(s) ", Log.DEBUGLEVEL07);
 		try {
 			Collection collection;
-			StorableObjectCondition condition = this.restoreCondition(condition_Transferable);
+			StorableObjectCondition condition = StorableObjectConditionBuilder.restoreCondition(condition_Transferable);
 			if (identifier_Transferables.length > 0) {
 				List idsList = new ArrayList(identifier_Transferables.length);
 				for (int i = 0; i < identifier_Transferables.length; i++)
@@ -1795,7 +1796,7 @@ public abstract class CMMeasurementTransmit extends CMConfigurationTransmit {
 				+ " item(s) ", Log.DEBUGLEVEL07);
 		try {
 			Collection collection;
-			StorableObjectCondition condition = this.restoreCondition(condition_Transferable);
+			StorableObjectCondition condition = StorableObjectConditionBuilder.restoreCondition(condition_Transferable);
 			if (identifier_Transferables.length > 0) {
 				List idsList = new ArrayList(identifier_Transferables.length);
 				for (int i = 0; i < identifier_Transferables.length; i++)
@@ -1945,7 +1946,7 @@ public abstract class CMMeasurementTransmit extends CMConfigurationTransmit {
 				+ " item(s) ", Log.DEBUGLEVEL07);
 		try {
 			Collection collection;
-			StorableObjectCondition condition = this.restoreCondition(condition_Transferable);
+			StorableObjectCondition condition = StorableObjectConditionBuilder.restoreCondition(condition_Transferable);
 			if (identifier_Transferables.length > 0) {
 				List idsList = new ArrayList(identifier_Transferables.length);
 				for (int i = 0; i < identifier_Transferables.length; i++)
@@ -2190,7 +2191,7 @@ public abstract class CMMeasurementTransmit extends CMConfigurationTransmit {
 				+ " item(s) ", Log.DEBUGLEVEL07);
 		try {
 			Collection collection;
-			StorableObjectCondition condition = this.restoreCondition(condition_Transferable);
+			StorableObjectCondition condition = StorableObjectConditionBuilder.restoreCondition(condition_Transferable);
 			if (identifier_Transferables.length > 0) {
 				List idsList = new ArrayList(identifier_Transferables.length);
 				for (int i = 0; i < identifier_Transferables.length; i++)

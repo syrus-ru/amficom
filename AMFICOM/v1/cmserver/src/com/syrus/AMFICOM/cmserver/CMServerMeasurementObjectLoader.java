@@ -1,5 +1,5 @@
 /*
- * $Id: CMServerMeasurementObjectLoader.java,v 1.25 2005/02/15 15:04:44 arseniy Exp $
+ * $Id: CMServerMeasurementObjectLoader.java,v 1.26 2005/02/25 09:16:07 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,29 +18,21 @@ import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 import com.syrus.AMFICOM.configuration.KIS;
 import com.syrus.AMFICOM.configuration.MeasurementPort;
 import com.syrus.AMFICOM.general.CommunicationException;
-import com.syrus.AMFICOM.general.CompoundCondition;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseException;
-import com.syrus.AMFICOM.general.EquivalentCondition;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.SessionContext;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
+import com.syrus.AMFICOM.general.StorableObjectConditionBuilder;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
-import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
-import com.syrus.AMFICOM.general.corba.CompoundCondition_Transferable;
-import com.syrus.AMFICOM.general.corba.EquivalentCondition_Transferable;
 import com.syrus.AMFICOM.general.corba.ErrorCode;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
-import com.syrus.AMFICOM.general.corba.LinkedIdsCondition_Transferable;
-import com.syrus.AMFICOM.general.corba.StorableObjectCondition_Transferable;
-import com.syrus.AMFICOM.general.corba.TypicalCondition_Transferable;
 import com.syrus.AMFICOM.measurement.Analysis;
 import com.syrus.AMFICOM.measurement.AnalysisDatabase;
 import com.syrus.AMFICOM.measurement.DatabaseMeasurementObjectLoader;
@@ -56,8 +48,8 @@ import com.syrus.AMFICOM.measurement.corba.Evaluation_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Measurement_Transferable;
 import com.syrus.util.Log;
 /**
- * @version $Revision: 1.25 $, $Date: 2005/02/15 15:04:44 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.26 $, $Date: 2005/02/25 09:16:07 $
+ * @author $Author: bob $
  * @module cmserver_v1
  */
 //TODO For one-objects loads do 'update' instead of 'insert'
@@ -78,22 +70,7 @@ public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementOb
     
     public CMServerMeasurementObjectLoader(long refreshTimeout){
     	this.refreshTimeout = refreshTimeout;
-    }
-    
-    private StorableObjectCondition_Transferable getConditionTransferable(StorableObjectCondition condition) {
-		StorableObjectCondition_Transferable conditionTransferable = new StorableObjectCondition_Transferable();
-		Object transferable = condition.getTransferable();
-		if (condition instanceof LinkedIdsCondition) {
-			conditionTransferable.linkedIdsCondition((LinkedIdsCondition_Transferable) transferable);
-		} else if (condition instanceof CompoundCondition) {
-			conditionTransferable.compoundCondition((CompoundCondition_Transferable) transferable);
-		} else if (condition instanceof TypicalCondition) {
-			conditionTransferable.typicalCondition((TypicalCondition_Transferable) transferable);
-		} else if (condition instanceof EquivalentCondition) {
-			conditionTransferable.equialentCondition((EquivalentCondition_Transferable) transferable);
-		} 
-		return conditionTransferable;
-	}
+    }    
   
     public Set refresh(Set storableObjects) throws DatabaseException, CommunicationException {
     		/* refresh no often than one in refreshTimeout ms */
@@ -446,7 +423,7 @@ public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementOb
 					MeasurementPort measurementPort = (MeasurementPort) ConfigurationStorableObjectPool.getStorableObject(test.getMonitoredElement().getMeasurementPortId(), true);
 					KIS kis = (KIS)ConfigurationStorableObjectPool.getStorableObject(measurementPort.getKISId(), true);
 					com.syrus.AMFICOM.mcm.corba.MCM mcmRef = (com.syrus.AMFICOM.mcm.corba.MCM)ClientMeasurementServer.mcmRefs.get(kis.getMCMId());
-					measurementTransferables = mcmRef.transmitMeasurementsButIds(  this.getConditionTransferable(condition) , identifierTransferables);
+					measurementTransferables = mcmRef.transmitMeasurementsButIds(  StorableObjectConditionBuilder.getConditionTransferable(condition) , identifierTransferables);
 					for (int j = 0; j < measurementTransferables.length; j++) {
 						Measurement measurement = new Measurement(measurementTransferables[j]);
 						Log.debugMessage("CMServerMeasurementObjectLoader.loadMeasurementsButIds | loaded measurement : " + measurement.getId().toString(), Log.DEBUGLEVEL05);
@@ -501,7 +478,7 @@ public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementOb
 			}
 			com.syrus.AMFICOM.mcm.corba.MCM mcmRef = (com.syrus.AMFICOM.mcm.corba.MCM)ClientMeasurementServer.mcmRefs.get(mcmId);
 										 
-			analysesTransferables = mcmRef.transmitAnalysesButIds(this.getConditionTransferable(condition), identifierTransferables);
+			analysesTransferables = mcmRef.transmitAnalysesButIds(StorableObjectConditionBuilder.getConditionTransferable(condition), identifierTransferables);
 			Collection loadedFromMCM = new LinkedList();
 			for (int j = 0; j < analysesTransferables.length; j++) 
 				loadedFromMCM.add(new Analysis(analysesTransferables[j]));			
@@ -548,7 +525,7 @@ public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementOb
 			}
 			com.syrus.AMFICOM.mcm.corba.MCM mcmRef = (com.syrus.AMFICOM.mcm.corba.MCM)ClientMeasurementServer.mcmRefs.get(mcmId);
 													 
-			evaluationTransferables = mcmRef.transmitEvaluationsButIds(this.getConditionTransferable(condition), identifierTransferables);
+			evaluationTransferables = mcmRef.transmitEvaluationsButIds(StorableObjectConditionBuilder.getConditionTransferable(condition), identifierTransferables);
 			Collection loadedFromMCM = new LinkedList();
 			for (int j = 0; j < evaluationTransferables.length; j++) 
 				loadedFromMCM.add(new Evaluation(evaluationTransferables[j]));			

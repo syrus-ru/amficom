@@ -1,5 +1,5 @@
 /*
- * $Id: ClientConfigurationObjectLoader.java,v 1.21 2005/02/21 11:11:15 bob Exp $
+ * $Id: ClientConfigurationObjectLoader.java,v 1.22 2005/02/25 09:16:15 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,32 +33,24 @@ import com.syrus.AMFICOM.configuration.corba.Port_Transferable;
 import com.syrus.AMFICOM.configuration.corba.TransmissionPathType_Transferable;
 import com.syrus.AMFICOM.configuration.corba.TransmissionPath_Transferable;
 import com.syrus.AMFICOM.general.CommunicationException;
-import com.syrus.AMFICOM.general.CompoundCondition;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseException;
-import com.syrus.AMFICOM.general.EquivalentCondition;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.SessionContext;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
-import com.syrus.AMFICOM.general.TypicalCondition;
+import com.syrus.AMFICOM.general.StorableObjectConditionBuilder;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.general.corba.AccessIdentifier_Transferable;
-import com.syrus.AMFICOM.general.corba.CompoundCondition_Transferable;
-import com.syrus.AMFICOM.general.corba.EquivalentCondition_Transferable;
 import com.syrus.AMFICOM.general.corba.ErrorCode;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
-import com.syrus.AMFICOM.general.corba.LinkedIdsCondition_Transferable;
-import com.syrus.AMFICOM.general.corba.StorableObjectCondition_Transferable;
 import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
-import com.syrus.AMFICOM.general.corba.TypicalCondition_Transferable;
 
 /**
- * @version $Revision: 1.21 $, $Date: 2005/02/21 11:11:15 $
+ * @version $Revision: 1.22 $, $Date: 2005/02/25 09:16:15 $
  * @author $Author: bob $
  * @module generalclient_v1
  */
@@ -71,21 +63,6 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
 		return  (AccessIdentifier_Transferable) SessionContext.getAccessIdentity().getTransferable();
 	}
 	
-	private StorableObjectCondition_Transferable getConditionTransferable(StorableObjectCondition condition) {
-		StorableObjectCondition_Transferable condition_Transferable = new StorableObjectCondition_Transferable();
-		Object transferable = condition.getTransferable();
-		if (condition instanceof LinkedIdsCondition) {
-			condition_Transferable.linkedIdsCondition((LinkedIdsCondition_Transferable) transferable);
-		} else if (condition instanceof CompoundCondition) {
-			condition_Transferable.compoundCondition((CompoundCondition_Transferable) transferable);
-		} else if (condition instanceof TypicalCondition) {
-			condition_Transferable.typicalCondition((TypicalCondition_Transferable) transferable);
-		} else if (condition instanceof EquivalentCondition) {
-			condition_Transferable.equialentCondition((EquivalentCondition_Transferable) transferable);
-		} 
-		return condition_Transferable;
-	}
-
 	public ClientConfigurationObjectLoader(CMServer server) {
 		this.server = server;
 	}
@@ -276,7 +253,7 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
 				identifierTransferables[i] = (Identifier_Transferable) id.getTransferable();
 			}
 			transferables = this.server.transmitEquipmentsButIdsCondition(identifierTransferables,
-				getAccessIdentifierTransferable(), this.getConditionTransferable(condition));			
+				getAccessIdentifierTransferable(), StorableObjectConditionBuilder.getConditionTransferable(condition));			
 			Collection list = new ArrayList(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
 				list.add(new Equipment(transferables[j]));
@@ -394,7 +371,7 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
 				identifierTransferables[i] = (Identifier_Transferable) id.getTransferable();
 			}
 			transferables = this.server.transmitKISsButIdsCondition(identifierTransferables,
-				getAccessIdentifierTransferable(), this.getConditionTransferable(condition));
+				getAccessIdentifierTransferable(), StorableObjectConditionBuilder.getConditionTransferable(condition));
 			Collection list = new ArrayList(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
 				list.add(new KIS(transferables[j]));
@@ -561,7 +538,7 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
 				identifierTransferables[i] = (Identifier_Transferable) id.getTransferable();
 			}
 			transferables = this.server.transmitCableLinkTypesButIdsCondition(identifierTransferables, getAccessIdentifierTransferable(),
-				this.getConditionTransferable(condition));
+				StorableObjectConditionBuilder.getConditionTransferable(condition));
 			Collection list = new ArrayList(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
 				list.add(new CableLinkType(transferables[j]));
@@ -585,7 +562,7 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
 				identifierTransferables[i] = (Identifier_Transferable) id.getTransferable();
 			}
 			transferables = this.server.transmitCableThreadButIdsCondition(identifierTransferables, getAccessIdentifierTransferable(),
-				this.getConditionTransferable(condition));
+				StorableObjectConditionBuilder.getConditionTransferable(condition));
 			Collection list = new ArrayList(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
 				list.add(new CableThread(transferables[j]));
@@ -647,7 +624,7 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
 			}
 			transferables = this.server.transmitMeasurementPortsButIdsCondition(identifierTransferables,
 				getAccessIdentifierTransferable(),
-				this.getConditionTransferable(condition));
+				StorableObjectConditionBuilder.getConditionTransferable(condition));
 			Collection list = new ArrayList(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
 				list.add(new MeasurementPort(transferables[j]));
@@ -764,7 +741,7 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
 			}
 			
 			transferables = this.server.transmitMonitoredElementsButIdsCondition(identifierTransferables,
-				getAccessIdentifierTransferable(), this.getConditionTransferable(condition));
+				getAccessIdentifierTransferable(), StorableObjectConditionBuilder.getConditionTransferable(condition));
 			
 			Collection list = new ArrayList(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
@@ -822,7 +799,7 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
 				identifierTransferables[i] = (Identifier_Transferable) id.getTransferable();
 			}
 			transferables = this.server.transmitPortsButIdsCondition(identifierTransferables,
-				getAccessIdentifierTransferable(), this.getConditionTransferable(condition));
+				getAccessIdentifierTransferable(), StorableObjectConditionBuilder.getConditionTransferable(condition));
 			
 			Collection list = new ArrayList(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
@@ -943,7 +920,7 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
 				identifierTransferables[i] = (Identifier_Transferable) id.getTransferable();
 			}
 			transferables = this.server.transmitTransmissionPathsButIdsCondition(identifierTransferables,
-				getAccessIdentifierTransferable(), this.getConditionTransferable(condition));
+				getAccessIdentifierTransferable(), StorableObjectConditionBuilder.getConditionTransferable(condition));
 			
 			Collection list = new ArrayList(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
