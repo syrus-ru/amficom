@@ -13,9 +13,12 @@ import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourceTreeModel;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourceTreeNode;
 import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
+import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.corba.*;
 import com.syrus.AMFICOM.general.corba.StringFieldSort;
+import com.syrus.AMFICOM.scheme.*;
 import com.syrus.AMFICOM.scheme.SchemeStorableObjectPool;
 import com.syrus.AMFICOM.scheme.corba.Scheme;
 import com.syrus.AMFICOM.scheme.corba.SchemePackage.Type;
@@ -119,10 +122,11 @@ public class SchemeOpenTreeModel extends ObjectResourceTreeModel
 			if(node.getObject() instanceof Type)
 			{
 				Type type = (Type)node.getObject();
-				StringFieldCondition condition = new StringFieldCondition(
-						String.valueOf(type.value()),
-						ObjectEntities.SCHEME_ENTITY_CODE,
-						StringFieldSort.STRINGSORT_INTEGER);
+				TypicalCondition condition = new TypicalCondition(
+					String.valueOf(type.value()),
+					OperationSort.OPERATION_EQUALS,
+					ObjectEntities.SCHEME_ENTITY_CODE,
+					com.syrus.AMFICOM.scheme.SchemeController.COLUMN_TYPE);
 				try {
 					List schemes = SchemeStorableObjectPool.getStorableObjectsByCondition(condition, true);
 

@@ -13,6 +13,7 @@ import com.syrus.AMFICOM.client_.general.ui_.tree.*;
 import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
 import com.syrus.AMFICOM.configuration.*;
 import com.syrus.AMFICOM.general.*;
+import com.syrus.AMFICOM.general.corba.*;
 import com.syrus.AMFICOM.general.corba.StringFieldSort;
 import com.syrus.AMFICOM.measurement.*;
 import com.syrus.AMFICOM.scheme.SchemeStorableObjectPool;
@@ -208,8 +209,7 @@ public class SchemeTreeModel implements TreeDataModel
 			}
 			else if(s.equals("netdirectory"))
 			{
-//				vec.add(new StorableObjectTreeNode("LinkType", LangModelConfig.getString("menuNetDirLinkText")));
-				vec.add(new CheckableTreeNode("LinkType", LangModelConfig.getString("menuNetDirLinkText")));
+				vec.add(new StorableObjectTreeNode("LinkType", LangModelConfig.getString("menuNetDirLinkText")));
 				vec.add(new StorableObjectTreeNode("CableLinkType", LangModelConfig.getString("menuNetDirCableText")));
 				vec.add(new StorableObjectTreeNode("PortType", LangModelConfig.getString("menuNetDirPortText")));
 			}
@@ -247,8 +247,7 @@ public class SchemeTreeModel implements TreeDataModel
 
 					for (Iterator it = linkTypes.iterator(); it.hasNext(); ) {
 						LinkType type = (LinkType)it.next();
-//						StorableObjectTreeNode n = new StorableObjectTreeNode(type, type.getName(), true);
-						CheckableTreeNode n = new CheckableTreeNode(type, type.getName(), true);
+						StorableObjectTreeNode n = new StorableObjectTreeNode(type, type.getName(), true);
 						vec.add(n);
 					}
 				}
@@ -450,10 +449,11 @@ public class SchemeTreeModel implements TreeDataModel
 			if(node.getUserObject() instanceof Type)
 			{
 				Type type = (Type)node.getUserObject();
-				StringFieldCondition condition = new StringFieldCondition(
+				TypicalCondition condition = new TypicalCondition(
 						String.valueOf(type.value()),
+						OperationSort.OPERATION_EQUALS,
 						ObjectEntities.SCHEME_ENTITY_CODE,
-						StringFieldSort.STRINGSORT_INTEGER);
+						com.syrus.AMFICOM.scheme.SchemeController.COLUMN_TYPE);
 				try {
 					List schemes = SchemeStorableObjectPool.getStorableObjectsByCondition(condition, true);
 
