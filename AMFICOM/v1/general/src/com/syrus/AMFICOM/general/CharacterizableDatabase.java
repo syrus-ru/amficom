@@ -1,5 +1,5 @@
 /*
- * $Id: CharacterizableDatabase.java,v 1.1 2005/03/05 21:19:07 arseniy Exp $ Copyright © 2004 Syrus Systems. Научно-технический центр. Проект:
+ * $Id: CharacterizableDatabase.java,v 1.2 2005/03/10 15:18:40 arseniy Exp $ Copyright © 2004 Syrus Systems. Научно-технический центр. Проект:
  * АМФИКОМ.
  */
 package com.syrus.AMFICOM.general;
@@ -14,7 +14,7 @@ import java.util.Map;
 import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/03/05 21:19:07 $
+ * @version $Revision: 1.2 $, $Date: 2005/03/10 15:18:40 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -40,16 +40,10 @@ public abstract class CharacterizableDatabase extends StorableObjectDatabase {
 		this.retrieveCharacteristics(this.fromStorableObject(storableObject));
 	}
 
-	public Collection retrieveByIds(Collection ids, String condition) throws IllegalDataException, RetrieveObjectException {
-		Collection objects = null;
-		if (ids == null || ids.isEmpty())
-			objects = this.retrieveByIdsOneQuery(null, condition);
-		else
-			objects = this.retrieveByIdsOneQuery(ids, condition);
-
-		this.retrieveCharacteristicsByOneQuery(objects);
-
-		return objects;
+	protected Collection retrieveByCondition(String conditionQuery) throws RetrieveObjectException, IllegalDataException {
+		Collection collection = super.retrieveByCondition(conditionQuery);
+		this.retrieveCharacteristicsByOneQuery(collection);
+		return collection;
 	}
 
 	private void retrieveCharacteristics(Characterizable characterizable) throws RetrieveObjectException, IllegalDataException {
@@ -60,7 +54,7 @@ public abstract class CharacterizableDatabase extends StorableObjectDatabase {
 				+ CharacteristicWrapper.COLUMN_CHARACTERIZABLE_ID + EQUALS + cdIdStr;
 
 		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase) GeneralDatabaseContext.characteristicDatabase;
-		Collection characteristics = characteristicDatabase.retrieveByIds(null, sql);
+		Collection characteristics = characteristicDatabase.retrieveByCondition(sql);
 
 		characterizable.setCharacteristics0(characteristics);
 	}
@@ -77,7 +71,7 @@ public abstract class CharacterizableDatabase extends StorableObjectDatabase {
 		stringBuffer.append(idsEnumerationString(storableObjects, CharacteristicWrapper.COLUMN_CHARACTERIZABLE_ID, true));
 
 		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase) GeneralDatabaseContext.characteristicDatabase;
-		Collection characteristics = characteristicDatabase.retrieveByIds(null, stringBuffer.toString());
+		Collection characteristics = characteristicDatabase.retrieveByCondition(stringBuffer.toString());
 
 		Map orderedCharacteristicsMap = new HashMap();
 		Characteristic characteristic;
@@ -185,7 +179,7 @@ public abstract class CharacterizableDatabase extends StorableObjectDatabase {
 
 		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase) GeneralDatabaseContext.characteristicDatabase;
 		try {
-			characteristics = characteristicDatabase.retrieveByIds(null, sql);
+			characteristics = characteristicDatabase.retrieveByCondition(sql);
 		}
 		catch (ApplicationException ae) {
 			throw new UpdateObjectException("Cannot retrieve from database characteristics for " + this.getEnityName()
@@ -259,7 +253,7 @@ public abstract class CharacterizableDatabase extends StorableObjectDatabase {
 
 		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase) GeneralDatabaseContext.characteristicDatabase;
 		try {
-			characteristics = characteristicDatabase.retrieveByIds(null, stringBuffer.toString());
+			characteristics = characteristicDatabase.retrieveByCondition(stringBuffer.toString());
 		}
 		catch (ApplicationException ae) {
 			throw new UpdateObjectException(ae);
