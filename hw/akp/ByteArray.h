@@ -31,4 +31,3 @@ int operator == (const ByteArray& ba1, const ByteArray& ba2);
 int operator != (const ByteArray& ba1, const ByteArray& ba2);
 
 #endif // !defined(AFX_BYTEARRAY_H__A0420B47_08CD_44A8_8EE8_8882A826F8C3__INCLUDED_)
-

@@ -1,7 +1,6 @@
 // MeasurementSegment.cpp: implementation of the MeasurementSegment class.
 //
 //////////////////////////////////////////////////////////////////////
-
 #include <stdio.h>
 #include "crossplatf.h"
 #include "MeasurementSegment.h"
@@ -156,4 +155,3 @@ void MeasurementSegment::parseSegment() {
 		this->parnumber = parcount;
 	}
 }
-
