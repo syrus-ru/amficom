@@ -49,7 +49,7 @@ private:
 	double *noise;
 
     double* f_wlet;
-    double average_factor;
+    double average_factor; // не зависит ни от выбранного масштаба вейвлета, ни от выбранной нормы (а только от ср. наклона на р/г)
 #ifdef debug_VCL
     double* f_tmp; //!!! массив дл€ временного хранени€ обработанной рефлектограммы ( исользуетс€ при отладке )
 #endif
@@ -78,12 +78,12 @@ private:
 
 	// подготовка среднего значени€
 	double calcWletMeanValue(double* fw, double from, double to, int columns);// вычислить самое попул€рное значение ф-ции fw
-	void calcAverageFactor(double* fw, int scale);
+	void calcAverageFactor(double* fw, int scale, double norma1);
 
 	// выполнение вейвлет-преобразовани€
 	void performTransformationOnly(double *y, int begin, int end, double *trans, int freq, double norma);
 	void performTransformationAndCenter(double *y, int begin, int end, double *trans, int freq, double norma);
-	void centerWletImageOnly(double* f_wlet, int scale, int begin, int end);
+	void centerWletImageOnly(double* f_wlet, int scale, int begin, int end, double norma1);
 
 	// анализ
     void findAllWletSplashes(double* f_wlet, ArrList& splashes);

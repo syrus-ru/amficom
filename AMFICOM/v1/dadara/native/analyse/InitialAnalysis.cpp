@@ -126,8 +126,8 @@ void InitialAnalysis::performAnalysis()
 	// f_wlet - вейвлет-образ функции, wlet_width - ширина вейвлета, wn - норма вейвлета
     wn = getWLetNorma(wlet_width);
     performTransformationOnly(data, 0, lastNonZeroPoint, f_wlet, wlet_width, wn);
-	calcAverageFactor(f_wlet, wlet_width);
-	centerWletImageOnly(f_wlet, wlet_width, 0, lastNonZeroPoint);// вычитаем из коэффициентов преобразования(КП) постоянную составляющую
+	calcAverageFactor(f_wlet, wlet_width, wn);
+	centerWletImageOnly(f_wlet, wlet_width, 0, lastNonZeroPoint, wn);// вычитаем из коэффициентов преобразования(КП) постоянную составляющую
     { // ищём все всплески вейвлет-образа
       ArrList splashes; // создаем пустой ArrList
       findAllWletSplashes(f_wlet, splashes); // заполняем массив splashes объектами
@@ -233,10 +233,10 @@ void InitialAnalysis::findAllWletSplashes(double* f_wlet, ArrList& splashes)
 #endif
 }
 // -------------------------------------------------------------------------------------------------
-void InitialAnalysis::calcAverageFactor(double* fw, int scale)
+void InitialAnalysis::calcAverageFactor(double* fw, int scale, double norma1)
 {
 	double f_wlet_avrg = calcWletMeanValue(fw, -0.5, 0, 500);
-	average_factor = f_wlet_avrg / getWLetNorma2(scale);
+	average_factor = f_wlet_avrg * norma1 / getWLetNorma2(scale);
 }
 // -------------------------------------------------------------------------------------------------
 void InitialAnalysis::fillNoiseArray(double *y, int data_length, int N, double Neff, double *outNoise)
@@ -266,13 +266,13 @@ void InitialAnalysis::performTransformationAndCenter(double* f, int begin, int e
 {
 	// transform
 	performTransformationOnly(f, begin, end, f_wlet, scale, norma);
-	centerWletImageOnly(f_wlet, scale, begin, end);
+	centerWletImageOnly(f_wlet, scale, begin, end, norma);
 }
 
-void InitialAnalysis::centerWletImageOnly(double* f_wlet, int scale, int begin, int end)
+void InitialAnalysis::centerWletImageOnly(double* f_wlet, int scale, int begin, int end, double norma1)
 {
 	// shift (calcAverageFactor must be performed by now!)
-	double f_wlet_avrg = average_factor * getWLetNorma2(scale);
+	double f_wlet_avrg = average_factor * getWLetNorma2(scale) / norma1;
 	for(int i=begin; i<end; i++)
     {	f_wlet[i] -= f_wlet_avrg;
     }
@@ -408,7 +408,7 @@ return;
 		//prf_b("correctSpliceCoords: getWLetNorma");
 	    wn = getWLetNorma(width);
 		//prf_b("correctSpliceCoords: performTransformationAndCenter");
-	   	performTransformationAndCenter(data, w_l, w_r+1, f_wlet, width, wn);
+	   	performTransformationAndCenter(data, ev.begin, ev.end+1, f_wlet, width, wn);
 		//prf_b("correctSpliceCoords: processing");
 		// считаем добавку к шуму ( степень немонотонности от пересечения порога до максимума )
 		// сначала ищём положение экстремума при данном масштабе
@@ -449,11 +449,11 @@ return;
         }
 #ifdef debug_lines //рисуем вейвлет образы для данного масштаба
 		{ coln++;
-          for(int i=w_l-1; i<=w_r+1; i++)
+          for(int i=ev.begin-1; i<=ev.end+1; i++)
           { double x1=i, y1=f_wlet[i], x2=i+1, y2=f_wlet[i+1];
             xs[cou]=x1*delta_x; ys[cou]=y1; xe[cou]=x2*delta_x; ye[cou]=y2;
             col[cou]=color[coln];
-            if(i<left_cross || i>right_cross) col[cou] = 0x888888;
+            if(i<w_l || i>w_r) col[cou] = 0x888888;
             cou++;
           }
         }
