@@ -172,7 +172,7 @@ return;
       ep->type = EventParams::REFLECTIVE;
       ep->begin = begin; ep->end = end;
       if(ep->end >= lastNonZeroPoint){ ep->end = lastNonZeroPoint-1;}
-      ep->gain = 0;  ep->gain_thr = 0;
+      //ep->gain = 0;  ep->gain_thr = 0;
       events->add(ep);
     }
 //* ищем остальные коннекторы
@@ -181,7 +181,7 @@ return;
         sp2 = (Splash*)splashes[i+1];
     	double dist = sp2->begin_thr - sp1->end_thr;
 		// отмечаем , что найден новый коннектор
-        if( dist<reflectiveSize*2			// если всплески близко
+        if( dist<reflectiveSize*2			// если всплески близко (это же значение используется в SetConnectorParamsBySplashes)
         	&& (sp1->sign>0 && sp2->sign<0) // первый положительный, а второй - отрицательный
 			&& ( sp1->begin_conn_n !=-1 )
 
@@ -207,16 +207,12 @@ void InitialAnalysis::SetSpliceParamsBySplash( EventParams& ep, Splash& sp)
     ep.end = sp.end_weld+1;
     if(ep.end>=lastNonZeroPoint){ep.end = lastNonZeroPoint-1;}
     if(ep.begin<0){ep.begin=0;}
-    // ищем площадь
-
-    int l = max(sp.begin_thr, sp.begin_thr - wlet_width);
-    int r = min(sp.end_thr, sp.end_thr + wlet_width);
-	double alpha = 1./wlet_width;// пока так, потом посчитаем иначе
-    double sum=0;
-    for(int i=l; i<=r; i++)
-    {	sum += f_wlet[i];
+    double max = -1;
+	for(int i=sp.begin_weld_n; i<sp.end_weld_n; i++)
+    { double res = (f_wlet[i]-minimalWeld)/noise[i];
+      if(max<res) max = res;
     }
-    ep.gain = alpha*sum;
+    ep.R = max;
 }
 // -------------------------------------------------------------------------------------------------
 void InitialAnalysis::SetConnectorParamsBySplashes( EventParams& ep, Splash& sp1, Splash& sp2 )
@@ -225,6 +221,22 @@ void InitialAnalysis::SetConnectorParamsBySplashes( EventParams& ep, Splash& sp1
    if(ep.begin<0){ep.begin=0;}
    ep.end = sp2.end_thr;
    if(ep.end>=lastNonZeroPoint){ep.end = lastNonZeroPoint;}
+
+   double max = -1;
+   for(int i=sp1.begin_conn_n ; i<sp1.end_conn_n; i++)
+   { double res = (f_wlet[i]-minimalConnector)/noise[i];
+     if(max<res) max = res;
+   }
+   ep.R1 = max;
+   max = -1;
+   for(int i=sp2.begin_thr ; i<sp2.end_thr; i++)
+   { double res = fabs(f_wlet[i])/minimalThreshold - 1;
+     if(max<res) max = res;
+   }
+   ep.R2 = max;
+   double l = sp2.begin_thr - sp1.end_conn_n, l_max = reflectiveSize*2;
+   assert(l>0);
+   ep.R3 = 2*ep.R2*(l_max-l)/(l+wlet_width)*(wlet_width/l_max);
 }
 // -------------------------------------------------------------------------------------------------
 // ВАЖНО: Считаем, что minimalThreshold < minimalWeld < minimalConnector
