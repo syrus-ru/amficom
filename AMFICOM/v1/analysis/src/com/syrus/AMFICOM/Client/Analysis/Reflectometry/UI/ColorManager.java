@@ -9,7 +9,7 @@ import com.syrus.AMFICOM.Client.General.Event.RefUpdateEvent;
 
 /**
  * @deprecated ОБИя
- * @version $Revision: 1.6 $, $Date: 2005/03/24 09:29:11 $
+ * @version $Revision: 1.7 $, $Date: 2005/03/25 09:34:28 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module analysis_v1
@@ -43,17 +43,17 @@ public class ColorManager
 																												 //в виде (IDтрассы, ЦВЕТ)
 
 	static Col[] defaultcolors = new Col[] {
-		new Col ("desktopColor", Color.lightGray),
-		new Col ("backColor", new Color(241,241,250)),
-		new Col ("textColor", Color.black),
-		new Col ("tableGridColor", Color.black),
-		new Col ("scaleColor", Color.lightGray),
-		new Col ("scaleDigitColor", Color.black),
+//		new Col ("desktopColor", Color.lightGray),
+//		new Col ("backColor", new Color(241,241,250)),
+//		new Col ("textColor", Color.black),
+//		new Col ("tableGridColor", Color.black),
+//		new Col ("scaleColor", Color.lightGray),
+//		new Col ("scaleDigitColor", Color.black),
 		new Col ("alarmColor", new Color (255,51,51)),
-		new Col ("selectColor", Color.gray),
+//		new Col ("selectColor", Color.gray),
 		new Col ("analysisMarkerColor", new Color(0, 0, 0)),//133,184,235)),
 		new Col ("referencetrace", Color.gray),
-		new Col (RefUpdateEvent.PRIMARY_TRACE, Color.blue),
+//		new Col (RefUpdateEvent.PRIMARY_TRACE, Color.blue),
 		new Col ("modeledtrace", Color.blue),
 		new Col ("wavelet", Color.blue),
 		new Col ("etalon", Color.darkGray),
@@ -68,7 +68,6 @@ public class ColorManager
 		new Col ("linezoneColor", new Color(0, 0, 255)), //Color.blue
 		new Col ("endColor", new Color(160,32,255)),
 		new Col ("noiseColor", new Color (160, 160, 160)),
-		new Col ("modeledColor", new Color (0, 192, 0)),
 		new Col ("markeventColor", Color.gray),
 		new Col ("markflashColor", new Color(133,184,235)),
 		new Col ("analyseBarColor", Color.white),
@@ -76,22 +75,12 @@ public class ColorManager
 		new Col ("dataWriteColor", Color.black),
 		new Col ("minTraceLevelColor", new Color(255, 64, 64)),
 	};
-	static Col[] tracecolors = new Col[] {
-		new Col ("trace0", new Color (0, 128, 128)),
-		new Col ("trace1", new Color (128, 64, 0)),
-		new Col ("trace2", new Color (128, 0, 128)),
-		new Col ("trace3", new Color (0, 96, 0)),
-		new Col ("trace4", new Color (0, 64, 128)),
-		new Col ("trace5", new Color (128, 128, 0)),
-	};
 
 	static
 	{
 		// забиваем дефолтные значения.
 		for (int i=0; i<defaultcolors.length; i++)
 			traceColorTable.put(defaultcolors[i].name, defaultcolors[i].color);
-		for (int i=0; i<tracecolors.length; i++)
-			traceColorTable.put(tracecolors[i].name, tracecolors[i].color);
 		for (int i=0; i<traceanalysiscolors.length; i++)
 			traceColorTable.put(traceanalysiscolors[i].name, traceanalysiscolors[i].color);
 
@@ -115,8 +104,6 @@ public class ColorManager
 		{
 		}
 		// забиваем в freeTraceColors доступные цвета для рефлектограмм
-		for (int i=0; i<tracecolors.length; i++)
-			freeTraceColors.put(tracecolors[i].name, traceColorTable.get(tracecolors[i].name));
 	}
 
 	static public Color getColor(String id)
@@ -167,8 +154,6 @@ public class ColorManager
 		freeTraceColors.clear();
 		busyTraceColors.clear();
 		randomTraceColors.clear();
-		for (int i=0; i<tracecolors.length; i++)
-			freeTraceColors.put(tracecolors[i].name, traceColorTable.get(tracecolors[i].name));
 
 	}
 
@@ -205,8 +190,6 @@ public class ColorManager
 			traceColorTable.put(defaultcolors[i].name, defaultcolors[i].color);
 		for (int i=0; i<traceanalysiscolors.length; i++)
 			traceColorTable.put(traceanalysiscolors[i].name, traceanalysiscolors[i].color);
-		for (int i=0; i<tracecolors.length; i++)
-			freeTraceColors.put(tracecolors[i].name, tracecolors[i].color);
 	}
 
 	public static void saveIni()

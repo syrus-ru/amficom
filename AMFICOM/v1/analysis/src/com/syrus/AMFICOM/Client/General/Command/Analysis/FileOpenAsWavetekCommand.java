@@ -79,7 +79,7 @@ public class FileOpenAsWavetekCommand extends VoidCommand
 		int returnVal = chooser.showOpenDialog(Environment.getActiveWindow());
 		if(returnVal == JFileChooser.APPROVE_OPTION)
 		{
-			Environment.getActiveWindow().setCursor(new Cursor(Cursor.WAIT_CURSOR));
+			Environment.getActiveWindow().setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 			WavetekReader wr = new WavetekReader();
 			bs = wr.getData(chooser.getSelectedFile());
 			if (bs == null)
@@ -115,7 +115,7 @@ public class FileOpenAsWavetekCommand extends VoidCommand
 			catch (IOException ex)
 			{
 			}
-			Environment.getActiveWindow().setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+			Environment.getActiveWindow().setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 		}
 	}
 }

@@ -7,6 +7,7 @@ import javax.swing.UIManager;
 
 import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
+import com.syrus.AMFICOM.Client.Resource.ResourceKeys;
 import com.syrus.AMFICOM.analysis.dadara.MathRef;
 
 public class AnalysisPanel extends MapMarkersPanel
@@ -34,14 +35,15 @@ public class AnalysisPanel extends MapMarkersPanel
 	private int activeEvent = -1;
 
 	protected Color markerColor;
+	protected Color markerColorXOR;
 
 	public AnalysisPanel(AnalysisLayeredPanel panel, Dispatcher dispatcher, double y[], double deltaX)
 	{
 		super (panel, dispatcher, y, deltaX);
 
-		start_y = MathRef.getLinearStartPoint(y);
+		this.start_y = MathRef.getLinearStartPoint(y);
 
-		markerA = new Marker("A", (int)(y.length*.2));
+		this.markerA = new Marker("A", (int)(y.length*.2));
 //		markerA.id = "A";
 		lines[0] = new AnaLine();
 		lines[1] = new AnaLine();
@@ -52,23 +54,17 @@ public class AnalysisPanel extends MapMarkersPanel
 		lines[0].factor = MathRef.calcLSA(y, lines[0].point[0], lines[0].point[1]);
 		lines[1].factor = MathRef.calcLSA(y, lines[1].point[0], lines[1].point[1]);
 
-		markerB = new Marker ("B", (int)(y.length * .8));
+		this.markerB = new Marker ("B", (int)(y.length * .8));
 //		markerB.id = "B";
+		
+		this.markerColor = UIManager.getColor(AnalysisResourceKeys.COLOR_MARKER);
+		this.markerA.setColor(markerColor);
+		this.markerB.setColor(markerColor);
+		
+		this.markerColorXOR = new Color(this.markerColor.getRGB() ^ UIManager.getColor(ResourceKeys.COLOR_GRAPHICS_BACKGROUND).getRGB());
 
-		try
-		{
-			jbInit();
-		}
-		catch(Exception ex)
-		{
-			ex.printStackTrace();
-		}
-	}
-
-	private void jbInit() throws Exception
-	{
 		MARKER_STROKE = new BasicStroke(marker_w);
-		useXORMode = false;
+		this.useXORMode = false;
 	}
 
 	public void updEvents(String id)
@@ -109,7 +105,7 @@ public class AnalysisPanel extends MapMarkersPanel
 						 Math.abs(currpos.y-lindraw(lines[1].factor[0], lines[1].factor[1], lines[1].point[1])) < MOUSE_COUPLING)
 					{
 						moving_point = 4;
-						setCursor(new Cursor(Cursor.HAND_CURSOR));
+						setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 						setPaintMode(useXORMode);
 						return;
 					}
@@ -117,7 +113,7 @@ public class AnalysisPanel extends MapMarkersPanel
 						 Math.abs(currpos.y-lindraw(lines[1].factor[0], lines[1].factor[1], lines[1].point[0])) < MOUSE_COUPLING)
 					{
 						moving_point = 3;
-						setCursor(new Cursor(Cursor.HAND_CURSOR));
+						setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 						setPaintMode(useXORMode);
 						return;
 					}
@@ -128,7 +124,7 @@ public class AnalysisPanel extends MapMarkersPanel
 						 Math.abs(currpos.y-(int)((maxY - y[lines[1].point[0]] - top)*scaleY)) < MOUSE_COUPLING)
 					{
 						moving_point = 3;
-						setCursor(new Cursor(Cursor.HAND_CURSOR));
+						setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 						setPaintMode(useXORMode);
 						return;
 					}
@@ -139,7 +135,7 @@ public class AnalysisPanel extends MapMarkersPanel
 						 Math.abs(currpos.y-lindraw(lines[0].factor[0], lines[0].factor[1], lines[0].point[i])) < MOUSE_COUPLING)
 					{
 						moving_point = i + 1;
-						setCursor(new Cursor(Cursor.HAND_CURSOR));
+						setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 						setPaintMode(useXORMode);
 						return;
 					}
@@ -149,7 +145,7 @@ public class AnalysisPanel extends MapMarkersPanel
 			if (Math.abs(index2coord(markerA.pos)-currpos.x) < MOUSE_COUPLING)
 			{
 				moving_marker = markerA;
-				setCursor(new Cursor(Cursor.W_RESIZE_CURSOR));
+				setCursor(Cursor.getPredefinedCursor(Cursor.W_RESIZE_CURSOR));
 				updMarker (markerA);
 				setPaintMode(useXORMode);
 				return;
@@ -157,7 +153,7 @@ public class AnalysisPanel extends MapMarkersPanel
 			if (Math.abs(index2coord(markerB.pos)-currpos.x) < MOUSE_COUPLING)
 			{
 				moving_marker = markerB;
-				setCursor(new Cursor(Cursor.W_RESIZE_CURSOR));
+				setCursor(Cursor.getPredefinedCursor(Cursor.W_RESIZE_CURSOR));
 				updMarker (markerB);
 				setPaintMode(useXORMode);
 				return;
@@ -177,7 +173,7 @@ public class AnalysisPanel extends MapMarkersPanel
 			Graphics g = getGraphics();
 			if (paintMarkerXOR)
 			{
-				g.setXORMode(new Color(markerColor.getRGB() ^ SystemColor.window.getRGB()));
+				g.setXORMode(this.markerColorXOR);
 				paint_marker(g, moving_marker);
 				if (moving_marker.equals(markerA))
 				{
@@ -273,7 +269,7 @@ public class AnalysisPanel extends MapMarkersPanel
 				Graphics g = getGraphics();
 				if (paintMarkerXOR)
 				{
-					g.setXORMode(new Color(markerColor.getRGB() ^ SystemColor.window.getRGB()));
+					g.setXORMode(this.markerColorXOR);
 					if (loss_analysis)
 						paint_loss_ana(g);
 					else
@@ -282,7 +278,7 @@ public class AnalysisPanel extends MapMarkersPanel
 				move_ana_point (moving_point, coord2index(currpos.x));
 				if (paintMarkerXOR)
 				{
-					g.setXORMode(new Color(markerColor.getRGB() ^ SystemColor.window.getRGB()));
+					g.setXORMode(this.markerColorXOR);
 					if (loss_analysis)
 						paint_loss_ana(g);
 					else
@@ -314,7 +310,7 @@ public class AnalysisPanel extends MapMarkersPanel
 
 	protected void this_mouseReleased(MouseEvent e)
 	{
-		setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+		setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 		// если рисовали маркеры - ничего не делаем
 		if(moving_marker != null)
 		{
@@ -500,10 +496,6 @@ public class AnalysisPanel extends MapMarkersPanel
 	protected void updColorModel()
 	{
 		super.updColorModel();
-
-		markerColor = UIManager.getColor(AnalysisResourceKeys.COLOR_MARKER);
-		markerA.setColor(markerColor);
-		markerB.setColor(markerColor);
 	}
 
 	public void paint(Graphics g)
@@ -523,7 +515,7 @@ public class AnalysisPanel extends MapMarkersPanel
 	protected void paint_analysis_markers (Graphics g)
 	{
 		if (paintMarkerXOR)
-			g.setXORMode(new Color(markerColor.getRGB() ^ SystemColor.window.getRGB()));
+			g.setXORMode(this.markerColorXOR);
 		else
 			g.setColor(markerColor);
 

@@ -79,7 +79,7 @@ public class FileOpenAsBellcoreCommand extends VoidCommand
 		int returnVal = chooser.showOpenDialog(Environment.getActiveWindow());
 		if(returnVal == JFileChooser.APPROVE_OPTION)
 		{
-			Environment.getActiveWindow().setCursor(new Cursor(Cursor.WAIT_CURSOR));
+			Environment.getActiveWindow().setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 			BellcoreReader br = new BellcoreReader();
 			bs = br.getData(chooser.getSelectedFile());
 			if (bs == null)
@@ -115,7 +115,7 @@ public class FileOpenAsBellcoreCommand extends VoidCommand
 			catch (IOException ex)
 			{
 			}
-			Environment.getActiveWindow().setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+			Environment.getActiveWindow().setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 		}
 	}
 }

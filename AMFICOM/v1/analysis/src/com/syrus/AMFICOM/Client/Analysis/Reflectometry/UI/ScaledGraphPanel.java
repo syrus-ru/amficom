@@ -3,6 +3,9 @@ package com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI;
 import java.awt.*;
 import java.awt.event.*;
 
+import javax.swing.UIManager;
+
+import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
 import com.syrus.AMFICOM.analysis.dadara.MathRef;
 
 public class ScaledGraphPanel extends SimpleGraphPanel
@@ -21,9 +24,9 @@ public class ScaledGraphPanel extends SimpleGraphPanel
 	protected double Kx = 1; // коэффициент пересчета из точек в единицы деления
 	protected double Ky = 1; // коэффициент пересчета из точек в единицы деления
 
-	protected Color scaleColor; // color to paint scale mesh
-	protected Color scaleDigitColor; // color to paint scale digits
-	protected Color selectColor;
+//	protected Color scaleColor; // color to paint scale mesh
+//	protected Color scaleDigitColor; // color to paint scale digits
+//	protected Color selectColor;
 
 	protected Point startpos = new Point();
 	protected Point currpos = new Point();
@@ -103,7 +106,7 @@ public class ScaledGraphPanel extends SimpleGraphPanel
 		{
 			upd_currpos(e);
 
-			setCursor(new Cursor(Cursor.CROSSHAIR_CURSOR));
+			setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
 			paint_select(getGraphics().create());
 		}
 	}
@@ -123,7 +126,7 @@ public class ScaledGraphPanel extends SimpleGraphPanel
 			else
 				parent.repaint();
 
-			setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+			setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 		}
 	}
 
@@ -157,9 +160,9 @@ public class ScaledGraphPanel extends SimpleGraphPanel
 	{
 		super.updColorModel();
 
-		scaleColor = ColorManager.getColor("scaleColor");
-		scaleDigitColor = ColorManager.getColor("scaleDigitColor");
-		selectColor = ColorManager.getColor("selectColor");
+//		scaleColor = ColorManager.getColor("scaleColor");
+//		scaleDigitColor = ColorManager.getColor("scaleDigitColor");
+//		selectColor = ColorManager.getColor("selectColor");
 	}
 
 	public void paint(Graphics g)
@@ -174,7 +177,7 @@ public class ScaledGraphPanel extends SimpleGraphPanel
 		int jh = getHeight();
 		int jw = getWidth();
 
-		g.setColor(scaleColor);
+		g.setColor(UIManager.getColor(AnalysisResourceKeys.COLOR_SCALE));
 
 		double m = calcNodeDistance (cell_w / scaleX * Kx); // единиц на одно деление
 		double delta =	m * scaleX / Kx; // число экранных точек на одно деление
@@ -205,7 +208,7 @@ public class ScaledGraphPanel extends SimpleGraphPanel
 		int jh = getHeight();
 		int jw = getWidth();
 
-		g.setColor(scaleDigitColor);
+		g.setColor(UIManager.getColor(AnalysisResourceKeys.COLOR_SCALE_DIGITS));
 
 		double m = calcNodeDistance (cell_w / scaleX * Kx); // единиц на одно деление
 		double delta =	m * scaleX / Kx; // число экранных точек на одно деление
@@ -233,7 +236,7 @@ public class ScaledGraphPanel extends SimpleGraphPanel
 
 	protected void paint_select (Graphics g)
 	{
-		g.setXORMode(selectColor);
+		g.setXORMode(UIManager.getColor(AnalysisResourceKeys.COLOR_SELECT));
 		g.drawRect (Math.min(startpos.x, tmppos.x),
 								Math.min(startpos.y, tmppos.y),
 								Math.abs(tmppos.x - startpos.x),

@@ -166,12 +166,12 @@ public class WeightsDialog extends JDialog
 		int []netArchitecture = getArchitecture(s[8]);
 
 		System.out.println("Выполнение...");
-		setCursor(new Cursor(Cursor.WAIT_CURSOR));
+		setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 
 		// Call of the dll' function;
 		double res = getWeights(nEpochs, nEvents, netArchitecture.length, eventSize, netArchitecture, minWeld, maxWeld, minLet, maxLet, maxNoise);
 		System.out.println("res = " + res);
-		setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+		setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 
 		System.out.println("Вычисление весов для заданной архитектуры завершено");
 	}

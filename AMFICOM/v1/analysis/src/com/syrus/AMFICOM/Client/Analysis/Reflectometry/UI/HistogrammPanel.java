@@ -131,7 +131,7 @@ public class HistogrammPanel extends ScaledGraphPanel
 		g.drawLine(10, (int)((maxY - level - top) * scaleY - 1),
 							 jw - 10, (int)((maxY - level - top) * scaleY - 1));
 
-		g.setColor(scaleDigitColor);
+		g.setColor(UIManager.getColor(AnalysisResourceKeys.COLOR_SCALE_DIGITS));
 		g.drawString(String.valueOf(MathRef.round_2(level)),
 								 jw - 30,
 								 (int)((maxY - level - top) * scaleY - 4));
@@ -147,7 +147,7 @@ public class HistogrammPanel extends ScaledGraphPanel
 		{
 			move_level = true;
 			level = coord2value(currpos.y);
-			setCursor(new Cursor(Cursor.N_RESIZE_CURSOR));
+			setCursor(Cursor.getPredefinedCursor(Cursor.N_RESIZE_CURSOR));
 			parent.repaint();
 			return;
 		}
@@ -173,7 +173,7 @@ public class HistogrammPanel extends ScaledGraphPanel
 		if (move_level)
 		{
 			move_level = false;
-			setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+			setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 			parent.repaint();
 			return;
 		}

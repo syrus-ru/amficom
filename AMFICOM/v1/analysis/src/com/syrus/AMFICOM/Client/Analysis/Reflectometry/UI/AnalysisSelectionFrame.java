@@ -363,7 +363,7 @@ public class AnalysisSelectionFrame extends ATableFrame
 
 	void analysisStartButton_actionPerformed(ActionEvent e)
 	{
-		setCursor(new Cursor(Cursor.WAIT_CURSOR));
+		setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 		double[] minuitParams = new double[8];
 		minuitParams[2] = ((Double)getDoubleValueAt(jTable.getValueAt(0, 1), 0)).doubleValue();
 		minuitParams[1] = ((Double)getDoubleValueAt(jTable.getValueAt(1, 1), 1)).doubleValue();
@@ -382,7 +382,7 @@ public class AnalysisSelectionFrame extends ATableFrame
 			dispatcher.notify(new RefUpdateEvent(this.selectedEventId, RefUpdateEvent.EVENT_SELECTED_EVENT));
 		}
 
-		setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+		setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 	}
 
 	void analysisInitialButton_actionPerformed(ActionEvent e)

@@ -57,7 +57,7 @@ public class MinuitAnalyseCommand extends VoidCommand
 		BellcoreStructure bs = (BellcoreStructure)Pool.get("bellcorestructure", id);
 		if (bs != null)
 		{
-			Environment.getActiveWindow().setCursor(new Cursor(Cursor.WAIT_CURSOR));
+			Environment.getActiveWindow().setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 
 			//double deltaX = bs.getResolution();
 			double[] y = bs.getTraceData();
@@ -91,7 +91,7 @@ public class MinuitAnalyseCommand extends VoidCommand
 
 			Pool.put(ModelTraceManager.CODENAME, id, mtm);
 
-			Environment.getActiveWindow().setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+			Environment.getActiveWindow().setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 	  //System.out.println("MinuitAnalysis.execute(): pool & Cursor complete at dt/ms " + (System.currentTimeMillis()-t0));
 		}
 	}

@@ -92,7 +92,7 @@ public class FileOpenCommand extends VoidCommand
 		int returnVal = chooser.showOpenDialog(Environment.getActiveWindow());
 		if(returnVal == JFileChooser.APPROVE_OPTION)
 		{
-			Environment.getActiveWindow().setCursor(new Cursor(Cursor.WAIT_CURSOR));
+			Environment.getActiveWindow().setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 			TraceReader tr = new TraceReader();
 			try
 			{
@@ -141,7 +141,7 @@ public class FileOpenCommand extends VoidCommand
 								LangModelAnalyse.getString("messageReadError") + ":\n" + chooser.getSelectedFile().getAbsolutePath(),
 								LangModelAnalyse.getString("messageError"),
 								JOptionPane.OK_OPTION);
-						Environment.getActiveWindow().setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+						Environment.getActiveWindow().setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 						return;
 					}
 				}
@@ -157,7 +157,7 @@ public class FileOpenCommand extends VoidCommand
 			Pool.put("bellcorestructure", RefUpdateEvent.PRIMARY_TRACE, bs);
 			Pool.put("activecontext", "activepathid", "");
 
-			Environment.getActiveWindow().setCursor(new Cursor(Cursor.WAIT_CURSOR));
+			Environment.getActiveWindow().setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 
 			new InitialAnalysisCommand().execute();
 			//new MinuitAnalyseCommand(dispatcher, RefUpdateEvent.PRIMARY_TRACE, aContext).execute();
@@ -178,7 +178,7 @@ public class FileOpenCommand extends VoidCommand
 			{
 			}
 
-			Environment.getActiveWindow().setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+			Environment.getActiveWindow().setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 		}
 	}
 }

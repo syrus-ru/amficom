@@ -3,8 +3,11 @@ package com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 
+import javax.swing.UIManager;
+
 import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
+import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
 import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.analysis.dadara.*;
 
@@ -26,9 +29,6 @@ public class ReflectogramEventsPanel extends TraceEventsPanel
 	protected boolean moving_level = false;
 
 	//protected double[] modeled_y;
-
-	protected Color modeledColor;
-	protected Color minLevelColor;
 
 	public ReflectogramEventsPanel(ResizableLayeredPanel panel, Dispatcher dispatcher, double[] y, double deltaX)
 	{
@@ -84,9 +84,6 @@ public class ReflectogramEventsPanel extends TraceEventsPanel
 	protected void updColorModel()
 	{
 		super.updColorModel();
-
-		modeledColor = ColorManager.getColor("modeledColor");
-		minLevelColor = ColorManager.getColor("minTraceLevelColor");
 	}
 
 	protected void this_mousePressed(MouseEvent e)
@@ -102,7 +99,7 @@ public class ReflectogramEventsPanel extends TraceEventsPanel
 			if(Math.abs(currpos.y-(int)((min_trace_level.doubleValue() - top) * scaleY - 1)) < MOUSE_COUPLING)
 			{
 				moving_level = true;
-				setCursor(new Cursor(Cursor.N_RESIZE_CURSOR));
+				setCursor(Cursor.getPredefinedCursor(Cursor.N_RESIZE_CURSOR));
 				return;
 			}
 		}
@@ -114,7 +111,7 @@ public class ReflectogramEventsPanel extends TraceEventsPanel
 		if (moving_level)
 		{
 			moving_level = false;
-			setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+			setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 			parent.repaint();
 			updateMinTraceLevel(min_trace_level);
 			return;
@@ -173,7 +170,7 @@ public class ReflectogramEventsPanel extends TraceEventsPanel
 	{
 		int jw = getWidth();
 		((Graphics2D) g).setStroke(SELECTION_STROKE);
-		g.setColor(scaleColor.darker());
+		g.setColor(UIManager.getColor(AnalysisResourceKeys.COLOR_SCALE).darker());
 		int h = (int)((noise_level - top) * scaleY - 1);
 		g.drawLine(0, h, jw, h);
 		((Graphics2D) g).setStroke(DEFAULT_STROKE);
@@ -184,7 +181,7 @@ public class ReflectogramEventsPanel extends TraceEventsPanel
 	{
 		int jw = getWidth();
 		((Graphics2D) g).setStroke(SELECTION_STROKE);
-		g.setColor(minLevelColor);
+		g.setColor(UIManager.getColor(AnalysisResourceKeys.COLOR_MIN_TRACE_LEVEL));
 		g.drawLine(0, (int)((min_trace_level.doubleValue() - top) * scaleY - 1),
 							 jw, (int)((min_trace_level.doubleValue() - top) * scaleY - 1));
 		((Graphics2D) g).setStroke(DEFAULT_STROKE);
@@ -245,7 +242,7 @@ public class ReflectogramEventsPanel extends TraceEventsPanel
 	{
 		if (mtm == null)
 			return;
-		g.setColor(modeledColor);
+		g.setColor(UIManager.getColor(AnalysisResourceKeys.COLOR_MODELED));
 		drawModelCurve(g, mtm.getModelTrace(), null);
 	}
 

@@ -158,7 +158,7 @@ public class ThresholdsPanel extends ReflectogramEventsPanel
 					RefUpdateEvent.THRESHOLD_CHANGED_EVENT));
 				c_TH = null;
 			}
-			setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+			setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 		}
 	}
 

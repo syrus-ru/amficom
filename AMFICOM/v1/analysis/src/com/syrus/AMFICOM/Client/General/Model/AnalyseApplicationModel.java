@@ -8,6 +8,8 @@ import javax.swing.ImageIcon;
 import javax.swing.UIDefaults;
 import javax.swing.UIManager;
 
+import com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.ColorManager;
+
 public class AnalyseApplicationModel extends ApplicationModel {
 
 	public static final String SELECT_PREVIOUS_EVENT = "SelectPreviousEvent";
@@ -172,6 +174,13 @@ public class AnalyseApplicationModel extends ApplicationModel {
 		
 		defaults.put(AnalysisResourceKeys.COLOR_WARNING_THRESHOLD, new Color(255, 220, 0));
 		defaults.put(AnalysisResourceKeys.COLOR_ALARM_THRESHOLD, new Color(255, 150, 60));
+		
+		defaults.put(AnalysisResourceKeys.COLOR_MODELED, new Color (0, 192, 0));
+		defaults.put(AnalysisResourceKeys.COLOR_MIN_TRACE_LEVEL, new Color(255, 64, 64));
+		defaults.put(AnalysisResourceKeys.COLOR_SCALE, Color.LIGHT_GRAY);
+		defaults.put(AnalysisResourceKeys.COLOR_SCALE_DIGITS, Color.BLACK);
+		defaults.put(AnalysisResourceKeys.COLOR_SELECT, Color.GRAY); 
+		
 	}
 	/*
 	 * public DataSourceInterface getDataSource(SessionInterface si) { String

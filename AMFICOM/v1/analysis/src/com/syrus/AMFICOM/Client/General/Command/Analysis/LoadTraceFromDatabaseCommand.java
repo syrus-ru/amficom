@@ -153,6 +153,6 @@ public class LoadTraceFromDatabaseCommand extends VoidCommand
 			dispatcher.notify(new RefUpdateEvent(AnalysisUtil.ETALON,
 				RefUpdateEvent.THRESHOLDS_UPDATED_EVENT));
 		}
-		Environment.getActiveWindow().setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+		Environment.getActiveWindow().setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 	}
 }

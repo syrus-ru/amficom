@@ -11,7 +11,7 @@ import com.syrus.AMFICOM.general.*;
 public class MapMarkersPanel extends ThresholdsPanel
 {
 	protected Identifier monitored_element_id = null;
-	protected com.syrus.AMFICOM.general.Identifier scheme_path_id = null;
+	protected Identifier scheme_path_id = null;
 
 	protected boolean show_markers = true;
 	protected boolean creating_marker = false;
@@ -102,7 +102,7 @@ public class MapMarkersPanel extends ThresholdsPanel
 					if(m.canMove())
 					{
 						move_marker = true;
-						setCursor(new Cursor(Cursor.W_RESIZE_CURSOR));
+						setCursor(Cursor.getPredefinedCursor(Cursor.W_RESIZE_CURSOR));
 					}
 					active_marker = m;
 					dispatcher.notify (new MapNavigateEvent (this, MapNavigateEvent.DATA_MARKER_SELECTED_EVENT,
@@ -159,7 +159,7 @@ public class MapMarkersPanel extends ThresholdsPanel
 		if(move_marker)
 		{
 			move_marker = false;
-			setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+			setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 			parent.repaint();
 			return;
 		}
