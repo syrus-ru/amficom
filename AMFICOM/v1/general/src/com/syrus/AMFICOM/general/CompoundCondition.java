@@ -1,5 +1,5 @@
 /*
-* $Id: CompoundCondition.java,v 1.1 2005/01/20 15:08:28 bob Exp $
+* $Id: CompoundCondition.java,v 1.2 2005/01/21 08:21:41 bob Exp $
 *
 * Copyright ¿ 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -10,9 +10,17 @@ package com.syrus.AMFICOM.general;
 
 import java.util.List;
 
+import org.omg.CORBA.Any;
+import org.omg.CORBA.ORB;
+
+import com.syrus.AMFICOM.general.corba.CompoundCondition_Transferable;
+import com.syrus.AMFICOM.general.corba.LinkedIdsCondition_Transferable;
+import com.syrus.AMFICOM.general.corba.StorableObjectCondition_Transferable;
+import com.syrus.AMFICOM.general.corba.StringFieldCondition_Transferable;
+import com.syrus.util.corba.JavaSoftORBUtil;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/01/20 15:08:28 $
+ * @version $Revision: 1.2 $, $Date: 2005/01/21 08:21:41 $
  * @author $Author: bob $
  * @module general_v1
  */
@@ -21,6 +29,8 @@ public class CompoundCondition implements StorableObjectCondition {
 	public static final int OPERATION_AND 	= 0;
 	public static final int OPERATION_OR	= 1;
 	public static final int OPERATION_XOR	= 2;
+	
+	private static final ORB orb =  JavaSoftORBUtil.getInstance().getORB();
 
 	private StorableObjectCondition firstCondition;
 	private int operation;
@@ -88,12 +98,44 @@ public class CompoundCondition implements StorableObjectCondition {
 		this.entityCode = entityCode;
 	}
 
-	/* (non-Javadoc)
-	 * @see com.syrus.AMFICOM.general.StorableObjectCondition#getTransferable()
-	 */
 	public Object getTransferable() {
-		// TODO Auto-generated method stub
-		return null;
+		CompoundCondition_Transferable transferable = new CompoundCondition_Transferable();
+		transferable.innerConditions = new org.omg.CORBA.Any[2];
+		StorableObjectCondition_Transferable transferable2 = new StorableObjectCondition_Transferable();
+		StorableObjectCondition_Transferable transferable3 = new StorableObjectCondition_Transferable();
+
+		if (this.firstCondition instanceof StringFieldCondition) {
+			StringFieldCondition stringFieldCondition = (StringFieldCondition) this.firstCondition;
+			transferable2.stringFieldCondition((StringFieldCondition_Transferable) stringFieldCondition.getTransferable());
+		} else if (this.firstCondition instanceof LinkedIdsCondition) {
+			LinkedIdsCondition linkedIdsCondition = (LinkedIdsCondition) this.firstCondition;
+			transferable2.linkedIdsCondition((LinkedIdsCondition_Transferable) linkedIdsCondition.getTransferable());			
+		} else if (this.firstCondition instanceof CompoundCondition) {
+			CompoundCondition compoundCondition = (CompoundCondition) this.firstCondition;
+			transferable2.compoundCondition((CompoundCondition_Transferable) compoundCondition.getTransferable());
+		} 
+
+		if (this.secondCondition instanceof StringFieldCondition) {
+			StringFieldCondition stringFieldCondition = (StringFieldCondition) this.secondCondition;
+			transferable3.stringFieldCondition((StringFieldCondition_Transferable) stringFieldCondition.getTransferable());
+		} else if (this.secondCondition instanceof LinkedIdsCondition) {
+			LinkedIdsCondition linkedIdsCondition = (LinkedIdsCondition) this.secondCondition;
+			transferable3.linkedIdsCondition((LinkedIdsCondition_Transferable) linkedIdsCondition.getTransferable());			
+		} else if (this.secondCondition instanceof CompoundCondition) {
+			CompoundCondition compoundCondition = (CompoundCondition) this.secondCondition;
+			transferable3.compoundCondition((CompoundCondition_Transferable) compoundCondition.getTransferable());
+		} 
+
+		
+		Any any1 = orb.create_any();
+		any1.insert_Value(transferable2);
+		transferable.innerConditions[0] = any1;
+
+		Any any2 = orb.create_any();
+		any1.insert_Value(transferable3);
+		transferable.innerConditions[2] = any2;
+
+		return transferable;
 	}
 
 	/**
