@@ -8,8 +8,10 @@ IDL=$(HOME)\idl
 
 VBJCLASSPATH=$(ORACLE_HOME)\lib\vbjorb.jar;$(ORACLE_HOME)\lib\vbjapp.jar
 
-IDL2JAVA=$(ORACLE_HOME)\bin\idl2java
-IDL2JAVAOPTIONS=-no_examples -no_tie -root_dir $(SRC)
+#IDL2JAVA=$(ORACLE_HOME)\bin\idl2java
+IDL2JAVA=idlj
+#IDL2JAVAOPTIONS=-no_examples -no_tie -root_dir $(SRC)
+IDL2JAVAOPTIONS=-i .\idl -fallTIE -td $(SRC)
 JAVAC=javac
 JAR=jar
 
@@ -51,12 +53,21 @@ $(LIBNAME_OBJECT):	$(ALL_LIBS)
 	$(IDL2JAVA) $(IDL2JAVAOPTIONS) $(IDL)\AMFICOM.idl
 	$(IDL2JAVA) $(IDL2JAVAOPTIONS) $(IDL)\client.idl
 	$(JAVAC) -d $(CLASSES) -classpath $(LIBNAME_GENERAL);$(LIBNAME_ADMIN);$(LIBNAME_ALARM);$(LIBNAME_MAP);$(LIBNAME_NETWORK);$(LIBNAME_ISM);$(LIBNAME_SURVEY);$(LIBNAME_REPORT);$(VBJCLASSPATH) -sourcepath $(SRC) \
-		$(SRC)\com\syrus\AMFICOM\CORBA\_AMFICOMImplBase.java \
+		$(SRC)\com\syrus\AMFICOM\CORBA\_AMFICOMClientStub.java \
+		$(SRC)\com\syrus\AMFICOM\CORBA\AMFICOMClient.java \
+		$(SRC)\com\syrus\AMFICOM\CORBA\AMFICOMClientHelper.java \
+		$(SRC)\com\syrus\AMFICOM\CORBA\AMFICOMClientHolder.java \
+		$(SRC)\com\syrus\AMFICOM\CORBA\AMFICOMClientOperations.java \
+		$(SRC)\com\syrus\AMFICOM\CORBA\AMFICOMClientPOA.java \
+		$(SRC)\com\syrus\AMFICOM\CORBA\AMFICOMClientPOATie.java
+	$(JAVAC) -d $(CLASSES) -classpath $(LIBNAME_GENERAL);$(LIBNAME_ADMIN);$(LIBNAME_ALARM);$(LIBNAME_MAP);$(LIBNAME_NETWORK);$(LIBNAME_ISM);$(LIBNAME_SURVEY);$(LIBNAME_REPORT);$(VBJCLASSPATH) -sourcepath $(SRC) \
+		$(SRC)\com\syrus\AMFICOM\CORBA\_AMFICOMStub.java \
+		$(SRC)\com\syrus\AMFICOM\CORBA\AMFICOM.java \
 		$(SRC)\com\syrus\AMFICOM\CORBA\AMFICOMHelper.java \
 		$(SRC)\com\syrus\AMFICOM\CORBA\AMFICOMHolder.java \
-		$(SRC)\com\syrus\AMFICOM\CORBA\_AMFICOMClientImplBase.java \
-		$(SRC)\com\syrus\AMFICOM\CORBA\AMFICOMClientHelper.java \
-		$(SRC)\com\syrus\AMFICOM\CORBA\AMFICOMClientHolder.java
+		$(SRC)\com\syrus\AMFICOM\CORBA\AMFICOMOperations.java \
+		$(SRC)\com\syrus\AMFICOM\CORBA\AMFICOMPOA.java \
+		$(SRC)\com\syrus\AMFICOM\CORBA\AMFICOMPOATie.java
 
 jar1:
 	$(JAR) -cf $(LIBNAME_OBJECT) \
@@ -141,9 +152,13 @@ $(LIBNAME_GENERAL):
 	$(JAVAC) -d $(CLASSES) -classpath $(VBJCLASSPATH) -sourcepath $(SRC) $(SRC)\com\syrus\AMFICOM\CORBA\Resource\*.java
 	$(JAVAC) -d $(CLASSES) -classpath $(VBJCLASSPATH) -sourcepath $(SRC) $(SRC)\com\syrus\AMFICOM\CORBA\Constant\*.java
 	$(JAVAC) -d $(CLASSES) -classpath $(VBJCLASSPATH) -sourcepath $(SRC) \
-		$(SRC)\com\syrus\AMFICOM\CORBA\_ConstantsImplBase.java \
+		$(SRC)\com\syrus\AMFICOM\CORBA\Constants.java \
 		$(SRC)\com\syrus\AMFICOM\CORBA\ConstantsHelper.java \
-		$(SRC)\com\syrus\AMFICOM\CORBA\ConstantsHolder.java
+		$(SRC)\com\syrus\AMFICOM\CORBA\ConstantsHolder.java \
+		$(SRC)\com\syrus\AMFICOM\CORBA\ConstantsOperations.java \
+		$(SRC)\com\syrus\AMFICOM\CORBA\ConstantsPOA.java \
+		$(SRC)\com\syrus\AMFICOM\CORBA\ConstantsPOATie.java \
+		$(SRC)\com\syrus\AMFICOM\CORBA\_ConstantsStub.java
 
 jar10:
 	$(JAR) -cf $(LIBNAME_GENERAL) \

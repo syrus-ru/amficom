@@ -25,8 +25,7 @@ module Network
 		wstring type_id;
 		wstring equipment_id;
 		wstring domain_id;
-
-		General::CharacteristicSeq_Transferable characteristics;
+		long long modified;
 	};
 	typedef sequence <Port_Transferable> PortSeq_Transferable;
 
@@ -41,8 +40,7 @@ module Network
 		wstring type_id;
 		wstring equipment_id;
 		wstring domain_id;
-
-		General::CharacteristicSeq_Transferable characteristics;
+		long long modified;
 	};
 	typedef sequence <CablePort_Transferable> CablePortSeq_Transferable;
 
@@ -67,19 +65,9 @@ module Network
 		wstring supplier_code;
 
 		wstring eq_class;
-		wstring image_id;
 
-		wstring agent_id;
 		wstring domain_id;
-		boolean is_kis;
 		long long modified;
-
-		General::wstringSeq port_ids;
-		General::wstringSeq cport_ids;
-		General::wstringSeq s_port_ids;
-
-		General::CharacteristicSeq_Transferable characteristics;
-
 	};
 	typedef sequence <Equipment_Transferable> EquipmentSeq_Transferable;
 
@@ -96,20 +84,9 @@ module Network
 		wstring supplier;
 		wstring supplier_code;
 
-		wstring link_class;
-		wstring image_id;
-
-		wstring start_equipment_id;
-		wstring start_port_id;
-		wstring end_equipment_id;
-		wstring end_port_id;
 		wstring domain_id;
 
 		long long modified;
-
-		wstring physical_length;
-		wstring optical_length;
-		General::CharacteristicSeq_Transferable characteristics;
 	};
 	typedef sequence <Link_Transferable> LinkSeq_Transferable;
 
@@ -136,60 +113,17 @@ module Network
 		wstring supplier;
 		wstring supplier_code;
 
-		wstring link_class;
 		wstring image_id;
 
-		wstring start_equipment_id;
-		wstring start_port_id;
-		wstring end_equipment_id;
-		wstring end_port_id;
 		wstring domain_id;
 
 		long long modified;
-
-		wstring physical_length;
-		wstring optical_length;
-		CableLinkThreadSeq_Transferable threads;
-
-		General::CharacteristicSeq_Transferable characteristics;
 	};
 	typedef sequence <CableLink_Transferable> CableLinkSeq_Transferable;
-
-	struct TestPort_Transferable
-	{
-		wstring id;
-		wstring name;
-		wstring type_id;
-		wstring equipment_id;
-		wstring port_id;
-
-		General::CharacteristicSeq_Transferable characteristics;
-	};
-	typedef sequence <TestPort_Transferable> TestPortSeq_Transferable;
 };
 
 module NetworkDirectory
 {
-	struct LinkType_Transferable
-	{
-		wstring id;
-		wstring name;
-		wstring codename;
-		wstring description;
-		wstring year;
-		wstring standard;
-		wstring link_class;
-		wstring manufacturer;
-		wstring manufacturer_code;
-		boolean is_holder;
-
-		wstring image_id;
-		long long modified;
-
-		General::CharacteristicSeq_Transferable characteristics;
-	};
-	typedef sequence <LinkType_Transferable> LinkTypeSeq_Transferable;
-
 	struct EquipmentType_Transferable
 	{
 		wstring id;
@@ -198,7 +132,6 @@ module NetworkDirectory
 		wstring description;
 		wstring manufacturer;
 		wstring eq_class;
-		boolean is_holder;
 
 		wstring image_id;
 		long long modified;
@@ -224,17 +157,6 @@ module NetworkDirectory
 	};
 	typedef sequence <PortType_Transferable> PortTypeSeq_Transferable;
 
-	struct TestPortType_Transferable
-	{
-		wstring id;
-		wstring name;
-		wstring description;
-		wstring port_type_id;
-
-		General::CharacteristicSeq_Transferable characteristics;
-	};
-	typedef sequence <TestPortType_Transferable> TestPortTypeSeq_Transferable;
-
 	struct CablePortType_Transferable
 	{
 		wstring id;
@@ -252,6 +174,25 @@ module NetworkDirectory
 	};
 	typedef sequence <CablePortType_Transferable> CablePortTypeSeq_Transferable;
 
+	struct LinkType_Transferable
+	{
+		wstring id;
+		wstring name;
+		wstring codename;
+		wstring description;
+		wstring year;
+		wstring standard;
+		wstring link_class;
+		wstring manufacturer;
+		wstring manufacturer_code;
+
+		wstring image_id;
+		long long modified;
+
+		General::CharacteristicSeq_Transferable characteristics;
+	};
+	typedef sequence <LinkType_Transferable> LinkTypeSeq_Transferable;
+
 	struct CableTypeThread_Transferable
 	{
 		wstring id;
@@ -259,8 +200,6 @@ module NetworkDirectory
 		wstring color;
 		wstring mark;
 		wstring link_type_id;
-
-		General::CharacteristicSeq_Transferable characteristics;
 	};
 	typedef sequence <CableTypeThread_Transferable> CableTypeThreadSeq_Transferable;
 

@@ -1,49 +1,17 @@
-//////////////////////////////////////////////////////////////////////////////
-// *                                                                      * //
-// * Syrus Systems                                                        * //
-// * Департамент Системных Исследований и Разработок                      * //
-// *                                                                      * //
-// * Проект: АМФИКОМ - система Автоматизированного Многофункционального   * //
-// *         Интеллектуального Контроля и Объектного Мониторинга          * //
-// *                                                                      * //
-// *         реализация Интегрированной Системы Мониторинга               * //
-// *                                                                      * //
-// * Название: Реализация серверной части интерфейса прототипа РИСД       * //
-// *           (включает реализацию пакета pmServer и класса pmRISDImpl)  * //
-// * Тип: IDL                                                             * //
-// *                                                                      * //
-// * Автор: Крупенников А.В.                                              * //
-// *                                                                      * //
-// * Версия: 0.1                                                          * //
-// * От: 22 jan 2002                                                      * //
-// * Расположение: ISM\prog\java\AMFICOM\AMFICOM.idl                      * //
-// *                                                                      * //
-// * Компилятор: Oracle JDeveloper (javac)                                * //
-// *                                                                      * //
-// * Статус: разработка                                                   * //
-// *                                                                      * //
-// * Изменения:                                                           * //
-// *  Кем         Верс   Когда      Комментарии                           * //
-// * -----------  ----- ---------- -------------------------------------- * //
-// *                                                                      * //
-// * Описание:                                                            * //
-// *                                                                      * //
-//////////////////////////////////////////////////////////////////////////////
-
 #ifndef _amficom_idl_
 #define _amficom_idl_
 
-//#include <general.idl>
-#include <admin.idl>
-#include <map.idl>
-#include <alarm.idl>
-//#include <scheme.idl>
-#include <network.idl>
-#include <ISM.idl>
-#include <resource.idl>
-#include <survey.idl>
-#include <report.idl>
-#include <client.idl>
+#include "general.idl"
+#include "admin.idl"
+#include "map.idl"
+#include "alarm.idl"
+#include "scheme.idl"
+#include "network.idl"
+#include "ISM.idl"
+#include "resource.idl"
+#include "survey.idl"
+#include "report.idl"
+#include "client.idl"
 
 module com
 {
@@ -54,10 +22,6 @@ module AMFICOM
 module CORBA
 {
 
-//////////////////////////////////////////////////////////////////////////////
-// * Интерфейс объекта РИСД - сервера ИСМ
-// *
-//////////////////////////////////////////////////////////////////////////////
 interface AMFICOM
 {
 	void registerAlarmReceiver(
@@ -78,15 +42,15 @@ interface AMFICOM
 	void syncPing(out long long serverTimeMillis)
 		raises (General::AMFICOMRemoteException);
 
-//////////////////////////////////////////////////////////////////////////////
-// * Обработка сессии
-// *
+/**
+ * Session management
+ */
+
 	long Logon(
-			in wstring username,	// имя пользователя
-			in General::octetSeq password,	// пароль пользователя
-			in wstring category,	// цель соединения с РИСД
+			in wstring username,
+			in General::octetSeq password,
+			in wstring category,
 			out Admin::AccessIdentity_Transferable accessIdentity)
-									// идентификатор сессии
 		raises (General::AMFICOMRemoteException);
 
 	long Logoff(
@@ -95,19 +59,19 @@ interface AMFICOM
 
 	long GetLoggedUserIds(
 			in Admin::AccessIdentity_Transferable accessIdentity,
-										// идентификатор сессии
 			out General::wstringSeq userids)
 		raises (General::AMFICOMRemoteException);
 
 	long ChangePassword(
 			in Admin::AccessIdentity_Transferable accessIdentity,
-			in General::octetSeq oldpassword,	// пароль пользователя
-			in General::octetSeq newpassword)	// новый пароль пользователя
+			in General::octetSeq oldpassword,
+			in General::octetSeq newpassword)
 		raises (General::AMFICOMRemoteException);
 
-//////////////////////////////////////////////////////////////////////////////
-// * Общие функции
-// *
+/**
+ * General functions
+ */
+
 	long GetUId(
 			in Admin::AccessIdentity_Transferable accessIdentity,
 			in wstring type,
@@ -152,18 +116,16 @@ interface AMFICOM
 			out Resource::ImageResourceSeq_Transferable imgs)
 		raises (General::AMFICOMRemoteException);
 
-//////////////////////////////////////////////////////////////////////////////
-// * Обработка административных объектов
-// *
+/**
+ * Administration
+ */
+
 	long GetObjects(
 			in Admin::AccessIdentity_Transferable accessIdentity,
-										// идентификатор сессии
 			out Resource::ImageResourceSeq_Transferable imageseq,
 			out Admin::DomainSeq_Transferable domainseq,
 			out Admin::OperatorCategorySeq_Transferable categoryseq,
 			out Admin::OperatorGroupSeq_Transferable groupseq,
-//			out Admin::OperatorRoleSeq_Transferable roleseq,
-//			out Admin::OperatorPrivilegeSeq_Transferable privilegeseq,
 			out Admin::OperatorProfileSeq_Transferable profileseq,
 			out Admin::CommandPermissionAttributesSeq_Transferable execseq,
 			out Admin::UserSeq_Transferable userseq)
@@ -171,7 +133,6 @@ interface AMFICOM
 
 	long GetStatedObjects(
 			in Admin::AccessIdentity_Transferable accessIdentity,
-										// идентификатор сессии
 			in General::wstringSeq catagory_ids,
 			in General::wstringSeq group_ids,
 			in General::wstringSeq profile_ids,
@@ -182,7 +143,6 @@ interface AMFICOM
 
 	long GetUserDescriptors(
 			in Admin::AccessIdentity_Transferable accessIdentity,
-										// идентификатор сессии
 			out Resource::ImageResourceSeq_Transferable imageseq,
 			out Admin::DomainSeq_Transferable domainseq,
 			out Admin::UserSeq_Transferable userseq)
@@ -199,8 +159,6 @@ interface AMFICOM
 			in Admin::DomainSeq_Transferable domainseq,
 			in Admin::OperatorCategorySeq_Transferable categoryseq,
 			in Admin::OperatorGroupSeq_Transferable groupseq,
-//			in Admin::OperatorRoleSeq_Transferable roleseq,
-//			in Admin::OperatorPrivilegeSeq_Transferable privilegeseq,
 			in Admin::OperatorProfileSeq_Transferable profileseq,
 			in Admin::CommandPermissionAttributesSeq_Transferable execseq,
 			in Admin::UserSeq_Transferable userseq)
@@ -211,8 +169,6 @@ interface AMFICOM
 			in General::wstringSeq domainseq,
 			in General::wstringSeq categoryseq,
 			in General::wstringSeq groupseq,
-//			in General::wstringSeq roleseq,
-//			in General::wstringSeq privilegeseq,
 			in General::wstringSeq profileseq,
 			in General::wstringSeq execseq,
 			in General::wstringSeq userseq)
@@ -249,199 +205,148 @@ interface AMFICOM
 			in General::wstringSeq agentseq)
 		raises (General::AMFICOMRemoteException);
 
-//////////////////////////////////////////////////////////////////////////////
-// * Обработка объектов карты
-// *
+/**
+ * Maps
+ */
+
 	long GetMaps(
 			in Admin::AccessIdentity_Transferable accessIdentity,
-										// идентификатор сессии
 			out Resource::ImageResourceSeq_Transferable imageseq,
-			out Map::MapContextSeq_Transferable mapseq,
-			out Map::MapElementSeq_Transferable equipmentseq,
-			out Map::MapElementSeq_Transferable kisseq,
+			out Map::MapSeq_Transferable mapseq,
+			out Map::MapSiteElementSeq_Transferable equipmentseq,
 			out Map::MapMarkElementSeq_Transferable markseq,
 			out Map::MapPhysicalNodeElementSeq_Transferable nodeseq,
 			out Map::MapNodeLinkElementSeq_Transferable nodelinkseq,
-			out Map::MapPhysicalLinkElementSeq_Transferable linkseq,
-			out Map::MapPathElementSeq_Transferable pathseq)
-		raises (General::AMFICOMRemoteException);
-
-	long GetJMaps(
-			in Admin::AccessIdentity_Transferable accessIdentity,
-										// идентификатор сессии
-			out Resource::ImageResourceSeq_Transferable imageseq,
-			out Map::ISMMapContextSeq_Transferable mapseq,
-			out Map::MapKISElementSeq_Transferable kisseq,
-//			out Map::MapConnectionPointElementSeq_Transferable cpointseq,
-			out Map::MapPhysicalNodeElementSeq_Transferable nodeseq,
-			out Map::MapNodeLinkElementSeq_Transferable nodelinkseq,
-			out Map::MapPhysicalLinkElementSeq_Transferable linkseq,
-			out Map::MapPathElementSeq_Transferable pathseq)
+			out Map::MapPhysicalLinkElementSeq_Transferable linkseq)
 		raises (General::AMFICOMRemoteException);
 
 	long GetMap(
 			in Admin::AccessIdentity_Transferable accessIdentity,
-										// идентификатор сессии
 			in wstring map_id,
 			out Resource::ImageResourceSeq_Transferable imageseq,
-			out Map::MapContextSeq_Transferable mapseq,
-			out Map::MapElementSeq_Transferable equipmentseq,
-			out Map::MapElementSeq_Transferable kisseq,
+			out Map::MapSeq_Transferable mapseq,
+			out Map::MapSiteElementSeq_Transferable siteseq,
 			out Map::MapMarkElementSeq_Transferable markseq,
 			out Map::MapPhysicalNodeElementSeq_Transferable nodeseq,
 			out Map::MapNodeLinkElementSeq_Transferable nodelinkseq,
-			out Map::MapPhysicalLinkElementSeq_Transferable linkseq,
-			out Map::MapPathElementSeq_Transferable pathseq)
+			out Map::MapPhysicalLinkElementSeq_Transferable linkseq)
 		raises (General::AMFICOMRemoteException);
 
-	long GetJMap(
-			in Admin::AccessIdentity_Transferable accessIdentity,
-										// идентификатор сессии
-			in wstring map_id,
-			out Resource::ImageResourceSeq_Transferable imageseq,
-			out Map::ISMMapContextSeq_Transferable mapseq,
-			out Map::MapKISElementSeq_Transferable kisseq,
-//			out Map::MapConnectionPointElementSeq_Transferable cpointseq,
-			out Map::MapPhysicalNodeElementSeq_Transferable nodeseq,
-			out Map::MapNodeLinkElementSeq_Transferable nodelinkseq,
-			out Map::MapPhysicalLinkElementSeq_Transferable linkseq,
-			out Map::MapPathElementSeq_Transferable pathseq)
-		raises (General::AMFICOMRemoteException);
-/*
-	long GetConnectionPoints(
-			in Admin::AccessIdentity_Transferable accessIdentity,
-										// идентификатор сессии
-			in wstring element_id,
-			out Map::MapConnectionPointElementSeq_Transferable cpointseq)
-		raises (General::AMFICOMRemoteException);
-*/
 	long SaveMaps(
 			in Admin::AccessIdentity_Transferable accessIdentity,
-										// идентификатор сессии
 			in Resource::ImageResourceSeq_Transferable imageseq,
-			in Map::MapContextSeq_Transferable mapseq,
-			in Map::MapElementSeq_Transferable equipmentseq,
-			in Map::MapElementSeq_Transferable kisseq,
+			in Map::MapSeq_Transferable mapseq,
+			in Map::MapSiteElementSeq_Transferable siteseq,
 			in Map::MapMarkElementSeq_Transferable markseq,
 			in Map::MapPhysicalNodeElementSeq_Transferable nodeseq,
 			in Map::MapNodeLinkElementSeq_Transferable nodelinkseq,
-			in Map::MapPhysicalLinkElementSeq_Transferable linkseq,
-			in Map::MapPathElementSeq_Transferable pathseq)
+			in Map::MapPhysicalLinkElementSeq_Transferable linkseq)
 		raises (General::AMFICOMRemoteException);
 
 	long RemoveMaps(
 			in Admin::AccessIdentity_Transferable accessIdentity,
-										// идентификатор сессии
 			in General::wstringSeq mapseq,
-			in General::wstringSeq equipmentseq,
-			in General::wstringSeq kisseq,
+			in General::wstringSeq siteseq,
 			in General::wstringSeq markseq,
 			in General::wstringSeq nodeseq,
 			in General::wstringSeq nodelinkseq,
-			in General::wstringSeq linkseq,
-			in General::wstringSeq pathseq)
+			in General::wstringSeq linkseq)
 		raises (General::AMFICOMRemoteException);
 
-	long SaveJMaps(
+	long GetMapView(
 			in Admin::AccessIdentity_Transferable accessIdentity,
-										// идентификатор сессии
+			in wstring mv_id,
+			out Resource::ImageResourceSeq_Transferable imageseq,
+			out Map::MapViewSeq_Transferable mvseq)
+//			out Map::MapPathElementSeq_Transferable pathseq)
+		raises (General::AMFICOMRemoteException);
+
+	long SaveMapViews(
+			in Admin::AccessIdentity_Transferable accessIdentity,
 			in Resource::ImageResourceSeq_Transferable imageseq,
-			in Map::ISMMapContextSeq_Transferable mapseq,
-			in Map::MapKISElementSeq_Transferable kisseq,
-//			in Map::MapConnectionPointElementSeq_Transferable cpointseq,
-			in Map::MapPhysicalNodeElementSeq_Transferable nodeseq,
-			in Map::MapNodeLinkElementSeq_Transferable nodelinkseq,
-			in Map::MapPhysicalLinkElementSeq_Transferable linkseq,
-			in Map::MapPathElementSeq_Transferable pathseq)
+			in Map::MapViewSeq_Transferable mvseq)
+//			in Map::MapPathElementSeq_Transferable pathseq)
 		raises (General::AMFICOMRemoteException);
 
-	long RemoveJMaps(
+	long RemoveMapViews(
 			in Admin::AccessIdentity_Transferable accessIdentity,
-										// идентификатор сессии
-			in General::wstringSeq mapseq,
-			in General::wstringSeq kisseq,
-//			in General::wstringSeq cpointseq,
-			in General::wstringSeq nodeseq,
-			in General::wstringSeq nodelinkseq,
-			in General::wstringSeq linkseq,
-			in General::wstringSeq pathseq)
+			in General::wstringSeq mvseq)
+//			in General::wstringSeq pathseq)
 		raises (General::AMFICOMRemoteException);
 
+/**
+ * Map Proto Elements
+ */
+ 
 	long GetMapProtoElements(
 			in Admin::AccessIdentity_Transferable accessIdentity,
-										// идентификатор сессии
 			out Resource::ImageResourceSeq_Transferable imageseq,
-			out Scheme::MapProtoGroupSeq_Transferable groupseq,
-			out Map::MapProtoElementSeq_Transferable protoseq,
-			out Map::MapLinkProtoElementSeq_Transferable linkseq,
-			out Map::MapPathProtoElementSeq_Transferable pathseq)
+			out Map::MapNodeProtoElementSeq_Transferable protoseq,
+			out Map::MapLinkProtoElementSeq_Transferable linkseq)
+//			out Map::MapPathProtoElementSeq_Transferable pathseq)
 		raises (General::AMFICOMRemoteException);
 
 	long GetStatedMapProtoElements(
 			in Admin::AccessIdentity_Transferable accessIdentity,
-										// идентификатор сессии
-			in General::wstringSeq group_ids,
 			in General::wstringSeq element_ids,
 			in General::wstringSeq link_ids,
-			in General::wstringSeq path_ids,
+//			in General::wstringSeq path_ids,
 			out Resource::ImageResourceSeq_Transferable imageseq,
-			out Scheme::MapProtoGroupSeq_Transferable groupseq,
-			out Map::MapProtoElementSeq_Transferable protoseq,
-			out Map::MapLinkProtoElementSeq_Transferable linkseq,
-			out Map::MapPathProtoElementSeq_Transferable pathseq)
+			out Map::MapNodeProtoElementSeq_Transferable protoseq,
+			out Map::MapLinkProtoElementSeq_Transferable linkseq)
+//			out Map::MapPathProtoElementSeq_Transferable pathseq)
 		raises (General::AMFICOMRemoteException);
 
 	long SaveMapProtoElements(
 			in Admin::AccessIdentity_Transferable accessIdentity,
-										// идентификатор сессии
 			in Resource::ImageResourceSeq_Transferable imageseq,
-			in Scheme::MapProtoGroupSeq_Transferable groupseq,
-			in Map::MapProtoElementSeq_Transferable protoseq)
+			in Map::MapNodeProtoElementSeq_Transferable protoseq)
 		raises (General::AMFICOMRemoteException);
 
 	long RemoveMapProtoElements(
 			in Admin::AccessIdentity_Transferable accessIdentity,
-										// идентификатор сессии
-			in General::wstringSeq group_ids,
 			in General::wstringSeq proto_ids)
 		raises (General::AMFICOMRemoteException);
 
+/**
+ * Attribute types
+ */
+
 	long LoadAttributeTypes(
 			in Admin::AccessIdentity_Transferable accessIdentity,
-			out Scheme::ElementAttributeTypeSeq_Transferable attrseq)
+			out General::ElementAttributeTypeSeq_Transferable attrseq)
 		raises (General::AMFICOMRemoteException);
 
 	long LoadStatedAttributeTypes(
 			in Admin::AccessIdentity_Transferable accessIdentity,
 			in General::wstringSeq ids,
-			out Scheme::ElementAttributeTypeSeq_Transferable attrseq)
+			out General::ElementAttributeTypeSeq_Transferable attrseq)
 		raises (General::AMFICOMRemoteException);
 
-	long ReloadAttributes(
+/**
+ * Scheme Proto elements & Groups
+ */
+ 
+	long GetStatedSchemeProtoGroups(
 			in Admin::AccessIdentity_Transferable accessIdentity,
-			in General::wstringSeq map_ids,
-			out Scheme::ElementAttributeSeq_Transferable attrseq)
+			in General::wstringSeq group_ids,
+			out Scheme::SchemeProtoGroupSeq_Transferable groupseq,
+			out Resource::ImageResourceSeq_Transferable imageseq)
 		raises (General::AMFICOMRemoteException);
 
-	long ReloadISMAttributes(
+	long SaveSchemeProtoGroups(
 			in Admin::AccessIdentity_Transferable accessIdentity,
-			in General::wstringSeq ism_map_ids,
-			out Scheme::ElementAttributeSeq_Transferable attrseq)
+			in Scheme::SchemeProtoGroupSeq_Transferable groupseq,
+			in Resource::ImageResourceSeq_Transferable imageseq)
 		raises (General::AMFICOMRemoteException);
 
-//////////////////////////////////////////////////////////////////////////////
-// * Обработка объектов схемы
-// *
-	long GetSchemeProtoElements(
+	long RemoveSchemeProtoGroups(
 			in Admin::AccessIdentity_Transferable accessIdentity,
-										// идентификатор сессии
-			out Resource::ImageResourceSeq_Transferable imageseq,
-			out Scheme::SchemeProtoElementSeq_Transferable elementseq)
+			in General::wstringSeq group_ids)
 		raises (General::AMFICOMRemoteException);
 
 	long GetStatedSchemeProtoElements(
 			in Admin::AccessIdentity_Transferable accessIdentity,
-										// идентификатор сессии
 			in General::wstringSeq ids,
 			out Resource::ImageResourceSeq_Transferable imageseq,
 			out Scheme::SchemeProtoElementSeq_Transferable elementseq)
@@ -449,27 +354,21 @@ interface AMFICOM
 
 	long SaveSchemeProtoElements(
 			in Admin::AccessIdentity_Transferable accessIdentity,
-										// идентификатор сессии
 			in Resource::ImageResourceSeq_Transferable imageseq,
 			in Scheme::SchemeProtoElementSeq_Transferable elementseq)
 		raises (General::AMFICOMRemoteException);
 
 	long RemoveSchemeProtoElements(
 			in Admin::AccessIdentity_Transferable accessIdentity,
-										// идентификатор сессии
 			in General::wstringSeq element_ids)
 		raises (General::AMFICOMRemoteException);
 
-	long GetSchemes(
-			in Admin::AccessIdentity_Transferable accessIdentity,
-										// идентификатор сессии
-			out Resource::ImageResourceSeq_Transferable imageseq,
-			out Scheme::SchemeSeq_Transferable schemeseq)
-		raises (General::AMFICOMRemoteException);
+/**
+ * Schemes
+ */
 
 	long GetStatedSchemes(
 			in Admin::AccessIdentity_Transferable accessIdentity,
-										// идентификатор сессии
 			in General::wstringSeq ids,
 			out Resource::ImageResourceSeq_Transferable imageseq,
 			out Scheme::SchemeSeq_Transferable schemeseq)
@@ -477,39 +376,21 @@ interface AMFICOM
 
 	long SaveSchemes(
 			in Admin::AccessIdentity_Transferable accessIdentity,
-										// идентификатор сессии
 			in Resource::ImageResourceSeq_Transferable imageseq,
 			in Scheme::SchemeSeq_Transferable schemeseq)
 		raises (General::AMFICOMRemoteException);
 
 	long RemoveSchemes(
 			in Admin::AccessIdentity_Transferable accessIdentity,
-										// идентификатор сессии
 			in General::wstringSeq scheme_ids,
 			in General::wstringSeq scheme_path_ids,
 			in General::wstringSeq scheme_link_ids,
 			in General::wstringSeq scheme_element_ids)
 		raises (General::AMFICOMRemoteException);
 
-//////////////////////////////////////////////////////////////////////////////
-// * Обработка объектов справочника и каталога
-// *
-/*
-	long LoadKISDescriptors(
-			in Admin::AccessIdentity_Transferable accessIdentity,
-			out Network::EquipmentSeq_Transferable kiss)
-		raises (General::AMFICOMRemoteException);
-*/
-	long LoadNet(
-			in Admin::AccessIdentity_Transferable accessIdentity,
-			out Network::PortSeq_Transferable ports,
-			out Network::CablePortSeq_Transferable cports,
-			out Network::EquipmentSeq_Transferable equipments,
-			out Network::LinkSeq_Transferable links,
-			out Network::CableLinkSeq_Transferable clinks,
-			out Network::TestPortSeq_Transferable testports)
-		raises (General::AMFICOMRemoteException);
-
+/**
+ * ISM & Network
+ */
 	long LoadStatedNet(
 			in Admin::AccessIdentity_Transferable accessIdentity,
 			in General::wstringSeq p_ids,
@@ -521,8 +402,7 @@ interface AMFICOM
 			out Network::CablePortSeq_Transferable cports,
 			out Network::EquipmentSeq_Transferable equipments,
 			out Network::LinkSeq_Transferable links,
-			out Network::CableLinkSeq_Transferable clinks,
-			out Network::TestPortSeq_Transferable testports)
+			out Network::CableLinkSeq_Transferable clinks)
 		raises (General::AMFICOMRemoteException);
 
 	long RemoveNet(
@@ -534,88 +414,51 @@ interface AMFICOM
 			in General::wstringSeq cl_ids)
 		raises (General::AMFICOMRemoteException);
 
-	long LoadISM(
-			in Admin::AccessIdentity_Transferable accessIdentity,
-			out Network::PortSeq_Transferable ports,
-			out Network::CablePortSeq_Transferable cports,
-			out Network::EquipmentSeq_Transferable kiss,
-			out Network::LinkSeq_Transferable links,
-			out Network::CableLinkSeq_Transferable clinks,
-			out ISM::MonitoredElementSeq_Transferable mes,
-			out ISM::TransmissionPathSeq_Transferable paths,
-			out ISM::AccessPortSeq_Transferable accessports)
-		raises (General::AMFICOMRemoteException);
-
-	long LoadStatedISM(
-			in Admin::AccessIdentity_Transferable accessIdentity,
-			in General::wstringSeq p_ids,
-			in General::wstringSeq cp_ids,
-			in General::wstringSeq eq_ids,
-			in General::wstringSeq l_ids,
-			in General::wstringSeq cl_ids,
-			in General::wstringSeq me_ids,
-			in General::wstringSeq t_ids,
-			in General::wstringSeq ap_ids,
-			out Network::PortSeq_Transferable ports,
-			out Network::CablePortSeq_Transferable cports,
-			out Network::EquipmentSeq_Transferable kiss,
-			out Network::LinkSeq_Transferable links,
-			out Network::CableLinkSeq_Transferable clinks,
-			out ISM::MonitoredElementSeq_Transferable mes,
-			out ISM::TransmissionPathSeq_Transferable paths,
-			out ISM::AccessPortSeq_Transferable accessports)
-		raises (General::AMFICOMRemoteException);
-
-	long RemoveISM(
-			in Admin::AccessIdentity_Transferable accessIdentity,
-			in General::wstringSeq p_ids,
-			in General::wstringSeq cp_ids,
-			in General::wstringSeq ks_ids,
-			in General::wstringSeq l_ids,
-			in General::wstringSeq cl_ids,
-			in General::wstringSeq me_ids,
-			in General::wstringSeq t_ids,
-			in General::wstringSeq ap_ids)
-		raises (General::AMFICOMRemoteException);
-
 	long SaveNet(
 			in Admin::AccessIdentity_Transferable accessIdentity,
 			in Network::PortSeq_Transferable ports,
 			in Network::CablePortSeq_Transferable cports,
 			in Network::EquipmentSeq_Transferable equipments,
 			in Network::LinkSeq_Transferable links,
-			in Network::CableLinkSeq_Transferable clinks,
-			in Network::TestPortSeq_Transferable testports)
+			in Network::CableLinkSeq_Transferable clinks)
+		raises (General::AMFICOMRemoteException);
+
+	long LoadStatedISM(
+			in Admin::AccessIdentity_Transferable accessIdentity,
+			in General::wstringSeq me_ids,
+			in General::wstringSeq tp_ids,
+			in General::wstringSeq mp_ids,
+			in General::wstringSeq kis_ids,
+			out ISM::MonitoredElementSeq_Transferable mes,
+			out ISM::TransmissionPathSeq_Transferable paths,
+			out ISM::MeasurementPortSeq_Transferable mports,
+			out ISM::KISSeq_Transferable kiss)
+		raises (General::AMFICOMRemoteException);
+
+	long RemoveISM(
+			in Admin::AccessIdentity_Transferable accessIdentity,
+			in General::wstringSeq me_ids,
+			in General::wstringSeq tp_ids,
+			in General::wstringSeq mp_ids,
+			in General::wstringSeq kis_ids)
 		raises (General::AMFICOMRemoteException);
 
 	long SaveISM(
 			in Admin::AccessIdentity_Transferable accessIdentity,
-			in Network::PortSeq_Transferable ports,
-			in Network::CablePortSeq_Transferable cports,
-			in Network::EquipmentSeq_Transferable kiss,
-			in Network::LinkSeq_Transferable links,
-			in Network::CableLinkSeq_Transferable clinks,
 			in ISM::MonitoredElementSeq_Transferable mes,
 			in ISM::TransmissionPathSeq_Transferable paths,
-			in ISM::AccessPortSeq_Transferable accessports)
+			in ISM::MeasurementPortSeq_Transferable mports,
+			in ISM::KISSeq_Transferable kiss)
 		raises (General::AMFICOMRemoteException);
 
-	long LoadNetDirectory(
-			in Admin::AccessIdentity_Transferable accessIdentity,
-			out NetworkDirectory::PortTypeSeq_Transferable porttypes,
-			out NetworkDirectory::EquipmentTypeSeq_Transferable equipmenttypes,
-			out NetworkDirectory::LinkTypeSeq_Transferable linktypes,
-			out NetworkDirectory::TestPortTypeSeq_Transferable tporttypes,
-			out NetworkDirectory::CharacteristicTypeSeq_Transferable characteristictypes,
-			out NetworkDirectory::CablePortTypeSeq_Transferable cableporttypes,
-			out NetworkDirectory::CableLinkTypeSeq_Transferable cablelinktypes)
-		raises (General::AMFICOMRemoteException);
+/**
+ * Network & ISM Directory
+ */
 
-	long LoadISMDirectory(
+	long LoadStatedCharacteristicTypes(
 			in Admin::AccessIdentity_Transferable accessIdentity,
-			out NetworkDirectory::EquipmentTypeSeq_Transferable kistypes,
-			out ISMDirectory::AccessPortTypeSeq_Transferable aporttypes,
-			out ISMDirectory::TransmissionPathTypeSeq_Transferable pathtypes)
+			in General::wstringSeq cht_ids,
+			out General::CharacteristicTypeSeq_Transferable characteristictypes)
 		raises (General::AMFICOMRemoteException);
 
 	long LoadStatedNetDirectory(
@@ -623,14 +466,11 @@ interface AMFICOM
 			in General::wstringSeq pt_ids,
 			in General::wstringSeq eqt_ids,
 			in General::wstringSeq lt_ids,
-			in General::wstringSeq cht_ids,
 			in General::wstringSeq cpt_ids,
 			in General::wstringSeq clt_ids,
 			out NetworkDirectory::PortTypeSeq_Transferable porttypes,
 			out NetworkDirectory::EquipmentTypeSeq_Transferable equipmenttypes,
 			out NetworkDirectory::LinkTypeSeq_Transferable linktypes,
-			out NetworkDirectory::TestPortTypeSeq_Transferable tporttypes,
-			out NetworkDirectory::CharacteristicTypeSeq_Transferable characteristictypes,
 			out NetworkDirectory::CablePortTypeSeq_Transferable cableporttypes,
 			out NetworkDirectory::CableLinkTypeSeq_Transferable cablelinktypes)
 		raises (General::AMFICOMRemoteException);
@@ -638,10 +478,10 @@ interface AMFICOM
 	long LoadStatedISMDirectory(
 			in Admin::AccessIdentity_Transferable accessIdentity,
 			in General::wstringSeq kis_ids,
-			in General::wstringSeq aport_ids,
+			in General::wstringSeq mport_ids,
 			in General::wstringSeq path_ids,
-			out NetworkDirectory::EquipmentTypeSeq_Transferable kistypes,
-			out ISMDirectory::AccessPortTypeSeq_Transferable aporttypes,
+			out ISMDirectory::KISTypeSeq_Transferable kistypes,
+			out ISMDirectory::MeasurementPortTypeSeq_Transferable mporttypes,
 			out ISMDirectory::TransmissionPathTypeSeq_Transferable pathtypes)
 		raises (General::AMFICOMRemoteException);
 
@@ -657,8 +497,13 @@ interface AMFICOM
 	long RemoveISMDirectory(
 			in Admin::AccessIdentity_Transferable accessIdentity,
 			in General::wstringSeq kst_ids,
-			in General::wstringSeq apt_ids,
+			in General::wstringSeq mpt_ids,
 			in General::wstringSeq tpt_ids)
+		raises (General::AMFICOMRemoteException);
+
+	long SaveCharacteristicTypes(
+			in Admin::AccessIdentity_Transferable accessIdentity,
+			in General::CharacteristicTypeSeq_Transferable characteristictypes)
 		raises (General::AMFICOMRemoteException);
 
 	long SaveNetDirectory(
@@ -666,22 +511,21 @@ interface AMFICOM
 			in NetworkDirectory::PortTypeSeq_Transferable porttypes,
 			in NetworkDirectory::EquipmentTypeSeq_Transferable equipmenttypes,
 			in NetworkDirectory::LinkTypeSeq_Transferable linktypes,
-			in NetworkDirectory::TestPortTypeSeq_Transferable tporttypes,
-			in NetworkDirectory::CharacteristicTypeSeq_Transferable characteristictypes,
 			in NetworkDirectory::CablePortTypeSeq_Transferable cableporttypes,
 			in NetworkDirectory::CableLinkTypeSeq_Transferable cablelinktypes)
 		raises (General::AMFICOMRemoteException);
 
 	long SaveISMDirectory(
 			in Admin::AccessIdentity_Transferable accessIdentity,
-			in NetworkDirectory::EquipmentTypeSeq_Transferable kistypes,
-			in ISMDirectory::AccessPortTypeSeq_Transferable aporttypes,
+			in ISMDirectory::KISTypeSeq_Transferable kistypes,
+			in ISMDirectory::MeasurementPortTypeSeq_Transferable mporttypes,
 			in ISMDirectory::TransmissionPathTypeSeq_Transferable pathtypes)
 		raises (General::AMFICOMRemoteException);
 
-//////////////////////////////////////////////////////////////////////////////
-// * Обработка объектов тревоги и предупреждений
-// *
+/**
+ * Alarms
+ */
+
 	long GetAlarmTypes(
 			in Admin::AccessIdentity_Transferable accessIdentity,
 			out Alarm::AlarmTypeSeq_Transferable atseq)
@@ -736,7 +580,6 @@ interface AMFICOM
 			in Admin::AccessIdentity_Transferable accessIdentity,
 			in wstring me_id,
 			out Resource::ResourceDescriptorSeq_Transferable desc)
-//			out General::wstringSeq alarmids)
 		raises (General::AMFICOMRemoteException);
 
 	/**
@@ -766,9 +609,9 @@ interface AMFICOM
 			in wstring amu_id)
 		raises (General::AMFICOMRemoteException);
 
-//////////////////////////////////////////////////////////////////////////////
-// * Обработка операций
-// *
+/**
+ * Survey Resource management
+ */
 
 	long GetResults(
 			in Admin::AccessIdentity_Transferable accessIdentity,
@@ -785,14 +628,7 @@ interface AMFICOM
 			in General::wstringSeq ids,
 			out Survey::ClientTestSeq_Transferable testseq)
 		raises (General::AMFICOMRemoteException);
-/*
-	long GetOneTimeTestIdsInDiapazon(
-			in Admin::AccessIdentity_Transferable accessIdentity,
-			in long long start_time,
-			in long long end_time,
-			out Resource::ResourceDescriptorSeq_Transferable desc)
-		raises (General::AMFICOMRemoteException);
-*/
+
 	long GetTestIdsInDiapazon(
 			in Admin::AccessIdentity_Transferable accessIdentity,
 			in long long start_time,
@@ -804,7 +640,6 @@ interface AMFICOM
 			in Admin::AccessIdentity_Transferable accessIdentity,
 			in wstring me_id,
 			out Resource::ResourceDescriptorSeq_Transferable desc)
-//			out General::wstringSeq testids)
 		raises (General::AMFICOMRemoteException);
 
 	long GetAnalysis(
@@ -822,7 +657,6 @@ interface AMFICOM
 			in Admin::AccessIdentity_Transferable accessIdentity,
 			in wstring me_id,
 			out Resource::ResourceDescriptorSeq_Transferable desc)
-//			out General::wstringSeq analysisids)
 		raises (General::AMFICOMRemoteException);
 
 	long GetModelings(
@@ -840,7 +674,6 @@ interface AMFICOM
 			in Admin::AccessIdentity_Transferable accessIdentity,
 			in wstring scheme_path_id,
 			out Resource::ResourceDescriptorSeq_Transferable desc)
-//			out General::wstringSeq modelingids)
 		raises (General::AMFICOMRemoteException);
 
 	long GetEvaluations(
@@ -858,7 +691,6 @@ interface AMFICOM
 			in Admin::AccessIdentity_Transferable accessIdentity,
 			in wstring me_id,
 			out Resource::ResourceDescriptorSeq_Transferable desc)
-//			out General::wstringSeq evaluationids)
 		raises (General::AMFICOMRemoteException);
 
 	long GetRequests(
@@ -875,20 +707,12 @@ interface AMFICOM
 	long GetAlarmedTests(
 			in Admin::AccessIdentity_Transferable accessIdentity,
 			out Resource::ResourceDescriptorSeq_Transferable desc)
-//			out General::wstringSeq testids)
 		raises (General::AMFICOMRemoteException);
 
 	long RequestTest(
 			in Admin::AccessIdentity_Transferable accessIdentity,
 			in Survey::ClientTestRequest_Transferable treq,
 			in Survey::ClientTestSeq_Transferable testseq)
-		raises (General::AMFICOMRemoteException);
-
-	long QueryResource(
-			in Admin::AccessIdentity_Transferable accessIdentity,
-			in wstring parameter_id,
-			in wstring kis_id,
-			in wstring parameter_type_id)
 		raises (General::AMFICOMRemoteException);
 
 	long RemoveTests(
@@ -901,9 +725,16 @@ interface AMFICOM
 			in Survey::ClientTestSeq_Transferable testseq)
 		raises (General::AMFICOMRemoteException);
 
-//////////////////////////////////////////////////////////////////////////////
-// * Обработка результатов операций
-// *
+	long QueryResource(
+			in Admin::AccessIdentity_Transferable accessIdentity,
+			in wstring parameter_id,
+			in wstring kis_id,
+			in wstring parameter_type_id)
+		raises (General::AMFICOMRemoteException);
+
+/**
+ * Results
+ */
 
 	long GetLastResult(
 			in Admin::AccessIdentity_Transferable accessIdentity,
@@ -954,35 +785,30 @@ interface AMFICOM
 			in Admin::AccessIdentity_Transferable accessIdentity,
 			in wstring me_id,
 			out Resource::ResourceDescriptor_Transferable desc)
-//			out wstring result)
 		raises (General::AMFICOMRemoteException);
 
 	long GetTestResultIds(
 			in Admin::AccessIdentity_Transferable accessIdentity,
 			in wstring test_id,
 			out Resource::ResourceDescriptorSeq_Transferable desc)
-//			out General::wstringSeq results)
 		raises (General::AMFICOMRemoteException);
 
 	long GetAnalysisResultIds(
 			in Admin::AccessIdentity_Transferable accessIdentity,
 			in wstring analysis_id,
 			out Resource::ResourceDescriptorSeq_Transferable desc)
-//			out General::wstringSeq results)
 		raises (General::AMFICOMRemoteException);
 
 	long GetModelingResultId(
 			in Admin::AccessIdentity_Transferable accessIdentity,
 			in wstring modeling_id,
 			out Resource::ResourceDescriptor_Transferable desc)
-//			out wstring result)
 		raises (General::AMFICOMRemoteException);
 
 	long GetEvaluationResultIds(
 			in Admin::AccessIdentity_Transferable accessIdentity,
 			in wstring evaluation_id,
 			out Resource::ResourceDescriptorSeq_Transferable desc)
-//			out General::wstringSeq results)
 		raises (General::AMFICOMRemoteException);
 
 	long GetResult(
@@ -1030,7 +856,6 @@ interface AMFICOM
 			in Admin::AccessIdentity_Transferable accessIdentity,
 			in wstring result_id,
 			out Resource::ResourceDescriptorSeq_Transferable desc)
-//			out General::wstringSeq result_ids)
 		raises (General::AMFICOMRemoteException);
 
 	long GetResultSetResultMEIds(
@@ -1038,12 +863,11 @@ interface AMFICOM
 			in wstring result_id,
 			in wstring me_id,
 			out Resource::ResourceDescriptorSeq_Transferable desc)
-//			out General::wstringSeq result_ids)
 		raises (General::AMFICOMRemoteException);
 
-//////////////////////////////////////////////////////////////////////////////
-// * Обработка объектов для тестирования
-// *
+/**
+ * Measurement-related types and templates
+ */
 
 	long LoadGlobalParameterTypes(
 			in Admin::AccessIdentity_Transferable accessIdentity,
@@ -1127,10 +951,6 @@ interface AMFICOM
 			out Survey::ClientEtalonSeq_Transferable ets)
 		raises (General::AMFICOMRemoteException);
 
-//////////////////////////////////////////////////////////////////////////////
-// * Обработка объектов анализа
-// *
-
 	Survey::AnalysisTypeSeq_Transferable getAnalysisTypes(
 			in Admin::AccessIdentity_Transferable accessIdentity,
 			in wstring test_type_id)
@@ -1141,9 +961,9 @@ interface AMFICOM
 			in Survey::AnalysisType_Transferable analysis_type)
 		raises (General::AMFICOMRemoteException);
 
-//////////////////////////////////////////////////////////////////////////////
-// * Обработка объектов теста
-// *
+/**
+ * Tests
+ */
 
 	Survey::ClientTest_Transferable getTestByAnalysis(
 			in Admin::AccessIdentity_Transferable accessIdentity,
@@ -1165,9 +985,9 @@ interface AMFICOM
 			in wstring evaluation_id)
 		raises (General::AMFICOMRemoteException);
 
-//////////////////////////////////////////////////////////////////////////////
-// * Обработка объектов анализа
-// *
+/**
+ * Analysis
+ */
 
 	wstring createAnalysis(
 			in Admin::AccessIdentity_Transferable accessIdentity,
@@ -1189,9 +1009,9 @@ interface AMFICOM
 			in wstring test_id)
 		raises (General::AMFICOMRemoteException);
 
-//////////////////////////////////////////////////////////////////////////////
-// * Обработка объектов оценки
-// *
+/**
+ * Evaluations
+ */
 
 	wstring createEvaluation(
 			in Admin::AccessIdentity_Transferable accessIdentity,
@@ -1213,18 +1033,18 @@ interface AMFICOM
 			in wstring test_id)
 		raises (General::AMFICOMRemoteException);
 
-//////////////////////////////////////////////////////////////////////////////
-// * Обработка объектов моделирования
-// *
+/**
+ * Modelings
+ */
 
 	Survey::ClientModeling_Transferable getModelingById(
 			in Admin::AccessIdentity_Transferable accessIdentity,
 			in wstring id)
 		raises (General::AMFICOMRemoteException);
 
-//////////////////////////////////////////////////////////////////////////////
-// * Обработка объектов шаблонов
-// *
+/**
+ * Test setups
+ */
 
 	wstring createTestSetup(
 			in Admin::AccessIdentity_Transferable accessIdentity,
@@ -1274,9 +1094,9 @@ interface AMFICOM
 			in wstring test_type_id)
 		raises (General::AMFICOMRemoteException);
 
-//////////////////////////////////////////////////////////////////////////////
-// * Обработка объектов TEST ARGUMENT SET
-// *
+/**
+ * Test argument sets
+ */
 
 	wstring createTestArgumentSet(
 			in Admin::AccessIdentity_Transferable accessIdentity,
@@ -1299,10 +1119,9 @@ interface AMFICOM
 			in wstring monitored_element_id)
 		raises (General::AMFICOMRemoteException);
 
-
-//////////////////////////////////////////////////////////////////////////////
-// * Обработка объектов CRITERIA SET
-// *
+/**
+ * Criteria sets
+ */
 
 	wstring createCriteriaSet(
 			in Admin::AccessIdentity_Transferable accessIdentity,
@@ -1331,9 +1150,9 @@ interface AMFICOM
 			in wstring analysis_type_id)
 		raises (General::AMFICOMRemoteException);
 
-//////////////////////////////////////////////////////////////////////////////
-// * Обработка объектов THRESHOLD SET
-// *
+/**
+ * Threshold sets
+ */
 
 	wstring createThresholdSet(
 			in Admin::AccessIdentity_Transferable accessIdentity,
@@ -1362,9 +1181,9 @@ interface AMFICOM
 			in wstring analysis_type_id)
 		raises (General::AMFICOMRemoteException);
 
-//////////////////////////////////////////////////////////////////////////////
-// * Обработка объектов ETALON
-// *
+/**
+ * Etalons
+ */
 
 	wstring createEtalon(
 			in Admin::AccessIdentity_Transferable accessIdentity,
@@ -1393,20 +1212,18 @@ interface AMFICOM
 			in long long time)
 		raises (General::AMFICOMRemoteException);
 
-//////////////////////////////////////////////////////////////////////////////
-// * Обработка Отчетов
-// *
+/**
+ * Reports
+ */
 
 	wstring saveReportTemplates(
 			in Admin::AccessIdentity_Transferable accessIdentity,
-//			in Report::FieldReportSeq_Transferable frs,
 			in Report::ReportTemplateSeq_Transferable rts)
 		raises (General::AMFICOMRemoteException);
 
 	void getStatedReportTemplates(
 			in Admin::AccessIdentity_Transferable accessIdentity,
 			in General::wstringSeq ids,
-//			out Report::FieldReportSeq_Transferable fieldReports,
 			out Report::ReportTemplateSeq_Transferable reportTemplates)
 		raises (General::AMFICOMRemoteException);
 
@@ -1415,7 +1232,9 @@ interface AMFICOM
 			in General::wstringSeq reportTemplate_ids)
 		raises (General::AMFICOMRemoteException);
 
-//////////////////////////////////////////////////////////////////////////////
+/**
+ * Optimization
+ */
 
 	Scheme::SchemeOptimizeInfoSeq_Transferable getSchemeOptimizeInfo(
 			in Admin::AccessIdentity_Transferable accessIdentity)
@@ -1431,7 +1250,9 @@ interface AMFICOM
 			in General::wstringSeq soi_ids)
 		raises (General::AMFICOMRemoteException);
 
-//////////////////////////////////////////////////////////////////////////////
+/**
+ * Optimization solutions
+ */
 
 	Scheme::SchemeMonitoringSolutionSeq_Transferable getSchemeMonitoringSolutions(
 			in Admin::AccessIdentity_Transferable accessIdentity)
