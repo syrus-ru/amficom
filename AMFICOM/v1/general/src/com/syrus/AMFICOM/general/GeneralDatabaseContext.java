@@ -1,5 +1,5 @@
 /*
- * $Id: GeneralDatabaseContext.java,v 1.4 2005/01/20 11:56:00 bass Exp $
+ * $Id: GeneralDatabaseContext.java,v 1.5 2005/02/16 13:51:27 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,8 +10,8 @@ package com.syrus.AMFICOM.general;
 
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/01/20 11:56:00 $
- * @author $Author: bass $
+ * @version $Revision: 1.5 $, $Date: 2005/02/16 13:51:27 $
+ * @author $Author: arseniy $
  * @todo Declare all fields private as<ol>
  *       <li>they have public accessors; and</li>
  *       <li>there's {@link #init(StorableObjectDatabase, StorableObjectDatabase, StorableObjectDatabase)}
@@ -38,6 +38,10 @@ public final class GeneralDatabaseContext {
 
 		if (characteristicDatabase1 != null)
 			characteristicDatabase = characteristicDatabase1;
+	}
+
+	public static StorableObjectDatabase getDatabase(Short entityCode) {
+		return getDatabase(entityCode.shortValue());
 	}
 
 	public static StorableObjectDatabase getDatabase(short entityCode ) {

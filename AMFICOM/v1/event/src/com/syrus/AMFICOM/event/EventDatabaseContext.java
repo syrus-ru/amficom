@@ -1,5 +1,5 @@
 /*
- * $Id: EventDatabaseContext.java,v 1.4 2005/02/08 20:11:45 arseniy Exp $
+ * $Id: EventDatabaseContext.java,v 1.5 2005/02/16 13:50:40 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,7 +12,7 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/02/08 20:11:45 $
+ * @version $Revision: 1.5 $, $Date: 2005/02/16 13:50:40 $
  * @author $Author: arseniy $
  * @module event_v1
  */
@@ -50,6 +50,10 @@ public class EventDatabaseContext {
 
 //		if (alarmDatabase1 != null)
 //			alarmDatabase = alarmDatabase1;
+	}
+
+	public static StorableObjectDatabase getDatabase(Short entityCode) {
+		return getDatabase(entityCode.shortValue());
 	}
 
 	public static StorableObjectDatabase getDatabase(short entityCode) {

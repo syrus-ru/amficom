@@ -1,5 +1,5 @@
 /*
- * $Id: AdministrationDatabaseContext.java,v 1.3 2005/02/04 12:05:31 arseniy Exp $
+ * $Id: AdministrationDatabaseContext.java,v 1.4 2005/02/16 13:51:47 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,7 +12,7 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/02/04 12:05:31 $
+ * @version $Revision: 1.4 $, $Date: 2005/02/16 13:51:47 $
  * @author $Author: arseniy $
  * @todo Declare all fields private as<ol>
  *       <li>they have public accessors; and</li>
@@ -38,6 +38,10 @@ public final class AdministrationDatabaseContext {
 		domainDatabase = domainDatabase1;
 		serverDatabase = serverDatabase1;
 		mcmDatabase = mcmDatabase1;
+	}
+
+	public static StorableObjectDatabase getDatabase(Short entityCode) {
+		return getDatabase(entityCode.shortValue());
 	}
 
 	public static StorableObjectDatabase getDatabase(short entityCode) {

@@ -1,5 +1,5 @@
 /*
- * $Id: ConfigurationDatabaseContext.java,v 1.39 2005/02/04 12:02:44 arseniy Exp $
+ * $Id: ConfigurationDatabaseContext.java,v 1.40 2005/02/16 13:52:05 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,7 +12,7 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 
 /**
- * @version $Revision: 1.39 $, $Date: 2005/02/04 12:02:44 $
+ * @version $Revision: 1.40 $, $Date: 2005/02/16 13:52:05 $
  * @author $Author: arseniy $
  * @todo Declare all fields private as<ol>
  *       <li>they have public accessors; and</li>
@@ -102,6 +102,10 @@ public final class ConfigurationDatabaseContext {
 		if (cableThreadDatabase1 != null)
 			cableThreadDatabase = cableThreadDatabase1;
 
+	}
+
+	public static StorableObjectDatabase getDatabase(Short entityCode) {
+		return getDatabase(entityCode.shortValue());
 	}
 
 	public static StorableObjectDatabase getDatabase(short entityCode) {
