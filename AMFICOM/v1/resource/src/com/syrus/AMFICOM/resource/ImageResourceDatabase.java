@@ -1,5 +1,5 @@
 /*
- * $Id: ImageResourceDatabase.java,v 1.18 2005/03/11 11:01:08 bob Exp $
+ * $Id: ImageResourceDatabase.java,v 1.19 2005/03/24 13:02:28 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -38,18 +38,14 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @author $Author: bob $
- * @version $Revision: 1.18 $, $Date: 2005/03/11 11:01:08 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.19 $, $Date: 2005/03/24 13:02:28 $
  * @module resource_v1
  */
 
 public final class ImageResourceDatabase extends StorableObjectDatabase {
 	// table :: ImageResource
-	/**
-	 * Shadowing is ok, as this table does have codename 256 chars long.
-	 * codename  VARCHAR2(256)
-	 */
-	private static final int SIZE_CODENAME_COLUMN = 256;
+	private static final int SIZE_CODENAME_COLUMN_IR = 256;
 
 	/**
 	 * codename  VARCHAR2(256)
@@ -164,7 +160,7 @@ public final class ImageResourceDatabase extends StorableObjectDatabase {
 			throw new IllegalDataException("ImageResourceDatabase.getUpdateSingleSQLValues | Illegal AbstractImageResource : " + abstractImageResource.getClass().getName()); //$NON-NLS-1$
 		}            
 
-		String sql = APOSTOPHE + DatabaseString.toQuerySubString(codename, SIZE_CODENAME_COLUMN) + APOSTOPHE + COMMA
+		String sql = APOSTOPHE + DatabaseString.toQuerySubString(codename, SIZE_CODENAME_COLUMN_IR) + APOSTOPHE + COMMA
 			+ APOSTOPHE + sort.value() + APOSTOPHE;            
 		return sql;
 	}
@@ -343,14 +339,14 @@ public final class ImageResourceDatabase extends StorableObjectDatabase {
 		try {
 			if(sort == ImageResourceSort._BITMAP) {
 				BitmapImageResource bitmapImageResource = (BitmapImageResource) abstractImageResource;
-				DatabaseString.setString(preparedStatement, ++startParameterNumber, bitmapImageResource.getCodename(), SIZE_CODENAME_COLUMN);
+				DatabaseString.setString(preparedStatement, ++startParameterNumber, bitmapImageResource.getCodename(), SIZE_CODENAME_COLUMN_IR);
 				preparedStatement.setInt(++startParameterNumber, ImageResourceSort._BITMAP);
 			} else if(sort == ImageResourceSort._FILE) {
 				FileImageResource fileImageResource = (FileImageResource) abstractImageResource;
-				DatabaseString.setString(preparedStatement, ++startParameterNumber, fileImageResource.getFileName(), SIZE_CODENAME_COLUMN);
+				DatabaseString.setString(preparedStatement, ++startParameterNumber, fileImageResource.getFileName(), SIZE_CODENAME_COLUMN_IR);
 				preparedStatement.setInt(++startParameterNumber, ImageResourceSort._FILE);
 			} else if(sort == ImageResourceSort._SCHEME) {
-				DatabaseString.setString(preparedStatement, ++startParameterNumber, "", SIZE_CODENAME_COLUMN); //$NON-NLS-1$
+				DatabaseString.setString(preparedStatement, ++startParameterNumber, "", SIZE_CODENAME_COLUMN_IR); //$NON-NLS-1$
 				preparedStatement.setInt(++startParameterNumber, ImageResourceSort._SCHEME);
 			} else {
 				throw new IllegalDataException("Unsupported ImageResourse sort =" + sort); //$NON-NLS-1$
