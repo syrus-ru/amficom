@@ -19,8 +19,6 @@ public class ThresholdsSelectionFrame extends ATableFrame
 	protected Dispatcher dispatcher;
 	private ATable jTable;
 
-	//private EventTableModel tModelLinear;
-	//private EventTableModel tModelConnector;
 	private BellcoreStructure bs; // для доступа к самой р/г во время пересчета порогов
 
 	protected ModelTraceManager mtm;
@@ -28,12 +26,10 @@ public class ThresholdsSelectionFrame extends ATableFrame
 	private Threshold[] init_Threshs;
 	protected int current_ev = -1;
 	private boolean selected_there = false;
-	//private int _type = -1;
 
 	JPanel mainPanel = new JPanel();
 	JScrollPane scrollPane = new JScrollPane();
 	JViewport viewport = new JViewport();
-	//AComboBox jComboBox1 = new AComboBox();
 	JToolBar jToolBar1 = new JToolBar();
 	JButton jButton1 = new JButton();
 	JButton jButton3 = new JButton();
@@ -73,46 +69,17 @@ public class ThresholdsSelectionFrame extends ATableFrame
 		this.setIconifiable(true);
 		this.setTitle(LangModelAnalyse.getString("thresholdsTableTitle"));
 
-		/*tModelLinear = new EventTableModel(
-				new String[] {LangModelAnalyse.getString("thresholdsKey"),
-											LangModelAnalyse.getString("thresholdsAmplitude")},
-				new Object[] {new Double(1), new Double(1) },
-				new String[] {LangModelAnalyse.getString("thresholdsUpWarning"),
-											LangModelAnalyse.getString("thresholdsUpAlarm"),
-											LangModelAnalyse.getString("thresholdsDownWarning"),
-											LangModelAnalyse.getString("thresholdsDownAlarm")},
-				new int[]    { 1 }
+		EventTableModel tModelEmpty = new EventTableModel( // FIXME - переделать
+			new String[] { LangModelAnalyse.getString("thresholdsKey") },
+			new Object[] { },
+			new String[] {
+					LangModelAnalyse.getString("thresholdsUpWarning"),
+					LangModelAnalyse.getString("thresholdsUpAlarm"),
+					LangModelAnalyse.getString("thresholdsDownWarning"),
+					LangModelAnalyse.getString("thresholdsDownAlarm")},
+			new int[] { }
 		);
-
-		tModelConnector = new EventTableModel(
-				new String[] {
-						LangModelAnalyse.getString("thresholdsKey"),
-						LangModelAnalyse.getString("thresholdsAmplitude"),
-						LangModelAnalyse.getString("thresholdsCenter"),
-						LangModelAnalyse.getString("thresholdsWidth"),
-						LangModelAnalyse.getString("thresholdsHeight")
-				},
-				new Object[] {new Double(1), new Double(1), new Double(1), new Double(1), new Double(1)},
-				new String[] {
-						LangModelAnalyse.getString("thresholdsUpWarning"),
-						LangModelAnalyse.getString("thresholdsUpAlarm"),
-						LangModelAnalyse.getString("thresholdsDownWarning"),
-						LangModelAnalyse.getString("thresholdsDownAlarm")
-				},
-				new int[]    { 1, 2, 3, 4 }
-		);*/
-
-		EventTableModel tModelUseless = new EventTableModel( // FIXME - переделать
-			new String[] {LangModelAnalyse.getString("thresholdsKey"),
-										LangModelAnalyse.getString("thresholdsAmplitude")},
-			new Object[] {new Double(1), new Double(1) },
-			new String[] {LangModelAnalyse.getString("thresholdsUpWarning"),
-										LangModelAnalyse.getString("thresholdsUpAlarm"),
-										LangModelAnalyse.getString("thresholdsDownWarning"),
-										LangModelAnalyse.getString("thresholdsDownAlarm")},
-			new int[]    { 1 }
-		);
-		jTable = new ATable (tModelUseless);
+		jTable = new ATable (tModelEmpty);
 
 		jButton1.setMaximumSize(btn_size);
 		jButton1.setMinimumSize(btn_size);
@@ -141,19 +108,6 @@ public class ThresholdsSelectionFrame extends ATableFrame
 		});
 
 		this.setContentPane(mainPanel);
-
-		/*
-		jComboBox1.addItemListener(new java.awt.event.ItemListener()
-		{
-			public void itemStateChanged(ItemEvent e)
-			{
-				jComboBox1_itemStateChanged(e);
-			}
-		});
-		jComboBox1.addItem(LangModelAnalyse.getString("thresholdsConnector"));
-		jComboBox1.addItem(LangModelAnalyse.getString("thresholdsWeld"));
-		jComboBox1.addItem(LangModelAnalyse.getString("thresholdsLinear"));
-		*/
 
 		//jToolBar1.setBorderPainted(true);
 		jToolBar1.setFloatable(false);
@@ -187,8 +141,6 @@ public class ThresholdsSelectionFrame extends ATableFrame
 		jTable.setBackground(SystemColor.window);
 		jTable.setForeground(ColorManager.getColor("textColor"));
 		jTable.setGridColor(ColorManager.getColor("tableGridColor"));
-//		jComboBox1.setBackground(SystemColor.window);
-//		jComboBox1.setForeground(ColorManager.getColor("textColor"));
 	}
 
 	void init_module(Dispatcher dispatcher)
@@ -241,8 +193,8 @@ public class ThresholdsSelectionFrame extends ATableFrame
 						// FIXME:
 						// --- тут была попытка сохранить пороги при
 						// замене списка событий, и, в принципе, ее можно бы
-						// вернуть, если только она делала что-то осмысленное
-					
+						// доделать, если только она будет делать что-то осмысленное
+
 						selected_there = true;
 						updThresholds();
 						selected_there = false;
@@ -367,7 +319,7 @@ public class ThresholdsSelectionFrame extends ATableFrame
 					LangModelAnalyse.getString("thresholdsDownWarning"),
 					LangModelAnalyse.getString("thresholdsDownAlarm")
 			},
-			new int[]    { 1, 2, 3, 4 });
+			new int[]    { 1, 2, 3, 4, 5 });
 
 		Object[][] pData = new Object[4][];
 		for (int k = 0; k < 4; k++)

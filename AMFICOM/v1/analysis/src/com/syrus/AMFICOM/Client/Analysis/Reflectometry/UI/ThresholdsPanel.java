@@ -112,9 +112,6 @@ public class ThresholdsPanel extends ReflectogramEventsPanel
 
 				// перемещаем курсор
 				r.mouseMove(currpos.x + p.x, currpos.y + p.y);
-
-				// запоминаем окончательную экранную позицию
-				currpos = new Point(x, y); 
 			}
 			catch (AWTException ex)
 			{
