@@ -1,5 +1,5 @@
 /*
- * $Id: ResourcedbInterface.java,v 1.4 2004/09/23 15:00:42 bass Exp $
+ * $Id: ResourcedbInterface.java,v 1.5 2004/10/18 15:16:58 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,13 +18,11 @@ import java.util.*;
  * will be removed.
  * 
  * @author $Author: bass $
- * @version $Revision: 1.4 $, $Date: 2004/09/23 15:00:42 $
+ * @version $Revision: 1.5 $, $Date: 2004/10/18 15:16:58 $
  * @module servermisc_v1
  * @todo Dispose of duplicate string literals. 
  */
-public final class ResourcedbInterface {
-	private static final boolean DEBUG = true;
-
+public final class ResourcedbInterface implements SqlConstants {
 	private static final char SEPARATOR = '-';
 
 	/**
@@ -209,9 +207,6 @@ public final class ResourcedbInterface {
 
 	private static final String COLUMN_NAME_SOURCE_STRING = "source_string";
 
-	private static final String TABLE_NAME_IMAGERESOURCES
-		= "amficom.imageresources";
-
 	private static final String ID_EQUALS = "id = '";
 
 	private static final String SOURCE_STRING_FILE = "file";
@@ -281,7 +276,7 @@ public final class ResourcedbInterface {
 	 * @param conn the database connection to use.
 	 */
 	public static void setImage(final Connection conn, String imageResourceId, byte data[]) throws SQLException {
-		JdbcBlobManager.setData(conn, COLUMN_NAME_IMG, TABLE_NAME_IMAGERESOURCES, ID_EQUALS + imageResourceId + '\'', data);
+		JdbcBlobManager.setData(conn, COLUMN_NAME_IMG, TABLE_IMAGERESOURCES, ID_EQUALS + imageResourceId + '\'', data);
 	}
 
 	/**
@@ -346,11 +341,11 @@ public final class ResourcedbInterface {
 			return;
 
 		StringBuffer sql1 = new StringBuffer("SELECT id FROM ");
-		sql1.append(TABLE_NAME_IMAGERESOURCES);
+		sql1.append(TABLE_IMAGERESOURCES);
 		sql1.append(" WHERE id ");
 
 		StringBuffer sql2 = new StringBuffer("INSERT INTO ");
-		sql2.append(TABLE_NAME_IMAGERESOURCES);
+		sql2.append(TABLE_IMAGERESOURCES);
 		sql2.append(" (id, name, codename, filename, ");
 		sql2.append(COLUMN_NAME_SOURCE_STRING);
 		sql2.append(", ");
@@ -386,7 +381,7 @@ public final class ResourcedbInterface {
 				if (!resultSet.next())
 					stmt2.executeUpdate(sql2.toString());
 				if (!imageResource.source_string.equals(SOURCE_STRING_FILE))
-					JdbcBlobManager.setData(conn, COLUMN_NAME_IMG, TABLE_NAME_IMAGERESOURCES, ID_EQUALS + imageResource.id + '\'', false, imageResource.image);
+					JdbcBlobManager.setData(conn, COLUMN_NAME_IMG, TABLE_IMAGERESOURCES, ID_EQUALS + imageResource.id + '\'', false, imageResource.image);
 				conn.commit();
 			} finally {
 				try {
@@ -428,7 +423,7 @@ public final class ResourcedbInterface {
 							stmt2.executeUpdate();
 						}
 						if (!imageResource.source_string.equals(SOURCE_STRING_FILE))
-							JdbcBlobManager.setData(conn, COLUMN_NAME_IMG, TABLE_NAME_IMAGERESOURCES, ID_EQUALS + imageResource.id + '\'', false, imageResource.image);
+							JdbcBlobManager.setData(conn, COLUMN_NAME_IMG, TABLE_IMAGERESOURCES, ID_EQUALS + imageResource.id + '\'', false, imageResource.image);
 					} finally {
 						if (resultSet != null)
 							resultSet.close();
@@ -470,7 +465,7 @@ public final class ResourcedbInterface {
 			sql.append(", filename, ");
 			sql.append(COLUMN_NAME_IMG);
 			sql.append(" FROM ");
-			sql.append(TABLE_NAME_IMAGERESOURCES);
+			sql.append(TABLE_IMAGERESOURCES);
 
 			int i = 0;
 			resultSet = stmt.executeQuery(sql.toString());
@@ -517,7 +512,7 @@ public final class ResourcedbInterface {
 		sql.append(", filename, ");
 		sql.append(COLUMN_NAME_IMG);
 		sql.append(" FROM ");
-		sql.append(TABLE_NAME_IMAGERESOURCES);
+		sql.append(TABLE_IMAGERESOURCES);
 		sql.append(" WHERE id ");
 		if (imageResourceIdsLength == 1) {
 			sql.append("= '");
@@ -601,7 +596,7 @@ public final class ResourcedbInterface {
 		sql.append(", filename, ");
 		sql.append(COLUMN_NAME_IMG);
 		sql.append(" FROM ");
-		sql.append(TABLE_NAME_IMAGERESOURCES);
+		sql.append(TABLE_IMAGERESOURCES);
 		sql.append(" WHERE id ");
 		if (imageResourceIdsLength == 1) {
 			sql.append("= '");
