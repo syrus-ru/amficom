@@ -1,5 +1,5 @@
 /**
- * $Id: DeleteNodeLinkCommandBundle.java,v 1.15 2005/02/18 12:19:44 krupenn Exp $
+ * $Id: DeleteNodeLinkCommandBundle.java,v 1.16 2005/02/28 16:20:55 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -34,7 +34,7 @@ import java.util.Iterator;
  * фрагментов линий, линий, узлов  (и путей). Команда
  * состоит из последовательности атомарных действий
  * @author $Author: krupenn $
- * @version $Revision: 1.15 $, $Date: 2005/02/18 12:19:44 $
+ * @version $Revision: 1.16 $, $Date: 2005/02/28 16:20:55 $
  * @module mapviewclient_v1
  */
 public class DeleteNodeLinkCommandBundle extends MapActionCommandBundle
@@ -220,7 +220,6 @@ public class DeleteNodeLinkCommandBundle extends MapActionCommandBundle
 	protected void removeNodeLinkBetweenSiteAndInactiveNode(
 			NodeLink nodeLink, 
 			PhysicalLink physicalLink,
-			SiteNode site,
 			TopologicalNode node)
 		throws Throwable
 	{
@@ -332,7 +331,6 @@ public class DeleteNodeLinkCommandBundle extends MapActionCommandBundle
 					this.removeNodeLinkBetweenSiteAndInactiveNode(
 							this.nodeLink, 
 							physicalLink, 
-							site, 
 							node);
 				}//if ! (node.isActive())
 			}//MapSiteNodeElement && MapPhysicalNodeElement
