@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementServerSetup.java,v 1.19 2004/11/29 09:24:42 max Exp $
+ * $Id: MeasurementServerSetup.java,v 1.20 2004/11/29 09:33:29 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,7 +28,7 @@ import com.syrus.util.ByteArray;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.19 $, $Date: 2004/11/29 09:24:42 $
+ * @version $Revision: 1.20 $, $Date: 2004/11/29 09:33:29 $
  * @author $Author: max $
  * @module mserver_v1
  */
@@ -186,7 +186,7 @@ public class MeasurementServerSetup {
 																									"PortTypeReflectometry",
                                                                                                     "",
 																									"",
-                                                                                                    0);
+                                                                                                    PortTypeSort.PORTTYPESORT_ELECTRICAL);
 			PortType portType1 = PortType.getInstance((PortType_Transferable)portType.getTransferable());
 			return portType;
 		}
