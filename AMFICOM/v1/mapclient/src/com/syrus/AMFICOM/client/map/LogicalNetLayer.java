@@ -15,7 +15,6 @@ import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
 import com.syrus.AMFICOM.Client.Resource.Map.MapContext;
 import com.syrus.AMFICOM.Client.Resource.Map.MapElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapEquipmentNodeElement;
-import com.syrus.AMFICOM.Client.Resource.Map.MapKISNodeElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapMarkElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapMarker;
 import com.syrus.AMFICOM.Client.Resource.Map.MapNodeElement;
@@ -53,13 +52,14 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 
-import java.util.Enumeration;
+import java.util.*;
 import java.util.Vector;
 
 import javax.swing.*;
 import javax.swing.JTextField;
 import javax.swing.JPopupMenu;
 import javax.swing.SwingUtilities;
+import java.util.Iterator;
 
 public class LogicalNetLayer extends SxMapLayer
 		implements
@@ -175,7 +175,7 @@ public class LogicalNetLayer extends SxMapLayer
 	public void drawLines(Graphics g)
 	{
 		Graphics2D p = (Graphics2D )g;
-		Enumeration e;
+		Iterator e;
 
 	//Если режим показа nodeLink не разрешён, то включам режим показа physicalLink
 		if ( mapMainFrame.aContext.getApplicationModel().isEnabled("mapModeNodeLink") == false
@@ -195,27 +195,29 @@ public class LogicalNetLayer extends SxMapLayer
 			//1 transmissionPath
 			//2 physicalLink которвые не вошли в transmissionPath
 			//Выбираем какие physicalLink надо показать
-			Vector physicalLinkToShow = new Vector();
-			e = mapContext.getPhysicalLinks().elements();
-			while (e.hasMoreElements())
+			LinkedList physicalLinkToShow = new LinkedList();
+			e = mapContext.getPhysicalLinks().iterator();
+			while (e.hasNext())
 			{
-				MapPhysicalLinkElement myMapPhysicalLinkElement = (MapPhysicalLinkElement )e.nextElement();
+				MapPhysicalLinkElement myMapPhysicalLinkElement = 
+					(MapPhysicalLinkElement )e.next();
 				physicalLinkToShow.add(myMapPhysicalLinkElement.getId());
 			}
 
 			//Удаляем из них какие не надо
-			e = mapContext.getTransmissionPath().elements();
-			while (e.hasMoreElements())
+			e = mapContext.getTransmissionPath().iterator();
+			while (e.hasNext())
 			{
-				MapTransmissionPathElement myMapTransmissionPathElement = (MapTransmissionPathElement )e.nextElement();
+				MapTransmissionPathElement myMapTransmissionPathElement = 
+					(MapTransmissionPathElement )e.next();
 				myMapTransmissionPathElement.paint( g);
 				physicalLinkToShow.removeAll(myMapTransmissionPathElement.physicalLink_ids);
 			}
 
-			e = physicalLinkToShow.elements();
-			while (e.hasMoreElements())
+			e = physicalLinkToShow.iterator();
+			while (e.hasNext())
 			{
-				mapContext.getPhysicalLink((String)e.nextElement()).paint(g);
+				mapContext.getPhysicalLink((String )e.next()).paint(g);
 			}
 			return;
 		}
@@ -223,20 +225,21 @@ public class LogicalNetLayer extends SxMapLayer
 		if (mapMainFrame.aContext.getApplicationModel().isEnabled("mapActionShowLink") &&
 				getMapContext().linkState == MapContext.SHOW_PHYSICALLINK)
 		{
-			e = mapContext.getPhysicalLinks().elements();
-			while (e.hasMoreElements())
+			e = mapContext.getPhysicalLinks().iterator();
+			while (e.hasNext())
 			{
-				MapPhysicalLinkElement myMapPhysicalLinkElement = ( MapPhysicalLinkElement) e.nextElement();
+				MapPhysicalLinkElement myMapPhysicalLinkElement = 
+					(MapPhysicalLinkElement )e.next();
 				myMapPhysicalLinkElement.paint( g);
 			}
 			return;
 		}
 
-		e = mapContext.getNodeLinks().elements();
-		while (e.hasMoreElements())
+		e = mapContext.getNodeLinks().iterator();
+		while (e.hasNext())
 		{
-			MapNodeLinkElement curNodeLink = (MapNodeLinkElement) e.nextElement();
-			if ( !getMapContext().getPhysicalLinkbyNodeLink( curNodeLink.getId()).isSelected())
+			MapNodeLinkElement curNodeLink = (MapNodeLinkElement )e.next();
+			if ( !getMapContext().getPhysicalLinkbyNodeLink(curNodeLink.getId()).isSelected())
 			{
 				curNodeLink.paint(p);
 			}
@@ -276,18 +279,10 @@ public class LogicalNetLayer extends SxMapLayer
 	{
 		Graphics2D pg = (Graphics2D )g;
 
-		Enumeration e = mapContext.getNodes().elements();
-		while (e.hasMoreElements())
+		Iterator e = mapContext.getNodes().iterator();
+		while (e.hasNext())
 		{
-			MapNodeElement curNode = (MapNodeElement)e.nextElement();
-			if ( curNode instanceof MapKISNodeElement)
-			{
-				if ( mapMainFrame
-						.aContext.getApplicationModel().isEnabled("mapActionShowKIS"))
-				{
-					curNode.paint(pg);
-				}
-			}
+			MapNodeElement curNode = (MapNodeElement )e.next();
 			if ( curNode instanceof MapEquipmentNodeElement)
 			{
 				if ( mapMainFrame
@@ -312,10 +307,10 @@ public class LogicalNetLayer extends SxMapLayer
 			}
 		}
 
-		e = mapContext.markers.elements();
-		while (e.hasMoreElements())
+		e = mapContext.markers.iterator();
+		while (e.hasNext())
 		{
-			MapMarker marker = (MapMarker )e.nextElement();
+			MapMarker marker = (MapMarker )e.next();
 			marker.paint(pg);
 		}
 	}
@@ -804,7 +799,7 @@ public class LogicalNetLayer extends SxMapLayer
 			thePath.PATH_ID = sp.getId();
 			thePath.name = sp.getName();
 
-			getMapContext().getTransmissionPath().addElement(thePath);
+			getMapContext().getTransmissionPath().add(thePath);
 		}
 	}
 	
@@ -845,7 +840,7 @@ public class LogicalNetLayer extends SxMapLayer
 
 		MapPhysicalLinkElement theLink;
 		if ( mapMainFrame.aContext.getApplicationModel()
-				.isEnabled("mapActionCreateKIS"))
+				.isEnabled("mapActionCreateLink"))
 		{
 			if(scl == null)
 				return;
@@ -879,7 +874,7 @@ public class LogicalNetLayer extends SxMapLayer
 				emne, 
 				getMapContext());
 			Pool.put(MapNodeLinkElement.typ, myNodeLink.getId(), myNodeLink);
-			getMapContext().getNodeLinks().addElement(myNodeLink);
+			getMapContext().getNodeLinks().add(myNodeLink);
 
 			theLink = new MapPhysicalLinkElement(
 					dataSource.GetUId( MapPhysicalLinkElement.typ ),
@@ -895,7 +890,7 @@ public class LogicalNetLayer extends SxMapLayer
 			theLink.name = scl.getName();
 
 			Pool.put( MapPhysicalLinkElement.typ, theLink.getId(), theLink );
-			getMapContext().getPhysicalLinks().addElement(theLink);
+			getMapContext().getPhysicalLinks().add(theLink);
 		}
 	}
 	
@@ -911,79 +906,44 @@ public class LogicalNetLayer extends SxMapLayer
 		DataSourceInterface dataSource = mapMainFrame.getContext().getDataSourceInterface();
 
 		MapNodeElement theNode = null;
-		if(mpe.pe_is_kis)
+
+		if ( mapMainFrame.aContext.getApplicationModel()
+				.isEnabled("mapActionCreateEquipment"))
 		{
-			if ( mapMainFrame.aContext.getApplicationModel()
-					.isEnabled("mapActionCreateKIS"))
+			theNode = new MapEquipmentNodeElement(
+					dataSource.GetUId( MapEquipmentNodeElement.typ),
+					mySXPoint,
+					getMapContext(),
+					getMapContext().defaultScale/getMapContext().currentScale,
+					mpe);
+			theNode.attributes = ResourceUtil.copyAttributes(dataSource, mpe.attributes);
+			theNode.name = se.getName();
+
+			Pool.put( ((MapEquipmentNodeElement)(theNode)).getTyp(), theNode.getId(), theNode );
+			mapContext.getNodes().add(theNode);
+
+			if(se != null)
 			{
-				Vector vec = new Vector();
-				theNode = new MapKISNodeElement(
-						dataSource.GetUId( MapKISNodeElement.typ ),
-						dataSource.GetUId( MapEquipmentNodeElement.typ ),
-						mySXPoint,
-						getMapContext(),
-						getMapContext().defaultScale/getMapContext().currentScale,
-						mpe);
-				theNode.attributes = ResourceUtil.copyAttributes(dataSource, mpe.attributes);
-				theNode.name = se.getName();
-
-				Pool.put( ((MapKISNodeElement)(theNode)).getTyp(), theNode.getId(), theNode );
-				mapContext.getNodes().addElement(theNode);
-
-				if(se != null)
-				{
-					MapKISNodeElement en = (MapKISNodeElement )theNode;
-					en.element_type_id = se.proto_element_id;
-					en.element_id = se.getId();
-				}
+				MapEquipmentNodeElement en = (MapEquipmentNodeElement )theNode;
+				en.element_type_id = se.proto_element_id;
+				en.element_id = se.getId();
 			}
 		}
-		else
-//		if(!mpe.pe_is_kis)
-		{
-			if ( mapMainFrame.aContext.getApplicationModel()
-					.isEnabled("mapActionCreateEquipment"))
-			{
-				theNode = new MapEquipmentNodeElement(
-						dataSource.GetUId( MapEquipmentNodeElement.typ),
-						mySXPoint,
-						getMapContext(),
-						getMapContext().defaultScale/getMapContext().currentScale,
-						mpe);
-				theNode.attributes = ResourceUtil.copyAttributes(dataSource, mpe.attributes);
-				theNode.name = se.getName();
 
-				Pool.put( ((MapEquipmentNodeElement)(theNode)).getTyp(), theNode.getId(), theNode );
-				mapContext.getNodes().addElement(theNode);
-
-				if(se != null)
-				{
-					MapEquipmentNodeElement en = (MapEquipmentNodeElement )theNode;
-					en.element_type_id = se.proto_element_id;
-					en.element_id = se.getId();
-				}
-			}
-		}
 		if(theNode != null)
 			theNode.setScaleCoefficient(getMapContext().defaultScale / this.getMapContext().getLogicalNetLayer().getScale());
 	}
 
 	public MapEquipmentNodeElement findElement(String id)
 	{
-		for(Enumeration enum = getMapContext().getNodes().elements(); enum.hasMoreElements();)
+		for(Iterator it = getMapContext().getNodes().iterator(); it.hasNext();)
 		{
-			MapNodeElement node = (MapNodeElement )enum.nextElement();
+			MapNodeElement node = (MapNodeElement )it.next();
 			if(node instanceof MapEquipmentNodeElement)
 			{
 				MapEquipmentNodeElement en = (MapEquipmentNodeElement )node;
 				if(en.element_id.equals(id))
 					return en;
-			}
-			if(node instanceof MapKISNodeElement)
-			{
-				MapKISNodeElement kn = (MapKISNodeElement )node;
-				if(kn.element_id.equals(id))
-					return kn;
 			}
 		}
 		return null;
@@ -991,9 +951,9 @@ public class LogicalNetLayer extends SxMapLayer
 
 	public MapPhysicalLinkElement findPhysicalLink(String id)
 	{
-		for(Enumeration enum = getMapContext().getPhysicalLinks().elements(); enum.hasMoreElements();)
+		for(Iterator it = getMapContext().getPhysicalLinks().iterator(); it.hasNext();)
 		{
-			MapPhysicalLinkElement link = (MapPhysicalLinkElement )enum.nextElement();
+			MapPhysicalLinkElement link = (MapPhysicalLinkElement )it.next();
 			if(link.LINK_ID.equals(id))
 				return link;
 		}
@@ -1002,9 +962,9 @@ public class LogicalNetLayer extends SxMapLayer
 
 	public MapTransmissionPathElement findPath(String id)
 	{
-		for(Enumeration enum = getMapContext().getTransmissionPath().elements(); enum.hasMoreElements();)
+		for(Iterator it = getMapContext().getTransmissionPath().iterator(); it.hasNext();)
 		{
-			MapTransmissionPathElement path = (MapTransmissionPathElement )enum.nextElement();
+			MapTransmissionPathElement path = (MapTransmissionPathElement )it.next();
 			if(path.PATH_ID.equals(id))
 				return path;
 		}

@@ -50,7 +50,6 @@ public class MapElementPanel extends JPanel
 		typeComboBox.addItem(MapPhysicalLinkElement.typ);
 		typeComboBox.addItem(MapPhysicalNodeElement.typ);
 		typeComboBox.addItem(MapMarkElement.typ);
-//		typeComboBox.addItem(MapKISNodeElement.typ);
 		typeComboBox.addItem(MapTransmissionPathElement.typ);
 		typeComboBox.addItem(MapMarker.typ);
 
@@ -179,8 +178,6 @@ public class MapElementPanel extends JPanel
 
 		if(mapContext != null)
 		{
-			if(selection.equals(MapKISNodeElement.typ))
-				dataSet = new DataSet(mapContext.getMapKISNodeElements());
 			if(selection.equals(MapEquipmentNodeElement.typ))
 				dataSet = new DataSet(mapContext.getMapEquipmentNodeElements());
 			if(selection.equals(MapPhysicalLinkElement.typ))

@@ -1,16 +1,19 @@
 package com.syrus.AMFICOM.Client.General.Command.Map;
 
-import javax.swing.*;
+import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
+import com.syrus.AMFICOM.Client.General.Event.StatusMessageEvent;
+import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
+import com.syrus.AMFICOM.Client.General.UI.ObjectResourceDisplayModel;
+import com.syrus.AMFICOM.Client.General.UI.ObjectResourceTableModel;
+import com.syrus.AMFICOM.Client.Map.MapMainFrame;
+import com.syrus.AMFICOM.Client.Map.UI.Display.MapContextDisplayModel;
+import com.syrus.AMFICOM.Client.Map.UI.MapChooserDialog;
+import com.syrus.AMFICOM.Client.Resource.DataSet;
+import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
+import com.syrus.AMFICOM.Client.Resource.Map.MapContext;
+import com.syrus.AMFICOM.Client.Resource.Pool;
 
-import com.syrus.AMFICOM.Client.Map.*;
-import com.syrus.AMFICOM.Client.Map.UI.*;
-import com.syrus.AMFICOM.Client.Map.UI.Display.*;
-import com.syrus.AMFICOM.Client.General.Command.*;
-import com.syrus.AMFICOM.Client.General.Model.*;
-import com.syrus.AMFICOM.Client.General.Event.*;
-import com.syrus.AMFICOM.Client.General.UI.*;
-import com.syrus.AMFICOM.Client.Resource.*;
-import com.syrus.AMFICOM.Client.Resource.Map.*;
+import javax.swing.JDesktopPane;
 
 public class MapOpenCommand extends VoidCommand
 {

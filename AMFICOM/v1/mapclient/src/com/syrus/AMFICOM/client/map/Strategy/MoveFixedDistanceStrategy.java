@@ -10,45 +10,45 @@ import com.syrus.AMFICOM.Client.General.Model.*;
 
 import com.syrus.AMFICOM.Client.Map.*;
 
-public class MoveFixedDistanceStrategy implements MapStrategy {
+public class MoveFixedDistanceStrategy implements MapStrategy 
+{
+	LogicalNetLayer logicalNetLayer;
+	Point thePoint;
+	ApplicationContext aContext;
 
-  LogicalNetLayer logicalNetLayer;
-  Point thePoint;
-  ApplicationContext aContext;
+	public MoveFixedDistanceStrategy(ApplicationContext aContext, MouseEvent me, LogicalNetLayer lnl)
+	{
+		this.aContext = aContext;
+		logicalNetLayer = lnl;
+		thePoint = me.getPoint();
+	}
 
-  public MoveFixedDistanceStrategy(ApplicationContext aContext, MouseEvent me, LogicalNetLayer lnl)
-  {
-	this.aContext = aContext;
-    logicalNetLayer = lnl;
-    thePoint = me.getPoint();
-  }
-
-  public void doContextChanges()
-  {
+	public void doContextChanges()
+	{
 		//Перемещаем выбранные элементы взависимости от разрешения на перемещение
-    MapElement theVictim = logicalNetLayer.getMapContext().getCurrentMapElement();
-    if (theVictim instanceof MapNodeElement)
-    {
-      MapNodeElement myNode = (MapNodeElement)theVictim;
-      SxDoublePoint startSxPoint = myNode.getAnchor();
-      SxDoublePoint endSxPoint = logicalNetLayer.convertScreenToMap(thePoint);
-      double deltaX = endSxPoint.getX() - startSxPoint.getX();
-      double deltaY = endSxPoint.getY() - startSxPoint.getY();
-      Enumeration e = logicalNetLayer.getMapContext().getNodes().elements();
-
-      while (e.hasMoreElements() )
-      {
-        MapNodeElement theNode = (MapNodeElement) e.nextElement();
-        if (theNode.isSelected() && theNode.isMovable())
-        {
-          theNode.move(deltaX, deltaY);
-        }
-		if(theNode instanceof MapMarkElement)
+		MapElement theVictim = logicalNetLayer.getMapContext().getCurrentMapElement();
+		if (theVictim instanceof MapNodeElement)
 		{
-			MapMarkElement mme = (MapMarkElement )theNode;
-			mme.moveToFromStart(mme.distance);
+			MapNodeElement myNode = (MapNodeElement)theVictim;
+			SxDoublePoint startSxPoint = myNode.getAnchor();
+			SxDoublePoint endSxPoint = logicalNetLayer.convertScreenToMap(thePoint);
+			double deltaX = endSxPoint.getX() - startSxPoint.getX();
+			double deltaY = endSxPoint.getY() - startSxPoint.getY();
+			Iterator e = logicalNetLayer.getMapContext().getNodes().iterator();
+
+			while(e.hasNext())
+			{
+				MapNodeElement theNode = (MapNodeElement) e.next();
+				if (theNode.isSelected() && theNode.isMovable())
+				{
+					theNode.move(deltaX, deltaY);
+				}
+				if(theNode instanceof MapMarkElement)
+				{
+					MapMarkElement mme = (MapMarkElement )theNode;
+					mme.moveToFromStart(mme.distance);
+				}
+			}
 		}
-      }
-    }
-  }
+	}
 }

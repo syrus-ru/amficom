@@ -9,8 +9,8 @@ import com.syrus.AMFICOM.Client.General.Model.*;
 
 import com.syrus.AMFICOM.Client.Map.*;
 
-public class DeleteSelectionStrategy implements MapStrategy{
-
+public class DeleteSelectionStrategy implements MapStrategy
+{
 	LogicalNetLayer logicalNetLayer;
 	ApplicationContext aContext;
 
@@ -22,20 +22,20 @@ public class DeleteSelectionStrategy implements MapStrategy{
 
 	public void doContextChanges()
 	{
-//Удаляем все выбранные элементы взависимости от разрешения на их удаление
-		Enumeration e = logicalNetLayer.getMapContext().getNodes().elements();
+		//Удаляем все выбранные элементы взависимости от разрешения на их удаление
+		Iterator e = logicalNetLayer.getMapContext().getNodes().iterator();
 
-		Vector nodesToDelete = new Vector();
-		Vector nodeLinksToDelete = new Vector();
-		Vector linksToDelete = new Vector();
-		Vector pathsToDelete = new Vector();
+		LinkedList nodesToDelete = new LinkedList();
+		LinkedList nodeLinksToDelete = new LinkedList();
+		LinkedList linksToDelete = new LinkedList();
+		LinkedList pathsToDelete = new LinkedList();
 
-		while (e.hasMoreElements())
+		while (e.hasNext())
 		{
-			MapNodeElement myNode = (MapNodeElement) e.nextElement();
+			MapNodeElement myNode = (MapNodeElement )e.next();
 			if (myNode.isSelected())
 			{
-				nodesToDelete.addElement(myNode);
+				nodesToDelete.add(myNode);
 			}
 		}
 
@@ -43,10 +43,10 @@ public class DeleteSelectionStrategy implements MapStrategy{
 				.aContext.getApplicationModel().isEnabled("mapActionDeleteNode"))
 		{
 			System.out.println("mapActionDeleteNode");
-			e = logicalNetLayer.getMapContext().getNodeLinks().elements();
-			while (e.hasMoreElements())
+			e = logicalNetLayer.getMapContext().getNodeLinks().iterator();
+			while (e.hasNext())
 			{
-				MapNodeLinkElement myNodeLink = (MapNodeLinkElement) e.nextElement();
+				MapNodeLinkElement myNodeLink = (MapNodeLinkElement )e.next();
 				if (myNodeLink.isSelected())
 				{
 					nodeLinksToDelete.add(myNodeLink);
@@ -58,17 +58,14 @@ public class DeleteSelectionStrategy implements MapStrategy{
 				.aContext.getApplicationModel().isEnabled("mapActionDeleteNode"))
 		{
 			System.out.println("mapActionDeleteNode");
-			e = logicalNetLayer.getMapContext().getPhysicalLinks().elements();
-			while (e.hasMoreElements())
+			e = logicalNetLayer.getMapContext().getPhysicalLinks().iterator();
+			while (e.hasNext())
 			{
-				MapPhysicalLinkElement link = (MapPhysicalLinkElement )e.nextElement();
+				MapPhysicalLinkElement link = (MapPhysicalLinkElement )e.next();
 				if (link.isSelected())
 				{
-					for(
-							Enumeration en = 
-								logicalNetLayer.getMapContext().getNodeLinksInPhysicalLink(link.getId()).elements();
-							en.hasMoreElements();)
-						nodeLinksToDelete.add((MapNodeLinkElement )en.nextElement());
+					for(Iterator it = logicalNetLayer.getMapContext().getNodeLinksInPhysicalLink(link.getId()).iterator(); it.hasNext();)
+						nodeLinksToDelete.add((MapNodeLinkElement )it.next());
 					linksToDelete.add(link);
 				}
 			}
@@ -78,10 +75,10 @@ public class DeleteSelectionStrategy implements MapStrategy{
 				.aContext.getApplicationModel().isEnabled("mapActionDeletePath"))
 		{
 			System.out.println("mapActionDeletePath");
-			e = logicalNetLayer.getMapContext().getTransmissionPath().elements();
-			while (e.hasMoreElements())
+			e = logicalNetLayer.getMapContext().getTransmissionPath().iterator();
+			while (e.hasNext())
 			{
-				MapTransmissionPathElement path = (MapTransmissionPathElement )e.nextElement();
+				MapTransmissionPathElement path = (MapTransmissionPathElement )e.next();
 				if (path.isSelected())
 				{
 					pathsToDelete.add(path);
@@ -92,10 +89,10 @@ public class DeleteSelectionStrategy implements MapStrategy{
 		if ( logicalNetLayer.mapMainFrame
 				.aContext.getApplicationModel().isEnabled("mapActionMarkerDelete"))
 		{
-			e = logicalNetLayer.getMapContext().markers.elements();
-			while (e.hasMoreElements())
+			e = logicalNetLayer.getMapContext().markers.iterator();
+			while (e.hasNext())
 			{
-				MapMarker myMarker = (MapMarker) e.nextElement();
+				MapMarker myMarker = (MapMarker )e.next();
 				if (myMarker.isSelected())
 				{
 					myMarker.sendMessage_Marker_Deleted();
@@ -119,7 +116,7 @@ public class DeleteSelectionStrategy implements MapStrategy{
 						}
 					}
 
-//Если существует ещё маркер то выбыраем его
+					//Если существует ещё маркер то выбыраем его
 					if (logicalNetLayer.getMapContext().markers.size() > 0)
 					{
 						((MapMarker)(logicalNetLayer.getMapContext().markers.get(0))).select();
@@ -138,25 +135,31 @@ public class DeleteSelectionStrategy implements MapStrategy{
 		}
 
 		//deleting
-		e = nodeLinksToDelete.elements();
-		while (e.hasMoreElements())
+		e = nodeLinksToDelete.iterator();
+		while (e.hasNext())
 		{
-			MapStrategy myStrategy = new DeleteNodeLinkStrategy(aContext, logicalNetLayer, (MapNodeLinkElement)e.nextElement());
+			MapStrategy myStrategy = new DeleteNodeLinkStrategy(
+					aContext, 
+					logicalNetLayer, 
+					(MapNodeLinkElement )e.next());
 			myStrategy.doContextChanges();
 		}
 
-		e = nodesToDelete.elements();
-		while (e.hasMoreElements())
+		e = nodesToDelete.iterator();
+		while (e.hasNext())
 		{
-			MapStrategy myStrategy = new DeleteNodeStrategy(aContext, logicalNetLayer, (MapNodeElement)e.nextElement());
+			MapStrategy myStrategy = new DeleteNodeStrategy(
+					aContext, 
+					logicalNetLayer, 
+					(MapNodeElement )e.next());
 			myStrategy.doContextChanges();
 		}
 
-		e = pathsToDelete.elements();
-		while (e.hasMoreElements())
+		e = pathsToDelete.iterator();
+		while (e.hasNext())
 		{
 			logicalNetLayer.getMapContext().removeTransmissionPath(
-				(MapTransmissionPathElement )e.nextElement());
+				(MapTransmissionPathElement )e.next());
 		}
 
 		MapElement myMapElement = new VoidMapElement( logicalNetLayer);
@@ -168,7 +171,5 @@ public class DeleteSelectionStrategy implements MapStrategy{
 				disp.notify(new MapNavigateEvent(myMapElement, MapNavigateEvent.MAP_ELEMENT_SELECTED_EVENT));
 				logicalNetLayer.perform_processing = true;
 			}
-//		logicalNetLayer.parent.setContents((ObjectResource )myMapElement);//Заполняем таблицу свойств
-
 	}
 }

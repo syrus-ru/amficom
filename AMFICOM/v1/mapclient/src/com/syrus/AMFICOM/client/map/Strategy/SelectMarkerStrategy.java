@@ -13,58 +13,56 @@ import com.syrus.AMFICOM.Client.Map.*;
 
 public class SelectMarkerStrategy implements MapStrategy{
 
-  LogicalNetLayer logicalNetLayer;
-  Rectangle selectionRect;
-  ApplicationContext aContext;
+	LogicalNetLayer logicalNetLayer;
+	Rectangle selectionRect;
+	ApplicationContext aContext;
 
+	public SelectMarkerStrategy(ApplicationContext aContext, LogicalNetLayer lnl, Rectangle rect)
+	{
+		this.aContext = aContext;
+		logicalNetLayer = lnl;
+		selectionRect = rect;
+	}
 
-  public SelectMarkerStrategy(ApplicationContext aContext, LogicalNetLayer lnl, Rectangle rect)
-  {
-	this.aContext = aContext;
-    logicalNetLayer = lnl;
-    selectionRect = rect;
-  }
+	public void doContextChanges()
+	{
+		//Здесь просто проверяется что элемент содержится в прямоугольной области
+		Iterator e = logicalNetLayer.getMapContext().getNodes().iterator();
+	
+		LinkedList nodesToSelect = new LinkedList();
+		LinkedList nodeLinkToSelect = new LinkedList();
 
-  public void doContextChanges()
-  {
-//Здесь просто проверяется что элемент содержится в прямоугольной области
-    Enumeration e = logicalNetLayer.getMapContext().getNodes().elements();
+		//Пробегаем и смотрим вхотит ли в область MapNodeElement
+		while (e.hasNext())
+		{
+			MapNodeElement myNode = (MapNodeElement )e.next();
+			SxDoublePoint mySXPoint = myNode.getAnchor();
+			Point p = logicalNetLayer.convertMapToScreen(mySXPoint);
 
-    Vector nodesToSelect = new Vector();
-    Vector NodeLinkToSelect = new Vector();
+			if (selectionRect.contains(p))
+			{
+				myNode.select();
+				nodesToSelect.add(myNode.getId());
+			}
+		}
 
-//Пробегаем и смотрим вхотит ли в область MapNodeElement
-    while (e.hasMoreElements())
-    {
-      MapNodeElement myNode = (MapNodeElement) e.nextElement();
-      SxDoublePoint mySXPoint = myNode.getAnchor();
-      Point p = logicalNetLayer.convertMapToScreen(mySXPoint);
+		e = logicalNetLayer.getMapContext().getNodeLinks().iterator();
 
-     if (selectionRect.contains(p))
-      {
-        myNode.select();
-        nodesToSelect.addElement(myNode.getId());
-      }
-    }
+		//Пробегаем и смотрим вхотит ли в область nodeLink
+		while (e.hasNext() )
+		{
+			MapNodeLinkElement myNodeLink = (MapNodeLinkElement )e.next();
+			Point p;
+			if (
+				selectionRect.contains(logicalNetLayer.convertMapToScreen(myNodeLink.startNode.getAnchor())) 
+				&& selectionRect.contains(logicalNetLayer.convertMapToScreen(myNodeLink.endNode.getAnchor())))
+	       {
+				myNodeLink.select();
+				nodeLinkToSelect.add(myNodeLink.getId());
+			}
+		}
 
-    e = logicalNetLayer.getMapContext().getNodeLinks().elements();
-
-//Пробегаем и смотрим вхотит ли в область nodeLink
-    while (e.hasMoreElements() )
-    {
-      MapNodeLinkElement myNodeLink = (MapNodeLinkElement) e.nextElement();
-      Point p ;
-      if (
-           selectionRect.contains( logicalNetLayer.convertMapToScreen ( myNodeLink.startNode.getAnchor()  ) ) &&
-           selectionRect.contains( logicalNetLayer.convertMapToScreen ( myNodeLink.endNode.getAnchor()  ) )
-         )
-       {
-        myNodeLink.select();
-        NodeLinkToSelect.addElement(myNodeLink.getId());
-       }
-    }
-
-    logicalNetLayer.setMode(LogicalNetLayer.NULL_MODE);
-  }
+		logicalNetLayer.setMode(LogicalNetLayer.NULL_MODE);
+	}
 }
 

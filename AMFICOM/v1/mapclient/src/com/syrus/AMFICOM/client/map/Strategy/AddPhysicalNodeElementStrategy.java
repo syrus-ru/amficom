@@ -45,7 +45,7 @@ public class AddPhysicalNodeElementStrategy implements  MapStrategy{
 	Pool.put(MapPhysicalNodeElement.typ, myPhysicalNodeElement.getId(), myPhysicalNodeElement);
 	myPhysicalNodeElement.setScaleCoefficient(logicalNetLayer.getMapContext().defaultScale / logicalNetLayer.viewer.getScale());
 
-    logicalNetLayer.getMapContext().getNodes().addElement(myPhysicalNodeElement);
+    logicalNetLayer.getMapContext().getNodes().add(myPhysicalNodeElement);
     MapNodeElement myStartNode = curLink.startNode;
     MapNodeElement myEndNode = curLink.endNode;
 

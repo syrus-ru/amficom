@@ -2,12 +2,11 @@
 // Copyright (c) Syrus Systems 2000 Syrus Systems
 package com.syrus.AMFICOM.Client.Map.Editor;
 
-import com.syrus.AMFICOM.Client.Map.*;
 import com.syrus.AMFICOM.Client.General.Checker;
+import com.syrus.AMFICOM.Client.General.Command.CloseAllInternalCommand;
 import com.syrus.AMFICOM.Client.General.Command.Config.MapCatalogueCommand;
 import com.syrus.AMFICOM.Client.General.Command.Config.NewMapViewCommand;
 import com.syrus.AMFICOM.Client.General.Command.Config.ViewMapNavigatorCommand;
-import com.syrus.AMFICOM.Client.General.Command.CloseAllInternalCommand;
 import com.syrus.AMFICOM.Client.General.Command.ExitCommand;
 import com.syrus.AMFICOM.Client.General.Command.HelpAboutCommand;
 import com.syrus.AMFICOM.Client.General.Command.Map.MapMapCloseCommand;
@@ -17,9 +16,9 @@ import com.syrus.AMFICOM.Client.General.Command.Map.MapMapSaveAsCommand;
 import com.syrus.AMFICOM.Client.General.Command.Map.MapMapSaveCommand;
 import com.syrus.AMFICOM.Client.General.Command.Map.ViewMapAllCommand;
 import com.syrus.AMFICOM.Client.General.Command.Map.ViewMapElementsCommand;
-import com.syrus.AMFICOM.Client.General.Command.Map.ViewMapSetupCommand;
 import com.syrus.AMFICOM.Client.General.Command.Map.ViewMapPropertiesCommand;
 import com.syrus.AMFICOM.Client.General.Command.Map.ViewMapSchemeNavigatorCommand;
+import com.syrus.AMFICOM.Client.General.Command.Map.ViewMapSetupCommand;
 import com.syrus.AMFICOM.Client.General.Command.Session.SessionChangePasswordCommand;
 import com.syrus.AMFICOM.Client.General.Command.Session.SessionCloseCommand;
 import com.syrus.AMFICOM.Client.General.Command.Session.SessionConnectionCommand;
@@ -41,6 +40,10 @@ import com.syrus.AMFICOM.Client.General.Model.MapConfigureApplicationModelFactor
 import com.syrus.AMFICOM.Client.General.Model.MapMapEditorApplicationModelFactory;
 import com.syrus.AMFICOM.Client.General.SessionInterface;
 import com.syrus.AMFICOM.Client.General.UI.StatusBarModel;
+import com.syrus.AMFICOM.Client.Map.MapElementsFrame;
+import com.syrus.AMFICOM.Client.Map.MapMainFrame;
+import com.syrus.AMFICOM.Client.Map.MapPropertyFrame;
+import com.syrus.AMFICOM.Client.Map.MapSchemeTreeFrame;
 import com.syrus.AMFICOM.Client.Resource.ConfigDataSourceImage;
 import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
 import com.syrus.AMFICOM.Client.Resource.Map.MapContext;
@@ -49,10 +52,11 @@ import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.Client.Resource.SchemeDataSourceImage;
 import com.syrus.io.IniFile;
 
-import java.awt.*;
+import java.awt.AWTEvent;
 import java.awt.BorderLayout;
-import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.SystemColor;
 import java.awt.Toolkit;
 import java.awt.event.ComponentEvent;
 import java.awt.event.WindowEvent;
@@ -287,9 +291,9 @@ public class MapMDIMain extends JFrame implements OperationListener
 
 		aModel.setCommand("menuMapNew", new MapMapNewCommand(this, aContext));
 		aModel.setCommand("menuMapClose", new MapMapCloseCommand(this, internal_dispatcher));
-		aModel.setCommand("menuMapOpen", new MapMapOpenCommand(desktopPane, this, aContext));
-		aModel.setCommand("menuMapSave", new MapMapSaveCommand(desktopPane, this, aContext));
-		aModel.setCommand("menuMapSaveAs", new MapMapSaveAsCommand(desktopPane, this, aContext));
+		aModel.setCommand("menuMapOpen", new MapMapOpenCommand(desktopPane, aContext));
+		aModel.setCommand("menuMapSave", new MapMapSaveCommand(null, aContext));
+		aModel.setCommand("menuMapSaveAs", new MapMapSaveAsCommand(null, aContext));
 		aModel.setCommand("menuMapCatalogue", new MapCatalogueCommand(internal_dispatcher, desktopPane, aContext, new MapConfigureApplicationModelFactory()));
 
 		aModel.add("menuHelpAbout", new HelpAboutCommand(this));
@@ -364,6 +368,14 @@ public class MapMDIMain extends JFrame implements OperationListener
 		if(ae.getActionCommand().equals("mapframeshownevent"))
 		{
 			mapFrame = (MapMainFrame )ae.getSource();
+
+			ApplicationModel aModel = aContext.getApplicationModel();
+			if(aModel != null)
+			{
+				aModel.getCommand("menuMapOpen").setParameter("mapFrame", mapFrame);
+				aModel.getCommand("menuMapSave").setParameter("mapFrame", mapFrame);
+				aModel.getCommand("menuMapSaveAs").setParameter("mapFrame", mapFrame);
+			}
 		 }
 		else
 		if(ae.getActionCommand().equals("mapselectevent"))
@@ -372,6 +384,7 @@ public class MapMDIMain extends JFrame implements OperationListener
 			aModel.setEnabled("menuMapSave", true);
 			aModel.setEnabled("menuMapSaveAs", true);
 			aModel.setEnabled("menuMapClose", true);
+
 			aModel.fireModelChanged("");
 			setTitle(LangModelConfig.String("MapTitle") + ": " + ((MapContext)ae.getSource()).getName());
 		}

@@ -140,9 +140,9 @@ public class MapTransmissionPathElementModel extends MapLinkElementModel
 		{
 			MapContext mc = (MapContext )Pool.get(MapContext.typ, path.mapContextID);
 			Hashtable ht2 = new Hashtable();
-			for(Enumeration enum = mc.getNodes().elements(); enum.hasMoreElements();)
+			for(Iterator it = mc.getNodes().iterator(); it.hasNext();)
 			{
-				ObjectResource or = (ObjectResource )enum.nextElement();
+				ObjectResource or = (ObjectResource )it.next();
 				ht2.put(or.getId(), or);
 			}
 			ObjectResourceComboBox orcb =  new ObjectResourceComboBox(ht2, path.startNode_id);
@@ -155,9 +155,9 @@ public class MapTransmissionPathElementModel extends MapLinkElementModel
 		{
 			MapContext mc = (MapContext )Pool.get(MapContext.typ, path.mapContextID);
 			Hashtable ht2 = new Hashtable();
-			for(Enumeration enum = mc.getNodes().elements(); enum.hasMoreElements();)
+			for(Iterator it = mc.getNodes().iterator(); it.hasNext();)
 			{
-				ObjectResource or = (ObjectResource )enum.nextElement();
+				ObjectResource or = (ObjectResource )it.next();
 				ht2.put(or.getId(), or);
 			}
 			ObjectResourceComboBox orcb =  new ObjectResourceComboBox(ht2, path.endNode_id);
@@ -230,10 +230,10 @@ public class MapTransmissionPathElementModel extends MapLinkElementModel
 		double length = 0;
 		double d1;
 		String l1;
-		Enumeration e = path.getMapContext().getPhysicalLinksInTransmissiionPath(path.getId()).elements();
-		while( e.hasMoreElements())
+		Iterator e = path.getMapContext().getPhysicalLinksInTransmissiionPath(path.getId()).iterator();
+		while( e.hasNext())
 		{
-			MapPhysicalLinkElement link = (MapPhysicalLinkElement )e.nextElement();
+			MapPhysicalLinkElement link = (MapPhysicalLinkElement )e.next();
 			l1 = link.getModel().getPropertyValue("physical_length");
 			try
 			{
@@ -262,10 +262,10 @@ public class MapTransmissionPathElementModel extends MapLinkElementModel
 		double length = 0;
 		double d1;
 		String l1;
-		Enumeration e = path.getMapContext().getPhysicalLinksInTransmissiionPath(path.getId()).elements();
-		while( e.hasMoreElements())
+		Iterator e = path.getMapContext().getPhysicalLinksInTransmissiionPath(path.getId()).iterator();
+		while( e.hasNext())
 		{
-			MapPhysicalLinkElement link = (MapPhysicalLinkElement )e.nextElement();
+			MapPhysicalLinkElement link = (MapPhysicalLinkElement )e.next();
 			l1 = link.getModel().getPropertyValue("optical_length");
 //			length = length + Double.parseDouble(l1);
 			try

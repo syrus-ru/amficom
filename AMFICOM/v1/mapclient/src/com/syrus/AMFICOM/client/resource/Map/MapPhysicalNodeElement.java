@@ -77,10 +77,6 @@ public class MapPhysicalNodeElement extends MapNodeElement implements Serializab
 		name = myID;
 		setAnchor(myAnchor);
 		mapContextID = mapContext.id;
-		if(mapContext instanceof ISMMapContext)
-		{
-			ism_map_id = ((ISMMapContext)mapContext).ISM_id;
-		}
 		setImageID("node");
 		physicalLinkID = myphysicalLinkID;
 		attributes = new Hashtable();

@@ -1,20 +1,11 @@
 package com.syrus.AMFICOM.Client.General.Command.Map;
 
-import java.awt.*;
-import javax.swing.*;
-import java.util.*;
+import com.syrus.AMFICOM.Client.General.Command.Config.NewMapViewCommand;
+import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
+import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
+import com.syrus.AMFICOM.Client.General.Model.ApplicationModelFactory;
 
-import com.syrus.AMFICOM.Client.Resource.*;
-import com.syrus.AMFICOM.Client.Resource.Map.*;
-//import com.syrus.AMFICOM.Client.Test.*;
-import com.syrus.AMFICOM.Client.Configure.*;
-import com.syrus.AMFICOM.Client.Map.*;
-import com.syrus.AMFICOM.Client.General.Lang.*;
-import com.syrus.AMFICOM.Client.General.Event.*;
-import com.syrus.AMFICOM.Client.General.Model.*;
-import com.syrus.AMFICOM.Client.General.Command.*;
-import com.syrus.AMFICOM.Client.General.Command.Map.*;
-import com.syrus.AMFICOM.Client.General.Command.Config.*;
+import javax.swing.JDesktopPane;
 
 public class ViewMapAllCommand extends VoidCommand
 {

@@ -34,12 +34,13 @@ import java.io.Serializable;
 
 import java.util.Enumeration;
 import java.util.Hashtable;
-import java.util.Vector;
+import java.util.*;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 import javax.swing.SwingUtilities;
+import java.util.Iterator;
 
 //A0A
 public class MapPhysicalLinkElement extends MapLinkElement implements Serializable
@@ -88,9 +89,6 @@ public class MapPhysicalLinkElement extends MapLinkElement implements Serializab
 			mapContextID = mapContext.id;
 		startNode = stNode;
 		endNode = eNode;
-		if(mapContext != null)
-			if(mapContext instanceof ISMMapContext)
-			  ism_map_id = ((ISMMapContext)mapContext).ISM_id;
 		selected = false;
 
 		transferable = new MapPhysicalLinkElement_Transferable();
@@ -238,13 +236,9 @@ public class MapPhysicalLinkElement extends MapLinkElement implements Serializab
 	{
 		this.startNode = (MapNodeElement)Pool.get("mapequipmentelement", startNode_id);
 		if(this.startNode == null)
-			this.startNode = (MapNodeElement)Pool.get("mapkiselement", startNode_id);
-		if(this.startNode == null)
 			this.startNode = (MapNodeElement)Pool.get("mapnodeelement", startNode_id);
 
 		this.endNode = (MapNodeElement)Pool.get("mapequipmentelement", endNode_id);
-		if(this.endNode == null)
-			this.endNode = (MapNodeElement)Pool.get("mapkiselement", endNode_id);
 		if(this.endNode == null)
 			this.endNode = (MapNodeElement)Pool.get("mapnodeelement", endNode_id);
 		this.mapContext = (MapContext)Pool.get("mapcontext", this.mapContextID);
@@ -303,10 +297,10 @@ public class MapPhysicalLinkElement extends MapLinkElement implements Serializab
 		p.setStroke( str);
 		p.setColor( this.getColor());
 
-		Enumeration e = mapContext.getNodeLinksInPhysicalLink( this.getId() ).elements();
-		while (e.hasMoreElements())
+		Iterator e = mapContext.getNodeLinksInPhysicalLink( this.getId() ).iterator();
+		while (e.hasNext())
 		{
-			MapNodeLinkElement myNodeLink = (MapNodeLinkElement)e.nextElement();
+			MapNodeLinkElement myNodeLink = (MapNodeLinkElement)e.next();
 
 			Point from = getLogicalNetLayer().convertMapToScreen(myNodeLink.startNode.getAnchor());
 			Point to = getLogicalNetLayer().convertMapToScreen(myNodeLink.endNode.getAnchor());
@@ -350,12 +344,11 @@ public class MapPhysicalLinkElement extends MapLinkElement implements Serializab
 		int a;
 		if(!selected)
 			a = 0;
-		//A0A
-		Vector nodeLinksVector = getMapContext().getNodeLinksInPhysicalLink( this.getId());
-		Enumeration e = nodeLinksVector.elements();
-		while ( e.hasMoreElements())
+		
+		LinkedList nodeLinksVector = getMapContext().getNodeLinksInPhysicalLink( this.getId());
+		for(Iterator it = nodeLinksVector.iterator(); it.hasNext();)
 		{
-			MapNodeLinkElement nodelink = (MapNodeLinkElement)e.nextElement();
+			MapNodeLinkElement nodelink = (MapNodeLinkElement)it.next();
 
 			Point from = getLogicalNetLayer().convertMapToScreen( nodelink.startNode.getAnchor());
 			Point to = getLogicalNetLayer().convertMapToScreen( nodelink.endNode.getAnchor());
@@ -377,15 +370,7 @@ public class MapPhysicalLinkElement extends MapLinkElement implements Serializab
 			if ( isSelected())
 			{
 				p.setStroke(DEF.selected_stroke);
-/*
-				new BasicStroke( 
-						1,
-                        BasicStroke.CAP_BUTT,
-                        BasicStroke.JOIN_BEVEL,
-                        (float)0.0,
-                        new float[] {5, 5},
-                        (float)0.0));
-*/
+
 				double l = 4;
 				double l1 = 6;
 				double cos_a = (from.y - to.y)/
@@ -414,11 +399,9 @@ public class MapPhysicalLinkElement extends MapLinkElement implements Serializab
 	public double getSizeInDoubleLt()
 	{
 		double returnValue = 0;
-		Vector vec = getMapContext().getNodeLinksInPhysicalLink( getId());
-		Enumeration e = vec.elements();
-		while ( e.hasMoreElements())
+		for(Iterator it = getMapContext().getNodeLinksInPhysicalLink(getId()).iterator(); it.hasNext();)
 		{
-			MapNodeLinkElement nodeLink = (MapNodeLinkElement)e.nextElement();
+			MapNodeLinkElement nodeLink = (MapNodeLinkElement )it.next();
 			returnValue += nodeLink.getSizeInDoubleLt();
 		}
 		return returnValue;
@@ -571,10 +554,9 @@ public class MapPhysicalLinkElement extends MapLinkElement implements Serializab
 		Vector vec = new Vector();
 		SxDoublePoint pts[];
 
-		for(Enumeration enum = getMapContext().getNodeLinksInPhysicalLink(getId()).elements();
-			enum.hasMoreElements();)
+		for(Iterator it = getMapContext().getNodeLinksInPhysicalLink(getId()).iterator(); it.hasNext();)
 		{
-			MapNodeLinkElement mnle = (MapNodeLinkElement )enum.nextElement();
+			MapNodeLinkElement mnle = (MapNodeLinkElement )it.next();
 			vec.add(mnle.getAnchor());
 		}
 
@@ -605,15 +587,15 @@ public class MapPhysicalLinkElement extends MapLinkElement implements Serializab
 			MapNodeElement smne = this.startNode;
 			Vector vec = new Vector();
 			Vector nodevec = new Vector();
-			Vector nodelinks = getMapContext().getNodeLinksInPhysicalLink(getId());
+			LinkedList nodelinks = getMapContext().getNodeLinksInPhysicalLink(getId());
 			while(!smne.equals(this.endNode))
 			{
 				nodevec.add(smne);
 
-				Enumeration e = nodelinks.elements();
-				while( e.hasMoreElements())
+				for(Iterator it = nodelinks.iterator(); it.hasNext();)
 				{
-					MapNodeLinkElement nodeLink = (MapNodeLinkElement) e.nextElement();
+					MapNodeLinkElement nodeLink = (MapNodeLinkElement )it.next();
+
 					if(nodeLink.startNode.equals(smne))
 					{
 						vec.add(nodeLink);

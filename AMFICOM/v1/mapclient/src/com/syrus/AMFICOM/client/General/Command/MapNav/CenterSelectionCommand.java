@@ -49,42 +49,37 @@ public class CenterSelectionCommand extends VoidCommand
 		Vector vec = new Vector();
 		SxDoublePoint pts[];
 
-		for(Enumeration enum = logicalNetLayer.getMapContext().getNodes().elements();
-			enum.hasMoreElements();)
+		for(Iterator it = logicalNetLayer.getMapContext().getNodes().iterator(); it.hasNext();)
 		{
-			me = (MapElement )enum.nextElement();
+			me = (MapElement )it.next();
 			if(me.isSelected())
 				vec.add(me.getAnchor());
 		}
 
-		for(Enumeration enum = logicalNetLayer.getMapContext().markers.elements();
-			enum.hasMoreElements();)
+		for(Iterator it = logicalNetLayer.getMapContext().markers.iterator(); it.hasNext();)
 		{
-			me = (MapElement )enum.nextElement();
+			me = (MapElement )it.next();
 			if(me.isSelected())
 				vec.add(me.getAnchor());
 		}
 
-		for(Enumeration enum = logicalNetLayer.getMapContext().getNodeLinks().elements();
-			enum.hasMoreElements();)
+		for(Iterator it = logicalNetLayer.getMapContext().getNodeLinks().iterator(); it.hasNext();)
 		{
-			me = (MapElement )enum.nextElement();
+			me = (MapElement )it.next();
 			if(me.isSelected())
 				vec.add(me.getAnchor());
 		}
 
-		for(Enumeration enum = logicalNetLayer.getMapContext().getPhysicalLinks().elements();
-			enum.hasMoreElements();)
+		for(Iterator it = logicalNetLayer.getMapContext().getPhysicalLinks().iterator(); it.hasNext();)
 		{
-			me = (MapElement )enum.nextElement();
+			me = (MapElement )it.next();
 			if(me.isSelected())
 				vec.add(me.getAnchor());
 		}
 
-		for(Enumeration enum = logicalNetLayer.getMapContext().getTransmissionPath().elements();
-			enum.hasMoreElements();)
+		for(Iterator it = logicalNetLayer.getMapContext().getTransmissionPath().iterator(); it.hasNext();)
 		{
-			me = (MapElement )enum.nextElement();
+			me = (MapElement )it.next();
 			if(me.isSelected())
 				vec.add(me.getAnchor());
 		}
@@ -100,12 +95,11 @@ public class CenterSelectionCommand extends VoidCommand
 		point.x /= pts.length;
 		point.y /= pts.length;
 		
-      logicalNetLayer.getMapViewer().setCenter(point.x, point.y);
+		logicalNetLayer.getMapViewer().setCenter(point.x, point.y);
 
-      logicalNetLayer.parent.myMapScrollPane.upDateScroll();
-      logicalNetLayer.postDirtyEvent();
-      logicalNetLayer.postPaintEvent();
-      return;
-
+		logicalNetLayer.parent.myMapScrollPane.upDateScroll();
+		logicalNetLayer.postDirtyEvent();
+		logicalNetLayer.postPaintEvent();
+		return;
 	}
 }

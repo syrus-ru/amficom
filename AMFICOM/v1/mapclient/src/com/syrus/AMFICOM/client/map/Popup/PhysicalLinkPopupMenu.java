@@ -135,11 +135,10 @@ public class PhysicalLinkPopupMenu
 			MapNodeElement startNode = null;
 			MapNodeElement endNode = null;
 
-//A0A
-			Enumeration e1 = logicalNetLayer.getMapContext().getPhysicalLinks().elements();
-			while ( e1.hasMoreElements())
+			Iterator e1 = logicalNetLayer.getMapContext().getPhysicalLinks().iterator();
+			while ( e1.hasNext())
 			{
-				MapPhysicalLinkElement myMapPhysicalLinkElement = (MapPhysicalLinkElement)e1.nextElement();
+				MapPhysicalLinkElement myMapPhysicalLinkElement = (MapPhysicalLinkElement )e1.next();
 
 				if ( myMapPhysicalLinkElement.isSelected() )
 				{

@@ -1,17 +1,14 @@
 package com.syrus.AMFICOM.Client.General.Command.Map;
 
-import java.awt.*;
-import javax.swing.*;
+import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
+import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
+import com.syrus.AMFICOM.Client.Map.MapPropertyFrame;
+
+import java.awt.Dimension;
+
 import java.util.Vector;
 
-import com.syrus.AMFICOM.Client.General.Lang.*;
-import com.syrus.AMFICOM.Client.General.Model.*;
-import com.syrus.AMFICOM.Client.Resource.*;
-import com.syrus.AMFICOM.Client.Resource.Map.*;
-import com.syrus.AMFICOM.Client.Configure.*;
-import com.syrus.AMFICOM.Client.Map.*;
-import com.syrus.AMFICOM.Client.General.Command.*;
-import com.syrus.AMFICOM.Client.General.UI.*;
+import javax.swing.JDesktopPane;
 
 //A0A
 public class ViewMapPropertiesCommand extends VoidCommand

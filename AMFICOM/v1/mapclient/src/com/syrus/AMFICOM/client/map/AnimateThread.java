@@ -1,12 +1,11 @@
 package com.syrus.AMFICOM.Client.Map;
 
 import com.syrus.AMFICOM.Client.Resource.Map.*;
-import com.syrus.AMFICOM.Client.Resource.Map.MapKISNodeElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapNodeLinkElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalLinkElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapTransmissionPathElement;
 
-import java.util.Enumeration;
+import java.util.*;
 
 //thread который отвечает за из менение резима показа alarm у nodeLInk
 
@@ -58,60 +57,50 @@ import java.util.Enumeration;
 		{
 			if ( myLogicalNetLayer.mapContext != null)
 			{
-				Enumeration e = myLogicalNetLayer.mapContext.getNodeLinks().elements();
-				while (e.hasMoreElements())
+				Iterator e = myLogicalNetLayer.mapContext.getNodeLinks().iterator();
+				while (e.hasNext())
 				{
-					MapNodeLinkElement nodeLink = (MapNodeLinkElement)e.nextElement();
+					MapNodeLinkElement nodeLink = (MapNodeLinkElement)e.next();
 
 					//Меняем режим показа alarma
 					if ( nodeLink.getAlarmState())
 						nodeLink.setShowAlarmed(!nodeLink.getShowAlarmed());
 				}
 
-				e = myLogicalNetLayer.mapContext.getPhysicalLinks().elements();
-				while (e.hasMoreElements())
+				e = myLogicalNetLayer.mapContext.getPhysicalLinks().iterator();
+				while (e.hasNext())
 				{
-					MapPhysicalLinkElement link = (MapPhysicalLinkElement )e.nextElement();
+					MapPhysicalLinkElement link = (MapPhysicalLinkElement )e.next();
 
 					//Меняем режим показа alarma
 					if (link.getAlarmState())
 						link.setShowAlarmed(!link.getShowAlarmed());
 				}
 
-				e = myLogicalNetLayer.mapContext.getTransmissionPath().elements();
-				while (e.hasMoreElements())
+				e = myLogicalNetLayer.mapContext.getTransmissionPath().iterator();
+				while (e.hasNext())
 				{
-					MapTransmissionPathElement path = (MapTransmissionPathElement)e.nextElement();
+					MapTransmissionPathElement path = (MapTransmissionPathElement)e.next();
 
 					//Меняем режим показа alarma
 					if (path.getAlarmState())
 						path.setShowAlarmed(!path.getShowAlarmed());
 				}
 
-				e = myLogicalNetLayer.mapContext.getMapEquipmentNodeElements().elements();
-				while (e.hasMoreElements())
+				e = myLogicalNetLayer.mapContext.getMapEquipmentNodeElements().iterator();
+				while (e.hasNext())
 				{
-					MapEquipmentNodeElement equip = (MapEquipmentNodeElement)e.nextElement();
+					MapEquipmentNodeElement equip = (MapEquipmentNodeElement)e.next();
 
 					//Меняем режим показа alarma
 					if ( equip.getAlarmState())
 						equip.setShowAlarmed(!equip.getShowAlarmed());
 				}
 
-				e = myLogicalNetLayer.mapContext.getMapKISNodeElements().elements();
-				while (e.hasMoreElements())
+				e = myLogicalNetLayer.mapContext.markers.iterator();
+				while (e.hasNext())
 				{
-					MapKISNodeElement kis = (MapKISNodeElement)e.nextElement();
-
-					//Меняем режим показа alarma
-//					if ( kis.getAlarmState())
-//						kis.setShowAlarmed(!kis.getShowAlarmed());
-				}
-
-				e = myLogicalNetLayer.mapContext.markers.elements();
-				while (e.hasMoreElements())
-				{
-					MapMarker mm = (MapMarker )e.nextElement();
+					MapMarker mm = (MapMarker )e.next();
 
 					//Меняем режим показа alarma
 					if ( mm instanceof MapAlarmMarker)

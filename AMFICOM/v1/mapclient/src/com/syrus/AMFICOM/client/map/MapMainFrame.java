@@ -176,7 +176,7 @@ public class MapMainFrame extends JInternalFrame implements OperationListener
 		aModel.setCommand("menuMapNew", new MapNewCommand(this, aContext));
 		aModel.setCommand("menuMapClose", new MapCloseCommand(this));
 		aModel.setCommand("menuMapOpen", new MapOpenCommand((JDesktopPane )this.getParent(), this, aContext));
-		aModel.setCommand("menuMapSave", new MapSaveCommand((JDesktopPane )this.getParent(), this, aContext));
+		aModel.setCommand("menuMapSave", new MapSaveCommand(this, aContext));
 
 		aModel.setCommand("menuMapOptions", new MapSelectMapViewerCommand(this));
 
@@ -354,9 +354,9 @@ public class MapMainFrame extends JInternalFrame implements OperationListener
 				MapTransmissionPathElement path = null;
 				SchemePath the_sp = null;
 
-				for(Enumeration enum = lnl().getMapContext().getTransmissionPath().elements(); enum.hasMoreElements();)
+				for(Iterator it = lnl().getMapContext().getTransmissionPath().iterator(); it.hasNext();)
 				{
-					MapTransmissionPathElement mappath = (MapTransmissionPathElement )enum.nextElement();
+					MapTransmissionPathElement mappath = (MapTransmissionPathElement )it.next();
 					if(mappath.PATH_ID != null && !mappath.PATH_ID.equals(""))
 					{
 						SchemePath sp = (SchemePath )Pool.get(SchemePath.typ, mappath.PATH_ID);
@@ -404,9 +404,9 @@ public class MapMainFrame extends JInternalFrame implements OperationListener
 				MapTransmissionPathElement path = null;
 				SchemePath the_sp = null;
 
-				for(Enumeration enum = lnl().getMapContext().getTransmissionPath().elements(); enum.hasMoreElements();)
+				for(Iterator it = lnl().getMapContext().getTransmissionPath().iterator(); it.hasNext();)
 				{
-					MapTransmissionPathElement mappath = (MapTransmissionPathElement )enum.nextElement();
+					MapTransmissionPathElement mappath = (MapTransmissionPathElement )it.next();
 					if(mappath.PATH_ID != null && !mappath.PATH_ID.equals(""))
 					{
 						SchemePath sp = (SchemePath )Pool.get(SchemePath.typ, mappath.PATH_ID);
@@ -455,9 +455,9 @@ public class MapMainFrame extends JInternalFrame implements OperationListener
 				MapTransmissionPathElement path = null;
 				SchemePath the_sp = null;
 
-				for(Enumeration enum = lnl().getMapContext().getTransmissionPath().elements(); enum.hasMoreElements();)
+				for(Iterator it = lnl().getMapContext().getTransmissionPath().iterator(); it.hasNext();)
 				{
-					MapTransmissionPathElement mappath = (MapTransmissionPathElement )enum.nextElement();
+					MapTransmissionPathElement mappath = (MapTransmissionPathElement )it.next();
 					if(mappath.PATH_ID != null && !mappath.PATH_ID.equals(""))
 					{
 						SchemePath sp = (SchemePath )Pool.get(SchemePath.typ, mappath.PATH_ID);
@@ -484,12 +484,11 @@ public class MapMainFrame extends JInternalFrame implements OperationListener
 				MapAlarmMarker marker = null;
 				if(path != null)
 				{
-					Enumeration e = lnl().getMapContext().markers.elements();
-					while( e.hasMoreElements())
+					for(Iterator it = lnl().getMapContext().markers.iterator(); it.hasNext();)
 					{
 						try
 						{
-							marker = (MapAlarmMarker)e.nextElement();
+							marker = (MapAlarmMarker )it.next();
 							if(marker.path_id.equals(path.getId()))
 								break;
 							marker = null;
@@ -690,21 +689,17 @@ public class MapMainFrame extends JInternalFrame implements OperationListener
 				SchemeElement[] ses = (SchemeElement[] )sne.getSource();
 				Scheme s = (Scheme )Pool.get(Scheme.typ, this.getMapContext().scheme_id);
 
-				Enumeration enum = lnl().getMapContext().getNodes().elements();
-				while(enum.hasMoreElements())
+				for(Iterator it = lnl().getMapContext().getNodes().iterator(); it.hasNext();)
 				{
-					Object obj = enum.nextElement();
-					if(	obj instanceof MapKISNodeElement ||
-						obj instanceof MapEquipmentNodeElement )
+					Object obj = it.next();
+					if(	obj instanceof MapEquipmentNodeElement )
 					{
-						MapEquipmentNodeElement mapkis = (MapEquipmentNodeElement )obj;
+						MapEquipmentNodeElement mape = (MapEquipmentNodeElement )obj;
 						for(int i = 0; i < ses.length; i++)
 						{
 							SchemeElement se = s.getTopologicalElement(ses[i].getId());
-///							SchemeElement se = s.getTopLevelElement(ses[i].getId());
-							if(mapkis.element_id.equals(se.getId()))
-//							if(mapkis.element_id.equals(ses[i].getId()))
-								mapkis.select();
+							if(mape.element_id.equals(se.getId()))
+								mape.select();
 						}
 					}
 				}
@@ -714,9 +709,9 @@ public class MapMainFrame extends JInternalFrame implements OperationListener
 			{
 //				System.out.println("SCHEME_PATH_SELECTED");
 				SchemePath[] sps = (SchemePath[] )sne.getSource();
-				for(Enumeration enum = lnl().getMapContext().getTransmissionPath().elements(); enum.hasMoreElements();)
+				for(Iterator it = lnl().getMapContext().getTransmissionPath().iterator(); it.hasNext();)
 				{
-					MapTransmissionPathElement mappath = (MapTransmissionPathElement )enum.nextElement();
+					MapTransmissionPathElement mappath = (MapTransmissionPathElement )it.next();
 					for(int i = 0; i < sps.length; i++)
 						if(mappath.PATH_ID.equals(sps[i].getId()))
 							mappath.select();
@@ -727,9 +722,9 @@ public class MapMainFrame extends JInternalFrame implements OperationListener
 			{
 //				System.out.println("SCHEME_CABLE_LINK_SELECTED");
 				SchemeCableLink[] scs = (SchemeCableLink[] )sne.getSource();
-				for(Enumeration enum = lnl().getMapContext().getPhysicalLinks().elements(); enum.hasMoreElements();)
+				for(Iterator it = lnl().getMapContext().getPhysicalLinks().iterator(); it.hasNext();)
 				{
-					MapPhysicalLinkElement link = (MapPhysicalLinkElement )enum.nextElement();
+					MapPhysicalLinkElement link = (MapPhysicalLinkElement )it.next();
 					for(int i = 0; i < scs.length; i++)
 						if(link.LINK_ID.equals(scs[i].getId()))
 							link.select();
@@ -742,21 +737,17 @@ public class MapMainFrame extends JInternalFrame implements OperationListener
 				SchemeElement[] ses = (SchemeElement[] )sne.getSource();
 				Scheme s = (Scheme )Pool.get(Scheme.typ, this.getMapContext().scheme_id);
 
-				Enumeration enum = lnl().getMapContext().getNodes().elements();
-				while(enum.hasMoreElements())
+				for(Iterator it = lnl().getMapContext().getNodes().iterator(); it.hasNext();)
 				{
-					Object obj = enum.nextElement();
-					if(	obj instanceof MapKISNodeElement ||
-						obj instanceof MapEquipmentNodeElement )
+					Object obj = it.next();
+					if(	obj instanceof MapEquipmentNodeElement )
 					{
-						MapEquipmentNodeElement mapkis = (MapEquipmentNodeElement )obj;
+						MapEquipmentNodeElement mape = (MapEquipmentNodeElement )obj;
 						for(int i = 0; i < ses.length; i++)
 						{
 							SchemeElement se = s.getTopologicalElement(ses[i].getId());
-//							SchemeElement se = s.getTopLevelElement(ses[i].getId());
-							if(mapkis.element_id.equals(se.getId()))
-//							if(mapkis.element_id.equals(ses[i].getId()))
-								mapkis.deselect();
+							if(mape.element_id.equals(se.getId()))
+								mape.deselect();
 						}
 					}
 				}
@@ -766,9 +757,9 @@ public class MapMainFrame extends JInternalFrame implements OperationListener
 			{
 //				System.out.println("SCHEME_PATH_DESELECTED");
 				SchemePath[] sps = (SchemePath[] )sne.getSource();
-				for(Enumeration enum = lnl().getMapContext().getTransmissionPath().elements(); enum.hasMoreElements();)
+				for(Iterator it = lnl().getMapContext().getTransmissionPath().iterator(); it.hasNext();)
 				{
-					MapTransmissionPathElement mappath = (MapTransmissionPathElement )enum.nextElement();
+					MapTransmissionPathElement mappath = (MapTransmissionPathElement )it.next();
 					for(int i = 0; i < sps.length; i++)
 						if(mappath.PATH_ID.equals(sps[i].getId()))
 							mappath.deselect();
@@ -779,9 +770,9 @@ public class MapMainFrame extends JInternalFrame implements OperationListener
 			{
 //				System.out.println("SCHEME_CABLE_LINK_DESELECTED");
 				SchemeCableLink[] scs = (SchemeCableLink[] )sne.getSource();
-				for(Enumeration enum = lnl().getMapContext().getPhysicalLinks().elements(); enum.hasMoreElements();)
+				for(Iterator it = lnl().getMapContext().getPhysicalLinks().iterator(); it.hasNext();)
 				{
-					MapPhysicalLinkElement link = (MapPhysicalLinkElement )enum.nextElement();
+					MapPhysicalLinkElement link = (MapPhysicalLinkElement )it.next();
 					for(int i = 0; i < scs.length; i++)
 						if(link.LINK_ID.equals(scs[i].getId()))
 							link.deselect();
@@ -805,9 +796,9 @@ public class MapMainFrame extends JInternalFrame implements OperationListener
 			{
 //				System.out.println("CATALOG_PATH_SELECTED");
 				TransmissionPath[] tps = (TransmissionPath[] )cne.getSource();
-				for(Enumeration enum = lnl().getMapContext().getTransmissionPath().elements(); enum.hasMoreElements();)
+				for(Iterator it = lnl().getMapContext().getTransmissionPath().iterator(); it.hasNext();)
 				{
-					MapTransmissionPathElement mappath = (MapTransmissionPathElement )enum.nextElement();
+					MapTransmissionPathElement mappath = (MapTransmissionPathElement )it.next();
 					if(mappath.PATH_ID != null && !mappath.PATH_ID.equals(""))
 					{
 						SchemePath sp = (SchemePath )Pool.get(SchemePath.typ, mappath.PATH_ID);
@@ -823,9 +814,9 @@ public class MapMainFrame extends JInternalFrame implements OperationListener
 			{
 //				System.out.println("CATALOG_CABLE_LINK_SELECTED");
 				CableLink[] cs = (CableLink[] )cne.getSource();
-				for(Enumeration enum = lnl().getMapContext().getPhysicalLinks().elements(); enum.hasMoreElements();)
+				for(Iterator it = lnl().getMapContext().getPhysicalLinks().iterator(); it.hasNext();)
 				{
-					MapPhysicalLinkElement link = (MapPhysicalLinkElement )enum.nextElement();
+					MapPhysicalLinkElement link = (MapPhysicalLinkElement )it.next();
 					if(link.LINK_ID != null && !link.LINK_ID.equals(""))
 					{
 						SchemeCableLink scl = (SchemeCableLink )Pool.get(SchemeCableLink.typ, link.LINK_ID);
@@ -866,9 +857,9 @@ public class MapMainFrame extends JInternalFrame implements OperationListener
 
 	public MapPhysicalLinkElement findMapLinkByCableLink(String link_id)
 	{
-		for(Enumeration enum = lnl().getMapContext().getPhysicalLinks().elements(); enum.hasMoreElements();)
+		for(Iterator it = lnl().getMapContext().getPhysicalLinks().iterator(); it.hasNext();)
 		{
-			MapPhysicalLinkElement link = (MapPhysicalLinkElement )enum.nextElement();
+			MapPhysicalLinkElement link = (MapPhysicalLinkElement )it.next();
 			if(link.LINK_ID != null && !link.LINK_ID.equals(""))
 			{
 				SchemeCableLink scl = (SchemeCableLink )Pool.get(SchemeCableLink.typ, link.LINK_ID);
@@ -919,9 +910,9 @@ public class MapMainFrame extends JInternalFrame implements OperationListener
 		}
 		if(se != null)
 		{
-			for(Enumeration enum = lnl().getMapContext().getMapEquipmentNodeElements().elements(); enum.hasMoreElements();)
+			for(Iterator it = lnl().getMapContext().getMapEquipmentNodeElements().iterator(); it.hasNext();)
 			{
-				MapEquipmentNodeElement node = (MapEquipmentNodeElement )enum.nextElement();
+				MapEquipmentNodeElement node = (MapEquipmentNodeElement )it.next();
 				if(node.element_id != null && node.element_id.equals(se.getId()))
 					return node;
 			}
@@ -973,17 +964,17 @@ public class MapMainFrame extends JInternalFrame implements OperationListener
 //	mapPanel.myMapViewer.lnl.getMapContext().zoom(myMapContext.zoomFactor);
 			myMapScrollPane.upDateScroll();
 
-			Enumeration e = myMapContext.getAllElements().elements();
-			while (e.hasMoreElements())
+			Iterator e = myMapContext.getAllElements().iterator();
+			while (e.hasNext())
 			{
-				MapElement mapElement = (MapElement)e.nextElement();
+				MapElement mapElement = (MapElement)e.next();
 				mapElement.setMapContext( myMapContext);
 			}
 
-			e = myMapContext.getNodeLinks().elements();
-			while (e.hasMoreElements())
+			e = myMapContext.getNodeLinks().iterator();
+			while (e.hasNext())
 			{
-				MapNodeLinkElement nodeLink = (MapNodeLinkElement )e.nextElement();
+				MapNodeLinkElement nodeLink = (MapNodeLinkElement )e.next();
 				nodeLink.finalUpdate();
 			}
 

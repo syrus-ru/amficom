@@ -220,31 +220,6 @@ public class MapEquipmentNodeElement extends MapNodeElement implements Serializa
 		return new MapEquipmentNodeElementDisplayModel();
 	}
 
-	public Enumeration getChildTypes()
-    {
-		Vector vec = new Vector();
-        vec.add(MapPhysicalLinkElement.typ);
-		return vec.elements();
-    }
-		
-	public Class getChildClass(String key)
-    {
-		if(key.equals(MapPhysicalLinkElement.typ))
-			return MapPhysicalLinkElement.class;
-        return ObjectResource.class;
-    }
-		
-	public Enumeration getChildren(String key)
-	{
-		Vector vec = new Vector();
-//		System.out.println("get CP children, count = " + connectionPoints.ports.size());
-		if(key.equals(MapPhysicalLinkElement.typ))
-		{
-			return mapContext.getPhysicalLinksContainingNode(this).elements();
-		}
-		return vec.elements();
-	}
-
 	public static PropertiesPanel getPropertyPane()
 	{
 		return new MapEquipmentPane();
