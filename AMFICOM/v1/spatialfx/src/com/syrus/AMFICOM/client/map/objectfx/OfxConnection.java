@@ -1,5 +1,5 @@
 /**
- * $Id: OfxConnection.java,v 1.6 2005/02/24 13:46:09 krupenn Exp $
+ * $Id: OfxConnection.java,v 1.7 2005/02/25 13:58:59 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -20,7 +20,7 @@ import java.util.List;
 
 /**
  * Реализация соединения с хранилищем данных в формате SpatialFX.
- * @version $Revision: 1.6 $, $Date: 2005/02/24 13:46:09 $
+ * @version $Revision: 1.7 $, $Date: 2005/02/25 13:58:59 $
  * @author $Author: krupenn $
  * @module spatialfx_v1
  */
@@ -175,7 +175,7 @@ public class OfxConnection extends MapConnection
 
 			if(!dbset)
 				this.jMapViewer.setDBName(sessionName);
-			this.jMapViewer.setMapName(dataBaseView);
+			this.jMapViewer.setMapName(this.dataBaseView);
 		}
 		catch(Exception e)
 		{
@@ -224,6 +224,6 @@ public class OfxConnection extends MapConnection
 
 	public JMapViewer getJMapViewer()
 	{
-		return jMapViewer;
+		return this.jMapViewer;
 	}
 }
