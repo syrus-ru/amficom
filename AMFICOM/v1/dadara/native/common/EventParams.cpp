@@ -11,6 +11,7 @@ const int EventParams::GAIN = EventParams_GAIN;
 const int EventParams::LOSS = EventParams_LOSS;
 const int EventParams::REFLECTIVE = EventParams_REFLECTIVE;
 const int EventParams::SINGULARITY = EventParams_SINGULARITY;
+const int EventParams::DEADZONE = EventParams_DEADZONE;
 
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction

@@ -15,6 +15,7 @@
 #define EventParams_GAIN 11
 #define EventParams_LOSS 12
 #define EventParams_REFLECTIVE 13
+#define EventParams_DEADZONE 15
 #define EventParams_SINGULARITY 14
 
 class EventParams
@@ -29,6 +30,7 @@ public:
 	static const int GAIN;
 	static const int LOSS;
 	static const int REFLECTIVE;
+	static const int DEADZONE;
 	static const int SINGULARITY;
 
 public:
