@@ -272,6 +272,10 @@ src\com\syrus\AMFICOM\client_\general\ui_\AbstractLabelCellRenderer.java
 src\com\syrus\AMFICOM\client_\general\ui_\ColorCellRenderer.java
 src\com\syrus\AMFICOM\client_\general\ui_\ColumnSorter.java
 src\com\syrus\AMFICOM\client_\general\ui_\LabelCheckBoxRenderer.java
+src\com\syrus\AMFICOM\client_\general\ui_\ObjectResourcePropertiesTable.java
+src\com\syrus\AMFICOM\client_\general\ui_\ObjectResourcePropertiesTableModel.java
+src\com\syrus\AMFICOM\client_\general\ui_\ObjectResourcePropertiesController.java
+src\com\syrus\AMFICOM\client_\general\ui_\PropertiesCellRenderer.java
 src\com\syrus\AMFICOM\client_\general\ui_\ObjectResourceTable.java
 src\com\syrus\AMFICOM\client_\general\ui_\ObjectResourceTableModel.java
 src\com\syrus\AMFICOM\client_\general\ui_\StubComboBoxCellRenderer.java

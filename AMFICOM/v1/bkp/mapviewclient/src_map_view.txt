@@ -199,7 +199,3 @@ src\com\syrus\AMFICOM\Client\Resource\MapView\MapUnboundLinkElement.java
 src\com\syrus\AMFICOM\Client\Resource\MapView\MapUnboundNodeElement.java
 src\com\syrus\AMFICOM\Client\Resource\MapView\MapView.java
 src\com\syrus\AMFICOM\Client\Resource\MapView\VoidMapElement.java
-src\com\syrus\AMFICOM\client_\general\ui_\ObjectResourcePropertiesController.java
-src\com\syrus\AMFICOM\client_\general\ui_\ObjectResourcePropertiesTable.java
-src\com\syrus\AMFICOM\client_\general\ui_\ObjectResourcePropertiesTableModel.java
-src\com\syrus\AMFICOM\client_\general\ui_\PropertiesCellRenderer.java
