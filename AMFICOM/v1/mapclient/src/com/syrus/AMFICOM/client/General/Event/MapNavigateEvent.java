@@ -1,5 +1,5 @@
 /**
- * $Id: MapNavigateEvent.java,v 1.11 2004/12/23 16:35:17 krupenn Exp $
+ * $Id: MapNavigateEvent.java,v 1.12 2004/12/27 15:49:27 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -18,7 +18,7 @@ import com.syrus.AMFICOM.general.corba.IdentifierDefaultFactory;
  *
  *
  *
- * @version $Revision: 1.11 $, $Date: 2004/12/23 16:35:17 $
+ * @version $Revision: 1.12 $, $Date: 2004/12/27 15:49:27 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -154,7 +154,7 @@ public class MapNavigateEvent extends MapEvent
 		super(source, MAP_NAVIGATE);
 		this.markerId = markerId;
 		this.distance = distance;
-		this.schemePathId = new Identifier(schemePathId.getTransferable());
+		this.schemePathId = new Identifier(schemePathId.transferable());
 		this.meId = meId;
 	}
 
@@ -168,7 +168,7 @@ public class MapNavigateEvent extends MapEvent
 			com.syrus.AMFICOM.general.corba.Identifier schemePathElementId)
 	{
 		this(source, typ, markerId, distance, schemePathId, meId);
-		this.schemePathElementId = new Identifier(schemePathElementId.getTransferable());
+		this.schemePathElementId = new Identifier(schemePathElementId.transferable());
 	}
 
 	public void setMarkerId(Identifier markerId)
@@ -193,7 +193,7 @@ public class MapNavigateEvent extends MapEvent
 
 	public void setSchemePathId(com.syrus.AMFICOM.general.corba.Identifier schemePathId)
 	{
-		this.schemePathId = new Identifier(schemePathId.getTransferable());
+		this.schemePathId = new Identifier(schemePathId.transferable());
 	}
 
 	public com.syrus.AMFICOM.general.corba.Identifier getSchemePathId()
@@ -213,7 +213,7 @@ public class MapNavigateEvent extends MapEvent
 
 	public void setSchemePathElementId(com.syrus.AMFICOM.general.corba.Identifier schemePathElementId)
 	{
-		this.schemePathElementId = new Identifier(schemePathElementId.getTransferable());
+		this.schemePathElementId = new Identifier(schemePathElementId.transferable());
 	}
 
 	public com.syrus.AMFICOM.general.corba.Identifier getSchemePathElementId()
