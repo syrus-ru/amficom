@@ -1,5 +1,5 @@
 /*
- * $Id: Domain.java,v 1.8 2005/02/14 11:18:19 arseniy Exp $
+ * $Id: Domain.java,v 1.9 2005/02/22 11:07:24 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,8 +9,8 @@
 package com.syrus.AMFICOM.administration;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/02/14 11:18:19 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.9 $, $Date: 2005/02/22 11:07:24 $
+ * @author $Author: bob $
  * @module administration_v1
  */
 
@@ -25,6 +25,7 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.Characterized;
 import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
@@ -66,7 +67,7 @@ public class Domain extends DomainMember implements Characterized {
 		try {
 			this.characteristics = new ArrayList(dt.characteristic_ids.length);
 			for (int i = 0; i < dt.characteristic_ids.length; i++)
-				this.characteristics.add(AdministrationStorableObjectPool.getStorableObject(new Identifier(dt.characteristic_ids[i]), true));
+				this.characteristics.add(GeneralStorableObjectPool.getStorableObject(new Identifier(dt.characteristic_ids[i]), true));
 		}
 		catch (ApplicationException ae) {
 			throw new CreateObjectException(ae);
