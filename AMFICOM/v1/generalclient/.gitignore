@@ -9,5 +9,6 @@ classes
 *.gz
 .idl
 .sqlj
+.all
 SQLChecker.cache
 sqlj.properties
