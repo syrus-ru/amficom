@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.syrus.AMFICOM.Client.General.Lang.LangModelSchedule;
+import com.syrus.AMFICOM.Client.General.Lang.LangModelMeasurement;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObject_Database;
@@ -50,20 +50,20 @@ public class TemporalPattern extends StorableObject {
 
 		public void fillAllData() {
 			if (this.minutes == null)
-				this.minutes = parseExpression(LangModelSchedule
+				this.minutes = parseExpression(LangModelMeasurement
 						.getString("min"), "*", 0, 59); //$NON-NLS-1$ //$NON-NLS-2$
 			if (this.hours == null)
-				this.hours = parseExpression(LangModelSchedule
+				this.hours = parseExpression(LangModelMeasurement
 						.getString("hour"), "*", 0, 23); //$NON-NLS-1$ //$NON-NLS-2$
 			if (this.dayOfMonth == null)
-				this.dayOfMonth = parseExpression(LangModelSchedule
+				this.dayOfMonth = parseExpression(LangModelMeasurement
 						.getString("day_of_month"), "*", 1, 31); //$NON-NLS-1$ //$NON-NLS-2$
 			if (this.month == null)
-				this.month = parseExpression(LangModelSchedule
+				this.month = parseExpression(LangModelMeasurement
 						.getString("month"), "*", 0, 11); //$NON-NLS-1$ //$NON-NLS-2$
 			this.month.names = MONTH_NAMES;
 			if (this.dayOfWeek == null)
-				this.dayOfWeek = parseExpression(LangModelSchedule
+				this.dayOfWeek = parseExpression(LangModelMeasurement
 						.getString("day_of_week"), //$NON-NLS-1$
 						"*", 0, 6); //$NON-NLS-1$ //$NON-NLS-2$
 			this.dayOfWeek.names = DAY_OF_WEEK_NAMES;
@@ -100,7 +100,7 @@ public class TemporalPattern extends StorableObject {
 				if (this.hours.isAll()) {
 					desc.append(this.minutes.toString());
 					desc.append(" "); //$NON-NLS-1$
-					desc.append(LangModelSchedule.getString("of")); //$NON-NLS-1$
+					desc.append(LangModelMeasurement.getString("of")); //$NON-NLS-1$
 					desc.append(" "); //$NON-NLS-1$
 					desc.append(this.hours.toString());
 
@@ -211,12 +211,12 @@ public class TemporalPattern extends StorableObject {
 							case 1:
 								//minute
 								this.minutes = parseExpression(
-										LangModelSchedule.getString("min"), subString, 0, //$NON-NLS-1$
+										LangModelMeasurement.getString("min"), subString, 0, //$NON-NLS-1$
 										59);
 								break;
 							case 2:
 								//hour
-								this.hours = parseExpression(LangModelSchedule
+								this.hours = parseExpression(LangModelMeasurement
 										.getString("hour"), //$NON-NLS-1$
 										subString, 0, //$NON-NLS-1$
 										23);
@@ -224,20 +224,20 @@ public class TemporalPattern extends StorableObject {
 							case 3:
 								//day of month
 								this.dayOfMonth = parseExpression(
-										LangModelSchedule
+										LangModelMeasurement
 												.getString("day_of_month"), subString, //$NON-NLS-1$
 										1, 31);
 								break;
 							case 4:
 								//month
-								this.month = parseExpression(LangModelSchedule
+								this.month = parseExpression(LangModelMeasurement
 										.getString("month"), subString, 0, //$NON-NLS-1$
 										11);
 								break;
 							case 5:
 								//day of week
 								this.dayOfWeek = parseExpression(
-										LangModelSchedule
+										LangModelMeasurement
 												.getString("day_of_week"), //$NON-NLS-1$
 										subString, 0, 6);
 								break;
@@ -574,7 +574,7 @@ public class TemporalPattern extends StorableObject {
 					if (sbuf.length() > 0)
 						sbuf.append(", "); //$NON-NLS-1$
 
-					sbuf.append(LangModelSchedule.getString("each")); //$NON-NLS-1$
+					sbuf.append(LangModelMeasurement.getString("each")); //$NON-NLS-1$
 					sbuf.append(" "); //$NON-NLS-1$
 					String str = Integer.toString(this.divisor[i]);
 					if (this.divisor[i] != 1) {
@@ -589,14 +589,14 @@ public class TemporalPattern extends StorableObject {
 					if (this.starts[i] != this.ends[i]) {
 						if (sbuf.length() > 0)
 							sbuf.append(", "); //$NON-NLS-1$
-						sbuf.append(LangModelSchedule.getString("from")); //$NON-NLS-1$
+						sbuf.append(LangModelMeasurement.getString("from")); //$NON-NLS-1$
 						sbuf.append(" "); //$NON-NLS-1$
 						if (this.names == null)
 							sbuf.append(Integer.toString(this.starts[i]));
 						else
 							sbuf.append(this.names[this.starts[i]]);
 						sbuf.append(" "); //$NON-NLS-1$
-						sbuf.append(LangModelSchedule.getString("to")); //$NON-NLS-1$
+						sbuf.append(LangModelMeasurement.getString("to")); //$NON-NLS-1$
 						sbuf.append(" "); //$NON-NLS-1$
 						if (this.names == null)
 							sbuf.append(Integer.toString(this.ends[i]));
@@ -625,18 +625,18 @@ public class TemporalPattern extends StorableObject {
 	}
 
 	public static final String[]	DAY_OF_WEEK_NAMES	= new String[] {
-			LangModelSchedule.getString("Sunday"), LangModelSchedule.getString("Monday"), //$NON-NLS-1$ //$NON-NLS-2$
-			LangModelSchedule.getString("Tuesday"), LangModelSchedule.getString("Wednesday"), //$NON-NLS-1$ //$NON-NLS-2$
-			LangModelSchedule.getString("Thursday"), LangModelSchedule.getString("Friday"), //$NON-NLS-1$ //$NON-NLS-2$
-			LangModelSchedule.getString("Saturday"),	};										//$NON-NLS-1$
+			LangModelMeasurement.getString("Sunday"), LangModelMeasurement.getString("Monday"), //$NON-NLS-1$ //$NON-NLS-2$
+			LangModelMeasurement.getString("Tuesday"), LangModelMeasurement.getString("Wednesday"), //$NON-NLS-1$ //$NON-NLS-2$
+			LangModelMeasurement.getString("Thursday"), LangModelMeasurement.getString("Friday"), //$NON-NLS-1$ //$NON-NLS-2$
+			LangModelMeasurement.getString("Saturday"),	};										//$NON-NLS-1$
 
 	public static final String[]	MONTH_NAMES			= new String[] {
-			LangModelSchedule.getString("January"), LangModelSchedule.getString("February"), //$NON-NLS-1$ //$NON-NLS-2$
-			LangModelSchedule.getString("March"), LangModelSchedule.getString("April"), //$NON-NLS-1$ //$NON-NLS-2$
-			LangModelSchedule.getString("May"), LangModelSchedule.getString("June"), //$NON-NLS-1$ //$NON-NLS-2$
-			LangModelSchedule.getString("July"), LangModelSchedule.getString("Augest"), //$NON-NLS-1$ //$NON-NLS-2$
-			LangModelSchedule.getString("September"), LangModelSchedule.getString("October"), //$NON-NLS-1$ //$NON-NLS-2$
-			LangModelSchedule.getString("November"), LangModelSchedule.getString("December")};	//$NON-NLS-1$ //$NON-NLS-2$
+			LangModelMeasurement.getString("January"), LangModelMeasurement.getString("February"), //$NON-NLS-1$ //$NON-NLS-2$
+			LangModelMeasurement.getString("March"), LangModelMeasurement.getString("April"), //$NON-NLS-1$ //$NON-NLS-2$
+			LangModelMeasurement.getString("May"), LangModelMeasurement.getString("June"), //$NON-NLS-1$ //$NON-NLS-2$
+			LangModelMeasurement.getString("July"), LangModelMeasurement.getString("Augest"), //$NON-NLS-1$ //$NON-NLS-2$
+			LangModelMeasurement.getString("September"), LangModelMeasurement.getString("October"), //$NON-NLS-1$ //$NON-NLS-2$
+			LangModelMeasurement.getString("November"), LangModelMeasurement.getString("December")};	//$NON-NLS-1$ //$NON-NLS-2$
 
 	public static final int[]		weekNumber			= new int[] {
 			Calendar.SUNDAY, Calendar.MONDAY, Calendar.TUESDAY,
@@ -648,9 +648,6 @@ public class TemporalPattern extends StorableObject {
 	private String[]				cronStrings;
 	private String					description;
 	private StorableObject_Database	temporalPatternDatabase;
-
-	private long					endPeriod;
-	private long					startPeriod;
 
 	private HashMap					templates;
 	private long[]					times;
@@ -763,13 +760,21 @@ public class TemporalPattern extends StorableObject {
 		return collection;
 	}
 
-	public long[] getTimes() {
+	/**
+	 * get times in ms that describes by temporal patterns and between start and end
+	 * @param start
+	 * @param end
+	 * @return
+	 */
+	public long[] getTimes(long start, long end) {
 		if (this.times == null) {
 			//int count = 0;
 			Collection list = this.templates.values();
 			List timeList = new ArrayList();
 			for (Iterator it = list.iterator(); it.hasNext();) {
 				TimeLine timeLine = (TimeLine) it.next();
+				timeLine.setStartPeriod(start);
+				timeLine.setEndPeriod(end);
 				timeLine.parseTemplate();
 				if (timeLine.dateList != null) {
 					for (Iterator it2 = timeLine.dateList.iterator(); it2
@@ -804,39 +809,7 @@ public class TemporalPattern extends StorableObject {
 			this.templates = new HashMap();
 		TimeLine timeLine = new TimeLine();
 		timeLine.setTemplate(template);
-		timeLine.setStartPeriod(this.startPeriod);
-		timeLine.setEndPeriod(this.endPeriod);
 		this.templates.put(timeLine, timeLine);
 		//setType(TIMESTAMPTYPE_PERIODIC);
-	}
-
-	/**
-	 * @return Returns the endPeriod.
-	 */
-	public long getEndPeriod() {
-		return this.endPeriod;
-	}
-
-	/**
-	 * @param endPeriod
-	 *            The endPeriod to set.
-	 */
-	public void setEndPeriod(long endPeriod) {
-		this.endPeriod = endPeriod;
-	}
-
-	/**
-	 * @return Returns the startPeriod.
-	 */
-	public long getStartPeriod() {
-		return this.startPeriod;
-	}
-
-	/**
-	 * @param startPeriod
-	 *            The startPeriod to set.
-	 */
-	public void setStartPeriod(long startPeriod) {
-		this.startPeriod = startPeriod;
 	}
 }
