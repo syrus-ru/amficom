@@ -2,7 +2,6 @@ package com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.SystemColor;
 
 import javax.swing.BorderFactory;
 import javax.swing.Icon;
@@ -278,15 +277,15 @@ implements OperationListener
 
 	private void updColorModel()
 	{
-		scrollPane.getViewport().setBackground(SystemColor.window);
-		jTable.setBackground(SystemColor.window);
-		jTable.setForeground(ColorManager.getColor("textColor"));
-		jTable.setGridColor(ColorManager.getColor("tableGridColor"));
-
-		scrollPaneWholeComp.getViewport().setBackground(SystemColor.window);
-		jTableWholeComp.setBackground(SystemColor.window);
-		jTableWholeComp.setForeground(ColorManager.getColor("textColor"));
-		jTableWholeComp.setGridColor(ColorManager.getColor("tableGridColor"));
+//		scrollPane.getViewport().setBackground(SystemColor.window);
+//		jTable.setBackground(SystemColor.window);
+//		jTable.setForeground(ColorManager.getColor("textColor"));
+//		jTable.setGridColor(ColorManager.getColor("tableGridColor"));
+//
+//		scrollPaneWholeComp.getViewport().setBackground(SystemColor.window);
+//		jTableWholeComp.setBackground(SystemColor.window);
+//		jTableWholeComp.setForeground(ColorManager.getColor("textColor"));
+//		jTableWholeComp.setGridColor(ColorManager.getColor("tableGridColor"));
 	}
 
 	void updTableModel(String id)

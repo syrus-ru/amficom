@@ -5,6 +5,13 @@ import java.util.*;
 
 import java.awt.Color;
 
+/**
+ * @deprecated нахЪ
+ * @version $Revision: 1.5 $, $Date: 2005/03/23 16:38:46 $
+ * @author $Author: bob $
+ * @author Vladimir Dolzhenko
+ * @module analysis_v1
+ */
 public class ColorManager
 {
 	private ColorManager()

@@ -85,7 +85,7 @@ public class SimpleGraphPanel extends JPanel
 
 		// default values of scales - fitted to panel size
 		scaleX = (double)getWidth() / (double)y.length;
-		scaleY = (double)getHeight() / (maxY - minY);
+		scaleY = getHeight() / (maxY - minY);
 	}
 
 	public void setColorModel(String color_id)

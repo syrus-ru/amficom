@@ -1,12 +1,18 @@
 package com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI;
 
-import java.awt.*;
 import java.awt.event.ActionEvent;
-import javax.swing.*;
+
+import javax.swing.AbstractButton;
+import javax.swing.JButton;
+import javax.swing.JToolBar;
+import javax.swing.UIManager;
 
 import com.syrus.AMFICOM.Client.General.Command.Command;
-import com.syrus.AMFICOM.Client.General.Lang.*;
-import com.syrus.AMFICOM.Client.General.Model.*;
+import com.syrus.AMFICOM.Client.General.Lang.LangModel;
+import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
+import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
+import com.syrus.AMFICOM.Client.General.Model.ApplicationModel;
+import com.syrus.AMFICOM.Client.General.Model.ApplicationModelListener;
 import com.syrus.AMFICOM.Client.Resource.ResourceKeys;
 
 public class AnalyseMainToolBar extends JToolBar implements ApplicationModelListener

@@ -3,7 +3,9 @@ package com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
 
+import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
 import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.analysis.CoreAnalysisManager;
 import com.syrus.AMFICOM.analysis.dadara.*;
@@ -36,7 +38,7 @@ public class HistogrammPanel extends ScaledGraphPanel
 		inversed_y = false;
 		grid_shift_x = down_limit;
 
-		Kx = (up_limit - down_limit) / (double)nBins;
+		Kx = (up_limit - down_limit) / nBins;
 		Ky = 1;
 
 		init();
@@ -57,7 +59,7 @@ public class HistogrammPanel extends ScaledGraphPanel
 			derivative[i] = -derivative[i];
 
 		//Normalizing of the derivative to the dimension db/km
-		double tmp = 1000./(double)event_size/deltaX;
+		double tmp = 1000./event_size/deltaX;
 		for (int i = 0; i < derivative.length; i++)
 			derivative[i] = derivative[i]*tmp;
 	}
@@ -66,8 +68,8 @@ public class HistogrammPanel extends ScaledGraphPanel
 	{
 		super.updColorModel();
 
-		gaussColor = ColorManager.getColor("connectColor");
-		thresholdColor = ColorManager.getColor("endColor");
+		gaussColor = UIManager.getColor(AnalysisResourceKeys.COLOR_CONNECTOR);
+		thresholdColor = UIManager.getColor(AnalysisResourceKeys.COLOR_END);
 	}
 
 	public void paint(Graphics g)

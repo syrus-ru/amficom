@@ -9,18 +9,22 @@ package com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI;
  * @version 1.0
  */
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
 
 import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
 import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.Resource.Pool;
-import com.syrus.AMFICOM.administration.*;
-import com.syrus.AMFICOM.configuration.*;
+import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
+import com.syrus.AMFICOM.configuration.MonitoredElement;
 import com.syrus.AMFICOM.configuration.corba.MonitoredElementSort;
-import com.syrus.AMFICOM.general.*;
-import com.syrus.AMFICOM.scheme.*;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.LinkedIdsCondition;
+import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.scheme.SchemePath;
 import com.syrus.AMFICOM.scheme.SchemeStorableObjectPool;
 import com.syrus.io.BellcoreStructure;
 
@@ -60,11 +64,9 @@ public class PathElementsFrame extends AnalysisFrame
 								new Identifier(bs.monitoredElementId), true);
 
 				if (me.getSort().equals(MonitoredElementSort.MONITOREDELEMENT_SORT_TRANSMISSION_PATH)) {
-					Identifier domain_id = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).
+					Identifier domainId = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).
 							getAccessIdentifier().domain_id);
-					Domain domain = (Domain)ConfigurationStorableObjectPool.getStorableObject(
-							domain_id, true);
-					DomainCondition condition = new DomainCondition(domain,
+					LinkedIdsCondition condition = new LinkedIdsCondition(domainId,
 							ObjectEntities.SCHEME_PATH_ENTITY_CODE);
 					List paths = SchemeStorableObjectPool.getStorableObjectsByCondition(condition, true);
 

@@ -4,7 +4,6 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.SystemColor;
 
 import javax.swing.BorderFactory;
 import javax.swing.Icon;
@@ -61,7 +60,6 @@ implements OperationListener
 	private FixedSizeEditableTableModel tModel;
 	private JTable jTable;
 	protected int selected = 0;
-	protected boolean skip = false;
 
 	BorderLayout borderLayout = new BorderLayout();
 	JPanel mainPanel = new JPanel();
@@ -116,7 +114,6 @@ implements OperationListener
 						RefAnalysis a = (RefAnalysis)Pool.get("refanalysis", id);
 						BellcoreStructure bs = (BellcoreStructure)Pool.get("bellcorestructure", id);
 						setTableModel(bs, a.events);
-						this.skip = true;
 						this.updateTableModel(0);
 					}
 					setVisible(true);
@@ -315,11 +312,7 @@ implements OperationListener
 			else
 			{
 				selected = lsm.getMinSelectionIndex();
-				if (!skip)
-				{
-					dispatcher.notify(new RefUpdateEvent(String.valueOf(selected), RefUpdateEvent.EVENT_SELECTED_EVENT));
-				}
-				skip = false;
+				dispatcher.notify(new RefUpdateEvent(String.valueOf(selected), RefUpdateEvent.EVENT_SELECTED_EVENT));
 			}
 		}
 		});
@@ -336,11 +329,11 @@ implements OperationListener
 
 	private void updColorModel()
 	{
-		scrollPane.getViewport().setBackground(SystemColor.window);
-		jTable.setBackground(SystemColor.window);
-		jTable.setForeground(ColorManager.getColor("textColor"));
-		jTable.setGridColor(ColorManager.getColor("tableGridColor"));
-		repaint();
+//		scrollPane.getViewport().setBackground(SystemColor.window);
+//		jTable.setBackground(SystemColor.window);
+//		jTable.setForeground(ColorManager.getColor("textColor"));
+//		jTable.setGridColor(ColorManager.getColor("tableGridColor"));
+//		repaint();
 	}
 
 	private void updateTableModel(int activeEvent)

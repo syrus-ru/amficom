@@ -23,7 +23,7 @@ public class Histogramm
 	public double[] init(double[] data, int start, int end)
 	{
 		histo = new double[nBins];
-		double derivDelta = (upLimit - downLimit) / (double)nBins;
+		double derivDelta = (upLimit - downLimit) / nBins;
 
 		int n;
 		for (int i = Math.max(0, start); i <= Math.min (end, data.length-1); i++)
@@ -51,7 +51,7 @@ public class Histogramm
 	public double getMaximumValue()
 	{
 		int max = getMaximumIndex();
-		return downLimit + (double)(upLimit - downLimit) / (double)nBins * max;
+		return downLimit + (upLimit - downLimit) / nBins * max;
 	}
 
 	public double[] getHistogramm()

@@ -49,14 +49,14 @@ public class AnalysisSelectionFrame extends ATableFrame
 																		implements OperationListener
 {
 	
-	private static final Double[] ff =
+	static final Double[] ff =
 	 {
 		 new Double(0.0), new Double(0.05), new Double(0.1), new Double(0.15),
 		 new Double(0.2), new Double(0.25), new Double(0.3), new Double(0.35),
 		 new Double(0.4), new Double(0.45), new Double(0.5)
 	 };
 
-	 private static final String[] strategy =
+	 static final String[] strategy =
 	 {
 		 LangModelAnalyse.getString("strategy-1"),
 		 LangModelAnalyse.getString("strategy0"),
@@ -66,7 +66,7 @@ public class AnalysisSelectionFrame extends ATableFrame
 		 LangModelAnalyse.getString("strategy4")
 	 };
 
-	 private static final Integer[] tactics =
+	 static final Integer[] tactics =
 	 {
 		 new Integer(0), new Integer(1), new Integer(2), new Integer(3),
 		 new Integer(4), new Integer(5), new Integer(6), new Integer(7), new Integer(8)
@@ -247,9 +247,9 @@ public class AnalysisSelectionFrame extends ATableFrame
 	private void updColorModel()
 	{
 		scrollPane.getViewport().setBackground(SystemColor.window);
-		jTable.setBackground(SystemColor.window);
-		jTable.setForeground(ColorManager.getColor("textColor"));
-		jTable.setGridColor(ColorManager.getColor("tableGridColor"));
+//		jTable.setBackground(SystemColor.window);
+//		jTable.setForeground(ColorManager.getColor("textColor"));
+//		jTable.setGridColor(ColorManager.getColor("tableGridColor"));
 	}
 
 	private void jbInit() throws Exception
@@ -530,17 +530,17 @@ public class AnalysisSelectionFrame extends ATableFrame
 		 if(row == 5 && column == 1)
 		 {
 			 model.ffComboBox.setBackground(SystemColor.window);
-			 return (Component)model.ffComboBox;
+			 return model.ffComboBox;
 		 }
 		 if(row == 6 && column == 1)
 		 {
 			 model.strComboBox.setBackground(SystemColor.window);
-			 return (Component)model.strComboBox;
+			 return model.strComboBox;
 		 }
 		 if(row == 7 && column == 1)
 		 {
 			 model.tactComboBox.setBackground(SystemColor.window);
-			 return (Component)model.tactComboBox;
+			 return model.tactComboBox;
 		 }
 		 return super.getTableCellEditorComponent (table, value, isSelected, row,  column);
 		}

@@ -456,14 +456,14 @@ public class DetailedEventsFrame extends JInternalFrame
 	private void updColorModel()
 	{
 		scrollPane.getViewport().setBackground(SystemColor.window);
-		jTable.setBackground(SystemColor.window);
-		jTable.setForeground(ColorManager.getColor("textColor"));
-		jTable.setGridColor(ColorManager.getColor("tableGridColor"));
+//		jTable.setBackground(SystemColor.window);
+//		jTable.setForeground(ColorManager.getColor("textColor"));
+//		jTable.setGridColor(ColorManager.getColor("tableGridColor"));
 
 		scrollPaneComp.getViewport().setBackground(SystemColor.window);
-		jTableComp.setBackground(SystemColor.window);
-		jTableComp.setForeground(ColorManager.getColor("textColor"));
-		jTableComp.setGridColor(ColorManager.getColor("tableGridColor"));
+//		jTableComp.setBackground(SystemColor.window);
+//		jTableComp.setForeground(ColorManager.getColor("textColor"));
+//		jTableComp.setGridColor(ColorManager.getColor("tableGridColor"));
 	}
 
 	private void updateTableModel(int num)

@@ -3,8 +3,10 @@ package com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
 
 import com.syrus.AMFICOM.Client.General.Event.*;
+import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
 import com.syrus.AMFICOM.analysis.dadara.MathRef;
 
 public class AnalysisPanel extends MapMarkersPanel
@@ -499,7 +501,7 @@ public class AnalysisPanel extends MapMarkersPanel
 	{
 		super.updColorModel();
 
-		markerColor = ColorManager.getColor("analysisMarkerColor");
+		markerColor = UIManager.getColor(AnalysisResourceKeys.COLOR_MARKER);
 		markerA.setColor(markerColor);
 		markerB.setColor(markerColor);
 	}

@@ -161,7 +161,7 @@ public class TraceSelectorFrame extends JInternalFrame
 				{
 					int selectedRow = lsm.getMinSelectionIndex();
 					//selectedRow is selected
-					RefChangeEvent event = new RefChangeEvent((String)traces.get(selectedRow), RefChangeEvent.SELECT_EVENT);
+					RefChangeEvent event = new RefChangeEvent(traces.get(selectedRow), RefChangeEvent.SELECT_EVENT);
 					dispatcher.notify(event);
 				}
 			}
@@ -177,10 +177,10 @@ public class TraceSelectorFrame extends JInternalFrame
 
 	private void updColorModel()
 	{
-		scrollPane.getViewport().setBackground(SystemColor.window);
-		jTable.setBackground(SystemColor.window);
-		jTable.setForeground(ColorManager.getColor("textColor"));
-		jTable.setGridColor(ColorManager.getColor("tableGridColor"));
+//		scrollPane.getViewport().setBackground(SystemColor.window);
+//		jTable.setBackground(SystemColor.window);
+//		jTable.setForeground(ColorManager.getColor("textColor"));
+//		jTable.setGridColor(ColorManager.getColor("tableGridColor"));
 	}
 
 			class DefaultTableModel extends AbstractTableModel {

@@ -2,7 +2,6 @@ package com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.SystemColor;
 import java.text.SimpleDateFormat;
 
 import javax.swing.BorderFactory;
@@ -155,10 +154,10 @@ public class PrimaryParametersFrame extends ATableFrame
 
 	private void updColorModel()
 	{
-		scrollPane.getViewport().setBackground(SystemColor.window);
-		jTable.setBackground(SystemColor.window);
-		jTable.setForeground(ColorManager.getColor("textColor"));
-		jTable.setGridColor(ColorManager.getColor("tableGridColor"));
+//		scrollPane.getViewport().setBackground(SystemColor.window);
+//		jTable.setBackground(SystemColor.window);
+//		jTable.setForeground(ColorManager.getColor("textColor"));
+//		jTable.setGridColor(ColorManager.getColor("tableGridColor"));
 	}
 
 	void updTableModel(String id)

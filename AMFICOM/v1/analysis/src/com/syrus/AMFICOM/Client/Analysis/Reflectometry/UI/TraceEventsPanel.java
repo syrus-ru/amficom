@@ -2,6 +2,9 @@ package com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI;
 
 import java.awt.*;
 
+import javax.swing.UIManager;
+
+import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
 import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.analysis.dadara.*;
 
@@ -37,12 +40,12 @@ public class TraceEventsPanel extends ScaledGraphPanel
 	{
 		super.updColorModel();
 
-		connectColor = ColorManager.getColor("connectColor");
+		connectColor = UIManager.getColor(AnalysisResourceKeys.COLOR_CONNECTOR);
 		deadzoneColor = ColorManager.getColor("deadzoneColor");
 		weldColor = ColorManager.getColor("weldColor");
 		linezoneColor = ColorManager.getColor("linezoneColor");
 		nonidColor = ColorManager.getColor("nonidColor");
-		endColor = ColorManager.getColor("endColor");
+		endColor = UIManager.getColor(AnalysisResourceKeys.COLOR_END);
 		noiseColor = ColorManager.getColor("noiseColor");
 	}
 

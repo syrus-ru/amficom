@@ -155,10 +155,10 @@ public class MarkersInfoFrame extends JInternalFrame implements OperationListene
 
 	private void updColorModel()
 	{
-		scrollPane.getViewport().setBackground(SystemColor.window);
-		jTable.setBackground(SystemColor.window);
-		jTable.setForeground(ColorManager.getColor("textColor"));
-		jTable.setGridColor(ColorManager.getColor("tableGridColor"));
+//		scrollPane.getViewport().setBackground(SystemColor.window);
+//		jTable.setBackground(SystemColor.window);
+//		jTable.setForeground(ColorManager.getColor("textColor"));
+//		jTable.setGridColor(ColorManager.getColor("tableGridColor"));
 	}
 
 	void updTableModel(MarkersInfo mInfo)

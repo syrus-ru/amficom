@@ -47,10 +47,10 @@ public class LoadTestSetupCommand extends VoidCommand
 
 		if(dialog.ret_code == 0)
 			return;
-		if (!(dialog.resource instanceof MeasurementSetup))
-			return;
+//		if (!(dialog.resource instanceof MeasurementSetup))
+//			return;
 
-		MeasurementSetup ms = (MeasurementSetup)dialog.resource;
+		MeasurementSetup ms = dialog.resource;
 		Pool.put(AnalysisUtil.CONTEXT, "MeasurementSetup", ms);
 
 		Identifier userId = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).getAccessIdentifier().user_id);
