@@ -5,7 +5,7 @@ CREATE TABLE EventSource (
  creator_id VARCHAR2(32) NOT NULL,
  modifier_id VARCHAR2(32) NOT NULL,
 --
- source_entity_code NUMBER(2) NOT NULL,
+ source_entity_code NUMBER(5) NOT NULL,
 --
  mcm_id VARCHAR2(32),
 --
