@@ -136,7 +136,11 @@ public class MCM extends DomainMember implements Characterized, TypedObject {
 																						Identifier domainId,
 																						Identifier typeId,
 																						String name,
-																						String description) {
+																						String description,
+																						Identifier userId,
+																						Identifier serverId,
+																						String location,
+																						String hostname) {
 		super.setAttributes(created,
 												modified,
 												creatorId,
@@ -145,6 +149,10 @@ public class MCM extends DomainMember implements Characterized, TypedObject {
 		this.typeId = typeId;
 		this.name = name;
 		this.description = description;
+		this.userId = userId;
+		this.serverId = serverId;
+		this.location = location;
+		this.hostname = hostname;
 	}
 
 	protected synchronized void setKISs(List kiss) {

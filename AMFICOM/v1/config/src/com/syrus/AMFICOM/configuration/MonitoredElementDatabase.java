@@ -8,9 +8,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.AMFICOM.general.*;
 
 public class MonitoredElementDatabase extends StorableObjectDatabase {
-	//	 kis_id VARCHAR2(32) NOT NULL,
-    public static final String COLUMN_KIS_ID        = "kis_id";
-    // local_address VARCHAR2(64) NOT NULL,
+    public static final String COLUMN_KIS_ID = "kis_id";
     public static final String COLUMN_LOCAL_ADDRESS = "local_address";
 
 	private MonitoredElement fromStorableObject(StorableObject storableObject) throws IllegalDataException {
@@ -82,7 +80,9 @@ public class MonitoredElementDatabase extends StorableObjectDatabase {
 				statement = null;
 				resultSet = null;
 			}
-			catch (SQLException sqle1) {}
+			catch (SQLException sqle1) {
+				Log.errorException(sqle1);
+			}
 		}
 	}
 
@@ -120,8 +120,8 @@ public class MonitoredElementDatabase extends StorableObjectDatabase {
 
 	private void insertMonitoredElement(MonitoredElement monitoredElement) throws CreateObjectException {
 		String meIdStr = monitoredElement.getId().toSQLString();
-		String sql = SQL_INSERT_INTO + ObjectEntities.ME_ENTITY
-			+ OPEN_BRACKET 
+		String sql = SQL_INSERT_INTO
+			+ ObjectEntities.ME_ENTITY + OPEN_BRACKET 
 			+ COLUMN_ID + COMMA
 			+ COLUMN_CREATED + COMMA
 			+ COLUMN_MODIFIED + COMMA
@@ -130,17 +130,16 @@ public class MonitoredElementDatabase extends StorableObjectDatabase {
 			+ DomainMember.COLUMN_DOMAIN_ID + COMMA
 			+ COLUMN_KIS_ID + COMMA
 			+ COLUMN_LOCAL_ADDRESS
-			+ CLOSE_BRACKET
-			+ SQL_VALUES + OPEN_BRACKET			
+			+ CLOSE_BRACKET + SQL_VALUES + OPEN_BRACKET			
 			+ meIdStr + COMMA
 			+ DatabaseDate.toUpdateSubString(monitoredElement.getCreated()) + COMMA
 			+ DatabaseDate.toUpdateSubString(monitoredElement.getModified()) + COMMA
 			+ monitoredElement.getCreatorId().toSQLString() + COMMA
 			+ monitoredElement.getModifierId().toSQLString() + COMMA
 			+ monitoredElement.getDomainId().toSQLString() + COMMA
-			+ monitoredElement.getKISId().toSQLString() + COMMA + APOSTOPHE
-			+ monitoredElement.getLocalAddress()
-			+ APOSTOPHE + CLOSE_BRACKET;
+			+ monitoredElement.getKISId().toSQLString() + COMMA
+			+ APOSTOPHE + monitoredElement.getLocalAddress() + APOSTOPHE
+			+ CLOSE_BRACKET;
 		Statement statement = null;
 		try {
 			statement = connection.createStatement();
@@ -157,7 +156,9 @@ public class MonitoredElementDatabase extends StorableObjectDatabase {
 					statement.close();
 				statement = null;
 			}
-			catch (SQLException sqle1) {}
+			catch (SQLException sqle1) {
+				Log.errorException(sqle1);
+			}
 		}
 	}
 

@@ -21,19 +21,21 @@ import com.syrus.AMFICOM.configuration.corba.EquipmentSort;
 
 public class MCMDatabase extends StorableObjectDatabase {
 
-	public static final String	COLUMN_NAME			= "name";
-	public static final String	COLUMN_DESCRIPTION	= "description";
-	public static final String	COLUMN_TYPE_ID		= "type_id";
+	public static final String COLUMN_NAME = "name";
+	public static final String COLUMN_DESCRIPTION = "description";
+	public static final String COLUMN_TYPE_ID = "type_id";
+	public static final String COLUMN_USER_ID = "user_id";
+	public static final String COLUMN_SERVER_ID = "server_id";
+	public static final String COLUMN_LOCATION = "location";
+	public static final String COLUMN_HOSTNAME = "hostname";
 	
 	private MCM fromStorableObject(StorableObject storableObject) throws IllegalDataException {
 		if (storableObject instanceof MCM)
 			return (MCM) storableObject;
-		throw new IllegalDataException("MCMDatabase.fromStorableObject | Illegal Storable Object: "
-				+ storableObject.getClass().getName());
+		throw new IllegalDataException("MCMDatabase.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
 	}
 
-	public void retrieve(StorableObject storableObject) throws IllegalDataException, ObjectNotFoundException,
-			RetrieveObjectException {
+	public void retrieve(StorableObject storableObject) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
 		MCM mcm = this.fromStorableObject(storableObject);
 		this.retrieveMCM(mcm);
 		this.retrieveMCMKis(mcm);
@@ -41,16 +43,21 @@ public class MCMDatabase extends StorableObjectDatabase {
 
 	private void retrieveMCM(MCM mcm) throws ObjectNotFoundException, RetrieveObjectException {
 		String mIdStr = mcm.getId().toSQLString();
-		String sql = SQL_SELECT +
-				DatabaseDate.toQuerySubString(COLUMN_CREATED) + COMMA
+		String sql = SQL_SELECT
+				+ DatabaseDate.toQuerySubString(COLUMN_CREATED) + COMMA
 				+ DatabaseDate.toQuerySubString(COLUMN_MODIFIED) + COMMA
 				+ COLUMN_CREATOR_ID + COMMA
 				+ COLUMN_MODIFIER_ID + COMMA 
 				+ DomainMember.COLUMN_DOMAIN_ID + COMMA
 				+ COLUMN_TYPE_ID + COMMA
 				+ COLUMN_NAME + COMMA 
-				+ COLUMN_DESCRIPTION + COMMA 
-				+ SQL_FROM + ObjectEntities.MCM_ENTITY + SQL_WHERE + COLUMN_ID + EQUALS + mIdStr;
+				+ COLUMN_DESCRIPTION + COMMA
+				+ COLUMN_USER_ID + COMMA
+				+ COLUMN_SERVER_ID + COMMA
+				+ COLUMN_LOCATION + COMMA
+				+ COLUMN_HOSTNAME
+				+ SQL_FROM + ObjectEntities.MCM_ENTITY
+				+ SQL_WHERE + COLUMN_ID + EQUALS + mIdStr;
 		Statement statement = null;
 		ResultSet resultSet = null;
 		try {
@@ -58,32 +65,51 @@ public class MCMDatabase extends StorableObjectDatabase {
 			Log.debugMessage("MCMDatabase.retrieve | Trying: " + sql, Log.DEBUGLEVEL05);
 			resultSet = statement.executeQuery(sql);
 			if (resultSet.next()) {
-				mcm.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED), DatabaseDate
-						.fromQuerySubString(resultSet, COLUMN_MODIFIED),
-				/**
-				 * @todo when change DB Identifier model ,change getString() to
-				 *       getLong()
-				 */
-				new Identifier(resultSet.getString(COLUMN_CREATOR_ID)),
-				/**
-				 * @todo when change DB Identifier model ,change getString() to
-				 *       getLong()
-				 */
-				new Identifier(resultSet.getString(COLUMN_MODIFIER_ID)),
-				/**
-				 * @todo when change DB Identifier model ,change getString() to
-				 *       getLong()
-				 */
-				new Identifier(resultSet.getString(DomainMember.COLUMN_DOMAIN_ID)),
-				new Identifier(resultSet.getString(COLUMN_TYPE_ID)),
-				resultSet.getString(COLUMN_NAME),
-				resultSet.getString(COLUMN_DESCRIPTION));
-			} else
+				mcm.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
+													DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
+													/**
+													 * @todo when change DB Identifier model ,change getString() to
+													 *       getLong()
+													 */
+													 new Identifier(resultSet.getString(COLUMN_CREATOR_ID)),
+													/**
+													 * @todo when change DB Identifier model ,change getString() to
+													 *       getLong()
+													 */
+													 new Identifier(resultSet.getString(COLUMN_MODIFIER_ID)),
+													/**
+													 * @todo when change DB Identifier model ,change getString() to
+													 *       getLong()
+													 */
+													 new Identifier(resultSet.getString(DomainMember.COLUMN_DOMAIN_ID)),
+													 /**
+													 * @todo when change DB Identifier model ,change getString() to
+													 *       getLong()
+													 */
+													 new Identifier(resultSet.getString(COLUMN_TYPE_ID)),
+													 resultSet.getString(COLUMN_NAME),
+													 resultSet.getString(COLUMN_DESCRIPTION),
+													 /**
+													 * @todo when change DB Identifier model ,change getString() to
+													 *       getLong()
+													 */
+													 new Identifier(resultSet.getString(COLUMN_USER_ID)),
+													 /**
+													 * @todo when change DB Identifier model ,change getString() to
+													 *       getLong()
+													 */
+													 new Identifier(resultSet.getString(COLUMN_SERVER_ID)),
+													 resultSet.getString(COLUMN_LOCATION),
+													 resultSet.getString(COLUMN_HOSTNAME));
+			}
+			else
 				throw new ObjectNotFoundException("No such mcm: " + mIdStr);
-		} catch (SQLException sqle) {
+		}
+		catch (SQLException sqle) {
 			String mesg = "MCMDatabase.retrieve | Cannot retrieve mcm " + mIdStr;
 			throw new RetrieveObjectException(mesg, sqle);
-		} finally {
+		}
+		finally {
 			try {
 				if (statement != null)
 					statement.close();
@@ -91,8 +117,9 @@ public class MCMDatabase extends StorableObjectDatabase {
 					resultSet.close();
 				statement = null;
 				resultSet = null;
-			} catch (SQLException sqle1) {
-				// nothing yet.
+			}
+			catch (SQLException sqle1) {
+				Log.errorException(sqle1);
 			}
 		}
 	}
@@ -101,11 +128,9 @@ public class MCMDatabase extends StorableObjectDatabase {
 		String mIdStr = mcm.getId().toSQLString();
 		String sql = SQL_SELECT 
 				+ COLUMN_ID
-				+ SQL_FROM 
-				+ ObjectEntities.EQUIPMENT_ENTITY + SQL_WHERE 
-				+ EquipmentDatabase.COLUMN_SORT + EQUALS + EquipmentSort._EQUIPMENT_SORT_KIS
-				+ SQL_AND
-				+ KISDatabase.COLUMN_MCM_ID + EQUALS + mIdStr;
+				+ SQL_FROM + ObjectEntities.EQUIPMENT_ENTITY
+				+ SQL_WHERE + EquipmentDatabase.COLUMN_SORT + EQUALS + Integer.toString(EquipmentSort._EQUIPMENT_SORT_KIS)
+				+ SQL_AND + KISDatabase.COLUMN_MCM_ID + EQUALS + mIdStr;
 		Statement statement = null;
 		ResultSet resultSet = null;
 		try {
@@ -115,12 +140,15 @@ public class MCMDatabase extends StorableObjectDatabase {
 			List characteristicIds = new ArrayList();
 			if (resultSet.next()) {				
 				characteristicIds.add(resultSet.getString(COLUMN_ID));
-			} else
+			}
+			else
 				throw new ObjectNotFoundException("No such mcm: " + mIdStr);
-		} catch (SQLException sqle) {
+		}
+		catch (SQLException sqle) {
 			String mesg = "MCMDatabase.retrieve | Cannot retrieve mcm " + mIdStr;
 			throw new RetrieveObjectException(mesg, sqle);
-		} finally {
+		}
+		finally {
 			try {
 				if (statement != null)
 					statement.close();
@@ -128,8 +156,9 @@ public class MCMDatabase extends StorableObjectDatabase {
 					resultSet.close();
 				statement = null;
 				resultSet = null;
-			} catch (SQLException sqle1) {
-//				 nothing yet.
+			}
+			catch (SQLException sqle1) {
+				Log.errorException(sqle1);
 			}
 		}
 	}
@@ -147,10 +176,12 @@ public class MCMDatabase extends StorableObjectDatabase {
 		MCM mcm = this.fromStorableObject(storableObject);
 		try {
 			this.insertMCM(mcm);
-		} catch (CreateObjectException e) {
+		}
+		catch (CreateObjectException e) {
 			try {
 				connection.rollback();
-			} catch (SQLException sqle) {
+			}
+			catch (SQLException sqle) {
 				Log.errorMessage("Exception in rolling back");
 				Log.errorException(sqle);
 			}
@@ -158,7 +189,8 @@ public class MCMDatabase extends StorableObjectDatabase {
 		}
 		try {
 			connection.commit();
-		} catch (SQLException sqle) {
+		}
+		catch (SQLException sqle) {
 			Log.errorMessage("Exception in commiting");
 			Log.errorException(sqle);
 		}
@@ -166,76 +198,59 @@ public class MCMDatabase extends StorableObjectDatabase {
 
 	private void insertMCM(MCM mcm) throws CreateObjectException {
 		String cIdStr = mcm.getId().toSQLString();		
-		String sql;
-		{
-			StringBuffer buffer = new StringBuffer(SQL_INSERT_INTO);
-			buffer.append(ObjectEntities.CHARACTERISTIC_ENTITY);
-			buffer.append(OPEN_BRACKET);
-			buffer.append(COLUMN_ID);
-			buffer.append(COMMA);
-			buffer.append(COLUMN_CREATED);
-			buffer.append(COMMA);
-			buffer.append(COLUMN_MODIFIED);
-			buffer.append(COMMA);
-			buffer.append(COLUMN_CREATOR_ID);
-			buffer.append(COMMA);
-			buffer.append(COLUMN_MODIFIER_ID);
-			buffer.append(COMMA);
-			buffer.append(DomainMember.COLUMN_DOMAIN_ID);
-			buffer.append(COMMA);
-			buffer.append(COLUMN_TYPE_ID);
-			buffer.append(COMMA);
-			buffer.append(COLUMN_NAME);
-			buffer.append(COMMA);
-			buffer.append(COLUMN_DESCRIPTION);
-			buffer.append(CLOSE_BRACKET);
-			buffer.append(SQL_VALUES);
-			buffer.append(OPEN_BRACKET);
-			buffer.append(cIdStr);
-			buffer.append(COMMA);
-			buffer.append(DatabaseDate.toUpdateSubString(mcm.getCreated()));
-			buffer.append(COMMA);
-			buffer.append(DatabaseDate.toUpdateSubString(mcm.getModified()));
-			buffer.append(COMMA);
-			buffer.append(mcm.getCreatorId().toSQLString());
-			buffer.append(COMMA);
-			buffer.append(mcm.getModifierId().toSQLString());
-			buffer.append(COMMA);
-			buffer.append(mcm.getDomainId().toSQLString());			
-			buffer.append(COMMA);
-			buffer.append(mcm.getTypeId().toSQLString());
-			buffer.append(COMMA);
-			buffer.append(APOSTOPHE);
-			buffer.append(mcm.getName());
-			buffer.append(APOSTOPHE);
-			buffer.append(COMMA);
-			buffer.append(APOSTOPHE);
-			buffer.append(mcm.getDescription());
-			buffer.append(APOSTOPHE);			
-			buffer.append(CLOSE_BRACKET);
-			sql = buffer.toString();
-		}
+		String sql = SQL_INSERT_INTO
+			+ ObjectEntities.CHARACTERISTIC_ENTITY + OPEN_BRACKET
+			+ COLUMN_ID + COMMA
+			+ COLUMN_CREATED + COMMA
+			+ COLUMN_MODIFIED + COMMA
+			+ COLUMN_CREATOR_ID + COMMA
+			+ COLUMN_MODIFIER_ID + COMMA
+			+ DomainMember.COLUMN_DOMAIN_ID + COMMA
+			+ COLUMN_TYPE_ID + COMMA
+			+ COLUMN_NAME + COMMA
+			+ COLUMN_DESCRIPTION + COMMA
+			+ COLUMN_USER_ID + COMMA
+			+ COLUMN_SERVER_ID + COMMA
+			+ COLUMN_LOCATION + COMMA
+			+ COLUMN_HOSTNAME
+			+ CLOSE_BRACKET + SQL_VALUES + OPEN_BRACKET
+			+ cIdStr + COMMA
+			+ DatabaseDate.toUpdateSubString(mcm.getCreated()) + COMMA
+			+ DatabaseDate.toUpdateSubString(mcm.getModified()) + COMMA
+			+ mcm.getCreatorId().toSQLString() + COMMA
+			+ mcm.getModifierId().toSQLString() + COMMA
+			+ mcm.getDomainId().toSQLString() + COMMA
+			+ mcm.getTypeId().toSQLString() + COMMA
+			+ APOSTOPHE + mcm.getName() + APOSTOPHE + COMMA
+			+ APOSTOPHE + mcm.getDescription() + APOSTOPHE + COMMA
+			+ mcm.getUserId().toSQLString() + COMMA
+			+ mcm.getServerId().toSQLString() + COMMA
+			+ APOSTOPHE + mcm.getLocation() + APOSTOPHE + COMMA
+			+ APOSTOPHE + mcm.getHostName() + APOSTOPHE
+			+ CLOSE_BRACKET;
 		Statement statement = null;
 		try {
 			statement = connection.createStatement();
 			Log.debugMessage("MCMDatabase.insert | Trying: " + sql, Log.DEBUGLEVEL05);
 			statement.executeUpdate(sql);
-		} catch (SQLException sqle) {
+		}
+		catch (SQLException sqle) {
 			String mesg = "MCMDatabase.insert | Cannot insert mcm " + cIdStr;
 			throw new CreateObjectException(mesg, sqle);
-		} finally {
+		}
+		finally {
 			try {
 				if (statement != null)
 					statement.close();
 				statement = null;
-			} catch (SQLException sqle1) {
-//				 nothing yet.
+			}
+			catch (SQLException sqle1) {
+				Log.errorException(sqle1);
 			}
 		}
 	}
 
-	public void update(StorableObject storableObject, int update_kind, Object obj) throws IllegalDataException,
-			UpdateObjectException {
+	public void update(StorableObject storableObject, int update_kind, Object obj) throws IllegalDataException, UpdateObjectException {
 		MCM mcm = this.fromStorableObject(storableObject);
 		switch (update_kind) {
 			default:

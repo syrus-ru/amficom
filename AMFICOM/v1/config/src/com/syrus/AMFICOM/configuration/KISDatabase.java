@@ -26,12 +26,10 @@ public class KISDatabase extends StorableObjectDatabase {
 	private KIS fromStorableObject(StorableObject storableObject) throws IllegalDataException {
 		if (storableObject instanceof KIS)
 			return (KIS) storableObject;
-		throw new IllegalDataException("KISDatabase.fromStorableObject | Illegal Storable Object: "
-				+ storableObject.getClass().getName());
+		throw new IllegalDataException("KISDatabase.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
 	}
 
-	public void retrieve(StorableObject storableObject) throws IllegalDataException, ObjectNotFoundException,
-			RetrieveObjectException {
+	public void retrieve(StorableObject storableObject) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
 		KIS kis = this.fromStorableObject(storableObject);
 		this.retrieveKIS(kis);	
 	}
@@ -92,12 +90,15 @@ public class KISDatabase extends StorableObjectDatabase {
 				 *       getLong()
 				 */
 				new Identifier(resultSet.getString(COLUMN_MCM_ID)));
-			} else
+			}
+			else
 				throw new ObjectNotFoundException("No such kis: " + mIdStr);
-		} catch (SQLException sqle) {
+		}
+		catch (SQLException sqle) {
 			String mesg = "KISDatabase.retrieve | Cannot retrieve kis " + mIdStr;
 			throw new RetrieveObjectException(mesg, sqle);
-		} finally {
+		}
+		finally {
 			try {
 				if (statement != null)
 					statement.close();
@@ -105,8 +106,9 @@ public class KISDatabase extends StorableObjectDatabase {
 					resultSet.close();
 				statement = null;
 				resultSet = null;
-			} catch (SQLException sqle1) {
-				// nothing yet.
+			}
+			catch (SQLException sqle1) {
+				Log.errorException(sqle1);
 			}
 		}
 	}	
@@ -124,10 +126,12 @@ public class KISDatabase extends StorableObjectDatabase {
 		KIS kis = this.fromStorableObject(storableObject);
 		try {
 			this.insertKIS(kis);
-		} catch (CreateObjectException e) {
+		}
+		catch (CreateObjectException e) {
 			try {
 				connection.rollback();
-			} catch (SQLException sqle) {
+			}
+			catch (SQLException sqle) {
 				Log.errorMessage("Exception in rolling back");
 				Log.errorException(sqle);
 			}
@@ -135,7 +139,8 @@ public class KISDatabase extends StorableObjectDatabase {
 		}
 		try {
 			connection.commit();
-		} catch (SQLException sqle) {
+		}
+		catch (SQLException sqle) {
 			Log.errorMessage("Exception in commiting");
 			Log.errorException(sqle);
 		}
@@ -149,22 +154,24 @@ public class KISDatabase extends StorableObjectDatabase {
 			statement = connection.createStatement();
 			Log.debugMessage("KISDatabase.insert | Trying: " + sql, Log.DEBUGLEVEL05);
 			statement.executeUpdate(sql);
-		} catch (SQLException sqle) {
+		}
+		catch (SQLException sqle) {
 			String mesg = "KISDatabase.insert | Cannot insert kis " + cIdStr;
 			throw new CreateObjectException(mesg, sqle);
-		} finally {
+		}
+		finally {
 			try {
 				if (statement != null)
 					statement.close();
 				statement = null;
-			} catch (SQLException sqle1) {
-//				 nothing yet.
+			}
+			catch (SQLException sqle1) {
+				Log.errorException(sqle1);
 			}
 		}
 	}
 
-	public void update(StorableObject storableObject, int updateKind, Object obj) throws IllegalDataException,
-			UpdateObjectException {
+	public void update(StorableObject storableObject, int updateKind, Object obj) throws IllegalDataException, UpdateObjectException {
 		KIS kis = this.fromStorableObject(storableObject);
 		switch (updateKind) {
 			default:

@@ -7,29 +7,19 @@ IDLDIR=../idl_v1/idl
 LIBDIR=../lib
 EXTLIBDIR=../../extlib
 
-USER=amficom
-PASSWORD=amficom
 DBHOSTNAME=mongol
 CONNECTSTRING=mongol
+USER=amficom
+PASSWORD=amficom
 
 LIBNAME=configuration.jar
 ARCHFILE=configuration.tar.gz
-
-SRC_SUFFIXES = \
-	.java \
-	.generated.java
-
-CLASS_SUFFIXES = \
-	.class \
-	$$%.class \
-	_SJProfile0.class \
-	_SJProfileKeys.class
 
 ORACLECLASSPATH = $(ORACLE_HOME)/jdbc/lib/classes12.jar:$(ORACLE_HOME)/sqlj/lib/translator.jar:$(ORACLE_HOME)/sqlj/lib/runtime12ee.jar
 APPCLASSPATH = $(LIBDIR)/util.jar:$(LIBDIR)/general.jar
 EXTCLASSPATH = $(EXTLIBDIR)/jgraphpad.jar:$(EXTLIBDIR)/jfreechartK.jar:$(EXTLIBDIR)/ofx.spatialfx.jar
 
-IDL2JAVAFLAGS = \
+IDL2JAVA_FLAGS = \
 	-C \
 	-H \
 	-no_bind \
@@ -41,9 +31,9 @@ IDL2JAVAFLAGS = \
 	-root_dir $(SRCDIR) \
 	-I$(IDLDIR)
 
-SUNJAVACFLAGS = -target 1.4.2
+SUNJAVAC_FLAGS = -target 1.4.2
 
-JIKESFLAGS = \
+JIKES_FLAGS = \
 	-target 1.4.2 \
 	-bootclasspath $(JAVA_HOME)/jre/lib/rt.jar \
 	-extdirs $(JAVA_HOME)/jre/lib/ext \
@@ -53,15 +43,16 @@ JIKESFLAGS = \
 	+Pswitchcheck \
 	+Pnaming-convention \
 	+T=2
-JAVACFLAGS = \
+JAVAC_FLAGS = \
 	-d $(CLASSDIR) \
 	-source 1.4 \
 	-g \
 	-O \
 	-deprecation
 
+JAVAC_FLAGS := $(JIKES_FLAGS) $(JAVAC_FLAGS)
 
-include Makefile.inc
+include ../tools/Makefile.inc
 $(call checkenve,JAVA_HOME)
 $(call checkenve,ORACLE_HOME)
 $(call checkenve,IDL2JAVA)
@@ -72,7 +63,7 @@ $(LIBNAME): .mach
 		-C $(CLASSDIR) com
 
 .mach:	.corba $(CLASSDIR)
-	$(JAVAC) $(JAVACFLAGS) \
+	$(JAVAC) $(JAVAC_FLAGS) \
 		-classpath $(APPCLASSPATH):$(CLASSDIR) \
 		$(SRCDIR)/com/syrus/AMFICOM/configuration/ConfigurationDatabaseContext.java \
 		$(SRCDIR)/com/syrus/AMFICOM/configuration/CharacteristicType.java \
@@ -92,9 +83,9 @@ $(LIBNAME): .mach
 	touch $@
 
 .corba:	$(CLASSDIR)
-	$(IDL2JAVA) $(IDL2JAVAFLAGS) \
+	$(IDL2JAVA) $(IDL2JAVA_FLAGS) \
 		$(IDLDIR)/configuration.idl
-	$(JAVAC) $(JAVACFLAGS) -nowarn \
+	$(JAVAC) $(JAVAC_FLAGS) -nowarn \
 		-classpath $(APPCLASSPATH) \
 		-sourcepath $(SRCDIR) \
 		$(SRCDIR)/com/syrus/AMFICOM/configuration/corba/*.java
