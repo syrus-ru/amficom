@@ -1,5 +1,5 @@
 /*
-al * $Id: Result.java,v 1.34 2005/01/26 15:38:41 arseniy Exp $
+ * $Id: Result.java,v 1.35 2005/01/27 08:01:56 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,7 +30,7 @@ import com.syrus.AMFICOM.measurement.corba.Result_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.34 $, $Date: 2005/01/26 15:38:41 $
+ * @version $Revision: 1.35 $, $Date: 2005/01/27 08:01:56 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
