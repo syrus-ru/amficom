@@ -1,5 +1,5 @@
 /*
- * $Id: ConfigurationObjectLoader.java,v 1.4 2004/09/14 14:53:47 max Exp $
+ * $Id: ConfigurationObjectLoader.java,v 1.5 2004/09/14 15:49:09 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,7 +16,7 @@ import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.IllegalDataException;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2004/09/14 14:53:47 $
+ * @version $Revision: 1.5 $, $Date: 2004/09/14 15:49:09 $
  * @author $Author: max $
  * @module configuration_v1
  */
@@ -57,35 +57,35 @@ public interface ConfigurationObjectLoader {
     
     // this block for multiple objects
     
-    List loadCharacteristicTypes(List ids) throws DatabaseException, CommunicationException, IllegalDataException;
+    List loadCharacteristicTypes(List ids) throws DatabaseException, CommunicationException;
 
-    List loadEquipmentTypes(List ids) throws DatabaseException, CommunicationException, IllegalDataException;
+    List loadEquipmentTypes(List ids) throws DatabaseException, CommunicationException;
 
-    List loadPortTypes(List ids) throws DatabaseException, CommunicationException, IllegalDataException;
+    List loadPortTypes(List ids) throws DatabaseException, CommunicationException;
 
-    List loadMeasurementPortTypes(List ids) throws DatabaseException, CommunicationException, IllegalDataException;
+    List loadMeasurementPortTypes(List ids) throws DatabaseException, CommunicationException;
 
-    List loadCharacteristics(List ids) throws DatabaseException, CommunicationException, IllegalDataException;
+    List loadCharacteristics(List ids) throws DatabaseException, CommunicationException;
 
 //  PermissionAttributes loadPermissionAttributes(List ids) throws DatabaseException, CommunicationException;
 
-    List loadUsers(List ids) throws DatabaseException, CommunicationException, IllegalDataException;
+    List loadUsers(List ids) throws DatabaseException, CommunicationException;
 
-    List loadDomains(List ids) throws DatabaseException, CommunicationException, IllegalDataException;
+    List loadDomains(List ids) throws DatabaseException, CommunicationException;
 
-    List loadServers(List ids) throws DatabaseException, CommunicationException, IllegalDataException;
+    List loadServers(List ids) throws DatabaseException, CommunicationException;
 
-    List loadMCMs(List ids) throws DatabaseException, CommunicationException, IllegalDataException;
+    List loadMCMs(List ids) throws DatabaseException, CommunicationException;
 
-    List loadEquipments(List ids) throws DatabaseException, CommunicationException, IllegalDataException;
+    List loadEquipments(List ids) throws DatabaseException, CommunicationException;
 
-    List loadPorts(List ids) throws DatabaseException, CommunicationException, IllegalDataException;
+    List loadPorts(List ids) throws DatabaseException, CommunicationException;
 
-    List loadTransmissionPaths(List ids) throws DatabaseException, CommunicationException, IllegalDataException;
+    List loadTransmissionPaths(List ids) throws DatabaseException, CommunicationException;
 
-    List loadKISs(List ids) throws DatabaseException, CommunicationException, IllegalDataException;
+    List loadKISs(List ids) throws DatabaseException, CommunicationException;
 
-    List loadMeasurementPorts(List ids) throws DatabaseException, CommunicationException, IllegalDataException;
+    List loadMeasurementPorts(List ids) throws DatabaseException, CommunicationException;
 
-    List loadMonitoredElements(List ids) throws DatabaseException, CommunicationException, IllegalDataException;
+    List loadMonitoredElements(List ids) throws DatabaseException, CommunicationException;
 }

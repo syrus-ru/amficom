@@ -1,5 +1,5 @@
 /*
- * $Id: ConfigurationStorableObjectPool.java,v 1.6 2004/08/23 20:48:15 arseniy Exp $
+ * $Id: ConfigurationStorableObjectPool.java,v 1.7 2004/09/14 15:49:09 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,9 +9,14 @@
 package com.syrus.AMFICOM.configuration;
 
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Hashtable;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
@@ -21,8 +26,8 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2004/08/23 20:48:15 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.7 $, $Date: 2004/09/14 15:49:09 $
+ * @author $Author: max $
  * @module configuration_v1
  */
 
@@ -115,7 +120,68 @@ public class ConfigurationStorableObjectPool {
 		}
 	}
 
-	private static StorableObject loadStorableObject(Identifier objectId) throws DatabaseException, CommunicationException {
+	public static List getStorableObjects(List objectIds, boolean useLoader) throws DatabaseException, CommunicationException {
+        List list = null;
+        Map objectQueueMap = null;
+        if (objectIds != null) {
+            for (Iterator it = objectIds.iterator(); it.hasNext();) {
+                Identifier objectId = (Identifier) it.next();
+                short objectEntityCode = objectId.getMajor();
+                Short entityCode = new Short(objectEntityCode);
+                LRUMap objectPool = (LRUMap)objectPoolMap.get(objectId);
+                StorableObject storableObject = null;
+                if (objectPool != null) {
+                    storableObject = (StorableObject)objectPool.get(objectId);
+                    if (storableObject != null){
+                        if (list == null)
+                            list = new LinkedList();
+                        list.add(storableObject);
+                    }
+                }
+                if (storableObject == null) {
+                    Log.errorMessage("ConfigurationStorableObjectPool.getStorableObjects | Cannot find object pool for objectId: '" + objectId.toString() + "' entity code: '" + objectEntityCode + "'");
+                    if (useLoader) {
+                        if (objectQueueMap == null)
+                            objectQueueMap = new HashMap();
+                        List objectQueue = (List)objectQueueMap.get(entityCode);
+                        if (objectQueue == null){
+                            objectQueue = new LinkedList();
+                            objectQueueMap.put(entityCode, objectQueue);
+                        }
+                        objectQueue.add(objectId);              
+                    }
+                }           
+            }
+            
+        }
+        else {
+            Log.errorMessage("ConfigurationStorableObjectPool.getStorableObjects | NULL list of identifiers supplied");
+        }
+
+        if (objectQueueMap != null){
+            for (Iterator it = objectQueueMap.keySet().iterator(); it.hasNext();) {
+                Short entityCode = (Short) it.next();
+                List objectQueue = (List)objectQueueMap.get(entityCode);
+                List storableObjects = loadStorableObjects(entityCode, objectQueue);
+                if (storableObjects != null) {
+                    try {
+                        for (Iterator iter = storableObjects.iterator(); iter.hasNext();) {
+                            StorableObject storableObject = (StorableObject) iter.next();
+                            putStorableObject(storableObject);
+                            list.add(storableObject);
+                        }                       
+                    }
+                    catch (IllegalObjectEntityException ioee) {
+                        Log.errorException(ioee);
+                    }
+                }
+            }
+        }
+        
+        return list;
+    }
+    
+    private static StorableObject loadStorableObject(Identifier objectId) throws DatabaseException, CommunicationException {
 		StorableObject storableObject;
 		switch (objectId.getMajor()) {
 			case ObjectEntities.CHARACTERISTICTYPE_ENTITY_CODE:
@@ -172,7 +238,59 @@ public class ConfigurationStorableObjectPool {
 		}
 		return storableObject;
 	}
-
+    
+    private static List loadStorableObjects(Short entityCode, List ids) throws DatabaseException, CommunicationException {
+        List storableObjects;
+        switch (entityCode.shortValue()) {
+            case ObjectEntities.CHARACTERISTICTYPE_ENTITY_CODE:
+                storableObjects = cObjectLoader.loadCharacteristicTypes(ids);
+                break;
+            case ObjectEntities.EQUIPMENTTYPE_ENTITY_CODE:
+                storableObjects = cObjectLoader.loadEquipmentTypes(ids);
+                break;
+            case ObjectEntities.PORTTYPE_ENTITY_CODE:
+                storableObjects = cObjectLoader.loadPortTypes(ids);
+                break;
+            case ObjectEntities.MEASUREMENTPORTTYPE_ENTITY_CODE:
+                storableObjects = cObjectLoader.loadMeasurementPortTypes(ids);
+                break;
+            case ObjectEntities.CHARACTERISTIC_ENTITY_CODE:
+                storableObjects = cObjectLoader.loadCharacteristics(ids);
+                break;
+            case ObjectEntities.USER_ENTITY_CODE:
+                storableObjects = cObjectLoader.loadUsers(ids);
+                break;
+            case ObjectEntities.DOMAIN_ENTITY_CODE:
+                storableObjects = cObjectLoader.loadDomains(ids);
+                break;
+            case ObjectEntities.SERVER_ENTITY_CODE:
+                storableObjects = cObjectLoader.loadServers(ids);
+                break;
+            case ObjectEntities.MCM_ENTITY_CODE:
+                storableObjects = cObjectLoader.loadMCMs(ids);
+                break;
+            case ObjectEntities.EQUIPMENT_ENTITY_CODE:
+                storableObjects = cObjectLoader.loadEquipments(ids);
+                break;
+            case ObjectEntities.PORT_ENTITY_CODE:
+                storableObjects = cObjectLoader.loadPorts(ids);
+                break;
+            case ObjectEntities.KIS_ENTITY_CODE:
+                storableObjects = cObjectLoader.loadKISs(ids);
+                break;
+            case ObjectEntities.MEASUREMENTPORT_ENTITY_CODE:
+                storableObjects = cObjectLoader.loadMeasurementPorts(ids);
+                break;
+            case ObjectEntities.ME_ENTITY_CODE:
+                storableObjects = cObjectLoader.loadMonitoredElements(ids);
+                break;
+            default:
+                Log.errorMessage("ConfigurationStorableObjectPool.loadStorableObjects | Unknown entityCode : " + entityCode);
+                storableObjects = null;
+        }
+        return storableObjects;
+    }
+    
 	public static StorableObject putStorableObject(StorableObject storableObject) throws IllegalObjectEntityException {
 		Identifier objectId = storableObject.getId();
 		LRUMap objectPool = (LRUMap)objectPoolMap.get(new Short(objectId.getMajor()));

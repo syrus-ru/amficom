@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseConfigurationObjectLoader.java,v 1.5 2004/09/14 14:53:47 max Exp $
+ * $Id: DatabaseConfigurationObjectLoader.java,v 1.6 2004/09/14 15:49:09 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,7 +17,7 @@ import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2004/09/14 14:53:47 $
+ * @version $Revision: 1.6 $, $Date: 2004/09/14 15:49:09 $
  * @author $Author: max $
  * @module configuration_v1
  */
@@ -92,27 +92,27 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
 	}
     
     // for multiple objects
-    public List loadCharacteristicTypes(List ids) throws DatabaseException, RetrieveObjectException, IllegalDataException {
+    public List loadCharacteristicTypes(List ids) throws DatabaseException {
         CharacteristicTypeDatabase database = (CharacteristicTypeDatabase)ConfigurationDatabaseContext.getCharacteristicTypeDatabase();
         return database.retrieveByIds(ids, null);
     }
 
-    public List loadEquipmentTypes(List ids) throws DatabaseException, RetrieveObjectException, IllegalDataException {
+    public List loadEquipmentTypes(List ids) throws DatabaseException {
         EquipmentTypeDatabase database = (EquipmentTypeDatabase)ConfigurationDatabaseContext.getEquipmentTypeDatabase(); 
         return database.retrieveByIds(ids, null);
     }
 
-    public List loadPortTypes(List ids) throws DatabaseException, RetrieveObjectException, IllegalDataException {
+    public List loadPortTypes(List ids) throws DatabaseException {
         PortTypeDatabase database = (PortTypeDatabase)ConfigurationDatabaseContext.getPortTypeDatabase();
         return database.retrieveByIds(ids, null);
     }
 
-    public List loadMeasurementPortTypes(List ids) throws DatabaseException, RetrieveObjectException, IllegalDataException {
+    public List loadMeasurementPortTypes(List ids) throws DatabaseException {
         MeasurementPortTypeDatabase database = (MeasurementPortTypeDatabase)ConfigurationDatabaseContext.getMeasurementPortTypeDatabase();
         return database.retrieveByIds(ids, null);
     }
 
-    public List loadCharacteristics(List ids) throws DatabaseException, RetrieveObjectException, IllegalDataException {
+    public List loadCharacteristics(List ids) throws DatabaseException {
         CharacteristicDatabase database = (CharacteristicDatabase)ConfigurationDatabaseContext.getCharacteristicDatabase();
         return database.retrieveByIds(ids, null);
     }
@@ -121,52 +121,52 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
 //      return new PermissionAttributes(id);
 //  }
 
-    public List loadUsers(List ids) throws DatabaseException, RetrieveObjectException, IllegalDataException {
+    public List loadUsers(List ids) throws DatabaseException {
         UserDatabase database = (UserDatabase)ConfigurationDatabaseContext.getUserDatabase();
         return database.retrieveByIds(ids, null);
     }
 
-    public List loadDomains(List ids) throws DatabaseException, RetrieveObjectException, IllegalDataException {
+    public List loadDomains(List ids) throws DatabaseException {
         DomainDatabase database = (DomainDatabase)ConfigurationDatabaseContext.getDomainDatabase();
         return database.retrieveByIds(ids, null);
     }
 
-    public List loadServers(List ids) throws DatabaseException, RetrieveObjectException, IllegalDataException {
+    public List loadServers(List ids) throws DatabaseException {
         ServerDatabase database = (ServerDatabase)ConfigurationDatabaseContext.getServerDatabase();
         return database.retrieveByIds(ids, null);
     }
 
-    public List loadMCMs(List ids) throws DatabaseException, RetrieveObjectException, IllegalDataException {
+    public List loadMCMs(List ids) throws DatabaseException {
         MCMDatabase database = (MCMDatabase)ConfigurationDatabaseContext.getMCMDatabase();
         return database.retrieveByIds(ids, null);
     }
 
-    public List loadEquipments(List ids) throws DatabaseException, RetrieveObjectException, IllegalDataException {
+    public List loadEquipments(List ids) throws DatabaseException {
         EquipmentDatabase database = (EquipmentDatabase)ConfigurationDatabaseContext.getEquipmentDatabase();
         return database.retrieveByIds(ids, null);
     }
 
-    public List loadPorts(List ids) throws DatabaseException, RetrieveObjectException, IllegalDataException {
+    public List loadPorts(List ids) throws DatabaseException {
         PortDatabase database = (PortDatabase)ConfigurationDatabaseContext.getPortDatabase();
         return database.retrieveByIds(ids, null); 
     }
 
-    public List loadTransmissionPaths(List ids) throws DatabaseException, RetrieveObjectException, IllegalDataException {
+    public List loadTransmissionPaths(List ids) throws DatabaseException {
         TransmissionPathDatabase database = (TransmissionPathDatabase)ConfigurationDatabaseContext.getPortDatabase();
         return database.retrieveByIds(ids, null);
     }
 
-    public List loadKISs(List ids) throws DatabaseException, RetrieveObjectException, IllegalDataException {
+    public List loadKISs(List ids) throws DatabaseException {
         KISDatabase database = (KISDatabase)ConfigurationDatabaseContext.getKISDatabase();
         return database.retrieveByIds(ids, null);
     }
 
-    public List loadMeasurementPorts(List ids) throws DatabaseException, RetrieveObjectException, IllegalDataException {
+    public List loadMeasurementPorts(List ids) throws DatabaseException {
         MeasurementPortDatabase database = (MeasurementPortDatabase)ConfigurationDatabaseContext.getMeasurementPortDatabase();
         return database.retrieveByIds(ids, null);
     }
 
-    public List loadMonitoredElements(List ids) throws DatabaseException, RetrieveObjectException, IllegalDataException{
+    public List loadMonitoredElements(List ids) throws DatabaseException{
         MonitoredElementDatabase database = (MonitoredElementDatabase)ConfigurationDatabaseContext.getMonitoredElementDatabase();
         return database.retrieveByIds(ids, null);
     }
