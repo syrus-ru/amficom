@@ -1,27 +1,27 @@
--- $Id: schemeelement.sql,v 1.1 2005/02/04 15:26:50 bass Exp $
+-- $Id: schemeelement.sql,v 1.2 2005/02/08 14:08:58 bass Exp $
 
 CREATE TABLE "SchemeElement" (
-	id VARCHAR2(32) NOT NULL,
+	id VARCHAR2(32 CHAR) NOT NULL,
 --
 	created TIMESTAMP NOT NULL,
 	modified TIMESTAMP NOT NULL,
-	creator_id VARCHAR2(32) NOT NULL,
-	modifier_id VARCHAR2(32) NOT NULL,
+	creator_id VARCHAR2(32 CHAR) NOT NULL,
+	modifier_id VARCHAR2(32 CHAR) NOT NULL,
 --
-	name VARCHAR2 (32)NOT NULL,
-	description VARCHAR2(256),
+	name VARCHAR2(32 CHAR)NOT NULL,
+	description VARCHAR2(256 CHAR),
 --
-	label VARCHAR2(64),
-	equipment_type_id VARCHAR2(32),
-	equipment_id VARCHAR2(32),
-	rtu_id VARCHAR2(32),
-	site_id VARCHAR2(32),
-	symbol_id VARCHAR2(32),
-	ugo_cell_id VARCHAR2(32),
-	scheme_cell_id VARCHAR2(32),
-	scheme_proto_element_id VARCHAR2(32),
-	parent_scheme_id VARCHAR2(32),
-	parent_scheme_element_id VARCHAR2(32),
+	label VARCHAR2(64 CHAR),
+	equipment_type_id VARCHAR2(32 CHAR),
+	equipment_id VARCHAR2(32 CHAR),
+	rtu_id VARCHAR2(32 CHAR),
+	site_id VARCHAR2(32 CHAR),
+	symbol_id VARCHAR2(32 CHAR),
+	ugo_cell_id VARCHAR2(32 CHAR),
+	scheme_cell_id VARCHAR2(32 CHAR),
+	scheme_proto_element_id VARCHAR2(32 CHAR),
+	parent_scheme_id VARCHAR2(32 CHAR),
+	parent_scheme_element_id VARCHAR2(32 CHAR),
 --
 	CONSTRAINT schemeelement_pk PRIMARY KEY(id),
 --
@@ -29,6 +29,7 @@ CREATE TABLE "SchemeElement" (
 		REFERENCES "User"(id) ON DELETE CASCADE,
 	CONSTRAINT schemeelement_modifier_fk FOREIGN KEY(modifier_id)
 		REFERENCES "User"(id) ON DELETE CASCADE,
+--
 	CONSTRAINT schemeelement_equipmnt_type_fk FOREIGN KEY(equipment_type_id)
 		REFERENCES EquipmentType(id) ON DELETE CASCADE,
 	CONSTRAINT schemeelement_equipmnt_fk FOREIGN KEY(equipment_id)

@@ -1,4 +1,13 @@
--- $Id: DROP.sql,v 1.2 2005/02/04 15:26:50 bass Exp $
+-- $Id: DROP.sql,v 1.3 2005/02/08 14:08:58 bass Exp $
+
+-- 05. SchemeOptimizeInfo
+PROMPT 05. Dropping table "SchemeOptimizeInfo"...;
+DROP TABLE "SchemeOptimizeInfoSwitch";
+DROP SEQUENCE "SchemeOptimizeInfoSwitch_Seq";
+DROP TABLE "SchemeOptimizeInfoRtu";
+DROP SEQUENCE "SchemeOptimizeInfoRtu_Seq";
+DROP TABLE "SchemeOptimizeInfo";
+DROP SEQUENCE "SchemeOptimizeInfo_Seq";
 
 -- 04. SchemeElement
 PROMPT 04. Dropping table "SchemeElement"...;
