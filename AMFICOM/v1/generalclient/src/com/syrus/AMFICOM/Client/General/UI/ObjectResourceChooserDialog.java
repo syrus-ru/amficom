@@ -1,39 +1,23 @@
-/**
- * $Id: ObjectResourceChooserDialog.java,v 1.3 2004/08/17 15:02:51 krupenn Exp $
+/*
+ * $Id: ObjectResourceChooserDialog.java,v 1.4 2004/09/27 06:15:02 bass Exp $
  *
- * Syrus Systems
- * Научно-технический центр
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
  * Проект: АМФИКОМ
- *
- * Платформа: java 1.4.1
-*/
+ */
+
 package com.syrus.AMFICOM.Client.General.UI;
 
-import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.General.Lang.LangModel;
-import com.syrus.AMFICOM.Client.General.UI.ObjectResourceDisplayModel;
-import com.syrus.AMFICOM.Client.General.UI.ObjectResourceTablePane;
-import com.syrus.AMFICOM.Client.Resource.DataSet;
-import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
-import com.syrus.AMFICOM.Client.Resource.ObjectResource;
-
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.Frame;
-import java.awt.Toolkit;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
+import com.syrus.AMFICOM.Client.General.Model.Environment;
+import com.syrus.AMFICOM.Client.General.UI.*;
+import com.syrus.AMFICOM.Client.Resource.*;
+import java.awt.*;
+import java.awt.event.*;
 import java.util.List;
-import javax.swing.BorderFactory;
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JPanel;
+import javax.swing.*;
 import javax.swing.border.BevelBorder;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
-
+import javax.swing.event.*;
 import oracle.jdeveloper.layout.XYLayout;
 
 /**
@@ -45,12 +29,10 @@ import oracle.jdeveloper.layout.XYLayout;
  * Для этого следует переопределить метод remove(ObjectResource obj). Для того,
  * чтобы включить эту возможность, необходимо вызвать метод 
  * setCanDelete(boolean bool)
- * 
- * 
- * @version $Revision: 1.3 $, $Date: 2004/08/17 15:02:51 $
- * @module
- * @author $Author: krupenn $
- * @see
+ *
+ * @author $Author: bass $
+ * @version $Revision: 1.4 $, $Date: 2004/09/27 06:15:02 $
+ * @module generalclient_v1
  */
 public class ObjectResourceChooserDialog extends JDialog 
 {
