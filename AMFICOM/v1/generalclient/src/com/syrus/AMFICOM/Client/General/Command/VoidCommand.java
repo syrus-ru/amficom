@@ -1,5 +1,5 @@
 /**
- * $Id: VoidCommand.java,v 1.6 2004/08/19 11:23:30 krupenn Exp $
+ * $Id: VoidCommand.java,v 1.7 2004/08/23 11:57:02 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -18,7 +18,7 @@ import com.syrus.AMFICOM.Client.General.Model.Environment;
  * 
  * 
  * 
- * @version $Revision: 1.6 $, $Date: 2004/08/19 11:23:30 $
+ * @version $Revision: 1.7 $, $Date: 2004/08/23 11:57:02 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -89,12 +89,30 @@ public class VoidCommand implements Command, Cloneable
 	public void undo()
 	{
 		System.out.println("Void command undo for " + source.toString() + " - ignored");
+		try
+		{
+			throw new Exception("dummy");
+		}
+		catch(Exception e)
+		{
+			System.out.println("current execution point with call stack:");
+			e.printStackTrace();
+		}
 	}
 
 	// пустая команда не выполняет никаких действий
 	public void redo()
 	{
 		System.out.println("Void command redo for " + source.toString() + " - defaults to \'EXECUTE\'");
+		try
+		{
+			throw new Exception("dummy");
+		}
+		catch(Exception e)
+		{
+			System.out.println("current execution point with call stack:");
+			e.printStackTrace();
+		}
 		execute();
 	}
 
@@ -120,8 +138,8 @@ public class VoidCommand implements Command, Cloneable
 	// пустая команда не имеет параметров
 	public void setParameter(String field, Object value)
 	{
-		System.out.println("Set for Void command paramenter " + field +
-				" to value " + value.toString() + " - ignored");
+//		System.out.println("Set for Void command paramenter " + field +
+//				" to value " + value.toString() + " - ignored");
 		try
 		{
 			throw new Exception("dummy");
