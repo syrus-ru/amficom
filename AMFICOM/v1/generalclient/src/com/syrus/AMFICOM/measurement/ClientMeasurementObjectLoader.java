@@ -1,5 +1,5 @@
 /*
- * $Id: ClientMeasurementObjectLoader.java,v 1.25 2005/03/28 15:57:17 bob Exp $
+ * $Id: ClientMeasurementObjectLoader.java,v 1.26 2005/03/31 07:40:40 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,7 +28,6 @@ import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.general.corba.AccessIdentifier_Transferable;
 import com.syrus.AMFICOM.general.corba.ErrorCode;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
-import com.syrus.AMFICOM.general.corba.StorableObjectCondition_Transferable;
 import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 import com.syrus.AMFICOM.measurement.corba.AnalysisType_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Analysis_Transferable;
@@ -45,7 +44,7 @@ import com.syrus.AMFICOM.measurement.corba.TemporalPattern_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Test_Transferable;
 
 /**
- * @version $Revision: 1.25 $, $Date: 2005/03/28 15:57:17 $
+ * @version $Revision: 1.26 $, $Date: 2005/03/31 07:40:40 $
  * @author $Author: bob $
  * @module generalclient_v1
  */
@@ -288,8 +287,7 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 				identifierTransferables[i] = (Identifier_Transferable) id.getTransferable();
 			}
 			transferables = this.server.transmitAnalysesButIdsCondition(identifierTransferables,
-				getAccessIdentifierTransferable(), (StorableObjectCondition_Transferable) storableObjectCondition
-						.getTransferable());
+				getAccessIdentifierTransferable(), StorableObjectConditionBuilder.getConditionTransferable(storableObjectCondition));
 			Collection list = new ArrayList(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
 				list.add(new Analysis(transferables[j]));
@@ -335,8 +333,7 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 				identifierTransferables[i] = (Identifier_Transferable) id.getTransferable();
 			}
 			transferables = this.server.transmitAnalysisTypesButIdsCondition(identifierTransferables,
-				getAccessIdentifierTransferable(), (StorableObjectCondition_Transferable) storableObjectCondition
-						.getTransferable());
+				getAccessIdentifierTransferable(), StorableObjectConditionBuilder.getConditionTransferable(storableObjectCondition));
 			Collection list = new ArrayList(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
 				list.add(new AnalysisType(transferables[j]));
@@ -382,8 +379,7 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 				identifierTransferables[i] = (Identifier_Transferable) id.getTransferable();
 			}
 			transferables = this.server.transmitEvaluationsButIdsCondition(identifierTransferables,
-				getAccessIdentifierTransferable(), (StorableObjectCondition_Transferable) storableObjectCondition
-						.getTransferable());
+				getAccessIdentifierTransferable(), StorableObjectConditionBuilder.getConditionTransferable(storableObjectCondition));
 			Collection list = new ArrayList(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
 				list.add(new Evaluation(transferables[j]));
@@ -429,8 +425,7 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 				identifierTransferables[i] = (Identifier_Transferable) id.getTransferable();
 			}
 			transferables = this.server.transmitEvaluationTypesButIdsCondition(identifierTransferables,
-				getAccessIdentifierTransferable(), (StorableObjectCondition_Transferable) storableObjectCondition
-						.getTransferable());
+				getAccessIdentifierTransferable(), StorableObjectConditionBuilder.getConditionTransferable(storableObjectCondition));
 			Collection list = new ArrayList(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
 				list.add(new EvaluationType(transferables[j]));
@@ -478,8 +473,7 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 			}
 
 			transferables = this.server.transmitMeasurementsButIdsCondition(identifierTransferables,
-				getAccessIdentifierTransferable(), (StorableObjectCondition_Transferable) storableObjectCondition
-						.getTransferable());
+				getAccessIdentifierTransferable(), StorableObjectConditionBuilder.getConditionTransferable(storableObjectCondition));
 			Collection list = new ArrayList(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
 				list.add(new Measurement(transferables[j]));
@@ -547,8 +541,7 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 				identifierTransferables[i] = (Identifier_Transferable) id.getTransferable();
 			}
 			transferables = this.server.transmitModelingsButIdsCondition(identifierTransferables,
-				getAccessIdentifierTransferable(), (StorableObjectCondition_Transferable) storableObjectCondition
-						.getTransferable());
+				getAccessIdentifierTransferable(), StorableObjectConditionBuilder.getConditionTransferable(storableObjectCondition));
 
 			Collection list = new ArrayList(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
@@ -759,8 +752,7 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 				identifierTransferables[i] = (Identifier_Transferable) id.getTransferable();
 			}
 			transferables = this.server.transmitSetsButIdsCondition(identifierTransferables,
-				getAccessIdentifierTransferable(), (StorableObjectCondition_Transferable) storableObjectCondition
-						.getTransferable());
+				getAccessIdentifierTransferable(), StorableObjectConditionBuilder.getConditionTransferable(storableObjectCondition));
 			Collection list = new ArrayList(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
 				list.add(new Set(transferables[j]));
