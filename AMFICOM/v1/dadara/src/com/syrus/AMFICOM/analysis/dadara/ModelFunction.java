@@ -20,7 +20,7 @@ import java.io.*;
  * <p>Should be constructed as one of three AMFICOM-specific simple functions.
  * The modelling function will probably change when fit() will be called.</p>
  *
- * @version $Revision: 1.3 $, $Date: 2004/12/20 13:54:50 $
+ * @version $Revision: 1.4 $, $Date: 2004/12/20 15:48:49 $
  * @author $Author: saa $
  * @module analysis_v1
  */
@@ -119,7 +119,7 @@ public class ModelFunction {
 		ret.nInitAsLinear();
 		return ret;
 	}
-	
+
 	public void setAsLinear(
 			int x1, double y1, int x2, double y2)
 	{

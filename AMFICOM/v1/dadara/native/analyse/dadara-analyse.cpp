@@ -180,6 +180,7 @@ Java_com_syrus_AMFICOM_analysis_CoreAnalysisManager_analyse2(
 #ifdef DEBUG_DADARA_ANALYSE
 	fprintf( dbg_stream, "# re freed\n");
 #endif
+
 	// send to JNI
 	double meanAtt = ia->getMeanAttenuation();
 
