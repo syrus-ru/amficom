@@ -1,5 +1,5 @@
 /*
- * $Id: LogicalSchemeUI.java,v 1.6 2005/03/11 12:07:32 bob Exp $
+ * $Id: LogicalSchemeUI.java,v 1.7 2005/03/11 12:58:47 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -33,7 +33,7 @@ import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/03/11 12:07:32 $
+ * @version $Revision: 1.7 $, $Date: 2005/03/11 12:58:47 $
  * @author $Author: bob $
  * @module filter_v1
  */
@@ -559,6 +559,29 @@ public class LogicalSchemeUI extends JComponent implements MouseListener, MouseM
 		}
 	}
 
+	private void fireSelectionChanged() {
+		if (this.selectionListeners.length > 0) {
+			Collection selections;
+			if (!this.selectedItems.isEmpty()) {
+				selections = new ArrayList(this.selectedItems.size());
+				for (Iterator it = this.selectedItems.iterator(); it.hasNext();) {
+					ViewItem element = (ViewItem) it.next();
+					selections.add(element.getSourceItem());
+				}
+
+			} else {
+				if (this.selectedItem != null)
+					selections = Collections.singletonList(this.selectedItem.getSourceItem());
+				else
+					selections = Collections.EMPTY_LIST;
+			}
+
+			for (int i = 0; i < this.selectionListeners.length; i++) {
+				this.selectionListeners[i].selectedItems(selections);
+			}
+		}
+	}
+
 	public void mouseClicked(MouseEvent e) {
 		this.mouseDragging = false;
 		if (SwingUtilities.isLeftMouseButton(e)) {
@@ -587,42 +610,6 @@ public class LogicalSchemeUI extends JComponent implements MouseListener, MouseM
 						this.selectedItems.add(this.selectedItem);
 
 					this.fireSelectionChanged();
-
-					if (!e.isControlDown()) {
-						this.firstSelectedLineItem = null;
-						this.secondSelectedLineItem = null;
-						if (this.linkItem != null) {
-							if ((this.linkItem.getMaxChildrenCount() != 0)
-									&& (this.linkItem.children == null || this.linkItem.getMaxChildrenCount() > this.linkItem.children
-											.size())) {
-								/* calculate output link for selectedItem */
-								int outputCount = 0;
-								for (Iterator it = this.items.iterator(); it.hasNext();) {
-									ViewItem item = (ViewItem) it.next();
-									if (item.children != null) {
-										for (Iterator iter = item.children.iterator(); iter.hasNext();) {
-											ViewItem item2 = (ViewItem) iter.next();
-											if (item2.equals(this.selectedItem))
-												outputCount++;
-										}
-									}
-								}
-								/*
-								 * add selected item to linkItem if total output
-								 * count less than its limit
-								 */
-								if (outputCount < this.selectedItem.getMaxParentCount()) {
-									try {
-										this.linkItem.addChild(this.selectedItem);
-									} catch (UnsupportedOperationException uoe) {
-										JOptionPane.showMessageDialog(this, uoe.getMessage(), "Error",
-											JOptionPane.OK_OPTION);
-									}
-								}
-							}
-							this.linkItem = null;
-						}
-					}
 				} else {
 					this.selectedItems.clear();
 					this.fireSelectionChanged();
@@ -632,44 +619,10 @@ public class LogicalSchemeUI extends JComponent implements MouseListener, MouseM
 
 			}
 			this.repaint();
-		} else if (SwingUtilities.isRightMouseButton(e)) {
+		} else {
+			this.selectedItem = null;
 			this.selectedItems.clear();
-			int mouseX = e.getX();
-			int mouseY = e.getY();
-			this.selectedItem = this.getItem(mouseX, mouseY);
-			if (this.selectedItem != null) {
-				this.linkItem = this.selectedItem;
-				this.x = mouseX;
-				this.y = mouseY;
-				this.dx = this.linkItem.x - mouseX;
-				this.dy = this.linkItem.y - mouseY;
-			} else if (this.linkItem != null) {
-				this.linkItem = null;
-			}
 			this.fireSelectionChanged();
-		}
-	}
-
-	private void fireSelectionChanged() {
-		if (this.selectionListeners.length > 0) {
-			Collection selections;
-			if (!this.selectedItems.isEmpty()) {
-				selections = new ArrayList(this.selectedItems.size());
-				for (Iterator it = this.selectedItems.iterator(); it.hasNext();) {
-					ViewItem element = (ViewItem) it.next();
-					selections.add(element.getSourceItem());
-				}
-
-			} else {
-				if (this.selectedItem != null)
-					selections = Collections.singletonList(this.selectedItem.getSourceItem());
-				else
-					selections = Collections.EMPTY_LIST;
-			}
-
-			for (int i = 0; i < this.selectionListeners.length; i++) {
-				this.selectionListeners[i].selectedItems(selections);
-			}
 		}
 	}
 
@@ -686,7 +639,8 @@ public class LogicalSchemeUI extends JComponent implements MouseListener, MouseM
 		int mouseY = e.getY();
 
 		if (this.selectedItem != null) {
-			if (this.preSelectedItem != null
+			if (SwingUtilities.isRightMouseButton(e)
+					&& this.preSelectedItem != null
 					&& (this.preSelectedItem.equals(this.selectedItem) || this.selectedItems
 							.contains(this.preSelectedItem))) {
 				if (!this.mouseDragging) {
@@ -709,15 +663,25 @@ public class LogicalSchemeUI extends JComponent implements MouseListener, MouseM
 				}
 				this.mouseDragging = true;
 			} else {
-				this.selectedItem = null;
-				this.selectedItems.clear();
-				this.mouseDragging = false;
-				this.mouseMoving = false;
+				if (SwingUtilities.isLeftMouseButton(e) && this.preSelectedItem != null
+						&& this.preSelectedItem.equals(this.selectedItem)) {
+					this.linkItem = this.selectedItem;
+					this.x = mouseX;
+					this.y = mouseY;
+					this.dx = this.linkItem.x - mouseX;
+					this.dy = this.linkItem.y - mouseY;
+					this.fireSelectionChanged();
+				} else {
+					this.selectedItem = null;
+					this.selectedItems.clear();
+					this.mouseDragging = false;
+					this.mouseMoving = false;
+				}
 			}
 
 			this.repaint();
 
-		} else {
+		} else if (SwingUtilities.isLeftMouseButton(e)) {
 			if (!this.mouseDragging) {
 				this.x = mouseX;
 				this.y = mouseY;
@@ -752,11 +716,39 @@ public class LogicalSchemeUI extends JComponent implements MouseListener, MouseM
 	}
 
 	public void mouseReleased(MouseEvent e) {
-		// System.out.println("mouseReleased");
-		// this.selectedItem = null;
+		int mouseX = e.getX();
+		int mouseY = e.getY();
 		if (this.mouseDragging && this.selectedItem == null && this.selectedItems.isEmpty()) {
 			this.selectItemsInRect(this.x, this.y, this.dx, this.dy);
 		}
+		//
+		if (this.linkItem != null) {
+			if ((this.linkItem.getMaxChildrenCount() != 0)
+					&& (this.linkItem.children == null || this.linkItem.getMaxChildrenCount() > this.linkItem.children
+							.size())) {
+				this.selectedItem = this.getItem(mouseX, mouseY);
+				if (this.selectedItem != null) {
+					/* calculate output link for selectedItem */
+					int outputCount = this.selectedItem.getParents() == null ? 0 : this.selectedItem.getParents()
+							.size();
+					/*
+					 * add selected item to linkItem if total output count less
+					 * than its limit
+					 */
+					if (outputCount < this.selectedItem.getMaxParentCount()) {
+						try {
+							this.linkItem.addChild(this.selectedItem);
+						} catch (UnsupportedOperationException uoe) {
+							JOptionPane.showMessageDialog(this, uoe.getMessage(), "Error", JOptionPane.OK_OPTION);
+						}
+					}
+				}
+			}
+			this.linkItem = null;
+			this.selectedItems.clear();
+			this.fireSelectionChanged();
+		}
+
 		this.mouseDragging = false;
 		this.mouseMoving = false;
 		this.resize();
