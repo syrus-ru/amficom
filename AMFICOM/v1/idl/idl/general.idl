@@ -1,5 +1,5 @@
 /*
- * $Id: general.idl,v 1.58 2005/02/21 11:16:06 bob Exp $
+ * $Id: general.idl,v 1.59 2005/02/28 13:20:29 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,7 +27,12 @@ module corba {
 	typedef wstring<256> WString256;
 
 	struct Identifier_Transferable {
+#ifdef NUMERIC_IDENTIFIER
+		short major;
+		long long minor;
+#else // NUMERIC_IDENTIFIER
 		wstring identifier_string;
+#endif // NUMERIC_IDENTIFIER
 	};
 
 	typedef sequence <Identifier_Transferable> IdentifierSeq_Transferable;
@@ -217,13 +222,14 @@ module corba {
 	};
 
 	/**
-	 * @deprecated use TypicalCondition instead.
 	 * If {@link StringFieldCondition_Transferable#sort} is
 	 * {@link StringFieldSort#STRINGSORT_INTEGER}, then
 	 * {@link StringFieldCondition_Transferable#field_string}'s value is
 	 * interpreted as an integer rather than a string. Mapping of this
 	 * value to the specific column in a table is entity-specific (i. e.
 	 * depends on {@link StringFieldCondition_Transferable#entity_code}).
+	 *
+	 * @deprecated use {@link TypicalCondition_Transferable} instead.
 	 */
 	struct StringFieldCondition_Transferable {
 		short entity_code;
