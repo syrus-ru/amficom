@@ -1,0 +1,259 @@
+package com.syrus.impexp.unicablemap;
+
+public class UniCableMapParameter {
+	// abstract parameters
+//	public static final String UCM_TEMPLATE_PARAMETER = "Шаблонный параметр";
+	public static final String UCM_NAME = "Название";
+//	public static final String UCM_NUMBER = "Номер";
+//	public static final String UCM_LENGTH = "Длина";
+//	public static final String UCM_KIND = "Вид";
+	public static final String UCM_OBJECT_KIND = "Вид объекта";
+//	public static final String UCM_LINK_TYPE = "Вид связи";
+//	public static final String UCM_LINK_TYPE_ = "Вид связи";
+	public static final String UCM_POSESSES = "Владеет";
+//	public static final String UCM_PRESENTED_TYPE = "Представляемый тип";
+//	public static final String UCM_LAYER = "Слой";
+//	public static final String UCM_IMAGE = "Изображение";
+//	public static final String UCM_MIN_MAX = "Min/max";
+//	public static final String UCM_AUTO = "Авто";
+//	public static final String UCM_CALCULATED = "Вычисляемая";
+//	public static final String UCM_CASCADE_CHILD_REMOVAL = "Каскадное удаление потомка";
+//	public static final String UCM_CASCADE_PARENT_REMOVAL = "Каскадное удаление предка";
+//	public static final String UCM_END_OF_LINR = "Конец строки";
+//	public static final String UCM_START_OF_LINE = "Начало строки";
+//	public static final String UCM_DEFINITION = "Определение";
+//	public static final String UCM_RECURSION = "Рекурсия";
+//	public static final String UCM_HIDDEN = "Скрытый";
+//	public static final String UCM_CREATION = "Создание";
+//	public static final String UCM_BEFORE = "До";
+//	public static final String UCM_SOURCE = "Источник";
+//	public static final String UCM_END = "Конец";
+//	public static final String UCM_START = "Начало";
+//	public static final String UCM_GENERALIZATION = "Обобщение";
+//	public static final String UCM_FROM = "От";
+//	public static final String UCM_CONTAINS = "Содержит";
+//	public static final String UCM_TYPE = "Тип";
+//	public static final String UCM_IDENTIFIER = "Идентификатор";
+//	public static final String UCM_COMMENT = "Комментарий";
+//	public static final String UCM_NAME_FOR_CHILD = "Название для потомка";
+//	public static final String UCM_NAME_FOR_PARENT = "Название для предка";
+//	public static final String UCM_MAP_LABEL = "Подпись на карте";
+//	public static final String UCM_MAX_CHILD_COUNT = "Макс. кол. потомков";
+//	public static final String UCM_MAX_PARENT_COUNT = "Макс. кол. предков";
+//	public static final String UCM_MIN_CHILD_COUNT = "Мин. кол. потомков";
+//	public static final String UCM_MIN_PARENT_COUNT = "Мин. кол. предков";
+//	public static final String UCM_X = "По X";
+//	public static final String UCM_Y = "По Y";
+//	public static final String UCM_SEQUENCE = "Порядок";
+//	public static final String UCM_UPDATE_SEQUENCE = "Порядок обновления";
+//	public static final String UCM_RECURSION_LEVEL = "Уровень рекурсии";
+//	public static final String UCM_CHANNEL_COUNT = "Число каналов";
+//	public static final String UCM_FIELD_WODTH = "Ширина поля";
+//	public static final String UCM_STANDARD_SIZE = "Стандартный размер";
+//	public static final String UCM_NUMBERING_START = "Начало нумерации";
+//	public static final String UCM_FROM_RIGHT = "Справа";
+//	public static final String UCM_FROM_TOP = "Сверху";
+//	public static final String UCM_COUNT = "Количество";
+//	public static final String UCM_HORIZONTAL = "Горизонтально";
+//	public static final String UCM_INVERSION = "Инверсия";
+	public static final String UCM_COINCIDES_BY_LINK = "Совпадает по связи";
+//	public static final String UCM_NUMBER_COINCIDENCE = "Совпадение номеров";
+//	public static final String UCM_CONTINUES = "Продолжает";
+//	public static final String UCM_READ_ONLY = "Только чтение";
+//	public static final String UCM_FIBRES = "Волокна";
+//	public static final String UCM_STATE = "Состояние";
+//	public static final String UCM_STREET = "Улица";
+//	public static final String UCM_ADDRESS = "Адрес";
+//	public static final String UCM_TEMPLATE_NAME = "Название шаблона";
+//	public static final String UCM_EXECUTE = "Выполнить";
+//	public static final String UCM_SAVE_TO_MAP = "Сохранить на карту";
+//	public static final String UCM_PASSWORD = "Пароль";
+//	public static final String UCM_PICTURE_NUMBER = "Номер картинки";
+//	public static final String UCM_CLEAR_RESULTS = "Очистить результаты";
+	public static final String UCM_PICTURE = "Картинка";
+//	public static final String UCM_RESERVED = "Зарезервированно";
+//	public static final String UCM_MANDATORY = "Обязательный";
+//	public static final String UCM_ABBREVIATION = "Сокращение";
+//	public static final String UCM_FILL_ON_CREATE = "Заполнять при создании";
+//	public static final String UCM_LABEL = "Метка";
+//	public static final String UCM_CHILD_COUNT = "Кол. потомков";
+//	public static final String UCM_PARENT_COUNT = "Кол. предков";
+//	public static final String UCM_YEAR = "Год";
+//	public static final String UCM_QUERY_TYPE = "Запросный тип";
+//	public static final String UCM_STYLE = "Стиль";
+//	public static final String UCM_SYMBOL = "Символ";
+//	public static final String UCM_COLOR = "Цвет";
+//	public static final String UCM_SIZE = "Размер";
+//	public static final String UCM_FILL = "Заливка";
+	public static final String UCM_LENGTH1 = "Длина1";
+	public static final String UCM_LENGTH2 = "Длина2";
+//	public static final String UCM_PROJECT = "Проект";
+//	public static final String UCM_UNDIRECTED = "Ненаправленная";
+//	public static final String UCM_CHAINS = "Цепочки";
+//	public static final String UCM_THROUGH_OBJECTS = "Через объекты";
+//	public static final String UCM_LINK_KIND_FOR_QUERY = "Вид связи для запроса";
+//	public static final String UCM_POLYGONE_FILL = "Заливка полигона";
+//	public static final String UCM_POLYGONE_COLOR = "Цвет полигона";
+//	public static final String UCM_POLYGONE_BACKGROUND = "Цвет фона полигона";
+//	public static final String UCM_SYS_AUTO = "Сис авто";
+//	public static final String UCM_PARENT_QUERY = "Опрос предка";
+//	public static final String UCM_EDITING = "Редактирование";
+//	public static final String UCM_MODEL_EDITING = "Редактирование модели";
+//	public static final String UCM_UPCASE = "Верхний регистр";
+//	public static final String UCM_ARCHIVE = "Архив";
+//	public static final String UCM_QUERY_ZONE = "Зона запроса";
+//	public static final String UCM_MAP_LENGTH = "Длина на карте";
+//	public static final String UCM_SET = "Установить";
+//	public static final String UCM_FRAME = "Стойка";
+//	public static final String UCM_RING_COUNT = "Число колец";
+//	public static final String UCM_PLANNED = "Проектируемый";
+//	public static final String UCM_GRAPHIC_LINKS = "Графические связи";
+	public static final String UCM_ATS = "АТС";
+//	public static final String UCM_NODE = "Узел";
+	public static final String UCM_SCHEME = "Схема";
+	public static final String UCM_SCHEME_TOTAL = "Схема всего";
+
+	// logical parameters
+	public static final String UCM_AUTO = "Авто";
+	public static final String UCM_CALCULATED = "Вычисляемая";
+	public static final String UCM_MIN_MAX = "Min/max";
+	public static final String UCM_CASCADE_PARENT_REMOVAL = "Каскадное удаление предка";
+	public static final String UCM_CASCADE_CHILD_REMOVAL = "Каскадное удаление потомка";
+	public static final String UCM_RECURSION = "Рекурсия";
+	public static final String UCM_START_OF_LINE = "Начало строки";
+	public static final String UCM_END_OF_LINR = "Конец строки";
+	public static final String UCM_CREATION = "Создание";
+	public static final String UCM_HIDDEN = "Скрытый";
+	public static final String UCM_DEFINITION = "Определение";
+	public static final String UCM_TEMPLATE_PARAMETER = "Шаблонный параметр";
+	public static final String UCM_FROM_RIGHT = "Справа";
+	public static final String UCM_FROM_TOP = "Сверху";
+	public static final String UCM_HORIZONTAL = "Горизонтально";
+	public static final String UCM_INVERSION = "Инверсия";
+	public static final String UCM_NUMBER_COINCIDENCE = "Совпадение номеров";
+	public static final String UCM_READ_ONLY = "Только чтение";
+	public static final String UCM_MANDATORY = "Обязательный";
+	public static final String UCM_FILL_ON_CREATE = "Заполнять при создании";
+	public static final String UCM_UNDIRECTED = "Ненаправленная";
+	public static final String UCM_CHAINS = "Цепочки";
+	public static final String UCM_SYS_AUTO = "Сис авто";
+	public static final String UCM_PARENT_QUERY = "Опрос предка";
+	public static final String UCM_EDITING = "Редактирование";
+	public static final String UCM_MODEL_EDITING = "Редактирование модели";
+	public static final String UCM_UPCASE = "Верхний регистр";
+	public static final String UCM_PLANNED = "Проектируемый";
+	public static final String UCM_RESERVED = "Зарезервированно";
+	// button parameters
+	public static final String UCM_EXECUTE = "Выполнить";
+	public static final String UCM_SAVE_TO_MAP = "Сохранить на карту";
+	public static final String UCM_CLEAR_RESULTS = "Очистить результаты";
+	public static final String UCM_SET = "Установить";
+	public static final String UCM_RING_SCHEME = "Схема кольца"; //15199
+	public static final String UCM_RING_ALL = "Все кольца"; //15200
+	// date parameters
+	// parameters dependency
+	// dropdown list parameters
+	public static final String UCM_CABLE_KIND = "Вид кабеля"; //1282
+	public static final String UCM_LINK_TYPE = "Вид связи";
+	public static final String UCM_PRESENTED_TYPE = "Представляемый тип";
+	public static final String UCM_LINK_KIND_ = "Вид связи";
+	public static final String UCM_KIND = "Вид";
+	public static final String UCM_QUERY_TYPE = "Запросный тип";
+	public static final String UCM_LAYER = "Слой";
+	public static final String UCM_CABLE = "Кабель"; //14293
+	public static final String UCM_SUBKIND = "Разновидность"; //15129
+	public static final String UCM_SUBSCRIBER = "Абонент"; //14475
+	public static final String UCM_COLLECTOR = "Коллектор"; //14609
+	public static final String UCM_MUFF_KIND = "Вид муфты"; //14647
+	public static final String UCM_CITY = "Город"; //14652
+	public static final String UCM_CONTRACTOR = "Подрядчик"; //14743
+	public static final String UCM_THROUGH_OBJECTS = "Через объекты";
+	public static final String UCM_LINK_KIND_FOR_QUERY = "Вид связи для запроса";
+	public static final String UCM_QUERY_ZONE = "Зона запроса";
+	public static final String UCM_STREET = "Улица";
+	public static final String UCM_COMMUTATOR = "Коммутатор"; //14971
+	public static final String UCM_NODE = "Узел";
+	public static final String UCM_WELL_KIND = "Вид колодца"; //15202
+	// float parameters
+	public static final String UCM_LENGTH = "Длина";
+	public static final String UCM_STANDARD_SIZE = "Стандартный размер";
+	public static final String UCM_LENGTH_IN_TUNNELING = "Длина в канализации"; //14735
+	public static final String UCM_LENGTH_IN_COLLECTOR = "Длина в коллекторе"; //14736
+	public static final String UCM_MAP_LENGTH = "Длина на карте";
+	// graphical link parameters
+	public static final String UCM_GRAPHIC_LINKS = "Графические связи";
+	// image parameters
+	public static final String UCM_IMAGE = "Изображение";
+	// integer parameters
+	public static final String UCM_FIELD_WODTH = "Ширина поля";
+	public static final String UCM_SEQUENCE = "Порядок";
+	public static final String UCM_MIN_CHILD_COUNT = "Мин. кол. потомков";
+	public static final String UCM_MIN_PARENT_COUNT = "Мин. кол. предков";
+	public static final String UCM_MAX_CHILD_COUNT = "Макс. кол. потомков";
+	public static final String UCM_MAX_PARENT_COUNT = "Макс. кол. предков";
+	public static final String UCM_RECURSION_LEVEL = "Уровень рекурсии";
+	public static final String UCM_UPDATE_SEQUENCE = "Порядок обновления";
+	public static final String UCM_CHANNEL_COUNT = "Число каналов";
+	public static final String UCM_X = "По X";
+	public static final String UCM_Y = "По Y";
+	public static final String UCM_NUMBERING_START = "Начало нумерации";
+	public static final String UCM_COUNT = "Количество";
+	public static final String UCM_FIBRES = "Волокна";
+	public static final String UCM_MUNBER_RO_MANDATORY = "Номер RO обяз"; //14654
+	public static final String UCM_CHILD_COUNT = "Кол. потомков";
+	public static final String UCM_PARENT_COUNT = "Кол. предков";
+	public static final String UCM_COLOR = "Цвет";
+	public static final String UCM_SIZE = "Размер";
+	public static final String UCM_FILL = "Заливка";
+	public static final String UCM_POLYGONE_COLOR = "Цвет полигона";
+	public static final String UCM_POLYGONE_BACKGROUND = "Цвет фона полигона";
+	public static final String UCM_POLYGONE_FILL = "Заливка полигона";
+	public static final String UCM_PICTURE_NUMBER = "Номер картинки";
+	public static final String UCM_RO_CHANNEL_COUNT = "Число каналов RO"; //14927
+	public static final String UCM_RING_COUNT = "Число колец";
+	// password parameters
+	public static final String UCM_PASSWORD = "Пароль";
+	// picture parameters
+	public static final String UCM_STATE = "Состояние";
+	// reference parameters
+	public static final String UCM_RING = "Кольцо"; //14957
+	public static final String UCM_START = "Начало";
+	public static final String UCM_END = "Конец";
+	public static final String UCM_SOURCE = "Источник";
+	public static final String UCM_FROM = "От";
+	public static final String UCM_BEFORE = "До";
+	public static final String UCM_TYPE = "Тип";
+	public static final String UCM_GENERALIZATION = "Обобщение";
+	public static final String UCM_CONTAINS = "Содержит";
+	public static final String UCM_CONTINUES = "Продолжает";
+	public static final String UCM_PROJECT = "Проект";
+	public static final String UCM_ADDRESS = "Адрес";
+	public static final String UCM_FRAME = "Стойка";
+	// string parameters
+	public static final String UCM_NAME_MANDATORY = "Название обязательное"; //1267
+	public static final String UCM_IDENTIFIER = "Идентификатор";
+	public static final String UCM_NAME_FOR_PARENT = "Название для предка";
+	public static final String UCM_NAME_FOR_CHILD = "Название для потомка";
+	public static final String UCM_MAP_LABEL = "Подпись на карте";
+	public static final String UCM_MUNBER_STRING_50 = "Номер строка 50"; //1394
+	public static final String UCM_COMMENT = "Комментарий";
+	public static final String UCM_NAME_MANDATORY_70 = "Название обязательное 70"; //15130
+	public static final String UCM_ABBREVIATION = "Сокращение";
+	public static final String UCM_LABEL = "Метка";
+	public static final String UCM_NAME_HIDDEN = "Название скрытое"; //14709
+	public static final String UCM_NAME_OPTIONAL = "Название необязательное"; //14710
+	public static final String UCM_YEAR = "Год";
+	public static final String UCM_NUMBER_STRING_100 = "Номер строка 100"; //14712
+	public static final String UCM_NUMBER_STRING_RO_100 = "Номер строка RO 100"; //14720
+	public static final String UCM_STYLE = "Стиль";
+	public static final String UCM_SYMBOL = "Символ";
+	public static final String UCM_TEMPLATE_NAME = "Название шаблона";
+	public static final String UCM_NAMING = "Имя"; //14932
+	public static final String UCM_ARCHIVE = "Архив";
+
+	public UniCableMapObject realParameter;
+	public String value;
+	
+	public UniCableMapParameter() {
+	}
+}
