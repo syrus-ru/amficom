@@ -1,5 +1,5 @@
 /*
- * $Id: PortDatabase.java,v 1.17 2004/09/08 14:19:49 bob Exp $
+ * $Id: PortDatabase.java,v 1.18 2004/09/09 10:18:16 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,7 +31,7 @@ import com.syrus.util.database.DatabaseDate;
 
 
 /**
- * @version $Revision: 1.17 $, $Date: 2004/09/08 14:19:49 $
+ * @version $Revision: 1.18 $, $Date: 2004/09/09 10:18:16 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -258,30 +258,27 @@ public class PortDatabase extends StorableObjectDatabase {
 		return list;
 	}
 
-	protected void setEntityForPreparedStatement(StorableObject storableObject, PreparedStatement preparedStatement)
+	protected int setEntityForPreparedStatement(StorableObject storableObject, PreparedStatement preparedStatement)
 		throws IllegalDataException, UpdateObjectException {
 		Port port = fromStorableObject(storableObject);
 		Identifier typeId = port.getType().getId();
 		Identifier equipmentId = port.getEquipmentId();
 
-		super.setEntityForPreparedStatement(storableObject, preparedStatement);
+		int i = super.setEntityForPreparedStatement(storableObject, preparedStatement);
 		try {
 			/**
 			  * @todo when change DB Identifier model ,change setString() to setLong()
 			  */			
-			preparedStatement.setString(6, (typeId != null)? typeId.getCode():"");
-			preparedStatement.setString(7, port.getDescription());
+			preparedStatement.setString(++i, (typeId != null)? typeId.getCode():"");
+			preparedStatement.setString(++i, port.getDescription());
 			/**
 			  * @todo when change DB Identifier model ,change setString() to setLong()
 			  */			
-			preparedStatement.setString(8, (equipmentId != null)? equipmentId.getCode():"");
-			preparedStatement.setInt(9, port.getSort());
-			/**
-			  * @todo when change DB Identifier model ,change setString() to setLong()
-			  */
-			preparedStatement.setString(10, port.getId().getCode());
+			preparedStatement.setString(++i, (equipmentId != null)? equipmentId.getCode():"");
+			preparedStatement.setInt(++i, port.getSort());
 		} catch (SQLException sqle) {
 			throw new UpdateObjectException(getEnityName() + "Database.setEntityForPreparedStatement | Error " + sqle.getMessage(), sqle);
 		}
+		return i;
 	}
 }

@@ -1,5 +1,5 @@
 /*
- * $Id: ServerDatabase.java,v 1.17 2004/09/08 13:18:01 bob Exp $
+ * $Id: ServerDatabase.java,v 1.18 2004/09/09 10:16:40 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,7 +31,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2004/09/08 13:18:01 $
+ * @version $Revision: 1.18 $, $Date: 2004/09/09 10:16:40 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -143,29 +143,25 @@ public class ServerDatabase extends StorableObjectDatabase {
 		return server;
 	}
 
-	protected void setEntityForPreparedStatement(StorableObject storableObject, PreparedStatement preparedStatement)
+	protected int setEntityForPreparedStatement(StorableObject storableObject, PreparedStatement preparedStatement)
 		throws IllegalDataException, UpdateObjectException {
 		Server server = fromStorableObject(storableObject);
-		super.setEntityForPreparedStatement(storableObject, preparedStatement);
+		int i = super.setEntityForPreparedStatement(storableObject, preparedStatement);
 		try {
 			/**
 			  * @todo when change DB Identifier model ,change setString() to setLong()
 			  */
-			preparedStatement.setString(6, server.getDomainId().getCode());
-			preparedStatement.setString(7, server.getName());
-			preparedStatement.setString(8, server.getDescription());
+			preparedStatement.setString(++i, server.getDomainId().getCode());
+			preparedStatement.setString(++i, server.getName());
+			preparedStatement.setString(++i, server.getDescription());
 			/**
 			  * @todo when change DB Identifier model ,change setString() to setLong()
 			  */
-			preparedStatement.setString(9, server.getUserId().getCode());
-			/**
-			  * @todo when change DB Identifier model ,change setString() to setLong()
-			  */
-			preparedStatement.setString(10, server.getId().getCode());
-			
+			preparedStatement.setString(++i, server.getUserId().getCode());
 		} catch (SQLException sqle) {
 			throw new UpdateObjectException(getEnityName() + "Database.setEntityForPreparedStatement | Error " + sqle.getMessage(), sqle);
 		}
+		return i;
 	}
 
 	public Object retrieveObject(StorableObject storableObject, int retrieve_kind, Object arg)

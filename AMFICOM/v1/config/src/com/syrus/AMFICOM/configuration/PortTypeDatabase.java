@@ -1,5 +1,5 @@
 /*
- * $Id: PortTypeDatabase.java,v 1.9 2004/09/08 13:48:10 bob Exp $
+ * $Id: PortTypeDatabase.java,v 1.10 2004/09/09 10:18:16 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,7 +27,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2004/09/08 13:48:10 $
+ * @version $Revision: 1.10 $, $Date: 2004/09/09 10:18:16 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -198,20 +198,16 @@ public class PortTypeDatabase extends StorableObjectDatabase {
 		return list;
 	}
 	
-	protected void setEntityForPreparedStatement(StorableObject storableObject, PreparedStatement preparedStatement)
+	protected int setEntityForPreparedStatement(StorableObject storableObject, PreparedStatement preparedStatement)
 		throws IllegalDataException, UpdateObjectException {
 		PortType portType = fromStorableObject(storableObject);
-		super.setEntityForPreparedStatement(storableObject, preparedStatement);
+		int i = super.setEntityForPreparedStatement(storableObject, preparedStatement);
 		try {			
-			preparedStatement.setString(6, portType.getCodename());
-			preparedStatement.setString(7, portType.getDescription());
-			/**
-			 * @todo when change DB Identifier model ,change setString() to setLong()
-			 */
-			preparedStatement.setString(8, portType.getId().getCode());
+			preparedStatement.setString(++i, portType.getCodename());
+			preparedStatement.setString(++i, portType.getDescription());
 		} catch (SQLException sqle) {
 			throw new UpdateObjectException(getEnityName() + "Database.setEntityForPreparedStatement | Error " + sqle.getMessage(), sqle);
 		}
-	
+		return i;	
 	}
 }
