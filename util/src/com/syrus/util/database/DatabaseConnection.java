@@ -114,10 +114,10 @@ public class DatabaseConnection {
 				// пока не организовано взаимодействие с ConnectionPool
 				// connection не закрывать
 				/**
-				 * FIXME close connection when Oracle Connection Pool'll have made
+				 * FIXME release connection when Oracle Connection Pool'll have made
 				 */
 				// connection.close();
-				Log.debugMessage("DatabaseConnection | closeConnection(Connection)", Log.DEBUGLEVEL05);
+				Log.debugMessage("DatabaseConnection | releaseConnection(Connection)", Log.DEBUGLEVEL10);
 			}
 			catch (Exception e) {
 				Log.errorException(e);
