@@ -1,5 +1,5 @@
 /*
- * Название: $Id: ControlsFrame.java,v 1.1 2004/09/13 12:33:42 krupenn Exp $
+ * Название: $Id: ControlsFrame.java,v 1.2 2004/10/04 16:04:43 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -38,7 +38,7 @@ import javax.swing.JTabbedPane;
  * 
  * 
  * 
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  * @author $Author: krupenn $
  * @see
  */
@@ -103,8 +103,8 @@ import javax.swing.JTabbedPane;
 			if(disp != null)
 			{
 				disp.unregister(this, MapEvent.MAP_FRAME_SHOWN);
-				disp.unregister(this, MapEvent.MAP_SELECTED);
-				disp.unregister(this, MapEvent.MAP_DESELECTED);
+				disp.unregister(this, MapEvent.MAP_VIEW_SELECTED);
+				disp.unregister(this, MapEvent.MAP_VIEW_DESELECTED);
 			}
 		}
 		this.aContext = aContext;
@@ -114,8 +114,8 @@ import javax.swing.JTabbedPane;
 		if(disp != null)
 		{
 			disp.register(this, MapEvent.MAP_FRAME_SHOWN);
-			disp.register(this, MapEvent.MAP_SELECTED);
-			disp.register(this, MapEvent.MAP_DESELECTED);
+			disp.register(this, MapEvent.MAP_VIEW_SELECTED);
+			disp.register(this, MapEvent.MAP_VIEW_DESELECTED);
 		}
 	}
 
@@ -136,9 +136,9 @@ import javax.swing.JTabbedPane;
 
 	public void operationPerformed(OperationEvent ae)
 	{
-		if(ae.getActionCommand().equals(MapEvent.MAP_SELECTED))
+		if(ae.getActionCommand().equals(MapEvent.MAP_VIEW_SELECTED))
 			asp.setMapView((MapView)ae.getSource());
-		if(ae.getActionCommand().equals(MapEvent.MAP_DESELECTED))
+		if(ae.getActionCommand().equals(MapEvent.MAP_VIEW_DESELECTED))
 			asp.setMapView(null);
 		if(	ae.getActionCommand().equals(MapEvent.MAP_FRAME_SHOWN))
 		{

@@ -2,7 +2,6 @@ package com.syrus.AMFICOM.client_.general.ui_;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModel;
 import com.syrus.AMFICOM.Client.Resource.ObjectResource;
-import com.syrus.AMFICOM.client_.general.ui_.ObjectResourcePropertiesController;
 
 import java.util.Iterator;
 import java.util.Map;

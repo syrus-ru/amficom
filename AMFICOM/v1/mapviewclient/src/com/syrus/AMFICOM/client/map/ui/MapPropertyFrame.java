@@ -1,5 +1,5 @@
 /**
- * $Id: MapPropertyFrame.java,v 1.4 2004/10/01 16:34:08 krupenn Exp $
+ * $Id: MapPropertyFrame.java,v 1.5 2004/10/04 16:04:43 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -40,7 +40,7 @@ import javax.swing.event.TableModelListener;
  * 
  * 
  * 
- * @version $Revision: 1.4 $, $Date: 2004/10/01 16:34:08 $
+ * @version $Revision: 1.5 $, $Date: 2004/10/04 16:04:43 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -98,7 +98,6 @@ public final class MapPropertyFrame extends JInternalFrame
 			{
 				Dispatcher disp = this.aContext.getDispatcher();
 				disp.unregister(this, MapEvent.MAP_NAVIGATE);
-				disp.unregister(this, MapEvent.MAP_DESELECTED);
 			}
 		this.aContext = aContext;
 		if(aContext == null)
@@ -107,7 +106,6 @@ public final class MapPropertyFrame extends JInternalFrame
 		if(disp == null)
 			return;
 		disp.register(this, MapEvent.MAP_NAVIGATE);
-		disp.register(this, MapEvent.MAP_DESELECTED);
 	}
 
 	public void initialize()

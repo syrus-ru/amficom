@@ -1,5 +1,5 @@
 /**
- * $Id: MapMarker.java,v 1.7 2004/09/29 15:20:01 krupenn Exp $
+ * $Id: MapMarker.java,v 1.8 2004/10/04 16:04:43 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -63,7 +63,7 @@ import javax.swing.ImageIcon;
  * 
  * 
  * 
- * @version $Revision: 1.7 $, $Date: 2004/09/29 15:20:01 $
+ * @version $Revision: 1.8 $, $Date: 2004/10/04 16:04:43 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -91,12 +91,17 @@ public class MapMarker extends MapNodeElement implements MapElement
 
 	protected int nodeLinkIndex = 0;
 
-	protected MapMeasurementPathElement transmissionPath;
+	protected MapMeasurementPathElement measurementPath;
 	protected SchemePath schemePath = null;
 	protected TransmissionPath catalogPath = null;
 	protected String me_id = "";
 
 	protected PathDecompositor spd = null;
+
+	protected String mapViewId = "";
+	
+	protected MapView mapView;
+
 
 	public String[][] getExportColumns()
 	{
@@ -227,11 +232,6 @@ public class MapMarker extends MapNodeElement implements MapElement
 		selected = false;
 	}
 */
-	public MapMeasurementPathElement getTransmissionPath()
-	{
-		return this.transmissionPath;
-	}
-
 	public Rectangle getBounds()
 	{
 		return bounds;
@@ -351,6 +351,16 @@ public class MapMarker extends MapNodeElement implements MapElement
 	public void setName(String name)
 	{
 		this.name = name;
+	}
+
+	public void setMapView(MapView mapView)
+	{
+		this.mapView = mapView;
+	}
+	
+	public MapView getMapView()
+	{
+		return this.mapView;
 	}
 
 	public boolean isVisible(Rectangle2D.Double visibleBounds)
@@ -915,7 +925,7 @@ public class MapMarker extends MapNodeElement implements MapElement
 
 	public String getToolTipText()
 	{
-		String s1 = getName() + " (" + LangModelMap.getString("Path_lowercase") + " " + transmissionPath.getName() + ")";
+		String s1 = getName() + " (" + LangModelMap.getString("Path_lowercase") + " " + measurementPath.getName() + ")";
 
 		return s1;
 	}
@@ -956,6 +966,18 @@ public class MapMarker extends MapNodeElement implements MapElement
 	
 	public void setRemoved(boolean removed)
 	{
+	}
+
+
+	public void setMeasurementPath(MapMeasurementPathElement measurementPath)
+	{
+		this.measurementPath = measurementPath;
+	}
+
+
+	public MapMeasurementPathElement getMeasurementPath()
+	{
+		return measurementPath;
 	}
 
 }

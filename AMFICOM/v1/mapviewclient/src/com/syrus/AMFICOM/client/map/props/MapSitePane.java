@@ -42,12 +42,6 @@ public class MapSitePane extends JPanel implements ObjectResourcePropertiesPane
 		return instance;
 	}
 
-	private MapSitePane(MapSiteNodeElement site)
-	{
-		this();
-		setObjectResource(site);
-	}
-	
 	private void jbInit() throws Exception
 	{
 		this.setLayout(new BorderLayout());

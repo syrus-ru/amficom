@@ -1,5 +1,5 @@
 /*
- * $Id: ImportCommand.java,v 1.1 2004/09/23 10:07:14 krupenn Exp $
+ * $Id: ImportCommand.java,v 1.2 2004/10/04 16:04:43 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -8,7 +8,7 @@
  * Платформа: java 1.4.1
 */
 
-package com.syrus.AMFICOM.Client.Map.Command.Map;
+package com.syrus.AMFICOM.Client.Map.Command;
 
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
@@ -36,26 +36,26 @@ import javax.swing.JOptionPane;
  * самого окна карты. При этом в азголовке окна отображается информация о том,
  * что активной карты нет, и карта центрируется по умолчанию
  * 
- * @version $Revision: 1.1 $, $Date: 2004/09/23 10:07:14 $
+ * @version $Revision: 1.2 $, $Date: 2004/10/04 16:04:43 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
  */
 public abstract class ImportCommand extends VoidCommand
 {
-	protected FileInputStream fis;
-	protected IntelStreamReader isr;
+	private FileInputStream fis;
+	private IntelStreamReader isr;
 
-	protected Map clonedIds = new HashMap();
+	private Map clonedIds = new HashMap();
 	
-	protected DataSourceInterface dsi;
+	private DataSourceInterface dsi;
 	
 	public ImportCommand(DataSourceInterface dsi)
 	{
 		this.dsi = dsi;
 	}
 
-	protected String getClonedId(String typ, String id)
+	protected final String getClonedId(String typ, String id)
 	{
 		String clonedId = (String )clonedIds.get(id);
 		if(clonedId == null)
@@ -63,7 +63,7 @@ public abstract class ImportCommand extends VoidCommand
 		return clonedId;
 	}
 	
-	private String cloneId(String typ, String id)
+	private final String cloneId(String typ, String id)
 	{
 		String clonedId;
 		if(dsi == null)
@@ -181,7 +181,25 @@ public abstract class ImportCommand extends VoidCommand
 		}
 	}
 	
-	protected String openFileForReading(String path)
+	protected void close()
+	{
+		try
+		{
+			isr.close();
+			fis.close();
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+	}
+
+	public void setDsi(DataSourceInterface dsi)
+	{
+		this.dsi = dsi;
+	}
+	
+	protected static final String openFileForReading(String path)
 	{
 		String fileName = null;
 		JFileChooser fileChooser = new JFileChooser();
@@ -211,22 +229,4 @@ public abstract class ImportCommand extends VoidCommand
 		return fileName;
 	}
 
-	protected void close()
-	{
-		try
-		{
-			isr.close();
-			fis.close();
-		}
-		catch(Exception e)
-		{
-			e.printStackTrace();
-		}
-	}
-
-	public void setDsi(DataSourceInterface dsi)
-	{
-		this.dsi = dsi;
-	}
-	
 }

@@ -1,5 +1,5 @@
 /**
- * $Id: DefaultMapEditorApplicationModelFactory.java,v 1.1 2004/09/18 11:27:04 krupenn Exp $
+ * $Id: DefaultMapEditorApplicationModelFactory.java,v 1.2 2004/10/04 16:04:43 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -19,7 +19,7 @@ import com.syrus.AMFICOM.Client.General.Model.ApplicationModel;
  * 
  * 
  * 
- * @version $Revision: 1.1 $, $Date: 2004/09/18 11:27:04 $
+ * @version $Revision: 1.2 $, $Date: 2004/10/04 16:04:43 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -37,14 +37,16 @@ public class DefaultMapEditorApplicationModelFactory
 //		aModel.setVisible("menuMapOptions", false);
 //		aModel.setVisible("menuMapCatalogue", false);
 
-		aModel.setUsable("menuHelpContents", false);
-		aModel.setUsable("menuHelpFind", false);
-		aModel.setUsable("menuHelpTips", false);
-		aModel.setUsable("menuHelpStart", false);
-		aModel.setUsable("menuHelpCourse", false);
-		aModel.setUsable("menuHelpHelp", false);
-		aModel.setUsable("menuHelpSupport", false);
-		aModel.setUsable("menuHelpLicense", false);
+		aModel.setVisible("menuScheme", false);
+
+		aModel.setVisible("menuHelpContents", false);
+		aModel.setVisible("menuHelpFind", false);
+		aModel.setVisible("menuHelpTips", false);
+		aModel.setVisible("menuHelpStart", false);
+		aModel.setVisible("menuHelpCourse", false);
+		aModel.setVisible("menuHelpHelp", false);
+		aModel.setVisible("menuHelpSupport", false);
+		aModel.setVisible("menuHelpLicense", false);
 
 		return aModel;
 	}

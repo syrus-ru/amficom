@@ -1,5 +1,5 @@
 /**
- * $Id: MapElementsFrame.java,v 1.4 2004/10/01 16:34:37 krupenn Exp $
+ * $Id: MapElementsFrame.java,v 1.5 2004/10/04 16:04:43 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -32,7 +32,7 @@ import javax.swing.JInternalFrame;
  * 
  * 
  * 
- * @version $Revision: 1.4 $, $Date: 2004/10/01 16:34:37 $
+ * @version $Revision: 1.5 $, $Date: 2004/10/04 16:04:43 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -67,8 +67,8 @@ public class MapElementsFrame extends JInternalFrame
 			if(this.aContext.getDispatcher() != null)
 			{
 				Dispatcher disp = this.aContext.getDispatcher();
-				disp.unregister(this, MapEvent.MAP_SELECTED);
-				disp.unregister(this, MapEvent.MAP_DESELECTED);
+				disp.unregister(this, MapEvent.MAP_VIEW_SELECTED);
+				disp.unregister(this, MapEvent.MAP_VIEW_DESELECTED);
 				disp.unregister(this, MapEvent.MAP_CHANGED);
 				disp.unregister(this, MapEvent.SELECTION_CHANGED);
 				disp.unregister(this, MapEvent.MAP_FRAME_SHOWN);
@@ -80,8 +80,8 @@ public class MapElementsFrame extends JInternalFrame
 		Dispatcher disp = aContext.getDispatcher();
 		if(disp == null)
 			return;
-		disp.register(this, MapEvent.MAP_SELECTED);
-		disp.register(this, MapEvent.MAP_DESELECTED);
+		disp.register(this, MapEvent.MAP_VIEW_SELECTED);
+		disp.register(this, MapEvent.MAP_VIEW_DESELECTED);
 		disp.register(this, MapEvent.MAP_CHANGED);
 		disp.register(this, MapEvent.SELECTION_CHANGED);
 		disp.register(this, MapEvent.MAP_FRAME_SHOWN);
@@ -109,10 +109,10 @@ public class MapElementsFrame extends JInternalFrame
 	public void operationPerformed(OperationEvent ae)
 	{
 
-		if(ae.getActionCommand().equals(MapEvent.MAP_CLOSED))
+		if(ae.getActionCommand().equals(MapEvent.MAP_VIEW_CLOSED))
 			if(panel.performProcessing)
 				setMap(null);
-		if(	ae.getActionCommand().equals(MapEvent.MAP_SELECTED))
+		if(	ae.getActionCommand().equals(MapEvent.MAP_VIEW_SELECTED))
 			if(panel.performProcessing)
 				setMap(((MapView)ae.getSource()).getMap());
 		if(	ae.getActionCommand().equals(MapEvent.MAP_CHANGED))

@@ -52,7 +52,7 @@ public class MapAlarmMarker extends MapMarker
 	public String getToolTipText()
 	{
 		String s1 = LangModelMap.getString("Alarm") + " " + getName() + 
-				" (" + LangModelMap.getString("Path_lowercase") + " " + transmissionPath.getName() + 
+				" (" + LangModelMap.getString("Path_lowercase") + " " + measurementPath.getName() + 
 				") " + LangModelMap.getString("Distance_lowercase") + " - " + getModel().getColumnValue("Length_1");
 
 		return s1;

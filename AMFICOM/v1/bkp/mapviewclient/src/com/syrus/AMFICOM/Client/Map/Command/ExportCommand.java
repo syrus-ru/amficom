@@ -1,5 +1,5 @@
 /*
- * $Id: ExportCommand.java,v 1.1 2004/09/23 10:07:14 krupenn Exp $
+ * $Id: ExportCommand.java,v 1.2 2004/10/04 16:04:43 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -8,7 +8,7 @@
  * Платформа: java 1.4.1
 */
 
-package com.syrus.AMFICOM.Client.Map.Command.Map;
+package com.syrus.AMFICOM.Client.Map.Command;
 
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
@@ -29,23 +29,16 @@ import javax.swing.JOptionPane;
  * самого окна карты. При этом в азголовке окна отображается информация о том,
  * что активной карты нет, и карта центрируется по умолчанию
  * 
- * @version $Revision: 1.1 $, $Date: 2004/09/23 10:07:14 $
+ * @version $Revision: 1.2 $, $Date: 2004/10/04 16:04:43 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
  */
 public abstract class ExportCommand extends VoidCommand
 {
-	protected FileOutputStream fos;
-	protected OutputStreamWriter osw;
-	protected PrintWriter pw;
-
-	protected DataSourceInterface dsi;
-	
-	public ExportCommand(DataSourceInterface dsi)
-	{
-		this.dsi = dsi;
-	}
+	private FileOutputStream fos;
+	private OutputStreamWriter osw;
+	private PrintWriter pw;
 
 	protected void startObject(String type)
 	{
@@ -86,8 +79,22 @@ public abstract class ExportCommand extends VoidCommand
 			e.printStackTrace();
 		}
 	}
+
+	protected void close()
+	{
+		try
+		{
+			pw.close();
+			osw.close();
+			fos.close();
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+	}
 	
-	String openFileForWriting(String path)
+	protected static final String openFileForWriting(String path)
 	{
 		String fileName = null;
 		JFileChooser fileChooser = new JFileChooser();
@@ -122,20 +129,6 @@ public abstract class ExportCommand extends VoidCommand
 		}
 
 		return fileName;
-	}
-	
-	protected void close()
-	{
-		try
-		{
-			pw.close();
-			osw.close();
-			fos.close();
-		}
-		catch(Exception e)
-		{
-			e.printStackTrace();
-		}
 	}
 	
 }

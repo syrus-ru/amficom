@@ -1,5 +1,5 @@
 /*
- * Название: $Id: LayersPanel.java,v 1.1 2004/09/13 12:33:42 krupenn Exp $
+ * Название: $Id: LayersPanel.java,v 1.2 2004/10/04 16:04:43 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -40,7 +40,7 @@ import javax.swing.JSeparator;
  * 
  * 
  * 
- * @version $Revision: 1.1 $, $Date: 2004/09/13 12:33:42 $
+ * @version $Revision: 1.2 $, $Date: 2004/10/04 16:04:43 $
  * @author $Author: krupenn $
  * @see
  */
@@ -123,6 +123,17 @@ public class LayersPanel extends JPanel
 		gridbagconstraints.gridheight = 1;
 		gridbagconstraints.fill = 0;
 		titlePanel.add(jlabel, gridbagconstraints);
+
+		Component box = Box.createHorizontalBox();
+		box.setSize(32, 1);
+		gridbagconstraints.gridx = 1;
+		gridbagconstraints.gridy = 0;
+		gridbagconstraints.weightx = 0.0D;
+		gridbagconstraints.weighty = 0.0D;
+		gridbagconstraints.gridwidth = 1;
+		gridbagconstraints.gridheight = 1;
+		gridbagconstraints.fill = 0;
+		titlePanel.add(box, gridbagconstraints);
 
 		JLabel jlabel2 = new JLabel(LangModelMap.getString("Layers"));
 		gridbagconstraints.gridx = 2;

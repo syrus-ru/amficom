@@ -34,7 +34,7 @@ public class MapEventMarker extends MapMarker
 	{
 		String s1 = LangModelMap.getString("Event") + " " + getName() 
 			+ " (" + LangModelMap.getString("Path_lowercase")
-			+ " " + transmissionPath.getName() + ")";
+			+ " " + measurementPath.getName() + ")";
 
 		return s1;
 	}

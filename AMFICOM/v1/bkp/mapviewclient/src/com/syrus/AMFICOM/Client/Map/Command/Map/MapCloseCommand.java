@@ -1,5 +1,5 @@
 /*
- * $Id: MapCloseCommand.java,v 1.1 2004/09/13 12:33:42 krupenn Exp $
+ * $Id: MapCloseCommand.java,v 1.2 2004/10/04 16:04:43 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -22,7 +22,7 @@ import com.syrus.AMFICOM.Client.Resource.MapView.MapView;
  * самого окна карты. При этом в азголовке окна отображается информация о том,
  * что активной карты нет, и карта центрируется по умолчанию
  * 
- * @version $Revision: 1.1 $, $Date: 2004/09/13 12:33:42 $
+ * @version $Revision: 1.2 $, $Date: 2004/10/04 16:04:43 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -53,7 +53,6 @@ public class MapCloseCommand extends VoidCommand
 		if(mapFrame == null)
 			return;
         System.out.println("Closing map");
-//        mapFrame.getMapView().removeMap();
 		mapFrame.saveConfig();
         mapFrame.setMapView(null);
 
@@ -62,8 +61,6 @@ public class MapCloseCommand extends VoidCommand
 		MapView mv = cmd.mv;
 		mapFrame.setMapView(mv);
 
-
-//        mapFrame.setTitle(LangModelMap.getString("Map"));
 		setResult(Command.RESULT_OK);
 	}
 

@@ -1,5 +1,5 @@
 /**
- * $Id: MapMeasurementPathElement.java,v 1.4 2004/09/30 13:38:11 krupenn Exp $
+ * $Id: MapMeasurementPathElement.java,v 1.5 2004/10/04 16:04:43 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -43,7 +43,7 @@ import java.util.List;
  * 
  * 
  * 
- * @version $Revision: 1.4 $, $Date: 2004/09/30 13:38:11 $
+ * @version $Revision: 1.5 $, $Date: 2004/10/04 16:04:43 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -105,7 +105,7 @@ public class MapMeasurementPathElement extends MapLinkElement implements Seriali
 		this.mapView = mapView;
 	}
 	
-	public MapView getmapView()
+	public MapView getMapView()
 	{
 		return this.mapView;
 	}
@@ -240,11 +240,6 @@ public class MapMeasurementPathElement extends MapLinkElement implements Seriali
 		return schemePath;
 	}
 
-	public MapView getMapView()
-	{
-		return this.mapView;
-	}
-	
 	public boolean isSelectionVisible()
 	{
 		return isSelected();

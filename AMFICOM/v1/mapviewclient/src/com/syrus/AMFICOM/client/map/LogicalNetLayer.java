@@ -1,5 +1,5 @@
 /**
- * $Id: LogicalNetLayer.java,v 1.7 2004/10/01 16:36:55 krupenn Exp $
+ * $Id: LogicalNetLayer.java,v 1.8 2004/10/04 16:04:43 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -65,7 +65,7 @@ import java.util.List;
  * 
  * 
  * 
- * @version $Revision: 1.7 $, $Date: 2004/10/01 16:36:55 $
+ * @version $Revision: 1.8 $, $Date: 2004/10/04 16:04:43 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -324,12 +324,16 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 					&& mapView.getMap() != null)
 				{
 					aContext.getDispatcher().notify(
-						new MapEvent(mapView, MapEvent.MAP_SELECTED));
+						new MapEvent(mapView, MapEvent.MAP_VIEW_SELECTED));
+					aContext.getDispatcher().notify(
+						new MapEvent(mapView.getMap(), MapEvent.MAP_SELECTED));
 				}
 				else
 				{
 					aContext.getDispatcher().notify(
-							new MapEvent(this, MapEvent.MAP_DESELECTED));
+							new MapEvent(this, MapEvent.MAP_VIEW_DESELECTED));
+					aContext.getDispatcher().notify(
+						new MapEvent(this, MapEvent.MAP_DESELECTED));
 				}
 		}
 
@@ -474,7 +478,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 		if(disp == null)
 			return;
 		Point2D.Double p = this.convertScreenToMap(point);
-		disp.notify(new MapEvent(p, MapEvent.MAP_CENTER_CHANGED));
+		disp.notify(new MapEvent(p, MapEvent.MAP_VIEW_CENTER_CHANGED));
 	}
 
 	/**

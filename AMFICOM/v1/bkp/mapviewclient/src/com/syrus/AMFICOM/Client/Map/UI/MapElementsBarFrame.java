@@ -1,5 +1,5 @@
 /**
- * $Id: MapElementsBarFrame.java,v 1.1 2004/09/13 12:33:42 krupenn Exp $
+ * $Id: MapElementsBarFrame.java,v 1.2 2004/10/04 16:04:43 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -30,7 +30,7 @@ import javax.swing.JInternalFrame;
  * 
  * 
  * 
- * @version $Revision: 1.1 $, $Date: 2004/09/13 12:33:42 $
+ * @version $Revision: 1.2 $, $Date: 2004/10/04 16:04:43 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -65,8 +65,8 @@ public class MapElementsBarFrame extends JInternalFrame implements OperationList
 			if(this.aContext.getDispatcher() != null)
 			{
 				Dispatcher disp = this.aContext.getDispatcher();
-//				disp.unregister(this, MapEvent.MAP_SELECTED);
-//				disp.unregister(this, MapEvent.MAP_DESELECTED);
+//				disp.unregister(this, MapEvent.MAP_VIEW_SELECTED);
+//				disp.unregister(this, MapEvent.MAP_VIEW_DESELECTED);
 			}
 		this.aContext = aContext;
 		panel.setContext(aContext);
@@ -75,8 +75,8 @@ public class MapElementsBarFrame extends JInternalFrame implements OperationList
 		Dispatcher disp = aContext.getDispatcher();
 		if(disp == null)
 			return;
-//		disp.register(this, MapEvent.MAP_SELECTED);
-//		disp.register(this, MapEvent.MAP_DESELECTED);
+//		disp.register(this, MapEvent.MAP_VIEW_SELECTED);
+//		disp.register(this, MapEvent.MAP_VIEW_DESELECTED);
 	}
 
 	private void jbInit()
@@ -96,9 +96,9 @@ public class MapElementsBarFrame extends JInternalFrame implements OperationList
 	
 	public void operationPerformed(OperationEvent oe)
 	{
-		if(oe.getActionCommand().equals(MapEvent.MAP_DESELECTED))
+		if(oe.getActionCommand().equals(MapEvent.MAP_VIEW_DESELECTED))
 			panel.setEnableDisablePanel(false);
-		if(oe.getActionCommand().equals(MapEvent.MAP_SELECTED))
+		if(oe.getActionCommand().equals(MapEvent.MAP_VIEW_SELECTED))
 			panel.setEnableDisablePanel(true);
 	}
 }

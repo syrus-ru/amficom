@@ -16,6 +16,7 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 
+import java.awt.geom.Point2D;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
@@ -23,11 +24,18 @@ import javax.swing.JTextField;
 
 public class MapSiteGeneralPanel extends JPanel implements ObjectResourcePropertiesPane
 {
-	private JLabel nameLabel = new JLabel();
 	private GridBagLayout gridBagLayout1 = new GridBagLayout();
+
+	private JLabel nameLabel = new JLabel();
 	private JTextField nameTextField = new JTextField();
 	private JLabel typeLabel = new JLabel();
 	private ObjectResourceComboBox typeComboBox = new ObjectResourceComboBox(MapNodeProtoElement.typ);
+
+	private JLabel longLabel = new JLabel();
+	private JTextField longTextField = new JTextField();
+	private JLabel latLabel = new JLabel();
+	private JTextField latTextField = new JTextField();
+
 	private JLabel descLabel = new JLabel();
 	private JTextArea descTextArea = new JTextArea();
 
@@ -67,6 +75,12 @@ public class MapSiteGeneralPanel extends JPanel implements ObjectResourcePropert
 		typeLabel.setText(LangModelMap.getString("Type"));
 		typeLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
 
+		longLabel.setText(LangModelMap.getString("Longitude"));
+		longLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
+
+		latLabel.setText(LangModelMap.getString("Latitude"));
+		latLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
+
 		descLabel.setText(LangModelMap.getString("Description"));
 		descLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
 
@@ -87,10 +101,14 @@ public class MapSiteGeneralPanel extends JPanel implements ObjectResourcePropert
 		this.add(nameTextField, ReusedGridBagConstraints.get(1, 0, 1, 1, 1.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, null, 0, 0));
 		this.add(typeLabel, ReusedGridBagConstraints.get(0, 1, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, null, 0, 0));
 		this.add(typeComboBox, ReusedGridBagConstraints.get(1, 1, 1, 1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, null, 0, 0));
-		this.add(addressLabel, ReusedGridBagConstraints.get(0, 2, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, null, 0, 0));
-		this.add(addressPanel, ReusedGridBagConstraints.get(1, 2, 1, 1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, null, 0, 0));
-		this.add(descLabel, ReusedGridBagConstraints.get(0, 3, 1, 1, 0.0, 0.0, GridBagConstraints.NORTHWEST, GridBagConstraints.NONE, null, 0, 0));
-		this.add(descTextArea, ReusedGridBagConstraints.get(1, 3, 1, 1, 1.0, 1.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, null, 0, 0));
+		this.add(longLabel, ReusedGridBagConstraints.get(0, 2, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, null, 0, 0));
+		this.add(longTextField, ReusedGridBagConstraints.get(1, 2, 1, 1, 1.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, null, 0, 0));
+		this.add(latLabel, ReusedGridBagConstraints.get(0, 3, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, null, 0, 0));
+		this.add(latTextField, ReusedGridBagConstraints.get(1, 3, 1, 1, 1.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, null, 0, 0));
+		this.add(addressLabel, ReusedGridBagConstraints.get(0, 4, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, null, 0, 0));
+		this.add(addressPanel, ReusedGridBagConstraints.get(1, 4, 1, 1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, null, 0, 0));
+		this.add(descLabel, ReusedGridBagConstraints.get(0, 5, 1, 1, 0.0, 0.0, GridBagConstraints.NORTHWEST, GridBagConstraints.NONE, null, 0, 0));
+		this.add(descTextArea, ReusedGridBagConstraints.get(1, 5, 1, 1, 1.0, 1.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, null, 0, 0));
 	}
 
 	public ObjectResource getObjectResource()
@@ -109,6 +127,11 @@ public class MapSiteGeneralPanel extends JPanel implements ObjectResourcePropert
 			descTextArea.setEnabled(false);
 			descTextArea.setText("");
 
+			longTextField.setEnabled(false);
+			longTextField.setText("");
+			latTextField.setEnabled(false);
+			latTextField.setText("");
+
 			cityTextField.setText("");
 			streetTextField.setText("");
 			buildingTextField.setText("");
@@ -121,6 +144,11 @@ public class MapSiteGeneralPanel extends JPanel implements ObjectResourcePropert
 			typeComboBox.setSelected(site.getMapProtoId());
 			descTextArea.setEnabled(true);
 			descTextArea.setText(site.getDescription());
+
+			longTextField.setEnabled(true);
+			longTextField.setText(String.valueOf(site.getAnchor().x));
+			latTextField.setEnabled(true);
+			latTextField.setText(String.valueOf(site.getAnchor().y));
 
 			cityTextField.setText(site.getCity());
 			streetTextField.setText(site.getStreet());
@@ -139,6 +167,18 @@ public class MapSiteGeneralPanel extends JPanel implements ObjectResourcePropert
 			site.setName(nameTextField.getText());
 			site.setMapProtoId(typeComboBox.getSelectedId());
 			site.setDescription(descTextArea.getText());
+
+			try 
+			{
+				double x = Double.parseDouble(longTextField.getText());
+				double y = Double.parseDouble(longTextField.getText());
+				
+				site.setAnchor(new Point2D.Double(x, y));
+			} 
+			catch (NumberFormatException ex) 
+			{
+				System.out.println(ex.getMessage());
+			} 
 
 			site.setCity(cityTextField.getText());
 			site.setStreet(streetTextField.getText());

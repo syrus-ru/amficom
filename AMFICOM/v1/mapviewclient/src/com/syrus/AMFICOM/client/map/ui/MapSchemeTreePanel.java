@@ -1,28 +1,27 @@
 package com.syrus.AMFICOM.Client.Map.UI;
 
 import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
+import com.syrus.AMFICOM.Client.General.Event.MapEvent;
+import com.syrus.AMFICOM.Client.General.Event.MapNavigateEvent;
 import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
 import com.syrus.AMFICOM.Client.General.Event.OperationListener;
 import com.syrus.AMFICOM.Client.General.Event.StatusMessageEvent;
 import com.syrus.AMFICOM.Client.General.Lang.LangModel;
+import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourceChooserDialog;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourceDisplayModel;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourceTableModel;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourceTreeNode;
 import com.syrus.AMFICOM.Client.General.UI.UniTreePanel;
-import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
-import com.syrus.AMFICOM.Client.Resource.ObjectResource;
-
-import com.syrus.AMFICOM.Client.General.Event.MapEvent;
-import com.syrus.AMFICOM.Client.General.Event.MapNavigateEvent;
-import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.Map.UI.MapSchemeTreeModel;
+import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapView;
-
+import com.syrus.AMFICOM.Client.Resource.ObjectResource;
 import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.Client.Resource.Scheme.Scheme;
 import com.syrus.AMFICOM.Client.Resource.SchemeDataSourceImage;
+
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Image;
@@ -31,8 +30,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import java.util.Enumeration;
-
 import java.util.List;
+
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JPanel;
@@ -155,6 +154,8 @@ public final class MapSchemeTreePanel extends JPanel
 				Dispatcher disp = this.aContext.getDispatcher();
 				disp.unregister(this, MapEvent.MAP_NAVIGATE);
 				disp.unregister(this, MapEvent.MAP_VIEW_CHANGED);
+				disp.unregister(this, MapEvent.MAP_VIEW_SELECTED);
+				disp.unregister(this, MapEvent.MAP_VIEW_CLOSED);
 			}
 		this.aContext = aContext;
 		if(aContext == null)
@@ -164,6 +165,8 @@ public final class MapSchemeTreePanel extends JPanel
 			return;
 		disp.register(this, MapEvent.MAP_NAVIGATE);
 		disp.register(this, MapEvent.MAP_VIEW_CHANGED);
+		disp.register(this, MapEvent.MAP_VIEW_SELECTED);
+		disp.register(this, MapEvent.MAP_VIEW_CLOSED);
 
 		initTree();
 
@@ -172,6 +175,17 @@ public final class MapSchemeTreePanel extends JPanel
 
 	public void operationPerformed(OperationEvent oe )
 	{
+		if(	oe.getActionCommand().equals(MapEvent.MAP_VIEW_CLOSED))
+			if(performProcessing)
+			{
+				updateTree(null);
+			}
+		if(	oe.getActionCommand().equals(MapEvent.MAP_VIEW_SELECTED))
+			if(performProcessing)
+			{
+				MapView mv = (MapView)oe.getSource();
+				updateTree(mv);
+			}
 		if(	oe.getActionCommand().equals(MapEvent.MAP_VIEW_CHANGED))
 			if(performProcessing)
 			{
@@ -304,10 +318,13 @@ public final class MapSchemeTreePanel extends JPanel
 			}
 			else
 			{
-				mapFrame.getMapView().addScheme((Scheme )retObj);
-				mapFrame.getContext().getDispatcher().notify(new MapEvent(
-						mapFrame.getMapView(),
-						MapEvent.MAP_VIEW_CHANGED));
+				if(!mapFrame.getMapView().getSchemes().contains(retObj))
+				{
+					mapFrame.getMapView().addScheme((Scheme )retObj);
+					mapFrame.getContext().getDispatcher().notify(new MapEvent(
+							mapFrame.getMapView(),
+							MapEvent.MAP_VIEW_CHANGED));
+				}
 			}
 			aContext.getDispatcher().notify(new StatusMessageEvent(
 					StatusMessageEvent.STATUS_MESSAGE,

@@ -1,5 +1,5 @@
 /**
- * $Id: OfxNetMapViewer.java,v 1.2 2004/09/16 10:39:53 krupenn Exp $
+ * $Id: OfxNetMapViewer.java,v 1.3 2004/10/04 16:04:43 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -52,7 +52,7 @@ import javax.swing.ToolTipManager;
  * 
  * 
  * 
- * @version $Revision: 1.2 $, $Date: 2004/09/16 10:39:53 $
+ * @version $Revision: 1.3 $, $Date: 2004/10/04 16:04:43 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -241,12 +241,13 @@ public class OfxNetMapViewer extends NetMapViewer
 	{
 		if (!getConnection().getView().equals(dataBaseView)) 
 		{
-			try 
-			{
-				jMapViewer.setMapName(dataBaseView);
-				getConnection().setView(dataBaseView);
-			} 
-			catch (SxInvalidNameException ine) { }
+			setMap(getConnection().getPath(), dataBaseView);
+//			try 
+//			{
+//				jMapViewer.setMapName(dataBaseView);
+//				getConnection().setView(dataBaseView);
+//			} 
+//			catch (SxInvalidNameException ine) { }
 		}
 	}
 

@@ -1,5 +1,5 @@
 /**
- * $Id: MapView.java,v 1.6 2004/09/29 15:18:39 krupenn Exp $
+ * $Id: MapView.java,v 1.7 2004/10/04 16:04:43 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -31,7 +31,6 @@ import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalLinkElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapSiteNodeElement;
 import com.syrus.AMFICOM.Client.Resource.ObjectResourceModel;
 import com.syrus.AMFICOM.Client.Resource.Pool;
-import com.syrus.AMFICOM.Client.Resource.Scheme.PathElement;
 import com.syrus.AMFICOM.Client.Resource.Scheme.Scheme;
 import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeCableLink;
 import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeElement;
@@ -55,7 +54,7 @@ import java.util.List;
  * 
  * 
  * 
- * @version $Revision: 1.6 $, $Date: 2004/09/29 15:18:39 $
+ * @version $Revision: 1.7 $, $Date: 2004/10/04 16:04:43 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -464,11 +463,15 @@ public final class MapView extends StubResource
 
 	public void removeSchemes()
 	{
+		while(getSchemes().size() != 0)
+		{
+			Scheme sch = (Scheme )getSchemes().get(0);
+			removeScheme(sch);
+		}
 		for(Iterator it = getSchemes().iterator(); it.hasNext();)
 		{
 			Scheme sch = (Scheme )it.next();
 			removeScheme(sch);
-			it.remove();
 		}
 	}
 
@@ -965,7 +968,7 @@ public final class MapView extends StubResource
 	{
 		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "getAllElements()");
 		
-		List returnVector = getMap().getAllElements1();
+		List returnVector = getMap().getAllElements();
 		
 		Iterator e;
 
@@ -1014,6 +1017,29 @@ public final class MapView extends StubResource
 	public void revert()
 	{
 		removeMarkers();
+	}
+
+
+	public void setDescription(String description)
+	{
+		this.description = description;
+	}
+
+
+	public String getDescription()
+	{
+		return description;
+	}
+
+	public String getCreatedBy()
+	{
+		return createdBy;
+	}
+
+
+	public long getCreated()
+	{
+		return created;
 	}
 
 /* from SiteNode

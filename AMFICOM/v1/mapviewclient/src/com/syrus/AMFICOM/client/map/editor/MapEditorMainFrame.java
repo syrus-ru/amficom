@@ -1,5 +1,5 @@
 /**
- * $Id: MapEditorMainFrame.java,v 1.2 2004/09/23 10:07:15 krupenn Exp $
+ * $Id: MapEditorMainFrame.java,v 1.3 2004/10/04 16:04:43 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -96,7 +96,7 @@ import javax.swing.JViewport;
  * 
  * 
  * 
- * @version $Revision: 1.2 $, $Date: 2004/09/23 10:07:15 $
+ * @version $Revision: 1.3 $, $Date: 2004/10/04 16:04:43 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -223,6 +223,7 @@ public class MapEditorMainFrame extends JFrame
 		aModel.setEnabled("menuExit", false);
 
 		aModel.setEnabled("menuView", false);
+		aModel.setEnabled("menuViewProto", false);
 		aModel.setEnabled("menuViewNavigator", false);
 		aModel.setEnabled("menuViewAttributes", false);
 		aModel.setEnabled("menuViewElements", false);
@@ -237,8 +238,15 @@ public class MapEditorMainFrame extends JFrame
 		aModel.setEnabled("menuMapClose", false);
 		aModel.setEnabled("menuMapSave", false);
 		aModel.setEnabled("menuMapSaveAs", false);
-		aModel.setEnabled("menuMapOptions", false);
-		aModel.setEnabled("menuMapCatalogue", false);
+		aModel.setEnabled("menuMapImport", false);
+		aModel.setEnabled("menuMapExport", false);
+
+		aModel.setEnabled("menuMapView", false);
+		aModel.setEnabled("menuMapViewNew", false);
+		aModel.setEnabled("menuMapViewOpen", false);
+		aModel.setEnabled("menuMapViewClose", false);
+		aModel.setEnabled("menuMapViewSave", false);
+		aModel.setEnabled("menuMapViewSaveAs", false);
 
 		aModel.setEnabled("menuHelp", false);
 		aModel.setEnabled("menuHelpContents", false);
@@ -387,8 +395,8 @@ public class MapEditorMainFrame extends JFrame
 			{
 				this.aContext.getDispatcher().unregister(this, ContextChangeEvent.type);
 				this.aContext.getDispatcher().unregister(this, MapEvent.MAP_FRAME_SHOWN);
-				this.aContext.getDispatcher().unregister(this, MapEvent.MAP_SELECTED);
-				this.aContext.getDispatcher().unregister(this, MapEvent.MAP_CLOSED);
+				this.aContext.getDispatcher().unregister(this, MapEvent.MAP_VIEW_SELECTED);
+				this.aContext.getDispatcher().unregister(this, MapEvent.MAP_VIEW_CLOSED);
 				statusBar.removeDispatcher(this.aContext.getDispatcher());
 			}
 
@@ -401,8 +409,8 @@ public class MapEditorMainFrame extends JFrame
 
 			aContext.getDispatcher().register(this, ContextChangeEvent.type);
 			aContext.getDispatcher().register(this, MapEvent.MAP_FRAME_SHOWN);
-			aContext.getDispatcher().register(this, MapEvent.MAP_SELECTED);
-			aContext.getDispatcher().register(this, MapEvent.MAP_CLOSED);
+			aContext.getDispatcher().register(this, MapEvent.MAP_VIEW_SELECTED);
+			aContext.getDispatcher().register(this, MapEvent.MAP_VIEW_CLOSED);
 			statusBar.addDispatcher(this.aContext.getDispatcher());
 		}
 	}
@@ -451,18 +459,23 @@ public class MapEditorMainFrame extends JFrame
 			}
 		 }
 		else
-		if(ae.getActionCommand().equals(MapEvent.MAP_SELECTED))
+		if(ae.getActionCommand().equals(MapEvent.MAP_VIEW_SELECTED))
 		{
 			ApplicationModel aModel = aContext.getApplicationModel();
 			aModel.setEnabled("menuMapSave", true);
 			aModel.setEnabled("menuMapSaveAs", true);
 			aModel.setEnabled("menuMapClose", true);
+			aModel.setEnabled("menuMapExport", true);
 
-			aModel.fireModelChanged("");
-			setTitle(LangModelMap.getString("Map") + ": " + ((ObjectResource )ae.getSource()).getName());
+			aModel.setEnabled("menuMapViewSave", true);
+			aModel.setEnabled("menuMapViewSaveAs", true);
+			aModel.setEnabled("menuMapViewClose", true);
+
+			aModel.fireModelChanged();
+			setTitle(LangModelMap.getString("MapView") + ": " + ((ObjectResource )ae.getSource()).getName());
 		}
 		else
-		if(ae.getActionCommand().equals(MapEvent.MAP_CLOSED))
+		if(ae.getActionCommand().equals(MapEvent.MAP_VIEW_CLOSED))
 		{
 			for(int i = 0; i < desktopPane.getComponents().length; i++)
 			{
@@ -484,8 +497,14 @@ public class MapEditorMainFrame extends JFrame
 			aModel.setEnabled("menuMapSave", false);
 			aModel.setEnabled("menuMapSaveAs", false);
 			aModel.setEnabled("menuMapClose", false);
+			aModel.setEnabled("menuMapExport", false);
+
+			aModel.setEnabled("menuMapViewSave", false);
+			aModel.setEnabled("menuMapViewSaveAs", false);
+			aModel.setEnabled("menuMapViewClose", false);
+
 			aModel.fireModelChanged();
-			setTitle(LangModelMap.getString("Map"));
+			setTitle(LangModelMap.getString("MapView"));
 		}
 		else
 /*		
@@ -717,6 +736,7 @@ public class MapEditorMainFrame extends JFrame
 
 		aModel.setEnabled("menuMapNew", true);
 		aModel.setEnabled("menuMapOpen", true);
+		aModel.setEnabled("menuMapImport", true);
 		aModel.setEnabled("menuMapViewNew", true);
 		aModel.setEnabled("menuMapViewOpen", true);
 
@@ -754,6 +774,8 @@ public class MapEditorMainFrame extends JFrame
 		aModel.setEnabled("menuMapSave", false);
 		aModel.setEnabled("menuMapSaveAs", false);
 		aModel.setEnabled("menuMapClose", false);
+		aModel.setEnabled("menuMapImport", true);
+		aModel.setEnabled("menuMapExport", true);
 		
 		aModel.setEnabled("menuViewNavigator", false);
 		aModel.setEnabled("menuViewAttributes", false);

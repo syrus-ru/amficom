@@ -1,5 +1,5 @@
 /*
- * $Id: MapExportCommand.java,v 1.1 2004/09/23 10:07:14 krupenn Exp $
+ * $Id: MapExportCommand.java,v 1.2 2004/10/04 16:04:43 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -29,7 +29,7 @@ import java.util.Iterator;
  * самого окна карты. При этом в азголовке окна отображается информация о том,
  * что активной карты нет, и карта центрируется по умолчанию
  * 
- * @version $Revision: 1.1 $, $Date: 2004/09/23 10:07:14 $
+ * @version $Revision: 1.2 $, $Date: 2004/10/04 16:04:43 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -72,7 +72,7 @@ public class MapExportCommand extends ExportCommand
 		}
 		super.endObject();
 
-		for(Iterator it = map.getAllElements1().iterator(); it.hasNext();)
+		for(Iterator it = map.getAllElements().iterator(); it.hasNext();)
 		{
 			MapElement me = (MapElement )it.next();
 			super.startObject(((ObjectResource )me).getTyp());

@@ -1,5 +1,5 @@
 /**
- * $Id: MapPopupMenu.java,v 1.5 2004/09/29 15:18:00 krupenn Exp $
+ * $Id: MapPopupMenu.java,v 1.6 2004/10/04 16:04:43 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -51,7 +51,7 @@ import javax.swing.JPopupMenu;
  * 
  * 
  * 
- * @version $Revision: 1.5 $, $Date: 2004/09/29 15:18:00 $
+ * @version $Revision: 1.6 $, $Date: 2004/10/04 16:04:43 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -268,6 +268,9 @@ public abstract class MapPopupMenu extends JPopupMenu
 		command.setLogicalNetLayer(logicalNetLayer);
 		getLogicalNetLayer().getCommandList().add(command);
 		getLogicalNetLayer().getCommandList().execute();
+		
+		if(collector.getLinks().size() == 0)
+			removeCollector(collector);
 	}
 	
 	protected void removeCollector(MapPipePathElement collector)
