@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectXML.java,v 1.6 2005/01/27 13:17:35 bob Exp $
+ * $Id: StorableObjectXML.java,v 1.7 2005/01/31 13:54:06 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,15 +20,17 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Provide routines with storage StorableObject as XML.
- * StorableObject must be declarated at {@link com.syrus.AMFICOM.general.ObjectEntities}
- * and {@link com.syrus.AMFICOM.general.ObjectGroupEntities}. StorableObject must have
- * protected constuctor with arguments at less Identifier id, Identifier creatorId. 
- * There must be a wrapper for the storable object which must be named StorableObjectWrapper
- * and belong to the same package
- * (i.g. {@link com.syrus.AMFICOM.general.CharacteristicWrapper} for {@link com.syrus.AMFICOM.general.Characteristic}) which must have static getInstance method.
+ * Provide routines with storage StorableObject as XML. StorableObject must be
+ * declarated at {@link com.syrus.AMFICOM.general.ObjectEntities}and
+ * {@link com.syrus.AMFICOM.general.ObjectGroupEntities}. StorableObject must
+ * have protected constuctor with arguments at less Identifier id, Identifier
+ * creatorId. There must be a wrapper for the storable object which must be
+ * named StorableObjectWrapper and belong to the same package (i.g.
+ * {@link com.syrus.AMFICOM.general.CharacteristicWrapper}for
+ * {@link com.syrus.AMFICOM.general.Characteristic}) which must have static
+ * getInstance method.
  * 
- * @version $Revision: 1.6 $, $Date: 2005/01/27 13:17:35 $
+ * @version $Revision: 1.7 $, $Date: 2005/01/31 13:54:06 $
  * @author $Author: bob $
  * @module general_v1
  */
@@ -73,11 +75,10 @@ public class StorableObjectXML {
 		short entityCode = identifier.getMajor();
 		StorableObject storableObject = getStorableObject(identifier);
 		Wrapper wrapper = this.getWrapper(entityCode);
-		storableObject.setAttributes(new Date(Long.parseLong((String) objectMap
-				.get(StorableObjectDatabase.COLUMN_CREATED))), new Date(Long.parseLong((String) objectMap
-				.get(StorableObjectDatabase.COLUMN_MODIFIED))), new Identifier((String) objectMap
-				.get(StorableObjectDatabase.COLUMN_CREATOR_ID)), new Identifier((String) objectMap
-				.get(StorableObjectDatabase.COLUMN_MODIFIER_ID)));
+		storableObject.setAttributes((Date) objectMap.get(StorableObjectDatabase.COLUMN_CREATED), (Date) objectMap
+				.get(StorableObjectDatabase.COLUMN_MODIFIED), (Identifier) objectMap
+				.get(StorableObjectDatabase.COLUMN_CREATOR_ID), (Identifier) objectMap
+				.get(StorableObjectDatabase.COLUMN_MODIFIER_ID));
 		for (Iterator it = objectMap.keySet().iterator(); it.hasNext();) {
 			String key = (String) it.next();
 			wrapper.setValue(storableObject, key, objectMap.get(key));
@@ -85,8 +86,9 @@ public class StorableObjectXML {
 		storableObject.resetVersion();
 		return storableObject;
 	}
-	
-	public List retrieveByCondition(List ids, StorableObjectCondition condition)  throws RetrieveObjectException, IllegalDataException{
+
+	public List retrieveByCondition(List ids, StorableObjectCondition condition) throws RetrieveObjectException,
+			IllegalDataException {
 		List list = null;
 		List identifiers = this.driver.getIdentifiers(condition.getEntityCode().shortValue());
 		for (Iterator it = identifiers.iterator(); it.hasNext();) {
@@ -95,18 +97,20 @@ public class StorableObjectXML {
 				try {
 					StorableObject storableObject = retrieve(id);
 					if (condition.isConditionTrue(storableObject)) {
-						if (list==null)
+						if (list == null)
 							list = new LinkedList();
 						list.add(storableObject);
 					}
-											
+
 				} catch (ObjectNotFoundException e) {
-					String msg = "StorableObjectXML.retrieveByCondition | object " + id.getIdentifierString() + " not found";
+					String msg = "StorableObjectXML.retrieveByCondition | object " + id.getIdentifierString()
+							+ " not found";
 					throw new RetrieveObjectException(msg, e);
 				} catch (ApplicationException e) {
-					String msg = "StorableObjectXML.retrieveByCondition | caught  " + e.getMessage() + " during check " + id.getIdentifierString() + " for condition ";
+					String msg = "StorableObjectXML.retrieveByCondition | caught  " + e.getMessage() + " during check "
+							+ id.getIdentifierString() + " for condition ";
 					throw new RetrieveObjectException(msg, e);
-				} 
+				}
 			}
 		}
 		if (list == null)

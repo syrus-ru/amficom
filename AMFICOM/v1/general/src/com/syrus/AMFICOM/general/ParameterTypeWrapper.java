@@ -1,5 +1,5 @@
 /*
- * $Id: ParameterTypeWrapper.java,v 1.1 2005/01/24 15:29:27 bob Exp $
+ * $Id: ParameterTypeWrapper.java,v 1.2 2005/01/31 13:53:19 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,7 +16,7 @@ import java.util.List;
 import com.syrus.AMFICOM.general.corba.DataType;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/01/24 15:29:27 $
+ * @version $Revision: 1.2 $, $Date: 2005/01/31 13:53:19 $
  * @author $Author: bob $
  * @module general_v1
  */
@@ -78,15 +78,15 @@ public class ParameterTypeWrapper implements Wrapper {
 		if (object instanceof ParameterType) {
 			ParameterType parameterType = (ParameterType) object;
 			if (key.equals(StorableObjectDatabase.COLUMN_ID))
-				return parameterType.getId().getIdentifierString();
+				return parameterType.getId();
 			else if (key.equals(StorableObjectDatabase.COLUMN_CREATED))
-				return Long.toString(parameterType.getCreated().getTime());
+				return parameterType.getCreated();
 			else if (key.equals(StorableObjectDatabase.COLUMN_MODIFIED))
-				return Long.toString(parameterType.getModified().getTime());
+				return parameterType.getModified();
 			else if (key.equals(StorableObjectDatabase.COLUMN_CREATOR_ID))
-				return parameterType.getCreatorId().getIdentifierString();
+				return parameterType.getCreatorId();
 			else if (key.equals(StorableObjectDatabase.COLUMN_MODIFIER_ID))
-				return parameterType.getModifierId().getIdentifierString();
+				return parameterType.getModifierId();
 			else if (key.equals(COLUMN_CODENAME))
 				return parameterType.getCodename();
 			else if (key.equals(COLUMN_DESCRIPTION))
@@ -94,7 +94,7 @@ public class ParameterTypeWrapper implements Wrapper {
 			else if (key.equals(COLUMN_NAME))
 				return parameterType.getName();
 			else if (key.equals(COLUMN_DATA_TYPE))
-				return Integer.toString(parameterType.getDataType().value());
+				return new Integer(parameterType.getDataType().value());
 		}
 		return null;
 	}
@@ -107,13 +107,13 @@ public class ParameterTypeWrapper implements Wrapper {
 		if (object instanceof ParameterType) {
 			ParameterType parameterType = (ParameterType) object;
 			if (key.equals(COLUMN_CODENAME))
-				parameterType.setCodename0((String) value);
+				parameterType.setCodename((String) value);
 			else if (key.equals(COLUMN_DESCRIPTION))
-				parameterType.setDescription0((String) value);
+				parameterType.setDescription((String) value);
 			else if (key.equals(COLUMN_NAME))
 				parameterType.setName((String) value);
 			else if (key.equals(COLUMN_DATA_TYPE))
-				parameterType.setDataType0(DataType.from_int(Integer.parseInt((String) value)));
+				parameterType.setDataType(DataType.from_int(((Integer)value).intValue()));
 		}
 	}
 
