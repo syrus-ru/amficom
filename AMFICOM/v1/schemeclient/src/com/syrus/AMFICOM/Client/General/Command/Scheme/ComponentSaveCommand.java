@@ -60,7 +60,7 @@ public class ComponentSaveCommand extends VoidCommand
 				return;
 			}
 			proto.serializable_cell = cell_graph.getArchiveableState(cell_graph.getRoots());
-			GraphActions.setResizable(ugo_graph, ugo_graph.getAll(), false);
+			//GraphActions.setResizable(ugo_graph, ugo_graph.getAll(), false);
 			proto.serializable_ugo = ugo_graph.getArchiveableState(ugo_graph.getRoots());
 			proto.pack();
 
@@ -94,7 +94,7 @@ public class ComponentSaveCommand extends VoidCommand
 					}
 
 					proto.serializable_cell = cell_graph.getArchiveableState(cell_graph.getRoots());
-					GraphActions.setResizable(ugo_graph, ugo_graph.getAll(), false);
+					//GraphActions.setResizable(ugo_graph, ugo_graph.getAll(), false);
 					proto.serializable_ugo = ugo_graph.getArchiveableState(ugo_graph.getRoots());
 					proto.pack();
 

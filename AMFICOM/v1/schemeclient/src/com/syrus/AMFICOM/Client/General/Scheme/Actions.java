@@ -676,17 +676,17 @@ class CreateTopLevelElementAction extends AbstractAction
 				proto.links.add(links[i].getSchemeLink());
 
 			SchemeDevice new_dev = new SchemeDevice(dataSource.GetUId(SchemeDevice.typ));
-			for (int i = 0; i < blockports_in.size(); i++)
+			for (Iterator it = blockports_in.iterator(); it.hasNext();)
 			{
-				BlockPortCell bpc = (BlockPortCell)blockports_in.get(i);
+				BlockPortCell bpc = (BlockPortCell)it.next();
 				if (bpc.isCablePort())
 					new_dev.cableports.add(bpc.getSchemeCablePort());
 				else
 					new_dev.ports.add(bpc.getSchemePort());
 			}
-			for (int i = 0; i < blockports_out.size(); i++)
+			for (Iterator it = blockports_out.iterator(); it.hasNext();)
 			{
-				BlockPortCell bpc = (BlockPortCell)blockports_out.get(i);
+				BlockPortCell bpc = (BlockPortCell)it.next();
 				if (bpc.isCablePort())
 					new_dev.cableports.add(bpc.getSchemeCablePort());
 				else
@@ -858,6 +858,42 @@ class CreateUgoAction
 		proto.serializable_ugo = graph.getArchiveableState(cells);
 		graph.setSelectionCells(new Object[0]);
 		//Notifier.selectionNotify(graph.dispatcher, cells, true);
+	}
+}
+
+class SetLinkModeAction extends AbstractAction
+{
+	SchemePanel panel;
+	SchemeGraph graph;
+
+	SetLinkModeAction(SchemePanel panel)
+	{
+		super(Constants.linkMode);
+		this.panel = panel;
+		this.graph = panel.getGraph();
+	}
+
+	public void actionPerformed(ActionEvent e)
+	{
+		graph.mode = Constants.linkMode;
+	}
+}
+
+class SetPathModeAction extends AbstractAction
+{
+	SchemePanel panel;
+	SchemeGraph graph;
+
+	SetPathModeAction(SchemePanel panel)
+	{
+		super(Constants.pathMode);
+		this.panel = panel;
+		this.graph = panel.getGraph();
+	}
+
+	public void actionPerformed(ActionEvent e)
+	{
+		graph.mode = Constants.pathMode;
 	}
 }
 

@@ -1124,7 +1124,7 @@ public class DirectoryToFile
 					pw.println ("@end of devices");
 					pw.println ("@elements ");
 					//for (Enumeration e = el.element_ids.elements(); e.hasMoreElements();)
-					for (Iterator it = el.getChildElements(); it.hasNext();)
+					for (Iterator it = el.getChildElements().iterator(); it.hasNext();)
 						pw.println (((SchemeElement)it.next()).getId());
 					pw.println ("@end of elements");
 					pw.println ("@links ");

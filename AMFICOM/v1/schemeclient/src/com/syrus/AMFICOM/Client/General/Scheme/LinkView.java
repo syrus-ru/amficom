@@ -1,14 +1,11 @@
 package com.syrus.AMFICOM.Client.General.Scheme;
 
-import java.awt.Graphics;
-import java.awt.Point;
-import java.awt.Rectangle;
+import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.util.Map;
 
 import com.jgraph.JGraph;
 import com.jgraph.graph.*;
-//import com.jgraph.graph.EdgeView$EdgeHandle;
 
 public class LinkView extends EdgeView
 {

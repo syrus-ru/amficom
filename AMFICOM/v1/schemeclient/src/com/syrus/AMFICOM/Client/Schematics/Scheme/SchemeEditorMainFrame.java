@@ -561,9 +561,6 @@ public class SchemeEditorMainFrame extends JFrame
 		}
 
 		DataSourceInterface dataSource = aContext.getDataSourceInterface();
-		new SchemeDataSourceImage(dataSource).LoadSchemes();
-		new ConfigDataSourceImage(dataSource).LoadNet();
-		new ConfigDataSourceImage(dataSource).LoadISM();
 
 		new SchemeDataSourceImage(dataSource).LoadAttributeTypes();
 		new SchemeDataSourceImage(dataSource).LoadNetDirectory();
@@ -609,6 +606,10 @@ public class SchemeEditorMainFrame extends JFrame
 	{
 //		new ImportSchemeCommand(internal_dispatcher, aContext).execute();
 //		new ExportSchemeCommand(internal_dispatcher, aContext).execute();
+		DataSourceInterface dataSource = aContext.getDataSourceInterface();
+		new SchemeDataSourceImage(dataSource).LoadSchemes();
+		new ConfigDataSourceImage(dataSource).LoadNet();
+		new ConfigDataSourceImage(dataSource).LoadISM();
 
 		ApplicationModel aModel = aContext.getApplicationModel();
 		aModel.enable("menuSessionClose");

@@ -194,14 +194,14 @@ public class SchemeElement extends ObjectResource
 		return new SchemeElementPane();
 	}
 
-	public Iterator getChildElements()
+	public Collection getChildElements()
 	{
 		if (scheme_id.equals(""))
 		{
 			HashSet v = new HashSet();
 			for (Iterator it = element_ids.iterator(); it.hasNext();)
 				v.add(Pool.get(SchemeElement.typ, (String)it.next()));
-			return v.iterator();
+			return v;
 		}
 		else
 		{
@@ -210,7 +210,7 @@ public class SchemeElement extends ObjectResource
 		}
 	}
 
-	public Iterator getAllChilds()
+	public Collection getAllChilds()
 	{
 		if (scheme_id.equals(""))
 		{
@@ -219,10 +219,10 @@ public class SchemeElement extends ObjectResource
 			{
 				SchemeElement inner_se = (SchemeElement)Pool.get(SchemeElement.typ, (String)it.next());
 				v.add(inner_se);
-				for (Iterator it2 = inner_se.getAllChilds(); it2.hasNext(); )
+				for (Iterator it2 = inner_se.getAllChilds().iterator(); it2.hasNext(); )
 					v.add(it2.next());
 			}
-			return v.iterator();
+			return v;
 		}
 		else
 		{
@@ -413,7 +413,7 @@ public class SchemeElement extends ObjectResource
 		return null;
 	}
 
-	public Iterator getAllElementsLinks()
+	public Collection getAllElementsLinks()
 	{
 		HashSet ht = new HashSet();
 		for(Iterator it = links.iterator(); it.hasNext();)
@@ -424,18 +424,18 @@ public class SchemeElement extends ObjectResource
 			SchemeElement se = (SchemeElement)Pool.get(SchemeElement.typ, (String)it.next());
 			if (se.scheme_id.length() == 0)
 			{
-				for (Iterator it2 = se.getAllElementsLinks(); it2.hasNext();)
+				for (Iterator it2 = se.getAllElementsLinks().iterator(); it2.hasNext();)
 					ht.add(it2.next());
 			}
 		}
-		return ht.iterator();
+		return ht;
 	}
 
-	public Iterator getAllSchemesLinks()
+	public Collection getAllSchemesLinks()
 	{
 		HashSet ht = new HashSet();
 
-		for (Iterator it = getAllElementsLinks(); it.hasNext();)
+		for (Iterator it = getAllElementsLinks().iterator(); it.hasNext();)
 		{
 			SchemeLink l = (SchemeLink)it.next();
 			ht.add(l);
@@ -444,7 +444,7 @@ public class SchemeElement extends ObjectResource
 		if (!scheme_id.equals(""))
 		{
 			Scheme scheme = (Scheme)Pool.get(Scheme.typ, scheme_id);
-			for (Iterator it = scheme.getAllLinks(); it.hasNext();)
+			for (Iterator it = scheme.getAllLinks().iterator(); it.hasNext();)
 				ht.add(it.next());
 		}
 
@@ -454,11 +454,11 @@ public class SchemeElement extends ObjectResource
 			if (se.scheme_id.length() != 0)
 			{
 				Scheme inner_scheme = (Scheme)Pool.get(Scheme.typ, se.scheme_id);
-				for (Iterator it2 = inner_scheme.getAllLinks(); it2.hasNext();)
+				for (Iterator it2 = inner_scheme.getAllLinks().iterator(); it2.hasNext();)
 					ht.add(it2.next());
 			}
 		}
-		return ht.iterator();
+		return ht;
 	}
 
 	public SchemeElement getSchemeElementByCablePort(String port_id)

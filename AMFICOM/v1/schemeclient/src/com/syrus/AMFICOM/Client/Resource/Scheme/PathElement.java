@@ -9,9 +9,20 @@ import com.syrus.AMFICOM.Client.Resource.Network.*;
 
 public class PathElement extends StubResource implements Serializable
 {
+	public static final int SCHEME_ELEMENT = 0;
+	public static final int CABLE_LINK = 1;
+	public static final int LINK = 2;
+
+	int type;
+
 	private static final long serialVersionUID = 01L;
 	public int n;
+
+	/**
+	 * @deprecated use type
+	 **/
 	public boolean is_cable;
+
 	public String link_id;
 	public String thread_id;
 
@@ -19,7 +30,6 @@ public class PathElement extends StubResource implements Serializable
 	public String end_port_id;
 
 	public String scheme_element_id = "";
-
 	public String scheme_id = "";
 
 	public PathElement()

@@ -112,7 +112,7 @@ public class SchemeSaveAsCommand extends VoidCommand
 		ugoPanel.assignClonedIds(ugo_graph.getAll());
 
 		scheme.serializable_ugo = ugo_graph.getArchiveableState(ugo_graph.getRoots());
-		GraphActions.setResizable(ugo_graph, ugo_graph.getAll(), false);
+		//GraphActions.setResizable(ugo_graph, ugo_graph.getAll(), false);
 		scheme.serializable_cell = graph.getArchiveableState(graph.getRoots());
 
 		boolean res = scheme.pack();
@@ -139,15 +139,15 @@ public class SchemeSaveAsCommand extends VoidCommand
 //		schemePanel.insertCell(scheme.serializable_cell, true);
 //		ugoPanel.insertCell(scheme.serializable_ugo, true);
 
-		Hashtable h = schemePanel.schemes_to_save;
-		h.put(scheme.getId(), scheme);
+		HashSet h = schemePanel.schemes_to_save;
+		h.add(scheme);
 
-		for (Enumeration e = h.elements(); e.hasMoreElements();)
+		for (Iterator it = h.iterator(); it.hasNext();)
 		{
-			Scheme s = (Scheme)e.nextElement();
+			Scheme s = (Scheme)it.next();
 			dataSource.SaveScheme(s.getId());
 		}
-		schemePanel.schemes_to_save = new Hashtable();
+		schemePanel.schemes_to_save = new HashSet();
 		graph.setGraphChanged(false);
 		ugo_graph.setGraphChanged(false);
 

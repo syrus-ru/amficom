@@ -24,12 +24,12 @@ public class SchemeGraph extends GPGraph
 	ApplicationContext aContext;
 	UgoPanel panel;
 	public SchemePath currentPath;
+	public String mode = Constants.linkMode;
 
 	public boolean make_notifications = true;
 
 	protected boolean show_grid_at_actual_size = false;
 	protected boolean border_visible = false;
-	protected boolean path_trigger = false;
 	protected static boolean skip_notify = false;
 	boolean can_be_editable = false;
 
@@ -209,7 +209,7 @@ public class SchemeGraph extends GPGraph
 		if (skip_notify || !make_notifications)
 			return;
 
-		skip_notify = true;
+		//skip_notify = true;
 
 		Object[] cells = getSelectionCells();
 
@@ -220,7 +220,7 @@ public class SchemeGraph extends GPGraph
 		}
 		else
 		{
-			Notifier.selectionNotify(dispatcher, cells, can_be_editable, is_debug);
+			Notifier.selectionNotify(dispatcher, cells, can_be_editable, mode, is_debug);
 			((ShemeMarqueeHandler)getMarqueeHandler()).enableButtons(cells);
 		}
 
@@ -273,8 +273,8 @@ public class SchemeGraph extends GPGraph
 		Object[] cells = getAll();
 		ArrayList new_cells = new ArrayList();
 		ArrayList links = new ArrayList();
-		for (int i = 0; i < path.links.size(); i++)
-			links.add(((PathElement)path.links.get(i)).link_id);
+		for (Iterator it = path.links.iterator(); it.hasNext();)
+			links.add(((PathElement)it.next()).link_id);
 
 		for (int i = 0; i < cells.length; i++)
 		{
@@ -299,9 +299,9 @@ public class SchemeGraph extends GPGraph
 		Object[] cells = getAll();
 		ArrayList new_cells = new ArrayList();
 		ArrayList links = new ArrayList();
-		for (int i = 0; i < path.links.size(); i++)
+		for (Iterator it = path.links.iterator(); it.hasNext();)
 		{
-			TransmissionPathElement tpe = (TransmissionPathElement)path.links.get(i);
+			TransmissionPathElement tpe = (TransmissionPathElement)it.next();
 //			Link link = (Link)Pool.get(Link.typ, tpe.link_id);
 			links.add(tpe.link_id);//link.getId()
 		}
@@ -535,6 +535,8 @@ public class SchemeGraph extends GPGraph
 		public transient JButton scheme_ugo = new JButton();
 		public transient JButton bp = new JButton();
 		public transient JButton bSize = new JButton();
+		public transient JToggleButton pathButt = new JToggleButton();
+		public transient JToggleButton linkButt = new JToggleButton();
 
 		transient ProtoElement setting_proto = null;
 		private transient boolean isEditable = true;

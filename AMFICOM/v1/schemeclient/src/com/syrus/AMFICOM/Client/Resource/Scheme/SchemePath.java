@@ -139,6 +139,11 @@ public class SchemePath extends ObjectResource
 		return new SchemePathPane();
 	}
 
+	static public ObjectResourceSorter getSorter()
+	{
+		return new ObjectResourcePathSorter();
+	}
+
 	public ObjectResourceModel getModel()
 	{
 		return new SchemePathModel(this);
@@ -296,6 +301,14 @@ public class SchemePath extends ObjectResource
 
 		for(int i = 0; i < transferable.links.length; i++)
 			links.add(new PathElement(transferable.links[i]));
+
+		ObjectResourceSorter sorter = getSorter();
+		DataSet ds = new DataSet(links);
+		sorter.setDataSet(ds);
+		ds = sorter.sort("num", ObjectResourceSorter.SORT_ASCENDING);
+		links = new Vector();
+		for (Iterator it = ds.iterator(); it.hasNext();)
+			links.add(it.next());
 
 		for(int i = 0; i < transferable.attributes.length; i++)
 			attributes.put(transferable.attributes[i].type_id, new ElementAttribute(transferable.attributes[i]));

@@ -16,7 +16,7 @@ import com.syrus.AMFICOM.Client.Resource.SchemeDirectory.ProtoElement;
 
 public class SchemePanel extends ElementsPanel
 {
-	public Hashtable schemes_to_save = new Hashtable();
+	public HashSet schemes_to_save = new HashSet();
 
 	protected static String[] buttons = new String[]
 	{
@@ -41,7 +41,10 @@ public class SchemePanel extends ElementsPanel
 		Constants.zoomOutKey,
 		Constants.zoomActualKey,
 		Constants.separator,
-		Constants.backgroundSize
+		Constants.backgroundSize,
+		Constants.separator,
+		Constants.linkMode,
+		Constants.pathMode
 	};
 
 
@@ -295,9 +298,9 @@ public class SchemePanel extends ElementsPanel
 	public boolean removeAllPathsFromScheme()
 	{
 		scheme.paths = new Vector();
-		for (int i = 0; i < scheme.paths.size(); i++)
+		for (Iterator it = scheme.paths.iterator(); it.hasNext();)
 		{
-			boolean b = removePathFromScheme((SchemePath)scheme.paths.get(i));
+			boolean b = removePathFromScheme((SchemePath)it.next());
 			if (!b)
 				return false;
 		}
@@ -313,9 +316,9 @@ public class SchemePanel extends ElementsPanel
 																		scheme.getName(), JOptionPane.OK_OPTION);
 			return false;
 		}
-		for (int i = 0; i < paths.size(); i++)
+		for (Iterator it = paths.iterator(); it.hasNext();)
 		{
-			b = insertPathToScheme((SchemePath)paths.get(i));
+			b = insertPathToScheme((SchemePath)it.next());
 			if (!b)
 			{
 				JOptionPane.showMessageDialog(Environment.getActiveWindow(), "Ошибка", "(2)Ошибка обновления путей на схеме " +
@@ -330,26 +333,26 @@ public class SchemePanel extends ElementsPanel
 	{
 		scheme.paths.remove(path);
 
-		Enumeration s_to_save;
-		Enumeration se_to_save;
+		Iterator s_to_save;
+		Iterator se_to_save;
 
 		Hashtable lp = new Hashtable();
-		for (int i = 0; i < path.links.size(); i++)
+		for (Iterator it = path.links.iterator(); it.hasNext();)
 		{
-			PathElement pe = (PathElement)path.links.get(i);
+			PathElement pe = (PathElement)it.next();
 			lp.put(pe.link_id, "");
 		}
 
 		//first of all find internal schemes to insert path
-		for (se_to_save = findSchemeElementsToInsertPath (scheme, lp).elements(); se_to_save.hasMoreElements();)
+		for (se_to_save = findSchemeElementsToInsertPath (scheme, lp).iterator(); se_to_save.hasNext();)
 		{
-			SchemeElement se = (SchemeElement)se_to_save.nextElement();
+			SchemeElement se = (SchemeElement)se_to_save.next();
 			insertPathToSchemeElement (se, lp);
 		}
 
-		for (s_to_save = findSchemeToInsertPath (scheme, lp).elements(); s_to_save.hasMoreElements();)
+		for (s_to_save = findSchemeToInsertPath (scheme, lp).iterator(); s_to_save.hasNext();)
 		{
-			Scheme s = (Scheme)s_to_save.nextElement();
+			Scheme s = (Scheme)s_to_save.next();
 //			if (!s.equals(scheme))
 			boolean b = insertPathToScheme(s, lp);
 			if (!b)
@@ -357,10 +360,10 @@ public class SchemePanel extends ElementsPanel
 			//aContext.getDataSourceInterface().SaveScheme(s.getId());
 		}
 
-		for (Enumeration e = s_to_save; e.hasMoreElements();)
+		for (Iterator it = s_to_save; it.hasNext();)
 		{
-			Scheme s = (Scheme)e.nextElement();
-			schemes_to_save.put(s.getId(), s);
+			Scheme s = (Scheme)it.next();
+			schemes_to_save.add(s);
 		}
 		return true;
 	}
@@ -450,46 +453,46 @@ public class SchemePanel extends ElementsPanel
 			scheme.paths.add(path);
 
 		Hashtable lp = new Hashtable();
-		for (int i = 0; i < path.links.size(); i++)
+		for (Iterator it = path.links.iterator(); it.hasNext();)
 		{
-			PathElement pe = (PathElement)path.links.get(i);
+			PathElement pe = (PathElement)it.next();
 			lp.put(pe.link_id, path.getId());
 		}
 
 		//first of all find internal schemes to insert path
-		for (Enumeration e = findSchemeElementsToInsertPath (scheme, lp).elements(); e.hasMoreElements();)
+		for (Iterator it = findSchemeElementsToInsertPath (scheme, lp).iterator(); it.hasNext();)
 		{
-			SchemeElement se = (SchemeElement)e.nextElement();
+			SchemeElement se = (SchemeElement)it.next();
 			insertPathToSchemeElement (se, lp);
 		}
 
-		for (Enumeration e = findSchemeToInsertPath (scheme, lp).elements(); e.hasMoreElements();)
+		for (Iterator it = findSchemeToInsertPath (scheme, lp).iterator(); it.hasNext();)
 		{
-			Scheme s = (Scheme)e.nextElement();
+			Scheme s = (Scheme)it.next();
 //			if (!s.equals(scheme))
 			boolean b = insertPathToScheme(s, lp);
 			if (!b)
 				return false;
 //			aContext.getDataSourceInterface().SaveScheme(s.getId());
-			schemes_to_save.put(s.getId(), s);
+			schemes_to_save.add(s);
 		}
 		return true;
 	}
 
-	protected Hashtable findSchemeToInsertPath (Scheme sc, Hashtable lp)
+	protected Collection findSchemeToInsertPath (Scheme sc, Hashtable lp)
 	{
-		Hashtable schemes_to_save = new Hashtable();
+		HashSet schemes_to_save = new HashSet();
 		for (int i = 0; i < sc.links.size(); i++)
 		{
 			String p_id = (String)lp.get(((SchemeLink)sc.links.get(i)).getId());
 			if (p_id != null)
-				schemes_to_save.put(sc.getId(), sc);
+				schemes_to_save.add(sc);
 		}
 		for (int i = 0; i < sc.cablelinks.size(); i++)
 		{
 			String p_id = (String)lp.get(((SchemeCableLink)sc.cablelinks.get(i)).getId());
 			if (p_id != null)
-				schemes_to_save.put(sc.getId(), sc);
+				schemes_to_save.add(sc);
 		}
 
 		for (int i = 0; i < sc.elements.size(); i++)
@@ -498,19 +501,19 @@ public class SchemePanel extends ElementsPanel
 			if (!se.scheme_id.equals(""))
 			{
 				Scheme inner = (Scheme)Pool.get(Scheme.typ, se.scheme_id);
-				for (Enumeration e = findSchemeToInsertPath (inner, lp).elements(); e.hasMoreElements();)
+				for (Iterator it = findSchemeToInsertPath (inner, lp).iterator(); it.hasNext();)
 				{
-					Scheme s = (Scheme)e.nextElement();
-					schemes_to_save.put(s.getId(), s);
+					Scheme s = (Scheme)it.next();
+					schemes_to_save.add(s);
 				}
 			}
 		}
 		return schemes_to_save;
 	}
 
-	protected Hashtable findSchemeElementsToInsertPath (Scheme sc, Hashtable lp)
+	protected Collection findSchemeElementsToInsertPath (Scheme sc, Hashtable lp)
 	{
-		Hashtable schemeelements_to_save = new Hashtable();
+		HashSet schemeelements_to_save = new HashSet();
 
 		for (int i = 0; i < sc.elements.size(); i++)
 		{
@@ -518,10 +521,10 @@ public class SchemePanel extends ElementsPanel
 			if (!se.scheme_id.equals(""))
 			{
 				Scheme inner = (Scheme)Pool.get(Scheme.typ, se.scheme_id);
-				for (Enumeration e = findSchemeElementsToInsertPath (inner, lp).elements(); e.hasMoreElements();)
+				for (Iterator it = findSchemeElementsToInsertPath (inner, lp).iterator(); it.hasNext();)
 				{
-					SchemeElement s = (SchemeElement)e.nextElement();
-					schemeelements_to_save.put(s.getId(), s);
+					SchemeElement s = (SchemeElement)it.next();
+					schemeelements_to_save.add(s);
 				}
 			}
 			else
@@ -530,17 +533,17 @@ public class SchemePanel extends ElementsPanel
 				{
 					String p_id = (String)lp.get(((SchemeLink)se.links.get(j)).getId());
 					if (p_id != null)
-						schemeelements_to_save.put(se.getId(), se);
+						schemeelements_to_save.add(se);
 				}
 
-				for (Iterator it = se.getAllChilds(); it.hasNext();)
+				for (Iterator it = se.getAllChilds().iterator(); it.hasNext();)
 				{
 					SchemeElement child = (SchemeElement)it.next();
 					for (int j = 0; j < child.links.size(); j++)
 					{
 						String p_id = (String)lp.get(((SchemeLink)child.links.get(j)).getId());
 						if (p_id != null)
-							schemeelements_to_save.put(child.getId(), child);
+							schemeelements_to_save.add(child);
 					}
 				}
 			}
@@ -589,18 +592,30 @@ public class SchemePanel extends ElementsPanel
 										createToolButton(mh.scheme_ugo, btn_size, null, "УГО схемы",
 										new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/sheme_ugo.gif")),
 										new CreateTopLevelSchemeAction (graph, SchemePanel.this), true));
-
 				buttons.put(Constants.backgroundSize,
 										createToolButton(mh.bSize, btn_size, null, "размер схемы",
 										new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/sheme_size.gif")),
 										new SetBackgroundSizeAction (SchemePanel.this), true));
 
+				buttons.put(Constants.linkMode,
+										createToolButton(mh.linkButt, btn_size, null, "режим линий",
+										new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/linkmode.gif")),
+										new SetLinkModeAction (SchemePanel.this), true));
+				buttons.put(Constants.pathMode,
+										createToolButton(mh.pathButt, btn_size, null, "режим путей",
+										new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/pathmode.gif")),
+										new SetPathModeAction (SchemePanel.this), true));
+
+
 				ButtonGroup group = new ButtonGroup();
-				for (Enumeration enum = buttons.elements(); enum.hasMoreElements();)
-				{
-					AbstractButton button = (AbstractButton)enum.nextElement();
-					group.add(button);
-				}
+				group.add(mh.linkButt);
+				group.add(mh.pathButt);
+				mh.linkButt.doClick();
+//				for (Enumeration enum = buttons.elements(); enum.hasMoreElements();)
+//				{
+//					AbstractButton button = (AbstractButton)enum.nextElement();
+//					group.add(button);
+//				}
 				mh.s.doClick();
 			}
 			return buttons;

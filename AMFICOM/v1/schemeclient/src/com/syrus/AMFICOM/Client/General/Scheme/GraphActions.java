@@ -927,83 +927,83 @@ public class GraphActions
 	}
 }
 
- class SchemeActions
-{
-	static JPopupMenu createElementPopup(final ApplicationContext aContext, final SchemeGraph graph, DeviceGroup group)
+	class SchemeActions
 	{
-		final SchemeElement se = group.getSchemeElement();
-
-		boolean show_catalog = true;
-
-		JPopupMenu pop = new JPopupMenu();
-		if (!group.getSchemeId().equals(""))
+		static JPopupMenu createElementPopup(final ApplicationContext aContext, final SchemeGraph graph, DeviceGroup group)
 		{
-			final String scheme_id = group.getSchemeId();
-			Scheme sc = (Scheme)Pool.get(Scheme.typ, scheme_id);
+			final SchemeElement se = group.getSchemeElement();
 
-			if (sc != null)
+			boolean show_catalog = true;
+
+			JPopupMenu pop = new JPopupMenu();
+			if (!group.getSchemeId().equals(""))
 			{
-				JMenuItem menu1 = new JMenuItem(new AbstractAction()
+				final String scheme_id = group.getSchemeId();
+				Scheme sc = (Scheme)Pool.get(Scheme.typ, scheme_id);
+
+				if (sc != null)
 				{
-					public void actionPerformed(ActionEvent ev)
+					JMenuItem menu1 = new JMenuItem(new AbstractAction()
 					{
-						aContext.getDispatcher().notify(new OperationEvent(scheme_id, 0, "addschemeevent"));
+						public void actionPerformed(ActionEvent ev)
+						{
+							aContext.getDispatcher().notify(new OperationEvent(scheme_id, 0, "addschemeevent"));
 
-						if (se != null && se.alarmed)
-							aContext.getDispatcher().notify(new SchemeElementsEvent(this,
-									se.alarmed_link_id, SchemeElementsEvent.CREATE_ALARMED_LINK_EVENT));
-					}
-				});
-				menu1.setText("Открыть схему");
-				pop.add(menu1);
-				pop.addSeparator();
+							if (se != null && se.alarmed)
+								aContext.getDispatcher().notify(new SchemeElementsEvent(this,
+										se.alarmed_link_id, SchemeElementsEvent.CREATE_ALARMED_LINK_EVENT));
+						}
+					});
+					menu1.setText("Открыть схему");
+					pop.add(menu1);
+					pop.addSeparator();
+				}
+				else
+				{
+					show_catalog = false;
+					JMenuItem menu1 = new JMenuItem("Ошибка! Схема не найдена");
+					pop.add(menu1);
+				}
 			}
-			else
+
+			if (!group.getSchemeElementId().equals(""))
 			{
-				show_catalog = false;
-				JMenuItem menu1 = new JMenuItem("Ошибка! Схема не найдена");
-				pop.add(menu1);
+				final String se_id = se.getId();
+
+				Vector v = (Vector)se.serializable_ugo;
+				if (!se.element_ids.isEmpty() ||
+						(v != null && v.size() != 0 && ((Object[])v.get(0)).length != 0))
+						{
+							JMenuItem menu1 = new JMenuItem(new AbstractAction()
+							{
+							public void actionPerformed(ActionEvent ev)
+							{
+								aContext.getDispatcher().notify(new OperationEvent(se_id, 0, "addschemeelementevent"));
+
+								if (se.alarmed)
+									aContext.getDispatcher().notify(new SchemeElementsEvent(this,
+											se.alarmed_link_id, SchemeElementsEvent.CREATE_ALARMED_LINK_EVENT));
+							}
+							});
+							menu1.setText("Открыть компонент");
+							pop.add(menu1);
+				}
+
+				if (show_catalog && graph.isEditable() && graph.panel instanceof SchemePanel)
+				{
+					JMenuItem menu2 = new JMenuItem(new AbstractAction()
+					{
+						public void actionPerformed(ActionEvent ev)
+						{
+							new InsertToCatalogCommand(aContext, (SchemePanel)(graph.panel), null, false).execute();
+						}
+					});
+					menu2.setText("Связать с каталогом");
+					pop.add(menu2);
+				}
 			}
+			return pop;
 		}
-
-		if (!group.getSchemeElementId().equals(""))
-		{
-			final String se_id = se.getId();
-
-			Vector v = (Vector)se.serializable_ugo;
-			if (!se.element_ids.isEmpty() ||
-					(v != null && v.size() != 0 && ((Object[])v.get(0)).length != 0))
-			{
-				JMenuItem menu1 = new JMenuItem(new AbstractAction()
-				{
-					public void actionPerformed(ActionEvent ev)
-					{
-						aContext.getDispatcher().notify(new OperationEvent(se_id, 0, "addschemeelementevent"));
-
-						if (se.alarmed)
-						aContext.getDispatcher().notify(new SchemeElementsEvent(this,
-								se.alarmed_link_id, SchemeElementsEvent.CREATE_ALARMED_LINK_EVENT));
-					}
-				});
-				menu1.setText("Открыть компонент");
-				pop.add(menu1);
-			}
-
-			if (show_catalog && graph.isEditable() && graph.panel instanceof SchemePanel)
-			{
-				JMenuItem menu2 = new JMenuItem(new AbstractAction()
-				{
-					public void actionPerformed(ActionEvent ev)
-					{
-						new InsertToCatalogCommand(aContext, (SchemePanel)(graph.panel), null, false).execute();
-					}
-				});
-				menu2.setText("Связать с каталогом");
-				pop.add(menu2);
-			}
-		}
-		return pop;
-	}
 
 	static JPopupMenu createLinkPopup(final ApplicationContext aContext, final SchemeGraph graph, DefaultLink link)
 	{

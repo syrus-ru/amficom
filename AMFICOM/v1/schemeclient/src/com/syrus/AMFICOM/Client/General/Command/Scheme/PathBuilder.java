@@ -116,7 +116,7 @@ public class PathBuilder
 				SchemePort port = (SchemePort)port_it.next();
 				if (port.direction_type.equals("out"))
 				{
-					for (Iterator it2 = scheme.getAllLinks(); it2.hasNext();)
+					for (Iterator it2 = scheme.getAllLinks().iterator(); it2.hasNext();)
 					{
 						SchemeLink link = (SchemeLink)it2.next();
 						if (link.source_port_id.equals(port.getId()))
@@ -124,7 +124,8 @@ public class PathBuilder
 							newPE.start_port_id = link.source_port_id;
 							newPE.end_port_id = link.target_port_id;
 							newPE.link_id = link.getId();
-							//scheme.getSchemeByLink()
+							newPE.scheme_id = scheme.getSchemeByLink(link.getId()).getId();
+							newPE.is_cable = false;
 							links_found++;
 						}
 						else if (link.target_port_id.equals(port.getId()))
@@ -132,10 +133,19 @@ public class PathBuilder
 							newPE.start_port_id = link.target_port_id;
 							newPE.end_port_id = link.source_port_id;
 							newPE.link_id = link.getId();
+							newPE.scheme_id = scheme.getSchemeByLink(link.getId()).getId();
+							newPE.is_cable = false;
 							links_found++;
 						}
 					}
-					for (Iterator it2 = scheme.getAllCableLinks(); it2.hasNext();)
+				}
+			}
+			for (Iterator port_it = dev.cableports.iterator(); port_it.hasNext();)
+			{
+				SchemeCablePort port = (SchemeCablePort)port_it.next();
+				if (port.direction_type.equals("out"))
+				{
+					for (Iterator it2 = scheme.getAllCableLinks().iterator(); it2.hasNext();)
 					{
 						SchemeCableLink link = (SchemeCableLink)it2.next();
 						if (link.source_port_id.equals(port.getId()))
@@ -143,6 +153,8 @@ public class PathBuilder
 							newPE.start_port_id = link.source_port_id;
 							newPE.end_port_id = link.target_port_id;
 							newPE.link_id = link.getId();
+							newPE.scheme_id = scheme.getSchemeByCableLink(link.getId()).getId();
+							newPE.is_cable = true;
 							links_found++;
 						}
 						else if (link.target_port_id.equals(port.getId()))
@@ -150,6 +162,8 @@ public class PathBuilder
 							newPE.start_port_id = link.target_port_id;
 							newPE.end_port_id = link.source_port_id;
 							newPE.link_id = link.getId();
+							newPE.scheme_id = scheme.getSchemeByCableLink(link.getId()).getId();
+							newPE.is_cable = true;
 							links_found++;
 						}
 					}

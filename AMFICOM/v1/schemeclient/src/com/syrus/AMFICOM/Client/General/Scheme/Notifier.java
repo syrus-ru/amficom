@@ -29,10 +29,10 @@ public class Notifier
 {
 	public static boolean DEBUG = false;
 
-	public static void selectionNotify(Dispatcher dispatcher, Object[] cells, boolean isEditable, boolean is_debug)
+	public static void selectionNotify(Dispatcher dispatcher, Object[] cells, boolean isEditable, String mode, boolean is_debug)
 	{
 		DEBUG = is_debug;
-		selectionNotify(dispatcher, cells, isEditable);
+		selectionNotify(dispatcher, cells, mode, isEditable);
 	}
 
 	public static void selectionNotify(Dispatcher dispatcher, ObjectResource[] cells, boolean isEditable)
@@ -92,7 +92,7 @@ public class Notifier
 					CatalogNavigateEvent.CATALOG_ACCESS_PORT_SELECTED_EVENT, isEditable));
 	}
 
-	public static void selectionNotify(Dispatcher dispatcher, Object[] cells, boolean isEditable)
+	public static void selectionNotify(Dispatcher dispatcher, Object[] cells, String mode, boolean isEditable)
 	{
 		ArrayList elements = new ArrayList();
 		ArrayList devices = new ArrayList();
@@ -156,17 +156,49 @@ public class Notifier
 //         obj_res.add(((DeviceCell)cells[i]).getSchemeDevice());
 				else if (obj instanceof DefaultLink)
 				{
-					SchemeLink link = ((DefaultLink)obj).getSchemeLink();
-					scheme_links.add(link);
-					if (!link.link_id.equals(""))
-						links.add(Pool.get(Link.typ, link.link_id));
+					if (mode.equals(Constants.linkMode))
+					{
+						SchemeLink link = ((DefaultLink)obj).getSchemeLink();
+						scheme_links.add(link);
+						if (!link.link_id.equals(""))
+							links.add(Pool.get(Link.typ, link.link_id));
+					}
+					else if (mode.equals(Constants.pathMode))
+					{
+						if (((DefaultLink)obj).scheme_path_id.length() != 0)
+						{
+							SchemePath path = ((DefaultLink)obj).getSchemePath();
+							if (path != null)
+							{
+								scheme_paths.add(path);
+								if(path.path_id.length() != 0)
+									paths.add(Pool.get(TransmissionPath.typ, path.path_id));
+							}
+						}
+					}
 				}
 				else if (obj instanceof DefaultCableLink)
 				{
-					SchemeCableLink link = ((DefaultCableLink)obj).getSchemeCableLink();
-					scheme_clinks.add(link);
-					if (!link.cable_link_id.equals(""))
-						clinks.add(Pool.get(CableLink.typ, link.cable_link_id));
+					if (mode.equals(Constants.linkMode))
+					{
+						SchemeCableLink link = ((DefaultCableLink)obj).getSchemeCableLink();
+						scheme_clinks.add(link);
+						if (!link.cable_link_id.equals(""))
+							clinks.add(Pool.get(CableLink.typ, link.cable_link_id));
+					}
+					else if (mode.equals(Constants.pathMode))
+					{
+						if (((DefaultCableLink)obj).scheme_path_id.length() != 0)
+						{
+							SchemePath path = ((DefaultCableLink)obj).getSchemePath();
+							if (path != null)
+							{
+								scheme_paths.add(path);
+								if(path.path_id.length() != 0)
+									paths.add(Pool.get(TransmissionPath.typ, path.path_id));
+							}
+						}
+					}
 				}
 				else if (obj instanceof PortCell)
 				{

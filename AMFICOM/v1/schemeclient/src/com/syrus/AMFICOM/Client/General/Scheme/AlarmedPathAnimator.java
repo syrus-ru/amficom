@@ -172,7 +172,7 @@ public class AlarmedPathAnimator// extends Thread implements Runnable
 					SchemeElement se = ((DeviceGroup)cells[i]).getSchemeElement();
 					if (se.scheme_id.equals(""))
 					{
-						for (Iterator it = se.getAllElementsLinks(); it.hasNext();)
+						for (Iterator it = se.getAllElementsLinks().iterator(); it.hasNext();)
 						{
 							SchemeLink sl = (SchemeLink)it.next();
 							if (sl.link_id.equals(alarmed_link_id))

@@ -1,22 +1,14 @@
 package com.syrus.AMFICOM.Client.General.Command.Scheme;
 
-import java.util.Enumeration;
-import java.util.Hashtable;
+import java.util.*;
 
 import javax.swing.JOptionPane;
 
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
-import com.syrus.AMFICOM.Client.General.Event.SchemeElementsEvent;
-import com.syrus.AMFICOM.Client.General.Event.TreeListSelectionEvent;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.Model.Environment;
-import com.syrus.AMFICOM.Client.General.Scheme.GraphActions;
-import com.syrus.AMFICOM.Client.General.Scheme.SchemeGraph;
-import com.syrus.AMFICOM.Client.General.Scheme.SchemePanel;
-import com.syrus.AMFICOM.Client.General.Scheme.UgoPanel;
-import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
-import com.syrus.AMFICOM.Client.Resource.MyUtil;
-import com.syrus.AMFICOM.Client.Resource.Pool;
+import com.syrus.AMFICOM.Client.General.Event.*;
+import com.syrus.AMFICOM.Client.General.Model.*;
+import com.syrus.AMFICOM.Client.General.Scheme.*;
+import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.Resource.Scheme.Scheme;
 
 public class SchemeSaveCommand extends VoidCommand
@@ -101,7 +93,7 @@ public class SchemeSaveCommand extends VoidCommand
 		if (ugoPanel != null)
 		{
 			scheme.serializable_ugo = ugoPanel.getGraph().getArchiveableState(ugoPanel.getGraph().getRoots());
-			GraphActions.setResizable(ugoPanel.getGraph(), ugoPanel.getGraph().getAll(), false);
+			//GraphActions.setResizable(ugoPanel.getGraph(), ugoPanel.getGraph().getAll(), false);
 		}
 		scheme.serializable_cell = graph.getArchiveableState(graph.getRoots());
 		boolean res = scheme.pack();
@@ -113,15 +105,15 @@ public class SchemeSaveCommand extends VoidCommand
 			return;
 		}
 
-		Hashtable h = schemePanel.schemes_to_save;
-		h.put(scheme.getId(), scheme);
+		HashSet h = schemePanel.schemes_to_save;
+		h.add(scheme);
 
-		for (Enumeration e = h.elements(); e.hasMoreElements();)
+		for (Iterator it = h.iterator(); it.hasNext();)
 		{
-			Scheme s = (Scheme)e.nextElement();
+			Scheme s = (Scheme)it.next();
 			dataSource.SaveScheme(s.getId());
 		}
-		schemePanel.schemes_to_save = new Hashtable();
+		schemePanel.schemes_to_save = new HashSet();
 		graph.setGraphChanged(false);
 		if (ugoPanel != null)
 			ugoPanel.getGraph().setGraphChanged(false);
