@@ -1,5 +1,5 @@
 /*
- * $Id: DadaraAnalysisManager.java,v 1.26 2005/03/16 16:41:03 arseniy Exp $
+ * $Id: DadaraAnalysisManager.java,v 1.27 2005/03/22 15:21:03 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,12 +9,13 @@
 package com.syrus.AMFICOM.mcm;
 
 /**
- * @version $Revision: 1.26 $, $Date: 2005/03/16 16:41:03 $
+ * @version $Revision: 1.27 $, $Date: 2005/03/22 15:21:03 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
 
 //*
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -133,7 +134,12 @@ public class DadaraAnalysisManager implements AnalysisManager, EvaluationManager
 
 		// получаем из эталона уровень обнаружения обрыва
 		double breakThresh = 0;
-		breakThresh = getParBA(CODENAME_DADARA_ETALON_BREAK_THRESH).toDouble();
+		try {
+			breakThresh = getParBA(CODENAME_DADARA_ETALON_BREAK_THRESH).toDouble();
+		}
+		catch (IOException ioe) {
+			throw new AnalysisException("Couldn't get " + CODENAME_DADARA_ETALON_BREAK_THRESH + ": " + ioe + ", " + ioe.getMessage());
+		}
 
 		// Получаем эталонный MTM (пороговые кривые и события)
 		ModelTraceManager etMTM = obtainEtalonMTM();
