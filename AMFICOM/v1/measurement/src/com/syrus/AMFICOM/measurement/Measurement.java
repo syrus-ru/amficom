@@ -1,5 +1,5 @@
 /*
- * $Id: Measurement.java,v 1.53 2005/03/11 13:12:31 bass Exp $
+ * $Id: Measurement.java,v 1.54 2005/03/15 16:15:10 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,30 +8,31 @@
 
 package com.syrus.AMFICOM.measurement;
 
+import java.util.Collection;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.syrus.AMFICOM.measurement.corba.MeasurementStatus;
-import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.IdentifierPool;
-import com.syrus.AMFICOM.general.IllegalObjectEntityException;
-import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.RetrieveObjectException;
-import com.syrus.AMFICOM.general.UpdateObjectException;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.IllegalObjectEntityException;
+import com.syrus.AMFICOM.general.LinkedIdsCondition;
+import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
-import com.syrus.AMFICOM.general.VersionCollisionException;
+import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
+import com.syrus.AMFICOM.measurement.corba.MeasurementStatus;
 import com.syrus.AMFICOM.measurement.corba.Measurement_Transferable;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
+import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.53 $, $Date: 2005/03/11 13:12:31 $
- * @author $Author: bass $
+ * @version $Revision: 1.54 $, $Date: 2005/03/15 16:15:10 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -172,18 +173,6 @@ public class Measurement extends Action {
 		return this.testId;
 	}
 
-	public synchronized void updateStatus(MeasurementStatus status1, Identifier modifierId1) throws UpdateObjectException {
-		this.status = status1.value();
-		super.modified = new Date(System.currentTimeMillis());
-		super.modifierId = modifierId1;
-		try {
-			this.measurementDatabase.update(this, modifierId1, UPDATE_STATUS);
-		}
-		catch (VersionCollisionException vce) {
-			throw new UpdateObjectException(vce.getMessage(), vce);
-		}
-	}
-
 	protected synchronized void setAttributes(Date created,
 											  Date modified,
 											  Identifier creatorId,
@@ -273,6 +262,18 @@ public class Measurement extends Action {
 	public void setName(String name) {
 		this.name = name;
 		super.changed = true;
+	}
+
+	public Collection getResults() {
+		LinkedIdsCondition condition = new LinkedIdsCondition(this.id, ObjectEntities.RESULT_ENTITY_CODE);
+		Collection results = null;
+		try {
+			results = MeasurementStorableObjectPool.getStorableObjectsByCondition(condition, true);
+		}
+		catch (ApplicationException ae) {
+			Log.errorException(ae);
+		}
+		return results;
 	}
 
 	public List getDependencies() {
