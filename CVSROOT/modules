@@ -110,8 +110,8 @@ measurement_v1	AMFICOM/v1/measurement
 prediction_v1	AMFICOM/v1/prediction
 #M	scheme_v1	Scheme module
 scheme_v1	AMFICOM/v1/scheme
-#M	schemecommon_v1 Intermediary scheme module
-schemecommon_v1	AMFICOM/v1/schemecommon
+#M	schemeclient_v1 Clent scheme module
+schemeclient_v1	AMFICOM/v1/schemeclient
 #M	filter_v1	Files common for client-side and server-side filtering
 filter_v1	AMFICOM/v1/filter
 #M	reportbuilder_v1	Report builder module
