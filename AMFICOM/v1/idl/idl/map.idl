@@ -1,41 +1,18 @@
-//////////////////////////////////////////////////////////////////////////////
-// *                                                                      * //
-// * Syrus Systems                                                        * //
-// * Департамент Системных Исследований и Разработок                      * //
-// *                                                                      * //
-// * Проект: АМФИКОМ - система Автоматизированного Многофункционального   * //
-// *         Интеллектуального Контроля и Объектного Мониторинга          * //
-// *                                                                      * //
-// *         реализация Интегрированной Системы Мониторинга               * //
-// *                                                                      * //
-// * Название: Реализация серверной части интерфейса прототипа РИСД       * //
-// *           (включает реализацию пакета pmServer и класса pmRISDImpl)  * //
-// * Тип: Java 1.2.2                                                      * //
-// *                                                                      * //
-// * Автор: Крупенников А.В.                                              * //
-// *                                                                      * //
-// * Версия: 0.1                                                          * //
-// * От: 22 jan 2002                                                      * //
-// * Расположение: ISM\prog\java\AMFICOMConfigure\                        * //
-// *        com\syrus\AMFICOM\Client\Configure\ISM\AccessPoint.java       * //
-// *                                                                      * //
-// * Компилятор: Oracle JDeveloper (javac)                                * //
-// *                                                                      * //
-// * Статус: разработка                                                   * //
-// *                                                                      * //
-// * Изменения:                                                           * //
-// *  Кем         Верс   Когда      Комментарии                           * //
-// * -----------  ----- ---------- -------------------------------------- * //
-// *                                                                      * //
-// * Описание:                                                            * //
-// *                                                                      * //
-//////////////////////////////////////////////////////////////////////////////
-
+/**
+ * $Id: map.idl,v 1.4 2004/09/10 10:01:53 krupenn Exp $
+ *
+ * Syrus Systems
+ * Научно-технический центр
+ * Проект: АМФИКОМ
+ *
+ * Платформа: java 1.4.1
+*/
 #ifndef _map_idl_
 #define _map_idl_
 
-#include <general.idl>
-#include <scheme.idl>
+#include "general.idl"
+#include "scheme.idl"
+#include "streams.idl"
 
 module com
 {
@@ -45,103 +22,98 @@ module AMFICOM
 {
 module CORBA
 {
-
 module Map
 {
-	struct MapProtoElement_Transferable
+/*
+	struct MapProtoGroup_Transferable
 	{
 		wstring id;
 		wstring name;
-		wstring codename;
-		wstring description;
-		wstring owner_id;
+		wstring parent_id;
+		::CORBA::WStringSeq group_ids;
+		::CORBA::WStringSeq mapproto_ids;
+		long long modified;
+	};
+	typedef sequence <MapProtoGroup_Transferable> MapProtoGroupSeq_Transferable;
+*/
 
-		wstring symbol_id;
+	struct MapNodeProtoElement_Transferable
+	{
+		wstring id;
+		wstring name;
+		wstring description;
+
+		wstring symbolId;
+
 		long long modified;
 
-		wstring pe_class;
-		boolean pe_is_kis;
-		boolean is_visual;
-		boolean is_topological;
-		wstring domain_id;
+		boolean isTopological;
 
-		Scheme::ElementAttributeSeq_Transferable attributes;
-		General::wstringSeq pe_ids;
+		General::ElementAttributeSeq_Transferable attributes;
 	};
-	typedef sequence <MapProtoElement_Transferable> MapProtoElementSeq_Transferable;
+	typedef sequence <MapNodeProtoElement_Transferable> MapNodeProtoElementSeq_Transferable;
 
 	struct MapLinkProtoElement_Transferable
 	{
 		wstring id;
 		wstring name;
 		wstring description;
-		wstring owner_id;
-		wstring domain_id;
 
 		long long modified;
-		General::wstringSeq cable_type_ids;
-		Scheme::ElementAttributeSeq_Transferable attributes;
+
+		General::ElementAttributeSeq_Transferable attributes;
 	};
 	typedef sequence <MapLinkProtoElement_Transferable> MapLinkProtoElementSeq_Transferable;
-
+/*
 	struct MapPathProtoElement_Transferable
 	{
 		wstring id;
 		wstring name;
 		wstring description;
-		wstring owner_id;
-		wstring domain_id;
 
 		long long modified;
-		General::wstringSeq path_type_ids;
-		Scheme::ElementAttributeSeq_Transferable attributes;
+
+		General::ElementAttributeSeq_Transferable attributes;
 	};
 	typedef sequence <MapPathProtoElement_Transferable> MapPathProtoElementSeq_Transferable;
-
-	struct MapElement_Transferable
+*/
+	struct MapSiteElement_Transferable
 	{
 		wstring id;
 		wstring name;
-		wstring type_id;
 		wstring description;
-		wstring owner_id;
-
 		wstring longitude;		// anchor
 		wstring latitude;		// anchor
-		wstring map_id;
 
-		wstring symbol_id;
+		wstring mapId;
 
-		wstring element_id;
-		wstring element_type_id;
+		wstring symbolId;
+
+		wstring mapProtoId;
 
 		long long modified;
-		boolean has_kis;
-		wstring kis_element_type_id;
-		wstring ism_map_id;
-		wstring map_kis_id;
 
-		Scheme::ElementAttributeSeq_Transferable attributes;
+		General::ElementAttributeSeq_Transferable attributes;
 	};
-	typedef sequence <MapElement_Transferable> MapElementSeq_Transferable;
+	typedef sequence <MapSiteElement_Transferable> MapSiteElementSeq_Transferable;
 
 	struct MapPhysicalNodeElement_Transferable
 	{
 		wstring id;
 		wstring name;
+		wstring description;
 		wstring longitude;
 		wstring latitude;
-		wstring description;
-		wstring owner_id;
 
-		wstring map_id;
-		wstring ism_map_id;
+		wstring mapId;
 
-		wstring symbol_id;
+		wstring symbolId;
 
-		wstring physicalLinkID;
+		wstring physicalLinkId;
+
 		boolean active;
-		Scheme::ElementAttributeSeq_Transferable attributes;
+
+		General::ElementAttributeSeq_Transferable attributes;
 	};
 	typedef sequence <MapPhysicalNodeElement_Transferable> MapPhysicalNodeElementSeq_Transferable;
 
@@ -149,15 +121,16 @@ module Map
 	{
 		wstring id;
 		wstring name;
-		wstring owner_id;
 
-		wstring map_id;
-		wstring ism_map_id;
+		wstring mapId;
 
-		wstring startNode_id;//начало
-		wstring endNode_id;//конец
-		wstring physicalLinkID;
-		Scheme::ElementAttributeSeq_Transferable attributes;
+		wstring physicalLinkId;
+		wstring startNodeId;
+		wstring endNodeId;
+
+		double length;
+
+		General::ElementAttributeSeq_Transferable attributes;
 	};
 	typedef sequence <MapNodeLinkElement_Transferable> MapNodeLinkElementSeq_Transferable;
 
@@ -165,21 +138,18 @@ module Map
 	{
 		wstring id;
 		wstring name;
-		wstring type_id;
 		wstring description;
-		wstring owner_id;
 
-		wstring map_id;
-		wstring ism_map_id;
+		wstring mapId;
 
-		wstring startNode_id;//начало
-		wstring endNode_id;//конец
-		Scheme::ElementAttributeSeq_Transferable attributes;
+		wstring mapProtoId;
 
-		wstring link_id;
-		wstring link_type_id;
+		wstring startNodeId;
+		wstring endNodeId;
 
-		General::wstringSeq nodeLink_ids;
+		::CORBA::WStringSeq nodeLinkIds;
+
+		General::ElementAttributeSeq_Transferable attributes;
 	};
 	typedef sequence <MapPhysicalLinkElement_Transferable> MapPhysicalLinkElementSeq_Transferable;
 
@@ -187,201 +157,102 @@ module Map
 	{
 		wstring id;
 		wstring name;
+		wstring description;
 		wstring longitude;
 		wstring latitude;
-		wstring description;
-		wstring owner_id;
 
-		wstring map_id;
+		wstring mapId;
 
-		wstring symbol_id;
+		wstring symbolId;
 
-		wstring link_id;
+		wstring physicalLinkId;
+		
 		double distance;
 
-		Scheme::ElementAttributeSeq_Transferable attributes;
+		General::ElementAttributeSeq_Transferable attributes;
 	};
 	typedef sequence <MapMarkElement_Transferable> MapMarkElementSeq_Transferable;
+/*
+	struct MapCablePathElement_Transferable
+	{
+		wstring id;
+		wstring name;
+		wstring description;
 
+		wstring mapId;
+
+		wstring startNodeId;//начало
+		wstring endNodeId;//конец
+		General::ElementAttributeSeq_Transferable attributes;
+
+		::CORBA::WStringSeq physicalLinkIds;
+	};
+	typedef sequence <MapCablePathElement_Transferable> MapCablePathElementSeq_Transferable;
+*/
+/*
 	struct MapPathElement_Transferable
 	{
 		wstring id;
 		wstring name;
-		wstring type_id;
+		wstring typeId;
 		wstring description;
-		wstring owner_id;
 
-		wstring map_id;
-		wstring ism_map_id;
+		wstring mapViewId;
 
-		wstring startNode_id;//начало
-		wstring endNode_id;//конец
-		Scheme::ElementAttributeSeq_Transferable attributes;
+		wstring startNodeId;//начало
+		wstring endNodeId;//конец
+		General::ElementAttributeSeq_Transferable attributes;
 
-		wstring path_id;
-
-		General::wstringSeq physicalLink_ids;
+		::CORBA::WStringSeq physicalLinkIds;
 	};
 	typedef sequence <MapPathElement_Transferable> MapPathElementSeq_Transferable;
-
-	struct MapContext_Transferable
+*/
+	struct Map_Transferable
 	{
 		wstring id;
 		wstring name;
-		wstring codename;
-		wstring user_id;
+		wstring userId;
 		wstring description;
-		wstring domain_id;
+		wstring domainId;
 
 		long long created;
-		wstring created_by;
+		wstring createdBy;
 		long long modified;
-		wstring modified_by;
+		wstring modifiedBy;
 
-		wstring scheme_id;
+		::CORBA::WStringSeq siteIds;//Вектор элементов наследников класса Node
+		::CORBA::WStringSeq nodeIds;//Вектор элементов наследников класса Node
+		::CORBA::WStringSeq nodeLinkIds;//Вектор элементов типа NodeLinks
+		::CORBA::WStringSeq physicalLinkIds;
+		::CORBA::WStringSeq markIds;
+	};
+	typedef sequence <Map_Transferable> MapSeq_Transferable;
 
-		General::wstringSeq equipment_ids;//Вектор элементов наследников класса Node
-		General::wstringSeq kis_ids;//Вектор элементов наследников класса Node
-		General::wstringSeq node_ids;//Вектор элементов наследников класса Node
-		General::wstringSeq nodeLink_ids;//Вектор элементов типа NodeLinks
-		General::wstringSeq physicalLink_ids;
-		General::wstringSeq path_ids;
-		General::wstringSeq mark_ids;
+	struct MapView_Transferable
+	{
+		wstring id;
+		wstring name;
+		wstring userId;
+		wstring description;
+		wstring domainId;
 
-		boolean showPhysicalNodeElement;//Флаг видимости PhysicalNodeElement
+		long long created;
+		wstring createdBy;
+		long long modified;
+		wstring modifiedBy;
 
 		wstring longitude;
 		wstring latitude;
-		double zoomFactor;
-		double defaultZoomFactor;
+		double scale;
+		double defaultScale;
+		
+		wstring mapId;
+		::CORBA::WStringSeq schemeIds;
 
-		long mouseTolerancy;
+//		::CORBA::WStringSeq cablePathIds;
 	};
-	typedef sequence <MapContext_Transferable> MapContextSeq_Transferable;
+	typedef sequence <MapView_Transferable> MapViewSeq_Transferable;
 
-	struct ISMMapContext_Transferable
-	{
-		wstring id;
-		wstring name;
-		wstring codename;
-		wstring user_id;
-		wstring description;
-		wstring domain_id;
-
-		long long created;
-		wstring created_by;
-		long long modified;
-		wstring modified_by;
-
-		wstring map_id;
-
-		General::wstringSeq kis_ids;//Вектор элементов наследников класса Node
-		General::wstringSeq node_ids;//Вектор элементов наследников класса Node
-		General::wstringSeq nodeLink_ids;//Вектор элементов типа NodeLinks
-		General::wstringSeq physicalLink_ids;
-		General::wstringSeq path_ids;
-		General::wstringSeq mark_ids;
-	};
-	typedef sequence <ISMMapContext_Transferable> ISMMapContextSeq_Transferable;
-
-
-
-
-
-
-
-
-
-/*
-	struct MapEquipmentElement_Transferable
-	{
-		wstring id;
-		wstring name;
-		wstring type_id;
-		wstring description;
-		wstring owner_id;
-
-		wstring longitude;		// anchor
-		wstring latitude;		// anchor
-		wstring map_id;
-
-		wstring symbol_id;
-
-		wstring element_id;
-		wstring element_type_id;
-
-		wstring codename;
-		wstring scheme_equipment_element_id;
-
-		Scheme::ElementAttributeSeq_Transferable attributes;
-//		General::wstringSeq connect_point_ids;
-//		wstringSeq access_point_ids;
-	};
-	typedef sequence <MapEquipmentElement_Transferable> MapEquipmentElementSeq_Transferable;
-*/
-	struct MapKISElement_Transferable
-	{
-		wstring id;
-		wstring name;
-		wstring type_id;
-		wstring description;
-		wstring owner_id;
-
-		wstring longitude;
-		wstring latitude;
-		wstring map_id;
-		wstring ism_map_id;
-
-		wstring symbol_id;
-
-		wstring KIS_id;
-		wstring KIS_type_id;
-
-		wstring codename;
-		wstring scheme_kis_element_id;
-
-		Scheme::ElementAttributeSeq_Transferable attributes;
-//		General::wstringSeq connect_point_ids;
-//		wstringSeq test_point_ids;
-
-	};
-	typedef sequence <MapKISElement_Transferable> MapKISElementSeq_Transferable;
-
-/*
-	struct MapConnectionPointElement_Transferable
-	{
-		wstring id;
-		wstring name;
-		wstring description;
-		wstring physicalLinkID;
-		wstring in_out;// "in" "out"
-		wstring map_id;
-
-		wstring element_id;
-
-		wstring interface_id;
-
-		wstring port_id;
-		wstring port_local_id;
-		wstring port_type_id;
-
-//		wstring local_address;
-
-		wstring test_port_id;
-		wstring test_port_type_id;
-		wstring test_port_local_id;
-
-		wstring access_port_id;
-		wstring access_port_type_id;
-		wstring access_port_local_id;
-//		wstring path_id;
-		boolean is_test_port;
-		boolean is_access_port;
-
-		Scheme::ElementAttributeSeq_Transferable attributes;
-	};
-	typedef sequence <MapConnectionPointElement_Transferable> MapConnectionPointElementSeq_Transferable;
-*/
 };
 };
 };

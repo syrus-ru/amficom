@@ -1,40 +1,7 @@
-//////////////////////////////////////////////////////////////////////////////
-// *                                                                      * //
-// * Syrus Systems                                                        * //
-// * Департамент Системных Исследований и Разработок                      * //
-// *                                                                      * //
-// * Проект: АМФИКОМ - система Автоматизированного Многофункционального   * //
-// *         Интеллектуального Контроля и Объектного Мониторинга          * //
-// *                                                                      * //
-// *         реализация Интегрированной Системы Мониторинга               * //
-// *                                                                      * //
-// * Название: Реализация серверной части интерфейса прототипа РИСД       * //
-// *           (включает реализацию пакета pmServer и класса pmRISDImpl)  * //
-// * Тип: Java 1.2.2                                                      * //
-// *                                                                      * //
-// * Автор: Крупенников А.В.                                              * //
-// *                                                                      * //
-// * Версия: 0.1                                                          * //
-// * От: 22 jan 2002                                                      * //
-// * Расположение: ISM\prog\java\AMFICOMConfigure\                        * //
-// *        com\syrus\AMFICOM\Client\Configure\ISM\AccessPoint.java       * //
-// *                                                                      * //
-// * Компилятор: Oracle JDeveloper (javac)                                * //
-// *                                                                      * //
-// * Статус: разработка                                                   * //
-// *                                                                      * //
-// * Изменения:                                                           * //
-// *  Кем         Верс   Когда      Комментарии                           * //
-// * -----------  ----- ---------- -------------------------------------- * //
-// *                                                                      * //
-// * Описание:                                                            * //
-// *                                                                      * //
-//////////////////////////////////////////////////////////////////////////////
-
 #ifndef _network_idl_
 #define _network_idl_
 
-#include <general.idl>
+#include "general.idl"
 
 module com
 {
@@ -47,18 +14,6 @@ module CORBA
 
 module Network
 {
-	struct Characteristic_Transferable
-	{
-		wstring id;
-		wstring ch_class;
-		wstring name;
-		wstring description;
-		wstring type_id;
-		wstring value;
-		wstring value_type_id;
-	};
-	typedef sequence <Characteristic_Transferable> CharacteristicSeq_Transferable;
-
 	struct Port_Transferable
 	{
 		wstring id;
@@ -71,7 +26,7 @@ module Network
 		wstring equipment_id;
 		wstring domain_id;
 
-		Network::CharacteristicSeq_Transferable characteristics;
+		General::CharacteristicSeq_Transferable characteristics;
 	};
 	typedef sequence <Port_Transferable> PortSeq_Transferable;
 
@@ -87,28 +42,10 @@ module Network
 		wstring equipment_id;
 		wstring domain_id;
 
-		Network::CharacteristicSeq_Transferable characteristics;
+		General::CharacteristicSeq_Transferable characteristics;
 	};
 	typedef sequence <CablePort_Transferable> CablePortSeq_Transferable;
-/*
-	struct EquipmentHolderSlot_Transferable
-	{
-		wstring id;
-		wstring name;
-		wstring type_id;
-		wstring hw_serial;
-		wstring sw_serial;
-		wstring longitude;
-		wstring latitude;
-		wstring description;
-		wstring slot_interface;
-		wstring size;
-		wstring inventory_nr;
 
-		PortSeq_Transferable ports;
-	};
-	typedef sequence <EquipmentHolderSlot_Transferable> EquipmentHolderSlotSeq_Transferable;
-*/
 	struct Equipment_Transferable
 	{
 		wstring id;
@@ -141,7 +78,7 @@ module Network
 		General::wstringSeq cport_ids;
 		General::wstringSeq s_port_ids;
 
-		CharacteristicSeq_Transferable characteristics;
+		General::CharacteristicSeq_Transferable characteristics;
 
 	};
 	typedef sequence <Equipment_Transferable> EquipmentSeq_Transferable;
@@ -172,7 +109,7 @@ module Network
 
 		wstring physical_length;
 		wstring optical_length;
-		Network::CharacteristicSeq_Transferable characteristics;
+		General::CharacteristicSeq_Transferable characteristics;
 	};
 	typedef sequence <Link_Transferable> LinkSeq_Transferable;
 
@@ -214,7 +151,7 @@ module Network
 		wstring optical_length;
 		CableLinkThreadSeq_Transferable threads;
 
-		Network::CharacteristicSeq_Transferable characteristics;
+		General::CharacteristicSeq_Transferable characteristics;
 	};
 	typedef sequence <CableLink_Transferable> CableLinkSeq_Transferable;
 
@@ -226,113 +163,13 @@ module Network
 		wstring equipment_id;
 		wstring port_id;
 
-		CharacteristicSeq_Transferable characteristics;
+		General::CharacteristicSeq_Transferable characteristics;
 	};
 	typedef sequence <TestPort_Transferable> TestPortSeq_Transferable;
-/*
-	struct TestPortGroup_Transferable
-	{
-		wstring id;
-		wstring name;
-		General::wstringSeq test_port_ids;
-		TestPortSeq_Transferable test_ports;
-	};
-*/
 };
 
 module NetworkDirectory
 {
-// catalogue
-	struct CharacteristicType_Transferable
-	{
-		wstring id;
-		wstring ch_class;
-		wstring name;
-		wstring description;
-		wstring value_type_id;
-		boolean editable;
-		boolean visible;
-		long long modified;
-	};
-	typedef sequence <CharacteristicType_Transferable> CharacteristicTypeSeq_Transferable;
-/*
-
-	struct Technology_Transferable
-	{
-		wstring id;
-		wstring name;
-		wstring description;
-		wstring abbreviation;
-		wstring year;
-	};
-	typedef sequence <Technology_Transferable> TechnologySeq_Transferable;
-
-	struct Media_Transferable
-	{
-		wstring id;
-		wstring name;
-		wstring codename;
-		wstring description;
-		wstring year;
-		wstring body;
-		wstring standard;
-	};
-	typedef sequence <Media_Transferable> MediaSeq_Transferable;
-
-	struct Protocol_Transferable
-	{
-		wstring id;
-		wstring name;
-		wstring description;
-		wstring codename;
-		wstring year;
-		wstring body;
-		wstring standard;
-		wstring id_format;
-		wstring layer_id;
-	};
-	typedef sequence <Protocol_Transferable> ProtocolSeq_Transferable;
-
-	struct ProtocolStack_Transferable
-	{
-		wstring id;
-		wstring name;
-		wstring description;
-		wstring year;
-		wstring body;
-		wstring standard;
-		ProtocolSeq_Transferable protocols;
-	};
-	typedef sequence <ProtocolStack_Transferable> ProtocolStackSeq_Transferable;
-
-	struct Interface_Transferable
-	{
-		wstring id;
-		wstring name;
-		wstring description;
-		wstring codename;
-		wstring protocol_stack_id;
-
-		wstring year;
-		wstring type_id;//GII
-		wstring technology_id;
-	};
-	typedef sequence <Interface_Transferable> InterfaceSeq_Transferable;
-
-	struct AddressType_Transferable
-	{
-		wstring id;
-		wstring name;
-		wstring description;
-		wstring codename;
-		wstring year;
-		wstring body;
-		wstring standard;
-		wstring format;
-		wstring protocol_id;
-	};
-	typedef sequence <AddressType_Transferable> AddressTypeSeq_Transferable;
-*/
 	struct LinkType_Transferable
 	{
 		wstring id;
@@ -349,7 +186,7 @@ module NetworkDirectory
 		wstring image_id;
 		long long modified;
 
-		Network::CharacteristicSeq_Transferable characteristics;
+		General::CharacteristicSeq_Transferable characteristics;
 	};
 	typedef sequence <LinkType_Transferable> LinkTypeSeq_Transferable;
 
@@ -366,7 +203,7 @@ module NetworkDirectory
 		wstring image_id;
 		long long modified;
 
-		Network::CharacteristicSeq_Transferable characteristics;
+		General::CharacteristicSeq_Transferable characteristics;
 	};
 	typedef sequence <EquipmentType_Transferable> EquipmentTypeSeq_Transferable;
 
@@ -383,7 +220,7 @@ module NetworkDirectory
 		wstring p_class;
 		long long modified;
 
-		Network::CharacteristicSeq_Transferable characteristics;
+		General::CharacteristicSeq_Transferable characteristics;
 	};
 	typedef sequence <PortType_Transferable> PortTypeSeq_Transferable;
 
@@ -394,7 +231,7 @@ module NetworkDirectory
 		wstring description;
 		wstring port_type_id;
 
-		Network::CharacteristicSeq_Transferable characteristics;
+		General::CharacteristicSeq_Transferable characteristics;
 	};
 	typedef sequence <TestPortType_Transferable> TestPortTypeSeq_Transferable;
 
@@ -411,7 +248,7 @@ module NetworkDirectory
 		wstring p_class;
 		long long modified;
 
-		Network::CharacteristicSeq_Transferable characteristics;
+		General::CharacteristicSeq_Transferable characteristics;
 	};
 	typedef sequence <CablePortType_Transferable> CablePortTypeSeq_Transferable;
 
@@ -423,7 +260,7 @@ module NetworkDirectory
 		wstring mark;
 		wstring link_type_id;
 
-		Network::CharacteristicSeq_Transferable characteristics;
+		General::CharacteristicSeq_Transferable characteristics;
 	};
 	typedef sequence <CableTypeThread_Transferable> CableTypeThreadSeq_Transferable;
 
@@ -441,50 +278,9 @@ module NetworkDirectory
 
 		CableTypeThreadSeq_Transferable cable_threads;
 
-		Network::CharacteristicSeq_Transferable characteristics;
+		General::CharacteristicSeq_Transferable characteristics;
 	};
 	typedef sequence <CableLinkType_Transferable> CableLinkTypeSeq_Transferable;
-
-/*
-	struct NetworkResource_Transferable
-	{
-		wstring id;
-		wstring name;
-		wstring description;
-	};
-	typedef sequence <NetworkResource_Transferable> NetworkResourceSeq_Transferable;
-*/
-/*
-	struct EquipmentHolderSlotType_Transferable
-	{
-		wstring id;
-		wstring name;
-		wstring type;
-		wstring hw_serial;
-		wstring sw_serial;
-		wstring longitude;
-		wstring latitude;
-		wstring description;
-
-//		PortSeq_Transferable ports;
-	};
-	typedef sequence <EquipmentHolderSlotType_Transferable> EquipmentHolderSlotTypeSeq_Transferable;
-*/
-/*
-	struct LinkHolderType_Transferable
-	{
-		wstring id;
-		wstring name;
-		wstring type;
-		wstring description;
-
-//		Equipment_Transferable start_equipment;
-//		Port_Transferable start_port;
-//		Equipment_Transferable end_equipment;
-//		Port_Transferable end_port;
-	};
-	typedef sequence <LinkHolderType_Transferable> LinkHolderTypeSeq_Transferable;
-*/
 };
 };
 };

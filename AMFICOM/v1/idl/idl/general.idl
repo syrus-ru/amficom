@@ -1,5 +1,5 @@
 /*
- * $Id: general.idl,v 1.16 2004/08/17 11:07:44 arseniy Exp $
+ * $Id: general.idl,v 1.17 2004/09/10 10:01:53 krupenn Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -157,6 +157,55 @@ module General
 		EVENT_STATUS_GENERATED,
 		EVENT_STATUS_PROCESSED
 	};
+
+	struct ElementAttribute_Transferable
+	{
+		wstring id;
+		wstring name;
+		wstring value;
+		wstring type_id;
+		boolean editable;
+		boolean visible;
+	};
+	typedef sequence <ElementAttribute_Transferable> ElementAttributeSeq_Transferable;
+
+	struct ElementAttributeType_Transferable
+	{
+		wstring id;
+		wstring name;
+		wstring default_value;
+		wstring value_type_id;
+		boolean editable;
+		boolean visible;
+		long long modified;
+	};
+	typedef sequence <ElementAttributeType_Transferable> ElementAttributeTypeSeq_Transferable;
+
+	struct Characteristic_Transferable
+	{
+		wstring id;
+		wstring ch_class;
+		wstring name;
+		wstring description;
+		wstring type_id;
+		wstring value;
+		wstring value_type_id;
+	};
+	typedef sequence <Characteristic_Transferable> CharacteristicSeq_Transferable;
+
+	struct CharacteristicType_Transferable
+	{
+		wstring id;
+		wstring ch_class;
+		wstring name;
+		wstring description;
+		wstring value_type_id;
+		boolean editable;
+		boolean visible;
+		long long modified;
+	};
+	typedef sequence <CharacteristicType_Transferable> CharacteristicTypeSeq_Transferable;
+
 };
 };
 };

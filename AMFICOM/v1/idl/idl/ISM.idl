@@ -1,41 +1,7 @@
-//////////////////////////////////////////////////////////////////////////////
-// *                                                                      * //
-// * Syrus Systems                                                        * //
-// * Департамент Системных Исследований и Разработок                      * //
-// *                                                                      * //
-// * Проект: АМФИКОМ - система Автоматизированного Многофункционального   * //
-// *         Интеллектуального Контроля и Объектного Мониторинга          * //
-// *                                                                      * //
-// *         реализация Интегрированной Системы Мониторинга               * //
-// *                                                                      * //
-// * Название: Реализация серверной части интерфейса прототипа РИСД       * //
-// *           (включает реализацию пакета pmServer и класса pmRISDImpl)  * //
-// * Тип: Java 1.2.2                                                      * //
-// *                                                                      * //
-// * Автор: Крупенников А.В.                                              * //
-// *                                                                      * //
-// * Версия: 0.1                                                          * //
-// * От: 22 jan 2002                                                      * //
-// * Расположение: ISM\prog\java\AMFICOMConfigure\                        * //
-// *        com\syrus\AMFICOM\Client\Configure\ISM\AccessPoint.java       * //
-// *                                                                      * //
-// * Компилятор: Oracle JDeveloper (javac)                                * //
-// *                                                                      * //
-// * Статус: разработка                                                   * //
-// *                                                                      * //
-// * Изменения:                                                           * //
-// *  Кем         Верс   Когда      Комментарии                           * //
-// * -----------  ----- ---------- -------------------------------------- * //
-// *                                                                      * //
-// * Описание:                                                            * //
-// *                                                                      * //
-//////////////////////////////////////////////////////////////////////////////
-
 #ifndef _ism_idl_
 #define _ism_idl_
 
-#include <general.idl>
-#include <network.idl>
+#include "general.idl"
 
 module com
 {
@@ -58,7 +24,7 @@ module ISM
 		wstring local_id;
 		wstring domain_id;
 
-		Network::CharacteristicSeq_Transferable characteristics;
+		General::CharacteristicSeq_Transferable characteristics;
 	};
 	typedef sequence <AccessPort_Transferable> AccessPortSeq_Transferable;
 
@@ -85,7 +51,7 @@ module ISM
 		long long modified;
 
 		TransmissionPathElementSeq_Transferable links;
-		Network::CharacteristicSeq_Transferable characteristics;
+		General::CharacteristicSeq_Transferable characteristics;
 	};
 	typedef sequence <TransmissionPath_Transferable> TransmissionPathSeq_Transferable;
 
@@ -118,7 +84,7 @@ module ISMDirectory
 
 		General::wstringSeq test_type_ids;
 
-		Network::CharacteristicSeq_Transferable characteristics;
+		General::CharacteristicSeq_Transferable characteristics;
 	};
 	typedef sequence <AccessPortType_Transferable> AccessPortTypeSeq_Transferable;
 
