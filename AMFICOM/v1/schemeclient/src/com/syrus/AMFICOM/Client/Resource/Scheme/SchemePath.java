@@ -10,7 +10,6 @@ import com.syrus.AMFICOM.Client.General.Lang.LangModelSchematics;
 import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.Resource.Map.MapTransmissionPathProtoElement;
-import com.syrus.AMFICOM.Client.Schematics.UI.SchemePathPane;
 
 public class SchemePath extends StubResource
 		implements Transferable, Serializable
@@ -148,10 +147,9 @@ public class SchemePath extends StubResource
 		return new StubDisplayModel(new String[] { "name" }, new String[] { LangModelSchematics.getString("name") });
 	}
 
-	public static PropertiesPanel getPropertyPane()
+	public String getPropertyPaneClassName()
 	{
-		System.out.println("Getting SchemePath property pane");
-		return new SchemePathPane();
+		return "com.syrus.AMFICOM.Client.Schematics.UI.SchemePathPane";
 	}
 
 	static public ObjectResourceSorter getSorter()

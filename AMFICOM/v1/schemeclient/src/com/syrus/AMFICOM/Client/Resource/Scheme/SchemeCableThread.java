@@ -93,6 +93,11 @@ public class SchemeCableThread extends StubResource implements Serializable
 	{
 	}
 
+	public String getPropertyPaneClassName()
+	{
+		return "";
+	}
+
 	public Object clone(DataSourceInterface dataSource)
 	{
 		SchemeCableThread thread = new SchemeCableThread(dataSource.GetUId(SchemeCableThread.typ));

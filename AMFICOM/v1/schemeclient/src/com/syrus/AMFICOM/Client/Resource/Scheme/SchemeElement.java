@@ -192,10 +192,9 @@ public class SchemeElement extends StubResource
 		return new StubDisplayModel(new String[] { "name" }, new String[] { LangModelSchematics.getString("name") });
 	}
 
-	public static PropertiesPanel getPropertyPane()
+	public String getPropertyPaneClassName()
 	{
-		System.out.println("Getting SchemeElement property pane");
-		return new SchemeElementPane();
+		return "com.syrus.AMFICOM.Client.Schematics.UI.SchemeElementPane";
 	}
 
 	public Collection getChildElements()

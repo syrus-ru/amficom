@@ -449,6 +449,12 @@ public class Scheme extends StubResource implements Serializable
 		}
 	}
 
+	public String getPropertyPaneClassName()
+	{
+		return "";
+	}
+
+
 	public synchronized boolean pack()
 	{
 		schemecell = pack(serializable_cell);

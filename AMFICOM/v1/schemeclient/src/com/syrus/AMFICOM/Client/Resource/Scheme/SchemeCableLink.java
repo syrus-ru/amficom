@@ -11,7 +11,6 @@ import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalLinkProtoElement;
 import com.syrus.AMFICOM.Client.Resource.Network.CableLink;
-import com.syrus.AMFICOM.Client.Schematics.UI.SchemeCableLinkPane;
 
 public class SchemeCableLink extends StubResource
 		implements Transferable, Serializable
@@ -108,10 +107,9 @@ public class SchemeCableLink extends StubResource
 		return new StubDisplayModel(new String[] { "name" }, new String[] { LangModelSchematics.getString("name") });
 	}
 
-	public static PropertiesPanel getPropertyPane()
+	public String getPropertyPaneClassName()
 	{
-		System.out.println("Getting CableLink property pane");
-		return new SchemeCableLinkPane();
+		return "com.syrus.AMFICOM.Client.Schematics.UI.SchemeCableLinkPane";
 	}
 
 	public String getDomainId()

@@ -29,14 +29,13 @@ public class SchemeCablePort extends StubResource implements Serializable
 	{
 		this.transferable = transferable;
 		setLocalFromTransferable();
-
-		attributes = new HashMap();
 	}
 
 	public SchemeCablePort(String id)
 	{
 		this.id = id;
 		transferable = new SchemeCablePort_Transferable();
+		attributes = new HashMap();
 	}
 
 	public String getTyp()
@@ -52,6 +51,11 @@ public class SchemeCablePort extends StubResource implements Serializable
 	public String getId()
 	{
 		return id;
+	}
+
+	public String getPropertyPaneClassName()
+	{
+		return "";
 	}
 
 	public Object getTransferable()

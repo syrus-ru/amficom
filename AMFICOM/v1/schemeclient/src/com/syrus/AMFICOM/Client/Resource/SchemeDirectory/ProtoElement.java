@@ -7,7 +7,6 @@ import java.util.zip.*;
 import java.awt.datatransfer.*;
 
 import com.syrus.AMFICOM.CORBA.Scheme.*;
-import com.syrus.AMFICOM.Client.Configure.UI.EquipmentTypePane;
 import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.Resource.Map.MapProtoElement;
@@ -95,10 +94,9 @@ public class ProtoElement extends StubResource
 		return new ProtoElementDisplayModel();
 	}
 
-	public static PropertiesPanel getPropertyPane()
+	public String getPropertyPaneClassName()
 	{
-		System.out.println("Getting ProtoElement property pane");
-		return new EquipmentTypePane();
+		return "com.syrus.AMFICOM.Client.Configure.UI.EquipmentTypePane";
 	}
 
 	public void setLocalFromTransferable()

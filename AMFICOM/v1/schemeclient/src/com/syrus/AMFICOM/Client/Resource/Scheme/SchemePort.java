@@ -109,6 +109,11 @@ public class SchemePort extends StubResource implements Serializable
 	{
 	}
 
+	public String getPropertyPaneClassName()
+	{
+		return "";
+	}
+
 	public Object clone(DataSourceInterface dataSource)
 	{
 		String cloned_id = (String)Pool.get("clonedids", id);

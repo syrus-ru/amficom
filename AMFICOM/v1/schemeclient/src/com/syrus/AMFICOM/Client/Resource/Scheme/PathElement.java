@@ -47,6 +47,12 @@ public class PathElement extends StubResource implements Serializable
 	{
 		setObject(type, obj_id);
 	}
+
+	public String getPropertyPaneClassName()
+	{
+		return "";
+	}
+
 /*
 	public Object clone(DataSourceInterface dataSource)
 	{

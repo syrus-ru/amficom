@@ -8,7 +8,6 @@ import com.syrus.AMFICOM.Client.General.Lang.LangModelSchematics;
 import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.Resource.Network.Link;
-import com.syrus.AMFICOM.Client.Schematics.UI.SchemeLinkPane;
 
 public class SchemeLink extends StubResource implements Serializable
 {
@@ -59,10 +58,9 @@ public class SchemeLink extends StubResource implements Serializable
 		return new StubDisplayModel(new String[] { "name" }, new String[] { LangModelSchematics.getString("name") });
 	}
 
-	public static PropertiesPanel getPropertyPane()
+	public String getPropertyPaneClassName()
 	{
-		System.out.println("Getting Link property pane");
-		return new SchemeLinkPane();
+		return "com.syrus.AMFICOM.Client.Schematics.UI.SchemeLinkPane";
 	}
 
 	public String getName()
