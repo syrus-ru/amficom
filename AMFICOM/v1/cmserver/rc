@@ -1,9 +1,0 @@
-#!/bin/bash
-
-
-JAVA=$JAVA_HOME/bin/java
-LIB=../lib
-ORACLECLASSPATH=$ORACLE_HOME/jdbc/lib/classes12.jar
-APPCLASSPATH=$LIB/cmserver.jar:$LIB/measurement.jar:$LIB/configuration.jar:$LIB/general.jar:$LIB/servermisc.jar:$LIB/util.jar
-
-exec $JAVA -server -classpath $APPCLASSPATH:$ORACLECLASSPATH com.syrus.AMFICOM.cmserver.ClientMeasurementServer
