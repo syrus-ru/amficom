@@ -1,5 +1,5 @@
 /*
- * $Id: MapImportCommand.java,v 1.15 2005/01/21 16:19:57 krupenn Exp $
+ * $Id: MapImportCommand.java,v 1.16 2005/01/24 16:51:32 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -48,7 +48,7 @@ import javax.swing.JDesktopPane;
  * самого окна карты. При этом в азголовке окна отображается информация о том,
  * что активной карты нет, и карта центрируется по умолчанию
  * 
- * @version $Revision: 1.15 $, $Date: 2005/01/21 16:19:57 $
+ * @version $Revision: 1.16 $, $Date: 2005/01/24 16:51:32 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -109,6 +109,8 @@ public class MapImportCommand extends ImportCommand
 
 			if(!type.equals(MAP_TYPE))
 				return;
+
+			correctCrossLinks(type, exportColumns);
 
 			Identifier userId = new Identifier(
 				aContext.getSessionInterface().getAccessIdentifier().user_id);
@@ -212,6 +214,12 @@ public class MapImportCommand extends ImportCommand
 			field = it.next();
 			value = exportColumns.get(field);
 
+			if(type.equals(MAP_TYPE))
+			{
+				if(field.equals(Map.COLUMN_ID))
+					value = super.getClonedId(ObjectEntities.MAP_ENTITY_CODE, (String )value);
+			}
+			else
 			if(type.equals(MARK_TYPE))
 			{
 				if(field.equals(Mark.COLUMN_ID))

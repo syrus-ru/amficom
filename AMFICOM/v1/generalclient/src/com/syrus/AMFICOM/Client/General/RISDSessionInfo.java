@@ -1,5 +1,5 @@
 /*
- * $Id: RISDSessionInfo.java,v 1.18 2005/01/24 16:49:31 krupenn Exp $
+ * $Id: RISDSessionInfo.java,v 1.19 2005/01/24 16:50:53 krupenn Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -55,7 +55,7 @@ import org.omg.PortableServer.POAManagerPackage.AdapterInactive;
 
 /**
  * @author $Author: krupenn $
- * @version $Revision: 1.18 $, $Date: 2005/01/24 16:49:31 $
+ * @version $Revision: 1.19 $, $Date: 2005/01/24 16:50:53 $
  * @module generalclient_v1
  */
 public final class RISDSessionInfo extends SessionInterface {
@@ -250,8 +250,8 @@ public final class RISDSessionInfo extends SessionInterface {
 
 			ResourceStorableObjectPool.init(new EmptyClientResourceObjectLoader(), clazz, size);
 
-//			IdentifierPool.init(cmServer);
-			IdentifierPool.init(new LocalIdentifierGeneratorServer());
+			IdentifierPool.init(cmServer);
+//			IdentifierPool.init(new LocalIdentifierGeneratorServer());
 
 			System.err.println("domainId: " + this.accessIdentifier.domain_id.identifier_string);
 			System.err.println("sessionId: " + this.accessIdentifier.session_id.identifier_string);

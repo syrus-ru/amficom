@@ -2,22 +2,18 @@ package com.syrus.AMFICOM.Client.Map.UI;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.administration.AdministrationStorableObjectPool;
-import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
+import com.syrus.AMFICOM.administration.Domain;
+import com.syrus.AMFICOM.administration.User;
+import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.DatabaseException;
-import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.map.Map;
-import com.syrus.AMFICOM.Client.Resource.Object.Domain;
-import com.syrus.AMFICOM.Client.Resource.Object.User;
-import com.syrus.AMFICOM.Client.Resource.Pool;
-import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
 
 import java.text.SimpleDateFormat;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 
 public final class MapController implements ObjectResourceController 
@@ -87,7 +83,8 @@ public final class MapController implements ObjectResourceController
 		{
 			try
 			{
-				result = AdministrationStorableObjectPool.getStorableObject(map.getDomainId(), false);
+				Domain domain = (Domain )AdministrationStorableObjectPool.getStorableObject(map.getDomainId(), false);
+				result = domain.getName();
 			}
 			catch (CommunicationException e)
 			{
@@ -103,7 +100,8 @@ public final class MapController implements ObjectResourceController
 		{
 			try
 			{
-				result = AdministrationStorableObjectPool.getStorableObject(map.getCreatorId(), false);
+				User user = (User )AdministrationStorableObjectPool.getStorableObject(map.getCreatorId(), false);
+				result = user.getName();
 			}
 			catch (CommunicationException e)
 			{

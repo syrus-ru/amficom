@@ -1,5 +1,5 @@
 /**
- * $Id: PhysicalLinkController.java,v 1.3 2005/01/20 14:37:52 krupenn Exp $
+ * $Id: PhysicalLinkController.java,v 1.4 2005/01/24 16:51:32 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -42,7 +42,7 @@ import com.syrus.AMFICOM.Client.Map.Controllers.NodeLinkController;
  * 
  * 
  * 
- * @version $Revision: 1.3 $, $Date: 2005/01/20 14:37:52 $
+ * @version $Revision: 1.4 $, $Date: 2005/01/24 16:51:32 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -279,7 +279,7 @@ public class PhysicalLinkController extends AbstractLinkController
 			return Integer.parseInt(ea.getValue());
 		else
 		{
-			LinkTypeController ltc = (LinkTypeController)com.syrus.AMFICOM.Client.Map.Controllers.LinkTypeController.getInstance();
+			LinkTypeController ltc = (LinkTypeController)LinkTypeController.getInstance();
 			return ltc.getLineSize((PhysicalLinkType )plink.getType());
 		}
 	}
@@ -321,7 +321,7 @@ public class PhysicalLinkController extends AbstractLinkController
 			return LineComboBox.getStrokeByType(ea.getValue());
 		else
 		{
-			LinkTypeController ltc = (LinkTypeController)com.syrus.AMFICOM.Client.Map.Controllers.LinkTypeController.getInstance();
+			LinkTypeController ltc = (LinkTypeController)LinkTypeController.getInstance();
 			return ltc.getStroke((PhysicalLinkType )plink.getType());
 		}
 	}

@@ -1,5 +1,5 @@
 /**
- * $Id: ViewMapWindowCommand.java,v 1.10 2005/01/21 16:19:57 krupenn Exp $
+ * $Id: ViewMapWindowCommand.java,v 1.11 2005/01/24 16:51:32 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -17,18 +17,16 @@ import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
 import com.syrus.AMFICOM.Client.General.Event.MapEvent;
 import com.syrus.AMFICOM.Client.General.Event.StatusMessageEvent;
 import com.syrus.AMFICOM.Client.General.Lang.LangModel;
-import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationModelFactory;
-import com.syrus.AMFICOM.Client.General.UI.MessageBox;
 import com.syrus.AMFICOM.Client.Map.Command.Map.MapNewCommand;
 import com.syrus.AMFICOM.Client.Map.Command.Map.MapViewNewCommand;
 import com.syrus.AMFICOM.Client.Map.Command.MapDesktopCommand;
 import com.syrus.AMFICOM.Client.Map.UI.MapFrame;
 import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapView;
-
 import com.syrus.AMFICOM.map.Map;
+
 import java.awt.Dimension;
 
 import javax.swing.JDesktopPane;
@@ -38,7 +36,7 @@ import javax.swing.JDesktopPane;
  * 
  * 
  * 
- * @version $Revision: 1.10 $, $Date: 2005/01/21 16:19:57 $
+ * @version $Revision: 1.11 $, $Date: 2005/01/24 16:51:32 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -86,22 +84,20 @@ public class ViewMapWindowCommand extends VoidCommand
 		aC.setSessionInterface(aContext.getSessionInterface());
 		aC.setDispatcher(dispatcher);
 
-		DataSourceInterface dataSource = aContext.getDataSource();
-		if(dataSource == null)
-			return;
-
 		frame = MapDesktopCommand.findMapFrame(desktop);
 		
 		if(frame == null)
 		{
 			frame = new MapFrame();
 			desktop.add(frame);
-			frame.setContext(aC);
 			Dimension dim = desktop.getSize();
 			frame.setLocation(0, 0);
 			frame.setSize(dim.width * 4 / 5, dim.height * 7 / 8);
+			
+			setMapFrame(frame);
 		}
 
+		frame.setContext(aC);
 		showMapFrame(frame);
 		dispatcher.notify(new MapEvent(frame, MapEvent.MAP_FRAME_SHOWN));
 		aContext.getDispatcher().notify(new StatusMessageEvent(
@@ -109,42 +105,8 @@ public class ViewMapWindowCommand extends VoidCommand
 				LangModel.getString("Finished")));
 		setResult(Command.RESULT_OK);
 	}
-/*	
-		if(frame.isVisible())
-		{
-			if(frame.getParent() != null)
-			{
-				if(frame.getParent().equals(desktop))
-				{
-					showMapFrame(frame);
 
-					dispatcher.notify(new MapEvent(frame, MapEvent.MAP_FRAME_SHOWN));
-					aContext.getDispatcher().notify(new StatusMessageEvent(
-							StatusMessageEvent.STATUS_MESSAGE,
-							LangModel.getString("Finished")));
-					setResult(Command.RESULT_OK);
-					return;
-				}
-				else
-				{
-					frame = null;
-					MessageBox mb = new MessageBox(LangModelMap.getString("MapAlreadyOpened"));
-					setResult(Command.RESULT_NO);
-					return;
-				}
-			}
-		}//if(frame.isVisible())
-
-		setMapFrame(frame, aC);
-		showMapFrame(frame);
-		dispatcher.notify(new MapEvent(frame, MapEvent.MAP_FRAME_SHOWN));
-		aContext.getDispatcher().notify(new StatusMessageEvent(
-				StatusMessageEvent.STATUS_MESSAGE,
-				LangModel.getString("Finished")));
-		setResult(Command.RESULT_OK);
-	}
-*/
-	protected void showMapFrame(MapFrame mapFrame)
+	protected void setMapFrame(MapFrame mapFrame)
 	{
 		MapView mapView = null;
 		Map map = null;
@@ -172,21 +134,11 @@ public class ViewMapWindowCommand extends VoidCommand
 		mapView.setLogicalNetLayer(frame.getMapViewer().getLogicalNetLayer());
 
 		frame.setMapView(mapView);
-		frame.setVisible(true);
 	}
 
-	protected void setMapFrame(MapFrame mapFrame, ApplicationContext aC)
+	protected void showMapFrame(MapFrame mapFrame)
 	{
-		JDesktopPane dt = (JDesktopPane )frame.getParent();
-		if(dt != null)
-		{
-			dt.remove(frame);
-		}
-		desktop.add(frame);
-		frame.setContext(aC);
-		Dimension dim = desktop.getSize();
-		frame.setLocation(0, 0);
-		frame.setSize(dim.width * 4 / 5, dim.height * 7 / 8);
+		frame.setVisible(true);
 	}
 
 }

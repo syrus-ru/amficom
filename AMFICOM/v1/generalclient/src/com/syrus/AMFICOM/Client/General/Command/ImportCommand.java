@@ -1,5 +1,5 @@
 /*
- * $Id: ImportCommand.java,v 1.5 2005/01/21 13:55:18 krupenn Exp $
+ * $Id: ImportCommand.java,v 1.6 2005/01/24 16:49:31 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -38,7 +38,7 @@ import javax.swing.JOptionPane;
  * Класс $RCSfile: ImportCommand.java,v $ 
  * 
  * 
- * @version $Revision: 1.5 $, $Date: 2005/01/21 13:55:18 $
+ * @version $Revision: 1.6 $, $Date: 2005/01/24 16:49:31 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -131,7 +131,8 @@ public abstract class ImportCommand extends VoidCommand
 						return null;
 					arg.add(s2[0]);
 				}
-				key = arg;
+				key = s[0];
+				value = arg;
 			}
 			else
 				value = s[1];

@@ -1,5 +1,5 @@
 /**
- * $Id: LogicalNetLayer.java,v 1.36 2005/01/21 16:19:57 krupenn Exp $
+ * $Id: LogicalNetLayer.java,v 1.37 2005/01/24 16:51:32 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -80,7 +80,7 @@ import java.util.Set;
  * 
  * 
  * 
- * @version $Revision: 1.36 $, $Date: 2005/01/21 16:19:57 $
+ * @version $Revision: 1.37 $, $Date: 2005/01/24 16:51:32 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -394,7 +394,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 			Iterator e = mapView.getAllElements().iterator();
 			while (e.hasNext())
 			{
-				MapElement mapElement = (MapElement)e.next();
+				MapElement mapElement = (MapElement )e.next();
 				mapElement.setMap(mapView.getMap());
 			}
 
@@ -410,7 +410,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 		this.mapView.setLogicalNetLayer(this);
 
 		//Поумолчанию текущий элемент Void
-		currentMapElement = com.syrus.AMFICOM.Client.Map.mapview.VoidElement.getInstance(this.mapView);
+		currentMapElement = VoidElement.getInstance(this.mapView);
 
 		commandList.flush();
 

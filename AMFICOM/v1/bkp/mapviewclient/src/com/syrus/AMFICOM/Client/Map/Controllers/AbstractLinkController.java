@@ -1,5 +1,5 @@
 /**
- * $Id: AbstractLinkController.java,v 1.2 2005/01/20 14:37:52 krupenn Exp $
+ * $Id: AbstractLinkController.java,v 1.3 2005/01/24 16:51:32 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -17,6 +17,7 @@ import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.CharacteristicType;
 import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
+import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.corba.CharacteristicTypeSort;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
@@ -41,7 +42,7 @@ import com.syrus.AMFICOM.Client.Map.Controllers.MapElementController;
  * 
  * 
  * 
- * @version $Revision: 1.2 $, $Date: 2005/01/20 14:37:52 $
+ * @version $Revision: 1.3 $, $Date: 2005/01/24 16:51:32 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -83,7 +84,7 @@ public abstract class AbstractLinkController implements MapElementController
 		try
 		{
 			List pTypes =
-				ConfigurationStorableObjectPool.getStorableObjectsByCondition(pTypeCondition, true);
+				GeneralStorableObjectPool.getStorableObjectsByCondition(pTypeCondition, true);
 			for (Iterator it = pTypes.iterator(); it.hasNext();)
 			{
 				CharacteristicType type = (CharacteristicType )it.next();
@@ -105,7 +106,7 @@ public abstract class AbstractLinkController implements MapElementController
 					"",
 					dataType.value(),
 					sort);
-			ConfigurationStorableObjectPool.putStorableObject(type);
+			GeneralStorableObjectPool.putStorableObject(type);
 			return type;
 		}
 		catch (ApplicationException e)

@@ -1,5 +1,5 @@
 /**
- * $Id: TopologicalNodeController.java,v 1.4 2005/01/21 16:19:57 krupenn Exp $
+ * $Id: TopologicalNodeController.java,v 1.5 2005/01/24 16:51:32 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,15 +11,18 @@
 
 package com.syrus.AMFICOM.Client.Map.Controllers;
 
+import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
 import com.syrus.AMFICOM.Client.Map.MapCoordinatesConverter;
 import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.map.TopologicalNode;
 
 import java.awt.BasicStroke;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.geom.Rectangle2D;
@@ -33,7 +36,7 @@ import com.syrus.AMFICOM.Client.Map.Controllers.AbstractNodeController;
  * 
  * 
  * 
- * @version $Revision: 1.4 $, $Date: 2005/01/21 16:19:57 $
+ * @version $Revision: 1.5 $, $Date: 2005/01/24 16:51:32 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -53,6 +56,9 @@ public class TopologicalNodeController extends AbstractNodeController
 	private static final String PROPERTY_PANE_CLASS_NAME = "";
 
 	private static boolean needInit = true;
+	
+	private static Identifier openImageId;
+	private static Identifier closedImageId;
 
 	private static TopologicalNodeController instance = null;
 
@@ -89,31 +95,70 @@ public class TopologicalNodeController extends AbstractNodeController
 
 	public void setActive(TopologicalNode node, boolean active)
 	{
-		Identifier creatorId = new Identifier(
-			getLogicalNetLayer().getContext().getSessionInterface().getAccessIdentifier().user_id);
+//		Identifier creatorId = new Identifier(
+//			getLogicalNetLayer().getContext().getSessionInterface().getAccessIdentifier().user_id);
 
 		node.setActive(active);
+
+		if(needInit)
+		{
+			Identifier creatorId = 
+				((RISDSessionInfo )(getLogicalNetLayer().getContext().getSessionInterface())).getUserIdentifier();
+
+			openImageId = NodeTypeController.getImageId(creatorId, OPEN_NODE, OPEN_NODE_IMAGE);
+			closedImageId = NodeTypeController.getImageId(creatorId, CLOSED_NODE, CLOSED_NODE_IMAGE);
+
+			MapPropertiesManager.setOriginalImage(
+				openImageId,
+				new ImageIcon(OPEN_NODE_IMAGE).getImage());
+			MapPropertiesManager.setOriginalImage(
+				closedImageId,
+				new ImageIcon(CLOSED_NODE_IMAGE).getImage());
+				
+			needInit = false;
+		}
+
+//		openImageId = NodeTypeController.getImageId(creatorId, OPEN_NODE, OPEN_NODE_IMAGE);
+//		closedImageId = NodeTypeController.getImageId(creatorId, CLOSED_NODE, CLOSED_NODE_IMAGE);
+
 		if(active)
-			node.setImageId(NodeTypeController.getImageId(creatorId, CLOSED_NODE, CLOSED_NODE_IMAGE));
+			node.setImageId(openImageId);
 		else
-			node.setImageId(NodeTypeController.getImageId(creatorId, OPEN_NODE, OPEN_NODE_IMAGE));
+			node.setImageId(closedImageId);
+	}
+
+	/**
+	 * получить пиктограмму элемента
+	 */
+	public Image getImage(AbstractNode node)
+	{
+		if(needInit)
+		{
+			Identifier creatorId = 
+				((RISDSessionInfo )(getLogicalNetLayer().getContext().getSessionInterface())).getUserIdentifier();
+
+			openImageId = NodeTypeController.getImageId(creatorId, OPEN_NODE, OPEN_NODE_IMAGE);
+			closedImageId = NodeTypeController.getImageId(creatorId, CLOSED_NODE, CLOSED_NODE_IMAGE);
+
+			MapPropertiesManager.setOriginalImage(
+				openImageId,
+				new ImageIcon(OPEN_NODE_IMAGE).getImage());
+			MapPropertiesManager.setOriginalImage(
+				closedImageId,
+				new ImageIcon(CLOSED_NODE_IMAGE).getImage());
+				
+			needInit = false;
+		}
+
+		TopologicalNode topologicalNode = (TopologicalNode )node;
+		if(topologicalNode.isActive())
+			return MapPropertiesManager.getScaledImage(closedImageId);
+		else
+			return MapPropertiesManager.getScaledImage(openImageId);
 	}
 
 	public void paint (MapElement me, Graphics g, Rectangle2D.Double visibleBounds)
 	{
-		if(needInit)
-		{
-			Identifier creatorId = new Identifier(
-				getLogicalNetLayer().getContext().getSessionInterface().getAccessIdentifier().user_id);
-
-			MapPropertiesManager.setOriginalImage(
-				NodeTypeController.getImageId(creatorId, OPEN_NODE, OPEN_NODE_IMAGE),
-				new ImageIcon(OPEN_NODE_IMAGE).getImage());
-			MapPropertiesManager.setOriginalImage(
-				NodeTypeController.getImageId(creatorId, CLOSED_NODE, CLOSED_NODE_IMAGE), 
-				new ImageIcon(CLOSED_NODE_IMAGE).getImage());
-		}
-
 		if(!(me instanceof TopologicalNode))
 			return;
 		TopologicalNode node = (TopologicalNode)me;

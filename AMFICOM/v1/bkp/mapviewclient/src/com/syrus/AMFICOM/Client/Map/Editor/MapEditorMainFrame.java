@@ -1,5 +1,5 @@
 /**
- * $Id: MapEditorMainFrame.java,v 1.17 2005/01/21 16:19:57 krupenn Exp $
+ * $Id: MapEditorMainFrame.java,v 1.18 2005/01/24 16:51:32 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -100,7 +100,7 @@ import javax.swing.JViewport;
  * 
  * 
  * 
- * @version $Revision: 1.17 $, $Date: 2005/01/21 16:19:57 $
+ * @version $Revision: 1.18 $, $Date: 2005/01/24 16:51:32 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -593,7 +593,8 @@ public class MapEditorMainFrame extends JFrame
 				if(aContext.getSessionInterface().equals(ssi))
 				{
 					if(!Checker.checkCommandByUserId(
-							((RISDSessionInfo )aContext.getSessionInterface()).getUserIdentifier().toString(),
+							((RISDSessionInfo )aContext.getSessionInterface()).getUserId(),
+//							((RISDSessionInfo )aContext.getSessionInterface()).getUserIdentifier().toString(),
 							Checker.topologyEditing))
 					{
 						JOptionPane.showMessageDialog(null, LangModelMap.getString("NotEnoughRights"), LangModel.getString("Error"), JOptionPane.OK_OPTION);

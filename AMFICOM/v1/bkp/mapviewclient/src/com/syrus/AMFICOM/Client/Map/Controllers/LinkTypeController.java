@@ -1,5 +1,5 @@
 /**
- * $Id: LinkTypeController.java,v 1.4 2005/01/20 14:37:52 krupenn Exp $
+ * $Id: LinkTypeController.java,v 1.5 2005/01/24 16:51:32 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -48,7 +48,7 @@ import java.util.List;
  * 
  * 
  * 
- * @version $Revision: 1.4 $, $Date: 2005/01/20 14:37:52 $
+ * @version $Revision: 1.5 $, $Date: 2005/01/24 16:51:32 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -57,6 +57,9 @@ public final class LinkTypeController extends AbstractLinkController
 {
 	private static LinkTypeController instance = null;
 	
+	private static java.util.Map colorsHolder = new HashMap();
+	private static java.util.Map alarmedColorsHolder = new HashMap();
+
 	private LinkTypeController()
 	{
 	}
@@ -283,6 +286,7 @@ public final class LinkTypeController extends AbstractLinkController
 			}
 		}
 		ea.setValue(String.valueOf(color.getRGB()));
+		colorsHolder.put(link, color);
 	}
 
 	/**
@@ -290,11 +294,20 @@ public final class LinkTypeController extends AbstractLinkController
 	 */
 	public Color getColor(PhysicalLinkType link)
 	{
-		CharacteristicType cType = getCharacteristicType(link.getCreatorId(), ATTRIBUTE_COLOR);
-		Characteristic ea = (Characteristic )getCharacteristic(link, cType);
-		if(ea == null)
-			return MapPropertiesManager.getColor();
-		return new Color(Integer.parseInt(ea.getValue()));
+		Color color = (Color )colorsHolder.get(link);
+		if(color == null)
+		{
+			CharacteristicType cType = getCharacteristicType(link.getCreatorId(), ATTRIBUTE_COLOR);
+			Characteristic ea = (Characteristic )getCharacteristic(link, cType);
+
+			if(ea == null)
+				color = MapPropertiesManager.getColor();
+			else
+				color = new Color(Integer.parseInt(ea.getValue()));
+			
+			colorsHolder.put(link, color);
+		}
+		return color;
 	}
 
 	/**
@@ -327,6 +340,7 @@ public final class LinkTypeController extends AbstractLinkController
 			}
 		}
 		ea.setValue(String.valueOf(color.getRGB()));
+		alarmedColorsHolder.put(link, color);
 	}
 
 	/**
@@ -334,11 +348,18 @@ public final class LinkTypeController extends AbstractLinkController
 	 */
 	public Color getAlarmedColor(PhysicalLinkType link)
 	{
-		CharacteristicType cType = getCharacteristicType(link.getCreatorId(), ATTRIBUTE_ALARMED_COLOR);
-		Characteristic ea = (Characteristic )getCharacteristic(link, cType);
-		if(ea == null)
-			return MapPropertiesManager.getAlarmedColor();
-		return new Color(Integer.parseInt(ea.getValue()));
+		Color color = (Color )alarmedColorsHolder.get(link);
+		if(color == null)
+		{
+			CharacteristicType cType = getCharacteristicType(link.getCreatorId(), ATTRIBUTE_ALARMED_COLOR);
+			Characteristic ea = (Characteristic )getCharacteristic(link, cType);
+			if(ea == null)
+				color = MapPropertiesManager.getAlarmedColor();
+			color = new Color(Integer.parseInt(ea.getValue()));
+
+			alarmedColorsHolder.put(link, color);
+		}
+		return color;
 	}
 
 	/**

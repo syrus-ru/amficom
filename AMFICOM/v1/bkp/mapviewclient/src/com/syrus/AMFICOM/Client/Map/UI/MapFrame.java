@@ -1,5 +1,5 @@
 /**
- * $Id: MapFrame.java,v 1.20 2005/01/21 16:19:58 krupenn Exp $
+ * $Id: MapFrame.java,v 1.21 2005/01/24 16:51:32 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -79,7 +79,7 @@ import javax.swing.event.InternalFrameEvent;
  * 
  * 
  * 
- * @version $Revision: 1.20 $, $Date: 2005/01/21 16:19:58 $
+ * @version $Revision: 1.21 $, $Date: 2005/01/24 16:51:32 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -339,7 +339,7 @@ public class MapFrame extends JInternalFrame
 				Identifier di2 = getMapView().getDomainId();
 				if(!di.equals(di2))
 				{
-					setMapView(null);
+//					setMapView(null);
 					aContext.getDispatcher().notify(new MapEvent(this, MapEvent.MAP_VIEW_CLOSED));
 				}
 			}
@@ -437,7 +437,7 @@ public class MapFrame extends JInternalFrame
 	public void closeMap()
 	{
 		System.out.println("Closing map");
-		setMapView(null);
+//		setMapView(null);
 		setContext(null);
 	}
 
