@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractCloneableDomainMember.java,v 1.1 2005/03/15 17:46:56 bass Exp $
+ * $Id: AbstractCloneableDomainMember.java,v 1.2 2005/03/17 09:12:05 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,12 +15,13 @@ import java.util.*;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: bass $
- * @version $Revision: 1.1 $, $Date: 2005/03/15 17:46:56 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.2 $, $Date: 2005/03/17 09:12:05 $
  * @module admin_v1
  */
 public abstract class AbstractCloneableDomainMember extends DomainMember
 		implements CloneableStorableObject {
+	private static final long serialVersionUID = -1126583003571701586L;
 
 	/**
 	 * @param id
