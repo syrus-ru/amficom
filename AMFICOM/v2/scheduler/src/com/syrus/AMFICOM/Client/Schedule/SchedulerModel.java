@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -422,7 +421,7 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 		String[] ids = sDataSrcImg.GetTests(startTime, endTime);
 
 		//выбираем необходимые тесты из пула
-		Hashtable hash = new Hashtable();
+		Map map = new HashMap();
 		for (int i = 0; i < ids.length; i++) {
 			//Environment.log(Environment.LOG_LEVEL_INFO, "get test#" +
 			// ids[i]); //$NON-NLS-1$
@@ -433,7 +432,7 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 				dsi.GetEvaluation(test.getEvaluationId());
 
 			if (test != null) {
-				hash.put(test.getId(), test);
+				map.put(test.getId(), test);
 			} else {
 				Environment.log(Environment.LOG_LEVEL_WARNING, "test " + ids[i] + " is null"); //$NON-NLS-1$ //$NON-NLS-2$
 			}
@@ -445,26 +444,26 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 		//DataSet testSet = new DataSet(hash);
 
 		//testSet = ordf.filter(testSet);
-		ordf.filtrate(hash);
+		ordf.filtrate(map);
 
 		if (this.allTests == null)
 			this.allTests = new ArrayList();
 		else
 			this.allTests.clear();
 
-		for (Iterator it = hash.keySet().iterator(); it.hasNext();) {
-			Test test = (Test) hash.get(it.next());
+		for (Iterator it = map.keySet().iterator(); it.hasNext();) {
+			Test test = (Test) map.get(it.next());
 			//System.out.println("loaded ordf tests:" + test.getId());
 			this.allTests.add(test);
 		}
 
 		//testSet = this.filter.filter(testSet);
-		this.filter.filtrate(hash);
+		this.filter.filtrate(map);
 
 		//подгружаем тестреквесты и недостающие тесты
 		HashSet treqs = new HashSet();
-		for (Iterator it = hash.keySet().iterator(); it.hasNext();) {
-			Test test = (Test) hash.get(it.next());
+		for (Iterator it = map.keySet().iterator(); it.hasNext();) {
+			Test test = (Test) map.get(it.next());
 			treqs.add(test.getRequestId());
 		}
 		dsi.GetRequests();
@@ -477,7 +476,7 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 					String testId = (String) it2.next();
 					//Environment.log(Environment.LOG_LEVEL_INFO, "test_id:" +
 					// testId); //$NON-NLS-1$
-					if (hash.get(testId) == null)
+					if (map.get(testId) == null)
 						loadTests.add(testId);
 				}
 			}
@@ -490,8 +489,8 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 		else
 			this.tests.clear();
 
-		for (Iterator it = hash.keySet().iterator(); it.hasNext();) {
-			Test test = (Test) hash.get(it.next());
+		for (Iterator it = map.keySet().iterator(); it.hasNext();) {
+			Test test = (Test) map.get(it.next());
 			this.tests.add(test);
 		}
 

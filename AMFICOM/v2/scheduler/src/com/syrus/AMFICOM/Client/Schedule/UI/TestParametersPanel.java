@@ -340,10 +340,10 @@ public class TestParametersPanel extends JPanel implements OperationListener {
 		this.testSetups.removeAll();
 		this.testMap.clear();
 		if (this.meList != null) {
-			Hashtable tsTable = Pool.getHash(TestSetup.TYPE);
-			if (tsTable != null) {
-				for (Iterator it = tsTable.keySet().iterator(); it.hasNext();) {
-					TestSetup ts = (TestSetup) tsTable.get(it.next());
+			Map tsMap = Pool.getMap(TestSetup.TYPE);
+			if (tsMap != null) {
+				for (Iterator it = tsMap.keySet().iterator(); it.hasNext();) {
+					TestSetup ts = (TestSetup) tsMap.get(it.next());
 					String[] meIds = ts.getMonitoredElementIds();
 					if (meIds.length == 0) {
 						//						System.out.println("meIds.length == 0\t" +

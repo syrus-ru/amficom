@@ -205,7 +205,7 @@ public class TestLine extends JLabel implements ActionListener, OperationListene
 					this.timer = new javax.swing.Timer(TIME_OUT, this);
 					//System.out.println("timer created");
 
-				}				
+				}
 			}
 			if (this.unsavedTests.containsValue(test)) {
 				//System.out.println("unsavedTests.contains(test)");
@@ -305,7 +305,8 @@ public class TestLine extends JLabel implements ActionListener, OperationListene
 				}
 			}
 		} else if (commandName.equals(SchedulerModel.COMMAND_CLEAN)) {
-			this.timer.stop();
+			if (this.timer != null)
+				this.timer.stop();
 			if (this.unsavedTests != null)
 				this.unsavedTests.clear();
 			if (this.tests != null)
@@ -534,8 +535,8 @@ public class TestLine extends JLabel implements ActionListener, OperationListene
 		this.dispatcher.register(this, SchedulerModel.COMMAND_TEST_SAVED_OK);
 		this.dispatcher.register(this, SchedulerModel.COMMAND_CLEAN);
 	}
-	
-	public void unregisterDispatcher(){
+
+	public void unregisterDispatcher() {
 		this.dispatcher.unregister(this, TestUpdateEvent.TYPE);
 		this.dispatcher.unregister(this, SchedulerModel.COMMAND_TEST_SAVED_OK);
 		this.dispatcher.unregister(this, SchedulerModel.COMMAND_CLEAN);
