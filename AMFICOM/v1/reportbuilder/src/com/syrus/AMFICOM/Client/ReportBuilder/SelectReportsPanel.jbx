@@ -1,0 +1,19 @@
+[PropertyInfo]
+aContext,ApplicationContext,false,false, , ,false,<default>
+curFilterChanging,ObjectResourceFilter,false,false, , ,false,<default>
+desktop,JDesktopPane,false,false, , ,false,<default>
+enabled,boolean,false,false, , ,true,<default>
+ev_filterPaneCreated,String,false,false, , ,false,<default>
+orfpWindow,SetRestrictionsWindow,false,false, , ,false,<default>
+ownerWindow,JFrame,false,false, , ,false,<default>
+reportsTreePanel,UniTreePanel,false,false, , ,false,<default>
+reportTemplate,ReportTemplate,false,false, , ,false,<default>
+rtm,AvailableReportsTreeModel,false,false, , ,false,<default>
+tdsEventHappened,boolean,false,false, , ,false,<default>
+xYLayout1,XYLayout,false,false, , ,false,<default>
+xYLayout2,XYLayout,false,false, , ,false,<default>
+[IconNames]
+
+
+
+
