@@ -1,5 +1,5 @@
 /*
- * $Id: EquipmentDatabase.java,v 1.53 2004/12/10 16:07:30 bob Exp $
+ * $Id: EquipmentDatabase.java,v 1.54 2004/12/14 17:07:21 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -41,8 +41,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.53 $, $Date: 2004/12/10 16:07:30 $
- * @author $Author: bob $
+ * @version $Revision: 1.54 $, $Date: 2004/12/14 17:07:21 $
+ * @author $Author: max $
  * @module configuration_v1
  */
 
@@ -139,7 +139,7 @@ public class EquipmentDatabase extends StorableObjectDatabase {
 		Equipment equipment = storableObject == null ? null : fromStorableObject(storableObject);
 		if (equipment == null){
 			equipment = new Equipment(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID), null, null, null, null,
-									   null, null, "", 0, 0);			
+									   null, null, "", null, 0, 0 , null ,null ,null ,null,null);			
 		}
 		String name = DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_NAME));
 		String description = DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_DESCRIPTION));
@@ -158,7 +158,16 @@ public class EquipmentDatabase extends StorableObjectDatabase {
 								equipmentType,
 								(name != null) ? name : "",
 								(description != null) ? description : "",
-								DatabaseIdentifier.getIdentifier(resultSet, COLUMN_IMAGE_ID));
+								DatabaseIdentifier.getIdentifier(resultSet, COLUMN_IMAGE_ID),
+                                null,
+                                null,
+                                0,
+                                0,
+                                null,
+                                null,
+                                null,
+                                null,
+                                null);
 
 		
 		return equipment;
