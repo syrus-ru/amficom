@@ -1,5 +1,5 @@
 /**
- * $Id: MapViewController.java,v 1.17 2005/02/25 13:49:16 krupenn Exp $
+ * $Id: MapViewController.java,v 1.18 2005/02/28 16:18:49 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -10,6 +10,12 @@
 
 package com.syrus.AMFICOM.Client.Map.Controllers;
 
+import com.syrus.AMFICOM.map.Collector;
+import com.syrus.AMFICOM.map.Mark;
+import com.syrus.AMFICOM.map.NodeLink;
+import com.syrus.AMFICOM.map.PhysicalLink;
+import com.syrus.AMFICOM.map.TopologicalNode;
+import com.syrus.AMFICOM.mapview.Marker;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.geom.Rectangle2D;
@@ -52,11 +58,47 @@ import com.syrus.AMFICOM.scheme.corba.SchemePath;
  * Класс используется для управления информацией о канализационной
  * прокладке кабелей и положении узлов и других топологических объектов.
  * @author $Author: krupenn $
- * @version $Revision: 1.17 $, $Date: 2005/02/25 13:49:16 $
+ * @version $Revision: 1.18 $, $Date: 2005/02/28 16:18:49 $
  * @module mapviewclient_v1
  */
 public final class MapViewController
 {
+	public static final String ELEMENT_SITENODE = "sitenode";
+	public static final String ELEMENT_WELL = "well";
+	public static final String ELEMENT_PIQUET = "piquet";
+	public static final String ELEMENT_PHYSICALLINK = "physicallink";
+	public static final String ELEMENT_COLLECTOR = "collector";
+	public static final String ELEMENT_CABLEPATH = "cablepath";
+	public static final String ELEMENT_TOPOLOGICALNODE = "topologicalnode";
+	public static final String ELEMENT_MARK = "mark";
+	public static final String ELEMENT_MEASUREMENTPATH = "measurementpath";
+	public static final String ELEMENT_MARKER = "marker";
+	public static final String ELEMENT_CABLEINLET = "cableinlet";
+	public static final String ELEMENT_NODELINK = "nodelink";
+
+	public static String getMapElementType(MapElement mapElement)
+	{
+		if(mapElement instanceof SiteNode)
+			return MapViewController.ELEMENT_SITENODE;
+		else if(mapElement instanceof PhysicalLink)
+			return MapViewController.ELEMENT_PHYSICALLINK;
+		else if(mapElement instanceof Collector)
+			return MapViewController.ELEMENT_COLLECTOR;
+		else if(mapElement instanceof CablePath)
+			return MapViewController.ELEMENT_CABLEPATH;
+		else if(mapElement instanceof TopologicalNode)
+			return MapViewController.ELEMENT_TOPOLOGICALNODE;
+		else if(mapElement instanceof Mark)
+			return MapViewController.ELEMENT_MARK;
+		else if(mapElement instanceof MeasurementPath)
+			return MapViewController.ELEMENT_MEASUREMENTPATH;
+		else if(mapElement instanceof Marker)
+			return MapViewController.ELEMENT_MARKER;
+		else if(mapElement instanceof NodeLink)
+			return MapViewController.ELEMENT_NODELINK;
+		return "";
+	}
+
 	/** Хэш-таблица контроллеров элементов карты. */
 	private static java.util.Map ctlMap = new HashMap();
 	

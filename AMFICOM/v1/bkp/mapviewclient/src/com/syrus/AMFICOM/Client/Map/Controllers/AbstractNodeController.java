@@ -1,5 +1,5 @@
 /**
- * $Id: AbstractNodeController.java,v 1.5 2005/02/18 12:19:45 krupenn Exp $
+ * $Id: AbstractNodeController.java,v 1.6 2005/02/28 16:18:49 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -12,6 +12,7 @@
 package com.syrus.AMFICOM.Client.Map.Controllers;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModel;
+import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
 import com.syrus.AMFICOM.Client.Map.MapConnectionException;
 import com.syrus.AMFICOM.Client.Map.MapCoordinatesConverter;
@@ -34,7 +35,7 @@ import java.util.HashMap;
 /**
  * Контроллер узла.
  * @author $Author: krupenn $
- * @version $Revision: 1.5 $, $Date: 2005/02/18 12:19:45 $
+ * @version $Revision: 1.6 $, $Date: 2005/02/28 16:18:49 $
  * @module mapviewclient_v1
  */
 public abstract class AbstractNodeController implements MapElementController
@@ -319,7 +320,7 @@ public abstract class AbstractNodeController implements MapElementController
 
 		String s1 = node.getName();
 
-		return s1 + " [" + LangModel.getString("node" + node.getClass()) + "]";
+		return s1 + " [" + LangModelMap.getString(MapViewController.getMapElementType(node)) + "]";
 	}
 
 
