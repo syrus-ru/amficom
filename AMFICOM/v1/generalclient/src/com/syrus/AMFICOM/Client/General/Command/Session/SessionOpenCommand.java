@@ -136,6 +136,8 @@ public class SessionOpenCommand extends VoidCommand //implements Command
 			// Проверяем, может ли текущий пользователь с ним работать
 			if(Checker.checkObject(sess.getUserId(), Domain.typ, ev_domain_id, Checker.read))
 				sess.setDomainId(ev_domain_id);
+			else
+				sess.setDomainId("");
 
 			dispatcher.notify(new StatusMessageEvent("Сессия открыта"));
 			dispatcher.notify(new ContextChangeEvent(
