@@ -1,5 +1,5 @@
 /*
- * $Id: CollectorDatabase.java,v 1.16 2005/02/21 07:45:31 bob Exp $
+ * $Id: CollectorDatabase.java,v 1.17 2005/02/24 15:47:37 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -19,10 +19,9 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CharacteristicDatabase;
-import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.GeneralDatabaseContext;
 import com.syrus.AMFICOM.general.Identifier;
@@ -43,7 +42,7 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.16 $, $Date: 2005/02/21 07:45:31 $
+ * @version $Revision: 1.17 $, $Date: 2005/02/24 15:47:37 $
  * @author $Author: bob $
  * @module map_v1
  */
@@ -78,11 +77,9 @@ public class CollectorDatabase extends StorableObjectDatabase {
 			Collection physicalLinkIds = (Collection)map.get(collector);
 			try {
 				collector.setPhysicalLinks0(MapStorableObjectPool.getStorableObjects(physicalLinkIds, true));
-			} catch (DatabaseException e) {
+			} catch (ApplicationException e) {
 				throw new RetrieveObjectException(e);
-			} catch (CommunicationException e) {
-				throw new RetrieveObjectException(e);
-			}
+			} 
 		}
 	}
 	
@@ -176,25 +173,24 @@ public class CollectorDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	public void update(StorableObject storableObject, Identifier modifierId, int updateKind) throws IllegalDataException, VersionCollisionException, UpdateObjectException {
-		Collector collector = this.fromStorableObject(storableObject);
+	public void update(StorableObject storableObject, Identifier modifierId, int updateKind) throws VersionCollisionException, UpdateObjectException {
 		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)GeneralDatabaseContext.getCharacteristicDatabase();
 		switch (updateKind) {
 			case UPDATE_CHECK:
-				super.checkAndUpdateEntity(collector, modifierId, false);
-				characteristicDatabase.updateCharacteristics(collector);
+				super.checkAndUpdateEntity(storableObject, modifierId, false);
+				characteristicDatabase.updateCharacteristics(storableObject);
 				break;
 			case UPDATE_FORCE:					
 			default:
-				super.checkAndUpdateEntity(collector, modifierId, true);
-				characteristicDatabase.updateCharacteristics(collector);
+				super.checkAndUpdateEntity(storableObject, modifierId, true);
+				characteristicDatabase.updateCharacteristics(storableObject);
 				return;
 		}
 		this.updatePhysicalLinks(Collections.singletonList(storableObject));
 	}
 	
 	
-	public void update(Collection storableObjects, Identifier modifierId, int updateKind) throws IllegalDataException,
+	public void update(Collection storableObjects, Identifier modifierId, int updateKind) throws 
 		VersionCollisionException, UpdateObjectException {
 		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)GeneralDatabaseContext.getCharacteristicDatabase();
 		switch (updateKind) {
@@ -211,12 +207,17 @@ public class CollectorDatabase extends StorableObjectDatabase {
 		this.updatePhysicalLinks(storableObjects);
 	}	
 	
-	private void updatePhysicalLinks(Collection collectors) throws UpdateObjectException, IllegalDataException {
+	private void updatePhysicalLinks(Collection collectors) throws UpdateObjectException {
 		if (collectors == null || collectors.isEmpty())
 			return;
 		java.util.Map collectorIdPhysicalLinkIdsMap = new HashMap();
 		for (Iterator it = collectors.iterator(); it.hasNext();) {
-			Collector collector = this.fromStorableObject((StorableObject)it.next());
+			Collector collector;
+			try {
+				collector = this.fromStorableObject((StorableObject)it.next());
+			} catch (IllegalDataException e) {
+				throw new UpdateObjectException("CollectorDatabase.updatePhysicalLinks | cannot get collector ", e);
+			}
 			Collection physicalLinks = collector.getPhysicalLinks();
 			Collection physicalLinkIds = new ArrayList(physicalLinks.size());
 			for (Iterator iter = physicalLinks.iterator(); iter.hasNext();) {
@@ -225,7 +226,12 @@ public class CollectorDatabase extends StorableObjectDatabase {
 			}
 			collectorIdPhysicalLinkIdsMap.put(collector.getId(), physicalLinkIds);
 		}		
-		super.updateLinkedEntities(collectorIdPhysicalLinkIdsMap, COLLECTOR_PHYSICAL_LINK, CollectorWrapper.LINK_COLUMN_COLLECTOR_ID, CollectorWrapper.LINK_COLUMN_PHYSICAL_LINK_ID);
+		
+		try {
+			super.updateLinkedEntities(collectorIdPhysicalLinkIdsMap, COLLECTOR_PHYSICAL_LINK, CollectorWrapper.LINK_COLUMN_COLLECTOR_ID, CollectorWrapper.LINK_COLUMN_PHYSICAL_LINK_ID);
+		} catch (IllegalDataException e) {
+			throw new UpdateObjectException("CollectorDatabase.updatePhysicalLinks | cannot update physical links ", e);
+		}
 	}	
 	
 	public void delete(Identifier id) throws IllegalDataException {

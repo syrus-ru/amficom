@@ -1,5 +1,5 @@
 /**
- * $Id: PhysicalLink.java,v 1.29 2005/02/14 10:30:56 bob Exp $
+ * $Id: PhysicalLink.java,v 1.30 2005/02/24 15:47:38 bob Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -23,9 +23,7 @@ import java.util.List;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.Characterized;
-import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierPool;
@@ -53,7 +51,7 @@ import com.syrus.AMFICOM.map.corba.PhysicalLink_Transferable;
  * тоннель (<code>{@link PhysicalLinkType#TUNNEL}</code>) 
  * и коллектор (<code>{@link PhysicalLinkType#COLLECTOR}</code>).
  * @author $Author: bob $
- * @version $Revision: 1.29 $, $Date: 2005/02/14 10:30:56 $
+ * @version $Revision: 1.30 $, $Date: 2005/02/24 15:47:38 $
  * @module map_v1
  */
 public class PhysicalLink extends StorableObject implements Characterized, TypedObject, MapElement {
@@ -896,12 +894,7 @@ public class PhysicalLink extends StorableObject implements Characterized, Typed
 		{
 			setType((PhysicalLinkType )(MapStorableObjectPool.getStorableObject(mples.mapProtoId, true)));
 		}
-		catch (CommunicationException e)
-		{
-			e.printStackTrace();
-		}
-		catch (DatabaseException e)
-		{
+		catch (ApplicationException e) {
 			e.printStackTrace();
 		}
 		

@@ -1,5 +1,5 @@
 /*
- * $Id: MapDatabase.java,v 1.16 2005/02/21 07:45:32 bob Exp $
+ * $Id: MapDatabase.java,v 1.17 2005/02/24 15:47:37 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -20,9 +20,7 @@ import java.util.Iterator;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CharacteristicDatabase;
-import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.GeneralDatabaseContext;
 import com.syrus.AMFICOM.general.Identifier;
@@ -42,7 +40,7 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.16 $, $Date: 2005/02/21 07:45:32 $
+ * @version $Revision: 1.17 $, $Date: 2005/02/24 15:47:37 $
  * @author $Author: bob $
  * @module map_v1
  */
@@ -127,9 +125,7 @@ public class MapDatabase extends StorableObjectDatabase {
 				if (id.equals(map.getId())){
 					try {
 						map.setCollectors0(MapStorableObjectPool.getStorableObjects(collectorIds, true));
-					} catch (DatabaseException e) {
-						throw new RetrieveObjectException(e);
-					} catch (CommunicationException e) {
+					} catch (ApplicationException e) {
 						throw new RetrieveObjectException(e);
 					}
 				}
@@ -144,11 +140,9 @@ public class MapDatabase extends StorableObjectDatabase {
 				if (id.equals(map.getId())){
 					try {
 						map.setMarks0(MapStorableObjectPool.getStorableObjects(markIds, true));
-					} catch (DatabaseException e) {
+					} catch (ApplicationException e) {
 						throw new RetrieveObjectException(e);
-					} catch (CommunicationException e) {
-						throw new RetrieveObjectException(e);
-					}
+					} 
 				}
 			}
 		}
@@ -161,9 +155,7 @@ public class MapDatabase extends StorableObjectDatabase {
 				if (id.equals(map.getId())){
 					try {
 						map.setNodeLinks0(MapStorableObjectPool.getStorableObjects(nodeLinkIds, true));
-					} catch (DatabaseException e) {
-						throw new RetrieveObjectException(e);
-					} catch (CommunicationException e) {
+					} catch (ApplicationException e) {
 						throw new RetrieveObjectException(e);
 					}
 				}
@@ -178,11 +170,9 @@ public class MapDatabase extends StorableObjectDatabase {
 				if (id.equals(map.getId())){
 					try {
 						map.setPhysicalLinks0(MapStorableObjectPool.getStorableObjects(physicalLinkIds, true));
-					} catch (DatabaseException e) {
+					} catch (ApplicationException e) {
 						throw new RetrieveObjectException(e);
-					} catch (CommunicationException e) {
-						throw new RetrieveObjectException(e);
-					}
+					} 
 				}
 			}
 		}
@@ -195,11 +185,9 @@ public class MapDatabase extends StorableObjectDatabase {
 				if (id.equals(map.getId())){
 					try {
 						map.setSiteNodes0(MapStorableObjectPool.getStorableObjects(siteNodeIds, true));
-					} catch (DatabaseException e) {
+					} catch (ApplicationException e) {
 						throw new RetrieveObjectException(e);
-					} catch (CommunicationException e) {
-						throw new RetrieveObjectException(e);
-					}
+					} 
 				}
 			}
 		}
@@ -212,9 +200,7 @@ public class MapDatabase extends StorableObjectDatabase {
 				if (id.equals(map.getId())){
 					try {
 						map.setTopologicalNodes0(MapStorableObjectPool.getStorableObjects(topologicalNodeIds, true));
-					} catch (DatabaseException e) {
-						throw new RetrieveObjectException(e);
-					} catch (CommunicationException e) {
+					} catch (ApplicationException e) {
 						throw new RetrieveObjectException(e);
 					}
 				}
@@ -337,21 +323,20 @@ public class MapDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	public void update(StorableObject storableObject, Identifier modifierId, int updateKind) throws IllegalDataException, VersionCollisionException, UpdateObjectException {
-		Map map = this.fromStorableObject(storableObject);
+	public void update(StorableObject storableObject, Identifier modifierId, int updateKind) throws VersionCollisionException, UpdateObjectException {
 		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)GeneralDatabaseContext.getCharacteristicDatabase();
 		switch (updateKind) {
 			case UPDATE_CHECK:
-				super.checkAndUpdateEntity(map, modifierId, false);
-				characteristicDatabase.updateCharacteristics(map);
+				super.checkAndUpdateEntity(storableObject, modifierId, false);
+				characteristicDatabase.updateCharacteristics(storableObject);
 				break;
 			case UPDATE_FORCE:					
 			default:
-				super.checkAndUpdateEntity(map, modifierId, true);
-				characteristicDatabase.updateCharacteristics(map);
+				super.checkAndUpdateEntity(storableObject, modifierId, true);
+				characteristicDatabase.updateCharacteristics(storableObject);
 				return;
 		}
-		Collection maps = Collections.singletonList(map);
+		Collection maps = Collections.singletonList(storableObject);
 		this.updateLinkedObjectIds(maps, _MAP_COLLECTOR);
 		this.updateLinkedObjectIds(maps, _MAP_MARK);
 		this.updateLinkedObjectIds(maps, _MAP_NODE_LINK);
@@ -361,8 +346,7 @@ public class MapDatabase extends StorableObjectDatabase {
 	}
 	
 	
-	public void update(Collection storableObjects, Identifier modifierId, int updateKind) throws IllegalDataException,
-		VersionCollisionException, UpdateObjectException {
+	public void update(Collection storableObjects, Identifier modifierId, int updateKind) throws VersionCollisionException, UpdateObjectException {
 		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)GeneralDatabaseContext.getCharacteristicDatabase();
 		switch (updateKind) {
 			case UPDATE_CHECK:
@@ -383,18 +367,28 @@ public class MapDatabase extends StorableObjectDatabase {
 		this.updateLinkedObjectIds(storableObjects, _MAP_TOPOLOGICAL_NODE);
 	}	
 	
-	private void updateLinkedObjectIds(Collection maps, int linkedTable) throws UpdateObjectException, IllegalDataException {
+	private void updateLinkedObjectIds(Collection maps, int linkedTable) throws UpdateObjectException {
 		if (maps == null || maps.isEmpty())
 			return;
 
-		String tableName = getLinkedTableName(linkedTable);
+		String tableName;
+		try {
+			tableName = getLinkedTableName(linkedTable);
+		} catch (IllegalDataException e) {
+			throw new UpdateObjectException(e);
+		}
 		String columnName = (String) dbTableColumnName.get(tableName);
 		
 		java.util.Map mapIdLinkedObjectIds = new HashMap();
 		
 		for (Iterator colIter = maps.iterator(); colIter.hasNext();) {
 			StorableObject storableObject = (StorableObject) colIter.next();
-	        Map map = fromStorableObject(storableObject);
+	        Map map;
+			try {
+				map = fromStorableObject(storableObject);
+			} catch (IllegalDataException e) {
+				throw new UpdateObjectException(e);
+			}
 	        Collection linkedObjectList ;
 	        switch(linkedTable){
 				case _MAP_COLLECTOR:
@@ -416,7 +410,7 @@ public class MapDatabase extends StorableObjectDatabase {
 					linkedObjectList = map.getTopologicalNodes();
 					break;
 				default:
-					throw new IllegalDataException(this.getEnityName() + "Database.updateLinkedObjectIds | unknown linked table code:" + linkedTable);
+					throw new UpdateObjectException(this.getEnityName() + "Database.updateLinkedObjectIds | unknown linked table code:" + linkedTable);
 			}
 	
 	        Collection linkedObjectIds = new ArrayList(linkedObjectList.size());
@@ -428,7 +422,11 @@ public class MapDatabase extends StorableObjectDatabase {
 	        mapIdLinkedObjectIds.put(map.getId(), linkedObjectIds);
 		}
 		
-		super.updateLinkedEntities(mapIdLinkedObjectIds, tableName, MapWrapper.LINK_COLUMN_MAP_ID, columnName);
+		try {
+			super.updateLinkedEntities(mapIdLinkedObjectIds, tableName, MapWrapper.LINK_COLUMN_MAP_ID, columnName);
+		} catch (IllegalDataException e) {
+			throw new UpdateObjectException(e);
+		}
 
 	}
 	
@@ -584,11 +582,9 @@ public class MapDatabase extends StorableObjectDatabase {
 				if (id.equals(map.getId())){
 					try {
 						map.setCollectors0(MapStorableObjectPool.getStorableObjects(collectorIds, true));
-					} catch (DatabaseException e) {
+					} catch (ApplicationException e) {
 						throw new RetrieveObjectException(e);
-					} catch (CommunicationException e) {
-						throw new RetrieveObjectException(e);
-					}
+					} 
 				}
 			}
 		}
@@ -602,9 +598,7 @@ public class MapDatabase extends StorableObjectDatabase {
 				if (id.equals(map.getId())){
 					try {
 						map.setMarks0(MapStorableObjectPool.getStorableObjects(markIds, true));
-					} catch (DatabaseException e) {
-						throw new RetrieveObjectException(e);
-					} catch (CommunicationException e) {
+					} catch (ApplicationException e) {
 						throw new RetrieveObjectException(e);
 					}
 				}
@@ -620,9 +614,7 @@ public class MapDatabase extends StorableObjectDatabase {
 				if (id.equals(map.getId())){
 					try {
 						map.setNodeLinks0(MapStorableObjectPool.getStorableObjects(nodeLinkIds, true));
-					} catch (DatabaseException e) {
-						throw new RetrieveObjectException(e);
-					} catch (CommunicationException e) {
+					} catch (ApplicationException e) {
 						throw new RetrieveObjectException(e);
 					}
 				}
@@ -638,11 +630,9 @@ public class MapDatabase extends StorableObjectDatabase {
 				if (id.equals(map.getId())){
 					try {
 						map.setPhysicalLinks0(MapStorableObjectPool.getStorableObjects(physicalLinkIds, true));
-					} catch (DatabaseException e) {
+					} catch (ApplicationException e) {
 						throw new RetrieveObjectException(e);
-					} catch (CommunicationException e) {
-						throw new RetrieveObjectException(e);
-					}
+					} 
 				}
 			}
 		}
@@ -656,9 +646,7 @@ public class MapDatabase extends StorableObjectDatabase {
 				if (id.equals(map.getId())){
 					try {
 						map.setSiteNodes0(MapStorableObjectPool.getStorableObjects(siteNodeIds, true));
-					} catch (DatabaseException e) {
-						throw new RetrieveObjectException(e);
-					} catch (CommunicationException e) {
+					} catch (ApplicationException e) {
 						throw new RetrieveObjectException(e);
 					}
 				}
@@ -674,9 +662,7 @@ public class MapDatabase extends StorableObjectDatabase {
 				if (id.equals(map.getId())){
 					try {
 						map.setTopologicalNodes0(MapStorableObjectPool.getStorableObjects(topologicalNodeIds, true));
-					} catch (DatabaseException e) {
-						throw new RetrieveObjectException(e);
-					} catch (CommunicationException e) {
+					} catch (ApplicationException e) {
 						throw new RetrieveObjectException(e);
 					}
 				}

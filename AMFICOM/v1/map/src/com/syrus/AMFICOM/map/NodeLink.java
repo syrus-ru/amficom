@@ -1,5 +1,5 @@
 /**
- * $Id: NodeLink.java,v 1.23 2005/02/11 15:14:51 bob Exp $
+ * $Id: NodeLink.java,v 1.24 2005/02/24 15:47:38 bob Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,12 +11,18 @@
 
 package com.syrus.AMFICOM.map;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.Characterized;
-import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierPool;
@@ -30,21 +36,13 @@ import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.map.corba.NodeLink_Transferable;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-
 /**
  * Фрагмент линии на топологической схеме. Фрагмент представляет собой линейный
  * отрезок, соединяющий два концевых узла ({@link AbstractNode}). Фрагменты 
  * не живут сами по себе, а входят в состав одной и только одной линии
  * ({@link PhysicalLink}).
  * @author $Author: bob $
- * @version $Revision: 1.23 $, $Date: 2005/02/11 15:14:51 $
+ * @version $Revision: 1.24 $, $Date: 2005/02/24 15:47:38 $
  * @module map_v1
  */
 public class NodeLink extends StorableObject implements Characterized, MapElement {
@@ -443,14 +441,10 @@ public class NodeLink extends StorableObject implements Characterized, MapElemen
 		{
 			setPhysicalLink((PhysicalLink )MapStorableObjectPool.getStorableObject(mnles.physicalLinkId, false));
 		}
-		catch (CommunicationException e)
+		catch (ApplicationException e)
 		{
 			e.printStackTrace();
-		}
-		catch (DatabaseException e)
-		{
-			e.printStackTrace();
-		}
+		}		
 	}
 
 	/**

@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseMapObjectLoader.java,v 1.7 2005/02/21 07:45:32 bob Exp $
+ * $Id: DatabaseMapObjectLoader.java,v 1.8 2005/02/24 15:47:37 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,7 +27,7 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/02/21 07:45:32 $
+ * @version $Revision: 1.8 $, $Date: 2005/02/24 15:47:37 $
  * @author $Author: bob $
  * @module map_v1
  */
@@ -412,11 +412,7 @@ public class DatabaseMapObjectLoader implements MapObjectLoader {
 			Log.errorMessage("DatabaseMapObjectLoader.saveCollector | UpdateObjectException: " + e.getMessage());
 			throw new DatabaseException("DatabaseMapObjectLoader.saveCollector | UpdateObjectException: "
 					+ e.getMessage());
-		} catch (IllegalDataException e) {
-			Log.errorMessage("DatabaseMapObjectLoader.saveCollector | Illegal Storable Object: " + e.getMessage());
-			throw new DatabaseException("DatabaseMapObjectLoader.saveCollector | Illegal Storable Object: "
-					+ e.getMessage());
-		}
+		} 
 	}
 
 	public void saveMap(Map map, boolean force) throws VersionCollisionException, DatabaseException,
@@ -427,9 +423,6 @@ public class DatabaseMapObjectLoader implements MapObjectLoader {
 		} catch (UpdateObjectException e) {
 			Log.errorMessage("DatabaseMapObjectLoader.saveMap | UpdateObjectException: " + e.getMessage());
 			throw new DatabaseException("DatabaseMapObjectLoader.saveMap | UpdateObjectException: " + e.getMessage());
-		} catch (IllegalDataException e) {
-			Log.errorMessage("DatabaseMapObjectLoader.saveMap | Illegal Storable Object: " + e.getMessage());
-			throw new DatabaseException("DatabaseMapObjectLoader.saveMap | Illegal Storable Object: " + e.getMessage());
 		}
 	}
 
@@ -441,9 +434,6 @@ public class DatabaseMapObjectLoader implements MapObjectLoader {
 		} catch (UpdateObjectException e) {
 			Log.errorMessage("DatabaseMapObjectLoader.saveMark | UpdateObjectException: " + e.getMessage());
 			throw new DatabaseException("DatabaseMapObjectLoader.saveMark | UpdateObjectException: " + e.getMessage());
-		} catch (IllegalDataException e) {
-			Log.errorMessage("DatabaseMapObjectLoader.saveMark | Illegal Storable Object: " + e.getMessage());
-			throw new DatabaseException("DatabaseMapObjectLoader.saveMark | Illegal Storable Object: " + e.getMessage());
 		}
 	}
 
@@ -457,11 +447,7 @@ public class DatabaseMapObjectLoader implements MapObjectLoader {
 			Log.errorMessage("DatabaseMapObjectLoader.saveNodeLink | UpdateObjectException: " + e.getMessage());
 			throw new DatabaseException("DatabaseMapObjectLoader.saveNodeLink | UpdateObjectException: "
 					+ e.getMessage());
-		} catch (IllegalDataException e) {
-			Log.errorMessage("DatabaseMapObjectLoader.saveNodeLink | Illegal Storable Object: " + e.getMessage());
-			throw new DatabaseException("DatabaseMapObjectLoader.saveNodeLink | Illegal Storable Object: "
-					+ e.getMessage());
-		}
+		} 
 	}
 
 	public void savePhysicalLink(PhysicalLink physicalLink, boolean force) throws VersionCollisionException,
@@ -474,11 +460,7 @@ public class DatabaseMapObjectLoader implements MapObjectLoader {
 			Log.errorMessage("DatabaseMapObjectLoader.savePhysicalLink | UpdateObjectException: " + e.getMessage());
 			throw new DatabaseException("DatabaseMapObjectLoader.savePhysicalLink | UpdateObjectException: "
 					+ e.getMessage());
-		} catch (IllegalDataException e) {
-			Log.errorMessage("DatabaseMapObjectLoader.savePhysicalLink | Illegal Storable Object: " + e.getMessage());
-			throw new DatabaseException("DatabaseMapObjectLoader.savePhysicalLink | Illegal Storable Object: "
-					+ e.getMessage());
-		}
+		} 
 	}
 
 	public void savePhysicalLinkType(PhysicalLinkType physicalLinkType, boolean force)
@@ -490,11 +472,6 @@ public class DatabaseMapObjectLoader implements MapObjectLoader {
 		} catch (UpdateObjectException e) {
 			Log.errorMessage("DatabaseMapObjectLoader.savePhysicalLinkType | UpdateObjectException: " + e.getMessage());
 			throw new DatabaseException("DatabaseMapObjectLoader.savePhysicalLinkType | UpdateObjectException: "
-					+ e.getMessage());
-		} catch (IllegalDataException e) {
-			Log.errorMessage("DatabaseMapObjectLoader.savePhysicalLinkType | Illegal Storable Object: "
-					+ e.getMessage());
-			throw new DatabaseException("DatabaseMapObjectLoader.savePhysicalLinkType | Illegal Storable Object: "
 					+ e.getMessage());
 		}
 	}
@@ -509,10 +486,6 @@ public class DatabaseMapObjectLoader implements MapObjectLoader {
 			Log.errorMessage("DatabaseMapObjectLoader.saveSiteNode | UpdateObjectException: " + e.getMessage());
 			throw new DatabaseException("DatabaseMapObjectLoader.saveSiteNode | UpdateObjectException: "
 					+ e.getMessage());
-		} catch (IllegalDataException e) {
-			Log.errorMessage("DatabaseMapObjectLoader.saveSiteNode | Illegal Storable Object: " + e.getMessage());
-			throw new DatabaseException("DatabaseMapObjectLoader.saveSiteNode | Illegal Storable Object: "
-					+ e.getMessage());
 		}
 	}
 
@@ -525,10 +498,6 @@ public class DatabaseMapObjectLoader implements MapObjectLoader {
 		} catch (UpdateObjectException e) {
 			Log.errorMessage("DatabaseMapObjectLoader.saveSiteNodeType | UpdateObjectException: " + e.getMessage());
 			throw new DatabaseException("DatabaseMapObjectLoader.saveSiteNodeType | UpdateObjectException: "
-					+ e.getMessage());
-		} catch (IllegalDataException e) {
-			Log.errorMessage("DatabaseMapObjectLoader.saveSiteNodeType | Illegal Storable Object: " + e.getMessage());
-			throw new DatabaseException("DatabaseMapObjectLoader.saveSiteNodeType | Illegal Storable Object: "
 					+ e.getMessage());
 		}
 	}
@@ -543,13 +512,7 @@ public class DatabaseMapObjectLoader implements MapObjectLoader {
 			Log.errorMessage("DatabaseMapObjectLoader.saveTopologicalNode | UpdateObjectException: " + e.getMessage());
 			throw new DatabaseException("DatabaseMapObjectLoader.saveTopologicalNode | UpdateObjectException: "
 					+ e.getMessage());
-		} catch (IllegalDataException e) {
-			Log
-					.errorMessage("DatabaseMapObjectLoader.saveTopologicalNode | Illegal Storable Object: "
-							+ e.getMessage());
-			throw new DatabaseException("DatabaseMapObjectLoader.saveTopologicalNode | Illegal Storable Object: "
-					+ e.getMessage());
-		}
+		} 
 	}
 
 	public void saveCollectors(Collection list, boolean force) throws VersionCollisionException, DatabaseException,
@@ -562,12 +525,7 @@ public class DatabaseMapObjectLoader implements MapObjectLoader {
 			Log.errorMessage("DatabaseMapObjectLoader.saveCollectors | UpdateObjectException: " + e.getMessage());
 			throw new DatabaseException("DatabaseMapObjectLoader.saveCollectors | UpdateObjectException: "
 					+ e.getMessage());
-		} catch (IllegalDataException e) {
-			Log.errorMessage("DatabaseMapObjectLoader.saveCollectors | Illegal Storable Object: " + e.getMessage());
-			throw new DatabaseException("DatabaseMapObjectLoader.saveCollectors | Illegal Storable Object: "
-					+ e.getMessage());
 		}
-
 	}
 
 	public void saveMaps(Collection list, boolean force) throws VersionCollisionException, DatabaseException,
@@ -578,11 +536,7 @@ public class DatabaseMapObjectLoader implements MapObjectLoader {
 		} catch (UpdateObjectException e) {
 			Log.errorMessage("DatabaseMapObjectLoader.saveMaps | UpdateObjectException: " + e.getMessage());
 			throw new DatabaseException("DatabaseMapObjectLoader.saveMaps | UpdateObjectException: " + e.getMessage());
-		} catch (IllegalDataException e) {
-			Log.errorMessage("DatabaseMapObjectLoader.saveMaps | Illegal Storable Object: " + e.getMessage());
-			throw new DatabaseException("DatabaseMapObjectLoader.saveMaps | Illegal Storable Object: " + e.getMessage());
 		}
-
 	}
 
 	public void saveMarks(Collection list, boolean force) throws VersionCollisionException, DatabaseException,
@@ -593,9 +547,6 @@ public class DatabaseMapObjectLoader implements MapObjectLoader {
 		} catch (UpdateObjectException e) {
 			Log.errorMessage("DatabaseMapObjectLoader.saveMarks | UpdateObjectException: " + e.getMessage());
 			throw new DatabaseException("DatabaseMapObjectLoader.saveMarks | UpdateObjectException: " + e.getMessage());
-		} catch (IllegalDataException e) {
-			Log.errorMessage("DatabaseMapObjectLoader.saveMarks | Illegal Storable Object: " + e.getMessage());
-			throw new DatabaseException("DatabaseMapObjectLoader.saveMarks | Illegal Storable Object: " + e.getMessage());
 		}
 	}
 
@@ -608,10 +559,6 @@ public class DatabaseMapObjectLoader implements MapObjectLoader {
 		} catch (UpdateObjectException e) {
 			Log.errorMessage("DatabaseMapObjectLoader.saveNodeLinks | UpdateObjectException: " + e.getMessage());
 			throw new DatabaseException("DatabaseMapObjectLoader.saveNodeLinks | UpdateObjectException: "
-					+ e.getMessage());
-		} catch (IllegalDataException e) {
-			Log.errorMessage("DatabaseMapObjectLoader.saveNodeLinks | Illegal Storable Object: " + e.getMessage());
-			throw new DatabaseException("DatabaseMapObjectLoader.saveNodeLinks | Illegal Storable Object: "
 					+ e.getMessage());
 		}
 	}
@@ -626,10 +573,6 @@ public class DatabaseMapObjectLoader implements MapObjectLoader {
 			Log.errorMessage("DatabaseMapObjectLoader.savePhysicalLinks | UpdateObjectException: " + e.getMessage());
 			throw new DatabaseException("DatabaseMapObjectLoader.savePhysicalLinks | UpdateObjectException: "
 					+ e.getMessage());
-		} catch (IllegalDataException e) {
-			Log.errorMessage("DatabaseMapObjectLoader.savePhysicalLinks | Illegal Storable Object: " + e.getMessage());
-			throw new DatabaseException("DatabaseMapObjectLoader.savePhysicalLinks | Illegal Storable Object: "
-					+ e.getMessage());
 		}
 	}
 
@@ -642,11 +585,6 @@ public class DatabaseMapObjectLoader implements MapObjectLoader {
 		} catch (UpdateObjectException e) {
 			Log.errorMessage("DatabaseMapObjectLoader.savePhysicalLinkTypes | UpdateObjectException: " + e.getMessage());
 			throw new DatabaseException("DatabaseMapObjectLoader.savePhysicalLinkTypes | UpdateObjectException: "
-					+ e.getMessage());
-		} catch (IllegalDataException e) {
-			Log.errorMessage("DatabaseMapObjectLoader.savePhysicalLinkTypes | Illegal Storable Object: "
-					+ e.getMessage());
-			throw new DatabaseException("DatabaseMapObjectLoader.savePhysicalLinkTypes | Illegal Storable Object: "
 					+ e.getMessage());
 		}
 	}
@@ -661,10 +599,6 @@ public class DatabaseMapObjectLoader implements MapObjectLoader {
 			Log.errorMessage("DatabaseMapObjectLoader.saveSiteNodes | UpdateObjectException: " + e.getMessage());
 			throw new DatabaseException("DatabaseMapObjectLoader.saveSiteNodes | UpdateObjectException: "
 					+ e.getMessage());
-		} catch (IllegalDataException e) {
-			Log.errorMessage("DatabaseMapObjectLoader.saveSiteNodes | Illegal Storable Object: " + e.getMessage());
-			throw new DatabaseException("DatabaseMapObjectLoader.saveSiteNodes | Illegal Storable Object: "
-					+ e.getMessage());
 		}
 	}
 
@@ -678,10 +612,6 @@ public class DatabaseMapObjectLoader implements MapObjectLoader {
 			Log.errorMessage("DatabaseMapObjectLoader.saveSiteNodeTypes | UpdateObjectException: " + e.getMessage());
 			throw new DatabaseException("DatabaseMapObjectLoader.saveSiteNodeType | UpdateObjectException: "
 					+ e.getMessage());
-		} catch (IllegalDataException e) {
-			Log.errorMessage("DatabaseMapObjectLoader.saveSiteNodeTypes | Illegal Storable Object: " + e.getMessage());
-			throw new DatabaseException("DatabaseMapObjectLoader.saveSiteNodeTypes | Illegal Storable Object: "
-					+ e.getMessage());
 		}
 	}
 
@@ -694,12 +624,6 @@ public class DatabaseMapObjectLoader implements MapObjectLoader {
 		} catch (UpdateObjectException e) {
 			Log.errorMessage("DatabaseMapObjectLoader.saveTopologicalNodes | UpdateObjectException: " + e.getMessage());
 			throw new DatabaseException("DatabaseMapObjectLoader.saveTopologicalNodes | UpdateObjectException: "
-					+ e.getMessage());
-		} catch (IllegalDataException e) {
-			Log
-					.errorMessage("DatabaseMapObjectLoader.saveTopologicalNodes | Illegal Storable Object: "
-							+ e.getMessage());
-			throw new DatabaseException("DatabaseMapObjectLoader.saveTopologicalNodes | Illegal Storable Object: "
 					+ e.getMessage());
 		}
 	}

@@ -1,5 +1,5 @@
 /*
- * $Id: SiteNodeDatabase.java,v 1.14 2005/02/21 07:45:32 bob Exp $
+ * $Id: SiteNodeDatabase.java,v 1.15 2005/02/24 15:47:38 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,7 +35,7 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.14 $, $Date: 2005/02/21 07:45:32 $
+ * @version $Revision: 1.15 $, $Date: 2005/02/24 15:47:38 $
  * @author $Author: bob $
  * @module map_v1
  */
@@ -191,25 +191,23 @@ public class SiteNodeDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	public void update(StorableObject storableObject, Identifier modifierId, int updateKind) throws IllegalDataException, VersionCollisionException, UpdateObjectException {
-		SiteNode siteNode = this.fromStorableObject(storableObject);
+	public void update(StorableObject storableObject, Identifier modifierId, int updateKind) throws VersionCollisionException, UpdateObjectException {
 		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)GeneralDatabaseContext.getCharacteristicDatabase();
 		switch (updateKind) {
 			case UPDATE_CHECK:
-				super.checkAndUpdateEntity(siteNode, modifierId, false);
-				characteristicDatabase.updateCharacteristics(siteNode);
+				super.checkAndUpdateEntity(storableObject, modifierId, false);
+				characteristicDatabase.updateCharacteristics(storableObject);
 				break;
 			case UPDATE_FORCE:					
 			default:
-				super.checkAndUpdateEntity(siteNode, modifierId, true);
-				characteristicDatabase.updateCharacteristics(siteNode);
+				super.checkAndUpdateEntity(storableObject, modifierId, true);
+				characteristicDatabase.updateCharacteristics(storableObject);
 				return;
 		}
 	}
 	
 	
-	public void update(Collection storableObjects, Identifier modifierId, int updateKind) throws IllegalDataException,
-		VersionCollisionException, UpdateObjectException {
+	public void update(Collection storableObjects, Identifier modifierId, int updateKind) throws VersionCollisionException, UpdateObjectException {
 		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)GeneralDatabaseContext.getCharacteristicDatabase();
 		switch (updateKind) {
 			case UPDATE_CHECK:

@@ -1,5 +1,5 @@
 /**
- * $Id: SiteNode.java,v 1.21 2005/02/14 10:30:56 bob Exp $
+ * $Id: SiteNode.java,v 1.22 2005/02/24 15:47:38 bob Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -22,9 +22,7 @@ import java.util.List;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
-import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierPool;
@@ -58,7 +56,7 @@ import com.syrus.AMFICOM.resource.ResourceStorableObjectPool;
  * {@link #city}, {@link #street}, {@link #building} для поиска по 
  * географическим параметрам. 
  * @author $Author: bob $
- * @version $Revision: 1.21 $, $Date: 2005/02/14 10:30:56 $
+ * @version $Revision: 1.22 $, $Date: 2005/02/24 15:47:38 $
  * @module map_v1
  */
 public class SiteNode extends AbstractNode implements TypedObject {
@@ -382,11 +380,7 @@ public class SiteNode extends AbstractNode implements TypedObject {
 		{
 			setType((SiteNodeType )(MapStorableObjectPool.getStorableObject(msnes.mapProtoId, true)));
 		}
-		catch (CommunicationException e)
-		{
-			e.printStackTrace();
-		}
-		catch (DatabaseException e)
+		catch (ApplicationException e)
 		{
 			e.printStackTrace();
 		}

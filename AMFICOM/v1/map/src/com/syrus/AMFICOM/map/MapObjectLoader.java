@@ -1,5 +1,5 @@
 /*
- * $Id: MapObjectLoader.java,v 1.5 2005/02/21 07:45:32 bob Exp $
+ * $Id: MapObjectLoader.java,v 1.6 2005/02/24 15:47:37 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,15 +10,13 @@ package com.syrus.AMFICOM.map;
 
 import java.util.Collection;
 
-import com.syrus.AMFICOM.general.CommunicationException;
-import com.syrus.AMFICOM.general.DatabaseException;
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
-import com.syrus.AMFICOM.general.VersionCollisionException;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/02/21 07:45:32 $
+ * @version $Revision: 1.6 $, $Date: 2005/02/24 15:47:37 $
  * @author $Author: bob $
  * @module map_v1
  */
@@ -28,118 +26,123 @@ public interface MapObjectLoader {
 
 	void delete(Collection ids) throws IllegalDataException;
 
-	Collector loadCollector(Identifier id) throws DatabaseException, CommunicationException;
+	Collector loadCollector(Identifier id) throws ApplicationException;
 
-	Collection loadCollectors(Collection ids) throws DatabaseException, CommunicationException;
+	Collection loadCollectors(Collection ids) throws ApplicationException;
 
-	Map loadMap(Identifier id) throws DatabaseException, CommunicationException;
+	Map loadMap(Identifier id) throws ApplicationException;
 
-	Collection loadMaps(Collection ids) throws DatabaseException, CommunicationException;
+	Collection loadMaps(Collection ids) throws ApplicationException;
 
-	Mark loadMark(Identifier id) throws DatabaseException, CommunicationException;
+	Mark loadMark(Identifier id) throws ApplicationException;
 
-	Collection loadMarks(Collection ids) throws DatabaseException, CommunicationException;
+	Collection loadMarks(Collection ids) throws ApplicationException;
 
-	NodeLink loadNodeLink(Identifier id) throws DatabaseException, CommunicationException;
+	NodeLink loadNodeLink(Identifier id) throws ApplicationException;
 
-	Collection loadNodeLinks(Collection ids) throws DatabaseException, CommunicationException;
+	Collection loadNodeLinks(Collection ids) throws ApplicationException;
 
-	PhysicalLink loadPhysicalLink(Identifier id) throws DatabaseException, CommunicationException;
+	PhysicalLink loadPhysicalLink(Identifier id) throws ApplicationException;
 
-	Collection loadPhysicalLinks(Collection ids) throws DatabaseException, CommunicationException;
+	Collection loadPhysicalLinks(Collection ids) throws ApplicationException;
 
-	PhysicalLinkType loadPhysicalLinkType(Identifier id) throws DatabaseException, CommunicationException;
+	PhysicalLinkType loadPhysicalLinkType(Identifier id) throws ApplicationException;
 
-	Collection loadPhysicalLinkTypes(Collection ids) throws DatabaseException, CommunicationException;
+	Collection loadPhysicalLinkTypes(Collection ids) throws ApplicationException;
 
-	SiteNode loadSiteNode(Identifier id) throws DatabaseException, CommunicationException;
+	SiteNode loadSiteNode(Identifier id) throws ApplicationException;
 
-	Collection loadSiteNodes(Collection ids) throws DatabaseException, CommunicationException;
+	Collection loadSiteNodes(Collection ids) throws ApplicationException;
 
-	SiteNodeType loadSiteNodeType(Identifier id) throws DatabaseException, CommunicationException;
+	SiteNodeType loadSiteNodeType(Identifier id) throws ApplicationException;
 
-	Collection loadSiteNodeTypes(Collection ids) throws DatabaseException, CommunicationException;
+	Collection loadSiteNodeTypes(Collection ids) throws ApplicationException;
 
-	TopologicalNode loadTopologicalNode(Identifier id) throws DatabaseException, CommunicationException;
+	TopologicalNode loadTopologicalNode(Identifier id) throws ApplicationException;
 
-	Collection loadTopologicalNodes(Collection ids) throws DatabaseException, CommunicationException;
+	Collection loadTopologicalNodes(Collection ids) throws ApplicationException;
 
-	Collection loadCollectorsButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException,
-			CommunicationException;
+	Collection loadCollectorsButIds(StorableObjectCondition condition,
+									Collection ids) throws ApplicationException;
 
-	Collection loadMapsButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException, CommunicationException;
+	Collection loadMapsButIds(	StorableObjectCondition condition,
+								Collection ids) throws ApplicationException;
 
-	Collection loadMarksButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException, CommunicationException;
+	Collection loadMarksButIds(	StorableObjectCondition condition,
+								Collection ids) throws ApplicationException;
 
-	Collection loadNodeLinksButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException,
-			CommunicationException;
+	Collection loadNodeLinksButIds(	StorableObjectCondition condition,
+									Collection ids) throws ApplicationException;
 
-	Collection loadPhysicalLinksButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException,
-			CommunicationException;
+	Collection loadPhysicalLinksButIds(	StorableObjectCondition condition,
+										Collection ids) throws ApplicationException;
 
-	Collection loadPhysicalLinkTypesButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException,
-			CommunicationException;
+	Collection loadPhysicalLinkTypesButIds(	StorableObjectCondition condition,
+											Collection ids) throws ApplicationException;
 
-	Collection loadSiteNodesButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException,
-			CommunicationException;
+	Collection loadSiteNodesButIds(	StorableObjectCondition condition,
+									Collection ids) throws ApplicationException;
 
-	Collection loadSiteNodeTypesButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException,
-			CommunicationException;
+	Collection loadSiteNodeTypesButIds(	StorableObjectCondition condition,
+										Collection ids) throws ApplicationException;
 
-	Collection loadTopologicalNodesButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException,
-			CommunicationException;
+	Collection loadTopologicalNodesButIds(	StorableObjectCondition condition,
+											Collection ids) throws ApplicationException;
 
-	java.util.Set refresh(java.util.Set storableObjects) throws CommunicationException, DatabaseException;
+	java.util.Set refresh(java.util.Set storableObjects) throws ApplicationException;
 
-	void saveCollector(Collector collector, boolean force) throws VersionCollisionException, DatabaseException,
-			CommunicationException;
+	void saveCollector(	Collector collector,
+						boolean force) throws ApplicationException;
 
-	void saveMap(Map map, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
+	void saveMap(	Map map,
+					boolean force) throws ApplicationException;
 
-	void saveMark(Mark mark, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
+	void saveMark(	Mark mark,
+					boolean force) throws ApplicationException;
 
-	void saveNodeLink(NodeLink nodeLink, boolean force) throws VersionCollisionException, DatabaseException,
-			CommunicationException;
+	void saveNodeLink(	NodeLink nodeLink,
+						boolean force) throws ApplicationException;
 
-	void savePhysicalLink(PhysicalLink physicalLink, boolean force) throws VersionCollisionException,
-			DatabaseException, CommunicationException;
+	void savePhysicalLink(	PhysicalLink physicalLink,
+							boolean force) throws ApplicationException;
 
-	void savePhysicalLinkType(PhysicalLinkType physicalLinkType, boolean force) throws VersionCollisionException,
-			DatabaseException, CommunicationException;
+	void savePhysicalLinkType(	PhysicalLinkType physicalLinkType,
+								boolean force) throws ApplicationException;
 
-	void saveSiteNode(SiteNode siteNode, boolean force) throws VersionCollisionException, DatabaseException,
-			CommunicationException;
+	void saveSiteNode(	SiteNode siteNode,
+						boolean force) throws ApplicationException;
 
-	void saveSiteNodeType(SiteNodeType siteNodeType, boolean force) throws VersionCollisionException,
-			DatabaseException, CommunicationException;
+	void saveSiteNodeType(	SiteNodeType siteNodeType,
+							boolean force) throws ApplicationException;
 
-	void saveTopologicalNode(TopologicalNode topologicalNode, boolean force) throws VersionCollisionException,
-			DatabaseException, CommunicationException;
+	void saveTopologicalNode(	TopologicalNode topologicalNode,
+								boolean force) throws ApplicationException;
 
-	void saveCollectors(Collection list, boolean force) throws VersionCollisionException, DatabaseException,
-			CommunicationException;
+	void saveCollectors(Collection list,
+						boolean force) throws ApplicationException;
 
-	void saveMaps(Collection list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
+	void saveMaps(	Collection list,
+					boolean force) throws ApplicationException;
 
-	void saveMarks(Collection list, boolean force) throws VersionCollisionException, DatabaseException,
-			CommunicationException;
+	void saveMarks(	Collection list,
+					boolean force) throws ApplicationException;
 
-	void saveNodeLinks(Collection list, boolean force) throws VersionCollisionException, DatabaseException,
-			CommunicationException;
+	void saveNodeLinks(	Collection list,
+						boolean force) throws ApplicationException;
 
-	void savePhysicalLinks(Collection list, boolean force) throws VersionCollisionException, DatabaseException,
-			CommunicationException;
+	void savePhysicalLinks(	Collection list,
+							boolean force) throws ApplicationException;
 
-	void savePhysicalLinkTypes(Collection list, boolean force) throws VersionCollisionException, DatabaseException,
-			CommunicationException;
+	void savePhysicalLinkTypes(	Collection list,
+								boolean force) throws ApplicationException;
 
-	void saveSiteNodes(Collection list, boolean force) throws VersionCollisionException, DatabaseException,
-			CommunicationException;
+	void saveSiteNodes(	Collection list,
+						boolean force) throws ApplicationException;
 
-	void saveSiteNodeTypes(Collection list, boolean force) throws VersionCollisionException, DatabaseException,
-			CommunicationException;
+	void saveSiteNodeTypes(	Collection list,
+							boolean force) throws ApplicationException;
 
-	void saveTopologicalNodes(Collection list, boolean force) throws VersionCollisionException, DatabaseException,
-			CommunicationException;
+	void saveTopologicalNodes(	Collection list,
+								boolean force) throws ApplicationException;
 
 }
