@@ -1,5 +1,5 @@
 /*
- * $Id: MonitoredElementDatabase.java,v 1.46 2005/02/16 21:26:05 arseniy Exp $
+ * $Id: MonitoredElementDatabase.java,v 1.47 2005/02/18 18:09:09 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -40,7 +40,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.46 $, $Date: 2005/02/16 21:26:05 $
+ * @version $Revision: 1.47 $, $Date: 2005/02/18 18:09:09 $
  * @author $Author: arseniy $
  * @module config_v1
  */
@@ -245,7 +245,7 @@ public class MonitoredElementDatabase extends StorableObjectDatabase {
 				case MonitoredElementSort._MONITOREDELEMENT_SORT_TRANSMISSION_PATH:
 					this.retrieveMDMIdsByOneQuery(monitoredElementsOneSort,
 							ObjectEntities.TRANSPATHMELINK_ENTITY,
-							MonitoredElementWrapper.LINK_COLUMN_MONITORED_ELEMENT_ID);
+							MonitoredElementWrapper.LINK_COLUMN_TRANSMISSION_PATH_ID);
 					break;
 				default:
 					String mesg = "ERROR: Unknown sort of monitoredelement: " + meSort;
@@ -259,70 +259,95 @@ public class MonitoredElementDatabase extends StorableObjectDatabase {
 		if (monitoredElements == null || monitoredElements.isEmpty())
 			return;
 
-		StringBuffer sql = new StringBuffer(SQL_SELECT
-				+ MonitoredElementWrapper.LINK_COLUMN_MONITORED_ELEMENT_ID + COMMA
-				+ linkColumn
-				+ SQL_FROM + linkTable
-				+ SQL_WHERE);
+		Map mdmIdsMap = null;
 		try {
-			sql.append(this.idsEnumerationString(monitoredElements, MonitoredElementWrapper.LINK_COLUMN_MONITORED_ELEMENT_ID, true));
+			mdmIdsMap = this.retrieveLinkedEntityIds(monitoredElements, linkTable, MonitoredElementWrapper.LINK_COLUMN_MONITORED_ELEMENT_ID, linkColumn);
 		}
-		catch (IllegalDataException ide) {
-			throw new RetrieveObjectException(ide);
+		catch (IllegalDataException e) {
+			throw new RetrieveObjectException(e);
 		}
+		Identifier meId;
+		Collection mdmIds;
 
-		Statement statement = null;
-		ResultSet resultSet = null;
-		Connection connection = DatabaseConnection.getConnection();
-		try {
-			statement = connection.createStatement();
-			Log.debugMessage("MonitoredElementDatabase.retrieveMDMIdsByOneQuery | Trying: " + sql, Log.DEBUGLEVEL09);
-			resultSet = statement.executeQuery(sql.toString());
+		MonitoredElement monitoredElement;
+		for (Iterator it = monitoredElements.iterator(); it.hasNext();) {
+			monitoredElement = (MonitoredElement) it.next();
+			meId = monitoredElement.getId();
+			mdmIds = (Collection) mdmIdsMap.get(meId);
 
-			Map mdmIdsMap = new HashMap();
-			Identifier meId;
-			Collection mdmIds;
-			while (resultSet.next()) {
-				meId = DatabaseIdentifier.getIdentifier(resultSet, MonitoredElementWrapper.LINK_COLUMN_MONITORED_ELEMENT_ID);
-				mdmIds = (Collection) mdmIdsMap.get(meId);
-				if (mdmIds == null) {
-					mdmIds = new LinkedList();
-					mdmIdsMap.put(meId, mdmIds);
-				}
-				mdmIds.add(DatabaseIdentifier.getIdentifier(resultSet, linkColumn));
-			}
-
-			MonitoredElement monitoredElement;
-			for (Iterator it = monitoredElements.iterator(); it.hasNext();) {
-				monitoredElement = (MonitoredElement) it.next();
-				meId = monitoredElement.getId();
-				mdmIds = (Collection) mdmIdsMap.get(meId);
-
-				monitoredElement.setMonitoredDomainMemberIds0(mdmIds);
-			}
-		}
-		catch (SQLException sqle) {
-			String mesg = "MonitoredElementDatabase.retrieveMDMIdsByOneQuery | Cannot retrieve parameters for result -- "
-					+ sqle.getMessage();
-			throw new RetrieveObjectException(mesg, sqle);
-		}
-		finally {
-			try {
-				if (statement != null)
-					statement.close();
-				if (resultSet != null)
-					resultSet.close();
-				statement = null;
-				resultSet = null;
-			}
-			catch (SQLException sqle1) {
-				Log.errorException(sqle1);
-			}
-			finally {
-				DatabaseConnection.releaseConnection(connection);
-			}
+			monitoredElement.setMonitoredDomainMemberIds0(mdmIds);
 		}
 	}
+
+//	private void retrieveMDMIdsByOneQuery1(Collection monitoredElements, String linkTable, String linkColumn)
+//			throws RetrieveObjectException {
+//		if (monitoredElements == null || monitoredElements.isEmpty())
+//			return;
+//
+//		StringBuffer sql = new StringBuffer(SQL_SELECT
+//				+ MonitoredElementWrapper.LINK_COLUMN_MONITORED_ELEMENT_ID + COMMA
+//				+ linkColumn
+//				+ SQL_FROM + linkTable
+//				+ SQL_WHERE);
+//		try {
+//			sql.append(this.idsEnumerationString(monitoredElements, MonitoredElementWrapper.LINK_COLUMN_MONITORED_ELEMENT_ID, true));
+//		}
+//		catch (IllegalDataException ide) {
+//			throw new RetrieveObjectException(ide);
+//		}
+//
+//		Statement statement = null;
+//		ResultSet resultSet = null;
+//		Connection connection = DatabaseConnection.getConnection();
+//		try {
+//			statement = connection.createStatement();
+//			Log.debugMessage("MonitoredElementDatabase.retrieveMDMIdsByOneQuery | Trying: " + sql, Log.DEBUGLEVEL09);
+//			resultSet = statement.executeQuery(sql.toString());
+//
+//			Map mdmIdsMap = new HashMap();
+//			Identifier meId;
+//			Collection mdmIds;
+//			while (resultSet.next()) {
+//				meId = DatabaseIdentifier.getIdentifier(resultSet, MonitoredElementWrapper.LINK_COLUMN_MONITORED_ELEMENT_ID);
+//				mdmIds = (Collection) mdmIdsMap.get(meId);
+//				if (mdmIds == null) {
+//					mdmIds = new LinkedList();
+//					mdmIdsMap.put(meId, mdmIds);
+//				}
+//				mdmIds.add(DatabaseIdentifier.getIdentifier(resultSet, linkColumn));
+//			}
+//
+//			MonitoredElement monitoredElement;
+//			for (Iterator it = monitoredElements.iterator(); it.hasNext();) {
+//				monitoredElement = (MonitoredElement) it.next();
+//				meId = monitoredElement.getId();
+//				mdmIds = (Collection) mdmIdsMap.get(meId);
+//
+//				monitoredElement.setMonitoredDomainMemberIds0(mdmIds);
+//			}
+//		}
+//		catch (SQLException sqle) {
+//			String mesg = "MonitoredElementDatabase.retrieveMDMIdsByOneQuery | Cannot retrieve parameters for result -- "
+//					+ sqle.getMessage();
+//			throw new RetrieveObjectException(mesg, sqle);
+//		}
+//		finally {
+//			try {
+//				if (statement != null)
+//					statement.close();
+//				if (resultSet != null)
+//					resultSet.close();
+//				statement = null;
+//				resultSet = null;
+//			}
+//			catch (SQLException sqle1) {
+//				Log.errorException(sqle1);
+//			}
+//			finally {
+//				DatabaseConnection.releaseConnection(connection);
+//			}
+//		}
+//	}
 
 	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg)
 			throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
@@ -339,8 +364,9 @@ public class MonitoredElementDatabase extends StorableObjectDatabase {
 		try {
 			super.insertEntity(monitoredElement);
 			this.insertMonitoredDomainMemberIds(monitoredElement);
-		} catch (CreateObjectException coe) {
-			this.delete(monitoredElement);
+		}
+		catch (CreateObjectException coe) {
+			this.delete(monitoredElement.getId());
 			throw coe;
 		}
 	}
@@ -476,57 +502,69 @@ public class MonitoredElementDatabase extends StorableObjectDatabase {
 		return objects;
 	}
 
-	public void delete(StorableObject storableObject) throws IllegalDataException {
-		MonitoredElement monitoredElement = this.fromStorableObject(storableObject);
-		String meIdStr = DatabaseIdentifier.toSQLString(monitoredElement.getId());
-		int meSort = monitoredElement.getSort().value();
+	public void delete(Identifier id) throws IllegalDataException {
+		if (id.getMajor() != ObjectEntities.ME_ENTITY_CODE)
+			throw new IllegalDataException("MonitoredElementDatabase.delete | Cannot delete object of code "
+					+ id.getMajor() + ", entity '" + ObjectEntities.codeToString(id.getMajor()) + "'");
 
-		String sql1;
-		{
-			StringBuffer buffer = new StringBuffer(SQL_DELETE_FROM);
+		try {
+			MonitoredElement monitoredElement = new MonitoredElement(id);
+			String meIdStr = DatabaseIdentifier.toSQLString(monitoredElement.getId());
+			int meSort = monitoredElement.getSort().value();
+
+			StringBuffer sql1 = new StringBuffer(SQL_DELETE_FROM);
 			switch (meSort) {
 				case MonitoredElementSort._MONITOREDELEMENT_SORT_EQUIPMENT:
-					buffer.append(ObjectEntities.EQUIPMENTMELINK_ENTITY);
+					sql1.append(ObjectEntities.EQUIPMENTMELINK_ENTITY);
 					break;
 				case MonitoredElementSort._MONITOREDELEMENT_SORT_TRANSMISSION_PATH:
-					buffer.append(ObjectEntities.TRANSPATHMELINK_ENTITY);
+					sql1.append(ObjectEntities.TRANSPATHMELINK_ENTITY);
 					break;
 				default:
 					String mesg = "MonitoredElementDatabase.delete | ERROR: Unknown sort of monitored element: "
 							+ meSort;
 					Log.errorMessage(mesg);
 			}
-			buffer.append(SQL_WHERE);
-			buffer.append(MonitoredElementWrapper.LINK_COLUMN_MONITORED_ELEMENT_ID);
-			buffer.append(EQUALS);
-			buffer.append(meIdStr);
-			sql1 = buffer.toString();
-		}
+			sql1.append(SQL_WHERE);
+			sql1.append(MonitoredElementWrapper.LINK_COLUMN_MONITORED_ELEMENT_ID);
+			sql1.append(EQUALS);
+			sql1.append(meIdStr);
 
-		String sql2 = SQL_DELETE_FROM + ObjectEntities.ME_ENTITY + SQL_WHERE + StorableObjectWrapper.COLUMN_ID + EQUALS
-				+ meIdStr;
+			String sql2 = SQL_DELETE_FROM + ObjectEntities.ME_ENTITY
+					+ SQL_WHERE + StorableObjectWrapper.COLUMN_ID + EQUALS + meIdStr;
 
-		Statement statement = null;
-		Connection connection = DatabaseConnection.getConnection();
-		try {
-			statement = connection.createStatement();
-			Log.debugMessage("MonitoredElementDatabase.delete | Trying: " + sql1, Log.DEBUGLEVEL09);
-			statement.executeUpdate(sql1);
-			Log.debugMessage("MonitoredElementDatabase.delete | Trying: " + sql2, Log.DEBUGLEVEL09);
-			statement.executeUpdate(sql2);
-			connection.commit();
-		} catch (SQLException sqle1) {
-			Log.errorException(sqle1);
-		} finally {
+			Statement statement = null;
+			Connection connection = DatabaseConnection.getConnection();
 			try {
-				if (statement != null)
-					statement.close();
-				statement = null;
-			} catch (SQLException sqle1) {
-				Log.errorException(sqle1);
-			} finally {
-				DatabaseConnection.releaseConnection(connection);
+				statement = connection.createStatement();
+				Log.debugMessage("MonitoredElementDatabase.delete | Trying: " + sql1, Log.DEBUGLEVEL09);
+				statement.executeUpdate(sql1.toString());
+				Log.debugMessage("MonitoredElementDatabase.delete | Trying: " + sql2, Log.DEBUGLEVEL09);
+				statement.executeUpdate(sql2);
+				connection.commit();
 			}
+			catch (SQLException sqle1) {
+				Log.errorException(sqle1);
+			}
+			finally {
+				try {
+					if (statement != null)
+						statement.close();
+					statement = null;
+				}
+				catch (SQLException sqle1) {
+					Log.errorException(sqle1);
+				}
+				finally {
+					DatabaseConnection.releaseConnection(connection);
+				}
+			}
+		}
+		catch (RetrieveObjectException e) {
+			Log.errorException(e);
+		}
+		catch (ObjectNotFoundException e) {
+			Log.errorException(e);
 		}
 	}
 
