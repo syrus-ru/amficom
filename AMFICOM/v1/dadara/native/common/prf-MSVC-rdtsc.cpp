@@ -9,9 +9,11 @@
 static int clock_cur;
 static __int64 clock_cur_64;
 static int cur_id = -1;
+static int isModified = 0;
 
 const int debug_to_console = 0;
-const int dump_regularly = 1;
+const int dump_regularly = 0;
+const int print_only_if_modified = 1;
 
 #if USE_clock
 const int clock_loop_print = CLK_TCK * 5;
@@ -92,6 +94,7 @@ void prf_b(char *id)
 		}
 #endif
 		pdata[cur_id].total_count++;
+		isModified = 1;
 	}
 	// если не надо начинать другой блок, заканчиваем
 	if (id == 0)
@@ -131,6 +134,11 @@ void prf_print(FILE *f) // f == 0 is default (stdout)
 {
 	if (f == 0)
 		f = stdout;
+
+	if (!isModified)
+		return;
+
+	isModified = 0;
 
 	int i;
 
