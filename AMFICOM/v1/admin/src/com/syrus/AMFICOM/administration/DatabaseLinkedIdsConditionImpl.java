@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseLinkedIdsConditionImpl.java,v 1.3 2005/02/09 15:44:39 bob Exp $
+ * $Id: DatabaseLinkedIdsConditionImpl.java,v 1.4 2005/02/10 08:09:01 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,7 +15,7 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/02/09 15:44:39 $
+ * @version $Revision: 1.4 $, $Date: 2005/02/10 08:09:01 $
  * @author $Author: bob $
  * @module admin_v1
  */
@@ -30,8 +30,8 @@ final class DatabaseLinkedIdsConditionImpl extends AbstractDatabaseLinkedIdsCond
 		StringBuffer buffer = new StringBuffer();
 		switch (super.condition.getEntityCode().shortValue()) {
 			case ObjectEntities.MCM_ENTITY_CODE:
-				buffer.append(super.getLinkedQuery(MCMWrapper.LINK_COLUMN_MCM_ID, ObjectEntities.KIS_ENTITY,
-					StorableObjectWrapper.COLUMN_ID));
+				buffer.append(super.getLinkedQuery(MCMWrapper.LINK_COLUMN_MCM_ID,
+					StorableObjectWrapper.COLUMN_ID, ObjectEntities.KIS_ENTITY));
 				/* break commenting is ok, append domain condition too */
 //				break; 				
 			case ObjectEntities.DOMAIN_ENTITY_CODE:
