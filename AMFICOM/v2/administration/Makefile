@@ -4,9 +4,6 @@ IDL=../idl
 LIB=../lib
 DEVLIB=../devlib
 
-
-
-
 LIBNAME=administration.jar
 ARCHFILE=administration.tar.gz
 
@@ -35,6 +32,11 @@ $(LIBNAME):	mach
 
 mach:	corba
 	$(JAVAC) $(JAVAC_CUSTOM_OPTIONS) $(JAVAC_OPTIONS) -classpath $(CLASSES):$(APPCLASSPATH) \
+		$(SRC)/com/syrus/AMFICOM/administration/DomainMember.java \
+		$(SRC)/com/syrus/AMFICOM/administration/PermissionAttributes.java \
+		$(SRC)/com/syrus/AMFICOM/administration/PermissionAttributes_Database.java \
+		$(SRC)/com/syrus/AMFICOM/administration/Domain.java \
+		$(SRC)/com/syrus/AMFICOM/administration/Domain_Database.java \
 		$(SRC)/com/syrus/AMFICOM/administration/Server.java \
 		$(SRC)/com/syrus/AMFICOM/administration/Server_Database.java \
 		$(SRC)/com/syrus/AMFICOM/administration/MCM.java \

@@ -8,7 +8,6 @@ import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObject_Database;
-import com.syrus.AMFICOM.general.StorableObject_DatabaseContext;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.configuration.KIS;
 import com.syrus.AMFICOM.administration.corba.MCM_Transferable;
@@ -28,7 +27,7 @@ public class MCM extends StorableObject {
 	public MCM(Identifier id) throws RetrieveObjectException {
 		super(id);
 
-		this.mcmDatabase = StorableObject_DatabaseContext.mcmDatabase;
+		this.mcmDatabase = AdministrationDatabaseContext.mcmDatabase;
 		try {
 			this.mcmDatabase.retrieve(this);
 		}
@@ -59,7 +58,7 @@ public class MCM extends StorableObject {
 				throw new CreateObjectException(roe.getMessage(), roe);
 			}
 
-		this.mcmDatabase = StorableObject_DatabaseContext.mcmDatabase;
+		this.mcmDatabase = AdministrationDatabaseContext.mcmDatabase;
 		try {
 			this.mcmDatabase.insert(this);
 		}

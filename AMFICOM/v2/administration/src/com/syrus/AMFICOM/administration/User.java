@@ -6,7 +6,6 @@ import java.util.Iterator;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObject_Database;
-import com.syrus.AMFICOM.general.StorableObject_DatabaseContext;
 import com.syrus.AMFICOM.general.TransferableObject;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
@@ -28,7 +27,7 @@ public class User extends StorableObject {
 	public User(Identifier id) throws RetrieveObjectException {
 		super(id);
 
-		this.userDatabase = StorableObject_DatabaseContext.userDatabase;
+		this.userDatabase = AdministrationDatabaseContext.userDatabase;
 		try {
 			this.userDatabase.retrieve(this);
 		}
@@ -57,7 +56,7 @@ public class User extends StorableObject {
 		for (int i = 0; i < ut.group_ids.length; i++)
 			this.group_ids.add(new Identifier(ut.group_ids[i]));
 
-		this.userDatabase = StorableObject_DatabaseContext.userDatabase;
+		this.userDatabase = AdministrationDatabaseContext.userDatabase;
 		try {
 			this.userDatabase.insert(this);
 		}
@@ -139,11 +138,11 @@ public class User extends StorableObject {
 		this.sessions = sessions;
 	}
 
-	protected void setCategoryIds(ArrayList category_ids) {
+	protected synchronized void setCategoryIds(ArrayList category_ids) {
 		this.category_ids = category_ids;
 	}
 
-	protected void setGroupIds(ArrayList group_ids) {
+	protected synchronized void setGroupIds(ArrayList group_ids) {
 		this.group_ids = group_ids;
 	}
 }

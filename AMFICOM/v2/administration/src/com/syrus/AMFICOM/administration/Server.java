@@ -8,7 +8,6 @@ import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObject_Database;
-import com.syrus.AMFICOM.general.StorableObject_DatabaseContext;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.administration.corba.Server_Transferable;
 
@@ -27,7 +26,7 @@ public class Server extends StorableObject {
 	public Server(Identifier id) throws RetrieveObjectException {
 		super(id);
 
-		this.serverDatabase = StorableObject_DatabaseContext.serverDatabase;
+		this.serverDatabase = AdministrationDatabaseContext.serverDatabase;
 		try {
 			this.serverDatabase.retrieve(this);
 		}
@@ -58,7 +57,7 @@ public class Server extends StorableObject {
 				throw new CreateObjectException(roe.getMessage(), roe);
 			}
 
-		this.serverDatabase = StorableObject_DatabaseContext.serverDatabase;
+		this.serverDatabase = AdministrationDatabaseContext.serverDatabase;
 		try {
 			this.serverDatabase.insert(this);
 		}
