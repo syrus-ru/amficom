@@ -1,2 +1,0 @@
-@@parametertype
-@@characteristictype.sql

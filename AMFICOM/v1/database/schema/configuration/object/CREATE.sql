@@ -1,9 +1,0 @@
-@@link.sql
-@@equipment.sql
-@@port.sql
-@@transmissionpath.sql
-@@kis.sql
-@@measurementport.sql
-@@monitoredelement.sql
-@@equipmentmelink.sql
-@@transmissionpathmelink.sql
