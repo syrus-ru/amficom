@@ -150,7 +150,8 @@ public class Pool extends Object
 				if (obj instanceof ObjectResource)
 				{
 					ObjectResource or = (ObjectResource) obj;
-					if (or.isChanged()) retht.put(or.getId(), or);
+					if (or.isChanged())
+						retht.put(or.getId(), or);
 				}
 			}
 		}
