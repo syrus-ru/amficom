@@ -46,7 +46,7 @@ $(LIBNAME):	.mach
 	touch $@
 
 .mach:	$(CLASSDIR)
-	$(JAVAC) $(JAVACFLAGS) -nowarn \
+	$(JAVAC) $(JAVACFLAGS) \
 		-classpath $(APPCLASSPATH) \
 		$(wildcard $(SRCDIR)/com/syrus/AMFICOM/analysis/*.java) \
 		$(wildcard $(SRCDIR)/com/syrus/AMFICOM/analysis/dadara/*.java)
