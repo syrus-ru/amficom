@@ -127,7 +127,6 @@ public class ThresholdsSelectionFrame extends ATableFrame
 			}
 		});
 
-		// @todo: add tooltip text and icon
 		jButtonInc.setToolTipText(LangModelAnalyse.getString("increaseThresh"));
 		jButtonInc.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/increaseThresh.gif")));
 		jButtonInc.addActionListener(new ActionListener()
@@ -143,7 +142,6 @@ public class ThresholdsSelectionFrame extends ATableFrame
 			}
 		});
 
-		// @todo: add tooltip text and icon
 		jButtonDec.setToolTipText(LangModelAnalyse.getString("decreaseThresh"));
 		jButtonDec.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/decreaseThresh.gif")));
 		jButtonDec.addActionListener(new ActionListener()
