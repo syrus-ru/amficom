@@ -1,5 +1,5 @@
 /*
- * $Id: MCM.java,v 1.32 2004/12/09 12:23:59 bob Exp $
+ * $Id: MCM.java,v 1.33 2004/12/09 16:12:48 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,8 +27,8 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.configuration.corba.MCM_Transferable;
 
 /**
- * @version $Revision: 1.32 $, $Date: 2004/12/09 12:23:59 $
- * @author $Author: bob $
+ * @version $Revision: 1.33 $, $Date: 2004/12/09 16:12:48 $
+ * @author $Author: arseniy $
  * @module configuration_v1
  */
 
@@ -110,21 +110,31 @@ public class MCM extends DomainMember implements Characterized {
 		
 		this.mcmDatabase = ConfigurationDatabaseContext.mcmDatabase;
 	}
-	
-	public static MCM getInstance(MCM_Transferable mt) throws CreateObjectException {
-		MCM mcm = new MCM(mt);
-		
-		mcm.mcmDatabase = ConfigurationDatabaseContext.mcmDatabase;
-		try {
-			if (mcm.mcmDatabase != null)
-				mcm.mcmDatabase.insert(mcm);
-		}
-		catch (IllegalDataException ide) {
-			throw new CreateObjectException(ide.getMessage(), ide);
-		}
 
-		return mcm;
+	public void insert() throws CreateObjectException {
+		try {
+			if (this.mcmDatabase != null)
+				this.mcmDatabase.update(this, StorableObjectDatabase.UPDATE_FORCE, null);
+		}
+		catch (ApplicationException ae) {
+			throw new CreateObjectException(ae.getMessage(), ae);
+		}
 	}
+
+//	public static MCM getInstance(MCM_Transferable mt) throws CreateObjectException {
+//		MCM mcm = new MCM(mt);
+//		
+//		mcm.mcmDatabase = ConfigurationDatabaseContext.mcmDatabase;
+//		try {
+//			if (mcm.mcmDatabase != null)
+//				mcm.mcmDatabase.insert(mcm);
+//		}
+//		catch (IllegalDataException ide) {
+//			throw new CreateObjectException(ide.getMessage(), ide);
+//		}
+//
+//		return mcm;
+//	}
 
 	public Object getTransferable() {
 		int i = 0;

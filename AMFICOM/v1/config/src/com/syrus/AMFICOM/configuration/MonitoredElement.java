@@ -1,5 +1,5 @@
 /*
- * $Id: MonitoredElement.java,v 1.31 2004/12/09 12:24:00 bob Exp $
+ * $Id: MonitoredElement.java,v 1.32 2004/12/09 16:12:48 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,6 +18,7 @@ import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
@@ -27,8 +28,8 @@ import com.syrus.AMFICOM.configuration.corba.MonitoredElement_Transferable;
 import com.syrus.AMFICOM.configuration.corba.MonitoredElementSort;
 
 /**
- * @version $Revision: 1.31 $, $Date: 2004/12/09 12:24:00 $
- * @author $Author: bob $
+ * @version $Revision: 1.32 $, $Date: 2004/12/09 16:12:48 $
+ * @author $Author: arseniy $
  * @module configuration_v1
  */
 
@@ -130,20 +131,30 @@ public class MonitoredElement extends DomainMember {
 		}
 	}
 
-	public static MonitoredElement getInstance(MonitoredElement_Transferable met) throws CreateObjectException {
-		MonitoredElement me = new MonitoredElement(met);
-		
-		me.monitoredElementDatabase = ConfigurationDatabaseContext.monitoredElementDatabase;
+	public void insert() throws CreateObjectException {
 		try {
-			if (me.monitoredElementDatabase != null)
-				me.monitoredElementDatabase.insert(me);
+			if (this.monitoredElementDatabase != null)
+				this.monitoredElementDatabase.update(this, StorableObjectDatabase.UPDATE_FORCE, null);
 		}
-		catch (IllegalDataException ide) {
-			throw new CreateObjectException(ide.getMessage(), ide);
+		catch (ApplicationException ae) {
+			throw new CreateObjectException(ae.getMessage(), ae);
 		}
-		
-		return me;
 	}
+
+//	public static MonitoredElement getInstance(MonitoredElement_Transferable met) throws CreateObjectException {
+//		MonitoredElement me = new MonitoredElement(met);
+//		
+//		me.monitoredElementDatabase = ConfigurationDatabaseContext.monitoredElementDatabase;
+//		try {
+//			if (me.monitoredElementDatabase != null)
+//				me.monitoredElementDatabase.insert(me);
+//		}
+//		catch (IllegalDataException ide) {
+//			throw new CreateObjectException(ide.getMessage(), ide);
+//		}
+//		
+//		return me;
+//	}
 	
 	public Object getTransferable() {
 		Identifier_Transferable[] mdmIds = new Identifier_Transferable[this.monitoredDomainMemberIds.size()];

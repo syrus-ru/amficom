@@ -1,5 +1,5 @@
 /*
- * $Id: Server.java,v 1.26 2004/12/09 12:24:00 bob Exp $
+ * $Id: Server.java,v 1.27 2004/12/09 16:12:48 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,8 +27,8 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.configuration.corba.Server_Transferable;
 
 /**
- * @version $Revision: 1.26 $, $Date: 2004/12/09 12:24:00 $
- * @author $Author: bob $
+ * @version $Revision: 1.27 $, $Date: 2004/12/09 16:12:48 $
+ * @author $Author: arseniy $
  * @module configuration_v1
  */
 
@@ -93,21 +93,31 @@ public class Server extends DomainMember implements Characterized {
 		this.characteristics = new LinkedList();
 		this.serverDatabase = ConfigurationDatabaseContext.serverDatabase;
 	}
-	
-	public static Server getInstance(Server_Transferable st) throws CreateObjectException {
-		Server server = new Server(st);
-		
-		server.serverDatabase = ConfigurationDatabaseContext.serverDatabase;
-		try {
-			if (server.serverDatabase != null)
-				server.serverDatabase.insert(server);
-		}
-		catch (IllegalDataException ide) {
-			throw new CreateObjectException(ide.getMessage(), ide);
-		}
 
-		return server;
+	public void insert() throws CreateObjectException {
+		try {
+			if (this.serverDatabase != null)
+				this.serverDatabase.update(this, StorableObjectDatabase.UPDATE_FORCE, null);
+		}
+		catch (ApplicationException ae) {
+			throw new CreateObjectException(ae.getMessage(), ae);
+		}
 	}
+
+//	public static Server getInstance(Server_Transferable st) throws CreateObjectException {
+//		Server server = new Server(st);
+//		
+//		server.serverDatabase = ConfigurationDatabaseContext.serverDatabase;
+//		try {
+//			if (server.serverDatabase != null)
+//				server.serverDatabase.insert(server);
+//		}
+//		catch (IllegalDataException ide) {
+//			throw new CreateObjectException(ide.getMessage(), ide);
+//		}
+//
+//		return server;
+//	}
 
 	public Object getTransferable() {
 		int i = 0;

@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPathType.java,v 1.13 2004/12/09 12:24:00 bob Exp $
+ * $Id: TransmissionPathType.java,v 1.14 2004/12/09 16:12:48 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,8 +28,8 @@ import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2004/12/09 12:24:00 $
- * @author $Author: bob $
+ * @version $Revision: 1.14 $, $Date: 2004/12/09 16:12:48 $
+ * @author $Author: arseniy $
  * @module module_name
  */
 
@@ -92,34 +92,46 @@ public class TransmissionPathType extends StorableObjectType implements Characte
     public static TransmissionPathType createInstance(Identifier creatorId,
             String codename,
             String description,
-            String name) throws CreateObjectException{
-    	if (creatorId == null || codename == null || name == null || description == null)
-			throw new IllegalArgumentException("Argument is 'null'");
-		
-        try {
-			return new TransmissionPathType(IdentifierPool.getGeneratedIdentifier(ObjectEntities.TRANSPATHTYPE_ENTITY_CODE),
+            String name) throws CreateObjectException {
+			if (creatorId == null || codename == null || name == null || description == null)
+				throw new IllegalArgumentException("Argument is 'null'");
+
+      try {
+				return new TransmissionPathType(IdentifierPool.getGeneratedIdentifier(ObjectEntities.TRANSPATHTYPE_ENTITY_CODE),
 			        creatorId,
 			        codename,
 			        description,
 			        name);
-		} catch (IllegalObjectEntityException e) {
-			throw new CreateObjectException("TransmissionPathType.createInstance | cannot generate identifier ", e);
+			}
+			catch (IllegalObjectEntityException e) {
+				throw new CreateObjectException("TransmissionPathType.createInstance | cannot generate identifier ", e);
+			}
+    }
+
+	public void insert() throws CreateObjectException {
+		try {
+			if (this.transmissionPathTypeDatabase != null)
+				this.transmissionPathTypeDatabase.update(this, StorableObjectDatabase.UPDATE_FORCE, null);
 		}
-    }
-    public static TransmissionPathType getInstance(TransmissionPathType_Transferable ktt) throws CreateObjectException {
-        TransmissionPathType transmissionPathType = new TransmissionPathType(ktt);
-        
-        transmissionPathType.transmissionPathTypeDatabase = ConfigurationDatabaseContext.transmissionPathTypeDatabase;
-        try {
-            if (transmissionPathType.transmissionPathTypeDatabase != null)
-                transmissionPathType.transmissionPathTypeDatabase.insert(transmissionPathType);
-        }
-        catch (IllegalDataException ide) {
-            throw new CreateObjectException(ide.getMessage(), ide);
-        }
-        
-        return transmissionPathType;
-    }
+		catch (ApplicationException ae) {
+			throw new CreateObjectException(ae.getMessage(), ae);
+		}
+	}
+
+//	public static TransmissionPathType getInstance(TransmissionPathType_Transferable ktt) throws CreateObjectException {
+//			TransmissionPathType transmissionPathType = new TransmissionPathType(ktt);
+//			
+//			transmissionPathType.transmissionPathTypeDatabase = ConfigurationDatabaseContext.transmissionPathTypeDatabase;
+//			try {
+//					if (transmissionPathType.transmissionPathTypeDatabase != null)
+//							transmissionPathType.transmissionPathTypeDatabase.insert(transmissionPathType);
+//			}
+//			catch (IllegalDataException ide) {
+//					throw new CreateObjectException(ide.getMessage(), ide);
+//			}
+//			
+//			return transmissionPathType;
+//	}
     
     public Object getTransferable() {
         int i = 0;

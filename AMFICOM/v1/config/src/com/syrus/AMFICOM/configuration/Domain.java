@@ -1,5 +1,5 @@
 /*
- * $Id: Domain.java,v 1.24 2004/12/09 12:23:55 bob Exp $
+ * $Id: Domain.java,v 1.25 2004/12/09 16:12:48 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,8 +9,8 @@
 package com.syrus.AMFICOM.configuration;
 
 /**
- * @version $Revision: 1.24 $, $Date: 2004/12/09 12:23:55 $
- * @author $Author: bob $
+ * @version $Revision: 1.25 $, $Date: 2004/12/09 16:12:48 $
+ * @author $Author: arseniy $
  * @module configuration_v1
  */
 
@@ -158,21 +158,31 @@ public class Domain extends DomainMember implements Characterized {
 			throw new CreateObjectException("Domain.createInstance | cannot generate identifier ", e);
 		}
 	}
-	
-	public static Domain getInstance(Domain_Transferable dt) throws CreateObjectException {
-		Domain domain = new Domain(dt);
-		
-		domain.domainDatabase = ConfigurationDatabaseContext.domainDatabase;
+
+	public void insert() throws CreateObjectException {
 		try {
-			if (domain.domainDatabase != null)
-				domain.domainDatabase.insert(domain);
+			if (this.domainDatabase != null)
+				this.domainDatabase.update(this, StorableObjectDatabase.UPDATE_FORCE, null);
 		}
-		catch (IllegalDataException ide) {
-			throw new CreateObjectException(ide.getMessage(), ide);
+		catch (ApplicationException ae) {
+			throw new CreateObjectException(ae.getMessage(), ae);
 		}
-		
-		return domain;
 	}
+
+//	public static Domain getInstance(Domain_Transferable dt) throws CreateObjectException {
+//		Domain domain = new Domain(dt);
+//		
+//		domain.domainDatabase = ConfigurationDatabaseContext.domainDatabase;
+//		try {
+//			if (domain.domainDatabase != null)
+//				domain.domainDatabase.insert(domain);
+//		}
+//		catch (IllegalDataException ide) {
+//			throw new CreateObjectException(ide.getMessage(), ide);
+//		}
+//		
+//		return domain;
+//	}
 
 	protected synchronized void setAttributes(Date created,
 																						Date modified,

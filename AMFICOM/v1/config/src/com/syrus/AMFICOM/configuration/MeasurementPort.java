@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPort.java,v 1.25 2004/12/09 12:24:00 bob Exp $
+ * $Id: MeasurementPort.java,v 1.26 2004/12/09 16:12:48 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,8 +31,8 @@ import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.25 $, $Date: 2004/12/09 12:24:00 $
- * @author $Author: bob $
+ * @version $Revision: 1.26 $, $Date: 2004/12/09 16:12:48 $
+ * @author $Author: arseniy $
  * @module configuration_v1
  */
 public class MeasurementPort extends StorableObject implements Characterized, TypedObject{
@@ -140,20 +140,30 @@ public class MeasurementPort extends StorableObject implements Characterized, Ty
 		}
 	}
 
-	public static MeasurementPort getInstance(MeasurementPort_Transferable mpt) throws CreateObjectException {
-		MeasurementPort measurementPort = new MeasurementPort(mpt);
-		
-		measurementPort.measurementPortDatabase = ConfigurationDatabaseContext.measurementPortDatabase;
+	public void insert() throws CreateObjectException {
 		try {
-			if (measurementPort.measurementPortDatabase != null)
-				measurementPort.measurementPortDatabase.insert(measurementPort);
+			if (this.measurementPortDatabase != null)
+				this.measurementPortDatabase.update(this, StorableObjectDatabase.UPDATE_FORCE, null);
 		}
-		catch (IllegalDataException ide) {
-			throw new CreateObjectException(ide.getMessage(), ide);
+		catch (ApplicationException ae) {
+			throw new CreateObjectException(ae.getMessage(), ae);
 		}
-		
-		return measurementPort;
 	}
+
+//	public static MeasurementPort getInstance(MeasurementPort_Transferable mpt) throws CreateObjectException {
+//		MeasurementPort measurementPort = new MeasurementPort(mpt);
+//		
+//		measurementPort.measurementPortDatabase = ConfigurationDatabaseContext.measurementPortDatabase;
+//		try {
+//			if (measurementPort.measurementPortDatabase != null)
+//				measurementPort.measurementPortDatabase.insert(measurementPort);
+//		}
+//		catch (IllegalDataException ide) {
+//			throw new CreateObjectException(ide.getMessage(), ide);
+//		}
+//		
+//		return measurementPort;
+//	}
 	
 	public Object getTransferable() {
 		int i = 0;

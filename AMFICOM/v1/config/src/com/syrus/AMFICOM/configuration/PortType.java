@@ -1,5 +1,5 @@
 /*
- * $Id: PortType.java,v 1.21 2004/12/09 12:24:00 bob Exp $
+ * $Id: PortType.java,v 1.22 2004/12/09 16:12:48 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,8 +31,8 @@ import com.syrus.AMFICOM.configuration.corba.PortTypeSort;
 import com.syrus.AMFICOM.configuration.corba.PortType_Transferable;
 
 /**
- * @version $Revision: 1.21 $, $Date: 2004/12/09 12:24:00 $
- * @author $Author: bob $
+ * @version $Revision: 1.22 $, $Date: 2004/12/09 16:12:48 $
+ * @author $Author: arseniy $
  * @module configuration_v1
  */
 
@@ -120,21 +120,31 @@ public class PortType extends StorableObjectType implements Characterized {
 			throw new CreateObjectException("PortType.createInstance | cannot generate identifier ", e);
 		}
 	}
-	
-	public static PortType getInstance(PortType_Transferable ptt) throws CreateObjectException {
-		PortType portType = new PortType(ptt);
-		
-		portType.portTypeDatabase = ConfigurationDatabaseContext.portTypeDatabase;
+
+	public void insert() throws CreateObjectException {
 		try {
-			if (portType.portTypeDatabase != null)
-				portType.portTypeDatabase.insert(portType);
+			if (this.portTypeDatabase != null)
+				this.portTypeDatabase.update(this, StorableObjectDatabase.UPDATE_FORCE, null);
 		}
-		catch (IllegalDataException ide) {
-			throw new CreateObjectException(ide.getMessage(), ide);
+		catch (ApplicationException ae) {
+			throw new CreateObjectException(ae.getMessage(), ae);
 		}
-		
-		return portType;
 	}
+
+//	public static PortType getInstance(PortType_Transferable ptt) throws CreateObjectException {
+//		PortType portType = new PortType(ptt);
+//		
+//		portType.portTypeDatabase = ConfigurationDatabaseContext.portTypeDatabase;
+//		try {
+//			if (portType.portTypeDatabase != null)
+//				portType.portTypeDatabase.insert(portType);
+//		}
+//		catch (IllegalDataException ide) {
+//			throw new CreateObjectException(ide.getMessage(), ide);
+//		}
+//		
+//		return portType;
+//	}
 	
 	public Object getTransferable() {
 		int i = 0;

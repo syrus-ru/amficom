@@ -1,5 +1,5 @@
 /*
- * $Id: CableThreadType.java,v 1.7 2004/12/09 14:21:36 max Exp $
+ * $Id: CableThreadType.java,v 1.8 2004/12/09 16:12:48 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -19,14 +19,15 @@ import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2004/12/09 14:21:36 $
- * @author $Author: max $
+ * @version $Revision: 1.8 $, $Date: 2004/12/09 16:12:48 $
+ * @author $Author: arseniy $
  * @module configuration_v1
  */
 
@@ -100,19 +101,29 @@ public class CableThreadType extends AbstractLinkType {
 
 	}
 
-	public static CableThreadType getInstance(CableThreadType_Transferable ctt) throws CreateObjectException {
-		CableThreadType cableThreadType = new CableThreadType(ctt);
-
-		cableThreadType.cableThreadTypeDatabase = ConfigurationDatabaseContext.cableThreadTypeDatabase;
+	public void insert() throws CreateObjectException {
 		try {
-			if (cableThreadType.cableThreadTypeDatabase != null)
-				cableThreadType.cableThreadTypeDatabase.insert(cableThreadType);
-		} catch (IllegalDataException ide) {
-			throw new CreateObjectException(ide.getMessage(), ide);
+			if (this.cableThreadTypeDatabase != null)
+				this.cableThreadTypeDatabase.update(this, StorableObjectDatabase.UPDATE_FORCE, null);
 		}
-
-		return cableThreadType;
+		catch (ApplicationException ae) {
+			throw new CreateObjectException(ae.getMessage(), ae);
+		}
 	}
+
+//	public static CableThreadType getInstance(CableThreadType_Transferable ctt) throws CreateObjectException {
+//		CableThreadType cableThreadType = new CableThreadType(ctt);
+//
+//		cableThreadType.cableThreadTypeDatabase = ConfigurationDatabaseContext.cableThreadTypeDatabase;
+//		try {
+//			if (cableThreadType.cableThreadTypeDatabase != null)
+//				cableThreadType.cableThreadTypeDatabase.insert(cableThreadType);
+//		} catch (IllegalDataException ide) {
+//			throw new CreateObjectException(ide.getMessage(), ide);
+//		}
+//
+//		return cableThreadType;
+//	}
 
 	public Object getTransferable() {
 		return new CableThreadType_Transferable(super.getHeaderTransferable(), 

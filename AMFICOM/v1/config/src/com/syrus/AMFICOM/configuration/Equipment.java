@@ -1,5 +1,5 @@
 /*
- * $Id: Equipment.java,v 1.42 2004/12/09 12:23:55 bob Exp $
+ * $Id: Equipment.java,v 1.43 2004/12/09 16:12:48 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,8 +29,8 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.configuration.corba.Equipment_Transferable;
 
 /**
- * @version $Revision: 1.42 $, $Date: 2004/12/09 12:23:55 $
- * @author $Author: bob $
+ * @version $Revision: 1.43 $, $Date: 2004/12/09 16:12:48 $
+ * @author $Author: arseniy $
  * @module configuration_v1
  */
 
@@ -176,21 +176,31 @@ public class Equipment extends MonitoredDomainMember implements Characterized, T
 			throw new CreateObjectException("Equipment.createInstance | cannot generate identifier ", e);
 		}
 	}
-	
-	public static Equipment getInstance(Equipment_Transferable et) throws CreateObjectException{
-		Equipment equipment = new Equipment(et);	
-		
-		equipment.equipmentDatabase = ConfigurationDatabaseContext.equipmentDatabase;
+
+	public void insert() throws CreateObjectException {
 		try {
-			if (equipment.equipmentDatabase != null)
-				equipment.equipmentDatabase.insert(equipment);
+			if (this.equipmentDatabase != null)
+				this.equipmentDatabase.update(this, StorableObjectDatabase.UPDATE_FORCE, null);
 		}
-		catch (IllegalDataException ide) {
-			throw new CreateObjectException(ide.getMessage(), ide);
+		catch (ApplicationException ae) {
+			throw new CreateObjectException(ae.getMessage(), ae);
 		}
-		
-		return equipment;
 	}
+
+//	public static Equipment getInstance(Equipment_Transferable et) throws CreateObjectException{
+//		Equipment equipment = new Equipment(et);	
+//		
+//		equipment.equipmentDatabase = ConfigurationDatabaseContext.equipmentDatabase;
+//		try {
+//			if (equipment.equipmentDatabase != null)
+//				equipment.equipmentDatabase.insert(equipment);
+//		}
+//		catch (IllegalDataException ide) {
+//			throw new CreateObjectException(ide.getMessage(), ide);
+//		}
+//		
+//		return equipment;
+//	}
 
 	public Object getTransferable() {
 		int i = 0;

@@ -1,5 +1,5 @@
 /*
- * $Id: KIS.java,v 1.41 2004/12/09 12:23:55 bob Exp $
+ * $Id: KIS.java,v 1.42 2004/12/09 16:12:48 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,8 +28,8 @@ import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.41 $, $Date: 2004/12/09 12:23:55 $
- * @author $Author: bob $
+ * @version $Revision: 1.42 $, $Date: 2004/12/09 16:12:48 $
+ * @author $Author: arseniy $
  * @module configuration_v1
  */
 
@@ -153,21 +153,31 @@ public class KIS extends DomainMember implements Characterized {
 		}
 	}
 
-	public static KIS getInstance(KIS_Transferable kt) throws CreateObjectException{
-		
-		KIS kis = new KIS(kt);
-		
-		kis.kisDatabase = ConfigurationDatabaseContext.kisDatabase;
+	public void insert() throws CreateObjectException {
 		try {
-			if (kis.kisDatabase != null)
-				kis.kisDatabase.insert(kis);
+			if (this.kisDatabase != null)
+				this.kisDatabase.update(this, StorableObjectDatabase.UPDATE_FORCE, null);
 		}
-		catch (IllegalDataException ide) {
-			throw new CreateObjectException(ide.getMessage(), ide);
+		catch (ApplicationException ae) {
+			throw new CreateObjectException(ae.getMessage(), ae);
 		}
-		
-		return kis;
 	}
+
+//	public static KIS getInstance(KIS_Transferable kt) throws CreateObjectException{
+//		
+//		KIS kis = new KIS(kt);
+//		
+//		kis.kisDatabase = ConfigurationDatabaseContext.kisDatabase;
+//		try {
+//			if (kis.kisDatabase != null)
+//				kis.kisDatabase.insert(kis);
+//		}
+//		catch (IllegalDataException ide) {
+//			throw new CreateObjectException(ide.getMessage(), ide);
+//		}
+//		
+//		return kis;
+//	}
 
 	public Object getTransferable() {
 		int i = 0;

@@ -1,5 +1,5 @@
 /*
- * $Id: EquipmentType.java,v 1.24 2004/12/09 12:23:55 bob Exp $
+ * $Id: EquipmentType.java,v 1.25 2004/12/09 16:12:48 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,8 +29,8 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.configuration.corba.EquipmentType_Transferable;
 
 /**
- * @version $Revision: 1.24 $, $Date: 2004/12/09 12:23:55 $
- * @author $Author: bob $
+ * @version $Revision: 1.25 $, $Date: 2004/12/09 16:12:48 $
+ * @author $Author: arseniy $
  * @module configuration_v1
  */
 
@@ -113,21 +113,31 @@ public class EquipmentType extends StorableObjectType implements Characterized {
 			throw new CreateObjectException("EquipmentType.createInstance | cannot generate identifier ", e);
 		}		
 	}
-	
-	public static EquipmentType getInstance(EquipmentType_Transferable ett) throws CreateObjectException {
-		EquipmentType equipmentType = new EquipmentType(ett);
-		
-		equipmentType.equipmentTypeDatabase = ConfigurationDatabaseContext.equipmentTypeDatabase;
+
+	public void insert() throws CreateObjectException {
 		try {
-			if (equipmentType.equipmentTypeDatabase != null)
-				equipmentType.equipmentTypeDatabase.insert(equipmentType);
+			if (this.equipmentTypeDatabase != null)
+				this.equipmentTypeDatabase.update(this, StorableObjectDatabase.UPDATE_FORCE, null);
 		}
-		catch (IllegalDataException ide) {
-			throw new CreateObjectException(ide.getMessage(), ide);
+		catch (ApplicationException ae) {
+			throw new CreateObjectException(ae.getMessage(), ae);
 		}
-		
-		return equipmentType;
 	}
+
+//	public static EquipmentType getInstance(EquipmentType_Transferable ett) throws CreateObjectException {
+//		EquipmentType equipmentType = new EquipmentType(ett);
+//		
+//		equipmentType.equipmentTypeDatabase = ConfigurationDatabaseContext.equipmentTypeDatabase;
+//		try {
+//			if (equipmentType.equipmentTypeDatabase != null)
+//				equipmentType.equipmentTypeDatabase.insert(equipmentType);
+//		}
+//		catch (IllegalDataException ide) {
+//			throw new CreateObjectException(ide.getMessage(), ide);
+//		}
+//		
+//		return equipmentType;
+//	}
 	
 	public Object getTransferable() {
         int i = 0;

@@ -1,5 +1,5 @@
 /*
- * $Id: Characteristic.java,v 1.33 2004/12/09 12:23:55 bob Exp $
+ * $Id: Characteristic.java,v 1.34 2004/12/09 16:12:48 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,8 +30,8 @@ import com.syrus.AMFICOM.configuration.corba.Characteristic_Transferable;
 import com.syrus.AMFICOM.configuration.corba.CharacteristicSort;
 
 /**
- * @version $Revision: 1.33 $, $Date: 2004/12/09 12:23:55 $
- * @author $Author: bob $
+ * @version $Revision: 1.34 $, $Date: 2004/12/09 16:12:48 $
+ * @author $Author: arseniy $
  * @module configuration_v1
  */
 
@@ -148,21 +148,31 @@ public class Characteristic extends StorableObject implements TypedObject {
 			throw new CreateObjectException("Characteristic.createInstance | cannot generate identifier ", e);
 		}
 	}
-	
-	public static Characteristic getInstance(Characteristic_Transferable ct) throws CreateObjectException {
-		Characteristic characteristic = new Characteristic(ct);
-		
-		characteristic.characteristicDatabase = ConfigurationDatabaseContext.characteristicDatabase;
+
+	public void insert() throws CreateObjectException {
 		try {
-			if (characteristic.characteristicDatabase != null)
-				characteristic.characteristicDatabase.insert(characteristic);
+			if (this.characteristicDatabase != null)
+				this.characteristicDatabase.update(this, StorableObjectDatabase.UPDATE_FORCE, null);
 		}
-		catch (IllegalDataException ide) {
-			throw new CreateObjectException(ide.getMessage(), ide);
+		catch (ApplicationException ae) {
+			throw new CreateObjectException(ae.getMessage(), ae);
 		}
-		
-		return characteristic;
 	}
+
+//	public static Characteristic getInstance(Characteristic_Transferable ct) throws CreateObjectException {
+//		Characteristic characteristic = new Characteristic(ct);
+//		
+//		characteristic.characteristicDatabase = ConfigurationDatabaseContext.characteristicDatabase;
+//		try {
+//			if (characteristic.characteristicDatabase != null)
+//				characteristic.characteristicDatabase.insert(characteristic);
+//		}
+//		catch (IllegalDataException ide) {
+//			throw new CreateObjectException(ide.getMessage(), ide);
+//		}
+//		
+//		return characteristic;
+//	}
 
 	public Object getTransferable() {
 		return new Characteristic_Transferable(super.getHeaderTransferable(),

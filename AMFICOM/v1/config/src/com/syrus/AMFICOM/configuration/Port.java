@@ -1,5 +1,5 @@
 /*
- * $Id: Port.java,v 1.24 2004/12/09 12:24:00 bob Exp $
+ * $Id: Port.java,v 1.25 2004/12/09 16:12:48 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,8 +32,8 @@ import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.24 $, $Date: 2004/12/09 12:24:00 $
- * @author $Author: bob $
+ * @version $Revision: 1.25 $, $Date: 2004/12/09 16:12:48 $
+ * @author $Author: arseniy $
  * @module configuration_v1
  */
 public class Port extends StorableObject implements Characterized, TypedObject {
@@ -136,21 +136,31 @@ public class Port extends StorableObject implements Characterized, TypedObject {
 			throw new CreateObjectException("Port.createInstance | cannot generate identifier ", e);
 		}
 	}
-	
-	public static Port getInstance(Port_Transferable pt) throws CreateObjectException {
-		Port port = new Port(pt);
-		
-		port.portDatabase = ConfigurationDatabaseContext.portDatabase;
+
+	public void insert() throws CreateObjectException {
 		try {
-			if (port.portDatabase != null)
-				port.portDatabase.insert(port);
+			if (this.portDatabase != null)
+				this.portDatabase.update(this, StorableObjectDatabase.UPDATE_FORCE, null);
 		}
-		catch (IllegalDataException ide) {
-			throw new CreateObjectException(ide.getMessage(), ide);
+		catch (ApplicationException ae) {
+			throw new CreateObjectException(ae.getMessage(), ae);
 		}
-		
-		return port;
 	}
+
+//	public static Port getInstance(Port_Transferable pt) throws CreateObjectException {
+//		Port port = new Port(pt);
+//		
+//		port.portDatabase = ConfigurationDatabaseContext.portDatabase;
+//		try {
+//			if (port.portDatabase != null)
+//				port.portDatabase.insert(port);
+//		}
+//		catch (IllegalDataException ide) {
+//			throw new CreateObjectException(ide.getMessage(), ide);
+//		}
+//		
+//		return port;
+//	}
 	
 	public Object getTransferable() {
 		int i = 0;

@@ -1,5 +1,5 @@
 /*
- * $Id: LinkType.java,v 1.14 2004/12/09 12:23:59 bob Exp $
+ * $Id: LinkType.java,v 1.15 2004/12/09 16:12:48 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,8 +29,8 @@ import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2004/12/09 12:23:59 $
- * @author $Author: bob $
+ * @version $Revision: 1.15 $, $Date: 2004/12/09 16:12:48 $
+ * @author $Author: arseniy $
  * @module configuration_v1
  */
 
@@ -122,19 +122,29 @@ public class LinkType extends AbstractLinkType implements Characterized {
 		}
 	}
 
-	public static LinkType getInstance(LinkType_Transferable ltt) throws CreateObjectException {
-		LinkType linkType = new LinkType(ltt);
-
-		linkType.linkTypeDatabase = ConfigurationDatabaseContext.linkTypeDatabase;
+	public void insert() throws CreateObjectException {
 		try {
-			if (linkType.linkTypeDatabase != null)
-				linkType.linkTypeDatabase.insert(linkType);
-		} catch (IllegalDataException ide) {
-			throw new CreateObjectException(ide.getMessage(), ide);
+			if (this.linkTypeDatabase != null)
+				this.linkTypeDatabase.update(this, StorableObjectDatabase.UPDATE_FORCE, null);
 		}
-
-		return linkType;
+		catch (ApplicationException ae) {
+			throw new CreateObjectException(ae.getMessage(), ae);
+		}
 	}
+
+//	public static LinkType getInstance(LinkType_Transferable ltt) throws CreateObjectException {
+//		LinkType linkType = new LinkType(ltt);
+//
+//		linkType.linkTypeDatabase = ConfigurationDatabaseContext.linkTypeDatabase;
+//		try {
+//			if (linkType.linkTypeDatabase != null)
+//				linkType.linkTypeDatabase.insert(linkType);
+//		} catch (IllegalDataException ide) {
+//			throw new CreateObjectException(ide.getMessage(), ide);
+//		}
+//
+//		return linkType;
+//	}
 
 	public Object getTransferable() {
 		int i = 0;

@@ -1,5 +1,5 @@
 /*
- * $Id: User.java,v 1.19 2004/12/09 12:24:00 bob Exp $
+ * $Id: User.java,v 1.20 2004/12/09 16:12:48 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,6 +18,7 @@ import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.CreateObjectException;
@@ -26,8 +27,8 @@ import com.syrus.AMFICOM.configuration.corba.User_Transferable;
 import com.syrus.AMFICOM.configuration.corba.UserSort;
 
 /**
- * @version $Revision: 1.19 $, $Date: 2004/12/09 12:24:00 $
- * @author $Author: bob $
+ * @version $Revision: 1.20 $, $Date: 2004/12/09 16:12:48 $
+ * @author $Author: arseniy $
  * @module configuration_v1
  */
 
@@ -79,21 +80,31 @@ public class User extends StorableObject {
 		
 		this.userDatabase = ConfigurationDatabaseContext.userDatabase;
 	}
-	
-	public static User getInstance(User_Transferable ut) throws CreateObjectException {
-		User user = new User(ut);
-		
-		user.userDatabase = ConfigurationDatabaseContext.userDatabase;
+
+	public void insert() throws CreateObjectException {
 		try {
-			if (user.userDatabase != null)
-				user.userDatabase.insert(user);
+			if (this.userDatabase != null)
+				this.userDatabase.update(this, StorableObjectDatabase.UPDATE_FORCE, null);
 		}
-		catch (IllegalDataException ide) {
-			throw new CreateObjectException(ide.getMessage(), ide);
+		catch (ApplicationException ae) {
+			throw new CreateObjectException(ae.getMessage(), ae);
 		}
-		
-		return user;
 	}
+
+//	public static User getInstance(User_Transferable ut) throws CreateObjectException {
+//		User user = new User(ut);
+//		
+//		user.userDatabase = ConfigurationDatabaseContext.userDatabase;
+//		try {
+//			if (user.userDatabase != null)
+//				user.userDatabase.insert(user);
+//		}
+//		catch (IllegalDataException ide) {
+//			throw new CreateObjectException(ide.getMessage(), ide);
+//		}
+//		
+//		return user;
+//	}
 
 	public Object getTransferable() {
 		return new User_Transferable(super.getHeaderTransferable(),

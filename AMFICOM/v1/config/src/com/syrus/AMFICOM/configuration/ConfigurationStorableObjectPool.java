@@ -1,5 +1,5 @@
 /*
- * $Id: ConfigurationStorableObjectPool.java,v 1.50 2004/12/07 10:47:23 bass Exp $
+ * $Id: ConfigurationStorableObjectPool.java,v 1.51 2004/12/09 16:12:48 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,8 +27,8 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.50 $, $Date: 2004/12/07 10:47:23 $
- * @author $Author: bass $
+ * @version $Revision: 1.51 $, $Date: 2004/12/09 16:12:48 $
+ * @author $Author: arseniy $
  * @module configuration_v1
  */
 
@@ -243,9 +243,7 @@ public final class ConfigurationStorableObjectPool extends StorableObjectPool {
 				storableObject = cObjectLoader.loadMonitoredElement(objectId);
 				break;
 			default:
-				Log
-						.errorMessage("ConfigurationStorableObjectPool.loadStorableObject | Unknown entity: "
-								+ ObjectEntities.codeToString(objectId.getMajor()));
+				Log.errorMessage("ConfigurationStorableObjectPool.loadStorableObject | Unknown entity: " + ObjectEntities.codeToString(objectId.getMajor()));
 				storableObject = null;
 		}
 		return storableObject;
@@ -411,34 +409,24 @@ public final class ConfigurationStorableObjectPool extends StorableObjectPool {
 			switch (code) {
 				case ObjectEntities.CABLETHREADTYPE_ENTITY_CODE:
 					if (alone)
-						cObjectLoader
-						.saveCableThreadType(
-									(CableThreadType) list
-											.get(0),
-									force);
+						cObjectLoader.saveCableThreadType((CableThreadType) list.get(0), force);
 				else
 					cObjectLoader.saveCableThreadTypes(list, force);
 				case ObjectEntities.CHARACTERISTICTYPE_ENTITY_CODE:
 					if (alone)
-						cObjectLoader
-								.saveCharacteristicType(
-											(CharacteristicType) list
-													.get(0),
-											force);
+						cObjectLoader.saveCharacteristicType((CharacteristicType) list.get(0), force);
 					else
 						cObjectLoader.saveCharacteristicTypes(list, force);
 					break;
 				case ObjectEntities.EQUIPMENTTYPE_ENTITY_CODE:
 					if (alone)
-						cObjectLoader.saveEquipmentType((EquipmentType) list
-								.get(0), force);
+						cObjectLoader.saveEquipmentType((EquipmentType) list.get(0), force);
 					else
 						cObjectLoader.saveEquipmentTypes(list, force);
 					break;
 				case ObjectEntities.PORTTYPE_ENTITY_CODE:
 					if (alone)
-						cObjectLoader.savePortType((PortType) list.get(0),
-										force);
+						cObjectLoader.savePortType((PortType) list.get(0), force);
 					else
 						cObjectLoader.savePortTypes(list, force);
 					break;

@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicType.java,v 1.24 2004/12/09 12:23:55 bob Exp $
+ * $Id: CharacteristicType.java,v 1.25 2004/12/09 16:12:48 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -20,6 +20,7 @@ import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
@@ -27,8 +28,8 @@ import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.corba.DataType;
 
 /**
- * @version $Revision: 1.24 $, $Date: 2004/12/09 12:23:55 $
- * @author $Author: bob $
+ * @version $Revision: 1.25 $, $Date: 2004/12/09 16:12:48 $
+ * @author $Author: arseniy $
  * @module configuration_v1
  */
 
@@ -107,22 +108,31 @@ public class CharacteristicType extends StorableObjectType {
 			throw new CreateObjectException("CharacteristicType.createInstance | cannot generate identifier ", e);
 		}	
 	}
-	
-	
-	public static CharacteristicType getInstance(CharacteristicType_Transferable ctt) throws CreateObjectException {
-		CharacteristicType characteristicType = new CharacteristicType(ctt);
-		
-		characteristicType.characteristicTypeDatabase = ConfigurationDatabaseContext.characteristicTypeDatabase;
+
+	public void insert() throws CreateObjectException {
 		try {
-			if (characteristicType.characteristicTypeDatabase != null)
-				characteristicType.characteristicTypeDatabase.insert(characteristicType);
+			if (this.characteristicTypeDatabase != null)
+				this.characteristicTypeDatabase.update(this, StorableObjectDatabase.UPDATE_FORCE, null);
 		}
-		catch (IllegalDataException ide) {
-			throw new CreateObjectException(ide.getMessage(), ide);
+		catch (ApplicationException ae) {
+			throw new CreateObjectException(ae.getMessage(), ae);
 		}
-		
-		return characteristicType;
 	}
+
+//	public static CharacteristicType getInstance(CharacteristicType_Transferable ctt) throws CreateObjectException {
+//		CharacteristicType characteristicType = new CharacteristicType(ctt);
+//		
+//		characteristicType.characteristicTypeDatabase = ConfigurationDatabaseContext.characteristicTypeDatabase;
+//		try {
+//			if (characteristicType.characteristicTypeDatabase != null)
+//				characteristicType.characteristicTypeDatabase.insert(characteristicType);
+//		}
+//		catch (IllegalDataException ide) {
+//			throw new CreateObjectException(ide.getMessage(), ide);
+//		}
+//		
+//		return characteristicType;
+//	}
 
 	public Object getTransferable() {
 		return new CharacteristicType_Transferable(super.getHeaderTransferable(),
