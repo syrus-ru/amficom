@@ -1,5 +1,5 @@
 /*
- * $Id: ConfigurationStorableObjectPool.java,v 1.40 2004/11/19 10:16:37 bob Exp $
+ * $Id: ConfigurationStorableObjectPool.java,v 1.41 2004/11/19 10:18:28 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -36,7 +36,7 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.40 $, $Date: 2004/11/19 10:16:37 $
+ * @version $Revision: 1.41 $, $Date: 2004/11/19 10:18:28 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -772,6 +772,12 @@ public class ConfigurationStorableObjectPool {
 					else
 						cObjectLoader.savePortTypes(list, force);
 					break;
+				case ObjectEntities.LINKTYPE_ENTITY_CODE:
+					if (alone)
+						cObjectLoader.saveLinkType((LinkType) list.get(0), force);
+					else
+						cObjectLoader.saveLinkTypes(list, force);
+					break;
 				case ObjectEntities.MEASUREMENTPORTTYPE_ENTITY_CODE:
 					if (alone)
 						cObjectLoader
@@ -825,6 +831,12 @@ public class ConfigurationStorableObjectPool {
 						cObjectLoader.savePort((Port) list.get(0), force);
 					else
 						cObjectLoader.savePorts(list, force);
+					break;
+				case ObjectEntities.LINK_ENTITY_CODE:
+					if (alone)
+						cObjectLoader.saveLink((Link) list.get(0), force);
+					else
+						cObjectLoader.saveLinks(list, force);
 					break;
 				case ObjectEntities.KIS_ENTITY_CODE:
 					if (alone)
