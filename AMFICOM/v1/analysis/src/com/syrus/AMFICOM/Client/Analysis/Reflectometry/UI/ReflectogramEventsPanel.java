@@ -207,7 +207,7 @@ public class ReflectogramEventsPanel extends TraceEventsPanel
 	}
 
 	/**
-	 * Draws model curve using current graphigs plotting settings.
+	 * Draws model curve using current graphics plotting settings.
 	 * May be used for drawing both model and threshold curve 
 	 * @param g graphics to plot
 	 * @param mt trace to plot
