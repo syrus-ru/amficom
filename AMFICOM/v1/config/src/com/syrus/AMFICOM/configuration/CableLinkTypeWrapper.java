@@ -1,5 +1,5 @@
 /*
- * $Id: CableLinkTypeWrapper.java,v 1.6 2005/02/03 08:37:00 bob Exp $
+ * $Id: CableLinkTypeWrapper.java,v 1.7 2005/02/03 20:15:45 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,8 +18,8 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/02/03 08:37:00 $
- * @author $Author: bob $
+ * @version $Revision: 1.7 $, $Date: 2005/02/03 20:15:45 $
+ * @author $Author: arseniy $
  * @module configuration_v1
  */
 public final class CableLinkTypeWrapper implements StorableObjectWrapper {
@@ -35,7 +35,7 @@ public final class CableLinkTypeWrapper implements StorableObjectWrapper {
 	// image_id VARCHAR2(32),
 	public static final String			COLUMN_IMAGE_ID				= "image_id";
 
-	public static final String			COLUMN_CABLE_THREAD_TYPES	= "cable_thread_type_id";
+	public static final String			LINK_FIELD_CABLE_THREAD_TYPES	= "cable_thread_types";
 
 	private static CableLinkTypeWrapper	instance;
 
@@ -45,7 +45,7 @@ public final class CableLinkTypeWrapper implements StorableObjectWrapper {
 		// empty private constructor
 		String[] keysArray = new String[] { COLUMN_CODENAME,
 				COLUMN_DESCRIPTION, COLUMN_NAME, COLUMN_SORT, COLUMN_MANUFACTURER,
-				COLUMN_MANUFACTURER_CODE, COLUMN_IMAGE_ID, COLUMN_CHARACTERISTICS, COLUMN_CABLE_THREAD_TYPES};
+				COLUMN_MANUFACTURER_CODE, COLUMN_IMAGE_ID, COLUMN_CHARACTERISTICS, LINK_FIELD_CABLE_THREAD_TYPES};
 
 		this.keys = Collections.unmodifiableList(new ArrayList(Arrays.asList(keysArray)));
 	}
@@ -82,7 +82,7 @@ public final class CableLinkTypeWrapper implements StorableObjectWrapper {
 				return type.getManufacturerCode();
 			if (key.equals(COLUMN_IMAGE_ID))
 				return type.getImageId();
-			if (key.equals(COLUMN_CABLE_THREAD_TYPES))
+			if (key.equals(LINK_FIELD_CABLE_THREAD_TYPES))
 				return type.getCableThreadTypes();
 			if (key.equals(COLUMN_CHARACTERISTICS))
 				return type.getCharacteristics();
@@ -111,7 +111,7 @@ public final class CableLinkTypeWrapper implements StorableObjectWrapper {
 				type.setManufacturerCode((String) value);
 			else if (key.equals(COLUMN_IMAGE_ID))
 				type.setImageId((Identifier) value);
-			else if (key.equals(COLUMN_CABLE_THREAD_TYPES)) 
+			else if (key.equals(LINK_FIELD_CABLE_THREAD_TYPES)) 
 				type.setCableThreadTypes((List) value);
 			else if (key.equals(COLUMN_CHARACTERISTICS)) 
 				type.setCharacteristics((List) value);
@@ -134,7 +134,7 @@ public final class CableLinkTypeWrapper implements StorableObjectWrapper {
 	public Class getPropertyClass(String key) {
 		if (key.equals(StorableObjectWrapper.COLUMN_CHARACTERISTICS)) {
 			return List.class;
-		} else if (key.equals(COLUMN_CABLE_THREAD_TYPES)) { return List.class; }
+		} else if (key.equals(LINK_FIELD_CABLE_THREAD_TYPES)) { return List.class; }
 		return String.class;
 	}
 }
