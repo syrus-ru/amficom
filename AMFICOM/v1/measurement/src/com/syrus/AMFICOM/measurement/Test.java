@@ -1,5 +1,5 @@
 /*
- * $Id: Test.java,v 1.81 2005/02/16 21:26:46 arseniy Exp $
+ * $Id: Test.java,v 1.82 2005/02/24 10:01:14 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,44 +8,45 @@
 
 package com.syrus.AMFICOM.measurement;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.ArrayList;
-import java.util.Iterator;
 
+import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
+import com.syrus.AMFICOM.configuration.MonitoredElement;
+import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IdentifierPool;
+import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.IllegalObjectEntityException;
+import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.ObjectNotFoundException;
+import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.general.StorableObject;
+import com.syrus.AMFICOM.general.StorableObjectDatabase;
+import com.syrus.AMFICOM.general.UpdateObjectException;
+import com.syrus.AMFICOM.general.VersionCollisionException;
+import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
+import com.syrus.AMFICOM.measurement.corba.MeasurementStatus;
+import com.syrus.AMFICOM.measurement.corba.ResultSort;
+import com.syrus.AMFICOM.measurement.corba.TestReturnType;
+import com.syrus.AMFICOM.measurement.corba.TestStatus;
+import com.syrus.AMFICOM.measurement.corba.TestTemporalType;
+import com.syrus.AMFICOM.measurement.corba.TestTimeStamps_Transferable;
+import com.syrus.AMFICOM.measurement.corba.Test_Transferable;
+import com.syrus.AMFICOM.measurement.corba.TestTimeStamps_TransferablePackage.ContinuousTestTimeStamps;
+import com.syrus.AMFICOM.measurement.corba.TestTimeStamps_TransferablePackage.PeriodicalTestTimeStamps;
 import com.syrus.util.HashCodeGenerator;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
-import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.IdentifierPool;
-import com.syrus.AMFICOM.general.IllegalObjectEntityException;
-import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.StorableObject;
-import com.syrus.AMFICOM.general.StorableObjectDatabase;
-import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.RetrieveObjectException;
-import com.syrus.AMFICOM.general.UpdateObjectException;
-import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.ObjectNotFoundException;
-import com.syrus.AMFICOM.general.VersionCollisionException;
-import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
-import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
-import com.syrus.AMFICOM.configuration.MonitoredElement;
-import com.syrus.AMFICOM.measurement.corba.Test_Transferable;
-import com.syrus.AMFICOM.measurement.corba.TestTimeStamps_Transferable;
-import com.syrus.AMFICOM.measurement.corba.TestTemporalType;
-import com.syrus.AMFICOM.measurement.corba.TestStatus;
-import com.syrus.AMFICOM.measurement.corba.MeasurementStatus;
-import com.syrus.AMFICOM.measurement.corba.TestReturnType;
-import com.syrus.AMFICOM.measurement.corba.ResultSort;
-import com.syrus.AMFICOM.measurement.corba.TestTimeStamps_TransferablePackage.ContinuousTestTimeStamps;
-import com.syrus.AMFICOM.measurement.corba.TestTimeStamps_TransferablePackage.PeriodicalTestTimeStamps;
 
 /**
- * @version $Revision: 1.81 $, $Date: 2005/02/16 21:26:46 $
+ * @version $Revision: 1.82 $, $Date: 2005/02/24 10:01:14 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -75,7 +76,7 @@ public class Test extends StorableObject {
 	private MonitoredElement monitoredElement;
 	private int	returnType;
 	private String description;
-	private List measurementSetupIds;
+	private Collection measurementSetupIds;
 
 	private MeasurementSetup mainMeasurementSetup;
 	
@@ -83,6 +84,7 @@ public class Test extends StorableObject {
 
 	public Test(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
+		this.measurementSetupIds = new HashSet();
 
 		this.testDatabase = MeasurementDatabaseContext.testDatabase;
 		try {
@@ -132,7 +134,7 @@ public class Test extends StorableObject {
 					 MonitoredElement monitoredElement,
 					 int returnType,
 					 String description,
-					 List measurementSetupIds) {
+					 Collection measurementSetupIds) {
 		super(id,
 			new Date(System.currentTimeMillis()),
 			new Date(System.currentTimeMillis()),
@@ -152,9 +154,7 @@ public class Test extends StorableObject {
 		this.monitoredElement = monitoredElement;
 		this.returnType = returnType;
 		this.description = description;
-		this.measurementSetupIds = measurementSetupIds;
-		if (this.measurementSetupIds == null)
-			this.measurementSetupIds = new LinkedList();
+		this.setMeasurementSetupIds0(measurementSetupIds);
 		this.status = TestStatus._TEST_STATUS_NEW;
 		
 		this.testDatabase = MeasurementDatabaseContext.testDatabase;
@@ -188,7 +188,7 @@ public class Test extends StorableObject {
 									  MonitoredElement monitoredElement,
 									  TestReturnType returnType,
 									  String description,
-									  List measurementSetupIds) throws CreateObjectException {
+									  Collection measurementSetupIds) throws CreateObjectException {
 		if (creatorId == null || startTime == null || endTime == null || 
 				temporalPattern == null || temporalType == null || measurementType == null ||
 				monitoredElement == null || returnType == null || description == null)
@@ -254,12 +254,13 @@ public class Test extends StorableObject {
 	
 		this.returnType = tt.return_type.value();
 		this.description = new String(tt.description);
-		this.measurementSetupIds = new ArrayList(tt.measurement_setup_ids.length);
+		this.measurementSetupIds = new HashSet(tt.measurement_setup_ids.length);
 		for (int i = 0; i < tt.measurement_setup_ids.length; i++)
 			this.measurementSetupIds.add(new Identifier(tt.measurement_setup_ids[i]));
 	
 		try {
-			this.mainMeasurementSetup = (MeasurementSetup)MeasurementStorableObjectPool.getStorableObject((Identifier)this.measurementSetupIds.get(0), true);
+			this.mainMeasurementSetup = (MeasurementSetup) MeasurementStorableObjectPool.getStorableObject((Identifier) this.measurementSetupIds.iterator().next(),
+					true);
 		}
 		catch (ApplicationException ae) {
 			throw new CreateObjectException(ae);
@@ -293,8 +294,8 @@ public class Test extends StorableObject {
 		return this.evaluationType;
 	}
 
-	public List getMeasurementSetupIds() {
-		return Collections.unmodifiableList(this.measurementSetupIds);
+	public Collection getMeasurementSetupIds() {
+		return Collections.unmodifiableCollection(this.measurementSetupIds);
 	}
 
 	public MeasurementType getMeasurementType() {
@@ -512,18 +513,22 @@ public class Test extends StorableObject {
 		this.description = description;
 	}
 
-	protected synchronized void setMeasurementSetupIds0(List measurementSetupIds) {
-		this.measurementSetupIds = measurementSetupIds;
+	protected synchronized void setMeasurementSetupIds0(Collection measurementSetupIds) {
+		this.measurementSetupIds.clear();
+		if (measurementSetupIds != null)
+			this.measurementSetupIds.addAll(measurementSetupIds);
 
-		try {
-			this.mainMeasurementSetup = (MeasurementSetup)MeasurementStorableObjectPool.getStorableObject((Identifier)this.measurementSetupIds.get(0), true);
-		}
-		catch (ApplicationException ae) {
-			Log.errorException(ae);
-		}
+		if (!this.measurementSetupIds.isEmpty())
+			try {
+				this.mainMeasurementSetup = (MeasurementSetup) MeasurementStorableObjectPool.getStorableObject((Identifier) this.measurementSetupIds.iterator().next(),
+						true);
+			}
+			catch (ApplicationException ae) {
+				Log.errorException(ae);
+			}
 	}
 	
-	public void setMeasurementSetupIds(List measurementSetupIds) {
+	public void setMeasurementSetupIds(Collection measurementSetupIds) {
 		this.setMeasurementSetupIds0(measurementSetupIds);
 		super.changed = true;
 	}
