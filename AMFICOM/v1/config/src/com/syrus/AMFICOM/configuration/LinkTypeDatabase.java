@@ -1,5 +1,5 @@
 /*
- * $Id: LinkTypeDatabase.java,v 1.8 2004/11/25 10:44:55 max Exp $
+ * $Id: LinkTypeDatabase.java,v 1.9 2004/12/03 18:53:12 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,9 +11,7 @@ package com.syrus.AMFICOM.configuration;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 import com.syrus.AMFICOM.configuration.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.CreateObjectException;
@@ -32,8 +30,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2004/11/25 10:44:55 $
- * @author $Author: max $
+ * @version $Revision: 1.9 $, $Date: 2004/12/03 18:53:12 $
+ * @author $Author: bob $
  * @module configuration_v1
  */
 
@@ -160,7 +158,7 @@ public class LinkTypeDatabase extends StorableObjectDatabase {
 	}
 	
 	public Object retrieveObject(StorableObject storableObject, int retrieve_kind, Object arg) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
-		LinkType linkType = this.fromStorableObject(storableObject);
+//		LinkType linkType = this.fromStorableObject(storableObject);
 		switch (retrieve_kind) {
 			default:
 				return null;
@@ -225,12 +223,7 @@ public class LinkTypeDatabase extends StorableObjectDatabase {
         
         if (list != null) {
             CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(ConfigurationDatabaseContext.characteristicDatabase);
-            Map characteristicMap = characteristicDatabase.retrieveCharacteristicsByOneQuery(list, CharacteristicSort.CHARACTERISTIC_SORT_LINKTYPE);
-            for (Iterator iter = list.iterator(); iter.hasNext();) {
-                LinkType linkType = (LinkType) iter.next();
-                List characteristics = (List)characteristicMap.get(linkType);
-                linkType.setCharacteristics(characteristics);
-            }
+            characteristicDatabase.retrieveCharacteristicsByOneQuery(list, CharacteristicSort.CHARACTERISTIC_SORT_LINKTYPE);
         }
         return list;
 	}

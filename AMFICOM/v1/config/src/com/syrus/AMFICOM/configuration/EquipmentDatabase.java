@@ -1,5 +1,5 @@
 /*
- * $Id: EquipmentDatabase.java,v 1.46 2004/11/25 15:00:58 bob Exp $
+ * $Id: EquipmentDatabase.java,v 1.47 2004/12/03 18:53:08 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -40,7 +40,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.46 $, $Date: 2004/11/25 15:00:58 $
+ * @version $Revision: 1.47 $, $Date: 2004/12/03 18:53:08 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -429,7 +429,7 @@ public class EquipmentDatabase extends StorableObjectDatabase {
     }
 
 	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
-		Equipment equipment = this.fromStorableObject(storableObject);
+//		Equipment equipment = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
 			default:
 				return null;
@@ -587,12 +587,7 @@ public class EquipmentDatabase extends StorableObjectDatabase {
             retrieveEquipmentMEIdsByOneQuery(list); 
             
             CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(ConfigurationDatabaseContext.characteristicDatabase);
-            Map characteristicMap = characteristicDatabase.retrieveCharacteristicsByOneQuery(list, CharacteristicSort.CHARACTERISTIC_SORT_EQUIPMENT);
-            for (Iterator iter = list.iterator(); iter.hasNext();) {
-                Equipment equipment = (Equipment) iter.next();
-                List characteristics = (List)characteristicMap.get(equipment);
-                equipment.setCharacteristics(characteristics);
-            }
+            characteristicDatabase.retrieveCharacteristicsByOneQuery(list, CharacteristicSort.CHARACTERISTIC_SORT_EQUIPMENT);            
         }
 		return list;
 	}

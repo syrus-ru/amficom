@@ -1,5 +1,5 @@
 /*
- * $Id: PortDatabase.java,v 1.28 2004/11/17 08:22:37 bob Exp $
+ * $Id: PortDatabase.java,v 1.29 2004/12/03 18:53:12 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,14 +11,13 @@ package com.syrus.AMFICOM.configuration;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
-import com.syrus.AMFICOM.general.DatabaseIdentifier;
-import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.configuration.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.DatabaseIdentifier;
+import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
@@ -28,13 +27,12 @@ import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.VersionCollisionException;
-import com.syrus.AMFICOM.configuration.corba.CharacteristicSort;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.28 $, $Date: 2004/11/17 08:22:37 $
+ * @version $Revision: 1.29 $, $Date: 2004/12/03 18:53:12 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -200,12 +198,7 @@ public class PortDatabase extends StorableObjectDatabase {
 		
         if (list != null) {
     		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(ConfigurationDatabaseContext.characteristicDatabase);
-    		Map characteristicMap = characteristicDatabase.retrieveCharacteristicsByOneQuery(list, CharacteristicSort.CHARACTERISTIC_SORT_PORT);
-            for (Iterator iter = list.iterator(); iter.hasNext();) {
-                Port port = (Port) iter.next();
-                List characteristics = (List)characteristicMap.get(port);
-                port.setCharacteristics(characteristics);
-            }
+    		characteristicDatabase.retrieveCharacteristicsByOneQuery(list, CharacteristicSort.CHARACTERISTIC_SORT_PORT);            
         }
 		return list;
 	}

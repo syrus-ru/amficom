@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicDatabase.java,v 1.45 2004/12/03 18:32:48 max Exp $
+ * $Id: CharacteristicDatabase.java,v 1.46 2004/12/03 18:53:08 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -40,8 +40,8 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.configuration.corba.CharacteristicSort;
 
 /**
- * @version $Revision: 1.45 $, $Date: 2004/12/03 18:32:48 $
- * @author $Author: max $
+ * @version $Revision: 1.46 $, $Date: 2004/12/03 18:53:08 $
+ * @author $Author: bob $
  * @module configuration_v1
  */
 
@@ -185,7 +185,7 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
 	}
 	
 	public Object retrieveObject(StorableObject storableObject, int retrieve_kind, Object arg) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
-		Characteristic characteristic = this.fromStorableObject(storableObject);
+//		Characteristic characteristic = this.fromStorableObject(storableObject);
 		switch (retrieve_kind) {
 			default:
 				return null;
@@ -277,7 +277,7 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
 		return characteristics;
 	}
     
-    public Map retrieveCharacteristicsByOneQuery(List list, CharacteristicSort sort) throws RetrieveObjectException, IllegalDataException {
+    public void retrieveCharacteristicsByOneQuery(List list, CharacteristicSort sort) throws RetrieveObjectException, IllegalDataException {
         
         int sortValue = sort.value();
         String sql;
@@ -288,7 +288,12 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
         int i = 1;
         for (Iterator it = list.iterator(); it.hasNext();i++) {
             StorableObject storableObject = (StorableObject)it.next();
-            buff.append(DatabaseIdentifier.toSQLString(storableObject.getId()));
+            Identifier id = storableObject.getId();
+            // check items for Characterized
+            if (storableObject instanceof Characterized){
+            	throw new IllegalDataException("CharacteristicDatabase.retrieveCharacteristicsByOneQuery | Illefal entity: entity " + id + " is not characterized ");
+            }
+            buff.append(DatabaseIdentifier.toSQLString(id));
             if (it.hasNext()){
                 if (((i+1) % MAXIMUM_EXPRESSION_NUMBER != 0))
                     buff.append(COMMA);
@@ -336,10 +341,14 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
                 characteristics.add(characteristic);              
             }
             
-            return characteristicMap;
+            for (Iterator it = characteristicMap.keySet().iterator(); it.hasNext();) {
+				Characterized characterized = (Characterized) it.next();
+				List characteristics = (List)characteristicMap.get(characterized);
+				characterized.setCharacteristics(characteristics);				
+			}
             
         } catch (SQLException sqle) {
-            String mesg = "TestDatabase.retrieveMeasurementSetupTestLinksByOneQuery | Cannot retrieve parameters for result -- " + sqle.getMessage();
+            String mesg = "CharacteristicDatabase.retrieveCharacteristicsByOneQuery | Cannot retrieve characteristics for characterized object -- " + sqle.getMessage();
             throw new RetrieveObjectException(mesg, sqle);
         } finally {
             try {
@@ -491,11 +500,7 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
         buff.append(CLOSE_BRACKET);        
         String sql = retrieveQuery(buff.toString());
         Map dbStorableObjectIdCharIdsMap = new HashMap();
-        List listIdToDelete = new LinkedList();
-        List listIdToInsert = new LinkedList();
-        List listIdToUpdate = new LinkedList();
-        List listToInsert = new LinkedList();
-        List listToUpdate = new LinkedList();        
+        List listIdToDelete = new LinkedList();       
         Statement statement = null;
         ResultSet resultSet = null;
         Connection connection = DatabaseConnection.getConnection();
