@@ -111,15 +111,6 @@ src\com\syrus\AMFICOM\Client\Map\Editor\MapEditorMainFrame.java
 src\com\syrus\AMFICOM\Client\Map\Editor\MapEditorMenuBar.java
 src\com\syrus\AMFICOM\Client\Map\Editor\MapEditorRun.java
 src\com\syrus\AMFICOM\Client\Map\Editor\MapEditorToolBar.java
-src\com\syrus\AMFICOM\Client\Map\Mapinfo\LogicalLayerMapTool.java
-src\com\syrus\AMFICOM\Client\Map\Mapinfo\MapInfoConnection.java
-src\com\syrus\AMFICOM\Client\Map\Mapinfo\MapInfoLogicalNetLayer.java
-src\com\syrus\AMFICOM\Client\Map\Mapinfo\MapInfoNetMapViewer.java
-src\com\syrus\AMFICOM\Client\Map\ObjectFX\OfxConnection.java
-src\com\syrus\AMFICOM\Client\Map\ObjectFX\OfxLogicalNetLayer.java
-src\com\syrus\AMFICOM\Client\Map\ObjectFX\OfxNetMapViewer.java
-src\com\syrus\AMFICOM\Client\Map\ObjectFX\OfxSpatialLayer.java
-src\com\syrus\AMFICOM\Client\Map\ObjectFX\OfxSpatialObject.java
 src\com\syrus\AMFICOM\Client\Map\Popup\CablePathPopupMenu.java
 src\com\syrus\AMFICOM\Client\Map\Popup\LinkPopupMenu.java
 src\com\syrus\AMFICOM\Client\Map\Popup\MapPopupMenu.java

@@ -5,7 +5,7 @@ EXTLIB=d:\lib91
 ORACLE_HOME=d:\oracle\ora91
 SRC=$(HOME)\src
 CLASSES=$(HOME)\classes
-JAVADOCDIR=$(HOME)\javadoc
+JAVADOCDIR=$(HOME)\docs
 JAVA_HOME=d:\java\j2sdk1.4.1_03
 LIBDOC=$(HOME)\..\AMFICOMCommon\javadoc
 
