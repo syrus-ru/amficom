@@ -13,11 +13,11 @@ public class AlarmDescriptorEvent extends StubResource
 	public static final int ERROR = 4;
 	public static final int CRITICAL = 5;
 
-	private String id;
-	private String title;
-	private String text;
-	private String meId = "";
-	private int severity = 0;
+	protected String id;
+	protected String title;
+	protected String text;
+	protected String meId = "";
+	protected int severity = 0;
 
 	TransmissionPathDecompositor tpd = null;
 	
