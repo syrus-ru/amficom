@@ -383,7 +383,7 @@ public class ScheduleMainFrame extends JFrame implements OperationListener {
 		Hashtable unsavedTestArgumentSet = Pool.getChangedHash(TestArgumentSet.typ);
 		Hashtable unsavedAnalysis = Pool.getChangedHash(Analysis.typ);
 		Hashtable unsavedEvaluation = Pool.getChangedHash(Evaluation.typ);
-		Hashtable unsavedTestRequest = Pool.getChangedHash(TestRequest.TYPE);
+		Hashtable unsavedTestRequest = Pool.getChangedHash(TestRequest.typ);
 		Hashtable unsavedTest = Pool.getChangedHash(Test.TYPE);
 
 		for (int i = 0; i < 5; i++) {

@@ -20,7 +20,6 @@ import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
 import com.syrus.AMFICOM.Client.Schedule.Filter.TestFilter;
 import com.syrus.AMFICOM.Client.Scheduler.General.UIStorage;
-import com.syrus.AMFICOM.Client.Survey.Alarm.Filter.AlarmFilter;
 
 class PlanToolBar extends JPanel {
 
@@ -177,16 +176,14 @@ class PlanToolBar extends JPanel {
 			}
 		});
 
-		UIStorage.setRigidSize(this.filterButton, UIStorage.BUTTON_SIZE);
+		//UIStorage.setRigidSize(this.filterButton, UIStorage.BUTTON_SIZE);
+		this.filterButton.setMargin(UIStorage.INSET_NULL);
 		this.filterButton.setFocusable(false);
 		this.filterButton.setIcon(UIStorage.FILTER_ICON);
 		this.filterButton.setToolTipText(LangModelSchedule.getString("Filtration")); //$NON-NLS-1$
 		this.filterButton.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {
-				/**
-				 * clean code
-				 */
 				ObjectResourceFilter filter = ((SchedulerModel) aContext.getApplicationModel()).getFilter();
 				TestFilter orf = (TestFilter) filter.clone();
 				if (PlanToolBar.this.filterDialog == null) {
@@ -210,7 +207,7 @@ class PlanToolBar extends JPanel {
 				PlanToolBar.this.filterDialog.setModal(true);
 				PlanToolBar.this.filterDialog.setVisible(true);
 
-				if (PlanToolBar.this.filterDialog.retcode == FilterDialog.RETURN_CODE_OK) {
+				if (PlanToolBar.this.filterDialog.retcode == FilterDialog.RETURN_CODE_OK) {					
 					((SchedulerModel) aContext.getApplicationModel()).setFilter(orf);
 				}
 			}

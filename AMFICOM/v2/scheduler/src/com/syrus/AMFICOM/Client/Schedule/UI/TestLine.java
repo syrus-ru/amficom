@@ -203,19 +203,18 @@ public class TestLine extends JLabel implements ActionListener, OperationListene
 	public void addTest(Test test) {
 		//		if (!this.skipTestUpdate) {
 		if (test.isChanged()) {
-			//System.out.println("test is changed");
+			System.out.println("test is changed");
 			if (this.unsavedTests == null) {
 				this.unsavedTests = new HashMap();
 				this.timer = new javax.swing.Timer(TIME_OUT, this);
 				this.timer.start();
-				//System.out.println("timer created");
+				System.out.println("timer created");
 			}
 			if (this.unsavedTests.containsValue(test)) {
-				//System.out.println("unsavedTests.contains(test)");
+				System.out.println("unsavedTests.contains(test)");
 				// //$NON-NLS-1$
 			} else {
-				//System.out.println("unsavedTests.put(" + test.getId() + ",
-				// test);");
+				System.out.println("unsavedTests.put(" + test.getId() + ")");
 				this.unsavedTests.put(test.getId(), test);
 			}
 		} else {
@@ -397,6 +396,7 @@ public class TestLine extends JLabel implements ActionListener, OperationListene
 	}
 
 	private void drawTestRect(Graphics g, Test test) {
+		//System.out.println("drawTestRect:"+test.getId());
 		TimeStamp timeStamp = test.getTimeStamp();
 		int x = this.margin + (int) (this.scale * (test.getTimeStamp().getPeriodStart() - this.start));
 		int en = this.margin + (int) (this.scale * (test.getTimeStamp().getPeriodEnd() - this.start));

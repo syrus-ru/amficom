@@ -237,6 +237,11 @@ public class PlanPanel extends JPanel implements OperationListener {
 				if ((this.test == null) || (!this.test.getId().equals(test.getId()))) {
 					this.test = test;
 					boolean found = false;
+					if (test!=null){
+						Date date = new Date(test.getStartTime());
+						this.toolBar.timeSpinner.getModel().setValue(date);
+						this.toolBar.dateSpinner.getModel().setValue(date);						
+					}
 					//				java.util.List tests = ((SchedulerModel)
 					// this.aContext.getApplicationModel()).getTests();
 					//				java.util.List unsavedTests = ((SchedulerModel)
@@ -318,6 +323,11 @@ public class PlanPanel extends JPanel implements OperationListener {
 			repaint();
 			revalidate();
 			this.parent.repaint();
+		} else if (commandName.equals(SchedulerModel.COMMAND_NAME_ALL_TESTS)) {
+			updateTests();
+			repaint();
+			revalidate();
+			this.parent.repaint();			
 		}
 
 	}
@@ -529,6 +539,7 @@ public class PlanPanel extends JPanel implements OperationListener {
 		this.dispatcher.register(this, TestUpdateEvent.TYPE);
 		this.dispatcher.register(this, SchedulerModel.COMMAND_CLEAN);
 		this.dispatcher.register(this, SchedulerModel.COMMAND_REMOVE_TEST);
+		this.dispatcher.register(this, SchedulerModel.COMMAND_NAME_ALL_TESTS);
 	}
 
 	private void updateRealScale() {

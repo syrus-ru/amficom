@@ -100,7 +100,7 @@ public class TableFrame extends JInternalFrame implements OperationListener {
 
 	}
 
-	private class TestTableModel extends ObjectResourceTableModel {
+	private class TestTableModel extends ObjResTableModel {
 
 		public TestTableModel() {
 			super(7);

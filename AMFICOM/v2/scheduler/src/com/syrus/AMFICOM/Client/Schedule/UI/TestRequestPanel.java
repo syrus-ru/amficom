@@ -241,7 +241,7 @@ public class TestRequestPanel extends JPanel implements OperationListener {
 
 		if (needNewReq) {
 		//	System.out.println("new TestRequest required");
-			this.testRequest = new TestRequest(dsi.GetUId(TestRequest.TYPE));
+			this.testRequest = new TestRequest(dsi.GetUId(TestRequest.typ));
 		//	System.out.println("set treqId:" + this.testRequest.getId());
 			this.testRequest.setName(LangModelSchedule.getString("Test created at") + " "
 					+ UIStorage.SDF.format(new Date(System.currentTimeMillis())));
@@ -249,7 +249,7 @@ public class TestRequestPanel extends JPanel implements OperationListener {
 			this.testRequest.setUserId(this.aContext.getSessionInterface().getUserId());
 			//testRequest = newTestRequest;
 			this.testRequest.setChanged(true);
-			Pool.put(TestRequest.TYPE, this.testRequest.getId(), this.testRequest);
+			Pool.put(TestRequest.typ, this.testRequest.getId(), this.testRequest);
 			this.tests = null;
 		}
 
@@ -279,7 +279,7 @@ public class TestRequestPanel extends JPanel implements OperationListener {
 		//System.out.println(getClass().getName() + " setTest");
 		if (test != null) {
 			String treqId = test.getRequestId();
-			TestRequest treq = (TestRequest) Pool.get(TestRequest.TYPE, treqId);
+			TestRequest treq = (TestRequest) Pool.get(TestRequest.typ, treqId);
 			setTestRequest(treq);
 			MonitoredElement me = (MonitoredElement) Pool.get(MonitoredElement.typ, test.getMonitoredElementId());
 			if (me != null) {

@@ -16,7 +16,7 @@ public class Schedule {
 
 			this.aContext = new ApplicationContext();
 			this.aContext.setDispatcher(new Dispatcher());
-			this.aContext.setApplicationModel(new SchedulerModel(aContext));		
+			this.aContext.setApplicationModel(new SchedulerModel(this.aContext));		
 			
 			ScheduleMainFrame frame = new ScheduleMainFrame(this.aContext);
 			frame.setIconImage(UIStorage.SCHEDULING_ICON_MINI);

@@ -70,7 +70,7 @@ public class ObjectResourceTable extends JTable{
 				// The index of the column whose header was clicked
 				int columnIndex = colModel.getColumnIndexAtX(evt.getX());
 				int mColIndex = table.convertColumnIndexToModel(columnIndex);
-				ObjectResourceTableModel model = (ObjectResourceTableModel) table.getModel();
+				ObjResTableModel model = (ObjResTableModel) table.getModel();
 				String s;
 				if (model.getSortOrder(mColIndex))
 					s = " v "; //$NON-NLS-1$

@@ -60,7 +60,7 @@ public abstract class ObjectResourceTableCellRenderer extends JLabel implements 
 		// 'value' is value contained in the cell located at
 		// (rowIndex, vColIndex)
 		//
-		ObjectResourceTableModel model = (ObjectResourceTableModel) table.getModel();
+		ObjResTableModel model = (ObjResTableModel) table.getModel();
 		ObjectResourceTableRow line = (ObjectResourceTableRow) model.getRow(rowIndex);
 
 		ObjectResource objectResource = line.getObjectResource();
