@@ -45,6 +45,20 @@ module corba {
 			raises (general::corba::AMFICOMRemoteException);
 
 
+/*
+		administration::corba::UserSeq_Transferable transmitUsers(
+						in general::corba::IdentifierSeq_Transferable ids_Transferable,
+						in general::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (general::corba::AMFICOMRemoteException);
+
+		administration::corba::UserSeq_Transferable transmitUsersButIdsCondition(
+						in general::corba::IdentifierSeq_Transferable ids_Transferable,
+						in general::corba::AccessIdentifier_Transferable accessIdentifier,
+						in general::corba::StorableObjectCondition_Transferable condition_Transferable)
+			raises (general::corba::AMFICOMRemoteException);
+*/
+
+
 /////////////////////////////////////////	Configuration ////////////////////////////////////////////////
 
 		configuration::corba::EquipmentType_Transferable transmitEquipmentType(in general::corba::Identifier_Transferable id)
