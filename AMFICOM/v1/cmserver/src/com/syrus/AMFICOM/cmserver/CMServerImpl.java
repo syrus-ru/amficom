@@ -1,5 +1,5 @@
 /*
- * $Id: CMServerImpl.java,v 1.44 2004/10/15 11:00:08 max Exp $
+ * $Id: CMServerImpl.java,v 1.45 2004/10/15 11:10:10 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,8 +12,6 @@ package com.syrus.AMFICOM.cmserver;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
-import javax.swing.text.StringContent;
 
 import com.syrus.AMFICOM.configuration.LinkedIdsCondition;
 import com.syrus.AMFICOM.configuration.corba.LinkedIdsCondition_Transferable;
@@ -140,7 +138,7 @@ import com.syrus.AMFICOM.mserver.corba.MServer;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.44 $, $Date: 2004/10/15 11:00:08 $
+ * @version $Revision: 1.45 $, $Date: 2004/10/15 11:10:10 $
  * @author $Author: max $
  * @module cmserver_v1
  */
@@ -5364,12 +5362,6 @@ public class CMServerImpl implements CMServerOperations {
             StringFieldCondition_Transferable stringFieldCondition_Transferable)
             throws AMFICOMRemoteException {
         try {
-            Identifier domainId = new Identifier(accessIdentifier.domain_id);
-            Domain domain = (Domain) ConfigurationStorableObjectPool.getStorableObject(domainId, true);
-            Log.debugMessage("CMServerImpl.transmitParameterTypes | requiere "
-                    + (identifier_Transferables.length == 0 ? "all" : Integer
-                            .toString(identifier_Transferables.length))
-                    + " item(s) in domain: " + domainId.toString(), Log.DEBUGLEVEL07);
             List list;
             if (identifier_Transferables.length > 0) {
                 List idsList = new ArrayList(identifier_Transferables.length);

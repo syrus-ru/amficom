@@ -1,5 +1,5 @@
 /*
- * $Id: CMServerTestCase.java,v 1.18 2004/10/11 14:59:44 max Exp $
+ * $Id: CMServerTestCase.java,v 1.19 2004/10/15 11:10:10 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -62,7 +62,7 @@ import com.syrus.util.ClientLRUMap;
 import com.syrus.util.corba.JavaSoftORBUtil;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2004/10/11 14:59:44 $
+ * @version $Revision: 1.19 $, $Date: 2004/10/15 11:10:10 $
  * @author $Author: max $
  * @module module
  */
@@ -247,7 +247,7 @@ public class CMServerTestCase extends TestCase {
         List emptyList = new ArrayList();
         for (int i = 0; i < measurementTypes.length; i++) {
             Identifier id = IdentifierPool.generateId(ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE);
-            measurementTypes[i] = MeasurementType.createInstance(id, userId, "Test"+ id , "This object was creates for test", emptyList, emptyList);            
+            measurementTypes[i] = MeasurementType.createInstance(id, userId, "Test"+ id , "This object was creates for test", emptyList, emptyList, emptyList);            
             measurementType_Transferables[i] = (MeasurementType_Transferable)measurementTypes[i].getTransferable();
             identifier_Transferables[i] = (Identifier_Transferable) id.getTransferable();
             System.out.println("the object has been created with id " + id);
