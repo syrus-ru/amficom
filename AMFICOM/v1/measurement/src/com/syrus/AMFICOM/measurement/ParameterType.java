@@ -1,5 +1,5 @@
 /*
- * $Id: ParameterType.java,v 1.35 2004/12/24 09:44:49 arseniy Exp $
+ * $Id: ParameterType.java,v 1.36 2004/12/27 11:25:35 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,7 +29,7 @@ import com.syrus.AMFICOM.measurement.corba.ParameterType_Transferable;
 import com.syrus.util.HashCodeGenerator;
 
 /**
- * @version $Revision: 1.35 $, $Date: 2004/12/24 09:44:49 $
+ * @version $Revision: 1.36 $, $Date: 2004/12/27 11:25:35 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -43,7 +43,7 @@ public class ParameterType extends StorableObjectType {
 	private int dataType;
 
 	private StorableObjectDatabase parameterTypeDatabase;
-	
+
 	protected static final String ID_NAME = "name"+KEY_VALUE_SEPERATOR;
 	protected static final String ID_DATA_TYPE = "data type"+KEY_VALUE_SEPERATOR;
 
@@ -84,10 +84,10 @@ public class ParameterType extends StorableObjectType {
 		this.name = name;
 		this.dataType = dataType;
 		super.currentVersion = super.getNextVersion();
-		
+
 		this.parameterTypeDatabase = MeasurementDatabaseContext.parameterTypeDatabase;
 	}
-		
+
 	/**
 	 * create new instance for client
 	 * @param creatorId
@@ -102,7 +102,7 @@ public class ParameterType extends StorableObjectType {
 											   String name) throws CreateObjectException {
 		if (creatorId == null || codename == null || codename.length() == 0 || description == null || name == null || name.length() == 0)
 			throw new IllegalArgumentException("Argument is 'null'");
-		
+
 		try {
 			return new ParameterType(IdentifierPool.getGeneratedIdentifier(ObjectEntities.PARAMETERTYPE_ENTITY_CODE),
 				creatorId,
@@ -114,7 +114,7 @@ public class ParameterType extends StorableObjectType {
 			throw new CreateObjectException("ParameterType.createInstance | cannot generate identifier ", e);
 		}
 	}
-	
+
 	/**
 	 * create new instance for client
 	 * @param creatorId
@@ -154,41 +154,26 @@ public class ParameterType extends StorableObjectType {
 		}
 	}
 
-//	public static ParameterType getInstance(ParameterType_Transferable ptt) throws CreateObjectException {
-//		ParameterType parameterType = new ParameterType(ptt);
-//		
-//		parameterType.parameterTypeDatabase = MeasurementDatabaseContext.parameterTypeDatabase;
-//		try {
-//			parameterType.parameterTypeDatabase.insert(parameterType);
-//		}
-//		catch (IllegalDataException e) {
-//			throw new CreateObjectException(e.getMessage(), e);
-//		}
-//		
-//		return parameterType;
-//	}
+	public short getEntityCode() {
+			return ObjectEntities.PARAMETERTYPE_ENTITY_CODE;
+	}
 
-    public short getEntityCode() {
-        return ObjectEntities.PARAMETERTYPE_ENTITY_CODE;
-    }
-    
-    public Object getTransferable() {
+  public Object getTransferable() {
 		return new ParameterType_Transferable(super.getHeaderTransferable(),
 											  new String(super.codename),
 											  (super.description != null) ? (new String(super.description)) : "",
 											  new String(this.name),
 											  DataType.from_int(this.dataType));
 	}
-	
 
 	public String getName() {
 		return this.name;
 	}
-	
+
 	public DataType getDataType(){
 		return DataType.from_int(this.dataType);
 	}
-	
+
 	protected synchronized void setAttributes(Date created,
 											  Date modified,
 											  Identifier creatorId,
@@ -206,6 +191,7 @@ public class ParameterType extends StorableObjectType {
 		this.name = name;
 		this.dataType = dataType;
 	}
+
 	/**
 	 * client setter for name 
 	 * @param name The name to set.
@@ -214,8 +200,7 @@ public class ParameterType extends StorableObjectType {
 		this.currentVersion = super.getNextVersion();
 		this.name = name;
 	}
-	
-	
+
 	public boolean equals(Object obj) {
 		boolean equals = (obj==this);
 		if ((!equals)&&(obj instanceof ParameterType)){
@@ -233,8 +218,7 @@ public class ParameterType extends StorableObjectType {
 		}
 		return equals;
 	}
-	
-	
+
 	public int hashCode() {
 		HashCodeGenerator hashCodeGenerator = new HashCodeGenerator();
 		hashCodeGenerator.addObject(this.id);
@@ -251,8 +235,7 @@ public class ParameterType extends StorableObjectType {
 		return result;
 
 	}
-	
-	
+
 	public String toString() {
 		String str = getClass().getName()+EOSL
 					 + ID+this.id + EOSL
@@ -267,7 +250,7 @@ public class ParameterType extends StorableObjectType {
 					 
 		return str;
 	}
-	
+
 	public List getDependencies() {
 		return Collections.EMPTY_LIST;
 	}

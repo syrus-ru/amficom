@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectPool.java,v 1.5 2004/12/23 11:21:03 arseniy Exp $
+ * $Id: StorableObjectPool.java,v 1.6 2004/12/27 11:24:55 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,7 +25,7 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2004/12/23 11:21:03 $
+ * @version $Revision: 1.6 $, $Date: 2004/12/27 11:24:55 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -123,8 +123,7 @@ public abstract class StorableObjectPool {
 
 	protected abstract void deleteStorableObjects(List ids) throws DatabaseException, CommunicationException;
 
-	protected void flushImpl(boolean force) throws VersionCollisionException, DatabaseException,
-			CommunicationException, IllegalDataException {
+	protected void flushImpl(boolean force) throws VersionCollisionException, DatabaseException, CommunicationException, IllegalDataException {
 		List list = new LinkedList();
 		for (Iterator it = this.objectPoolMap.keySet().iterator(); it.hasNext();) {
 			Short entityCode = (Short) it.next();
@@ -143,15 +142,14 @@ public abstract class StorableObjectPool {
 				short code = entityCode.shortValue();
 				save(code, list, force);
 
-			} else {
-				Log.errorMessage("StorableObjectPool.flushImpl | Cannot find object pool for entity code: '"
-						+ ObjectEntities.codeToString(entityCode.shortValue()) + "'");
+			}
+			else {
+				Log.errorMessage("StorableObjectPool.flushImpl | Cannot find object pool for entity code: '" + ObjectEntities.codeToString(entityCode.shortValue()) + "'");
 			}
 		}
 	}
 
-	protected StorableObject getStorableObjectImpl(Identifier objectId, boolean useLoader) throws DatabaseException,
-			CommunicationException {
+	protected StorableObject getStorableObjectImpl(Identifier objectId, boolean useLoader) throws DatabaseException, CommunicationException {
 		if (objectId != null) {
 			short objectEntityCode = objectId.getMajor();
 			LRUMap objectPool = (LRUMap) this.objectPoolMap.get(new Short(objectEntityCode));
@@ -165,18 +163,17 @@ public abstract class StorableObjectPool {
 						if (storableObject != null)
 							try {
 								putStorableObjectImpl(storableObject);
-							} catch (IllegalObjectEntityException ioee) {
+							}
+							catch (IllegalObjectEntityException ioee) {
 								Log.errorException(ioee);
 							}
 					}
 					return storableObject;
 				}
 			}
-			
-			Log
-					.errorMessage("StorableObjectPool.getStorableObjectImpl | Cannot find object pool for objectId: '"
-							+ objectId.toString() + "' entity code: '" + objectEntityCode + "'");
-			for(Iterator it = this.objectPoolMap.keySet().iterator();it.hasNext();){
+
+			Log.errorMessage("StorableObjectPool.getStorableObjectImpl | Cannot find object pool for objectId: '" + objectId.toString() + "' entity code: '" + objectEntityCode + "'");
+			for(Iterator it = this.objectPoolMap.keySet().iterator();it.hasNext();) {
 				Short entityCode = (Short)it.next();
 				Log.debugMessage("StorableObjectPool.getStorableObjectImpl | available " + ObjectEntities.codeToString(entityCode.shortValue()) + " / " + entityCode, Log.DEBUGLEVEL05);
 			}
@@ -248,8 +245,7 @@ public abstract class StorableObjectPool {
 		return getStorableObjectsByConditionButIdsImpl(null, condition, useLoader);
 	}
 
-	protected List getStorableObjectsImpl(List objectIds, boolean useLoader) throws DatabaseException,
-			CommunicationException {
+	protected List getStorableObjectsImpl(List objectIds, boolean useLoader) throws DatabaseException, CommunicationException {
 		List list = null;
 		Map objectQueueMap = null;
 		if (objectIds != null) {
@@ -276,16 +272,17 @@ public abstract class StorableObjectPool {
 						}
 						objectQueue.add(objectId);
 					}
-				} else {
-					Log
-							.errorMessage("StorableObjectPool.getStorableObjectsImpl | Cannot find object pool for objectId: '"
+				}
+				else {
+					Log.errorMessage("StorableObjectPool.getStorableObjectsImpl | Cannot find object pool for objectId: '"
 									+ objectId.toString()
-									+ "' entity code: '"
+									+ "', entity code: '"
 									+ ObjectEntities.codeToString(objectEntityCode) + "'");
 				}
 			}
 
-		} else {
+		}
+		else {
 			Log.errorMessage("StorableObjectPool.getStorableObjectsImpl | NULL list of identifiers supplied");
 		}
 
@@ -303,7 +300,8 @@ public abstract class StorableObjectPool {
 							putStorableObjectImpl(storableObject);
 							list.add(storableObject);
 						}
-					} catch (IllegalObjectEntityException ioee) {
+					}
+					catch (IllegalObjectEntityException ioee) {
 						Log.errorException(ioee);
 					}
 				}
@@ -316,14 +314,11 @@ public abstract class StorableObjectPool {
 		return list;
 	}
 
-	protected abstract StorableObject loadStorableObject(Identifier objectId) throws DatabaseException,
-			CommunicationException;
+	protected abstract StorableObject loadStorableObject(Identifier objectId) throws DatabaseException, CommunicationException;
 
-	protected abstract List loadStorableObjects(Short entityCode, List ids) throws DatabaseException,
-			CommunicationException;
+	protected abstract List loadStorableObjects(Short entityCode, List ids) throws DatabaseException, CommunicationException;
 
-	protected abstract List loadStorableObjectsButIds(StorableObjectCondition condition, List ids)
-			throws DatabaseException, CommunicationException;
+	protected abstract List loadStorableObjectsButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException;
 
 	protected void polulatePools() {
 		try {
@@ -333,10 +328,12 @@ public abstract class StorableObjectPool {
 				if (keys != null)
 					getStorableObjectsImpl(keys, true);
 			}
-		} catch (CommunicationException e) {
+		}
+		catch (CommunicationException e) {
 			Log.errorException(e);
 			Log.errorMessage("StorableObjectPool.polulatePools | Error: " + e.getMessage());
-		} catch (DatabaseException e) {
+		}
+		catch (DatabaseException e) {
 			Log.errorException(e);
 			Log.errorMessage("StorableObjectPool.polulatePools | Error: " + e.getMessage());
 		}
@@ -400,31 +397,33 @@ public abstract class StorableObjectPool {
 
 	
 	private void save(short code, List list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException, IllegalDataException{
-		if (!list.isEmpty()){		
+		if (!list.isEmpty()) {		
 			// calculate dependencies to save
 			Map dependenciesMap = new HashMap();
 			for (Iterator it = list.iterator(); it.hasNext();) {
 				StorableObject storableObject = (StorableObject) it.next();
-				Log.debugMessage("StorableObjectPool.save | calculate dependencies for '" 
-								 + storableObject.getId() + "'", Log.DEBUGLEVEL08);
+				Log.debugMessage("StorableObjectPool.save | calculate dependencies for '" + storableObject.getId() + "'", Log.DEBUGLEVEL08);
 				List dependencies = storableObject.getDependencies();
 				for (Iterator depIt = dependencies.iterator(); depIt.hasNext();) {
 					Object depItObj = depIt.next();
 					Identifier id;
 					StorableObject stObj;
-					if (depItObj instanceof StorableObject){
+					if (depItObj instanceof StorableObject) {
 						stObj = (StorableObject)depItObj;
 						id = stObj.getId();
-					} else if (depItObj instanceof Identifier) {
-						id = (Identifier) depItObj;
-						stObj = getStorableObjectImpl(id, true);
-					} else {
-						throw new IllegalDataException("StorableObjectPool.save | Illegal dependencies Object: " + depItObj.getClass().getName());
 					}
-					
+					else
+						if (depItObj instanceof Identifier) {
+							id = (Identifier) depItObj;
+							stObj = getStorableObjectImpl(id, true);
+						}
+						else {
+							throw new IllegalDataException("StorableObjectPool.save | Illegal dependencies Object: " + depItObj.getClass().getName());
+						}
+
 					Short major = new Short(id.getMajor());
 					List depList = (List)dependenciesMap.get(major);
-					if (depList == null){
+					if (depList == null) {
 						depList = new LinkedList();
 						dependenciesMap.put(major, depList);
 					}
@@ -432,40 +431,37 @@ public abstract class StorableObjectPool {
 						depList.add(stObj);
 				}
 			}
-			
-			
+
+
 			// recursieve save dependencies
 			for (Iterator it = dependenciesMap.keySet().iterator(); it.hasNext();) {
 				Short major = (Short) it.next();
 				List depList = (List)dependenciesMap.get(major);
 				if (depList != null && !depList.isEmpty()){
-					Log.debugMessage("StorableObjectPool.save | recursieve save '" 
-									 + ObjectEntities.codeToString(major.shortValue()) + "'", Log.DEBUGLEVEL08);
+					Log.debugMessage("StorableObjectPool.save | recursive save '" + ObjectEntities.codeToString(major.shortValue()) + "'", Log.DEBUGLEVEL08);
 					// [:]/\/\/\/\/|||||||||||||||||||||||||||[:]
 					save(major.shortValue(), depList, force);
 				}
 			}
-			
+
 			for (Iterator it = list.iterator(); it.hasNext();) {
 				StorableObject storableObject = (StorableObject) it.next();
-				Log.debugMessage("StorableObjectPool.save | save '" 
-								 + storableObject.getId() + "'", Log.DEBUGLEVEL08);
+				Log.debugMessage("StorableObjectPool.save | save '" + storableObject.getId() + "'", Log.DEBUGLEVEL08);
 			}
-			
-			
+
+
 			saveStorableObjects(code, list, force);
 
 		}
 	}
-	protected abstract void saveStorableObjects(short code, List list, boolean force) throws VersionCollisionException,
-			DatabaseException, CommunicationException, IllegalDataException;
+
+	protected abstract void saveStorableObjects(short code, List list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException, IllegalDataException;
 
 	protected void serializePoolImpl() {
 		java.util.Set entityCodeSet = this.objectPoolMap.keySet();
 		for (Iterator it = entityCodeSet.iterator(); it.hasNext();) {
 			Short entityCode = (Short) it.next();
-			LRUMapSaver.save((LRUMap) this.objectPoolMap.get(entityCode), ObjectEntities.codeToString(entityCode
-					.shortValue()));
+			LRUMapSaver.save((LRUMap) this.objectPoolMap.get(entityCode), ObjectEntities.codeToString(entityCode.shortValue()));
 		}
 	}
 }
