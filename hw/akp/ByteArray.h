@@ -17,7 +17,7 @@ public:
 	virtual ~ByteArray();
 	unsigned int getLength() const;
 	char* getSegment() const;
-	char* getData() const; //---
+	char* getData() const;
 	ByteArray* clone() const;
 	ByteArray* getReversed() const;
 
