@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.15 2004/12/17 15:05:56 bass Exp $
+# $Id: Makefile,v 1.16 2004/12/23 11:13:01 bass Exp $
 #
 # vim:ft=make:
 #
@@ -11,12 +11,7 @@ LIBNAME_OBJECT = ServerObjectInterface.jar
 LIBNAME_ADMIN = ServerInterface_Admin.jar
 LIBNAME_ALARM = ServerInterface_Alarm.jar
 LIBNAME_GENERAL = ServerInterface_General.jar
-LIBNAME_ISM = ServerInterface_ISM.jar
-LIBNAME_MAP = ServerInterface_Map.jar
-LIBNAME_NETWORK = ServerInterface_Network.jar
 LIBNAME_REPORT = ServerInterface_Report.jar
-LIBNAME_SCHEME = ServerInterface_Scheme.jar
-LIBNAME_SURVEY = ServerInterface_Survey.jar
 
 JAVACFLAGS = -source 1.4
 SUNJAVACFLAGS = -target 1.4
@@ -27,7 +22,7 @@ $(call checkenve,JAVA_HOME)
 $(call checkenve,ORACLE_HOME)
 
 .PHONY: export
-export: $(LIBNAME) $(LIBNAME_OBJECT) $(LIBNAME_ADMIN) $(LIBNAME_ALARM) $(LIBNAME_GENERAL) $(LIBNAME_ISM) $(LIBNAME_MAP) $(LIBNAME_NETWORK) $(LIBNAME_REPORT) $(LIBNAME_SCHEME) $(LIBNAME_SURVEY)
+export: $(LIBNAME) $(LIBNAME_OBJECT) $(LIBNAME_ADMIN) $(LIBNAME_ALARM) $(LIBNAME_GENERAL) $(LIBNAME_REPORT)
 
 .PHONY: all
 all: .all
@@ -59,18 +54,13 @@ idl: .idl
 
 .idl: $(SRCDIR) $(CLASSDIR)
 	$(IDLJ) $(IDLJFLAGS) $(IDLDIR)/AMFICOM.idl
-	$(IDLJ) $(IDLJFLAGS) $(IDLDIR)/ISM.idl
 	$(IDLJ) $(IDLJFLAGS) $(IDLDIR)/admin.idl
 	$(IDLJ) $(IDLJFLAGS) $(IDLDIR)/alarm.idl
 	$(IDLJ) $(IDLJFLAGS) $(IDLDIR)/client.idl
 	$(IDLJ) $(IDLJFLAGS) $(IDLDIR)/constants.idl
 	$(IDLJ) $(IDLJFLAGS) $(IDLDIR)/general.idl
-	$(IDLJ) $(IDLJFLAGS) $(IDLDIR)/map.idl
-	$(IDLJ) $(IDLJFLAGS) $(IDLDIR)/network.idl
 	$(IDLJ) $(IDLJFLAGS) $(IDLDIR)/report.idl
 	$(IDLJ) $(IDLJFLAGS) $(IDLDIR)/resource.idl
-	$(IDLJ) $(IDLJFLAGS) $(IDLDIR)/scheme.idl
-	$(IDLJ) $(IDLJFLAGS) $(IDLDIR)/survey.idl
 	touch $@
 
 .PHONY: idlclean
@@ -147,28 +137,6 @@ $(LIBNAME_GENERAL): .all
 		-C $(CLASSDIR) com/syrus/AMFICOM/CORBA/ConstantsPOATie.class \
 		-C $(CLASSDIR) com/syrus/AMFICOM/CORBA/_ConstantsStub.class
 
-$(LIBNAME_ISM): .all
-	$(JAR) cf $@ \
-		-C $(CLASSDIR) com/syrus/AMFICOM/CORBA/ISM \
-		-C $(CLASSDIR) com/syrus/AMFICOM/CORBA/ISMDirectory
-
-$(LIBNAME_MAP): .all
-	$(JAR) cf $@ \
-		-C $(CLASSDIR) com/syrus/AMFICOM/CORBA/Map
-
-$(LIBNAME_NETWORK): .all
-	$(JAR) cf $@ \
-		-C $(CLASSDIR) com/syrus/AMFICOM/CORBA/Network \
-		-C $(CLASSDIR) com/syrus/AMFICOM/CORBA/NetworkDirectory
-
 $(LIBNAME_REPORT): .all
 	$(JAR) cf $@ \
 		-C $(CLASSDIR) com/syrus/AMFICOM/CORBA/Report
-
-$(LIBNAME_SCHEME): .all
-	$(JAR) cf $@ \
-		-C $(CLASSDIR) com/syrus/AMFICOM/CORBA/Scheme
-
-$(LIBNAME_SURVEY): .all
-	$(JAR) cf $@ \
-		-C $(CLASSDIR) com/syrus/AMFICOM/CORBA/Survey

@@ -1,5 +1,5 @@
 /*
- * $Id: alarm.idl,v 1.4 2004/10/04 13:33:18 bass Exp $
+ * $Id: alarm.idl,v 1.5 2004/12/23 11:13:01 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,19 +9,13 @@
 #ifndef ALARM_IDL
 #define ALARM_IDL
 
-#include "general.idl"
+#include "event.idl"
 
-module com
-{
-module syrus
-{
-module AMFICOM
-{
-module CORBA
-{
-
-module Alarm
-{
+module com {
+module syrus {
+module AMFICOM {
+module CORBA {
+module Alarm {
 	struct Message_Transferable
 	{
 		wstring id;
@@ -50,7 +44,7 @@ module Alarm
 		wstring comments;
 		wstring type_id;
 		wstring fixed_by;
-		General::AlarmStatus status;
+		event::corba::AlarmStatus status;
 		wstring assigned_to;
 		wstring event_id;
 
@@ -75,7 +69,7 @@ module Alarm
 		wstring source_id;
 		wstring type_id;
 		wstring descriptor;
-		General::EventStatus status;
+		event::corba::EventStatus status;
 		long long created;
 	};
 	typedef sequence <Event_Transferable> EventSeq_Transferable;
@@ -101,34 +95,7 @@ module Alarm
 	};
 
 	typedef sequence <EventSourceType_Transferable> EventSourceTypeSeq_Transferable;
-/*
-	struct MessageType_Transferable
-	{
-		wstring id;
-		wstring name;
-		wstring description;
-		long long modified;
-	};
-	typedef sequence <MessageType_Transferable> MessageTypeSeq_Transferable;
 
-	struct AlertingType_Transferable
-	{
-		wstring id;
-		wstring name;
-		wstring description;
-		long long modified;
-	};
-	typedef sequence <AlertingType_Transferable> AlertingTypeSeq_Transferable;
-
-	struct EventType_Transferable
-	{
-		wstring id;
-		wstring name;
-		wstring source_type;
-		long long modified;
-	};
-	typedef sequence <EventType_Transferable> EventTypeSeq_Transferable;
-*/
 	struct AlertingMessage_Transferable
 	{
 		wstring id;
