@@ -10,10 +10,10 @@ CREATE TABLE TransmissionPathType (
  --
  name VARCHAR2(128),
  --
- CONSTRAINT kistype_pk PRIMARY KEY (id),
- CONSTRAINT kistype_creator_fk FOREIGN KEY (creator_id)
+ CONSTRAINT tpathtype_pk PRIMARY KEY (id),
+ CONSTRAINT tpathtype_creator_fk FOREIGN KEY (creator_id)
   REFERENCES Users (id) ON DELETE CASCADE,
- CONSTRAINT kistype_modifier_fk FOREIGN KEY (modifier_id)
+ CONSTRAINT tpathtype_modifier_fk FOREIGN KEY (modifier_id)
   REFERENCES Users (id) ON DELETE CASCADE
 );
 

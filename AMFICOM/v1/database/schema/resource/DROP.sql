@@ -1,0 +1,1 @@
+@@resource/object/DROP.sql
