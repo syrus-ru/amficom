@@ -27,7 +27,7 @@ LIBNAME_SCHEME=$(LIB)\ServerInterface_Scheme.jar
 LIBNAME_SURVEY=$(LIB)\ServerInterface_Survey.jar
 
 SERVERCP=$(LIBNAME_ADMIN);$(LIBNAME_ALARM);$(LIBNAME_GENERAL);$(LIBNAME_ISM);$(LIBNAME_MAP);$(LIBNAME_NETWORK);$(LIBNAME_REPORT);$(LIBNAME_SCHEME);$(LIBNAME_SURVEY);$(LIBNAME_OBJECT)
-CLIENTCP=$(LIB)\io.jar;$(LIB)\util.jar;$(LIB)\general.jar;$(LIB)\localize.jar;$(LIB)\corba_portable.jar;$(LIB)\corba_portable_client.jar;$(LIB)\filter.jar
+CLIENTCP=$(LIB)\util.jar;$(LIB)\generalclient.jar;$(LIB)\localize.jar;$(LIB)\corba_portable.jar;$(LIB)\corba_portable_client.jar;$(LIB)\filter.jar
 
 ORBCP=$(EXTLIB)\aurora.zip;$(EXTLIB)\aurora_client_orbindep.jar;$(EXTLIB)\aurora_client_orbdep.jar
 VBJCP=$(ORACLE_HOME)\lib\vbjorb.jar;$(ORACLE_HOME)\lib\vbjapp.jar
