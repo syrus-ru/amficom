@@ -1,5 +1,5 @@
 /*
- * $Id: Modeling.java,v 1.15 2004/11/19 12:25:34 bob Exp $
+ * $Id: Modeling.java,v 1.16 2004/12/06 10:59:15 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,6 +16,7 @@ import com.syrus.AMFICOM.event.corba.AlarmLevel;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
@@ -28,7 +29,7 @@ import com.syrus.AMFICOM.measurement.corba.ResultSort;
 import com.syrus.util.HashCodeGenerator;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2004/11/19 12:25:34 $
+ * @version $Revision: 1.16 $, $Date: 2004/12/06 10:59:15 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -61,12 +62,12 @@ public class Modeling extends Action {
 	}
 	
 	protected Modeling(Identifier id,
-							 Identifier creatorId,
-							 Identifier schemePathId,
-							 Identifier monitoredElementId,
-							 String name,
-							 Set argumentSet,
-							 int sort){
+					   Identifier creatorId,
+					   Identifier schemePathId,
+					   Identifier monitoredElementId,
+					   String name,
+					   Set argumentSet,
+					   int sort){
 		super(id);
 		long time = System.currentTimeMillis();
 		super.created = new Date(time);
@@ -88,20 +89,19 @@ public class Modeling extends Action {
 	 * create new instance for client
 	 */
 
-	public static Modeling createInstance(Identifier id,
-																		Identifier creatorId,
-																		Identifier schemePathId,
-																		Identifier monitoredElementId,
-																		String name,
-																		Set argumentSet,
-																		ModelingSort sort){
-		return new Modeling(id,
-										creatorId,
-										schemePathId,
-										monitoredElementId,
-										name,
-										argumentSet,
-										sort.value());
+	public static Modeling createInstance(Identifier creatorId,
+										  Identifier schemePathId,
+										  Identifier monitoredElementId,
+										  String name,
+										  Set argumentSet,
+										  ModelingSort sort){
+		return new Modeling(IdentifierPool.generateId(ObjectEntities.MODELING_ENTITY_CODE),
+			creatorId,
+			schemePathId,
+			monitoredElementId,
+			name,
+			argumentSet,
+			sort.value());
 		
 	}
 	
@@ -151,22 +151,19 @@ public class Modeling extends Action {
 	/** 
 	 * @deprecated as unsupport method
 	 */
-	public Result createResult(	Identifier id,
-								Identifier creatorId,
+	public Result createResult(Identifier creatorId,
 								Measurement measurement,
 								AlarmLevel alarmLevel,
 								SetParameter[] parameters) throws CreateObjectException {
 		throw new UnsupportedOperationException("method isn't support");
 	}
 
-	public Result createResult(Identifier id,
-								 Identifier creatorId,		
-								 SetParameter[] parameters) throws CreateObjectException {
-		return Result.createInstance(id,
-												 creatorId,
-												 this,
-												 ResultSort.RESULT_SORT_MODELING,
-												 parameters);
+	public Result createResult(Identifier creatorId,		
+							   SetParameter[] parameters) throws CreateObjectException {
+		return Result.createInstance(creatorId,
+			this,
+			ResultSort.RESULT_SORT_MODELING,
+			parameters);
 	}
 
 	public MeasurementType getMeasurementType() {
@@ -184,19 +181,19 @@ public class Modeling extends Action {
 	}
 
 	protected synchronized void setAttributes(Date created,
-																						Date modified,
-																						Identifier creatorId,
-																						Identifier modifierId,
-																						String name,
-																						Identifier monitoredElementId,
-																						Identifier schemePathId,
-																						MeasurementType measurementType,
-																						Set argumentSet,
-																						int sort) {
+											  Date modified,
+											  Identifier creatorId,
+											  Identifier modifierId,
+											  String name,
+											  Identifier monitoredElementId,
+											  Identifier schemePathId,
+											  MeasurementType measurementType,
+											  Set argumentSet,
+											  int sort) {
 		super.setAttributes(created,
-												modified,
-												creatorId,
-												modifierId);
+			modified,
+			creatorId,
+			modifierId);
 		this.name = name;
 		this.monitoredElementId = monitoredElementId;
 		this.schemePathId = schemePathId;

@@ -1,5 +1,5 @@
 /*
- * $Id: Result.java,v 1.24 2004/11/16 15:48:45 bob Exp $
+ * $Id: Result.java,v 1.25 2004/12/06 10:59:15 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,6 +13,7 @@ import java.util.Date;
 import java.util.List;
 
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
@@ -29,7 +30,7 @@ import com.syrus.AMFICOM.measurement.corba.Parameter_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.24 $, $Date: 2004/11/16 15:48:45 $
+ * @version $Revision: 1.25 $, $Date: 2004/12/06 10:59:15 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -194,17 +195,17 @@ public class Result extends StorableObject {
 	}
 
 	protected synchronized void setAttributes(Date created,
-																						Date modified,
-																						Identifier creatorId,
-																						Identifier modifierId,
-																						Measurement measurement,
-																						Action action,
-																						int sort,
-																						int alarmLevel) {
+											  Date modified,
+											  Identifier creatorId,
+											  Identifier modifierId,
+											  Measurement measurement,
+											  Action action,
+											  int sort,
+											  int alarmLevel) {
 		super.setAttributes(created,
-												modified,
-												creatorId,
-												modifierId);
+			modified,
+			creatorId,
+			modifierId);
 		this.measurement = measurement;
 		this.action = action;
 		this.sort = sort;
@@ -215,29 +216,27 @@ public class Result extends StorableObject {
 		this.parameters = parameters;
 	}
 
-	protected static Result createInstance(Identifier id,
-																				 Identifier creatorId,
-																				 Measurement measurement,
-																				 Action action,
-																				 ResultSort sort,
-																				 AlarmLevel alarmLevel,
-																				 SetParameter[] parameters) throws CreateObjectException {
-		return new Result(id,
-											creatorId,
-											measurement,
-											action,
-											sort.value(),
-											alarmLevel.value(),
-											parameters);
+	protected static Result createInstance(Identifier creatorId,
+										   Measurement measurement,
+										   Action action,
+										   ResultSort sort,
+										   AlarmLevel alarmLevel,
+										   SetParameter[] parameters) {
+		return new Result(IdentifierPool.generateId(ObjectEntities.RESULT_ENTITY_CODE),
+			creatorId,
+			measurement,
+			action,
+			sort.value(),
+			alarmLevel.value(),
+			parameters);
 	}
 	
-	protected static Result createInstance(Identifier id,
-											 Identifier creatorId,
-											 Modeling modeling,
-											 ResultSort sort,					
-											 SetParameter[] parameters) throws CreateObjectException {
+	protected static Result createInstance(Identifier creatorId,
+										   Modeling modeling,
+										   ResultSort sort,					
+										   SetParameter[] parameters) {
 
-		return new Result(id,
+		return new Result(IdentifierPool.generateId(ObjectEntities.RESULT_ENTITY_CODE),
 				creatorId,
 				null,
 				modeling,

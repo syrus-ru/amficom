@@ -1,5 +1,5 @@
 /*
- * $Id: ParameterType.java,v 1.26 2004/11/16 15:48:45 bob Exp $
+ * $Id: ParameterType.java,v 1.27 2004/12/06 10:59:15 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,6 +14,7 @@ import java.util.List;
 
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
@@ -26,7 +27,7 @@ import com.syrus.AMFICOM.measurement.corba.ParameterType_Transferable;
 import com.syrus.util.HashCodeGenerator;
 
 /**
- * @version $Revision: 1.26 $, $Date: 2004/11/16 15:48:45 $
+ * @version $Revision: 1.27 $, $Date: 2004/12/06 10:59:15 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -56,7 +57,7 @@ public class ParameterType extends StorableObjectType {
 		}
 	}
 
-	public ParameterType(ParameterType_Transferable ptt) throws CreateObjectException {
+	public ParameterType(ParameterType_Transferable ptt) {
 		super(ptt.header,
 			  new String(ptt.codename),
 			  new String(ptt.description));
@@ -65,11 +66,11 @@ public class ParameterType extends StorableObjectType {
 	}
 
 	protected ParameterType(Identifier id,
-												Identifier creatorId,
-												String codename,
-												String description,
-												String name,
-												int sort) {
+							Identifier creatorId,
+							String codename,
+							String description,
+							String name,
+							int sort) {
 		super(id);
 		long time = System.currentTimeMillis();
 		super.created = new Date(time);
@@ -94,17 +95,16 @@ public class ParameterType extends StorableObjectType {
 	 * @param name
 	 * @return
 	 */
-	public static ParameterType createInstance(Identifier id,
-																						 Identifier creatorId,
-																						 String codename,
-																						 String description,
-																						 String name) {
-		return new ParameterType(id,
-														 creatorId,
-														 codename,
-														 description,
-														 name,
-														 DataType._DATA_TYPE_DATA);
+	public static ParameterType createInstance(Identifier creatorId,
+											   String codename,
+											   String description,
+											   String name) {
+		return new ParameterType(IdentifierPool.generateId(ObjectEntities.PARAMETERTYPE_ENTITY_CODE),
+			creatorId,
+			codename,
+			description,
+			name,
+			DataType._DATA_TYPE_DATA);
 	}
 	
 	/**
@@ -117,13 +117,12 @@ public class ParameterType extends StorableObjectType {
 	 * @param sort {@link ParameterTypeSort}
 	 * @return
 	 */
-	public static ParameterType createInstance(Identifier id,
-												 Identifier creatorId,
-												 String codename,
-												 String description,
-												 String name,
-												 DataType sort) {
-		return new ParameterType(id,
+	public static ParameterType createInstance(Identifier creatorId,
+											   String codename,
+											   String description,
+											   String name,
+											   DataType sort) {
+		return new ParameterType(IdentifierPool.generateId(ObjectEntities.PARAMETERTYPE_ENTITY_CODE),
 						 creatorId,
 						 codename,
 						 description,
@@ -168,19 +167,19 @@ public class ParameterType extends StorableObjectType {
 	}
 	
 	protected synchronized void setAttributes(Date created,
-																						Date modified,
-																						Identifier creatorId,
-																						Identifier modifierId,
-																						String codename,
-																						String description,
-																						String name,
-																						int sort) {
+											  Date modified,
+											  Identifier creatorId,
+											  Identifier modifierId,
+											  String codename,
+											  String description,
+											  String name,
+											  int sort) {
 		super.setAttributes(created,
-												modified,
-												creatorId,
-												modifierId,
-												codename,
-												description);
+			modified,
+			creatorId,
+			modifierId,
+			codename,
+			description);
 		this.name = name;
 		this.sort = sort;
 	}

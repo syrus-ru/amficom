@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementSetup.java,v 1.34 2004/11/16 15:48:45 bob Exp $
+ * $Id: MeasurementSetup.java,v 1.35 2004/12/06 10:59:15 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,10 +9,12 @@
 package com.syrus.AMFICOM.measurement;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
@@ -27,7 +29,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.corba.MeasurementSetup_Transferable;
 
 /**
- * @version $Revision: 1.34 $, $Date: 2004/11/16 15:48:45 $
+ * @version $Revision: 1.35 $, $Date: 2004/12/06 10:59:15 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -54,6 +56,7 @@ public class MeasurementSetup extends StorableObject {
 	public MeasurementSetup(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
+		this.monitoredElementIds = new LinkedList();
 		this.measurementSetupDatabase = MeasurementDatabaseContext.measurementSetupDatabase;
 		try {
 			this.measurementSetupDatabase.retrieve(this);
@@ -97,14 +100,14 @@ public class MeasurementSetup extends StorableObject {
 	}
 
 	protected MeasurementSetup(Identifier id,
-													 Identifier creatorId,
-													 Set parameterSet,
-													 Set criteriaSet,
-													 Set thresholdSet,
-													 Set etalon,
-													 String description,
-													 long measurementDuration,
-													 List monitoredElementIds) {
+							   Identifier creatorId,
+							   Set parameterSet,
+							   Set criteriaSet,
+							   Set thresholdSet,
+							   Set etalon,
+							   String description,
+							   long measurementDuration,
+							   List monitoredElementIds) {
 		super(id);
 		long time = System.currentTimeMillis();
 		super.created = new Date(time);
@@ -117,7 +120,8 @@ public class MeasurementSetup extends StorableObject {
 		this.etalon = etalon;
 		this.description = description;
 		this.measurementDuration = measurementDuration;
-		this.monitoredElementIds = monitoredElementIds;
+		this.monitoredElementIds = new LinkedList();
+		this.setMonitoredElementIds0(monitoredElementIds);
 		
 		this.measurementSetupDatabase = MeasurementDatabaseContext.measurementSetupDatabase;
 
@@ -137,24 +141,23 @@ public class MeasurementSetup extends StorableObject {
 	 * @param monitoredElementIds
 	 * @return
 	 */
-	public static MeasurementSetup createInstance(Identifier id,
-																								Identifier creatorId,
-																								Set parameterSet,
-																								Set criteriaSet,
-																								Set thresholdSet,
-																								Set etalon,
-																								String description,
-																								long measurementDuration,
-																								List monitoredElementIds) {
-		return new MeasurementSetup(id,
-																creatorId,
-																parameterSet,
-																criteriaSet,
-																thresholdSet,
-																etalon,
-																description,
-																measurementDuration,
-																monitoredElementIds);
+	public static MeasurementSetup createInstance(Identifier creatorId,
+												  Set parameterSet,
+												  Set criteriaSet,
+												  Set thresholdSet,
+												  Set etalon,
+												  String description,
+												  long measurementDuration,
+												  List monitoredElementIds) {
+		return new MeasurementSetup(IdentifierPool.generateId(ObjectEntities.MS_ENTITY_CODE),
+			creatorId,
+			parameterSet,
+			criteriaSet,
+			thresholdSet,
+			etalon,
+			description,
+			measurementDuration,
+			monitoredElementIds);
 	}
 	
 	public static MeasurementSetup getInstance(MeasurementSetup_Transferable mst) throws CreateObjectException {
@@ -193,7 +196,6 @@ public class MeasurementSetup extends StorableObject {
 			throw new UpdateObjectException(vce.getMessage(), vce);
 		}
 		this.monitoredElementIds.add(monitoredElementId);
-		//this.monitoredElementIds.trimToSize();
 	}
 
 	public void detachFromMonitoredElement(Identifier monitoredElementId, Identifier modifierId) throws UpdateObjectException {
@@ -257,7 +259,7 @@ public class MeasurementSetup extends StorableObject {
 	}
 
 	public List getMonitoredElementIds() {
-		return this.monitoredElementIds;
+		return Collections.unmodifiableList(this.monitoredElementIds);
 	}
 
 	public String[] getParameterTypeCodenames() {
@@ -277,19 +279,19 @@ public class MeasurementSetup extends StorableObject {
 	}
 
 	protected synchronized void setAttributes(Date created,
-																						Date modified,
-																						Identifier creatorId,
-																						Identifier modifierId,
-																						Set parameterSet,
-																						Set criteriaSet,
-																						Set thresholdSet,
-																						Set etalon,
-																						String description,
-																						long measurementDuration) {
+											  Date modified,
+											  Identifier creatorId,
+											  Identifier modifierId,
+											  Set parameterSet,
+											  Set criteriaSet,
+											  Set thresholdSet,
+											  Set etalon,
+											  String description,
+											  long measurementDuration) {
 		super.setAttributes(created,
-												modified,
-												creatorId,
-												modifierId);
+			modified,
+			creatorId,
+			modifierId);
 		this.parameterSet = parameterSet;
 		this.criteriaSet = criteriaSet;
 		this.thresholdSet = thresholdSet;
@@ -298,8 +300,15 @@ public class MeasurementSetup extends StorableObject {
 		this.measurementDuration = measurementDuration;
 	}
 
-	protected synchronized void setMonitoredElementIds(List monitoredElementIds) {
-		this.monitoredElementIds = monitoredElementIds;
+	protected synchronized void setMonitoredElementIds0(List monitoredElementIds) {
+		this.monitoredElementIds.clear();
+		if (monitoredElementIds != null)
+	     	this.monitoredElementIds.addAll(monitoredElementIds);
+	}
+	
+	public void setMonitoredElementIds(List monitoredElementIds) {
+		this.setMonitoredElementIds0(monitoredElementIds);
+	    super.currentVersion = super.getNextVersion();
 	}
 
 	/**

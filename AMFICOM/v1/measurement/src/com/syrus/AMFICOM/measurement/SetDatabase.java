@@ -1,5 +1,5 @@
 /*
- * $Id: SetDatabase.java,v 1.40 2004/12/01 10:09:58 max Exp $
+ * $Id: SetDatabase.java,v 1.41 2004/12/06 10:59:15 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -45,8 +45,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.40 $, $Date: 2004/12/01 10:09:58 $
- * @author $Author: max $
+ * @version $Revision: 1.41 $, $Date: 2004/12/06 10:59:15 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
@@ -356,7 +356,7 @@ public class SetDatabase extends StorableObjectDatabase {
             for (Iterator iter = sets.iterator(); iter.hasNext();) {
                 Set set = (Set) iter.next();
                 List meIds = (List)meLinkMap.get(set);
-                set.setMonitoredElementIds(meIds);
+                set.setMonitoredElementIds0(meIds);
             }
             
         } catch (SQLException sqle) {

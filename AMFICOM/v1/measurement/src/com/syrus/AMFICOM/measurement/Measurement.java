@@ -1,5 +1,5 @@
 /*
- * $Id: Measurement.java,v 1.34 2004/11/16 15:48:45 bob Exp $
+ * $Id: Measurement.java,v 1.35 2004/12/06 10:59:15 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,6 +14,7 @@ import java.util.List;
 
 import com.syrus.AMFICOM.measurement.corba.MeasurementStatus;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -29,7 +30,7 @@ import com.syrus.AMFICOM.measurement.corba.ResultSort;
 import com.syrus.AMFICOM.event.corba.AlarmLevel;
 
 /**
- * @version $Revision: 1.34 $, $Date: 2004/11/16 15:48:45 $
+ * @version $Revision: 1.35 $, $Date: 2004/12/06 10:59:15 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -191,24 +192,24 @@ public class Measurement extends Action {
 	}
 
 	protected synchronized void setAttributes(Date created,
-																						Date modified,
-																						Identifier creatorId,
-																						Identifier modifierId,
-																						MeasurementType type,
-																						String name,
-																						Identifier monitoredElementId,
-																						MeasurementSetup setup,
-																						Date startTime,
-																						long duration,
-																						int status,
-																						String localAddress,
-																						Identifier testId) {
+											  Date modified,
+											  Identifier creatorId,
+											  Identifier modifierId,
+											  MeasurementType type,
+											  String name,
+											  Identifier monitoredElementId,
+											  MeasurementSetup setup,
+											  Date startTime,
+											  long duration,
+											  int status,
+											  String localAddress,
+											  Identifier testId) {
 		super.setAttributes(created,
-												modified,
-												creatorId,
-												modifierId,
-												type,
-												monitoredElementId);
+			modified,
+			creatorId,
+			modifierId,
+			type,
+			monitoredElementId);
 		this.name = name;
 		this.setup = setup;
 		this.startTime = startTime;
@@ -218,44 +219,41 @@ public class Measurement extends Action {
 		this.testId = testId;
 	}
 
-	protected static Measurement createInstance(Identifier id,
-																							Identifier creatorId,
-																							MeasurementType type,
-																							String name,
-																							Identifier monitoredElementId,
-																							MeasurementSetup setup,
-																							Date startTime,
-																							String localAddress,
-																							Identifier testId) throws CreateObjectException {
-		return new Measurement(id,
-													 creatorId,
-													 type,
-													 name,
-													 monitoredElementId,
-													 setup,
-													 startTime,
-													 localAddress,
-													 testId);
+	protected static Measurement createInstance(Identifier creatorId,
+												MeasurementType type,
+												String name,
+												Identifier monitoredElementId,
+												MeasurementSetup setup,
+												Date startTime,
+												String localAddress,
+												Identifier testId) throws CreateObjectException {
+		return new Measurement(IdentifierPool.generateId(ObjectEntities.MEASUREMENT_ENTITY_CODE),
+			creatorId,
+			type,
+			name,
+			monitoredElementId,
+			setup,
+			startTime,
+			localAddress,
+			testId);
 	}
 
-	public Result createResult(Identifier id,
-														 Identifier creatorId,
-														 Measurement measurement,
-														 AlarmLevel alarmLevel,
-														 SetParameter[] parameters) throws CreateObjectException {
-		return Result.createInstance(id,
-																 creatorId,
-																 this,
-																 this,
-																 ResultSort.RESULT_SORT_MEASUREMENT,
-																 alarmLevel,
-																 parameters);						
+	public Result createResult(Identifier creatorId,
+							   Measurement measurement,
+							   AlarmLevel alarmLevel,
+							   SetParameter[] parameters) throws CreateObjectException {
+		return Result.createInstance(creatorId,
+			this,
+			this,
+			ResultSort.RESULT_SORT_MEASUREMENT,
+			alarmLevel,
+			parameters);						
 	}
 	
 	/** 
 	 * @deprecated as unsupport method
 	 */
-	public Result createResult(Identifier id, Identifier creatorId, SetParameter[] parameters)
+	public Result createResult(Identifier creatorId, SetParameter[] parameters)
 			throws CreateObjectException {
 		throw new UnsupportedOperationException("method isn't support");
 	}

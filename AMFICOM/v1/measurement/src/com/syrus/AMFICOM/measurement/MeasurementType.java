@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementType.java,v 1.33 2004/11/16 15:48:45 bob Exp $
+ * $Id: MeasurementType.java,v 1.34 2004/12/06 10:59:15 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,6 +8,7 @@
 
 package com.syrus.AMFICOM.measurement;
 
+import java.util.Collections;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -17,6 +18,7 @@ import java.util.Iterator;
 import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 import com.syrus.AMFICOM.configuration.MeasurementPortType;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -30,7 +32,7 @@ import com.syrus.AMFICOM.measurement.corba.MeasurementType_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.33 $, $Date: 2004/11/16 15:48:45 $
+ * @version $Revision: 1.34 $, $Date: 2004/12/06 10:59:15 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -48,6 +50,10 @@ public class MeasurementType extends ActionType {
 
 	public MeasurementType(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
+		
+		this.inParameterTypes = new LinkedList();
+		this.outParameterTypes = new LinkedList();
+		this.measurementPortTypes = new LinkedList();
 
 		this.measurementTypeDatabase = MeasurementDatabaseContext.measurementTypeDatabase;
 		try {
@@ -91,12 +97,12 @@ public class MeasurementType extends ActionType {
 	}
 	
 	protected MeasurementType(Identifier id,
-													Identifier creatorId,
-													String codename,
-													String description,
-													List inParameterTypes,
-													List	outParameterTypes,
-													List measurementPortTypes){
+							  Identifier creatorId,
+							  String codename,
+							  String description,
+							  List inParameterTypes,
+							  List	outParameterTypes,
+							  List measurementPortTypes){
 		super(id);
 		long time = System.currentTimeMillis();
 		super.created = new Date(time);
@@ -105,9 +111,15 @@ public class MeasurementType extends ActionType {
 		super.modifierId = creatorId;
 		super.codename = codename;
 		super.description = description;
-		this.inParameterTypes = inParameterTypes;
-		this.outParameterTypes = outParameterTypes;
-		this.measurementPortTypes = measurementPortTypes;
+		
+		this.inParameterTypes = new LinkedList(); 
+		this.setInParameterTypes0(inParameterTypes);
+		
+		this.outParameterTypes = new LinkedList();
+		this.setOutParameterTypes0(outParameterTypes);
+		
+		this.measurementPortTypes = new LinkedList();
+		this.setMeasurementPortTypes0(measurementPortTypes);
 
 		super.currentVersion = super.getNextVersion();
 		
@@ -124,20 +136,19 @@ public class MeasurementType extends ActionType {
 	 * @param outParameterTypes
 	 * @return
 	 */
-	public static MeasurementType createInstance(Identifier id,
-																							 Identifier creatorId,
-																							 String codename,
-																							 String description,
-																							 List inParameterTypes,
-																							 List	outParameterTypes,
-																							 List measurementPortTypes) {
-		return new MeasurementType(id,
-															 creatorId,
-															 codename,
-															 description,
-															 inParameterTypes,
-															 outParameterTypes,
-															 measurementPortTypes);
+	public static MeasurementType createInstance(Identifier creatorId,
+												 String codename,
+												 String description,
+												 List inParameterTypes,
+												 List outParameterTypes,
+												 List measurementPortTypes) {
+		return new MeasurementType(IdentifierPool.generateId(ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE),
+			creatorId,
+			codename,
+			description,
+			inParameterTypes,
+			outParameterTypes,
+			measurementPortTypes);
 	}
 	
 	public static MeasurementType getInstance(MeasurementType_Transferable mtt) throws CreateObjectException {
@@ -182,61 +193,85 @@ public class MeasurementType extends ActionType {
 												outParTypeIds,
 												measurementPortTypeIds);
 	}
-
-    public short getEntityCode() {
-        return ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE;
-    }
     
     public List getInParameterTypes() {
-		return this.inParameterTypes;
+		return Collections.unmodifiableList(this.inParameterTypes);
 	}
 
 	public List getOutParameterTypes() {
-		return this.outParameterTypes;
+		return Collections.unmodifiableList(this.outParameterTypes);
 	}
 
 	protected synchronized void setAttributes(Date created,
-																						Date modified,
-																						Identifier creatorId,
-																						Identifier modifierId,
-																						String codename,
-																						String description) {
+											  Date modified,
+											  Identifier creatorId,
+											  Identifier modifierId,
+											  String codename,
+											  String description) {
 		super.setAttributes(created,
-												modified,
-												creatorId,
-												modifierId,
-												codename,
-												description);
+			modified,
+			creatorId,
+			modifierId,
+			codename,
+			description);
 	}
 
 	protected synchronized void setParameterTypes(List inParameterTypes,
-																								List outParameterTypes) {
-		this.inParameterTypes = inParameterTypes;
-		this.outParameterTypes = outParameterTypes;
+												  List outParameterTypes) {
+		this.setInParameterTypes0(inParameterTypes);
+		this.setOutParameterTypes0(outParameterTypes);
 	}
+	
+	protected void setInParameterTypes0(List inParameterTypes) {
+		this.inParameterTypes.clear();
+		if (inParameterTypes != null)
+	     	this.inParameterTypes.addAll(inParameterTypes);
+	}
+	
 	/**
 	 * client setter for inParameterTypes
-	 * @param inParameterTypes The inParameterTypes to set.
+	 * 
+	 * @param inParameterTypes
+	 *            The inParameterTypes to set.
 	 */
 	public void setInParameterTypes(List inParameterTypes) {
-		this.currentVersion = super.getNextVersion();
-		this.inParameterTypes = inParameterTypes;
+		this.setInParameterTypes0(inParameterTypes);
+		super.currentVersion = super.getNextVersion();		
 	}
+	
+	
+	protected void setOutParameterTypes0(List outParameterTypes) {
+		this.outParameterTypes.clear();
+		if (outParameterTypes != null)
+	     	this.outParameterTypes.addAll(outParameterTypes);
+	}
+	
 	/**
 	 * client setter for outParameterTypes
-	 * @param outParameterTypes The outParameterTypes to set.
+	 * 
+	 * @param inParameterTypes
+	 *            The inParameterTypes to set.
 	 */
 	public void setOutParameterTypes(List outParameterTypes) {
-		this.currentVersion = super.getNextVersion();
-		this.outParameterTypes = outParameterTypes;
+		this.setOutParameterTypes0(outParameterTypes);
+		super.currentVersion = super.getNextVersion();		
+	}
+	
+	
+	protected void setMeasurementPortTypes0(List measurementPortTypes) {
+		this.measurementPortTypes.clear();
+		if (measurementPortTypes != null)
+	     	this.measurementPortTypes.addAll(measurementPortTypes);
+	}
+	
+
+	public void setMeasurementPortTypes(List measurementPortTypes) {
+		this.setMeasurementPortTypes0(measurementPortTypes);
+		super.currentVersion = super.getNextVersion();		
 	}
 	
 	public List getMeasurementPortTypes() {
-		return this.measurementPortTypes;
-	}
-	
-	public void setMeasurementPortTypes(List measurementPortTypes) {
-		this.measurementPortTypes = measurementPortTypes;
+		return Collections.unmodifiableList(this.measurementPortTypes);
 	}
 	
 	public List getDependencies() {

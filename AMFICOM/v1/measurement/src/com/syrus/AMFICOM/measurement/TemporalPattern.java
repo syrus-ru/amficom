@@ -1,5 +1,5 @@
 /*
- * $Id: TemporalPattern.java,v 1.50 2004/11/16 15:48:45 bob Exp $
+ * $Id: TemporalPattern.java,v 1.51 2004/12/06 10:59:15 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -20,6 +20,7 @@ import java.util.regex.Pattern;
 
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
@@ -31,7 +32,7 @@ import com.syrus.AMFICOM.resource.LangModelMeasurement;
 import com.syrus.util.HashCodeGenerator;
 
 /**
- * @version $Revision: 1.50 $, $Date: 2004/11/16 15:48:45 $
+ * @version $Revision: 1.51 $, $Date: 2004/12/06 10:59:15 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -868,18 +869,17 @@ public class TemporalPattern extends StorableObject {
 	 * @param cronString
 	 * @return
 	 */
-	public static TemporalPattern createInstance(	Identifier id,
-							Identifier creatorId,
+	public static TemporalPattern createInstance(Identifier creatorId,
 							String description,
 							List cronString) {
-		return new TemporalPattern(id, creatorId, description, cronString);
+		return new TemporalPattern(IdentifierPool.generateId(ObjectEntities.TEMPORALPATTERN_ENTITY_CODE),
+			creatorId, description, cronString);
 	}
 
-	public static TemporalPattern createInstance(	Identifier id,
-							Identifier creatorId,
+	public static TemporalPattern createInstance(Identifier creatorId,
 							String description,
 							String[] cronStrings) {
-		return new TemporalPattern(id, creatorId, description, cronStrings);
+		return new TemporalPattern(IdentifierPool.generateId(ObjectEntities.TEMPORALPATTERN_ENTITY_CODE), creatorId, description, cronStrings);
 	}
 
 	public short getEntityCode() {

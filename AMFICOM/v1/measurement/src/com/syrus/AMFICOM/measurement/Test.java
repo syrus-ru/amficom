@@ -1,5 +1,5 @@
 /*
- * $Id: Test.java,v 1.65 2004/11/16 15:48:45 bob Exp $
+ * $Id: Test.java,v 1.66 2004/12/06 10:59:15 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,6 +8,7 @@
 
 package com.syrus.AMFICOM.measurement;
 
+import java.util.Collections;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -18,6 +19,7 @@ import com.syrus.util.HashCodeGenerator;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
@@ -43,7 +45,7 @@ import com.syrus.AMFICOM.measurement.corba.TestTimeStamps_TransferablePackage.Co
 import com.syrus.AMFICOM.measurement.corba.TestTimeStamps_TransferablePackage.PeriodicalTestTimeStamps;
 
 /**
- * @version $Revision: 1.65 $, $Date: 2004/11/16 15:48:45 $
+ * @version $Revision: 1.66 $, $Date: 2004/12/06 10:59:15 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -87,20 +89,18 @@ public class Test extends StorableObject {
 		}
 	}
 
-	public Measurement createMeasurement(Identifier measurementId,
-																			 Identifier creatorId,
-																			 Date startTime) throws CreateObjectException {
-		Measurement measurement1 = Measurement.createInstance(measurementId,
-															 creatorId,
-															 this.measurementType,
-															 "create by Test:'" 
-															 + this.getDescription() + "' at "
-															 + DatabaseDate.SDF.format(new Date(System.currentTimeMillis())),
-															 this.monitoredElement.getId(),
-															 this.mainMeasurementSetup,
-															 startTime,
-															 this.monitoredElement.getLocalAddress(),
-															 this.id);
+	public Measurement createMeasurement(Identifier creatorId,
+										 Date startTime) throws CreateObjectException {
+			Measurement measurement1 = Measurement.createInstance(creatorId,
+				this.measurementType,
+				"create by Test:'" 
+				+ this.getDescription() + "' at "
+				+ DatabaseDate.SDF.format(new Date(System.currentTimeMillis())),
+				this.monitoredElement.getId(),
+				this.mainMeasurementSetup,
+				startTime,
+				this.monitoredElement.getLocalAddress(),
+				this.id);
 		Measurement measurement = Measurement.getInstance((Measurement_Transferable)measurement1.getTransferable());
 		super.modified = new Date(System.currentTimeMillis());
 		super.modifierId = (Identifier) creatorId.clone();
@@ -172,32 +172,31 @@ public class Test extends StorableObject {
 	 * @return
 	 */
 
-	public static Test createInstance(Identifier id,
-																		Identifier creatorId,
-																		Date startTime,
-																		Date endTime,
-																		TemporalPattern temporalPattern,
-																		TestTemporalType temporalType,
-																		MeasurementType measurementType,
-																		AnalysisType analysisType,
-																		EvaluationType evaluationType,
-																		MonitoredElement monitoredElement,
-																		TestReturnType returnType,
-																		String description,
-																		List measurementSetupIds){
-		return new Test(id,
-										creatorId,
-										startTime,
-										endTime,
-										temporalPattern,
-										temporalType.value(),
-										measurementType,
-										analysisType,
-										evaluationType,
-										monitoredElement,
-										returnType.value(),
-										description,
-										measurementSetupIds);
+	public static Test createInstance(Identifier creatorId,
+									  Date startTime,
+									  Date endTime,
+									  TemporalPattern temporalPattern,
+									  TestTemporalType temporalType,
+									  MeasurementType measurementType,
+									  AnalysisType analysisType,
+									  EvaluationType evaluationType,
+									  MonitoredElement monitoredElement,
+									  TestReturnType returnType,
+									  String description,
+									  List measurementSetupIds){
+		return new Test(IdentifierPool.generateId(ObjectEntities.TEST_ENTITY_CODE),
+			creatorId,
+			startTime,
+			endTime,
+			temporalPattern,
+			temporalType.value(),
+			measurementType,
+			analysisType,
+			evaluationType,
+			monitoredElement,
+			returnType.value(),
+			description,
+			measurementSetupIds);
 		
 	}
 
@@ -288,7 +287,7 @@ public class Test extends StorableObject {
 	}
 
 	public List getMeasurementSetupIds() {
-		return this.measurementSetupIds;
+		return Collections.unmodifiableList(this.measurementSetupIds);
 	}
 
 	public MeasurementType getMeasurementType() {
@@ -466,29 +465,29 @@ public class Test extends StorableObject {
 	}
 
 	public synchronized void setAttributes(Date created,
-																						Date modified,
-																						Identifier creatorId,
-																						Identifier modifierId,
-																						int temporalType,
-																						Date startTime,
-																						Date endTime,
-																						TemporalPattern temporalPattern,
-																						MeasurementType measurementType,
-																						AnalysisType analysisType,
-																						EvaluationType evaluationType,
-																						int status,
-																						MonitoredElement monitoredElement,
-																						int returnType,
-																						String description) {
+										   Date modified,
+										   Identifier creatorId,
+										   Identifier modifierId,
+										   int temporalType,
+										   Date startTime,
+										   Date endTime,
+										   TemporalPattern temporalPattern,
+										   MeasurementType measurementType,
+										   AnalysisType analysisType,
+										   EvaluationType evaluationType,
+										   int status,
+										   MonitoredElement monitoredElement,
+										   int returnType,
+										   String description) {
 		super.setAttributes(created,
-												modified,
-												creatorId,
-												modifierId);
+			modified,
+			creatorId,
+			modifierId);
 		this.temporalType = temporalType;
 		this.timeStamps = new TestTimeStamps(temporalType,
-																				 startTime,
-																				 endTime,
-																				 temporalPattern);
+			startTime,
+			endTime,
+			temporalPattern);
 
 		this.measurementType = measurementType;
 		this.analysisType = analysisType;
@@ -499,7 +498,7 @@ public class Test extends StorableObject {
 		this.description = description;
 	}
 
-	protected synchronized void setMeasurementSetupIds(List measurementSetupIds) {
+	protected synchronized void setMeasurementSetupIds0(List measurementSetupIds) {
 		this.measurementSetupIds = measurementSetupIds;
 
 		try {
@@ -509,7 +508,6 @@ public class Test extends StorableObject {
 			Log.errorException(ae);
 		}
 	}
-	
 	
 	public int hashCode() {
 		HashCodeGenerator hashCodeGenerator = new HashCodeGenerator();

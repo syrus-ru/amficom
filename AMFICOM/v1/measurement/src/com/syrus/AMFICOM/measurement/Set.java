@@ -1,5 +1,5 @@
 /*
- * $Id: Set.java,v 1.30 2004/11/16 15:48:45 bob Exp $
+ * $Id: Set.java,v 1.31 2004/12/06 10:59:15 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,8 +12,10 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -31,7 +33,7 @@ import com.syrus.AMFICOM.measurement.corba.Parameter_Transferable;
 import com.syrus.util.HashCodeGenerator;
 
 /**
- * @version $Revision: 1.30 $, $Date: 2004/11/16 15:48:45 $
+ * @version $Revision: 1.31 $, $Date: 2004/12/06 10:59:15 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -58,6 +60,8 @@ public class Set extends StorableObject {
 	public Set(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
+		this.monitoredElementIds = new LinkedList();
+		
 		this.setDatabase = MeasurementDatabaseContext.setDatabase;
 		try {
 			this.setDatabase.retrieve(this);
@@ -88,11 +92,11 @@ public class Set extends StorableObject {
 	}	
 	
 	protected Set(Identifier id,
-							Identifier creatorId,
-							int sort,
-							String description,
-							SetParameter[] parameters,
-							List monitoredElementIds) {
+				  Identifier creatorId,
+				  int sort,
+				  String description,
+				  SetParameter[] parameters,
+				  List monitoredElementIds) {
 		super(id);
 		long time = System.currentTimeMillis();
 		super.created = new Date(time);
@@ -102,7 +106,8 @@ public class Set extends StorableObject {
 		this.sort = sort;
 		this.description = description;
 		this.parameters = parameters;
-		this.monitoredElementIds = monitoredElementIds;
+		this.monitoredElementIds = new LinkedList();
+		this.setMonitoredElementIds0(monitoredElementIds);
 
 		super.currentVersion = super.getNextVersion();
 		
@@ -119,18 +124,17 @@ public class Set extends StorableObject {
 	 * @param monitoredElementIds
 	 * @return
 	 */
-	public static Set createInstance(Identifier id,
-																	 Identifier creatorId,
-																	 SetSort sort,
-																	 String description,
-																	 SetParameter[] parameters,
-																	 List monitoredElementIds) {
-		return new Set(id,
-									 creatorId,
-									 sort.value(),
-									 description,
-									 parameters,
-									 monitoredElementIds);
+	public static Set createInstance(Identifier creatorId,
+									 SetSort sort,
+									 String description,
+									 SetParameter[] parameters,
+									 List monitoredElementIds) {
+		return new Set(IdentifierPool.generateId(ObjectEntities.SET_ENTITY_CODE),
+			creatorId,
+			sort.value(),
+			description,
+			parameters,
+			monitoredElementIds);
 	}
 	
 	public static Set getInstance(Set_Transferable st) throws CreateObjectException {
@@ -149,7 +153,7 @@ public class Set extends StorableObject {
 	}
 
 	public boolean isAttachedToMonitoredElement(Identifier monitoredElementId) {
-    return this.monitoredElementIds.contains(monitoredElementId);
+		return this.monitoredElementIds.contains(monitoredElementId);
 	}
 
 	public void attachToMonitoredElement(Identifier monitoredElementId,
@@ -221,19 +225,19 @@ public class Set extends StorableObject {
 	}
 
 	public List getMonitoredElementIds() {
-		return this.monitoredElementIds;
+		return Collections.unmodifiableList(this.monitoredElementIds);
 	}
 
 	protected synchronized void setAttributes(Date created,
-																						Date modified,
-																						Identifier creatorId,
-																						Identifier modifierId,
-																						int sort,
-																						String description) {
+											  Date modified,
+											  Identifier creatorId,
+											  Identifier modifierId,
+											  int sort,
+											  String description) {
 		super.setAttributes(created,
-												modified,
-												creatorId,
-												modifierId);
+			modified,
+			creatorId,
+			modifierId);
 		this.sort = sort;
 		this.description = description;
 	}
@@ -242,9 +246,16 @@ public class Set extends StorableObject {
 		this.parameters = parameters;
 	}
 
-	protected synchronized void setMonitoredElementIds(List monitoredElementIds) {
-		this.monitoredElementIds = monitoredElementIds;
+	protected synchronized void setMonitoredElementIds0(List monitoredElementIds) {
+		this.monitoredElementIds.clear();
+		if (monitoredElementIds != null)
+	     	this.monitoredElementIds.addAll(monitoredElementIds);
 	}
+	
+	protected synchronized void setMonitoredElementIds(List monitoredElementIds) {
+		this.setMonitoredElementIds0(monitoredElementIds);
+	}
+	
 	/**
 	 * @param description The description to set.
 	 */

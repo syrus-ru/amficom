@@ -1,5 +1,5 @@
 /*
- * $Id: Action.java,v 1.13 2004/11/16 15:48:44 bob Exp $
+ * $Id: Action.java,v 1.14 2004/12/06 10:59:15 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,7 +17,7 @@ import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 import com.syrus.AMFICOM.event.corba.AlarmLevel;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2004/11/16 15:48:44 $
+ * @version $Revision: 1.14 $, $Date: 2004/12/06 10:59:15 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -65,27 +65,25 @@ public abstract class Action extends StorableObject implements TypedObject {
 	}
 
 	protected synchronized void setAttributes(Date created,
-																						Date modified,
-																						Identifier creatorId,
-																						Identifier modifierId,
-																						ActionType type,
-																						Identifier monitoredElementId) {
+											  Date modified,
+											  Identifier creatorId,
+											  Identifier modifierId,
+											  ActionType type,
+											  Identifier monitoredElementId) {
 		super.setAttributes(created,
-												modified,
-												creatorId,
-												modifierId);
+			modified,
+			creatorId,
+			modifierId);
 		this.type = type;
 		this.monitoredElementId = monitoredElementId;
 	}
 
-	public abstract Result createResult(Identifier id,
-																			Identifier creatorId,
-																			Measurement measurement,
-																			AlarmLevel alarmLevel,
-																			SetParameter[] parameters) throws CreateObjectException;
+	public abstract Result createResult(Identifier creatorId,
+										Measurement measurement,
+										AlarmLevel alarmLevel,
+										SetParameter[] parameters) throws CreateObjectException;
 	
-	public abstract Result createResult(Identifier id,
-										Identifier creatorId,
+	public abstract Result createResult(Identifier creatorId,
 										SetParameter[] parameters) throws CreateObjectException;
 
 }

@@ -1,5 +1,5 @@
 /*
- * $Id: Evaluation.java,v 1.31 2004/11/16 15:48:44 bob Exp $
+ * $Id: Evaluation.java,v 1.32 2004/12/06 10:59:15 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,21 +12,22 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
-import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.StorableObjectDatabase;
+import com.syrus.AMFICOM.event.corba.AlarmLevel;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
+import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Evaluation_Transferable;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
-import com.syrus.AMFICOM.event.corba.AlarmLevel;
 
 /**
- * @version $Revision: 1.31 $, $Date: 2004/11/16 15:48:44 $
+ * @version $Revision: 1.32 $, $Date: 2004/12/06 10:59:15 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -70,10 +71,10 @@ public class Evaluation extends Action {
 	}
 
 	protected Evaluation(Identifier id,
-										 Identifier creatorId,
-										 EvaluationType type,
-										 Identifier monitoredElementId,
-										 Set thresholdSet) {
+						 Identifier creatorId,
+						 EvaluationType type,
+						 Identifier monitoredElementId,
+						 Set thresholdSet) {
 		super(id);
 		long time = System.currentTimeMillis();
 		super.created = new Date(time);
@@ -122,33 +123,31 @@ public class Evaluation extends Action {
 	}
 
 	protected synchronized void setAttributes(Date created,
-																						Date modified,
-																						Identifier creatorId,
-																						Identifier modifierId,
-																						EvaluationType type,
-																						Identifier monitoredElementId,
-																						Set thresholdSet) {
+											  Date modified,
+											  Identifier creatorId,
+											  Identifier modifierId,
+											  EvaluationType type,
+											  Identifier monitoredElementId,
+											  Set thresholdSet) {
 		super.setAttributes(created,
-												modified,
-												creatorId,
-												modifierId,
-												type,
-												monitoredElementId);
+			modified,
+			creatorId,
+			modifierId,
+			type,
+			monitoredElementId);
 		this.thresholdSet = thresholdSet;
 	}
 
-	public Result createResult(Identifier id,
-														 Identifier creatorId,
-														 Measurement measurement,
-														 AlarmLevel alarmLevel,
-														 SetParameter[] parameters) throws CreateObjectException {
-		return Result.createInstance(id,
-																 creatorId,
-																 measurement,
-																 this,
-																 ResultSort.RESULT_SORT_EVALUATION,
-																 alarmLevel,
-																 parameters);
+	public Result createResult(Identifier creatorId,
+							   Measurement measurement,
+							   AlarmLevel alarmLevel,
+							   SetParameter[] parameters) throws CreateObjectException {
+		return Result.createInstance(creatorId,
+			measurement,
+			this,
+			ResultSort.RESULT_SORT_EVALUATION,
+			alarmLevel,
+			parameters);
 	}
 	
 	
@@ -156,21 +155,20 @@ public class Evaluation extends Action {
 	/** 
 	 * @deprecated as unsupport method
 	 */
-	public Result createResult(Identifier id, Identifier creatorId, SetParameter[] parameters)
+	public Result createResult(Identifier creatorId, SetParameter[] parameters)
 			throws CreateObjectException {
 		throw new UnsupportedOperationException("method isn't support");
 	}
 
-	public static Evaluation createInstance(Identifier id,
-																					Identifier creatorId,
-																					EvaluationType type,
-																					Identifier monitoredElementId,
-																					Set thresholdSet) throws CreateObjectException {
-		return new Evaluation(id,
-													creatorId,
-													type,
-													monitoredElementId,
-													thresholdSet);
+	public static Evaluation createInstance(Identifier creatorId,
+											EvaluationType type,
+											Identifier monitoredElementId,
+											Set thresholdSet) {
+		return new Evaluation(IdentifierPool.generateId(ObjectEntities.EVALUATION_ENTITY_CODE),
+			creatorId,
+			type,
+			monitoredElementId,
+			thresholdSet);
 	}
 	
 	public List getDependencies() {		

@@ -1,5 +1,5 @@
 /*
- * $Id: Analysis.java,v 1.31 2004/11/16 15:48:44 bob Exp $
+ * $Id: Analysis.java,v 1.32 2004/12/06 10:59:15 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,6 +13,7 @@ import java.util.Date;
 import java.util.List;
 
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -26,7 +27,7 @@ import com.syrus.AMFICOM.measurement.corba.ResultSort;
 import com.syrus.AMFICOM.event.corba.AlarmLevel;
 
 /**
- * @version $Revision: 1.31 $, $Date: 2004/11/16 15:48:44 $
+ * @version $Revision: 1.32 $, $Date: 2004/12/06 10:59:15 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -72,10 +73,10 @@ public class Analysis extends Action {
 	}
 
 	protected Analysis(Identifier id,
-									 Identifier creatorId,
-									 AnalysisType type,
-									 Identifier monitoredElementId,
-									 Set criteriaSet) {
+					   Identifier creatorId,
+					   AnalysisType type,
+					   Identifier monitoredElementId,
+					   Set criteriaSet) {
 		super(id);
 		long time = System.currentTimeMillis();
 		super.created = new Date(time);
@@ -95,10 +96,10 @@ public class Analysis extends Action {
 
 	public Object getTransferable() {
 		return new Analysis_Transferable(super.getHeaderTransferable(),
-										 (Identifier_Transferable)super.type.getId().getTransferable(),
-										 (Identifier_Transferable)super.monitoredElementId.getTransferable(),
-										 new String(super.type.getCodename()),
-										 (Identifier_Transferable)this.criteriaSet.getId().getTransferable());
+			(Identifier_Transferable)super.type.getId().getTransferable(),
+			(Identifier_Transferable)super.monitoredElementId.getTransferable(),
+			new String(super.type.getCodename()),
+			(Identifier_Transferable)this.criteriaSet.getId().getTransferable());
 	}
 
 	public Set getCriteriaSet() {
@@ -106,12 +107,12 @@ public class Analysis extends Action {
 	}
 
 	protected synchronized void setAttributes(Date created,
-																						Date modified,
-																						Identifier creatorId,
-																						Identifier modifierId,
-																						AnalysisType type,
-																						Identifier monitoredElementId,
-																						Set criteriaSet) {
+											  Date modified,
+											  Identifier creatorId,
+											  Identifier modifierId,
+											  AnalysisType type,
+											  Identifier monitoredElementId,
+											  Set criteriaSet) {
 		super.setAttributes(created,
 												modified,
 												creatorId,
@@ -121,38 +122,35 @@ public class Analysis extends Action {
 		this.criteriaSet = criteriaSet;
 	}
 
-	public Result createResult(Identifier id,
-														 Identifier creatorId,
-														 Measurement measurement,
-														 AlarmLevel alarmLevel,
-														 SetParameter[] parameters) throws CreateObjectException {
-		return Result.createInstance(id,
-																 creatorId,
-																 measurement,
-																 this,
-																 ResultSort.RESULT_SORT_ANALYSIS,
-																 alarmLevel,
-																 parameters);
+	public Result createResult(Identifier creatorId,
+							   Measurement measurement,
+							   AlarmLevel alarmLevel,
+							   SetParameter[] parameters) throws CreateObjectException {
+		return Result.createInstance(creatorId,
+			measurement,
+			this,
+			ResultSort.RESULT_SORT_ANALYSIS,
+			alarmLevel,
+			parameters);
 	}
 	
 	/** 
 	 * @deprecated as unsupport method
 	 */
-	public Result createResult(Identifier id, Identifier creatorId, SetParameter[] parameters)
+	public Result createResult(Identifier creatorId, SetParameter[] parameters)
 			throws CreateObjectException {
 		throw new UnsupportedOperationException("method isn't support");
 	}
 
-	public static Analysis createInstance(Identifier id,
-																				Identifier creatorId,
-																				AnalysisType type,
-																				Identifier monitoredElementId,
-																				Set criteriaSet) throws CreateObjectException {
-		return new Analysis(id,
-												creatorId,
-												type,
-												monitoredElementId,
-												criteriaSet);
+	public static Analysis createInstance(Identifier creatorId,
+										  AnalysisType type,
+										  Identifier monitoredElementId,
+										  Set criteriaSet) throws CreateObjectException {
+		return new Analysis(IdentifierPool.generateId(ObjectEntities.ANALYSIS_ENTITY_CODE),
+			creatorId,
+			type,
+			monitoredElementId,
+			criteriaSet);
 	}
 	
 	public static Analysis getInstance(Analysis_Transferable at) throws CreateObjectException {

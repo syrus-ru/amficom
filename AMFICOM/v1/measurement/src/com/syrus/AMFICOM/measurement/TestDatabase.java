@@ -1,5 +1,5 @@
 /*
- * $Id: TestDatabase.java,v 1.50 2004/12/01 10:09:58 max Exp $
+ * $Id: TestDatabase.java,v 1.51 2004/12/06 10:59:15 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -52,8 +52,8 @@ import com.syrus.AMFICOM.configuration.MeasurementPortDatabase;
 import com.syrus.AMFICOM.configuration.KISDatabase;
 
 /**
- * @version $Revision: 1.50 $, $Date: 2004/12/01 10:09:58 $
- * @author $Author: max $
+ * @version $Revision: 1.51 $, $Date: 2004/12/06 10:59:15 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
@@ -273,7 +273,7 @@ public class TestDatabase extends StorableObjectDatabase {
 			}
 		}
 		if (!msList.isEmpty())
-			test.setMeasurementSetupIds(msList);
+			test.setMeasurementSetupIds0(msList);
 		else 
 			throw new RetrieveObjectException("TestDatabase.retrieveMeasurementSetupTestLinks | Measurement setup ids for test '" + testIdStr + "' not found.");
 	}
@@ -342,7 +342,7 @@ public class TestDatabase extends StorableObjectDatabase {
             for (Iterator iter = tests.iterator(); iter.hasNext();) {
                 Test test = (Test) iter.next();
                 List msIds = (List)msIdMap.get(test);
-                test.setMeasurementSetupIds(msIds);
+                test.setMeasurementSetupIds0(msIds);
             }
             
         } catch (SQLException sqle) {
