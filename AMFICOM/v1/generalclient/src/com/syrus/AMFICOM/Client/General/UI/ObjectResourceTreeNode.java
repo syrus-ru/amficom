@@ -1,9 +1,12 @@
 package com.syrus.AMFICOM.Client.General.UI;
 
-import java.awt.*;
+import java.awt.Color;
+import java.awt.BorderLayout;
 
-import javax.swing.*;
-import javax.swing.tree.*;
+import javax.swing.JPanel;
+import javax.swing.ImageIcon;
+
+import javax.swing.tree.DefaultMutableTreeNode;
 
 public class ObjectResourceTreeNode extends DefaultMutableTreeNode
 {
@@ -97,7 +100,7 @@ public class ObjectResourceTreeNode extends DefaultMutableTreeNode
 		return parameter;
 	}
 
-	public JComponent getComponent()
+	public JPanel getComponent()
 	{
 		return renderer;
 	}
