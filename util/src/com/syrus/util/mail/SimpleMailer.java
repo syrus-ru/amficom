@@ -1,34 +1,31 @@
 package com.syrus.util.mail;
 
+import com.syrus.util.prefs.SMTPConnectionManager;
 import java.io.*;
 import java.net.*;
 
 /**
  * @todo Change the code to utilize java.net.InetSocketAddress
  *
- * @version $Revision: 1.1 $, $Date: 2004/05/01 17:45:22 $
- * @author $Author: cvsadmin $
+ * @version $Revision: 1.2 $, $Date: 2004/05/06 11:48:10 $
+ * @author $Author: bass $
  * @module util
  */
 public class SimpleMailer {
-	private static final String DEFAULT_SMTP_HOST = "localhost";
-
-	private static final int DEFAULT_SMTP_PORT = 25;
-
 	private InetAddress host;
 
 	private int port;
 
 	public SimpleMailer() {
-		this(DEFAULT_SMTP_HOST, DEFAULT_SMTP_PORT);
+		this(SMTPConnectionManager.getHost(), SMTPConnectionManager.getPort());
 	}
 
 	public SimpleMailer(String host) {
-		this(host, DEFAULT_SMTP_PORT);
+		this(host, SMTPConnectionManager.getPort());
 	}
 
 	public SimpleMailer(int port) {
-		this(DEFAULT_SMTP_HOST, port);
+		this(SMTPConnectionManager.getHost(), port);
 	}
 
 	public SimpleMailer(String host, int port) {

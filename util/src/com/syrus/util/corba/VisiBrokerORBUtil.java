@@ -1,5 +1,5 @@
 /*
- * $Id: AuroraORBUtil.java,v 1.2 2004/05/06 11:48:10 bass Exp $
+ * $Id: VisiBrokerORBUtil.java,v 1.1 2004/05/06 11:48:10 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,17 +9,17 @@
 package com.syrus.util.corba;
 
 import java.util.Properties;
-import oracle.aurora.jndi.orb_dep.Orb;
+import org.omg.CORBA.ORB;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2004/05/06 11:48:10 $
+ * @version $Revision: 1.1 $, $Date: 2004/05/06 11:48:10 $
  * @author $Author: bass $
  * @module util
  */
-public final class AuroraORBUtil extends VisiBrokerORBUtil {
-	private static final ORBUtil INSTANCE = new AuroraORBUtil();
+public class VisiBrokerORBUtil extends ORBUtil {
+	private static final ORBUtil INSTANCE = new VisiBrokerORBUtil();
 
-	private AuroraORBUtil() {
+	VisiBrokerORBUtil() {
 	}
 
 	public static ORBUtil getInstance() {
@@ -34,7 +34,7 @@ public final class AuroraORBUtil extends VisiBrokerORBUtil {
 			"com.visigenic.vbroker.orb.ORB");
 		properties.put("org.omg.CORBA.ORBSingletonClass",
 			"com.visigenic.vbroker.orb.ORB");
-		orb = Orb.init(properties);
+		orb = ORB.init(new String[0], properties);
 	}
 
 	synchronized void initORBSingleton() {
@@ -44,6 +44,6 @@ public final class AuroraORBUtil extends VisiBrokerORBUtil {
 			"com.visigenic.vbroker.orb.ORB");
 		System.setProperty("org.omg.CORBA.ORBSingletonClass",
 			"com.visigenic.vbroker.orb.ORB");
-		orbSingleton = Orb.init();
+		orbSingleton = ORB.init();
 	}
 }

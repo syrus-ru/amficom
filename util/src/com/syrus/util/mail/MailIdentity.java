@@ -1,8 +1,8 @@
 package com.syrus.util.mail;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2004/05/01 17:45:22 $
- * @author $Author: cvsadmin $
+ * @version $Revision: 1.2 $, $Date: 2004/05/06 11:48:10 $
+ * @author $Author: bass $
  * @module util
  */
 public class MailIdentity {
