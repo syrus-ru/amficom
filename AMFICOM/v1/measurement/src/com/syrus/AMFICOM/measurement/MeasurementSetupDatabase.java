@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementSetupDatabase.java,v 1.52 2004/12/28 11:56:31 bob Exp $
+ * $Id: MeasurementSetupDatabase.java,v 1.53 2004/12/28 12:14:59 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -43,7 +43,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.52 $, $Date: 2004/12/28 11:56:31 $
+ * @version $Revision: 1.53 $, $Date: 2004/12/28 12:14:59 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -590,8 +590,7 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 	       		 else {
 	                mtIdsStr.append(CLOSE_BRACKET);
 	                mtIdsStr.append(SQL_AND);
-                    mtIdsStr.append(NOT);
-                    mtIdsStr.append(SQL_IN);
+                    mtIdsStr.append(SQL_OR);
 	                mtIdsStr.append(MeasurementTypeDatabase.LINK_COLUMN_MEASUREMENT_TYPE_ID);
 	                mtIdsStr.append(SQL_IN);
 	                mtIdsStr.append(OPEN_BRACKET);
@@ -637,8 +636,7 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 	       		 	meIdsStr.append(COMMA);
 	       		 else {
 	                meIdsStr.append(CLOSE_BRACKET);
-	                meIdsStr.append(SQL_AND);
-                    meIdsStr.append(NOT);
+	                meIdsStr.append(SQL_OR);
                     meIdsStr.append(SQL_IN);
 	                meIdsStr.append(LINK_COLUMN_ME_ID);
 	                meIdsStr.append(SQL_IN);
@@ -648,7 +646,7 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
        	}
         
 		String condition = COLUMN_ID + SQL_IN + OPEN_BRACKET
-					+ SQL_SELECT + LINK_COLUMN_MEASUREMENT_SETUP_ID + ObjectEntities.MSMELINK_ENTITY
+					+ SQL_SELECT + LINK_COLUMN_MEASUREMENT_SETUP_ID + SQL_FROM + ObjectEntities.MSMELINK_ENTITY
 					+ SQL_WHERE + LINK_COLUMN_ME_ID + SQL_IN 
 					+ OPEN_BRACKET
 					+ meIdsStr.toString()
