@@ -134,6 +134,8 @@ public class StatusBarModel extends JPanel implements OperationListener
 	public static String field_user = "user";
 	public static String field_time = "time";
 
+	public static String FIELD_DOMAIN = "domain";
+
 	private ProgressBar pbar;
 	private boolean pbarEnabled = false;
 
@@ -186,11 +188,18 @@ public class StatusBarModel extends JPanel implements OperationListener
 	public void removeDispatcher(Dispatcher disp)
 	{
 		if(disp != null)
-			disp.register(this, StatusMessageEvent.type);
+		{
+			disp.unregister(this, StatusMessageEvent.STATUS_MESSAGE);
+			disp.unregister(this, StatusMessageEvent.STATUS_USER);
+			disp.unregister(this, StatusMessageEvent.STATUS_SERVER);
+			disp.unregister(this, StatusMessageEvent.STATUS_SESSION);
+			disp.unregister(this, StatusMessageEvent.STATUS_DOMAIN);
+			disp.unregister(this, StatusMessageEvent.STATUS_PROGRESS_BAR);
+		}
 	}
 
 	/**
-	 * @deprecated use {@link addDispatcher}
+	 * @deprecated use {@link #addDispatcher(Dispatcher) addDispatcher}
 	 */
 	public void setDispatcher(Dispatcher disp)
 	{
@@ -200,7 +209,14 @@ public class StatusBarModel extends JPanel implements OperationListener
 	public void addDispatcher(Dispatcher disp)
 	{
 		if(disp != null)
-			disp.register(this, StatusMessageEvent.type);
+		{
+			disp.register(this, StatusMessageEvent.STATUS_MESSAGE);
+			disp.register(this, StatusMessageEvent.STATUS_USER);
+			disp.register(this, StatusMessageEvent.STATUS_SERVER);
+			disp.register(this, StatusMessageEvent.STATUS_SESSION);
+			disp.register(this, StatusMessageEvent.STATUS_DOMAIN);
+			disp.register(this, StatusMessageEvent.STATUS_PROGRESS_BAR);
+		}
 	}
 
 	public void setText(int index, String text)
@@ -525,11 +541,45 @@ public class StatusBarModel extends JPanel implements OperationListener
 
 	public void operationPerformed(OperationEvent oe)
 	{
-		if(oe.getActionCommand().equals(StatusMessageEvent.type))
+		try 
 		{
 			StatusMessageEvent sme = (StatusMessageEvent )oe;
-			setText(StatusBarModel.field_status, sme.getText());
-		}
+			if(sme.getActionCommand().equals(StatusMessageEvent.STATUS_MESSAGE))
+			{
+				setText(StatusBarModel.field_status, sme.getText());
+			}
+			else
+			if(sme.getActionCommand().equals(StatusMessageEvent.STATUS_SESSION))
+			{
+				setText(StatusBarModel.field_session, sme.getText());
+			}
+			else
+			if(sme.getActionCommand().equals(StatusMessageEvent.STATUS_SERVER))
+			{
+				setText(StatusBarModel.field_server, sme.getText());
+			}
+			else
+			if(sme.getActionCommand().equals(StatusMessageEvent.STATUS_USER))
+			{
+				setText(StatusBarModel.field_user, sme.getText());
+			}
+			else
+			if(sme.getActionCommand().equals(StatusMessageEvent.STATUS_DOMAIN))
+			{
+				setText(StatusBarModel.FIELD_DOMAIN, sme.getText());
+			}
+			else
+			if(sme.getActionCommand().equals(StatusMessageEvent.STATUS_PROGRESS_BAR))
+			{
+				this.setEnableProgressBar(sme.getShowProgressBar());
+			}
+			
+		} 
+		catch (Exception ex) 
+		{
+//			System.out.println("this is not a StatusMessageEvent so don't bother");
+		} 
+		
 	}
 	
 	
