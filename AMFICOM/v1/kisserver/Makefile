@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.7 2004/08/04 17:38:41 arseniy Exp $
+# $Id: Makefile,v 1.8 2004/09/14 12:43:12 bass Exp $
 #
 # vim:set ft=make:
 #
@@ -8,14 +8,13 @@ MODULE_NAME = kisserver_v1
 
 LIBNAME = $(subst _v1,,$(MODULE_NAME)).jar
 
-JAVACFLAGS = -source 1.3
-SUNJAVACFLAGS = -target 1.2
-JIKESFLAGS = -target 1.2
+JAVACFLAGS = -source 1.4
+SUNJAVACFLAGS = -target 1.4
+JIKESFLAGS = -target 1.4.2
 
 include ../tools/Makefile.inc
 $(call checkenve,JAVA_HOME)
 $(call checkenve,ORACLE_HOME)
-$(call checkenve,IDL2JAVA)
 
 .PHONY: export
 export: $(LIBNAME)
@@ -26,7 +25,7 @@ all: .all
 .all: .idl .sqlj
 	$(JAVAC) \
 		$(JAVACFLAGS) $(JAVAC_WARNOFF_FLAG) \
-		-classpath $(AMFICOMCLASSPATH)$(AURORACLASSPATH):$(VBJCLASSPATH):$(JDBCCLASSPATH):$(SQLJCLASSPATH):$(CLASSDIR) \
+		-classpath $(AMFICOMCLASSPATH)$(JDBCCLASSPATH):$(SQLJCLASSPATH):$(CLASSDIR) \
 	 	$(shell find $(SRCDIR) -name '*.java')
 	touch $@
 
@@ -34,10 +33,8 @@ all: .all
 idl: .idl
 
 .idl: $(SRCDIR) $(CLASSDIR)
-	$(IDL2JAVA) \
-		$(IDL2JAVAFLAGS) \
-		$(IDLDIR)/AMFICOMKIS.idl \
-		$(IDLDIR)/KIS.idl
+	$(IDLJ) $(IDLJFLAGS) $(IDLDIR)/AMFICOMKIS.idl
+	$(IDLJ) $(IDLJFLAGS) $(IDLDIR)/KIS.idl
 	touch $@
 
 .PHONY: idlclean

@@ -1,41 +1,37 @@
+/*
+ * $Id: AmficomRtuImpl.java,v 1.1 2004/09/14 12:43:12 bass Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ.
+ */
+
 package com.syrus.AMFICOM.server.measurement;
 
-import java.sql.SQLException;
-import sqlj.runtime.ref.DefaultContext;
-import com.syrus.AMFICOM.CORBA._AMFICOMKISImplBase;
+import com.syrus.AMFICOM.CORBA.AMFICOMKISOperations;
 import com.syrus.AMFICOM.CORBA.Constants;
 import com.syrus.AMFICOM.CORBA.General.AMFICOMRemoteException;
+import com.syrus.AMFICOM.CORBA.General.AlarmLevel;
 import com.syrus.AMFICOM.CORBA.General.TestStatus;
 import com.syrus.AMFICOM.CORBA.KIS.AgentIdentity_Transferable;
-import com.syrus.AMFICOM.CORBA.KIS.Test_Transferable;
 import com.syrus.AMFICOM.CORBA.KIS.Result_Transferable;
-import com.syrus.AMFICOM.CORBA.General.AlarmLevel;
+import com.syrus.AMFICOM.CORBA.KIS.Test_Transferable;
 import com.syrus.AMFICOM.server.event.Event;
 import com.syrus.AMFICOM.server.event.EventSource;
-/*import com.syrus.util.database.Server;*/
+import com.syrus.AMFICOM.server.prefs.JdbcConnectionManager;
 import com.syrus.util.Log;
-import com.syrus.util.database.DatabaseConnection;
+import java.sql.SQLException;
+import javax.sql.DataSource;
 
-public class AMFICOMKISImplementation extends _AMFICOMKISImplBase {
+/**
+ * @version $Revision: 1.1 $, $Date: 2004/09/14 12:43:12 $
+ * @author $Author: bass $
+ * @module kisserver_v1
+ */
+public final class AmficomRtuImpl implements AMFICOMKISOperations {
+	private static final DataSource DATA_SOURCE = JdbcConnectionManager.getDataSource();
 
-	static {/*
-		Server.init("amficomkis");*/
-		
-    DefaultContext dc = DefaultContext.getDefaultContext();
-    try {
-      dc.getConnection().setAutoCommit(false);
-    }
-    catch (SQLException e) {
-      Log.errorException(e);
-    }
-    DefaultContext.setDefaultContext(dc);
-
-		DatabaseConnection.setConnection(dc.getConnection());
-	}
-
-  public Test_Transferable[] queryTests(AgentIdentity_Transferable agentid,
-																	 long interval)
-                                    throws AMFICOMRemoteException {
+	public Test_Transferable[] queryTests(AgentIdentity_Transferable agentid, long interval) throws AMFICOMRemoteException {
 //Check access rights
     if (!this.checkRigths(agentid)) {
       Log.errorMessage("AMFICOMKIS.query | ERROR: Authentication failed!");

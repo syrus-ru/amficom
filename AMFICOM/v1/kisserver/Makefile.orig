@@ -25,7 +25,7 @@ IDL2JAVA=idl2java
 IDL2JAVAOPTIONS=-no_examples -no_tie -root_dir $(SRC)
 JAVAC=javac
 SQLJ=sqlj
-SQLJOPTIONS=-optcols -compiler-executable=$(JAVAC) -codegen=oraclejdbc -ser2class -status -u amficom/amficom -d $(CLASSES) -dir $(SRC) -url=jdbc:oracle:thin:@$(SERVERHOSTNAME):1521:$(CONNECTSTRING) -classpath $(CLASSES):$(MYCLASSPATH):$(SQLJCLASSPATH)
+SQLJOPTIONS=-optcols -compiler-executable=$(JAVAC) -codegen=oracle -status -u amficom/amficom -d $(CLASSES) -dir $(SRC) -url=jdbc:oracle:thin:@$(SERVERHOSTNAME):1521:$(CONNECTSTRING) -classpath $(CLASSES):$(MYCLASSPATH):$(SQLJCLASSPATH)
 JAR=jar-3.3.1
 
 LIBNAME=kisserver.jar
