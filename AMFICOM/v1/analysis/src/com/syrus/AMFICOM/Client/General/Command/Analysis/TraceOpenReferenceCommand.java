@@ -85,13 +85,13 @@ public class TraceOpenReferenceCommand extends VoidCommand
 			if (!Heap.hasEmptyAllBSMap())
 			{
 				if (Heap.getBSReferenceTrace() != null)
-					 new FileRemoveCommand (dispatcher, "referencetrace", aContext).execute();
+					 new FileRemoveCommand (dispatcher, Heap.REFERENCE_TRACE_KEY, aContext).execute();
 			}
 
 			String activeRefId = chooser.getSelectedFile().getAbsolutePath().toLowerCase();
 			bs.title = activeRefId;
 			Heap.setBSReferenceTrace(bs);
-			dispatcher.notify(new RefChangeEvent("referencetrace",
+			dispatcher.notify(new RefChangeEvent(Heap.REFERENCE_TRACE_KEY,
 											RefChangeEvent.OPEN_EVENT));
 			try
 			{
