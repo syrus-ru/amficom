@@ -257,8 +257,8 @@ void ThreshDXArrayToTHXArray(ThreshDXArray &taX, int key, THX** thxOut, int *thx
 		thX[j].leftMode = leftMode;
 		thX[j].x0 = taX.getX0(j);
 		thX[j].x1 = taX.getX1(j);
-		thX[j].dxL = leftMode ? -taX.getDX(j, key) : taX.getDX(j, conjKey);
-		thX[j].dxR = leftMode ? -taX.getDX(j, conjKey) : taX.getDX(j, key);
+		thX[j].dxL = leftMode ? -taX.getDX(j, key) : -taX.getDX(j, conjKey);
+		thX[j].dxR = leftMode ? taX.getDX(j, conjKey) : taX.getDX(j, key);
 	}
 	*thxOut = thX;
 	// the user will then have to free the array:
@@ -301,10 +301,8 @@ void ThreshDXUpdateFromTHXArray(ThreshDXArray &taX, int key, THX* thX)
 	{
 		int isRising = taX.getIsRise(j);
 		int leftMode = !!isRising ^ !!isUpper ^ 1;
-		//thX[j].dxL = leftMode ? -taX.getDX(j, key) : taX.getDX(j, conjKey);
-		//thX[j].dxR = leftMode ? -taX.getDX(j, conjKey) : taX.getDX(j, key);
 		taX.setDX(j, key,     leftMode ? -thX[j].dxL : thX[j].dxR);
-		taX.setDX(j, conjKey, leftMode ? -thX[j].dxR : thX[j].dxL);
+		taX.setDX(j, conjKey, leftMode ? thX[j].dxR : -thX[j].dxL);
 	}
 }
 
