@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisTypeDatabase.java,v 1.20 2004/08/26 14:15:39 bob Exp $
+ * $Id: AnalysisTypeDatabase.java,v 1.21 2004/08/26 14:59:18 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,7 +30,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.20 $, $Date: 2004/08/26 14:15:39 $
+ * @version $Revision: 1.21 $, $Date: 2004/08/26 14:59:18 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -493,8 +493,8 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 	public static List retrieveByIds(List ids) throws RetrieveObjectException {
 		if ((ids == null) || (ids.isEmpty()))
 			return new LinkedList();
-		//return retriveByIdsOneQuery(ids);	
-		return retriveByIdsPreparedStatement(ids);
+		return retriveByIdsOneQuery(ids);	
+		//return retriveByIdsPreparedStatement(ids);
 	}
 	
 	private static List retriveByIdsOneQuery(List ids) throws RetrieveObjectException {
