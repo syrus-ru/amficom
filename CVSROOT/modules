@@ -66,7 +66,8 @@ AMFICOM_v1	&idl_v1\
 		&connjdbc_v1\
 		&corbaportable_v1\
 		&importmif_v1\
-		&tools
+		&tools\
+		&mapview_v1
 
 #M	idl_v1		Client-side AMFICOM CORBA object & interface
 idl_v1		AMFICOM/v1/idl
@@ -130,7 +131,9 @@ mcm_v1		AMFICOM/v1/mcm
 mserver_v1	AMFICOM/v1/mserver
 #M	cmserver_v1	Client Measurement Server
 cmserver_v1	AMFICOM/v1/cmserver
-
+#M	mapview_v1	Map View Module
+mapview_v1	AMFICOM/v1/mapview
+#M	database_v1	Database Module
 database_v1	AMFICOM/v1/database
 
 akp		hw/akp
