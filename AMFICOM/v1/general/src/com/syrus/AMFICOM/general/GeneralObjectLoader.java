@@ -1,5 +1,5 @@
 /*
- * $Id: GeneralObjectLoader.java,v 1.7 2005/02/11 18:40:16 arseniy Exp $
+ * $Id: GeneralObjectLoader.java,v 1.8 2005/02/18 17:52:26 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,7 +12,7 @@ import java.util.Collection;
 import java.util.Set;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/02/11 18:40:16 $
+ * @version $Revision: 1.8 $, $Date: 2005/02/18 17:52:26 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -59,8 +59,8 @@ public interface GeneralObjectLoader {
 	Set refresh(Set storableObjects) throws CommunicationException, DatabaseException;
 	
 
-	void delete(Identifier id) throws CommunicationException, DatabaseException;
+	void delete(Identifier id) throws IllegalDataException;
 
-	void delete(Collection objects) throws CommunicationException, DatabaseException, IllegalDataException;
+	void delete(Collection objects) throws IllegalDataException;
 
 }

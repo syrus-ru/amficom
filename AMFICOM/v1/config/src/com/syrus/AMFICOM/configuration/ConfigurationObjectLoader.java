@@ -1,5 +1,5 @@
 /*
- * $Id: ConfigurationObjectLoader.java,v 1.30 2005/02/11 16:02:55 bob Exp $
+ * $Id: ConfigurationObjectLoader.java,v 1.31 2005/02/18 17:53:23 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -19,16 +19,12 @@ import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 
 /**
- * @version $Revision: 1.30 $, $Date: 2005/02/11 16:02:55 $
- * @author $Author: bob $
+ * @version $Revision: 1.31 $, $Date: 2005/02/18 17:53:23 $
+ * @author $Author: arseniy $
  * @module config_v1
  */
 
 public interface ConfigurationObjectLoader {
-
-	void delete(Identifier id) throws CommunicationException, DatabaseException;
-
-	void delete(Collection objects) throws CommunicationException, DatabaseException, IllegalDataException;
 
 	CableLinkType loadCableLinkType(Identifier id) throws DatabaseException, CommunicationException;
 
@@ -223,5 +219,11 @@ public interface ConfigurationObjectLoader {
 
 	void saveTransmissionPathTypes(Collection list, boolean force) throws VersionCollisionException, DatabaseException,
 			CommunicationException;
+
+
+
+	void delete(Identifier id) throws IllegalDataException;
+
+	void delete(Collection objects) throws IllegalDataException;
 
 }

@@ -1,5 +1,5 @@
 /*
- * $Id: AdministrationObjectLoader.java,v 1.6 2005/02/11 18:40:09 arseniy Exp $
+ * $Id: AdministrationObjectLoader.java,v 1.7 2005/02/18 17:52:53 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -19,7 +19,7 @@ import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/02/11 18:40:09 $
+ * @version $Revision: 1.7 $, $Date: 2005/02/18 17:52:53 $
  * @author $Author: arseniy $
  * @module administration_v1
  */
@@ -87,8 +87,8 @@ public interface AdministrationObjectLoader {
 
 	Set refresh(Set storableObjects) throws CommunicationException, DatabaseException;
 
-	void delete(Identifier id) throws CommunicationException, DatabaseException;
+	void delete(Identifier id) throws IllegalDataException;
 
-	void delete(Collection objects) throws CommunicationException, DatabaseException, IllegalDataException;
+	void delete(Collection objects) throws IllegalDataException;
 
 }

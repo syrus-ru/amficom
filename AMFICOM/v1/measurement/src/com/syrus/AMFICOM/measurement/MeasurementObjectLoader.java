@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementObjectLoader.java,v 1.21 2005/02/11 16:31:48 bob Exp $
+ * $Id: MeasurementObjectLoader.java,v 1.22 2005/02/18 17:53:47 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,16 +18,12 @@ import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 
 /**
- * @version $Revision: 1.21 $, $Date: 2005/02/11 16:31:48 $
- * @author $Author: bob $
+ * @version $Revision: 1.22 $, $Date: 2005/02/18 17:53:47 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
 public interface MeasurementObjectLoader {
-
-	void delete(Identifier id) throws CommunicationException, DatabaseException;
-
-	void delete(Collection objects) throws CommunicationException, DatabaseException, IllegalDataException;
 
 	Collection loadAnalyses(Collection ids) throws DatabaseException, CommunicationException;
 
@@ -196,5 +192,11 @@ public interface MeasurementObjectLoader {
 
 	void saveTests(Collection list, boolean force) throws VersionCollisionException, DatabaseException,
 			CommunicationException;
+
+
+
+	void delete(Identifier id) throws IllegalDataException;
+
+	void delete(Collection objects) throws IllegalDataException;
 
 }
