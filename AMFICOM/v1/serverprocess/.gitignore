@@ -2,3 +2,4 @@ classes
 docs
 lib
 *.jpr
+*.properties
