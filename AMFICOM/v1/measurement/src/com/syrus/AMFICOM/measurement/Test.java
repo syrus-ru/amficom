@@ -1,5 +1,5 @@
 /*
- * $Id: Test.java,v 1.95 2005/03/30 15:36:37 arseniy Exp $
+ * $Id: Test.java,v 1.96 2005/03/30 15:44:42 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -47,8 +47,8 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.95 $, $Date: 2005/03/30 15:36:37 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.96 $, $Date: 2005/03/30 15:44:42 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
@@ -203,7 +203,7 @@ public class Test extends StorableObject {
 				|| monitoredElement == null
 				|| returnType == null
 				|| description == null
-				|| measurementSetupIds == null)
+				|| (measurementSetupIds == null || measurementSetupIds.isEmpty()))
 			throw new IllegalArgumentException("Argument is 'null'");
 		if (measurementSetupIds.isEmpty())
 			throw new IllegalArgumentException("No measurement setups");
