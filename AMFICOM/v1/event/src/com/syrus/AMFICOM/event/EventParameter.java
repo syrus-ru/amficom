@@ -1,5 +1,5 @@
 /*
- * $Id: EventParameter.java,v 1.2 2005/01/31 07:04:22 arseniy Exp $
+ * $Id: EventParameter.java,v 1.3 2005/01/31 13:17:01 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,7 +27,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/01/31 07:04:22 $
+ * @version $Revision: 1.3 $, $Date: 2005/01/31 13:17:01 $
  * @author $Author: arseniy $
  * @module event_v1
  */
@@ -61,7 +61,7 @@ public class EventParameter implements TransferableObject, TypedObject, Identifi
 		}
 	}
 
-	private EventParameter(Identifier id,
+	protected EventParameter(Identifier id,
 								ParameterType type,
 								int value) {
 		this.id = id;
@@ -70,7 +70,7 @@ public class EventParameter implements TransferableObject, TypedObject, Identifi
 		this.valueNumber = value;
 	}
 
-	private EventParameter(Identifier id,
+	protected EventParameter(Identifier id,
 								ParameterType type,
 								String value) {
 		this.id = id;
@@ -79,7 +79,7 @@ public class EventParameter implements TransferableObject, TypedObject, Identifi
 		this.valueString = value;
 	}
 
-	private EventParameter(Identifier id,
+	protected EventParameter(Identifier id,
 								ParameterType type,
 								byte[] value) {
 		this.id = id;

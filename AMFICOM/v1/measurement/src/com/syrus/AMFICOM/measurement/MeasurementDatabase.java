@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementDatabase.java,v 1.53 2005/01/27 15:50:02 bob Exp $
+ * $Id: MeasurementDatabase.java,v 1.54 2005/01/31 13:21:37 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -43,8 +43,8 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
 
 /**
- * @version $Revision: 1.53 $, $Date: 2005/01/27 15:50:02 $
- * @author $Author: bob $
+ * @version $Revision: 1.54 $, $Date: 2005/01/31 13:21:37 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -68,7 +68,7 @@ public class MeasurementDatabase extends StorableObjectDatabase {
 	}	
 
 	protected String getColumns(int mode) {
-		if (columns == null){
+		if (columns == null) {
 			columns = super.getColumns(mode) + COMMA
 				+ MeasurementWrapper.COLUMN_TYPE_ID + COMMA
 				+ MeasurementWrapper.COLUMN_MONITORED_ELEMENT_ID + COMMA
@@ -84,7 +84,7 @@ public class MeasurementDatabase extends StorableObjectDatabase {
 	}	
 
 	protected String getUpdateMultiplySQLValues(int mode) {
-		if (updateMultiplySQLValues == null){
+		if (updateMultiplySQLValues == null) {
 			updateMultiplySQLValues = super.getUpdateMultiplySQLValues(mode) + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA

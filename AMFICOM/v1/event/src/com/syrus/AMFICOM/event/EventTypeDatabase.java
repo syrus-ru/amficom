@@ -1,5 +1,5 @@
 /*
- * $Id: EventTypeDatabase.java,v 1.3 2005/01/28 14:02:09 arseniy Exp $
+ * $Id: EventTypeDatabase.java,v 1.4 2005/01/31 13:16:46 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,6 +31,7 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.VersionCollisionException;
@@ -40,15 +41,12 @@ import com.syrus.util.database.DatabaseString;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/01/28 14:02:09 $
+ * @version $Revision: 1.4 $, $Date: 2005/01/31 13:16:46 $
  * @author $Author: arseniy $
  * @module event_v1
  */
 
 public class EventTypeDatabase extends StorableObjectDatabase {
-
-	public static final String COLUMN_CODENAME = "codename";
-	public static final String COLUMN_DESCRIPTION = "description";
 
 	public static final String LINK_COLUMN_EVENT_TYPE_ID = "event_type_id";
 
@@ -68,8 +66,8 @@ public class EventTypeDatabase extends StorableObjectDatabase {
 	protected String getColumns(int mode) {
 		if (columns == null) {
 			columns = super.getColumns(mode) + COMMA
-				+ COLUMN_CODENAME + COMMA 
-				+ COLUMN_DESCRIPTION;
+				+ StorableObjectType.COLUMN_CODENAME + COMMA 
+				+ StorableObjectType.COLUMN_DESCRIPTION;
 		}
 		return columns;
 	}
@@ -111,8 +109,8 @@ public class EventTypeDatabase extends StorableObjectDatabase {
 								   DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
 								   DatabaseIdentifier.getIdentifier(resultSet, COLUMN_CREATOR_ID),
 								   DatabaseIdentifier.getIdentifier(resultSet, COLUMN_MODIFIER_ID),
-								   DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_CODENAME)),
-								   DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_DESCRIPTION)));
+								   DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectType.COLUMN_CODENAME)),
+								   DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectType.COLUMN_DESCRIPTION)));
 		return eventType;
 	}
 
@@ -393,7 +391,7 @@ public class EventTypeDatabase extends StorableObjectDatabase {
 	public EventType retrieveForCodename(String codename) throws ObjectNotFoundException, RetrieveObjectException {
 		List list = null;
 		try {
-			list = this.retrieveByIds(null, COLUMN_CODENAME + EQUALS + APOSTOPHE + DatabaseString.toQuerySubString(codename, SIZE_CODENAME_COLUMN) + APOSTOPHE);
+			list = this.retrieveByIds(null, StorableObjectType.COLUMN_CODENAME + EQUALS + APOSTOPHE + DatabaseString.toQuerySubString(codename, SIZE_CODENAME_COLUMN) + APOSTOPHE);
 		}
 		catch (IllegalDataException ide) {				
 			throw new RetrieveObjectException(ide);
