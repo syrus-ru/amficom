@@ -1,5 +1,5 @@
 /*
- * $Id: LinkedIdsCondition.java,v 1.2 2004/12/24 09:28:40 bob Exp $
+ * $Id: LinkedIdsCondition.java,v 1.3 2004/12/24 09:35:28 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -62,7 +62,7 @@ import com.syrus.util.Log;
  * </ul>
  * 
  * @author $Author: bob $
- * @version $Revision: 1.2 $, $Date: 2004/12/24 09:28:40 $
+ * @version $Revision: 1.3 $, $Date: 2004/12/24 09:35:28 $
  * @module general_v1
  */
 public class LinkedIdsCondition implements StorableObjectCondition {
@@ -115,27 +115,27 @@ public class LinkedIdsCondition implements StorableObjectCondition {
 	}
 
 	public LinkedIdsCondition(final LinkedIdsCondition_Transferable transferable) {
-		Short entityCode = new Short(transferable.entity_code);
-		Identifier identifier = null;
-		List linkedIds = null;
+		Short code = new Short(transferable.entity_code);
+		Identifier id = null;
+		List linkIds = null;
 		
 		if (transferable.linked_ids.length == 1) {
-			identifier = new Identifier(transferable.linked_ids[0]);
+			id = new Identifier(transferable.linked_ids[0]);
 		} else {
-			linkedIds = new ArrayList(transferable.linked_ids.length);
+			linkIds = new ArrayList(transferable.linked_ids.length);
 			for (int i = 0; i < transferable.linked_ids.length; i++) {
-				linkedIds.add(new Identifier(transferable.linked_ids[i]));
+				linkIds.add(new Identifier(transferable.linked_ids[i]));
 			}
 		}
-		final String className = "com.syrus.AMFICOM." + ObjectGroupEntities.getGroupName(entityCode.shortValue()).toLowerCase().replaceAll("group$", "") + ".LinkedIdsCondition"; //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+		final String className = "com.syrus.AMFICOM." + ObjectGroupEntities.getGroupName(code.shortValue()).toLowerCase().replaceAll("group$", "") + ".LinkedIdsCondition"; //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 		try {
 			Constructor ctor;
-			if (identifier == null)
+			if (id == null)
 				ctor = Class.forName(className).getDeclaredConstructor(new Class[] { List.class, Short.class});
 			else
 				ctor = Class.forName(className).getDeclaredConstructor(new Class[] { Identifier.class, Short.class});
 			ctor.setAccessible(true);
-			this.delegate = (LinkedIdsCondition) ctor.newInstance(new Object[] { linkedIds, entityCode});
+			this.delegate = (LinkedIdsCondition) ctor.newInstance(new Object[] { linkIds, code});
 		} catch (ClassNotFoundException cnfe) {
 			Log.debugMessage(LINKED_IDS_CONDITION_INIT + "Class " + className //$NON-NLS-1$
 					+ " not found on the classpath" //$NON-NLS-1$
@@ -188,9 +188,9 @@ public class LinkedIdsCondition implements StorableObjectCondition {
 						return false;
 					}
 				};
-				this.delegate.identifier = identifier;
-				this.delegate.entityCode = entityCode;
-				this.delegate.linkedIds = linkedIds;
+				this.delegate.identifier = id;
+				this.delegate.entityCode = code;
+				this.delegate.linkedIds = linkIds;
 			}
 		}
 		this.delegate.domainId = new Identifier(transferable.domain_id);
