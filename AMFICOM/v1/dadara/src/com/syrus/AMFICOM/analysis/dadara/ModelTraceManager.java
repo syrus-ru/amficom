@@ -1,5 +1,5 @@
 /*
- * $Id: ModelTraceManager.java,v 1.24 2005/03/21 18:09:23 saa Exp $
+ * $Id: ModelTraceManager.java,v 1.25 2005/03/21 18:15:22 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ import com.syrus.AMFICOM.analysis.CoreAnalysisManager;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.24 $, $Date: 2005/03/21 18:09:23 $
+ * @version $Revision: 1.25 $, $Date: 2005/03/21 18:15:22 $
  * @module
  */
 public class ModelTraceManager
@@ -341,13 +341,6 @@ public class ModelTraceManager
 			thMTCache[key] = thMt;
 		}
 		return thMt;
-	}
-
-	public void setThreshold(int nEvent, Threshold th) // FIXME -- remove
-	{
-		throw new UnsupportedOperationException();
-		//invalidateThMFCache();
-		//re[nEvent].setThreshold(th);
 	}
 
 	public void updateUpperThreshToContain(double[] yTop)
