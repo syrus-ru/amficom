@@ -42,6 +42,17 @@ $(LIBNAME_INTERFACE):	.corba
 
 .corba:	$(CLASSDIR)
 	$(IDLJ) $(IDLJFLAGS) idl/mserver.idl
+#
+#	cpp -I../idl_v1/idl idl/mserver.idl idl/tmp_mserver.idl
+#	$(IDLJ) $(IDLJFLAGS) idl/tmp_mserver.idl
+#	$(RM) -r \
+		idl/tmp_mserver.idl \
+		$(SRCDIR)/com/syrus/AMFICOM/configuration \
+		$(SRCDIR)/com/syrus/AMFICOM/CORBA \
+		$(SRCDIR)/com/syrus/AMFICOM/event \
+		$(SRCDIR)/com/syrus/AMFICOM/general \
+		$(SRCDIR)/com/syrus/AMFICOM/measurement
+#
 	$(JAVAC) $(JAVACFLAGS) $(JAVAC_WARNOFF_FLAG) \
 		-classpath $(APPCLASSPATH) \
 		-sourcepath $(SRCDIR) \

@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseContextSetup.java,v 1.17 2004/10/27 08:25:51 max Exp $
+ * $Id: DatabaseContextSetup.java,v 1.18 2004/11/24 09:23:02 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,6 +16,7 @@ import com.syrus.AMFICOM.configuration.EquipmentTypeDatabase;
 import com.syrus.AMFICOM.configuration.KISTypeDatabase;
 import com.syrus.AMFICOM.configuration.LinkDatabase;
 import com.syrus.AMFICOM.configuration.LinkTypeDatabase;
+import com.syrus.AMFICOM.configuration.CableThreadTypeDatabase;
 import com.syrus.AMFICOM.configuration.PortTypeDatabase;
 import com.syrus.AMFICOM.configuration.MeasurementPortTypeDatabase;
 import com.syrus.AMFICOM.configuration.CharacteristicDatabase;
@@ -47,8 +48,8 @@ import com.syrus.AMFICOM.measurement.ResultDatabase;
 import com.syrus.AMFICOM.measurement.TemporalPatternDatabase;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2004/10/27 08:25:51 $
- * @author $Author: max $
+ * @version $Revision: 1.18 $, $Date: 2004/11/24 09:23:02 $
+ * @author $Author: arseniy $
  * @module mserver_v1
  */
 
@@ -60,24 +61,25 @@ public abstract class DatabaseContextSetup {
 
 	public static void initDatabaseContext() {
 		ConfigurationDatabaseContext.init(new CharacteristicTypeDatabase(),
-																			new EquipmentTypeDatabase(),
-																			new PortTypeDatabase(),
-																			new MeasurementPortTypeDatabase(),
-                                                                            new LinkTypeDatabase(),
-                                                                            new KISTypeDatabase(),																			
-																			new CharacteristicDatabase(),
-																			new UserDatabase(),
-																			new DomainDatabase(),
-																			new ServerDatabase(),
-																			new MCMDatabase(),
-																			new EquipmentDatabase(),
-																			new PortDatabase(),
-																			new MeasurementPortDatabase(),
-																			new TransmissionPathDatabase(),
-                                                                            new TransmissionPathTypeDatabase(),
-																			new KISDatabase(),
-																			new MonitoredElementDatabase(),
-                                                                            new LinkDatabase());
+																		new EquipmentTypeDatabase(),
+																		new PortTypeDatabase(),
+																		new MeasurementPortTypeDatabase(),
+																		new LinkTypeDatabase(),
+																		new CableThreadTypeDatabase(),
+																		new KISTypeDatabase(),
+																		new CharacteristicDatabase(),
+																		new UserDatabase(),
+																		new DomainDatabase(),
+																		new ServerDatabase(),
+																		new MCMDatabase(),
+																		new EquipmentDatabase(),
+																		new PortDatabase(),
+																		new MeasurementPortDatabase(),
+																		new TransmissionPathDatabase(),
+																		new TransmissionPathTypeDatabase(),
+																		new KISDatabase(),
+																		new MonitoredElementDatabase(),
+																		new LinkDatabase());
 
 		MeasurementDatabaseContext.init(new ParameterTypeDatabase(),
 																		new MeasurementTypeDatabase(),

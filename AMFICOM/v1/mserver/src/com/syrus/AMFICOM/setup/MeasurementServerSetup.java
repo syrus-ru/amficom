@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementServerSetup.java,v 1.16 2004/10/27 09:54:21 max Exp $
+ * $Id: MeasurementServerSetup.java,v 1.17 2004/11/24 09:23:02 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,8 +28,8 @@ import com.syrus.util.ByteArray;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2004/10/27 09:54:21 $
- * @author $Author: max $
+ * @version $Revision: 1.17 $, $Date: 2004/11/24 09:23:02 $
+ * @author $Author: arseniy $
  * @module mserver_v1
  */
 
@@ -101,7 +101,7 @@ public class MeasurementServerSetup {
 																			UserSort.USER_SORT_MCM,
 																			"User Mcmovich",
 																			"User for measurement control module");
-		Identifier mcmId = createMCM(sysAdminId, domainId, mcmUserId, serverId);
+		Identifier mcmId = createMCM(sysAdminId, domainId, mcmUserId, serverId, (short)7500);
 
 		Identifier equipmentId = createEquipment(sysAdminId,
 																						 domainId,
@@ -113,7 +113,7 @@ public class MeasurementServerSetup {
 		Identifier tpId = createTransmissionPath(sysAdminId, domainId, portId1, portId2, transmissionPathType);
 
 
-		Identifier kisId = createKIS(sysAdminId, domainId, equipmentId, mcmId, kisType);
+		Identifier kisId = createKIS(sysAdminId, domainId, equipmentId, mcmId, "rtu-1", (short)7501, kisType);
 
 		Identifier mportId = createMeasurementPort(sysAdminId, mPortType, kisId, portId1);
 
@@ -270,7 +270,8 @@ public class MeasurementServerSetup {
 	private static Identifier createMCM(Identifier creatorId,
 																			Identifier domainId,
 																			Identifier mcmUserId,
-																			Identifier serverId) {
+																			Identifier serverId,
+																			short tcpPort) {
 		try {
 			Identifier id = IdentifierGenerator.generateIdentifier(ObjectEntities.MCM_ENTITY_CODE);
 			MCM mcm = MCM.createInstance(id,
@@ -279,7 +280,8 @@ public class MeasurementServerSetup {
 																	 "mcm 1",
 																	 "Measurement control module",
 																	 mcmUserId,
-																	 serverId);
+																	 serverId,
+																	 tcpPort);
 			MCM.getInstance((MCM_Transferable)mcm.getTransferable());
 			return id;
 		}
@@ -293,7 +295,9 @@ public class MeasurementServerSetup {
 																			Identifier domainId,
 																			Identifier equipmentId,
 																			Identifier mcmId,
-                                                                            KISType kisType) {
+																			String hostName,
+																			short tcpPort,
+																			KISType kisType) {
 		try {
 			Identifier id = IdentifierGenerator.generateIdentifier(ObjectEntities.KIS_ENTITY_CODE);
 			KIS kis = KIS.createInstance(id,
@@ -301,7 +305,9 @@ public class MeasurementServerSetup {
 																	 domainId,
 																	 "KIS",
 																	 "kis ",
-                                                                     kisType,
+																	 hostName,
+																	 tcpPort,
+																	 kisType,
 																	 equipmentId,
 																	 mcmId);
 			KIS.getInstance((KIS_Transferable)kis.getTransferable());
