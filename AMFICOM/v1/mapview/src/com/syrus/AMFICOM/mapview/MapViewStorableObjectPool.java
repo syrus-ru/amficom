@@ -1,5 +1,5 @@
 /*
- * $Id: MapViewStorableObjectPool.java,v 1.1 2004/12/22 15:21:52 cvsadmin Exp $
+ * $Id: MapViewStorableObjectPool.java,v 1.2 2004/12/27 13:41:56 bob Exp $
  *
  * Copyright ? 2004 Syrus Systems.
  * ѕвиапр-жейпкаехмкл зепжф.
@@ -26,8 +26,8 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2004/12/22 15:21:52 $
- * @author $Author: cvsadmin $
+ * @version $Revision: 1.2 $, $Date: 2004/12/27 13:41:56 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
@@ -80,7 +80,7 @@ public final class MapViewStorableObjectPool extends StorableObjectPool {
 
 		instance.addObjectPool(ObjectEntities.MAPVIEW_ENTITY_CODE, size);
 
-		instance.polulatePools();
+		instance.populatePools();
 	}
 
 	public static void init(MapViewObjectLoader mvObjectLoader1) {
@@ -91,7 +91,7 @@ public final class MapViewStorableObjectPool extends StorableObjectPool {
 		mvObjectLoader = mvObjectLoader1;
 		instance.addObjectPool(ObjectEntities.MAPVIEW_ENTITY_CODE, MAPVIEW_OBJECT_POOL_SIZE);
 
-		instance.polulatePools();
+		instance.populatePools();
 	}
 
 	public static void refresh() throws DatabaseException, CommunicationException {

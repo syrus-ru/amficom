@@ -1,5 +1,5 @@
 /*
- * $Id: ConfigurationStorableObjectPool.java,v 1.53 2004/12/23 11:19:52 arseniy Exp $
+ * $Id: ConfigurationStorableObjectPool.java,v 1.54 2004/12/27 13:40:36 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,8 +27,8 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.53 $, $Date: 2004/12/23 11:19:52 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.54 $, $Date: 2004/12/27 13:40:36 $
+ * @author $Author: bob $
  * @module configuration_v1
  */
 
@@ -98,7 +98,7 @@ public final class ConfigurationStorableObjectPool extends StorableObjectPool {
 		instance.addObjectPool(ObjectEntities.MEASUREMENTPORT_ENTITY_CODE, size);
 		instance.addObjectPool(ObjectEntities.ME_ENTITY_CODE, size);
 		
-		instance.polulatePools();		
+		instance.populatePools();		
 	}
 
 	public static void init(ConfigurationObjectLoader cObjectLoader1) {
@@ -130,7 +130,7 @@ public final class ConfigurationStorableObjectPool extends StorableObjectPool {
 		instance.addObjectPool(ObjectEntities.MEASUREMENTPORT_ENTITY_CODE, MEASUREMENTPORT_OBJECT_POOL_SIZE);
 		instance.addObjectPool(ObjectEntities.ME_ENTITY_CODE, ME_OBJECT_POOL_SIZE);
 		
-		instance.polulatePools();
+		instance.populatePools();
 	}
 
 	/**

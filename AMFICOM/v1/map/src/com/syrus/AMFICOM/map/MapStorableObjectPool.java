@@ -1,5 +1,5 @@
 /*
- * $Id: MapStorableObjectPool.java,v 1.3 2004/12/07 08:21:02 bob Exp $
+ * $Id: MapStorableObjectPool.java,v 1.4 2004/12/27 13:40:50 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,7 +26,7 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2004/12/07 08:21:02 $
+ * @version $Revision: 1.4 $, $Date: 2004/12/27 13:40:50 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -97,7 +97,7 @@ public final class MapStorableObjectPool extends StorableObjectPool {
 		instance.addObjectPool(ObjectEntities.COLLECTOR_ENTITY_CODE, size);
 		instance.addObjectPool(ObjectEntities.MAP_ENTITY_CODE, size);
 
-		instance.polulatePools();
+		instance.populatePools();
 	}
 
 	public static void init(MapObjectLoader mObjectLoader1) {
@@ -117,7 +117,7 @@ public final class MapStorableObjectPool extends StorableObjectPool {
 		instance.addObjectPool(ObjectEntities.COLLECTOR_ENTITY_CODE, COLLECTOR_OBJECT_POOL_SIZE);
 		instance.addObjectPool(ObjectEntities.MAP_ENTITY_CODE, MAP_OBJECT_POOL_SIZE);
 
-		instance.polulatePools();
+		instance.populatePools();
 	}
 
 	public static void refresh() throws DatabaseException, CommunicationException {

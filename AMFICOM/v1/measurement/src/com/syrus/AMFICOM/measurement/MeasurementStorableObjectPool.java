@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementStorableObjectPool.java,v 1.57 2004/11/25 13:23:39 bob Exp $
+ * $Id: MeasurementStorableObjectPool.java,v 1.58 2004/12/27 13:40:18 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,7 +26,7 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.57 $, $Date: 2004/11/25 13:23:39 $
+ * @version $Revision: 1.58 $, $Date: 2004/12/27 13:40:18 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -117,7 +117,7 @@ public class MeasurementStorableObjectPool extends StorableObjectPool {
 		instance.addObjectPool(ObjectEntities.TEMPORALPATTERN_ENTITY_CODE, size);
 		instance.addObjectPool(ObjectEntities.RESULT_ENTITY_CODE, size);
 		
-		instance.polulatePools();
+		instance.populatePools();
 	}
 
 	public static void init(MeasurementObjectLoader mObjectLoader1) {
@@ -143,7 +143,7 @@ public class MeasurementStorableObjectPool extends StorableObjectPool {
 		instance.addObjectPool(ObjectEntities.TEMPORALPATTERN_ENTITY_CODE, TEMPORALPATTERN_OBJECT_POOL_SIZE);
 		instance.addObjectPool(ObjectEntities.RESULT_ENTITY_CODE, RESULT_OBJECT_POOL_SIZE);
 		
-		instance.polulatePools();
+		instance.populatePools();
 	}
 		
     public static void refresh() throws DatabaseException, CommunicationException {        
