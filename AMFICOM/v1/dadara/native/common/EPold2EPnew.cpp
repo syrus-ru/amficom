@@ -37,7 +37,7 @@ void EPold2EPnew(EventParams* epo, EventP &epn, double delta_x)
 		epn.mf.init(MF_ID_BREAKL);
 		break;
 
-	case EventParams_SINGULARITY:
+	case EventParams_UNRECOGNIZED:
 		epn.gentype = com_syrus_AMFICOM_analysis_dadara_SimpleReflectogramEvent_NOTIDENTIFIED;
 		epn.mf.init(MF_ID_BREAKL);
 		break;
@@ -78,7 +78,7 @@ void EPold2SE(EventParams* epo, SimpleEvent &epn)
 		epn.type = com_syrus_AMFICOM_analysis_dadara_SimpleReflectogramEvent_REFLECTIVE;
 		break;
 
-	case EventParams_SINGULARITY:
+	case EventParams_UNRECOGNIZED:
 		epn.type = com_syrus_AMFICOM_analysis_dadara_SimpleReflectogramEvent_NOTIDENTIFIED;
 		break;
 

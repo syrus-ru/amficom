@@ -1,5 +1,5 @@
 /*
- * $Id: ModelTraceManager.java,v 1.40 2005/03/31 11:46:23 saa Exp $
+ * $Id: ModelTraceManager.java,v 1.41 2005/04/01 08:19:55 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ import com.syrus.AMFICOM.analysis.CoreAnalysisManager;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.40 $, $Date: 2005/03/31 11:46:23 $
+ * @version $Revision: 1.41 $, $Date: 2005/04/01 08:19:55 $
  * @module
  */
 public class ModelTraceManager
@@ -62,12 +62,14 @@ extends ModelTraceAndEvents
 	private void createTH()
 	{
 		LinkedList thresholds = new LinkedList();
-		Thresh last; // далее будет всегда указывать на текущий порог "линейного" типа
-		thresholds.add(last = new ThreshDY(-1, false, 0, 0)); // "C" coding style
+		Thresh last = null; // далее будет всегда указывать на текущий порог A-типа, либо null, если разрыв (в нач. р/г либо после н/ид соб)
 		for (int i = 0; i < getSE().length; i++)
 		{
 			int evBegin = getSE()[i].getBegin();
 			int evEnd = getSE()[i].getEnd();
+			if (last == null)
+				thresholds.add(last = new ThreshDY(i, false, evBegin, evEnd)); // "C" coding style
+
 			switch(getSE()[i].getEventType())
 			{
 			case SimpleReflectogramEvent.LINEAR:
@@ -85,6 +87,11 @@ extends ModelTraceAndEvents
 				last.eventId1 = i;
 				thresholds.add(new ThreshDX(i, evBegin, evEnd, false));
 				thresholds.add(last = new ThreshDY(i, false, evEnd, evEnd));
+				break;
+			case SimpleReflectogramEvent.NOTIDENTIFIED:
+				last.xMax = evBegin;
+				thresholds.add(new ThreshDY(i, false, evBegin, evEnd));
+				last = null;
 				break;
 			case SimpleReflectogramEvent.REFLECTIVE:
 				int[] pos = CoreAnalysisManager.getConnectorMinMaxMin(getMF(), evBegin, evEnd);
