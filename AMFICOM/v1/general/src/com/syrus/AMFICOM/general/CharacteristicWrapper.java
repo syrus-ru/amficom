@@ -1,5 +1,5 @@
 /*
-* $Id: CharacteristicWrapper.java,v 1.2 2005/01/31 14:07:21 bob Exp $
+* $Id: CharacteristicWrapper.java,v 1.3 2005/01/31 14:38:46 bob Exp $
 *
 * Copyright ¿ 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -14,10 +14,9 @@ import java.util.Collections;
 import java.util.List;
 
 import com.syrus.AMFICOM.general.corba.CharacteristicSort;
-import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/01/31 14:07:21 $
+ * @version $Revision: 1.3 $, $Date: 2005/01/31 14:38:46 $
  * @author $Author: bob $
  * @module general_v1
  */
