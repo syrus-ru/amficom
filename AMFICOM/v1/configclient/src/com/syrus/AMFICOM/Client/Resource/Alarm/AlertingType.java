@@ -108,42 +108,41 @@ public class AlertingType extends StubResource
 	/**
 	 * Value: {@value}.
 	 */
-	public static final String NAME_VOICE = "голосовое";	
+	public static final String NAME_VOICE = "голосовое";
 
-  public static String type = "alertingtype";
-  public String name = "";
-  public String id = "";
+	public static String type = "alertingtype";
+	public String name = "";
+	public String id = "";
 
-  public AlertingType()
-  {
-  }
-
-  public AlertingType(String id, String name)
-  {
-    this.id = id;
-    this.name = name;
-  }
-
-  public static AlertingType[] createTypes (int number,String[] ids, String[] names)
-  {
-    AlertingType[] result = new AlertingType[number];
-    for (int i = 0; i < number; i++)
+	public AlertingType()
 	{
-      result[i] = new AlertingType(ids[i], names[i]);
-	  Pool.put(AlertingType.type, result[i].getId(), result[i]);
 	}
-    return result;
-  }
 
-  public String getId()
-  {
-    return id;
-  }
+	public AlertingType(String id, String name)
+	{
+		this.id = id;
+		this.name = name;
+	}
 
-  public String getName()
-  {
-    return name;
-  }
+	public static AlertingType[] createTypes (int number,String[] ids, String[] names)
+	{
+		AlertingType[] result = new AlertingType[number];
+		for (int i = 0; i < number; i++)
+	{
+			result[i] = new AlertingType(ids[i], names[i]);
+		Pool.put(AlertingType.type, result[i].getId(), result[i]);
+	}
+		return result;
+	}
+
+	public String getId()
+	{
+		return id;
+	}
+
+	public String getName()
+	{
+		return name;
+	}
 
 }
-

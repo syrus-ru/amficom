@@ -19,7 +19,7 @@ import java.awt.event.KeyListener;
 
 import java.util.Enumeration;
 import java.util.Hashtable;
-import java.util.Vector;
+import java.util.*;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -39,7 +39,6 @@ public class AddPropFrame extends JDialog
 	protected int res = CANCEL;
 	protected String ch_class;
 	String selected = LangModelConfig.getString("label_new_char");
-	Hashtable h;
 	Hashtable h_named = new Hashtable();
 	CharacteristicType type = new CharacteristicType();
 
@@ -207,10 +206,10 @@ public class AddPropFrame extends JDialog
 		}
 	}
 
-	public int showDialog(String ch_class, Vector chars)
+	public int showDialog(String ch_class, List chars)
 	{
 		this.ch_class = ch_class;
-		h = Pool.getHash(CharacteristicType.typ);
+		Map h = Pool.getHash(CharacteristicType.typ);
 
 		if (h != null)
 		{
@@ -221,9 +220,9 @@ public class AddPropFrame extends JDialog
 				used.put(el.get(0), el);
 			}
 
-			for (Enumeration enum = h.elements(); enum.hasMoreElements();)
+			for (Iterator it = h.values().iterator(); it.hasNext();)
 			{
-				CharacteristicType type = (CharacteristicType)enum.nextElement();
+				CharacteristicType type = (CharacteristicType)it.next();
 				if (type.ch_class.equals(ch_class) && !used.containsKey(type.getName()))
 					jComboBox1.addItem(type.getName());
 				h_named.put(type.getName(), type);
