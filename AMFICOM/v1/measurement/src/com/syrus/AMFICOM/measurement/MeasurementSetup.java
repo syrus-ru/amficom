@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementSetup.java,v 1.20 2004/08/16 10:49:49 bob Exp $
+ * $Id: MeasurementSetup.java,v 1.21 2004/08/18 12:38:31 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,8 +23,8 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.corba.MeasurementSetup_Transferable;
 
 /**
- * @version $Revision: 1.20 $, $Date: 2004/08/16 10:49:49 $
- * @author $Author: bob $
+ * @version $Revision: 1.21 $, $Date: 2004/08/18 12:38:31 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -67,17 +67,17 @@ public class MeasurementSetup extends StorableObject {
 		 * @todo when change DB Identifier model ,change identifier_string
 		 *       to identifier_code
 		 */
-		this.criteriaSet = (mst.criteria_set_id.identifier_string != "") ? (Set)MeasurementStorableObjectPool.getStorableObject(new Identifier(mst.criteria_set_id), true) : null;
+		this.criteriaSet = (mst.criteria_set_id.identifier_string.length() != 0) ? (Set)MeasurementStorableObjectPool.getStorableObject(new Identifier(mst.criteria_set_id), true) : null;
 		/**
 		 * @todo when change DB Identifier model ,change identifier_string
 		 *       to identifier_code
 		 */
-		this.thresholdSet = (mst.threshold_set_id.identifier_string != "") ? (Set)MeasurementStorableObjectPool.getStorableObject(new Identifier(mst.threshold_set_id), true) : null;
+		this.thresholdSet = (mst.threshold_set_id.identifier_string.length() != 0) ? (Set)MeasurementStorableObjectPool.getStorableObject(new Identifier(mst.threshold_set_id), true) : null;
 		/**
 		 * @todo when change DB Identifier model ,change identifier_string
 		 *       to identifier_code
 		 */
-		this.etalon = (mst.etalon_id.identifier_string != "") ? (Set)MeasurementStorableObjectPool.getStorableObject(new Identifier(mst.etalon_id), true) : null;
+		this.etalon = (mst.etalon_id.identifier_string.length() != 0) ? (Set)MeasurementStorableObjectPool.getStorableObject(new Identifier(mst.etalon_id), true) : null;
 		this.description = new String(mst.description);
 		this.measurementDuration = mst.measurement_duration;
 		this.monitoredElementIds = new ArrayList(mst.monitored_element_ids.length);
