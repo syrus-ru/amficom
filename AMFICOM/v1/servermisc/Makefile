@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.3 2004/06/11 13:26:19 arseniy Exp $
+# $Id: Makefile,v 1.4 2004/06/18 08:50:24 bass Exp $
 #
 # vim:set ft=make:
 #
@@ -12,7 +12,7 @@ PASSWORD = amficom
 HOST = RESEARCH
 SERVICE_NAME = SHAITAN
 
-LIBNAME = servermisc.jar
+LIBNAME = $(subst _v1,,$(MODULE_NAME)).jar
 
 SRC_SUFFIXES = \
 	.java \
@@ -26,7 +26,11 @@ CLASS_SUFFIXES = \
 
 SRCDIR = src
 CLASSDIR = classes
+ifeq ($(shell hostname -s),bass)
+LIBDIR = lib
+else
 LIBDIR = ../lib
+endif
 ENCODING = windows-1251
 JAVACFLAGS = -source 1.3 -sourcepath $(SRCDIR) -deprecation -g -O
 SUNJAVACFLAGS = -target 1.2
