@@ -1,5 +1,5 @@
 /*
- * $Id: CMServerImpl.java,v 1.4 2004/09/16 09:03:46 bob Exp $
+ * $Id: CMServerImpl.java,v 1.5 2004/09/16 09:20:57 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -53,7 +53,7 @@ import com.syrus.AMFICOM.measurement.corba.Test_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2004/09/16 09:03:46 $
+ * @version $Revision: 1.5 $, $Date: 2004/09/16 09:20:57 $
  * @author $Author: bob $
  * @module cmserver_v1
  */
@@ -519,12 +519,14 @@ public class CMServerImpl implements CMServerOperations {
 			Identifier domainId = new Identifier(accessIdentifier.domain_id);
 			Domain domain = (Domain) ConfigurationStorableObjectPool.getStorableObject(domainId, true);
 			
-			// List<Identifier> that get from cache
-			List ids = null;		
+			Date start = new Date(startTime);
+			Date end = new Date(endTime);
+			// List<Identifier> that get from cache			
+			List ids = MeasurementStorableObjectPool.getTestsByTimeRange(domain, start, end);		
 
 			try {
 				TestDatabase database = (TestDatabase) MeasurementDatabaseContext.getTestDatabase();
-				list = database.retrieveButIdsByTimeRange(ids, domain, new Date(startTime), new Date(endTime));
+				list = database.retrieveButIdsByTimeRange(ids, domain, start, end);
 			} catch (RetrieveObjectException roe) {
 				Log.errorException(roe);
 				throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, roe
