@@ -1,6 +1,6 @@
 #include <assert.h>
 
-#include "Thresharray.h"
+#include "ThreshArray.h"
 #include "names.h"
 
 // Java object accessors
