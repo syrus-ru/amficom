@@ -82,25 +82,18 @@ public class FileAddCommand extends VoidCommand
 		{
 			System.out.println("DEBUG: the user has added file " + chooser.getSelectedFile().getAbsolutePath()); // FIXME: debugging purpose only
 			String id = chooser.getSelectedFile().getAbsolutePath().toLowerCase();
-			if (!Heap.hasEmptyAllBSMap())
+			if (Heap.hasSecondaryBSKey(id))
 			{
-				Iterator it = Heap.getAllBSMap().keySet().iterator();
-				while (it.hasNext())
-				{
-					if (((String)it.next()).equals(id))
-					{
-						JOptionPane cDialog = new JOptionPane();
-						int ret = JOptionPane.showConfirmDialog (
-								null,
-								LangModelAnalyse.getString("messageFileAlreadyLoaded"),
-								"",
-								JOptionPane.YES_NO_OPTION);
-						if (ret == JOptionPane.NO_OPTION)
-							 return;
-						if (ret == JOptionPane.YES_OPTION)
-							 new FileRemoveCommand(dispatcher, id, aContext).execute();
-					}
-				}
+				//JOptionPane cDialog = new JOptionPane();
+				int ret = JOptionPane.showConfirmDialog (
+						null,
+						LangModelAnalyse.getString("messageFileAlreadyLoaded"),
+						"",
+						JOptionPane.YES_NO_OPTION);
+				if (ret == JOptionPane.NO_OPTION)
+					 return;
+				if (ret == JOptionPane.YES_OPTION)
+					 new FileRemoveCommand(dispatcher, id, aContext).execute();
 			}
 			TraceReader tr = new TraceReader();
 			bs = tr.getData(chooser.getSelectedFile());

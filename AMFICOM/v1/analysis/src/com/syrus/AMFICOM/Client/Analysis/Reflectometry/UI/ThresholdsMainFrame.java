@@ -678,20 +678,13 @@ implements OperationListener, bsHashChangeListener, EtalonMTMListener, CurrentTr
 			aModel.setEnabled("menuTraceReferenceMakeCurrent", false);
 			aModel.fireModelChanged(new String [] {"menuTraceReferenceMakeCurrent"});
 		}
-		Iterator it = Heap.getAllBSMap().keySet().iterator();
-		String nextId = (String)it.next();
-		if (nextId.equals(RefUpdateEvent.PRIMARY_TRACE))
+		Heap.updateCurrentTraceWhenBSRemoved();
+		if (! Heap.hasSecondaryBS())
 		{
-			if (!it.hasNext())
-			{
-				aModel.setEnabled("menuFileRemoveCompare", false);
-				aModel.setEnabled("menuTraceRemoveCompare", false);
-				aModel.fireModelChanged(new String [] {"menuFileRemoveCompare", "menuTraceRemoveCompare"});
-			}
-			else
-				nextId = (String)it.next();
+			aModel.setEnabled("menuFileRemoveCompare", false);
+			aModel.setEnabled("menuTraceRemoveCompare", false);
+			aModel.fireModelChanged(new String [] {"menuFileRemoveCompare", "menuTraceRemoveCompare"});
 		}
-		Heap.setCurrentTrace(nextId);
 	}
 
 	public void bsHashRemovedAll()

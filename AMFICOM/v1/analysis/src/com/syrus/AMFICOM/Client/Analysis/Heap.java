@@ -1,5 +1,5 @@
 /*-
- * $Id: Heap.java,v 1.7 2005/04/01 09:22:31 saa Exp $
+ * $Id: Heap.java,v 1.8 2005/04/01 11:02:52 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -32,7 +32,7 @@ import com.syrus.io.BellcoreStructure;
  * использование остальных методов работы с BS
  * 
  * @author $Author: saa $
- * @version $Revision: 1.7 $, $Date: 2005/04/01 09:22:31 $
+ * @version $Revision: 1.8 $, $Date: 2005/04/01 11:02:52 $
  * @module
  */
 public class Heap
@@ -63,40 +63,28 @@ public class Heap
 		dialogHash.put(key, dialog);
 	}
 
-	public static ModelTraceManager getMTMByKey(String key)
-	{
+	public static ModelTraceManager getMTMByKey(String key) {
 		return (ModelTraceManager)MTMHash.get(key);
 	}
-	public static ModelTraceManager getMTMPrimary()
-	{
+	public static ModelTraceManager getMTMPrimary() {
 		return (ModelTraceManager)MTMHash.get(PRIMARY_TRACE_KEY);
 	}
-	public static ModelTraceManager getMTMEtalon()
-	{
+	public static ModelTraceManager getMTMEtalon() {
 		return (ModelTraceManager)MTMHash.get(ETALON_TRACE_KEY);
 	}
-	public static void setMTMByKey(String key, ModelTraceManager mtm)
-	{
+	public static void setMTMByKey(String key, ModelTraceManager mtm) {
 		MTMHash.put(key, mtm);
 	}
-	public static RefAnalysis getRefAnalysisByKey(String key)
-	{
+	public static RefAnalysis getRefAnalysisByKey(String key) {
 		return (RefAnalysis)refAnalysisHash.get(key);
 	}
-	public static void setRefAnalysisByKey(String key, RefAnalysis ra)
-	{
+	public static void setRefAnalysisByKey(String key, RefAnalysis ra) {
 		refAnalysisHash.put(key, ra);
 	}
-	public static BellcoreStructure getAnyBSTraceByKey(String key)
-	{
+	public static BellcoreStructure getAnyBSTraceByKey(String key) {
 		return (BellcoreStructure )bsHash.get(key);
 	}
-	public static void setAnyBSTraceByKey(String key, BellcoreStructure bs)
-	{
-		bsHash.put(key, bs);
-	}
-	public static void putSecondaryTraceByKey(String key, BellcoreStructure bs)
-	{
+	public static void putSecondaryTraceByKey(String key, BellcoreStructure bs) {
 		bsHash.put(key, bs);
 	}
 	public static BellcoreStructure getBSPrimaryTrace() {
@@ -118,79 +106,81 @@ public class Heap
 	{
 		bsHash.put(REFERENCE_TRACE_KEY, primaryTrace);
 	}
-	public static Map getAllBSMap()
-	{
-		return bsHash;
+	public static boolean hasSecondaryBSKey(String id) {
+		return bsHash.containsKey(id);
 	}
-	public static boolean hasEmptyAllBSMap()
-	{
-		return getAllBSMap().isEmpty();
+	public static boolean hasEmptyAllBSMap() {
+		return bsHash.isEmpty();
+	}
+	private static String getFirstSecondaryBSKey() {
+		Iterator it = bsHash.entrySet().iterator();
+		while (it.hasNext())
+		{
+			String key = (String)it.next();
+			if (key == PRIMARY_TRACE_KEY)
+				continue;
+			return key;
+		}
+		return null;
+	}
+	public static void updateCurrentTraceWhenBSRemoved() {
+		if (!bsHash.containsKey(currentTrace))
+			currentTrace = getFirstSecondaryBSKey();
+		if (currentTrace == null)
+			currentTrace = PRIMARY_TRACE_KEY;
+	}
+	public static boolean hasSecondaryBS() {
+		return getFirstSecondaryBSKey() == null ? false : true; 
 	}
 
-	public static double[] getMinuitInitialParams()
-	{
+	public static double[] getMinuitInitialParams() {
 		return minuitInitialParams;
 	}
-	public static void setMinuitInitialParams(double[] minuitInitialParams)
-	{
+	public static void setMinuitInitialParams(double[] minuitInitialParams) {
 		Heap.minuitInitialParams = minuitInitialParams;
 	}
-	public static double[] getMinuitDefaultParams()
-	{
+	public static double[] getMinuitDefaultParams() {
 		return minuitDefaultParams;
 	}
-	public static void setMinuitDefaultParams(double[] minuitDefaults)
-	{
+	public static void setMinuitDefaultParams(double[] minuitDefaults) {
 		Heap.minuitDefaultParams = minuitDefaults;
 	}
-	public static double[] getMinuitAnalysisParams()
-	{
+	public static double[] getMinuitAnalysisParams() {
 		return minuitAnalysisParams;
 	}
-	public static void setMinuitAnalysisParams(double[] minuitAnalysisParams)
-	{
+	public static void setMinuitAnalysisParams(double[] minuitAnalysisParams) {
 		Heap.minuitAnalysisParams = minuitAnalysisParams;
 	}
-	public static MeasurementSetup getContextMeasurementSetup()
-	{
+	public static MeasurementSetup getContextMeasurementSetup() {
 		return contextMeasurementSetup;
 	}
 	public static void setContextMeasurementSetup(
-			MeasurementSetup contextMeasurementSetup)
-	{
+			MeasurementSetup contextMeasurementSetup) {
 		Heap.contextMeasurementSetup = contextMeasurementSetup;
 	}
-	public static Map getBsBellCoreMap()
-	{
+	public static Map getBsBellCoreMap() {
 		return bsBellCoreMap;
 	}
-	public static void setBsBellCoreMap(Map bsBellCoreMap)
-	{
+	public static void setBsBellCoreMap(Map bsBellCoreMap) {
 		Heap.bsBellCoreMap = bsBellCoreMap;
 	}
-	public static Double getMinTraceLevel()
-	{
+	public static Double getMinTraceLevel() {
 		return minTraceLevel;
 	}
-	public static void setMinTraceLevel(Double minTraceLevel)
-	{
+	public static void setMinTraceLevel(Double minTraceLevel) {
 		Heap.minTraceLevel = minTraceLevel;
 	}
-	public static void removeAllBS()
-	{
+	public static void removeAllBS() {
 		bsHash = new HashMap();
 	}
-	public static void removeAnyBSByName(String id)
-	{
+	public static void removeAnyBSByName(String id) {
 		bsHash.remove(id);
 	}
-	public static void setEtalonEtalonMetas(Set metas)
-	{
+	public static void setEtalonEtalonMetas(Set metas) {
 		// @todo: may be required in Survey
 		//Pool.put("etalon", ETALON, metas);
 	}
-	public static void setActiveContextActivePathIDToEmptyString()
-	{
+	public static void setActiveContextActivePathIDToEmptyString() {
 		// @todo: may be required in Survey
 		//Pool.put("activecontext", "activepathid", "");
 	}
