@@ -1,5 +1,5 @@
 /*
- * $Id: TemporalPatternDatabase.java,v 1.31 2005/01/21 14:39:19 arseniy Exp $
+ * $Id: TemporalPatternDatabase.java,v 1.32 2005/01/27 16:24:51 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,15 +35,12 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.31 $, $Date: 2005/01/21 14:39:19 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.32 $, $Date: 2005/01/27 16:24:51 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
 public class TemporalPatternDatabase extends StorableObjectDatabase {
-	public static final String COLUMN_DESCRIPTION 	= "description";
-	public static final String COLUMN_VALUE 		= "value";
-		
 	public static final int CHARACTER_NUMBER_OF_RECORDS = 1;
 
 	private TemporalPattern fromStorableObject(StorableObject storableObject) throws IllegalDataException {
@@ -62,8 +59,8 @@ public class TemporalPatternDatabase extends StorableObjectDatabase {
 	protected String getColumns(int mode) {
 		if (columns == null){
 			columns = super.getColumns(mode) + COMMA
-				+ COLUMN_DESCRIPTION + COMMA
-				+ COLUMN_VALUE;
+				+ TemporalPatternWrapper.COLUMN_DESCRIPTION + COMMA
+				+ TemporalPatternWrapper.COLUMN_VALUE;
 		}
 		return columns;
 	}	
@@ -93,12 +90,12 @@ public class TemporalPatternDatabase extends StorableObjectDatabase {
 		TemporalPattern temporalPattern = (storableObject == null) ?
 				new TemporalPattern(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID), null, null, null):
 				this.fromStorableObject(storableObject);
-		String[] cronStrings = ((CronStringArray)(((OracleResultSet)resultSet).getORAData(COLUMN_VALUE, CronStringArray.getORADataFactory()))).getArray();
+		String[] cronStrings = ((CronStringArray)(((OracleResultSet)resultSet).getORAData(TemporalPatternWrapper.COLUMN_VALUE, CronStringArray.getORADataFactory()))).getArray();
 		temporalPattern.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
 									  DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
 									  DatabaseIdentifier.getIdentifier(resultSet, COLUMN_CREATOR_ID),
 									  DatabaseIdentifier.getIdentifier(resultSet, COLUMN_MODIFIER_ID),
-									  DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_DESCRIPTION)),
+									  DatabaseString.fromQuerySubString(resultSet.getString(TemporalPatternWrapper.COLUMN_DESCRIPTION)),
 									  cronStrings);
 		return temporalPattern;
 	}
