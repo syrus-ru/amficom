@@ -1,9 +1,22 @@
+/*
+ * $Id: JDBCConnectionInfo.java,v 1.2 2004/08/20 13:47:37 bass Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ.
+ */
+
 package com.syrus.AMFICOM.Client.General;
 
-import com.syrus.AMFICOM.server.*;
-import com.syrus.AMFICOM.server.Object.*;
+import com.syrus.AMFICOM.server.ConnectionManager;
+import com.syrus.AMFICOM.server.object.AMFICOMServer;
 import java.util.logging.*;
 
+/**
+ * @version $Revision: 1.2 $, $Date: 2004/08/20 13:47:37 $
+ * @author $Author: bass $
+ * @module connjdbc_v1
+ */
 public class JDBCConnectionInfo extends RISDConnectionInfo 
 {
 	private boolean connected = false;
