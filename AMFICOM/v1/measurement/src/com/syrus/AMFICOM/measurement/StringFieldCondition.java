@@ -1,5 +1,5 @@
 /*
- * $Id: StringFieldCondition.java,v 1.1 2004/10/06 06:47:51 bob Exp $
+ * $Id: StringFieldCondition.java,v 1.2 2004/10/06 14:42:20 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,7 +13,7 @@ import com.syrus.AMFICOM.measurement.corba.StringFieldCondition_Transferable;
 
 
 /**
- * @version $Revision: 1.1 $, $Date: 2004/10/06 06:47:51 $
+ * @version $Revision: 1.2 $, $Date: 2004/10/06 14:42:20 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -31,6 +31,11 @@ public class StringFieldCondition implements StorableObjectCondition {
 		this.string = string;
 		this.entityCode = entityCode;		
 	}
+
+	public StringFieldCondition(String string, short entityCode){
+		this(string, new Short(entityCode));		
+	}
+
 	
 	public boolean isConditionTrue(Object object) throws ApplicationException {
 		boolean condition = false;
