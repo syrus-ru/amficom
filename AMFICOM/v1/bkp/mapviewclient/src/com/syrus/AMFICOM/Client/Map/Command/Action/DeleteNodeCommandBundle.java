@@ -1,5 +1,5 @@
 /**
- * $Id: DeleteNodeCommandBundle.java,v 1.7 2004/10/20 10:14:39 krupenn Exp $
+ * $Id: DeleteNodeCommandBundle.java,v 1.8 2004/10/20 12:38:40 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -13,6 +13,7 @@ package com.syrus.AMFICOM.Client.Map.Command.Action;
 
 import com.syrus.AMFICOM.Client.General.Event.MapEvent;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
+import com.syrus.AMFICOM.Client.General.Model.MapApplicationModel;
 import com.syrus.AMFICOM.Client.Resource.Map.Map;
 import com.syrus.AMFICOM.Client.Resource.Map.MapElementState;
 import com.syrus.AMFICOM.Client.Resource.Map.MapMarkElement;
@@ -36,7 +37,7 @@ import java.util.List;
  * 
  * 
  * 
- * @version $Revision: 1.7 $, $Date: 2004/10/20 10:14:39 $
+ * @version $Revision: 1.8 $, $Date: 2004/10/20 12:38:40 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -63,7 +64,7 @@ public class DeleteNodeCommandBundle extends MapActionCommandBundle
 	 */
 	protected void deleteSite(MapSiteNodeElement node)
 	{
-		if ( !getContext().getApplicationModel().isEnabled("mapActionDeleteEquipment"))
+		if ( !getContext().getApplicationModel().isEnabled(MapApplicationModel.ACTION_EDIT_MAP))
 		{
 			return;
 		}
@@ -205,7 +206,7 @@ public class DeleteNodeCommandBundle extends MapActionCommandBundle
 	 */
 	public void deletePhysicalNode(MapPhysicalNodeElement node)
 	{
-		if ( !getContext().getApplicationModel().isEnabled("mapActionDeleteNode"))
+		if ( !getContext().getApplicationModel().isEnabled(MapApplicationModel.ACTION_EDIT_MAP))
 			return;
 
 		MapPhysicalLinkElement physicalLink = map
@@ -352,6 +353,9 @@ public class DeleteNodeCommandBundle extends MapActionCommandBundle
 	 */
 	protected void deleteUnbound(MapUnboundNodeElement unbound)
 	{
+		if ( !getContext().getApplicationModel().isEnabled(MapApplicationModel.ACTION_EDIT_BINDING))
+			return;
+
 		MapView mapView = logicalNetLayer.getMapView();
 	
 		super.removeNode(unbound);
@@ -373,7 +377,7 @@ public class DeleteNodeCommandBundle extends MapActionCommandBundle
 	 */
 	public void deleteMark(MapMarkElement node)
 	{
-		if ( !getContext().getApplicationModel().isEnabled("mapActionMarkDelete"))
+		if ( !getContext().getApplicationModel().isEnabled(MapApplicationModel.ACTION_EDIT_MAP))
 			return;
 
 		super.removeNode(node);

@@ -1,5 +1,5 @@
 /**
- * $Id: MapMarkElementStrategy.java,v 1.4 2004/10/19 11:48:28 krupenn Exp $
+ * $Id: MapMarkElementStrategy.java,v 1.5 2004/10/20 12:38:40 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -13,6 +13,7 @@ package com.syrus.AMFICOM.Client.Map.Strategy;
 
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
+import com.syrus.AMFICOM.Client.General.Model.MapApplicationModel;
 import com.syrus.AMFICOM.Client.Map.Command.Action.MoveMarkCommand;
 import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
 import com.syrus.AMFICOM.Client.Map.MapCoordinatesConverter;
@@ -32,7 +33,7 @@ import javax.swing.SwingUtilities;
  * 
  * 
  * 
- * @version $Revision: 1.4 $, $Date: 2004/10/19 11:48:28 $
+ * @version $Revision: 1.5 $, $Date: 2004/10/20 12:38:40 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -114,7 +115,8 @@ public final class MapMarkElementStrategy implements  MapStrategy
 				if(command == null)
 					command = new MoveMarkCommand(mark);
 				
-				if (aContext.getApplicationModel().isEnabled("mapActionMarkMove"))
+				if (aContext.getApplicationModel().isEnabled(
+						MapApplicationModel.ACTION_EDIT_MAP))
 				{
 //						mark.link.setSelected(true);
 

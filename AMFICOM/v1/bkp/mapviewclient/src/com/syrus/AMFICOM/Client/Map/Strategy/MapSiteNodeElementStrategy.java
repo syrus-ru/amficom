@@ -1,5 +1,5 @@
 /**
- * $Id: MapSiteNodeElementStrategy.java,v 1.3 2004/10/19 11:48:28 krupenn Exp $
+ * $Id: MapSiteNodeElementStrategy.java,v 1.4 2004/10/20 12:38:40 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -14,6 +14,7 @@ package com.syrus.AMFICOM.Client.Map.Strategy;
 import com.syrus.AMFICOM.Client.General.Command.Command;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
+import com.syrus.AMFICOM.Client.General.Model.MapApplicationModel;
 import com.syrus.AMFICOM.Client.Map.Command.Action.CreateNodeLinkCommandBundle;
 import com.syrus.AMFICOM.Client.Map.Command.Action.MoveSelectionCommandBundle;
 import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
@@ -32,7 +33,7 @@ import javax.swing.SwingUtilities;
  * 
  * 
  * 
- * @version $Revision: 1.3 $, $Date: 2004/10/19 11:48:28 $
+ * @version $Revision: 1.4 $, $Date: 2004/10/20 12:38:40 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -110,7 +111,8 @@ public final class MapSiteNodeElementStrategy implements  MapStrategy
 				if (actionMode == MapState.MOVE_ACTION_MODE)
 				{
 					//Если разрешено то перемещаем объект
-					if ( aContext.getApplicationModel().isEnabled("mapActionMoveEquipment"))
+					if ( aContext.getApplicationModel().isEnabled(
+						MapApplicationModel.ACTION_EDIT_MAP))
 					{
 						if(command == null)
 						{

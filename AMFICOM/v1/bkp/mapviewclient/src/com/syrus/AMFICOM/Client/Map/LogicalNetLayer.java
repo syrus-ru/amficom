@@ -1,5 +1,5 @@
 /**
- * $Id: LogicalNetLayer.java,v 1.14 2004/10/20 10:14:39 krupenn Exp $
+ * $Id: LogicalNetLayer.java,v 1.15 2004/10/20 12:38:40 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -21,6 +21,7 @@ import com.syrus.AMFICOM.Client.General.Event.TreeListSelectionEvent;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
+import com.syrus.AMFICOM.Client.General.Model.MapApplicationModel;
 import com.syrus.AMFICOM.Client.Map.Command.Action.DeleteSelectionCommand;
 import com.syrus.AMFICOM.Client.Map.Command.Action.MoveNodeCommand;
 import com.syrus.AMFICOM.Client.Map.Command.Action.MoveSelectionCommandBundle;
@@ -70,7 +71,7 @@ import java.util.Set;
  * 
  * 
  * 
- * @version $Revision: 1.14 $, $Date: 2004/10/20 10:14:39 $
+ * @version $Revision: 1.15 $, $Date: 2004/10/20 12:38:40 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -369,7 +370,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 
 			if(aContext != null)
 				if(aContext.getApplicationModel() != null)
-					if (aContext.getApplicationModel().isEnabled("mapActionIndication"))
+					if (aContext.getApplicationModel().isEnabled(MapApplicationModel.ACTION_INDICATION))
 				{
 					animateThread = new AnimateThread(this);
 					animateThread.start();
@@ -670,10 +671,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 			MapNodeElement curNode = (MapNodeElement )e.next();
 			if ( curNode instanceof MapSiteNodeElement)
 			{
-				if ( aContext.getApplicationModel().isEnabled("mapActionShowEquipment"))
-				{
-					curNode.paint(pg, visibleBounds);
-				}
+				curNode.paint(pg, visibleBounds);
 			}
 			if ( curNode instanceof MapPhysicalNodeElement)
 			{
@@ -684,12 +682,9 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 			}
 			if ( curNode instanceof MapMarkElement)
 			{
-				if (aContext.getApplicationModel().isEnabled("mapActionMarkShow"))
-				{
 //					MapMarkElement mme = (MapMarkElement )curNode;
 //					mme.moveToFromStartLt(mme.getDistance());
-					curNode.paint(pg, visibleBounds);
-				}
+				curNode.paint(pg, visibleBounds);
 			}
 		}
 

@@ -1,5 +1,5 @@
 /**
- * $Id: InsertSiteCommandBundle.java,v 1.1 2004/10/19 10:07:43 krupenn Exp $
+ * $Id: InsertSiteCommandBundle.java,v 1.2 2004/10/20 12:38:40 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -13,6 +13,7 @@ package com.syrus.AMFICOM.Client.Map.Command.Action;
 import com.syrus.AMFICOM.Client.General.Event.MapEvent;
 import com.syrus.AMFICOM.Client.General.Event.MapNavigateEvent;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
+import com.syrus.AMFICOM.Client.General.Model.MapApplicationModel;
 import com.syrus.AMFICOM.Client.Resource.Map.Map;
 import com.syrus.AMFICOM.Client.Resource.Map.MapElementState;
 import com.syrus.AMFICOM.Client.Resource.Map.MapNodeLinkElement;
@@ -30,7 +31,7 @@ import java.util.Iterator;
 /**
  * вставить сетевой узел вместо топологического узла
  * 
- * @version $Revision: 1.1 $, $Date: 2004/10/19 10:07:43 $
+ * @version $Revision: 1.2 $, $Date: 2004/10/20 12:38:40 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -82,7 +83,7 @@ public class InsertSiteCommandBundle extends MapActionCommandBundle
 				"execute()");
 
 		if ( !getLogicalNetLayer().getContext().getApplicationModel()
-				.isEnabled("mapActionCreateEquipment"))
+				.isEnabled(MapApplicationModel.ACTION_EDIT_MAP))
 			return;
 		
 		map = logicalNetLayer.getMapView().getMap();

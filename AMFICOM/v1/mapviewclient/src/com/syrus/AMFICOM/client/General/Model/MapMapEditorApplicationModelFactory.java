@@ -1,4 +1,5 @@
 package com.syrus.AMFICOM.Client.General.Model;
+import com.syrus.AMFICOM.Client.General.Model.MapApplicationModel;
 
 public class MapMapEditorApplicationModelFactory
 		extends MapApplicationModelFactory 
@@ -7,38 +8,8 @@ public class MapMapEditorApplicationModelFactory
 	{
 		ApplicationModel aModel = super.create();
 
-		aModel.setUsable("mapActionMoveNode", true);
-		aModel.setUsable("mapActionMoveEquipment", true);
-		aModel.setUsable("mapActionMoveKIS", true);
-		aModel.setUsable("mapActionShowLink", true);
-		aModel.setUsable("mapActionShowEquipment", true);
-		aModel.setUsable("mapActionShowKIS", true);
-		aModel.setUsable("mapActionShowPath", true);
-		aModel.setUsable("mapActionCreateLink", true);
-		aModel.setUsable("mapActionCreateEquipment", true);
-		aModel.setUsable("mapActionCreateKIS", true);
-		aModel.setUsable("mapActionCreatePath", true);
-		aModel.setUsable("mapActionDeleteNode", true);
-		aModel.setUsable("mapActionDeleteEquipment", true);
-		aModel.setUsable("mapActionDeleteKIS", true);
-		aModel.setUsable("mapActionDeletePath", true);
-		aModel.setUsable("mapActionMarkerMove", false);
-		aModel.setUsable("mapActionMarkerCreate", false);
-		aModel.setUsable("mapActionMarkerDelete", false);
-		aModel.setUsable("mapActionMarkShow", true);
-		aModel.setUsable("mapActionMarkMove", true);
-		aModel.setUsable("mapActionMarkCreate", true);
-		aModel.setUsable("mapActionMarkDelete", true);
-		aModel.setUsable("mapActionIndication", false);
-		aModel.setUsable("mapActionViewProperties", true);
-		aModel.setUsable("mapActionEditProperties", true);
-
-		aModel.setUsable("mapActionShowProto", false);
-		aModel.setUsable("mapActionReload", false);
-
-		aModel.setUsable("mapModeNodeLink", true);
-		aModel.setUsable("mapModeLink", true);
-		aModel.setUsable("mapModePath", true);
+		aModel.setUsable(MapApplicationModel.ACTION_INDICATION, false);
+		aModel.setUsable(MapApplicationModel.ACTION_USE_MARKER, false);
 
 		return aModel;
 	}

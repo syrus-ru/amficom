@@ -1,5 +1,5 @@
 /**
- * $Id: MapFrame.java,v 1.7 2004/10/20 10:14:39 krupenn Exp $
+ * $Id: MapFrame.java,v 1.8 2004/10/20 12:38:40 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -66,7 +66,7 @@ import javax.swing.event.InternalFrameEvent;
  * 
  * 
  * 
- * @version $Revision: 1.7 $, $Date: 2004/10/20 10:14:39 $
+ * @version $Revision: 1.8 $, $Date: 2004/10/20 12:38:40 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -500,7 +500,8 @@ public class MapFrame extends JInternalFrame
 
 			if(aContext != null)
 				if(aContext.getApplicationModel() != null)
-					if (aContext.getApplicationModel().isEnabled("mapActionIndication"))
+					if (aContext.getApplicationModel().isEnabled(
+						MapApplicationModel.ACTION_INDICATION))
 				{
 					animateThread = new AnimateThread(lnl());
 					animateThread.start();
@@ -524,6 +525,9 @@ public class MapFrame extends JInternalFrame
 		boolean canClose;
 	
 		Map map = getMapView().getMap();
+		
+		if(!getContext().getApplicationModel().isEnabled("mapsave"))
+			return false;
 		
 		if(map.isChanged())
 		{
@@ -568,6 +572,9 @@ public class MapFrame extends JInternalFrame
 	
 		MapView mapView = getMapView();
 		
+		if(!getContext().getApplicationModel().isEnabled("mapsave"))
+			return false;
+
 		if(mapView.isChanged())
 		{
 			String message = "Объект " + mapView.getName() 

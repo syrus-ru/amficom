@@ -1,5 +1,5 @@
 /**
- * $Id: PlaceSchemeElementCommand.java,v 1.3 2004/10/19 10:07:43 krupenn Exp $
+ * $Id: PlaceSchemeElementCommand.java,v 1.4 2004/10/20 12:38:40 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -13,6 +13,7 @@ package com.syrus.AMFICOM.Client.Map.Command.Action;
 import com.syrus.AMFICOM.Client.General.Event.MapEvent;
 import com.syrus.AMFICOM.Client.General.Event.MapNavigateEvent;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
+import com.syrus.AMFICOM.Client.General.Model.MapApplicationModel;
 import com.syrus.AMFICOM.Client.Resource.Map.Map;
 import com.syrus.AMFICOM.Client.Resource.Map.MapElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapSiteNodeElement;
@@ -29,7 +30,7 @@ import java.awt.geom.Point2D;
  * Разместить c[tvysq элемент на карте в соответствии с привязкой
  * или по координатам
  * 
- * @version $Revision: 1.3 $, $Date: 2004/10/19 10:07:43 $
+ * @version $Revision: 1.4 $, $Date: 2004/10/20 12:38:40 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -89,7 +90,7 @@ public class PlaceSchemeElementCommand extends MapActionCommandBundle
 				"execute()");
 
 		if ( !getLogicalNetLayer().getContext().getApplicationModel()
-				.isEnabled("mapActionCreateEquipment"))
+				.isEnabled(MapApplicationModel.ACTION_EDIT_BINDING))
 			return;
 		
 		// если географическая точка не задана, получить ее из экранной точки

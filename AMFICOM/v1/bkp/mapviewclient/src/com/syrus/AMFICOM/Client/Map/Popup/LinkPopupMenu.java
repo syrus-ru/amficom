@@ -2,6 +2,7 @@ package com.syrus.AMFICOM.Client.Map.Popup;
 
 import com.syrus.AMFICOM.Client.General.Event.MapEvent;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
+import com.syrus.AMFICOM.Client.General.Model.MapApplicationModel;
 import com.syrus.AMFICOM.Client.Map.Command.Action.CreateMarkCommandAtomic;
 import com.syrus.AMFICOM.Client.Resource.Map.MapElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalLinkElement;
@@ -56,6 +57,9 @@ public final class LinkPopupMenu extends MapPopupMenu
 		newCollectorMenuItem.setVisible(collector == null);
 		removeCollectorMenuItem.setVisible(collector != null);
 		removeFromCollectorMenuItem.setVisible(collector != null);
+		addMarkMenuItem.setVisible(
+			getLogicalNetLayer().getContext().getApplicationModel().isEnabled(
+					MapApplicationModel.ACTION_EDIT_MAP));
 		if(collector != null)
 		{
 			removeCollectorMenuItem.setText(
@@ -156,16 +160,12 @@ public final class LinkPopupMenu extends MapPopupMenu
 
 	private void addMark()
 	{
-		if ( getLogicalNetLayer().getContext().getApplicationModel().isEnabled("mapActionMarkCreate"))
-		{
+		CreateMarkCommandAtomic command = new CreateMarkCommandAtomic(link, point);
+		command.setLogicalNetLayer(logicalNetLayer);
+		getLogicalNetLayer().getCommandList().add(command);
+		getLogicalNetLayer().getCommandList().execute();
 
-			CreateMarkCommandAtomic command = new CreateMarkCommandAtomic(link, point);
-			command.setLogicalNetLayer(logicalNetLayer);
-			getLogicalNetLayer().getCommandList().add(command);
-			getLogicalNetLayer().getCommandList().execute();
-	
-			getLogicalNetLayer().repaint();
-		}
+		getLogicalNetLayer().repaint();
 	}
 
 	private void newCollector()

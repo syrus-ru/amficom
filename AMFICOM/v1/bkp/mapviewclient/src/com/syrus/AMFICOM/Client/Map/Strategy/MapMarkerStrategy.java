@@ -1,5 +1,5 @@
 /**
- * $Id: MapMarkerStrategy.java,v 1.2 2004/10/19 11:48:28 krupenn Exp $
+ * $Id: MapMarkerStrategy.java,v 1.3 2004/10/20 12:38:40 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -27,7 +27,7 @@ import java.awt.event.MouseEvent;
  * 
  * 
  * 
- * @version $Revision: 1.2 $, $Date: 2004/10/19 11:48:28 $
+ * @version $Revision: 1.3 $, $Date: 2004/10/20 12:38:40 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -86,7 +86,8 @@ public final class MapMarkerStrategy implements  MapStrategy
 				case MapState.MOUSE_DRAGGED:
 					//ѕроверка того что маркер можно перемещать и его перемещение
 					if ( lnl.mapMainFrame
-							.aContext.getApplicationModel().isEnabled("mapActionMarkerMove"))
+							.aContext.getApplicationModel().isEnabled(
+								MapApplicationModel.ACTION_USE_MARKER))
 					if(isMovable())
 					{
 						transmissionPath.select();

@@ -1,5 +1,5 @@
 /**
- * $Id: MapMarker.java,v 1.11 2004/10/19 11:48:28 krupenn Exp $
+ * $Id: MapMarker.java,v 1.12 2004/10/20 12:38:40 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -55,7 +55,7 @@ import java.awt.geom.Rectangle2D;
  * 
  * 
  * 
- * @version $Revision: 1.11 $, $Date: 2004/10/19 11:48:28 $
+ * @version $Revision: 1.12 $, $Date: 2004/10/20 12:38:40 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -668,7 +668,8 @@ public class MapMarker extends MapNodeElement implements MapElement
 /*
 		LogicalNetLayer lnl = getLogicalNetLayer();
 		if ( lnl.mapMainFrame
-				.aContext.getApplicationModel().isEnabled("mapActionMarkerMove"))
+				.aContext.getApplicationModel().isEnabled(
+					MapApplicationModel.ACTION_USE_MARKER))
 		{
 			double pathl = transmissionPath.getSizeInDoubleLt();
 			if ( distance > pathl)
@@ -759,7 +760,8 @@ public class MapMarker extends MapNodeElement implements MapElement
 		distance = dist;
 
 		if ( transmissionPath.getLogicalNetLayer().mapMainFrame
-				.aContext.getApplicationModel().isEnabled("mapActionMarkerMove"))
+				.aContext.getApplicationModel().isEnabled(
+					MapApplicationModel.ACTION_USE_MARKER))
 		{
 			double pathl = transmissionPath.getSizeInDoubleLf();
 			if ( distance > pathl)
@@ -820,7 +822,7 @@ public class MapMarker extends MapNodeElement implements MapElement
 					path_length += mple.getSizeInDoubleLf();
 				}
 			}// for(Enumeration plen
-		}// if ( isEnabled("mapActionMarkerMove")
+		}// if ( isEnabled(MapApplicationModel.ACTION_USE_MARKER)
 */
 	}
 
@@ -908,7 +910,8 @@ public class MapMarker extends MapNodeElement implements MapElement
 	{
 /*
 		if ( transmissionPath.getLogicalNetLayer().mapMainFrame
-				.aContext.getApplicationModel().isEnabled("mapActionMarkerMove"))
+				.aContext.getApplicationModel().isEnabled(
+					MapApplicationModel.ACTION_USE_MARKER))
 		{
 			return true;
 		}

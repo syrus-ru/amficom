@@ -1,5 +1,5 @@
 /**
- * $Id: CreateUnboundNodeCommandAtomic.java,v 1.1 2004/10/19 10:07:43 krupenn Exp $
+ * $Id: CreateUnboundNodeCommandAtomic.java,v 1.2 2004/10/20 12:38:40 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,6 +11,7 @@
 package com.syrus.AMFICOM.Client.Map.Command.Action;
 
 import com.syrus.AMFICOM.Client.General.Model.Environment;
+import com.syrus.AMFICOM.Client.General.Model.MapApplicationModel;
 import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
 import com.syrus.AMFICOM.Client.Resource.Map.Map;
 import com.syrus.AMFICOM.Client.Resource.Map.MapSiteNodeElement;
@@ -24,7 +25,7 @@ import java.awt.geom.Point2D;
  * Разместить сетевой элемент на карте. используется при переносе 
  * (drag/drop), в точке point (в экранных координатах)
  * 
- * @version $Revision: 1.1 $, $Date: 2004/10/19 10:07:43 $
+ * @version $Revision: 1.2 $, $Date: 2004/10/20 12:38:40 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -69,7 +70,7 @@ public class CreateUnboundNodeCommandAtomic extends MapActionCommand
 				"execute()");
 
 		if ( !getLogicalNetLayer().getContext().getApplicationModel()
-				.isEnabled("mapActionCreateEquipment"))
+				.isEnabled(MapApplicationModel.ACTION_EDIT_BINDING))
 			return;
 		
 		DataSourceInterface dataSource = aContext.getDataSource();
