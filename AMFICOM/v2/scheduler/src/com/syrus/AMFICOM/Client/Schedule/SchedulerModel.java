@@ -506,7 +506,12 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 					//if (testSetupIds==null)
 					//	testSetupIds=new ArrayList();
 					//testSetupIds.add(test.getTestSetupId());
-					dsi.loadTestSetup(test.getTestSetupId());
+					String testSetupId = test.getTestSetupId();
+					if ((testSetupId != null) && (testSetupId.length() > 0)) {
+						Environment.log(Environment.LOG_LEVEL_INFO, "loading test setup:" + test.getTestSetupId()
+								+ " for test:" + test.getId());
+						dsi.loadTestSetup(testSetupId);
+					}
 				}
 
 				TestArgumentSet testArgumentSet = (TestArgumentSet) Pool.get(TestArgumentSet.typ, test
@@ -760,16 +765,16 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 	 */
 	public void setFilter(ObjectResourceFilter filter) {
 		this.filter = filter;
-//		Vector v = this.filter.getCriteria();
-//		for(Iterator it=v.iterator();it.hasNext();){
-//			FilterExpressionInterface fei = (FilterExpressionInterface)it.next();
-//			System.out.println("name:"+fei.getName()+"\tid:"+fei.getId());
-//			Vector v2= 	fei.getVec();
-//			for(Iterator it2=v2.iterator();it2.hasNext();){
-//				Object obj = it2.next();
-//				System.out.println("'"+obj+"'");
-//			}
-//		}
+		//		Vector v = this.filter.getCriteria();
+		//		for(Iterator it=v.iterator();it.hasNext();){
+		//			FilterExpressionInterface fei = (FilterExpressionInterface)it.next();
+		//			System.out.println("name:"+fei.getName()+"\tid:"+fei.getId());
+		//			Vector v2= fei.getVec();
+		//			for(Iterator it2=v2.iterator();it2.hasNext();){
+		//				Object obj = it2.next();
+		//				System.out.println("'"+obj+"'");
+		//			}
+		//		}
 		if (this.allTests != null && !this.allTests.isEmpty()) {
 			this.dispatcher.notify(new OperationEvent(this, 0, SchedulerModel.COMMAND_CLEAN));
 			for (Iterator it = this.tests.iterator(); it.hasNext();) {
@@ -778,10 +783,10 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 					this.allTests.add(obj);
 			}
 
-//			for (Iterator it = this.allTests.iterator(); it.hasNext();) {
-//				Test test = (Test) it.next();
-//								System.out.println("allTests > filter:" + test.getId());
-//			}
+			//			for (Iterator it = this.allTests.iterator(); it.hasNext();) {
+			//				Test test = (Test) it.next();
+			//								System.out.println("allTests > filter:" + test.getId());
+			//			}
 
 			if (this.unsavedTests != null) {
 				for (Iterator it = this.unsavedTests.iterator(); it.hasNext();) {
@@ -791,24 +796,24 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 				}
 			}
 
-//			DataSet testSet = new DataSet(this.allTests);
-//			testSet = this.filter.filter(testSet);
-//			this.tests.clear();
-//			for (Iterator it = testSet.iterator(); it.hasNext();) {
-//				Test test = (Test) it.next();
-////				System.out.println("filtered test:" + test.getId());
-//				this.tests.add(test);
-//			}
+			//			DataSet testSet = new DataSet(this.allTests);
+			//			testSet = this.filter.filter(testSet);
+			//			this.tests.clear();
+			//			for (Iterator it = testSet.iterator(); it.hasNext();) {
+			//				Test test = (Test) it.next();
+			//// System.out.println("filtered test:" + test.getId());
+			//				this.tests.add(test);
+			//			}
 			this.filter.filtrate(this.allTests, this.tests);
 
 			if (this.allUnsavedTests != null) {
-//				testSet = new DataSet(this.allUnsavedTests);
-//				testSet = this.filter.filter(testSet);
-//				this.unsavedTests.clear();
-//				for (Iterator it = testSet.iterator(); it.hasNext();) {
-//					Test test = (Test) it.next();
-//					this.unsavedTests.add(test);
-//				}
+				//				testSet = new DataSet(this.allUnsavedTests);
+				//				testSet = this.filter.filter(testSet);
+				//				this.unsavedTests.clear();
+				//				for (Iterator it = testSet.iterator(); it.hasNext();) {
+				//					Test test = (Test) it.next();
+				//					this.unsavedTests.add(test);
+				//				}
 				this.filter.filtrate(this.allUnsavedTests, this.unsavedTests);
 			}
 			//						for (Iterator it = this.tests.iterator(); it.hasNext();) {

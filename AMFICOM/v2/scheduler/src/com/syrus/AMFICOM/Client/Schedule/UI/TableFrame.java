@@ -526,9 +526,10 @@ public class TableFrame extends JInternalFrame implements OperationListener {
 			});
 			{
 				//int vColIndex = 0;
+				TestTableCellRenderer tableCellRenderer = new TestTableCellRenderer();
 				for (int vColIndex = 0; vColIndex < tableModel.getColumnCount(); vColIndex++) {
 					TableColumn col = this.listTable.getColumnModel().getColumn(vColIndex);
-					col.setCellRenderer(new TestTableCellRenderer());
+					col.setCellRenderer(tableCellRenderer);
 				}
 			}
 			JTableHeader header = this.listTable.getTableHeader();
