@@ -159,6 +159,7 @@ src\com\syrus\AMFICOM\Client\Map\Props\MapSitePane.java
 src\com\syrus\AMFICOM\Client\Map\Props\MapUnboundLinkPropertiesController.java
 src\com\syrus\AMFICOM\Client\Map\Props\MapViewPanel.java
 src\com\syrus\AMFICOM\Client\Map\Props\MapVoidElementPropertiesController.java
+src\com\syrus\AMFICOM\Client\Map\Props\ObjectResourceLabel.java
 src\com\syrus\AMFICOM\Client\Map\Props\TunnelLayout.java
 src\com\syrus\AMFICOM\Client\Map\Setup\AMFICOMSearchPanel.java
 src\com\syrus\AMFICOM\Client\Map\Setup\ControlsFrame.java
