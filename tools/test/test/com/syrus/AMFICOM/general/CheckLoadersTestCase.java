@@ -1,5 +1,5 @@
 /*
- * $Id: CheckLoadersTestCase.java,v 1.1 2005/02/02 07:24:09 bob Exp $
+ * $Id: CheckLoadersTestCase.java,v 1.2 2005/02/02 07:31:03 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,7 +17,7 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectGroupEntities;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/02/02 07:24:09 $
+ * @version $Revision: 1.2 $, $Date: 2005/02/02 07:31:03 $
  * @author $Author: bob $
  * @module tools
  */
@@ -30,7 +30,10 @@ public class CheckLoadersTestCase extends TestCase {
 	public void testGeneralObjectLoader() throws ClassNotFoundException, SecurityException, NoSuchFieldException,
 			IllegalArgumentException, IllegalAccessException {
 		for (short s = ObjectGroupEntities.GENERAL_GROUP_CODE; s < 0xFF; s++) {
-			/* except EVENT_GROUP_CODE & SCHEME_GROUP_CODE due to these groups ara not exist */
+			/*
+			 * except EVENT_GROUP_CODE & SCHEME_GROUP_CODE due to these groups
+			 * ara not exist
+			 */
 			if (s == ObjectGroupEntities.EVENT_GROUP_CODE || s == ObjectGroupEntities.SCHEME_GROUP_CODE)
 				continue;
 			String groupName = ObjectGroupEntities.codeToString(s);
@@ -51,13 +54,17 @@ public class CheckLoadersTestCase extends TestCase {
 			Method[] methods = clazz.getMethods();
 
 			for (short ec = minEntityCode; ec <= maxEntityCode; ec++) {
-				/* except ObjectEntities.PERMATTR_ENTITY_CODE due to this entity is not exist */
+				/*
+				 * except ObjectEntities.PERMATTR_ENTITY_CODE due to this entity
+				 * is not exist
+				 */
 				if (ec == ObjectEntities.PERMATTR_ENTITY_CODE)
 					continue;
 				String entityName = ObjectEntities.codeToString(ec);
 				if (entityName != null) {
 					String loadSimple = "load" + entityName;
 					String saveSimple = "save" + entityName;
+
 					String loadSeq = "load" + entityName + "s";
 					String saveSeq = "save" + entityName + "s";
 					if (entityName.equals(ObjectEntities.ANALYSIS_ENTITY)) {
@@ -66,8 +73,11 @@ public class CheckLoadersTestCase extends TestCase {
 						saveSeq = "saveAnalyses";
 					}
 
+					String loadSeqButIds = loadSeq + "ButIds";
+
 					boolean foundLoadSimple = false;
 					boolean foundSaveSimple = false;
+					boolean foundLoadSeqButIds = false;
 					boolean foundLoadSeq = false;
 					boolean foundSaveSeq = false;
 
@@ -78,16 +88,20 @@ public class CheckLoadersTestCase extends TestCase {
 						if (!foundSaveSimple && methodName.equals(saveSimple))
 							foundSaveSimple = true;
 
+						if (!foundLoadSeqButIds && methodName.equals(loadSeqButIds))
+							foundLoadSeqButIds = true;
+
 						if (!foundLoadSeq && methodName.equals(loadSeq))
 							foundLoadSeq = true;
 						if (!foundSaveSeq && methodName.equals(saveSeq))
 							foundSaveSeq = true;
 
-						if (foundLoadSimple && foundSaveSimple && foundLoadSeq && foundSaveSeq)
+						if (foundLoadSimple && foundSaveSimple && foundLoadSeqButIds && foundLoadSeq && foundSaveSeq)
 							break;
 					}
 					assertTrue(loadSimple + " method not found at " + className, foundLoadSimple);
 					assertTrue(saveSimple + " method not found at " + className, foundSaveSimple);
+					assertTrue(loadSeqButIds + " method not found at " + className, foundLoadSeqButIds);
 					assertTrue(loadSeq + " method not found at " + className, foundLoadSeq);
 					assertTrue(saveSeq + " method not found at " + className, foundSaveSeq);
 
