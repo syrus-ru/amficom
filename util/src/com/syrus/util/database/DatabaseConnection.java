@@ -117,7 +117,7 @@ public class DatabaseConnection {
 				 * FIXME close connection when Oracle Connection Pool'll have made
 				 */
 				// connection.close();
-				Log.debugMessage("DatabaseConnection | closeConnection(Connection)", Log.DEBUGLEVEL03);
+				Log.debugMessage("DatabaseConnection | closeConnection(Connection)", Log.DEBUGLEVEL05);
 			}
 			catch (Exception e) {
 				Log.errorException(e);

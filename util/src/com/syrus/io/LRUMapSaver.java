@@ -1,5 +1,5 @@
 /*
- * $Id: LRUMapSaver.java,v 1.3 2004/11/17 13:07:16 max Exp $
+ * $Id: LRUMapSaver.java,v 1.4 2004/11/18 14:53:16 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,8 +23,8 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2004/11/17 13:07:16 $
- * @author $Author: max $
+ * @version $Revision: 1.4 $, $Date: 2004/11/18 14:53:16 $
+ * @author $Author: bob $
  * @module module_name
  */
 public class LRUMapSaver {
@@ -87,7 +87,7 @@ public class LRUMapSaver {
                 saveDir = new File(pathNameOfSaveDir);
                 saveDir.mkdir(); 
             }           
-            Log.debugMessage("Trying to load LRUMap with " + objectEntityName + " | LRUMapSaver.load ", Log.DEBUGLEVEL10);
+            Log.debugMessage("LRUMapSaver.load | Trying to load LRUMap with " + objectEntityName , Log.DEBUGLEVEL10);
             File saveFile = new File(saveDir.getPath() + File.separator + objectEntityName + "LRUMap.serialized");
             ObjectInputStream in = new ObjectInputStream(
                     new FileInputStream(saveFile));
@@ -99,13 +99,13 @@ public class LRUMapSaver {
             List keys = (LinkedList) in.readObject();
             return keys;
         } catch (FileNotFoundException fnfe) {
-            Log.errorMessage("LRUMapSaver.save | Warning: " + fnfe.getMessage());
+            Log.debugMessage("LRUMapSaver.load | Warning: " + fnfe.getMessage(), Log.DEBUGLEVEL09);
             return null;
         } catch (ClassNotFoundException cnfe) {
-            Log.errorMessage("LRUMapSaver.save | Error: " + cnfe.getMessage());
+            Log.errorMessage("LRUMapSaver.load | Error: " + cnfe.getMessage());
             return null;
         } catch (IOException ioe) {
-            Log.errorMessage("LRUMapSaver.save | Error: " + ioe.getMessage());
+            Log.errorMessage("LRUMapSaver.load | Error: " + ioe.getMessage());
             return null;
         }
     }
