@@ -1,16 +1,23 @@
 package com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI;
 
 import java.awt.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Random;
 
 import javax.swing.JPanel;
+import javax.swing.UIManager;
+
+import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
 
 public class SimpleGraphPanel extends JPanel
 {
 	public static final int mouse_coupling = 5;
 
-	protected String color_id;
+	protected String colorId;
 
 	protected Color traceColor; // color, which used to paint graphic itself
+	private Color color;
 	
 	protected boolean weakColor;
 
@@ -23,6 +30,8 @@ public class SimpleGraphPanel extends JPanel
 	protected int end = 0; // номер конечной точки
 	protected double top = 0; // столько находится за пределами экрана вверху (в единицах измерения - для рефлектограммы дБ)
 	protected double bottom = 0; // столько находится за пределами экрана внизу (в единицах измерения - для рефлектограммы дБ)
+	
+	private static Map idColorMap = new HashMap(); 
 
 	public SimpleGraphPanel (double[] y, double deltaX, Color color)
 	{
@@ -88,10 +97,35 @@ public class SimpleGraphPanel extends JPanel
 		scaleY = getHeight() / (maxY - minY);
 	}
 
-	public void setColorModel(String color_id)
+	public synchronized void setColorModel(String id)
 	{
-		this.color_id = color_id;
+		this.color = (Color) idColorMap.get(id);
+		if (this.color == null) {
+			int i = 0;
+			id = null;
+			while(id == null) {
+				id = AnalysisResourceKeys.COLOR_TRACE_PREFIX + i++;
+//				System.out.println("search by " + id);
+				this.color = (Color) idColorMap.get(id);
+				if (this.color != null)
+					id = null;
+			}
+//			System.out.println("by id:" + id);
+			this.color = UIManager.getColor(id);
+			if (this.color == null) {
+				Random random = new Random();
+//				System.out.println("by random");
+				this.color = new Color(Math.abs(random.nextInt()) % 256, Math.abs(random.nextInt()) % 256, Math.abs(random.nextInt()) % 256);
+			}
+			idColorMap.put(id, this.color);
+		}
+//		System.out.println(this.color);
 		updColorModel();
+	}
+	
+	
+	protected void updColorModel() {
+		this.traceColor = this.correctColor(this.color);
 	}
 	
 	protected Color correctColor(Color color)
@@ -114,12 +148,6 @@ public class SimpleGraphPanel extends JPanel
 	                250)
 	    		: color;
 	    */
-	}
-
-	protected void updColorModel()
-	{
-		System.out.println(color_id);
-		traceColor = correctColor(ColorManager.getColor(color_id));
 	}
 
 	// plots from y[i0] to y[i0+N] _inclusively_ at x=x0..x0+N
