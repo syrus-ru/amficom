@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementControlModule.java,v 1.58 2005/02/15 15:09:20 arseniy Exp $
+ * $Id: MeasurementControlModule.java,v 1.59 2005/02/24 10:08:00 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,26 +8,15 @@
 
 package com.syrus.AMFICOM.mcm;
 
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
-import java.util.Map;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
-import com.syrus.AMFICOM.general.DatabaseException;
-import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.SleepButWorkThread;
-import com.syrus.AMFICOM.general.CORBAServer;
-import com.syrus.AMFICOM.general.IdentifierPool;
-import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.CommunicationException;
-import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.UpdateObjectException;
-import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
-import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.administration.AdministrationStorableObjectPool;
 import com.syrus.AMFICOM.administration.Domain;
 import com.syrus.AMFICOM.administration.MCM;
@@ -50,13 +39,24 @@ import com.syrus.AMFICOM.configuration.corba.MeasurementPort_Transferable;
 import com.syrus.AMFICOM.configuration.corba.MonitoredElement_Transferable;
 import com.syrus.AMFICOM.configuration.corba.Port_Transferable;
 import com.syrus.AMFICOM.configuration.corba.TransmissionPath_Transferable;
+import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.CORBAServer;
+import com.syrus.AMFICOM.general.CommunicationException;
+import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.DatabaseException;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IdentifierPool;
+import com.syrus.AMFICOM.general.SleepButWorkThread;
+import com.syrus.AMFICOM.general.UpdateObjectException;
+import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
+import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.MeasurementDatabaseContext;
+import com.syrus.AMFICOM.measurement.Result;
 import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.AMFICOM.measurement.TestDatabase;
-import com.syrus.AMFICOM.measurement.Result;
+import com.syrus.AMFICOM.measurement.corba.Result_Transferable;
 import com.syrus.AMFICOM.measurement.corba.TestStatus;
 import com.syrus.AMFICOM.measurement.corba.TestTemporalType;
-import com.syrus.AMFICOM.measurement.corba.Result_Transferable;
 import com.syrus.AMFICOM.mserver.corba.MServer;
 import com.syrus.AMFICOM.mserver.corba.MServerHelper;
 import com.syrus.util.Application;
@@ -65,7 +65,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.58 $, $Date: 2005/02/15 15:09:20 $
+ * @version $Revision: 1.59 $, $Date: 2005/02/24 10:08:00 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -301,7 +301,7 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 	}
 
 	private static void activateKISTransceivers() {
-		List kisIds = iAm.getKISIds();
+		Collection kisIds = iAm.getKISIds();
 		transceivers = Collections.synchronizedMap(new HashMap(kisIds.size()));
 		Identifier kisId;
 		Transceiver transceiver;
