@@ -45,6 +45,7 @@ import com.syrus.AMFICOM.Client.General.UI.TimeSpinner;
 import com.syrus.AMFICOM.Client.General.lang.LangModelSchedule;
 import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
 import com.syrus.AMFICOM.Client.Scheduler.General.UIStorage;
+import com.syrus.AMFICOM.general.ApplicationException;
 
 class PlanToolBar extends JPanel {
 
@@ -106,6 +107,7 @@ class PlanToolBar extends JPanel {
 		//this.aContext = aContext;
 		if (aContext != null)
 			this.dispatcher = aContext.getDispatcher();
+		final SchedulerModel schedulerModel = (SchedulerModel) aContext.getApplicationModel();
 		this.panel = panel;
 		setLayout(new GridBagLayout());
 		GridBagConstraints gbc = new GridBagConstraints();
@@ -385,8 +387,11 @@ class PlanToolBar extends JPanel {
 				ReportBuilder.invokeAsynchronously(new Runnable() {
 
 					public void run() {
-						PlanToolBar.this.dispatcher.notify(new OperationEvent(new Boolean(false), 0,
-																				SchedulerModel.COMMAND_COMMIT_CHANGES));
+						try {
+							schedulerModel.commitChanges();
+						} catch (ApplicationException e) {
+							SchedulerModel.showErrorMessage(PlanToolBar.this, e);
+						}
 						Calendar date = Calendar.getInstance();
 						date.setTime((Date) PlanToolBar.this.dateSpinner.getValue());
 						Calendar time = Calendar.getInstance();

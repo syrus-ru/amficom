@@ -28,7 +28,6 @@ import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
 import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
 import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
 import com.syrus.AMFICOM.Client.General.Event.OperationListener;
-import com.syrus.AMFICOM.Client.General.Event.TestUpdateEvent;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.General.UI.AComboBox;
@@ -134,7 +133,7 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 	public static final String		PARAMETER_RESOLUTION		= PARAMETER_PREFIX + RESOLUTION;	//$NON-NLS-1$
 	public static final String		PARAMETER_WAVELENGHT		= "ref_wvlen";						//$NON-NLS-1$
 
-	private static final boolean	DEBUG						= true;
+	private static final boolean	DEBUG						= false;
 
 	ListNumberComparator			comparator					= new ListNumberComparator();
 	AComboBox						maxDistanceComboBox			= new AComboBox();
@@ -266,7 +265,7 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 					String waveStr = wave.toString();
 					if ((waveStr == null) || (waveStr.length() == 0))
 						throw new IllegalArgumentException(LangModelSchedule.getString("wave_length_is_not_set"));
-					byteArray = new ByteArray(Integer.parseInt(waveStr));
+					byteArray = new ByteArray(((int)Double.parseDouble(waveStr)));
 
 					params[0] = SetParameter.createInstance(wvlenParam, byteArray.getBytes());
 
@@ -347,10 +346,7 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 		String commandName = ae.getActionCommand();
 		// Object obj = ae.getSource();
 		Environment.log(Environment.LOG_LEVEL_INFO, "commandName:" + commandName, getClass().getName());
-		if (commandName.equals(TestUpdateEvent.TYPE)) {
-			TestUpdateEvent tue = (TestUpdateEvent) ae;
-			setTest(tue.test);
-		} else if (commandName.equals(SchedulerModel.COMMAND_CHANGE_ME_TYPE)) {
+		if (commandName.equals(SchedulerModel.COMMAND_CHANGE_ME_TYPE)) {
 			this.meId = (Identifier) ae.getSource();
 		}
 	}
@@ -545,7 +541,7 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 					try {
 						MeasurementSetup measurementSetup = (MeasurementSetup) MeasurementStorableObjectPool
 								.getStorableObject(id, true);
-						setMeasurementSetup(measurementSetup);
+						setSet(measurementSetup.getParameterSet());
 					} catch (ApplicationException ae) {
 						SchedulerModel.showErrorMessage(this, ae);
 					}
@@ -621,10 +617,6 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 		} catch (IOException ioe) {
 			Environment.log(Environment.LOG_LEVEL_WARNING, ioe.getMessage());
 		}
-	}
-
-	public void setMeasurementSetup(MeasurementSetup measurementSetup) {
-		setSet(measurementSetup.getParameterSet());
 	}
 
 	private void init() {
@@ -743,12 +735,10 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 
 	private void initModule(Dispatcher dispatcher) {
 		this.dispatcher = dispatcher;
-		this.dispatcher.register(this, TestUpdateEvent.TYPE);
 		this.dispatcher.register(this, SchedulerModel.COMMAND_CHANGE_ME_TYPE);
 	}
 
 	public void unregisterDispatcher() {
-		this.dispatcher.unregister(this, TestUpdateEvent.TYPE);
 		this.dispatcher.unregister(this, SchedulerModel.COMMAND_CHANGE_ME_TYPE);
 	}
 
@@ -774,7 +764,7 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 		for (int i = 0; i < cb.getItemCount(); i++) {
 			Object obj = cb.getItemAt(i);
 			String item = obj.toString();
-			int v = Integer.parseInt(item);
+			int v = (int) Double.parseDouble(item);
 			if (DEBUG)
 				System.out.println("item:" + v); //$NON-NLS-1$
 			if (v == value) {

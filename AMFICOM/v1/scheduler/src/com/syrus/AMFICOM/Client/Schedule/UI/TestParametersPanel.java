@@ -32,9 +32,7 @@ import javax.swing.event.ListSelectionListener;
 import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
 import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
 import com.syrus.AMFICOM.Client.General.Event.OperationListener;
-import com.syrus.AMFICOM.Client.General.Event.TestUpdateEvent;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationModel;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.General.lang.LangModelSchedule;
 import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
@@ -62,46 +60,45 @@ import com.syrus.AMFICOM.measurement.Test;
 
 public class TestParametersPanel extends JPanel implements OperationListener {
 
-	/**
-	 * Comment for <code>serialVersionUID</code>
-	 */
-	private static final long	serialVersionUID		= 3258416114433209908L;
 	public static final String	PARAMETER_PARAMETER		= "Parameter";											//$NON-NLS-1$
 	public static final String	PARAMETERS_PANEL_PREFIX	= "PARAMETERS_PANEL";									//$NON-NLS-1$
 
-	private Dispatcher			dispatcher;
+	private static final String	PATTERN_PANEL_NAME		= "PATTERN_PANEL";										//$NON-NLS-1$
+
 	ApplicationContext			aContext;
-
-	private JRadioButton		patternRadioButton;
-	JRadioButton				paramsRadioButton;
-
-	JCheckBox					useAnalysisBox;
-	private JCheckBox			usePatternsWithAnalysisBox;
+	private SchedulerModel		schedulerModel;
 	ObjComboBox					analysisComboBox		= new ObjComboBox(AnalysisTypeController.getInstance(),
 																			Collections.EMPTY_LIST,
 																			AnalysisTypeController.KEY_NAME);
+
+	String						currentParametersPanelName;
 	ObjComboBox					evaluationComboBox		= new ObjComboBox(EvaluationTypeController.getInstance(),
 																			Collections.EMPTY_LIST,
 																			EvaluationTypeController.KEY_NAME);
+	JRadioButton				paramsRadioButton;
 
 	final JPanel				switchPanel				= new JPanel(new CardLayout());
-
-	ObjList						testSetups;
 	HashMap						testMap;
-
-	private static final String	PATTERN_PANEL_NAME		= "PATTERN_PANEL";										//$NON-NLS-1$
 
 	HashMap						testPanels				= new HashMap();
 
-	private Test				test;
+	ObjList						testSetups;
 
-	private HashMap				parameters;
+	JCheckBox					useAnalysisBox;
+
+	private Dispatcher			dispatcher;
 	private java.util.List		meList;
 
-	String						currentParametersPanelName;
+	private HashMap				parameters;
+
+	private JRadioButton		patternRadioButton;
+
+	private Test				test;
+	private JCheckBox			usePatternsWithAnalysisBox;
 
 	public TestParametersPanel(final ApplicationContext aContext) {
 		this.aContext = aContext;
+		this.schedulerModel = (SchedulerModel) aContext.getApplicationModel();
 
 		if (aContext != null) {
 			initModule(aContext.getDispatcher());
@@ -179,8 +176,9 @@ public class TestParametersPanel extends JPanel implements OperationListener {
 			public void valueChanged(ListSelectionEvent e) {
 				// if (e.getStateChange() == ItemEvent.SELECTED)
 				// {
-				MeasurementSetup ts = (MeasurementSetup) TestParametersPanel.this.testSetups.getSelectedValue();
-				if (ts != null) {
+				MeasurementSetup measurementSetup = (MeasurementSetup) TestParametersPanel.this.testSetups
+						.getSelectedValue();
+				if (measurementSetup != null) {
 					TestParametersPanel.this.useAnalysisBox.setEnabled(true);
 					// DataSet dsAnalysis = new DataSet();
 					// dsAnalysis.add((ObjectResource)
@@ -196,9 +194,11 @@ public class TestParametersPanel extends JPanel implements OperationListener {
 					try {
 						TestParametersPanel.this.analysisComboBox.removeAll();
 
-						LinkedIdsCondition linkedIdsCondition = new LinkedIdsCondition((List)null, ObjectEntities.ANALYSISTYPE_ENTITY_CODE);
+						LinkedIdsCondition linkedIdsCondition = new LinkedIdsCondition(
+																						(List) null,
+																						ObjectEntities.ANALYSISTYPE_ENTITY_CODE);
 						{
-							Set criteriaSet = ts.getCriteriaSet();
+							Set criteriaSet = measurementSetup.getCriteriaSet();
 							if (criteriaSet != null) {
 								SetParameter[] setParameters = criteriaSet.getParameters();
 								List list = new ArrayList(setParameters.length);
@@ -220,15 +220,15 @@ public class TestParametersPanel extends JPanel implements OperationListener {
 						TestParametersPanel.this.evaluationComboBox.removeAll();
 						linkedIdsCondition.setEntityCode(ObjectEntities.EVALUATIONTYPE_ENTITY_CODE);
 						{
-							Set thresholdSet = ts.getThresholdSet();
+							Set thresholdSet = measurementSetup.getThresholdSet();
 							if (thresholdSet != null) {
 								SetParameter[] setParameters = thresholdSet.getParameters();
 								List list = new ArrayList(setParameters.length);
 								for (int i = 0; i < setParameters.length; i++)
 									list.add(setParameters[i].getId());
 								linkedIdsCondition.setLinkedIds(list);
-								Collection evaluationTypes = MeasurementStorableObjectPool.getStorableObjectsByCondition(
-									linkedIdsCondition, true);
+								Collection evaluationTypes = MeasurementStorableObjectPool
+										.getStorableObjectsByCondition(linkedIdsCondition, true);
 								for (Iterator it = evaluationTypes.iterator(); it.hasNext();) {
 									EvaluationType evaluationType = (EvaluationType) it.next();
 									((ObjListModel) TestParametersPanel.this.evaluationComboBox.getModel())
@@ -241,7 +241,7 @@ public class TestParametersPanel extends JPanel implements OperationListener {
 							String key = (String) it.next();
 							ParametersTestPanel panel = (ParametersTestPanel) (TestParametersPanel.this.testPanels
 									.get(key));
-							panel.setMeasurementSetup(ts);
+							panel.setSet(measurementSetup.getParameterSet());
 						}
 					} catch (ApplicationException ae) {
 						SchedulerModel.showErrorMessage(TestParametersPanel.this, ae);
@@ -297,7 +297,8 @@ public class TestParametersPanel extends JPanel implements OperationListener {
 	 * @param panel
 	 *            ParametersTestPanel
 	 */
-	public void addParameterPanel(String command, ParametersTestPanel panel) {
+	public void addParameterPanel(	String command,
+									ParametersTestPanel panel) {
 		this.testPanels.put(command, panel);
 		this.switchPanel.add(panel, command);
 		this.paramsRadioButton.setEnabled(true);
@@ -307,100 +308,29 @@ public class TestParametersPanel extends JPanel implements OperationListener {
 		return this.testPanels.get(command) != null;
 	}
 
-	private void initModule(Dispatcher dispatcher) {
-		this.dispatcher = dispatcher;
-		this.dispatcher.register(this, SchedulerModel.COMMAND_DATA_REQUEST);
-		this.dispatcher.register(this, SchedulerModel.COMMAND_CHANGE_PARAM_PANEL);
-		this.dispatcher.register(this, SchedulerModel.COMMAND_ADD_PARAM_PANEL);
-		this.dispatcher.register(this, SchedulerModel.COMMAND_CHANGE_ME_TYPE);
-		this.dispatcher.register(this, SchedulerModel.COMMAND_CLEAN);
-		this.dispatcher.register(this, SchedulerModel.COMMAND_AVAILABLE_ME);
-	}
-
-	public void unregisterDispatcher() {
-		for (Iterator it = this.testPanels.keySet().iterator(); it.hasNext();) {
-			Object key = it.next();
-			ParametersTestPanel panel = (ParametersTestPanel) this.testPanels.get(key);
-			panel.unregisterDispatcher();
-		}
-		this.dispatcher.unregister(this, SchedulerModel.COMMAND_DATA_REQUEST);
-		this.dispatcher.unregister(this, SchedulerModel.COMMAND_CHANGE_PARAM_PANEL);
-		this.dispatcher.unregister(this, SchedulerModel.COMMAND_ADD_PARAM_PANEL);
-		this.dispatcher.unregister(this, SchedulerModel.COMMAND_CHANGE_ME_TYPE);
-		this.dispatcher.unregister(this, SchedulerModel.COMMAND_CLEAN);
-		this.dispatcher.unregister(this, SchedulerModel.COMMAND_AVAILABLE_ME);
-	}
-
-	public void setTest(Test test) {
-		if ((this.test == null) || (!this.test.getId().equals(test.getId()))) {
-			this.test = test;
-
-			if (this.meList == null)
-				this.meList = new LinkedList();
-			else
-				this.meList.clear();
-			MonitoredElement monitoredElement = test.getMonitoredElement();
-			if (!this.meList.contains(monitoredElement))
-				this.meList.add(monitoredElement);
-			updateTestSetupList();
-		}
-
-	}
-
-	private void getParameters() {
-		if (this.parameters == null)
-			this.parameters = new HashMap();
-		MeasurementSetup ts = (MeasurementSetup) this.testSetups.getSelectedValue();
-		if (ts == null) {
-			JOptionPane.showMessageDialog(this,
-				LangModelSchedule.getString("Do_not_choose_measurement_pattern"), LangModelSchedule.getString("Error"), //$NON-NLS-1$ //$NON-NLS-2$
-				JOptionPane.OK_OPTION);
-			this.parameters = null;
-			return;
-		}
-		this.parameters.put(ObjectEntities.MS_ENTITY, ts);
-		EvaluationType evaluationType = null;
-		AnalysisType analysisType = null;
-		// DataSourceInterface dsi = aContext.getDataSourceInterface();
-		if (this.useAnalysisBox.isSelected()) {
-			evaluationType = (EvaluationType) this.evaluationComboBox.getSelectedItem();
-			analysisType = (AnalysisType) this.analysisComboBox.getSelectedItem();
-
-		}
-		// if (evaluationType != null)
-		this.parameters.put(ObjectEntities.EVALUATIONTYPE_ENTITY, evaluationType);
-		// if (analysisType != null)
-		this.parameters.put(ObjectEntities.ANALYSISTYPE_ENTITY, analysisType);
-	}
-
 	public void operationPerformed(OperationEvent ae) {
-		ApplicationModel aModel = this.aContext.getApplicationModel();
 		String commandName = ae.getActionCommand();
 		Object obj = ae.getSource();
 		Environment.log(Environment.LOG_LEVEL_INFO, "commandName:" + commandName, getClass().getName());
 		if (commandName.equalsIgnoreCase(SchedulerModel.COMMAND_DATA_REQUEST)) {
 			if (this.paramsRadioButton.isSelected()) {
-				Set tas = ((ParametersTestPanel) (this.testPanels.get(this.currentParametersPanelName))).getSet();
-				if (tas != null)
-					this.dispatcher.notify(new OperationEvent(tas, SchedulerModel.DATA_ID_PARAMETERS,
-																SchedulerModel.COMMAND_SEND_DATA));
+				Set set = ((ParametersTestPanel) (this.testPanels.get(this.currentParametersPanelName))).getSet();
+				this.schedulerModel.setMeasurementSetupIds(null);
+				this.schedulerModel.setAnalysisType(null);
+				this.schedulerModel.setEvaluationType(null);
+				this.schedulerModel.setSet(set);
 			} else if (this.patternRadioButton.isSelected()) {
 				this.getParameters();
 				if (this.parameters != null) {
-					MeasurementSetup ts = (MeasurementSetup) this.parameters.get(ObjectEntities.MS_ENTITY);
+					MeasurementSetup measurementSetup = (MeasurementSetup) this.parameters
+							.get(ObjectEntities.MS_ENTITY);
 					AnalysisType analysisType = (AnalysisType) this.parameters.get(ObjectEntities.ANALYSISTYPE_ENTITY);
 					EvaluationType evaluationType = (EvaluationType) this.parameters
 							.get(ObjectEntities.EVALUATIONTYPE_ENTITY);
-					this.dispatcher.notify(new OperationEvent((ts == null) ? (Object) "" : (Object) ts, //$NON-NLS-1$
-																SchedulerModel.DATA_ID_PARAMETERS_PATTERN,
-																SchedulerModel.COMMAND_SEND_DATA));
-					// if (analysisType != null)
-					this.dispatcher.notify(new OperationEvent((analysisType == null) ? (Object) "" //$NON-NLS-1$
-							: (Object) analysisType, SchedulerModel.DATA_ID_PARAMETERS_ANALYSIS,
-																SchedulerModel.COMMAND_SEND_DATA));
-					this.dispatcher.notify(new OperationEvent((evaluationType == null) ? (Object) "" //$NON-NLS-1$
-							: (Object) evaluationType, SchedulerModel.DATA_ID_PARAMETERS_EVALUATION,
-																SchedulerModel.COMMAND_SEND_DATA));
+					this.schedulerModel.setMeasurementSetupIds(Collections.singletonList(measurementSetup.getId()));
+					this.schedulerModel.setAnalysisType(analysisType);
+					this.schedulerModel.setEvaluationType(evaluationType);
+					this.schedulerModel.setSet(null);
 				}
 			}
 
@@ -417,9 +347,9 @@ public class TestParametersPanel extends JPanel implements OperationListener {
 			}
 			this.currentParametersPanelName = name;
 			this.paramsRadioButton.doClick();
-		} else if (commandName.equals(TestUpdateEvent.TYPE)) {
-			TestUpdateEvent tue = (TestUpdateEvent) ae;
-			setTest(tue.test);
+		} else if (commandName.equals(SchedulerModel.COMMAND_REFRESH_TEST)
+				|| commandName.equals(SchedulerModel.COMMAND_REFRESH_TESTS)) {
+			this.setTest(this.schedulerModel.getSelectedTest());
 		} else if (commandName.equals(SchedulerModel.COMMAND_CLEAN)) {
 			this.testMap.clear();
 			this.patternRadioButton.doClick();
@@ -442,8 +372,38 @@ public class TestParametersPanel extends JPanel implements OperationListener {
 				SchedulerModel.showErrorMessage(this, e);
 			}
 		}
+	}
 
-		aModel.fireModelChanged(""); //$NON-NLS-1$
+	public void setTest(Test test) {
+		if ((this.test == null) || (!this.test.getId().equals(test.getId()))) {
+			this.test = test;
+
+			if (this.meList == null)
+				this.meList = new LinkedList();
+			else
+				this.meList.clear();
+			MonitoredElement monitoredElement = test.getMonitoredElement();
+			if (!this.meList.contains(monitoredElement))
+				this.meList.add(monitoredElement);
+			updateTestSetupList();
+		}
+
+	}
+
+	public void unregisterDispatcher() {
+		for (Iterator it = this.testPanels.keySet().iterator(); it.hasNext();) {
+			Object key = it.next();
+			ParametersTestPanel panel = (ParametersTestPanel) this.testPanels.get(key);
+			panel.unregisterDispatcher();
+		}
+		this.dispatcher.unregister(this, SchedulerModel.COMMAND_DATA_REQUEST);
+		this.dispatcher.unregister(this, SchedulerModel.COMMAND_CHANGE_PARAM_PANEL);
+		this.dispatcher.unregister(this, SchedulerModel.COMMAND_ADD_PARAM_PANEL);
+		this.dispatcher.unregister(this, SchedulerModel.COMMAND_CHANGE_ME_TYPE);
+		this.dispatcher.unregister(this, SchedulerModel.COMMAND_CLEAN);
+		this.dispatcher.unregister(this, SchedulerModel.COMMAND_AVAILABLE_ME);
+		this.dispatcher.unregister(this, SchedulerModel.COMMAND_REFRESH_TEST);
+		this.dispatcher.unregister(this, SchedulerModel.COMMAND_REFRESH_TESTS);
 	}
 
 	void updateTestSetupList() {
@@ -462,7 +422,8 @@ public class TestParametersPanel extends JPanel implements OperationListener {
 					}
 					linkedIdsCondition = new LinkedIdsCondition(meIdList, ObjectEntities.MS_ENTITY_CODE);
 				}
-				Collection msList = MeasurementStorableObjectPool.getStorableObjectsByCondition(linkedIdsCondition, true);
+				Collection msList = MeasurementStorableObjectPool.getStorableObjectsByCondition(linkedIdsCondition,
+					true);
 				for (Iterator it = msList.iterator(); it.hasNext();) {
 					MeasurementSetup ts = (MeasurementSetup) it.next();
 					Collection meIds = ts.getMonitoredElementIds();
@@ -549,7 +510,46 @@ public class TestParametersPanel extends JPanel implements OperationListener {
 		// testSetups.setSelected(selectedTs);
 	}
 
-	private void selectComboBox(ObjComboBox cb, Identifier value) {
+	private void getParameters() {
+		if (this.parameters == null)
+			this.parameters = new HashMap();
+		MeasurementSetup ts = (MeasurementSetup) this.testSetups.getSelectedValue();
+		if (ts == null) {
+			JOptionPane.showMessageDialog(this,
+				LangModelSchedule.getString("Do_not_choose_measurement_pattern"), LangModelSchedule.getString("Error"), //$NON-NLS-1$ //$NON-NLS-2$
+				JOptionPane.OK_OPTION);
+			this.parameters = null;
+			return;
+		}
+		this.parameters.put(ObjectEntities.MS_ENTITY, ts);
+		EvaluationType evaluationType = null;
+		AnalysisType analysisType = null;
+		// DataSourceInterface dsi = aContext.getDataSourceInterface();
+		if (this.useAnalysisBox.isSelected()) {
+			evaluationType = (EvaluationType) this.evaluationComboBox.getSelectedItem();
+			analysisType = (AnalysisType) this.analysisComboBox.getSelectedItem();
+
+		}
+		// if (evaluationType != null)
+		this.parameters.put(ObjectEntities.EVALUATIONTYPE_ENTITY, evaluationType);
+		// if (analysisType != null)
+		this.parameters.put(ObjectEntities.ANALYSISTYPE_ENTITY, analysisType);
+	}
+
+	private void initModule(Dispatcher dispatcher) {
+		this.dispatcher = dispatcher;
+		this.dispatcher.register(this, SchedulerModel.COMMAND_DATA_REQUEST);
+		this.dispatcher.register(this, SchedulerModel.COMMAND_CHANGE_PARAM_PANEL);
+		this.dispatcher.register(this, SchedulerModel.COMMAND_ADD_PARAM_PANEL);
+		this.dispatcher.register(this, SchedulerModel.COMMAND_CHANGE_ME_TYPE);
+		this.dispatcher.register(this, SchedulerModel.COMMAND_CLEAN);
+		this.dispatcher.register(this, SchedulerModel.COMMAND_AVAILABLE_ME);
+		this.dispatcher.register(this, SchedulerModel.COMMAND_REFRESH_TEST);
+		this.dispatcher.register(this, SchedulerModel.COMMAND_REFRESH_TESTS);
+	}
+
+	private void selectComboBox(ObjComboBox cb,
+								Identifier value) {
 		for (int i = 0; i < cb.getItemCount(); i++) {
 			Object obj = cb.getItemAt(i);
 			Identifier id = null;

@@ -1,22 +1,40 @@
 
 package com.syrus.AMFICOM.Client.Schedule.UI;
 
-import java.awt.*;
-import java.awt.event.*;
-import java.text.*;
-import java.util.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Point;
+import java.awt.SystemColor;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
-import javax.swing.*;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 
-import com.syrus.AMFICOM.Client.General.Event.*;
-import com.syrus.AMFICOM.Client.General.Model.*;
+import oracle.jdeveloper.layout.VerticalFlowLayout;
 
+import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
+import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
+import com.syrus.AMFICOM.Client.General.Event.OperationListener;
+import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
+import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
 import com.syrus.AMFICOM.Client.Scheduler.General.UIStorage;
 import com.syrus.AMFICOM.configuration.MonitoredElement;
 import com.syrus.AMFICOM.measurement.Test;
-
-import oracle.jdeveloper.layout.*;
 
 public class PlanPanel extends JPanel implements OperationListener {
 
@@ -24,15 +42,15 @@ public class PlanPanel extends JPanel implements OperationListener {
 
 	private static class Step {
 
-		int	align;		//выравнивание по кратному
+		int	align;		// выравнивание по кратному
 
-		int	one;		//число единиц измерения внутри одного деления
+		int	one;		// число единиц измерения внутри одного деления
 
-		int	scale;		//степень градации основных делений шкалы
+		int	scale;		// степень градации основных делений шкалы
 
-		int	subscales;	//число дополнительных делений внутри основного
+		int	subscales;	// число дополнительных делений внутри основного
 
-		int	total;		//общее число единиц измерения
+		int	total;		// общее число единиц измерения
 
 		Step(int scale, int one, int total, int subscales, int align) {
 			this.scale = scale;
@@ -79,21 +97,19 @@ public class PlanPanel extends JPanel implements OperationListener {
 	protected Point					startpos		= new Point();
 
 	// saved tests, loaded from server
-	//private DataSet tests;
+	// private DataSet tests;
 
 	protected Point					tmppos;
 	private ApplicationContext		aContext;
 
 	private Dispatcher				dispatcher;
 	private int						maxZoom			= 50;
-	private Test					test;
-
-	private HashMap					testLines		= new HashMap();
+	private Map						testLines		= new HashMap();
 
 	private PlanToolBar				toolBar;
 
 	// new tests, which haven't saved yet
-	//private ArrayList unsavedTests;
+	// private ArrayList unsavedTests;
 
 	public PlanPanel(JScrollPane parent, ApplicationContext aContext) {
 		this.aContext = aContext;
@@ -101,10 +117,10 @@ public class PlanPanel extends JPanel implements OperationListener {
 		this.toolBar = new PlanToolBar(aContext, this);
 
 		setLayout(new VerticalFlowLayout());
-		//setLayout(new GridLayout(0,1));
+		// setLayout(new GridLayout(0,1));
 		setBackground(SystemColor.window);
 		setPreferredSize(new Dimension(600, 20));
-		//		setCursor(UIStorage.DEFAULT_CURSOR);
+		// setCursor(UIStorage.DEFAULT_CURSOR);
 
 		this.addMouseListener(new MouseAdapter() {
 
@@ -118,7 +134,7 @@ public class PlanPanel extends JPanel implements OperationListener {
 			}
 
 			public void mouseReleased(MouseEvent e) {
-				//if (e.getClickCount() > 0) 
+				// if (e.getClickCount() > 0)
 				{
 					setCursor(UIStorage.DEFAULT_CURSOR);
 
@@ -170,7 +186,7 @@ public class PlanPanel extends JPanel implements OperationListener {
 		updateRealScale();
 	}
 
-	//private static final int TIME_OUT = 500;
+	// private static final int TIME_OUT = 500;
 
 	public PlanPanel(JScrollPane parent, ApplicationContext aContext, Date start, int scale) {
 		this(parent, aContext);
@@ -185,10 +201,10 @@ public class PlanPanel extends JPanel implements OperationListener {
 	public static void main(String[] args) {
 		JScrollPane scroll = new JScrollPane();
 
-		//		PlanLayeredPanel panel = new PlanLayeredPanel();
+		// PlanLayeredPanel panel = new PlanLayeredPanel();
 		PlanPanel demo = new PlanPanel(scroll, null);
 		PlanToolBar toolBar = demo.getToolBar();
-		//		panel.setGraphPanel(mainPanel);
+		// panel.setGraphPanel(mainPanel);
 		scroll.getViewport().add(demo);
 		JFrame mainFrame = new JFrame("TimeParametersPanel"); //$NON-NLS-1$
 		mainFrame.addWindowListener(new WindowAdapter() {
@@ -197,7 +213,7 @@ public class PlanPanel extends JPanel implements OperationListener {
 				System.exit(0);
 			}
 		});
-		//mainFrame.getContentPane().add(demo);
+		// mainFrame.getContentPane().add(demo);
 		mainFrame.getContentPane().add(toolBar, BorderLayout.NORTH);
 		mainFrame.getContentPane().add(scroll, BorderLayout.CENTER);
 		mainFrame.pack();
@@ -217,120 +233,10 @@ public class PlanPanel extends JPanel implements OperationListener {
 		return this.toolBar;
 	}
 
-	//	public void actionPerformed(ActionEvent e) {
-	//		for (Iterator it = testLines.values().iterator(); it.hasNext();) {
-	//			TestLine testLine = (TestLine) it.next();
-	//			testLine.flashUnsavedTest();
-	//		}
-	//	}
-
 	public void operationPerformed(OperationEvent ae) {
 		String commandName = ae.getActionCommand();
 		Environment.log(Environment.LOG_LEVEL_INFO, "commandName:" + commandName, getClass().getName());
-		if (commandName.equals(TestUpdateEvent.TYPE)) {
-			TestUpdateEvent tue = (TestUpdateEvent) ae;
-			if (tue.testSelected) {
-				Test test = tue.test;
-				if ((this.test == null) || (!this.test.getId().equals(test.getId()))) {
-					this.test = test;
-					boolean found = false;
-					if (test != null) {
-						long diff = 0;
-						//						int scaleIndex =
-						// this.toolBar.scaleComboBox.getSelectedIndex();
-						//						if ((scaleIndex > 0) && (scaleIndex <
-						// SCALES_MS.length))
-						//							diff = SCALES_MS[scaleIndex] / 2;
-						//Date date = new Date(test.getStartTime().getTime() -
-						// diff);
-						//						System.out.println(ConstStorage.SIMPLE_DATE_FORMAT.format(date));
-						//
-						//						System.out.println(ConstStorage.SIMPLE_DATE_FORMAT.format(this.toolBar.timeSpinner.getModel()
-						//								.getValue()));
-						//						System.out.println(ConstStorage.SIMPLE_DATE_FORMAT.format(this.toolBar.dateSpinner.getModel()
-						//								.getValue()));
-
-						Date startDate = test.getStartTime();
-						//this.toolBar.timeSpinner.getModel().setValue(startDate);
-						//this.toolBar.dateSpinner.getModel().setValue(startDate);
-						//System.out.println(test.getStartTime().getTime() -
-						// this.scaleStart.getTime());
-						BoundedRangeModel model = this.parent.getHorizontalScrollBar().getModel();
-
-						long scaleStartTime = this.scaleStart.getTime();
-						long scaleEndTime = this.scaleEnd.getTime();
-
-						model
-								.setValue(model.getMaximum() - 2 * this.margin - (int) ((scaleEndTime - startDate.getTime())
-										* model.getMaximum() / (scaleEndTime - scaleStartTime)));
-					}
-					//				java.util.List tests = ((SchedulerModel)
-					// this.aContext.getApplicationModel()).getTests();
-					//				java.util.List unsavedTests = ((SchedulerModel)
-					// this.aContext.getApplicationModel()).getUnsavedTests();
-					//				if (tests != null) {
-					//					for (Iterator it = tests.iterator(); it.hasNext();) {
-					//						Test t = (Test) it.next();
-					//						if (t.getId().equals(selectedTest.getId())) {
-					//							found = true;
-					//							break;
-					//						}
-					//					}
-					//				}
-					//				if ((unsavedTests != null) &&
-					// (unsavedTests.contains(selectedTest)))
-					// {
-					//					found = true;
-					//				}
-					//				
-					found = this.testLines.containsKey(test.getMonitoredElement().getId());
-					if (found) {
-						TestLine testLine = (TestLine) this.testLines.get(test.getMonitoredElement().getId());
-						//System.out.println("testLine found");
-						//System.out.println("testLine.getTest(selectedTest.getId()):"
-						// + testLine.getTest(selectedTest.getId()));
-						found = testLine.getTest(test.getId()) != null;
-					}
-
-					//System.out.println("found:" + found);
-
-					if (!found) {
-						Environment.log(Environment.LOG_LEVEL_INFO, "new selectedTest catched"); //$NON-NLS-1$
-						//unsavedTests.add(selectedTest);
-						{
-							TestLine testLine;
-							if (this.testLines == null)
-								Environment.log(Environment.LOG_LEVEL_WARNING, "testLines is null"); //$NON-NLS-1$
-							if (test == null)
-								Environment.log(Environment.LOG_LEVEL_WARNING, "selectedTest is null"); //$NON-NLS-1$
-							else if (test.getMonitoredElement().getId() == null)
-								Environment.log(Environment.LOG_LEVEL_WARNING,
-												"selectedTest.monitored_element_id is null"); //$NON-NLS-1$
-							if (this.testLines.containsKey(test.getMonitoredElement().getId()))
-								testLine = (TestLine) this.testLines.get(test.getMonitoredElement().getId());
-							else {
-								MonitoredElement monitoredElement = test.getMonitoredElement();
-								//String meName =
-								// Pool.getName(MonitoredElement.typ,
-								// selectedTest.getMonitoredElementId());
-								testLine = new TestLine(this.aContext,
-								//parent.getViewport(),
-														monitoredElement.getName(), this.scaleStart.getTime(),
-														this.scaleEnd.getTime(), this.margin / 2);
-								testLine.setPreferredSize(new Dimension(0, 20));
-								this.testLines.put(monitoredElement.getId(), testLine);
-								add(testLine);
-							}
-							testLine.addTest(test);
-
-						}
-
-					}
-				}
-				revalidate();
-				this.parent.repaint();
-			}
-		} else if (commandName.equals(SchedulerModel.COMMAND_CLEAN)) {
+		if (commandName.equals(SchedulerModel.COMMAND_CLEAN)) {
 			for (Iterator it = this.testLines.keySet().iterator(); it.hasNext();) {
 				Object key = it.next();
 				TestLine line = (TestLine) this.testLines.get(key);
@@ -340,23 +246,8 @@ public class PlanPanel extends JPanel implements OperationListener {
 			removeAll();
 			revalidate();
 			this.parent.repaint();
-		} else if (commandName.equals(SchedulerModel.COMMAND_REMOVE_TEST)) {
-			for (Iterator it = this.testLines.keySet().iterator(); it.hasNext();) {
-				Test test = (Test) ae.getSource();
-				Object key = it.next();
-				TestLine line = (TestLine) this.testLines.get(key);
-				//System.out.println("selectedTest "+selectedTest.getId()+"
-				// found at
-				// TestLine");
-				line.removeTest(test);
-				//System.out.println("line.isEmpty():"+line.isEmpty());
-				if (line.isEmpty())
-					remove(line);
-			}
-			repaint();
-			revalidate();
-			this.parent.repaint();
-		} else if (commandName.equals(SchedulerModel.COMMAND_NAME_ALL_TESTS)) {
+		}
+		else if (commandName.equals(SchedulerModel.COMMAND_REFRESH_TESTS)) {
 			updateTests();
 			repaint();
 			revalidate();
@@ -392,7 +283,7 @@ public class PlanPanel extends JPanel implements OperationListener {
 					this.cal.set(Calendar.SECOND, 0);
 			}
 
-			//округляем до шага
+			// округляем до шага
 			int num = this.cal.get(STEPS[this.scale].scale);
 			while (num / STEPS[this.scale].align * STEPS[this.scale].align != num) {
 				this.cal.add(STEPS[this.scale].scale, -1);
@@ -400,10 +291,10 @@ public class PlanPanel extends JPanel implements OperationListener {
 			}
 
 			this.scaleStart = this.cal.getTime();
-			//scroll calendar to end of period
+			// scroll calendar to end of period
 			this.cal.add(STEPS[this.scale].scale, STEPS[this.scale].total);
 			this.scaleEnd = this.cal.getTime();
-			//scroll calendar to start point
+			// scroll calendar to start point
 			this.cal.setTime(this.startDate);
 		}
 	}
@@ -428,12 +319,15 @@ public class PlanPanel extends JPanel implements OperationListener {
 
 	}
 
-	protected void paintScaleDigits(Graphics g, long diff, double delta, double subDelta) //,
+	protected void paintScaleDigits(Graphics g,
+									long diff,
+									double delta,
+									double subDelta) // ,
 	// double
 	// sub_sub_delta)
 	{
 		int h = getHeight() - 1;
-		//		int w = getWidth();
+		// int w = getWidth();
 
 		long tmpDiff = diff;
 		double tmpDelta = delta;
@@ -466,7 +360,10 @@ public class PlanPanel extends JPanel implements OperationListener {
 		this.cal.setTime(this.scaleStart);
 	}
 
-	protected void paintScales(Graphics g, long diff, double delta, double subDelta) {
+	protected void paintScales(	Graphics g,
+								long diff,
+								double delta,
+								double subDelta) {
 
 		int h = getHeight() - 1;
 		int w = getWidth();
@@ -515,7 +412,8 @@ public class PlanPanel extends JPanel implements OperationListener {
 
 	}
 
-	void setDate(Date startDate, int scale) {
+	void setDate(	Date startDate,
+					int scale) {
 		this.setCursor(UIStorage.WAIT_CURSOR);
 		setScale(scale);
 		setStartDate(startDate);
@@ -538,13 +436,14 @@ public class PlanPanel extends JPanel implements OperationListener {
 	void updateScale(double k) {
 		updateScale(k, (int) (this.parent.getViewport().getViewPosition().x + this.parent.getVisibleRect().width
 				* (k * 0.5 - 0.5) - this.margin));
-		//		BoundedRangeModel model =
+		// BoundedRangeModel model =
 		// this.parent.getHorizontalScrollBar().getModel();
 		updateRealScale();
 		this.parent.revalidate();
 	}
 
-	void updateScale(double k, int view_x) {
+	void updateScale(	double k,
+						int view_x) {
 		if (getSize().width / this.parent.getVisibleRect().width >= this.maxZoom - 1 && k > 1) {
 			this.parent.repaint();
 			return;
@@ -555,7 +454,7 @@ public class PlanPanel extends JPanel implements OperationListener {
 
 		setPreferredSize(new Dimension((int) ((getSize().width - 2 * this.margin) * k), getPreferredSize().height));
 		setSize(new Dimension((int) ((getSize().width - 2 * this.margin) * k), Math.max(getSize().height,
-																						getPreferredSize().height)));
+			getPreferredSize().height)));
 		/*
 		 * for (Iterator it = testLines.values().iterator(); it.hasNext();) {
 		 * TestLine testLine = (TestLine)it.next();
@@ -579,19 +478,13 @@ public class PlanPanel extends JPanel implements OperationListener {
 	}
 
 	private void initModule(Dispatcher dispatcher) {
-		//timer.start();
+		// timer.start();
 		this.dispatcher = dispatcher;
-		this.dispatcher.register(this, TestUpdateEvent.TYPE);
-		this.dispatcher.register(this, SchedulerModel.COMMAND_CLEAN);
-		this.dispatcher.register(this, SchedulerModel.COMMAND_REMOVE_TEST);
-		this.dispatcher.register(this, SchedulerModel.COMMAND_NAME_ALL_TESTS);
+		this.dispatcher.register(this, SchedulerModel.COMMAND_REFRESH_TESTS);
 	}
 
 	public void unregisterDispatcher() {
-		this.dispatcher.unregister(this, TestUpdateEvent.TYPE);
-		this.dispatcher.unregister(this, SchedulerModel.COMMAND_CLEAN);
-		this.dispatcher.unregister(this, SchedulerModel.COMMAND_REMOVE_TEST);
-		this.dispatcher.unregister(this, SchedulerModel.COMMAND_NAME_ALL_TESTS);
+		this.dispatcher.unregister(this, SchedulerModel.COMMAND_REFRESH_TESTS);
 	}
 
 	private void updateRealScale() {
@@ -616,7 +509,7 @@ public class PlanPanel extends JPanel implements OperationListener {
 			double delta = (getWidth() - 2 * this.margin)
 					/ ((double) (this.scaleEnd.getTime() - this.scaleStart.getTime()) / (double) diff);
 
-			//double sub_delta = delta / STEPS[actualScale].subscales;
+			// double sub_delta = delta / STEPS[actualScale].subscales;
 			if (delta >= 0 && delta < 35 && this.actualScale < STEPS.length - 1)
 				this.actualScale++;
 
@@ -655,68 +548,26 @@ public class PlanPanel extends JPanel implements OperationListener {
 		this.parent.repaint();
 	}
 
-	private void updateTest(Test test) {
+	private void addTestLine(MonitoredElement monitoredElement) {
 		TestLine testLine;
-		//System.out.println("updateTest:" + selectedTest.getId());
-		MonitoredElement monitoredElement = test.getMonitoredElement();
 		if (this.testLines.containsKey(monitoredElement.getId()))
 			testLine = (TestLine) this.testLines.get(monitoredElement.getId());
 		else {
-			testLine = new TestLine(this.aContext,
-			//parent.getViewport(),
-									monitoredElement.getName(), this.scaleStart.getTime(), this.scaleEnd.getTime(),
-									this.margin / 2);
+			testLine = new TestLine(this.aContext, monitoredElement.getName(), this.scaleStart.getTime(), this.scaleEnd
+					.getTime(), this.margin / 2, monitoredElement.getId());
 			testLine.setPreferredSize(new Dimension(0, 25));
 			this.testLines.put(monitoredElement.getId(), testLine);
+			super.add(testLine);
 		}
-		testLine.addTest(test);
-		add(testLine);
 	}
 
 	protected void updateTests() {
-		//Environment.log(Environment.LOG_LEVEL_INFO, "updateTests",
-		// getClass().getName()); //$NON-NLS-1$
-		//		this.setCursor(UIStorage.WAIT_CURSOR);
-		// clear old tests
-
-		/**
-		 * @TODO do testLine update without removing items
-		 */
-		if (this.testLines == null)
-			this.testLines = new HashMap();
-		else
-			this.testLines.clear();
-		// and fill with new ones
-
-		removeAll();
-		java.util.List tests = ((SchedulerModel) this.aContext.getApplicationModel()).getTests();
-		java.util.List unsavedTests = ((SchedulerModel) this.aContext.getApplicationModel()).getUnsavedTests();
-		if (unsavedTests != null) {
-			if (tests == null)
-				tests = unsavedTests;
-			//			else
-			//				tests.addAll(unsavedTests);
+		Collection tests = ((SchedulerModel) this.aContext.getApplicationModel()).getTests();
+		for (Iterator it = tests.iterator(); it.hasNext();) {
+			Test test = (Test) it.next();
+			this.addTestLine(test.getMonitoredElement());
 		}
-
-		//System.out.println("tests:" + (tests == null ? " is null" : "" +
-		// tests.size()));
-
-		if (tests != null) {
-			for (Iterator it = tests.iterator(); it.hasNext();) {
-				Test test = (Test) it.next();
-				updateTest(test);
-			}
-		}
-
-		if (unsavedTests != null) {
-			for (Iterator it = unsavedTests.iterator(); it.hasNext();) {
-				Test test = (Test) it.next();
-				updateTest(test);
-			}
-		}
-
-		setPreferredSize(new Dimension(getPreferredSize().width, 30 + 25 * this.testLines.values().size()));
-		updateRealScale();
-		//		this.setCursor(UIStorage.DEFAULT_CURSOR);
+		super.setPreferredSize(new Dimension(getPreferredSize().width, 30 + 25 * this.testLines.values().size()));
+		this.updateRealScale();
 	}
 }

@@ -1,3 +1,4 @@
+
 package com.syrus.AMFICOM.Client.Schedule.UI;
 
 import java.awt.BorderLayout;
@@ -8,7 +9,6 @@ import com.syrus.AMFICOM.Client.General.Command.Command;
 import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
 import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
 import com.syrus.AMFICOM.Client.General.Event.OperationListener;
-import com.syrus.AMFICOM.Client.General.Event.TestUpdateEvent;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.lang.LangModelSchedule;
 import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
@@ -23,12 +23,14 @@ import com.syrus.AMFICOM.measurement.Test;
 public class TestParametersFrame extends JInternalFrame implements OperationListener {
 
 	private ApplicationContext	aContext;
+	private SchedulerModel		schedulerModel;
 	private Dispatcher			dispatcher;
 	private TestParametersPanel	panel;
 	private Command				command;
 
 	public TestParametersFrame(ApplicationContext aContext) {
 		this.aContext = aContext;
+		this.schedulerModel = (SchedulerModel) aContext.getApplicationModel();
 		setTitle(LangModelSchedule.getString("Measurement_options")); //$NON-NLS-1$
 		setFrameIcon(UIStorage.GENERAL_ICON);
 		setResizable(true);
@@ -43,12 +45,14 @@ public class TestParametersFrame extends JInternalFrame implements OperationList
 
 	private void initModule(Dispatcher dispatcher) {
 		this.dispatcher = dispatcher;
-		this.dispatcher.register(this, TestUpdateEvent.TYPE);
+		this.dispatcher.register(this, SchedulerModel.COMMAND_REFRESH_TEST);
+		this.dispatcher.register(this, SchedulerModel.COMMAND_REFRESH_TESTS);
 		this.dispatcher.register(this, SchedulerModel.COMMAND_CHANGE_PORT_TYPE);
 	}
 
 	public void unregisterDispatcher() {
-		this.dispatcher.unregister(this, TestUpdateEvent.TYPE);
+		this.dispatcher.unregister(this, SchedulerModel.COMMAND_REFRESH_TEST);
+		this.dispatcher.unregister(this, SchedulerModel.COMMAND_REFRESH_TESTS);
 		this.dispatcher.unregister(this, SchedulerModel.COMMAND_CHANGE_PORT_TYPE);
 		this.panel.unregisterDispatcher();
 	}
@@ -56,33 +60,30 @@ public class TestParametersFrame extends JInternalFrame implements OperationList
 	public void operationPerformed(OperationEvent ae) {
 		String commandName = ae.getActionCommand();
 		Object obj = ae.getSource();
-				System.out.println(getClass().getName() + "\tcommandName:"
-						+ commandName);
-				System.out.println("obj:" + obj.getClass().getName() + "\t" + obj);
-		if (commandName.equals(TestUpdateEvent.TYPE)) {
-			TestUpdateEvent tue = (TestUpdateEvent) ae;
-			Test test = tue.test;
-			if (tue.testSelected) {				
-				try{
-					MeasurementPort port = (MeasurementPort) ConfigurationStorableObjectPool.getStorableObject(test.getMonitoredElement().getMeasurementPortId(), true);
-					if (((MeasurementPortType)port.getType()).getCodename().equals(ElementsTreePanel.ACCESSPORT_NAME_REFLECTOMETER)) {
-						if (!this.panel.isParameterPanelExists(ReflectometryTestPanel.PANEL_NAME)) {
-							this.dispatcher.notify(new OperationEvent(new ReflectometryTestPanel(this.aContext, port,
-																									test), 0,
-																		SchedulerModel.COMMAND_ADD_PARAM_PANEL));
-						}
+		if (commandName.equals(SchedulerModel.COMMAND_REFRESH_TEST)
+				|| commandName.equals(SchedulerModel.COMMAND_REFRESH_TESTS)) {
+			Test test = this.schedulerModel.getSelectedTest();
+			try {
+				MeasurementPort port = (MeasurementPort) ConfigurationStorableObjectPool.getStorableObject(test
+						.getMonitoredElement().getMeasurementPortId(), true);
+				if (((MeasurementPortType) port.getType()).getCodename().equals(
+					ElementsTreePanel.ACCESSPORT_NAME_REFLECTOMETER)) {
+					if (!this.panel.isParameterPanelExists(ReflectometryTestPanel.PANEL_NAME)) {
+						this.dispatcher.notify(new OperationEvent(
+																	new ReflectometryTestPanel(this.aContext, port,
+																								test), 0,
+																	SchedulerModel.COMMAND_ADD_PARAM_PANEL));
 					}
-				}catch(ApplicationException e){
-					SchedulerModel.showErrorMessage(this.panel, e);
 				}
-
-				this.panel.setTest(test);
-			} else {
-				//				nothing
+			} catch (ApplicationException e) {
+				SchedulerModel.showErrorMessage(this.panel, e);
 			}
+
+			this.panel.setTest(test);
 		} else if (commandName.equals(SchedulerModel.COMMAND_CHANGE_PORT_TYPE)) {
 			MeasurementPort port = (MeasurementPort) obj;
-			if(((MeasurementPortType)port.getType()).getCodename().equals(ElementsTreePanel.ACCESSPORT_NAME_REFLECTOMETER)) {
+			if (((MeasurementPortType) port.getType()).getCodename().equals(
+				ElementsTreePanel.ACCESSPORT_NAME_REFLECTOMETER)) {
 				if (!this.panel.isParameterPanelExists(ReflectometryTestPanel.PANEL_NAME)) {
 					this.dispatcher.notify(new OperationEvent(new ReflectometryTestPanel(this.aContext, port), 0,
 																SchedulerModel.COMMAND_ADD_PARAM_PANEL));

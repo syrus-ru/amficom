@@ -48,7 +48,6 @@ import com.syrus.AMFICOM.Client.General.Event.ContextChangeEvent;
 import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
 import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
 import com.syrus.AMFICOM.Client.General.Event.OperationListener;
-import com.syrus.AMFICOM.Client.General.Event.TestUpdateEvent;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.General.UI.CalendarUI;
@@ -72,7 +71,7 @@ import com.syrus.AMFICOM.measurement.TestTemporalStamps;
 import com.syrus.AMFICOM.measurement.TemporalPattern.TimeLine;
 import com.syrus.AMFICOM.measurement.corba.TestTemporalType;
 
-public class TimeParametersFrame extends JInternalFrame implements OperationListener {
+public class TimeParametersFrame extends JInternalFrame {
 
 	private static final long	serialVersionUID	= 6562288896016470275L;
 
@@ -80,6 +79,7 @@ public class TimeParametersFrame extends JInternalFrame implements OperationList
 
 		private static final long	serialVersionUID	= -7975294015403739057L;
 
+		SchedulerModel schedulerModel;
 		ApplicationContext			aContext;
 
 		Dispatcher					dispatcher;
@@ -117,6 +117,7 @@ public class TimeParametersFrame extends JInternalFrame implements OperationList
 
 		public TimeParametersPanel(ApplicationContext aContext) {
 			this.aContext = aContext;
+			this.schedulerModel = (SchedulerModel) aContext.getApplicationModel();
 			initModule(aContext.getDispatcher());
 			init();
 		}
@@ -124,13 +125,15 @@ public class TimeParametersFrame extends JInternalFrame implements OperationList
 		private void initModule(Dispatcher dispatcher) {
 			this.dispatcher = dispatcher;
 			this.dispatcher.register(this, ContextChangeEvent.type);
-			this.dispatcher.register(this, TestUpdateEvent.TYPE);
+			this.dispatcher.register(this, SchedulerModel.COMMAND_REFRESH_TEST);
+			this.dispatcher.register(this, SchedulerModel.COMMAND_REFRESH_TESTS);
 			this.dispatcher.register(this, SchedulerModel.COMMAND_DATA_REQUEST);
 		}
 
 		public void unregisterDispatcher() {
 			this.dispatcher.unregister(this, ContextChangeEvent.type);
-			this.dispatcher.unregister(this, TestUpdateEvent.TYPE);
+			this.dispatcher.unregister(this, SchedulerModel.COMMAND_REFRESH_TEST);
+			this.dispatcher.unregister(this, SchedulerModel.COMMAND_REFRESH_TESTS);
 			this.dispatcher.unregister(this, SchedulerModel.COMMAND_DATA_REQUEST);
 		}
 
@@ -443,8 +446,7 @@ public class TimeParametersFrame extends JInternalFrame implements OperationList
 					public void actionPerformed(ActionEvent e) {
 						TimeParametersPanel.this.createButton.setEnabled(false);
 						TimeParametersPanel.this.applyButton.setEnabled(false);
-						TimeParametersPanel.this.dispatcher
-								.notify(new OperationEvent("", 0, SchedulerModel.COMMAND_APPLY_TEST));
+						TimeParametersPanel.this.schedulerModel.applyTest();
 						TimeParametersPanel.this.createButton.setEnabled(true);
 						TimeParametersPanel.this.applyButton.setEnabled(true);
 
@@ -456,8 +458,7 @@ public class TimeParametersFrame extends JInternalFrame implements OperationList
 					public void actionPerformed(ActionEvent e) {
 						TimeParametersPanel.this.createButton.setEnabled(false);
 						TimeParametersPanel.this.applyButton.setEnabled(false);
-						TimeParametersPanel.this.dispatcher
-								.notify(new OperationEvent("", 0, SchedulerModel.COMMAND_CREATE_TEST));
+						TimeParametersPanel.this.schedulerModel.createTest();
 						TimeParametersPanel.this.createButton.setEnabled(true);
 						TimeParametersPanel.this.applyButton.setEnabled(true);
 					}
@@ -480,52 +481,55 @@ public class TimeParametersFrame extends JInternalFrame implements OperationList
 			this.oneRadioButton.doClick();
 			this.periodicalRadioButton.doClick();
 		}
+		
+		private void sendParameters() {
+
+			TestTemporalType temporalType = null;
+			TemporalPattern temporalPattern = null;
+			if (this.oneRadioButton.isSelected()) {
+				temporalType = TestTemporalType.TEST_TEMPORAL_TYPE_ONETIME;
+			} else if (this.periodicalRadioButton.isSelected()) {
+				temporalType = TestTemporalType.TEST_TEMPORAL_TYPE_PERIODICAL;
+				temporalPattern = (TemporalPattern) TimeParametersPanel.this.timeStamps.getSelectedValue();
+			} else if (this.continuosRadioButton.isSelected()) {
+				temporalType = TestTemporalType.TEST_TEMPORAL_TYPE_CONTINUOUS;
+			} else {
+				// SchedulerModel.showErrorMessage(this, ne)
+				return;
+			}
+
+			Calendar dateCal = Calendar.getInstance();
+			Calendar timeCal = Calendar.getInstance();
+
+			dateCal.setTime((Date) this.startDateSpinner.getValue());
+			timeCal.setTime((Date) this.startTimeSpinner.getValue());
+			dateCal.set(Calendar.HOUR_OF_DAY, timeCal.get(Calendar.HOUR_OF_DAY));
+			dateCal.set(Calendar.MINUTE, timeCal.get(Calendar.MINUTE));
+			dateCal.set(Calendar.SECOND, 0);
+			dateCal.set(Calendar.MILLISECOND, 0);
+			long start = dateCal.getTimeInMillis();
+
+			dateCal.setTime((Date) this.endDateSpinner.getValue());
+			timeCal.setTime((Date) this.endTimeSpinner.getValue());
+			dateCal.set(Calendar.HOUR_OF_DAY, timeCal.get(Calendar.HOUR_OF_DAY));
+			dateCal.set(Calendar.MINUTE, timeCal.get(Calendar.MINUTE));
+			dateCal.set(Calendar.SECOND, 0);
+			dateCal.set(Calendar.MILLISECOND, 0);
+			long end = dateCal.getTimeInMillis();
+
+			TestTemporalStamps timeStamps = new TestTemporalStamps(temporalType, new Date(start), new Date(end),
+																	temporalPattern);
+			this.schedulerModel.setTestTimeStamps(timeStamps);
+		}
 
 		public void operationPerformed(OperationEvent ae) {
 			String commandName = ae.getActionCommand();
 			if (commandName.equalsIgnoreCase(SchedulerModel.COMMAND_DATA_REQUEST)) {
-				TestTemporalType temporalType = null;
-				TemporalPattern temporalPattern = null;
-				if (this.oneRadioButton.isSelected()) {
-					temporalType = TestTemporalType.TEST_TEMPORAL_TYPE_ONETIME;
-				} else if (this.periodicalRadioButton.isSelected()) {
-					temporalType = TestTemporalType.TEST_TEMPORAL_TYPE_PERIODICAL;
-					temporalPattern = (TemporalPattern) TimeParametersPanel.this.timeStamps.getSelectedValue();
-				} else if (this.continuosRadioButton.isSelected()) {
-					temporalType = TestTemporalType.TEST_TEMPORAL_TYPE_CONTINUOUS;
-				} else {
-					// SchedulerModel.showErrorMessage(this, ne)
-					return;
-				}
-
-				Calendar dateCal = Calendar.getInstance();
-				Calendar timeCal = Calendar.getInstance();
-
-				dateCal.setTime((Date) this.startDateSpinner.getValue());
-				timeCal.setTime((Date) this.startTimeSpinner.getValue());
-				dateCal.set(Calendar.HOUR_OF_DAY, timeCal.get(Calendar.HOUR_OF_DAY));
-				dateCal.set(Calendar.MINUTE, timeCal.get(Calendar.MINUTE));
-				dateCal.set(Calendar.SECOND, 0);
-				dateCal.set(Calendar.MILLISECOND, 0);
-				long start = dateCal.getTimeInMillis();
-
-				dateCal.setTime((Date) this.endDateSpinner.getValue());
-				timeCal.setTime((Date) this.endTimeSpinner.getValue());
-				dateCal.set(Calendar.HOUR_OF_DAY, timeCal.get(Calendar.HOUR_OF_DAY));
-				dateCal.set(Calendar.MINUTE, timeCal.get(Calendar.MINUTE));
-				dateCal.set(Calendar.SECOND, 0);
-				dateCal.set(Calendar.MILLISECOND, 0);
-				long end = dateCal.getTimeInMillis();
-
-				TestTemporalStamps timeStamps = new TestTemporalStamps(temporalType, new Date(start), new Date(end),
-																		temporalPattern);
-				this.dispatcher.notify(new OperationEvent(timeStamps, SchedulerModel.DATA_ID_TIMESTAMP,
-															SchedulerModel.COMMAND_SEND_DATA));
-			} else if (commandName.equals(TestUpdateEvent.TYPE)) {
-				TestUpdateEvent tue = (TestUpdateEvent) ae;
-				Test test = tue.test;
+				this.sendParameters();
+			} else if (commandName.equals(SchedulerModel.COMMAND_REFRESH_TEST)|| commandName.equals(SchedulerModel.COMMAND_REFRESH_TESTS)) {
+				Test test = this.schedulerModel.getSelectedTest();
 				if ((this.test == null) || (!this.test.getId().equals(test.getId()))) {
-					this.test = tue.test;
+					this.test = test;
 					Date startTime = this.test.getStartTime();
 					this.startDateSpinner.getModel().setValue(startTime);
 					this.startTimeSpinner.getModel().setValue(startTime);
@@ -602,8 +606,6 @@ public class TimeParametersFrame extends JInternalFrame implements OperationList
 
 	}
 
-	private Dispatcher			dispatcher;
-
 	private TimeParametersPanel	panel;
 
 	private Command				command;
@@ -628,12 +630,9 @@ public class TimeParametersFrame extends JInternalFrame implements OperationList
 	}
 
 	public TimeParametersFrame() {
-
 	}
 
 	public TimeParametersFrame(ApplicationContext aContext) {
-		// this.aContext = aContext;
-		initModule(aContext.getDispatcher());
 		setTitle(LangModelSchedule.getString("TemporalType.Title")); //$NON-NLS-1$
 		setFrameIcon(UIStorage.GENERAL_ICON);
 		setResizable(true);
@@ -643,32 +642,7 @@ public class TimeParametersFrame extends JInternalFrame implements OperationList
 		this.getContentPane().add(this.panel, BorderLayout.CENTER);
 		this.command = new WindowCommand(this);
 	}
-
-	private void initModule(Dispatcher dispatcher) {
-		this.dispatcher = dispatcher;
-		this.dispatcher.register(this, TestUpdateEvent.TYPE);
-	}
-
-	public void unregisterDispatcher() {
-		this.dispatcher.unregister(this, TestUpdateEvent.TYPE);
-		this.panel.unregisterDispatcher();
-	}
-
-	public void operationPerformed(OperationEvent ae) {
-		String commandName = ae.getActionCommand();
-		Environment.log(Environment.LOG_LEVEL_INFO, "commandName:" + commandName, getClass().getName());
-		// int id = ae.getID();
-		// Object obj = ae.getSource();
-
-		if (commandName.equals(TestUpdateEvent.TYPE)) {
-			TestUpdateEvent tue = (TestUpdateEvent) ae;
-			Test test = tue.test;
-			if (tue.testSelected) {
-			} else {
-				// nothing
-			}
-		}
-	}
+	
 
 	/**
 	 * @return Returns the command.

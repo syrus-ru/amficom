@@ -13,6 +13,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -21,13 +22,10 @@ import java.util.Map;
 import javax.swing.JLabel;
 import javax.swing.Timer;
 
-import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
 import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
 import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
 import com.syrus.AMFICOM.Client.General.Event.OperationListener;
-import com.syrus.AMFICOM.Client.General.Event.TestUpdateEvent;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
 import com.syrus.AMFICOM.Client.Scheduler.General.UIStorage;
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -43,10 +41,19 @@ import com.syrus.AMFICOM.measurement.corba.TestTemporalType;
 
 public class TestLine extends JLabel implements ActionListener, OperationListener {
 
-	/**
-	 * Comment for <code>serialVersionUID</code>
-	 */
-	private static final long	serialVersionUID			= 3258134669420606000L;
+	private class TestTimeLine implements Comparable {
+
+		protected long		duration;
+		protected boolean	haveMeasurement;
+
+		protected long		startTime;
+		protected Test		test;
+
+		public int compareTo(Object o) {
+			TestTimeLine testTimeLine = (TestTimeLine) o;
+			return (int) (this.startTime - testTimeLine.startTime);
+		}
+	}
 	/**
 	 * @TODO recast using alpha
 	 */
@@ -70,8 +77,12 @@ public class TestLine extends JLabel implements ActionListener, OperationListene
 	public static final int		MINIMAL_WIDTH				= 7;
 
 	public static final int		TIME_OUT					= 500;
-	List						allTests;
-	// Test currentTest;
+
+	/**
+	 * Comment for <code>serialVersionUID</code>
+	 */
+	private static final long	serialVersionUID			= 3258134669420606000L;
+	Collection					allTests					= new HashSet();
 
 	Dispatcher					dispatcher;
 
@@ -79,61 +90,45 @@ public class TestLine extends JLabel implements ActionListener, OperationListene
 	int							height;
 	int							margin;
 	double						scale;
+	SchedulerModel				schedulerModel;
 	Test						selectedTest;
 
 	int							titleHeight;
+	Collection					unsavedTest					= new HashSet();
 
 	int							width;
 
 	private long				end;
+
+	// Map <Identifier testId, List<TestTimeLine>>
+	private Map					measurements				= new HashMap();
+	private Identifier			monitoredElementId;
 	private long				start;
 
-	private Map					tests						= new HashMap();
 	private Timer				timer;
 
 	private String				title;
 
-	private Map					unsavedTests;
-
-	// Map <Identifier testId, List<TestTimeLine>>
-	private Map					measurements;
-	private ApplicationContext		aContext;
-
-	private class TestTimeLine implements Comparable {
-
-		protected long		startTime;
-		protected long		duration;
-		protected Test		test;
-		protected boolean	haveMeasurement;
-
-		public int compareTo(Object o) {
-			TestTimeLine testTimeLine = (TestTimeLine) o;
-			return (int) (this.startTime - testTimeLine.startTime);
-		}
-
-	}
-
-	public TestLine(ApplicationContext aContext, String title, long start, long end, int margin) {
-		this.aContext = aContext;
+	public TestLine(ApplicationContext aContext,
+			String title,
+			long start,
+			long end,
+			int margin,
+			Identifier monitoredElementId) {
+		this.schedulerModel = (SchedulerModel) aContext.getApplicationModel();
 		this.title = title;
 		this.start = start;
 		this.end = end;
 		this.margin = margin;
+		this.monitoredElementId = monitoredElementId;
 		initModule(aContext.getDispatcher());
 		this.addMouseListener(new MouseAdapter() {
 
 			public void mousePressed(MouseEvent e) {
-				if (TestLine.this.allTests != null) {
+				if (!TestLine.this.allTests.isEmpty()) {
 					int x = e.getX();
 					int y = e.getY();
-					// int width = getWidth();
-					// System.out.println("mousePressed: (" + x + "," + y +
-					// ")");
-					// double scale = (double) (width - 2 * margin)/ (double)
-					// (end - start);
 
-					// for (Iterator it = getTests().iterator(); it.hasNext();)
-					// {
 					for (Iterator it = TestLine.this.allTests.iterator(); it.hasNext();) {
 						// Test selectedTest = (Test) it.next();
 						Test test = (Test) it.next();
@@ -178,26 +173,14 @@ public class TestLine extends JLabel implements ActionListener, OperationListene
 						}
 
 						if (condition) {
-							// System.out.println("selectedTest:" +
-							// selectedTest.id);
-							// System.out.println("selectedTest.status.value():"
-							// + selectedTest.status.value());
-							// System.out.println("TestLine>onClick:
-							// selectedTest==null
-							// : " //$NON-NLS-1$
-							// + (selectedTest.isChanged()));
-							// TestLine.this.skipTestUpdate = true;
-							TestLine.this.dispatcher.notify(new TestUpdateEvent(this, test,
-																				TestUpdateEvent.TEST_SELECTED_EVENT));
-							// TestLine.this.skipTestUpdate = false;
-							// TestLine.this.selectedTest = selectedTest;
+							TestLine.this.schedulerModel.setSelectedTest(test);
 							break;
 						}
 					}
 				}
 
 			}
-			
+
 		});
 		this.addMouseMotionListener(new MouseMotionListener() {
 
@@ -213,6 +196,7 @@ public class TestLine extends JLabel implements ActionListener, OperationListene
 			}
 		});
 
+		this.acquireTests();
 	}
 
 	public void actionPerformed(ActionEvent e) {
@@ -220,130 +204,14 @@ public class TestLine extends JLabel implements ActionListener, OperationListene
 		flashUnsavedTest();
 	}
 
-	public void addTest(Identifier id) throws ApplicationException {
-		Test test = (Test) MeasurementStorableObjectPool.getStorableObject(id, true);
-		if (test != null)
-			addTest(test);
-	}
-
-	public synchronized void addTest(Test test) {
-		// if (!this.skipTestUpdate) {
-		if (test.isChanged()) {
-			// System.out.println("selectedTest is changed");
-			if (this.unsavedTests == null) {
-				this.unsavedTests = new HashMap();
-				if (this.timer == null) {
-					this.timer = new Timer(TIME_OUT, this);
-					// System.out.println("timer created");
-
-				}
-			}
-			if (this.unsavedTests.containsValue(test)) {
-				// System.out.println("unsavedTests.contains(selectedTest)");
-				// //$NON-NLS-1$
-			} else {
-				// System.out.println("unsavedTests.put(" + selectedTest.getId()
-				// + ")");
-				this.unsavedTests.put(test.getId(), test);
-			}
-			this.timer.restart();	
-			
-			
-		} else {
-			// System.out.println("selectedTest is NOT changed");
-			this.tests.put(test.getId(), test);
-			LinkedIdsCondition linkedIdsCondition = new LinkedIdsCondition(test.getId(), ObjectEntities.MEASUREMENT_ENTITY_CODE);
-			RISDSessionInfo sessionInterface = (RISDSessionInfo) this.aContext.getSessionInterface();
-			try {
-				Collection measurements = MeasurementStorableObjectPool.getStorableObjectsByCondition(linkedIdsCondition,
-					true);
-				if (this.measurements == null)
-					this.measurements = new HashMap();
-
-				List measurementTestList = new LinkedList();
-				for (Iterator it = measurements.iterator(); it.hasNext();) {
-					Measurement measurement = (Measurement) it.next();
-					TestTimeLine testTimeLine = new TestTimeLine();
-					testTimeLine.test = test;
-					testTimeLine.startTime = measurement.getStartTime().getTime();
-					testTimeLine.duration = measurement.getDuration();
-					testTimeLine.haveMeasurement = true;
-					measurementTestList.add(testTimeLine);
-				}
-				this.measurements.put(test.getId(), measurementTestList);
-			} catch (ApplicationException e) {
-				SchedulerModel.showErrorMessage(this, e);
-			}
-		}
-		
-		if (this.measurements == null){
-			this.measurements = new HashMap();
-		}
-		
-		List measurementTestList = (List) this.measurements.get(test.getId());
-		if (measurementTestList == null) {
-			measurementTestList = new LinkedList();
-			this.measurements.put(test.getId(), measurementTestList);
-		}
-
-		try {
-			MeasurementSetup measurementSetup = (MeasurementSetup) MeasurementStorableObjectPool.getStorableObject(
-				(Identifier) test.getMeasurementSetupIds().iterator().next(), true);
-			switch (test.getTemporalType().value()) {
-				case TestTemporalType._TEST_TEMPORAL_TYPE_PERIODICAL:
-					List times = test.getTemporalPattern().getTimes(test.getStartTime(), test.getEndTime());
-					List addMeasurementTestList = new LinkedList();
-					for (Iterator timeIt = times.iterator(); timeIt.hasNext();) {
-						Date date = (Date) timeIt.next();
-						long time = date.getTime();
-						boolean found = false;
-						for (Iterator it = measurementTestList.iterator(); it.hasNext();) {
-							TestTimeLine testTimeLine = (TestTimeLine) it.next();
-							if (testTimeLine.startTime == time) {
-								found = true;
-								break;
-							}
-						}
-						if (!found) {
-							TestTimeLine testTimeLine = new TestTimeLine();
-							testTimeLine.test = test;
-							testTimeLine.startTime = time;
-							testTimeLine.duration = measurementSetup.getMeasurementDuration();
-							testTimeLine.haveMeasurement = false;
-							addMeasurementTestList.add(testTimeLine);
-						}
-					}
-					measurementTestList.addAll(addMeasurementTestList);
-					break;
-				default:
-					TestTimeLine testTimeLine = new TestTimeLine();
-					testTimeLine.test = test;
-					testTimeLine.startTime = test.getStartTime().getTime();
-					testTimeLine.duration = test.getEndTime().getTime() - testTimeLine.startTime;
-					break;
-
-			}
-			Collections.sort(measurementTestList);
-		} catch (ApplicationException ae) {
-			SchedulerModel.showErrorMessage(this, ae);
-		}
-		
-
-		if (this.allTests == null)
-			this.allTests = new LinkedList();
-		if (!this.allTests.contains(test))
-			this.allTests.add(test);
-		this.revalidate();
-		// }
-	}
-
 	public void flashUnsavedTest() {
-		if ((this.isVisible()) && (this.unsavedTests != null)) {
+
+		if ((this.isVisible()) && (!this.unsavedTest.isEmpty())) {
 			Graphics g = this.getGraphics();
 			if (g != null) {
 				this.flash = !this.flash;
-				for (Iterator it = this.unsavedTests.keySet().iterator(); it.hasNext();) {
-					Test test = (Test) this.unsavedTests.get(it.next());
+				for (Iterator it = this.unsavedTest.iterator(); it.hasNext();) {
+					Test test = (Test) it.next();
 					g.setColor(this.flash ? (((this.selectedTest == null) || (!this.selectedTest.getId().equals(
 						test.getId()))) ? COLOR_SCHEDULED : COLOR_SCHEDULED_SELECTED) : COLOR_UNRECOGNIZED);
 					drawTestRect(g, test);
@@ -353,79 +221,19 @@ public class TestLine extends JLabel implements ActionListener, OperationListene
 
 	}
 
-	/**
-	 * @return Returns the end.
-	 */
-	long getEnd() {
-		return this.end;
-	}
-
-	/**
-	 * @return Returns the start.
-	 */
-	long getStart() {
-		return this.start;
-	}
-
-	// public Collection getTests() {
-	// return tests.values();
-	// }
-	//
-	// public Set getTestIds() {
-	// return tests.keySet();
-	// }
-
-	public Test getTest(Identifier id) {
-		Test test = (Test) this.tests.get(id);
-		if (test == null) {
-			for (Iterator it = this.allTests.iterator(); it.hasNext();) {
-				Test t = (Test) it.next();
-				if (t.getId().equals(id)) {
-					test = t;
-					break;
-				}
-
-			}
-		}
-
-		return test;
-	}
-
-	public boolean isEmpty() {
-		return this.allTests.isEmpty();
-	}
-
 	public void operationPerformed(OperationEvent e) {
 		String commandName = e.getActionCommand();
-		Environment.log(Environment.LOG_LEVEL_INFO, "commandName:" + commandName, getClass().getName());
-		if (commandName.equals(SchedulerModel.COMMAND_TEST_SAVED_OK)) {
-			if (this.unsavedTests != null) {
-				for (Iterator it = this.unsavedTests.keySet().iterator(); it.hasNext();) {
-					Object key = it.next();
-					Test test = (Test) this.unsavedTests.get(key);
-					if (!test.isChanged()) {
-						// System.out.println("remove " + key);
-						this.unsavedTests.remove(key);
-						this.tests.put(test.getId(), test);
-					}
-				}
-			}
-		} else if (commandName.equals(SchedulerModel.COMMAND_CLEAN)) {
-			if (this.timer != null)
-				this.timer.stop();
-			if (this.unsavedTests != null)
-				this.unsavedTests.clear();
-			if (this.tests != null)
-				this.tests.clear();
-			if (this.measurements != null)
-				this.measurements.clear();
-		} else if (commandName.equals(TestUpdateEvent.TYPE)) {
-			TestUpdateEvent tue = (TestUpdateEvent) e;
-			Test test = tue.test;
-			if ((this.selectedTest == null) || (!this.selectedTest.getId().equals(test.getId()))) {
+		// Environment.log(Environment.LOG_LEVEL_INFO, "commandName:" +
+		// commandName, getClass().getName());
+		if (commandName.equals(SchedulerModel.COMMAND_REFRESH_TESTS)) {
+			this.acquireTests();
+		} else if (commandName.equals(SchedulerModel.COMMAND_REFRESH_TEST)) {
+			Test test = this.schedulerModel.getSelectedTest();
+			if (test == null)
+				this.acquireTests();
+			else if ((this.selectedTest != null) && (!this.selectedTest.getId().equals(test.getId()))
+					&& ((this.allTests.contains(test)) || (this.unsavedTest.contains(test)))) {
 				this.selectedTest = test;
-				// System.out.println("set selectedTest
-				// :"+selectedTest.getId());
 				this.repaint();
 			}
 		}
@@ -435,22 +243,17 @@ public class TestLine extends JLabel implements ActionListener, OperationListene
 		this.height = getHeight();
 		this.width = getWidth();
 
-		if (this.allTests != null) {
+		if (this.schedulerModel.getTests() != null) {
 			this.scale = (double) (this.width - 2 * this.margin) / (double) (this.end - this.start);
 			Font font = UIStorage.ARIAL_12_FONT;
 			g.setFont(font);
 			this.titleHeight = g.getFontMetrics().getHeight();
-			// System.out.println("titleHeight:"+titleHeight);
 			g.setColor(Color.gray);
 			g.clearRect(0, 0, this.width, this.titleHeight / 2 + 3);
 			g.setColor(Color.black);
 			g.drawString(this.title, 5, this.titleHeight / 2 + 2);
 			g.drawLine(0, this.titleHeight / 2 + 3, this.width, this.titleHeight / 2 + 3);
 			g.drawLine(0, this.height - 1, this.width, this.height - 1);
-			// for (Iterator it = tests.values().iterator(); it.hasNext();) {
-			// System.out.println(":" + allTests.size() + "\t"
-			// + System.currentTimeMillis());
-
 			/**
 			 * FIXME fix occur ConcurrentModificationException
 			 */
@@ -458,7 +261,6 @@ public class TestLine extends JLabel implements ActionListener, OperationListene
 				for (Iterator it = this.allTests.iterator(); it.hasNext();) {
 					Color color;
 					Test test = (Test) it.next();
-
 					if ((this.selectedTest == null) || (!this.selectedTest.getId().equals(test.getId()))) {
 						switch (test.getStatus().value()) {
 							case TestStatus._TEST_STATUS_COMPLETED:
@@ -496,57 +298,11 @@ public class TestLine extends JLabel implements ActionListener, OperationListene
 								break;
 						}
 					}
-					// System.out.println("color:" + color);
-					if ((this.unsavedTests == null) || (!this.unsavedTests.containsValue(test))) {
-						g.setColor(color);
-						drawTestRect(g, test);
-					}
-
+					g.setColor(color);
+					drawTestRect(g, test);
 				}
 			}
 		}
-	}
-
-	public void removeAllTests() {
-		synchronized (this.tests) {
-			this.tests.clear();
-		}
-		synchronized (this.allTests) {
-			this.allTests.clear();
-		}
-		synchronized (this.unsavedTests) {
-			this.unsavedTests.clear();
-		}
-	}
-
-	public void removeTest(Test test) {
-		// Test selectedTest = (Test) this.tests.get(id);
-		Identifier testId = test.getId();
-		if (this.unsavedTests != null) {
-			if (this.unsavedTests.containsKey(testId)) {
-				this.timer.stop();
-				this.unsavedTests.remove(testId);
-				if (!this.unsavedTests.isEmpty())
-					this.timer.restart();
-				// System.out.println("this.unsavedTests.remove(" +
-				// selectedTest.getId()
-				// +
-				// "):"
-				// + this.unsavedTests.containsKey(selectedTest.getId()));
-			}
-		}
-		if (this.allTests != null) {
-			// for (Iterator it = this.allTests.iterator(); it.hasNext();) {
-			// Test t = (Test) it.next();
-			// System.out.println(t.getId());
-			// }
-			this.allTests.remove(test);
-			// System.out.println("this.allTests.remove(selectedTest):" +
-			// this.allTests.contains(selectedTest));
-		}
-		this.tests.remove(testId);
-		// System.out.println("this.tests.remove(testId):" +
-		// this.tests.containsKey(testId));
 	}
 
 	/**
@@ -565,7 +321,132 @@ public class TestLine extends JLabel implements ActionListener, OperationListene
 		this.start = start;
 	}
 
-	private void drawTestRect(Graphics g, Test test) {
+	public void unregisterDispatcher() {
+		this.dispatcher.unregister(this, SchedulerModel.COMMAND_REFRESH_TEST);
+		this.dispatcher.unregister(this, SchedulerModel.COMMAND_REFRESH_TESTS);
+	}
+
+	/**
+	 * @return Returns the end.
+	 */
+	long getEnd() {
+		return this.end;
+	}
+
+	/**
+	 * @return Returns the start.
+	 */
+	long getStart() {
+		return this.start;
+	}
+
+	private void acquireTests() {
+		Collection tests = this.schedulerModel.getTests();
+		this.allTests.clear();
+		this.unsavedTest.clear();
+		this.measurements.clear();
+		for (Iterator it = tests.iterator(); it.hasNext();) {
+			Test test = (Test) it.next();
+			if (test.getMonitoredElement().getId().equals(this.monitoredElementId)) {
+				if (test.isChanged())
+					this.unsavedTest.add(test);
+				else {
+					this.allTests.add(test);
+					LinkedIdsCondition linkedIdsCondition = new LinkedIdsCondition(
+																					test.getId(),
+																					ObjectEntities.MEASUREMENT_ENTITY_CODE);
+					try {
+						Collection testMeasurements = MeasurementStorableObjectPool.getStorableObjectsByCondition(
+							linkedIdsCondition, true);
+						List measurementTestList = new LinkedList();
+						for (Iterator iter = testMeasurements.iterator(); iter.hasNext();) {
+							Measurement measurement = (Measurement) iter.next();
+							TestTimeLine testTimeLine = new TestTimeLine();
+							testTimeLine.test = test;
+							testTimeLine.startTime = measurement.getStartTime().getTime();
+							testTimeLine.duration = measurement.getDuration();
+							testTimeLine.haveMeasurement = true;
+							measurementTestList.add(testTimeLine);
+						}
+						this.measurements.put(test.getId(), measurementTestList);
+					} catch (ApplicationException e) {
+						SchedulerModel.showErrorMessage(this, e);
+					}
+
+				}
+
+				// ///
+				List measurementTestList = (List) this.measurements.get(test.getId());
+				if (measurementTestList == null) {
+					measurementTestList = new LinkedList();
+					TestTimeLine testTimeLine = new TestTimeLine();
+					testTimeLine.test = test;
+					testTimeLine.startTime = test.getStartTime().getTime();
+					testTimeLine.duration = test.getEndTime().getTime() - testTimeLine.startTime;
+					testTimeLine.haveMeasurement = false;
+					measurementTestList.add(testTimeLine);
+					this.measurements.put(test.getId(), measurementTestList);
+				}
+
+				try {
+					MeasurementSetup measurementSetup = (MeasurementSetup) MeasurementStorableObjectPool
+							.getStorableObject((Identifier) test.getMeasurementSetupIds().iterator().next(), true);
+					switch (test.getTemporalType().value()) {
+						case TestTemporalType._TEST_TEMPORAL_TYPE_PERIODICAL:
+							List times = test.getTemporalPattern().getTimes(test.getStartTime(), test.getEndTime());
+							List addMeasurementTestList = new LinkedList();
+							for (Iterator timeIt = times.iterator(); timeIt.hasNext();) {
+								Date date = (Date) timeIt.next();
+								long time = date.getTime();
+								boolean found = false;
+								for (Iterator iter = measurementTestList.iterator(); iter.hasNext();) {
+									TestTimeLine testTimeLine = (TestTimeLine) iter.next();
+									if (testTimeLine.startTime == time) {
+										found = true;
+										break;
+									}
+								}
+								if (!found) {
+									TestTimeLine testTimeLine = new TestTimeLine();
+									testTimeLine.test = test;
+									testTimeLine.startTime = time;
+									testTimeLine.duration = measurementSetup.getMeasurementDuration();
+									testTimeLine.haveMeasurement = false;
+									addMeasurementTestList.add(testTimeLine);
+								}
+							}
+							measurementTestList.addAll(addMeasurementTestList);
+							break;
+						default:
+							TestTimeLine testTimeLine = new TestTimeLine();
+							testTimeLine.test = test;
+							testTimeLine.startTime = test.getStartTime().getTime();
+							testTimeLine.duration = test.getEndTime().getTime() - testTimeLine.startTime;
+							break;
+
+					}
+					Collections.sort(measurementTestList);
+				} catch (ApplicationException ae) {
+					SchedulerModel.showErrorMessage(this, ae);
+				}
+				// ///
+
+			}
+		}
+
+		if (!this.unsavedTest.isEmpty()) {
+			if (this.timer == null) {
+				this.timer = new Timer(TIME_OUT, this);
+				System.out.println("timer created");
+			}
+			this.timer.restart();
+		} else
+			this.timer.stop();
+
+	}
+
+	private void drawTestRect(	Graphics g,
+								Test test) {
 		// System.out.println("drawTestRect:"+selectedTest.getId());
 		int y = this.titleHeight / 2 + 4;
 		int h = this.height - (this.titleHeight / 2 + 4) - 2;
@@ -579,11 +460,9 @@ public class TestLine extends JLabel implements ActionListener, OperationListene
 		/**
 		 * TODO remove when ok
 		 */
-//		ElementaryTestAlarm[] testAlarms = new ElementaryTestAlarm[0];
-
+		// ElementaryTestAlarm[] testAlarms = new ElementaryTestAlarm[0];
 		// switch (temporalType.value()) {
 		// case TestTemporalType._TEST_TEMPORAL_TYPE_PERIODICAL:
-
 		int i = 0;
 
 		// List times =
@@ -607,35 +486,40 @@ public class TestLine extends JLabel implements ActionListener, OperationListene
 			 * TODO remove when ok
 			 */
 
-//			if (testAlarms.length > 0) {
-//				for (int j = 0; j < testAlarms.length; j++) {
-//					if (Math.abs(testAlarms[j].elementary_start_time - testTimeLine.startTime) < 1000 * 30) {
-//						Alarm alarm = (Alarm) Pool.get(Alarm.typ, testAlarms[j].alarm_id);
-//						if (alarm != null) {
-//							// System.out.println("alarm.type_id:" +
-//							// alarm.type_id);
-//							if (alarm.type_id.equals(AlarmTypeConstants.ID_RTU_TEST_ALARM)) {
-//								// System.out.println("ID_RTU_TEST_ALARM");
-//								if ((this.selectedTest != null) && (this.selectedTest.getId().equals(test.getId())))
-//									g.setColor(TestLine.COLOR_ALARM_SELECTED);
-//								else
-//									g.setColor(TestLine.COLOR_ALARM);
-//							} else if (alarm.type_id.equals(AlarmTypeConstants.ID_RTU_TEST_WARNING)) {
-//								// System.out.println("ID_RTU_TEST_WARNING");
-//								if ((this.selectedTest != null) && (this.selectedTest.getId().equals(test.getId())))
-//									g.setColor(TestLine.COLOR_WARNING_SELECTED);
-//								else
-//									g.setColor(TestLine.COLOR_WARNING);
-//							}
-//						}
-//
-//					}
-//					// System.out.println(
-//					// (testAlarms[j].elementary_start_time-times[i]));
-//
-//					// alarm.
-//				}
-//			}
+			// if (testAlarms.length > 0) {
+			// for (int j = 0; j < testAlarms.length; j++) {
+			// if (Math.abs(testAlarms[j].elementary_start_time -
+			// testTimeLine.startTime) < 1000 * 30) {
+			// Alarm alarm = (Alarm) Pool.get(Alarm.typ,
+			// testAlarms[j].alarm_id);
+			// if (alarm != null) {
+			// // System.out.println("alarm.type_id:" +
+			// // alarm.type_id);
+			// if (alarm.type_id.equals(AlarmTypeConstants.ID_RTU_TEST_ALARM)) {
+			// // System.out.println("ID_RTU_TEST_ALARM");
+			// if ((this.selectedTest != null) &&
+			// (this.selectedTest.getId().equals(test.getId())))
+			// g.setColor(TestLine.COLOR_ALARM_SELECTED);
+			// else
+			// g.setColor(TestLine.COLOR_ALARM);
+			// } else if
+			// (alarm.type_id.equals(AlarmTypeConstants.ID_RTU_TEST_WARNING)) {
+			// // System.out.println("ID_RTU_TEST_WARNING");
+			// if ((this.selectedTest != null) &&
+			// (this.selectedTest.getId().equals(test.getId())))
+			// g.setColor(TestLine.COLOR_WARNING_SELECTED);
+			// else
+			// g.setColor(TestLine.COLOR_WARNING);
+			// }
+			// }
+			//
+			// }
+			// // System.out.println(
+			// // (testAlarms[j].elementary_start_time-times[i]));
+			//
+			// // alarm.
+			// }
+			// }
 			x = this.margin + (int) (this.scale * (testTimeLine.startTime - this.start));
 			Color mColor = g.getColor();
 			if (testTimeLine.haveMeasurement) {
@@ -661,14 +545,7 @@ public class TestLine extends JLabel implements ActionListener, OperationListene
 
 	private void initModule(Dispatcher dispatcher) {
 		this.dispatcher = dispatcher;
-		this.dispatcher.register(this, TestUpdateEvent.TYPE);
-		this.dispatcher.register(this, SchedulerModel.COMMAND_TEST_SAVED_OK);
-		this.dispatcher.register(this, SchedulerModel.COMMAND_CLEAN);
-	}
-
-	public void unregisterDispatcher() {
-		this.dispatcher.unregister(this, TestUpdateEvent.TYPE);
-		this.dispatcher.unregister(this, SchedulerModel.COMMAND_TEST_SAVED_OK);
-		this.dispatcher.unregister(this, SchedulerModel.COMMAND_CLEAN);
+		this.dispatcher.register(this, SchedulerModel.COMMAND_REFRESH_TEST);
+		this.dispatcher.register(this, SchedulerModel.COMMAND_REFRESH_TESTS);
 	}
 }

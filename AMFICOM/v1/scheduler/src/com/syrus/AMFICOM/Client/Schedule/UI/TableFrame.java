@@ -10,6 +10,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 
@@ -30,7 +31,6 @@ import com.syrus.AMFICOM.Client.General.Command.Command;
 import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
 import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
 import com.syrus.AMFICOM.Client.General.Event.OperationListener;
-import com.syrus.AMFICOM.Client.General.Event.TestUpdateEvent;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.General.lang.LangModelSchedule;
@@ -47,252 +47,8 @@ import com.syrus.AMFICOM.measurement.TestController;
  */
 public class TableFrame extends JInternalFrame implements OperationListener {
 
-//	private class TestTableCellRenderer extends ObjectResourceTableCellRenderer {
-//
-//		protected void customRendering(	JTable table,
-//										ObjectResource objectResource,
-//										boolean isSelected,
-//										boolean hasFocus,
-//										int rowIndex,
-//										int vColIndex) {
-//			if (objectResource instanceof Test) {
-//				Test test = (Test) objectResource;
-//				Color color = table.getBackground();
-//				TestTableModel model = (TestTableModel) table.getModel();
-//
-//				ElementaryTestAlarm[] testAlarms = test.getElementaryTestAlarms();
-//				if (testAlarms.length != 0) {
-//					//System.out.println("testAlarms.length:"+testAlarms.length);
-//					for (int i = 0; i < testAlarms.length; i++) {
-//						Alarm alarm = (Alarm) Pool.get(Alarm.typ, testAlarms[i].alarm_id);
-//						//System.out.println("alarm:"+alarm.type_id);
-//						if (alarm != null) {
-//							//System.out.println("alarm.type_id:" +
-//							// alarm.type_id);
-//							if (alarm.type_id.equals(AlarmTypeConstants.ID_RTU_TEST_ALARM)) {
-//								//System.out.println("ID_RTU_TEST_ALARM");
-//								color = TestLine.COLOR_ALARM;
-//							} else if (alarm.type_id.equals(AlarmTypeConstants.ID_RTU_TEST_WARNING)) {
-//								//System.out.println("ID_RTU_TEST_WARNING");
-//								color = TestLine.COLOR_WARNING;
-//							}
-//						}
-//					}
-//				}
-//				int statusIndex = -1;
-//				{
-//					int columnCount = model.getColumnCount();
-//					String statusString = LangModelSchedule.getString("Status");
-//					for (int i = 0; i < columnCount; i++)
-//						if (model.getColumnName(i).equals(statusString)) {
-//							statusIndex = i;
-//							break;
-//						}
-//				}
-//
-//				if (vColIndex == table.convertColumnIndexToView(statusIndex)) {
-//					//System.out.println("statusIndex:"+statusIndex);
-//					if (test.getStatus().equals(TestStatus.TEST_STATUS_COMPLETED)) {
-//						color = TestLine.COLOR_COMPLETED;
-//					} else if (test.getStatus().equals(TestStatus.TEST_STATUS_SCHEDULED)) {
-//						color = TestLine.COLOR_SCHEDULED;
-//					} else if (test.getStatus().equals(TestStatus.TEST_STATUS_PROCESSING)) {
-//						color = TestLine.COLOR_PROCCESSING;
-//					} else if (test.getStatus().equals(TestStatus.TEST_STATUS_ABORTED)) {
-//						color = TestLine.COLOR_ABORDED;
-//					} else {
-//						color = TestLine.COLOR_UNRECOGNIZED;
-//					}
-//
-//				}
-//
-//				super.setBackground(color);
-//
-//			}
-//		}
-//
-//	}
-//
-//	private class TestTableModel extends ObjResTableModel {
-//
-//		public TestTableModel() {
-//			super(7);
-//		}
-//
-//		public Class getColumnClass(int columnIndex) {
-//			Class clazz;
-//			switch (columnIndex) {
-//				default:
-//					clazz = String.class;
-//					break;
-//			}
-//			return clazz;
-//		}
-//
-//		public String getColumnName(int columnIndex) {
-//			String name;
-//			switch (columnIndex) {
-//				case 0:
-//					name = LangModelSchedule.getString("TemporalType"); //$NON-NLS-1$
-//					break;
-//				case 1:
-//					name = LangModelSchedule.getString("RTU"); //$NON-NLS-1$
-//					break;
-//				case 2:
-//					name = LangModelSchedule.getString("Port"); //$NON-NLS-1$
-//					break;
-//				case 3:
-//					name = LangModelSchedule.getString("TestObject"); //$NON-NLS-1$
-//					break;
-//				case 4:
-//					name = LangModelSchedule.getString("MeasurementType"); //$NON-NLS-1$
-//					break;
-//				case 5:
-//					name = LangModelSchedule.getString("TestStartTime"); //$NON-NLS-1$
-//					break;
-//				case 6:
-//					name = LangModelSchedule.getString("Status"); //$NON-NLS-1$
-//					break;
-//				default:
-//					name = null;
-//					break;
-//			}
-//			return name;
-//		}
-//
-//		//		public Vector getDataVector() {
-//		//			Vector vec = new Vector();
-//		//			for (int i = 0; i < getRowCount(); i++)
-//		//				vec.add(getRowData(i));
-//		//			return vec;
-//		//		}
-//
-//		public boolean isCellEditable(int rowIndex, int columnIndex) {
-//			return false;
-//		}
-//	}
-//
-//	private class TestTableRow extends ObjectResourceTableRow {
-//
-//		private java.util.List	data;
-//		private String			me;
-//		private String			port;
-//		private String			rtu;
-//		private String			statusName;
-//
-//		private String			temporalType;
-//
-//		//private Test test;
-//		private String			testType;
-//		private String			time;
-//
-//		public TestTableRow(ObjectResource test) {
-//			super(test);
-//		}
-//
-//		public java.util.List getData() {
-//			if ((this.data == null) || (this.data.isEmpty())) {
-//				this.data = new ArrayList();
-//				this.data.add(this.temporalType);
-//				this.data.add(this.rtu);
-//				this.data.add(this.port);
-//				this.data.add(this.me);
-//				this.data.add(this.testType);
-//				this.data.add(this.time);
-//				this.data.add(this.statusName);
-//			}
-//			return this.data;
-//		}
-//
-//		public void setValue(Object value, int columnIndex) {
-//			if (value instanceof String) {
-//				String s = (String) value;
-//				switch (columnIndex) {
-//					case 1:
-//						this.temporalType = s;
-//						break;
-//					case 2:
-//						this.rtu = s;
-//						break;
-//					case 3:
-//						this.port = s;
-//						break;
-//					case 4:
-//						this.me = s;
-//						break;
-//					case 5:
-//						this.testType = s;
-//						break;
-//					case 6:
-//						this.time = s;
-//						break;
-//					case 7:
-//						this.statusName = s;
-//						break;
-//				}
-//				this.data.clear();
-//			}
-//
-//		}
-//
-//		public void setObjectResource(ObjectResource objectResource) {
-//			//DataSourceInterface dsi =
-//			// TableFrame.this.aContext.getDataSourceInterface();
-//			//dsi.LoadKISDescriptors();
-//			if (objectResource instanceof Test) {
-//				Test test = (Test) objectResource;
-//				this.data = null;
-//				super.setObjectResource(test);
-//				switch (test.getTimeStamp().getType()) {
-//					case TimeStamp.TIMESTAMPTYPE_ONETIME:
-//						this.temporalType = LangModelSchedule.getString("Onetime"); //$NON-NLS-1$
-//						break;
-//					case TimeStamp.TIMESTAMPTYPE_CONTINUOS:
-//						this.temporalType = LangModelSchedule.getString("Continual"); //$NON-NLS-1$
-//						break;
-//					case TimeStamp.TIMESTAMPTYPE_PERIODIC:
-//						this.temporalType = LangModelSchedule.getString("Periodical"); //$NON-NLS-1$
-//						break;
-//				}
-//
-//				KIS kis = (KIS) Pool.get(KIS.typ, test.getKisId());
-//				this.rtu = kis.name;
-//				MonitoredElement me = (MonitoredElement) Pool.get(MonitoredElement.typ, test.getMonitoredElementId());
-//				AccessPort port = null;
-//				for (Iterator it = kis.access_ports.iterator(); it.hasNext();) {
-//					AccessPort aport = (AccessPort) it.next();
-//					if (me.access_port_id.equals(aport.getId())) {
-//						port = aport;
-//						break;
-//					}
-//				}
-//				if (port != null)
-//					this.port = port.name;
-//				this.me = me.getName();
-//				TestType testType = (TestType) Pool.get(TestType.typ, test.getTestTypeId());
-//				this.testType = testType.getName();
-//				this.time = UIStorage.SDF.format(new Date(test.getTimeStamp().getPeriodStart()));
-//
-//				//this.id = test.id;
-//				//this.kis = test.kis;
-//				if (test.getStatus().equals(TestStatus.TEST_STATUS_COMPLETED)) {
-//					this.statusName = LangModelSchedule.getString("Done"); //$NON-NLS-1$
-//				} else if (test.getStatus().equals(TestStatus.TEST_STATUS_SCHEDULED)) {
-//					this.statusName = LangModelSchedule.getString("Scheduled"); //$NON-NLS-1$
-//				} else if (test.getStatus().equals(TestStatus.TEST_STATUS_PROCESSING)) {
-//					this.statusName = LangModelSchedule.getString("Running"); //$NON-NLS-1$
-//				} else if (test.getStatus().equals(TestStatus.TEST_STATUS_ABORTED)) {
-//					this.statusName = LangModelSchedule.getString("Aborted"); //$NON-NLS-1$
-//				} else {
-//					this.statusName = LangModelSchedule.getString("Unrecognized"); //$NON-NLS-1$
-//				}
-//
-//			}
-//		}
-//
-//	}
-
 	Dispatcher			dispatcher;
+	SchedulerModel				schedulerModel;
 	ObjectResourceTable	listTable;
 	ApplicationContext	aContext;
 	private JPanel		panel;
@@ -302,8 +58,10 @@ public class TableFrame extends JInternalFrame implements OperationListener {
 
 	public TableFrame(ApplicationContext aContext) {
 		this.aContext = aContext;
-		if (aContext != null)
+		if (aContext != null) {
 			initModule(aContext.getDispatcher());
+			this.schedulerModel = (SchedulerModel) aContext.getApplicationModel();
+		}
 		init();
 		this.command = new WindowCommand(this);
 	}
@@ -311,11 +69,10 @@ public class TableFrame extends JInternalFrame implements OperationListener {
 	public void operationPerformed(OperationEvent ae) {
 		String commandName = ae.getActionCommand();
 		Environment.log(Environment.LOG_LEVEL_INFO, "commandName:" + commandName, getClass().getName());
-		if (commandName.equals(TestUpdateEvent.TYPE)) {
-			TestUpdateEvent tue = (TestUpdateEvent) ae;
-			Test test = tue.test;
+		if (commandName.equals(SchedulerModel.COMMAND_REFRESH_TEST)) {
+			Test test = this.schedulerModel.getSelectedTest();
 			if ((this.test == null) || (!this.test.getId().equals(test.getId()))) {
-				java.util.List savedTests = ((SchedulerModel) this.aContext.getApplicationModel()).getTests();
+				Collection savedTests = ((SchedulerModel) this.aContext.getApplicationModel()).getTests();
 				this.test = test;
 
 				ObjectResourceTableModel tableModel = (ObjectResourceTableModel) this.listTable.getModel();
@@ -334,16 +91,13 @@ public class TableFrame extends JInternalFrame implements OperationListener {
 
 			}
 
-		} else if (commandName.equals(SchedulerModel.COMMAND_NAME_ALL_TESTS)) {
-			setSavedTests();
-		} else if (commandName.equals(SchedulerModel.COMMAND_CLEAN)) {
-			ObjectResourceTableModel model = (ObjectResourceTableModel) this.listTable.getModel();
-			model.clear();
+		} else if (commandName.equals(SchedulerModel.COMMAND_REFRESH_TESTS)) {
 			this.listTable.removeAll();
+			this.setSavedTests();
 			this.listTable.revalidate();
 			this.listTable.repaint();
 
-		}
+		} 
 	}
 
 	public void setSavedTests() {
@@ -352,32 +106,14 @@ public class TableFrame extends JInternalFrame implements OperationListener {
 			public void run() {
 				ObjectResourceTableModel model = (ObjectResourceTableModel) TableFrame.this.listTable.getModel();
 				model.clear();
-				TableFrame.this.listTable.removeAll();
-				java.util.List tests = ((SchedulerModel) TableFrame.this.aContext.getApplicationModel()).getTests();
+				Collection tests = ((SchedulerModel) TableFrame.this.aContext.getApplicationModel()).getTests();
 				//System.out.println("tests.size:"+tests.size());
 				for (Iterator it = tests.iterator(); it.hasNext();) {
 					Test test = (Test) it.next();
 					if (model.getIndexOfObject(test) < 0) {
-						//System.out.println("add test:" + test.getId());						
 						model.getContents().add(test);
 					}
 				}
-
-				java.util.List unsavedTests = ((SchedulerModel) TableFrame.this.aContext.getApplicationModel())
-						.getUnsavedTests();
-				if (unsavedTests != null) {
-					for (Iterator it = unsavedTests.iterator(); it.hasNext();) {
-						Test test = (Test) it.next();
-						if (model.getIndexOfObject(test) < 0) {
-							//System.out.println("add test:" + test.getId());						
-							model.getContents().add(test);
-						}
-					}
-				}
-
-				//TableFrame.this.listTable.resort();
-				TableFrame.this.listTable.repaint();
-				TableFrame.this.listTable.revalidate();
 			}
 		});
 	}
@@ -398,11 +134,8 @@ public class TableFrame extends JInternalFrame implements OperationListener {
 					ListSelectionModel lsm = (ListSelectionModel) e.getSource();
 					if (!lsm.isSelectionEmpty()) {
 						int selectedRow = lsm.getMinSelectionIndex();
-
-						Test test = (Test) ((ObjectResourceTableModel) TableFrame.this.listTable.getModel())
-								.getObject(selectedRow);
-						TableFrame.this.dispatcher.notify(new TestUpdateEvent(this, test,
-																				TestUpdateEvent.TEST_SELECTED_EVENT));
+						TableFrame.this.schedulerModel.setSelectedTest((Test) ((ObjectResourceTableModel) TableFrame.this.listTable.getModel())
+							.getObject(selectedRow));
 					}
 				}
 
@@ -433,6 +166,7 @@ public class TableFrame extends JInternalFrame implements OperationListener {
 					//						}
 					//					} else
 					if (SwingUtilities.isRightMouseButton(evt)) {
+						System.out.println("RightMouseButton");
 						final int[] rowIndices = table.getSelectedRows();
 						if ((rowIndices != null) && (rowIndices.length > 0)) {
 							final ObjectResourceTableModel model = (ObjectResourceTableModel) table.getModel();
@@ -456,27 +190,17 @@ public class TableFrame extends JInternalFrame implements OperationListener {
 										}
 										for (Iterator it = TableFrame.this.rowToRemove.iterator(); it.hasNext();) {
 											Test test = (Test) it.next();											
-											//test.setDeleted(System.currentTimeMillis());
-											TableFrame.this.dispatcher
-													.notify(new OperationEvent(test, 0,
-																				SchedulerModel.COMMAND_REMOVE_TEST));
-											//System.out.println("remove
-											// index:"+index+"\ttest:"+test.getId());
+											TableFrame.this.schedulerModel.removeTest(test);
 											model.getContents().remove(test);
 										}
 										table.revalidate();
 										table.repaint();
 									}
 								}
-							});
-							/**
-							 * TODO activate deleting  
-							 * TODO remove comments when test will be correct
-							 *       remove from other panels
-							 */
+							});							
 							JPopupMenu popup = new JPopupMenu();
-							//popup.add(deleteTestMenuItem);
-							//popup.show(table, evt.getX(), evt.getY());
+							popup.add(deleteTestMenuItem);
+							popup.show(table, evt.getX(), evt.getY());
 						}
 					}
 
@@ -516,15 +240,13 @@ public class TableFrame extends JInternalFrame implements OperationListener {
 
 	private void initModule(Dispatcher dispatcher) {
 		this.dispatcher = dispatcher;
-		this.dispatcher.register(this, TestUpdateEvent.TYPE);
-		this.dispatcher.register(this, SchedulerModel.COMMAND_NAME_ALL_TESTS);
-		this.dispatcher.register(this, SchedulerModel.COMMAND_CLEAN);
+		this.dispatcher.register(this, SchedulerModel.COMMAND_REFRESH_TEST);
+		this.dispatcher.register(this, SchedulerModel.COMMAND_REFRESH_TESTS);
 	}
 
 	public void unregisterDispatcher() {
-		this.dispatcher.unregister(this, TestUpdateEvent.TYPE);
-		this.dispatcher.unregister(this, SchedulerModel.COMMAND_NAME_ALL_TESTS);
-		this.dispatcher.unregister(this, SchedulerModel.COMMAND_CLEAN);
+		this.dispatcher.unregister(this, SchedulerModel.COMMAND_REFRESH_TEST);
+		this.dispatcher.unregister(this, SchedulerModel.COMMAND_REFRESH_TESTS);
 	}
 
 	/**

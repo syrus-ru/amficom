@@ -5,9 +5,7 @@
  */
 package com.syrus.AMFICOM.Client.Schedule.UI;
 
-import com.syrus.AMFICOM.measurement.MeasurementSetup;
 import com.syrus.AMFICOM.measurement.Set;
-import com.syrus.AMFICOM.measurement.Test;
 
 /**
  * @author Vladimir Dolzhenko
@@ -22,12 +20,8 @@ public interface ParametersTest {
 	Set getSet();
 	
 	void setSet(Set set);
-	
-	void setMeasurementSetup(MeasurementSetup measurementSetup);
 
 	String getPanelName();
-
-	void setTest(Test test);
 	
 	void unregisterDispatcher();
 }
