@@ -67,7 +67,7 @@ public class CablePortCharacteristicsPanel extends GeneralPanel
 	public void setObject(Object or)
 	{
 		port = (SchemeCablePort)or;
-		portId = new Identifier(port.id().getTransferable());
+		portId = new Identifier(port.id().transferable());
 
 		for (int i = 0; i < sorts.length; i++)
 			charPane.setTypeSortMapping(
@@ -75,7 +75,7 @@ public class CablePortCharacteristicsPanel extends GeneralPanel
 					CharacteristicSort.CHARACTERISTIC_SORT_SCHEMECABLEPORT,
 					portId,
 					false);
-		charPane.addCharacteristics(port.characteristicsImpl(), portId);
+		charPane.addCharacteristics(port.characteristicsImpl().getValue(), portId);
 
 		if (port.port() != null)
 		{

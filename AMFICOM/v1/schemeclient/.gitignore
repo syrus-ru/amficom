@@ -24,3 +24,7 @@ Makefile
 makescheme
 mk.bat
 *.properties
+r2.bat
+run.bat
+SchemeV2.jpx
+src_scheme.txt

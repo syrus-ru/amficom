@@ -65,7 +65,7 @@ public class LinkCharacteristicsPanel extends GeneralPanel
 	public void setObject(Object or)
 	{
 		link = (SchemeLink)or;
-		linkId = new Identifier(link.id().getTransferable());
+		linkId = new Identifier(link.id().transferable());
 
 		for (int i = 0; i < sorts.length; i++)
 			charPane.setTypeSortMapping(
@@ -73,7 +73,7 @@ public class LinkCharacteristicsPanel extends GeneralPanel
 					CharacteristicSort.CHARACTERISTIC_SORT_SCHEMELINK,
 					linkId,
 					false);
-		charPane.addCharacteristics(link.characteristicsImpl(), linkId);
+		charPane.addCharacteristics(link.characteristicsImpl().getValue(), linkId);
 
 		if (link.link() != null)
 		{

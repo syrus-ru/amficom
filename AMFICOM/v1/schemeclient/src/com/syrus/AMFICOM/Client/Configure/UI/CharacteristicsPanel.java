@@ -72,6 +72,12 @@ public class CharacteristicsPanel extends JPanel implements OperationListener
 		addCharacteristics(characteristics, characterizedId);
 	}
 
+	public CharacteristicsPanel(Characteristic[] characteristics, Identifier characterizedId)
+	{
+		this();
+		addCharacteristics(characteristics, characterizedId);
+	}
+
 	public void setContext(ApplicationContext aContext)
 	{
 		this.aContext = aContext;
@@ -134,6 +140,13 @@ public class CharacteristicsPanel extends JPanel implements OperationListener
 		elementSelected(selectedTypeSort);
 	}
 
+	public void addCharacteristics(Characteristic[] characteristics, Identifier characterizedId)
+	{
+		this.characteristics.put(characterizedId, Arrays.asList(characteristics));
+		elementSelected(selectedTypeSort);
+	}
+
+
 	public void setTypeSortMapping(CharacteristicTypeSort typeSort, CharacteristicSort sort, Identifier characterizedId, boolean isEditable)
 	{
 		typeSortsCharacterizedIds.put(typeSort, new CharacterizedObject(sort, characterizedId));
@@ -181,9 +194,12 @@ public class CharacteristicsPanel extends JPanel implements OperationListener
 		tModel.clearTable();
 		for (Iterator it = characteristics.values().iterator(); it.hasNext();)
 		{
-			Characteristic ch = (Characteristic)it.next();
-			if (((CharacteristicType)ch.getType()).getSort().equals(selected_type)) {
-				tModel.addRow(ch.getName(), new Object[] {ch.getValue()});
+			Characteristic[] chars = (Characteristic[])it.next();
+			for (int i = 0; i < chars.length; i++) {
+				Characteristic ch = chars[i];
+				if (((CharacteristicType)ch.getType()).getSort().equals(selected_type)) {
+					tModel.addRow(ch.getName(), new Object[] {ch.getValue()});
+				}
 			}
 		}
 		setPropsEditable(editableSorts.contains(selectedTypeSort));

@@ -68,7 +68,7 @@ public final class SchemeController implements ObjectResourceController
 		else if (key.equals(KEY_USER)) {
 			try {
 				User user = (User)ConfigurationStorableObjectPool.getStorableObject(
-						new Identifier(sc.creatorId().getTransferable()), true);
+						new Identifier(sc.creatorId().transferable()), true);
 				result = user.getName();
 			}
 			catch (Exception ex) {

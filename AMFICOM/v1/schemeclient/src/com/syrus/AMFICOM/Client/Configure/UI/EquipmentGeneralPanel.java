@@ -260,7 +260,7 @@ public class EquipmentGeneralPanel extends GeneralPanel
 			element.equipmentTypeImpl((EquipmentType)typeBox.getSelectedItem());
 			if (element.rtu() != null)
 			{
-//				element.rtuImpl().setMcmId(new Identifier(agentField.getText()));
+				element.rtuImpl().setMCMId(new Identifier(agentField.getText()));
 			}
 		}
 		catch(Exception ex)

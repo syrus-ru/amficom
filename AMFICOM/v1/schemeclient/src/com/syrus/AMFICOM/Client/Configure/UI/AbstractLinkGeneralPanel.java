@@ -94,7 +94,6 @@ public abstract class AbstractLinkGeneralPanel extends GeneralPanel
 	{
 		typeBox = new ObjComboBox(
 				LinkTypeController.getInstance(),
-				new LinkedList(),
 				LinkTypeController.KEY_NAME);
 
 		typeBox.addItemListener(new ItemListener()

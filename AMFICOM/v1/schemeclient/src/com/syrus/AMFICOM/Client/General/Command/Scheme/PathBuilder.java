@@ -309,7 +309,7 @@ public class PathBuilder
 				// or any positive number of ports
 				else if (ports.size() > 0 && cports.size() == 0)
 				{
-					SchemePort port = pe.schemeCableThread().schemePort();
+					SchemePort port = pe.schemeCableThread().getSchemePort(dev);
 					if (port != null)
 						newPE.endAbstractSchemePort(port);
 				}
