@@ -1,5 +1,5 @@
 /*
- * $Id: CMServerImpl.java,v 1.11 2004/09/21 05:42:23 bob Exp $
+ * $Id: CMServerImpl.java,v 1.12 2004/09/21 07:14:44 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -61,7 +61,7 @@ import com.syrus.AMFICOM.measurement.corba.Test_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2004/09/21 05:42:23 $
+ * @version $Revision: 1.12 $, $Date: 2004/09/21 07:14:44 $
  * @author $Author: bob $
  * @module cmserver_v1
  */
@@ -74,7 +74,8 @@ public class CMServerImpl implements CMServerOperations {
 		/**
 		 * TODO check user for access
 		 */
-		Log.debugMessage("Received " + test_Transferables.length + " tests", Log.DEBUGLEVEL07);
+		Log.debugMessage("CMServerImpl.receiveTests | Received " + test_Transferables.length + " tests",
+					Log.DEBUGLEVEL07);
 		List testList = new ArrayList(test_Transferables.length);
 		try {
 
@@ -107,7 +108,8 @@ public class CMServerImpl implements CMServerOperations {
 		/**
 		 * TODO check user for access
 		 */
-		Log.debugMessage("Received " + set_Transferables.length + " sets", Log.DEBUGLEVEL07);
+		Log.debugMessage("CMServerImpl.receiveSets | Received " + set_Transferables.length + " sets",
+					Log.DEBUGLEVEL07);
 		List setList = new ArrayList(set_Transferables.length);
 		try {
 
@@ -141,6 +143,7 @@ public class CMServerImpl implements CMServerOperations {
 							AccessIdentifier_Transferable accessIdentifier)
 			throws AMFICOMRemoteException {
 		Identifier id = new Identifier(identifier_Transferable);
+		Log.debugMessage("CMServerImpl.transmitDomain | require " + id.toString(), Log.DEBUGLEVEL07);
 		try {
 			Domain domain = (Domain) ConfigurationStorableObjectPool.getStorableObject(id, true);
 			return (Domain_Transferable) domain.getTransferable();
@@ -170,6 +173,7 @@ public class CMServerImpl implements CMServerOperations {
 								AccessIdentifier_Transferable accessIdentifier)
 			throws AMFICOMRemoteException {
 		Identifier id = new Identifier(identifier_Transferable);
+		Log.debugMessage("CMServerImpl.transmitAnalysisType | require " + id.toString(), Log.DEBUGLEVEL07);
 		try {
 			AnalysisType analysisType = (AnalysisType) MeasurementStorableObjectPool
 					.getStorableObject(id, true);
@@ -197,6 +201,7 @@ public class CMServerImpl implements CMServerOperations {
 									AccessIdentifier_Transferable accessIdentifier)
 			throws AMFICOMRemoteException {
 		Identifier id = new Identifier(identifier_Transferable);
+		Log.debugMessage("CMServerImpl.transmitEvaluationType | require " + id.toString(), Log.DEBUGLEVEL07);
 		try {
 			EvaluationType evaluationType = (EvaluationType) MeasurementStorableObjectPool
 					.getStorableObject(id, true);
@@ -224,6 +229,7 @@ public class CMServerImpl implements CMServerOperations {
 									AccessIdentifier_Transferable accessIdentifier)
 			throws AMFICOMRemoteException {
 		Identifier id = new Identifier(identifier_Transferable);
+		Log.debugMessage("CMServerImpl.transmitMeasurementSetup | require " + id.toString(), Log.DEBUGLEVEL07);
 		try {
 			MeasurementSetup measurementSetup = (MeasurementSetup) MeasurementStorableObjectPool
 					.getStorableObject(id, true);
@@ -251,6 +257,7 @@ public class CMServerImpl implements CMServerOperations {
 									AccessIdentifier_Transferable accessIdentifier)
 			throws AMFICOMRemoteException {
 		Identifier id = new Identifier(identifier_Transferable);
+		Log.debugMessage("CMServerImpl.transmitMeasurementType | require " + id.toString(), Log.DEBUGLEVEL07);
 		try {
 			MeasurementType measurementType = (MeasurementType) MeasurementStorableObjectPool
 					.getStorableObject(id, true);
@@ -278,6 +285,7 @@ public class CMServerImpl implements CMServerOperations {
 								AccessIdentifier_Transferable accessIdentifier)
 			throws AMFICOMRemoteException {
 		Identifier id = new Identifier(identifier_Transferable);
+		Log.debugMessage("CMServerImpl.transmitParameterType | require " + id.toString(), Log.DEBUGLEVEL07);
 		try {
 			ParameterType parameterType = (ParameterType) MeasurementStorableObjectPool
 					.getStorableObject(id, true);
@@ -305,6 +313,7 @@ public class CMServerImpl implements CMServerOperations {
 						AccessIdentifier_Transferable accessIdentifier)
 			throws AMFICOMRemoteException {
 		Identifier id = new Identifier(identifier_Transferable);
+		Log.debugMessage("CMServerImpl.transmitSet | require " + id.toString(), Log.DEBUGLEVEL07);
 		try {
 			Set set = (Set) MeasurementStorableObjectPool.getStorableObject(id, true);
 			return (Set_Transferable) set.getTransferable();
@@ -331,6 +340,7 @@ public class CMServerImpl implements CMServerOperations {
 						AccessIdentifier_Transferable accessIdentifier)
 			throws AMFICOMRemoteException {
 		Identifier id = new Identifier(identifier_Transferable);
+		Log.debugMessage("CMServerImpl.transmitTest | require " + id.toString(), Log.DEBUGLEVEL07);
 		try {
 			Test test = (Test) MeasurementStorableObjectPool.getStorableObject(id, true);
 			return (Test_Transferable) test.getTransferable();
@@ -357,6 +367,10 @@ public class CMServerImpl implements CMServerOperations {
 							AccessIdentifier_Transferable accessIdentifier)
 			throws AMFICOMRemoteException {
 		List idsList = new ArrayList();
+		Log.debugMessage("CMServerImpl.transmitDomains | requiere "
+				+ (identifier_Transferables.length == 0 ? "all" : Integer
+						.toString(identifier_Transferables.length)) + " item(s)",
+					Log.DEBUGLEVEL07);
 		try {
 			List domainList = null;
 			if (identifier_Transferables.length > 0) {
@@ -421,8 +435,12 @@ public class CMServerImpl implements CMServerOperations {
 		try {
 			Identifier domainId = new Identifier(accessIdentifier.domain_id);
 			Domain domain = (Domain) ConfigurationStorableObjectPool.getStorableObject(domainId, true);
-			List list = null;
+			Log.debugMessage("CMServerImpl.transmitAnalysisTypes | requiere "
+					+ (identifier_Transferables.length == 0 ? "all" : Integer
+							.toString(identifier_Transferables.length))
+					+ " item(s) in domain: " + domainId.toString(), Log.DEBUGLEVEL07);
 
+			List list = null;
 			if (identifier_Transferables.length > 0) {
 				List idsList = new ArrayList(identifier_Transferables.length);
 				for (int i = 0; i < identifier_Transferables.length; i++)
@@ -484,6 +502,10 @@ public class CMServerImpl implements CMServerOperations {
 		try {
 			Identifier domainId = new Identifier(accessIdentifier.domain_id);
 			Domain domain = (Domain) ConfigurationStorableObjectPool.getStorableObject(domainId, true);
+			Log.debugMessage("CMServerImpl.transmitEvaluationTypes | requiere "
+					+ (identifier_Transferables.length == 0 ? "all" : Integer
+							.toString(identifier_Transferables.length))
+					+ " item(s) in domain: " + domainId.toString(), Log.DEBUGLEVEL07);
 			List list;
 			if (identifier_Transferables.length > 0) {
 				List idsList = new ArrayList(identifier_Transferables.length);
@@ -544,8 +566,11 @@ public class CMServerImpl implements CMServerOperations {
 		try {
 			Identifier domainId = new Identifier(accessIdentifier.domain_id);
 			Domain domain = (Domain) ConfigurationStorableObjectPool.getStorableObject(domainId, true);
+			Log.debugMessage("CMServerImpl.transmitMeasurementSetups | requiere "
+					+ (identifier_Transferables.length == 0 ? "all" : Integer
+							.toString(identifier_Transferables.length))
+					+ " item(s) in domain: " + domainId.toString(), Log.DEBUGLEVEL07);
 			List list;
-
 			if (identifier_Transferables.length > 0) {
 				List idsList = new ArrayList(identifier_Transferables.length);
 				for (int i = 0; i < identifier_Transferables.length; i++)
@@ -602,6 +627,10 @@ public class CMServerImpl implements CMServerOperations {
 		try {
 			Identifier domainId = new Identifier(accessIdentifier.domain_id);
 			Domain domain = (Domain) ConfigurationStorableObjectPool.getStorableObject(domainId, true);
+			Log.debugMessage("CMServerImpl.transmitMeasurementTypes | requiere "
+					+ (identifier_Transferables.length == 0 ? "all" : Integer
+							.toString(identifier_Transferables.length))
+					+ " item(s) in domain: " + domainId.toString(), Log.DEBUGLEVEL07);
 			List list = null;
 			if (identifier_Transferables.length > 0) {
 				List idsList = new ArrayList(identifier_Transferables.length);
@@ -665,7 +694,10 @@ public class CMServerImpl implements CMServerOperations {
 		try {
 			Identifier domainId = new Identifier(accessIdentifier.domain_id);
 			Domain domain = (Domain) ConfigurationStorableObjectPool.getStorableObject(domainId, true);
-
+			Log.debugMessage("CMServerImpl.transmitSets | requiere "
+					+ (identifier_Transferables.length == 0 ? "all" : Integer
+							.toString(identifier_Transferables.length))
+					+ " item(s) in domain: " + domainId.toString(), Log.DEBUGLEVEL07);
 			List list;
 			if (identifier_Transferables.length > 0) {
 				List idsList = new ArrayList(identifier_Transferables.length);
@@ -724,6 +756,10 @@ public class CMServerImpl implements CMServerOperations {
 		try {
 			Identifier domainId = new Identifier(accessIdentifier.domain_id);
 			Domain domain = (Domain) ConfigurationStorableObjectPool.getStorableObject(domainId, true);
+			Log.debugMessage("CMServerImpl.transmitTests | requiere "
+					+ (identifier_Transferables.length == 0 ? "all" : Integer
+							.toString(identifier_Transferables.length))
+					+ " item(s) in domain: " + domainId.toString(), Log.DEBUGLEVEL07);
 			List list;
 			if (identifier_Transferables.length > 0) {
 				List idsList = new ArrayList(identifier_Transferables.length);
@@ -787,9 +823,13 @@ public class CMServerImpl implements CMServerOperations {
 		try {
 			Identifier domainId = new Identifier(accessIdentifier.domain_id);
 			Domain domain = (Domain) ConfigurationStorableObjectPool.getStorableObject(domainId, true);
-
 			Date start = new Date(startTime);
 			Date end = new Date(endTime);
+
+			Log.debugMessage("CMServerImpl.transmitTestsByTime | requiere test from " + start.toString()
+					+ " to " + end.toString() + " in domain: " + domainId.toString(),
+						Log.DEBUGLEVEL07);
+
 			// List<Identifier> that get from cache
 			List ids = MeasurementStorableObjectPool.getTestsByTimeRange(domain, start, end);
 
