@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeCableThreadImpl.java,v 1.6 2004/12/17 15:58:57 bass Exp $
+ * $Id: SchemeCableThreadImpl.java,v 1.7 2004/12/20 10:09:50 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,7 +16,7 @@ import java.util.*;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.6 $, $Date: 2004/12/17 15:58:57 $
+ * @version $Revision: 1.7 $, $Date: 2004/12/20 10:09:50 $
  * @module schemecommon_v1
  */
 final class SchemeCableThreadImpl extends SchemeCableThread implements Cloneable {
@@ -187,15 +187,33 @@ final class SchemeCableThreadImpl extends SchemeCableThread implements Cloneable
 		throw new UnsupportedOperationException();
 	}
 
-	public SchemePort schemePort() {
+	/**
+	 * @see SchemeCableThread#sourceSchemePort()
+	 */
+	public SchemePort sourceSchemePort() {
 		throw new UnsupportedOperationException();
 	}
 
 	/**
-	 * @param newSchemePort
-	 * @see com.syrus.AMFICOM.scheme.corba.SchemeCableThread#schemePort(com.syrus.AMFICOM.scheme.corba.SchemePort)
+	 * @param sourceSchemePort
+	 * @see SchemeCableThread#sourceSchemePort(SchemePort)
 	 */
-	public void schemePort(SchemePort newSchemePort) {
+	public void sourceSchemePort(final SchemePort sourceSchemePort) {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @see SchemeCableThread#targetSchemePort()
+	 */
+	public SchemePort targetSchemePort() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @param targetSchemePort
+	 * @see SchemeCableThread#targetSchemePort(SchemePort)
+	 */
+	public void targetSchemePort(final SchemePort targetSchemePort) {
 		throw new UnsupportedOperationException();
 	}
 
