@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisEvaluationProcessor.java,v 1.17 2005/01/28 12:26:59 arseniy Exp $
+ * $Id: AnalysisEvaluationProcessor.java,v 1.18 2005/02/15 15:06:09 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,24 +11,25 @@ package com.syrus.AMFICOM.mcm;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
-import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
-import com.syrus.AMFICOM.measurement.AnalysisType;
-import com.syrus.AMFICOM.measurement.EvaluationType;
-import com.syrus.AMFICOM.measurement.SetParameter;
-import com.syrus.AMFICOM.measurement.Set;
-import com.syrus.AMFICOM.measurement.MeasurementSetup;
-import com.syrus.AMFICOM.measurement.Measurement;
+import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.measurement.Analysis;
+import com.syrus.AMFICOM.measurement.AnalysisType;
 import com.syrus.AMFICOM.measurement.Evaluation;
-import com.syrus.AMFICOM.measurement.Test;
+import com.syrus.AMFICOM.measurement.EvaluationType;
+import com.syrus.AMFICOM.measurement.Measurement;
+import com.syrus.AMFICOM.measurement.MeasurementDatabaseContext;
+import com.syrus.AMFICOM.measurement.MeasurementSetup;
+import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
 import com.syrus.AMFICOM.measurement.Result;
+import com.syrus.AMFICOM.measurement.Set;
+import com.syrus.AMFICOM.measurement.SetParameter;
+import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2005/01/28 12:26:59 $
+ * @version $Revision: 1.18 $, $Date: 2005/02/15 15:06:09 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -99,11 +100,11 @@ public class AnalysisEvaluationProcessor {
 					monitoredElementId,
 					measurement,
 					criteriaSet);
-			analysis.insert();
+			MeasurementDatabaseContext.getAnalysisDatabase().insert(analysis);
 			return analysis;
 		}
-		catch (CreateObjectException coe) {
-			throw new AnalysisException("Cannot create analysis", coe);
+		catch (ApplicationException ae) {
+			throw new AnalysisException("Cannot create analysis", ae);
 		}
 	}
 
@@ -120,11 +121,11 @@ public class AnalysisEvaluationProcessor {
 					monitoredElementId,
 					measurement,
 					thresholdSet);
-			evaluation.insert();
+			MeasurementDatabaseContext.getEvaluationDatabase().insert(evaluation);
 			return evaluation;
 		}
-		catch (CreateObjectException coe) {
-			throw new EvaluationException("Cannot create evaluation", coe);
+		catch (ApplicationException ae) {
+			throw new EvaluationException("Cannot create evaluation", ae);
 		}
 	}
 
