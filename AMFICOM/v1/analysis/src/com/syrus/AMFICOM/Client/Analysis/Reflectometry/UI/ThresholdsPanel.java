@@ -22,8 +22,6 @@ public class ThresholdsPanel extends ReflectogramEventsPanel
 	protected int c_event = 0;
 	protected ModelTraceManager.ThresholdHandle c_TH = null;
 	protected boolean isRbutton = false;
-	private Color[] colors;
-	private int[] keys;
 
 	public ThresholdsPanel(ResizableLayeredPanel panel, Dispatcher dispatcher, double y[], double deltaX)
 	{
@@ -245,22 +243,15 @@ public class ThresholdsPanel extends ReflectogramEventsPanel
 		if (et_mtm == null)
 			return;
 
-		if (keys == null) {
-			keys = new int[] { Thresh.SOFT_UP, Thresh.SOFT_DOWN, Thresh.HARD_UP, Thresh.HARD_DOWN};
-		}
-		if (colors == null) {
-			colors = new Color[] { UIManager.getColor(AnalysisResourceKeys.COLOR_WARNING_THRESHOLD),
-					UIManager.getColor(AnalysisResourceKeys.COLOR_WARNING_THRESHOLD),
-					UIManager.getColor(AnalysisResourceKeys.COLOR_ALARM_THRESHOLD),
-					UIManager.getColor(AnalysisResourceKeys.COLOR_ALARM_THRESHOLD)};
-		}
 		SimpleReflectogramEvent sre = nEvent >= 0
 				? et_mtm.getSimpleEvent(nEvent)
 				: null;
-		for (int k = 0; k < 4; k++)
+
+		for (int key = 0; key < 4; key++)
 		{
-			int key = keys[k];
-			g.setColor(colors[k]);
+			g.setColor(UIManager.getColor(Thresh.IS_KEY_HARD[key]
+			     ? AnalysisResourceKeys.COLOR_ALARM_THRESHOLD
+			     : AnalysisResourceKeys.COLOR_WARNING_THRESHOLD));
 			// XXX: нет draw_joint_of_two_model_curves
 			drawModelCurve(g, et_mtm.getThresholdMT(key), sre);
 		}
