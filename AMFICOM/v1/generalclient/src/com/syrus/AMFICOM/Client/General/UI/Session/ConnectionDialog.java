@@ -47,9 +47,9 @@ import java.awt.*;
 import javax.swing.*;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2004/05/27 11:24:21 $
+ * @version $Revision: 1.2 $, $Date: 2004/06/11 13:48:38 $
  * @author $Author: bass $
- * @module General
+ * @module general
  * 
  * @todo Also show session timeout.
  */
@@ -214,7 +214,7 @@ public final class ConnectionDialog extends JDialog {
 		gridBagConstraints.insets = new java.awt.Insets(0, 10, 5, 5);
 		getContentPane().add(jCtxLabel4, gridBagConstraints);
 		
-		jCtxTextField4.setEnabled(false);
+		jCtxTextField4.setEditable(false);
 		gridBagConstraints = new java.awt.GridBagConstraints();
 		gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
 		gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
@@ -245,7 +245,7 @@ public final class ConnectionDialog extends JDialog {
 		gridBagConstraints.insets = new java.awt.Insets(0, 10, 5, 5);
 		getContentPane().add(jServiceURLLabel6, gridBagConstraints);
 		
-		jServiceURLTextField6.setEnabled(false);
+		jServiceURLTextField6.setEditable(false);
 		gridBagConstraints = new java.awt.GridBagConstraints();
 		gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
 		gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
@@ -261,7 +261,7 @@ public final class ConnectionDialog extends JDialog {
 		gridBagConstraints.insets = new java.awt.Insets(0, 10, 5, 5);
 		getContentPane().add(jFullURLLabel7, gridBagConstraints);
 		
-		jFullURLTextField7.setEnabled(false);
+		jFullURLTextField7.setEditable(false);
 		gridBagConstraints = new java.awt.GridBagConstraints();
 		gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
 		gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
