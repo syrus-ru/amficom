@@ -56,22 +56,16 @@ public class TestLine extends JLabel implements ActionListener, OperationListene
 	int							titleHeight;
 
 	int							width;
+
 	private long				end;
-	//	boolean skipTestUpdate = false;
 	private long				start;
 
 	private HashMap				tests						= new HashMap();
-	private javax.swing.Timer	timer;													//		=
-	//private ApplicationContext aContext;
+	private javax.swing.Timer	timer;
+
 	private String				title;
 
 	private HashMap				unsavedTests;
-
-	// new
-	// javax.swing.Timer(
-	//			TIME_OUT,
-	// this);
-	// ;
 
 	public TestLine(ApplicationContext aContext, String title, long start, long end, int margin) {
 		//this.aContext = aContext;
@@ -111,11 +105,11 @@ public class TestLine extends JLabel implements ActionListener, OperationListene
 						Test test = (Test) it.next();
 						TimeStamp timeStamp = test.getTimeStamp();
 						int st = TestLine.this.margin
-								+ (int) (TestLine.this.scale * (test.getTimeStamp().getPeriodStart() - TestLine.this.start))
-								- 1;
+								+ (int) (TestLine.this.scale * (test.getTimeStamp().getPeriodStart() - TestLine.this
+										.getStart())) - 1;
 						int en = TestLine.this.margin
-								+ (int) (TestLine.this.scale * (test.getTimeStamp().getPeriodEnd() - TestLine.this.start))
-								+ 1;
+								+ (int) (TestLine.this.scale * (test.getTimeStamp().getPeriodEnd() - TestLine.this
+										.getStart())) + 1;
 						en = (en - st < MINIMAL_WIDTH) ? st + MINIMAL_WIDTH : en;
 						//					System.out.println("."+((x >= st) && (x <= en) && (y
 						// >=
@@ -132,7 +126,7 @@ public class TestLine extends JLabel implements ActionListener, OperationListene
 								long[] times = timeStamp.getTestTimes();
 								for (int j = 0; j < times.length; j++) {
 									st = TestLine.this.margin
-											+ (int) (TestLine.this.scale * (times[j] - TestLine.this.start));
+											+ (int) (TestLine.this.scale * (times[j] - TestLine.this.getStart()));
 									en = st + w;
 									if ((x >= st) && (x <= en) && (y >= TestLine.this.titleHeight / 2 + 4)) {
 										condition = true;
@@ -191,6 +185,7 @@ public class TestLine extends JLabel implements ActionListener, OperationListene
 	}
 
 	public void actionPerformed(ActionEvent e) {
+		//System.out.println("actionPerformed:");
 		flashUnsavedTest();
 	}
 
@@ -203,22 +198,23 @@ public class TestLine extends JLabel implements ActionListener, OperationListene
 	public void addTest(Test test) {
 		//		if (!this.skipTestUpdate) {
 		if (test.isChanged()) {
-			System.out.println("test is changed");
+			//System.out.println("test is changed");
 			if (this.unsavedTests == null) {
 				this.unsavedTests = new HashMap();
 				if (this.timer == null) {
 					this.timer = new javax.swing.Timer(TIME_OUT, this);
-					this.timer.start();
-				}
-				System.out.println("timer created");
+					//System.out.println("timer created");
+
+				}				
 			}
 			if (this.unsavedTests.containsValue(test)) {
-				System.out.println("unsavedTests.contains(test)");
+				//System.out.println("unsavedTests.contains(test)");
 				// //$NON-NLS-1$
 			} else {
-				System.out.println("unsavedTests.put(" + test.getId() + ")");
+				//System.out.println("unsavedTests.put(" + test.getId() + ")");
 				this.unsavedTests.put(test.getId(), test);
 			}
+			this.timer.restart();
 		} else {
 			//System.out.println("test is NOT changed");
 			this.tests.put(test.getId(), test);
@@ -254,14 +250,14 @@ public class TestLine extends JLabel implements ActionListener, OperationListene
 	/**
 	 * @return Returns the end.
 	 */
-	public long getEnd() {
+	long getEnd() {
 		return this.end;
 	}
 
 	/**
 	 * @return Returns the start.
 	 */
-	public long getStart() {
+	long getStart() {
 		return this.start;
 	}
 
@@ -309,6 +305,7 @@ public class TestLine extends JLabel implements ActionListener, OperationListene
 				}
 			}
 		} else if (commandName.equals(SchedulerModel.COMMAND_CLEAN)) {
+			this.timer.stop();
 			if (this.unsavedTests != null)
 				this.unsavedTests.clear();
 			if (this.tests != null)
@@ -392,10 +389,16 @@ public class TestLine extends JLabel implements ActionListener, OperationListene
 		//Test test = (Test) this.tests.get(id);
 		String testId = test.getId();
 		if (this.unsavedTests != null) {
-			this.unsavedTests.remove(test.getId());
-			//			System.out.println("this.unsavedTests.remove(" + test.getId() +
-			// "):"
-			//					+ this.unsavedTests.containsKey(test.getId()));
+			if (this.unsavedTests.containsKey(testId)) {
+				this.timer.stop();
+				this.unsavedTests.remove(testId);
+				if (!this.unsavedTests.isEmpty())
+					this.timer.restart();
+				//			System.out.println("this.unsavedTests.remove(" + test.getId()
+				// +
+				// "):"
+				//					+ this.unsavedTests.containsKey(test.getId()));
+			}
 		}
 		if (this.allTests != null) {
 			//			for (Iterator it = this.allTests.iterator(); it.hasNext();) {
