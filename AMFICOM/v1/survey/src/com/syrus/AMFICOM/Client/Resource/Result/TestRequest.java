@@ -1,92 +1,186 @@
 package com.syrus.AMFICOM.Client.Resource.Result;
 
-import java.awt.*;
-import java.text.*;
 import java.util.*;
 
 import com.syrus.AMFICOM.CORBA.General.*;
 import com.syrus.AMFICOM.CORBA.Survey.*;
 import com.syrus.AMFICOM.Client.Resource.*;
-//import com.syrus.AMFICOM.Client.Analysis.Reflectometry.Data.*;
-
-import com.syrus.AMFICOM.Client.General.UI.*;
+import com.syrus.AMFICOM.Client.Survey.General.ConstStorage;
 
 public class TestRequest extends ObjectResource
 {
 	static final public String typ = "testrequest";
+	/**
+	 * @deprecated use setter/getter pair to access this field
+	 */
 	public ClientTestRequest_Transferable transferable;
+	/**
+	 * @deprecated use setter/getter pair to access this field
+	 */
 	public String id = "";
+	/**
+	 * @deprecated use setter/getter pair to access this field
+	 */
 	public String name = "";
+	/**
+	 * @deprecated use setter/getter pair to access this field
+	 */
 	public long created = 0;
+	/**
+	 * @deprecated use setter/getter pair to access this field
+	 */
 	public String user_id = "";
+	/**
+	 * @deprecated use setter/getter pair to access this field
+	 */
 	public long deleted = 0;
+	/**
+	 * @deprecated use setter/getter pair to access this field
+	 */
 	public TestRequestStatus status = TestRequestStatus.TEST_REQUEST_STATUS_SHEDULED;
+	/**
+	 * @deprecated use setter/getter pair to access this field
+	 */
 	public long completion_time = 0;
+	/**
+	 * @deprecated use setter/getter pair to access this field
+	 */
 	public String status_text = "";
+	/**
+	 * @deprecated use setter/getter pair for testIds
+	 */
 	public Vector test_ids = new Vector();
+	private List							testIds			= new ArrayList();
 
 	Hashtable tests = new Hashtable();
 
-	public TestRequest(ClientTestRequest_Transferable transferable)	
-	{
+	public TestRequest(ClientTestRequest_Transferable transferable) {
 		this.transferable = transferable;
 		setLocalFromTransferable();
 	}
 
-	public TestRequest(String id)	
-	{
+	public TestRequest(String id) {
 		this.id = id;
-		transferable = new ClientTestRequest_Transferable();
-	}
-/*
-	public void addParameter(Parameter parameter)	{
-		parameters.add(parameter);
+		this.transferable = new ClientTestRequest_Transferable();
 	}
 
-	public void addArgument(Parameter argument)	{
-		arguments.add(argument);
-	}
-*/
-	public void updateLocalFromTransferable()	
-	{
-		int l;
-		int i;
-
-		l = test_ids.size();
-		tests = new Hashtable();
-		for(i = 0; i < l; i++)
-			tests.put(test_ids.get(i),
-				Pool.get("test", (String)test_ids.get(i)));
+	public void addTest(Test test) {
+		// System.out.println(getClass().getName() + "\taddTest:" + test.getId());
+		this.testIds.add(test.getId());
 	}
 
-	public void setTransferableFromLocal()	{
-/*
-		public java.lang.String id;
-		public java.lang.String name;
-		public int status;
-		public long created;
-		public java.lang.String user_id;
-		public long deleted;
-		public long completion_time;
-		public java.lang.String status_text;
-		public java.lang.String[] test_ids;
-	*/
-		this.transferable.id = this.id;
-		this.transferable.name = this.name;
-		this.transferable.status = this.status;
-		this.transferable.created = this.created;
-		this.transferable.user_id = this.user_id;
-		this.transferable.deleted = this.deleted;
-		this.transferable.completion_time = this.completion_time;
-		this.transferable.status_text = "";
-
-		this.transferable.test_ids = new String[this.test_ids.size()];
-		for(int i = 0; i < this.transferable.test_ids.length; i++)
-			this.transferable.test_ids[i] = (String)this.test_ids.get(i);
+	/**
+	 * @return Returns the completionTime.
+	 */
+	public long getCompletionTime() {
+		return this.completion_time;
 	}
 
-	public void setLocalFromTransferable()	
-	{
+	/**
+	 * @return Returns the created.
+	 */
+	public long getCreated() {
+		return this.created;
+	}
+
+	/**
+	 * @return Returns the deleted.
+	 */
+	public long getDeleted() {
+		return this.deleted;
+	}
+
+	public String getDomainId() {
+		return ConstStorage.SYS_DOMAIN;
+	}
+
+	public String getId() {
+		return this.id;
+	}
+
+	public String getName() {
+		return this.name;
+	}
+
+	/**
+	 * @return Returns the status.
+	 */
+	public TestRequestStatus getStatus() {
+		return this.status;
+	}
+
+	/**
+	 * @return Returns the statusText.
+	 */
+	public String getStatusText() {
+		return this.status_text;
+	}
+
+	/**
+	 * @return Returns the testIds.
+	 */
+	public List getTestIds() {
+		return this.testIds;
+	}
+
+	public Object getTransferable() {
+		return this.transferable;
+	}
+
+	public String getTyp() {
+		return typ;
+	}
+
+	/**
+	 * @return Returns the userId.
+	 */
+	public String getUserId() {
+		return user_id;
+	}
+
+	public void removeTest(Test test) {
+		this.testIds.remove(test.getId());
+		if (this.testIds.isEmpty())
+			this.changed = false;
+	}
+
+	/**
+	 * @param completionTime
+	 *            The completionTime to set.
+	 */
+	public void setCompletionTime(long completionTime) {
+		this.changed = true;
+		this.completion_time = completionTime;
+	}
+
+	/**
+	 * @param created
+	 *            The created to set.
+	 */
+	public void setCreated(long created) {
+		this.changed = true;
+		this.created = created;
+	}
+
+	/**
+	 * @param deleted
+	 *            The deleted to set.
+	 */
+	public void setDeleted(long deleted) {
+		this.changed = true;
+		this.deleted = deleted;
+	}
+
+	/**
+	 * @param id
+	 *            The id to set.
+	 */
+	public void setId(String id) {
+		this.changed = true;
+		this.id = id;
+	}
+
+	public void setLocalFromTransferable() {
 		this.id = this.transferable.id;
 		this.name = this.transferable.name;
 		this.created = this.transferable.created;
@@ -96,142 +190,90 @@ public class TestRequest extends ObjectResource
 		this.completion_time = this.transferable.completion_time;
 		this.status_text = "";
 
-		this.test_ids = new Vector();
-		for(int i = 0; i < this.transferable.test_ids.length; i++) {
-			this.test_ids.add(this.transferable.test_ids[i]);
+		this.testIds.clear();
+		for (int i = 0; i < this.transferable.test_ids.length; i++) {
+			this.testIds.add(this.transferable.test_ids[i]);
 		}
+		this.changed = false;
 	}
 
-	public String getId()	
-	{
-		return id;
+	/**
+	 * @param name
+	 *            The name to set.
+	 */
+	public void setName(String name) {
+		this.changed = true;
+		this.name = name;
 	}
 
-	public String getDomainId()
-	{
-		return "sysdomain";
+	/**
+	 * @param status
+	 *            The status to set.
+	 */
+	public void setStatus(TestRequestStatus status) {
+		this.changed = true;
+		this.status = status;
 	}
 
-	public String getName()	
-	{
-		return name;
+	/**
+	 * @param statusText
+	 *            The statusText to set.
+	 */
+	public void setStatusText(String status_text) {
+		this.changed = true;
+		this.status_text = status_text;
 	}
 
-	public Object getTransferable()	
-	{
-		return transferable;
+	/**
+	 * @param testIds
+	 *            The testIds to set.
+	 */
+	public void setTestIds(List testIds) {
+		this.changed = true;
+		this.testIds = testIds;
 	}
 
-	public String getTyp ()	
-	{
-		return typ;
+	public void setTransferableFromLocal() {
+		/*
+		 * public java.lang.String id; public java.lang.String name; public int
+		 * status; public long created; public java.lang.String userId; public
+		 * long deleted; public long completionTime; public java.lang.String
+		 * statusText; public java.lang.String[] testIds;
+		 */
+		this.transferable.id = this.id;
+		this.transferable.name = this.name;
+		this.transferable.status = this.status;
+		this.transferable.created = this.created;
+		this.transferable.user_id = this.user_id;
+		this.transferable.deleted = this.deleted;
+		this.transferable.completion_time = this.completion_time;
+		this.transferable.status_text = "";
+
+		this.transferable.test_ids = new String[this.testIds.size()];
+		int i = 0;
+		for (Iterator it = this.testIds.iterator(); it.hasNext();)
+			this.transferable.test_ids[i++] = (String) it.next();
+		this.changed = false;
 	}
 
-	public Hashtable getColumns()
-	{
-		Hashtable cols = new Hashtable();
-		cols.put("created", "Время запроса");
-		cols.put("user_id", "Пользователь");
-		cols.put("status", "Статус");
-		return cols;
+	/**
+	 * @param userId
+	 *            The userId to set.
+	 */
+	public void setUserId(String userId) {
+		this.changed = true;
+		this.user_id = userId;
 	}
 
-	public int getColumnSize(String col_id)
-	{
-		if(col_id.equals("created"))
-			return 100;
-		if(col_id.equals("user_id"))
-			return 100;
-		if(col_id.equals("status"))
-			return 100;
-		return 100;
-	}
-
-	public String getColumnValue(String col_id)
-	{
-		SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yy HH:mm:ss");
-		String s = "";
-		try
-		{
-			if(col_id.equals("status"))
-			{
-				switch(status.value())
-				{
-					case TestRequestStatus._TEST_REQUEST_STATUS_SHEDULED:
-						s = "Готов к выполнению";
-						break;
-					case TestRequestStatus._TEST_REQUEST_STATUS_PROCESSING:
-						s = "Выполняется";
-						break;
-					case TestRequestStatus._TEST_REQUEST_STATUS_COMPLETED:
-						s = "Выполнен";
-						break;
-					case TestRequestStatus._TEST_REQUEST_STATUS_ABORTED:
-						s = "Снят с выполнения";
-						break;
-				}
-			}
-			if(col_id.equals("user_id"))
-				s = user_id;
-			if(col_id.equals("created"))
-				s = sdf.format(new Date(created));
-		}
-		catch(Exception e)
-		{
-//			System.out.println("error gettin field value - TestRequest");
-			s = "";
-		}
-		return s;
-	}
-
-	public boolean isColumnEditable(String col_id)
-	{
-		if(col_id.equals("created"))
-			return false;
-		if(col_id.equals("user_id"))
-			return true;
-		if(col_id.equals("status"))
-			return false;
-		return false;
-	}
-
-	public Component getColumnRenderer(String col_id)
-	{
-		SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yy HH:mm:ss");
-
-		if(col_id.equals("status"))
-			return new TextFieldEditor(getColumnValue("status"));
-		if(col_id.equals("created"))
-			return new TextFieldEditor(sdf.format(new Date(created)));
-		if(col_id.equals("user_id"))
-			return new ObjectResourceComboBox("user", user_id);
-		return null;
-	}
-
-	public String getColumnName (String col_id)
-	{
-		String s = "";
-		if(col_id.equals("creatd"))
-			s = "Время запроса";
-		if(col_id.equals("user_id"))
-			s = "Пользователь";
-		if(col_id.equals("status"))
-			s = "Статус";
-		return s;
-	}
-
-	public Component getColumnEditor(String col_id)
-	{
-		return getColumnRenderer(col_id);
-	}
-
-	public Enumeration getChildren(String key)
-	{
-		if(key.equals("test"))
-		{
-			return tests.elements();
-		}
-		return new Vector().elements();
+	/*
+	 * public void addParameter(Parameter parameter) {
+	 * parameters.add(parameter); }
+	 * 
+	 * public void addArgument(Parameter argument) { arguments.add(argument); }
+	 */
+	public void updateLocalFromTransferable() {
+		// here must be updateing local from tranferable
+		// but it don't
 	}
 }
 
