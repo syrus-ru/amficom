@@ -1,5 +1,5 @@
 /*
- * $Id: CollectorDatabase.java,v 1.2 2004/12/03 15:07:11 bob Exp $
+ * $Id: CollectorDatabase.java,v 1.3 2004/12/03 17:55:34 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -42,7 +42,7 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.2 $, $Date: 2004/12/03 15:07:11 $
+ * @version $Revision: 1.3 $, $Date: 2004/12/03 17:55:34 $
  * @author $Author: bob $
  * @module map_v1
  */
@@ -161,7 +161,7 @@ public class CollectorDatabase extends StorableObjectDatabase {
 				for(Iterator it=collectorPhysicalLink.keySet().iterator();it.hasNext();){
 					Collector collector = (Collector) it.next();
 					List physicalLinkIds = (List)collectorPhysicalLink.get(collector);
-					collector.setPhysicalLinks(MapStorableObjectPool.getStorableObjects(physicalLinkIds, true));
+					collector.setPhysicalLinks0(MapStorableObjectPool.getStorableObjects(physicalLinkIds, true));
 				}
 			}
 			catch (ApplicationException ae) {
