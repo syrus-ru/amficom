@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementSetup.java,v 1.19 2004/08/10 19:05:19 arseniy Exp $
+ * $Id: MeasurementSetup.java,v 1.20 2004/08/16 10:49:49 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,8 +23,8 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.corba.MeasurementSetup_Transferable;
 
 /**
- * @version $Revision: 1.19 $, $Date: 2004/08/10 19:05:19 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.20 $, $Date: 2004/08/16 10:49:49 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
@@ -200,9 +200,9 @@ public class MeasurementSetup extends StorableObject {
 																						 (Identifier_Transferable) super.creatorId.getTransferable(),
 																						 (Identifier_Transferable) super.modifierId.getTransferable(),
 																						 (Identifier_Transferable) this.parameterSet.getId().getTransferable(),
-																						 (this.criteriaSet == null) ? (Identifier_Transferable) this.criteriaSet.getId().getTransferable() : (new Identifier_Transferable("")),
-																						 (this.thresholdSet == null) ? (Identifier_Transferable) this.thresholdSet.getId().getTransferable() : (new Identifier_Transferable("")),
-																						 (this.etalon == null) ? (Identifier_Transferable) this.etalon.getId().getTransferable() : (new Identifier_Transferable("")),
+																						 (this.criteriaSet != null) ? (Identifier_Transferable) this.criteriaSet.getId().getTransferable() : (new Identifier_Transferable("")),
+																						 (this.thresholdSet != null) ? (Identifier_Transferable) this.thresholdSet.getId().getTransferable() : (new Identifier_Transferable("")),
+																						 (this.etalon != null) ? (Identifier_Transferable) this.etalon.getId().getTransferable() : (new Identifier_Transferable("")),
 																						 this.description,
 																						 this.measurementDuration,
 																						 meIds);

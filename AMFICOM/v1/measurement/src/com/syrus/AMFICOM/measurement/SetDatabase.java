@@ -1,5 +1,5 @@
 /*
- * $Id: SetDatabase.java,v 1.15 2004/08/10 19:05:19 arseniy Exp $
+ * $Id: SetDatabase.java,v 1.16 2004/08/16 10:49:49 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,11 +15,11 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
 import oracle.sql.BLOB;
 import com.syrus.util.Log;
-import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.ByteArrayDatabase;
+import com.syrus.util.database.DatabaseDate;
+import com.syrus.AMFICOM.configuration.Port;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObject;
@@ -31,8 +31,8 @@ import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2004/08/10 19:05:19 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.16 $, $Date: 2004/08/16 10:49:49 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
@@ -44,6 +44,8 @@ public class SetDatabase extends StorableObjectDatabase {
 	public static final String LINK_COLUMN_ME_ID 	= "monitored_element_id";
 	public static final String LINK_COLUMN_TYPE_ID	= "type_id";
 	public static final String LINK_COLUMN_VALUE	= "value";
+	
+    public static final int CHARACTER_NUMBER_OF_RECORDS = 1;
 
 	private Set fromStorableObject(StorableObject storableObject) throws IllegalDataException {
 		if (storableObject instanceof Set)
@@ -236,7 +238,7 @@ public class SetDatabase extends StorableObjectDatabase {
 			this.insertSetMELinks(set);
 		}
 		catch (CreateObjectException e) {
-			this.delete(set);
+			SetDatabase.delete(set);
 			throw e;
 		}
 	}
@@ -523,7 +525,7 @@ public class SetDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	private void delete(Set set) {
+	public static void delete(Set set) {
 		String setIdStr = set.getId().toSQLString();
 		Statement statement = null;
 		try {
@@ -559,4 +561,42 @@ public class SetDatabase extends StorableObjectDatabase {
 			}
 		}
 	}
+	
+	public static List retrieveAll() throws RetrieveObjectException {
+		List sets = new ArrayList(CHARACTER_NUMBER_OF_RECORDS);
+		String sql = SQL_SELECT
+				+ COLUMN_ID
+				+ SQL_FROM + ObjectEntities.SET_ENTITY;
+		Statement statement = null;
+		ResultSet resultSet = null;
+		try {
+			statement = connection.createStatement();
+			Log.debugMessage("SetDatabase.retrieveAll | Trying: " + sql, Log.DEBUGLEVEL05);
+			resultSet = statement.executeQuery(sql);
+			while (resultSet.next())
+				sets.add(new Set(new Identifier(resultSet.getString(COLUMN_ID))));			
+		}
+		catch (ObjectNotFoundException onfe) {
+			Log.errorException(onfe);
+		}
+		catch (SQLException sqle) {
+			String mesg = "SetDatabase.retrieveAll | Cannot retrieve set";
+			throw new RetrieveObjectException(mesg, sqle);
+		}
+		finally {
+			try {
+				if (statement != null)
+					statement.close();
+				if (resultSet != null)
+					resultSet.close();
+				statement = null;
+				resultSet = null;
+			}
+			catch (SQLException sqle1) {
+				Log.errorException(sqle1);
+			}
+		}
+		return sets;
+	}
+
 }

@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementSetupDatabase.java,v 1.11 2004/08/10 19:05:19 arseniy Exp $
+ * $Id: MeasurementSetupDatabase.java,v 1.12 2004/08/16 10:49:49 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,8 +28,8 @@ import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2004/08/10 19:05:19 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.12 $, $Date: 2004/08/16 10:49:49 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
@@ -44,6 +44,8 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 
 	public static final String	LINK_COLUMN_ME_ID					= "monitored_element_id";
 	public static final String	LINK_COLUMN_MEASUREMENT_SETUP_ID	= "measurement_setup_id";
+	
+	public static final int CHARACTER_NUMBER_OF_RECORDS = 1;
 
 	private MeasurementSetup fromStorableObject(StorableObject storableObject) throws IllegalDataException {
 		if (storableObject instanceof MeasurementSetup)
@@ -464,4 +466,72 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 			}
 		}
 	}
+	
+	public static List retrieveAll() throws RetrieveObjectException {
+		List ports = new ArrayList(CHARACTER_NUMBER_OF_RECORDS);
+		String sql = SQL_SELECT
+				+ COLUMN_ID
+				+ SQL_FROM + ObjectEntities.MS_ENTITY;
+		Statement statement = null;
+		ResultSet resultSet = null;
+		try {
+			statement = connection.createStatement();
+			Log.debugMessage("MeasurementSetupDatabase.retrieveAll | Trying: " + sql, Log.DEBUGLEVEL05);
+			resultSet = statement.executeQuery(sql);
+			while (resultSet.next())
+				ports.add(new MeasurementSetup(new Identifier(resultSet.getString(COLUMN_ID))));			
+		}
+		catch (ObjectNotFoundException onfe) {
+			Log.errorException(onfe);
+		}
+		catch (SQLException sqle) {
+			String mesg = "MeasurementSetupDatabase.retrieveAll | Cannot retrieve measurement setup ";
+			throw new RetrieveObjectException(mesg, sqle);
+		}
+		finally {
+			try {
+				if (statement != null)
+					statement.close();
+				if (resultSet != null)
+					resultSet.close();
+				statement = null;
+				resultSet = null;
+			}
+			catch (SQLException sqle1) {
+				Log.errorException(sqle1);
+			}
+		}
+		return ports;
+	}
+
+	public static void delete(MeasurementSetup measurementSetup) {
+		String msIdStr = measurementSetup.getId().toSQLString();
+		Statement statement = null;
+		try {
+			statement = connection.createStatement();
+			String sql = SQL_DELETE_FROM
+						+ ObjectEntities.MS_ENTITY
+						+ SQL_WHERE
+						+ COLUMN_ID + EQUALS
+						+ msIdStr;
+			Log.debugMessage("MeasurementSetupDatabase.delete | Trying: " + sql, Log.DEBUGLEVEL05);
+			statement.executeUpdate(sql);
+			connection.commit();
+		}
+		catch (SQLException sqle1) {
+			Log.errorException(sqle1);
+		}
+		finally {
+			try {
+				if(statement != null)
+					statement.close();
+				statement = null;
+			}
+			catch(SQLException sqle1) {
+				Log.errorException(sqle1);
+			}
+		}
+	}
+
+
 }
