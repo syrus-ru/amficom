@@ -1,5 +1,5 @@
 /*
- * $Id: XMLResourceObjectLoader.java,v 1.1 2005/02/15 08:59:10 bob Exp $
+ * $Id: XMLResourceObjectLoader.java,v 1.2 2005/02/24 16:10:22 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,7 +16,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
@@ -32,7 +31,7 @@ import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/02/15 08:59:10 $
+ * @version $Revision: 1.2 $, $Date: 2005/02/24 16:10:22 $
  * @author $Author: bob $
  * @module resource_v1
  */
@@ -45,23 +44,15 @@ public class XMLResourceObjectLoader implements ResourceObjectLoader {
 		this.resourceXML = new StorableObjectXML(driver);
 	}
 
-	public void delete(Identifier id) throws CommunicationException, DatabaseException {
-		try {
-			this.resourceXML.delete(id);
-		} catch (IllegalDataException e) {
-			throw new CommunicationException("XMLResourceObjectLoader.delete | caught " + e.getMessage(), e);
-		}
+	public void delete(Identifier id) throws IllegalDataException {
+		this.resourceXML.delete(id);
 		this.resourceXML.flush();
 	}
 
-	public void delete(Collection ids) throws CommunicationException, DatabaseException {
-		try {
-			for (Iterator it = ids.iterator(); it.hasNext();) {
+	public void delete(Collection ids) throws IllegalDataException {
+		for (Iterator it = ids.iterator(); it.hasNext();) {
 				Identifier id = (Identifier) it.next();
 				this.resourceXML.delete(id);
-			}
-		} catch (IllegalDataException e) {
-			throw new CommunicationException("XMLResourceObjectLoader.delete | caught " + e.getMessage(), e);
 		}
 		this.resourceXML.flush();
 

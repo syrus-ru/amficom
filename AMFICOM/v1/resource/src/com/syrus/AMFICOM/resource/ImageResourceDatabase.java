@@ -1,5 +1,5 @@
 /*
- * $Id: ImageResourceDatabase.java,v 1.12 2005/02/21 07:38:33 max Exp $
+ * $Id: ImageResourceDatabase.java,v 1.13 2005/02/24 16:10:21 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -38,8 +38,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @author $Author: max $
- * @version $Revision: 1.12 $, $Date: 2005/02/21 07:38:33 $
+ * @author $Author: bob $
+ * @version $Revision: 1.13 $, $Date: 2005/02/24 16:10:21 $
  * @module resource_v1
  */
 
@@ -244,7 +244,7 @@ public final class ImageResourceDatabase extends StorableObjectDatabase {
 	}
 
 	public void update(Collection storableObjects, Identifier modifierId, int updateKind)
-			throws IllegalDataException, VersionCollisionException,
+			throws VersionCollisionException,
 			UpdateObjectException {
 		switch (updateKind) {
 			case UPDATE_CHECK:
@@ -255,7 +255,12 @@ public final class ImageResourceDatabase extends StorableObjectDatabase {
 				super.checkAndUpdateEntities(storableObjects, modifierId, true);				
 		}
 		for (Iterator it = storableObjects.iterator(); it.hasNext();) {
-			AbstractImageResource abstractImageResource = fromStorableObject((AbstractImageResource) it.next());
+			AbstractImageResource abstractImageResource;
+			try {
+				abstractImageResource = fromStorableObject((AbstractImageResource) it.next());
+			} catch (IllegalDataException e) {
+				throw new UpdateObjectException("ImageResourceDatabase.update | object isn't AbstractImageResource");
+			}
 			if((abstractImageResource instanceof BitmapImageResource) || (abstractImageResource instanceof SchemeImageResource))
 				updateImage(abstractImageResource);
 		}
@@ -263,7 +268,7 @@ public final class ImageResourceDatabase extends StorableObjectDatabase {
 	}
 
 	public void update(StorableObject storableObject, Identifier modifierId, int updateKind)
-			throws IllegalDataException, VersionCollisionException,
+			throws VersionCollisionException,
 			UpdateObjectException {
 //		AbstractImageResource abstractImageResource = this.fromStorableObject(storableObject);
 		switch (updateKind) {

@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseResourceObjectLoader.java,v 1.6 2005/02/15 08:41:26 bob Exp $
+ * $Id: DatabaseResourceObjectLoader.java,v 1.7 2005/02/24 16:10:21 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,7 +32,7 @@ import com.syrus.AMFICOM.resource.corba.ImageResource_TransferablePackage.ImageR
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/02/15 08:41:26 $
+ * @version $Revision: 1.7 $, $Date: 2005/02/24 16:10:21 $
  * @author $Author: bob $
  * @module resource_v1
  */
@@ -124,9 +124,6 @@ public class DatabaseResourceObjectLoader implements ResourceObjectLoader {
 		} catch (UpdateObjectException e) {
 			Log.errorMessage("ResourceObjectLoader.saveImageResource | UpdateObjectException: " + e.getMessage()); //$NON-NLS-1$
 			throw new DatabaseException("ResourceObjectLoader.saveImageResource | UpdateObjectException: " + e.getMessage()); //$NON-NLS-1$
-		} catch (IllegalDataException e) {
-			Log.errorMessage("ResourceObjectLoader.saveImageResource | Illegal Storable Object: " + e.getMessage()); //$NON-NLS-1$
-			throw new DatabaseException("ResourceObjectLoader.saveImageResource | Illegal Storable Object: " + e.getMessage()); //$NON-NLS-1$
 		} catch (VersionCollisionException e) {
 			Log.errorMessage("ResourceObjectLoader.saveImageResource | VersionCollisionException: " + e.getMessage()); //$NON-NLS-1$
 			throw new DatabaseException("ResourceObjectLoader.saveImageResource | VersionCollisionException: " + e.getMessage()); //$NON-NLS-1$
@@ -140,20 +137,17 @@ public class DatabaseResourceObjectLoader implements ResourceObjectLoader {
 		} catch (UpdateObjectException e) {
 			Log.errorMessage("ResourceObjectLoader.saveImageResources | UpdateObjectException: " + e.getMessage()); //$NON-NLS-1$
 			throw new DatabaseException("ResourceObjectLoader.saveImageResources | UpdateObjectException: " + e.getMessage()); //$NON-NLS-1$
-		} catch (IllegalDataException e) {
-			Log.errorMessage("ResourceObjectLoader.saveImageResources | Illegal Storable Object: " + e.getMessage()); //$NON-NLS-1$
-			throw new DatabaseException("ResourceObjectLoader.saveImageResources | Illegal Storable Object: " + e.getMessage()); //$NON-NLS-1$
 		} catch (VersionCollisionException e) {
 			Log.errorMessage("ResourceObjectLoader.saveImageResources | VersionCollisionException: " + e.getMessage()); //$NON-NLS-1$
 			throw new DatabaseException("ResourceObjectLoader.saveImageResources | VersionCollisionException: " + e.getMessage()); //$NON-NLS-1$
 		}
 	}
 
-	public void delete(Identifier id) throws DatabaseException {
+	public void delete(Identifier id) throws IllegalDataException {
 		delete(id, null);		
 	}
 
-	public void delete(Collection ids) throws DatabaseException {
+	public void delete(Collection ids) throws IllegalDataException {
 		if (ids == null || ids.isEmpty())
 			return;
 		/**
@@ -172,7 +166,7 @@ public class DatabaseResourceObjectLoader implements ResourceObjectLoader {
 			else if (object instanceof Identified)
 				identifier = ((Identified)object).getId();
 			else
-				throw new DatabaseException("ResourceObjectLoader.delete | Object " + object.getClass().getName() + " isn't Identifier or Identified"); //$NON-NLS-1$ //$NON-NLS-2$
+				throw new IllegalDataException("ResourceObjectLoader.delete | Object " + object.getClass().getName() + " isn't Identifier or Identified"); //$NON-NLS-1$ //$NON-NLS-2$
 			Short entityCode = new Short(identifier.getMajor());
 			Collection list = (Collection)map.get(entityCode);
 			if (list == null) {
@@ -195,9 +189,9 @@ public class DatabaseResourceObjectLoader implements ResourceObjectLoader {
 	 * delete storable objects of one kind of entity
 	 * @param id
 	 * @param ids
-	 * @throws DatabaseException
+	 * @throws IllegalDataException
 	 */
-	private void delete(Identifier id, Collection ids) throws DatabaseException {
+	private void delete(Identifier id, Collection ids) throws IllegalDataException {
 		short entityCode = (id != null) ? id.getMajor() : 0;
 		if (id == null) {
 			if (ids.isEmpty())
@@ -208,26 +202,21 @@ public class DatabaseResourceObjectLoader implements ResourceObjectLoader {
 			else if (obj instanceof Identified)
 				entityCode = ((Identified)obj).getId().getMajor();
 		}
-		try {
-			StorableObjectDatabase database = null;
-			switch (entityCode) {
-				case ObjectEntities.IMAGE_RESOURCE_ENTITY_CODE:
-					database = ResourceDatabaseContext.getImageResourceDatabase();
-					break;
-				default:
-					Log.errorMessage("ResourceObjectLoader.delete | Unknown entity: " + entityCode);                 //$NON-NLS-1$
-			}
+		StorableObjectDatabase database = null;
+		switch (entityCode) {
+			case ObjectEntities.IMAGE_RESOURCE_ENTITY_CODE:
+				database = ResourceDatabaseContext.getImageResourceDatabase();
+				break;
+			default:
+				Log.errorMessage("ResourceObjectLoader.delete | Unknown entity: " + entityCode);                 //$NON-NLS-1$
+		}
 
-			if (database != null) {
-				if (id != null)
-					database.delete(id);
-				else if (ids != null && !ids.isEmpty()) {
-					database.delete(ids);
-				}
+		if (database != null) {
+			if (id != null)
+				database.delete(id);
+			else if (ids != null && !ids.isEmpty()) {
+				database.delete(ids);
 			}
-		} catch (IllegalDataException e) {
-			Log.errorMessage("ResourceObjectLoader.delete | DatabaseException: " + e.getMessage()); //$NON-NLS-1$
-			throw new DatabaseException("ResourceObjectLoader.delete | DatabaseException: " + e.getMessage()); //$NON-NLS-1$
 		}
 	}
 }
