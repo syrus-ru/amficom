@@ -15,5 +15,7 @@
 	<classpathentry kind="var" path="AMFICOM_HOME/lib/administrate.jar"/>
 	<classpathentry kind="src" path="/map_v1"/>
 	<classpathentry kind="src" path="/admin_v1"/>
+	<classpathentry kind="src" path="/resource_v1"/>
+	<classpathentry kind="src" path="/mapview_v1"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>
