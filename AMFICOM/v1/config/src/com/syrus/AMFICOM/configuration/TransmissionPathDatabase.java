@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPathDatabase.java,v 1.12 2004/08/19 12:21:22 arseniy Exp $
+ * $Id: TransmissionPathDatabase.java,v 1.13 2004/08/22 18:49:19 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,7 +28,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2004/08/19 12:21:22 $
+ * @version $Revision: 1.13 $, $Date: 2004/08/22 18:49:19 $
  * @author $Author: arseniy $
  * @module configuration_v1
  */
@@ -85,7 +85,7 @@ public class TransmissionPathDatabase extends StorableObjectDatabase {
 		ResultSet resultSet = null;
 		try {
 			statement = connection.createStatement();
-			Log.debugMessage("TransmissionPathDatabase.retrieveTransmissionPath | Trying: " + sql, Log.DEBUGLEVEL05);
+			Log.debugMessage("TransmissionPathDatabase.retrieveTransmissionPath | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql);
 			if (resultSet.next()) {
 				String name = resultSet.getString(COLUMN_NAME);
@@ -147,7 +147,7 @@ public class TransmissionPathDatabase extends StorableObjectDatabase {
 		ResultSet resultSet = null;
 		try {
 			statement = connection.createStatement();
-			Log.debugMessage("TransmissionPathDatabase.retrieveEquipmentMELink | Trying: " + sql, Log.DEBUGLEVEL05);
+			Log.debugMessage("TransmissionPathDatabase.retrieveEquipmentMELink | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql);
 			List meLink = new ArrayList();
 			while (resultSet.next()) {				
@@ -243,7 +243,7 @@ public class TransmissionPathDatabase extends StorableObjectDatabase {
 		Statement statement = null;
 		try {
 			statement = connection.createStatement();
-			Log.debugMessage("TransmissionPathDatabase.insertTransmissionPath | Trying: " + sql, Log.DEBUGLEVEL05);
+			Log.debugMessage("TransmissionPathDatabase.insertTransmissionPath | Trying: " + sql, Log.DEBUGLEVEL09);
 			statement.executeUpdate(sql);
 		}
 		catch (SQLException sqle) {
@@ -304,7 +304,7 @@ public class TransmissionPathDatabase extends StorableObjectDatabase {
 //				Log.debugMessage("TransmissionPathDatabase.insertTransmissionPathMELinks | Inserting link for transmission path '"
 //								+ tpIdCode
 //								+ "' and monitored element '"
-//								+ meIdCode + "'", Log.DEBUGLEVEL05);
+//								+ meIdCode + "'", Log.DEBUGLEVEL09);
 //				preparedStatement.executeUpdate();
 //			}
 //		}
@@ -345,7 +345,7 @@ public class TransmissionPathDatabase extends StorableObjectDatabase {
 		Statement statement = null;
 		try {
 			statement = connection.createStatement();
-			Log.debugMessage("TransmissionPathDatabase.setModified | Trying: " + sql, Log.DEBUGLEVEL05);
+			Log.debugMessage("TransmissionPathDatabase.setModified | Trying: " + sql, Log.DEBUGLEVEL09);
 			statement.executeUpdate(sql);
 			connection.commit();
 		}
@@ -375,7 +375,7 @@ public class TransmissionPathDatabase extends StorableObjectDatabase {
 		ResultSet resultSet = null;
 		try {
 			statement = connection.createStatement();
-			Log.debugMessage("TransmissionPathDatabase.retrieveAll | Trying: " + sql, Log.DEBUGLEVEL05);
+			Log.debugMessage("TransmissionPathDatabase.retrieveAll | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql);
 			while (resultSet.next())
 				transPaths.add(new TransmissionPath(new Identifier(resultSet.getString(COLUMN_ID))));			
@@ -411,7 +411,7 @@ public class TransmissionPathDatabase extends StorableObjectDatabase {
 			String sql = SQL_DELETE_FROM
 				+ ObjectEntities.TRANSPATH_ENTITY
 				+ SQL_WHERE + COLUMN_ID + EQUALS + tpIdStr;
-			Log.debugMessage("TransmissionPathDatabase.delete | Trying: " + sql, Log.DEBUGLEVEL05);
+			Log.debugMessage("TransmissionPathDatabase.delete | Trying: " + sql, Log.DEBUGLEVEL09);
 			statement.executeUpdate(sql);
 			connection.commit();
 		}

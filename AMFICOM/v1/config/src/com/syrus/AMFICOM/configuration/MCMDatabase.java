@@ -1,5 +1,5 @@
 /*
- * $Id: MCMDatabase.java,v 1.11 2004/08/18 08:46:04 arseniy Exp $
+ * $Id: MCMDatabase.java,v 1.12 2004/08/22 18:49:19 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,7 +27,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2004/08/18 08:46:04 $
+ * @version $Revision: 1.12 $, $Date: 2004/08/22 18:49:19 $
  * @author $Author: arseniy $
  * @module configuration_v1
  */
@@ -75,7 +75,7 @@ public class MCMDatabase extends StorableObjectDatabase {
 		ResultSet resultSet = null;
 		try {
 			statement = connection.createStatement();
-			Log.debugMessage("MCMDatabase.retrieve | Trying: " + sql, Log.DEBUGLEVEL05);
+			Log.debugMessage("MCMDatabase.retrieve | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql);
 			if (resultSet.next()) {
 				mcm.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
@@ -142,7 +142,7 @@ public class MCMDatabase extends StorableObjectDatabase {
 		ResultSet resultSet = null;
 		try {
 			statement = connection.createStatement();
-			Log.debugMessage("MCMDatabase.retrieveKISIds | Trying: " + sql, Log.DEBUGLEVEL05);
+			Log.debugMessage("MCMDatabase.retrieveKISIds | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql);
 			while (resultSet.next())				
 				kisIds.add(new Identifier(resultSet.getString(COLUMN_ID)));
@@ -230,7 +230,7 @@ public class MCMDatabase extends StorableObjectDatabase {
 		Statement statement = null;
 		try {
 			statement = connection.createStatement();
-			Log.debugMessage("MCMDatabase.insert | Trying: " + sql, Log.DEBUGLEVEL05);
+			Log.debugMessage("MCMDatabase.insert | Trying: " + sql, Log.DEBUGLEVEL09);
 			statement.executeUpdate(sql);
 		}
 		catch (SQLException sqle) {

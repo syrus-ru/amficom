@@ -1,5 +1,5 @@
 /*
- * $Id: ConfigurationStorableObjectPool.java,v 1.4 2004/08/18 18:08:05 arseniy Exp $
+ * $Id: ConfigurationStorableObjectPool.java,v 1.5 2004/08/22 18:49:19 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -21,7 +21,7 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2004/08/18 18:08:05 $
+ * @version $Revision: 1.5 $, $Date: 2004/08/22 18:49:19 $
  * @author $Author: arseniy $
  * @module configuration_v1
  */
@@ -83,28 +83,34 @@ public class ConfigurationStorableObjectPool {
 	}
 
 	public static StorableObject getStorableObject(Identifier objectId, boolean useLoader) {
-		short objectEntityCode = objectId.getMajor();
-		LRUMap objectPool = (LRUMap)objectPoolMap.get(new Short(objectEntityCode));
-		if (objectPool != null) {
-			StorableObject storableObject = (StorableObject)objectPool.get(objectId);
-			if (storableObject != null)
-				return storableObject;
-			else {
-				if (useLoader) {
-					try {
-						storableObject = loadStorableObject(objectId);
-						if (storableObject != null)
-							putStorableObject(storableObject);
+		if (objectId != null) {
+			short objectEntityCode = objectId.getMajor();
+			LRUMap objectPool = (LRUMap)objectPoolMap.get(new Short(objectEntityCode));
+			if (objectPool != null) {
+				StorableObject storableObject = (StorableObject)objectPool.get(objectId);
+				if (storableObject != null)
+					return storableObject;
+				else {
+					if (useLoader) {
+						try {
+							storableObject = loadStorableObject(objectId);
+							if (storableObject != null)
+								putStorableObject(storableObject);
+						}
+						catch (Exception e) {
+							Log.errorException(e);
+						}
 					}
-					catch (Exception e) {
-						Log.errorException(e);
-					}
+					return storableObject;
 				}
-				return storableObject;
+			}
+			else {
+				Log.errorMessage("ConfigurationStorableObjectPool.getStorableObject | Cannot find object pool for objectId: '" + objectId.toString() + "' entity code: '" + objectEntityCode + "'");
+				return null;
 			}
 		}
 		else {
-			Log.errorMessage("ConfigurationStorableObjectPool.getStorableObject | Cannot find object pool for objectId: '" + objectId.toString() + "' entity code: '" + objectEntityCode + "'");
+			Log.errorMessage("ConfigurationStorableObjectPool.getStorableObject | NULL identifier supplied");
 			return null;
 		}
 	}

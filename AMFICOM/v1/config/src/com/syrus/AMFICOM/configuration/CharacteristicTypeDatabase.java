@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicTypeDatabase.java,v 1.7 2004/08/13 14:08:14 bob Exp $
+ * $Id: CharacteristicTypeDatabase.java,v 1.8 2004/08/22 18:49:19 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,8 +26,8 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2004/08/13 14:08:14 $
- * @author $Author: bob $
+ * @version $Revision: 1.8 $, $Date: 2004/08/22 18:49:19 $
+ * @author $Author: arseniy $
  * @module configuration_v1
  */
 
@@ -69,7 +69,7 @@ public class CharacteristicTypeDatabase extends StorableObjectDatabase {
 		ResultSet resultSet = null;
 		try {
 			statement = connection.createStatement();
-			Log.debugMessage("CharacteristicTypeDatabase.retrieve | Trying: " + sql, Log.DEBUGLEVEL05);
+			Log.debugMessage("CharacteristicTypeDatabase.retrieve | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql);
 			if (resultSet.next())
 				characteristicType.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
@@ -174,7 +174,7 @@ public class CharacteristicTypeDatabase extends StorableObjectDatabase {
 		Statement statement = null;
 		try {
 			statement = connection.createStatement();
-			Log.debugMessage("CharacteristicTypeDatabase.insert | Trying: " + sql, Log.DEBUGLEVEL05);
+			Log.debugMessage("CharacteristicTypeDatabase.insert | Trying: " + sql, Log.DEBUGLEVEL09);
 			statement.executeUpdate(sql);
 		}
 		catch (SQLException sqle) {
@@ -210,7 +210,7 @@ public class CharacteristicTypeDatabase extends StorableObjectDatabase {
 		ResultSet resultSet = null;
 		try {
 			statement = connection.createStatement();
-			Log.debugMessage("CharacteristicTypeDatabase.retrieveAll | Trying: " + sql, Log.DEBUGLEVEL05);
+			Log.debugMessage("CharacteristicTypeDatabase.retrieveAll | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql);
 			while (resultSet.next())
 				characteristicTypes.add(new CharacteristicType(new Identifier(resultSet.getString(COLUMN_ID))));			

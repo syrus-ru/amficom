@@ -1,5 +1,5 @@
 /*
- * $Id: KISDatabase.java,v 1.16 2004/08/18 18:08:05 arseniy Exp $
+ * $Id: KISDatabase.java,v 1.17 2004/08/22 18:49:19 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,7 +27,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2004/08/18 18:08:05 $
+ * @version $Revision: 1.17 $, $Date: 2004/08/22 18:49:19 $
  * @author $Author: arseniy $
  * @module configuration_v1
  */
@@ -76,7 +76,7 @@ public class KISDatabase extends StorableObjectDatabase {
 		ResultSet resultSet = null;
 		try {
 			statement = connection.createStatement();
-			Log.debugMessage("KISDatabase.retrieveKIS | Trying: " + sql, Log.DEBUGLEVEL05);
+			Log.debugMessage("KISDatabase.retrieveKIS | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql);
 			if (resultSet.next()) {				
 				kis.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
@@ -139,7 +139,7 @@ public class KISDatabase extends StorableObjectDatabase {
 		ResultSet resultSet = null;
 		try {
 			statement = connection.createStatement();
-			Log.debugMessage("KISDatabase.retrieveKISMeasurementPortIds | Trying: " + sql, Log.DEBUGLEVEL05);
+			Log.debugMessage("KISDatabase.retrieveKISMeasurementPortIds | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql);
 			while (resultSet.next()) {
 				measurementPortIds.add(new Identifier(resultSet.getString(COLUMN_ID)));
@@ -193,7 +193,7 @@ public class KISDatabase extends StorableObjectDatabase {
 		ResultSet resultSet = null;
 		try {
 			statement = connection.createStatement();
-			Log.debugMessage("KISDatabase.retrieveMonitoredElements | Trying: " + sql, Log.DEBUGLEVEL05);
+			Log.debugMessage("KISDatabase.retrieveMonitoredElements | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql);
 			while (resultSet.next()) {
 				monitoredElements.add((MonitoredElement)ConfigurationStorableObjectPool.getStorableObject(new Identifier(resultSet.getString(COLUMN_ID)), true));
@@ -284,7 +284,7 @@ public class KISDatabase extends StorableObjectDatabase {
 		Statement statement = null;
 		try {
 			statement = connection.createStatement();
-			Log.debugMessage("KISDatabase.insertKIS | Trying: " + sql, Log.DEBUGLEVEL05);
+			Log.debugMessage("KISDatabase.insertKIS | Trying: " + sql, Log.DEBUGLEVEL09);
 			statement.executeUpdate(sql);
 		}
 		catch (SQLException sqle) {
@@ -319,7 +319,7 @@ public class KISDatabase extends StorableObjectDatabase {
 			String sql = SQL_DELETE_FROM
 				+ ObjectEntities.KIS_ENTITY
 				+ SQL_WHERE + COLUMN_ID + EQUALS + kisIdStr;
-			Log.debugMessage("KISDatabase.delete | Trying: " + sql, Log.DEBUGLEVEL05);
+			Log.debugMessage("KISDatabase.delete | Trying: " + sql, Log.DEBUGLEVEL09);
 			statement.executeUpdate(sql);
 			connection.commit();
 		}
@@ -347,7 +347,7 @@ public class KISDatabase extends StorableObjectDatabase {
 		ResultSet resultSet = null;
 		try {
 			statement = connection.createStatement();
-			Log.debugMessage("KISDatabase.retrieveAll | Trying: " + sql, Log.DEBUGLEVEL05);
+			Log.debugMessage("KISDatabase.retrieveAll | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql);
 			while (resultSet.next())
 				kiss.add(new KIS(new Identifier(resultSet.getString(COLUMN_ID))));			

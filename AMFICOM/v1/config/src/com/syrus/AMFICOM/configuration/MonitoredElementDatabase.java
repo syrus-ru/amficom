@@ -1,5 +1,5 @@
 /*
- * $Id: MonitoredElementDatabase.java,v 1.11 2004/08/19 12:21:22 arseniy Exp $
+ * $Id: MonitoredElementDatabase.java,v 1.12 2004/08/22 18:49:19 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,7 +30,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2004/08/19 12:21:22 $
+ * @version $Revision: 1.12 $, $Date: 2004/08/22 18:49:19 $
  * @author $Author: arseniy $
  * @module configuration_v1
  */
@@ -76,7 +76,7 @@ public class MonitoredElementDatabase extends StorableObjectDatabase {
 		ResultSet resultSet = null;
 		try {
 			statement = connection.createStatement();
-			Log.debugMessage("MonitoredElementDatabase.retrieveMonitoredElement | Trying: " + sql, Log.DEBUGLEVEL05);
+			Log.debugMessage("MonitoredElementDatabase.retrieveMonitoredElement | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql);
 			if (resultSet.next())
 				monitoredElement.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
@@ -167,7 +167,7 @@ public class MonitoredElementDatabase extends StorableObjectDatabase {
 		ResultSet resultSet = null;
 		try {
 			statement = connection.createStatement();
-			Log.debugMessage("MonitoredElementDatabase.retrieveMonitoredDomainMemberIds | Trying: " + sql, Log.DEBUGLEVEL05);
+			Log.debugMessage("MonitoredElementDatabase.retrieveMonitoredDomainMemberIds | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql);
 			while (resultSet.next()) {
 				/**
@@ -243,7 +243,7 @@ public class MonitoredElementDatabase extends StorableObjectDatabase {
 		Statement statement = null;
 		try {
 			statement = connection.createStatement();
-			Log.debugMessage("MonitoredElementDatabase.insertMonitoredElement | Trying: " + sql, Log.DEBUGLEVEL05);
+			Log.debugMessage("MonitoredElementDatabase.insertMonitoredElement | Trying: " + sql, Log.DEBUGLEVEL09);
 			statement.executeUpdate(sql);
 			connection.commit();
 		}
@@ -324,7 +324,7 @@ public class MonitoredElementDatabase extends StorableObjectDatabase {
 				 *       setLong()
 				 */
 				preparedStatement.setString(2, meIdCode);
-				Log.debugMessage("MonitoredElementDatabase.insertMonitoredDomainMemberIds | Inserting link for monitored element '" + meIdCode + "' and monitored domain member '" + mdmIdCode + "'", Log.DEBUGLEVEL05);
+				Log.debugMessage("MonitoredElementDatabase.insertMonitoredDomainMemberIds | Inserting link for monitored element '" + meIdCode + "' and monitored domain member '" + mdmIdCode + "'", Log.DEBUGLEVEL09);
 				preparedStatement.executeUpdate();
 			}
 			connection.commit();
@@ -362,7 +362,7 @@ public class MonitoredElementDatabase extends StorableObjectDatabase {
 		ResultSet resultSet = null;
 		try {
 			statement = connection.createStatement();
-			Log.debugMessage("MonitoredElementDatabase.retrieveAll | Trying: " + sql, Log.DEBUGLEVEL05);
+			Log.debugMessage("MonitoredElementDatabase.retrieveAll | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql);
 			while (resultSet.next())
 				mes.add(new MonitoredElement(new Identifier(resultSet.getString(COLUMN_ID))));			
@@ -421,9 +421,9 @@ public class MonitoredElementDatabase extends StorableObjectDatabase {
 		Statement statement = null;
 		try {
 			statement = connection.createStatement();
-			Log.debugMessage("MonitoredElementDatabase.delete | Trying: " + sql1, Log.DEBUGLEVEL05);
+			Log.debugMessage("MonitoredElementDatabase.delete | Trying: " + sql1, Log.DEBUGLEVEL09);
 			statement.executeUpdate(sql1);
-			Log.debugMessage("MonitoredElementDatabase.delete | Trying: " + sql2, Log.DEBUGLEVEL05);
+			Log.debugMessage("MonitoredElementDatabase.delete | Trying: " + sql2, Log.DEBUGLEVEL09);
 			statement.executeUpdate(sql2);
 			connection.commit();
 		}

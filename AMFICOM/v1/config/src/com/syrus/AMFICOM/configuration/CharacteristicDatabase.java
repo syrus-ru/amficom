@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicDatabase.java,v 1.13 2004/08/20 12:55:35 arseniy Exp $
+ * $Id: CharacteristicDatabase.java,v 1.14 2004/08/22 18:49:19 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,7 +27,7 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.configuration.corba.CharacteristicSort;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2004/08/20 12:55:35 $
+ * @version $Revision: 1.14 $, $Date: 2004/08/22 18:49:19 $
  * @author $Author: arseniy $
  * @module configuration_v1
  */
@@ -92,7 +92,7 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
 		ResultSet resultSet = null;
 		try {
 			statement = connection.createStatement();
-			Log.debugMessage("Characteristic_Database.retrieveCharacteristic | Trying: " + sql, Log.DEBUGLEVEL05);
+			Log.debugMessage("Characteristic_Database.retrieveCharacteristic | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql);
 			if (resultSet.next()) {
 				
@@ -382,7 +382,7 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
 		Statement statement = null;
 		try {
 			statement = connection.createStatement();
-			Log.debugMessage("Characteristic_Database.insertCharacteristic | Trying: " + sql, Log.DEBUGLEVEL05);
+			Log.debugMessage("Characteristic_Database.insertCharacteristic | Trying: " + sql, Log.DEBUGLEVEL09);
 			statement.executeUpdate(sql);
 		}
 		catch (SQLException sqle) {
@@ -455,7 +455,7 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
 		ResultSet resultSet = null;
 		try {
 			statement = connection.createStatement();
-			Log.debugMessage("Characteristic_Database.retrieveCharacteristics | Trying: " + sql, Log.DEBUGLEVEL05);
+			Log.debugMessage("Characteristic_Database.retrieveCharacteristics | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql);
 			while (resultSet.next()) {
 				try {

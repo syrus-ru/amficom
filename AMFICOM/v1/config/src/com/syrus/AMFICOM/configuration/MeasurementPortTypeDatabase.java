@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPortTypeDatabase.java,v 1.2 2004/08/16 09:02:05 bob Exp $
+ * $Id: MeasurementPortTypeDatabase.java,v 1.3 2004/08/22 18:49:19 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,8 +26,8 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2004/08/16 09:02:05 $
- * @author $Author: bob $
+ * @version $Revision: 1.3 $, $Date: 2004/08/22 18:49:19 $
+ * @author $Author: arseniy $
  * @module configuration_v1
  */
 
@@ -63,7 +63,7 @@ public class MeasurementPortTypeDatabase extends StorableObjectDatabase {
 		ResultSet resultSet = null;
 		try {
 			statement = connection.createStatement();
-			Log.debugMessage("MeasurementPortTypeDatabase.retrieve | Trying: " + sql, Log.DEBUGLEVEL05);
+			Log.debugMessage("MeasurementPortTypeDatabase.retrieve | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql);
 			if (resultSet.next())
 				measurementPortType.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
@@ -158,7 +158,7 @@ public class MeasurementPortTypeDatabase extends StorableObjectDatabase {
 		Statement statement = null;
 		try {
 			statement = connection.createStatement();
-			Log.debugMessage("MeasurementPortTypeDatabase.insert | Trying: " + sql, Log.DEBUGLEVEL05);
+			Log.debugMessage("MeasurementPortTypeDatabase.insert | Trying: " + sql, Log.DEBUGLEVEL09);
 			statement.executeUpdate(sql);
 		}
 		catch (SQLException sqle) {
@@ -194,7 +194,7 @@ public class MeasurementPortTypeDatabase extends StorableObjectDatabase {
 		ResultSet resultSet = null;
 		try {
 			statement = connection.createStatement();
-			Log.debugMessage("MeasurementPortTypeDatabase.retrieveAll | Trying: " + sql, Log.DEBUGLEVEL05);
+			Log.debugMessage("MeasurementPortTypeDatabase.retrieveAll | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql);
 			while (resultSet.next())
 				measurementPortTypes.add(new MeasurementPortType(new Identifier(resultSet.getString(COLUMN_ID))));			
@@ -232,7 +232,7 @@ public class MeasurementPortTypeDatabase extends StorableObjectDatabase {
 						+ SQL_WHERE
 						+ COLUMN_ID + EQUALS
 						+ mtIdStr;
-			Log.debugMessage("MeasurementPortTypeDatabase.delete | Trying: " + sql, Log.DEBUGLEVEL05);
+			Log.debugMessage("MeasurementPortTypeDatabase.delete | Trying: " + sql, Log.DEBUGLEVEL09);
 			statement.executeUpdate(sql);
 			connection.commit();
 		}

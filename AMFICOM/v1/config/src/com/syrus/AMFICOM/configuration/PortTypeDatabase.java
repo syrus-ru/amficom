@@ -1,5 +1,5 @@
 /*
- * $Id: PortTypeDatabase.java,v 1.5 2004/08/13 14:08:15 bob Exp $
+ * $Id: PortTypeDatabase.java,v 1.6 2004/08/22 18:49:19 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,8 +26,8 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2004/08/13 14:08:15 $
- * @author $Author: bob $
+ * @version $Revision: 1.6 $, $Date: 2004/08/22 18:49:19 $
+ * @author $Author: arseniy $
  * @module configuration_v1
  */
 
@@ -63,7 +63,7 @@ public class PortTypeDatabase extends StorableObjectDatabase {
 		ResultSet resultSet = null;
 		try {
 			statement = connection.createStatement();
-			Log.debugMessage("PortTypeDatabase.retrieve | Trying: " + sql, Log.DEBUGLEVEL05);
+			Log.debugMessage("PortTypeDatabase.retrieve | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql);
 			if (resultSet.next())
 				portType.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
@@ -158,7 +158,7 @@ public class PortTypeDatabase extends StorableObjectDatabase {
 		Statement statement = null;
 		try {
 			statement = connection.createStatement();
-			Log.debugMessage("PortTypeDatabase.insert | Trying: " + sql, Log.DEBUGLEVEL05);
+			Log.debugMessage("PortTypeDatabase.insert | Trying: " + sql, Log.DEBUGLEVEL09);
 			statement.executeUpdate(sql);
 		}
 		catch (SQLException sqle) {
@@ -194,7 +194,7 @@ public class PortTypeDatabase extends StorableObjectDatabase {
 		ResultSet resultSet = null;
 		try {
 			statement = connection.createStatement();
-			Log.debugMessage("PortTypeDatabase.retrieveAll | Trying: " + sql, Log.DEBUGLEVEL05);
+			Log.debugMessage("PortTypeDatabase.retrieveAll | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql);
 			while (resultSet.next())
 				portTypes.add(new PortType(new Identifier(resultSet.getString(COLUMN_ID))));			
@@ -232,7 +232,7 @@ public class PortTypeDatabase extends StorableObjectDatabase {
 						+ SQL_WHERE
 						+ COLUMN_ID + EQUALS
 						+ ptIdStr;
-			Log.debugMessage("PortTypeDatabase.delete | Trying: " + sql, Log.DEBUGLEVEL05);
+			Log.debugMessage("PortTypeDatabase.delete | Trying: " + sql, Log.DEBUGLEVEL09);
 			statement.executeUpdate(sql);
 			connection.commit();
 		}

@@ -1,5 +1,5 @@
 /*
- * $Id: PortDatabase.java,v 1.9 2004/08/18 08:46:04 arseniy Exp $
+ * $Id: PortDatabase.java,v 1.10 2004/08/22 18:49:19 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,7 +31,7 @@ import com.syrus.util.database.DatabaseDate;
 
 
 /**
- * @version $Revision: 1.9 $, $Date: 2004/08/18 08:46:04 $
+ * @version $Revision: 1.10 $, $Date: 2004/08/22 18:49:19 $
  * @author $Author: arseniy $
  * @module configuration_v1
  */
@@ -95,7 +95,7 @@ public class PortDatabase extends StorableObjectDatabase {
 		ResultSet resultSet = null;
 		try {
 			statement = connection.createStatement();
-			Log.debugMessage("PortDatabase.retrievePort | Trying: " + sql, Log.DEBUGLEVEL05);
+			Log.debugMessage("PortDatabase.retrievePort | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql);
 			if (resultSet.next()) {
 				/**
@@ -250,7 +250,7 @@ public class PortDatabase extends StorableObjectDatabase {
 			
 			preparedStatement.setInt(9, port.getSort());			
 										
-			Log.debugMessage("PortDatabase.insertPort | Trying: " + sql, Log.DEBUGLEVEL05);
+			Log.debugMessage("PortDatabase.insertPort | Trying: " + sql, Log.DEBUGLEVEL09);
 			preparedStatement.executeUpdate();
 			connection.commit();
 		}
@@ -287,7 +287,7 @@ public class PortDatabase extends StorableObjectDatabase {
 		ResultSet resultSet = null;
 		try {
 			statement = connection.createStatement();
-			Log.debugMessage("PortDatabase.retrieveAll | Trying: " + sql, Log.DEBUGLEVEL05);
+			Log.debugMessage("PortDatabase.retrieveAll | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql);
 			while (resultSet.next())
 				ports.add(new Port(new Identifier(resultSet.getString(COLUMN_ID))));			
@@ -325,7 +325,7 @@ public class PortDatabase extends StorableObjectDatabase {
 						+ SQL_WHERE
 						+ COLUMN_ID + EQUALS
 						+ portIdStr;
-			Log.debugMessage("PortDatabase.delete | Trying: " + sql, Log.DEBUGLEVEL05);
+			Log.debugMessage("PortDatabase.delete | Trying: " + sql, Log.DEBUGLEVEL09);
 			statement.executeUpdate(sql);
 			connection.commit();
 		}

@@ -1,5 +1,5 @@
 /*
- * $Id: DomainDatabase.java,v 1.2 2004/08/18 08:46:04 arseniy Exp $
+ * $Id: DomainDatabase.java,v 1.3 2004/08/22 18:49:19 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,7 +27,7 @@ import com.syrus.util.database.DatabaseDate;
 
 
 /**
- * @version $Revision: 1.2 $, $Date: 2004/08/18 08:46:04 $
+ * @version $Revision: 1.3 $, $Date: 2004/08/22 18:49:19 $
  * @author $Author: arseniy $
  * @module configuration_v1
  */
@@ -65,7 +65,7 @@ public class DomainDatabase extends StorableObjectDatabase {
 		ResultSet resultSet = null;
 		try {
 			statement = connection.createStatement();
-			Log.debugMessage("DomainDatabase.retrieve | Trying: " + sql, Log.DEBUGLEVEL05);
+			Log.debugMessage("DomainDatabase.retrieve | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql);
 			if (resultSet.next()) {
 				/**
@@ -173,7 +173,7 @@ public class DomainDatabase extends StorableObjectDatabase {
 		Statement statement = null;
 		try {
 			statement = connection.createStatement();
-			Log.debugMessage("DomainDatabase.insertDomain | Trying: " + sql, Log.DEBUGLEVEL05);
+			Log.debugMessage("DomainDatabase.insertDomain | Trying: " + sql, Log.DEBUGLEVEL09);
 			statement.executeUpdate(sql);
 		}
 		catch (SQLException sqle) {

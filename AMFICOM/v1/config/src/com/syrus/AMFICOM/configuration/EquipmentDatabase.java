@@ -1,5 +1,5 @@
 /*
- * $Id: EquipmentDatabase.java,v 1.23 2004/08/19 12:21:22 arseniy Exp $
+ * $Id: EquipmentDatabase.java,v 1.24 2004/08/22 18:49:19 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,7 +28,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.23 $, $Date: 2004/08/19 12:21:22 $
+ * @version $Revision: 1.24 $, $Date: 2004/08/22 18:49:19 $
  * @author $Author: arseniy $
  * @module configuration_v1
  */
@@ -86,7 +86,7 @@ public class EquipmentDatabase extends StorableObjectDatabase {
 		ResultSet resultSet = null;
 		try {
 			statement = connection.createStatement();
-			Log.debugMessage("EquipmentDatabase.retrieveEquipment | Trying: " + sql, Log.DEBUGLEVEL05);
+			Log.debugMessage("EquipmentDatabase.retrieveEquipment | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql);
 			if (resultSet.next()) {
 				String name = resultSet.getString(COLUMN_NAME);
@@ -148,7 +148,7 @@ public class EquipmentDatabase extends StorableObjectDatabase {
 		ResultSet resultSet = null;
 		try {
 			statement = connection.createStatement();
-			Log.debugMessage("EquipmentDatabase.retrieveEquipmentPortIds | Trying: " + sql, Log.DEBUGLEVEL05);
+			Log.debugMessage("EquipmentDatabase.retrieveEquipmentPortIds | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql);
 			while (resultSet.next()) {				
 				/**
@@ -190,7 +190,7 @@ public class EquipmentDatabase extends StorableObjectDatabase {
 		ResultSet resultSet = null;
 		try {
 			statement = connection.createStatement();
-			Log.debugMessage("EquipmentDatabase.retrieveEquipmentMEIds | Trying: " + sql, Log.DEBUGLEVEL05);
+			Log.debugMessage("EquipmentDatabase.retrieveEquipmentMEIds | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql);
 			while (resultSet.next()) {
 				/**
@@ -284,7 +284,7 @@ public class EquipmentDatabase extends StorableObjectDatabase {
 		Statement statement = null;
 		try {
 			statement = connection.createStatement();
-			Log.debugMessage("EquipmentDatabase.insertEquipment | Trying: " + sql, Log.DEBUGLEVEL05);
+			Log.debugMessage("EquipmentDatabase.insertEquipment | Trying: " + sql, Log.DEBUGLEVEL09);
 			statement.executeUpdate(sql);
 		}
 		catch (SQLException sqle) {
@@ -339,7 +339,7 @@ public class EquipmentDatabase extends StorableObjectDatabase {
 //				Log.debugMessage("EquipmentDatabase.insertEquipmentMELinks | Inserting link for equipment "
 //								+ eqIdCode
 //								+ " and monitored element "
-//								+ meIdCode, Log.DEBUGLEVEL05);
+//								+ meIdCode, Log.DEBUGLEVEL09);
 //				preparedStatement.executeUpdate();
 //			}
 //		}
@@ -379,7 +379,7 @@ public class EquipmentDatabase extends StorableObjectDatabase {
 		Statement statement = null;
 		try {
 			statement = connection.createStatement();
-			Log.debugMessage("EquipmentDatabase.setModified | Trying: " + sql, Log.DEBUGLEVEL05);
+			Log.debugMessage("EquipmentDatabase.setModified | Trying: " + sql, Log.DEBUGLEVEL09);
 			statement.executeUpdate(sql);
 			connection.commit();
 		}
@@ -408,7 +408,7 @@ public class EquipmentDatabase extends StorableObjectDatabase {
 				+ ObjectEntities.EQUIPMENT_ENTITY
 				+ SQL_WHERE
 					+ COLUMN_ID + EQUALS + eqIdStr;
-			Log.debugMessage("EquipmentDatabase.delete | Trying: " + sql, Log.DEBUGLEVEL05);
+			Log.debugMessage("EquipmentDatabase.delete | Trying: " + sql, Log.DEBUGLEVEL09);
 			statement.executeUpdate(sql);
 			connection.commit();
 		}
@@ -436,7 +436,7 @@ public class EquipmentDatabase extends StorableObjectDatabase {
 		ResultSet resultSet = null;
 		try {
 			statement = connection.createStatement();
-			Log.debugMessage("EquipmentDatabase.retrieveAll | Trying: " + sql, Log.DEBUGLEVEL05);
+			Log.debugMessage("EquipmentDatabase.retrieveAll | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql);
 			while (resultSet.next())
 				equipments.add(new Equipment(new Identifier(resultSet.getString(COLUMN_ID))));			
