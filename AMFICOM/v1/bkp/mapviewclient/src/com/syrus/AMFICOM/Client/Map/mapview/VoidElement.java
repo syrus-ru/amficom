@@ -1,5 +1,5 @@
 /**
- * $Id: VoidElement.java,v 1.1 2004/12/24 15:42:14 krupenn Exp $
+ * $Id: VoidElement.java,v 1.2 2005/01/13 15:16:24 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -26,7 +26,7 @@ import com.syrus.AMFICOM.Client.Resource.MapView.MapView;
  * 
  * 
  * 
- * @version $Revision: 1.1 $, $Date: 2004/12/24 15:42:14 $
+ * @version $Revision: 1.2 $, $Date: 2005/01/13 15:16:24 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -166,4 +166,8 @@ public final class VoidElement implements MapElement
 		throw new UnsupportedOperationException();
 	}
 
+	public Object[][] exportColumns()
+	{
+		throw new UnsupportedOperationException();
+	}
 }

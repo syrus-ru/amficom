@@ -1,5 +1,5 @@
 /*
- * $Id: MapImportCommand.java,v 1.10 2004/12/22 16:38:40 krupenn Exp $
+ * $Id: MapImportCommand.java,v 1.11 2005/01/13 15:16:24 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -24,6 +24,7 @@ import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.map.MapStorableObjectPool;
@@ -40,6 +41,9 @@ import com.syrus.AMFICOM.Client.Resource.ResourceUtil;
 
 import java.io.File;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -50,7 +54,7 @@ import java.util.List;
  * самого окна карты. При этом в азголовке окна отображается информация о том,
  * что активной карты нет, и карта центрируется по умолчанию
  * 
- * @version $Revision: 1.10 $, $Date: 2004/12/22 16:38:40 $
+ * @version $Revision: 1.11 $, $Date: 2005/01/13 15:16:24 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -71,7 +75,6 @@ public class MapImportCommand extends ImportCommand
 
 	public MapImportCommand(MapFrame mapFrame)
 	{
-		super(null);
 		this.mapFrame = mapFrame;
 	}
 
@@ -81,16 +84,18 @@ public class MapImportCommand extends ImportCommand
 			mapFrame = MapFrame.getMapMainFrame();
 		if(mapFrame == null)
 			return;
-/*			
+			
 		ApplicationContext aContext = mapFrame.getContext();
 
 		try
 		{
-			super.setDsi(aContext.getDataSource());
 			System.out.println("Import map");
 	
 			Map map;
-			String[][] exportColumns;
+			MapElement me;
+			ImportCommand.ImportObject importObject;
+			String type;
+			Object[][] exportColumns;
 	
 			String fileName = super.openFileForReading(MapPropertiesManager.getLastDirectory());
 			if(fileName == null)
@@ -98,169 +103,79 @@ public class MapImportCommand extends ImportCommand
 			MapPropertiesManager.setLastDirectory(new File(fileName).getParent());
 			super.open(fileName);
 	
-			exportColumns = super.readObject();
-			String type = exportColumns[0][0];
+			importObject = super.readObject();
+			if(importObject == null)
+				return;
+			type = importObject.type;
+			exportColumns = importObject.exportColumns;
+
 			if(!type.equals(MAP_TYPE))
 				return;
-	
-			String field;
-			String value;
-	
-			MapElement me;
-	//		List loadedObjects = new LinkedList();
-	
+
 			Identifier userId = new Identifier(
 				aContext.getSessionInterface().getAccessIdentifier().user_id);
 
 			Identifier domainId = new Identifier(
 				aContext.getSessionInterface().getAccessIdentifier().domain_id);
-	
-			map = Map.createInstance(userId, "", "");
-			map.setDomainId(domainId);
-	
-			for (int i = 1; i < exportColumns.length; i++) 
-			{
-				field = exportColumns[i][0];
-				value = exportColumns[i][1];
-				if(field.equals(com.syrus.AMFICOM.map.Map.COLUMN_ID))
-					value = super.getClonedId(MAP_TYPE, value);
-				map.setColumn(field, value);
-			}
 
-			MapStorableObjectPool.putStorableObject(map);
+			map = Map.createInstance(userId, domainId, exportColumns);
 	
 			while(true)
 			{
-				exportColumns = super.readObject();
-				if(exportColumns == null)
+				importObject = super.readObject();
+				if(importObject == null)
 					break;
-				type = exportColumns[0][0];
+				type = importObject.type;
+				exportColumns = importObject.exportColumns;
+
+				correctCrossLinks(type, exportColumns);
 	
 				if(type.equals(MARK_TYPE))
-					me = new Mark();
+				{
+					me = Mark.createInstance(userId, exportColumns);
+					map.addNode((Mark )me);
+				}
 				else
 				if(type.equals(NODELINK_TYPE))
-					me = new NodeLink();
+				{
+					me = NodeLink.createInstance(userId, exportColumns);
+					map.addNodeLink((NodeLink )me);
+				}
 				else
 				if(type.equals(LINK_TYPE))
-					me = new PhysicalLink();
+				{
+					me = PhysicalLink.createInstance(userId, exportColumns);
+					map.addPhysicalLink((PhysicalLink )me);
+				}
 				else
 				if(type.equals(NODE_TYPE))
-					me = new TopologicalNode();
+				{
+					me = TopologicalNode.createInstance(userId, exportColumns);
+					map.addNode((TopologicalNode )me);
+				}
 				else
 				if(type.equals(COLLECTOR_TYPE))
-					me = new Collector();
+				{
+					me = Collector.createInstance(userId, exportColumns);
+					map.addCollector((Collector )me);
+				}
 				else
 				if(type.equals(SITE_TYPE))
-					me = new SiteNode();
+				{
+					me = SiteNode.createInstance(userId, exportColumns);
+					map.addNode((SiteNode )me);
+				}
 				else
 					return;
 	
 				me.setMap(map);
-				for (int i = 1; i < exportColumns.length; i++) 
-				{
-					field = exportColumns[i][0];
-					value = exportColumns[i][1];
-					if(type.equals(MARK_TYPE))
-					{
-						if(field.equals(com.syrus.AMFICOM.map.Mark.COLUMN_ID))
-							value = super.getClonedId(MARK_TYPE, value);
-						else
-						if(field.equals(com.syrus.AMFICOM.map.Mark.COLUMN_PHYSICAL_LINK_ID))
-							value = super.getClonedId(LINK_TYPE, value);
-					}
-					else
-					if(type.equals(NODELINK_TYPE))
-					{
-						if(field.equals(com.syrus.AMFICOM.map.NodeLink.COLUMN_ID))
-							value = super.getClonedId(NODELINK_TYPE, value);
-						else
-						if(field.equals(com.syrus.AMFICOM.map.NodeLink.COLUMN_PHYSICAL_LINK_ID))
-							value = super.getClonedId(LINK_TYPE, value);
-						else
-						if(field.equals(com.syrus.AMFICOM.map.NodeLink.COLUMN_START_NODE_ID))
-							value = super.getClonedId(SITE_TYPE, value);
-						else
-						if(field.equals(com.syrus.AMFICOM.map.NodeLink.COLUMN_END_NODE_ID))
-							value = super.getClonedId(SITE_TYPE, value);
-					}
-					else
-					if(type.equals(LINK_TYPE))
-					{
-						if(field.equals(com.syrus.AMFICOM.map.PhysicalLink.COLUMN_ID))
-							value = super.getClonedId(LINK_TYPE, value);
-						else
-						if(field.equals(com.syrus.AMFICOM.map.PhysicalLink.COLUMN_START_NODE_ID))
-							value = super.getClonedId(SITE_TYPE, value);
-						else
-						if(field.equals(com.syrus.AMFICOM.map.PhysicalLink.COLUMN_END_NODE_ID))
-							value = super.getClonedId(SITE_TYPE, value);
-						else
-						if(field.equals(com.syrus.AMFICOM.map.PhysicalLink.COLUMN_NODE_LINKS))
-						{
-							String val2 = "";
-							for(Iterator it = ResourceUtil.parseStrings(value).iterator(); it.hasNext();)
-							{
-								val2 += super.getClonedId(NODELINK_TYPE, (String )(it.next())) + " ";
-							}
-							value = val2;
-						}
-					}
-					else
-					if(type.equals(NODE_TYPE))
-					{
-						if(field.equals(com.syrus.AMFICOM.map.TopologicalNode.COLUMN_ID))
-							value = super.getClonedId(SITE_TYPE, value);
-						else
-						if(field.equals(com.syrus.AMFICOM.map.NodeLink.COLUMN_PHYSICAL_LINK_ID))
-							value = super.getClonedId(LINK_TYPE, value);
-					}
-					else
-					if(type.equals(COLLECTOR_TYPE))
-					{
-						if(field.equals(com.syrus.AMFICOM.map.Collector.COLUMN_ID))
-							value = super.getClonedId(COLLECTOR_TYPE, value);
-						if(field.equals(com.syrus.AMFICOM.map.Collector.COLUMN_LINKS))
-						{
-							String val2 = "";
-							for(Iterator it = ResourceUtil.parseStrings(value).iterator(); it.hasNext();)
-							{
-								val2 += super.getClonedId(LINK_TYPE, (String )(it.next())) + " ";
-							}
-							value = val2;
-						}
-					}
-					else
-					if(type.equals(SITE_TYPE))
-					{
-						if(field.equals(com.syrus.AMFICOM.map.SiteNode.COLUMN_ID))
-							value = super.getClonedId(SITE_TYPE, value);
-					}
-					me.setColumn(field, value);
-				}
-	
-				if(type.equals(MARK_TYPE))
-					map.addNode((Mark )me);
-				else
-				if(type.equals(NODELINK_TYPE))
-					map.addNodeLink((NodeLink )me);
-				else
-				if(type.equals(LINK_TYPE))
-					map.addPhysicalLink((PhysicalLink )me);
-				else
-				if(type.equals(NODE_TYPE))
-					map.addNode((TopologicalNode )me);
-				else
-				if(type.equals(COLLECTOR_TYPE))
-					map.addCollector((Collector )me);
-				else
-				if(type.equals(SITE_TYPE))
-					map.addNode((SiteNode )me);
-				else
-					return;
+
+				MapStorableObjectPool.putStorableObject((StorableObject )me);
 			}
 	
 			super.close();
+
+			MapStorableObjectPool.putStorableObject(map);
 	
 			MapView mv = mapFrame.getMapView();
 			mv.removeSchemes();
@@ -276,11 +191,6 @@ public class MapImportCommand extends ImportCommand
 	
 			setResult(Command.RESULT_OK);
 		}
-		catch (CommunicationException e)
-		{
-			e.printStackTrace();
-			setResult(Command.RESULT_NO);
-		}
 		catch (DatabaseException e)
 		{
 			e.printStackTrace();
@@ -291,7 +201,100 @@ public class MapImportCommand extends ImportCommand
 			e.printStackTrace();
 			setResult(Command.RESULT_NO);
 		}
-*/
 	}
 
+	private void correctCrossLinks(String type, Object[][] exportColumns)
+		throws IllegalObjectEntityException
+	{
+		Object field;
+		Object value;
+
+		for (int i = 1; i < exportColumns.length; i++) 
+		{
+			field = exportColumns[i][0];
+			value = exportColumns[i][1];
+
+			if(type.equals(MARK_TYPE))
+			{
+				if(field.equals(Mark.COLUMN_ID))
+					value = super.getClonedId(ObjectEntities.MARK_ENTITY_CODE, (Identifier )value);
+				else
+				if(field.equals(Mark.COLUMN_PHYSICAL_LINK_ID))
+					value = super.getClonedId(ObjectEntities.PHYSICAL_LINK_ENTITY_CODE, (Identifier )value);
+			}
+			else
+			if(type.equals(NODELINK_TYPE))
+			{
+				if(field.equals(NodeLink.COLUMN_ID))
+					value = super.getClonedId(ObjectEntities.NODE_LINK_ENTITY_CODE, (Identifier )value);
+				else
+				if(field.equals(NodeLink.COLUMN_PHYSICAL_LINK_ID))
+					value = super.getClonedId(ObjectEntities.PHYSICAL_LINK_ENTITY_CODE, (Identifier )value);
+				else
+				if(field.equals(NodeLink.COLUMN_START_NODE_ID))
+					value = super.getClonedId(ObjectEntities.SITE_NODE_ENTITY_CODE, (Identifier )value);
+				else
+				if(field.equals(NodeLink.COLUMN_END_NODE_ID))
+					value = super.getClonedId(ObjectEntities.SITE_NODE_ENTITY_CODE, (Identifier )value);
+			}
+			else
+			if(type.equals(LINK_TYPE))
+			{
+				if(field.equals(PhysicalLink.COLUMN_ID))
+					value = super.getClonedId(ObjectEntities.PHYSICAL_LINK_ENTITY_CODE, (Identifier )value);
+				else
+				if(field.equals(PhysicalLink.COLUMN_START_NODE_ID))
+					value = super.getClonedId(ObjectEntities.SITE_NODE_ENTITY_CODE, (Identifier )value);
+				else
+				if(field.equals(PhysicalLink.COLUMN_END_NODE_ID))
+					value = super.getClonedId(ObjectEntities.SITE_NODE_ENTITY_CODE, (Identifier )value);
+				else
+				if(field.equals(PhysicalLink.COLUMN_NODE_LINKS))
+				{
+					List list = (List )value;
+					List newList = new ArrayList(list.size());
+					for(Iterator it = list.iterator(); it.hasNext();)
+					{
+						Identifier id = (Identifier )it.next();
+						newList.add(super.getClonedId(ObjectEntities.NODE_LINK_ENTITY_CODE, id));
+					}
+					value = newList;
+				}
+			}
+			else
+			if(type.equals(NODE_TYPE))
+			{
+				if(field.equals(TopologicalNode.COLUMN_ID))
+					value = super.getClonedId(ObjectEntities.TOPOLOGICAL_NODE_ENTITY_CODE, (Identifier )value);
+				else
+				if(field.equals(TopologicalNode.COLUMN_PHYSICAL_LINK_ID))
+					value = super.getClonedId(ObjectEntities.PHYSICAL_LINK_ENTITY_CODE, (Identifier )value);
+			}
+			else
+			if(type.equals(COLLECTOR_TYPE))
+			{
+				if(field.equals(Collector.COLUMN_ID))
+					value = super.getClonedId(ObjectEntities.COLLECTOR_ENTITY_CODE, (Identifier )value);
+				if(field.equals(Collector.COLUMN_LINKS))
+				{
+					List list = (List )value;
+					List newList = new ArrayList(list.size());
+					for(Iterator it = list.iterator(); it.hasNext();)
+					{
+						Identifier id = (Identifier )it.next();
+						newList.add(super.getClonedId(ObjectEntities.PHYSICAL_LINK_ENTITY_CODE, id));
+					}
+					value = newList;
+				}
+			}
+			else
+			if(type.equals(SITE_TYPE))
+			{
+				if(field.equals(SiteNode.COLUMN_ID))
+					value = super.getClonedId(ObjectEntities.SITE_NODE_ENTITY_CODE, (Identifier )value);
+			}
+
+			exportColumns[i][1] = value;
+		}	
+	}
 }

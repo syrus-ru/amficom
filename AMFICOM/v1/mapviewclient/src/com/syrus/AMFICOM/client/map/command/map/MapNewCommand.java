@@ -1,5 +1,5 @@
 /**
- * $Id: MapNewCommand.java,v 1.12 2004/12/28 17:35:12 krupenn Exp $
+ * $Id: MapNewCommand.java,v 1.13 2005/01/13 15:16:24 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -32,7 +32,7 @@ import com.syrus.AMFICOM.map.MapStorableObjectPool;
  * 
  * 
  * 
- * @version $Revision: 1.12 $, $Date: 2004/12/28 17:35:12 $
+ * @version $Revision: 1.13 $, $Date: 2005/01/13 15:16:24 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -65,9 +65,16 @@ public class MapNewCommand extends VoidCommand
 						LangModelMap.getString("MapNew")));
 		try
 		{
+			Identifier userId = new Identifier(
+				aContext.getSessionInterface().getAccessIdentifier().user_id);
+	
+			Identifier domainId = new Identifier(
+				aContext.getSessionInterface().getAccessIdentifier().domain_id);
+	
 			map = Map.createInstance(
-				new Identifier(aContext.getSessionInterface().getAccessIdentifier().user_id), 
-				LangModelMap.getString("New"), 
+				userId,
+				domainId,
+				LangModelMap.getString("New"),
 				"");
 		}
 		catch (Exception e)

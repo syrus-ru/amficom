@@ -1,5 +1,5 @@
 /*
- * $Id: MapSaveAsCommand.java,v 1.11 2004/12/28 17:35:12 krupenn Exp $
+ * $Id: MapSaveAsCommand.java,v 1.12 2005/01/13 15:16:24 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -41,7 +41,7 @@ import java.awt.Toolkit;
  * 
  * 
  * 
- * @version $Revision: 1.11 $, $Date: 2004/12/28 17:35:12 $
+ * @version $Revision: 1.12 $, $Date: 2005/01/13 15:16:24 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -75,9 +75,12 @@ public class MapSaveAsCommand extends VoidCommand
 		Identifier userId = new Identifier(
 			aContext.getSessionInterface().getAccessIdentifier().user_id);
 
+		Identifier domainId = new Identifier(
+			aContext.getSessionInterface().getAccessIdentifier().domain_id);
+
 		try
 		{
-			newMap = Map.createInstance(userId, map.getName() + "(Copy)", "");
+			newMap = Map.createInstance(userId, domainId, map.getName() + "(Copy)", "");
 		}
 		catch (CreateObjectException e)
 		{

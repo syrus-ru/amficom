@@ -1,5 +1,5 @@
 /*
- * $Id: MapExportCommand.java,v 1.6 2004/12/22 16:38:40 krupenn Exp $
+ * $Id: MapExportCommand.java,v 1.7 2005/01/13 15:16:24 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -14,12 +14,14 @@ import com.syrus.AMFICOM.Client.General.Command.Command;
 import com.syrus.AMFICOM.Client.General.Command.ExportCommand;
 import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
 import com.syrus.AMFICOM.Client.Map.UI.MapFrame;
+import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.Client.Resource.ObjectResource;
 
 import java.io.File;
 
+import java.util.HashMap;
 import java.util.Iterator;
 
 /**
@@ -28,7 +30,7 @@ import java.util.Iterator;
  * самого окна карты. При этом в азголовке окна отображается информация о том,
  * что активной карты нет, и карта центрируется по умолчанию
  * 
- * @version $Revision: 1.6 $, $Date: 2004/12/22 16:38:40 $
+ * @version $Revision: 1.7 $, $Date: 2005/01/13 15:16:24 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -42,10 +44,24 @@ public class MapExportCommand extends ExportCommand
 	public static final String NODELINK_TYPE = "mapnodelinkelement";
 	public static final String COLLECTOR_TYPE = "mappipepathelement";
 	public static final String LINK_TYPE = "maplinkelement";
+	
+	private static java.util.Map typesMap = new HashMap();
+	
 	/**
 	 * окно карты
 	 */
 	MapFrame mapFrame;
+	
+	static
+	{
+		typesMap.put(ObjectEntities.MAP_ENTITY, MAP_TYPE);
+		typesMap.put(ObjectEntities.MARK_ENTITY, MARK_TYPE);
+		typesMap.put(ObjectEntities.SITE_NODE_ENTITY, SITE_TYPE);
+		typesMap.put(ObjectEntities.TOPOLOGICAL_NODE_ENTITY, NODE_TYPE);
+		typesMap.put(ObjectEntities.NODE_LINK_ENTITY, NODELINK_TYPE);
+		typesMap.put(ObjectEntities.COLLECTOR_ENTITY, COLLECTOR_TYPE);
+		typesMap.put(ObjectEntities.PHYSICAL_LINK_ENTITY, LINK_TYPE);
+	}
 
 	public MapExportCommand(MapFrame mapFrame)
 	{
@@ -62,7 +78,7 @@ public class MapExportCommand extends ExportCommand
         System.out.println("Closing map");
 
 		Map map = mapFrame.getMap();
-		String[][] exportColumns = null;
+		Object[][] exportColumns = null;
 		
 		String fileName = super.openFileForWriting(MapPropertiesManager.getLastDirectory());
 		if(fileName == null)
@@ -71,7 +87,7 @@ public class MapExportCommand extends ExportCommand
 		super.open(fileName);
 		
 		super.startObject(MAP_TYPE);
-//		exportColumns = map.getExportColumns();
+		exportColumns = map.exportColumns();
 		for (int i = 0; i < exportColumns.length; i++) 
 		{
 			super.put(exportColumns[i][0], exportColumns[i][1]);
@@ -80,9 +96,10 @@ public class MapExportCommand extends ExportCommand
 
 		for(Iterator it = map.getAllElements().iterator(); it.hasNext();)
 		{
-			MapElement me = (MapElement)it.next();
-//			super.startObject(((ObjectResource )me).getTyp());
-//			exportColumns = me.getExportColumns();
+			MapElement me = (MapElement )it.next();
+			String entityCodeString = ObjectEntities.codeToString(me.getId().getMajor());
+			super.startObject((String )typesMap.get(entityCodeString));
+			exportColumns = me.exportColumns();
 			for (int i = 0; i < exportColumns.length; i++) 
 			{
 				super.put(exportColumns[i][0], exportColumns[i][1]);
