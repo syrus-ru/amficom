@@ -132,7 +132,7 @@ public class LoadTraceFromDatabaseCommand extends VoidCommand
 			}
 			else
 			{
-				dataSource.loadTestSetup(test.getTestArgumentSetId());
+				dataSource.loadTestSetup(test.getTestSetupId());
 				bs.test_setup_id = test.getTestSetupId();
 				ts = (TestSetup)Pool.get(TestSetup.typ, bs.test_setup_id);
 			}

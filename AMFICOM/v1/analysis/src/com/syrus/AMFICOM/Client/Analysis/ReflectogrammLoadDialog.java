@@ -564,8 +564,8 @@ class ReflectogrammTreeModel extends ObjectResourceTreeModel
 		{
 				Object o = node.getObject();
 					Test t = (Test)o;
-					//new SurveyDataSourceImage(dsi).GetTestResult(t.getId());
-					new SurveyDataSourceImage(dsi).GetResults(t.getResultIds());
+					new SurveyDataSourceImage(dsi).GetTestResult(t.getId());
+					//new SurveyDataSourceImage(dsi).GetResults(t.getResultIds());
 		}
 	}
 

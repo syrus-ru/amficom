@@ -2,20 +2,12 @@ package com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI;
 
 import java.awt.Toolkit;
 import java.awt.event.*;
-import java.util.*;
+import java.util.Hashtable;
 
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JToggleButton;
+import javax.swing.*;
 
-import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
-import com.syrus.AMFICOM.Client.General.Event.MapNavigateEvent;
-import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
-import com.syrus.AMFICOM.Client.General.Event.OperationListener;
+import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
-
-import oracle.jdeveloper.layout.XYConstraints;
-import oracle.jdeveloper.layout.XYLayout;
 
 public class MapMarkersLayeredPanel extends TraceEventsLayeredPanel implements OperationListener
 {
@@ -169,6 +161,7 @@ public class MapMarkersLayeredPanel extends TraceEventsLayeredPanel implements O
 	{
 		((MapMarkersToolBar)toolbar).createMarkerTButton.setSelected(false);
 		((MapMarkersToolBar)toolbar).deleteMarkerButton.setEnabled(true);
+		((MapMarkersToolBar)toolbar).deleteMarkerButton.setEnabled(true);
 	}
 }
 
@@ -182,7 +175,7 @@ class MapMarkersToolBar extends TraceEventsToolBar
 
 	protected static String[] buttons = new String[]
 	{
-		ex, dx, ey, dy, fit, separator, createMarker, deleteMarker, separator, events, modeled
+		ex, dx, ey, dy, fit, separator, events, separator, createMarker, deleteMarker
 	};
 
 	public MapMarkersToolBar(MapMarkersLayeredPanel panel)
