@@ -1,5 +1,5 @@
 /*
- * $Id: scheme.idl,v 1.11 2004/10/04 13:22:09 bass Exp $
+ * $Id: scheme.idl,v 1.12 2004/11/12 14:40:56 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,354 +11,923 @@
 
 #include <streams.idl>
 
-#include "general.idl"
+#include "configuration.idl"
+#include "map.idl"
+#include "resource.idl"
 
-module com
-{
-module syrus
-{
-module AMFICOM
-{
-module CORBA
-{
+module com {
+	module syrus {
+		module AMFICOM {
+#ifdef SCHEME_COMMON
+			module scheme {
+				module corba {
+					valuetype Scheme;
+					valuetype SchemeCableLink;
+					valuetype SchemeCableThread;
+					valuetype SchemeDevice;
+					valuetype SchemeElement;
+					valuetype SchemeLink;
+					valuetype SchemeProtoElement;
+					valuetype SchemeProtoGroup;
 
-module Scheme
-{
-	struct SchemePort_Transferable
-	{
-		wstring id;
-		wstring name;
-		wstring deviceId;
-		wstring linkId;
+					typedef sequence<SchemeElement> SchemeElementSeq;
+					typedef sequence<SchemeProtoElement> SchemeProtoElementSeq;
+					typedef sequence<SchemeProtoGroup> SchemeProtoGroupSeq;
 
-		wstring portTypeId;
-		wstring portId;
+					abstract valuetype AbstractSchemePort: general::corba::StorableObject {
+						enum DirectionType {
+							_IN,
+							_OUT
+						};
 
-#ifdef SERVER
-		boolean isMeasurementPort;
-#endif
-		wstring measurementPortTypeId;
-		wstring measurementPortId;
-		wstring directionType;
+						wstring getName();
+						SchemeDevice getSchemeDevice();
+						configuration::corba::MeasurementPortType getMeasurementPortType();
+						configuration::corba::MeasurementPort getMeasurementPort();
+						DirectionType getDirectionType();
+						configuration::corba::CharacteristicSeq getCharacteristics();
+					};
 
-		General::ElementAttributeSeq_Transferable attributes;
-	};
-	typedef sequence <SchemePort_Transferable> SchemePortSeq_Transferable;
+					valuetype SchemePort: AbstractSchemePort {
+						private general::corba::Identifier id;
+						private wstring name;
+						private general::corba::Identifier schemeDeviceId;
+						private general::corba::Identifier schemeCableThreadId;
+						private general::corba::Identifier schemeLinkId;
+						private general::corba::Identifier portTypeId;
+						private general::corba::Identifier portId;
+						private general::corba::Identifier measurementPortTypeId;
+						private general::corba::Identifier measurementPortId;
+						private DirectionType directionType;
+						private general::corba::IdentifierSeq characteristicIds;
 
-	struct SchemeCablePort_Transferable
-	{
-		wstring id;
-		wstring name;
-		wstring deviceId;
-		wstring cableLinkId;
+						/**
+						 * This is a circular dependency on {@link SchemeCableThread}, see {@link SchemeCableThread#getSchemePort()}.
+						 *
+						 * @return scheme cable thread attached to this scheme port.
+						 * @see #schemeCableThreadId
+						 * @see SchemeCableThread#getSchemePort()
+						 */
+						SchemeCableThread getSchemeCableThread();
+						SchemeLink getSchemeLink();
+						configuration::corba::PortType getPortType();
+						configuration::corba::Port getPort();
 
-		wstring cablePortTypeId;
-		wstring cablePortId;
+						SchemePort cloneInstance();
 
-#ifdef SERVER
-		boolean isMeasurementPort;
-#endif
-		wstring measurementPortTypeId;
-		wstring measurementPortId;
-		wstring directionType;
+						factory createInstance();
+					};
 
-		General::ElementAttributeSeq_Transferable attributes;
-	};
-	typedef sequence <SchemeCablePort_Transferable> SchemeCablePortSeq_Transferable;
+					typedef sequence<SchemePort> SchemePortSeq;
 
-	struct PortThreadMap_Transferable
-	{
-		wstring deviceId;
-		wstring portId;
-		wstring cableLinkId;
-		wstring threadId;
-	};
-	typedef sequence <PortThreadMap_Transferable> PortThreadMapSeq_Transferable;
+					valuetype SchemeCablePort: AbstractSchemePort {
+						private general::corba::Identifier id;
+						private wstring name;
+						private general::corba::Identifier schemeDeviceId;
+						private general::corba::Identifier schemeCableLinkId;
+						private general::corba::Identifier cablePortTypeId;
+						private general::corba::Identifier cablePortId;
+						private general::corba::Identifier measurementPortTypeId;
+						private general::corba::Identifier measurementPortId;
+						private DirectionType directionType;
+						private general::corba::IdentifierSeq characteristicIds;
 
-	struct SchemeDevice_Transferable
-	{
-		wstring id;
-		wstring name;
+						SchemeCableLink getSchemeCableLink();
+						configuration::corba::PortType getCablePortType();
+						configuration::corba::Port getCablePort();
 
-		SchemePortSeq_Transferable ports;
-		SchemeCablePortSeq_Transferable cableports;
-		General::ElementAttributeSeq_Transferable attributes;
-#ifndef SERVER
-		PortThreadMapSeq_Transferable portmap;
-#endif
-	};
-	typedef sequence <SchemeDevice_Transferable> SchemeDeviceSeq_Transferable;
+						SchemeCablePort cloneInstance();
 
-	struct SchemeLink_Transferable
-	{
-		wstring id;
-		wstring name;
-		wstring sourcePortId;
-		wstring targetPortId;
-		wstring linkTypeId;
-		wstring linkId;
-#ifndef SERVER
-		wstring schemeId;
-#endif
-		wstring physicalLength;
-		wstring opticalLength;
+						factory createInstance();
+					};
 
-#ifndef SERVER
-		wstring siteId;
-#endif
+					typedef sequence<SchemeCablePort> SchemeCablePortSeq;
 
-		General::ElementAttributeSeq_Transferable attributes;
-	};
-	typedef sequence <SchemeLink_Transferable> SchemeLinkSeq_Transferable;
+					valuetype SchemeDevice: general::corba::StorableObject {
+						private general::corba::Identifier id;
+						private wstring name;
+						private general::corba::IdentifierSeq schemePortIds;
+						private general::corba::IdentifierSeq schemeCablePortIds;
+						private general::corba::IdentifierSeq characteristicIds;
 
-	struct SchemeCableThread_Transferable
-	{
-		wstring id;
-		wstring name;
-		wstring linkTypeId;
-#ifndef SERVER
-		wstring cableLinkId;
-#endif
-		wstring threadId;
-		General::ElementAttributeSeq_Transferable attributes;
-	};
-	typedef sequence <SchemeCableThread_Transferable> SchemeCableThreadSeq_Transferable;
+						wstring getName();
+						SchemePortSeq getSchemePorts();
+						SchemeCablePortSeq getSchemeCablePorts();
+						configuration::corba::CharacteristicSeq getCharacteristics();
 
-	struct CableChannelingItem_Transferable
-	{
-		wstring id;
-		long n;
-		wstring startSiteId;
-		double startSpare;
-		wstring physicalLinkId;
-		long row_x;
-		long place_y;
-		double endSpare;
-		wstring endSiteId;
-	};
-	typedef sequence <CableChannelingItem_Transferable> CableChannelingItemSeq_Transferable;
+						SchemeDevice cloneInstance();
 
-	struct SchemeCableLink_Transferable
-	{
-		wstring id;
-		wstring name;
-		wstring sourcePortId;
-		wstring targetPortId;
-		wstring cableLinkTypeId;
-		wstring cableLinkId;
-#ifndef SERVER
-		wstring schemeId;
-#endif
-		wstring physicalLength;
-		wstring opticalLength;
-		SchemeCableThreadSeq_Transferable cableThreads;
+						factory createInstance();
+					};
 
-		General::ElementAttributeSeq_Transferable attributes;
+					typedef sequence<SchemeDevice> SchemeDeviceSeq;
 
-#ifndef SERVER
-		CableChannelingItemSeq_Transferable channeling;
-#endif
-	};
-	typedef sequence <SchemeCableLink_Transferable> SchemeCableLinkSeq_Transferable;
+					valuetype SchemeLink: general::corba::StorableObject {
+						private general::corba::Identifier id;
+						private wstring name;
+						private general::corba::Identifier sourceSchemePortId;
+						private general::corba::Identifier targetSchemePortId;
+						private general::corba::Identifier linkTypeId;
+						private general::corba::Identifier linkId;
+						private general::corba::Identifier schemeId;
+						/**
+						 * 0 means either zero or unspecified length.
+						 *
+						 * @see #getPhysicalLength()
+						 */
+						private double physicalLength;
+						/**
+						 * 0 means either zero or unspecified length.
+						 *
+						 * @see #getOpticalLength()
+						 */
+						private double opticalLength;
+						private general::corba::Identifier siteId;
+						private general::corba::IdentifierSeq characteristicIds;
 
-	struct PathElement_Transferable
-	{
-		long n;
-#ifdef SERVER
-		boolean isCable;
-		wstring linkId;
+						wstring getName();
+						SchemePort getSourceSchemePort();
+						SchemePort getTargetSchemePort();
+						configuration::corba::LinkType getLinkType();
+						configuration::corba::Link getLink();
+						/**
+						 * @return scheme parent to this scheme link.
+						 * @see #schemeId
+						 */
+						Scheme getScheme();
+						/**
+						 * @return physical length of this scheme link.
+						 * @see #physicalLength
+						 */
+						double getPhysicalLength();
+						/**
+						 * @return optical length of this scheme link.
+						 * @see #opticalLength
+						 */
+						double getOpticalLength();
+						CORBA::Map::MapSiteElement getSite();
+						configuration::corba::CharacteristicSeq getCharacteristics();
+
+						SchemeLink cloneInstance();
+
+						factory createInstance();
+					};
+
+					typedef sequence<SchemeLink> SchemeLinkSeq;
+
+					valuetype SchemeCableThread: general::corba::StorableObject {
+						private general::corba::Identifier id;
+						private wstring name;
+						private general::corba::Identifier linkTypeId;
+						private general::corba::Identifier schemePortId;
+						private general::corba::Identifier schemeCableLinkId;
+						private general::corba::Identifier threadId;
+						private general::corba::IdentifierSeq characteristicIds;
+
+						wstring getName();
+						configuration::corba::LinkType getLinkType();
+						/**
+						 * This is a circular dependency on {@link SchemePort}, see {@link SchemePort#getSchemeCableThread()}.
+						 *
+						 * @return scheme port this scheme cable thread is attached to.
+						 * @see #schemePortId
+						 * @see SchemePort#getSchemeCableThread()
+						 */
+						SchemePort getSchemePort();
+						/**
+						 * @return scheme cable link containing this scheme cable thread.
+						 * @see #schemeCableLinkId
+						 */
+						SchemeCableLink getSchemeCablelink();
+						configuration::corba::Link getThread();
+						configuration::corba::CharacteristicSeq getCharacteristics();
+
+						SchemeCableThread cloneInstance();
+
+						factory createInstance();
+					};
+
+					typedef sequence<SchemeCableThread> SchemeCableThreadSeq;
+
+					valuetype CableChannelingItem: general::corba::StorableObject {
+						private general::corba::Identifier id;
+						private long sequentialNumber;
+						private general::corba::Identifier startSiteId;
+						private double startSpare;
+						private general::corba::Identifier physicalLinkId;
+						private long rowX;
+						private long placeY;
+						private double endSpare;
+						private general::corba::Identifier endSiteId;
+
+						long getSequentialNumber();
+						CORBA::Map::MapSiteElement getStartSite();
+						double getStartSpare();
+						CORBA::Map::MapPhysicalLinkElement getPhysicalLink();
+						long getRowX();
+						long getPlaceY();
+						double getEndSpare();
+						CORBA::Map::MapSiteElement getEndSite();
+
+						CableChannelingItem cloneInstance();
+
+						factory createInstance();
+					};
+
+					typedef sequence<CableChannelingItem> CableChannelingItemSeq;
+
+					valuetype SchemeCableLink: general::corba::StorableObject {
+						private general::corba::Identifier id;
+						private wstring name;
+						private general::corba::Identifier sourceSchemeCablePortId;
+						private general::corba::Identifier targetSchemeCablePortId;
+						private general::corba::Identifier cableLinkTypeId;
+						private general::corba::Identifier cableLinkId;
+						private general::corba::Identifier schemeId;
+						/**
+						 * 0 means either zero or unspecified length.
+						 *
+						 * @see #getPhysicalLength()
+						 */
+						private double physicalLength;
+						/**
+						 * 0 means either zero or unspecified length.
+						 *
+						 * @see #getOpticalLength()
+						 */
+						private double opticalLength;
+						private general::corba::IdentifierSeq SchemeCableThreadIds;
+						private general::corba::IdentifierSeq characteristicIds;
+						private general::corba::IdentifierSeq CableChannelingItemIds;
+
+						wstring getName();
+						SchemeCablePort getSourceSchemeCablePort();
+						SchemeCablePort getTargetSchemeCablePort();
+						configuration::corba::LinkType getLinkType();
+						configuration::corba::Link getLink();
+						/**
+						 * @return scheme parent to this scheme cable link.
+						 * @see #schemeId
+						 */
+						Scheme getScheme();
+						/**
+						 * @return physical length of this scheme cable link.
+						 * @see #physicalLength
+						 */
+						double getPhysicalLength();
+						/**
+						 * @return optical length of this scheme cable link.
+						 * @see #opticalLength
+						 */
+						double getOpticalLength();
+						SchemeCableThreadSeq getSchemeCableThreads();
+						configuration::corba::CharacteristicSeq getCharacteristics();
+						CableChannelingItemSeq getCableChannelingItems();
+
+						SchemeCableLink cloneInstance();
+
+						factory createInstance();
+					};
+
+					typedef sequence<SchemeCableLink> SchemeCableLinkSeq;
+
+					valuetype PathElement: general::corba::StorableObject {
+						enum Type {
+							SCHEME_CABLE_LINK,
+							SCHEME_ELEMENT,
+							SCHEME_LINK
+						};
+						private general::corba::Identifier id;
+						private long sequentialNumber;
+						private Type type;
+						/**
+						 * Empty if type is other than {@link com.syrus.AMFICOM.scheme.corba.PathElementPackage.Type#SCHEME_CABLE_LINK}.
+						 */
+						private general::corba::Identifier schemeCableThreadId;
+						/**
+						 * Depending on {@link #type}, may reference either {@link SchemePort} or {@link SchemeCablePort}.
+						 */
+						private general::corba::Identifier startAbstractSchemePortId;
+						/**
+						 * Depending on {@link #type}, may reference either {@link SchemePort} or {@link SchemeCablePort}.
+						 */
+						private general::corba::Identifier endAbstractSchemePortId;
+						private general::corba::Identifier schemeId;
+
+						long getSequentialNumber();
+						Type getType();
+						SchemeCableThread getSchemeCableThread();
+						AbstractSchemePort getStartAbstractSchemePort();
+						AbstractSchemePort getEndAbstractSchemePort();
+						Scheme getScheme();
+
+						PathElement cloneInstance();
+
+						factory createInstance();
+					};
+
+					typedef sequence<PathElement> PathElementSeq;
+
+					valuetype SchemePath: general::corba::StorableObject {
+						private general::corba::Identifier id;
+						private wstring name;
+						private general::corba::Identifier _typeId;
+						private general::corba::Identifier startDeviceId;
+						private general::corba::Identifier endDeviceId;
+						private general::corba::Identifier pathId;
+						private general::corba::IdentifierSeq links;
+						private general::corba::IdentifierSeq characteristicIds;
+
+						wstring getName();
+						configuration::corba::TransmissionPathType getType();
+						SchemeElement getStartDevice();
+						SchemeElement getEndDevice();
+						configuration::corba::TransmissionPath getPath();
+						PathElementSeq getLinks();
+						configuration::corba::CharacteristicSeq getCharacteristics();
+
+						SchemePath cloneInstance();
+
+						factory createInstance();
+					};
+
+					typedef sequence<SchemePath> SchemePathSeq;
+
+					valuetype SchemeProtoElement: general::corba::StorableObject {
+						private general::corba::Identifier id;
+						private wstring name;
+						private general::corba::Identifier equipmentTypeId;
+						private general::corba::Identifier domainId;
+						private long long modified;
+						private general::corba::IdentifierSeq deviceIds;
+						private general::corba::IdentifierSeq linkIds;
+						private general::corba::IdentifierSeq protoElementIds;
+						private general::corba::Identifier symbolId;
+						private wstring label;
+						private general::corba::Identifier ugoCellId;
+						private general::corba::Identifier schemeCellId;
+						private general::corba::IdentifierSeq characteristicIds;
+
+						wstring getName();
+						configuration::corba::EquipmentType getEquipmentType();
+						configuration::corba::Domain getDomain();
+						long long getModified();
+						SchemeDeviceSeq getDevices();
+						SchemeLinkSeq getLinks();
+						/**
+						 * @return an array of this node's child nodes.
+						 * @see #protoElementIds
+						 */
+						SchemeProtoElementSeq getProtoElements();
+						CORBA::Resource::ImageResource getSymbol();
+						wstring getLabel();
+						CORBA::Resource::ImageResource getUgoCell();
+						CORBA::Resource::ImageResource getSchemeCell();
+						configuration::corba::CharacteristicSeq getCharacteristics();
+
+						SchemeProtoElement cloneInstance();
+
+						factory createInstance();
+					};
+
+					valuetype SchemeElement: general::corba::StorableObject {
+						private general::corba::Identifier id;
+						private wstring name;
+						/**
+						 * May be empty.
+						 */
+						private general::corba::Identifier schemeProtoElementId;
+						private general::corba::Identifier equipmentId;
+						private general::corba::Identifier rtuId;
+						private general::corba::IdentifierSeq schemeDeviceIds;
+						private general::corba::IdentifierSeq schemeLinkIds;
+						private general::corba::IdentifierSeq schemeElementIds;
+						private general::corba::Identifier internalSchemeId;
+						private general::corba::Identifier schemeId;
+						private wstring description;
+						private general::corba::Identifier ugoCellId;
+						private general::corba::Identifier schemeCellId;
+						private general::corba::Identifier siteId;
+						private general::corba::Identifier symbolId;
+						private general::corba::IdentifierSeq characteristicIds;
+
+						wstring getName();
+						SchemeProtoElement getSchemeProtoElement();
+						configuration::corba::Equipment getEquipment();
+						configuration::corba::Rtu getRtu();
+						SchemeDeviceSeq getSchemeDevices();
+						SchemeLinkSeq getSchemeLinks();
+						SchemeElementSeq getSchemeElements();
+						Scheme getInternalScheme();
+						Scheme getScheme();
+						wstring getDescription();
+						CORBA::Resource::ImageResource getUgoCell();
+						CORBA::Resource::ImageResource getSchemeCell();
+						CORBA::Map::MapSiteElement getSite();
+						CORBA::Resource::ImageResource getSymbol();						
+						configuration::corba::CharacteristicSeq getCharacteristics();
+
+						SchemeElement cloneInstance();
+
+						factory createInstance();
+					};
+
+					valuetype SchemeMonitoringSolution: general::corba::StorableObject {
+						private general::corba::Identifier id;
+						private wstring name;
+						private general::corba::Identifier schemeId;
+						private double price;
+						private general::corba::IdentifierSeq schemePathIds;
+
+						wstring getName();
+						Scheme getScheme();
+						double getPrice();
+						SchemePathSeq getSchemePaths();
+
+						SchemeMonitoringSolution cloneInstance();
+
+						factory createInstance();
+					};
+
+					typedef sequence<SchemeMonitoringSolution> SchemeMonitoringSolutionSeq;
+
+					valuetype Scheme: general::corba::StorableObject {
+						enum Type {
+							BUILDING,
+							CABLE_SUBNETWORK,
+							NETWORK
+						};
+						private general::corba::Identifier id;
+						private wstring name;
+						private Type type;
+						private long long created;
+						private long long modified;
+						private general::corba::Identifier createdById;
+						private general::corba::Identifier modifiedById;
+						private general::corba::Identifier ownerId;
+						private general::corba::Identifier domainId;
+						private wstring description;
+						private general::corba::IdentifierSeq schemeElementIds;
+						private general::corba::IdentifierSeq schemeLinkIds;
+						private general::corba::IdentifierSeq schemeCableLinkIds;
+						private general::corba::Identifier schemeMonitoringSolutionId;
+						private general::corba::Identifier symbolId;
+						private wstring label;
+						private general::corba::Identifier ugoCellId;
+						private general::corba::Identifier schemeCellId;
+						private long width;
+						private long height;
+						private general::corba::Identifier mapId;
+
+						wstring getName();
+						Type getType();
+						long long getCreated();
+						long long getModified();
+						configuration::corba::User getCreatedBy();
+						configuration::corba::User getModifiedBy();
+						configuration::corba::User getOwner();
+						configuration::corba::Domain getDomain();
+						wstring getDescription();
+						SchemeElementSeq getSchemeElements();
+						SchemeLinkSeq getSchemeLinks();
+						SchemeCableLinkSeq getSchemeCableLinks();
+						SchemeMonitoringSolution getSchemeMonitoringSolution();
+						CORBA::Resource::ImageResource getSymbol();
+						wstring getLabel();
+						CORBA::Resource::ImageResource getUgoCell();
+						CORBA::Resource::ImageResource getSchemeCell();
+						long getWidth();
+						long getHeight();
+						CORBA::Map::Map getMap();
+
+						Scheme cloneInstance();
+
+						factory createInstance();
+					};
+
+					typedef sequence<Scheme> SchemeSeq;
+
+					valuetype SchemeProtoGroup: general::corba::StorableObject {
+						private general::corba::Identifier id;
+						private wstring name;
+						private wstring description;
+						private general::corba::Identifier symbolId;
+						private general::corba::Identifier parentId;
+						private long long modified;
+						private wstring SchemeProtoElementClass;
+						private general::corba::IdentifierSeq SchemeProtoGroupIds;
+						private general::corba::IdentifierSeq SchemeProtoElementIds;
+
+						wstring getName();
+						wstring getDescription();
+						CORBA::Resource::ImageResource getSymbol();
+						SchemeProtoGroup getParent();
+						long long getModified();
+						wstring getSchemeProtoElementClass();
+						SchemeProtoGroupSeq getSchemeProtoGroups();
+						SchemeProtoElementSeq getSchemeProtoElements();
+
+						SchemeProtoGroup cloneInstance();
+
+						factory createInstance();
+					};
+
+					valuetype SchemeOptimizeInfo: general::corba::StorableObject {
+						enum OptimizationMode {
+							_DEFAULT
+						};
+						private general::corba::Identifier id;
+						private general::corba::Identifier schemeId;
+						private general::corba::Identifier schemeMonitoringSolutionId;
+						private long long date;
+						private OptimizationMode optimizationMode;
+						private double iterations;
+						private double price;
+						private double wavelength;
+						private double lenMargin;
+						private double mutationRate;
+						private double mutationDegree;
+						private double rtuDeleteProb;
+						private double rtuCreateProb;
+						private double nodesSpliceProb;
+						private double nodesCutProb;
+						private double survivorRate;
+						private ::CORBA::DoubleSeq reflPrices;
+						private ::CORBA::WStringSeq reflNames;
+						private ::CORBA::DoubleSeq reflRanges;
+						private ::CORBA::DoubleSeq switchPrices;
+						private ::CORBA::DoubleSeq switchNports;
+						private ::CORBA::WStringSeq switchNames;
+
+						Scheme getScheme();
+						SchemeMonitoringSolution getSchemeMonitoringSolution();
+						long long getDate();
+						OptimizationMode getOptimizationMode();
+						double getIterations();
+						double getPrice();
+						double getWavelength();
+						double getLenMargin();
+						double getMutationRate();
+						double getMutationDegree();
+						double getRtuDeleteProb();
+						double getRtuCreateProb();
+						double getNodesSpliceProb();
+						double getNodesCutProb();
+						double getSurvivorRate();
+						::CORBA::DoubleSeq getReflPrices();
+						::CORBA::WStringSeq getReflNames();
+						::CORBA::DoubleSeq getReflRanges();
+						::CORBA::DoubleSeq getSwitchPrices();
+						::CORBA::DoubleSeq getSwitchNports();
+						::CORBA::WStringSeq getSwitchNames();
+
+						SchemeOptimizeInfo cloneInstance();
+
+						factory createInstance();
+					};
+
+					typedef sequence<SchemeOptimizeInfo> SchemeOptimizeInfoSeq;
+				};
+			};
 #else
-		long type;
-		wstring elementId;
-#endif
-		wstring threadId;
-#ifndef SERVER
-		wstring startPortId;
-		wstring endPortId;
-		wstring schemeId;
-#endif
-	};
-	typedef sequence <PathElement_Transferable> PathElementSeq_Transferable;
+			module CORBA {
+				module Scheme {
+					struct SchemePort_Transferable {
+						wstring id;
+						wstring name;
+						wstring deviceId;
+						wstring linkId;
 
-	struct SchemePath_Transferable
-	{
-		wstring id;
-		wstring name;
-		wstring _typeId;
-		wstring startDeviceId;
-		wstring endDeviceId;
-
-		wstring pathId;
-
-		PathElementSeq_Transferable links;
-
-		General::ElementAttributeSeq_Transferable attributes;
-	};
-	typedef sequence <SchemePath_Transferable> SchemePathSeq_Transferable;
-
-	struct SchemeProtoElement_Transferable
-	{
-		wstring id;
-		wstring name;
-		wstring equipmentTypeId;
-		wstring domainId;
-		long long modified;
-		SchemeDeviceSeq_Transferable devices;
-		SchemeLinkSeq_Transferable links;
-		::CORBA::WStringSeq protoElementIds;
-
-		wstring symbolId;
-		wstring label;
-		::CORBA::OctetSeq ugocell;
-		::CORBA::OctetSeq schemecell;
-		General::ElementAttributeSeq_Transferable attributes;
-	};
-	typedef sequence <SchemeProtoElement_Transferable> SchemeProtoElementSeq_Transferable;
-
-	struct SchemeElement_Transferable
-	{
-		wstring id;
-		wstring name;
-		wstring protoElementId;
-		wstring equipmentId;
-#ifndef SERVER
-		wstring kisId;
-#endif
-		SchemeDeviceSeq_Transferable devices;
-		SchemeLinkSeq_Transferable links;
-		::CORBA::WStringSeq elementIds;
-
-#ifndef SERVER
-		wstring internalSchemeId;
-#endif
-		wstring schemeId;
-#ifdef SERVER
-		boolean isScheme;
-#endif
-
-		wstring description;
-		::CORBA::OctetSeq ugocell;
-		::CORBA::OctetSeq schemecell;
-
-#ifndef SERVER
-		wstring siteId;
-
-		wstring imageId;
-#endif
-
-		General::ElementAttributeSeq_Transferable attributes;
-	};
-	typedef sequence <SchemeElement_Transferable> SchemeElementSeq_Transferable;
-
-	struct SchemeMonitoringSolution_Transferable
-	{
-		wstring id;
-		wstring name;
-		wstring schemeId;
-		double price;
-		SchemePathSeq_Transferable paths;
-	};
-	typedef sequence <SchemeMonitoringSolution_Transferable> SchemeMonitoringSolutionSeq_Transferable;
-
-	struct Scheme_Transferable
-	{
-		wstring id;
-		wstring name;
-		wstring schemeType;
-		long long created;
-		long long modified;
-		wstring createdBy;
-		wstring modifiedBy;
-		wstring ownerId;
-		wstring domainId;
-		wstring description;
-
-		SchemeElementSeq_Transferable elements;
-		SchemeLinkSeq_Transferable links;
-		SchemeCableLinkSeq_Transferable cableLinks;
+						wstring portTypeId;
+						wstring portId;
 
 #ifdef SERVER
-		SchemePathSeq_Transferable paths;
+						boolean isMeasurementPort;
+#endif
+						wstring measurementPortTypeId;
+						wstring measurementPortId;
+						wstring directionType;
+
+						General::ElementAttributeSeq_Transferable attributes;
+					};
+
+					typedef sequence<SchemePort_Transferable> SchemePortSeq_Transferable;
+
+					struct SchemeCablePort_Transferable {
+						wstring id;
+						wstring name;
+						wstring deviceId;
+						wstring cableLinkId;
+
+						wstring cablePortTypeId;
+						wstring cablePortId;
+
+#ifdef SERVER
+						boolean isMeasurementPort;
+#endif
+						wstring measurementPortTypeId;
+						wstring measurementPortId;
+						wstring directionType;
+
+						General::ElementAttributeSeq_Transferable attributes;
+					};
+
+					typedef sequence<SchemeCablePort_Transferable> SchemeCablePortSeq_Transferable;
+
+					struct PortThreadMap_Transferable {
+						wstring deviceId;
+						wstring portId;
+						wstring cableLinkId;
+						wstring threadId;
+					};
+
+					typedef sequence<PortThreadMap_Transferable> PortThreadMapSeq_Transferable;
+
+					struct SchemeDevice_Transferable {
+						wstring id;
+						wstring name;
+
+						SchemePortSeq_Transferable ports;
+						SchemeCablePortSeq_Transferable cableports;
+						General::ElementAttributeSeq_Transferable attributes;
+#ifndef SERVER
+						PortThreadMapSeq_Transferable portmap;
+#endif
+					};
+
+					typedef sequence<SchemeDevice_Transferable> SchemeDeviceSeq_Transferable;
+
+					struct SchemeLink_Transferable {
+						wstring id;
+						wstring name;
+						wstring sourcePortId;
+						wstring targetPortId;
+						wstring linkTypeId;
+						wstring linkId;
+#ifndef SERVER
+						wstring schemeId;
+#endif
+						wstring physicalLength;
+						wstring opticalLength;
+
+#ifndef SERVER
+						wstring siteId;
+#endif
+
+						General::ElementAttributeSeq_Transferable attributes;
+					};
+
+					typedef sequence<SchemeLink_Transferable> SchemeLinkSeq_Transferable;
+
+					struct SchemeCableThread_Transferable {
+						wstring id;
+						wstring name;
+						wstring linkTypeId;
+#ifndef SERVER
+						wstring cableLinkId;
+#endif
+						wstring threadId;
+						General::ElementAttributeSeq_Transferable attributes;
+					};
+
+					typedef sequence<SchemeCableThread_Transferable> SchemeCableThreadSeq_Transferable;
+
+					struct CableChannelingItem_Transferable {
+						wstring id;
+						long n;
+						wstring startSiteId;
+						double startSpare;
+						wstring physicalLinkId;
+						long row_x;
+						long place_y;
+						double endSpare;
+						wstring endSiteId;
+					};
+
+					typedef sequence<CableChannelingItem_Transferable> CableChannelingItemSeq_Transferable;
+
+					struct SchemeCableLink_Transferable {
+						wstring id;
+						wstring name;
+						wstring sourcePortId;
+						wstring targetPortId;
+						wstring cableLinkTypeId;
+						wstring cableLinkId;
+#ifndef SERVER
+						wstring schemeId;
+#endif
+						wstring physicalLength;
+						wstring opticalLength;
+						SchemeCableThreadSeq_Transferable cableThreads;
+
+						General::ElementAttributeSeq_Transferable attributes;
+
+#ifndef SERVER
+						CableChannelingItemSeq_Transferable channeling;
+#endif
+					};
+
+					typedef sequence<SchemeCableLink_Transferable> SchemeCableLinkSeq_Transferable;
+
+					struct PathElement_Transferable {
+						long n;
+#ifdef SERVER
+						boolean isCable;
+						wstring linkId;
 #else
-		SchemeMonitoringSolution_Transferable solution;
+						long type;
+						wstring elementId;
 #endif
+						wstring threadId;
+#ifndef SERVER
+						wstring startPortId;
+						wstring endPortId;
+						wstring schemeId;
+#endif
+					};
 
-		::CORBA::WStringSeq elementIds;
+					typedef sequence<PathElement_Transferable> PathElementSeq_Transferable;
 
-		wstring symbolId;
-		wstring label;
-		::CORBA::OctetSeq ugocell;
-		::CORBA::OctetSeq schemecell;
+					struct SchemePath_Transferable {
+						wstring id;
+						wstring name;
+						wstring _typeId;
+						wstring startDeviceId;
+						wstring endDeviceId;
 
-		long width;
-		long height;
-		::CORBA::OctetSeq clonez;
+						wstring pathId;
+
+						PathElementSeq_Transferable links;
+
+						General::ElementAttributeSeq_Transferable attributes;
+					};
+
+					typedef sequence<SchemePath_Transferable> SchemePathSeq_Transferable;
+
+					struct SchemeProtoElement_Transferable {
+						wstring id;
+						wstring name;
+						wstring equipmentTypeId;
+						wstring domainId;
+						long long modified;
+						SchemeDeviceSeq_Transferable devices;
+						SchemeLinkSeq_Transferable links;
+						::CORBA::WStringSeq protoElementIds;
+
+						wstring symbolId;
+						wstring label;
+						::CORBA::OctetSeq ugocell;
+						::CORBA::OctetSeq schemecell;
+						General::ElementAttributeSeq_Transferable attributes;
+					};
+
+					typedef sequence<SchemeProtoElement_Transferable> SchemeProtoElementSeq_Transferable;
+
+					struct SchemeElement_Transferable {
+						wstring id;
+						wstring name;
+						wstring protoElementId;
+						wstring equipmentId;
+#ifndef SERVER
+						wstring kisId;
+#endif
+						SchemeDeviceSeq_Transferable devices;
+						SchemeLinkSeq_Transferable links;
+						::CORBA::WStringSeq elementIds;
 
 #ifndef SERVER
-		wstring mapId;
-
-		wstring imageId;
+						wstring internalSchemeId;
 #endif
-	};
-	typedef sequence <Scheme_Transferable> SchemeSeq_Transferable;
-
-	struct SchemeProtoGroup_Transferable
-	{
-		wstring id;
-		wstring name;
-#ifndef SERVER
-		wstring description;
-		wstring symbolId;
+						wstring schemeId;
+#ifdef SERVER
+						boolean isScheme;
 #endif
 
-		wstring parentId;
-
-		long long modified;
+						wstring description;
+						::CORBA::OctetSeq ugocell;
+						::CORBA::OctetSeq schemecell;
 
 #ifndef SERVER
-		wstring peClass;
-		boolean peIsKis;
+						wstring siteId;
+
+						wstring imageId;
 #endif
 
-		::CORBA::WStringSeq groupIds;
-		::CORBA::WStringSeq peIds;
-	};
-	typedef sequence <SchemeProtoGroup_Transferable> SchemeProtoGroupSeq_Transferable;
+						General::ElementAttributeSeq_Transferable attributes;
+					};
 
-	struct SchemeOptimizeInfo_Transferable
-	{
-		wstring id;
-		wstring schemeId;
-		wstring solutionCompactId;// identifier for SchemeMonitoringSolution
-		wstring date;
+					typedef sequence<SchemeElement_Transferable> SchemeElementSeq_Transferable;
 
-		long optimizeMode;
+					struct SchemeMonitoringSolution_Transferable {
+						wstring id;
+						wstring name;
+						wstring schemeId;
+						double price;
+						SchemePathSeq_Transferable paths;
+					};
 
-		double iterations;
-		double price;
-		double wavelength;
-									// optimization parameters
-		double lenMargin;
-		double mutationRate;
-		double mutationDegree;
-		double rtuDeleteProb;
-		double rtuCreateProb;
-		double nodesSpliceProb;
-		double nodesCutProb;
-		double survivorRate;
+					typedef sequence<SchemeMonitoringSolution_Transferable> SchemeMonitoringSolutionSeq_Transferable;
 
-		::CORBA::DoubleSeq reflPrices;
-		::CORBA::WStringSeq reflNames;
-		::CORBA::DoubleSeq reflRanges;
-		::CORBA::DoubleSeq switchPrices;
-		::CORBA::DoubleSeq switchNports;
-		::CORBA::WStringSeq switchNames;
-	};
-	typedef sequence <SchemeOptimizeInfo_Transferable> SchemeOptimizeInfoSeq_Transferable;
-};
-};
-};
-};
-};
+					struct Scheme_Transferable {
+						wstring id;
+						wstring name;
+						wstring schemeType;
+						long long created;
+						long long modified;
+						wstring createdBy;
+						wstring modifiedBy;
+						wstring ownerId;
+						wstring domainId;
+						wstring description;
 
+						SchemeElementSeq_Transferable elements;
+						SchemeLinkSeq_Transferable links;
+						SchemeCableLinkSeq_Transferable cableLinks;
+
+#ifdef SERVER
+						SchemePathSeq_Transferable paths;
+#else
+						SchemeMonitoringSolution_Transferable solution;
 #endif
+
+						::CORBA::WStringSeq elementIds;
+
+						wstring symbolId;
+						wstring label;
+						::CORBA::OctetSeq ugocell;
+						::CORBA::OctetSeq schemecell;
+
+						long width;
+						long height;
+						::CORBA::OctetSeq clonez;
+
+#ifndef SERVER
+						wstring mapId;
+
+						wstring imageId;
+#endif
+					};
+
+					typedef sequence<Scheme_Transferable> SchemeSeq_Transferable;
+
+					struct SchemeProtoGroup_Transferable {
+						wstring id;
+						wstring name;
+#ifndef SERVER
+						wstring description;
+						wstring symbolId;
+#endif
+
+						wstring parentId;
+
+						long long modified;
+
+#ifndef SERVER
+						wstring peClass;
+						boolean peIsKis;
+#endif
+
+						::CORBA::WStringSeq groupIds;
+						::CORBA::WStringSeq peIds;
+					};
+
+					typedef sequence<SchemeProtoGroup_Transferable> SchemeProtoGroupSeq_Transferable;
+
+					struct SchemeOptimizeInfo_Transferable {
+						wstring id;
+						wstring schemeId;
+						wstring solutionCompactId;// identifier for SchemeMonitoringSolution
+						wstring date;
+
+						long optimizeMode;
+
+						double iterations;
+						double price;
+						double wavelength;
+						// optimization parameters
+						double lenMargin;
+						double mutationRate;
+						double mutationDegree;
+						double rtuDeleteProb;
+						double rtuCreateProb;
+						double nodesSpliceProb;
+						double nodesCutProb;
+						double survivorRate;
+
+						::CORBA::DoubleSeq reflPrices;
+						::CORBA::WStringSeq reflNames;
+						::CORBA::DoubleSeq reflRanges;
+						::CORBA::DoubleSeq switchPrices;
+						::CORBA::DoubleSeq switchNports;
+						::CORBA::WStringSeq switchNames;
+					};
+
+					typedef sequence<SchemeOptimizeInfo_Transferable> SchemeOptimizeInfoSeq_Transferable;
+				};
+			};
+#endif // SCHEME_COMMON
+		};
+	};
+};
+
+#endif // SCHEME_IDL
