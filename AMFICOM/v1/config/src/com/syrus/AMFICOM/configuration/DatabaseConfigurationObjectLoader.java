@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseConfigurationObjectLoader.java,v 1.33 2005/02/08 09:26:57 arseniy Exp $
+ * $Id: DatabaseConfigurationObjectLoader.java,v 1.34 2005/02/11 10:52:50 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.syrus.AMFICOM.general.AccessIdentity;
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.general.Identified;
@@ -29,8 +30,8 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.33 $, $Date: 2005/02/08 09:26:57 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.34 $, $Date: 2005/02/11 10:52:50 $
+ * @author $Author: bob $
  * @module config_v1
  */
 
@@ -549,10 +550,10 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
 //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 
 
-	public void saveEquipmentType(EquipmentType equipmentType, boolean force) throws DatabaseException, CommunicationException {
+	public void saveEquipmentType(EquipmentType equipmentType, AccessIdentity accessIdentity, boolean force) throws DatabaseException, CommunicationException {
 		EquipmentTypeDatabase database = (EquipmentTypeDatabase) ConfigurationDatabaseContext.equipmentTypeDatabase;
 		try {
-			database.update(equipmentType, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
+			database.update(equipmentType, accessIdentity.getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 		}
 		catch (UpdateObjectException e) {
 			Log.errorMessage("DatabaseConfigurationObjectLoader.saveEquipmentType | UpdateObjectException: " + e.getMessage());
@@ -571,10 +572,10 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
 		}
 	}
 
-	public void savePortType(PortType portType, boolean force) throws DatabaseException, CommunicationException {
+	public void savePortType(PortType portType, AccessIdentity accessIdentity, boolean force) throws DatabaseException, CommunicationException {
 		PortTypeDatabase database = (PortTypeDatabase) ConfigurationDatabaseContext.portTypeDatabase;
 		try {
-			database.update(portType, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
+			database.update(portType, accessIdentity.getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 		}
 		catch (UpdateObjectException e) {
 			Log.errorMessage("DatabaseConfigurationObjectLoader.savePortType | UpdateObjectException: " + e.getMessage());
@@ -590,14 +591,13 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
 		}
 	}
 
-	public void saveMeasurementPortType(MeasurementPortType measurementPortType, boolean force)
+	public void saveMeasurementPortType(MeasurementPortType measurementPortType, AccessIdentity accessIdentity, boolean force)
 			throws DatabaseException,
 				CommunicationException {
 		MeasurementPortTypeDatabase database = (MeasurementPortTypeDatabase) ConfigurationDatabaseContext.measurementPortTypeDatabase;
 		try {
-			database.update(measurementPortType,
-					force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK,
-					null);
+			database.update(measurementPortType, accessIdentity.getUserId(),
+					force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 		}
 		catch (UpdateObjectException e) {
 			Log.errorMessage("DatabaseConfigurationObjectLoader.saveMeasurementPortType | UpdateObjectException: " + e.getMessage());
@@ -616,13 +616,13 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
 		}
 	}
 
-	public void saveLinkType(LinkType linkType, boolean force)
+	public void saveLinkType(LinkType linkType, AccessIdentity accessIdentity, boolean force)
 			throws VersionCollisionException,
 				DatabaseException,
 				CommunicationException {
 		LinkTypeDatabase database = (LinkTypeDatabase) ConfigurationDatabaseContext.linkTypeDatabase;
 		try {
-			database.update(linkType, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
+			database.update(linkType, accessIdentity.getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 		}
 		catch (UpdateObjectException e) {
 			Log.errorMessage("DatabaseConfigurationObjectLoader.saveLinkType | UpdateObjectException: " + e.getMessage());
@@ -638,13 +638,13 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
 		}
 	}
 
-	public void saveCableLinkType(CableLinkType cableLinkType, boolean force)
+	public void saveCableLinkType(CableLinkType cableLinkType, AccessIdentity accessIdentity, boolean force)
 			throws VersionCollisionException,
 				DatabaseException,
 				CommunicationException {
 		StorableObjectDatabase database = ConfigurationDatabaseContext.cableLinkTypeDatabase;
 		try {
-			database.update(cableLinkType, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
+			database.update(cableLinkType, accessIdentity.getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 		}
 		catch (UpdateObjectException e) {
 			Log.errorMessage("DatabaseConfigurationObjectLoader.saveCableLinkType | UpdateObjectException: " + e.getMessage());
@@ -663,13 +663,13 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
 		}
 	}
 
-	public void saveCableThreadType(CableThreadType cableThreadType, boolean force)
+	public void saveCableThreadType(CableThreadType cableThreadType, AccessIdentity accessIdentity, boolean force)
 			throws VersionCollisionException,
 				DatabaseException,
 				CommunicationException {
 		CableThreadTypeDatabase database = (CableThreadTypeDatabase) ConfigurationDatabaseContext.cableThreadTypeDatabase;
 		try {
-			database.update(cableThreadType, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
+			database.update(cableThreadType, accessIdentity.getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 		}
 		catch (UpdateObjectException e) {
 			Log.errorMessage("DatabaseConfigurationObjectLoader.saveCableThreadType | UpdateObjectException: " + e.getMessage());
@@ -688,10 +688,10 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
 		}
 	}
 
-	public void saveEquipment(Equipment equipment, boolean force) throws DatabaseException, CommunicationException {
+	public void saveEquipment(Equipment equipment, AccessIdentity accessIdentity, boolean force) throws DatabaseException, CommunicationException {
 		EquipmentDatabase database = (EquipmentDatabase) ConfigurationDatabaseContext.equipmentDatabase;
 		try {
-			database.update(equipment, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
+			database.update(equipment, accessIdentity.getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 		}
 		catch (UpdateObjectException e) {
 			Log.errorMessage("DatabaseConfigurationObjectLoader.saveEquipment | UpdateObjectException: " + e.getMessage());
@@ -708,10 +708,10 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
 		}
 	}
 
-	public void savePort(Port port, boolean force) throws DatabaseException, CommunicationException {
+	public void savePort(Port port, AccessIdentity accessIdentity, boolean force) throws DatabaseException, CommunicationException {
 		PortDatabase database = (PortDatabase) ConfigurationDatabaseContext.portDatabase;
 		try {
-			database.update(port, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
+			database.update(port, accessIdentity.getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 		}
 		catch (UpdateObjectException e) {
 			Log.errorMessage("DatabaseConfigurationObjectLoader.savePort | UpdateObjectException: " + e.getMessage());
@@ -727,12 +727,12 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
 		}
 	}
 
-	public void saveMeasurementPort(MeasurementPort measurementPort, boolean force)
+	public void saveMeasurementPort(MeasurementPort measurementPort, AccessIdentity accessIdentity, boolean force)
 			throws DatabaseException,
 				CommunicationException {
 		MeasurementPortDatabase database = (MeasurementPortDatabase) ConfigurationDatabaseContext.measurementPortDatabase;
 		try {
-			database.update(measurementPort, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
+			database.update(measurementPort, accessIdentity.getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 		}
 		catch (UpdateObjectException e) {
 			Log.errorMessage("DatabaseConfigurationObjectLoader.saveMeasurementPort | UpdateObjectException: " + e.getMessage());
@@ -751,12 +751,12 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
 		}
 	}
 
-	public void saveTransmissionPath(TransmissionPath transmissionPath, boolean force)
+	public void saveTransmissionPath(TransmissionPath transmissionPath, AccessIdentity accessIdentity, boolean force)
 			throws DatabaseException,
 				CommunicationException {
 		TransmissionPathDatabase database = (TransmissionPathDatabase) ConfigurationDatabaseContext.transmissionPathDatabase;
 		try {
-			database.update(transmissionPath, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
+			database.update(transmissionPath, accessIdentity.getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 		}
 		catch (UpdateObjectException e) {
 			Log.errorMessage("DatabaseConfigurationObjectLoader.saveTransmissionPath | UpdateObjectException: " + e.getMessage());
@@ -775,15 +775,14 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
 		}
 	}
 
-	public void saveTransmissionPathType(TransmissionPathType transmissionPathType, boolean force)
+	public void saveTransmissionPathType(TransmissionPathType transmissionPathType, AccessIdentity accessIdentity, boolean force)
 			throws VersionCollisionException,
 				DatabaseException,
 				CommunicationException {
 		TransmissionPathTypeDatabase database = (TransmissionPathTypeDatabase) ConfigurationDatabaseContext.transmissionPathTypeDatabase;
 		try {
-			database.update(transmissionPathType,
-					force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK,
-					null);
+			database.update(transmissionPathType, accessIdentity.getUserId(),
+					force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 		}
 		catch (UpdateObjectException e) {
 			Log.errorMessage("DatabaseConfigurationObjectLoader.saveTransmissionPathType | UpdateObjectException: " + e.getMessage());
@@ -803,10 +802,10 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
 		}
 	}
 
-	public void saveKIS(KIS kis, boolean force) throws DatabaseException, CommunicationException {
+	public void saveKIS(KIS kis, AccessIdentity accessIdentity, boolean force) throws DatabaseException, CommunicationException {
 		KISDatabase database = (KISDatabase) ConfigurationDatabaseContext.kisDatabase;
 		try {
-			database.update(kis, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
+			database.update(kis, accessIdentity.getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 		}
 		catch (UpdateObjectException e) {
 			Log.errorMessage("DatabaseConfigurationObjectLoader.saveKIS | UpdateObjectException: " + e.getMessage());
@@ -822,12 +821,12 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
 		}
 	}
 
-	public void saveMonitoredElement(MonitoredElement monitoredElement, boolean force)
+	public void saveMonitoredElement(MonitoredElement monitoredElement, AccessIdentity accessIdentity, boolean force)
 			throws DatabaseException,
 				CommunicationException {
 		MonitoredElementDatabase database = (MonitoredElementDatabase) ConfigurationDatabaseContext.monitoredElementDatabase;
 		try {
-			database.update(monitoredElement, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
+			database.update(monitoredElement, accessIdentity.getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 		}
 		catch (UpdateObjectException e) {
 			Log.errorMessage("DatabaseConfigurationObjectLoader.saveMonitoredElement | UpdateObjectException: " + e.getMessage());
@@ -846,10 +845,10 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
 		}
 	}
 
-	public void saveLink(Link link, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException {
+	public void saveLink(Link link, AccessIdentity accessIdentity, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException {
 		LinkDatabase database = (LinkDatabase) ConfigurationDatabaseContext.linkDatabase;
 		try {
-			database.update(link, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
+			database.update(link, accessIdentity.getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 		}
 		catch (UpdateObjectException e) {
 			Log.errorMessage("DatabaseConfigurationObjectLoader.saveLink | UpdateObjectException: " + e.getMessage());
@@ -865,13 +864,13 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
 		}
 	}
 
-	public void saveCableThread(CableThread cableThread, boolean force)
+	public void saveCableThread(CableThread cableThread, AccessIdentity accessIdentity, boolean force)
 			throws VersionCollisionException,
 				DatabaseException,
 				CommunicationException {
 		StorableObjectDatabase database = ConfigurationDatabaseContext.cableThreadDatabase;
 		try {
-			database.update(cableThread, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
+			database.update(cableThread, accessIdentity.getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 		}
 		catch (UpdateObjectException e) {
 			Log.errorMessage("DatabaseConfigurationObjectLoader.saveCableThread | UpdateObjectException: " + e.getMessage());
@@ -894,13 +893,13 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
 //############################################################################
 
 
-	public void saveCableLinkTypes(List list, boolean force)
+	public void saveCableLinkTypes(List list, AccessIdentity accessIdentity, boolean force)
 			throws VersionCollisionException,
 				DatabaseException,
 				CommunicationException {
 		StorableObjectDatabase database = ConfigurationDatabaseContext.cableLinkTypeDatabase;
 		try {
-			database.update(list, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
+			database.update(list, accessIdentity.getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 		}
 		catch (UpdateObjectException e) {
 			Log.errorMessage("DatabaseConfigurationObjectLoader.saveCableLinkTypes | UpdateObjectException: " + e.getMessage());
@@ -919,13 +918,13 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
 		}
 	}
 
-	public void saveCableThreads(List list, boolean force)
+	public void saveCableThreads(List list, AccessIdentity accessIdentity, boolean force)
 			throws VersionCollisionException,
 				DatabaseException,
 				CommunicationException {
 		StorableObjectDatabase database = ConfigurationDatabaseContext.cableThreadDatabase;
 		try {
-			database.update(list, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
+			database.update(list, accessIdentity.getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 		}
 		catch (UpdateObjectException e) {
 			Log.errorMessage("DatabaseConfigurationObjectLoader.saveCableThreads | UpdateObjectException: " + e.getMessage());
@@ -943,10 +942,10 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
 		}
 	}
 
-	public void saveCableThreadTypes(List list, boolean force) throws DatabaseException, CommunicationException {
+	public void saveCableThreadTypes(List list, AccessIdentity accessIdentity, boolean force) throws DatabaseException, CommunicationException {
 		CableThreadTypeDatabase database = (CableThreadTypeDatabase) ConfigurationDatabaseContext.cableThreadTypeDatabase;
 		try {
-			database.update(list, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
+			database.update(list, accessIdentity.getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 		}
 		catch (UpdateObjectException e) {
 			Log.errorMessage("DatabaseConfigurationObjectLoader.saveCableThreadTypes | UpdateObjectException: " + e.getMessage());
@@ -965,10 +964,10 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
 		}
 	}
 
-	public void saveEquipments(List list, boolean force) throws DatabaseException, CommunicationException {
+	public void saveEquipments(List list, AccessIdentity accessIdentity, boolean force) throws DatabaseException, CommunicationException {
 		EquipmentDatabase database = (EquipmentDatabase) ConfigurationDatabaseContext.equipmentDatabase;
 		try {
-			database.update(list, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
+			database.update(list, accessIdentity.getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 		}
 		catch (UpdateObjectException e) {
 			Log.errorMessage("DatabaseConfigurationObjectLoader.saveEquipments | UpdateObjectException: " + e.getMessage());
@@ -985,10 +984,10 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
 		}
 	}
 
-	public void saveEquipmentTypes(List list, boolean force) throws DatabaseException, CommunicationException {
+	public void saveEquipmentTypes(List list, AccessIdentity accessIdentity, boolean force) throws DatabaseException, CommunicationException {
 		EquipmentTypeDatabase database = (EquipmentTypeDatabase) ConfigurationDatabaseContext.equipmentTypeDatabase;
 		try {
-			database.update(list, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
+			database.update(list, accessIdentity.getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 		}
 		catch (UpdateObjectException e) {
 			Log.errorMessage("DatabaseConfigurationObjectLoader.saveEquipmentTypes | UpdateObjectException: " + e.getMessage());
@@ -1007,10 +1006,10 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
 		}
 	}
 
-	public void saveKISs(List list, boolean force) throws DatabaseException, CommunicationException {
+	public void saveKISs(List list, AccessIdentity accessIdentity, boolean force) throws DatabaseException, CommunicationException {
 		KISDatabase database = (KISDatabase) ConfigurationDatabaseContext.kisDatabase;
 		try {
-			database.update(list, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
+			database.update(list, accessIdentity.getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 		}
 		catch (UpdateObjectException e) {
 			Log.errorMessage("DatabaseConfigurationObjectLoader.saveKISs | UpdateObjectException: " + e.getMessage());
@@ -1026,10 +1025,10 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
 		}
 	}
 
-	public void saveLinks(List list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException {
+	public void saveLinks(List list, AccessIdentity accessIdentity, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException {
 		LinkDatabase database = (LinkDatabase) ConfigurationDatabaseContext.linkDatabase;
 		try {
-			database.update(list, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
+			database.update(list, accessIdentity.getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 		}
 		catch (UpdateObjectException e) {
 			Log.errorMessage("DatabaseConfigurationObjectLoader.saveLinks | UpdateObjectException: " + e.getMessage());
@@ -1045,10 +1044,10 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
 		}
 	}
 
-	public void saveLinkTypes(List list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException {
+	public void saveLinkTypes(List list, AccessIdentity accessIdentity, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException {
 		LinkTypeDatabase database = (LinkTypeDatabase) ConfigurationDatabaseContext.linkTypeDatabase;
 		try {
-			database.update(list, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
+			database.update(list, accessIdentity.getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 		}
 		catch (UpdateObjectException e) {
 			Log.errorMessage("DatabaseConfigurationObjectLoader.saveLinkTypes | UpdateObjectException: " + e.getMessage());
@@ -1065,10 +1064,10 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
 		}
 	}
 
-	public void saveMeasurementPorts(List list, boolean force) throws DatabaseException, CommunicationException {
+	public void saveMeasurementPorts(List list, AccessIdentity accessIdentity, boolean force) throws DatabaseException, CommunicationException {
 		MeasurementPortDatabase database = (MeasurementPortDatabase) ConfigurationDatabaseContext.measurementPortDatabase;
 		try {
-			database.update(list, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
+			database.update(list, accessIdentity.getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 		}
 		catch (UpdateObjectException e) {
 			Log.errorMessage("DatabaseConfigurationObjectLoader.saveMeasurementPorts | UpdateObjectException: " + e.getMessage());
@@ -1087,10 +1086,10 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
 		}
 	}
 
-	public void saveMeasurementPortTypes(List list, boolean force) throws DatabaseException, CommunicationException {
+	public void saveMeasurementPortTypes(List list, AccessIdentity accessIdentity, boolean force) throws DatabaseException, CommunicationException {
 		MeasurementPortTypeDatabase database = (MeasurementPortTypeDatabase) ConfigurationDatabaseContext.measurementPortTypeDatabase;
 		try {
-			database.update(list, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
+			database.update(list, accessIdentity.getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 		}
 		catch (UpdateObjectException e) {
 			Log.errorMessage("DatabaseConfigurationObjectLoader.saveMeasurementPortTypes | UpdateObjectException: " + e.getMessage());
@@ -1110,10 +1109,10 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
 		}
 	}
 
-	public void saveMonitoredElements(List list, boolean force) throws DatabaseException, CommunicationException {
+	public void saveMonitoredElements(List list, AccessIdentity accessIdentity, boolean force) throws DatabaseException, CommunicationException {
 		MonitoredElementDatabase database = (MonitoredElementDatabase) ConfigurationDatabaseContext.monitoredElementDatabase;
 		try {
-			database.update(list, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
+			database.update(list, accessIdentity.getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 		}
 		catch (UpdateObjectException e) {
 			Log.errorMessage("DatabaseConfigurationObjectLoader.saveMonitoredElements | UpdateObjectException: " + e.getMessage());
@@ -1132,10 +1131,10 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
 		}
 	}
 
-	public void savePorts(List list, boolean force) throws DatabaseException, CommunicationException {
+	public void savePorts(List list, AccessIdentity accessIdentity, boolean force) throws DatabaseException, CommunicationException {
 		PortDatabase database = (PortDatabase) ConfigurationDatabaseContext.portDatabase;
 		try {
-			database.update(list, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
+			database.update(list, accessIdentity.getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 		}
 		catch (UpdateObjectException e) {
 			Log.errorMessage("DatabaseConfigurationObjectLoader.savePorts | UpdateObjectException: " + e.getMessage());
@@ -1151,10 +1150,10 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
 		}
 	}
 
-	public void savePortTypes(List list, boolean force) throws DatabaseException, CommunicationException {
+	public void savePortTypes(List list, AccessIdentity accessIdentity, boolean force) throws DatabaseException, CommunicationException {
 		PortTypeDatabase database = (PortTypeDatabase) ConfigurationDatabaseContext.portTypeDatabase;
 		try {
-			database.update(list, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
+			database.update(list, accessIdentity.getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 		}
 		catch (UpdateObjectException e) {
 			Log.errorMessage("DatabaseConfigurationObjectLoader.savePortTypes | UpdateObjectException: " + e.getMessage());
@@ -1171,10 +1170,10 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
 		}
 	}
 
-	public void saveTransmissionPaths(List list, boolean force) throws DatabaseException, CommunicationException {
+	public void saveTransmissionPaths(List list, AccessIdentity accessIdentity, boolean force) throws DatabaseException, CommunicationException {
 		TransmissionPathDatabase database = (TransmissionPathDatabase) ConfigurationDatabaseContext.transmissionPathDatabase;
 		try {
-			database.update(list, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
+			database.update(list, accessIdentity.getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 		}
 		catch (UpdateObjectException e) {
 			Log.errorMessage("DatabaseConfigurationObjectLoader.saveTransmissionPaths | UpdateObjectException: " + e.getMessage());
@@ -1193,13 +1192,13 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
 		}
 	}
 
-	public void saveTransmissionPathTypes(List list, boolean force)
+	public void saveTransmissionPathTypes(List list, AccessIdentity accessIdentity, boolean force)
 			throws VersionCollisionException,
 				DatabaseException,
 				CommunicationException {
 		TransmissionPathTypeDatabase database = (TransmissionPathTypeDatabase) ConfigurationDatabaseContext.transmissionPathTypeDatabase;
 		try {
-			database.update(list, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
+			database.update(list, accessIdentity.getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 		}
 		catch (UpdateObjectException e) {
 			Log.errorMessage("DatabaseConfigurationObjectLoader.saveTransmissionPathTypes | UpdateObjectException: " + e.getMessage());

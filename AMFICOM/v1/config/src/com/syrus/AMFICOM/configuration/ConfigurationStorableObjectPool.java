@@ -1,5 +1,5 @@
 /*
- * $Id: ConfigurationStorableObjectPool.java,v 1.59 2005/02/09 11:17:20 max Exp $
+ * $Id: ConfigurationStorableObjectPool.java,v 1.60 2005/02/11 10:52:50 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,6 +13,7 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.Set;
 
+import com.syrus.AMFICOM.general.AccessIdentity;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.DatabaseException;
@@ -20,6 +21,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.SessionContext;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectPool;
@@ -27,8 +29,8 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.59 $, $Date: 2005/02/09 11:17:20 $
- * @author $Author: max $
+ * @version $Revision: 1.60 $, $Date: 2005/02/11 10:52:50 $
+ * @author $Author: bob $
  * @module config_v1
  */
 
@@ -313,80 +315,81 @@ public final class ConfigurationStorableObjectPool extends StorableObjectPool {
 	//public static void save()
 
 	protected void saveStorableObjects(short code, List list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException, IllegalDataException {
+		AccessIdentity accessIdentity = SessionContext.getAccessIdentity();
 		if (!list.isEmpty()) {
 			boolean alone = (list.size() == 1);
 			switch (code) {
 				case ObjectEntities.CABLETHREADTYPE_ENTITY_CODE:
 					if (alone)
-						cObjectLoader.saveCableThreadType((CableThreadType) list.get(0), force);
+						cObjectLoader.saveCableThreadType((CableThreadType) list.get(0), accessIdentity, force);
 					else
-						cObjectLoader.saveCableThreadTypes(list, force);
+						cObjectLoader.saveCableThreadTypes(list, accessIdentity, force);
 					break;
 				case ObjectEntities.CABLELINKTYPE_ENTITY_CODE:
 					if (alone)
-						cObjectLoader.saveCableLinkType((CableLinkType) list.get(0), force);
+						cObjectLoader.saveCableLinkType((CableLinkType) list.get(0), accessIdentity, force);
 					else
-						cObjectLoader.saveCableLinkTypes(list, force);
+						cObjectLoader.saveCableLinkTypes(list, accessIdentity, force);
 					break;
 				case ObjectEntities.EQUIPMENTTYPE_ENTITY_CODE:
 					if (alone)
-						cObjectLoader.saveEquipmentType((EquipmentType) list.get(0), force);
+						cObjectLoader.saveEquipmentType((EquipmentType) list.get(0), accessIdentity, force);
 					else
-						cObjectLoader.saveEquipmentTypes(list, force);
+						cObjectLoader.saveEquipmentTypes(list, accessIdentity, force);
 					break;
 				case ObjectEntities.PORTTYPE_ENTITY_CODE:
 					if (alone)
-						cObjectLoader.savePortType((PortType) list.get(0), force);
+						cObjectLoader.savePortType((PortType) list.get(0), accessIdentity, force);
 					else
-						cObjectLoader.savePortTypes(list, force);
+						cObjectLoader.savePortTypes(list, accessIdentity, force);
 					break;
 				case ObjectEntities.LINKTYPE_ENTITY_CODE:
 					if (alone)
-						cObjectLoader.saveLinkType((LinkType) list.get(0), force);
+						cObjectLoader.saveLinkType((LinkType) list.get(0), accessIdentity, force);
 					else
-						cObjectLoader.saveLinkTypes(list, force);
+						cObjectLoader.saveLinkTypes(list, accessIdentity, force);
 					break;
 				case ObjectEntities.MEASUREMENTPORTTYPE_ENTITY_CODE:
 					if (alone)
-						cObjectLoader.saveMeasurementPortType((MeasurementPortType) list.get(0), force);
+						cObjectLoader.saveMeasurementPortType((MeasurementPortType) list.get(0), accessIdentity, force);
 					else
-						cObjectLoader.saveMeasurementPortTypes(list, force);
+						cObjectLoader.saveMeasurementPortTypes(list, accessIdentity, force);
 					break;
 				case ObjectEntities.EQUIPMENT_ENTITY_CODE:
 					if (alone)
-						cObjectLoader.saveEquipment((Equipment) list.get(0), force);
+						cObjectLoader.saveEquipment((Equipment) list.get(0), accessIdentity, force);
 					else
-						cObjectLoader.saveEquipments(list, force);
+						cObjectLoader.saveEquipments(list, accessIdentity, force);
 					break;
 				case ObjectEntities.PORT_ENTITY_CODE:
 					if (alone)
-						cObjectLoader.savePort((Port) list.get(0), force);
+						cObjectLoader.savePort((Port) list.get(0), accessIdentity, force);
 					else
-						cObjectLoader.savePorts(list, force);
+						cObjectLoader.savePorts(list, accessIdentity, force);
 					break;
 				case ObjectEntities.LINK_ENTITY_CODE:
 					if (alone)
-						cObjectLoader.saveLink((Link) list.get(0), force);
+						cObjectLoader.saveLink((Link) list.get(0), accessIdentity, force);
 					else
-						cObjectLoader.saveLinks(list, force);
+						cObjectLoader.saveLinks(list, accessIdentity, force);
 					break;
 				case ObjectEntities.KIS_ENTITY_CODE:
 					if (alone)
-						cObjectLoader.saveKIS((KIS) list.get(0), force);
+						cObjectLoader.saveKIS((KIS) list.get(0), accessIdentity, force);
 					else
-						cObjectLoader.saveKISs(list, force);
+						cObjectLoader.saveKISs(list, accessIdentity, force);
 					break;
 				case ObjectEntities.MEASUREMENTPORT_ENTITY_CODE:
 					if (alone)
-						cObjectLoader.saveMeasurementPort((MeasurementPort) list.get(0), force);
+						cObjectLoader.saveMeasurementPort((MeasurementPort) list.get(0), accessIdentity, force);
 					else
-						cObjectLoader.saveMeasurementPorts(list, force);
+						cObjectLoader.saveMeasurementPorts(list, accessIdentity, force);
 					break;
 				case ObjectEntities.ME_ENTITY_CODE:
 					if (alone)
-						cObjectLoader.saveMonitoredElement((MonitoredElement) list.get(0), force);
+						cObjectLoader.saveMonitoredElement((MonitoredElement) list.get(0), accessIdentity, force);
 					else
-						cObjectLoader.saveMonitoredElements(list, force);
+						cObjectLoader.saveMonitoredElements(list, accessIdentity, force);
 					break;
 
 				default:

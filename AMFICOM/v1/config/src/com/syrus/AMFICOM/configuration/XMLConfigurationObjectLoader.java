@@ -1,5 +1,5 @@
 /*
- * $Id: XMLConfigurationObjectLoader.java,v 1.2 2005/02/02 08:05:05 bob Exp $
+ * $Id: XMLConfigurationObjectLoader.java,v 1.3 2005/02/11 10:52:50 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,7 +17,7 @@ import java.util.Set;
 import com.syrus.AMFICOM.general.*;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/02/02 08:05:05 $
+ * @version $Revision: 1.3 $, $Date: 2005/02/11 10:52:50 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -328,171 +328,171 @@ public final class XMLConfigurationObjectLoader implements ConfigurationObjectLo
 		return null;
 	}
 
-	public void saveCableLinkType(CableLinkType cableLinkType, boolean force) throws VersionCollisionException,
+	public void saveCableLinkType(CableLinkType cableLinkType, AccessIdentity accessIdentity, boolean force) throws VersionCollisionException,
 			DatabaseException, CommunicationException {
-		this.saveStorableObject(cableLinkType);
+		this.saveStorableObject(cableLinkType, accessIdentity);
 		this.configurationXML.flush();
 
 	}
 
-	public void saveCableLinkTypes(List list, boolean force) throws VersionCollisionException, DatabaseException,
+	public void saveCableLinkTypes(List list, AccessIdentity accessIdentity, boolean force) throws VersionCollisionException, DatabaseException,
 			CommunicationException {
-		this.saveStorableObjects(list);
+		this.saveStorableObjects(list, accessIdentity);
 
 	}
 
-	public void saveCableThread(CableThread cableThread, boolean force) throws VersionCollisionException,
+	public void saveCableThread(CableThread cableThread, AccessIdentity accessIdentity, boolean force) throws VersionCollisionException,
 			DatabaseException, CommunicationException {
-		this.saveStorableObject(cableThread);
+		this.saveStorableObject(cableThread, accessIdentity);
 		this.configurationXML.flush();
 	}
 
-	public void saveCableThreads(List list, boolean force) throws VersionCollisionException, DatabaseException,
+	public void saveCableThreads(List list, AccessIdentity accessIdentity, boolean force) throws VersionCollisionException, DatabaseException,
 			CommunicationException {
-		this.saveStorableObjects(list);
+		this.saveStorableObjects(list, accessIdentity);
 	}
 
-	public void saveCableThreadType(CableThreadType cableThreadType, boolean force) throws VersionCollisionException,
+	public void saveCableThreadType(CableThreadType cableThreadType, AccessIdentity accessIdentity, boolean force) throws VersionCollisionException,
 			DatabaseException, CommunicationException {
-		this.saveStorableObject(cableThreadType);
+		this.saveStorableObject(cableThreadType, accessIdentity);
 		this.configurationXML.flush();
 	}
 
-	public void saveCableThreadTypes(List list, boolean force) throws VersionCollisionException, DatabaseException,
+	public void saveCableThreadTypes(List list, AccessIdentity accessIdentity, boolean force) throws VersionCollisionException, DatabaseException,
 			CommunicationException {
-		this.saveStorableObjects(list);
+		this.saveStorableObjects(list, accessIdentity);
 	}
 
-	public void saveEquipment(Equipment equipment, boolean force) throws VersionCollisionException, DatabaseException,
+	public void saveEquipment(Equipment equipment, AccessIdentity accessIdentity, boolean force) throws VersionCollisionException, DatabaseException,
 			CommunicationException {
-		this.saveStorableObject(equipment);
+		this.saveStorableObject(equipment, accessIdentity);
 		this.configurationXML.flush();
 	}
 
-	public void saveEquipments(List list, boolean force) throws VersionCollisionException, DatabaseException,
+	public void saveEquipments(List list, AccessIdentity accessIdentity, boolean force) throws VersionCollisionException, DatabaseException,
 			CommunicationException {
-		this.saveStorableObjects(list);
+		this.saveStorableObjects(list, accessIdentity);
 	}
 
-	public void saveEquipmentType(EquipmentType equipmentType, boolean force) throws VersionCollisionException,
+	public void saveEquipmentType(EquipmentType equipmentType, AccessIdentity accessIdentity, boolean force) throws VersionCollisionException,
 			DatabaseException, CommunicationException {
-		this.saveStorableObject(equipmentType);
+		this.saveStorableObject(equipmentType, accessIdentity);
 		this.configurationXML.flush();
 	}
 
-	public void saveEquipmentTypes(List list, boolean force) throws VersionCollisionException, DatabaseException,
+	public void saveEquipmentTypes(List list, AccessIdentity accessIdentity, boolean force) throws VersionCollisionException, DatabaseException,
 			CommunicationException {
-		this.saveStorableObjects(list);
+		this.saveStorableObjects(list, accessIdentity);
 	}
 
-	public void saveKIS(KIS kis, boolean force) throws VersionCollisionException, DatabaseException,
+	public void saveKIS(KIS kis, AccessIdentity accessIdentity, boolean force) throws VersionCollisionException, DatabaseException,
 			CommunicationException {
-		this.saveStorableObject(kis);
+		this.saveStorableObject(kis, accessIdentity);
 		this.configurationXML.flush();
 	}
 
-	public void saveKISs(List list, boolean force) throws VersionCollisionException, DatabaseException,
+	public void saveKISs(List list, AccessIdentity accessIdentity, boolean force) throws VersionCollisionException, DatabaseException,
 			CommunicationException {
-		this.saveStorableObjects(list);
+		this.saveStorableObjects(list, accessIdentity);
 	}
 
-	public void saveLink(Link link, boolean force) throws VersionCollisionException, DatabaseException,
+	public void saveLink(Link link, AccessIdentity accessIdentity, boolean force) throws VersionCollisionException, DatabaseException,
 			CommunicationException {
-		this.saveStorableObject(link);
+		this.saveStorableObject(link, accessIdentity);
 		this.configurationXML.flush();
 	}
 
-	public void saveLinks(List list, boolean force) throws VersionCollisionException, DatabaseException,
+	public void saveLinks(List list, AccessIdentity accessIdentity, boolean force) throws VersionCollisionException, DatabaseException,
 			CommunicationException {
-		this.saveStorableObjects(list);
+		this.saveStorableObjects(list, accessIdentity);
 	}
 
-	public void saveLinkType(LinkType linkType, boolean force) throws VersionCollisionException, DatabaseException,
+	public void saveLinkType(LinkType linkType, AccessIdentity accessIdentity, boolean force) throws VersionCollisionException, DatabaseException,
 			CommunicationException {
-		this.saveStorableObject(linkType);
+		this.saveStorableObject(linkType, accessIdentity);
 		this.configurationXML.flush();
 	}
 
-	public void saveLinkTypes(List list, boolean force) throws VersionCollisionException, DatabaseException,
+	public void saveLinkTypes(List list, AccessIdentity accessIdentity, boolean force) throws VersionCollisionException, DatabaseException,
 			CommunicationException {
-		this.saveStorableObjects(list);
+		this.saveStorableObjects(list, accessIdentity);
 	}
 
-	public void saveMeasurementPort(MeasurementPort measurementPort, boolean force) throws VersionCollisionException,
+	public void saveMeasurementPort(MeasurementPort measurementPort, AccessIdentity accessIdentity, boolean force) throws VersionCollisionException,
 			DatabaseException, CommunicationException {
-		this.saveStorableObject(measurementPort);
+		this.saveStorableObject(measurementPort, accessIdentity);
 		this.configurationXML.flush();
 	}
 
-	public void saveMeasurementPorts(List list, boolean force) throws VersionCollisionException, DatabaseException,
+	public void saveMeasurementPorts(List list, AccessIdentity accessIdentity, boolean force) throws VersionCollisionException, DatabaseException,
 			CommunicationException {
-		this.saveStorableObjects(list);
+		this.saveStorableObjects(list, accessIdentity);
 	}
 
-	public void saveMeasurementPortType(MeasurementPortType measurementPortType, boolean force)
+	public void saveMeasurementPortType(MeasurementPortType measurementPortType, AccessIdentity accessIdentity, boolean force)
 			throws VersionCollisionException, DatabaseException, CommunicationException {
-		this.saveStorableObject(measurementPortType);
+		this.saveStorableObject(measurementPortType, accessIdentity);
 		this.configurationXML.flush();
 	}
 
-	public void saveMeasurementPortTypes(List list, boolean force) throws VersionCollisionException, DatabaseException,
+	public void saveMeasurementPortTypes(List list, AccessIdentity accessIdentity, boolean force) throws VersionCollisionException, DatabaseException,
 			CommunicationException {
-		this.saveStorableObjects(list);
+		this.saveStorableObjects(list, accessIdentity);
 	}
 
-	public void saveMonitoredElement(MonitoredElement monitoredElement, boolean force)
+	public void saveMonitoredElement(MonitoredElement monitoredElement, AccessIdentity accessIdentity, boolean force)
 			throws VersionCollisionException, DatabaseException, CommunicationException {
-		this.saveStorableObject(monitoredElement);
+		this.saveStorableObject(monitoredElement, accessIdentity);
 		this.configurationXML.flush();
 	}
 
-	public void saveMonitoredElements(List list, boolean force) throws VersionCollisionException, DatabaseException,
+	public void saveMonitoredElements(List list, AccessIdentity accessIdentity, boolean force) throws VersionCollisionException, DatabaseException,
 			CommunicationException {
-		this.saveStorableObjects(list);
+		this.saveStorableObjects(list, accessIdentity);
 	}
 
-	public void savePort(Port port, boolean force) throws VersionCollisionException, DatabaseException,
+	public void savePort(Port port, AccessIdentity accessIdentity, boolean force) throws VersionCollisionException, DatabaseException,
 			CommunicationException {
-		this.saveStorableObject(port);
+		this.saveStorableObject(port, accessIdentity);
 		this.configurationXML.flush();
 	}
 
-	public void savePorts(List list, boolean force) throws VersionCollisionException, DatabaseException,
+	public void savePorts(List list, AccessIdentity accessIdentity, boolean force) throws VersionCollisionException, DatabaseException,
 			CommunicationException {
-		this.saveStorableObjects(list);
+		this.saveStorableObjects(list, accessIdentity);
 	}
 
-	public void savePortType(PortType portType, boolean force) throws VersionCollisionException, DatabaseException,
+	public void savePortType(PortType portType, AccessIdentity accessIdentity, boolean force) throws VersionCollisionException, DatabaseException,
 			CommunicationException {
-		this.saveStorableObject(portType);
+		this.saveStorableObject(portType, accessIdentity);
 		this.configurationXML.flush();
 	}
 
-	public void savePortTypes(List list, boolean force) throws VersionCollisionException, DatabaseException,
+	public void savePortTypes(List list, AccessIdentity accessIdentity, boolean force) throws VersionCollisionException, DatabaseException,
 			CommunicationException {
-		this.saveStorableObjects(list);
+		this.saveStorableObjects(list, accessIdentity);
 	}
 
-	public void saveTransmissionPath(TransmissionPath transmissionPath, boolean force)
+	public void saveTransmissionPath(TransmissionPath transmissionPath, AccessIdentity accessIdentity, boolean force)
 			throws VersionCollisionException, DatabaseException, CommunicationException {
-		this.saveStorableObject(transmissionPath);
+		this.saveStorableObject(transmissionPath, accessIdentity);
 		this.configurationXML.flush();
 	}
 
-	public void saveTransmissionPaths(List list, boolean force) throws VersionCollisionException, DatabaseException,
+	public void saveTransmissionPaths(List list, AccessIdentity accessIdentity, boolean force) throws VersionCollisionException, DatabaseException,
 			CommunicationException {
-		this.saveStorableObjects(list);
+		this.saveStorableObjects(list, accessIdentity);
 	}
 
-	public void saveTransmissionPathType(TransmissionPathType transmissionPathType, boolean force)
+	public void saveTransmissionPathType(TransmissionPathType transmissionPathType, AccessIdentity accessIdentity, boolean force)
 			throws VersionCollisionException, DatabaseException, CommunicationException {
-		this.saveStorableObject(transmissionPathType);
+		this.saveStorableObject(transmissionPathType, accessIdentity);
 		this.configurationXML.flush();
 	}
 
-	public void saveTransmissionPathTypes(List list, boolean force) throws VersionCollisionException,
+	public void saveTransmissionPathTypes(List list, AccessIdentity accessIdentity, boolean force) throws VersionCollisionException,
 			DatabaseException, CommunicationException {
-		this.saveStorableObjects(list);
+		this.saveStorableObjects(list, accessIdentity);
 	}
 
 	private StorableObject loadStorableObject(Identifier id) throws CommunicationException {
@@ -522,10 +522,10 @@ public final class XMLConfigurationObjectLoader implements ConfigurationObjectLo
 		}
 	}
 
-	private void saveStorableObject(StorableObject storableObject) throws CommunicationException {
+	private void saveStorableObject(StorableObject storableObject, AccessIdentity accessIdentity) throws CommunicationException {
 		Identifier id = storableObject.getId();
 		try {
-			this.configurationXML.updateObject(storableObject);
+			this.configurationXML.updateObject(storableObject, accessIdentity.getUserId());
 		} catch (UpdateObjectException e) {
 			throw new CommunicationException("XMLConfigurationObjectLoader.save"
 					+ ObjectEntities.codeToString(id.getMajor()) + " | caught " + e.getMessage(), e);
@@ -538,10 +538,10 @@ public final class XMLConfigurationObjectLoader implements ConfigurationObjectLo
 		}
 	}
 
-	private void saveStorableObjects(List storableObjects) throws CommunicationException {
+	private void saveStorableObjects(List storableObjects, AccessIdentity accessIdentity) throws CommunicationException {
 		for (Iterator it = storableObjects.iterator(); it.hasNext();) {
 			StorableObject storableObject = (StorableObject) it.next();
-			this.saveStorableObject(storableObject);
+			this.saveStorableObject(storableObject, accessIdentity);
 		}
 		this.configurationXML.flush();
 	}
