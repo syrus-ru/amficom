@@ -1,5 +1,5 @@
 /*
- * $Id: configuration.idl,v 1.46 2004/11/15 19:09:26 arseniy Exp $
+ * $Id: configuration.idl,v 1.47 2004/11/16 09:54:20 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -315,7 +315,7 @@ module corba {
 		wstring name;
 		wstring description;
 		wstring hostname;
-		short port;
+		short tcp_port;
 		com::syrus::AMFICOM::general::corba::Identifier_Transferable type_id;
 		com::syrus::AMFICOM::general::corba::Identifier_Transferable equipment_id;
 		com::syrus::AMFICOM::general::corba::Identifier_Transferable mcm_id;
