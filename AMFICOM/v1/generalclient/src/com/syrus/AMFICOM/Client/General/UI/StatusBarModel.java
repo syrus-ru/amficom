@@ -157,7 +157,7 @@ public class StatusBarModel extends JPanel implements OperationListener
 
 	public StatusBarModel(boolean withStatusBar)
 	{
-		this();
+		this(0);
 
 		if (withStatusBar)
 		{
