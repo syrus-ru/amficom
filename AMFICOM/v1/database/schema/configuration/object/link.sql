@@ -15,9 +15,9 @@ CREATE TABLE Equipment (
 --
  inventory_no VARCHAR2(64),
  supplier VARCHAR2(128),
+ color NUMBER(38),
  supplier_code VARCHAR2(32),
  link_id VARCHAR2(32),
- color VARCHAR(32),
  mark VARCHAR(32),
 --
  CONSTRAINT linkp_pk PRIMARY KEY (id),
