@@ -9,13 +9,16 @@ package com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI;
  * @version 1.0
  */
 
-import java.util.Iterator;
+import java.util.*;
+import java.util.List;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
 
 import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
-import com.syrus.AMFICOM.Client.Resource.Scheme.*;
+import com.syrus.AMFICOM.Client.Resource.Scheme.PathDecompositor;
+import com.syrus.AMFICOM.scheme.corba.*;
+import com.syrus.AMFICOM.scheme.corba.PathElementPackage.Type;
 
 public class PathElementsPanel extends AnalysisPanel
 {
@@ -104,7 +107,8 @@ public class PathElementsPanel extends AnalysisPanel
 			if (startPE == null || endPE == null)
 				setGraphBounds(start, end);
 
-			for (Iterator it = path.links.listIterator(path.links.indexOf(startPE)); it.hasNext();)
+			List links = Arrays.asList(path.links());
+			for (Iterator it = links.listIterator(links.indexOf(startPE)); it.hasNext();)
 			{
 				PathElement pe = (PathElement)it.next();
 				if (pe.equals(endPE))
@@ -112,7 +116,7 @@ public class PathElementsPanel extends AnalysisPanel
 
 				if (pe.equals(activePE))
 					g.setColor(Color.RED);
-				else if (pe.getType() == PathElement.CABLE_LINK)
+				else if (pe.type().equals(Type.SCHEME_CABLE_LINK))
 					g.setColor(Color.GREEN);
 				else
 					g.setColor(Color.BLUE);

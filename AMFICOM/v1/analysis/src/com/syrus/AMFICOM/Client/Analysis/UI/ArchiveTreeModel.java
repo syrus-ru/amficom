@@ -8,8 +8,9 @@ import java.awt.*;
 import javax.swing.ImageIcon;
 
 import com.syrus.AMFICOM.Client.General.Filter.*;
+import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
 import com.syrus.AMFICOM.Client.Resource.Pool;
-import com.syrus.AMFICOM.Client.Resource.Scheme.SchemePath;
+import com.syrus.AMFICOM.scheme.corba.*;
 import com.syrus.AMFICOM.client_.general.ui_.tree.*;
 import com.syrus.AMFICOM.configuration.*;
 import com.syrus.AMFICOM.event.corba.AlarmLevel;
@@ -18,6 +19,7 @@ import com.syrus.AMFICOM.measurement.*;
 import com.syrus.AMFICOM.measurement.DomainCondition;
 import com.syrus.AMFICOM.measurement.LinkedIdsCondition;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
+import com.syrus.AMFICOM.scheme.SchemeStorableObjectPool;
 
 /*
 |- Архив
@@ -169,24 +171,23 @@ public class ArchiveTreeModel extends ObjectResourceTreeModel
 			}
 			else if(s.equals("calculated"))
 			{
-				List paths = Pool.getList(SchemePath.typ);
-				if (paths != null)
-				{
-					ObjectResourceFilter filter = new ObjectResourceDomainFilter(domain.getId().getIdentifierString());
-					paths = filter.filter(paths);
-//					ObjectResourceSorter sorter = SchemePath.getSorter();
-//					sorter.setDataSet(paths);
-//					paths = sorter.default_sort();
-					for(Iterator it = paths.iterator(); it.hasNext();)
-					{
+				DomainCondition condition = new DomainCondition(domain,
+						ObjectEntities.SCHEME_PATH_ENTITY_CODE);
+				try {
+					List paths = SchemeStorableObjectPool.getStorableObjectsByCondition(condition, true);
+					for (Iterator it = paths.iterator(); it.hasNext(); ) {
 						SchemePath path = (SchemePath)it.next();
 						ObjectResourceTreeNode n = new ObjectResourceTreeNode(
 								path,
-								path.getName(),
+								path.name(),
 								true,
-								new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/pathmode.gif").getScaledInstance(15, 15, Image.SCALE_SMOOTH)));
+								new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/pathmode.gif").
+															getScaledInstance(15, 15, Image.SCALE_SMOOTH)));
 						vec.add(n);
 					}
+				}
+				catch (ApplicationException ex) {
+					ex.printStackTrace();
 				}
 			}
 			else if(s.equals("measurementsetups"))

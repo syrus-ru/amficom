@@ -14,22 +14,27 @@ import java.util.*;
 import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.Client.Resource.Pool;
-import com.syrus.AMFICOM.Client.Resource.Scheme.SchemePath;
+import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
+import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
 import com.syrus.AMFICOM.configuration.*;
 import com.syrus.AMFICOM.configuration.corba.*;
 import com.syrus.io.BellcoreStructure;
-import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.*;
+import com.syrus.AMFICOM.scheme.corba.*;
+import com.syrus.AMFICOM.scheme.SchemeStorableObjectPool;
 
 public class PathElementsFrame extends AnalysisFrame
 {
-	public PathElementsFrame(Dispatcher dispatcher, AnalysisLayeredPanel panel)
+	ApplicationContext aContext;
+	public PathElementsFrame(ApplicationContext aContext, Dispatcher dispatcher, AnalysisLayeredPanel panel)
 	{
 		super(dispatcher, panel);
+		this.aContext = aContext;
 	}
 
-	public PathElementsFrame(Dispatcher dispatcher)
+	public PathElementsFrame(ApplicationContext aContext, Dispatcher dispatcher)
 	{
-		this(dispatcher, new PathElementsLayeredPanel(dispatcher));
+		this(aContext, dispatcher, new PathElementsLayeredPanel(dispatcher));
 	}
 
 	public void addTrace (String id)
@@ -52,23 +57,28 @@ public class PathElementsFrame extends AnalysisFrame
 			{
 				MonitoredElement me = (MonitoredElement)ConfigurationStorableObjectPool.getStorableObject(
 								new Identifier(bs.monitoredElementId), true);
-				if(me.getSort().equals(MonitoredElementSort.MONITOREDELEMENT_SORT_TRANSMISSION_PATH))
-				{
+
+				if (me.getSort().equals(MonitoredElementSort.MONITOREDELEMENT_SORT_TRANSMISSION_PATH)) {
+					Identifier domain_id = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).
+							getAccessIdentifier().domain_id);
+					Domain domain = (Domain)ConfigurationStorableObjectPool.getStorableObject(
+							domain_id, true);
+					DomainCondition condition = new DomainCondition(domain,
+							ObjectEntities.SCHEME_PATH_ENTITY_CODE);
+					List paths = SchemeStorableObjectPool.getStorableObjectsByCondition(condition, true);
+
 					List tpathIds = me.getMonitoredDomainMemberIds();
-					List paths = Pool.getList(SchemePath.typ);
-					if (path != null)
-						for(Iterator it = paths.iterator(); it.hasNext(); )
+					for (Iterator it = paths.iterator(); it.hasNext(); ) {
+						SchemePath sp = (SchemePath)it.next();
+						/**
+						 * @todo remove comment when SchemePath moves to new TransmissionPath
+						 */
+						if(sp.path() != null && tpathIds.contains(sp.pathImpl().getId()))
 						{
-							SchemePath sp = (SchemePath)it.next();
-							/**
-							 * @todo remove comment when SchemePath moves to new TransmissionPath
-							 */
-//						if(sp.path != null && tpathIds.contains(sp.path.getId()))
-							{
-								path = sp;
-								break;
-							}
+							path = sp;
+							break;
 						}
+					}
 				}
 				setTitle(me.getName());
 			}

@@ -1,6 +1,7 @@
 package com.syrus.AMFICOM.analysis.dadara;
 
-import com.syrus.AMFICOM.Client.Resource.Scheme.PathElement;
+import com.syrus.AMFICOM.scheme.corba.*;
+import com.syrus.AMFICOM.scheme.corba.PathElementPackage.Type;
 import com.syrus.AMFICOM.Client.Survey.Alarm.AlarmDescriptorEvent;
 import com.syrus.AMFICOM.general.Identifier;
 
@@ -110,10 +111,10 @@ public class OpticalAlarmDescriptorEvent extends AlarmDescriptorEvent
 //
 		double meters = d * 1000.;
 		PathElement pe = getPathDecompositor().getPathElementByOpticalDistance(meters);
-		if (pe.getType() == PathElement.SCHEME_ELEMENT)
+		if (pe.type().equals(Type.SCHEME_ELEMENT))
 			return pe;
-		PathElement next = getPathDecompositor().getNextNode(pe, true);
-		PathElement prev = getPathDecompositor().getPreviousNode(pe, true);
+		PathElement next = getPathDecompositor().getNextNode(pe);
+		PathElement prev = getPathDecompositor().getPreviousNode(pe);
 		if (next == null)
 		{
 			if (prev == null)
@@ -148,10 +149,10 @@ public class OpticalAlarmDescriptorEvent extends AlarmDescriptorEvent
 //			return getPathDecompositor().getPreviousNode(pe, true);
 
 		PathElement pe = getPathDecompositor().getPathElementByOpticalDistance(d * 1000);
-		if (pe.getType() == PathElement.SCHEME_ELEMENT)
+		if (pe.type().equals(Type.SCHEME_ELEMENT))
 			return pe;
-		PathElement next = getPathDecompositor().getNextNode(pe, true);
-		PathElement prev = getPathDecompositor().getPreviousNode(pe, true);
+		PathElement next = getPathDecompositor().getNextNode(pe);
+		PathElement prev = getPathDecompositor().getPreviousNode(pe);
 		if (next == null)
 		{
 			if (prev == null)
@@ -249,13 +250,13 @@ public class OpticalAlarmDescriptorEvent extends AlarmDescriptorEvent
 
 		StringBuffer s = new StringBuffer();
 		s.append("Событие произошло на участке '");
-		s.append(getLink(d0).getName());
+		s.append(getLink(d0).name());
 		s.append("' между устройствами:\n'");
-		s.append(getNearestEvent(d0).getName());
+		s.append(getNearestEvent(d0).name());
 		s.append("' (дистанция до устройства - ");
 		s.append(MathRef.round_3(d5));
 		s.append(" км),\n'");
-		s.append(getOtherEvent(d0).getName());
+		s.append(getOtherEvent(d0).name());
 		s.append("' (дистанция до устройства - ");
 		s.append(MathRef.round_3(d6));
 		s.append(" км).\n");
@@ -270,11 +271,11 @@ public class OpticalAlarmDescriptorEvent extends AlarmDescriptorEvent
 
 		StringBuffer s = new StringBuffer();
 		s.append("Расстояние до ближайшего отражательного события '");
-		s.append(getNearestEvent(d0).getName());
+		s.append(getNearestEvent(d0).name());
 		s.append("' = ");
 		s.append(MathRef.round_3(d3));
 		s.append(" км \nРасстояние до ближайшего отражательного события с другой стороны '");
-		s.append(getOtherEvent(d0).getName());
+		s.append(getOtherEvent(d0).name());
 		s.append("' = ");
 		s.append(MathRef.round_3(d4));
 		s.append(" км \n");

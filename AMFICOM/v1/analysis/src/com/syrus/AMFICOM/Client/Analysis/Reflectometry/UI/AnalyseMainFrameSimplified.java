@@ -249,7 +249,7 @@ public class AnalyseMainFrameSimplified extends JFrame
 		aModel.setEnabled("menuHelp", true);
 		aModel.setEnabled("menuReport", true);
 		aModel.setEnabled("menuWindow", true);
-		
+
 		aModel.setEnabled("menuFileOpen", AnalyseMainFrameSimplified.DEBUG); // XXX: saa: security bypass
 
 		aModel.setVisible("menuTestSetup", false);
@@ -556,9 +556,8 @@ public class AnalyseMainFrameSimplified extends JFrame
 		aModel.setEnabled("menuSessionDomain", true);
 		aModel.setEnabled("menuSessionNew", false);
 		aModel.fireModelChanged("");
-		String domain_id = aContext.getSessionInterface().getDomainId();
-		if (domain_id != null && !domain_id.equals(""))
-			internal_dispatcher.notify(new ContextChangeEvent(domain_id, ContextChangeEvent.DOMAIN_SELECTED_EVENT));
+		Identifier domain_id = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).getAccessIdentifier().domain_id);
+		internal_dispatcher.notify(new ContextChangeEvent(domain_id, ContextChangeEvent.DOMAIN_SELECTED_EVENT));
 	}
 
 	public void setDomainSelected()

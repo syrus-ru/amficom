@@ -609,8 +609,7 @@ public class ThresholdsMainFrame extends JFrame
 		aModel.setEnabled("menuSessionDomain", true);
 		aModel.setEnabled("menuSessionNew", false);
 		aModel.fireModelChanged("");
-		String domain_id = aContext.getSessionInterface().getDomainId();
-		if (domain_id != null && !domain_id.equals(""))
+		Identifier domain_id = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).getAccessIdentifier().domain_id);
 		internal_dispatcher.notify(new ContextChangeEvent(domain_id, ContextChangeEvent.DOMAIN_SELECTED_EVENT));
 	}
 

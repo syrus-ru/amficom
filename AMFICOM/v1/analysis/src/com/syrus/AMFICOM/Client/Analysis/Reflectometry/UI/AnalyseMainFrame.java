@@ -148,7 +148,7 @@ public class AnalyseMainFrame extends JFrame
 		detailedEvFrame = new DetailedEventsFrame(internal_dispatcher);
 		desktopPane.add(detailedEvFrame);
 
-		analysisFrame = new PathElementsFrame(internal_dispatcher);
+		analysisFrame = new PathElementsFrame(aContext, internal_dispatcher);
 		desktopPane.add(analysisFrame);
 		graphs.add(analysisFrame);
 
@@ -683,9 +683,8 @@ public class AnalyseMainFrame extends JFrame
 		aModel.setEnabled("menuSessionDomain", true);
 		aModel.setEnabled("menuSessionNew", false);
 		aModel.fireModelChanged("");
-		String domain_id = aContext.getSessionInterface().getDomainId();
-		if (domain_id != null && !domain_id.equals(""))
-			internal_dispatcher.notify(new ContextChangeEvent(domain_id, ContextChangeEvent.DOMAIN_SELECTED_EVENT));
+		Identifier domain_id = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).getAccessIdentifier().domain_id);
+		internal_dispatcher.notify(new ContextChangeEvent(domain_id, ContextChangeEvent.DOMAIN_SELECTED_EVENT));
 	}
 
 	public void setSessionClosed()

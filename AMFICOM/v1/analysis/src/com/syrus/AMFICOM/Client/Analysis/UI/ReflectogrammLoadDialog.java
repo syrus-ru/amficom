@@ -26,7 +26,7 @@ public class ReflectogrammLoadDialog extends JDialog implements OperationListene
 
 	private Dispatcher dispatcher = new Dispatcher();
 	private ApplicationContext aContext;
-	private String domainID;
+	private Identifier domainId;
 
 	private JButton okButton;
 	private JButton cancelButton;
@@ -39,7 +39,7 @@ public class ReflectogrammLoadDialog extends JDialog implements OperationListene
 	{
 		super(Environment.getActiveWindow());
 		this.aContext = aContext;
-		domainID = new String(aContext.getSessionInterface().getDomainId());
+		domainId = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).getAccessIdentifier().domain_id);
 		try
 		{
 			jbInit();
@@ -135,21 +135,21 @@ public class ReflectogrammLoadDialog extends JDialog implements OperationListene
 
 	public void setVisible(boolean key)
 	{
-		if(!domainID.equals(aContext.getSessionInterface().getDomainId()))
+		if(!domainId.equals(new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).getAccessIdentifier().domain_id)))
 			setTree();
 		super.setVisible(key);
 	}
 
 	public void show()
 	{
-		if(!domainID.equals(aContext.getSessionInterface().getDomainId()))
+		if(!domainId.equals(new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).getAccessIdentifier().domain_id)))
 			setTree();
 		super.show();
 	}
 
 	private void setTree()
 	{
-		domainID = new String(aContext.getSessionInterface().getDomainId());
+		domainId = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).getAccessIdentifier().domain_id);
 
 		getContentPane().remove(scrollPane);
 		scrollPane = new JScrollPane();
