@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisEvaluationProcessor.java,v 1.10 2004/08/23 20:48:29 arseniy Exp $
+ * $Id: AnalysisEvaluationProcessor.java,v 1.11 2004/08/27 12:12:20 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,11 +27,13 @@ import com.syrus.AMFICOM.measurement.Analysis;
 import com.syrus.AMFICOM.measurement.Evaluation;
 import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.AMFICOM.measurement.Result;
+import com.syrus.AMFICOM.measurement.corba.Analysis_Transferable;
+import com.syrus.AMFICOM.measurement.corba.Evaluation_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2004/08/23 20:48:29 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.11 $, $Date: 2004/08/27 12:12:20 $
+ * @author $Author: bob $
  * @module mcm_v1
  */
 
@@ -97,11 +99,12 @@ public abstract class AnalysisEvaluationProcessor {
 		}
 
 		try {
-			return Analysis.createInstance(analysisId,
+			Analysis analysis = Analysis.createInstance(analysisId,
 																		 MeasurementControlModule.iAm.getUserId(),
 																		 analysisType,
 																		 monitoredElementId,
-																		 criteriaSet);
+															 criteriaSet);			
+			return new Analysis((Analysis_Transferable) analysis.getTransferable());
 		}
 		catch (CreateObjectException coe) {
 			throw new AnalysisException("Cannot create analysis", coe);
@@ -126,11 +129,12 @@ public abstract class AnalysisEvaluationProcessor {
 		}
 
 		try {
-			return Evaluation.createInstance(evaluationId,
+			Evaluation evaluation = Evaluation.createInstance(evaluationId,
 																			 MeasurementControlModule.iAm.getUserId(),
 																			 evaluationType,
 																			 monitoredElementId,
 																			 thresholdSet);
+			return new Evaluation((Evaluation_Transferable)evaluation.getTransferable());
 		}
 		catch (CreateObjectException coe) {
 			throw new EvaluationException("Cannot create evaluation", coe);

@@ -1,5 +1,5 @@
 /*
- * $Id: DadaraAnalysisManager.java,v 1.12 2004/08/23 20:48:29 arseniy Exp $
+ * $Id: DadaraAnalysisManager.java,v 1.13 2004/08/27 12:12:20 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -20,6 +20,7 @@ import com.syrus.AMFICOM.analysis.dadara.Threshold;
 import com.syrus.AMFICOM.analysis.dadara.ReflectogramComparer;
 import com.syrus.AMFICOM.analysis.dadara.ReflectogramAlarm;
 import com.syrus.AMFICOM.analysis.dadara.ReflectogramMath;
+import com.syrus.AMFICOM.measurement.MeasurementDatabaseContext;
 import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
 import com.syrus.AMFICOM.measurement.ParameterType;
 import com.syrus.AMFICOM.measurement.ParameterTypeDatabase;
@@ -39,8 +40,8 @@ import java.text.SimpleDateFormat;
 import java.io.FileOutputStream;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2004/08/23 20:48:29 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.13 $, $Date: 2004/08/27 12:12:20 $
+ * @author $Author: bob $
  * @module mcm_v1
  */
 
@@ -72,6 +73,9 @@ public class DadaraAnalysisManager implements AnalysisManager, EvaluationManager
     catch (UnsatisfiedLinkError ule) {
       Log.errorMessage(ule.getMessage());
     }
+    	
+    	MeasurementDatabaseContext.init(new ParameterTypeDatabase(), null, null, null, null, null,
+										null, null, null, null, null, null);
 
 		outParameterTypeIds = new HashMap();
 		addOutParameterTypeId(CODENAME_DADARA_EVENT_ARRAY);
@@ -358,8 +362,9 @@ Log.debugMessage("$$$$$$$$$ Number of events == " + revents.length + "; tmp.leng
 	}
 
 	private static void addOutParameterTypeId(String codename) {
+		ParameterTypeDatabase parameterTypeDatabase = ((ParameterTypeDatabase)MeasurementDatabaseContext.getParameterTypeDatabase());
 		try {
-			ParameterType parameterType = ParameterTypeDatabase.retrieveForCodename(codename);
+			ParameterType parameterType = parameterTypeDatabase.retrieveForCodename(codename);
 			Identifier id = parameterType.getId();
 			if (! outParameterTypeIds.containsKey(codename)) {
 				outParameterTypeIds.put(codename, id);

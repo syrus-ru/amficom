@@ -1,5 +1,5 @@
 /*
- * $Id: KISReport.java,v 1.13 2004/08/23 20:48:29 arseniy Exp $
+ * $Id: KISReport.java,v 1.14 2004/08/27 12:12:20 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,6 +16,7 @@ import com.syrus.AMFICOM.general.NewIdentifierPool;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
+import com.syrus.AMFICOM.measurement.MeasurementDatabaseContext;
 import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
 import com.syrus.AMFICOM.measurement.ParameterType;
 import com.syrus.AMFICOM.measurement.ParameterTypeDatabase;
@@ -26,8 +27,8 @@ import com.syrus.AMFICOM.event.corba.AlarmLevel;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2004/08/23 20:48:29 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.14 $, $Date: 2004/08/27 12:12:20 $
+ * @author $Author: bob $
  * @module mcm_v1
  */
 
@@ -40,6 +41,8 @@ public class KISReport {
 	private byte[][] parameterValues;
 
 	static {
+    	MeasurementDatabaseContext.init(new ParameterTypeDatabase(), null, null, null, null, null,
+										null, null, null, null, null, null);
 		outParameterTypeIds = new HashMap(1);
 		addOutParameterTypeId(CODENAME_REFLECTOGRAMMA);
 	}
@@ -87,8 +90,9 @@ public class KISReport {
 	}
 
 	private static void addOutParameterTypeId(String codename) {
+		ParameterTypeDatabase parameterTypeDatabase = ((ParameterTypeDatabase)MeasurementDatabaseContext.getParameterTypeDatabase());
 		try {
-			ParameterType parameterType = ParameterTypeDatabase.retrieveForCodename(codename);
+			ParameterType parameterType = parameterTypeDatabase.retrieveForCodename(codename);
 			Identifier id = parameterType.getId();
 			if (! outParameterTypeIds.containsKey(codename)) {
 				outParameterTypeIds.put(codename, id);
