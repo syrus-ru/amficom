@@ -1,5 +1,5 @@
 /*
- * $Id: AMFICOMdbInterface.sqlj,v 1.5 2004/07/26 11:11:48 krupenn Exp $
+ * $Id: AMFICOMdbInterface.sqlj,v 1.6 2004/07/26 11:18:42 krupenn Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,7 +34,7 @@ import org.omg.CORBA.StringHolder;
 import sqlj.runtime.ref.DefaultContext;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2004/07/26 11:11:48 $
+ * @version $Revision: 1.6 $, $Date: 2004/07/26 11:18:42 $
  * @author $Author: krupenn $
  * @module server_v1
  */
@@ -2292,7 +2292,9 @@ public class AMFICOMdbInterface
 		vec1.copyInto(desc1);
 
 		Vector vec = filterTimeDiapazon(start_time, end_time, desc1);
+		System.out.println("tests in diapazon - " + vec.size());
 		vec = filterDomain(vec, accessIdentity.domain_id);
+		System.out.println("tests in domain - " + vec.size());
 
 		desc.value = new ResourceDescriptor_Transferable[vec.size()];
 		vec.copyInto(desc.value);
@@ -2377,7 +2379,8 @@ public class AMFICOMdbInterface
 				};
 				if(domain_id.equals(dom))
 				{
-					vec.add(test);
+					vec.add(rd);
+					System.out.println("Test " + test.getId());
 				}
 			}
 			catch(Exception e)
