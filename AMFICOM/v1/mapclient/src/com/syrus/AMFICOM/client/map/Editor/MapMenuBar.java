@@ -77,6 +77,9 @@ public class MapMenuBar extends JMenuBar
 	JMenuItem menuMapOptions = new JMenuItem();
 	JMenuItem menuMapCatalogue = new JMenuItem();
 
+	JMenu menuReport = new JMenu();
+	JMenuItem menuReportOpen = new JMenuItem();
+
 	JMenu menuHelp = new JMenu();
 	JMenuItem menuHelpContents = new JMenuItem();
 	JMenuItem menuHelpFind = new JMenuItem();
@@ -184,6 +187,12 @@ public class MapMenuBar extends JMenuBar
 		menuMapCatalogue.setName("menuMapCatalogue");
 		menuMapCatalogue.addActionListener(actionAdapter);
 
+		menuReport.setText(LangModelReport.getString("label_report"));
+		menuReport.setName("menuReport");
+		menuReportOpen.setText(LangModelReport.getString("label_reportForTemplate"));
+		menuReportOpen.setName("menuReportOpen");
+		menuReportOpen.addActionListener(actionAdapter);
+
 		menuHelp.setText(LangModel.getString("menuHelp"));
 		menuHelp.setName("menuHelp");
 		menuHelpContents.setText(LangModel.getString("menuHelpContents"));
@@ -243,6 +252,8 @@ public class MapMenuBar extends JMenuBar
  //   menuMap.add(menuMapOptions);
 //    menuMap.add(menuMapCatalogue);
 
+		menuReport.add(menuReportOpen);
+
 		menuHelp.add(menuHelpContents);
 		menuHelp.add(menuHelpFind);
 		menuHelp.add(menuHelpTips);
@@ -259,6 +270,7 @@ public class MapMenuBar extends JMenuBar
 		this.add(menuSession);
 		this.add(menuMap);
 		this.add(menuView);
+		this.add(menuReport);
 		this.add(menuHelp);
 	}
 

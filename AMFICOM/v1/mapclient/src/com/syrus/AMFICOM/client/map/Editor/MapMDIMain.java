@@ -9,6 +9,7 @@ import com.syrus.AMFICOM.Client.General.Command.Config.NewMapViewCommand;
 import com.syrus.AMFICOM.Client.General.Command.Config.ViewMapNavigatorCommand;
 import com.syrus.AMFICOM.Client.General.Command.ExitCommand;
 import com.syrus.AMFICOM.Client.General.Command.HelpAboutCommand;
+import com.syrus.AMFICOM.Client.General.Command.Map.CreateMapReportCommand;
 import com.syrus.AMFICOM.Client.General.Command.Map.MapMapCloseCommand;
 import com.syrus.AMFICOM.Client.General.Command.Map.MapMapNewCommand;
 import com.syrus.AMFICOM.Client.General.Command.Map.MapMapOpenCommand;
@@ -203,6 +204,9 @@ public class MapMDIMain extends JFrame implements OperationListener
 		aModel.disable("menuMapOptions");
 		aModel.disable("menuMapCatalogue");
 
+		aModel.disable("menuReport");
+		aModel.disable("menuReportOpen");
+
 		aModel.disable("menuHelp");
 		aModel.disable("menuHelpContents");
 		aModel.disable("menuHelpFind");
@@ -223,6 +227,7 @@ public class MapMDIMain extends JFrame implements OperationListener
 		aModel.setEnabled("menuMap", true);
 		aModel.setEnabled("menuHelp", true);
 		aModel.setEnabled("menuHelpAbout", true);
+		aModel.setEnabled("menuReport", true);
 
 //		aModel.setVisible("menuMapSaveAs", false);
 	}
@@ -301,6 +306,8 @@ public class MapMDIMain extends JFrame implements OperationListener
 		aModel.setCommand("menuMapSave", new MapMapSaveCommand(null, aContext));
 		aModel.setCommand("menuMapSaveAs", new MapMapSaveAsCommand(null, aContext));
 		aModel.setCommand("menuMapCatalogue", new MapCatalogueCommand(internal_dispatcher, desktopPane, aContext, new MapConfigureApplicationModelFactory()));
+
+		aModel.setCommand("menuReportOpen", new CreateMapReportCommand(aContext));
 
 		aModel.add("menuHelpAbout", new HelpAboutCommand(this));
 
@@ -390,6 +397,7 @@ public class MapMDIMain extends JFrame implements OperationListener
 			aModel.setEnabled("menuMapSave", true);
 			aModel.setEnabled("menuMapSaveAs", true);
 			aModel.setEnabled("menuMapClose", true);
+			aModel.setEnabled("menuReportOpen", true);
 
 			aModel.fireModelChanged("");
 			setTitle(LangModelConfig.getString("MapTitle") + ": " + ((MapContext )ae.getSource()).getName());
@@ -417,6 +425,7 @@ public class MapMDIMain extends JFrame implements OperationListener
 			aModel.setEnabled("menuMapSave", false);
 			aModel.setEnabled("menuMapSaveAs", false);
 			aModel.setEnabled("menuMapClose", false);
+			aModel.setEnabled("menuReportOpen", false);
 			aModel.fireModelChanged("");
 			setTitle(LangModelConfig.getString("MapTitle"));
 		}
@@ -586,6 +595,7 @@ public class MapMDIMain extends JFrame implements OperationListener
 
 		aModel.setEnabled("menuMap", false);
 		aModel.setEnabled("menuView", false);
+		aModel.setEnabled("menuReport", false);
 
 		aModel.fireModelChanged("");
 
@@ -605,6 +615,7 @@ public class MapMDIMain extends JFrame implements OperationListener
 
 		aModel.setEnabled("menuMap", false);
 		aModel.setEnabled("menuView", false);
+		aModel.setEnabled("menuReport",false);
 
 		aModel.fireModelChanged("");
 
@@ -660,6 +671,7 @@ public class MapMDIMain extends JFrame implements OperationListener
 		aModel.setEnabled("menuViewMap", true);
 		aModel.setEnabled("menuViewMapScheme", true);
 		aModel.setEnabled("menuViewAll", true);
+		aModel.setEnabled("menuReport", true);
 
 		aModel.fireModelChanged("");
 
@@ -687,6 +699,8 @@ public class MapMDIMain extends JFrame implements OperationListener
 		aModel.setEnabled("menuViewMap", false);
 		aModel.setEnabled("menuViewMapScheme", false);
 		aModel.setEnabled("menuViewAll", false);
+		aModel.setEnabled("menuReport", false);
+		aModel.setEnabled("menuReportOpen", false);
 		aModel.fireModelChanged("");
 
 		new CloseAllInternalCommand(desktopPane).execute();

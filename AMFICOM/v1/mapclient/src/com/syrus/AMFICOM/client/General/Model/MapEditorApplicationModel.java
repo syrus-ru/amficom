@@ -39,6 +39,9 @@ public class MapEditorApplicationModel extends ApplicationModel
 		add("menuMapOptions");
 		add("menuMapCatalogue");
 
+		add("menuReport");
+		add("menuReportOpen");
+
 		add("menuHelp");
 		add("menuHelpContents");
 		add("menuHelpFind");
