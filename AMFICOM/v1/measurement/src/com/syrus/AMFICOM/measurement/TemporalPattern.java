@@ -1,5 +1,5 @@
 /*
- * $Id: TemporalPattern.java,v 1.44 2004/10/13 09:11:22 bob Exp $
+ * $Id: TemporalPattern.java,v 1.45 2004/11/02 15:27:46 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,7 +32,7 @@ import com.syrus.AMFICOM.resource.LangModelMeasurement;
 import com.syrus.util.HashCodeGenerator;
 
 /**
- * @version $Revision: 1.44 $, $Date: 2004/10/13 09:11:22 $
+ * @version $Revision: 1.45 $, $Date: 2004/11/02 15:27:46 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -801,11 +801,13 @@ public class TemporalPattern extends StorableObject {
 
 		this.description = new String(tpt.description);
 		//this.cronStrings = new String[tpt.cronStrings.length];
+		long version = this.currentVersion;
 		removeAll();
 		for (int i = 0; i < tpt.cron_strings.length; i++) {
 			//this.cronStrings[i] = new String(tpt.cronStrings[i]);
 			addTemplate(new String(tpt.cron_strings[i]));
 		}
+		this.currentVersion = version;
 
 		this.temporalPatternDatabase = MeasurementDatabaseContext.temporalPatternDatabase;
 		try {
@@ -831,7 +833,7 @@ public class TemporalPattern extends StorableObject {
 				addTemplate(cronStrings[i]);
 		}
 
-		super.currentVersion = super.getNextVersion();
+		this.currentVersion = super.getNextVersion();
 
 		this.temporalPatternDatabase = MeasurementDatabaseContext.temporalPatternDatabase;
 	}
@@ -844,12 +846,14 @@ public class TemporalPattern extends StorableObject {
 		super.creatorId = creatorId;
 		super.modifierId = creatorId;
 		this.description = description;
+		long version = this.currentVersion;
 		for (Iterator it = cronString.iterator(); it.hasNext();) {
 			String str = (String) it.next();
 			addTemplate(str);
 		}
 
-		super.currentVersion = super.getNextVersion();
+		this.currentVersion = version;
+		this.currentVersion = super.getNextVersion();
 
 		this.temporalPatternDatabase = MeasurementDatabaseContext.temporalPatternDatabase;
 	}
@@ -914,9 +918,11 @@ public class TemporalPattern extends StorableObject {
 		super.setAttributes(created, modified, creatorId, modifierId);
 		this.description = description;
 		this.cronStrings = cronStrings;
+		long version = this.currentVersion;
 		removeAll();
 		for (int i = 0; i < cronStrings.length; i++)
 			addTemplate(cronStrings[i]);
+		this.currentVersion = version;
 
 	}
 
@@ -950,43 +956,7 @@ public class TemporalPattern extends StorableObject {
 	 * @return List of java.util.Data
 	 */
 	public List getTimes(Date start, Date end) {
-		return this.getTimes(start.getTime(), end.getTime());
-		//		if (this.times == null)
-		//			this.times = new LinkedList();
-		//		if (this.startTime==null)
-		//			this.times.clear();
-		//		else if (!this.startTime.equals(start))
-		//			this.times.clear();
-		//		this.startTime = start;
-		//
-		//		if (this.endTime==null)
-		//			this.times.clear();
-		//		else if (!this.endTime.equals(end))
-		//			this.times.clear();
-		//		this.endTime = end;
-		//
-		//		if (this.times.isEmpty()){
-		//			//int count = 0;
-		//			Collection list = this.templates.values();
-		//			for (Iterator it = list.iterator(); it.hasNext();) {
-		//				TimeLine timeLine = (TimeLine) it.next();
-		//				timeLine.setStartPeriod(start.getTime());
-		//				timeLine.setEndPeriod(end.getTime());
-		//				timeLine.parseTemplate();
-		//				if (timeLine.dateList != null) {
-		//					for (Iterator it2 = timeLine.dateList.iterator();
-		// it2.hasNext();) {
-		//						Object obj = it2.next();
-		//						if (!this.times.contains(obj))
-		//							this.times.add(obj);
-		//					}
-		//
-		//				}
-		//
-		//			}
-		//		}
-		//
-		//		return this.times;
+		return this.getTimes(start.getTime(), end.getTime());	
 	}
 
 	/**
@@ -1041,7 +1011,7 @@ public class TemporalPattern extends StorableObject {
 	}
 
 	public void addTemplate(String template) {
-		this.currentVersion = super.getNextVersion();
+		this.currentVersion = super.getNextVersion();		
 		if (this.times == null)
 			this.times = new LinkedList();
 		else
@@ -1066,7 +1036,7 @@ public class TemporalPattern extends StorableObject {
 		}
 
 		this.times.clear();
-		this.currentVersion = super.getNextVersion();
+		this.currentVersion = super.getNextVersion();		
 	}
 
 	/**
@@ -1074,7 +1044,7 @@ public class TemporalPattern extends StorableObject {
 	 *                The description to set.
 	 */
 	public void setDescription(String description) {
-		this.currentVersion = super.getNextVersion();
+		this.currentVersion = super.getNextVersion();		
 		this.description = description;
 	}
 

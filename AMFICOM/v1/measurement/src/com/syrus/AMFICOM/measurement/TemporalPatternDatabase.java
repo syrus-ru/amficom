@@ -1,5 +1,5 @@
 /*
- * $Id: TemporalPatternDatabase.java,v 1.23 2004/10/29 13:49:23 max Exp $
+ * $Id: TemporalPatternDatabase.java,v 1.24 2004/11/02 15:27:46 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,8 +35,8 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.measurement.ora.CronStringArray;
 
 /**
- * @version $Revision: 1.23 $, $Date: 2004/10/29 13:49:23 $
- * @author $Author: max $
+ * @version $Revision: 1.24 $, $Date: 2004/11/02 15:27:46 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
@@ -243,7 +243,7 @@ public class TemporalPatternDatabase extends StorableObjectDatabase {
 	
 	public List retrieveByCondition(List ids, StorableObjectCondition condition) throws RetrieveObjectException,
 			IllegalDataException {
-		List list = this.retrieveByCondition(ids, condition);
+		List list = this.retrieveButIds(ids, null);
 		return list;
 	}
 	
