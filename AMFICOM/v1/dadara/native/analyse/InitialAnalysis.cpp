@@ -8,6 +8,7 @@
 #include <stdlib.h>
 #include "../an2/findLength.h"
 #include "../an2/findNoise.h"
+#include "../wavelet/wavelet.h"
 
 #include "../common/prf.h"
 
@@ -354,9 +355,49 @@ void InitialAnalysis::centerWletImageOnly(double* f_wlet, int scale, int begin, 
     }
 }
 //------------------------------------------------------------------------------------------------------------
+void InitialAnalysis::performTransformationOnly(double* f, int begin, int end, double* f_wlet, int freq, double norma)
+{
+	int len = end - begin;
+	SineWavelet wavelet;
+	wavelet.transform(freq, f, lastNonZeroPoint, begin, end - 1, f_wlet + begin, norma);
+}
+//------------------------------------------------------------------------------------------------------------
+/* //--- Outdated and testing code
+void InitialAnalysis::performTransformationOnly(double* f, int begin, int end, double* f_wlet, int freq, double norma)
+{
+	int len = end - begin;
+	double *test = new double[len ? len : 1];
+	prf_b("performTransformationOnly: method 0");
+	performTransformationOnly0(f, begin, end, f_wlet, freq, norma);
+	prf_b("performTransformationOnly: SineWavelet:");
+	SineWavelet wavelet;
+	wavelet.transform(freq, f, lastNonZeroPoint, begin, end - 1, test, norma);
+	prf_b("performTransformationOnly: etc");
+
+	{
+		int i;
+		double minDiff = 0;
+		double maxDiff = 0;
+		for (i = 0; i < len; i++)
+		{
+			double diff = fabs(f_wlet[i + begin] - test[i]);
+			if (diff > maxDiff)
+				maxDiff = diff;
+			if (i == 0 || diff < minDiff)
+				minDiff = diff;
+		}
+		fprintf(stderr, "nMakeTransform: scale %3d len %4d minDiff %g maxDiff %g\n",
+			freq, len, minDiff, maxDiff);
+		fflush(stderr);
+	}
+
+	delete[] test;
+	prf_b("performTransformationOnly: return");
+}
+
 // f- исходная ф-ция,
 // f_wlet - вейвлет-образ
-void InitialAnalysis::performTransformationOnly(double* f, int begin, int end, double* f_wlet, int freq, double norma)
+void InitialAnalysis::performTransformationOnly0(double* f, int begin, int end, double* f_wlet, int freq, double norma)
 {	double tmp;
 	int i;
 	double *wLetData = new double[freq * 2 + 1];
@@ -378,6 +419,7 @@ void InitialAnalysis::performTransformationOnly(double* f, int begin, int end, d
 	}
 	delete[] wLetData;
 }
+*/
 //------------------------------------------------------------------------------------------------------------
 // вычислить среднее значение вейвлет-образа 
 double InitialAnalysis::calcWletMeanValue(double *fw, double from, double to, int columns)
