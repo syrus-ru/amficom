@@ -1,5 +1,5 @@
 /*
- * $Id: TestMonitoredElement.java,v 1.7 2005/03/03 21:31:07 arseniy Exp $
+ * $Id: TestMonitoredElement.java,v 1.8 2005/04/01 16:05:37 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,13 +17,14 @@ import com.syrus.AMFICOM.configuration.corba.MonitoredElementSort;
 import com.syrus.AMFICOM.configuration.corba.MonitoredElement_Transferable;
 import com.syrus.AMFICOM.general.AccessIdentity;
 import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.EquivalentCondition;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.SessionContext;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/03/03 21:31:07 $
+ * @version $Revision: 1.8 $, $Date: 2005/04/01 16:05:37 $
  * @author $Author: arseniy $
  * @module config_v1
  */
@@ -82,7 +83,13 @@ public class TestMonitoredElement extends CommonConfigurationTest {
 	private void checkMonitoredElement(MonitoredElement monitoredElement) {
 		MonitoredElement_Transferable met = (MonitoredElement_Transferable) monitoredElement.getTransferable();
 
-		MonitoredElement monitoredElement1 = new MonitoredElement(met);
+		MonitoredElement monitoredElement1 = null;
+		try {
+			monitoredElement1 = new MonitoredElement(met);
+		}
+		catch (CreateObjectException e) {
+			e.printStackTrace();
+		}
 		assertEquals(monitoredElement.getId(), monitoredElement1.getId());
 		assertEquals(monitoredElement.getCreated(), monitoredElement1.getCreated());
 		assertEquals(monitoredElement.getModified(), monitoredElement1.getModified());
