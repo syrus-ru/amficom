@@ -10,8 +10,6 @@ package com.syrus.AMFICOM.Client.Optimize;
  */
 // Copyright (c) Syrus Systems 2000-2003 Syrus Systems
 
-import java.awt.*;
-import java.awt.event.*;
 import javax.swing.*;
 
 import com.syrus.AMFICOM.Client.General.Lang.*;
