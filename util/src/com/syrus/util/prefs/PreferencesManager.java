@@ -1,5 +1,5 @@
 /*
- * $Id: PreferencesManager.java,v 1.3 2004/06/01 14:09:15 bass Exp $
+ * $Id: PreferencesManager.java,v 1.4 2004/06/29 08:19:01 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,16 +8,15 @@
 
 package com.syrus.util.prefs;
 
-import com.syrus.io.IniFile;
 import java.io.*;
-import java.util.List;
+import java.util.*;
 import java.util.prefs.*;
-import javax.swing.tree.*;
+import javax.swing.tree.DefaultMutableTreeNode;
 
 /**
  * @todo PREFS LOCATION: local or db
  *
- * @version $Revision: 1.3 $, $Date: 2004/06/01 14:09:15 $
+ * @version $Revision: 1.4 $, $Date: 2004/06/29 08:19:01 $
  * @author $Author: bass $
  * @module util
  */
@@ -54,39 +53,18 @@ public final class PreferencesManager {
 				file = null;
 		}
 		try {
-			IniFile iniFile = new IniFile(file);
 			Preferences preferences = Preferences.userRoot().node(pathName);
-			List list = iniFile.getKeys();
-			String keys[] = (String[]) (list.toArray(new String[list.size()]));
-			outer:
-			for (int i = 0; i < keys.length; i ++) {
-				/*
-				 * Trim keys that start with whitespace. Ignore keys that start
-				 * with '#' (standard) or ';' (non-standard, Syrus-specific ;-)
-				 */
-				String key = keys[i];
-				try {
-					int firstNonWhiteSpaceIndex = 0;
-					while (true) {
-						char c = key.charAt(firstNonWhiteSpaceIndex);
-						if ((c == '#') || (c == ';'))
-							continue outer;
-						else if ((c == ' ') || (c == '\t'))
-							firstNonWhiteSpaceIndex ++;
-						else {
-							key = key.substring(firstNonWhiteSpaceIndex);
-							break;
-						}
-					}
-				} catch (StringIndexOutOfBoundsException sioobe) {
-					continue;
-				}
-				preferences.put(key, iniFile.getValue(keys[i]));
+			Properties properties = new Properties();
+			properties.load(new FileInputStream(file));
+			Enumeration keys = properties.keys();
+			while (keys.hasMoreElements()) {
+				String key = (String) (keys.nextElement());
+				preferences.put(key, properties.getProperty(key));
 			}
 			preferences.flush();
 		} catch (NullPointerException npe) {
 			/*
-			 * Stay silent if no ini file found.
+			 * Stay silent if no property file found.
 			 */
 			;
 		} catch (IOException ioe) {
