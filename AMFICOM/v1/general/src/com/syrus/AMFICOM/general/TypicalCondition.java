@@ -1,5 +1,5 @@
 /*
- * $Id: TypicalCondition.java,v 1.4 2005/02/04 09:18:02 bob Exp $
+ * $Id: TypicalCondition.java,v 1.5 2005/02/04 10:35:46 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -87,7 +87,7 @@ import com.syrus.util.Log;
  * 		this.key = key;
  * }
  * 
- * private TypicalCondition(final Date firstDate, final Date secondDate, 
+ * private TypicalConditionImpl(final Date firstDate, final Date secondDate, 
  * 	                        final OperationSort operation, final Short entityCode, final String key) {
  * 		super(); // First line must invoke superconstructor w/o parameters.
  * 		this.value = firstDate;
@@ -111,7 +111,7 @@ import com.syrus.util.Log;
  * 
  * </ul>
  * 
- * @version $Revision: 1.4 $, $Date: 2005/02/04 09:18:02 $
+ * @version $Revision: 1.5 $, $Date: 2005/02/04 10:35:46 $
  * @author $Author: bob $
  * @module general_v1
  */
@@ -167,6 +167,11 @@ public class TypicalCondition implements StorableObjectCondition {
 	 * Field is used by descendants only, and never directly.
 	 */
 	protected Short				entityCode;
+	
+	/**
+	 * Field is used by descendants only, and never directly.
+	 */
+	protected String 			key;
 
 	private TypicalCondition	delegate;
 
@@ -254,6 +259,7 @@ public class TypicalCondition implements StorableObjectCondition {
 						return false;
 					}
 				};
+				this.delegate.key = key;
 				this.delegate.entityCode = entityCode;
 				this.delegate.type = TypicalSort._TYPE_NUMBER_INT;
 				this.delegate.firstInt = firstInt;
@@ -333,6 +339,7 @@ public class TypicalCondition implements StorableObjectCondition {
 						return false;
 					}
 				};
+				this.delegate.key = key;
 				this.delegate.entityCode = entityCode;
 				this.delegate.type = TypicalSort._TYPE_NUMBER_LONG;
 				this.delegate.firstLong = firstLong;
@@ -412,6 +419,7 @@ public class TypicalCondition implements StorableObjectCondition {
 						return false;
 					}
 				};
+				this.delegate.key = key;
 				this.delegate.entityCode = entityCode;
 				this.delegate.type = TypicalSort._TYPE_NUMBER_DOUBLE;
 				this.delegate.firstDouble = firstDouble;
@@ -488,6 +496,7 @@ public class TypicalCondition implements StorableObjectCondition {
 						return false;
 					}
 				};
+				this.delegate.key = key;
 				this.delegate.entityCode = entityCode;
 				this.delegate.type = TypicalSort._TYPE_STRING;
 				this.delegate.value = value;
@@ -568,6 +577,7 @@ public class TypicalCondition implements StorableObjectCondition {
 						return false;
 					}
 				};
+				this.delegate.key = key;
 				this.delegate.entityCode = entityCode;
 				this.delegate.type = TypicalSort._TYPE_DATE;
 				this.delegate.value = firstDate;
@@ -730,6 +740,14 @@ public class TypicalCondition implements StorableObjectCondition {
 	public final void setEntityCode(final Short entityCode) {
 		this.delegate.entityCode = entityCode;
 	}
+	
+	public String getKey() {
+		return this.delegate.key;
+	}
+	
+	public void setKey(final String key) {
+		this.delegate.key = key;
+	}
 
 	public Object getTransferable() {
 		TypicalCondition_Transferable transferable = new TypicalCondition_Transferable();
@@ -759,6 +777,7 @@ public class TypicalCondition implements StorableObjectCondition {
 				break;
 
 		}
+		transferable.key = this.key;
 		transferable.entity_code = this.entityCode.shortValue();
 		transferable.type = TypicalSort.from_int(this.type);
 		transferable.operation = OperationSort.from_int(this.operation);
@@ -970,5 +989,5 @@ public class TypicalCondition implements StorableObjectCondition {
 				break;
 		}
 		return result;
-	}
+	}	
 }
