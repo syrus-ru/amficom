@@ -60,7 +60,7 @@ public class HistogrammPanel extends ScaledGraphPanel
 			derivative[i] = -derivative[i];
 
 		//Normalizing of the derivative to the dimension db/km
-		double tmp = 1000./event_size/deltaX;
+		double tmp = 1000./deltaX;
 		for (int i = 0; i < derivative.length; i++)
 			derivative[i] = derivative[i]*tmp;
 	}
