@@ -1,5 +1,5 @@
 /*
- * $Id: TestResourceComboBoxTest.java,v 1.3 2004/10/06 14:48:18 bob Exp $
+ * $Id: TestResourceListTest.java,v 1.1 2004/10/06 14:48:18 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,19 +15,24 @@ import java.util.List;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 
 import com.syrus.AMFICOM.CORBA.General.TestStatus;
+import com.syrus.AMFICOM.Client.General.UI.AComboBox;
+import com.syrus.AMFICOM.client_.general.ui_.LabelCheckBoxRenderer;
 import com.syrus.AMFICOM.client_.general.ui_.ObjComboBox;
+import com.syrus.AMFICOM.client_.general.ui_.ObjList;
 import com.syrus.AMFICOM.client_.general.ui_.ObjListModel;
+import com.syrus.AMFICOM.client_.general.ui_.ObjectResourceTable;
 import com.syrus.AMFICOM.client_.resource.TestResource;
 import com.syrus.AMFICOM.client_.resource.TestResourceController;
 
 /**
  * @author $Author: bob $
- * @version $Revision: 1.3 $, $Date: 2004/10/06 14:48:18 $
+ * @version $Revision: 1.1 $, $Date: 2004/10/06 14:48:18 $
  * @module general_v1
  */
-public class TestResourceComboBoxTest {
+public class TestResourceListTest {
 
 	public static void main(String[] args) {
 		JFrame frame = new JFrame("TestResourceTableTest");
@@ -48,14 +53,14 @@ public class TestResourceComboBoxTest {
 		list.add(tr2);
 
 		ObjListModel listModel = new ObjListModel(controller, list, TestResourceController.KEY_STATUS);
-		ObjComboBox comboBox = new ObjComboBox(listModel); 
+		ObjList objList = new ObjList(listModel); 
 
 		JPanel panel = new JPanel(new GridLayout(0, 1));
 		Dimension d = new Dimension(100,20);
-		comboBox.setPreferredSize(d);
-		panel.add(comboBox);
+		objList.setPreferredSize(d);
+		panel.add(objList);
 
-		comboBox.setSelectedItem(tr2);
+		//objList.setSelectedItem(tr2);
 		//comboBox.setSelectedIndex(1);
 
 		frame.getContentPane().add(panel);		
