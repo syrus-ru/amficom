@@ -1,5 +1,5 @@
 /*
- * $Id: KISType.java,v 1.4 2004/11/04 08:51:05 bob Exp $
+ * $Id: KISType.java,v 1.5 2004/11/04 09:05:13 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,7 +22,7 @@ import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2004/11/04 08:51:05 $
+ * @version $Revision: 1.5 $, $Date: 2004/11/04 09:05:13 $
  * @author $Author: bob $
  * @module module_name
  */
@@ -138,7 +138,7 @@ public class KISType extends StorableObjectType {
 		this.name = name;
 	}
 	
-	protected List getDependencies() {		
+	public List getDependencies() {		
 		return Collections.EMPTY_LIST;
 	}
 }

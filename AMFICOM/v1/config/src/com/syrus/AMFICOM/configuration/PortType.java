@@ -1,5 +1,5 @@
 /*
- * $Id: PortType.java,v 1.9 2004/11/04 08:51:05 bob Exp $
+ * $Id: PortType.java,v 1.10 2004/11/04 09:05:13 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,7 +23,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.configuration.corba.PortType_Transferable;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2004/11/04 08:51:05 $
+ * @version $Revision: 1.10 $, $Date: 2004/11/04 09:05:13 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -147,7 +147,7 @@ public class PortType extends StorableObjectType {
 		this.name = name;
 	}	
 
-	protected List getDependencies() {		
+	public List getDependencies() {		
 		return Collections.EMPTY_LIST;
 	}
 }

@@ -1,5 +1,5 @@
 /*
- * $Id: Set.java,v 1.26 2004/11/04 08:51:52 bob Exp $
+ * $Id: Set.java,v 1.27 2004/11/04 09:03:45 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,7 +31,7 @@ import com.syrus.AMFICOM.measurement.corba.Parameter_Transferable;
 import com.syrus.util.HashCodeGenerator;
 
 /**
- * @version $Revision: 1.26 $, $Date: 2004/11/04 08:51:52 $
+ * @version $Revision: 1.27 $, $Date: 2004/11/04 09:03:45 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -342,7 +342,7 @@ public class Set extends StorableObject {
 		return buffer.toString();
 	}	
 	
-	protected List getDependencies() {		
+	public List getDependencies() {		
 		return this.monitoredElementIds;
 	}
 	

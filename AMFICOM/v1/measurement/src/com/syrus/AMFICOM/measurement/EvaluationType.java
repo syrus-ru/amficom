@@ -1,5 +1,5 @@
 /*
- * $Id: EvaluationType.java,v 1.27 2004/11/04 08:51:52 bob Exp $
+ * $Id: EvaluationType.java,v 1.28 2004/11/04 09:03:45 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,7 +27,7 @@ import com.syrus.AMFICOM.measurement.corba.EvaluationType_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.27 $, $Date: 2004/11/04 08:51:52 $
+ * @version $Revision: 1.28 $, $Date: 2004/11/04 09:03:45 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -295,7 +295,7 @@ public class EvaluationType extends ActionType {
 	}
 	
 	
-	protected List getDependencies() {
+	public List getDependencies() {
 		List dependencies = new LinkedList();
 		if (this.inParameterTypes != null)
 			for (Iterator it = this.inParameterTypes.iterator(); it.hasNext();) {

@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementSetup.java,v 1.30 2004/11/04 08:51:52 bob Exp $
+ * $Id: MeasurementSetup.java,v 1.31 2004/11/04 09:03:45 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,7 +27,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.corba.MeasurementSetup_Transferable;
 
 /**
- * @version $Revision: 1.30 $, $Date: 2004/11/04 08:51:52 $
+ * @version $Revision: 1.31 $, $Date: 2004/11/04 09:03:45 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -371,7 +371,7 @@ public class MeasurementSetup extends StorableObject {
 		this.thresholdSet = thresholdSet;
 	}
 	
-	protected List getDependencies() {
+	public List getDependencies() {
 		List dependencies = new LinkedList();
 		if (this.parameterSet != null)
 			dependencies.add(this.parameterSet.getId());

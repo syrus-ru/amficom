@@ -1,5 +1,5 @@
 /*
- * $Id: Measurement.java,v 1.30 2004/11/04 08:51:52 bob Exp $
+ * $Id: Measurement.java,v 1.31 2004/11/04 09:03:45 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,7 +29,7 @@ import com.syrus.AMFICOM.measurement.corba.ResultSort;
 import com.syrus.AMFICOM.event.corba.AlarmLevel;
 
 /**
- * @version $Revision: 1.30 $, $Date: 2004/11/04 08:51:52 $
+ * @version $Revision: 1.31 $, $Date: 2004/11/04 09:03:45 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -281,7 +281,7 @@ public class Measurement extends Action {
 		this.name = name;
 	}
 	
-	protected List getDependencies() {
+	public List getDependencies() {
 		List dependencies = new LinkedList();
 		dependencies.add(this.testId);
 		dependencies.add(this.setup.getId());

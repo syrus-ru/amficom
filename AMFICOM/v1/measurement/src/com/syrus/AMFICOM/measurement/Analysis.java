@@ -1,5 +1,5 @@
 /*
- * $Id: Analysis.java,v 1.27 2004/11/04 08:51:52 bob Exp $
+ * $Id: Analysis.java,v 1.28 2004/11/04 09:03:45 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,7 +26,7 @@ import com.syrus.AMFICOM.measurement.corba.ResultSort;
 import com.syrus.AMFICOM.event.corba.AlarmLevel;
 
 /**
- * @version $Revision: 1.27 $, $Date: 2004/11/04 08:51:52 $
+ * @version $Revision: 1.28 $, $Date: 2004/11/04 09:03:45 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -172,7 +172,7 @@ public class Analysis extends Action {
 		return analysis;
 	}	
 	
-	protected List getDependencies() {		
+	public List getDependencies() {		
 		return Collections.singletonList(this.criteriaSet.getId());
 	}
 }
