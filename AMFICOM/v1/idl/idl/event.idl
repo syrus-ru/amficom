@@ -1,5 +1,5 @@
 /*
- * $Id: event.idl,v 1.9 2005/02/03 14:21:24 arseniy Exp $
+ * $Id: event.idl,v 1.10 2005/02/08 19:45:50 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -89,8 +89,9 @@ module corba {
 	};
 
 	struct EventSource_Transferable {
-		general::corba::Identifier_Transferable id;
-		general::corba::Identifier_Transferable entity_id;
+		general::corba::StorableObject_Transferable header;
+
+		general::corba::Identifier_Transferable source_entity_id;
 	};
 
 	enum EventStatus {
@@ -106,7 +107,7 @@ module corba {
 		general::corba::WString256 description;
 
 		sequence <EventParameter_Transferable> parameters;
-		sequence <EventSource_Transferable> event_sources;
+		sequence <general::corba::Identifier_Transferable> event_source_ids;
 	};
 
 /*
