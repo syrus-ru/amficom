@@ -1,5 +1,5 @@
 /**
- * $Id: CreateUnboundNodeCommandAtomic.java,v 1.9 2005/02/02 08:58:39 krupenn Exp $
+ * $Id: CreateUnboundNodeCommandAtomic.java,v 1.10 2005/02/08 15:11:09 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -12,27 +12,20 @@ package com.syrus.AMFICOM.Client.Map.Command.Action;
 
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.General.Model.MapApplicationModel;
-import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
+import com.syrus.AMFICOM.Client.Map.Controllers.UnboundNodeController;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.map.DoublePoint;
 import com.syrus.AMFICOM.map.Map;
-import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.mapview.UnboundNode;
-import com.syrus.AMFICOM.Client.Map.Controllers.UnboundNodeController;
-import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.scheme.corba.SchemeElement;
-
-import java.awt.geom.Point2D;
-import com.syrus.AMFICOM.Client.Map.Controllers.MapViewController;
 
 /**
  * –азместить сетевой элемент на карте. используетс€ при переносе 
  * (drag/drop), в точке point (в экранных координатах)
  * 
- * @version $Revision: 1.9 $, $Date: 2005/02/02 08:58:39 $
- * @module map_v2
  * @author $Author: krupenn $
- * @see
+ * @version $Revision: 1.10 $, $Date: 2005/02/08 15:11:09 $
+ * @module mapviewclietn_v1
  */
 public class CreateUnboundNodeCommandAtomic extends MapActionCommand
 {
@@ -41,7 +34,7 @@ public class CreateUnboundNodeCommandAtomic extends MapActionCommand
 	 */
 	UnboundNode unbound;
 
-	SchemeElement se;	
+	SchemeElement schemeElement;	
 
 	Map map;
 	
@@ -56,13 +49,13 @@ public class CreateUnboundNodeCommandAtomic extends MapActionCommand
 			DoublePoint dpoint)
 	{
 		super(MapActionCommand.ACTION_DRAW_NODE);
-		this.se = se;
+		this.schemeElement = se;
 		this.coordinatePoint = dpoint;
 	}
 
 	public UnboundNode getUnbound()
 	{
-		return unbound;
+		return this.unbound;
 	}
 
 	public void execute()
@@ -77,17 +70,17 @@ public class CreateUnboundNodeCommandAtomic extends MapActionCommand
 				.isEnabled(MapApplicationModel.ACTION_EDIT_BINDING))
 			return;
 		
-		map = logicalNetLayer.getMapView().getMap();
+		this.map = this.logicalNetLayer.getMapView().getMap();
 
 		try
 		{
 			// создать новый узел
-			unbound = com.syrus.AMFICOM.mapview.UnboundNode.createInstance(
-				logicalNetLayer.getUserId(),
-				se,
-				coordinatePoint,
-				map,
-				logicalNetLayer.getUnboundProto());
+			this.unbound = UnboundNode.createInstance(
+				this.logicalNetLayer.getUserId(),
+				this.schemeElement,
+				this.coordinatePoint,
+				this.map,
+				this.logicalNetLayer.getUnboundProto());
 		}
 		catch (CreateObjectException e)
 		{
@@ -95,20 +88,20 @@ public class CreateUnboundNodeCommandAtomic extends MapActionCommand
 			return;
 		}
 	
-		UnboundNodeController unc = (UnboundNodeController)getLogicalNetLayer().getMapViewController().getController(unbound);
+		UnboundNodeController unc = (UnboundNodeController)getLogicalNetLayer().getMapViewController().getController(this.unbound);
 
-		unc.updateScaleCoefficient(unbound);
+		unc.updateScaleCoefficient(this.unbound);
 	
-		map.addNode(unbound);
+		this.map.addNode(this.unbound);
 	}
 	
 	public void undo()
 	{
-		map.removeNode(unbound);
+		this.map.removeNode(this.unbound);
 	}
 	
 	public void redo()
 	{
-		map.addNode(unbound);
+		this.map.addNode(this.unbound);
 	}
 }

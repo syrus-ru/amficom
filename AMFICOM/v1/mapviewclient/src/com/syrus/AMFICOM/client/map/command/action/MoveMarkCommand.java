@@ -1,5 +1,5 @@
 /**
- * $Id: MoveMarkCommand.java,v 1.7 2005/01/21 16:19:57 krupenn Exp $
+ * $Id: MoveMarkCommand.java,v 1.8 2005/02/08 15:11:09 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,26 +11,17 @@
 
 package com.syrus.AMFICOM.Client.Map.Command.Action;
 
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
-import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
+import com.syrus.AMFICOM.Client.Map.Controllers.MarkController;
 import com.syrus.AMFICOM.map.DoublePoint;
 import com.syrus.AMFICOM.map.Mark;
-
-import com.syrus.AMFICOM.Client.Map.Controllers.MarkController;
-import java.awt.geom.Point2D;
-import com.syrus.AMFICOM.Client.Map.Controllers.MapViewController;
 
 /**
  * Команда перемещения метки. вызывает только функцию "обновить состояние 
  * местоположения"
- * 
- * 
- * 
- * @version $Revision: 1.7 $, $Date: 2005/01/21 16:19:57 $
- * @module
  * @author $Author: krupenn $
- * @see
+ * @version $Revision: 1.8 $, $Date: 2005/02/08 15:11:09 $
+ * @module mapviewclient_v1
  */
 public class MoveMarkCommand extends MapActionCommand
 {
@@ -42,14 +33,14 @@ public class MoveMarkCommand extends MapActionCommand
 
 	Mark mark;
 	
-	MarkController mc;
+	MarkController markController;
 
 	public MoveMarkCommand(Mark mark)
 	{
 		super(MapActionCommand.ACTION_DRAW_NODE);
 		this.mark = mark;
-		initialLocation = mark.getLocation();
-		initialDistance = mark.getDistance();
+		this.initialLocation = mark.getLocation();
+		this.initialDistance = mark.getDistance();
 //		setState(mark.getState());
 	}
 
@@ -74,19 +65,19 @@ public class MoveMarkCommand extends MapActionCommand
 				getClass().getName(), 
 				"execute()");
 
-		mc = (MarkController )super.logicalNetLayer.getMapViewController().getController(mark);
+		this.markController = (MarkController )super.logicalNetLayer.getMapViewController().getController(this.mark);
 
-		distance = mark.getDistance();
-		mc.moveToFromStartLt(mark, distance);
+		this.distance = this.mark.getDistance();
+		this.markController.moveToFromStartLt(this.mark, this.distance);
 	}
 	
 	public void undo()
 	{
-		mc.moveToFromStartLt(mark, distance);
+		this.markController.moveToFromStartLt(this.mark, this.distance);
 	}
 
 	public void redo()
 	{
-		mc.moveToFromStartLt(mark, initialDistance);
+		this.markController.moveToFromStartLt(this.mark, this.initialDistance);
 	}
 }

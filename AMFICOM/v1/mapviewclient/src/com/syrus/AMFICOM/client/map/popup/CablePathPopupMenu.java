@@ -1,22 +1,21 @@
 package com.syrus.AMFICOM.Client.Map.Popup;
 
-import com.syrus.AMFICOM.Client.General.Lang.LangModel;
-import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
-import com.syrus.AMFICOM.Client.General.Model.Environment;
-import com.syrus.AMFICOM.client_.general.ui_.ObjectResourcePropertiesDialog;
-import com.syrus.AMFICOM.Client.Map.Props.MapCablePathPane;
-import com.syrus.AMFICOM.map.MapElement;
-import com.syrus.AMFICOM.map.SiteNodeType;
-import com.syrus.AMFICOM.mapview.CablePath;
-
-import com.syrus.AMFICOM.mapview.UnboundLink;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Iterator;
 
 import javax.swing.JMenuItem;
-import java.util.Iterator;
+
+import com.syrus.AMFICOM.Client.General.Lang.LangModel;
+import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
+import com.syrus.AMFICOM.Client.General.Model.Environment;
+import com.syrus.AMFICOM.Client.Map.Props.MapCablePathPane;
+import com.syrus.AMFICOM.client_.general.ui_.ObjectResourcePropertiesDialog;
+import com.syrus.AMFICOM.map.SiteNodeType;
+import com.syrus.AMFICOM.mapview.CablePath;
+import com.syrus.AMFICOM.mapview.UnboundLink;
 
 public class CablePathPopupMenu extends MapPopupMenu 
 {
@@ -52,77 +51,77 @@ public class CablePathPopupMenu extends MapPopupMenu
 		this.path = (CablePath)me;
 		
 		boolean canGenerate = false;
-		for(Iterator it = path.getLinks().iterator(); it.hasNext();)
+		for(Iterator it = this.path.getLinks().iterator(); it.hasNext();)
 		{
 			Object link = it.next();
 			if(link instanceof UnboundLink)
 				canGenerate = true;
 		}
-		generateMenuItem.setVisible(canGenerate);
+		this.generateMenuItem.setVisible(canGenerate);
 	}
 
 	private void jbInit() 
 	{
-		removeMenuItem.setText(LangModelMap.getString("Delete"));
-		removeMenuItem.addActionListener(new ActionListener()
+		this.removeMenuItem.setText(LangModelMap.getString("Delete"));
+		this.removeMenuItem.addActionListener(new ActionListener()
 			{
 				public void actionPerformed(ActionEvent e)
 				{
 					removeCablePath();
 				}
 			});
-		propertiesMenuItem.setText(LangModelMap.getString("Properties"));
-		propertiesMenuItem.addActionListener(new ActionListener()
+		this.propertiesMenuItem.setText(LangModelMap.getString("Properties"));
+		this.propertiesMenuItem.addActionListener(new ActionListener()
 			{
 				public void actionPerformed(ActionEvent e)
 				{
 					showProperties();
 				}
 			});
-		bindMenuItem.setText(LangModelMap.getString("Bind"));
-		bindMenuItem.addActionListener(new ActionListener()
+		this.bindMenuItem.setText(LangModelMap.getString("Bind"));
+		this.bindMenuItem.addActionListener(new ActionListener()
 			{
 				public void actionPerformed(ActionEvent e)
 				{
 					bind();
 				}
 			});
-		generateMenuItem.setText(LangModelMap.getString("GenerateCabling"));
-		generateMenuItem.addActionListener(new ActionListener()
+		this.generateMenuItem.setText(LangModelMap.getString("GenerateCabling"));
+		this.generateMenuItem.addActionListener(new ActionListener()
 			{
 				public void actionPerformed(ActionEvent e)
 				{
 					generateCabling();
 				}
 			});
-		this.add(removeMenuItem);
-		this.add(bindMenuItem);
-		this.add(generateMenuItem);
+		this.add(this.removeMenuItem);
+		this.add(this.bindMenuItem);
+		this.add(this.generateMenuItem);
 		this.addSeparator();
-		this.add(propertiesMenuItem);
+		this.add(this.propertiesMenuItem);
 	}
 
-	private void showProperties()
+	void showProperties()
 	{
-		super.showProperties(path);
+		super.showProperties(this.path);
 	}
 
-	private void removeCablePath()
+	void removeCablePath()
 	{
-		super.removeMapElement(path);
+		super.removeMapElement(this.path);
 
 		getLogicalNetLayer().repaint(false);
 	}
 
-	private void bind()
+	void bind()
 	{
 		MapCablePathPane prop = (MapCablePathPane )MapCablePathPane.getInstance();
-		prop.setContext(logicalNetLayer.getContext());
+		prop.setContext(this.logicalNetLayer.getContext());
 		ObjectResourcePropertiesDialog dialog = new ObjectResourcePropertiesDialog(
 				Environment.getActiveWindow(), 
 				LangModel.getString("Properties"), 
 				true, 
-				path,
+				this.path,
 				prop);
 
 		prop.showBindPanel();
@@ -140,16 +139,16 @@ public class CablePathPopupMenu extends MapPopupMenu
 		dialog.setVisible(true);
 
 		if ( dialog.ifAccept())
-		{
+		{// think about repainting?..
 		}
 	}
 
-	private void generateCabling()
+	void generateCabling()
 	{
 		SiteNodeType proto = super.selectNodeProto();
 		if(proto != null)
 		{
-			super.generatePathCabling(path, proto);
+			super.generatePathCabling(this.path, proto);
 			getLogicalNetLayer().repaint(false);
 		}
 	}

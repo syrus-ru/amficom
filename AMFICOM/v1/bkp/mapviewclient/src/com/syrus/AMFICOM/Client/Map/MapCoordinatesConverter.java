@@ -1,5 +1,5 @@
 /**
- * $Id: MapCoordinatesConverter.java,v 1.2 2005/02/07 16:09:25 krupenn Exp $
+ * $Id: MapCoordinatesConverter.java,v 1.3 2005/02/08 15:11:08 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -20,10 +20,9 @@ import java.awt.Point;
  * 
  * 
  * 
- * @version $Revision: 1.2 $, $Date: 2005/02/07 16:09:25 $
- * @module
  * @author $Author: krupenn $
- * @see
+ * @version $Revision: 1.3 $, $Date: 2005/02/08 15:11:08 $
+ * @module maviewclient_v1
  * @todo в панелях свойств используется приведение конвертера к типу 
  * LogicalNetLayer, поскольку в данной реализации модуля именно он 
  * имплементит MapCoordinatesConverter - необходимо найти обходной путь

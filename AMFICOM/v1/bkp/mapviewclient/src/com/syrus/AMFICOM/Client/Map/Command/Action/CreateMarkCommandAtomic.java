@@ -1,5 +1,5 @@
 /**
- * $Id: CreateMarkCommandAtomic.java,v 1.8 2005/02/02 09:05:10 krupenn Exp $
+ * $Id: CreateMarkCommandAtomic.java,v 1.9 2005/02/08 15:11:09 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -10,36 +10,29 @@
 
 package com.syrus.AMFICOM.Client.Map.Command.Action;
 
-import com.syrus.AMFICOM.Client.General.Model.Environment;
-import com.syrus.AMFICOM.Client.General.Model.MapApplicationModel;
-import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.map.DoublePoint;
-import com.syrus.AMFICOM.Client.Map.Controllers.MarkController;
-import com.syrus.AMFICOM.Client.Map.Controllers.NodeLinkController;
-import com.syrus.AMFICOM.Client.Resource.Pool;
+import java.awt.Point;
+import java.util.Iterator;
 
 import com.syrus.AMFICOM.Client.General.Event.MapEvent;
 import com.syrus.AMFICOM.Client.General.Event.MapNavigateEvent;
+import com.syrus.AMFICOM.Client.General.Model.Environment;
+import com.syrus.AMFICOM.Client.General.Model.MapApplicationModel;
+import com.syrus.AMFICOM.Client.Map.Controllers.MarkController;
+import com.syrus.AMFICOM.Client.Map.Controllers.NodeLinkController;
+import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.map.AbstractNode;
+import com.syrus.AMFICOM.map.DoublePoint;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.Mark;
-import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.NodeLink;
 import com.syrus.AMFICOM.map.PhysicalLink;
-
-import java.awt.Point;
-import java.awt.geom.Point2D;
-
-import java.util.Iterator;
-import com.syrus.AMFICOM.Client.Map.Controllers.MapViewController;
 
 /**
  *  оманда создани€ метки на линии
  * 
- * @version $Revision: 1.8 $, $Date: 2005/02/02 09:05:10 $
- * @module map_v2
  * @author $Author: krupenn $
- * @see
+ * @version $Revision: 1.9 $, $Date: 2005/02/08 15:11:09 $
+ * @module mapviewclient_v1
  */
 public class CreateMarkCommandAtomic extends MapActionCommand
 {
@@ -85,30 +78,27 @@ public class CreateMarkCommandAtomic extends MapActionCommand
 		if ( !getLogicalNetLayer().getContext().getApplicationModel()
 				.isEnabled(MapApplicationModel.ACTION_EDIT_MAP))
 			return;
-		
-		map = logicalNetLayer.getMapView().getMap();
 
-		link.sortNodeLinks();
-		distance = 0.0;
-		AbstractNode node = link.getStartNode();
+		this.map = this.logicalNetLayer.getMapView().getMap();
 
-		for(Iterator it = link.getNodeLinks().iterator(); it.hasNext();)
+		this.link.sortNodeLinks();
+		this.distance = 0.0;
+		AbstractNode node = this.link.getStartNode();
+
+		for(Iterator it = this.link.getNodeLinks().iterator(); it.hasNext();)
 		{
 			NodeLink mnle = (NodeLink)it.next();
 
 			NodeLinkController nlc = (NodeLinkController)getLogicalNetLayer().getMapViewController().getController(mnle);
 
-			if(nlc.isMouseOnElement(mnle, point))
+			if(nlc.isMouseOnElement(mnle, this.point))
 			{
-				DoublePoint dpoint = logicalNetLayer.convertScreenToMap(point);
-				distance += logicalNetLayer.distance(node.getLocation(), dpoint);
+				DoublePoint dpoint = this.logicalNetLayer.convertScreenToMap(this.point);
+				this.distance += this.logicalNetLayer.distance(node.getLocation(), dpoint);
 				break;
 			}
-			else
-			{
-				nlc.updateLengthLt(mnle);
-				distance += mnle.getLengthLt();
-			}
+			nlc.updateLengthLt(mnle);
+			this.distance += mnle.getLengthLt();
 
 			if(mnle.getStartNode().equals(node))
 				node = mnle.getEndNode();
@@ -118,37 +108,37 @@ public class CreateMarkCommandAtomic extends MapActionCommand
 
 		try
 		{
-			mark = Mark.createInstance(
-					logicalNetLayer.getUserId(),
-					link, 
-					distance);
+			this.mark = Mark.createInstance(
+					this.logicalNetLayer.getUserId(),
+					this.link, 
+					this.distance);
 		}
 		catch (CreateObjectException e)
 		{
 			e.printStackTrace();
 		}
 
-		map.addNode(mark);
+		this.map.addNode(this.mark);
 
-		MarkController mc = (MarkController)getLogicalNetLayer().getMapViewController().getController(mark);
+		MarkController mc = (MarkController)getLogicalNetLayer().getMapViewController().getController(this.mark);
 
-		mc.updateScaleCoefficient(mark);
+		mc.updateScaleCoefficient(this.mark);
 		
 		// операци€ закончена - оповестить слушателей
-		logicalNetLayer.sendMapEvent(new MapEvent(this, MapEvent.MAP_CHANGED));
-		logicalNetLayer.sendMapEvent(new MapNavigateEvent(
-					mark,
+		this.logicalNetLayer.sendMapEvent(new MapEvent(this, MapEvent.MAP_CHANGED));
+		this.logicalNetLayer.sendMapEvent(new MapNavigateEvent(
+					this.mark,
 					MapNavigateEvent.MAP_ELEMENT_SELECTED_EVENT));
-		logicalNetLayer.setCurrentMapElement(mark);
+		this.logicalNetLayer.setCurrentMapElement(this.mark);
 	}
 	
 	public void undo()
 	{
-		map.removeNode(mark);
+		this.map.removeNode(this.mark);
 	}
 	
 	public void redo()
 	{
-		map.addNode(mark);
+		this.map.addNode(this.mark);
 	}
 }

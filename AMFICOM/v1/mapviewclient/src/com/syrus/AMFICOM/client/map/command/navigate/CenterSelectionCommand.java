@@ -1,5 +1,5 @@
 /**
- * $Id: CenterSelectionCommand.java,v 1.11 2005/02/01 11:34:56 krupenn Exp $
+ * $Id: CenterSelectionCommand.java,v 1.12 2005/02/08 15:11:10 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,28 +11,21 @@
 
 package com.syrus.AMFICOM.Client.Map.Command.Navigate;
 
+import java.util.Iterator;
+
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationModel;
 import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
 import com.syrus.AMFICOM.map.DoublePoint;
 import com.syrus.AMFICOM.map.MapElement;
-
 import com.syrus.AMFICOM.mapview.MapView;
-import java.awt.geom.Point2D;
-
-import java.util.Iterator;
-import com.syrus.AMFICOM.map.Map;
 
 /**
  * Центрировать геометрическое место точек, являющих собой центры 
  * выделенных элементов карты
- * 
- * 
- * 
- * @version $Revision: 1.11 $, $Date: 2005/02/01 11:34:56 $
- * @module
  * @author $Author: krupenn $
- * @see
+ * @version $Revision: 1.12 $, $Date: 2005/02/08 15:11:10 $
+ * @module mapviewclient_v1
  */
 public class CenterSelectionCommand extends VoidCommand
 {
@@ -47,19 +40,21 @@ public class CenterSelectionCommand extends VoidCommand
 	public void setParameter(String field, Object value)
 	{
 		if(field.equals("logicalNetLayer"))
-			logicalNetLayer = (LogicalNetLayer )value;
+			this.logicalNetLayer = (LogicalNetLayer )value;
 		if(field.equals("applicationModel"))
-			aModel = (ApplicationModel )value;
+			this.aModel = (ApplicationModel )value;
 	}
 
 	public void execute()
 	{
-		if(logicalNetLayer == null)
+		if(this.logicalNetLayer == null)
+		{
 			return;
+		}
 
 		MapElement me;
 		
-		MapView mapView = logicalNetLayer.getMapView();
+		MapView mapView = this.logicalNetLayer.getMapView();
 
 		int count = 0;
 		DoublePoint point = new DoublePoint(0.0, 0.0);
@@ -144,8 +139,8 @@ public class CenterSelectionCommand extends VoidCommand
 		
 		point.setLocation(x, y);
 		
-		logicalNetLayer.setCenter(point);
+		this.logicalNetLayer.setCenter(point);
 
-		logicalNetLayer.repaint(true);
+		this.logicalNetLayer.repaint(true);
 	}
 }

@@ -1,5 +1,5 @@
 /*
- * $Id: MapEditorOpenViewCommand.java,v 1.12 2005/01/30 15:38:17 krupenn Exp $
+ * $Id: MapEditorOpenViewCommand.java,v 1.13 2005/02/08 15:11:10 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -10,19 +10,19 @@
 
 package com.syrus.AMFICOM.Client.Map.Command.Editor;
 
+import javax.swing.JDesktopPane;
+
 import com.syrus.AMFICOM.Client.General.Command.Command;
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationModelFactory;
 import com.syrus.AMFICOM.Client.General.Model.MapMapEditorApplicationModelFactory;
-import com.syrus.AMFICOM.Client.Map.Command.Map.MapViewOpenCommand;
 import com.syrus.AMFICOM.Client.Map.Command.MapDesktopCommand;
+import com.syrus.AMFICOM.Client.Map.Command.Map.MapOpenCommand;
+import com.syrus.AMFICOM.Client.Map.Command.Map.MapViewOpenCommand;
 import com.syrus.AMFICOM.Client.Map.UI.MapElementsFrame;
 import com.syrus.AMFICOM.Client.Map.UI.MapFrame;
 import com.syrus.AMFICOM.Client.Map.UI.MapPropertyFrame;
 import com.syrus.AMFICOM.mapview.MapView;
-
-import javax.swing.JDesktopPane;
 
 /**
  * Класс $RCSfile: MapEditorOpenViewCommand.java,v $ используется для открытия топологической схемы в модуле
@@ -30,7 +30,7 @@ import javax.swing.JDesktopPane;
  * пользователь выбрал MapContext, открывается окно карты и сопутствующие окна
  * и MapContext передается в окно карты
  * 
- * @version $Revision: 1.12 $, $Date: 2005/01/30 15:38:17 $
+ * @version $Revision: 1.13 $, $Date: 2005/02/08 15:11:10 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see MapOpenCommand
@@ -52,10 +52,6 @@ public class MapEditorOpenViewCommand extends VoidCommand
 
 	private boolean checkSave = true;
 
-	public MapEditorOpenViewCommand()
-	{
-	}
-
 	/**
 	 * 
 	 * @param desktop куда класть окно карты
@@ -69,49 +65,49 @@ public class MapEditorOpenViewCommand extends VoidCommand
 
 	public void execute()
 	{
-		mapFrame = MapDesktopCommand.findMapFrame(desktop);
-		if(mapFrame != null)
+		this.mapFrame = MapDesktopCommand.findMapFrame(this.desktop);
+		if(this.mapFrame != null)
 		{
 			if(isCheckSave())
 			{
-				if(!mapFrame.checkCanCloseMap())
+				if(!this.mapFrame.checkCanCloseMap())
 					return;
-				if(!mapFrame.checkCanCloseMapView())
+				if(!this.mapFrame.checkCanCloseMapView())
 					return;
 			}
 		}
 
-		MapViewOpenCommand moc = new MapViewOpenCommand(desktop, aContext);
+		MapViewOpenCommand moc = new MapViewOpenCommand(this.desktop, this.aContext);
 		moc.setCanDelete(isCanDelete());
 		moc.execute();
 
 		if (moc.getResult() == Command.RESULT_OK)
 		{
-			mapView = moc.getMapView();
+			this.mapView = moc.getMapView();
 		
-			mapFrame = MapDesktopCommand.findMapFrame(desktop);
-			if(mapFrame == null)
+			this.mapFrame = MapDesktopCommand.findMapFrame(this.desktop);
+			if(this.mapFrame == null)
 			{
 				ViewMapWindowCommand mapCommand = new ViewMapWindowCommand(
-					aContext.getDispatcher(), 
-					desktop, 
-					aContext, 
+					this.aContext.getDispatcher(), 
+					this.desktop, 
+					this.aContext, 
 					new MapMapEditorApplicationModelFactory());
 
 				mapCommand.execute();
-				this.mapFrame = mapCommand.frame;
+				this.mapFrame = mapCommand.mapFrame;
 			}
 
-			if(mapFrame == null)
+			if(this.mapFrame == null)
 				return;
 
-			mapFrame.setMapView(mapView);
+			this.mapFrame.setMapView(this.mapView);
 
-			ViewMapPropertiesCommand propCommand = new ViewMapPropertiesCommand(desktop, aContext);
+			ViewMapPropertiesCommand propCommand = new ViewMapPropertiesCommand(this.desktop, this.aContext);
 			propCommand.execute();
 			this.propFrame = propCommand.frame;
 
-			ViewMapElementsCommand elementsCommand = new ViewMapElementsCommand(desktop, aContext);
+			ViewMapElementsCommand elementsCommand = new ViewMapElementsCommand(this.desktop, this.aContext);
 			elementsCommand.execute();
 			this.elementsFrame = elementsCommand.frame;
 		}
@@ -119,17 +115,17 @@ public class MapEditorOpenViewCommand extends VoidCommand
 
 	public MapFrame getMapFrame()
 	{
-		return mapFrame;
+		return this.mapFrame;
 	}
 
 	public MapPropertyFrame getPropertiesFrame()
 	{
-		return propFrame;
+		return this.propFrame;
 	}
 
 	public MapElementsFrame getElementsFrame()
 	{
-		return elementsFrame;
+		return this.elementsFrame;
 	}
 
 
@@ -141,7 +137,7 @@ public class MapEditorOpenViewCommand extends VoidCommand
 
 	public boolean isCanDelete()
 	{
-		return canDelete;
+		return this.canDelete;
 	}
 
 
@@ -153,7 +149,7 @@ public class MapEditorOpenViewCommand extends VoidCommand
 
 	public boolean isCheckSave()
 	{
-		return checkSave;
+		return this.checkSave;
 	}
 
 }

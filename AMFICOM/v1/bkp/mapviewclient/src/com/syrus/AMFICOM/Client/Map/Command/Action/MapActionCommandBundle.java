@@ -1,5 +1,5 @@
 /**
- * $Id: MapActionCommandBundle.java,v 1.15 2005/01/31 12:19:18 krupenn Exp $
+ * $Id: MapActionCommandBundle.java,v 1.16 2005/02/08 15:11:09 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,18 +11,22 @@
 
 package com.syrus.AMFICOM.Client.Map.Command.Action;
 
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+
 import com.syrus.AMFICOM.Client.General.Command.CommandBundle;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
+import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.DoublePoint;
 import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.map.MapElementState;
-import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.NodeLink;
-import com.syrus.AMFICOM.map.SiteNodeType;
 import com.syrus.AMFICOM.map.PhysicalLink;
-import com.syrus.AMFICOM.map.TopologicalNode;
 import com.syrus.AMFICOM.map.SiteNode;
+import com.syrus.AMFICOM.map.SiteNodeType;
+import com.syrus.AMFICOM.map.TopologicalNode;
 import com.syrus.AMFICOM.mapview.CablePath;
 import com.syrus.AMFICOM.mapview.MeasurementPath;
 import com.syrus.AMFICOM.mapview.UnboundLink;
@@ -31,22 +35,11 @@ import com.syrus.AMFICOM.scheme.corba.SchemeCableLink;
 import com.syrus.AMFICOM.scheme.corba.SchemeElement;
 import com.syrus.AMFICOM.scheme.corba.SchemePath;
 
-import java.awt.geom.Point2D;
-
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import com.syrus.AMFICOM.map.PhysicalLinkBinding;
-
 /**
- *  
  * 
- * 
- * 
- * @version $Revision: 1.15 $, $Date: 2005/01/31 12:19:18 $
- * @module
  * @author $Author: krupenn $
- * @see
+ * @version $Revision: 1.16 $, $Date: 2005/02/08 15:11:09 $
+ * @module maviewclient_v1
  */
 public class MapActionCommandBundle extends CommandBundle
 {
@@ -61,20 +54,20 @@ public class MapActionCommandBundle extends CommandBundle
 	
 	protected ApplicationContext getContext()
 	{
-		return aContext;
+		return this.aContext;
 	}
 	
 	protected LogicalNetLayer getLogicalNetLayer()
 	{
-		return logicalNetLayer;
+		return this.logicalNetLayer;
 	}
 
 	public void setParameter(String field, Object value)
 	{
 		if(field.equals("logicalNetLayer"))
-			logicalNetLayer = (LogicalNetLayer )value;
+			this.logicalNetLayer = (LogicalNetLayer )value;
 		if(field.equals("applicationContext"))
-			aContext = (ApplicationContext )value;
+			this.aContext = (ApplicationContext )value;
 		super.setParameter(field, value);
 	}
 	
@@ -84,7 +77,7 @@ public class MapActionCommandBundle extends CommandBundle
 	protected SiteNode createSite(DoublePoint point,  SiteNodeType proto)
 	{
 		CreateSiteCommandAtomic cmd = new CreateSiteCommandAtomic(proto, point);
-		cmd.setLogicalNetLayer(logicalNetLayer);
+		cmd.setLogicalNetLayer(this.logicalNetLayer);
 		cmd.execute();
 		add(cmd);
 		return cmd.getSite();
@@ -96,7 +89,7 @@ public class MapActionCommandBundle extends CommandBundle
 	protected UnboundNode createUnboundNode(DoublePoint point, SchemeElement se)
 	{
 		CreateUnboundNodeCommandAtomic cmd = new CreateUnboundNodeCommandAtomic(se, point);
-		cmd.setLogicalNetLayer(logicalNetLayer);
+		cmd.setLogicalNetLayer(this.logicalNetLayer);
 		cmd.execute();
 		add(cmd);
 		return cmd.getUnbound();
@@ -108,7 +101,7 @@ public class MapActionCommandBundle extends CommandBundle
 	protected TopologicalNode createPhysicalNode(PhysicalLink physicalLink, DoublePoint point)
 	{
 		CreatePhysicalNodeCommandAtomic cmd = new CreatePhysicalNodeCommandAtomic(physicalLink, point);
-		cmd.setLogicalNetLayer(logicalNetLayer);
+		cmd.setLogicalNetLayer(this.logicalNetLayer);
 		cmd.execute();
 		add(cmd);
 		return cmd.getNode();
@@ -123,7 +116,7 @@ public class MapActionCommandBundle extends CommandBundle
 			AbstractNode endNode)
 	{
 		CreateNodeLinkCommandAtomic cmd = new CreateNodeLinkCommandAtomic(physicalLink, startNode, endNode);
-		cmd.setLogicalNetLayer(logicalNetLayer);
+		cmd.setLogicalNetLayer(this.logicalNetLayer);
 		cmd.execute();
 		add(cmd);
 		return cmd.getNodeLink();
@@ -137,7 +130,7 @@ public class MapActionCommandBundle extends CommandBundle
 			AbstractNode endNode)
 	{
 		CreatePhysicalLinkCommandAtomic cmd = new CreatePhysicalLinkCommandAtomic(startNode, endNode);
-		cmd.setLogicalNetLayer(logicalNetLayer);
+		cmd.setLogicalNetLayer(this.logicalNetLayer);
 		cmd.execute();
 		add(cmd);
 		return cmd.getLink();
@@ -152,7 +145,7 @@ public class MapActionCommandBundle extends CommandBundle
 			AbstractNode endNode)
 	{
 		CreateCablePathCommandAtomic cmd = new CreateCablePathCommandAtomic(scl, startNode, endNode);
-		cmd.setLogicalNetLayer(logicalNetLayer);
+		cmd.setLogicalNetLayer(this.logicalNetLayer);
 		cmd.execute();
 		add(cmd);
 		return cmd.getPath();
@@ -164,7 +157,7 @@ public class MapActionCommandBundle extends CommandBundle
 	protected void removeCablePath(CablePath mcpe)
 	{
 		RemoveCablePathCommandAtomic cmd = new RemoveCablePathCommandAtomic(mcpe);
-		cmd.setLogicalNetLayer(logicalNetLayer);
+		cmd.setLogicalNetLayer(this.logicalNetLayer);
 		cmd.execute();
 		add(cmd);
 	}
@@ -176,7 +169,7 @@ public class MapActionCommandBundle extends CommandBundle
 			SchemePath path)
 	{
 		CreateMeasurementPathCommandAtomic cmd = new CreateMeasurementPathCommandAtomic(path);
-		cmd.setLogicalNetLayer(logicalNetLayer);
+		cmd.setLogicalNetLayer(this.logicalNetLayer);
 		cmd.execute();
 		add(cmd);
 		return cmd.getPath();
@@ -188,7 +181,7 @@ public class MapActionCommandBundle extends CommandBundle
 	protected void removeMeasurementPath(MeasurementPath mpe)
 	{
 		RemoveMeasurementPathCommandAtomic cmd = new RemoveMeasurementPathCommandAtomic(mpe);
-		cmd.setLogicalNetLayer(logicalNetLayer);
+		cmd.setLogicalNetLayer(this.logicalNetLayer);
 		cmd.execute();
 		add(cmd);
 	}
@@ -201,7 +194,7 @@ public class MapActionCommandBundle extends CommandBundle
 			AbstractNode endNode)
 	{
 		CreateUnboundLinkCommandAtomic cmd = new CreateUnboundLinkCommandAtomic(startNode, endNode);
-		cmd.setLogicalNetLayer(logicalNetLayer);
+		cmd.setLogicalNetLayer(this.logicalNetLayer);
 		cmd.execute();
 		add(cmd);
 		return cmd.getLink();
@@ -230,7 +223,7 @@ public class MapActionCommandBundle extends CommandBundle
 	protected void removePhysicalLink(PhysicalLink mple)
 	{
 		RemovePhysicalLinkCommandAtomic cmd = new RemovePhysicalLinkCommandAtomic(mple);
-		cmd.setLogicalNetLayer(logicalNetLayer);
+		cmd.setLogicalNetLayer(this.logicalNetLayer);
 		cmd.execute();
 		add(cmd);
 	}
@@ -241,7 +234,7 @@ public class MapActionCommandBundle extends CommandBundle
 	protected void removeNodeLink(NodeLink mple)
 	{
 		RemoveNodeLinkCommandAtomic cmd = new RemoveNodeLinkCommandAtomic(mple);
-		cmd.setLogicalNetLayer(logicalNetLayer);
+		cmd.setLogicalNetLayer(this.logicalNetLayer);
 		cmd.execute();
 		add(cmd);
 	}
@@ -252,7 +245,7 @@ public class MapActionCommandBundle extends CommandBundle
 	protected void removeNode(AbstractNode mne)
 	{
 		RemoveNodeCommandAtomic cmd = new RemoveNodeCommandAtomic(mne);
-		cmd.setLogicalNetLayer(logicalNetLayer);
+		cmd.setLogicalNetLayer(this.logicalNetLayer);
 		cmd.execute();
 		add(cmd);
 	}
@@ -263,7 +256,7 @@ public class MapActionCommandBundle extends CommandBundle
 	protected void changePhysicalNodeActivity(TopologicalNode mpne, boolean active)
 	{
 		ChangePhysicalNodeActivityCommandAtomic cmd = new ChangePhysicalNodeActivityCommandAtomic(mpne, active);
-		cmd.setLogicalNetLayer(logicalNetLayer);
+		cmd.setLogicalNetLayer(this.logicalNetLayer);
 		cmd.execute();
 		add(cmd);
 	}
@@ -274,7 +267,7 @@ public class MapActionCommandBundle extends CommandBundle
 	protected void registerStateChange(MapElement me, MapElementState initialState, MapElementState finalState)
 	{
 		MapElementStateChangeCommand cmd = new MapElementStateChangeCommand(me, initialState, finalState);
-		cmd.setLogicalNetLayer(logicalNetLayer);
+		cmd.setLogicalNetLayer(this.logicalNetLayer);
 		add(cmd);
 	}
 
@@ -342,7 +335,7 @@ public class MapActionCommandBundle extends CommandBundle
 	 * @param registerStateChange
 	 * @param firstConditionalNodeExit
 	 * @param secondConditionalNodeExit
-	 * @return 
+	 * @return узел
 	 */
 	protected AbstractNode moveNodeLinks(
 		PhysicalLink link, 

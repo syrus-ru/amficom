@@ -1,5 +1,5 @@
 /**
- * $Id: CreateUnboundLinkCommandAtomic.java,v 1.9 2005/02/02 08:58:39 krupenn Exp $
+ * $Id: CreateUnboundLinkCommandAtomic.java,v 1.10 2005/02/08 15:11:09 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -12,27 +12,17 @@
 package com.syrus.AMFICOM.Client.Map.Command.Action;
 
 import com.syrus.AMFICOM.Client.General.Model.Environment;
-import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.IdentifierPool;
-import com.syrus.AMFICOM.general.IllegalObjectEntityException;
-import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.AbstractNode;
-import com.syrus.AMFICOM.map.PhysicalLink;
+import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.mapview.UnboundLink;
-import com.syrus.AMFICOM.Client.Resource.Pool;
 
 /**
  * создание непривязанной линии, внесение ее в пул и на карту - 
  * атомарное действие 
- * 
- * 
- * 
- * @version $Revision: 1.9 $, $Date: 2005/02/02 08:58:39 $
- * @module
  * @author $Author: krupenn $
- * @see
+ * @version $Revision: 1.10 $, $Date: 2005/02/08 15:11:09 $
+ * @module mapviewclient_v1
  */
 public class CreateUnboundLinkCommandAtomic extends MapActionCommand
 {
@@ -54,7 +44,7 @@ public class CreateUnboundLinkCommandAtomic extends MapActionCommand
 	
 	public UnboundLink getLink()
 	{
-		return link;
+		return this.link;
 	}
 	
 	public void execute()
@@ -65,18 +55,18 @@ public class CreateUnboundLinkCommandAtomic extends MapActionCommand
 				getClass().getName(), 
 				"execute()");
 
-		map = logicalNetLayer.getMapView().getMap();
+		this.map = this.logicalNetLayer.getMapView().getMap();
 		
 		try
 		{
-			link = com.syrus.AMFICOM.mapview.UnboundLink.createInstance(
-					logicalNetLayer.getUserId(),
-					startNode, 
-					endNode, 
-					map,
-					logicalNetLayer.getUnboundPen());
+			this.link = UnboundLink.createInstance(
+					this.logicalNetLayer.getUserId(),
+					this.startNode, 
+					this.endNode, 
+					this.map,
+					this.logicalNetLayer.getUnboundPen());
 	
-			map.addPhysicalLink(link);
+			this.map.addPhysicalLink(this.link);
 		}
 		catch (ApplicationException e)
 		{

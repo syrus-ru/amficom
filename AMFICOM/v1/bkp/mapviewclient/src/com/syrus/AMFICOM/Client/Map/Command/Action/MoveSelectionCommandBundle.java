@@ -1,5 +1,5 @@
 /**
- * $Id: MoveSelectionCommandBundle.java,v 1.6 2004/12/22 16:38:40 krupenn Exp $
+ * $Id: MoveSelectionCommandBundle.java,v 1.7 2005/02/08 15:11:09 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,28 +11,21 @@
 
 package com.syrus.AMFICOM.Client.Map.Command.Action;
 
+import java.awt.Point;
+import java.util.Iterator;
+
 import com.syrus.AMFICOM.Client.General.Event.MapEvent;
 import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
+import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.DoublePoint;
 import com.syrus.AMFICOM.map.Mark;
-import com.syrus.AMFICOM.map.AbstractNode;
-
-import java.awt.Point;
-import java.awt.geom.Point2D;
-
-import java.util.Iterator;
-import com.syrus.AMFICOM.map.Map;
 
 /**
  * Перемещение объектов по карте. Команда является пучком команд 
  * (CommandBundle), передвгающих отдельные элементы.
- * 
- * 
- * 
- * @version $Revision: 1.6 $, $Date: 2004/12/22 16:38:40 $
- * @module
  * @author $Author: krupenn $
- * @see
+ * @version $Revision: 1.7 $, $Date: 2005/02/08 15:11:09 $
+ * @module mapviewclient_v1
  */
 public class MoveSelectionCommandBundle extends MapActionCommandBundle
 {
@@ -67,7 +60,7 @@ public class MoveSelectionCommandBundle extends MapActionCommandBundle
 
 	public MoveSelectionCommandBundle(Point point)
 	{
-		startPoint = point;
+		this.startPoint = point;
 	}
 
 	public MoveSelectionCommandBundle(LogicalNetLayer logicalNetLayer)
@@ -84,33 +77,33 @@ public class MoveSelectionCommandBundle extends MapActionCommandBundle
 	{
 		if(field.equals(DELTA_X))
 		{
-			deltaX = Double.parseDouble((String )value);
+			this.deltaX = Double.parseDouble((String )value);
 			super.setParameter(field, value);
 		}
 		else
 		if(field.equals(DELTA_Y))
 		{
-			deltaY = Double.parseDouble((String )value);
+			this.deltaY = Double.parseDouble((String )value);
 			super.setParameter(field, value);
 		}
 		else
 		if(field.equals(START_POINT))
 		{
-			startPoint = (Point )value;
-			endPoint = (Point )value;
+			this.startPoint = (Point )value;
+			this.endPoint = (Point )value;
 			//пересчитать смещение
 			this.setShift();
-			super.setParameter(DELTA_X, String.valueOf(deltaX));
-			super.setParameter(DELTA_Y, String.valueOf(deltaY));
+			super.setParameter(DELTA_X, String.valueOf(this.deltaX));
+			super.setParameter(DELTA_Y, String.valueOf(this.deltaY));
 		}
 		else
 		if(field.equals(END_POINT))
 		{
-			endPoint = (Point )value;
+			this.endPoint = (Point )value;
 			//пересчитать смещение
 			this.setShift();
-			super.setParameter(DELTA_X, String.valueOf(deltaX));
-			super.setParameter(DELTA_Y, String.valueOf(deltaY));
+			super.setParameter(DELTA_X, String.valueOf(this.deltaX));
+			super.setParameter(DELTA_Y, String.valueOf(this.deltaY));
 		}
 			
 	}
@@ -132,10 +125,10 @@ public class MoveSelectionCommandBundle extends MapActionCommandBundle
 	 */
 	protected void setShift()
 	{
-		DoublePoint sp = logicalNetLayer.convertScreenToMap(startPoint);
-		DoublePoint ep = logicalNetLayer.convertScreenToMap(endPoint);
-		deltaX = ep.getX() - sp.getX();
-		deltaY = ep.getY() - sp.getY();
+		DoublePoint sp = this.logicalNetLayer.convertScreenToMap(this.startPoint);
+		DoublePoint ep = this.logicalNetLayer.convertScreenToMap(this.endPoint);
+		this.deltaX = ep.getX() - sp.getX();
+		this.deltaY = ep.getY() - sp.getY();
 	}
 	
 	/**
@@ -144,7 +137,7 @@ public class MoveSelectionCommandBundle extends MapActionCommandBundle
 	 */
 	protected void setElements()
 	{
-		Iterator e = logicalNetLayer.getMapView().getMap().getNodes().iterator();
+		Iterator e = this.logicalNetLayer.getMapView().getMap().getNodes().iterator();
 
 		while (e.hasNext() )
 		{
@@ -164,6 +157,6 @@ public class MoveSelectionCommandBundle extends MapActionCommandBundle
 	public void execute()
 	{
 		super.execute();
-		logicalNetLayer.sendMapEvent(new MapEvent(this, MapEvent.MAP_CHANGED));
+		this.logicalNetLayer.sendMapEvent(new MapEvent(this, MapEvent.MAP_CHANGED));
 	}
 }

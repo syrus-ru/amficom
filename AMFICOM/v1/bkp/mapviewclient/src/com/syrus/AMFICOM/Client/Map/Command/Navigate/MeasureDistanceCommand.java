@@ -1,5 +1,5 @@
 /**
- * $Id: MeasureDistanceCommand.java,v 1.4 2004/11/16 17:31:17 krupenn Exp $
+ * $Id: MeasureDistanceCommand.java,v 1.5 2005/02/08 15:11:10 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -21,13 +21,9 @@ import java.awt.Cursor;
 
 /**
  * Команда включения/выключения масштабирования по выбранной области 
- * 
- * 
- * 
- * @version $Revision: 1.4 $, $Date: 2004/11/16 17:31:17 $
- * @module
  * @author $Author: krupenn $
- * @see
+ * @version $Revision: 1.5 $, $Date: 2005/02/08 15:11:10 $
+ * @module mapviewclient_v1
  */
 public class MeasureDistanceCommand extends VoidCommand
 {
@@ -42,36 +38,36 @@ public class MeasureDistanceCommand extends VoidCommand
 	public void setParameter(String field, Object value)
 	{
 		if(field.equals("logicalNetLayer"))
-			logicalNetLayer = (LogicalNetLayer )value;
+			this.logicalNetLayer = (LogicalNetLayer )value;
 		if(field.equals("applicationModel"))
-			aModel = (ApplicationModel )value;
+			this.aModel = (ApplicationModel )value;
 	}
 
 	public void execute()
 	{
-		if(aModel.isSelected(MapApplicationModel.OPERATION_MEASURE_DISTANCE))
+		if(this.aModel.isSelected(MapApplicationModel.OPERATION_MEASURE_DISTANCE))
 		{
-			logicalNetLayer.getMapState().setActionMode(MapState.NULL_ACTION_MODE);
-			logicalNetLayer.getMapState().setOperationMode(MapState.NO_OPERATION);
-			logicalNetLayer.setCursor(Cursor.getDefaultCursor());
+			this.logicalNetLayer.getMapState().setActionMode(MapState.NULL_ACTION_MODE);
+			this.logicalNetLayer.getMapState().setOperationMode(MapState.NO_OPERATION);
+			this.logicalNetLayer.setCursor(Cursor.getDefaultCursor());
 
-			aModel.setSelected(MapApplicationModel.OPERATION_MEASURE_DISTANCE, false);
-			aModel.fireModelChanged();
+			this.aModel.setSelected(MapApplicationModel.OPERATION_MEASURE_DISTANCE, false);
+			this.aModel.fireModelChanged();
 		}
 		else
-		if(!aModel.isSelected(MapApplicationModel.OPERATION_MEASURE_DISTANCE))
+		if(!this.aModel.isSelected(MapApplicationModel.OPERATION_MEASURE_DISTANCE))
 		{
-			aModel.setSelected(MapApplicationModel.OPERATION_MEASURE_DISTANCE, true);
+			this.aModel.setSelected(MapApplicationModel.OPERATION_MEASURE_DISTANCE, true);
 
-			aModel.setSelected(MapApplicationModel.OPERATION_ZOOM_BOX, false);
-			aModel.setSelected(MapApplicationModel.OPERATION_MOVE_TO_CENTER, false);
-			aModel.setSelected(MapApplicationModel.OPERATION_ZOOM_TO_POINT, false);
-			aModel.setSelected(MapApplicationModel.OPERATION_HAND_PAN, false);
-			aModel.setSelected(MapApplicationModel.OPERATION_MOVE_FIXED, false);
-			aModel.fireModelChanged();
+			this.aModel.setSelected(MapApplicationModel.OPERATION_ZOOM_BOX, false);
+			this.aModel.setSelected(MapApplicationModel.OPERATION_MOVE_TO_CENTER, false);
+			this.aModel.setSelected(MapApplicationModel.OPERATION_ZOOM_TO_POINT, false);
+			this.aModel.setSelected(MapApplicationModel.OPERATION_HAND_PAN, false);
+			this.aModel.setSelected(MapApplicationModel.OPERATION_MOVE_FIXED, false);
+			this.aModel.fireModelChanged();
 
-			logicalNetLayer.getMapState().setOperationMode(MapState.MEASURE_DISTANCE);
-			logicalNetLayer.setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
+			this.logicalNetLayer.getMapState().setOperationMode(MapState.MEASURE_DISTANCE);
+			this.logicalNetLayer.setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
 		}
 	}
 }

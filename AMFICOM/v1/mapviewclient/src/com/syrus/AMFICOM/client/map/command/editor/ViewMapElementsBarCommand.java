@@ -1,5 +1,5 @@
 /**
- * $Id: ViewMapElementsBarCommand.java,v 1.8 2005/01/21 13:49:27 krupenn Exp $
+ * $Id: ViewMapElementsBarCommand.java,v 1.9 2005/02/08 15:11:10 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -20,27 +20,20 @@ import com.syrus.AMFICOM.Client.Map.UI.MapElementsBarFrame;
 import java.awt.Dimension;
 
 import javax.swing.JDesktopPane;
+import javax.swing.JLayeredPane;
 
 /**
  * Команда отображает окно компонентов карты (протоэлементов), используемых 
  * для рисования карты
- * 
- * 
- * 
- * @version $Revision: 1.8 $, $Date: 2005/01/21 13:49:27 $
- * @module
  * @author $Author: krupenn $
- * @see
+ * @version $Revision: 1.9 $, $Date: 2005/02/08 15:11:10 $
+ * @module mapviewclient_v1
  */
 public class ViewMapElementsBarCommand extends VoidCommand
 {
 	public ApplicationContext aContext;
 	public JDesktopPane desktop;
 	public MapElementsBarFrame frame;
-
-	public ViewMapElementsBarCommand()
-	{
-	}
 
 	public ViewMapElementsBarCommand(JDesktopPane desktop, ApplicationContext aContext)
 	{
@@ -50,26 +43,26 @@ public class ViewMapElementsBarCommand extends VoidCommand
 
 	public void execute()
 	{
-		if(aContext.getDataSource() == null)
+		if(this.aContext.getDataSource() == null)
 			return;
 
 /**todo*/		
 //		new MapDataSourceImage(aContext.getDataSource()).loadProtoElements();
 			
-		frame = MapDesktopCommand.findMapElementsBarFrame(desktop);
+		this.frame = MapDesktopCommand.findMapElementsBarFrame(this.desktop);
 
-		if(frame == null)
+		if(this.frame == null)
 		{
-			frame = new MapElementsBarFrame(aContext);
+			this.frame = new MapElementsBarFrame(this.aContext);
 
-			desktop.add(frame, JDesktopPane.PALETTE_LAYER);
+			this.desktop.add(this.frame, JLayeredPane.PALETTE_LAYER);
 
-			Dimension dim = new Dimension(desktop.getWidth(), desktop.getHeight());
-			frame.setLocation(0, dim.height * 7 / 8);
-			frame.setSize(dim.width * 4 / 5, dim.height / 8);
+			Dimension dim = new Dimension(this.desktop.getWidth(), this.desktop.getHeight());
+			this.frame.setLocation(0, dim.height * 7 / 8);
+			this.frame.setSize(dim.width * 4 / 5, dim.height / 8);
 		}
 
-		frame.setVisible(true);
+		this.frame.setVisible(true);
 		setResult(Command.RESULT_OK);
 	}
 

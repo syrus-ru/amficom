@@ -1,5 +1,5 @@
 /**
- * $Id: CreateSiteCommandAtomic.java,v 1.10 2005/02/02 09:05:10 krupenn Exp $
+ * $Id: CreateSiteCommandAtomic.java,v 1.11 2005/02/08 15:11:09 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -10,32 +10,26 @@
 
 package com.syrus.AMFICOM.Client.Map.Command.Action;
 
+import java.awt.Point;
+
 import com.syrus.AMFICOM.Client.General.Event.MapEvent;
 import com.syrus.AMFICOM.Client.General.Event.MapNavigateEvent;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.General.Model.MapApplicationModel;
-import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
+import com.syrus.AMFICOM.Client.Map.Controllers.SiteNodeController;
 import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.map.DoublePoint;
 import com.syrus.AMFICOM.map.Map;
-import com.syrus.AMFICOM.map.SiteNodeType;
 import com.syrus.AMFICOM.map.SiteNode;
-import com.syrus.AMFICOM.Client.Map.Controllers.SiteNodeController;
-import com.syrus.AMFICOM.Client.Resource.Pool;
-
-import java.awt.Point;
-import java.awt.geom.Point2D;
-import com.syrus.AMFICOM.Client.Map.Controllers.MapViewController;
+import com.syrus.AMFICOM.map.SiteNodeType;
 
 /**
  * –азместить сетевой элемент на карте. используетс€ при переносе 
  * (drag/drop), в точке point (в экранных координатах)
  * 
- * @version $Revision: 1.10 $, $Date: 2005/02/02 09:05:10 $
- * @module map_v2
  * @author $Author: krupenn $
- * @see
+ * @version $Revision: 1.11 $, $Date: 2005/02/08 15:11:09 $
+ * @module mapviewclient_v1
  */
 public class CreateSiteCommandAtomic extends MapActionCommand
 {
@@ -80,7 +74,7 @@ public class CreateSiteCommandAtomic extends MapActionCommand
 
 	public SiteNode getSite()
 	{
-		return site;
+		return this.site;
 	}
 
 	public void execute()
@@ -95,47 +89,47 @@ public class CreateSiteCommandAtomic extends MapActionCommand
 				.isEnabled(MapApplicationModel.ACTION_EDIT_MAP))
 			return;
 		
-		if(coordinatePoint == null)
-			coordinatePoint = logicalNetLayer.convertScreenToMap(point);
+		if(this.coordinatePoint == null)
+			this.coordinatePoint = this.logicalNetLayer.convertScreenToMap(this.point);
 		
-		map = logicalNetLayer.getMapView().getMap();
+		this.map = this.logicalNetLayer.getMapView().getMap();
 
 		// создать новый узел
 		try
 		{
-			site = SiteNode.createInstance(
-					logicalNetLayer.getUserId(),
-					coordinatePoint,
-					proto);
+			this.site = SiteNode.createInstance(
+					this.logicalNetLayer.getUserId(),
+					this.coordinatePoint,
+					this.proto);
 		}
 		catch (CreateObjectException e)
 		{
 			e.printStackTrace();
 		}
 
-		SiteNodeController snc = (SiteNodeController)getLogicalNetLayer().getMapViewController().getController(site);
+		SiteNodeController snc = (SiteNodeController)getLogicalNetLayer().getMapViewController().getController(this.site);
 		
-		snc.updateScaleCoefficient(site);
+		snc.updateScaleCoefficient(this.site);
 
-		map.addNode(site);
+		this.map.addNode(this.site);
 		
 		// операци€ закончена - оповестить слушателей
-		logicalNetLayer.sendMapEvent(new MapEvent(this, MapEvent.MAP_CHANGED));
-		logicalNetLayer.sendMapEvent(new MapNavigateEvent(
-					site, 
+		this.logicalNetLayer.sendMapEvent(new MapEvent(this, MapEvent.MAP_CHANGED));
+		this.logicalNetLayer.sendMapEvent(new MapNavigateEvent(
+					this.site, 
 					MapNavigateEvent.MAP_ELEMENT_SELECTED_EVENT));
-		logicalNetLayer.setCurrentMapElement(site);
-		logicalNetLayer.notifySchemeEvent(site);
+		this.logicalNetLayer.setCurrentMapElement(this.site);
+		this.logicalNetLayer.notifySchemeEvent(this.site);
 
 	}
 	
 	public void undo()
 	{
-		map.removeNode(site);
+		this.map.removeNode(this.site);
 	}
 	
 	public void redo()
 	{
-		map.addNode(site);
+		this.map.addNode(this.site);
 	}
 }

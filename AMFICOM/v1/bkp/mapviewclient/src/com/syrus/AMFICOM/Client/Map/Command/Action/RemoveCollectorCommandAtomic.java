@@ -1,5 +1,5 @@
 /**
- * $Id: RemoveCollectorCommandAtomic.java,v 1.4 2004/12/22 16:38:40 krupenn Exp $
+ * $Id: RemoveCollectorCommandAtomic.java,v 1.5 2005/02/08 15:11:09 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -13,18 +13,12 @@ package com.syrus.AMFICOM.Client.Map.Command.Action;
 
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.map.Collector;
-import com.syrus.AMFICOM.Client.Resource.Pool;
-import com.syrus.AMFICOM.map.Map;
 
 /**
  * удаление коллектора из карты - атомарное действие 
- * 
- * 
- * 
- * @version $Revision: 1.4 $, $Date: 2004/12/22 16:38:40 $
- * @module
  * @author $Author: krupenn $
- * @see
+ * @version $Revision: 1.5 $, $Date: 2005/02/08 15:11:09 $
+ * @module mapviewclient_v1
  */
 public class RemoveCollectorCommandAtomic extends MapActionCommand
 {
@@ -38,7 +32,7 @@ public class RemoveCollectorCommandAtomic extends MapActionCommand
 	
 	public Collector getCollector()
 	{
-		return collector;
+		return this.collector;
 	}
 	
 	public void execute()
@@ -49,17 +43,17 @@ public class RemoveCollectorCommandAtomic extends MapActionCommand
 				getClass().getName(), 
 				"execute()");
 
-		logicalNetLayer.getMapView().getMap().removeCollector(collector);
+		this.logicalNetLayer.getMapView().getMap().removeCollector(this.collector);
 	}
 	
 	public void redo()
 	{
-		logicalNetLayer.getMapView().getMap().removeCollector(collector);
+		this.logicalNetLayer.getMapView().getMap().removeCollector(this.collector);
 	}
 	
 	public void undo()
 	{
-		logicalNetLayer.getMapView().getMap().addCollector(collector);
+		this.logicalNetLayer.getMapView().getMap().addCollector(this.collector);
 	}
 }
 

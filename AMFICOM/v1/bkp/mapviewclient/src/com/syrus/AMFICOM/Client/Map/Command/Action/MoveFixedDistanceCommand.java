@@ -1,5 +1,5 @@
 /**
- * $Id: MoveFixedDistanceCommand.java,v 1.5 2004/12/23 16:57:59 krupenn Exp $
+ * $Id: MoveFixedDistanceCommand.java,v 1.6 2005/02/08 15:11:09 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,24 +11,19 @@
 
 package com.syrus.AMFICOM.Client.Map.Command.Action;
 
-import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
-
-import com.syrus.AMFICOM.map.DoublePoint;
-import com.syrus.AMFICOM.map.AbstractNode;
 import java.awt.Point;
-import java.awt.geom.Point2D;
+
+import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
+import com.syrus.AMFICOM.map.AbstractNode;
+import com.syrus.AMFICOM.map.DoublePoint;
 
 /**
  * Команда позволяет перемещать топологический узел вокруг другого
  * топологического узла, связанного с ним фрагментом линии, при сохранении
  * длины фрагмента
- * 
- * 
- * 
- * @version $Revision: 1.5 $, $Date: 2004/12/23 16:57:59 $
- * @module
  * @author $Author: krupenn $
- * @see
+ * @version $Revision: 1.6 $, $Date: 2005/02/08 15:11:09 $
+ * @module mapviewclient_v1
  */
 public class MoveFixedDistanceCommand extends MoveSelectionCommandBundle
 {
@@ -38,8 +33,8 @@ public class MoveFixedDistanceCommand extends MoveSelectionCommandBundle
 	DoublePoint projectedPoint;
 	double fixedDistance;
 	
-	Point fp;
-	double fd;
+	Point fixedScreenPoint;
+	double fixedScreenDistance;
 
 	public MoveFixedDistanceCommand(Point point, AbstractNode fixedNode, AbstractNode movedNode)
 	{
@@ -47,24 +42,29 @@ public class MoveFixedDistanceCommand extends MoveSelectionCommandBundle
 		this.fixedNode = fixedNode;
 		this.movedNode = movedNode;
 
-		fixedPoint = fixedNode.getLocation();
+		this.fixedPoint = fixedNode.getLocation();
 
-		double fx = fixedNode.getLocation().getX();
-		double fy = fixedNode.getLocation().getY();
-		double mx = movedNode.getLocation().getX();
-		double my = movedNode.getLocation().getY();
+		double fixedX = fixedNode.getLocation().getX();
+		double fixedY = fixedNode.getLocation().getY();
+		double movedX = movedNode.getLocation().getX();
+		double movedY = movedNode.getLocation().getY();
 
-		fixedDistance = Math.sqrt((mx - fx) * (mx - fx) + (my - fy) * (my - fy));
+		this.fixedDistance = Math.sqrt((movedX - fixedX) * (movedX - fixedX) 
+				+ (movedY - fixedY) * (movedY - fixedY));
 	}
 
 	public void setLogicalNetLayer(LogicalNetLayer logicalNetLayer)
 	{
 		super.setLogicalNetLayer(logicalNetLayer);
 
-		fp = logicalNetLayer.convertMapToScreen(fixedNode.getLocation());
-		Point ep = logicalNetLayer.convertMapToScreen(movedNode.getLocation());
+		this.fixedScreenPoint = logicalNetLayer.convertMapToScreen(this.fixedNode.getLocation());
+		Point movedScreenPoint = logicalNetLayer.convertMapToScreen(this.movedNode.getLocation());
 		
-		fd = Math.sqrt((ep.x - fp.x) * (ep.x - fp.x) + (ep.y - fp.y) * (ep.y - fp.y));
+		this.fixedScreenDistance = Math.sqrt(
+				(movedScreenPoint.x - this.fixedScreenPoint.x) 
+					* (movedScreenPoint.x - this.fixedScreenPoint.x) 
+				+ (movedScreenPoint.y - this.fixedScreenPoint.y) 
+					* (movedScreenPoint.y - this.fixedScreenPoint.y));
 	}
 
 	public MoveFixedDistanceCommand(LogicalNetLayer logicalNetLayer)
@@ -78,7 +78,7 @@ public class MoveFixedDistanceCommand extends MoveSelectionCommandBundle
 	 */
 	protected void setElements()
 	{
-		super.add(new MoveNodeCommand(movedNode));
+		super.add(new MoveNodeCommand(this.movedNode));
 	}
 	
 	/**
@@ -87,41 +87,24 @@ public class MoveFixedDistanceCommand extends MoveSelectionCommandBundle
 	protected void setShift()
 	{
 		double dist1 = Math.sqrt( 
-			(endPoint.x - fp.x) * (endPoint.x - fp.x) +
-			(endPoint.y - fp.y) * (endPoint.y - fp.y) );
+			(super.endPoint.x - this.fixedScreenPoint.x) 
+				* (super.endPoint.x - this.fixedScreenPoint.x) 
+			+ (super.endPoint.y - this.fixedScreenPoint.y) 
+				* (super.endPoint.y - this.fixedScreenPoint.y) );
 
-		double sinB1 = (endPoint.y - fp.y) / dist1;
+		double sinB1 = (super.endPoint.y - this.fixedScreenPoint.y) / dist1;
 
-		double cosB1 = (endPoint.x - fp.x) / dist1;
+		double cosB1 = (super.endPoint.x - this.fixedScreenPoint.x) / dist1;
 
-		Point targetp1 = new Point(
-			(int )(fp.x + cosB1 * fd),
-			(int )(fp.y + sinB1 * fd));
+		Point targetScreenPoint = new Point(
+			(int )(this.fixedScreenPoint.x + cosB1 * this.fixedScreenDistance),
+			(int )(this.fixedScreenPoint.y + sinB1 * this.fixedScreenDistance));
 
-		DoublePoint tp = logicalNetLayer.convertScreenToMap(targetp1);
-		DoublePoint sp = logicalNetLayer.convertScreenToMap(startPoint);
+		DoublePoint targetMapPoint = this.logicalNetLayer.convertScreenToMap(targetScreenPoint);
+		DoublePoint startMapPoint = this.logicalNetLayer.convertScreenToMap(super.startPoint);
 
-		super.deltaX = tp.getX() - sp.getX();
-		super.deltaY = tp.getY() - sp.getY();
-/*
-		Point2D.Double sp = logicalNetLayer.convertScreenToMap(startPoint);
-		Point2D.Double ep = logicalNetLayer.convertScreenToMap(endPoint);
-
-		double dist = Math.sqrt( 
-			(ep.x - fixedPoint.x) * (ep.x - fixedPoint.x) +
-			(ep.y - fixedPoint.y) * (ep.y - fixedPoint.y) );
-
-		double sinB = (ep.y - fixedPoint.y) / dist;
-
-		double cosB = (ep.x - fixedPoint.x) / dist;
-		
-		Point2D.Double targetp = new Point2D.Double(
-			fixedPoint.x + cosB * fixedDistance,
-			fixedPoint.y + sinB * fixedDistance);
-
-		super.deltaX = targetp.getX() - sp.getX();
-		super.deltaY = targetp.getY() - sp.getY();
-*/
+		super.deltaX = targetMapPoint.getX() - startMapPoint.getX();
+		super.deltaY = targetMapPoint.getY() - startMapPoint.getY();
 	}
 	
 }

@@ -1,5 +1,5 @@
 /**
- * $Id: CreateCollectorCommandAtomic.java,v 1.7 2005/02/02 09:05:10 krupenn Exp $
+ * $Id: CreateCollectorCommandAtomic.java,v 1.8 2005/02/08 15:11:09 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -12,23 +12,15 @@
 package com.syrus.AMFICOM.Client.Map.Command.Action;
 
 import com.syrus.AMFICOM.Client.General.Model.Environment;
-import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
 import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.map.Collector;
-import com.syrus.AMFICOM.Client.Resource.Pool;
-import com.syrus.AMFICOM.map.Map;
 
 /**
  * создание коллектора, внесение его в пул и на карту - 
  * атомарное действие 
- * 
- * 
- * 
- * @version $Revision: 1.7 $, $Date: 2005/02/02 09:05:10 $
- * @module
  * @author $Author: krupenn $
- * @see
+ * @version $Revision: 1.8 $, $Date: 2005/02/08 15:11:09 $
+ * @module mapviewclient_v1
  */
 public class CreateCollectorCommandAtomic extends MapActionCommand
 {
@@ -46,7 +38,7 @@ public class CreateCollectorCommandAtomic extends MapActionCommand
 	
 	public Collector getCollector()
 	{
-		return collector;
+		return this.collector;
 	}
 	
 	public void execute()
@@ -59,10 +51,10 @@ public class CreateCollectorCommandAtomic extends MapActionCommand
 		
 		try
 		{
-			collector = Collector.createInstance(
-					logicalNetLayer.getUserId(),
-					logicalNetLayer.getMapView().getMap(),
-					name,
+			this.collector = Collector.createInstance(
+					this.logicalNetLayer.getUserId(),
+					this.logicalNetLayer.getMapView().getMap(),
+					this.name,
 					"");
 		}
 		catch (CreateObjectException e)
@@ -70,17 +62,17 @@ public class CreateCollectorCommandAtomic extends MapActionCommand
 			e.printStackTrace();
 		}
 
-		logicalNetLayer.getMapView().getMap().addCollector(collector);
+		this.logicalNetLayer.getMapView().getMap().addCollector(this.collector);
 	}
 	
 	public void redo()
 	{
-		logicalNetLayer.getMapView().getMap().addCollector(collector);
+		this.logicalNetLayer.getMapView().getMap().addCollector(this.collector);
 	}
 	
 	public void undo()
 	{
-		logicalNetLayer.getMapView().getMap().removeCollector(collector);
+		this.logicalNetLayer.getMapView().getMap().removeCollector(this.collector);
 	}
 }
 

@@ -1,5 +1,5 @@
 /**
- * $Id: ZoomOutCommand.java,v 1.3 2005/01/12 15:45:53 krupenn Exp $
+ * $Id: ZoomOutCommand.java,v 1.4 2005/02/08 15:11:10 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -17,13 +17,9 @@ import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
 
 /**
  * Команда "Отдалить вид со стандартным коэффициентом" 
- * 
- * 
- * 
- * @version $Revision: 1.3 $, $Date: 2005/01/12 15:45:53 $
- * @module
  * @author $Author: krupenn $
- * @see
+ * @version $Revision: 1.4 $, $Date: 2005/02/08 15:11:10 $
+ * @module mapviewclient_v1
  */
 public class ZoomOutCommand extends VoidCommand
 {
@@ -38,14 +34,14 @@ public class ZoomOutCommand extends VoidCommand
 	public void setParameter(String field, Object value)
 	{
 		if(field.equals("logicalNetLayer"))
-			logicalNetLayer = (LogicalNetLayer )value;
+			this.logicalNetLayer = (LogicalNetLayer )value;
 		if(field.equals("applicationModel"))
-			aModel = (ApplicationModel )value;
+			this.aModel = (ApplicationModel )value;
 	}
 
 	public void execute()
 	{
-		logicalNetLayer.zoomOut();
-		logicalNetLayer.repaint(true);
+		this.logicalNetLayer.zoomOut();
+		this.logicalNetLayer.repaint(true);
 	}
 }

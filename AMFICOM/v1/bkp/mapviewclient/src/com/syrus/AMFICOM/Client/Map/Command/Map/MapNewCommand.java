@@ -1,5 +1,5 @@
 /**
- * $Id: MapNewCommand.java,v 1.14 2005/01/30 15:38:17 krupenn Exp $
+ * $Id: MapNewCommand.java,v 1.15 2005/02/08 15:11:10 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -18,34 +18,20 @@ import com.syrus.AMFICOM.Client.General.Lang.LangModel;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
-import com.syrus.AMFICOM.Client.Map.UI.MapFrame;
-import com.syrus.AMFICOM.general.CommunicationException;
-import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.map.Map;
-import com.syrus.AMFICOM.mapview.MapView;
-import com.syrus.AMFICOM.Client.Resource.Pool;
-import com.syrus.AMFICOM.map.MapStorableObjectPool;
 
 /**
  * создание новой карты (Map). включает в себ€ создание нового вида
- * 
- * 
- * 
- * @version $Revision: 1.14 $, $Date: 2005/01/30 15:38:17 $
- * @module
  * @author $Author: krupenn $
- * @see
+ * @version $Revision: 1.15 $, $Date: 2005/02/08 15:11:10 $
+ * @module mapviewclient_v1
  */
 public class MapNewCommand extends VoidCommand
 {
 	ApplicationContext aContext;
 
 	Map map;
-
-	public MapNewCommand()
-	{
-	}
 
 	public MapNewCommand(ApplicationContext aContext)
 	{
@@ -59,19 +45,19 @@ public class MapNewCommand extends VoidCommand
 //		new MapViewNewCommand(mapFrame, aContext).execute();
 
 		System.out.println("Creating new map context");
-		aContext.getDispatcher().notify(
+		this.aContext.getDispatcher().notify(
 				new StatusMessageEvent(
 						StatusMessageEvent.STATUS_MESSAGE,
 						LangModelMap.getString("MapNew")));
 		try
 		{
 			Identifier userId = new Identifier(
-				aContext.getSessionInterface().getAccessIdentifier().user_id);
+				this.aContext.getSessionInterface().getAccessIdentifier().user_id);
 	
 			Identifier domainId = new Identifier(
-				aContext.getSessionInterface().getAccessIdentifier().domain_id);
+				this.aContext.getSessionInterface().getAccessIdentifier().domain_id);
 	
-			map = Map.createInstance(
+			this.map = Map.createInstance(
 				userId,
 				domainId,
 				LangModelMap.getString("New"),
@@ -80,13 +66,13 @@ public class MapNewCommand extends VoidCommand
 		catch (Exception e)
 		{
 			e.printStackTrace();
-			map = null;
+			this.map = null;
 			setResult(Command.RESULT_NO);
 			return;
 		}
 
-		map.setDomainId(
-				new Identifier(aContext.getSessionInterface().getAccessIdentifier().domain_id));
+		this.map.setDomainId(
+				new Identifier(this.aContext.getSessionInterface().getAccessIdentifier().domain_id));
 
 //		if (mapFrame != null)
 //		{
@@ -111,7 +97,7 @@ public class MapNewCommand extends VoidCommand
 //			mapFrame.setMapView(mv);
 //			mapFrame.setTitle( LangModelMap.getString("Map") + " - " + mv.getName());
 //		}
-		aContext.getDispatcher().notify(new StatusMessageEvent(
+		this.aContext.getDispatcher().notify(new StatusMessageEvent(
 				StatusMessageEvent.STATUS_MESSAGE,
 				LangModel.getString("Finished")));
 		setResult(Command.RESULT_OK);
@@ -120,7 +106,7 @@ public class MapNewCommand extends VoidCommand
 
 	public Map getMap()
 	{
-		return map;
+		return this.map;
 	}
 
 }

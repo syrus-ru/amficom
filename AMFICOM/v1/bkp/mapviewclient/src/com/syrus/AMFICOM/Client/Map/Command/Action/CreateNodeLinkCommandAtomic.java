@@ -1,5 +1,5 @@
 /**
- * $Id: CreateNodeLinkCommandAtomic.java,v 1.8 2005/02/02 09:05:10 krupenn Exp $
+ * $Id: CreateNodeLinkCommandAtomic.java,v 1.9 2005/02/08 15:11:09 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -12,25 +12,17 @@
 package com.syrus.AMFICOM.Client.Map.Command.Action;
 
 import com.syrus.AMFICOM.Client.General.Model.Environment;
-import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
 import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.NodeLink;
-import com.syrus.AMFICOM.Client.Resource.Pool;
-import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.PhysicalLink;
 
 /**
  * создание фрагмента линии св€зи, внесение ее в пул и на карту - 
  * атомарное действие 
- * 
- * 
- * 
- * @version $Revision: 1.8 $, $Date: 2005/02/02 09:05:10 $
- * @module
  * @author $Author: krupenn $
- * @see
+ * @version $Revision: 1.9 $, $Date: 2005/02/08 15:11:09 $
+ * @module mapviewclient_v1
  */
 public class CreateNodeLinkCommandAtomic extends MapActionCommand
 {
@@ -56,7 +48,7 @@ public class CreateNodeLinkCommandAtomic extends MapActionCommand
 	
 	public NodeLink getNodeLink()
 	{
-		return nodeLink;
+		return this.nodeLink;
 	}
 	
 	public void execute()
@@ -69,28 +61,28 @@ public class CreateNodeLinkCommandAtomic extends MapActionCommand
 
 		try
 		{
-			nodeLink = NodeLink.createInstance(
-					logicalNetLayer.getUserId(),
-					physicalLink, 
-					startNode, 
-					endNode);
+			this.nodeLink = NodeLink.createInstance(
+					this.logicalNetLayer.getUserId(),
+					this.physicalLink, 
+					this.startNode, 
+					this.endNode);
 		}
 		catch (CreateObjectException e)
 		{
 			e.printStackTrace();
 		}
 
-		logicalNetLayer.getMapView().getMap().addNodeLink(nodeLink);
+		this.logicalNetLayer.getMapView().getMap().addNodeLink(this.nodeLink);
 	}
 	
 	public void redo()
 	{
-		logicalNetLayer.getMapView().getMap().addNodeLink(nodeLink);
+		this.logicalNetLayer.getMapView().getMap().addNodeLink(this.nodeLink);
 	}
 	
 	public void undo()
 	{
-		logicalNetLayer.getMapView().getMap().removeNodeLink(nodeLink);
+		this.logicalNetLayer.getMapView().getMap().removeNodeLink(this.nodeLink);
 	}
 }
 

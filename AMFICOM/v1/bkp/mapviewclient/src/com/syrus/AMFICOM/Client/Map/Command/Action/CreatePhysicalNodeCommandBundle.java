@@ -1,5 +1,5 @@
 /**
- * $Id: CreatePhysicalNodeCommandBundle.java,v 1.8 2004/12/24 15:42:11 krupenn Exp $
+ * $Id: CreatePhysicalNodeCommandBundle.java,v 1.9 2005/02/08 15:11:09 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -10,19 +10,18 @@
 
 package com.syrus.AMFICOM.Client.Map.Command.Action;
 
+import java.awt.Point;
+
 import com.syrus.AMFICOM.Client.General.Event.MapEvent;
 import com.syrus.AMFICOM.Client.General.Event.MapNavigateEvent;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
+import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.DoublePoint;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.MapElementState;
-import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.NodeLink;
 import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.map.TopologicalNode;
-
-import java.awt.Point;
-import java.awt.geom.Point2D;
 
 /**
  * В данном классе реализуется алгоритм добавления топологического узла на 
@@ -30,10 +29,9 @@ import java.awt.geom.Point2D;
  * два других фрагмента, разделенные новывм топологичсеским узлом. Команда
  * состоит из последовательности атомарных действий
  * 
- * @version $Revision: 1.8 $, $Date: 2004/12/24 15:42:11 $
- * @module map_v2
+ * @version $Revision: 1.9 $, $Date: 2005/02/08 15:11:09 $
+ * @module mapviewclient_v1
  * @author $Author: krupenn $
- * @see
  */
 public class CreatePhysicalNodeCommandBundle extends MapActionCommandBundle
 {
@@ -66,20 +64,20 @@ public class CreatePhysicalNodeCommandBundle extends MapActionCommandBundle
 				getClass().getName(), 
 				"execute()");
 		
-		DoublePoint coordinatePoint = logicalNetLayer.convertScreenToMap(point);
+		DoublePoint coordinatePoint = this.logicalNetLayer.convertScreenToMap(this.point);
 		
-		map = logicalNetLayer.getMapView().getMap();
+		this.map = this.logicalNetLayer.getMapView().getMap();
 
 		// получить линию связи, которой принадлежит фрагмент
-		PhysicalLink physicalLink = nodeLink.getPhysicalLink();
+		PhysicalLink physicalLink = this.nodeLink.getPhysicalLink();
 	
 		// создать новый активный топологический узел
 		TopologicalNode node = super.createPhysicalNode(physicalLink, coordinatePoint);
 		changePhysicalNodeActivity(node, true);
 
 		// взять начальный и конечный узлы фрагмента
-		AbstractNode startNode = nodeLink.getStartNode();
-		AbstractNode endNode = nodeLink.getEndNode();
+		AbstractNode startNode = this.nodeLink.getStartNode();
+		AbstractNode endNode = this.nodeLink.getEndNode();
 
 		// разбить фрагмент на две части - т.е. создать два новых фрагмента
 		NodeLink link1 = createNodeLink(physicalLink, startNode, node);
@@ -88,12 +86,12 @@ public class CreatePhysicalNodeCommandBundle extends MapActionCommandBundle
 		link2.setPhysicalLink(physicalLink);
 
 		// удаляется старый фрагмент с карты
-		removeNodeLink(nodeLink);	
+		removeNodeLink(this.nodeLink);	
 		
 		MapElementState pls = physicalLink.getState();
 
 		// удаляется старый фрагмент из линии
-		physicalLink.removeNodeLink(nodeLink);
+		physicalLink.removeNodeLink(this.nodeLink);
 		// добавляются два новых фрагмента
 		physicalLink.addNodeLink(link1);
 		physicalLink.addNodeLink(link2);
@@ -101,12 +99,12 @@ public class CreatePhysicalNodeCommandBundle extends MapActionCommandBundle
 		registerStateChange(physicalLink, pls, physicalLink.getState());
 
 		// операция закончена - оповестить слушателей
-		logicalNetLayer.sendMapEvent(new MapEvent(this, MapEvent.MAP_CHANGED));
-		logicalNetLayer.sendMapEvent(new MapNavigateEvent(
+		this.logicalNetLayer.sendMapEvent(new MapEvent(this, MapEvent.MAP_CHANGED));
+		this.logicalNetLayer.sendMapEvent(new MapNavigateEvent(
 					node, 
 					MapNavigateEvent.MAP_ELEMENT_SELECTED_EVENT));
-		logicalNetLayer.setCurrentMapElement(node);
-		logicalNetLayer.notifySchemeEvent(node);
+		this.logicalNetLayer.setCurrentMapElement(node);
+		this.logicalNetLayer.notifySchemeEvent(node);
 
 	}
 }

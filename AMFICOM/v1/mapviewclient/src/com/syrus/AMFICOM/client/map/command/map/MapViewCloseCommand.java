@@ -1,5 +1,5 @@
 /*
- * $Id: MapViewCloseCommand.java,v 1.8 2005/01/30 15:38:17 krupenn Exp $
+ * $Id: MapViewCloseCommand.java,v 1.9 2005/02/08 15:11:10 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -12,12 +12,9 @@ package com.syrus.AMFICOM.Client.Map.Command.Map;
 
 import com.syrus.AMFICOM.Client.General.Command.Command;
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
-import com.syrus.AMFICOM.Client.Map.UI.MapFrame;
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.DatabaseException;
-import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.mapview.MapView;
-import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.mapview.MapViewStorableObjectPool;
 
 /**
@@ -26,10 +23,9 @@ import com.syrus.AMFICOM.mapview.MapViewStorableObjectPool;
  * самого окна карты. При этом в азголовке окна отображается информация о том,
  * что активной карты нет, и карта центрируется по умолчанию
  * 
- * @version $Revision: 1.8 $, $Date: 2005/01/30 15:38:17 $
- * @module map_v2
  * @author $Author: krupenn $
- * @see
+ * @version $Revision: 1.9 $, $Date: 2005/02/08 15:11:10 $
+ * @module mapviewclient_v1
  */
 public class MapViewCloseCommand extends VoidCommand
 {
@@ -47,11 +43,11 @@ public class MapViewCloseCommand extends VoidCommand
 	{
 //		mapFrame.saveConfig();
 
-		if(mapView != null)
+		if(this.mapView != null)
 		try
 		{
 			// TODO should be 'remove', node 'delete'
-			MapViewStorableObjectPool.delete(mapView.getId());
+			MapViewStorableObjectPool.delete(this.mapView.getId());
 		}
 		catch (CommunicationException e)
 		{

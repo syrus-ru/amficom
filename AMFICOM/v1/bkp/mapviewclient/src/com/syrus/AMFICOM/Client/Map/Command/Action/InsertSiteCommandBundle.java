@@ -1,5 +1,5 @@
 /**
- * $Id: InsertSiteCommandBundle.java,v 1.10 2005/02/01 13:29:56 krupenn Exp $
+ * $Id: InsertSiteCommandBundle.java,v 1.11 2005/02/08 15:11:09 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -10,35 +10,32 @@
 
 package com.syrus.AMFICOM.Client.Map.Command.Action;
 
+import java.util.Iterator;
+
 import com.syrus.AMFICOM.Client.General.Event.MapEvent;
 import com.syrus.AMFICOM.Client.General.Event.MapNavigateEvent;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.General.Model.MapApplicationModel;
 import com.syrus.AMFICOM.Client.Map.Controllers.CableController;
+import com.syrus.AMFICOM.Client.Map.Controllers.SiteNodeController;
+import com.syrus.AMFICOM.map.Collector;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.MapElementState;
 import com.syrus.AMFICOM.map.NodeLink;
-import com.syrus.AMFICOM.map.SiteNodeType;
 import com.syrus.AMFICOM.map.PhysicalLink;
-import com.syrus.AMFICOM.map.TopologicalNode;
-import com.syrus.AMFICOM.map.Collector;
 import com.syrus.AMFICOM.map.SiteNode;
-import com.syrus.AMFICOM.Client.Map.Controllers.SiteNodeController;
+import com.syrus.AMFICOM.map.SiteNodeType;
+import com.syrus.AMFICOM.map.TopologicalNode;
 import com.syrus.AMFICOM.mapview.CablePath;
-import com.syrus.AMFICOM.mapview.UnboundLink;
 import com.syrus.AMFICOM.mapview.MapView;
-
-import java.util.Iterator;
-import com.syrus.AMFICOM.map.PhysicalLinkBinding;
-import com.syrus.AMFICOM.Client.Map.Controllers.MapViewController;
+import com.syrus.AMFICOM.mapview.UnboundLink;
 
 /**
  * вставить сетевой узел вместо топологического узла
  * 
- * @version $Revision: 1.10 $, $Date: 2005/02/01 13:29:56 $
- * @module map_v2
  * @author $Author: krupenn $
- * @see
+ * @version $Revision: 1.11 $, $Date: 2005/02/08 15:11:09 $
+ * @module mapviewclient_v1
  */
 public class InsertSiteCommandBundle extends MapActionCommandBundle
 {
@@ -90,142 +87,87 @@ public class InsertSiteCommandBundle extends MapActionCommandBundle
 				.isEnabled(MapApplicationModel.ACTION_EDIT_MAP))
 			return;
 		
-		map = logicalNetLayer.getMapView().getMap();
+		this.map = this.logicalNetLayer.getMapView().getMap();
 		
-		link = node.getPhysicalLink();
+		this.link = this.node.getPhysicalLink();
 		
 		// создать новый узел
-		site = super.createSite(
-				node.getLocation(),
-				proto);
-		site.setName(node.getName());
+		this.site = super.createSite(
+				this.node.getLocation(),
+				this.proto);
+		this.site.setName(this.node.getName());
 		
-		SiteNodeController snc = (SiteNodeController)getLogicalNetLayer().getMapViewController().getController(site);
+		SiteNodeController snc = (SiteNodeController)getLogicalNetLayer().getMapViewController().getController(this.site);
 		
-		snc.updateScaleCoefficient(site);
+		snc.updateScaleCoefficient(this.site);
 
 		// обновить концевые узлы фрагментов
-		for(Iterator it = node.getNodeLinks().iterator(); it.hasNext();)
+		for(Iterator it = this.node.getNodeLinks().iterator(); it.hasNext();)
 		{
 			NodeLink mnle = (NodeLink)it.next();
 
 			MapElementState nls = mnle.getState();
 
-			if(mnle.getStartNode().equals(node))
-				mnle.setStartNode(site);
+			if(mnle.getStartNode().equals(this.node))
+				mnle.setStartNode(this.site);
 			else
-				mnle.setEndNode(site);
+				mnle.setEndNode(this.site);
 
 			registerStateChange(mnle, nls, mnle.getState());
 		}
 
-		super.removeNode(node);
+		super.removeNode(this.node);
 
-		MapElementState pls = link.getState();
+		MapElementState pls = this.link.getState();
 
 		// обновить концевые узлы линии
-		if(link.getStartNode().equals(node))
-			link.setStartNode(site);
+		if(this.link.getStartNode().equals(this.node))
+			this.link.setStartNode(this.site);
 		else
-		if(link.getEndNode().equals(node))
-			link.setEndNode(site);
+		if(this.link.getEndNode().equals(this.node))
+			this.link.setEndNode(this.site);
 
 		// если топологический узел был активен, то разделить линию
 		// на две части
-		if(node.isActive())
+		if(this.node.isActive())
 		{
-			if(link instanceof UnboundLink)
-				newLink = super.createUnboundLink(link.getStartNode(), site);
+			if(this.link instanceof UnboundLink)
+				this.newLink = super.createUnboundLink(this.link.getStartNode(), this.site);
 			else
-				newLink = super.createPhysicalLink(link.getStartNode(), site);
-			newLink.setType(link.getType());
-			Collector collector = map.getCollector(link);
+				this.newLink = super.createPhysicalLink(this.link.getStartNode(), this.site);
+			this.newLink.setType(this.link.getType());
+			Collector collector = this.map.getCollector(this.link);
 			if(collector != null)
-				collector.addPhysicalLink(newLink);
+				collector.addPhysicalLink(this.newLink);
 
-			super.moveNodeLinks(link, newLink, true, site, null);
-			link.setStartNode(site);
-/*
-			// получить все фрагменты первой филической линии
-			java.util.List nodelinks = link.getNodeLinks();
+			super.moveNodeLinks(this.link, this.newLink, true, this.site, null);
+			this.link.setStartNode(this.site);
 
-			// определить начальный узел и начальный фрагмент физической линии
-			MapNodeLinkElement startNodeLink = null;
-			MapNodeElement startNode = link.getStartNode();
-			for(Iterator it = nodelinks.iterator(); it.hasNext();)
-			{
-				startNodeLink = (MapNodeLinkElement )it.next();
-				if(startNodeLink.getStartNode() == link.getStartNode()
-					|| startNodeLink.getEndNode() == link.getStartNode())
-				{
-					break;
-				}
-			}
-		
-			// неявный цикл по фракментам линии - перекидывать фрагменты в новую 
-			// физическую линию. движемся по фрагментам от первого пока не наткнемся
-			// на фрагмент, соседний с удаленным
-			for(;;)
-			{
-				// перекинуть фрагмент в новую линию
-				link.removeNodeLink(startNodeLink);
-				link1.addNodeLink(startNodeLink);
-				
-				MapElementState nls = startNodeLink.getState();
-				
-				startNodeLink.setPhysicalLinkId(link1.getId());
-
-				registerStateChange(startNodeLink, nls, startNodeLink.getState());
-				
-				// перейти к следующему узлу
-				startNode = startNodeLink.getOtherNode(startNode);
-
-				// если наткнулись на разрыв линии связи, то обновить
-				// концевые узлы и закончить
-				if(startNode == site)
-				{
-					link1.setEndNode(site);
-					link.setStartNode(site);
-					break;
-				}
-				
-				// перейти к следующему фрагменту
-				for(Iterator it = startNode.getNodeLinks().iterator(); it.hasNext();)
-				{
-					MapNodeLinkElement mnle = (MapNodeLinkElement )it.next();
-					if(startNodeLink != mnle)
-					{
-						startNodeLink = mnle;
-						break;
-					}
-				}
-			}//for(;;)
-*/
-			MapView mapView = logicalNetLayer.getMapView();
+			MapView mapView = this.logicalNetLayer.getMapView();
 	
 			// проверить все кабельные пути, прохидящие по линии,
 			// и добавить новую линию
-			for(Iterator it = mapView.getCablePaths(link).iterator(); it.hasNext();)
+			for(Iterator it = mapView.getCablePaths(this.link).iterator(); it.hasNext();)
 			{
 				CablePath cablePath = (CablePath)it.next();
 
-				cablePath.addLink(newLink, CableController.generateCCI(newLink));
-				if(newLink instanceof UnboundLink)
-					((UnboundLink)newLink).setCablePath(cablePath);
+				cablePath.addLink(this.newLink, CableController.generateCCI(this.newLink));
+				if(this.newLink instanceof UnboundLink)
+					((UnboundLink)this.newLink).setCablePath(cablePath);
 				else
-					newLink.getBinding().add(cablePath);
+					this.newLink.getBinding().add(cablePath);
 			}
 		}
 
-		super.registerStateChange(link, pls, link.getState());
+		super.registerStateChange(this.link, pls, this.link.getState());
 	
 		// операция закончена - оповестить слушателей
-		logicalNetLayer.sendMapEvent(new MapEvent(this, MapEvent.MAP_CHANGED));
-		logicalNetLayer.sendMapEvent(new MapNavigateEvent(
-					site, 
+		this.logicalNetLayer.sendMapEvent(new MapEvent(this, MapEvent.MAP_CHANGED));
+		this.logicalNetLayer.sendMapEvent(new MapNavigateEvent(
+					this.site, 
 					MapNavigateEvent.MAP_ELEMENT_SELECTED_EVENT));
-		logicalNetLayer.setCurrentMapElement(site);
-		logicalNetLayer.notifySchemeEvent(site);
+		this.logicalNetLayer.setCurrentMapElement(this.site);
+		this.logicalNetLayer.notifySchemeEvent(this.site);
 
 	}
 }

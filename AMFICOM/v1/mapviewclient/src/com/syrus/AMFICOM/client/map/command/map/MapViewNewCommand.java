@@ -1,5 +1,5 @@
 /**
- * $Id: MapViewNewCommand.java,v 1.12 2005/01/30 15:38:17 krupenn Exp $
+ * $Id: MapViewNewCommand.java,v 1.13 2005/02/08 15:11:10 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -18,25 +18,19 @@ import com.syrus.AMFICOM.Client.General.Lang.LangModel;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
-import com.syrus.AMFICOM.Client.Map.UI.MapFrame;
 import com.syrus.AMFICOM.configuration.corba.AccessIdentifier_Transferable;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.mapview.MapView;
-import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.mapview.MapViewStorableObjectPool;
 
 /**
  * создать новый вид 
- * 
- * 
- * 
- * @version $Revision: 1.12 $, $Date: 2005/01/30 15:38:17 $
- * @module
  * @author $Author: krupenn $
- * @see
+ * @version $Revision: 1.13 $, $Date: 2005/02/08 15:11:10 $
+ * @module mapviewclient_v1
  */
 public class MapViewNewCommand extends VoidCommand
 {
@@ -44,10 +38,6 @@ public class MapViewNewCommand extends VoidCommand
 
 	MapView mapView;
 	Map map;
-
-	public MapViewNewCommand()
-	{
-	}
 
 	public MapViewNewCommand(Map map, ApplicationContext aContext)
 	{
@@ -60,19 +50,19 @@ public class MapViewNewCommand extends VoidCommand
 		Environment.log(Environment.LOG_LEVEL_CONFIG, "Creating new map view", getClass().getName(), "execute()");
 		
 		System.out.println("Creating new map view");
-		aContext.getDispatcher().notify(
+		this.aContext.getDispatcher().notify(
 				new StatusMessageEvent(
 					StatusMessageEvent.STATUS_MESSAGE,
 					LangModelMap.getString("MapNew")));
 
 		AccessIdentifier_Transferable ait = 
-			aContext.getSessionInterface().getAccessIdentifier();
+			this.aContext.getSessionInterface().getAccessIdentifier();
 		Identifier creatorId = new Identifier(ait.user_id);
 		Identifier domainId = new Identifier(ait.domain_id);
 
 		try
 		{
-			mapView = com.syrus.AMFICOM.mapview.MapView.createInstance(
+			this.mapView = com.syrus.AMFICOM.mapview.MapView.createInstance(
 					creatorId,
 					domainId,
 					LangModelMap.getString("New"),
@@ -81,9 +71,9 @@ public class MapViewNewCommand extends VoidCommand
 					0.0D,
 					1.0D,
 					1.0D,
-					map);
+					this.map);
 
-			MapViewStorableObjectPool.putStorableObject(mapView);
+			MapViewStorableObjectPool.putStorableObject(this.mapView);
 		}
 		catch (CreateObjectException e)
 		{
@@ -98,7 +88,7 @@ public class MapViewNewCommand extends VoidCommand
 			return;
 		}
 
-		mapView.setName(LangModelMap.getString("New"));
+		this.mapView.setName(LangModelMap.getString("New"));
 
 		setResult(Command.RESULT_OK);
 //		if (mapFrame != null)
@@ -112,7 +102,7 @@ public class MapViewNewCommand extends VoidCommand
 //			mapFrame.setMapView(mv);
 //			mapFrame.setTitle( LangModelMap.getString("Map") + " - " + mv.getName());
 //		}
-		aContext.getDispatcher().notify(new StatusMessageEvent(
+		this.aContext.getDispatcher().notify(new StatusMessageEvent(
 				StatusMessageEvent.STATUS_MESSAGE,
 				LangModel.getString("Finished")));
 			setResult(Command.RESULT_OK);
@@ -121,7 +111,7 @@ public class MapViewNewCommand extends VoidCommand
 
 	public MapView getMapView()
 	{
-		return mapView;
+		return this.mapView;
 	}
 
 }

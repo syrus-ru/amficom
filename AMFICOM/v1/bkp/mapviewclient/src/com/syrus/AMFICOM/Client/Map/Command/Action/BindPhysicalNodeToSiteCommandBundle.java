@@ -1,5 +1,5 @@
 /**
- * $Id: BindPhysicalNodeToSiteCommandBundle.java,v 1.14 2005/02/01 13:29:56 krupenn Exp $
+ * $Id: BindPhysicalNodeToSiteCommandBundle.java,v 1.15 2005/02/08 15:11:08 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -28,14 +28,11 @@ import java.util.Iterator;
 
 /**
  *  Команда привязывания топологического узла, принадлежащего
- *  непривязанному кабелю, к элементу узла. при этом линия, которой 
+ *  непривязанному кабелю, к элементу узла. При этом линия, которой 
  *  принадлежит данный узел, делится на 2 части
- * 
- * 
- * @version $Revision: 1.14 $, $Date: 2005/02/01 13:29:56 $
- * @module
  * @author $Author: krupenn $
- * @see
+ * @version $Revision: 1.15 $, $Date: 2005/02/08 15:11:08 $
+ * @module mapclient_v1
  */
 public class BindPhysicalNodeToSiteCommandBundle extends MapActionCommandBundle
 {
@@ -85,44 +82,44 @@ public class BindPhysicalNodeToSiteCommandBundle extends MapActionCommandBundle
 				getClass().getName(), 
 				"execute()");
 
-		mapView = logicalNetLayer.getMapView();
-		map = mapView.getMap();
+		this.mapView = this.logicalNetLayer.getMapView();
+		this.map = this.mapView.getMap();
 
-		PhysicalLink link = node.getPhysicalLink();
+		PhysicalLink link = this.node.getPhysicalLink();
 
 		// находим "ливый" и "правый" узлы, одновременно обновляем
 		// концевые узлы фрагментов
-		for(Iterator it = node.getNodeLinks().iterator(); it.hasNext();)
+		for(Iterator it = this.node.getNodeLinks().iterator(); it.hasNext();)
 		{
 			NodeLink mnle = (NodeLink)it.next();
 
-			if(node1 == null)
-				node1 = mnle.getOtherNode(node);
+			if(this.node1 == null)
+				this.node1 = mnle.getOtherNode(this.node);
 			else
-				node2 = mnle.getOtherNode(node);
+				this.node2 = mnle.getOtherNode(this.node);
 
-			if(mnle.getStartNode().equals(node))
-				mnle.setStartNode(site);
+			if(mnle.getStartNode().equals(this.node))
+				mnle.setStartNode(this.site);
 			else
-				mnle.setEndNode(site);
+				mnle.setEndNode(this.site);
 		}
 
 		// топологический узел удаляется
-		super.removeNode(node);
+		super.removeNode(this.node);
 
 		// обновляются концевые узлы линии
-		if(link.getStartNode().equals(node))
-			link.setStartNode(site);
+		if(link.getStartNode().equals(this.node))
+			link.setStartNode(this.site);
 		else
-		if(link.getEndNode().equals(node))
-			link.setEndNode(site);
+		if(link.getEndNode().equals(this.node))
+			link.setEndNode(this.site);
 
 		// создается вторая линия
-		UnboundLink newLink = super.createUnboundLink(link.getStartNode(), site);
+		UnboundLink newLink = super.createUnboundLink(link.getStartNode(), this.site);
 		newLink.setType(link.getType());
 
 		// single cpath, as long as link is UnboundLink
-		CablePath cpath = (CablePath)(mapView.getCablePaths(link).get(0));
+		CablePath cpath = (CablePath)(this.mapView.getCablePaths(link).get(0));
 		
 		// новая линия добавляется в кабельный путь
 		cpath.addLink(newLink, CableController.generateCCI(newLink));
@@ -134,12 +131,12 @@ public class BindPhysicalNodeToSiteCommandBundle extends MapActionCommandBundle
 				link,
 				newLink,
 				false,
-				site,
+				this.site,
 				null);
-		link.setStartNode(site);
+		link.setStartNode(this.site);
 		cpath.sortLinks();
 
-		logicalNetLayer.sendMapEvent(new MapEvent(this, MapEvent.MAP_CHANGED));
+		this.logicalNetLayer.sendMapEvent(new MapEvent(this, MapEvent.MAP_CHANGED));
 	}
 }
 

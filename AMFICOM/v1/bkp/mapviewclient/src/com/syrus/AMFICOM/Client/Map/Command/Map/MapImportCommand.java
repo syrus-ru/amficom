@@ -1,5 +1,5 @@
 /*
- * $Id: MapImportCommand.java,v 1.20 2005/02/07 16:09:25 krupenn Exp $
+ * $Id: MapImportCommand.java,v 1.21 2005/02/08 15:11:10 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -52,10 +52,9 @@ import javax.swing.JDesktopPane;
  * самого окна карты. При этом в азголовке окна отображается информация о том,
  * что активной карты нет, и карта центрируется по умолчанию
  * 
- * @version $Revision: 1.20 $, $Date: 2005/02/07 16:09:25 $
- * @module map_v2
  * @author $Author: krupenn $
- * @see
+ * @version $Revision: 1.21 $, $Date: 2005/02/08 15:11:10 $
+ * @module mapviewclient_v1
  */
 public class MapImportCommand extends ImportCommand
 {
@@ -84,9 +83,9 @@ public class MapImportCommand extends ImportCommand
 
 	public void execute()
 	{
-		mapFrame = MapDesktopCommand.findMapFrame(desktop);
+		this.mapFrame = MapDesktopCommand.findMapFrame(this.desktop);
 
-		if(mapFrame == null)
+		if(this.mapFrame == null)
 			return;
 			
 		try
@@ -123,12 +122,12 @@ public class MapImportCommand extends ImportCommand
 
 			MapStorableObjectPool.putStorableObject(map);
 
-			MapView mv = mapFrame.getMapView();
-			mapFrame.getMapViewer().getLogicalNetLayer().getMapViewController().removeSchemes();
+			MapView mv = this.mapFrame.getMapView();
+			this.mapFrame.getMapViewer().getLogicalNetLayer().getMapViewController().removeSchemes();
 			mv.setMap(map);
-			mapFrame.setMapView(mv);
+			this.mapFrame.setMapView(mv);
 			
-			Dispatcher disp = mapFrame.getContext().getDispatcher();
+			Dispatcher disp = this.mapFrame.getContext().getDispatcher();
 			if(disp != null)
 			{
 				disp.notify(new MapEvent(mv, MapEvent.MAP_VIEW_CHANGED));
@@ -164,8 +163,8 @@ public class MapImportCommand extends ImportCommand
 		java.util.Map exportColumns;
 
 		// make sure default types loaded
-		LinkTypeController.getPens(aContext);
-		NodeTypeController.getTopologicalProtos(aContext);
+		LinkTypeController.getPens(this.aContext);
+		NodeTypeController.getTopologicalProtos(this.aContext);
 
 		super.open(fileName);
 
@@ -181,10 +180,10 @@ public class MapImportCommand extends ImportCommand
 		correctCrossLinks(type, exportColumns);
 
 		Identifier userId = new Identifier(
-			aContext.getSessionInterface().getAccessIdentifier().user_id);
+			this.aContext.getSessionInterface().getAccessIdentifier().user_id);
 
 		Identifier domainId = new Identifier(
-			aContext.getSessionInterface().getAccessIdentifier().domain_id);
+			this.aContext.getSessionInterface().getAccessIdentifier().domain_id);
 
 		map = Map.createInstance(userId, domainId, exportColumns);
 

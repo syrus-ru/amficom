@@ -1,5 +1,5 @@
 /**
- * $Id: MapViewController.java,v 1.10 2005/02/07 16:09:25 krupenn Exp $
+ * $Id: MapViewController.java,v 1.11 2005/02/08 15:11:10 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -54,7 +54,7 @@ import java.util.Iterator;
  * Класс используется для управления информацией о канализационной
  * прокладке кабелей и положении узлов и других топологических объектов.
  * @author $Author: krupenn $
- * @version $Revision: 1.10 $, $Date: 2005/02/07 16:09:25 $
+ * @version $Revision: 1.11 $, $Date: 2005/02/08 15:11:10 $
  * @module mapviewclient_v1
  */
 public final class MapViewController
@@ -586,7 +586,7 @@ public final class MapViewController
 	/**
 	 * Убрать кабель из вида. Подразумевает отавязку от всех тоннелей 
 	 * и удаление непривязанных фрагментов.
-	 * @param cp кабель
+	 * @param cablePath кабель
 	 */
 	public void unplaceElement(CablePath cp)
 	{

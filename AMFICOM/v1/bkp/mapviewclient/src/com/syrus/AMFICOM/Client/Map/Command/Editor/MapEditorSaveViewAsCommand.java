@@ -1,5 +1,5 @@
 /*
- * $Id: MapEditorSaveViewAsCommand.java,v 1.7 2005/02/01 11:34:56 krupenn Exp $
+ * $Id: MapEditorSaveViewAsCommand.java,v 1.8 2005/02/08 15:11:10 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -28,10 +28,10 @@ import javax.swing.JDesktopPane;
  * "Редактор топологических схем" с новым именем. Использует команду
  * MapSaveAsCommand
  * 
- * @version $Revision: 1.7 $, $Date: 2005/02/01 11:34:56 $
- * @module map_v2
  * @author $Author: krupenn $
- * @see MapSaveAsCommand
+ * @version $Revision: 1.8 $, $Date: 2005/02/08 15:11:10 $
+ * @module mapviewclient_v1
+ * @see MapViewSaveAsCommand
  */
 public class MapEditorSaveViewAsCommand extends VoidCommand
 {
@@ -40,7 +40,6 @@ public class MapEditorSaveViewAsCommand extends VoidCommand
 
 	/**
 	 * 
-	 * @param mapFrame окно карты, из которого сохранять схему
 	 * @param aContext контекст модуля "Редактор топологических схем"
 	 */
 	public MapEditorSaveViewAsCommand(JDesktopPane desktop, ApplicationContext aContext)
@@ -51,7 +50,7 @@ public class MapEditorSaveViewAsCommand extends VoidCommand
 	
 	public void execute()
 	{
-		MapFrame mapFrame = MapDesktopCommand.findMapFrame(desktop);
+		MapFrame mapFrame = MapDesktopCommand.findMapFrame(this.desktop);
 
 		if(mapFrame == null)
 		{
@@ -59,7 +58,7 @@ public class MapEditorSaveViewAsCommand extends VoidCommand
 			setResult(Command.RESULT_NO);
 			return;
 		}
-		MapViewSaveAsCommand mvsac = new MapViewSaveAsCommand(mapFrame.getMapView(), aContext);
+		MapViewSaveAsCommand mvsac = new MapViewSaveAsCommand(mapFrame.getMapView(), this.aContext);
 
 		mvsac.execute();
 		

@@ -1,5 +1,5 @@
 /**
- * $Id: GenerateCablePathCablingCommandBundle.java,v 1.14 2005/02/01 13:29:56 krupenn Exp $
+ * $Id: GenerateCablePathCablingCommandBundle.java,v 1.15 2005/02/08 15:11:09 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,36 +11,31 @@
 
 package com.syrus.AMFICOM.Client.Map.Command.Action;
 
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+
 import com.syrus.AMFICOM.Client.General.Event.MapEvent;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.Map.Controllers.CableController;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.NodeLink;
-import com.syrus.AMFICOM.map.SiteNodeType;
 import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.map.SiteNode;
+import com.syrus.AMFICOM.map.SiteNodeType;
 import com.syrus.AMFICOM.mapview.CablePath;
+import com.syrus.AMFICOM.mapview.MapView;
 import com.syrus.AMFICOM.mapview.UnboundLink;
 import com.syrus.AMFICOM.mapview.UnboundNode;
-import com.syrus.AMFICOM.mapview.MapView;
-
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import com.syrus.AMFICOM.map.PhysicalLinkBinding;
 
 /**
  *  Команда генерации тоннелей в соответствии с прохождением кабеля.
  *  из непроложенных линий генерируются тоннели и кабель привязывается к ним.
  *  Уже существующая привязка сохраняется. По непривязанным элементам 
  *  генерируются сетевые узла и схемные элементы привязываются к ним.
- * 
- * 
- * 
- * @version $Revision: 1.14 $, $Date: 2005/02/01 13:29:56 $
- * @module
  * @author $Author: krupenn $
- * @see
+ * @version $Revision: 1.15 $, $Date: 2005/02/08 15:11:09 $
+ * @module mapviewclient_v1
  */
 public class GenerateCablePathCablingCommandBundle extends MapActionCommandBundle
 {
@@ -77,12 +72,12 @@ public class GenerateCablePathCablingCommandBundle extends MapActionCommandBundl
 				getClass().getName(), 
 				"execute()");
 
-		mapView = logicalNetLayer.getMapView();
-		map = mapView.getMap();
+		this.mapView = this.logicalNetLayer.getMapView();
+		this.map = this.mapView.getMap();
 		
 		// для последующего цикла необходима последовательность
 		// узлов от начального к конечному
-		SiteNode startsite = (SiteNode)path.getStartNode();
+		SiteNode startsite = (SiteNode)this.path.getStartNode();
 		SiteNode endsite = null;
 		
 		// проверить, что узел является сетевым узлом (если это непривязанный
@@ -91,7 +86,7 @@ public class GenerateCablePathCablingCommandBundle extends MapActionCommandBundl
 
 		// отдельный список, поскольку используется удаление
 		List list  = new LinkedList();
-		list.addAll(path.getLinks());
+		list.addAll(this.path.getLinks());
 
 		// цикл по всем линиям, участвующим в кабельном пути
 		// по непривязанным линиям генерировать тоннели
@@ -112,7 +107,7 @@ public class GenerateCablePathCablingCommandBundle extends MapActionCommandBundl
 			// если непривязанная линия, генерировать тоннель
 			if(link instanceof UnboundLink)
 			{
-				path.removeLink(link);
+				this.path.removeLink(link);
 				UnboundLink un = (UnboundLink)link;
 				super.removePhysicalLink(un);
 
@@ -124,14 +119,14 @@ public class GenerateCablePathCablingCommandBundle extends MapActionCommandBundl
 					mnle.setPhysicalLink(link);
 					link.addNodeLink(mnle);
 				}
-				path.addLink(link, CableController.generateCCI(link));
-				link.getBinding().add(path);
+				this.path.addLink(link, CableController.generateCCI(link));
+				link.getBinding().add(this.path);
 			}
 
 			startsite = endsite;
 		}
 
-		logicalNetLayer.sendMapEvent(new MapEvent(this, MapEvent.MAP_CHANGED));
+		this.logicalNetLayer.sendMapEvent(new MapEvent(this, MapEvent.MAP_CHANGED));
 	}
 
 	/**
@@ -146,9 +141,9 @@ public class GenerateCablePathCablingCommandBundle extends MapActionCommandBundl
 		{
 			CreateSiteCommandAtomic command = 
 					new CreateSiteCommandAtomic(
-						proto, 
+						this.proto, 
 						site.getLocation());
-			command.setLogicalNetLayer(logicalNetLayer);
+			command.setLogicalNetLayer(this.logicalNetLayer);
 			command.execute();
 			super.add(command);
 			
@@ -158,7 +153,7 @@ public class GenerateCablePathCablingCommandBundle extends MapActionCommandBundl
 					new BindUnboundNodeToSiteCommandBundle(
 						(UnboundNode)site, 
 						site2);
-			command2.setLogicalNetLayer(logicalNetLayer);
+			command2.setLogicalNetLayer(this.logicalNetLayer);
 			command2.execute();
 			super.add(command2);
 

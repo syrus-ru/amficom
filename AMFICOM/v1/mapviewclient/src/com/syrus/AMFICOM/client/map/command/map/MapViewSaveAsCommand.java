@@ -1,5 +1,5 @@
 /*
- * $Id: MapViewSaveAsCommand.java,v 1.11 2005/02/01 11:34:56 krupenn Exp $
+ * $Id: MapViewSaveAsCommand.java,v 1.12 2005/02/08 15:11:10 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -10,6 +10,9 @@
 
 package com.syrus.AMFICOM.Client.Map.Command.Map;
 
+import java.awt.Dimension;
+import java.awt.Toolkit;
+
 import com.syrus.AMFICOM.Client.General.Command.Command;
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.Event.StatusMessageEvent;
@@ -17,13 +20,8 @@ import com.syrus.AMFICOM.Client.General.Lang.LangModel;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
-import com.syrus.AMFICOM.client_.general.ui_.ObjectResourcePropertiesDialog;
 import com.syrus.AMFICOM.Client.Map.Props.MapViewPanel;
-import com.syrus.AMFICOM.Client.Map.UI.MapFrame;
-import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
-import com.syrus.AMFICOM.mapview.MapView;
-import com.syrus.AMFICOM.Client.Resource.Pool;
-
+import com.syrus.AMFICOM.client_.general.ui_.ObjectResourcePropertiesDialog;
 import com.syrus.AMFICOM.configuration.corba.AccessIdentifier_Transferable;
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
@@ -32,21 +30,15 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.VersionCollisionException;
-import com.syrus.AMFICOM.map.MapStorableObjectPool;
+import com.syrus.AMFICOM.mapview.MapView;
 import com.syrus.AMFICOM.mapview.MapViewStorableObjectPool;
-import java.awt.Dimension;
-import java.awt.Toolkit;
 
 /**
- * Класс $RCSfile: MapViewSaveAsCommand.java,v $ используется для сохранения топологической схемы с новым
+ * Класс используется для сохранения топологической схемы с новым
  * именем
- * 
- * 
- * 
- * @version $Revision: 1.11 $, $Date: 2005/02/01 11:34:56 $
- * @module map_v2
  * @author $Author: krupenn $
- * @see
+ * @version $Revision: 1.12 $, $Date: 2005/02/08 15:11:10 $
+ * @module mapviewclient_v1
  */
 public class MapViewSaveAsCommand extends VoidCommand
 {
@@ -54,11 +46,6 @@ public class MapViewSaveAsCommand extends VoidCommand
 	MapView newMapView;
     ApplicationContext aContext;
 
-	/**
-	 * 
-	 * @param paramName comments
-	 * @exception Exception comments
-	 */
 	public MapViewSaveAsCommand(MapView mapView, ApplicationContext aContext)
 	{
 		this.mapView = mapView;
@@ -68,13 +55,13 @@ public class MapViewSaveAsCommand extends VoidCommand
 	public void execute()
 	{
 		AccessIdentifier_Transferable ait = 
-			aContext.getSessionInterface().getAccessIdentifier();
+			this.aContext.getSessionInterface().getAccessIdentifier();
 		Identifier creatorId = new Identifier(ait.user_id);
 		Identifier domainId = new Identifier(ait.domain_id);
 
 		try
 		{
-			newMapView = com.syrus.AMFICOM.mapview.MapView.createInstance(
+			this.newMapView = com.syrus.AMFICOM.mapview.MapView.createInstance(
 					creatorId,
 					domainId,
 					LangModelMap.getString("New"),
@@ -83,11 +70,11 @@ public class MapViewSaveAsCommand extends VoidCommand
 					0.0D,
 					1.0D,
 					1.0D,
-					mapView.getMap());
+					this.mapView.getMap());
 
-			MapViewStorableObjectPool.putStorableObject(newMapView);
+			MapViewStorableObjectPool.putStorableObject(this.newMapView);
 
-			newMapView.setName(mapView.getName() + "(Copy)");
+			this.newMapView.setName(this.mapView.getName() + "(Copy)");
 		}
 		catch (CreateObjectException e)
 		{
@@ -105,7 +92,7 @@ public class MapViewSaveAsCommand extends VoidCommand
 				Environment.getActiveWindow(), 
 				LangModelMap.getString("MapViewProperties"), 
 				true, 
-				newMapView,
+				this.newMapView,
 				MapViewPanel.getInstance());
 
 		Dimension screenSize =  Toolkit.getDefaultToolkit().getScreenSize();
@@ -157,14 +144,14 @@ public class MapViewSaveAsCommand extends VoidCommand
 				e.printStackTrace();
 			}
 	
-			aContext.getDispatcher().notify(new StatusMessageEvent(
+			this.aContext.getDispatcher().notify(new StatusMessageEvent(
 					StatusMessageEvent.STATUS_MESSAGE,
 					LangModel.getString("Finished")));
 			setResult(Command.RESULT_OK);
 		}
 		else
 		{
-			aContext.getDispatcher().notify(new StatusMessageEvent(
+			this.aContext.getDispatcher().notify(new StatusMessageEvent(
 					StatusMessageEvent.STATUS_MESSAGE,
 					LangModel.getString("Aborted")));
 			setResult(Command.RESULT_CANCEL);
@@ -173,12 +160,12 @@ public class MapViewSaveAsCommand extends VoidCommand
 
 	public MapView getMapView()
 	{
-		return mapView;
+		return this.mapView;
 	}
 
 	public MapView getNewMapView()
 	{
-		return newMapView;
+		return this.newMapView;
 	}
 
 }

@@ -1,5 +1,5 @@
 /**
- * $Id: CreatePhysicalNodeCommandAtomic.java,v 1.12 2005/02/02 09:05:10 krupenn Exp $
+ * $Id: CreatePhysicalNodeCommandAtomic.java,v 1.13 2005/02/08 15:11:09 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -12,30 +12,18 @@
 package com.syrus.AMFICOM.Client.Map.Command.Action;
 
 import com.syrus.AMFICOM.Client.General.Model.Environment;
-import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
+import com.syrus.AMFICOM.Client.Map.Controllers.TopologicalNodeController;
 import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.map.DoublePoint;
-import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.map.TopologicalNode;
-import com.syrus.AMFICOM.Client.Map.Controllers.TopologicalNodeController;
-import com.syrus.AMFICOM.Client.Resource.Pool;
-
-import java.awt.geom.Point2D;
-import com.syrus.AMFICOM.map.Map;
-import com.syrus.AMFICOM.Client.Map.Controllers.MapViewController;
 
 /**
  * создание топологического узла, внесение его в пул и на карту - 
  * атомарное действие 
- * 
- * 
- * 
- * @version $Revision: 1.12 $, $Date: 2005/02/02 09:05:10 $
- * @module
  * @author $Author: krupenn $
- * @see
+ * @version $Revision: 1.13 $, $Date: 2005/02/08 15:11:09 $
+ * @module mapviewclient_v1
  */
 public class CreatePhysicalNodeCommandAtomic extends MapActionCommand
 {
@@ -79,34 +67,34 @@ public class CreatePhysicalNodeCommandAtomic extends MapActionCommand
 
 		try
 		{
-			node = TopologicalNode.createInstance(
-					logicalNetLayer.getUserId(),
-				physicalLink,
-				point);
+			this.node = TopologicalNode.createInstance(
+				this.logicalNetLayer.getUserId(),
+				this.physicalLink,
+				this.point);
 		}
 		catch (CreateObjectException e)
 		{
 			e.printStackTrace();
 		}
 
-		TopologicalNodeController tnc = (TopologicalNodeController)getLogicalNetLayer().getMapViewController().getController(node);
+		TopologicalNodeController tnc = (TopologicalNodeController)getLogicalNetLayer().getMapViewController().getController(this.node);
 
 		// по умолчанию топологиеский узел не активен
-		tnc.setActive(node, false);
+		tnc.setActive(this.node, false);
 		// установить коэффициент для масштабирования изображения
 		// в соответствии с текущим масштабом отображения карты
-		tnc.updateScaleCoefficient(node);
+		tnc.updateScaleCoefficient(this.node);
 
-		logicalNetLayer.getMapView().getMap().addNode(node);
+		this.logicalNetLayer.getMapView().getMap().addNode(this.node);
 	}
 	
-	public void redo()
+	public void redo() 
 	{
-		logicalNetLayer.getMapView().getMap().addNode(node);
+		this.logicalNetLayer.getMapView().getMap().addNode(this.node);
 	}
 	
 	public void undo()
 	{
-		logicalNetLayer.getMapView().getMap().removeNode(node);
+		this.logicalNetLayer.getMapView().getMap().removeNode(this.node);
 	}
 }

@@ -1,5 +1,5 @@
 /**
- * $Id: CreatePhysicalLinkCommandAtomic.java,v 1.8 2005/02/02 09:05:10 krupenn Exp $
+ * $Id: CreatePhysicalLinkCommandAtomic.java,v 1.9 2005/02/08 15:11:09 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -12,24 +12,16 @@
 package com.syrus.AMFICOM.Client.Map.Command.Action;
 
 import com.syrus.AMFICOM.Client.General.Model.Environment;
-import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
 import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.PhysicalLink;
-import com.syrus.AMFICOM.Client.Resource.Pool;
-import com.syrus.AMFICOM.map.Map;
 
 /**
  * создание физической линии, внесение ее в пул и на карту - 
  * атомарное действие 
- * 
- * 
- * 
- * @version $Revision: 1.8 $, $Date: 2005/02/02 09:05:10 $
- * @module
  * @author $Author: krupenn $
- * @see
+ * @version $Revision: 1.9 $, $Date: 2005/02/08 15:11:09 $
+ * @module mapviewclient_v1
  */
 public class CreatePhysicalLinkCommandAtomic extends MapActionCommand
 {
@@ -53,7 +45,7 @@ public class CreatePhysicalLinkCommandAtomic extends MapActionCommand
 	
 	public PhysicalLink getLink()
 	{
-		return link;
+		return this.link;
 	}
 	
 	public void execute()
@@ -66,28 +58,28 @@ public class CreatePhysicalLinkCommandAtomic extends MapActionCommand
 
 		try
 		{
-			link = PhysicalLink.createInstance(
-					logicalNetLayer.getUserId(),
-					startNode, 
-					endNode, 
-					logicalNetLayer.getPen());
+			this.link = PhysicalLink.createInstance(
+					this.logicalNetLayer.getUserId(),
+					this.startNode, 
+					this.endNode, 
+					this.logicalNetLayer.getPen());
 		}
 		catch (CreateObjectException e)
 		{
 			e.printStackTrace();
 		}
 
-		logicalNetLayer.getMapView().getMap().addPhysicalLink(link);
+		this.logicalNetLayer.getMapView().getMap().addPhysicalLink(this.link);
 	}
 	
 	public void redo()
 	{
-		logicalNetLayer.getMapView().getMap().addPhysicalLink(link);
+		this.logicalNetLayer.getMapView().getMap().addPhysicalLink(this.link);
 	}
 	
 	public void undo()
 	{
-		logicalNetLayer.getMapView().getMap().removePhysicalLink(link);
+		this.logicalNetLayer.getMapView().getMap().removePhysicalLink(this.link);
 	}
 }
 

@@ -1,5 +1,5 @@
 /**
- * $Id: PlaceSchemeElementCommand.java,v 1.11 2005/02/01 11:34:56 krupenn Exp $
+ * $Id: PlaceSchemeElementCommand.java,v 1.12 2005/02/08 15:11:09 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -10,6 +10,8 @@
 
 package com.syrus.AMFICOM.Client.Map.Command.Action;
 
+import java.awt.Point;
+
 import com.syrus.AMFICOM.Client.General.Event.MapEvent;
 import com.syrus.AMFICOM.Client.General.Event.MapNavigateEvent;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
@@ -18,23 +20,17 @@ import com.syrus.AMFICOM.map.DoublePoint;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.map.SiteNode;
-import com.syrus.AMFICOM.mapview.UnboundNode;
 import com.syrus.AMFICOM.mapview.MapView;
-import com.syrus.AMFICOM.Client.Resource.Pool;
-import com.syrus.AMFICOM.scheme.corba.Scheme;
+import com.syrus.AMFICOM.mapview.UnboundNode;
 import com.syrus.AMFICOM.scheme.corba.SchemeElement;
-
-import java.awt.Point;
-import java.awt.geom.Point2D;
 
 /**
  * –азместить c[tvysq элемент на карте в соответствии с прив€зкой
  * или по координатам
  * 
- * @version $Revision: 1.11 $, $Date: 2005/02/01 11:34:56 $
- * @module map_v2
  * @author $Author: krupenn $
- * @see
+ * @version $Revision: 1.12 $, $Date: 2005/02/08 15:11:09 $
+ * @module mapviewclient_v1
  */
 public class PlaceSchemeElementCommand extends MapActionCommandBundle
 {
@@ -51,7 +47,7 @@ public class PlaceSchemeElementCommand extends MapActionCommandBundle
 	/**
 	 * размещаемый схемный элемент
 	 */
-	SchemeElement se = null;
+	SchemeElement schemeElement = null;
 	
 	Map map;
 	
@@ -66,10 +62,10 @@ public class PlaceSchemeElementCommand extends MapActionCommandBundle
 	DoublePoint coordinatePoint = null;
 
 	public PlaceSchemeElementCommand(
-			SchemeElement se,
+			SchemeElement schemeElement,
 			DoublePoint dpoint)
 	{
-		this.se = se;
+		this.schemeElement = schemeElement;
 		this.coordinatePoint = dpoint;
 	}
 
@@ -78,7 +74,7 @@ public class PlaceSchemeElementCommand extends MapActionCommandBundle
 			SchemeElement se,
 			Point point)
 	{
-		this.se = se;
+		this.schemeElement = se;
 		this.point = point;
 	}
 
@@ -95,39 +91,39 @@ public class PlaceSchemeElementCommand extends MapActionCommandBundle
 			return;
 		
 		// если географическа€ точка не задана, получить ее из экранной точки
-		if(coordinatePoint == null)
-			coordinatePoint = logicalNetLayer.convertScreenToMap(point);
+		if(this.coordinatePoint == null)
+			this.coordinatePoint = this.logicalNetLayer.convertScreenToMap(this.point);
 		
-		MapView mapView = logicalNetLayer.getMapView();
-		map = mapView.getMap();
+		MapView mapView = this.logicalNetLayer.getMapView();
+		this.map = mapView.getMap();
 
-		site = mapView.findElement(se);
-		if(site == null)
+		this.site = mapView.findElement(this.schemeElement);
+		if(this.site == null)
 		{
-			MapElement me = logicalNetLayer.getMapElementAtPoint(point);
+			MapElement mapElement = this.logicalNetLayer.getMapElementAtPoint(this.point);
 			
-			if(me instanceof SiteNode
-				&& !(me instanceof UnboundNode))
+			if(mapElement instanceof SiteNode
+				&& !(mapElement instanceof UnboundNode))
 			{
-				site = (SiteNode )me;
-				se.siteNodeImpl(site);
+				this.site = (SiteNode )mapElement;
+				this.schemeElement.siteNodeImpl(this.site);
 			}
 			else
 			{
-				unbound = super.createUnboundNode(coordinatePoint, se);
-				site = unbound;
+				this.unbound = super.createUnboundNode(this.coordinatePoint, this.schemeElement);
+				this.site = this.unbound;
 			}
 			
-			logicalNetLayer.getMapViewController().scanCables(se.scheme());
+			this.logicalNetLayer.getMapViewController().scanCables(this.schemeElement.scheme());
 		}
 
 		// операци€ закончена - оповестить слушателей
-		logicalNetLayer.sendMapEvent(new MapEvent(this, MapEvent.MAP_CHANGED));
-		logicalNetLayer.sendMapEvent(new MapNavigateEvent(
-				site, 
+		this.logicalNetLayer.sendMapEvent(new MapEvent(this, MapEvent.MAP_CHANGED));
+		this.logicalNetLayer.sendMapEvent(new MapNavigateEvent(
+				this.site, 
 				MapNavigateEvent.MAP_ELEMENT_SELECTED_EVENT));
-		logicalNetLayer.setCurrentMapElement(site);
-		logicalNetLayer.notifySchemeEvent(site);
+		this.logicalNetLayer.setCurrentMapElement(this.site);
+		this.logicalNetLayer.notifySchemeEvent(this.site);
 
 	}
 }

@@ -1,5 +1,5 @@
 /**
- * $Id: ShowNodesCommand.java,v 1.6 2005/01/12 15:45:53 krupenn Exp $
+ * $Id: ShowNodesCommand.java,v 1.7 2005/02/08 15:11:10 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,26 +11,21 @@
 
 package com.syrus.AMFICOM.Client.Map.Command.Navigate;
 
-import com.syrus.AMFICOM.Client.General.Command.Command;
+import javax.swing.AbstractButton;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
+
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationModel;
 import com.syrus.AMFICOM.Client.General.Model.MapApplicationModel;
 import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
 import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
 
-import javax.swing.AbstractButton;
-import javax.swing.Icon;
-import javax.swing.ImageIcon;
-
 /**
  * Команда включения/выключения режима отображения топологических узлов на карте 
- * 
- * 
- * 
- * @version $Revision: 1.6 $, $Date: 2005/01/12 15:45:53 $
- * @module
  * @author $Author: krupenn $
- * @see
+ * @version $Revision: 1.7 $, $Date: 2005/02/08 15:11:10 $
+ * @module mapviewclient_v1
  */
 public class ShowNodesCommand extends VoidCommand
 {
@@ -46,11 +41,11 @@ public class ShowNodesCommand extends VoidCommand
 	public void setParameter(String field, Object value)
 	{
 		if(field.equals("logicalNetLayer"))
-			logicalNetLayer = (LogicalNetLayer )value;
+			this.logicalNetLayer = (LogicalNetLayer )value;
 		if(field.equals("button"))
-			button = (AbstractButton )value;
+			this.button = (AbstractButton )value;
 		if(field.equals("applicationModel"))
-			aModel = (ApplicationModel )value;
+			this.aModel = (ApplicationModel )value;
 	}
 
 	Icon visibleIcon = new ImageIcon("images/nodes_visible.gif");
@@ -60,19 +55,19 @@ public class ShowNodesCommand extends VoidCommand
 	{
 		if(MapPropertiesManager.isShowPhysicalNodes())
 		{
-			button.setIcon(invisibleIcon);
+			this.button.setIcon(this.invisibleIcon);
 			MapPropertiesManager.setShowPhysicalNodes(false);
 		}
 		else
-		if(!aModel.isSelected(MapApplicationModel.MODE_NODES))
+		if(!this.aModel.isSelected(MapApplicationModel.MODE_NODES))
 		{
-			button.setIcon(visibleIcon);
+			this.button.setIcon(this.visibleIcon);
 			MapPropertiesManager.setShowPhysicalNodes(true);
 		}
 
-		aModel.setSelected(MapApplicationModel.MODE_NODES, 
+		this.aModel.setSelected(MapApplicationModel.MODE_NODES, 
 				MapPropertiesManager.isShowPhysicalNodes());
-		aModel.fireModelChanged();
-		logicalNetLayer.repaint(false);
+		this.aModel.fireModelChanged();
+		this.logicalNetLayer.repaint(false);
 	}
 }

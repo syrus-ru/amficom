@@ -1,18 +1,7 @@
 package com.syrus.AMFICOM.Client.Map.Command.Map;
 
-import com.syrus.AMFICOM.Client.General.Command.OpenTypedTemplateCommand;
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.Report.AMTReport;
-import com.syrus.AMFICOM.Client.General.Report.ReportTemplate;
-//import com.syrus.AMFICOM.Client.Map.Report.MapReportModel;
-import com.syrus.AMFICOM.Client.Map.UI.MapFrame;
-import com.syrus.AMFICOM.map.MapElement;
-import com.syrus.AMFICOM.map.PhysicalLink;
-import com.syrus.AMFICOM.map.Collector;
-import com.syrus.AMFICOM.map.SiteNode;
-import com.syrus.AMFICOM.mapview.CablePath;
-import com.syrus.AMFICOM.mapview.Marker;
 
 public class CreateMapReportCommand extends VoidCommand
 {

@@ -1,5 +1,5 @@
 /**
- * $Id: ViewMapSetupCommand.java,v 1.4 2005/01/21 13:49:27 krupenn Exp $
+ * $Id: ViewMapSetupCommand.java,v 1.5 2005/02/08 15:11:10 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -23,23 +23,15 @@ import javax.swing.JDesktopPane;
 
 /**
  *  оманда отображает окно управлени€ сло€ми и поиска 
- * 
- * 
- * 
- * @version $Revision: 1.4 $, $Date: 2005/01/21 13:49:27 $
- * @module
  * @author $Author: krupenn $
- * @see
+ * @version $Revision: 1.5 $, $Date: 2005/02/08 15:11:10 $
+ * @module mapviewclient_v1
  */
 public class ViewMapSetupCommand extends VoidCommand
 {
 	ApplicationContext aContext;
 	JDesktopPane desktop;
 	public ControlsFrame frame;
-
-	public ViewMapSetupCommand()
-	{
-	}
 
 	public ViewMapSetupCommand(JDesktopPane desktop, ApplicationContext aContext)
 	{
@@ -49,21 +41,21 @@ public class ViewMapSetupCommand extends VoidCommand
 
 	public void execute()
 	{
-		frame = MapDesktopCommand.findControlsFrame(desktop);
+		this.frame = MapDesktopCommand.findControlsFrame(this.desktop);
 
-		if(frame == null)
+		if(this.frame == null)
 		{
-			frame = new ControlsFrame(null, aContext);
+			this.frame = new ControlsFrame(null, this.aContext);
 
-			desktop.add(frame);
+			this.desktop.add(this.frame);
 
-			Dimension dim = new Dimension(desktop.getWidth(), desktop.getHeight());
-			frame.setLocation(dim.width * 4 / 5, dim.height / 2);
-			frame.setSize(dim.width / 5, dim.height / 2);
+			Dimension dim = new Dimension(this.desktop.getWidth(), this.desktop.getHeight());
+			this.frame.setLocation(dim.width * 4 / 5, dim.height / 2);
+			this.frame.setSize(dim.width / 5, dim.height / 2);
 		}
 
-		frame.setVisible(true);
-		frame.setMapFrame(MapDesktopCommand.findMapFrame(desktop));
+		this.frame.setVisible(true);
+		this.frame.setMapFrame(MapDesktopCommand.findMapFrame(this.desktop));
 		setResult(Command.RESULT_OK);
 	}
 

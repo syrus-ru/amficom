@@ -1,5 +1,5 @@
 /**
- * $Id: DeleteNodeLinkCommandBundle.java,v 1.13 2005/02/01 13:29:56 krupenn Exp $
+ * $Id: DeleteNodeLinkCommandBundle.java,v 1.14 2005/02/08 15:11:09 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -32,12 +32,9 @@ import java.util.Iterator;
  * от того, какие конечные точки на концах происходит операци€ удалени€ 
  * фрагментов линий, линий, узлов  (и путей).  оманда
  * состоит из последовательности атомарных действий
- * 
- * 
- * @version $Revision: 1.13 $, $Date: 2005/02/01 13:29:56 $
- * @module
  * @author $Author: krupenn $
- * @see
+ * @version $Revision: 1.14 $, $Date: 2005/02/08 15:11:09 $
+ * @module mapviewclient_v1
  */
 public class DeleteNodeLinkCommandBundle extends MapActionCommandBundle
 {
@@ -236,32 +233,32 @@ public class DeleteNodeLinkCommandBundle extends MapActionCommandBundle
 		// фрагмент может быть удален в результате атомарной команды в составе
 		// другой команды удалени€, в этом случае у него будет выставлен
 		// флаг isRemoved
-		if(nodeLink.isRemoved())
+		if(this.nodeLink.isRemoved())
 			return;
 
-		map = logicalNetLayer.getMapView().getMap();
+		this.map = this.logicalNetLayer.getMapView().getMap();
 
 		PhysicalLink physicalLink = 
-				nodeLink.getPhysicalLink();
+				this.nodeLink.getPhysicalLink();
 
-		if (nodeLink.getStartNode() instanceof SiteNode
-			&& nodeLink.getEndNode() instanceof SiteNode)
+		if (this.nodeLink.getStartNode() instanceof SiteNode
+			&& this.nodeLink.getEndNode() instanceof SiteNode)
         {
-			this.removeNodeLinkBetweenTwoSites(nodeLink, physicalLink);
+			this.removeNodeLinkBetweenTwoSites(this.nodeLink, physicalLink);
         }//MapSiteNodeElement && MapSiteNodeElement
 		else
-		if(nodeLink.getStartNode() instanceof TopologicalNode
-			&& nodeLink.getEndNode() instanceof TopologicalNode)
+		if(this.nodeLink.getStartNode() instanceof TopologicalNode
+			&& this.nodeLink.getEndNode() instanceof TopologicalNode)
 		{
 			TopologicalNode leftNode = 
-					(TopologicalNode)nodeLink.getStartNode();
+					(TopologicalNode)this.nodeLink.getStartNode();
 			TopologicalNode rightNode = 
-					(TopologicalNode)nodeLink.getEndNode();
+					(TopologicalNode)this.nodeLink.getEndNode();
 			
 			if(leftNode.isActive() && rightNode.isActive())
 			{
 				this.removeNodeLinkBetweenActiveNodes(
-						nodeLink, 
+						this.nodeLink, 
 						physicalLink, 
 						leftNode, 
 						rightNode);
@@ -270,7 +267,7 @@ public class DeleteNodeLinkCommandBundle extends MapActionCommandBundle
 			if( !leftNode.isActive() && !rightNode.isActive())
 			{
 				this.removeNodeLinkBetweenInactiveNodes(
-						nodeLink, 
+						this.nodeLink, 
 						physicalLink, 
 						leftNode, 
 						rightNode);
@@ -287,7 +284,7 @@ public class DeleteNodeLinkCommandBundle extends MapActionCommandBundle
 						: leftNode;
 
 				this.removeNodeLinkBetweenActiveAndInactive(
-						nodeLink, 
+						this.nodeLink, 
 						physicalLink, 
 						activeNode, 
 						inactiveNode);
@@ -300,25 +297,25 @@ public class DeleteNodeLinkCommandBundle extends MapActionCommandBundle
 			SiteNode site = null;
 			TopologicalNode node = null;
 			
-			if(nodeLink.getStartNode() instanceof SiteNode
-				&& nodeLink.getEndNode() instanceof TopologicalNode)
+			if(this.nodeLink.getStartNode() instanceof SiteNode
+				&& this.nodeLink.getEndNode() instanceof TopologicalNode)
 			{
-				site = (SiteNode)nodeLink.getStartNode();
-				node = (TopologicalNode)nodeLink.getEndNode();
+				site = (SiteNode)this.nodeLink.getStartNode();
+				node = (TopologicalNode)this.nodeLink.getEndNode();
 	
 			}
 			else
-			if(nodeLink.getEndNode() instanceof SiteNode
-				&& nodeLink.getStartNode() instanceof TopologicalNode)
+			if(this.nodeLink.getEndNode() instanceof SiteNode
+				&& this.nodeLink.getStartNode() instanceof TopologicalNode)
 			{
-				site = (SiteNode)nodeLink.getEndNode();
-				node = (TopologicalNode)nodeLink.getStartNode();
+				site = (SiteNode)this.nodeLink.getEndNode();
+				node = (TopologicalNode)this.nodeLink.getStartNode();
 			}
 
 			if (node.isActive())
 			{
 				this.removeNodeLinkBetweenSiteAndActiveNode(
-						nodeLink, 
+						this.nodeLink, 
 						physicalLink, 
 						site, 
 						node);
@@ -326,14 +323,14 @@ public class DeleteNodeLinkCommandBundle extends MapActionCommandBundle
 			else
 			{
 				this.removeNodeLinkBetweenSiteAndInactiveNode(
-						nodeLink, 
+						this.nodeLink, 
 						physicalLink, 
 						site, 
 						node);
 			}//if ! (node.isActive())
 		}//MapSiteNodeElement && MapPhysicalNodeElement
 			
-		MapView mapView = logicalNetLayer.getMapView();
+		MapView mapView = this.logicalNetLayer.getMapView();
 
 		if(physicalLink.getStartNode() instanceof SiteNode
 			&& physicalLink.getEndNode() instanceof SiteNode)
@@ -351,6 +348,6 @@ public class DeleteNodeLinkCommandBundle extends MapActionCommandBundle
 			}
 		}
 
-		logicalNetLayer.sendMapEvent(new MapEvent(this, MapEvent.MAP_CHANGED));
+		this.logicalNetLayer.sendMapEvent(new MapEvent(this, MapEvent.MAP_CHANGED));
 	}
 }

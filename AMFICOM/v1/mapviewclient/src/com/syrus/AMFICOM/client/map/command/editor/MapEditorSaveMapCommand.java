@@ -1,5 +1,5 @@
 /*
- * $Id: MapEditorSaveMapCommand.java,v 1.5 2005/01/21 13:49:27 krupenn Exp $
+ * $Id: MapEditorSaveMapCommand.java,v 1.6 2005/02/08 15:11:10 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -24,7 +24,7 @@ import javax.swing.JDesktopPane;
  * 
  * 
  * 
- * @version $Revision: 1.5 $, $Date: 2005/01/21 13:49:27 $
+ * @version $Revision: 1.6 $, $Date: 2005/02/08 15:11:10 $
  * @module
  * @author $Author: krupenn $
  * @see MapSaveCommand
@@ -36,7 +36,6 @@ public class MapEditorSaveMapCommand extends VoidCommand
 
 	/**
 	 * 
-	 * @param mapFrame окно карты, из которого сохранять схему
 	 * @param aContext контекст модуля "Редактор топологических схем"
 	 */
 	public MapEditorSaveMapCommand(JDesktopPane desktop, ApplicationContext aContext)
@@ -47,7 +46,7 @@ public class MapEditorSaveMapCommand extends VoidCommand
 
 	public void execute()
 	{
-		MapFrame mapFrame = MapDesktopCommand.findMapFrame(desktop);
+		MapFrame mapFrame = MapDesktopCommand.findMapFrame(this.desktop);
 
 		if(mapFrame == null)
 		{
@@ -55,7 +54,7 @@ public class MapEditorSaveMapCommand extends VoidCommand
 			setResult(Command.RESULT_NO);
 			return;
 		}
-		new MapSaveCommand(mapFrame.getMap(), aContext).execute();
+		new MapSaveCommand(mapFrame.getMap(), this.aContext).execute();
 		setResult(Command.RESULT_OK);
 	}
 

@@ -1,5 +1,5 @@
 /**
- * $Id: HandPanCommand.java,v 1.6 2005/01/12 15:45:53 krupenn Exp $
+ * $Id: HandPanCommand.java,v 1.7 2005/02/08 15:11:10 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -23,13 +23,9 @@ import java.awt.Cursor;
  * Команда переключения режима сдвика карты "лапкой".
  * основное действие - изменение модели приложения и объекта MapState
  * в логическом сетевом слое карты
- * 
- * 
- * 
- * @version $Revision: 1.6 $, $Date: 2005/01/12 15:45:53 $
- * @module
  * @author $Author: krupenn $
- * @see
+ * @version $Revision: 1.7 $, $Date: 2005/02/08 15:11:10 $
+ * @module mpviewclient_v1
  */
 public class HandPanCommand extends VoidCommand
 {
@@ -44,36 +40,36 @@ public class HandPanCommand extends VoidCommand
 	public void setParameter(String field, Object value)
 	{
 		if(field.equals("logicalNetLayer"))
-			logicalNetLayer = (LogicalNetLayer )value;
+			this.logicalNetLayer = (LogicalNetLayer )value;
 		if(field.equals("applicationModel"))
-			aModel = (ApplicationModel )value;
+			this.aModel = (ApplicationModel )value;
 	}
 
 	public void execute()
 	{
-		if(aModel.isSelected(MapApplicationModel.OPERATION_HAND_PAN))
+		if(this.aModel.isSelected(MapApplicationModel.OPERATION_HAND_PAN))
 		{
-			logicalNetLayer.getMapState().setActionMode(MapState.NULL_ACTION_MODE);
-			logicalNetLayer.getMapState().setOperationMode(MapState.NO_OPERATION);
-			logicalNetLayer.setCursor(Cursor.getDefaultCursor());
+			this.logicalNetLayer.getMapState().setActionMode(MapState.NULL_ACTION_MODE);
+			this.logicalNetLayer.getMapState().setOperationMode(MapState.NO_OPERATION);
+			this.logicalNetLayer.setCursor(Cursor.getDefaultCursor());
 
-			aModel.setSelected(MapApplicationModel.OPERATION_HAND_PAN, false);
-			aModel.fireModelChanged();
+			this.aModel.setSelected(MapApplicationModel.OPERATION_HAND_PAN, false);
+			this.aModel.fireModelChanged();
 		}
 		else
-		if(!aModel.isSelected(MapApplicationModel.OPERATION_HAND_PAN))
+		if(!this.aModel.isSelected(MapApplicationModel.OPERATION_HAND_PAN))
 		{
-			aModel.setSelected(MapApplicationModel.OPERATION_HAND_PAN, true);
+			this.aModel.setSelected(MapApplicationModel.OPERATION_HAND_PAN, true);
 
-			aModel.setSelected(MapApplicationModel.OPERATION_MEASURE_DISTANCE, false);
-			aModel.setSelected(MapApplicationModel.OPERATION_MOVE_TO_CENTER, false);
-			aModel.setSelected(MapApplicationModel.OPERATION_ZOOM_TO_POINT, false);
-			aModel.setSelected(MapApplicationModel.OPERATION_ZOOM_BOX, false);
-			aModel.setSelected(MapApplicationModel.OPERATION_MOVE_FIXED, false);
-			aModel.fireModelChanged();
+			this.aModel.setSelected(MapApplicationModel.OPERATION_MEASURE_DISTANCE, false);
+			this.aModel.setSelected(MapApplicationModel.OPERATION_MOVE_TO_CENTER, false);
+			this.aModel.setSelected(MapApplicationModel.OPERATION_ZOOM_TO_POINT, false);
+			this.aModel.setSelected(MapApplicationModel.OPERATION_ZOOM_BOX, false);
+			this.aModel.setSelected(MapApplicationModel.OPERATION_MOVE_FIXED, false);
+			this.aModel.fireModelChanged();
 
-			logicalNetLayer.getMapState().setOperationMode(MapState.MOVE_HAND);
-			logicalNetLayer.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+			this.logicalNetLayer.getMapState().setOperationMode(MapState.MOVE_HAND);
+			this.logicalNetLayer.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		}
 	}
 }

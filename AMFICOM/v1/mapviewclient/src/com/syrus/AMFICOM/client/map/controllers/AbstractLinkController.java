@@ -1,5 +1,5 @@
 /**
- * $Id: AbstractLinkController.java,v 1.7 2005/02/03 16:24:01 krupenn Exp $
+ * $Id: AbstractLinkController.java,v 1.8 2005/02/08 15:11:10 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -17,14 +17,17 @@ import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.CharacteristicType;
+import com.syrus.AMFICOM.general.CharacteristicTypeWrapper;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StringFieldCondition;
+import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.CharacteristicTypeSort;
 import com.syrus.AMFICOM.general.corba.DataType;
+import com.syrus.AMFICOM.general.corba.OperationSort;
 import com.syrus.AMFICOM.general.corba.StringFieldSort;
 import com.syrus.AMFICOM.map.MapElement;
 
@@ -37,7 +40,7 @@ import java.util.List;
 /**
  * Контроллер линейного элемента карты.
  * @author $Author: krupenn $
- * @version $Revision: 1.7 $, $Date: 2005/02/03 16:24:01 $
+ * @version $Revision: 1.8 $, $Date: 2005/02/08 15:11:10 $
  * @module mapviewclient_v1
  */
 public abstract class AbstractLinkController implements MapElementController
@@ -95,6 +98,11 @@ public abstract class AbstractLinkController implements MapElementController
 		CharacteristicTypeSort sort = CharacteristicTypeSort.CHARACTERISTICTYPESORT_VISUAL;
 		DataType dataType = DataType.DATA_TYPE_STRING;
 
+//		StorableObjectCondition pTypeCondition = new TypicalCondition(
+//				codename, 
+//				OperationSort.OPERATION_EQUALS,
+//				ObjectEntities.CHARACTERISTICTYPE_ENTITY_CODE,
+//				CharacteristicTypeWrapper.COLUMN_CODENAME);
 		StorableObjectCondition pTypeCondition = new StringFieldCondition(
 			codename,
 			ObjectEntities.CHARACTERISTICTYPE_ENTITY_CODE,

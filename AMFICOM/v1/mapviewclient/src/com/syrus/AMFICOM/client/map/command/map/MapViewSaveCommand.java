@@ -1,5 +1,5 @@
 /*
- * $Id: MapViewSaveCommand.java,v 1.13 2005/02/01 11:34:56 krupenn Exp $
+ * $Id: MapViewSaveCommand.java,v 1.14 2005/02/08 15:11:10 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -10,6 +10,10 @@
 
 package com.syrus.AMFICOM.Client.Map.Command.Map;
 
+import java.awt.Dimension;
+import java.awt.Toolkit;
+import java.util.Iterator;
+
 import com.syrus.AMFICOM.Client.General.Command.Command;
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.Event.StatusMessageEvent;
@@ -17,45 +21,28 @@ import com.syrus.AMFICOM.Client.General.Lang.LangModel;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
-import com.syrus.AMFICOM.client_.general.ui_.ObjectResourcePropertiesDialog;
 import com.syrus.AMFICOM.Client.Map.Props.MapViewPanel;
-import com.syrus.AMFICOM.Client.Map.UI.MapFrame;
-import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
-
-import com.syrus.AMFICOM.mapview.MapView;
-import com.syrus.AMFICOM.Client.Resource.Pool;
+import com.syrus.AMFICOM.client_.general.ui_.ObjectResourcePropertiesDialog;
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.VersionCollisionException;
-import com.syrus.AMFICOM.map.MapStorableObjectPool;
+import com.syrus.AMFICOM.mapview.MapView;
 import com.syrus.AMFICOM.mapview.MapViewStorableObjectPool;
 import com.syrus.AMFICOM.scheme.SchemeStorableObjectPool;
 import com.syrus.AMFICOM.scheme.corba.Scheme;
-import java.awt.Dimension;
-import java.awt.Toolkit;
-import java.util.Iterator;
 
 /**
- * Класс $RCSfile: MapViewSaveCommand.java,v $ используется для сохранения топологической схемы на сервере
- * 
- * 
- * 
- * @version $Revision: 1.13 $, $Date: 2005/02/01 11:34:56 $
- * @module map_v2
+ * Класс используется для сохранения топологической схемы на сервере
  * @author $Author: krupenn $
- * @see
+ * @version $Revision: 1.14 $, $Date: 2005/02/08 15:11:10 $
+ * @module mapviewclietn_v1
  */
 public class MapViewSaveCommand extends VoidCommand
 {
 	MapView mapView;
 	ApplicationContext aContext;
 
-	/**
-	 * 
-	 * @param mapFrame comments
-	 * @param aContext comments
-	 */
 	public MapViewSaveCommand(MapView mapView, ApplicationContext aContext)
 	{
 		this.mapView = mapView;
@@ -68,7 +55,7 @@ public class MapViewSaveCommand extends VoidCommand
 				Environment.getActiveWindow(), 
 				LangModelMap.getString("MapViewProperties"), 
 				true, 
-				mapView,
+				this.mapView,
 				MapViewPanel.getInstance());
 
 		Dimension screenSize =  Toolkit.getDefaultToolkit().getScreenSize();
@@ -85,11 +72,11 @@ public class MapViewSaveCommand extends VoidCommand
 
 		if ( dialog.ifAccept())
 		{
-			aContext.getDispatcher().notify(new StatusMessageEvent(
+			this.aContext.getDispatcher().notify(new StatusMessageEvent(
 					StatusMessageEvent.STATUS_MESSAGE,
 					LangModelMap.getString("MapSaving")));
 
-			MapSaveCommand cmd = new MapSaveCommand(mapView.getMap(), aContext);
+			MapSaveCommand cmd = new MapSaveCommand(this.mapView.getMap(), this.aContext);
 			cmd.execute();
 			if(cmd.getResult() == Command.RESULT_CANCEL)
 			{
@@ -97,10 +84,10 @@ public class MapViewSaveCommand extends VoidCommand
 				return;
 			}
 			
-			for(Iterator it = mapView.getSchemes().iterator(); it.hasNext();)
+			for(Iterator it = this.mapView.getSchemes().iterator(); it.hasNext();)
 			{
 				Scheme scheme = (Scheme )it.next();
-				scheme.mapImpl(mapView.getMap());
+				scheme.mapImpl(this.mapView.getMap());
 				try
 				{
 					SchemeStorableObjectPool.flush(true);// save scheme
@@ -145,14 +132,14 @@ public class MapViewSaveCommand extends VoidCommand
 				e.printStackTrace();
 			}
 			
-			aContext.getDispatcher().notify(new StatusMessageEvent(
+			this.aContext.getDispatcher().notify(new StatusMessageEvent(
 					StatusMessageEvent.STATUS_MESSAGE,
 					LangModel.getString("Finished")));
 			setResult(Command.RESULT_OK);
 		}
 		else
 		{
-			aContext.getDispatcher().notify(new StatusMessageEvent(
+			this.aContext.getDispatcher().notify(new StatusMessageEvent(
 					StatusMessageEvent.STATUS_MESSAGE,
 					LangModel.getString("Aborted")));
 			setResult(Command.RESULT_CANCEL);

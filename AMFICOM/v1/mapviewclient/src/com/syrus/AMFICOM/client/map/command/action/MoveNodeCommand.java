@@ -1,5 +1,5 @@
 /**
- * $Id: MoveNodeCommand.java,v 1.7 2005/01/11 16:43:05 krupenn Exp $
+ * $Id: MoveNodeCommand.java,v 1.8 2005/02/08 15:11:09 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -13,27 +13,21 @@ package com.syrus.AMFICOM.Client.Map.Command.Action;
 
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
-import com.syrus.AMFICOM.map.DoublePoint;
 import com.syrus.AMFICOM.map.AbstractNode;
-
-import java.awt.geom.Point2D;
+import com.syrus.AMFICOM.map.DoublePoint;
 
 /**
- * Перемещение узла
- * 
- * 
- * 
- * @version $Revision: 1.7 $, $Date: 2005/01/11 16:43:05 $
- * @module
+ * Перемещение узла.
  * @author $Author: krupenn $
- * @see
+ * @version $Revision: 1.8 $, $Date: 2005/02/08 15:11:09 $
+ * @module mapviewclient_v1
  */
 public class MoveNodeCommand extends MapActionCommand
 {
 	/**
 	 * начальная позиция перемещаемого элемента
 	 */
-	DoublePoint location;
+	DoublePoint initialLocation;
 
 	/**
 	 * абсолютное смещение по оси абсцисс
@@ -56,20 +50,20 @@ public class MoveNodeCommand extends MapActionCommand
 		this.node = node;
 
 		// запомнить начальное положение
-		location = node.getLocation();
+		this.initialLocation = node.getLocation();
 	}
 
 	public void setParameter(String field, Object value)
 	{
 		if(field.equals(MoveSelectionCommandBundle.DELTA_X))
 		{
-			deltaX = Double.parseDouble((String )value);
+			this.deltaX = Double.parseDouble((String )value);
 			execute();
 		}
 		else
 		if(field.equals(MoveSelectionCommandBundle.DELTA_Y))
 		{
-			deltaY = Double.parseDouble((String )value);
+			this.deltaY = Double.parseDouble((String )value);
 			execute();
 		}
 	}
@@ -88,15 +82,15 @@ public class MoveNodeCommand extends MapActionCommand
 				getClass().getName(), 
 				"execute()");
 		
-		DoublePoint dp = node.getLocation();
+		DoublePoint nodeLocation = this.node.getLocation();
 
-		dp.setLocation(location.getX() + deltaX, location.getY() + deltaY);
+		nodeLocation.setLocation(this.initialLocation.getX() + this.deltaX, this.initialLocation.getY() + this.deltaY);
 
-		node.setLocation(dp);
+		this.node.setLocation(nodeLocation);
 	}
 	
 	public void undo()
 	{
-		node.setLocation(location);
+		this.node.setLocation(this.initialLocation);
 	}
 }

@@ -1,5 +1,5 @@
 /**
- * $Id: CreateCablePathCommandAtomic.java,v 1.9 2005/02/01 11:34:55 krupenn Exp $
+ * $Id: CreateCablePathCommandAtomic.java,v 1.10 2005/02/08 15:11:09 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,16 +11,11 @@
 
 package com.syrus.AMFICOM.Client.Map.Command.Action;
 
-import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
+import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.IdentifierPool;
-import com.syrus.AMFICOM.general.IllegalObjectEntityException;
-import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.mapview.CablePath;
-import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.scheme.corba.SchemeCableLink;
-import com.syrus.AMFICOM.Client.General.Model.Environment;
 
 /**
  * создание пути рпокладки кабеля, внесение его в пул и на карту - 
@@ -28,18 +23,17 @@ import com.syrus.AMFICOM.Client.General.Model.Environment;
  * 
  * 
  * 
- * @version $Revision: 1.9 $, $Date: 2005/02/01 11:34:55 $
- * @module
  * @author $Author: krupenn $
- * @see
+ * @version $Revision: 1.10 $, $Date: 2005/02/08 15:11:09 $
+ * @module mapviewclient_v1
  */
 public class CreateCablePathCommandAtomic extends MapActionCommand
 {
 	/** кабельный путь */
-	CablePath cp;
+	CablePath cablePath;
 	
 	/** кабель */
-	SchemeCableLink scl;
+	SchemeCableLink schemeCableLink;
 	
 	/** начальный узел */
 	AbstractNode startNode;
@@ -53,14 +47,14 @@ public class CreateCablePathCommandAtomic extends MapActionCommand
 			AbstractNode endNode)
 	{
 		super(MapActionCommand.ACTION_DRAW_LINE);
-		this.scl = scl;
+		this.schemeCableLink = scl;
 		this.startNode = startNode;
 		this.endNode = endNode;
 	}
 	
 	public CablePath getPath()
 	{
-		return cp;
+		return this.cablePath;
 	}
 	
 	public void execute()
@@ -73,13 +67,13 @@ public class CreateCablePathCommandAtomic extends MapActionCommand
 		
 		try
 		{
-			cp = com.syrus.AMFICOM.mapview.CablePath.createInstance(
-					scl,
-					startNode, 
-					endNode, 
-					logicalNetLayer.getMapView());
+			this.cablePath = com.syrus.AMFICOM.mapview.CablePath.createInstance(
+					this.schemeCableLink,
+					this.startNode, 
+					this.endNode, 
+					this.logicalNetLayer.getMapView());
 	
-			logicalNetLayer.getMapView().addCablePath(cp);
+			this.logicalNetLayer.getMapView().addCablePath(this.cablePath);
 		}
 		catch (ApplicationException e)
 		{
@@ -89,12 +83,12 @@ public class CreateCablePathCommandAtomic extends MapActionCommand
 	
 	public void redo()
 	{
-		logicalNetLayer.getMapView().addCablePath(cp);
+		this.logicalNetLayer.getMapView().addCablePath(this.cablePath);
 	}
 	
 	public void undo()
 	{
-		logicalNetLayer.getMapView().removeCablePath(cp);
+		this.logicalNetLayer.getMapView().removeCablePath(this.cablePath);
 	}
 }
 

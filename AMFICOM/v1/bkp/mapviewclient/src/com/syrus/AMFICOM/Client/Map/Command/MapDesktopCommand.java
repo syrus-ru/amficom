@@ -1,15 +1,15 @@
 package com.syrus.AMFICOM.Client.Map.Command;
 
-import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
+import java.awt.Component;
+
+import javax.swing.JDesktopPane;
+
 import com.syrus.AMFICOM.Client.Map.Setup.ControlsFrame;
 import com.syrus.AMFICOM.Client.Map.UI.MapElementsBarFrame;
 import com.syrus.AMFICOM.Client.Map.UI.MapElementsFrame;
 import com.syrus.AMFICOM.Client.Map.UI.MapFrame;
 import com.syrus.AMFICOM.Client.Map.UI.MapPropertyFrame;
 import com.syrus.AMFICOM.Client.Map.UI.MapSchemeTreeFrame;
-
-import java.awt.Component;
-import javax.swing.JDesktopPane;
 
 public abstract class MapDesktopCommand
 {

@@ -1,5 +1,5 @@
 /**
- * $Id: RemoveMeasurementPathCommandAtomic.java,v 1.9 2005/02/01 11:34:56 krupenn Exp $
+ * $Id: RemoveMeasurementPathCommandAtomic.java,v 1.10 2005/02/08 15:11:09 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -13,31 +13,26 @@ package com.syrus.AMFICOM.Client.Map.Command.Action;
 
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.mapview.MeasurementPath;
-import com.syrus.AMFICOM.Client.Resource.Pool;
 
 /**
  * удаление измерительного пути из карты - атомарное действие 
- * 
- * 
- * 
- * @version $Revision: 1.9 $, $Date: 2005/02/01 11:34:56 $
- * @module
  * @author $Author: krupenn $
- * @see
+ * @version $Revision: 1.10 $, $Date: 2005/02/08 15:11:09 $
+ * @module mapviewclient_v1
  */
 public class RemoveMeasurementPathCommandAtomic extends MapActionCommand
 {
-	MeasurementPath mp;
+	MeasurementPath measuremetnPath;
 	
 	public RemoveMeasurementPathCommandAtomic(MeasurementPath mp)
 	{
 		super(MapActionCommand.ACTION_DROP_LINE);
-		this.mp = mp;
+		this.measuremetnPath = mp;
 	}
 	
 	public MeasurementPath getPath()
 	{
-		return mp;
+		return this.measuremetnPath;
 	}
 	
 	public void execute()
@@ -48,17 +43,17 @@ public class RemoveMeasurementPathCommandAtomic extends MapActionCommand
 				getClass().getName(), 
 				"execute()");
 
-		logicalNetLayer.getMapView().removeMeasurementPath(mp);
+		this.logicalNetLayer.getMapView().removeMeasurementPath(this.measuremetnPath);
 	}
 
 	public void redo()
 	{
-		logicalNetLayer.getMapView().removeMeasurementPath(mp);
+		this.logicalNetLayer.getMapView().removeMeasurementPath(this.measuremetnPath);
 	}
 
 	public void undo()
 	{
-		logicalNetLayer.getMapView().addMeasurementPath(mp);
+		this.logicalNetLayer.getMapView().addMeasurementPath(this.measuremetnPath);
 	}
 }
 

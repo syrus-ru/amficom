@@ -1,5 +1,5 @@
 /*
- * $Id: MapEditorNewViewCommand.java,v 1.9 2005/01/30 15:38:17 krupenn Exp $
+ * $Id: MapEditorNewViewCommand.java,v 1.10 2005/02/08 15:11:10 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -10,29 +10,30 @@
 
 package com.syrus.AMFICOM.Client.Map.Command.Editor;
 
+import javax.swing.JDesktopPane;
+
 import com.syrus.AMFICOM.Client.General.Command.Command;
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.Model.MapMapEditorApplicationModelFactory;
+import com.syrus.AMFICOM.Client.Map.Command.MapDesktopCommand;
 import com.syrus.AMFICOM.Client.Map.Command.Map.MapNewCommand;
 import com.syrus.AMFICOM.Client.Map.Command.Map.MapViewCloseCommand;
 import com.syrus.AMFICOM.Client.Map.Command.Map.MapViewNewCommand;
-import com.syrus.AMFICOM.Client.Map.Command.MapDesktopCommand;
-import com.syrus.AMFICOM.Client.Map.Editor.MapEditorMainFrame;
 import com.syrus.AMFICOM.Client.Map.UI.MapFrame;
-import com.syrus.AMFICOM.mapview.MapView;
 import com.syrus.AMFICOM.map.Map;
-import javax.swing.JDesktopPane;
+import com.syrus.AMFICOM.mapview.MapView;
 
 /**
  * Класс $RCSfile: MapEditorNewViewCommand.java,v $ используется для создания новой топологической схемы в
  * модуле "Редактор топологических схем". При этом в модуле открываются все
  * окна (команда ViewMapAllCommand) и вызывается команда MapNewCommand
  * 
- * @version $Revision: 1.9 $, $Date: 2005/01/30 15:38:17 $
+ * @version $Revision: 1.10 $, $Date: 2005/02/08 15:11:10 $
  * @module
  * @author $Author: krupenn $
- * @see MapNewCommand, ViewMapAllCommand
+ * @see MapNewCommand
+ * @see ViewMapAllCommand
  */
 public class MapEditorNewViewCommand extends VoidCommand
 {
@@ -47,12 +48,12 @@ public class MapEditorNewViewCommand extends VoidCommand
 
 	public void execute()
 	{
-		MapFrame mapFrame = MapDesktopCommand.findMapFrame(desktop);
+		MapFrame mapFrame = MapDesktopCommand.findMapFrame(this.desktop);
 	
 		if(mapFrame == null)
 		{
-			new ViewMapAllCommand(desktop, aContext, new MapMapEditorApplicationModelFactory()).execute();
-			mapFrame = MapDesktopCommand.findMapFrame(desktop);
+			new ViewMapAllCommand(this.desktop, this.aContext, new MapMapEditorApplicationModelFactory()).execute();
+			mapFrame = MapDesktopCommand.findMapFrame(this.desktop);
 		}
 
 		if(!mapFrame.checkCanCloseMap())

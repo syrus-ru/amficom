@@ -1,5 +1,5 @@
 /**
- * $Id: DeletePhysicalLinkCommandBundle.java,v 1.10 2005/02/01 13:29:56 krupenn Exp $
+ * $Id: DeletePhysicalLinkCommandBundle.java,v 1.11 2005/02/08 15:11:09 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -33,10 +33,9 @@ import java.util.List;
  * состоит из последовательности атомарных действий
  * 
  * 
- * @version $Revision: 1.10 $, $Date: 2005/02/01 13:29:56 $
- * @module
  * @author $Author: krupenn $
- * @see
+ * @version $Revision: 1.11 $, $Date: 2005/02/08 15:11:09 $
+ * @module mapviewclient_v1
  */
 public class DeletePhysicalLinkCommandBundle extends MapActionCommandBundle
 {
@@ -68,18 +67,18 @@ public class DeletePhysicalLinkCommandBundle extends MapActionCommandBundle
 		// связь может быть удалена в результате атомарной команды в составе
 		// другой команды удаления, в этом случае у неё будет выставлен
 		// флаг isRemoved
-		if(link.isRemoved())
+		if(this.link.isRemoved())
 			return;
 
-		MapView mapView = logicalNetLayer.getMapView();
-		map = mapView.getMap();
+		MapView mapView = this.logicalNetLayer.getMapView();
+		this.map = mapView.getMap();
 		
-		List cablePathsToScan = mapView.getCablePaths(link);
+		List cablePathsToScan = mapView.getCablePaths(this.link);
 
-		link.sortNodes();
+		this.link.sortNodes();
 		
 		/// удаляются все топологические узлы линии
-		for(Iterator it = link.getSortedNodes().iterator(); it.hasNext();)
+		for(Iterator it = this.link.getSortedNodes().iterator(); it.hasNext();)
 		{
 			AbstractNode ne = (AbstractNode)it.next();
 			if(ne instanceof TopologicalNode)
@@ -90,14 +89,14 @@ public class DeletePhysicalLinkCommandBundle extends MapActionCommandBundle
 		}
 		
 		// удаляются все фрагменты линии
-		for(Iterator it = link.getNodeLinks().iterator(); it.hasNext();)
+		for(Iterator it = this.link.getNodeLinks().iterator(); it.hasNext();)
 		{
 			NodeLink nodeLink = (NodeLink)it.next();
 			super.removeNodeLink(nodeLink);
 		}
 		
 		// удаляется сама линия
-		super.removePhysicalLink(link);
+		super.removePhysicalLink(this.link);
 		
 		// проверяются все кабельные пути, которые проходили по удаленной линии,
 		// и прохождение по ней заменяется непривязанной связью
@@ -105,14 +104,14 @@ public class DeletePhysicalLinkCommandBundle extends MapActionCommandBundle
 		{
 			CablePath cablePath = (CablePath)it.next();
 			
-			cablePath.removeLink(link);
+			cablePath.removeLink(this.link);
 			UnboundLink unbound = super.createUnboundLinkWithNodeLink(
-					link.getStartNode(),
-					link.getEndNode());
+					this.link.getStartNode(),
+					this.link.getEndNode());
 			unbound.setCablePath(cablePath);
 			cablePath.addLink(unbound, CableController.generateCCI(unbound));
 		}
 
-		logicalNetLayer.sendMapEvent(new MapEvent(this, MapEvent.MAP_CHANGED));
+		this.logicalNetLayer.sendMapEvent(new MapEvent(this, MapEvent.MAP_CHANGED));
 	}
 }

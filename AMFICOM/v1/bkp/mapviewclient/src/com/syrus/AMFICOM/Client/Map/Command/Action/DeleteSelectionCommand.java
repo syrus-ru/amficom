@@ -1,5 +1,5 @@
 /**
- * $Id: DeleteSelectionCommand.java,v 1.13 2005/01/31 12:19:18 krupenn Exp $
+ * $Id: DeleteSelectionCommand.java,v 1.14 2005/02/08 15:11:09 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,34 +11,27 @@
 
 package com.syrus.AMFICOM.Client.Map.Command.Action;
 
+import java.util.Iterator;
+import java.util.LinkedList;
+
 import com.syrus.AMFICOM.Client.General.Event.MapEvent;
 import com.syrus.AMFICOM.Client.General.Event.MapNavigateEvent;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
 import com.syrus.AMFICOM.Client.Map.MapState;
-import com.syrus.AMFICOM.map.Map;
-import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.map.AbstractNode;
+import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.map.NodeLink;
 import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.mapview.CablePath;
 import com.syrus.AMFICOM.mapview.UnboundLink;
-import com.syrus.AMFICOM.mapview.MapView;
-import com.syrus.AMFICOM.mapview.VoidElement;
-
-import java.util.Iterator;
-import java.util.LinkedList;
 
 /**
  * Удалить выбранные элементы карты. Команда является пучком команд 
  * (CommandBundle), удаляющих отдельные элементы.
- * 
- * 
- * 
- * @version $Revision: 1.13 $, $Date: 2005/01/31 12:19:18 $
- * @module
  * @author $Author: krupenn $
- * @see
+ * @version $Revision: 1.14 $, $Date: 2005/02/08 15:11:09 $
+ * @module mapviewclient_v1
  */
 public class DeleteSelectionCommand extends MapActionCommandBundle
 {
@@ -51,9 +44,6 @@ public class DeleteSelectionCommand extends MapActionCommandBundle
 	{
 		super.setLogicalNetLayer(logicalNetLayer);
 		
-		MapView mapView = logicalNetLayer.getMapView();
-		Map map = mapView.getMap();
-
 		//Удаляем все выбранные элементы взависимости от разрешения на их удаление
 		Iterator e;
 
@@ -95,17 +85,17 @@ public class DeleteSelectionCommand extends MapActionCommandBundle
 		{
 			for(e = logicalNetLayer.getMapView().getCablePaths().iterator(); e.hasNext();)
 			{
-				MapCablePathElement cp = (MapCablePathElement)e.next();
-				if (cp.isSelected())
+				MapCablePathElement cablePath = (MapCablePathElement)e.next();
+				if (cablePath.isSelected())
 				{
-					for(Iterator it = cp.getLinks().iterator(); it.hasNext();)
+					for(Iterator it = cablePath.getLinks().iterator(); it.hasNext();)
 					{
 						MapPhysicalLinkElement link = (MapPhysicalLinkElement )it.next();
 						nodeLinksToDelete.addAll(link.getNodeLinks());
 						linksToDelete.add(link);
 					}
 				}
-				cablePathsToDelete.add(cp);
+				cablePathsToDelete.add(cablePath);
 			}
 		}
 */
@@ -234,11 +224,11 @@ public class DeleteSelectionCommand extends MapActionCommandBundle
 		// выполнить все команды в списке
 		super.execute();
 
-		MapElement mapElement = com.syrus.AMFICOM.mapview.VoidElement.getInstance(logicalNetLayer.getMapView());
+		MapElement mapElement = com.syrus.AMFICOM.mapview.VoidElement.getInstance(this.logicalNetLayer.getMapView());
 
-		logicalNetLayer.setCurrentMapElement(mapElement);
-		logicalNetLayer.sendMapEvent(new MapNavigateEvent(mapElement, MapNavigateEvent.MAP_ELEMENT_SELECTED_EVENT));
-		logicalNetLayer.sendMapEvent(new MapEvent(mapElement, MapEvent.MAP_CHANGED));
+		this.logicalNetLayer.setCurrentMapElement(mapElement);
+		this.logicalNetLayer.sendMapEvent(new MapNavigateEvent(mapElement, MapNavigateEvent.MAP_ELEMENT_SELECTED_EVENT));
+		this.logicalNetLayer.sendMapEvent(new MapEvent(mapElement, MapEvent.MAP_CHANGED));
 	}
 
 

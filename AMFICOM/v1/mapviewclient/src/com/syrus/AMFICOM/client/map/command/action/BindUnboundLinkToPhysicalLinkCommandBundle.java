@@ -1,5 +1,5 @@
 /**
- * $Id: BindUnboundLinkToPhysicalLinkCommandBundle.java,v 1.8 2005/02/01 13:29:56 krupenn Exp $
+ * $Id: BindUnboundLinkToPhysicalLinkCommandBundle.java,v 1.9 2005/02/08 15:11:08 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -17,9 +17,8 @@ import com.syrus.AMFICOM.Client.Map.Controllers.CableController;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.mapview.CablePath;
-import com.syrus.AMFICOM.mapview.UnboundLink;
 import com.syrus.AMFICOM.mapview.MapView;
-import com.syrus.AMFICOM.map.PhysicalLinkBinding;
+import com.syrus.AMFICOM.mapview.UnboundLink;
 
 /**
  *  команда привязывания непривязанной линии к тоннелю. концевые узлы
@@ -27,10 +26,9 @@ import com.syrus.AMFICOM.map.PhysicalLinkBinding;
  * 
  * 
  * 
- * @version $Revision: 1.8 $, $Date: 2005/02/01 13:29:56 $
- * @module
  * @author $Author: krupenn $
- * @see
+ * @version $Revision: 1.9 $, $Date: 2005/02/08 15:11:08 $
+ * @module mapviewclient_v1 
  */
 public class BindUnboundLinkToPhysicalLinkCommandBundle extends MapActionCommandBundle
 {
@@ -65,19 +63,19 @@ public class BindUnboundLinkToPhysicalLinkCommandBundle extends MapActionCommand
 				getClass().getName(), 
 				"execute()");
 
-		MapView mapView = logicalNetLayer.getMapView();
-		map = mapView.getMap();
+		MapView mapView = this.logicalNetLayer.getMapView();
+		this.map = mapView.getMap();
 		
 		// удаляется непривязанная линия
-		super.removeUnboundLink(unbound);
+		super.removeUnboundLink(this.unbound);
 		
 		// одновляется информация о привязке кабульного пути
-		CablePath cablePath = unbound.getCablePath();
-		cablePath.removeLink(unbound);
-		cablePath.addLink(link, CableController.generateCCI(link));
-		link.getBinding().add(cablePath);
+		CablePath cablePath = this.unbound.getCablePath();
+		cablePath.removeLink(this.unbound);
+		cablePath.addLink(this.link, CableController.generateCCI(this.link));
+		this.link.getBinding().add(cablePath);
 
-		logicalNetLayer.sendMapEvent(new MapEvent(this, MapEvent.MAP_CHANGED));
+		this.logicalNetLayer.sendMapEvent(new MapEvent(this, MapEvent.MAP_CHANGED));
 	}
 	
 }

@@ -1,5 +1,5 @@
 /**
- * $Id: ViewMapAllCommand.java,v 1.3 2004/10/19 14:10:03 krupenn Exp $
+ * $Id: ViewMapAllCommand.java,v 1.4 2005/02/08 15:11:10 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -20,24 +20,15 @@ import javax.swing.JDesktopPane;
 
 /**
  * отобразить стандартный набор окон модуля "Редактор топологических схем"
- * 
- * 
- * 
- * 
- * @version $Revision: 1.3 $, $Date: 2004/10/19 14:10:03 $
- * @module
  * @author $Author: krupenn $
- * @see
+ * @version $Revision: 1.4 $, $Date: 2005/02/08 15:11:10 $
+ * @module mapviewclient_v1
  */
 public class ViewMapAllCommand extends VoidCommand
 {
 	ApplicationContext aContext;
 	JDesktopPane desktop;
 	ApplicationModelFactory factory;
-
-	public ViewMapAllCommand()
-	{
-	}
 
 	public ViewMapAllCommand(JDesktopPane desktop, ApplicationContext aContext, ApplicationModelFactory factory)
 	{
@@ -48,11 +39,11 @@ public class ViewMapAllCommand extends VoidCommand
 
 	public void execute()
 	{
-		new ViewMapPropertiesCommand(desktop, aContext).execute();
-		new ViewMapElementsCommand(desktop, aContext).execute();
-		new ViewMapElementsBarCommand(desktop, aContext).execute();
-		new ViewMapNavigatorCommand(desktop, aContext).execute();
-		new ViewMapWindowCommand(aContext.getDispatcher(), desktop, aContext, factory).execute();
+		new ViewMapPropertiesCommand(this.desktop, this.aContext).execute();
+		new ViewMapElementsCommand(this.desktop, this.aContext).execute();
+		new ViewMapElementsBarCommand(this.desktop, this.aContext).execute();
+		new ViewMapNavigatorCommand(this.desktop, this.aContext).execute();
+		new ViewMapWindowCommand(this.aContext.getDispatcher(), this.desktop, this.aContext, this.factory).execute();
 		setResult(Command.RESULT_OK);
 	}
 }

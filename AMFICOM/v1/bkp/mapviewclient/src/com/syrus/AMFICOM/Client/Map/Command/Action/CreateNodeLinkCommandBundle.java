@@ -1,5 +1,5 @@
 /**
- * $Id: CreateNodeLinkCommandBundle.java,v 1.10 2005/01/12 14:23:19 krupenn Exp $
+ * $Id: CreateNodeLinkCommandBundle.java,v 1.11 2005/02/08 15:11:09 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,24 +11,21 @@
 
 package com.syrus.AMFICOM.Client.Map.Command.Action;
 
+import java.awt.Point;
+import java.util.Iterator;
+import java.util.LinkedList;
+
 import com.syrus.AMFICOM.Client.General.Event.MapEvent;
-import com.syrus.AMFICOM.Client.General.Event.MapNavigateEvent;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
+import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.DoublePoint;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.map.MapElementState;
-import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.NodeLink;
 import com.syrus.AMFICOM.map.PhysicalLink;
-import com.syrus.AMFICOM.map.TopologicalNode;
 import com.syrus.AMFICOM.map.SiteNode;
-
-import java.awt.Point;
-import java.awt.geom.Point2D;
-
-import java.util.Iterator;
-import java.util.LinkedList;
+import com.syrus.AMFICOM.map.TopologicalNode;
 
 /**
  * создание фрагмента линии, которое строится из 
@@ -38,10 +35,9 @@ import java.util.LinkedList;
  * данная команда
  * 
  * 
- * @version $Revision: 1.10 $, $Date: 2005/01/12 14:23:19 $
- * @module
  * @author $Author: krupenn $
- * @see
+ * @version $Revision: 1.11 $, $Date: 2005/02/08 15:11:09 $
+ * @module mapviewclient_v1
  */
 public class CreateNodeLinkCommandBundle extends MapActionCommandBundle
 {
@@ -73,7 +69,7 @@ public class CreateNodeLinkCommandBundle extends MapActionCommandBundle
 	{
 		if(field.equals(END_POINT))
 		{
-			endPoint = (Point )value;
+			this.endPoint = (Point )value;
 		}
 	}
 
@@ -84,9 +80,9 @@ public class CreateNodeLinkCommandBundle extends MapActionCommandBundle
 
 		// создается новая физическая линия из одного фрагмента
 		
-		physicalLink = super.createPhysicalLink(startNode, endNode);
+		physicalLink = super.createPhysicalLink(this.startNode, endNode);
 
-		nodeLink = super.createNodeLink(physicalLink, startNode, endNode);
+		nodeLink = super.createNodeLink(physicalLink, this.startNode, endNode);
 		nodeLink.setPhysicalLink(physicalLink);
 
 		physicalLink.addNodeLink(nodeLink);
@@ -97,13 +93,13 @@ public class CreateNodeLinkCommandBundle extends MapActionCommandBundle
 		PhysicalLink physicalLink = null;
 		NodeLink nodeLink = null;
 
-		physicalLink = super.createPhysicalLink(startNode, startNode);
+		physicalLink = super.createPhysicalLink(this.startNode, this.startNode);
 
 		AbstractNode endNode = super.createPhysicalNode(physicalLink, mapEndPoint);
 		
 		physicalLink.setEndNode(endNode);
 
-		nodeLink = super.createNodeLink(physicalLink, startNode, endNode);
+		nodeLink = super.createNodeLink(physicalLink, this.startNode, endNode);
 		nodeLink.setPhysicalLink(physicalLink);
 
 		physicalLink.addNodeLink(nodeLink);
@@ -118,7 +114,7 @@ public class CreateNodeLinkCommandBundle extends MapActionCommandBundle
 
 		MapElementState pls = physicalLink.getState();
 
-		nodeLink = super.createNodeLink(physicalLink, startNode, endNode);
+		nodeLink = super.createNodeLink(physicalLink, this.startNode, endNode);
 		nodeLink.setPhysicalLink(physicalLink);
 
 		physicalLink.addNodeLink(nodeLink);
@@ -128,7 +124,7 @@ public class CreateNodeLinkCommandBundle extends MapActionCommandBundle
 		// Коррекция начального и конечного узлов линии
 		if(physicalLink.getEndNode().equals(endNode))
 			physicalLink.setEndNode(physicalLink.getStartNode());
-		physicalLink.setStartNode(startNode);
+		physicalLink.setStartNode(this.startNode);
 
 		super.registerStateChange(physicalLink, pls, physicalLink.getState());
 	}
@@ -140,13 +136,13 @@ public class CreateNodeLinkCommandBundle extends MapActionCommandBundle
 		PhysicalLink physicalLink = null;
 		NodeLink nodeLink = null;
 
-		TopologicalNode mpne = (TopologicalNode )startNode;
+		TopologicalNode mpne = (TopologicalNode )this.startNode;
 
 		physicalLink = mpne.getPhysicalLink();
 
 		MapElementState pls = physicalLink.getState();
 
-		nodeLink = super.createNodeLink(physicalLink, startNode, endNode);
+		nodeLink = super.createNodeLink(physicalLink, this.startNode, endNode);
 		nodeLink.setPhysicalLink(physicalLink);
 
 		physicalLink.addNodeLink(nodeLink);
@@ -154,7 +150,7 @@ public class CreateNodeLinkCommandBundle extends MapActionCommandBundle
 		super.changePhysicalNodeActivity(mpne, true);
 
 		// Коррекция начального и конечного узлов линии
-		if(physicalLink.getStartNode().equals(startNode))
+		if(physicalLink.getStartNode().equals(this.startNode))
 			physicalLink.setStartNode(physicalLink.getEndNode());
 		physicalLink.setEndNode(endNode);
 
@@ -166,15 +162,15 @@ public class CreateNodeLinkCommandBundle extends MapActionCommandBundle
 		PhysicalLink physicalLink = null;
 		NodeLink nodeLink = null;
 
-		TopologicalNode smpne = (TopologicalNode )startNode;
+		TopologicalNode smpne = (TopologicalNode )this.startNode;
 
 		physicalLink = smpne.getPhysicalLink();
 
 		MapElementState pls = physicalLink.getState();
 
-		TopologicalNode endNode = (TopologicalNode )super.createPhysicalNode(physicalLink, mapEndPoint);;
+		TopologicalNode endNode = super.createPhysicalNode(physicalLink, mapEndPoint);
 
-		nodeLink = super.createNodeLink(physicalLink, startNode, endNode);
+		nodeLink = super.createNodeLink(physicalLink, this.startNode, endNode);
 		nodeLink.setPhysicalLink(physicalLink);
 
 		physicalLink.addNodeLink(nodeLink);
@@ -182,7 +178,7 @@ public class CreateNodeLinkCommandBundle extends MapActionCommandBundle
 		super.changePhysicalNodeActivity(smpne, true);
 
 		// Коррекция начального и конечного узлов линии
-		if(physicalLink.getStartNode().equals(startNode))
+		if(physicalLink.getStartNode().equals(this.startNode))
 			physicalLink.setStartNode(physicalLink.getEndNode());
 		physicalLink.setEndNode(endNode);
 
@@ -194,15 +190,15 @@ public class CreateNodeLinkCommandBundle extends MapActionCommandBundle
 		PhysicalLink physicalLink = null;
 		NodeLink nodeLink = null;
 
-		TopologicalNode smpne = (TopologicalNode )startNode;
-		TopologicalNode empne = (TopologicalNode )endNode;
+		TopologicalNode smpne = (TopologicalNode )this.startNode;
+		TopologicalNode empne = endNode;
 
 		physicalLink = smpne.getPhysicalLink();
 		PhysicalLink emple = empne.getPhysicalLink();
 
 		MapElementState pls = physicalLink.getState();
 
-		nodeLink = super.createNodeLink(physicalLink, startNode, endNode);
+		nodeLink = super.createNodeLink(physicalLink, this.startNode, endNode);
 		nodeLink.setPhysicalLink(physicalLink);
 
 		physicalLink.addNodeLink(nodeLink);
@@ -211,7 +207,7 @@ public class CreateNodeLinkCommandBundle extends MapActionCommandBundle
 		super.changePhysicalNodeActivity(empne, true);
 
 		// Коррекция начального и конечного узлов линии
-		if(physicalLink.getStartNode().equals(startNode))
+		if(physicalLink.getStartNode().equals(this.startNode))
 			physicalLink.setStartNode(physicalLink.getEndNode());
 		physicalLink.setEndNode(endNode);
 
@@ -256,19 +252,18 @@ public class CreateNodeLinkCommandBundle extends MapActionCommandBundle
 				"execute()");
 
 		// анализируется элемент в точке, в которой отпущена мышка		
-		MapElement curElementAtPoint = logicalNetLayer.getMapElementAtPoint(endPoint);
+		MapElement curElementAtPoint = this.logicalNetLayer.getMapElementAtPoint(this.endPoint);
 
 		// если мышка отпущена на том же элементе, то линию не рисовать
-		if(curElementAtPoint.equals(startNode))
+		if(curElementAtPoint.equals(this.startNode))
 			return;
 	
-		this.map = logicalNetLayer.getMapView().getMap();
+		this.map = this.logicalNetLayer.getMapView().getMap();
 	
 		AbstractNode endNode = null;
 		PhysicalLink physicalLink = null;
-		NodeLink nodeLink = null;
 
-		DoublePoint mapEndPoint = logicalNetLayer.convertScreenToMap(endPoint);
+		DoublePoint mapEndPoint = this.logicalNetLayer.convertScreenToMap(this.endPoint);
 
 		// если в конечной точке уже есть элемент, проверяем, какой это узел
 		if ( curElementAtPoint != null
@@ -310,190 +305,46 @@ public class CreateNodeLinkCommandBundle extends MapActionCommandBundle
 
 		if(endNode == null)
 		{
-			if (startNode instanceof SiteNode)
+			if (this.startNode instanceof SiteNode)
 			{
 				createSiteToNewNode(mapEndPoint);
 			}
 			else
-			if (startNode instanceof TopologicalNode)
+			if (this.startNode instanceof TopologicalNode)
 			{
 				createNodeToNewNode(mapEndPoint);
 			}
 		}
 		else
 		{
-			if (startNode instanceof SiteNode 
+			if (this.startNode instanceof SiteNode 
 				&& endNode instanceof SiteNode )
 			{
 				createSiteToSite(endNode);
 			}
 			else
-			if ( startNode instanceof SiteNode
+			if ( this.startNode instanceof SiteNode
 				&& endNode instanceof TopologicalNode )
 			{
 				createSiteToNode((TopologicalNode )endNode);
 			}
 			else
-			if ( startNode instanceof TopologicalNode
+			if ( this.startNode instanceof TopologicalNode
 				&& endNode instanceof SiteNode )
 			{
 				createNodeToSite((SiteNode )endNode);
 			}
 			else
-			if ( startNode instanceof TopologicalNode 
+			if ( this.startNode instanceof TopologicalNode 
 				&& endNode instanceof TopologicalNode )
 			{
 				createNodeToNode((TopologicalNode )endNode);
 			}
 		}
-/*
-		//Далее в зависимости от того какая комбинация startNode и endNode
-		if (startNode instanceof SiteNode 
-			&& endNode instanceof SiteNode )
-		{
-			// создается новая физическая линия из одного фрагмента
-			createSiteToSite(endNode);	
-//			physicalLink = super.createPhysicalLink(startNode, endNode);
-//
-//			nodeLink = super.createNodeLink(physicalLink, startNode, endNode);
-//			nodeLink.setPhysicalLink(physicalLink);
-//
-//			physicalLink.addNodeLink( nodeLink);
-		}//if ( MapSiteNodeElement && MapSiteNodeElement)
-		else
-		if ( startNode instanceof SiteNode
-			&& endNode instanceof TopologicalNode )
-		{
-			TopologicalNode mpne = (TopologicalNode)endNode;
-
-			// Если у конечного узла два входящих фрагмента (включая только 
-			// что созданный), то есть фрагмент пририсован к существующей линии,
-			// то замкнуть эту линию
-			if(endNode.getNodeLinks().size() == 2)
-			{
-				createSiteToNode(mpne);
-//				physicalLink = mpne.getPhysicalLink();
-//
-//				MapElementState pls = physicalLink.getState();
-//
-//				nodeLink = super.createNodeLink(physicalLink, startNode, endNode);
-//				nodeLink.setPhysicalLink(physicalLink);
-//
-//				physicalLink.addNodeLink(nodeLink);
-//
-//				// Коррекция начального и конечного узлов линии
-//				if(physicalLink.getEndNode().equals(mpne))
-//					physicalLink.setEndNode(physicalLink.getStartNode());
-//				physicalLink.setStartNode(startNode);
-//
-//				super.registerStateChange(physicalLink, pls, physicalLink.getState());
-			}//if(endNode.getNodeLinks().size() == 2
-			//  в противном случае создается новая линия из одного фрагмента
-			else
-			{
-				createSiteToNewNode(mapEndPoint);
-
-//				physicalLink = super.createPhysicalLink(startNode, endNode);
-//
-//				nodeLink = super.createNodeLink(physicalLink, startNode, endNode);
-//				nodeLink.setPhysicalLink(physicalLink);
-//
-//				physicalLink.addNodeLink( nodeLink);
-			}
-		}//if ( MapSiteNodeElement && MapPhysicalNodeElement )
-		else
-		if ( startNode instanceof TopologicalNode
-			&& endNode instanceof SiteNode )
-		{
-			// существующая физическая линия завершается на узле site
-			createNodeToSite((SiteNode )endNode);
-
-//			TopologicalNode mpne = (TopologicalNode)startNode;
-//
-//			physicalLink = mpne.getPhysicalLink();
-//
-//			MapElementState pls = physicalLink.getState();
-//
-//			nodeLink = super.createNodeLink(physicalLink, startNode, endNode);
-//			nodeLink.setPhysicalLink(physicalLink);
-//
-//			physicalLink.addNodeLink(nodeLink);
-//
-//			super.changePhysicalNodeActivity(mpne, true);
-//
-//			// Коррекция начального и конечного узлов линии
-//			if(physicalLink.getStartNode().equals(startNode))
-//				physicalLink.setStartNode(physicalLink.getEndNode());
-//			physicalLink.setEndNode(endNode);
-//
-//			super.registerStateChange(physicalLink, pls, physicalLink.getState());
-		}// if ( MapPhysicalNodeElement && MapSiteNodeElement )
-		else
-		// Когда соединяются две линии, в одну из линий переносятся фрагменты 
-		// другой, которая удаляется
-		if ( startNode instanceof TopologicalNode 
-			&& endNode instanceof TopologicalNode )
-		{
-			createNodeToNewNode(mapEndPoint);
-//			TopologicalNode smpne = (TopologicalNode)startNode;
-			TopologicalNode empne = (TopologicalNode)endNode;
-//
-//			physicalLink = smpne.getPhysicalLink();
-			PhysicalLink emple = empne.getPhysicalLink();
-//
-//			MapElementState pls = physicalLink.getState();
-//
-//			nodeLink = super.createNodeLink(physicalLink, startNode, endNode);
-//			nodeLink.setPhysicalLink(physicalLink);
-//
-//			physicalLink.addNodeLink(nodeLink);
-//
-//			super.changePhysicalNodeActivity(smpne, true);
-//
-//			// Коррекция начального и конечного узлов линии
-//			if(physicalLink.getStartNode().equals(startNode))
-//				physicalLink.setStartNode(physicalLink.getEndNode());
-//			physicalLink.setEndNode(endNode);
-
-			// перекидываем фрагменты из одной линии в другую и удаляем
-			// ненужную линию
-			if(emple != null)
-				if(!emple.equals(physicalLink))
-			{
-				createNodeToNode((TopologicalNode )endNode);
-//				MapElementState pls2 = emple.getState();
-//
-//				// отдельный список, поскольку используется операция удаления
-//				LinkedList nodeLinksToMove = new LinkedList();
-//				nodeLinksToMove.addAll(emple.getNodeLinks());
-//
-//				// Перенос фрагментов линии из одной линии в другую
-//				for(Iterator it = nodeLinksToMove.iterator(); it.hasNext();)
-//				{
-//					NodeLink mnle = (NodeLink)it.next();
-//					emple.removeNodeLink(mnle);
-//					physicalLink.addNodeLink(mnle);
-//					mnle.setPhysicalLink(physicalLink);
-//				}			
-//			
-//				// Коррекция начального и конечного узлов линии
-//				if(emple.getStartNode().equals(endNode))
-//					physicalLink.setEndNode(emple.getEndNode());
-//				else
-//					physicalLink.setEndNode(emple.getStartNode());
-//
-//				super.registerStateChange(emple, pls2, emple.getState());
-//
-//				super.removePhysicalLink(emple);
-			}
-
-//			super.registerStateChange(physicalLink, pls, physicalLink.getState());
-		}
-*/
-		logicalNetLayer.sendMapEvent(new MapEvent(this, MapEvent.MAP_CHANGED));
-//		logicalNetLayer.sendMapEvent(new MapNavigateEvent(
+		this.logicalNetLayer.sendMapEvent(new MapEvent(this, MapEvent.MAP_CHANGED));
+//		this.logicalNetLayer.sendMapEvent(new MapNavigateEvent(
 //				physicalLink, 
 //				MapNavigateEvent.MAP_ELEMENT_SELECTED_EVENT));
-		logicalNetLayer.notifySchemeEvent(physicalLink);
+		this.logicalNetLayer.notifySchemeEvent(physicalLink);
 	}
 }

@@ -1,5 +1,5 @@
 /*
- * $Id: MapExportCommand.java,v 1.11 2005/02/07 16:09:25 krupenn Exp $
+ * $Id: MapExportCommand.java,v 1.12 2005/02/08 15:11:10 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -10,11 +10,17 @@
 
 package com.syrus.AMFICOM.Client.Map.Command.Map;
 
+import java.io.File;
+import java.util.HashMap;
+import java.util.Iterator;
+
+import javax.swing.JDesktopPane;
+
 import com.syrus.AMFICOM.Client.General.Command.Command;
 import com.syrus.AMFICOM.Client.General.Command.ExportCommand;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.Map.Command.MapDesktopCommand;
 import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
+import com.syrus.AMFICOM.Client.Map.Command.MapDesktopCommand;
 import com.syrus.AMFICOM.Client.Map.UI.MapFrame;
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.DatabaseException;
@@ -23,13 +29,6 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.map.XMLMapObjectLoader;
-import com.syrus.AMFICOM.Client.Resource.ObjectResource;
-
-import java.io.File;
-
-import java.util.HashMap;
-import java.util.Iterator;
-import javax.swing.JDesktopPane;
 
 /**
  *  ласс $RCSfile: MapExportCommand.java,v $ используетс€ дл€ закрыти€ 
@@ -37,10 +36,9 @@ import javax.swing.JDesktopPane;
  * самого окна карты. ѕри этом в азголовке окна отображаетс€ информаци€ о том,
  * что активной карты нет, и карта центрируетс€ по умолчанию
  * 
- * @version $Revision: 1.11 $, $Date: 2005/02/07 16:09:25 $
- * @module map_v2
  * @author $Author: krupenn $
- * @see 
+ * @version $Revision: 1.12 $, $Date: 2005/02/08 15:11:10 $
+ * @module mapviewclient_v1
  */
 public class MapExportCommand extends ExportCommand
 {
@@ -82,14 +80,14 @@ public class MapExportCommand extends ExportCommand
 
 	public void execute()
 	{
-		mapFrame = MapDesktopCommand.findMapFrame(desktop);
+		this.mapFrame = MapDesktopCommand.findMapFrame(this.desktop);
 
-		if(mapFrame == null)
+		if(this.mapFrame == null)
 			return;
 
         System.out.println("Closing map");
 
-		Map map = mapFrame.getMap();
+		Map map = this.mapFrame.getMap();
 		
 		String fileName = ExportCommand.openFileForWriting(MapPropertiesManager.getLastDirectory());
 		if(fileName == null)
@@ -119,7 +117,6 @@ public class MapExportCommand extends ExportCommand
 
 	protected void saveXML(Map map, File file)
 	{
-//		XMLMapObjectLoader xmlLoader = new XMLMapObjectLoader(new File(fileName));
 		XMLMapObjectLoader xmlLoader = new XMLMapObjectLoader(file);
 		
 		try

@@ -1,5 +1,5 @@
 /**
- * $Id: ViewMapWindowCommand.java,v 1.12 2005/01/30 15:38:17 krupenn Exp $
+ * $Id: ViewMapWindowCommand.java,v 1.13 2005/02/08 15:11:10 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,6 +11,10 @@
 
 package com.syrus.AMFICOM.Client.Map.Command.Editor;
 
+import java.awt.Dimension;
+
+import javax.swing.JDesktopPane;
+
 import com.syrus.AMFICOM.Client.General.Command.Command;
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
@@ -19,27 +23,18 @@ import com.syrus.AMFICOM.Client.General.Event.StatusMessageEvent;
 import com.syrus.AMFICOM.Client.General.Lang.LangModel;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationModelFactory;
+import com.syrus.AMFICOM.Client.Map.Command.MapDesktopCommand;
 import com.syrus.AMFICOM.Client.Map.Command.Map.MapNewCommand;
 import com.syrus.AMFICOM.Client.Map.Command.Map.MapViewNewCommand;
-import com.syrus.AMFICOM.Client.Map.Command.MapDesktopCommand;
 import com.syrus.AMFICOM.Client.Map.UI.MapFrame;
-import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
-import com.syrus.AMFICOM.mapview.MapView;
 import com.syrus.AMFICOM.map.Map;
-
-import java.awt.Dimension;
-
-import javax.swing.JDesktopPane;
+import com.syrus.AMFICOM.mapview.MapView;
 
 /**
  * Команда отображает окно карты 
- * 
- * 
- * 
- * @version $Revision: 1.12 $, $Date: 2005/01/30 15:38:17 $
- * @module
  * @author $Author: krupenn $
- * @see
+ * @version $Revision: 1.13 $, $Date: 2005/02/08 15:11:10 $
+ * @module mapviewclient_v1
  */
 public class ViewMapWindowCommand extends VoidCommand
 {
@@ -48,7 +43,7 @@ public class ViewMapWindowCommand extends VoidCommand
 	JDesktopPane desktop;
 	ApplicationModelFactory factory;
 
-	public MapFrame frame;
+	protected MapFrame mapFrame;
 
 	public ViewMapWindowCommand(Dispatcher dispatcher, JDesktopPane desktop, ApplicationContext aContext, ApplicationModelFactory factory)
 	{
@@ -80,38 +75,38 @@ public class ViewMapWindowCommand extends VoidCommand
 	public void execute()
 	{
 		ApplicationContext aC = new ApplicationContext();
-		aC.setApplicationModel(factory.create());
-		aC.setSessionInterface(aContext.getSessionInterface());
-		aC.setDispatcher(dispatcher);
+		aC.setApplicationModel(this.factory.create());
+		aC.setSessionInterface(this.aContext.getSessionInterface());
+		aC.setDispatcher(this.dispatcher);
 
-		frame = MapDesktopCommand.findMapFrame(desktop);
+		this.mapFrame = MapDesktopCommand.findMapFrame(this.desktop);
 		
-		if(frame == null)
+		if(this.mapFrame == null)
 		{
-			frame = new MapFrame();
-			desktop.add(frame);
-			Dimension dim = desktop.getSize();
-			frame.setLocation(0, 0);
-			frame.setSize(dim.width * 4 / 5, dim.height * 7 / 8);
+			this.mapFrame = new MapFrame();
+			this.desktop.add(this.mapFrame);
+			Dimension dim = this.desktop.getSize();
+			this.mapFrame.setLocation(0, 0);
+			this.mapFrame.setSize(dim.width * 4 / 5, dim.height * 7 / 8);
 			
-			setMapFrame(frame);
+			setMapFrame();
 		}
 
-		frame.setContext(aC);
-		showMapFrame(frame);
-		dispatcher.notify(new MapEvent(frame, MapEvent.MAP_FRAME_SHOWN));
-		aContext.getDispatcher().notify(new StatusMessageEvent(
+		this.mapFrame.setContext(aC);
+		this.mapFrame.setVisible(true);
+		this.dispatcher.notify(new MapEvent(this.mapFrame, MapEvent.MAP_FRAME_SHOWN));
+		this.aContext.getDispatcher().notify(new StatusMessageEvent(
 				StatusMessageEvent.STATUS_MESSAGE,
 				LangModel.getString("Finished")));
 		setResult(Command.RESULT_OK);
 	}
 
-	protected void setMapFrame(MapFrame mapFrame)
+	protected void setMapFrame()
 	{
 		MapView mapView = null;
 		Map map = null;
 		
-		MapNewCommand mnc = new MapNewCommand(aContext);
+		MapNewCommand mnc = new MapNewCommand(this.aContext);
 		mnc.execute();
 		if(mnc.getResult() == Command.RESULT_OK)
 		{
@@ -120,7 +115,7 @@ public class ViewMapWindowCommand extends VoidCommand
 		else
 			return;
 
-		MapViewNewCommand mvnc = new MapViewNewCommand(map, aContext);
+		MapViewNewCommand mvnc = new MapViewNewCommand(map, this.aContext);
 		mvnc.execute();
 		if(mvnc.getResult() == Command.RESULT_OK)
 		{
@@ -133,12 +128,7 @@ public class ViewMapWindowCommand extends VoidCommand
 
 //		mapView.setLogicalNetLayer(frame.getMapViewer().getLogicalNetLayer());
 
-		frame.setMapView(mapView);
-	}
-
-	protected void showMapFrame(MapFrame mapFrame)
-	{
-		frame.setVisible(true);
+		this.mapFrame.setMapView(mapView);
 	}
 
 }

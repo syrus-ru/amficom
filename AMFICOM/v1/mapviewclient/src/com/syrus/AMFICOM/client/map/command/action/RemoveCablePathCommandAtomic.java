@@ -1,5 +1,5 @@
 /**
- * $Id: RemoveCablePathCommandAtomic.java,v 1.9 2005/02/01 11:34:56 krupenn Exp $
+ * $Id: RemoveCablePathCommandAtomic.java,v 1.10 2005/02/08 15:11:09 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -13,31 +13,26 @@ package com.syrus.AMFICOM.Client.Map.Command.Action;
 
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.mapview.CablePath;
-import com.syrus.AMFICOM.Client.Resource.Pool;
 
 /**
  * удаление кабельного пути из карты - атомарное действие 
- * 
- * 
- * 
- * @version $Revision: 1.9 $, $Date: 2005/02/01 11:34:56 $
- * @module
  * @author $Author: krupenn $
- * @see
+ * @version $Revision: 1.10 $, $Date: 2005/02/08 15:11:09 $
+ * @module mapviewclient_v1
  */
 public class RemoveCablePathCommandAtomic extends MapActionCommand
 {
-	CablePath cp;
+	CablePath cablePath;
 	
 	public RemoveCablePathCommandAtomic(CablePath cp)
 	{
 		super(MapActionCommand.ACTION_DROP_LINE);
-		this.cp = cp;
+		this.cablePath = cp;
 	}
 	
 	public CablePath getPath()
 	{
-		return cp;
+		return this.cablePath;
 	}
 	
 	public void execute()
@@ -48,17 +43,17 @@ public class RemoveCablePathCommandAtomic extends MapActionCommand
 				getClass().getName(), 
 				"execute()");
 
-		logicalNetLayer.getMapView().removeCablePath(cp);
+		this.logicalNetLayer.getMapView().removeCablePath(this.cablePath);
 	}
 
 	public void redo()
 	{
-		logicalNetLayer.getMapView().removeCablePath(cp);
+		this.logicalNetLayer.getMapView().removeCablePath(this.cablePath);
 	}
 
 	public void undo()
 	{
-		logicalNetLayer.getMapView().addCablePath(cp);
+		this.logicalNetLayer.getMapView().addCablePath(this.cablePath);
 	}
 }
 

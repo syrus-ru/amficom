@@ -1,5 +1,5 @@
 /**
- * $Id: MapViewRemoveSchemeCommand.java,v 1.3 2005/02/01 11:34:56 krupenn Exp $
+ * $Id: MapViewRemoveSchemeCommand.java,v 1.4 2005/02/08 15:11:10 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -31,13 +31,9 @@ import javax.swing.JDesktopPane;
 
 /**
  * убрать из вида выбранную схему 
- * 
- * 
- * 
- * @version $Revision: 1.3 $, $Date: 2005/02/01 11:34:56 $
- * @module
  * @author $Author: krupenn $
- * @see
+ * @version $Revision: 1.4 $, $Date: 2005/02/08 15:11:10 $
+ * @module mapviewclient_v1
  */
 public class MapViewRemoveSchemeCommand extends VoidCommand
 {
@@ -52,7 +48,7 @@ public class MapViewRemoveSchemeCommand extends VoidCommand
 	
 	public void execute()
 	{
-		MapFrame mapFrame = MapDesktopCommand.findMapFrame(desktop);
+		MapFrame mapFrame = MapDesktopCommand.findMapFrame(this.desktop);
 		
 		if(mapFrame == null)
 			return;
@@ -65,7 +61,7 @@ public class MapViewRemoveSchemeCommand extends VoidCommand
 		if(mapView == null)
 			return;
 
-		aContext.getDispatcher().notify(new StatusMessageEvent(
+		this.aContext.getDispatcher().notify(new StatusMessageEvent(
 				StatusMessageEvent.STATUS_MESSAGE,
 				LangModelMap.getString("MapOpening")));
 
@@ -79,7 +75,7 @@ public class MapViewRemoveSchemeCommand extends VoidCommand
 		mcd.setVisible(true);
 		if(mcd.getReturnCode() != ObjectResourceChooserDialog.RET_OK)
 		{
-			aContext.getDispatcher().notify(new StatusMessageEvent(
+			this.aContext.getDispatcher().notify(new StatusMessageEvent(
 					StatusMessageEvent.STATUS_MESSAGE,
 					LangModel.getString("Aborted")));
 			return;
@@ -92,7 +88,7 @@ public class MapViewRemoveSchemeCommand extends VoidCommand
 				mapFrame.getMapView(),
 				MapEvent.MAP_VIEW_CHANGED));
 
-		aContext.getDispatcher().notify(new StatusMessageEvent(
+		this.aContext.getDispatcher().notify(new StatusMessageEvent(
 				StatusMessageEvent.STATUS_MESSAGE,
 				LangModel.getString("Finished")));
 		setResult(Command.RESULT_OK);

@@ -1,5 +1,5 @@
 /**
- * $Id: ChangePhysicalNodeActivityCommandAtomic.java,v 1.5 2005/01/12 14:23:19 krupenn Exp $
+ * $Id: ChangePhysicalNodeActivityCommandAtomic.java,v 1.6 2005/02/08 15:11:09 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -18,13 +18,9 @@ import com.syrus.AMFICOM.map.TopologicalNode;
 
 /**
  * »зменение активности топологического узла - атомарное действие
- * 
- * 
- * 
- * @version $Revision: 1.5 $, $Date: 2005/01/12 14:23:19 $
- * @module
  * @author $Author: krupenn $
- * @see
+ * @version $Revision: 1.6 $, $Date: 2005/02/08 15:11:09 $
+ * @module mapviewclient_v1
  */
 public class ChangePhysicalNodeActivityCommandAtomic extends MapActionCommand
 {
@@ -51,13 +47,13 @@ public class ChangePhysicalNodeActivityCommandAtomic extends MapActionCommand
 	{
 		super.setLogicalNetLayer(lnl);
 
-		controller = (TopologicalNodeController )
-			lnl.getMapViewController().getController(node);
+		this.controller = (TopologicalNodeController )
+			lnl.getMapViewController().getController(this.node);
 	}
 	
 	public TopologicalNode getNode()
 	{
-		return node;
+		return this.node;
 	}
 	
 	public void execute()
@@ -68,7 +64,7 @@ public class ChangePhysicalNodeActivityCommandAtomic extends MapActionCommand
 				getClass().getName(), 
 				"execute()");
 
-		controller.setActive(node, active);
+		this.controller.setActive(this.node, this.active);
 	}
 	
 	public void redo()
@@ -78,7 +74,7 @@ public class ChangePhysicalNodeActivityCommandAtomic extends MapActionCommand
 	
 	public void undo()
 	{
-		controller.setActive(node, !active);
+		this.controller.setActive(this.node, !this.active);
 	}
 }
 

@@ -1,5 +1,5 @@
 /*
- * $Id: MapCloseCommand.java,v 1.8 2005/01/30 15:38:17 krupenn Exp $
+ * $Id: MapCloseCommand.java,v 1.9 2005/02/08 15:11:10 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -12,14 +12,7 @@ package com.syrus.AMFICOM.Client.Map.Command.Map;
 
 import com.syrus.AMFICOM.Client.General.Command.Command;
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
-
-import com.syrus.AMFICOM.Client.Map.UI.MapFrame;
-import com.syrus.AMFICOM.general.CommunicationException;
-import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.map.Map;
-import com.syrus.AMFICOM.mapview.MapView;
-import com.syrus.AMFICOM.Client.Resource.Pool;
-import com.syrus.AMFICOM.map.MapStorableObjectPool;
 
 /**
  *  ласс $RCSfile: MapCloseCommand.java,v $ используетс€ дл€ закрыти€ 
@@ -27,10 +20,9 @@ import com.syrus.AMFICOM.map.MapStorableObjectPool;
  * самого окна карты. ѕри этом в азголовке окна отображаетс€ информаци€ о том,
  * что активной карты нет, и карта центрируетс€ по умолчанию
  * 
- * @version $Revision: 1.8 $, $Date: 2005/01/30 15:38:17 $
- * @module map_v2
  * @author $Author: krupenn $
- * @see
+ * @version $Revision: 1.9 $, $Date: 2005/02/08 15:11:10 $
+ * @module mapviewclient_v1
  */
 public class MapCloseCommand extends VoidCommand
 {

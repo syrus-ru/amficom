@@ -1,5 +1,5 @@
 /*
- * $Id: MapSaveAsCommand.java,v 1.13 2005/02/01 11:34:56 krupenn Exp $
+ * $Id: MapSaveAsCommand.java,v 1.14 2005/02/08 15:11:10 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -10,6 +10,9 @@
 
 package com.syrus.AMFICOM.Client.Map.Command.Map;
 
+import java.awt.Dimension;
+import java.awt.Toolkit;
+
 import com.syrus.AMFICOM.Client.General.Command.Command;
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.Event.StatusMessageEvent;
@@ -17,10 +20,8 @@ import com.syrus.AMFICOM.Client.General.Lang.LangModel;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
-import com.syrus.AMFICOM.client_.general.ui_.ObjectResourcePropertiesDialog;
 import com.syrus.AMFICOM.Client.Map.Props.MapPanel;
-import com.syrus.AMFICOM.Client.Map.UI.MapFrame;
-import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
+import com.syrus.AMFICOM.client_.general.ui_.ObjectResourcePropertiesDialog;
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseException;
@@ -29,22 +30,14 @@ import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.map.Map;
-import com.syrus.AMFICOM.Client.Resource.Pool;
-
 import com.syrus.AMFICOM.map.MapStorableObjectPool;
-import java.awt.Dimension;
-import java.awt.Toolkit;
 
 /**
  * Класс $RCSfile: MapSaveAsCommand.java,v $ используется для сохранения 
  * топологической схемы с новым именем
- * 
- * 
- * 
- * @version $Revision: 1.13 $, $Date: 2005/02/01 11:34:56 $
- * @module map_v2
  * @author $Author: krupenn $
- * @see
+ * @version $Revision: 1.14 $, $Date: 2005/02/08 15:11:10 $
+ * @module mapviewclient_v1
  */
 public class MapSaveAsCommand extends VoidCommand
 {
@@ -52,11 +45,6 @@ public class MapSaveAsCommand extends VoidCommand
 	Map newMap;
     ApplicationContext aContext;
 
-	/**
-	 * 
-	 * @param paramName comments
-	 * @exception Exception comments
-	 */
 	public MapSaveAsCommand(
 			Map map, 
 			ApplicationContext aContext)
@@ -68,14 +56,14 @@ public class MapSaveAsCommand extends VoidCommand
 	public void execute()
 	{
 		Identifier userId = new Identifier(
-			aContext.getSessionInterface().getAccessIdentifier().user_id);
+			this.aContext.getSessionInterface().getAccessIdentifier().user_id);
 
 		Identifier domainId = new Identifier(
-			aContext.getSessionInterface().getAccessIdentifier().domain_id);
+			this.aContext.getSessionInterface().getAccessIdentifier().domain_id);
 
 		try
 		{
-			newMap = Map.createInstance(userId, domainId, map.getName() + "(Copy)", "");
+			this.newMap = Map.createInstance(userId, domainId, this.map.getName() + "(Copy)", "");
 		}
 		catch (CreateObjectException e)
 		{
@@ -83,7 +71,7 @@ public class MapSaveAsCommand extends VoidCommand
 			return;
 		}
 
-		aContext.getDispatcher().notify(new StatusMessageEvent(
+		this.aContext.getDispatcher().notify(new StatusMessageEvent(
 				StatusMessageEvent.STATUS_MESSAGE,
 				LangModelMap.getString("MapSaving")));
 
@@ -91,7 +79,7 @@ public class MapSaveAsCommand extends VoidCommand
 				Environment.getActiveWindow(), 
 				LangModelMap.getString("MapProperties"), 
 				true, 
-				newMap,
+				this.newMap,
 				MapPanel.getInstance());
 
 		Dimension screenSize =  Toolkit.getDefaultToolkit().getScreenSize();
@@ -124,7 +112,7 @@ public class MapSaveAsCommand extends VoidCommand
 */
 			try
 			{
-				MapStorableObjectPool.putStorableObject(newMap);
+				MapStorableObjectPool.putStorableObject(this.newMap);
 			}
 			catch (IllegalObjectEntityException e)
 			{
@@ -151,14 +139,14 @@ public class MapSaveAsCommand extends VoidCommand
 				e.printStackTrace();
 			}
 
-			aContext.getDispatcher().notify(new StatusMessageEvent(
+			this.aContext.getDispatcher().notify(new StatusMessageEvent(
 					StatusMessageEvent.STATUS_MESSAGE,
 					LangModel.getString("Finished")));
 			setResult(Command.RESULT_OK);
 		}
 		else
 		{
-			aContext.getDispatcher().notify(new StatusMessageEvent(
+			this.aContext.getDispatcher().notify(new StatusMessageEvent(
 					StatusMessageEvent.STATUS_MESSAGE,
 					LangModel.getString("Aborted")));
 			setResult(Command.RESULT_CANCEL);
@@ -167,12 +155,12 @@ public class MapSaveAsCommand extends VoidCommand
 
 	public Map getMap()
 	{
-		return map;
+		return this.map;
 	}
 
 	public Map getNewMap()
 	{
-		return newMap;
+		return this.newMap;
 	}
 
 }

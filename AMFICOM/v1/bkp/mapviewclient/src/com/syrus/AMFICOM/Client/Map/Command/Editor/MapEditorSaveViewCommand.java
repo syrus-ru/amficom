@@ -1,5 +1,5 @@
 /*
- * $Id: MapEditorSaveViewCommand.java,v 1.5 2005/01/21 13:49:27 krupenn Exp $
+ * $Id: MapEditorSaveViewCommand.java,v 1.6 2005/02/08 15:11:10 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -24,10 +24,10 @@ import javax.swing.JDesktopPane;
  * 
  * 
  * 
- * @version $Revision: 1.5 $, $Date: 2005/01/21 13:49:27 $
- * @module
  * @author $Author: krupenn $
- * @see MapSaveCommand
+ * @version $Revision: 1.6 $, $Date: 2005/02/08 15:11:10 $
+ * @module mapviewclient_v1
+ * @see MapViewSaveCommand
  */
 public class MapEditorSaveViewCommand extends VoidCommand
 {
@@ -36,7 +36,6 @@ public class MapEditorSaveViewCommand extends VoidCommand
 
 	/**
 	 * 
-	 * @param mapFrame окно карты, из которого сохранять схему
 	 * @param aContext контекст модуля "Редактор топологических схем"
 	 */
 	public MapEditorSaveViewCommand(JDesktopPane desktop, ApplicationContext aContext)
@@ -47,14 +46,14 @@ public class MapEditorSaveViewCommand extends VoidCommand
 
 	public void execute()
 	{
-		MapFrame mapFrame = MapDesktopCommand.findMapFrame(desktop);
+		MapFrame mapFrame = MapDesktopCommand.findMapFrame(this.desktop);
 		if(mapFrame == null)
 		{
 			System.out.println("map frame is null! Cannot create new map.");
 			setResult(Command.RESULT_NO);
 			return;
 		}
-		new MapViewSaveCommand(mapFrame.getMapView(), aContext).execute();
+		new MapViewSaveCommand(mapFrame.getMapView(), this.aContext).execute();
 
 		setResult(Command.RESULT_OK);
 	}
