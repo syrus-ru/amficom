@@ -19,7 +19,7 @@ import com.syrus.AMFICOM.Client.Resource.Network.*;
 import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.*;
 import com.syrus.AMFICOM.Client.Resource.Scheme.*;
 import com.syrus.AMFICOM.Client.Resource.SchemeDirectory.*;
-import com.syrus.AMFICOM.Client.Schematics.General.DeviceGroup;
+import com.syrus.AMFICOM.Client.General.Scheme.DeviceGroup;
 import oracle.jdeveloper.layout.*;
 
 public class PropsFrame extends JInternalFrame

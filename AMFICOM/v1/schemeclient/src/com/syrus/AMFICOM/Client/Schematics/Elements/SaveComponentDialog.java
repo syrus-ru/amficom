@@ -142,7 +142,7 @@ public class SaveComponentDialog extends JDialog
 			return;
 		}
 
-		ComponentSaveCommand.saveTypes(aContext.getDataSourceInterface(), false);
+		//ComponentSaveCommand.saveTypes(aContext.getDataSourceInterface(), false);
 
 		if (!map_proto.pe_ids.contains(proto.getId()))
 			map_proto.pe_ids.add(proto.getId());
