@@ -1,5 +1,5 @@
 /*
- * $Id: ResourcedbInterface.java,v 1.3 2004/09/09 11:32:40 bass Exp $
+ * $Id: ResourcedbInterface.java,v 1.4 2004/09/23 15:00:42 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,11 +18,13 @@ import java.util.*;
  * will be removed.
  * 
  * @author $Author: bass $
- * @version $Revision: 1.3 $, $Date: 2004/09/09 11:32:40 $
+ * @version $Revision: 1.4 $, $Date: 2004/09/23 15:00:42 $
  * @module servermisc_v1
  * @todo Dispose of duplicate string literals. 
  */
 public final class ResourcedbInterface {
+	private static final boolean DEBUG = true;
+
 	private static final char SEPARATOR = '-';
 
 	/**
@@ -225,7 +227,7 @@ public final class ResourcedbInterface {
 	/**
 	 * @param conn the database connection to use.
 	 */
-	public static String getUid(final Connection conn, String type) throws SQLException {
+	public static String getUid(final Connection conn, final String type) throws SQLException {
 		Statement stmt = null;
 		ResultSet resultSet = null;
 		try {
@@ -237,12 +239,15 @@ public final class ResourcedbInterface {
 					sequenceName = SEQ_IDS[i + 2];
 					break;
 				}
+			if (sequenceName == null) {
+				if (DEBUG)
+					System.err.println("WARNING: Sequence for type: \"" + type + "\" not found.");
+				return type + System.currentTimeMillis();
+			}
 			stmt = conn.createStatement();
 			resultSet = stmt.executeQuery("SELECT amficom." + sequenceName + ".nextval FROM sys.dual");
-			if (resultSet.next())
-				return identifierBase + SEPARATOR + String.valueOf(resultSet.getInt("nextval"));
-			else
-				return type + System.currentTimeMillis();
+			resultSet.next();
+			return identifierBase + SEPARATOR + String.valueOf(resultSet.getInt("nextval"));
 		} finally {
 			try {
 				if (resultSet != null)
