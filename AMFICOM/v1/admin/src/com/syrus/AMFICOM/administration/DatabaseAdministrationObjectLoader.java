@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseAdministrationObjectLoader.java,v 1.3 2005/02/04 12:52:27 arseniy Exp $
+ * $Id: DatabaseAdministrationObjectLoader.java,v 1.4 2005/02/04 13:02:59 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,49 +25,12 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/02/04 12:52:27 $
+ * @version $Revision: 1.4 $, $Date: 2005/02/04 13:02:59 $
  * @author $Author: arseniy $
  * @module administration_v1
  */
 
 public class DatabaseAdministrationObjectLoader implements AdministrationObjectLoader {
-
-	private void delete(Identifier id, List ids) throws DatabaseException {
-		short entityCode = (id != null) ? id.getMajor() : 0;
-		if (id == null) {
-			if (ids.isEmpty())
-				return;
-			Object obj = ids.iterator().next();
-			if (obj instanceof Identifier)
-				entityCode = ((Identifier) obj).getMajor();
-			else
-				if (obj instanceof Identified)
-					entityCode = ((Identified) obj).getId().getMajor();
-		}
-		try {
-			StorableObjectDatabase database = AdministrationDatabaseContext.getDatabase(entityCode);
-			if (database != null) {
-				if (id != null)
-					database.delete(id);
-				else
-					if (ids != null && !ids.isEmpty()) {
-						database.delete(ids);
-					}
-			}
-		}
-		catch (IllegalDataException e) {
-			Log.errorMessage("DatabaseAdministrationObjectLoader.delete | DatabaseException: " + e.getMessage());
-			throw new DatabaseException("DatabaseAdministrationObjectLoader.delete | DatabaseException: " + e.getMessage());
-		}
-	}
-
-	public void delete(Identifier id) throws CommunicationException, DatabaseException {
-		delete(id, null);
-	}
-
-	public void delete(List ids) throws CommunicationException, DatabaseException {
-		delete(null, ids);
-	}
 
 	public User loadUser(Identifier id) throws DatabaseException, CommunicationException {
 		return new User(id);
@@ -411,6 +374,43 @@ public class DatabaseAdministrationObjectLoader implements AdministrationObjectL
 			Log.errorMessage("DatabaseAdministrationObjectLoader.refresh | DatabaseException: " + e.getMessage());
 			throw new DatabaseException("DatabaseAdministrationObjectLoader.refresh | DatabaseException: " + e.getMessage());
 		}
+	}
+
+	private void delete(Identifier id, List ids) throws DatabaseException {
+		short entityCode = (id != null) ? id.getMajor() : 0;
+		if (id == null) {
+			if (ids.isEmpty())
+				return;
+			Object obj = ids.iterator().next();
+			if (obj instanceof Identifier)
+				entityCode = ((Identifier) obj).getMajor();
+			else
+				if (obj instanceof Identified)
+					entityCode = ((Identified) obj).getId().getMajor();
+		}
+		try {
+			StorableObjectDatabase database = AdministrationDatabaseContext.getDatabase(entityCode);
+			if (database != null) {
+				if (id != null)
+					database.delete(id);
+				else
+					if (ids != null && !ids.isEmpty()) {
+						database.delete(ids);
+					}
+			}
+		}
+		catch (IllegalDataException e) {
+			Log.errorMessage("DatabaseAdministrationObjectLoader.delete | DatabaseException: " + e.getMessage());
+			throw new DatabaseException("DatabaseAdministrationObjectLoader.delete | DatabaseException: " + e.getMessage());
+		}
+	}
+
+	public void delete(Identifier id) throws CommunicationException, DatabaseException {
+		delete(id, null);
+	}
+
+	public void delete(List ids) throws CommunicationException, DatabaseException {
+		delete(null, ids);
 	}
 
 }

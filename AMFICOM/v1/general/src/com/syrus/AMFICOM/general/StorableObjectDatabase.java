@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectDatabase.java,v 1.80 2005/02/04 12:50:18 arseniy Exp $
+ * $Id: StorableObjectDatabase.java,v 1.81 2005/02/04 13:00:48 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,7 +33,7 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.80 $, $Date: 2005/02/04 12:50:18 $
+ * @version $Revision: 1.81 $, $Date: 2005/02/04 13:00:48 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -746,9 +746,8 @@ public abstract class StorableObjectDatabase {
 	public List retrieveButIds(List ids) throws IllegalDataException, RetrieveObjectException {
 		return retrieveButIds(ids, null);
 	}
-	
-	private DatabaseStorableObjectCondition reflectDatabaseCondition(StorableObjectCondition condition)
-			throws IllegalDataException {
+
+	private DatabaseStorableObjectCondition reflectDatabaseCondition(StorableObjectCondition condition) throws IllegalDataException {
 		DatabaseStorableObjectCondition databaseStorableObjectCondition = null;
 		String className = condition.getClass().getName();
 		int lastPoint = className.lastIndexOf('.');
@@ -756,40 +755,55 @@ public abstract class StorableObjectDatabase {
 		// System.out.println("dbClassName:" + dbClassName);
 		try {
 			Class clazz = Class.forName(dbClassName);
-			Constructor constructor = clazz.getConstructor(new Class[] { condition.getClass()});
+			Constructor constructor = clazz.getConstructor(new Class[] {condition.getClass()});
 			constructor.setAccessible(true);
-			databaseStorableObjectCondition = (DatabaseStorableObjectCondition) constructor
-					.newInstance(new Object[] { condition});
-		} catch (ClassNotFoundException e) {
+			databaseStorableObjectCondition = (DatabaseStorableObjectCondition) constructor.newInstance(new Object[] {condition});
+		}
+		catch (ClassNotFoundException e) {
 			String msg = this.getEnityName() + "Database.reflectDatabaseCondition | Class " + dbClassName //$NON-NLS-1$
 					+ " not found on the classpath";
 			throw new IllegalDataException(msg, e);
-		} catch (SecurityException e) {
+		}
+		catch (SecurityException e) {
 			String msg = this.getEnityName() + "Database.reflectDatabaseCondition | Caught " + e.getMessage();
 			throw new IllegalDataException(msg, e);
-		} catch (NoSuchMethodException e) {
-			String msg = this.getEnityName() + "Database.reflectDatabaseCondition | Class  " + dbClassName
-					+ " haven't constructor (" + className + ")";
+		}
+		catch (NoSuchMethodException e) {
+			String msg = this.getEnityName()
+					+ "Database.reflectDatabaseCondition | Class  "
+					+ dbClassName
+					+ " haven't constructor ("
+					+ className
+					+ ")";
 			throw new IllegalDataException(msg, e);
-		} catch (IllegalArgumentException e) {
-			String msg = this.getEnityName() + "Database.reflectDatabaseCondition | Class  " + dbClassName
-					+ " haven't constructor (" + className + ")";
+		}
+		catch (IllegalArgumentException e) {
+			String msg = this.getEnityName()
+					+ "Database.reflectDatabaseCondition | Class  "
+					+ dbClassName
+					+ " haven't constructor ("
+					+ className
+					+ ")";
 			throw new IllegalDataException(msg, e);
-		} catch (InstantiationException e) {
+		}
+		catch (InstantiationException e) {
 			String msg = this.getEnityName() + "Database.reflectDatabaseCondition | Caught " + e.getMessage();
 			throw new IllegalDataException(msg, e);
-		} catch (IllegalAccessException e) {
+		}
+		catch (IllegalAccessException e) {
 			String msg = this.getEnityName() + "Database.reflectDatabaseCondition | Caught " + e.getMessage();
 			throw new IllegalDataException(msg, e);
-		} catch (InvocationTargetException e) {
+		}
+		catch (InvocationTargetException e) {
 			String msg = this.getEnityName() + "Database.reflectDatabaseCondition | Caught " + e.getMessage();
 			throw new IllegalDataException(msg, e);
 		}
 		return databaseStorableObjectCondition;
 	}
 
-	public List retrieveByCondition(List ids, StorableObjectCondition condition) throws RetrieveObjectException,
-			IllegalDataException {
+	public List retrieveByCondition(List ids, StorableObjectCondition condition)
+			throws RetrieveObjectException,
+				IllegalDataException {
 
 		DatabaseStorableObjectCondition databaseStorableObjectCondition = this.reflectDatabaseCondition(condition);
 		short conditionCode = databaseStorableObjectCondition.getEntityCode().shortValue();
@@ -798,13 +812,15 @@ public abstract class StorableObjectDatabase {
 		if (ObjectEntities.stringToCode(enityName) != conditionCode)
 			throw new IllegalDataException(enityName
 					+ "Database.retrieveByCondition | Uncompatible condition ("
-					+ ObjectEntities.codeToString(conditionCode) + ") and database (" + this.getEnityName()
+					+ ObjectEntities.codeToString(conditionCode)
+					+ ") and database ("
+					+ this.getEnityName()
 					+ ") classes");
 		String conditionQuery = databaseStorableObjectCondition.getSQLQuery();
 		List list = retrieveButIds(ids, conditionQuery);
 		return list;
 	}
-	
+
 	/**
 	 * retrive storable objects by additional condition and identifiers not in ids   
 	 * @param ids List&lt;{@link Identifier}&gt; or List&lt;{@link Identified}&gt;
