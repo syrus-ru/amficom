@@ -1,5 +1,5 @@
 /*
- * $Id: CableLinkType.java,v 1.14 2005/01/31 13:47:50 arseniy Exp $
+ * $Id: CableLinkType.java,v 1.15 2005/02/03 20:10:02 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,7 +32,7 @@ import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2005/01/31 13:47:50 $
+ * @version $Revision: 1.15 $, $Date: 2005/02/03 20:10:02 $
  * @author $Author: arseniy $
  * @module config_v1
  */
@@ -56,7 +56,8 @@ public class CableLinkType extends AbstractLinkType implements Characterized {
 		super(id);
 
 		this.characteristics = new ArrayList();
-		this.cableThreadTypes = new LinkedList();
+		this.cableThreadTypes = new ArrayList();
+
 		this.cableLinkTypeDatabase = ConfigurationDatabaseContext.cableLinkTypeDatabase;
 		try {
 			this.cableLinkTypeDatabase.retrieve(this);
@@ -89,6 +90,8 @@ public class CableLinkType extends AbstractLinkType implements Characterized {
 		catch (ApplicationException ae) {
 			throw new CreateObjectException(ae);
 		}
+
+		this.cableLinkTypeDatabase = ConfigurationDatabaseContext.cableLinkTypeDatabase;
 	}
 
 	protected CableLinkType(Identifier id,
@@ -113,7 +116,10 @@ public class CableLinkType extends AbstractLinkType implements Characterized {
 		this.manufacturerCode = manufacturerCode;
 		this.imageId = imageId;
 		this.characteristics = new ArrayList();
-		this.cableThreadTypes = new LinkedList();
+		this.cableThreadTypes = new ArrayList();
+
+		super.currentVersion = super.getNextVersion();
+
 		this.cableLinkTypeDatabase = ConfigurationDatabaseContext.cableLinkTypeDatabase;
 	}
 
@@ -122,23 +128,37 @@ public class CableLinkType extends AbstractLinkType implements Characterized {
 	 * @throws CreateObjectException
 	 */
 	public static CableLinkType createInstance(Identifier creatorId,
-																					String codename,
-																					String description,
-																					String name,
-																					LinkTypeSort sort,
-																					String manufacturer,
-																					String manufacturerCode,
-																					Identifier imageId) throws CreateObjectException {
-			if (creatorId == null || codename == null || description == null || name == null ||
-					sort == null || manufacturer == null || manufacturerCode == null || imageId == null)
-				throw new IllegalArgumentException("Argument is 'null'");
+			String codename,
+			String description,
+			String name,
+			LinkTypeSort sort,
+			String manufacturer,
+			String manufacturerCode,
+			Identifier imageId) throws CreateObjectException {
+		if (creatorId == null
+				|| codename == null
+				|| description == null
+				|| name == null
+				|| sort == null
+				|| manufacturer == null
+				|| manufacturerCode == null
+				|| imageId == null)
+			throw new IllegalArgumentException("Argument is 'null'");
 
-			try {
-				return new CableLinkType(IdentifierPool.getGeneratedIdentifier(ObjectEntities.CABLE_LINKTYPE_ENTITY_CODE), creatorId, codename, description, name, sort.value(), manufacturer, manufacturerCode, imageId);
-			}
-			catch (IllegalObjectEntityException e) {
-				throw new CreateObjectException("CableLinkType.createInstance | cannot generate identifier ", e);
-			}
+		try {
+			return new CableLinkType(IdentifierPool.getGeneratedIdentifier(ObjectEntities.CABLELINKTYPE_ENTITY_CODE),
+					creatorId,
+					codename,
+					description,
+					name,
+					sort.value(),
+					manufacturer,
+					manufacturerCode,
+					imageId);
+		}
+		catch (IllegalObjectEntityException e) {
+			throw new CreateObjectException("CableLinkType.createInstance | cannot generate identifier ", e);
+		}
 	}
 
 	public Object getTransferable() {
