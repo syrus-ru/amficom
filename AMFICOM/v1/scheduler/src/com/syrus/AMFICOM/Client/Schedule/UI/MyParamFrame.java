@@ -47,7 +47,7 @@ public class MyParamFrame extends JInternalFrame implements OperationListener {
 	String							testtypeid					= "";
 	Vector							res							= new Vector();
 	Vector							pulswd						= new Vector();
-	Vector							Par_Objects;												;
+	Vector							Par_Objects;												
 	//	String[] izmer = { "4000",
 	//			"8000", "16000", "32000", "64000", "128000", "256000"};
 	//	String[] volna = { "1310",
@@ -70,7 +70,7 @@ public class MyParamFrame extends JInternalFrame implements OperationListener {
 	static String					iniFileName					= "My.properties";
 
 	boolean							initial_init				= true;
-	private BorderLayout			borderLayout1				= new BorderLayout();
+//	private BorderLayout			borderLayout1				= new BorderLayout();
 	private JScrollPane				jScrollPane1				= new JScrollPane();
 	private JPanel					jPanel1						= new JPanel();
 	private JPanel					jPanel3						= new JPanel();
@@ -775,98 +775,42 @@ public class MyParamFrame extends JInternalFrame implements OperationListener {
 			as = (TestArgumentSet) Pool.get(TestArgumentSet.typ,
 					testsetup.test_argument_set_id);
 			Vector arg = as.arguments;
+			HashMap map = new HashMap();
+			for (Iterator it = arg.iterator(); it.hasNext();) {				
+				Parameter par = (Parameter) it.next();
+				String codeName = par.getCodename();
+				map.put(codeName,par);
+			}
+			
 			if (testtypeid.equals("trace_and_analyse")) {
 				try {
-					for (int i = 0; i < arg.size(); i++) {
-						Parameter par = (Parameter) arg.elementAt(i);
-						String s = "";
-						String cbval = "";
-						if (par.codename.equals("ref_ior")) {
-							double d = (new ByteArray(par.value)).toDouble();
-							s = String.valueOf(d);
-							refractTextField.setText(String
-									.valueOf((new ByteArray(par.value))
-											.toDouble()));
-							refractTextField.repaint();
-
-							cbval += "	" + refractTextField.getText() + "\n";
-							
-						} else if (par.codename.equals("ref_wvlen")) {
-							int d = (new ByteArray(par.value)).toInt();
-							s = String.valueOf(d);
-							waveLengthComboBox
-									.setSelectedItem(String
-											.valueOf((new ByteArray(par.value))
-													.toInt()));
-							waveLengthComboBox.repaint();
-
-							int count = waveLengthComboBox.getModel().getSize();
-							for (int j = 0; j < count; j++) 
-							{
-								cbval += "	" + waveLengthComboBox.getModel().getElementAt(j) + "\n";
-							}
-							
-						} else if (par.codename.equals("ref_scans")) {
-							double d = (new ByteArray(par.value)).toDouble();
-							s = String.valueOf(d);
-							averageQuantityComboBox.setSelectedItem(String
-									.valueOf((new ByteArray(par.value))
-											.toDouble()));
-							averageQuantityComboBox.repaint();
-
-							int count = averageQuantityComboBox.getModel().getSize();
-							for (int j = 0; j < count; j++) 
-							{
-								cbval += "	" + averageQuantityComboBox.getModel().getElementAt(j) + "\n";
-							}
-							
-						} else if (par.codename.equals("ref_trclen")) {
-							double d = (new ByteArray(par.value)).toDouble();
-							s = String.valueOf(d);
-							maxDistanceComboBox.setSelectedItem(String
-									.valueOf((new ByteArray(par.value))
-											.toDouble()));
-							maxDistanceComboBox.repaint();
-
-							int count = maxDistanceComboBox.getModel().getSize();
-							for (int j = 0; j < count; j++) 
-							{
-								cbval += "	" + maxDistanceComboBox.getModel().getElementAt(j) + "\n";
-							}
-							
-						} else if (par.codename.equals("ref_res")) {
-							double d = (new ByteArray(par.value)).toDouble();
-							s = String.valueOf(d);
-							resolutionComboBox.setSelectedItem(String
-									.valueOf((new ByteArray(par.value))
-											.toDouble()));
-							resolutionComboBox.repaint();
-
-							int count = resolutionComboBox.getModel().getSize();
-							for (int j = 0; j < count; j++) 
-							{
-								cbval += "	" + resolutionComboBox.getModel().getElementAt(j) + "\n";
-							}
-							
-						} else if (par.codename.equals("ref_pulswd")) {
-							long d = (new ByteArray(par.value)).toLong();
-							s = String.valueOf(d);
-							pulseWidthComboBox.setSelectedItem(String
-									.valueOf((new ByteArray(par.value))
-											.toLong()));
-							pulseWidthComboBox.repaint();
-
-							int count = pulseWidthComboBox.getModel().getSize();
-							for (int j = 0; j < count; j++) 
-							{
-								cbval += "	" + pulseWidthComboBox.getModel().getElementAt(j) + "\n";
-							}
-							
+					
+					// first of all we must select max distance, which select ranges for other parameters 
+					
+					{
+						Parameter par = (Parameter)map.get(PARAMETER_MAX_DISTANCE);
+						byte[] value = par.getValue();
+						selectCBValue(maxDistanceComboBox, (new ByteArray(value)).toDouble());
+						map.remove(PARAMETER_MAX_DISTANCE);
+					}
+					
+					for (Iterator it = map.keySet().iterator();it.hasNext();) {						
+						String codeName = (String)it.next();
+						Parameter par = (Parameter) map.get(codeName);
+						byte[] value = par.getValue();										
+						if (codeName.equals(PARAMETER_REFRACTION)) {
+							double d = (new ByteArray(value)).toDouble();
+							refractTextField.setText(String.valueOf(d));
+							refractTextField.repaint();							
+						} else if (codeName.equals(PARAMETER_WAVELENGHT)) {							
+							selectCBValue(this.waveLengthComboBox , (new ByteArray(value)).toInt());							
+						} else if (codeName.equals(PARAMETER_AVERAGE_QUANTITY)) {
+							selectCBValue(averageQuantityComboBox, (new ByteArray(value)).toDouble());
+						} else if (codeName.equals(PARAMETER_RESOLUTION)) {
+							selectCBValue(this.resolutionComboBox, (new ByteArray(value)).toDouble());
+						} else if (codeName.equals(PARAMETER_PULSE_WIDTH)) {
+							selectCBValue(this.pulseWidthComboBox, (new ByteArray(value)).toLong());
 						}
-						System.out.println("Set " + par.getName() + " = " + s);
-						System.out.println("	Values are");
-						System.out.println(cbval);
-						
 					}
 				} catch (java.io.IOException ex) {
 					ex.printStackTrace();
@@ -883,6 +827,50 @@ public class MyParamFrame extends JInternalFrame implements OperationListener {
 					"TestSetup"));
 		}
 		orList.setSelected(testsetup);
+	}	
+
+	private void selectCBValue(AComboBox cb, double value) {
+		for (int i = 0; i < cb.getItemCount(); i++) {
+			Object obj = cb.getItemAt(i);
+			String item = obj.toString();
+			double v = Double.parseDouble(item);
+//			System.out.println("item:" + v); //$NON-NLS-1$
+			if (v == value) {
+				cb.setSelectedItem(obj);
+				cb.revalidate();
+//				System.out.println("selected"); //$NON-NLS-1$
+				break;
+			}
+		}
+	}
+	
+	private void selectCBValue(AComboBox cb, int value) {
+		for (int i = 0; i < cb.getItemCount(); i++) {
+			Object obj = cb.getItemAt(i);
+			String item = obj.toString();
+			int v = Integer.parseInt(item);
+//			if (DEBUG) System.out.println("item:" + v); //$NON-NLS-1$
+			if (v == value) {
+				cb.setSelectedItem(obj);
+//				if (DEBUG) System.out.println("selected"); //$NON-NLS-1$
+				break;
+			}
+		}
+	}
+
+	private void selectCBValue(AComboBox cb, long value) {
+		for (int i = 0; i < cb.getItemCount(); i++) {
+			Object obj = cb.getItemAt(i);
+			String item = obj.toString();
+			//item = item.replaceAll(".", "");
+			long v = Long.parseLong(item);
+//			if (DEBUG) System.out.println("item:" + v); //$NON-NLS-1$
+			if (v == value) {
+				cb.setSelectedItem(obj);
+//				if (DEBUG) System.out.println("selected"); //$NON-NLS-1$
+				break;
+			}
+		}
 	}
 
 	private class ListNumberComparator implements java.util.Comparator {
