@@ -1,5 +1,5 @@
 #include "dadara.h"
-#include "com_syrus_AMFICOM_analysis_dadara_DadaraAnalysisManager.h"
+#include "com_syrus_AMFICOM_agent_DadaraAnalysisManager.h"
 //#include "com_syrus_AMFICOM_analysis_AnalysisManager.h"
 #include "InitialAnalysis.h"
 #include "Fitter.h"
@@ -15,19 +15,19 @@ int dbg_suppress_cf_messages=0;
 
 JNIEXPORT jdoubleArray JNICALL 
 //Java_com_syrus_AMFICOM_analysis_AnalysisManager_analyse(JNIEnv* env, jclass obj,
-Java_com_syrus_AMFICOM_analysis_dadara_DadaraAnalysisManager_ana(JNIEnv* env, jobject obj,
-	jint waveletType,             //type of the WaveLet transformation applied.
-	jdoubleArray y,               //the refl. itself
-	jdouble delta_x,              //dx
-	jdouble connFallParams,       // Param. to descr. the behav. of conn. at fall
-	jdouble min_level,            // ?
-	jdouble max_level_noise,      // ?
-	jdouble min_level_to_find_end,// ? 
-	jdouble min_weld,             // ?
-	jdouble min_connector,
-	jint strategy, 
-	jint reflectiveSize, 
-	jint nonReflectiveSize)
+Java_com_syrus_AMFICOM_agent_DadaraAnalysisManager_ana(JNIEnv *env, jobject obj,
+		jint waveletType,             //type of the WaveLet transformation applied.
+		jdoubleArray y,               //the refl. itself
+		jdouble delta_x,              //dx
+		jdouble connFallParams,       // Param. to descr. the behav. of conn. at fall
+		jdouble min_level,            // ?
+		jdouble max_level_noise,      // ?
+		jdouble min_level_to_find_end,// ?
+		jdouble min_weld,             // ?
+		jdouble min_connector,
+		jint strategy,
+		jint reflectiveSize,
+		jint nonReflectiveSize)
 {
 
 #ifdef DEBUG_DADARA
@@ -113,10 +113,18 @@ Java_com_syrus_AMFICOM_analysis_dadara_DadaraAnalysisManager_ana(JNIEnv* env, jo
 		ep = fitter->getEventParams();
 	}
 
+
+//----
+printf("$$$$$$$ deleting ia $$$$$\n");
+//----
+	delete ia;
+
 	int Ret_Length;
 	double *RET = setParRet(nEvents, ep, Ret_Length);
+//----
+printf("$$$$$$$ setParRet done $$$$$\n");
+//----
 	ret = (env)->NewDoubleArray(Ret_Length);
-	delete ia;
 
 #ifdef DEBUG_DADARA
 	fprintf( dbg_stream, "return to java: %d (38*%d) doubles \n", Ret_Length, Ret_Length/38);
@@ -145,7 +153,7 @@ Java_com_syrus_AMFICOM_analysis_dadara_DadaraAnalysisManager_ana(JNIEnv* env, jo
 	delete[] RET;
 	return ret;
 }
-
+/*
 JNIEXPORT jdoubleArray JNICALL 
 Java_com_syrus_AMFICOM_analysis_AnalysisManager_fit(
 	JNIEnv* env, 
@@ -157,7 +165,7 @@ Java_com_syrus_AMFICOM_analysis_AnalysisManager_fit(
 	jdouble meanAttenuation)
 {
 #ifdef DEBUG_DADARA
-	/*timeval tv;
+	timeval tv;
 	gettimeofday(&tv, NULL);
 	tm* t = localtime(&tv.tv_sec);
 	const int size = 9 + 6 + 1 + 14 + 1 + 3 + 1;
@@ -165,8 +173,8 @@ Java_com_syrus_AMFICOM_analysis_AnalysisManager_fit(
 	sprintf(filename, ".//logs//%04d%02d%02d%02d%02d%02d-dadara.log", 1900 + t->tm_year, 1 + t->tm_mon, t->tm_mday, t->tm_hour, t->tm_min, t->tm_sec);
 	filename[size - 1] = 0;
 	dbg_stream = fopen(filename, "a");
-	delete[] filename;*/
-	dbg_stream = fopen("c:\\dadara.log", "a");
+	delete[] filename;
+
 	fprintf (dbg_stream, "# logfile opened in AnalysisManager_analyse\n");
 	dbg_delta_x = delta_x;
 
@@ -216,7 +224,7 @@ Java_com_syrus_AMFICOM_analysis_AnalysisManager_fit(
 	delete[] RET;
 	return ret;
 }
-
+*/
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 double *setParRet(int n_events, EventParams **ep, int &Ret_Length)
 {

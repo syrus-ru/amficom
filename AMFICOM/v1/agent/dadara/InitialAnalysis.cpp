@@ -42,8 +42,7 @@ InitialAnalysis::InitialAnalysis(
 	this->str = fopen(filename, "a");
 	delete[] filename;
 
-	fprintf (this->str, "*** InitialAnalysis::InitialAnalysis: data=%p, data_length=%d\n",
-		data,data_length);
+	fprintf (this->str, "*** InitialAnalysis::InitialAnalysis: data=%p, data_length=%d\n", data, data_length);
 #endif
 
 	this->delta_x				= delta_x;
@@ -74,9 +73,12 @@ InitialAnalysis::~InitialAnalysis()
 	delete[] noise;
 	delete[] data_woc;
 
+printf("$$$$ Calling clear $$$$\n");
 	epVector.clear();
 
-	delete[] eps;
+printf("$$$$ Calling delete eps $$$$\n");
+//	delete[] eps;
+//printf("$$$$ delete passed $$$$\n");
 
 #ifdef DEBUG_INITIAL_ANALYSIS
 	fprintf(this->str, "### InitialAnalysis::~InitialAnalysis\n");
@@ -104,8 +106,6 @@ void InitialAnalysis::performAnalysis()
 		fprintf(this->str, "Reflecting event size = %d\n", evSizeC);
 		fprintf(this->str, "Nonreflecting event size = %d\n", evSizeW);
 #endif
-
-//	FILE * f = fopen("c:\\io.log", "w");
 
 	// вычисляем уровень шума
 	getNoise(noise, evSizeC);
@@ -190,14 +190,13 @@ void InitialAnalysis::performAnalysis()
 		fprintf(this->str, "done\nTotal number of events = %d\n", epVector.size());
 #endif
 
-//	fclose (f);
 #ifdef DEBUG_INITIAL_ANALYSIS
 	for (it = epVector.begin(); it != epVector.end(); it++)
 	{
 		if(it->end <= it->begin)
 			fprintf(this->str, "error in event bounds: x1 = %d, x2 = %d\n", it->begin, it->end);
 	}
-	fclose(this->str);
+//	fclose(this->str);
 #endif
 }
 

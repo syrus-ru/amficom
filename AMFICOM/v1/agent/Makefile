@@ -1,41 +1,58 @@
-SRC=./src
-CLASSES=./classes
-TRANSCEIVER=./transceiver
-DADARA=./dadara
-LIB=../lib
+MODULE_NAME = agent_v1
 
-ORBCLASSPATH=$(ORACLE_HOME)/javavm/lib/aurora.zip:$(ORACLE_HOME)/javavm/lib/aurora_client_orbdep.jar:$(ORACLE_HOME)/javavm/lib/aurora_client_orbindep.jar:$(ORACLE_HOME)/lib/vbjorb.jar:$(ORACLE_HOME)/lib/vbjapp.jar
-APPCLASSPATH=$(LIB)/kisserver.jar:$(LIB)/ServerInterface_General.jar:$(LIB)/util.jar:$(LIB)/dadara.jar
+LIBNAME = $(subst _v1,,$(MODULE_NAME)).jar
+ARCHFILE = $(subst _v1,,$(MODULE_NAME)).tar.gz
 
-JAVAC=javac
+TRANSCEIVERDIR=./transceiver
+DADARADIR=./dadara
+
+APPCLASSPATH=$(LIBDIR)/kisserver.jar:$(LIBDIR)/ServerInterface_General.jar:$(LIBDIR)/util.jar:$(LIBDIR)/dadara.jar
+
+#JAVAC=javac
+#JAVACFLAGS = source 1.3
+#SUNJAVACFLAGS = -target 1.2
+#JIKESFLAGS = -target 1.2
+
 JAVAH=javah
-JAR=jar-3.3.1
 
-LIBNAME=agent.jar
-ARCHFILE=agent.tar.gz
+include ../tools/Makefile.inc
+$(call checkenve,JAVA_HOME)
+$(call checkenve,ORACLE_HOME)
+$(call checkenve,IDL2JAVA)
 
-
-.PHONY:	clean arch
 
 $(LIBNAME):	agent
-	$(JAR) -cf ./$(LIBNAME) -C $(CLASSES) com/
-	cp -vf ./$(LIBNAME) $(LIB)/
+	$(JAR) -cf $@ -C $(CLASSDIR) com/
 
 agent:
-	$(JAVAC) -classpath $(APPCLASSPATH):$(ORBCLASSPATH) -sourcepath $(SRC) -d $(CLASSES) $(SRC)/com/syrus/AMFICOM/agent/Agent.java
-	$(JAVAH) -classpath $(CLASSES) -d $(TRANSCEIVER) com.syrus.AMFICOM.agent.Transceiver
-	$(JAVAH) -classpath $(CLASSES) -d $(DADARA) com.syrus.AMFICOM.analysis.dadara.DadaraAnalysisManager
+	$(JAVAC) $(JAVACFLAGS) \
+		-classpath $(APPCLASSPATH):$(AURORACLASSPATH):$(VBJCLASSPATH) \
+			$(SRCDIR)/com/syrus/AMFICOM/agent/Agent.java \
+			$(SRCDIR)/com/syrus/AMFICOM/agent/TaskReceiver.java \
+			$(SRCDIR)/com/syrus/AMFICOM/agent/ReportReceiver.java \
+			$(SRCDIR)/com/syrus/AMFICOM/agent/TestContainer.java \
+			$(SRCDIR)/com/syrus/AMFICOM/agent/Transceiver.java \
+			$(SRCDIR)/com/syrus/AMFICOM/agent/ParametersDatabase.java \
+			$(SRCDIR)/com/syrus/AMFICOM/agent/AnalysisManager.java \
+			$(SRCDIR)/com/syrus/AMFICOM/agent/EvaluationManager.java \
+			$(SRCDIR)/com/syrus/AMFICOM/agent/DadaraAnalysisManager.java \
+			$(SRCDIR)/com/syrus/AMFICOM/agent/DadaraEvaluationManager.java \
+			$(SRCDIR)/com/syrus/AMFICOM/RISDConnection.java
+	$(JAVAH) -classpath $(CLASSDIR) -d $(TRANSCEIVERDIR) com.syrus.AMFICOM.agent.Transceiver
+	$(JAVAH) -classpath $(CLASSDIR) -d $(DADARADIR) com.syrus.AMFICOM.agent.DadaraAnalysisManager
 	touch agent
 
+.PHONY:	clean
 clean:
-	rm -rf $(CLASSES)/com
+	rm -rf $(CLASSDIR)/com
 	rm -f agent $(LIBNAME)
 
+.PHONY: arch
 arch:
 	tar -czvf $(ARCHFILE) \
 		Makefile rc agent.properties \
 		src \
-		$(TRANSCEIVER)/*.cpp $(TRANSCEIVER)/*.h $(TRANSCEIVER)/Makefile \
-		$(DADARA)/*.cpp $(DADARA)/*.cxx $(DADARA)/*.h $(DADARA)/Makefile $(DADARA)/architecture.net $(DADARA)/weights.wht
+		$(TRANSCEIVERDIR)/*.cpp $(TRANSCEIVERDIR)/*.h $(TRANSCEIVERDIR)/Makefile \
+		$(DADARADIR)/*.cpp $(DADARADIR)/*.cxx $(DADARADIR)/*.h $(DADARADIR)/Makefile $(DADARADIR)/architecture.net $(DADARADIR)/weights.wht
 
 

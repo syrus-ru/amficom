@@ -1,5 +1,5 @@
 /*
- * $Id: RISDConnection.java,v 1.3 2004/06/21 14:56:29 bass Exp $
+ * $Id: RISDConnection.java,v 1.4 2004/07/19 14:01:34 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,20 +8,23 @@
 
 package com.syrus.AMFICOM;
 
-import com.syrus.util.Log;
+
 import java.util.Hashtable;
-import javax.naming.*;
+import javax.naming.Context;
+import javax.naming.InitialContext;
 import oracle.aurora.jndi.sess_iiop.ServiceCtx;
+import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2004/06/21 14:56:29 $
- * @author $Author: bass $
+ * @version $Revision: 1.4 $, $Date: 2004/07/19 14:01:34 $
+ * @author $Author: arseniy $
  * @module agent_v1
  */
+
 public class RISDConnection {
-	public static final String DEFAULT_serviceURL = "sess_iiop://research:2481:research";
-	public static final String DEFAULT_user = "amficom";
-	public static final String DEFAULT_password = "amficom";
+	public static final String DEFAULT_SERVICE_URL = "sess_iiop://research:2481:research";
+	public static final String DEFAULT_USER = "amficom";
+	public static final String DEFAULT_PASSWORD = "amficom";
 	private String serviceURL;
 	private String username;
 	private String password;
@@ -37,9 +40,9 @@ public class RISDConnection {
   }
 
   public void setDefaults() {
-    this.serviceURL = DEFAULT_serviceURL;
-    this.username = DEFAULT_user;
-    this.password = DEFAULT_password;
+    this.serviceURL = DEFAULT_SERVICE_URL;
+    this.username = DEFAULT_USER;
+    this.password = DEFAULT_PASSWORD;
   }
 
   public Object getServerObject(String objectName) {

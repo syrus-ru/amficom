@@ -1,5 +1,5 @@
 /*
- * $Id: Agent.java,v 1.2 2004/06/21 14:56:29 bass Exp $
+ * $Id: Agent.java,v 1.3 2004/07/19 14:01:34 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,21 +8,31 @@
 
 package com.syrus.AMFICOM.agent;
 
-import com.syrus.AMFICOM.RISDConnection;
-import com.syrus.AMFICOM.CORBA.*;
-import com.syrus.AMFICOM.CORBA.General.AMFICOMRemoteException;
-import com.syrus.AMFICOM.CORBA.KIS.*;
-import com.syrus.AMFICOM.server.measurement.Result;
-import com.syrus.util.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.LinkedList;
+import java.util.Hashtable;
 import java.sql.Timestamp;
-import java.util.*;
+import com.syrus.AMFICOM.RISDConnection;
+import com.syrus.AMFICOM.CORBA.AMFICOMKIS;
+import com.syrus.AMFICOM.CORBA.Constants;
+import com.syrus.AMFICOM.CORBA.General.AMFICOMRemoteException;
+import com.syrus.AMFICOM.CORBA.KIS.Test_Transferable;
+import com.syrus.AMFICOM.CORBA.KIS.Result_Transferable;
+import com.syrus.AMFICOM.CORBA.KIS.AgentIdentity_Transferable;
+import com.syrus.AMFICOM.server.measurement.Result;
+import com.syrus.util.Application;
+import com.syrus.util.ApplicationProperties;
+import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2004/06/21 14:56:29 $
- * @author $Author: bass $
+ * @version $Revision: 1.3 $, $Date: 2004/07/19 14:01:34 $
+ * @author $Author: arseniy $
  * @module agent_v1
  */
 public class Agent extends Thread  {
+	protected static final String MEASUREMENT_ID_DELIMITER = "*";
+
 	private static final long KISTIMEWAIT = 1000;
 	private static final long RISDTIMEWAIT = 1000;
 	static final long MEASURETIME = 10*60*1000;
@@ -34,25 +44,25 @@ public class Agent extends Thread  {
 	static long kistimewait;
 	static long risdtimewait;
 	static long measuretime;
-	static String agent_id;
+	static String agentId;
 	static List taskQueue;
 	static List reportQueue;
 	static Hashtable testContainers;
 	static AMFICOMKIS amficomkis;
-	private static String[] kis_ids;
+	private static String[] kisIds;
 
   public static void main(String[] args) {
 		//Initialize application
 		Application.init("agent");
 		System.out.println("Setting values from file " + ApplicationProperties.getFileName());
 
-		kistimewait = (ApplicationProperties.getInt("kistimewait", (int)KISTIMEWAIT/1000)) * 1000;
-		risdtimewait = (ApplicationProperties.getInt("risdtimewait", (int)RISDTIMEWAIT/1000)) * 1000;
-		measuretime = (ApplicationProperties.getInt("measuretime", (int)MEASURETIME/1000)) * 1000;
-		agent_id = ApplicationProperties.getString("agent_id", AGENT_ID);
+		kistimewait = (ApplicationProperties.getInt("KISTimeWait", (int)KISTIMEWAIT/1000)) * 1000;
+		risdtimewait = (ApplicationProperties.getInt("RISDTimeWait", (int)RISDTIMEWAIT/1000)) * 1000;
+		measuretime = (ApplicationProperties.getInt("MeasureTime", (int)MEASURETIME/1000)) * 1000;
+		agentId = ApplicationProperties.getString("AgentId", AGENT_ID);
 
 		String serverObjectName = ApplicationProperties.getString("ServerObjectName", SERVEROBJECTNAME);
-		RISDConnection risdconnection = new RISDConnection(ApplicationProperties.getString("serviceURL", SERVICEURL),
+		RISDConnection risdconnection = new RISDConnection(ApplicationProperties.getString("ServiceURL", SERVICEURL),
 																												ApplicationProperties.getString("username", USERNAME),
 																												ApplicationProperties.getString("password", PASSWORD));
 
@@ -67,8 +77,8 @@ public class Agent extends Thread  {
     testContainers = new Hashtable(Collections.synchronizedMap(new Hashtable()));
 
     try {
-      kis_ids = amficomkis.getKISIdentities(new AgentIdentity_Transferable(agent_id, "hz"));
-			//kis_ids = getKISIdentities_Stub();
+      kisIds = amficomkis.getKISIdentities(new AgentIdentity_Transferable(agentId, "hz"));
+			//kisIds = getKISIdentitiesStub();
     }
     catch (AMFICOMRemoteException e) {
 			Log.errorMessage("AMFICOMRemoteException: " + e.message);
@@ -79,8 +89,8 @@ public class Agent extends Thread  {
     TaskReceiver taskReceiver = new TaskReceiver();
     taskReceiver.start();
     ReportReceiver reportReceiver;
-    for (int i = 0; i < kis_ids.length; i++) {
-      reportReceiver = new ReportReceiver(kis_ids[i]);
+    for (int i = 0; i < kisIds.length; i++) {
+      reportReceiver = new ReportReceiver(kisIds[i]);
       reportReceiver.start();
     }
   }
@@ -89,8 +99,8 @@ public class Agent extends Thread  {
     Test_Transferable tt;
 		Result_Transferable result;
 		int retcode;		
-		AgentIdentity_Transferable agentId = new AgentIdentity_Transferable(agent_id, "hz");
-    String kis_id;
+		AgentIdentity_Transferable agentIdT = new AgentIdentity_Transferable(agentId, "hz");
+    String kisId;
     TestContainer testContainer;
     while (true) {
 			synchronized (taskQueue) {
@@ -98,9 +108,9 @@ public class Agent extends Thread  {
 		      if (((Test_Transferable)taskQueue.get(0)).start_time <= System.currentTimeMillis()) {
 			      tt = (Test_Transferable)taskQueue.remove(0);
 				    Log.debugMessage("Removed from taskQueue id: " + tt.id, Log.DEBUGLEVEL03);
-					  kis_id = findKISIDForTest(tt);
-						if (kis_id != null) {
-							testContainer = new TestContainer(tt, kis_id);
+					  kisId = findKISIDForTest(tt);
+						if (kisId != null) {
+							testContainer = new TestContainer(tt, kisId);
 							synchronized (testContainers) {
 								testContainers.put(tt.id, testContainer);
 							}
@@ -127,7 +137,7 @@ public class Agent extends Thread  {
 					result = (Result_Transferable)reportQueue.get(0);
 			    retcode = Constants.ERROR_EMPTY;
 				  try{
-					  retcode = amficomkis.reportResult(agentId, result);
+					  retcode = amficomkis.reportResult(agentIdT, result);
 						//retcode = reportResult_Stub(result);
 	        }
 		      catch (AMFICOMRemoteException e) {
@@ -157,21 +167,21 @@ public class Agent extends Thread  {
 
   private static String findKISIDForTest(Test_Transferable tt) {
     int i = 0;
-    while (i < kis_ids.length && !tt.kis_id.equals(kis_ids[i]))
+    while (i < kisIds.length && !tt.kis_id.equals(kisIds[i]))
       i++;
-    if (i < kis_ids.length)
-      return kis_ids[i];
+    if (i < kisIds.length)
+      return kisIds[i];
     else
       return null;
   }
 
-	private static String[] getKISIdentities_Stub() throws AMFICOMRemoteException {
+	private static String[] getKISIdentitiesStub() throws AMFICOMRemoteException {
 		String[] str = new String[1];
 		str[0] = "kis1";
 		return str;
 	}
 
-	private static int reportResult_Stub(Result_Transferable result) throws AMFICOMRemoteException {
+	private static int reportResultStub(Result_Transferable result) throws AMFICOMRemoteException {
     System.out.println("---------------- report ----------------");
     if (result.result_type.equals(Result.RESULT_TYPE_TEST)) {
       System.out.println("test_id == '" + result.action_id + "'");

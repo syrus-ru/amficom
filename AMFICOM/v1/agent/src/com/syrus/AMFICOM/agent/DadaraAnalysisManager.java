@@ -1,19 +1,28 @@
 /*
- * $Id: DadaraAnalysisManager.java,v 1.1 2004/07/19 06:10:40 arseniy Exp $
+ * $Id: DadaraAnalysisManager.java,v 1.2 2004/07/19 14:01:34 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
  * Проект: АМФИКОМ.
  */
 
-package com.syrus.AMFICOM.analysis.dadara;
+package com.syrus.AMFICOM.agent;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
-import com.syrus.AMFICOM.agent.AnalysisManager;
+import java.util.Hashtable;
+import com.syrus.AMFICOM.analysis.dadara.ReflectogramMath;
+import com.syrus.AMFICOM.analysis.dadara.ReflectogramEvent;
 import com.syrus.io.BellcoreStructure;
+import com.syrus.io.BellcoreReader;
+import com.syrus.util.ByteArray;
+import com.syrus.util.Log;
+
+import java.util.Date;
+import java.io.FileOutputStream;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2004/07/19 06:10:40 $
+ * @version $Revision: 1.2 $, $Date: 2004/07/19 14:01:34 $
  * @author $Author: arseniy $
  * @module agent_v1
  */
@@ -29,7 +38,7 @@ public class DadaraAnalysisManager extends AnalysisManager {
 
 	public native double[] ana(int waveletType,
 														 double[] y,                  //the refl. itself
-														 double d_x,                  //dx
+														 double dx,                  //dx
 														 double connFallParams,       // ?
 														 double min_level,            // ?
 														 double max_level_noise,      // ?
@@ -43,9 +52,9 @@ public class DadaraAnalysisManager extends AnalysisManager {
 	public Hashtable analyse(Hashtable criterias, Hashtable resultparameters, Hashtable etalonparameters) {
 		BellcoreReader br = new BellcoreReader();
 		BellcoreStructure bs = br.getData((byte[])resultparameters.get("reflectogramm"));
-		double[] y = new double[bs.dataPts.TNDP];
+		double[] reflectogramma = new double[bs.dataPts.TNDP];
 		for (int i = 0; i < bs.dataPts.TPS[0]; i++)
-			y[i] = (double)(65535 - bs.dataPts.DSF[0][i])/1000d;
+			reflectogramma[i] = (double)(65535 - bs.dataPts.DSF[0][i])/1000d;
 
 //----------------
 	try {
@@ -63,65 +72,76 @@ public class DadaraAnalysisManager extends AnalysisManager {
 	}
 //----------------
 
-		double d_x = (double)(bs.fxdParams.AR - bs.fxdParams.AO)*3d*1000d / ((double)bs.dataPts.TNDP * (double)bs.fxdParams.GI);
+		double dx = (double)(bs.fxdParams.AR - bs.fxdParams.AO)*3d*1000d / ((double)bs.dataPts.TNDP * (double)bs.fxdParams.GI);
 
 		int useLinear;
 		int eventsize;
 		double connFallParams;
-		double min_level;
-		double max_level_noise;
-		double min_level_to_find_end;
-		double min_weld;
-		double min_connector;
+		double minLevel;
+		double maxLevelNoise;
+		double minLevelToFindEnd;
+		double minWeld;
+		double minConnector;
 		int strategy;
 		try {
 			useLinear = (new ByteArray((byte[])criterias.get("ref_uselinear"))).toInt();
 			eventsize = (new ByteArray((byte[])criterias.get("ref_eventsize"))).toInt();
 			connFallParams = (new ByteArray((byte[])criterias.get("ref_conn_fall_params"))).toDouble();
-			min_level = (new ByteArray((byte[])criterias.get("ref_min_level"))).toDouble();
-			max_level_noise = (new ByteArray((byte[])criterias.get("ref_max_level_noise"))).toDouble();
-			min_level_to_find_end = (new ByteArray((byte[])criterias.get("ref_min_level_to_find_end"))).toDouble();
-			min_weld = (new ByteArray((byte[])criterias.get("ref_min_weld"))).toDouble();
-			min_connector = (new ByteArray((byte[])criterias.get("ref_min_connector"))).toDouble();
+			minLevel = (new ByteArray((byte[])criterias.get("ref_min_level"))).toDouble();
+			maxLevelNoise = (new ByteArray((byte[])criterias.get("ref_max_level_noise"))).toDouble();
+			minLevelToFindEnd = (new ByteArray((byte[])criterias.get("ref_min_level_to_find_end"))).toDouble();
+			minWeld = (new ByteArray((byte[])criterias.get("ref_min_weld"))).toDouble();
+			minConnector = (new ByteArray((byte[])criterias.get("ref_min_connector"))).toDouble();
 			strategy = (new ByteArray((byte[])criterias.get("ref_strategy"))).toInt();
 		}
 		catch(IOException e) {
 			Log.errorException(e);
 			return null;
 		}
+
+		int reflSize = ReflectogramMath.getReflectiveEventSize(reflectogramma, 0.5);
+		int nReflSize = ReflectogramMath.getNonReflectiveEventSize(reflectogramma,
+																															 1000,
+																															 ((double)bs.fxdParams.GI) / 100000d,
+																															 dx);
+		if (nReflSize > 3 * reflSize / 5)
+			nReflSize = 3 * reflSize / 5;
+
 //-------------------------------------------------------------
 Log.debugMessage("$$$$$$$$$ DadaraAnalysisManager.analyse:", Log.DEBUGLEVEL05);
-Log.debugMessage("$$$$$$$$$ Number of points: " + y.length, Log.DEBUGLEVEL05);
-Log.debugMessage("$$$$$$$$$ d_x == " + d_x, Log.DEBUGLEVEL05);
+Log.debugMessage("$$$$$$$$$ Number of points: " + reflectogramma.length, Log.DEBUGLEVEL05);
+Log.debugMessage("$$$$$$$$$ dx == " + dx, Log.DEBUGLEVEL05);
 Log.debugMessage("$$$$$$$$$ useLinear == " + useLinear, Log.DEBUGLEVEL05);
 Log.debugMessage("$$$$$$$$$ eventsize == " + eventsize, Log.DEBUGLEVEL05);
 Log.debugMessage("$$$$$$$$$ connFallParams == " + connFallParams, Log.DEBUGLEVEL05);
-Log.debugMessage("$$$$$$$$$ min_level == " + min_level, Log.DEBUGLEVEL05);
-Log.debugMessage("$$$$$$$$$ max_level_noise == " + max_level_noise, Log.DEBUGLEVEL05);
-Log.debugMessage("$$$$$$$$$ min_level_to_find_end == " + min_level_to_find_end, Log.DEBUGLEVEL05);
-Log.debugMessage("$$$$$$$$$ min_weld == " + min_weld, Log.DEBUGLEVEL05);
-Log.debugMessage("$$$$$$$$$ min_connector == " + min_connector, Log.DEBUGLEVEL05);
+Log.debugMessage("$$$$$$$$$ minLevel == " + minLevel, Log.DEBUGLEVEL05);
+Log.debugMessage("$$$$$$$$$ maxLevelNoise == " + maxLevelNoise, Log.DEBUGLEVEL05);
+Log.debugMessage("$$$$$$$$$ minLevelToFindEnd == " + minLevelToFindEnd, Log.DEBUGLEVEL05);
+Log.debugMessage("$$$$$$$$$ minWeld == " + minWeld, Log.DEBUGLEVEL05);
+Log.debugMessage("$$$$$$$$$ minConnector == " + minConnector, Log.DEBUGLEVEL05);
 Log.debugMessage("$$$$$$$$$ strategy == " + strategy, Log.DEBUGLEVEL05);
+Log.debugMessage("$$$$$$$$$ reflSize == " + reflSize, Log.DEBUGLEVEL05);
+Log.debugMessage("$$$$$$$$$ nReflSize == " + nReflSize, Log.DEBUGLEVEL05);
 //-------------------------------------------------------------
 		//y = WorkWithReflectoEventsArray.correctReflectoArraySavingNoise(y);
 		double[] tmp = ana(useLinear,
-											 y,
-											 d_x,
+											 reflectogramma,
+											 dx,
 											 connFallParams,
-											 min_level,
-											 max_level_noise,
-											 min_level_to_find_end,
-											 min_weld,
-											 min_connector,
+											 minLevel,
+											 maxLevelNoise,
+											 minLevelToFindEnd,
+											 minWeld,
+											 minConnector,
 											 strategy,
-											 0,
-											 0);
-		int n_events = tmp.length / ReflectogramEvent.NUMBER_OF_PARAMETERS;
-		ReflectogramEvent[] revents = new ReflectogramEvent[n_events];
-		for(int i = 0; i < n_events; i++) {
+											 reflSize,
+											 nReflSize);
+		int nEvents = tmp.length / ReflectogramEvent.NUMBER_OF_PARAMETERS;
+		ReflectogramEvent[] revents = new ReflectogramEvent[nEvents];
+		for(int i = 0; i < nEvents; i++) {
 			revents[i] = new ReflectogramEvent();
 			revents[i].setParams(tmp, i * ReflectogramEvent.NUMBER_OF_PARAMETERS);
-			revents[i].setDeltaX(d_x);
+			revents[i].setDeltaX(dx);
 		}
 
 //----------
@@ -140,10 +160,10 @@ Log.debugMessage("$$$$$$$$$ Number of events == " + revents.length + "; tmp.leng
 				if (revents[i].getType() == ReflectogramEvent.CONNECTOR &&
 						Math.abs(revents[i].begin - endEvent.begin) < delta &&
 						Math.abs(revents[i].end - endEvent.end) < delta) {
-						ReflectogramEvent[] new_revents = new ReflectogramEvent[i+1];
+						ReflectogramEvent[] newRevents = new ReflectogramEvent[i+1];
 						for (int j = 0; j < i + 1; j++)
-							new_revents[j] = revents[j];
-						revents = new_revents;
+							newRevents[j] = revents[j];
+						revents = newRevents;
 						break;
 					}
 			}

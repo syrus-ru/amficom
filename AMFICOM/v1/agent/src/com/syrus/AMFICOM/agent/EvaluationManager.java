@@ -1,22 +1,17 @@
-/*
- * $Id: EvaluationManager.java,v 1.2 2004/06/21 14:56:29 bass Exp $
- *
- * Copyright © 2004 Syrus Systems.
- * Научно-технический центр.
- * Проект: АМФИКОМ.
- */
-
 package com.syrus.AMFICOM.agent;
 
+import java.util.LinkedList;
+import java.util.Hashtable;
+import java.util.Enumeration;
 import com.syrus.AMFICOM.CORBA.General.AlarmLevel;
-import com.syrus.AMFICOM.CORBA.KIS.*;
-import com.syrus.AMFICOM.analysis.dadara.DadaraEvaluationManager;
+import com.syrus.AMFICOM.CORBA.KIS.Result_Transferable;
+import com.syrus.AMFICOM.CORBA.KIS.Evaluation_Transferable;
+import com.syrus.AMFICOM.CORBA.KIS.Parameter_Transferable;
 import com.syrus.AMFICOM.server.measurement.Result;
-import java.util.*;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2004/06/21 14:56:29 $
- * @author $Author: bass $
+ * @version $Revision: 1.3 $, $Date: 2004/07/19 14:01:34 $
+ * @author $Author: arseniy $
  * @module agent_v1
  */
 public abstract class EvaluationManager {
@@ -54,10 +49,10 @@ public abstract class EvaluationManager {
     Enumeration names = this.evaluationresultparameters.keys();
     Enumeration values = this.evaluationresultparameters.elements();
     LinkedList ll = new LinkedList();
-    String par_name;
+    String parName;
     while (names.hasMoreElements()) {
-      par_name = (String)names.nextElement();
-      ll.add(new Parameter_Transferable(par_name, ParametersDatabase.getEvaluationParameterTypeId(par_name, evaluation.evaluation_type_id), (byte[])values.nextElement()));
+      parName = (String)names.nextElement();
+      ll.add(new Parameter_Transferable(parName, ParametersDatabase.getEvaluationParameterTypeId(parName, evaluation.evaluation_type_id), (byte[])values.nextElement()));
     }
     Parameter_Transferable[] erparameters = (Parameter_Transferable[])ll.toArray(new Parameter_Transferable[ll.size()]);
 

@@ -71,7 +71,7 @@ JNIEXPORT jboolean JNICALL Java_com_syrus_AMFICOM_agent_Transceiver_read1(JNIEnv
 
 	char* measurement_id = resultSegment->getMeasurementId()->getData();
 	jstring jmeasurement_id = env->NewStringUTF(measurement_id);
-	fld = env->GetStaticFieldID(cls, "measurement_id", "Ljava/lang/String;");
+	fld = env->GetStaticFieldID(cls, "measurementId", "Ljava/lang/String;");
 	env->SetStaticObjectField(cls, fld, (jobject)jmeasurement_id);
 
 	jsize parnumber = (jsize)resultSegment->getParnumber();
@@ -87,9 +87,9 @@ JNIEXPORT jboolean JNICALL Java_com_syrus_AMFICOM_agent_Transceiver_read1(JNIEnv
 		env->SetByteArrayRegion(jpar_value, 0, parameters[s]->getValue()->getLength(), (jbyte*)parameters[s]->getValue()->getData());
 		env->SetObjectArrayElement(jpar_values, s, jpar_value);
 	}
-	fld = env->GetStaticFieldID(cls, "par_names", "[Ljava/lang/String;");
+	fld = env->GetStaticFieldID(cls, "parNames", "[Ljava/lang/String;");
 	env->SetStaticObjectField(cls, fld, jpar_names);
-	fld = env->GetStaticFieldID(cls, "par_values", "[[B");
+	fld = env->GetStaticFieldID(cls, "parValues", "[[B");
 	env->SetStaticObjectField(cls, fld, jpar_values);
 
 	delete resultSegment;

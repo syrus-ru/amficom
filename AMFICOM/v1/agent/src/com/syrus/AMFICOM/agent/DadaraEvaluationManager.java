@@ -1,26 +1,34 @@
 /*
- * $Id: DadaraEvaluationManager.java,v 1.1 2004/07/19 06:10:40 arseniy Exp $
+ * $Id: DadaraEvaluationManager.java,v 1.2 2004/07/19 14:01:34 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
  * Проект: АМФИКОМ.
  */
 
-package com.syrus.AMFICOM.analysis.dadara;
+package com.syrus.AMFICOM.agent;
 
-import com.syrus.AMFICOM.CORBA.General.AlarmLevel;
-import com.syrus.AMFICOM.agent.EvaluationManager;
-import com.syrus.io.*;
-import com.syrus.util.Log;
 import java.io.FileOutputStream;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Hashtable;
+import com.syrus.AMFICOM.CORBA.General.AlarmLevel;
+import com.syrus.AMFICOM.analysis.dadara.ReflectogramEvent;
+import com.syrus.AMFICOM.analysis.dadara.Threshold;
+import com.syrus.AMFICOM.analysis.dadara.ReflectogramAlarm;
+import com.syrus.AMFICOM.analysis.dadara.ReflectogramComparer;
+import com.syrus.io.BellcoreStructure;
+import com.syrus.io.BellcoreReader;
+import com.syrus.util.Log;
+
+import java.util.Date;
+import java.io.FileOutputStream;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2004/07/19 06:10:40 $
+ * @version $Revision: 1.2 $, $Date: 2004/07/19 14:01:34 $
  * @author $Author: arseniy $
  * @module agent_v1
  */
+
 public class DadaraEvaluationManager extends EvaluationManager  {
 	public void evaluate(Hashtable thresholds,
 											 Hashtable etalonparameters,

@@ -1,5 +1,5 @@
 /*
- * $Id: TaskReceiver.java,v 1.2 2004/06/21 14:56:29 bass Exp $
+ * $Id: TaskReceiver.java,v 1.3 2004/07/19 14:01:34 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,24 +8,34 @@
 
 package com.syrus.AMFICOM.agent;
 
-import com.syrus.AMFICOM.CORBA.General.*;
-import com.syrus.AMFICOM.CORBA.KIS.*;
-import com.syrus.util.*;
 import java.io.IOException;
 import java.sql.Timestamp;
+import com.syrus.AMFICOM.CORBA.General.TestTimeStamps;
+import com.syrus.AMFICOM.CORBA.General.TestTemporalType;
+import com.syrus.AMFICOM.CORBA.General.TestStatus;
+import com.syrus.AMFICOM.CORBA.General.TestReturnType;
+import com.syrus.AMFICOM.CORBA.General.AMFICOMRemoteException;
+import com.syrus.AMFICOM.CORBA.KIS.AgentIdentity_Transferable;
+import com.syrus.AMFICOM.CORBA.KIS.Test_Transferable;
+import com.syrus.AMFICOM.CORBA.KIS.Analysis_Transferable;
+import com.syrus.AMFICOM.CORBA.KIS.Evaluation_Transferable;
+import com.syrus.AMFICOM.CORBA.KIS.Etalon_Transferable;
+import com.syrus.AMFICOM.CORBA.KIS.Parameter_Transferable;
+import com.syrus.util.ByteArray;
+import com.syrus.util.Log;
 
 // For queryTests_Stub()
 
 /**
- * @version $Revision: 1.2 $, $Date: 2004/06/21 14:56:29 $
- * @author $Author: bass $
+ * @version $Revision: 1.3 $, $Date: 2004/07/19 14:01:34 $
+ * @author $Author: arseniy $
  * @module agent_v1
  */
 public class TaskReceiver extends Agent  {
 	public void run() {
 
 //Query
-		AgentIdentity_Transferable agentId = new AgentIdentity_Transferable(agent_id, "hz");
+		AgentIdentity_Transferable agentIdT = new AgentIdentity_Transferable(agentId, "hz");
     Test_Transferable[] tests;
 		String[] atids;
     while(true) {
@@ -33,7 +43,7 @@ public class TaskReceiver extends Agent  {
 			atids = null;
 
       try {
-        tests = amficomkis.queryTests(agentId, risdtimewait);
+        tests = amficomkis.queryTests(agentIdT, risdtimewait);
         //tests = queryTests_Stub();
       }
       catch (AMFICOMRemoteException e) {
@@ -56,7 +66,7 @@ public class TaskReceiver extends Agent  {
         Log.debugMessage("tests == NULL", Log.DEBUGLEVEL05);
 
 			try {
-				atids = amficomkis.queryAbortedTests(agentId);
+				atids = amficomkis.queryAbortedTests(agentIdT);
 			}
 			catch (AMFICOMRemoteException e) {
         Log.errorMessage("Exception while quering aborted tests: "  + e.message);
@@ -121,7 +131,7 @@ public class TaskReceiver extends Agent  {
     }
   }
 
-  private static Test_Transferable[] queryTests_Stub() throws AMFICOMRemoteException {
+  private static Test_Transferable[] queryTestsStub() throws AMFICOMRemoteException {
     System.out.println("---------------- query ----------------");
     Test_Transferable[] tests = new Test_Transferable[1];
     TestTimeStamps tts = new TestTimeStamps();

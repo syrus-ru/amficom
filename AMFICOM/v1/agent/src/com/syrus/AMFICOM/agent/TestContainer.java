@@ -1,5 +1,5 @@
 /*
- * $Id: TestContainer.java,v 1.3 2004/06/21 14:56:29 bass Exp $
+ * $Id: TestContainer.java,v 1.4 2004/07/19 14:01:34 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,17 +8,23 @@
 
 package com.syrus.AMFICOM.agent;
 
-import com.syrus.AMFICOM.CORBA.General.*;
-import com.syrus.AMFICOM.CORBA.KIS.*;
-import com.syrus.util.Log;
 import java.sql.Timestamp;
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.LinkedList;
+import com.syrus.AMFICOM.CORBA.General.TestTemporalType;
+import com.syrus.AMFICOM.CORBA.General.TestTimeStamps;
+import com.syrus.AMFICOM.CORBA.General.TestStatus;
+import com.syrus.AMFICOM.CORBA.KIS.Test_Transferable;
+import com.syrus.AMFICOM.CORBA.KIS.Result_Transferable;
+import com.syrus.AMFICOM.CORBA.KIS.Parameter_Transferable;
+import com.syrus.util.Log;
 
 //sortArguments
 
 /**
- * @version $Revision: 1.3 $, $Date: 2004/06/21 14:56:29 $
- * @author $Author: bass $
+ * @version $Revision: 1.4 $, $Date: 2004/07/19 14:01:34 $
+ * @author $Author: arseniy $
  * @module agent_v1
  */
 public class TestContainer extends Agent {
@@ -60,11 +66,24 @@ public class TestContainer extends Agent {
   
   private void processPeriodical() {
     long dt = this.tt.time_stamps.ptpars().dt;
-    long end_time = this.tt.time_stamps.ptpars().end_time;
+    long endTime = this.tt.time_stamps.ptpars().end_time;
     LinkedList testList = new LinkedList();
-    for(int i = 0; i <= (int)((end_time - this.tt.start_time)/dt); i++) {
+    for(int i = 0; i <= (int)((endTime - this.tt.start_time)/dt); i++) {
       Log.debugMessage("processPeriodical() | Adding elementary whith start_time: " + (new Timestamp(this.tt.start_time + i*dt)).toString(), Log.DEBUGLEVEL05);
-      testList.add(new Test_Transferable(this.tt.id, this.tt.test_type_id, this.tt.test_request_id, TestTemporalType.TEST_TEMPORAL_TYPE_ONETIME, this.tt.start_time + i*dt, new TestTimeStamps(), TestStatus.TEST_STATUS_PROCESSING, this.tt.kis_id, this.tt.monitored_element_id, this.tt.local_address, this.tt.parameters, this.tt.analysis, this.tt.evaluation, this.tt.return_type));
+      testList.add(new Test_Transferable(this.tt.id,
+																				 this.tt.test_type_id,
+																				 this.tt.test_request_id,
+																				 TestTemporalType.TEST_TEMPORAL_TYPE_ONETIME,
+																				 this.tt.start_time + i*dt,
+																				 new TestTimeStamps(),
+																				 TestStatus.TEST_STATUS_PROCESSING,
+																				 this.tt.kis_id,
+																				 this.tt.monitored_element_id,
+																				 this.tt.local_address,
+																				 this.tt.parameters,
+																				 this.tt.analysis,
+																				 this.tt.evaluation,
+																				 this.tt.return_type));
     }
     this.processElementaryTestList(testList);
   }
@@ -79,22 +98,22 @@ public class TestContainer extends Agent {
   }
 
   private void processElementaryTestList(LinkedList testList) {
-    Test_Transferable test_i;
-		String measurement_id;
+    Test_Transferable testI;
+		String measurementId;
 		Result_Transferable result;
-    int n_tests = testList.size();
-		int n_reports = 0;
-    long deadtime = ((Test_Transferable)testList.get(n_tests-1)).start_time + measuretime;
+    int nTests = testList.size();
+		int nReports = 0;
+    long deadtime = ((Test_Transferable)testList.get(nTests-1)).start_time + measuretime;
 		this.aborted = false;
-    while(n_reports < n_tests && System.currentTimeMillis() <= deadtime && !this.aborted) {
-			Log.debugMessage("----------- Elementary tests : " + n_tests + ", reports: " + n_reports + " ---------", Log.DEBUGLEVEL05);
+    while(nReports < nTests && System.currentTimeMillis() <= deadtime && !this.aborted) {
+			Log.debugMessage("----------- Elementary tests : " + nTests + ", reports: " + nReports + " ---------", Log.DEBUGLEVEL05);
 			if (!testList.isEmpty()) {
-			  test_i = (Test_Transferable)testList.get(0);
-		    if (test_i.start_time <= System.currentTimeMillis()) {
+			  testI = (Test_Transferable)testList.get(0);
+		    if (testI.start_time <= System.currentTimeMillis()) {
 					Log.debugMessage("Pushung", Log.DEBUGLEVEL05);
 
 //---------******* DON't FORGET REMOVE IT NAHREN!!! *******---------
-sortArguments(test_i);
+sortArguments(testI);
 //------------------------------------------------------------------
 
 	        if (!this.taskFileConnected) {
@@ -110,21 +129,21 @@ sortArguments(test_i);
 		        }
 	        }
 					else {
-				    String[] par_names = new String[test_i.parameters.length];
-			      byte[][] par_values = new byte[test_i.parameters.length][];
-		        for (int i = 0; i < par_names.length; i++) {
-	            par_names[i] = test_i.parameters[i].name;
-							par_values[i] = test_i.parameters[i].value;
+				    String[] parNames = new String[testI.parameters.length];
+			      byte[][] parValues = new byte[testI.parameters.length][];
+		        for (int i = 0; i < parNames.length; i++) {
+	            parNames[i] = testI.parameters[i].name;
+							parValues[i] = testI.parameters[i].value;
 						}
-						measurement_id = test_i.id + "*" + Long.toString(test_i.start_time);
+						measurementId = testI.id + MEASUREMENT_ID_DELIMITER + Long.toString(testI.start_time);
 					  if (Transceiver.push1(this.taskFileHandle, this.taskFileName,
-																	measurement_id,
-																	test_i.test_type_id,
-																	test_i.local_address,
-																	par_names,
-																	par_values)) {
+																	measurementId,
+																	testI.test_type_id,
+																	testI.local_address,
+																	parNames,
+																	parValues)) {
 				      Log.debugMessage("TestContainer.processElementaryTestList | Task is written", Log.DEBUGLEVEL03);
-			        testList.remove(test_i);
+			        testList.remove(testI);
 		        }
 	          else {
 						  Log.debugMessage("TestContainer.processElementaryTestList | Task is NOT written", Log.DEBUGLEVEL03);
@@ -142,7 +161,7 @@ sortArguments(test_i);
 					synchronized (reportQueue) {
 						reportQueue.add(result);
 					}
-					n_reports ++;
+					nReports ++;
 //----------------------------------------------------
 //Process analysis and/or evaluation
 				  Result_Transferable analysisResult = null;
@@ -193,7 +212,7 @@ sortArguments(test_i);
 		synchronized (testContainers) {
 			testContainers.remove(this.tt.id);
 		}
-    Log.debugMessage("+ Exiting: testList size == " + testList.size() + ", resultQueue size == " + this.resultQueue.size() + ", reports: " + n_reports + " +", Log.DEBUGLEVEL03);
+    Log.debugMessage("+ Exiting: testList size == " + testList.size() + ", resultQueue size == " + this.resultQueue.size() + ", reports: " + nReports + " +", Log.DEBUGLEVEL03);
   }
 
 	public void addResult(Result_Transferable result) {
