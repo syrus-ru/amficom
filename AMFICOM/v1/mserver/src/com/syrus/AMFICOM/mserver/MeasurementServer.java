@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementServer.java,v 1.6 2004/08/09 14:23:34 arseniy Exp $
+ * $Id: MeasurementServer.java,v 1.7 2004/08/11 14:49:34 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,7 +26,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2004/08/09 14:23:34 $
+ * @version $Revision: 1.7 $, $Date: 2004/08/11 14:49:34 $
  * @author $Author: arseniy $
  * @module mserver_v1
  */
@@ -116,36 +116,43 @@ public class MeasurementServer extends SleepButWorkThread {
 	}
 	
 	private static void activateMCMReferences() {
-//		List mcms = iAm.getMCMs();
-//		mcmRefs = new Hashtable(mcms.size());
-//		Identifier mcmId;
-//		com.syrus.AMFICOM.mcm.corba.MCM mcmRef;
-//		for (Iterator iterator = mcms.iterator(); iterator.hasNext();) {
-//			mcmId = ((MCM)mcms.iterator()).getId();
-//			try {
-//				mcmRef = com.syrus.AMFICOM.mcm.corba.MCMHelper.narrow(corbaServer.resolveReference(mcmId.toString()));
-//			}
-//			catch (CommunicationException ce) {
-//				Log.errorException(ce);
-//				mcmRef = null;
-//			}
-//			if (mcmRef != null)
-//				mcmRefs.put(mcmId, mcmRef);
-//		}
-
-		mcmRefs = new Hashtable(1);
-		com.syrus.AMFICOM.mcm.corba.MCM mcmRef;
 		try {
-			mcmRef = com.syrus.AMFICOM.mcm.corba.MCMHelper.narrow(corbaServer.resolveReference("mcm_1"));
+			List mcmIds = iAm.retrieveMCMIds();
+			mcmRefs = new Hashtable(mcmIds.size());
+			Identifier mcmId;
+			com.syrus.AMFICOM.mcm.corba.MCM mcmRef;
+			for (Iterator iterator = mcmIds.iterator(); iterator.hasNext();) {
+				mcmId = (Identifier)iterator.next();
+				try {
+					mcmRef = com.syrus.AMFICOM.mcm.corba.MCMHelper.narrow(corbaServer.resolveReference(mcmId.toString()));
+				}
+				catch (CommunicationException ce) {
+					Log.errorException(ce);
+					mcmRef = null;
+				}
+				if (mcmRef != null)
+					mcmRefs.put(mcmId, mcmRef);
+			}
 		}
-		catch (CommunicationException ce) {
-			Log.errorException(ce);
-			mcmRef = null;
+		catch (Exception e) {
+			Log.errorException(e);
+			System.exit(-1);
 		}
-		if (mcmRef != null)
-			mcmRefs.put("mcm_1", mcmRef);
-		else
-			System.out.println("ignoring null");
+		
+
+//		mcmRefs = new Hashtable(1);
+//		com.syrus.AMFICOM.mcm.corba.MCM mcmRef;
+//		try {
+//			mcmRef = com.syrus.AMFICOM.mcm.corba.MCMHelper.narrow(corbaServer.resolveReference("mcm_1"));
+//		}
+//		catch (CommunicationException ce) {
+//			Log.errorException(ce);
+//			mcmRef = null;
+//		}
+//		if (mcmRef != null)
+//			mcmRefs.put("mcm_1", mcmRef);
+//		else
+//			System.out.println("ignoring null");
 	}
 
 	public void run() {

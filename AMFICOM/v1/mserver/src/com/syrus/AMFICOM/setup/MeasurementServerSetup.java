@@ -10,10 +10,12 @@ import com.syrus.AMFICOM.general.IdentifierGenerator;
 import com.syrus.AMFICOM.configuration.User;
 import com.syrus.AMFICOM.configuration.Domain;
 import com.syrus.AMFICOM.configuration.Server;
+import com.syrus.AMFICOM.configuration.MCM;
 import com.syrus.AMFICOM.configuration.corba.User_Transferable;
 import com.syrus.AMFICOM.configuration.corba.UserSort;
 import com.syrus.AMFICOM.configuration.corba.Domain_Transferable;
 import com.syrus.AMFICOM.configuration.corba.Server_Transferable;
+import com.syrus.AMFICOM.configuration.corba.MCM_Transferable;
 import com.syrus.AMFICOM.measurement.ParameterType;
 import com.syrus.AMFICOM.measurement.ParameterTypeDatabase;
 import com.syrus.AMFICOM.measurement.MeasurementType;
@@ -76,16 +78,25 @@ public class MeasurementServerSetup {
 //							 UserSort.USER_SORT_SERVER,
 //							 "User Serverovich",
 //							 "User for measurement server");
+//		createUser(creatorId,
+//							 "mcm",
+//							 UserSort.USER_SORT_MCM,
+//							 "User Mcmovich",
+//							 "User for measurement control module");
 
 //		createDomain(creatorId);
 //		checkDomain();
 
 		Identifier serverUserId = new Identifier("Users_10");
+		Identifier mcmUserId = new Identifier("Users_11");
 		Identifier domainId = new Identifier("Domain_26");
 //		createServer(creatorId,
 //								 domainId,
 //								 serverUserId);
 //		checkServer();
+
+		Identifier serverId = new Identifier("Server_3");
+		createMCM(creatorId, domainId, mcmUserId, serverId);
 
 //		createParameterTypes(creatorId);
 //		checkParameterTypes();
@@ -157,14 +168,13 @@ public class MeasurementServerSetup {
 																	 Identifier serverUserId) {
 		try {
 			Identifier id = IdentifierGenerator.generateIdentifier(ObjectEntities.SERVER_ENTITY_CODE);
-			System.out.println("Id: '" + id.toString() + "', major: " + id.getMajor() + ", majorString: '" + id.getMajorString() + "', minor: " + id.getMinor());
 			Server server = Server.createInstance(id,
 																						creatorId,
 																						domainId,
 																						"server 1",
 																						"Measurement server",
 																						serverUserId);
-			Server server1 = new Server((Server_Transferable)server.getTransferable());
+			new Server((Server_Transferable)server.getTransferable());
 		}
 		catch (Exception e) {
 			Log.errorException(e);
@@ -176,6 +186,26 @@ public class MeasurementServerSetup {
 			Identifier id = new Identifier("Server_3");
 			Server server = new Server(id);
 			System.out.println("creator: " + server.getCreatorId() + ", domain_id: " + server.getDomainId() + ", name: " + server.getName() + ", description: " + server.getDescription() + ", user: " + server.getUserId());
+		}
+		catch (Exception e) {
+			Log.errorException(e);
+		}
+	}
+
+	private static void createMCM(Identifier creatorId,
+																Identifier domainId,
+																Identifier mcmUserId,
+																Identifier serverId) {
+		try {
+			Identifier id = IdentifierGenerator.generateIdentifier(ObjectEntities.MCM_ENTITY_CODE);
+			MCM mcm = MCM.createInstance(id,
+																	 creatorId,
+																	 domainId,
+																	 "mcm 1",
+																	 "Measurement control module",
+																	 mcmUserId,
+																	 serverId);
+			new MCM((MCM_Transferable)mcm.getTransferable());
 		}
 		catch (Exception e) {
 			Log.errorException(e);
