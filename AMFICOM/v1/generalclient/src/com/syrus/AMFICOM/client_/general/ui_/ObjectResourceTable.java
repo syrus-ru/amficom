@@ -9,6 +9,7 @@ import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -24,7 +25,7 @@ import com.syrus.AMFICOM.Client.General.UI.AComboBox;
 import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2004/10/07 06:07:45 $
+ * @version $Revision: 1.4 $, $Date: 2004/11/03 07:23:50 $
  * @author $Author: bob $
  * @module generalclient_v1
  */
@@ -34,6 +35,10 @@ public class ObjectResourceTable extends JTable {
 
 	public ObjectResourceTable(ObjectResourceController controller, List objectResourceList) {
 		this(new ObjectResourceTableModel(controller, objectResourceList));
+	}
+	
+	public ObjectResourceTable(ObjectResourceController controller) {
+		this(new ObjectResourceTableModel(controller, new LinkedList()));
 	}
 
 	public ObjectResourceTable(ObjectResourceTableModel dm) {

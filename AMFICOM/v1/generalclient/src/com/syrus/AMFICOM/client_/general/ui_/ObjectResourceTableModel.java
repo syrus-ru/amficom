@@ -13,7 +13,7 @@ import javax.swing.table.AbstractTableModel;
 import java.util.Iterator;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2004/10/11 14:20:07 $
+ * @version $Revision: 1.5 $, $Date: 2004/11/03 07:23:50 $
  * @author $Author: bob $
  * @module generalclient_v1
  */
@@ -134,7 +134,6 @@ public class ObjectResourceTableModel extends AbstractTableModel {
 			obj = keyObject;
 
 		}
-
 		return obj;
 	}
 
