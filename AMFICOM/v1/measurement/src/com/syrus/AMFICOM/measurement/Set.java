@@ -1,5 +1,5 @@
 /*
- * $Id: Set.java,v 1.38 2005/01/28 15:17:49 arseniy Exp $
+ * $Id: Set.java,v 1.39 2005/01/31 06:55:25 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,7 +34,7 @@ import com.syrus.AMFICOM.measurement.corba.Parameter_Transferable;
 import com.syrus.util.HashCodeGenerator;
 
 /**
- * @version $Revision: 1.38 $, $Date: 2005/01/28 15:17:49 $
+ * @version $Revision: 1.39 $, $Date: 2005/01/31 06:55:25 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -154,21 +154,6 @@ public class Set extends StorableObject {
 		}
 	}
 
-//	public static Set getInstance(Set_Transferable st) throws CreateObjectException {
-//		Set set = new Set(st);
-//		
-//		set.setDatabase = MeasurementDatabaseContext.setDatabase;
-//		try {
-//			if (set.setDatabase != null)
-//				set.setDatabase.insert(set);
-//		}
-//		catch (IllegalDataException e) {
-//			throw new CreateObjectException(e.getMessage(), e);
-//		}
-//		
-//		return set;
-//	}
-
 	public boolean isAttachedToMonitoredElement(Identifier monitoredElementId) {
 		return this.monitoredElementIds.contains(monitoredElementId);
 	}
@@ -177,7 +162,7 @@ public class Set extends StorableObject {
 																			 Identifier modifierId) throws UpdateObjectException {
 		if (this.isAttachedToMonitoredElement(monitoredElementId))
       return;
-		super.modifierId = (Identifier)modifierId.clone();
+		super.modifierId = (Identifier) modifierId.clone();
 		try {
 			this.setDatabase.update(this, UPDATE_ATTACH_ME, monitoredElementId);
 		}
@@ -194,7 +179,7 @@ public class Set extends StorableObject {
 																				 Identifier modifierId) throws UpdateObjectException {
     if (!this.isAttachedToMonitoredElement(monitoredElementId))
       return;
-		super.modifierId = (Identifier)modifierId.clone();
+		super.modifierId = (Identifier) modifierId.clone();
 		try {
 	    this.setDatabase.update(this, UPDATE_DETACH_ME, monitoredElementId);
 		}
