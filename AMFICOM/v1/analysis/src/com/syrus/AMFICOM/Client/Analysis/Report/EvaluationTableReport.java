@@ -4,11 +4,7 @@ import javax.swing.table.TableColumn;
 
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 
-import com.syrus.AMFICOM.Client.General.Report.ObjectsReport;
-import com.syrus.AMFICOM.Client.General.Report.CreateReportException;
-import com.syrus.AMFICOM.Client.General.Report.ReportData;
-import com.syrus.AMFICOM.Client.General.Report.DividableTableColumnModel;
-import com.syrus.AMFICOM.Client.General.Report.DividableTableModel;
+import com.syrus.AMFICOM.Client.General.Report.*;
 
 /**
  * <p>Title: </p>
@@ -54,7 +50,7 @@ class EvaluationTableReportTableModel extends DividableTableModel
 
 	int length = 0;
 
-	ReportTable reportTable = null;
+	AMTReportTable reportTable = null;
 
 	boolean viewColumnNames = false;
 
@@ -62,9 +58,9 @@ class EvaluationTableReportTableModel extends DividableTableModel
 		ObjectsReport report) throws CreateReportException
 	{
 		super(divisionsNumber,
-			((ReportTable) report.getReserve()).model.getColumnCount());
+			((AMTReportTable) report.getReserve()).model.getColumnCount());
 
-		reportTable = (ReportTable) report.getReserve();
+		reportTable = (AMTReportTable) report.getReserve();
 
 		width = reportTable.model.getColumnCount();
 		length = reportTable.model.getRowCount();

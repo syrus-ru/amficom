@@ -4,11 +4,7 @@ import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelReport;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 
-import com.syrus.AMFICOM.Client.General.Report.ReportTemplate;
-import com.syrus.AMFICOM.Client.General.Report.RenderingObject;
-import com.syrus.AMFICOM.Client.General.Report.ObjectsReport;
-import com.syrus.AMFICOM.Client.General.Report.ReportResultsTablePanel;
-import com.syrus.AMFICOM.Client.General.Report.CreateReportException;
+import com.syrus.AMFICOM.Client.General.Report.*;
 
 import com.syrus.AMFICOM.Client.General.Report.APOReportModel;
 
@@ -131,7 +127,7 @@ abstract public class ESAPEReportModel extends APOReportModel
 				CreateReportException.cantImplement);
 
 		JComponent returnValue = null;
-		if (rp.getReserve() instanceof ReportTable)
+		if (rp.getReserve() instanceof AMTReportTable)
 		{
 			EvaluationTableReport er = new EvaluationTableReport(rp, divisionsNumber);
 			returnValue = new ReportResultsTablePanel(
@@ -154,7 +150,7 @@ abstract public class ESAPEReportModel extends APOReportModel
 			 || rt.templateType.equals(ReportTemplate.rtt_Prediction)
 			 || rt.templateType.equals(ReportTemplate.rtt_Survey))
 		{
-			AnalysisReport aReport = (AnalysisReport) data;
+			AMTReport aReport = (AMTReport) data;
 			for (int i = 0; i < rt.objectRenderers.size(); i++)
 			{
 				RenderingObject curRenderer = (RenderingObject) rt.objectRenderers.
@@ -163,7 +159,7 @@ abstract public class ESAPEReportModel extends APOReportModel
 
 				for (int j = 0; j < aReport.tables.size(); j++)
 				{
-					ReportTable curTable = (ReportTable) aReport.tables.get(j);
+					AMTReportTable curTable = (AMTReportTable) aReport.tables.get(j);
 					if (curTable.title.equals(getLangForField(itsTableTitle)))
 					{
 						try
@@ -181,7 +177,7 @@ abstract public class ESAPEReportModel extends APOReportModel
 
 				for (int j = 0; j < aReport.panels.size(); j++)
 				{
-					ReportPanel curPanel = (ReportPanel) aReport.panels.get(j);
+					AMTReportPanel curPanel = (AMTReportPanel) aReport.panels.get(j);
 					if (curPanel.title.equals(getLangForField(itsTableTitle)))
 					{
 						try

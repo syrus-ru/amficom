@@ -5,6 +5,8 @@ import com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.AnalysisPanel;
 
 import com.syrus.AMFICOM.Client.General.Report.RenderingObject;
 import com.syrus.AMFICOM.Client.General.Report.CreateReportException;
+import com.syrus.AMFICOM.Client.General.Report.AMTReportPanel;
+
 
 import javax.swing.JPanel;
 
@@ -32,8 +34,8 @@ public class EvaluationGraphPanel extends JPanel
 	{
 		this.ro = ro;
 
-		ReportPanel rPanel = (ReportPanel) ro.getReportToRender().getReserve();
-		this.sgPanel = rPanel.panel;
+		AMTReportPanel rPanel = (AMTReportPanel) ro.getReportToRender().getReserve();
+		this.sgPanel = (ScaledGraphPanel)rPanel.panel;
 
 		if (sgPanel == null)
 			throw new CreateReportException(
