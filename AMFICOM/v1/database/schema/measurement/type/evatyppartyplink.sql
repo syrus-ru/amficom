@@ -1,6 +1,6 @@
 CREATE TABLE EvaTypParTypLink (
- evaluation_type_id VARCHAR2(32) NOT NULL,
- parameter_type_id VARCHAR2(32) NOT NULL,
+ evaluation_type_id Identifier NOT NULL,
+ parameter_type_id Identifier NOT NULL,
  parameter_mode VARCHAR2(3) NOT NULL,
 --
  CONSTRAINT evatpartlnk_evat_fk FOREIGN KEY (evaluation_type_id)

@@ -1,7 +1,7 @@
 CREATE TABLE MntTypAnaTypEvaTyp (
- measurement_type_id VARCHAR2(32) NOT NULL,
- analysis_type_id VARCHAR2(32) NOT NULL,
- evaluation_type_id VARCHAR2(32) NOT NULL,
+ measurement_type_id Identifier NOT NULL,
+ analysis_type_id Identifier NOT NULL,
+ evaluation_type_id Identifier NOT NULL,
 --
  CONSTRAINT mnttanatevat_uniq UNIQUE (measurement_type_id, analysis_type_id, evaluation_type_id),
 --

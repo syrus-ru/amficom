@@ -1,16 +1,16 @@
 CREATE TABLE Domain (
- id VARCHAR2(32),
+ id Identifier,
 --
  created DATE NOT NULL,
  modified DATE NOT NULL,
- creator_id VARCHAR2(32) NOT NULL,
- modifier_id VARCHAR2(32) NOT NULL,
+ creator_id Identifier NOT NULL,
+ modifier_id Identifier NOT NULL,
 --
- domain_id VARCHAR2(32),
+ domain_id Identifier,
 --
  name VARCHAR2(64) NOT NULL,
  description VARCHAR2(256),
- owner_id VARCHAR2(32),
+ owner_id Identifier,
  CONSTRAINT domain_pk PRIMARY KEY (id),
  CONSTRAINT domain_creator_fk FOREIGN KEY (creator_id)
   REFERENCES Users (id) ON DELETE CASCADE,

@@ -1,14 +1,14 @@
 CREATE TABLE Analysis (
- id VARCHAR2(32),
+ id Identifier,
  created DATE NOT NULL,
  modified DATE NOT NULL,
- creator_id VARCHAR2(32) NOT NULL,
- modifier_id VARCHAR2(32) NOT NULL,
+ creator_id Identifier NOT NULL,
+ modifier_id Identifier NOT NULL,
 --
- type_id VARCHAR2(32) NOT NULL,
- monitored_element_id VARCHAR2(32) NOT NULL,
+ type_id Identifier NOT NULL,
+ monitored_element_id Identifier NOT NULL,
 --
- criteria_set_id VARCHAR2(32) NOT NULL,
+ criteria_set_id Identifier NOT NULL,
 --
  CONSTRAINT ana_pk PRIMARY KEY (id),
  CONSTRAINT ana_creator_fk FOREIGN KEY (creator_id)

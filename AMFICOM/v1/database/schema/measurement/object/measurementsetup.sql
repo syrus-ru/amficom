@@ -1,14 +1,14 @@
 CREATE TABLE MeasurementSetup (
- id VARCHAR2(32),
+ id Identifier,
  created DATE NOT NULL,
  modified DATE NOT NULL,
- creator_id VARCHAR2(32) NOT NULL,
- modifier_id VARCHAR2(32) NOT NULL,
+ creator_id Identifier NOT NULL,
+ modifier_id Identifier NOT NULL,
 --
- parameter_set_id VARCHAR2(32) NOT NULL,
- criteria_set_id VARCHAR2(32),
- threshold_set_id VARCHAR2(32),
- etalon_id VARCHAR2(32),
+ parameter_set_id Identifier NOT NULL,
+ criteria_set_id Identifier,
+ threshold_set_id Identifier,
+ etalon_id Identifier,
  description VARCHAR2(256),
  measurement_duration NUMBER(20),
 --

@@ -1,6 +1,6 @@
 CREATE TABLE AnaTypParTypLink (
- analysis_type_id VARCHAR2(32) NOT NULL,
- parameter_type_id VARCHAR2(32) NOT NULL,
+ analysis_type_id Identifier NOT NULL,
+ parameter_type_id Identifier NOT NULL,
  parameter_mode VARCHAR2(3) NOT NULL,
 --
  CONSTRAINT anatpartlnk_anat_fk FOREIGN KEY (analysis_type_id)

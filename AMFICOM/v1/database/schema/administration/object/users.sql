@@ -1,9 +1,9 @@
 CREATE TABLE Users(
- id VARCHAR2(32),
+ id Identifier,
  created DATE NOT NULL,
  modified DATE NOT NULL,
- creator_id VARCHAR2(32) NOT NULL,
- modifier_id VARCHAR2(32) NOT NULL,
+ creator_id Identifier NOT NULL,
+ modifier_id Identifier NOT NULL,
 --
  login VARCHAR2(32) NOT NULL,
  sort NUMBER(2, 0) NOT NULL,

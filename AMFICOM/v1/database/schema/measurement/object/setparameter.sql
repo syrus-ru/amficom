@@ -1,7 +1,7 @@
 CREATE TABLE SetParameter (
- id VARCHAR2(32),
- type_id VARCHAR2(32) NOT NULL,
- set_id VARCHAR2(32) NOT NULL,
+ id Identifier,
+ type_id Identifier NOT NULL,
+ set_id Identifier NOT NULL,
  value BLOB NOT NULL,
 --
  CONSTRAINT spar_pk PRIMARY KEY (id),

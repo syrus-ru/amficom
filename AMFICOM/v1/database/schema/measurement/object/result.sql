@@ -1,13 +1,13 @@
 CREATE TABLE Result (
- id VARCHAR2(32),
+ id Identifier,
  created DATE NOT NULL,
  modified DATE NOT NULL,
- creator_id VARCHAR2(32) NOT NULL,
- modifier_id VARCHAR2(32) NOT NULL,
+ creator_id Identifier NOT NULL,
+ modifier_id Identifier NOT NULL,
 --
- measurement_id VARCHAR2(32) NOT NULL,
- analysis_id VARCHAR2(32),
- evaluation_id VARCHAR2(32),
+ measurement_id Identifier NOT NULL,
+ analysis_id Identifier,
+ evaluation_id Identifier,
  sort NUMBER(2, 0) NOT NULL,
  alarm_level NUMBER(2, 0) NOT NULL,
 --
