@@ -1,5 +1,5 @@
 /*
- * $Id: IdentifierLoader.java,v 1.1 2004/09/30 10:06:54 bob Exp $
+ * $Id: IdentifierLoader.java,v 1.2 2004/09/30 10:55:47 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,27 +8,27 @@
 
 package com.syrus.AMFICOM.general;
 
-import com.syrus.AMFICOM.cmserver.corba.CMServer;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.SleepButWorkThread;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
+import com.syrus.AMFICOM.general.corba.IdentifierGeneratorServer;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.util.Fifo;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2004/09/30 10:06:54 $
+ * @version $Revision: 1.2 $, $Date: 2004/09/30 10:55:47 $
  * @author $Author: bob $
  * @module module
  */
 public class IdentifierLoader extends SleepButWorkThread {
 
-	private CMServer	server;
+	private IdentifierGeneratorServer	server;
 	private Fifo		idPool;
 	private short		entityCode;
 	private static int	timeToSleep	= 1000;
 
-	public IdentifierLoader(CMServer server, Fifo idPool, short entityCode) {
+	public IdentifierLoader(IdentifierGeneratorServer server, Fifo idPool, short entityCode) {
 		super(timeToSleep);
 		this.server = server;
 		this.idPool = idPool;

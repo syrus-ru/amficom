@@ -1,5 +1,5 @@
 /*
- * $Id: IdentifierPool.java,v 1.3 2004/09/30 10:06:54 bob Exp $
+ * $Id: IdentifierPool.java,v 1.4 2004/09/30 10:55:47 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,19 +12,19 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.syrus.AMFICOM.cmserver.corba.CMServer;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.corba.IdentifierGeneratorServer;
 import com.syrus.util.Fifo;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2004/09/30 10:06:54 $
+ * @version $Revision: 1.4 $, $Date: 2004/09/30 10:55:47 $
  * @author $Author: bob $
  * @module cmserver_v1
  */
 public class IdentifierPool {
 
-	static CMServer		server;
+	static IdentifierGeneratorServer		server;
 
 	static int		capacity	= 10;
 
@@ -39,14 +39,14 @@ public class IdentifierPool {
 		// empty private construcor
 	}
 
-	public static void init(CMServer server, int capacity) {
+	public static void init(IdentifierGeneratorServer server, int capacity) {
 		IdentifierPool.server = server;
 		IdentifierPool.capacity = capacity;
 		idPoolMap = Collections.synchronizedMap(new HashMap());
 
 	}
 
-	public static void init(CMServer server) {
+	public static void init(IdentifierGeneratorServer server) {
 		init(server, 10);
 	}
 
