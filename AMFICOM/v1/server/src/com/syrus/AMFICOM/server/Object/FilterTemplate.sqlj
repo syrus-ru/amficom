@@ -15,11 +15,10 @@ public class FilterTemplate extends Object
 	private String resource_typ;
 	private byte[] logic_scheme;
 
-	public FilterTemplate(Filter_Transferable filter, String f_id)
+	public FilterTemplate(Filter_Transferable filter)
 			throws Exception
 	{
-    this.id = f_id; 
-  
+		this.id = filter.id; 
 		this.resource_typ = filter.resource_typ;
 		this.logic_scheme = filter.logic_scheme;
 		
@@ -39,8 +38,8 @@ public class FilterTemplate extends Object
 
 			ByteArrayDatabase bArr = new ByteArrayDatabase(this.logic_scheme);
       
-      ConnectionContext connCtx2 = DefaultContext.getDefaultContext();
-      boolean autoc = connCtx2.getConnection().getAutoCommit();
+			ConnectionContext connCtx2 = DefaultContext.getDefaultContext();
+			boolean autoc = connCtx2.getConnection().getAutoCommit();
       
 			bArr.saveAsBlob(
 				connCtx2.getConnection(),
@@ -64,10 +63,11 @@ public class FilterTemplate extends Object
 
 		try
 		{
-			#sql fIt = { select
-				ID,
-				RESOURCE_TYP,
-				LOGIC_SCHEME
+			#sql fIt = { 
+				select
+					ID,
+					RESOURCE_TYP,
+					LOGIC_SCHEME
 				from AMFICOM.FILTERS
 				where ID = :id
 			};
@@ -78,16 +78,16 @@ public class FilterTemplate extends Object
 			}
 
 			try { this.id = fIt.id(); }
-        catch(SQLException e) { }
+			catch(SQLException e) { }
 			if(this.id == null) this.id = "";
 
 			try { this.resource_typ = fIt.resource_typ(); }
-        catch(SQLException e) { }
+			catch(SQLException e) { }
 			if(this.resource_typ == null) this.resource_typ = "";
 
-      byte[] logic_scheme_bytes = new byte[0];        
+			byte[] logic_scheme_bytes = new byte[0];        
 			try { logic_scheme_bytes = ByteArrayDatabase.toByteArray(fIt.logic_scheme()); }
-        catch(SQLException e) { e.printStackTrace(); }
+			catch(SQLException e) { e.printStackTrace(); }
       
 			fIt.close();
       
@@ -105,13 +105,13 @@ public class FilterTemplate extends Object
 		catch(Exception e)
 		{
 			if(fIt != null)
-        try
-        {
-          fIt.close();
-        }
-        catch(Exception exe) {}
+			try
+			{
+				fIt.close();
+			}
+			catch(Exception exe) {}
 		
-    	System.out.println("error loading report template: " + e.getMessage());
+			System.out.println("error loading report template: " + e.getMessage());
 			throw e;
 		}
 	}
@@ -141,7 +141,7 @@ public class FilterTemplate extends Object
 	public void update(Filter_Transferable filter) throws Exception
 	{
 		this.resource_typ = filter.resource_typ;
-    this.logic_scheme = filter.logic_scheme;
+		this.logic_scheme = filter.logic_scheme;
 
 		#sql{ update AMFICOM.FILTERS set
 				ID = :(this.id),
@@ -156,8 +156,8 @@ public class FilterTemplate extends Object
 
 			ByteArrayDatabase bArr = new ByteArrayDatabase(this.logic_scheme);
       
-      ConnectionContext connCtx2 = DefaultContext.getDefaultContext();
-      boolean autoc = connCtx2.getConnection().getAutoCommit();
+			ConnectionContext connCtx2 = DefaultContext.getDefaultContext();
+			boolean autoc = connCtx2.getConnection().getAutoCommit();
       
 			bArr.saveAsBlob(
 				connCtx2.getConnection(),
@@ -181,5 +181,5 @@ public class FilterTemplate extends Object
 	#sql public static iterator FilterIterator(
 		String id,
 		String resource_typ,
-    BLOB logic_scheme);
+		BLOB logic_scheme);
 }

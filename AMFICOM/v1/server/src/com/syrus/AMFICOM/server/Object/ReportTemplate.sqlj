@@ -77,7 +77,27 @@ public class ReportTemplate
 		int len4 = rt.filters.length;
 		this.filters = new FilterTemplate[len4];
 		for(int i = 0; i < len4; i++)
-			filters[i] = new FilterTemplate(rt.filters[i], this.id);
+    {
+			filters[i] = new FilterTemplate(rt.filters[i]);
+      try 
+      {
+        #sql{ insert into REPORTTEMPLATEFILTERS (
+            REPORT_TEMPLATE_ID, 
+            FILTER_ID)
+          values(
+            :(this.id), 
+            :(filters[i].getId()))
+        };
+        #sql { commit };
+      } 
+      catch (Exception ex) 
+      {
+        System.out.println("error saving new report template: " + ex.getMessage());
+        ex.printStackTrace();
+        throw ex;
+      } 
+      
+    }
 	}
 
 	public ReportTemplate(String id)
@@ -120,23 +140,9 @@ public class ReportTemplate
 			ros = RenderingObject.retrieveRenderingObjects(this.id);
 			boxes = FirmedTextPane.retrieveBoxes(this.id);
 			images = ImagePane.retrieveImages(this.id);
+			
+			filters = getFilters();
 
-      //Выбрали фильтры этого шаблона
-      ReportFilterIterator rfIt = null;
-			#sql rfIt = { select
-					REPORT_TEMPLATE_ID,
-					FILTER_ID
-				from AMFICOM.REPORTTEMPLATEFILTERS
-				where REPORT_TEMPLATE_ID = :id
-			};
-
-      Vector rep_filters = new Vector();
-			while(rfIt.next())
-      {
-        FilterTemplate ft = new FilterTemplate(rfIt.filter_id());
-        rep_filters.add(ft);
-      }
-      rep_filters.copyInto(this.filters);
 		}
 		catch(Exception e)
 		{
@@ -145,6 +151,35 @@ public class ReportTemplate
 			e.printStackTrace();
 			throw e;
 		}
+	}
+
+	public FilterTemplate[] getFilters()
+	{
+		try
+		{
+			//Выбрали фильтры этого шаблона
+			ReportFilterIterator rfIt = null;
+				
+			#sql rfIt = { select
+					REPORT_TEMPLATE_ID,
+					FILTER_ID
+				from AMFICOM.REPORTTEMPLATEFILTERS
+				where REPORT_TEMPLATE_ID = :id
+			};
+	
+			Vector rep_filters = new Vector();
+			while(rfIt.next())
+			{
+				FilterTemplate ft = new FilterTemplate(rfIt.filter_id());
+				rep_filters.add(ft);
+			}
+			return (FilterTemplate[] )rep_filters.toArray(new FilterTemplate[0]);
+		}
+		catch(Exception e)
+		{
+			System.out.println("Cannot load filter s for reporttemplate " + this.id);
+		}
+		return new FilterTemplate[0];
 	}
 
 	public ReportTemplate_Transferable getTransferable()
@@ -174,8 +209,8 @@ public class ReportTemplate
 			this.template_type,
 			ros_t,
 			boxes_t,
-      images_t,
-      filters_t);
+			images_t,
+			filters_t);
 	}
 
 	public long getModified()
@@ -207,26 +242,8 @@ public class ReportTemplate
 				where REPORT_TEMPLATE_ID = :(this.id)
 			};
       
-      //Выбрали фильтры этого шаблона
-      ReportFilterIterator rfIt = null;
-			#sql rfIt = { select
-					REPORT_TEMPLATE_ID,
-					FILTER_ID
-				from AMFICOM.REPORTTEMPLATEFILTERS
-				where REPORT_TEMPLATE_ID = :id
-			};
-      //Уничтожили их
-			while(rfIt.next())
-      {
-        #sql { delete from AMFICOM.FILTERS
-          where ID = :(rfIt.filter_id())
-        };
-      }
-      //И уничтожили ссылки на них в связывающей таблице
-			#sql { delete from AMFICOM.REPORTTEMPLATEFILTERS
-				where REPORT_TEMPLATE_ID = :(this.id)
-			};
-      
+			removeFilters();
+	  
 			#sql { delete from AMFICOM.REPORTTEMPLATES
 				where ID = :(this.id)
 			};
@@ -238,6 +255,35 @@ public class ReportTemplate
 			ex.printStackTrace();
 			throw ex;
 		} 
+	}
+	
+	public void removeFilters()
+	{
+		try
+		{
+			//Выбрали фильтры этого шаблона
+			ReportFilterIterator rfIt = null;
+			#sql rfIt = { select
+					REPORT_TEMPLATE_ID,
+					FILTER_ID
+				from AMFICOM.REPORTTEMPLATEFILTERS
+				where REPORT_TEMPLATE_ID = :id
+			};
+			//Уничтожили их
+			while(rfIt.next())
+			{
+				#sql { delete from AMFICOM.FILTERS
+					where ID = :(rfIt.filter_id())
+				};
+			}
+			//И уничтожили ссылки на них в связывающей таблице
+			#sql { delete from AMFICOM.REPORTTEMPLATEFILTERS
+				where REPORT_TEMPLATE_ID = :(this.id)
+			};
+		}
+		catch(Exception e)
+		{
+		}
 	}
 
 	public void update(ReportTemplate_Transferable rt) throws Exception
@@ -329,29 +375,10 @@ public class ReportTemplate
 		int len = new_filters.length;
 		this.filters = new FilterTemplate[len];
 
-    //Выбрали фильтры этого шаблона
-    ReportFilterIterator rfIt = null;
-  	#sql rfIt = { select
-				REPORT_TEMPLATE_ID,
-				FILTER_ID
-			from AMFICOM.REPORTTEMPLATEFILTERS
-			where REPORT_TEMPLATE_ID = :id
-		};
-    //Уничтожили их
-		while(rfIt.next())
-    {
-      #sql { delete from AMFICOM.FILTERS
-        where ID = :(rfIt.filter_id())
-      };
-    }
-    //И уничтожили ссылки на них в связывающей таблице
-  	#sql { delete from AMFICOM.REPORTTEMPLATEFILTERS
-			where REPORT_TEMPLATE_ID = :(this.id)
-		};
-		#sql { commit };
+		removeFilters();
 
 		for(int i = 0; i < len; i++)
-			filters[i] = new FilterTemplate(new_filters[i], this.id);
+			filters[i] = new FilterTemplate(new_filters[i]);
 	}
 
 	#sql public static iterator ReportTemplateIterator(
