@@ -1,5 +1,5 @@
 /*
- * $Id: ObjectResourceChooserDialog.java,v 1.5 2004/09/27 09:33:03 bass Exp $
+ * $Id: ObjectResourceChooserDialog.java,v 1.6 2004/10/06 08:20:48 krupenn Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,8 +11,12 @@ package com.syrus.AMFICOM.Client.General.UI;
 import com.syrus.AMFICOM.Client.General.Lang.LangModel;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.Resource.*;
+import com.syrus.AMFICOM.client_.general.ui_.ObjectResourceTable;
+import com.syrus.AMFICOM.client_.general.ui_.ObjectResourceTableModel;
+import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
 import java.awt.*;
 import java.awt.event.*;
+import java.util.Collection;
 import java.util.List;
 import javax.swing.*;
 import javax.swing.border.BevelBorder;
@@ -29,8 +33,8 @@ import oracle.jdeveloper.layout.XYLayout;
  * чтобы включить эту возможность, необходимо вызвать метод 
  * setCanDelete(boolean bool)
  *
- * @author $Author: bass $
- * @version $Revision: 1.5 $, $Date: 2004/09/27 09:33:03 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.6 $, $Date: 2004/10/06 08:20:48 $
  * @module generalclient_v1
  */
 public class ObjectResourceChooserDialog extends JDialog 
@@ -39,13 +43,15 @@ public class ObjectResourceChooserDialog extends JDialog
 	static public final int RET_CANCEL = 2;
 
 	protected JPanel topPanel = new JPanel();
-	protected XYLayout xYLayout1 = new XYLayout();
 	protected JButton buttonHelp = new JButton();
 	protected JButton buttonCancel = new JButton();
 	protected JButton buttonOpen = new JButton();
 	protected JButton buttonDelete = new JButton();
 
-	protected ObjectResourceTablePane listPane = new ObjectResourceTablePane();
+	protected ObjectResourceTable table;
+	protected ObjectResourceTableModel model;
+	protected ObjectResourceController controller;
+	protected JScrollPane scrollPane = new JScrollPane();
 
 	protected ObjectResource retObject;
 	protected int retCode = 2;
@@ -59,19 +65,16 @@ public class ObjectResourceChooserDialog extends JDialog
 	protected FlowLayout flowLayout3 = new FlowLayout();
 	protected BorderLayout borderLayout3 = new BorderLayout();
 
-	protected DataSourceInterface dataSource = null;
-	
 	protected boolean canDelete = false;
 
-	public ObjectResourceChooserDialog(DataSourceInterface dataSource, String typ)
+	public ObjectResourceChooserDialog(ObjectResourceController controller, String typ)
 	{
-		this(Environment.getActiveWindow(), LangModel.getString("node" + typ), false);
-		this.dataSource = dataSource;
-	}
+		super(Environment.getActiveWindow(), LangModel.getString("node" + typ), true);
 
-	protected ObjectResourceChooserDialog(Frame parent, String title, boolean modal)
-	{
-		super(parent, title, modal);
+		this.controller = controller;
+		model = new ObjectResourceTableModel(controller);
+		table = new ObjectResourceTable(model);
+
 		try
 		{
 			jbInit();
@@ -80,11 +83,13 @@ public class ObjectResourceChooserDialog extends JDialog
 		{
 			e.printStackTrace();
 		}
+		
+		setCanDelete(false);
 	}
 
-	public void setContents(ObjectResourceDisplayModel odm, List dataSet)
+	public void setContents(List list)
 	{
-		listPane.initialize(odm, dataSet);
+		model.setContents(list);
 		buttonOpen.setEnabled(false);
 		buttonDelete.setEnabled(false);
 	}
@@ -142,11 +147,15 @@ public class ObjectResourceChooserDialog extends JDialog
 		this.getContentPane().add(bottomPanel, BorderLayout.SOUTH);
 		this.getContentPane().add(topPanel, BorderLayout.CENTER);
 
-		topPanel.add(listPane, BorderLayout.CENTER);
+		table.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		scrollPane.getViewport().add(table);
+		scrollPane.setWheelScrollingEnabled(true);
+		scrollPane.getViewport().setBackground(SystemColor.window);
+		table.setBackground(SystemColor.window);
 
-		buttonDelete.setVisible(false);
+		topPanel.add(scrollPane, BorderLayout.CENTER);
 
-		listPane.getTable().getSelectionModel().addListSelectionListener(new ListSelectionListener()
+		table.getSelectionModel().addListSelectionListener(new ListSelectionListener()
 			{
 				public void valueChanged(ListSelectionEvent e)
 				{
@@ -173,12 +182,12 @@ public class ObjectResourceChooserDialog extends JDialog
 	
 	public ObjectResourceTableModel getTableModel()
 	{
-		return (ObjectResourceTableModel )listPane.getTable().getModel();
+		return (ObjectResourceTableModel )table.getModel();
 	}
 
 	protected void buttonOpen_actionPerformed(ActionEvent e)
 	{
-		retObject = (ObjectResource )listPane.getSelectedObject();
+		retObject = (ObjectResource )getTableModel().getObjectResource(table.getSelectedRow());
 		if(retObject == null)
 			return;
 
@@ -215,14 +224,14 @@ public class ObjectResourceChooserDialog extends JDialog
 		if(!canDelete)
 			return;
 
-		ObjectResource obj = (ObjectResource )listPane.getSelectedObject();
+		ObjectResource obj = (ObjectResource )getTableModel().getObjectResource(table.getSelectedRow());
 		if(obj == null)
 			return;
 
 		if(delete(obj))
 		{
-			listPane.getContents().remove(obj);
-			listPane.updateUI();
+			getTableModel().getContents().remove(obj);
+			getTableModel().fireTableDataChanged();
 			buttonOpen.setEnabled(false);
 			buttonDelete.setEnabled(false);
 		}
@@ -233,7 +242,7 @@ public class ObjectResourceChooserDialog extends JDialog
 //		if (e.getValueIsAdjusting())
 //			return;
 
-		ObjectResource or = (ObjectResource )listPane.getSelectedObject();
+		ObjectResource or = (ObjectResource )getTableModel().getObjectResource(table.getSelectedRow());
 		if (or != null)
 		{
 			buttonOpen.setEnabled(true);
