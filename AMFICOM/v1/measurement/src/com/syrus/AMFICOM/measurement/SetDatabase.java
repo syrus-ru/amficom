@@ -1,5 +1,5 @@
 /*
- * $Id: SetDatabase.java,v 1.24 2004/09/07 15:20:44 bob Exp $
+ * $Id: SetDatabase.java,v 1.25 2004/09/08 10:59:13 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,11 +12,12 @@ import java.sql.Statement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Timestamp;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Iterator;
+
 import oracle.sql.BLOB;
+
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObject;
@@ -33,7 +34,7 @@ import com.syrus.util.database.ByteArrayDatabase;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.24 $, $Date: 2004/09/07 15:20:44 $
+ * @version $Revision: 1.25 $, $Date: 2004/09/08 10:59:13 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -62,11 +63,7 @@ public class SetDatabase extends StorableObjectDatabase {
 	
 	protected String getUpdateColumns() {
 		if (this.updateColumns == null){
-			this.updateColumns = COLUMN_ID + COMMA
-				+ COLUMN_CREATED + COMMA
-				+ COLUMN_MODIFIED + COMMA
-				+ COLUMN_CREATOR_ID + COMMA
-				+ COLUMN_MODIFIER_ID + COMMA
+			this.updateColumns = super.getUpdateColumns() + COMMA
 				+ COLUMN_SORT  + COMMA
 				+ COLUMN_DESCRIPTION;
 		}
@@ -76,11 +73,7 @@ public class SetDatabase extends StorableObjectDatabase {
 	
 	protected String getUpdateMultiplySQLValues() {
 		if (this.updateMultiplySQLValues == null){
-			this.updateMultiplySQLValues = QUESTION + COMMA
-				+ QUESTION + COMMA
-				+ QUESTION + COMMA
-				+ QUESTION + COMMA
-				+ QUESTION + COMMA
+			this.updateMultiplySQLValues = super.getUpdateMultiplySQLValues() + COMMA
 				+ QUESTION  + COMMA
 				+ QUESTION;
 		}
@@ -90,12 +83,9 @@ public class SetDatabase extends StorableObjectDatabase {
 	protected String getUpdateSingleSQLValues(StorableObject storableObject) throws IllegalDataException,
 			UpdateObjectException {
 		Set set = fromStorableObject(storableObject);
-		String values = DatabaseDate.toUpdateSubString(set.getCreated()) + COMMA
-		+ DatabaseDate.toUpdateSubString(set.getModified()) + COMMA
-		+ set.getCreatorId().toSQLString() + COMMA
-		+ set.getModifierId().toSQLString() + COMMA
-		+ Integer.toString(set.getSort().value()) + COMMA
-		+ APOSTOPHE + set.getDescription() + APOSTOPHE;
+		String values = super.getUpdateSingleSQLValues(storableObject) + COMMA
+			+ Integer.toString(set.getSort().value()) + COMMA
+			+ APOSTOPHE + set.getDescription() + APOSTOPHE;
 		return values;
 	}
 	
@@ -103,22 +93,8 @@ public class SetDatabase extends StorableObjectDatabase {
 	protected void setEntityForPreparedStatement(StorableObject storableObject, PreparedStatement preparedStatement)
 			throws IllegalDataException, UpdateObjectException {
 		Set set = fromStorableObject(storableObject);
+		super.setEntityForPreparedStatement(storableObject, preparedStatement);
 		try {
-			/**
-			 * @todo when change DB Identifier model ,change setString() to setLong()
-			 */
-			preparedStatement.setString(1, set.getId().getCode());
-			preparedStatement.setTimestamp(2, new Timestamp(set.getCreated().getTime()));
-			preparedStatement.setTimestamp(3, new Timestamp(set.getModified().getTime()));
-			/**
-			 * @todo when change DB Identifier model ,change setString() to setLong()
-			 */
-			preparedStatement.setString(4, set.getCreatorId().getCode());
-			/**
-			 * @todo when change DB Identifier model ,change setString() to setLong()
-			 */
-			preparedStatement.setString(5, set.getModifierId().getCode());
-
 			preparedStatement.setInt(6, set.getSort().value());
 			preparedStatement.setString(7, set.getDescription());
 			/**
@@ -145,30 +121,19 @@ public class SetDatabase extends StorableObjectDatabase {
 	}
 	
 	protected String retrieveQuery(String condition){
-		return SQL_SELECT
-		+ COLUMN_ID + COMMA
-		+ DatabaseDate.toQuerySubString(COLUMN_CREATED) + COMMA 
-		+ DatabaseDate.toQuerySubString(COLUMN_MODIFIED) + COMMA
-		+ COLUMN_CREATOR_ID + COMMA
-		+ COLUMN_MODIFIER_ID + COMMA
-		+ COLUMN_SORT + COMMA
-		+ COLUMN_DESCRIPTION 
-		+ SQL_FROM 
-		+ ObjectEntities.SET_ENTITY
-		+ ( ((condition == null) || (condition.length() == 0) ) ? "" : SQL_WHERE + condition);
-
-	}
-	
+		return super.retrieveQuery(condition) + COMMA
+			+ COLUMN_SORT + COMMA
+			+ COLUMN_DESCRIPTION 
+			+ SQL_FROM 
+			+ ObjectEntities.SET_ENTITY
+			+ ( ((condition == null) || (condition.length() == 0) ) ? "" : SQL_WHERE + condition);
+	}	
 	
 	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
 			throws IllegalDataException, RetrieveObjectException, SQLException {
-		Set set = fromStorableObject(storableObject);
-		if (set == null){
-			/**
-			 * @todo when change DB Identifier model ,change getString() to getLong()
-			 */
-			set = new Set(new Identifier(resultSet.getString(COLUMN_ID)), null, 0, null, null, null);
-		}
+		Set set = (storableObject == null) ?
+				new Set(new Identifier(resultSet.getString(COLUMN_ID)), null, 0, null, null, null) :			
+				fromStorableObject(storableObject);
 		String description = resultSet.getString(COLUMN_DESCRIPTION);
 		set.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
 											DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
@@ -182,7 +147,6 @@ public class SetDatabase extends StorableObjectDatabase {
 											new Identifier(resultSet.getString(COLUMN_MODIFIER_ID)),
 											resultSet.getInt(COLUMN_SORT),
 											(description != null) ? description : "");
-
 		return set;
 	}
 
@@ -635,10 +599,6 @@ public class SetDatabase extends StorableObjectDatabase {
 		return retrieveByIds(null, null);
 	}
 
-	
-	/* (non-Javadoc)
-	 * @see com.syrus.AMFICOM.general.StorableObjectDatabase#retrieveByIds(java.util.List, java.lang.String)
-	 */
 	public List retrieveByIds(List ids, String condition) throws IllegalDataException, RetrieveObjectException {
 		List list = null; 
 		if ((ids == null) || (ids.isEmpty()))

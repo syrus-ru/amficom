@@ -1,5 +1,5 @@
 /*
- * $Id: TestDatabase.java,v 1.32 2004/09/06 14:33:12 bob Exp $
+ * $Id: TestDatabase.java,v 1.33 2004/09/08 10:59:13 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -41,7 +41,7 @@ import com.syrus.AMFICOM.configuration.MeasurementPortDatabase;
 import com.syrus.AMFICOM.configuration.KISDatabase;
 
 /**
- * @version $Revision: 1.32 $, $Date: 2004/09/06 14:33:12 $
+ * @version $Revision: 1.33 $, $Date: 2004/09/08 10:59:13 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -77,44 +77,36 @@ public class TestDatabase extends StorableObjectDatabase {
 	
 	protected String getUpdateColumns() {
 		if (this.updateColumns == null){
-			this.updateColumns = COLUMN_ID + COMMA
-			+ COLUMN_CREATED + COMMA
-			+ COLUMN_MODIFIED + COMMA
-			+ COLUMN_CREATOR_ID + COMMA
-			+ COLUMN_MODIFIER_ID + COMMA
-			+ COLUMN_TEMPORAL_TYPE + COMMA
-			+ COLUMN_START_TIME + COMMA
-			+ COLUMN_END_TIME + COMMA
-			+ COLUMN_TEMPORAL_PATTERN_ID + COMMA
-			+ COLUMN_MEASUREMENT_TYPE_ID + COMMA
-			+ COLUMN_ANALYSIS_TYPE_ID + COMMA
-			+ COLUMN_EVALUATION_TYPE_ID + COMMA
-			+ COLUMN_STATUS + COMMA
-			+ COLUMN_MONITORED_ELEMENT_ID + COMMA
-			+ COLUMN_RETURN_TYPE + COMMA
-			+ COLUMN_DESCRIPTION;
+			this.updateColumns = super.getUpdateColumns() + COMMA
+				+ COLUMN_TEMPORAL_TYPE + COMMA
+				+ COLUMN_START_TIME + COMMA
+				+ COLUMN_END_TIME + COMMA
+				+ COLUMN_TEMPORAL_PATTERN_ID + COMMA
+				+ COLUMN_MEASUREMENT_TYPE_ID + COMMA
+				+ COLUMN_ANALYSIS_TYPE_ID + COMMA
+				+ COLUMN_EVALUATION_TYPE_ID + COMMA
+				+ COLUMN_STATUS + COMMA
+				+ COLUMN_MONITORED_ELEMENT_ID + COMMA
+				+ COLUMN_RETURN_TYPE + COMMA
+				+ COLUMN_DESCRIPTION;
 		}
 		return this.updateColumns;
 	}	
 
 	protected String getUpdateMultiplySQLValues() {
 		if (this.updateMultiplySQLValues == null){
-			this.updateMultiplySQLValues = QUESTION + COMMA
-			+ QUESTION + COMMA
-			+ QUESTION + COMMA
-			+ QUESTION + COMMA
-			+ QUESTION + COMMA
-			+ QUESTION + COMMA
-			+ QUESTION + COMMA
-			+ QUESTION + COMMA
-			+ QUESTION + COMMA
-			+ QUESTION + COMMA
-			+ QUESTION + COMMA
-			+ QUESTION + COMMA
-			+ QUESTION + COMMA
-			+ QUESTION + COMMA
-			+ QUESTION + COMMA
-			+ QUESTION;
+			this.updateMultiplySQLValues = super.getUpdateMultiplySQLValues() + COMMA
+				+ QUESTION + COMMA
+				+ QUESTION + COMMA
+				+ QUESTION + COMMA
+				+ QUESTION + COMMA
+				+ QUESTION + COMMA
+				+ QUESTION + COMMA
+				+ QUESTION + COMMA
+				+ QUESTION + COMMA
+				+ QUESTION + COMMA
+				+ QUESTION + COMMA
+				+ QUESTION;
 		}
 		return this.updateMultiplySQLValues;
 	}	
@@ -128,10 +120,7 @@ public class TestDatabase extends StorableObjectDatabase {
 		AnalysisType analysisType = test.getAnalysisType();
 		EvaluationType evaluationType = test.getEvaluationType();
 
-		return DatabaseDate.toUpdateSubString(test.getCreated()) + COMMA
-			+ DatabaseDate.toUpdateSubString(test.getModified()) + COMMA
-			+ test.getCreatorId().toSQLString() + COMMA
-			+ test.getModifierId().toSQLString() + COMMA
+		return super.getUpdateSingleSQLValues(storableObject) + COMMA
 			+ test.getTemporalType().value() + COMMA
 			+ ((startTime != null) ? DatabaseDate.toUpdateSubString(startTime) : SQL_NULL ) + COMMA
 			+ ((endTime != null) ? DatabaseDate.toUpdateSubString(endTime) : SQL_NULL ) + COMMA
@@ -159,22 +148,8 @@ public class TestDatabase extends StorableObjectDatabase {
 		TemporalPattern temporalPattern = test.getTemporalPattern();		
 		AnalysisType analysisType = test.getAnalysisType();
 		EvaluationType evaluationType = test.getEvaluationType();
-
-		try {
-			/**
-			  * @todo when change DB Identifier model ,change setString() to setLong()
-			  */
-			preparedStatement.setString(1, testIdCode);
-			preparedStatement.setTimestamp(2, new Timestamp(test.getCreated().getTime()));
-			preparedStatement.setTimestamp(3, new Timestamp(test.getModified().getTime()));
-			/**
-			  * @todo when change DB Identifier model ,change setString() to setLong()
-			  */
-			preparedStatement.setString(4, test.getCreatorId().getCode());
-			/**
-			  * @todo when change DB Identifier model ,change setString() to setLong()
-			  */
-			preparedStatement.setString(5, test.getModifierId().getCode());
+		super.setEntityForPreparedStatement(storableObject, preparedStatement);
+		try {			
 			preparedStatement.setInt(6, test.getTemporalType().value());
 			preparedStatement.setTimestamp(7, (startTime != null) ? (new Timestamp(startTime.getTime())) : null);
 			preparedStatement.setTimestamp(8, (endTime != null) ? (new Timestamp(endTime.getTime())) : null);
@@ -224,12 +199,7 @@ public class TestDatabase extends StorableObjectDatabase {
 	}
 	
 	protected String retrieveQuery(String condition){
-		return SQL_SELECT
-		+ COLUMN_ID + COMMA
-		+ DatabaseDate.toQuerySubString(COLUMN_CREATED) + COMMA 
-		+ DatabaseDate.toQuerySubString(COLUMN_MODIFIED) + COMMA
-		+ COLUMN_CREATOR_ID + COMMA
-		+ COLUMN_MODIFIER_ID + COMMA
+		return super.retrieveQuery(condition) + COMMA
 		+ COLUMN_TEMPORAL_TYPE + COMMA
 		+ DatabaseDate.toQuerySubString(COLUMN_START_TIME) + COMMA
 		+ DatabaseDate.toQuerySubString(COLUMN_END_TIME) + COMMA
@@ -248,14 +218,10 @@ public class TestDatabase extends StorableObjectDatabase {
 
 	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
 			throws IllegalDataException, RetrieveObjectException, SQLException {
-		Test test = fromStorableObject(storableObject);
-		if (test == null){
-			/**
-			 * @todo when change DB Identifier model ,change getString() to getLong()
-			 */
-			test = new Test(new Identifier(resultSet.getString(COLUMN_ID)), null, null, null, null, TestTemporalType._TEST_TEMPORAL_TYPE_ONETIME, 
-							 null, null, null, null, 0, null, null);
-		}
+		Test test = (storableObject == null)?
+				new Test(new Identifier(resultSet.getString(COLUMN_ID)), null, null, null, null, TestTemporalType._TEST_TEMPORAL_TYPE_ONETIME, 
+						 null, null, null, null, 0, null, null) :
+					fromStorableObject(storableObject);
 		TemporalPattern temporalPattern;
 		MeasurementType measurementType;
 		AnalysisType analysisType;
@@ -802,7 +768,7 @@ public class TestDatabase extends StorableObjectDatabase {
 		List list = null;
 		
 		try {
-			list = retriveByIdsOneQuery(null, null);
+			list = retrieveByIds(null, null);
 		}  catch (IllegalDataException ide) {			
 			Log.debugMessage("TestDatabase.retrieveAll | Trying: " + ide, Log.DEBUGLEVEL09);
 		}

@@ -1,5 +1,5 @@
 /*
- * $Id: ParameterTypeDatabase.java,v 1.20 2004/09/06 14:33:12 bob Exp $
+ * $Id: ParameterTypeDatabase.java,v 1.21 2004/09/08 10:59:12 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,7 +13,6 @@ import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Timestamp;
 
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
@@ -29,7 +28,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.20 $, $Date: 2004/09/06 14:33:12 $
+ * @version $Revision: 1.21 $, $Date: 2004/09/08 10:59:12 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -56,28 +55,20 @@ public class ParameterTypeDatabase extends StorableObjectDatabase  {
 	
 	protected String getUpdateColumns() {
 		if (this.updateColumns == null){
-			this.updateColumns = COLUMN_ID + COMMA
-			+ COLUMN_CREATED + COMMA
-			+ COLUMN_MODIFIED + COMMA
-			+ COLUMN_CREATOR_ID + COMMA
-			+ COLUMN_MODIFIER_ID + COMMA
-			+ COLUMN_CODENAME + COMMA
-			+ COLUMN_DESCRIPTION + COMMA
-			+ COLUMN_NAME;
+			this.updateColumns = super.getUpdateColumns() + COMMA
+				+ COLUMN_CODENAME + COMMA
+				+ COLUMN_DESCRIPTION + COMMA
+				+ COLUMN_NAME;
 		}
 		return this.updateColumns;
 	}	
 	
 	protected String getUpdateMultiplySQLValues() {
 		if (this.updateMultiplySQLValues == null){
-			this.updateMultiplySQLValues = QUESTION + COMMA
-			+ QUESTION + COMMA
-			+ QUESTION + COMMA
-			+ QUESTION + COMMA
-			+ QUESTION + COMMA
-			+ QUESTION + COMMA
-			+ QUESTION + COMMA
-			+ QUESTION;
+			this.updateMultiplySQLValues = super.getUpdateMultiplySQLValues() + COMMA
+				+ QUESTION + COMMA
+				+ QUESTION + COMMA
+				+ QUESTION;
 		}
 		return this.updateMultiplySQLValues;
 	}
@@ -86,13 +77,10 @@ public class ParameterTypeDatabase extends StorableObjectDatabase  {
 	protected String getUpdateSingleSQLValues(StorableObject storableObject) throws IllegalDataException,
 			UpdateObjectException {
 		ParameterType parameterType = fromStorableObject(storableObject);
-		return DatabaseDate.toUpdateSubString(parameterType.getCreated()) + COMMA
-		+ DatabaseDate.toUpdateSubString(parameterType.getModified()) + COMMA
-		+ parameterType.getCreatorId().toSQLString() + COMMA
-		+ parameterType.getModifierId().toSQLString() + COMMA
-		+ APOSTOPHE + parameterType.getCodename() + APOSTOPHE + COMMA
-		+ APOSTOPHE + parameterType.getDescription() + APOSTOPHE + COMMA
-		+ APOSTOPHE + parameterType.getName() + APOSTOPHE;
+		return super.getUpdateSingleSQLValues(storableObject) + COMMA
+			+ APOSTOPHE + parameterType.getCodename() + APOSTOPHE + COMMA
+			+ APOSTOPHE + parameterType.getDescription() + APOSTOPHE + COMMA
+			+ APOSTOPHE + parameterType.getName() + APOSTOPHE;
 	}	
 
 	private ParameterType fromStorableObject(StorableObject storableObject) throws IllegalDataException {
@@ -107,29 +95,20 @@ public class ParameterTypeDatabase extends StorableObjectDatabase  {
 	}
 
 	protected String retrieveQuery(String condition){
-		return SQL_SELECT
-		+ COLUMN_ID + COMMA
-		+ DatabaseDate.toQuerySubString(COLUMN_CREATED) + COMMA
-		+ DatabaseDate.toQuerySubString(COLUMN_MODIFIED) + COMMA
-		+ COLUMN_CREATOR_ID + COMMA
-		+ COLUMN_MODIFIER_ID + COMMA
-		+ COLUMN_CODENAME + COMMA
-		+ COLUMN_DESCRIPTION + COMMA
-		+ COLUMN_NAME
-		+ SQL_FROM + ObjectEntities.PARAMETERTYPE_ENTITY
-		+ ( ((condition == null) || (condition.length() == 0) ) ? "" : SQL_WHERE + condition);
+		return super.retrieveQuery(condition) + COMMA
+			+ COLUMN_CODENAME + COMMA
+			+ COLUMN_DESCRIPTION + COMMA
+			+ COLUMN_NAME
+			+ SQL_FROM + ObjectEntities.PARAMETERTYPE_ENTITY
+			+ ( ((condition == null) || (condition.length() == 0) ) ? "" : SQL_WHERE + condition);
 
 	}	
 	
 	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
 		throws IllegalDataException, RetrieveObjectException, SQLException {
-		ParameterType parameterType = fromStorableObject(storableObject);
-		if (parameterType == null){
-			/**
-			 * @todo when change DB Identifier model ,change getString() to getLong()
-			 */
-			parameterType = new ParameterType(new Identifier(resultSet.getString(COLUMN_ID)), null, null, null, null);
-		}
+		ParameterType parameterType = (storableObject == null) ? 
+					new ParameterType(new Identifier(resultSet.getString(COLUMN_ID)), null, null, null, null) : 
+					fromStorableObject(storableObject);
 		/**
 		 * @todo when change DB Identifier model ,change getString() to getLong()
 		 */
@@ -158,6 +137,11 @@ public class ParameterTypeDatabase extends StorableObjectDatabase  {
 			default:
 				return null;
 		}
+	}
+	
+	
+	private void хуйняПонная(){
+		System.out.println( );
 	}
 
 	public void insert(StorableObject storableObject) throws IllegalDataException, CreateObjectException {
@@ -269,21 +253,8 @@ public class ParameterTypeDatabase extends StorableObjectDatabase  {
 	protected void setEntityForPreparedStatement(StorableObject storableObject, PreparedStatement preparedStatement)
 			throws IllegalDataException, UpdateObjectException {
 		ParameterType parameterType = fromStorableObject(storableObject);
-		try {
-			/**
-			 * @todo when change DB Identifier model ,change setString() to setLong()
-			 */
-			preparedStatement.setString(1, parameterType.getId().getCode());
-			preparedStatement.setTimestamp(2, new Timestamp(parameterType.getCreated().getTime()));
-			preparedStatement.setTimestamp(3, new Timestamp(parameterType.getModified().getTime()));
-			/**
-			 * @todo when change DB Identifier model ,change setString() to setLong()
-			 */
-			preparedStatement.setString(4, parameterType.getCreatorId().getCode());
-			/**
-			 * @todo when change DB Identifier model ,change setString() to setLong()
-			 */
-			preparedStatement.setString(5, parameterType.getModifierId().getCode());
+		super.setEntityForPreparedStatement(storableObject, preparedStatement);
+		try {			
 			preparedStatement.setString(6, parameterType.getCodename());
 			preparedStatement.setString(7, parameterType.getDescription());
 			preparedStatement.setString(8, parameterType.getName());

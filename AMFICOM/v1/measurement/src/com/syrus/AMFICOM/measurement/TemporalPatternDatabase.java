@@ -1,5 +1,5 @@
 /*
- * $Id: TemporalPatternDatabase.java,v 1.15 2004/09/07 15:20:44 bob Exp $
+ * $Id: TemporalPatternDatabase.java,v 1.16 2004/09/08 10:59:13 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,7 +11,6 @@ package com.syrus.AMFICOM.measurement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Timestamp;
 import java.util.List;
 
 import oracle.jdbc.driver.OracleResultSet;
@@ -31,7 +30,7 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.measurement.ora.CronStringArray;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2004/09/07 15:20:44 $
+ * @version $Revision: 1.16 $, $Date: 2004/09/08 10:59:13 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -61,11 +60,7 @@ public class TemporalPatternDatabase extends StorableObjectDatabase {
 	
 	protected String getUpdateColumns() {
 		if (this.updateColumns == null){
-			this.updateColumns = COLUMN_ID + COMMA
-				+ COLUMN_CREATED + COMMA
-				+ COLUMN_MODIFIED + COMMA
-				+ COLUMN_CREATOR_ID + COMMA
-				+ COLUMN_MODIFIER_ID + COMMA
+			this.updateColumns = super.getUpdateColumns() + COMMA
 				+ COLUMN_DESCRIPTION + COMMA
 				+ COLUMN_VALUE;
 		}
@@ -74,11 +69,7 @@ public class TemporalPatternDatabase extends StorableObjectDatabase {
 
 	protected String getUpdateMultiplySQLValues() {
 		if (this.updateMultiplySQLValues == null){	
-			this.updateMultiplySQLValues = QUESTION + COMMA
-				+ QUESTION + COMMA
-				+ QUESTION + COMMA
-				+ QUESTION + COMMA
-				+ QUESTION + COMMA
+			this.updateMultiplySQLValues = super.getUpdateMultiplySQLValues() + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION;
 		}
@@ -98,28 +89,18 @@ public class TemporalPatternDatabase extends StorableObjectDatabase {
 	}
 
 	protected String retrieveQuery(String condition){
-		return SQL_SELECT
-		+ COLUMN_ID + COMMA
-		+ DatabaseDate.toQuerySubString(COLUMN_CREATED) + COMMA 
-		+ DatabaseDate.toQuerySubString(COLUMN_MODIFIED) + COMMA
-		+ COLUMN_CREATOR_ID + COMMA
-		+ COLUMN_MODIFIER_ID + COMMA
-		+ COLUMN_DESCRIPTION + COMMA
-		+ COLUMN_VALUE
-		+ SQL_FROM + ObjectEntities.TEMPORALPATTERN_ENTITY
-		+ ( ((condition == null) || (condition.length() == 0) ) ? "" : SQL_WHERE + condition);
-
+		return super.retrieveQuery(condition) + COMMA
+			+ COLUMN_DESCRIPTION + COMMA
+			+ COLUMN_VALUE
+			+ SQL_FROM + ObjectEntities.TEMPORALPATTERN_ENTITY
+			+ ( ((condition == null) || (condition.length() == 0) ) ? "" : SQL_WHERE + condition);
 	}
 	
 	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
 			throws IllegalDataException, RetrieveObjectException, SQLException {
-		TemporalPattern temporalPattern = fromStorableObject(storableObject);
-		if (temporalPattern == null){
-			/**
-			 * @todo when change DB Identifier model ,change getString() to getLong()
-			 */
-			temporalPattern = new TemporalPattern(new Identifier(resultSet.getString(COLUMN_ID)), null, null, null);
-		}
+		TemporalPattern temporalPattern = (storableObject == null) ?
+				new TemporalPattern(new Identifier(resultSet.getString(COLUMN_ID)), null, null, null):
+				fromStorableObject(storableObject);
 		String[] cronStrings = ((CronStringArray)(((OracleResultSet)resultSet).getORAData(COLUMN_VALUE, CronStringArray.getORADataFactory()))).getArray();
 		temporalPattern.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
 																	DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
@@ -178,28 +159,11 @@ public class TemporalPatternDatabase extends StorableObjectDatabase {
 		return connection.prepareStatement(sql);
 	}
 	
-	
-	/* (non-Javadoc)
-	 * @see com.syrus.AMFICOM.general.StorableObjectDatabase#setEntityForPreparedStatement(com.syrus.AMFICOM.general.StorableObject, java.sql.PreparedStatement)
-	 */
 	protected void setEntityForPreparedStatement(StorableObject storableObject, PreparedStatement preparedStatement)
 			throws IllegalDataException, UpdateObjectException {
 		TemporalPattern temporalPattern = fromStorableObject(storableObject);
+		super.setEntityForPreparedStatement(storableObject, preparedStatement);
 		try {
-			/**
-			 * @todo when change DB Identifier model ,change setString() to setLong()
-			 */
-			preparedStatement.setString(1, temporalPattern.getId().getCode());
-			preparedStatement.setTimestamp(2, new Timestamp(temporalPattern.getCreated().getTime()));
-			preparedStatement.setTimestamp(3, new Timestamp(temporalPattern.getModified().getTime()));
-			/**
-			 * @todo when change DB Identifier model ,change setString() to setLong()
-			 */
-			preparedStatement.setString(4, temporalPattern.getCreatorId().getCode());
-			/**
-			 * @todo when change DB Identifier model ,change setString() to setLong()
-			 */
-			preparedStatement.setString(5, temporalPattern.getModifierId().getCode());
 			preparedStatement.setString(6, temporalPattern.getDescription());
 			((OraclePreparedStatement)preparedStatement).setORAData(7, new CronStringArray(temporalPattern.getCronStrings()));
 			/**
@@ -274,8 +238,7 @@ public class TemporalPatternDatabase extends StorableObjectDatabase {
 	
 	public List retrieveAll() throws IllegalDataException, RetrieveObjectException {
 		return retriveByIdsOneQuery(null, null);
-	}
-	
+	}	
 	
 	public List retrieveByIds(List ids, String condition) throws IllegalDataException, RetrieveObjectException {
 		if ((ids == null) || (ids.isEmpty()))

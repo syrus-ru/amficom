@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementSetupDatabase.java,v 1.19 2004/09/06 14:33:12 bob Exp $
+ * $Id: MeasurementSetupDatabase.java,v 1.20 2004/09/08 10:59:12 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,8 +12,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.Timestamp;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -32,7 +30,7 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 
 /**
- * @version $Revision: 1.19 $, $Date: 2004/09/06 14:33:12 $
+ * @version $Revision: 1.20 $, $Date: 2004/09/08 10:59:12 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -253,17 +251,9 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 		}
 	}
 	
-	
-	/* (non-Javadoc)
-	 * @see com.syrus.AMFICOM.general.StorableObjectDatabase#getUpdateColumns()
-	 */
 	protected String getUpdateColumns() {
 		if (this.updateColumns == null){			
-			this.updateColumns = COLUMN_ID + COMMA
-			+ COLUMN_CREATED + COMMA
-			+ COLUMN_MODIFIED + COMMA
-			+ COLUMN_CREATOR_ID + COMMA
-			+ COLUMN_MODIFIER_ID + COMMA
+			this.updateColumns = super.getUpdateColumns() + COMMA
 			+ COLUMN_PARAMETER_SET_ID + COMMA
 			+ COLUMN_CRITERIA_SET_ID + COMMA
 			+ COLUMN_THRESHOLD_SET_ID + COMMA
@@ -277,11 +267,7 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 	
 	protected String getUpdateMultiplySQLValues() {
 		if (this.updateMultiplySQLValues == null){			
-			this.updateMultiplySQLValues = QUESTION + COMMA
-			+ QUESTION + COMMA
-			+ QUESTION + COMMA
-			+ QUESTION + COMMA
-			+ QUESTION + COMMA
+			this.updateMultiplySQLValues = super.getUpdateMultiplySQLValues() + COMMA
 			+ QUESTION + COMMA
 			+ QUESTION + COMMA
 			+ QUESTION + COMMA
@@ -303,10 +289,7 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 		String criteriaSetIdSubstr = (criteriaSet != null) ? (criteriaSet.getId().toSQLString()) : Identifier.getNullSQLString();
 		String thresholdSetIdSubstr = (thresholdSet != null) ? (thresholdSet.getId().toSQLString()) : Identifier.getNullSQLString();
 		String etalonIdSubstr = (etalon != null) ? (etalon.getId().toSQLString()) : Identifier.getNullSQLString();
-		String values = DatabaseDate.toUpdateSubString(measurementSetup.getCreated()) + COMMA
-			+ DatabaseDate.toUpdateSubString(measurementSetup.getModified()) + COMMA
-			+ measurementSetup.getCreatorId().toSQLString() + COMMA
-			+ measurementSetup.getModifierId().toSQLString() + COMMA
+		String values = super.getUpdateSingleSQLValues(storableObject) + COMMA
 			+ measurementSetup.getParameterSet().getId().toSQLString() + COMMA
 			+ criteriaSetIdSubstr + COMMA
 			+ thresholdSetIdSubstr + COMMA
@@ -326,16 +309,8 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 		String criteriaSetIdSubstr = (criteriaSet != null) ? (criteriaSet.getId().getCode()) : "";
 		String thresholdSetIdSubstr = (thresholdSet != null) ? (thresholdSet.getId().getCode()) : "";
 		String etalonIdSubstr = (etalon != null) ? (etalon.getId().getCode()) : "";
-
+		super.setEntityForPreparedStatement(storableObject, preparedStatement);
 		try {
-			/**
-			 * @todo when change DB Identifier model ,change setString() to setLong()
-			 */
-			preparedStatement.setString(1, measurementSetup.getId().getCode());
-			preparedStatement.setTimestamp(2, new Timestamp(measurementSetup.getCreated().getTime()));
-			preparedStatement.setTimestamp(3, new Timestamp(measurementSetup.getModified().getTime()));
-			preparedStatement.setString(4, measurementSetup.getCreatorId().getCode());
-			preparedStatement.setString(5, measurementSetup.getModifierId().getCode());
 			/**
 			 * @todo when change DB Identifier model ,change setString() to setLong()
 			 */
@@ -360,63 +335,6 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 			throw new UpdateObjectException(getEnityName() + "Database.setEntityForPreparedStatement | Error " + sqle.getMessage(), sqle);
 		}
 
-	}
-
-	private void insertMeasurementSetup(MeasurementSetup measurementSetup) throws CreateObjectException {
-		String msIdStr = measurementSetup.getId().toSQLString();
-		Set criteriaSet = measurementSetup.getCriteriaSet();
-		Set thresholdSet = measurementSetup.getThresholdSet();
-		Set etalon = measurementSetup.getEtalon();		
-		String criteriaSetIdSubstr = (criteriaSet != null) ? (criteriaSet.getId().toSQLString()) : Identifier.getNullSQLString();
-		String thresholdSetIdSubstr = (thresholdSet != null) ? (thresholdSet.getId().toSQLString()) : Identifier.getNullSQLString();
-		String etalonIdSubstr = (etalon != null) ? (etalon.getId().toSQLString()) : Identifier.getNullSQLString();
-		String sql = SQL_INSERT_INTO
-			+ ObjectEntities.MS_ENTITY + OPEN_BRACKET
-			+ COLUMN_ID + COMMA
-			+ COLUMN_CREATED + COMMA
-			+ COLUMN_MODIFIED + COMMA
-			+ COLUMN_CREATOR_ID + COMMA
-			+ COLUMN_MODIFIER_ID + COMMA
-			+ COLUMN_PARAMETER_SET_ID + COMMA
-			+ COLUMN_CRITERIA_SET_ID + COMMA
-			+ COLUMN_THRESHOLD_SET_ID + COMMA
-			+ COLUMN_ETALON_ID + COMMA
-			+ COLUMN_DESCRIPTION + COMMA
-			+ COLUMN_MEASUREMENT_DURAION
-			+ CLOSE_BRACKET + SQL_VALUES + OPEN_BRACKET
-			+ msIdStr + COMMA
-			+ DatabaseDate.toUpdateSubString(measurementSetup.getCreated()) + COMMA
-			+ DatabaseDate.toUpdateSubString(measurementSetup.getModified()) + COMMA
-			+ measurementSetup.getCreatorId().toSQLString() + COMMA
-			+ measurementSetup.getModifierId().toSQLString() + COMMA
-			+ measurementSetup.getParameterSet().getId().toSQLString() + COMMA
-			+ criteriaSetIdSubstr + COMMA
-			+ thresholdSetIdSubstr + COMMA
-			+ etalonIdSubstr + COMMA
-			+ APOSTOPHE + measurementSetup.getDescription() + APOSTOPHE + COMMA
-			+ Long.toString(measurementSetup.getMeasurementDuration())
-			+ CLOSE_BRACKET;
-
-		Statement statement = null;
-		try {
-			statement = connection.createStatement();
-			Log.debugMessage("MeasurementSetupDatabase.insertMeasurementSetup | Trying: " + sql, Log.DEBUGLEVEL09);
-			statement.executeUpdate(sql);
-		}
-		catch (SQLException sqle) {
-			String mesg = "MeasurementSetupDatabase.insertMeasurementSetup | Cannot insert Measurement Setup '" + msIdStr + "' -- " + sqle.getMessage();
-			throw new CreateObjectException(mesg, sqle);
-		}
-		finally {
-			try {
-				if (statement != null)
-					statement.close();
-				statement = null;
-			}
-			catch (SQLException sqle1) {
-				Log.errorException(sqle1);
-			}
-		}
 	}
 
 	private void insertMeasurementSetupMELinks(MeasurementSetup measurementSetup) throws CreateObjectException {
@@ -476,37 +394,24 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 	}
 	
 	protected String retrieveQuery(String condition){
-		return SQL_SELECT
-		+ COLUMN_ID + COMMA
-		+ DatabaseDate.toQuerySubString(COLUMN_CREATED) + COMMA
-		+ DatabaseDate.toQuerySubString(COLUMN_MODIFIED) + COMMA
-		+ COLUMN_CREATOR_ID + COMMA
-		+ COLUMN_MODIFIER_ID + COMMA
-		+ COLUMN_PARAMETER_SET_ID + COMMA
-		+ COLUMN_CRITERIA_SET_ID + COMMA
-		+ COLUMN_THRESHOLD_SET_ID + COMMA
-		+ COLUMN_ETALON_ID + COMMA
-		+ COLUMN_DESCRIPTION + COMMA
-		+ COLUMN_MEASUREMENT_DURAION
-		+ SQL_FROM + ObjectEntities.MS_ENTITY
-		+ ( ((condition == null) || (condition.length() == 0) ) ? "" : SQL_WHERE + condition);
+		return super.retrieveQuery(condition) + COMMA
+			+ COLUMN_PARAMETER_SET_ID + COMMA
+			+ COLUMN_CRITERIA_SET_ID + COMMA
+			+ COLUMN_THRESHOLD_SET_ID + COMMA
+			+ COLUMN_ETALON_ID + COMMA
+			+ COLUMN_DESCRIPTION + COMMA
+			+ COLUMN_MEASUREMENT_DURAION
+			+ SQL_FROM + ObjectEntities.MS_ENTITY
+			+ ( ((condition == null) || (condition.length() == 0) ) ? "" : SQL_WHERE + condition);
 
 	}	
 	
 	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
 			throws IllegalDataException, RetrieveObjectException, SQLException {
-		MeasurementSetup measurementSetup = fromStorableObject(storableObject);
-		if (measurementSetup == null){
-			/**
-			 * @todo when change DB Identifier model ,change getString() to getLong()
-			 */
-			measurementSetup = new MeasurementSetup(new Identifier(resultSet.getString(COLUMN_ID)), null, null, null, 
-												   null, null, null, 0, null);
-		}
-		/**
-		 * @todo when change DB Identifier model ,change getString() to
-		 *       getLong()
-		 */
+		MeasurementSetup measurementSetup = (storableObject == null) ? 
+				new MeasurementSetup(new Identifier(resultSet.getString(COLUMN_ID)), null, null, null, 
+									   null, null, null, 0, null) : 
+					fromStorableObject(storableObject);	
 		Set parameterSet;
 		Set criteriaSet;
 		Set thresholdSet;

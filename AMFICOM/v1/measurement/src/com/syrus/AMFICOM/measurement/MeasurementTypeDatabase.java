@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementTypeDatabase.java,v 1.23 2004/09/06 14:33:12 bob Exp $
+ * $Id: MeasurementTypeDatabase.java,v 1.24 2004/09/08 10:59:12 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,7 +8,6 @@
 
 package com.syrus.AMFICOM.measurement;
 
-import java.util.LinkedList;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -16,7 +15,6 @@ import java.sql.Statement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Timestamp;
 
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
@@ -33,7 +31,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.23 $, $Date: 2004/09/06 14:33:12 $
+ * @version $Revision: 1.24 $, $Date: 2004/09/08 10:59:12 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -70,26 +68,18 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 	
 	protected String getUpdateColumns() {
 		if (this.updateColumns == null){
-			this.updateColumns = COLUMN_ID + COMMA 
-			+ COLUMN_CREATED + COMMA 
-			+ COLUMN_MODIFIED + COMMA 
-			+ COLUMN_CREATOR_ID + COMMA 
-			+ COLUMN_MODIFIER_ID + COMMA
-			+ COLUMN_CODENAME + COMMA 
-			+ COLUMN_DESCRIPTION;
+			this.updateColumns = super.getUpdateColumns() + COMMA
+				+ COLUMN_CODENAME + COMMA 
+				+ COLUMN_DESCRIPTION;
 		}
 		return this.updateColumns;
 	}	
 
 	protected String getUpdateMultiplySQLValues() {
 		if (this.updateMultiplySQLValues == null){
-			this.updateMultiplySQLValues = QUESTION + COMMA 
-			+ QUESTION + COMMA 
-			+ QUESTION + COMMA 
-			+ QUESTION + COMMA 
-			+ QUESTION + COMMA
-			+ QUESTION + COMMA 
-			+ QUESTION;
+			this.updateMultiplySQLValues = super.getUpdateMultiplySQLValues() + COMMA
+				+ QUESTION + COMMA 
+				+ QUESTION;
 		}
 		return this.updateMultiplySQLValues;
 	}	
@@ -98,14 +88,9 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 	protected String getUpdateSingleSQLValues(StorableObject storableObject) throws IllegalDataException,
 			UpdateObjectException {
 		MeasurementType measurementType = fromStorableObject(storableObject);
-		String analysisTypeIdStr = measurementType.getId().toSQLString();
-		String sql = analysisTypeIdStr + COMMA
-		+ DatabaseDate.toUpdateSubString(measurementType.getCreated()) + COMMA
-		+ DatabaseDate.toUpdateSubString(measurementType.getModified()) + COMMA
-		+ measurementType.getCreatorId().toSQLString() + COMMA 
-		+ measurementType.getModifierId().toSQLString() + COMMA
-		+ APOSTOPHE + measurementType.getCodename() + APOSTOPHE + COMMA 
-		+ APOSTOPHE + measurementType.getDescription() + APOSTOPHE;
+		String sql = super.getUpdateSingleSQLValues(storableObject) + COMMA
+			+ APOSTOPHE + measurementType.getCodename() + APOSTOPHE + COMMA 
+			+ APOSTOPHE + measurementType.getDescription() + APOSTOPHE;
 		return sql;
 	}	
 
@@ -116,30 +101,21 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 	}
 
 	protected String retrieveQuery(String condition){
-		return SQL_SELECT
-		+ COLUMN_ID + COMMA
-		+ DatabaseDate.toQuerySubString(COLUMN_CREATED) + COMMA
-		+ DatabaseDate.toQuerySubString(COLUMN_MODIFIED) + COMMA
-		+ COLUMN_CREATOR_ID + COMMA
-		+ COLUMN_MODIFIER_ID + COMMA
-		+ COLUMN_CODENAME + COMMA
-		+ COLUMN_DESCRIPTION
-		+ SQL_FROM + ObjectEntities.MEASUREMENTTYPE_ENTITY
-		+ ( ((condition == null) || (condition.length() == 0) ) ? "" : SQL_WHERE + condition);
+		return super.retrieveQuery(condition) + COMMA
+			+ COLUMN_CODENAME + COMMA
+			+ COLUMN_DESCRIPTION
+			+ SQL_FROM + ObjectEntities.MEASUREMENTTYPE_ENTITY
+			+ ( ((condition == null) || (condition.length() == 0) ) ? "" : SQL_WHERE + condition);
 
 	}
 	
 	
 	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
 		throws IllegalDataException, RetrieveObjectException, SQLException {
-		MeasurementType measurementType = fromStorableObject(storableObject);
-		if (measurementType == null){
-			/**
-			 * @todo when change DB Identifier model ,change getString() to getLong()
-			 */
-			measurementType = new MeasurementType(new Identifier(resultSet.getString(COLUMN_ID)), null, null, null, 
-												   null, null);
-		}
+		MeasurementType measurementType = (storableObject == null) ? 
+				new MeasurementType(new Identifier(resultSet.getString(COLUMN_ID)), null, null, null, 
+									   null, null) : 
+					fromStorableObject(storableObject);
 		/**
 		 * @todo when change DB Identifier model ,change getString() to getLong()
 		 */
@@ -442,21 +418,8 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 	protected void setEntityForPreparedStatement(StorableObject storableObject, PreparedStatement preparedStatement)
 		throws IllegalDataException, UpdateObjectException {
 		MeasurementType measurementType = fromStorableObject(storableObject);
-			try {
-				/**
-				 * @todo when change DB Identifier model ,change setString() to setLong()
-				 */
-				preparedStatement.setString(1, measurementType.getId().getCode());
-				preparedStatement.setTimestamp(2, new Timestamp(measurementType.getCreated().getTime()));
-				preparedStatement.setTimestamp(3, new Timestamp(measurementType.getModified().getTime()));
-				/**
-				 * @todo when change DB Identifier model ,change setString() to setLong()
-				 */
-				preparedStatement.setString(4, measurementType.getCreatorId().getCode());
-				/**
-				 * @todo when change DB Identifier model ,change setString() to setLong()
-				 */
-				preparedStatement.setString(5, measurementType.getModifierId().getCode());
+		super.setEntityForPreparedStatement(storableObject, preparedStatement);
+			try {				
 				preparedStatement.setString(6, measurementType.getCodename());
 				preparedStatement.setString(7, measurementType.getDescription());
 				/**

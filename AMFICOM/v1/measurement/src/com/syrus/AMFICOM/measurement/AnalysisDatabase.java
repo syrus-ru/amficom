@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisDatabase.java,v 1.19 2004/09/06 14:33:11 bob Exp $
+ * $Id: AnalysisDatabase.java,v 1.20 2004/09/08 10:59:12 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,12 +9,8 @@
 package com.syrus.AMFICOM.measurement;
 
 import java.sql.PreparedStatement;
-import java.sql.Statement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Timestamp;
-import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 
 import com.syrus.util.Log;
@@ -32,7 +28,7 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 
 /**
- * @version $Revision: 1.19 $, $Date: 2004/09/06 14:33:11 $
+ * @version $Revision: 1.20 $, $Date: 2004/09/08 10:59:12 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -68,11 +64,7 @@ public class AnalysisDatabase extends StorableObjectDatabase {
 	
 	protected String getUpdateColumns() {
 		if (this.updateColumns == null){
-			this.updateColumns = COLUMN_ID + COMMA
-			+ COLUMN_CREATED + COMMA
-			+ COLUMN_MODIFIED + COMMA
-			+ COLUMN_CREATOR_ID + COMMA
-			+ COLUMN_MODIFIER_ID + COMMA
+			this.updateColumns = super.getUpdateColumns() + COMMA
 			+ COLUMN_TYPE_ID + COMMA
 			+ COLUMN_MONITORED_ELEMENT_ID + COMMA
 			+ COLUMN_CRITERIA_SET_ID;
@@ -82,14 +74,10 @@ public class AnalysisDatabase extends StorableObjectDatabase {
 	
 	protected String getUpdateMultiplySQLValues() {
 		if (this.updateMultiplySQLValues == null){
-			this.updateMultiplySQLValues = QUESTION + COMMA
-			+ QUESTION + COMMA
-			+ QUESTION + COMMA
-			+ QUESTION + COMMA
-			+ QUESTION + COMMA
-			+ QUESTION + COMMA
-			+ QUESTION + COMMA
-			+ QUESTION;
+			this.updateMultiplySQLValues = super.getUpdateMultiplySQLValues() + COMMA
+				+ QUESTION + COMMA
+				+ QUESTION + COMMA
+				+ QUESTION;
 		}
 		return this.updateMultiplySQLValues;
 	}
@@ -97,16 +85,9 @@ public class AnalysisDatabase extends StorableObjectDatabase {
 	
 	protected void setEntityForPreparedStatement(StorableObject storableObject, PreparedStatement preparedStatement)
 			throws IllegalDataException, UpdateObjectException {
-		Analysis analysis = fromStorableObject(storableObject);		
+		Analysis analysis = fromStorableObject(storableObject);
+		super.setEntityForPreparedStatement(storableObject, preparedStatement);
 		try {
-			/**
-			 * @todo when change DB Identifier model ,change setString() to setLong()
-			 */
-			preparedStatement.setString(1, analysis.getId().getCode());
-			preparedStatement.setTimestamp(2, new Timestamp(analysis.getCreated().getTime()));
-			preparedStatement.setTimestamp(3, new Timestamp(analysis.getModified().getTime()));
-			preparedStatement.setString(4, analysis.getCreatorId().getCode());
-			preparedStatement.setString(5, analysis.getModifierId().getCode());
 			/**
 			 * @todo when change DB Identifier model ,change setString() to setLong()
 			 */
@@ -131,23 +112,15 @@ public class AnalysisDatabase extends StorableObjectDatabase {
 	protected String getUpdateSingleSQLValues(StorableObject storableObject) throws IllegalDataException,
 			UpdateObjectException {
 		Analysis analysis = fromStorableObject(storableObject);
-		String values = DatabaseDate.toUpdateSubString(analysis.getCreated()) + COMMA
-		+ DatabaseDate.toUpdateSubString(analysis.getModified()) + COMMA
-		+ analysis.getCreatorId().toSQLString() + COMMA
-		+ analysis.getModifierId().toSQLString() + COMMA
-		+ analysis.getType().getId().toSQLString() + COMMA
-		+ analysis.getMonitoredElementId().toSQLString() + COMMA
-		+ analysis.getCriteriaSet().getId().toSQLString();
+		String values = super.getUpdateSingleSQLValues(storableObject)
+			+ analysis.getType().getId().toSQLString() + COMMA
+			+ analysis.getMonitoredElementId().toSQLString() + COMMA
+			+ analysis.getCriteriaSet().getId().toSQLString();
 		return values;
 	}
 
 	protected String retrieveQuery(String condition){
-		return SQL_SELECT
-		+ COLUMN_ID + COMMA
-		+ DatabaseDate.toQuerySubString(COLUMN_CREATED) + COMMA 
-		+ DatabaseDate.toQuerySubString(COLUMN_MODIFIED) + COMMA
-		+ COLUMN_CREATOR_ID + COMMA
-		+ COLUMN_MODIFIER_ID + COMMA
+		return super.retrieveQuery(condition) + COMMA
 		+ COLUMN_TYPE_ID + COMMA
 		+ COLUMN_MONITORED_ELEMENT_ID + COMMA
 		+ COLUMN_CRITERIA_SET_ID
@@ -158,13 +131,9 @@ public class AnalysisDatabase extends StorableObjectDatabase {
 	
 	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
 	throws IllegalDataException, RetrieveObjectException, SQLException {
-		Analysis analysis = fromStorableObject(storableObject);
-		if (analysis == null){
-			/**
-			 * @todo when change DB Identifier model ,change getString() to getLong()
-			 */
-			analysis = new Analysis(new Identifier(resultSet.getString(COLUMN_ID)), null, null, null, null);			
-		}
+		Analysis analysis = (storableObject == null) ? 
+				new Analysis(new Identifier(resultSet.getString(COLUMN_ID)), null, null, null, null) : 
+					fromStorableObject(storableObject);
 		AnalysisType analysisType;
 		Set criteriaSet;
 		try {

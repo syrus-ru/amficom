@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisTypeDatabase.java,v 1.25 2004/09/06 14:33:11 bob Exp $
+ * $Id: AnalysisTypeDatabase.java,v 1.26 2004/09/08 10:59:12 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,8 +15,6 @@ import java.sql.Statement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Timestamp;
-
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObject;
@@ -32,7 +30,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.25 $, $Date: 2004/09/06 14:33:11 $
+ * @version $Revision: 1.26 $, $Date: 2004/09/08 10:59:12 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -72,26 +70,19 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 	
 	protected String getUpdateColumns() {
 		if (this.updateColumns == null){
-			this.updateColumns = COLUMN_ID + COMMA 
-			+ COLUMN_CREATED + COMMA 
-			+ COLUMN_MODIFIED + COMMA 
-			+ COLUMN_CREATOR_ID + COMMA 
-			+ COLUMN_MODIFIER_ID + COMMA
-			+ COLUMN_CODENAME + COMMA 
-			+ COLUMN_DESCRIPTION;
+			this.updateColumns = super.getUpdateColumns()
+				+ COLUMN_CODENAME + COMMA 
+				+ COLUMN_DESCRIPTION;
 		}
 		return this.updateColumns;
 	}	
 
 	protected String getUpdateMultiplySQLValues() {
 		if (this.updateMultiplySQLValues == null){
-			this.updateMultiplySQLValues = QUESTION + COMMA 
-			+ QUESTION + COMMA 
-			+ QUESTION + COMMA 
-			+ QUESTION + COMMA 
-			+ QUESTION + COMMA
-			+ QUESTION + COMMA 
-			+ QUESTION;
+			this.updateMultiplySQLValues = super.getUpdateMultiplySQLValues() 
+				+ COMMA
+				+ QUESTION + COMMA 
+				+ QUESTION;
 		}
 		return this.updateMultiplySQLValues;
 	}	
@@ -99,15 +90,10 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 	
 	protected String getUpdateSingleSQLValues(StorableObject storableObject) throws IllegalDataException,
 			UpdateObjectException {
-		AnalysisType analysisType = fromStorableObject(storableObject);
-		String analysisTypeIdStr = analysisType.getId().toSQLString();
-		String sql = analysisTypeIdStr + COMMA
-		+ DatabaseDate.toUpdateSubString(analysisType.getCreated()) + COMMA
-		+ DatabaseDate.toUpdateSubString(analysisType.getModified()) + COMMA
-		+ analysisType.getCreatorId().toSQLString() + COMMA 
-		+ analysisType.getModifierId().toSQLString() + COMMA
-		+ APOSTOPHE + analysisType.getCodename() + APOSTOPHE + COMMA 
-		+ APOSTOPHE + analysisType.getDescription() + APOSTOPHE;
+		AnalysisType analysisType = fromStorableObject(storableObject);		
+		String sql = super.getUpdateSingleSQLValues(storableObject) + COMMA 
+			+ APOSTOPHE + analysisType.getCodename() + APOSTOPHE + COMMA 
+			+ APOSTOPHE + analysisType.getDescription() + APOSTOPHE;
 		return sql;
 	}
 	
@@ -119,31 +105,22 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 	}
 	
 	protected String retrieveQuery(final String condition){
-		return SQL_SELECT
-		+ COLUMN_ID + COMMA
-		+ DatabaseDate.toQuerySubString(COLUMN_CREATED) + COMMA
-		+ DatabaseDate.toQuerySubString(COLUMN_MODIFIED) + COMMA
-		+ COLUMN_CREATOR_ID + COMMA
-		+ COLUMN_MODIFIER_ID + COMMA
-		+ COLUMN_CODENAME + COMMA
-		+ COLUMN_DESCRIPTION
-		+ SQL_FROM + ObjectEntities.ANALYSISTYPE_ENTITY
-		+ ( ((condition == null) || (condition.length() == 0) ) ? "" : SQL_WHERE + condition);
+		return super.retrieveQuery(condition) + COMMA
+			+ COLUMN_CODENAME + COMMA
+			+ COLUMN_DESCRIPTION
+			+ SQL_FROM + ObjectEntities.ANALYSISTYPE_ENTITY
+			+ ( ((condition == null) || (condition.length() == 0) ) ? "" : SQL_WHERE + condition);
 
 	}
 	
-	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet) throws RetrieveObjectException, SQLException{
-		AnalysisType analysisType1 = (AnalysisType) storableObject;
-		if (storableObject == null){
-			/**
-			 * @todo when change DB Identifier model ,change getString() to getLong()
-			 */
-			analysisType1 = new AnalysisType(new Identifier(resultSet.getString(COLUMN_ID)), null,null,null,null,null,null,null);
-		}
+	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet) throws IllegalDataException, RetrieveObjectException, SQLException{
+		AnalysisType analysisType = storableObject == null ? 
+				new AnalysisType(new Identifier(resultSet.getString(COLUMN_ID)), null,null,null,null,null,null,null) : 
+					fromStorableObject(storableObject);
 		/**
 		 * @todo when change DB Identifier model ,change getString() to getLong()
 		 */
-		analysisType1.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
+		analysisType.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
 												DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
 												/**
 												 * @todo when change DB Identifier model ,change getString() to
@@ -157,7 +134,7 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 												 new Identifier(resultSet.getString(COLUMN_MODIFIER_ID)),
 												 resultSet.getString(COLUMN_CODENAME),
 												 resultSet.getString(COLUMN_DESCRIPTION));
-		return analysisType1;
+		return analysisType;
 	}
 
 	private void retrieveParameterTypes(AnalysisType analysisType) throws RetrieveObjectException {	
@@ -474,21 +451,8 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 	protected void setEntityForPreparedStatement(StorableObject storableObject, PreparedStatement preparedStatement)
 			throws IllegalDataException, UpdateObjectException {
 		AnalysisType analysisType = fromStorableObject(storableObject);
+		super.setEntityForPreparedStatement(storableObject, preparedStatement);
 		try {
-			/**
-			 * @todo when change DB Identifier model ,change setString() to setLong()
-			 */
-			preparedStatement.setString(1, analysisType.getId().getCode());
-			preparedStatement.setTimestamp(2, new Timestamp(analysisType.getCreated().getTime()));
-			preparedStatement.setTimestamp(3, new Timestamp(analysisType.getModified().getTime()));
-			/**
-			 * @todo when change DB Identifier model ,change setString() to setLong()
-			 */
-			preparedStatement.setString(4, analysisType.getCreatorId().getCode());
-			/**
-			 * @todo when change DB Identifier model ,change setString() to setLong()
-			 */
-			preparedStatement.setString(5, analysisType.getModifierId().getCode());
 			preparedStatement.setString(6, analysisType.getCodename());
 			preparedStatement.setString(7, analysisType.getDescription());
 			/**

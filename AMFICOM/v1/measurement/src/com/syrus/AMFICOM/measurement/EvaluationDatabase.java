@@ -1,5 +1,5 @@
 /*
- * $Id: EvaluationDatabase.java,v 1.16 2004/09/06 14:33:11 bob Exp $
+ * $Id: EvaluationDatabase.java,v 1.17 2004/09/08 10:59:12 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,12 +9,8 @@
 package com.syrus.AMFICOM.measurement;
 
 import java.sql.PreparedStatement;
-import java.sql.Statement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Timestamp;
-import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 
 import com.syrus.util.Log;
@@ -32,7 +28,7 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2004/09/06 14:33:11 $
+ * @version $Revision: 1.17 $, $Date: 2004/09/08 10:59:12 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -68,12 +64,7 @@ public class EvaluationDatabase extends StorableObjectDatabase {
 	}
 	
 	protected String retrieveQuery(String condition){
-		return SQL_SELECT
-		+ COLUMN_ID + COMMA
-		+ DatabaseDate.toQuerySubString(COLUMN_CREATED) + COMMA 
-		+ DatabaseDate.toQuerySubString(COLUMN_MODIFIED) + COMMA
-		+ COLUMN_CREATOR_ID + COMMA
-		+ COLUMN_MODIFIER_ID + COMMA
+		return super.retrieveQuery(condition) + COMMA
 		+ COLUMN_TYPE_ID + COMMA
 		+ COLUMN_MONITORED_ELEMENT_ID + COMMA
 		+ COLUMN_THRESHOLD_SET_ID
@@ -85,11 +76,7 @@ public class EvaluationDatabase extends StorableObjectDatabase {
 	
 	protected String getUpdateColumns() {
 		if (this.updateColumns == null){
-			this.updateColumns = COLUMN_ID + COMMA
-			+ COLUMN_CREATED + COMMA
-			+ COLUMN_MODIFIED + COMMA
-			+ COLUMN_CREATOR_ID + COMMA
-			+ COLUMN_MODIFIER_ID + COMMA
+			this.updateColumns = super.getUpdateColumns() + COMMA
 			+ COLUMN_TYPE_ID + COMMA
 			+ COLUMN_MONITORED_ELEMENT_ID + COMMA
 			+ COLUMN_THRESHOLD_SET_ID;
@@ -100,11 +87,7 @@ public class EvaluationDatabase extends StorableObjectDatabase {
 	
 	protected String getUpdateMultiplySQLValues() {
 		if (this.updateMultiplySQLValues == null){
-			this.updateMultiplySQLValues = QUESTION + COMMA
-			+ QUESTION + COMMA
-			+ QUESTION + COMMA
-			+ QUESTION + COMMA
-			+ QUESTION + COMMA
+			this.updateMultiplySQLValues = super.getUpdateMultiplySQLValues() + COMMA
 			+ QUESTION + COMMA
 			+ QUESTION + COMMA
 			+ QUESTION;
@@ -115,32 +98,18 @@ public class EvaluationDatabase extends StorableObjectDatabase {
 	protected String getUpdateSingleSQLValues(StorableObject storableObject) throws IllegalDataException,
 			UpdateObjectException {
 		Evaluation evaluation = fromStorableObject(storableObject);
-		String values = DatabaseDate.toUpdateSubString(evaluation.getCreated()) + COMMA
-		+ DatabaseDate.toUpdateSubString(evaluation.getModified()) + COMMA
-		+ evaluation.getCreatorId().toSQLString() + COMMA
-		+ evaluation.getModifierId().toSQLString() + COMMA
+		String values = super.getUpdateSingleSQLValues(storableObject) + COMMA
 		+ evaluation.getType().getId().toSQLString() + COMMA
 		+ evaluation.getMonitoredElementId().toSQLString() + COMMA
 		+ evaluation.getThresholdSet().getId().toSQLString();
 		return values;
-	}
-	
-	
-	/* (non-Javadoc)
-	 * @see com.syrus.AMFICOM.general.StorableObjectDatabase#setEntityForPreparedStatement(com.syrus.AMFICOM.general.StorableObject, java.sql.PreparedStatement)
-	 */
+	}	
+
 	protected void setEntityForPreparedStatement(StorableObject storableObject, PreparedStatement preparedStatement)
 			throws IllegalDataException, UpdateObjectException {
 		Evaluation evaluation = fromStorableObject(storableObject);
+		super.setEntityForPreparedStatement(storableObject, preparedStatement);
 		try {
-			/**
-			 * @todo when change DB Identifier model ,change setString() to setLong()
-			 */
-			preparedStatement.setString(1, evaluation.getId().getCode());
-			preparedStatement.setTimestamp(2, new Timestamp(evaluation.getCreated().getTime()));
-			preparedStatement.setTimestamp(3, new Timestamp(evaluation.getModified().getTime()));
-			preparedStatement.setString(4, evaluation.getCreatorId().getCode());
-			preparedStatement.setString(5, evaluation.getModifierId().getCode());
 			/**
 			 * @todo when change DB Identifier model ,change setString() to setLong()
 			 */
@@ -164,13 +133,9 @@ public class EvaluationDatabase extends StorableObjectDatabase {
 	
 	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
 			throws IllegalDataException, RetrieveObjectException, SQLException {
-		Evaluation evaluation = fromStorableObject(storableObject);
-		if (evaluation == null){
-			/**
-			 * @todo when change DB Identifier model ,change getString() to getLong()
-			 */
-			evaluation = new Evaluation(new Identifier(resultSet.getString(COLUMN_ID)), null, null, null, null);			
-		}
+		Evaluation evaluation = (storableObject == null) ? 
+				new Evaluation(new Identifier(resultSet.getString(COLUMN_ID)), null, null, null, null) : 
+					fromStorableObject(storableObject);
 		EvaluationType evaluationType;
 		Set thresholdSet;
 		try {

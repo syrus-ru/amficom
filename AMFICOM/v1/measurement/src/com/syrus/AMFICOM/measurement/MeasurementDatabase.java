@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementDatabase.java,v 1.19 2004/09/06 14:33:12 bob Exp $
+ * $Id: MeasurementDatabase.java,v 1.20 2004/09/08 10:59:12 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,7 +32,7 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
 
 /**
- * @version $Revision: 1.19 $, $Date: 2004/09/06 14:33:12 $
+ * @version $Revision: 1.20 $, $Date: 2004/09/08 10:59:12 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -71,11 +71,7 @@ public class MeasurementDatabase extends StorableObjectDatabase {
 	
 	protected String getUpdateColumns() {
 		if (this.updateColumns == null){
-			this.updateColumns = COLUMN_ID + COMMA
-			+ COLUMN_CREATED + COMMA
-			+ COLUMN_MODIFIED + COMMA
-			+ COLUMN_CREATOR_ID + COMMA
-			+ COLUMN_MODIFIER_ID + COMMA
+			this.updateColumns = super.getUpdateColumns() + COMMA
 			+ COLUMN_TYPE_ID + COMMA
 			+ COLUMN_MONITORED_ELEMENT_ID + COMMA
 			+ COLUMN_SETUP_ID + COMMA
@@ -90,11 +86,7 @@ public class MeasurementDatabase extends StorableObjectDatabase {
 	
 	protected String getUpdateMultiplySQLValues() {
 		if (this.updateMultiplySQLValues == null){
-			this.updateMultiplySQLValues = QUESTION + COMMA
-			+ QUESTION + COMMA
-			+ QUESTION + COMMA
-			+ QUESTION + COMMA
-			+ QUESTION + COMMA
+			this.updateMultiplySQLValues = super.getUpdateMultiplySQLValues() + COMMA
 			+ QUESTION + COMMA
 			+ QUESTION + COMMA
 			+ QUESTION + COMMA
@@ -111,10 +103,7 @@ public class MeasurementDatabase extends StorableObjectDatabase {
 	protected String getUpdateSingleSQLValues(StorableObject storableObject) throws IllegalDataException,
 			UpdateObjectException {
 		Measurement measurement = fromStorableObject(storableObject);
-		String values = DatabaseDate.toUpdateSubString(measurement.getCreated()) + COMMA
-		+ DatabaseDate.toUpdateSubString(measurement.getModified()) + COMMA
-		+ measurement.getCreatorId().toSQLString() + COMMA
-		+ measurement.getModifierId().toSQLString() + COMMA
+		String values = getUpdateSingleSQLValues(storableObject) + COMMA
 		+ measurement.getType().getId().toSQLString() + COMMA
 		+ measurement.getMonitoredElementId().toSQLString() + COMMA
 		+ measurement.getSetup().getId().toSQLString() + COMMA
@@ -130,21 +119,8 @@ public class MeasurementDatabase extends StorableObjectDatabase {
 	protected void setEntityForPreparedStatement(StorableObject storableObject, PreparedStatement preparedStatement)
 			throws IllegalDataException, UpdateObjectException {
 		Measurement measurement = fromStorableObject(storableObject);
-		try {
-			/**
-			 * @todo when change DB Identifier model ,change setString() to setLong()
-			 */
-			preparedStatement.setString(1, measurement.getId().getCode());
-			preparedStatement.setTimestamp(2, new Timestamp(measurement.getCreated().getTime()));
-			preparedStatement.setTimestamp(3, new Timestamp(measurement.getModified().getTime()));
-			/**
-			 * @todo when change DB Identifier model ,change setString() to setLong()
-			 */
-			preparedStatement.setString(4, measurement.getCreatorId().getCode());
-			/**
-			 * @todo when change DB Identifier model ,change setString() to setLong()
-			 */
-			preparedStatement.setString(5, measurement.getModifierId().getCode());
+		super.setEntityForPreparedStatement(storableObject, preparedStatement);
+		try {			
 			/**
 			 * @todo when change DB Identifier model ,change setString() to setLong()
 			 */
@@ -181,12 +157,7 @@ public class MeasurementDatabase extends StorableObjectDatabase {
 	}
 	
 	protected String retrieveQuery(String condition){
-		return SQL_SELECT
-		+ COLUMN_ID + COMMA
-		+ DatabaseDate.toQuerySubString(COLUMN_CREATED) + COMMA 
-		+ DatabaseDate.toQuerySubString(COLUMN_MODIFIED) + COMMA
-		+ COLUMN_CREATOR_ID + COMMA
-		+ COLUMN_MODIFIER_ID + COMMA
+		return super.retrieveQuery(condition) + COMMA
 		+ COLUMN_TYPE_ID + COMMA
 		+ COLUMN_MONITORED_ELEMENT_ID + COMMA
 		+ COLUMN_SETUP_ID + COMMA
@@ -202,14 +173,10 @@ public class MeasurementDatabase extends StorableObjectDatabase {
 	
 	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
 		throws IllegalDataException, RetrieveObjectException, SQLException {
-		Measurement measurement = fromStorableObject(storableObject);
-		if (measurement == null){
-			/**
-			 * @todo when change DB Identifier model ,change getString() to getLong()
-			 */
-			measurement = new Measurement(new Identifier(resultSet.getString(COLUMN_ID)), null, null, null, 
-										   null, null, null, null);			
-		}
+		Measurement measurement = (storableObject == null) ?
+				new Measurement(new Identifier(resultSet.getString(COLUMN_ID)), null, null, null, 
+								   null, null, null, null) : 
+					fromStorableObject(storableObject);		
 		MeasurementType measurementType;
 		MeasurementSetup measurementSetup;
 		try {

@@ -1,5 +1,5 @@
 /*
- * $Id: EvaluationTypeDatabase.java,v 1.22 2004/09/06 14:33:12 bob Exp $
+ * $Id: EvaluationTypeDatabase.java,v 1.23 2004/09/08 10:59:12 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,7 +15,6 @@ import java.sql.Statement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Timestamp;
 
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
@@ -32,7 +31,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.22 $, $Date: 2004/09/06 14:33:12 $
+ * @version $Revision: 1.23 $, $Date: 2004/09/08 10:59:12 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -71,11 +70,7 @@ public class EvaluationTypeDatabase extends StorableObjectDatabase {
 	
 	protected String getUpdateColumns() {
 		if (this.updateColumns == null){
-			this.updateColumns = COLUMN_ID + COMMA
-			+ COLUMN_CREATED + COMMA
-			+ COLUMN_MODIFIED + COMMA
-			+ COLUMN_CREATOR_ID + COMMA
-			+ COLUMN_MODIFIER_ID + COMMA
+			this.updateColumns = super.getUpdateColumns() + COMMA
 			+ COLUMN_CODENAME + COMMA
 			+ COLUMN_DESCRIPTION;
 		}
@@ -85,11 +80,7 @@ public class EvaluationTypeDatabase extends StorableObjectDatabase {
 	
 	protected String getUpdateMultiplySQLValues() {
 		if (this.updateMultiplySQLValues == null){
-			this.updateMultiplySQLValues = QUESTION + COMMA
-			+ QUESTION + COMMA
-			+ QUESTION + COMMA
-			+ QUESTION + COMMA
-			+ QUESTION + COMMA
+			this.updateMultiplySQLValues = super.getUpdateMultiplySQLValues() + COMMA
 			+ QUESTION + COMMA
 			+ QUESTION;
 		}		
@@ -100,22 +91,9 @@ public class EvaluationTypeDatabase extends StorableObjectDatabase {
 	protected void setEntityForPreparedStatement(StorableObject storableObject, PreparedStatement preparedStatement)
 			throws IllegalDataException, UpdateObjectException {
 		EvaluationType evaluationType = fromStorableObject(storableObject);
+		super.setEntityForPreparedStatement(storableObject, preparedStatement);
 		try {
-			/**
-			 * @todo when change DB Identifier model ,change setString() to setLong()
-			 */
-			preparedStatement.setString(1, evaluationType.getId().getCode());
-			preparedStatement.setTimestamp(2, new Timestamp(evaluationType.getCreated().getTime()));
-			preparedStatement.setTimestamp(3, new Timestamp(evaluationType.getModified().getTime()));
-			preparedStatement.setString(4, evaluationType.getCreatorId().getCode());
-			preparedStatement.setString(5, evaluationType.getModifierId().getCode());
-			/**
-			 * @todo when change DB Identifier model ,change setString() to setLong()
-			 */
 			preparedStatement.setString(6, evaluationType.getCodename()); 
-			/**
-			 * @todo when change DB Identifier model ,change setString() to setLong()
-			 */
 			preparedStatement.setString(7, evaluationType.getDescription()); 
 			/**
 			 * @todo when change DB Identifier model ,change setString() to setLong()
@@ -131,10 +109,7 @@ public class EvaluationTypeDatabase extends StorableObjectDatabase {
 	protected String getUpdateSingleSQLValues(StorableObject storableObject) throws IllegalDataException,
 			UpdateObjectException {
 		EvaluationType evaluationType = fromStorableObject(storableObject);
-		String values = DatabaseDate.toUpdateSubString(evaluationType.getCreated()) + COMMA
-		+ DatabaseDate.toUpdateSubString(evaluationType.getModified()) + COMMA
-		+ evaluationType.getCreatorId().toSQLString() + COMMA
-		+ evaluationType.getModifierId().toSQLString() + COMMA
+		String values = super.getUpdateSingleSQLValues(storableObject) + COMMA
 		+ APOSTOPHE + evaluationType.getCodename() + APOSTOPHE + COMMA
 		+ APOSTOPHE + evaluationType.getDescription() + APOSTOPHE;		
 		return values;
@@ -148,12 +123,7 @@ public class EvaluationTypeDatabase extends StorableObjectDatabase {
 	}
 	
 	protected String retrieveQuery(String condition){
-		return SQL_SELECT
-		+ COLUMN_ID + COMMA
-		+ DatabaseDate.toQuerySubString(COLUMN_CREATED) + COMMA
-		+ DatabaseDate.toQuerySubString(COLUMN_MODIFIED) + COMMA
-		+ COLUMN_CREATOR_ID + COMMA
-		+ COLUMN_MODIFIER_ID + COMMA
+		return super.retrieveQuery(condition) + COMMA
 		+ COLUMN_CODENAME + COMMA
 		+ COLUMN_DESCRIPTION
 		+ SQL_FROM + ObjectEntities.EVALUATIONTYPE_ENTITY
@@ -164,13 +134,9 @@ public class EvaluationTypeDatabase extends StorableObjectDatabase {
 	
 	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
 		throws IllegalDataException, RetrieveObjectException, SQLException {
-		EvaluationType evaluationType = fromStorableObject(storableObject);
-		if (evaluationType == null){
-			/**
-			 * @todo when change DB Identifier model ,change getString() to getLong()
-			 */
-			evaluationType = new EvaluationType(new Identifier(resultSet.getString(COLUMN_ID)), null,null,null,null,null,null,null);
-		}
+		EvaluationType evaluationType = (storableObject == null) ?
+				new EvaluationType(new Identifier(resultSet.getString(COLUMN_ID)), null,null,null,null,null,null,null) : 
+					fromStorableObject(storableObject);
 		/**
 		 * @todo when change DB Identifier model ,change getString() to getLong()
 		 */
