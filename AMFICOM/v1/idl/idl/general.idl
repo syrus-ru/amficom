@@ -1,5 +1,5 @@
 /*
- * $Id: general.idl,v 1.30 2004/11/18 14:35:20 bass Exp $
+ * $Id: general.idl,v 1.31 2004/11/22 12:58:15 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -85,12 +85,21 @@ module corba {
 #ifdef GENERAL_COMMON
 
 	valuetype Identifier {
+		const char SEPARATOR = '_';
+#ifdef NUMERIC_IDENTIFIER
+		const string IDENTIFIER_STRING_UNINITIALIZED = "";
+#else // NUMERIC_IDENTIFIER
+		const short MAJOR_UNINITIALIZED = -1;
+		const long long MINOR_UNINITIALIZED = -1;
+#endif // NUMERIC_IDENTIFIER
+
 #ifdef NUMERIC_IDENTIFIER
 		private short thisMajor;
 		private long long thisMinor;
 #else // NUMERIC_IDENTIFIER  
 		private string thisIdentifierString;
-#endif // NUMERIC_IDENTIFIER 
+#endif // NUMERIC_IDENTIFIER
+
 		readonly attribute short major;
 		readonly attribute long long minor;
 		readonly attribute string identifierString;
