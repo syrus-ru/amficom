@@ -1,5 +1,5 @@
 /*
- * $Id: Equipment.java,v 1.18 2004/08/11 16:45:02 arseniy Exp $
+ * $Id: Equipment.java,v 1.19 2004/08/13 05:17:37 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,8 +25,8 @@ import com.syrus.AMFICOM.configuration.corba.Equipment_Transferable;
 import com.syrus.AMFICOM.configuration.corba.EquipmentSort;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2004/08/11 16:45:02 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.19 $, $Date: 2004/08/13 05:17:37 $
+ * @author $Author: bob $
  * @module configuration_v1
  */
 
@@ -105,6 +105,55 @@ public class Equipment extends MonitoredDomainMember implements Characterized, T
 		catch (IllegalDataException ide) {
 			throw new CreateObjectException(ide.getMessage(), ide);
 		}
+	}
+	
+	private Equipment(Identifier id,
+						Identifier creatorId,
+						Identifier domainId,
+						EquipmentType type,
+						String name,
+						String description,
+						Identifier imageId,
+						int sort,
+						Identifier kisId){
+				super(id,
+						new Date(System.currentTimeMillis()),
+						new Date(System.currentTimeMillis()),
+						creatorId,
+						creatorId,
+						domainId);
+				this.type = type;
+				this.name = name;
+				this.description = description;
+				this.imageId = imageId;
+				this.sort = sort;
+				this.kisId = kisId;
+				
+				this.characteristicIds = new ArrayList();
+				this.portIds = new ArrayList();
+				this.cablePortIds = new ArrayList();
+				this.specialPortIds = new ArrayList();
+	}
+				
+	
+	public static Equipment  createInstance(Identifier id,
+											Identifier creatorId,
+											Identifier domainId,
+											EquipmentType type,
+											String name,
+											String description,
+											Identifier imageId,
+											int sort,
+											Identifier kisId){
+		return new Equipment(id,
+							 creatorId,
+							 domainId,
+							 type,
+							 name,
+							 description,
+							 imageId,
+							 sort,
+							 kisId);
 	}
 
 	public Object getTransferable() {

@@ -1,5 +1,5 @@
 /*
- * $Id: Port.java,v 1.3 2004/08/11 16:45:02 arseniy Exp $
+ * $Id: Port.java,v 1.4 2004/08/13 05:17:37 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,8 +27,8 @@ import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2004/08/11 16:45:02 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.4 $, $Date: 2004/08/13 05:17:37 $
+ * @author $Author: bob $
  * @module configuration_v1
  */
 public class Port extends StorableObject implements Characterized, TypedObject {
@@ -79,7 +79,48 @@ public class Port extends StorableObject implements Characterized, TypedObject {
 			throw new CreateObjectException(ide.getMessage(), ide);
 		}
 	}
-
+	
+	private Port(Identifier id,
+				Identifier creatorId,
+				PortType type,
+				String description,
+				Identifier equipmentId,
+				int sort){
+		super(id,
+				new Date(System.currentTimeMillis()),
+				new Date(System.currentTimeMillis()),
+				creatorId,
+				creatorId);
+		this.type = type;
+		this.description = description;
+		this.equipmentId = equipmentId;
+		this.sort = sort;
+	}
+	
+	/**
+	 * create new instance for client 
+	 * @param id
+	 * @param creatorId
+	 * @param type
+	 * @param description
+	 * @param equipmentId
+	 * @param sort
+	 * @return
+	 */
+	public static Port createInstance(Identifier id,
+					Identifier creatorId,
+					PortType type,
+					String description,
+					Identifier equipmentId,
+					int sort){
+		return new Port(id,
+						creatorId,
+						type,
+						description,
+						equipmentId,
+						sort);
+	}
+	
 	public Object getTransferable() {
 		int i = 0;
 		

@@ -1,5 +1,5 @@
 /*
- * $Id: PortType.java,v 1.1 2004/08/11 10:46:20 bob Exp $
+ * $Id: PortType.java,v 1.2 2004/08/13 05:17:37 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -20,7 +20,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.configuration.corba.PortType_Transferable;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2004/08/11 10:46:20 $
+ * @version $Revision: 1.2 $, $Date: 2004/08/13 05:17:37 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -57,6 +57,38 @@ public class PortType extends StorableObjectType {
 		catch (IllegalDataException ide) {
 			throw new CreateObjectException(ide.getMessage(), ide);
 		}
+	}
+	
+	private PortType(Identifier id,
+						 Identifier creatorId,
+						 String codename,
+						 String description){
+		super(id,
+				new Date(System.currentTimeMillis()),
+				new Date(System.currentTimeMillis()),
+				creatorId,
+				creatorId,
+				codename,
+				description);
+	}
+	
+	
+	/**
+	 * create new instance for client 
+	 * @param id
+	 * @param creatorId
+	 * @param codename
+	 * @param description
+	 * @return
+	 */
+	public static PortType createInstance(Identifier id,
+											 Identifier creatorId,
+											 String codename,
+											 String description){
+		return new PortType(id,
+							creatorId,
+							codename,
+							description);
 	}
 	
 	public Object getTransferable() {

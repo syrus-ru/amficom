@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPath.java,v 1.7 2004/08/11 16:45:02 arseniy Exp $
+ * $Id: TransmissionPath.java,v 1.8 2004/08/13 05:17:37 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -21,8 +21,8 @@ import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.configuration.corba.TransmissionPath_Transferable;
 /**
- * @version $Revision: 1.7 $, $Date: 2004/08/11 16:45:02 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.8 $, $Date: 2004/08/13 05:17:37 $
+ * @author $Author: bob $
  * @module configuration_v1
  */
 
@@ -50,6 +50,54 @@ public class TransmissionPath extends MonitoredDomainMember implements Character
 			throw new RetrieveObjectException(ide.getMessage(), ide);
 		}
 	}
+	
+	private TransmissionPath(Identifier id,
+								Identifier creatorId,
+								Identifier domainId,
+								String name,
+								String description,
+								Identifier startPortId,
+								Identifier finishPortId){
+		super(id,
+				new Date(System.currentTimeMillis()),
+				new Date(System.currentTimeMillis()),
+				creatorId,
+				creatorId,
+				domainId);
+		this.name = name;
+		this.description = description;
+		this.startPortId = startPortId;
+		this.finishPortId = finishPortId;
+		this.characteristicIds = new ArrayList();
+	}
+	
+	/**
+	 * create new instance for client 
+	 * @param id
+	 * @param creatorId
+	 * @param domainId
+	 * @param name
+	 * @param description
+	 * @param startPortId
+	 * @param finishPortId
+	 * @return
+	 */
+	public static TransmissionPath createInstance(Identifier id,
+													Identifier creatorId,
+													Identifier domainId,
+													String name,
+													String description,
+													Identifier startPortId,
+													Identifier finishPortId) {
+				return new TransmissionPath(id,
+					 creatorId,					 
+					 domainId,
+					 name,
+					 description,
+					 startPortId,
+					 finishPortId);
+		}
+
 
 	public TransmissionPath(TransmissionPath_Transferable tpt) throws CreateObjectException {
 		super(new Identifier(tpt.id),

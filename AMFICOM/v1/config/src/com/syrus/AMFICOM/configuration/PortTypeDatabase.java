@@ -1,5 +1,5 @@
 /*
- * $Id: PortTypeDatabase.java,v 1.3 2004/08/11 13:22:43 bob Exp $
+ * $Id: PortTypeDatabase.java,v 1.4 2004/08/13 05:17:37 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,7 +26,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2004/08/11 13:22:43 $
+ * @version $Revision: 1.4 $, $Date: 2004/08/13 05:17:37 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -146,6 +146,7 @@ public class PortTypeDatabase extends StorableObjectDatabase {
 			+ COLUMN_DESCRIPTION
 			+ CLOSE_BRACKET
 			+ SQL_VALUES
+			+ OPEN_BRACKET
 			+ ptIdStr + COMMA
 			+ DatabaseDate.toUpdateSubString(portType.getCreated()) + COMMA
 			+ DatabaseDate.toUpdateSubString(portType.getModified()) + COMMA
@@ -219,5 +220,32 @@ public class PortTypeDatabase extends StorableObjectDatabase {
 			}
 		}
 		return portTypes;
+	}
+	
+	public static void delete(PortType portType) {
+		String ptIdStr = portType.getId().toSQLString();
+		Statement statement = null;
+		try {
+			statement = connection.createStatement();
+			statement.executeUpdate(SQL_DELETE_FROM
+									+ ObjectEntities.PORTTYPE_ENTITY
+									+ SQL_WHERE
+									+ COLUMN_ID + EQUALS
+									+ ptIdStr);
+			connection.commit();
+		}
+		catch (SQLException sqle1) {
+			Log.errorException(sqle1);
+		}
+		finally {
+			try {
+				if(statement != null)
+					statement.close();
+				statement = null;
+			}
+			catch(SQLException sqle1) {
+				Log.errorException(sqle1);
+			}
+		}
 	}
 }

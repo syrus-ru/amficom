@@ -1,5 +1,5 @@
 /*
- * $Id: EquipmentType.java,v 1.4 2004/08/10 19:01:08 arseniy Exp $
+ * $Id: EquipmentType.java,v 1.5 2004/08/13 05:17:37 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -20,8 +20,8 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.configuration.corba.EquipmentType_Transferable;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2004/08/10 19:01:08 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.5 $, $Date: 2004/08/13 05:17:37 $
+ * @author $Author: bob $
  * @module configuration_v1
  */
 
@@ -57,6 +57,38 @@ public class EquipmentType extends StorableObjectType {
 		catch (IllegalDataException ide) {
 			throw new CreateObjectException(ide.getMessage(), ide);
 		}
+	}
+	
+	private EquipmentType(Identifier id,
+					 Identifier creatorId,
+					 String codename,
+					 String description){
+		super(id,
+				new Date(System.currentTimeMillis()),
+				new Date(System.currentTimeMillis()),
+				creatorId,
+				creatorId,
+				codename,
+				description);
+	}
+
+
+	/**
+	 * create new instance for client 
+	 * @param id
+	 * @param creatorId
+	 * @param codename
+	 * @param description
+	 * @return
+	 */
+	public static EquipmentType createInstance(Identifier id,
+											 Identifier creatorId,
+											 String codename,
+											 String description){
+		return new EquipmentType(id,
+							creatorId,
+							codename,
+							description);
 	}
 	
 	public Object getTransferable() {
