@@ -103,7 +103,8 @@ module corba {
 		com::syrus::AMFICOM::general::corba::Identifier_Transferable equipment_id;
 
 		PortSort sort;
-		CharacteristicSeq_Transferable characteristics;
+		com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable characteristic_ids;
+		
 		
 	};
 
