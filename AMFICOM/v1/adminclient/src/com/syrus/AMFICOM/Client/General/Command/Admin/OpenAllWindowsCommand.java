@@ -1,15 +1,25 @@
+/*
+ * $Id: OpenAllWindowsCommand.java,v 1.2 2004/09/27 16:29:07 bass Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ
+ */
+
 package com.syrus.AMFICOM.Client.General.Command.Admin;
 
-import javax.swing.*;
-
-import com.syrus.AMFICOM.Client.General.Command.*;
+import com.syrus.AMFICOM.Client.General.Command.Admin.OpenWhoAmIFrameCommand;
+import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Model.*;
-import com.syrus.AMFICOM.Client.General.UI.*;
-import com.syrus.AMFICOM.Client.General.Command.Admin.OpenWhoAmIFrameCommand;
+import com.syrus.AMFICOM.Client.General.UI.ObjectResourceDisplayModel;
+import javax.swing.JDesktopPane;
 
-
-
+/**
+ * @author $Author: bass $
+ * @version $Revision: 1.2 $, $Date: 2004/09/27 16:29:07 $
+ * @module admin_v1
+ */
 public class OpenAllWindowsCommand extends VoidCommand
 {
   JDesktopPane desktop;
@@ -66,18 +76,13 @@ public class OpenAllWindowsCommand extends VoidCommand
                                      filters);
   }
 
+	public void execute() {
+		Environment.getDispatcher().notify(new StatusMessageEvent(StatusMessageEvent.STATUS_MESSAGE, "Инициализация интерфейса"));
 
-  public void execute()
-  {
-    Environment.the_dispatcher.notify(new StatusMessageEvent("Инициализация интерфейса"));
+		(new ViewObjectNavigatorCommand(dispatcher, desktop, rootTitle, aContext )).execute();
+		(new OpenObjectFrameCommand(desktop, aContext, parameter, dModel, orclass)).execute();
+		(new OpenWhoAmIFrameCommand(desktop, aContext)).execute();
 
-    (new ViewObjectNavigatorCommand(dispatcher, desktop, rootTitle, aContext )).execute();
-    (new OpenObjectFrameCommand(desktop, aContext, parameter, dModel, orclass)).execute();
-    (new OpenWhoAmIFrameCommand(desktop, aContext)).execute();
-
-    Environment.the_dispatcher.notify(new StatusMessageEvent("  "));
-    return;
-  }
-
-
+		Environment.getDispatcher().notify(new StatusMessageEvent(StatusMessageEvent.STATUS_MESSAGE, "  "));
+	}
 }

@@ -1,22 +1,26 @@
+/*
+ * $Id: RISDObjectDataSource.java,v 1.2 2004/09/27 16:25:14 bass Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ
+ */
+
 package com.syrus.AMFICOM.Client.Resource;
 
-import com.syrus.AMFICOM.CORBA.Constants;
 import com.syrus.AMFICOM.CORBA.Admin.*;
-import com.syrus.AMFICOM.CORBA.Resource.ImageResourceSeq_TransferableHolder;
-import com.syrus.AMFICOM.CORBA.Resource.ImageResource_Transferable;
+import com.syrus.AMFICOM.CORBA.Constants;
+import com.syrus.AMFICOM.CORBA.Resource.*;
 import com.syrus.AMFICOM.Client.General.SessionInterface;
-import com.syrus.AMFICOM.Client.Resource.Object.CommandPermissionAttributes;
-import com.syrus.AMFICOM.Client.Resource.Object.Domain;
-import com.syrus.AMFICOM.Client.Resource.Object.OperatorCategory;
-import com.syrus.AMFICOM.Client.Resource.Object.OperatorGroup;
-import com.syrus.AMFICOM.Client.Resource.Object.OperatorProfile;
-import com.syrus.AMFICOM.Client.Resource.Object.User;
-import com.syrus.AMFICOM.Client.Resource.System.Agent;
-import com.syrus.AMFICOM.Client.Resource.System.Client;
-import com.syrus.AMFICOM.Client.Resource.System.Server;
-
+import com.syrus.AMFICOM.Client.Resource.Object.*;
+import com.syrus.AMFICOM.Client.Resource.System.*;
 import java.util.Vector;
 
+/**
+ * @author $Author: bass $
+ * @version $Revision: 1.2 $, $Date: 2004/09/27 16:25:14 $
+ * @module admin_v1
+ */
 public class RISDObjectDataSource
 		extends RISDReportDataSource
 		implements DataSourceInterface
@@ -74,7 +78,7 @@ public class RISDObjectDataSource
 
 		try
 		{
-			ecode = si.ci.server.GetObjects(si.accessIdentity, ih, dh, och, ogh, oprh, eh, uh);
+			ecode = si.ci.getServer().GetObjects(si.accessIdentity, ih, dh, och, ogh, oprh, eh, uh);
 		}
 		catch (Exception ex)
 		{
@@ -214,7 +218,7 @@ public class RISDObjectDataSource
 
 		try
 		{
-			ecode = si.ci.server.GetStatedObjects(si.accessIdentity, cat_ids, grp_ids, prof_ids, och, ogh, oprh);
+			ecode = si.ci.getServer().GetStatedObjects(si.accessIdentity, cat_ids, grp_ids, prof_ids, och, ogh, oprh);
 		}
 		catch (Exception ex)
 		{
@@ -292,7 +296,7 @@ public class RISDObjectDataSource
 
 		try
 		{
-			ecode = si.ci.server.SaveObjects(
+			ecode = si.ci.getServer().SaveObjects(
 					si.accessIdentity,
 					images,
 					domain_t,
@@ -335,7 +339,7 @@ public class RISDObjectDataSource
 
 		try
 		{
-			ecode = si.ci.server.SaveObjects(
+			ecode = si.ci.getServer().SaveObjects(
 					si.accessIdentity,
 					images,
 					new Domain_Transferable[0],
@@ -380,7 +384,7 @@ public class RISDObjectDataSource
 
 		try
 		{
-			ecode = si.ci.server.SaveObjects(
+			ecode = si.ci.getServer().SaveObjects(
 					si.accessIdentity,
 					images,
 					new Domain_Transferable[0],
@@ -423,7 +427,7 @@ public class RISDObjectDataSource
 
 		try
 		{
-			ecode = si.ci.server.SaveObjects(
+			ecode = si.ci.getServer().SaveObjects(
 					si.accessIdentity,
 					images,
 					new Domain_Transferable[0],
@@ -465,7 +469,7 @@ public class RISDObjectDataSource
 
 		try
 		{
-			ecode = si.ci.server.SaveObjects(
+			ecode = si.ci.getServer().SaveObjects(
 					si.accessIdentity,
 					images,
 					new Domain_Transferable[0],
@@ -508,7 +512,7 @@ public class RISDObjectDataSource
 
 		try
 		{
-			ecode = si.ci.server.SaveObjects(
+			ecode = si.ci.getServer().SaveObjects(
 					si.accessIdentity,
 					images,
 					new Domain_Transferable[0],
@@ -545,7 +549,7 @@ public class RISDObjectDataSource
 
 		try
 		{
-			ecode = si.ci.server.RemoveObjects(
+			ecode = si.ci.getServer().RemoveObjects(
 					si.accessIdentity,
 					domain_ids,
 					new String[] {},
@@ -579,7 +583,7 @@ public class RISDObjectDataSource
 
 		try
 		{
-			ecode = si.ci.server.RemoveObjects(
+			ecode = si.ci.getServer().RemoveObjects(
 					si.accessIdentity,
 					new String[] {},
 					new String[] {},
@@ -613,7 +617,7 @@ public class RISDObjectDataSource
 
 		try
 		{
-			ecode = si.ci.server.RemoveObjects(
+			ecode = si.ci.getServer().RemoveObjects(
 					si.accessIdentity,
 					new String[] {},
 					new String[] {},
@@ -647,7 +651,7 @@ public class RISDObjectDataSource
 
 		try
 		{
-			ecode = si.ci.server.RemoveObjects(
+			ecode = si.ci.getServer().RemoveObjects(
 					si.accessIdentity,
 					new String[] {},
 					new String[] {},
@@ -681,7 +685,7 @@ public class RISDObjectDataSource
 
 		try
 		{
-			ecode = si.ci.server.RemoveObjects(
+			ecode = si.ci.getServer().RemoveObjects(
 					si.accessIdentity,
 					new String[] {},
 					new String[] {},
@@ -729,7 +733,7 @@ public class RISDObjectDataSource
 
 		try
 		{
-			ecode = si.ci.server.GetAdminObjects(si.accessIdentity, sh, ch, ah);
+			ecode = si.ci.getServer().GetAdminObjects(si.accessIdentity, sh, ch, ah);
 		}
 		catch (Exception ex)
 		{
@@ -807,7 +811,7 @@ public class RISDObjectDataSource
 
 		try
 		{
-			ecode = si.ci.server.GetStatedAdminObjects(si.accessIdentity, ser_ids, cli_ids, ag_ids, sh, ch, ah);
+			ecode = si.ci.getServer().GetStatedAdminObjects(si.accessIdentity, ser_ids, cli_ids, ag_ids, sh, ch, ah);
 		}
 		catch (Exception ex)
 		{
@@ -878,7 +882,7 @@ public class RISDObjectDataSource
 
 		try
 		{
-			ecode = si.ci.server.SaveAdminObjects(
+			ecode = si.ci.getServer().SaveAdminObjects(
 					si.accessIdentity,
 					server_t,
 					new Client_Transferable[0],
@@ -916,7 +920,7 @@ public class RISDObjectDataSource
 
 		try
 		{
-			ecode = si.ci.server.SaveAdminObjects(
+			ecode = si.ci.getServer().SaveAdminObjects(
 					si.accessIdentity,
 					new Server_Transferable[0],
 					client_t,
@@ -954,7 +958,7 @@ public class RISDObjectDataSource
 
 		try
 		{
-			ecode = si.ci.server.SaveAdminObjects(
+			ecode = si.ci.getServer().SaveAdminObjects(
 					si.accessIdentity,
 					new Server_Transferable[0],
 					new Client_Transferable[0],
@@ -986,7 +990,7 @@ public class RISDObjectDataSource
 
 		try
 		{
-			ecode = si.ci.server.RemoveAdminObjects(
+			ecode = si.ci.getServer().RemoveAdminObjects(
 					si.accessIdentity,
 					server_ids,
 					new String[] {},
@@ -1017,7 +1021,7 @@ public class RISDObjectDataSource
 
 		try
 		{
-			ecode = si.ci.server.RemoveAdminObjects(
+			ecode = si.ci.getServer().RemoveAdminObjects(
 					si.accessIdentity,
 					new String[] {},
 					client_ids,
@@ -1048,7 +1052,7 @@ public class RISDObjectDataSource
 
 		try
 		{
-			ecode = si.ci.server.RemoveAdminObjects(
+			ecode = si.ci.getServer().RemoveAdminObjects(
 					si.accessIdentity,
 					new String[] {},
 					new String[] {},

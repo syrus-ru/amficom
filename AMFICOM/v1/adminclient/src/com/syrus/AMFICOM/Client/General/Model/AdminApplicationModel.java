@@ -1,5 +1,5 @@
 /*
- * $Id: AdminApplicationModel.java,v 1.2 2004/09/14 14:44:38 bass Exp $
+ * $Id: AdminApplicationModel.java,v 1.3 2004/09/27 16:26:48 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,15 +12,11 @@ import com.syrus.AMFICOM.Client.General.SessionInterface;
 import com.syrus.AMFICOM.Client.Resource.*;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2004/09/14 14:44:38 $
+ * @version $Revision: 1.3 $, $Date: 2004/09/27 16:26:48 $
  * @author $Author: bass $
  * @module admin_v1
  */
 public final class AdminApplicationModel extends ApplicationModel {
-	private SessionInterface session = null;
-
-	private DataSourceInterface dataSource = null;
-
 	public AdminApplicationModel() {
 		add("menuSession");
 		add("menuSessionNew");
@@ -63,15 +59,14 @@ public final class AdminApplicationModel extends ApplicationModel {
 		add("menuHelpAbout");
 	}
 
-	public DataSourceInterface getDataSource(SessionInterface session) {
-		if ((this.session == null) || (!this.session.equals(session))) {
+	public DataSourceInterface getDataSource(final SessionInterface session) {
+		if ((this.session == null) || (!this.session.equals(session)))
 			synchronized (this) {
 				if ((this.session == null) || (!this.session.equals(session))) {
 					this.session = session;
 					this.dataSource = new RISDObjectDataSource(this.session);
 				}
 			}
-		}
 		return this.dataSource;
 	}
 }
