@@ -65,7 +65,8 @@ AMFICOM_v1	&idl_v1\
 		&load_v1\
 		&connjdbc_v1\
 		&corbaportable_v1\
-		&importmif_v1
+		&importmif_v1\
+		&tools
 
 #M	idl_v1		Client-side AMFICOM CORBA object & interface
 idl_v1		AMFICOM/v1/idl
@@ -126,3 +127,5 @@ akp		hw/akp
 trc		hw/trc
 t4		hw/t4
 
+
+tools		tools
