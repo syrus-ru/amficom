@@ -25,7 +25,7 @@ public class CommandPermissionAttributesDisplayModel extends StubDisplayModel
     Vector vec = new Vector();
 //    vec.add("id");
     vec.add("name");
-    vec.add("owner_id");
+//    vec.add("owner_id");
     vec.add("modified");
     return vec;
   }
