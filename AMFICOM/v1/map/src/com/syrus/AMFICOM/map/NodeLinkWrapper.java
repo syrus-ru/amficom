@@ -1,5 +1,5 @@
 /*
-* $Id: NodeLinkWrapper.java,v 1.1 2005/01/25 13:37:08 bob Exp $
+* $Id: NodeLinkWrapper.java,v 1.2 2005/01/25 14:35:59 bob Exp $
 *
 * Copyright © 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -11,10 +11,12 @@ package com.syrus.AMFICOM.map;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.DatabaseException;
+import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.Wrapper;
@@ -22,7 +24,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/01/25 13:37:08 $
+ * @version $Revision: 1.2 $, $Date: 2005/01/25 14:35:59 $
  * @author $Author: bob $
  * @module map_v1
  */
@@ -38,6 +40,8 @@ public class NodeLinkWrapper implements Wrapper {
 	public static final String COLUMN_END_NODE_ID   = "end_node_id";
 	// length NUMBER(12,6),
 	public static final String COLUMN_LENGTH        = "length";
+
+	public static final String COLUMN_CHARACTERISTIC_ID  = "collector_id";
 
 	protected static NodeLinkWrapper	instance;
 
@@ -74,6 +78,8 @@ public class NodeLinkWrapper implements Wrapper {
 	}
 
 	public Class getPropertyClass(String key) {	
+		if (key.equals(COLUMN_CHARACTERISTIC_ID))
+			return List.class;
 		return String.class;
 	}
 
@@ -105,6 +111,8 @@ public class NodeLinkWrapper implements Wrapper {
 				return nodeLink.getEndNode().getId().getIdentifierString();
 			else if (key.equals(COLUMN_LENGTH))
 				return Double.toString(nodeLink.getLength());
+			else if (key.equals(COLUMN_CHARACTERISTIC_ID))
+				return nodeLink.getCharacteristics();
 		}
 		return null;
 	}
@@ -149,6 +157,19 @@ public class NodeLinkWrapper implements Wrapper {
 				}
 			else if (key.equals(COLUMN_LENGTH))
 				nodeLink.setLength0(Double.parseDouble((String)value));
+			else if (key.equals(COLUMN_CHARACTERISTIC_ID)) {
+				List characteristicIdStr = (List)value;
+				List characteristicIds = new ArrayList(characteristicIdStr.size());
+				for (Iterator it = characteristicIdStr.iterator(); it.hasNext();) 
+					characteristicIds.add(new Identifier((String) it.next()));
+				try {
+					nodeLink.setCharacteristics0(GeneralStorableObjectPool.getStorableObjects(characteristicIds, true));
+				} catch (DatabaseException e) {
+					Log.errorMessage("MarkWrapper.setValue | key '" + key + "' caught " + e.getMessage());
+				} catch (CommunicationException e) {
+					Log.errorMessage("MarkWrapper.setValue | key '" + key + "' caught " + e.getMessage());
+				}
+			}
 		}
 	}
 }
