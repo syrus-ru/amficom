@@ -6,10 +6,11 @@ import java.awt.Toolkit;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 
+import java.util.Iterator;
 import javax.swing.*;
 
-import java.util.Enumeration;
-import java.util.Hashtable;
+import java.util.HashMap;
+import java.util.Map;
 
 import java.io.File;
 import java.io.FileFilter;
@@ -403,17 +404,16 @@ public class ReportToolBar
 		new ReportDataSourceImage(
 				mainWindow.aContext.getDataSourceInterface()).LoadReportTemplates();
 
-		Hashtable rtHash = Pool.getHash(ReportTemplate.typ);
+		Map rtHash = Pool.getMap(ReportTemplate.typ);
 		if (rtHash == null)
 			return;
 
 		int templNumber = 0;
 		ReportTemplate curRT = null;
 		System.out.println("Exporting report templates.");
-		Enumeration rtEnum = rtHash.elements();
-		while (rtEnum.hasMoreElements())
+		for (Iterator it = rtHash.values().iterator();it.hasNext();)
 		{
-			curRT = (ReportTemplate) rtEnum.nextElement();
+			curRT = (ReportTemplate) it.next();
 			String curRTFileName = dirToSave + "//" + curRT.id + ".tpl";
 
 			try

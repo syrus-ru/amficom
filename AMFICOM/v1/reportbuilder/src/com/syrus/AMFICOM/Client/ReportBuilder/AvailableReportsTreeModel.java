@@ -4,10 +4,16 @@ import java.awt.Toolkit;
 import java.awt.Color;
 import java.awt.Image;
 
-import java.util.Hashtable;
-import java.util.Enumeration;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+
+import java.util.ListIterator;
+import java.util.Map;
+import java.util.Set;
 import javax.swing.ImageIcon;
 import javax.swing.tree.TreeNode;
 
@@ -473,14 +479,13 @@ public class AvailableReportsTreeModel extends ObjectResourceTreeModel
 				s.equals("reciever") ||
 				s.equals("tester"))
 			{
-				Hashtable equipTypeHash = Pool.getHash(EquipmentType.typ);
+				Map equipTypeHash = Pool.getMap(EquipmentType.typ);
 				if (equipTypeHash == null)
-					return new LinkedList();
+					return new ArrayList();
 
-				Enumeration equipTypeEnum = equipTypeHash.elements();
-				while (equipTypeEnum.hasMoreElements())
+				for (Iterator it = equipTypeHash.values().iterator(); it.hasNext();)
 				{
-					EquipmentType eqType = (EquipmentType) equipTypeEnum.nextElement();
+					EquipmentType eqType = (EquipmentType) it.next();
 					if (eqType.eq_class.equals(s))
 					{
 						ObjectsReport rep = new ObjectsReport(new
@@ -512,19 +517,20 @@ public class AvailableReportsTreeModel extends ObjectResourceTreeModel
 			else if (   s.equals("label_repPhysicalScheme")
 						&& this.toAskObjects(node))
 			{
-				Hashtable ht = new Hashtable();
-				if (Pool.getHash(Scheme.typ) != null)
+        Set schemeTypeSet = new HashSet();
+        
+				Map schemeMap = Pool.getMap(Scheme.typ);
+				if (schemeMap != null)
 				{
-					for (Enumeration en = Pool.getHash(Scheme.typ).elements();
-						en.hasMoreElements(); )
+					for (Iterator it = schemeMap.values().iterator(); it.hasNext();)
 					{
-						Scheme sch = (Scheme) en.nextElement();
-						ht.put(sch.scheme_type, sch.scheme_type);
+						Scheme sch = (Scheme) it.next();
+						schemeTypeSet.add(sch.scheme_type);
 					}
 
-					for (Enumeration en = ht.elements(); en.hasMoreElements(); )
+					for (Iterator it = schemeTypeSet.iterator(); it.hasNext();)
 					{
-						String type = (String) en.nextElement();
+						String type = (String) it.next();
 						String name = LangModelSchematics.getString(type);
 						if (type.equals(""))
 							name = "Схема";
@@ -543,17 +549,16 @@ public class AvailableReportsTreeModel extends ObjectResourceTreeModel
 					ObjectResourceFilter filter = new ObjectResourceDomainFilter(
 						aContext.getDataSourceInterface().getSession().getDomainId());
             
-          Hashtable mcHash = Pool.getHash(MapContext.typ);
+          Map mcHash = Pool.getMap(MapContext.typ);
 					filter.filtrate(mcHash);
           
-/*					ObjectResourceSorter sorter = MapContext.getDefaultSorter();
-					sorter.setDataSet(dSet);
-					dSet = sorter.default_sort();*/
+					ObjectResourceSorter sorter = MapContext.getDefaultSorter();
+					sorter.setDataSet(mcHash);
+					sorter.default_sort();
 
-          Enumeration mcEnum = mcHash.elements();
-					for (; mcEnum.hasMoreElements(); )
+					for (Iterator it = mcHash.values().iterator(); it.hasNext();)
 					{
-						MapContext mc = (MapContext) mcEnum.nextElement();
+						MapContext mc = (MapContext) it.next();
 						ObjectResourceTreeNode n = new ObjectResourceTreeNode(mc,
 							mc.getName(), true);
 						vec.add(n);
@@ -566,10 +571,10 @@ public class AvailableReportsTreeModel extends ObjectResourceTreeModel
 					getParent();
 				MapContext mc = (MapContext) parent.getObject();
 ////////////////////////////////////
-				DataSet dSet = new DataSet();
-				for (int i = 0; i < mc.getNodes().size(); i++)
+				List dSet = new ArrayList();
+				for (ListIterator it = mc.getNodes().listIterator(); it.hasNext();)
 				{
-					ObjectResource os = (ObjectResource) mc.getNodes().get(i);
+					ObjectResource os = (ObjectResource) it.next();
 					if (os instanceof MapEquipmentNodeElement)
 						dSet.add(os);
 				}
@@ -577,14 +582,11 @@ public class AvailableReportsTreeModel extends ObjectResourceTreeModel
 				ObjectResourceSorter sorter = MapEquipmentNodeElement.
 					getDefaultSorter();
 				sorter.setDataSet(dSet);
-				dSet = sorter.default_sort();
+				sorter.default_sort();
 
-				Enumeration enumerer = dSet.elements();
-/////////////////////////////////////////        
-				for (; enumerer.hasMoreElements(); )
+				for (ListIterator iter = dSet.listIterator(); iter.hasNext(); )
 				{
-					MapEquipmentNodeElement me = (MapEquipmentNodeElement) enumerer.
-						nextElement();
+					MapEquipmentNodeElement me = (MapEquipmentNodeElement) iter.next();
 					ObjectResourceTreeNode n = new ObjectResourceTreeNode(me,
 						me.getName(), true);
 					vec.add(n);
@@ -625,10 +627,10 @@ public class AvailableReportsTreeModel extends ObjectResourceTreeModel
 					getParent();
 				MapContext mc = (MapContext) parent.getObject();
 
-				DataSet dSet = new DataSet();
-				for (int i = 0; i < mc.getNodes().size();	i++)
+				List dSet = new ArrayList();
+				for (ListIterator lIt = mc.getNodes().listIterator(); lIt.hasNext();)
 				{
-					ObjectResource os = (ObjectResource) mc.getNodes().get(i);
+					ObjectResource os = (ObjectResource) lIt.next();
 					if (os instanceof MapPhysicalNodeElement)
 						dSet.add(os);
 				}
@@ -636,13 +638,11 @@ public class AvailableReportsTreeModel extends ObjectResourceTreeModel
 				ObjectResourceSorter sorter = MapPhysicalNodeElement.
 					getDefaultSorter();
 				sorter.setDataSet(dSet);
-				dSet = sorter.default_sort();
+				sorter.default_sort();
 
-				Enumeration enumerer = dSet.elements();
-				for (; enumerer.hasMoreElements(); )
+				for (ListIterator lIt = dSet.listIterator(); lIt.hasNext();)
 				{
-					MapPhysicalNodeElement me = (MapPhysicalNodeElement) enumerer.
-						nextElement();
+					MapPhysicalNodeElement me = (MapPhysicalNodeElement) lIt.next();
 					ObjectResourceTreeNode n = new ObjectResourceTreeNode(me,
 						me.getName(), true);
 					vec.add(n);
@@ -653,23 +653,22 @@ public class AvailableReportsTreeModel extends ObjectResourceTreeModel
 				ObjectResourceTreeNode parent = (ObjectResourceTreeNode) node.
 					getParent();
 				MapContext mc = null;
-				DataSet dSet = null;
+				List dSet = null;
 				if (parent.getObject()instanceof MapContext)
 				{
 					mc = (MapContext) parent.getObject();
-					dSet = new DataSet(mc.getPhysicalLinks());
+					dSet = mc.getPhysicalLinks();
 				}
 				else
 				{
 					MapEquipmentNodeElement mene = (MapEquipmentNodeElement) parent.
-getObject();
+            getObject();
 					mc = mene.getMapContext();
 
-					dSet = new DataSet();
-
-					for (int i = 0; i < mc.getPhysicalLinks().size();	i++)
+					dSet = new ArrayList();
+					for (ListIterator lIt = mc.getPhysicalLinks().listIterator(); lIt.hasNext();)
 					{
-						MapPhysicalLinkElement ml = (MapPhysicalLinkElement) mc.getPhysicalLinks().get(i);
+						MapPhysicalLinkElement ml = (MapPhysicalLinkElement) lIt.next();
 
 						if (ml.startNode.equals(mene) || ml.endNode.equals(mene))
 							dSet.add(ml);
@@ -679,13 +678,11 @@ getObject();
 				ObjectResourceSorter sorter = MapPhysicalLinkElement.
 					getDefaultSorter();
 				sorter.setDataSet(dSet);
-				dSet = sorter.default_sort();
+				sorter.default_sort();
 
-				Enumeration enumerer = dSet.elements();
-				for (; enumerer.hasMoreElements(); )
+				for (ListIterator lIt = dSet.listIterator(); lIt.hasNext();)
 				{
-					MapPhysicalLinkElement ml = (MapPhysicalLinkElement) enumerer.
-						nextElement();
+					MapPhysicalLinkElement ml = (MapPhysicalLinkElement) lIt.next();
 
 					String curName = ml.getName();
 					ObjectsReport curReport = new ObjectsReport(new MapReportModel(),
@@ -720,19 +717,16 @@ getObject();
 					getParent();
 				MapContext mc = (MapContext) parent.getObject();
 
-				DataSet dSet = new DataSet(mc.getTransmissionPath());
+				List dSet = mc.getTransmissionPath();
 
 				ObjectResourceSorter sorter = MapTransmissionPathElement.
 					getDefaultSorter();
 				sorter.setDataSet(dSet);
-				dSet = sorter.default_sort();
+				sorter.default_sort();
 
-				Enumeration enumerer = dSet.elements();
-				for (; enumerer.hasMoreElements(); )
+				for (ListIterator lIt = dSet.listIterator(); lIt.hasNext();)
 				{
-					MapTransmissionPathElement me = (MapTransmissionPathElement)
-						enumerer.
-						nextElement();
+					MapTransmissionPathElement me = (MapTransmissionPathElement)lIt.next();
 					ObjectResourceTreeNode n = new ObjectResourceTreeNode(me,
 						me.getName(), true);
 					vec.add(n);
@@ -746,22 +740,21 @@ getObject();
 					getObject();
 				MapContext mc = ml.getMapContext();
 
-				DataSet dSet = new DataSet();
-				for (int i = 0; i < mc.getMapMarkElements().size(); i++)
+				List dSet = new ArrayList();
+				for (ListIterator lIt = mc.getMapMarkElements().listIterator(); lIt.hasNext();)        
 				{
-					MapMarkElement mme = (MapMarkElement) mc.getMapMarkElements().get(i);
+					MapMarkElement mme = (MapMarkElement) lIt.next();
 					if (mme.link_id.equals(ml.getId()))
 						dSet.add(mme);
 				}
 
 				ObjectResourceSorter sorter = MapMarkElement.getDefaultSorter();
 				sorter.setDataSet(dSet);
-				dSet = sorter.default_sort();
+				sorter.default_sort();
 
-				Enumeration enumerer = dSet.elements();
-				for (; enumerer.hasMoreElements(); )
+				for (ListIterator lIt = dSet.listIterator(); lIt.hasNext();)        
 				{
-					MapMarkElement mme = (MapMarkElement) enumerer.nextElement();
+					MapMarkElement mme = (MapMarkElement) lIt.next();
 					ObjectResourceTreeNode n = new ObjectResourceTreeNode(mme,
 						mme.getName(), true);
 					vec.add(n);
@@ -772,19 +765,19 @@ getObject();
 				((ObjectResourceTreeNode) node.getParent()).getObject().equals(
 				"label_repPhysicalScheme"))
 			{
-
-				DataSet dSet = new DataSet(Pool.getHash(Scheme.typ));
+				Map dSet = Pool.getMap(Scheme.typ);
 
 				ObjectResourceFilter filter = new ObjectResourceDomainFilter(
 					aContext.getDataSourceInterface().getSession().getDomainId());
-				dSet = filter.filter(dSet);
+          
+				filter.filter(dSet);
 				ObjectResourceSorter sorter = Scheme.getDefaultSorter();
 				sorter.setDataSet(dSet);
-				dSet = sorter.default_sort();
+				sorter.default_sort();
 
-				for (Enumeration enumer = dSet.elements(); enumer.hasMoreElements(); )
+				for (Iterator it = dSet.values().iterator(); it.hasNext(); )
 				{
-					Scheme scheme = (Scheme) enumer.nextElement();
+					Scheme scheme = (Scheme) it.next();
 					if (scheme.scheme_type.equals(s))
 					{
 						ObjectsReport or = new ObjectsReport (
@@ -823,11 +816,11 @@ getObject();
 
 					List views = curModel.getAvailableViewTypesforField(curName);
 					if (views == null)
-						return new LinkedList();
+						return new ArrayList();
 
-					for (int i = 0; i < views.size(); i++)
+					for (ListIterator lIt = views.listIterator();lIt.hasNext();)
 					{
-						String view = (String) views.get(i);
+						String view = (String) lIt.next();
 						ObjectsReport curReport = new ObjectsReport(curModel,
 							curName, view, toAskObjects(node));
 
@@ -865,10 +858,9 @@ getObject();
 			 Scheme scheme = (Scheme) node.getObject();*/
 
 			//Элементы
-			for (Enumeration enumer = scheme.elements.elements();
-				enumer.hasMoreElements(); )
+			for (Iterator it = scheme.elements.iterator();it.hasNext();)
 			{
-				SchemeElement element = (SchemeElement) enumer.nextElement();
+				SchemeElement element = (SchemeElement) it.next();
 				if (element.scheme_id.equals(""))
 				{
 					ObjectsReport rep = new ObjectsReport(new
@@ -936,9 +928,9 @@ getObject();
 			}
 
 			//Линки
-			for (int i = 0; i < scheme.links.size(); i++)
+			for (Iterator it = scheme.links.iterator(); it.hasNext();)
 			{
-				SchemeLink link = (SchemeLink) scheme.links.get(i);
+				SchemeLink link = (SchemeLink) it.next();
 				ObjectsReport rep = new ObjectsReport(new EquipFeaturesReportModel(),
 					"",
 					ObjectResourceReportModel.rt_objProperies,
@@ -976,9 +968,9 @@ getObject();
 			}
 
 			//Кабельные линки
-			for (int i = 0; i < scheme.cablelinks.size(); i++)
+			for (Iterator it = scheme.cablelinks.iterator(); it.hasNext();)
 			{
-				SchemeCableLink link = (SchemeCableLink) scheme.cablelinks.get(i);
+				SchemeCableLink link = (SchemeCableLink) it.next();
 				ObjectsReport rep = new ObjectsReport(new EquipFeaturesReportModel(),
 					"",
 					ObjectResourceReportModel.rt_objProperies,
@@ -1023,10 +1015,9 @@ getObject();
 			if (!schel.scheme_id.equals(""))
 			{
 				Scheme scheme = (Scheme) Pool.get(Scheme.typ, schel.scheme_id);
-				for (Enumeration enumer = scheme.elements.elements();
-					enumer.hasMoreElements(); )
+				for (Iterator it = scheme.elements.iterator();it.hasNext(); )
 				{
-					SchemeElement element = (SchemeElement) enumer.nextElement();
+					SchemeElement element = (SchemeElement) it.next();
 
 					if (element.scheme_id.equals(""))
 					{
@@ -1148,10 +1139,13 @@ getObject();
 			List fields = orm.getAllColumnIDs();
 			List fieldNames = orm.getColumnNamesbyIDs(orm.getAllColumnIDs());
 
-			for (int i = 0; i < fields.size(); i++)
+      ListIterator fIt = fields.listIterator();
+      ListIterator fNIt = fieldNames.listIterator();
+
+			for (;fIt.hasNext();)
 			{
-				String curField = (String) fields.get(i);
-				String curName = (String) fieldNames.get(i);
+				String curField = (String) fIt.next();
+				String curName = (String) fNIt.next();
 
 				//Поля для которых нет стат.отчётов не отображаем
 				List views = orm.getAvailableViewTypesforField(curField);
@@ -1204,13 +1198,15 @@ getObject();
 				List fieldNames = orrm.getColumnNamesbyIDs(orrm.getAllColumnIDs());
 
 				if (fields == null)
-					return new LinkedList();
+					return new ArrayList();
 
-				for (int i = 0; i < fields.size(); i++)
+				for (ListIterator fIt = fields.listIterator(),
+                          fNIt = fieldNames.listIterator();
+             fIt.hasNext();)
 				{
 					ObjectResourceTreeNode ortn = new ObjectResourceTreeNode(
-						fields.get(i),
-						(String) fieldNames.get(i),
+						fIt.next(),
+						(String) fNIt.next(),
 						true);
 					ortn.setFinal(true);
 
@@ -1237,10 +1233,9 @@ getObject();
       }
 
 			List fields = rm.getAvailableReports();
-
-			for (int i = 0; i < fields.size(); i++)
+			for (ListIterator it = fields.listIterator(); it.hasNext();)
 			{
-				String curName = (String) fields.get(i);
+				String curName = (String) it.next();
 				String langName = rm.getLangForField(curName);
 
 				ObjectResourceTreeNode ortn = new ObjectResourceTreeNode(

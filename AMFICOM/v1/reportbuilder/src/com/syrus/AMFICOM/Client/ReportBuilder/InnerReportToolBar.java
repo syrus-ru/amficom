@@ -9,6 +9,8 @@ import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 
 import java.util.List;
+import java.util.ListIterator;
+
 import javax.swing.JToolBar;
 import javax.swing.JButton;
 import javax.swing.JToggleButton;
@@ -336,12 +338,12 @@ else
 
 				// ¬ конструкторе была инициализирована ширина таблицы чтобы вместить
 				// все столбцы, ширины которых здесь выставл€ютс€
-				for (int i = 0; i < objectRenderers.size(); i++)
-					((RenderingObject) objectRenderers.get(i)).setColumnWidths();
+				for (ListIterator lIt = objectRenderers.listIterator(); lIt.hasNext();)
+					((RenderingObject) lIt.next()).setColumnWidths();
 
 				// у надписей мен€ютс€ owner теперь они на новой панели
-				for (int i = 0; i < labels.size(); i++)
-					mainWindow.layoutWOCPanel.remove((FirmedTextPane) labels.get(i));
+				for (ListIterator lIt = labels.listIterator(); lIt.hasNext();)
+					mainWindow.layoutWOCPanel.remove((FirmedTextPane) lIt.next());
 
 				setEditToolBarState(false);
 				saveReportButton.setEnabled(true);
@@ -387,9 +389,9 @@ else
 		else
 		{
 			// —охран€ем информацию о колонках таблиц
-			for (int i = 0; i < objectRenderers.size(); i++)
-				((RenderingObject) objectRenderers.get(i)).saveColumnWidths();
-
+      for (ListIterator lIt = objectRenderers.listIterator(); lIt.hasNext();)
+        ((RenderingObject) lIt.next()).saveColumnWidths();
+      
 			changeViewButton.setToolTipText(LangModelReport.getString(
 				"label_viewReport"));
 			changeViewButton.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().
@@ -412,9 +414,10 @@ else
 			mainWindow.layoutWCPanel = null;
 			// Ёто требуетс€ в FirmedTextPane дл€ правильного нахождени€ координат
 			// прив€занных надписей
-			for (int i = 0; i < objectRenderers.size(); i++)
-				((RenderingObject) objectRenderers.get(i)).rendererPanel = null;
-
+      
+      for (ListIterator lIt = objectRenderers.listIterator(); lIt.hasNext();)
+        ((RenderingObject) lIt.next()).rendererPanel = null;
+      
 			setEditToolBarState(true);
 			saveReportButton.setEnabled(false);
 			printReportButton.setEnabled(false);

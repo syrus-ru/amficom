@@ -1,5 +1,7 @@
 package com.syrus.AMFICOM.Client.ReportBuilder;
 
+import java.util.Iterator;
+import java.util.Map;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.JButton;
@@ -9,8 +11,9 @@ import javax.swing.JScrollPane;
 import javax.swing.JOptionPane;
 import javax.swing.BorderFactory;
 
-import java.util.Hashtable;
-import java.util.Enumeration;
+import java.util.List;
+import java.util.ListIterator;
+import java.util.ArrayList;
 
 import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.Client.Resource.ReportDataSourceImage;
@@ -218,14 +221,13 @@ public class SelectTemplate extends JDialog
 		new ReportDataSourceImage(
 				owner.aContext.getDataSourceInterface()).LoadReportTemplates();
 
-		Hashtable rtHash = Pool.getHash(ReportTemplate.typ);
+		Map rtHash = Pool.getMap(ReportTemplate.typ);
 		if (rtHash == null)
 			return;
 
-		Enumeration rtEnum = rtHash.elements();
-		while (rtEnum.hasMoreElements())
+    for (Iterator it = rtHash.values().iterator(); it.hasNext();)
 		{
-			ReportTemplate curRT = (ReportTemplate) rtEnum.nextElement();
+			ReportTemplate curRT = (ReportTemplate) it.next();
 			String curType = comboData[templateTypesComboBox.getSelectedIndex()];
 			if (curRT.templateType.equals(curType) || curType.equals(ReportTemplate.rtt_AllTemplates))
 				this.templatesList.add(curRT);
@@ -241,7 +243,7 @@ public class SelectTemplate extends JDialog
 		comboData[2] = ReportTemplate.rtt_Map;
 		comboData[3] = ReportTemplate.rtt_Optimization;
     
-		comboData[4] = ReportTemplate.rtt_Sheduler;        
+		comboData[4] = ReportTemplate.rtt_Scheduler;        
     
 		comboData[5] = ReportTemplate.rtt_Analysis;
 		comboData[6] = ReportTemplate.rtt_Survey;    
@@ -276,10 +278,10 @@ public class SelectTemplate extends JDialog
 			//Это всё для правильного отображения на схеме
 			ReportBuilder.loadRequiredObjects(owner.aContext,selectedTemplate);
 
-			for (int j = 0; j < selectedTemplate.objectRenderers.size(); j++)
+      for (ListIterator lIt = selectedTemplate.objectRenderers.listIterator(); lIt.hasNext();)
 			{
 				ObjectsReport report =
-					((RenderingObject)selectedTemplate.objectRenderers.get(j)).getReportToRender();
+					((RenderingObject)lIt.next()).getReportToRender();
 				try
 				{
 					report.setReserve(report.getReserve());
@@ -320,9 +322,10 @@ public class SelectTemplate extends JDialog
 			//меняем ID
 			DataSourceInterface dsi = this.owner.aContext.getDataSourceInterface();
 			templateToSave.id = dsi.GetUId(ReportTemplate.typ);
-			for (int i = 0; i < templateToSave.objectRenderers.size(); i++)
+      
+      for (ListIterator lIt = templateToSave.objectRenderers.listIterator(); lIt.hasNext();)      
 			{
-				RenderingObject curRO = (RenderingObject) templateToSave.objectRenderers.get(i);
+				RenderingObject curRO = (RenderingObject) lIt.next();
 				curRO.id = this.owner.aContext.getDataSourceInterface().GetUId("reporttemplatefield");
 			}
 
@@ -347,16 +350,16 @@ public class SelectTemplate extends JDialog
 	private void removeButton_actionPerformed(ActionEvent e)
 	{
 		int[] selIndices = this.templatesList.getSelectedIndices();
-		List selTemplates = new LinkedList();
+		List selTemplates = new ArrayList();
 
 		for (int i = 0; i < selIndices.length; i++)
 			selTemplates.add((ReportTemplate)this.templatesList.
 				getModel().getElementAt(selIndices[i]));
 
 
-		for (int i = 0; i < selTemplates.size(); i++)
+		for (ListIterator lIt = selTemplates.listIterator(); lIt.hasNext();)
 		{
-			ReportTemplate rt = (ReportTemplate) selTemplates.get(i);
+			ReportTemplate rt = (ReportTemplate) lIt.next();
 			if (rt != null)
 			{
 				this.owner.aContext.getDataSourceInterface().RemoveReportTemplates(

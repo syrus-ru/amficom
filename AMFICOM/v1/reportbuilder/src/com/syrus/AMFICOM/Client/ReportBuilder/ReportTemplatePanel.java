@@ -11,10 +11,10 @@ import javax.swing.JMenuItem;
 
 import java.awt.*;
 
-import java.util.Enumeration;
-import java.util.Hashtable;
+import java.util.HashMap;
 import java.util.List;
-import java.util.LinkedList;
+import java.util.ListIterator;
+import java.util.ArrayList;
 
 import oracle.jdeveloper.layout.XYConstraints;
 import oracle.jdeveloper.layout.XYLayout;
@@ -212,9 +212,9 @@ public class ReportTemplatePanel extends JPanel
 		this.removeAll();
 		this.reportTemplate = rt;
 
-		for (int i = 0; i < rt.labels.size(); i++)
+		for (ListIterator lIt = rt.labels.listIterator(); lIt.hasNext();)
 		{
-			FirmedTextPane tp = (FirmedTextPane) rt.labels.get(i);
+			FirmedTextPane tp = (FirmedTextPane) lIt.next();
 			this.add(tp, new XYConstraints(tp.getX(), tp.getY(), -1, -1));
 
 			tp.setBorder(BorderFactory.createLineBorder(Color.lightGray, 2));
@@ -222,9 +222,9 @@ public class ReportTemplatePanel extends JPanel
 			this.setLabelListener(tp);
 		}
 
-		for (int i = 0; i < rt.images.size(); i++)
+		for (ListIterator lIt = rt.images.listIterator(); lIt.hasNext();)
 		{
-			ImagePanel ip = (ImagePanel) rt.images.get(i);
+			ImagePanel ip = (ImagePanel) lIt.next();
 			this.add(ip, new XYConstraints(ip.getX(), ip.getY(), -1, -1));
 			this.setImagePanelListener(ip);
 		}
@@ -242,11 +242,10 @@ public class ReportTemplatePanel extends JPanel
 */
 	private RenderingObject identifyObject(int x, int y)
 	{
-		for (int i = 0; i < reportTemplate.objectRenderers.size(); i++)
+		for (ListIterator lIt = reportTemplate.objectRenderers.listIterator();
+         lIt.hasNext();)  
 		{
-			RenderingObject ror = (RenderingObject) reportTemplate.
-				objectRenderers.
-				get(i);
+			RenderingObject ror = (RenderingObject) lIt.next();
 			if ((ror.x - 2 < x) && (x < ror.x + ror.width + 2) &&
 				(ror.y - 2 < y) && (y < ror.y + ror.height + 2))
 				return ror;
@@ -260,15 +259,18 @@ public class ReportTemplatePanel extends JPanel
 	public boolean checkTemplatesScheme()
 	{
 		// Проверка пересечений объектов отчёта
-		for (int i = 0; i < reportTemplate.objectRenderers.size() - 1; i++)
+    int curI = 0;
+    int orSize = reportTemplate.objectRenderers.size();
+		for (ListIterator iIt = reportTemplate.objectRenderers.listIterator();
+         curI < orSize - 1; curI++)
 		{
-			RenderingObject roI = (RenderingObject) reportTemplate.
-				objectRenderers.get(i);
+			RenderingObject roI = (RenderingObject) iIt.next();
 
-			for (int j = i + 1; j < reportTemplate.objectRenderers.size(); j++)
+      int curJ = curI + 1;
+      for (ListIterator jIt = reportTemplate.objectRenderers.listIterator(curJ);
+           curJ < orSize; curJ++)
 			{
-				RenderingObject roJ = (RenderingObject) reportTemplate.
-					objectRenderers.get(j);
+				RenderingObject roJ = (RenderingObject) jIt.next();
 
 				if (  roJ.hasPoint(roI.x,roI.y,null)
 					||	roJ.hasPoint(roI.x + roI.width,roI.y,null)
@@ -279,15 +281,14 @@ public class ReportTemplatePanel extends JPanel
 		}
 
 		// Проверка пересечений объектов отчёта с надписями
-		for (int i = 0; i < reportTemplate.objectRenderers.size(); i++)
+		for (ListIterator iIt = reportTemplate.objectRenderers.listIterator();
+         iIt.hasNext();)
 		{
-			RenderingObject roI = (RenderingObject) reportTemplate.
-				objectRenderers.get(i);
+			RenderingObject roI = (RenderingObject) iIt.next();
 
-			for (int j = 0; j < reportTemplate.labels.size(); j++)
+      for (ListIterator jIt = reportTemplate.labels.listIterator(); jIt.hasNext();)
 			{
-				FirmedTextPane tpJ = (FirmedTextPane) reportTemplate.
-					labels.get(j);
+				FirmedTextPane tpJ = (FirmedTextPane) jIt.next();
 
 				if (  tpJ.hasPoint(roI.x,roI.y)
 					||	tpJ.hasPoint(roI.x + roI.width,roI.y)
@@ -298,15 +299,14 @@ public class ReportTemplatePanel extends JPanel
 		}
 
 		// Проверка пересечений объектов отчёта с надписями
-		for (int i = 0; i < reportTemplate.objectRenderers.size(); i++)
+		for (ListIterator iIt = reportTemplate.objectRenderers.listIterator();
+         iIt.hasNext();)
 		{
-			RenderingObject roI = (RenderingObject) reportTemplate.
-				objectRenderers.get(i);
+			RenderingObject roI = (RenderingObject) iIt.next();
 
-			for (int j = 0; j < reportTemplate.labels.size(); j++)
+      for (ListIterator jIt = reportTemplate.labels.listIterator(); jIt.hasNext();)
 			{
-				FirmedTextPane tpJ = (FirmedTextPane) reportTemplate.
-					labels.get(j);
+				FirmedTextPane tpJ = (FirmedTextPane) jIt.next();
 
 				if (  roI.hasPoint(tpJ.getX(),tpJ.getY(),null)
 					||	roI.hasPoint(tpJ.getX() + tpJ.getWidth(),tpJ.getY(),null)
@@ -317,15 +317,17 @@ public class ReportTemplatePanel extends JPanel
 		}
 
 		// Проверка пересечений надписей
-		for (int i = 0; i < reportTemplate.labels.size() - 1; i++)
+    curI = 0;
+    int labelsSize = reportTemplate.labels.size();
+    
+    for (ListIterator iIt = reportTemplate.labels.listIterator(); curI < labelsSize - 1; curI++)
 		{
-			FirmedTextPane tpI = (FirmedTextPane) reportTemplate.
-				labels.get(i);
+			FirmedTextPane tpI = (FirmedTextPane) iIt.next();
 
-			for (int j = i + 1; j < reportTemplate.labels.size(); j++)
+      int curJ = curI + 1;
+      for (ListIterator jIt = reportTemplate.labels.listIterator(curJ); curJ < labelsSize; curJ++)
 			{
-				FirmedTextPane tpJ = (FirmedTextPane) reportTemplate.
-					labels.get(j);
+				FirmedTextPane tpJ = (FirmedTextPane) jIt.next();
 
 				if (  tpJ.hasPoint(tpI.getX(),tpI.getY())
 					||	tpJ.hasPoint(tpI.getX() + tpI.getWidth(),tpI.getY())
@@ -355,8 +357,8 @@ public class ReportTemplatePanel extends JPanel
 
 		g.setColor(Color.black);
 
-		for (int i = 0; i < this.reportTemplate.objectRenderers.size(); i++)
-			((RenderingObject)this.reportTemplate.objectRenderers.get(i)).paint(g);
+    for (ListIterator lIt = reportTemplate.objectRenderers.listIterator(); lIt.hasNext();)
+			((RenderingObject)lIt.next()).paint(g);
 
 		if (this.selectedObject != null)
 		{
@@ -434,7 +436,7 @@ public class ReportTemplatePanel extends JPanel
 			{
 				public void actionPerformed(ActionEvent el)
 				{
-					List selectItems = new LinkedList();
+					List selectItems = new ArrayList();
 					selectItems.add(LangModelReport.getString(FirmedTextPane.
 						toFieldsTop));
 					selectItems.add(LangModelReport.getString(FirmedTextPane.toTop));
@@ -493,7 +495,7 @@ public class ReportTemplatePanel extends JPanel
 			{
 				public void actionPerformed(ActionEvent el)
 				{
-					List selectItems = new LinkedList();
+					List selectItems = new ArrayList();
 					selectItems.add(LangModelReport.getString(FirmedTextPane.
 						toFieldsLeft));
 					selectItems.add(LangModelReport.getString(FirmedTextPane.toLeft));
@@ -846,10 +848,9 @@ public class ReportTemplatePanel extends JPanel
 		if (!smthChanged)
 			return;
 
-		for (int i = 0; i < this.reportTemplate.labels.size(); i++)
+    for (ListIterator lIt = reportTemplate.labels.listIterator(); lIt.hasNext();)
 		{
-			FirmedTextPane tp = (FirmedTextPane)this.reportTemplate.labels.
-				get(i);
+			FirmedTextPane tp = (FirmedTextPane)lIt.next();
 			if ((tp.vertFirmer != null) &&
 				tp.vertFirmer.equals(selectedRenderingObject) ||
 				(tp.horizFirmer != null) &&
@@ -1041,9 +1042,9 @@ public class ReportTemplatePanel extends JPanel
 				this.reportTemplate.objectRenderers.remove(selectedObject);
 
 				List labels = this.reportTemplate.labels;
-				for (int i = 0; i < labels.size(); i++)
+        for (ListIterator lIt = labels.listIterator(); lIt.hasNext();)        
 				{
-					FirmedTextPane curLabel = (FirmedTextPane) labels.get(i);
+					FirmedTextPane curLabel = (FirmedTextPane) lIt.next();
 					if ((curLabel.vertFirmer != null)
 						 && (curLabel.vertFirmer.equals(selectedObject))
 						 && (curLabel.horizFirmer != null)
@@ -1080,7 +1081,8 @@ public class ReportTemplatePanel extends JPanel
 		List theLabels = this.rtbWindow.layoutWCPanel.labels;
 		List theImages = this.rtbWindow.layoutWCPanel.images;
 
-		this.reportTemplate.setLabels(((LinkedList) theLabels).clone());
+    List cloneList = (List)((ArrayList) theLabels).clone();
+		this.reportTemplate.setLabels(cloneList);
 
 		boolean[] labelsTransformed = new boolean[this.reportTemplate.labels.
 			size()];
@@ -1097,20 +1099,21 @@ public class ReportTemplatePanel extends JPanel
 		for (int i = 0; i < objectsTransformed.length; i++)
 			objectsTransformed[i] = false;
 
-		List xs = new LinkedList(); //строим карту отображённых элементов
-		List ys = new LinkedList();
+		List xs = new ArrayList(); //строим карту отображённых элементов
+		List ys = new ArrayList();
 		getAxisValuesMatrices(xs, ys);
 
+    int curIndex = 0;
 		boolean toBreak = false;
 		while (!toBreak)
 		{
-			for (int i = 0; i < reportTemplate.objectRenderers.size(); i++)
+      curIndex = 0;
+      for (ListIterator lIt = reportTemplate.objectRenderers.listIterator(); lIt.hasNext(); curIndex++)
 			{
-				if (objectsTransformed[i])
+				if (objectsTransformed[curIndex])
 					continue;
 
-				RenderingObject curObjectToPrint = (RenderingObject) reportTemplate.
-					objectRenderers.get(i);
+				RenderingObject curObjectToPrint = (RenderingObject) lIt.next();
 
 				int newY = checkToTopForElements(curObjectToPrint, xs, ys);
 				if (newY == -2)
@@ -1134,20 +1137,19 @@ public class ReportTemplatePanel extends JPanel
 				if ((insidePanel != null)
 					&& ((insidePanel instanceof ReportChartPanel)
 					|| (insidePanel instanceof MapRenderPanel)))
-					curObjectToPrint.height = curObjectToPrint.rendererPanel.
-getHeight();
+					curObjectToPrint.height = curObjectToPrint.rendererPanel.getHeight();
 
-				objectsTransformed[i] = true;
+				objectsTransformed[curIndex] = true;
 				break;
 			}
 
-			for (int i = 0; i < theLabels.size(); i++)
+      curIndex = 0;
+      for (ListIterator lIt = theLabels.listIterator(); lIt.hasNext(); curIndex++)
 			{
-				if (labelsTransformed[i])
+				if (labelsTransformed[curIndex])
 					continue;
 
-				FirmedTextPane curLabelToPrint = (FirmedTextPane) reportTemplate.
-					labels.get(i);
+				FirmedTextPane curLabelToPrint = (FirmedTextPane) lIt.next();
 
 				boolean labelCantBePrinted = false;
 				for (int j = 0; j < objectsTransformed.length; j++)
@@ -1181,17 +1183,17 @@ getHeight();
 					-1));
 
 				curLabelToPrint.setLocation(curLabelToPrint.getX(), newY);
-				labelsTransformed[i] = true;
+				labelsTransformed[curIndex] = true;
 				break;
 			}
 
-			for (int i = 0; i < theImages.size(); i++)
+      curIndex = 0;
+      for (ListIterator lIt = theImages.listIterator(); lIt.hasNext(); curIndex++)
 			{
-				if (imagesTransformed[i])
+				if (imagesTransformed[curIndex])
 					continue;
 
-				ImagePanel curImageToPrint = (ImagePanel) reportTemplate.
-					images.get(i);
+				ImagePanel curImageToPrint = (ImagePanel) lIt.next();
 
 				int newY = checkToTopForElements(curImageToPrint, xs, ys);
 				//вернёт -2 если есть нераспечатанные эл-ты
@@ -1211,7 +1213,7 @@ getHeight();
 					-1));
 
 				curImageToPrint.setLocation(curImageToPrint.getX(), newY);
-				imagesTransformed[i] = true;
+				imagesTransformed[curIndex] = true;
 				break;
 			}
 
@@ -1447,9 +1449,9 @@ getHeight();
 		List theObjects = this.rtbWindow.layoutWCPanel.objects;
 		int elemCount = 0;
 
-		for (int i = 0; i < theLabels.size(); i++)
+    for (ListIterator lIt = theLabels.listIterator(); lIt.hasNext();)
 		{
-			FirmedTextPane curPane = (FirmedTextPane) theLabels.get(i);
+			FirmedTextPane curPane = (FirmedTextPane) lIt.next();
 			//Ищем только несвязные надписи
 			if ((curPane.horizFirmer != null) ||
 				(curPane.vertFirmer != null))
@@ -1463,9 +1465,9 @@ getHeight();
 			elemCount += 2;
 		}
 
-		for (int i = 0; i < theImages.size(); i++)
+    for (ListIterator lIt = theImages.listIterator(); lIt.hasNext();)
 		{
-			ImagePanel curImage = (ImagePanel) theImages.get(i);
+			ImagePanel curImage = (ImagePanel) lIt.next();
 
 			xs.add(new Integer(curImage.getX()));
 			ys.add(new Integer(curImage.getY()));
@@ -1475,9 +1477,9 @@ getHeight();
 			elemCount += 2;
 		}
 
-		for (int i = 0; i < theObjects.size(); i++)
+    for (ListIterator lIt = theObjects.listIterator(); lIt.hasNext();)
 		{
-			RenderingObject curRO = (RenderingObject) theObjects.get(i);
+			RenderingObject curRO = (RenderingObject) lIt.next();
 
 			if (curRO.rendererPanel != null)
 			{
@@ -1534,13 +1536,14 @@ getHeight();
 	{
 		List theLabels = this.rtbWindow.layoutWCPanel.labels;
 
-		for (int i = 0; i < theLabels.size(); i++)
+    int curIndex = 0;
+    for (ListIterator lIt = theLabels.listIterator(); lIt.hasNext(); curIndex++)
 		{
-			FirmedTextPane curLabel = (FirmedTextPane) theLabels.get(i);
+			FirmedTextPane curLabel = (FirmedTextPane) lIt.next();
 			if ((curLabel.horizFirmer == null) &&
 				(curLabel.vertFirmer == null) &&
 				curLabel.hasPoint(x, y))
-				return i;
+				return curIndex;
 		}
 		return -1;
 	}
@@ -1549,14 +1552,15 @@ getHeight();
 	{
 		List theImages = this.rtbWindow.layoutWCPanel.images;
 
-		for (int i = 0; i < theImages.size(); i++)
+    int curIndex = 0;
+    for (ListIterator lIt = theImages.listIterator(); lIt.hasNext(); curIndex++)
 		{
-			ImagePanel curImage = (ImagePanel) theImages.get(i);
+			ImagePanel curImage = (ImagePanel) lIt.next();
 			if ((curImage.getX() < x)
 				 && (x < curImage.getX() + curImage.getWidth())
 				 && (curImage.getY() < y)
 				 && (y < curImage.getY() + curImage.getHeight()))
-				return i;
+				return curIndex;
 		}
 		return -1;
 	}
@@ -1573,9 +1577,11 @@ getHeight();
 	private int getRenderingObjectAt(int x, int y)
 	{
 		List theObjects = this.rtbWindow.layoutWCPanel.objects;
-		for (int i = 0; i < theObjects.size(); i++)
+    
+    int curIndex = 0;
+    for (ListIterator lIt = theObjects.listIterator(); lIt.hasNext(); curIndex++)    
 		{
-			RenderingObject curRO = (RenderingObject) theObjects.get(i);
+			RenderingObject curRO = (RenderingObject) lIt.next();
 
 			if (curRO.rendererPanel != null)
 			{
@@ -1583,13 +1589,13 @@ getHeight();
 					(x < curRO.rendererPanel.getX() + curRO.rendererPanel.getWidth()) &&
 					(curRO.rendererPanel.getY() < y) &&
 					(y < curRO.rendererPanel.getY() + curRO.rendererPanel.getHeight()))
-					return i;
+					return curIndex;
 			}
 			else
 			{
 				if ((curRO.x < x) && (x < curRO.x + curRO.width) &&
 					(curRO.y < y) && (y < curRO.y + curRO.height))
-					return i;
+					return curIndex;
 			}
 		}
 		return -1;
