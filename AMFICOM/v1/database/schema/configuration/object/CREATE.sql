@@ -2,12 +2,12 @@
 @@server.sql
 @@mcm.sql
 @@kis.sql
-@@monitoredelement.sql
 @@equipment.sql
-@@equipmentmelink.sql
 @@port.sql
-@@measurementport.sql
 @@transmissionpath.sql
+@@measurementport.sql
+@@monitoredelement.sql
+@@equipmentmelink.sql
 @@transmissionpathmelink.sql
 @@characteristic.sql
 
