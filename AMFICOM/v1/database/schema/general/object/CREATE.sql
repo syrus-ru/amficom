@@ -1,2 +1,0 @@
-@@serverproperty.sql
-@@characteristic.sql
