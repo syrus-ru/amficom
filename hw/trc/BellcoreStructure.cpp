@@ -686,6 +686,7 @@ BellcoreStructure::DataPts::DataPts(const int TNDP,
 //!!!	Не создавать новый массив. Использовать ссылку на уже созданный.
 //	Модуль, создавший массив DSF, не должен его удалять!
 //	Это делает деструктор данного класса.
+//	
 //	this->DSF = new unsigned short*[this->TSF];
 //	for (int i = 0; i < this->TSF; i++) {
 //		this->TPS[i] = TPS[i];
@@ -694,7 +695,7 @@ BellcoreStructure::DataPts::DataPts(const int TNDP,
 //		for (int k = 0; k < this->TPS[i]; k++)
 //			this->DSF[i][k] = DSF[i][k];
 //	}
-	this->DSF = (unsigned short**)DSF;
+	this->DSF = DSF;
 }
 
 BellcoreStructure::DataPts::~DataPts() {
