@@ -1,5 +1,5 @@
 /*
- * $Id: configuration.idl,v 1.73 2004/12/24 12:51:45 arseniy Exp $
+ * $Id: configuration.idl,v 1.74 2004/12/27 21:04:42 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -42,7 +42,6 @@ module corba {
 		CHARACTERISTICTYPESORT_INTERFACE,
 		CHARACTERISTICTYPESORT_VISUAL
 	};
-	
 
 	struct CharacteristicType_Transferable {
 		com::syrus::AMFICOM::general::corba::StorableObject_Transferable header;
