@@ -16,3 +16,4 @@ CREATE TABLE MeasurementPortType (
 );
 
 CREATE SEQUENCE MeasurementPortType_seq ORDER;
+
