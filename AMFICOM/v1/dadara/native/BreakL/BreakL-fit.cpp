@@ -80,10 +80,12 @@ inline void calc_yarr_stat3(
 	myy = (acc.yy[i0 + n] - acc.yy[i0]) / n;
 
 	double i0d = i0;
-	double i0pn = i0 + n;
 	mx = i0 + (n - 1) / 2.0;
-	mxx = (i0pn * (2 * i0pn - 1) * (i0pn - 1) - i0d * (2 * i0d - 1) * (i0d - 1))
-			/ (6 * n);
+	mxx = i0d * (i0d + n - 1) + (double )(2 * n - 1) * (n - 1) / 6;
+	// this straightforward old code gave critical precision loss if i0 > ~256K and was also a bit slower:
+	//double i0pn = i0 + n;
+	//mxx = (i0pn * (2 * i0pn - 1) * (i0pn - 1) - i0d * (2 * i0d - 1) * (i0d - 1))
+	//		/ (6 * n);
 }
 
 inline double div(double a, double b)
