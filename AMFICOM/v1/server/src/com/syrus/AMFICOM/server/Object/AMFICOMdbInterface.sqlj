@@ -1,0 +1,5042 @@
+package com.syrus.AMFICOM.server.Object;
+
+import sqlj.runtime.*;
+import sqlj.runtime.ref.*;
+import java.sql.*;
+import oracle.sql.*;
+import java.text.*;
+
+import java.io.*;
+import org.omg.CORBA.*;
+import java.util.*;
+
+import com.syrus.io.*;
+import com.syrus.util.*;
+import com.syrus.util.database.*;
+
+import com.syrus.AMFICOM.CORBA.*;
+import com.syrus.AMFICOM.CORBA.Map.*;
+import com.syrus.AMFICOM.CORBA.Scheme.*;
+import com.syrus.AMFICOM.CORBA.Alarm.*;
+import com.syrus.AMFICOM.CORBA.Admin.*;
+import com.syrus.AMFICOM.CORBA.Resource.*;
+import com.syrus.AMFICOM.CORBA.Report.*;
+import com.syrus.AMFICOM.CORBA.General.*;
+import com.syrus.AMFICOM.CORBA.Survey.*;
+import com.syrus.AMFICOM.CORBA.ISM.*;
+import com.syrus.AMFICOM.CORBA.Network.*;
+import com.syrus.AMFICOM.CORBA.ISMDirectory.*;
+import com.syrus.AMFICOM.CORBA.NetworkDirectory.*;
+
+import com.syrus.AMFICOM.filter.*;
+import com.syrus.AMFICOM.server.*;
+import com.syrus.AMFICOM.server.measurement.*;
+import com.syrus.AMFICOM.server.event.*;
+
+//import com.syrus.AMFICOM.Server.Process.ServerProcessHelper;
+
+public class AMFICOMdbInterface
+{
+	SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
+
+	static
+	{
+		DatabaseConnection.setConnection(DefaultContext.getDefaultContext().getConnection());
+	}
+
+	public AMFICOMdbInterface()
+	{
+	}
+
+	public int Logon(String username, byte[] password, String ior, AccessIdentity_TransferableHolder accessIdentity)
+		throws AMFICOMRemoteException
+	{
+		return AMFICOMdbGeneral.Logon(username, password, ior, accessIdentity);
+/*
+	try
+	{
+		String id = "";
+		String sess = "sess";
+		String sess_code = "";
+		String pwd = "";
+		long pwd_exp = 0;
+		String type = "";
+		BLOB pwd_blob = null;
+		Timestamp tms = new Timestamp(System.currentTimeMillis());
+
+//		oracle.aurora.net.SessionIdentifier si = oracle.aurora.mts.session.Session.THIS_SESSION().sessionID();
+//		sess_code = si.toAsciiString();
+
+		accessIdentity.value = new AccessIdentity_Transferable(0, "", "", "", "sysdomain");
+//		System.out.println("logging on " + username + " pwd " + password);
+		// проверить права доступа пользователя в систему
+		try
+		{
+			#sql { select ID, TYPE into :id, :type
+				from AMFICOM.USERS where LOGIN = :username };
+		}
+		catch (SQLException e)
+		{
+			System.out.println("id " + id + " type " + type);
+			e.printStackTrace();
+			if(e.getErrorCode() == 8000)	// Нет контекста соединения с БД
+											// невозможно соединиться с РИСД
+				return Constants.ERROR_NO_CONNECT;
+			else
+			if(e.getErrorCode() == 2000)	// Не найдено записей
+											// пользователь не имеет прав дост.
+				return Constants.ERROR_WRONG_LOGIN;
+			else
+			if(e.getErrorCode() == 8003)	// Нет контекста выполнения SQL
+											// сбой в работе РИСД
+				return Constants.ERROR_RISD_ERROR;
+			else
+				throw e;
+		}
+		if(type.equals("operatorprofile"))
+		{
+			String op_id = "";
+			try
+			{
+				#sql { select OPERATOR_ID into :op_id
+					from AMFICOM.USERS where LOGIN = :username };
+			}
+			catch (SQLException ex1)
+			{
+			}
+			System.out.println("op_id " + op_id);
+*/
+/*
+
+			try
+			{
+				#sql { select PASSWORD, PASSWORD_EXPIRY into :pwd_blob, :pwd_exp
+					from AMFICOM.OPERATORPROFILES where ID = :op_id };
+			}
+			catch (SQLException ex1)
+			{
+				ex1.printStackTrace();
+				pwd_blob = new BLOB();
+			}
+
+			byte[] pwd_bytes = ByteArrayDatabase.toByteArray(pwd_blob);
+			System.out.println("decode...");
+			String decpwd = Rewriter.read(pwd_bytes);
+			String logpwd = Rewriter.read(password);
+			System.out.println("pwd " + new String(pwd_bytes) + " decpwd " + decpwd + " compare to " + new String(password) + " logpwd " + logpwd + " pwd_exp " + pwd_exp + " curtime " + System.currentTimeMillis());
+			if(!decpwd.equals(logpwd))
+//			if(!pwd.equals(password))
+											// неправильно указан пароль
+				return Constants.ERROR_WRONG_PASSWORD;
+
+			if((!id.equals("sys")) && (pwd_exp != 0) && (pwd_exp < System.currentTimeMillis()))
+//				return Constants.ERROR_PASSWORD_EXPIRED;
+				throw new AMFICOMRemoteException(Constants.ERROR_PASSWORD_EXPIRED, "fn Logon: Ограниечение времени действия логина");
+*/
+/*
+		}
+		// выделить пользователю идентификатор сессии и занести
+		// запись о нем в БД
+		try
+		{
+			sess = ResourcedbInterface.getUId("loggeduser");
+
+			ConnectionContext connCtx2 = DefaultContext.getDefaultContext();
+			java.sql.Connection conn = connCtx2.getConnection();
+
+			boolean autoc = conn.getAutoCommit();
+   			System.out.println("autocommit " + conn.getAutoCommit());
+			conn.setAutoCommit(false);
+*/
+/*
+   			System.out.println("commit1");
+			conn.createStatement().execute("COMMIT");
+
+			String sql = "insert into amficom.iors (id, ior) values('" + sess + "', empty_blob())";
+
+			System.out.println("EXECUTE: " + sql);
+
+			conn.createStatement().execute(sql);
+*/
+/*
+   			System.out.println("autocommit " + conn.getAutoCommit());
+			#sql { insert into AMFICOM.IORS (ID, IOR)
+				values(:sess, empty_blob() )
+			};
+
+			ByteArrayDatabase bArr = new ByteArrayDatabase(ior.getBytes());// можно указать кодировку US-ASCII
+
+   			System.out.println("commit2");
+//			conn.createStatement().execute("COMMIT");
+			#sql { commit };
+			int ci;
+			String si;
+			#sql { select id into :si from amficom.iors where id = :sess };
+			System.out.println("selected " + si + " iors for sess " + sess);
+
+			conn.setAutoCommit(false);
+			bArr.saveAsBlob(
+					conn,
+					"AMFICOM.IORS",
+					"IOR",
+					"id = '" + sess + "'");
+
+			System.out.println("commit3");
+			conn.createStatement().execute("COMMIT");
+			conn.setAutoCommit(autoc);
+
+			#sql { insert into AMFICOM.LOGGEDUSERS
+					(ID, NAME, LOGGED, USER_ID, ACCESSED)
+					values (:sess, :username, SYSDATE, :id, SYSDATE) };
+			System.out.println("ok iserted!!");
+			#sql { select LOGGED into :tms from AMFICOM.LOGGEDUSERS
+					where ID = :sess };
+		}
+		catch (SQLException e)
+		{
+			System.out.println("error sess " + sess + " error is " + e.getErrorCode() + e.getMessage());
+			e.printStackTrace();
+			if(e.getErrorCode() == 8003)	// Нет контекста выполнения SQL
+											// сбой в работе РИСД
+				return Constants.ERROR_RISD_ERROR;
+			else
+				throw e;
+		}
+		// вернуть пользователю идентификатор сессии
+		#sql { commit };
+
+//		tm = sdf.format(tms);
+		System.out.println("sess " + sess + " at " + sdf.format(tms));
+		Calendar cal = Calendar.getInstance();
+		accessIdentity.value = new AccessIdentity_Transferable(cal.getTime().getTime(), username, id, sess, "sysdomain");
+
+		return Constants.ERROR_NO_ERROR;
+	}
+	catch (Exception e)
+	{
+		throw new AMFICOMRemoteException(1, "fn Logon:" + e.getMessage());
+	}
+*/
+	}
+
+	public void CheckUserPrivileges(AccessIdentity_Transferable accessIdentity)
+		throws AMFICOMRemoteException
+	{
+		AMFICOMdbGeneral.CheckUserPrivileges(accessIdentity);
+/*
+		try
+		{
+			#sql
+			{
+				update AMFICOM.LOGGEDUSERS
+					set ACCESSED = SYSDATE
+					where ID = :(accessIdentity.sess_id)
+			};
+			#sql { commit };
+		}
+		catch (Exception e)
+		{
+			throw new AMFICOMRemoteException(
+					Constants.ERROR_INSUFFICIENT_PRIVILEGES,
+					"Ошибка пользователя: " + e.getMessage());
+		}
+*/
+	}
+
+	public int Logoff(AccessIdentity_Transferable accessIdentity)
+		throws AMFICOMRemoteException
+	{
+	try
+	{
+//		int i = 0;
+//		int count;
+//		String nm;
+//		String sessid = accessIdentity.sess_id;
+
+		CheckUserPrivileges(accessIdentity);
+/*
+		// проверить права пользователя на работу с системой
+		if (pm6.CheckUserPrivileges(
+				accessIdentity.sess_id,
+				Constants._OP,
+				Constants._ELEMENT,
+				Constants.EMPTY_ELEMENTID) == 0)
+			return Constants.ERROR_INSUFFICIENT_PRIVILEGES;
+*/
+		return AMFICOMdbGeneral.Logoff(accessIdentity);
+/*
+		// удалить запись о сессии пользователя
+		#sql {delete from AMFICOM.IORS
+			where ID = :sessid };
+
+		#sql {delete from AMFICOM.LOGGEDUSERS
+			where ID = :sessid };
+		#sql { commit };
+
+		return Constants.ERROR_NO_ERROR;
+*/
+	}
+	catch (Exception e)
+	{
+		e.printStackTrace();
+		throw new AMFICOMRemoteException(1, "fn Logoff:" + e.getMessage ());
+	}
+	}
+
+//	#sql public static iterator UserIdIterator( String user_id );
+
+	public int GetLoggedUserIds(
+			AccessIdentity_Transferable accessIdentity,
+			wstringSeqHolder userids)
+		throws AMFICOMRemoteException
+	{
+		System.out.println("CheckUserPrivileges " + accessIdentity.sess_id);
+		CheckUserPrivileges(accessIdentity);
+		System.out.println("get logged users ");
+
+		return AMFICOMdbGeneral.GetLoggedUserIds(accessIdentity, userids);
+/*
+		Vector vec = new Vector();
+		userids.value = new String[0];
+
+		UserIdIterator uIt = null;
+
+		try
+		{
+			#sql uIt = { select USER_ID
+				from AMFICOM.LOGGEDUSERS
+			};
+			while(uIt.next())
+			{
+				System.out.println("adding " + uIt.user_id());
+				try { vec.add(uIt.user_id()); }
+				catch(SQLException e) { }
+			}
+			uIt.close();
+		}
+		catch (SQLException ex1)
+		{
+			if(uIt != null) try
+			{
+			uIt.close();
+			}catch(Exception exe) {}
+			ex1.printStackTrace();
+			throw new AMFICOMRemoteException(1, "fn GetLoggedUserIds:" + ex1.getMessage ());
+		}
+		userids.value = new String[vec.size()];
+		vec.copyInto(userids.value);
+
+		return Constants.ERROR_NO_ERROR;
+*/
+	}
+
+	public int ChangePassword(
+			AccessIdentity_Transferable accessIdentity,
+			byte[] oldpassword,	// пароль пользователя
+			byte[] newpassword)	// новый пароль пользователя
+		throws AMFICOMRemoteException
+	{
+		CheckUserPrivileges(accessIdentity);
+		return AMFICOMdbGeneral.ChangePassword(accessIdentity, oldpassword, newpassword);
+/*
+		String user_id;
+		String type;
+		String op_id = "";
+		String pwd = "";
+		BLOB pwd_blob = null;
+		long pwd_exp = 0;
+		try
+		{
+			#sql
+			{
+				select USER_ID into :user_id
+					from AMFICOM.LOGGEDUSERS
+					where ID = :(accessIdentity.sess_id)
+			};
+			#sql { select TYPE into :type
+				from AMFICOM.USERS
+				where ID = :user_id };
+
+			if(type.equals("operatorprofile"))
+			{
+				#sql { select OPERATOR_ID into :op_id
+					from AMFICOM.USERS where ID = :user_id };
+				System.out.println("op_id " + op_id);
+
+				#sql { select PASSWORD, PASSWORD_EXPIRY into :pwd_blob, :pwd_exp
+					from AMFICOM.OPERATORPROFILES where ID = :op_id };
+
+				pwd = Rewriter.read(ByteArrayDatabase.toByteArray(pwd_blob));
+				if(!pwd.equals(Rewriter.read(oldpassword)))
+					return Constants.ERROR_WRONG_PASSWORD;
+
+				ConnectionContext connCtx2 = DefaultContext.getDefaultContext();
+				java.sql.Connection conn = connCtx2.getConnection();
+
+				ByteArrayDatabase bad = new ByteArrayDatabase(newpassword);
+				bad.saveAsBlob(
+						conn,
+						"AMFICOM.OPERATORPROFILES",
+						"PASSWORD",
+						"id = '" + op_id + "'");
+//				#sql { update AMFICOM.OPERATORPROFILES
+//						set PASSWORD = :newpassword
+//						where ID = :op_id };
+			}
+			#sql { commit };
+		}
+		catch (Exception e)
+		{
+			throw new AMFICOMRemoteException(
+					Constants.ERROR_SAVING,
+					"Ошибка: " + e.getMessage());
+		}
+		return Constants.ERROR_NO_ERROR;
+*/
+	}
+
+	public int GetObjects(
+			AccessIdentity_Transferable accessIdentity,
+			ImageResourceSeq_TransferableHolder imageseq,
+			DomainSeq_TransferableHolder domainseq,
+			OperatorCategorySeq_TransferableHolder categoryseq,
+			OperatorGroupSeq_TransferableHolder groupseq,
+//			OperatorRoleSeq_TransferableHolder roleseq,
+//			OperatorPrivilegeSeq_TransferableHolder privilegeseq,
+			OperatorProfileSeq_TransferableHolder profileseq,
+			CommandPermissionAttributesSeq_TransferableHolder execseq,
+			UserSeq_TransferableHolder userseq)
+		throws AMFICOMRemoteException
+	{
+		CheckUserPrivileges(accessIdentity);
+
+		int ret = Constants.ERROR_NO_ERROR;
+
+		Vector map_ids = new Vector();
+		Vector img_ids = new Vector();
+
+		imageseq.value = new ImageResource_Transferable[0];
+		domainseq.value = new Domain_Transferable[0];
+		categoryseq.value = new OperatorCategory_Transferable[0];
+		groupseq.value = new OperatorGroup_Transferable[0];
+//		roleseq.value = new OperatorRole_Transferable[0];
+//		privilegeseq.value = new OperatorPrivilege_Transferable[0];
+		profileseq.value = new OperatorProfile_Transferable[0];
+		execseq.value = new CommandPermissionAttributes_Transferable[0];
+		userseq.value = new User_Transferable[0];
+		ret = ObjectdbInterfaceLoad.loadDomains(domainseq);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+		ret = ObjectdbInterfaceLoad.loadCategories(categoryseq);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+		ret = ObjectdbInterfaceLoad.loadGroups(groupseq);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+/*
+		ret = ObjectdbInterfaceLoad.loadRoles(roleseq, img_ids);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+		ret = ObjectdbInterfaceLoad.loadPrivileges(privilegeseq, img_ids);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+*/
+		ret = ObjectdbInterfaceLoad.loadProfiles(profileseq);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+		ret = ObjectdbInterfaceLoad.loadExecs(execseq);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+		ret = ObjectdbInterfaceLoad.loadUserDescriptors(userseq);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+/*
+		ret = ResourcedbInterface.loadImages(imageseq, img_ids);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+*/
+		return Constants.ERROR_NO_ERROR;
+	}
+
+	public int GetStatedObjects(
+			AccessIdentity_Transferable accessIdentity,
+			String []category_ids,
+			String []group_ids,
+			String []profile_ids,
+			OperatorCategorySeq_TransferableHolder categoryseq,
+			OperatorGroupSeq_TransferableHolder groupseq,
+			OperatorProfileSeq_TransferableHolder profileseq)
+		throws AMFICOMRemoteException
+	{
+		CheckUserPrivileges(accessIdentity);
+
+		int ret = Constants.ERROR_NO_ERROR;
+
+		categoryseq.value = new OperatorCategory_Transferable[0];
+		groupseq.value = new OperatorGroup_Transferable[0];
+		profileseq.value = new OperatorProfile_Transferable[0];
+
+		ret = ObjectdbInterfaceLoad.loadCategories(categoryseq, category_ids);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+		ret = ObjectdbInterfaceLoad.loadGroups(groupseq, group_ids);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+		ret = ObjectdbInterfaceLoad.loadProfiles(profileseq, profile_ids);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+		return Constants.ERROR_NO_ERROR;
+	}
+
+	public int GetUserDescriptors(
+			AccessIdentity_Transferable accessIdentity,
+			ImageResourceSeq_TransferableHolder imageseq,
+			DomainSeq_TransferableHolder domainseq,
+			UserSeq_TransferableHolder userseq)
+		throws AMFICOMRemoteException
+	{
+		CheckUserPrivileges(accessIdentity);
+
+		int ret = Constants.ERROR_NO_ERROR;
+		Vector img_ids = new Vector();
+
+		imageseq.value = new ImageResource_Transferable[0];
+		domainseq.value = new Domain_Transferable[0];
+		userseq.value = new User_Transferable[0];
+
+		ret = ObjectdbInterfaceLoad.loadDomains(domainseq);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+		ret = ObjectdbInterfaceLoad.loadUserDescriptors(userseq);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+/*
+		ret = ResourcedbInterface.loadImages(imageseq, img_ids);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+*/
+		return Constants.ERROR_NO_ERROR;
+	}
+
+	public int GetExecDescriptors(
+			AccessIdentity_Transferable accessIdentity,
+			CommandPermissionAttributesSeq_TransferableHolder execseq)
+		throws AMFICOMRemoteException
+	{
+		CheckUserPrivileges(accessIdentity);
+
+		int ret = Constants.ERROR_NO_ERROR;
+
+		execseq.value = new CommandPermissionAttributes_Transferable[0];
+
+		ret = ObjectdbInterfaceLoad.loadExecs(execseq);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+		return Constants.ERROR_NO_ERROR;
+	}
+
+	public int SaveObjects(
+			AccessIdentity_Transferable accessIdentity,
+			ImageResource_Transferable[] imageseq,
+			Domain_Transferable[] domainseq,
+			OperatorCategory_Transferable[] categoryseq,
+			OperatorGroup_Transferable[] groupseq,
+//			OperatorRole_Transferable[] roleseq,
+//			OperatorPrivilege_Transferable[] privilegeseq,
+			OperatorProfile_Transferable[] profileseq,
+			CommandPermissionAttributes_Transferable[] execseq,
+			User_Transferable[] userseq)
+		throws AMFICOMRemoteException
+	{
+		CheckUserPrivileges(accessIdentity);
+
+		int ret = Constants.ERROR_NO_ERROR;
+
+		ret = ResourcedbInterface.saveImages(imageseq);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+		ret = ObjectdbInterfaceSave.saveDomains(domainseq);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+		ret = ObjectdbInterfaceSave2.saveCategories(categoryseq);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+		ret = ObjectdbInterfaceSave2.saveGroups(groupseq);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+/*
+		ret = ObjectdbInterfaceSave.saveRoles(roleseq);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+		ret = ObjectdbInterfaceSave.savePrivileges(privilegeseq);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+*/
+		ret = ObjectdbInterfaceSave2.saveProfiles(profileseq);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+		ret = ObjectdbInterfaceSave.saveExecs(execseq);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+		ret = ObjectdbInterfaceSave.saveUsers(userseq);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+		return Constants.ERROR_NO_ERROR;
+	}
+
+	public int RemoveObjects(
+			AccessIdentity_Transferable accessIdentity,
+			String[] domainseq,
+			String[] categoryseq,
+			String[] groupseq,
+//			String[] roleseq,
+//			String[] privilegeseq,
+			String[] profileseq,
+			String[] execseq,
+			String[] userseq)
+		throws AMFICOMRemoteException
+	{
+		CheckUserPrivileges(accessIdentity);
+
+		int ret = Constants.ERROR_NO_ERROR;
+
+		ret = ObjectdbInterfaceRemove.removeDomains(domainseq);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+		ret = ObjectdbInterfaceRemove.removeCategories(categoryseq);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+		ret = ObjectdbInterfaceRemove.removeGroups(groupseq);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+/*
+		ret = ObjectdbInterfaceRemove.removeRoles(roleseq);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+		ret = ObjectdbInterfaceRemove.removePrivileges(privilegeseq);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+*/
+		ret = ObjectdbInterfaceRemove.removeProfiles(profileseq);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+		ret = ObjectdbInterfaceRemove.removeExecs(execseq);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+		ret = ObjectdbInterfaceRemove.removeUsers(userseq);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+		return Constants.ERROR_NO_ERROR;
+	}
+
+	public int GetAdminObjects(
+			AccessIdentity_Transferable accessIdentity,
+			ServerSeq_TransferableHolder serverseq,
+			ClientSeq_TransferableHolder clientseq,
+			AgentSeq_TransferableHolder agentseq)
+		throws AMFICOMRemoteException
+	{
+		CheckUserPrivileges(accessIdentity);
+
+		int ret = Constants.ERROR_NO_ERROR;
+
+		serverseq.value = new Server_Transferable[0];
+		clientseq.value = new Client_Transferable[0];
+		agentseq.value = new Agent_Transferable[0];
+		ret = AdmindbInterfaceLoad.loadServers(serverseq);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+		ret = AdmindbInterfaceLoad.loadClients(clientseq);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+		ret = AdmindbInterfaceLoad.loadAgents(agentseq);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+		return Constants.ERROR_NO_ERROR;
+	}
+
+	public int GetStatedAdminObjects(
+			AccessIdentity_Transferable accessIdentity,
+			String []server_ids,
+			String []client_ids,
+			String []agent_ids,
+			ServerSeq_TransferableHolder serverseq,
+			ClientSeq_TransferableHolder clientseq,
+			AgentSeq_TransferableHolder agentseq)
+		throws AMFICOMRemoteException
+	{
+		CheckUserPrivileges(accessIdentity);
+
+		int ret = Constants.ERROR_NO_ERROR;
+
+		serverseq.value = new Server_Transferable[0];
+		clientseq.value = new Client_Transferable[0];
+		agentseq.value = new Agent_Transferable[0];
+		ret = AdmindbInterfaceLoad.loadServers(serverseq, server_ids);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+		ret = AdmindbInterfaceLoad.loadClients(clientseq, client_ids);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+		ret = AdmindbInterfaceLoad.loadAgents(agentseq, agent_ids);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+		return Constants.ERROR_NO_ERROR;
+	}
+
+	public int SaveAdminObjects(
+			AccessIdentity_Transferable accessIdentity,
+			Server_Transferable[] serverseq,
+			Client_Transferable[] clientseq,
+			Agent_Transferable[] agentseq)
+		throws AMFICOMRemoteException
+	{
+		CheckUserPrivileges(accessIdentity);
+
+		int ret = Constants.ERROR_NO_ERROR;
+
+		ret = AdmindbInterfaceSave.saveServers(serverseq);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+		ret = AdmindbInterfaceSave.saveClients(clientseq);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+		ret = AdmindbInterfaceSave.saveAgents(agentseq);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+		return Constants.ERROR_NO_ERROR;
+	}
+
+	public int RemoveAdminObjects(
+			AccessIdentity_Transferable accessIdentity,
+			String[] serverseq,
+			String[] clientseq,
+			String[] agentseq)
+		throws AMFICOMRemoteException
+	{
+		CheckUserPrivileges(accessIdentity);
+
+		int ret = Constants.ERROR_NO_ERROR;
+
+		ret = AdmindbInterfaceRemove.removeServers(serverseq);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+		ret = AdmindbInterfaceRemove.removeClients(clientseq);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+		ret = AdmindbInterfaceRemove.removeAgents(agentseq);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+		return Constants.ERROR_NO_ERROR;
+	}
+
+	public int GetMaps(
+			AccessIdentity_Transferable accessIdentity,
+			ImageResourceSeq_TransferableHolder imageseq,
+			MapContextSeq_TransferableHolder mapseq,
+			MapElementSeq_TransferableHolder equipmentseq,
+			MapElementSeq_TransferableHolder kisseq,
+			MapMarkElementSeq_TransferableHolder markseq,
+			MapPhysicalNodeElementSeq_TransferableHolder nodeseq,
+			MapNodeLinkElementSeq_TransferableHolder nodelinkseq,
+			MapPhysicalLinkElementSeq_TransferableHolder linkseq,
+			MapPathElementSeq_TransferableHolder pathseq)
+		throws AMFICOMRemoteException
+	{
+		CheckUserPrivileges(accessIdentity);
+
+		int ret = Constants.ERROR_NO_ERROR;
+
+		Vector map_ids = new Vector();
+		Vector img_ids = new Vector();
+
+		imageseq.value = new ImageResource_Transferable[0];
+		mapseq.value = new MapContext_Transferable[0];
+		equipmentseq.value = new MapElement_Transferable[0];
+		kisseq.value = new MapElement_Transferable[0];
+		markseq.value = new MapMarkElement_Transferable[0];
+		nodeseq.value = new MapPhysicalNodeElement_Transferable[0];
+		nodelinkseq.value = new MapNodeLinkElement_Transferable[0];
+		linkseq.value = new MapPhysicalLinkElement_Transferable[0];
+		pathseq.value = new MapPathElement_Transferable[0];
+
+		ret = MapdbInterfaceLoad1.loadMaps(accessIdentity.domain_id, map_ids, mapseq, img_ids);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+		ret = MapdbInterfaceLoad1.loadMapElements(map_ids, equipmentseq, img_ids);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+
+		ret = MapdbInterfaceLoad1.loadMapKISs(map_ids, kisseq, img_ids);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+
+		ret = MapdbInterfaceLoad1.loadMapMarks(map_ids, markseq, img_ids);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+		ret = MapdbInterfaceLoad2.loadMapNodes(map_ids, nodeseq, img_ids);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+		ret = MapdbInterfaceLoad2.loadMapNodeLinks(map_ids, nodelinkseq, img_ids);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+		ret = MapdbInterfaceLoad2.loadMapLinks(map_ids, linkseq, img_ids);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+
+		ret = MapdbInterfaceLoad2.loadMapPaths(map_ids, pathseq, img_ids);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+/*
+		ret = ResourcedbInterface.loadImages(imageseq, img_ids);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+*/
+		return Constants.ERROR_NO_ERROR;
+	}
+
+	public int GetJMaps(
+			AccessIdentity_Transferable accessIdentity,
+			ImageResourceSeq_TransferableHolder imageseq,
+			ISMMapContextSeq_TransferableHolder mapseq,
+			MapKISElementSeq_TransferableHolder kisseq,
+			MapPhysicalNodeElementSeq_TransferableHolder nodeseq,
+			MapNodeLinkElementSeq_TransferableHolder nodelinkseq,
+			MapPhysicalLinkElementSeq_TransferableHolder linkseq,
+			MapPathElementSeq_TransferableHolder pathseq)
+		throws AMFICOMRemoteException
+	{
+		CheckUserPrivileges(accessIdentity);
+
+		int ret = Constants.ERROR_NO_ERROR;
+
+		Vector map_ids = new Vector();
+		Vector img_ids = new Vector();
+
+		imageseq.value = new ImageResource_Transferable[0];
+		mapseq.value = new ISMMapContext_Transferable[0];
+		kisseq.value = new MapKISElement_Transferable[0];
+		nodeseq.value = new MapPhysicalNodeElement_Transferable[0];
+		nodelinkseq.value = new MapNodeLinkElement_Transferable[0];
+		linkseq.value = new MapPhysicalLinkElement_Transferable[0];
+		pathseq.value = new MapPathElement_Transferable[0];
+
+		ret = MapdbInterfaceLoad3.loadJMaps(map_ids, mapseq, img_ids);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+		ret = MapdbInterfaceLoad3.loadJMapKISs(map_ids, kisseq, img_ids);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+		ret = MapdbInterfaceLoad5.loadJMapNodes(map_ids, nodeseq, img_ids);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+		ret = MapdbInterfaceLoad5.loadJMapNodeLinks(map_ids, nodelinkseq, img_ids);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+		ret = MapdbInterfaceLoad5.loadJMapLinks(map_ids, linkseq, img_ids);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+		ret = MapdbInterfaceLoad3.loadJMapPaths(map_ids, pathseq, img_ids);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+		ret = ResourcedbInterface.loadImages(imageseq, img_ids);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+		return Constants.ERROR_NO_ERROR;
+	}
+
+	public int GetMap(
+			AccessIdentity_Transferable accessIdentity,
+			String map_id,
+			ImageResourceSeq_TransferableHolder imageseq,
+			MapContextSeq_TransferableHolder mapseq,
+			MapElementSeq_TransferableHolder equipmentseq,
+			MapElementSeq_TransferableHolder kisseq,
+			MapMarkElementSeq_TransferableHolder markseq,
+			MapPhysicalNodeElementSeq_TransferableHolder nodeseq,
+			MapNodeLinkElementSeq_TransferableHolder nodelinkseq,
+			MapPhysicalLinkElementSeq_TransferableHolder linkseq,
+			MapPathElementSeq_TransferableHolder pathseq)
+		throws AMFICOMRemoteException
+	{
+		CheckUserPrivileges(accessIdentity);
+
+		int ret = Constants.ERROR_NO_ERROR;
+
+		Vector map_ids = new Vector();
+		Vector img_ids = new Vector();
+
+		imageseq.value = new ImageResource_Transferable[0];
+		mapseq.value = new MapContext_Transferable[0];
+		equipmentseq.value = new MapElement_Transferable[0];
+		kisseq.value = new MapElement_Transferable[0];
+		markseq.value = new MapMarkElement_Transferable[0];
+		nodeseq.value = new MapPhysicalNodeElement_Transferable[0];
+		nodelinkseq.value = new MapNodeLinkElement_Transferable[0];
+		linkseq.value = new MapPhysicalLinkElement_Transferable[0];
+		pathseq.value = new MapPathElement_Transferable[0];
+
+		ret = MapdbInterfaceLoad1.loadMaps(accessIdentity.domain_id, map_ids, mapseq, img_ids);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+		int ind = map_ids.indexOf(map_id);
+		map_ids.clear();
+		map_ids.add(map_id);
+		MapContext_Transferable mc_t = mapseq.value[ind];
+		mapseq.value = new MapContext_Transferable[1];
+		mapseq.value[0] = mc_t;
+
+		ret = MapdbInterfaceLoad1.loadMapElements(map_ids, equipmentseq, img_ids);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+
+		ret = MapdbInterfaceLoad1.loadMapKISs(map_ids, kisseq, img_ids);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+
+		ret = MapdbInterfaceLoad1.loadMapMarks(map_ids, markseq, img_ids);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+		ret = MapdbInterfaceLoad2.loadMapNodes(map_ids, nodeseq, img_ids);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+		ret = MapdbInterfaceLoad2.loadMapNodeLinks(map_ids, nodelinkseq, img_ids);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+		ret = MapdbInterfaceLoad2.loadMapLinks(map_ids, linkseq, img_ids);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+
+		ret = MapdbInterfaceLoad2.loadMapPaths(map_ids, pathseq, img_ids);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+/*
+		ret = ResourcedbInterface.loadImages(imageseq, img_ids);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+*/
+		return Constants.ERROR_NO_ERROR;
+	}
+
+	public int GetJMap(
+			AccessIdentity_Transferable accessIdentity,
+			String map_id,
+			ImageResourceSeq_TransferableHolder imageseq,
+			ISMMapContextSeq_TransferableHolder mapseq,
+			MapKISElementSeq_TransferableHolder kisseq,
+			MapPhysicalNodeElementSeq_TransferableHolder nodeseq,
+			MapNodeLinkElementSeq_TransferableHolder nodelinkseq,
+			MapPhysicalLinkElementSeq_TransferableHolder linkseq,
+			MapPathElementSeq_TransferableHolder pathseq)
+		throws AMFICOMRemoteException
+	{
+		CheckUserPrivileges(accessIdentity);
+
+		int ret = Constants.ERROR_NO_ERROR;
+
+		Vector map_ids = new Vector();
+		map_ids.add(map_id);
+		Vector img_ids = new Vector();
+
+		imageseq.value = new ImageResource_Transferable[0];
+		mapseq.value = new ISMMapContext_Transferable[0];
+		kisseq.value = new MapKISElement_Transferable[0];
+		nodeseq.value = new MapPhysicalNodeElement_Transferable[0];
+		nodelinkseq.value = new MapNodeLinkElement_Transferable[0];
+		linkseq.value = new MapPhysicalLinkElement_Transferable[0];
+		pathseq.value = new MapPathElement_Transferable[0];
+
+		ret = MapdbInterfaceLoad3.loadJMaps(map_ids, mapseq, img_ids);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+		int ind = map_ids.indexOf(map_id);
+		map_ids.clear();
+		map_ids.add(map_id);
+		ISMMapContext_Transferable mc_t = mapseq.value[ind];
+		mapseq.value = new ISMMapContext_Transferable[1];
+		mapseq.value[0] = mc_t;
+
+		ret = MapdbInterfaceLoad3.loadJMapKISs(map_ids, kisseq, img_ids);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+		ret = MapdbInterfaceLoad5.loadJMapNodes(map_ids, nodeseq, img_ids);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+		ret = MapdbInterfaceLoad5.loadJMapNodeLinks(map_ids, nodelinkseq, img_ids);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+		ret = MapdbInterfaceLoad5.loadJMapLinks(map_ids, linkseq, img_ids);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+		ret = MapdbInterfaceLoad3.loadJMapPaths(map_ids, pathseq, img_ids);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+		ret = ResourcedbInterface.loadImages(imageseq, img_ids);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+		return Constants.ERROR_NO_ERROR;
+	}
+
+	public int SaveMaps(
+			AccessIdentity_Transferable accessIdentity,
+			ImageResource_Transferable[] imageseq,
+			MapContext_Transferable[] mapseq,
+			MapElement_Transferable[] equipmentseq,
+			MapElement_Transferable[] kisseq,
+			MapMarkElement_Transferable[] markseq,
+			MapPhysicalNodeElement_Transferable[] nodeseq,
+			MapNodeLinkElement_Transferable[] nodelinkseq,
+			MapPhysicalLinkElement_Transferable[] linkseq,
+			MapPathElement_Transferable[] pathseq)
+		throws AMFICOMRemoteException
+	{
+		CheckUserPrivileges(accessIdentity);
+
+		int ret = Constants.ERROR_NO_ERROR;
+
+		ret = ResourcedbInterface.saveImages(imageseq);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+		ret = MapdbInterfaceSave1.saveMaps(mapseq);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+		ret = MapdbInterfaceSave1.saveMapElements(equipmentseq);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+
+		ret = MapdbInterfaceSave1.saveMapKISs(kisseq);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+
+		ret = MapdbInterfaceSave1.saveMapMarks(markseq);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+		ret = MapdbInterfaceSave2.saveMapNodes(nodeseq);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+		ret = MapdbInterfaceSave2.saveMapNodeLinks(nodelinkseq);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+		ret = MapdbInterfaceSave2.saveMapLinks(linkseq);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+
+		ret = MapdbInterfaceSave3.saveMapPaths(pathseq);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+
+		return Constants.ERROR_NO_ERROR;
+	}
+
+	public int SaveJMaps(
+			AccessIdentity_Transferable accessIdentity,
+			ImageResource_Transferable[] imageseq,
+			ISMMapContext_Transferable[] mapseq,
+			MapKISElement_Transferable[] kisseq,
+			MapPhysicalNodeElement_Transferable[] nodeseq,
+			MapNodeLinkElement_Transferable[] nodelinkseq,
+			MapPhysicalLinkElement_Transferable[] linkseq,
+			MapPathElement_Transferable[] pathseq)
+		throws AMFICOMRemoteException
+	{
+		CheckUserPrivileges(accessIdentity);
+
+		int ret = Constants.ERROR_NO_ERROR;
+
+		ret = ResourcedbInterface.saveImages(imageseq);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+		ret = MapdbInterfaceSave4.saveJMaps(mapseq);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+		ret = MapdbInterfaceSave4.saveJMapKISs(kisseq);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+		ret = MapdbInterfaceSave5.saveJMapNodes(nodeseq);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+		ret = MapdbInterfaceSave5.saveJMapNodeLinks(nodelinkseq);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+		ret = MapdbInterfaceSave5.saveJMapLinks(linkseq);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+		ret = MapdbInterfaceSave4.saveJMapPaths(pathseq);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+		return Constants.ERROR_NO_ERROR;
+	}
+
+	public int GetMapProtoElements(
+			AccessIdentity_Transferable accessIdentity,
+			ImageResourceSeq_TransferableHolder imageseq,
+			MapProtoGroupSeq_TransferableHolder groupseq,
+			MapProtoElementSeq_TransferableHolder protoseq,
+			MapLinkProtoElementSeq_TransferableHolder linkseq,
+			MapPathProtoElementSeq_TransferableHolder pathseq)
+		throws AMFICOMRemoteException
+	{
+		CheckUserPrivileges(accessIdentity);
+
+		int ret = Constants.ERROR_NO_ERROR;
+
+		Vector img_ids = new Vector();
+
+		imageseq.value = new ImageResource_Transferable[0];
+		groupseq.value = new MapProtoGroup_Transferable[0];
+		protoseq.value = new MapProtoElement_Transferable[0];
+		linkseq.value = new MapLinkProtoElement_Transferable[0];
+		pathseq.value = new MapPathProtoElement_Transferable[0];
+
+		ret = MapdbInterfaceProto.loadProtoGroups(accessIdentity.domain_id, groupseq);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+		ret = MapdbInterfaceProto.loadProtoElements(accessIdentity.domain_id, protoseq, img_ids);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+		ret = MapdbInterfaceProto.loadLinkProto(accessIdentity.domain_id, linkseq, img_ids);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+		ret = MapdbInterfaceProto.loadPathProto(accessIdentity.domain_id, pathseq, img_ids);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+		ret = ResourcedbInterface.loadImages(imageseq, img_ids);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+		return Constants.ERROR_NO_ERROR;
+	}
+
+	public int GetStatedMapProtoElements(
+			AccessIdentity_Transferable accessIdentity,
+			String[] group_ids,
+			String[] element_ids,
+			String[] link_ids,
+			String[] path_ids,
+			ImageResourceSeq_TransferableHolder imageseq,
+			MapProtoGroupSeq_TransferableHolder groupseq,
+			MapProtoElementSeq_TransferableHolder protoseq,
+			MapLinkProtoElementSeq_TransferableHolder linkseq,
+			MapPathProtoElementSeq_TransferableHolder pathseq)
+		throws AMFICOMRemoteException
+	{
+		CheckUserPrivileges(accessIdentity);
+
+		int ret = Constants.ERROR_NO_ERROR;
+
+		Vector img_ids = new Vector();
+
+		imageseq.value = new ImageResource_Transferable[0];
+		groupseq.value = new MapProtoGroup_Transferable[0];
+		protoseq.value = new MapProtoElement_Transferable[0];
+		linkseq.value = new MapLinkProtoElement_Transferable[0];
+		pathseq.value = new MapPathProtoElement_Transferable[0];
+
+		ret = MapdbInterfaceProto.loadProtoGroups(accessIdentity.domain_id, group_ids, groupseq);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+		ret = MapdbInterfaceProto.loadProtoElements(accessIdentity.domain_id, element_ids, protoseq, img_ids);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+		ret = MapdbInterfaceProto.loadLinkProto(accessIdentity.domain_id, link_ids, linkseq, img_ids);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+		ret = MapdbInterfaceProto.loadPathProto(accessIdentity.domain_id, path_ids, pathseq, img_ids);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+		ret = ResourcedbInterface.loadImages(imageseq, img_ids);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+		return Constants.ERROR_NO_ERROR;
+	}
+
+
+	public int SaveMapProtoElements(
+			AccessIdentity_Transferable accessIdentity,
+			ImageResource_Transferable[] images,
+			MapProtoGroup_Transferable[] groups,
+			MapProtoElement_Transferable[] protos)
+		throws AMFICOMRemoteException
+	{
+		CheckUserPrivileges(accessIdentity);
+
+		int ret = Constants.ERROR_NO_ERROR;
+		ret = ResourcedbInterface.saveImages(images);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+		ret = MapdbInterfaceProto.saveProtoGroups(accessIdentity.domain_id, groups);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+		ret = MapdbInterfaceProto.saveProtoElements(accessIdentity.domain_id, protos);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+		return Constants.ERROR_NO_ERROR;
+	}
+
+	public int RemoveMapProtoElements(
+			AccessIdentity_Transferable accessIdentity,
+			String[] group_ids,
+			String[] proto_ids)
+		throws AMFICOMRemoteException
+	{
+		CheckUserPrivileges(accessIdentity);
+
+		int ret = Constants.ERROR_NO_ERROR;
+		ret = MapdbInterfaceProto.removeProtoGroups(group_ids);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+		ret = MapdbInterfaceProto.removeProtoElements(proto_ids);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+		return Constants.ERROR_NO_ERROR;
+	}
+
+	public int GetSchemeProtoElements(
+			AccessIdentity_Transferable accessIdentity,
+			ImageResourceSeq_TransferableHolder imageseq,
+			SchemeProtoElementSeq_TransferableHolder elementseq)
+		throws AMFICOMRemoteException
+	{
+		CheckUserPrivileges(accessIdentity);
+
+		int ret = Constants.ERROR_NO_ERROR;
+
+		Vector img_ids = new Vector();
+
+		imageseq.value = new ImageResource_Transferable[0];
+		elementseq.value = new SchemeProtoElement_Transferable[0];
+
+		SchemedbInterfaceProtoLoad.getProtoElements(accessIdentity.domain_id, elementseq);
+		return Constants.ERROR_NO_ERROR;
+	}
+
+	public int GetStatedSchemeProtoElements(
+			AccessIdentity_Transferable accessIdentity,
+			String[] ids,
+			ImageResourceSeq_TransferableHolder imageseq,
+			SchemeProtoElementSeq_TransferableHolder elementseq)
+		throws AMFICOMRemoteException
+	{
+		CheckUserPrivileges(accessIdentity);
+
+		int ret = Constants.ERROR_NO_ERROR;
+
+		Vector img_ids = new Vector();
+
+		imageseq.value = new ImageResource_Transferable[0];
+		elementseq.value = new SchemeProtoElement_Transferable[0];
+
+		SchemedbInterfaceProtoLoad.getProtoElements(accessIdentity.domain_id, ids, elementseq);
+/*
+		ret = ResourcedbInterface.loadImages(imageseq, img_ids);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+*/
+		return Constants.ERROR_NO_ERROR;
+	}
+
+	public int SaveSchemeProtoElements(
+			AccessIdentity_Transferable accessIdentity,
+			ImageResource_Transferable[] images,
+			SchemeProtoElement_Transferable[] elementseq)
+		throws AMFICOMRemoteException
+	{
+		CheckUserPrivileges(accessIdentity);
+
+		int ret = Constants.ERROR_NO_ERROR;
+
+		ret = ResourcedbInterface.saveImages(images);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+		ret = SchemedbInterfaceProtoSave.saveProtoElements(accessIdentity.domain_id, elementseq);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+		return Constants.ERROR_NO_ERROR;
+	}
+
+	public int RemoveSchemeProtoElements(
+			AccessIdentity_Transferable accessIdentity,
+			String[] element_ids)
+		throws AMFICOMRemoteException
+	{
+		CheckUserPrivileges(accessIdentity);
+
+		int ret = Constants.ERROR_NO_ERROR;
+
+		ret = SchemedbInterfaceProtoSave.removeProtoElements(element_ids);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+		return Constants.ERROR_NO_ERROR;
+	}
+
+	public int GetSchemes(
+			AccessIdentity_Transferable accessIdentity,
+			ImageResourceSeq_TransferableHolder imageseq,
+			SchemeSeq_TransferableHolder elementseq)
+		throws AMFICOMRemoteException
+	{
+		CheckUserPrivileges(accessIdentity);
+
+		int ret = Constants.ERROR_NO_ERROR;
+
+		Vector img_ids = new Vector();
+
+		imageseq.value = new ImageResource_Transferable[0];
+		elementseq.value = new Scheme_Transferable[0];
+
+		SchemedbInterfaceLoad.getSchemes(accessIdentity.domain_id, elementseq);
+		return Constants.ERROR_NO_ERROR;
+	}
+
+	public int GetStatedSchemes(
+			AccessIdentity_Transferable accessIdentity,
+			String[] ids,
+			ImageResourceSeq_TransferableHolder imageseq,
+			SchemeSeq_TransferableHolder elementseq)
+		throws AMFICOMRemoteException
+	{
+		CheckUserPrivileges(accessIdentity);
+
+		int ret = Constants.ERROR_NO_ERROR;
+
+		Vector img_ids = new Vector();
+
+		imageseq.value = new ImageResource_Transferable[0];
+		elementseq.value = new Scheme_Transferable[0];
+
+		SchemedbInterfaceLoad.getSchemes(accessIdentity.domain_id, ids, elementseq);
+		return Constants.ERROR_NO_ERROR;
+	}
+
+	public int SaveSchemes(
+			AccessIdentity_Transferable accessIdentity,
+			ImageResource_Transferable[] images,
+			Scheme_Transferable[] elementseq)
+		throws AMFICOMRemoteException
+	{
+		CheckUserPrivileges(accessIdentity);
+
+		int ret = Constants.ERROR_NO_ERROR;
+
+		ret = ResourcedbInterface.saveImages(images);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+		ret = SchemedbInterfaceSave.saveSchemes(accessIdentity.domain_id, elementseq);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+		return Constants.ERROR_NO_ERROR;
+	}
+
+	public int RemoveSchemes(
+			AccessIdentity_Transferable accessIdentity,
+			String[] scheme_ids,
+			String[] scheme_path_ids,// not used
+			String[] scheme_cable_link_ids,
+			String[] scheme_element_ids)
+		throws AMFICOMRemoteException
+	{
+		CheckUserPrivileges(accessIdentity);
+
+		int ret = Constants.ERROR_NO_ERROR;
+
+		ret = SchemedbInterfaceSave.removeCableLinks(scheme_cable_link_ids);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+		ret = SchemedbInterfaceSave.removeSchemeElements(scheme_element_ids);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+		ret = SchemedbInterfaceSave.removeSchemes(scheme_ids);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+		return Constants.ERROR_NO_ERROR;
+	}
+
+	public int RemoveMaps(
+			AccessIdentity_Transferable accessIdentity,
+			String[] mapseq,
+			String[] equipmentseq,
+			String[] kisseq,
+			String[] markseq,
+			String[] nodeseq,
+			String[] nodelinkseq,
+			String[] linkseq,
+			String[] pathseq)
+		throws AMFICOMRemoteException
+	{
+		CheckUserPrivileges(accessIdentity);
+
+		int ret = Constants.ERROR_NO_ERROR;
+
+		ret = MapdbInterfaceRemove.removeMaps(mapseq);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+		ret = MapdbInterfaceRemove.removeElements(equipmentseq);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+		ret = MapdbInterfaceRemove.removeKISs(kisseq);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+		ret = MapdbInterfaceRemove.removeMarks(markseq);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+		ret = MapdbInterfaceRemove.removeNodes(nodeseq);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+		ret = MapdbInterfaceRemove.removeNodeLinks(nodelinkseq);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+		ret = MapdbInterfaceRemove.removeLinks(linkseq);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+		ret = MapdbInterfaceRemove.removePaths(pathseq);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+		return Constants.ERROR_NO_ERROR;
+	}
+
+	public int RemoveJMaps(
+			AccessIdentity_Transferable accessIdentity,
+			String[] mapseq,
+			String[] kisseq,
+			String[] nodeseq,
+			String[] nodelinkseq,
+			String[] linkseq,
+			String[] pathseq)
+		throws AMFICOMRemoteException
+	{
+		CheckUserPrivileges(accessIdentity);
+
+		int ret = Constants.ERROR_NO_ERROR;
+
+		ret = MapdbInterfaceRemove.removeJMaps(mapseq);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+		ret = MapdbInterfaceRemove.removeKISs(kisseq);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+		ret = MapdbInterfaceRemove.removeNodes(nodeseq);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+		ret = MapdbInterfaceRemove.removeNodeLinks(nodelinkseq);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+		ret = MapdbInterfaceRemove.removeLinks(linkseq);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+		ret = MapdbInterfaceRemove.removePaths(pathseq);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+		return Constants.ERROR_NO_ERROR;
+	}
+
+	public int LoadAttributeTypes(
+			AccessIdentity_Transferable accessIdentity,
+			ElementAttributeTypeSeq_TransferableHolder attrseq)
+		throws AMFICOMRemoteException
+	{
+		CheckUserPrivileges(accessIdentity);
+
+		int ret = Constants.ERROR_NO_ERROR;
+
+		ret = MapdbInterfaceLoad4.loadAttributeTypes(attrseq);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+		return ret;
+	}
+
+	public int LoadStatedAttributeTypes(
+			AccessIdentity_Transferable accessIdentity,
+			String[] ids,
+			ElementAttributeTypeSeq_TransferableHolder attrseq)
+		throws AMFICOMRemoteException
+	{
+		CheckUserPrivileges(accessIdentity);
+
+		int ret = Constants.ERROR_NO_ERROR;
+
+		ret = MapdbInterfaceLoad4.loadAttributeTypes(ids, attrseq);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+		return ret;
+	}
+
+	public int ReloadAttributes(
+			AccessIdentity_Transferable accessIdentity,
+			String[] map_ids,
+			ElementAttributeSeq_TransferableHolder attrseq)
+		throws AMFICOMRemoteException
+	{
+		CheckUserPrivileges(accessIdentity);
+
+		int ret = Constants.ERROR_NO_ERROR;
+
+		attrseq.value = new ElementAttribute_Transferable[0];
+
+		Vector vector = new Vector();
+		ret = MapdbInterfaceLoad4.reloadAttributes(map_ids, vector);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+
+		ElementAttribute_Transferable[] attributes = new ElementAttribute_Transferable[vector.size()];
+		vector.copyInto(attributes);
+		attrseq.value = attributes;
+
+		return ret;
+	}
+
+	public int ReloadISMAttributes(
+			AccessIdentity_Transferable accessIdentity,
+			String[] ism_map_ids,
+			ElementAttributeSeq_TransferableHolder attrseq)
+		throws AMFICOMRemoteException
+	{
+		CheckUserPrivileges(accessIdentity);
+
+		int ret = Constants.ERROR_NO_ERROR;
+
+		attrseq.value = new ElementAttribute_Transferable[0];
+
+		Vector vector = new Vector();
+		ret = MapdbInterfaceLoad4.reloadISMAttributes(ism_map_ids, vector);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+
+		ElementAttribute_Transferable[] attributes = new ElementAttribute_Transferable[vector.size()];
+		vector.copyInto(attributes);
+		attrseq.value = attributes;
+
+		return ret;
+	}
+
+	public int GetAlarms(
+			AccessIdentity_Transferable accessIdentity,
+			AlarmSeq_TransferableHolder alarmseq,
+			EventSourceSeq_TransferableHolder eventsourceseq,
+			EventSeq_TransferableHolder eventseq)
+		throws AMFICOMRemoteException
+	{
+		CheckUserPrivileges(accessIdentity);
+
+		int ret = Constants.ERROR_NO_ERROR;
+
+		alarmseq.value = new Alarm_Transferable[0];
+		eventsourceseq.value = new EventSource_Transferable[0];
+		eventseq.value = new Event_Transferable[0];
+
+		Hashtable ht = new Hashtable();
+		Hashtable ht2 = new Hashtable();
+
+		Alarm[] alarms;
+		EventSource src;
+		Event evt;
+		try
+		{
+			alarms = Alarm.retrieveAlarms(accessIdentity.domain_id);
+			alarmseq.value = new Alarm_Transferable[alarms.length];
+			String mesg = "retrieve alarms for domain '" + accessIdentity.domain_id + "' - " + alarms.length + " found ";
+			System.out.println(mesg);
+			for(int i = 0; i < alarms.length; i++)
+			{
+				alarmseq.value[i] = alarms[i].getTransferable();
+				evt = new Event(alarms[i].getEventId());
+				src = new EventSource(evt.getSourceId());
+				ht.put(evt.getSourceId(), src.getTransferable());
+				ht2.put(alarms[i].getEventId(), evt.getTransferable());
+			}
+			eventsourceseq.value = new EventSource_Transferable[ht.size()];
+			int i = 0;
+			for(Enumeration enum = ht.elements(); enum.hasMoreElements();)
+				eventsourceseq.value[i++] = (EventSource_Transferable )enum.nextElement();
+
+			eventseq.value = new Event_Transferable[ht2.size()];
+			i = 0;
+			for(Enumeration enum = ht2.elements(); enum.hasMoreElements();)
+				eventseq.value[i++] = (Event_Transferable )enum.nextElement();
+		}
+		catch(SQLException ex)
+		{
+			ex.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_LOADING, "Невозможно загрузить тесты: " + ex.getMessage());
+/*
+			ret = SurveydbInterfaceLoad2.loadAlarms(accessIdentity.domain_id, alarmseq, eventsourceseq, eventseq);
+			if(ret != Constants.ERROR_NO_ERROR)
+				return ret;
+*/
+		}
+		return ret;
+	}
+
+	public int GetStatedAlarms(
+			AccessIdentity_Transferable accessIdentity,
+			String[] ids,
+			AlarmSeq_TransferableHolder alarmseq,
+			EventSourceSeq_TransferableHolder eventsourceseq,
+			EventSeq_TransferableHolder eventseq)
+		throws AMFICOMRemoteException
+	{
+		CheckUserPrivileges(accessIdentity);
+
+		int ret = Constants.ERROR_NO_ERROR;
+
+		alarmseq.value = new Alarm_Transferable[0];
+		eventsourceseq.value = new EventSource_Transferable[0];
+		eventseq.value = new Event_Transferable[0];
+
+		Vector alarms = new Vector();
+		Hashtable ht = new Hashtable();
+		Hashtable ht2 = new Hashtable();
+
+		Alarm alarm;
+		EventSource src;
+		Event evt;
+		try
+		{
+			for(int i = 0; i < ids.length; i++)
+			{
+				alarm = new Alarm(ids[i]);
+				if(alarm != null)
+				{
+					alarms.add(alarm.getTransferable());
+
+					evt = new Event(alarm.getEventId());
+					src = new EventSource(evt.getSourceId());
+					ht.put(evt.getSourceId(), src.getTransferable());
+					ht2.put(alarm.getEventId(), evt.getTransferable());
+				}
+			}
+
+			alarmseq.value = new Alarm_Transferable[alarms.size()];
+			alarms.copyInto(alarmseq.value);
+
+			eventsourceseq.value = new EventSource_Transferable[ht.size()];
+			int i = 0;
+			for(Enumeration enum = ht.elements(); enum.hasMoreElements();)
+				eventsourceseq.value[i++] = (EventSource_Transferable )enum.nextElement();
+
+			eventseq.value = new Event_Transferable[ht2.size()];
+			i = 0;
+			for(Enumeration enum = ht2.elements(); enum.hasMoreElements();)
+				eventseq.value[i++] = (Event_Transferable )enum.nextElement();
+		}
+		catch(SQLException ex)
+		{
+			ex.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_LOADING, "Невозможно загрузить тесты: " + ex.getMessage());
+		}
+		return ret;
+	}
+
+	public int GetStatedAlarmsFiltered(
+			AccessIdentity_Transferable accessIdentity,
+			String[] ids,
+			Filter_Transferable filter,
+			AlarmSeq_TransferableHolder alarmseq,
+			EventSourceSeq_TransferableHolder eventsourceseq,
+			EventSeq_TransferableHolder eventseq)
+		throws AMFICOMRemoteException
+	{
+		CheckUserPrivileges(accessIdentity);
+
+		int ret = Constants.ERROR_NO_ERROR;
+
+		alarmseq.value = new Alarm_Transferable[0];
+		eventsourceseq.value = new EventSource_Transferable[0];
+		eventseq.value = new Event_Transferable[0];
+
+		Vector nf_alarms = new Vector();
+
+		Vector alarms = new Vector();
+		Hashtable ht = new Hashtable();
+		Hashtable ht2 = new Hashtable();
+
+		Alarm alarm;
+		EventSource src;
+		Event evt;
+		try
+		{
+			for(int i = 0; i < ids.length; i++)
+			{
+				alarm = new Alarm(ids[i]);
+				if(alarm != null)
+				{
+					nf_alarms.add(alarm);
+				}
+			}
+
+			LogicScheme_yo ls = new LogicScheme_yo(new AlarmFilter());
+
+			try
+			{
+				ByteArrayInputStream bis = new ByteArrayInputStream(filter.logic_scheme);
+				ObjectInputStream in = new ObjectInputStream(bis);
+				ls.readObject(in);
+			}
+			catch(Exception ex)
+			{
+				System.out.println("cannot read logic");
+			}
+
+			Vector res = new Vector();
+
+			for(int i = 0; i < nf_alarms.size(); i++)
+			{
+				java.lang.Object obj = nf_alarms.get(i);
+				if(ls.passesAllConstraints(obj))
+					res.add(obj);
+			}
+			nf_alarms = res;
+
+			for(int i = 0; i < nf_alarms.size(); i++)
+			{
+				alarm = (Alarm )nf_alarms.get(i);
+				if(alarm != null)
+				{
+					alarms.add(alarm.getTransferable());
+
+					evt = new Event(alarm.getEventId());
+					src = new EventSource(evt.getSourceId());
+					ht.put(evt.getSourceId(), src.getTransferable());
+					ht2.put(alarm.getEventId(), evt.getTransferable());
+				}
+			}
+
+			alarmseq.value = new Alarm_Transferable[alarms.size()];
+			alarms.copyInto(alarmseq.value);
+
+			eventsourceseq.value = new EventSource_Transferable[ht.size()];
+			int i = 0;
+			for(Enumeration enum = ht.elements(); enum.hasMoreElements();)
+				eventsourceseq.value[i++] = (EventSource_Transferable )enum.nextElement();
+
+			eventseq.value = new Event_Transferable[ht2.size()];
+			i = 0;
+			for(Enumeration enum = ht2.elements(); enum.hasMoreElements();)
+				eventseq.value[i++] = (Event_Transferable )enum.nextElement();
+		}
+		catch(SQLException ex)
+		{
+			ex.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_LOADING, "Невозможно загрузить тесты: " + ex.getMessage());
+		}
+		return ret;
+	}
+
+	public int GetMessages(
+			AccessIdentity_Transferable accessIdentity,
+			MessageSeq_TransferableHolder messageseq)
+		throws AMFICOMRemoteException
+	{
+		CheckUserPrivileges(accessIdentity);
+
+			messageseq.value = new Message_Transferable[0];
+			return Constants.ERROR_NO_ERROR;
+/*
+		int returnValue;
+		try
+		{
+			messageseq.value = ServerProcessHelper.loadMessages(accessIdentity.user_id);
+			return Constants.ERROR_NO_ERROR;
+		}
+		catch (SQLException sqle)
+		{
+			System.out.println("error loading Messages: " + sqle.getMessage());
+			sqle.printStackTrace();
+			messageseq.value = new Message_Transferable[0];
+			return Constants.ERROR_LOADING;
+		}
+*/
+/*
+		int ret = Constants.ERROR_NO_ERROR;
+
+		messageseq.value = new Message_Transferable[0];
+
+		ret = SurveydbInterfaceLoad2.loadMessages(accessIdentity.user_id, messageseq);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+		return ret;
+*/
+	}
+
+	public int SetAlarm(
+			AccessIdentity_Transferable accessIdentity,
+			Alarm_Transferable alarm)
+		throws AMFICOMRemoteException
+	{
+		CheckUserPrivileges(accessIdentity);
+
+		int ret = Constants.ERROR_NO_ERROR;
+
+		try
+		{
+			Alarm a = new Alarm(alarm.id);
+			if(alarm.status.value() == AlarmStatus._ALARM_STATUS_ASSIGNED)
+				a.assignTo(alarm.assigned_to);
+			if(alarm.status.value() == AlarmStatus._ALARM_STATUS_FIXED)
+				a.setFixed(alarm.fixed_by);
+			a.setComments(alarm.comments);
+			if(alarm.status.value() == AlarmStatus._ALARM_STATUS_DELETED)
+				DeleteAlarm(accessIdentity, alarm.id);
+		}
+		catch(SQLException ex)
+		{
+			ex.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_DELETING, "Невозможно удалить сигнал тревоги: " + ex.getMessage());
+		}
+//		ret = SurveydbInterfaceSave2.setAlarm(accessIdentity.domain_id, alarm);
+//		if(ret != Constants.ERROR_NO_ERROR)
+//			return ret;
+		return Constants.ERROR_NO_ERROR;
+	}
+
+	public int DeleteAlarm(
+			AccessIdentity_Transferable accessIdentity,
+			String alarm_id)
+		throws AMFICOMRemoteException
+	{
+		CheckUserPrivileges(accessIdentity);
+
+		int ret = Constants.ERROR_NO_ERROR;
+
+		try
+		{
+			Alarm alarm = new Alarm(alarm_id);
+			alarm.delete();
+		}
+		catch(SQLException ex)
+		{
+			ex.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_DELETING, "Невозможно удалить сигнал тревоги: " + ex.getMessage());
+		}
+//		ret = SurveydbInterfaceSave2.deleteAlarm(alarm_id);
+//		if(ret != Constants.ERROR_NO_ERROR)
+//			return ret;
+		return Constants.ERROR_NO_ERROR;
+	}
+
+	public int SetUserAlarm(
+			AccessIdentity_Transferable accessIdentity,
+			String source_id,
+			String descriptor)
+		throws AMFICOMRemoteException
+	{
+		CheckUserPrivileges(accessIdentity);
+
+		int ret = Constants.ERROR_NO_ERROR;
+
+		ret = SurveydbInterfaceSave2.userAlarm(source_id, descriptor);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+		return Constants.ERROR_NO_ERROR;
+	}
+
+	public int GetAlarmIdsForMonitoredElement(
+			AccessIdentity_Transferable accessIdentity,
+			String me_id,
+			ResourceDescriptorSeq_TransferableHolder alarmids)
+//			wstringSeqHolder alarmids)
+		throws AMFICOMRemoteException
+	{
+		CheckUserPrivileges(accessIdentity);
+
+		int ret = Constants.ERROR_NO_ERROR;
+
+		ret = MaintenancedbInterface.GetAlarmIdsForMonitoredElement(me_id, alarmids);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+/*
+		alarmids.value = new ResourceDescriptor_Transferable[0];
+		try
+		{
+			Vector vec = new Vector();
+
+			IdIterator idIt = null;
+			IdIterator residIt = null;
+
+			#sql idIt = { select ID from AMFICOM.EVALUATIONS
+				where MONITORED_ELEMENT_ID = :me_id
+				and USER_ID IS NULL
+				and DELETED IS NULL
+			};
+			while(idIt.next())
+			{
+				try
+				{
+					String eval_id = idIt.id();
+					String res_id;
+					#sql residIt = { select ID from AMFICOM.RESULTS
+						where EVALUATION_ID = :eval_id
+					};
+					while(residIt.next())
+					{
+					try
+					{
+						res_id = residIt.id();
+						String ev_id;
+						#sql { select ID into :ev_id from AMFICOM.EVENTS
+							where DESCRIPTOR = :res_id
+						};
+
+						ResourceIdIterator idIt2 = null;
+						#sql idIt2 = { select ID, MODIFIED from AMFICOM.ALARMS
+							where EVENT_ID = :ev_id
+							and STATUS != :(AlarmStatus._ALARM_DELETED)
+						};
+						while(idIt2.next())
+							vec.add(new ResourceDescriptor_Transferable(idIt2.id(), idIt2.modified().getTime()));
+						idIt2.close();
+					}
+					catch(Exception e1)
+					{
+					}
+					}//while residIt
+					residIt.close();
+				}
+				catch(Exception e1)
+				{
+				}
+			}// while idIt
+			idIt.close();
+
+			alarmids.value = new ResourceDescriptor_Transferable[vec.size()];
+			vec.copyInto(alarmids.value);
+		}
+		catch(SQLException ex)
+		{
+			ex.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_LOADING, "Невозможно загрузить тест: " + ex.getMessage());
+		}
+*/
+		return ret;
+	}
+
+	public int LoadMaintenanceData(
+			AccessIdentity_Transferable accessIdentity,
+			EventSourceTypeSeq_TransferableHolder est,
+			AlertingMessageSeq_TransferableHolder am,
+			AlertingMessageUserSeq_TransferableHolder amu)
+		throws AMFICOMRemoteException
+	{
+		CheckUserPrivileges(accessIdentity);
+
+		Vector vec;
+		vec = MaintenancedbInterface.getEventSourceTypes();
+		est.value = new EventSourceType_Transferable[vec.size()];
+		vec.copyInto(est.value);
+		vec = MaintenancedbInterface.getAlertingMessages();
+		am.value = new AlertingMessage_Transferable[vec.size()];
+		vec.copyInto(am.value);
+		vec = MaintenancedbInterface.getAlertingMessageUsers();
+		amu.value = new AlertingMessageUser_Transferable[vec.size()];
+		vec.copyInto(amu.value);
+		return Constants.ERROR_NO_ERROR;
+	}
+
+	public int SaveMaintenanceData(
+			AccessIdentity_Transferable accessIdentity,
+			AlertingMessage_Transferable []am,
+			AlertingMessageUser_Transferable []amu)
+		throws AMFICOMRemoteException
+	{
+		CheckUserPrivileges(accessIdentity);
+		for(int i = 0; i < am.length; i++)
+			MaintenancedbInterface.saveAlertingMessages(am[i]);
+		for(int i = 0; i < amu.length; i++)
+			MaintenancedbInterface.saveAlertingMessageUsers(amu[i]);
+		return Constants.ERROR_NO_ERROR;
+	}
+
+	public int RemoveMaintenanceData(
+			AccessIdentity_Transferable accessIdentity,
+			String amu_id)
+		throws AMFICOMRemoteException
+	{
+		CheckUserPrivileges(accessIdentity);
+		MaintenancedbInterface.removeAlertingMessageUser(amu_id);
+		return Constants.ERROR_NO_ERROR;
+	}
+
+	public int GetUId(
+			AccessIdentity_Transferable accessIdentity,
+			String type,
+			StringHolder id)
+		throws AMFICOMRemoteException
+	{
+		CheckUserPrivileges(accessIdentity);
+
+		try
+		{
+			id.value = ResourcedbInterface.getUId(type);
+			return Constants.ERROR_NO_ERROR;
+		}
+		catch(Exception e)
+		{
+			id.value = "";
+			return Constants.ERROR_UID;
+		}
+	}
+
+	public int GetResourceDescriptors(
+			AccessIdentity_Transferable accessIdentity,
+			String type,
+			ResourceDescriptorSeq_TransferableHolder desc)
+		throws AMFICOMRemoteException
+	{
+		CheckUserPrivileges(accessIdentity);
+
+		Vector vec = ResourcedbInterface.getResourceDescriptors(type);
+		desc.value = new ResourceDescriptor_Transferable[vec.size()];
+		vec.copyInto(desc.value);
+		return Constants.ERROR_NO_ERROR;
+	}
+
+	public int GetResourceDescriptor(
+			AccessIdentity_Transferable accessIdentity,
+			String type,
+			String id,
+			ResourceDescriptor_TransferableHolder desc)
+		throws AMFICOMRemoteException
+	{
+		CheckUserPrivileges(accessIdentity);
+
+		desc.value = ResourcedbInterface.getResourceDescriptor(type, id);
+		if(desc.value == null)
+			throw new AMFICOMRemoteException(0, "Нельзя загрузить дескриптор ресурса: " + type + " " + id);
+		return Constants.ERROR_NO_ERROR;
+	}
+
+	public int GetResourceDescriptorsByIds(
+			AccessIdentity_Transferable accessIdentity,
+			String type,
+			String[] ids,
+			ResourceDescriptorSeq_TransferableHolder desc)
+		throws AMFICOMRemoteException
+	{
+		CheckUserPrivileges(accessIdentity);
+
+		Vector vec = ResourcedbInterface.getResourceDescriptors(type);
+		Vector vec3 = new Vector();
+		for(int i = 0; i < ids.length; i++)
+			vec3.add(ids[i]);
+		Vector vec2 = new Vector();
+		for(int i = 0; i < vec.size(); i++)
+		{
+			ResourceDescriptor_Transferable d = (ResourceDescriptor_Transferable )vec.get(i);
+			if(vec3.contains(d.resource_id))
+				vec2.add(d);
+		}
+		desc.value = new ResourceDescriptor_Transferable[vec2.size()];
+		vec2.copyInto(desc.value);
+		return Constants.ERROR_NO_ERROR;
+	}
+
+	public int GetResultDescriptorsByIds(
+			AccessIdentity_Transferable accessIdentity,
+			String[] ids,
+			ResourceDescriptorSeq_TransferableHolder desc)
+		throws AMFICOMRemoteException
+	{
+		CheckUserPrivileges(accessIdentity);
+
+		int ret = Constants.ERROR_NO_ERROR;
+		desc.value = new ResourceDescriptor_Transferable[0];
+		Result res;
+		Vector vec = new Vector();
+		Vector idsvec = new Vector();
+		for(int i = 0; i < ids.length; i++)
+		{
+			try
+			{
+				res = new Result(ids[i]);
+				if(!idsvec.contains(res.getId()))
+				{
+					ResourceDescriptor_Transferable d = new ResourceDescriptor_Transferable(res.getId(), res.getElementaryStartTime().getTime());
+					vec.add(d);
+					idsvec.add(res.getId());
+				}
+			}
+			catch(Exception ex)
+			{
+			}
+		}
+		desc.value = new ResourceDescriptor_Transferable[vec.size()];
+		vec.copyInto(desc.value);
+		return Constants.ERROR_NO_ERROR;
+	}
+
+	public int GetDomainResourceDescriptors(
+			AccessIdentity_Transferable accessIdentity,
+			String type,
+			ResourceDescriptorSeq_TransferableHolder desc)
+		throws AMFICOMRemoteException
+	{
+		CheckUserPrivileges(accessIdentity);
+
+		Vector vec = ResourcedbInterface.getDomainResourceDescriptors(type, accessIdentity.domain_id);
+		desc.value = new ResourceDescriptor_Transferable[vec.size()];
+		vec.copyInto(desc.value);
+		return Constants.ERROR_NO_ERROR;
+	}
+
+	public int GetResults(
+			AccessIdentity_Transferable accessIdentity,
+			ClientResultSeq_TransferableHolder resultseq)
+		throws AMFICOMRemoteException
+	{
+		CheckUserPrivileges(accessIdentity);
+
+		int ret = Constants.ERROR_NO_ERROR;
+
+		resultseq.value = new ClientResult_Transferable[0];
+/*
+//		ret = SurveydbInterfaceLoad4.loadResults(resultseq);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+*/
+		Result res;
+		IdIterator idIt = null;
+		Vector vec = new Vector();
+		try
+		{
+
+			#sql idIt = { select ID from AMFICOM.RESULTS };
+			while(idIt.next())
+			{
+				res = new Result(idIt.id());
+				vec.add(res.getClientTransferable());
+			}
+			idIt.close();
+			resultseq.value = new ClientResult_Transferable[vec.size()];
+			vec.copyInto(resultseq.value);
+		}
+		catch(Exception ex)
+		{
+			if(idIt != null) try
+			{
+			idIt.close();
+			}catch(Exception exe) {}
+			ex.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_LOADING, "Невозможно получить результат: " + ex.getMessage());
+		}
+
+		return ret;
+	}
+
+	public int GetStatedResults(
+			AccessIdentity_Transferable accessIdentity,
+			String[] ids,
+			ClientResultSeq_TransferableHolder resultseq)
+		throws AMFICOMRemoteException
+	{
+		CheckUserPrivileges(accessIdentity);
+
+		int ret = Constants.ERROR_NO_ERROR;
+
+		resultseq.value = new ClientResult_Transferable[0];
+
+		Vector idsvec = new Vector();
+		for(int i = 0; i < ids.length; i++)
+			idsvec.add(ids[i]);
+
+		Result res;
+		IdIterator idIt = null;
+		Vector vec = new Vector();
+		try
+		{
+
+			#sql idIt = { select ID from AMFICOM.RESULTS };
+			while(idIt.next())
+			{
+				if(idsvec.contains(idIt.id()))
+				{
+					res = new Result(idIt.id());
+					vec.add(res.getClientTransferable());
+				}
+			}
+			idIt.close();
+			resultseq.value = new ClientResult_Transferable[vec.size()];
+			vec.copyInto(resultseq.value);
+		}
+		catch(Exception ex)
+		{
+			if(idIt != null) try
+			{
+			idIt.close();
+			}catch(Exception exe) {}
+			ex.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_LOADING, "Невозможно получить результат: " + ex.getMessage());
+		}
+
+		return ret;
+	}
+
+	public int GetRequests(
+			AccessIdentity_Transferable accessIdentity,
+			ClientTestRequestSeq_TransferableHolder treqseq)
+		throws AMFICOMRemoteException
+	{
+		CheckUserPrivileges(accessIdentity);
+
+		int ret = Constants.ERROR_NO_ERROR;
+
+		treqseq.value = new ClientTestRequest_Transferable[0];
+
+		ret = SurveydbInterfaceLoad3.loadRequests(accessIdentity.domain_id, treqseq);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+		return ret;
+	}
+
+	public int GetTests(
+			AccessIdentity_Transferable accessIdentity,
+			ClientTestSeq_TransferableHolder testseq)
+		throws AMFICOMRemoteException
+	{
+		CheckUserPrivileges(accessIdentity);
+
+		int ret = Constants.ERROR_NO_ERROR;
+
+		testseq.value = new ClientTest_Transferable[0];
+
+		Test[] tests;
+		try
+		{
+			tests = Test.retrieveTests(accessIdentity.domain_id);
+			testseq.value = new ClientTest_Transferable[tests.length];
+			for(int i = 0; i < tests.length; i++)
+				testseq.value[i] = tests[i].getClientTransferable();
+		}
+		catch(SQLException ex)
+		{
+			ex.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_LOADING, "Невозможно загрузить тесты: " + ex.getMessage());
+/*
+//		ret = SurveydbInterfaceLoad3.loadTests(testseq);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+*/
+		}
+		return ret;
+	}
+
+	public int GetStatedTests(
+			AccessIdentity_Transferable accessIdentity,
+			String[] ids,
+			ClientTestSeq_TransferableHolder testseq)
+		throws AMFICOMRemoteException
+	{
+		CheckUserPrivileges(accessIdentity);
+
+		int ret = Constants.ERROR_NO_ERROR;
+
+		testseq.value = new ClientTest_Transferable[0];
+
+		Test[] tests;
+		Vector vec = new Vector();
+		try
+		{
+			for(int i = 0; i < ids.length; i++)
+			{
+				Test test = new Test(ids[i]);
+				if(test != null)
+					vec.add(test.getClientTransferable());
+			}
+			testseq.value = new ClientTest_Transferable[vec.size()];
+			vec.copyInto(testseq.value);
+		}
+		catch(SQLException ex)
+		{
+			ex.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_LOADING, "Невозможно загрузить тесты: " + ex.getMessage());
+/*
+//		ret = SurveydbInterfaceLoad3.loadTests(testseq);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+*/
+		}
+		return ret;
+	}
+
+	public int GetOneTimeTestIdsInDiapazon(
+			AccessIdentity_Transferable accessIdentity,
+			long start_time,
+			long end_time,
+			ResourceDescriptorSeq_TransferableHolder desc)
+		throws AMFICOMRemoteException
+	{
+		CheckUserPrivileges(accessIdentity);
+
+		Vector vec1 = ResourcedbInterface.getResourceDescriptors("testonetime");
+		ResourceDescriptor_Transferable[] desc1 = new ResourceDescriptor_Transferable[vec1.size()];
+		vec1.copyInto(desc1);
+
+		Vector vec = filterTimeDiapazon(start_time, end_time, desc1);
+
+		desc.value = new ResourceDescriptor_Transferable[vec.size()];
+		vec.copyInto(desc.value);
+		return Constants.ERROR_NO_ERROR;
+	}
+
+	public int GetTestIdsInDiapazon(
+			AccessIdentity_Transferable accessIdentity,
+			long start_time,
+			long end_time,
+			ResourceDescriptorSeq_TransferableHolder desc)
+		throws AMFICOMRemoteException
+	{
+		CheckUserPrivileges(accessIdentity);
+
+		Vector vec1 = ResourcedbInterface.getResourceDescriptors("test");
+		ResourceDescriptor_Transferable[] desc1 = new ResourceDescriptor_Transferable[vec1.size()];
+		vec1.copyInto(desc1);
+
+		Vector vec = filterTimeDiapazon(start_time, end_time, desc1);
+
+		desc.value = new ResourceDescriptor_Transferable[vec.size()];
+		vec.copyInto(desc.value);
+		return Constants.ERROR_NO_ERROR;
+/*
+		try
+		{
+			Vector vec = new Vector();
+
+			for(int i = 0; i < desc1.length; i++)
+			{
+				Test test = new Test(desc1[i].resource_id);
+				long st = test.getTransferable().start_time;
+				if(test.getTemporalType() == TestTemporalType._TEST_TEMPORAL_TYPE_ONETIME)
+				{
+					if(st <= end_time && st >= start_time)
+					{
+						vec.add(desc1[i]);
+//						System.out.println("for diapazon " + start_time + ", " + end_time + " retrieving test " + desc1[i].resource_id);
+					}
+				}
+				else
+				if(test.getTemporalType() == TestTemporalType._TEST_TEMPORAL_TYPE_PERIODICAL)
+				{
+					long et = test.getEndTime().getTime();
+					if(st <= end_time && et >= start_time)
+					{
+						vec.add(desc1[i]);
+//						System.out.println("for diapazon " + start_time + ", " + end_time + " retrieving test " + desc1[i].resource_id);
+					}
+				}
+				else
+				if(test.getTemporalType() == TestTemporalType._TEST_TEMPORAL_TYPE_TIMETABLE)
+				{
+					long et = st;
+					long[] ti = test.getTransferable().time_stamps.ti();
+					for(int j = 0; j < ti.length; j++)
+						if(ti[j] > et)
+							et = ti[j];
+					if(st <= end_time && et >= start_time)
+					{
+						vec.add(desc1[i]);
+//						System.out.println("for diapazon " + start_time + ", " + end_time + " retrieving test " + desc1[i].resource_id);
+					}
+				}
+//				System.out.println("for diapazon " + start_time + ", " + end_time + " retrieving test " + idIt.id());
+			}
+
+//			System.out.println("vec size is " + vec.size());
+			desc.value = new ResourceDescriptor_Transferable[vec.size()];
+			vec.copyInto(desc.value);
+			return Constants.ERROR_NO_ERROR;
+
+		}
+		catch(SQLException ex)
+		{
+			ex.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_LOADING, "Невозможно загрузить тест: " + ex.getMessage());
+		}
+*/
+	}
+
+	public Vector filterTimeDiapazon(
+			long start_time,
+			long end_time,
+			ResourceDescriptor_Transferable[] desc1)
+		throws AMFICOMRemoteException
+	{
+		Vector vec = new Vector();
+
+		try
+		{
+			for(int i = 0; i < desc1.length; i++)
+			{
+				Test test = new Test(desc1[i].resource_id);
+				long st = test.getTransferable().start_time;
+				if(test.getTemporalType() == TestTemporalType._TEST_TEMPORAL_TYPE_ONETIME)
+				{
+					if(st <= end_time && st >= start_time)
+					{
+						vec.add(desc1[i]);
+//						System.out.println("for diapazon " + start_time + ", " + end_time + " retrieving test " + desc1[i].resource_id);
+					}
+				}
+				else
+				if(test.getTemporalType() == TestTemporalType._TEST_TEMPORAL_TYPE_PERIODICAL)
+				{
+					long et = test.getEndTime().getTime();
+					if(st <= end_time && et >= start_time)
+					{
+						vec.add(desc1[i]);
+//						System.out.println("for diapazon " + start_time + ", " + end_time + " retrieving test " + desc1[i].resource_id);
+					}
+				}
+				else
+				if(test.getTemporalType() == TestTemporalType._TEST_TEMPORAL_TYPE_TIMETABLE)
+				{
+					long et = st;
+					long[] ti = test.getTransferable().time_stamps.ti();
+					for(int j = 0; j < ti.length; j++)
+						if(ti[j] > et)
+							et = ti[j];
+					if(st <= end_time && et >= start_time)
+					{
+						vec.add(desc1[i]);
+//						System.out.println("for diapazon " + start_time + ", " + end_time + " retrieving test " + desc1[i].resource_id);
+					}
+				}
+//				System.out.println("for diapazon " + start_time + ", " + end_time + " retrieving test " + idIt.id());
+			}
+
+//			System.out.println("vec size is " + vec.size());
+			return vec;
+		}
+		catch(SQLException ex)
+		{
+			ex.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_LOADING, "Невозможно загрузить тест: " + ex.getMessage());
+		}
+	}
+
+	public int GetTestIdsForMonitoredElement(
+			AccessIdentity_Transferable accessIdentity,
+			String me_id,
+			ResourceDescriptorSeq_TransferableHolder testids)
+//			wstringSeqHolder testids)
+		throws AMFICOMRemoteException
+	{
+		CheckUserPrivileges(accessIdentity);
+
+		int ret = Constants.ERROR_NO_ERROR;
+		return SurveydbInterfaceLoad.GetTestIdsForMonitoredElement(me_id, testids);
+	}
+/*
+		testids.value = new ResourceDescriptor_Transferable[0];
+		try
+		{
+			Vector vec = new Vector();
+
+			ResourceIdIterator idIt = null;
+
+			#sql idIt = { select ID, MODIFIED from AMFICOM.TESTS
+				where MONITORED_ELEMENT_ID = :me_id
+				and DELETED IS NULL
+			};
+			while(idIt.next())
+				vec.add(new ResourceDescriptor_Transferable(idIt.id(), idIt.modified().getTime()));
+			idIt.close();
+
+			testids.value = new ResourceDescriptor_Transferable[vec.size()];
+			vec.copyInto(testids.value);
+		}
+		catch(SQLException ex)
+		{
+			ex.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_LOADING, "Невозможно загрузить тест: " + ex.getMessage());
+		}
+		return ret;
+	}
+*/
+	public int GetAnalysis(
+			AccessIdentity_Transferable accessIdentity,
+			ClientAnalysisSeq_TransferableHolder analysisseq)
+		throws AMFICOMRemoteException
+	{
+		CheckUserPrivileges(accessIdentity);
+
+		int ret = Constants.ERROR_NO_ERROR;
+
+		analysisseq.value = new ClientAnalysis_Transferable[0];
+/*
+//		ret = SurveydbInterfaceLoad3.loadAnalysis(analysisseq);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+*/
+
+		Analysis[] a;
+		try
+		{
+			a = Analysis.retrieveUserAnalysises(accessIdentity.domain_id);
+			analysisseq.value = new ClientAnalysis_Transferable[a.length];
+			for(int i = 0; i < a.length; i++)
+				analysisseq.value[i] = a[i].getClientTransferable();
+		}
+		catch(SQLException ex)
+		{
+			ex.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_LOADING, "Невозможно загрузить Объекты анализа: " + ex.getMessage());
+		}
+		return ret;
+	}
+
+	public int GetAnalysisIdsForMonitoredElement(
+			AccessIdentity_Transferable accessIdentity,
+			String me_id,
+			ResourceDescriptorSeq_TransferableHolder analysisids)
+//			wstringSeqHolder analysisids)
+		throws AMFICOMRemoteException
+	{
+		CheckUserPrivileges(accessIdentity);
+
+		int ret = Constants.ERROR_NO_ERROR;
+
+		analysisids.value = new ResourceDescriptor_Transferable[0];
+
+		Vector vec = new Vector();
+
+		ResourceIdIterator idIt = null;
+
+		try
+		{
+			#sql idIt = { select ID, MODIFIED from AMFICOM.ANALYSIS
+				where MONITORED_ELEMENT_ID = :me_id
+				and DELETED IS NULL
+				and USER_ID IS NOT NULL
+			};
+			while(idIt.next())
+				vec.add(new ResourceDescriptor_Transferable(idIt.id(), idIt.modified().getTime()));
+			idIt.close();
+
+			analysisids.value = new ResourceDescriptor_Transferable[vec.size()];
+			vec.copyInto(analysisids.value);
+		}
+		catch(Exception ex)
+		{
+			if(idIt != null) try
+			{
+			idIt.close();
+			}catch(Exception exe) {}
+			ex.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_LOADING, "Невозможно загрузить анализ: " + ex.getMessage());
+		}
+		return ret;
+	}
+
+	public int GetModelings(
+			AccessIdentity_Transferable accessIdentity,
+			ClientModelingSeq_TransferableHolder modelingseq)
+		throws AMFICOMRemoteException
+	{
+		CheckUserPrivileges(accessIdentity);
+
+		int ret = Constants.ERROR_NO_ERROR;
+
+		modelingseq.value = new ClientModeling_Transferable[0];
+/*
+		ret = SurveydbInterfaceLoad3.loadModeling(modelingseq);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+*/
+		Modeling[] m;
+		try
+		{
+			m = Modeling.retrieveModelings();
+			modelingseq.value = new ClientModeling_Transferable[m.length];
+			for(int i = 0; i < m.length; i++)
+				modelingseq.value[i] = m[i].getClientTransferable();
+		}
+		catch(SQLException ex)
+		{
+			ex.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_LOADING, "Невозможно загрузить Объекты моделирования " + ex.getMessage());
+		}
+		return ret;
+	}
+
+	public int GetModelingIdsForSchemePath(
+			AccessIdentity_Transferable accessIdentity,
+			String scheme_path_id,
+			ResourceDescriptorSeq_TransferableHolder modelingids)
+//			wstringSeqHolder modelingids)
+		throws AMFICOMRemoteException
+	{
+		CheckUserPrivileges(accessIdentity);
+
+		int ret = Constants.ERROR_NO_ERROR;
+
+		modelingids.value = new ResourceDescriptor_Transferable[0];
+
+		Vector vec = new Vector();
+
+		ResourceIdIterator idIt = null;
+		try
+		{
+
+			#sql idIt = { select ID, MODIFIED from AMFICOM.MODELING
+				where SCHEME_PATH_ID = :scheme_path_id
+				and DELETED IS NULL
+				and USER_ID IS NOT NULL
+			};
+			while(idIt.next())
+				vec.add(new ResourceDescriptor_Transferable(idIt.id(), idIt.modified().getTime()));
+			idIt.close();
+
+			modelingids.value = new ResourceDescriptor_Transferable[vec.size()];
+			vec.copyInto(modelingids.value);
+		}
+		catch(Exception ex)
+		{
+			if(idIt != null) try
+			{
+			idIt.close();
+			}catch(Exception exe) {}
+			ex.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_LOADING, "Невозможно загрузить модели: " + ex.getMessage());
+		}
+		return ret;
+	}
+
+	public int GetEvaluations(
+			AccessIdentity_Transferable accessIdentity,
+			ClientEvaluationSeq_TransferableHolder evaluationseq)
+		throws AMFICOMRemoteException
+	{
+		CheckUserPrivileges(accessIdentity);
+
+		int ret = Constants.ERROR_NO_ERROR;
+
+		evaluationseq.value = new ClientEvaluation_Transferable[0];
+/*
+//		ret = SurveydbInterfaceLoad2.loadEvaluation(evaluationseq);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+*/
+		Evaluation[] e;
+		try
+		{
+			e = Evaluation.retrieveUserEvaluations(accessIdentity.domain_id);
+			evaluationseq.value = new ClientEvaluation_Transferable[e.length];
+			for(int i = 0; i < e.length; i++)
+				evaluationseq.value[i] = e[i].getClientTransferable();
+		}
+		catch(SQLException ex)
+		{
+			ex.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_LOADING, "Невозможно загрузить Объекты оценки: " + ex.getMessage());
+		}
+		return ret;
+	}
+
+	public int GetEvaluationIdsForMonitoredElement(
+			AccessIdentity_Transferable accessIdentity,
+			String me_id,
+			ResourceDescriptorSeq_TransferableHolder evaluationids)
+//			wstringSeqHolder evaluationids)
+		throws AMFICOMRemoteException
+	{
+		CheckUserPrivileges(accessIdentity);
+
+		int ret = Constants.ERROR_NO_ERROR;
+
+		evaluationids.value = new ResourceDescriptor_Transferable[0];
+
+		Vector vec = new Vector();
+
+		ResourceIdIterator idIt = null;
+		try
+		{
+
+			#sql idIt = { select ID, MODIFIED from AMFICOM.EVALUATIONS
+				where MONITORED_ELEMENT_ID = :me_id
+				and DELETED IS NULL
+				and USER_ID IS NOT NULL
+			};
+			while(idIt.next())
+				vec.add(new ResourceDescriptor_Transferable(idIt.id(), idIt.modified().getTime()));
+			idIt.close();
+
+			evaluationids.value = new ResourceDescriptor_Transferable[vec.size()];
+			vec.copyInto(evaluationids.value);
+		}
+		catch(Exception ex)
+		{
+			if(idIt != null) try
+			{
+			idIt.close();
+			}catch(Exception exe) {}
+			ex.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_LOADING, "Невозможно загрузить оценку: " + ex.getMessage());
+		}
+		return ret;
+	}
+
+	public int GetRequestTests(
+			AccessIdentity_Transferable accessIdentity,
+			String request_id,
+			ClientTestSeq_TransferableHolder testseq)
+		throws AMFICOMRemoteException
+	{
+		CheckUserPrivileges(accessIdentity);
+
+		int ret = Constants.ERROR_NO_ERROR;
+
+		testseq.value = new ClientTest_Transferable[0];
+/*
+//		ret = SurveydbInterfaceLoad3.loadTestsForRequest(request_id, testseq);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+*/
+		Test test;
+		Vector vec = new Vector();
+
+		IdIterator idIt = null;
+		try
+		{
+
+			#sql idIt = { select ID from AMFICOM.TESTS
+				where REQUEST_ID = :request_id
+				and DELETED IS NULL
+			};
+			while(idIt.next())
+			{
+				test = new Test(idIt.id());
+				vec.add(test.getTransferable());
+			}
+			idIt.close();
+
+			testseq.value = new ClientTest_Transferable[vec.size()];
+			vec.copyInto(testseq.value);
+		}
+		catch(Exception ex)
+		{
+			if(idIt != null) try
+			{
+			idIt.close();
+			}catch(Exception exe) {}
+			ex.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_LOADING, "Невозможно загрузить тесты: " + ex.getMessage());
+		}
+		return ret;
+	}
+
+//WWW
+	public int GetAlarmedTests(
+			AccessIdentity_Transferable accessIdentity,
+			ResourceDescriptorSeq_TransferableHolder testids)
+//			wstringSeqHolder testids)
+		throws AMFICOMRemoteException
+	{
+		CheckUserPrivileges(accessIdentity);
+
+		int ret = Constants.ERROR_NO_ERROR;
+
+		testids.value = new ResourceDescriptor_Transferable[0];
+
+		ret = TestDatadbInterfaceLoad.getAlarmedTests(accessIdentity.domain_id, testids);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+		return ret;
+	}
+
+	public int RequestTest(
+			AccessIdentity_Transferable accessIdentity,
+			ClientTestRequest_Transferable treq,
+			ClientTest_Transferable[] testseq)
+		throws AMFICOMRemoteException
+	{
+		CheckUserPrivileges(accessIdentity);
+
+		int ret = Constants.ERROR_NO_ERROR;
+
+		ret = TestDatadbInterfaceSave.saveTestRequest(accessIdentity.domain_id, treq);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+
+		try
+		{
+			for(int i = 0; i < testseq.length; i++)
+				new Test(testseq[i]);
+		}
+		catch(SQLException ex)
+		{
+			ex.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_SAVING, "Невозможно создать задание на тест: " + ex.getMessage());
+//		ret = TestDatadbInterfaceSave.saveTests(testseq);
+//		if(ret != Constants.ERROR_NO_ERROR)
+//			return ret;
+		}
+		return ret;
+	}
+
+	public int QueryResource(
+			AccessIdentity_Transferable accessIdentity,
+			String parameter_id,
+			String kis_id,
+			String parameter_type_id)
+		throws AMFICOMRemoteException
+	{
+		CheckUserPrivileges(accessIdentity);
+
+		String a_id = ResourcedbInterface.getUId("resourcequery");
+		try
+		{
+			#sql { insert into RESOURCEQUERIES(
+					ID,
+					PARAMETER_ID,
+					KIS_ID,
+					PARAMETER_TYPE_ID)
+				values(
+					:a_id,
+					:parameter_id,
+					:kis_id,
+					:parameter_type_id)
+
+			};
+		}
+		catch (SQLException e)
+		{
+			System.out.println("id " + a_id + " param " + parameter_id);
+			e.printStackTrace();
+			return Constants.ERROR_SAVING;
+		}
+		return Constants.ERROR_NO_ERROR;
+	}
+
+	public int RemoveTests(
+			AccessIdentity_Transferable accessIdentity,
+			String[] testids)
+		throws AMFICOMRemoteException
+	{
+		CheckUserPrivileges(accessIdentity);
+
+		int ret = Constants.ERROR_NO_ERROR;
+/*
+		ret = TestDatadbInterfaceSave.removeTests(testids);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+*/
+
+		try
+		{
+			for(int i = 0; i < testids.length; i++)
+				new Test(testids[i]).delete();
+		}
+		catch(SQLException ex)
+		{
+			ex.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_UPDATING, "Невозможно ИЗМЕНИТЬ тест: " + ex.getMessage());
+		}
+
+		return ret;
+	}
+
+	public int UpdateTests(
+			AccessIdentity_Transferable accessIdentity,
+			ClientTest_Transferable[] testseq)
+		throws AMFICOMRemoteException
+	{
+		CheckUserPrivileges(accessIdentity);
+
+		int ret = Constants.ERROR_NO_ERROR;
+
+		try
+		{
+			for(int i = 0; i < testseq.length; i++)
+			try
+			{
+				new Test(testseq[i]);
+			}
+			catch(Exception ex)
+			{
+				new Test(testseq[i].id).update(testseq[i]);
+			}
+
+		}
+		catch(SQLException ex)
+		{
+			ex.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_UPDATING, "Невозможно ИЗМЕНИТЬ тест: " + ex.getMessage());
+//		ret = TestDatadbInterfaceSave.updateTests(testseq);
+//		if(ret != Constants.ERROR_NO_ERROR)
+//			return ret;
+		}
+		return ret;
+	}
+
+	public int GetLastResult(
+			AccessIdentity_Transferable accessIdentity,
+			String me_id,
+			ClientResult_TransferableHolder result)
+		throws AMFICOMRemoteException
+	{
+		CheckUserPrivileges(accessIdentity);
+
+		int ret = Constants.ERROR_NO_ERROR;
+
+		result.value = new ClientResult_Transferable();
+/*
+//		ret = SurveydbInterfaceLoad4.loadMEResult(me_id, result);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+*/
+
+		IdIterator idIt = null;
+
+		try
+		{
+			String test_id = "";
+			Timestamp est;
+			String max_test_id = "";
+			Timestamp max_est = new Timestamp(0);
+
+			String res_id = "";
+
+			#sql idIt = { select ID from AMFICOM.TESTS
+					where MONITORED_ELEMENT_ID = :me_id };
+
+			while(idIt.next())
+			{
+				test_id = idIt.id();
+
+				#sql { select MAX(ELEMENTARY_START_TIME) into :est
+					from AMFICOM.RESULTS
+					where TEST_ID = :test_id
+				};
+				if(est.getTime() > max_est.getTime())
+				{
+					max_est = est;
+					max_test_id = test_id;
+				}
+			}
+			idIt.close();
+
+			#sql { select ID into :res_id from AMFICOM.RESULTS
+				where TEST_ID = :max_test_id
+				and ELEMENTARY_START_TIME = :max_est
+			};
+
+			result.value = new Result(res_id).getClientTransferable();
+		}
+		catch(Exception ex)
+		{
+			if(idIt != null) try
+			{
+			idIt.close();
+			}catch(Exception exe) {}
+			ex.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_LOADING, "Невозможно получить результат теста: " + ex.getMessage());
+		}
+
+		return ret;
+	}
+
+	public int GetTestResults(
+			AccessIdentity_Transferable accessIdentity,
+			String test_id,
+			ClientResultSeq_TransferableHolder results)
+		throws AMFICOMRemoteException
+	{
+		CheckUserPrivileges(accessIdentity);
+
+		int ret = Constants.ERROR_NO_ERROR;
+
+		results.value = new ClientResult_Transferable[0];
+/*
+//		ret = SurveydbInterfaceLoad4.loadTestResults(test_id, results);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+*/
+		Result[] res;
+		try
+		{
+			res = Result.retrieveResults("test", test_id);
+
+			results.value = new ClientResult_Transferable[res.length];
+			for(int i = 0; i < res.length; i++)
+				results.value[i] = res[i].getClientTransferable();
+		}
+		catch(SQLException ex)
+		{
+			ex.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_LOADING, "Невозможно получить результат теста: " + ex.getMessage());
+		}
+		return ret;
+	}
+
+	public int GetAnalysisResults(
+			AccessIdentity_Transferable accessIdentity,
+			String analysis_id,
+			ClientResultSeq_TransferableHolder results)
+		throws AMFICOMRemoteException
+	{
+		CheckUserPrivileges(accessIdentity);
+
+		int ret = Constants.ERROR_NO_ERROR;
+
+		results.value = new ClientResult_Transferable[0];
+/*
+//		ret = SurveydbInterfaceLoad4.loadAnalysisResult(analysis_id, result);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+*/
+		Result[] res;
+		try
+		{
+			res = Result.retrieveResults("analysis", analysis_id);
+
+			results.value = new ClientResult_Transferable[res.length];
+			for(int i = 0; i < res.length; i++)
+				results.value[i] = res[i].getClientTransferable();
+		}
+		catch(SQLException ex)
+		{
+			ex.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_LOADING, "Невозможно получить результат анализа: " + ex.getMessage());
+		}
+		return ret;
+	}
+
+	ClientResult_Transferable[] GetStatisticsAnalysisResults(
+			AccessIdentity_Transferable accessIdentity,
+			String monitored_element_id,
+			long start_time,
+			long end_time)
+		throws AMFICOMRemoteException
+	{
+		CheckUserPrivileges(accessIdentity);
+
+		int ret = Constants.ERROR_NO_ERROR;
+
+		ClientResult_Transferable[] results = new ClientResult_Transferable[0];
+
+		Vector vec = new Vector();
+		String me_id;
+		Result res;
+		IdIterator idIt = null;
+		try
+		{
+			#sql idIt =
+			{
+				select ID from AMFICOM.RESULTS
+				where RESULT_TYPE = 'analysis'
+				and ELEMENTARY_START_TIME < :(new Timestamp(end_time))
+				and ELEMENTARY_START_TIME > :(new Timestamp(start_time))
+				and ANALYSIS_ID in
+					( select ID from AMFICOM.ANALYSIS
+						where MONITORED_ELEMENT_ID = :monitored_element_id
+						and DELETED is null
+					)
+			};
+
+			while(idIt.next())
+			{
+				res = new Result(idIt.id());
+				vec.add(res.getClientTransferable());
+			}
+			idIt.close();
+
+
+			results = new ClientResult_Transferable[vec.size()];
+			vec.copyInto(results);
+		}
+		catch(Exception ex)
+		{
+			if(idIt != null) try
+			{
+			idIt.close();
+			}catch(Exception exe) {}
+			ex.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_LOADING, "Невозможно получить результат анализа: " + ex.getMessage());
+		}
+		return results;
+	}
+
+	ClientResult_Transferable[] GetStatisticsAnalysisResultsByTS(
+			AccessIdentity_Transferable accessIdentity,
+			String monitored_element_id,
+			long start_time,
+			long end_time,
+			String test_setup_id)
+		throws AMFICOMRemoteException
+	{
+		CheckUserPrivileges(accessIdentity);
+
+		int ret = Constants.ERROR_NO_ERROR;
+
+		ClientResult_Transferable[] results = new ClientResult_Transferable[0];
+
+		Vector vec = new Vector();
+		String me_id;
+		Result res;
+		IdIterator idIt = null;
+		try
+		{
+			#sql idIt =
+			{
+				select ID from AMFICOM.RESULTS
+				where RESULT_TYPE = 'analysis'
+				and ELEMENTARY_START_TIME < :(new Timestamp(end_time))
+				and ELEMENTARY_START_TIME > :(new Timestamp(start_time))
+				and ANALYSIS_ID in
+					( select ID from AMFICOM.ANALYSIS
+						where MONITORED_ELEMENT_ID = :monitored_element_id
+						and DELETED is null
+					)
+				and ANALYSIS_ID in
+					( select ANALYSIS_ID from AMFICOM.TESTS
+						where MONITORED_ELEMENT_ID = :monitored_element_id
+						and TEST_SETUP_ID = :test_setup_id
+						and ANALYSIS_ID is not null
+						and DELETED is null
+					)
+			};
+
+			while(idIt.next())
+			{
+				res = new Result(idIt.id());
+				vec.add(res.getClientTransferable());
+			}
+			idIt.close();
+
+
+			results = new ClientResult_Transferable[vec.size()];
+			vec.copyInto(results);
+		}
+		catch(Exception ex)
+		{
+			if(idIt != null) try
+			{
+			idIt.close();
+			}catch(Exception exe) {}
+			ex.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_LOADING, "Невозможно получить результат анализа: " + ex.getMessage());
+		}
+		return results;
+	}
+
+	public int GetModelingResult(
+			AccessIdentity_Transferable accessIdentity,
+			String modeling_id,
+			ClientResult_TransferableHolder result)
+		throws AMFICOMRemoteException
+	{
+		CheckUserPrivileges(accessIdentity);
+
+		int ret = Constants.ERROR_NO_ERROR;
+
+//		System.out.println("get1 res for modeling " + modeling_id);
+		result.value = new ClientResult_Transferable();
+/*
+//		ret = SurveydbInterfaceLoad4.loadModelingResult(modeling_id, result);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+*/
+		Result[] res;
+		try
+		{
+			res = Result.retrieveResults("modeling", modeling_id);
+			if(res.length != 0)
+				result.value = res[0].getClientTransferable();
+		}
+		catch(SQLException ex)
+		{
+			ex.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_LOADING, "Невозможно получить результат моделирования: " + ex.getMessage());
+		}
+		return ret;
+	}
+
+	public int GetEvaluationResults(
+			AccessIdentity_Transferable accessIdentity,
+			String evaluation_id,
+			ClientResultSeq_TransferableHolder results)
+		throws AMFICOMRemoteException
+	{
+		CheckUserPrivileges(accessIdentity);
+
+		int ret = Constants.ERROR_NO_ERROR;
+
+//		System.out.println("get1 res for evaluation " + evaluation_id);
+		results.value = new ClientResult_Transferable[0];
+/*
+//		ret = SurveydbInterfaceLoad2.loadEvaluationResult(evaluation_id, result);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+*/
+		Result[] res;
+		try
+		{
+			res = Result.retrieveResults("evaluation", evaluation_id);
+
+			results.value = new ClientResult_Transferable[res.length];
+			for(int i = 0; i < res.length; i++)
+				results.value[i] = res[i].getClientTransferable();
+		}
+		catch(SQLException ex)
+		{
+			ex.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_LOADING, "Невозможно получить результат оценки: " + ex.getMessage());
+		}
+		return ret;
+	}
+
+	public int GetLastResultId(
+			AccessIdentity_Transferable accessIdentity,
+			String me_id,
+			ResourceDescriptor_TransferableHolder result)
+//			StringHolder result)
+		throws AMFICOMRemoteException
+	{
+		CheckUserPrivileges(accessIdentity);
+
+		result.value = new ResourceDescriptor_Transferable();
+		ClientResult_TransferableHolder resulth = new ClientResult_TransferableHolder();
+		int ret = GetLastResult(accessIdentity, me_id, resulth);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+		result.value = new ResourceDescriptor_Transferable(resulth.value.id, resulth.value.elementary_start_time);
+		return ret;
+	}
+
+	public int GetTestResultIds(
+			AccessIdentity_Transferable accessIdentity,
+			String test_id,
+			ResourceDescriptorSeq_TransferableHolder results)
+//			wstringSeqHolder results)
+		throws AMFICOMRemoteException
+	{
+		CheckUserPrivileges(accessIdentity);
+
+		int ret = Constants.ERROR_NO_ERROR;
+
+		results.value = new ResourceDescriptor_Transferable[0];
+		Result[] res;
+		try
+		{
+			res = Result.retrieveResults("test", test_id);
+
+			results.value = new ResourceDescriptor_Transferable[res.length];
+			for(int i = 0; i < res.length; i++)
+				results.value[i] = new ResourceDescriptor_Transferable(res[i].getId(), res[i].getElementaryStartTime().getTime());
+		}
+		catch(SQLException ex)
+		{
+			ex.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_LOADING, "Невозможно получить результат теста: " + ex.getMessage());
+		}
+		return ret;
+	}
+
+	public int GetAnalysisResultIds(
+			AccessIdentity_Transferable accessIdentity,
+			String analysis_id,
+			ResourceDescriptorSeq_TransferableHolder results)
+//			wstringSeqHolder results)
+		throws AMFICOMRemoteException
+	{
+		CheckUserPrivileges(accessIdentity);
+
+		int ret = Constants.ERROR_NO_ERROR;
+
+		results.value = new ResourceDescriptor_Transferable[0];
+		Result[] res;
+		try
+		{
+			res = Result.retrieveResults("analysis", analysis_id);
+
+			results.value = new ResourceDescriptor_Transferable[res.length];
+			for(int i = 0; i < res.length; i++)
+				results.value[i] = new ResourceDescriptor_Transferable(res[i].getId(), res[i].getElementaryStartTime().getTime());
+		}
+		catch(SQLException ex)
+		{
+			ex.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_LOADING, "Невозможно получить результат анализа: " + ex.getMessage());
+		}
+		return ret;
+	}
+
+	public int GetModelingResultId(
+			AccessIdentity_Transferable accessIdentity,
+			String modeling_id,
+			ResourceDescriptor_TransferableHolder result)
+//			StringHolder result)
+		throws AMFICOMRemoteException
+	{
+		CheckUserPrivileges(accessIdentity);
+
+		int ret = Constants.ERROR_NO_ERROR;
+
+		result.value = new ResourceDescriptor_Transferable();
+
+		Result[] res;
+		try
+		{
+			res = Result.retrieveResults("modeling", modeling_id);
+			if(res.length != 0)
+				result.value = new ResourceDescriptor_Transferable(res[0].getId(), res[0].getElementaryStartTime().getTime());
+		}
+		catch(SQLException ex)
+		{
+			ex.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_LOADING, "Невозможно получить результат моделирования: " + ex.getMessage());
+		}
+		return ret;
+	}
+
+	public int GetEvaluationResultIds(
+			AccessIdentity_Transferable accessIdentity,
+			String evaluation_id,
+			ResourceDescriptorSeq_TransferableHolder results)
+//			wstringSeqHolder results)
+		throws AMFICOMRemoteException
+	{
+		CheckUserPrivileges(accessIdentity);
+
+		int ret = Constants.ERROR_NO_ERROR;
+		results.value = new ResourceDescriptor_Transferable[0];
+		Result[] res;
+		try
+		{
+			res = Result.retrieveResults("evaluation", evaluation_id);
+
+			results.value = new ResourceDescriptor_Transferable[res.length];
+			for(int i = 0; i < res.length; i++)
+				results.value[i] = new ResourceDescriptor_Transferable(res[i].getId(), res[i].getElementaryStartTime().getTime());
+		}
+		catch(SQLException ex)
+		{
+			ex.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_LOADING, "Невозможно получить результат оценки: " + ex.getMessage());
+		}
+		return ret;
+	}
+
+	public int GetResult(
+			AccessIdentity_Transferable accessIdentity,
+			String result_id,
+			ClientResult_TransferableHolder result)
+		throws AMFICOMRemoteException
+	{
+		CheckUserPrivileges(accessIdentity);
+
+		int ret = Constants.ERROR_NO_ERROR;
+
+		try
+		{
+			result.value = new Result(result_id).getClientTransferable();
+		}
+		catch(SQLException ex)
+		{
+			ex.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_LOADING, "Невозможно получить результат: " + ex.getMessage());
+		}
+
+		return ret;
+	}
+
+	public int SaveAnalysis(
+			AccessIdentity_Transferable accessIdentity,
+			ClientAnalysis_Transferable analysis,
+			ClientResult_Transferable result)
+		throws AMFICOMRemoteException
+	{
+		CheckUserPrivileges(accessIdentity);
+
+		int ret = Constants.ERROR_NO_ERROR;
+/*
+		ClientAnalysis_Transferable[] as = new ClientAnalysis_Transferable[1];
+		as[0] = analysis;
+//		ret = SurveydbInterfaceSave3.saveAnalysis(as);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+		ClientResult_Transferable[] rs = new ClientResult_Transferable[1];
+		rs[0] = result;
+//		ret = SurveydbInterfaceSave3.saveResults(rs);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+*/
+		try
+		{
+			new Analysis(analysis);
+			new Result(result);
+		}
+		catch(SQLException sqle)
+		{
+			sqle.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_SAVING, "Невозможно сохранить анализ: " + sqle.getMessage());
+		}
+		catch(Exception e)
+		{
+			/**
+			 * @todo Soon, Arseniy will introduce a separate exception type.
+			 */
+			e.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_SAVING, "Невозможно сохранить анализ: " + e.getMessage());
+		}
+		return ret;
+	}
+
+	public int SaveModeling(
+			AccessIdentity_Transferable accessIdentity,
+			ClientModeling_Transferable modeling,
+			ClientResult_Transferable result)
+		throws AMFICOMRemoteException
+	{
+		CheckUserPrivileges(accessIdentity);
+
+		int ret = Constants.ERROR_NO_ERROR;
+/*
+		ClientModeling_Transferable[] ms = new ClientModeling_Transferable[1];
+		ms[0] = modeling;
+//		ret = SurveydbInterfaceSave3.saveModeling(ms);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+		ClientResult_Transferable[] rs = new ClientResult_Transferable[1];
+		rs[0] = result;
+//		ret = SurveydbInterfaceSave3.saveResults(rs);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+*/
+		try
+		{
+			new Modeling(modeling);
+			new Result(result);
+		}
+		catch(SQLException sqle)
+		{
+			sqle.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_SAVING, "Невозможно сохранить модель: " + sqle.getMessage());
+		}
+		catch(Exception e)
+		{
+			/**
+			 * @todo Soon, Arseniy will introduce a separate exception type.
+			 */
+			e.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_SAVING, "Невозможно сохранить модель: " + e.getMessage());
+		}
+		return ret;
+	}
+
+	public int SaveEvaluation(
+			AccessIdentity_Transferable accessIdentity,
+			ClientEvaluation_Transferable evaluation,
+			ClientResult_Transferable result)
+		throws AMFICOMRemoteException
+	{
+		CheckUserPrivileges(accessIdentity);
+
+		int ret = Constants.ERROR_NO_ERROR;
+/*
+		ClientEvaluation_Transferable[] ms = new ClientEvaluation_Transferable[1];
+		ms[0] = evaluation;
+//		ret = SurveydbInterfaceSave2.saveEvaluation(ms);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+		ClientResult_Transferable[] rs = new ClientResult_Transferable[1];
+		rs[0] = result;
+//		ret = SurveydbInterfaceSave3.saveResults(rs);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+*/
+		try
+		{
+			new Evaluation(evaluation);
+			new Result(result);
+		}
+		catch(SQLException sqle)
+		{
+			sqle.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_SAVING, "Невозможно сохранить оценку: " + sqle.getMessage());
+		}
+		catch(Exception e)
+		{
+			/**
+			 * @todo Soon, Arseniy will introduce a separate exception type.
+			 */
+			e.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_SAVING, "Невозможно сохранить оценку: " + e.getMessage());
+		}
+		return ret;
+	}
+
+	public int GetResultSets(
+			AccessIdentity_Transferable accessIdentity,
+			ResultSetSeq_TransferableHolder resultsets)
+		throws AMFICOMRemoteException
+	{
+		CheckUserPrivileges(accessIdentity);
+		int ret = Constants.ERROR_NO_ERROR;
+
+		resultsets.value = new ResultSet_Transferable[0];
+
+		ret = ResultSetdbInterface.getResultSets(accessIdentity.domain_id, resultsets);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+		return ret;
+	}
+
+	public int GetStatedResultSets(
+			AccessIdentity_Transferable accessIdentity,
+			String[] ids,
+			ResultSetSeq_TransferableHolder resultsets)
+		throws AMFICOMRemoteException
+	{
+		CheckUserPrivileges(accessIdentity);
+		int ret = Constants.ERROR_NO_ERROR;
+
+		resultsets.value = new ResultSet_Transferable[0];
+
+		ret = ResultSetdbInterface.getResultSets(accessIdentity.domain_id, resultsets, ids);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+		return ret;
+	}
+
+	public int GetResultSetResultIds(
+			AccessIdentity_Transferable accessIdentity,
+			String result_set_id,
+			ResourceDescriptorSeq_TransferableHolder result_ids)
+//			wstringSeqHolder result_ids)
+		throws AMFICOMRemoteException
+	{
+		CheckUserPrivileges(accessIdentity);
+		int ret = Constants.ERROR_NO_ERROR;
+
+		result_ids.value = new ResourceDescriptor_Transferable[0];
+
+		ret = ResultSetdbInterface.getResultIds(result_set_id, result_ids);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+		return ret;
+	}
+
+	public int GetResultSetResultMEIds(
+			AccessIdentity_Transferable accessIdentity,
+			String result_set_id,
+			String me_id,
+			ResourceDescriptorSeq_TransferableHolder result_ids)
+//			wstringSeqHolder result_ids)
+		throws AMFICOMRemoteException
+	{
+		CheckUserPrivileges(accessIdentity);
+		int ret = Constants.ERROR_NO_ERROR;
+
+		result_ids.value = new ResourceDescriptor_Transferable[0];
+
+		ret = ResultSetdbInterface.getResultIds(result_set_id, me_id, result_ids);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+		return ret;
+	}
+
+////////////////////////////////////////////////////////////////
+//
+
+	public int LoadGlobalParameterTypes(
+			AccessIdentity_Transferable accessIdentity,
+			GlobalParameterTypeSeq_TransferableHolder params)
+		throws AMFICOMRemoteException
+	{
+		CheckUserPrivileges(accessIdentity);
+
+		int ret = Constants.ERROR_NO_ERROR;
+		GlobalParameterType_Transferable[] gp = new GlobalParameterType_Transferable[0];
+		ret = SurveydbInterfaceLoad5.loadGlobalParameterTypes(params);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+		return ret;
+	}
+
+	public int LoadGlobalParameterTypes(
+			AccessIdentity_Transferable accessIdentity,
+			String[] ids,
+			GlobalParameterTypeSeq_TransferableHolder params)
+		throws AMFICOMRemoteException
+	{
+		CheckUserPrivileges(accessIdentity);
+
+		int ret = Constants.ERROR_NO_ERROR;
+		GlobalParameterType_Transferable[] gp = new GlobalParameterType_Transferable[0];
+		ret = SurveydbInterfaceLoad5.loadGlobalParameterTypes(ids, params);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+		return ret;
+	}
+
+	public int LoadTestTypes(
+			AccessIdentity_Transferable accessIdentity,
+			TestTypeSeq_TransferableHolder ttypeseq)
+		throws AMFICOMRemoteException
+	{
+		CheckUserPrivileges(accessIdentity);
+
+		int ret = Constants.ERROR_NO_ERROR;
+
+		ttypeseq.value = new TestType_Transferable[0];
+/*
+		ret = TestDatadbInterfaceLoad.loadTestTypes(ttypeseq);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+*/
+
+		TestType[] ttypes;
+		try
+		{
+			ttypes = TestType.retrieveTestTypes();
+			ttypeseq.value = new TestType_Transferable[ttypes.length];
+			for(int i = 0; i < ttypes.length; i++)
+				ttypeseq.value[i] = ttypes[i].getTransferable();
+		}
+		catch(SQLException e)
+		{
+//			ret = TestDatadbInterfaceLoad.loadTestTypes(ttypeseq);
+			String mesg = "Exception while getting test types: " + e.getMessage();
+			System.out.println(mesg);
+			e.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_SAVING, mesg);
+		}
+		return ret;
+	}
+
+	public int LoadTestTypes(
+			AccessIdentity_Transferable accessIdentity,
+			String[] ids,
+			TestTypeSeq_TransferableHolder ttypeseq)
+		throws AMFICOMRemoteException
+	{
+		CheckUserPrivileges(accessIdentity);
+
+		int ret = Constants.ERROR_NO_ERROR;
+
+		ttypeseq.value = new TestType_Transferable[0];
+/*
+		ret = TestDatadbInterfaceLoad.loadTestTypes(ids, ttypeseq);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+*/
+
+		try
+		{
+			ttypeseq.value = new TestType_Transferable[ids.length];
+			for(int i = 0; i < ids.length; i++)
+				ttypeseq.value[i] = new TestType(ids[i]).getTransferable();
+		}
+		catch(SQLException e)
+		{
+//			ret = TestDatadbInterfaceLoad.loadTestTypes(ids, ttypeseq);
+			String mesg = "Exception while getting test types: " + e.getMessage();
+			System.out.println(mesg);
+			e.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_SAVING, mesg);
+		}
+		return ret;
+	}
+
+	public int LoadAnalysisTypes(
+			AccessIdentity_Transferable accessIdentity,
+			AnalysisTypeSeq_TransferableHolder atypes)
+		throws AMFICOMRemoteException
+	{
+		CheckUserPrivileges(accessIdentity);
+
+		int ret = Constants.ERROR_NO_ERROR;
+
+		atypes.value = new AnalysisType_Transferable[0];
+/*
+		ret = TestDatadbInterfaceLoad.loadAnalysisTypes(atypes);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+*/
+		AnalysisType[] at;
+		try
+		{
+			at = AnalysisType.retrieveAnalysisTypes();
+			atypes.value = new AnalysisType_Transferable[at.length];
+			for(int i = 0; i < at.length; i++)
+				atypes.value[i] = at[i].getTransferable();
+		}
+		catch(SQLException e)
+		{
+//			ret = TestDatadbInterfaceLoad.loadAnalysisTypes(atypes);
+			String mesg = "Exception while getting analysis types: " + e.getMessage();
+			System.out.println(mesg);
+			e.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_SAVING, mesg);
+		}
+		return ret;
+	}
+
+	public int LoadAnalysisTypes(
+			AccessIdentity_Transferable accessIdentity,
+			String[] ids,
+			AnalysisTypeSeq_TransferableHolder atypes)
+		throws AMFICOMRemoteException
+	{
+		CheckUserPrivileges(accessIdentity);
+
+		int ret = Constants.ERROR_NO_ERROR;
+
+		atypes.value = new AnalysisType_Transferable[0];
+/*
+		ret = TestDatadbInterfaceLoad.loadAnalysisTypes(ids, atypes);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+*/
+		try
+		{
+			atypes.value = new AnalysisType_Transferable[ids.length];
+			for(int i = 0; i < ids.length; i++)
+				atypes.value[i] = new AnalysisType(ids[i]).getTransferable();
+		}
+		catch(SQLException e)
+		{
+//			ret = TestDatadbInterfaceLoad.loadAnalysisTypes(ids, atypes);
+			String mesg = "Exception while getting analysis types: " + e.getMessage();
+			System.out.println(mesg);
+			e.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_SAVING, mesg);
+		}
+		return ret;
+	}
+
+	public int LoadEvaluationTypes(
+			AccessIdentity_Transferable accessIdentity,
+			EvaluationTypeSeq_TransferableHolder etypes)
+		throws AMFICOMRemoteException
+	{
+		CheckUserPrivileges(accessIdentity);
+
+		int ret = Constants.ERROR_NO_ERROR;
+
+		etypes.value = new EvaluationType_Transferable[0];
+/*
+		ret = TestDatadbInterfaceLoad.loadEvaluationTypes(etypes);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+*/
+		EvaluationType[] et;
+		try
+		{
+			et = EvaluationType.retrieveEvaluationTypes();
+			etypes.value = new EvaluationType_Transferable[et.length];
+			for(int i = 0; i < et.length; i++)
+				etypes.value[i] = et[i].getTransferable();
+		}
+		catch(SQLException e)
+		{
+//			ret = TestDatadbInterfaceLoad.loadEvaluationTypes(etypes);
+			String mesg = "Exception while getting evaluation types: " + e.getMessage();
+			System.out.println(mesg);
+			e.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_SAVING, mesg);
+		}
+		return ret;
+	}
+
+	public int LoadEvaluationTypes(
+			AccessIdentity_Transferable accessIdentity,
+			String[] ids,
+			EvaluationTypeSeq_TransferableHolder etypes)
+		throws AMFICOMRemoteException
+	{
+		CheckUserPrivileges(accessIdentity);
+
+		int ret = Constants.ERROR_NO_ERROR;
+
+		etypes.value = new EvaluationType_Transferable[0];
+/*
+		ret = TestDatadbInterfaceLoad.loadEvaluationTypes(ids, etypes);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+*/
+		try
+		{
+			System.out.println("get evaluation " + ids[0]);
+			etypes.value = new EvaluationType_Transferable[ids.length];
+			for(int i = 0; i < ids.length; i++)
+				etypes.value[i] = new EvaluationType(ids[i]).getTransferable();
+		}
+		catch(SQLException e)
+		{
+//			ret = TestDatadbInterfaceLoad.loadEvaluationTypes(ids, etypes);
+			String mesg = "Exception while getting evaluation types: " + e.getMessage();
+			System.out.println(mesg);
+			e.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_SAVING, mesg);
+		}
+		return ret;
+	}
+
+	public int LoadModelingTypes(
+			AccessIdentity_Transferable accessIdentity,
+			ModelingTypeSeq_TransferableHolder mtypes)
+		throws AMFICOMRemoteException
+	{
+		CheckUserPrivileges(accessIdentity);
+
+		int ret = Constants.ERROR_NO_ERROR;
+
+		mtypes.value = new ModelingType_Transferable[0];
+/*
+		ret = TestDatadbInterfaceLoad.loadModelingTypes(mtypes);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+*/
+		ModelingType[] mt;
+		try
+		{
+			System.out.println("get all modelings");
+			mt = ModelingType.retrieveModelingTypes();
+			mtypes.value = new ModelingType_Transferable[mt.length];
+			for(int i = 0; i < mt.length; i++)
+				mtypes.value[i] = mt[i].getTransferable();
+		}
+		catch(SQLException e)
+		{
+//			ret = TestDatadbInterfaceLoad.loadModelingTypes(mtypes);
+			String mesg = "Exception while getting modeling types: " + e.getMessage();
+			System.out.println(mesg);
+			e.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_SAVING, mesg);
+		}
+		return ret;
+	}
+
+	public int LoadModelingTypes(
+			AccessIdentity_Transferable accessIdentity,
+			String[] ids,
+			ModelingTypeSeq_TransferableHolder mtypes)
+		throws AMFICOMRemoteException
+	{
+		CheckUserPrivileges(accessIdentity);
+
+		int ret = Constants.ERROR_NO_ERROR;
+
+		mtypes.value = new ModelingType_Transferable[0];
+/*
+		ret = TestDatadbInterfaceLoad.loadModelingTypes(ids, mtypes);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+*/
+		try
+		{
+			System.out.println("get modeling " + ids[0]);
+			mtypes.value = new ModelingType_Transferable[ids.length];
+			for(int i = 0; i < ids.length; i++)
+				mtypes.value[i] = new ModelingType(ids[i]).getTransferable();
+		}
+		catch(SQLException e)
+		{
+//			ret = TestDatadbInterfaceLoad.loadModelingTypes(ids, mtypes);
+			String mesg = "Exception while getting modeling types: " + e.getMessage();
+			System.out.println(mesg);
+			e.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_SAVING, mesg);
+		}
+		return ret;
+	}
+
+//WWW
+	public int LoadCriteriaSets(
+			AccessIdentity_Transferable accessIdentity,
+			ClientCriteriaSetSeq_TransferableHolder css)
+		throws AMFICOMRemoteException
+	{
+		CheckUserPrivileges(accessIdentity);
+
+		int ret = Constants.ERROR_NO_ERROR;
+
+		css.value = new ClientCriteriaSet_Transferable[0];
+//		ret = SurveyDatadbInterfaceLoad.loadCriteriaSets(css);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+		return ret;
+	}
+
+//WWW
+	public int LoadThresholdSets(
+			AccessIdentity_Transferable accessIdentity,
+			ClientThresholdSetSeq_TransferableHolder tss)
+		throws AMFICOMRemoteException
+	{
+		CheckUserPrivileges(accessIdentity);
+
+		int ret = Constants.ERROR_NO_ERROR;
+
+		tss.value = new ClientThresholdSet_Transferable[0];
+//		ret = SurveyDatadbInterfaceLoad.loadThresholdSets(tss);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+		return ret;
+	}
+
+//WWW
+	public int LoadEtalons(
+			AccessIdentity_Transferable accessIdentity,
+			ClientEtalonSeq_TransferableHolder ets)
+		throws AMFICOMRemoteException
+	{
+		CheckUserPrivileges(accessIdentity);
+
+		int ret = Constants.ERROR_NO_ERROR;
+
+		ets.value = new ClientEtalon_Transferable[0];
+//		ret = SurveyDatadbInterfaceLoad.loadEtalons(ets);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+		return ret;
+	}
+
+	public String createTestSetup(
+			AccessIdentity_Transferable accessIdentity,
+			TestSetup_Transferable test_setup_t)
+		throws AMFICOMRemoteException
+	{
+		TestSetup ts = null;
+		int count;
+		try
+		{
+			#sql { select count(*) into :count from AMFICOM.TESTSETUPS
+				where ID = :(test_setup_t.id)
+			};
+			if(count == 0)
+			{
+				ts = new TestSetup(test_setup_t);
+				return ts.getId();
+			}
+			else
+			{
+				ts = new TestSetup(test_setup_t.id);
+				ts.update(test_setup_t);
+				return test_setup_t.id;
+			}
+		}
+		catch (SQLException e)
+		{
+			String mesg = "Exception while saving TestSetup '" + test_setup_t.name + "' for test_type_id '" + test_setup_t.test_type_id + "': " + e.getMessage();
+			System.out.println(mesg);
+			e.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_SAVING, mesg);
+		}
+	}
+
+	public String createTestArgumentSet(
+			AccessIdentity_Transferable accessIdentity,
+			ClientTestArgumentSet_Transferable arg_set_t)
+		throws AMFICOMRemoteException
+	{
+		TestArgumentSet tas = null;
+		int count;
+		try
+		{
+			#sql { select count(*) into :count from AMFICOM.TESTARGUMENTSETS
+				where ID = :(arg_set_t.id)
+			};
+			if(count == 0)
+			{
+				tas = new TestArgumentSet(arg_set_t);
+				return tas.getId();
+			}
+			else
+			{
+				tas = new TestArgumentSet(arg_set_t.id);
+				tas.update(arg_set_t);
+				return arg_set_t.id;
+			}
+		}
+		catch (SQLException sqle)
+		{
+			String mesg = "Exception while saving teas argument set '" + arg_set_t.name + "' for test_type_id '" + arg_set_t.test_type_id + "': " + sqle.getMessage();
+			System.out.println(mesg);
+			sqle.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_SAVING, mesg);
+		}
+		catch (Exception e)
+		{
+			/**
+			 * @todo Soon, Arseniy will introduce a separate exception type.
+			 */
+			String mesg = "Exception while saving teas argument set '" + arg_set_t.name + "' for test_type_id '" + arg_set_t.test_type_id + "': " + e.getMessage();
+			System.out.println(mesg);
+			e.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_SAVING, mesg);
+		}
+	}
+
+	public String createCriteriaSet(
+			AccessIdentity_Transferable accessIdentity,
+			ClientCriteriaSet_Transferable criteria_set_t)
+		throws AMFICOMRemoteException
+	{
+		CriteriaSet cs = null;
+		int count;
+		try
+		{
+			#sql { select count(*) into :count from AMFICOM.CRITERIASETS
+				where ID = :(criteria_set_t.id)
+			};
+			if(count == 0)
+			{
+				cs = new CriteriaSet(criteria_set_t);
+				return cs.getId();
+			}
+			else
+			{
+				cs = new CriteriaSet(criteria_set_t.id);
+				cs.update(criteria_set_t);
+				return criteria_set_t.id;
+			}
+		}
+		catch (SQLException sqle)
+		{
+			String mesg = "Exception while saving criteria set '" + criteria_set_t.name + "' for analysis_type_id '" + criteria_set_t.analysis_type_id + "': " + sqle.getMessage();
+			System.out.println(mesg);
+			sqle.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_SAVING, mesg);
+		}
+		catch (Exception e)
+		{
+			/**
+			 * @todo Soon, Arseniy will introduce a separate exception type.
+			 */
+			String mesg = "Exception while saving criteria set '" + criteria_set_t.name + "' for analysis_type_id '" + criteria_set_t.analysis_type_id + "': " + e.getMessage();
+			System.out.println(mesg);
+			e.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_SAVING, mesg);
+		}
+	}
+
+	public String createThresholdSet(
+			AccessIdentity_Transferable accessIdentity,
+			ClientThresholdSet_Transferable th_set_t)
+		throws AMFICOMRemoteException
+	{
+		ThresholdSet th = null;
+		int count;
+		try
+		{
+			#sql { select count(*) into :count from AMFICOM.THRESHOLDSETS
+				where ID = :(th_set_t.id)
+			};
+			if(count == 0)
+			{
+				th = new ThresholdSet(th_set_t);
+				return th.getId();
+			}
+			else
+			{
+				th = new ThresholdSet(th_set_t.id);
+				th.update(th_set_t);
+				return th_set_t.id;
+			}
+		}
+		catch (SQLException sqle)
+		{
+			String mesg = "Exception while saving Threshold set '" + th_set_t.name + "' for evaluation_type_id '" + th_set_t.evaluation_type_id + "': " + sqle.getMessage();
+			System.out.println(mesg);
+			sqle.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_SAVING, mesg);
+		}
+		catch (Exception e)
+		{
+			/**
+			 * @todo Soon, Arseniy will introduce a separate exception type.
+			 */
+			String mesg = "Exception while saving Threshold set '" + th_set_t.name + "' for evaluation_type_id '" + th_set_t.evaluation_type_id + "': " + e.getMessage();
+			System.out.println(mesg);
+			e.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_SAVING, mesg);
+		}
+	}
+
+	public String createEtalon(
+			AccessIdentity_Transferable accessIdentity,
+			ClientEtalon_Transferable e_t)
+		throws AMFICOMRemoteException
+	{
+		String id = null;
+		int count;
+		try
+		{
+			#sql { select count(*) into :count from AMFICOM.ETALONS
+				where ID = :(e_t.id)
+			};
+			if(count == 0)
+				id = new Etalon(e_t).getId();
+			else
+			{
+				new Etalon(e_t.id).update(e_t);
+				id = e_t.id;
+			}
+		}
+		catch (SQLException sqle)
+		{
+			String mesg = "Exception while saving Etalon '" + e_t.name + "' : " + sqle.getMessage();
+			System.out.println(mesg);
+			sqle.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_SAVING, mesg);
+		}
+		catch (Exception e)
+		{
+			/**
+			 * @todo Soon, Arseniy will introduce a separate exception type.
+			 */
+			String mesg = "Exception while saving Etalon '" + e_t.name + "' : " + e.getMessage();
+			System.out.println(mesg);
+			e.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_SAVING, mesg);
+		}
+		return id;
+	}
+
+	public int LoadNetDirectory(
+			AccessIdentity_Transferable accessIdentity,
+			PortTypeSeq_TransferableHolder porttypes,
+			EquipmentTypeSeq_TransferableHolder equipmenttypes,
+			LinkTypeSeq_TransferableHolder linktypes,
+			TestPortTypeSeq_TransferableHolder tporttypes,
+			CharacteristicTypeSeq_TransferableHolder characteristictypes,
+			CablePortTypeSeq_TransferableHolder cableporttypes,
+			CableLinkTypeSeq_TransferableHolder cablelinktypes)
+		throws AMFICOMRemoteException
+	{
+		CheckUserPrivileges(accessIdentity);
+
+		int ret = Constants.ERROR_NO_ERROR;
+
+		Vector port_vec = new Vector();
+		Vector equipment_vec = new Vector();
+		Vector link_vec = new Vector();
+
+		porttypes.value = new PortType_Transferable[0];
+		equipmenttypes.value = new EquipmentType_Transferable[0];
+		linktypes.value = new LinkType_Transferable[0];
+		tporttypes.value = new TestPortType_Transferable[0];
+		characteristictypes.value = new CharacteristicType_Transferable[0];
+		cableporttypes.value = new CablePortType_Transferable[0];
+		cablelinktypes.value = new CableLinkType_Transferable[0];
+/*
+		// проверить права пользователя на работу с системой
+		if (pm6.CheckUserPrivileges(
+				accessIdentity.sess_id,
+				Constants._OP,
+				Constants._ELEMENT,
+				Constants.EMPTY_ELEMENTID) == 0)
+			return Constants.ERROR_INSUFFICIENT_PRIVILEGES;
+*/
+		ret = NetDirectorydbInterfaceLoad.loadPortTypes(porttypes);
+//		System.out.println("finish " + porttypes.value.length + " porttypes " + ret);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+		ret = NetDirectorydbInterfaceLoad.loadEquipmentTypes(equipmenttypes);
+//		System.out.println("finish " + equipmenttypes.value.length + " equipmenttypes " + ret);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+//		System.out.println("finish " + linktypes.value.length + " linktypes " + ret);
+		ret = NetDirectorydbInterfaceLoad.loadLinkTypes(linktypes);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+//		System.out.println("finish " + tporttypes.value.length + " testporttypes " + ret);
+		ret = NetDirectorydbInterfaceLoad.loadTestPortTypes(tporttypes);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+//		System.out.println("finish " + linktypes.value.length + " linktypes " + ret);
+		ret = NetDirectorydbInterfaceLoad.loadCharacteristicTypes(characteristictypes);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+		ret = NetDirectorydbInterfaceLoad.loadCablePortTypes(cableporttypes);
+//		System.out.println("finish " + porttypes.value.length + " porttypes " + ret);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+		ret = NetDirectorydbInterfaceLoad.loadCableTypes(cablelinktypes);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+
+		return ret;
+	}
+
+	public int LoadStatedNetDirectory(
+			AccessIdentity_Transferable accessIdentity,
+			String[] pt_ids,
+			String[] eqt_ids,
+			String[] lt_ids,
+			String[] cht_ids,
+			String[] cpt_ids,
+			String[] clt_ids,
+			PortTypeSeq_TransferableHolder porttypes,
+			EquipmentTypeSeq_TransferableHolder equipmenttypes,
+			LinkTypeSeq_TransferableHolder linktypes,
+			TestPortTypeSeq_TransferableHolder tporttypes,
+			CharacteristicTypeSeq_TransferableHolder characteristictypes,
+			CablePortTypeSeq_TransferableHolder cableporttypes,
+			CableLinkTypeSeq_TransferableHolder cablelinktypes)
+		throws AMFICOMRemoteException
+	{
+		CheckUserPrivileges(accessIdentity);
+
+		int ret = Constants.ERROR_NO_ERROR;
+
+		Vector port_vec = new Vector();
+		Vector equipment_vec = new Vector();
+		Vector link_vec = new Vector();
+
+		porttypes.value = new PortType_Transferable[0];
+		equipmenttypes.value = new EquipmentType_Transferable[0];
+		linktypes.value = new LinkType_Transferable[0];
+		tporttypes.value = new TestPortType_Transferable[0];
+		characteristictypes.value = new CharacteristicType_Transferable[0];
+		cableporttypes.value = new CablePortType_Transferable[0];
+		cablelinktypes.value = new CableLinkType_Transferable[0];
+/*
+		// проверить права пользователя на работу с системой
+		if (pm6.CheckUserPrivileges(
+				accessIdentity.sess_id,
+				Constants._OP,
+				Constants._ELEMENT,
+				Constants.EMPTY_ELEMENTID) == 0)
+			return Constants.ERROR_INSUFFICIENT_PRIVILEGES;
+*/
+		ret = NetDirectorydbInterfaceLoad2.loadPortTypes(pt_ids, porttypes);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+		ret = NetDirectorydbInterfaceLoad2.loadEquipmentTypes(eqt_ids, equipmenttypes);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+		ret = NetDirectorydbInterfaceLoad2.loadLinkTypes(lt_ids, linktypes);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+//		ret = NetDirectorydbInterfaceLoad.loadCharacteristicTypes(characteristictypes);
+		ret = NetDirectorydbInterfaceLoad2.loadCharacteristicTypes(cht_ids, characteristictypes);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+		ret = NetDirectorydbInterfaceLoad2.loadCablePortTypes(cpt_ids, cableporttypes);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+		ret = NetDirectorydbInterfaceLoad2.loadCableTypes(clt_ids, cablelinktypes);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+		return ret;
+	}
+
+	public int LoadISMDirectory(
+			AccessIdentity_Transferable accessIdentity,
+			EquipmentTypeSeq_TransferableHolder kistypes,
+			AccessPortTypeSeq_TransferableHolder aporttypes,
+			TransmissionPathTypeSeq_TransferableHolder pathtypes)
+		throws AMFICOMRemoteException
+	{
+		CheckUserPrivileges(accessIdentity);
+
+		int ret = Constants.ERROR_NO_ERROR;
+
+		kistypes.value = new EquipmentType_Transferable[0];
+		aporttypes.value = new AccessPortType_Transferable[0];
+		pathtypes.value = new TransmissionPathType_Transferable[0];
+/*
+		// проверить права пользователя на работу с системой
+		if (pm6.CheckUserPrivileges(
+				accessIdentity.sess_id,
+				Constants._OP,
+				Constants._ELEMENT,
+				Constants.EMPTY_ELEMENTID) == 0)
+			return Constants.ERROR_INSUFFICIENT_PRIVILEGES;
+*/
+//		System.out.println("Start load...");
+		ret = ISMDirectorydbInterfaceLoad.loadAccessPortTypes(aporttypes);
+//		System.out.println("Ok access port types");
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+//		System.out.println("loading kis types...");
+//		ret = ISMDirectorydbInterfaceLoad.loadKISTypes(kistypes);
+//		System.out.println("Ok kis types");
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+//		System.out.println("filling ports & access ports (" + port_vec.size() + " and " + access_port_vec.size() + " resp)");
+		ret = ISMDirectorydbInterfaceLoad.loadPathTypes(pathtypes);
+//		System.out.println("Ok kis types");
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+
+		return ret;
+	}
+
+	public int LoadStatedISMDirectory(
+			AccessIdentity_Transferable accessIdentity,
+			String[] kis_ids,
+			String[] aport_ids,
+			String[] path_ids,
+			EquipmentTypeSeq_TransferableHolder kistypes,
+			AccessPortTypeSeq_TransferableHolder aporttypes,
+			TransmissionPathTypeSeq_TransferableHolder pathtypes)
+		throws AMFICOMRemoteException
+	{
+		CheckUserPrivileges(accessIdentity);
+
+		int ret = Constants.ERROR_NO_ERROR;
+
+		kistypes.value = new EquipmentType_Transferable[0];
+		aporttypes.value = new AccessPortType_Transferable[0];
+		pathtypes.value = new TransmissionPathType_Transferable[0];
+/*
+		// проверить права пользователя на работу с системой
+		if (pm6.CheckUserPrivileges(
+				accessIdentity.sess_id,
+				Constants._OP,
+				Constants._ELEMENT,
+				Constants.EMPTY_ELEMENTID) == 0)
+			return Constants.ERROR_INSUFFICIENT_PRIVILEGES;
+*/
+		ret = ISMDirectorydbInterfaceLoad2.loadAccessPortTypes(aport_ids, aporttypes);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+//		ret = ISMDirectorydbInterfaceLoad2.loadKISTypes(kis_ids, kistypes);
+//		System.out.println("Ok kis types");
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+		ret = ISMDirectorydbInterfaceLoad2.loadPathTypes(path_ids, pathtypes);
+//		System.out.println("Ok kis types");
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+		return ret;
+	}
+
+	public int RemoveNetDirectory(
+			AccessIdentity_Transferable accessIdentity,
+			String[] pt_ids,
+			String[] cpt_ids,
+			String[] eqt_ids,
+			String[] lt_ids,
+			String[] clt_ids)
+		throws AMFICOMRemoteException
+	{
+		CheckUserPrivileges(accessIdentity);
+
+		int ret = Constants.ERROR_NO_ERROR;
+		ret = NetDirectorydbInterfaceRemove.removePortTypes(pt_ids);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+		ret = NetDirectorydbInterfaceRemove.removeEquipmentTypes(eqt_ids);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+		ret = NetDirectorydbInterfaceRemove.removeLinkTypes(lt_ids);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+		ret = NetDirectorydbInterfaceRemove.removeCablePortTypes(cpt_ids);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+		ret = NetDirectorydbInterfaceRemove.removeCableLinkTypes(clt_ids);
+		return ret;
+	}
+
+	public int RemoveISMDirectory(
+			AccessIdentity_Transferable accessIdentity,
+			String[] kst_ids,
+			String[] apt_ids,
+			String[] tpt_ids)
+		throws AMFICOMRemoteException
+	{
+		CheckUserPrivileges(accessIdentity);
+
+		int ret = Constants.ERROR_NO_ERROR;
+		ret = ISMDirectorydbInterfaceRemove.removeAccessPortTypes(apt_ids);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+		ret = ISMDirectorydbInterfaceRemove.removeKISTypes(kst_ids);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+		ret = ISMDirectorydbInterfaceRemove.removePathTypes(tpt_ids);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+		return ret;
+	}
+
+	public int SaveNetDirectory(
+			AccessIdentity_Transferable accessIdentity,
+			PortType_Transferable[] porttypes,
+			EquipmentType_Transferable[] equipmenttypes,
+			LinkType_Transferable[] linktypes,
+			TestPortType_Transferable[] tporttypes,
+			CharacteristicType_Transferable[] characteristictypes,
+			CablePortType_Transferable[] cableporttypes,
+			CableLinkType_Transferable[] cablelinktypes)
+		throws AMFICOMRemoteException
+	{
+		CheckUserPrivileges(accessIdentity);
+
+		int ret = Constants.ERROR_NO_ERROR;
+		ret = NetDirectorydbInterfaceSave.savePortTypes(porttypes);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+		ret = NetDirectorydbInterfaceSave.saveEquipmentTypes(equipmenttypes);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+		ret = NetDirectorydbInterfaceSave.saveLinkTypes(linktypes);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+		ret = NetDirectorydbInterfaceSave.saveCharacteristicTypes(characteristictypes);
+//		ret = NetDirectorydbInterfaceLoad2.loadCharacteristicTypes(cht_ids, characteristictypes);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+		ret = NetDirectorydbInterfaceSave.saveCablePortTypes(cableporttypes);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+		ret = NetDirectorydbInterfaceSave.saveCableLinkTypes(cablelinktypes);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+		return ret;
+	}
+
+	public int SaveISMDirectory(
+			AccessIdentity_Transferable accessIdentity,
+			EquipmentType_Transferable[] kistypes,
+			AccessPortType_Transferable[] aporttypes,
+			TransmissionPathType_Transferable[] pathtypes)
+		throws AMFICOMRemoteException
+	{
+		CheckUserPrivileges(accessIdentity);
+
+		int ret = Constants.ERROR_NO_ERROR;
+		ret = ISMDirectorydbInterfaceSave.saveAccessPortTypes(aporttypes);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+		ret = ISMDirectorydbInterfaceSave.saveKISTypes(kistypes);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+		ret = ISMDirectorydbInterfaceSave.savePathTypes(pathtypes);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+		return ret;
+	}
+
+	public int LoadNet(
+			AccessIdentity_Transferable accessIdentity,
+			PortSeq_TransferableHolder ports,
+			CablePortSeq_TransferableHolder cports,
+			EquipmentSeq_TransferableHolder equipments,
+			LinkSeq_TransferableHolder links,
+			CableLinkSeq_TransferableHolder clinks,
+			TestPortSeq_TransferableHolder testports)
+		throws AMFICOMRemoteException
+	{
+		CheckUserPrivileges(accessIdentity);
+
+		int ret = Constants.ERROR_NO_ERROR;
+
+		Vector port_vec = new Vector();
+		Vector cport_vec = new Vector();
+		Vector testport_vec = new Vector();
+
+		ports.value = new Port_Transferable[0];
+		cports.value = new CablePort_Transferable[0];
+		equipments.value = new Equipment_Transferable[0];
+		links.value = new Link_Transferable[0];
+		clinks.value = new CableLink_Transferable[0];
+		testports.value = new TestPort_Transferable[0];
+/*
+		// проверить права пользователя на работу с системой
+		if (pm6.CheckUserPrivileges(
+				accessIdentity.sess_id,
+				Constants._OP,
+				Constants._ELEMENT,
+				Constants.EMPTY_ELEMENTID) == 0)
+			return Constants.ERROR_INSUFFICIENT_PRIVILEGES;
+*/
+		ret = NetdbInterfaceLoad.loadEquipments(accessIdentity.domain_id, equipments, port_vec, cport_vec, testport_vec);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+
+		ret = NetdbInterfaceLoad.loadLinks(accessIdentity.domain_id, links);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+		ret = NetdbInterfaceLoad.loadCableLinks(accessIdentity.domain_id, clinks);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+
+		ports.value = new Port_Transferable[port_vec.size()];
+		port_vec.copyInto(ports.value);
+		cports.value = new CablePort_Transferable[cport_vec.size()];
+		cport_vec.copyInto(cports.value);
+		testports.value = new TestPort_Transferable[testport_vec.size()];
+		testport_vec.copyInto(testports.value);
+
+		return ret;
+	}
+
+	public int LoadStatedNet(
+			AccessIdentity_Transferable accessIdentity,
+			String[] p_ids,
+			String[] cp_ids,
+			String[] eq_ids,
+			String[] l_ids,
+			String[] cl_ids,
+			PortSeq_TransferableHolder ports,
+			CablePortSeq_TransferableHolder cports,
+			EquipmentSeq_TransferableHolder equipments,
+			LinkSeq_TransferableHolder links,
+			CableLinkSeq_TransferableHolder clinks,
+			TestPortSeq_TransferableHolder testports)
+		throws AMFICOMRemoteException
+	{
+		CheckUserPrivileges(accessIdentity);
+
+		int ret = Constants.ERROR_NO_ERROR;
+
+		Vector port_vec = new Vector();
+		Vector cport_vec = new Vector();
+		Vector testport_vec = new Vector();
+
+		ports.value = new Port_Transferable[0];
+		cports.value = new CablePort_Transferable[0];
+		equipments.value = new Equipment_Transferable[0];
+		links.value = new Link_Transferable[0];
+		clinks.value = new CableLink_Transferable[0];
+		testports.value = new TestPort_Transferable[0];
+/*
+		// проверить права пользователя на работу с системой
+		if (pm6.CheckUserPrivileges(
+				accessIdentity.sess_id,
+				Constants._OP,
+				Constants._ELEMENT,
+				Constants.EMPTY_ELEMENTID) == 0)
+			return Constants.ERROR_INSUFFICIENT_PRIVILEGES;
+*/
+		ret = NetdbInterfaceLoad2.loadEquipments(accessIdentity.domain_id, eq_ids, equipments, port_vec, cport_vec, testport_vec);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+
+		ret = NetdbInterfaceLoad2.loadLinks(accessIdentity.domain_id, l_ids, links);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+		ret = NetdbInterfaceLoad2.loadCableLinks(accessIdentity.domain_id, cl_ids, clinks);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+
+		ports.value = new Port_Transferable[port_vec.size()];
+		port_vec.copyInto(ports.value);
+		cports.value = new CablePort_Transferable[cport_vec.size()];
+		cport_vec.copyInto(cports.value);
+		testports.value = new TestPort_Transferable[testport_vec.size()];
+		testport_vec.copyInto(testports.value);
+
+		return ret;
+	}
+
+	public int LoadISM(
+			AccessIdentity_Transferable accessIdentity,
+			PortSeq_TransferableHolder ports,
+			CablePortSeq_TransferableHolder cports,
+			EquipmentSeq_TransferableHolder kiss,
+			LinkSeq_TransferableHolder links,
+			CableLinkSeq_TransferableHolder clinks,
+			MonitoredElementSeq_TransferableHolder mes,
+			TransmissionPathSeq_TransferableHolder paths,
+			AccessPortSeq_TransferableHolder accessports)
+		throws AMFICOMRemoteException
+	{
+		CheckUserPrivileges(accessIdentity);
+
+		int ret = Constants.ERROR_NO_ERROR;
+
+		Vector port_vec = new Vector();
+		Vector cport_vec = new Vector();
+		Vector accessport_vec = new Vector();
+
+		ports.value = new Port_Transferable[0];
+		cports.value = new CablePort_Transferable[0];
+		kiss.value = new Equipment_Transferable[0];
+		links.value = new Link_Transferable[0];
+		clinks.value = new CableLink_Transferable[0];
+		mes.value = new MonitoredElement_Transferable[0];
+		paths.value = new TransmissionPath_Transferable[0];
+		accessports.value = new AccessPort_Transferable[0];
+/*
+		// проверить права пользователя на работу с системой
+		if (pm6.CheckUserPrivileges(
+				accessIdentity.sess_id,
+				Constants._OP,
+				Constants._ELEMENT,
+				Constants.EMPTY_ELEMENTID) == 0)
+			return Constants.ERROR_INSUFFICIENT_PRIVILEGES;
+*/
+		ret = ISMdbInterfaceLoad.loadKISs(accessIdentity.domain_id, kiss, port_vec, cport_vec, accessport_vec);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+
+		ret = ISMdbInterfaceLoad.loadTransmissionPaths(accessIdentity.domain_id, paths);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+
+		ret = ISMdbInterfaceLoad.loadMonitoredElements(accessIdentity.domain_id, mes);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+
+		ports.value = new Port_Transferable[port_vec.size()];
+		port_vec.copyInto(ports.value);
+		cports.value = new CablePort_Transferable[cport_vec.size()];
+		cport_vec.copyInto(cports.value);
+		accessports.value = new AccessPort_Transferable[accessport_vec.size()];
+		accessport_vec.copyInto(accessports.value);
+		return ret;
+	}
+
+	public int LoadStatedISM(
+			AccessIdentity_Transferable accessIdentity,
+			String[] p_ids,
+			String[] cp_ids,
+			String[] k_ids,
+			String[] l_ids,
+			String[] cl_ids,
+			String[] me_ids,
+			String[] t_ids,
+			String[] ap_ids,
+			PortSeq_TransferableHolder ports,
+			CablePortSeq_TransferableHolder cports,
+			EquipmentSeq_TransferableHolder kiss,
+			LinkSeq_TransferableHolder links,
+			CableLinkSeq_TransferableHolder clinks,
+			MonitoredElementSeq_TransferableHolder mes,
+			TransmissionPathSeq_TransferableHolder paths,
+			AccessPortSeq_TransferableHolder accessports)
+		throws AMFICOMRemoteException
+	{
+		CheckUserPrivileges(accessIdentity);
+
+		int ret = Constants.ERROR_NO_ERROR;
+
+		Vector port_vec = new Vector();
+		Vector cport_vec = new Vector();
+		Vector accessport_vec = new Vector();
+
+		ports.value = new Port_Transferable[0];
+		cports.value = new CablePort_Transferable[0];
+		kiss.value = new Equipment_Transferable[0];
+		links.value = new Link_Transferable[0];
+		clinks.value = new CableLink_Transferable[0];
+		mes.value = new MonitoredElement_Transferable[0];
+		paths.value = new TransmissionPath_Transferable[0];
+		accessports.value = new AccessPort_Transferable[0];
+/*
+		// проверить права пользователя на работу с системой
+		if (pm6.CheckUserPrivileges(
+				accessIdentity.sess_id,
+				Constants._OP,
+				Constants._ELEMENT,
+				Constants.EMPTY_ELEMENTID) == 0)
+			return Constants.ERROR_INSUFFICIENT_PRIVILEGES;
+*/
+		ret = ISMdbInterfaceLoad2.loadKISs(accessIdentity.domain_id, k_ids, kiss, port_vec, cport_vec, accessport_vec);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+
+		ret = ISMdbInterfaceLoad2.loadTransmissionPaths(accessIdentity.domain_id, t_ids, paths);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+
+		ret = ISMdbInterfaceLoad2.loadMonitoredElements(accessIdentity.domain_id, me_ids, mes);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+
+		ports.value = new Port_Transferable[port_vec.size()];
+		port_vec.copyInto(ports.value);
+		cports.value = new CablePort_Transferable[cport_vec.size()];
+		cport_vec.copyInto(cports.value);
+		accessports.value = new AccessPort_Transferable[accessport_vec.size()];
+		accessport_vec.copyInto(accessports.value);
+		return ret;
+	}
+
+	public int SaveNet(
+			AccessIdentity_Transferable accessIdentity,
+			Port_Transferable[] ports,
+			CablePort_Transferable[] cports,
+			Equipment_Transferable[] equipments,
+			Link_Transferable[] links,
+			CableLink_Transferable[] clinks,
+			TestPort_Transferable[] testports)
+		throws AMFICOMRemoteException
+	{
+		CheckUserPrivileges(accessIdentity);
+
+		int ret = Constants.ERROR_NO_ERROR;
+
+/*
+		// проверить права пользователя на работу с системой
+		if (pm6.CheckUserPrivileges(
+				accessIdentity.sess_id,
+				Constants._OP,
+				Constants._ELEMENT,
+				Constants.EMPTY_ELEMENTID) == 0)
+			return Constants.ERROR_INSUFFICIENT_PRIVILEGES;
+*/
+		ret = NetdbInterfaceSave.saveEquipments(equipments);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+		ret = NetdbInterfaceSave.savePorts(ports);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+		ret = NetdbInterfaceSave.saveCablePorts(cports);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+		ret = NetdbInterfaceSave.saveTestPorts(testports);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+		ret = NetdbInterfaceSave.saveLinks(links);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+		ret = NetdbInterfaceSave.saveCableLinks(clinks);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+		return ret;
+	}
+
+	public int SaveISM(
+			AccessIdentity_Transferable accessIdentity,
+			Port_Transferable[] ports,
+			CablePort_Transferable[] cports,
+			Equipment_Transferable[] kiss,
+			Link_Transferable[] links,
+			CableLink_Transferable[] clinks,
+			MonitoredElement_Transferable[] mes,
+			TransmissionPath_Transferable[] paths,
+			AccessPort_Transferable[] accessports)
+		throws AMFICOMRemoteException
+	{
+		CheckUserPrivileges(accessIdentity);
+
+		int ret = Constants.ERROR_NO_ERROR;
+
+/*
+		// проверить права пользователя на работу с системой
+		if (pm6.CheckUserPrivileges(
+				accessIdentity.sess_id,
+				Constants._OP,
+				Constants._ELEMENT,
+				Constants.EMPTY_ELEMENTID) == 0)
+			return Constants.ERROR_INSUFFICIENT_PRIVILEGES;
+*/
+		ret = ISMdbInterfaceSave.saveKISs(kiss);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+		ret = NetdbInterfaceSave.savePorts(ports);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+		ret = NetdbInterfaceSave.saveCablePorts(cports);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+		ret = ISMdbInterfaceSave.saveAccessPorts(accessports);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+		ret = ISMdbInterfaceSave.saveTransmissionPaths(paths);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+		ret = ISMdbInterfaceSave.saveMonitoredElements(mes);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+/*
+		ret = NetdbInterfaceSave.saveLinks(links);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+		ret = NetdbInterfaceSave.saveCableLinks(clinks);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+*/
+		return ret;
+	}
+
+	public int RemoveNet(
+			AccessIdentity_Transferable accessIdentity,
+			String[] p_ids,
+			String[] cp_ids,
+			String[] eq_ids,
+			String[] l_ids,
+			String[] cl_ids)
+		throws AMFICOMRemoteException
+	{
+		CheckUserPrivileges(accessIdentity);
+
+		int ret = Constants.ERROR_NO_ERROR;
+		ret = NetdbInterfaceRemove.removeLinks(l_ids);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+		ret = NetdbInterfaceRemove.removeCableLinks(cl_ids);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+		ret = NetdbInterfaceRemove.removePorts(p_ids);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+		ret = NetdbInterfaceRemove.removeCablePorts(cp_ids);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+		ret = NetdbInterfaceRemove.removeEquipments(eq_ids);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+		return ret;
+	}
+
+	public int RemoveISM(
+			AccessIdentity_Transferable accessIdentity,
+			String[] p_ids,
+			String[] cp_ids,
+			String[] ks_ids,
+			String[] l_ids,
+			String[] cl_ids,
+			String[] me_ids,
+			String[] t_ids,
+			String[] ap_ids)
+		throws AMFICOMRemoteException
+	{
+		CheckUserPrivileges(accessIdentity);
+
+		int ret = Constants.ERROR_NO_ERROR;
+		ret = ISMdbInterfaceRemove.removeAccessPorts(ap_ids);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+		ret = ISMdbInterfaceRemove.removeTransmissionPaths(t_ids);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+		ret = ISMdbInterfaceRemove.removeKISs(ks_ids);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+		return ret;
+	}
+
+//////////////////////////////////////////////////////////////////////////////
+// * Обработка Отчетов
+// *
+
+	public String saveReportTemplates(
+			AccessIdentity_Transferable accessIdentity,
+//			FieldReport_Transferable[] frs,
+			ReportTemplate_Transferable[] rts)
+		throws AMFICOMRemoteException
+	{
+//		System.out.println("called saveReportTemplates");
+		CheckUserPrivileges(accessIdentity);
+/*
+		System.out.println("saving frs");
+		for(int i = 0; i < frs.length; i++)
+		{
+			try
+			{
+				FieldReport fr = new FieldReport(frs[i].id);
+				fr.update(frs[i]);
+			}
+			catch(Exception ex)
+			{
+				System.out.println("field report not found for update - inserting new");
+				try
+				{
+					FieldReport fr = new FieldReport(frs[i]);
+				}
+				catch(Exception exx)
+				{
+					System.out.println("ERROR! new field report could newt be created!");
+				}
+			}
+		}
+*/
+//		System.out.println("saving rts");
+		for(int i = 0; i < rts.length; i++)
+		{
+			try
+			{
+				ReportTemplate r = new ReportTemplate(rts[i].id);
+				r.update(rts[i]);
+			}
+			catch(Exception ex)
+			{
+				System.out.println("report template not found for update - inserting new");
+				try
+				{
+					ReportTemplate r = new ReportTemplate(rts[i]);
+				}
+				catch(Exception exx)
+				{
+					System.out.println("ERROR! new report template could newt be created!");
+					exx.printStackTrace();
+				}
+			}
+		}
+		return "";
+	}
+
+	public void getStatedReportTemplates(
+			AccessIdentity_Transferable accessIdentity,
+			String[] ids,
+//			FieldReportSeq_TransferableHolder fieldReports,
+			ReportTemplateSeq_TransferableHolder reportTemplates)
+		throws AMFICOMRemoteException
+	{
+		Vector vec = new Vector();
+//		Vector vec2 = new Vector();
+		for(int i = 0; i < ids.length; i++)
+			try
+			{
+				ReportTemplate rt = new ReportTemplate(ids[i]);
+				vec.add(rt.getTransferable());
+/*
+				String[] frs = rt.getFieldReportIds();
+				for(int j = 0; j < frs.length; j++)
+					vec2.add(new FieldReport(frs[j]).getTransferable());
+*/
+			}
+			catch(Exception ex)
+			{
+				System.out.println("error retrieving report template " + ids[i] + " - " + ex.getMessage());
+				ex.printStackTrace();
+			}
+		ReportTemplate_Transferable[] rt = new ReportTemplate_Transferable[vec.size()];
+		vec.copyInto(rt);
+//		FieldReport_Transferable[] fr = new FieldReport_Transferable[vec2.size()];
+//		vec2.copyInto(fr);
+
+		reportTemplates.value = rt;
+//		fieldReports.value = fr;
+	}
+
+	public void removeReportTemplates(
+			AccessIdentity_Transferable accessIdentity,
+			String[] reportTemplate_ids)
+		throws AMFICOMRemoteException
+	{
+		CheckUserPrivileges(accessIdentity);
+
+		for(int i = 0; i < reportTemplate_ids.length; i++)
+			try
+			{
+				ReportTemplate rt = new ReportTemplate(reportTemplate_ids[i]);
+/*
+				String[] frs = rt.getFieldReportIds();
+				for(int j = 0; j < frs.length; j++)
+				{
+					FieldReport fr = new FieldReport(frs[j]);
+					fr.delete();
+				}
+*/
+				rt.delete();
+			}
+			catch(Exception ex)
+			{
+				System.out.println("error removing report template " + reportTemplate_ids[i] + " - " + ex.getMessage());
+				ex.printStackTrace();
+			}
+	}
+
+   	public String saveSchemeOptimizeInfo(
+			AccessIdentity_Transferable accessIdentity,
+			SchemeOptimizeInfo_Transferable soi)
+		throws AMFICOMRemoteException
+	{
+		CheckUserPrivileges(accessIdentity);
+		try
+		{
+				new SchemeOptimizeInfo(soi);
+		}
+		catch(Exception ex)
+		{
+			ex.printStackTrace();
+		}
+
+		return "";
+	}
+
+	public SchemeOptimizeInfo_Transferable[] getSchemeOptimizeInfo(
+			AccessIdentity_Transferable accessIdentity)
+		throws AMFICOMRemoteException
+	{
+		CheckUserPrivileges(accessIdentity);
+		try
+		{
+			return SchemeOptimizeInfo.getSOIs();
+		}
+		catch(Exception ex)
+		{
+			ex.printStackTrace();
+		}
+		return new SchemeOptimizeInfo_Transferable[0];
+	}
+
+	public void removeSchemeOptimizeInfo(
+			AccessIdentity_Transferable accessIdentity,
+			String[] soi_ids)
+		throws AMFICOMRemoteException
+	{
+		CheckUserPrivileges(accessIdentity);
+		try
+		{
+			for(int i = 0; i < soi_ids.length; i++)
+			{
+				SchemeOptimizeInfo soi = new SchemeOptimizeInfo(soi_ids[i]);
+				soi.delete();
+			}
+		}
+		catch(Exception ex)
+		{
+			ex.printStackTrace();
+		}
+	}
+
+//-----------------------------------------------------------------------
+
+	public String saveSchemeMonitoringSolutions(
+			AccessIdentity_Transferable accessIdentity,
+			SchemeMonitoringSolution_Transferable sol)
+		throws AMFICOMRemoteException
+	{
+		CheckUserPrivileges(accessIdentity);
+		try
+		{
+				new SchemeMonitoringSolution(sol);
+		}
+		catch(Exception ex)
+		{
+			ex.printStackTrace();
+		}
+
+		return "";
+	}
+
+	public SchemeMonitoringSolution_Transferable[] getSchemeMonitoringSolutions(
+			AccessIdentity_Transferable accessIdentity)
+		throws AMFICOMRemoteException
+	{
+		CheckUserPrivileges(accessIdentity);
+		try
+		{
+			return SchemeMonitoringSolution.getSMSs();
+		}
+		catch(Exception ex)
+		{
+			ex.printStackTrace();
+		}
+		return new SchemeMonitoringSolution_Transferable[0];
+	}
+
+	public void removeSchemeMonitoringSolutions(
+			AccessIdentity_Transferable accessIdentity,
+			String[] sol_ids)
+		throws AMFICOMRemoteException
+	{
+		CheckUserPrivileges(accessIdentity);
+		try
+		{
+			for(int i = 0; i < sol_ids.length; i++)
+			{
+				SchemeMonitoringSolution sol = new SchemeMonitoringSolution(sol_ids[i]);
+				sol.delete();
+			}
+		}
+		catch(Exception ex)
+		{
+			ex.printStackTrace();
+		}
+	}
+
+	#sql public static iterator IdIterator( String id );
+	#sql public static iterator ResourceIdIterator( String id, Timestamp modified );
+	#sql public static iterator ResultIdIterator( String id, Timestamp elementary_start_time );
+}

@@ -1,0 +1,850 @@
+
+// Copyright (c) Syrus Systems 2000 Syrus Systems
+package com.syrus.AMFICOM.server.load;
+
+import sqlj.runtime.*;
+import sqlj.runtime.ref.*;
+import java.sql.*;
+
+import sqlj.*;
+
+import java.io.*;
+
+import java.util.*;
+
+//Package for Oracle Extensions to JDBC
+import oracle.sql.*;
+import oracle.jdbc.driver.*;
+
+import com.syrus.io.*;
+import com.syrus.AMFICOM.server.*;
+
+public class LoadMaintenanceData
+{
+	LogWriter frame;
+	ConnectionManager connectionManager;
+
+	protected LoadMaintenanceData()
+	{
+	}
+
+	public LoadMaintenanceData(LogWriter frame, ConnectionManager connectionManager)
+	{
+		this.frame = frame;
+		this.connectionManager = connectionManager;
+	}
+
+	public void run()
+	{
+		frame.log("Loading Maintenance data:");
+		try{
+			connectionManager.m_ctx.getConnection().setAutoCommit(false);
+		} catch (Exception exx) {}
+		try
+		{
+			File file;
+			FileToDirectory ftd;
+			String[] fnames;
+			int i;
+
+			LoadSystemAdministrator lsa = new LoadSystemAdministrator(frame, connectionManager);
+			String us_id = lsa.getOperatorUser("sysuser");
+
+//			if(true)
+//				return;
+
+			try
+			{
+				file = new File("resources/maintenance/eventtypes.txt");
+				ftd = new FileToDirectory(file);
+				while(ftd.hasMoreElements())
+				{
+					ftd.nextElement();
+					loadEventType(
+						(String )ftd.read("@id"),
+						(String )ftd.read("@codename"),
+						(String )ftd.read("@name"));
+				}
+			}
+			catch(Exception e)
+			{
+				frame.log("FILE maintenance/eventtypes.txt NOT LOADED");
+			}
+
+			try
+			{
+				file = new File("resources/maintenance/eventsourcetypes.txt");
+				ftd = new FileToDirectory(file);
+				while(ftd.hasMoreElements())
+				{
+					ftd.nextElement();
+					String id = (String )ftd.read("@id");
+					loadEventSourceType(
+						id,
+						(String )ftd.read("@name"),
+						(String )ftd.read("@codename"),
+						(String )ftd.read("@source_table_name"));
+
+					Hashtable ht2 = (Hashtable )ftd.read("@eventtypes");
+					if(ht2 != null)
+						for(Enumeration e = ht2.keys(); e.hasMoreElements();)
+						{
+							String et_id = (String )e.nextElement();
+							setSourceTypeEvent(id, et_id, true);
+						}
+				}
+			}
+			catch(Exception e)
+			{
+				frame.log("FILE resources/maintenance/eventsourcetypes.txt NOT LOADED");
+			}
+
+			try
+			{
+				file = new File("resources/maintenance/messagetypes.txt");
+				ftd = new FileToDirectory(file);
+				while(ftd.hasMoreElements())
+				{
+					ftd.nextElement();
+					loadMessageType(
+						(String )ftd.read("@id"),
+						(String )ftd.read("@codename"),
+						(String )ftd.read("@name"));
+				}
+			}
+			catch(Exception e)
+			{
+				frame.log("FILE maintenance/messagetypes.txt NOT LOADED");
+			}
+
+			try
+			{
+				file = new File("resources/maintenance/alertingtypes.txt");
+				ftd = new FileToDirectory(file);
+				while(ftd.hasMoreElements())
+				{
+					ftd.nextElement();
+					loadAlertingType(
+						(String )ftd.read("@id"),
+						(String )ftd.read("@codename"),
+						(String )ftd.read("@name"));
+				}
+			}
+			catch(Exception e)
+			{
+				frame.log("FILE maintenance/alertingtypes.txt NOT LOADED");
+			}
+
+			try
+			{
+				file = new File("resources/maintenance/alarmtypes.txt");
+				ftd = new FileToDirectory(file);
+				while(ftd.hasMoreElements())
+				{
+					ftd.nextElement();
+					loadAlarmType(
+						(String )ftd.read("@id"),
+						(String )ftd.read("@codename"),
+						(String )ftd.read("@name"),
+						us_id,
+						false,
+						(String )ftd.read("@description"),
+						new Timestamp(System.currentTimeMillis()),
+						new Timestamp(1000));
+				}
+			}
+			catch(Exception e)
+			{
+				frame.log("FILE maintenance/alarmtypes.txt NOT LOADED");
+			}
+
+			try
+			{
+				file = new File("resources/maintenance/alertingmessages.txt");
+				ftd = new FileToDirectory(file);
+				while(ftd.hasMoreElements())
+				{
+					ftd.nextElement();
+					String id = (String )ftd.read("@id");
+
+					loadEventTypeMessage(
+						id,
+						(String )ftd.read("@event_type_id"),
+						(String )ftd.read("@message_type_id"),
+						(String )ftd.read("@text"));
+
+//					setAlertingMessageUser(id, us_id);
+				}
+			}
+			catch(Exception e)
+			{
+				frame.log("FILE maintenance/alertingmessages.txt NOT LOADED");
+			}
+
+			try
+			{
+				file = new File("resources/maintenance/eventrules.txt");
+				ftd = new FileToDirectory(file);
+				while(ftd.hasMoreElements())
+				{
+					ftd.nextElement();
+
+					loadEventTypeRule(
+						(String )ftd.read("@id"),
+						(String )ftd.read("@source_type_id"),
+						(String )ftd.read("@event_type_id"),
+						(String )ftd.read("@logic_text"));
+				}
+			}
+			catch(Exception e)
+			{
+				frame.log("FILE maintenance/eventrules.txt NOT LOADED");
+			}
+
+			/*
+			loadAlarmTypeRule("KISsource", "alarmrule1", "alarmrule1", "rtuhwalarm", "Обработка программного сбоя на РТУ", "IF Event(\"swalarmevent\") ON %1 THEN GENERATE_ALARM(\"rtuswalarm\", %1, Event.ID)");
+			loadAlarmTypeRule("KISsource", "alarmrule2", "alarmrule2", "rtuswalarm", "Обработка аппаратного сбоя на РТУ", "IF Event(\"hwalarmevent\") ON %1 THEN GENERATE_ALARM(\"rtuhwalarm\", %1, Event.ID)");
+			loadAlarmTypeRule("KISsource", "alarmrule3", "alarmrule3", "rtutestalarm", "Обработка приема сигнала тревоги по результатам измерений на РТУ", "IF Event(\"testalarmevent\") ON %1 THEN GENERATE_ALARM(\"rtutestalarm\", %1, Event.ID)");
+			loadAlarmTypeRule("KISsource", "alarmrule4", "alarmrule4", "rtutestalarm", "Обработка приема сигнала тревоги по результатам измерений на РТУ", "IF Event(\"evaluationalarmevent\") ON %1 THEN GENERATE_ALARM(\"rtutestalarm\", %1, Event.ID)");
+*/
+
+			try
+			{
+				file = new File("resources/maintenance/alertedusers.txt");
+				ftd = new FileToDirectory(file);
+				while(ftd.hasMoreElements())
+				{
+					ftd.nextElement();
+
+					setAlertingMessageUser(
+						(String )ftd.read("@id"),
+						(String )ftd.read("@alerting_message_id"),
+						(String )ftd.read("@alerting_type_id"),
+						(String )ftd.read("@user_id"));
+				}
+			}
+			catch(Exception e)
+			{
+				frame.log("FILE maintenance/alertedusers.txt NOT LOADED");
+			}
+
+			try
+			{
+				file = new File("resources/maintenance/attributetypes.txt");
+				ftd = new FileToDirectory(file);
+				while(ftd.hasMoreElements())
+				{
+					ftd.nextElement();
+					String id = (String )ftd.read("@id");
+					loadElementAttributeType(
+						id,
+						(String )ftd.read("@name"),
+						(String )ftd.read("@value_type"),
+						(String )ftd.read("@default_value"),
+						((String )ftd.read("@is_editable")).equals("true"),
+						((String )ftd.read("@is_visible")).equals("true") );
+
+					Hashtable ht2 = (Hashtable )ftd.read("@values");
+					if(ht2 != null)
+						for(Enumeration e = ht2.keys(); e.hasMoreElements();)
+						{
+							String val = (String )e.nextElement();
+							addElementAttributeValue(id, val);
+						}
+/*
+			loadElementAttributeTypeRule("alarmedattributerule1", "alarmedattributerule1", "alarmed", "IF Event(\"alarmevent\") ON %1 THEN SET_VALUE(\"true\")");
+			loadElementAttributeTypeRule("alarmedattributerule2", "alarmedattributerule2", "alarmed", "IF Event(\"alarmchangeevent\") WITH %1 THEN SET_VALUE(\"false\")");
+
+			loadElementAttributeTypeRule("connectededattributerule1", "connectededattributerule1", "connecteded", "IF Event(\"connectevent\") ON %1 THEN SET_VALUE(\"true\")");
+			loadElementAttributeTypeRule("connectededattributerule2", "connectededattributerule2", "connecteded", "IF Event(\"disconnectevent\") ON %1 THEN SET_VALUE(\"false\")");
+*/
+				}
+			}
+			catch(Exception e)
+			{
+				frame.log("FILE resources/maintenance/attributetypes.txt NOT LOADED");
+			}
+
+			try
+			{
+				file = new File("resources/maintenance/eventsources.txt");
+				ftd = new FileToDirectory(file);
+				while(ftd.hasMoreElements())
+				{
+					ftd.nextElement();
+
+					loadEventSource(
+						(String )ftd.read("@id"),
+						(String )ftd.read("@type_id"),
+						(String )ftd.read("@object_source_name"),
+						(String )ftd.read("@object_source_id"),
+						(String )ftd.read("@description"));
+/*
+					Hashtable ht2 = (Hashtable )ftd.read("@eventrules");
+					if(ht2 != null)
+						for(Enumeration e = ht2.keys(); e.hasMoreElements();)
+						{
+							String et_id = (String )e.nextElement();
+//							setSourceRule(id, et_id);
+						}
+*/
+				}
+			}
+			catch(Exception e)
+			{
+				frame.log("FILE maintenance/eventsources.txt NOT LOADED");
+			}
+
+			#sql { commit };
+
+			frame.log("All Maintenance data loaded.");
+		}
+		catch(SQLException e)
+		{
+			frame.log("Could not finish operation");
+		}
+	}
+
+	public void loadEventSource(
+			String id,
+			String type_id,
+			String object_name,
+			String object_id,
+			String description)
+	{
+		frame.log("load event source ID:" + id + " NAME:" + object_name + " of type: " + type_id);
+		try
+		{
+			#sql {
+				insert into AMFICOM.EVENTSOURCES(
+						ID,
+						OBJECT_SOURCE_NAME,
+						OBJECT_SOURCE_ID,
+						TYPE_ID,
+						DESCRIPTION)
+					values(
+						:id,
+						:object_name,
+						:object_id,
+						:type_id,
+						:description)
+			};
+			#sql { commit };
+		}
+		catch(SQLException ex)
+		{
+			frame.log("event source exists - updating...");
+			try
+			{
+				#sql {
+					update AMFICOM.EVENTSOURCES
+						set
+							OBJECT_SOURCE_NAME = :object_name,
+							OBJECT_SOURCE_ID = :object_id,
+							TYPE_ID = :type_id,
+							DESCRIPTION = :description
+						where ID = :id
+				};
+				#sql { commit };
+			}
+			catch(SQLException exx)
+			{
+				frame.log("error saVing event source: " + exx.getMessage());
+			}
+		}
+	}
+
+	public void loadEventSourceType(String id, String name, String codename, String table_name)
+	{
+		frame.log("load event source type ID:" + id + " NAME:" + name + " from TABLE: " + table_name);
+		try
+		{
+			#sql {
+				insert into AMFICOM.EVENTSOURCETYPES(ID, NAME, CODENAME, SOURCE_TABLE_NAME)
+					values(
+						:id,
+						:name,
+						:codename,
+						:table_name)
+			};
+			#sql { commit };
+		}
+		catch(SQLException ex)
+		{
+			frame.log("event source type exists - updating...");
+			try
+			{
+				#sql {
+					update AMFICOM.EVENTSOURCETYPES
+						set NAME = :name,
+							CODENAME = :codename,
+							SOURCE_TABLE_NAME = :table_name
+						where ID = :id
+				};
+				#sql { commit };
+			}
+			catch(SQLException exx)
+			{
+				frame.log("error saVing event source type: " + exx.getMessage());
+			}
+		}
+	}
+
+	public void loadEventType(String id, String codename, String name)
+	{
+		frame.log("load event type ID:" + id + " NAME:" + name);
+		try
+		{
+			#sql {
+				insert into AMFICOM.EVENTTYPES(ID, NAME, CODENAME)
+					values(
+						:id,
+						:name,
+						:codename)
+			};
+			#sql { commit };
+		}
+		catch(SQLException ex)
+		{
+			frame.log("event type exists - updating...");
+			try
+			{
+				#sql {
+					update AMFICOM.EVENTTYPES
+						set NAME = :name,
+							CODENAME = :codename
+						where ID = :id
+				};
+				#sql { commit };
+			}
+			catch(SQLException exx)
+			{
+				frame.log("error saVing event type: " + exx.getMessage());
+			}
+		}
+	}
+
+	public void setSourceTypeEvent(String source_id, String event_id, boolean is_generated)
+	{
+		frame.log("set event type ID:" + event_id + " for source type ID:" + source_id + ", generation flag: " + is_generated);
+		int is_gen = (is_generated)? 1 : 0;
+		try
+		{
+			int count;
+			#sql
+			{
+				select count(*) into :count from AMFICOM.SOURCETYPEEVENTTYPELINKS
+					where EVENT_TYPE_ID = :event_id
+					and SOURCE_TYPE_ID = :source_id
+			};
+			if(count != 0)
+				return;
+			#sql {
+				insert into AMFICOM.SOURCETYPEEVENTTYPELINKS(IS_GENERATED, EVENT_TYPE_ID, SOURCE_TYPE_ID)
+					values(
+						:is_gen,
+						:event_id,
+						:source_id)
+			};
+			#sql { commit };
+		}
+		catch(SQLException exx)
+		{
+			frame.log("error setting event type for source type: " + exx.getMessage());
+		}
+	}
+
+	public void loadEventTypeRule(
+			String id1,
+			String source_type_id,
+			String event_type_id,
+			String logic_text)
+	{
+		frame.log("set event type ID:" + event_type_id + " for source type ID:" + source_type_id + ", rule field: " + logic_text);
+		try
+		{
+			int count;
+			#sql
+			{
+				select count(*) into :count from AMFICOM.SOURCETYPEEVENTTYPELINKS
+					where EVENT_TYPE_ID = :event_type_id
+					and SOURCE_TYPE_ID = :source_type_id
+			};
+			if(count != 0)
+			{
+				#sql {
+					update AMFICOM.SOURCETYPEEVENTTYPELINKS
+						set DEFAULT_REACTION_SUBSTRING = :logic_text
+						where EVENT_TYPE_ID = :event_type_id
+						and SOURCE_TYPE_ID = :source_type_id
+				};
+				#sql { commit };
+			}
+			else
+			{
+				#sql {
+					insert into AMFICOM.SOURCETYPEEVENTTYPELINKS(
+							IS_GENERATED,
+							EVENT_TYPE_ID,
+							SOURCE_TYPE_ID,
+							DEFAULT_REACTION_SUBSTRING)
+						values(
+							1,
+							:event_type_id,
+							:source_type_id,
+							:logic_text)
+				};
+				#sql { commit };
+			}
+		}
+		catch(SQLException exx)
+		{
+			frame.log("error setting event type rule for source type: " + exx.getMessage());
+		}
+	}
+
+	public void loadMessageType(String id, String codename, String name)
+	{
+		frame.log("load message type ID:" + id + " NAME:" + name);
+		try
+		{
+			#sql {
+				insert into AMFICOM.MESSAGETYPES(ID, NAME, CODENAME, DESCRIPTION)
+					values(
+						:id,
+						:name,
+						:codename,
+						:name)
+			};
+			#sql { commit };
+		}
+		catch(SQLException ex)
+		{
+			frame.log("message type exists - updating...");
+			try
+			{
+				#sql {
+					update AMFICOM.MESSAGETYPES
+						set NAME = :name,
+							CODENAME = :codename,
+							DESCRIPTION = :name
+						where ID = :id
+				};
+				#sql { commit };
+			}
+			catch(SQLException exx)
+			{
+				frame.log("error saVing message type: " + exx.getMessage());
+			}
+		}
+	}
+
+	public void loadAlertingType(String id, String codename, String name)
+	{
+		frame.log("load alerting type ID:" + id + " NAME:" + name);
+		try
+		{
+			#sql {
+				insert into AMFICOM.ALERTINGTYPES(ID, NAME, CODENAME)
+					values(
+						:id,
+						:name,
+						:codename)
+			};
+			#sql { commit };
+		}
+		catch(SQLException ex)
+		{
+			frame.log("alerting type exists - updating...");
+			try
+			{
+				#sql {
+					update AMFICOM.ALERTINGTYPES
+						set NAME = :name,
+							CODENAME = :codename
+						where ID = :id
+				};
+				#sql { commit };
+			}
+			catch(SQLException exx)
+			{
+				frame.log("error saVing alerting type: " + exx.getMessage());
+			}
+		}
+	}
+
+
+	public void loadAlarmType(
+			String id,
+			String codename,
+			String name,
+			String owner_id,
+			boolean regenerate,
+			String description,
+			Timestamp regen_period,
+			Timestamp time_to_fix)
+	{
+		frame.log("load alarm type ID:" + id + " NAME:" + name);
+		int is_regen = (regenerate)? 1 : 0;
+		try
+		{
+			#sql {
+				insert into AMFICOM.ALARMTYPES(
+						ID,
+						NAME,
+						CODENAME,
+						DESCRIPTION)
+					values(
+						:id,
+						:name,
+						:codename,
+						:description)
+			};
+			#sql { commit };
+		}
+		catch(SQLException ex)
+		{
+			frame.log("alarm type exists - updating...");
+			try
+			{
+				#sql {
+					update AMFICOM.ALARMTYPES
+						set NAME = :name,
+							CODENAME = :codename,
+							DESCRIPTION = :name
+						where ID = :id
+				};
+				#sql { commit };
+			}
+			catch(SQLException exx)
+			{
+				frame.log("error saVing alarm type: " + exx.getMessage());
+			}
+		}
+	}
+
+	public void loadEventTypeMessage(
+			String id,
+			String event_type_id,
+			String message_type_id,
+			String text)
+	{
+		frame.log("load message ID: " + id + " TEXT: " + text + " for alarm type ID:" + event_type_id);
+		try
+		{
+			#sql {
+				insert into AMFICOM.ALERTINGMESSAGETEXTS(
+						ID,
+						EVENT_TYPE_ID,
+						MESSAGE_TYPE_ID,
+						TEXT)
+					values(
+						:id,
+						:event_type_id,
+						:message_type_id,
+						:text)
+			};
+			#sql { commit };
+		}
+		catch(SQLException ex)
+		{
+			frame.log("message for alarm type exists - updating...");
+			try
+			{
+				#sql {
+					update AMFICOM.ALERTINGMESSAGETEXTS
+						set
+							EVENT_TYPE_ID = :event_type_id,
+							MESSAGE_TYPE_ID = :message_type_id,
+							TEXT = :text
+						where ID = :id
+				};
+				#sql { commit };
+			}
+			catch(SQLException exx)
+			{
+				frame.log("error saVing message for alarm type: " + exx.getMessage());
+			}
+		}
+	}
+
+	public void setAlertingMessageUser(
+			String id,
+			String alerting_message_id,
+			String alerting_type_id,
+			String user_id)
+	{
+		frame.log("set user ID:" + user_id + " for message with alerting ID: " + alerting_message_id);
+		try
+		{
+			int count;
+			#sql
+			{
+				select count(*) into :count from AMFICOM.ALERTINGMESSAGEUSERLINKS
+					where ALERTING_MESSAGE_ID = :alerting_message_id
+					and USER_ID = :user_id
+			};
+			if(count != 0)
+				return;
+			#sql {
+				insert into AMFICOM.ALERTINGMESSAGEUSERLINKS(
+						ID,
+						ALERTING_TYPE_ID,
+						USER_ID,
+						ALERTING_MESSAGE_ID)
+					values(
+						:id,
+						:alerting_type_id,
+						:user_id,
+						:alerting_message_id)
+			};
+			#sql { commit };
+		}
+		catch(SQLException exx)
+		{
+			frame.log("error setting user for alarm type: " + exx.getMessage());
+		}
+	}
+
+	public void loadElementAttributeType(
+			String id,
+			String name,
+			String value_type,
+			String default_value,
+			boolean is_editable,
+			boolean is_visible)
+	{
+		frame.log("load element attribute type ID: " + id + " NAME:" + name + " of TYPE: " + value_type);
+		int is_ed = (is_editable)? 1 : 0;
+		int is_vis = (is_visible)? 1 : 0;
+		try
+		{
+			#sql {
+				insert into AMFICOM.ELEMENTATTRIBUTETYPES(
+						ID,
+						NAME,
+						VALUE_TYPE,
+						DEFAULT_VALUE,
+						IS_EDITABLE,
+						IS_VISIBLE,
+						MODIFIED)
+					values(
+						:id,
+						:name,
+						:value_type,
+						:default_value,
+						:is_ed,
+						:is_vis,
+						SYSDATE)
+			};
+			#sql { commit };
+		}
+		catch(SQLException ex)
+		{
+			frame.log("element attribute type exists - updating...");
+			try
+			{
+				#sql {
+					update AMFICOM.ELEMENTATTRIBUTETYPES
+						set NAME = :name,
+							VALUE_TYPE = :value_type,
+							DEFAULT_VALUE = :default_value,
+							IS_EDITABLE = :is_ed,
+							IS_VISIBLE = :is_vis,
+							MODIFIED = SYSDATE
+						where ID = :id
+				};
+				#sql { commit };
+			}
+			catch(SQLException exx)
+			{
+				frame.log("error saVing element attribute type: " + exx.getMessage());
+			}
+		}
+	}
+
+	public void addElementAttributeValue(
+			String attribute_type_id,
+			String value)
+	{
+		frame.log("add attribute value:" + value + " for attribute type ID:" + attribute_type_id);
+		try
+		{
+			int count;
+			#sql
+			{
+				select count(*) into :count from AMFICOM.ELEMENTATTRIBUTETYPEVALUES
+					where ATTRIBUTE_TYPE_ID = :attribute_type_id
+					and VALUE = :value
+			};
+			if(count != 0)
+				return;
+			int id;
+			String id_v = "eatval";
+			#sql { select AMFICOM.ATTRVAL_SEQ.NEXTVAL into :id from SYS.DUAL };
+			id_v = id_v + String.valueOf(id);
+			#sql {
+				insert into AMFICOM.ELEMENTATTRIBUTETYPEVALUES(
+						ID,
+						ATTRIBUTE_TYPE_ID,
+						VALUE)
+					values(
+						:id_v,
+						:attribute_type_id,
+						:value)
+			};
+			#sql { commit };
+		}
+		catch(SQLException exx)
+		{
+			frame.log("error adding attribute value: " + exx.getMessage());
+		}
+	}
+/*
+	public void loadElementAttributeTypeRule(
+			String id,
+			String codename,
+			String attribute_type_id,
+			String logic)
+	{
+		frame.log("load attribute rule ID: " + id + " CODENAME:" + codename + " for attribute TYPE:" + attribute_type_id + " with LOGIC: " + logic);
+		try
+		{
+			#sql {
+				insert into AMFICOM.ELEMENTATTRIBUTETYPERULES(
+						ID,
+						ATTRIBUTE_TYPE_ID,
+						CODENAME,
+						LOGIC_TEXT)
+					values(
+						:id,
+						:attribute_type_id,
+						:codename,
+						:logic)
+			};
+			#sql { commit };
+		}
+		catch(SQLException ex)
+		{
+			frame.log("attribute rule exists - updating...");
+			try
+			{
+				#sql {
+					update AMFICOM.ELEMENTATTRIBUTETYPERULES
+						set ATTRIBUTE_TYPE_ID = :attribute_type_id,
+							CODENAME = :codename,
+							LOGIC_TEXT = :logic
+						where ID = :id
+				};
+				#sql { commit };
+			}
+			catch(SQLException exx)
+			{
+				frame.log("error saVing attribute rule: " + exx.getMessage());
+			}
+		}
+	}
+*/
+
+}
+

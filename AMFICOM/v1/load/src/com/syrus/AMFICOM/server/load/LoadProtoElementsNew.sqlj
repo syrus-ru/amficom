@@ -1,0 +1,1718 @@
+
+// Copyright (c) Syrus Systems 2000 Syrus Systems
+package com.syrus.AMFICOM.server.load;
+
+import sqlj.runtime.*;
+import sqlj.runtime.ref.*;
+import java.sql.*;
+
+import sqlj.*;
+
+import java.io.*;
+
+import java.util.*;
+
+//Package for Oracle Extensions to JDBC
+import oracle.sql.*;
+import oracle.jdbc.driver.*;
+
+import com.syrus.AMFICOM.server.*;
+import com.syrus.io.*;
+
+public class LoadProtoElementsNew
+{
+	LogWriter frame;
+	ConnectionManager connectionManager;
+
+	LoadImages li;
+	LoadSystemAdministrator lsa;
+
+	protected LoadProtoElementsNew()
+	{
+	}
+
+	public LoadProtoElementsNew(LogWriter frame, ConnectionManager connectionManager)
+	{
+		this.frame = frame;
+		this.connectionManager = connectionManager;
+	}
+
+	public void run()
+	{
+		frame.log("Loading proto elements:");
+		li = new LoadImages(frame, connectionManager);
+		lsa = new LoadSystemAdministrator(frame, connectionManager);
+		try{
+			connectionManager.m_ctx.getConnection().setAutoCommit(false);
+		} catch (Exception exx) {}
+		try
+		{
+			File file;
+			FileToDirectory ftd;
+			String[] fnames;
+			int i;
+
+			String us_id = lsa.getOperatorUser("sysuser");
+
+//			#sql { commit };
+//			frame.log("Ok!");
+//			if(true)
+//				return;
+
+			try
+			{
+				file = new File("resources/devices/equipment.txt");
+				ftd = new FileToDirectory(file);
+				while(ftd.hasMoreElements())
+				{
+					ftd.nextElement();
+					loadSchemeDevice(
+						(String )ftd.read("@id"),
+						(String )ftd.read("@name"));
+				}
+			}
+			catch(Exception e)
+			{
+				frame.log("FILE resources/ports/equipment.txt NOT LOADED");
+			}
+
+			try
+			{
+				file = new File("resources/ports/port.txt");
+				ftd = new FileToDirectory(file);
+				while(ftd.hasMoreElements())
+				{
+					ftd.nextElement();
+					setSchemeDevicePort(
+						(String )ftd.read("@device_id"),
+						(String )ftd.read("@id"),
+						(String )ftd.read("@name"),
+						(String )ftd.read("@port_type_id"),
+						(String )ftd.read("@access_port_type_id"));
+				}
+			}
+			catch(Exception e)
+			{
+				frame.log("FILE resources/ports/port.txt NOT LOADED");
+			}
+
+			try
+			{
+				file = new File("resources/ports/cableport.txt");
+				ftd = new FileToDirectory(file);
+				while(ftd.hasMoreElements())
+				{
+					ftd.nextElement();
+					setSchemeDeviceCablePort(
+						(String )ftd.read("@device_id"),
+						(String )ftd.read("@id"),
+						(String )ftd.read("@name"),
+						(String )ftd.read("@cable_port_type_id"));
+				}
+			}
+			catch(Exception e)
+			{
+				frame.log("FILE resources/ports/cableport.txt NOT LOADED");
+			}
+
+			try
+			{
+				file = new File("resources/links/link.txt");
+				ftd = new FileToDirectory(file);
+				while(ftd.hasMoreElements())
+				{
+					ftd.nextElement();
+					loadSchemeLink(
+						(String )ftd.read("@id"),
+						(String )ftd.read("@name"),
+						(String )ftd.read("@link_type_id"),
+						(String )ftd.read("@source_port_id"),
+						(String )ftd.read("@target_port_id"));
+				}
+			}
+			catch(Exception e)
+			{
+				frame.log("FILE resources/ports/link.txt NOT LOADED");
+			}
+
+			try
+			{
+				file = new File("resources/links/cablelink.txt");
+				ftd = new FileToDirectory(file);
+				while(ftd.hasMoreElements())
+				{
+					ftd.nextElement();
+					String id = (String )ftd.read("@id");
+					loadSchemeCableLink(
+						id,
+						(String )ftd.read("@name"),
+						(String )ftd.read("@cable_link_type_id"),
+						(String )ftd.read("@source_port_id"),
+						(String )ftd.read("@target_port_id"));
+
+					Hashtable ht2 = (Hashtable )ftd.read("@threads");
+					if(ht2 != null)
+						for(Enumeration e = ht2.keys(); e.hasMoreElements();)
+						{
+							String thread_id = (String )e.nextElement();
+
+							MyStringTokenizer parser = new MyStringTokenizer((String )ht2.get(thread_id));
+							String thread_type_id = parser.nextToken();
+							String thread_name = parser.finalToken();
+
+							setCableThread(
+								id,
+								thread_id,
+								thread_name,
+								thread_type_id);
+						}
+				}
+			}
+			catch(Exception e)
+			{
+				frame.log("FILE resources/ports/cablelink.txt NOT LOADED");
+			}
+
+			fnames = new String[] {
+				"resources/proto/equipmentmufta.txt",//-----------  Муфты
+				"resources/proto/equipmentswitch.txt",//---- Оптический коммутатор
+				"resources/proto/equipmentcross.txt",//-------- Оптический кросс
+				"resources/proto/equipmentmultiplexor.txt",//- Оптический мультиплексор
+				"resources/proto/equipmentfilter.txt",//----- Оптический фильтр
+				"resources/proto/equipmenttransmitter.txt",//-------- Transmitter
+				"resources/proto/equipmentreciever.txt",//----------- Reciever
+				"resources/proto/equipmenttester.txt"};//------------- KIS OTDR
+			for(i = 0; i < fnames.length; i++)
+			{
+				try
+				{
+					file = new File(fnames[i]);
+					ftd = new FileToDirectory(file);
+					while(ftd.hasMoreElements())
+					{
+						ftd.nextElement();
+						String id = (String )ftd.read("@id");
+
+						loadProtoElement(
+							id,
+							(String )ftd.read("@name"),
+							(String )ftd.read("@equipment_type_id"),
+							(String )ftd.read("@schemecell"));
+
+						Hashtable ht = (Hashtable )ftd.read("@devices");
+						if(ht != null)
+							for(Enumeration e = ht.keys(); e.hasMoreElements();)
+							{
+								String key = (String )e.nextElement();
+								setProtoElementDevice(id, key);
+							}
+
+						Hashtable ht2 = (Hashtable )ftd.read("@links");
+						if(ht2 != null)
+							for(Enumeration e = ht2.keys(); e.hasMoreElements();)
+							{
+								String key = (String )e.nextElement();
+								setProtoElementLink(id, key);
+							}
+
+						Hashtable ht3 = (Hashtable )ftd.read("@protoelements");
+						if(ht3 != null)
+							for(Enumeration e = ht3.keys(); e.hasMoreElements();)
+							{
+								String key = (String )e.nextElement();
+								setProtoElementPE(id, key);
+							}
+					}
+				}
+				catch(Exception e)
+				{
+					frame.log("FILE + " + fnames[i] + " NOT LOADED");
+				}
+			}
+/*
+			li.upload("OSA_proto", "OSA", "images/db/mnc/gif150/OSA_150.gif", "bytes", 150, 150);
+			li.upload("PMD_Analiser_proto", "PMD_Analiser", "images/db/mnc/gif150/PMD_Analiser_150.gif", "bytes", 150, 150);
+			li.upload("Polarisation_controller_proto", "Polarisation_controller", "images/db/mnc/gif150/Polarisation_controller_150.gif", "bytes", 150, 150);
+			li.upload("Tunable_Laser_proto", "Tunable_Laser", "images/db/mnc/gif150/Tunable_Laser_150.gif", "bytes", 150, 150);
+			li.upload("Attenuator_proto", "Attenuator", "images/db/onc/gif150/Attenuator_150.gif", "bytes", 150, 150);
+			li.upload("Attenuator_multichannel_proto", "Attenuator_multichannel", "images/db/onc/gif150/Attenuator_multichannel_150.gif", "bytes", 150, 150);
+			li.upload("Attenuator_variable_proto", "Attenuator_variable", "images/db/onc/gif150/Attenuator_variable_150.gif", "bytes", 150, 150);
+			li.upload("Cable_proto", "Cable", "images/db/onc/gif150/Cable_150.gif", "bytes", 150, 150);
+			li.upload("Circulator_proto", "Circulator", "images/db/onc/gif150/Circulator_150.gif", "bytes", 150, 150);
+			li.upload("Connector_proto", "Connector", "images/db/onc/gif150/Connector_150.gif", "bytes", 150, 150);
+			li.upload("Filter_BPF_proto", "Filter_BPF", "images/db/onc/gif150/Filter_BPF_150.gif", "bytes", 150, 150);
+			li.upload("Isolator_proto", "Isolator", "images/db/onc/gif150/Isolator_150.gif", "bytes", 150, 150);
+			li.upload("Mufts_proto", "Mufts", "images/db/onc/gif150/Mufts_150.gif", "bytes", 150, 150);
+			li.upload("MUX_DMUX_proto", "MUX_DMUX", "images/db/onc/gif150/MUX_DMUX_150.gif", "bytes", 150, 150);
+			li.upload("Reciever_proto", "Receiver", "images/db/onc/gif150/Reciver_150.gif", "bytes", 150, 150);
+			li.upload("Stanchion_proto", "Stanchion", "images/db/onc/gif150/Stanchion_150.gif", "bytes", 150, 150);
+			li.upload("Switch_proto", "Switch", "images/db/onc/gif150/Switch_150.gif", "bytes", 150, 150);
+			li.upload("Transmitter_proto", "Transmitter", "images/db/onc/gif150/Transmitter_150.gif", "bytes", 150, 150);
+			li.upload("Transmitter_Reciever_proto", "Transmitter_Reciever", "images/db/onc/gif150/Transmitter_Reciver.gif", "bytes", 150, 150);
+			li.upload("WDM_proto", "WDM", "images/db/onc/gif150/WDM_150.gif", "bytes", 150, 150);
+			li.upload("Patchcord_proto", "Patchcord", "images/db/onc/gif150/Patchcord_150.gif", "bytes", 150, 150);
+			li.upload("Cross_proto", "Cross", "images/db/onc/gif150/Cross_150.gif", "bytes", 150, 150);
+			li.upload("Acterna_OTDR_proto", "Acterna_OTDR", "images/db/mnc/Acterna_OTDR.gif", "bytes", 150, 150);
+			li.upload("Agilent_OTDR_proto", "Agilent_OTDR", "images/db/mnc/Agilent_OTDR.gif", "bytes", 150, 150);
+			li.upload("Nettest_OTDR_proto", "Nettest_OTDR", "images/db/mnc/Nettest_OTDR.gif", "bytes", 150, 150);
+			li.upload("OTAU_proto", "OTAU", "images/db/mnc/OTAU.gif", "bytes", 150, 150);
+*/
+			frame.log("Images loaded.");
+
+//-------------------------------------------------------------------------------
+
+			try
+			{
+				file = new File("resources/proto/mapproto.txt");
+				ftd = new FileToDirectory(file);
+				while(ftd.hasMoreElements())
+				{
+					ftd.nextElement();
+					String id = (String )ftd.read("@id");
+
+					String pe_is_kis = (String )ftd.read("@pe_is_kis");
+					boolean bool_is_kis = false;
+					if(pe_is_kis.equals("true"))
+						bool_is_kis = true;
+
+					String is_visual = (String )ftd.read("@is_visual");
+					boolean bool_is_visual = false;
+					if(is_visual.equals("true"))
+						bool_is_visual = true;
+
+					String is_topological = (String )ftd.read("@is_topological");
+					boolean bool_is_topological = false;
+					if(is_topological.equals("true"))
+						bool_is_topological = true;
+
+					loadMapProtoElement(
+						id,
+						(String )ftd.read("@name"),
+						(String )ftd.read("@codename"),
+						(String )ftd.read("@description"),
+						us_id,
+						(String )ftd.read("@symbol_id"),
+						(String )ftd.read("@pe_class"),
+						bool_is_kis,
+						bool_is_visual,
+						bool_is_topological);
+
+					Hashtable ht2 = (Hashtable )ftd.read("@protoelements");
+					if(ht2 != null)
+						for(Enumeration e = ht2.keys(); e.hasMoreElements();)
+						{
+							String pe_id = (String )e.nextElement();
+							setMapProtoPE(id, pe_id);
+						}
+
+					Hashtable ht3 = (Hashtable )ftd.read("@attributes");
+					if(ht3 != null)
+						for(Enumeration e = ht3.keys(); e.hasMoreElements();)
+						{
+							String attr_id = (String )e.nextElement();
+							String val = (String )ht3.get(attr_id);
+							setMapProtoAttribute(id, attr_id, val);
+						}
+				}
+			}
+			catch(Exception e)
+			{
+				frame.log("FILE resources/ports/mapproto.txt NOT LOADED");
+			}
+
+//-------------------------------------------------------------------------------
+
+			try
+			{
+				file = new File("resources/proto/mapprotogroup.txt");
+				ftd = new FileToDirectory(file);
+				while(ftd.hasMoreElements())
+				{
+					ftd.nextElement();
+					String id = (String )ftd.read("@id");
+
+					loadMapProtoGroup(
+						id,
+						(String )ftd.read("@name"));
+
+					Hashtable ht2 = (Hashtable )ftd.read("@mapprotos");
+					if(ht2 != null)
+						for(Enumeration e = ht2.keys(); e.hasMoreElements();)
+						{
+							String mpe_id = (String )e.nextElement();
+							setMapGroupProto(id, mpe_id);
+						}
+
+					Hashtable ht3 = (Hashtable )ftd.read("@groups");
+					if(ht3 != null)
+						for(Enumeration e = ht3.keys(); e.hasMoreElements();)
+						{
+							String gr_id = (String )e.nextElement();
+							setMapGroupChildGroup(id, gr_id);
+						}
+				}
+			}
+			catch(Exception e)
+			{
+				frame.log("FILE resources/ports/mapprotogroup.txt NOT LOADED");
+			}
+
+//--------------------------------- Путь тестирования ----------------------------------------------
+
+			try
+			{
+				file = new File("resources/proto/mappathproto.txt");
+				ftd = new FileToDirectory(file);
+				while(ftd.hasMoreElements())
+				{
+					ftd.nextElement();
+					String id = (String )ftd.read("@id");
+					loadPathProto(
+						us_id,
+						(String )ftd.read("@name"),
+						(String )ftd.read("@symbol_id"),
+						(String )ftd.read("@description"),
+						(String )ftd.read("@codename"),
+						id,
+						id,
+						true,
+						"",
+						"");
+
+					Hashtable ht2 = (Hashtable )ftd.read("@pathtypes");
+					if(ht2 != null)
+						for(Enumeration e = ht2.keys(); e.hasMoreElements();)
+						{
+							String ct_id = (String )e.nextElement();
+							setPathProtoPathType(id, ct_id);
+						}
+
+					Hashtable ht3 = (Hashtable )ftd.read("@attributes");
+					if(ht3 != null)
+						for(Enumeration e = ht3.keys(); e.hasMoreElements();)
+						{
+							String attr_id = (String )e.nextElement();
+							String val = (String )ht3.get(attr_id);
+							setPathAttribute(id, attr_id, val);
+						}
+				}
+			}
+			catch(Exception e)
+			{
+				frame.log("FILE resources/ports/mappathproto.txt NOT LOADED");
+			}
+
+//--------------------------------- Волокно ----------------------------------------------
+
+			try
+			{
+				file = new File("resources/proto/maplinkproto.txt");
+				ftd = new FileToDirectory(file);
+				while(ftd.hasMoreElements())
+				{
+					ftd.nextElement();
+					String id = (String )ftd.read("@id");
+					loadLinkProto(
+						us_id,
+						(String )ftd.read("@name"),
+						(String )ftd.read("@symbol_id"),
+						(String )ftd.read("@description"),
+						(String )ftd.read("@codename"),
+						id,
+						id,
+						true,
+						"",
+						"");
+
+					Hashtable ht2 = (Hashtable )ftd.read("@cabletypes");
+					if(ht2 != null)
+						for(Enumeration e = ht2.keys(); e.hasMoreElements();)
+						{
+							String ct_id = (String )e.nextElement();
+							setLinkProtoCableType(id, ct_id);
+						}
+
+					Hashtable ht3 = (Hashtable )ftd.read("@attributes");
+					if(ht3 != null)
+						for(Enumeration e = ht3.keys(); e.hasMoreElements();)
+						{
+							String attr_id = (String )e.nextElement();
+							String val = (String )ht3.get(attr_id);
+							setLinkAttribute(id, attr_id, val);
+						}
+				}
+			}
+			catch(Exception e)
+			{
+				frame.log("FILE resources/ports/maplinkproto.txt NOT LOADED");
+			}
+
+			#sql { commit };
+
+			frame.log("All proto elements loaded.");
+		}
+		catch(SQLException e)
+		{
+			frame.log("Could not finish operation: " + e.getMessage());
+			e.printStackTrace();
+		}
+		catch(Exception e)
+		{
+			frame.log("Could not finish operation: " + e.getMessage());
+			e.printStackTrace();
+		}
+	}
+
+	public void loadEquipmentProto(
+			String owner_id,
+			String name,
+			String symbol_id,
+			String description,
+			String codename,
+			String id,
+			String type_id,
+			boolean is_proto,
+			String equipment_id,
+			String equipment_type_id)
+	{
+		frame.log("load equipment proto element ID:" + id + " NAME:" + name + " EQUIPMENT_TYPE_ID:" + equipment_type_id);
+		try
+		{
+			#sql {
+				insert into AMFICOM.MAPEQUIPMENTELEMENTS(
+						SCHEME_EQUIPMENT_ELEMENT_ID,
+						OWNER_ID,
+						LATITUDE,
+						NAME,
+						SYMBOL_ID,
+						TYPE_ID,
+						DESCRIPTION,
+						LONGITUDE,
+						CODENAME,
+						ID,
+						EQUIPMENT_ID,
+						EQUIPMENT_TYPE_ID)
+					values(
+						'',
+						:owner_id,
+						'0',
+						:name,
+						:symbol_id,
+						:type_id,
+						:description,
+						'0',
+						:codename,
+						:id,
+						:equipment_id,
+						:equipment_type_id )
+			};
+			#sql { commit };
+		}
+		catch(SQLException ex)
+		{
+			frame.log("equipment element exists - updating...");
+			try
+			{
+				#sql {
+					update AMFICOM.MAPEQUIPMENTELEMENTS set
+							SCHEME_EQUIPMENT_ELEMENT_ID = '',
+							OWNER_ID = :owner_id,
+							LATITUDE = '0',
+							NAME = :name,
+							SYMBOL_ID = :symbol_id,
+							TYPE_ID = :type_id,
+							DESCRIPTION = :description,
+							LONGITUDE = '0',
+							CODENAME = :codename,
+							EQUIPMENT_ID = :equipment_id,
+							EQUIPMENT_TYPE_ID = :equipment_type_id
+						where ID = :id
+				};
+				#sql { commit };
+			}
+			catch(SQLException exx)
+			{
+				frame.log("error saVing equipment elements: " + exx.getMessage());
+			}
+		}
+	}
+/*
+	public void loadKISProto(
+			String owner_id,
+			String name,
+			String symbol_id,
+			String description,
+			String codename,
+			String id,
+			String type_id,
+			boolean is_proto,
+			String kis_id,
+			String kis_type_id)
+	{
+		frame.log("load kis proto element ID:" + id + " NAME:" + name + " KIS_TYPE_ID:" + kis_type_id);
+		try
+		{
+			#sql {
+				insert into AMFICOM.MAPKISELEMENTS(
+						SCHEME_KIS_ELEMENT_ID,
+						OWNER_ID,
+						LATITUDE,
+						NAME,
+						SYMBOL_ID,
+						TYPE_ID,
+						DESCRIPTION,
+						LONGITUDE,
+						CODENAME,
+						ID,
+						KIS_ID,
+						KIS_TYPE_ID)
+					values(
+						'',
+						:owner_id,
+						'0',
+						:name,
+						:symbol_id,
+						:type_id,
+						:description,
+						'0',
+						:codename,
+						:id,
+						:kis_id,
+						:kis_type_id )
+			};
+			#sql { commit };
+		}
+		catch(SQLException ex)
+		{
+			frame.log("kis element exists - updating...");
+			try
+			{
+				#sql {
+					update AMFICOM.MAPKISELEMENTS set
+							SCHEME_KIS_ELEMENT_ID = '',
+							OWNER_ID = :owner_id,
+							LATITUDE = '0',
+							NAME = :name,
+							SYMBOL_ID = :symbol_id,
+							TYPE_ID = :type_id,
+							DESCRIPTION = :description,
+							LONGITUDE = '0',
+							CODENAME = :codename,
+							KIS_ID = :kis_id,
+							KIS_TYPE_ID = :kis_type_id
+						where ID = :id
+				};
+				#sql { commit };
+			}
+			catch(SQLException exx)
+			{
+				frame.log("error saVing kis elements: " + exx.getMessage());
+			}
+		}
+	}
+*/
+	public void loadLinkProto(
+			String owner_id,
+			String name,
+			String symbol_id,
+			String description,
+			String codename,
+			String id,
+			String type_id,
+			boolean is_proto,
+			String link_id,
+			String link_type_id)
+	{
+		frame.log("load link proto element ID:" + id + " NAME:" + name + " LINK_TYPE_ID:" + link_type_id);
+		try
+		{
+			#sql {
+				insert into AMFICOM.MAPLINKPROTOELEMENTS(
+						ID,
+						DESCRIPTION,
+						NAME,
+						OWNER_ID,
+						MODIFIED)
+					values(
+						:id,
+						:name,
+						:description,
+						:owner_id,
+						SYSDATE)
+			};
+			#sql { commit };
+		}
+		catch(SQLException ex)
+		{
+			frame.log("link element exists - updating...");
+			try
+			{
+				#sql {
+					update AMFICOM.MAPLINKPROTOELEMENTS set
+							DESCRIPTION = :description,
+							NAME = :name,
+							OWNER_ID = :owner_id,
+							MODIFIED = SYSDATE
+						where ID = :id
+				};
+				#sql { commit };
+			}
+			catch(SQLException exx)
+			{
+				frame.log("error saVing link elements: " + exx.getMessage());
+			}
+		}
+	}
+
+	public void loadPathProto(
+			String owner_id,
+			String name,
+			String symbol_id,
+			String description,
+			String codename,
+			String id,
+			String type_id,
+			boolean is_proto,
+			String path_id,
+			String path_type_id)
+	{
+		frame.log("load path proto element ID:" + id + " NAME:" + name);// + " PATH_TYPE_ID:" + path_type_id);
+		try
+		{
+			#sql {
+				insert into AMFICOM.MAPPATHPROTOELEMENTS(
+						ID,
+						NAME,
+						DESCRIPTION,
+						OWNER_ID,
+						MODIFIED)
+					values(
+						:id,
+						:name,
+						:description,
+						:owner_id,
+						SYSDATE)
+			};
+			#sql { commit };
+		}
+		catch(SQLException ex)
+		{
+			frame.log("path element exists - updating...");
+			try
+			{
+				#sql {
+					update AMFICOM.MAPPATHPROTOELEMENTS set
+							DESCRIPTION = :description,
+							NAME = :name,
+							OWNER_ID = :owner_id,
+							MODIFIED = SYSDATE
+						where ID = :id
+				};
+				#sql { commit };
+			}
+			catch(SQLException exx)
+			{
+				frame.log("error saVing path elements: " + exx.getMessage());
+			}
+		}
+	}
+
+	public void setMapProtoAttribute(
+			String proto_id,
+			String attribute_type_id,
+			String value)
+	{
+		frame.log("set attribute TYPE:" + attribute_type_id + " for map proto TYPE:" + proto_id + ", with initial VALUE: " + value);
+		try
+		{
+			int is_editable = 1;
+			int is_visible = 1;
+
+			try 
+			{
+				#sql { select IS_EDITABLE, IS_VISIBLE
+					into :is_editable, :is_visible
+					from AMFICOM.ELEMENTATTRIBUTETYPES
+					where ID = :attribute_type_id
+				};
+			} 
+			catch (Exception ex) 
+			{
+			} 
+			
+			int id2;
+			String id_v2 = "mpattr";
+			#sql { select AMFICOM.ATTRIB_SEQ.NEXTVAL into :id2 from SYS.DUAL };
+			id_v2 = id_v2 + String.valueOf(id2);
+			#sql {
+				insert into AMFICOM.MAPPROTOELEMENTATTRIBUTES(
+						ID,
+						ATTRIBUTE_TYPE_ID,
+						MAP_PROTO_ELEMENT_ID,
+						VALUE,
+						IS_EDITABLE,
+						IS_VISIBLE)
+					values(
+						:id_v2,
+						:attribute_type_id,
+						:proto_id,
+						:value,
+						:is_editable,
+						:is_visible)
+			};
+			#sql { commit };
+		}
+		catch(SQLException exx)
+		{
+			frame.log("error setting attribute for map proto type: " + exx.getMessage());
+		}
+	}
+
+	public void setPathAttribute(
+			String path_id,
+			String attribute_type_id,
+			String value)
+	{
+		frame.log("set attribute TYPE:" + attribute_type_id + " for path TYPE:" + path_id + ", with initial VALUE: " + value);
+		try
+		{
+			int is_editable = 1;
+			int is_visible = 1;
+
+			try 
+			{
+				#sql { select IS_EDITABLE, IS_VISIBLE
+					into :is_editable, :is_visible
+					from AMFICOM.ELEMENTATTRIBUTETYPES
+					where ID = :attribute_type_id
+				};
+			} 
+			catch (Exception ex) 
+			{
+			} 
+			
+			int id2;
+			String id_v2 = "mpattr";
+			#sql { select AMFICOM.ATTRIB_SEQ.NEXTVAL into :id2 from SYS.DUAL };
+			id_v2 = id_v2 + String.valueOf(id2);
+			#sql {
+				insert into AMFICOM.MAPPATHPROTOELEMENTATTRIBUTES(
+						ID,
+						ATTRIBUTE_TYPE_ID,
+						MAP_PATH_PROTO_ELEMENT_ID,
+						VALUE,
+						IS_EDITABLE,
+						IS_VISIBLE)
+					values(
+						:id_v2,
+						:attribute_type_id,
+						:path_id,
+						:value,
+						:is_editable,
+						:is_visible)
+			};
+			#sql { commit };
+		}
+		catch(SQLException exx)
+		{
+			frame.log("error setting attribute for path type: " + exx.getMessage());
+		}
+	}
+
+	public void setLinkAttribute(
+			String link_id,
+			String attribute_type_id,
+			String value)
+	{
+		frame.log("set attribute TYPE:" + attribute_type_id + " for link TYPE:" + link_id + ", with initial VALUE: " + value);
+		try
+		{
+			int is_editable = 1;
+			int is_visible = 1;
+
+			try 
+			{
+				#sql { select IS_EDITABLE, IS_VISIBLE
+					into :is_editable, :is_visible
+					from AMFICOM.ELEMENTATTRIBUTETYPES
+					where ID = :attribute_type_id
+				};
+			} 
+			catch (Exception ex) 
+			{
+			} 
+			
+			int id2;
+			String id_v2 = "mlattr";
+			#sql { select AMFICOM.ATTRIB_SEQ.NEXTVAL into :id2 from SYS.DUAL };
+			id_v2 = id_v2 + String.valueOf(id2);
+			#sql {
+				insert into AMFICOM.MAPLINKPROTOELEMENTATTRIBUTES(
+						ID,
+						ATTRIBUTE_TYPE_ID,
+						MAP_LINK_PROTO_ELEMENT_ID,
+						VALUE,
+						IS_EDITABLE,
+						IS_VISIBLE)
+					values(
+						:id_v2,
+						:attribute_type_id,
+						:link_id,
+						:value,
+						:is_editable,
+						:is_visible)
+			};
+			#sql { commit };
+		}
+		catch(SQLException exx)
+		{
+			frame.log("error setting attribute for link type: " + exx.getMessage());
+		}
+	}
+
+	public void setLinkProtoCableType(String id, String ct_id)
+	{
+		frame.log("set cable type TYPE:" + ct_id + " for link proto:" + id);
+		try
+		{
+			int id2;
+			String id_v2 = "mlattr";
+			#sql { select AMFICOM.ATTRIB_SEQ.NEXTVAL into :id2 from SYS.DUAL };
+			id_v2 = id_v2 + String.valueOf(id2);
+			#sql {
+				insert into AMFICOM.MAPLINKPROTOCABLETYPES(
+						ID,
+						MAP_LINK_ID,
+						CABLE_TYPE_ID)
+					values(
+						:id_v2,
+						:id,
+						:ct_id)
+			};
+			#sql { commit };
+		}
+		catch(SQLException exx)
+		{
+			frame.log("error setting cable type for link proto: " + exx.getMessage());
+		}
+	}
+
+	public void setPathProtoPathType(String id, String path_type_id)
+	{
+		frame.log("set path type TYPE:" + path_type_id + " for path proto:" + id);
+		try
+		{
+			int id2;
+			String id_v2 = "mlattr";
+			#sql { select AMFICOM.ATTRIB_SEQ.NEXTVAL into :id2 from SYS.DUAL };
+			id_v2 = id_v2 + String.valueOf(id2);
+			#sql {
+				insert into AMFICOM.MAPPATHPROTOPATHTYPES(
+						ID,
+						MAP_PATH_PROTO_ID,
+						PATH_TYPE_ID)
+					values(
+						:id_v2,
+						:id,
+						:path_type_id)
+			};
+			#sql { commit };
+		}
+		catch(SQLException exx)
+		{
+			frame.log("error setting path type for path proto: " + exx.getMessage());
+		}
+	}
+/*
+	public void loadProtoCP(
+			String id,
+			String name,
+			String description,
+			String element_id,
+			String port_local_id,
+			String port_type_id,
+			String port_id,
+			String interface_id)
+	{
+		frame.log("load connection point ID:" + id + " NAME:" + name + " for proto element ID:" + element_id);
+		try
+		{
+			#sql {
+				insert into AMFICOM.MAPCONNECTIONPOINTELEMENT(
+						ELEMENT_ID,
+						IN_OUT,
+						NAME,
+						DESCRIPTION,
+						ID,
+						PORT_LOCAL_ID,
+						INTERFACE_ID,
+						PORT_TYPE_ID,
+						PORT_ID,
+						IS_TEST_PORT,
+						IS_ACCESS_PORT)
+					values(
+						:element_id,
+						'in',
+						:name,
+						:description,
+						:id,
+						:port_local_id,
+						:interface_id,
+						:port_type_id,
+						:port_id,
+						0,
+						0 )
+			};
+		}
+		catch(SQLException ex)
+		{
+			frame.log("connection point exists - updating...");
+			try
+			{
+				#sql {
+					update AMFICOM.MAPCONNECTIONPOINTELEMENT
+						set
+							ELEMENT_ID = :element_id,
+							IN_OUT = 'in',
+							NAME = :name,
+							DESCRIPTION = :description,
+							PORT_LOCAL_ID = :port_local_id,
+							INTERFACE_ID = :interface_id,
+							PORT_TYPE_ID = :port_type_id,
+							PORT_ID = :port_id
+						where ID = :id
+				};
+			}
+			catch(SQLException exx)
+			{
+				frame.log("error saVing connection point: " + exx.getMessage());
+			}
+		}
+	}
+
+	public void setKISProtoAccessPort(
+			String cp_id,
+			String access_port_type_id,
+			String access_port_id)
+	{
+		frame.log("setting port ID:" + cp_id + " as access port of type:" + access_port_type_id);
+		try
+		{
+			#sql {
+				update AMFICOM.MAPCONNECTIONPOINTELEMENT
+					set
+						ACCESS_PORT_ID = :access_port_id,
+						ACCESS_PORT_TYPE_ID = :access_port_type_id,
+						IS_ACCESS_PORT = 1
+					where ID = :cp_id
+			};
+			#sql { commit };
+		}
+		catch(SQLException ex)
+		{
+			frame.log("error saVing connection point: " + ex.getMessage());
+		}
+	}
+*/
+	public void loadSchemeDevice(String id, String name)//, String type_id)
+	{
+		frame.log("load scheme device ID:" + id + " NAME:" + name);
+		try
+		{
+//						EQUIPMENT_TYPE_ID)
+//						:type_id)
+			#sql {
+				insert into AMFICOM.SCHEMEDEVICES(
+						ID,
+						NAME)
+					values(
+						:id,
+						:name)
+			};
+			#sql { commit };
+		}
+		catch(SQLException ex)
+		{
+//			if(ex.getErrorCode() ==
+			frame.log("device exists - updating...");
+			try
+			{
+//							EQUIPMENT_TYPE_ID = :type_id
+				#sql {
+					update AMFICOM.SCHEMEDEVICES set
+							NAME = :name
+						where ID = :id
+				};
+				#sql { commit };
+			}
+			catch(SQLException exx)
+			{
+				frame.log("error saVing device: " + exx.getMessage());
+			}
+		}
+	}
+
+	public void setSchemeDevicePort(
+			String dev_id,
+			String id,
+			String name,
+			String type_id,
+			String access_port_type_id)
+	{
+		frame.log("load port ID:" + id + " NAME:" + name + " type:" + type_id  + " (access:" + access_port_type_id + ") for device:" + dev_id);
+		try
+		{
+			#sql {
+				insert into AMFICOM.SCHEMEPORTS(
+						ID,
+						NAME,
+						PORT_TYPE_ID,
+						ACCESS_PORT_TYPE_ID)
+					values(
+						:id,
+						:name,
+						:type_id,
+						:access_port_type_id)
+			};
+
+			int idd;
+			String id_v = "schdp";
+			#sql { select AMFICOM.SCHDP_SEQ.NEXTVAL into :idd from SYS.DUAL };
+			id_v = id_v + String.valueOf(idd);
+			#sql
+			{
+				insert into AMFICOM.SCHEMEDEVICEPORTS(ID, SCHEME_DEVICE_ID, SCHEME_PORT_ID)
+				values(:id_v, :dev_id, :id)
+			};
+			#sql { commit };
+		}
+		catch(SQLException ex)
+		{
+			frame.log("device port exists - updating...");
+			try
+			{
+				#sql {
+					update AMFICOM.SCHEMEPORTS set
+							NAME = :name,
+							PORT_TYPE_ID = :type_id,
+							ACCESS_PORT_TYPE_ID = :access_port_type_id
+						where ID = :id
+				};
+				#sql { commit };
+			}
+			catch(SQLException exx)
+			{
+				frame.log("error saVing device port: " + exx.getMessage());
+			}
+		}
+	}
+
+	public void setSchemeDeviceCablePort(
+			String dev_id,
+			String id,
+			String name,
+			String type_id)
+	{
+		frame.log("load cable port ID:" + id + " NAME:" + name + " type:" + type_id  + " for device:" + dev_id);
+		try
+		{
+			#sql {
+				insert into AMFICOM.SCHEMECABLEPORTS(
+						ID,
+						NAME,
+						CABLE_PORT_TYPE_ID)
+					values(
+						:id,
+						:name,
+						:type_id)
+			};
+
+			int idd;
+			String id_v = "schdp";
+			#sql { select AMFICOM.SCHDP_SEQ.NEXTVAL into :idd from SYS.DUAL };
+			id_v = id_v + String.valueOf(idd);
+			#sql
+			{
+				insert into AMFICOM.SCHEMEDEVICECABLEPORTS(ID, SCHEME_DEVICE_ID, SCHEME_CABLE_PORT_ID)
+				values(:id_v, :dev_id, :id)
+			};
+			#sql { commit };
+		}
+		catch(SQLException ex)
+		{
+			frame.log("device cable port exists - updating...");
+			try
+			{
+				#sql {
+					update AMFICOM.SCHEMECABLEPORTS set
+							NAME = :name,
+							CABLE_PORT_TYPE_ID = :type_id
+						where ID = :id
+				};
+				#sql { commit };
+			}
+			catch(SQLException exx)
+			{
+				frame.log("error saVing device cable port: " + exx.getMessage());
+			}
+		}
+	}
+
+	public void loadSchemeLink(
+			String id,
+			String name,
+			String type_id,
+			String src_id,
+			String tgt_id)
+	{
+		int count;
+		frame.log("load link ID:" + id + " NAME:" + name + " type:" + type_id  + " bounding ports:" + src_id + " and " + tgt_id);
+		try
+		{
+			#sql {
+				select count(*) into :count from AMFICOM.SCHEMELINKS
+					where ID = :id
+			};
+			if(count == 0)
+			{
+				throw new SQLException("do insert!");
+			}
+			System.out.println("update link " + id);
+			try
+			{
+				#sql {
+					update AMFICOM.SCHEMELINKS
+						set
+							NAME = :name,
+							LINK_TYPE_ID = :type_id,
+							SOURCe_PORT_ID = :src_id,
+							TARGET_PORT_ID = :tgt_id
+						where ID = :id
+				};
+			}
+			catch(SQLException e)
+			{
+				System.out.println("error saVing link: " + e.getMessage());
+				e.printStackTrace();
+				return;
+			}
+			#sql { commit };
+		}
+		catch(SQLException e)
+		{
+			System.out.println("insert new link " + id);
+			try
+			{
+				#sql {
+					insert into AMFICOM.SCHEMELINKS(
+							ID,
+							NAME,
+							LINK_TYPE_ID,
+							SOURCE_PORT_ID,
+							TARGET_PORT_ID)
+						values(
+							 :id,
+							 :name,
+							 :type_id,
+							 :src_id,
+							 :tgt_id )
+				};
+				#sql { commit };
+			}
+			catch(SQLException ex)
+			{
+				System.out.println("error saVing link: " + ex.getMessage());
+				ex.printStackTrace();
+			}
+		}
+	}
+
+	public void loadSchemeCableLink(
+			String id,
+			String name,
+			String type_id,
+			String src_id,
+			String tgt_id)
+	{
+		int count;
+		frame.log("load cable link ID:" + id + " NAME:" + name + " type:" + type_id  + " bounding ports:" + src_id + " and " + tgt_id);
+		try
+		{
+			#sql {
+				select count(*) into :count from AMFICOM.SCHEMECABLELINKS
+					where ID = :id
+			};
+			if(count == 0)
+			{
+				throw new SQLException("do insert!");
+			}
+			System.out.println("update cable link " + id);
+			try
+			{
+				#sql {
+					update AMFICOM.SCHEMECABLELINKS
+						set
+							NAME = :name,
+							CABLE_LINK_TYPE_ID = :type_id,
+							SOURCe_PORT_ID = :src_id,
+							TARGET_PORT_ID = :tgt_id
+						where ID = :id
+				};
+			}
+			catch(SQLException e)
+			{
+				System.out.println("error saVing cable link: " + e.getMessage());
+				e.printStackTrace();
+				return;
+			}
+			#sql { commit };
+		}
+		catch(SQLException e)
+		{
+			System.out.println("insert new cable link " + id);
+			try
+			{
+				#sql {
+					insert into AMFICOM.SCHEMECABLELINKS(
+							ID,
+							NAME,
+							CABLE_LINK_TYPE_ID,
+							SOURCE_PORT_ID,
+							TARGET_PORT_ID)
+						values(
+							 :id,
+							 :name,
+							 :type_id,
+							 :src_id,
+							 :tgt_id )
+				};
+				#sql { commit };
+			}
+			catch(SQLException ex)
+			{
+				System.out.println("error saVing cable link: " + ex.getMessage());
+				ex.printStackTrace();
+			}
+		}
+	}
+
+	public void setCableThread(
+			String cable_id,
+			String thread_id,
+			String thread_name,
+			String thread_type_id)
+	{
+		frame.log("load thread ID:" + thread_id + " NAME:" + thread_name + " type:" + thread_type_id  + " for cable:" + cable_id);
+		try
+		{
+			#sql {
+				insert into AMFICOM.SCHEMECABLETHREADS(
+						ID,
+						NAME,
+						LINK_TYPE_ID)
+					values(
+						:thread_id,
+						:thread_name,
+						:thread_type_id)
+			};
+
+			String at_s = ResourcedbInterface.getUId("ctlnk");
+			#sql {
+				insert into AMFICOM.SCHEMECABLELINKTHREADS(
+						ID,
+						SCHEME_CABLE_LINK_ID,
+						SCHEME_CABLE_THREAD_ID)
+					values(
+						:at_s,
+						:cable_id,
+						:thread_id )
+			};
+			#sql { commit };
+
+		}
+		catch(SQLException ex)
+		{
+			frame.log("cable thread exists - updating...");
+			try
+			{
+				#sql {
+					update AMFICOM.SCHEMECABLETHREADS
+						set
+							NAME = :thread_name,
+							LINK_TYPE_ID = :thread_type_id
+						where ID = :thread_id
+				};
+				#sql { commit };
+			}
+			catch(SQLException exx)
+			{
+				frame.log("error saVing cable thread: " + exx.getMessage());
+			}
+		}
+	}
+
+	public void loadProtoElement(String id, String name, String type_id, String image_path)
+	{
+		int count;
+		frame.log("load proto ID:" + id + " NAME:" + name + " type:" + type_id);
+
+		try
+		{
+			li.upload(image_path, image_path, image_path, "bytes", 150, 150);
+
+			#sql {
+				select count(*) into :count from AMFICOM.SCHEMEPROTOELEMENTS
+					where ID = :(id)
+			};
+			if(count == 0)
+			{
+				#sql {
+					insert into AMFICOM.SCHEMEPROTOELEMENTS(
+							ID,
+							NAME,
+							EQUIPMENT_TYPE_ID,
+							IS_TOP_LEVEL,
+							MODIFIED,
+							SYMBOL_ID)
+						values(
+							:id,
+							:name,
+							:type_id,
+							1,
+							SYSDATE,
+							:image_path)
+				};
+				#sql { commit };
+				return;
+			}
+		}
+		catch(SQLException ex)
+		{
+			count = 1;
+		}
+		if(count != 0)
+		{
+			frame.log("proto exists - updating...");
+			try
+			{
+				#sql {
+					update AMFICOM.SCHEMEPROTOELEMENTS set
+							NAME = :name,
+							EQUIPMENT_TYPE_ID = :type_id,
+							IS_TOP_LEVEL = 1,
+							MODIFIED = SYSDATE,
+							SYMBOL_ID = :image_path
+						where ID = :id
+				};
+				#sql { commit };
+			}
+			catch(SQLException exx)
+			{
+				frame.log("error saVing proto: " + exx.getMessage());
+			}
+		}
+	}
+
+	public void setProtoElementDevice(String pe_id, String dev_id)
+	{
+		frame.log("setting dev ID:" + dev_id + " for pe:" + pe_id);
+		try
+		{
+			int count;
+			#sql
+			{
+				select count(*) into :count from AMFICOM.SCHEMEPROTOELEMENTDEVICES
+					where SCHEME_PROTO_ELEMENT_ID = :pe_id
+					and SCHEME_DEVICE_ID = :dev_id
+			};
+			if(count != 0)
+				return;
+			int id;
+			String id_v = "peldev";
+			#sql { select AMFICOM.SCHPROELD_SEQ.NEXTVAL into :id from SYS.DUAL };
+			id_v = id_v + String.valueOf(id);
+			#sql
+			{
+				insert into AMFICOM.SCHEMEPROTOELEMENTDEVICES(ID, SCHEME_PROTO_ELEMENT_ID, SCHEME_DEVICE_ID)
+				values(:id_v, :pe_id, :dev_id)
+			};
+			#sql { commit };
+		}
+		catch(SQLException ex)
+		{
+			frame.log("error setting device for proto element: " + ex.getMessage());
+		}
+	}
+
+	public void setProtoElementLink(String pe_id, String link_id)
+	{
+		frame.log("setting link ID:" + link_id + " for pe:" + pe_id);
+		try
+		{
+			int count;
+			#sql
+			{
+				select count(*) into :count from AMFICOM.SCHEMEPROTOELEMENTLINKS
+					where SCHEME_PROTO_ELEMENT_ID = :pe_id
+					and SCHEME_LINK_ID = :link_id
+			};
+			if(count != 0)
+				return;
+			int id;
+			String id_v = "pellnk";
+			#sql { select AMFICOM.SCHPROELD_SEQ.NEXTVAL into :id from SYS.DUAL };
+			id_v = id_v + String.valueOf(id);
+			#sql
+			{
+				insert into AMFICOM.SCHEMEPROTOELEMENTLINKS(ID, SCHEME_PROTO_ELEMENT_ID, SCHEME_LINK_ID)
+				values(:id_v, :pe_id, :link_id)
+			};
+			#sql { commit };
+		}
+		catch(SQLException ex)
+		{
+			frame.log("error setting link for proto element: " + ex.getMessage());
+		}
+	}
+
+	public void setProtoElementPE(String id, String pe_id)
+	{
+		frame.log("setting PE ID:" + pe_id + " for proto:" + id);
+		try
+		{
+			int count;
+			#sql
+			{
+				select count(*) into :count from AMFICOM.SCHEMEPROTOELEMENTPES
+					where SCHEME_PROTO_ELEMENT_ID = :id
+					and SCHEME_PE_ID = :pe_id
+			};
+			if(count != 0)
+				return;
+			int id_;
+			String id_v = "pelpe";
+			#sql { select AMFICOM.SCHPROELD_SEQ.NEXTVAL into :id_ from SYS.DUAL };
+			id_v = id_v + String.valueOf(id_);
+			#sql
+			{
+				insert into AMFICOM.SCHEMEPROTOELEMENTPES(ID, SCHEME_PROTO_ELEMENT_ID, SCHEME_PE_ID)
+				values(:id_v, :id, :pe_id)
+			};
+			#sql { commit };
+		}
+		catch(SQLException ex)
+		{
+			frame.log("error setting PE for proto element: " + ex.getMessage());
+		}
+	}
+
+	public void loadMapProtoElement(
+			String id,
+			String name,
+			String codename,
+			String description,
+			String owner_id,
+			String symbol_id,
+			String pe_class,
+			boolean pe_is_kis,
+			boolean is_visual,
+			boolean is_topological)
+	{
+		int int_is_kis = (pe_is_kis) ? 1 : 0;
+		int int_is_visual = (is_visual) ? 1 : 0;
+		int int_is_topological = (is_topological) ? 1 : 0;
+		frame.log("load map proto element ID:" + id + " NAME:" + name + " class:" + pe_class);
+		try
+		{
+			#sql {
+				insert into AMFICOM.MAPPROTOELEMENTS(
+						ID,
+						NAME,
+						CODENAME,
+						DESCRIPTION,
+						OWNER_ID,
+						SYMBOL_ID,
+						MODIFIED,
+						PE_CLASS,
+						PE_IS_KIS,
+						IS_VISUAL,
+						IS_TOPOLOGICAL)
+					values(
+						:id,
+						:name,
+						:codename,
+						:description,
+						:owner_id,
+						:symbol_id,
+						SYSDATE,
+						:pe_class,
+						:int_is_kis,
+						:int_is_visual,
+						:int_is_topological)
+			};
+			#sql { commit };
+		}
+		catch(SQLException ex)
+		{
+			frame.log("map proto element exists - updating...");
+			try
+			{
+				#sql {
+					update AMFICOM.MAPPROTOELEMENTS set
+							NAME = :name,
+							CODENAME = :codename,
+							DESCRIPTION = :description,
+							OWNER_ID = :owner_id,
+							SYMBOL_ID = :symbol_id,
+							MODIFIED = SYSDATE,
+							PE_CLASS = :pe_class,
+							PE_IS_KIS = :int_is_kis,
+							IS_VISUAL = :int_is_visual,
+							IS_TOPOLOGICAL = :int_is_topological
+						where ID = :id
+				};
+				#sql { commit };
+			}
+			catch(SQLException exx)
+			{
+				frame.log("error saVing map proto elements: " + exx.getMessage());
+			}
+		}
+	}
+
+	public void setMapProtoPE(String map_proto_id, String pe_id)
+	{
+		frame.log("setting pe ID:" + pe_id + " as map proto of type:" + map_proto_id);
+		try
+		{
+			int count;
+			#sql
+			{
+				select count(*) into :count from AMFICOM.MAPPROTOELEMENTPELINKS
+					where MAP_PROTO_ELEMENT_ID = :map_proto_id
+					and PROTO_ELEMENT_ID = :pe_id
+			};
+			if(count != 0)
+				return;
+			int id;
+			String id_v = "mapppel";
+			#sql { select AMFICOM.MAPPPEL_SEQ.NEXTVAL into :id from SYS.DUAL };
+			id_v = id_v + String.valueOf(id);
+			#sql
+			{
+				insert into AMFICOM.MAPPROTOELEMENTPELINKS(ID, MAP_PROTO_ELEMENT_ID, PROTO_ELEMENT_ID)
+				values(:id_v, :map_proto_id, :pe_id)
+			};
+			#sql { commit };
+		}
+		catch(SQLException ex)
+		{
+			frame.log("error setting pe for map proto: " + ex.getMessage());
+		}
+	}
+
+	public void loadMapProtoGroup(
+			String id,
+			String name)
+	{
+		frame.log("load map proto group ID:" + id + " NAME:" + name);
+		try
+		{
+			#sql {
+				insert into AMFICOM.MAPPROTOGROUPS(
+						ID,
+						NAME,
+						MODIFIED)
+					values(
+						:id,
+						:name,
+						SYSDATE)
+			};
+			#sql { commit };
+		}
+		catch(SQLException ex)
+		{
+			frame.log("map proto group exists - updating... - " + ex.getMessage());
+			try
+			{
+				#sql {
+					update AMFICOM.MAPPROTOGROUPS set
+							NAME = :name,
+							MODIFIED = SYSDATE
+						where ID = :id
+				};
+				#sql { commit };
+			}
+			catch(SQLException exx)
+			{
+				frame.log("error saVing map proto group: " + exx.getMessage());
+			}
+		}
+
+		try
+		{
+			#sql
+			{
+				delete from AMFICOM.MAPPROTOGROUPLINKS
+					where GROUP_ID = :id
+			};
+			#sql { commit };
+		}
+		catch(SQLException ex)
+		{
+			frame.log("error clearing prg-el links for map group: " + ex.getMessage());
+		}
+
+		try
+		{
+			#sql
+			{
+				delete from AMFICOM.MAPPROTOGROUPNESTINGS
+					where PARENT_ID = :id
+			};
+			#sql { commit };
+		}
+		catch(SQLException ex)
+		{
+			frame.log("error clearing child links for map group: " + ex.getMessage());
+		}
+	}
+
+	public void setMapGroupProto(String map_group_id, String map_proto_id)
+	{
+		frame.log("setting mp element ID:" + map_proto_id + " for map proto group:" + map_group_id);
+		try
+		{
+			#sql
+			{
+				insert into AMFICOM.MAPPROTOGROUPLINKS(PROTO_ID, GROUP_ID)
+				values(:map_proto_id, :map_group_id)
+			};
+			#sql { commit };
+		}
+		catch(SQLException ex)
+		{
+			frame.log("error setting map proto for group: " + ex.getMessage());
+		}
+	}
+
+	public void setMapGroupChildGroup(String map_group_id, String map_child_id)
+	{
+		frame.log("setting mp group ID:" + map_child_id + " as a child for map proto group:" + map_group_id);
+		try
+		{
+			#sql
+			{
+				insert into AMFICOM.MAPPROTOGROUPNESTINGS(PARENT_ID, CHILD_ID)
+				values(:map_group_id, :map_child_id)
+			};
+			#sql { commit };
+		}
+		catch(SQLException ex)
+		{
+			frame.log("error setting a child for group: " + ex.getMessage());
+		}
+	}
+
+}
+

@@ -1,0 +1,164 @@
+package com.syrus.AMFICOM.server.AlarmReceiver;
+
+import com.syrus.AMFICOM.CORBA.*;
+import com.syrus.AMFICOM.CORBA.Admin.AccessIdentity_Transferable;
+import com.syrus.AMFICOM.CORBA.Constants;
+import com.syrus.AMFICOM.CORBA.General.AMFICOMRemoteException;
+import com.syrus.AMFICOM.server.Object.AMFICOMdbInterface;
+import com.syrus.util.corba.AuroraORBUtil;
+import java.io.UnsupportedEncodingException;
+import java.sql.*;
+import oracle.sql.BLOB;
+import org.omg.CORBA.SystemException;
+import sqlj.runtime.ref.DefaultContext;
+
+/**
+ * @version $Revision: 1.1 $, $Date: 2004/05/27 11:20:11 $
+ * @author $Author: bass $
+ */
+public class OracleAlarmReceiverMap extends DBAlarmReceiverMap {
+	private final AMFICOMdbInterface dbInterface;
+
+	private static final boolean WORKAROUND_ORACLE_8I_BUG = true;
+
+	/**
+	 * Default constructor
+	 */
+	public OracleAlarmReceiverMap() {
+		dbInterface = new AMFICOMdbInterface();
+	}
+
+	/**
+	 * When creating a new instance of {@link
+	 * com.syrus.AMFICOM.server.AlarmReceiver.AlarmReceiverMap
+	 * AlarmReceiverMap} from {@link
+	 * com.syrus.AMFICOM.server.Object.AMFICOMServer AMFICOMServer}, use this
+	 * constructor and provide the <code>dbInterface</code> field of
+	 * <code>AMFICOMServer</code> class as a parameter.
+	 * 
+	 * @param dbInterface an instance of <code>AMFICOMdbInterface</code>.
+	 */
+	public OracleAlarmReceiverMap(AMFICOMdbInterface dbInterface) {
+		this.dbInterface = dbInterface;
+	}
+	
+	public boolean containsKey(AccessIdentity_Transferable key) throws AMFICOMRemoteException {
+		if (key == null)
+			throw new NullPointerException();
+
+		dbInterface.CheckUserPrivileges(key);
+
+		int alarmReceiver = 0; 
+		try {
+			#sql {
+				SELECT alarm_receiver INTO :alarmReceiver FROM amficom.loggedusers WHERE id = :(key.sess_id)
+			};
+		} catch (SQLException sqle) {
+			throw new AMFICOMRemoteException(Constants.ERROR_LOADING, sqle.getLocalizedMessage());
+		}
+
+		return (alarmReceiver == 1);
+	}
+	
+	public AMFICOMClient put(AccessIdentity_Transferable key, AMFICOMClient value) throws AMFICOMRemoteException {
+		if ((key == null) || (value == null))
+			throw new NullPointerException();
+
+		dbInterface.CheckUserPrivileges(key);
+
+		AMFICOMClient returnValue;
+		if (containsKey(key)) {
+			/*
+			 * Pop the previous value from the underlying database.
+			 * 
+			 * If user already logged in (otherwise AMFICOMRemoteException is
+			 * thrown above), both values (one stored in the database and one
+			 * provided as a parameter) refer to the same object.
+			 */
+			returnValue = value;
+		} else
+			returnValue = null;
+
+		update(key, 1);
+
+		return returnValue;
+	}
+	
+	public AMFICOMClient remove(AccessIdentity_Transferable key) throws AMFICOMRemoteException {
+		if (key == null)
+			throw new NullPointerException();
+
+		dbInterface.CheckUserPrivileges(key);
+
+		AMFICOMClient returnValue;
+		if (containsKey(key)) {
+			/*
+			 * Pop the previous value from the underlying database.
+			 */
+			returnValue = null;
+
+			try {
+				BLOB blob;
+				#sql {
+					SELECT ior INTO :blob FROM amficom.iors WHERE id = :(key.sess_id)
+				};
+
+				long length = blob.length();
+
+				/*
+				 * Silently truncate data if necessary. Anyway, we're unable to
+				 * handle too long object references
+				 */
+				if (length > Integer.MAX_VALUE)
+					length = Integer.MAX_VALUE;
+
+				byte b[] = blob.getBytes(1L, (int) length);
+				String ior;
+				try {
+					ior = new String(b, "US-ASCII");
+				} catch (UnsupportedEncodingException uee) {
+					ior = new String(b);
+				}
+
+				returnValue = AMFICOMClientHelper.narrow(AuroraORBUtil.getInstance().getORB().string_to_object(ior));
+			} catch (NullPointerException npe) {
+				/*
+				 * BLOB stored in the database is null.
+				 */
+				 returnValue = null;
+			} catch (SystemException se) {
+				/*
+				 * JavaSoft ORB throws BAD_PARAM; VisiBroker throws INV_OBJREF.
+				 */
+				returnValue = null;
+			} catch (SQLException sqle) {
+				returnValue = null;
+			}
+		} else
+			returnValue = null;
+
+		update(key, 0);
+
+		return returnValue;
+	}
+
+	private void update(AccessIdentity_Transferable key, int alarmReceiver) throws AMFICOMRemoteException {
+		try {
+			if (WORKAROUND_ORACLE_8I_BUG) {
+				Connection conn = DefaultContext.getDefaultContext().getConnection();
+				conn.setAutoCommit(true);
+				conn.createStatement().execute("UPDATE amficom.loggedusers SET alarm_receiver = " + alarmReceiver + " WHERE id = '" + key.sess_id + "'");
+				conn.createStatement().execute("COMMIT");
+				return;
+			}
+			#sql {
+				UPDATE amficom.loggedusers SET alarm_receiver = :alarmReceiver WHERE id = :(key.sess_id)
+			};
+			#sql {
+				COMMIT
+			};
+		} catch (SQLException sqle) {
+			throw new AMFICOMRemoteException(Constants.ERROR_SAVING, sqle.getLocalizedMessage());
+		}
+	}
+}

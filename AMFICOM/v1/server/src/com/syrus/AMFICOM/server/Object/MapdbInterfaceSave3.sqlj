@@ -1,0 +1,250 @@
+
+// Copyright (c) Syrus Systems 2000 Syrus Systems
+package com.syrus.AMFICOM.server.Object;
+
+import sqlj.runtime.*;
+import sqlj.runtime.ref.*;
+import java.sql.*;
+import oracle.sql.*;
+import java.text.*;
+
+import java.util.Vector;
+
+import com.syrus.AMFICOM.CORBA.*;
+import com.syrus.AMFICOM.CORBA.Map.*;
+import com.syrus.AMFICOM.CORBA.Scheme.*;
+import com.syrus.AMFICOM.CORBA.Resource.*;
+
+import com.syrus.AMFICOM.server.*;
+
+public class MapdbInterfaceSave3 extends Object
+{
+	protected MapdbInterfaceSave3()
+	{
+	}
+
+	static public void saveAttributes(
+			String attrTable,
+			String attrField,
+			String element_id,
+			ElementAttribute_Transferable[] attributes)
+	{
+		int count;
+		int len2;
+		int j;
+
+		try
+		{
+			String qry = "delete from AMFICOM." + attrTable +
+						" where " + attrField + " = '" + element_id + "'";
+			#sql {
+				BEGIN
+					execute immediate :qry;
+				END;
+			};
+
+			len2 = attributes.length;
+			for(j = 0; j < len2; j++)
+			{
+				try
+				{
+					System.out.println("insert  attribute: type " + attributes[j].type_id + " value " + attributes[j].value + " for element " + element_id);
+					attributes[j].id = ResourcedbInterface.getUId("attribute");
+					String qry2 = "insert into AMFICOM." + attrTable +
+						"(ID, ATTRIBUTE_TYPE_ID, VALUE, IS_EDITABLE, IS_VISIBLE, " +
+						attrField + ") values ('" +
+						attributes[j].id + "', '" +
+						attributes[j].type_id + "', '" +
+						attributes[j].value + "', '" +
+						((attributes[j].editable)? "1" : "0") + "', '" +
+						((attributes[j].visible)? "1" : "0") + "', '" +
+						element_id + "')";
+
+					#sql {
+						BEGIN
+							execute immediate :qry2;
+						END;
+					};
+
+					#sql { commit };
+				}
+				catch(SQLException exx)
+				{
+					System.out.println("error saVing attribute: " + exx.getMessage());
+					exx.printStackTrace();
+				}
+				catch(Exception exxx)
+				{
+					System.out.println("error generating attribute: " + exxx.getMessage());
+				}
+			}
+		}
+		catch(SQLException exx)
+		{
+			System.out.println("could not save attributes: " + exx.getMessage());
+			exx.printStackTrace();
+		}
+	}
+
+	static public int saveMapPath(MapPathElement_Transferable path)
+	{
+		int j;
+		int len2;
+		int count = 0;
+
+		try
+		{
+			#sql {
+				select count(*) into :count from AMFICOM.MAPPATHELEMENTS
+					where ID = :(path.id)
+			};
+			if(count == 0)
+			{
+//				System.out.println("path " + path.id + " not found in database");
+				throw new SQLException("do insert!");
+			}
+			System.out.println("update path " + path.id);
+			try
+			{
+				#sql {
+					update AMFICOM.MAPPATHELEMENTS
+						set
+							DESCRIPTION = :(path.description),
+							END_NODE_ID = :(path.endNode_id),
+							START_NODE_ID = :(path.startNode_id),
+							NAME = :(path.name),
+							OWNER_ID = :(path.owner_id),
+							TYPE_ID = :(path.type_id),
+							MAP_ID = :(path.map_id),
+							PATH_ID = :(path.path_id)
+						where ID = :(path.id)
+				};
+				#sql { commit };
+			}
+			catch(Exception e)
+			{
+				System.out.println("error saVing paths: " + e.getMessage());
+				e.printStackTrace();
+				return Constants.ERROR_UPDATING;
+			}
+		}
+		catch(Exception e)
+		{
+			System.out.println("insert new path " + path.id);
+			try
+			{
+				#sql {
+					insert into AMFICOM.MAPPATHELEMENTS(
+							DESCRIPTION,
+							ID,
+							END_NODE_ID,
+							START_NODE_ID,
+							NAME,
+							OWNER_ID,
+							TYPE_ID,
+							MAP_ID,
+							PATH_ID)
+						values(
+							:(path.description),
+							:(path.id),
+							:(path.endNode_id),
+							:(path.startNode_id),
+							:(path.name),
+							:(path.owner_id),
+							:(path.type_id),
+							:(path.map_id),
+							:(path.path_id) )
+				};
+				#sql { commit };
+			}
+			catch(Exception ex)
+			{
+				System.out.println("error saVing paths: " + ex.getMessage());
+				ex.printStackTrace();
+				return Constants.ERROR_SAVING;
+			}
+		}
+		MapdbInterfaceSave3.saveAttributes(
+				"MAPPATHELEMENTATTRIBUTES",
+				"MAP_PATH_ELEMENT_ID",
+				path.id,
+				path.attributes);
+
+		CatalogSchemeMapUpdater.mapPathUpdated(path);
+
+		len2 = path.physicalLink_ids.length;
+		for(j = 0; j < len2; j++)
+		{
+			String pl_id;
+			try
+			{
+				#sql {
+					select ID into :pl_id from AMFICOM.MAPPATHLINKS
+						where PATH_ID = :(path.id)
+							and PHYSICAL_LINK_ID = :(path.physicalLink_ids[j])
+				};
+				System.out.println("update path link " + path.id);
+				try
+				{
+					#sql {
+						update AMFICOM.MAPPATHLINKS
+							set
+								PHYSICAL_LINK_ID = :(path.physicalLink_ids[j])
+							where ID = :pl_id
+					};
+					#sql { commit };
+				}
+				catch(Exception exx)
+				{
+					System.out.println("error saVing path link: " + exx.getMessage());
+					exx.printStackTrace();
+				}
+			}
+			catch(Exception ex)
+			{
+				System.out.println("insert path link: " + ex.getMessage());
+				try
+				{
+					String mpl_s = ResourcedbInterface.getUId("mappathlink");
+					#sql {
+						insert into AMFICOM.MAPPATHLINKS(
+								ID,
+								PATH_ID,
+								PHYSICAL_LINK_ID)
+							values(
+								:mpl_s,
+								:(path.id),
+								:(path.physicalLink_ids[j]) )
+					};
+					#sql { commit };
+				}
+				catch(SQLException exx)
+				{
+					System.out.println("error saVing path link: " + exx.getMessage());
+					exx.printStackTrace();
+				}
+				catch(Exception exxx)
+				{
+					System.out.println("error generating map path link: " + exxx.getMessage());
+					exxx.printStackTrace();
+				}
+			}
+		}//for (path links)
+		return Constants.ERROR_NO_ERROR;
+	}
+
+	static public int saveMapPaths(MapPathElement_Transferable[] pathseq)
+	{
+		int i;
+		int len;
+
+		len = pathseq.length;
+		for (i = 0; i < len; i++)
+		{
+			saveMapPath(pathseq[i]);
+		}
+		return Constants.ERROR_NO_ERROR;
+	}
+
+}
+

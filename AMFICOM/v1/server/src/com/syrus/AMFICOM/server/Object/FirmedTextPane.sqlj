@@ -1,0 +1,271 @@
+package com.syrus.AMFICOM.server.Object;
+
+import sqlj.runtime.*;
+import sqlj.runtime.ref.*;
+import java.sql.*;
+
+import java.util.*;
+import java.io.*;
+
+import com.syrus.AMFICOM.CORBA.Report.*;
+
+import com.syrus.AMFICOM.server.*;
+
+public class FirmedTextPane extends Object
+{
+	private String id;
+	private int labelX;
+	private int labelY;
+	private String strings_contained;
+	private String labels_font;  
+	private String vertFirmer;
+	private String horizFirmer;
+	private String verticalFirmTo;
+	private String horizontalFirmTo;
+	private int distanceX;
+	private int distanceY;
+
+	private String report_template_id;
+
+	public FirmedTextPane(FirmedTextPane_Transferable ftp, String r_t_id)
+			throws Exception
+	{
+		this.id = ResourcedbInterface.getUId("reporttemplatebox");
+		this.labelX = ftp.labelX;
+		this.labelY = ftp.labelY;
+		this.strings_contained = ftp.strings_contained;
+		this.labels_font = ftp.labels_font;    
+		this.vertFirmer = ftp.vertFirmer;
+		this.horizFirmer = ftp.horizFirmer;
+		this.verticalFirmTo = ftp.verticalFirmTo;
+		this.horizontalFirmTo = ftp.horizontalFirmTo;
+		this.distanceX = ftp.distanceX;
+		this.distanceY = ftp.distanceY;
+		this.report_template_id = r_t_id;
+
+		#sql{ insert into AMFICOM.REPORTTEMPLATEBOXES(
+				ID,
+				REPORT_TEMPLATE_ID,
+				LABEL_X,
+				LABEL_Y,
+				STRINGS_CONTAINED,
+        LABELFONT,
+				VERTFIRMER,
+        HORIZFIRMER,
+				VERTICAL_FIRM_TO,
+				HORIZONTAL_FIRM_TO,
+				DISTANCE_X,
+				DISTANCE_Y)
+			values(
+				:(this.id),
+				:(this.report_template_id),
+				:(this.labelX),
+				:(this.labelY),
+				:(this.strings_contained),
+        :(this.labels_font),
+        :(this.vertFirmer),
+				:(this.horizFirmer),
+				:(this.verticalFirmTo),
+				:(this.horizontalFirmTo),
+				:(this.distanceX),
+				:(this.distanceY))
+		};
+
+		#sql { commit };
+	}
+
+	public FirmedTextPane(String id)
+			throws Exception
+	{
+		FirmedTextPaneIterator ftpIt = null;
+
+		try
+		{
+			#sql ftpIt = { select
+					ID,
+					REPORT_TEMPLATE_ID,
+					LABEL_X,
+					LABEL_Y,
+					STRINGS_CONTAINED,
+          LABELFONT,
+					VERTFIRMER,
+					HORIZFIRMER,
+					VERTICAL_FIRM_TO,
+					HORIZONTAL_FIRM_TO,
+					DISTANCE_X,
+					DISTANCE_Y
+				from AMFICOM.REPORTTEMPLATEBOXES
+				where ID = :id
+			};
+
+			if(!ftpIt.next())
+			{
+				throw new Exception("NO firmedtextpane for id " + id);
+			}
+
+			try { this.id = ftpIt.id(); }
+        catch(SQLException e) { }
+			if(this.id == null) this.id = "";
+      
+			try { this.labelX = ftpIt.label_x(); }
+        catch(SQLException e) { this.labelX = 0; }
+			try { this.labelY = ftpIt.label_y(); }
+        catch(SQLException e) { this.labelY = 0; }
+			try { this.distanceX = ftpIt.distance_x(); }
+        catch(SQLException e) { this.distanceX = 0; }
+			try { this.distanceY = ftpIt.distance_y(); }
+        catch(SQLException e) { this.distanceY = 0; }
+        
+			try { this.strings_contained = ftpIt.strings_contained(); }
+        catch(SQLException e) { }
+			if(this.strings_contained == null) this.strings_contained = "";
+
+			try { this.labels_font = ftpIt.labelfont(); }
+        catch(SQLException e) { }
+			if(this.labels_font == null) this.labels_font = "";
+			
+      try { this.vertFirmer = ftpIt.vertfirmer(); }
+        catch(SQLException e) { }
+			if(this.vertFirmer == null) this.vertFirmer = "";
+      
+			try { this.horizFirmer = ftpIt.horizfirmer(); }
+        catch(SQLException e) { }
+			if(this.horizFirmer == null) this.horizFirmer = "";
+      
+			try { this.verticalFirmTo = ftpIt.vertical_firm_to(); }
+        catch(SQLException e) { }
+			if(this.verticalFirmTo == null) this.verticalFirmTo = "";
+      
+			try { this.horizontalFirmTo = ftpIt.horizontal_firm_to(); }
+        catch(SQLException e) { }
+			if(this.horizontalFirmTo == null) this.horizontalFirmTo = "";
+      
+			try { this.report_template_id = ftpIt.report_template_id(); }
+        catch(SQLException e) { }
+			if(this.report_template_id == null) this.report_template_id = "";
+
+			ftpIt.close();
+		}
+		catch(Exception e)
+		{
+			if(ftpIt != null) try {
+			ftpIt.close();
+			}catch(Exception exe) {}
+			System.out.println("error loading report template: " + e.getMessage());
+			throw e;
+//			e.printStackTrace();
+		}
+	}
+
+	public FirmedTextPane_Transferable getTransferable()
+			throws Exception
+	{
+		return new FirmedTextPane_Transferable(
+			this.labelX,
+			this.labelY,
+			this.strings_contained,
+      this.labels_font,
+			this.vertFirmer,
+			this.horizFirmer,
+			this.verticalFirmTo,
+			this.horizontalFirmTo,
+			this.distanceX,
+			this.distanceY);
+	}
+
+	public String getReportTemplateId()
+	{
+		return this.report_template_id;
+	}
+
+	public String getId()
+	{
+		return this.id;
+	}
+
+	public void delete() throws Exception
+	{
+		#sql { delete from AMFICOM.REPORTTEMPLATEBOXES
+			where ID = :(this.id)
+		};
+		#sql { commit };
+	}
+
+	public void update(FirmedTextPane_Transferable ftp) throws Exception
+	{
+		this.labelX = ftp.labelX;
+		this.labelY = ftp.labelY;
+		this.strings_contained = ftp.strings_contained;
+		this.vertFirmer = ftp.vertFirmer;
+		this.horizFirmer = ftp.horizFirmer;
+		this.verticalFirmTo = ftp.verticalFirmTo;
+		this.horizontalFirmTo = ftp.horizontalFirmTo;
+		this.distanceX = ftp.distanceX;
+		this.distanceY = ftp.distanceY;
+
+		#sql{ update AMFICOM.REPORTTEMPLATEBOXES set
+				ID = :(this.id),
+				REPORT_TEMPLATE_ID = :(this.report_template_id),
+				LABEL_X = :(this.labelX),
+				LABEL_Y = :(this.labelY),
+				STRINGS_CONTAINED = :(this.strings_contained),
+        LABELFONT = :(this.labels_font),
+				VERTFIRMER = :(this.vertFirmer),
+				HORIZFIRMER = :(this.horizFirmer),
+				VERTICAL_FIRM_TO = :(this.verticalFirmTo),
+				HORIZONTAL_FIRM_TO = :(this.horizontalFirmTo),
+				DISTANCE_X = :(this.distanceX),
+				DISTANCE_Y = :(this.distanceY)
+			where ID = :(this.id)
+		};
+
+		#sql { commit };
+	}
+
+	public static FirmedTextPane[] retrieveBoxes(String rt_id) throws Exception
+	{
+		IdIterator idIt = null;
+		Vector linkedlist = new Vector();
+
+		try
+		{
+			#sql idIt = { select ID
+					from AMFICOM.REPORTTEMPLATEBOXES
+					where report_template_id = :rt_id  };
+	
+			while (idIt.next())
+				linkedlist.add(new FirmedTextPane(idIt.id()));
+			idIt.close();
+		}
+		catch(Exception ex)
+		{
+			if(idIt != null) try {
+			idIt.close();
+			}catch(Exception exe) {}
+			throw ex;
+		}
+		FirmedTextPane[] ftps = new FirmedTextPane[linkedlist.size()];
+		linkedlist.copyInto(ftps);
+		return ftps;
+	}
+
+	#sql public static iterator IdIterator(
+		String id);
+
+	#sql public static iterator FirmedTextPaneIterator(
+		String id,
+		String report_template_id,
+		int label_x,
+		int label_y,
+		String strings_contained,
+    String labelfont,
+		String vertfirmer,
+		String horizfirmer,
+		String vertical_firm_to,
+		String horizontal_firm_to,
+		int distance_x,
+		int distance_y);
+
+
+}
+

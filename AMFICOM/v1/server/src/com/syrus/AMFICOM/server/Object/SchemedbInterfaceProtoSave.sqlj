@@ -1,0 +1,1014 @@
+package com.syrus.AMFICOM.server.Object;
+
+import sqlj.runtime.*;
+import sqlj.runtime.ref.*;
+import java.sql.*;
+
+import java.util.Vector;
+import java.util.Hashtable;
+
+import com.syrus.AMFICOM.CORBA.*;
+import com.syrus.AMFICOM.CORBA.Network.*;
+import com.syrus.AMFICOM.CORBA.NetworkDirectory.*;
+import com.syrus.AMFICOM.CORBA.Scheme.*;
+import com.syrus.AMFICOM.CORBA.Resource.*;
+
+import com.syrus.AMFICOM.server.*;
+
+public class SchemedbInterfaceProtoSave
+{
+	protected SchemedbInterfaceProtoSave()
+	{
+	}
+
+	static public int saveDevicePorts(String device_id, SchemePort_Transferable[] ports)
+	{
+		PortIdIterator idIt = null;
+
+		int i;
+		int len;
+		int index = 0;
+
+		Vector vec = new Vector();
+		Vector id_vec = new Vector();
+		Vector del_vec = new Vector();
+
+		for (i = 0; i < ports.length; i++)
+		{
+			vec.add(ports[i]);
+			id_vec.add(ports[i].id);
+//			System.out.println("id_vec: " + ports[i].id);
+		}
+
+		try
+		{
+			#sql idIt = { select SCHEME_PORT_ID
+				from AMFICOM.SCHEMEDEVICEPORTS
+					where SCHEME_DEVICE_ID = :device_id };
+
+			while (idIt.next())
+			{
+//				System.out.println("check port " + idIt.scheme_port_id());
+				if(id_vec.contains(idIt.scheme_port_id()))
+				{
+					//update
+					index = id_vec.indexOf(idIt.scheme_port_id());
+					System.out.println("update port " + ports[index].id);
+					int is_a_p = (ports[index].is_access_port)? 1 : 0;
+					try
+					{
+						#sql {
+							update AMFICOM.SCHEMEPORTS
+								set
+									NAME = :(ports[index].name),
+									PORT_TYPE_ID = :(ports[index].port_type_id),
+									PORT_ID = :(ports[index].port_id),
+									IS_ACCESS_PORT = :is_a_p,
+									ACCESS_PORT_TYPE_ID = :(ports[index].access_port_type_id),
+									ACCESS_PORT_ID = :(ports[index].access_port_id),
+									DIRECTION_TYPE = :(ports[index].direction_type)
+								where ID = :(ports[index].id)
+						};
+						MapdbInterfaceSave3.saveAttributes(
+							"SCHEMEPORTATTRIBUTES",
+							"SCHEME_PORT_ID",
+							ports[index].id,
+							ports[index].attributes);
+
+						CatalogSchemeMapUpdater.schemePortUpdated(ports[index]);
+					}
+					catch(SQLException e)
+					{
+						System.out.println("error saVing scheme port: " + e.getMessage());
+						e.printStackTrace();
+						return Constants.ERROR_UPDATING;
+					}
+					#sql { commit };
+					vec.remove(ports[index]);
+				}
+				else
+					del_vec.add(idIt.scheme_port_id());
+			}
+			idIt.close();
+		}
+		catch(Exception e)
+		{
+			if(idIt != null) try {
+			idIt.close();
+			}catch(Exception exe) {}
+		}
+
+		len = vec.size();
+		for (i = 0; i < len; i++)
+		{
+			SchemePort_Transferable port = (SchemePort_Transferable )vec.get(i);
+			System.out.println("insert new port " + port.id);
+			int is_a_p = (port.is_access_port)? 1 : 0;
+			try
+			{
+				#sql {
+					insert into AMFICOM.SCHEMEPORTS(
+							ID,
+							NAME,
+							PORT_TYPE_ID,
+							PORT_ID,
+							IS_ACCESS_PORT,
+							ACCESS_PORT_TYPE_ID,
+							ACCESS_PORT_ID,
+							DIRECTION_TYPE)
+						values(
+							 :(port.id),
+							 :(port.name),
+							 :(port.port_type_id),
+							 :(port.port_id),
+							 :is_a_p,
+							 :(port.access_port_type_id),
+							 :(port.access_port_id),
+							 :(port.direction_type) )
+				};
+
+				MapdbInterfaceSave3.saveAttributes(
+					"SCHEMEPORTATTRIBUTES",
+					"SCHEME_PORT_ID",
+					port.id,
+					port.attributes);
+				String at_s = ResourcedbInterface.getUId("deviceport");
+				#sql {
+					insert into AMFICOM.SCHEMEDEVICEPORTS(
+							ID,
+							SCHEME_DEVICE_ID,
+							SCHEME_PORT_ID)
+						values(
+							:at_s,
+							:(device_id),
+							:(port.id) )
+				};
+				#sql { commit };
+			}
+			catch(SQLException ex)
+			{
+				System.out.println("error saVing port: " + ex.getMessage());
+				ex.printStackTrace();
+				return Constants.ERROR_SAVING;
+			}
+			catch(Exception exx)
+			{
+				System.out.println("error generating port: " + exx.getMessage());
+				return Constants.ERROR_SAVING;
+			}
+		}
+
+		len = del_vec.size();
+		for (i = 0; i < len; i++)
+		{
+			try
+			{
+				String s = (String )del_vec.get(i);
+				#sql {
+					delete from AMFICOM.SCHEMEDEVICEPORTS
+						where SCHEME_PORT_ID = :s
+				};
+				#sql {
+					delete from AMFICOM.SCHEMEPORTS
+						where ID = :s
+				};
+				#sql { commit };
+			}
+			catch(SQLException e)
+			{
+				System.out.println("could not delete ports for device " + device_id + ": " + e.getMessage());
+				e.printStackTrace();
+				return Constants.ERROR_DELETING;
+			}
+		}
+		return Constants.ERROR_NO_ERROR;
+	}
+
+	static public int saveDeviceCablePorts(String device_id, SchemeCablePort_Transferable[] ports)
+	{
+		CablePortIdIterator idIt = null;
+
+		int i;
+		int len;
+		int index = 0;
+
+		Vector vec = new Vector();
+		Vector id_vec = new Vector();
+		Vector del_vec = new Vector();
+
+		for (i = 0; i < ports.length; i++)
+		{
+			vec.add(ports[i]);
+			id_vec.add(ports[i].id);
+		}
+
+		try
+		{
+			#sql idIt = { select SCHEME_CABLE_PORT_ID
+				from AMFICOM.SCHEMEDEVICECABLEPORTS
+					where SCHEME_DEVICE_ID = :device_id };
+
+			while (idIt.next())
+			{
+				if(id_vec.contains(idIt.scheme_cable_port_id()))
+				{
+					//update
+					index = id_vec.indexOf(idIt.scheme_cable_port_id());
+					System.out.println("update port " + ports[index].id);
+					int is_a_p = (ports[index].is_access_port)? 1 : 0;
+					try
+					{
+						#sql {
+							update AMFICOM.SCHEMECABLEPORTS
+								set
+									NAME = :(ports[index].name),
+									CABLE_PORT_TYPE_ID = :(ports[index].cable_port_type_id),
+									CABLE_PORT_ID = :(ports[index].cable_port_id),
+									IS_ACCESS_PORT = :is_a_p,
+									ACCESS_PORT_TYPE_ID = :(ports[index].access_port_type_id),
+									ACCESS_PORT_ID = :(ports[index].access_port_id),
+									DIRECTION_TYPE = :(ports[index].direction_type)
+								where ID = :(ports[index].id)
+						};
+						MapdbInterfaceSave3.saveAttributes(
+							"SCHEMECABLEPORTATTRIBUTES",
+							"SCHEME_CABLE_PORT_ID",
+							ports[index].id,
+							ports[index].attributes);
+
+						CatalogSchemeMapUpdater.schemeCablePortUpdated(ports[index]);
+					}
+					catch(SQLException e)
+					{
+						System.out.println("error saVing scheme cable port: " + e.getMessage());
+						e.printStackTrace();
+						return Constants.ERROR_UPDATING;
+					}
+					#sql { commit };
+					vec.remove(ports[index]);
+				}
+				else
+					del_vec.add(idIt.scheme_cable_port_id());
+			}
+			idIt.close();
+		}
+		catch(Exception e)
+		{
+			if(idIt != null) try {
+			idIt.close();
+			}catch(Exception exe) {}
+		}
+
+		len = vec.size();
+		for (i = 0; i < len; i++)
+		{
+			SchemeCablePort_Transferable port = (SchemeCablePort_Transferable )vec.get(i);
+			System.out.println("insert new cable port " + port.id);
+			int is_a_p = (port.is_access_port)? 1 : 0;
+			try
+			{
+				#sql {
+					insert into AMFICOM.SCHEMECABLEPORTS(
+							ID,
+							NAME,
+							CABLE_PORT_TYPE_ID,
+							CABLE_PORT_ID,
+							IS_ACCESS_PORT,
+							ACCESS_PORT_TYPE_ID,
+							ACCESS_PORT_ID,
+							DIRECTION_TYPE)
+						values(
+							 :(port.id),
+							 :(port.name),
+							 :(port.cable_port_type_id),
+							 :(port.cable_port_id),
+							 :is_a_p,
+							 :(port.access_port_type_id),
+							 :(port.access_port_id),
+							 :(port.direction_type) )
+				};
+
+				MapdbInterfaceSave3.saveAttributes(
+					"SCHEMECABLEPORTATTRIBUTES",
+					"SCHEME_CABLE_PORT_ID",
+					port.id,
+					port.attributes);
+
+				String at_s = ResourcedbInterface.getUId("schemecableport");
+				#sql {
+					insert into AMFICOM.SCHEMEDEVICECABLEPORTS(
+							ID,
+							SCHEME_DEVICE_ID,
+							SCHEME_CABLE_PORT_ID)
+						values(
+							:at_s,
+							:(device_id),
+							:(port.id) )
+				};
+				#sql { commit };
+			}
+			catch(SQLException ex)
+			{
+				System.out.println("error saVing cable port: " + ex.getMessage());
+				ex.printStackTrace();
+				return Constants.ERROR_SAVING;
+			}
+			catch(Exception exx)
+			{
+				System.out.println("error generating cable port: " + exx.getMessage());
+				return Constants.ERROR_SAVING;
+			}
+		}
+
+		len = del_vec.size();
+		for (i = 0; i < len; i++)
+		{
+			try
+			{
+				String s = (String )del_vec.get(i);
+				#sql {
+					delete from AMFICOM.SCHEMEDEVICECABLEPORTS
+						where SCHEME_CABLE_PORT_ID = :s
+				};
+				#sql {
+					delete from AMFICOM.SCHEMECABLEPORTS
+						where ID = :s
+				};
+				#sql { commit };
+			}
+			catch(SQLException e)
+			{
+				System.out.println("could not cable delete ports for device " + device_id + ": " + e.getMessage());
+				e.printStackTrace();
+				return Constants.ERROR_DELETING;
+			}
+		}
+		return Constants.ERROR_NO_ERROR;
+	}
+
+	static public int saveLinks(SchemeLink_Transferable[] links)
+	{
+		int i;
+		int len;
+		int count = 0;
+
+		len = links.length;
+		for (i = 0; i < len; i++)
+		{
+			try
+			{
+				#sql {
+					select count(*) into :count from AMFICOM.SCHEMELINKS
+						where ID = :(links[i].id)
+				};
+				if(count == 0)
+				{
+					throw new SQLException("do insert!");
+				}
+				System.out.println("update link " + links[i].id);
+				try
+				{
+					#sql {
+						update AMFICOM.SCHEMELINKS
+							set
+								NAME = :(links[i].name),
+								LINK_TYPE_ID = :(links[i].link_type_id),
+								LINK_ID = :(links[i].link_id),
+								SOURCe_PORT_ID = :(links[i].source_port_id),
+								TARGET_PORT_ID = :(links[i].target_port_id),
+								PHYSICAL_LENGTH = :(links[i].physical_length),
+								OPTICAL_LENGTH = :(links[i].optical_length)
+							where ID = :(links[i].id)
+					};
+				}
+				catch(SQLException e)
+				{
+					System.out.println("error saVing link: " + e.getMessage());
+					e.printStackTrace();
+					return Constants.ERROR_UPDATING;
+				}
+				#sql { commit };
+			}
+			catch(SQLException e)
+			{
+				System.out.println("insert new link " + links[i].id);
+				try
+				{
+					#sql {
+						insert into AMFICOM.SCHEMELINKS(
+								ID,
+								NAME,
+								LINK_TYPE_ID,
+								LINK_ID,
+								SOURCE_PORT_ID,
+								TARGET_PORT_ID,
+								PHYSICAL_LENGTH,
+								OPTICAL_LENGTH)
+							values(
+								:(links[i].id),
+								:(links[i].name),
+								:(links[i].link_type_id),
+								:(links[i].link_id),
+								:(links[i].source_port_id),
+								:(links[i].target_port_id),
+								:(links[i].physical_length),
+								:(links[i].optical_length) )
+					};
+					#sql { commit };
+				}
+				catch(SQLException ex)
+				{
+					System.out.println("error saVing link: " + ex.getMessage());
+					ex.printStackTrace();
+					return Constants.ERROR_SAVING;
+				}
+			}
+			MapdbInterfaceSave3.saveAttributes(
+				"SCHEMELINKATTRIBUTES",
+				"SCHEME_LINK_ID",
+				links[i].id,
+				links[i].attributes);
+
+			CatalogSchemeMapUpdater.schemeLinkUpdated(links[i]);
+		}
+		return Constants.ERROR_NO_ERROR;
+	}
+
+	static public int saveSchemeDevices(SchemeDevice_Transferable[] devices)
+	{
+		int i;
+		int j;
+		int len;
+		int count = 0;
+
+		String id = "";
+		len = devices.length;
+		for (i = 0; i < len; i++)
+		{
+			try
+			{
+				#sql {
+					select count(*) into :count from AMFICOM.SCHEMEDEVICES
+						where ID = :(devices[i].id)
+				};
+				if(count == 0)
+				{
+					throw new SQLException("do insert!");
+				}
+				System.out.println("update device " + devices[i].id);
+				try
+				{
+					#sql {
+						update AMFICOM.SCHEMEDEVICES
+							set
+								NAME = :(devices[i].name)
+							where ID = :(devices[i].id)
+					};
+				}
+				catch(SQLException e)
+				{
+					System.out.println("error saVing device: " + e.getMessage());
+					e.printStackTrace();
+					return Constants.ERROR_UPDATING;
+				}
+				#sql { commit };
+			}
+			catch(SQLException e)
+			{
+				System.out.println("insert new device " + devices[i].id);
+				try
+				{
+					#sql {
+						insert into AMFICOM.SCHEMEDEVICES(ID, NAME)
+							values(:(devices[i].id), :(devices[i].name) )
+					};
+					#sql { commit };
+				}
+				catch(SQLException ex)
+				{
+					System.out.println("error saVing device: " + ex.getMessage());
+					ex.printStackTrace();
+					return Constants.ERROR_SAVING;
+				}
+			}
+
+			MapdbInterfaceSave3.saveAttributes(
+				"SCHEMEDEVICEATTRIBUTES",
+				"SCHEME_DEVICE_ID",
+				devices[i].id,
+				devices[i].attributes);
+
+			saveDevicePorts(devices[i].id, devices[i].ports);
+			saveDeviceCablePorts(devices[i].id, devices[i].cableports);
+		}
+		return Constants.ERROR_NO_ERROR;
+	}
+
+	static public int saveProtoElement(
+			String domain_id,
+			SchemeProtoElement_Transferable proto,
+			Hashtable other_protos)
+	{
+		int i;
+		int j;
+		int len;
+		int count = 0;
+
+		String id = "";
+		String scheme_cell_id = "";
+		String ugo_cell_id = "";
+		try
+		{
+			#sql {
+				select count(*) into :count from AMFICOM.SCHEMEPROTOELEMENTS
+					where ID = :(proto.id)
+			};
+			if(count == 0)
+			{
+				throw new SQLException("do insert!");
+			}
+			System.out.println("update proto " + proto.id);
+			try
+			{
+				Timestamp ts = new Timestamp(proto.modified);
+				#sql {
+					update AMFICOM.SCHEMEPROTOELEMENTS
+						set
+							NAME = :(proto.name),
+							EQUIPMENT_TYPE_ID = :(proto.equipment_type_id),
+							IS_TOP_LEVEL = 1,
+							MODIFIED = :ts,
+							SYMBOL_ID = :(proto.symbol_id),
+							LABEL = :(proto.label),
+							DOMAIN_ID = :domain_id
+						where ID = :(proto.id)
+				};
+				#sql {
+					select SCHEME_CELL_ID into :scheme_cell_id
+						from AMFICOM.SCHEMEPROTOELEMENTS
+						where ID = :(proto.id)
+				};
+				ResourcedbInterface.updateImage(scheme_cell_id, proto.schemecell);
+				#sql {
+					select UGO_CELL_ID into :ugo_cell_id
+						from AMFICOM.SCHEMEPROTOELEMENTS
+						where ID = :(proto.id)
+				};
+				ResourcedbInterface.updateImage(ugo_cell_id, proto.ugocell);
+			}
+			catch(SQLException e)
+			{
+				System.out.println("error saVing proto: " + e.getMessage());
+				e.printStackTrace();
+				return Constants.ERROR_UPDATING;
+			}
+			#sql { commit };
+		}
+		catch(SQLException e)
+		{
+			System.out.println("insert new proto " + proto.id);
+			try
+			{
+				scheme_cell_id = ResourcedbInterface.saveImage(proto.schemecell);
+				#sql {
+					update AMFICOM.IMAGERESOURCES
+						set SOURCE_STRING = 'scheme'
+						where ID = :scheme_cell_id
+				};
+				ugo_cell_id = ResourcedbInterface.saveImage(proto.ugocell);
+				#sql {
+					update AMFICOM.IMAGERESOURCES
+						set SOURCE_STRING = 'scheme'
+						where ID = :ugo_cell_id
+				};
+				#sql {
+					insert into AMFICOM.SCHEMEPROTOELEMENTS(
+							ID,
+							NAME,
+							EQUIPMENT_TYPE_ID,
+							IS_TOP_LEVEL,
+							SCHEME_CELL_ID,
+							UGO_CELL_ID,
+							SYMBOL_ID,
+							LABEL,
+							MODIFIED,
+							DOMAIN_ID)
+						values(
+							:(proto.id),
+							:(proto.name),
+							:(proto.equipment_type_id),
+							1,
+							:scheme_cell_id,
+							:ugo_cell_id,
+							:(proto.symbol_id),
+							:(proto.label),
+							SYSDATE,
+							:domain_id )
+				};
+				#sql { commit };
+			}
+			catch(SQLException ex)
+			{
+				System.out.println("error saVing proto: " + ex.getMessage());
+				ex.printStackTrace();
+				return Constants.ERROR_SAVING;
+			}
+		}
+
+		MapdbInterfaceSave3.saveAttributes(
+			"SCHEMEPROTOELEMENTATTRIBUTES",
+			"SCHEME_PROTO_ELEMENT_ID",
+			proto.id,
+			proto.attributes);
+
+		saveSchemeDevices(proto.devices);
+
+		try
+		{
+			#sql { delete from SCHEMEPROTOELEMENTDEVICES
+				where SCHEME_PROTO_ELEMENT_ID = :(proto.id)
+			};
+
+			for (i = 0; i < proto.devices.length; i++)
+			{
+				String a_id = ResourcedbInterface.getUId("schemedevice");
+				#sql { insert into SCHEMEPROTOELEMENTDEVICES(ID, SCHEME_PROTO_ELEMENT_ID, SCHEME_DEVICE_ID)
+					values(:a_id, :(proto.id), :(proto.devices[i].id) )
+				};
+			}
+			#sql { commit };
+		}
+		catch(SQLException ex)
+		{
+			System.out.println("error saVing proto: " + ex.getMessage());
+			ex.printStackTrace();
+			return Constants.ERROR_SAVING;
+		}
+
+		saveLinks(proto.links);
+		try
+		{
+			#sql { delete from SCHEMEPROTOELEMENTLINKS
+				where SCHEME_PROTO_ELEMENT_ID = :(proto.id)
+			};
+
+			for (i = 0; i < proto.links.length; i++)
+			{
+				String a_id = ResourcedbInterface.getUId("schemelink");
+				#sql { insert into SCHEMEPROTOELEMENTLINKS(ID, SCHEME_PROTO_ELEMENT_ID, SCHEME_LINK_ID)
+					values(:a_id, :(proto.id), :(proto.links[i].id) )
+				};
+			}
+			#sql { commit };
+		}
+		catch(SQLException ex)
+		{
+			System.out.println("error saVing proto: " + ex.getMessage());
+			ex.printStackTrace();
+			return Constants.ERROR_SAVING;
+		}
+
+		try
+		{
+			#sql { delete from SCHEMEPROTOELEMENTPES
+				where SCHEME_PROTO_ELEMENT_ID = :(proto.id)
+			};
+
+			for (i = 0; i < proto.proto_element_ids.length; i++)
+			{
+				String a_id = ResourcedbInterface.getUId("proto");
+				#sql { insert into SCHEMEPROTOELEMENTPES(ID, SCHEME_PROTO_ELEMENT_ID, SCHEME_PE_ID)
+					values(:a_id, :(proto.id), :(proto.proto_element_ids[i]) )
+				};
+			}
+			#sql { commit };
+		}
+		catch(SQLException ex)
+		{
+			System.out.println("error saVing proto: " + ex.getMessage());
+			ex.printStackTrace();
+			return Constants.ERROR_SAVING;
+		}
+		return Constants.ERROR_NO_ERROR;
+	}
+
+	static public int saveProtoElements(
+			String domain_id,
+			SchemeProtoElement_Transferable[] protos)
+	{
+		int i;
+		int j;
+		int len;
+		int count = 0;
+
+		String id = "";
+		len = protos.length;
+		for (i = 0; i < len; i++)
+		{
+			saveProtoElement(domain_id, protos[i], new Hashtable());
+		}
+		return Constants.ERROR_NO_ERROR;
+	}
+
+	static public int removeSchemePort(String id)
+	{
+		PortIdIterator pidIt = null;
+		try
+		{
+			MapdbInterfaceRemove.removeElementAttributes(
+					"SCHEMEPORTATTRIBUTES",
+					"SCHEME_PORT_ID",
+					id);
+
+			#sql { delete from SCHEMEDEVICEPORTS
+					where SCHEME_PORT_ID = :id
+			};
+
+			#sql {
+				delete from AMFICOM.SCHEMEPORTS
+					where ID = :id
+			};
+			#sql { commit };
+		}
+		catch (Exception e)
+		{
+			System.out.println("Oblazhalis' - " + e.getMessage());
+			e.printStackTrace();
+		}
+		return Constants.ERROR_NO_ERROR;
+	}
+
+	static public int removeSchemeCablePort(String id)
+	{
+		CablePortIdIterator pidIt = null;
+		try
+		{
+			MapdbInterfaceRemove.removeElementAttributes(
+					"SCHEMECABLEPORTATTRIBUTES",
+					"SCHEME_CABLE_PORT_ID",
+					id);
+
+			#sql { delete from SCHEMEDEVICECABLEPORTS
+					where SCHEME_CABLE_PORT_ID = :id
+			};
+
+			#sql {
+				delete from AMFICOM.SCHEMECABLEPORTS
+					where ID = :id
+			};
+			#sql { commit };
+		}
+		catch (Exception e)
+		{
+			System.out.println("Oblazhalis' - " + e.getMessage());
+			e.printStackTrace();
+		}
+		return Constants.ERROR_NO_ERROR;
+	}
+
+	static public int removeSchemeDevice(String id)
+	{
+		PortIdIterator pidIt = null;
+		CablePortIdIterator cpidIt = null;
+		try
+		{
+			MapdbInterfaceRemove.removeElementAttributes(
+					"SCHEMEDEVICEATTRIBUTES",
+					"SCHEME_DEVICE_ID",
+					id);
+
+			#sql pidIt = { select SCHEME_PORT_ID
+					from SCHEMEDEVICEPORTS
+					where SCHEME_DEVICE_ID = :id
+			};
+			while(pidIt.next())
+			{
+				removeSchemePort(pidIt.scheme_port_id());
+			}
+			pidIt.close();
+
+			#sql cpidIt = { select SCHEME_CABLE_PORT_ID
+					from SCHEMEDEVICECABLEPORTS
+					where SCHEME_DEVICE_ID = :id
+			};
+			while(cpidIt.next())
+			{
+				removeSchemeCablePort(cpidIt.scheme_cable_port_id());
+			}
+			cpidIt.close();
+
+			#sql {
+				delete from AMFICOM.SCHEMEDEVICES
+					where ID = :id
+			};
+			#sql { commit };
+		}
+		catch (Exception e)
+		{
+			if(pidIt != null) try {
+			pidIt.close();
+			}catch(Exception exe) {}
+			if(cpidIt != null) try {
+			cpidIt.close();
+			}catch(Exception exe) {}
+			System.out.println("Oblazhalis' - " + e.getMessage());
+			e.printStackTrace();
+		}
+		return Constants.ERROR_NO_ERROR;
+	}
+
+	static public int removeSchemeDevices(String[] ids)
+	{
+		int i;
+		int j;
+		int len;
+		int count = 0;
+
+		String id = "";
+		len = ids.length;
+		for (i = 0; i < len; i++)
+		{
+			removeSchemeDevice(ids[i]);
+		}
+		return Constants.ERROR_NO_ERROR;
+	}
+
+	static public int removeSchemeLink(String id)
+	{
+		PortIdIterator pidIt = null;
+		try
+		{
+			MapdbInterfaceRemove.removeElementAttributes(
+					"SCHEMELINKATTRIBUTES",
+					"SCHEME_LINK_ID",
+					id);
+
+			#sql {
+				delete from AMFICOM.SCHEMELINKS
+					where ID = :id
+			};
+			#sql { commit };
+		}
+		catch (Exception e)
+		{
+			System.out.println("Oblazhalis' - " + e.getMessage());
+			e.printStackTrace();
+		}
+		return Constants.ERROR_NO_ERROR;
+	}
+
+	static public int removeSchemeLinks(String[] ids)
+	{
+		int i;
+		int j;
+		int len;
+		int count = 0;
+
+		String id = "";
+		len = ids.length;
+		for (i = 0; i < len; i++)
+		{
+			removeSchemeLink(ids[i]);
+		}
+		return Constants.ERROR_NO_ERROR;
+	}
+
+	static public int removeProtoElements(String[] proto_ids)
+	{
+		String scheme_cell_id = "";
+		String ugo_cell_id = "";
+		DeviceIdIterator didIt = null;
+		LinkIdIterator lidIt = null;
+		MapProtoIdIterator mpIt = null;
+
+		for(int i = 0; i < proto_ids.length; i++)
+		{
+			try
+			{
+				#sql {
+					select SCHEME_CELL_ID into :scheme_cell_id
+						from AMFICOM.SCHEMEPROTOELEMENTS
+						where ID = :(proto_ids[i])
+				};
+				#sql {
+					delete from AMFICOM.IMAGERESOURCES
+						where ID = :scheme_cell_id
+				};
+
+				#sql {
+					select UGO_CELL_ID into :ugo_cell_id
+						from AMFICOM.SCHEMEPROTOELEMENTS
+						where ID = :(proto_ids[i])
+				};
+				#sql {
+					delete from AMFICOM.IMAGERESOURCES
+						where ID = :ugo_cell_id
+				};
+
+				#sql { delete from SCHEMEPROTOELEMENTPES
+					where SCHEME_PROTO_ELEMENT_ID = :(proto_ids[i])
+				};
+
+				try
+				{
+					#sql didIt = { select SCHEME_DEVICE_ID
+							from SCHEMEPROTOELEMENTDEVICES
+							where SCHEME_PROTO_ELEMENT_ID = :(proto_ids[i])
+					};
+					#sql { delete from SCHEMEPROTOELEMENTDEVICES
+							where SCHEME_PROTO_ELEMENT_ID = :(proto_ids[i])
+					};
+					while(didIt.next())
+					{
+						removeSchemeDevice(didIt.scheme_device_id());
+					}
+					didIt.close();
+					#sql { commit };
+				}
+				catch (Exception e)
+				{
+					didIt.close();
+					System.out.println("Oblazhalis' - " + e.getMessage());
+					e.printStackTrace();
+				}
+
+				try
+				{
+					#sql lidIt = { select SCHEME_LINK_ID
+							from SCHEMEPROTOELEMENTLINKS
+							where SCHEME_PROTO_ELEMENT_ID = :(proto_ids[i])
+					};
+					#sql { delete from SCHEMEPROTOELEMENTLINKS
+							where SCHEME_PROTO_ELEMENT_ID = :(proto_ids[i])
+					};
+					while(lidIt.next())
+					{
+						removeSchemeLink(lidIt.scheme_link_id());
+					}
+					lidIt.close();
+					#sql { commit };
+				}
+				catch (Exception e)
+				{
+					lidIt.close();
+					System.out.println("Oblazhalis' - " + e.getMessage());
+					e.printStackTrace();
+				}
+
+				try
+				{
+					#sql mpIt = { select MAP_PROTO_ELEMENT_ID
+							from AMFICOM.MAPPROTOELEMENTPELINKS
+							where PROTO_ELEMENT_ID = :(proto_ids[i])
+					};
+					#sql { delete from AMFICOM.MAPPROTOELEMENTPELINKS
+							where PROTO_ELEMENT_ID = :(proto_ids[i])
+					};
+					while(mpIt.next())
+					{
+						String mp_id = mpIt.map_proto_element_id();
+						#sql { update AMFICOM.MAPPROTOELEMENTS
+							set MODIFIED = SYSDATE
+							where ID = :mp_id
+						};
+					}
+					mpIt.close();
+					#sql { commit };
+				}
+				catch (Exception e)
+				{
+					mpIt.close();
+					System.out.println("Oblazhalis' - " + e.getMessage());
+					e.printStackTrace();
+				}
+
+				MapdbInterfaceRemove.removeElementAttributes(
+					"SCHEMEPROTOELEMENTATTRIBUTES",
+					"SCHEME_PROTO_ELEMENT_ID",
+					proto_ids[i]);
+
+				#sql {
+					delete from AMFICOM.SCHEMEPROTOELEMENTS
+						where ID = :(proto_ids[i])
+				};
+
+				#sql { commit };
+			}
+			catch(SQLException e)
+			{
+				System.out.println("error saVing proto: " + e.getMessage());
+				e.printStackTrace();
+				return Constants.ERROR_UPDATING;
+			}
+		}
+		return Constants.ERROR_NO_ERROR;
+	}
+
+	#sql public static iterator DeviceIdIterator ( String scheme_device_id );
+	#sql public static iterator LinkIdIterator ( String scheme_link_id );
+	#sql public static iterator PortIdIterator ( String scheme_port_id );
+	#sql public static iterator CablePortIdIterator ( String scheme_cable_port_id );
+	#sql public static iterator MapProtoIdIterator ( String map_proto_element_id );
+
+}
+

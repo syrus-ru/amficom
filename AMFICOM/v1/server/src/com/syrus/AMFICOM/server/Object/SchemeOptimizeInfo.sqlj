@@ -1,0 +1,445 @@
+package com.syrus.AMFICOM.server.Object;
+
+import com.syrus.AMFICOM.CORBA.Resource.*;
+import com.syrus.AMFICOM.CORBA.Scheme.*;
+import com.syrus.util.*;
+import com.syrus.util.database.*;
+
+import sqlj.runtime.*;
+import sqlj.runtime.ref.*;
+
+import java.util.*;
+import java.sql.*;
+
+import oracle.sql.*;
+
+import java.io.*;
+
+public class SchemeOptimizeInfo extends Object
+{
+	SchemeOptimizeInfo_Transferable soi;
+
+	String id = "";
+	String scheme_id = "";
+	String solution_compact_id = "";
+    String date = "";
+
+    int optimize_mode = 0;
+
+	double iterations = 0.0;
+	double price = 0.0;
+	double wavelength = 0.0;
+	double len_margin = 0.0;
+    double mutation_rate = 0.0;
+    double mutation_degree = 0.0;
+    double rtu_delete_prob = 0.0;
+    double rtu_create_prob = 0.0;
+    double nodes_splice_prob = 0.0;
+    double nodes_cut_prob = 0.0;
+    double survivor_rate = 0.0;
+
+	double[] refl_prices = new double[0];
+	double[] switch_prices = new double[0];
+
+   	String[] refl_names = new String[0];
+	String[] switch_names = new String[0];
+
+	double[] refl_ranges = new double[0];
+	double[] switch_nports = new double[0];
+
+   	byte[] refl_prices_b = new byte[0];
+	byte[] switch_prices_b = new byte[0];
+
+   	byte[] refl_names_b = new byte[0];
+	byte[] switch_names_b = new byte[0];
+
+	byte[] refl_ranges_b = new byte[0];
+	byte[] switch_nports_b = new byte[0];
+
+	public SchemeOptimizeInfo(SchemeOptimizeInfo_Transferable soi)
+    	throws Exception
+	{
+    	this.soi = soi;
+
+		this.id = soi.id;
+		this.scheme_id = soi.scheme_id;
+		this.solution_compact_id = soi.solution_compact_id;
+    	this.date = soi.date;
+
+        this.optimize_mode = soi.optimize_mode;
+		this.iterations = soi.iterations;
+		this.price = soi.price;
+        this.wavelength = soi.wavelength;
+
+		this.len_margin = soi.len_margin;
+    	this.mutation_rate = soi.mutation_rate;
+    	this.mutation_degree = soi.mutation_degree;
+    	this.rtu_delete_prob = soi.rtu_delete_prob;
+    	this.rtu_create_prob = soi.rtu_create_prob;
+    	this.nodes_splice_prob = soi.nodes_splice_prob;
+    	this.nodes_cut_prob = soi.nodes_cut_prob;
+    	this.survivor_rate = soi.survivor_rate;
+
+		this.price = soi.price;
+		this.iterations = soi.iterations;
+
+        this.refl_prices = new double[soi.refl_prices.length];
+        for(int i = 0; i < soi.refl_prices.length; i++)
+			this.refl_prices[i] = soi.refl_prices[i];
+
+        this.switch_prices = new double[soi.switch_prices.length];
+        for(int i = 0; i < soi.switch_prices.length; i++)
+			this.switch_prices[i] = soi.switch_prices[i];
+
+        this.refl_names = new String[soi.refl_names.length];
+        for(int i = 0; i < soi.refl_names.length; i++)
+			this.refl_names[i] = soi.refl_names[i];
+
+        this.switch_names = new String[soi.switch_names.length];
+        for(int i = 0; i < soi.switch_names.length; i++)
+			this.switch_names[i] = soi.switch_names[i];
+
+        this.refl_ranges = new double[soi.refl_ranges.length];
+        for(int i = 0; i < soi.refl_ranges.length; i++)
+			this.refl_ranges[i] = soi.refl_ranges[i];
+
+        this.switch_nports = new double[soi.switch_nports.length];
+        for(int i = 0; i < soi.switch_nports.length; i++)
+			this.switch_nports[i] = soi.switch_nports[i];
+/*
+		System.out.println(
+				"	\n id = " + id +
+		    	"	\n scheme_id = " + scheme_id +
+				"	\n solution_compact_id = " + solution_compact_id +
+				"	\n opt_date = " + date +
+                "	\n optimize_mode = " + optimize_mode +
+                "	\n iterations = " + iterations +
+                "	\n price = " + price +
+                "	\n wavelength = " + wavelength +
+		    	"	\n len_margin = " + len_margin +
+				"	\n mutation_rate = " + mutation_rate +
+				"	\n mutation_degree = " + mutation_degree +
+				"	\n rtu_delete_prob = " + rtu_delete_prob +
+				"	\n rtu_create_prob = " + rtu_create_prob +
+				"	\n nodes_splice_prob = " + nodes_splice_prob +
+				"	\n nodes_cut_prob = " + nodes_cut_prob +
+				"	\n survivor_rate = " + survivor_rate +
+                "	\n refl_prices = " + refl_prices.length +
+                "	\n refl_names = " + refl_names.length +
+                "	\n refl_ranges = " + refl_ranges.length +
+                "	\n switch_prices = " + switch_prices.length +
+                "	\n switch_nports = " + switch_nports.length +
+                "	\n switch_names = " + switch_names.length);
+*/
+		#sql { insert into SCHEMEOPTIMIZEINFO(
+				id,
+		    	scheme_id,
+				solution_compact_id,
+				opt_date,
+                optimize_mode,
+                iterations,
+                price,
+                wavelength,
+		    	len_margin,
+				mutation_rate,
+				mutation_degree,
+				rtu_delete_prob,
+				rtu_create_prob,
+				nodes_splice_prob,
+				nodes_cut_prob,
+				survivor_rate,
+                refl_prices,
+                refl_names,
+                refl_ranges,
+                switch_prices,
+                switch_nports,
+                switch_names)
+        	values(
+				:id,
+		    	:scheme_id,
+				:solution_compact_id,
+				:date,
+                :optimize_mode,
+                :iterations,
+                :price,
+                :wavelength,
+		    	:len_margin,
+				:mutation_rate,
+				:mutation_degree,
+				:rtu_delete_prob,
+				:rtu_create_prob,
+				:nodes_splice_prob,
+				:nodes_cut_prob,
+				:survivor_rate,
+                empty_blob(),
+                empty_blob(),
+                empty_blob(),
+                empty_blob(),
+                empty_blob(),
+                empty_blob())
+        };
+
+        try
+        {
+	        refl_prices_b = ByteArray.toByteArray(refl_prices);
+	        refl_ranges_b = ByteArray.toByteArray(refl_ranges);
+    	    switch_prices_b = ByteArray.toByteArray(switch_prices);
+    	    switch_nports_b = ByteArray.toByteArray(switch_nports);
+        }
+        catch(IOException ex)
+        {
+	        refl_prices_b = new byte[0];
+	        refl_ranges_b = new byte[0];
+    	    switch_prices_b = new byte[0];
+    	    switch_nports_b = new byte[0];
+        }
+
+        try
+        {
+	        refl_names_b = toByteArray(refl_names);
+    	    switch_names_b = toByteArray(switch_names);
+//	        refl_names_b = ByteArray.toByteArray(refl_names);
+//    	    switch_names_b = ByteArray.toByteArray(switch_names);
+        }
+        catch(Exception ex)
+        {
+	        refl_names_b = new byte[0];
+    	    switch_names_b = new byte[0];
+        }
+
+		ConnectionContext connCtx2 = DefaultContext.getDefaultContext();
+        ByteArrayDatabase bad = new ByteArrayDatabase(refl_prices_b);
+        bad.saveAsBlob(
+				connCtx2.getConnection(),
+				"AMFICOM.SCHEMEOPTIMIZEINFO",
+				"REFL_PRICES",
+				"id = '" + id + "'");
+
+        bad = new ByteArrayDatabase(refl_names_b);
+        bad.saveAsBlob(
+				connCtx2.getConnection(),
+				"AMFICOM.SCHEMEOPTIMIZEINFO",
+				"REFL_NAMES",
+				"id = '" + id + "'");
+
+        bad = new ByteArrayDatabase(refl_ranges_b);
+        bad.saveAsBlob(
+				connCtx2.getConnection(),
+				"AMFICOM.SCHEMEOPTIMIZEINFO",
+				"REFL_RANGES",
+				"id = '" + id + "'");
+
+        bad = new ByteArrayDatabase(switch_prices_b);
+        bad.saveAsBlob(
+				connCtx2.getConnection(),
+				"AMFICOM.SCHEMEOPTIMIZEINFO",
+				"SWITCH_PRICES",
+				"id = '" + id + "'");
+
+        bad = new ByteArrayDatabase(switch_nports_b);
+        bad.saveAsBlob(
+				connCtx2.getConnection(),
+				"AMFICOM.SCHEMEOPTIMIZEINFO",
+				"SWITCH_NPORTS",
+				"id = '" + id + "'");
+
+        bad = new ByteArrayDatabase(switch_names_b);
+        bad.saveAsBlob(
+				connCtx2.getConnection(),
+				"AMFICOM.SCHEMEOPTIMIZEINFO",
+				"SWITCH_NAMES",
+				"id = '" + id + "'");
+
+    	#sql { commit };
+	}
+
+	public SchemeOptimizeInfo(String soi_id)
+    	throws SQLException
+    {
+    	BLOB refl_prices_blob;
+        BLOB switch_prices_blob;
+
+       	BLOB refl_ranges_blob;
+        BLOB switch_nports_blob;
+
+    	BLOB refl_names_blob;
+        BLOB switch_names_blob;
+
+		#sql { select
+				id,
+		    	scheme_id,
+				solution_compact_id,
+				opt_date,
+                optimize_mode,
+                iterations,
+                price,
+                wavelength,
+		    	len_margin,
+				mutation_rate,
+				mutation_degree,
+				rtu_delete_prob,
+				rtu_create_prob,
+				nodes_splice_prob,
+				nodes_cut_prob,
+				survivor_rate,
+                refl_prices,
+                refl_names,
+                refl_ranges,
+                switch_prices,
+                switch_nports,
+                switch_names
+        	into
+				:id,
+		    	:scheme_id,
+				:solution_compact_id,
+				:date,
+                :optimize_mode,
+                :iterations,
+                :price,
+                :wavelength,
+		    	:len_margin,
+				:mutation_rate,
+				:mutation_degree,
+				:rtu_delete_prob,
+				:rtu_create_prob,
+				:nodes_splice_prob,
+				:nodes_cut_prob,
+				:survivor_rate,
+                :refl_prices_blob,
+                :refl_names_blob,
+                :refl_ranges_blob,
+                :switch_prices_blob,
+                :switch_nports_blob,
+                :switch_names_blob
+            from SCHEMEOPTIMIZEINFO
+            where id = :soi_id
+        };
+
+        refl_prices_b = ByteArrayDatabase.toByteArray(refl_prices_blob);
+        switch_prices_b = ByteArrayDatabase.toByteArray(switch_prices_blob);
+
+        refl_prices = new ByteArray(refl_prices_b).toDoubleArray();
+        switch_prices = new ByteArray(switch_prices_b).toDoubleArray();
+
+        refl_ranges_b = ByteArrayDatabase.toByteArray(refl_ranges_blob);
+        switch_nports_b = ByteArrayDatabase.toByteArray(switch_nports_blob);
+
+        refl_ranges = new ByteArray(refl_ranges_b).toDoubleArray();
+        switch_nports = new ByteArray(switch_nports_b).toDoubleArray();
+
+        refl_names_b = ByteArrayDatabase.toByteArray(refl_names_blob);
+        switch_names_b = ByteArrayDatabase.toByteArray(switch_names_blob);
+
+//        refl_names = new ByteArray(refl_names_b).toStringArray();
+//        switch_names = new ByteArray(switch_names_b).toStringArray();
+        refl_names = toStringArray(refl_names_b);
+        switch_names = toStringArray(switch_names_b);
+    }
+
+    public void delete()
+    	throws SQLException
+    {
+    	#sql { delete
+            from SCHEMEOPTIMIZEINFO
+            wher id = :id
+        };
+    	#sql { commit };
+    }
+
+    public byte[] toByteArray(String[] s)
+    {
+    	try
+        {
+			ByteArrayOutputStream baos = new ByteArrayOutputStream();
+			DataOutputStream oos = new DataOutputStream(baos);
+			for(int i = 0; i < s.length; i++)
+				oos.writeUTF(s[i]);
+			byte[] bytes = baos.toByteArray();
+    	    return bytes;
+        }
+        catch(IOException e)
+        {
+        	return new byte[0];
+        }
+    }
+
+    public String[] toStringArray(byte[] bytes)
+    {
+    	try
+        {
+    		Vector vec = new Vector();
+			ByteArrayInputStream bais = new ByteArrayInputStream(bytes);
+			DataInputStream ois = new DataInputStream(bais);
+
+    	    while(ois.available() > 0)
+	        	vec.add(ois.readUTF());
+
+	        return (String[] )vec.toArray(new String[0]);
+        }
+        catch(IOException e)
+        {
+        	return new String[0];
+        }
+    }
+
+    public SchemeOptimizeInfo_Transferable getTransferable()
+    {
+    	soi = new SchemeOptimizeInfo_Transferable(
+				id,
+		    	scheme_id,
+				solution_compact_id,
+				date,
+                optimize_mode,
+                iterations,
+                price,
+                wavelength,
+		    	len_margin,
+				mutation_rate,
+				mutation_degree,
+				rtu_delete_prob,
+				rtu_create_prob,
+				nodes_splice_prob,
+				nodes_cut_prob,
+				survivor_rate,
+                refl_prices,
+                refl_names,
+                refl_ranges,
+                switch_prices,
+                switch_nports,
+                switch_names);
+        return soi;
+    }
+
+    static public SchemeOptimizeInfo_Transferable[] getSOIs()
+    	throws SQLException
+    {
+    	Vector vec = new Vector();
+
+    	IdIterator idIt = null;
+
+		try
+		{
+		#sql idIt = { select id
+            from SCHEMEOPTIMIZEINFO
+        };
+        while(idIt.next())
+        	vec.add(new SchemeOptimizeInfo(idIt.id()).getTransferable());
+		}
+		catch(SQLException e)
+		{
+			throw e;
+		}
+		finally
+		{
+			try {
+				idIt.close();
+			}catch(Exception exe) {}
+		}
+		
+
+        return (SchemeOptimizeInfo_Transferable [])vec.toArray(new SchemeOptimizeInfo_Transferable[vec.size()]);
+    }
+
+   	#sql public static iterator IdIterator( String id );
+}
+

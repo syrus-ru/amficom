@@ -1,0 +1,258 @@
+package com.syrus.AMFICOM.server.catalog;
+
+import sqlj.runtime.*;
+import sqlj.runtime.ref.*;
+import java.sql.*;
+
+import com.syrus.AMFICOM.CORBA.*;
+import com.syrus.AMFICOM.CORBA.General.*;
+import com.syrus.AMFICOM.CORBA.ISM.*;
+
+public class MonitoredElement extends Object
+{
+	String id = "";
+	String path_id = "";
+	String equipment_id = "";
+	String element_id = "";
+	String element_name = "";
+	String element_type = "";
+	String local_address = "";
+	String access_port_id = "";
+	String domain_id = "";
+
+	Timestamp modified;
+
+	MonitoredElement_Transferable transferable;
+
+	public MonitoredElement(String me_id)
+    	throws SQLException
+	{
+		#sql { select
+				ID,
+				PATH_ID,
+				EQUIPMENT_ID,
+				ELEMENT_TYPE,
+				LOCAL_ADDRESS,
+				MODIFIED,
+				DOMAIN_ID
+			into
+				:id,
+				:path_id,
+				:equipment_id,
+				:element_type,
+				:local_address,
+				:modified,
+				:domain_id
+			from AMFICOM.MONITOREDELEMENTS
+			where ID = :me_id
+        };
+
+        element_id = getElementId();
+		access_port_id = getAccessPortId();
+	}
+
+	public MonitoredElement(
+    		String id,
+            String element_id,
+            String element_type,
+            String local_address,
+            String access_port_id,
+            String domain_id)
+    	throws SQLException
+    {
+		this.id = id;
+		this.element_id = element_id;
+		this.element_type = element_type;
+		this.element_name = element_name;
+		this.local_address = local_address;
+		this.access_port_id = access_port_id;
+		this.domain_id = domain_id;
+
+		Timestamp modified = new Timestamp(System.currentTimeMillis());
+
+		if(element_type.equals("path"))
+		   	this.path_id = this.element_id;
+   	 	else
+		if(element_type.equals("equipment"))
+			this.equipment_id = this.element_id;
+
+		#sql {
+			insert into AMFICOM.MONITOREDELEMENTS(
+				ID,
+				PATH_ID,
+                EQUIPMENT_ID,
+				LOCAL_ADDRESS,
+				ELEMENT_TYPE,
+				MODIFIED,
+				DOMAIN_ID)
+			values(
+            	:id,
+				:path_id,
+				:equipment_id,
+				:local_address,
+				:element_type,
+                :modified,
+				:domain_id)
+		};
+		#sql { commit };
+    }
+
+    public void update(MonitoredElement_Transferable tr)
+    	throws SQLException, AMFICOMRemoteException
+	{
+    	transferable = tr;
+
+		this.id = tr.id;
+		this.element_id = tr.element_id;
+		this.element_type = tr.element_type;
+		this.element_name = tr.element_name;
+		this.local_address = tr.local_address;
+		this.access_port_id = tr.access_port_id;
+		this.domain_id = tr.domain_id;
+
+        this.modified = new Timestamp(tr.modified);
+
+		if(element_type.equals("path"))
+		   	this.path_id = this.element_id;
+   	 	else
+		if(element_type.equals("equipment"))
+			this.equipment_id = this.element_id;
+
+		int count;
+
+		#sql {
+			select count(*) into :count from AMFICOM.MONITOREDELEMENTS
+				where ID = :(tr.id)
+		};
+		if(count != 0)
+		{
+			System.out.println("ME не существует!!!");
+			throw new AMFICOMRemoteException(Constants.ERROR_SAVING, "ME не существует!!!");
+		}
+
+		System.out.println("update me " + tr.id);
+
+		#sql {
+			update AMFICOM.MONITOREDELEMENTS
+				set
+					LOCAL_ADDRESS = :(tr.local_address),
+					DOMAIN_ID = :(tr.domain_id),
+                    MODIFIED = SYSDATE
+				where ID = :(tr.id)
+		};
+
+		try
+		{
+			#sql {
+				update AMFICOM.MONITOREDELEMENTATTACHMENTS
+					set ACCESS_PORT_ID = :(tr.access_port_id)
+					where MONITORED_ELEMENT_ID = :(tr.id)
+			};
+		}
+		catch(SQLException e)
+		{
+			System.out.println("me attachment not saved: " + e.getMessage());
+		}
+
+		#sql { commit };
+	}
+
+    public String getAccessPortId()
+    {
+    	String It_access_port_id = "";
+		try
+		{
+			#sql {select ACCESS_PORT_ID into :It_access_port_id
+					from AMFICOM.MONITOREDELEMENTATTACHMENTS
+					where MONITORED_ELEMENT_ID = :id };
+		}
+		catch(Exception ee)
+		{
+			It_access_port_id = "";
+		}
+		if(It_access_port_id == null)
+        	It_access_port_id = "";
+        return It_access_port_id;
+    }
+
+    public String getElementId()
+    {
+    	String It_element_name = "";
+		if(element_type.equals("path"))
+		{
+			try
+			{
+				#sql {
+					select NAME into :It_element_name
+					from AMFICOM.TRANSMISSIONPATHS
+					where ID = :element_id
+				};
+			}
+			catch(SQLException e) { }
+			if(It_element_name == null)
+				It_element_name = "";
+		}
+        else
+		if(element_type.equals("equipment"))
+		{
+			try
+			{
+				#sql {
+					select NAME into :It_element_name
+					from AMFICOM.EQUIPMENTS
+					where ID = :element_id
+				};
+				if(It_element_name == null)
+					It_element_name = "";
+			}
+			catch(SQLException e) { }
+		}
+        return It_element_name;
+    }
+
+    public MonitoredElement_Transferable getTransferable()
+    {
+    	transferable = new MonitoredElement_Transferable(
+				id,
+				element_name,
+				element_id,
+				element_type,
+				local_address,
+				access_port_id,
+				domain_id,
+				modified.getTime());
+
+    	return transferable;
+    }
+
+    public void remove()
+    {
+		try
+		{
+			#sql {
+				delete from AMFICOM.MONITOREDELEMENTATTACHMENTS
+					where MONITORED_ELEMENT_ID = :id
+			};
+			#sql {
+				delete from AMFICOM.MONITOREDELEMENTS
+				where ID = :id
+			};
+			#sql { commit; };
+		}
+		catch(SQLException e)
+		{
+			System.out.println("no ME");
+		}
+    }
+
+    public String getId()
+    {
+    	return id;
+    }
+
+    public String getName()
+    {
+    	return element_name;
+    }
+}
+
