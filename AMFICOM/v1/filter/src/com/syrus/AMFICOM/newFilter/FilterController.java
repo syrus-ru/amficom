@@ -1,5 +1,5 @@
 /*
- * $Id: FilterController.java,v 1.4 2005/04/01 10:44:06 max Exp $
+ * $Id: FilterController.java,v 1.5 2005/04/06 12:18:17 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,7 +31,7 @@ import com.syrus.AMFICOM.general.corba.CompoundCondition_TransferablePackage.Com
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/04/01 10:44:06 $
+ * @version $Revision: 1.5 $, $Date: 2005/04/06 12:18:17 $
  * @author $Author: max $
  * @module filter_v1
  */
@@ -203,7 +203,8 @@ public class FilterController implements ActionListener, PopupMenuListener {
 			if (!equals.equals("") && !from.equals("")) {
 				this.view.showErrorMessage(Filter.EQUALS_AND_FROM_SIMULTENIOUSLY);
 				return;
-			}			
+			}
+			break;
 		case ConditionWrapper.FLOAT:
 			break;
 		case ConditionWrapper.DOUBLE:
@@ -267,6 +268,7 @@ public class FilterController implements ActionListener, PopupMenuListener {
 			if (sort2 == null)
 				return;
 			this.model.addCondition(keyName, new TypicalCondition(start, end, sort2, this.model.getEntityCode(), key));
+			break;
 		default:
 			Log.errorMessage("FilterController.addConditionToModel | Unsupported condition type");
 		}		
