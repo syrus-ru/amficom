@@ -142,3 +142,7 @@ arch:
 .PHONY: pmd
 pmd:
 	${JAVA} -classpath $(PMD_JARS) -jar $(PMD_JAR) src/com/syrus/AMFICOM/measurement text $(PMD_RULES) 
+
+#### Compile and install jar to libdir
+lib: $(LIBNAME)
+	$(CP) $(LIBNAME) $(LIBDIR)	
