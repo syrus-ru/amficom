@@ -4,6 +4,7 @@ DROP TABLE measurementporttype;
 DROP TABLE porttype;
 DROP TABLE equipmenttype;
 DROP TABLE servertype;
+DROP TABLE linktype;
 
 DROP SEQUENCE characteristictype_seq;
 DROP SEQUENCE mcmtype_seq;
@@ -11,4 +12,4 @@ DROP SEQUENCE measurementporttype_seq;
 DROP SEQUENCE porttype_seq;
 DROP SEQUENCE equipmenttype_seq;
 DROP SEQUENCE servertype_seq;
-
+DROP SEQUENCE linktype_seq;

@@ -10,4 +10,4 @@
 @@monitoredelement.sql
 @@equipmentmelink.sql
 @@transmissionpathmelink.sql
-
+@@link.sql

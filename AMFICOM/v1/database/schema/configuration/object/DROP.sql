@@ -10,6 +10,7 @@ DROP TABLE equipment;
 DROP TABLE mcm;
 DROP TABLE server;
 DROP TABLE domain;
+DROP TABLE link;
 
 DROP SEQUENCE monitoredelement_seq;
 DROP SEQUENCE measurementport_seq;
@@ -21,4 +22,5 @@ DROP SEQUENCE equipment_seq;
 DROP SEQUENCE mcm_seq;
 DROP SEQUENCE server_seq;
 DROP SEQUENCE domain_seq;
+DROP SEQUENCE link_seq;
 
