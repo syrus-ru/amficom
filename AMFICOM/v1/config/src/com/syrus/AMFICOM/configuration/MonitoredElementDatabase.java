@@ -1,5 +1,5 @@
 /*
- * $Id: MonitoredElementDatabase.java,v 1.53 2005/02/28 14:12:14 bob Exp $
+ * $Id: MonitoredElementDatabase.java,v 1.54 2005/03/03 21:30:20 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,6 +15,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -32,14 +33,16 @@ import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
+import com.syrus.AMFICOM.general.UpdateObjectException;
+import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.53 $, $Date: 2005/02/28 14:12:14 $
- * @author $Author: bob $
+ * @version $Revision: 1.54 $, $Date: 2005/03/03 21:30:20 $
+ * @author $Author: arseniy $
  * @module config_v1
  */
 
@@ -297,7 +300,7 @@ public class MonitoredElementDatabase extends StorableObjectDatabase {
 		super.insertEntities(storableObjects);
 		for (Iterator iter = storableObjects.iterator(); iter.hasNext();) {
 			MonitoredElement monitoredElement = (MonitoredElement) iter.next();
-			insertMonitoredDomainMemberIds(monitoredElement);
+			this.insertMonitoredDomainMemberIds(monitoredElement);
 		}
 	}
 
@@ -384,6 +387,91 @@ public class MonitoredElementDatabase extends StorableObjectDatabase {
 			finally {
 				DatabaseConnection.releaseConnection(connection);
 			}
+		}
+	}
+
+	public void update(StorableObject storableObject, Identifier modifierId, int updateKind)
+			throws VersionCollisionException, UpdateObjectException {
+		switch (updateKind) {
+			case UPDATE_FORCE:
+				super.checkAndUpdateEntity(storableObject, modifierId, true);
+				break;
+			case UPDATE_CHECK:
+			default:
+				super.checkAndUpdateEntity(storableObject, modifierId, false);
+		}
+		
+		this.updateMonitoredDomainMemberIds(Collections.singletonList(storableObject));
+	}
+
+	public void update(Collection storableObjects, Identifier modifierId, int updateKind)
+			throws VersionCollisionException, UpdateObjectException {
+		switch (updateKind) {
+			case UPDATE_FORCE:
+				super.checkAndUpdateEntities(storableObjects, modifierId, true);
+				break;
+			case UPDATE_CHECK:
+			default:
+				super.checkAndUpdateEntities(storableObjects, modifierId, false);
+		}
+
+		this.updateMonitoredDomainMemberIds(storableObjects);
+	}
+
+	private void updateMonitoredDomainMemberIds(Collection monitoredElements) throws UpdateObjectException {
+		Map sortedMonitoredElements = new HashMap();
+		Collection monitoredElementsOneSort;
+		Integer meSort;
+
+		MonitoredElement monitoredElement;
+		for (Iterator it = monitoredElements.iterator(); it.hasNext();) {
+			monitoredElement = (MonitoredElement) it.next();
+			meSort = new Integer(monitoredElement.getSort().value());
+			monitoredElementsOneSort = (Collection) sortedMonitoredElements.get(meSort);
+			if (monitoredElementsOneSort == null) {
+				monitoredElementsOneSort = new LinkedList();
+				sortedMonitoredElements.put(meSort, monitoredElementsOneSort);
+			}
+			monitoredElementsOneSort.add(monitoredElement);
+		}
+
+		for (Iterator it = sortedMonitoredElements.keySet().iterator(); it.hasNext();) {
+			meSort = (Integer) it.next();
+			monitoredElementsOneSort = (Collection) sortedMonitoredElements.get(meSort);
+			switch (meSort.intValue()) {
+				case MonitoredElementSort._MONITOREDELEMENT_SORT_EQUIPMENT:
+					this.updateMDMIds(monitoredElementsOneSort,
+							ObjectEntities.EQUIPMENTMELINK_ENTITY,
+							MonitoredElementWrapper.LINK_COLUMN_EQUIPMENT_ID);
+					break;
+				case MonitoredElementSort._MONITOREDELEMENT_SORT_TRANSMISSION_PATH:
+					this.updateMDMIds(monitoredElementsOneSort,
+							ObjectEntities.TRANSPATHMELINK_ENTITY,
+							MonitoredElementWrapper.LINK_COLUMN_TRANSMISSION_PATH_ID);
+					break;
+				default:
+					String mesg = "ERROR: Unknown sort of monitoredelement: " + meSort;
+					throw new UpdateObjectException(mesg);
+			}
+		}
+	}
+
+	private void updateMDMIds(Collection monitoredElements, String linkTable, String linkColumn) throws UpdateObjectException {
+		if (monitoredElements == null || monitoredElements.isEmpty())
+			return;
+
+		Map mdmIdsMap = new HashMap();
+		try {
+			for (Iterator it = monitoredElements.iterator(); it.hasNext();) {
+				MonitoredElement monitoredElement = this.fromStorableObject((StorableObject) it.next());
+				Collection mdmIds = monitoredElement.getMonitoredDomainMemberIds();
+				mdmIdsMap.put(monitoredElement.getId(), mdmIds);
+			}
+
+			super.updateLinkedEntities(mdmIdsMap, linkTable, MonitoredElementWrapper.LINK_COLUMN_MONITORED_ELEMENT_ID, linkColumn);
+		}
+		catch (IllegalDataException ide) {
+			throw new UpdateObjectException("Cannot update monitored element domain members ids -- "  + ide.getMessage(), ide);
 		}
 	}
 
