@@ -41,6 +41,8 @@ $(LIBNAME): .mach
 		$(SRCDIR)/com/syrus/AMFICOM/configuration/CharacteristicTypeDatabase.java \
 		$(SRCDIR)/com/syrus/AMFICOM/configuration/EquipmentType.java \
 		$(SRCDIR)/com/syrus/AMFICOM/configuration/EquipmentTypeDatabase.java \
+		$(SRCDIR)/com/syrus/AMFICOM/configuration/PortType.java \
+		$(SRCDIR)/com/syrus/AMFICOM/configuration/PortTypeDatabase.java \
 		$(SRCDIR)/com/syrus/AMFICOM/configuration/DomainMember.java \
 		$(SRCDIR)/com/syrus/AMFICOM/configuration/MonitoredDomainMember.java \
 		$(SRCDIR)/com/syrus/AMFICOM/configuration/Characterized.java \
@@ -54,6 +56,8 @@ $(LIBNAME): .mach
 		$(SRCDIR)/com/syrus/AMFICOM/configuration/ServerDatabase.java \
 		$(SRCDIR)/com/syrus/AMFICOM/configuration/Equipment.java \
 		$(SRCDIR)/com/syrus/AMFICOM/configuration/EquipmentDatabase.java \
+		$(SRCDIR)/com/syrus/AMFICOM/configuration/Port.java \
+		$(SRCDIR)/com/syrus/AMFICOM/configuration/PortDatabase.java \
 		$(SRCDIR)/com/syrus/AMFICOM/configuration/TransmissionPath.java \
 		$(SRCDIR)/com/syrus/AMFICOM/configuration/TransmissionPathDatabase.java \
 		$(SRCDIR)/com/syrus/AMFICOM/configuration/KIS.java \

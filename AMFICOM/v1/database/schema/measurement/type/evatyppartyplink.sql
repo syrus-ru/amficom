@@ -8,8 +8,12 @@ CREATE TABLE EvaTypParTypLink (
  CONSTRAINT evatpartlnk_part_fk FOREIGN KEY (parameter_type_id)
   REFERENCES ParameterType (id) ON DELETE CASCADE,
 --
- CONSTRAINT evatpartlnk_chk CHECK (parameter_mode = 'IN'
-  OR parameter_mode = 'THS'
-  OR parameter_mode = 'ETA'
-  OR parameter_mode = 'OUT')
+ CONSTRAINT evatpartlnk_chk CHECK (
+  parameter_mode IN (
+   'IN',
+   'THS',
+   'ETA',
+   'OUT')
+ )
 );
+

@@ -8,7 +8,12 @@ CREATE TABLE AnaTypParTypLink (
  CONSTRAINT anatpartlnk_part_fk FOREIGN KEY (parameter_type_id)
   REFERENCES ParameterType (id) ON DELETE CASCADE,
 --
- CONSTRAINT anatpartlnk_chk CHECK (parameter_mode = 'IN'
-  OR parameter_mode = 'CRI'
-  OR parameter_mode = 'OUT')
+ CONSTRAINT anatpartlnk_chk CHECK (
+  parameter_mode IN (
+   'IN',
+   'CRI',
+   'ETA',
+   'OUT')
+  )
 );
+

@@ -8,6 +8,10 @@ CREATE TABLE MntTypParTypLink (
  CONSTRAINT mnttpartlnk_part_fk FOREIGN KEY (parameter_type_id)
   REFERENCES ParameterType (id) ON DELETE CASCADE,
 --
- CONSTRAINT mnttpartlnk_chk CHECK (parameter_mode = 'IN'
-  OR parameter_mode = 'OUT')
+ CONSTRAINT mnttpartlnk_chk CHECK (
+  parameter_mode IN (
+   'IN',
+   'OUT')
+ )
 );
+
