@@ -1,5 +1,5 @@
 /*
- * $Id: Result.java,v 1.39 2005/02/03 15:02:03 arseniy Exp $
+ * $Id: Result.java,v 1.40 2005/02/03 15:28:07 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,7 +30,7 @@ import com.syrus.AMFICOM.measurement.corba.Result_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.39 $, $Date: 2005/02/03 15:02:03 $
+ * @version $Revision: 1.40 $, $Date: 2005/02/03 15:28:07 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -193,15 +193,6 @@ public class Result extends StorableObject {
 		this.sort = sort;
 	}
 
-	protected synchronized void setParameters0(SetParameter[] parameters) {
-		this.parameters = parameters;
-	}
-
-	public void setParameters(SetParameter[] parameters) {
-		this.setParameters0(parameters);
-		super.currentVersion = super.getNextVersion();
-	}
-
 	protected static Result createInstance(Identifier creatorId,
 										   Action action,
 										   ResultSort sort,
@@ -220,6 +211,15 @@ public class Result extends StorableObject {
 		catch (IllegalObjectEntityException e) {
 			throw new CreateObjectException("Result.createInstance | cannot generate identifier ", e);
 		}
+	}
+
+	protected synchronized void setParameters0(SetParameter[] parameters) {
+		this.parameters = parameters;
+	}
+
+	public void setParameters(SetParameter[] parameters) {
+		this.setParameters0(parameters);
+		super.currentVersion = super.getNextVersion();
 	}
 
 	public List getDependencies() {
