@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectPool.java,v 1.19 2005/02/08 10:50:01 bob Exp $
+ * $Id: StorableObjectPool.java,v 1.20 2005/02/09 12:37:24 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,7 +26,7 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.19 $, $Date: 2005/02/08 10:50:01 $
+ * @version $Revision: 1.20 $, $Date: 2005/02/09 12:37:24 $
  * @author $Author: bob $
  * @module general_v1
  */
@@ -540,6 +540,9 @@ public abstract class StorableObjectPool {
 			final Map dependencyMap = new HashMap();
 			for (final Iterator storableObjectIterator = storableObjects.iterator(); storableObjectIterator.hasNext();) {
 				StorableObject storableObject = (StorableObject) storableObjectIterator.next();
+				/* calculate dependencies only for objects in self group */
+				if (ObjectGroupEntities.getGroupCode(storableObject.getId().getMajor()) != this.selfGroupCode)
+						continue;
 				Log.debugMessage("StorableObjectPool.save | calculate dependencies for '" + storableObject.getId() + "'",
 						Log.DEBUGLEVEL08);
 				final List dependencies = storableObject.getDependencies();
@@ -573,10 +576,13 @@ public abstract class StorableObjectPool {
 					if (depList == null) {
 						Short group = new Short(ObjectGroupEntities.getGroupCode(entityCode.shortValue()));
 						/* invoke only for other groups that this package pool */
+						Log.debugMessage(
+									"StorableObjectPool.save | selfGroupCode is " + ObjectGroupEntities.codeToString(this.selfGroupCode) //$NON-NLS-1$											
+									, Log.INFO);
 						if (group.shortValue() != this.selfGroupCode) {
 							if (this.flushedGroup.get(group) == null)
 								/* set that flush for this group wan't invoke */
-								this.flushedGroup.put(group, Boolean.TRUE);
+								this.flushedGroup.put(group, Boolean.FALSE);
 						}
 						else {
 							depList = new LinkedList();
@@ -602,15 +608,18 @@ public abstract class StorableObjectPool {
 					continue;
 
 				final short group = groupCode.shortValue();
-				final String groupName = ObjectGroupEntities.codeToString(group);				
+				final String groupName = ObjectGroupEntities.codeToString(group).replaceAll("Group$", "");				
 
 				String className = "com.syrus.AMFICOM." 
 					+ groupName.toLowerCase() + "." 
 					+ groupName + "StorableObjectPool";
 				try {
 					Class clazz = Class.forName(className);
-					Method flushMethod = clazz.getDeclaredMethod("flush", new Class[] {boolean.class});
-					flushMethod.invoke(null, new Object[] {force ? Boolean.TRUE : Boolean.FALSE});
+					Method flushMethod = clazz.getDeclaredMethod("flush", new Class[] { boolean.class});
+					Log.debugMessage("StorableObjectPool.save | " + className //$NON-NLS-1$
+							+ " flushing." //$NON-NLS-1$
+					, Log.WARNING);
+					flushMethod.invoke(null, new Object[] { force ? Boolean.TRUE : Boolean.FALSE});
 					/* set that we have invoke flush for this group */
 					this.flushedGroup.put(groupCode, Boolean.TRUE);
 				}
