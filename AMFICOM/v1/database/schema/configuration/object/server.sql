@@ -7,6 +7,8 @@ CREATE TABLE Server (
 --
  domain_id Identifier,
 --
+ type_id Identifier NOT NULL,
+--
  name VARCHAR2(64) NOT NULL,
  description VARCHAR2(256),
  user_id Identifier NOT NULL,
@@ -19,6 +21,9 @@ CREATE TABLE Server (
 --
  CONSTRAINT server_domain_fk FOREIGN KEY (domain_id)
   REFERENCES Domain (id) ON DELETE CASCADE,
+--
+ CONSTRAINT server_servertype_fk FOREIGN KEY (type_id)
+  REFERENCES ServerType (id) ON DELETE CASCADE,
 --
  CONSTRAINT server_user_fk FOREIGN KEY (user_id)
   REFERENCES Users (id) ON DELETE CASCADE

@@ -7,6 +7,8 @@ CREATE TABLE Equipment (
 --
  domain_id Identifier,
 --
+ monitored_element_id Identifier,
+--
  type_id Identifier NOT NULL,
 --
  name VARCHAR2(64) NOT NULL,
@@ -24,6 +26,9 @@ CREATE TABLE Equipment (
 --
  CONSTRAINT eqp_domain_fk FOREIGN KEY (domain_id)
   REFERENCES Domain (id) ON DELETE CASCADE,
+--
+ CONSTRAINT eqp_me_fk FOREIGN KEY (monitored_element_id)
+  REFERENCES MonitoredElement (id) ON DELETE CASCADE,
 --
  CONSTRAINT eqp_epqtype_fk FOREIGN KEY (type_id)
   REFERENCES EquipmentType (id) ON DELETE CASCADE,

@@ -1,5 +1,5 @@
 /*
- * $Id: KIS.java,v 1.10 2004/07/28 12:54:18 arseniy Exp $
+ * $Id: KIS.java,v 1.11 2004/08/03 17:15:58 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,6 +9,8 @@
 package com.syrus.AMFICOM.configuration;
 
 import java.util.Date;
+import java.util.List;
+import java.util.ArrayList;
 import java.util.Iterator;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
@@ -17,17 +19,20 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
-import com.syrus.AMFICOM.configuration.corba.Equipment_Transferable;
-import com.syrus.AMFICOM.configuration.corba.EquipmentSort;
+import com.syrus.AMFICOM.configuration.corba.KIS_Transferable;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2004/07/28 12:54:18 $
+ * @version $Revision: 1.11 $, $Date: 2004/08/03 17:15:58 $
  * @author $Author: arseniy $
  * @module configuration_v1
  */
 
-public class KIS extends Equipment {
+public class KIS extends DomainMember {
 	private Identifier mcmId;
+	private String name;
+	private String description;
+	
+	private List measurementPortIds;
 
 	private StorableObjectDatabase kisDatabase;
 
@@ -43,9 +48,18 @@ public class KIS extends Equipment {
 		}
 	}
 
-	public KIS(Equipment_Transferable eq) throws CreateObjectException {
-		super(eq);
-		this.mcmId = new Identifier(eq.mcm_id);
+	public KIS(KIS_Transferable kt) throws CreateObjectException {
+		super(new Identifier(kt.id),
+					new Date(kt.created),
+					new Date(kt.modified),
+					new Identifier(kt.creator_id),
+					new Identifier(kt.modifier_id),
+					new Identifier(kt.domain_id));
+		this.mcmId = new Identifier(kt.mcm_id);
+		
+		this.measurementPortIds = new ArrayList(kt.measurement_port_ids.length);
+		for (int i = 0; i < kt.measurement_port_ids.length; i++)
+			this.measurementPortIds.add(new Identifier(kt.measurement_port_ids[i]));
 
 		this.kisDatabase = ConfigurationDatabaseContext.kisDatabase;
 		try {
@@ -59,54 +73,32 @@ public class KIS extends Equipment {
 	public Object getTransferable() {
 		int i = 0;
 
-		Identifier_Transferable[] charIds = new Identifier_Transferable[super.characteristicIds.size()];
-		for (Iterator iterator = super.characteristicIds.iterator(); iterator.hasNext();)
-			charIds[i++] = (Identifier_Transferable)((Identifier)iterator.next()).getTransferable();
+		Identifier_Transferable[] mportIds = new Identifier_Transferable[this.measurementPortIds.size()];
+		for (Iterator iterator = this.measurementPortIds.iterator(); iterator.hasNext();)
+			mportIds[i++] = (Identifier_Transferable)((Identifier)iterator.next()).getTransferable();
 
-		Identifier_Transferable[] pIds = new Identifier_Transferable[super.portIds.size()];
-		for (Iterator iterator = super.portIds.iterator(); iterator.hasNext();)
-			pIds[i++] = (Identifier_Transferable)((Identifier)iterator.next()).getTransferable();
-
-		Identifier_Transferable[] cportIds = new Identifier_Transferable[super.cablePortIds.size()];
-		for (Iterator iterator = super.cablePortIds.iterator(); iterator.hasNext();)
-			cportIds[i++] = (Identifier_Transferable)((Identifier)iterator.next()).getTransferable();
-
-		Identifier_Transferable[] sportIds = new Identifier_Transferable[super.specialPortIds.size()];
-		for (Iterator iterator = super.specialPortIds.iterator(); iterator.hasNext();)
-			sportIds[i++] = (Identifier_Transferable)((Identifier)iterator.next()).getTransferable();
-
-		return new Equipment_Transferable((Identifier_Transferable)super.getId().getTransferable(),
-																			super.created.getTime(),
-																			super.modified.getTime(),
-																			(Identifier_Transferable)super.creatorId.getTransferable(),
-																			(Identifier_Transferable)super.modifierId.getTransferable(),
-																			(Identifier_Transferable)super.domainId.getTransferable(),
-																			(Identifier_Transferable)super.type.getId().getTransferable(),
-																			new String(super.name),
-																			new String(super.description),
-																			new String(super.latitude),
-																			new String(super.longitude),
-																			new String(super.hwSerial),
-																			new String(super.swSerial),
-																			new String(super.hwVersion),
-																			new String(super.swVersion),
-																			new String(super.inventoryNumber),
-																			new String(super.manufacturer),
-																			new String(super.manufacturerCode),
-																			new String(super.supplier),
-																			new String(super.supplierCode),
-																			new String(super.eqClass),
-																			(Identifier_Transferable)super.imageId.getTransferable(),
-																			charIds,
-																			pIds,
-																			cportIds,
-																			sportIds,
-																			EquipmentSort.EQUIPMENT_SORT_KIS,
-																			(Identifier_Transferable)this.mcmId.getTransferable());
+		return new KIS_Transferable((Identifier_Transferable)super.getId().getTransferable(),
+																super.created.getTime(),
+																super.modified.getTime(),
+																(Identifier_Transferable)super.creatorId.getTransferable(),
+																(Identifier_Transferable)super.modifierId.getTransferable(),
+																(Identifier_Transferable)super.domainId.getTransferable(),
+																new String(this.name),
+																new String(this.description),
+																(Identifier_Transferable)this.mcmId.getTransferable(),
+																mportIds);
 	}
 
 	public Identifier getMCMId() {
 		return this.mcmId;
+	}
+
+	public String getName() {
+		return this.name;
+	}
+
+	public String getDescription() {
+		return this.description;
 	}
 
 	protected synchronized void setAttributes(Date created,
@@ -114,45 +106,16 @@ public class KIS extends Equipment {
 																						Identifier creatorId,
 																						Identifier modifierId,
 																						Identifier domainId,
-																						EquipmentType type,
 																						String name,
-																						String description,
-																						String latitude,
-																						String longitude,
-																						String hwSerial,
-																						String swSerial,
-																						String hwVersion,
-																						String swVersion,
-																						String inventoryNumber,
-																						String manufacturer,
-																						String manufacturerCode,
-																						String supplier,
-																						String supplierCode,
-																						String eqClass,
-																						Identifier imageId,
+																						String description,																						
 																						Identifier mcmId) {
 		super.setAttributes(created,
 												modified,
 												creatorId,
 												modifierId,
-												domainId,
-												type,
-												name,
-												description,
-												latitude,
-												longitude,
-												hwSerial,
-												swSerial,
-												hwVersion,
-												swVersion,
-												inventoryNumber,
-												manufacturer,
-												manufacturerCode,
-												supplier,
-												supplierCode,
-												eqClass,
-												imageId,
-												EquipmentSort.EQUIPMENT_SORT_KIS.value());
+												domainId);
+		this.name = name;
+		this.description = description;
 		this.mcmId = mcmId;
 	}
 }

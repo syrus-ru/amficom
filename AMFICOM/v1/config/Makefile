@@ -10,7 +10,6 @@ APPCLASSPATH = $(LIBDIR)/general.jar:$(LIBDIR)/util.jar
 HOST=mongol
 SERVICE_NAME=mongol
 
-IDL2JAVAFLAGS = -strict
 JAVACFLAGS = -source 1.3
 SUNJAVACFLAGS = -target 1.2
 JIKESFLAGS = -target 1.2
@@ -19,6 +18,14 @@ include ../tools/Makefile.inc
 $(call checkenve,JAVA_HOME)
 $(call checkenve,ORACLE_HOME)
 $(call checkenve,IDL2JAVA)
+
+
+IDL2JAVA=$(JAVA_HOME)/bin/idlj
+IDL2JAVAFLAGS = \
+	-fall \
+	-i $(IDLDIR) \
+	-td $(SRCDIR) \
+	-v
 
 
 $(LIBNAME): .mach
@@ -40,11 +47,14 @@ $(LIBNAME): .mach
 		$(SRCDIR)/com/syrus/AMFICOM/configuration/CharacteristicDatabase.java \
 		$(SRCDIR)/com/syrus/AMFICOM/configuration/Equipment.java \
 		$(SRCDIR)/com/syrus/AMFICOM/configuration/EquipmentDatabase.java \
+		$(SRCDIR)/com/syrus/AMFICOM/configuration/TransmissionPath.java \
+		$(SRCDIR)/com/syrus/AMFICOM/configuration/TransmissionPathDatabase.java \
 		$(SRCDIR)/com/syrus/AMFICOM/configuration/KIS.java \
 		$(SRCDIR)/com/syrus/AMFICOM/configuration/KISDatabase.java \
 		$(SRCDIR)/com/syrus/AMFICOM/configuration/MCM.java \
 		$(SRCDIR)/com/syrus/AMFICOM/configuration/MCMDatabase.java \
 		$(SRCDIR)/com/syrus/AMFICOM/configuration/Server.java \
+		$(SRCDIR)/com/syrus/AMFICOM/configuration/ServerDatabase.java \
 		$(SRCDIR)/com/syrus/AMFICOM/configuration/MonitoredElement.java \
 		$(SRCDIR)/com/syrus/AMFICOM/configuration/MonitoredElementDatabase.java
 	touch $@

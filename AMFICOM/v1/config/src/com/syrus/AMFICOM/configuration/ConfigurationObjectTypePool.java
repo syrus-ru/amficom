@@ -1,5 +1,5 @@
 /*
- * $Id: ConfigurationObjectTypePool.java,v 1.3 2004/07/28 12:54:18 arseniy Exp $
+ * $Id: ConfigurationObjectTypePool.java,v 1.4 2004/08/03 17:15:58 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,7 +17,7 @@ import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2004/07/28 12:54:18 $
+ * @version $Revision: 1.4 $, $Date: 2004/08/03 17:15:58 $
  * @author $Author: arseniy $
  * @module configuration_v1
  */
@@ -54,11 +54,11 @@ public class ConfigurationObjectTypePool {
 	public static StorableObjectType getObjectType(Identifier objectTypeId) {
 		return (StorableObjectType)identifierObjectTypes.get(objectTypeId);
 	}
-	
+
 	public static StorableObjectType getObjectType(String objectTypeCodename) {
 		return (StorableObjectType)codenameObjectTypes.get(objectTypeCodename);
 	}
-	
+
 	private static void addIdentifierObjectType(StorableObjectType objectType) {
 		Identifier objectTypeId = objectType.getId();
 		if (! identifierObjectTypes.containsKey(objectTypeId))
@@ -66,7 +66,7 @@ public class ConfigurationObjectTypePool {
 		else
 			Log.errorMessage("ConfigurationObjectTypePool.addIdentifierObjectType | object type of id '" + objectTypeId.toString() + "' already added");
 	}
-	
+
 	private static void addCodenameObjectType(StorableObjectType objectType) {
 		String objectTypeCodename = objectType.getCodename();
 		if (! codenameObjectTypes.containsKey(objectTypeCodename))

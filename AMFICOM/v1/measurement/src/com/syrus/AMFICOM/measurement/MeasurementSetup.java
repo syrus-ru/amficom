@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementSetup.java,v 1.16 2004/07/27 15:52:26 arseniy Exp $
+ * $Id: MeasurementSetup.java,v 1.17 2004/08/03 17:16:45 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,7 +23,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.corba.MeasurementSetup_Transferable;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2004/07/27 15:52:26 $
+ * @version $Revision: 1.17 $, $Date: 2004/08/03 17:16:45 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -205,19 +205,16 @@ public class MeasurementSetup extends StorableObject {
 			meIds[i] = (Identifier_Transferable) ((Identifier) this.monitoredElementIds.get(i)).getTransferable();
 
 		return new MeasurementSetup_Transferable((Identifier_Transferable) super.getId().getTransferable(),
-													super.created.getTime(), super.modified.getTime(),
-													(Identifier_Transferable) super.creatorId.getTransferable(),
-													(Identifier_Transferable) super.modifierId.getTransferable(),
-													(Identifier_Transferable) this.parameterSet.getId()
-															.getTransferable(), (this.criteriaSet == null)
-															? (Identifier_Transferable) this.criteriaSet.getId()
-																	.getTransferable() : null,
-													(this.thresholdSet == null)
-															? (Identifier_Transferable) this.thresholdSet.getId()
-																	.getTransferable() : null, (this.etalon == null)
-															? (Identifier_Transferable) this.etalon.getId()
-																	.getTransferable() : null, this.description,
-													this.measurementDuration, meIds);
+																						 super.created.getTime(), super.modified.getTime(),
+																						 (Identifier_Transferable) super.creatorId.getTransferable(),
+																						 (Identifier_Transferable) super.modifierId.getTransferable(),
+																						 (Identifier_Transferable) this.parameterSet.getId().getTransferable(),
+																						 (this.criteriaSet == null) ? (Identifier_Transferable) this.criteriaSet.getId().getTransferable() : (new Identifier_Transferable()),
+																						 (this.thresholdSet == null) ? (Identifier_Transferable) this.thresholdSet.getId().getTransferable() : (new Identifier_Transferable()),
+																						 (this.etalon == null) ? (Identifier_Transferable) this.etalon.getId().getTransferable() : (new Identifier_Transferable()),
+																						 this.description,
+																						 this.measurementDuration,
+																						 meIds);
 	}
 
 	public Set getParameterSet() {

@@ -1,5 +1,5 @@
 /*
- * $Id: Result.java,v 1.10 2004/07/27 15:52:26 arseniy Exp $
+ * $Id: Result.java,v 1.11 2004/08/03 17:16:45 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -24,7 +24,7 @@ import com.syrus.AMFICOM.measurement.corba.Parameter_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2004/07/27 15:52:26 $
+ * @version $Revision: 1.11 $, $Date: 2004/08/03 17:16:45 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -150,8 +150,8 @@ public class Result extends StorableObject {
 																	 (Identifier_Transferable)super.creatorId.getTransferable(),
 																	 (Identifier_Transferable)super.modifierId.getTransferable(),
 																	 (Identifier_Transferable)this.measurement.getId().getTransferable(),
-																	 (this.sort == ResultSort._RESULT_SORT_ANALYSIS)?(Identifier_Transferable)this.action.getId().getTransferable():null,
-																	 (this.sort == ResultSort._RESULT_SORT_EVALUATION)?(Identifier_Transferable)this.action.getId().getTransferable():null,
+																	 (this.sort == ResultSort._RESULT_SORT_ANALYSIS)?(Identifier_Transferable)this.action.getId().getTransferable():(new Identifier_Transferable()),
+																	 (this.sort == ResultSort._RESULT_SORT_EVALUATION)?(Identifier_Transferable)this.action.getId().getTransferable():(new Identifier_Transferable()),
 																	 ResultSort.from_int(this.sort),
 																	 pts,
 																	 AlarmLevel.from_int(this.alarmLevel));

@@ -1,5 +1,5 @@
 /*
- * $Id: Test.java,v 1.23 2004/07/28 07:22:49 arseniy Exp $
+ * $Id: Test.java,v 1.24 2004/08/03 17:16:45 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,7 +34,7 @@ import com.syrus.AMFICOM.configuration.MonitoredElement;
 import com.syrus.AMFICOM.configuration.KIS;
 
 /**
- * @version $Revision: 1.23 $, $Date: 2004/07/28 07:22:49 $
+ * @version $Revision: 1.24 $, $Date: 2004/08/03 17:16:45 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -384,8 +384,8 @@ public class Test extends StorableObject {
 																 TestTemporalType.from_int(this.temporalType),
 																 this.timeStamps.getTransferable(),
 																 (Identifier_Transferable)this.measurementType.getId().getTransferable(),
-																 (this.analysisType != null) ? (Identifier_Transferable)this.analysisType.getId().getTransferable() : null,
-																 (this.evaluationType != null) ? (Identifier_Transferable)this.evaluationType.getId().getTransferable() : null,
+																 (this.analysisType != null) ? (Identifier_Transferable)this.analysisType.getId().getTransferable() : (new Identifier_Transferable()),
+																 (this.evaluationType != null) ? (Identifier_Transferable)this.evaluationType.getId().getTransferable() : (new Identifier_Transferable()),
 																 TestStatus.from_int(this.status),
 																 (Identifier_Transferable)this.monitoredElement.getId().getTransferable(),
 																 TestReturnType.from_int(this.returnType),

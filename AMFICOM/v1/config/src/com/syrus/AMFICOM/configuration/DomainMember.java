@@ -1,5 +1,5 @@
 /*
- * $Id: DomainMember.java,v 1.6 2004/07/28 12:54:18 arseniy Exp $
+ * $Id: DomainMember.java,v 1.7 2004/08/03 17:15:58 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,7 +13,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObject;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2004/07/28 12:54:18 $
+ * @version $Revision: 1.7 $, $Date: 2004/08/03 17:15:58 $
  * @author $Author: arseniy $
  * @module configuration_v1
  */
@@ -22,18 +22,18 @@ public abstract class DomainMember extends StorableObject {
 	
 	public static final String	COLUMN_DOMAIN_ID	= "domain_id";
 	
-	protected Identifier domainId;
+	Identifier domainId;
 
 	protected DomainMember(Identifier id) {
 		super(id);
 	}
 
-	protected DomainMember(Identifier id,
-												 Date created,
-												 Date modified,
-												 Identifier creator_id,
-												 Identifier modifier_id,
-												 Identifier domainId) {
+	DomainMember(Identifier id,
+							 Date created,
+							 Date modified,
+							 Identifier creator_id,
+							 Identifier modifier_id,
+							 Identifier domainId) {
 		super(id,
 					created,
 					modified,

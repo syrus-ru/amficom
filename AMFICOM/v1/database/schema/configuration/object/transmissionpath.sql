@@ -7,10 +7,10 @@ CREATE TABLE TransmissionPath (
 --
  domain_id Identifier,
 --
+ monitored_element_id Identifier,
+--
  name VARCHAR2(64) NOT NULL,
  description VARCHAR2(256),
---
- monitored_element_id Identifier,
 --
  CONSTRAINT tp_pk PRIMARY KEY (id),
  CONSTRAINT tp_creator_fk FOREIGN KEY (creator_id)
@@ -25,5 +25,5 @@ CREATE TABLE TransmissionPath (
   REFERENCES MonitoredElement (id) ON DELETE CASCADE
 );
 
-CREATE SEQUENCE tp_seq ORDER;
+CREATE SEQUENCE transmissionpath_seq ORDER;
 

@@ -1,5 +1,5 @@
 /*
- * $Id: Equipment.java,v 1.10 2004/07/28 12:54:18 arseniy Exp $
+ * $Id: Equipment.java,v 1.11 2004/08/03 17:15:58 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,68 +11,64 @@ package com.syrus.AMFICOM.configuration;
 import java.util.Date;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Iterator;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.TypedObject;
+import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectType;
+import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.ObjectNotFoundException;
+import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.configuration.corba.Equipment_Transferable;
+import com.syrus.AMFICOM.configuration.corba.EquipmentSort;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2004/07/28 12:54:18 $
+ * @version $Revision: 1.11 $, $Date: 2004/08/03 17:15:58 $
  * @author $Author: arseniy $
  * @module configuration_v1
  */
 
-public abstract class Equipment extends DomainMember implements Characterized, TypedObject {
-	EquipmentType type;
-	String name;
-	String description;
-	String latitude;
-	String longitude;
-	String hwSerial;
-	String swSerial;
-	String hwVersion;
-	String swVersion;
-	String inventoryNumber;
-	String manufacturer;
-	String manufacturerCode;
-	String supplier;
-	String supplierCode;
-	String eqClass;
-	Identifier imageId;
+public class Equipment extends MonitoredElement implements Characterized, TypedObject {
+	private EquipmentType type;
+	private String name;
+	private String description;
+	private Identifier imageId;
 
-	List characteristicIds;
-	List portIds;
-	List cablePortIds;
-	List specialPortIds;
+	private List characteristicIds;
+	private List portIds;
+	private List cablePortIds;
+	private List specialPortIds;
 	
-	int sort;
+	private int sort;
+	private Identifier kisId;
 
-	Equipment(Identifier id) {
+	private StorableObjectDatabase equipmentDatabase;
+
+	public Equipment(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
+		
+		this.equipmentDatabase = ConfigurationDatabaseContext.equipmentDatabase;
+		try {
+			this.equipmentDatabase.retrieve(this);
+		}
+		catch (IllegalDataException ide) {
+			throw new RetrieveObjectException(ide.getMessage(), ide);
+		}
 	}
 
-	Equipment(Equipment_Transferable et) {
+	public Equipment(Equipment_Transferable et) throws CreateObjectException {
 		super(new Identifier(et.id),
 					new Date(et.created),
 					new Date(et.modified),
 					new Identifier(et.creator_id),
 					new Identifier(et.modifier_id),
-					new Identifier(et.domain_id));
+					new Identifier(et.domain_id),
+					new Identifier(et.monitored_element_id));
 		this.type = (EquipmentType)ConfigurationObjectTypePool.getObjectType(new Identifier(et.type_id));
 		this.name = new String(et.name);
 		this.description = new String(et.description);
-		this.latitude = new String(et.latitude);
-		this.longitude = new String(et.longitude);
-		this.hwSerial = new String(et.hw_serial);
-		this.swSerial = new String(et.sw_serial);
-		this.hwVersion = new String(et.hw_version);
-		this.swVersion = new String(et.sw_version);
-		this.inventoryNumber = new String(et.inventory_nr);
-		this.manufacturer = new String(et.manufacturer);
-		this.manufacturerCode = new String(et.manufacturer_code);
-		this.supplier = new String(et.supplier);
-		this.supplierCode = new String(et.supplier_code);
-		this.eqClass = new String(et.eq_class);
 		this.imageId = new Identifier(et.image_id);
 
 		this.characteristicIds = new ArrayList(et.characteristic_ids.length);
@@ -92,6 +88,54 @@ public abstract class Equipment extends DomainMember implements Characterized, T
 			this.specialPortIds.add(new Identifier(et.special_port_ids[i]));
 		
 		this.sort = et.sort.value();
+		if (this.sort == EquipmentSort._EQUIPMENT_SORT_KIS)
+			this.kisId = new Identifier(et.kis_id);
+		
+		this.equipmentDatabase = ConfigurationDatabaseContext.equipmentDatabase;
+		try {
+			this.equipmentDatabase.insert(this);
+		}
+		catch (IllegalDataException ide) {
+			throw new CreateObjectException(ide.getMessage(), ide);
+		}
+	}
+
+	public Equipment_Transferable getTransferable() {
+		int i = 0;
+
+		Identifier_Transferable[] charIds = new Identifier_Transferable[this.characteristicIds.size()];
+		for (Iterator iterator = this.characteristicIds.iterator(); iterator.hasNext();)
+			charIds[i++] = (Identifier_Transferable)((Identifier)iterator.next()).getTransferable();
+
+		Identifier_Transferable[] pIds = new Identifier_Transferable[this.portIds.size()];
+		for (Iterator iterator = this.portIds.iterator(); iterator.hasNext();)
+			pIds[i++] = (Identifier_Transferable)((Identifier)iterator.next()).getTransferable();
+
+		Identifier_Transferable[] cportIds = new Identifier_Transferable[this.cablePortIds.size()];
+		for (Iterator iterator = this.cablePortIds.iterator(); iterator.hasNext();)
+			cportIds[i++] = (Identifier_Transferable)((Identifier)iterator.next()).getTransferable();
+
+		Identifier_Transferable[] sportIds = new Identifier_Transferable[this.specialPortIds.size()];
+		for (Iterator iterator = this.specialPortIds.iterator(); iterator.hasNext();)
+			sportIds[i++] = (Identifier_Transferable)((Identifier)iterator.next()).getTransferable();
+
+		return new Equipment_Transferable((Identifier_Transferable)super.getId().getTransferable(),
+																			super.created.getTime(),
+																			super.modified.getTime(),
+																			(Identifier_Transferable)super.creatorId.getTransferable(),
+																			(Identifier_Transferable)super.modifierId.getTransferable(),
+																			(Identifier_Transferable)super.domainId.getTransferable(),
+																			(Identifier_Transferable)super.monitoredElementId.getTransferable(),
+																			(Identifier_Transferable)this.type.getId().getTransferable(),
+																			new String(this.name),
+																			new String(this.description),
+																			(Identifier_Transferable)this.imageId.getTransferable(),
+																			charIds,
+																			pIds,
+																			cportIds,
+																			sportIds,
+																			EquipmentSort.from_int(this.sort),
+																			(this.sort == EquipmentSort._EQUIPMENT_SORT_KIS) ? (Identifier_Transferable)this.kisId.getTransferable() : (new Identifier_Transferable()));
 	}
 
 	public StorableObjectType getType() {
@@ -106,57 +150,8 @@ public abstract class Equipment extends DomainMember implements Characterized, T
 		return this.description;
 	}
 
-	public String getLatitude() {
-		return this.latitude;
-	}
-
-	public String getLongitude() {
-		return this.longitude;
-	}
-
-	public String getHWSerial() {
-		return this.hwSerial;
-	}
-
-	public String getSWSerial() {
-		return this.swSerial;
-	}
-
-	public String getHWVersion() {
-		return this.hwVersion;
-	}
-
-	public String getSWVersion() {
-		return this.swVersion;
-	}
-
-	
 	public Identifier getImageId(){
 		return this.imageId;
-	}
-	
-	public String getInventoryNumber() {
-		return this.inventoryNumber;
-	}
-
-	public String getManufacturer() {
-		return this.manufacturer;
-	}
-
-	public String getManufacturerCode() {
-		return this.manufacturerCode;
-	}
-
-	public String getSupplier() {
-		return this.supplier;
-	}
-
-	public String getSupplierCode() {
-		return this.supplierCode;
-	}
-
-	public String getEqClass() {
-		return this.eqClass;
 	}
 
 	public List getCharacteristicIds() {
@@ -174,9 +169,15 @@ public abstract class Equipment extends DomainMember implements Characterized, T
 	public List getSpecialPortIds() {
 		return this.specialPortIds;
 	}
-	
+
 	public int getSort(){
 		return this.sort;
+	}
+
+	public Identifier getKISId() throws IllegalDataException {
+		if (this.sort == EquipmentSort._EQUIPMENT_SORT_KIS)
+			return this.kisId;
+		throw new IllegalDataException("Equipment sort: " + this.sort + " not KIS");
 	}
 
 	public void setCharacteristicIds(List characteristicIds) {
@@ -188,44 +189,29 @@ public abstract class Equipment extends DomainMember implements Characterized, T
 																						Identifier creatorId,
 																						Identifier modifierId,
 																						Identifier domainId,
+																						Identifier monitoredElementId,
 																						EquipmentType type,
 																						String name,
 																						String description,
-																						String latitude,
-																						String longitude,
-																						String hwSerial,
-																						String swSerial,
-																						String hwVersion,
-																						String swVersion,
-																						String inventoryNumber,
-																						String manufacturer,
-																						String manufacturerCode,
-																						String supplier,
-																						String supplierCode,
-																						String eqClass,
 																						Identifier imageId,
-																						int sort) {
+																						int sort,
+																						Identifier kisId) {
 		super.setAttributes(created,
 												modified,
 												creatorId,
 												modifierId,
-												domainId);
+												domainId,
+												monitoredElementId);
 		this.type = type;
 		this.name = name;
 		this.description = description;
-		this.latitude = latitude;
-		this.longitude = longitude;
-		this.hwSerial = hwSerial;
-		this.swSerial = swSerial;
-		this.hwVersion = hwVersion;
-		this.swVersion = swVersion;
-		this.inventoryNumber = inventoryNumber;
-		this.manufacturer = manufacturer;
-		this.manufacturerCode = manufacturerCode;
-		this.supplier = supplier;
-		this.supplierCode = supplierCode;
-		this.eqClass = eqClass;
 		this.imageId = imageId;
 		this.sort = sort;
+		switch (this.sort) {
+			case EquipmentSort._EQUIPMENT_SORT_KIS:
+				this.kisId = kisId;
+				break;
+			default:
+		}
 	}
 }
