@@ -1,5 +1,5 @@
 /*
- * $Id: configuration.idl,v 1.81 2005/02/11 09:11:10 bob Exp $
+ * $Id: configuration.idl,v 1.82 2005/02/16 21:30:49 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -179,17 +179,18 @@ module corba {
 
 		general::corba::WString128 name;
 		general::corba::WString256 description;
+
 		general::corba::WString128 supplier;
 		general::corba::WString32 supplierCode;
 		
 		float longitude;
 		float latitude;
 		
-		wstring hwSerial;
-		wstring hwVersion;
-		wstring swSerial;
-		wstring swVersion;
-		wstring inventoryNumber;	
+		general::corba::WString64 hwSerial;
+		general::corba::WString64 hwVersion;
+		general::corba::WString64 swSerial;
+		general::corba::WString64 swVersion;
+		general::corba::WString64 inventoryNumber;	
 		
 		general::corba::Identifier_Transferable image_id;
 
