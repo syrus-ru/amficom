@@ -1,5 +1,5 @@
 /**
- * $Id: PhysicalLinkBinding.java,v 1.1 2004/12/20 12:36:01 krupenn Exp $
+ * $Id: PhysicalLinkBinding.java,v 1.2 2004/12/20 18:39:18 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -22,7 +22,7 @@ import java.util.List;
  * 
  * 
  * 
- * @version $Revision: 1.1 $, $Date: 2004/12/20 12:36:01 $
+ * @version $Revision: 1.2 $, $Date: 2004/12/20 18:39:18 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -121,7 +121,7 @@ public final class PhysicalLinkBinding
 		this.dimension = dimension;
 		
 		// создается новая матрица прокладки
-		List[][] bindingMap2 = new List[dimension.width][dimension.height];
+		List[][] bindingMap2 = new List[dimension.getWidth()][dimension.getHeight()];
 
 		for (int i = 0; i < bindingMap2.length; i++) 
 		{
@@ -151,8 +151,8 @@ public final class PhysicalLinkBinding
 	public int getSequenceNumber(int ii, int jj)
 	{
 		int sequenceNumber = -1;
-		int m = getDimension().width;
-		int n = getDimension().height;
+		int m = getDimension().getWidth();
+		int n = getDimension().getHeight();
 		int counter = 1;
 		int limit = n * m;
 

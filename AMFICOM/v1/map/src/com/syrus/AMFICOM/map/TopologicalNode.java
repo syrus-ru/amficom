@@ -1,5 +1,5 @@
 /*
- * $Id: TopologicalNode.java,v 1.6 2004/12/20 12:36:01 krupenn Exp $
+ * $Id: TopologicalNode.java,v 1.7 2004/12/20 18:39:18 krupenn Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,7 +32,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2004/12/20 12:36:01 $
+ * @version $Revision: 1.7 $, $Date: 2004/12/20 18:39:18 $
  * @author $Author: krupenn $
  * @module map_v1
  */
@@ -110,8 +110,8 @@ public class TopologicalNode extends AbstractNode {
 		super.modifierId = creatorId;
 		this.name = name;
 		this.description = description;
-		this.longitude = longitude;
-		this.latitude = latitude;
+		this.location.x = longitude;
+		this.location.y = latitude;
 		this.active = active;
 
 		this.characteristics = new LinkedList();
