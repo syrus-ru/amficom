@@ -1,5 +1,5 @@
 /*
- * $Id: LinkedIdsConditionImpl.java,v 1.5 2005/02/24 09:16:06 bob Exp $
+ * $Id: LinkedIdsConditionImpl.java,v 1.6 2005/03/05 21:33:00 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,26 +9,26 @@
 package com.syrus.AMFICOM.general;
 
 import java.util.Collection;
-import java.util.Collections;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/02/24 09:16:06 $
- * @author $Author: bob $
+ * @version $Revision: 1.6 $, $Date: 2005/03/05 21:33:00 $
+ * @author $Author: arseniy $
  * @module general_v1
  */
 class LinkedIdsConditionImpl extends LinkedIdsCondition {
 
 	protected static final Short CHARACTERISTIC_SHORT	= new Short(ObjectEntities.CHARACTERISTIC_ENTITY_CODE);
 
-	private LinkedIdsConditionImpl(Collection linkedIds, Short entityCode) {
+	private LinkedIdsConditionImpl(Collection linkedIds, Short linkedEntityCode, Short entityCode) {
 		this.linkedIds = linkedIds;
+		this.linkedEntityCode = linkedEntityCode.shortValue();
 		this.entityCode = entityCode;
 	}
-
-	private LinkedIdsConditionImpl(Identifier identifier, Short entityCode) {
-		this.linkedIds = Collections.singletonList(identifier);
-		this.entityCode = entityCode;
-	}
+//
+//	private LinkedIdsConditionImpl(Identifier identifier, Short entityCode) {
+//		this.linkedIds = Collections.singletonList(identifier);
+//		this.entityCode = entityCode;
+//	}
 
 	/**
 	 * @return <code>true</code>
@@ -42,7 +42,7 @@ class LinkedIdsConditionImpl extends LinkedIdsCondition {
 		switch (this.entityCode.shortValue()) {
 			case ObjectEntities.CHARACTERISTIC_ENTITY_CODE:
 				Characteristic characteristic = (Characteristic) object;
-				Identifier id = characteristic.getCharacterizedId();
+				Identifier id = characteristic.getCharacterizableId();
 				condition = super.conditionTest(id);				
 				break;
 			default:
