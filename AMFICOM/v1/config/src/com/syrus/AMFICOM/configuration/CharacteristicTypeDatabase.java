@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicTypeDatabase.java,v 1.16 2004/09/09 09:29:07 max Exp $
+ * $Id: CharacteristicTypeDatabase.java,v 1.17 2004/09/10 10:19:44 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,7 +28,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2004/09/09 09:29:07 $
+ * @version $Revision: 1.17 $, $Date: 2004/09/10 10:19:44 $
  * @author $Author: max $
  * @module configuration_v1
  */
@@ -234,9 +234,16 @@ public class CharacteristicTypeDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	public List retrieveAll() throws IllegalDataException, RetrieveObjectException {		
-		return this.retriveByIdsOneQuery(null, null);
-	}
+	public List retrieveAll() throws RetrieveObjectException {
+        List list = null;
+        try {
+            list = retrieveByIds(null, null);
+        }  catch (IllegalDataException ide) {           
+            Log.debugMessage("CharacteristicTypeDatabase.retrieveAll | Trying: " + ide, Log.DEBUGLEVEL09);
+            throw new RetrieveObjectException(ide);
+        }
+        return list;
+    }
 	
 	public List retrieveByIds(List ids, String condition) throws IllegalDataException, RetrieveObjectException {
 		if ((ids == null) || (ids.isEmpty()))

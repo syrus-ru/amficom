@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPortDatabase.java,v 1.13 2004/09/09 11:00:09 max Exp $
+ * $Id: MeasurementPortDatabase.java,v 1.14 2004/09/10 10:19:44 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,11 +12,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 
-import com.syrus.AMFICOM.configuration.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -33,7 +30,7 @@ import com.syrus.util.database.DatabaseDate;
 
 
 /**
- * @version $Revision: 1.13 $, $Date: 2004/09/09 11:00:09 $
+ * @version $Revision: 1.14 $, $Date: 2004/09/10 10:19:44 $
  * @author $Author: max $
  * @module configuration_v1
  */
@@ -274,9 +271,16 @@ public class MeasurementPortDatabase extends StorableObjectDatabase {
 		}
 	}
 	
-	public List retrieveAll() throws IllegalDataException, RetrieveObjectException {		
-		return this.retriveByIdsOneQuery(null,null);
-	}
+	public List retrieveAll() throws RetrieveObjectException {
+        List list = null;
+        try {
+            list = retrieveByIds(null, null);
+        }  catch (IllegalDataException ide) {           
+            Log.debugMessage("MeasurementPortDatabase.retrieveAll | Trying: " + ide, Log.DEBUGLEVEL09);
+            throw new RetrieveObjectException(ide);
+        }
+        return list;
+    }
 
 	public void delete(MeasurementPort measurementPort) {
 		String mpIdStr = measurementPort.getId().toSQLString();

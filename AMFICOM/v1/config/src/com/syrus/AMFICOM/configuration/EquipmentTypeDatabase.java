@@ -1,5 +1,5 @@
 /*
- * $Id: EquipmentTypeDatabase.java,v 1.9 2004/09/09 11:00:09 max Exp $
+ * $Id: EquipmentTypeDatabase.java,v 1.10 2004/09/10 10:19:44 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,7 +29,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2004/09/09 11:00:09 $
+ * @version $Revision: 1.10 $, $Date: 2004/09/10 10:19:44 $
  * @author $Author: max $
  * @module configuration_v1
  */
@@ -205,9 +205,16 @@ public class EquipmentTypeDatabase extends StorableObjectDatabase {
 	}
 	
 		
-	public List retrieveAll() throws IllegalDataException, RetrieveObjectException {		
-		return this.retriveByIdsOneQuery(null, null);
-	}
+	public List retrieveAll() throws RetrieveObjectException {
+        List list = null;
+        try {
+            list = retrieveByIds(null, null);
+        }  catch (IllegalDataException ide) {           
+            Log.debugMessage("EquipmentTypeDatabase.retrieveAll | Trying: " + ide, Log.DEBUGLEVEL09);
+            throw new RetrieveObjectException(ide);
+        }
+        return list;
+    }
 	
 	public void delete(EquipmentType equipmentType) {
 		String eqIdStr = equipmentType.getId().toSQLString();

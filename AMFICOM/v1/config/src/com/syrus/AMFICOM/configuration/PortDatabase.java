@@ -1,5 +1,5 @@
 /*
- * $Id: PortDatabase.java,v 1.18 2004/09/09 10:18:16 bob Exp $
+ * $Id: PortDatabase.java,v 1.19 2004/09/10 10:19:44 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,8 +31,8 @@ import com.syrus.util.database.DatabaseDate;
 
 
 /**
- * @version $Revision: 1.18 $, $Date: 2004/09/09 10:18:16 $
- * @author $Author: bob $
+ * @version $Revision: 1.19 $, $Date: 2004/09/10 10:19:44 $
+ * @author $Author: max $
  * @module configuration_v1
  */
 public class PortDatabase extends StorableObjectDatabase {
@@ -235,14 +235,15 @@ public class PortDatabase extends StorableObjectDatabase {
 	}
 	
 	public List retrieveAll() throws RetrieveObjectException {
-		List list = null;
-		try {
-			list = retrieveByIds(null, null);
-		} catch (IllegalDataException ide) {
-			throw new RetrieveObjectException(ide);
-		}
-		return list; 
-	}
+        List list = null;
+        try {
+            list = retrieveByIds(null, null);
+        }  catch (IllegalDataException ide) {           
+            Log.debugMessage("PortDatabase.retrieveAll | Trying: " + ide, Log.DEBUGLEVEL09);
+            throw new RetrieveObjectException(ide);
+        }
+        return list;
+    }
 	
 	public List retrieveByIds(List ids, String condition) throws IllegalDataException, RetrieveObjectException {
 		List list = null; 
