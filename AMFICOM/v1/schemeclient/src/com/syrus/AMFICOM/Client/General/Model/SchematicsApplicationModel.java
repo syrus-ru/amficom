@@ -4,6 +4,7 @@ import com.syrus.AMFICOM.Client.General.SessionInterface;
 import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
 import com.syrus.AMFICOM.Client.Resource.EmptyConfigDataSource;
 import com.syrus.AMFICOM.Client.Resource.RISDConfigDataSource;
+import com.syrus.AMFICOM.Client.Resource.RISDMapDataSource;
 
 public class SchematicsApplicationModel extends ApplicationModel
 {
@@ -65,7 +66,7 @@ public class SchematicsApplicationModel extends ApplicationModel
 	{
 		String connection = Environment.getConnectionType();
 		if(connection.equals("RISD"))
-			return new RISDConfigDataSource(si);
+			return new RISDMapDataSource(si);
 		else
 		if(connection.equals("Empty"))
 			return new EmptyConfigDataSource(si);

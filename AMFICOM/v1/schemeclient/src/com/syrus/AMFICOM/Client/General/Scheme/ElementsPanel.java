@@ -1,4 +1,4 @@
-package com.syrus.AMFICOM.Client.Schematics.General;
+package com.syrus.AMFICOM.Client.General.Scheme;
 
 import java.awt.Component;
 import java.awt.Toolkit;
