@@ -4,6 +4,7 @@ AdmindbInterfaceSave.java
 AMFICOMdbGeneral.java
 AMFICOMdbInterface.java
 CatalogSchemeMapUpdater.java
+FilterTemplate.java
 FirmedTextPane.java
 ImagePane.java
 ISMdbInterfaceLoad.java
