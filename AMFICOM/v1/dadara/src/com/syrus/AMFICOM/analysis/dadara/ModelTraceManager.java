@@ -1,5 +1,5 @@
 /*
- * $Id: ModelTraceManager.java,v 1.37 2005/03/30 14:37:39 saa Exp $
+ * $Id: ModelTraceManager.java,v 1.38 2005/03/31 11:14:13 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ import com.syrus.AMFICOM.analysis.CoreAnalysisManager;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.37 $, $Date: 2005/03/30 14:37:39 $
+ * @version $Revision: 1.38 $, $Date: 2005/03/31 11:14:13 $
  * @module
  */
 public class ModelTraceManager
@@ -491,10 +491,13 @@ public class ModelTraceManager
 		}
 	}
 
-	protected Thresh[] tL;
-	protected ThreshDX[] tDX;
-	protected ThreshDY[] tDY;
+	protected Thresh[] tL; // полный список порогов
+	protected ThreshDX[] tDX; // список DX-порогов
+	protected ThreshDY[] tDY; // список DY-порогов
 
+	/**
+	 * Интерфейс для управления порогами мышью
+	 */
 	public interface ThresholdHandle {
 
 		final int	VERTICAL_UP_TYPE		= 1;
