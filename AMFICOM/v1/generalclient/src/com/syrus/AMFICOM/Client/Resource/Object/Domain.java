@@ -1,11 +1,23 @@
+/*
+ * $Id: Domain.java,v 1.7 2004/09/27 15:47:44 bass Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ
+ */
+
 package com.syrus.AMFICOM.Client.Resource.Object;
 
+import com.syrus.AMFICOM.CORBA.Admin.*;
+import com.syrus.AMFICOM.Client.General.UI.ObjectResourceDisplayModel;
+import com.syrus.AMFICOM.Client.Resource.*;
 import java.util.*;
 
-import com.syrus.AMFICOM.CORBA.Admin.*;
-import com.syrus.AMFICOM.Client.General.UI.*;
-import com.syrus.AMFICOM.Client.Resource.*;
-
+/**
+ * @author $Author: bass $
+ * @version $Revision: 1.7 $, $Date: 2004/09/27 15:47:44 $
+ * @module generalclient_v1
+ */
 public class Domain extends AdminObjectResource
 {
 	public Domain_Transferable transferable = new Domain_Transferable();
@@ -204,7 +216,7 @@ public class Domain extends AdminObjectResource
 		return ObjectResource.class;
 	}
 
-	public String getPropertyPaneClassName()
+	public static String getPropertyPaneClassName()
 	{
 		return "com.syrus.AMFICOM.Client.Administrate.Object.UI.DomainPaneConfig";
 	}

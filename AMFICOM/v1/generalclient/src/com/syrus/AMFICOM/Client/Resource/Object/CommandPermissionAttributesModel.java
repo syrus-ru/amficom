@@ -1,13 +1,24 @@
+/*
+ * $Id: CommandPermissionAttributesModel.java,v 1.5 2004/09/27 15:46:18 bass Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ
+ */
+
 package com.syrus.AMFICOM.Client.Resource.Object;
 
-import java.text.*;
+import com.syrus.AMFICOM.Client.Administrate.Object.UI.CommandPermissionAttributesPane;
+import com.syrus.AMFICOM.Client.General.UI.ObjectResourcePropertiesPane;
+import com.syrus.AMFICOM.Client.Resource.*;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
-
-import com.syrus.AMFICOM.Client.Administrate.Object.UI.*;
-import com.syrus.AMFICOM.Client.General.UI.*;
-import com.syrus.AMFICOM.Client.Resource.*;
-
+/**
+ * @author $Author: bass $
+ * @version $Revision: 1.5 $, $Date: 2004/09/27 15:46:18 $
+ * @module generalclient_v1
+ */
 public class CommandPermissionAttributesModel extends ObjectResourceModel
 {
 
@@ -42,10 +53,10 @@ public class CommandPermissionAttributesModel extends ObjectResourceModel
 		return ObjectResource.class;
 	}
 
-
-	public PropertiesPanel getPropertyPane()
-	{
-		return new CommandPermissionAttributesPane(cpa);
+	public ObjectResourcePropertiesPane getPropertyPane() {
+		CommandPermissionAttributesPane commandPermissionAttributesPane = CommandPermissionAttributesPane.getInstance();
+		commandPermissionAttributesPane.setObjectResource(cpa);
+		return commandPermissionAttributesPane;
 	}
 
 	public String getColumnValue(String col_id)
