@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseLinkedIdsConditionImpl.java,v 1.3 2005/03/05 21:37:24 arseniy Exp $
+ * $Id: DatabaseLinkedIdsConditionImpl.java,v 1.4 2005/03/09 15:40:18 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,7 +16,7 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/03/05 21:37:24 $
+ * @version $Revision: 1.4 $, $Date: 2005/03/09 15:40:18 $
  * @author $Author: arseniy $
  * @module config_v1
  */
@@ -39,12 +39,11 @@ final class DatabaseLinkedIdsConditionImpl extends AbstractDatabaseLinkedIdsCond
 				switch (super.condition.getLinkedEntityCode()) {
 					case ObjectEntities.MCM_ENTITY_CODE:
 						query = super.getQuery(KISWrapper.COLUMN_MCM_ID);
-System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
-System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$ query: " + query);
 						break;
 					default:
 						query = super.getQuery(DomainMember.COLUMN_DOMAIN_ID);
 				}
+				break;
 			case ObjectEntities.ME_ENTITY_CODE:
 				query = super.getQuery(DomainMember.COLUMN_DOMAIN_ID);
 				break;
@@ -54,15 +53,17 @@ System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$ query: " + query);
 						query = super.getQuery(PortWrapper.COLUMN_EQUIPMENT_ID);
 						break;
 					default:
-						query = super.getLinkedQuery(PortWrapper.COLUMN_EQUIPMENT_ID, 
-								StorableObjectWrapper.COLUMN_ID, DomainMember.COLUMN_DOMAIN_ID,
+						query = super.getLinkedQuery(PortWrapper.COLUMN_EQUIPMENT_ID,
+								StorableObjectWrapper.COLUMN_ID,
+								DomainMember.COLUMN_DOMAIN_ID,
 								ObjectEntities.EQUIPMENT_ENTITY);
 				}
 				break;
 			case ObjectEntities.MEASUREMENTPORT_ENTITY_CODE:
-				query = super.getLinkedQuery(MeasurementPortWrapper.COLUMN_KIS_ID, 
-					StorableObjectWrapper.COLUMN_ID, DomainMember.COLUMN_DOMAIN_ID,
-					ObjectEntities.KIS_ENTITY);
+				query = super.getLinkedQuery(MeasurementPortWrapper.COLUMN_KIS_ID,
+						StorableObjectWrapper.COLUMN_ID,
+						DomainMember.COLUMN_DOMAIN_ID,
+						ObjectEntities.KIS_ENTITY);
 				break;
 		}
 		return query;
