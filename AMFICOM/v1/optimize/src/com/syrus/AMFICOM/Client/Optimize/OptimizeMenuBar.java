@@ -347,7 +347,7 @@ public class OptimizeMenuBar extends JMenuBar	implements ApplicationModelListene
 		this.add(menuScheme);
 		this.add(menuView);
 		this.add(menuOptimize);
-		this.add(menuReport);
+		//this.add(menuReport); меню по созданию отчётов пока не добавляем
 		this.add(menuHelp);
 	}
 	//--------------------------------------------------------------------------------------------------------------
