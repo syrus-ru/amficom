@@ -9,8 +9,8 @@ import com.syrus.AMFICOM.client_.general.ui_.ObjectResourcePropertiesPane;
 import com.syrus.AMFICOM.configuration.*;
 import com.syrus.AMFICOM.general.ApplicationException;
 
-public class MeasurementPortPane extends JPanel implements ObjectResourcePropertiesPane
-{
+public class MeasurementPortPane extends JPanel implements
+		ObjectResourcePropertiesPane {
 	protected MeasurementPort port;
 	private static ObjectResourcePropertiesPane instance;
 
@@ -18,34 +18,27 @@ public class MeasurementPortPane extends JPanel implements ObjectResourcePropert
 	private MeasurementPortCharacteristicsPanel chPanel = new MeasurementPortCharacteristicsPanel();
 	private JTabbedPane tabbedPane = new JTabbedPane();
 
-	protected MeasurementPortPane()
-	{
+	protected MeasurementPortPane() {
 		super();
-		try
-		{
+		try {
 			jbInit();
-		}
-		catch (Exception e)
-		{
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
-	protected MeasurementPortPane(MeasurementPort p)
-	{
+	protected MeasurementPortPane(MeasurementPort p) {
 		this();
 		setObject(p);
 	}
 
-	public static ObjectResourcePropertiesPane getInstance()
-	{
+	public static ObjectResourcePropertiesPane getInstance() {
 		if (instance == null)
 			instance = new MeasurementPortPane();
 		return instance;
 	}
 
-	private void jbInit() throws Exception
-	{
+	private void jbInit() throws Exception {
 		this.setLayout(new BorderLayout());
 		this.add(tabbedPane, BorderLayout.CENTER);
 
@@ -55,29 +48,24 @@ public class MeasurementPortPane extends JPanel implements ObjectResourcePropert
 		tabbedPane.add(chPanel.getName(), chPanel);
 	}
 
-	public Object getObject()
-	{
+	public Object getObject() {
 		return port;
 	}
 
-	public void setObject(Object or)
-	{
-		this.port = (MeasurementPort )or;
+	public void setObject(Object or) {
+		this.port = (MeasurementPort) or;
 
 		gPanel.setObject(port);
 		chPanel.setObject(port);
 	}
 
-	public void setContext(ApplicationContext aContext)
-	{
+	public void setContext(ApplicationContext aContext) {
 		gPanel.setContext(aContext);
 		chPanel.setContext(aContext);
 	}
 
-	public boolean modify()
-	{
-		if(		gPanel.modify() &&
-				chPanel.modify())
+	public boolean modify() {
+		if (gPanel.modify() && chPanel.modify())
 			return true;
 		return false;
 	}
@@ -100,23 +88,19 @@ public class MeasurementPortPane extends JPanel implements ObjectResourcePropert
 		return false;
 	}
 
-	public boolean open()
-	{
+	public boolean open() {
 		return false;
 	}
 
-	public boolean delete()
-	{
+	public boolean delete() {
 		return true;
 	}
 
-	public boolean create()
-	{
+	public boolean create() {
 		return false;
 	}
 
-	public boolean cancel()
-	{
+	public boolean cancel() {
 		return false;
 	}
 }

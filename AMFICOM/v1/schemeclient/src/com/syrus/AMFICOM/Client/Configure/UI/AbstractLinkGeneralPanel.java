@@ -13,8 +13,7 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.scheme.corba.*;
 
-public abstract class AbstractLinkGeneralPanel extends GeneralPanel
-{
+public abstract class AbstractLinkGeneralPanel extends GeneralPanel {
 	protected AbstractSchemeLink link;
 
 	private JLabel typeLabel = new JLabel();
@@ -57,27 +56,21 @@ public abstract class AbstractLinkGeneralPanel extends GeneralPanel
 	protected JTextField optLengthField = new JTextField();
 	protected JTextField physLengthField = new JTextField();
 
-	protected AbstractLinkGeneralPanel()
-	{
+	protected AbstractLinkGeneralPanel() {
 		super();
-		try
-		{
+		try {
 			jbInit();
-		}
-		catch (Exception e)
-		{
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
-	protected AbstractLinkGeneralPanel(AbstractSchemeLink link)
-	{
+	protected AbstractLinkGeneralPanel(AbstractSchemeLink link) {
 		this();
 		setObject(link);
 	}
 
-	private void jbInit() throws Exception
-	{
+	private void jbInit() throws Exception {
 		this.typeBox = new ObjComboBox(
 				LinkTypeController.getInstance(),
 				StorableObjectWrapper.COLUMN_NAME);
@@ -231,13 +224,11 @@ public abstract class AbstractLinkGeneralPanel extends GeneralPanel
 //		this.add(saveButton, BorderLayout.SOUTH);
 	}
 
-	public Object getObject()
-	{
+	public Object getObject() {
 		return this.link;
 	}
 
-	public void setObject(Object or)
-	{
+	public void setObject(Object or) {
 		this.link = (AbstractSchemeLink) or;
 
 		this.idField.setText(this.link.id().identifierString());
@@ -257,24 +248,19 @@ public abstract class AbstractLinkGeneralPanel extends GeneralPanel
 
 		this.descTextArea.setText(this.link.description());
 
-		if(this.link.link() != null)
-		{
+		if (this.link.link() != null) {
 			this.rnField.setText(this.link.link().inventoryNo);
 			this.supplierField.setText(this.link.link().supplier);
 			this.supplierCodeField.setText(this.link.link().supplierCode);
-		}
-		else
-		{
+		} else {
 			this.rnField.setText(""); //$NON-NLS-1$
 			this.supplierField.setText(""); //$NON-NLS-1$
 			this.supplierCodeField.setText(""); //$NON-NLS-1$
 		}
 	}
 
-	public boolean modify()
-	{
-		try
-		{
+	public boolean modify() {
+		try {
 			double d1 = Double.parseDouble(this.physLengthField.getText());
 			double d2 = Double.parseDouble(this.optLengthField.getText());
 
@@ -288,26 +274,21 @@ public abstract class AbstractLinkGeneralPanel extends GeneralPanel
 
 			this.link.description(this.descTextArea.getText());
 
-			if (this.link.link() != null)
-			{
+			if (this.link.link() != null) {
 				this.link.link().inventoryNo = this.rnField.getText();
 				this.link.link().supplier = this.supplierField.getText();
 				this.link.link().supplierCode = this.supplierCodeField.getText();
 			}
 		}
-		catch (Exception ex)
-		{
+		catch (Exception ex) {
 			return false;
 		}
 		return true;
 	}
 
-	void saveButton_actionPerformed(ActionEvent e)
-	{
-		if (modify())
-		{
-			if (this.link.link() != null)
-			{
+	void saveButton_actionPerformed(ActionEvent e) {
+		if (modify()) {
+			if (this.link.link() != null) {
 				try {
 					ConfigurationStorableObjectPool.putStorableObject(this.link.linkImpl());
 				}

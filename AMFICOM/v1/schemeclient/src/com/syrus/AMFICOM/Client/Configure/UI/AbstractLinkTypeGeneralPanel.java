@@ -32,27 +32,21 @@ public class AbstractLinkTypeGeneralPanel extends GeneralPanel
 	private JScrollPane descriptionScrollPane = new JScrollPane();
 	private JTextPane descTextArea = new JTextPane();
 
-	protected AbstractLinkTypeGeneralPanel()
-	{
+	protected AbstractLinkTypeGeneralPanel() {
 		super();
-		try
-		{
+		try {
 			jbInit();
-		}
-		catch (Exception e)
-		{
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
-	protected AbstractLinkTypeGeneralPanel(LinkType linkType)
-	{
+	protected AbstractLinkTypeGeneralPanel(LinkType linkType) {
 		this();
 		setObject(linkType);
 	}
 
-	private void jbInit() throws Exception
-	{
+	private void jbInit() throws Exception {
 		setName(LangModelConfig.getString("label_general")); //$NON-NLS-1$
 
 		idLabel.setText(LangModelConfig.getString("label_id")); //$NON-NLS-1$
@@ -105,8 +99,7 @@ public class AbstractLinkTypeGeneralPanel extends GeneralPanel
 			this.add(idField, new GridBagConstraints(1, 7, 1, 1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0));
 	}
 
-	public Object getObject()
-	{
+	public Object getObject() {
 		return linkType;
 	}
 

@@ -96,12 +96,7 @@ class DeleteAction extends AbstractAction
 						{
 							Arrays.asList(panel.getGraph().getScheme().schemeElements()).remove(element);
 							if (element.equipment() != null)
-								try {
-									ConfigurationStorableObjectPool.delete(element.equipmentImpl().getId());
-								}
-								catch (ApplicationException ex) {
-									ex.printStackTrace();
-								}
+								ConfigurationStorableObjectPool.delete(element.equipmentImpl().getId());
 							try {
 								SchemeStorableObjectPool.delete(element.id());
 							}
@@ -135,15 +130,9 @@ class DeleteAction extends AbstractAction
 					SchemeActions.disconnectSchemeCableLink (graph, (DefaultCableLink)cells[i], false);
 					if (panel.getGraph().getScheme() != null)
 						Arrays.asList(panel.getGraph().getScheme().schemeCableLinks()).remove(link);
-					if (link.link() != null)
-					{
-						try {
+					if (link.link() != null) {
 							ConfigurationStorableObjectPool.delete(link.linkImpl().getId());
 						}
-						catch (ApplicationException ex) {
-							ex.printStackTrace();
-						}
-					}
 					try {
 						SchemeStorableObjectPool.delete(link.id());
 					}
@@ -170,11 +159,7 @@ class DeleteAction extends AbstractAction
 					if (link.link() != null)
 					{
 						link.link(null);
-						try {
-							ConfigurationStorableObjectPool.delete(link.linkImpl().getId());
-						}
-						catch (ApplicationException ex) {
-						}
+						ConfigurationStorableObjectPool.delete(link.linkImpl().getId());
 					}
 					try {
 						SchemeStorableObjectPool.delete(link.id());
@@ -200,12 +185,7 @@ class DeleteAction extends AbstractAction
 					{
 						SchemePort port = ((PortCell)cells[i]).getSchemePort();
 						if (port.port() != null) {
-							try {
-								ConfigurationStorableObjectPool.delete(port.portImpl().getId());
-							}
-							catch (ApplicationException ex) {
-								ex.printStackTrace();
-							}
+							ConfigurationStorableObjectPool.delete(port.portImpl().getId());
 						}
 						try {
 							SchemeStorableObjectPool.delete(port.id());
@@ -234,12 +214,7 @@ class DeleteAction extends AbstractAction
 					{
 						SchemeCablePort port = ((CablePortCell)cells[i]).getSchemeCablePort();
 						if (port.port() != null) {
-							try {
-								ConfigurationStorableObjectPool.delete(port.portImpl().getId());
-							}
-							catch (ApplicationException ex) {
-								ex.printStackTrace();
-							}
+							ConfigurationStorableObjectPool.delete(port.portImpl().getId());
 						}
 						try {
 							SchemeStorableObjectPool.delete(port.id());
