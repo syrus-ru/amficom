@@ -64,18 +64,18 @@ $(CLASSDIR):
 
 .PHONY:	clean
 clean:	cleanmach cleancorba
-	rm -f $(LIBNAME) $(LIBNAME_INTERFACE)
+	$(RM) $(LIBNAME) $(LIBNAME_INTERFACE)
 
 .PHONY:	cleanmach
 cleanmach:
-	rm -rf $(CLASSDIR)/com/syrus/AMFICOM/mserver/*.class
-	rm -f .mach
+	$(RM) $(wildcard $(CLASSDIR)/com/syrus/AMFICOM/mserver/*.class)
+	$(RM) .mach
 
 .PHONY:	cleancorba
 cleancorba:
-	rm -rf $(SRCDIR)/com/syrus/AMFICOM/mserver/corba
-	rm -rf $(CLASSDIR)/com/syrus/AMFICOM/mserver/corba
-	rm -f .corba
+	$(RM) -r $(SRCDIR)/com/syrus/AMFICOM/mserver/corba
+	$(RM) -r $(CLASSDIR)/com/syrus/AMFICOM/mserver/corba
+	$(RM) .corba
 
 #### Install ####
 .PHONY:	install

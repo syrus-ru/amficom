@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.25 2004/12/21 17:32:23 arseniy Exp $
+# $Id: Makefile,v 1.26 2004/12/22 17:42:47 arseniy Exp $
 #
 # vim:set ft=make:
 #
@@ -51,7 +51,7 @@ clean:	cleanmach cleancorba
 
 .PHONY:	cleanmach
 cleanmach:
-	$(RM) -r $(CLASSDIR)/com/syrus/AMFICOM/general/*.class
+	$(RM) $(wildcard $(CLASSDIR)/com/syrus/AMFICOM/general/*.class)
 	$(RM) .mach
 
 .PHONY:	cleancorba
@@ -63,6 +63,11 @@ cleancorba:
 	$(RM) -r $(CLASSDIR)/com/syrus/AMFICOM/CORBA/General
 	$(RM) .corba
 
+#### Install ####
+.PHONY:	install
+install: $(LIBNAME)
+	$(CP) $(LIBNAME) $(LIBDIR)
+
 #### Archive ####
 .PHONY:	arch
 arch:
@@ -71,8 +76,4 @@ arch:
 		$(IDLDIR)/general.idl \
 		$(SRCDIR)/com/syrus/AMFICOM/general/*.java \
 		$(SRCDIR)/com/syrus/AMFICOM/io/*.java
-#### Install ####
-.PHONY:	install
-install: $(LIBNAME)
-	$(CP) $(LIBNAME) $(LIBDIR)
 

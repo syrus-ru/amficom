@@ -116,7 +116,7 @@ clean:	cleanmach cleanora cleancorba
 
 .PHONY:	cleanmach
 cleanmach:
-	$(RM) -r $(CLASSDIR)/com/syrus/AMFICOM/measurement/*.class
+	$(RM) $(wildcard $(CLASSDIR)/com/syrus/AMFICOM/measurement/*.class)
 	$(RM) .mach
 
 .PHONY:	cleanora
@@ -131,7 +131,7 @@ cleancorba:
 	$(RM) -r $(CLASSDIR)/com/syrus/AMFICOM/measurement/corba
 	$(RM) -r $(SRCDIR)/com/syrus/AMFICOM/event/corba
 	$(RM) -r $(CLASSDIR)/com/syrus/AMFICOM/event/corba
-	$(RM) -f .corba
+	$(RM) .corba
 
 #### Install ####
 .PHONY:	install

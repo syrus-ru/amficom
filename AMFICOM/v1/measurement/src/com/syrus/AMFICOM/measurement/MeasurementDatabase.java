@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementDatabase.java,v 1.42 2004/12/10 16:24:51 bob Exp $
+ * $Id: MeasurementDatabase.java,v 1.43 2004/12/22 17:42:16 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -41,8 +41,8 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
 
 /**
- * @version $Revision: 1.42 $, $Date: 2004/12/10 16:24:51 $
- * @author $Author: bob $
+ * @version $Revision: 1.43 $, $Date: 2004/12/22 17:42:16 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -401,22 +401,24 @@ public class MeasurementDatabase extends StorableObjectDatabase {
         return list;
     }
 	
-	public List retrieveByCondition(List ids, StorableObjectCondition condition) throws RetrieveObjectException,
-			IllegalDataException {
+	public List retrieveByCondition(List ids, StorableObjectCondition condition) throws RetrieveObjectException, IllegalDataException {
 		List list = null;
-		if (condition instanceof LinkedIdsCondition){
+		if (condition instanceof LinkedIdsCondition) {
 			LinkedIdsCondition linkedIdsCondition = (LinkedIdsCondition)condition;
 			List testIds = linkedIdsCondition.getTestIds();
 			if (testIds == null)
 				testIds = Collections.singletonList(linkedIdsCondition.getIdentifier());
 			list = this.retrieveButIdsByTest(ids, testIds);
-		} else if (condition instanceof DomainCondition){
-			DomainCondition domainCondition = (DomainCondition)condition;
-			list = this.retrieveButIdsByDomain(ids, domainCondition.getDomain()); 
-		} else{
-			Log.errorMessage("MeasurementDatabase.retrieveByCondition | Unknown condition class: " + condition);
-			list = this.retrieveButIds(ids);
 		}
+		else
+			if (condition instanceof DomainCondition) {
+				DomainCondition domainCondition = (DomainCondition)condition;
+				list = this.retrieveButIdsByDomain(ids, domainCondition.getDomain());
+			}
+			else {
+				Log.errorMessage("MeasurementDatabase.retrieveByCondition | Unknown condition class: " + condition);
+				list = this.retrieveButIds(ids);
+			}
 		return list;
 	}
 }

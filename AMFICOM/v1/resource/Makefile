@@ -36,7 +36,7 @@ $(CLASSDIR):
 
 .PHONY:	clean
 clean:	cleanmach cleancorba
-	rm -f $(LIBNAME)
+	$(RM) $(LIBNAME)
 
 .PHONY:	cleanmach
 cleanmach:

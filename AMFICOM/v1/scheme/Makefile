@@ -95,7 +95,7 @@ idlclean:
 
 .PHONY:	clean
 clean: cleanmach
-	rm -f $(LIBNAME)
+	$(RM) $(LIBNAME)
 
 .PHONY:	cleanmach
 cleanmach: cleancorba

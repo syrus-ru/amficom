@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectDatabase.java,v 1.63 2004/12/21 13:56:56 bass Exp $
+ * $Id: StorableObjectDatabase.java,v 1.64 2004/12/22 17:42:48 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,8 +31,8 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.63 $, $Date: 2004/12/21 13:56:56 $
- * @author $Author: bass $
+ * @version $Revision: 1.64 $, $Date: 2004/12/22 17:42:48 $
+ * @author $Author: arseniy $
  * @module general_v1
  */
 
@@ -413,8 +413,6 @@ public abstract class StorableObjectDatabase {
 				throw new ObjectNotFoundException("No such " + getEnityName() + ": " + strorableObjectTypeIdStr);
 		}
 		catch (SQLException sqle) {
-			sqle.printStackTrace();
-			Log.errorException(sqle);
 			String mesg = this.getEnityName() + "Database.retrieveEntity | Cannot retrieve " + getEnityName() + " '" + strorableObjectTypeIdStr + "' -- " + sqle.getMessage();
 			throw new RetrieveObjectException(mesg, sqle);
 		}

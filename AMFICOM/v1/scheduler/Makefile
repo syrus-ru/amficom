@@ -30,7 +30,7 @@ $(CLASSDIR):
 
 .PHONY:	clean
 clean:	
-	rm -f $(LIBNAME)
+	$(RM) $(LIBNAME)
 
 #.mach:	$(CLASSDIR)
 #	$(JAVAC) $(JAVACFLAGS) \

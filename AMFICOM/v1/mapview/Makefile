@@ -7,36 +7,23 @@ IDLDIR=../idl_v1/idl
 
 APPCLASSPATH = $(LIBDIR)/configuration.jar:$(LIBDIR)/general.jar:$(LIBDIR)/util.jar
 
-HOST=mongol
-SERVICE_NAME=mongol
-
 JAVACFLAGS = -source 1.3
 SUNJAVACFLAGS = -target 1.2
 JIKESFLAGS = -target 1.2
 
-JPUB = $(ORACLE_HOME)/bin/jpub
-JPUB_FLAGS = \
-	-J-classpath $(JDBCCLASSPATH):$(SQLJCLASSPATH) \
-	-user=amficom/amficom \
-	-url=jdbc:oracle:thin:@$(HOST):1521:$(SERVICE_NAME) \
-	-omit_schema_names \
-	-package=com.syrus.AMFICOM.map.ora \
-	-dir=$(SRCDIR) \
-	-usertypes=oracle \
-	-methods=all
-
 
 include ../tools/Makefile.inc
 $(call checkenve,JAVA_HOME)
-$(call checkenve,ORACLE_HOME)
+
 
 $(LIBNAME): .mach
 	$(JAR) -cf $@ \
-		-C $(CLASSDIR) com/syrus/AMFICOM/map
+		-C $(CLASSDIR) com/syrus/AMFICOM/map \
+		-C $(CLASSDIR) com/syrus/AMFICOM/mapview
 
 .mach:	.corba $(CLASSDIR)
 	$(JAVAC) $(JAVACFLAGS) \
-		-classpath $(APPCLASSPATH):$(JDBCCLASSPATH):$(CLASSDIR) \
+		-classpath $(APPCLASSPATH):$(CLASSDIR) \
 		$(wildcard $(SRCDIR)/com/syrus/AMFICOM/mapview/*.java)
 	touch $@
 
@@ -53,20 +40,23 @@ $(CLASSDIR):
 
 .PHONY:	clean
 clean:	cleanmach cleancorba
-	rm -f $(LIBNAME)
+	$(RM) $(LIBNAME)
 
 .PHONY:	cleanmach
 cleanmach:
-	rm -rf $(CLASSDIR)/com/syrus/AMFICOM/map/*.class
-	rm -f .mach
+	$(RM) $(wildcard $(CLASSDIR)/com/syrus/AMFICOM/map/*.class)
+	$(RM) .mach
 
 .PHONY:	cleancorba
 cleancorba:
-	rm -rf $(SRCDIR)/com/syrus/AMFICOM/map/corba
-	rm -rf $(CLASSDIR)/com/syrus/AMFICOM/map/corba
-	rm -rf $(SRCDIR)/com/syrus/AMFICOM/event/corba
-	rm -rf $(CLASSDIR)/com/syrus/AMFICOM/event/corba
-	rm -f .corba
+	$(RM) -r $(SRCDIR)/com/syrus/AMFICOM/map/corba
+	$(RM) -r $(CLASSDIR)/com/syrus/AMFICOM/map/corba
+	$(RM) .corba
+
+#### Install ####
+.PHONY:	install
+install: $(LIBNAME)
+	$(CP) $(LIBNAME) $(LIBDIR)
 
 #### Archive ####
 .PHONY:	arch
@@ -80,6 +70,3 @@ arch:
 pmd:
 	${JAVA} -classpath $(PMD_JARS) -jar $(PMD_JAR) src/com/syrus/AMFICOM/map text $(PMD_RULES) 
 
-#### Compile and install jar to libdir
-lib: $(LIBNAME)
-	$(CP) $(LIBNAME) $(LIBDIR)	
