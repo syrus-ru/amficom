@@ -57,6 +57,7 @@ import com.syrus.AMFICOM.Client.General.Command.Session.SessionOpenCommand;
 import com.syrus.AMFICOM.Client.General.Command.Session.SessionOptionsCommand;
 import com.syrus.AMFICOM.Client.General.Event.ContextChangeEvent;
 import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
+import com.syrus.AMFICOM.Client.General.Event.EtalonMTMListener;
 import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
 import com.syrus.AMFICOM.Client.General.Event.OperationListener;
 import com.syrus.AMFICOM.Client.General.Event.RefChangeEvent;
@@ -79,7 +80,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.io.BellcoreStructure;
 
 public class ThresholdsMainFrame extends JFrame
-implements OperationListener, bsHashChangeListener
+implements OperationListener, bsHashChangeListener, EtalonMTMListener
 {
 	public ApplicationContext aContext;
 	private Dispatcher internal_dispatcher = new Dispatcher();
@@ -233,6 +234,7 @@ implements OperationListener, bsHashChangeListener
 		internal_dispatcher.register(this, RefChangeEvent.typ);
 		internal_dispatcher.register(this, "contextchange");
 		Heap.addBsHashListener(this);
+		Heap.addEtalonMTMListener(this);
 		Environment.getDispatcher().register(this, "contextchange");
 
 		aModel.setCommand("menuSessionNew", new SessionOpenCommand(Environment.getDispatcher(), aContext));
@@ -443,16 +445,6 @@ implements OperationListener, bsHashChangeListener
 		{
 			ApplicationModel aModel = aContext.getApplicationModel();
 			RefChangeEvent rce = (RefChangeEvent)ae;
-			if(rce.isEtalonOpen())
-			{
-				aModel.setEnabled("menuTraceCloseEtalon", true);
-				aModel.fireModelChanged(new String [] {"menuTraceCloseEtalon"});
-			}
-			if(rce.isEtalonClose())
-			{
-				aModel.setEnabled("menuTraceCloseEtalon", false);
-				aModel.fireModelChanged(new String [] {"menuTraceCloseEtalon"});
-			}
 
 			if(rce.isEventSelect())
 			{
@@ -774,6 +766,20 @@ implements OperationListener, bsHashChangeListener
 		setTitle(LangModelAnalyse.getString("ThresholdsTitle"));
 		//			thresholdsFrame.setVisible(false);
 		thresholdsSelectionFrame.setVisible(false);
+	}
+
+	public void etalonMTMCUpdated()
+	{
+		ApplicationModel aModel = aContext.getApplicationModel();
+		aModel.setEnabled("menuTraceCloseEtalon", true);
+		aModel.fireModelChanged(new String [] {"menuTraceCloseEtalon"});
+	}
+
+	public void etalonMTMRemoved()
+	{
+		ApplicationModel aModel = aContext.getApplicationModel();
+		aModel.setEnabled("menuTraceCloseEtalon", false);
+		aModel.fireModelChanged(new String [] {"menuTraceCloseEtalon"});
 	}
 }
 

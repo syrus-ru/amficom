@@ -14,7 +14,7 @@ import com.syrus.io.BellcoreStructure;
 import com.syrus.util.ByteArray;
 
 public class ThresholdsFrame extends SimpleResizableFrame
-implements OperationListener, bsHashChangeListener
+implements OperationListener, bsHashChangeListener, EtalonMTMListener
 {
 	private Dispatcher dispatcher;
 	Map traces = new HashMap();
@@ -50,26 +50,13 @@ implements OperationListener, bsHashChangeListener
 		this.dispatcher = dispatcher;
 		bellcoreTraces = new HashMap();
 		Heap.setBsBellCoreMap(bellcoreTraces);
-		dispatcher.register(this, RefChangeEvent.typ);
+		//dispatcher.register(this, RefChangeEvent.typ);
 		Heap.addBsHashListener(this);
+		Heap.addEtalonMTMListener(this);
 	}
 
 	public void operationPerformed(OperationEvent ae)
 	{
-		if(ae.getActionCommand().equals(RefChangeEvent.typ))
-		{
-			RefChangeEvent rce = (RefChangeEvent)ae;
-			if (rce.isEtalonOpen())
-			{
-				String etId = (String)rce.getSource();
-				addEtalon(etId);
-			}
-			if (rce.isEtalonClose())
-			{
-				String etId = (String)rce.getSource();
-				removeEtalon(etId);
-			}
-		}
 	}
 
 	public void addEtalon(String id)
@@ -217,5 +204,15 @@ implements OperationListener, bsHashChangeListener
 	{
 		removeTrace("all");
 		setVisible (false);
+	}
+
+	public void etalonMTMCUpdated()
+	{
+		addEtalon(Heap.ETALON_TRACE_KEY);
+	}
+
+	public void etalonMTMRemoved()
+	{
+		removeEtalon(Heap.ETALON_TRACE_KEY);
 	}
 }

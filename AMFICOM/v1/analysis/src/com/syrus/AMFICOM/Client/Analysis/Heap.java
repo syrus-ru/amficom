@@ -1,5 +1,5 @@
 /*-
- * $Id: Heap.java,v 1.3 2005/03/31 16:58:27 saa Exp $
+ * $Id: Heap.java,v 1.4 2005/03/31 17:27:34 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,7 +14,9 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
 
+import com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.AnalyseMainFrame;
 import com.syrus.AMFICOM.Client.Analysis.UI.ReflectogrammLoadDialog;
+import com.syrus.AMFICOM.Client.General.Event.EtalonMTMListener;
 import com.syrus.AMFICOM.Client.General.Event.PrimaryMTMListener;
 import com.syrus.AMFICOM.Client.General.Event.bsHashChangeListener;
 import com.syrus.AMFICOM.Client.General.Event.PrimaryTraceListener;
@@ -30,7 +32,7 @@ import com.syrus.io.BellcoreStructure;
  * использование остальных методов работы с BS
  * 
  * @author $Author: saa $
- * @version $Revision: 1.3 $, $Date: 2005/03/31 16:58:27 $
+ * @version $Revision: 1.4 $, $Date: 2005/03/31 17:27:34 $
  * @module
  */
 public class Heap
@@ -62,6 +64,14 @@ public class Heap
 	public static ModelTraceManager getMTMByKey(String key)
 	{
 		return (ModelTraceManager)MTMHash.get(key);
+	}
+	public static ModelTraceManager getMTMPrimary()
+	{
+		return (ModelTraceManager)MTMHash.get(PRIMARY_TRACE_KEY);
+	}
+	public static ModelTraceManager getMTMEtalon()
+	{
+		return (ModelTraceManager)MTMHash.get(ETALON_TRACE_KEY);
 	}
 	public static void setMTMByKey(String key, ModelTraceManager mtm)
 	{
@@ -201,6 +211,7 @@ public class Heap
 	private static LinkedList bsHashChangedListeners = new LinkedList();
 	private static LinkedList primaryTraceListeners = new LinkedList();
 	private static LinkedList primaryMTMListeners = new LinkedList();
+	private static LinkedList etalonMTMListeners = new LinkedList();
 
 	// XXX: change each notify method to private as soon as bsHash will become private
 
@@ -243,15 +254,25 @@ public class Heap
 		for (Iterator it = primaryTraceListeners.iterator(); it.hasNext(); )
 			((PrimaryTraceListener)it.next()).primaryTraceRemoved();
 	}
-	public static void notifyPrimaryMTMChanged()
+	public static void notifyPrimaryMTMCUpdated()
 	{
 		for (Iterator it = primaryMTMListeners.iterator(); it.hasNext(); )
-		{
-			if (MTMHash.containsKey(PRIMARY_TRACE_KEY))
 				((PrimaryMTMListener)it.next()).primaryMTMCUpdated();
-			else
+	}
+	public static void notifyPrimaryMTMRemoved()
+	{
+		for (Iterator it = primaryMTMListeners.iterator(); it.hasNext(); )
 				((PrimaryMTMListener)it.next()).primaryMTMRemoved();
-		}
+	}
+	public static void notifyEtalonMTMCUpdated()
+	{
+		for (Iterator it = etalonMTMListeners.iterator(); it.hasNext(); )
+				((EtalonMTMListener)it.next()).etalonMTMCUpdated();
+	}
+	public static void notifyEtalonMTMRemoved()
+	{
+		for (Iterator it = primaryMTMListeners.iterator(); it.hasNext(); )
+				((EtalonMTMListener)it.next()).etalonMTMRemoved();
 	}
 
 	private static void addListener(Collection c, Object listener)
@@ -289,6 +310,14 @@ public class Heap
 	{
 		removeListener(primaryMTMListeners, listener);
 	}
+	public static void addEtalonMTMListener(EtalonMTMListener listener)
+	{
+		addListener(etalonMTMListeners, listener);
+	}
+	public static void removeEtalonMTMListener(EtalonMTMListener listener)
+	{
+		removeListener(etalonMTMListeners, listener);
+	}
 
 	public static void primaryTraceOpened(BellcoreStructure bs)
 	{
@@ -311,9 +340,12 @@ public class Heap
 		if (key.equals(PRIMARY_TRACE_KEY))
 			notifyPrimaryTraceOpened();
 	}
-	// FIXME: реализовать корректно - через etalonMTM 
-	public static void etalonMTMUpdated(String key)
+	public static void etalonMTMCUpdated()
 	{
-		notifyPrimaryMTMChanged();
+		notifyEtalonMTMCUpdated();
+	}
+	public static void etalonMTMRemoved()
+	{
+		notifyEtalonMTMCUpdated();
 	}
 }

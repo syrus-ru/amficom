@@ -18,7 +18,7 @@ import com.syrus.AMFICOM.client_.general.ui_.ADefaultTableCellRenderer;
 import com.syrus.io.BellcoreStructure;
 
 public class DetailedEventsFrame extends JInternalFrame
-implements OperationListener, bsHashChangeListener
+implements OperationListener, bsHashChangeListener, EtalonMTMListener
 {
 	private ModelTraceManager etalonMTM;
 	private ModelTraceManager dataMTM;
@@ -82,6 +82,7 @@ implements OperationListener, bsHashChangeListener
 		dispatcher.register(this, RefChangeEvent.typ);
 		dispatcher.register(this, RefUpdateEvent.typ);
 		Heap.addBsHashListener(this);
+		Heap.addEtalonMTMListener(this);
 	}
 
 	private void makeAlignedDataMT()
@@ -98,29 +99,6 @@ implements OperationListener, bsHashChangeListener
 		if(ae.getActionCommand().equals(RefChangeEvent.typ))
 		{
 			RefChangeEvent rce = (RefChangeEvent)ae;
-			if(rce.isEtalonOpen())
-			{
-				etalonMTM = Heap.getMTMByKey(AnalysisUtil.ETALON);
-				if(dataMTM != null)
-					makeAlignedDataMT();
-				else
-					alignedDataMT = null;
-				ctModel.clearTable();
-				tabbedPane.setEnabledAt(0, true);
-				tabbedPane.setSelectedIndex(0);
-				etalon_loaded = true;
-				if(analysis_performed)
-					tabbedPane.setEnabledAt(1, true);
-			}
-			if(rce.isEtalonClose())
-			{
-				alignedDataMT = null;
-				ctModel.clearTable();
-				tabbedPane.setEnabledAt(0, true);
-				tabbedPane.setSelectedIndex(0);
-				etalon_loaded = false;
-				tabbedPane.setEnabledAt(1, false);
-			}
 		}
 		if(ae.getActionCommand().equals(RefUpdateEvent.typ))
 		{
@@ -558,6 +536,31 @@ implements OperationListener, bsHashChangeListener
 		analysis_performed = false;
 		tabbedPane.setEnabledAt(1, false);
 		setVisible(false);
+	}
+
+	public void etalonMTMCUpdated()
+	{
+		etalonMTM = Heap.getMTMByKey(AnalysisUtil.ETALON);
+		if(dataMTM != null)
+			makeAlignedDataMT();
+		else
+			alignedDataMT = null;
+		ctModel.clearTable();
+		tabbedPane.setEnabledAt(0, true);
+		tabbedPane.setSelectedIndex(0);
+		etalon_loaded = true;
+		if(analysis_performed)
+			tabbedPane.setEnabledAt(1, true);
+	}
+
+	public void etalonMTMRemoved()
+	{
+		alignedDataMT = null;
+		ctModel.clearTable();
+		tabbedPane.setEnabledAt(0, true);
+		tabbedPane.setSelectedIndex(0);
+		etalon_loaded = false;
+		tabbedPane.setEnabledAt(1, false);
 	}
 }
 

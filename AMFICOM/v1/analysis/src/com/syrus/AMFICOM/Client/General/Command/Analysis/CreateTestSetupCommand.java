@@ -84,7 +84,7 @@ public class CreateTestSetupCommand extends VoidCommand
 		}
 		// будем считать status == OK, если в Heap.ContextMeasurementSetup != null
 		Heap.setContextMeasurementSetup(measurementSetup);
-		Heap.notifyPrimaryMTMChanged();
+		Heap.notifyPrimaryMTMCUpdated();
 	}
 }
 

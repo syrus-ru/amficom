@@ -16,7 +16,7 @@ import com.syrus.AMFICOM.Client.Resource.ResourceKeys;
 import com.syrus.io.BellcoreStructure;
 
 public class TraceSelectorFrame extends JInternalFrame
-implements OperationListener, bsHashChangeListener
+implements OperationListener, bsHashChangeListener, EtalonMTMListener
 {
 	protected static List traces = new ArrayList();
 	protected Dispatcher dispatcher;
@@ -55,6 +55,7 @@ implements OperationListener, bsHashChangeListener
 		this.dispatcher = dispatcher;
 		dispatcher.register(this, RefChangeEvent.typ);
 		Heap.addBsHashListener(this);
+		Heap.addEtalonMTMListener(this);
 	}
 
 	public void operationPerformed(OperationEvent ae)
@@ -62,21 +63,6 @@ implements OperationListener, bsHashChangeListener
 		if(ae.getActionCommand().equals(RefChangeEvent.typ))
 		{
 			RefChangeEvent rce = (RefChangeEvent)ae;
-			if(rce.isEtalonOpen())
-			{
-				String id = (String)(rce.getSource());
-				if (traces.contains(id))
-					return;
-
-				traces.add(id);
-
-				BellcoreStructure bs = Heap.getAnyBSTraceByKey(id);
-				if (bs != null)
-					title = bs.title;
-
-				tModel.addRow(title, new Color[] {ColorManager.getColor(id)});
-				setVisible(true);
-			}
 
 			if(rce.isEventSelect())
 			{
@@ -239,5 +225,25 @@ implements OperationListener, bsHashChangeListener
 		tModel.clearTable();
 		traces = new ArrayList();
 		setVisible(false);
+	}
+
+	public void etalonMTMCUpdated()
+	{
+		String id = Heap.ETALON_TRACE_KEY;
+		if (traces.contains(id))
+			return;
+
+		traces.add(id);
+
+		BellcoreStructure bs = Heap.getAnyBSTraceByKey(id);
+		if (bs != null)
+			title = bs.title;
+
+		tModel.addRow(title, new Color[] {ColorManager.getColor(id)});
+		setVisible(true);
+	}
+
+	public void etalonMTMRemoved()
+	{
 	}
 }

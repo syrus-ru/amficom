@@ -74,6 +74,6 @@ public class LoadEtalonCommand extends VoidCommand
 			return;
 		}
 
-		aContext.getDispatcher().notify(new RefChangeEvent(AnalysisUtil.ETALON, RefChangeEvent.OPEN_ETALON_EVENT));
+		Heap.etalonMTMCUpdated();
 	}
 }

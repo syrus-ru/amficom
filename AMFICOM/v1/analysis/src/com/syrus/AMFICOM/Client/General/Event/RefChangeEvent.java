@@ -3,40 +3,28 @@ package com.syrus.AMFICOM.Client.General.Event;
 public class RefChangeEvent extends OperationEvent
 {
 //	public static final long OPEN_EVENT = 0x00000001;
-	public static final long OPEN_ETALON_EVENT = 0x00000002;
+	//public static final long OPEN_ETALON_EVENT = 0x00000002;
 	public static final long SAVE_EVENT = 0x00000010;
 //	public static final long CLOSE_EVENT = 0x00000100;
-	public static final long CLOSE_ETALON_EVENT = 0x00000200; // never generated?
-	//public static final long THRESHOLDS_CALC_EVENT = 0x00001000;
+	//public static final long CLOSE_ETALON_EVENT = 0x00000200; // never generated?
+//	public static final long THRESHOLDS_CALC_EVENT = 0x00001000;
 	public static final long SELECT_EVENT = 0x00010000;
 
 	public static final String typ = "refchange";
 	
 	private long type;
 	
-//	public boolean isOpen()
+//	public boolean isEtalonOpen()
 //	{
-//		return (type & OPEN_EVENT) != 0;
+//		return (type & OPEN_ETALON_EVENT) != 0;
 //	}
-	public boolean isEtalonOpen()
-	{
-		return (type & OPEN_ETALON_EVENT) != 0;
-	}
 	public boolean isSave()
 	{
 		return (type & SAVE_EVENT) != 0;
 	}
-//	public boolean isClose()
+//	public boolean isEtalonClose()
 //	{
-//		return (type & CLOSE_EVENT) != 0;
-//	}
-	public boolean isEtalonClose()
-	{
-		return (type & CLOSE_ETALON_EVENT) != 0;
-	}
-//	public boolean isThresholdsCalc()
-//	{
-//		return (type & THRESHOLDS_CALC_EVENT) != 0;
+//		return (type & CLOSE_ETALON_EVENT) != 0;
 //	}
 	public boolean isEventSelect()
 	{

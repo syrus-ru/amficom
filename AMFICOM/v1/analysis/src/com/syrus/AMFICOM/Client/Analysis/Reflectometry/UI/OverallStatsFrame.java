@@ -19,6 +19,7 @@ import javax.swing.table.TableModel;
 import com.syrus.AMFICOM.Client.Analysis.AnalysisUtil;
 import com.syrus.AMFICOM.Client.Analysis.Heap;
 import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
+import com.syrus.AMFICOM.Client.General.Event.EtalonMTMListener;
 import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
 import com.syrus.AMFICOM.Client.General.Event.OperationListener;
 import com.syrus.AMFICOM.Client.General.Event.RefChangeEvent;
@@ -38,7 +39,7 @@ import com.syrus.AMFICOM.analysis.dadara.TraceEvent;
 import com.syrus.io.BellcoreStructure;
 
 public class OverallStatsFrame extends ATableFrame
-implements OperationListener, bsHashChangeListener
+implements OperationListener, bsHashChangeListener, EtalonMTMListener
 {
 	private FixedSizeEditableTableModel tModel;
 	private JTable jTable;
@@ -84,38 +85,14 @@ implements OperationListener, bsHashChangeListener
 
 	void init_module(Dispatcher dispatcher)
 	{
-		dispatcher.register(this, RefChangeEvent.typ);
+		//dispatcher.register(this, RefChangeEvent.typ);
 		dispatcher.register(this, RefUpdateEvent.typ);
 		Heap.addBsHashListener(this);
+		Heap.addEtalonMTMListener(this);
 	}
 
 	public void operationPerformed(OperationEvent ae)
 	{
-		if(ae.getActionCommand().equals(RefChangeEvent.typ))
-		{
-			RefChangeEvent rce = (RefChangeEvent)ae;
-
-			if(rce.isEtalonOpen())
-			{
-				wctModel.clearTable();
-				tabbedPane.setSelectedIndex(0);
-				etalon_loaded = true;
-				if(analysis_performed)
-				{
-					setWholeData();
-					tabbedPane.setEnabledAt(1, true);
-				}
-			}
-			if(rce.isEtalonClose())
-			{
-				wctModel.clearTable();
-				tabbedPane.setSelectedIndex(0);
-				etalon_loaded = false;
-				tabbedPane.setEnabledAt(1, false);
-			}
-
-		}
-
 		if(ae.getActionCommand().equals(RefUpdateEvent.typ))
 		{
 			RefUpdateEvent rue = (RefUpdateEvent)ae;
@@ -312,6 +289,26 @@ implements OperationListener, bsHashChangeListener
 		analysis_performed = false;
 		tabbedPane.setEnabledAt(1, false);
 		setVisible(false);
+	}
+
+	public void etalonMTMCUpdated()
+	{
+		wctModel.clearTable();
+		tabbedPane.setSelectedIndex(0);
+		etalon_loaded = true;
+		if(analysis_performed)
+		{
+			setWholeData();
+			tabbedPane.setEnabledAt(1, true);
+		}
+	}
+
+	public void etalonMTMRemoved()
+	{
+		wctModel.clearTable();
+		tabbedPane.setSelectedIndex(0);
+		etalon_loaded = false;
+		tabbedPane.setEnabledAt(1, false);
 	}
 }
 

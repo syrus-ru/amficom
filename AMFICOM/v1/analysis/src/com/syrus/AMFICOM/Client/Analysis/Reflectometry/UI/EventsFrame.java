@@ -21,6 +21,7 @@ import javax.swing.table.TableModel;
 import com.syrus.AMFICOM.Client.Analysis.AnalysisUtil;
 import com.syrus.AMFICOM.Client.Analysis.Heap;
 import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
+import com.syrus.AMFICOM.Client.General.Event.EtalonMTMListener;
 import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
 import com.syrus.AMFICOM.Client.General.Event.OperationListener;
 import com.syrus.AMFICOM.Client.General.Event.RefChangeEvent;
@@ -41,7 +42,7 @@ import com.syrus.AMFICOM.client_.general.ui_.ADefaultTableCellRenderer;
 import com.syrus.io.BellcoreStructure;
 
 public class EventsFrame extends ATableFrame
-implements OperationListener, bsHashChangeListener
+implements OperationListener, bsHashChangeListener, EtalonMTMListener
 {
 	public static final String LINEAR = LangModelAnalyse.getString("eventTypeLinear");
 	public static final String CONNECTOR = LangModelAnalyse.getString("eventTypeReflective");
@@ -90,43 +91,17 @@ implements OperationListener, bsHashChangeListener
 	private void initModule(Dispatcher dispatcher)
 	{
 		this.dispatcher = dispatcher;
-		dispatcher.register(this, RefChangeEvent.typ);
+		//dispatcher.register(this, RefChangeEvent.typ);
 		dispatcher.register(this, RefUpdateEvent.typ);
 		dispatcher.register(this, AnalyseApplicationModel.SELECT_NEXT_EVENT);
 		dispatcher.register(this, AnalyseApplicationModel.SELECT_PREVIOUS_EVENT);
 		Heap.addBsHashListener(this);
+		Heap.addEtalonMTMListener(this);
 	}
 
 	public void operationPerformed(OperationEvent ae)
 	{
 		String actionCommand = ae.getActionCommand();
-		if(actionCommand.equals(RefChangeEvent.typ))
-		{
-			RefChangeEvent rce = (RefChangeEvent)ae;
-			if(rce.isEtalonOpen())
-			{
-				String etId = (String)rce.getSource();
-
-				if(etId != null)
-					etalon = Heap.getMTMByKey(etId).getComplexEvents();
-				else
-					etalon = null;
-
-// выравнивание не требуется, т.к. сравниваются только относительные параметры
-//				if(etalon != null && data!= null)
-//					data_ = ReflectogramMath.alignClone(data, etalon); 
-//				else
-//					data_ = null;
-
-				setComparedWithEtalonEventsColor();
-			}
-			if(rce.isEtalonClose())
-			{
-				data = null;
-				etalon = null;
-				setNoComparedWithEtalonColor();
-			}
-		} else 
 		if(actionCommand.equals(RefUpdateEvent.typ))
 		{
 			RefUpdateEvent rue = (RefUpdateEvent)ae;
@@ -519,5 +494,18 @@ implements OperationListener, bsHashChangeListener
 		tModel.clearTable();
 		setNoComparedWithEtalonColor();
 		setVisible(false);
+	}
+
+	public void etalonMTMCUpdated()
+	{
+		etalon = Heap.getMTMEtalon().getComplexEvents();
+		setComparedWithEtalonEventsColor();
+	}
+
+	public void etalonMTMRemoved()
+	{
+		data = null;
+		etalon = null;
+		setNoComparedWithEtalonColor();
 	}
 }
