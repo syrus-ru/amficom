@@ -440,6 +440,12 @@ module corba {
 						in general::corba::AccessIdentifier_Transferable accessIdentifier)
 			raises (general::corba::AMFICOMRemoteException);
 
+		general::corba::CharacteristicTypeSeq_Transferable transmitCharacteristicTypesButIdsCondition(
+						in general::corba::IdentifierSeq_Transferable ids_Transferable,
+						in general::corba::AccessIdentifier_Transferable accessIdentifier,
+						in general::corba::StorableObjectCondition_Transferable condition_Transferable)
+			raises (general::corba::AMFICOMRemoteException);
+
 
 		// Reftresh Storable objects in Pool
 		general::corba::IdentifierSeq_Transferable transmitRefreshedGeneralObjects(
@@ -472,6 +478,11 @@ module corba {
 
 		// Transmit Sequences
 		administration::corba::UserSeq_Transferable transmitUsers(
+						in general::corba::IdentifierSeq_Transferable ids_Transferable,
+						in general::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (general::corba::AMFICOMRemoteException);
+
+		administration::corba::UserSeq_Transferable transmitUsersButIds(
 						in general::corba::IdentifierSeq_Transferable ids_Transferable,
 						in general::corba::AccessIdentifier_Transferable accessIdentifier)
 			raises (general::corba::AMFICOMRemoteException);
