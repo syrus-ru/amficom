@@ -58,6 +58,6 @@ install: $(LIBNAME)
 arch:
 	tar -czvf $(ARCHFILE) \
 		Makefile \
-		idl/resource.idl \
+		$(IDLDIR)/resource.idl \
 		$(SRCDIR)/com/syrus/AMFICOM/resource/*.java
 
