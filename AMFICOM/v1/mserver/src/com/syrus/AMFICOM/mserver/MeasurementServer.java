@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementServer.java,v 1.13 2004/08/22 18:58:07 arseniy Exp $
+ * $Id: MeasurementServer.java,v 1.14 2004/08/26 07:20:28 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,6 +8,7 @@
 
 package com.syrus.AMFICOM.mserver;
 
+import java.util.Date;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -36,8 +37,8 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2004/08/22 18:58:07 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.14 $, $Date: 2004/08/26 07:20:28 $
+ * @author $Author: bob $
  * @module mserver_v1
  */
 
@@ -220,7 +221,7 @@ public class MeasurementServer extends SleepButWorkThread {
 				}
 //			}	//synchronized
 
-			System.out.println(System.currentTimeMillis());
+			System.out.println(new Date(System.currentTimeMillis()));
 			try {
 				sleep(super.initialTimeToSleep);
 			}
