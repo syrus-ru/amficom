@@ -1,0 +1,93 @@
+//////////////////////////////////////////////////////////////////////////////
+// *                                                                      * //
+// * Syrus Systems                                                        * //
+// * Департамент Системных Исследований и Разработок                      * //
+// *                                                                      * //
+// * Проект: АМФИКОМ - система Автоматизированного Многофункционального   * //
+// *         Интеллектуального Контроля и Объектного Мониторинга          * //
+// *                                                                      * //
+// *         реализация Интегрированной Системы Мониторинга               * //
+// *                                                                      * //
+// * Название: Реализация серверной части интерфейса прототипа РИСД       * //
+// *           (включает реализацию пакета pmServer и класса pmRISDImpl)  * //
+// * Тип: Java 1.2.2                                                      * //
+// *                                                                      * //
+// * Автор: Крупенников А.В.                                              * //
+// *                                                                      * //
+// * Версия: 0.1                                                          * //
+// * От: 22 jan 2002                                                      * //
+// * Расположение: ISM\prog\java\AMFICOMConfigure\                        * //
+// *        com\syrus\AMFICOM\Client\Configure\ISM\AccessPoint.java       * //
+// *                                                                      * //
+// * Компилятор: Oracle JDeveloper (javac)                                * //
+// *                                                                      * //
+// * Статус: разработка                                                   * //
+// *                                                                      * //
+// * Изменения:                                                           * //
+// *  Кем         Верс   Когда      Комментарии                           * //
+// * -----------  ----- ---------- -------------------------------------- * //
+// *                                                                      * //
+// * Описание:                                                                     * //
+// *                                                                      * //
+//////////////////////////////////////////////////////////////////////////////
+
+#ifndef _resource_idl_
+#define _resource_idl_
+
+#include <general.idl>
+
+module com
+{
+module syrus
+{
+module AMFICOM
+{
+module CORBA
+{
+
+module Resource
+{
+	struct ImageResource_Transferable
+	{
+		wstring id;
+		wstring name;
+		wstring source_string;
+
+		wstring filename;				// only one of these
+		General::OctetSequence image;	// should be valid
+	};
+	typedef sequence <ImageResource_Transferable> ImageResourceSeq_Transferable;
+
+	struct ImageCatalogue_Transferable
+	{
+		wstring id;
+		ImageResourceSeq_Transferable loaded_images;
+
+//		long getImage(in wstring image_id);
+	};
+
+	struct ResourceDescriptor_Transferable
+	{
+		wstring resource_id;
+		long long resource_modified;
+	};
+	typedef sequence <ResourceDescriptor_Transferable> ResourceDescriptorSeq_Transferable;
+
+   	struct Filter_Transferable
+	{
+//		wstring id;
+		wstring resource_typ;
+//		long long modified;
+		General::OctetSequence logic_scheme;
+	};
+	typedef sequence <Filter_Transferable> FilterSeq_Transferable;
+
+};
+
+};
+};
+};
+};
+
+#endif
+

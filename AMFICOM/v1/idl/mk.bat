@@ -1,0 +1,1 @@
+nmake /f makeidl %1 %2
