@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicDatabase.java,v 1.51 2004/12/10 16:07:30 bob Exp $
+ * $Id: CharacteristicDatabase.java,v 1.52 2004/12/24 12:55:16 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,6 +26,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
@@ -40,7 +41,7 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.configuration.corba.CharacteristicSort;
 
 /**
- * @version $Revision: 1.51 $, $Date: 2004/12/10 16:07:30 $
+ * @version $Revision: 1.52 $, $Date: 2004/12/24 12:55:16 $
  * @author $Author: bob $
  * @module configuration_v1
  */
