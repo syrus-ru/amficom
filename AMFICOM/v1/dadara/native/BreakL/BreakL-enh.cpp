@@ -10,6 +10,8 @@
 inline int imax(int a, int b) { return a > b ? a : b; }
 inline int imin(int a, int b) { return a < b ? a : b; }
 
+#define prf_b(x) ((void)0)
+#define prf_e() ((void)0)
 
 void TTDX::set(int thId)
 {
