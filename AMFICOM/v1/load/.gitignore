@@ -1,5 +1,7 @@
 accessportupdate.txt
 classes
+docs
+lib
 *.deploy
 *.jpr
 *.jpx

@@ -1,4 +1,6 @@
 classes
+docs
+lib
 load_server.bat
 *.deploy
 *.jpr

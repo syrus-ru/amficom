@@ -1,5 +1,7 @@
 bak
 classes
+docs
+lib
 *.deploy
 *.jpr
 *.jar
