@@ -1,23 +1,23 @@
 package com.syrus.AMFICOM.mcm;
 
-import java.util.List;
 import java.util.ArrayList;
-import java.util.Map;
-import java.util.HashMap;
 import java.util.Collections;
-import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.SleepButWorkThread;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import com.syrus.AMFICOM.configuration.KIS;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CommunicationException;
-import com.syrus.AMFICOM.general.UpdateObjectException;
+import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
-import com.syrus.AMFICOM.configuration.KIS;
-import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
+import com.syrus.AMFICOM.general.SleepButWorkThread;
 import com.syrus.AMFICOM.measurement.Measurement;
+import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
 import com.syrus.AMFICOM.measurement.Result;
 import com.syrus.AMFICOM.measurement.corba.MeasurementStatus;
-import com.syrus.util.Log;
 import com.syrus.util.ApplicationProperties;
+import com.syrus.util.Log;
 
 public class Transceiver extends SleepButWorkThread {
 	/*	Error codes for method processFall()	*/
@@ -99,8 +99,9 @@ public class Transceiver extends SleepButWorkThread {
 
 							Log.debugMessage("Transceiver.run | Successfully transferred measurement '" + measurementId + "'", Log.DEBUGLEVEL03);
 							this.scheduledMeasurements.remove(measurement);
-							measurement.updateStatus(MeasurementStatus.MEASUREMENT_STATUS_ACQUIRING, MeasurementControlModule.iAm.getUserId());
+							measurement.setStatus(MeasurementStatus.MEASUREMENT_STATUS_ACQUIRING);
 							MeasurementStorableObjectPool.putStorableObject(measurement);
+							MeasurementStorableObjectPool.flush(true);
 							super.clearFalls();
 						}
 						catch (CommunicationException ce) {
@@ -110,11 +111,8 @@ public class Transceiver extends SleepButWorkThread {
 							this.measurementToRemove = measurement;
 							super.sleepCauseOfFall();
 						}
-						catch (UpdateObjectException uoe) {
-							Log.errorException(uoe);
-						}
-						catch (IllegalObjectEntityException ioee) {
-							Log.errorException(ioee);
+						catch (ApplicationException ae) {
+							Log.errorException(ae);
 						}
 					}// if (! this.scheduledMeasurements.isEmpty())
 
@@ -147,7 +145,8 @@ public class Transceiver extends SleepButWorkThread {
 
 								try {
 									result = this.kisReport.createResult();
-									measurement.updateStatus(MeasurementStatus.MEASUREMENT_STATUS_ACQUIRED, MeasurementControlModule.iAm.getUserId());
+									measurement.setStatus(MeasurementStatus.MEASUREMENT_STATUS_ACQUIRED);
+									MeasurementStorableObjectPool.flush(true);
 									super.clearFalls();
 								}
 								catch (MeasurementException me) {
@@ -162,8 +161,8 @@ public class Transceiver extends SleepButWorkThread {
 										this.throwAwayKISReport();
 									}
 								}
-								catch (UpdateObjectException uoe) {
-									Log.errorException(uoe);
+								catch (ApplicationException ae) {
+									Log.errorException(ae);
 								}
 
 								if (result != null) {
