@@ -2,9 +2,11 @@ package com.syrus.AMFICOM.measurement;
 
 import java.util.Date;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
-import com.syrus.AMFICOM.general.StorableObjectDatabase;
+import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Analysis_Transferable;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
@@ -15,19 +17,19 @@ public class Analysis extends Action {
 
 	private StorableObjectDatabase analysisDatabase;
 
-	public Analysis(Identifier id) throws RetrieveObjectException {
+	public Analysis(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
 		this.analysisDatabase = MeasurementDatabaseContext.analysisDatabase;
 		try {
 			this.analysisDatabase.retrieve(this);
 		}
-		catch (Exception e) {
-			throw new RetrieveObjectException(e.getMessage(), e);
+		catch (IllegalDataException ide){
+			throw new RetrieveObjectException(ide.getMessage(), ide);
 		}
 	}
 
-	public Analysis(Analysis_Transferable at) throws CreateObjectException, RetrieveObjectException {
+	public Analysis(Analysis_Transferable at) throws CreateObjectException {
 		super(new Identifier(at.id),
 					new Date(at.created),
 					new Date(at.modified),
@@ -35,13 +37,21 @@ public class Analysis extends Action {
 					new Identifier(at.modifier_id),
 					new Identifier(at.type_id),
 					new Identifier(at.monitored_element_id));
-		this.criteriaSet = new Set(new Identifier(at.criteria_set_id));
+		try {
+			this.criteriaSet = new Set(new Identifier(at.criteria_set_id));
+		}
+		catch (RetrieveObjectException roe) {
+			throw new CreateObjectException(roe.getMessage(), roe);
+		}
+		catch (ObjectNotFoundException e) {
+			throw new CreateObjectException(e.getMessage(), e);
+		}
 
 		this.analysisDatabase = MeasurementDatabaseContext.analysisDatabase;
 		try {
 			this.analysisDatabase.insert(this);
 		}
-		catch (Exception e) {
+		catch (IllegalDataException e) {
 			throw new CreateObjectException(e.getMessage(), e);
 		}
 	}
@@ -64,7 +74,7 @@ public class Analysis extends Action {
 		try {
 			this.analysisDatabase.insert(this);
 		}
-		catch (Exception e) {
+		catch (IllegalDataException e) {
 			throw new CreateObjectException(e.getMessage(), e);
 		}
 	}
@@ -73,8 +83,8 @@ public class Analysis extends Action {
 		return new Analysis_Transferable((Identifier_Transferable)super.getId().getTransferable(),
 																			super.created.getTime(),
 																			super.modified.getTime(),
-																			(Identifier_Transferable)super.creator_id.getTransferable(),
-																			(Identifier_Transferable)super.modifier_id.getTransferable(),
+																			(Identifier_Transferable)super.creatorId.getTransferable(),
+																			(Identifier_Transferable)super.modifierId.getTransferable(),
 																			(Identifier_Transferable)super.typeId.getTransferable(),
 																			(Identifier_Transferable)super.monitoredElementId.getTransferable(),
 																			(Identifier_Transferable)this.criteriaSet.getId().getTransferable());

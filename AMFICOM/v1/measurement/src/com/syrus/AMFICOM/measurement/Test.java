@@ -1,15 +1,18 @@
 package com.syrus.AMFICOM.measurement;
 
 import java.util.Date;
+import java.util.List;
 import java.util.ArrayList;
 import java.util.Iterator;
 import com.syrus.util.Log;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.StorableObject;
+import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.UpdateObjectException;
-import com.syrus.AMFICOM.general.StorableObject;
-import com.syrus.AMFICOM.general.StorableObjectDatabase;
+import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.corba.TestTimeStamps_Transferable;
 import com.syrus.AMFICOM.measurement.corba.TestTimeStamps_TransferablePackage.ContinuousTestTimeStamps;
@@ -72,13 +75,16 @@ public class Test extends StorableObject {
 		 * @todo when change DB Identifier model ,change identifier_string to
 		 *       identifier_code
 		 */
-		this.evaluationTypeId = (tt.evaluation_type_id.identifier_string != null)
-				? (new Identifier(tt.evaluation_type_id)) : null;
+		this.evaluationTypeId = (tt.evaluation_type_id.identifier_string != null)	? (new Identifier(tt.evaluation_type_id)) : null;
 		this.status = tt.status.value();
 		try {
 			this.monitoredElement = new MonitoredElement(new Identifier(tt.monitored_element_id));
-		} catch (RetrieveObjectException roe) {
+		}
+		catch (RetrieveObjectException roe) {
 			throw new CreateObjectException(roe.getMessage(), roe);
+		}
+		catch (ObjectNotFoundException e) {
+			throw new CreateObjectException(e.getMessage(), e);
 		}
 		this.returnType = tt.return_type.value();
 		this.description = new String(tt.description);
@@ -89,14 +95,19 @@ public class Test extends StorableObject {
 		try {
 			this.mainMeasurementSetup = new MeasurementSetup((Identifier) this.measurementSetupIds.get(0));
 			this.kis = new KIS(this.monitoredElement.getKISId());
-		} catch (RetrieveObjectException roe) {
+		}
+		catch (RetrieveObjectException roe) {
 			throw new CreateObjectException(roe.getMessage(), roe);
+		}
+		catch (ObjectNotFoundException e) {
+			throw new CreateObjectException(e.getMessage(), e);
 		}
 
 		this.testDatabase = MeasurementDatabaseContext.testDatabase;
 		try {
 			this.testDatabase.insert(this);
-		} catch (Exception e) {
+		}
+		catch (IllegalDataException e) {
 			throw new CreateObjectException(e.getMessage(), e);
 		}
 	}
@@ -106,21 +117,22 @@ public class Test extends StorableObject {
 		int i = 0;
 		for (Iterator iterator = this.measurementSetupIds.iterator(); iterator.hasNext();)
 			msIds[i++] = (Identifier_Transferable) ((Identifier) iterator.next()).getTransferable();
-		return new Test_Transferable((Identifier_Transferable) this.id.getTransferable(), super.created.getTime(),
-										super.modified.getTime(), (Identifier_Transferable) super.creator_id
-												.getTransferable(), (Identifier_Transferable) super.modifier_id
-												.getTransferable(), TestTemporalType.from_int(this.temporalType),
-										this.timeStamps.getTransferable(),
-										(Identifier_Transferable) this.temporalPatternId.getTransferable(),
-										(Identifier_Transferable) this.measurementTypeId.getTransferable(),
-										(this.analysisTypeId != null) ? 
-												(Identifier_Transferable) this.analysisTypeId.getTransferable() 
-												: null, 
-												(this.evaluationTypeId != null)	? 
-												(Identifier_Transferable) this.evaluationTypeId.getTransferable()
-												: null, TestStatus.from_int(this.status),
-										(Identifier_Transferable) this.monitoredElement.getId().getTransferable(),
-										TestReturnType.from_int(this.returnType), new String(this.description), msIds);
+		return new Test_Transferable((Identifier_Transferable)this.id.getTransferable(),
+																 super.created.getTime(),
+																 super.modified.getTime(),
+																 (Identifier_Transferable)super.creatorId.getTransferable(),
+																 (Identifier_Transferable)super.modifierId.getTransferable(),
+																 TestTemporalType.from_int(this.temporalType),
+																 this.timeStamps.getTransferable(),
+																 (Identifier_Transferable)this.temporalPatternId.getTransferable(),
+																 (Identifier_Transferable)this.measurementTypeId.getTransferable(),
+																 (this.analysisTypeId != null) ? (Identifier_Transferable)this.analysisTypeId.getTransferable() : null,
+																 (this.evaluationTypeId != null) ? (Identifier_Transferable)this.evaluationTypeId.getTransferable() : null,
+																 TestStatus.from_int(this.status),
+																 (Identifier_Transferable)this.monitoredElement.getId().getTransferable(),
+																 TestReturnType.from_int(this.returnType),
+																 new String(this.description),
+																 msIds);
 	}
 
 	public TestTemporalType getTemporalType() {
@@ -212,8 +224,12 @@ public class Test extends StorableObject {
 
 		try {
 			this.kis = new KIS(this.monitoredElement.getKISId());
-		} catch (RetrieveObjectException roe) {
+		}
+		catch (RetrieveObjectException roe) {
 			Log.errorException(roe);
+		}
+		catch (ObjectNotFoundException e) {
+			Log.errorException(e);
 		}
 	}
 
@@ -222,14 +238,14 @@ public class Test extends StorableObject {
 
 		try {
 			this.mainMeasurementSetup = new MeasurementSetup((Identifier) this.measurementSetupIds.get(0));
-		} catch (RetrieveObjectException roe) {
+		}
+		catch (RetrieveObjectException roe) {
 			Log.errorException(roe);
 		}
+		catch (ObjectNotFoundException e) {
+			Log.errorException(e);
+		}
 	}
-
-	/*
-	 * !! Test(ClientTest_Transferable)
-	 */
 
 	/*
 	 * public ArrayList getMeasurements() { return this.measurements; }
@@ -238,34 +254,43 @@ public class Test extends StorableObject {
 	public void setStatus(TestStatus status, Identifier modifierId) throws UpdateObjectException {
 		this.status = status.value();
 		super.modified = new Date(System.currentTimeMillis());
-		super.modifier_id = (Identifier) modifierId.clone();
+		super.modifierId = (Identifier) modifierId.clone();
 		try {
 			this.testDatabase.update(this, UPDATE_STATUS, null);
-		} catch (Exception e) {
+		}
+		catch (IllegalDataException e) {
 			throw new UpdateObjectException(e.getMessage(), e);
 		}
 	}
 
-	public Measurement createMeasurement(Identifier measurementId, Date startTime, Identifier creatorId)
-			throws CreateObjectException {
-		Measurement measurement = Measurement.create(measurementId, creatorId, this.measurementTypeId,
-														this.monitoredElement.getId(), this.mainMeasurementSetup,
-														startTime, this.monitoredElement.getLocalAddress(), this.id);
+	public Measurement createMeasurement(Identifier measurementId,
+																			 Date startTime,
+																			 Identifier creatorId) throws CreateObjectException {
+		Measurement measurement = Measurement.create(measurementId,
+																								 creatorId,
+																								 this.measurementTypeId,
+																								 this.monitoredElement.getId(),
+																								 this.mainMeasurementSetup,
+																								 startTime,
+																								 this.monitoredElement.getLocalAddress(),
+																								 this.id);
 		super.modified = new Date(System.currentTimeMillis());
-		super.modifier_id = (Identifier) creatorId.clone();
+		super.modifierId = (Identifier) creatorId.clone();
 		try {
 			this.testDatabase.update(this, UPDATE_MODIFIED, null);
-		} catch (Exception e) {
+		}
+		catch (Exception e) {
 			throw new CreateObjectException(e.getMessage(), e);
 		}
 		return measurement;
 	}
 
-	public ArrayList retrieveMeasurementsOrderByStartTime(MeasurementStatus measurementStatus)
-			throws RetrieveObjectException {
+	public List retrieveMeasurementsOrderByStartTime(MeasurementStatus measurementStatus)
+			throws RetrieveObjectException, ObjectNotFoundException {
 		try {
-			return (ArrayList) this.testDatabase.retrieveObject(this, RETRIEVE_MEASUREMENTS, measurementStatus);
-		} catch (Exception e) {
+			return (List)this.testDatabase.retrieveObject(this, RETRIEVE_MEASUREMENTS, measurementStatus);
+		}
+		catch (IllegalDataException e) {
 			throw new RetrieveObjectException(e.getMessage(), e);
 		}
 	}

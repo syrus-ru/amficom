@@ -1,7 +1,7 @@
 MODULE_NAME = measurement_v1
 MODULE_VERSION = $(shell date +%Y%m%d)S
 
-RCDIR=./src
+SRCDIR=./src
 CLASSDIR=./classes
 IDLDIR=../idl_v1/idl
 LIBDIR=../lib

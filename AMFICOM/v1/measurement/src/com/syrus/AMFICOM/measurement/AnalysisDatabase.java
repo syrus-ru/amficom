@@ -5,7 +5,15 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
-import com.syrus.AMFICOM.general.*;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.StorableObject;
+import com.syrus.AMFICOM.general.StorableObjectDatabase;
+import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.UpdateObjectException;
+import com.syrus.AMFICOM.general.ObjectNotFoundException;
 
 public class AnalysisDatabase extends StorableObjectDatabase {
 
@@ -13,8 +21,7 @@ public class AnalysisDatabase extends StorableObjectDatabase {
 	public static final String	COLUMN_MONITORED_ELEMENT_ID	= "monitored_element_id";
 	public static final String	COLUMN_CRITERIA_SET_ID		= "criteria_set_id";
 
-	private Analysis fromStorableObject(StorableObject storableObject)
-			throws IllegalDataException {
+	private Analysis fromStorableObject(StorableObject storableObject) throws IllegalDataException {
 		if (storableObject instanceof Analysis)
 			return (Analysis) storableObject;
 	throw new IllegalDataException(

@@ -10,7 +10,15 @@ import java.util.List;
 
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
-import com.syrus.AMFICOM.general.*;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.StorableObject;
+import com.syrus.AMFICOM.general.StorableObjectDatabase;
+import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.UpdateObjectException;
+import com.syrus.AMFICOM.general.ObjectNotFoundException;
 
 public class MeasurementSetupDatabase extends StorableObjectDatabase {
 
@@ -97,7 +105,7 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 	}
 
 	private void createMEAttachment(MeasurementSetup measurementSetup,
-			Identifier monitoredElementId) throws UpdateObjectException {
+																	Identifier monitoredElementId) throws UpdateObjectException {
 		String msIdStr = measurementSetup.getId().toSQLString();
 		String meIdStr = monitoredElementId.toSQLString();
 		String sql = SQL_INSERT_INTO + ObjectEntities.MSMELINK_ENTITY
@@ -119,22 +127,25 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 					"MeasurementSetupDatabase.createMEAttachment | Trying: "
 							+ sql, Log.DEBUGLEVEL05);
 			statement.executeUpdate(sql);
-		} catch (SQLException sqle) {
+		}
+		catch (SQLException sqle) {
 			String mesg = "MeasurementSetupDatabase.createMEAttachment | Cannot attach measurement setup "
 					+ msIdStr + " to monitored element " + meIdStr;
 			throw new UpdateObjectException(mesg, sqle);
-		} finally {
+		}
+		finally {
 			try {
 				if (statement != null)
 					statement.close();
 				statement = null;
-			} catch (SQLException sqle1) {
+			}
+			catch (SQLException sqle1) {
 			}
 		}
 	}
 
 	private void deleteMEAttachment(MeasurementSetup measurementSetup,
-			Identifier monitoredElementId) throws IllegalDataException {
+																	Identifier monitoredElementId) throws IllegalDataException {
 		String msIdStr = measurementSetup.getId().toSQLString();
 		String meIdStr = monitoredElementId.toSQLString();
 		String sql = SQL_DELETE_FROM 
@@ -154,22 +165,24 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 					"MeasurementSetupDatabase.deleteMEAttachment | Trying: "
 							+ sql, Log.DEBUGLEVEL05);
 			statement.executeUpdate(sql);
-		} catch (SQLException sqle) {
+		}
+		catch (SQLException sqle) {
 			String mesg = "MeasurementSetupDatabase.deleteMEAttachment | Cannot detach measurement setup "
 					+ msIdStr + " from monitored element " + meIdStr;
 			throw new IllegalDataException(mesg, sqle);
-		} finally {
+		}
+		finally {
 			try {
 				if (statement != null)
 					statement.close();
 				statement = null;
-			} catch (SQLException sqle1) {
+			}
+			catch (SQLException sqle1) {
 			}
 		}
 	}
 
-	private MeasurementSetup fromStorableObject(StorableObject storableObject)
-			throws IllegalDataException {
+	private MeasurementSetup fromStorableObject(StorableObject storableObject) throws IllegalDataException {
 		if (storableObject instanceof MeasurementSetup)
 			return (MeasurementSetup) storableObject;
 		throw new IllegalDataException(
@@ -177,8 +190,7 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 							+ storableObject.getClass().getName());
 	}
 
-	private void insertMeasurementSetup(MeasurementSetup measurementSetup)
-			throws CreateObjectException {
+	private void insertMeasurementSetup(MeasurementSetup measurementSetup) throws CreateObjectException {
 		String msIdStr = measurementSetup.getId().toSQLString();
 		Set criteriaSet = measurementSetup.getCriteriaSet();
 		Set thresholdSet = measurementSetup.getThresholdSet();
@@ -254,16 +266,19 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 					"MeasurementSetupDatabase.insertMeasurementSetup | Trying: "
 							+ sql, Log.DEBUGLEVEL05);
 			statement.executeUpdate(sql);
-		} catch (SQLException sqle) {
+		}
+		catch (SQLException sqle) {
 			String mesg = "MeasurementSetupDatabase.insertMeasurementSetup | Cannot insert Measurement Setup "
 					+ msIdStr;
 			throw new CreateObjectException(mesg, sqle);
-		} finally {
+		}
+		finally {
 			try {
 				if (statement != null)
 					statement.close();
 				statement = null;
-			} catch (SQLException sqle1) {
+			}
+			catch (SQLException sqle1) {
 //				 nothing yet.
 			}
 		}
@@ -316,16 +331,19 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 										+ meIdCode, Log.DEBUGLEVEL05);
 				preparedStatement.executeUpdate();
 			}
-		} catch (SQLException sqle) {
+		}
+		catch (SQLException sqle) {
 			String mesg = "MeasurementSetupDatabase.insertMeasurementSetupMELinks | Cannot insert link for monitored element "
 					+ meIdCode + " and Measurement Setup " + msIdCode;
 			throw new CreateObjectException(mesg, sqle);
-		} finally {
+		}
+		finally {
 			try {
 				if (preparedStatement != null)
 					preparedStatement.close();
 				preparedStatement = null;
-			} catch (SQLException sqle1) {
+			}
+			catch (SQLException sqle1) {
 //				 nothing yet.
 			}
 		}
@@ -422,11 +440,13 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 								.getLong(COLUMN_MEASUREMENT_DURAION));
 			} else
 				throw new ObjectNotFoundException("No such measurement setup: " + msIdStr);
-		} catch (SQLException sqle) {
+		}
+		catch (SQLException sqle) {
 			String mesg = "MeasurementSetupDatabase.retrieveMeasurementSetup | Cannot retrieve measurement setup "
 					+ msIdStr;
 			throw new RetrieveObjectException(mesg, sqle);
-		} finally {
+		}
+		finally {
 			try {
 				if (statement != null)
 					statement.close();
@@ -434,14 +454,14 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 					resultSet.close();
 				statement = null;
 				resultSet = null;
-			} catch (SQLException sqle1) {
+			}
+			catch (SQLException sqle1) {
 //				 nothing yet.
 			}
 		}
 	}
 
-	private void retrieveMeasurementSetupMELinks(
-			MeasurementSetup measurementSetup) throws RetrieveObjectException {
+	private void retrieveMeasurementSetupMELinks(MeasurementSetup measurementSetup) throws RetrieveObjectException {
 		String msIdStr = measurementSetup.getId().toSQLString();
 		String sql;
 		{
@@ -469,13 +489,14 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 				 * @todo when change DB Identifier model ,change getString() to
 				 *       getLong()
 				 */
-				arraylist.add(new Identifier(resultSet
-						.getString(LINK_COLUMN_ME_ID)));
-		} catch (SQLException sqle) {
+				arraylist.add(new Identifier(resultSet.getString(LINK_COLUMN_ME_ID)));
+		}
+		catch (SQLException sqle) {
 			String mesg = "MeasurementSetupDatabase.retrieveMeasurementSetupMELinks | Cannot retrieve monitored element ids for measurement setup "
 					+ msIdStr;
 			throw new RetrieveObjectException(mesg, sqle);
-		} finally {
+		}
+		finally {
 			try {
 				if (statement != null)
 					statement.close();
@@ -483,7 +504,8 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 					resultSet.close();
 				statement = null;
 				resultSet = null;
-			} catch (SQLException sqle1) {
+			}
+			catch (SQLException sqle1) {
 //				 nothing yet.
 			}
 		}
@@ -498,8 +520,7 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 				+ SQL_SET
 				+ COLUMN_MODIFIED
 				+ EQUALS
-				+ DatabaseDate
-						.toUpdateSubString(measurementSetup.getModified())
+				+ DatabaseDate.toUpdateSubString(measurementSetup.getModified())
 				+ COMMA
 				+ COLUMN_MODIFIER_ID
 				+ EQUALS
@@ -510,19 +531,20 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 		Statement statement = null;
 		try {
 			statement = connection.createStatement();
-			Log.debugMessage("MeasurementSetupDatabase.setModified | Trying: "
-					+ sql, Log.DEBUGLEVEL05);
+			Log.debugMessage("MeasurementSetupDatabase.setModified | Trying: " + sql, Log.DEBUGLEVEL05);
 			statement.executeUpdate(sql);
-		} catch (SQLException sqle) {
-			String mesg = "MeasurementSetupDatabase.setModified | Cannot set modified for measurement setup "
-					+ msIdStr;
+		}
+		catch (SQLException sqle) {
+			String mesg = "MeasurementSetupDatabase.setModified | Cannot set modified for measurement setup "	+ msIdStr;
 			throw new UpdateObjectException(mesg, sqle);
-		} finally {
+		}
+		finally {
 			try {
 				if (statement != null)
 					statement.close();
 				statement = null;
-			} catch (SQLException sqle1) {
+			}
+			catch (SQLException sqle1) {
 				// nothing yet.
 			}
 		}

@@ -1,14 +1,15 @@
 package com.syrus.AMFICOM.measurement;
 
 import java.util.Date;
-import com.syrus.util.Log;
 import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
-import com.syrus.AMFICOM.measurement.corba.ResultSort;
+import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.event.corba.AlarmLevel;
+import com.syrus.AMFICOM.measurement.corba.ResultSort;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Result_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Parameter_Transferable;
@@ -22,25 +23,33 @@ public class Result extends StorableObject {
 
 	private StorableObjectDatabase resultDatabase;
 
-	public Result(Identifier id) throws RetrieveObjectException {
+	public Result(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
 		this.resultDatabase = MeasurementDatabaseContext.resultDatabase;
 		try {
 			this.resultDatabase.retrieve(this);
 		}
-		catch (Exception e) {
+		catch (IllegalDataException e) {
 			throw new RetrieveObjectException(e.getMessage(), e);
 		}
 	}
 
-	public Result(Result_Transferable rt) throws CreateObjectException, RetrieveObjectException {
+	public Result(Result_Transferable rt) throws CreateObjectException {
 		super(new Identifier(rt.id),
 					new Date(rt.created),
 					new Date(rt.modified),
 					new Identifier(rt.creator_id),
 					new Identifier(rt.modifier_id));
-		this.measurement = new Measurement(new Identifier(rt.measurement_id));
+		try {
+			this.measurement = new Measurement(new Identifier(rt.measurement_id));
+		}
+		catch (RetrieveObjectException roe) {
+			throw new CreateObjectException(roe.getMessage(), roe);
+		}
+		catch (ObjectNotFoundException e) {
+			throw new CreateObjectException(e.getMessage(), e);
+		}
 		this.sort = rt.sort.value();
 		this.alarmLevel = rt.alarm_level.value();
 		switch (this.sort) {
@@ -48,10 +57,26 @@ public class Result extends StorableObject {
 				this.action = this.measurement;
 				break;
 			case ResultSort._RESULT_SORT_ANALYSIS:
-				this.action = new Analysis(new Identifier(rt.analysis_id));
+				try {
+					this.action = new Analysis(new Identifier(rt.analysis_id));
+				}
+				catch (RetrieveObjectException roe) {
+					throw new CreateObjectException(roe.getMessage(), roe);
+				}
+				catch (ObjectNotFoundException e) {
+					throw new CreateObjectException(e.getMessage(), e);
+				}
 				break;
 			case ResultSort._RESULT_SORT_EVALUATION:
-				this.action = new Evaluation(new Identifier(rt.evaluation_id));
+				try {
+					this.action = new Evaluation(new Identifier(rt.evaluation_id));
+				}
+				catch (RetrieveObjectException roe) {
+					throw new CreateObjectException(roe.getMessage(), roe);
+				}
+				catch (ObjectNotFoundException e) {
+					throw new CreateObjectException(e.getMessage(), e);
+				}
 				break;
 		}
 
@@ -63,7 +88,7 @@ public class Result extends StorableObject {
 		try {
 			this.resultDatabase.insert(this);
 		}
-		catch (Exception e) {
+		catch (IllegalDataException e) {
 			throw new CreateObjectException(e.getMessage(), e);
 		}
 	}
@@ -97,7 +122,7 @@ public class Result extends StorableObject {
 		try {
 			this.resultDatabase.insert(this);
 		}
-		catch (Exception e) {
+		catch (IllegalDataException e) {
 			throw new CreateObjectException(e.getMessage(), e);
 		}
 	}
@@ -109,8 +134,8 @@ public class Result extends StorableObject {
 		return new Result_Transferable((Identifier_Transferable)this.id.getTransferable(),
 																	 super.created.getTime(),
 																	 super.modified.getTime(),
-																	 (Identifier_Transferable)super.creator_id.getTransferable(),
-																	 (Identifier_Transferable)super.modifier_id.getTransferable(),
+																	 (Identifier_Transferable)super.creatorId.getTransferable(),
+																	 (Identifier_Transferable)super.modifierId.getTransferable(),
 																	 (Identifier_Transferable)this.measurement.getId().getTransferable(),
 																	 (this.sort == ResultSort._RESULT_SORT_ANALYSIS)?(Identifier_Transferable)this.action.getId().getTransferable():null,
 																	 (this.sort == ResultSort._RESULT_SORT_EVALUATION)?(Identifier_Transferable)this.action.getId().getTransferable():null,

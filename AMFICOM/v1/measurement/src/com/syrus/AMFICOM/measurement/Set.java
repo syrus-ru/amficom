@@ -6,11 +6,13 @@ import java.util.Iterator;
 import java.util.List;
 
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.StorableObject;
+import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.UpdateObjectException;
-import com.syrus.AMFICOM.general.StorableObject;
-import com.syrus.AMFICOM.general.StorableObjectDatabase;
+import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.corba.SetSort;
 import com.syrus.AMFICOM.measurement.corba.Set_Transferable;
@@ -27,14 +29,14 @@ public class Set extends StorableObject {
 
 	private StorableObjectDatabase setDatabase;
 
-	public Set(Identifier id) throws RetrieveObjectException {
+	public Set(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
 		this.setDatabase = MeasurementDatabaseContext.setDatabase;
 		try {
 			this.setDatabase.retrieve(this);
 		}
-		catch (Exception e) {
+		catch (IllegalDataException e) {
 			throw new RetrieveObjectException(e.getMessage(), e);
 		}
 	}
@@ -60,7 +62,7 @@ public class Set extends StorableObject {
 		try {
 			this.setDatabase.insert(this);
 		}
-		catch (Exception e) {
+		catch (IllegalDataException e) {
 			throw new CreateObjectException(e.getMessage(), e);
 		}
 	}
@@ -73,30 +75,28 @@ public class Set extends StorableObject {
 																			 Identifier modifierId) throws UpdateObjectException {
 		if (this.isAttachedToMonitoredElement(monitoredElementId))
       return;
-		super.modifier_id = (Identifier)modifierId.clone();
+		super.modifierId = (Identifier)modifierId.clone();
 		try {
 			this.setDatabase.update(this, UPDATE_ATTACH_ME, monitoredElementId);
 		}
-		catch (Exception e) {
+		catch (IllegalDataException e) {
 			throw new UpdateObjectException("MeasurementSetup.attachToMonitoredElement | Cannot attach measurement setup '" + this.id + "' to monitored element '" + monitoredElementId + "' -- " + e.getMessage(), e);
 		}
 		this.monitoredElementIds.add(monitoredElementId);
-		//this.monitoredElementIds.trimToSize();
 	}
 
 	public void detachFromMonitoredElement(Identifier monitoredElementId,
 																				 Identifier modifierId) throws UpdateObjectException {
     if (!this.isAttachedToMonitoredElement(monitoredElementId))
       return;
-		super.modifier_id = (Identifier)modifierId.clone();
+		super.modifierId = (Identifier)modifierId.clone();
 		try {
 	    this.setDatabase.update(this, UPDATE_DETACH_ME, monitoredElementId);
 		}
-		catch (Exception e) {
+		catch (IllegalDataException e) {
 			throw new UpdateObjectException("MeasurementSetup.detachFromMonitoredElement | Cannot dettach measurement setup '" + this.id + "' from monitored element '" + monitoredElementId + "' -- " + e.getMessage(), e);
 		}
 		this.monitoredElementIds.remove(monitoredElementId);
-		//this.monitoredElementIds.trimToSize();
   }
 
 	public Object getTransferable() {
@@ -112,8 +112,8 @@ public class Set extends StorableObject {
 		return new Set_Transferable((Identifier_Transferable)super.getId().getTransferable(),
 																super.created.getTime(),
 																super.modified.getTime(),
-																(Identifier_Transferable)super.creator_id.getTransferable(),
-																(Identifier_Transferable)super.modifier_id.getTransferable(),
+																(Identifier_Transferable)super.creatorId.getTransferable(),
+																(Identifier_Transferable)super.modifierId.getTransferable(),
 																SetSort.from_int(this.sort),
 																new String(this.description),
 																pts,

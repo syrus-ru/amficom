@@ -6,6 +6,8 @@ import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.corba.ParameterType_Transferable;
 
@@ -14,14 +16,14 @@ public class ParameterType extends StorableObjectType {
 
 	private StorableObjectDatabase parameterTypeDatabase;
 
-	public ParameterType(Identifier id) throws RetrieveObjectException {
+	public ParameterType(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
 		this.parameterTypeDatabase = MeasurementDatabaseContext.parameterTypeDatabase;
 		try {
 			this.parameterTypeDatabase.retrieve(this);
 		}
-		catch (Exception e) {
+		catch (IllegalDataException e) {
 			throw new RetrieveObjectException(e.getMessage(), e);
 		}
 	}
@@ -36,7 +38,7 @@ public class ParameterType extends StorableObjectType {
 		try {
 			this.parameterTypeDatabase.insert(this);
 		}
-		catch (Exception e) {
+		catch (IllegalDataException e) {
 			throw new CreateObjectException(e.getMessage(), e);
 		}
 	}
@@ -54,7 +56,7 @@ public class ParameterType extends StorableObjectType {
 		try {
 			this.parameterTypeDatabase.insert(this);
 		}
-		catch (Exception e) {
+		catch (IllegalDataException e) {
 			throw new CreateObjectException(e.getMessage(), e);
 		}
 	}
@@ -72,18 +74,18 @@ public class ParameterType extends StorableObjectType {
 	}
 	
 	protected synchronized void setAttributes(Date created,
-											  Date modified,
-											  Identifier creatorId,
-											  Identifier modifierId,
-											  String codename,
-											  String description,
-											  String name) {
+																						Date modified,
+																						Identifier creatorId,
+																						Identifier modifierId,
+																						String codename,
+																						String description,
+																						String name) {
 		super.setAttributes(created,
-							modified,
-							creatorId,
-							modifierId,
-							codename,
-							description);
+												modified,
+												creatorId,
+												modifierId,
+												codename,
+												description);
 		this.name = name;
 	}
 }

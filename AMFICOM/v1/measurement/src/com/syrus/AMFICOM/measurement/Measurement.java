@@ -3,10 +3,12 @@ package com.syrus.AMFICOM.measurement;
 import java.util.Date;
 import com.syrus.AMFICOM.measurement.corba.MeasurementStatus;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.UpdateObjectException;
-import com.syrus.AMFICOM.general.StorableObjectDatabase;
+import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Measurement_Transferable;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
@@ -26,14 +28,14 @@ public class Measurement extends Action {
 
 	private StorableObjectDatabase measurementDatabase;
 
-	public Measurement(Identifier id) throws RetrieveObjectException {
+	public Measurement(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
 		this.measurementDatabase = MeasurementDatabaseContext.measurementDatabase;
 		try {
 			this.measurementDatabase.retrieve(this);
 		}
-		catch (Exception e) {
+		catch (IllegalDataException e) {
 			throw new RetrieveObjectException(e.getMessage(), e);
 		}
 	}
@@ -52,6 +54,9 @@ public class Measurement extends Action {
 		catch (RetrieveObjectException roe) {
 			throw new CreateObjectException(roe.getMessage(), roe);
 		}
+		catch (ObjectNotFoundException e) {
+			throw new CreateObjectException(e.getMessage(), e);
+		}
 		this.startTime = new Date(mt.start_time);
 		this.duration = mt.duration;
 		this.status = mt.status.value();
@@ -62,7 +67,7 @@ public class Measurement extends Action {
 		try {
 			this.measurementDatabase.insert(this);
 		}
-		catch (Exception e) {
+		catch (IllegalDataException e) {
 			throw new CreateObjectException(e.getMessage(), e);
 		}
 	}
@@ -93,7 +98,7 @@ public class Measurement extends Action {
 		try {
 			this.measurementDatabase.insert(this);
 		}
-		catch (Exception e) {
+		catch (IllegalDataException e) {
 			throw new CreateObjectException(e.getMessage(), e);
 		}
 	}
@@ -102,8 +107,8 @@ public class Measurement extends Action {
 		return new Measurement_Transferable((Identifier_Transferable)super.getId().getTransferable(),
 																				super.created.getTime(),
 																				super.modified.getTime(),
-																				(Identifier_Transferable)super.creator_id.getTransferable(),
-																				(Identifier_Transferable)super.modifier_id.getTransferable(),
+																				(Identifier_Transferable)super.creatorId.getTransferable(),
+																				(Identifier_Transferable)super.modifierId.getTransferable(),
 																				(Identifier_Transferable)super.typeId.getTransferable(),
 																				(Identifier_Transferable)super.monitoredElementId.getTransferable(),
 																				(Identifier_Transferable)this.setup.getId().getTransferable(),
@@ -141,11 +146,11 @@ public class Measurement extends Action {
 	public synchronized void setStatus(MeasurementStatus status, Identifier modifierId) throws UpdateObjectException {
 		this.status = status.value();
 		super.modified = new Date(System.currentTimeMillis());
-		super.modifier_id = (Identifier)modifierId.clone();
+		super.modifierId = (Identifier)modifierId.clone();
 		try {
 			this.measurementDatabase.update(this, UPDATE_STATUS, null);
 		}
-		catch (Exception e) {
+		catch (IllegalDataException e) {
 			throw new UpdateObjectException(e.getMessage(), e);
 		}
 	}
@@ -212,11 +217,11 @@ public class Measurement extends Action {
 												 parameterValues);						
 	}
 
-	public Result retrieveResult(ResultSort resultSort) throws RetrieveObjectException {
+	public Result retrieveResult(ResultSort resultSort) throws RetrieveObjectException, ObjectNotFoundException {
 		try {
 			return (Result)this.measurementDatabase.retrieveObject(this, RETRIEVE_RESULT, resultSort);
 		}
-		catch (Exception e) {
+		catch (IllegalDataException e) {
 			throw new RetrieveObjectException(e.getMessage(), e);
 		}
 	}

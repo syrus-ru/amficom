@@ -5,10 +5,12 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.corba.EvaluationType_Transferable;
 
@@ -20,14 +22,14 @@ public class EvaluationType extends ActionType {
 
 	private StorableObjectDatabase evaluationTypeDatabase;
 
-	public EvaluationType(Identifier id) throws RetrieveObjectException {
+	public EvaluationType(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
 		this.evaluationTypeDatabase = MeasurementDatabaseContext.evaluationTypeDatabase;
 		try {
 			this.evaluationTypeDatabase.retrieve(this);
 		}
-		catch (Exception e) {
+		catch (IllegalDataException e) {
 			throw new RetrieveObjectException(e.getMessage(), e);
 		}
 	}
@@ -61,7 +63,7 @@ public class EvaluationType extends ActionType {
 		try {
 			this.evaluationTypeDatabase.insert(this);
 		}
-		catch (Exception e) {
+		catch (IllegalDataException e) {
 			throw new CreateObjectException(e.getMessage(), e);
 		}
 	}
@@ -90,8 +92,8 @@ public class EvaluationType extends ActionType {
 		return new EvaluationType_Transferable((Identifier_Transferable)super.id.getTransferable(),
 																					 super.created.getTime(),
 																					 super.modified.getTime(),
-																					 (Identifier_Transferable)super.creator_id.getTransferable(),
-																					 (Identifier_Transferable)super.modifier_id.getTransferable(),
+																					 (Identifier_Transferable)super.creatorId.getTransferable(),
+																					 (Identifier_Transferable)super.modifierId.getTransferable(),
 																					 new String(super.codename),
 																					 new String(super.description),
 																					 inParTypes,

@@ -9,7 +9,15 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
-import com.syrus.AMFICOM.general.*;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.StorableObject;
+import com.syrus.AMFICOM.general.StorableObjectDatabase;
+import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.UpdateObjectException;
+import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.measurement.corba.MeasurementStatus;
 import com.syrus.AMFICOM.configuration.MonitoredElement;
 
@@ -210,7 +218,17 @@ public class TestDatabase extends StorableObjectDatabase {
 				/**
 				  * @todo when change DB Identifier model ,change getString() to getLong()
 				  */
-				arraylist.add(new Measurement(new Identifier(resultSet.getString(COLUMN_ID))));
+				try {
+					arraylist.add(new Measurement(new Identifier(resultSet.getString(COLUMN_ID))));
+				}
+				catch (RetrieveObjectException roe) {
+					Log.errorException(roe);
+					continue;
+				}
+				catch (ObjectNotFoundException e) {
+					Log.errorException(e);
+					continue;
+				}
 			}
 		}
 		catch (SQLException sqle) {

@@ -2,9 +2,11 @@ package com.syrus.AMFICOM.measurement;
 
 import java.util.Date;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
-import com.syrus.AMFICOM.general.StorableObjectDatabase;
+import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Evaluation_Transferable;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
@@ -16,14 +18,14 @@ public class Evaluation extends Action {
 
 	private StorableObjectDatabase evaluationDatabase;
 
-	public Evaluation(Identifier id) throws RetrieveObjectException {
+	public Evaluation(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
 		this.evaluationDatabase = MeasurementDatabaseContext.evaluationDatabase;
 		try {
 			this.evaluationDatabase.retrieve(this);
 		}
-		catch (Exception e) {
+		catch (IllegalDataException e) {
 			throw new RetrieveObjectException(e.getMessage(), e);
 		}
 	}
@@ -43,12 +45,15 @@ public class Evaluation extends Action {
 		catch (RetrieveObjectException roe) {
 			throw new CreateObjectException(roe.getMessage(), roe);
 		}
+		catch (ObjectNotFoundException e) {
+			throw new CreateObjectException(e.getMessage(), e);
+		}
 
 		this.evaluationDatabase = MeasurementDatabaseContext.evaluationDatabase;
 		try {
 			this.evaluationDatabase.insert(this);
 		}
-		catch (Exception e) {
+		catch (IllegalDataException e) {
 			throw new CreateObjectException(e.getMessage(), e);
 		}
 	}
@@ -73,7 +78,7 @@ public class Evaluation extends Action {
 		try {
 			this.evaluationDatabase.insert(this);
 		}
-		catch (Exception e) {
+		catch (IllegalDataException e) {
 			throw new CreateObjectException(e.getMessage(), e);
 		}
 	}
@@ -82,8 +87,8 @@ public class Evaluation extends Action {
 		return new Evaluation_Transferable((Identifier_Transferable)super.getId().getTransferable(),
 																			 super.created.getTime(),
 																			 super.modified.getTime(),
-																			 (Identifier_Transferable)super.creator_id.getTransferable(),
-																			 (Identifier_Transferable)super.modifier_id.getTransferable(),
+																			 (Identifier_Transferable)super.creatorId.getTransferable(),
+																			 (Identifier_Transferable)super.modifierId.getTransferable(),
 																			 (Identifier_Transferable)super.typeId.getTransferable(),
 																			 (Identifier_Transferable)super.monitoredElementId.getTransferable(),
 																			 (Identifier_Transferable)this.thresholdSet.getId().getTransferable(),

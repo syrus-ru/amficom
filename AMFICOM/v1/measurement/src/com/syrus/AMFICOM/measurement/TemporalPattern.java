@@ -12,12 +12,12 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.corba.TemporalPattern_Transferable;
 import com.syrus.AMFICOM.resource.LangModelMeasurement;
@@ -632,15 +632,19 @@ public class TemporalPattern extends StorableObject {
 		this.temporalPatternDatabase = MeasurementDatabaseContext.temporalPatternDatabase;
 		try{
 			this.temporalPatternDatabase.retrieve(this);
-		}catch (IllegalDataException ide){
+		}
+		catch (IllegalDataException ide){
 			throw new RetrieveObjectException(ide.getMessage(), ide);
 		}
 		
 	}
 
 	public TemporalPattern(TemporalPattern_Transferable tpt) throws CreateObjectException {
-		super(new Identifier(tpt.id), new Date(tpt.created), new Date(tpt.modified), new Identifier(tpt.creator_id),
-				new Identifier(tpt.modifier_id));
+		super(new Identifier(tpt.id),
+					new Date(tpt.created),
+					new Date(tpt.modified),
+					new Identifier(tpt.creator_id),
+					new Identifier(tpt.modifier_id));
 		this.description = new String(tpt.description);
 		//this.cronStrings = new String[tpt.cronStrings.length];
 		removeAll();
@@ -652,19 +656,24 @@ public class TemporalPattern extends StorableObject {
 		this.temporalPatternDatabase = MeasurementDatabaseContext.temporalPatternDatabase;
 		try {
 			this.temporalPatternDatabase.insert(this);
-		} catch (IllegalDataException e) {
+		}
+		catch (IllegalDataException e) {
 			throw new CreateObjectException(e.getMessage(), e);
 		}
 	}
 
 	private TemporalPattern(Identifier id,
-			Date created,
-			Date modified,
-			Identifier creatorId,
-			Identifier modifierId,
-			String description,
-			String[] cronStrings) {
-		super(id, created, modified, creatorId, modifierId);
+													Date created,
+													Date modified,
+													Identifier creatorId,
+													Identifier modifierId,
+													String description,
+													String[] cronStrings) {
+		super(id,
+					created,
+					modified,
+					creatorId,
+					modifierId);
 		this.description = description;
 		this.cronStrings = cronStrings;
 		if (cronStrings != null) {
@@ -702,20 +711,25 @@ public class TemporalPattern extends StorableObject {
 	}
 
 	public Object getTransferable() {
-
-		return new TemporalPattern_Transferable((Identifier_Transferable) this.id.getTransferable(), this.created
-				.getTime(), this.modified.getTime(), (Identifier_Transferable) this.creator_id.getTransferable(),
-												(Identifier_Transferable) this.modifier_id.getTransferable(),
-												new String(this.description), getCronStrings());
+		return new TemporalPattern_Transferable((Identifier_Transferable)this.id.getTransferable(),
+																						this.created.getTime(),
+																						this.modified.getTime(),
+																						(Identifier_Transferable)this.creatorId.getTransferable(),
+																						(Identifier_Transferable)this.modifierId.getTransferable(),
+																						new String(this.description),
+																						getCronStrings());
 	}
 
-	protected synchronized void setAttributes(	Date created,
-												Date modified,
-												Identifier creatorId,
-												Identifier modifierId,
-												String description,
-												String[] cronStrings) {
-		super.setAttributes(created, modified, creatorId, modifierId);
+	protected synchronized void setAttributes(Date created,
+																						Date modified,
+																						Identifier creatorId,
+																						Identifier modifierId,
+																						String description,
+																						String[] cronStrings) {
+		super.setAttributes(created,
+												modified,
+												creatorId,
+												modifierId);
 		this.description = description;
 		this.cronStrings = cronStrings;
 		removeAll();
