@@ -1,5 +1,5 @@
 /*
- * $Id: report.idl,v 1.5 2004/06/18 07:50:59 krupenn Exp $
+ * $Id: report.idl,v 1.6 2004/09/28 14:32:29 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -68,16 +68,12 @@ module Report
 		wstring description;
 		wstring template_type;
 
-		//объекты
 		sequence <RenderingObject_Transferable> renderingObjects;
 
-		//надписи
 		sequence <FirmedTextPane_Transferable> firmedTextPanes;
 
-		//картинки
 		sequence <ImagePane_Transferable> imagePanes;
 
-		//фильтры
 		sequence <Resource::Filter_Transferable> filters;
 	};
 	typedef sequence <ReportTemplate_Transferable> ReportTemplateSeq_Transferable;
