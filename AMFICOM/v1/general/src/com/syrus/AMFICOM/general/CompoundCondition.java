@@ -1,5 +1,5 @@
 /*
-* $Id: CompoundCondition.java,v 1.6 2005/01/26 15:27:29 arseniy Exp $
+* $Id: CompoundCondition.java,v 1.7 2005/02/02 08:34:31 max Exp $
 *
 * Copyright ¿ 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -28,8 +28,8 @@ import com.syrus.util.corba.JavaSoftORBUtil;
  * Compound condition such as (A & B), (A | B) , (A ^ B)
  * where A and B is conditions (they can be also compound condition too)
  *  
- * @version $Revision: 1.6 $, $Date: 2005/01/26 15:27:29 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.7 $, $Date: 2005/02/02 08:34:31 $
+ * @author $Author: max $
  * @module general_v1
  */
 public class CompoundCondition implements StorableObjectCondition {
@@ -41,6 +41,19 @@ public class CompoundCondition implements StorableObjectCondition {
 	private StorableObjectCondition secondCondition;
 	
 	private Short entityCode;
+	
+	private boolean doCompare(boolean firstResult, boolean secondResult) throws ApplicationException {
+		switch (this.operation) {
+			case CompoundConditionSort._AND:
+				return firstResult && secondResult;			
+			case CompoundConditionSort._OR:
+				return firstResult || secondResult;					
+			case CompoundConditionSort._XOR:
+				return (firstResult || secondResult) && !(firstResult && secondResult);			
+			default: 
+				throw new ApplicationException("CompoundCondition.doComapare Unsupported operation " + this.operation);
+		}
+	}
 	
 	public CompoundCondition(StorableObjectCondition firstCondition, 
 	                         CompoundConditionSort operation, 
@@ -66,6 +79,8 @@ public class CompoundCondition implements StorableObjectCondition {
 			} else if (serializable1 instanceof CompoundCondition_Transferable) {
 				CompoundCondition_Transferable cct = (CompoundCondition_Transferable) serializable1;
 				this.firstCondition = new CompoundCondition(cct);
+			} else {
+				throw new IllegalDataException("Wrong StorableObjectCondition " + serializable1.getClass().getName());
 			}
 			
 			if (serializable2 instanceof StringFieldCondition_Transferable) {
@@ -77,49 +92,24 @@ public class CompoundCondition implements StorableObjectCondition {
 			} else if (serializable2 instanceof CompoundCondition_Transferable) {
 				CompoundCondition_Transferable cct = (CompoundCondition_Transferable) serializable2;
 				this.secondCondition = new CompoundCondition(cct);
+			} else {
+				throw new IllegalDataException("Wrong StorableObjectCondition " + serializable2.getClass().getName());
 			}
+			
 		} else 
-			throw new IllegalDataException("Illegal contition count " + anies.length);
+			throw new IllegalDataException("Illegal condition count " + anies.length);
 	}
 	
 	public boolean isConditionTrue(Object object) throws ApplicationException {
-		boolean result = false;
 		boolean firstResult = this.firstCondition.isConditionTrue(object);
-		switch (this.operation) {
-			case CompoundConditionSort._AND:
-				result = firstResult && this.secondCondition.isConditionTrue(object);
-				break;
-			case CompoundConditionSort._OR:
-				result = firstResult || this.secondCondition.isConditionTrue(object);
-				break;
-				
-			case CompoundConditionSort._XOR:
-				boolean secondResult = this.secondCondition.isConditionTrue(object);
-				result = (!(firstResult && secondResult)) && (firstResult && secondResult); 
-				break;
-				
-		}
-		return result;
+		boolean secondResult = this.secondCondition.isConditionTrue(object);
+		return doCompare(firstResult, secondResult);		
 	}
 
 	public boolean isNeedMore(List list) throws ApplicationException {
-		boolean result = false;
 		boolean firstResult = this.firstCondition.isNeedMore(list);
-		switch (this.operation) {
-			case CompoundConditionSort._AND:
-				result = firstResult && this.secondCondition.isNeedMore(list);
-				break;
-			case CompoundConditionSort._OR:
-				result = firstResult || this.secondCondition.isNeedMore(list);
-				break;
-				
-			case CompoundConditionSort._XOR:
-				boolean secondResult = this.secondCondition.isNeedMore(list);
-				result = (!(firstResult && secondResult)) && (firstResult && secondResult); 
-				break;
-				
-		}
-		return result;
+		boolean secondResult = this.secondCondition.isNeedMore(list);
+		return doCompare(firstResult, secondResult);
 	}
 
 	public Short getEntityCode() {
