@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeStorableObjectPool.java,v 1.1 2004/11/22 14:53:14 bass Exp $
+ * $Id: SchemeStorableObjectPool.java,v 1.2 2004/11/24 15:27:09 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,7 +15,7 @@ import com.syrus.AMFICOM.general.*;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.1 $, $Date: 2004/11/22 14:53:14 $
+ * @version $Revision: 1.2 $, $Date: 2004/11/24 15:27:09 $
  * @module schemecommon_v1
  */
 public class SchemeStorableObjectPool {
@@ -39,6 +39,11 @@ public class SchemeStorableObjectPool {
 
 	public static List getStorableObjectsByConditionButIds(final List ids, final StorableObjectCondition condition, final boolean useLoader)
 			throws ApplicationException {
+		throw new UnsupportedOperationException();
+	}
+
+	public static StorableObject putStorableObject(final StorableObject storableObject)
+			throws IllegalObjectEntityException {
 		throw new UnsupportedOperationException();
 	}
 }

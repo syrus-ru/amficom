@@ -1,5 +1,5 @@
 /*
- * $Id: IdentifierPool.java,v 1.5 2004/11/03 16:47:10 bob Exp $
+ * $Id: IdentifierPool.java,v 1.6 2004/11/24 15:25:16 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,8 +18,8 @@ import com.syrus.util.Fifo;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2004/11/03 16:47:10 $
- * @author $Author: bob $
+ * @version $Revision: 1.6 $, $Date: 2004/11/24 15:25:16 $
+ * @author $Author: bass $
  * @module cmserver_v1
  */
 public class IdentifierPool {
@@ -50,7 +50,7 @@ public class IdentifierPool {
 		init(server, 10);
 	}
 
-	public static synchronized Identifier generateId(short entityCode) {
+	public static synchronized Identifier generateId(final short entityCode) {
 		Short entityCodeShort = new Short(entityCode);
 		Fifo fifo = (Fifo) idPoolMap.get(entityCodeShort);
 		if (fifo == null) {
@@ -73,7 +73,10 @@ public class IdentifierPool {
 			}
 		}
 
-		Identifier id = (Identifier) fifo.remove();
-		return id;
+		return (Identifier) fifo.remove();
+	}
+
+	public static synchronized com.syrus.AMFICOM.general.corba.Identifier generateIdImpl(final short entityCode) {
+		throw new UnsupportedOperationException();
 	}
 }
