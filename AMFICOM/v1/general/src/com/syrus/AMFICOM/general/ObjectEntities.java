@@ -1,5 +1,5 @@
 /*
- * $Id: ObjectEntities.java,v 1.50 2005/02/07 09:56:05 arseniy Exp $
+ * $Id: ObjectEntities.java,v 1.51 2005/02/08 19:47:37 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,7 +9,7 @@
 package com.syrus.AMFICOM.general;
 
 /**
- * @version $Revision: 1.50 $, $Date: 2005/02/07 09:56:05 $
+ * @version $Revision: 1.51 $, $Date: 2005/02/08 19:47:37 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -49,8 +49,8 @@ public final class ObjectEntities {
 
 	/*	Event	*/
 	public static final String EVENTPARAMETER_ENTITY = "EventParameter";
-	public static final String EVENT_SOURCE_ENTITY = "EventSource";
-	public static final String EVENT_SOURCE_LINK_ENTITY = "EventSourceLink";
+	public static final String EVENTSOURCE_ENTITY = "EventSource";
+	public static final String EVENTSOURCE_LINK_ENTITY = "EventSourceLink";
 	public static final String EVENT_ENTITY = "Event";
 //	public static final String ALARM_ENTITY = "Alarm";
 
@@ -155,7 +155,7 @@ public final class ObjectEntities {
 	public static final short EVENT_MIN_ENTITY_CODE = 0x0081;
 
 	public static final short EVENTPARAMETER_ENTITY_CODE = EVENT_MIN_ENTITY_CODE;
-	public static final short EVENT_SOURCE_ENTITY_CODE = 0x0082;
+	public static final short EVENTSOURCE_ENTITY_CODE = 0x0082;
 	public static final short EVENT_ENTITY_CODE = 0x0083;
 //	public static final short ALARM_ENTITY_CODE = 0x0084;
 
@@ -330,7 +330,7 @@ public final class ObjectEntities {
 		else if (entity.equals(CHARACTERISTIC_ENTITY)) return CHARACTERISTIC_ENTITY_CODE;
 
 		else if (entity.equals(EVENTPARAMETER_ENTITY)) return EVENTPARAMETER_ENTITY_CODE;
-		else if (entity.equals(EVENT_SOURCE_ENTITY)) return EVENT_SOURCE_ENTITY_CODE;
+		else if (entity.equals(EVENTSOURCE_ENTITY)) return EVENTSOURCE_ENTITY_CODE;
 		else if (entity.equals(EVENT_ENTITY)) return EVENT_ENTITY_CODE;
 //		else if (entity.equals(ALARM_ENTITY)) return ALARM_ENTITY_CODE;
 
@@ -443,8 +443,8 @@ public final class ObjectEntities {
 
 			case EVENTPARAMETER_ENTITY_CODE:
 				return EVENTPARAMETER_ENTITY;
-			case EVENT_SOURCE_ENTITY_CODE:
-				return EVENT_SOURCE_ENTITY;
+			case EVENTSOURCE_ENTITY_CODE:
+				return EVENTSOURCE_ENTITY;
 			case EVENT_ENTITY_CODE:
 				return EVENT_ENTITY;
 //			case ALARM_ENTITY_CODE:
