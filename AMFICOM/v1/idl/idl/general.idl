@@ -1,5 +1,5 @@
 /*
- * $Id: general.idl,v 1.34 2004/11/24 10:02:15 bob Exp $
+ * $Id: general.idl,v 1.35 2004/11/26 15:45:45 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,8 +28,8 @@ module corba {
 		Identifier_Transferable modifier_id;
 		long long version;
 	};
-	
-	typedef sequence <StorableObject_Transferable> StorableObjectSeq_Transferable;
+
+	typedef sequence<StorableObject_Transferable> StorableObjectSeq_Transferable;
 
 	enum DataType {
 		DATA_TYPE_INTEGER,
@@ -84,7 +84,7 @@ module corba {
 
 		Identifier_Transferable reverseLookupUserName(in wstring<64> userName) raises (AMFICOMRemoteException);
 	};
-	
+
 //	abstract
 	interface IdentifierGeneratorServer {
 		Identifier_Transferable getGeneratedIdentifier(in unsigned short entity) raises (AMFICOMRemoteException);
