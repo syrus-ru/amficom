@@ -125,8 +125,11 @@ public class SessionOpenCommand extends VoidCommand //implements Command
 			DataSourceInterface dataSource = aContext.getApplicationModel().getDataSource(aContext.getSessionInterface());
 
 			dispatcher.notify(new StatusMessageEvent("Инициализация начальных данных"));
+
+//			dispatcher.notify(new StatusMessageEvent(StatusMessageEvent.STATUS_PROGRESS_BAR, true));
 			dataSource.LoadUserDescriptors();
 			dataSource.LoadExecs();
+//			dispatcher.notify(new StatusMessageEvent(StatusMessageEvent.STATUS_PROGRESS_BAR, false));
 
 			SessionInterface sess = dataSource.getSession();
 			
