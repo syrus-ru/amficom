@@ -1,30 +1,32 @@
+/*
+ * $Id: TestDatadbInterfaceSave.sqlj,v 1.2 2004/06/29 07:12:58 bass Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ.
+ */
+
 package com.syrus.AMFICOM.server.Object;
 
-import sqlj.runtime.*;
-import sqlj.runtime.ref.*;
-import sqlj.runtime.profile.*;
-import java.sql.*;
-import oracle.sql.*;
-import oracle.jdbc.driver.*;
-
-import java.util.Vector;
-
-import com.syrus.io.*;
-import com.syrus.AMFICOM.CORBA.*;
+import com.syrus.AMFICOM.CORBA.Constants;
+import com.syrus.AMFICOM.CORBA.General.TestRequestStatus;
 import com.syrus.AMFICOM.CORBA.Survey.*;
-import com.syrus.AMFICOM.CORBA.Resource.*;
-import com.syrus.AMFICOM.CORBA.General.*;
-import com.syrus.AMFICOM.CORBA.General.TestTimeStampsPackage.*;
+import com.syrus.AMFICOM.server.ResourcedbInterface;
+import java.sql.*;
+import oracle.sql.BLOB;
 
-import com.syrus.AMFICOM.server.*;
-
+/**
+ * @version $Revision: 1.2 $, $Date: 2004/06/29 07:12:58 $
+ * @author $Author: bass $
+ * @module server_v1
+ */
 public class TestDatadbInterfaceSave
 {
 	protected TestDatadbInterfaceSave()
 	{
 	}
 
-	static public int saveTestArgument(
+	public static int saveTestArgument(
 			String argCodeName,
 			String test_id,
 			byte[] val)
@@ -118,7 +120,7 @@ public class TestDatadbInterfaceSave
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static public int saveTestTimeStamp(
+	public static int saveTestTimeStamp(
 			Timestamp date,
 			String test_id)
 	{
@@ -145,7 +147,7 @@ public class TestDatadbInterfaceSave
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static public int saveTestRequest(
+	public static int saveTestRequest(
 			String domain_id,
 			ClientTestRequest_Transferable treq)
 	{
@@ -180,7 +182,7 @@ public class TestDatadbInterfaceSave
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static public int saveTests(ClientTest_Transferable[] tests)
+	public static int saveTests(ClientTest_Transferable[] tests)
 	{
 		int i;
 		int len;
@@ -306,7 +308,7 @@ public class TestDatadbInterfaceSave
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static public int removeTests(String[] tests)
+	public static int removeTests(String[] tests)
 	{
 		int i;
 		int len;
@@ -358,7 +360,7 @@ public class TestDatadbInterfaceSave
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static public int updateTests(ClientTest_Transferable[] tests)
+	public static int updateTests(ClientTest_Transferable[] tests)
 	{
 		int i;
 		int len;
@@ -445,6 +447,4 @@ public class TestDatadbInterfaceSave
 */
 		return Constants.ERROR_NO_ERROR;
 	}
-
 }
-

@@ -1,14 +1,25 @@
+/*
+ * $Id: AlarmFilter.java,v 1.3 2004/06/29 07:12:57 bass Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Íàó÷íî-òåõíè÷åñêèé öåíòğ.
+ * Ïğîåêò: ÀÌÔÈÊÎÌ.
+ */
+
 package com.syrus.AMFICOM.server;
 
-import java.util.*;
-
+import com.syrus.AMFICOM.CORBA.General.AlarmStatus;
 import com.syrus.AMFICOM.filter.*;
+import com.syrus.AMFICOM.server.catalog.MonitoredElement;
 import com.syrus.AMFICOM.server.event.*;
 import com.syrus.AMFICOM.server.measurement.*;
-import com.syrus.AMFICOM.server.catalog.*;
+import java.util.*;
 
-import com.syrus.AMFICOM.CORBA.General.*;
-
+/**
+ * @version $Revision: 1.3 $, $Date: 2004/06/29 07:12:57 $
+ * @author $Author: bass $
+ * @module server_v1
+ */
 public class AlarmFilter implements Filter
 {
 	public AlarmFilter()
@@ -193,7 +204,6 @@ public class AlarmFilter implements Filter
 		boolean res = false;
 		if(text.indexOf(substring) >= 0)
 			return true;
-        return res;
-    }
+		return res;
+	}
 }
-

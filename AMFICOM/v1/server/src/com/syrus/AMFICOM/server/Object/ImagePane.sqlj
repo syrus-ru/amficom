@@ -1,17 +1,28 @@
+/*
+ * $Id: ImagePane.sqlj,v 1.4 2004/06/29 07:12:58 bass Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ.
+ */
+
 package com.syrus.AMFICOM.server.Object;
 
-import sqlj.runtime.ConnectionContext;
-import sqlj.runtime.ref.DefaultContext;
-import java.sql.SQLException;
-import oracle.sql.BLOB;
-import java.util.Vector;
-
 import com.syrus.AMFICOM.CORBA.Report.ImagePane_Transferable;
-
 import com.syrus.AMFICOM.server.ResourcedbInterface;
 import com.syrus.util.database.ByteArrayDatabase;
+import java.sql.SQLException;
+import java.util.Vector;
+import oracle.sql.BLOB;
+import sqlj.runtime.ConnectionContext;
+import sqlj.runtime.ref.DefaultContext;
 
-public class ImagePane extends Object
+/**
+ * @version $Revision: 1.4 $, $Date: 2004/06/29 07:12:58 $
+ * @author $Author: bass $
+ * @module server_v1
+ */
+public class ImagePane
 {
 	private String id;
   
@@ -262,6 +273,5 @@ public class ImagePane extends Object
 		int y,
 		int width,
 		int height,
-    BLOB img);
+		BLOB img);
 }
-

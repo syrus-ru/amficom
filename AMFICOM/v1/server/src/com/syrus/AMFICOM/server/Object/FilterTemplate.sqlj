@@ -1,15 +1,26 @@
+/*
+ * $Id: FilterTemplate.sqlj,v 1.3 2004/06/29 07:12:58 bass Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ.
+ */
+
 package com.syrus.AMFICOM.server.Object;
 
-import sqlj.runtime.ConnectionContext;
-import sqlj.runtime.ref.DefaultContext;
+import com.syrus.AMFICOM.CORBA.Resource.Filter_Transferable;
+import com.syrus.util.database.ByteArrayDatabase;
 import java.sql.SQLException;
 import oracle.sql.BLOB;
+import sqlj.runtime.ConnectionContext;
+import sqlj.runtime.ref.DefaultContext;
 
-import com.syrus.AMFICOM.CORBA.Resource.Filter_Transferable;
-
-import com.syrus.util.database.ByteArrayDatabase;
-
-public class FilterTemplate extends Object
+/**
+ * @version $Revision: 1.3 $, $Date: 2004/06/29 07:12:58 $
+ * @author $Author: bass $
+ * @module server_v1
+ */
+public class FilterTemplate
 {
 	private String id;
 	private String resource_typ;

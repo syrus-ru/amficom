@@ -1,29 +1,32 @@
+/*
+ * $Id: MapdbInterfaceLoad2.sqlj,v 1.2 2004/06/29 07:12:58 bass Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ.
+ */
 
-// Copyright (c) Syrus Systems 2000 Syrus Systems
 package com.syrus.AMFICOM.server.Object;
 
-import sqlj.runtime.*;
-import sqlj.runtime.ref.*;
-import java.sql.*;
-import oracle.sql.*;
-import java.text.*;
-
-import java.util.Vector;
-
-import com.syrus.AMFICOM.CORBA.*;
+import com.syrus.AMFICOM.CORBA.Constants;
 import com.syrus.AMFICOM.CORBA.Map.*;
-import com.syrus.AMFICOM.CORBA.Scheme.*;
-import com.syrus.AMFICOM.CORBA.Resource.*;
+import com.syrus.AMFICOM.CORBA.Scheme.ElementAttribute_Transferable;
+import java.sql.SQLException;
+import java.util.Vector;
+import sqlj.runtime.SQLNullException;
 
-import com.syrus.AMFICOM.server.*;
-
-public class MapdbInterfaceLoad2 extends Object
+/**
+ * @version $Revision: 1.2 $, $Date: 2004/06/29 07:12:58 $
+ * @author $Author: bass $
+ * @module server_v1
+ */
+public class MapdbInterfaceLoad2
 {
 	protected MapdbInterfaceLoad2()
 	{
 	}
 
-	static public MapPhysicalNodeElement_Transferable loadMapNode(
+	public static MapPhysicalNodeElement_Transferable loadMapNode(
 			String id,
 			Vector images)
 	{
@@ -143,7 +146,7 @@ public class MapdbInterfaceLoad2 extends Object
 		return node_t;
 	}
 
-	static public int loadMapNodes(
+	public static int loadMapNodes(
 			Vector map_ids,
 			MapPhysicalNodeElementSeq_TransferableHolder nodeseq,
 			Vector images)
@@ -201,7 +204,7 @@ public class MapdbInterfaceLoad2 extends Object
 	}
 
 /*
-	static public int loadMapNodes(
+	public static int loadMapNodes(
 			Vector map_ids,
 			MapPhysicalNodeElementSeq_TransferableHolder nodeseq,
 			Vector images)
@@ -337,7 +340,7 @@ public class MapdbInterfaceLoad2 extends Object
 	}
 */
 
-	static public MapNodeLinkElement_Transferable loadMapNodeLink(String id)
+	public static MapNodeLinkElement_Transferable loadMapNodeLink(String id)
 	{
 		MapNodeLinkElement_Transferable nl_t = null;
 		MapNodeLinkIterator nlIt = null;
@@ -438,7 +441,7 @@ public class MapdbInterfaceLoad2 extends Object
 		return nl_t;
 	}
 
-	static public int loadMapNodeLinks(
+	public static int loadMapNodeLinks(
 			Vector map_ids,
 			MapNodeLinkElementSeq_TransferableHolder nodelinkseq,
 			Vector images)
@@ -496,7 +499,7 @@ public class MapdbInterfaceLoad2 extends Object
 	}
 
 /*
-	static public int loadMapNodeLinks(
+	public static int loadMapNodeLinks(
 			Vector map_ids,
 			MapNodeLinkElementSeq_TransferableHolder nodelinkseq,
 			Vector images)
@@ -628,7 +631,7 @@ public class MapdbInterfaceLoad2 extends Object
 	}
 */
 
-	static public MapPhysicalLinkElement_Transferable loadMapLink(String id)
+	public static MapPhysicalLinkElement_Transferable loadMapLink(String id)
 	{
 		MapPhysicalLinkElement_Transferable link_t = null;
 		Vector vector = new Vector();
@@ -774,7 +777,7 @@ public class MapdbInterfaceLoad2 extends Object
 		return link_t;
 	}
 
-	static public int loadMapLinks(
+	public static int loadMapLinks(
 			Vector map_ids,
 			MapPhysicalLinkElementSeq_TransferableHolder linkseq,
 			Vector images)
@@ -831,7 +834,7 @@ public class MapdbInterfaceLoad2 extends Object
 
 		return Constants.ERROR_NO_ERROR;
 	}
-/*	static public int loadMapLinks(
+/*	public static int loadMapLinks(
 			Vector map_ids,
 			MapPhysicalLinkElementSeq_TransferableHolder linkseq,
 			Vector images)
@@ -1006,7 +1009,7 @@ public class MapdbInterfaceLoad2 extends Object
 	}
 */
 
-	static public MapPathElement_Transferable loadMapPath(String id)
+	public static MapPathElement_Transferable loadMapPath(String id)
 	{
 		MapPathElement_Transferable path_t = null;
 		MapPathIterator pathIt = null;
@@ -1150,7 +1153,7 @@ public class MapdbInterfaceLoad2 extends Object
 		return path_t;
 	}
 
-	static public int loadMapPaths(
+	public static int loadMapPaths(
 			Vector map_ids,
 			MapPathElementSeq_TransferableHolder pathseq,
 			Vector images)
@@ -1202,7 +1205,7 @@ public class MapdbInterfaceLoad2 extends Object
 	}
 
 /*
-	static public int loadMapPaths(
+	public static int loadMapPaths(
 			Vector map_ids,
 			MapPathElementSeq_TransferableHolder pathseq,
 			Vector images)
@@ -1364,7 +1367,7 @@ public class MapdbInterfaceLoad2 extends Object
 		String id,
 		String attribute_id );
 
-	#sql static public iterator MapNodeIterator (
+	#sql public static iterator MapNodeIterator (
 		String symbol_id,
 		String latitude,
 		String owner_id,
@@ -1377,7 +1380,7 @@ public class MapdbInterfaceLoad2 extends Object
 		String physical_link_id,
 		String longitude);
 
-	#sql static public iterator MapNodeLinkIterator (
+	#sql public static iterator MapNodeLinkIterator (
 		String physical_link_id,
 		String id,
 		String end_node_id,
@@ -1387,7 +1390,7 @@ public class MapdbInterfaceLoad2 extends Object
 		String map_id,
 		String ism_map_id);
 
-	#sql static public iterator MapPhysicalLinkIterator (
+	#sql public static iterator MapPhysicalLinkIterator (
 		String description,
 		String id,
 		String end_node_id,
@@ -1400,7 +1403,7 @@ public class MapdbInterfaceLoad2 extends Object
 		String link_id,
 		String link_type_id);
 
-	#sql static public iterator MapPathIterator (
+	#sql public static iterator MapPathIterator (
 		String description,
 		String id,
 		String end_node_id,
@@ -1411,6 +1414,4 @@ public class MapdbInterfaceLoad2 extends Object
 		String map_id,
 		String ism_map_id,
 		String path_id);
-
 }
-

@@ -1,11 +1,21 @@
+/*
+ * $Id: ServerTrafficReporterStream.java,v 1.2 2004/06/29 07:12:57 bass Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ.
+ */
+
 package com.syrus.AMFICOM.server;
 
+import org.omg.CORBA.*;
 import org.omg.CORBA.portable.*;
 
-import org.omg.CORBA.TypeCode;
-import org.omg.CORBA.Principal;
-import org.omg.CORBA.Any;
-
+/**
+ * @version $Revision: 1.2 $, $Date: 2004/06/29 07:12:57 $
+ * @author $Author: bass $
+ * @module server_v1
+ */
 public class ServerTrafficReporterStream extends OutputStream
 {
 	public int length = 0;
@@ -208,7 +218,4 @@ public class ServerTrafficReporterStream extends OutputStream
 	public void write_Principal(Principal value)
 	{
 	}
-
-
 }
-

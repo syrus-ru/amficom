@@ -1,25 +1,31 @@
+/*
+ * $Id: NetDirectorydbInterfaceSave.sqlj,v 1.2 2004/06/29 07:12:58 bass Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ.
+ */
+
 package com.syrus.AMFICOM.server.Object;
 
-import sqlj.runtime.*;
-import sqlj.runtime.ref.*;
+import com.syrus.AMFICOM.CORBA.Constants;
+import com.syrus.AMFICOM.CORBA.Network.Characteristic_Transferable;
+import com.syrus.AMFICOM.CORBA.NetworkDirectory.*;
+import com.syrus.AMFICOM.server.ResourcedbInterface;
 import java.sql.*;
 
-import java.util.Vector;
-
-import com.syrus.AMFICOM.CORBA.*;
-import com.syrus.AMFICOM.CORBA.Network.*;
-import com.syrus.AMFICOM.CORBA.NetworkDirectory.*;
-import com.syrus.AMFICOM.CORBA.Resource.*;
-
-import com.syrus.AMFICOM.server.*;
-
+/**
+ * @version $Revision: 1.2 $, $Date: 2004/06/29 07:12:58 $
+ * @author $Author: bass $
+ * @module server_v1
+ */
 public class NetDirectorydbInterfaceSave
 {
 	protected NetDirectorydbInterfaceSave()
 	{
 	}
 
-	static public void saveCharacteristicLinks(
+	public static void saveCharacteristicLinks(
 			String charLinkTable,
 			String charLinkField,
 			String element_id,
@@ -83,7 +89,7 @@ public class NetDirectorydbInterfaceSave
 		}
 	}
 /*
-	static public void saveCharacteristicLinks2(
+	public static void saveCharacteristicLinks2(
 			String charLinkTable,
 			String charLinkField,
 			String element_id,
@@ -149,7 +155,7 @@ public class NetDirectorydbInterfaceSave
 		}//for (characteristics)
 	}
 */
-	static public int saveCharacteristicTypes(
+	public static int saveCharacteristicTypes(
 			CharacteristicType_Transferable[] characteristictypes)
 	{
 		int count;
@@ -231,7 +237,7 @@ public class NetDirectorydbInterfaceSave
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static public int savePortTypes(
+	public static int savePortTypes(
 			PortType_Transferable[] porttypes)
 	{
 		int i;
@@ -332,7 +338,7 @@ public class NetDirectorydbInterfaceSave
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static public int saveCablePortTypes(
+	public static int saveCablePortTypes(
 			CablePortType_Transferable[] porttypes)
 	{
 		int i;
@@ -421,7 +427,7 @@ public class NetDirectorydbInterfaceSave
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static public int saveLinkTypes(
+	public static int saveLinkTypes(
 			LinkType_Transferable[] linktypes)
 	{
 		int i;
@@ -523,7 +529,7 @@ public class NetDirectorydbInterfaceSave
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static public int saveCableTypeThreads(String cable_id, CableTypeThread_Transferable[] threads)
+	public static int saveCableTypeThreads(String cable_id, CableTypeThread_Transferable[] threads)
 	{
 		try
 		{
@@ -567,7 +573,7 @@ public class NetDirectorydbInterfaceSave
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static public int saveCableLinkTypes(
+	public static int saveCableLinkTypes(
 			CableLinkType_Transferable[] linktypes)
 	{
 		int i;
@@ -660,7 +666,7 @@ public class NetDirectorydbInterfaceSave
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static public int saveEquipmentTypes(
+	public static int saveEquipmentTypes(
 			EquipmentType_Transferable[] equipmenttypes)
 	{
 		int i;
@@ -752,6 +758,6 @@ public class NetDirectorydbInterfaceSave
 		}
 		return Constants.ERROR_NO_ERROR;
 	}
+
 	#sql public static iterator IdIterator ( String id );
 }
-

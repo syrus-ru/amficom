@@ -1,29 +1,30 @@
+/*
+ * $Id: MapdbInterfaceSave1.sqlj,v 1.2 2004/06/29 07:12:58 bass Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ.
+ */
 
-// Copyright (c) Syrus Systems 2000 Syrus Systems
 package com.syrus.AMFICOM.server.Object;
 
-import sqlj.runtime.*;
-import sqlj.runtime.ref.*;
-import java.sql.*;
-import oracle.sql.*;
-import java.text.*;
-
-import java.util.Vector;
-
-import com.syrus.AMFICOM.CORBA.*;
+import com.syrus.AMFICOM.CORBA.Constants;
 import com.syrus.AMFICOM.CORBA.Map.*;
-import com.syrus.AMFICOM.CORBA.Scheme.*;
-import com.syrus.AMFICOM.CORBA.Resource.*;
+import com.syrus.AMFICOM.server.ResourcedbInterface;
+import java.sql.SQLException;
 
-import com.syrus.AMFICOM.server.*;
-
-public class MapdbInterfaceSave1 extends Object
+/**
+ * @version $Revision: 1.2 $, $Date: 2004/06/29 07:12:58 $
+ * @author $Author: bass $
+ * @module server_v1
+ */
+public class MapdbInterfaceSave1
 {
 	protected MapdbInterfaceSave1()
 	{
 	}
 
-	static public int saveMaps(MapContext_Transferable[] mapseq)
+	public static int saveMaps(MapContext_Transferable[] mapseq)
 	{
 		int i;
 		int j;
@@ -283,7 +284,7 @@ public class MapdbInterfaceSave1 extends Object
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static public int saveMapElement(MapElement_Transferable equipment)
+	public static int saveMapElement(MapElement_Transferable equipment)
 	{
 		int i;
 		int j;
@@ -385,7 +386,7 @@ public class MapdbInterfaceSave1 extends Object
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static public int saveMapElements(MapElement_Transferable[] equipmentseq)
+	public static int saveMapElements(MapElement_Transferable[] equipmentseq)
 	{
 		int i;
 		int len;
@@ -398,7 +399,7 @@ public class MapdbInterfaceSave1 extends Object
 		return Constants.ERROR_NO_ERROR;
 	}
 /*
-	static public int saveMapEquipments(MapEquipmentElement_Transferable[] equipmentseq)
+	public static int saveMapEquipments(MapEquipmentElement_Transferable[] equipmentseq)
 	{
 		int i;
 		int j;
@@ -504,7 +505,7 @@ public class MapdbInterfaceSave1 extends Object
 		return Constants.ERROR_NO_ERROR;
 	}
 */
-	static public int saveMapMark(MapMarkElement_Transferable mark)
+	public static int saveMapMark(MapMarkElement_Transferable mark)
 	{
 		int count = 0;
 
@@ -595,7 +596,7 @@ public class MapdbInterfaceSave1 extends Object
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static public int saveMapMarks(MapMarkElement_Transferable[] markseq)
+	public static int saveMapMarks(MapMarkElement_Transferable[] markseq)
 	{
 		int i;
 		int len;
@@ -608,7 +609,7 @@ public class MapdbInterfaceSave1 extends Object
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static public int saveMapKIS(MapElement_Transferable kis)
+	public static int saveMapKIS(MapElement_Transferable kis)
 	{
 		int count = 0;
 
@@ -683,7 +684,7 @@ public class MapdbInterfaceSave1 extends Object
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static public int saveMapKISs(MapElement_Transferable[] kisseq)
+	public static int saveMapKISs(MapElement_Transferable[] kisseq)
 	{
 		int i;
 		int len;
@@ -696,7 +697,7 @@ public class MapdbInterfaceSave1 extends Object
 		return Constants.ERROR_NO_ERROR;
 	}
 /*
-	static public int saveMapKISs(MapKISElement_Transferable[] kisseq)
+	public static int saveMapKISs(MapKISElement_Transferable[] kisseq)
 	{
 		int i;
 		int j;
@@ -803,4 +804,3 @@ public class MapdbInterfaceSave1 extends Object
 	}
 */
 }
-

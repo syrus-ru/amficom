@@ -1,17 +1,23 @@
+/*
+ * $Id: ReportTemplate.sqlj,v 1.5 2004/06/29 07:12:58 bass Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ.
+ */
+
 package com.syrus.AMFICOM.server.Object;
 
-import java.sql.Timestamp;
-import java.sql.SQLException;
-
+import com.syrus.AMFICOM.CORBA.Report.*;
+import com.syrus.AMFICOM.CORBA.Resource.Filter_Transferable;
+import java.sql.*;
 import java.util.Vector;
 
-import com.syrus.AMFICOM.CORBA.Report.FirmedTextPane_Transferable;
-import com.syrus.AMFICOM.CORBA.Report.ReportTemplate_Transferable;
-import com.syrus.AMFICOM.CORBA.Report.RenderingObject_Transferable;
-import com.syrus.AMFICOM.CORBA.Report.ImagePane_Transferable;
-
-import com.syrus.AMFICOM.CORBA.Resource.Filter_Transferable;
-
+/**
+ * @version $Revision: 1.5 $, $Date: 2004/06/29 07:12:58 $
+ * @author $Author: bass $
+ * @module server_v1
+ */
 public class ReportTemplate
 {
 	private String id;
@@ -392,4 +398,3 @@ public class ReportTemplate
 		String report_template_id,
 		String filter_id);
 }
-

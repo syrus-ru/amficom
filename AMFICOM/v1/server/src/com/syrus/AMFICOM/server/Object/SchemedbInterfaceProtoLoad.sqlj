@@ -1,27 +1,31 @@
+/*
+ * $Id: SchemedbInterfaceProtoLoad.sqlj,v 1.2 2004/06/29 07:12:58 bass Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ.
+ */
+
 package com.syrus.AMFICOM.server.Object;
 
-import sqlj.runtime.*;
-import sqlj.runtime.ref.*;
+import com.syrus.AMFICOM.CORBA.Resource.ImageResource_Transferable;
+import com.syrus.AMFICOM.CORBA.Scheme.*;
+import com.syrus.AMFICOM.server.ResourcedbInterface;
 import java.sql.*;
-
-import java.io.*;
 import java.util.Vector;
 
-import com.syrus.AMFICOM.CORBA.*;
-import com.syrus.AMFICOM.CORBA.Resource.*;
-import com.syrus.AMFICOM.CORBA.Network.*;
-import com.syrus.AMFICOM.CORBA.NetworkDirectory.*;
-import com.syrus.AMFICOM.CORBA.Scheme.*;
-
-import com.syrus.AMFICOM.server.*;
-
+/**
+ * @version $Revision: 1.2 $, $Date: 2004/06/29 07:12:58 $
+ * @author $Author: bass $
+ * @module server_v1
+ */
 public class SchemedbInterfaceProtoLoad
 {
 	protected SchemedbInterfaceProtoLoad()
 	{
 	}
 
-	static public Vector loadDevicePorts(String device_id)
+	public static Vector loadDevicePorts(String device_id)
 	{
 		PortIdIterator idIt = null;
 		String sp_id;
@@ -150,7 +154,7 @@ public class SchemedbInterfaceProtoLoad
 		return vector;
 	}
 
-	static public Vector loadDeviceCablePorts(String device_id)
+	public static Vector loadDeviceCablePorts(String device_id)
 	{
 		CablePortIdIterator idIt = null;
 		String sp_id;
@@ -279,7 +283,7 @@ public class SchemedbInterfaceProtoLoad
 		return vector;
 	}
 
-	static public Object loadSchemePort(String port_id)
+	public static Object loadSchemePort(String port_id)
 	{
 		String It_id = "";
 		String It_name = "";
@@ -392,7 +396,7 @@ public class SchemedbInterfaceProtoLoad
 		
 	}
 
-	static public Object loadSchemeCablePort(String port_id)
+	public static Object loadSchemeCablePort(String port_id)
 	{
 		String It_id = "";
 		String It_name = "";
@@ -506,7 +510,7 @@ public class SchemedbInterfaceProtoLoad
 		
 	}
 
-	static public Object loadSchemeLink(String link_id)
+	public static Object loadSchemeLink(String link_id)
 	{
 		String It_id = "";
 		String It_name = "";
@@ -608,7 +612,7 @@ public class SchemedbInterfaceProtoLoad
 		
 	}
 
-	static public Object loadSchemeDevice(String device_id)
+	public static Object loadSchemeDevice(String device_id)
 	{
 		String It_id = "";
 		String It_name = "";
@@ -682,7 +686,7 @@ public class SchemedbInterfaceProtoLoad
 		
 	}
 
-	static public void loadProtoElement(String element_id, Vector protoelements)
+	public static void loadProtoElement(String element_id, Vector protoelements)
 	{
 		String It_id = "";
 		String It_name = "";
@@ -900,7 +904,7 @@ public class SchemedbInterfaceProtoLoad
 		
 	}
 
-	static public void getProtoElements(
+	public static void getProtoElements(
 			String domain_id,
 			SchemeProtoElementSeq_TransferableHolder protos)
 	{
@@ -935,7 +939,7 @@ public class SchemedbInterfaceProtoLoad
 		vector.copyInto(protos.value);
 	}
 
-	static public void getProtoElements(
+	public static void getProtoElements(
 			String domain_id,
 			String[] ids,
 			SchemeProtoElementSeq_TransferableHolder protos)
@@ -1021,6 +1025,4 @@ public class SchemedbInterfaceProtoLoad
 		String label,
 		Timestamp modified,
 		String domain_id);
-
 }
-

@@ -1,24 +1,28 @@
+/*
+ * $Id: SurveydbInterfaceLoad5.sqlj,v 1.2 2004/06/29 07:12:58 bass Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ.
+ */
+
 package com.syrus.AMFICOM.server.Object;
 
-import sqlj.runtime.*;
-import sqlj.runtime.ref.*;
-import java.sql.*;
-import oracle.sql.*;
-import oracle.jdbc.driver.*;
-
-import java.util.Vector;
-import java.util.LinkedList;
-
-import com.syrus.io.*;
-import com.syrus.util.*;
-import com.syrus.util.database.*;
-import com.syrus.AMFICOM.CORBA.*;
+import com.syrus.AMFICOM.CORBA.Constants;
 import com.syrus.AMFICOM.CORBA.Survey.*;
-import com.syrus.AMFICOM.CORBA.Resource.*;
-import com.syrus.AMFICOM.CORBA.General.*;
+import com.syrus.util.database.ByteArrayDatabase;
+import java.sql.*;
+import java.util.Vector;
+import oracle.jdbc.driver.OracleResultSet;
+import oracle.sql.BLOB;
+import sqlj.runtime.ConnectionContext;
+import sqlj.runtime.ref.DefaultContext;
 
-import com.syrus.AMFICOM.server.*;
-
+/**
+ * @version $Revision: 1.2 $, $Date: 2004/06/29 07:12:58 $
+ * @author $Author: bass $
+ * @module server_v1
+ */
 public class SurveydbInterfaceLoad5
 {
 	protected SurveydbInterfaceLoad5()
@@ -33,7 +37,7 @@ public class SurveydbInterfaceLoad5
 			"ANALYSISTYPEARGUMENTS",
 			"ana1")
 */
-	static public ClientParameter_Transferable[] loadActionArguments(
+	public static ClientParameter_Transferable[] loadActionArguments(
 			String argumentTableName,
 			String argumentFieldName,
 			String argumentParameterFieldName,
@@ -163,7 +167,7 @@ System.out.println("Zaebali ");
 		return args;
 	}
 
-	static public int loadGlobalParameterTypes(
+	public static int loadGlobalParameterTypes(
 			GlobalParameterTypeSeq_TransferableHolder paramtypeseq)
 	{
 		String It_id = "";
@@ -260,7 +264,7 @@ System.out.println("Zaebali ");
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static public int loadGlobalParameterTypes(
+	public static int loadGlobalParameterTypes(
 			String[] ids,
 			GlobalParameterTypeSeq_TransferableHolder paramtypeseq)
 	{
@@ -387,6 +391,4 @@ System.out.println("Zaebali ");
 		String rangelo,
 		String formula,
 		Timestamp modified);
-
 }
-

@@ -1,24 +1,28 @@
+/*
+ * $Id: AdmindbInterfaceRemove.sqlj,v 1.2 2004/06/29 07:12:57 bass Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ.
+ */
+
 package com.syrus.AMFICOM.server.Object;
 
-import sqlj.runtime.*;
-import sqlj.runtime.ref.*;
-import java.sql.*;
+import com.syrus.AMFICOM.CORBA.Constants;
+import java.sql.SQLException;
 
-import java.util.Vector;
-
-import com.syrus.AMFICOM.CORBA.*;
-import com.syrus.AMFICOM.CORBA.Admin.*;
-import com.syrus.AMFICOM.CORBA.Resource.*;
-
-import com.syrus.AMFICOM.server.*;
-
+/**
+ * @version $Revision: 1.2 $, $Date: 2004/06/29 07:12:57 $
+ * @author $Author: bass $
+ * @module server_v1
+ */
 public class AdmindbInterfaceRemove
 {
 	protected AdmindbInterfaceRemove()
 	{
 	}
 
-	static public int removeServers(String[] serverseq)
+	public static int removeServers(String[] serverseq)
 	{
 		int i;
 		for(i = serverseq.length - 1; i >= 0; i--)
@@ -40,7 +44,7 @@ public class AdmindbInterfaceRemove
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static public int removeClients(String[] clientseq)
+	public static int removeClients(String[] clientseq)
 	{
 		int i;
 		for(i = clientseq.length - 1; i >= 0; i--)
@@ -62,7 +66,7 @@ public class AdmindbInterfaceRemove
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static public int removeAgents(String[] agentseq)
+	public static int removeAgents(String[] agentseq)
 	{
 		int i;
 		for(i = agentseq.length - 1; i >= 0; i--)
@@ -84,4 +88,3 @@ public class AdmindbInterfaceRemove
 		return Constants.ERROR_NO_ERROR;
 	}
 }
-

@@ -1,30 +1,33 @@
+/*
+ * $Id: MapdbInterfaceLoad4.sqlj,v 1.2 2004/06/29 07:12:58 bass Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ.
+ */
 
-// Copyright (c) Syrus Systems 2000 Syrus Systems
 package com.syrus.AMFICOM.server.Object;
 
-import sqlj.runtime.*;
-import sqlj.runtime.ref.*;
-import java.sql.*;
-import oracle.sql.*;
-import java.text.*;
-import oracle.jdbc.driver.*;
-
-import java.util.Vector;
-
-import com.syrus.AMFICOM.CORBA.*;
-import com.syrus.AMFICOM.CORBA.Map.*;
+import com.syrus.AMFICOM.CORBA.Constants;
 import com.syrus.AMFICOM.CORBA.Scheme.*;
-import com.syrus.AMFICOM.CORBA.Resource.*;
+import java.sql.*;
+import java.util.Vector;
+import oracle.jdbc.driver.OracleResultSet;
+import sqlj.runtime.*;
+import sqlj.runtime.ref.DefaultContext;
 
-import com.syrus.AMFICOM.server.*;
-
-public class MapdbInterfaceLoad4 extends Object
+/**
+ * @version $Revision: 1.2 $, $Date: 2004/06/29 07:12:58 $
+ * @author $Author: bass $
+ * @module server_v1
+ */
+public class MapdbInterfaceLoad4
 {
 	protected MapdbInterfaceLoad4()
 	{
 	}
 
-	static public Vector loadAttributes(
+	public static Vector loadAttributes(
 			String elementAttributeTable,
 			String elementAttributeField,
 			String element_id)
@@ -120,7 +123,7 @@ public class MapdbInterfaceLoad4 extends Object
 		return vector2;
 	}
 
-	static public Vector loadMapElementIds(
+	public static Vector loadMapElementIds(
 			String elementAttributeTable,
 			String map_id)
 	{
@@ -174,7 +177,7 @@ public class MapdbInterfaceLoad4 extends Object
 		return vector2;
 	}
 
-	static public Vector loadMapElementIds2(
+	public static Vector loadMapElementIds2(
 			String elementAttributeTable,
 			String elementAttributeField,
 			String map_id)
@@ -228,7 +231,7 @@ public class MapdbInterfaceLoad4 extends Object
 		return vector2;
 	}
 
-	static public Vector loadMapElementIdsNonISM(
+	public static Vector loadMapElementIdsNonISM(
 			String elementAttributeTable,
 			String map_id)
 	{
@@ -283,7 +286,7 @@ public class MapdbInterfaceLoad4 extends Object
 		return vector2;
 	}
 
-	static public Vector loadISMMapElementIds(
+	public static Vector loadISMMapElementIds(
 			String elementAttributeTable,
 			String map_id)
 	{
@@ -337,7 +340,7 @@ public class MapdbInterfaceLoad4 extends Object
 		return vector2;
 	}
 
-	static public int reloadAttributes(
+	public static int reloadAttributes(
 			String[] map_ids,
 			Vector vector)
 	{
@@ -432,7 +435,7 @@ public class MapdbInterfaceLoad4 extends Object
 
 	}
 
-	static public int reloadISMAttributes(
+	public static int reloadISMAttributes(
 			String[] ism_map_ids,
 			Vector vector)
 	{
@@ -501,7 +504,7 @@ public class MapdbInterfaceLoad4 extends Object
 
 	}
 
-	static public int loadAttributeTypes(
+	public static int loadAttributeTypes(
 			ElementAttributeTypeSeq_TransferableHolder atypeseq)
 	{
 		String It_id = "";
@@ -591,7 +594,7 @@ public class MapdbInterfaceLoad4 extends Object
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static public int loadAttributeTypes(
+	public static int loadAttributeTypes(
 			String[] ids,
 			ElementAttributeTypeSeq_TransferableHolder atypeseq)
 	{
@@ -705,4 +708,3 @@ public class MapdbInterfaceLoad4 extends Object
 		int is_visible,
 		Timestamp modified );
 }
-

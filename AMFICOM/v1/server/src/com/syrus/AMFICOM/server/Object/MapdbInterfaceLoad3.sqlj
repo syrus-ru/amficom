@@ -1,29 +1,32 @@
+/*
+ * $Id: MapdbInterfaceLoad3.sqlj,v 1.2 2004/06/29 07:12:58 bass Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ.
+ */
 
-// Copyright (c) Syrus Systems 2000 Syrus Systems
 package com.syrus.AMFICOM.server.Object;
 
-import sqlj.runtime.*;
-import sqlj.runtime.ref.*;
-import java.sql.*;
-import oracle.sql.*;
-import java.text.*;
-
-import java.util.Vector;
-
-import com.syrus.AMFICOM.CORBA.*;
+import com.syrus.AMFICOM.CORBA.Constants;
 import com.syrus.AMFICOM.CORBA.Map.*;
-import com.syrus.AMFICOM.CORBA.Scheme.*;
-import com.syrus.AMFICOM.CORBA.Resource.*;
+import com.syrus.AMFICOM.CORBA.Scheme.ElementAttribute_Transferable;
+import java.sql.*;
+import java.util.Vector;
+import sqlj.runtime.SQLNullException;
 
-import com.syrus.AMFICOM.server.*;
-
-public class MapdbInterfaceLoad3 extends Object
+/**
+ * @version $Revision: 1.2 $, $Date: 2004/06/29 07:12:58 $
+ * @author $Author: bass $
+ * @module server_v1
+ */
+public class MapdbInterfaceLoad3
 {
 	protected MapdbInterfaceLoad3()
 	{
 	}
 
-	static public int loadJMaps(
+	public static int loadJMaps(
 			Vector map_ids,
 			ISMMapContextSeq_TransferableHolder mapseq,
 			Vector images)
@@ -188,7 +191,7 @@ public class MapdbInterfaceLoad3 extends Object
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static public int loadJMapKISs(
+	public static int loadJMapKISs(
 			Vector map_ids,
 			MapKISElementSeq_TransferableHolder kisseq,
 			Vector images)
@@ -347,7 +350,7 @@ public class MapdbInterfaceLoad3 extends Object
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static public int loadJMapPaths(
+	public static int loadJMapPaths(
 			Vector map_ids,
 			MapPathElementSeq_TransferableHolder pathseq,
 			Vector images)
@@ -553,7 +556,7 @@ public class MapdbInterfaceLoad3 extends Object
 		String kis_id,
 		String kis_type_id);
 
-	#sql static public iterator MapPathIterator (
+	#sql public static iterator MapPathIterator (
 		String description,
 		String id,
 		String end_node_id,
@@ -564,6 +567,4 @@ public class MapdbInterfaceLoad3 extends Object
 		String map_id,
 		String ism_map_id,
 		String path_id);
-
 }
-

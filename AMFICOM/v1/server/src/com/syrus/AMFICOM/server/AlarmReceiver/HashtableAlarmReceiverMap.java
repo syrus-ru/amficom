@@ -1,15 +1,24 @@
+/*
+ * $Id: HashtableAlarmReceiverMap.java,v 1.3 2004/06/29 07:12:57 bass Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ.
+ */
+
 package com.syrus.AMFICOM.server.AlarmReceiver;
 
-import com.syrus.AMFICOM.CORBA.*;
-import com.syrus.AMFICOM.CORBA.Admin.*;
-import com.syrus.AMFICOM.CORBA.General.*;
-import java.util.*;
+import com.syrus.AMFICOM.CORBA.AMFICOMClient;
+import com.syrus.AMFICOM.CORBA.Admin.AccessIdentity_Transferable;
+import com.syrus.AMFICOM.CORBA.General.AMFICOMRemoteException;
+import java.util.Hashtable;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2004/06/18 10:03:07 $
+ * @version $Revision: 1.3 $, $Date: 2004/06/29 07:12:57 $
  * @author $Author: bass $
+ * @module server_v1
  */
-public class HashtableAlarmReceiverMap extends AbstractAlarmReceiverMap {
+public final class HashtableAlarmReceiverMap extends AbstractAlarmReceiverMap {
 	private Hashtable hashtable;
 
 	public HashtableAlarmReceiverMap() {

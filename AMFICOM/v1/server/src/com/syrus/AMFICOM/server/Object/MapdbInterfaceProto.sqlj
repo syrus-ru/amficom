@@ -1,43 +1,46 @@
+/*
+ * $Id: MapdbInterfaceProto.sqlj,v 1.2 2004/06/29 07:12:58 bass Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ.
+ */
 
-// Copyright (c) Syrus Systems 2000 Syrus Systems
 package com.syrus.AMFICOM.server.Object;
 
-import sqlj.runtime.*;
-import sqlj.runtime.ref.*;
-import java.sql.*;
-import oracle.sql.*;
-import java.text.*;
-
-import java.util.Vector;
-
-import com.syrus.AMFICOM.CORBA.*;
+import com.syrus.AMFICOM.CORBA.Constants;
 import com.syrus.AMFICOM.CORBA.Map.*;
 import com.syrus.AMFICOM.CORBA.Scheme.*;
-import com.syrus.AMFICOM.CORBA.Resource.*;
+import java.sql.*;
+import java.util.Vector;
+import sqlj.runtime.SQLNullException;
 
-import com.syrus.AMFICOM.server.*;
-
-public class MapdbInterfaceProto extends Object
+/**
+ * @version $Revision: 1.2 $, $Date: 2004/06/29 07:12:58 $
+ * @author $Author: bass $
+ * @module server_v1
+ */
+public class MapdbInterfaceProto
 {
 	protected MapdbInterfaceProto()
 	{
 	}
 /*
-	static public int loadEquipmentProto(
+	public static int loadEquipmentProto(
 			MapEquipmentElementSeq_TransferableHolder equipmentseq,
 			Vector images)
 	{
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static public int loadKISProto(
+	public static int loadKISProto(
 			MapKISElementSeq_TransferableHolder kisseq,
 			Vector images)
 	{
 		return Constants.ERROR_NO_ERROR;
 	}
 */
-	static public int loadProtoElements(
+	public static int loadProtoElements(
 			String domain_id,
 			MapProtoElementSeq_TransferableHolder protoseq,
 			Vector images)
@@ -209,7 +212,7 @@ public class MapdbInterfaceProto extends Object
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static public int loadProtoElements(
+	public static int loadProtoElements(
 			String domain_id,
 			String[] ids,
 			MapProtoElementSeq_TransferableHolder protoseq,
@@ -389,7 +392,7 @@ public class MapdbInterfaceProto extends Object
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static public int saveProtoElements(
+	public static int saveProtoElements(
 			String domain_id,
 			MapProtoElement_Transferable[] protos)
 	{
@@ -496,7 +499,7 @@ public class MapdbInterfaceProto extends Object
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static public int removeProtoElements(
+	public static int removeProtoElements(
 			String[] proto_ids)
 	{
 		for(int i = 0; i < proto_ids.length; i++)
@@ -530,7 +533,7 @@ public class MapdbInterfaceProto extends Object
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static public int loadProtoGroups(
+	public static int loadProtoGroups(
 			String domain_id,
 			MapProtoGroupSeq_TransferableHolder groupseq)
 	{
@@ -677,7 +680,7 @@ public class MapdbInterfaceProto extends Object
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static public int loadProtoGroups(
+	public static int loadProtoGroups(
 			String domain_id,
 			String[] group_ids,
 			MapProtoGroupSeq_TransferableHolder groupseq)
@@ -839,7 +842,7 @@ public class MapdbInterfaceProto extends Object
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static public int saveProtoGroups(
+	public static int saveProtoGroups(
 			String domain_id,
 			MapProtoGroup_Transferable[] groups)
 	{
@@ -960,7 +963,7 @@ public class MapdbInterfaceProto extends Object
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static public int removeProtoGroups(
+	public static int removeProtoGroups(
 			String[] group_ids)
 	{
 		for(int i = 0; i < group_ids.length; i++)
@@ -995,7 +998,7 @@ public class MapdbInterfaceProto extends Object
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static public int loadLinkProto(
+	public static int loadLinkProto(
 			String domain_id,
 			MapLinkProtoElementSeq_TransferableHolder linkseq,
 			Vector images)
@@ -1117,7 +1120,7 @@ public class MapdbInterfaceProto extends Object
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static public int loadLinkProto(
+	public static int loadLinkProto(
 			String domain_id,
 			String[] ids,
 			MapLinkProtoElementSeq_TransferableHolder linkseq,
@@ -1247,7 +1250,7 @@ public class MapdbInterfaceProto extends Object
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static public int loadPathProto(
+	public static int loadPathProto(
 			String domain_id,
 			MapPathProtoElementSeq_TransferableHolder pathseq,
 			Vector images)
@@ -1373,7 +1376,7 @@ public class MapdbInterfaceProto extends Object
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static public int loadPathProto(
+	public static int loadPathProto(
 			String domain_id,
 			String[] ids,
 			MapPathProtoElementSeq_TransferableHolder pathseq,
@@ -1507,7 +1510,7 @@ public class MapdbInterfaceProto extends Object
 		return Constants.ERROR_NO_ERROR;
 	}
 /*
-	static public int loadProtoConnectionPoints(
+	public static int loadProtoConnectionPoints(
 			MapConnectionPointElementSeq_TransferableHolder cpointseq)
 	{
 		int count;
@@ -1749,7 +1752,7 @@ public class MapdbInterfaceProto extends Object
 		String equipment_id,
 		String equipment_type_id);
 
-	#sql static public iterator MapLinkProtoIterator (
+	#sql public static iterator MapLinkProtoIterator (
 		String id,
 		String name,
 		String description,
@@ -1757,7 +1760,7 @@ public class MapdbInterfaceProto extends Object
 		Timestamp modified,
 		String domain_id);
 
-	#sql static public iterator MapPhysicalLinkIterator (
+	#sql public static iterator MapPhysicalLinkIterator (
 		int alarmed_line_size,
 		String metric,
 		int alarmed_color,
@@ -1814,7 +1817,7 @@ public class MapdbInterfaceProto extends Object
 		int is_test_port,
 		int is_access_port);
 
-	#sql static public iterator MapPathIterator (
+	#sql public static iterator MapPathIterator (
 		int alarmed_line_size,
 		String metric,
 		int alarmed_color,
@@ -1838,6 +1841,4 @@ public class MapdbInterfaceProto extends Object
 		String map_id,
 		String ism_map_id,
 		String path_id);
-
 }
-

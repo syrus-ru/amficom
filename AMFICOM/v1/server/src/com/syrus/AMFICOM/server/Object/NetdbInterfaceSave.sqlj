@@ -1,25 +1,31 @@
+/*
+ * $Id: NetdbInterfaceSave.sqlj,v 1.2 2004/06/29 07:12:58 bass Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ.
+ */
+
 package com.syrus.AMFICOM.server.Object;
 
-import sqlj.runtime.*;
-import sqlj.runtime.ref.*;
-import java.sql.*;
-
+import com.syrus.AMFICOM.CORBA.Constants;
+import com.syrus.AMFICOM.CORBA.Network.*;
+import com.syrus.AMFICOM.server.ResourcedbInterface;
+import java.sql.SQLException;
 import java.util.Vector;
 
-import com.syrus.AMFICOM.CORBA.*;
-import com.syrus.AMFICOM.CORBA.Network.*;
-import com.syrus.AMFICOM.CORBA.NetworkDirectory.*;
-import com.syrus.AMFICOM.CORBA.Resource.*;
-
-import com.syrus.AMFICOM.server.*;
-
+/**
+ * @version $Revision: 1.2 $, $Date: 2004/06/29 07:12:58 $
+ * @author $Author: bass $
+ * @module server_v1
+ */
 public class NetdbInterfaceSave
 {
 	protected NetdbInterfaceSave()
 	{
 	}
 
-	static public void saveCharacteristics(
+	public static void saveCharacteristics(
 			String charTable,
 			String charField,
 			String element_id,
@@ -81,7 +87,7 @@ public class NetdbInterfaceSave
 		}
 	}
 /*
-	static public void saveCharacteristics2(
+	public static void saveCharacteristics2(
 			String charTable,
 			String charField,
 			String element_id,
@@ -147,7 +153,7 @@ public class NetdbInterfaceSave
 		}//for (characteristics)
 	}
 */
-	static public int savePorts(
+	public static int savePorts(
 			Port_Transferable[] ports)
 	{
 		int i;
@@ -259,7 +265,7 @@ public class NetdbInterfaceSave
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static public int saveCablePorts(CablePort_Transferable[] cports)
+	public static int saveCablePorts(CablePort_Transferable[] cports)
 	{
 		int i;
 		int j;
@@ -357,7 +363,7 @@ public class NetdbInterfaceSave
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static public int saveTestPorts(TestPort_Transferable[] testports)
+	public static int saveTestPorts(TestPort_Transferable[] testports)
 	{
 		int i;
 		int j;
@@ -453,7 +459,7 @@ public class NetdbInterfaceSave
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static public int saveLinks(Link_Transferable[] links)
+	public static int saveLinks(Link_Transferable[] links)
 	{
 		int i;
 		int j;
@@ -576,7 +582,7 @@ public class NetdbInterfaceSave
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static public int saveCableThreads(String cable_id, CableLinkThread_Transferable[] threads)
+	public static int saveCableThreads(String cable_id, CableLinkThread_Transferable[] threads)
 	{
 		try
 		{
@@ -622,7 +628,7 @@ public class NetdbInterfaceSave
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static public int saveCableThreads2(String cable_id, CableLinkThread_Transferable[] threads)
+	public static int saveCableThreads2(String cable_id, CableLinkThread_Transferable[] threads)
 	{
 		IdIterator idIt = null;
 
@@ -746,7 +752,7 @@ public class NetdbInterfaceSave
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static public int saveCableLinks(CableLink_Transferable[] links)
+	public static int saveCableLinks(CableLink_Transferable[] links)
 	{
 		int i;
 		int j;
@@ -870,7 +876,7 @@ public class NetdbInterfaceSave
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static public int saveEquipments(
+	public static int saveEquipments(
 			Equipment_Transferable[] equipments)
 	{
 		int i;
@@ -1004,6 +1010,4 @@ public class NetdbInterfaceSave
 	}
 
 	#sql public static iterator IdIterator ( String id );
-
 }
-

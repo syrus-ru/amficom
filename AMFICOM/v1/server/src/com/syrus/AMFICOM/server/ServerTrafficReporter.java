@@ -1,12 +1,25 @@
+/*
+ * $Id: ServerTrafficReporter.java,v 1.3 2004/06/29 07:12:57 bass Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ.
+ */
+
 package com.syrus.AMFICOM.server;
 
 import java.io.*;
-import java.util.Date;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 
+/**
+ * @version $Revision: 1.3 $, $Date: 2004/06/29 07:12:57 $
+ * @author $Author: bass $
+ * @module server_v1
+ */
 public final class ServerTrafficReporter
 {
-	static public SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yy HH:mm:ss");
+	public static SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yy HH:mm:ss");
 	FileOutputStream fos;
 	PrintWriter pstr;
 
@@ -216,6 +229,4 @@ public final class ServerTrafficReporter
 			System.out.println("COULD NOT CLOSE TRAFFIC LOG FILE: " + ex.getMessage());
 		}
 	}
-
 }
-

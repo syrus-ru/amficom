@@ -1,25 +1,29 @@
+/*
+ * $Id: NetdbInterfaceRemove.sqlj,v 1.2 2004/06/29 07:12:58 bass Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ.
+ */
+
 package com.syrus.AMFICOM.server.Object;
 
-import sqlj.runtime.*;
-import sqlj.runtime.ref.*;
-import java.sql.*;
-
+import com.syrus.AMFICOM.CORBA.Constants;
+import java.sql.SQLException;
 import java.util.Vector;
 
-import com.syrus.AMFICOM.CORBA.*;
-import com.syrus.AMFICOM.CORBA.Network.*;
-import com.syrus.AMFICOM.CORBA.NetworkDirectory.*;
-import com.syrus.AMFICOM.CORBA.Resource.*;
-
-import com.syrus.AMFICOM.server.*;
-
+/**
+ * @version $Revision: 1.2 $, $Date: 2004/06/29 07:12:58 $
+ * @author $Author: bass $
+ * @module server_v1
+ */
 public class NetdbInterfaceRemove
 {
 	protected NetdbInterfaceRemove()
 	{
 	}
 
-	static public int removePorts(String[] port_ids)
+	public static int removePorts(String[] port_ids)
 	{
 		String ap_id;
 		int len = port_ids.length;
@@ -84,7 +88,7 @@ public class NetdbInterfaceRemove
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static public int removeCablePorts(String[] cport_ids)
+	public static int removeCablePorts(String[] cport_ids)
 	{
 		String ap_id;
 		int len = cport_ids.length;
@@ -149,7 +153,7 @@ public class NetdbInterfaceRemove
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static public int removeTestPorts(String[] testport_ids)
+	public static int removeTestPorts(String[] testport_ids)
 	{
 		int len = testport_ids.length;
 		for (int i = 0; i < len; i++)
@@ -176,7 +180,7 @@ public class NetdbInterfaceRemove
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static public int removeLinks(String[] link_ids)
+	public static int removeLinks(String[] link_ids)
 	{
 		int len = link_ids.length;
 		for (int i = 0; i < len; i++)
@@ -203,7 +207,7 @@ public class NetdbInterfaceRemove
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static public int removeCableLinks(String[] link_ids)
+	public static int removeCableLinks(String[] link_ids)
 	{
 		int len = link_ids.length;
 		for (int i = 0; i < len; i++)
@@ -234,7 +238,7 @@ public class NetdbInterfaceRemove
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static public int removeEquipments(String[] equipment_ids)
+	public static int removeEquipments(String[] equipment_ids)
 	{
 		int i;
 		int len;
@@ -301,6 +305,4 @@ public class NetdbInterfaceRemove
 	}
 
 	#sql public static iterator IdIterator ( String id );
-
 }
-

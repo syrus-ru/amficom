@@ -1,30 +1,28 @@
+/*
+ * $Id: SurveydbInterfaceSave2.sqlj,v 1.2 2004/06/29 07:12:58 bass Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ.
+ */
+
 package com.syrus.AMFICOM.server.Object;
 
-import sqlj.runtime.*;
-import sqlj.runtime.ref.*;
-import sqlj.runtime.profile.*;
-import java.sql.*;
-import oracle.sql.*;
-import oracle.jdbc.driver.*;
+import com.syrus.AMFICOM.CORBA.Constants;
+import java.sql.SQLException;
 
-import java.util.*;
-
-import com.syrus.io.*;
-import com.syrus.AMFICOM.CORBA.*;
-import com.syrus.AMFICOM.CORBA.Alarm.*;
-import com.syrus.AMFICOM.CORBA.Survey.*;
-import com.syrus.AMFICOM.CORBA.Admin.*;
-import com.syrus.AMFICOM.CORBA.Resource.*;
-
-import com.syrus.AMFICOM.server.*;
-
+/**
+ * @version $Revision: 1.2 $, $Date: 2004/06/29 07:12:58 $
+ * @author $Author: bass $
+ * @module server_v1
+ */
 public class SurveydbInterfaceSave2
 {
 	protected SurveydbInterfaceSave2()
 	{
 	}
 /*
-	static public int deleteAlarm(String alarm_id)
+	public static int deleteAlarm(String alarm_id)
 	{
 		try
 		{
@@ -44,7 +42,7 @@ public class SurveydbInterfaceSave2
 		return Constants.ERROR_NO_ERROR;
 	}
 */
-	static public int userAlarm(String source_id, String descriptor)
+	public static int userAlarm(String source_id, String descriptor)
 	{
 		System.out.println("user alarm on " + source_id + " ( desc: " + descriptor + ")");
 		try
@@ -68,6 +66,4 @@ public class SurveydbInterfaceSave2
 	}
 
 	#sql public static iterator IdIterator ( String id );
-
 }
-

@@ -1,28 +1,33 @@
+/*
+ * $Id: TestDatadbInterfaceLoad.sqlj,v 1.3 2004/06/29 07:12:58 bass Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ.
+ */
+
 package com.syrus.AMFICOM.server.Object;
 
-import sqlj.runtime.*;
-import sqlj.runtime.ref.*;
-import sqlj.runtime.profile.*;
-import java.sql.*;
-import oracle.sql.*;
-import oracle.jdbc.driver.*;
-
-import java.util.Vector;
-
-import com.syrus.AMFICOM.CORBA.*;
+import com.syrus.AMFICOM.CORBA.Constants;
+import com.syrus.AMFICOM.CORBA.General.octetSeqHolder;
+import com.syrus.AMFICOM.CORBA.Resource.ResourceDescriptorSeq_TransferableHolder;
 import com.syrus.AMFICOM.CORBA.Survey.*;
-import com.syrus.AMFICOM.CORBA.Resource.*;
-import com.syrus.AMFICOM.CORBA.General.*;
+import java.sql.Timestamp;
+import java.util.Vector;
+import oracle.sql.BLOB;
 
-import com.syrus.AMFICOM.server.*;
-
+/**
+ * @version $Revision: 1.3 $, $Date: 2004/06/29 07:12:58 $
+ * @author $Author: bass $
+ * @module server_v1
+ */
 public class TestDatadbInterfaceLoad
 {
 	protected TestDatadbInterfaceLoad()
 	{
 	}
 
-	static public Vector loadTestTypeParameters(
+	public static Vector loadTestTypeParameters(
 			String argTableName,
 			String argFieldName,
 			String testtype_id)
@@ -107,7 +112,7 @@ public class TestDatadbInterfaceLoad
 		return vector2;
 	}
 
-	static public Vector loadTestTypeArguments(
+	public static Vector loadTestTypeArguments(
 			String argTableName,
 			String argFieldName,
 			String argValueName,
@@ -257,7 +262,7 @@ public class TestDatadbInterfaceLoad
 		return vector2;
 	}
 
-	static public int loadTestTypes(
+	public static int loadTestTypes(
 			TestTypeSeq_TransferableHolder testtypeseq)
 	{
 /*
@@ -392,7 +397,7 @@ public class TestDatadbInterfaceLoad
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static public int loadTestTypes(
+	public static int loadTestTypes(
 			String[] ids,
 			TestTypeSeq_TransferableHolder testtypeseq)
 	{
@@ -535,7 +540,7 @@ public class TestDatadbInterfaceLoad
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static public int loadAnalysisTypes(
+	public static int loadAnalysisTypes(
 			AnalysisTypeSeq_TransferableHolder testtypeseq)
 	{
 /*
@@ -630,7 +635,7 @@ public class TestDatadbInterfaceLoad
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static public int loadAnalysisTypes(
+	public static int loadAnalysisTypes(
 			String[] ids,
 			AnalysisTypeSeq_TransferableHolder testtypeseq)
 	{
@@ -731,7 +736,7 @@ public class TestDatadbInterfaceLoad
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static public int loadEvaluationTypes(
+	public static int loadEvaluationTypes(
 			EvaluationTypeSeq_TransferableHolder testtypeseq)
 	{
 /*
@@ -844,7 +849,7 @@ public class TestDatadbInterfaceLoad
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static public int loadEvaluationTypes(
+	public static int loadEvaluationTypes(
 			String[] ids,
 			EvaluationTypeSeq_TransferableHolder testtypeseq)
 	{
@@ -962,7 +967,7 @@ public class TestDatadbInterfaceLoad
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static public int loadModelingTypes(
+	public static int loadModelingTypes(
 			ModelingTypeSeq_TransferableHolder testtypeseq)
 	{
 /*
@@ -1054,7 +1059,7 @@ public class TestDatadbInterfaceLoad
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static public int loadModelingTypes(
+	public static int loadModelingTypes(
 			String[] ids,
 			ModelingTypeSeq_TransferableHolder testtypeseq)
 	{
@@ -1153,7 +1158,7 @@ public class TestDatadbInterfaceLoad
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static public int getAlarmedTests(
+	public static int getAlarmedTests(
 			String domain_id,
 			ResourceDescriptorSeq_TransferableHolder testids)
 //			wstringSeqHolder testids)
@@ -1199,6 +1204,4 @@ public class TestDatadbInterfaceLoad
 		String name,
 		String description,
 		Timestamp modified);
-
 }
-

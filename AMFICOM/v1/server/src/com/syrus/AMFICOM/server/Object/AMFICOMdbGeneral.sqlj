@@ -1,25 +1,31 @@
+/*
+ * $Id: AMFICOMdbGeneral.sqlj,v 1.2 2004/06/29 07:12:57 bass Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ.
+ */
 
-// Copyright (c) Syrus Systems 2000 Syrus Systems
 package com.syrus.AMFICOM.server.Object;
 
-import sqlj.runtime.*;
-import sqlj.runtime.ref.*;
-import java.sql.*;
-import oracle.sql.*;
-import java.text.*;
-
-import com.syrus.AMFICOM.CORBA.*;
 import com.syrus.AMFICOM.CORBA.Admin.*;
+import com.syrus.AMFICOM.CORBA.Constants;
 import com.syrus.AMFICOM.CORBA.General.*;
-import com.syrus.AMFICOM.CORBA.Resource.*;
-
-import com.syrus.AMFICOM.server.*;
-import com.syrus.io.*;
-import com.syrus.util.*;
-import com.syrus.util.database.*;
-
+import com.syrus.AMFICOM.server.ResourcedbInterface;
+import com.syrus.io.Rewriter;
+import com.syrus.util.database.ByteArrayDatabase;
+import java.sql.*;
+import java.text.SimpleDateFormat;
 import java.util.*;
+import oracle.sql.BLOB;
+import sqlj.runtime.ConnectionContext;
+import sqlj.runtime.ref.DefaultContext;
 
+/**
+ * @version $Revision: 1.2 $, $Date: 2004/06/29 07:12:57 $
+ * @author $Author: bass $
+ * @module server_v1
+ */
 public class AMFICOMdbGeneral
 {
 	static SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
@@ -28,7 +34,7 @@ public class AMFICOMdbGeneral
 	{
 	}
 
-    static public void CheckUserPrivileges(AccessIdentity_Transferable accessIdentity)
+	public static void CheckUserPrivileges(AccessIdentity_Transferable accessIdentity)
 		throws AMFICOMRemoteException
 	{
 //		System.out.println("		check user " + accessIdentity.sess_id);
@@ -61,7 +67,7 @@ public class AMFICOMdbGeneral
 		}
 	}
 
-	static public int Logon(String username, byte[] password, String ior, AccessIdentity_TransferableHolder accessIdentity)
+	public static int Logon(String username, byte[] password, String ior, AccessIdentity_TransferableHolder accessIdentity)
 		throws AMFICOMRemoteException
 	{
 	try
@@ -222,7 +228,7 @@ public class AMFICOMdbGeneral
 	}
 	}
 
-	static public int Logoff(AccessIdentity_Transferable accessIdentity)
+	public static int Logoff(AccessIdentity_Transferable accessIdentity)
 		throws AMFICOMRemoteException
 	{
 	try
@@ -249,7 +255,7 @@ public class AMFICOMdbGeneral
 	}
 	}
 
-	static public int GetLoggedUserIds(
+	public static int GetLoggedUserIds(
 			AccessIdentity_Transferable accessIdentity,
 			wstringSeqHolder userids)
 		throws AMFICOMRemoteException
@@ -286,7 +292,7 @@ public class AMFICOMdbGeneral
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static public int ChangePassword(
+	public static int ChangePassword(
 			AccessIdentity_Transferable accessIdentity,
 			byte[] oldpassword,	// пароль пользователя
 			byte[] newpassword)	// новый пароль пользователя
@@ -348,4 +354,3 @@ public class AMFICOMdbGeneral
 
 	#sql public static iterator UserIdIterator( String user_id );
 }
-

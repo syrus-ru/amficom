@@ -1,12 +1,24 @@
-package com.syrus.AMFICOM.server.Object;
+/*
+ * $Id: FirmedTextPane.sqlj,v 1.3 2004/06/29 07:12:58 bass Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ.
+ */
 
-import java.sql.SQLException;
-import java.util.Vector;
+package com.syrus.AMFICOM.server.Object;
 
 import com.syrus.AMFICOM.CORBA.Report.FirmedTextPane_Transferable;
 import com.syrus.AMFICOM.server.ResourcedbInterface;
+import java.sql.SQLException;
+import java.util.Vector;
 
-public class FirmedTextPane extends Object
+/**
+ * @version $Revision: 1.3 $, $Date: 2004/06/29 07:12:58 $
+ * @author $Author: bass $
+ * @module server_v1
+ */
+public class FirmedTextPane
 {
 	private String id;
 	private int labelX;
@@ -253,14 +265,11 @@ public class FirmedTextPane extends Object
 		int label_x,
 		int label_y,
 		String strings_contained,
-    String labelfont,
+		String labelfont,
 		String vertfirmer,
 		String horizfirmer,
 		String vertical_firm_to,
 		String horizontal_firm_to,
 		int distance_x,
 		int distance_y);
-
-
 }
-

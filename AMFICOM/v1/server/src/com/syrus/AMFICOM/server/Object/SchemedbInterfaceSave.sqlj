@@ -1,29 +1,34 @@
+/*
+ * $Id: SchemedbInterfaceSave.sqlj,v 1.2 2004/06/29 07:12:58 bass Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ.
+ */
+
 package com.syrus.AMFICOM.server.Object;
 
-import sqlj.runtime.*;
-import sqlj.runtime.ref.*;
-import java.sql.*;
-
-import java.util.Vector;
-import java.util.Hashtable;
-
-import com.syrus.AMFICOM.CORBA.*;
-import com.syrus.AMFICOM.CORBA.Network.*;
-import com.syrus.AMFICOM.CORBA.NetworkDirectory.*;
+import com.syrus.AMFICOM.CORBA.Constants;
 import com.syrus.AMFICOM.CORBA.Scheme.*;
-import com.syrus.AMFICOM.CORBA.Resource.*;
+import com.syrus.AMFICOM.server.ResourcedbInterface;
+import com.syrus.util.database.ByteArrayDatabase;
+import java.sql.*;
+import java.util.Vector;
+import sqlj.runtime.ConnectionContext;
+import sqlj.runtime.ref.DefaultContext;
 
-import com.syrus.AMFICOM.server.*;
-
-import com.syrus.util.database.*;
-
+/**
+ * @version $Revision: 1.2 $, $Date: 2004/06/29 07:12:58 $
+ * @author $Author: bass $
+ * @module server_v1
+ */
 public class SchemedbInterfaceSave
 {
 	protected SchemedbInterfaceSave()
 	{
 	}
 
-	static public int saveCableThreads(String cable_id, SchemeCableThread_Transferable[] threads)
+	public static int saveCableThreads(String cable_id, SchemeCableThread_Transferable[] threads)
 	{
 		CableThreadIdIterator idIt = null;
 
@@ -159,7 +164,7 @@ public class SchemedbInterfaceSave
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static public int saveCableLinks(SchemeCableLink_Transferable[] links)
+	public static int saveCableLinks(SchemeCableLink_Transferable[] links)
 	{
 		int i;
 		int len;
@@ -248,7 +253,7 @@ public class SchemedbInterfaceSave
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static public int saveSchemePaths(SchemePath_Transferable[] paths)
+	public static int saveSchemePaths(SchemePath_Transferable[] paths)
 	{
 		int i;
 		int len;
@@ -367,7 +372,7 @@ public class SchemedbInterfaceSave
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static public int saveElement(SchemeElement_Transferable element)
+	public static int saveElement(SchemeElement_Transferable element)
 	{
 		int i;
 		int j;
@@ -554,7 +559,7 @@ public class SchemedbInterfaceSave
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static public int saveSchemeElements(SchemeElement_Transferable[] elements)
+	public static int saveSchemeElements(SchemeElement_Transferable[] elements)
 	{
 		int i;
 		int len;
@@ -568,7 +573,7 @@ public class SchemedbInterfaceSave
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static public int saveScheme(
+	public static int saveScheme(
 			String domain_id,
 			Scheme_Transferable scheme)
 	{
@@ -813,7 +818,7 @@ public class SchemedbInterfaceSave
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static public int saveSchemes(
+	public static int saveSchemes(
 			String domain_id,
 			Scheme_Transferable[] schemes)
 	{
@@ -829,7 +834,7 @@ public class SchemedbInterfaceSave
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static public int removeCableThread(String id)
+	public static int removeCableThread(String id)
 	{
 		SchemedbInterfaceLoad.CableThreadIdIterator tidIt = null;
 		try
@@ -852,7 +857,7 @@ public class SchemedbInterfaceSave
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static public int removeCableLink(String id)
+	public static int removeCableLink(String id)
 	{
 		CableThreadIdIterator tidIt = null;
 		try
@@ -889,7 +894,7 @@ public class SchemedbInterfaceSave
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static public int removeCableLinks(String[] ids)
+	public static int removeCableLinks(String[] ids)
 	{
 		int i;
 		int j;
@@ -905,7 +910,7 @@ public class SchemedbInterfaceSave
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static public int removeSchemePath(String id)
+	public static int removeSchemePath(String id)
 	{
 		try
 		{
@@ -933,7 +938,7 @@ public class SchemedbInterfaceSave
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static public int removeSchemePaths(String[] ids)
+	public static int removeSchemePaths(String[] ids)
 	{
 		int i;
 		int j;
@@ -949,7 +954,7 @@ public class SchemedbInterfaceSave
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static public int removeSchemeElement(String element_id)
+	public static int removeSchemeElement(String element_id)
 	{
 		String scheme_cell_id = "";
 		String ugo_cell_id = "";
@@ -1075,7 +1080,7 @@ public class SchemedbInterfaceSave
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static public int removeSchemeElements(String[] ids)
+	public static int removeSchemeElements(String[] ids)
 	{
 		int i;
 		int j;
@@ -1091,7 +1096,7 @@ public class SchemedbInterfaceSave
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static public int removeScheme(String scheme_id)
+	public static int removeScheme(String scheme_id)
 	{
 		String scheme_cell_id = "";
 		String ugo_cell_id = "";
@@ -1230,7 +1235,7 @@ public class SchemedbInterfaceSave
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static public int removeSchemes(String[] ids)
+	public static int removeSchemes(String[] ids)
 	{
 		int i;
 		int j;
@@ -1255,4 +1260,3 @@ public class SchemedbInterfaceSave
 	#sql public static iterator PathIdIterator ( String scheme_path_id );
 	#sql public static iterator CableThreadIdIterator ( String scheme_cable_thread_id );
 }
-

@@ -1,29 +1,29 @@
+/*
+ * $Id: MapdbInterfaceSave2.sqlj,v 1.2 2004/06/29 07:12:58 bass Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ.
+ */
 
-// Copyright (c) Syrus Systems 2000 Syrus Systems
 package com.syrus.AMFICOM.server.Object;
 
-import sqlj.runtime.*;
-import sqlj.runtime.ref.*;
-import java.sql.*;
-import oracle.sql.*;
-import java.text.*;
-
-import java.util.Vector;
-
-import com.syrus.AMFICOM.CORBA.*;
+import com.syrus.AMFICOM.CORBA.Constants;
 import com.syrus.AMFICOM.CORBA.Map.*;
-import com.syrus.AMFICOM.CORBA.Scheme.*;
-import com.syrus.AMFICOM.CORBA.Resource.*;
+import java.sql.SQLException;
 
-import com.syrus.AMFICOM.server.*;
-
-public class MapdbInterfaceSave2 extends Object
+/**
+ * @version $Revision: 1.2 $, $Date: 2004/06/29 07:12:58 $
+ * @author $Author: bass $
+ * @module server_v1
+ */
+public class MapdbInterfaceSave2
 {
 	protected MapdbInterfaceSave2()
 	{
 	}
 
-	static public int saveMapNode(MapPhysicalNodeElement_Transferable node)
+	public static int saveMapNode(MapPhysicalNodeElement_Transferable node)
 	{
 		int i;
 		int count = 0;
@@ -113,7 +113,7 @@ public class MapdbInterfaceSave2 extends Object
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static public int saveMapNodes(MapPhysicalNodeElement_Transferable[] nodeseq)
+	public static int saveMapNodes(MapPhysicalNodeElement_Transferable[] nodeseq)
 	{
 		int i;
 		int len;
@@ -126,7 +126,7 @@ public class MapdbInterfaceSave2 extends Object
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static public int saveMapNodeLink(MapNodeLinkElement_Transferable nodelink)
+	public static int saveMapNodeLink(MapNodeLinkElement_Transferable nodelink)
 	{
 		int count = 0;
 
@@ -204,7 +204,7 @@ public class MapdbInterfaceSave2 extends Object
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static public int saveMapNodeLinks(MapNodeLinkElement_Transferable[] nodelinkseq)
+	public static int saveMapNodeLinks(MapNodeLinkElement_Transferable[] nodelinkseq)
 	{
 		int i;
 		int len;
@@ -217,7 +217,7 @@ public class MapdbInterfaceSave2 extends Object
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static public int saveMapLink(MapPhysicalLinkElement_Transferable link)
+	public static int saveMapLink(MapPhysicalLinkElement_Transferable link)
 	{
 		int i;
 		int count = 0;
@@ -308,7 +308,7 @@ public class MapdbInterfaceSave2 extends Object
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static public int saveMapLinks(MapPhysicalLinkElement_Transferable[] linkseq)
+	public static int saveMapLinks(MapPhysicalLinkElement_Transferable[] linkseq)
 	{
 		int i;
 		int len;
@@ -320,6 +320,4 @@ public class MapdbInterfaceSave2 extends Object
 		}
 		return Constants.ERROR_NO_ERROR;
 	}
-
 }
-

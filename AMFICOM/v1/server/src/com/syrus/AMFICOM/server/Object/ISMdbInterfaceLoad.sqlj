@@ -1,26 +1,32 @@
+/*
+ * $Id: ISMdbInterfaceLoad.sqlj,v 1.2 2004/06/29 07:12:58 bass Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ.
+ */
+
 package com.syrus.AMFICOM.server.Object;
 
-import sqlj.runtime.*;
-import sqlj.runtime.ref.*;
-import java.sql.*;
-
-import java.util.Vector;
-
-import com.syrus.AMFICOM.CORBA.*;
-import com.syrus.AMFICOM.CORBA.Network.*;
+import com.syrus.AMFICOM.CORBA.Constants;
 import com.syrus.AMFICOM.CORBA.ISM.*;
-import com.syrus.AMFICOM.CORBA.ISMDirectory.*;
-import com.syrus.AMFICOM.CORBA.Resource.*;
+import com.syrus.AMFICOM.CORBA.Network.*;
+import java.sql.*;
+import java.util.Vector;
+import sqlj.runtime.SQLNullException;
 
-import com.syrus.AMFICOM.server.*;
-
+/**
+ * @version $Revision: 1.2 $, $Date: 2004/06/29 07:12:58 $
+ * @author $Author: bass $
+ * @module server_v1
+ */
 public class  ISMdbInterfaceLoad
 {
 	protected ISMdbInterfaceLoad()
 	{
 	}
 
-	static public Vector loadAccessPortTestTypes(String aport_id)
+	public static Vector loadAccessPortTestTypes(String aport_id)
 	{
 		TestTypeIdIterator idIt = null;
 		Vector vector = new Vector();
@@ -48,7 +54,7 @@ public class  ISMdbInterfaceLoad
 		return vector;
 	}
 
-	static public Vector loadKISAccessPorts(String element_id)
+	public static Vector loadKISAccessPorts(String element_id)
 	{
 		IdIterator idIt = null;
 		Vector vector = new Vector();
@@ -76,7 +82,7 @@ public class  ISMdbInterfaceLoad
 		return vector;
 	}
 
-	static public Object loadAccessPort(String aport_id)
+	public static Object loadAccessPort(String aport_id)
 	{
 		String It_id = "";
 		String It_name = "";
@@ -164,7 +170,7 @@ public class  ISMdbInterfaceLoad
 		}
 	}
 
-	static public int loadAccessPorts(
+	public static int loadAccessPorts(
 			AccessPortSeq_TransferableHolder aportseq)
 	{
 		String It_id = "";
@@ -258,7 +264,7 @@ public class  ISMdbInterfaceLoad
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static public int loadKISs(
+	public static int loadKISs(
 			String domain_id,
 			EquipmentSeq_TransferableHolder kiss,
 			Vector port_vec,
@@ -475,7 +481,7 @@ public class  ISMdbInterfaceLoad
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static public int loadTransmissionPaths(
+	public static int loadTransmissionPaths(
 			String domain_id,
 			TransmissionPathSeq_TransferableHolder pathseq)
 	{
@@ -682,7 +688,7 @@ public class  ISMdbInterfaceLoad
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static public int loadMonitoredElements(
+	public static int loadMonitoredElements(
 			String domain_id,
 			MonitoredElementSeq_TransferableHolder meseq)
 	{
@@ -875,6 +881,4 @@ public class  ISMdbInterfaceLoad
 		String local_address,
 		Timestamp modified,
 		String domain_id);
-
 }
-

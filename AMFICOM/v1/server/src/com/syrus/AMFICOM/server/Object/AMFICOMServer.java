@@ -1,38 +1,42 @@
+/*
+ * $Id: AMFICOMServer.java,v 1.4 2004/06/29 07:12:57 bass Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ.
+ */
+
 package com.syrus.AMFICOM.server.Object;
 
-import java.util.Vector;
-import java.sql.*;
-import com.inprise.vbroker.CORBA.*;
-import org.omg.CORBA.*;
-//import com.inprise.vbroker.IOP.*;
-import com.visigenic.vbroker.orb.ORB;
-
-import oracle.aurora.jndi.orb_dep.Orb;
-
-import oracle.aurora.AuroraServices.ActivatableObject;
-
-import com.syrus.AMFICOM.server.*;
-import com.syrus.AMFICOM.server.AlarmReceiver.*;
-import com.syrus.AMFICOM.server.measurement.*;
-import com.syrus.AMFICOM.server.event.*;
-import com.syrus.AMFICOM.CORBA.*;
-import com.syrus.AMFICOM.CORBA.Map.*;
-import com.syrus.AMFICOM.CORBA.Scheme.*;
-import com.syrus.AMFICOM.CORBA.Alarm.*;
+import com.syrus.AMFICOM.CORBA.AMFICOMClient;
 import com.syrus.AMFICOM.CORBA.Admin.*;
-import com.syrus.AMFICOM.CORBA.Resource.*;
-import com.syrus.AMFICOM.CORBA.Report.*;
+import com.syrus.AMFICOM.CORBA.Alarm.*;
+import com.syrus.AMFICOM.CORBA.Constants;
 import com.syrus.AMFICOM.CORBA.General.*;
-import com.syrus.AMFICOM.CORBA.Survey.*;
 import com.syrus.AMFICOM.CORBA.ISM.*;
-import com.syrus.AMFICOM.CORBA.Network.*;
 import com.syrus.AMFICOM.CORBA.ISMDirectory.*;
+import com.syrus.AMFICOM.CORBA.Map.*;
+import com.syrus.AMFICOM.CORBA.Network.*;
 import com.syrus.AMFICOM.CORBA.NetworkDirectory.*;
+import com.syrus.AMFICOM.CORBA.Report.*;
+import com.syrus.AMFICOM.CORBA.Resource.*;
+import com.syrus.AMFICOM.CORBA.Scheme.*;
+import com.syrus.AMFICOM.CORBA.Survey.*;
+import com.syrus.AMFICOM.CORBA._AMFICOMImplBase;
+import com.syrus.AMFICOM.server.AlarmReceiver.*;
+import com.syrus.AMFICOM.server.*;
+import com.syrus.AMFICOM.server.event.AlarmType;
+import com.syrus.AMFICOM.server.measurement.*;
+import java.sql.SQLException;
+import java.util.Vector;
+import org.omg.CORBA.*;
 
-import com.syrus.AMFICOM.CORBA.General.AMFICOMRemoteException;
-
-public class AMFICOMServer
-		extends _AMFICOMImplBase
+/**
+ * @version $Revision: 1.4 $, $Date: 2004/06/29 07:12:57 $
+ * @author $Author: bass $
+ * @module server_v1
+ */
+public class AMFICOMServer extends _AMFICOMImplBase
 {
 	AMFICOMdbInterface dbInterface = new AMFICOMdbInterface();
 
@@ -42,10 +46,10 @@ public class AMFICOMServer
 	protected AlarmReceiverMap alarmReceiverMap;
 	
 	protected ServerTrafficReporter thisReporter;
-	static protected ServerTrafficReporter theReporter;
+	protected static ServerTrafficReporter theReporter;
 
 	{
-		if(measuretraffic)
+		if (measuretraffic)
 		{
 			theReporter = new ServerTrafficReporter("d:\\traffic.log");
 		}
@@ -89,8 +93,8 @@ public class AMFICOMServer
 		throw new org.omg.CORBA.MARSHAL();
 	}
 
-	static private long starttm;
-	static private long endtm;
+	private static long starttm;
+	private static long endtm;
 
 	public static boolean _execute(com.syrus.AMFICOM.CORBA.AMFICOM _self, int _method_id, org.omg.CORBA.portable.InputStream _input, org.omg.CORBA.portable.OutputStream _output)
 	{
@@ -3164,13 +3168,13 @@ public class AMFICOMServer
 	 * реализации сессии между клиентом и сервером.
 	 */
 /*
-	static private void initORB()
+	private static void initORB()
 	{
 		if (orb == null)
 			orb = Orb.init();
 	}
 
-	static public ORB getORB()
+	public static ORB getORB()
 	{
 		initORB();
 		return orb;
@@ -3247,5 +3251,4 @@ public class AMFICOMServer
 			throw are;
 		}
 	}
-
 }

@@ -1,14 +1,24 @@
+/*
+ * $Id: MonitoredElement.sqlj,v 1.2 2004/06/29 07:12:58 bass Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ.
+ */
+
 package com.syrus.AMFICOM.server.catalog;
 
-import sqlj.runtime.*;
-import sqlj.runtime.ref.*;
+import com.syrus.AMFICOM.CORBA.Constants;
+import com.syrus.AMFICOM.CORBA.General.AMFICOMRemoteException;
+import com.syrus.AMFICOM.CORBA.ISM.MonitoredElement_Transferable;
 import java.sql.*;
 
-import com.syrus.AMFICOM.CORBA.*;
-import com.syrus.AMFICOM.CORBA.General.*;
-import com.syrus.AMFICOM.CORBA.ISM.*;
-
-public class MonitoredElement extends Object
+/**
+ * @version $Revision: 1.2 $, $Date: 2004/06/29 07:12:58 $
+ * @author $Author: bass $
+ * @module server_v1
+ */
+public class MonitoredElement
 {
 	String id = "";
 	String path_id = "";
@@ -250,9 +260,8 @@ public class MonitoredElement extends Object
     	return id;
     }
 
-    public String getName()
-    {
-    	return element_name;
-    }
+	public String getName()
+	{
+		return element_name;
+	}
 }
-

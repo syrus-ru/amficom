@@ -1,20 +1,29 @@
+/*
+ * $Id: RenderingObject.sqlj,v 1.4 2004/06/29 07:12:58 bass Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ.
+ */
+
 package com.syrus.AMFICOM.server.Object;
-
-import sqlj.runtime.ConnectionContext;
-import sqlj.runtime.ref.DefaultContext;
-import java.sql.SQLException;
-import oracle.sql.BLOB;
-
-import java.util.Vector;
-import java.io.DataOutputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.ObjectOutputStream;
 
 import com.syrus.AMFICOM.CORBA.Report.RenderingObject_Transferable;
 import com.syrus.util.ByteArray;
 import com.syrus.util.database.ByteArrayDatabase;
+import java.io.*;
+import java.sql.SQLException;
+import java.util.Vector;
+import oracle.sql.BLOB;
+import sqlj.runtime.ConnectionContext;
+import sqlj.runtime.ref.DefaultContext;
 
-public class RenderingObject extends Object
+/**
+ * @version $Revision: 1.4 $, $Date: 2004/06/29 07:12:58 $
+ * @author $Author: bass $
+ * @module server_v1
+ */
+public class RenderingObject
 {
 	private String roID;
 	private int objectX;
@@ -334,7 +343,4 @@ public class RenderingObject extends Object
 		BLOB in_report,
 		BLOB col_widths,
 		int tdn);
-
-
 }
-
