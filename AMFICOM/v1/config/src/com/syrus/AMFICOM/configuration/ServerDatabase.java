@@ -1,5 +1,5 @@
 /*
- * $Id: ServerDatabase.java,v 1.7 2004/08/09 13:21:26 bob Exp $
+ * $Id: ServerDatabase.java,v 1.8 2004/08/09 14:13:40 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,7 +26,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2004/08/09 13:21:26 $
+ * @version $Revision: 1.8 $, $Date: 2004/08/09 14:13:40 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -70,7 +70,7 @@ public class ServerDatabase extends StorableObjectDatabase {
 		buffer.append(COLUMN_NAME);
 		buffer.append(StorableObjectDatabase.COMMA);
 		buffer.append(COLUMN_DESCRIPTION);
-		buffer.append(StorableObjectDatabase.SQL_SELECT);
+		buffer.append(StorableObjectDatabase.COMMA);
 		buffer.append(COLUMN_USER_ID);
 		buffer.append(StorableObjectDatabase.SQL_FROM);
 		buffer.append(ObjectEntities.SERVER_ENTITY);
