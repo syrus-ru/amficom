@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectDatabase.java,v 1.53 2004/11/19 08:49:45 bob Exp $
+ * $Id: StorableObjectDatabase.java,v 1.54 2004/11/19 11:31:39 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,7 +29,7 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.53 $, $Date: 2004/11/19 08:49:45 $
+ * @version $Revision: 1.54 $, $Date: 2004/11/19 11:31:39 $
  * @author $Author: bob $
  * @module general_v1
  */
@@ -93,8 +93,8 @@ public abstract class StorableObjectDatabase {
 		//connection = DatabaseConnection.getConnection();
 	}
 
-	public void delete(StorableObject storableObject)  throws IllegalDataException {
-		String storableObjectIdStr = DatabaseIdentifier.toSQLString(storableObject.getId());
+	public void delete(Identifier id)  throws IllegalDataException {
+		String storableObjectIdStr = DatabaseIdentifier.toSQLString(id);
 		Statement statement = null;
 		Connection connection = DatabaseConnection.getConnection();
 		try {			
@@ -120,6 +120,10 @@ public abstract class StorableObjectDatabase {
 				DatabaseConnection.closeConnection(connection);
 			}
 		}
+	}
+	
+	public void delete(StorableObject storableObject)  throws IllegalDataException {
+		this.delete(storableObject.getId());
 	}
 	
 	public void delete(List ids) throws IllegalDataException {
