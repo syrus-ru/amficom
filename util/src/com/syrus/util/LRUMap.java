@@ -1,5 +1,5 @@
 /*
- * $Id: LRUMap.java,v 1.13 2004/11/12 09:38:26 bob Exp $
+ * $Id: LRUMap.java,v 1.14 2004/11/12 09:39:00 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,7 +14,7 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2004/11/12 09:38:26 $
+ * @version $Revision: 1.14 $, $Date: 2004/11/12 09:39:00 $
  * @author $Author: bob $
  * @module util
  */
@@ -178,7 +178,7 @@ public class LRUMap implements Serializable {
     	    try {
     		Object next = null;
     		while(next == null){
-    			next = keyIterator ? LRUMap.this.array[this.cursor].key : LRUMap.this.array[this.cursor].value;
+    			next = this.keyIterator ? LRUMap.this.array[this.cursor].key : LRUMap.this.array[this.cursor].value;
     			this.lastRet = this.cursor++;
     		}
     		return next;
