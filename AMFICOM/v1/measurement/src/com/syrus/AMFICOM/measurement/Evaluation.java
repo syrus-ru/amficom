@@ -1,5 +1,5 @@
 /*
- * $Id: Evaluation.java,v 1.33 2004/12/06 13:21:03 bob Exp $
+ * $Id: Evaluation.java,v 1.34 2004/12/09 12:01:45 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,7 +27,7 @@ import com.syrus.AMFICOM.measurement.corba.Evaluation_Transferable;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
 
 /**
- * @version $Revision: 1.33 $, $Date: 2004/12/06 13:21:03 $
+ * @version $Revision: 1.34 $, $Date: 2004/12/09 12:01:45 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -167,7 +167,7 @@ public class Evaluation extends Action {
 		if (creatorId == null || type == null || monitoredElementId == null || thresholdSet == null)
 			throw new IllegalArgumentException("Argument is 'null'");		
 
-		return new Evaluation(IdentifierPool.generateId(ObjectEntities.EVALUATION_ENTITY_CODE),
+		return new Evaluation(IdentifierPool.getGeneratedIdentifier(ObjectEntities.EVALUATION_ENTITY_CODE),
 			creatorId,
 			type,
 			monitoredElementId,

@@ -1,5 +1,5 @@
 /*
- * $Id: EvaluationType.java,v 1.35 2004/12/08 10:24:09 bob Exp $
+ * $Id: EvaluationType.java,v 1.36 2004/12/09 12:01:45 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,7 +29,7 @@ import com.syrus.AMFICOM.measurement.corba.EvaluationType_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.35 $, $Date: 2004/12/08 10:24:09 $
+ * @version $Revision: 1.36 $, $Date: 2004/12/09 12:01:45 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -160,7 +160,7 @@ public class EvaluationType extends ActionType {
 		if (creatorId == null || codename == null || codename.length() == 0 || description == null)
 			throw new IllegalArgumentException("Argument is 'null'");
 
-		return new EvaluationType(IdentifierPool.generateId(ObjectEntities.EVALUATIONTYPE_ENTITY_CODE),
+		return new EvaluationType(IdentifierPool.getGeneratedIdentifier(ObjectEntities.EVALUATIONTYPE_ENTITY_CODE),
 			creatorId,
 			codename,
 			description,

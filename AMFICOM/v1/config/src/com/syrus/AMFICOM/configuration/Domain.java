@@ -1,5 +1,5 @@
 /*
- * $Id: Domain.java,v 1.22 2004/12/07 10:58:36 bass Exp $
+ * $Id: Domain.java,v 1.23 2004/12/09 12:01:41 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,8 +9,8 @@
 package com.syrus.AMFICOM.configuration;
 
 /**
- * @version $Revision: 1.22 $, $Date: 2004/12/07 10:58:36 $
- * @author $Author: bass $
+ * @version $Revision: 1.23 $, $Date: 2004/12/09 12:01:41 $
+ * @author $Author: bob $
  * @module configuration_v1
  */
 
@@ -146,7 +146,7 @@ public class Domain extends DomainMember implements Characterized {
 				description == null)
 			throw new IllegalArgumentException("Argument is 'null'");
 		
-		return new Domain(IdentifierPool.generateId(ObjectEntities.DOMAIN_ENTITY_CODE),
+		return new Domain(IdentifierPool.getGeneratedIdentifier(ObjectEntities.DOMAIN_ENTITY_CODE),
 					creatorId,
 					domainId,
 					name,

@@ -1,5 +1,5 @@
 /*
- * $Id: PortType.java,v 1.19 2004/12/07 10:58:36 bass Exp $
+ * $Id: PortType.java,v 1.20 2004/12/09 12:01:42 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,8 +30,8 @@ import com.syrus.AMFICOM.configuration.corba.PortTypeSort;
 import com.syrus.AMFICOM.configuration.corba.PortType_Transferable;
 
 /**
- * @version $Revision: 1.19 $, $Date: 2004/12/07 10:58:36 $
- * @author $Author: bass $
+ * @version $Revision: 1.20 $, $Date: 2004/12/09 12:01:42 $
+ * @author $Author: bob $
  * @module configuration_v1
  */
 
@@ -107,7 +107,7 @@ public class PortType extends StorableObjectType implements Characterized {
 				sort == null)
 			throw new IllegalArgumentException("Argument is 'null'");
 		
-		return new PortType(IdentifierPool.generateId(ObjectEntities.PORTTYPE_ENTITY_CODE),
+		return new PortType(IdentifierPool.getGeneratedIdentifier(ObjectEntities.PORTTYPE_ENTITY_CODE),
 							creatorId,
 							codename,
 							description,

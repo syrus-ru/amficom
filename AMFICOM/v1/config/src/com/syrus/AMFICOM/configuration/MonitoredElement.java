@@ -1,5 +1,5 @@
 /*
- * $Id: MonitoredElement.java,v 1.29 2004/12/07 10:58:36 bass Exp $
+ * $Id: MonitoredElement.java,v 1.30 2004/12/09 12:01:41 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,8 +26,8 @@ import com.syrus.AMFICOM.configuration.corba.MonitoredElement_Transferable;
 import com.syrus.AMFICOM.configuration.corba.MonitoredElementSort;
 
 /**
- * @version $Revision: 1.29 $, $Date: 2004/12/07 10:58:36 $
- * @author $Author: bass $
+ * @version $Revision: 1.30 $, $Date: 2004/12/09 12:01:41 $
+ * @author $Author: bob $
  * @module configuration_v1
  */
 
@@ -114,7 +114,7 @@ public class MonitoredElement extends DomainMember {
 				localAddress == null )
 			throw new IllegalArgumentException("Argument is 'null'");
 		
-		return new MonitoredElement(IdentifierPool.generateId(ObjectEntities.ME_ENTITY_CODE),
+		return new MonitoredElement(IdentifierPool.getGeneratedIdentifier(ObjectEntities.ME_ENTITY_CODE),
 							creatorId,
 							domainId,
 							name,

@@ -1,5 +1,5 @@
 /*
- * $Id: Server.java,v 1.24 2004/12/06 12:54:20 bob Exp $
+ * $Id: Server.java,v 1.25 2004/12/09 12:01:42 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,7 +26,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.configuration.corba.Server_Transferable;
 
 /**
- * @version $Revision: 1.24 $, $Date: 2004/12/06 12:54:20 $
+ * @version $Revision: 1.25 $, $Date: 2004/12/09 12:01:42 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -169,7 +169,7 @@ public class Server extends DomainMember implements Characterized {
 				userId == null)
 			throw new IllegalArgumentException("Argument is 'null'");
 		
-		return new Server(IdentifierPool.generateId(ObjectEntities.SERVER_ENTITY_CODE),
+		return new Server(IdentifierPool.getGeneratedIdentifier(ObjectEntities.SERVER_ENTITY_CODE),
 					creatorId,
 					domainId,
 					name,

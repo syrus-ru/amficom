@@ -1,5 +1,5 @@
 /*
- * $Id: Measurement.java,v 1.36 2004/12/06 13:21:04 bob Exp $
+ * $Id: Measurement.java,v 1.37 2004/12/09 12:01:45 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,7 +30,7 @@ import com.syrus.AMFICOM.measurement.corba.ResultSort;
 import com.syrus.AMFICOM.event.corba.AlarmLevel;
 
 /**
- * @version $Revision: 1.36 $, $Date: 2004/12/06 13:21:04 $
+ * @version $Revision: 1.37 $, $Date: 2004/12/09 12:01:45 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -231,7 +231,7 @@ public class Measurement extends Action {
 				monitoredElementId == null || setup == null || startTime == null || localAddress == null || testId == null)
 			throw new IllegalArgumentException("Argument is 'null'");
 
-		return new Measurement(IdentifierPool.generateId(ObjectEntities.MEASUREMENT_ENTITY_CODE),
+		return new Measurement(IdentifierPool.getGeneratedIdentifier(ObjectEntities.MEASUREMENT_ENTITY_CODE),
 			creatorId,
 			type,
 			name,

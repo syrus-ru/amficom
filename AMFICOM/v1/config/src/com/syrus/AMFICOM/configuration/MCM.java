@@ -1,5 +1,5 @@
 /*
- * $Id: MCM.java,v 1.30 2004/12/06 12:54:20 bob Exp $
+ * $Id: MCM.java,v 1.31 2004/12/09 12:01:41 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,7 +26,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.configuration.corba.MCM_Transferable;
 
 /**
- * @version $Revision: 1.30 $, $Date: 2004/12/06 12:54:20 $
+ * @version $Revision: 1.31 $, $Date: 2004/12/09 12:01:41 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -201,7 +201,7 @@ public class MCM extends DomainMember implements Characterized {
 				userId == null || serverId == null)
 			throw new IllegalArgumentException("Argument is 'null'");
 		
-		return new MCM(IdentifierPool.generateId(ObjectEntities.MCM_ENTITY_CODE),
+		return new MCM(IdentifierPool.getGeneratedIdentifier(ObjectEntities.MCM_ENTITY_CODE),
 							creatorId,
 							domainId,
 							name,

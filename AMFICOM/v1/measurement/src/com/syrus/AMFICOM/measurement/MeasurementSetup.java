@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementSetup.java,v 1.38 2004/12/08 10:24:09 bob Exp $
+ * $Id: MeasurementSetup.java,v 1.39 2004/12/09 12:01:45 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,7 +29,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.corba.MeasurementSetup_Transferable;
 
 /**
- * @version $Revision: 1.38 $, $Date: 2004/12/08 10:24:09 $
+ * @version $Revision: 1.39 $, $Date: 2004/12/09 12:01:45 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -151,7 +151,7 @@ public class MeasurementSetup extends StorableObject {
 		if (creatorId == null || description == null || parameterSet == null || monitoredElementIds == null)
 			throw new IllegalArgumentException("Argument is 'null'");
 	
-		return new MeasurementSetup(IdentifierPool.generateId(ObjectEntities.MS_ENTITY_CODE),
+		return new MeasurementSetup(IdentifierPool.getGeneratedIdentifier(ObjectEntities.MS_ENTITY_CODE),
 			creatorId,
 			parameterSet,
 			criteriaSet,

@@ -1,5 +1,5 @@
 /*
- * $Id: IdentifierPool.java,v 1.7 2004/12/09 11:51:49 arseniy Exp $
+ * $Id: IdentifierPool.java,v 1.8 2004/12/09 12:01:32 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,8 +18,8 @@ import com.syrus.util.Fifo;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2004/12/09 11:51:49 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.8 $, $Date: 2004/12/09 12:01:32 $
+ * @author $Author: bob $
  * @module cmserver_v1
  */
 public class IdentifierPool {
@@ -48,7 +48,7 @@ public class IdentifierPool {
 		init(igServer1, DEFAULT_CAPACITY);
 	}
 
-	public static synchronized Identifier generateId(final short entityCode) throws IllegalObjectEntityException {
+	public static synchronized Identifier getGeneratedIdentifier(final short entityCode) throws IllegalObjectEntityException {
 		if (ObjectEntities.codeIsValid(entityCode)) {
 			Short entityCodeShort = new Short(entityCode);
 			Fifo fifo = (Fifo) idPoolMap.get(entityCodeShort);

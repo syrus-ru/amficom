@@ -10,6 +10,7 @@ import com.syrus.util.database.DatabaseConnection;
 public class IdentifierGenerator {
 	
 	private IdentifierGenerator() {
+		// singleton constructor
 	}
 	
 	public static synchronized Identifier generateIdentifier(short entityCode) throws IllegalObjectEntityException, IdentifierGenerationException {

@@ -1,5 +1,5 @@
 /*
- * $Id: TemporalPattern.java,v 1.53 2004/12/07 10:59:48 bass Exp $
+ * $Id: TemporalPattern.java,v 1.54 2004/12/09 12:01:45 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,8 +32,8 @@ import com.syrus.AMFICOM.resource.LangModelMeasurement;
 import com.syrus.util.HashCodeGenerator;
 
 /**
- * @version $Revision: 1.53 $, $Date: 2004/12/07 10:59:48 $
- * @author $Author: bass $
+ * @version $Revision: 1.54 $, $Date: 2004/12/09 12:01:45 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
@@ -873,7 +873,7 @@ public class TemporalPattern extends StorableObject {
 		if (creatorId == null || description == null || cronString == null )
 			throw new IllegalArgumentException("Argument is 'null'");
 
-		return new TemporalPattern(IdentifierPool.generateId(ObjectEntities.TEMPORALPATTERN_ENTITY_CODE),
+		return new TemporalPattern(IdentifierPool.getGeneratedIdentifier(ObjectEntities.TEMPORALPATTERN_ENTITY_CODE),
 			creatorId, description, cronString);
 	}
 
@@ -883,7 +883,7 @@ public class TemporalPattern extends StorableObject {
 		if (creatorId == null || description == null || cronStrings == null )
 			throw new IllegalArgumentException("Argument is 'null'");
 
-		return new TemporalPattern(IdentifierPool.generateId(ObjectEntities.TEMPORALPATTERN_ENTITY_CODE), creatorId, description, cronStrings);
+		return new TemporalPattern(IdentifierPool.getGeneratedIdentifier(ObjectEntities.TEMPORALPATTERN_ENTITY_CODE), creatorId, description, cronStrings);
 	}
 
 	public short getEntityCode() {

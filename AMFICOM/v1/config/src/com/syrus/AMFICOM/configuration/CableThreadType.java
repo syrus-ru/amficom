@@ -1,5 +1,5 @@
 /*
- * $Id: CableThreadType.java,v 1.4 2004/12/06 12:54:20 bob Exp $
+ * $Id: CableThreadType.java,v 1.5 2004/12/09 12:01:41 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -24,7 +24,7 @@ import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2004/12/06 12:54:20 $
+ * @version $Revision: 1.5 $, $Date: 2004/12/09 12:01:41 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -89,7 +89,7 @@ public class CableThreadType extends AbstractLinkType {
 				mark == null || color == null || linkTypeId == null)
 			throw new IllegalArgumentException("Argument is 'null'");
 		
-		return new CableThreadType(IdentifierPool.generateId(ObjectEntities.CABLETHREADTYPE_ENTITY_CODE), creatorId, codename, description, mark, color, linkTypeId);
+		return new CableThreadType(IdentifierPool.getGeneratedIdentifier(ObjectEntities.CABLETHREADTYPE_ENTITY_CODE), creatorId, codename, description, mark, color, linkTypeId);
 	}
 
 	public static CableThreadType getInstance(CableThreadType_Transferable ctt) throws CreateObjectException {

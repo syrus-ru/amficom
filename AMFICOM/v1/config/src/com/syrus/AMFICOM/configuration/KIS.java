@@ -1,5 +1,5 @@
 /*
- * $Id: KIS.java,v 1.39 2004/12/07 10:58:36 bass Exp $
+ * $Id: KIS.java,v 1.40 2004/12/09 12:01:41 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,8 +27,8 @@ import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.39 $, $Date: 2004/12/07 10:58:36 $
- * @author $Author: bass $
+ * @version $Revision: 1.40 $, $Date: 2004/12/09 12:01:41 $
+ * @author $Author: bob $
  * @module configuration_v1
  */
 
@@ -136,7 +136,7 @@ public class KIS extends DomainMember implements Characterized {
 				description == null || hostname == null || equipmentId == null || mcmId == null)
 			throw new IllegalArgumentException("Argument is 'null'");
 
-		return new KIS(IdentifierPool.generateId(ObjectEntities.KIS_ENTITY_CODE),
+		return new KIS(IdentifierPool.getGeneratedIdentifier(ObjectEntities.KIS_ENTITY_CODE),
 				creatorId,
 				domainId,
 				name,

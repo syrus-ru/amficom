@@ -1,5 +1,5 @@
 /*
- * $Id: Characteristic.java,v 1.31 2004/12/07 10:58:36 bass Exp $
+ * $Id: Characteristic.java,v 1.32 2004/12/09 12:01:41 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,8 +29,8 @@ import com.syrus.AMFICOM.configuration.corba.Characteristic_Transferable;
 import com.syrus.AMFICOM.configuration.corba.CharacteristicSort;
 
 /**
- * @version $Revision: 1.31 $, $Date: 2004/12/07 10:58:36 $
- * @author $Author: bass $
+ * @version $Revision: 1.32 $, $Date: 2004/12/09 12:01:41 $
+ * @author $Author: bob $
  * @module configuration_v1
  */
 
@@ -131,7 +131,7 @@ public class Characteristic extends StorableObject implements TypedObject {
 				value == null || characterizedId == null)
 			throw new IllegalArgumentException("Argument is 'null'");		
 		
-		return new Characteristic(IdentifierPool.generateId(ObjectEntities.CHARACTERISTIC_ENTITY_CODE),
+		return new Characteristic(IdentifierPool.getGeneratedIdentifier(ObjectEntities.CHARACTERISTIC_ENTITY_CODE),
 								  creatorId,
 								  type,
 								  name,
