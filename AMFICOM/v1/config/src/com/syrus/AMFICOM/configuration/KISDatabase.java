@@ -3,8 +3,6 @@ package com.syrus.AMFICOM.configuration;
 import java.sql.Statement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;

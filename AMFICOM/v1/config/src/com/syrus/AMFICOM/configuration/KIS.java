@@ -3,7 +3,6 @@ package com.syrus.AMFICOM.configuration;
 import java.util.Date;
 import java.util.Iterator;
 import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
@@ -50,9 +49,9 @@ public class KIS extends Equipment {
 		for (Iterator iterator = super.characteristicIds.iterator(); iterator.hasNext();)
 			charIds[i++] = (Identifier_Transferable)((Identifier)iterator.next()).getTransferable();
 
-		Identifier_Transferable[] portIds = new Identifier_Transferable[super.portIds.size()];
+		Identifier_Transferable[] pIds = new Identifier_Transferable[super.portIds.size()];
 		for (Iterator iterator = super.portIds.iterator(); iterator.hasNext();)
-			portIds[i++] = (Identifier_Transferable)((Identifier)iterator.next()).getTransferable();
+			pIds[i++] = (Identifier_Transferable)((Identifier)iterator.next()).getTransferable();
 
 		Identifier_Transferable[] cportIds = new Identifier_Transferable[super.cablePortIds.size()];
 		for (Iterator iterator = super.cablePortIds.iterator(); iterator.hasNext();)
@@ -85,7 +84,7 @@ public class KIS extends Equipment {
 																			new String(super.eqClass),
 																			(Identifier_Transferable)super.imageId.getTransferable(),
 																			charIds,
-																			portIds,
+																			pIds,
 																			cportIds,
 																			sportIds,
 																			EquipmentSort.EQUIPMENT_SORT_KIS,

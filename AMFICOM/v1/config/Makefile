@@ -5,6 +5,8 @@ ARCHFILE = $(subst _v1,,$(MODULE_NAME)).tar.gz
 
 IDLDIR=../idl_v1/idl
 
+APPCLASSPATH = $(LIBDIR)/general.jar:$(LIBDIR)/util.jar
+
 HOST=mongol
 SERVICE_NAME=mongol
 
@@ -24,7 +26,7 @@ $(LIBNAME): .mach
 
 .mach:	.corba $(CLASSDIR)
 	$(JAVAC) $(JAVACFLAGS) \
-		-classpath $(AMFICOMCLASSPATH):$(CLASSDIR) \
+		-classpath $(APPCLASSPATH):$(CLASSDIR) \
 		$(SRCDIR)/com/syrus/AMFICOM/configuration/ConfigurationDatabaseContext.java \
 		$(SRCDIR)/com/syrus/AMFICOM/configuration/CharacteristicType.java \
 		$(SRCDIR)/com/syrus/AMFICOM/configuration/CharacteristicTypeDatabase.java \
@@ -46,7 +48,7 @@ $(LIBNAME): .mach
 	$(IDL2JAVA) $(IDL2JAVAFLAGS) \
 		$(IDLDIR)/configuration.idl
 	$(JAVAC) $(JAVACFLAGS) $(JAVAC_WARNOFF_FLAG) \
-		-classpath $(AMFICOMCLASSPATH) \
+		-classpath $(APPCLASSPATH) \
 		-sourcepath $(SRCDIR) \
 		$(SRCDIR)/com/syrus/AMFICOM/configuration/corba/*.java
 	touch $@
