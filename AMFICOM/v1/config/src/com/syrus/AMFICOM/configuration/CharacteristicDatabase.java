@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicDatabase.java,v 1.41 2004/11/25 15:59:50 max Exp $
+ * $Id: CharacteristicDatabase.java,v 1.42 2004/11/26 16:12:26 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,6 +8,7 @@
 
 package com.syrus.AMFICOM.configuration;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -39,7 +40,7 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.configuration.corba.CharacteristicSort;
 
 /**
- * @version $Revision: 1.41 $, $Date: 2004/11/25 15:59:50 $
+ * @version $Revision: 1.42 $, $Date: 2004/11/26 16:12:26 $
  * @author $Author: max $
  * @module configuration_v1
  */
@@ -378,8 +379,83 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
 		return list;
 	}
 
-	public void updateCharacteristics(StorableObject storableObject) {
-		// TODO Auto-generated method stub
-		
+	public void updateCharacteristics(StorableObject storableObject) throws UpdateObjectException {
+		if (!(storableObject instanceof Characterized)) {
+			String mesg = "CharacteristicDatabase.updateCharacteristics | Storable object " + 
+                    storableObject.getClass().getName() + " is not a type of Characterized";
+            throw new UpdateObjectException(mesg);           
+        }
+        Characterized characterizedStorableObject = (Characterized) storableObject;
+        List characteristics = characterizedStorableObject.getCharacteristics();
+        if (characteristics == null || characteristics.isEmpty())
+            return;
+        List characteristicIds = new ArrayList(characteristics.size());
+        for (Iterator it = characteristics.iterator(); it.hasNext();) {
+            Characteristic characteristic = (Characteristic) it.next();
+            characteristicIds.add(characteristic.getId());
+		}
+        
+        Map databaseIdCharacteristics = new HashMap();
+        String sql;
+        StringBuffer buff = new StringBuffer();
+        buff.append(COLUMN_CHARACTERIZED_ID);
+        buff.append(EQUALS);
+        buff.append(storableObject.getId());
+        sql = retrieveQuery(buff.toString());
+        Statement statement = null;
+        ResultSet resultSet = null;
+        Connection connection = DatabaseConnection.getConnection();
+        try {
+            statement = connection.createStatement();
+            Log.debugMessage("CharacteristicDatabase.updateCharacteristics | Trying: " + sql, Log.DEBUGLEVEL09);
+            resultSet = statement.executeQuery(sql.toString());
+            while (resultSet.next()) {
+                Characteristic characteristic = null;
+                updateEntityFromResultSet(characteristic, resultSet);
+                databaseIdCharacteristics.put(characteristic.getId(), characteristic);
+            }
+            
+            //  delete
+            for (Iterator it = databaseIdCharacteristics.keySet().iterator(); it.hasNext();) {
+                Identifier dbCharacteristicId = (Identifier) it.next();
+    			if(!characteristicIds.contains(dbCharacteristicId)) {
+    				super.delete(dbCharacteristicId);
+                    
+                }
+    		}
+            //  insert or update
+            for (Iterator it = characteristics.iterator(); it.hasNext();) {
+    			Characteristic characteristic = (Characteristic) it.next();
+                Characteristic dbCharacteristic = (Characteristic) databaseIdCharacteristics.get(characteristic.getId());
+                //  insert
+                if (dbCharacteristic == null) {
+                	this.insert(characteristic);
+                    continue;
+                }
+                //  update
+                boolean areIdsEqual = characteristic.getModifierId().equals(dbCharacteristic.getModifierId());
+                boolean areDatesEqual = Math.abs(storableObject.getModified().getTime() 
+                        - dbCharacteristic.getModified().getTime()) < 1000;
+                if (!(areIdsEqual && areDatesEqual)) {
+                	this.update(characteristic, UPDATE_FORCE, null);
+                }
+            }
+        } catch (SQLException sqle) {
+            String mesg = "CharacteristicDatabase.updateCharacteristics | SQLException: " + sqle.getMessage();
+            throw new UpdateObjectException(mesg, sqle);
+        } catch (VersionCollisionException vce) {
+            String mesg = "CharacteristicDatabase.updateCharacteristics | VersionCollisionException: " + vce.getMessage();
+            throw new UpdateObjectException(mesg, vce);
+        } catch (IllegalDataException ide) {
+            String mesg = "CharacteristicDatabase.updateCharacteristics | IllegalDataException: " + ide.getMessage();
+            throw new UpdateObjectException(mesg, ide);
+        } catch (RetrieveObjectException roe) {
+            String mesg = "CharacteristicDatabase.updateCharacteristics | RetrieveObjectException: " + roe.getMessage();
+            throw new UpdateObjectException(mesg, roe);
+        }catch(CreateObjectException coe) {
+            String mesg = "CharacteristicDatabase.updateCharacteristics | CreateObjectException: " + coe.getMessage();
+            throw new UpdateObjectException(mesg, coe);
+        }
+        
 	}
 }
