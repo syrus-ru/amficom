@@ -1,5 +1,5 @@
 /**
- * $Id: MapView.java,v 1.8 2004/10/06 09:27:28 krupenn Exp $
+ * $Id: MapView.java,v 1.9 2004/10/06 14:11:56 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -54,7 +54,7 @@ import java.util.List;
  * 
  * 
  * 
- * @version $Revision: 1.8 $, $Date: 2004/10/06 09:27:28 $
+ * @version $Revision: 1.9 $, $Date: 2004/10/06 14:11:56 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -454,26 +454,45 @@ public final class MapView extends StubResource
 		}
 	}
 
+	public void scanElement(SchemeElement schemeElement)
+	{
+		MapSiteNodeElement node = findElement(schemeElement);
+		if(node == null)
+		{
+			if(schemeElement.getLong() != 0.0D
+				|| schemeElement.getLat() != 0.0D)
+			{
+				placeElement(
+					schemeElement, 
+					new Point2D.Double(
+						schemeElement.getLong(), 
+						schemeElement.getLat()));
+			}
+		}
+	}
+	
 	public void scanElements(Scheme scheme)
 	{
 		for(Iterator it = scheme.getTopologicalElements().iterator(); it.hasNext();)
 		{
 			SchemeElement element = (SchemeElement )it.next();
-			MapSiteNodeElement node = findElement(element);
-			if(node == null)
-			{
-				if(element.getLong() != 0.0D
-					|| element.getLat() != 0.0D)
-				{
-					placeElement(
-						element, 
-						new Point2D.Double(
-							element.getLong(), 
-							element.getLat()));
-				}
-			}
+			scanElement(element);
 		}
 		scanCables(scheme);
+	}
+
+	public void scanCable(SchemeCableLink schemeCableLink)
+	{
+		MapCablePathElement cp = findCablePath(schemeCableLink);
+		if(cp == null)
+		{
+			MapSiteNodeElement[] mne = getSideNodes(schemeCableLink);
+	
+			if(mne[0] != null && mne[1] != null)
+			{
+				placeElement(schemeCableLink);
+			}
+		}
 	}
 	
 	public void scanCables(Scheme scheme)
@@ -481,18 +500,23 @@ public final class MapView extends StubResource
 		for(Iterator it = scheme.getTopologicalCableLinks().iterator(); it.hasNext();)
 		{
 			SchemeCableLink scl = (SchemeCableLink )it.next();
-			MapCablePathElement cp = findCablePath(scl);
-			if(cp == null)
-			{
-				MapSiteNodeElement[] mne = getSideNodes(scl);
-		
-				if(mne[0] != null && mne[1] != null)
-				{
-					placeElement(scl);
-				}
-			}
+			scanCable(scl);
 		}
 		scanPaths(scheme);
+	}
+
+	public void scanPath(SchemePath schemePath)
+	{
+		MapMeasurementPathElement mp = findMeasurementPath(schemePath);
+		if(mp == null)
+		{
+			MapSiteNodeElement[] mne = getSideNodes(schemePath);
+	
+			if(mne[0] != null && mne[1] != null)
+			{
+				placeElement(schemePath);
+			}
+		}
 	}
 
 	public void scanPaths(Scheme scheme)
@@ -500,16 +524,7 @@ public final class MapView extends StubResource
 		for(Iterator it = scheme.getTopologicalPaths().iterator(); it.hasNext();)
 		{
 			SchemePath path = (SchemePath )it.next();
-			MapMeasurementPathElement mp = findMeasurementPath(path);
-			if(mp == null)
-			{
-				MapSiteNodeElement[] mne = getSideNodes(path);
-		
-				if(mne[0] != null && mne[1] != null)
-				{
-					placeElement(path);
-				}
-			}
+			scanPath(path);
 		}
 	}
 

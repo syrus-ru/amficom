@@ -183,12 +183,15 @@ public final class MapSchemeTreePanel extends JPanel
 			if(performProcessing)
 			{
 				MapView mv = (MapView)oe.getSource();
-				updateTree(mv);
+				if(model == null || model.mv == null || !model.mv.equals(mv))
+				{
+					updateTree(mv);
+				}
 			}
 		if(	oe.getActionCommand().equals(MapEvent.MAP_VIEW_CHANGED))
 			if(performProcessing)
 			{
-				MapView mv = (MapView)oe.getSource();
+				MapView mv = (MapView )oe.getSource();
 				updateTree(mv);
 			}
 		if(oe.getActionCommand().equals(MapEvent.MAP_NAVIGATE))

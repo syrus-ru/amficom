@@ -80,12 +80,12 @@ public final class SchemeController implements ObjectResourceController
 		else
 		if (key.equals(KEY_DOMAIN))
 		{
-			result = Pool.get(Domain.typ, sc.getDomainId());
+			result = Pool.getName(Domain.typ, sc.getDomainId());
 		}
 		else
 		if (key.equals(KEY_USER))
 		{
-			result = Pool.get(User.typ, sc.createdBy);
+			result = Pool.getName(User.typ, sc.createdBy);
 		}
 		else
 		if (key.equals(KEY_CREATED))

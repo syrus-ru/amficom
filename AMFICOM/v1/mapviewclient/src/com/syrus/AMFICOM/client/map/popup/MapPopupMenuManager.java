@@ -39,7 +39,7 @@ public final class MapPopupMenuManager
 			SitePopupMenu.getInstance());
 		popupMap.put(MapUnboundNodeElement.class,
 			UnboundPopupMenu.getInstance());
-		popupMap.put(com.syrus.AMFICOM.Client.Resource.MapView.VoidMapElement.class,
+		popupMap.put(VoidMapElement.class,
 			VoidElementPopupMenu.getInstance());
 //		popupMap.put(MapAlarmMarker.class,
 //			MapAlarmMarkerPopupMenu.getInstance());
@@ -54,10 +54,6 @@ public final class MapPopupMenuManager
 	public static MapPopupMenu getPopupMenu(MapElement me)
 	{
 		MapPopupMenu menu = (MapPopupMenu )popupMap.get(me.getClass());
-//		if(menu != null)
-//		{
-//			menu.setMapElement(me);
-//		}
 		return menu;
 	}
 	

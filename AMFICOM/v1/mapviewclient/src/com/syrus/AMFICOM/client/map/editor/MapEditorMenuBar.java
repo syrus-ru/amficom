@@ -1,5 +1,5 @@
 /**
- * $Id: MapEditorMenuBar.java,v 1.4 2004/10/04 16:04:43 krupenn Exp $
+ * $Id: MapEditorMenuBar.java,v 1.5 2004/10/06 14:11:56 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -31,7 +31,7 @@ import java.awt.event.ActionListener;
  * 
  * 
  * 
- * @version $Revision: 1.4 $, $Date: 2004/10/04 16:04:43 $
+ * @version $Revision: 1.5 $, $Date: 2004/10/06 14:11:56 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -397,8 +397,8 @@ public class MapEditorMenuBar extends JMenuBar
 		menuMapImport.setVisible(aModel.isVisible("menuMapImport"));
 		menuMapImport.setEnabled(aModel.isEnabled("menuMapImport"));
 
-		menuScheme.setVisible(aModel.isVisible("menuMapView"));
-		menuScheme.setEnabled(aModel.isEnabled("menuMapView"));
+		menuScheme.setVisible(aModel.isVisible("menuScheme"));
+		menuScheme.setEnabled(aModel.isEnabled("menuScheme"));
 
 		menuSchemeAddToView.setVisible(aModel.isVisible("menuSchemeAddToView"));
 		menuSchemeAddToView.setEnabled(aModel.isEnabled("menuSchemeAddToView"));

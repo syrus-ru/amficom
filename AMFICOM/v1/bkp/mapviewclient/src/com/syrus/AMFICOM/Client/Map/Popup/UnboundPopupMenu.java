@@ -128,19 +128,7 @@ public class UnboundPopupMenu extends MapPopupMenu
 		MapNodeProtoElement proto = super.selectNodeProto();
 		if(proto != null)
 		{
-			CreateSiteCommand command = new CreateSiteCommand(proto, point);
-			command.setLogicalNetLayer(logicalNetLayer);
-			getLogicalNetLayer().getCommandList().add(command);
-			getLogicalNetLayer().getCommandList().execute();
-			
-			MapSiteNodeElement site = command.getSite();
-
-			BindToSiteCommandBundle command2 = new BindToSiteCommandBundle(unbound, site);
-			command2.setLogicalNetLayer(logicalNetLayer);
-			getLogicalNetLayer().getCommandList().add(command2);
-			getLogicalNetLayer().getCommandList().execute();
-			
-			getLogicalNetLayer().repaint();
+			super.convertUnboundNodeToSite(unbound, proto);
 		}
 	}
 }

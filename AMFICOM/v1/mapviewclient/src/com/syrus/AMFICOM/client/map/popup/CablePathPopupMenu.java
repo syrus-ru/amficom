@@ -147,16 +147,9 @@ public class CablePathPopupMenu extends MapPopupMenu
 
 	private void generateCabling()
 	{
-		MapNodeProtoElement proto = (MapNodeProtoElement )Pool.get(
-				MapNodeProtoElement.typ, 
-				MapNodeProtoElement.WELL);
-
-		BindCablePathCommandBundle command = 
-				new BindCablePathCommandBundle(path, proto);
-		command.setLogicalNetLayer(logicalNetLayer);
-		getLogicalNetLayer().getCommandList().add(command);
-		getLogicalNetLayer().getCommandList().execute();
+		super.generatePathCabling(path);
 
 		getLogicalNetLayer().repaint();
 	}
+	
 }

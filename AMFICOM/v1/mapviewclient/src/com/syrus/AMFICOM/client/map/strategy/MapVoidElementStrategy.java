@@ -1,5 +1,5 @@
 /**
- * $Id: MapVoidElementStrategy.java,v 1.4 2004/10/01 16:36:55 krupenn Exp $
+ * $Id: MapVoidElementStrategy.java,v 1.5 2004/10/06 14:11:56 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -29,6 +29,7 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 
+import java.awt.geom.Rectangle2D;
 import java.util.Iterator;
 
 import java.util.List;
@@ -39,7 +40,7 @@ import javax.swing.SwingUtilities;
  * 
  * 
  * 
- * @version $Revision: 1.4 $, $Date: 2004/10/01 16:36:55 $
+ * @version $Revision: 1.5 $, $Date: 2004/10/06 14:11:56 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -125,19 +126,22 @@ public final class MapVoidElementStrategy implements  MapStrategy
 	{
 		//Здесь просто проверяется что элемент содержится в прямоугольной области
 		Iterator e = logicalNetLayer.getMapView().getMap().getNodes().iterator();
+		
+//		Rectangle2D.Double visibleBounds = logicalNetLayer.getVisibleBounds();
 	
 		//Пробегаем и смотрим вхотит ли в область MapNodeElement
 		while (e.hasNext())
 		{
 			MapNodeElement node = (MapNodeElement )e.next();
-			Point p = logicalNetLayer.convertMapToScreen(node.getAnchor());
-
-			if (selectionRect.contains(p))
+//			if(node.isVisible(visibleBounds))
 			{
-				node.setSelected(true);
+				Point p = logicalNetLayer.convertMapToScreen(node.getAnchor());
+	
+				if (selectionRect.contains(p))
+					node.setSelected(true);
+				else
+					node.setSelected(false);
 			}
-			else
-				node.setSelected(false);
 		}
 
 		e = logicalNetLayer.getMapView().getMap().getNodeLinks().iterator();

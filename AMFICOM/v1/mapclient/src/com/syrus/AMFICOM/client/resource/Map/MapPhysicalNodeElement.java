@@ -1,5 +1,5 @@
 /**
- * $Id: MapPhysicalNodeElement.java,v 1.14 2004/10/06 09:27:38 krupenn Exp $
+ * $Id: MapPhysicalNodeElement.java,v 1.15 2004/10/06 14:10:05 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -14,16 +14,22 @@ package com.syrus.AMFICOM.Client.Resource.Map;
 import com.syrus.AMFICOM.CORBA.General.ElementAttribute_Transferable;
 import com.syrus.AMFICOM.CORBA.Map.MapPhysicalNodeElement_Transferable;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourceDisplayModel;
+import com.syrus.AMFICOM.Client.Map.MapCoordinatesConverter;
 import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
 import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
 import com.syrus.AMFICOM.Client.Resource.General.ElementAttribute;
 import com.syrus.AMFICOM.Client.Resource.ObjectResourceModel;
 import com.syrus.AMFICOM.Client.Resource.Pool;
 
+import java.awt.BasicStroke;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.geom.Point2D;
 
+import java.awt.geom.Rectangle2D;
 import java.io.IOException;
 import java.io.Serializable;
 
@@ -37,7 +43,7 @@ import javax.swing.ImageIcon;
  * 
  * 
  * 
- * @version $Revision: 1.14 $, $Date: 2004/10/06 09:27:38 $
+ * @version $Revision: 1.15 $, $Date: 2004/10/06 14:10:05 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -66,6 +72,11 @@ public final class MapPhysicalNodeElement extends MapNodeElement implements Seri
 	public final static Rectangle DEFAULT_BOUNDS = new Rectangle(10, 10);
 	public final static Rectangle MIN_BOUNDS = new Rectangle(2, 2);
 	public final static Rectangle MAX_BOUNDS = new Rectangle(15, 15);
+
+	/**
+	 * physical node can be bound to site only if it is part of an unbound link
+	 */
+	private boolean canBind = false;
 
 	static
 	{
@@ -261,6 +272,34 @@ public final class MapPhysicalNodeElement extends MapNodeElement implements Seri
 		this.physicalLinkId = pId;
 	}
 
+	public void paint(Graphics g, Rectangle2D.Double visibleBounds)
+	{
+		if(!isVisible(visibleBounds))
+			return;
+
+		super.paint(g, visibleBounds);
+
+		if (isCanBind())
+		{
+			MapCoordinatesConverter converter = getMap().getConverter();
+			
+			Point p = converter.convertMapToScreen(getAnchor());
+	
+			Graphics2D pg = (Graphics2D )g;
+			
+			int width = getBounds().width + 20;
+			int height = getBounds().height + 20;
+			
+			pg.setStroke(new BasicStroke(MapPropertiesManager.getUnboundThickness()));
+			pg.setColor(MapPropertiesManager.getCanBindColor());
+			pg.drawRect( 
+					p.x - width / 2,
+					p.y - height / 2,
+					width,
+					height);
+		}
+	}
+
 	public MapElementState getState()
 	{
 		return new MapPhysicalNodeElementState(this);
@@ -356,5 +395,17 @@ public final class MapPhysicalNodeElement extends MapNodeElement implements Seri
 		transferable = new MapPhysicalNodeElement_Transferable();
 		Pool.put(getTyp(), getId(), this);
 		Pool.put("serverimage", getId(), this);
+	}
+
+
+	public void setCanBind(boolean canBind)
+	{
+		this.canBind = canBind;
+	}
+
+
+	public boolean isCanBind()
+	{
+		return canBind;
 	}
 }

@@ -1,5 +1,5 @@
 /**
- * $Id: MapPopupMenu.java,v 1.6 2004/10/04 16:04:43 krupenn Exp $
+ * $Id: MapPopupMenu.java,v 1.7 2004/10/06 14:11:56 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -17,7 +17,10 @@ import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourcePropertiesDialog;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourcePropertiesPane;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourceSelectionDialog;
+import com.syrus.AMFICOM.Client.Map.Command.Action.BindCablePathCommandBundle;
+import com.syrus.AMFICOM.Client.Map.Command.Action.BindToSiteCommandBundle;
 import com.syrus.AMFICOM.Client.Map.Command.Action.CreateCollectorCommandAtomic;
+import com.syrus.AMFICOM.Client.Map.Command.Action.CreateSiteCommand;
 import com.syrus.AMFICOM.Client.Map.Command.Action.DeleteSelectionCommand;
 import com.syrus.AMFICOM.Client.Map.Command.Action.InsertSiteCommand;
 import com.syrus.AMFICOM.Client.Map.Command.Action.MapElementStateChangeCommand;
@@ -32,8 +35,10 @@ import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalLinkElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalNodeElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapPipePathElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapSiteNodeElement;
+import com.syrus.AMFICOM.Client.Resource.MapView.MapCablePathElement;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapUnboundNodeElement;
 import com.syrus.AMFICOM.Client.Resource.ObjectResource;
+import com.syrus.AMFICOM.Client.Resource.Pool;
 
 import java.awt.Dimension;
 import java.awt.Point;
@@ -51,7 +56,7 @@ import javax.swing.JPopupMenu;
  * 
  * 
  * 
- * @version $Revision: 1.6 $, $Date: 2004/10/04 16:04:43 $
+ * @version $Revision: 1.7 $, $Date: 2004/10/06 14:11:56 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -294,6 +299,36 @@ public abstract class MapPopupMenu extends JPopupMenu
 	protected void insertSiteInPlaceOfANode(MapPhysicalNodeElement node, MapNodeProtoElement proto)
 	{
 		InsertSiteCommand command = new InsertSiteCommand(node, proto);
+		command.setLogicalNetLayer(logicalNetLayer);
+		getLogicalNetLayer().getCommandList().add(command);
+		getLogicalNetLayer().getCommandList().execute();
+	}
+
+	protected void convertUnboundNodeToSite(MapUnboundNodeElement unbound, MapNodeProtoElement proto)
+	{
+		CreateSiteCommand command = new CreateSiteCommand(proto, unbound.getAnchor());
+		command.setLogicalNetLayer(logicalNetLayer);
+		getLogicalNetLayer().getCommandList().add(command);
+		getLogicalNetLayer().getCommandList().execute();
+		
+		MapSiteNodeElement site = command.getSite();
+
+		BindToSiteCommandBundle command2 = new BindToSiteCommandBundle(unbound, site);
+		command2.setLogicalNetLayer(logicalNetLayer);
+		getLogicalNetLayer().getCommandList().add(command2);
+		getLogicalNetLayer().getCommandList().execute();
+		
+		getLogicalNetLayer().repaint();
+	}
+
+	protected void generatePathCabling(MapCablePathElement path)
+	{
+		MapNodeProtoElement proto = (MapNodeProtoElement )Pool.get(
+				MapNodeProtoElement.typ, 
+				MapNodeProtoElement.WELL);
+
+		BindCablePathCommandBundle command = 
+				new BindCablePathCommandBundle(path, proto);
 		command.setLogicalNetLayer(logicalNetLayer);
 		getLogicalNetLayer().getCommandList().add(command);
 		getLogicalNetLayer().getCommandList().execute();

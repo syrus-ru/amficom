@@ -1,5 +1,5 @@
 /**
- * $Id: MapPropertiesManager.java,v 1.6 2004/09/29 15:02:14 krupenn Exp $
+ * $Id: MapPropertiesManager.java,v 1.7 2004/10/06 14:10:05 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -43,7 +43,7 @@ import java.util.Map;
  * 
  * 
  * 
- * @version $Revision: 1.6 $, $Date: 2004/09/29 15:02:14 $
+ * @version $Revision: 1.7 $, $Date: 2004/10/06 14:10:05 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -97,7 +97,7 @@ public final class MapPropertiesManager
 	public static final BasicStroke DEFAULT_ALARMED_STROKE = new BasicStroke(3);
 	public static final Color DEFAULT_ALARMED_COLOR = Color.red;
 	public static final String DEFAULT_ALARMED_ANIMATION = "blink";
-	public static final int DEFAULT_SELECTION_THICKNESS = 1;
+	public static final int DEFAULT_SELECTION_THICKNESS = 4;
 	public static final String DEFAULT_SELECTION_STYLE = "Solid line";
 	public static final BasicStroke DEFAULT_SELECTION_STROKE = new BasicStroke( 
 			1,

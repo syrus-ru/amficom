@@ -56,6 +56,19 @@ public final class LinkPopupMenu extends MapPopupMenu
 		newCollectorMenuItem.setVisible(collector == null);
 		removeCollectorMenuItem.setVisible(collector != null);
 		removeFromCollectorMenuItem.setVisible(collector != null);
+		if(collector != null)
+		{
+			removeCollectorMenuItem.setText(
+					LangModelMap.getString("RemoveCollector")
+					+ " (" 
+					+ collector.getName()
+					+ ")");
+		removeFromCollectorMenuItem.setText(
+					LangModelMap.getString("RemoveFromCollector")
+					+ " (" 
+					+ collector.getName()
+					+ ")");
+		}
 	}
 
 	private void jbInit()

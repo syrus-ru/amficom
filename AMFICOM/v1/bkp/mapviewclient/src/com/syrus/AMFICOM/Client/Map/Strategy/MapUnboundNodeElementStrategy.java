@@ -1,5 +1,5 @@
 /**
- * $Id: MapUnboundNodeElementStrategy.java,v 1.2 2004/10/01 16:36:55 krupenn Exp $
+ * $Id: MapUnboundNodeElementStrategy.java,v 1.3 2004/10/06 14:11:56 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -37,7 +37,7 @@ import javax.swing.SwingUtilities;
  * 
  * 
  * 
- * @version $Revision: 1.2 $, $Date: 2004/10/01 16:36:55 $
+ * @version $Revision: 1.3 $, $Date: 2004/10/06 14:11:56 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -126,7 +126,7 @@ public final class MapUnboundNodeElementStrategy implements  MapStrategy
 							command = new MoveSelectionCommandBundle(point);
 							((MoveSelectionCommandBundle )command).setLogicalNetLayer(logicalNetLayer);
 						}
-						command.setParameter(com.syrus.AMFICOM.Client.Map.Command.Action.MoveSelectionCommandBundle.END_POINT, point);
+						command.setParameter(MoveSelectionCommandBundle.END_POINT, point);
 					}
 				}//if (actionMode == MapState.MOVE_ACTION_MODE)
 
@@ -171,6 +171,7 @@ public final class MapUnboundNodeElementStrategy implements  MapStrategy
 									((BindToSiteCommandBundle )command).setLogicalNetLayer(logicalNetLayer);
 									logicalNetLayer.getCommandList().add(command);
 									logicalNetLayer.getCommandList().execute();
+									command = null;
 									break;
 								}
 						}

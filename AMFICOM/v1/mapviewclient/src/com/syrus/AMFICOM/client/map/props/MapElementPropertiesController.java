@@ -36,4 +36,5 @@ public interface MapElementPropertiesController
 	String PROPERTY_PHYSICAL_LENGTH = "PhysicalLength";
 	String PROPERTY_DISTANCE = "Distance";
 	String PROPERTY_TYPE = "Type";
+	String PROPERTY_SELECTION_COUNT = "SelectionCount";
 }

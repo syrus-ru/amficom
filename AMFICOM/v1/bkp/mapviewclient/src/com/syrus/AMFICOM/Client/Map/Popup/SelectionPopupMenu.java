@@ -19,6 +19,7 @@ import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import java.util.LinkedList;
 import java.util.List;
 import javax.swing.JMenuItem;
 import java.util.Iterator;
@@ -165,6 +166,28 @@ public final class SelectionPopupMenu extends MapPopupMenu
 
 	private void generateCabling()
 	{
+		List alreadyBound = new LinkedList();
+		MapNodeProtoElement proto = null;
+		for(Iterator it = selection.getElements().iterator(); it.hasNext();)
+		{
+			MapElement me = (MapElement )it.next();
+			if(me instanceof MapUnboundLinkElement)
+			{
+				MapCablePathElement path = ((MapUnboundLinkElement )me).getCablePath();
+				if(!alreadyBound.contains(path))
+				{
+					super.generatePathCabling(path);
+					alreadyBound.add(path);
+				}
+			}
+			else
+			if(me instanceof MapUnboundNodeElement)
+			{
+				if(proto == null)
+					proto = super.selectNodeProto();
+				super.convertUnboundNodeToSite((MapUnboundNodeElement )me, proto);
+			}
+		}
 	}
 
 	private void newCollector()

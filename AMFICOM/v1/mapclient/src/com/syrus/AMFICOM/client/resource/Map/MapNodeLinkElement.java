@@ -1,5 +1,5 @@
 /**
- * $Id: MapNodeLinkElement.java,v 1.16 2004/10/06 09:27:38 krupenn Exp $
+ * $Id: MapNodeLinkElement.java,v 1.17 2004/10/06 14:10:05 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -42,7 +42,7 @@ import java.util.Iterator;
  * 
  * 
  * 
- * @version $Revision: 1.16 $, $Date: 2004/10/06 09:27:38 $
+ * @version $Revision: 1.17 $, $Date: 2004/10/06 14:10:05 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -369,6 +369,12 @@ public final class MapNodeLinkElement extends MapLinkElement implements Serializ
 		else
 		{
 			p.setColor(color);
+		}
+
+		if (isSelectionVisible())
+		{
+			p.setColor(MapPropertiesManager.getSelectionColor());
+			p.setStroke(new BasicStroke(MapPropertiesManager.getSelectionThickness()));
 		}
 
 		p.drawLine(from.x, from.y, to.x, to.y);
