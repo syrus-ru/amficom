@@ -1,5 +1,5 @@
 /*
- * $Id: LinkDatabase.java,v 1.17 2004/12/15 12:28:41 max Exp $
+ * $Id: LinkDatabase.java,v 1.18 2004/12/15 17:16:43 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,7 +33,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2004/12/15 12:28:41 $
+ * @version $Revision: 1.18 $, $Date: 2004/12/15 17:16:43 $
  * @author $Author: max $
  * @module configuration_v1
  */
@@ -51,7 +51,7 @@ public class LinkDatabase extends StorableObjectDatabase {
     private static final int SIZE_INVENTORY_NO_COLUMN  = 64;
     public static final String COLUMN_INVENTORY_NO  = "inventory_no";
     // supplier VARCHAR2(64),
-    private static final int SIZE_SUPPLIER_COLUMN  = 64;
+    private static final int SIZE_SUPPLIER_COLUMN  = 128;
     public static final String COLUMN_SUPPLIER      = "supplier";
     // supplier_code VARCHAR2(64),
     private static final int SIZE_SUPPLIER_CODE_COLUMN  = 64;
