@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectPool.java,v 1.60 2005/04/05 07:48:28 arseniy Exp $
+ * $Id: StorableObjectPool.java,v 1.61 2005/04/05 16:02:18 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,7 +23,7 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.60 $, $Date: 2005/04/05 07:48:28 $
+ * @version $Revision: 1.61 $, $Date: 2005/04/05 16:02:18 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -351,6 +351,8 @@ public abstract class StorableObjectPool {
 	}
 
 	protected StorableObject getStorableObjectImpl(final Identifier objectId, final boolean useLoader) throws ApplicationException {
+		assert objectId != null : "Null identifier supplied";
+
 		if (objectId != null) {
 			/* do not load deleted objects */
 			if (this.deletedIds != null && this.deletedIds.contains(objectId)) {
