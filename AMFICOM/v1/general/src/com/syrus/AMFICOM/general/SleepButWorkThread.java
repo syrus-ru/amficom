@@ -1,5 +1,5 @@
 /*
- * $Id: SleepButWorkThread.java,v 1.3 2004/08/06 13:43:44 arseniy Exp $
+ * $Id: SleepButWorkThread.java,v 1.4 2004/08/13 17:46:03 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,7 +11,7 @@ package com.syrus.AMFICOM.general;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2004/08/06 13:43:44 $
+ * @version $Revision: 1.4 $, $Date: 2004/08/13 17:46:03 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -50,7 +50,8 @@ public abstract class SleepButWorkThread extends Thread {
 		}
 		else {
 			Log.errorMessage("Number of falls: " + this.fallsCounter + " reached maximum: " + this.maxFalls + ". Shutting down");
-			this.shutdown();
+			this.clearFalls();
+			this.processError();
 		}
 	}
 	
@@ -59,5 +60,5 @@ public abstract class SleepButWorkThread extends Thread {
 		this.timeToSleep = this.initialTimeToSleep;
 	}
 	
-	protected abstract void shutdown();
+	protected abstract void processError();
 }
