@@ -299,8 +299,9 @@ public class TestFilter extends ObjectResourceFilter {
 				} else if (mmtn.state == 1) {
 					for (Enumeration enum = mmtn.children(); enum.hasMoreElements();) {
 						FilterTreeNode down_mte = (FilterTreeNode) enum.nextElement();
-						String stat = test.getStatus().toString();
-						if (down_mte.getId().equals(stat) && (down_mte.state == 2))
+						int downMteValue = Integer.parseInt(down_mte.getId());
+						int status = test.getStatus().value();
+						if ((downMteValue == status) && (down_mte.state == 2))
 							result = true;
 					}
 				}
