@@ -1,5 +1,5 @@
 /*
- * $Id: MCM.java,v 1.6 2005/02/11 07:50:02 bob Exp $
+ * $Id: MCM.java,v 1.7 2005/02/14 11:18:19 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,8 +31,8 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.administration.corba.MCM_Transferable;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/02/11 07:50:02 $
- * @author $Author: bob $
+ * @version $Revision: 1.7 $, $Date: 2005/02/14 11:18:19 $
+ * @author $Author: arseniy $
  * @module administration_v1
  */
 
@@ -118,16 +118,16 @@ public class MCM extends DomainMember implements Characterized {
 
 		this.mcmDatabase = AdministrationDatabaseContext.mcmDatabase;
 	}
-
-	public void insert() throws CreateObjectException {
-		try {
-			if (this.mcmDatabase != null)
-				this.mcmDatabase.update(this, this.creatorId, StorableObjectDatabase.UPDATE_FORCE);
-		}
-		catch (ApplicationException ae) {
-			throw new CreateObjectException(ae.getMessage(), ae);
-		}
-	}
+//
+//	public void insert() throws CreateObjectException {
+//		try {
+//			if (this.mcmDatabase != null)
+//				this.mcmDatabase.update(this, this.creatorId, StorableObjectDatabase.UPDATE_FORCE);
+//		}
+//		catch (ApplicationException ae) {
+//			throw new CreateObjectException(ae.getMessage(), ae);
+//		}
+//	}
 
 	public Object getTransferable() {
 		int i = 0;
