@@ -1,5 +1,5 @@
 /*
- * $Id: configuration.idl,v 1.85 2005/03/05 21:18:19 arseniy Exp $
+ * $Id: configuration.idl,v 1.86 2005/03/16 16:42:52 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -148,6 +148,7 @@ module corba {
 		long color;
 		
 		general::corba::Identifier_Transferable linkTypeId;
+		general::corba::Identifier_Transferable cableLinkTypeId;
 	};
 	typedef sequence<CableThreadType_Transferable> CableThreadTypeSeq_Transferable;
 	typedef CableThreadType_Transferable CableThreadType;
