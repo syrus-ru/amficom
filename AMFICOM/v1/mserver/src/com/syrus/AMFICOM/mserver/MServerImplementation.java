@@ -1,5 +1,5 @@
 /*
- * $Id: MServerImplementation.java,v 1.18 2004/10/20 11:03:07 max Exp $
+ * $Id: MServerImplementation.java,v 1.19 2004/10/20 11:16:46 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -90,7 +90,7 @@ import com.syrus.AMFICOM.mserver.corba.MServerPOA;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2004/10/20 11:03:07 $
+ * @version $Revision: 1.19 $, $Date: 2004/10/20 11:16:46 $
  * @author $Author: max $
  * @module mserver_v1
  */
@@ -428,9 +428,23 @@ public class MServerImplementation extends MServerPOA {
         }
 	}
 	
-    public Measurement_Transferable transmitMeasurement(Identifier_Transferable id_Transferable) {
-        //TODO Implement this method
-        return null;
+    public Measurement_Transferable transmitMeasurement(Identifier_Transferable id_Transferable) throws AMFICOMRemoteException {
+        Identifier id = new Identifier(id_Transferable);
+        try {
+            Measurement measurement = new Measurement(id);
+            return (Measurement_Transferable)measurement.getTransferable();
+        }
+        catch (ObjectNotFoundException onfe) {
+            Log.errorException(onfe);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_NOT_FOUND, CompletionStatus.COMPLETED_YES, onfe.getMessage());
+        }
+        catch (RetrieveObjectException roe) {
+            Log.errorException(roe);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, roe.getMessage());
+        } catch (Throwable t) {
+            Log.errorException(t);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
+        }
     }
     
 	public MeasurementPort_Transferable transmitMeasurementPort(Identifier_Transferable idT) throws AMFICOMRemoteException {
