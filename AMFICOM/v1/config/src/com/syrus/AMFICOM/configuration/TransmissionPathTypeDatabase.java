@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPathTypeDatabase.java,v 1.1 2004/10/27 07:01:36 max Exp $
+ * $Id: TransmissionPathTypeDatabase.java,v 1.2 2004/10/27 12:26:54 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,7 +30,7 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2004/10/27 07:01:36 $
+ * @version $Revision: 1.2 $, $Date: 2004/10/27 12:26:54 $
  * @author $Author: max $
  * @module module_name
  */
