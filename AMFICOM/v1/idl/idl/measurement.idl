@@ -1,5 +1,5 @@
 /*
- * $Id: measurement.idl,v 1.54 2005/03/24 15:55:54 arseniy Exp $
+ * $Id: measurement.idl,v 1.55 2005/03/30 15:31:19 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -216,8 +216,7 @@ module corba {
 
 	struct Test_Transferable {
 		general::corba::StorableObject_Transferable header;
-
-    TestTemporalType temporal_type;
+		TestTemporalType temporal_type;
 		TestTimeStamps_Transferable time_stamps;
 		general::corba::Identifier_Transferable measurement_type_id;
 		general::corba::Identifier_Transferable analysis_type_id;
