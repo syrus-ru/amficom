@@ -1,5 +1,5 @@
 /*
- * $Id: EquipmentTypeDatabase.java,v 1.30 2005/01/26 15:09:22 bob Exp $
+ * $Id: EquipmentTypeDatabase.java,v 1.31 2005/01/28 10:23:01 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,8 +34,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.30 $, $Date: 2005/01/26 15:09:22 $
- * @author $Author: bob $
+ * @version $Revision: 1.31 $, $Date: 2005/01/28 10:23:01 $
+ * @author $Author: arseniy $
  * @module config_v1
  */
 
@@ -221,23 +221,25 @@ public class EquipmentTypeDatabase extends StorableObjectDatabase {
 		return list;
 	}
 
-	public List retrieveByIds(List ids, String condition) 
-			throws IllegalDataException, RetrieveObjectException {
+	public List retrieveByIds(List ids, String condition) throws IllegalDataException, RetrieveObjectException {
 		List list = null;
 		if ((ids == null) || (ids.isEmpty()))
 			list = this.retrieveByIdsOneQuery(null, condition);
 		else
-			list = this.retrieveByIdsOneQuery(ids, condition);	
-			if (list != null) {
-				CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(GeneralDatabaseContext.getCharacteristicDatabase());
-				Map characteristicMap = characteristicDatabase.retrieveCharacteristicsByOneQuery(list, CharacteristicSort.CHARACTERISTIC_SORT_EQUIPMENTTYPE);
+			list = this.retrieveByIdsOneQuery(ids, condition);
+
+		if (list != null) {
+			CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase) (GeneralDatabaseContext.getCharacteristicDatabase());
+			Map characteristicMap = characteristicDatabase.retrieveCharacteristicsByOneQuery(list,
+					CharacteristicSort.CHARACTERISTIC_SORT_EQUIPMENTTYPE);
+			if (characteristicMap != null)
 				for (Iterator iter = list.iterator(); iter.hasNext();) {
 					EquipmentType equipmentType = (EquipmentType) iter.next();
-					List characteristics = (List)characteristicMap.get(equipmentType);
+					List characteristics = (List) characteristicMap.get(equipmentType.getId());
 					equipmentType.setCharacteristics0(characteristics);
 				}
-			}
-			return list;
+		}
+		return list;
 	}
 
 	public List retrieveByCondition(List ids, StorableObjectCondition condition)

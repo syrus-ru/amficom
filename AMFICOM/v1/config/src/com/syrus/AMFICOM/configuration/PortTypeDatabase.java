@@ -1,5 +1,5 @@
 /*
- * $Id: PortTypeDatabase.java,v 1.30 2005/01/26 15:09:22 bob Exp $
+ * $Id: PortTypeDatabase.java,v 1.31 2005/01/28 10:23:01 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,8 +34,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.30 $, $Date: 2005/01/26 15:09:22 $
- * @author $Author: bob $
+ * @version $Revision: 1.31 $, $Date: 2005/01/28 10:23:01 $
+ * @author $Author: arseniy $
  * @module config_v1
  */
 
@@ -198,12 +198,14 @@ public class PortTypeDatabase extends StorableObjectDatabase {
 
     if (list != null) {
 			CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(GeneralDatabaseContext.getCharacteristicDatabase());
-			Map characteristicMap = characteristicDatabase.retrieveCharacteristicsByOneQuery(list, CharacteristicSort.CHARACTERISTIC_SORT_PORTTYPE);
-			for (Iterator iter = list.iterator(); iter.hasNext();) {
-				PortType portType = (PortType) iter.next();
-				List characteristics = (List)characteristicMap.get(portType);
-				portType.setCharacteristics0(characteristics);
-			}
+			Map characteristicMap = characteristicDatabase.retrieveCharacteristicsByOneQuery(list,
+					CharacteristicSort.CHARACTERISTIC_SORT_PORTTYPE);
+			if (characteristicMap != null)
+				for (Iterator iter = list.iterator(); iter.hasNext();) {
+					PortType portType = (PortType) iter.next();
+					List characteristics = (List) characteristicMap.get(portType.getId());
+					portType.setCharacteristics0(characteristics);
+				}
 		}
 		return list;
 	}

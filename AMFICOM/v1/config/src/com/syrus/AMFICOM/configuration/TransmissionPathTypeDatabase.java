@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPathTypeDatabase.java,v 1.17 2005/01/26 15:09:22 bob Exp $
+ * $Id: TransmissionPathTypeDatabase.java,v 1.18 2005/01/28 10:23:01 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,8 +33,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2005/01/26 15:09:22 $
- * @author $Author: bob $
+ * @version $Revision: 1.18 $, $Date: 2005/01/28 10:23:01 $
+ * @author $Author: arseniy $
  * @module config_v1
  */
 
@@ -205,13 +205,15 @@ public class TransmissionPathTypeDatabase extends StorableObjectDatabase {
 			list = this.retrieveByIdsOneQuery(ids, condition);
 
 		if (list != null) {
-			CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(GeneralDatabaseContext.getCharacteristicDatabase());
-			Map characteristicMap = characteristicDatabase.retrieveCharacteristicsByOneQuery(list, CharacteristicSort.CHARACTERISTIC_SORT_TRANSMISSIONPATHTYPE);
-			for (Iterator iter = list.iterator(); iter.hasNext();) {
-				TransmissionPathType transmissionPathType = (TransmissionPathType) iter.next();
-				List characteristics = (List)characteristicMap.get(transmissionPathType);
-				transmissionPathType.setCharacteristics0(characteristics);
-			}
+			CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase) (GeneralDatabaseContext.getCharacteristicDatabase());
+			Map characteristicMap = characteristicDatabase.retrieveCharacteristicsByOneQuery(list,
+					CharacteristicSort.CHARACTERISTIC_SORT_TRANSMISSIONPATHTYPE);
+			if (characteristicMap != null)
+				for (Iterator iter = list.iterator(); iter.hasNext();) {
+					TransmissionPathType transmissionPathType = (TransmissionPathType) iter.next();
+					List characteristics = (List) characteristicMap.get(transmissionPathType.getId());
+					transmissionPathType.setCharacteristics0(characteristics);
+				}
 		}
 		return list;
 	}

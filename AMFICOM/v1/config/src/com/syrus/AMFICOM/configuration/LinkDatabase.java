@@ -1,5 +1,5 @@
 /*
- * $Id: LinkDatabase.java,v 1.21 2005/01/26 15:09:22 bob Exp $
+ * $Id: LinkDatabase.java,v 1.22 2005/01/28 10:23:01 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -36,8 +36,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.21 $, $Date: 2005/01/26 15:09:22 $
- * @author $Author: bob $
+ * @version $Revision: 1.22 $, $Date: 2005/01/28 10:23:01 $
+ * @author $Author: arseniy $
  * @module config_v1
  */
 
@@ -280,15 +280,17 @@ public class LinkDatabase extends StorableObjectDatabase {
 
 		if(list != null) {
 			CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(GeneralDatabaseContext.getCharacteristicDatabase());
-			Map characteristicMap = characteristicDatabase.retrieveCharacteristicsByOneQuery(list, CharacteristicSort.CHARACTERISTIC_SORT_LINK);
-			for (Iterator iter = list.iterator(); iter.hasNext();) {
-				Link link = (Link) iter.next();
-				List characteristics = (List)characteristicMap.get(link);
-				link.setCharacteristics(characteristics);
-			}
+			Map characteristicMap = characteristicDatabase.retrieveCharacteristicsByOneQuery(list,
+					CharacteristicSort.CHARACTERISTIC_SORT_LINK);
+			if (characteristicMap != null)
+				for (Iterator iter = list.iterator(); iter.hasNext();) {
+					Link link = (Link) iter.next();
+					List characteristics = (List) characteristicMap.get(link.getId());
+					link.setCharacteristics(characteristics);
+				}
 		}
 		return list;
-	}	
+	}
 
 	public List retrieveByCondition(List ids, StorableObjectCondition condition)
 			throws RetrieveObjectException, IllegalDataException {

@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPortDatabase.java,v 1.32 2005/01/26 15:09:22 bob Exp $
+ * $Id: MeasurementPortDatabase.java,v 1.33 2005/01/28 10:23:01 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -40,8 +40,8 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.32 $, $Date: 2005/01/26 15:09:22 $
- * @author $Author: bob $
+ * @version $Revision: 1.33 $, $Date: 2005/01/28 10:23:01 $
+ * @author $Author: arseniy $
  * @module config_v1
  */
 public class MeasurementPortDatabase extends StorableObjectDatabase {
@@ -139,13 +139,15 @@ public class MeasurementPortDatabase extends StorableObjectDatabase {
 			list = this.retrieveByIdsOneQuery(ids, condition);
 
     if (list != null) {
-			CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(GeneralDatabaseContext.getCharacteristicDatabase());
-			Map characteristicMap = characteristicDatabase.retrieveCharacteristicsByOneQuery(list, CharacteristicSort.CHARACTERISTIC_SORT_MEASUREMENTPORT);
-			for (Iterator iter = list.iterator(); iter.hasNext();) {
-				MeasurementPort measurementPort = (MeasurementPort) iter.next();
-				List characteristics = (List)characteristicMap.get(measurementPort);
-				measurementPort.setCharacteristics0(characteristics);
-			}
+			CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase) (GeneralDatabaseContext.getCharacteristicDatabase());
+			Map characteristicMap = characteristicDatabase.retrieveCharacteristicsByOneQuery(list,
+					CharacteristicSort.CHARACTERISTIC_SORT_MEASUREMENTPORT);
+			if (characteristicMap != null)
+				for (Iterator iter = list.iterator(); iter.hasNext();) {
+					MeasurementPort measurementPort = (MeasurementPort) iter.next();
+					List characteristics = (List) characteristicMap.get(measurementPort.getId());
+					measurementPort.setCharacteristics0(characteristics);
+				}
 		}
 
     return list;
