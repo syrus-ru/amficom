@@ -24,6 +24,9 @@ import com.syrus.AMFICOM.configuration.corba.*;
 
 public class GraphActions
 {
+	/**
+	 * <b>moved</b>
+	 */
 	public static DeviceGroup CreateTopLevelElementAction(SchemeGraph graph, Object userObject, Rectangle bounds,  boolean autosize, Color border)
 	{
 		Map viewMap = new HashMap();

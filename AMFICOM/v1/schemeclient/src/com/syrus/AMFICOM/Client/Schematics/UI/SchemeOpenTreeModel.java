@@ -1,24 +1,18 @@
 package com.syrus.AMFICOM.Client.Schematics.UI;
 
-import java.awt.Color;
-import java.awt.Toolkit;
-import java.util.ArrayList;
-import java.util.Iterator;
+import java.awt.*;
+import java.util.*;
 import java.util.List;
 
 import javax.swing.ImageIcon;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModelSchematics;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.UI.ObjectResourceTreeModel;
-import com.syrus.AMFICOM.Client.General.UI.ObjectResourceTreeNode;
+import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
 import com.syrus.AMFICOM.general.*;
-import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.corba.*;
+import com.syrus.AMFICOM.general.corba.OperationSort;
 import com.syrus.AMFICOM.scheme.*;
-import com.syrus.AMFICOM.scheme.SchemeStorableObjectPool;
 import com.syrus.AMFICOM.scheme.corba.SchemeKind;
 
 public class SchemeOpenTreeModel extends ObjectResourceTreeModel
@@ -126,7 +120,7 @@ public class SchemeOpenTreeModel extends ObjectResourceTreeModel
 					ObjectEntities.SCHEME_ENTITY_CODE,
 					com.syrus.AMFICOM.scheme.SchemeController.COLUMN_TYPE);
 				try {
-					List schemes = SchemeStorableObjectPool.getStorableObjectsByCondition(condition, true);
+					Set schemes = SchemeStorableObjectPool.getStorableObjectsByCondition(condition, true);
 
 					for (Iterator it = schemes.iterator(); it.hasNext(); ) {
 						Scheme sc = (Scheme)it.next();

@@ -1,10 +1,10 @@
 package com.syrus.AMFICOM.Client.Schematics.Elements;
 
+import java.awt.*;
+import java.awt.event.*;
 import java.util.*;
 import java.util.List;
 
-import java.awt.*;
-import java.awt.event.*;
 import javax.swing.*;
 
 import com.syrus.AMFICOM.Client.General.Event.SchemeElementsEvent;
@@ -15,7 +15,6 @@ import com.syrus.AMFICOM.configuration.*;
 import com.syrus.AMFICOM.configuration.corba.LinkTypeSort;
 import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.scheme.*;
-import com.syrus.AMFICOM.scheme.SchemeStorableObjectPool;
 
 public class CableLinkPropsPanel extends JPanel
 {
@@ -416,7 +415,7 @@ public class CableLinkPropsPanel extends JPanel
 				for (int j = 0; j < num; j++)
 					links[i].getSchemeCableThreadsAsArray()[j].setCableThreadType((CableThreadType)it.next());
 
-					List toDelete = new LinkedList();
+					Set toDelete = new HashSet();
 					List threads = Arrays.asList(links[i].getSchemeCableThreadsAsArray());
 					for (int j = old_num-1; j >= num; j--)
 					{

@@ -1,23 +1,24 @@
 package com.syrus.AMFICOM.Client.Schematics.UI;
 
+import java.awt.*;
+import java.awt.event.*;
 import java.util.*;
 import java.util.List;
 
-import java.awt.*;
-import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.border.EtchedBorder;
+
+import oracle.jdeveloper.layout.*;
 
 import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
 import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.client_.general.ui_.tree_.*;
+import com.syrus.AMFICOM.client_.scheme.ui.SchemeTreeUI;
 import com.syrus.AMFICOM.general.*;
-import com.syrus.AMFICOM.logic.*;
+import com.syrus.AMFICOM.logic.ChildrenFactory;
 import com.syrus.AMFICOM.scheme.*;
-import com.syrus.AMFICOM.scheme.SchemeStorableObjectPool;
-import oracle.jdeveloper.layout.*;
 
 public class ElementsNavigatorPanel extends JPanel implements OperationListener
 {
@@ -27,7 +28,7 @@ public class ElementsNavigatorPanel extends JPanel implements OperationListener
 	ApplicationContext aContext;
 	Dispatcher dispatcher;
 	ChildrenFactory factory;
-	RenderableTreeUI utp;
+	IconedTreeUI utp;
 
 	Object selectedObject;
 
@@ -105,7 +106,7 @@ public class ElementsNavigatorPanel extends JPanel implements OperationListener
 		add(toolBar, BorderLayout.NORTH);
 
 		// TREE
-		utp = new RenderableTreeUI(new IconedNode(factory, "root", "Сеть"));
+		utp = new SchemeTreeUI(new PopulatableIconedNode(factory, "root", "Сеть"), aContext);
 
 //		JScrollPane scroll_pane = new JScrollPane();
 //		scroll_pane.getViewport().add(utp.getPanel());
@@ -222,7 +223,7 @@ public class ElementsNavigatorPanel extends JPanel implements OperationListener
 							getAccessIdentifier().domain_id);
 					LinkedIdsCondition condition = new LinkedIdsCondition(domain_id,
 							ObjectEntities.SCHEME_PROTO_GROUP_ENTITY_CODE);
-					List groups = SchemeStorableObjectPool.getStorableObjectsByCondition(condition, true);
+					Set groups = SchemeStorableObjectPool.getStorableObjectsByCondition(condition, true);
 
 					for (Iterator it = groups.iterator(); it.hasNext(); ) {
 						SchemeProtoGroup map_proto = (SchemeProtoGroup)it.next();

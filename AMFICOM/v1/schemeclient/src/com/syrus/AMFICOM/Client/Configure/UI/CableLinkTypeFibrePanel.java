@@ -1,25 +1,20 @@
 package com.syrus.AMFICOM.Client.Configure.UI;
 
-import java.util.*;
-import java.util.List;
-
 import java.awt.*;
 import java.awt.event.*;
+import java.util.*;
+import java.util.List;
 
 import javax.swing.*;
 import javax.swing.event.*;
 
 import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
-import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
-import com.syrus.AMFICOM.Client.General.Event.OperationListener;
-import com.syrus.AMFICOM.Client.General.Event.SchemeNavigateEvent;
+import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelConfig;
 import com.syrus.AMFICOM.Client.General.Scheme.ThreadTypeCell;
+import com.syrus.AMFICOM.Client.General.UI.GeneralPanel;
 import com.syrus.AMFICOM.Client.Resource.MiscUtil;
-import com.syrus.AMFICOM.client_.general.ui_.ObjList;
-import com.syrus.AMFICOM.client_.general.ui_.ObjComboBox;
-import com.syrus.AMFICOM.client_.general.ui_.ColorListCellRenderer;
-import com.syrus.AMFICOM.Client.General.UI.*;
+import com.syrus.AMFICOM.client_.general.ui_.*;
 import com.syrus.AMFICOM.configuration.*;
 import com.syrus.AMFICOM.general.*;
 
@@ -339,7 +334,7 @@ public class CableLinkTypeFibrePanel extends GeneralPanel {
 					}
 				} 
 				else if (num < old_num) {
-					List toDelete = new LinkedList();
+					Set toDelete = new HashSet();
 					/**
 					 * TODO! make sort by namr and remove from the end   
 					 */

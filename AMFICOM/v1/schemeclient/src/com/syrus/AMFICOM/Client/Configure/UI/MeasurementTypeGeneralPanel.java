@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementTypeGeneralPanel.java,v 1.2 2005/03/14 13:36:18 stas Exp $
+ * $Id: MeasurementTypeGeneralPanel.java,v 1.3 2005/04/05 10:01:05 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,7 +24,7 @@ import com.syrus.AMFICOM.measurement.MeasurementType;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.2 $, $Date: 2005/03/14 13:36:18 $
+ * @version $Revision: 1.3 $, $Date: 2005/04/05 10:01:05 $
  * @module schemeclient_v1
  */
 
@@ -561,9 +561,9 @@ public class MeasurementTypeGeneralPanel extends GeneralPanel {
 		ObjListModel outModel = (ObjListModel)lsOutList.getModel();
 		ObjListModel portsModel = (ObjListModel)lsAddedPortsList.getModel();
 		
-		Collection inPTypes = new ArrayList(inModel.getSize());
-		Collection outPTypes = new ArrayList(outModel.getSize());
-		Collection mPTypes = new ArrayList(portsModel.getSize());
+		Set inPTypes = new HashSet(inModel.getSize());
+		Set outPTypes = new HashSet(outModel.getSize());
+		Set mPTypes = new HashSet(portsModel.getSize());
 				
 		for (int i = 0; i < inModel.getSize(); i++)
 			inPTypes.add(inModel.getElementAt(i));

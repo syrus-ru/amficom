@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementTypeGeneralPanel.java,v 1.3 2005/03/30 13:33:39 stas Exp $
+ * $Id: MeasurementTypeGeneralPanel.java,v 1.4 2005/04/05 10:01:05 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,7 +26,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.3 $, $Date: 2005/03/30 13:33:39 $
+ * @version $Revision: 1.4 $, $Date: 2005/04/05 10:01:05 $
  * @module schemeclient_v1
  */
 
@@ -236,8 +236,8 @@ public class MeasurementTypeGeneralPanel implements StorableObjectEditor {
 		if (MiscUtil.validName(tfNameText.getText())) {
 			type.setDescription(tfNameText.getText());
 
-			Collection inPTypes = new LinkedList(this.type.getInParameterTypes());
-			Collection outPTypes = new LinkedList(this.type.getOutParameterTypes());
+			Set inPTypes = new HashSet(this.type.getInParameterTypes());
+			Set outPTypes = new HashSet(this.type.getOutParameterTypes());
 
 			for (Iterator it = allInPTypeNodes.iterator(); it.hasNext();) {
 				CheckableNode node = (CheckableNode) it.next();
@@ -256,7 +256,7 @@ public class MeasurementTypeGeneralPanel implements StorableObjectEditor {
 			}
 			type.setOutParameterTypes(outPTypes);
 
-			Collection mPTypes = new LinkedList(this.type.getMeasurementPortTypes());
+			Set mPTypes = new HashSet(this.type.getMeasurementPortTypes());
 			for (Iterator it = allMPTypeNodes.iterator(); it.hasNext();) {
 				CheckableNode node = (CheckableNode) it.next();
 				if (node.isChecked() && !mPTypes.contains(node.getObject()))

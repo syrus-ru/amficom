@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementTypePane.java,v 1.1 2005/02/21 14:19:31 stas Exp $
+ * $Id: MeasurementTypePane.java,v 1.2 2005/04/05 10:01:05 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,31 +8,22 @@
 
 package com.syrus.AMFICOM.Client.Configure.UI;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.Toolkit;
-import java.util.LinkedList;
+import java.awt.*;
+import java.util.HashSet;
 
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JTabbedPane;
-import javax.swing.SwingConstants;
+import javax.swing.*;
 
 import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelConfig;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.Model.Environment;
+import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.General.UI.PopupNameFrame;
 import com.syrus.AMFICOM.client_.general.ui_.ObjectResourcePropertiesPane;
-import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
-import com.syrus.AMFICOM.measurement.MeasurementType;
+import com.syrus.AMFICOM.general.*;
+import com.syrus.AMFICOM.measurement.*;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.1 $, $Date: 2005/02/21 14:19:31 $
+ * @version $Revision: 1.2 $, $Date: 2005/04/05 10:01:05 $
  * @module schemeclient_v1
  */
 
@@ -137,9 +128,9 @@ public class MeasurementTypePane  extends JPanel implements ObjectResourceProper
 						user_id,
 						name,
 						name,
-						new LinkedList(),
-						new LinkedList(),
-						new LinkedList());
+						new HashSet(),
+						new HashSet(),
+						new HashSet());
 
 				setObject(new_type);
 				return true;

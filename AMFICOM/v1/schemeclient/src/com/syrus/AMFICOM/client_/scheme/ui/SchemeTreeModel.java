@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeTreeModel.java,v 1.13 2005/03/30 13:33:39 stas Exp $
+ * $Id: SchemeTreeModel.java,v 1.14 2005/04/05 10:01:05 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,13 +10,14 @@ package com.syrus.AMFICOM.client_.scheme.ui;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.13 $, $Date: 2005/03/30 13:33:39 $
+ * @version $Revision: 1.14 $, $Date: 2005/04/05 10:01:05 $
  * @module schemeclient_v1
  */
 
 import java.awt.*;
 import java.util.*;
 import java.util.List;
+import java.util.Set;
 
 import javax.swing.ImageIcon;
 
@@ -259,7 +260,7 @@ public class SchemeTreeModel implements ChildrenFactory, VisualManagerFactory {
 							.getSessionInterface()).getAccessIdentifier().domain_id);
 					LinkedIdsCondition condition = new LinkedIdsCondition(domainId,
 							ObjectEntities.SCHEME_PROTO_GROUP_ENTITY_CODE);
-					List groups = SchemeStorableObjectPool.getStorableObjectsByCondition(
+					Set groups = SchemeStorableObjectPool.getStorableObjectsByCondition(
 							condition, true);
 
 					for (Iterator it = groups.iterator(); it.hasNext();) {
@@ -361,7 +362,7 @@ public class SchemeTreeModel implements ChildrenFactory, VisualManagerFactory {
 						ObjectEntities.SCHEME_ENTITY_CODE,
 						com.syrus.AMFICOM.scheme.SchemeController.COLUMN_TYPE);
 				try {
-					List schemes = SchemeStorableObjectPool
+					Set schemes = SchemeStorableObjectPool
 							.getStorableObjectsByCondition(condition, true);
 
 					for (Iterator it = schemes.iterator(); it.hasNext();) {

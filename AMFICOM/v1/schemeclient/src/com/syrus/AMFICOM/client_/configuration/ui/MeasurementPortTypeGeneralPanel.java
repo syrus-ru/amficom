@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPortTypeGeneralPanel.java,v 1.6 2005/03/30 13:33:39 stas Exp $
+ * $Id: MeasurementPortTypeGeneralPanel.java,v 1.7 2005/04/05 10:01:05 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,6 +10,7 @@ package com.syrus.AMFICOM.client_.configuration.ui;
 
 import java.awt.*;
 import java.util.*;
+import java.util.Set;
 import java.util.List;
 
 import javax.swing.*;
@@ -26,7 +27,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.6 $, $Date: 2005/03/30 13:33:39 $
+ * @version $Revision: 1.7 $, $Date: 2005/04/05 10:01:05 $
  * @module schemeclient_v1
  */
 
@@ -229,14 +230,15 @@ public class MeasurementPortTypeGeneralPanel implements StorableObjectEditor {
 				if (node.isChecked()) {
 					Collection pTypes = mtype.getMeasurementPortTypes();
 					if (!pTypes.contains(type)) {
-						List newPTypes = new LinkedList(pTypes);
+						Set newPTypes = new HashSet(pTypes);
 						newPTypes.add(type);
 						mtype.setMeasurementPortTypes(newPTypes);
 					}
 				} else {
 					Collection pTypes = mtype.getMeasurementPortTypes();
+					// TODO add/remove MeasurementPortType to/from MeasurementType
 					if (pTypes.contains(type)) {
-						List newPTypes = new LinkedList(pTypes);
+						Set newPTypes = new HashSet(pTypes);
 						newPTypes.remove(type);
 						mtype.setMeasurementPortTypes(newPTypes);
 					}

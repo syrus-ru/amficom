@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicsPanel.java,v 1.6 2005/03/30 13:33:39 stas Exp $
+ * $Id: CharacteristicsPanel.java,v 1.7 2005/04/05 10:01:05 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -33,7 +33,7 @@ import com.syrus.AMFICOM.logic.Item;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.6 $, $Date: 2005/03/30 13:33:39 $
+ * @version $Revision: 1.7 $, $Date: 2005/04/05 10:01:05 $
  * @module schemeclient_v1
  */
 
@@ -211,7 +211,7 @@ public abstract class CharacteristicsPanel implements
 					GeneralStorableObjectPool.putStorableObject(ch);
 				}
 			}
-			List removedIds = new LinkedList();
+			Set removedIds = new HashSet();
 			for (Iterator it = removedCharacteristics.values().iterator(); it
 					.hasNext();) {
 				List removed = (List) it.next();

@@ -604,6 +604,7 @@ public class SchemeEditorMainFrame extends JFrame
 		treeFrame.setVisible(true);
 
 		SchemeTreeModel model = new SchemeTreeModel(aContext);
+
 		ElementsNavigatorPanel utp = new ElementsNavigatorPanel(aContext, internal_dispatcher, model);
 		//UniTreePanel utp = new UniTreePanel(internal_dispatcher, aContext, model);
 		//utp.setBorder(BorderFactory.createLoweredBevelBorder());

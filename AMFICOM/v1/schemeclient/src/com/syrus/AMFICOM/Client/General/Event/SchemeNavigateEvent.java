@@ -1,5 +1,8 @@
 package com.syrus.AMFICOM.Client.General.Event;
 
+/**
+ * @deprecated use ObjectSelectedEvent
+ */
 public class SchemeNavigateEvent extends OperationEvent
 {
 	public boolean SCHEME_PATH_SELECTED = false;

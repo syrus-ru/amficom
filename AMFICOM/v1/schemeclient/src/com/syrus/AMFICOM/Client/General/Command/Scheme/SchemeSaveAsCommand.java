@@ -1,214 +1,198 @@
 package com.syrus.AMFICOM.Client.General.Command.Scheme;
 
-import java.util.List;
-
 import java.awt.*;
 import java.awt.event.*;
+import java.util.*;
+import java.util.List;
+
 import javax.swing.*;
 
 import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Model.*;
-import com.syrus.AMFICOM.Client.General.Scheme.*;
 import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.Schematics.Elements.SchemePropsPanel;
+import com.syrus.AMFICOM.client_.scheme.SchemeObjectsFactory;
+import com.syrus.AMFICOM.client_.scheme.graph.*;
 import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.scheme.*;
-import com.syrus.AMFICOM.scheme.SchemeStorableObjectPool;
 import com.syrus.AMFICOM.scheme.corba.SchemeKind;
+import com.syrus.util.Log;
 
-public class SchemeSaveAsCommand extends VoidCommand
-{
+public class SchemeSaveAsCommand extends VoidCommand {
 	public static final int CANCEL = 0;
 	public static final int OK = 1;
-
+	public int ret_code = CANCEL;
+	
 	ApplicationContext aContext;
 	SchemeTabbedPane schemeTab;
 	UgoTabbedPane ugoTab;
 
-	public int ret_code = CANCEL;
-
-	public SchemeSaveAsCommand(ApplicationContext aContext, SchemeTabbedPane schemeTab, UgoTabbedPane ugoTab)
-	{
+	public SchemeSaveAsCommand(ApplicationContext aContext,
+			SchemeTabbedPane schemeTab, UgoTabbedPane ugoTab) {
 		this.aContext = aContext;
 		this.schemeTab = schemeTab;
 		this.ugoTab = ugoTab;
 	}
 
-	public Object clone()
-	{
+	public Object clone() {
 		return new SchemeSaveAsCommand(aContext, schemeTab, ugoTab);
 	}
 
-	public void execute()
-	{
-		SchemeGraph graph = schemeTab.getPanel().getGraph();
-		SchemeGraph ugograph = ugoTab.getPanel().getGraph();
-		Scheme scheme = graph.getScheme();
+	public void execute() {
+		SchemeGraph graph = schemeTab.getGraph();
+		SchemeGraph ugograph = ugoTab.getGraph();
 
-//		if (scheme.getId().equals(""))
-//		{
-//			new SchemeSaveCommand(aContext, schemeTab, ugoTab).execute();
+//		if (SchemeGraph.path_creation_mode == Constants.CREATING_PATH_MODE)
+//			new PathSaveCommand(aContext, schemeTab).execute();
+//		if (SchemeGraph.path_creation_mode == Constants.CREATING_PATH_MODE)
 //			return;
-//		}
 
-		if (SchemeGraph.path_creation_mode == Constants.CREATING_PATH_MODE)
-			new PathSaveCommand(aContext, schemeTab).execute();
-		if (SchemeGraph.path_creation_mode == Constants.CREATING_PATH_MODE)
-			return;
-
-		if (graph.getRoots().length == 0)
-		{
-			JOptionPane.showMessageDialog(Environment.getActiveWindow(), "Невозможно сохранить пустую схему", "Ошибка", JOptionPane.OK_OPTION);
+		if (graph.getRoots().length == 0) {
+			JOptionPane.showMessageDialog(Environment.getActiveWindow(),
+					"Невозможно сохранить пустую схему", "Ошибка", JOptionPane.OK_OPTION);
 			return;
 		}
 
-		if (graph.getScheme().equals(ugograph.getScheme()))
-		{
-			if (ugograph.getRoots().length == 0)
-			{
-				int ret = JOptionPane.showConfirmDialog(Environment.getActiveWindow(), "Схему нельзя будет включить в другую схему,\nт.к. не создано условное графическое обозначение схемы.\nПродолжить сохранение?", "Предупреждение", JOptionPane.YES_NO_OPTION);
+		SchemeResource res = schemeTab.getCurrentPanel().getSchemeResource();
+		SchemeResource ugores = ugoTab.getCurrentPanel().getSchemeResource();
+		
+		Scheme scheme = res.getScheme();
+		
+		if (scheme.equals(ugores.getScheme())) {
+			if (ugograph.getRoots().length == 0) {
+				int ret = JOptionPane.showConfirmDialog(Environment.getActiveWindow(),
+						"Схему нельзя будет включить в другую схему,\nт.к. не создано условное графическое обозначение схемы.\nПродолжить сохранение?",
+						"Предупреждение", JOptionPane.YES_NO_OPTION);
 				if (ret == JOptionPane.NO_OPTION || ret == JOptionPane.CANCEL_OPTION)
 					return;
 			}
-		}
-		else if (scheme.getUgoCell() == null)
-		{
-			int ret = JOptionPane.showConfirmDialog(Environment.getActiveWindow(), "Схему нельзя будет включить в другую схему,\nт.к. не создано условное графическое обозначение схемы.\nПродолжить сохранение?", "Предупреждение", JOptionPane.YES_NO_OPTION);
+		} 
+		else if (scheme.getUgoCell() == null) {
+			int ret = JOptionPane.showConfirmDialog(Environment.getActiveWindow(),
+					"Схему нельзя будет включить в другую схему,\nт.к. не создано условное графическое обозначение схемы.\nПродолжить сохранение?",
+					"Предупреждение", JOptionPane.YES_NO_OPTION);
 			if (ret == JOptionPane.NO_OPTION || ret == JOptionPane.CANCEL_OPTION)
 				return;
 		}
 
 		SaveDialog sd;
-		while (true)
-		{
+		while (true) {
 			sd = new SaveDialog(aContext, aContext.getDispatcher(), "Сохранение схемы");
-			int ret = sd.init(scheme, scheme.getName()+ " (copy)", false);
+			int ret = sd.init(scheme, scheme.getName() + " (copy)", false);
 			if (ret == 0)
 				return;
 
 			if (!MiscUtil.validName(sd.name))
-				JOptionPane.showMessageDialog(Environment.getActiveWindow(), "Некорректное название схемы.", "Ошибка", JOptionPane.OK_OPTION);
+				JOptionPane.showMessageDialog(Environment.getActiveWindow(),
+						"Некорректное название схемы.", "Ошибка", JOptionPane.OK_OPTION);
 			else
 				break;
 		}
-//		ComponentSaveCommand.saveTypes(aContext.getDataSourceInterface(), false);
 		scheme = (Scheme) scheme.clone();
 
-		for (int i = 0; i < scheme.getSchemeElementsAsArray().length; i++)
-		{
-			SchemeElement se = scheme.getSchemeElementsAsArray()[i];
-			if (se.getSchemeElementsAsArray().length != 0)
-			{
-				SchemePanel.copySchemeElementFromArchivedState_virtual(se.getSchemeCell().getData());
+		for (Iterator it = scheme.getSchemeElements().iterator(); it.hasNext();) {
+			SchemeElement se = (SchemeElement)it.next();
+			if (!se.getSchemeElements().isEmpty()) {
+				SchemePanel.copyFromArchivedState_virtual(se.getSchemeCell().getData());
 			}
 		}
-
-			/*********/
-
 		UgoPanel.assignClonedIds(graph.getAll());
 
-		scheme.getSchemeCell().setData((List)graph.getArchiveableState(graph.getRoots()));
-		if (graph.getScheme().equals(ugograph.getScheme()))
-		{
-			UgoPanel.assignClonedIds(ugograph.getAll());
-			scheme.getUgoCell().setData((List)ugograph.getArchiveableState(ugograph.getRoots()));
-			ugoTab.setGraphChanged(false);
-		}
-		else
-			SchemePanel.copySchemeElementFromArchivedState_virtual(scheme.getSchemeCell().getData());
+		try {		
+			if (scheme.getSchemeCell() == null) {
+				scheme.setSchemeCell(SchemeObjectsFactory.createImageResource());
+			}
+			scheme.getSchemeCell().setData((List) graph.getArchiveableState());
 
-//		if (!res)
-//		{
-//			JOptionPane.showMessageDialog(Environment.getActiveWindow(), "Ошибка сохранения схемы " +
-//																		scheme.getName(), "Ошибка", JOptionPane.OK_OPTION);
-//			return;
-//		}
+			if (scheme.equals(ugores.getScheme())) {
+				UgoPanel.assignClonedIds(ugograph.getAll());
+				if (scheme.getUgoCell() == null) {
+					scheme.setUgoCell(SchemeObjectsFactory.createImageResource());
+				}
+				scheme.getUgoCell().setData((List) ugograph.getArchiveableState());
+				ugoTab.setGraphChanged(false);
+			} else
+				SchemePanel.copyFromArchivedState_virtual(scheme.getSchemeCell()
+						.getData());
 
-		scheme.setName(sd.name);
-		scheme.setDescription(sd.description);
-		scheme.setSchemeKind(sd.type);
+			scheme.setName(sd.name);
+			scheme.setDescription(sd.description);
+			scheme.setSchemeKind(sd.type);
 
-		final Identifier domainId = new Identifier(
-				((RISDSessionInfo) aContext
-						.getSessionInterface())
-						.getAccessIdentifier().domain_id);
-		scheme.setDomainId(domainId);
+			final Identifier domainId = new Identifier(((RISDSessionInfo) aContext
+					.getSessionInterface()).getAccessIdentifier().domain_id);
+			scheme.setDomainId(domainId);
 
-		try {
 			SchemeStorableObjectPool.putStorableObject(scheme);
 
-			JOptionPane.showMessageDialog(
-					Environment.getActiveWindow(),
-					"Схема " + scheme.getName() + " успешно сохранена",
-					"Сообщение",
+			JOptionPane.showMessageDialog(Environment.getActiveWindow(), "Схема "
+					+ scheme.getName() + " успешно сохранена", "Сообщение",
 					JOptionPane.INFORMATION_MESSAGE);
 
-			aContext.getDispatcher().notify(new TreeListSelectionEvent("",
-					TreeListSelectionEvent.SELECT_EVENT + TreeListSelectionEvent.REFRESH_EVENT));
-		}
+			aContext.getDispatcher().notify(
+					new TreeListSelectionEvent("", TreeListSelectionEvent.SELECT_EVENT
+							+ TreeListSelectionEvent.REFRESH_EVENT));
+			aContext.getDispatcher().notify(
+				new SchemeEvent(this, scheme, null, SchemeEvent.OPEN_SCHEME));
+			Pool.removeMap("clonedids");
+			ret_code = OK;
+		} 
 		catch (ApplicationException ex) {
-			ex.printStackTrace();
+			Log.errorException(ex);
 		}
-
-//		scheme.serializable_cell = null;
-//		scheme.serializable_ugo = null;
-//		scheme.unpack();
-
-		aContext.getDispatcher().notify(new SchemeElementsEvent(this, scheme, SchemeElementsEvent.OPEN_PRIMARY_SCHEME_EVENT));
-		Pool.removeMap("clonedids");
-		ret_code = OK;
 	}
 }
 
-class SaveDialog extends JDialog
-{
+class SaveDialog extends JDialog {
 	private JButton okButton = new JButton("OK");
+
 	private JButton cancelButton = new JButton("Отмена");
 
 	SchemePropsPanel panel;
 
 	public String name = "";
+
 	public String description = "";
+
 	public SchemeKind type = SchemeKind.NETWORK;
 
 	public int retCode = 0;
 
 	ApplicationContext aContext;
+
 	Dispatcher dispatcher;
 
-	public SaveDialog(ApplicationContext aContext, Dispatcher dispatcher, String title)
-	{
+	public SaveDialog(ApplicationContext aContext, Dispatcher dispatcher,
+			String title) {
 		super(Environment.getActiveWindow());
 		this.aContext = aContext;
 		this.dispatcher = dispatcher;
 
 		setTitle(title);
-		//setResizable(false);
+		// setResizable(false);
 		setModal(true);
 
-		this.addWindowListener(new java.awt.event.WindowAdapter()
-		{
-			public void windowClosing(WindowEvent e)
-			{
-				//undo();
+		this.addWindowListener(new java.awt.event.WindowAdapter() {
+			public void windowClosing(WindowEvent e) {
+				// undo();
 			}
 		});
 
-		Dimension frameSize = new Dimension (400, 165);
+		Dimension frameSize = new Dimension(400, 165);
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		setSize(frameSize);
-		setLocation((screenSize.width - frameSize.width) / 2, (screenSize.height - frameSize.height) / 2);
+		setLocation((screenSize.width - frameSize.width) / 2,
+				(screenSize.height - frameSize.height) / 2);
 	}
 
-	public int init(Scheme scheme, String initialName, boolean show_ugo)
-	{
+	public int init(Scheme scheme, String initialName, boolean show_ugo) {
 		panel = new SchemePropsPanel(aContext, dispatcher, show_ugo);
 		panel.setSchemeName(initialName);
 		panel.setSchemeDescription(scheme.getDescription());
 		panel.setSchemeType(scheme.getSchemeKind());
-	//	panel.init(graph.scheme, aContext.getDataSourceInterface());
+		// panel.init(graph.scheme, aContext.getDataSourceInterface());
 		getContentPane().setLayout(new BorderLayout());
 		getContentPane().add(panel, BorderLayout.CENTER);
 
@@ -222,18 +206,14 @@ class SaveDialog extends JDialog
 		cancelButton.setPreferredSize(new Dimension(80, 25));
 		buttonPanel.add(okButton, FlowLayout.LEFT);
 		buttonPanel.add(cancelButton, FlowLayout.CENTER);
-		okButton.addActionListener(new ActionListener()
-		{
-			public void actionPerformed (ActionEvent ev)
-			{
+		okButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent ev) {
 				this_okButtonActionPerformed();
 			}
 		});
-		cancelButton.addActionListener(new ActionListener()
-		{
-			public void actionPerformed (ActionEvent ev)
-			{
-				//undo();
+		cancelButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent ev) {
+				// undo();
 				dispose();
 			}
 		});
@@ -243,8 +223,7 @@ class SaveDialog extends JDialog
 		return retCode;
 	}
 
-	void this_okButtonActionPerformed()
-	{
+	void this_okButtonActionPerformed() {
 		retCode = 1;
 		name = panel.getSchemeName();
 		description = panel.getSchemeDescription();
@@ -252,5 +231,3 @@ class SaveDialog extends JDialog
 		dispose();
 	}
 }
-
-

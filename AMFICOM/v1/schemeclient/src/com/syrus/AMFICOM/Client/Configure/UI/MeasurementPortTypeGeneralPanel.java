@@ -3,7 +3,7 @@ package com.syrus.AMFICOM.Client.Configure.UI;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
-import java.util.List;
+import java.util.Set;
 
 import javax.swing.*;
 
@@ -278,9 +278,9 @@ public class MeasurementPortTypeGeneralPanel extends GeneralPanel {
 		ObjListModel usedModel = (ObjListModel)this.lsTypeUsedList.getModel();
 		for (int i = 0; i < usedModel.getSize(); i++) {
 			MeasurementType t = (MeasurementType)usedModel.getElementAt(i);
-			Collection mpTypes = t.getMeasurementPortTypes();
+			Set mpTypes = t.getMeasurementPortTypes();
 			if (!mpTypes.contains(type)) {
-				List newMPTypes = new ArrayList(mpTypes.size() + 1);
+				Set newMPTypes = new HashSet(mpTypes.size() + 1);
 				newMPTypes.addAll(mpTypes);
 				newMPTypes.add(type);
 				t.setMeasurementPortTypes(newMPTypes);
@@ -291,7 +291,7 @@ public class MeasurementPortTypeGeneralPanel extends GeneralPanel {
 			MeasurementType t = (MeasurementType)otherModel.getElementAt(i);
 			Collection mpTypes = t.getMeasurementPortTypes();
 			if (mpTypes.contains(type)) {
-				List newMPTypes = new LinkedList(mpTypes);
+				Set newMPTypes = new HashSet(mpTypes);
 				newMPTypes.remove(type);
 				t.setMeasurementPortTypes(newMPTypes);
 			}

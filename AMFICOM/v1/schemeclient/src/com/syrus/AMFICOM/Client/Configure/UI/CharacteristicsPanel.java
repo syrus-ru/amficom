@@ -195,7 +195,7 @@ public class CharacteristicsPanel extends GeneralPanel implements
 					GeneralStorableObjectPool.putStorableObject(ch);
 				}
 			}
-			List removedIds = new LinkedList();
+			Set removedIds = new HashSet();
 			for (Iterator it = removedCharacteristics.values().iterator(); it.hasNext();) {
 				List removed = (List) it.next();
 				for (Iterator it2 = removed.iterator(); it2.hasNext();) {

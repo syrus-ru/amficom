@@ -1,5 +1,5 @@
 /*
- * $Id: Constants.java,v 1.3 2005/03/30 13:33:39 stas Exp $
+ * $Id: Constants.java,v 1.4 2005/04/05 10:01:05 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,7 +15,7 @@ import javax.swing.*;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.3 $, $Date: 2005/03/30 13:33:39 $
+ * @version $Revision: 1.4 $, $Date: 2005/04/05 10:01:05 $
  * @module schemeclient_v1
  */
 
@@ -95,5 +95,4 @@ public interface Constants {
 	public static final String TEXT_SCHEME_TYPE_CABLE = Messages.getString("Constants.scheme_type_cable"); //$NON-NLS-1$
 	public static final String TEXT_SCHEME_TYPE_BUILDING = Messages.getString("Constants.scheme_type_building"); //$NON-NLS-1$
 	public static final String TEXT_SCHEME_PROTO_GROUP = Messages.getString("Constants.scheme_proto_group"); //$NON-NLS-1$
-
 }
