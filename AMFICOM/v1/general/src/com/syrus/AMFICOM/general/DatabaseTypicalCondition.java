@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseTypicalCondition.java,v 1.1 2005/02/04 09:18:44 bob Exp $
+ * $Id: DatabaseTypicalCondition.java,v 1.2 2005/02/04 14:12:36 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,7 +26,7 @@ import com.syrus.util.Log;
  *	}
  * </pre> 
  * 
- * @version $Revision: 1.1 $, $Date: 2005/02/04 09:18:44 $
+ * @version $Revision: 1.2 $, $Date: 2005/02/04 14:12:36 $
  * @author $Author: bob $
  * @module general_v1
  */
@@ -43,7 +43,7 @@ public class DatabaseTypicalCondition extends AbstractDatabaseTypicalCondition {
 		final String className = "com.syrus.AMFICOM." + ObjectGroupEntities.getGroupName(condition.getEntityCode().shortValue()).toLowerCase().replaceAll("group$", "") + ".DatabaseTypicalConditionImpl"; //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 		try {
 			Constructor ctor;
-			ctor = Class.forName(className).getDeclaredConstructor(new Class[] { LinkedIdsCondition.class});
+			ctor = Class.forName(className).getDeclaredConstructor(new Class[] { TypicalCondition.class});
 			ctor.setAccessible(true);
 			this.delegate = (AbstractDatabaseTypicalCondition) ctor.newInstance(new Object[] { condition});
 		} catch (ClassNotFoundException cnfe) {
@@ -95,7 +95,7 @@ public class DatabaseTypicalCondition extends AbstractDatabaseTypicalCondition {
 	}
 
 	public String getSQLQuery() throws IllegalDataException {
-		return super.getSQLQuery();
+		return this.delegate.getSQLQuery();
 	}
 
 	public Short getEntityCode() {
