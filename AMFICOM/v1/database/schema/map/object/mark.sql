@@ -7,10 +7,10 @@ CREATE TABLE Mark (
 --
  name VARCHAR2(128),
  description VARCHAR2(256),
- longitude DOUBLE,
- latiude DOUBLE,
+ longitude NUMBER(12, 6),
+ latiude NUMBER(12, 6),
  physical_link_id VARCHAR2(32) NOT NULL,
- distance DOUBLE,
+ distance NUMBER(12, 6),
  city VARCHAR2(128),
  street VARCHAR2(128),
  building VARCHAR2(128),

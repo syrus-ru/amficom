@@ -7,8 +7,8 @@ CREATE TABLE SiteNode (
 --
  name VARCHAR2(128),
  description VARCHAR2(256),
- longitude DOUBLE,
- latiude DOUBLE,
+ longitude NUMBER(12, 6),
+ latiude NUMBER(12, 6),
  image_id VARCHAR2(32) NOT NULL,
  site_node_type_id VARCHAR2(32) NOT NULL,
  city VARCHAR2(128),
@@ -21,7 +21,7 @@ CREATE TABLE SiteNode (
  CONSTRAINT sitnode_modifier_fk FOREIGN KEY (modifier_id)
   REFERENCES Users (id) ON DELETE CASCADE,
  CONSTRAINT sitnode_type_modifier_fk FOREIGN KEY (site_node_type_id)
-  REFERENCES SiteNodeType (id) ON DELETE CASCADE,
+  REFERENCES SiteNodeType (id) ON DELETE CASCADE
 );
 
 CREATE SEQUENCE sitenode_seq ORDER;

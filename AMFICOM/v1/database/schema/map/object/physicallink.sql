@@ -22,8 +22,8 @@ CREATE TABLE PhysicalLink (
   REFERENCES Users (id) ON DELETE CASCADE,
  CONSTRAINT phlink_modifier_fk FOREIGN KEY (modifier_id)
   REFERENCES Users (id) ON DELETE CASCADE,
- CONSTRAINT phlink_type_modifier_fk FOREIGN KEY (phisical_link_type_id)
-  REFERENCES PhysicalLinkType (id) ON DELETE CASCADE,
+ CONSTRAINT phlink_type_modifier_fk FOREIGN KEY (physical_link_type_id)
+  REFERENCES PhysicalLinkType (id) ON DELETE CASCADE
 );
 
 CREATE SEQUENCE physicallink_seq ORDER;

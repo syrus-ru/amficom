@@ -1,14 +1,14 @@
 @@sitenode
 @@topologicalnode
+@@physicallink
 @@nodelink
 @@mark
-@@physicallink
 @@collector
 @@collphlink
 @@map
 @@mapsitenode
-@@maptopolognode
+@@maptopologicalnode
 @@mapnodelink
-@@mapphyslink
+@@mapphysicallink
 @@mapmark
 @@mapcollector
