@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseGeneralObjectLoader.java,v 1.18 2005/04/01 10:27:37 bass Exp $
+ * $Id: DatabaseGeneralObjectLoader.java,v 1.19 2005/04/05 09:01:33 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,12 +18,12 @@ import java.util.Set;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2005/04/01 10:27:37 $
- * @author $Author: bass $
+ * @version $Revision: 1.19 $, $Date: 2005/04/05 09:01:33 $
+ * @author $Author: arseniy $
  * @module general_v1
  */
 
-public class DatabaseGeneralObjectLoader implements GeneralObjectLoader {
+public class DatabaseGeneralObjectLoader extends AbstractObjectLoader implements GeneralObjectLoader {
 
 	public ParameterType loadParameterType(Identifier id) throws ApplicationException {
 		return new ParameterType(id);
@@ -43,7 +43,7 @@ public class DatabaseGeneralObjectLoader implements GeneralObjectLoader {
 
 	// for multiple objects
 
-	public Set loadParameterTypes(Set ids) throws ApplicationException {
+	public Set loadParameterTypes(Set ids) throws RetrieveObjectException {
 		ParameterTypeDatabase database = GeneralDatabaseContext.getParameterTypeDatabase();
 		Set collection = null;
 		try {
@@ -51,12 +51,12 @@ public class DatabaseGeneralObjectLoader implements GeneralObjectLoader {
 		}
 		catch (IllegalDataException e) {
 			Log.errorMessage("DatabaseGeneralObjectLoader.loadParameterTypes | Illegal Storable Object: " + e.getMessage());
-			throw new DatabaseException("DatabaseGeneralObjectLoader.loadParameterTypes | Illegal Storable Object: " + e.getMessage());
+			throw new RetrieveObjectException("DatabaseGeneralObjectLoader.loadParameterTypes | Illegal Storable Object: " + e.getMessage());
 		}
 		return collection;
 	}
 
-	public Set loadCharacteristicTypes(Set ids) throws ApplicationException {
+	public Set loadCharacteristicTypes(Set ids) throws RetrieveObjectException {
 		CharacteristicTypeDatabase database = GeneralDatabaseContext.getCharacteristicTypeDatabase();
 		Set collection = null;
 		try {
@@ -64,13 +64,13 @@ public class DatabaseGeneralObjectLoader implements GeneralObjectLoader {
 		}
 		catch (IllegalDataException e) {
 			Log.errorMessage("DatabaseGeneralObjectLoader.loadCharacteristicTypes | Illegal Storable Object: " + e.getMessage());
-			throw new DatabaseException("DatabaseGeneralObjectLoader.loadCharacteristicTypes | Illegal Storable Object: "
+			throw new RetrieveObjectException("DatabaseGeneralObjectLoader.loadCharacteristicTypes | Illegal Storable Object: "
 					+ e.getMessage());
 		}
 		return collection;
 	}
 
-	public Set loadCharacteristics(Set ids) throws ApplicationException {
+	public Set loadCharacteristics(Set ids) throws RetrieveObjectException {
 		CharacteristicDatabase database = GeneralDatabaseContext.getCharacteristicDatabase();
 		Set collection = null;
 		try {
@@ -78,7 +78,7 @@ public class DatabaseGeneralObjectLoader implements GeneralObjectLoader {
 		}
 		catch (IllegalDataException e) {
 			Log.errorMessage("DatabaseGeneralObjectLoader.loadCharacteristics | Illegal Storable Object: " + e.getMessage());
-			throw new DatabaseException("DatabaseGeneralObjectLoader.loadCharacteristics | Illegal Storable Object: " + e.getMessage());
+			throw new RetrieveObjectException("DatabaseGeneralObjectLoader.loadCharacteristics | Illegal Storable Object: " + e.getMessage());
 		}
 		return collection;
 	}
@@ -88,7 +88,7 @@ public class DatabaseGeneralObjectLoader implements GeneralObjectLoader {
 
 
 	public Set loadParameterTypesButIds(StorableObjectCondition condition, Set ids)
-			throws ApplicationException {
+			throws RetrieveObjectException {
 		ParameterTypeDatabase database = GeneralDatabaseContext.getParameterTypeDatabase();
 		Set collection = null;
 		try {
@@ -96,14 +96,14 @@ public class DatabaseGeneralObjectLoader implements GeneralObjectLoader {
 		}
 		catch (IllegalDataException e) {
 			Log.errorMessage("DatabaseGeneralObjectLoader.loadParameterTypesButIds | Illegal Storable Object: " + e.getMessage());
-			throw new DatabaseException("DatabaseGeneralObjectLoader.loadParameterTypesButIds | Illegal Storable Object: "
+			throw new RetrieveObjectException("DatabaseGeneralObjectLoader.loadParameterTypesButIds | Illegal Storable Object: "
 					+ e.getMessage());
 		}
 		return collection;
 	}
 
 	public Set loadCharacteristicTypesButIds(StorableObjectCondition condition, Set ids)
-			throws ApplicationException {
+			throws RetrieveObjectException {
 		CharacteristicTypeDatabase database = GeneralDatabaseContext.getCharacteristicTypeDatabase();
 		Set collection = null;
 		try {
@@ -111,14 +111,14 @@ public class DatabaseGeneralObjectLoader implements GeneralObjectLoader {
 		}
 		catch (IllegalDataException e) {
 			Log.errorMessage("DatabaseGeneralObjectLoader.loadCharacteristicTypesButIds | Illegal Storable Object: " + e.getMessage());
-			throw new DatabaseException("DatabaseGeneralObjectLoader.loadCharacteristicTypesButIds | Illegal Storable Object: "
+			throw new RetrieveObjectException("DatabaseGeneralObjectLoader.loadCharacteristicTypesButIds | Illegal Storable Object: "
 					+ e.getMessage());
 		}
 		return collection;
 	}
 
 	public Set loadCharacteristicsButIds(StorableObjectCondition condition, Set ids)
-			throws ApplicationException {
+			throws RetrieveObjectException {
 		CharacteristicDatabase database = GeneralDatabaseContext.getCharacteristicDatabase();
 		Set collection = null;
 		try {
@@ -126,7 +126,7 @@ public class DatabaseGeneralObjectLoader implements GeneralObjectLoader {
 		}
 		catch (IllegalDataException e) {
 			Log.errorMessage("DatabaseGeneralObjectLoader.loadCharacteristicsButIds | Illegal Storable Object: " + e.getMessage());
-			throw new DatabaseException("DatabaseGeneralObjectLoader.loadCharacteristicsButIds | Illegal Storable Object: "
+			throw new RetrieveObjectException("DatabaseGeneralObjectLoader.loadCharacteristicsButIds | Illegal Storable Object: "
 					+ e.getMessage());
 		}
 		return collection;

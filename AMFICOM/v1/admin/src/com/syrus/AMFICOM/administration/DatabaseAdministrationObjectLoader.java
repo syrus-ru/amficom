@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseAdministrationObjectLoader.java,v 1.20 2005/04/01 10:31:51 bass Exp $
+ * $Id: DatabaseAdministrationObjectLoader.java,v 1.21 2005/04/05 09:02:14 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,11 +15,12 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
+import com.syrus.AMFICOM.general.AbstractObjectLoader;
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.SessionContext;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
@@ -27,12 +28,12 @@ import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.20 $, $Date: 2005/04/01 10:31:51 $
- * @author $Author: bass $
+ * @version $Revision: 1.21 $, $Date: 2005/04/05 09:02:14 $
+ * @author $Author: arseniy $
  * @module administration_v1
  */
 
-public class DatabaseAdministrationObjectLoader implements AdministrationObjectLoader {
+public class DatabaseAdministrationObjectLoader extends AbstractObjectLoader implements AdministrationObjectLoader {
 
 	public User loadUser(Identifier id) throws ApplicationException {
 		return new User(id);
@@ -59,7 +60,7 @@ public class DatabaseAdministrationObjectLoader implements AdministrationObjectL
 
 	// for multiple objects
 
-	public Set loadUsers(Set ids) throws ApplicationException {
+	public Set loadUsers(Set ids) throws RetrieveObjectException {
 		UserDatabase database = AdministrationDatabaseContext.getUserDatabase();
 		Set collection = null;
 		try {
@@ -68,12 +69,12 @@ public class DatabaseAdministrationObjectLoader implements AdministrationObjectL
 		catch (IllegalDataException e) {
 			String mesg = "DatabaseAdministrationObjectLoader.loadUsers | Illegal Storable Object: " + e.getMessage();
 			Log.errorMessage(mesg);
-			throw new DatabaseException(mesg, e);
+			throw new RetrieveObjectException(mesg, e);
 		}
 		return collection;
 	}
 
-	public Set loadDomains(Set ids) throws ApplicationException {
+	public Set loadDomains(Set ids) throws RetrieveObjectException {
 		DomainDatabase database = AdministrationDatabaseContext.getDomainDatabase();
 		Set collection = null;
 		try {
@@ -82,12 +83,12 @@ public class DatabaseAdministrationObjectLoader implements AdministrationObjectL
 		catch (IllegalDataException e) {
 			String mesg = "DatabaseAdministrationObjectLoader.loadDomains | Illegal Storable Object: " + e.getMessage();
 			Log.errorMessage(mesg);
-			throw new DatabaseException(mesg, e);
+			throw new RetrieveObjectException(mesg, e);
 		}
 		return collection;
 	}
 
-	public Set loadServers(Set ids) throws ApplicationException {
+	public Set loadServers(Set ids) throws RetrieveObjectException {
 		ServerDatabase database = AdministrationDatabaseContext.getServerDatabase();
 		Set collection = null;
 		try {
@@ -96,12 +97,12 @@ public class DatabaseAdministrationObjectLoader implements AdministrationObjectL
 		catch (IllegalDataException e) {
 			String mesg = "DatabaseAdministrationObjectLoader.loadDomains | Illegal Storable Object: " + e.getMessage();
 			Log.errorMessage(mesg);
-			throw new DatabaseException(mesg, e);
+			throw new RetrieveObjectException(mesg, e);
 		}
 		return collection;
 	}
 
-	public Set loadMCMs(Set ids) throws ApplicationException {
+	public Set loadMCMs(Set ids) throws RetrieveObjectException {
 		MCMDatabase database = AdministrationDatabaseContext.getMCMDatabase();
 		Set collection = null;
 		try {
@@ -110,12 +111,12 @@ public class DatabaseAdministrationObjectLoader implements AdministrationObjectL
 		catch (IllegalDataException e) {
 			String mesg = "DatabaseAdministrationObjectLoader.loadMCMs | Illegal Storable Object: " + e.getMessage();
 			Log.errorMessage(mesg);
-			throw new DatabaseException(mesg, e);
+			throw new RetrieveObjectException(mesg, e);
 		}
 		return collection;
 	}
 
-	//  public PermissionAttributes loadPermissionAttributes(Identifier id) throws ApplicationException {
+	//  public PermissionAttributes loadPermissionAttributes(Identifier id) throws RetrieveObjectException {
 	//      return new PermissionAttributes(id);
 	//  }
 
@@ -125,7 +126,7 @@ public class DatabaseAdministrationObjectLoader implements AdministrationObjectL
 
 
 
-	public Set loadUsersButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
+	public Set loadUsersButIds(StorableObjectCondition condition, Set ids) throws RetrieveObjectException {
 		UserDatabase database = AdministrationDatabaseContext.getUserDatabase();
 		Set collection = null;
 		try {
@@ -134,12 +135,12 @@ public class DatabaseAdministrationObjectLoader implements AdministrationObjectL
 		catch (IllegalDataException e) {
 			String mesg = "DatabaseAdministrationObjectLoader.loadUsersButIds | Illegal Storable Object: " + e.getMessage();
 			Log.errorMessage(mesg);
-			throw new DatabaseException(mesg, e);
+			throw new RetrieveObjectException(mesg, e);
 		}
 		return collection;
 	}
 
-	public Set loadDomainsButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
+	public Set loadDomainsButIds(StorableObjectCondition condition, Set ids) throws RetrieveObjectException {
 		DomainDatabase database = AdministrationDatabaseContext.getDomainDatabase();
 		Set collection = null;
 		try {
@@ -148,12 +149,12 @@ public class DatabaseAdministrationObjectLoader implements AdministrationObjectL
 		catch (IllegalDataException e) {
 			String mesg = "DatabaseAdministrationObjectLoader.loadDomainsButIds | Illegal Storable Object: " + e.getMessage();
 			Log.errorMessage(mesg);
-			throw new DatabaseException(mesg, e);
+			throw new RetrieveObjectException(mesg, e);
 		}
 		return collection;
 	}
 
-	public Set loadServersButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
+	public Set loadServersButIds(StorableObjectCondition condition, Set ids) throws RetrieveObjectException {
 		ServerDatabase database = AdministrationDatabaseContext.getServerDatabase();
 		Set collection = null;
 		try {
@@ -162,12 +163,12 @@ public class DatabaseAdministrationObjectLoader implements AdministrationObjectL
 		catch (IllegalDataException e) {
 			String mesg = "DatabaseAdministrationObjectLoader.loadDomainsButIds | Illegal Storable Object: " + e.getMessage();
 			Log.errorMessage(mesg);
-			throw new DatabaseException(mesg, e);
+			throw new RetrieveObjectException(mesg, e);
 		}
 		return collection;
 	}
 
-	public Set loadMCMsButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
+	public Set loadMCMsButIds(StorableObjectCondition condition, Set ids) throws RetrieveObjectException {
 		MCMDatabase database = AdministrationDatabaseContext.getMCMDatabase();
 		Set collection = null;
 		try {
@@ -176,7 +177,7 @@ public class DatabaseAdministrationObjectLoader implements AdministrationObjectL
 		catch (IllegalDataException e) {
 			String mesg = "DatabaseAdministrationObjectLoader.loadMCMsButIds | Illegal Storable Object: " + e.getMessage();
 			Log.errorMessage(mesg);
-			throw new DatabaseException(mesg, e);
+			throw new RetrieveObjectException(mesg, e);
 		}
 		return collection;
 	}
