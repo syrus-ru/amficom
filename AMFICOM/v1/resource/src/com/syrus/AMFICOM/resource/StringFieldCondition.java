@@ -1,5 +1,5 @@
 /*
- * $Id: StringFieldCondition.java,v 1.1 2004/12/08 16:53:22 bass Exp $
+ * $Id: StringFieldCondition.java,v 1.2 2004/12/17 10:26:00 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,7 +14,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.1 $, $Date: 2004/12/08 16:53:22 $
+ * @version $Revision: 1.2 $, $Date: 2004/12/17 10:26:00 $
  * @module resource_v1
  */
 final class StringFieldCondition extends com.syrus.AMFICOM.general.StringFieldCondition {
@@ -34,8 +34,9 @@ final class StringFieldCondition extends com.syrus.AMFICOM.general.StringFieldCo
 	 * @param object
 	 * @throws ApplicationException
 	 * @see com.syrus.AMFICOM.general.StorableObjectCondition#isConditionTrue(Object)
+	 * @todo Специально для Владимира Александровича: этод метод не реализован. Надеюсь, кому-то от этого жить стало легче.
 	 */
 	public boolean isConditionTrue(final Object object) throws ApplicationException {
-		return false;
+		throw new UnsupportedOperationException();
 	}
 }
