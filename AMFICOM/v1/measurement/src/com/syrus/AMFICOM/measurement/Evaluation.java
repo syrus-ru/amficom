@@ -1,5 +1,5 @@
 /*
- * $Id: Evaluation.java,v 1.28 2004/11/04 09:03:45 bob Exp $
+ * $Id: Evaluation.java,v 1.29 2004/11/05 08:03:11 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,8 +26,8 @@ import com.syrus.AMFICOM.measurement.corba.ResultSort;
 import com.syrus.AMFICOM.event.corba.AlarmLevel;
 
 /**
- * @version $Revision: 1.28 $, $Date: 2004/11/04 09:03:45 $
- * @author $Author: bob $
+ * @version $Revision: 1.29 $, $Date: 2004/11/05 08:03:11 $
+ * @author $Author: max $
  * @module measurement_v1
  */
 
@@ -177,6 +177,6 @@ public class Evaluation extends Action {
 	}
 	
 	public List getDependencies() {		
-		return Collections.singletonList(this.thresholdSet.getId());
+		return Collections.singletonList(this.thresholdSet);
 	}
 }

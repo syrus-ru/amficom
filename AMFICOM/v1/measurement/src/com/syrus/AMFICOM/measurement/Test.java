@@ -1,5 +1,5 @@
 /*
- * $Id: Test.java,v 1.62 2004/11/04 09:03:45 bob Exp $
+ * $Id: Test.java,v 1.63 2004/11/05 08:03:11 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -43,8 +43,8 @@ import com.syrus.AMFICOM.measurement.corba.TestTimeStamps_TransferablePackage.Co
 import com.syrus.AMFICOM.measurement.corba.TestTimeStamps_TransferablePackage.PeriodicalTestTimeStamps;
 
 /**
- * @version $Revision: 1.62 $, $Date: 2004/11/04 09:03:45 $
- * @author $Author: bob $
+ * @version $Revision: 1.63 $, $Date: 2004/11/05 08:03:11 $
+ * @author $Author: max $
  * @module measurement_v1
  */
 
@@ -573,14 +573,18 @@ public class Test extends StorableObject {
 	public List getDependencies() {
 		List dependencies = new LinkedList();
 		if (this.timeStamps.temporalPattern != null)
-			dependencies.add(this.timeStamps.temporalPattern.getId());
+			dependencies.add(this.timeStamps.temporalPattern);
+        
 		dependencies.addAll(this.measurementSetupIds);
-		dependencies.add(this.measurementType.getId());
-		if (this.analysisType != null)
-			dependencies.add(this.analysisType.getId());
+		dependencies.add(this.measurementType);
+		
+        if (this.analysisType != null)
+			dependencies.add(this.analysisType);
+        
 		if (this.evaluationType != null)
-			dependencies.add(this.evaluationType.getId());
-		dependencies.add(this.monitoredElement.getId());
+			dependencies.add(this.evaluationType);
+        
+		dependencies.add(this.monitoredElement);
 		return dependencies;
 	}
 

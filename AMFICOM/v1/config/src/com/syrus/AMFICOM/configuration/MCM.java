@@ -1,5 +1,5 @@
 /*
- * $Id: MCM.java,v 1.21 2004/11/04 09:05:13 bob Exp $
+ * $Id: MCM.java,v 1.22 2004/11/05 08:02:49 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -24,8 +24,8 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.configuration.corba.MCM_Transferable;
 
 /**
- * @version $Revision: 1.21 $, $Date: 2004/11/04 09:05:13 $
- * @author $Author: bob $
+ * @version $Revision: 1.22 $, $Date: 2004/11/05 08:02:49 $
+ * @author $Author: max $
  * @module configuration_v1
  */
 
@@ -219,10 +219,7 @@ public class MCM extends DomainMember implements Characterized {
 		dependencies.addAll(this.kisIds);
 		dependencies.add(this.userId);
 		dependencies.add(this.serverId);
-		for (Iterator it = this.characteristics.iterator(); it.hasNext();) {
-			Characteristic characteristic = (Characteristic) it.next();
-			dependencies.add(characteristic.getId());			
-		}
+		dependencies.addAll(this.characteristics);
 		return dependencies;
 	}
 }

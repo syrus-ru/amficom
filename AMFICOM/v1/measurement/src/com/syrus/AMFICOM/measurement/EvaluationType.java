@@ -1,5 +1,5 @@
 /*
- * $Id: EvaluationType.java,v 1.28 2004/11/04 09:03:45 bob Exp $
+ * $Id: EvaluationType.java,v 1.29 2004/11/05 08:03:11 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,8 +27,8 @@ import com.syrus.AMFICOM.measurement.corba.EvaluationType_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.28 $, $Date: 2004/11/04 09:03:45 $
- * @author $Author: bob $
+ * @version $Revision: 1.29 $, $Date: 2004/11/05 08:03:11 $
+ * @author $Author: max $
  * @module measurement_v1
  */
 
@@ -298,25 +298,17 @@ public class EvaluationType extends ActionType {
 	public List getDependencies() {
 		List dependencies = new LinkedList();
 		if (this.inParameterTypes != null)
-			for (Iterator it = this.inParameterTypes.iterator(); it.hasNext();) {
-				ParameterType inParamType = (ParameterType) it.next();
-				dependencies.add(inParamType.getId());			
-			}
+			dependencies.addAll(this.inParameterTypes);
+				
 		if (this.thresholdParameterTypes != null)
-			for (Iterator it = this.thresholdParameterTypes.iterator(); it.hasNext();) {
-				ParameterType thresholdParamType = (ParameterType) it.next();
-				dependencies.add(thresholdParamType.getId());			
-			}
+			dependencies.addAll(this.thresholdParameterTypes);
+				
 		if (this.etalonParameterTypes != null)
-			for (Iterator it = this.etalonParameterTypes.iterator(); it.hasNext();) {
-				ParameterType etalonParamType = (ParameterType) it.next();
-				dependencies.add(etalonParamType.getId());			
-			}
+			dependencies.addAll(this.etalonParameterTypes);
+				
 		if (this.outParameterTypes != null)
-			for (Iterator it = this.outParameterTypes.iterator(); it.hasNext();) {
-				ParameterType outParamType = (ParameterType) it.next();
-				dependencies.add(outParamType.getId());			
-			}
+			dependencies.addAll(this.outParameterTypes);
+				
 		return dependencies;
 	}
 }
