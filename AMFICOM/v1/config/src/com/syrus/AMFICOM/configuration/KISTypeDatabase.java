@@ -1,0 +1,242 @@
+package com.syrus.AMFICOM.configuration;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.List;
+
+import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.ObjectNotFoundException;
+import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.general.StorableObject;
+import com.syrus.AMFICOM.general.StorableObjectCondition;
+import com.syrus.AMFICOM.general.StorableObjectDatabase;
+import com.syrus.AMFICOM.general.UpdateObjectException;
+import com.syrus.AMFICOM.general.VersionCollisionException;
+import com.syrus.util.Log;
+import com.syrus.util.database.DatabaseConnection;
+import com.syrus.util.database.DatabaseDate;
+
+/*
+ * $Id: KISTypeDatabase.java,v 1.1 2004/10/22 10:32:09 max Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ.
+ */
+
+/**
+ * @version $Revision: 1.1 $, $Date: 2004/10/22 10:32:09 $
+ * @author $Author: max $
+ * @module module_name
+ */
+public class KISTypeDatabase extends StorableObjectDatabase {
+    public static final String COLUMN_CODENAME              = "codename";
+    public static final String COLUMN_DESCRIPTION           = "description";
+    
+    private String updateColumns;
+    private String updateMultiplySQLValues;
+    
+    public void retrieve(StorableObject storableObject) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
+        KISType kisType = this.fromStorableObject(storableObject);
+        super.retrieveEntity(kisType);
+    }
+    
+    private KISType fromStorableObject(StorableObject storableObject) throws IllegalDataException {
+        if (storableObject instanceof KISType)
+            return (KISType)storableObject;
+        throw new IllegalDataException("KISTypeDatabase.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
+    }
+    
+    protected String getEnityName() {
+        return "KISType";
+    }
+    
+    protected String getTableName() {
+        return ObjectEntities.KISTYPE_ENTITY;
+    }
+    
+    protected String getUpdateColumns() {
+        if (this.updateColumns == null){
+            this.updateColumns  = super.getUpdateColumns() + COMMA
+                + COLUMN_CODENAME + COMMA
+                + COLUMN_DESCRIPTION;                
+        }
+        return this.updateColumns;
+    }
+    
+    protected String getUpdateMultiplySQLValues() {
+        if (this.updateMultiplySQLValues == null){
+            this.updateMultiplySQLValues = super.getUpdateMultiplySQLValues() + COMMA
+            + QUESTION + COMMA
+            + QUESTION;
+        }
+        return this.updateMultiplySQLValues;
+    }
+    
+    protected String getUpdateSingleSQLValues(StorableObject storableObject)
+            throws IllegalDataException, UpdateObjectException {
+        KISType kisType = fromStorableObject(storableObject);
+        String sql = super.getUpdateSingleSQLValues(storableObject) + COMMA
+            + APOSTOPHE + kisType.getCodename() + APOSTOPHE + COMMA
+            + APOSTOPHE + kisType.getDescription() + APOSTOPHE;
+        return sql;
+    }
+    
+    protected String retrieveQuery(String condition){
+        return super.retrieveQuery(condition) + COMMA
+        + COLUMN_CODENAME + COMMA
+        + COLUMN_DESCRIPTION
+        + SQL_FROM + ObjectEntities.EQUIPMENTTYPE_ENTITY
+        + ( ((condition == null) || (condition.length() == 0) ) ? "" : SQL_WHERE + condition);
+
+    }
+    
+    protected int setEntityForPreparedStatement(StorableObject storableObject,
+            PreparedStatement preparedStatement) throws IllegalDataException,
+            UpdateObjectException {
+        KISType kisType = fromStorableObject(storableObject);
+        int i;
+        try {
+            i = super.setEntityForPreparedStatement(storableObject, preparedStatement);
+            preparedStatement.setString( ++i, kisType.getCodename());
+            preparedStatement.setString( ++i, kisType.getDescription());
+        } catch (SQLException sqle) {
+            throw new UpdateObjectException("KISTypeDatabase." +
+                    "setEntityForPreparedStatement | Error " + sqle.getMessage(), sqle);
+        }
+        return i;
+    }
+    
+    protected StorableObject updateEntityFromResultSet(
+            StorableObject storableObject, ResultSet resultSet)
+            throws IllegalDataException, RetrieveObjectException, SQLException {
+        KISType kisType = storableObject == null ? null : fromStorableObject(storableObject);
+        if (kisType == null){
+            /**
+             * @todo when change DB Identifier model ,change getString() to getLong()
+             */
+            kisType = new KISType(new Identifier(resultSet.getString(COLUMN_ID)), null, null, null);            
+        }
+        kisType.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
+                                    DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
+                                    /**
+                                        * @todo when change DB Identifier model ,change getString() to getLong()
+                                        */
+                                    new Identifier(resultSet.getString(COLUMN_CREATOR_ID)),
+                                    /**
+                                        * @todo when change DB Identifier model ,change getString() to getLong()
+                                        */
+                                    new Identifier(resultSet.getString(COLUMN_MODIFIER_ID)),
+                                    resultSet.getString(COLUMN_CODENAME),
+                                    resultSet.getString(COLUMN_DESCRIPTION));
+
+        
+        return kisType;
+    }
+    
+    public Object retrieveObject(StorableObject storableObject, int retrieve_kind, Object arg) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
+        KISType kisType = this.fromStorableObject(storableObject);
+        switch (retrieve_kind) {
+            default:
+                return null;
+        }
+    }
+    
+    public void insert(StorableObject storableObject) throws IllegalDataException, CreateObjectException {
+        KISType kisType = this.fromStorableObject(storableObject);
+        super.insertEntity(kisType);      
+    }
+
+    public void insert(List storableObjects) throws IllegalDataException,
+            CreateObjectException {
+        super.insertEntities(storableObjects);
+    }
+    
+    public void update(StorableObject storableObject, int updateKind, Object obj)
+            throws IllegalDataException, VersionCollisionException, UpdateObjectException {
+        switch (updateKind) {
+        case UPDATE_FORCE:
+            super.checkAndUpdateEntity(storableObject, true);
+            break;
+        case UPDATE_CHECK:                  
+        default:
+            super.checkAndUpdateEntity(storableObject, false);
+            break;
+        }
+    }
+        
+    public void update(List storableObjects, int updateKind, Object arg)
+            throws IllegalDataException, VersionCollisionException, UpdateObjectException {
+        switch (updateKind) {
+        case UPDATE_FORCE:
+            super.checkAndUpdateEntities(storableObjects, true);
+            break;
+        case UPDATE_CHECK:                  
+        default:
+            super.checkAndUpdateEntities(storableObjects, false);
+            break;
+        }
+    }
+    
+    public List retrieveAll() throws RetrieveObjectException {
+        List list = null;
+        try {
+            list = retrieveByIds(null, null);
+        }  catch (IllegalDataException ide) {           
+            Log.debugMessage("KISTypeDatabase.retrieveAll | Trying: " + ide, Log.DEBUGLEVEL09);
+            throw new RetrieveObjectException(ide);
+        }
+        return list;
+    }
+    
+    public void delete(KISType kisType) {
+        String kisIdStr = kisType.getId().toSQLString();
+        Statement statement = null;
+        Connection connection = DatabaseConnection.getConnection();
+        try {
+            statement = connection.createStatement();
+            String sql = SQL_DELETE_FROM
+                        + ObjectEntities.KISTYPE_ENTITY
+                        + SQL_WHERE
+                        + COLUMN_ID + EQUALS
+                        + kisIdStr;
+            Log.debugMessage("kisTypeDatabase.delete | Trying: " + sql, Log.DEBUGLEVEL09);
+            statement.executeUpdate(sql);
+            connection.commit();
+        }
+        catch (SQLException sqle1) {
+            Log.errorException(sqle1);
+        }
+        finally {
+            try {
+                if(statement != null)
+                    statement.close();
+                statement = null;
+            }
+            catch(SQLException sqle1) {
+                Log.errorException(sqle1);
+            } finally {
+                DatabaseConnection.closeConnection(connection);
+            }
+        }
+    }
+    
+    public List retrieveByIds(List ids, String condition) 
+            throws IllegalDataException, RetrieveObjectException {
+        if ((ids == null) || (ids.isEmpty()))
+            return super.retrieveByIdsOneQuery(null, condition);
+        return super.retrieveByIdsOneQuery(ids, condition); 
+        //return retriveByIdsPreparedStatement(ids);
+        }
+        
+    public List retrieveByCondition(List ids, StorableObjectCondition condition) throws RetrieveObjectException,
+            IllegalDataException {
+    	return this.retrieveButIds(ids);
+    }
+}
