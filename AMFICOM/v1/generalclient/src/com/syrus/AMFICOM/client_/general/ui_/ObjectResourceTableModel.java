@@ -12,11 +12,13 @@ import javax.swing.table.AbstractTableModel;
 import java.util.Iterator;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2004/08/26 10:26:40 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.3 $, $Date: 2004/10/07 06:07:45 $
+ * @author $Author: bob $
  * @module generalclient_v1
  */
 public class ObjectResourceTableModel extends AbstractTableModel {
+
+	private static final long	serialVersionUID	= 4007513055820570639L;
 
 	/**
 	 * ObjectResourceController of Model (ObjectResource) will be used for sorting.

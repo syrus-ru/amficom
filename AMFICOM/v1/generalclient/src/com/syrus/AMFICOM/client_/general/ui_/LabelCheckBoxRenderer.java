@@ -13,11 +13,13 @@ import javax.swing.border.EmptyBorder;
 
 /**
  * Renderer for JCheckBox items based on JLabel.
- * @version $Revision: 1.1 $, $Date: 2004/08/26 10:21:39 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.2 $, $Date: 2004/10/07 06:07:45 $
+ * @author $Author: bob $
  * @module generalclient_v1
  */
 public class LabelCheckBoxRenderer extends JLabel implements ListCellRenderer {
+
+	private static final long	serialVersionUID	= 6735690924700450480L;
 
 	protected static Border	noFocusBorder;
 	

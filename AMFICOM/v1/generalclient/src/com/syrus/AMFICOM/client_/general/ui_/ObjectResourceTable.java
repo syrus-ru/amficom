@@ -24,11 +24,13 @@ import com.syrus.AMFICOM.Client.General.UI.AComboBox;
 import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2004/08/26 10:26:40 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.3 $, $Date: 2004/10/07 06:07:45 $
+ * @author $Author: bob $
  * @module generalclient_v1
  */
 public class ObjectResourceTable extends JTable {
+
+	private static final long	serialVersionUID	= -437251205606073016L;
 
 	public ObjectResourceTable(ObjectResourceController controller, List objectResourceList) {
 		this(new ObjectResourceTableModel(controller, objectResourceList));
