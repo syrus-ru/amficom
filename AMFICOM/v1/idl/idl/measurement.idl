@@ -330,8 +330,14 @@ module corba {
 			long long end;
 	};
 
+	enum MeasurementSetupConditionSort {
+		MSC_SORT_MEASUREMENT_TYPE,
+		MSC_SORT_MONITORED_ELEMENT
+	};
+
 	struct MeasurementSetupCondition_Transferable {
-			com::syrus::AMFICOM::general::corba::Identifier_Transferable measurement_type_id;
+			com::syrus::AMFICOM::general::corba::Identifier_Transferable object_id;
+			MeasurementSetupConditionSort sort;
 	};
 	
 };
