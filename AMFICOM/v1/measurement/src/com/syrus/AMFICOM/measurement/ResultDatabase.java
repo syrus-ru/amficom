@@ -1,5 +1,5 @@
 /*
- * $Id: ResultDatabase.java,v 1.45 2004/12/09 13:25:10 arseniy Exp $
+ * $Id: ResultDatabase.java,v 1.46 2004/12/17 15:59:47 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -44,8 +44,8 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
 
 /**
- * @version $Revision: 1.45 $, $Date: 2004/12/09 13:25:10 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.46 $, $Date: 2004/12/17 15:59:47 $
+ * @author $Author: max $
  * @module measurement_v1
  */
 
@@ -535,7 +535,7 @@ public class ResultDatabase extends StorableObjectDatabase {
 		String sql = SQL_INSERT_INTO + ObjectEntities.RESULTPARAMETER_ENTITY + OPEN_BRACKET + COLUMN_ID + COMMA
 				+ LINK_COLUMN_TYPE_ID + COMMA + LINK_COLUMN_RESULT_ID + COMMA + LINK_COLUMN_VALUE
 				+ CLOSE_BRACKET + SQL_VALUES + OPEN_BRACKET + QUESTION + COMMA + QUESTION + COMMA
-				+ QUESTION + COMMA + QUESTION + CLOSE_BRACKET;
+				+ QUESTION + COMMA + APOSTOPHE + SQL_EMPTY_BLOB + APOSTOPHE + CLOSE_BRACKET;
 		PreparedStatement preparedStatement = null;
 		int i = 0;
 		Identifier parameterId = null;
@@ -549,7 +549,7 @@ public class ResultDatabase extends StorableObjectDatabase {
 				DatabaseIdentifier.setIdentifier(preparedStatement, 1, parameterId);
 				DatabaseIdentifier.setIdentifier(preparedStatement, 2, parameterTypeId);
 				DatabaseIdentifier.setIdentifier(preparedStatement, 3, resultId);
-				preparedStatement.setBlob(4, BLOB.empty_lob());
+				
 				Log.debugMessage("ResultDatabase.insertResultParameters | Inserting parameter "
 						+ parameterTypeId.toString() + " for result " + resultId,
 							Log.DEBUGLEVEL09);
