@@ -1,5 +1,5 @@
 /*
- * $Id: MCMConfigurationObjectLoader.java,v 1.2 2004/08/22 19:10:57 arseniy Exp $
+ * $Id: MCMConfigurationObjectLoader.java,v 1.3 2004/08/31 15:35:23 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,8 +35,8 @@ import com.syrus.AMFICOM.configuration.MonitoredElement;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2004/08/22 19:10:57 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.3 $, $Date: 2004/08/31 15:35:23 $
+ * @author $Author: bob $
  * @module mcm_v1
  */
 
@@ -53,7 +53,7 @@ public final class MCMConfigurationObjectLoader implements ConfigurationObjectLo
 		catch (ObjectNotFoundException onfe) {
 			Log.debugMessage("Characteristic type '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL07);
 			try {
-				characteristicType = new CharacteristicType(MeasurementControlModule.mServerRef.transmitCharacteristicType((Identifier_Transferable)id.getTransferable()));
+				characteristicType = CharacteristicType.getInstance(MeasurementControlModule.mServerRef.transmitCharacteristicType((Identifier_Transferable)id.getTransferable()));
 			}
 			catch (org.omg.CORBA.SystemException se) {
 				Log.errorException(se);
@@ -81,7 +81,7 @@ public final class MCMConfigurationObjectLoader implements ConfigurationObjectLo
 		catch (ObjectNotFoundException onfe) {
 			Log.debugMessage("Equipment type '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL07);
 			try {
-				equipmentType = new EquipmentType(MeasurementControlModule.mServerRef.transmitEquipmentType((Identifier_Transferable)id.getTransferable()));
+				equipmentType = EquipmentType.getInstance(MeasurementControlModule.mServerRef.transmitEquipmentType((Identifier_Transferable)id.getTransferable()));
 			}
 			catch (org.omg.CORBA.SystemException se) {
 				Log.errorException(se);
@@ -109,7 +109,7 @@ public final class MCMConfigurationObjectLoader implements ConfigurationObjectLo
 		catch (ObjectNotFoundException onfe) {
 			Log.debugMessage("Port type '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL07);
 			try {
-				portType = new PortType(MeasurementControlModule.mServerRef.transmitPortType((Identifier_Transferable)id.getTransferable()));
+				portType = PortType.getInstance(MeasurementControlModule.mServerRef.transmitPortType((Identifier_Transferable)id.getTransferable()));
 			}
 			catch (org.omg.CORBA.SystemException se) {
 				Log.errorException(se);
@@ -137,7 +137,7 @@ public final class MCMConfigurationObjectLoader implements ConfigurationObjectLo
 		catch (ObjectNotFoundException onfe) {
 			Log.debugMessage("Measurement port type '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL07);
 			try {
-				measurementPortType = new MeasurementPortType(MeasurementControlModule.mServerRef.transmitMeasurementPortType((Identifier_Transferable)id.getTransferable()));
+				measurementPortType = MeasurementPortType.getInstance(MeasurementControlModule.mServerRef.transmitMeasurementPortType((Identifier_Transferable)id.getTransferable()));
 			}
 			catch (org.omg.CORBA.SystemException se) {
 				Log.errorException(se);
@@ -165,7 +165,7 @@ public final class MCMConfigurationObjectLoader implements ConfigurationObjectLo
 		catch (ObjectNotFoundException onfe) {
 			Log.debugMessage("Characteristic '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL07);
 			try {
-				characteristic = new Characteristic(MeasurementControlModule.mServerRef.transmitCharacteristic((Identifier_Transferable)id.getTransferable()));
+				characteristic = Characteristic.getInstance(MeasurementControlModule.mServerRef.transmitCharacteristic((Identifier_Transferable)id.getTransferable()));
 			}
 			catch (org.omg.CORBA.SystemException se) {
 				Log.errorException(se);
@@ -197,7 +197,7 @@ public final class MCMConfigurationObjectLoader implements ConfigurationObjectLo
 		catch (ObjectNotFoundException onfe) {
 			Log.debugMessage("User '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL07);
 			try {
-				user = new User(MeasurementControlModule.mServerRef.transmitUser((Identifier_Transferable)id.getTransferable()));
+				user = User.getInstance(MeasurementControlModule.mServerRef.transmitUser((Identifier_Transferable)id.getTransferable()));
 			}
 			catch (org.omg.CORBA.SystemException se) {
 				Log.errorException(se);
@@ -225,7 +225,7 @@ public final class MCMConfigurationObjectLoader implements ConfigurationObjectLo
 		catch (ObjectNotFoundException onfe) {
 			Log.debugMessage("Domain '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL07);
 			try {
-				domain = new Domain(MeasurementControlModule.mServerRef.transmitDomain((Identifier_Transferable)id.getTransferable()));
+				domain = Domain.getInstance(MeasurementControlModule.mServerRef.transmitDomain((Identifier_Transferable)id.getTransferable()));
 			}
 			catch (org.omg.CORBA.SystemException se) {
 				Log.errorException(se);
@@ -253,7 +253,7 @@ public final class MCMConfigurationObjectLoader implements ConfigurationObjectLo
 		catch (ObjectNotFoundException onfe) {
 			Log.debugMessage("Server '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL07);
 			try {
-				server = new Server(MeasurementControlModule.mServerRef.transmitServer((Identifier_Transferable)id.getTransferable()));
+				server = Server.getInstance(MeasurementControlModule.mServerRef.transmitServer((Identifier_Transferable)id.getTransferable()));
 			}
 			catch (org.omg.CORBA.SystemException se) {
 				Log.errorException(se);
@@ -281,7 +281,7 @@ public final class MCMConfigurationObjectLoader implements ConfigurationObjectLo
 		catch (ObjectNotFoundException onfe) {
 			Log.debugMessage("MCM '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL07);
 			try {
-				mcm = new MCM(MeasurementControlModule.mServerRef.transmitMCM((Identifier_Transferable)id.getTransferable()));
+				mcm = MCM.getInstance(MeasurementControlModule.mServerRef.transmitMCM((Identifier_Transferable)id.getTransferable()));
 			}
 			catch (org.omg.CORBA.SystemException se) {
 				Log.errorException(se);
@@ -309,7 +309,7 @@ public final class MCMConfigurationObjectLoader implements ConfigurationObjectLo
 		catch (ObjectNotFoundException onfe) {
 			Log.debugMessage("Equipment '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL07);
 			try {
-				equipment = new Equipment(MeasurementControlModule.mServerRef.transmitEquipment((Identifier_Transferable)id.getTransferable()));
+				equipment = Equipment.getInstance(MeasurementControlModule.mServerRef.transmitEquipment((Identifier_Transferable)id.getTransferable()));
 			}
 			catch (org.omg.CORBA.SystemException se) {
 				Log.errorException(se);
@@ -337,7 +337,7 @@ public final class MCMConfigurationObjectLoader implements ConfigurationObjectLo
 		catch (ObjectNotFoundException onfe) {
 			Log.debugMessage("Port '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL07);
 			try {
-				port = new Port(MeasurementControlModule.mServerRef.transmitPort((Identifier_Transferable)id.getTransferable()));
+				port = Port.getInstance(MeasurementControlModule.mServerRef.transmitPort((Identifier_Transferable)id.getTransferable()));
 			}
 			catch (org.omg.CORBA.SystemException se) {
 				Log.errorException(se);
@@ -365,7 +365,7 @@ public final class MCMConfigurationObjectLoader implements ConfigurationObjectLo
 		catch (ObjectNotFoundException onfe) {
 			Log.debugMessage("Transmission path '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL07);
 			try {
-				transmissionPath = new TransmissionPath(MeasurementControlModule.mServerRef.transmitTransmissionPath((Identifier_Transferable)id.getTransferable()));
+				transmissionPath = TransmissionPath.getInstance(MeasurementControlModule.mServerRef.transmitTransmissionPath((Identifier_Transferable)id.getTransferable()));
 			}
 			catch (org.omg.CORBA.SystemException se) {
 				Log.errorException(se);
@@ -393,7 +393,7 @@ public final class MCMConfigurationObjectLoader implements ConfigurationObjectLo
 		catch (ObjectNotFoundException onfe) {
 			Log.debugMessage("KIS '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL07);
 			try {
-				kis = new KIS(MeasurementControlModule.mServerRef.transmitKIS((Identifier_Transferable)id.getTransferable()));
+				kis = KIS.getInstance(MeasurementControlModule.mServerRef.transmitKIS((Identifier_Transferable)id.getTransferable()));
 			}
 			catch (org.omg.CORBA.SystemException se) {
 				Log.errorException(se);
@@ -421,7 +421,7 @@ public final class MCMConfigurationObjectLoader implements ConfigurationObjectLo
 		catch (ObjectNotFoundException onfe) {
 			Log.debugMessage("Measurement port '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL07);
 			try {
-				measurementPort = new MeasurementPort(MeasurementControlModule.mServerRef.transmitMeasurementPort((Identifier_Transferable)id.getTransferable()));
+				measurementPort = MeasurementPort.getInstance(MeasurementControlModule.mServerRef.transmitMeasurementPort((Identifier_Transferable)id.getTransferable()));
 			}
 			catch (org.omg.CORBA.SystemException se) {
 				Log.errorException(se);
@@ -449,7 +449,7 @@ public final class MCMConfigurationObjectLoader implements ConfigurationObjectLo
 		catch (ObjectNotFoundException onfe) {
 			Log.debugMessage("Monitored element '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL07);
 			try {
-				monitoredElement = new MonitoredElement(MeasurementControlModule.mServerRef.transmitMonitoredElement((Identifier_Transferable)id.getTransferable()));
+				monitoredElement = MonitoredElement.getInstance(MeasurementControlModule.mServerRef.transmitMonitoredElement((Identifier_Transferable)id.getTransferable()));
 			}
 			catch (org.omg.CORBA.SystemException se) {
 				Log.errorException(se);

@@ -1,5 +1,5 @@
 /*
- * $Id: MServerImplementation.java,v 1.11 2004/08/30 14:41:50 bob Exp $
+ * $Id: MServerImplementation.java,v 1.12 2004/08/31 15:35:34 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -81,7 +81,7 @@ import com.syrus.AMFICOM.mserver.corba.MServerPOA;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2004/08/30 14:41:50 $
+ * @version $Revision: 1.12 $, $Date: 2004/08/31 15:35:34 $
  * @author $Author: bob $
  * @module mserver_v1
  */
@@ -145,7 +145,7 @@ public class MServerImplementation extends MServerPOA {
 			Result result;
 			for (int i = 0; i < resultsT.length; i++) {
 				try {
-					result = new Result(resultsT[i]);
+					result = Result.getInstance(resultsT[i]);
 				}
 				catch (CreateObjectException coe) {
 					Log.errorException(coe);

@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisEvaluationProcessor.java,v 1.11 2004/08/27 12:12:20 bob Exp $
+ * $Id: AnalysisEvaluationProcessor.java,v 1.12 2004/08/31 15:35:23 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,7 +32,7 @@ import com.syrus.AMFICOM.measurement.corba.Evaluation_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2004/08/27 12:12:20 $
+ * @version $Revision: 1.12 $, $Date: 2004/08/31 15:35:23 $
  * @author $Author: bob $
  * @module mcm_v1
  */
@@ -104,7 +104,7 @@ public abstract class AnalysisEvaluationProcessor {
 																		 analysisType,
 																		 monitoredElementId,
 															 criteriaSet);			
-			return new Analysis((Analysis_Transferable) analysis.getTransferable());
+			return Analysis.getInstance((Analysis_Transferable) analysis.getTransferable());
 		}
 		catch (CreateObjectException coe) {
 			throw new AnalysisException("Cannot create analysis", coe);
@@ -134,7 +134,7 @@ public abstract class AnalysisEvaluationProcessor {
 																			 evaluationType,
 																			 monitoredElementId,
 																			 thresholdSet);
-			return new Evaluation((Evaluation_Transferable)evaluation.getTransferable());
+			return Evaluation.getInstance((Evaluation_Transferable)evaluation.getTransferable());
 		}
 		catch (CreateObjectException coe) {
 			throw new EvaluationException("Cannot create evaluation", coe);

@@ -1,5 +1,5 @@
 /*
- * $Id: MServerMeasurementObjectLoader.java,v 1.1 2004/08/22 18:58:07 arseniy Exp $
+ * $Id: MServerMeasurementObjectLoader.java,v 1.2 2004/08/31 15:35:34 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,8 +33,8 @@ import com.syrus.AMFICOM.measurement.TemporalPattern;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2004/08/22 18:58:07 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.2 $, $Date: 2004/08/31 15:35:34 $
+ * @author $Author: bob $
  * @module mserver_v1
  */
 
@@ -83,7 +83,7 @@ public class MServerMeasurementObjectLoader implements MeasurementObjectLoader {
 			com.syrus.AMFICOM.mcm.corba.MCM mcmRef = (com.syrus.AMFICOM.mcm.corba.MCM)MeasurementServer.mcmRefs.get(mcmId);
 			if (mcmRef != null) {
 				try {
-					measurement = new Measurement(mcmRef.transmitMeasurement((Identifier_Transferable)id.getTransferable()));
+					measurement = Measurement.getInstance(mcmRef.transmitMeasurement((Identifier_Transferable)id.getTransferable()));
 				}
 				catch (org.omg.CORBA.SystemException se) {
 					Log.errorException(se);
@@ -118,7 +118,7 @@ public class MServerMeasurementObjectLoader implements MeasurementObjectLoader {
 			com.syrus.AMFICOM.mcm.corba.MCM mcmRef = (com.syrus.AMFICOM.mcm.corba.MCM)MeasurementServer.mcmRefs.get(mcmId);
 			if (mcmRef != null) {
 				try {
-					analysis = new Analysis(mcmRef.transmitAnalysis((Identifier_Transferable)id.getTransferable()));
+					analysis = Analysis.getInstance(mcmRef.transmitAnalysis((Identifier_Transferable)id.getTransferable()));
 				}
 				catch (org.omg.CORBA.SystemException se) {
 					Log.errorException(se);
@@ -153,7 +153,7 @@ public class MServerMeasurementObjectLoader implements MeasurementObjectLoader {
 			com.syrus.AMFICOM.mcm.corba.MCM mcmRef = (com.syrus.AMFICOM.mcm.corba.MCM)MeasurementServer.mcmRefs.get(mcmId);
 			if (mcmRef != null) {
 				try {
-					evaluation = new Evaluation(mcmRef.transmitEvaluation((Identifier_Transferable)id.getTransferable()));
+					evaluation = Evaluation.getInstance(mcmRef.transmitEvaluation((Identifier_Transferable)id.getTransferable()));
 				}
 				catch (org.omg.CORBA.SystemException se) {
 					Log.errorException(se);

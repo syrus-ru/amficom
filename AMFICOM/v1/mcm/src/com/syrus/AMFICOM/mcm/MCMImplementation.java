@@ -1,5 +1,5 @@
 /*
- * $Id: MCMImplementation.java,v 1.12 2004/08/30 14:41:15 bob Exp $
+ * $Id: MCMImplementation.java,v 1.13 2004/08/31 15:35:23 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,7 +30,7 @@ import com.syrus.AMFICOM.measurement.corba.Test_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2004/08/30 14:41:15 $
+ * @version $Revision: 1.13 $, $Date: 2004/08/31 15:35:23 $
  * @author $Author: bob $
  * @module mcm_v1
  */
@@ -45,7 +45,7 @@ public class MCMImplementation extends MCMPOA {
 		Test test;
 		for (int i = 0; i < testsT.length; i++) {
 			try {
-				test = new Test(testsT[i]);
+				test = Test.getInstance(testsT[i]);
 				MeasurementControlModule.addTest(test);
 			}
 			catch (CreateObjectException coe) {

@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementControlModule.java,v 1.28 2004/08/30 14:41:15 bob Exp $
+ * $Id: MeasurementControlModule.java,v 1.29 2004/08/31 15:35:23 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -42,7 +42,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.28 $, $Date: 2004/08/30 14:41:15 $
+ * @version $Revision: 1.29 $, $Date: 2004/08/31 15:35:23 $
  * @author $Author: bob $
  * @module mcm_v1
  */
@@ -537,7 +537,7 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 
 				Equipment_Transferable eqT = mServerRef.transmitEquipment(kisT.equipment_id);
 				try {
-					new Equipment(eqT);
+					Equipment.getInstance(eqT);
 				}
 				catch (CreateObjectException coe) {
 					Log.errorException(coe);
@@ -546,7 +546,7 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 				for (int j = 0; j < eqT.port_ids.length; j++) {
 					portT = mServerRef.transmitPort(eqT.port_ids[j]);
 					try {
-						new Port(portT);
+						Port.getInstance(portT);
 					}
 					catch (CreateObjectException coe) {
 						Log.errorException(coe);
@@ -557,7 +557,7 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 				 *  and subsequent information. Disregard now	*/
 
 				try {
-					new KIS(kisT);
+					KIS.getInstance(kisT);
 				}
 				catch (CreateObjectException coe) {
 					Log.errorException(coe);
@@ -567,7 +567,7 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 				for (int j = 0; j < kisT.measurement_port_ids.length; j++) {
 					mportT = mServerRef.transmitMeasurementPort(kisT.measurement_port_ids[j]);
 					try {
-						new MeasurementPort(mportT);
+						MeasurementPort.getInstance(mportT);
 					}
 					catch (CreateObjectException coe) {
 						Log.errorException(coe);
@@ -582,14 +582,14 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 					for (int k = 0; k < mesT[j].monitored_domain_member_ids.length; k++) {
 						tpT = mServerRef.transmitTransmissionPath(mesT[j].monitored_domain_member_ids[k]);
 						try {
-							new TransmissionPath(tpT);
+							TransmissionPath.getInstance(tpT);
 						}
 						catch (CreateObjectException coe) {
 							Log.errorException(coe);
 						}
 					}
 					try {
-						new MonitoredElement(mesT[j]);
+						MonitoredElement.getInstance(mesT[j]);
 					}
 					catch (CreateObjectException coe) {
 						Log.errorException(coe);
