@@ -8,5 +8,6 @@
 	<classpathentry kind="var" path="ORACLE_HOME/jdbc/lib/orai18n.jar"/>
 	<classpathentry kind="var" path="ORACLE_HOME/sqlj/lib/translator.jar"/>
 	<classpathentry kind="src" path="test"/>
+	<classpathentry kind="var" path="JUNIT_HOME/junit.jar"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>
