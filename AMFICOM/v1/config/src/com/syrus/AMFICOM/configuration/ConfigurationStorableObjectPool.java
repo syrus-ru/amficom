@@ -1,5 +1,5 @@
 /*
- * $Id: ConfigurationStorableObjectPool.java,v 1.16 2004/10/04 05:53:10 bob Exp $
+ * $Id: ConfigurationStorableObjectPool.java,v 1.17 2004/10/05 10:12:30 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,7 +32,7 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2004/10/04 05:53:10 $
+ * @version $Revision: 1.17 $, $Date: 2004/10/05 10:12:30 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -279,6 +279,53 @@ public class ConfigurationStorableObjectPool {
 				for (Iterator iter = list.iterator(); iter.hasNext();) {
 					StorableObject storableObject = (StorableObject) iter.next();
 					idsList.add(storableObject.getId());					
+				}
+				
+				loadedList = loadStorableObjectsButIds(condition, idsList);
+			}
+			
+			for (Iterator it = list.iterator(); it.hasNext();) {
+				StorableObject storableObject = (StorableObject) it.next();
+				objectPool.get(storableObject);				
+			}
+			
+			if (loadedList!=null){
+				for (Iterator it = loadedList.iterator(); it.hasNext();) {
+					StorableObject storableObject = (StorableObject) it.next();
+					objectPool.put(storableObject.getId(), storableObject);
+					list.add(storableObject);
+				}
+			}
+
+		}
+
+		return list;
+	}
+
+	public static List getStorableObjectsByConditionButIds(List ids, StorableObjectCondition condition, boolean useLoader) throws ApplicationException {
+		List list = null;
+		LRUMap objectPool = (LRUMap) objectPoolMap.get(condition.getEntityCode());
+		if (objectPool != null) {
+			list = new LinkedList();
+			for (Iterator it = objectPool.iterator(); it.hasNext();) {
+				StorableObject storableObject = (StorableObject) it.next();
+				if ((!ids.contains(storableObject.getId())) && (condition.isConditionTrue(storableObject)))
+					list.add(storableObject);
+			}			
+			
+			List loadedList = null;
+			
+			if (useLoader){								
+				List idsList = new ArrayList(list.size());
+				for (Iterator iter = list.iterator(); iter.hasNext();) {
+					StorableObject storableObject = (StorableObject) iter.next();
+					idsList.add(storableObject.getId());					
+				}
+				
+				for (Iterator iter = ids.iterator(); iter.hasNext();) {
+					Identifier id = (Identifier) iter.next();
+					if (!idsList.contains(id))
+						idsList.add(ids);					
 				}
 				
 				loadedList = loadStorableObjectsButIds(condition, idsList);
