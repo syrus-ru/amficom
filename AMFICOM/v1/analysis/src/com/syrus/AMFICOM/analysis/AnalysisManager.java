@@ -28,7 +28,9 @@ public class AnalysisManager
 		double min_level_to_find_end,// 4. мин. уровень конца
 		double min_weld,             // 5. минимальная сварка
 		double min_connector,        // 6. минимальный коннектор
-		int key);                    // 7. стратегия
+		int key,                    // 7. стратегия
+		int reflectiveSize,
+		int nonReflectiveSize);
 
 	private static native double[] fit(
 			double []y,                //the refl. itself
@@ -96,10 +98,26 @@ public class AnalysisManager
 		return threshold;
 	}
 
-	public static ReflectogramEvent[] analyseTrace(double[] y, double delta_x, double[] pars)
+	public static ReflectogramEvent[] analyseTrace(
+			double[] y,
+			double delta_x,
+			double[] pars,
+			int reflectiveSize,
+			int nonReflectiveSize)
 	{
 		double[] tmp = analyse(
-				(int)pars[7], y, delta_x, pars[5], pars[0], pars[4], pars[3], pars[1], pars[2], (int)pars[6]);
+				(int)pars[7],
+				y,
+				delta_x,
+				pars[5],
+				pars[0],
+				pars[4],
+				pars[3],
+				pars[1],
+				pars[2],
+				(int)pars[6],
+				reflectiveSize,
+				nonReflectiveSize);
 
 		int n_events = tmp.length / ReflectogramEvent.NUMBER_OF_PARAMETERS;
 		ReflectogramEvent[] ep = new ReflectogramEvent[n_events];
@@ -115,7 +133,7 @@ public class AnalysisManager
 	public static ReflectogramEvent[] fitTrace(double[] y, double delta_x, ReflectogramEvent[] events, int strategy, double meanAttenuation)
 	{
 		double[] revents = new double[events.length * ReflectogramEvent.NUMBER_OF_PARAMETERS];
-		for (int i = 0; i < revents.length; i++)
+		for (int i = 0; i < events.length; i++)
 			events[i].toDoubleArray(revents, ReflectogramEvent.NUMBER_OF_PARAMETERS * i);
 
 		double[] tmp = fit(y, delta_x, revents, strategy, meanAttenuation);

@@ -61,7 +61,7 @@ public class HistogrammPanel extends ScaledGraphPanel
 
 	public void init()
 	{
-		int event_size = ReflectogramMath.getEventSize(y, 0.1);
+		int event_size = ReflectogramMath.getReflectiveEventSize(y, 0.1);
 		derivative = ReflectogramMath.getDerivative(y, event_size, wLetTyp);
 
 		for (int i = 0; i < derivative.length; i++)

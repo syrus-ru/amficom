@@ -23,7 +23,6 @@ public class MinuitAnalyseCommand extends VoidCommand
 	private BellcoreStructure bs;
 	private String id;
 	private ApplicationContext aContext;
-	private Checker checker;
 
 
 	public MinuitAnalyseCommand(Dispatcher dispatcher, String id,
@@ -54,20 +53,6 @@ public class MinuitAnalyseCommand extends VoidCommand
 
 	public void execute()
 	{
-		try
-		{
-			this.checker = new Checker(this.aContext.getSessionInterface());
-			if(!checker.checkCommand(checker.performMINUITanalysis))
-			{
-				return;
-			}
-		}
-		catch (NullPointerException ex)
-		{
-			System.out.println("Application context and/or user are not defined");
-			return;
-		}
-
 		bs = (BellcoreStructure)Pool.get("bellcorestructure", id);
 		if (bs != null)
 		{
@@ -83,12 +68,20 @@ public class MinuitAnalyseCommand extends VoidCommand
 				params = (double[])Pool.get("analysisparameters", "minuitanalysis");
 			}
 
-		//AnalysResult anaresult = new AnalysResult(y, delta_x);
+			//AnalysResult anaresult = new AnalysResult(y, delta_x);
 
 //			InitialAnalysis ia = new InitialAnalysis(y, delta_x, params[0], params[1], params[2], params[3], params[4], (int)params[7], params[5]);
 //			ReflectogramEvent[] ep = ia.performAnalysis();
 
-			ReflectogramEvent[] ep = AnalysisManager.analyseTrace(y, delta_x, params);
+			int reflSize = ReflectogramMath.getReflectiveEventSize(y, 0.5);
+			int nReflSize = ReflectogramMath.getNonReflectiveEventSize(
+					y,
+					1000,
+					((double)bs.fxdParams.GI) / 100000d,
+					delta_x);
+			if (nReflSize > 3 * reflSize / 5)
+				nReflSize = 3 * reflSize / 5;
+			ReflectogramEvent[] ep = AnalysisManager.analyseTrace(y, delta_x, params, reflSize, nReflSize);
 
 			RefAnalysis a = new RefAnalysis();
 			a.decode(y, ep);

@@ -336,7 +336,7 @@ public class ReflectogramComparer
 		}
 		else
 		{
-			minimalEventSize = ReflectogramMath.getEventSize(data, 0.5)/2;
+			minimalEventSize = ReflectogramMath.getReflectiveEventSize(data, 0.5)/2;
 		}
 
 		if(minimalEventSize<3)

@@ -1,5 +1,7 @@
 package com.syrus.AMFICOM.analysis.dadara;
 
+import com.syrus.AMFICOM.Client.Analysis.MathRef;
+
 public class ReflectogramMath
 {
 	public static double[] getReflectogrammFromEvents(ReflectogramEvent[] re, int arrayLength)
@@ -164,8 +166,7 @@ public class ReflectogramMath
 		return 0;
 	}
 
-
-	public static int getEventSize(double[] data, double level)
+	public static int getReflectiveEventSize(double[] data, double level)
 	{
 		int eventSize = 0;
 		int maxIndex = 4;
@@ -189,6 +190,38 @@ public class ReflectogramMath
 		return eventSize;
 	}
 
+	public static int getNonReflectiveEventSize(double[] data, int pulsewidth, double refraction, double resolution)
+	{
+		double first_level = 0.25;
+		double second_level = 1.75;
+		int first_point = 0;
+		int second_point = 1;
+		int maxIndex = 4;
+
+		for (int i = 0; i < Math.min(300, data.length); i++)
+			if(data[i] > data[maxIndex])
+				maxIndex = i;
+
+		for(int i = maxIndex; i < data.length; i++)
+			if(data[i] < data[maxIndex] - first_level)
+			{
+				first_point = i;
+				break;
+			}
+
+		for(int i = first_point + 1; i < data.length; i++)
+			if(data[i] < data[maxIndex] - second_level)
+			{
+				second_point = i;
+				break;
+			}
+		double[] d = MathRef.linearize2point(data, first_point, second_point);
+		double eventSize = - 3d / d[0] + 150d / refraction * (double)pulsewidth / 1000d / resolution;
+		if(eventSize < 2)
+			eventSize = 2;
+		return (int)eventSize;
+	}
+
 	public static double[] waveletTransform(double[] y, int freq, double[] norma, int wLet)
 	{
 		double[] trans = new double[y.length];
@@ -206,11 +239,11 @@ public class ReflectogramMath
 
 	public static double[] waveletTransform(double[] y, int freq, double norma, int wLet, int start, int end)
 	{
-		double[] trans = new double[y.length];
+		double[] trans = new double[end - start];
 		for(int i = start; i < end; i++)
 		{
 			double tmp = 0.;
-			for(int j = i - freq; j < Math.min(i + freq + 1, y.length); j++)
+			for(int j = i - freq; j < Math.min(i + freq + 1, end); j++)
 				if(j >= 0)
 					tmp = tmp + y[j] * wLet(j - i, freq, norma, wLet);
 			trans[i] = tmp;

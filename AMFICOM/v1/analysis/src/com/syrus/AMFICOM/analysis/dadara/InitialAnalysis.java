@@ -26,17 +26,20 @@ public class InitialAnalysis
 	double[] transC;
 	double[] transW;
 	double[] noise;
+	double meanAttenuation = 0;
 
 	public InitialAnalysis(
-		double[] data,					   //точки рефлектограммы
-		double delta_x,				     //расстояние между точками (м)
-		double minimalThreshold,	 //минимальный уровень события
-		double minimalWeld,			   //минимальный уровень неотражательного события
-		double minimalConnector,	 //минимальный уровень отражательного события
-		double minimalEndingSplash,//минимальный уровень последнего отражения
-		double maximalNoise,			 //максимальный уровень шума
-		int waveletType,				   //номер используемого вейвлета
-		double formFactor)			   //формфактор отражательного события
+		double[] data,					  	//точки рефлектограммы
+		double delta_x,				    	//расстояние между точками (м)
+		double minimalThreshold,		//минимальный уровень события
+		double minimalWeld,			  	//минимальный уровень неотражательного события
+		double minimalConnector,		//минимальный уровень отражательного события
+		double minimalEndingSplash,	//минимальный уровень последнего отражения
+		double maximalNoise,				//максимальный уровень шума
+		int waveletType,				  	//номер используемого вейвлета
+		double formFactor,			  	//формфактор отражательного события
+		int reflectiveSize,					//характерный размер отражательного события
+		int nonReflectiveSize)			//характерный размер неотражательного события
 	{
 		this.data					       = data;
 		this.delta_x				     = delta_x;
@@ -47,6 +50,8 @@ public class InitialAnalysis
 		this.maximalNoise			   = maximalNoise;
 		this.waveletType			   = waveletType;
 		this.formFactor			     = formFactor;
+		this.evSizeC 						 = reflectiveSize;
+		this.evSizeW 						 = nonReflectiveSize;
 	}
 
 	public ReflectogramEvent[] performAnalysis()
@@ -54,9 +59,10 @@ public class InitialAnalysis
 		lastNonZeroPoint = getLastPoint();
 
 		// характерный размер отражательного события (ширина вейвлета)
-		evSizeC = ReflectogramMath.getEventSize(data, 0.5);
+		//evSizeC = ReflectogramMath.getReflectiveEventSize(data, 0.5);
 		// характерный размер неотражательного события
-		evSizeW = 3 * evSizeC / 5;
+		//evSizeW = ReflectogramMath.getNonReflectiveEventSize(data, 1000, 1.467, 8);
+		//evSizeW = 3 * evSizeC / 5;
 		// ширина вспомогательного вейвлета для лучшей локализации отражательных событий
 
 		wn_c = ReflectogramMath.getWLetNorma(evSizeC, waveletType);
@@ -72,17 +78,14 @@ public class InitialAnalysis
 		// выполняем вейвлет-преобразование
 		transC = ReflectogramMath.waveletTransform(data, evSizeC, wn_c, waveletType, 0, lastNonZeroPoint);
 		transW = ReflectogramMath.waveletTransform(data, evSizeW, wn_w, waveletType, 0, lastNonZeroPoint);
-		Pool.put("wavelet", "primarytrace", transC);
 
 		// вычитаем из коэффициентов преобразования(КП) постоянную составляющую (среднее затухание)
-		double meanAttenuation = shiftToZeroAttenuation(transC);
+		meanAttenuation = shiftToZeroAttenuation(transC);
 		shiftToZeroAttenuation(transW);
 
 		// устанавливаем в 0 КП, которые меньше уровня шума или минимального уровня события
 		setNonZeroTransformation(transC, minimalThreshold, 0, transC.length);
 		setNonZeroTransformation(transW, minimalThreshold, 0, transW.length);
-
-		//excludeMinimums(transC, 0, lastNonZeroPoint);
 
 		LinkedList events = new LinkedList();
 		// определяем координаты и типы событий по КП
@@ -91,10 +94,7 @@ public class InitialAnalysis
 				transC,
 				transW,
 				0,
-				Math.min(lastNonZeroPoint + evSizeC, data.length - 10));
-	//correctConnectorsCoords(events);
-
-		Pool.put("wavelet", "primarytracenarrow", transW);
+				lastNonZeroPoint - 1);//Math.min(lastNonZeroPoint + evSizeC, data.length - 10));
 
 		// корректируем координаты отражательных событий
 		//correctConnectorsCoords(events);
@@ -107,9 +107,10 @@ public class InitialAnalysis
 //										((ReflectogramEvent)events.get(0)).end,//7542,//
 //										((ReflectogramEvent)events.get(events.size() - 1)).begin);//7550);//
 
-		//noise = MathRef.getDerivative(data_woc);//getNoise(data_woc, evSizeW);
+		Pool.put("wavelet", "primarytrace", transC);
 		Pool.put("doublearray", "noise", noise);
 		Pool.put("wavelet", "deconnector", data_woc);
+		Pool.put("wavelet", "primarytracenarrow", noise);
 
 		findWelds(events, transW);
 		siewLinearParts(events);
@@ -120,7 +121,6 @@ public class InitialAnalysis
 
 		// исключаем события с длиной, меньшей половины характерного размера
 		excludeShortEvents(events, Math.max(evSizeW/2, 10), Math.max(evSizeW/2, 3), Math.max(evSizeC/2, 4));
-		//excludeShortEvents(events, evSizeW/2, evSizeW/2, evSizeC/2);
 		siewLinearParts(events);
 
 		setEventParams(events, evSizeC);
@@ -128,6 +128,11 @@ public class InitialAnalysis
 		// корректируем конец волокна согласно минимального отражения
 		correctEnd(events, evSizeC);
 		return (ReflectogramEvent[])events.toArray(new ReflectogramEvent[events.size()]);
+	}
+
+	public double getMeanAttenuation()
+	{
+		return meanAttenuation;
 	}
 
 	int getLastPoint()
@@ -146,30 +151,16 @@ public class InitialAnalysis
 
 	double[] getNoise(double[] data, int freq)
 	{
-		/*// First, we set that noise is euqal to the first derivative.
-		noise = ReflectogramMath.getDerivative(data, freq, waveletType);
-		double EXP;
-		double exp_1 = Math.exp(1.) - 1.;
-		// Cut of the prompt-peaks with exponent.
-		for(int i = 0; i < lastNonZeroPoint; i++)
-		{
-			EXP = (Math.exp((double)i / (double)lastNonZeroPoint) - 1.) * maximalNoise / exp_1;
-			if (noise[i] > EXP)
-				noise[i] = EXP;
-		}
-		convolutionOfNoise(noise, freq);
-		return noise;*/
-
 		// First, we set that noise is euqal to the first derivative.
-		double[] noise = new double[data.length];
+		double[] noise = new double[lastNonZeroPoint];
 
-		for(int i = 0; i < data.length - 1; i++)
+		for(int i = 0; i < lastNonZeroPoint - 1; i++)
 		{
 			noise[i] = Math.abs(data[i] - data[i+1]);
 				if (noise[i] > maximalNoise)
 					noise[i] = maximalNoise;
 		}
-		noise[data.length - 1] = 0.;
+		//noise[data.length - 1] = 0.;
 
 		double EXP;
 		// Cut of the prompt-peaks with exponent.
@@ -186,11 +177,11 @@ public class InitialAnalysis
 
 	void convolutionOfNoise(double[] noise, int n_points)
 	{
-		for(int i = 0; i < data.length; i++)
+		for(int i = 0; i < lastNonZeroPoint; i++)
 		{
 			int n = 0;
 			double meanValue = 0.;
-			for (int j = i; j < Math.min(i + n_points, data.length); j++)
+			for (int j = i; j < Math.min(i + n_points, lastNonZeroPoint); j++)
 			{
 				meanValue += noise[j];
 				n++;
@@ -267,7 +258,7 @@ public class InitialAnalysis
 		{
 			j = i + 1;
 			c1 = j;
-			while((MathRef.sign(trans[i]) == MathRef.sign(trans[j])) && j < end)
+			while(j < end && (MathRef.sign(trans[i]) == MathRef.sign(trans[j])))
 			{
 				if(Math.abs(trans[c1]) < Math.abs(trans[j]))
 					c1 = j;
@@ -275,7 +266,7 @@ public class InitialAnalysis
 			}
 			k = j + 1;
 			c2 = k;
-			while((MathRef.sign(trans[j]) == MathRef.sign(trans[k])) && k < end)
+			while(k < end && (MathRef.sign(trans[j]) == MathRef.sign(trans[k])))
 			{
 				if(Math.abs(trans[c2]) < Math.abs(trans[k]))
 					c2 = k;
@@ -283,7 +274,7 @@ public class InitialAnalysis
 			}
 			s = k + 1;
 			c3 = s;
-			while((MathRef.sign(trans[k]) == MathRef.sign(trans[s])) && s < end)
+			while(s < end && (MathRef.sign(trans[k]) == MathRef.sign(trans[s])))
 			{
 				if(Math.abs(trans[c3]) < Math.abs(trans[s]))
 					c3 = s;
@@ -310,7 +301,6 @@ public class InitialAnalysis
 						x2 = ii;
 						break;
 					}
-				//int infl = MathRef.findInflectionPoint(correct, c2, s);
 				int infl = MathRef.findFirstAbsMinimumPoint(correct, c2, s);
 				int constant = MathRef.findConstantPoint(correct, c2, s);
 				x2 = Math.min(constant, Math.min(infl, x2));
@@ -328,7 +318,6 @@ public class InitialAnalysis
 						x2 = ii;
 						break;
 					}
-					//	int infl = MathRef.findInflectionPoint(correct, c3, s);
 				int infl = MathRef.findFirstAbsMinimumPoint(correct, c3, s);
 				int constant = MathRef.findConstantPoint(correct, c3, s);
 				x2 = Math.min(constant, Math.min(infl, x2));
@@ -352,7 +341,7 @@ public class InitialAnalysis
 				ep.begin = x1;
 				if (i != 0)
 				{
-					ep.begin = c1 + evSizeW / 2;
+					ep.begin = c1 + (int)(0.6 * evSizeW);
 					for (int ii = x1; ii < c1; ii++)
 						if (correct != null && Math.abs(correct[ii]) > minimalConnector)
 						{
@@ -446,9 +435,9 @@ public class InitialAnalysis
 					type = ReflectogramEvent.LINEAR;
 					x2 = j;
 				}
-				else if((trans[c1] > minimalWeld * .8 ||
-								 trans[c1] < -minimalWeld * .8) &&
-								 (j - i) < 2 * evSizeC)//weld
+				else if(trans[c1] > minimalWeld * .8 ||
+								 trans[c1] < -minimalWeld * .8)
+				 //&&	 j - i < 3 * evSizeC)//weld
 				{
 					type = ReflectogramEvent.WELD;
 					x2 = j;
@@ -563,7 +552,8 @@ public class InitialAnalysis
 						double[] d = MathRef.linearize2point(data, ep_last.begin, ep_last.end);
 						for(int j = ep.begin; j < (ep.begin + ep.end) / 2; j++)
 						{
-							if(Math.abs(data[j] - (d[1] + d[0] * j)) > Math.max(minimalWeld, Math.abs(3 * noise[j])))
+							if(Math.abs(data[j] - (d[1] + d[0] * j)) > //Math.max(minimalWeld, Math.abs(3 * noise[j])))
+								 Math.abs(2 * noise[j]))
 							{
 								ep.begin = j;
 								if (ep.end - ep.begin < evSizeW)
@@ -585,7 +575,8 @@ public class InitialAnalysis
 						double[] d = MathRef.linearize2point(data, ep_next.begin, ep_next.end);
 						for(int j = ep.end; j > ep.begin; j--)
 						{
-							if (Math.abs(data[j] - (d[1] + d[0] * j)) > Math.max(minimalWeld, Math.abs(3 * noise[j])))
+							if (Math.abs(data[j] - (d[1] + d[0] * j)) > //Math.max(minimalWeld, Math.abs(3 * noise[j])))
+									Math.abs(2 * noise[j]))
 							{
 								ep.end = j;
 								if (ep.end - ep.begin < evSizeW)
