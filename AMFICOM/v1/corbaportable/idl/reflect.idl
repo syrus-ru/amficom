@@ -1,5 +1,5 @@
 /*
- * $Id: reflect.idl,v 1.1 2004/06/22 12:27:24 bass Exp $
+ * $Id: reflect.idl,v 1.2 2004/09/28 11:05:07 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,16 +9,13 @@
 #ifndef REFLECT_IDL
 #define REFLECT_IDL
 
+#include <streams.idl>
 #include <common.idl>
 
 /**
- * @version $Revision: 1.1 $, $Date: 2004/06/22 12:27:24 $
+ * @version $Revision: 1.2 $, $Date: 2004/09/28 11:05:07 $
  * @author $Author: bass $
  */
-module CORBA {
-	typedef sequence<string> StringSeq;
-};
-
 module com {
 	module syrus {
 		module AMFICOM {
