@@ -1,5 +1,5 @@
 /*
- * $Id: MServerImplementation.java,v 1.20 2004/10/25 10:04:25 bob Exp $
+ * $Id: MServerImplementation.java,v 1.21 2004/11/24 08:59:45 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,91 +9,87 @@
 package com.syrus.AMFICOM.mserver;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Iterator;
+import java.util.List;
 
-import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.IdentifierGenerator;
+import com.syrus.AMFICOM.configuration.Characteristic;
+import com.syrus.AMFICOM.configuration.CharacteristicType;
+import com.syrus.AMFICOM.configuration.Domain;
+import com.syrus.AMFICOM.configuration.Equipment;
+import com.syrus.AMFICOM.configuration.EquipmentType;
+import com.syrus.AMFICOM.configuration.KIS;
+import com.syrus.AMFICOM.configuration.LinkedIdsCondition;
+import com.syrus.AMFICOM.configuration.MCM;
+import com.syrus.AMFICOM.configuration.MeasurementPort;
+import com.syrus.AMFICOM.configuration.MeasurementPortType;
+import com.syrus.AMFICOM.configuration.MonitoredElement;
+import com.syrus.AMFICOM.configuration.Port;
+import com.syrus.AMFICOM.configuration.PortType;
+import com.syrus.AMFICOM.configuration.Server;
+import com.syrus.AMFICOM.configuration.TransmissionPath;
+import com.syrus.AMFICOM.configuration.User;
+import com.syrus.AMFICOM.configuration.corba.CharacteristicType_Transferable;
+import com.syrus.AMFICOM.configuration.corba.Characteristic_Transferable;
+import com.syrus.AMFICOM.configuration.corba.Domain_Transferable;
+import com.syrus.AMFICOM.configuration.corba.EquipmentType_Transferable;
+import com.syrus.AMFICOM.configuration.corba.Equipment_Transferable;
+import com.syrus.AMFICOM.configuration.corba.KIS_Transferable;
+import com.syrus.AMFICOM.configuration.corba.LinkedIdsCondition_Transferable;
+import com.syrus.AMFICOM.configuration.corba.MCM_Transferable;
+import com.syrus.AMFICOM.configuration.corba.MeasurementPortType_Transferable;
+import com.syrus.AMFICOM.configuration.corba.MeasurementPort_Transferable;
+import com.syrus.AMFICOM.configuration.corba.MonitoredElement_Transferable;
+import com.syrus.AMFICOM.configuration.corba.PortType_Transferable;
+import com.syrus.AMFICOM.configuration.corba.Port_Transferable;
+import com.syrus.AMFICOM.configuration.corba.Server_Transferable;
+import com.syrus.AMFICOM.configuration.corba.TransmissionPath_Transferable;
+import com.syrus.AMFICOM.configuration.corba.User_Transferable;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.RetrieveObjectException;
-import com.syrus.AMFICOM.general.ObjectNotFoundException;
-import com.syrus.AMFICOM.general.IllegalObjectEntityException;
+import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
-import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
+import com.syrus.AMFICOM.general.IdentifierGenerator;
+import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.IllegalObjectEntityException;
+import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.ObjectNotFoundException;
+import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.general.corba.CompletionStatus;
 import com.syrus.AMFICOM.general.corba.ErrorCode;
-
-import com.syrus.AMFICOM.configuration.CharacteristicType;
-import com.syrus.AMFICOM.configuration.EquipmentType;
-import com.syrus.AMFICOM.configuration.KISType;
-import com.syrus.AMFICOM.configuration.LinkedIdsCondition;
-import com.syrus.AMFICOM.configuration.PortType;
-import com.syrus.AMFICOM.configuration.MeasurementPortType;
-import com.syrus.AMFICOM.configuration.Characteristic;
-import com.syrus.AMFICOM.configuration.User;
-import com.syrus.AMFICOM.configuration.Domain;
-import com.syrus.AMFICOM.configuration.Server;
-import com.syrus.AMFICOM.configuration.MCM;
-import com.syrus.AMFICOM.configuration.Equipment;
-import com.syrus.AMFICOM.configuration.Port;
-import com.syrus.AMFICOM.configuration.TransmissionPath;
-import com.syrus.AMFICOM.configuration.KIS;
-import com.syrus.AMFICOM.configuration.MeasurementPort;
-import com.syrus.AMFICOM.configuration.MonitoredElement;
-import com.syrus.AMFICOM.configuration.corba.CharacteristicType_Transferable;
-import com.syrus.AMFICOM.configuration.corba.EquipmentType_Transferable;
-import com.syrus.AMFICOM.configuration.corba.KISType_Transferable;
-import com.syrus.AMFICOM.configuration.corba.LinkedIdsCondition_Transferable;
-import com.syrus.AMFICOM.configuration.corba.PortType_Transferable;
-import com.syrus.AMFICOM.configuration.corba.MeasurementPortType_Transferable;
-import com.syrus.AMFICOM.configuration.corba.Characteristic_Transferable;
-import com.syrus.AMFICOM.configuration.corba.User_Transferable;
-import com.syrus.AMFICOM.configuration.corba.Domain_Transferable;
-import com.syrus.AMFICOM.configuration.corba.Server_Transferable;
-import com.syrus.AMFICOM.configuration.corba.MCM_Transferable;
-import com.syrus.AMFICOM.configuration.corba.Equipment_Transferable;
-import com.syrus.AMFICOM.configuration.corba.Port_Transferable;
-import com.syrus.AMFICOM.configuration.corba.TransmissionPath_Transferable;
-import com.syrus.AMFICOM.configuration.corba.KIS_Transferable;
-import com.syrus.AMFICOM.configuration.corba.MeasurementPort_Transferable;
-import com.syrus.AMFICOM.configuration.corba.MonitoredElement_Transferable;
-
+import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.Analysis;
-import com.syrus.AMFICOM.measurement.Evaluation;
-import com.syrus.AMFICOM.measurement.Measurement;
-import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
-import com.syrus.AMFICOM.measurement.ParameterType;
-import com.syrus.AMFICOM.measurement.MeasurementType;
 import com.syrus.AMFICOM.measurement.AnalysisType;
+import com.syrus.AMFICOM.measurement.Evaluation;
 import com.syrus.AMFICOM.measurement.EvaluationType;
-import com.syrus.AMFICOM.measurement.Set;
+import com.syrus.AMFICOM.measurement.Measurement;
 import com.syrus.AMFICOM.measurement.MeasurementSetup;
-import com.syrus.AMFICOM.measurement.Test;
+import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
+import com.syrus.AMFICOM.measurement.MeasurementType;
+import com.syrus.AMFICOM.measurement.ParameterType;
 import com.syrus.AMFICOM.measurement.Result;
+import com.syrus.AMFICOM.measurement.Set;
 import com.syrus.AMFICOM.measurement.TemporalPattern;
+import com.syrus.AMFICOM.measurement.Test;
+import com.syrus.AMFICOM.measurement.corba.AnalysisType_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Analysis_Transferable;
+import com.syrus.AMFICOM.measurement.corba.EvaluationType_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Evaluation_Transferable;
+import com.syrus.AMFICOM.measurement.corba.MeasurementSetup_Transferable;
+import com.syrus.AMFICOM.measurement.corba.MeasurementType_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Measurement_Transferable;
 import com.syrus.AMFICOM.measurement.corba.ParameterType_Transferable;
-import com.syrus.AMFICOM.measurement.corba.MeasurementType_Transferable;
-import com.syrus.AMFICOM.measurement.corba.AnalysisType_Transferable;
-import com.syrus.AMFICOM.measurement.corba.EvaluationType_Transferable;
-import com.syrus.AMFICOM.measurement.corba.Set_Transferable;
-import com.syrus.AMFICOM.measurement.corba.MeasurementSetup_Transferable;
-import com.syrus.AMFICOM.measurement.corba.Test_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Result_Transferable;
+import com.syrus.AMFICOM.measurement.corba.Set_Transferable;
 import com.syrus.AMFICOM.measurement.corba.TemporalPattern_Transferable;
 import com.syrus.AMFICOM.measurement.corba.TestStatus;
+import com.syrus.AMFICOM.measurement.corba.Test_Transferable;
 import com.syrus.AMFICOM.mserver.corba.MServerPOA;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.20 $, $Date: 2004/10/25 10:04:25 $
- * @author $Author: bob $
+ * @version $Revision: 1.21 $, $Date: 2004/11/24 08:59:45 $
+ * @author $Author: max $
  * @module mserver_v1
  */
 
@@ -208,25 +204,6 @@ public class MServerImplementation extends MServerPOA {
         }
 	}
 	
-	public KISType_Transferable transmitKISType(Identifier_Transferable idT) throws AMFICOMRemoteException {
-		Identifier id = new Identifier(idT);
-		try {
-			KISType kisType = new KISType(id);
-			return (KISType_Transferable)kisType.getTransferable();
-		}
-		catch (ObjectNotFoundException onfe) {
-			Log.errorException(onfe);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_NOT_FOUND, CompletionStatus.COMPLETED_YES, onfe.getMessage());
-		}
-		catch (RetrieveObjectException roe) {
-			Log.errorException(roe);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, roe.getMessage());
-		} catch (Throwable t) {
-            Log.errorException(t);
-            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
-        }
-	}
-
 	public PortType_Transferable transmitPortType(Identifier_Transferable idT) throws AMFICOMRemoteException {
 		Identifier id = new Identifier(idT);
 		try {
