@@ -1,5 +1,5 @@
 /*
- * $Id: LinkedIdsCondition.java,v 1.4 2004/10/20 13:09:38 bob Exp $
+ * $Id: LinkedIdsCondition.java,v 1.5 2004/10/20 14:54:07 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -24,7 +24,7 @@ import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2004/10/20 13:09:38 $
+ * @version $Revision: 1.5 $, $Date: 2004/10/20 14:54:07 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -177,6 +177,10 @@ public class LinkedIdsCondition implements StorableObjectCondition {
 		return transferable;
 	}
 
+	public List getLinkedIds() {
+		return this.linkedIds;
+	}
+	
 	public Identifier getIdentifier() {
 		return this.identifier;
 	}

@@ -1,5 +1,5 @@
 /*
- * $Id: CMServerImpl.java,v 1.58 2004/10/20 14:29:30 max Exp $
+ * $Id: CMServerImpl.java,v 1.59 2004/10/20 14:54:25 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,8 +12,6 @@ package com.syrus.AMFICOM.cmserver;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
-import org.apache.xalan.transformer.ResultTreeHandler;
 
 import com.syrus.AMFICOM.configuration.corba.LinkedIdsCondition_Transferable;
 import com.syrus.AMFICOM.cmserver.corba.CMServerOperations;
@@ -145,8 +143,8 @@ import com.syrus.AMFICOM.mserver.corba.MServer;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.58 $, $Date: 2004/10/20 14:29:30 $
- * @author $Author: max $
+ * @version $Revision: 1.59 $, $Date: 2004/10/20 14:54:25 $
+ * @author $Author: bob $
  * @module cmserver_v1
  */
 

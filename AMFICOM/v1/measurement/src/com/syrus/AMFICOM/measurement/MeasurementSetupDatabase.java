@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementSetupDatabase.java,v 1.31 2004/10/20 14:54:10 bob Exp $
+ * $Id: MeasurementSetupDatabase.java,v 1.32 2004/10/20 14:56:27 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -36,7 +36,7 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 
 /**
- * @version $Revision: 1.31 $, $Date: 2004/10/20 14:54:10 $
+ * @version $Revision: 1.32 $, $Date: 2004/10/20 14:56:27 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -634,7 +634,12 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 				list = this.retrieveButIdsByMonitoredElement(ids, monitoredElement);			
         } else if ( condition instanceof LinkedIdsCondition ) {
             LinkedIdsCondition linkedIdsCondition = (LinkedIdsCondition)condition;
-            list = this.retrieveButIdMeasurementIds(ids, linkedIdsCondition.getLinkedIds());
+            List linkedIds = linkedIdsCondition.getLinkedIds();
+            if (linkedIds == null){
+            	linkedIds = new ArrayList(1);
+            	linkedIds.add(linkedIdsCondition.getIdentifier());
+            }
+            list = this.retrieveButIdMeasurementIds(ids, linkedIds);
         } else {
 			Log.errorMessage("MeasurementSetupDatabase.retrieveByCondition | Unknown condition class: " + condition);
 			list = this.retrieveButIds(ids);
