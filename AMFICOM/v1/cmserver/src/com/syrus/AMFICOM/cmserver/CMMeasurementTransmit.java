@@ -1,5 +1,5 @@
 /*
- * $Id: CMMeasurementTransmit.java,v 1.1 2005/01/26 15:43:17 arseniy Exp $
+ * $Id: CMMeasurementTransmit.java,v 1.2 2005/01/28 12:16:25 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -36,6 +36,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.general.corba.LinkedIdsCondition_Transferable;
 import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 import com.syrus.AMFICOM.general.corba.StringFieldCondition_Transferable;
+import com.syrus.AMFICOM.measurement.ActionCondition;
 import com.syrus.AMFICOM.measurement.Analysis;
 import com.syrus.AMFICOM.measurement.AnalysisType;
 import com.syrus.AMFICOM.measurement.DomainCondition;
@@ -47,12 +48,11 @@ import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
 import com.syrus.AMFICOM.measurement.MeasurementType;
 import com.syrus.AMFICOM.measurement.Modeling;
 import com.syrus.AMFICOM.measurement.Result;
-import com.syrus.AMFICOM.measurement.ResultCondition;
-import com.syrus.AMFICOM.measurement.ResultSortCondition;
 import com.syrus.AMFICOM.measurement.Set;
 import com.syrus.AMFICOM.measurement.TemporalCondition;
 import com.syrus.AMFICOM.measurement.TemporalPattern;
 import com.syrus.AMFICOM.measurement.Test;
+import com.syrus.AMFICOM.measurement.corba.ActionCondition_Transferable;
 import com.syrus.AMFICOM.measurement.corba.AnalysisType_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Analysis_Transferable;
 import com.syrus.AMFICOM.measurement.corba.EvaluationType_Transferable;
@@ -61,8 +61,6 @@ import com.syrus.AMFICOM.measurement.corba.MeasurementSetup_Transferable;
 import com.syrus.AMFICOM.measurement.corba.MeasurementType_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Measurement_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Modeling_Transferable;
-import com.syrus.AMFICOM.measurement.corba.ResultCondition_Transferable;
-import com.syrus.AMFICOM.measurement.corba.ResultSortCondition_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Result_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Set_Transferable;
 import com.syrus.AMFICOM.measurement.corba.TemporalCondition_Transferable;
@@ -71,16 +69,18 @@ import com.syrus.AMFICOM.measurement.corba.Test_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/01/26 15:43:17 $
+ * @version $Revision: 1.2 $, $Date: 2005/01/28 12:16:25 $
  * @author $Author: arseniy $
  * @module cmserver_v1
  */
 public abstract class CMMeasurementTransmit extends CMConfigurationTransmit {
 
+	private static final long serialVersionUID = 3410028455480782250L;
+
 	public AnalysisType_Transferable transmitAnalysisType(Identifier_Transferable identifier_Transferable,
 			AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
 		Identifier id = new Identifier(identifier_Transferable);
-		Log.debugMessage("CMServerImpl.transmitAnalysisType | require " + id.toString(), Log.DEBUGLEVEL07);
+		Log.debugMessage("CMMeasurementTransmit.transmitAnalysisType | require " + id.toString(), Log.DEBUGLEVEL07);
 		try {
 			AnalysisType analysisType = (AnalysisType) MeasurementStorableObjectPool.getStorableObject(id, true);
 			return (AnalysisType_Transferable) analysisType.getTransferable();
@@ -110,7 +110,7 @@ public abstract class CMMeasurementTransmit extends CMConfigurationTransmit {
 	public Evaluation_Transferable transmitEvaluation(Identifier_Transferable identifier_Transferable,
 			AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
 		Identifier id = new Identifier(identifier_Transferable);
-		Log.debugMessage("CMServerImpl.transmitEvaluation | require " + id.toString(), Log.DEBUGLEVEL07);
+		Log.debugMessage("CMMeasurementTransmit.transmitEvaluation | require " + id.toString(), Log.DEBUGLEVEL07);
 		try {
 			Evaluation evaluation = (Evaluation) MeasurementStorableObjectPool.getStorableObject(id, true);
 			return (Evaluation_Transferable) evaluation.getTransferable();
@@ -142,7 +142,7 @@ public abstract class CMMeasurementTransmit extends CMConfigurationTransmit {
 		try {
 			Identifier domainId = new Identifier(accessIdentifier.domain_id);
 			Domain domain = (Domain) AdministrationStorableObjectPool.getStorableObject(domainId, true);
-			Log.debugMessage("CMServerImpl.transmitEvaluations | requiere "
+			Log.debugMessage("CMMeasurementTransmit.transmitEvaluations | requiere "
 					+ (identifier_Transferables.length == 0 ? "all" : Integer.toString(identifier_Transferables.length))
 					+ " item(s) in domain: " + domainId.toString(), Log.DEBUGLEVEL07);
 			List list;
@@ -195,7 +195,7 @@ public abstract class CMMeasurementTransmit extends CMConfigurationTransmit {
 		try {
 			Identifier domainId = new Identifier(accessIdentifier.domain_id);
 			Domain domain = (Domain) AdministrationStorableObjectPool.getStorableObject(domainId, true);
-			Log.debugMessage("CMServerImpl.transmitEvaluationsButIds | requiere "
+			Log.debugMessage("CMMeasurementTransmit.transmitEvaluationsButIds | requiere "
 					+ (identifier_Transferables.length == 0 ? "all" : Integer.toString(identifier_Transferables.length))
 					+ " item(s) in domain: " + domainId.toString(), Log.DEBUGLEVEL07);
 			List list = null;
@@ -247,7 +247,7 @@ public abstract class CMMeasurementTransmit extends CMConfigurationTransmit {
 	public Evaluation_Transferable[] transmitEvaluationsButIdsCondition(Identifier_Transferable[] identifier_Transferables,
 			AccessIdentifier_Transferable accessIdentifier,
 			DomainCondition_Transferable domainCondition_Transferable) throws AMFICOMRemoteException {
-		Log.debugMessage("CMServerImpl.transmitEvaluationsButIdsCondition | requiere "
+		Log.debugMessage("CMMeasurementTransmit.transmitEvaluationsButIdsCondition | requiere "
 				+ (identifier_Transferables.length == 0 ? "all" : Integer.toString(identifier_Transferables.length))
 				+ " item(s) ", Log.DEBUGLEVEL07);
 		try {
@@ -301,7 +301,7 @@ public abstract class CMMeasurementTransmit extends CMConfigurationTransmit {
 	public EvaluationType_Transferable transmitEvaluationType(Identifier_Transferable identifier_Transferable,
 			AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
 		Identifier id = new Identifier(identifier_Transferable);
-		Log.debugMessage("CMServerImpl.transmitEvaluationType | require " + id.toString(), Log.DEBUGLEVEL07);
+		Log.debugMessage("CMMeasurementTransmit.transmitEvaluationType | require " + id.toString(), Log.DEBUGLEVEL07);
 		try {
 			EvaluationType evaluationType = (EvaluationType) MeasurementStorableObjectPool.getStorableObject(id, true);
 			return (EvaluationType_Transferable) evaluationType.getTransferable();
@@ -331,7 +331,7 @@ public abstract class CMMeasurementTransmit extends CMConfigurationTransmit {
 	public MeasurementType_Transferable transmitMeasurementType(Identifier_Transferable identifier_Transferable,
 			AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
 		Identifier id = new Identifier(identifier_Transferable);
-		Log.debugMessage("CMServerImpl.transmitMeasurementType | require " + id.toString(), Log.DEBUGLEVEL07);
+		Log.debugMessage("CMMeasurementTransmit.transmitMeasurementType | require " + id.toString(), Log.DEBUGLEVEL07);
 		try {
 			MeasurementType measurementType = (MeasurementType) MeasurementStorableObjectPool.getStorableObject(id, true);
 			return (MeasurementType_Transferable) measurementType.getTransferable();
@@ -364,7 +364,7 @@ public abstract class CMMeasurementTransmit extends CMConfigurationTransmit {
 	public Analysis_Transferable transmitAnalysis(Identifier_Transferable identifier_Transferable,
 			AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
 		Identifier id = new Identifier(identifier_Transferable);
-		Log.debugMessage("CMServerImpl.transmitAnalysis | require " + id.toString(), Log.DEBUGLEVEL07);
+		Log.debugMessage("CMMeasurementTransmit.transmitAnalysis | require " + id.toString(), Log.DEBUGLEVEL07);
 		try {
 			Analysis analysis = (Analysis) MeasurementStorableObjectPool.getStorableObject(id, true);
 			return (Analysis_Transferable) analysis.getTransferable();
@@ -394,7 +394,7 @@ public abstract class CMMeasurementTransmit extends CMConfigurationTransmit {
 	public Modeling_Transferable transmitModeling(Identifier_Transferable identifier_Transferable,
 			AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
 		Identifier id = new Identifier(identifier_Transferable);
-		Log.debugMessage("CMServerImpl.transmitModeling | require " + id.toString(), Log.DEBUGLEVEL07);
+		Log.debugMessage("CMMeasurementTransmit.transmitModeling | require " + id.toString(), Log.DEBUGLEVEL07);
 		try {
 			Modeling modeling = (Modeling) MeasurementStorableObjectPool.getStorableObject(id, true);
 			return (Modeling_Transferable) modeling.getTransferable();
@@ -424,7 +424,7 @@ public abstract class CMMeasurementTransmit extends CMConfigurationTransmit {
 	public Measurement_Transferable transmitMeasurement(Identifier_Transferable identifier_Transferable,
 			AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
 		Identifier id = new Identifier(identifier_Transferable);
-		Log.debugMessage("CMServerImpl.transmitMeasurement | require " + id.toString(), Log.DEBUGLEVEL07);
+		Log.debugMessage("CMMeasurementTransmit.transmitMeasurement | require " + id.toString(), Log.DEBUGLEVEL07);
 		try {
 			Measurement measurement = (Measurement) MeasurementStorableObjectPool.getStorableObject(id, true);
 			return (Measurement_Transferable) measurement.getTransferable();
@@ -454,7 +454,7 @@ public abstract class CMMeasurementTransmit extends CMConfigurationTransmit {
 	public MeasurementSetup_Transferable transmitMeasurementSetup(Identifier_Transferable identifier_Transferable,
 			AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
 		Identifier id = new Identifier(identifier_Transferable);
-		Log.debugMessage("CMServerImpl.transmitMeasurementSetup | require " + id.toString(), Log.DEBUGLEVEL07);
+		Log.debugMessage("CMMeasurementTransmit.transmitMeasurementSetup | require " + id.toString(), Log.DEBUGLEVEL07);
 		try {
 			MeasurementSetup measurementSetup = (MeasurementSetup) MeasurementStorableObjectPool.getStorableObject(id, true);
 			return (MeasurementSetup_Transferable) measurementSetup.getTransferable();
@@ -484,7 +484,7 @@ public abstract class CMMeasurementTransmit extends CMConfigurationTransmit {
 	public Result_Transferable transmitResult(Identifier_Transferable identifier_Transferable,
 			AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
 		Identifier id = new Identifier(identifier_Transferable);
-		Log.debugMessage("CMServerImpl.transmitResult | require " + id.toString(), Log.DEBUGLEVEL07);
+		Log.debugMessage("CMMeasurementTransmit.transmitResult | require " + id.toString(), Log.DEBUGLEVEL07);
 		try {
 			Result result = (Result) MeasurementStorableObjectPool.getStorableObject(id, true);
 			return (Result_Transferable) result.getTransferable();
@@ -514,7 +514,7 @@ public abstract class CMMeasurementTransmit extends CMConfigurationTransmit {
 	public Set_Transferable transmitSet(Identifier_Transferable identifier_Transferable,
 			AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
 		Identifier id = new Identifier(identifier_Transferable);
-		Log.debugMessage("CMServerImpl.transmitSet | require " + id.toString(), Log.DEBUGLEVEL07);
+		Log.debugMessage("CMMeasurementTransmit.transmitSet | require " + id.toString(), Log.DEBUGLEVEL07);
 		try {
 			Set set = (Set) MeasurementStorableObjectPool.getStorableObject(id, true);
 			return (Set_Transferable) set.getTransferable();
@@ -544,7 +544,7 @@ public abstract class CMMeasurementTransmit extends CMConfigurationTransmit {
 	public TemporalPattern_Transferable transmitTemporalPattern(Identifier_Transferable identifier_Transferable,
 			AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
 		Identifier id = new Identifier(identifier_Transferable);
-		Log.debugMessage("CMServerImpl.transmitTest | require " + id.toString(), Log.DEBUGLEVEL07);
+		Log.debugMessage("CMMeasurementTransmit.transmitTest | require " + id.toString(), Log.DEBUGLEVEL07);
 		try {
 			TemporalPattern temporalPattern = (TemporalPattern) MeasurementStorableObjectPool.getStorableObject(id, true);
 			return (TemporalPattern_Transferable) temporalPattern.getTransferable();
@@ -574,7 +574,7 @@ public abstract class CMMeasurementTransmit extends CMConfigurationTransmit {
 	public Test_Transferable transmitTest(Identifier_Transferable identifier_Transferable,
 			AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
 		Identifier id = new Identifier(identifier_Transferable);
-		Log.debugMessage("CMServerImpl.transmitTest | require " + id.toString(), Log.DEBUGLEVEL07);
+		Log.debugMessage("CMMeasurementTransmit.transmitTest | require " + id.toString(), Log.DEBUGLEVEL07);
 		try {
 			Test test = (Test) MeasurementStorableObjectPool.getStorableObject(id, true);
 			return (Test_Transferable) test.getTransferable();
@@ -610,7 +610,7 @@ public abstract class CMMeasurementTransmit extends CMConfigurationTransmit {
 		try {
 			Identifier domainId = new Identifier(accessIdentifier.domain_id);
 			Domain domain = (Domain) AdministrationStorableObjectPool.getStorableObject(domainId, true);
-			Log.debugMessage("CMServerImpl.transmitAnalysisTypes | requiere "
+			Log.debugMessage("CMMeasurementTransmit.transmitAnalysisTypes | requiere "
 					+ (identifier_Transferables.length == 0 ? "all" : Integer.toString(identifier_Transferables.length))
 					+ " item(s) in domain: "
 					+ domainId.toString(), Log.DEBUGLEVEL07);
@@ -666,7 +666,7 @@ public abstract class CMMeasurementTransmit extends CMConfigurationTransmit {
 		try {
 			Identifier domainId = new Identifier(accessIdentifier.domain_id);
 			Domain domain = (Domain) AdministrationStorableObjectPool.getStorableObject(domainId, true);
-			Log.debugMessage("CMServerImpl.transmitAnalysisTypesButIds | requiere "
+			Log.debugMessage("CMMeasurementTransmit.transmitAnalysisTypesButIds | requiere "
 					+ (identifier_Transferables.length == 0 ? "all" : Integer.toString(identifier_Transferables.length))
 					+ " item(s) in domain: "
 					+ domainId.toString(), Log.DEBUGLEVEL07);
@@ -720,7 +720,7 @@ public abstract class CMMeasurementTransmit extends CMConfigurationTransmit {
 	public AnalysisType_Transferable[] transmitAnalysisTypesButIdsCondition(Identifier_Transferable[] identifier_Transferables,
 			AccessIdentifier_Transferable accessIdentifier,
 			LinkedIdsCondition_Transferable linkedIdsCondition_Transferable) throws AMFICOMRemoteException {
-		Log.debugMessage("CMServerImpl.transmitAnalysisTypesButIdsCondition | requiere "
+		Log.debugMessage("CMMeasurementTransmit.transmitAnalysisTypesButIdsCondition | requiere "
 				+ (identifier_Transferables.length == 0 ? "all" : Integer.toString(identifier_Transferables.length))
 				+ " item(s) ", Log.DEBUGLEVEL07);
 		try {
@@ -777,7 +777,7 @@ public abstract class CMMeasurementTransmit extends CMConfigurationTransmit {
 		try {
 			Identifier domainId = new Identifier(accessIdentifier.domain_id);
 			Domain domain = (Domain) AdministrationStorableObjectPool.getStorableObject(domainId, true);
-			Log.debugMessage("CMServerImpl.transmitEvaluationTypes | requiere "
+			Log.debugMessage("CMMeasurementTransmit.transmitEvaluationTypes | requiere "
 					+ (identifier_Transferables.length == 0 ? "all" : Integer.toString(identifier_Transferables.length))
 					+ " item(s) in domain: "
 					+ domainId.toString(), Log.DEBUGLEVEL07);
@@ -832,7 +832,7 @@ public abstract class CMMeasurementTransmit extends CMConfigurationTransmit {
 		try {
 			Identifier domainId = new Identifier(accessIdentifier.domain_id);
 			Domain domain = (Domain) AdministrationStorableObjectPool.getStorableObject(domainId, true);
-			Log.debugMessage("CMServerImpl.transmitEvaluationTypesButIds | requiere "
+			Log.debugMessage("CMMeasurementTransmit.transmitEvaluationTypesButIds | requiere "
 					+ (identifier_Transferables.length == 0 ? "all" : Integer.toString(identifier_Transferables.length))
 					+ " item(s) in domain: "
 					+ domainId.toString(), Log.DEBUGLEVEL07);
@@ -885,7 +885,7 @@ public abstract class CMMeasurementTransmit extends CMConfigurationTransmit {
 	public EvaluationType_Transferable[] transmitEvaluationTypesButIdsCondition(Identifier_Transferable[] identifier_Transferables,
 			AccessIdentifier_Transferable accessIdentifier,
 			LinkedIdsCondition_Transferable linkedIdsCondition_Transferable) throws AMFICOMRemoteException {
-		Log.debugMessage("CMServerImpl.transmitEvaluationTypesButIdsCondition | requiere "
+		Log.debugMessage("CMMeasurementTransmit.transmitEvaluationTypesButIdsCondition | requiere "
 				+ (identifier_Transferables.length == 0 ? "all" : Integer.toString(identifier_Transferables.length))
 				+ " item(s) ", Log.DEBUGLEVEL07);
 		try {
@@ -941,7 +941,7 @@ public abstract class CMMeasurementTransmit extends CMConfigurationTransmit {
 		try {
 			Identifier domainId = new Identifier(accessIdentifier.domain_id);
 			Domain domain = (Domain) AdministrationStorableObjectPool.getStorableObject(domainId, true);
-			Log.debugMessage("CMServerImpl.transmitMeasurementTypes | requiere "
+			Log.debugMessage("CMMeasurementTransmit.transmitMeasurementTypes | requiere "
 					+ (identifier_Transferables.length == 0 ? "all" : Integer.toString(identifier_Transferables.length))
 					+ " item(s) in domain: "
 					+ domainId.toString(), Log.DEBUGLEVEL07);
@@ -995,7 +995,7 @@ public abstract class CMMeasurementTransmit extends CMConfigurationTransmit {
 		try {
 			Identifier domainId = new Identifier(accessIdentifier.domain_id);
 			Domain domain = (Domain) AdministrationStorableObjectPool.getStorableObject(domainId, true);
-			Log.debugMessage("CMServerImpl.transmitMeasurementTypesButIds | requiere "
+			Log.debugMessage("CMMeasurementTransmit.transmitMeasurementTypesButIds | requiere "
 					+ (identifier_Transferables.length == 0 ? "all" : Integer.toString(identifier_Transferables.length))
 					+ " item(s) in domain: "
 					+ domainId.toString(), Log.DEBUGLEVEL07);
@@ -1049,7 +1049,7 @@ public abstract class CMMeasurementTransmit extends CMConfigurationTransmit {
 			AccessIdentifier_Transferable accessIdentifier,
 			LinkedIdsCondition_Transferable linkedIdsCondition_Transferable) throws AMFICOMRemoteException {
 		try {
-			Log.debugMessage("CMServerImpl.transmitMeasurementTypesButIdsLinkedIdsCondition | requiere "
+			Log.debugMessage("CMMeasurementTransmit.transmitMeasurementTypesButIdsLinkedIdsCondition | requiere "
 					+ (identifier_Transferables.length == 0 ? "all" : Integer.toString(identifier_Transferables.length))
 					+ " item(s) ", Log.DEBUGLEVEL07);
 			List list = null;
@@ -1103,7 +1103,7 @@ public abstract class CMMeasurementTransmit extends CMConfigurationTransmit {
 			AccessIdentifier_Transferable accessIdentifier,
 			StringFieldCondition_Transferable stringFieldCondition_Transferable) throws AMFICOMRemoteException {
 		try {
-			Log.debugMessage("CMServerImpl.transmitMeasurementTypesButIdsStringFieldCondition | requiere "
+			Log.debugMessage("CMMeasurementTransmit.transmitMeasurementTypesButIdsStringFieldCondition | requiere "
 					+ (identifier_Transferables.length == 0 ? "all" : Integer.toString(identifier_Transferables.length))
 					+ " item(s) ", Log.DEBUGLEVEL07);
 			List list = null;
@@ -1162,7 +1162,7 @@ public abstract class CMMeasurementTransmit extends CMConfigurationTransmit {
 		try {
 			Identifier domainId = new Identifier(accessIdentifier.domain_id);
 			Domain domain = (Domain) AdministrationStorableObjectPool.getStorableObject(domainId, true);
-			Log.debugMessage("CMServerImpl.transmitAnalyses | requiere "
+			Log.debugMessage("CMMeasurementTransmit.transmitAnalyses | requiere "
 					+ (identifier_Transferables.length == 0 ? "all" : Integer.toString(identifier_Transferables.length))
 					+ " item(s) in domain: "
 					+ domainId.toString(), Log.DEBUGLEVEL07);
@@ -1217,7 +1217,7 @@ public abstract class CMMeasurementTransmit extends CMConfigurationTransmit {
 		try {
 			Identifier domainId = new Identifier(accessIdentifier.domain_id);
 			Domain domain = (Domain) AdministrationStorableObjectPool.getStorableObject(domainId, true);
-			Log.debugMessage("CMServerImpl.transmitAnalysesButIds | requiere "
+			Log.debugMessage("CMMeasurementTransmit.transmitAnalysesButIds | requiere "
 					+ (identifier_Transferables.length == 0 ? "all" : Integer.toString(identifier_Transferables.length))
 					+ " item(s) in domain: "
 					+ domainId.toString(), Log.DEBUGLEVEL07);
@@ -1267,7 +1267,7 @@ public abstract class CMMeasurementTransmit extends CMConfigurationTransmit {
 	public Analysis_Transferable[] transmitAnalysesButIdsCondition(Identifier_Transferable[] identifier_Transferables,
 			AccessIdentifier_Transferable accessIdentifier,
 			DomainCondition_Transferable domainCondition_Transferable) throws AMFICOMRemoteException {
-		Log.debugMessage("CMServerImpl.transmitAnalysesButIdsCondition | requiere "
+		Log.debugMessage("CMMeasurementTransmit.transmitAnalysesButIdsCondition | requiere "
 				+ (identifier_Transferables.length == 0 ? "all" : Integer.toString(identifier_Transferables.length))
 				+ " item(s) ", Log.DEBUGLEVEL07);
 		try {
@@ -1321,7 +1321,7 @@ public abstract class CMMeasurementTransmit extends CMConfigurationTransmit {
 		try {
 			Identifier domainId = new Identifier(accessIdentifier.domain_id);
 			Domain domain = (Domain) AdministrationStorableObjectPool.getStorableObject(domainId, true);
-			Log.debugMessage("CMServerImpl.transmitModelings | requiere "
+			Log.debugMessage("CMMeasurementTransmit.transmitModelings | requiere "
 					+ (identifier_Transferables.length == 0 ? "all" : Integer.toString(identifier_Transferables.length))
 					+ " item(s) in domain: "
 					+ domainId.toString(), Log.DEBUGLEVEL07);
@@ -1377,7 +1377,7 @@ public abstract class CMMeasurementTransmit extends CMConfigurationTransmit {
 		try {
 			Identifier domainId = new Identifier(accessIdentifier.domain_id);
 			Domain domain = (Domain) AdministrationStorableObjectPool.getStorableObject(domainId, true);
-			Log.debugMessage("CMServerImpl.transmitModelingsButIds | requiere "
+			Log.debugMessage("CMMeasurementTransmit.transmitModelingsButIds | requiere "
 					+ (identifier_Transferables.length == 0 ? "all" : Integer.toString(identifier_Transferables.length))
 					+ " item(s) in domain: "
 					+ domainId.toString(), Log.DEBUGLEVEL07);
@@ -1430,7 +1430,7 @@ public abstract class CMMeasurementTransmit extends CMConfigurationTransmit {
 	public Modeling_Transferable[] transmitModelingsButIdsCondition(Identifier_Transferable[] identifier_Transferables,
 			AccessIdentifier_Transferable accessIdentifier,
 			DomainCondition_Transferable domainCondition_Transferable) throws AMFICOMRemoteException {
-		Log.debugMessage("CMServerImpl.transmitModelingsButIdsCondition | requiere "
+		Log.debugMessage("CMMeasurementTransmit.transmitModelingsButIdsCondition | requiere "
 				+ (identifier_Transferables.length == 0 ? "all" : Integer.toString(identifier_Transferables.length))
 				+ " item(s) ", Log.DEBUGLEVEL07);
 		try {
@@ -1486,7 +1486,7 @@ public abstract class CMMeasurementTransmit extends CMConfigurationTransmit {
 		try {
 			Identifier domainId = new Identifier(accessIdentifier.domain_id);
 			Domain domain = (Domain) AdministrationStorableObjectPool.getStorableObject(domainId, true);
-			Log.debugMessage("CMServerImpl.transmitMeasurements | requiere "
+			Log.debugMessage("CMMeasurementTransmit.transmitMeasurements | requiere "
 					+ (ids_Transferable.length == 0 ? "all" : Integer.toString(ids_Transferable.length))
 					+ " item(s) in domain: "
 					+ domainId.toString(), Log.DEBUGLEVEL07);
@@ -1537,7 +1537,7 @@ public abstract class CMMeasurementTransmit extends CMConfigurationTransmit {
 		try {
 			Identifier domainId = new Identifier(accessIdentifier.domain_id);
 			Domain domain = (Domain) AdministrationStorableObjectPool.getStorableObject(domainId, true);
-			Log.debugMessage("CMServerImpl.transmitMeasurementsButIds | requiere "
+			Log.debugMessage("CMMeasurementTransmit.transmitMeasurementsButIds | requiere "
 					+ (identifier_Transferables.length == 0 ? "all" : Integer.toString(identifier_Transferables.length))
 					+ " item(s) in domain: "
 					+ domainId.toString(), Log.DEBUGLEVEL07);
@@ -1590,7 +1590,7 @@ public abstract class CMMeasurementTransmit extends CMConfigurationTransmit {
 	public Measurement_Transferable[] transmitMeasurementsButIdsLinkedCondition(Identifier_Transferable[] identifier_Transferables,
 			AccessIdentifier_Transferable accessIdentifier,
 			LinkedIdsCondition_Transferable linkedIdsCondition_Transferable) throws AMFICOMRemoteException {
-		Log.debugMessage("CMServerImpl.transmitMeasurementsButIdsLinkedCondition | requiere "
+		Log.debugMessage("CMMeasurementTransmit.transmitMeasurementsButIdsLinkedCondition | requiere "
 				+ (identifier_Transferables.length == 0 ? "all" : Integer.toString(identifier_Transferables.length))
 				+ " item(s) ", Log.DEBUGLEVEL07);
 		try {
@@ -1616,7 +1616,7 @@ public abstract class CMMeasurementTransmit extends CMConfigurationTransmit {
 				transferables[i] = (Measurement_Transferable) measurement.getTransferable();
 			}
 
-			Log.debugMessage("CMServerImpl.transmitMeasurementsButIdsLinkedCondition | transferables size "
+			Log.debugMessage("CMMeasurementTransmit.transmitMeasurementsButIdsLinkedCondition | transferables size "
 					+ transferables.length
 					+ ", count:"
 					+ i, Log.DEBUGLEVEL07);
@@ -1649,7 +1649,7 @@ public abstract class CMMeasurementTransmit extends CMConfigurationTransmit {
 	public Measurement_Transferable[] transmitMeasurementsButIdsDomainCondition(Identifier_Transferable[] identifier_Transferables,
 			AccessIdentifier_Transferable accessIdentifier,
 			DomainCondition_Transferable domainCondition_Transferable) throws AMFICOMRemoteException {
-		Log.debugMessage("CMServerImpl.transmitMeasurementsButIdsDomainCondition | requiere "
+		Log.debugMessage("CMMeasurementTransmit.transmitMeasurementsButIdsDomainCondition | requiere "
 				+ (identifier_Transferables.length == 0 ? "all" : Integer.toString(identifier_Transferables.length))
 				+ " item(s) ", Log.DEBUGLEVEL07);
 		try {
@@ -1705,7 +1705,7 @@ public abstract class CMMeasurementTransmit extends CMConfigurationTransmit {
 		try {
 			Identifier domainId = new Identifier(accessIdentifier.domain_id);
 			Domain domain = (Domain) AdministrationStorableObjectPool.getStorableObject(domainId, true);
-			Log.debugMessage("CMServerImpl.transmitMeasurementSetups | requiere "
+			Log.debugMessage("CMMeasurementTransmit.transmitMeasurementSetups | requiere "
 					+ (identifier_Transferables.length == 0 ? "all" : Integer.toString(identifier_Transferables.length))
 					+ " item(s) in domain: "
 					+ domainId.toString(), Log.DEBUGLEVEL07);
@@ -1756,7 +1756,7 @@ public abstract class CMMeasurementTransmit extends CMConfigurationTransmit {
 		try {
 			Identifier domainId = new Identifier(accessIdentifier.domain_id);
 			Domain domain = (Domain) AdministrationStorableObjectPool.getStorableObject(domainId, true);
-			Log.debugMessage("CMServerImpl.transmitMeasurementSetupsButIds | requiere "
+			Log.debugMessage("CMMeasurementTransmit.transmitMeasurementSetupsButIds | requiere "
 					+ (identifier_Transferables.length == 0 ? "all" : Integer.toString(identifier_Transferables.length))
 					+ " item(s) in domain: "
 					+ domainId.toString(), Log.DEBUGLEVEL07);
@@ -1806,7 +1806,7 @@ public abstract class CMMeasurementTransmit extends CMConfigurationTransmit {
 	public MeasurementSetup_Transferable[] transmitMeasurementSetupsButIdsLinkedCondition(Identifier_Transferable[] identifier_Transferables,
 			AccessIdentifier_Transferable accessIdentifier,
 			LinkedIdsCondition_Transferable linkedIdsCondition_Transferable) throws AMFICOMRemoteException {
-		Log.debugMessage("CMServerImpl.transmitMeasurementSetupsButIdsMeasurementLinkedCondition | requiere "
+		Log.debugMessage("CMMeasurementTransmit.transmitMeasurementSetupsButIdsMeasurementLinkedCondition | requiere "
 				+ (identifier_Transferables.length == 0 ? "all" : Integer.toString(identifier_Transferables.length))
 				+ " item(s) ", Log.DEBUGLEVEL07);
 		try {
@@ -1859,7 +1859,7 @@ public abstract class CMMeasurementTransmit extends CMConfigurationTransmit {
 		try {
 			Identifier domainId = new Identifier(accessIdentifier.domain_id);
 			Domain domain = (Domain) AdministrationStorableObjectPool.getStorableObject(domainId, true);
-			Log.debugMessage("CMServerImpl.transmitResults | requiere "
+			Log.debugMessage("CMMeasurementTransmit.transmitResults | requiere "
 					+ (identifier_Transferables.length == 0 ? "all" : Integer.toString(identifier_Transferables.length))
 					+ " item(s) in domain: "
 					+ domainId.toString(), Log.DEBUGLEVEL07);
@@ -1913,7 +1913,7 @@ public abstract class CMMeasurementTransmit extends CMConfigurationTransmit {
 		try {
 			Identifier domainId = new Identifier(accessIdentifier.domain_id);
 			Domain domain = (Domain) AdministrationStorableObjectPool.getStorableObject(domainId, true);
-			Log.debugMessage("CMServerImpl.transmitResultsButIds | requiere "
+			Log.debugMessage("CMMeasurementTransmit.transmitResultsButIds | requiere "
 					+ (identifier_Transferables.length == 0 ? "all" : Integer.toString(identifier_Transferables.length))
 					+ " item(s) in domain: "
 					+ domainId.toString(), Log.DEBUGLEVEL07);
@@ -1966,7 +1966,7 @@ public abstract class CMMeasurementTransmit extends CMConfigurationTransmit {
 	public Result_Transferable[] transmitResultsButIdsDomainCondition(Identifier_Transferable[] identifier_Transferables,
 			AccessIdentifier_Transferable accessIdentifier,
 			DomainCondition_Transferable domainCondition_Transferable) throws AMFICOMRemoteException {
-		Log.debugMessage("CMServerImpl.transmitResultsButIdsDomainCondition | requiere "
+		Log.debugMessage("CMMeasurementTransmit.transmitResultsButIdsDomainCondition | requiere "
 				+ (identifier_Transferables.length == 0 ? "all" : Integer.toString(identifier_Transferables.length))
 				+ " item(s) ", Log.DEBUGLEVEL07);
 		try {
@@ -2020,7 +2020,7 @@ public abstract class CMMeasurementTransmit extends CMConfigurationTransmit {
 	public Result_Transferable[] transmitResultsButIdsLinkedCondition(Identifier_Transferable[] identifier_Transferables,
 			AccessIdentifier_Transferable accessIdentifier,
 			LinkedIdsCondition_Transferable linkedIdsCondition_Transferable) throws AMFICOMRemoteException {
-		Log.debugMessage("CMServerImpl.transmitResultsButIdsLinkedCondition | requiere "
+		Log.debugMessage("CMMeasurementTransmit.transmitResultsButIdsLinkedCondition | requiere "
 				+ (identifier_Transferables.length == 0 ? "all" : Integer.toString(identifier_Transferables.length))
 				+ " item(s) ", Log.DEBUGLEVEL07);
 		try {
@@ -2071,26 +2071,29 @@ public abstract class CMMeasurementTransmit extends CMConfigurationTransmit {
 		}
 	}
 
-	public Result_Transferable[] transmitResultsButIdsResultCondition(Identifier_Transferable[] identifier_Transferables,
+	/* (non-Javadoc)
+	 * @see com.syrus.AMFICOM.cmserver.corba.CMServerOperations#transmitResultsButIdsActionCondition(com.syrus.AMFICOM.general.corba.Identifier_Transferable[], com.syrus.AMFICOM.configuration.corba.AccessIdentifier_Transferable, com.syrus.AMFICOM.measurement.corba.ActionCondition_Transferable)
+	 */
+	public Result_Transferable[] transmitResultsButIdsActionCondition(Identifier_Transferable[] ids,
 			AccessIdentifier_Transferable accessIdentifier,
-			ResultCondition_Transferable resultCondition_Transferable) throws AMFICOMRemoteException {
-		Log.debugMessage("CMServerImpl.transmitResultsButIdsLinkedResultCondition | requiere "
-				+ (identifier_Transferables.length == 0 ? "all" : Integer.toString(identifier_Transferables.length))
-				+ " item(s) ", Log.DEBUGLEVEL07);
+			ActionCondition_Transferable actionCondition_Transferable) throws AMFICOMRemoteException {
+		Log.debugMessage("CMMeasurementTransmit.transmitResultsButIdsActionCondition | requiere "
+			+ (ids.length == 0 ? "all" : Integer.toString(ids.length))
+			+ " item(s) ", Log.DEBUGLEVEL07);
 		try {
 			List list;
-			if (identifier_Transferables.length > 0) {
-				List idsList = new ArrayList(identifier_Transferables.length);
-				for (int i = 0; i < identifier_Transferables.length; i++)
-					idsList.add(new Identifier(identifier_Transferables[i]));
+			if (ids.length > 0) {
+				List idsList = new ArrayList(ids.length);
+				for (int i = 0; i < ids.length; i++)
+					idsList.add(new Identifier(ids[i]));
 
 				list = MeasurementStorableObjectPool.getStorableObjectsByConditionButIds(idsList,
-						new ResultCondition(resultCondition_Transferable),
+						new ActionCondition(actionCondition_Transferable),
 						true);
 
 			}
 			else
-				list = MeasurementStorableObjectPool.getStorableObjectsByCondition(new ResultCondition(resultCondition_Transferable),
+				list = MeasurementStorableObjectPool.getStorableObjectsByCondition(new ActionCondition(actionCondition_Transferable),
 						true);
 
 			Result_Transferable[] transferables = new Result_Transferable[list.size()];
@@ -2101,7 +2104,6 @@ public abstract class CMMeasurementTransmit extends CMConfigurationTransmit {
 			}
 
 			return transferables;
-
 		}
 		catch (RetrieveObjectException roe) {
 			Log.errorException(roe);
@@ -2125,66 +2127,120 @@ public abstract class CMMeasurementTransmit extends CMConfigurationTransmit {
 		}
 	}
 
-	public Result_Transferable[] transmitResultsButIdsResultSortCondition(Identifier_Transferable[] identifier_Transferables,
-			AccessIdentifier_Transferable accessIdentifier,
-			ResultSortCondition_Transferable resultSortCondition_Transferable) throws AMFICOMRemoteException {
-		Log.debugMessage("CMServerImpl.transmitResultsButIdsLinkedResultSortCondition | requiere "
-				+ (identifier_Transferables.length == 0 ? "all" : Integer.toString(identifier_Transferables.length))
-				+ " item(s) ", Log.DEBUGLEVEL07);
-		try {
-			List list;
-			if (identifier_Transferables.length > 0) {
-				List idsList = new ArrayList(identifier_Transferables.length);
-				for (int i = 0; i < identifier_Transferables.length; i++)
-					idsList.add(new Identifier(identifier_Transferables[i]));
-
-				list = MeasurementStorableObjectPool.getStorableObjectsByConditionButIds(idsList,
-						new ResultSortCondition(resultSortCondition_Transferable),
-						true);
-
-			}
-			else
-				list = MeasurementStorableObjectPool.getStorableObjectsByCondition(new ResultSortCondition(resultSortCondition_Transferable),
-						true);
-
-			Result_Transferable[] transferables = new Result_Transferable[list.size()];
-			int i = 0;
-			for (Iterator it = list.iterator(); it.hasNext(); i++) {
-				Result result = (Result) it.next();
-				transferables[i] = (Result_Transferable) result.getTransferable();
-			}
-
-			return transferables;
-
-		}
-		catch (RetrieveObjectException roe) {
-			Log.errorException(roe);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, roe.getMessage());
-		}
-		catch (IllegalDataException ide) {
-			Log.errorException(ide);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ide.getMessage());
-		}
-		catch (IllegalObjectEntityException ioee) {
-			Log.errorException(ioee);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ioee.getMessage());
-		}
-		catch (ApplicationException e) {
-			Log.errorException(e);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, e.getMessage());
-		}
-		catch (Throwable t) {
-			Log.errorException(t);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
-		}
-	}
+//	public Result_Transferable[] transmitResultsButIdsResultCondition(Identifier_Transferable[] identifier_Transferables,
+//			AccessIdentifier_Transferable accessIdentifier,
+//			ResultCondition_Transferable resultCondition_Transferable) throws AMFICOMRemoteException {
+//		Log.debugMessage("CMMeasurementTransmit.transmitResultsButIdsLinkedResultCondition | requiere "
+//				+ (identifier_Transferables.length == 0 ? "all" : Integer.toString(identifier_Transferables.length))
+//				+ " item(s) ", Log.DEBUGLEVEL07);
+//		try {
+//			List list;
+//			if (identifier_Transferables.length > 0) {
+//				List idsList = new ArrayList(identifier_Transferables.length);
+//				for (int i = 0; i < identifier_Transferables.length; i++)
+//					idsList.add(new Identifier(identifier_Transferables[i]));
+//
+//				list = MeasurementStorableObjectPool.getStorableObjectsByConditionButIds(idsList,
+//						new ResultCondition(resultCondition_Transferable),
+//						true);
+//
+//			}
+//			else
+//				list = MeasurementStorableObjectPool.getStorableObjectsByCondition(new ResultCondition(resultCondition_Transferable),
+//						true);
+//
+//			Result_Transferable[] transferables = new Result_Transferable[list.size()];
+//			int i = 0;
+//			for (Iterator it = list.iterator(); it.hasNext(); i++) {
+//				Result result = (Result) it.next();
+//				transferables[i] = (Result_Transferable) result.getTransferable();
+//			}
+//
+//			return transferables;
+//
+//		}
+//		catch (RetrieveObjectException roe) {
+//			Log.errorException(roe);
+//			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, roe.getMessage());
+//		}
+//		catch (IllegalDataException ide) {
+//			Log.errorException(ide);
+//			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ide.getMessage());
+//		}
+//		catch (IllegalObjectEntityException ioee) {
+//			Log.errorException(ioee);
+//			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ioee.getMessage());
+//		}
+//		catch (ApplicationException e) {
+//			Log.errorException(e);
+//			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, e.getMessage());
+//		}
+//		catch (Throwable t) {
+//			Log.errorException(t);
+//			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
+//		}
+//	}
+//
+//	public Result_Transferable[] transmitResultsButIdsResultSortCondition(Identifier_Transferable[] identifier_Transferables,
+//			AccessIdentifier_Transferable accessIdentifier,
+//			ResultSortCondition_Transferable resultSortCondition_Transferable) throws AMFICOMRemoteException {
+//		Log.debugMessage("CMMeasurementTransmit.transmitResultsButIdsLinkedResultSortCondition | requiere "
+//				+ (identifier_Transferables.length == 0 ? "all" : Integer.toString(identifier_Transferables.length))
+//				+ " item(s) ", Log.DEBUGLEVEL07);
+//		try {
+//			List list;
+//			if (identifier_Transferables.length > 0) {
+//				List idsList = new ArrayList(identifier_Transferables.length);
+//				for (int i = 0; i < identifier_Transferables.length; i++)
+//					idsList.add(new Identifier(identifier_Transferables[i]));
+//
+//				list = MeasurementStorableObjectPool.getStorableObjectsByConditionButIds(idsList,
+//						new ResultSortCondition(resultSortCondition_Transferable),
+//						true);
+//
+//			}
+//			else
+//				list = MeasurementStorableObjectPool.getStorableObjectsByCondition(new ResultSortCondition(resultSortCondition_Transferable),
+//						true);
+//
+//			Result_Transferable[] transferables = new Result_Transferable[list.size()];
+//			int i = 0;
+//			for (Iterator it = list.iterator(); it.hasNext(); i++) {
+//				Result result = (Result) it.next();
+//				transferables[i] = (Result_Transferable) result.getTransferable();
+//			}
+//
+//			return transferables;
+//
+//		}
+//		catch (RetrieveObjectException roe) {
+//			Log.errorException(roe);
+//			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, roe.getMessage());
+//		}
+//		catch (IllegalDataException ide) {
+//			Log.errorException(ide);
+//			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ide.getMessage());
+//		}
+//		catch (IllegalObjectEntityException ioee) {
+//			Log.errorException(ioee);
+//			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ioee.getMessage());
+//		}
+//		catch (ApplicationException e) {
+//			Log.errorException(e);
+//			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, e.getMessage());
+//		}
+//		catch (Throwable t) {
+//			Log.errorException(t);
+//			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
+//		}
+//	}
 
 	public Set_Transferable[] transmitSets(Identifier_Transferable[] identifier_Transferables,
 			AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
 		try {
 			Identifier domainId = new Identifier(accessIdentifier.domain_id);
 			Domain domain = (Domain) AdministrationStorableObjectPool.getStorableObject(domainId, true);
-			Log.debugMessage("CMServerImpl.transmitSets | requiere "
+			Log.debugMessage("CMMeasurementTransmit.transmitSets | requiere "
 					+ (identifier_Transferables.length == 0 ? "all" : Integer.toString(identifier_Transferables.length))
 					+ " item(s) in domain: "
 					+ domainId.toString(), Log.DEBUGLEVEL07);
@@ -2238,7 +2294,7 @@ public abstract class CMMeasurementTransmit extends CMConfigurationTransmit {
 		try {
 			Identifier domainId = new Identifier(accessIdentifier.domain_id);
 			Domain domain = (Domain) AdministrationStorableObjectPool.getStorableObject(domainId, true);
-			Log.debugMessage("CMServerImpl.transmitSetsButIds | requiere "
+			Log.debugMessage("CMMeasurementTransmit.transmitSetsButIds | requiere "
 					+ (identifier_Transferables.length == 0 ? "all" : Integer.toString(identifier_Transferables.length))
 					+ " item(s) in domain: "
 					+ domainId.toString(), Log.DEBUGLEVEL07);
@@ -2291,7 +2347,7 @@ public abstract class CMMeasurementTransmit extends CMConfigurationTransmit {
 	public Set_Transferable[] transmitSetsButIdsCondition(Identifier_Transferable[] identifier_Transferables,
 			AccessIdentifier_Transferable accessIdentifier,
 			DomainCondition_Transferable domainCondition_Transferable) throws AMFICOMRemoteException {
-		Log.debugMessage("CMServerImpl.transmitSetsButIdsCondition | requiere "
+		Log.debugMessage("CMMeasurementTransmit.transmitSetsButIdsCondition | requiere "
 				+ (identifier_Transferables.length == 0 ? "all" : Integer.toString(identifier_Transferables.length))
 				+ " item(s) ", Log.DEBUGLEVEL07);
 		try {
@@ -2347,7 +2403,7 @@ public abstract class CMMeasurementTransmit extends CMConfigurationTransmit {
 		try {
 			Identifier domainId = new Identifier(accessIdentifier.domain_id);
 			Domain domain = (Domain) AdministrationStorableObjectPool.getStorableObject(domainId, true);
-			Log.debugMessage("CMServerImpl.transmitTemporalPatterns | requiere "
+			Log.debugMessage("CMMeasurementTransmit.transmitTemporalPatterns | requiere "
 					+ (identifier_Transferables.length == 0 ? "all" : Integer.toString(identifier_Transferables.length))
 					+ " item(s) in domain: "
 					+ domainId.toString(), Log.DEBUGLEVEL07);
@@ -2401,7 +2457,7 @@ public abstract class CMMeasurementTransmit extends CMConfigurationTransmit {
 		try {
 			Identifier domainId = new Identifier(accessIdentifier.domain_id);
 			Domain domain = (Domain) AdministrationStorableObjectPool.getStorableObject(domainId, true);
-			Log.debugMessage("CMServerImpl.transmitTemporalPatternsButIds | requiere "
+			Log.debugMessage("CMMeasurementTransmit.transmitTemporalPatternsButIds | requiere "
 					+ (identifier_Transferables.length == 0 ? "all" : Integer.toString(identifier_Transferables.length))
 					+ " item(s) in domain: "
 					+ domainId.toString(), Log.DEBUGLEVEL07);
@@ -2456,7 +2512,7 @@ public abstract class CMMeasurementTransmit extends CMConfigurationTransmit {
 		try {
 			Identifier domainId = new Identifier(accessIdentifier.domain_id);
 			Domain domain = (Domain) AdministrationStorableObjectPool.getStorableObject(domainId, true);
-			Log.debugMessage("CMServerImpl.transmitTests | requiere "
+			Log.debugMessage("CMMeasurementTransmit.transmitTests | requiere "
 					+ (identifier_Transferables.length == 0 ? "all" : Integer.toString(identifier_Transferables.length))
 					+ " item(s) in domain: "
 					+ domainId.toString(), Log.DEBUGLEVEL07);
@@ -2510,7 +2566,7 @@ public abstract class CMMeasurementTransmit extends CMConfigurationTransmit {
 		try {
 			Identifier domainId = new Identifier(accessIdentifier.domain_id);
 			Domain domain = (Domain) AdministrationStorableObjectPool.getStorableObject(domainId, true);
-			Log.debugMessage("CMServerImpl.transmitTestsButIds | requiere "
+			Log.debugMessage("CMMeasurementTransmit.transmitTestsButIds | requiere "
 					+ (identifier_Transferables.length == 0 ? "all" : Integer.toString(identifier_Transferables.length))
 					+ " item(s) in domain: "
 					+ domainId.toString(), Log.DEBUGLEVEL07);
@@ -2563,7 +2619,7 @@ public abstract class CMMeasurementTransmit extends CMConfigurationTransmit {
 	public Test_Transferable[] transmitTestsButIdsCondition(Identifier_Transferable[] identifier_Transferables,
 			AccessIdentifier_Transferable accessIdentifier,
 			TemporalCondition_Transferable temporalCondition_Transferable) throws AMFICOMRemoteException {
-		Log.debugMessage("CMServerImpl.transmitTestsButIdsCondition | requiere "
+		Log.debugMessage("CMMeasurementTransmit.transmitTestsButIdsCondition | requiere "
 				+ (identifier_Transferables.length == 0 ? "all" : Integer.toString(identifier_Transferables.length))
 				+ " item(s) ", Log.DEBUGLEVEL07);
 		try {
