@@ -135,6 +135,30 @@ public class EmptyDataSource implements DataSourceInterface
 	{
 	}
 	
+	public void LoadMapViews()
+	{
+	}
+
+	public void LoadMapViews(Vector mv_ids)
+	{
+	}
+
+	public void LoadMapView(String mv_id)
+	{
+	}
+
+	public void SaveMapView(String mv_id)
+	{
+	}
+
+	public void RemoveMapView(String mv_id)
+	{
+	}
+
+	public void RemoveFromMapView(String mv_id)
+	{
+	}
+
 	public String GetUId(String type)
 	{
 		return type + Pool.rand.nextLong();

@@ -314,6 +314,54 @@ public class RISDDataSource
 			return;
 	}
 	
+	public void LoadMapViews()
+	{
+		if(si == null)
+			return;
+		if(!si.isOpened())
+			return;
+	}
+
+	public void LoadMapViews(Vector mv_ids)
+	{
+		if(si == null)
+			return;
+		if(!si.isOpened())
+			return;
+	}
+
+	public void LoadMapView(String mv_id)
+	{
+		if(si == null)
+			return;
+		if(!si.isOpened())
+			return;
+	}
+
+	public void SaveMapView(String mv_id)
+	{
+		if(si == null)
+			return;
+		if(!si.isOpened())
+			return;
+	}
+
+	public void RemoveMapView(String mv_id)
+	{
+		if(si == null)
+			return;
+		if(!si.isOpened())
+			return;
+	}
+
+	public void RemoveFromMapView(String mv_id)
+	{
+		if(si == null)
+			return;
+		if(!si.isOpened())
+			return;
+	}
+
 	public void LoadAttributeTypes()
 	{
 		if(si == null)

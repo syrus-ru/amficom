@@ -27,6 +27,13 @@ public interface DataSourceInterface
 	public void RemoveJMap(String mc_id);
 	public void RemoveFromJMap(String mc_id);
 
+	public void LoadMapViews();
+	public void LoadMapViews(Vector mv_ids);
+	public void LoadMapView(String mv_id);
+	public void SaveMapView(String mv_id);
+	public void RemoveMapView(String mv_id);
+	public void RemoveFromMapView(String mv_id);
+
 	public void LoadMapProtoElements();
 	public void LoadMapProtoElements(Vector gids, Vector eids, Vector lids, Vector pids);
 	public void SaveMapProtoElements(String[] ids);
