@@ -1,5 +1,5 @@
 /*
- * $Id: Modeling.java,v 1.1 2004/09/24 14:10:24 bob Exp $
+ * $Id: Modeling.java,v 1.2 2004/09/24 14:17:15 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,7 +23,7 @@ import com.syrus.AMFICOM.measurement.corba.Modeling_Transferable;
 import com.syrus.util.HashCodeGenerator;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2004/09/24 14:10:24 $
+ * @version $Revision: 1.2 $, $Date: 2004/09/24 14:17:15 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -51,6 +51,7 @@ public class Modeling extends StorableObject {
 	
 	protected Modeling(Identifier id,
 							 Identifier creatorId,
+							 Identifier domainId,
 							 String name,
 							 Set argumentSet){
 		super(id);
@@ -59,6 +60,7 @@ public class Modeling extends StorableObject {
 		super.modified = new Date(time);
 		super.creatorId = creatorId;
 		super.modifierId = creatorId;
+		this.domainId = domainId;
 		this.name = name;
 		this.argumentSet = argumentSet;
 		
@@ -73,10 +75,12 @@ public class Modeling extends StorableObject {
 
 	public static Modeling createInstance(Identifier id,
 																		Identifier creatorId,
+																		Identifier domainId,
 																		String name,
 																		Set argumentSet){
 		return new Modeling(id,
 										creatorId,
+										domainId,
 										name,
 										argumentSet);
 		
@@ -195,4 +199,16 @@ public class Modeling extends StorableObject {
 		return equals;
 	}
 
+	public Set getArgumentSet() {
+		return this.argumentSet;
+	}
+	public Identifier getDomainId() {
+		return this.domainId;
+	}
+	public String getName() {
+		return this.name;
+	}
+	public void setMeasurementType(MeasurementType measurementType) {
+		this.measurementType = measurementType;
+	}
 }
