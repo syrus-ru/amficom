@@ -1,5 +1,5 @@
 /*
- * $Id: TestProcessor.java,v 1.40 2005/03/22 16:11:15 arseniy Exp $
+ * $Id: TestProcessor.java,v 1.41 2005/03/23 13:07:06 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,7 +33,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.40 $, $Date: 2005/03/22 16:11:15 $
+ * @version $Revision: 1.41 $, $Date: 2005/03/23 13:07:06 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -70,7 +70,7 @@ public abstract class TestProcessor extends SleepButWorkThread {
 				this.stopInit();
 			}
 
-			if (! MeasurementControlModule.kisIds.contains(kisId)) {
+			if (! MeasurementControlModule.transceivers.containsKey(kisId)) {
 				Log.errorMessage("TestProcessor<init> | Invalid kis: '" + kisId + "'");
 				this.stopInit();
 			}
