@@ -1,5 +1,5 @@
 /*
- * $Id: UserDatabase.java,v 1.4 2004/08/09 14:23:06 bob Exp $
+ * $Id: UserDatabase.java,v 1.5 2004/08/10 13:07:50 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,8 +26,8 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2004/08/09 14:23:06 $
- * @author $Author: bob $
+ * @version $Revision: 1.5 $, $Date: 2004/08/10 13:07:50 $
+ * @author $Author: arseniy $
  * @module configuration_v1
  */
 
@@ -169,7 +169,7 @@ public class UserDatabase extends StorableObjectDatabase {
 
 		
 		String sql = SQL_INSERT_INTO
-			+ ObjectEntities.KIS_ENTITY
+			+ ObjectEntities.USER_ENTITY
 			+ OPEN_BRACKET
 			+ COLUMN_ID + COMMA
 			+ COLUMN_CREATED + COMMA
