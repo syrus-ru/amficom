@@ -1,5 +1,5 @@
 /*
- * $Id: CableLinkTypeDatabase.java,v 1.2 2004/12/14 10:18:36 max Exp $
+ * $Id: CableLinkTypeDatabase.java,v 1.3 2004/12/15 13:10:37 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -36,7 +36,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2004/12/14 10:18:36 $
+ * @version $Revision: 1.3 $, $Date: 2004/12/15 13:10:37 $
  * @author $Author: max $
  * @module config_v1
  */
@@ -157,7 +157,7 @@ public class CableLinkTypeDatabase extends StorableObjectDatabase {
         super.retrieveEntity(cableLinkType);
         this.retrieveCableThreadTypes(Collections.singletonList(cableLinkType));
         CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(ConfigurationDatabaseContext.characteristicDatabase);
-        cableLinkType.setCharacteristics0(characteristicDatabase.retrieveCharacteristics(cableLinkType.getId(), CharacteristicSort.CHARACTERISTIC_SORT_LINKTYPE));
+        cableLinkType.setCharacteristics0(characteristicDatabase.retrieveCharacteristics(cableLinkType.getId(), CharacteristicSort.CHARACTERISTIC_SORT_CABLELINKTYPE));
     }
     
     protected int setEntityForPreparedStatement(StorableObject storableObject,
