@@ -6,23 +6,23 @@
  * 4. Of course, remove start_time from ResultSegment.
  * */
 
-#include <stdio.h>
+
 #include <string.h>
 #include <stdlib.h>
-#include <fcntl.h>
-#include <unistd.h>
-#include <sys/select.h>
+#include <iostream.h>
+
 #include "com_syrus_AMFICOM_mcm_Transceiver.h"
 #include "protocoldefs.h"
 #include "ByteArray.h"
 #include "Parameter.h"
 #include "MeasurementSegment.h"
 #include "ResultSegment.h"
+#include "etcp.h"
 
-const unsigned int MAXLENTASK = 256;
-const unsigned int MAXLENREPORT = 34000;//6000;
-const int MAXLENPATH = 128;
-const char* FIFOROOTPATH = "/tmp";
+//const unsigned int MAXLENTASK = 256;
+//const unsigned int MAXLENREPORT = 34000;//6000;
+//const int MAXLENPATH = 128;
+//const char* FIFOROOTPATH = "/tmp";
 
 /*
 int main() {
@@ -33,6 +33,7 @@ int main() {
 
 JNIEXPORT jboolean JNICALL Java_com_syrus_AMFICOM_mcm_Transceiver_transmit(JNIEnv *env,
 									jobject obj,
+									jint serv_socket,
 									jstring jmeasurement_id,
 									jstring jmeasurement_type_codename,
 									jstring jlocal_address,
@@ -71,7 +72,8 @@ JNIEXPORT jboolean JNICALL Java_com_syrus_AMFICOM_mcm_Transceiver_transmit(JNIEn
 	Parameter** parameters = new Parameter*[parameters_length];
 	jstring jparameter_type_codename;
 	jbyteArray jparameter_value;
-	for (jsize s = 0; s < parameters_length; s++) {
+	for (jsize s = 0; s < parameters_length; s++)
+	{
 		jparameter_type_codename = (jstring)env->GetObjectArrayElement(jparameter_type_codenames, s);
 		l = env->GetStringUTFLength(jparameter_type_codename);
 		buffer = new char[l];
@@ -98,133 +100,69 @@ JNIEXPORT jboolean JNICALL Java_com_syrus_AMFICOM_mcm_Transceiver_transmit(JNIEn
 									parameters);
 
 	unsigned int length = measurementSegment->getLength();
-	if (length + INTSIZE > MAXLENTASK) {
-                printf("(native - agent - transmit) ERROR: Inadequate length of transmitting array: %d; must be <= %d\n",  length, MAXLENTASK - INTSIZE);
-		delete measurementSegment;
-                return JNI_FALSE;
-	}
 
-	jclass transceiver_class = env->GetObjectClass(obj);
-	char* fifoName = new char[MAXLENPATH];
-	strcpy(fifoName, FIFOROOTPATH);
-	strcat(fifoName, "/");
-	jfieldID fid = env->GetFieldID(transceiver_class, "taskFileName", "Ljava/lang/String;");
-	jstring j_task_file_name = (jstring)env->GetObjectField(obj, fid);
-	const char* task_file_name = env->GetStringUTFChars(j_task_file_name, NULL);
-	strcat(fifoName, task_file_name);
-	env->ReleaseStringUTFChars(j_task_file_name, task_file_name);
-	strcat(fifoName, getenv("USER"));
-//	printf("(native - agent - transmit) Opening FIFO: %s\n", fifoName);
-	FILE* fp;
-	if ((fp = fopen(fifoName, "w")) == NULL) {
-		perror("(native - agent - transmit) Cannot open FIFO");
-		delete measurementSegment;
-		delete[] fifoName;
-		return JNI_FALSE;
-	}
-//	printf("(native - agent - transmit) FIFO %s opened\n", fifoName);
-	delete[] fifoName;
-
-	char* arr = new char[MAXLENTASK];
+	char* arr = new char[length + INTSIZE];
 	memcpy(arr, (char*)&length, INTSIZE);
 	memcpy(arr + INTSIZE, measurementSegment->getData(), length);
 
 	delete measurementSegment;
 
-	printf("(native - agent - transmit) Transmitting array of length: %d\n", length);
-/*/------------
-for (l = 0; l < INTSIZE + length; l++)
-	printf("[%d] == %d\n", l, arr[l]);
-//------------*/
-	if (fwrite(arr, MAXLENTASK, 1, fp) < 1) {
-		fclose(fp);
+	cout << "(native - agent - transmit) Transmitting array of length: " << length << "\n";
+
+	if (send(serv_socket,arr,length + INTSIZE,0) < 0)
+	{
+		cout << "(native - agent - transmit) Transfer failed\n";
 		delete[] arr;
-		perror("(native - agent - transmit) Cannot transmit array");
 		return JNI_FALSE;
 	}
+
+	cout << "(native - agent - transmit) Transfer succeeded\n";
+
 	delete[] arr;
-	fclose(fp);
-	printf("(native - agent - transmit) Successfully transmitted array of length %d\n", length);
 
 	return JNI_TRUE;
 }
 
-JNIEXPORT jobject JNICALL Java_com_syrus_AMFICOM_mcm_Transceiver_receive(JNIEnv *env, jobject obj) {
-	jfieldID fid;
+JNIEXPORT jobject JNICALL Java_com_syrus_AMFICOM_mcm_Transceiver_receive(
+	JNIEnv *env,
+	jobject obj,
+	jint serv_socket)
+ {
 	jclass transceiver_class = env->GetObjectClass(obj);
 
-	char* fifoName = new char[MAXLENPATH];
-	strcpy(fifoName, FIFOROOTPATH);
-	strcat(fifoName, "/");
-	fid = env->GetFieldID(transceiver_class, "reportFileName", "Ljava/lang/String;");
-	jstring j_report_file_name = (jstring)env->GetObjectField(obj, fid);
-	const char* report_file_name = env->GetStringUTFChars(j_report_file_name, NULL);
-	strcat(fifoName, report_file_name);
-	env->ReleaseStringUTFChars(j_report_file_name, report_file_name);
-	strcat(fifoName, getenv("USER"));
-//	printf("(native - agent - receive) Opening FIFO: %s\n", fifoName);
-
-	fid = env->GetFieldID(transceiver_class, "initialTimeToSleep", "J");
-	unsigned int kis_tick_time = (unsigned int)(((long)env->GetLongField(obj, fid))/1000);
-	int fd;
-	fd_set in;
-	timeval tv;
-	int sel_ret;
-	char* buftoread;
-
-	if ((fd = open(fifoName, O_RDONLY | O_NONBLOCK)) <= 0) {
-		delete[] fifoName;
-		perror("(native - agent - receive) Cannot open FIFO");
-		sleep(kis_tick_time);
+	cout << "(native - agent - receive)  Getting length of array to receive.\n";
+	
+	unsigned int length = 0;
+	if (recv (serv_socket,(char *)&length,INTSIZE,0) < 0)
+	{
+		cout << "(native - agent - receive)  Failed getting length.\n";
 		return NULL;
 	}
-//	printf("(native - agent - receive) FIFO %s opened\n", fifoName);
 
-	FD_ZERO(&in);
-	FD_SET(fd, &in);
-	tv.tv_sec = (long)kis_tick_time;
-	tv.tv_usec = 0;
-	sel_ret = select(fd + 1, &in, NULL, NULL, &tv);
-	if (sel_ret == 0) {
-		delete[] fifoName;
-		close(fd);
+	char* buftoread = new char[length];
+	unsigned int receiveCode = recv (serv_socket,buftoread,length,0);
+	if (receiveCode <= 0) 
+	{
+		cout << "(native - agent - receive)  Failed getting array of length " << length <<".\n";
+		if (receiveCode < 0)
+			cout << "Reason: the socket was gracefully closed.\n";
+		else
+			cout << "Reason: connection error.\n";
 		return NULL;
 	}
-	else
-		if (sel_ret > 0) {
-			buftoread = new char[MAXLENREPORT];
-			if ((read(fd, buftoread, MAXLENREPORT)) < 1) {
-				delete[] fifoName;
-				delete[] buftoread;
-				close(fd);
-				perror("(native - agent - receive) Cannot read array");
-				sleep(kis_tick_time);
-				return NULL;
-			}
-		}
-		else {
-			delete[] fifoName;
-			close(fd);
-			perror("(native - agent - receive) select");
-			sleep(kis_tick_time);
-			return NULL;
-		}
-	delete[] fifoName;
-	close(fd);
 
-	unsigned int length = *(jsize*)buftoread;
-	printf("(native - agent - receive) Received byte array of length == %d\n", length);
-        if(length + INTSIZE > MAXLENREPORT) {
-		delete[] buftoread;
-		printf("(native - agent - receive) ERROR: Inadequate length of received array: %d; must be less or equal %d\n",  length, MAXLENREPORT - INTSIZE);
+	cout << "(native - agent - receive)  Received array of length " << receiveCode <<".\n";
+	if (length != receiveCode)
+		cout << "(native - agent - receive)  The declared data array length ("
+			 << length
+			 <<") and\n"
+			 << "the length of the received array (" 
+			 << receiveCode
+			 <<") are NOT EQUAL!\n";
 		return NULL;
-	}
 
 	char* data = new char[length];
-	memcpy(data, buftoread + INTSIZE, length);
-	delete[] buftoread;
-
-	ResultSegment* resultSegment = new ResultSegment(length, data);
+	ResultSegment* resultSegment = new ResultSegment(length, buftoread);
 
 	char* measurement_id = resultSegment->getMeasurementId()->getData();
 	jstring j_measurement_id = env->NewStringUTF(measurement_id);
@@ -235,7 +173,8 @@ JNIEXPORT jobject JNICALL Java_com_syrus_AMFICOM_mcm_Transceiver_receive(JNIEnv 
 	jobjectArray j_par_codenames = (jobjectArray)env->NewObjectArray(parnumber, env->FindClass("java/lang/String"), NULL);
 	jobjectArray j_par_values =  (jobjectArray)env->NewObjectArray(parnumber, env->FindClass("[B"), NULL);
 	jbyteArray jpar_value;
-	for (jsize s = 0; s < parnumber; s++) {
+	for (jsize s = 0; s < parnumber; s++)
+	{
 		env->SetObjectArrayElement(j_par_codenames, s, env->NewStringUTF(parameters[s]->getName()->getData()));
 		jpar_value = env->NewByteArray(parameters[s]->getValue()->getLength());
 		env->SetByteArrayRegion(jpar_value, 0, parameters[s]->getValue()->getLength(), (jbyte*)parameters[s]->getValue()->getData());
@@ -253,3 +192,53 @@ JNIEXPORT jobject JNICALL Java_com_syrus_AMFICOM_mcm_Transceiver_receive(JNIEnv 
 	return j_kis_report;
 }
 
+/*JNIEXPORT jint JNICALL Java_com_syrus_AMFICOM_mcm_Transceiver_init_server(
+	JNIEnv *env,
+	jobject obj)
+{
+	init();
+
+	jclass transceiver_class = env->GetObjectClass(obj);
+	jfieldID fid = env->GetFieldID(transceiver_class, "localPort", "Ljava/lang/String;");
+	jstring local_port_strpointer = (jstring)env->GetObjectField(obj, fid);
+	int l = env->GetStringUTFLength(local_port_strpointer);
+
+	char * localPort = new char[l];
+
+	const char* local_port_chars = env->GetStringUTFChars(local_port_strpointer, NULL);//must be released
+	memcpy(localPort, local_port_chars,l);
+	env->ReleaseStringUTFChars(local_port_strpointer, local_port_chars);
+
+	SOCKET listened_socket = tcp_server("127.0.0.1",localPort);
+
+	cout << "Listening socket " << listened_socket << " for port " << localPort << "\n";
+	
+	sockaddr_in peer;
+	int peerlen = sizeof(peer);
+	SOCKET accepted_socket = accept(listened_socket,(sockaddr *)&peer,&peerlen);
+	if (accepted_socket == INVALID_SOCKET)
+		return -1;
+
+	cout << "Connection established at socket " << accepted_socket << "\n";
+	return accepted_socket;
+}*/
+
+/*JNIEXPORT jboolean JNICALL Java_com_syrus_AMFICOM_mcm_Transceiver_shutdown_server(
+	JNIEnv *env,
+	jobject obj,
+	jint serv_socket)
+{
+	try
+	{
+		close(serv_socket);
+		exitConnection(0);
+
+		cout << "Socket " << serv_socket << " shutdowned.\n";
+		return true;
+	}
+	catch(...)
+	{
+	}
+
+	return false;
+}*/
