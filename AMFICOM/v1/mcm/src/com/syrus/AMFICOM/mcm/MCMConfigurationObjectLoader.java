@@ -1,5 +1,5 @@
 /*
- * $Id: MCMConfigurationObjectLoader.java,v 1.9 2004/10/25 10:04:42 bob Exp $
+ * $Id: MCMConfigurationObjectLoader.java,v 1.10 2004/10/26 08:54:31 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,6 +27,8 @@ import com.syrus.AMFICOM.configuration.EquipmentTypeDatabase;
 import com.syrus.AMFICOM.configuration.KIS;
 import com.syrus.AMFICOM.configuration.KISDatabase;
 import com.syrus.AMFICOM.configuration.KISType;
+import com.syrus.AMFICOM.configuration.Link;
+import com.syrus.AMFICOM.configuration.LinkType;
 import com.syrus.AMFICOM.configuration.MCM;
 import com.syrus.AMFICOM.configuration.MCMDatabase;
 import com.syrus.AMFICOM.configuration.MeasurementPort;
@@ -61,8 +63,8 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2004/10/25 10:04:42 $
- * @author $Author: bob $
+ * @version $Revision: 1.10 $, $Date: 2004/10/26 08:54:31 $
+ * @author $Author: max $
  * @module mcm_v1
  */
 
@@ -1405,6 +1407,86 @@ public final class MCMConfigurationObjectLoader implements ConfigurationObjectLo
 		public List loadMonitoredElementsButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException {
 //			 TODO method isn't complete
 			throw new UnsupportedOperationException("method isn't complete");
+		}
+
+		/* (non-Javadoc)
+		 * @see com.syrus.AMFICOM.configuration.ConfigurationObjectLoader#loadLinkType(com.syrus.AMFICOM.general.Identifier)
+		 */
+		public LinkType loadLinkType(Identifier id) throws DatabaseException, CommunicationException {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		/* (non-Javadoc)
+		 * @see com.syrus.AMFICOM.configuration.ConfigurationObjectLoader#loadLink(com.syrus.AMFICOM.general.Identifier)
+		 */
+		public Link loadLink(Identifier id) throws DatabaseException, CommunicationException {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		/* (non-Javadoc)
+		 * @see com.syrus.AMFICOM.configuration.ConfigurationObjectLoader#loadLinkTypes(java.util.List)
+		 */
+		public List loadLinkTypes(List ids) throws DatabaseException, CommunicationException {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		/* (non-Javadoc)
+		 * @see com.syrus.AMFICOM.configuration.ConfigurationObjectLoader#loadLinks(java.util.List)
+		 */
+		public List loadLinks(List ids) throws DatabaseException, CommunicationException {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		/* (non-Javadoc)
+		 * @see com.syrus.AMFICOM.configuration.ConfigurationObjectLoader#loadLinkTypesButIds(com.syrus.AMFICOM.general.StorableObjectCondition, java.util.List)
+		 */
+		public List loadLinkTypesButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		/* (non-Javadoc)
+		 * @see com.syrus.AMFICOM.configuration.ConfigurationObjectLoader#loadLinksButIds(com.syrus.AMFICOM.general.StorableObjectCondition, java.util.List)
+		 */
+		public List loadLinksButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		/* (non-Javadoc)
+		 * @see com.syrus.AMFICOM.configuration.ConfigurationObjectLoader#saveLinkType(com.syrus.AMFICOM.configuration.LinkType, boolean)
+		 */
+		public void saveLinkType(LinkType linkType, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException {
+			// TODO Auto-generated method stub
+			
+		}
+
+		/* (non-Javadoc)
+		 * @see com.syrus.AMFICOM.configuration.ConfigurationObjectLoader#saveLink(com.syrus.AMFICOM.configuration.Link, boolean)
+		 */
+		public void saveLink(Link link, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException {
+			// TODO Auto-generated method stub
+			
+		}
+
+		/* (non-Javadoc)
+		 * @see com.syrus.AMFICOM.configuration.ConfigurationObjectLoader#saveLinkTypes(java.util.List, boolean)
+		 */
+		public void saveLinkTypes(List list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException {
+			// TODO Auto-generated method stub
+			
+		}
+
+		/* (non-Javadoc)
+		 * @see com.syrus.AMFICOM.configuration.ConfigurationObjectLoader#saveLinks(java.util.List, boolean)
+		 */
+		public void saveLinks(List list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException {
+			// TODO Auto-generated method stub
+			
 		}
 
 }

@@ -1,5 +1,5 @@
 /*
- * $Id: ClientConfigurationObjectLoader.java,v 1.4 2004/10/22 10:24:27 max Exp $
+ * $Id: ClientConfigurationObjectLoader.java,v 1.5 2004/10/26 08:57:22 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -21,6 +21,8 @@ import com.syrus.AMFICOM.configuration.Equipment;
 import com.syrus.AMFICOM.configuration.EquipmentType;
 import com.syrus.AMFICOM.configuration.KIS;
 import com.syrus.AMFICOM.configuration.KISType;
+import com.syrus.AMFICOM.configuration.Link;
+import com.syrus.AMFICOM.configuration.LinkType;
 import com.syrus.AMFICOM.configuration.LinkedIdsCondition;
 import com.syrus.AMFICOM.configuration.MCM;
 import com.syrus.AMFICOM.configuration.MeasurementPort;
@@ -40,6 +42,8 @@ import com.syrus.AMFICOM.configuration.corba.EquipmentType_Transferable;
 import com.syrus.AMFICOM.configuration.corba.Equipment_Transferable;
 import com.syrus.AMFICOM.configuration.corba.KISType_Transferable;
 import com.syrus.AMFICOM.configuration.corba.KIS_Transferable;
+import com.syrus.AMFICOM.configuration.corba.LinkType_Transferable;
+import com.syrus.AMFICOM.configuration.corba.Link_Transferable;
 import com.syrus.AMFICOM.configuration.corba.LinkedIdsCondition_Transferable;
 import com.syrus.AMFICOM.configuration.corba.MCM_Transferable;
 import com.syrus.AMFICOM.configuration.corba.MeasurementPortType_Transferable;
@@ -65,7 +69,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.4 $, $Date: 2004/10/22 10:24:27 $
+ * @version $Revision: 1.5 $, $Date: 2004/10/26 08:57:22 $
  * @author $Author: max $
  * @module cmserver_v1
  */
@@ -79,7 +83,7 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
 	public ClientConfigurationObjectLoader(CMServer server) {
 		this.server = server;
 	}
-
+	
 	public static void setAccessIdentifierTransferable(AccessIdentifier_Transferable accessIdentifier_Transferable) {
 		accessIdentifierTransferable = accessIdentifier_Transferable;
 	}	
@@ -168,6 +172,17 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
             String msg = "ClientMeasurementObjectLoader.loadKISType | new KISType(" + id.toString()
                     + ")";
             throw new RetrieveObjectException(msg, e);
+        } catch (AMFICOMRemoteException e) {
+            String msg = "ClientMeasurementObjectLoader.loadKISType | server.transmitKISType("
+                    + id.toString() + ")";
+            throw new CommunicationException(msg, e);
+        }
+    }
+    
+    public LinkType loadLinkType(Identifier id) throws RetrieveObjectException, CommunicationException {
+        try {
+            return new LinkType(this.server.transmitLinkType((Identifier_Transferable) id
+                    .getTransferable(), accessIdentifierTransferable));
         } catch (AMFICOMRemoteException e) {
             String msg = "ClientMeasurementObjectLoader.loadKISType | server.transmitKISType("
                     + id.toString() + ")";
@@ -296,6 +311,22 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
             throw new RetrieveObjectException(msg, e);
         } catch (AMFICOMRemoteException e) {
             String msg = "ClientMeasurementObjectLoader.loadKIS | server.transmitKIS("
+                    + id.toString() + ")";
+            throw new CommunicationException(msg, e);
+        }
+	}
+
+	public Link loadLink(Identifier id) throws DatabaseException,
+			CommunicationException {
+		try {
+            return new Link(this.server.transmitLink((Identifier_Transferable) id
+                    .getTransferable(), accessIdentifierTransferable));
+        } catch (CreateObjectException e) {
+            String msg = "ClientMeasurementObjectLoader.loadLink | new Link(" + id.toString()
+                    + ")";
+            throw new RetrieveObjectException(msg, e);
+        } catch (AMFICOMRemoteException e) {
+            String msg = "ClientMeasurementObjectLoader.loadLink | server.transmitLink("
                     + id.toString() + ")";
             throw new CommunicationException(msg, e);
         }
@@ -471,6 +502,98 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
         }
 	}
 
+	public List loadLinks(List ids) throws DatabaseException,
+			CommunicationException {
+		try {
+            Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
+            int i = 0;
+            for (Iterator it = ids.iterator(); it.hasNext(); i++) {
+                Identifier id = (Identifier) it.next();
+                identifierTransferables[i] = (Identifier_Transferable) id.getTransferable();
+            }
+            Link_Transferable[] transferables = this.server
+                    .transmitLinks(identifierTransferables,
+                                    accessIdentifierTransferable);
+            List list = new ArrayList(transferables.length);
+            for (int j = 0; j < transferables.length; j++) {
+                list.add(new Link(transferables[j]));
+            }
+            return list;
+        } catch (CreateObjectException e) {
+            throw new RetrieveObjectException(e);
+        } catch (AMFICOMRemoteException e) {
+            throw new CommunicationException(e);
+        }
+	}
+
+	public List loadLinksButIds(StorableObjectCondition condition, List ids)
+			throws DatabaseException, CommunicationException {
+		try {
+            Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
+            int i = 0;
+            for (Iterator it = ids.iterator(); it.hasNext(); i++) {
+                Identifier id = (Identifier) it.next();
+                identifierTransferables[i] = (Identifier_Transferable) id.getTransferable();
+            }
+            Link_Transferable[] transferables = this.server
+                    .transmitLinksButIds(identifierTransferables,
+                                    accessIdentifierTransferable);
+            List list = new ArrayList(transferables.length);
+            for (int j = 0; j < transferables.length; j++) {
+                list.add(new Link(transferables[j]));
+            }
+            return list;
+        } catch (CreateObjectException e) {
+            throw new RetrieveObjectException(e);
+        } catch (AMFICOMRemoteException e) {
+            throw new CommunicationException(e);
+        }
+	}
+    
+	public List loadLinkTypes(List ids) throws DatabaseException,
+			CommunicationException {
+		try {
+            Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
+            int i = 0;
+            for (Iterator it = ids.iterator(); it.hasNext(); i++) {
+                Identifier id = (Identifier) it.next();
+                identifierTransferables[i] = (Identifier_Transferable) id.getTransferable();
+            }
+            LinkType_Transferable[] transferables = this.server
+                    .transmitLinkTypes(identifierTransferables,
+                                    accessIdentifierTransferable);
+            List list = new ArrayList(transferables.length);
+            for (int j = 0; j < transferables.length; j++) {
+                list.add(new LinkType(transferables[j]));
+            }
+            return list;
+        } catch (AMFICOMRemoteException e) {
+            throw new CommunicationException(e);
+        }
+	}
+
+	public List loadLinkTypesButIds(StorableObjectCondition condition, List ids)
+			throws DatabaseException, CommunicationException {
+		try {
+            Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
+            int i = 0;
+            for (Iterator it = ids.iterator(); it.hasNext(); i++) {
+                Identifier id = (Identifier) it.next();
+                identifierTransferables[i] = (Identifier_Transferable) id.getTransferable();
+            }
+            LinkType_Transferable[] transferables = this.server
+                    .transmitLinkTypesButIds(identifierTransferables,
+                                    accessIdentifierTransferable);
+            List list = new ArrayList(transferables.length);
+            for (int j = 0; j < transferables.length; j++) {
+                list.add(new LinkType(transferables[j]));
+            }
+            return list;
+        } catch (AMFICOMRemoteException e) {
+            throw new CommunicationException(e);
+        }
+	}
+
 	public List loadKISTypes(List ids) throws DatabaseException,
 			CommunicationException {
 		try {
@@ -494,6 +617,8 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
             throw new CommunicationException(e);
         }
 	}
+    
+    
 
 	public List loadKISTypesButIds(StorableObjectCondition condition, List ids)
 			throws DatabaseException, CommunicationException {
@@ -905,7 +1030,7 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
          try {
              this.server.receiveTransmissionPath(transferables, force, accessIdentifierTransferable);         
          } catch (AMFICOMRemoteException e) {
-             String msg = "ClientConfigurationObjectLoader.save_Transferable ";
+             String msg = "ClientConfigurationObjectLoader.saveTransmissionPath ";
              
              if (e.error_code.equals(ErrorCode.ERROR_VERSION_COLLISION))
                 throw new VersionCollisionException(msg, e);
@@ -919,7 +1044,7 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
          try {
              this.server.receiveKIS(transferables, force, accessIdentifierTransferable);         
          } catch (AMFICOMRemoteException e) {
-             String msg = "ClientConfigurationObjectLoader.save_Transferable ";
+             String msg = "ClientConfigurationObjectLoader.saveKIS ";
              
              if (e.error_code.equals(ErrorCode.ERROR_VERSION_COLLISION))
                 throw new VersionCollisionException(msg, e);
@@ -928,12 +1053,44 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
          }
      }
 
+	public void saveLink(Link link, boolean force)
+			throws VersionCollisionException, DatabaseException,
+			CommunicationException {
+        Link_Transferable transferables = (Link_Transferable) link.getTransferable();         
+        try {
+            this.server.receiveLink(transferables, force, accessIdentifierTransferable);         
+        } catch (AMFICOMRemoteException e) {
+            String msg = "ClientConfigurationObjectLoader.saveLink ";
+            
+            if (e.error_code.equals(ErrorCode.ERROR_VERSION_COLLISION))
+               throw new VersionCollisionException(msg, e);
+            
+            throw new CommunicationException(msg, e);       
+        }
+	}
+
+	public void saveLinkType(LinkType linkType, boolean force)
+			throws VersionCollisionException, DatabaseException,
+			CommunicationException {
+		LinkType_Transferable transferables = (LinkType_Transferable) linkType.getTransferable();         
+        try {
+            this.server.receiveLinkType(transferables, force, accessIdentifierTransferable);         
+        } catch (AMFICOMRemoteException e) {
+            String msg = "ClientConfigurationObjectLoader.saveLinkType ";
+            
+            if (e.error_code.equals(ErrorCode.ERROR_VERSION_COLLISION))
+               throw new VersionCollisionException(msg, e);
+            
+            throw new CommunicationException(msg, e);       
+        }
+	}
+
      public void saveMeasurementPort(MeasurementPort measurementPort, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException{
          MeasurementPort_Transferable transferables = (MeasurementPort_Transferable) measurementPort.getTransferable();         
          try {
              this.server.receiveMeasurementPort(transferables, force, accessIdentifierTransferable);         
          } catch (AMFICOMRemoteException e) {
-             String msg = "ClientConfigurationObjectLoader.save_Transferable ";
+             String msg = "ClientConfigurationObjectLoader.saveMeasurementPort ";
              
              if (e.error_code.equals(ErrorCode.ERROR_VERSION_COLLISION))
                 throw new VersionCollisionException(msg, e);
@@ -947,7 +1104,7 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
          try {
              this.server.receiveMonitoredElement(transferables, force, accessIdentifierTransferable);         
          } catch (AMFICOMRemoteException e) {
-             String msg = "ClientConfigurationObjectLoader.save_Transferable ";
+             String msg = "ClientConfigurationObjectLoader.saveMonitoredElement ";
              
              if (e.error_code.equals(ErrorCode.ERROR_VERSION_COLLISION))
                 throw new VersionCollisionException(msg, e);
@@ -1050,7 +1207,7 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
         KISType_Transferable[] transferables = new KISType_Transferable[list.size()];
         int i=0;
         for (Iterator it = list.iterator(); it.hasNext();i++) {
-            transferables[i] = (KISType_Transferable)( (Characteristic)it.next() ).getTransferable();                        
+            transferables[i] = (KISType_Transferable)( (KISType)it.next() ).getTransferable();                        
         }
         try {
             this.server.receiveKISTypes(transferables, force, accessIdentifierTransferable);         
@@ -1062,7 +1219,48 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
            
            throw new CommunicationException(msg, e);       
         }
-    }
+     }
+
+	public void saveLinks(List list, boolean force)
+			throws VersionCollisionException, DatabaseException,
+			CommunicationException {
+		Link_Transferable[] transferables = new Link_Transferable[list.size()];
+        int i=0;
+        for (Iterator it = list.iterator(); it.hasNext();i++) {
+            transferables[i] = (Link_Transferable)( (Link)it.next() ).getTransferable();                        
+        }
+        try {
+            this.server.receiveLinks(transferables, force, accessIdentifierTransferable);         
+        } catch (AMFICOMRemoteException e) {
+           String msg = "ClientMeasurementObjectLoader.saveLinks ";
+           
+           if (e.error_code.equals(ErrorCode.ERROR_VERSION_COLLISION))
+               throw new VersionCollisionException(msg, e);
+           
+           throw new CommunicationException(msg, e);       
+        }
+	}
+
+	public void saveLinkTypes(List list, boolean force)
+			throws VersionCollisionException, DatabaseException,
+			CommunicationException {
+		LinkType_Transferable[] transferables = new LinkType_Transferable[list.size()];
+        int i=0;
+        for (Iterator it = list.iterator(); it.hasNext();i++) {
+            transferables[i] = (LinkType_Transferable)( (LinkType)it.next() ).getTransferable();                        
+        }
+        try {
+            this.server.receiveLinkTypes(transferables, force, accessIdentifierTransferable);         
+        } catch (AMFICOMRemoteException e) {
+           String msg = "ClientMeasurementObjectLoader.saveLinkTypes ";
+           
+           if (e.error_code.equals(ErrorCode.ERROR_VERSION_COLLISION))
+               throw new VersionCollisionException(msg, e);
+           
+           throw new CommunicationException(msg, e);       
+        }
+	}
+     
 
 //     public void savePermissionAttributes(PermissionAttributes permissionAttributes) throws VersionCollisionException, DatabaseException, CommunicationException{
 //    TODO auto generated stub
