@@ -1,5 +1,5 @@
 /*
- * $Id: LinkedIdsCondition.java,v 1.21 2005/03/24 12:14:10 arseniy Exp $
+ * $Id: LinkedIdsCondition.java,v 1.22 2005/03/24 12:38:50 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,6 +17,9 @@ import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Map;
 
+import com.syrus.AMFICOM.administration.AdministrationStorableObjectPool;
+import com.syrus.AMFICOM.administration.Domain;
+import com.syrus.AMFICOM.administration.DomainMember;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.general.corba.LinkedIdsCondition_Transferable;
 import com.syrus.util.Log;
@@ -65,7 +68,7 @@ import com.syrus.util.Log;
  * </ul>
  * 
  * @author $Author: arseniy $
- * @version $Revision: 1.21 $, $Date: 2005/03/24 12:14:10 $
+ * @version $Revision: 1.22 $, $Date: 2005/03/24 12:38:50 $
  * @module general_v1
  */
 public class LinkedIdsCondition implements StorableObjectCondition {
@@ -424,6 +427,27 @@ public class LinkedIdsCondition implements StorableObjectCondition {
 			}
 		}
 		return false;
+	}
+
+	protected boolean checkDomain(DomainMember domainMember) {
+		boolean condition = false;
+		try {
+			Domain dmDomain = (Domain) AdministrationStorableObjectPool.getStorableObject(domainMember.getDomainId(), true);
+			Identifier id;
+			Domain domain;
+			for (Iterator it = this.linkedIds.iterator(); it.hasNext() && !condition;) {
+				id = (Identifier) it.next();
+				if (id.getMajor() == ObjectEntities.DOMAIN_ENTITY_CODE) {
+					domain = (Domain) AdministrationStorableObjectPool.getStorableObject(id, true);
+					if (dmDomain.isChild(domain))
+						condition = true;
+				}
+			}
+		}
+		catch (ApplicationException ae) {
+			Log.errorException(ae);
+		}
+		return condition;
 	}
 
 	private static short getOnlyOneLinkedEntityCode(Collection ids) throws IllegalDataException {
