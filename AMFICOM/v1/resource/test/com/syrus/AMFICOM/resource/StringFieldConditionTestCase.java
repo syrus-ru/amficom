@@ -1,5 +1,5 @@
 /*
- * $Id: StringFieldConditionTestCase.java,v 1.1 2004/12/08 16:53:22 bass Exp $
+ * $Id: StringFieldConditionTestCase.java,v 1.2 2004/12/15 10:31:59 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,12 +11,12 @@ package com.syrus.AMFICOM.resource;
 import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.general.StringFieldCondition;
 import com.syrus.AMFICOM.general.corba.StringFieldSort;
-import com.syrus.AMFICOM.resource.corba.ImageResourceSort;
+import com.syrus.AMFICOM.resource.corba.ImageResourceDataPackage.ImageResourceSort;
 import junit.framework.TestCase;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.1 $, $Date: 2004/12/08 16:53:22 $
+ * @version $Revision: 1.2 $, $Date: 2004/12/15 10:31:59 $
  * @module resource_v1
  */
 public class StringFieldConditionTestCase extends TestCase {
@@ -46,7 +46,7 @@ public class StringFieldConditionTestCase extends TestCase {
 	public final void testInvalidCtor() {
 		try {
 			new StringFieldCondition(
-				String.valueOf(ImageResourceSort._BYTES),
+				String.valueOf(ImageResourceSort._BITMAP),
 				ObjectEntities.RESOURCE_MAX_ENTITY_CODE,
 				StringFieldSort.STRINGSORT_INTEGER);
 			fail("Either resource group is fully populated, or you run the test with assertions disabled."); //$NON-NLS-1$
@@ -56,7 +56,7 @@ public class StringFieldConditionTestCase extends TestCase {
 	}
 
 	public final void testValidCtor() {
-		final String string = String.valueOf(ImageResourceSort._BYTES);
+		final String string = String.valueOf(ImageResourceSort._BITMAP);
 		final short entityCode = ObjectEntities.IMAGE_RESOURCE_ENTITY_CODE;
 		final StringFieldSort sort = StringFieldSort.STRINGSORT_INTEGER;
 		StringFieldCondition stringFieldCondition = new StringFieldCondition(

@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractImageResource.java,v 1.1 2004/12/03 19:11:29 bass Exp $
+ * $Id: AbstractImageResource.java,v 1.2 2004/12/15 10:31:59 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,7 +14,7 @@ import java.util.*;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.1 $, $Date: 2004/12/03 19:11:29 $
+ * @version $Revision: 1.2 $, $Date: 2004/12/15 10:31:59 $
  * @module resource_v1
  */
 public abstract class AbstractImageResource extends StorableObject {
@@ -23,7 +23,7 @@ public abstract class AbstractImageResource extends StorableObject {
 	/**
 	 * Server-side constructor. Shouldn't be invoked by clients.
 	 */
-	public AbstractImageResource(final Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
+	protected AbstractImageResource(final Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
 		super(id);
 		this.imageResourceDatabase = ResourceDatabaseContext.getImageResourceDatabase();
 		try {
@@ -31,13 +31,6 @@ public abstract class AbstractImageResource extends StorableObject {
 		} catch (IllegalDataException ide) {
 			throw new RetrieveObjectException(ide.getMessage(), ide);
 		}
-	}
-
-	/**
-	 * Middle-tier constructor. Shouldn't be invoked by clients.
-	 */
-	public AbstractImageResource(final ImageResource_Transferable imageResource) {
-		super(imageResource.header);
 	}
 
 	/**
@@ -52,7 +45,22 @@ public abstract class AbstractImageResource extends StorableObject {
 		super(id, created, modified, creatorId, modifierId);
 	}
 
+	/**
+	 * Middle-tier constructor. Shouldn't be invoked by clients.
+	 */
+	protected AbstractImageResource(final ImageResource_Transferable imageResource) {
+		super(imageResource.header);
+	}
+
 	public List getDependencies() {
 		return Collections.EMPTY_LIST;
+	}
+
+	/**
+	 * @throws CreateObjectException
+	 * @see StorableObject#insert()
+	 */
+	public void insert() throws CreateObjectException {
+		throw new UnsupportedOperationException();
 	}
 }

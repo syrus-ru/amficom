@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeImageResource.java,v 1.1 2004/12/03 19:11:29 bass Exp $
+ * $Id: SchemeImageResource.java,v 1.2 2004/12/15 10:31:59 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,6 +10,7 @@ package com.syrus.AMFICOM.resource;
 
 import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.resource.corba.*;
+import com.syrus.AMFICOM.resource.corba.ImageResourceDataPackage.ImageResourceSort;
 import com.syrus.util.Log;
 import java.io.*;
 import java.util.*;
@@ -17,7 +18,7 @@ import java.util.zip.*;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.1 $, $Date: 2004/12/03 19:11:29 $
+ * @version $Revision: 1.2 $, $Date: 2004/12/15 10:31:59 $
  * @module resource_v1
  */
 public final class SchemeImageResource extends AbstractImageResource {
@@ -62,13 +63,18 @@ public final class SchemeImageResource extends AbstractImageResource {
 	public static SchemeImageResource createInstance(final Date created,
 			final Date modified,
 			final Identifier creatorId,
-			final Identifier modifierId) {
-		return new SchemeImageResource(IdentifierPool.generateId(
+			final Identifier modifierId) throws CreateObjectException {
+		try {
+			return new SchemeImageResource(
+				IdentifierPool.getGeneratedIdentifier(
 					ObjectEntities.IMAGE_RESOURCE_ENTITY_CODE),
 				created,
 				modified,
 				creatorId,
 				modifierId);
+		} catch (IllegalObjectEntityException ioee) {
+			throw new CreateObjectException("SchemeImageResource.createInstance | cannot generate identifier ", ioee); //$NON-NLS-1$
+		}
 	}
 
 	public static SchemeImageResource getInstance(final ImageResource_Transferable imageResource) throws CreateObjectException {

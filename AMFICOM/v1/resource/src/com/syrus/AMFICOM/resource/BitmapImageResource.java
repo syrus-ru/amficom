@@ -1,5 +1,5 @@
 /*
- * $Id: BitmapImageResource.java,v 1.1 2004/12/03 19:11:29 bass Exp $
+ * $Id: BitmapImageResource.java,v 1.2 2004/12/15 10:31:59 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,20 +10,20 @@ package com.syrus.AMFICOM.resource;
 
 import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.resource.corba.*;
-import com.syrus.util.Log;
-import java.awt.*;
+import com.syrus.AMFICOM.resource.corba.ImageResourceDataPackage.*;
 import java.util.Date;
-
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.1 $, $Date: 2004/12/03 19:11:29 $
+ * @version $Revision: 1.2 $, $Date: 2004/12/15 10:31:59 $
  * @module resource_v1
  */
-public final class BitmapImageResource extends AbstractImageResource {
+public final class BitmapImageResource extends AbstractBitmapImageResource {
 	private static final long serialVersionUID = 7625218221524477821L;
 
-	private Image image;
+	private String codename;
+
+	private byte image[];
 
 	public BitmapImageResource(final Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
 		super(id);
@@ -36,8 +36,10 @@ public final class BitmapImageResource extends AbstractImageResource {
 	public BitmapImageResource(final ImageResource_Transferable imageResource) {
 		super(imageResource);
 		final ImageResourceData imageResourceData = imageResource.data;
-		assert imageResourceData.discriminator().value() == ImageResourceSort._BYTES;
-		this.image = safeUnpack(imageResourceData.image());
+		assert imageResourceData.discriminator().value() == ImageResourceSort._BITMAP;
+		final BitmapImageResourceData bitmapImageResourceData = imageResourceData.bitmapImageResourceData();
+		this.codename = bitmapImageResourceData.codename;
+		this.image = bitmapImageResourceData.image;
 	}
 
 	protected BitmapImageResource(final Identifier id,
@@ -45,8 +47,10 @@ public final class BitmapImageResource extends AbstractImageResource {
 			final Date modified,
 			final Identifier creatorId,
 			final Identifier modifierId,
-			final Image image) {
+			final String codename,
+			final byte image[]) {
 		super(id, created, modified, creatorId, modifierId);
+		this.codename = codename;
 		this.image = image;
 	}
 
@@ -54,14 +58,21 @@ public final class BitmapImageResource extends AbstractImageResource {
 			final Date modified,
 			final Identifier creatorId,
 			final Identifier modifierId,
-			final Image image) {
-		return new BitmapImageResource(IdentifierPool.generateId(
+			final String codename,
+			final byte image[]) throws CreateObjectException {
+		try {
+			return new BitmapImageResource(
+				IdentifierPool.getGeneratedIdentifier(
 					ObjectEntities.IMAGE_RESOURCE_ENTITY_CODE),
 				created,
 				modified,
 				creatorId,
 				modifierId,
+				codename,
 				image);
+		} catch (IllegalObjectEntityException ioee) {
+			throw new CreateObjectException("BitmapImageResource.createInstance | cannot generate identifier ", ioee); //$NON-NLS-1$
+		}
 	}
 
 	public static BitmapImageResource getInstance(final ImageResource_Transferable imageResource) throws CreateObjectException {
@@ -78,17 +89,35 @@ public final class BitmapImageResource extends AbstractImageResource {
 		return bitmapImageResource;
 	}
 
-	public Image getImage() {
+	/**
+	 * @see AbstractBitmapImageResource#getCodename()
+	 */
+	public String getCodename() {
+		return this.codename;
+	}
+
+	/**
+	 * @see AbstractBitmapImageResource#getImage()
+	 */
+	public byte[] getImage() {
 		return this.image;
 	}
 
 	public Object getTransferable() {
+		final BitmapImageResourceData bitmapImageResourceData = new BitmapImageResourceData();
+		bitmapImageResourceData.codename = this.codename;
+		bitmapImageResourceData.image = this.image;
 		final ImageResourceData imageResourceData = new ImageResourceData();
-		imageResourceData.image(ImageResourceSort.BYTES, safePack(this.image));
+		imageResourceData.bitmapImageResourceData(bitmapImageResourceData);
 		return new ImageResource_Transferable(getHeaderTransferable(), imageResourceData);
 	}
 
-	public void setImage(final Image image) {
+	public void setCodename(final String codename) {
+		this.currentVersion = getNextVersion();
+		setCodename0(codename);
+	}
+
+	public void setImage(final byte image[]) {
 		this.currentVersion = getNextVersion();
 		setImage0(image);
 	}
@@ -97,36 +126,18 @@ public final class BitmapImageResource extends AbstractImageResource {
 			final Date modified,
 			final Identifier creatorId,
 			final Identifier modifierId,
-			final byte packedImage[]) {
+			final String codename,
+			final byte image[]) {
 		super.setAttributes(created, modified, creatorId, modifierId);
-		this.image = safeUnpack(packedImage);
-	}
-
-	protected void setImage0(final Image image) {
+		this.codename = codename;
 		this.image = image;
 	}
 
-	/**
-	 * @todo Implement image to byte array conversion.
-	 */
-	private byte[] pack(final Image image) {
-		throw new UnsupportedOperationException();
+	protected void setCodename0(final String codename) {
+		this.codename = codename;
 	}
 
-	private byte[] safePack(final Image image) {
-		try {
-			return pack(image);
-		} catch (UnsupportedOperationException uoe) {
-			Log.errorException(uoe);
-		}
-		return new byte[0];
-	}
-
-	private Image safeUnpack(final byte packedImage[]) {
-		return unpack(packedImage);
-	}
-
-	private Image unpack(final byte packedImage[]) {
-		return Toolkit.getDefaultToolkit().createImage(packedImage);
+	protected void setImage0(final byte image[]) {
+		this.image = image;
 	}
 }

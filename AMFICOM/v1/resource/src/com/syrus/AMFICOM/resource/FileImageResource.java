@@ -1,5 +1,5 @@
 /*
- * $Id: FileImageResource.java,v 1.2 2004/12/03 19:11:29 bass Exp $
+ * $Id: FileImageResource.java,v 1.3 2004/12/15 10:31:59 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,14 +10,15 @@ package com.syrus.AMFICOM.resource;
 
 import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.resource.corba.*;
+import com.syrus.AMFICOM.resource.corba.ImageResourceDataPackage.ImageResourceSort;
 import java.util.Date;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.2 $, $Date: 2004/12/03 19:11:29 $
+ * @version $Revision: 1.3 $, $Date: 2004/12/15 10:31:59 $
  * @module resource_v1
  */
-public final class FileImageResource extends AbstractImageResource {
+public final class FileImageResource extends AbstractBitmapImageResource {
 	private static final long serialVersionUID = -3374486515234713818L;
 
 	private String fileName;
@@ -51,14 +52,19 @@ public final class FileImageResource extends AbstractImageResource {
 			final Date modified,
 			final Identifier creatorId,
 			final Identifier modifierId,
-			final String fileName) {
-		return new FileImageResource(IdentifierPool.generateId(
+			final String fileName) throws CreateObjectException {
+		try {
+			return new FileImageResource(
+				IdentifierPool.getGeneratedIdentifier(
 					ObjectEntities.IMAGE_RESOURCE_ENTITY_CODE),
 				created,
 				modified,
 				creatorId,
 				modifierId,
 				fileName);
+		} catch (IllegalObjectEntityException ioee) {
+			throw new CreateObjectException("FileImageResource.createInstance | cannot generate identifier ", ioee); //$NON-NLS-1$
+		}
 	}
 
 	public static FileImageResource getInstance(final ImageResource_Transferable imageResource) throws CreateObjectException {
@@ -75,8 +81,22 @@ public final class FileImageResource extends AbstractImageResource {
 		return fileImageResource;
 	}
 
+	/**
+	 * @see AbstractBitmapImageResource#getCodename()
+	 */
+	public String getCodename() {
+		return getFileName();
+	}
+
 	public String getFileName() {
 		return this.fileName;
+	}
+
+	/**
+	 * @see AbstractBitmapImageResource#getImage()
+	 */
+	public byte[] getImage() {
+		throw new UnsupportedOperationException();
 	}
 
 	public Object getTransferable() {
