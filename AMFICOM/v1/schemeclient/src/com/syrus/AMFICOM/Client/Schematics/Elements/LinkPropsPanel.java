@@ -1,35 +1,18 @@
 package com.syrus.AMFICOM.Client.Schematics.Elements;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Point;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.util.Enumeration;
-import java.util.Hashtable;
+import java.awt.*;
+import java.awt.event.*;
+import java.util.*;
 
-import javax.swing.BorderFactory;
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JScrollPane;
-import javax.swing.JPanel;
-import javax.swing.JSplitPane;
-import javax.swing.JTextArea;
-import javax.swing.JTextField;
+import javax.swing.*;
 
 import com.syrus.AMFICOM.Client.General.Event.SchemeElementsEvent;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.Model.Environment;
-import com.syrus.AMFICOM.Client.General.UI.ObjectResourceComboBox;
-import com.syrus.AMFICOM.Client.General.UI.AComboBox;
+import com.syrus.AMFICOM.Client.General.Model.*;
+import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.LinkType;
 import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeLink;
+import com.syrus.AMFICOM.Client.Schematics.UI.PopupNameFrame;
 
 public class LinkPropsPanel extends JPanel
 {
@@ -410,7 +393,7 @@ public class LinkPropsPanel extends JPanel
 
 	void addClassButton_actionPerformed()
 	{
-		PopUpNameFrame dialog = new PopUpNameFrame(Environment.getActiveWindow(), "Новый класс");
+		PopupNameFrame dialog = new PopupNameFrame(Environment.getActiveWindow(), "Новый класс");
 		dialog.setSize(this.getSize().width, dialog.preferredSize.height);
 		Point loc = this.getLocationOnScreen();
 		dialog.setLocation(loc.x, loc.y + 30);
@@ -434,7 +417,7 @@ public class LinkPropsPanel extends JPanel
 
 	void addTypeButton_actionPerformed()
 	{
-		PopUpNameFrame dialog = new PopUpNameFrame(Environment.getActiveWindow(), "Новый тип");
+		PopupNameFrame dialog = new PopupNameFrame(Environment.getActiveWindow(), "Новый тип");
 		dialog.setSize(this.getSize().width, dialog.preferredSize.height);
 		Point loc = this.getLocationOnScreen();
 		dialog.setLocation(loc.x, loc.y + 30);

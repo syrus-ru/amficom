@@ -3,17 +3,18 @@ package com.syrus.AMFICOM.Client.Schematics.UI;
 import java.awt.*;
 import java.util.*;
 
-import javax.swing.*;
+import javax.swing.ImageIcon;
 
 import com.syrus.AMFICOM.Client.General.Filter.*;
-import com.syrus.AMFICOM.Client.General.Lang.*;
+import com.syrus.AMFICOM.Client.General.Lang.LangModelConfig;
 import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.Resource.*;
+import com.syrus.AMFICOM.Client.Resource.ISMDirectory.TransmissionPathType;
 import com.syrus.AMFICOM.Client.Resource.ISMDirectory.*;
-import com.syrus.AMFICOM.Client.Resource.Map.*;
+import com.syrus.AMFICOM.Client.Resource.Map.MapProtoElement;
 import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.*;
-import com.syrus.AMFICOM.Client.Resource.Scheme.*;
-import com.syrus.AMFICOM.Client.Resource.SchemeDirectory.*;
+import com.syrus.AMFICOM.Client.Resource.Scheme.MapProtoGroup;
+import com.syrus.AMFICOM.Client.Resource.SchemeDirectory.ProtoElement;
 
 public class ElementsTreeModel extends ObjectResourceTreeModel
 {
@@ -46,6 +47,43 @@ public class ElementsTreeModel extends ObjectResourceTreeModel
 
 	public void nodeBeforeExpanded(ObjectResourceTreeNode node)
 	{
+	}
+
+	public ObjectResourceCatalogActionModel getNodeActionModel(ObjectResourceTreeNode node)
+	{
+		if(node.getObject() instanceof String)
+		{
+			String s = (String )node.getObject();
+			if(s.equals(KISType.typ) ||
+				 s.equals(EquipmentType.typ))
+				return new ObjectResourceCatalogActionModel(
+				ObjectResourceCatalogActionModel.PANEL,
+				ObjectResourceCatalogActionModel.NO_ADD_BUTTON,
+				ObjectResourceCatalogActionModel.SAVE_BUTTON,
+				ObjectResourceCatalogActionModel.NO_REMOVE_BUTTON,
+				ObjectResourceCatalogActionModel.PROPS_BUTTON,
+				ObjectResourceCatalogActionModel.NO_CANCEL_BUTTON);
+			else if(s.equals(LinkType.typ) ||
+							s.equals(CableLinkType.typ) ||
+							s.equals(PortType.typ) ||
+							s.equals(CablePortType.typ) ||
+							s.equals(AccessPortType.typ) ||
+							s.equals(TransmissionPathType.typ))
+				return new ObjectResourceCatalogActionModel(
+				ObjectResourceCatalogActionModel.PANEL,
+				ObjectResourceCatalogActionModel.ADD_BUTTON,
+				ObjectResourceCatalogActionModel.SAVE_BUTTON,
+				ObjectResourceCatalogActionModel.NO_REMOVE_BUTTON,
+				ObjectResourceCatalogActionModel.PROPS_BUTTON,
+				ObjectResourceCatalogActionModel.NO_CANCEL_BUTTON);
+		}
+		return new ObjectResourceCatalogActionModel(
+				ObjectResourceCatalogActionModel.NO_PANEL,
+				ObjectResourceCatalogActionModel.NO_ADD_BUTTON,
+				ObjectResourceCatalogActionModel.NO_SAVE_BUTTON,
+				ObjectResourceCatalogActionModel.NO_REMOVE_BUTTON,
+				ObjectResourceCatalogActionModel.NO_PROPS_BUTTON,
+				ObjectResourceCatalogActionModel.NO_CANCEL_BUTTON);
 	}
 
 	public Class getNodeChildClass(ObjectResourceTreeNode node)

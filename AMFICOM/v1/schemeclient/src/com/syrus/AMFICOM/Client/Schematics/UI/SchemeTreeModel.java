@@ -11,6 +11,7 @@ import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.Resource.Map.*;
 import com.syrus.AMFICOM.Client.Resource.Scheme.*;
+import com.syrus.AMFICOM.Client.Resource.ISM.*;
 import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.*;
 import com.syrus.AMFICOM.Client.Resource.ISMDirectory.*;
 import com.syrus.AMFICOM.Client.Resource.SchemeDirectory.*;
@@ -72,17 +73,16 @@ public class SchemeTreeModel extends ObjectResourceTreeModel
 		if(node.getObject() instanceof String)
 		{
 			String s = (String )node.getObject();
-			if(s.equals(SchemeElement.typ))
+			if(s.equals(KISType.typ) ||
+							s.equals(EquipmentType.typ))
 				return new ObjectResourceCatalogActionModel(
 						ObjectResourceCatalogActionModel.PANEL,
 						ObjectResourceCatalogActionModel.NO_ADD_BUTTON,
 						ObjectResourceCatalogActionModel.SAVE_BUTTON,
 						ObjectResourceCatalogActionModel.NO_REMOVE_BUTTON,
 						ObjectResourceCatalogActionModel.PROPS_BUTTON,
-						ObjectResourceCatalogActionModel.CANCEL_BUTTON);
-			else if(s.equals(EquipmentType.typ) ||
-							s.equals(KISType.typ) ||
-							s.equals(LinkType.typ) ||
+						ObjectResourceCatalogActionModel.NO_CANCEL_BUTTON);
+			else if(s.equals(LinkType.typ) ||
 							s.equals(CableLinkType.typ) ||
 							s.equals(PortType.typ) ||
 							s.equals(CablePortType.typ) ||
@@ -94,8 +94,15 @@ public class SchemeTreeModel extends ObjectResourceTreeModel
 						ObjectResourceCatalogActionModel.SAVE_BUTTON,
 						ObjectResourceCatalogActionModel.NO_REMOVE_BUTTON,
 						ObjectResourceCatalogActionModel.PROPS_BUTTON,
-						ObjectResourceCatalogActionModel.CANCEL_BUTTON);
-			else if(s.equals(SchemeCableLink.typ))
+						ObjectResourceCatalogActionModel.NO_CANCEL_BUTTON);
+			else if(s.equals(SchemeCableLink.typ) ||
+							s.equals(SchemeLink.typ) ||
+							s.equals(SchemePath.typ) ||
+							s.equals(SchemePort.typ) ||
+							s.equals(SchemeCablePort.typ) ||
+							s.equals(AccessPort.typ) ||
+							s.equals(Scheme.typ) ||
+							s.equals(SchemeElement.typ))
 				return new ObjectResourceCatalogActionModel(
 						ObjectResourceCatalogActionModel.PANEL,
 						ObjectResourceCatalogActionModel.NO_ADD_BUTTON,
@@ -103,47 +110,7 @@ public class SchemeTreeModel extends ObjectResourceTreeModel
 						ObjectResourceCatalogActionModel.NO_REMOVE_BUTTON,
 						ObjectResourceCatalogActionModel.PROPS_BUTTON,
 						ObjectResourceCatalogActionModel.CANCEL_BUTTON);
-			else if(s.equals(SchemeCableLink.typ))
-				return new ObjectResourceCatalogActionModel(
-						ObjectResourceCatalogActionModel.PANEL,
-						ObjectResourceCatalogActionModel.NO_ADD_BUTTON,
-						ObjectResourceCatalogActionModel.SAVE_BUTTON,
-						ObjectResourceCatalogActionModel.NO_REMOVE_BUTTON,
-						ObjectResourceCatalogActionModel.PROPS_BUTTON,
-						ObjectResourceCatalogActionModel.CANCEL_BUTTON);
-			else if(s.equals(Scheme.typ))
-				return new ObjectResourceCatalogActionModel(
-						ObjectResourceCatalogActionModel.PANEL,
-						ObjectResourceCatalogActionModel.NO_ADD_BUTTON,
-						ObjectResourceCatalogActionModel.SAVE_BUTTON,
-						ObjectResourceCatalogActionModel.NO_REMOVE_BUTTON,
-						ObjectResourceCatalogActionModel.PROPS_BUTTON,
-						ObjectResourceCatalogActionModel.CANCEL_BUTTON);
-			else if(s.equals(SchemePath.typ))
-				return new ObjectResourceCatalogActionModel(
-						ObjectResourceCatalogActionModel.PANEL,
-						ObjectResourceCatalogActionModel.NO_ADD_BUTTON,
-						ObjectResourceCatalogActionModel.SAVE_BUTTON,
-						ObjectResourceCatalogActionModel.NO_REMOVE_BUTTON,
-						ObjectResourceCatalogActionModel.PROPS_BUTTON,
-						ObjectResourceCatalogActionModel.CANCEL_BUTTON);
-			else if(s.equals(SchemePort.typ))
-				return new ObjectResourceCatalogActionModel(
-						ObjectResourceCatalogActionModel.PANEL,
-						ObjectResourceCatalogActionModel.NO_ADD_BUTTON,
-						ObjectResourceCatalogActionModel.SAVE_BUTTON,
-						ObjectResourceCatalogActionModel.NO_REMOVE_BUTTON,
-						ObjectResourceCatalogActionModel.PROPS_BUTTON,
-						ObjectResourceCatalogActionModel.CANCEL_BUTTON);
-			else if(s.equals(SchemeCablePort.typ))
-				return new ObjectResourceCatalogActionModel(
-						ObjectResourceCatalogActionModel.PANEL,
-						ObjectResourceCatalogActionModel.NO_ADD_BUTTON,
-						ObjectResourceCatalogActionModel.SAVE_BUTTON,
-						ObjectResourceCatalogActionModel.NO_REMOVE_BUTTON,
-						ObjectResourceCatalogActionModel.PROPS_BUTTON,
-						ObjectResourceCatalogActionModel.CANCEL_BUTTON);
-		}
+			}
 		return new ObjectResourceCatalogActionModel(
 				ObjectResourceCatalogActionModel.NO_PANEL,
 				ObjectResourceCatalogActionModel.NO_ADD_BUTTON,

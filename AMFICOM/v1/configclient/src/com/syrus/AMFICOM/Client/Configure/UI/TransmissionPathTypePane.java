@@ -1,18 +1,14 @@
 package com.syrus.AMFICOM.Client.Configure.UI;
 
-import java.awt.Dimension;
-import java.awt.GridBagLayout;
-import java.awt.GridBagConstraints;
-import java.awt.Insets;
-import java.awt.BorderLayout;
+import java.awt.*;
 
 import javax.swing.JTabbedPane;
 
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.Resource.ObjectResource;
-import com.syrus.AMFICOM.Client.Resource.ISMDirectory.TransmissionPathType;
+import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.General.UI.PropertiesPanel;
-import com.syrus.AMFICOM.Client.General.Checker;
+import com.syrus.AMFICOM.Client.Resource.*;
+import com.syrus.AMFICOM.Client.Resource.ISMDirectory.TransmissionPathType;
+import com.syrus.AMFICOM.Client.Schematics.UI.PopupNameFrame;
 
 public class TransmissionPathTypePane extends PropertiesPanel
 {
@@ -125,6 +121,33 @@ public class TransmissionPathTypePane extends PropertiesPanel
 
 	public boolean create()
 	{
+		DataSourceInterface dataSource = aContext.getDataSourceInterface();
+		if (dataSource == null)
+			return false;
+
+		PopupNameFrame dialog = new PopupNameFrame(Environment.getActiveWindow(), "Новый тип");
+		dialog.setSize(dialog.preferredSize);
+
+		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+		dialog.setLocation((screenSize.width - dialog.getPreferredSize().width) / 2,
+											 (screenSize.height - dialog.getPreferredSize().height) / 2);
+		dialog.setVisible(true);
+
+		if (dialog.getStatus() == dialog.OK && !dialog.getName().equals(""))
+		{
+			String name = dialog.getName();
+			TransmissionPathType new_type = new TransmissionPathType();
+			//new_type.is_modified = true;
+			new_type.name = name;
+			//new_type.link_class = "cable";
+			new_type.modified = System.currentTimeMillis();
+			new_type.id = aContext.getDataSourceInterface().GetUId(TransmissionPathType.typ);
+
+			setObjectResource(new_type);
+
+			Pool.put(TransmissionPathType.typ, new_type.getId(), new_type);
+			return true;
+		}
 		return false;
 	}
 }

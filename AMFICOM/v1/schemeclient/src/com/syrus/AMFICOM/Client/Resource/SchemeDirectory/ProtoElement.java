@@ -1,31 +1,15 @@
 package com.syrus.AMFICOM.Client.Resource.SchemeDirectory;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.Serializable;
-import java.util.Enumeration;
-import java.util.Hashtable;
-import java.util.Vector;
-import java.util.zip.GZIPInputStream;
-import java.util.zip.GZIPOutputStream;
+import java.io.*;
+import java.util.*;
+import java.util.zip.*;
 
-import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
-import com.syrus.AMFICOM.Client.Resource.ObjectResource;
-import com.syrus.AMFICOM.Client.Resource.Pool;
-import com.syrus.AMFICOM.Client.Resource.ResourceUtil;
+import com.syrus.AMFICOM.CORBA.Scheme.*;
+import com.syrus.AMFICOM.Client.General.UI.*;
+import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.Resource.Map.MapProtoElement;
 import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.EquipmentType;
-import com.syrus.AMFICOM.Client.Resource.Scheme.ElementAttribute;
-import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeDevice;
-import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeLink;
-
-import com.syrus.AMFICOM.CORBA.Scheme.ElementAttribute_Transferable;
-import com.syrus.AMFICOM.CORBA.Scheme.SchemeDevice_Transferable;
-import com.syrus.AMFICOM.CORBA.Scheme.SchemeLink_Transferable;
-import com.syrus.AMFICOM.CORBA.Scheme.SchemeProtoElement_Transferable;
+import com.syrus.AMFICOM.Client.Resource.Scheme.*;
 
 public class ProtoElement extends ObjectResource implements Serializable
 {
@@ -91,6 +75,16 @@ public class ProtoElement extends ObjectResource implements Serializable
 	public String getDomainId()
 	{
 		return domain_id;
+	}
+
+	public ObjectResourceModel getModel()
+	{
+		return new ProtoElementModel(this);
+	}
+
+	public static ObjectResourceDisplayModel getDefaultDisplayModel()
+	{
+		return new StubDisplayModel(new String[] { "name" }, new String[] { "name" });
 	}
 
 	public void setLocalFromTransferable()
@@ -341,5 +335,40 @@ public class ProtoElement extends ObjectResource implements Serializable
 		Pool.put("clonedids", id, proto.id);
 		return proto;
 	}
+}
 
+class ProtoElementModel extends ObjectResourceModel
+{
+	ProtoElement proto;
+
+	public ProtoElementModel(ProtoElement proto)
+	{
+		this.proto = proto;
+	}
+
+	public String getColumnValue(String col_id)
+	{
+		String s = "";
+		try
+		{
+			if(col_id.equals("name"))
+			{
+				s = proto.getName();
+			}
+			if(col_id.equals("id"))
+			{
+				s = proto.getId();
+			}
+		}
+		catch(Exception e)
+		{
+			System.out.println("error gettin field value - ProtoElement");
+			s = "";
+		}
+		return s;
+	}
+
+	public void setColumnValue(String col_id, Object obj)
+	{
+	}
 }

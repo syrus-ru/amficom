@@ -56,7 +56,7 @@ public class RISDSchemeDataSource
 		SchemeProtoElementSeq_TransferableHolder peh = new SchemeProtoElementSeq_TransferableHolder();
 		SchemeProtoElement_Transferable protos[];
 		ProtoElement proto;
-		
+
 		Vector loaded_objects = new Vector();
 		ObjectResource or;
 
@@ -78,7 +78,7 @@ public class RISDSchemeDataSource
 		}
 
 		Vector imvec = new Vector();
-	    for (i = 0; i < peh.value.length; i++)
+			for (i = 0; i < peh.value.length; i++)
 			imvec.add(peh.value[i].symbol_id);
 		String[] imids = new String[imvec.size()];
 		imvec.copyInto(imids);
@@ -87,31 +87,31 @@ public class RISDSchemeDataSource
 		images = ih.value;
 		count = images.length;
 		System.out.println("...Done! " + count + " image(s) fetched");
-	    for (i = 0; i < count; i++)
+			for (i = 0; i < count; i++)
 		{
 			image = new ImageResource(images[i]);
 			ImageCatalogue.add(image.getId(), image);
-	    }
+			}
 */
 		protos = peh.value;
 		count = protos.length;
 		System.out.println("...Done! " + count + " proto element(s) fetched");
-	    for (i = 0; i < count; i++)
+			for (i = 0; i < count; i++)
 		{
 			proto = new ProtoElement(protos[i]);
 			Pool.put(ProtoElement.typ, proto.getId(), proto);
 			loaded_objects.add(proto);
-	    }
+			}
 
 		// update loaded objects
 		count = loaded_objects.size();
-	    for (i = 0; i < count; i++)
+			for (i = 0; i < count; i++)
 		{
 			or = (ObjectResource )loaded_objects.get(i);
 			or.updateLocalFromTransferable();
 		}
 	}
-	
+
 	public void LoadSchemeProto(Vector ids)
 	{
 		if(si == null)
@@ -133,7 +133,7 @@ public class RISDSchemeDataSource
 		SchemeProtoElementSeq_TransferableHolder peh = new SchemeProtoElementSeq_TransferableHolder();
 		SchemeProtoElement_Transferable protos[];
 		ProtoElement proto;
-		
+
 		Vector loaded_objects = new Vector();
 		ObjectResource or;
 
@@ -155,7 +155,7 @@ public class RISDSchemeDataSource
 		}
 
 		Vector imvec = new Vector();
-	    for (i = 0; i < peh.value.length; i++)
+			for (i = 0; i < peh.value.length; i++)
 			imvec.add(peh.value[i].symbol_id);
 		String[] imids = new String[imvec.size()];
 		imvec.copyInto(imids);
@@ -164,25 +164,25 @@ public class RISDSchemeDataSource
 		images = ih.value;
 		count = images.length;
 		System.out.println("...Done! " + count + " image(s) fetched");
-	    for (i = 0; i < count; i++)
+			for (i = 0; i < count; i++)
 		{
 			image = new ImageResource(images[i]);
 			ImageCatalogue.add(image.getId(), image);
-	    }
+			}
 */
 		protos = peh.value;
 		count = protos.length;
 		System.out.println("...Done! " + count + " proto element(s) fetched");
-	    for (i = 0; i < count; i++)
+			for (i = 0; i < count; i++)
 		{
 			proto = new ProtoElement(protos[i]);
 			Pool.put(ProtoElement.typ, proto.getId(), proto);
 			loaded_objects.add(proto);
-	    }
+			}
 
 		// update loaded objects
 		count = loaded_objects.size();
-	    for (i = 0; i < count; i++)
+			for (i = 0; i < count; i++)
 		{
 			or = (ObjectResource )loaded_objects.get(i);
 			or.updateLocalFromTransferable();
@@ -199,7 +199,7 @@ public class RISDSchemeDataSource
 		int ecode;
 		ImageResource_Transferable []images;
 		Vector image_vec = new Vector();
-		
+
 		SchemeProtoElement_Transferable pes[] = new SchemeProtoElement_Transferable[ids.length];
 		for(int i = 0; i < ids.length; i++)
 		{
@@ -283,7 +283,7 @@ public class RISDSchemeDataSource
 		SchemeSeq_TransferableHolder sh = new SchemeSeq_TransferableHolder();
 		Scheme_Transferable schemes[];
 		Scheme scheme;
-		
+
 		Vector loaded_objects = new Vector();
 		ObjectResource or;
 
@@ -305,9 +305,9 @@ public class RISDSchemeDataSource
 		}
 
 		Vector imvec = new Vector();
-	    for (i = 0; i < ih.value.length; i++)
+			for (i = 0; i < ih.value.length; i++)
 			imvec.add(ih.value[i].id);
-	    for (i = 0; i < sh.value.length; i++)
+			for (i = 0; i < sh.value.length; i++)
 			imvec.add(sh.value[i].symbol_id);
 		String[] imids = new String[imvec.size()];
 		imvec.copyInto(imids);
@@ -317,25 +317,25 @@ public class RISDSchemeDataSource
 		images = ih.value;
 		count = images.length;
 		System.out.println("...Done! " + count + " image(s) fetched");
-	    for (i = 0; i < count; i++)
+			for (i = 0; i < count; i++)
 		{
 			image = new ImageResource(images[i]);
 			ImageCatalogue.add(image.getId(), image);
-	    }
+			}
 */
 		schemes = sh.value;
 		count = schemes.length;
 		System.out.println("...Done! " + count + " scheme(s) fetched");
-	    for (i = 0; i < count; i++)
+			for (i = 0; i < count; i++)
 		{
 			scheme = new Scheme(schemes[i]);
 			Pool.put(Scheme.typ, scheme.getId(), scheme);
 			loaded_objects.add(scheme);
-	    }
+			}
 
 		// update loaded objects
 		count = loaded_objects.size();
-	    for (i = 0; i < count; i++)
+			for (i = 0; i < count; i++)
 		{
 			or = (ObjectResource )loaded_objects.get(i);
 			or.updateLocalFromTransferable();
@@ -363,7 +363,7 @@ public class RISDSchemeDataSource
 		SchemeSeq_TransferableHolder sh = new SchemeSeq_TransferableHolder();
 		Scheme_Transferable schemes[];
 		Scheme scheme;
-		
+
 		Vector loaded_objects = new Vector();
 		ObjectResource or;
 
@@ -385,9 +385,9 @@ public class RISDSchemeDataSource
 		}
 
 		Vector imvec = new Vector();
-	    for (i = 0; i < ih.value.length; i++)
+			for (i = 0; i < ih.value.length; i++)
 			imvec.add(ih.value[i].id);
-	    for (i = 0; i < sh.value.length; i++)
+			for (i = 0; i < sh.value.length; i++)
 			imvec.add(sh.value[i].symbol_id);
 		String[] imids = new String[imvec.size()];
 		imvec.copyInto(imids);
@@ -396,25 +396,25 @@ public class RISDSchemeDataSource
 		images = ih.value;
 		count = images.length;
 		System.out.println("...Done! " + count + " image(s) fetched");
-	    for (i = 0; i < count; i++)
+			for (i = 0; i < count; i++)
 		{
 			image = new ImageResource(images[i]);
 			ImageCatalogue.add(image.getId(), image);
-	    }
+			}
 */
 		schemes = sh.value;
 		count = schemes.length;
 		System.out.println("...Done! " + count + " scheme(s) fetched");
-	    for (i = 0; i < count; i++)
+			for (i = 0; i < count; i++)
 		{
 			scheme = new Scheme(schemes[i]);
 			Pool.put(Scheme.typ, scheme.getId(), scheme);
 			loaded_objects.add(scheme);
-	    }
+			}
 
 		// update loaded objects
 		count = loaded_objects.size();
-	    for (i = 0; i < count; i++)
+			for (i = 0; i < count; i++)
 		{
 			or = (ObjectResource )loaded_objects.get(i);
 			or.updateLocalFromTransferable();
@@ -547,11 +547,11 @@ public class RISDSchemeDataSource
 		atypes = ath.value;
 		count = atypes.length;
 		System.out.println("...Done! " + count + " attribute type(s) fetched");
-	    for (i = 0; i < count; i++)
+			for (i = 0; i < count; i++)
 		{
 			atype = new ElementAttributeType(atypes[i]);
 			Pool.put(ElementAttributeType.typ, atype.getId(), atype);
-	    }
+			}
 	}
 
 	public void LoadAttributeTypes(String[] ids)
@@ -589,11 +589,11 @@ public class RISDSchemeDataSource
 		atypes = ath.value;
 		count = atypes.length;
 		System.out.println("...Done! " + count + " attribute type(s) fetched");
-	    for (i = 0; i < count; i++)
+			for (i = 0; i < count; i++)
 		{
 			atype = new ElementAttributeType(atypes[i]);
 			Pool.put(ElementAttributeType.typ, atype.getId(), atype);
-	    }
+			}
 	}
 
 	public void SaveSchemeOptimizeInfo(String soi_id)
@@ -616,7 +616,7 @@ public class RISDSchemeDataSource
 			return;
 		}
 	}
-	
+
 	public void LoadSchemeOptimizeInfo()
 	{
 		if(si == null)
@@ -643,12 +643,12 @@ public class RISDSchemeDataSource
 
 		count = sois.length;
 		System.out.println("...Done! " + count + " SOI(s) fetched");
-	    for (i = 0; i < count; i++)
+			for (i = 0; i < count; i++)
 		{
 			Pool.put("optimized_scheme_info", sois[i].id, sois[i]);
-	    }
+			}
 	}
-	
+
 	public void RemoveSchemeOptimizeInfo(String soi_id)
 	{
 		if(si == null)
@@ -677,7 +677,7 @@ public class RISDSchemeDataSource
 
 		SolutionCompact sc = (SolutionCompact )Pool.get("sm_solution", sol_id);
 		sc.setTransferableFromLocal();
-		SchemeMonitoringSolution_Transferable sol = 
+		SchemeMonitoringSolution_Transferable sol =
 				(SchemeMonitoringSolution_Transferable )sc.getTransferable();
 		try
 		{
@@ -690,7 +690,7 @@ public class RISDSchemeDataSource
 			return;
 		}
 	}
-	
+
 	public void LoadSchemeMonitoringSolutions()
 	{
 		if(si == null)
@@ -717,13 +717,13 @@ public class RISDSchemeDataSource
 
 		count = sols.length;
 		System.out.println("...Done! " + count + " SOL(s) fetched");
-	    for (i = 0; i < count; i++)
+			for (i = 0; i < count; i++)
 		{
 			SolutionCompact sc = new SolutionCompact(sols[i]);
 			Pool.put("sm_solution", sc.getId(), sc);
-	    }
+			}
 	}
-	
+
 	public void RemoveSchemeMonitoringSolution(String sol_id)
 	{
 		if(si == null)

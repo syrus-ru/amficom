@@ -34,6 +34,7 @@ import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.CablePortType;
 import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeCablePort;
 import com.syrus.AMFICOM.Client.General.UI.AComboBox;
+import com.syrus.AMFICOM.Client.Schematics.UI.PopupNameFrame;
 
 public class CablePortPropsPanel extends JPanel
 {
@@ -354,7 +355,7 @@ public class CablePortPropsPanel extends JPanel
 
 	void addClassButton_actionPerformed()
 	{
-		PopUpNameFrame dialog = new PopUpNameFrame(Environment.getActiveWindow(), "Новый класс");
+		PopupNameFrame dialog = new PopupNameFrame(Environment.getActiveWindow(), "Новый класс");
 		dialog.setSize(this.getSize().width, dialog.preferredSize.height);
 		Point loc = this.getLocationOnScreen();
 		dialog.setLocation(loc.x, loc.y + 30);
@@ -378,7 +379,7 @@ public class CablePortPropsPanel extends JPanel
 
 	void addTypeButton_actionPerformed()
 	{
-		PopUpNameFrame dialog = new PopUpNameFrame(Environment.getActiveWindow(), "Новый тип");
+		PopupNameFrame dialog = new PopupNameFrame(Environment.getActiveWindow(), "Новый тип");
 		dialog.setSize(this.getSize().width, dialog.preferredSize.height);
 		Point loc = this.getLocationOnScreen();
 		dialog.setLocation(loc.x, loc.y + 30);

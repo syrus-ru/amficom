@@ -33,6 +33,7 @@ import com.syrus.AMFICOM.Client.Resource.ISMDirectory.AccessPortType;
 import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.PortType;
 import com.syrus.AMFICOM.Client.Resource.Scheme.SchemePort;
 import com.syrus.AMFICOM.Client.General.UI.AComboBox;
+import com.syrus.AMFICOM.Client.Schematics.UI.PopupNameFrame;
 
 public class PortPropsPanel extends JPanel
 {
@@ -387,7 +388,7 @@ public class PortPropsPanel extends JPanel
 
 	void addClassButton_actionPerformed()
 	{
-		PopUpNameFrame dialog = new PopUpNameFrame(Environment.getActiveWindow(), "Новый класс");
+		PopupNameFrame dialog = new PopupNameFrame(Environment.getActiveWindow(), "Новый класс");
 		dialog.setSize(this.getSize().width, dialog.preferredSize.height);
 		Point loc = this.getLocationOnScreen();
 		dialog.setLocation(loc.x, loc.y + 30);
@@ -411,7 +412,7 @@ public class PortPropsPanel extends JPanel
 
 	void addTypeButton_actionPerformed()
 	{
-		PopUpNameFrame dialog = new PopUpNameFrame(Environment.getActiveWindow(), "Новый тип");
+		PopupNameFrame dialog = new PopupNameFrame(Environment.getActiveWindow(), "Новый тип");
 		dialog.setSize(this.getSize().width, dialog.preferredSize.height);
 		Point loc = this.getLocationOnScreen();
 		dialog.setLocation(loc.x, loc.y + 30);

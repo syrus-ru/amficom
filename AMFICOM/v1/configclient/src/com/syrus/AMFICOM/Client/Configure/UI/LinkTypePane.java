@@ -1,24 +1,18 @@
 package com.syrus.AMFICOM.Client.Configure.UI;
 
-import java.awt.BorderLayout;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 
-import javax.swing.JPanel;
-import javax.swing.JTabbedPane;
-import javax.swing.JButton;
+import javax.swing.*;
 
-import oracle.jdeveloper.layout.XYConstraints;
-
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.UI.PropertiesPanel;
-import com.syrus.AMFICOM.Client.General.UI.MessageBox;
 import com.syrus.AMFICOM.Client.General.Checker;
-
 import com.syrus.AMFICOM.Client.General.Lang.LangModelConfig;
-
-import com.syrus.AMFICOM.Client.Resource.ObjectResource;
-import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
-import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.LinkType;
+import com.syrus.AMFICOM.Client.General.Model.*;
+import com.syrus.AMFICOM.Client.General.UI.*;
+import com.syrus.AMFICOM.Client.Resource.*;
+import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.*;
+import com.syrus.AMFICOM.Client.Schematics.UI.PopupNameFrame;
+import oracle.jdeveloper.layout.XYConstraints;
 
 public class LinkTypePane extends PropertiesPanel
 {
@@ -146,6 +140,33 @@ public class LinkTypePane extends PropertiesPanel
 
 	public boolean create()
 	{
+		DataSourceInterface dataSource = aContext.getDataSourceInterface();
+		if (dataSource == null)
+			return false;
+
+		PopupNameFrame dialog = new PopupNameFrame(Environment.getActiveWindow(), "Новый тип");
+		dialog.setSize(dialog.preferredSize);
+
+		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+		dialog.setLocation((screenSize.width - dialog.getPreferredSize().width) / 2,
+											 (screenSize.height - dialog.getPreferredSize().height) / 2);
+		dialog.setVisible(true);
+
+		if (dialog.getStatus() == dialog.OK && !dialog.getName().equals(""))
+		{
+			String name = dialog.getName();
+			LinkType new_type = new LinkType();
+			new_type.is_modified = true;
+			new_type.name = name;
+			new_type.link_class = "fibre";
+			new_type.modified = System.currentTimeMillis();
+			new_type.id = aContext.getDataSourceInterface().GetUId(LinkType.typ);
+
+			setObjectResource(new_type);
+
+			Pool.put(LinkType.typ, new_type.getId(), new_type);
+			return true;
+		}
 		return false;
 	}
 

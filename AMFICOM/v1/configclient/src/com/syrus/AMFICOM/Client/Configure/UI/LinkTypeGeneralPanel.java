@@ -32,7 +32,7 @@ import oracle.jdeveloper.layout.VerticalFlowLayout;
 
 public class LinkTypeGeneralPanel extends GeneralPanel
 {
-  LinkType linkType;
+	LinkType linkType;
 
 	SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
 
@@ -44,20 +44,20 @@ public class LinkTypeGeneralPanel extends GeneralPanel
 
 	private GridBagLayout gridBagLayout1 = new GridBagLayout();
 
-  private JLabel manufacturerLabel = new JLabel();
-  private JTextField manufacturerField = new JTextField();
+	private JLabel manufacturerLabel = new JLabel();
+	private JTextField manufacturerField = new JTextField();
 
-  private JLabel manufacturerCodeLabel = new JLabel();
-  private JTextField manufacturerCodeField = new JTextField();
+	private JLabel manufacturerCodeLabel = new JLabel();
+	private JTextField manufacturerCodeField = new JTextField();
 
-  private JLabel modifyLabel2 = new JLabel();
-  private JLabel modifyLabel1 = new JLabel();
-  private JTextField ModifyField = new JTextField();
+	private JLabel modifyLabel2 = new JLabel();
+	private JLabel modifyLabel1 = new JLabel();
+	private JTextField ModifyField = new JTextField();
 
 	private JLabel descLabel = new JLabel();
 	private JPanel descriptionPanel = new JPanel();
-  JScrollPane descriptionScrollPane = new JScrollPane();
-  public JTextPane descTextArea = new JTextPane();
+	JScrollPane descriptionScrollPane = new JScrollPane();
+	public JTextPane descTextArea = new JTextPane();
 
 	private JButton saveButton = new JButton();
 
@@ -96,10 +96,10 @@ public class LinkTypeGeneralPanel extends GeneralPanel
 		descLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
 		manufacturerCodeLabel.setText(LangModelConfig.String("label_manCode"));
 		manufacturerCodeLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
-		manufacturerField.setEnabled(false);
+//		manufacturerField.setEnabled(false);
 		manufacturerLabel.setText(LangModelConfig.String("label_manufacter"));
 		manufacturerLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
-		manufacturerCodeField.setEnabled(false);
+//		manufacturerCodeField.setEnabled(false);
 		ModifyField.setEnabled(false);
 		modifyLabel1.setText(LangModelConfig.String("label_modified1"));
 		modifyLabel1.setPreferredSize(new Dimension(DEF_WIDTH, 10));
@@ -182,7 +182,7 @@ public class LinkTypeGeneralPanel extends GeneralPanel
 		try
 		{
 			if(MyUtil.validName(nameField.getText()))
-			   linkType.name = nameField.getText();
+				 linkType.name = nameField.getText();
 			else
 				return false;
 
@@ -211,8 +211,8 @@ public class LinkTypeGeneralPanel extends GeneralPanel
 		if(modify())
 		{
 			DataSourceInterface dataSource = aContext.getDataSourceInterface();
-      String[] s = new String[1];
-      s[0] = linkType.getId();
+			String[] s = new String[1];
+			s[0] = linkType.getId();
 			dataSource.SaveLinkTypes(s);
 		}
 	}

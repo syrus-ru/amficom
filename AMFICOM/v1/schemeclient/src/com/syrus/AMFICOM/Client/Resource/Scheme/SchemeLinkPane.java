@@ -2,7 +2,7 @@ package com.syrus.AMFICOM.Client.Resource.Scheme;
 
 import com.syrus.AMFICOM.Client.Configure.UI.*;
 import com.syrus.AMFICOM.Client.Resource.*;
-import com.syrus.AMFICOM.Client.Resource.Network.*;
+import com.syrus.AMFICOM.Client.Resource.Network.Link;
 
 public class SchemeLinkPane extends LinkPane
 {
