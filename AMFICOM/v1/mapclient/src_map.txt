@@ -3,6 +3,8 @@ src\com\syrus\AMFICOM\Client\General\Command\Config\MapCatalogueCommand.java
 src\com\syrus\AMFICOM\Client\General\Command\Config\MapConfigViewOpenCommand.java
 src\com\syrus\AMFICOM\Client\General\Command\Config\MapViewOpenCommand.java
 src\com\syrus\AMFICOM\Client\General\Command\Config\NewMapViewCommand.java
+src\com\syrus\AMFICOM\Client\General\Command\Config\OpenSchemeEditorCommand.java
+src\com\syrus\AMFICOM\Client\General\Command\Config\OpenMapEditorCommand.java 
 src\com\syrus\AMFICOM\Client\General\Command\Config\SchemeViewOpenCommand.java
 src\com\syrus\AMFICOM\Client\General\Command\Config\ViewMapNavigatorCommand.java 
 src\com\syrus\AMFICOM\Client\General\Command\Map\MapCloseCommand.java
