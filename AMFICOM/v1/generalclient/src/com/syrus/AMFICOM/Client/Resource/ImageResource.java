@@ -1,5 +1,5 @@
 /*
- * $Id: ImageResource.java,v 1.4 2004/09/27 16:08:06 bass Exp $
+ * $Id: ImageResource.java,v 1.5 2005/01/11 16:38:39 krupenn Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,9 +15,10 @@ import java.util.Hashtable;
 import javax.swing.ImageIcon;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.4 $, $Date: 2004/09/27 16:08:06 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.5 $, $Date: 2005/01/11 16:38:39 $
  * @module generalclient_v1
+ * @deprecated use AbstractImageResource along with ResourceStorableObjectPool
  */
 public class ImageResource extends StubResource
 		implements Serializable

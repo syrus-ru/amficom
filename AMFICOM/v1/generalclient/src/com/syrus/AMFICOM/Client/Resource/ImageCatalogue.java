@@ -1,5 +1,5 @@
 /*
- * $Id: ImageCatalogue.java,v 1.5 2004/09/27 16:06:49 bass Exp $
+ * $Id: ImageCatalogue.java,v 1.6 2005/01/11 16:38:39 krupenn Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,9 +13,10 @@ import com.syrus.AMFICOM.Client.General.SessionInterface;
 import java.util.*;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.5 $, $Date: 2004/09/27 16:06:49 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.6 $, $Date: 2005/01/11 16:38:39 $
  * @module generalclient_v1
+ * @deprecated use ResourceStorableObjectPool
  */
 public final class ImageCatalogue {
 	private static final Hashtable HASHTABLE = new Hashtable();
