@@ -1,5 +1,5 @@
 /*
- * $Id: ModelTrace.java,v 1.3 2005/02/08 11:46:27 saa Exp $
+ * $Id: ModelTrace.java,v 1.4 2005/02/15 14:19:18 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,15 +9,32 @@ package com.syrus.AMFICOM.analysis.dadara;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.3 $, $Date: 2005/02/08 11:46:27 $
+ * @version $Revision: 1.4 $, $Date: 2005/02/15 14:19:18 $
  * @module
  */
 public abstract class ModelTrace
 {
+	/**
+	 * ¬озвращает длину кривой в точках
+	 * @return длина
+	 */
 	public abstract int getLength();
 
+	/**
+	 * ѕолучить значение кривой при данном иксе 
+	 * @param x икс
+	 * @return игрек
+	 */
 	public abstract double getY(int x);
 
+	/**
+	 * ¬озвращает значени€ игреков на указанном диапазоне иксов x0 .. x0+N-1.
+	 * результат за пределами области определени€ рефлектограммы (x < 0 или x >= length)
+	 * не определен.
+	 * @param x0 Ќачальный икс
+	 * @param N количество иксов
+	 * @return массив значений
+	 */
 	public double[] getYArray(int x0, int N)
 	{
 		double[] ret = new double[N];
@@ -26,7 +43,13 @@ public abstract class ModelTrace
 		return ret;
 	}
 	
-	// if x0 + N > trace length, should fill with zero
+	/**
+	 * ¬озвращает значени€ игреков на диапазоне иксов x0 .. x0+N-1,
+	 * полага€ нулевыми значени€ за пределами области определени€.
+	 * @param x0 начальный икс, должен быть >=0
+	 * @param N количество иксов
+	 * @return массив значений
+	 */
 	public double[] getYArrayZeroPad(int x0, int N)
 	{
 		int toEnd = getLength() - x0;
@@ -46,6 +69,10 @@ public abstract class ModelTrace
 		}
 	}
 
+	/**
+	 * ¬озвращает значени€ игреков на всей длине рефлектограммы 
+	 * @return представление кривой в виде массива
+	 */
 	public double[] getYArray()
 	{
 		return getYArray(0, getLength());

@@ -1,5 +1,5 @@
 /*
- * $Id: ModelTraceManager.java,v 1.5 2005/02/11 12:10:37 saa Exp $
+ * $Id: ModelTraceManager.java,v 1.6 2005/02/15 14:19:18 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,7 +17,7 @@ import java.util.LinkedList;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.5 $, $Date: 2005/02/11 12:10:37 $
+ * @version $Revision: 1.6 $, $Date: 2005/02/15 14:19:18 $
  * @module
  */
 public class ModelTraceManager
@@ -225,9 +225,15 @@ public class ModelTraceManager
 		}
 	}
 
-	// XXX: slow
-	// XXX: inconvenient
-	public int getEventByCoord(int x) // may be -1
+	/**
+	 * ¬озвращает номер событи€, соответствующего данному
+	 * иксу. ≈сли x попадает на границу двух событий,
+	 * то выбор левого или правого зависит от реализации.
+	 * ≈сли x не попадает ни на одно событие,
+	 * то возвращает -1.
+	 * <p> ќтносительно медленный метод и не очень удобный. 
+	 */
+	public int getEventByCoord(int x)
 	{
 		int ret = -1;
 		for (int i = 0; i < se.length; i++)
