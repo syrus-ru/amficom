@@ -1,5 +1,5 @@
 /*
- * $Id: OperatorProfileModel.java,v 1.3 2004/08/19 10:47:23 stas Exp $
+ * $Id: OperatorProfileModel.java,v 1.4 2004/09/27 15:40:36 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,21 +8,19 @@
 
 package com.syrus.AMFICOM.Client.Resource.Object;
 
-import java.text.*;
-import java.util.*;
-
-
-import com.syrus.AMFICOM.Client.Administrate.Object.UI.*;
-import com.syrus.AMFICOM.Client.General.UI.*;
+import com.syrus.AMFICOM.Client.Administrate.Object.UI.OperatorProfilePane;
+import com.syrus.AMFICOM.Client.General.UI.ObjectResourcePropertiesPane;
 import com.syrus.AMFICOM.Client.Resource.*;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * This class actually belongs to <tt>admin_v1</tt> module. It was
  * moved to <tt>generalclient_v1</tt> to resolve cross-module
  * dependencies between <tt>generalclient_v1</tt> and <tt>admin_1</tt>.
  *
- * @author $Author: stas $
- * @version $Revision: 1.3 $, $Date: 2004/08/19 10:47:23 $
+ * @author $Author: bass $
+ * @version $Revision: 1.4 $, $Date: 2004/09/27 15:40:36 $
  * @module generalclient_v1
  */
 public class OperatorProfileModel extends ObjectResourceModel
@@ -71,10 +69,10 @@ public class OperatorProfileModel extends ObjectResourceModel
 			return ObjectResource.class;
 	}
 
-
-	public PropertiesPanel getPropertyPane()
-	{
-		return new OperatorProfilePane(prof);
+	public ObjectResourcePropertiesPane getPropertyPane() {
+		OperatorProfilePane operatorProfilePane = OperatorProfilePane.getInstance();
+		operatorProfilePane.setObjectResource(prof);
+		return operatorProfilePane;
 	}
 
 	public String getColumnValue(String col_id)

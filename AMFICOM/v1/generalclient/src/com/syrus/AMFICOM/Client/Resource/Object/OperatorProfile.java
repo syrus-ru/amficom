@@ -1,5 +1,5 @@
 /*
- * $Id: OperatorProfile.java,v 1.4 2004/09/10 14:13:36 stas Exp $
+ * $Id: OperatorProfile.java,v 1.5 2004/09/27 15:41:49 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,28 +8,20 @@
 
 package com.syrus.AMFICOM.Client.Resource.Object;
 
-import java.io.*;
-
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-import java.util.HashMap;
-import java.util.ArrayList;
-
-import com.syrus.AMFICOM.CORBA.Admin.*;
-import com.syrus.AMFICOM.Client.General.UI.*;
+import com.syrus.AMFICOM.CORBA.Admin.OperatorProfile_Transferable;
+import com.syrus.AMFICOM.Client.General.UI.ObjectResourceDisplayModel;
 import com.syrus.AMFICOM.Client.Resource.*;
-
 import com.syrus.io.Rewriter;
-import java.util.Map;
+import java.io.*;
+import java.util.*;
 
 /**
  * This class actually belongs to <tt>admin_v1</tt> module. It was
  * moved to <tt>generalclient_v1</tt> to resolve cross-module
  * dependencies between <tt>generalclient_v1</tt> and <tt>admin_1</tt>.
  *
- * @author $Author: stas $
- * @version $Revision: 1.4 $, $Date: 2004/09/10 14:13:36 $
+ * @author $Author: bass $
+ * @version $Revision: 1.5 $, $Date: 2004/09/27 15:41:49 $
  * @module generalclient_v1
  */
 public class OperatorProfile extends AdminObjectResource implements Serializable
@@ -342,7 +334,7 @@ public class OperatorProfile extends AdminObjectResource implements Serializable
 			return ObjectResource.class;
 	}
 
-	public String getPropertyPaneClassName()
+	public static String getPropertyPaneClassName()
 	{
 		return "com.syrus.AMFICOM.Client.Administrate.Object.UI.OperatorProfilePane";
 	}

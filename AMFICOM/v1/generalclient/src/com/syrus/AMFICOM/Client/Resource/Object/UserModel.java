@@ -1,13 +1,24 @@
+/*
+ * $Id: UserModel.java,v 1.4 2004/09/27 15:38:15 bass Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ
+ */
+
 package com.syrus.AMFICOM.Client.Resource.Object;
 
-import java.text.*;
+import com.syrus.AMFICOM.Client.Administrate.Object.UI.UserPane;
+import com.syrus.AMFICOM.Client.General.UI.ObjectResourcePropertiesPane;
+import com.syrus.AMFICOM.Client.Resource.*;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
-
-import com.syrus.AMFICOM.Client.Administrate.Object.UI.*;
-import com.syrus.AMFICOM.Client.General.UI.*;
-import com.syrus.AMFICOM.Client.Resource.*;
-
+/**
+ * @author $Author: bass $
+ * @version $Revision: 1.4 $, $Date: 2004/09/27 15:38:15 $
+ * @module generalclient_v1
+ */
 public class UserModel extends ObjectResourceModel
 {
   public User user;
@@ -27,11 +38,11 @@ public class UserModel extends ObjectResourceModel
     return ObjectResource.class;
   }
 
-
-  public  PropertiesPanel getPropertyPane()
-  {
-	  return new UserPane(user);
-  }
+	public  ObjectResourcePropertiesPane getPropertyPane() {
+		UserPane userPane = UserPane.getInstance();
+		userPane.setObjectResource(user);
+		return userPane;
+	}
 
   public String getColumnValue(String col_id)
   {
@@ -57,7 +68,5 @@ public class UserModel extends ObjectResourceModel
 		  s = "";
 
 	  return s;
-  }
-
-
+	}
 }

@@ -1,15 +1,23 @@
+/*
+ * $Id: User.java,v 1.7 2004/09/27 15:39:14 bass Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ
+ */
+
 package com.syrus.AMFICOM.Client.Resource.Object;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.HashMap;
-
-import com.syrus.AMFICOM.CORBA.Admin.*;
-import com.syrus.AMFICOM.Client.General.UI.*;
+import com.syrus.AMFICOM.CORBA.Admin.User_Transferable;
+import com.syrus.AMFICOM.Client.General.UI.ObjectResourceDisplayModel;
 import com.syrus.AMFICOM.Client.Resource.*;
-import java.util.Map;
+import java.util.*;
 
+/**
+ * @author $Author: bass $
+ * @version $Revision: 1.7 $, $Date: 2004/09/27 15:39:14 $
+ * @module generalclient_v1
+ */
 public class User extends AdminObjectResource
 {
 	public User_Transferable transferable = new User_Transferable();
@@ -138,7 +146,7 @@ public class User extends AdminObjectResource
 
 	}
 
-	public String getPropertyPaneClassName()
+	public static String getPropertyPaneClassName()
 	{
 		return "com.syrus.AMFICOM.Client.Administrate.Object.UI.UserPane";
 	}
