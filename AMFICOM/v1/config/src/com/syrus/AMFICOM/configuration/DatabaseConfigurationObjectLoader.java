@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseConfigurationObjectLoader.java,v 1.2 2004/08/11 16:46:23 arseniy Exp $
+ * $Id: DatabaseConfigurationObjectLoader.java,v 1.3 2004/08/16 08:17:26 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,7 +12,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.DatabaseException;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2004/08/11 16:46:23 $
+ * @version $Revision: 1.3 $, $Date: 2004/08/16 08:17:26 $
  * @author $Author: arseniy $
  * @module configuration_v1
  */
@@ -34,9 +34,9 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
 		return new PortType(id);
 	}
 
-//	public MeasurementPortType loadMeasurementPortType(Identifier id) throws DatabaseException {
-//		return new MeasurementPortType(id);
-//	}
+	public MeasurementPortType loadMeasurementPortType(Identifier id) throws DatabaseException {
+		return new MeasurementPortType(id);
+	}
 
 	public Characteristic loadCharacteristic(Identifier id) throws DatabaseException {
 		return new Characteristic(id);

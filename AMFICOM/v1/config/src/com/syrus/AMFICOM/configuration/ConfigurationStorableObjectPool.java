@@ -1,5 +1,5 @@
 /*
- * $Id: ConfigurationStorableObjectPool.java,v 1.2 2004/08/11 16:45:02 arseniy Exp $
+ * $Id: ConfigurationStorableObjectPool.java,v 1.3 2004/08/16 08:17:26 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -21,7 +21,7 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2004/08/11 16:45:02 $
+ * @version $Revision: 1.3 $, $Date: 2004/08/16 08:17:26 $
  * @author $Author: arseniy $
  * @module configuration_v1
  */
@@ -93,7 +93,8 @@ public class ConfigurationStorableObjectPool {
 				if (useLoader) {
 					try {
 						storableObject = loadStorableObject(objectId);
-						putStorableObject(storableObject);
+						if (storableObject != null)
+							putStorableObject(storableObject);
 					}
 					catch (Exception e) {
 						Log.errorException(e);
@@ -103,7 +104,7 @@ public class ConfigurationStorableObjectPool {
 			}
 		}
 		else {
-			Log.errorMessage("Cannot find object pool for objectId: '" + objectId.toString() + "' entity code: '" + objectEntityCode + "'");
+			Log.errorMessage("ConfigurationStorableObjectPool.getStorableObject | Cannot find object pool for objectId: '" + objectId.toString() + "' entity code: '" + objectEntityCode + "'");
 			return null;
 		}
 	}
@@ -120,9 +121,9 @@ public class ConfigurationStorableObjectPool {
 			case ObjectEntities.PORTTYPE_ENTITY_CODE:
 				storableObject = cObjectLoader.loadPortType(objectId);
 				break;
-//			case ObjectEntities.MEASUREMENTPORTTYPE_ENTITY_CODE:
-//				storableObject = cObjectLoader.loadMeasurementPortType(objectId);
-//				break;
+			case ObjectEntities.MEASUREMENTPORTTYPE_ENTITY_CODE:
+				storableObject = cObjectLoader.loadMeasurementPortType(objectId);
+				break;
 			case ObjectEntities.CHARACTERISTIC_ENTITY_CODE:
 				storableObject = cObjectLoader.loadCharacteristic(objectId);
 				break;
@@ -160,7 +161,7 @@ public class ConfigurationStorableObjectPool {
 				storableObject = cObjectLoader.loadMonitoredElement(objectId);
 				break;
 			default:
-				Log.errorMessage("Unknown entity: " + objectId.getObjectEntity());
+				Log.errorMessage("ConfigurationStorableObjectPool.loadStorableObject | Unknown entity: " + objectId.getObjectEntity());
 				storableObject = null;
 		}
 		return storableObject;
@@ -172,6 +173,6 @@ public class ConfigurationStorableObjectPool {
 		if (objectPool != null) {
 			return (StorableObject)objectPool.put(objectId, storableObject);
 		}
-		throw new IllegalObjectEntityException("Illegal object entity: '" + objectId.getObjectEntity() + "'", IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
+		throw new IllegalObjectEntityException("ConfigurationStorableObjectPool.putStorableObject | Illegal object entity: '" + objectId.getObjectEntity() + "'", IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
 	}
 }
