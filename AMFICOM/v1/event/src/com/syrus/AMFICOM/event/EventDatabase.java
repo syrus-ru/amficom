@@ -1,5 +1,5 @@
 /*
- * $Id: EventDatabase.java,v 1.5 2005/02/02 15:09:47 arseniy Exp $
+ * $Id: EventDatabase.java,v 1.6 2005/02/03 14:47:45 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,6 +35,7 @@ import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
+import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.Log;
@@ -44,7 +45,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/02/02 15:09:47 $
+ * @version $Revision: 1.6 $, $Date: 2005/02/03 14:47:45 $
  * @author $Author: arseniy $
  * @module event_v1
  */
@@ -52,11 +53,7 @@ import com.syrus.util.database.DatabaseString;
 public class EventDatabase extends StorableObjectDatabase {
 
 	public static final String LINK_COLUMN_EVENT_ID	= "event_id";
-	public static final String LINK_COLUMN_PARAMETER_TYPE_ID	= "type_id";
-	public static final String LINK_COLUMN_PARAMETER_SORT	= "sort";
-	public static final String LINK_COLUMN_PARAMETER_VALUE_NUMBER	= "value_number";
-	public static final String LINK_COLUMN_PARAMETER_VALUE_STRING	= "value_string";
-	public static final String LINK_COLUMN_PARAMETER_VALUE_RAW	= "value_raw";
+	
 	public static final String LINK_COLUMN_SOURCE_ID	= "source_id";
 	public static final String LINK_COLUMN_SOURCE_ENTITY_CODE	= "source_entity_code";
 	public static final String LINK_COLUMN_SOURCE_PORT_ID	= "port_id";
@@ -88,9 +85,9 @@ public class EventDatabase extends StorableObjectDatabase {
 	protected String getColumns(int mode) {
 		if (columns == null) {
 			columns = super.getColumns(mode) + COMMA
-				+ EventWrapper.COLUMN_TYPE_ID + COMMA
+				+ StorableObjectWrapper.COLUMN_TYPE_ID + COMMA
 				+ EventWrapper.COLUMN_STATUS + COMMA
-				+ EventWrapper.COLUMN_DESCRIPTION;
+				+ StorableObjectWrapper.COLUMN_DESCRIPTION;
 		}
 		return columns;
 	}
@@ -132,7 +129,7 @@ public class EventDatabase extends StorableObjectDatabase {
 
 	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
 			throws IllegalDataException, RetrieveObjectException, SQLException {
-		Event event = (storableObject == null) ? new Event(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID),
+		Event event = (storableObject == null) ? new Event(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
 				null,
 				null,
 				null,
@@ -141,18 +138,18 @@ public class EventDatabase extends StorableObjectDatabase {
 		EventType eventType;
 		try {
 			eventType = (EventType) EventStorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet,
-					EventWrapper.COLUMN_TYPE_ID), true);			
+					StorableObjectWrapper.COLUMN_TYPE_ID), true);			
 		}
 		catch (ApplicationException ae) {
 			throw new RetrieveObjectException(ae);
 		}
-		event.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
-								DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
-								DatabaseIdentifier.getIdentifier(resultSet, COLUMN_CREATOR_ID),
-								DatabaseIdentifier.getIdentifier(resultSet, COLUMN_MODIFIER_ID),
+		event.setAttributes(DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_CREATED),
+								DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
+								DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
+								DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
 								eventType,
 								resultSet.getInt(EventWrapper.COLUMN_STATUS),
-								DatabaseString.fromQuerySubString(resultSet.getString(EventWrapper.COLUMN_DESCRIPTION)));		
+								DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_DESCRIPTION)));		
 		return event;
 	}
 
@@ -161,17 +158,14 @@ public class EventDatabase extends StorableObjectDatabase {
 
 		String eventIdStr = DatabaseIdentifier.toSQLString(event.getId());
 		String sql = SQL_SELECT
-			+ COLUMN_ID + COMMA			
-			+ LINK_COLUMN_PARAMETER_TYPE_ID + COMMA
-			+ LINK_COLUMN_PARAMETER_SORT + COMMA
-			+ LINK_COLUMN_PARAMETER_VALUE_NUMBER + COMMA
-			+ LINK_COLUMN_PARAMETER_VALUE_STRING + COMMA
-			+ LINK_COLUMN_PARAMETER_VALUE_RAW
-			+ SQL_FROM
-			+ ObjectEntities.EVENTPARAMETER_ENTITY
-			+ SQL_WHERE
-			+ LINK_COLUMN_EVENT_ID + EQUALS
-			+ eventIdStr;
+			+ StorableObjectWrapper.COLUMN_ID + COMMA			
+			+ StorableObjectWrapper.COLUMN_TYPE_ID + COMMA
+			+ EventWrapper.LINK_COLUMN_EVENT_PARAMETER_SORT + COMMA
+			+ EventWrapper.LINK_COLUMN_EVENT_PARAMETER_VALUE_NUMBER + COMMA
+			+ EventWrapper.LINK_COLUMN_EVENT_PARAMETER_VALUE_STRING + COMMA
+			+ EventWrapper.LINK_COLUMN_EVENT_PARAMETER_VALUE_RAW
+			+ SQL_FROM + ObjectEntities.EVENTPARAMETER_ENTITY
+			+ SQL_WHERE + LINK_COLUMN_EVENT_ID + EQUALS + eventIdStr;
 		Statement statement = null;
 		ResultSet resultSet = null;
 		Connection connection = DatabaseConnection.getConnection();
@@ -184,31 +178,31 @@ public class EventDatabase extends StorableObjectDatabase {
 			EventParameter parameter;
 			ParameterType parameterType;
 			while (resultSet.next()) {
-				parameterId = DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID);
+				parameterId = DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID);
 				try {
-					parameterType = (ParameterType) GeneralStorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, LINK_COLUMN_PARAMETER_TYPE_ID), true);
+					parameterType = (ParameterType) GeneralStorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_TYPE_ID), true);
 				}
 				catch (ApplicationException ae) {
 					throw new RetrieveObjectException(ae);
 				}
-				sort = resultSet.getInt(LINK_COLUMN_PARAMETER_SORT);
+				sort = resultSet.getInt(EventWrapper.LINK_COLUMN_EVENT_PARAMETER_SORT);
 				switch (sort) {
 					case EventParameterSort._PARAMETER_SORT_NUMBER:
 						parameter = new EventParameter(parameterId,
 								parameterType,
-								resultSet.getInt(LINK_COLUMN_PARAMETER_VALUE_NUMBER));
+								resultSet.getInt(EventWrapper.LINK_COLUMN_EVENT_PARAMETER_VALUE_NUMBER));
 						parameters.add(parameter);
 						break;
 					case EventParameterSort._PARAMETER_SORT_STRING:
 						parameter = new EventParameter(parameterId,
 								parameterType,
-								resultSet.getString(LINK_COLUMN_PARAMETER_VALUE_STRING));
+								resultSet.getString(EventWrapper.LINK_COLUMN_EVENT_PARAMETER_VALUE_STRING));
 						parameters.add(parameter);
 						break;
 					case EventParameterSort._PARAMETER_SORT_RAW:
 						parameter = new EventParameter(parameterId,
 								parameterType,
-								ByteArrayDatabase.toByteArray(resultSet.getBlob(LINK_COLUMN_PARAMETER_VALUE_RAW)));
+								ByteArrayDatabase.toByteArray(resultSet.getBlob(EventWrapper.LINK_COLUMN_EVENT_PARAMETER_VALUE_RAW)));
 						parameters.add(parameter);
 						break;
 					default:
@@ -236,7 +230,7 @@ public class EventDatabase extends StorableObjectDatabase {
 				DatabaseConnection.releaseConnection(connection);
 			}
 		}
-		event.setParameters0((EventParameter[]) parameters.toArray(new EventParameter[parameters.size()]));
+		event.setEventParameters0((EventParameter[]) parameters.toArray(new EventParameter[parameters.size()]));
 	}
 
 	private void retrieveEventParametersByOneQuery(List events) throws RetrieveObjectException {
@@ -244,16 +238,14 @@ public class EventDatabase extends StorableObjectDatabase {
 			return;
 
     StringBuffer sql = new StringBuffer(SQL_SELECT
-  			+ COLUMN_ID + COMMA			
-  			+ LINK_COLUMN_PARAMETER_TYPE_ID + COMMA
-  			+ LINK_COLUMN_PARAMETER_SORT + COMMA
-  			+ LINK_COLUMN_PARAMETER_VALUE_NUMBER + COMMA
-  			+ LINK_COLUMN_PARAMETER_VALUE_STRING + COMMA
-  			+ LINK_COLUMN_PARAMETER_VALUE_RAW
-  			+ SQL_FROM
-  			+ ObjectEntities.EVENTPARAMETER_ENTITY
-  			+ SQL_WHERE
-  			+ LINK_COLUMN_EVENT_ID + SQL_IN + OPEN_BRACKET);
+  			+ StorableObjectWrapper.COLUMN_ID + COMMA			
+  			+ StorableObjectWrapper.COLUMN_TYPE_ID + COMMA
+  			+ EventWrapper.LINK_COLUMN_EVENT_PARAMETER_SORT + COMMA
+  			+ EventWrapper.LINK_COLUMN_EVENT_PARAMETER_VALUE_NUMBER + COMMA
+  			+ EventWrapper.LINK_COLUMN_EVENT_PARAMETER_VALUE_STRING + COMMA
+  			+ EventWrapper.LINK_COLUMN_EVENT_PARAMETER_VALUE_RAW
+  			+ SQL_FROM + ObjectEntities.EVENTPARAMETER_ENTITY
+  			+ SQL_WHERE + LINK_COLUMN_EVENT_ID + SQL_IN + OPEN_BRACKET);
     int i = 1;
 		for (Iterator it = events.iterator(); it.hasNext(); i++) {
 			Event event = (Event) it.next();
@@ -289,30 +281,30 @@ public class EventDatabase extends StorableObjectDatabase {
 			List eventParameters;
 			while (resultSet.next()) {
 				parameter = null;
-				parameterId = DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID);
+				parameterId = DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID);
 				try {
-					parameterType = (ParameterType) GeneralStorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, LINK_COLUMN_PARAMETER_TYPE_ID), true);
+					parameterType = (ParameterType) GeneralStorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_TYPE_ID), true);
 				}
 				catch (ApplicationException ae) {
 					throw new RetrieveObjectException(ae);
 				}
 				eventId = DatabaseIdentifier.getIdentifier(resultSet, LINK_COLUMN_EVENT_ID);
-				sort = resultSet.getInt(LINK_COLUMN_PARAMETER_SORT);
+				sort = resultSet.getInt(EventWrapper.LINK_COLUMN_EVENT_PARAMETER_SORT);
 				switch (sort) {
 					case EventParameterSort._PARAMETER_SORT_NUMBER:
 						parameter = new EventParameter(parameterId,
 								parameterType,
-								resultSet.getInt(LINK_COLUMN_PARAMETER_VALUE_NUMBER));
+								resultSet.getInt(EventWrapper.LINK_COLUMN_EVENT_PARAMETER_VALUE_NUMBER));
 						break;
 					case EventParameterSort._PARAMETER_SORT_STRING:
 						parameter = new EventParameter(parameterId,
 								parameterType,
-								resultSet.getString(LINK_COLUMN_PARAMETER_VALUE_STRING));
+								resultSet.getString(EventWrapper.LINK_COLUMN_EVENT_PARAMETER_VALUE_STRING));
 						break;
 					case EventParameterSort._PARAMETER_SORT_RAW:
 						parameter = new EventParameter(parameterId,
 								parameterType,
-								ByteArrayDatabase.toByteArray(resultSet.getBlob(LINK_COLUMN_PARAMETER_VALUE_RAW)));
+								ByteArrayDatabase.toByteArray(resultSet.getBlob(EventWrapper.LINK_COLUMN_EVENT_PARAMETER_VALUE_RAW)));
 						break;
 					default:
 						Log.errorMessage("EventDatabase.retrieveEventParameters | Unknown sort: " + sort + " of parameter '" + parameterId + "', event '" + eventId + "'");
@@ -334,7 +326,7 @@ public class EventDatabase extends StorableObjectDatabase {
 				eventParameters = (List) eventParametersMap.get(eventId);
 
 				if (eventParameters != null)
-					event.setParameters0((EventParameter[]) eventParameters.toArray(new EventParameter[eventParameters.size()]));
+					event.setEventParameters0((EventParameter[]) eventParameters.toArray(new EventParameter[eventParameters.size()]));
 			}
 		}
 		catch (SQLException sqle) {
@@ -365,14 +357,14 @@ public class EventDatabase extends StorableObjectDatabase {
 
 		String eventIdStr = DatabaseIdentifier.toSQLString(event.getId());
 		String sql = SQL_SELECT
-			+ COLUMN_ID + COMMA
+			+ StorableObjectWrapper.COLUMN_ID + COMMA
 			+ LINK_COLUMN_SOURCE_ENTITY_CODE + COMMA
 			+ LINK_COLUMN_SOURCE_PORT_ID + COMMA
 			+ LINK_COLUMN_SOURCE_EQUIPMENT_ID + COMMA
 			+ LINK_COLUMN_SOURCE_LINK_ID + COMMA
 			+ LINK_COLUMN_SOURCE_MONITOREDELEMENT_ID
 			+ SQL_FROM + ObjectEntities.EVENT_SOURCE_ENTITY
-			+ SQL_WHERE + COLUMN_ID + SQL_IN + OPEN_BRACKET
+			+ SQL_WHERE + StorableObjectWrapper.COLUMN_ID + SQL_IN + OPEN_BRACKET
 				+ SQL_SELECT
 				+ LINK_COLUMN_SOURCE_ID
 				+ SQL_FROM + ObjectEntities.EVENT_SOURCE_LINK_ENTITY
@@ -388,7 +380,7 @@ public class EventDatabase extends StorableObjectDatabase {
 			Identifier eventSourceId;
 			short sourceEntityCode;
 			while (resultSet.next()) {
-				eventSourceId = DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID);
+				eventSourceId = DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID);
 				sourceEntityCode = resultSet.getShort(LINK_COLUMN_SOURCE_ENTITY_CODE);
 				switch (sourceEntityCode) {
 					case ObjectEntities.PORT_ENTITY_CODE:
@@ -440,7 +432,7 @@ public class EventDatabase extends StorableObjectDatabase {
 			return;
 
     StringBuffer sql = new StringBuffer(SQL_SELECT
-  			+ ObjectEntities.EVENT_SOURCE_ENTITY + DOT + COLUMN_ID + COMMA
+  			+ ObjectEntities.EVENT_SOURCE_ENTITY + DOT + StorableObjectWrapper.COLUMN_ID + COMMA
   			+ ObjectEntities.EVENT_SOURCE_ENTITY + DOT + LINK_COLUMN_SOURCE_ENTITY_CODE + COMMA
   			+ ObjectEntities.EVENT_SOURCE_ENTITY + DOT + LINK_COLUMN_SOURCE_PORT_ID + COMMA
   			+ ObjectEntities.EVENT_SOURCE_ENTITY + DOT + LINK_COLUMN_SOURCE_EQUIPMENT_ID + COMMA
@@ -448,7 +440,7 @@ public class EventDatabase extends StorableObjectDatabase {
   			+ ObjectEntities.EVENT_SOURCE_ENTITY + DOT + LINK_COLUMN_SOURCE_MONITOREDELEMENT_ID + COMMA
   			+ ObjectEntities.EVENT_SOURCE_LINK_ENTITY + DOT + LINK_COLUMN_EVENT_ID
   			+ SQL_FROM + ObjectEntities.EVENT_SOURCE_ENTITY + COMMA + ObjectEntities.EVENT_SOURCE_LINK_ENTITY
-  			+ SQL_WHERE + ObjectEntities.EVENT_SOURCE_ENTITY + DOT + COLUMN_ID + SQL_IN + OPEN_BRACKET
+  			+ SQL_WHERE + ObjectEntities.EVENT_SOURCE_ENTITY + DOT + StorableObjectWrapper.COLUMN_ID + SQL_IN + OPEN_BRACKET
   				+ SQL_SELECT
   				+ LINK_COLUMN_SOURCE_ID
   				+ SQL_FROM + ObjectEntities.EVENT_SOURCE_LINK_ENTITY
@@ -488,7 +480,7 @@ public class EventDatabase extends StorableObjectDatabase {
 			List eventSources;
 			while (resultSet.next()) {
 				eventId = DatabaseIdentifier.getIdentifier(resultSet, LINK_COLUMN_EVENT_ID);
-				eventSourceId = DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID);
+				eventSourceId = DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID);
 				sourceEntityCode = resultSet.getShort(LINK_COLUMN_SOURCE_ENTITY_CODE);
 				eventSource = null;
 				switch (sourceEntityCode) {
@@ -586,13 +578,13 @@ public class EventDatabase extends StorableObjectDatabase {
 		String sql = SQL_INSERT_INTO 
 			+ ObjectEntities.EVENTPARAMETER_ENTITY
 			+ OPEN_BRACKET
-			+ COLUMN_ID  + COMMA
-			+ LINK_COLUMN_PARAMETER_TYPE_ID + COMMA
+			+ StorableObjectWrapper.COLUMN_ID  + COMMA
+			+ StorableObjectWrapper.COLUMN_TYPE_ID + COMMA
 			+ LINK_COLUMN_EVENT_ID + COMMA
-			+ LINK_COLUMN_PARAMETER_SORT + COMMA
-			+ LINK_COLUMN_PARAMETER_VALUE_NUMBER + COMMA
-			+ LINK_COLUMN_PARAMETER_VALUE_STRING + COMMA
-			+ LINK_COLUMN_PARAMETER_VALUE_RAW
+			+ EventWrapper.LINK_COLUMN_EVENT_PARAMETER_SORT + COMMA
+			+ EventWrapper.LINK_COLUMN_EVENT_PARAMETER_VALUE_NUMBER + COMMA
+			+ EventWrapper.LINK_COLUMN_EVENT_PARAMETER_VALUE_STRING + COMMA
+			+ EventWrapper.LINK_COLUMN_EVENT_PARAMETER_VALUE_RAW
 			+ CLOSE_BRACKET + SQL_VALUES + OPEN_BRACKET
 			+ QUESTION + COMMA
 			+ QUESTION + COMMA
@@ -643,8 +635,8 @@ public class EventDatabase extends StorableObjectDatabase {
 					ByteArrayDatabase.saveAsBlob(eventParameters[i].getValueRaw(),
 												 connection,
 												 ObjectEntities.EVENTPARAMETER_ENTITY,
-												 LINK_COLUMN_PARAMETER_VALUE_RAW,
-												 COLUMN_ID + EQUALS + DatabaseIdentifier.toSQLString(parameterId));
+												 EventWrapper.LINK_COLUMN_EVENT_PARAMETER_VALUE_RAW,
+												 StorableObjectWrapper.COLUMN_ID + EQUALS + DatabaseIdentifier.toSQLString(parameterId));
 				}
 			}
 			connection.commit();
@@ -686,6 +678,7 @@ public class EventDatabase extends StorableObjectDatabase {
 		Identifier eventSourceId = null;
 		Connection connection = DatabaseConnection.getConnection();
 		try {
+			preparedStatement = connection.prepareStatement(sql);
 			for (Iterator it = eventSources.iterator(); it.hasNext();) {
 				eventSourceId = ((EventSource) it.next()).getId();
 				DatabaseIdentifier.setIdentifier(preparedStatement, 1, event.getId());
@@ -773,7 +766,7 @@ public class EventDatabase extends StorableObjectDatabase {
 					+ SQL_WHERE + LINK_COLUMN_EVENT_ID + EQUALS + eventIdStr);
 			statement.executeUpdate(SQL_DELETE_FROM
 					+ ObjectEntities.EVENT_ENTITY
-					+ SQL_WHERE + COLUMN_ID + EQUALS + eventIdStr);
+					+ SQL_WHERE + StorableObjectWrapper.COLUMN_ID + EQUALS + eventIdStr);
 			connection.commit();
 		}
 		catch (SQLException sqle1) {
