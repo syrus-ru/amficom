@@ -4,7 +4,6 @@ IDL=../idl
 LIB=../lib
 DEVLIB=../devlib
 
-
 LIBNAME=general.jar
 ARCHFILE=general.tar.gz
 
