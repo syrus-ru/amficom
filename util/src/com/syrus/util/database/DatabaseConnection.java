@@ -107,6 +107,24 @@ public class DatabaseConnection {
 			}
 		}
 	}
+	
+	public static void closeConnection(Connection connection) {
+		if (connection != null) {
+			try {
+				// пока не организовано взаимодействие с ConnectionPool
+				// connection не закрывать
+				/**
+				 * FIXME close connection when Oracle Connection Pool'll have made
+				 */
+				// connection.close();
+				Log.debugMessage("Disconnected from database", Log.DEBUGLEVEL03);
+			}
+			catch (Exception e) {
+				Log.errorException(e);
+			}
+		}
+	}
+
 
 	public static Connection getConnection() {
 		return connection;
