@@ -25,7 +25,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.tree.TreePath;
 
-public class MapSchemeTreePanel extends JPanel 
+public final class MapSchemeTreePanel extends JPanel 
 		implements OperationListener
 {
 	UniTreePanel panel = null;

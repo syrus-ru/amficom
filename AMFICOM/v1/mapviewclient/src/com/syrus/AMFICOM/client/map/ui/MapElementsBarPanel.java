@@ -1,5 +1,5 @@
 /**
- * $Id: MapElementsBarPanel.java,v 1.1 2004/09/13 12:33:42 krupenn Exp $
+ * $Id: MapElementsBarPanel.java,v 1.2 2004/09/15 08:21:49 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -28,12 +28,12 @@ import javax.swing.JPanel;
  * 
  * 
  * 
- * @version $Revision: 1.1 $, $Date: 2004/09/13 12:33:42 $
+ * @version $Revision: 1.2 $, $Date: 2004/09/15 08:21:49 $
  * @module
  * @author $Author: krupenn $
  * @see
  */
-public class MapElementsBarPanel extends JPanel 
+public final class MapElementsBarPanel extends JPanel 
 {
 	final static int ELEMENT_DIMENSION = 30;
 

@@ -1,5 +1,5 @@
 /**
- * $Id: MapMouseMotionListener.java,v 1.1 2004/09/13 12:33:43 krupenn Exp $
+ * $Id: MapMouseMotionListener.java,v 1.2 2004/09/15 08:21:49 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -27,12 +27,12 @@ import java.awt.event.MouseMotionListener;
  * то обработка события передается текущему активному элементу карты
  * (посредством объекта MapStrategy)
  * 
- * @version $Revision: 1.1 $, $Date: 2004/09/13 12:33:43 $
+ * @version $Revision: 1.2 $, $Date: 2004/09/15 08:21:49 $
  * @module
  * @author $Author: krupenn $
  * @see
  */
-public class MapMouseMotionListener implements MouseMotionListener
+public final class MapMouseMotionListener implements MouseMotionListener
 {
 	LogicalNetLayer logicalNetLayer;
 

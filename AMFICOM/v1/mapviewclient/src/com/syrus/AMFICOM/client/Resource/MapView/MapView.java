@@ -1,5 +1,5 @@
 /**
- * $Id: MapView.java,v 1.2 2004/09/15 08:12:50 krupenn Exp $
+ * $Id: MapView.java,v 1.3 2004/09/15 08:21:49 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -49,12 +49,12 @@ import java.util.List;
  * 
  * 
  * 
- * @version $Revision: 1.2 $, $Date: 2004/09/15 08:12:50 $
+ * @version $Revision: 1.3 $, $Date: 2004/09/15 08:21:49 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
  */
-public class MapView extends StubResource
+public final class MapView extends StubResource
 {
 	private static final long serialVersionUID = 01L;
 	public static final String typ = "mapview";

@@ -1,5 +1,5 @@
 /**
- * $Id: MapScrollPane.java,v 1.1 2004/09/13 12:33:43 krupenn Exp $
+ * $Id: MapScrollPane.java,v 1.2 2004/09/15 08:21:49 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -23,12 +23,12 @@ import javax.swing.JScrollBar;
  * 
  * 
  * 
- * @version $Revision: 1.1 $, $Date: 2004/09/13 12:33:43 $
+ * @version $Revision: 1.2 $, $Date: 2004/09/15 08:21:49 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
  */
-public class MapScrollPane extends JPanel
+public final class MapScrollPane extends JPanel
 {
 	//Устанавливаем верхнюю, нижнюю границу
 	double horiz_left = -0.118503;

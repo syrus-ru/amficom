@@ -1,5 +1,5 @@
 /**
- * $Id: NodeSizePanel.java,v 1.1 2004/09/13 12:33:43 krupenn Exp $
+ * $Id: NodeSizePanel.java,v 1.2 2004/09/15 08:21:49 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -30,12 +30,12 @@ import oracle.jdeveloper.layout.XYLayout;
  * 
  * 
  * 
- * @version $Revision: 1.1 $, $Date: 2004/09/13 12:33:43 $
+ * @version $Revision: 1.2 $, $Date: 2004/09/15 08:21:49 $
  * @module
  * @author $Author: krupenn $
  * @see
  */
-public class NodeSizePanel extends JPanel 
+public final class NodeSizePanel extends JPanel 
 {
 	private LogicalNetLayer lnl;
 	private XYLayout xYLayout1 = new XYLayout();
