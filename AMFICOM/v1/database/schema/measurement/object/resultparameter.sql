@@ -1,7 +1,7 @@
 CREATE TABLE ResultParameter (
- id Identifier,
- type_id Identifier NOT NULL,
- result_id Identifier NOT NULL,
+ id VARCHAR2(32),
+ type_id VARCHAR2(32) NOT NULL,
+ result_id VARCHAR2(32) NOT NULL,
  value BLOB NOT NULL,
 --
  CONSTRAINT rtpar_pk PRIMARY KEY (id),

@@ -2,11 +2,11 @@ CREATE OR REPLACE TYPE CronStringArray AS TABLE OF VARCHAR2(64)
 /
 
 CREATE TABLE TemporalPattern (
- id Identifier,
+ id VARCHAR2(32),
  created DATE NOT NULL,
  modified DATE NOT NULL,
- creator_id Identifier NOT NULL,
- modifier_id Identifier NOT NULL,
+ creator_id VARCHAR2(32) NOT NULL,
+ modifier_id VARCHAR2(32) NOT NULL,
 --
  description VARCHAR2(256),
  value CronStringArray,

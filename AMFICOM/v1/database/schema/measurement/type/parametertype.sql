@@ -1,9 +1,9 @@
 CREATE TABLE ParameterType (
- id Identifier,
+ id VARCHAR2(32),
  created DATE NOT NULL,
  modified DATE NOT NULL,
- creator_id Identifier NOT NULL,
- modifier_id Identifier NOT NULL,
+ creator_id VARCHAR2(32) NOT NULL,
+ modifier_id VARCHAR2(32) NOT NULL,
 --
  codename VARCHAR2(32) NOT NULL,
  name VARCHAR2(128) NOT NULL,

@@ -1,20 +1,20 @@
 CREATE TABLE Equipment (
- id Identifier,
+ id VARCHAR2(32),
  created DATE NOT NULL,
  modified DATE NOT NULL,
- creator_id Identifier NOT NULL,
- modifier_id Identifier NOT NULL,
+ creator_id VARCHAR2(32) NOT NULL,
+ modifier_id VARCHAR2(32) NOT NULL,
 --
- domain_id Identifier,
+ domain_id VARCHAR2(32),
 --
- type_id Identifier NOT NULL,
+ type_id VARCHAR2(32) NOT NULL,
 --
  name VARCHAR2(64) NOT NULL,
  description VARCHAR2(256),
- image_id Identifier,
+ image_id VARCHAR2(32),
 --
  sort NUMBER(2) NOT NULL,
- kis_id Identifier,
+ kis_id VARCHAR2(32),
  --
  CONSTRAINT eqp_pk PRIMARY KEY (id),
  CONSTRAINT eqp_creator_fk FOREIGN KEY (creator_id)

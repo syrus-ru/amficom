@@ -1,6 +1,6 @@
 CREATE TABLE MntTypParTypLink (
- measurement_type_id Identifier NOT NULL,
- parameter_type_id Identifier NOT NULL,
+ measurement_type_id VARCHAR2(32) NOT NULL,
+ parameter_type_id VARCHAR2(32) NOT NULL,
  parameter_mode VARCHAR2(3) NOT NULL,
 --
  CONSTRAINT mnttpartlnk_mntt_fk FOREIGN KEY (measurement_type_id)

@@ -1,39 +1,39 @@
 CREATE TABLE Characteristic (
- id Identifier,
+ id VARCHAR2(32),
  created DATE NOT NULL,
  modified DATE NOT NULL,
- creator_id Identifier NOT NULL,
- modifier_id Identifier NOT NULL,
+ creator_id VARCHAR2(32) NOT NULL,
+ modifier_id VARCHAR2(32) NOT NULL,
 --
- type_id Identifier NOT NULL,
+ type_id VARCHAR2(32) NOT NULL,
 --
  name VARCHAR2(64) NOT NULL,
  description VARCHAR2(256),
  value VARCHAR2(256),
 --
  sort NUMBER(2) NOT NULL,
- server_id Identifier,
- mcm_id Identifier,
- equipment_id Identifier,
- transmission_path_id Identifier,
+ server_id VARCHAR2(32),
+ mcm_id VARCHAR2(32),
+ equipment_id VARCHAR2(32),
+ transmission_path_id VARCHAR2(32),
 --
- CONSTRAINT chc_pk (id) PRIMARY_KEY,
-CONSTRAINT chc_creator_fk FOREIGN KEY (creator_id)
+ CONSTRAINT chc_pk PRIMARY KEY (id),
+ CONSTRAINT chc_creator_fk FOREIGN KEY (creator_id)
   REFERENCES Users (id) ON DELETE CASCADE,
  CONSTRAINT chc_modifier_fk FOREIGN KEY (modifier_id)
   REFERENCES Users (id) ON DELETE CASCADE,
 --
-CONSTRAINT chc_chctype_fk (type_id)
-  REFERENCES CharacteristicType(id) ON DELETE CASCADE
+ CONSTRAINT chc_chctype_fk FOREIGN KEY (type_id)
+  REFERENCES CharacteristicType (id) ON DELETE CASCADE,
 --
- CONSTRAINT chc_server_fk FOREGN KEY (server_id)
-  REFERENCES Server(id) ON DELETE CASCADE,
- CONSTRAINT chc_mcm_fk FOREGN KEY (mcm_id)
-  REFERENCES MCM(id) ON DELETE CASCADE,
- CONSTRAINT chc_eqp_fk FOREGN KEY (equipment_id)
-  REFERENCES Equipment(id) ON DELETE CASCADE,
- CONSTRAINT chc_tp_fk FOREGN KEY (transmission_path_id)
-  REFERENCES TransmissionPath(id) ON DELETE CASCADE
+ CONSTRAINT chc_server_fk FOREIGN KEY (server_id)
+  REFERENCES Server (id) ON DELETE CASCADE,
+ CONSTRAINT chc_mcm_fk FOREIGN KEY (mcm_id)
+  REFERENCES MCM (id) ON DELETE CASCADE,
+ CONSTRAINT chc_eqp_fk FOREIGN KEY (equipment_id)
+  REFERENCES Equipment (id) ON DELETE CASCADE,
+ CONSTRAINT chc_tpath_fk FOREIGN KEY (transmission_path_id)
+  REFERENCES TransmissionPath (id) ON DELETE CASCADE
 );
 
 CREATE SEQUENCE characteristic_seq ORDER;

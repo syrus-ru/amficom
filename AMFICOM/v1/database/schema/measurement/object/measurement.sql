@@ -1,19 +1,19 @@
 CREATE TABLE Measurement (
- id Identifier,
+ id VARCHAR2(32),
  created DATE NOT NULL,
  modified DATE NOT NULL,
- creator_id Identifier NOT NULL,
- modifier_id Identifier NOT NULL,
+ creator_id VARCHAR2(32) NOT NULL,
+ modifier_id VARCHAR2(32) NOT NULL,
 --
- type_id Identifier NOT NULL,
- monitored_element_id Identifier NOT NULL,
+ type_id VARCHAR2(32) NOT NULL,
+ monitored_element_id VARCHAR2(32) NOT NULL,
 --
- setup_id Identifier NOT NULL,
+ setup_id VARCHAR2(32) NOT NULL,
  start_time DATE NOT NULL,
  duration NUMBER(20) NOT NULL,
  status NUMBER(2, 0) NOT NULL,
  local_address VARCHAR2(64) NOT NULL,
- test_id Identifier NOT NULL,
+ test_id VARCHAR2(32) NOT NULL,
 --
  CONSTRAINT measurement_pk PRIMARY KEY (id),
  CONSTRAINT mnt_creator_fk FOREIGN KEY (creator_id)

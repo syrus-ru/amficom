@@ -1,6 +1,6 @@
 CREATE TABLE MonitoredElement (
- id Identifier,
- kis_id Identifier NOT NULL,
+ id VARCHAR2(32),
+ kis_id VARCHAR2(32) NOT NULL,
  local_address VARCHAR2(64) NOT NULL,
 --
  CONSTRAINT me_pk PRIMARY KEY (id),

@@ -1,21 +1,21 @@
 CREATE TABLE Test (
- id Identifier,
+ id VARCHAR2(32),
  created DATE NOT NULL,
  modified DATE NOT NULL,
- creator_id Identifier NOT NULL,
- modifier_id Identifier NOT NULL,
+ creator_id VARCHAR2(32) NOT NULL,
+ modifier_id VARCHAR2(32) NOT NULL,
 --
  temporal_type NUMBER(2, 0) NOT NULL,
  start_time DATE,
  end_time DATE,
- temporal_pattern_id Identifier,
+ temporal_pattern_id VARCHAR2(32),
 --
- measurement_type_id Identifier NOT NULL,
- analysis_type_id Identifier,
- evaluation_type_id Identifier,
+ measurement_type_id VARCHAR2(32) NOT NULL,
+ analysis_type_id VARCHAR2(32),
+ evaluation_type_id VARCHAR2(32),
 --
  status NUMBER(2, 0) NOT NULL,
- monitored_element_id Identifier NOT NULL,
+ monitored_element_id VARCHAR2(32) NOT NULL,
  return_type NUMBER(2, 0) NOT NULL,
  description VARCHAR2(256),
 --

@@ -1,15 +1,15 @@
 CREATE TABLE Evaluation (
- id Identifier,
+ id VARCHAR2(32),
  created DATE NOT NULL,
  modified DATE NOT NULL,
- creator_id Identifier NOT NULL,
- modifier_id Identifier NOT NULL,
+ creator_id VARCHAR2(32) NOT NULL,
+ modifier_id VARCHAR2(32) NOT NULL,
 --
- type_id Identifier NOT NULL,
- monitored_element_id Identifier NOT NULL,
+ type_id VARCHAR2(32) NOT NULL,
+ monitored_element_id VARCHAR2(32) NOT NULL,
 --
- threshold_set_id Identifier NOT NULL,
- etalon_id Identifier NOT NULL,
+ threshold_set_id VARCHAR2(32) NOT NULL,
+ etalon_id VARCHAR2(32) NOT NULL,
 --
  CONSTRAINT eva_pk PRIMARY KEY (id),
  CONSTRAINT aeva_creator_fk FOREIGN KEY (creator_id)

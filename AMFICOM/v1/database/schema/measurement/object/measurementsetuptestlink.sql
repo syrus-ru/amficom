@@ -1,6 +1,6 @@
 CREATE TABLE MeasurementSetupTestLink (
- test_id Identifier NOT NULL,
- measurement_setup_id Identifier NOT NULL,
+ test_id VARCHAR2(32) NOT NULL,
+ measurement_setup_id VARCHAR2(32) NOT NULL,
 --
  CONSTRAINT mntsptlnk_test_fk FOREIGN KEY (test_id)
   REFERENCES Test (id) ON DELETE CASCADE,

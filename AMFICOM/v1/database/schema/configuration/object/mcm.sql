@@ -1,18 +1,18 @@
 CREATE TABLE MCM (
- id Identifier,
+ id VARCHAR2(32),
  created DATE NOT NULL,
  modified DATE NOT NULL,
- creator_id Identifier NOT NULL,
- modifier_id Identifier NOT NULL,
+ creator_id VARCHAR2(32) NOT NULL,
+ modifier_id VARCHAR2(32) NOT NULL,
 --
- domain_id Identifier,
+ domain_id VARCHAR2(32),
 --
- type_id Identifier,
+ type_id VARCHAR2(32),
 --
  name VARCHAR2(64) NOT NULL,
  description VARCHAR2(256),
- user_id Identifier NOT NULL,
- server_id Identifier NOT NULL,
+ user_id VARCHAR2(32) NOT NULL,
+ server_id VARCHAR2(32) NOT NULL,
 --
  CONSTRAINT mcm_pk PRIMARY KEY (id),
  CONSTRAINT mcm_creator_fk FOREIGN KEY (creator_id)

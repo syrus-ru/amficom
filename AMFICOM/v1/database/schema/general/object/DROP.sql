@@ -1,3 +1,1 @@
-DROP TYPE Identifier
-/
 
