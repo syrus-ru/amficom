@@ -65,7 +65,7 @@ public final class CharacteristicController implements ObjectResourceController 
 			else if (key.equals(COLUMN_VALUE))
 				result = ch.getValue();
 			else if (key.equals(COLUMN_CHARACTERIZED_ID))
-				result = ch.getCharacterizedId().getIdentifierString();
+				result = ch.getCharacterizableId().getIdentifierString();
 			else if (key.equals(COLUMN_EDITABLE))
 				result = Boolean.toString(ch.isEditable());
 			else if (key.equals(COLUMN_VISIBLE))
