@@ -1,14 +1,25 @@
+/*
+ * $Id: OpenMaintenanceCommand.java,v 1.3 2004/09/27 16:34:55 bass Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ
+ */
+
 package com.syrus.AMFICOM.Client.General.Command.Admin;
 
-import java.awt.*;
+import com.syrus.AMFICOM.Client.Administrate.Maintain.AlarmToAlert;
+import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
+import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
+import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
+import java.awt.Dimension;
 import javax.swing.*;
 
-import com.syrus.AMFICOM.Client.General.Model.*;
-import com.syrus.AMFICOM.Client.Resource.*;
-import com.syrus.AMFICOM.Client.General.Command.*;
-import com.syrus.AMFICOM.Client.Administrate.Maintain.AlarmToAlert;
-
-//A0A
+/**
+ * @author $Author: bass $
+ * @version $Revision: 1.3 $, $Date: 2004/09/27 16:34:55 $
+ * @module admin_v1
+ */
 public class OpenMaintenanceCommand extends VoidCommand
 {
 	public ApplicationContext aContext;
@@ -35,7 +46,7 @@ public class OpenMaintenanceCommand extends VoidCommand
 
 	public void execute()
 	{
-		DataSourceInterface dsi = aContext.getDataSourceInterface();
+		DataSourceInterface dsi = aContext.getDataSource();
 		if (dsi == null)
 			return;
 

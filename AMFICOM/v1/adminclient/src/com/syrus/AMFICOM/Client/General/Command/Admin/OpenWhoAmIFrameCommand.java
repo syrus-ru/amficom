@@ -1,15 +1,26 @@
+/*
+ * $Id: OpenWhoAmIFrameCommand.java,v 1.2 2004/09/27 16:30:56 bass Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ
+ */
+
 package com.syrus.AMFICOM.Client.General.Command.Admin;
 
+import com.syrus.AMFICOM.Client.Administrate.Object.UI.WhoAmIFrame;
+import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
+import com.syrus.AMFICOM.Client.General.Event.StatusMessageEvent;
+import com.syrus.AMFICOM.Client.General.Model.*;
+import com.syrus.AMFICOM.Client.Resource.Pool;
 import java.awt.*;
-
 import javax.swing.*;
 
-import com.syrus.AMFICOM.Client.Administrate.Object.UI.*;
-import com.syrus.AMFICOM.Client.General.Command.*;
-import com.syrus.AMFICOM.Client.General.Model.*;
-import com.syrus.AMFICOM.Client.Resource.*;
-import com.syrus.AMFICOM.Client.General.Event.*;
-
+/**
+ * @author $Author: bass $
+ * @version $Revision: 1.2 $, $Date: 2004/09/27 16:30:56 $
+ * @module admin_v1
+ */
 public class OpenWhoAmIFrameCommand extends VoidCommand
 {
   JDesktopPane desktop;
@@ -43,9 +54,8 @@ public class OpenWhoAmIFrameCommand extends VoidCommand
   }
 
 
-  public void execute()
-  {
-    Environment.the_dispatcher.notify(new StatusMessageEvent("Открытие окна <О себе>"));
+	public void execute() {
+		Environment.getDispatcher().notify(new StatusMessageEvent(StatusMessageEvent.STATUS_MESSAGE, "Открытие окна <О себе>"));
     wmi = (WhoAmIFrame)Pool.get("WhoAmI", "WhoAmIobject");
     if(wmi!=null)
     {
@@ -75,7 +85,6 @@ public class OpenWhoAmIFrameCommand extends VoidCommand
                                    ("¤")));
 
     Pool.put("WhoAmI", "WhoAmIobject", wmi);
-    Environment.the_dispatcher.notify(new StatusMessageEvent(" "));
-  }
-
+		Environment.getDispatcher().notify(new StatusMessageEvent(StatusMessageEvent.STATUS_MESSAGE, " "));
+	}
 }

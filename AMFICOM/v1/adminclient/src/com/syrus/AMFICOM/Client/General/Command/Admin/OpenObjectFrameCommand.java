@@ -1,18 +1,30 @@
+/*
+ * $Id: OpenObjectFrameCommand.java,v 1.3 2004/09/27 16:34:18 bass Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ
+ */
+
 package com.syrus.AMFICOM.Client.General.Command.Admin;
 
-import java.awt.*;
-
-import javax.swing.*;
+import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.Event.*;
-import com.syrus.AMFICOM.Client.General.Command.*;
-import com.syrus.AMFICOM.Client.General.Lang.*;
+import com.syrus.AMFICOM.Client.General.Lang.LangModelAdmin;
 import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.Resource.Object.*;
 import com.syrus.AMFICOM.Client.Resource.System.*;
+import java.awt.*;
+import javax.swing.*;
 
-public class OpenObjectFrameCommand extends VoidCommand// implements OperationListener
+/**
+ * @author $Author: bass $
+ * @version $Revision: 1.3 $, $Date: 2004/09/27 16:34:18 $
+ * @module admin_v1
+ */
+public class OpenObjectFrameCommand extends VoidCommand
 {
   String parameter;
   JDesktopPane desktop;
@@ -63,11 +75,10 @@ public class OpenObjectFrameCommand extends VoidCommand// implements OperationLi
 	 return new OpenObjectFrameCommand(desktop, aContext, parameter, dModel, orclass);
   }
 
-  public void execute()
-  {
-	 Environment.the_dispatcher.notify(new StatusMessageEvent("Открытие окна представления объектов"));
+	public void execute() {
+		Environment.getDispatcher().notify(new StatusMessageEvent(StatusMessageEvent.STATUS_MESSAGE, "Открытие окна представления объектов"));
 
-	 DataSourceInterface dataSource = aContext.getDataSourceInterface();
+	 DataSourceInterface dataSource = aContext.getDataSource();
 	 if(dataSource == null)
 		return;
 	 frame =
@@ -86,7 +97,7 @@ public class OpenObjectFrameCommand extends VoidCommand// implements OperationLi
 				aContext);
 
 	 frame.setDisplayModel(dModel);
-	 frame.setContents(new DataSet(Pool.getHash(parameter)));
+	 frame.setContents(Pool.getList(parameter));
 	 frame.setObjectResourceClass(orclass);
 
 	 Dimension d = desktop.getSize();
@@ -231,7 +242,6 @@ public class OpenObjectFrameCommand extends VoidCommand// implements OperationLi
 
 	 Pool.put("ObjectFrame", "AdministrateObjectFrame", frame);
 
-	 Environment.the_dispatcher.notify(new StatusMessageEvent(" "));
-  }
+		Environment.getDispatcher().notify(new StatusMessageEvent(StatusMessageEvent.STATUS_MESSAGE, " "));
+	}
 }
-

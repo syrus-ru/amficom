@@ -1,16 +1,27 @@
+/*
+ * $Id: ViewObjectNavigatorCommand.java,v 1.2 2004/09/27 16:32:17 bass Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ
+ */
+
 package com.syrus.AMFICOM.Client.General.Command.Admin;
 
-import java.awt.*;
-
-import javax.swing.*;
-
-import com.syrus.AMFICOM.Client.General.Command.*;
+import com.syrus.AMFICOM.Client.Administrate.Object.AdministrateTreeModel;
+import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Model.*;
-import com.syrus.AMFICOM.Client.General.UI.*;
-import com.syrus.AMFICOM.Client.Resource.*;
-import com.syrus.AMFICOM.Client.Administrate.Object.AdministrateTreeModel;
+import com.syrus.AMFICOM.Client.General.UI.UniTreePanel;
+import com.syrus.AMFICOM.Client.Resource.Pool;
+import java.awt.*;
+import javax.swing.*;
 
+/**
+ * @author $Author: bass $
+ * @version $Revision: 1.2 $, $Date: 2004/09/27 16:32:17 $
+ * @module admin_v1
+ */
 public class ViewObjectNavigatorCommand extends VoidCommand
 {
   ApplicationContext aContext;
@@ -36,9 +47,8 @@ public class ViewObjectNavigatorCommand extends VoidCommand
   }
 
 
-  public void execute()
-  {
-    Environment.the_dispatcher.notify(new StatusMessageEvent("Открытие окна навигации объектов"));
+	public void execute() {
+		Environment.getDispatcher().notify(new StatusMessageEvent(StatusMessageEvent.STATUS_MESSAGE, "Открытие окна навигации объектов"));
 
     frame = (JInternalFrame)Pool.get("Navigator", "ObjectNavigator");
     if(frame != null)
@@ -47,8 +57,7 @@ public class ViewObjectNavigatorCommand extends VoidCommand
       frame.dispose();
     }
 
-    AdministrateTreeModel atm =
-        new AdministrateTreeModel(this.aContext.getDataSourceInterface());
+		AdministrateTreeModel atm = new AdministrateTreeModel(this.aContext.getDataSource());
     UniTreePanel utp = new UniTreePanel(this.dispatcher, this.aContext, atm);
 
     frame = new JInternalFrame();
@@ -89,9 +98,6 @@ public class ViewObjectNavigatorCommand extends VoidCommand
 
     Pool.put("Navigator", "ObjectNavigator", frame);
 
-    Environment.the_dispatcher.notify(new StatusMessageEvent(" "));
-  }
+		Environment.getDispatcher().notify(new StatusMessageEvent(StatusMessageEvent.STATUS_MESSAGE, " "));
+	}
 }
-
-
-
