@@ -1,5 +1,5 @@
 /*
- * $Id: TestConditionWrapper.java,v 1.2 2005/04/01 10:48:31 max Exp $
+ * $Id: TestConditionWrapper.java,v 1.3 2005/04/01 12:50:37 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -24,7 +24,7 @@ import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.AMFICOM.measurement.TestWrapper;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/04/01 10:48:31 $
+ * @version $Revision: 1.3 $, $Date: 2005/04/01 12:50:37 $
  * @author $Author: max $
  * @module filterclient_v1
  */
@@ -43,16 +43,11 @@ public class TestConditionWrapper implements ConditionWrapper {
 		
 	
 	private static final String STATUS = "search by status";
-	private static final String ME = "search by monitored element";
-	private static final String MT = "search by measurementType";
-	private static final String MCM = "search by MCM";
+	private static final String ME = "search by monitored elements";
+	private static final String MT = "search by measurementTypes";
+	private static final String MCM = "search by MCMs";
 		
-	private static String[] keys = {
-			TestWrapper.COLUMN_STATUS,
-			TestWrapper.COLUMN_MONITORED_ELEMENT_ID,
-			TestWrapper.COLUMN_MEASUREMENT_TYPE_ID,
-			MCM
-			};
+	private static String[] keys = {TestWrapper.COLUMN_STATUS, ME, MT, MCM};
 	private static String[] keyNames = {STATUS, ME, MT, MCM};
 	private static byte[] keyTypes = {ConditionWrapper.CONSTRAINT, ConditionWrapper.LIST, ConditionWrapper.LIST, ConditionWrapper.LIST};
 	

@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementTypeConditionWrapper.java,v 1.4 2005/04/01 10:48:31 max Exp $
+ * $Id: MeasurementTypeConditionWrapper.java,v 1.5 2005/04/01 12:50:37 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -24,7 +24,7 @@ import com.syrus.AMFICOM.measurement.MeasurementType;
 import com.syrus.AMFICOM.measurement.MeasurementTypeWrapper;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/04/01 10:48:31 $
+ * @version $Revision: 1.5 $, $Date: 2005/04/01 12:50:37 $
  * @author $Author: max $
  * @module measurement_v1
  */
@@ -45,10 +45,7 @@ public class MeasurementTypeConditionWrapper implements ConditionWrapper {
 	private static final String PARAMTYPE = "search by ParameterTypes";
 		
 	private static String[] keys = {
-			StorableObjectWrapper.COLUMN_CODENAME,
-			MeasurementTypeWrapper.LINK_COLUMN_MEASUREMENT_PORT_TYPE_ID,
-			StorableObjectWrapper.LINK_COLUMN_PARAMETER_TYPE_ID
-			};
+			StorableObjectWrapper.COLUMN_CODENAME, PORTTYPE,PARAMTYPE};
 	private static String[] keyNames = {CODENAME, PORTTYPE, PARAMTYPE};
 	private static byte[] keyTypes = {ConditionWrapper.STRING, ConditionWrapper.LIST, ConditionWrapper.LIST};
 	
