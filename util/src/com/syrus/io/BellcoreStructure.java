@@ -1,5 +1,5 @@
 /*
- * $Id: BellcoreStructure.java,v 1.3 2004/07/07 14:36:44 bass Exp $
+ * $Id: BellcoreStructure.java,v 1.4 2004/09/09 12:10:11 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,7 +9,7 @@
 package com.syrus.io;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2004/07/07 14:36:44 $
+ * @version $Revision: 1.4 $, $Date: 2004/09/09 12:10:11 $
  * @author $Author: bass $
  * @module util
  */
@@ -57,31 +57,31 @@ public class BellcoreStructure // extends ObjectResource
 		switch (type)
 		{
 			case MAP:  // required
-					 if (!hasMap) { map = new Map(); hasMap = true; blocks++; }
+					 if (!this.hasMap) { this.map = new Map(); this.hasMap = true; this.blocks++; }
 					 break;
 			case GENPARAMS:  // required
-					 if (!hasGen) { genParams = new GenParams(); hasGen = true; blocks++; }
+					 if (!this.hasGen) { this.genParams = new GenParams(); this.hasGen = true; this.blocks++; }
 					 break;
 			case SUPPARAMS:  // required
-					 if (!hasSup) { supParams = new SupParams(); hasSup = true; blocks++; }
+					 if (!this.hasSup) { this.supParams = new SupParams(); this.hasSup = true; this.blocks++; }
 					 break;
 			case FXDPARAMS:  // required
-					 if (!hasFxd) { fxdParams = new FxdParams(); hasFxd = true; blocks++; }
+					 if (!this.hasFxd) { this.fxdParams = new FxdParams(); this.hasFxd = true; this.blocks++; }
 					 break;
 			case KEYEVENTS:
-					 if (!hasKey) { keyEvents = new KeyEvents(); hasKey = true; blocks++; }
+					 if (!this.hasKey) { this.keyEvents = new KeyEvents(); this.hasKey = true; this.blocks++; }
 					 break;
 			case LNKPARAMS:
-					 if (!hasLnk) { lnkParams = new LnkParams(); hasLnk = true; blocks++; }
+					 if (!this.hasLnk) { this.lnkParams = new LnkParams(); this.hasLnk = true; this.blocks++; }
 					 break;
 			case DATAPOINTS:
-					 if (!hasData) { dataPts = new DataPts(); hasData = true; blocks++; }
+					 if (!this.hasData) { this.dataPts = new DataPts(); this.hasData = true; this.blocks++; }
 					 break;
 			case SPECIAL:
-					 special[specials++] = new Special(); hasSpecial = true; blocks++;
+					 this.special[this.specials++] = new Special(); this.hasSpecial = true; this.blocks++;
 					 break;
 			case CKSUM: // required
-					 if (!hasMap) { cksum = new Cksum();  blocks++; }
+					 if (!this.hasMap) { this.cksum = new Cksum();  this.blocks++; }
 		}
 	}
 
@@ -99,8 +99,8 @@ public class BellcoreStructure // extends ObjectResource
 		public int getSize()
 		{
 			int size = 8;
-			for (int i = 1; i < NB; i++)
-				size = size + B_id[i].length() + 7;
+			for (int i = 1; i < this.NB; i++)
+				size = size + this.B_id[i].length() + 7;
 			return size;
 		}
 	}
@@ -124,8 +124,8 @@ public class BellcoreStructure // extends ObjectResource
 
 		public int getSize()
 		{
-			return (10 + 7 + CID.length() + FID.length() + OL.length() + TL.length()// + 6
-						 + CCD.length() + OP.length() + CMT.length());
+			return (10 + 7 + this.CID.length() + this.FID.length() + this.OL.length() + this.TL.length()// + 6
+						 + this.CCD.length() + this.OP.length() + this.CMT.length());
 		}
 	}
 
@@ -142,8 +142,8 @@ public class BellcoreStructure // extends ObjectResource
 
 		public int getSize()
 		{
-			return (7 + SN.length() + MFID.length() + OTDR.length() + OMID.length()
-						 + OMSN.length() + SR.length() + OT.length());
+			return (7 + this.SN.length() + this.MFID.length() + this.OTDR.length() + this.OMID.length()
+						 + this.OMSN.length() + this.SR.length() + this.OT.length());
 		}
 	}
 
@@ -177,7 +177,7 @@ public class BellcoreStructure // extends ObjectResource
 
 		public int getSize()
 		{
-			return (44 + TPW * 10);
+			return (44 + this.TPW * 10);
 		}
 	}
 
@@ -201,8 +201,8 @@ public class BellcoreStructure // extends ObjectResource
 		public int getSize()
 		{
 			int size = 26;
-			for (int i = 0; i < TNKE; i++)
-					size = size + 22 + CMT[i].length() + 1;
+			for (int i = 0; i < this.TNKE; i++)
+					size = size + 22 + this.CMT[i].length() + 1;
 			return size;
 		}
 	}
@@ -226,8 +226,8 @@ public class BellcoreStructure // extends ObjectResource
 		public int getSize()
 		{
 			int size = 2;
-			for (int i = 0; i < TNL; i++)
-					size = size + 32 + CMT[i].length() + 1;
+			for (int i = 0; i < this.TNL; i++)
+					size = size + 32 + this.CMT[i].length() + 1;
 			return size;
 		}
 	}
@@ -243,7 +243,7 @@ public class BellcoreStructure // extends ObjectResource
 
 		public int getSize()
 		{
-			int size = 6 + TSF * 6 + TNDP * 2;
+			int size = 6 + this.TSF * 6 + this.TNDP * 2;
 			//for (int i = 0; i < TSF; i++)
 				//	size += TPS[i] * 2;
 			return size;
@@ -269,23 +269,23 @@ public class BellcoreStructure // extends ObjectResource
 
 		public int getSize()
 		{
-			return spec_data.length;
+			return this.spec_data.length;
 		}
 	}
 
 	public double getDeltaX()
 	{
-		int n = dataPts.TNDP;
-		return (double)(fxdParams.AR - fxdParams.AO) * 3d / ((double)n * (double)fxdParams.GI/1000d);
+		int n = this.dataPts.TNDP;
+		return (this.fxdParams.AR - this.fxdParams.AO) * 3d / ((double)n * (double)this.fxdParams.GI/1000d);
 	}
 
 	public double[] getTraceData()
 	{
-		int n = dataPts.TNDP;
+		int n = this.dataPts.TNDP;
 		double[] y = new double[n];
 
-		for (int i = 0; i < dataPts.TPS[0]; i++)
-			y[i] = (double)(65535 - dataPts.DSF[0][i])/1000d;
+		for (int i = 0; i < this.dataPts.TPS[0]; i++)
+			y[i] = (65535 - this.dataPts.DSF[0][i])/1000d;
 
 		correctReflectogramm(y);
 		return y;

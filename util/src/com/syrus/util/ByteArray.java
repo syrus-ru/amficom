@@ -1,11 +1,7 @@
 package com.syrus.util;
 
-import java.util.LinkedList;
-import java.io.ByteArrayOutputStream;
-import java.io.DataOutputStream;
-import java.io.ByteArrayInputStream;
-import java.io.DataInputStream;
-import java.io.IOException;
+import java.io.*;
+import java.util.*;
 
 public class ByteArray {
   private byte[] bar = null;
@@ -118,19 +114,18 @@ public class ByteArray {
     return dis.readUTF();
   }
 
-	public String[] toUTFStringArray() throws IOException {
-    ByteArrayInputStream bais = new ByteArrayInputStream(this.bar);
-    DataInputStream dis = new DataInputStream(bais);
-	  LinkedList linkedlist = new LinkedList();
+	public String[] toUTFStringArray() {
+		ByteArrayInputStream bais = new ByteArrayInputStream(this.bar);
+		DataInputStream dis = new DataInputStream(bais);
+		Collection c = new LinkedList();
 		try {
 			while (bais.available() > 0)
-				linkedlist.add(dis.readUTF());
-		}
-		catch (Exception e) {
+				c.add(dis.readUTF());
+		} catch (Exception e) {
 			System.out.println("Exception while converting byte array to string array: " + e.getMessage() + ", length of byte array == " + this.bar.length);
-      e.printStackTrace();
+			e.printStackTrace();
 		}
-		return (String[])linkedlist.toArray(new String[linkedlist.size()]);
+		return (String[]) c.toArray(new String[c.size()]);
 	}
 
   public void concat(ByteArray bArr) {

@@ -23,4 +23,5 @@ sqlj.properties
 .sqlj
 .classpath
 .project
+.settings
 Makefile.inc

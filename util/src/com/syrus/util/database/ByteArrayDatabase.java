@@ -1,5 +1,5 @@
 /*
- * $Id: ByteArrayDatabase.java,v 1.10 2004/08/23 13:02:01 bass Exp $
+ * $Id: ByteArrayDatabase.java,v 1.11 2004/09/09 12:10:11 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,19 +8,13 @@
 
 package com.syrus.util.database;
 
-import java.io.OutputStream;
-import java.io.IOException;
-import java.sql.Connection;
-import java.sql.Statement;
-import java.sql.SQLException;
-import oracle.jdbc.driver.OracleResultSet;
-import oracle.sql.BLOB;
-import com.syrus.util.Log;
-import com.syrus.util.ByteArray;
+import java.io.*;
+import java.sql.*;
+import com.syrus.util.*;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.10 $, $Date: 2004/08/23 13:02:01 $
+ * @version $Revision: 1.11 $, $Date: 2004/09/09 12:10:11 $
  * @module util
  */
 public class ByteArrayDatabase {
@@ -59,19 +53,19 @@ public class ByteArrayDatabase {
 			conn.setAutoCommit(false);
 
 		Statement statement = null;
-		OracleResultSet ors = null;
+		ResultSet ors = null;
 		String s = "SELECT " + column + " FROM " + table + " WHERE " + where + " FOR UPDATE";
 		try {
 			statement = conn.createStatement();
 			Log.debugMessage("Trying: " + s, Log.DEBUGLEVEL09);
-			ors = (OracleResultSet)statement.executeQuery(s);
-			BLOB blob = null;
+			ors = statement.executeQuery(s);
+			Blob blob = null;
 			if (ors.next())
-				blob = ors.getBLOB(column);
+				blob = ors.getBlob(column);
 			else
 				throw new SQLException("No record in " + table + " for '" + where + "'");
 			OutputStream os = null;
-			os = blob.getBinaryOutputStream();
+			os = blob.setBinaryStream(0L);
 			os.write(bar);
 			os.close();
 		}
@@ -94,7 +88,7 @@ public class ByteArrayDatabase {
 		}
 	}
 
-	public static byte[] toByteArray(BLOB blob) throws SQLException {
+	public static byte[] toByteArray(Blob blob) throws SQLException {
 		return blob.getBytes(1, (int) blob.length());
 	}
 }
