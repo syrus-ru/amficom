@@ -8,6 +8,8 @@ import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.UI.Session.SessionOpenDialog;
 import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
+import com.syrus.AMFICOM.Client.Resource.Object.Domain;
+import com.syrus.AMFICOM.Client.General.Checker;
 
 import java.awt.Dimension;
 import java.awt.Toolkit;
@@ -125,6 +127,15 @@ public class SessionOpenCommand extends VoidCommand //implements Command
 			dispatcher.notify(new StatusMessageEvent("»нициализаци€ начальных данных"));
 			dataSource.LoadUserDescriptors();
 			dataSource.LoadExecs();
+
+			SessionInterface sess = dataSource.getSession();
+			
+			// Ѕерем сохраненный локально с прошлой сессии домен
+			String ev_domain_id = com.syrus.AMFICOM.Client.General.Model.Environment.getDomainId();
+			
+			// ѕровер€ем, может ли текущий пользователь с ним работать
+			if(Checker.checkObject(sess.getUserId(), Domain.typ, ev_domain_id, Checker.read))
+				sess.setDomainId(ev_domain_id);
 
 			dispatcher.notify(new StatusMessageEvent("—есси€ открыта"));
 			dispatcher.notify(new ContextChangeEvent(

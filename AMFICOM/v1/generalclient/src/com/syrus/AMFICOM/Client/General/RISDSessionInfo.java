@@ -39,7 +39,6 @@ package com.syrus.AMFICOM.Client.General;
 import com.syrus.AMFICOM.CORBA.Constants;
 import com.syrus.AMFICOM.CORBA.Admin.*;
 import com.syrus.AMFICOM.corba.portable.client.*;
-import com.syrus.AMFICOM.Client.Resource.Object.Domain;
 import com.syrus.io.*;
 import com.syrus.util.corba.JavaSoftORBUtil;
 import com.syrus.util.prefs.IIOPConnectionManager;
@@ -54,7 +53,7 @@ import org.omg.PortableServer.*;
 import org.omg.PortableServer.POAManagerPackage.AdapterInactive;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2004/07/16 14:05:57 $
+ * @version $Revision: 1.6 $, $Date: 2004/07/16 15:29:46 $
  * @author $Author: krupenn $
  */
 public class RISDSessionInfo extends SessionInterface {
@@ -291,11 +290,7 @@ public class RISDSessionInfo extends SessionInterface {
 			 */
 			accessIdentity = accessIdentityHolder.value;
 			
-			String ev_domain_id = com.syrus.AMFICOM.Client.General.Model.Environment.getDomainId();
-			if(Checker.checkObject(accessIdentity.user_id, Domain.typ, ev_domain_id, Checker.read))
-				setDomainId(ev_domain_id);
-			else
-				setDomainId("");
+			setDomainId("");
 
 			logRecord = new LogRecord(Level.CONFIG, "accessIdentity information:" + ((accessIdentity == null) ? ("\n\taccessIdentity: null") : ("\n\tstarted: " + accessIdentity.started + "\n\tdomain_id: " + accessIdentity.domain_id + "\n\tsess_id: " + accessIdentity.sess_id + "\n\tuser_id: " + accessIdentity.user_id + "\n\tusername: " + accessIdentity.username)));
 			logRecord.setSourceClassName(getClass().getName());
