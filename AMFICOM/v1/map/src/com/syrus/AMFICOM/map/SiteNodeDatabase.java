@@ -1,5 +1,5 @@
 /*
- * $Id: SiteNodeDatabase.java,v 1.9 2005/02/03 08:38:02 bob Exp $
+ * $Id: SiteNodeDatabase.java,v 1.10 2005/02/04 06:44:07 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -36,7 +36,7 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/02/03 08:38:02 $
+ * @version $Revision: 1.10 $, $Date: 2005/02/04 06:44:07 $
  * @author $Author: bob $
  * @module map_v1
  */
@@ -67,8 +67,8 @@ public class SiteNodeDatabase extends StorableObjectDatabase {
 	protected String getColumns(int mode) {
 		if (columns == null){
 			columns = super.getColumns(mode) + COMMA
-				+ SiteNodeWrapper.COLUMN_NAME + COMMA
-				+ SiteNodeWrapper.COLUMN_DESCRIPTION + COMMA
+				+ StorableObjectWrapper.COLUMN_NAME + COMMA
+				+ StorableObjectWrapper.COLUMN_DESCRIPTION + COMMA
 				+ SiteNodeWrapper.COLUMN_LONGITUDE + COMMA
 				+ SiteNodeWrapper.COLUMN_LATIUDE + COMMA 
 				+ SiteNodeWrapper.COLUMN_IMAGE_ID + COMMA
@@ -154,8 +154,8 @@ public class SiteNodeDatabase extends StorableObjectDatabase {
 							   DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
 							   DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
 							   DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
-							   DatabaseString.fromQuerySubString(resultSet.getString(SiteNodeWrapper.COLUMN_NAME)),
-							   DatabaseString.fromQuerySubString(resultSet.getString(SiteNodeWrapper.COLUMN_DESCRIPTION)),
+							   DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_NAME)),
+							   DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_DESCRIPTION)),
 							   resultSet.getDouble(SiteNodeWrapper.COLUMN_LONGITUDE),
 							   resultSet.getDouble(SiteNodeWrapper.COLUMN_LATIUDE),
 							   DatabaseIdentifier.getIdentifier(resultSet, SiteNodeWrapper.COLUMN_IMAGE_ID),

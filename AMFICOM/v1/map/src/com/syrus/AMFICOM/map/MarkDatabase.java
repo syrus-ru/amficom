@@ -1,5 +1,5 @@
 /*
- * $Id: MarkDatabase.java,v 1.7 2005/02/03 08:38:02 bob Exp $
+ * $Id: MarkDatabase.java,v 1.8 2005/02/04 06:44:07 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,7 +33,7 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/02/03 08:38:02 $
+ * @version $Revision: 1.8 $, $Date: 2005/02/04 06:44:07 $
  * @author $Author: bob $
  * @module map_v1
  */
@@ -65,8 +65,8 @@ public class MarkDatabase extends StorableObjectDatabase {
 	protected String getColumns(int mode) {
 		if (columns == null){
 			columns = super.getColumns(mode) + COMMA
-				+ MarkWrapper.COLUMN_NAME + COMMA
-				+ MarkWrapper.COLUMN_DESCRIPTION + COMMA
+				+ StorableObjectWrapper.COLUMN_NAME + COMMA
+				+ StorableObjectWrapper.COLUMN_DESCRIPTION + COMMA
 				+ MarkWrapper.COLUMN_LONGITUDE + COMMA
 				+ MarkWrapper.COLUMN_LATIUDE + COMMA
 				+ MarkWrapper.COLUMN_PHYSICAL_LINK_ID + COMMA
@@ -151,8 +151,8 @@ public class MarkDatabase extends StorableObjectDatabase {
 							   DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
 							   DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
 							   DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
-							   DatabaseString.fromQuerySubString(resultSet.getString(MarkWrapper.COLUMN_NAME)),
-							   DatabaseString.fromQuerySubString(resultSet.getString(MarkWrapper.COLUMN_DESCRIPTION)),
+							   DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_NAME)),
+							   DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_DESCRIPTION)),
 							   resultSet.getDouble(MarkWrapper.COLUMN_LONGITUDE),
 							   resultSet.getDouble(MarkWrapper.COLUMN_LATIUDE),
 							   physicalLink,

@@ -1,5 +1,5 @@
 /**
- * $Id: TopologicalNode.java,v 1.17 2005/02/03 08:38:02 bob Exp $
+ * $Id: TopologicalNode.java,v 1.18 2005/02/04 06:44:07 bob Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -43,7 +43,7 @@ import java.util.List;
  * топологический узел соответствует точке изгиба линии и не требует 
  * дополнительной описательной информации.
  * @author $Author: bob $
- * @version $Revision: 1.17 $, $Date: 2005/02/03 08:38:02 $
+ * @version $Revision: 1.18 $, $Date: 2005/02/04 06:44:07 $
  * @module map_v1
  */
 public class TopologicalNode extends AbstractNode {
@@ -398,8 +398,8 @@ public class TopologicalNode extends AbstractNode {
 		synchronized(exportMap) {
 			exportMap.clear();
 			exportMap.put(StorableObjectWrapper.COLUMN_ID, this.id);
-			exportMap.put(TopologicalNodeWrapper.COLUMN_NAME, this.name);
-			exportMap.put(TopologicalNodeWrapper.COLUMN_DESCRIPTION, this.description);
+			exportMap.put(StorableObjectWrapper.COLUMN_NAME, this.name);
+			exportMap.put(StorableObjectWrapper.COLUMN_DESCRIPTION, this.description);
 			exportMap.put(TopologicalNodeWrapper.COLUMN_PHYSICAL_LINK_ID, this.physicalLink.getId());
 			exportMap.put(TopologicalNodeWrapper.COLUMN_X, String.valueOf(this.location.getX()));
 			exportMap.put(TopologicalNodeWrapper.COLUMN_Y, String.valueOf(this.location.getY()));
@@ -411,8 +411,8 @@ public class TopologicalNode extends AbstractNode {
 	public static TopologicalNode createInstance(Identifier creatorId,
 		                      			java.util.Map exportMap) throws CreateObjectException {
 		Identifier id = (Identifier) exportMap.get(StorableObjectWrapper.COLUMN_ID);
-		String name = (String) exportMap.get(TopologicalNodeWrapper.COLUMN_NAME);
-		String description = (String) exportMap.get(TopologicalNodeWrapper.COLUMN_DESCRIPTION);
+		String name = (String) exportMap.get(StorableObjectWrapper.COLUMN_NAME);
+		String description = (String) exportMap.get(StorableObjectWrapper.COLUMN_DESCRIPTION);
   		Identifier physicalLinkId = (Identifier) exportMap.get(TopologicalNodeWrapper.COLUMN_PHYSICAL_LINK_ID);
   		double x = Double.parseDouble((String) exportMap.get(TopologicalNodeWrapper.COLUMN_X));
   		double y = Double.parseDouble((String) exportMap.get(TopologicalNodeWrapper.COLUMN_Y));

@@ -1,5 +1,5 @@
 /*
- * $Id: CollectorDatabase.java,v 1.11 2005/02/03 08:38:02 bob Exp $
+ * $Id: CollectorDatabase.java,v 1.12 2005/02/04 06:44:07 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -44,7 +44,7 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/02/03 08:38:02 $
+ * @version $Revision: 1.12 $, $Date: 2005/02/04 06:44:07 $
  * @author $Author: bob $
  * @module map_v1
  */
@@ -73,7 +73,7 @@ public class CollectorDatabase extends StorableObjectDatabase {
 	private void retrievePhysicalLinks(List collectors) throws RetrieveObjectException, IllegalDataException{
 		if (collectors == null || collectors.isEmpty())
 			return;
-		java.util.Map map = super.retrieveLinkedEntities(collectors, COLLECTOR_PHYSICAL_LINK, CollectorWrapper.LINK_COLUMN_COLLECTOR_ID, CollectorWrapper.LINK_COLUMN_PHYSICAL_LINK_ID);
+		java.util.Map map = super.retrieveLinkedEntityIds(collectors, COLLECTOR_PHYSICAL_LINK, CollectorWrapper.LINK_COLUMN_COLLECTOR_ID, CollectorWrapper.LINK_COLUMN_PHYSICAL_LINK_ID);
 		for (Iterator it = map.keySet().iterator(); it.hasNext();) {
 			Collector collector = (Collector) it.next();
 			List physicalLinkIds = (List)map.get(collector);
@@ -94,8 +94,8 @@ public class CollectorDatabase extends StorableObjectDatabase {
 	protected String getColumns(int mode) {
 		if (columns == null){
 			columns = super.getColumns(mode) + COMMA
-				+ CollectorWrapper.COLUMN_NAME + COMMA
-				+ CollectorWrapper.COLUMN_DESCRIPTION;
+				+ StorableObjectWrapper.COLUMN_NAME + COMMA
+				+ StorableObjectWrapper.COLUMN_DESCRIPTION;
 		}
 		return columns;
 	}	
@@ -142,8 +142,8 @@ public class CollectorDatabase extends StorableObjectDatabase {
 							   DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
 							   DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
 							   DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
-							   DatabaseString.fromQuerySubString(resultSet.getString(CollectorWrapper.COLUMN_NAME)),
-							   DatabaseString.fromQuerySubString(resultSet.getString(CollectorWrapper.COLUMN_DESCRIPTION)));		
+							   DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_NAME)),
+							   DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_DESCRIPTION)));		
 		return collector;
 	}
 

@@ -1,5 +1,5 @@
 /*
- * $Id: NodeLinkDatabase.java,v 1.7 2005/02/03 08:38:02 bob Exp $
+ * $Id: NodeLinkDatabase.java,v 1.8 2005/02/04 06:44:07 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,7 +33,7 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/02/03 08:38:02 $
+ * @version $Revision: 1.8 $, $Date: 2005/02/04 06:44:07 $
  * @author $Author: bob $
  * @module map_v1
  */
@@ -61,7 +61,7 @@ public class NodeLinkDatabase extends StorableObjectDatabase {
 	protected String getColumns(int mode) {
 		if (columns == null){
 			columns = super.getColumns(mode) + COMMA
-				+ NodeLinkWrapper.COLUMN_NAME + COMMA
+				+ StorableObjectWrapper.COLUMN_NAME + COMMA
 				+ NodeLinkWrapper.COLUMN_PHYSICAL_LINK_ID + COMMA
 				+ NodeLinkWrapper.COLUMN_START_NODE_ID + COMMA
 				+ NodeLinkWrapper.COLUMN_END_NODE_ID + COMMA 
@@ -137,7 +137,7 @@ public class NodeLinkDatabase extends StorableObjectDatabase {
 							   DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
 							   DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
 							   DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
-							   DatabaseString.fromQuerySubString(resultSet.getString(NodeLinkWrapper.COLUMN_NAME)),
+							   DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_NAME)),
 							   physicalLink,
 							   startNode,
 							   endNode,

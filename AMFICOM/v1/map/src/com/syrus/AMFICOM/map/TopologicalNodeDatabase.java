@@ -1,5 +1,5 @@
 /*
- * $Id: TopologicalNodeDatabase.java,v 1.8 2005/02/03 08:38:02 bob Exp $
+ * $Id: TopologicalNodeDatabase.java,v 1.9 2005/02/04 06:44:07 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -41,7 +41,7 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/02/03 08:38:02 $
+ * @version $Revision: 1.9 $, $Date: 2005/02/04 06:44:07 $
  * @author $Author: bob $
  * @module map_v1
  */
@@ -242,8 +242,8 @@ public class TopologicalNodeDatabase extends StorableObjectDatabase {
 	protected String getColumns(int mode) {
 		if (columns == null){
 			columns = super.getColumns(mode) + COMMA
-				+ TopologicalNodeWrapper.COLUMN_NAME + COMMA
-				+ TopologicalNodeWrapper.COLUMN_DESCRIPTION + COMMA
+				+ StorableObjectWrapper.COLUMN_NAME + COMMA
+				+ StorableObjectWrapper.COLUMN_DESCRIPTION + COMMA
 				+ TopologicalNodeWrapper.COLUMN_LONGITUDE + COMMA
 				+ TopologicalNodeWrapper.COLUMN_LATIUDE + COMMA 
 				+ TopologicalNodeWrapper.COLUMN_ACTIVE;
@@ -302,8 +302,8 @@ public class TopologicalNodeDatabase extends StorableObjectDatabase {
 							   DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
 							   DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
 							   DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
-							   DatabaseString.fromQuerySubString(resultSet.getString(TopologicalNodeWrapper.COLUMN_NAME)),
-							   DatabaseString.fromQuerySubString(resultSet.getString(TopologicalNodeWrapper.COLUMN_DESCRIPTION)),
+							   DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_NAME)),
+							   DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_DESCRIPTION)),
 							   resultSet.getDouble(TopologicalNodeWrapper.COLUMN_LONGITUDE),
 							   resultSet.getDouble(TopologicalNodeWrapper.COLUMN_LATIUDE),
 							   resultSet.getInt(TopologicalNodeWrapper.COLUMN_ACTIVE) == 1);		

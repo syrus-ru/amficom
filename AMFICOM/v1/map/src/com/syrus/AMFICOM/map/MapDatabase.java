@@ -1,5 +1,5 @@
 /*
- * $Id: MapDatabase.java,v 1.11 2005/02/03 08:38:02 bob Exp $
+ * $Id: MapDatabase.java,v 1.12 2005/02/04 06:44:07 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -43,7 +43,7 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/02/03 08:38:02 $
+ * @version $Revision: 1.12 $, $Date: 2005/02/04 06:44:07 $
  * @author $Author: bob $
  * @module map_v1
  */
@@ -230,7 +230,7 @@ public class MapDatabase extends StorableObjectDatabase {
 		String tableName = this.getLinkedTableName(linkedTable);
 		String columnName = (String)dbTableColumnName.get(tableName);
 		
-		return super.retrieveLinkedEntities(maps, tableName, MapWrapper.LINK_COLUMN_MAP_ID, columnName);
+		return super.retrieveLinkedEntityIds(maps, tableName, MapWrapper.LINK_COLUMN_MAP_ID, columnName);
 	}
 	
 	protected String getEnityName() {		
@@ -240,8 +240,8 @@ public class MapDatabase extends StorableObjectDatabase {
 	protected String getColumns(int mode) {
 		if (columns == null){
 			columns = super.getColumns(mode) + COMMA
-				+ MapWrapper.COLUMN_NAME + COMMA
-				+ MapWrapper.COLUMN_DESCRIPTION + COMMA
+				+ StorableObjectWrapper.COLUMN_NAME + COMMA
+				+ StorableObjectWrapper.COLUMN_DESCRIPTION + COMMA
 				+ MapWrapper.COLUMN_DOMAIN_ID;
 		}
 		return columns;
@@ -292,8 +292,8 @@ public class MapDatabase extends StorableObjectDatabase {
 							   DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
 							   DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
 							   DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
-							   DatabaseString.fromQuerySubString(resultSet.getString(MapWrapper.COLUMN_NAME)),
-							   DatabaseString.fromQuerySubString(resultSet.getString(MapWrapper.COLUMN_DESCRIPTION)),
+							   DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_NAME)),
+							   DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_DESCRIPTION)),
 							   DatabaseIdentifier.getIdentifier(resultSet, MapWrapper.COLUMN_DOMAIN_ID));		
 		return map;
 	}
