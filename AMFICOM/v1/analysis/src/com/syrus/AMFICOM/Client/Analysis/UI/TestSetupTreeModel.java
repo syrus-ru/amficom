@@ -22,7 +22,7 @@ import com.syrus.AMFICOM.client_.general.ui_.tree.ObjectResourceTreeNode;
 
 import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
-import com.syrus.AMFICOM.configuration.Domain;
+import com.syrus.AMFICOM.administration.Domain;
 import com.syrus.AMFICOM.configuration.MonitoredElement;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
