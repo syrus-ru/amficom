@@ -119,7 +119,7 @@ class TestSetupTreeModel extends ObjectResourceTreeModel
 						for(Iterator it = mSetups.iterator(); it.hasNext(); )
 						{
 							MeasurementSetup t = (MeasurementSetup)it.next();
-							List me_ids = t.getMonitoredElementIds();
+							Collection me_ids = t.getMonitoredElementIds();
 							for(Iterator it2 = me_ids.iterator(); it2.hasNext(); )
 							{
 								Identifier meId = (Identifier)it2.next();

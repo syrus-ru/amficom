@@ -258,7 +258,7 @@ public class AnalysisUtil
 		}
 	}
 
-	public static Set createCriteriaSetFromParams(Identifier userId, List meIds)
+	public static Set createCriteriaSetFromParams(Identifier userId, Collection meIds)
 	{
 		SetParameter[] params = new SetParameter[8];
 
@@ -325,7 +325,7 @@ public class AnalysisUtil
 
 	}
 
-	public static Set createEtalon(Identifier userId, List meIds, ModelTraceManager mtm)
+	public static Set createEtalon(Identifier userId, Collection meIds, ModelTraceManager mtm)
 	{
 		try
 		{
@@ -358,7 +358,7 @@ public class AnalysisUtil
 		}
 	}
 
-	public static Set createThresholdSet(Identifier userId, List meIds, ModelTraceManager mtm)
+	public static Set createThresholdSet(Identifier userId, Collection meIds, ModelTraceManager mtm)
 	{
 		SetParameter[] params = new SetParameter[2];
 
