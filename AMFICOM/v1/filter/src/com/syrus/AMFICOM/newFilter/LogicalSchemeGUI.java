@@ -1,5 +1,5 @@
 /*
- * $Id: LogicalSchemeGUI.java,v 1.1 2005/03/25 10:29:31 max Exp $
+ * $Id: LogicalSchemeGUI.java,v 1.2 2005/03/31 08:03:52 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,7 +23,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/03/25 10:29:31 $
+ * @version $Revision: 1.2 $, $Date: 2005/03/31 08:03:52 $
  * @author $Author: max $
  * @module filter_v1
  */
@@ -36,8 +36,8 @@ public class LogicalSchemeGUI implements LogicalSchemeView {
 	public LogicalSchemeGUI(LogicalScheme logicalScheme, JFrame parentFrame, Filter filter) {
 		this.controller = new LogicalSchemeController(logicalScheme, this, filter); 
 		this.frame = new JDialog(parentFrame, true);
-		createFrame();
 		logicalScheme.save();
+		createFrame();		
 	}
 
 	private void createFrame() {
@@ -127,7 +127,6 @@ public class LogicalSchemeGUI implements LogicalSchemeView {
 		panel.setMinimumSize(dimension);
 		panel.setPreferredSize(dimension);
 		this.frame.setSize((int)(dimension.getWidth()*1.2),(int)(dimension.getHeight()*1.2));
-		this.frame.setVisible(false);
 		this.frame.setVisible(true);
 	}
 	public void showErrorMessage(String message) {
