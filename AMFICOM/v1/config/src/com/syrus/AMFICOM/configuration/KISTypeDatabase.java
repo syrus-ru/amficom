@@ -24,7 +24,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /*
- * $Id: KISTypeDatabase.java,v 1.3 2004/10/29 15:03:39 max Exp $
+ * $Id: KISTypeDatabase.java,v 1.4 2004/11/02 12:24:40 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,8 +32,8 @@ import com.syrus.util.database.DatabaseString;
  */
 
 /**
- * @version $Revision: 1.3 $, $Date: 2004/10/29 15:03:39 $
- * @author $Author: max $
+ * @version $Revision: 1.4 $, $Date: 2004/11/02 12:24:40 $
+ * @author $Author: bob $
  * @module module_name
  */
 public class KISTypeDatabase extends StorableObjectDatabase {
@@ -100,7 +100,7 @@ public class KISTypeDatabase extends StorableObjectDatabase {
 	        + COLUMN_CODENAME + COMMA
 	        + COLUMN_DESCRIPTION + COMMA
 			+ COLUMN_NAME
-	        + SQL_FROM + ObjectEntities.EQUIPMENTTYPE_ENTITY
+	        + SQL_FROM + ObjectEntities.KISTYPE_ENTITY
 	        + ( ((condition == null) || (condition.length() == 0) ) ? "" : SQL_WHERE + condition);
     }
     

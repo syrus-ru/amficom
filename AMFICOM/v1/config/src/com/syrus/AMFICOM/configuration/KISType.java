@@ -1,5 +1,5 @@
 /*
- * $Id: KISType.java,v 1.2 2004/10/26 14:31:43 bob Exp $
+ * $Id: KISType.java,v 1.3 2004/11/02 12:24:40 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -20,7 +20,7 @@ import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2004/10/26 14:31:43 $
+ * @version $Revision: 1.3 $, $Date: 2004/11/02 12:24:40 $
  * @author $Author: bob $
  * @module module_name
  */
@@ -85,6 +85,7 @@ public class KISType extends StorableObjectType {
 				description,
 				name);
     }
+    
     public static KISType getInstance(KISType_Transferable ktt) throws CreateObjectException {
         KISType kisType = new KISType(ktt);
         
