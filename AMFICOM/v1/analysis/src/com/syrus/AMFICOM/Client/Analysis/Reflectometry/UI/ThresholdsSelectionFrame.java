@@ -26,7 +26,6 @@ public class ThresholdsSelectionFrame extends ATableFrame
 
 	protected ModelTraceManager mtm;
 
-	private Threshold[] init_Threshs;
 	protected int current_ev = -1;
 
 	JPanel mainPanel = new JPanel();
@@ -103,9 +102,8 @@ public class ThresholdsSelectionFrame extends ATableFrame
 			{
 				if (mtm != null && current_ev != -1)
 				{
-					mtm.setThreshold(current_ev, init_Threshs[current_ev].copy());
-					updThresholds();
-					dispatcher.notify(new RefUpdateEvent(this, RefUpdateEvent.THRESHOLD_CHANGED_EVENT));
+					// FIXME: outdated / useless mtm.setThreshold(...,init_Threshs...) removed
+					// the button should be removed or replaced with something more useful
 				}
 			}
 		});
