@@ -1,5 +1,5 @@
 /*
- * $Id: TemporalPattern.java,v 1.24 2004/07/28 08:21:31 bob Exp $
+ * $Id: TemporalPattern.java,v 1.25 2004/07/28 08:29:49 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,8 +30,8 @@ import com.syrus.AMFICOM.measurement.corba.TemporalPattern_Transferable;
 import com.syrus.AMFICOM.resource.LangModelMeasurement;
 
 /**
- * @version $Revision: 1.24 $, $Date: 2004/07/28 08:21:31 $
- * @author $Author: bob $
+ * @version $Revision: 1.25 $, $Date: 2004/07/28 08:29:49 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -639,8 +639,8 @@ public class TemporalPattern extends StorableObject {
 	private HashMap					templates;
 	private List					times;	
 	
-	private Date					startTime;
-	private Date					endTime;
+	private long					startTime = 0;
+	private long					endTime = 0;
 
 	public TemporalPattern(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
@@ -809,23 +809,65 @@ public class TemporalPattern extends StorableObject {
 	 * get times in ms that describes by temporal patterns and between start and
 	 * end
 	 * 
-	 * @param start
-	 * @param end
+	 * @param Date start
+	 * @param Date end
 	 * @return List of java.util.Data 
 	 */
 	public List getTimes(Date start, Date end) {
+		return this.getTimes(start.getTime(), end.getTime());
+//		if (this.times == null)
+//			this.times = new ArrayList();
+//		if (this.startTime==null)
+//			this.times.clear();
+//		else if (!this.startTime.equals(start))
+//			this.times.clear();
+//		this.startTime = start;
+//
+//		if (this.endTime==null)
+//			this.times.clear();
+//		else if (!this.endTime.equals(end))
+//			this.times.clear();
+//		this.endTime = end;
+//
+//		if (this.times.isEmpty()){
+//			//int count = 0;
+//			Collection list = this.templates.values();
+//			for (Iterator it = list.iterator(); it.hasNext();) {
+//				TimeLine timeLine = (TimeLine) it.next();
+//				timeLine.setStartPeriod(start.getTime());
+//				timeLine.setEndPeriod(end.getTime());
+//				timeLine.parseTemplate();
+//				if (timeLine.dateList != null) {
+//					for (Iterator it2 = timeLine.dateList.iterator(); it2.hasNext();) {
+//						Object obj = it2.next();
+//						if (!this.times.contains(obj))
+//							this.times.add(obj);
+//					}
+//
+//				}
+//
+//			}			
+//		}
+//
+//		return this.times;
+	}
+
+	/**
+	 * get times in ms that describes by temporal patterns and between start and
+	 * end
+	 * 
+	 * @param long start
+	 * @param long end
+	 * @return List of java.util.Data 
+	 */
+	public List getTimes(long start, long end) {			
 		if (this.times == null)
 			this.times = new ArrayList();
-		if (this.startTime==null)
-			this.times.clear();
-		else if (!this.startTime.equals(start))
-			this.times.clear();
+		if (this.startTime!=start)
+				this.times.clear();
 		this.startTime = start;
-
-		if (this.endTime==null)
-			this.times.clear();
-		else if (!this.endTime.equals(end))
-			this.times.clear();
+		if (this.endTime!=end)
+				this.times.clear();
 		this.endTime = end;
 
 		if (this.times.isEmpty()){
@@ -833,8 +875,8 @@ public class TemporalPattern extends StorableObject {
 			Collection list = this.templates.values();
 			for (Iterator it = list.iterator(); it.hasNext();) {
 				TimeLine timeLine = (TimeLine) it.next();
-				timeLine.setStartPeriod(start.getTime());
-				timeLine.setEndPeriod(end.getTime());
+				timeLine.setStartPeriod(start);
+				timeLine.setEndPeriod(end);
 				timeLine.parseTemplate();
 				if (timeLine.dateList != null) {
 					for (Iterator it2 = timeLine.dateList.iterator(); it2.hasNext();) {
