@@ -1,5 +1,5 @@
 /*
- * $Id: ClientConfigurationObjectLoader.java,v 1.2 2004/09/22 10:59:00 bob Exp $
+ * $Id: ClientConfigurationObjectLoader.java,v 1.3 2004/09/28 07:56:50 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -40,8 +40,8 @@ import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2004/09/22 10:59:00 $
- * @author $Author: bob $
+ * @version $Revision: 1.3 $, $Date: 2004/09/28 07:56:50 $
+ * @author $Author: max $
  * @module cmserver_v1
  */
 
@@ -294,4 +294,134 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
 		 */
 		throw new UnsupportedOperationException();
 	}
+    
+    public void saveCharacteristicType(CharacteristicType characteristicType) throws DatabaseException, CommunicationException{
+//    TODO auto generated stub
+     }
+
+     public void saveEquipmentType(EquipmentType equipmentType) throws DatabaseException, CommunicationException{
+//    TODO auto generated stub
+     }
+
+     public void savePortType(PortType portType) throws DatabaseException, CommunicationException{
+//    TODO auto generated stub
+     }
+
+     public void saveMeasurementPortType(MeasurementPortType measurementPortType) throws DatabaseException, CommunicationException{
+//    TODO auto generated stub
+     }
+
+     public void saveCharacteristic(Characteristic characteristic) throws DatabaseException, CommunicationException{
+//    TODO auto generated stub
+     }
+
+//     public void savePermissionAttributes(PermissionAttributes permissionAttributes) throws DatabaseException, CommunicationException{
+//    TODO auto generated stub
+//    }
+
+     public void saveUser(User user) throws DatabaseException, CommunicationException{
+//    TODO auto generated stub
+     }
+
+     public void saveDomain(Domain domain) throws DatabaseException, CommunicationException{
+//    TODO auto generated stub
+     }
+
+     public void saveServer(Server server) throws DatabaseException, CommunicationException{
+//    TODO auto generated stub
+     }
+
+     public void saveMCM(MCM mCM) throws DatabaseException, CommunicationException{
+//    TODO auto generated stub
+     }
+
+     public void saveEquipment(Equipment equipment) throws DatabaseException, CommunicationException{
+//    TODO auto generated stub
+     }
+
+     public void savePort(Port port) throws DatabaseException, CommunicationException{
+//    TODO auto generated stub
+     }
+
+     public void saveTransmissionPath(TransmissionPath transmissionPath) throws DatabaseException, CommunicationException{
+//    TODO auto generated stub
+     }
+
+     public void saveKIS(KIS kIS) throws DatabaseException, CommunicationException{
+//    TODO auto generated stub
+     }
+
+     public void saveMeasurementPort(MeasurementPort measurementPort) throws DatabaseException, CommunicationException{
+//    TODO auto generated stub
+     }
+
+     public void saveMonitoredElement(MonitoredElement monitoredElement) throws DatabaseException, CommunicationException{
+//    TODO auto generated stub
+     }
+
+     public void saveCharacteristicTypes(List list) throws DatabaseException, CommunicationException{
+//    TODO auto generated stub
+     }
+
+     public void saveEquipmentTypes(List list) throws DatabaseException, CommunicationException{
+//    TODO auto generated stub
+     }
+
+     public void savePortTypes(List list) throws DatabaseException, CommunicationException{
+//    TODO auto generated stub
+     }
+
+     public void saveMeasurementPortTypes(List list) throws DatabaseException, CommunicationException{
+//    TODO auto generated stub
+     }
+
+     public void saveCharacteristics(List list) throws DatabaseException, CommunicationException{
+//    TODO auto generated stub
+     }
+
+//     public void savePermissionAttributes(PermissionAttributes permissionAttributes) throws DatabaseException, CommunicationException{
+//    TODO auto generated stub
+//     }
+
+     public void saveUsers(List list) throws DatabaseException, CommunicationException{
+//    TODO auto generated stub
+     }
+
+     public void saveDomains(List list) throws DatabaseException, CommunicationException{
+//    TODO auto generated stub
+     }
+
+     public void saveServers(List list) throws DatabaseException, CommunicationException{
+//    TODO auto generated stub
+     }
+
+     public void saveMCMs(List list) throws DatabaseException, CommunicationException{
+//    TODO auto generated stub
+     }
+
+     public void saveEquipments(List list) throws DatabaseException, CommunicationException{
+//    TODO auto generated stub
+     }
+
+     public void savePorts(List list) throws DatabaseException, CommunicationException{
+//    TODO auto generated stub
+     }
+
+     public void saveTransmissionPaths(List list) throws DatabaseException, CommunicationException{
+//    TODO auto generated stub
+     }
+
+     public void saveKISs(List list) throws DatabaseException, CommunicationException{
+//    TODO auto generated stub
+     }
+
+     public void saveMeasurementPorts(List list) throws DatabaseException, CommunicationException{
+//    TODO auto generated stub
+     }
+
+     public void saveMonitoredElements(List list) throws DatabaseException, CommunicationException{
+//    TODO auto generated stub
+     }
+
+
 }

@@ -1,5 +1,5 @@
 /*
- * $Id: ClientMeasurementObjectLoader.java,v 1.5 2004/09/27 12:23:55 bob Exp $
+ * $Id: ClientMeasurementObjectLoader.java,v 1.6 2004/09/28 07:56:50 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,6 +13,21 @@ import java.util.Iterator;
 import java.util.List;
 
 import com.syrus.AMFICOM.cmserver.corba.CMServer;
+import com.syrus.AMFICOM.configuration.Characteristic;
+import com.syrus.AMFICOM.configuration.CharacteristicType;
+import com.syrus.AMFICOM.configuration.Domain;
+import com.syrus.AMFICOM.configuration.Equipment;
+import com.syrus.AMFICOM.configuration.EquipmentType;
+import com.syrus.AMFICOM.configuration.KIS;
+import com.syrus.AMFICOM.configuration.MCM;
+import com.syrus.AMFICOM.configuration.MeasurementPort;
+import com.syrus.AMFICOM.configuration.MeasurementPortType;
+import com.syrus.AMFICOM.configuration.MonitoredElement;
+import com.syrus.AMFICOM.configuration.Port;
+import com.syrus.AMFICOM.configuration.PortType;
+import com.syrus.AMFICOM.configuration.Server;
+import com.syrus.AMFICOM.configuration.TransmissionPath;
+import com.syrus.AMFICOM.configuration.User;
 import com.syrus.AMFICOM.configuration.corba.AccessIdentifier_Transferable;
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
@@ -48,8 +63,8 @@ import com.syrus.AMFICOM.measurement.corba.TemporalPattern_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Test_Transferable;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2004/09/27 12:23:55 $
- * @author $Author: bob $
+ * @version $Revision: 1.6 $, $Date: 2004/09/28 07:56:50 $
+ * @author $Author: max $
  * @module cmserver_v1
  */
 
@@ -507,4 +522,113 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 			throw new CommunicationException(e);
 		}
 	}
+    
+    public void saveMeasurementType(MeasurementType measurementType) throws DatabaseException, CommunicationException{
+//    TODO auto generated stub
+     }
+
+     public void saveAnalysisType(AnalysisType analysisType) throws DatabaseException, CommunicationException{
+//    TODO auto generated stub
+     }
+
+     public void saveEvaluationType(EvaluationType evaluationType) throws DatabaseException, CommunicationException{
+//    TODO auto generated stub
+     }
+
+     public void saveSet(Set set) throws DatabaseException, CommunicationException{
+//    TODO auto generated stub
+     }
+
+     public void saveMeasurementSetup(MeasurementSetup measurementSetup) throws DatabaseException, CommunicationException{
+//    TODO auto generated stub
+     }
+
+     public void saveModeling(Modeling modeling) throws DatabaseException, CommunicationException{
+//    TODO auto generated stub
+     }
+
+     public void saveMeasurement(Measurement measurement) throws DatabaseException, CommunicationException{
+//    TODO auto generated stub
+     }
+
+     public void saveAnalysis(Analysis analysis) throws DatabaseException, CommunicationException{
+//    TODO auto generated stub
+     }
+
+     public void saveEvaluation(Evaluation evaluation) throws DatabaseException, CommunicationException{
+//    TODO auto generated stub
+     }
+
+     public void saveTest(Test test) throws DatabaseException, CommunicationException{
+//    TODO auto generated stub
+     }
+
+     public void saveResult(Result result) throws DatabaseException, CommunicationException{
+//    TODO auto generated stub
+     }
+
+     public void saveTemporalPattern(TemporalPattern temporalPattern) throws DatabaseException, CommunicationException{
+//    TODO auto generated stub
+     }
+
+     public void saveParameterTypes(List parameterTypes) throws DatabaseException, CommunicationException{
+//    TODO auto generated stub
+     }
+
+     public void saveMeasurementTypes(List measurementTypes) throws DatabaseException, CommunicationException{
+//    TODO auto generated stub
+     }
+
+     public void saveAnalysisTypes(List analysisTypes) throws DatabaseException, CommunicationException{
+//    TODO auto generated stub
+     }
+
+     public void saveEvaluationTypes(List evaluationTypes) throws DatabaseException, CommunicationException{
+//    TODO auto generated stub
+     }
+
+     public void saveSets(List sets) throws DatabaseException, CommunicationException{
+//    TODO auto generated stub
+     }
+
+     public void saveModelings(List modelings) throws DatabaseException, CommunicationException{
+//    TODO auto generated stub
+     }
+
+     public void saveMeasurementSetups(List measurementSetups) throws DatabaseException, CommunicationException{
+//    TODO auto generated stub
+     }
+
+     public void saveMeasurements(List measurements) throws DatabaseException, CommunicationException{
+//    TODO auto generated stub
+     }
+
+     public void saveAnalyses(List analyses) throws DatabaseException, CommunicationException{
+//    TODO auto generated stub
+     }
+
+     public void saveEvaluations(List evaluations) throws DatabaseException, CommunicationException{
+//    TODO auto generated stub
+     }
+
+     public void saveTests(List tests) throws DatabaseException, CommunicationException{
+//    TODO auto generated stub
+     }
+
+     public void saveResults(List results) throws DatabaseException, CommunicationException{
+//    TODO auto generated stub
+     }
+
+     public void saveTemporalPatterns(List temporalPatterns) throws DatabaseException, CommunicationException{
+//    TODO auto generated stub
+     }
+     
+    public void saveParameterType(ParameterType parameterType)
+            throws DatabaseException, CommunicationException {
+        // TODO Auto-generated method stub
+
+    }
+     
+
+
 }
