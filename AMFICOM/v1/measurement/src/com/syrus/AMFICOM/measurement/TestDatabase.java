@@ -1,5 +1,5 @@
 /*
- * $Id: TestDatabase.java,v 1.38 2004/09/16 07:56:30 bob Exp $
+ * $Id: TestDatabase.java,v 1.39 2004/09/20 14:06:50 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,6 +8,7 @@
 
 package com.syrus.AMFICOM.measurement;
 
+import java.sql.Connection;
 import java.sql.Statement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -18,6 +19,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import com.syrus.util.Log;
+import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
@@ -43,7 +45,7 @@ import com.syrus.AMFICOM.configuration.MeasurementPortDatabase;
 import com.syrus.AMFICOM.configuration.KISDatabase;
 
 /**
- * @version $Revision: 1.38 $, $Date: 2004/09/16 07:56:30 $
+ * @version $Revision: 1.39 $, $Date: 2004/09/20 14:06:50 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -288,6 +290,7 @@ public class TestDatabase extends StorableObjectDatabase {
 		Statement statement = null;
 		ResultSet resultSet = null;
 		ArrayList arraylist = new ArrayList();
+		Connection connection = DatabaseConnection.getConnection();
 		try {
 			statement = connection.createStatement();
 			Log.debugMessage("TestDatabase.retrieveMeasurementSetupTestLinks | Trying: " + sql, Log.DEBUGLEVEL09);
@@ -314,6 +317,8 @@ public class TestDatabase extends StorableObjectDatabase {
 			}
 			catch (SQLException sqle1) {
 				Log.errorException(sqle1);
+			}  finally {
+				DatabaseConnection.closeConnection(connection);
 			}
 		}
 		test.setMeasurementSetupIds(arraylist);
@@ -348,6 +353,7 @@ public class TestDatabase extends StorableObjectDatabase {
 
 		Statement statement = null;
 		ResultSet resultSet = null;
+		Connection connection = DatabaseConnection.getConnection();
 		try {
 			statement = connection.createStatement();
 			Log.debugMessage("TestDatabase.retrieveMeasurementsOrderByStartTime | Trying: " + sql, Log.DEBUGLEVEL09);
@@ -377,6 +383,8 @@ public class TestDatabase extends StorableObjectDatabase {
 			}
 			catch (SQLException sqle1) {
 				Log.errorException(sqle1);
+			} finally {
+				DatabaseConnection.closeConnection(connection);
 			}
 		}
 		((ArrayList)measurements).trimToSize();
@@ -399,6 +407,7 @@ public class TestDatabase extends StorableObjectDatabase {
 					+ CLOSE_BRACKET;
 		Statement statement = null;
 		ResultSet resultSet = null;
+		Connection connection = DatabaseConnection.getConnection();
 		try {
 			statement = connection.createStatement();
 			Log.debugMessage("TestDatabase.retrieveLastMeasurement | Trying: " + sql, Log.DEBUGLEVEL09);
@@ -428,6 +437,8 @@ public class TestDatabase extends StorableObjectDatabase {
 			}
 			catch (SQLException sqle1) {
 				Log.errorException(sqle1);
+			} finally {
+				DatabaseConnection.closeConnection(connection);
 			}
 		}
 	}
@@ -440,6 +451,7 @@ public class TestDatabase extends StorableObjectDatabase {
 			+ SQL_WHERE + MeasurementDatabase.COLUMN_TEST_ID + EQUALS + testIdStr;
 		Statement statement = null;
 		ResultSet resultSet = null;
+		Connection connection = DatabaseConnection.getConnection();
 		try {
 			statement = connection.createStatement();
 			Log.debugMessage("TestDatabase.retrieveNumberOfMeasurements | Trying: " + sql, Log.DEBUGLEVEL09);
@@ -464,6 +476,8 @@ public class TestDatabase extends StorableObjectDatabase {
 			}
 			catch (SQLException sqle1) {
 				Log.errorException(sqle1);
+			} finally {
+				DatabaseConnection.closeConnection(connection);
 			}
 		}
 	}
@@ -483,6 +497,7 @@ public class TestDatabase extends StorableObjectDatabase {
 					+ CLOSE_BRACKET;
 		Statement statement = null;
 		ResultSet resultSet = null;
+		Connection connection = DatabaseConnection.getConnection();
 		try {
 			statement = connection.createStatement();
 			Log.debugMessage("TestDatabase.retrieveNumberOfResults | Trying: " + sql, Log.DEBUGLEVEL09);
@@ -507,33 +522,17 @@ public class TestDatabase extends StorableObjectDatabase {
 			}
 			catch (SQLException sqle1) {
 				Log.errorException(sqle1);
+			} finally {
+				DatabaseConnection.closeConnection(connection);
 			}
 		}
 	}
 
 	public void insert(StorableObject storableObject) throws IllegalDataException, CreateObjectException {
 		Test test = this.fromStorableObject(storableObject);
-		try {
-			this.insertEntity(test);
-			this.insertMeasurementSetupTestLinks(test);
-		}
-		catch (CreateObjectException e) {
-			try {
-				connection.rollback();
-			}
-			catch (SQLException sqle) {
-				Log.errorMessage("Exception in rolling back");
-				Log.errorException(sqle);
-			}
-			throw e;
-		}
-		try {
-			connection.commit();
-		}
-		catch (SQLException sqle) {
-			Log.errorMessage("Exception in commiting");
-			Log.errorException(sqle);
-		}
+		this.insertEntity(test);
+		this.insertMeasurementSetupTestLinks(test);
+		
 	}
 
 	public void insert(List storableObjects) throws IllegalDataException, CreateObjectException {
@@ -575,6 +574,7 @@ public class TestDatabase extends StorableObjectDatabase {
 		 * @todo when change DB Identifier model ,change String to long
 		 */
 		String msIdCode = null;
+		Connection connection = DatabaseConnection.getConnection();
 		try {
 			preparedStatement = connection.prepareStatement(sql);
 			for (Iterator iterator = msIds.iterator(); iterator.hasNext();) {
@@ -603,6 +603,8 @@ public class TestDatabase extends StorableObjectDatabase {
 			}
 			catch (SQLException sqle1) {
 				Log.errorException(sqle1);
+			} finally {
+				DatabaseConnection.closeConnection(connection);
 			}
 		}
 	}
@@ -662,6 +664,7 @@ public class TestDatabase extends StorableObjectDatabase {
 			+ COLUMN_MODIFIER_ID + EQUALS + test.getModifierId().toSQLString()
 			+ SQL_WHERE + COLUMN_ID + EQUALS + testIdStr;
 		Statement statement = null;
+		Connection connection = DatabaseConnection.getConnection();
 		try {
 			statement = connection.createStatement();
 			Log.debugMessage("TestDatabase.updateStatus | Trying: " + sql, Log.DEBUGLEVEL09);
@@ -680,6 +683,8 @@ public class TestDatabase extends StorableObjectDatabase {
 			}
 			catch (SQLException sqle1) {
 				Log.errorException(sqle1);
+			} finally {
+				DatabaseConnection.closeConnection(connection);
 			}
 		}
 	}
@@ -692,6 +697,7 @@ public class TestDatabase extends StorableObjectDatabase {
 			+ COLUMN_MODIFIER_ID + EQUALS + test.getModifierId().toSQLString()
 			+ SQL_WHERE + COLUMN_ID + EQUALS + testIdStr;
 		Statement statement = null;
+		Connection connection = DatabaseConnection.getConnection();
 		try {
 			statement = connection.createStatement();
 			Log.debugMessage("TestDatabase.updateModified | Trying: " + sql, Log.DEBUGLEVEL09);
@@ -710,6 +716,8 @@ public class TestDatabase extends StorableObjectDatabase {
 			}
 			catch (SQLException sqle1) {
 				Log.errorException(sqle1);
+			} finally {
+				DatabaseConnection.closeConnection(connection);
 			}
 		}
 	}

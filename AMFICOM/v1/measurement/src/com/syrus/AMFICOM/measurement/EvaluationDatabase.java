@@ -1,5 +1,5 @@
 /*
- * $Id: EvaluationDatabase.java,v 1.20 2004/09/16 10:06:57 max Exp $
+ * $Id: EvaluationDatabase.java,v 1.21 2004/09/20 14:06:50 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,8 +30,8 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 
 /**
- * @version $Revision: 1.20 $, $Date: 2004/09/16 10:06:57 $
- * @author $Author: max $
+ * @version $Revision: 1.21 $, $Date: 2004/09/20 14:06:50 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
@@ -179,26 +179,7 @@ public class EvaluationDatabase extends StorableObjectDatabase {
 
 	public void insert(StorableObject storableObject) throws CreateObjectException , IllegalDataException {
 		Evaluation evaluation = this.fromStorableObject(storableObject);
-		try {
-			this.insertEntity(evaluation);
-		}
-		catch (CreateObjectException e) {
-			try {
-				connection.rollback();
-			}
-			catch (SQLException sqle) {
-				Log.errorMessage("Exception in rolling back");
-				Log.errorException(sqle);
-			}
-			throw e;
-		}
-		try {
-			connection.commit();
-		}
-		catch (SQLException sqle) {
-			Log.errorMessage("Exception in commiting");
-			Log.errorException(sqle);
-		}
+		this.insertEntity(evaluation);
 	}
 	
 	

@@ -1,5 +1,5 @@
 /*
- * $Id: SetDatabase.java,v 1.28 2004/09/16 07:56:30 bob Exp $
+ * $Id: SetDatabase.java,v 1.29 2004/09/20 14:06:50 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,6 +8,7 @@
 
 package com.syrus.AMFICOM.measurement;
 
+import java.sql.Connection;
 import java.sql.Statement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -31,10 +32,11 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.Log;
 import com.syrus.util.database.ByteArrayDatabase;
+import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.28 $, $Date: 2004/09/16 07:56:30 $
+ * @version $Revision: 1.29 $, $Date: 2004/09/20 14:06:50 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -162,6 +164,7 @@ public class SetDatabase extends StorableObjectDatabase {
 			+ setIdStr;
 		Statement statement = null;
 		ResultSet resultSet = null;
+		Connection connection = DatabaseConnection.getConnection();
 		try {
 			statement = connection.createStatement();
 			Log.debugMessage("SetDatabase.retrieveSetParameters | Trying: " + sql, Log.DEBUGLEVEL09);
@@ -205,6 +208,8 @@ public class SetDatabase extends StorableObjectDatabase {
 			}
 			catch (SQLException sqle1) {
 				Log.errorException(sqle1);
+			} finally{
+				DatabaseConnection.closeConnection(connection);
 			}
 		}
 		set.setParameters((SetParameter[])parameters.toArray(new SetParameter[parameters.size()]));
@@ -221,6 +226,7 @@ public class SetDatabase extends StorableObjectDatabase {
 			+ setIdStr;
 		Statement statement = null;
 		ResultSet resultSet = null;
+		Connection connection = DatabaseConnection.getConnection();
 		try {
 			statement = connection.createStatement();
 			Log.debugMessage("SetDatabase.retrieveSetMELinks | Trying: " + sql, Log.DEBUGLEVEL09);
@@ -247,6 +253,8 @@ public class SetDatabase extends StorableObjectDatabase {
 			}
 			catch (SQLException sqle1) {
 				Log.errorException(sqle1);
+			} finally{
+				DatabaseConnection.closeConnection(connection);
 			}
 		}
 		set.setMonitoredElementIds(meIds);
@@ -303,6 +311,7 @@ public class SetDatabase extends StorableObjectDatabase {
 		int i = 0;
 		Identifier parameterId = null;
 		Identifier parameterTypeId = null;
+		Connection connection = DatabaseConnection.getConnection();
 		try {
 			preparedStatement = connection.prepareStatement(sql);
 			for (i = 0; i < setParameters.length; i++) {
@@ -344,6 +353,8 @@ public class SetDatabase extends StorableObjectDatabase {
 			}
 			catch (SQLException sqle1) {
 				Log.errorException(sqle1);
+			} finally{
+				DatabaseConnection.closeConnection(connection);
 			}
 		}
 	}
@@ -369,6 +380,7 @@ public class SetDatabase extends StorableObjectDatabase {
 		 * @todo when change DB Identifier model ,change String to long
 		 */
 		String meIdCode = null;
+		Connection connection = DatabaseConnection.getConnection();
 		try {
 			preparedStatement = connection.prepareStatement(sql);
 			for (Iterator iterator = meIds.iterator(); iterator.hasNext();) {
@@ -398,6 +410,8 @@ public class SetDatabase extends StorableObjectDatabase {
 			}
 			catch (SQLException sqle1) {
 				Log.errorException(sqle1);
+			}  finally{
+				DatabaseConnection.closeConnection(connection);
 			}
 		}
 	}
@@ -466,6 +480,7 @@ public class SetDatabase extends StorableObjectDatabase {
 			+ meIdStr
 			+ CLOSE_BRACKET;
 		Statement statement = null;
+		Connection connection = DatabaseConnection.getConnection();
 		try {
 			statement = connection.createStatement();
 			Log.debugMessage("Set.createMEAttachment | Trying: " + sql, Log.DEBUGLEVEL09);
@@ -484,6 +499,8 @@ public class SetDatabase extends StorableObjectDatabase {
 			}
 			catch (SQLException sqle1) {
 				Log.errorException(sqle1);
+			} finally{
+				DatabaseConnection.closeConnection(connection);
 			}
 		}
 	}
@@ -500,6 +517,7 @@ public class SetDatabase extends StorableObjectDatabase {
 					+ LINK_COLUMN_ME_ID + EQUALS
 					+ meIdStr;
 		Statement statement = null;
+		Connection connection = DatabaseConnection.getConnection();
 		try {
 			statement = connection.createStatement();
 			Log.debugMessage("SetDatabase.deleteMEAttachment | Trying: " + sql, Log.DEBUGLEVEL09);
@@ -518,6 +536,8 @@ public class SetDatabase extends StorableObjectDatabase {
 			}
 			catch (SQLException sqle1) {
 				Log.errorException(sqle1);
+			} finally{
+				DatabaseConnection.closeConnection(connection);
 			}
 		}
 	}
@@ -532,6 +552,7 @@ public class SetDatabase extends StorableObjectDatabase {
 					+ COLUMN_MODIFIER_ID + EQUALS + set.getModifierId().toSQLString()
 					+ SQL_WHERE + EQUALS + setIdStr;
 		Statement statement = null;
+		Connection connection = DatabaseConnection.getConnection();
 		try {
 			statement = connection.createStatement();
 			Log.debugMessage("SetDatabase.setModified | Trying: " + sql, Log.DEBUGLEVEL09);
@@ -550,6 +571,8 @@ public class SetDatabase extends StorableObjectDatabase {
 			}
 			catch (SQLException sqle1) {
 				Log.errorException(sqle1);
+			} finally{
+				DatabaseConnection.closeConnection(connection);
 			}
 		}
 	}
@@ -557,6 +580,7 @@ public class SetDatabase extends StorableObjectDatabase {
 	public void delete(Set set) {
 		String setIdStr = set.getId().toSQLString();
 		Statement statement = null;
+		Connection connection = DatabaseConnection.getConnection();
 		try {
 			statement = connection.createStatement();
 			statement.executeUpdate(SQL_DELETE_FROM
@@ -587,6 +611,8 @@ public class SetDatabase extends StorableObjectDatabase {
 			}
 			catch(SQLException sqle1) {
 				Log.errorException(sqle1);
+			} finally{
+				DatabaseConnection.closeConnection(connection);
 			}
 		}
 	}

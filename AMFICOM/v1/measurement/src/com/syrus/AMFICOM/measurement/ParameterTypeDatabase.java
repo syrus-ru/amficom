@@ -1,5 +1,5 @@
 /*
- * $Id: ParameterTypeDatabase.java,v 1.26 2004/09/16 07:56:59 bob Exp $
+ * $Id: ParameterTypeDatabase.java,v 1.27 2004/09/20 14:06:50 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,7 +27,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.26 $, $Date: 2004/09/16 07:56:59 $
+ * @version $Revision: 1.27 $, $Date: 2004/09/20 14:06:50 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -140,26 +140,7 @@ public class ParameterTypeDatabase extends StorableObjectDatabase  {
 	
 	public void insert(StorableObject storableObject) throws IllegalDataException, CreateObjectException {
 		ParameterType parameterType = this.fromStorableObject(storableObject);
-		try {
-			this.insertEntity(parameterType);
-		}
-		catch (CreateObjectException e) {
-			try {
-				connection.rollback();
-			}
-			catch (SQLException sqle) {
-				Log.errorMessage("Exception in rolling back");
-				Log.errorException(sqle);
-			}
-			throw e;
-		}
-		try {
-			connection.commit();
-		}
-		catch (SQLException sqle) {
-			Log.errorMessage("Exception in commiting");
-			Log.errorException(sqle);
-		}
+		this.insertEntity(parameterType);
 	}	
 	
 	

@@ -1,5 +1,5 @@
 /*
- * $Id: EvaluationTypeDatabase.java,v 1.26 2004/09/16 07:56:59 bob Exp $
+ * $Id: EvaluationTypeDatabase.java,v 1.27 2004/09/20 14:06:50 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,6 +11,7 @@ package com.syrus.AMFICOM.measurement;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.sql.Connection;
 import java.sql.Statement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -28,10 +29,11 @@ import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.Log;
+import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.26 $, $Date: 2004/09/16 07:56:59 $
+ * @version $Revision: 1.27 $, $Date: 2004/09/20 14:06:50 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -166,6 +168,7 @@ public class EvaluationTypeDatabase extends StorableObjectDatabase {
 			+ SQL_WHERE + LINK_COLUMN_EVALUATION_TYPE_ID + EQUALS + evaluationTypeIdStr;
 		Statement statement = null;
 		ResultSet resultSet = null;
+		Connection connection = DatabaseConnection.getConnection();
 		try {
 			statement = connection.createStatement();
 			Log.debugMessage("EvaluationTypeDatabase.retrieveParameterTypes | Trying: " + sql, Log.DEBUGLEVEL09);
@@ -215,6 +218,8 @@ public class EvaluationTypeDatabase extends StorableObjectDatabase {
 			}
 			catch (SQLException sqle1) {
 				Log.errorException(sqle1);
+			} finally{
+				DatabaseConnection.closeConnection(connection);
 			}
 		}
 		((ArrayList)inParTyps).trimToSize();
@@ -237,27 +242,8 @@ public class EvaluationTypeDatabase extends StorableObjectDatabase {
 
 	public void insert(StorableObject storableObject) throws CreateObjectException , IllegalDataException {
 		EvaluationType evaluationType = this.fromStorableObject(storableObject);
-		try {
-			this.insertEntity(evaluationType);
-			this.insertParameterTypes(evaluationType);
-		}
-		catch (CreateObjectException e) {
-			try {
-				connection.rollback();
-			}
-			catch (SQLException sqle) {
-				Log.errorMessage("Exception in rolling back");
-				Log.errorException(sqle);
-			}
-			throw e;
-		}
-		try {
-			connection.commit();
-		}
-		catch (SQLException sqle) {
-			Log.errorMessage("Exception in commiting");
-			Log.errorException(sqle);
-		}
+		this.insertEntity(evaluationType);
+		this.insertParameterTypes(evaluationType);
 	}
 	
 	
@@ -294,6 +280,7 @@ public class EvaluationTypeDatabase extends StorableObjectDatabase {
 		 */
 		String parameterTypeIdCode = null;
 		String parameterMode = null;
+		Connection connection = DatabaseConnection.getConnection();
 		try {
 			preparedStatement = connection.prepareStatement(sql);
 			for (Iterator iterator = inParTyps.iterator(); iterator.hasNext();) {
@@ -366,6 +353,8 @@ public class EvaluationTypeDatabase extends StorableObjectDatabase {
 			}
 			catch (SQLException sqle1) {
 				Log.errorException(sqle1);
+			} finally{
+				DatabaseConnection.closeConnection(connection);
 			}
 		}
 	}
@@ -401,6 +390,7 @@ public class EvaluationTypeDatabase extends StorableObjectDatabase {
 	public void delete(EvaluationType evaluationType) {
 		String evaluationTypeIdStr = evaluationType.getId().toSQLString();
 		Statement statement = null;
+		Connection connection = DatabaseConnection.getConnection();
 		try {
 			statement = connection.createStatement();
 			statement.executeUpdate(SQL_DELETE_FROM
@@ -422,6 +412,8 @@ public class EvaluationTypeDatabase extends StorableObjectDatabase {
 			}
 			catch (SQLException sqle1) {
 				Log.errorException(sqle1);
+			} finally{
+				DatabaseConnection.closeConnection(connection);
 			}
 		}
 	}

@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementSetupDatabase.java,v 1.24 2004/09/16 08:07:15 bob Exp $
+ * $Id: MeasurementSetupDatabase.java,v 1.25 2004/09/20 14:06:50 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,6 +8,7 @@
 
 package com.syrus.AMFICOM.measurement;
 
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.PreparedStatement;
@@ -16,6 +17,7 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.Iterator;
 import com.syrus.util.Log;
+import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 import com.syrus.AMFICOM.configuration.Domain;
 import com.syrus.AMFICOM.configuration.DomainMember;
@@ -32,7 +34,7 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 
 /**
- * @version $Revision: 1.24 $, $Date: 2004/09/16 08:07:15 $
+ * @version $Revision: 1.25 $, $Date: 2004/09/20 14:06:50 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -85,26 +87,8 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 
 	public void insert(StorableObject storableObject) throws CreateObjectException, IllegalDataException {
 		MeasurementSetup measurementSetup = this.fromStorableObject(storableObject);
-		try {
-			this.insertEntity(measurementSetup);
-			this.insertMeasurementSetupMELinks(measurementSetup);
-		}
-		catch (CreateObjectException e) {
-			try {
-				connection.rollback();
-			} catch (SQLException sqle) {
-				Log.errorMessage("Exception in rolling back");
-				Log.errorException(sqle);
-			}
-			throw e;
-		}
-		try {
-			connection.commit();
-		}
-		catch (SQLException sqle) {
-			Log.errorMessage("Exception in commiting");
-			Log.errorException(sqle);
-		}
+		this.insertEntity(measurementSetup);
+		this.insertMeasurementSetupMELinks(measurementSetup);
 	}
 	
 	
@@ -120,7 +104,6 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 
 	public void update(StorableObject storableObject, int updateKind, Object obj) throws IllegalDataException, VersionCollisionException, UpdateObjectException {
 		MeasurementSetup measurementSetup = this.fromStorableObject(storableObject);
-		try {
 			switch (updateKind) {
 				case MeasurementSetup.UPDATE_ATTACH_ME:
 					this.createMEAttachment(measurementSetup, (Identifier) obj);
@@ -137,25 +120,7 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 				default:
 					super.checkAndUpdateEntity(storableObject, true);					
 					return;
-			}
-		}
-		catch (UpdateObjectException e) {
-			try {
-				connection.rollback();
-			}
-			catch (SQLException sqle) {
-				Log.errorMessage("Exception in rolling back");
-				Log.errorException(sqle);
-			}
-			throw e;
-		}
-		try {
-			connection.commit();
-		}
-		catch (SQLException sqle) {
-			Log.errorMessage("Exception in commiting");
-			Log.errorException(sqle);
-		}
+			}		
 	}	
 	
 	
@@ -201,6 +166,7 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 			+ CLOSE_BRACKET;
 
 		Statement statement = null;
+		Connection connection = DatabaseConnection.getConnection();
 		try {
 			statement = connection.createStatement();
 			Log.debugMessage("MeasurementSetupDatabase.createMEAttachment | Trying: " + sql, Log.DEBUGLEVEL09);
@@ -218,6 +184,8 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 			}
 			catch (SQLException sqle1) {
 				Log.errorException(sqle1);
+			} finally{
+				DatabaseConnection.closeConnection(connection);
 			}
 		}
 	}
@@ -232,6 +200,7 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 			+ SQL_AND
 				+ LINK_COLUMN_ME_ID + EQUALS + meIdStr;
 		Statement statement = null;
+		Connection connection = DatabaseConnection.getConnection();
 		try {
 			statement = connection.createStatement();
 			Log.debugMessage("MeasurementSetupDatabase.deleteMEAttachment | Trying: " + sql, Log.DEBUGLEVEL09);
@@ -249,6 +218,8 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 			}
 			catch (SQLException sqle1) {
 				Log.errorException(sqle1);
+			} finally{
+				DatabaseConnection.closeConnection(connection);
 			}
 		}
 	}
@@ -357,6 +328,7 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 		 * @todo when change DB Identifier model ,change String to long
 		 */
 		String meIdCode = null;
+		Connection connection = DatabaseConnection.getConnection();
 		try {
 			preparedStatement = connection.prepareStatement(sql);
 			for (Iterator iterator = meIds.iterator(); iterator.hasNext();) {
@@ -390,6 +362,8 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 			}
 			catch (SQLException sqle1) {
 				Log.errorException(sqle1);
+			} finally{
+				DatabaseConnection.closeConnection(connection);
 			}
 		}
 	}
@@ -479,6 +453,7 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 
 		Statement statement = null;
 		ResultSet resultSet = null;
+		Connection connection = DatabaseConnection.getConnection();
 		try {
 			statement = connection.createStatement();
 			Log.debugMessage("MeasurementSetupDatabase.retrieveMeasurementSetupMELinks | Trying: " + sql, Log.DEBUGLEVEL09);
@@ -505,6 +480,8 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 			}
 			catch (SQLException sqle1) {
 				Log.errorException(sqle1);
+			} finally{
+				DatabaseConnection.closeConnection(connection);
 			}
 		}
 		measurementSetup.setMonitoredElementIds(meIds);
@@ -519,6 +496,7 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 				+ COLUMN_MODIFIER_ID + EQUALS + measurementSetup.getModifierId().toString()
 				+ SQL_WHERE + COLUMN_ID + msIdStr;
 		Statement statement = null;
+		Connection connection = DatabaseConnection.getConnection();
 		try {
 			statement = connection.createStatement();
 			Log.debugMessage("MeasurementSetupDatabase.setModified | Trying: " + sql, Log.DEBUGLEVEL09);
@@ -536,6 +514,8 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 			}
 			catch (SQLException sqle1) {
 				Log.errorException(sqle1);
+			} finally{
+				DatabaseConnection.closeConnection(connection);
 			}
 		}
 	}	

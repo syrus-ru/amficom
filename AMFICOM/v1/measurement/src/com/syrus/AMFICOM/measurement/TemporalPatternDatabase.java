@@ -1,5 +1,5 @@
 /*
- * $Id: TemporalPatternDatabase.java,v 1.19 2004/09/16 07:56:30 bob Exp $
+ * $Id: TemporalPatternDatabase.java,v 1.20 2004/09/20 14:06:50 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,6 +8,7 @@
 
 package com.syrus.AMFICOM.measurement;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -16,6 +17,7 @@ import java.util.List;
 import oracle.jdbc.driver.OracleResultSet;
 import oracle.jdbc.driver.OraclePreparedStatement;
 import com.syrus.util.Log;
+import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
@@ -30,7 +32,7 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.measurement.ora.CronStringArray;
 
 /**
- * @version $Revision: 1.19 $, $Date: 2004/09/16 07:56:30 $
+ * @version $Revision: 1.20 $, $Date: 2004/09/20 14:06:50 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -122,26 +124,7 @@ public class TemporalPatternDatabase extends StorableObjectDatabase {
 
 	public void insert(StorableObject storableObject) throws CreateObjectException , IllegalDataException {
 		TemporalPattern temporalPattern = this.fromStorableObject(storableObject);
-		try {
-			this.insertTemporalPattern(temporalPattern);
-		}
-		catch (CreateObjectException e) {
-			try {
-				connection.rollback();
-			}
-			catch (SQLException sqle) {
-				Log.errorMessage("Exception in rolling back");
-				Log.errorException(sqle);
-			}
-			throw e;
-		}
-		try {
-			connection.commit();
-		}
-		catch (SQLException sqle) {
-			Log.errorMessage("Exception in commiting");
-			Log.errorException(sqle);
-		}
+		this.insertTemporalPattern(temporalPattern);
 	}
 	
 	
@@ -150,13 +133,20 @@ public class TemporalPatternDatabase extends StorableObjectDatabase {
 	}
 	
 	private PreparedStatement insertTemporalPatternPreparedStatement() throws SQLException{
-		String sql = SQL_INSERT_INTO + ObjectEntities.TEMPORALPATTERN_ENTITY 
-		+ OPEN_BRACKET
-		+ this.getUpdateColumns()
-		+ CLOSE_BRACKET + SQL_VALUES + OPEN_BRACKET
-		+ getUpdateMultiplySQLValues()
-		+ CLOSE_BRACKET;
-		return connection.prepareStatement(sql);
+		PreparedStatement preparedStatement = null;
+		Connection connection = DatabaseConnection.getConnection();
+		try{
+			String sql = SQL_INSERT_INTO + ObjectEntities.TEMPORALPATTERN_ENTITY 
+			+ OPEN_BRACKET
+			+ this.getUpdateColumns()
+			+ CLOSE_BRACKET + SQL_VALUES + OPEN_BRACKET
+			+ getUpdateMultiplySQLValues()
+			+ CLOSE_BRACKET;
+			 connection.prepareStatement(sql);
+		} finally {
+			DatabaseConnection.closeConnection(connection);
+		}
+		return preparedStatement;
 	}
 	
 	protected int setEntityForPreparedStatement(StorableObject storableObject, PreparedStatement preparedStatement)

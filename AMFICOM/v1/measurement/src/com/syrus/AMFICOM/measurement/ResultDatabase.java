@@ -1,5 +1,5 @@
 /*
- * $Id: ResultDatabase.java,v 1.22 2004/09/16 07:56:30 bob Exp $
+ * $Id: ResultDatabase.java,v 1.23 2004/09/20 14:06:50 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,6 +11,7 @@ package com.syrus.AMFICOM.measurement;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ArrayList;
+import java.sql.Connection;
 import java.sql.Statement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -18,6 +19,7 @@ import java.sql.SQLException;
 
 import oracle.sql.BLOB;
 import com.syrus.util.Log;
+import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.ByteArrayDatabase;
 import com.syrus.AMFICOM.general.Identifier;
@@ -34,7 +36,7 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
 
 /**
- * @version $Revision: 1.22 $, $Date: 2004/09/16 07:56:30 $
+ * @version $Revision: 1.23 $, $Date: 2004/09/20 14:06:50 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -297,6 +299,7 @@ public class ResultDatabase extends StorableObjectDatabase {
 			+ resultIdStr;
 		Statement statement = null;
 		ResultSet resultSet = null;
+		Connection connection = DatabaseConnection.getConnection();
 		try {
 			statement = connection.createStatement();
 			Log.debugMessage("ResultDatabase.retrieveResultParameters | Trying: " + sql, Log.DEBUGLEVEL09);
@@ -340,6 +343,8 @@ public class ResultDatabase extends StorableObjectDatabase {
 			}
 			catch (SQLException sqle1) {
 				Log.errorException(sqle1);
+			} finally{
+				DatabaseConnection.closeConnection(connection);
 			}
 		}
 		result.setParameters((SetParameter[])parameters.toArray(new SetParameter[parameters.size()]));
@@ -399,6 +404,7 @@ public class ResultDatabase extends StorableObjectDatabase {
 		int i = 0;
 		Identifier parameterId = null;
 		Identifier parameterTypeId = null;
+		Connection connection = DatabaseConnection.getConnection();
 		try {
 			preparedStatement = connection.prepareStatement(sql);
 			for (i = 0; i < setParameters.length; i++) {
@@ -440,6 +446,8 @@ public class ResultDatabase extends StorableObjectDatabase {
 			}
 			catch (SQLException sqle1) {
 				Log.errorException(sqle1);
+			}  finally{
+				DatabaseConnection.closeConnection(connection);
 			}
 		}
 	}
@@ -473,6 +481,7 @@ public class ResultDatabase extends StorableObjectDatabase {
 	private void delete(Result result) {
 		String resultIdStr = result.getId().toSQLString();
 		Statement statement = null;
+		Connection connection = DatabaseConnection.getConnection();
 		try {
 			statement = connection.createStatement();
 			statement.executeUpdate(SQL_DELETE_FROM 
@@ -500,6 +509,8 @@ public class ResultDatabase extends StorableObjectDatabase {
 			}
 			catch(SQLException sqle1) {
 				Log.errorException(sqle1);
+			} finally{
+				DatabaseConnection.closeConnection(connection);
 			}
 		}
 	}
