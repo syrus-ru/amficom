@@ -1,5 +1,5 @@
 /*
- * $Id: XMLConfigurationObjectLoader.java,v 1.4 2005/02/11 12:59:05 bob Exp $
+ * $Id: XMLConfigurationObjectLoader.java,v 1.5 2005/02/11 16:02:55 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,14 +10,27 @@ package com.syrus.AMFICOM.configuration;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Set;
 
-import com.syrus.AMFICOM.general.*;
+import com.syrus.AMFICOM.general.CommunicationException;
+import com.syrus.AMFICOM.general.DatabaseException;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.ObjectNotFoundException;
+import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.general.SessionContext;
+import com.syrus.AMFICOM.general.StorableObject;
+import com.syrus.AMFICOM.general.StorableObjectCondition;
+import com.syrus.AMFICOM.general.StorableObjectXML;
+import com.syrus.AMFICOM.general.StorableObjectXMLDriver;
+import com.syrus.AMFICOM.general.UpdateObjectException;
+import com.syrus.AMFICOM.general.VersionCollisionException;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/02/11 12:59:05 $
+ * @version $Revision: 1.5 $, $Date: 2005/02/11 16:02:55 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -40,7 +53,7 @@ public final class XMLConfigurationObjectLoader implements ConfigurationObjectLo
 		this.configurationXML.flush();
 	}
 
-	public void delete(List ids) throws CommunicationException, DatabaseException {
+	public void delete(Collection ids) throws CommunicationException, DatabaseException {
 		try {
 			for (Iterator it = ids.iterator(); it.hasNext();) {
 				Identifier id = (Identifier) it.next();
@@ -56,8 +69,8 @@ public final class XMLConfigurationObjectLoader implements ConfigurationObjectLo
 		return (CableLinkType) this.loadStorableObject(id);
 	}
 
-	public List loadCableLinkTypes(List ids) throws DatabaseException, CommunicationException {
-		List list = new ArrayList(ids.size());
+	public Collection loadCableLinkTypes(Collection ids) throws DatabaseException, CommunicationException {
+		Collection list = new ArrayList(ids.size());
 		for (Iterator it = ids.iterator(); it.hasNext();) {
 			Identifier id = (Identifier) it.next();
 			list.add(this.loadStorableObject(id));
@@ -65,7 +78,7 @@ public final class XMLConfigurationObjectLoader implements ConfigurationObjectLo
 		return list;
 	}
 
-	public List loadCableLinkTypesButIds(StorableObjectCondition condition, List ids) throws DatabaseException,
+	public Collection loadCableLinkTypesButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException,
 			CommunicationException {
 		return this.loadStorableObjectButIds(condition, ids);
 	}
@@ -74,8 +87,8 @@ public final class XMLConfigurationObjectLoader implements ConfigurationObjectLo
 		return (CableThread) this.loadStorableObject(id);
 	}
 
-	public List loadCableThreads(List ids) throws DatabaseException, CommunicationException {
-		List list = new ArrayList(ids.size());
+	public Collection loadCableThreads(Collection ids) throws DatabaseException, CommunicationException {
+		Collection list = new ArrayList(ids.size());
 		for (Iterator it = ids.iterator(); it.hasNext();) {
 			Identifier id = (Identifier) it.next();
 			list.add(this.loadStorableObject(id));
@@ -83,7 +96,7 @@ public final class XMLConfigurationObjectLoader implements ConfigurationObjectLo
 		return list;
 	}
 
-	public List loadCableThreadsButIds(StorableObjectCondition condition, List ids) throws DatabaseException,
+	public Collection loadCableThreadsButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException,
 			CommunicationException {
 		return this.loadStorableObjectButIds(condition, ids);
 	}
@@ -92,8 +105,8 @@ public final class XMLConfigurationObjectLoader implements ConfigurationObjectLo
 		return (CableThreadType) this.loadStorableObject(id);
 	}
 
-	public List loadCableThreadTypes(List ids) throws DatabaseException, CommunicationException {
-		List list = new ArrayList(ids.size());
+	public Collection loadCableThreadTypes(Collection ids) throws DatabaseException, CommunicationException {
+		Collection list = new ArrayList(ids.size());
 		for (Iterator it = ids.iterator(); it.hasNext();) {
 			Identifier id = (Identifier) it.next();
 			list.add(this.loadStorableObject(id));
@@ -101,7 +114,7 @@ public final class XMLConfigurationObjectLoader implements ConfigurationObjectLo
 		return list;
 	}
 
-	public List loadCableThreadTypesButIds(StorableObjectCondition condition, List ids) throws DatabaseException,
+	public Collection loadCableThreadTypesButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException,
 			CommunicationException {
 		return this.loadStorableObjectButIds(condition, ids);
 	}
@@ -110,8 +123,8 @@ public final class XMLConfigurationObjectLoader implements ConfigurationObjectLo
 		return (Equipment) this.loadStorableObject(id);
 	}
 
-	public List loadEquipments(List ids) throws DatabaseException, CommunicationException {
-		List list = new ArrayList(ids.size());
+	public Collection loadEquipments(Collection ids) throws DatabaseException, CommunicationException {
+		Collection list = new ArrayList(ids.size());
 		for (Iterator it = ids.iterator(); it.hasNext();) {
 			Identifier id = (Identifier) it.next();
 			list.add(this.loadStorableObject(id));
@@ -119,7 +132,7 @@ public final class XMLConfigurationObjectLoader implements ConfigurationObjectLo
 		return list;
 	}
 
-	public List loadEquipmentsButIds(StorableObjectCondition condition, List ids) throws DatabaseException,
+	public Collection loadEquipmentsButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException,
 			CommunicationException {
 		return this.loadStorableObjectButIds(condition, ids);
 	}
@@ -128,8 +141,8 @@ public final class XMLConfigurationObjectLoader implements ConfigurationObjectLo
 		return (EquipmentType) this.loadStorableObject(id);
 	}
 
-	public List loadEquipmentTypes(List ids) throws DatabaseException, CommunicationException {
-		List list = new ArrayList(ids.size());
+	public Collection loadEquipmentTypes(Collection ids) throws DatabaseException, CommunicationException {
+		Collection list = new ArrayList(ids.size());
 		for (Iterator it = ids.iterator(); it.hasNext();) {
 			Identifier id = (Identifier) it.next();
 			list.add(this.loadStorableObject(id));
@@ -137,7 +150,7 @@ public final class XMLConfigurationObjectLoader implements ConfigurationObjectLo
 		return list;
 	}
 
-	public List loadEquipmentTypesButIds(StorableObjectCondition condition, List ids) throws DatabaseException,
+	public Collection loadEquipmentTypesButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException,
 			CommunicationException {
 		return this.loadStorableObjectButIds(condition, ids);
 	}
@@ -146,8 +159,8 @@ public final class XMLConfigurationObjectLoader implements ConfigurationObjectLo
 		return (KIS) this.loadStorableObject(id);
 	}
 
-	public List loadKISs(List ids) throws DatabaseException, CommunicationException {
-		List list = new ArrayList(ids.size());
+	public Collection loadKISs(Collection ids) throws DatabaseException, CommunicationException {
+		Collection list = new ArrayList(ids.size());
 		for (Iterator it = ids.iterator(); it.hasNext();) {
 			Identifier id = (Identifier) it.next();
 			list.add(this.loadStorableObject(id));
@@ -155,7 +168,7 @@ public final class XMLConfigurationObjectLoader implements ConfigurationObjectLo
 		return list;
 	}
 
-	public List loadKISsButIds(StorableObjectCondition condition, List ids) throws DatabaseException,
+	public Collection loadKISsButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException,
 			CommunicationException {
 		return this.loadStorableObjectButIds(condition, ids);
 	}
@@ -164,8 +177,8 @@ public final class XMLConfigurationObjectLoader implements ConfigurationObjectLo
 		return (Link) this.loadStorableObject(id);
 	}
 
-	public List loadLinks(List ids) throws DatabaseException, CommunicationException {
-		List list = new ArrayList(ids.size());
+	public Collection loadLinks(Collection ids) throws DatabaseException, CommunicationException {
+		Collection list = new ArrayList(ids.size());
 		for (Iterator it = ids.iterator(); it.hasNext();) {
 			Identifier id = (Identifier) it.next();
 			list.add(this.loadStorableObject(id));
@@ -173,7 +186,7 @@ public final class XMLConfigurationObjectLoader implements ConfigurationObjectLo
 		return list;
 	}
 
-	public List loadLinksButIds(StorableObjectCondition condition, List ids) throws DatabaseException,
+	public Collection loadLinksButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException,
 			CommunicationException {
 		return this.loadStorableObjectButIds(condition, ids);
 	}
@@ -182,8 +195,8 @@ public final class XMLConfigurationObjectLoader implements ConfigurationObjectLo
 		return (LinkType) this.loadStorableObject(id);
 	}
 
-	public List loadLinkTypes(List ids) throws DatabaseException, CommunicationException {
-		List list = new ArrayList(ids.size());
+	public Collection loadLinkTypes(Collection ids) throws DatabaseException, CommunicationException {
+		Collection list = new ArrayList(ids.size());
 		for (Iterator it = ids.iterator(); it.hasNext();) {
 			Identifier id = (Identifier) it.next();
 			list.add(this.loadStorableObject(id));
@@ -191,7 +204,7 @@ public final class XMLConfigurationObjectLoader implements ConfigurationObjectLo
 		return list;
 	}
 
-	public List loadLinkTypesButIds(StorableObjectCondition condition, List ids) throws DatabaseException,
+	public Collection loadLinkTypesButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException,
 			CommunicationException {
 		return this.loadStorableObjectButIds(condition, ids);
 	}
@@ -200,8 +213,8 @@ public final class XMLConfigurationObjectLoader implements ConfigurationObjectLo
 		return (MeasurementPort) this.loadStorableObject(id);
 	}
 
-	public List loadMeasurementPorts(List ids) throws DatabaseException, CommunicationException {
-		List list = new ArrayList(ids.size());
+	public Collection loadMeasurementPorts(Collection ids) throws DatabaseException, CommunicationException {
+		Collection list = new ArrayList(ids.size());
 		for (Iterator it = ids.iterator(); it.hasNext();) {
 			Identifier id = (Identifier) it.next();
 			list.add(this.loadStorableObject(id));
@@ -209,7 +222,7 @@ public final class XMLConfigurationObjectLoader implements ConfigurationObjectLo
 		return list;
 	}
 
-	public List loadMeasurementPortsButIds(StorableObjectCondition condition, List ids) throws DatabaseException,
+	public Collection loadMeasurementPortsButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException,
 			CommunicationException {
 		return this.loadStorableObjectButIds(condition, ids);
 	}
@@ -218,8 +231,8 @@ public final class XMLConfigurationObjectLoader implements ConfigurationObjectLo
 		return (MeasurementPortType) this.loadStorableObject(id);
 	}
 
-	public List loadMeasurementPortTypes(List ids) throws DatabaseException, CommunicationException {
-		List list = new ArrayList(ids.size());
+	public Collection loadMeasurementPortTypes(Collection ids) throws DatabaseException, CommunicationException {
+		Collection list = new ArrayList(ids.size());
 		for (Iterator it = ids.iterator(); it.hasNext();) {
 			Identifier id = (Identifier) it.next();
 			list.add(this.loadStorableObject(id));
@@ -227,7 +240,7 @@ public final class XMLConfigurationObjectLoader implements ConfigurationObjectLo
 		return list;
 	}
 
-	public List loadMeasurementPortTypesButIds(StorableObjectCondition condition, List ids) throws DatabaseException,
+	public Collection loadMeasurementPortTypesButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException,
 			CommunicationException {
 		return this.loadStorableObjectButIds(condition, ids);
 	}
@@ -236,8 +249,8 @@ public final class XMLConfigurationObjectLoader implements ConfigurationObjectLo
 		return (MonitoredElement) this.loadStorableObject(id);
 	}
 
-	public List loadMonitoredElements(List ids) throws DatabaseException, CommunicationException {
-		List list = new ArrayList(ids.size());
+	public Collection loadMonitoredElements(Collection ids) throws DatabaseException, CommunicationException {
+		Collection list = new ArrayList(ids.size());
 		for (Iterator it = ids.iterator(); it.hasNext();) {
 			Identifier id = (Identifier) it.next();
 			list.add(this.loadStorableObject(id));
@@ -245,7 +258,7 @@ public final class XMLConfigurationObjectLoader implements ConfigurationObjectLo
 		return list;
 	}
 
-	public List loadMonitoredElementsButIds(StorableObjectCondition condition, List ids) throws DatabaseException,
+	public Collection loadMonitoredElementsButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException,
 			CommunicationException {
 		return this.loadStorableObjectButIds(condition, ids);
 	}
@@ -254,8 +267,8 @@ public final class XMLConfigurationObjectLoader implements ConfigurationObjectLo
 		return (Port) this.loadStorableObject(id);
 	}
 
-	public List loadPorts(List ids) throws DatabaseException, CommunicationException {
-		List list = new ArrayList(ids.size());
+	public Collection loadPorts(Collection ids) throws DatabaseException, CommunicationException {
+		Collection list = new ArrayList(ids.size());
 		for (Iterator it = ids.iterator(); it.hasNext();) {
 			Identifier id = (Identifier) it.next();
 			list.add(this.loadStorableObject(id));
@@ -263,7 +276,7 @@ public final class XMLConfigurationObjectLoader implements ConfigurationObjectLo
 		return list;
 	}
 
-	public List loadPortsButIds(StorableObjectCondition condition, List ids) throws DatabaseException,
+	public Collection loadPortsButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException,
 			CommunicationException {
 		return this.loadStorableObjectButIds(condition, ids);
 	}
@@ -272,8 +285,8 @@ public final class XMLConfigurationObjectLoader implements ConfigurationObjectLo
 		return (PortType) this.loadStorableObject(id);
 	}
 
-	public List loadPortTypes(List ids) throws DatabaseException, CommunicationException {
-		List list = new ArrayList(ids.size());
+	public Collection loadPortTypes(Collection ids) throws DatabaseException, CommunicationException {
+		Collection list = new ArrayList(ids.size());
 		for (Iterator it = ids.iterator(); it.hasNext();) {
 			Identifier id = (Identifier) it.next();
 			list.add(this.loadStorableObject(id));
@@ -281,7 +294,7 @@ public final class XMLConfigurationObjectLoader implements ConfigurationObjectLo
 		return list;
 	}
 
-	public List loadPortTypesButIds(StorableObjectCondition condition, List ids) throws DatabaseException,
+	public Collection loadPortTypesButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException,
 			CommunicationException {
 		return this.loadStorableObjectButIds(condition, ids);
 	}
@@ -290,8 +303,8 @@ public final class XMLConfigurationObjectLoader implements ConfigurationObjectLo
 		return (TransmissionPath) this.loadStorableObject(id);
 	}
 
-	public List loadTransmissionPaths(List ids) throws DatabaseException, CommunicationException {
-		List list = new ArrayList(ids.size());
+	public Collection loadTransmissionPaths(Collection ids) throws DatabaseException, CommunicationException {
+		Collection list = new ArrayList(ids.size());
 		for (Iterator it = ids.iterator(); it.hasNext();) {
 			Identifier id = (Identifier) it.next();
 			list.add(this.loadStorableObject(id));
@@ -299,7 +312,7 @@ public final class XMLConfigurationObjectLoader implements ConfigurationObjectLo
 		return list;
 	}
 
-	public List loadTransmissionPathsButIds(StorableObjectCondition condition, List ids) throws DatabaseException,
+	public Collection loadTransmissionPathsButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException,
 			CommunicationException {
 		return this.loadStorableObjectButIds(condition, ids);
 	}
@@ -309,8 +322,8 @@ public final class XMLConfigurationObjectLoader implements ConfigurationObjectLo
 		return (TransmissionPathType) this.loadStorableObject(id);
 	}
 
-	public List loadTransmissionPathTypes(List ids) throws DatabaseException, CommunicationException {
-		List list = new ArrayList(ids.size());
+	public Collection loadTransmissionPathTypes(Collection ids) throws DatabaseException, CommunicationException {
+		Collection list = new ArrayList(ids.size());
 		for (Iterator it = ids.iterator(); it.hasNext();) {
 			Identifier id = (Identifier) it.next();
 			list.add(this.loadStorableObject(id));
@@ -318,7 +331,7 @@ public final class XMLConfigurationObjectLoader implements ConfigurationObjectLo
 		return list;
 	}
 
-	public List loadTransmissionPathTypesButIds(StorableObjectCondition condition, List ids) throws DatabaseException,
+	public Collection loadTransmissionPathTypesButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException,
 			CommunicationException {
 		return this.loadStorableObjectButIds(condition, ids);
 	}
@@ -335,7 +348,7 @@ public final class XMLConfigurationObjectLoader implements ConfigurationObjectLo
 
 	}
 
-	public void saveCableLinkTypes(List list, boolean force) throws VersionCollisionException, DatabaseException,
+	public void saveCableLinkTypes(Collection list, boolean force) throws VersionCollisionException, DatabaseException,
 			CommunicationException {
 		this.saveStorableObjects(list);
 
@@ -347,7 +360,7 @@ public final class XMLConfigurationObjectLoader implements ConfigurationObjectLo
 		this.configurationXML.flush();
 	}
 
-	public void saveCableThreads(List list, boolean force) throws VersionCollisionException, DatabaseException,
+	public void saveCableThreads(Collection list, boolean force) throws VersionCollisionException, DatabaseException,
 			CommunicationException {
 		this.saveStorableObjects(list);
 	}
@@ -358,7 +371,7 @@ public final class XMLConfigurationObjectLoader implements ConfigurationObjectLo
 		this.configurationXML.flush();
 	}
 
-	public void saveCableThreadTypes(List list, boolean force) throws VersionCollisionException, DatabaseException,
+	public void saveCableThreadTypes(Collection list, boolean force) throws VersionCollisionException, DatabaseException,
 			CommunicationException {
 		this.saveStorableObjects(list);
 	}
@@ -369,7 +382,7 @@ public final class XMLConfigurationObjectLoader implements ConfigurationObjectLo
 		this.configurationXML.flush();
 	}
 
-	public void saveEquipments(List list, boolean force) throws VersionCollisionException, DatabaseException,
+	public void saveEquipments(Collection list, boolean force) throws VersionCollisionException, DatabaseException,
 			CommunicationException {
 		this.saveStorableObjects(list);
 	}
@@ -380,7 +393,7 @@ public final class XMLConfigurationObjectLoader implements ConfigurationObjectLo
 		this.configurationXML.flush();
 	}
 
-	public void saveEquipmentTypes(List list, boolean force) throws VersionCollisionException, DatabaseException,
+	public void saveEquipmentTypes(Collection list, boolean force) throws VersionCollisionException, DatabaseException,
 			CommunicationException {
 		this.saveStorableObjects(list);
 	}
@@ -391,7 +404,7 @@ public final class XMLConfigurationObjectLoader implements ConfigurationObjectLo
 		this.configurationXML.flush();
 	}
 
-	public void saveKISs(List list, boolean force) throws VersionCollisionException, DatabaseException,
+	public void saveKISs(Collection list, boolean force) throws VersionCollisionException, DatabaseException,
 			CommunicationException {
 		this.saveStorableObjects(list);
 	}
@@ -402,7 +415,7 @@ public final class XMLConfigurationObjectLoader implements ConfigurationObjectLo
 		this.configurationXML.flush();
 	}
 
-	public void saveLinks(List list, boolean force) throws VersionCollisionException, DatabaseException,
+	public void saveLinks(Collection list, boolean force) throws VersionCollisionException, DatabaseException,
 			CommunicationException {
 		this.saveStorableObjects(list);
 	}
@@ -413,7 +426,7 @@ public final class XMLConfigurationObjectLoader implements ConfigurationObjectLo
 		this.configurationXML.flush();
 	}
 
-	public void saveLinkTypes(List list, boolean force) throws VersionCollisionException, DatabaseException,
+	public void saveLinkTypes(Collection list, boolean force) throws VersionCollisionException, DatabaseException,
 			CommunicationException {
 		this.saveStorableObjects(list);
 	}
@@ -424,7 +437,7 @@ public final class XMLConfigurationObjectLoader implements ConfigurationObjectLo
 		this.configurationXML.flush();
 	}
 
-	public void saveMeasurementPorts(List list, boolean force) throws VersionCollisionException, DatabaseException,
+	public void saveMeasurementPorts(Collection list, boolean force) throws VersionCollisionException, DatabaseException,
 			CommunicationException {
 		this.saveStorableObjects(list);
 	}
@@ -435,7 +448,7 @@ public final class XMLConfigurationObjectLoader implements ConfigurationObjectLo
 		this.configurationXML.flush();
 	}
 
-	public void saveMeasurementPortTypes(List list, boolean force) throws VersionCollisionException, DatabaseException,
+	public void saveMeasurementPortTypes(Collection list, boolean force) throws VersionCollisionException, DatabaseException,
 			CommunicationException {
 		this.saveStorableObjects(list);
 	}
@@ -446,7 +459,7 @@ public final class XMLConfigurationObjectLoader implements ConfigurationObjectLo
 		this.configurationXML.flush();
 	}
 
-	public void saveMonitoredElements(List list, boolean force) throws VersionCollisionException, DatabaseException,
+	public void saveMonitoredElements(Collection list, boolean force) throws VersionCollisionException, DatabaseException,
 			CommunicationException {
 		this.saveStorableObjects(list);
 	}
@@ -457,7 +470,7 @@ public final class XMLConfigurationObjectLoader implements ConfigurationObjectLo
 		this.configurationXML.flush();
 	}
 
-	public void savePorts(List list, boolean force) throws VersionCollisionException, DatabaseException,
+	public void savePorts(Collection list, boolean force) throws VersionCollisionException, DatabaseException,
 			CommunicationException {
 		this.saveStorableObjects(list);
 	}
@@ -468,7 +481,7 @@ public final class XMLConfigurationObjectLoader implements ConfigurationObjectLo
 		this.configurationXML.flush();
 	}
 
-	public void savePortTypes(List list, boolean force) throws VersionCollisionException, DatabaseException,
+	public void savePortTypes(Collection list, boolean force) throws VersionCollisionException, DatabaseException,
 			CommunicationException {
 		this.saveStorableObjects(list);
 	}
@@ -479,7 +492,7 @@ public final class XMLConfigurationObjectLoader implements ConfigurationObjectLo
 		this.configurationXML.flush();
 	}
 
-	public void saveTransmissionPaths(List list, boolean force) throws VersionCollisionException, DatabaseException,
+	public void saveTransmissionPaths(Collection list, boolean force) throws VersionCollisionException, DatabaseException,
 			CommunicationException {
 		this.saveStorableObjects(list);
 	}
@@ -490,7 +503,7 @@ public final class XMLConfigurationObjectLoader implements ConfigurationObjectLo
 		this.configurationXML.flush();
 	}
 
-	public void saveTransmissionPathTypes(List list, boolean force) throws VersionCollisionException,
+	public void saveTransmissionPathTypes(Collection list, boolean force) throws VersionCollisionException,
 			DatabaseException, CommunicationException {
 		this.saveStorableObjects(list);
 	}
@@ -510,7 +523,7 @@ public final class XMLConfigurationObjectLoader implements ConfigurationObjectLo
 		}
 	}
 
-	private List loadStorableObjectButIds(StorableObjectCondition condition, List ids) throws CommunicationException {
+	private Collection loadStorableObjectButIds(StorableObjectCondition condition, Collection ids) throws CommunicationException {
 		try {
 			return this.configurationXML.retrieveByCondition(ids, condition);
 		} catch (RetrieveObjectException e) {
@@ -538,7 +551,7 @@ public final class XMLConfigurationObjectLoader implements ConfigurationObjectLo
 		}
 	}
 
-	private void saveStorableObjects(List storableObjects) throws CommunicationException {
+	private void saveStorableObjects(Collection storableObjects) throws CommunicationException {
 		for (Iterator it = storableObjects.iterator(); it.hasNext();) {
 			StorableObject storableObject = (StorableObject) it.next();
 			this.saveStorableObject(storableObject);

@@ -1,5 +1,5 @@
 /*
- * $Id: CableThreadTypeDatabase.java,v 1.15 2005/02/11 07:49:43 bob Exp $
+ * $Id: CableThreadTypeDatabase.java,v 1.16 2005/02/11 16:02:55 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,6 +11,7 @@ package com.syrus.AMFICOM.configuration;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Collection;
 import java.util.List;
 
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -31,7 +32,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2005/02/11 07:49:43 $
+ * @version $Revision: 1.16 $, $Date: 2005/02/11 16:02:55 $
  * @author $Author: bob $
  * @module config_v1
  */
@@ -154,7 +155,7 @@ public class CableThreadTypeDatabase extends StorableObjectDatabase {
 		super.insertEntity(cableThreadType);		
 	}
 
-	public void insert(List storableObjects) throws IllegalDataException,
+	public void insert(Collection storableObjects) throws IllegalDataException,
 			CreateObjectException {
 		super.insertEntities(storableObjects);
 	}
@@ -172,7 +173,7 @@ public class CableThreadTypeDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	public void update(List storableObjects, Identifier modifierId, int updateKind)
+	public void update(Collection storableObjects, Identifier modifierId, int updateKind)
 			throws IllegalDataException, VersionCollisionException, UpdateObjectException {
 		switch (updateKind) {
 		case UPDATE_FORCE:
@@ -197,7 +198,7 @@ public class CableThreadTypeDatabase extends StorableObjectDatabase {
         return list;
     }
 	
-	public List retrieveByIds(List ids, String condition) 
+	public List retrieveByIds(Collection ids, String condition) 
 			throws IllegalDataException, RetrieveObjectException {
 		if ((ids == null) || (ids.isEmpty()))
 			return this.retrieveByIdsOneQuery(null, condition);

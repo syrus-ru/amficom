@@ -1,5 +1,5 @@
 /*
- * $Id: MonitoredElementDatabase.java,v 1.43 2005/02/11 07:49:43 bob Exp $
+ * $Id: MonitoredElementDatabase.java,v 1.44 2005/02/11 16:02:55 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,6 +14,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -40,7 +41,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.43 $, $Date: 2005/02/11 07:49:43 $
+ * @version $Revision: 1.44 $, $Date: 2005/02/11 16:02:55 $
  * @author $Author: bob $
  * @module config_v1
  */
@@ -349,7 +350,7 @@ public class MonitoredElementDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	public void insert(List storableObjects) throws IllegalDataException, CreateObjectException {
+	public void insert(Collection storableObjects) throws IllegalDataException, CreateObjectException {
 		super.insertEntities(storableObjects);
 		for (Iterator iter = storableObjects.iterator(); iter.hasNext();) {
 			MonitoredElement monitoredElement = (MonitoredElement) iter.next();
@@ -451,7 +452,7 @@ public class MonitoredElementDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	public void update(List storableObjects, Identifier modifierId, int updateKind) throws IllegalDataException,
+	public void update(Collection storableObjects, Identifier modifierId, int updateKind) throws IllegalDataException,
 			VersionCollisionException, UpdateObjectException {
 		switch (updateKind) {
 			case UPDATE_FORCE:
@@ -529,7 +530,7 @@ public class MonitoredElementDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	public List retrieveByIds(List ids, String condition) throws IllegalDataException, RetrieveObjectException {
+	public List retrieveByIds(Collection ids, String condition) throws IllegalDataException, RetrieveObjectException {
 		List list = null;
 		if ((ids == null) || (ids.isEmpty()))
 			list = this.retrieveByIdsOneQuery(null, condition);

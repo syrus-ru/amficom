@@ -1,5 +1,5 @@
 /*
- * $Id: ConfigurationStorableObjectPool.java,v 1.61 2005/02/11 12:59:05 bob Exp $
+ * $Id: ConfigurationStorableObjectPool.java,v 1.62 2005/02/11 16:02:55 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,9 +8,9 @@
 
 package com.syrus.AMFICOM.configuration;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Hashtable;
-import java.util.List;
 import java.util.Set;
 
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -27,7 +27,7 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.61 $, $Date: 2005/02/11 12:59:05 $
+ * @version $Revision: 1.62 $, $Date: 2005/02/11 16:02:55 $
  * @author $Author: bob $
  * @module config_v1
  */
@@ -146,16 +146,16 @@ public final class ConfigurationStorableObjectPool extends StorableObjectPool {
 		return instance.getStorableObjectImpl(objectId, useLoader);
 	}
 
-	public static List getStorableObjects(List objectIds, boolean useLoader) throws DatabaseException, CommunicationException {
+	public static Collection getStorableObjects(Collection objectIds, boolean useLoader) throws DatabaseException, CommunicationException {
 		return instance.getStorableObjectsImpl(objectIds, useLoader);
 	}
 
-	public static List getStorableObjectsByCondition(StorableObjectCondition condition, boolean useLoader)
+	public static Collection getStorableObjectsByCondition(StorableObjectCondition condition, boolean useLoader)
 			throws ApplicationException {
 		return instance.getStorableObjectsByConditionImpl(condition, useLoader);
 	}
 
-	public static List getStorableObjectsByConditionButIds(	List ids,
+	public static Collection getStorableObjectsByConditionButIds(Collection ids,
 								StorableObjectCondition condition,
 								boolean useLoader) throws ApplicationException {
 		return instance.getStorableObjectsByConditionButIdsImpl(ids, condition, useLoader);
@@ -210,8 +210,8 @@ public final class ConfigurationStorableObjectPool extends StorableObjectPool {
 		return storableObject;
 	}
 
-	protected List loadStorableObjects(Short entityCode, List ids) throws DatabaseException, CommunicationException {
-		List loadedList = null;
+	protected Collection loadStorableObjects(Short entityCode, Collection ids) throws DatabaseException, CommunicationException {
+		Collection loadedList = null;
 		switch (entityCode.shortValue()) {
 				case ObjectEntities.CABLETHREADTYPE_ENTITY_CODE:
 					loadedList = cObjectLoader.loadCableThreadTypes(ids);
@@ -259,134 +259,134 @@ public final class ConfigurationStorableObjectPool extends StorableObjectPool {
 		return loadedList;
 	}
 
-	protected List loadStorableObjectsButIds(StorableObjectCondition condition, List ids)
+	protected Collection loadStorableObjectsButIds(StorableObjectCondition condition, Collection ids)
 			throws DatabaseException, CommunicationException {
-		List loadedList = null;
+		Collection loadedCollection = null;
 		short entityCode = condition.getEntityCode().shortValue();
 		switch (entityCode) {
 				case ObjectEntities.CABLETHREADTYPE_ENTITY_CODE:
-					loadedList = cObjectLoader.loadCableThreadTypesButIds(condition, ids);
+					loadedCollection = cObjectLoader.loadCableThreadTypesButIds(condition, ids);
 					break;
 				case ObjectEntities.CABLELINKTYPE_ENTITY_CODE:
-					loadedList = cObjectLoader.loadCableLinkTypesButIds(condition, ids);
+					loadedCollection = cObjectLoader.loadCableLinkTypesButIds(condition, ids);
 					break;
 				case ObjectEntities.EQUIPMENTTYPE_ENTITY_CODE:
-					loadedList = cObjectLoader.loadEquipmentTypesButIds(condition, ids);
+					loadedCollection = cObjectLoader.loadEquipmentTypesButIds(condition, ids);
 					break;
 				case ObjectEntities.PORTTYPE_ENTITY_CODE:
-					loadedList = cObjectLoader.loadPortTypesButIds(condition, ids);
+					loadedCollection = cObjectLoader.loadPortTypesButIds(condition, ids);
 					break;
 				case ObjectEntities.LINKTYPE_ENTITY_CODE:
-					loadedList = cObjectLoader.loadLinkTypesButIds(condition, ids);
+					loadedCollection = cObjectLoader.loadLinkTypesButIds(condition, ids);
 					break;
 				case ObjectEntities.MEASUREMENTPORTTYPE_ENTITY_CODE:
-					loadedList = cObjectLoader.loadMeasurementPortTypesButIds(condition, ids);
+					loadedCollection = cObjectLoader.loadMeasurementPortTypesButIds(condition, ids);
 					break;
 				case ObjectEntities.EQUIPMENT_ENTITY_CODE:
-					loadedList = cObjectLoader.loadEquipmentsButIds(condition, ids);
+					loadedCollection = cObjectLoader.loadEquipmentsButIds(condition, ids);
 					break;
 				case ObjectEntities.PORT_ENTITY_CODE:
-					loadedList = cObjectLoader.loadPortsButIds(condition, ids);
+					loadedCollection = cObjectLoader.loadPortsButIds(condition, ids);
 					break;
 				case ObjectEntities.TRANSPATH_ENTITY_CODE:
-					loadedList = cObjectLoader.loadTransmissionPathsButIds(condition, ids);
+					loadedCollection = cObjectLoader.loadTransmissionPathsButIds(condition, ids);
 					break;
 				case ObjectEntities.KIS_ENTITY_CODE:
-					loadedList = cObjectLoader.loadKISsButIds(condition, ids);
+					loadedCollection = cObjectLoader.loadKISsButIds(condition, ids);
 					break;
 				case ObjectEntities.LINK_ENTITY_CODE:
-					loadedList = cObjectLoader.loadLinksButIds(condition, ids);
+					loadedCollection = cObjectLoader.loadLinksButIds(condition, ids);
 					break;
 				case ObjectEntities.MEASUREMENTPORT_ENTITY_CODE:
-					loadedList = cObjectLoader.loadMeasurementPortsButIds(condition, ids);
+					loadedCollection = cObjectLoader.loadMeasurementPortsButIds(condition, ids);
 					break;
 				case ObjectEntities.ME_ENTITY_CODE:
-					loadedList = cObjectLoader.loadMonitoredElementsButIds(condition, ids);
+					loadedCollection = cObjectLoader.loadMonitoredElementsButIds(condition, ids);
 					break;
 			default:				
 				Log.errorMessage("ConfigurationStorableObjectPool.loadStorableObjectsButIds | Unknown entity: '" + ObjectEntities.codeToString(entityCode) + "', entity code: " + entityCode);
-				loadedList = null;
+				loadedCollection = null;
 		}
-		return loadedList;
+		return loadedCollection;
 	}
 
 	//public static void save()
 
-	protected void saveStorableObjects(short code, List list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException, IllegalDataException {
-		if (!list.isEmpty()) {
-			boolean alone = (list.size() == 1);
+	protected void saveStorableObjects(short code, Collection collection, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException, IllegalDataException {
+		if (!collection.isEmpty()) {
+			boolean alone = (collection.size() == 1);
 			switch (code) {
 				case ObjectEntities.CABLETHREADTYPE_ENTITY_CODE:
 					if (alone)
-						cObjectLoader.saveCableThreadType((CableThreadType) list.get(0), force);
+						cObjectLoader.saveCableThreadType((CableThreadType) collection.iterator().next(), force);
 					else
-						cObjectLoader.saveCableThreadTypes(list, force);
+						cObjectLoader.saveCableThreadTypes(collection, force);
 					break;
 				case ObjectEntities.CABLELINKTYPE_ENTITY_CODE:
 					if (alone)
-						cObjectLoader.saveCableLinkType((CableLinkType) list.get(0), force);
+						cObjectLoader.saveCableLinkType((CableLinkType) collection.iterator().next(), force);
 					else
-						cObjectLoader.saveCableLinkTypes(list, force);
+						cObjectLoader.saveCableLinkTypes(collection, force);
 					break;
 				case ObjectEntities.EQUIPMENTTYPE_ENTITY_CODE:
 					if (alone)
-						cObjectLoader.saveEquipmentType((EquipmentType) list.get(0), force);
+						cObjectLoader.saveEquipmentType((EquipmentType) collection.iterator().next(), force);
 					else
-						cObjectLoader.saveEquipmentTypes(list, force);
+						cObjectLoader.saveEquipmentTypes(collection, force);
 					break;
 				case ObjectEntities.PORTTYPE_ENTITY_CODE:
 					if (alone)
-						cObjectLoader.savePortType((PortType) list.get(0), force);
+						cObjectLoader.savePortType((PortType) collection.iterator().next(), force);
 					else
-						cObjectLoader.savePortTypes(list, force);
+						cObjectLoader.savePortTypes(collection, force);
 					break;
 				case ObjectEntities.LINKTYPE_ENTITY_CODE:
 					if (alone)
-						cObjectLoader.saveLinkType((LinkType) list.get(0), force);
+						cObjectLoader.saveLinkType((LinkType) collection.iterator().next(), force);
 					else
-						cObjectLoader.saveLinkTypes(list, force);
+						cObjectLoader.saveLinkTypes(collection, force);
 					break;
 				case ObjectEntities.MEASUREMENTPORTTYPE_ENTITY_CODE:
 					if (alone)
-						cObjectLoader.saveMeasurementPortType((MeasurementPortType) list.get(0), force);
+						cObjectLoader.saveMeasurementPortType((MeasurementPortType) collection.iterator().next(), force);
 					else
-						cObjectLoader.saveMeasurementPortTypes(list, force);
+						cObjectLoader.saveMeasurementPortTypes(collection, force);
 					break;
 				case ObjectEntities.EQUIPMENT_ENTITY_CODE:
 					if (alone)
-						cObjectLoader.saveEquipment((Equipment) list.get(0), force);
+						cObjectLoader.saveEquipment((Equipment) collection.iterator().next(), force);
 					else
-						cObjectLoader.saveEquipments(list, force);
+						cObjectLoader.saveEquipments(collection, force);
 					break;
 				case ObjectEntities.PORT_ENTITY_CODE:
 					if (alone)
-						cObjectLoader.savePort((Port) list.get(0), force);
+						cObjectLoader.savePort((Port) collection.iterator().next(), force);
 					else
-						cObjectLoader.savePorts(list, force);
+						cObjectLoader.savePorts(collection, force);
 					break;
 				case ObjectEntities.LINK_ENTITY_CODE:
 					if (alone)
-						cObjectLoader.saveLink((Link) list.get(0), force);
+						cObjectLoader.saveLink((Link) collection.iterator().next(), force);
 					else
-						cObjectLoader.saveLinks(list, force);
+						cObjectLoader.saveLinks(collection, force);
 					break;
 				case ObjectEntities.KIS_ENTITY_CODE:
 					if (alone)
-						cObjectLoader.saveKIS((KIS) list.get(0), force);
+						cObjectLoader.saveKIS((KIS) collection.iterator().next(), force);
 					else
-						cObjectLoader.saveKISs(list, force);
+						cObjectLoader.saveKISs(collection, force);
 					break;
 				case ObjectEntities.MEASUREMENTPORT_ENTITY_CODE:
 					if (alone)
-						cObjectLoader.saveMeasurementPort((MeasurementPort) list.get(0), force);
+						cObjectLoader.saveMeasurementPort((MeasurementPort) collection.iterator().next(), force);
 					else
-						cObjectLoader.saveMeasurementPorts(list, force);
+						cObjectLoader.saveMeasurementPorts(collection, force);
 					break;
 				case ObjectEntities.ME_ENTITY_CODE:
 					if (alone)
-						cObjectLoader.saveMonitoredElement((MonitoredElement) list.get(0), force);
+						cObjectLoader.saveMonitoredElement((MonitoredElement) collection.iterator().next(), force);
 					else
-						cObjectLoader.saveMonitoredElements(list, force);
+						cObjectLoader.saveMonitoredElements(collection, force);
 					break;
 
 				default:
@@ -416,7 +416,7 @@ public final class ConfigurationStorableObjectPool extends StorableObjectPool {
 		instance.deleteImpl(id);
 	}
 
-	public static void delete(List objects) throws DatabaseException, CommunicationException, IllegalDataException {
+	public static void delete(Collection objects) throws DatabaseException, CommunicationException, IllegalDataException {
 		instance.deleteImpl(objects);
 	}
 
@@ -434,7 +434,7 @@ public final class ConfigurationStorableObjectPool extends StorableObjectPool {
 		}
 	}
 
-	protected void deleteStorableObjects(List objects) throws DatabaseException, CommunicationException, IllegalDataException {
+	protected void deleteStorableObjects(Collection objects) throws DatabaseException, CommunicationException, IllegalDataException {
 		try {
 			cObjectLoader.delete(objects);
 		}

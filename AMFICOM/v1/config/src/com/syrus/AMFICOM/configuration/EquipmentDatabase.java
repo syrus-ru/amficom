@@ -1,5 +1,5 @@
 /*
- * $Id: EquipmentDatabase.java,v 1.65 2005/02/11 07:49:43 bob Exp $
+ * $Id: EquipmentDatabase.java,v 1.66 2005/02/11 16:02:55 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,6 +14,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -44,7 +45,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.65 $, $Date: 2005/02/11 07:49:43 $
+ * @version $Revision: 1.66 $, $Date: 2005/02/11 16:02:55 $
  * @author $Author: bob $
  * @module config_v1
  */
@@ -403,7 +404,7 @@ public class EquipmentDatabase extends StorableObjectDatabase {
 		}		
 	}
 
-	public void insert(List storableObjects) throws IllegalDataException, CreateObjectException {
+	public void insert(Collection storableObjects) throws IllegalDataException, CreateObjectException {
 		super.insertEntities(storableObjects);
 		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(GeneralDatabaseContext.getCharacteristicDatabase());		
 		try {
@@ -415,7 +416,7 @@ public class EquipmentDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	private void updateEquipmentMELinks(List equipments) throws IllegalDataException, UpdateObjectException {
+	private void updateEquipmentMELinks(Collection equipments) throws IllegalDataException, UpdateObjectException {
 		if (equipments == null || equipments.isEmpty())
 			return;
 		Map monitoredElementIdsMap = new HashMap();
@@ -444,7 +445,7 @@ public class EquipmentDatabase extends StorableObjectDatabase {
 		this.updateEquipmentMELinks(Collections.singletonList(equipment));
 	}
 
-	public void update(List storableObjects, Identifier modifierId, int updateKind)
+	public void update(Collection storableObjects, Identifier modifierId, int updateKind)
 		throws IllegalDataException, VersionCollisionException, UpdateObjectException {
 		switch (updateKind) {
 		case UPDATE_FORCE:
@@ -507,7 +508,7 @@ public class EquipmentDatabase extends StorableObjectDatabase {
 		return list;
 	}
 
-	public List retrieveByIds(List ids, String condition)
+	public List retrieveByIds(Collection ids, String condition)
 			throws IllegalDataException, RetrieveObjectException {
 		List list = null;
 		if ((ids == null) || (ids.isEmpty()))

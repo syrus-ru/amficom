@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseConfigurationObjectLoader.java,v 1.35 2005/02/11 12:59:05 bob Exp $
+ * $Id: DatabaseConfigurationObjectLoader.java,v 1.36 2005/02/11 16:02:55 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,8 +11,8 @@ package com.syrus.AMFICOM.configuration;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Collection;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -30,7 +30,7 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.35 $, $Date: 2005/02/11 12:59:05 $
+ * @version $Revision: 1.36 $, $Date: 2005/02/11 16:02:55 $
  * @author $Author: bob $
  * @module config_v1
  */
@@ -103,9 +103,9 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
 
 	// for multiple objects
 
-	public List loadEquipmentTypes(List ids) throws DatabaseException, CommunicationException {
+	public Collection loadEquipmentTypes(Collection ids) throws DatabaseException, CommunicationException {
 		EquipmentTypeDatabase database = (EquipmentTypeDatabase) ConfigurationDatabaseContext.equipmentTypeDatabase;
-		List list = null;
+		Collection list = null;
 		try {
 			list = database.retrieveByIds(ids, null);
 		}
@@ -117,9 +117,9 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
 		return list;
 	}
 
-	public List loadPortTypes(List ids) throws DatabaseException, CommunicationException {
+	public Collection loadPortTypes(Collection ids) throws DatabaseException, CommunicationException {
 		PortTypeDatabase database = (PortTypeDatabase) ConfigurationDatabaseContext.portTypeDatabase;
-		List list = null;
+		Collection list = null;
 		try {
 			list = database.retrieveByIds(ids, null);
 		}
@@ -130,9 +130,9 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
 		return list;
 	}
 
-	public List loadMeasurementPortTypes(List ids) throws DatabaseException, CommunicationException {
+	public Collection loadMeasurementPortTypes(Collection ids) throws DatabaseException, CommunicationException {
 		MeasurementPortTypeDatabase database = (MeasurementPortTypeDatabase) ConfigurationDatabaseContext.measurementPortTypeDatabase;
-		List list = null;
+		Collection list = null;
 		try {
 			list = database.retrieveByIds(ids, null);
 		}
@@ -144,9 +144,9 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
 		return list;
 	}
 
-	public List loadLinkTypes(List ids) throws DatabaseException, CommunicationException {
+	public Collection loadLinkTypes(Collection ids) throws DatabaseException, CommunicationException {
 		LinkTypeDatabase database = (LinkTypeDatabase) ConfigurationDatabaseContext.linkTypeDatabase;
-		List list = null;
+		Collection list = null;
 		try {
 			list = database.retrieveByIds(ids, null);
 		}
@@ -157,9 +157,9 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
 		return list;
 	}
 
-	public List loadCableLinkTypes(List ids) throws DatabaseException, CommunicationException {
+	public Collection loadCableLinkTypes(Collection ids) throws DatabaseException, CommunicationException {
 		CableLinkTypeDatabase database = (CableLinkTypeDatabase) ConfigurationDatabaseContext.cableLinkTypeDatabase;
-		List list = null;
+		Collection list = null;
 		try {
 			list = database.retrieveByIds(ids, null);
 		}
@@ -171,9 +171,9 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
 		return list;
 	}
 
-	public List loadCableThreadTypes(List ids) throws DatabaseException, CommunicationException {
+	public Collection loadCableThreadTypes(Collection ids) throws DatabaseException, CommunicationException {
 		CableThreadTypeDatabase database = (CableThreadTypeDatabase) ConfigurationDatabaseContext.cableThreadTypeDatabase;
-		List list = null;
+		Collection list = null;
 		try {
 			list = database.retrieveByIds(ids, null);
 		}
@@ -185,9 +185,9 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
 		return list;
 	}
 
-	public List loadEquipments(List ids) throws DatabaseException, CommunicationException {
+	public Collection loadEquipments(Collection ids) throws DatabaseException, CommunicationException {
 		EquipmentDatabase database = (EquipmentDatabase) ConfigurationDatabaseContext.equipmentDatabase;
-		List list = null;
+		Collection list = null;
 		try {
 			list = database.retrieveByIds(ids, null);
 		}
@@ -198,9 +198,9 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
 		return list;
 	}
 
-	public List loadPorts(List ids) throws DatabaseException, CommunicationException {
+	public Collection loadPorts(Collection ids) throws DatabaseException, CommunicationException {
 		PortDatabase database = (PortDatabase) ConfigurationDatabaseContext.portDatabase;
-		List list = null;
+		Collection list = null;
 		try {
 			list = database.retrieveByIds(ids, null);
 		}
@@ -211,9 +211,9 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
 		return list;
 	}
 
-	public List loadMeasurementPorts(List ids) throws DatabaseException, CommunicationException {
+	public Collection loadMeasurementPorts(Collection ids) throws DatabaseException, CommunicationException {
 		MeasurementPortDatabase database = (MeasurementPortDatabase) ConfigurationDatabaseContext.measurementPortDatabase;
-		List list = null;
+		Collection list = null;
 		try {
 			list = database.retrieveByIds(ids, null);
 		}
@@ -225,9 +225,9 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
 		return list;
 	}
 
-	public List loadTransmissionPaths(List ids) throws DatabaseException, CommunicationException {
+	public Collection loadTransmissionPaths(Collection ids) throws DatabaseException, CommunicationException {
 		TransmissionPathDatabase database = (TransmissionPathDatabase) ConfigurationDatabaseContext.transmissionPathDatabase;
-		List list = null;
+		Collection list = null;
 		try {
 			list = database.retrieveByIds(ids, null);
 		}
@@ -239,9 +239,9 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
 		return list;
 	}
 
-	public List loadTransmissionPathTypes(List ids) throws DatabaseException, CommunicationException {
+	public Collection loadTransmissionPathTypes(Collection ids) throws DatabaseException, CommunicationException {
 		TransmissionPathTypeDatabase database = (TransmissionPathTypeDatabase) ConfigurationDatabaseContext.transmissionPathTypeDatabase;
-		List list = null;
+		Collection list = null;
 		try {
 			list = database.retrieveByIds(ids, null);
 		}
@@ -253,9 +253,9 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
 		return list;
 	}
 
-	public List loadKISs(List ids) throws DatabaseException, CommunicationException {
+	public Collection loadKISs(Collection ids) throws DatabaseException, CommunicationException {
 		KISDatabase database = (KISDatabase) ConfigurationDatabaseContext.kisDatabase;
-		List list = null;
+		Collection list = null;
 		try {
 			list = database.retrieveByIds(ids, null);
 		}
@@ -266,9 +266,9 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
 		return list;
 	}
 
-	public List loadMonitoredElements(List ids) throws DatabaseException, CommunicationException {
+	public Collection loadMonitoredElements(Collection ids) throws DatabaseException, CommunicationException {
 		MonitoredElementDatabase database = (MonitoredElementDatabase) ConfigurationDatabaseContext.monitoredElementDatabase;
-		List list = null;
+		Collection list = null;
 		try {
 			list = database.retrieveByIds(ids, null);
 		}
@@ -280,9 +280,9 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
 		return list;
 	}
 
-	public List loadLinks(List ids) throws DatabaseException, CommunicationException {
+	public Collection loadLinks(Collection ids) throws DatabaseException, CommunicationException {
 		LinkDatabase database = (LinkDatabase) ConfigurationDatabaseContext.linkDatabase;
-		List list = null;
+		Collection list = null;
 		try {
 			list = database.retrieveByIds(ids, null);
 		}
@@ -293,9 +293,9 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
 		return list;
 	}
 
-	public List loadCableThreads(List ids) throws DatabaseException, CommunicationException {
+	public Collection loadCableThreads(Collection ids) throws DatabaseException, CommunicationException {
 		CableThreadDatabase database = (CableThreadDatabase) ConfigurationDatabaseContext.cableThreadDatabase;
-		List list = null;
+		Collection list = null;
 		try {
 			list = database.retrieveByIds(ids, null);
 		}
@@ -310,11 +310,11 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
 
 
 
-	public List loadCableLinkTypesButIds(StorableObjectCondition condition, List ids)
+	public Collection loadCableLinkTypesButIds(StorableObjectCondition condition, Collection ids)
 			throws DatabaseException,
 				CommunicationException {
 		CableLinkTypeDatabase database = (CableLinkTypeDatabase) ConfigurationDatabaseContext.cableLinkTypeDatabase;
-		List list = null;
+		Collection list = null;
 		try {
 			list = database.retrieveByCondition(ids, condition);
 		}
@@ -326,11 +326,11 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
 		return list;
 	}
 
-	public List loadCableThreadsButIds(StorableObjectCondition condition, List ids)
+	public Collection loadCableThreadsButIds(StorableObjectCondition condition, Collection ids)
 			throws DatabaseException,
 				CommunicationException {
 		CableThreadDatabase database = (CableThreadDatabase) ConfigurationDatabaseContext.cableThreadDatabase;
-		List list = null;
+		Collection list = null;
 		try {
 			list = database.retrieveByCondition(ids, condition);
 		}
@@ -344,11 +344,11 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
 
 	/* Load Configuration StorableObject but argument ids */
 
-	public List loadCableThreadTypesButIds(StorableObjectCondition condition, List ids)
+	public Collection loadCableThreadTypesButIds(StorableObjectCondition condition, Collection ids)
 			throws DatabaseException,
 				CommunicationException {
 		CableThreadTypeDatabase database = (CableThreadTypeDatabase) ConfigurationDatabaseContext.cableThreadTypeDatabase;
-		List list = null;
+		Collection list = null;
 		try {
 			list = database.retrieveByCondition(ids, condition);
 		}
@@ -361,9 +361,9 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
 		return list;
 	}
 
-	public List loadEquipmentsButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException {
+	public Collection loadEquipmentsButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException, CommunicationException {
 		EquipmentDatabase database = (EquipmentDatabase) ConfigurationDatabaseContext.equipmentDatabase;
-		List list = null;
+		Collection list = null;
 		try {
 			list = database.retrieveByCondition(ids, condition);
 		}
@@ -375,11 +375,11 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
 		return list;
 	}
 
-	public List loadEquipmentTypesButIds(StorableObjectCondition condition, List ids)
+	public Collection loadEquipmentTypesButIds(StorableObjectCondition condition, Collection ids)
 			throws DatabaseException,
 				CommunicationException {
 		EquipmentTypeDatabase database = (EquipmentTypeDatabase) ConfigurationDatabaseContext.equipmentTypeDatabase;
-		List list = null;
+		Collection list = null;
 		try {
 			list = database.retrieveByCondition(ids, condition);
 		}
@@ -391,9 +391,9 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
 		return list;
 	}
 
-	public List loadKISsButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException {
+	public Collection loadKISsButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException, CommunicationException {
 		KISDatabase database = (KISDatabase) ConfigurationDatabaseContext.kisDatabase;
-		List list = null;
+		Collection list = null;
 		try {
 			list = database.retrieveByCondition(ids, condition);
 		}
@@ -404,9 +404,9 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
 		return list;
 	}
 
-	public List loadLinksButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException {
+	public Collection loadLinksButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException, CommunicationException {
 		LinkDatabase database = (LinkDatabase) ConfigurationDatabaseContext.linkDatabase;
-		List list = null;
+		Collection list = null;
 		try {
 			list = database.retrieveByCondition(ids, condition);
 		}
@@ -418,9 +418,9 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
 		return list;
 	}
 
-	public List loadLinkTypesButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException {
+	public Collection loadLinkTypesButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException, CommunicationException {
 		LinkTypeDatabase database = (LinkTypeDatabase) ConfigurationDatabaseContext.linkTypeDatabase;
-		List list = null;
+		Collection list = null;
 		try {
 			list = database.retrieveByCondition(ids, condition);
 		}
@@ -432,11 +432,11 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
 		return list;
 	}
 
-	public List loadMeasurementPortsButIds(StorableObjectCondition condition, List ids)
+	public Collection loadMeasurementPortsButIds(StorableObjectCondition condition, Collection ids)
 			throws DatabaseException,
 				CommunicationException {
 		MeasurementPortDatabase database = (MeasurementPortDatabase) ConfigurationDatabaseContext.measurementPortDatabase;
-		List list = null;
+		Collection list = null;
 		try {
 			list = database.retrieveByCondition(ids, condition);
 		}
@@ -449,11 +449,11 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
 		return list;
 	}
 
-	public List loadMeasurementPortTypesButIds(StorableObjectCondition condition, List ids)
+	public Collection loadMeasurementPortTypesButIds(StorableObjectCondition condition, Collection ids)
 			throws DatabaseException,
 				CommunicationException {
 		MeasurementPortTypeDatabase database = (MeasurementPortTypeDatabase) ConfigurationDatabaseContext.measurementPortTypeDatabase;
-		List list = null;
+		Collection list = null;
 		try {
 			list = database.retrieveByCondition(ids, condition);
 		}
@@ -466,11 +466,11 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
 		return list;
 	}
 
-	public List loadMonitoredElementsButIds(StorableObjectCondition condition, List ids)
+	public Collection loadMonitoredElementsButIds(StorableObjectCondition condition, Collection ids)
 			throws DatabaseException,
 				CommunicationException {
 		MonitoredElementDatabase database = (MonitoredElementDatabase) ConfigurationDatabaseContext.monitoredElementDatabase;
-		List list = null;
+		Collection list = null;
 		try {
 			list = database.retrieveByCondition(ids, condition);
 		}
@@ -483,9 +483,9 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
 		return list;
 	}
 
-	public List loadPortsButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException {
+	public Collection loadPortsButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException, CommunicationException {
 		PortDatabase database = (PortDatabase) ConfigurationDatabaseContext.portDatabase;
-		List list = null;
+		Collection list = null;
 		try {
 			list = database.retrieveByCondition(ids, condition);
 		}
@@ -497,9 +497,9 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
 		return list;
 	}
 
-	public List loadPortTypesButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException {
+	public Collection loadPortTypesButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException, CommunicationException {
 		PortTypeDatabase database = (PortTypeDatabase) ConfigurationDatabaseContext.portTypeDatabase;
-		List list = null;
+		Collection list = null;
 		try {
 			list = database.retrieveByCondition(ids, condition);
 		}
@@ -511,11 +511,11 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
 		return list;
 	}
 
-	public List loadTransmissionPathsButIds(StorableObjectCondition condition, List ids)
+	public Collection loadTransmissionPathsButIds(StorableObjectCondition condition, Collection ids)
 			throws DatabaseException,
 				CommunicationException {
 		TransmissionPathDatabase database = (TransmissionPathDatabase) ConfigurationDatabaseContext.transmissionPathDatabase;
-		List list = null;
+		Collection list = null;
 		try {
 			list = database.retrieveByCondition(ids, condition);
 		}
@@ -528,11 +528,11 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
 		return list;
 	}
 
-	public List loadTransmissionPathTypesButIds(StorableObjectCondition condition, List ids)
+	public Collection loadTransmissionPathTypesButIds(StorableObjectCondition condition, Collection ids)
 			throws DatabaseException,
 				CommunicationException {
 		TransmissionPathTypeDatabase database = (TransmissionPathTypeDatabase) ConfigurationDatabaseContext.transmissionPathTypeDatabase;
-		List list = null;
+		Collection list = null;
 		try {
 			list = database.retrieveByCondition(ids, condition);
 		}
@@ -893,7 +893,7 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
 //############################################################################
 
 
-	public void saveCableLinkTypes(List list, boolean force)
+	public void saveCableLinkTypes(Collection list, boolean force)
 			throws VersionCollisionException,
 				DatabaseException,
 				CommunicationException {
@@ -918,7 +918,7 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
 		}
 	}
 
-	public void saveCableThreads(List list, boolean force)
+	public void saveCableThreads(Collection list, boolean force)
 			throws VersionCollisionException,
 				DatabaseException,
 				CommunicationException {
@@ -942,7 +942,7 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
 		}
 	}
 
-	public void saveCableThreadTypes(List list, boolean force) throws DatabaseException, CommunicationException {
+	public void saveCableThreadTypes(Collection list, boolean force) throws DatabaseException, CommunicationException {
 		CableThreadTypeDatabase database = (CableThreadTypeDatabase) ConfigurationDatabaseContext.cableThreadTypeDatabase;
 		try {
 			database.update(list, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
@@ -964,7 +964,7 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
 		}
 	}
 
-	public void saveEquipments(List list, boolean force) throws DatabaseException, CommunicationException {
+	public void saveEquipments(Collection list, boolean force) throws DatabaseException, CommunicationException {
 		EquipmentDatabase database = (EquipmentDatabase) ConfigurationDatabaseContext.equipmentDatabase;
 		try {
 			database.update(list, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
@@ -984,7 +984,7 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
 		}
 	}
 
-	public void saveEquipmentTypes(List list, boolean force) throws DatabaseException, CommunicationException {
+	public void saveEquipmentTypes(Collection list, boolean force) throws DatabaseException, CommunicationException {
 		EquipmentTypeDatabase database = (EquipmentTypeDatabase) ConfigurationDatabaseContext.equipmentTypeDatabase;
 		try {
 			database.update(list, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
@@ -1006,7 +1006,7 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
 		}
 	}
 
-	public void saveKISs(List list, boolean force) throws DatabaseException, CommunicationException {
+	public void saveKISs(Collection list, boolean force) throws DatabaseException, CommunicationException {
 		KISDatabase database = (KISDatabase) ConfigurationDatabaseContext.kisDatabase;
 		try {
 			database.update(list, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
@@ -1025,7 +1025,7 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
 		}
 	}
 
-	public void saveLinks(List list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException {
+	public void saveLinks(Collection list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException {
 		LinkDatabase database = (LinkDatabase) ConfigurationDatabaseContext.linkDatabase;
 		try {
 			database.update(list, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
@@ -1044,7 +1044,7 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
 		}
 	}
 
-	public void saveLinkTypes(List list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException {
+	public void saveLinkTypes(Collection list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException {
 		LinkTypeDatabase database = (LinkTypeDatabase) ConfigurationDatabaseContext.linkTypeDatabase;
 		try {
 			database.update(list, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
@@ -1064,7 +1064,7 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
 		}
 	}
 
-	public void saveMeasurementPorts(List list, boolean force) throws DatabaseException, CommunicationException {
+	public void saveMeasurementPorts(Collection list, boolean force) throws DatabaseException, CommunicationException {
 		MeasurementPortDatabase database = (MeasurementPortDatabase) ConfigurationDatabaseContext.measurementPortDatabase;
 		try {
 			database.update(list, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
@@ -1086,7 +1086,7 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
 		}
 	}
 
-	public void saveMeasurementPortTypes(List list, boolean force) throws DatabaseException, CommunicationException {
+	public void saveMeasurementPortTypes(Collection list, boolean force) throws DatabaseException, CommunicationException {
 		MeasurementPortTypeDatabase database = (MeasurementPortTypeDatabase) ConfigurationDatabaseContext.measurementPortTypeDatabase;
 		try {
 			database.update(list, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
@@ -1109,7 +1109,7 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
 		}
 	}
 
-	public void saveMonitoredElements(List list, boolean force) throws DatabaseException, CommunicationException {
+	public void saveMonitoredElements(Collection list, boolean force) throws DatabaseException, CommunicationException {
 		MonitoredElementDatabase database = (MonitoredElementDatabase) ConfigurationDatabaseContext.monitoredElementDatabase;
 		try {
 			database.update(list, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
@@ -1131,7 +1131,7 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
 		}
 	}
 
-	public void savePorts(List list, boolean force) throws DatabaseException, CommunicationException {
+	public void savePorts(Collection list, boolean force) throws DatabaseException, CommunicationException {
 		PortDatabase database = (PortDatabase) ConfigurationDatabaseContext.portDatabase;
 		try {
 			database.update(list, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
@@ -1150,7 +1150,7 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
 		}
 	}
 
-	public void savePortTypes(List list, boolean force) throws DatabaseException, CommunicationException {
+	public void savePortTypes(Collection list, boolean force) throws DatabaseException, CommunicationException {
 		PortTypeDatabase database = (PortTypeDatabase) ConfigurationDatabaseContext.portTypeDatabase;
 		try {
 			database.update(list, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
@@ -1170,7 +1170,7 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
 		}
 	}
 
-	public void saveTransmissionPaths(List list, boolean force) throws DatabaseException, CommunicationException {
+	public void saveTransmissionPaths(Collection list, boolean force) throws DatabaseException, CommunicationException {
 		TransmissionPathDatabase database = (TransmissionPathDatabase) ConfigurationDatabaseContext.transmissionPathDatabase;
 		try {
 			database.update(list, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
@@ -1192,7 +1192,7 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
 		}
 	}
 
-	public void saveTransmissionPathTypes(List list, boolean force)
+	public void saveTransmissionPathTypes(Collection list, boolean force)
 			throws VersionCollisionException,
 				DatabaseException,
 				CommunicationException {
@@ -1248,7 +1248,7 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
 		delete(id, null);
 	}
 
-	public void delete(List objects) throws CommunicationException, DatabaseException, IllegalDataException {
+	public void delete(Collection objects) throws CommunicationException, DatabaseException, IllegalDataException {
 		if (objects == null || objects.isEmpty())
 			return;
 		/**
@@ -1272,7 +1272,7 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
 							+ object.getClass().getName()
 							+ " isn't Identifier or Identified");
 			Short entityCode = new Short(identifier.getMajor());
-			List list = (List) map.get(entityCode);
+			Collection list = (Collection) map.get(entityCode);
 			if (list == null) {
 				list = new LinkedList();
 				map.put(entityCode, list);
@@ -1282,12 +1282,12 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
 
 		for (Iterator it = map.keySet().iterator(); it.hasNext();) {
 			Short entityCode = (Short) it.next();
-			List list = (List) map.get(entityCode);
+			Collection list = (Collection) map.get(entityCode);
 			this.delete(null, list);
 		}
 	}
 
-	private void delete(Identifier id, List objects) throws DatabaseException {
+	private void delete(Identifier id, Collection objects) throws DatabaseException {
 		short entityCode = (id != null) ? id.getMajor() : 0;
 		if (id == null) {
 			if (objects.isEmpty())

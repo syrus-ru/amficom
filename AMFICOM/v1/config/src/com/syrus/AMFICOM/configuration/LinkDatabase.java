@@ -1,5 +1,5 @@
 /*
- * $Id: LinkDatabase.java,v 1.26 2005/02/11 07:49:43 bob Exp $
+ * $Id: LinkDatabase.java,v 1.27 2005/02/11 16:02:55 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,6 +11,7 @@ package com.syrus.AMFICOM.configuration;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -37,7 +38,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.26 $, $Date: 2005/02/11 07:49:43 $
+ * @version $Revision: 1.27 $, $Date: 2005/02/11 16:02:55 $
  * @author $Author: bob $
  * @module config_v1
  */
@@ -215,7 +216,7 @@ public class LinkDatabase extends StorableObjectDatabase {
 		characteristicDatabase.insert(link.getCharacteristics());		
 	}
 
-	public void insert(List storableObjects) throws IllegalDataException, CreateObjectException {
+	public void insert(Collection storableObjects) throws IllegalDataException, CreateObjectException {
 		super.insertEntities(storableObjects);
 		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(GeneralDatabaseContext.getCharacteristicDatabase());
 		for (Iterator iter = storableObjects.iterator(); iter.hasNext();) {
@@ -240,7 +241,7 @@ public class LinkDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	public void update(List storableObjects, Identifier modifierId, int updateKind)
+	public void update(Collection storableObjects, Identifier modifierId, int updateKind)
 		throws IllegalDataException, VersionCollisionException, UpdateObjectException {
 		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(GeneralDatabaseContext.getCharacteristicDatabase());
 		switch (updateKind) {
@@ -274,7 +275,7 @@ public class LinkDatabase extends StorableObjectDatabase {
 		return list;
 	}
 
-	public List retrieveByIds(List ids, String condition) throws IllegalDataException, RetrieveObjectException {
+	public List retrieveByIds(Collection ids, String condition) throws IllegalDataException, RetrieveObjectException {
 		List list = null;
 		if ((ids == null) || (ids.isEmpty()))
 			list = this.retrieveByIdsOneQuery(null, condition);

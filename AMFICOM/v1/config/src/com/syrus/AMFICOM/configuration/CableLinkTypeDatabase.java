@@ -1,5 +1,5 @@
 /*
- * $Id: CableLinkTypeDatabase.java,v 1.14 2005/02/11 07:49:43 bob Exp $
+ * $Id: CableLinkTypeDatabase.java,v 1.15 2005/02/11 16:02:55 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,6 +11,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -39,7 +40,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2005/02/11 07:49:43 $
+ * @version $Revision: 1.15 $, $Date: 2005/02/11 16:02:55 $
  * @author $Author: bob $
  * @module config_v1
  */
@@ -131,7 +132,7 @@ public class CableLinkTypeDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	private void updateCableThreadTypes(List cableLinkTypes) throws UpdateObjectException, IllegalDataException {
+	private void updateCableThreadTypes(Collection cableLinkTypes) throws UpdateObjectException, IllegalDataException {
 		if (cableLinkTypes == null || cableLinkTypes.isEmpty())
 			return;
 
@@ -236,7 +237,7 @@ public class CableLinkTypeDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	public void insert(List storableObjects) throws IllegalDataException, CreateObjectException {
+	public void insert(Collection storableObjects) throws IllegalDataException, CreateObjectException {
 		super.insertEntities(storableObjects);
 		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)GeneralDatabaseContext.getCharacteristicDatabase();
 		try {
@@ -264,7 +265,7 @@ public class CableLinkTypeDatabase extends StorableObjectDatabase {
 		this.updateCableThreadTypes(Collections.singletonList(storableObject));
 	}
 
-	public void update(List storableObjects, Identifier modifierId, int updateKind)
+	public void update(Collection storableObjects, Identifier modifierId, int updateKind)
 			throws IllegalDataException, VersionCollisionException, UpdateObjectException {
 		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)GeneralDatabaseContext.getCharacteristicDatabase();
 		switch (updateKind) {
@@ -292,7 +293,7 @@ public class CableLinkTypeDatabase extends StorableObjectDatabase {
 		return list;
 	}
 
-	public List retrieveByIds(List ids, String condition) throws IllegalDataException, RetrieveObjectException {
+	public List retrieveByIds(Collection ids, String condition) throws IllegalDataException, RetrieveObjectException {
 		List list = null; 
 		if ((ids == null) || (ids.isEmpty()))
 			list = this.retrieveByIdsOneQuery(null, condition);
