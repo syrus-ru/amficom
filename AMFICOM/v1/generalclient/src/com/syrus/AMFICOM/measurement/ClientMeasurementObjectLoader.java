@@ -1,5 +1,5 @@
 /*
- * $Id: ClientMeasurementObjectLoader.java,v 1.8 2004/12/24 13:02:44 bob Exp $
+ * $Id: ClientMeasurementObjectLoader.java,v 1.9 2005/01/18 07:40:06 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,9 +13,9 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 
+import com.syrus.AMFICOM.administration.corba.DomainCondition_Transferable;
 import com.syrus.AMFICOM.cmserver.corba.CMServer;
 import com.syrus.AMFICOM.configuration.corba.AccessIdentifier_Transferable;
-import com.syrus.AMFICOM.configuration.corba.DomainCondition_Transferable;
 import com.syrus.AMFICOM.general.corba.LinkedIdsCondition_Transferable;
 import com.syrus.AMFICOM.general.corba.StringFieldCondition_Transferable;
 import com.syrus.AMFICOM.general.CommunicationException;
@@ -50,7 +50,7 @@ import com.syrus.AMFICOM.measurement.corba.Test_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2004/12/24 13:02:44 $
+ * @version $Revision: 1.9 $, $Date: 2005/01/18 07:40:06 $
  * @author $Author: bob $
  * @module generalclient_v1
  */
