@@ -1,5 +1,5 @@
 /**
- * $Id: MapPipePathElement.java,v 1.9 2004/10/20 10:13:59 krupenn Exp $
+ * $Id: MapPipePathElement.java,v 1.10 2004/11/19 14:40:10 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -40,7 +40,7 @@ import java.util.List;
  * 
  * 
  * 
- * @version $Revision: 1.9 $, $Date: 2004/10/20 10:13:59 $
+ * @version $Revision: 1.10 $, $Date: 2004/11/19 14:40:10 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -149,6 +149,11 @@ public class MapPipePathElement extends MapLinkElement implements Serializable
 			String pli = (String )it.next();
 			links.add(getMap().getPhysicalLink(pli));
 		}
+	}
+
+	public String getName()
+	{
+		return name;
 	}
 
 	public boolean isVisible(Rectangle2D.Double visibleBounds)

@@ -1,5 +1,5 @@
 /**
- * $Id: MapLinkElement.java,v 1.12 2004/10/26 13:25:36 krupenn Exp $
+ * $Id: MapLinkElement.java,v 1.13 2004/11/19 14:40:10 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -32,7 +32,7 @@ import java.util.HashMap;
  * 
  * 
  * 
- * @version $Revision: 1.12 $, $Date: 2004/10/26 13:25:36 $
+ * @version $Revision: 1.13 $, $Date: 2004/11/19 14:40:10 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -119,7 +119,7 @@ public abstract class MapLinkElement extends StubResource implements MapElement
 	
 	public String getName()
 	{
-		return name;
+		return "\"" + getStartNode().getName() + " - " + getEndNode().getName() + "\"";//name;
 	}
 
 	public void setName(String name)

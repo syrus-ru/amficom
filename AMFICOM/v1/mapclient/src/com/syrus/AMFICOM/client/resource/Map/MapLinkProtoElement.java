@@ -1,5 +1,5 @@
 /**
- * $Id: MapLinkProtoElement.java,v 1.10 2004/10/18 12:43:13 krupenn Exp $
+ * $Id: MapLinkProtoElement.java,v 1.11 2004/11/19 14:40:10 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -33,7 +33,7 @@ import java.util.Iterator;
  * 
  * 
  * 
- * @version $Revision: 1.10 $, $Date: 2004/10/18 12:43:13 $
+ * @version $Revision: 1.11 $, $Date: 2004/11/19 14:40:10 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -154,6 +154,11 @@ public final class MapLinkProtoElement
 	public String getToolTipText()
 	{
 		return "proto " + this.getName();
+	}
+
+	public String getName()
+	{
+		return name;
 	}
 
 	public Point2D.Double getAnchor()
