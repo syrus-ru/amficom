@@ -1,5 +1,5 @@
 /*
- * $Id: ComplexReflectogramEvent.java,v 1.2 2005/01/26 14:59:25 saa Exp $
+ * $Id: ComplexReflectogramEvent.java,v 1.3 2005/02/08 11:46:27 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,8 +11,14 @@ import com.syrus.AMFICOM.analysis.dadara.SimpleReflectogramEvent;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.2 $, $Date: 2005/01/26 14:59:25 $
- * @module
+ * @version $Revision: 1.3 $, $Date: 2005/02/08 11:46:27 $
+ * @module dadara
+ * 
+ * Класс предназначен для хранения расширенной информации о
+ * рефлектометрическом событии -
+ * кроме стандартных {начало, конец, тип} хранятся также
+ * рефлектометрические параметры - потери, отражение и пр.,
+ * необходимые для отображения информации о событии пользователю.
  */
 public class ComplexReflectogramEvent implements SimpleReflectogramEvent
 {

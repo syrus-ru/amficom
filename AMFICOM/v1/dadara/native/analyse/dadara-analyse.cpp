@@ -11,7 +11,7 @@
 #include "../Common/EventP.h"
 #include "../Common/EPold2EPnew.h"
 
-#include "../Common/Java-bridge.h"
+#include "../JNI/Java-bridge.h"
 
 #ifdef DEBUG_DADARA_ANALYSE
 	#ifndef _WIN32

@@ -62,6 +62,9 @@ const int MF_PAR_FLAG_L = 4;
 #define MF_CMD_FIX_RANGE_PREFIT 3
 #define MF_CMD_FIX_RANGE_FINFIT 4
 #define MF_CMD_ACXL_CHANGE 5
+//#define MF_CMD_CHANGE_OTHER 6
+#define MF_CMD_CHANGE_BY_THRESH 7 /* BREAKL only */
+#define MF_CMD_FIX_THRESH 8 /* BREAKL only */
 
 #define MF_CMD_LIN_SET_BY_X1Y1X2Y2 2101
 
@@ -112,11 +115,22 @@ public:
 
 	ModelF(int ID, int npars = 0);
 
-	// объект можно инициализировать несколько раз
-	// при этом ModelF сам выделяет память под параметры (если надо), но
-	// сами параметры не инициализируются.
+	// Объект можно инициализировать несколько раз.
+	// Если pars не указано, то ModelF сам размещает параметры,
+	// возможно, в parsStorage, возможно, через new/delete.
+	// Сами параметры не инициализируются.
+	// Если же указан параметр pars, создается mf с уже готовыми параметрами
+	// в указанном месте в свободной памяти, как будто ModelF сама получила
+	// их через new double[]. Когда pars перестанет быть нужным ModelF,
+	// она удалит его через delete[].
 
-	void init(int ID, int npars = 0);
+	void init(int ID, int npars = 0, double *pars = 0);
+
+	// можно заменить весь массив параметров целиком.
+	// При этом пользователь должен сам создать массив длины NPars,
+	// а после операции замены относиться к нему как к полученному через
+	// метод getP() - удалять его будет ModelF.
+	void setP(double *pars);
 
 	// обнулить значения параметров
 	// XXX: быть может, это стоит делать вместе с init() ?
@@ -158,6 +172,13 @@ public:
 		return calcFunP(parsPtr, x);
 	}
 
+	// вычисление значения функции на сетке
+	void calcFunArrayP(double *pars, double x0, double step, int N, double *output);
+	void calcFunArray(               double x0, double step, int N, double *output)
+	{
+		calcFunArrayP(parsPtr, x0, step, N, output);
+	}
+
 	// расчет значение определенного аттрибута для данной кривой
 	// если для данной кривой этот аттрибут не определен, возвращает default_value
 	double getAttrP(double *pars, const char *name, double default_value);
@@ -195,6 +216,14 @@ public:
 	{
 		return RMS2LinP(parsPtr, y, i0, x0, length, rough);
 	}
+};
+
+struct ACXL_data
+{
+	double dA;
+	double dC;
+	double dX;
+	double dL;
 };
 
 /*

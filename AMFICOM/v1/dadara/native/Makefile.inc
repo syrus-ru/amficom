@@ -7,6 +7,8 @@ ANALYSE_DIR = ./analyse
 AN2_DIR = ./An2
 FIT_DIR = ./fit
 GAUSS_DIR = ./gauss
+JNI_DIR = ./JNI
+BREAKL_DIR = ./BreakL
 
 OUT = $(SO_PREFIX)dadara.$(SO_EXT)
 

@@ -1,5 +1,5 @@
 /*
- * $Id: CoreAnalysisManager.java,v 1.7 2005/01/25 14:16:50 saa Exp $
+ * $Id: CoreAnalysisManager.java,v 1.8 2005/02/08 11:46:27 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@ package com.syrus.AMFICOM.analysis;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.7 $, $Date: 2005/01/25 14:16:50 $
+ * @version $Revision: 1.8 $, $Date: 2005/02/08 11:46:27 $
  * @module
  */
 
@@ -204,7 +204,13 @@ public class CoreAnalysisManager
 
 		// установка параметров фитировки и фитировка
 		// (с определением параметров нужных для расчета потерь и отражения)
-		fitTrace(y, deltaX, ep, strategy, meanAttenuation[0], noiseArray);
+		//fitTrace(y, deltaX, ep, strategy, meanAttenuation[0], noiseArray); -- более не используется
+		
+		//фитируем ОДНОЙ кривой
+		ReflectogramEvent ev0 = ep[0].copy();
+		ev0.setEnd(ep[ep.length - 1].getEnd());
+		ReflectogramEvent[] el0 = new ReflectogramEvent[] { ev0 };
+		fitTrace(y, deltaX, el0, strategy, meanAttenuation[0], noiseArray);
 
 		// определение параметров потерь и отражения (по смежным событиям)
 		ReflectogramEvent.calcMutualParameters(ep, y);
@@ -215,7 +221,7 @@ public class CoreAnalysisManager
 		for (int i = 0; i < ep.length; i++)
 			ep[i].setDefaultThreshold(bs, bellcoreTraces);
 
-		return new ModelTraceManager(ep);
+		return new ModelTraceManager(ep, el0[0].getMFClone());
 	}
 
 	private static ReflectogramEvent[] fitTrace(double[] y, double deltaX,

@@ -1,5 +1,5 @@
 /*
- * $Id: SimpleReflectogramEvent.java,v 1.2 2005/01/26 14:59:25 saa Exp $
+ * $Id: SimpleReflectogramEvent.java,v 1.3 2005/02/08 11:46:28 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,8 +9,16 @@ package com.syrus.AMFICOM.analysis.dadara;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.2 $, $Date: 2005/01/26 14:59:25 $
- * @module
+ * @version $Revision: 1.3 $, $Date: 2005/02/08 11:46:28 $
+ * @module dadara
+ * 
+ * Обеспечивает базовую информацию о рефлектометрическом событии -
+ * начало, конец и тип.
+ * Не имеет setter'ов, чтобы упростить реализацию методов
+ * getSimpleReflectogramEvent в MTM и пр.
+ * (иначе во многих случаях пришлось бы делать обертку Unmodifiable) 
+ * Примечание: Согласно модели АМФИКОМа, начало следующего события
+ * совпадает с концом предыдущего.
  */
 public interface SimpleReflectogramEvent
 {

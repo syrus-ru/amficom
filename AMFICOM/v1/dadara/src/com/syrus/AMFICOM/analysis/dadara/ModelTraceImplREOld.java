@@ -1,5 +1,5 @@
 /*
- * $Id: ModelTraceImplREOld.java,v 1.1 2005/01/25 14:16:50 saa Exp $
+ * $Id: ModelTraceImplREOld.java,v 1.2 2005/02/08 11:46:27 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@ package com.syrus.AMFICOM.analysis.dadara;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.1 $, $Date: 2005/01/25 14:16:50 $
+ * @version $Revision: 1.2 $, $Date: 2005/02/08 11:46:27 $
  * @module
  */
 public class ModelTraceImplREOld extends ModelTrace
@@ -52,3 +52,4 @@ public class ModelTraceImplREOld extends ModelTrace
 	}
 
 }
+

@@ -5,29 +5,22 @@
 
 #include "../Common/assert.h"
 
-#include "ModelF.h"
-#include "EventP.h"
+#include "../Common/ModelF.h"
+#include "../Common/EventP.h"
 
-#include "prf.h"
+#include "../Common/prf.h"
+
+#include "names.h"
+#include "ThreshArray.h"
 
 #include "../fit/ModelF-fit.h"
-#include "../fit/BreakL-fit.h"
+#include "../BreakL/BreakL-fit.h"
 
 #include "../An2/findNoise.h"
 
-#include "com_syrus_AMFICOM_analysis_dadara_ModelFunction.h"
-#include "com_syrus_AMFICOM_analysis_dadara_ReflectogramEvent.h"
-#include "com_syrus_AMFICOM_analysis_CoreAnalysisManager.h"
-
-const char *CL_mf		= "com/syrus/AMFICOM/analysis/dadara/ModelFunction";
-const char *S_mf		= "Lcom/syrus/AMFICOM/analysis/dadara/ModelFunction;";
-const char *N_mf		= "mf";
-const char *S_shapeID	= "I";
-const char *N_shapeID	= "shapeID";
-const char *S_pars		= "[D";
-const char *N_pars		= "pars";
-const char *CL_ep	= "com/syrus/AMFICOM/analysis/dadara/ReflectogramEvent";
-const char *S_ep	= "Lcom/syrus/AMFICOM/analysis/dadara/ReflectogramEvent;";
+#include "../Common/com_syrus_AMFICOM_analysis_dadara_ModelFunction.h"
+#include "../Common/com_syrus_AMFICOM_analysis_dadara_ReflectogramEvent.h"
+#include "../Common/com_syrus_AMFICOM_analysis_CoreAnalysisManager.h"
 
 /*
  *
@@ -205,11 +198,49 @@ JNIEXPORT void JNICALL Java_com_syrus_AMFICOM_analysis_dadara_ModelFunction_nCha
 	if (ModelF_J2C(env, obj, mf))
 		assert(0);
 
-	double ACXL[4] = { dA, dC, dX, dL };
+	ACXL_data ACXL = { dA, dC, dX, dL };
 
-	mf.execCmd(MF_CMD_ACXL_CHANGE, (void *)ACXL);
+	mf.execCmd(MF_CMD_ACXL_CHANGE, (void *)&ACXL);
 
 	ModelF_C2J_update(env, mf, obj);
+	prf_e();
+}
+
+/*
+ * Class:     com_syrus_AMFICOM_analysis_dadara_ModelFunction
+ * Method:    nChangeByThresh
+ * Signature: ([Lcom/syrus/AMFICOM/analysis/dadara/Thresh;I)V
+ */
+JNIEXPORT void JNICALL Java_com_syrus_AMFICOM_analysis_dadara_ModelFunction_nChangeByThresh
+  (JNIEnv *env, jobject obj, jobjectArray threshArr, jint key)
+{
+	prf_b("nChangeByThresh");
+	ModelF mf;
+	if (ModelF_J2C(env, obj, mf))
+		assert(0);
+	ThreshArray ta(env, threshArr);
+	int key_ = key;
+	void *args[2] = { &key, &ta };
+	mf.execCmd(MF_CMD_CHANGE_BY_THRESH, args);
+	ModelF_C2J_update(env, mf, obj);
+	prf_e();
+}
+
+/*
+ * Class:     com_syrus_AMFICOM_analysis_dadara_ModelFunction
+ * Method:    nFixThresh
+ * Signature: ([Lcom/syrus/AMFICOM/analysis/dadara/Thresh;)V
+ */
+JNIEXPORT void JNICALL Java_com_syrus_AMFICOM_analysis_dadara_ModelFunction_nFixThresh
+  (JNIEnv *env, jobject obj, jobjectArray threshArr)
+{
+	prf_b("nFixThresh");
+	ModelF mf;
+	if (ModelF_J2C(env, obj, mf))
+		assert(0);
+	ThreshArray ta(env, threshArr);
+	mf.execCmd(MF_CMD_FIX_THRESH, (void *)&ta);
+	ModelF_C2J_update(env, mf, obj); // <-- usually not required
 	prf_e();
 }
 
@@ -288,6 +319,7 @@ JNIEXPORT jdouble JNICALL Java_com_syrus_AMFICOM_analysis_dadara_ModelFunction_n
 JNIEXPORT jdoubleArray JNICALL Java_com_syrus_AMFICOM_analysis_dadara_ModelFunction_nFArray
   (JNIEnv *env, jobject obj, jdouble x0, jdouble step, jint length)
 {
+	prf_b("nFArray");
 	ModelF mf;
 	if (ModelF_J2C(env, obj, mf))
 		assert(0);
@@ -297,11 +329,12 @@ JNIEXPORT jdoubleArray JNICALL Java_com_syrus_AMFICOM_analysis_dadara_ModelFunct
 
 	double *pp = env->GetDoubleArrayElements(arr, 0);
 	assert (pp);
-	int i;
-	for (i = 0; i < length; i++)
-		pp[i] = mf.calcFun(x0 + i * step);
+
+	mf.calcFunArray(x0, step, length, pp);
+
 	env->ReleaseDoubleArrayElements(arr, pp, 0);
 
+	prf_e();
 	return arr;
 }
 

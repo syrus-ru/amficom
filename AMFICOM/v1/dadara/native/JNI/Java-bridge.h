@@ -8,8 +8,8 @@
 
 #include <jni.h>
 
-#include "ModelF.h"
-#include "EventP.h"
+#include "../Common/ModelF.h"
+#include "../Common/EventP.h"
 
 // J ModelFunction -> C ModelF
 // returns 0 if ok, returns not 0 if error, assertion fails if JNI problem

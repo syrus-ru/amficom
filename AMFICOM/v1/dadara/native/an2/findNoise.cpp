@@ -24,6 +24,8 @@
 #include <stdlib.h>
 #include "findNoise.h"
 
+#include "../Common/prf.h"
+
 // Для отбрасывания участков, где точность определяется 0.001дБ-представлением
 const double prec0 = 0.001 * 1.5;
 
@@ -115,6 +117,13 @@ static double dB2dy(double y0, double dB)
 	return ret;
 }
 
+static double destroyAndGetMedian(double *gist, int nsam, int pos)
+{
+	// FIXME: ускорить - есть простые алгоритмы со сложностью O(nsam)
+	qsort(gist, nsam, sizeof(double), dfcmp);
+	return gist[pos];
+}
+
 /*
  * findNoiseArray()
  * определение уровня шума в зависимости от координаты
@@ -124,6 +133,7 @@ static double dB2dy(double y0, double dB)
  */
 void findNoiseArray(double *data, double *out, int size)
 {
+	prf_b("findNoise: findNoiseArray: enter");
 	assert(size > 0);
 	double *temp = new double[size]; // здесь временно будет сглаженная р/г
 	assert(temp);
@@ -148,14 +158,16 @@ void findNoiseArray(double *data, double *out, int size)
 			double v2 = data[i + j + width * 2];
 			gist[j] = fabs(v2 + v0 - v1 - v1) + 0.001; // XXX
 		}
-		qsort(gist, nsam, sizeof(double), dfcmp);
-		double dv = gist[nsam / 2];
+		prf_b("findNoise: findNoiseArray: #1.2");
+		double dv = destroyAndGetMedian(gist, nsam, nsam / 2);
+		prf_b("findNoise: findNoiseArray: #1.3");
 
 		// определяем среднее значение кривой
 		for (j = 0; j < nsam; j++)
 			gist[j] = data[i + j + width];
-		qsort(gist, nsam, sizeof(double), dfcmp);
-		double y0 = gist[nsam / 2];
+		prf_b("findNoise: findNoiseArray: #2.2");
+		double y0 = destroyAndGetMedian(gist, nsam, nsam / 2);
+		prf_b("findNoise: findNoiseArray: #2.3");
 		temp[i + mofs] = y0;
 
 		//int io = i + mofs;
@@ -190,4 +202,5 @@ void findNoiseArray(double *data, double *out, int size)
 	}
 
 	delete[] temp;
+	prf_e();
 }

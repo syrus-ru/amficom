@@ -20,7 +20,7 @@ import java.io.*;
  * <p>Should be constructed as one of three AMFICOM-specific simple functions.
  * The modelling function will probably change when fit() will be called.</p>
  *
- * @version $Revision: 1.6 $, $Date: 2005/01/12 18:42:23 $
+ * @version $Revision: 1.7 $, $Date: 2005/02/08 11:46:27 $
  * @author $Author: saa $
  * @module analysis_v1
  */
@@ -32,6 +32,9 @@ public class ModelFunction {
 	private native double nF(double x);
 	private native double[] nFArray(double x0, double step, int length);
 	private native void nChangeByACXL(double dA, double dC, double dX, double dL); // преобразование к своему ACXL-порогу
+	private native void nChangeByThresh(Thresh[] thresh, int key); // изменение порогом Thresh
+	private native void nFixThresh(Thresh[] thresh); // корректировка параметров Thresh в соответствии с м.ф. 
+	//private native void nChangeByOther(int code, double[] changePars); // изменение другим специфическим способом
 	private native double nRMS(double y[], int begin, int end); // end is included
 
 	private static final int FITMODE_VARY_ALL = 1; // фитируем кривую, варьируем все параметры
@@ -105,7 +108,7 @@ public class ModelFunction {
 	 * @param name имя параметра (поддерживаются только ASCII-имена)
 	 * @param default_value значение по умолчанию на случай, если
 	 *  параметр не определен.
-	 * @return
+	 * @return значение параметра
 	 */
 	private native double nGetAttr(String name, double default_value);
 
@@ -372,6 +375,30 @@ public class ModelFunction {
 	 */
 	public void changeByACXLThreshold(double[] ACXL) {
 		nChangeByACXL(ACXL[0], ACXL[1], ACXL[2], ACXL[3]);
+	}
+
+//	public void changeByOther0Threshold(double[] changePars)
+//	{
+//		//nChangeByOther(0, changePars);
+//	}
+	public void changeByThresh(Thresh[] thresh, int key)
+	{
+		nChangeByThresh(thresh, key);
+	}
+
+	public void fixThresh(Thresh[] thresh)
+	{
+//		System.err.print("fixThresh: A:");
+//		for (int i = 0; i < thresh.length; i++)
+//			System.err.print(" (" + thresh[i].xMin + "," + thresh[i].xMax + ")");
+//		System.err.println();
+
+		nFixThresh(thresh);
+
+//		System.err.print("fixThresh: B:");
+//		for (int i = 0; i < thresh.length; i++)
+//			System.err.print(" (" + thresh[i].xMin + "," + thresh[i].xMax + ")");
+//		System.err.println();
 	}
 
 	public void writeToDOS(DataOutputStream dos) throws IOException {

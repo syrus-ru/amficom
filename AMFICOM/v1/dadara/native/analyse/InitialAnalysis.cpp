@@ -13,6 +13,8 @@
 #include "../An2/findLength.h"
 #include "../An2/findNoise.h"
 
+#include "../Common/prf.h"
+
 #ifdef DEBUG_INITIAL_ANALYSIS
 	#ifndef _WIN32
 		#include <time.h>
@@ -95,6 +97,7 @@ void InitialAnalysis::performAnalysis()
       double noiseLevel = findNoise3s(data, sz) + 1.0; // !!! подобрать величину добавки (от 0 до 3)
       fillNoiseArray(data, sz, width, 1 + width / 20, noiseLevel, rnoise);
     }
+
 	// выполняем вейвлет-преобразование
 	performTransformation(data, 0, lastNonZeroPoint, transC, evSizeC, wn_c);// transC - transConnector
     performTransformation(data, 0, lastNonZeroPoint, transW, evSizeW, wn_w);// transW - transWeld
