@@ -1,5 +1,5 @@
 /**
- * $Id: CablePath.java,v 1.4 2005/02/25 13:45:05 krupenn Exp $
+ * $Id: CablePath.java,v 1.5 2005/03/04 14:27:51 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -38,7 +38,7 @@ import java.util.ListIterator;
 /**
  * Ёлемент кабельного пути. ќписывает прив€зку кабел€ к топологическим лини€м.
  * @author $Author: krupenn $
- * @version $Revision: 1.4 $, $Date: 2005/02/25 13:45:05 $
+ * @version $Revision: 1.5 $, $Date: 2005/03/04 14:27:51 $
  * @module mapviewclient_v1
  */
 public class CablePath implements MapElement
@@ -704,7 +704,7 @@ public class CablePath implements MapElement
 	{
 		if(!this.nodeLinksSorted)
 			return Collections.EMPTY_LIST;
-		return this.sortedNodes;
+		return Collections.unmodifiableList(this.sortedNodes);
 	}
 
 	/**
@@ -718,7 +718,7 @@ public class CablePath implements MapElement
 	{
 		if(!this.nodeLinksSorted)
 			return Collections.EMPTY_LIST;
-		return this.sortedNodeLinks;
+		return Collections.unmodifiableList(this.sortedNodeLinks);
 	}
 
 	/**
