@@ -18,7 +18,7 @@ LIBNAME_SRC=$(LIBSRC)\corbasource.jar
 
 .PHONY:	$(LIBNAME)
 
-$(LIBNAME):	clean object jar
+$(LIBNAME):	clean object server2 jar
 
 jar:
 	$(JAR) -cf $(LIBNAME) -C $(CLASSES) com\syrus\AMFICOM\CORBA
@@ -44,6 +44,24 @@ object:	alllibs
 		$(SRC)\com\syrus\AMFICOM\CORBA\AMFICOMPOA.java \
 		$(SRC)\com\syrus\AMFICOM\CORBA\AMFICOMPOATie.java
 
+server2: event config measurement mcm
+
+mcm: general config measurement
+	$(IDL2JAVA) $(IDL2JAVAOPTIONS) $(IDL)\cmserver.idl
+	$(JAVAC) -d $(CLASSES) -sourcepath $(SRC) $(SRC)\com\syrus\AMFICOM\cmserver\corba\*.java
+
+event:
+	$(IDL2JAVA) $(IDL2JAVAOPTIONS) $(IDL)\event.idl
+	$(JAVAC) -d $(CLASSES) -sourcepath $(SRC) $(SRC)\com\syrus\AMFICOM\event\corba\*.java
+
+config: general
+	$(IDL2JAVA) $(IDL2JAVAOPTIONS) $(IDL)\configuration.idl
+	$(JAVAC) -d $(CLASSES) -sourcepath $(SRC) $(SRC)\com\syrus\AMFICOM\configuration\corba\*.java
+
+measurement: event general
+	$(IDL2JAVA) $(IDL2JAVAOPTIONS) $(IDL)\measurement.idl
+	$(JAVAC) -d $(CLASSES) -sourcepath $(SRC) $(SRC)\com\syrus\AMFICOM\measurement\corba\*.java
+
 alllibs: general admin alarm network ism map scheme survey report
 
 ism:	general network
@@ -63,7 +81,7 @@ survey:	general
 	$(IDL2JAVA) $(IDL2JAVAOPTIONS) $(IDL)\survey.idl
 	$(JAVAC) -d $(CLASSES) -sourcepath $(SRC) $(SRC)\com\syrus\AMFICOM\CORBA\Survey\*.java
 
-network:	general
+network: general
 	$(IDL2JAVA) $(IDL2JAVAOPTIONS) $(IDL)\network.idl
 	$(JAVAC) -d $(CLASSES) -sourcepath $(SRC) $(SRC)\com\syrus\AMFICOM\CORBA\Network\*.java
 	$(JAVAC) -d $(CLASSES) -sourcepath $(SRC) $(SRC)\com\syrus\AMFICOM\CORBA\NetworkDirectory\*.java
