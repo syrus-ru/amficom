@@ -1,68 +1,37 @@
 /*
- * $Id: Environment.java,v 1.13 2004/09/03 08:17:18 krupenn Exp $
+ * $Id: Environment.java,v 1.14 2004/09/27 09:53:02 bass Exp $
  *
- * Syrus Systems
- * Научно-технический центр
- * Проект: АМФИКОМ
- *
- * Платформа: java 1.4.1
-*/
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ.
+ */
 
 package com.syrus.AMFICOM.Client.General.Model;
 
 import com.incors.plaf.kunststoff.KunststoffLookAndFeel;
-
+import com.sun.java.swing.plaf.gtk.GTKLookAndFeel;
 import com.sun.java.swing.plaf.motif.MotifLookAndFeel;
 import com.sun.java.swing.plaf.windows.WindowsLookAndFeel;
-
-import com.syrus.AMFICOM.Client.General.ConnectionInterface;
-import com.syrus.AMFICOM.Client.General.EmptyConnectionInfo;
-import com.syrus.AMFICOM.Client.General.EmptySessionInfo;
+import com.syrus.AMFICOM.Client.General.*;
 import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
-import com.syrus.AMFICOM.Client.General.RISDConnectionInfo;
-import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
-import com.syrus.AMFICOM.Client.General.SessionInterface;
-import com.syrus.AMFICOM.Client.General.Singleton;
-import com.syrus.AMFICOM.Client.General.UI.AMFICOMMetalTheme;
-import com.syrus.AMFICOM.Client.General.UI.ModuleCodeDialog;
+import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
-import com.syrus.AMFICOM.Client.Resource.EmptyDataSource;
-import com.syrus.AMFICOM.Client.Resource.RISDDataSource;
 import com.syrus.io.IniFile;
-
-import java.awt.Dimension;
-import java.awt.Toolkit;
-import java.awt.Window;
-
+import java.awt.*;
 import java.io.IOException;
-
 import java.util.ArrayList;
-import java.util.logging.ConsoleHandler;
-import java.util.logging.FileHandler;
-import java.util.logging.Formatter;
-import java.util.logging.Handler;
-import java.util.logging.Level;
-import java.util.logging.LogRecord;
-import java.util.logging.SimpleFormatter;
-import java.util.logging.XMLFormatter;
-
-import javax.swing.JDialog;
-import javax.swing.JFrame;
-import javax.swing.LookAndFeel;
-import javax.swing.UIManager;
-import javax.swing.plaf.metal.MetalLookAndFeel;
-import javax.swing.plaf.metal.MetalTheme;
+import java.util.logging.*;
+import javax.swing.*;
+import javax.swing.plaf.metal.*;
 
 /**
- * Класс $RCSfile: Environment.java,v $ используется для хранения общей для приложения информации
+ * Класс Environment используется для хранения общей для приложения информации.
  * 
- * 
- * 
- * @version $Revision: 1.13 $, $Date: 2004/09/03 08:17:18 $
- * @author $Author: krupenn $
- * @see
+ * @author $Author: bass $
+ * @version $Revision: 1.14 $, $Date: 2004/09/27 09:53:02 $
+ * @module generalclient_v1
  */
-public class Environment extends Singleton
+public final class Environment
 {
 	/**
 	 * @deprecated use Environment.getDispatcher()
@@ -76,13 +45,27 @@ public class Environment extends Singleton
 
 	private static JFrame activeWindow = null;
 
-	/** Connection */
+	/**
+	 * @deprecated
+	 */
 	private static final String FIELD_CONNECTION = "connection";
 
+	/**
+	 * @deprecated
+	 */
 	public static final String CONNECTION_RISD = "RISD";
+	/**
+	 * @deprecated
+	 */
 	public static final String CONNECTION_EMPTY = "Empty";
+	/**
+	 * @deprecated
+	 */
 	public static final String CONNECTION_JDBC = "JDBC";
 
+	/**
+	 * @deprecated
+	 */
 	private static String connection = CONNECTION_RISD;
 
 	/** Run */
@@ -95,7 +78,7 @@ public class Environment extends Singleton
 	private static String checkRun = RUN_NO;
 
 	/** Beep */
-	private static final String FIELD_BEEP = "neep";
+	private static final String FIELD_BEEP = "beep";
 
 	private static final String BEEP_DA = "da";
 	private static final String BEEP_NET = "net";
@@ -177,7 +160,6 @@ public class Environment extends Singleton
 		try
 		{
 			iniFile = new IniFile(iniFileName);
-			System.out.println("read ini file " + iniFileName);
 			connection = iniFile.getValue(FIELD_CONNECTION);
 			checkRun = iniFile.getValue(FIELD_RUN);
 			lookAndFeel = iniFile.getValue(FIELD_LOOK_AND_FEEL);
@@ -209,6 +191,10 @@ public class Environment extends Singleton
 		}
 	}
 	
+	private Environment()
+	{
+	}
+
 	public static String getDomainId()
 	{
 		return domainId;
@@ -353,11 +339,6 @@ public class Environment extends Singleton
 		handler.publish(logRecord);
 	}
 
-	protected Environment()
-	{
-		// nothing
-	}
-
 	static public void SetDefaults()
 	{
 		connection = CONNECTION_EMPTY;
@@ -393,7 +374,6 @@ public class Environment extends Singleton
 
 	public static LookAndFeel getLookAndFeel()
 	{
-		LookAndFeel laf = getDefaultLookAndFeel();
 		try
 		{
 			LookAndFeel plaf = null;
@@ -407,29 +387,23 @@ public class Environment extends Singleton
 				plaf = (LookAndFeel) (WindowsLookAndFeel.class.newInstance());
 			else if (lookAndFeel.equalsIgnoreCase(LOOK_AND_FEEL_MOTIF))
 				plaf = (LookAndFeel) (MotifLookAndFeel.class.newInstance());
-//			else if (lookAndFeel.equalsIgnoreCase(LOOK_AND_FEEL_GTK))
-//				plaf = (LookAndFeel) (GTKLookAndFeel.class.newInstance());
-			if ((plaf!=null) && (plaf.isSupportedLookAndFeel()))
-				laf = plaf;
-//			else
-//				return getDefaultLookAndFeel();
-		} 
-		catch (NullPointerException npe)
-		{
-			/*
-			 * Thrown if no "lookAndFeel" key in the config file was found.
-			 */
-			//return getDefaultLookAndFeel();
+			else if (lookAndFeel.equalsIgnoreCase(LOOK_AND_FEEL_GTK))
+				plaf = (LookAndFeel) (GTKLookAndFeel.class.newInstance());
+			else
+				return getDefaultLookAndFeel();
+			if (plaf.isSupportedLookAndFeel())
+				return plaf;
+			else
+				return getDefaultLookAndFeel();
 		}
 		catch (IllegalAccessException iae)
 		{
-			//return getDefaultLookAndFeel();
+			return getDefaultLookAndFeel();
 		}
 		catch (InstantiationException ie)
 		{
-			//return getDefaultLookAndFeel();
+			return getDefaultLookAndFeel();
 		}
-		return laf;
 	}
 
 	/**
@@ -453,62 +427,36 @@ public class Environment extends Singleton
 		return the_dispatcher;
 	}
 
+	/**
+	 * @deprecated
+	 */
 	public static String getConnectionType()
 	{
 		return connection;
 	}
 
+	/**
+	 * @deprecated Use {@link ConnectionInterface#getInstance()} instead.
+	 */
 	static public ConnectionInterface getDefaultConnectionInterface()
 	{
-		System.out.println("	connection = " + connection);
-		if(connection.equals(CONNECTION_JDBC))
-		{
-			try
-			{
-				Class cl = Class.forName(
-						"com.syrus.AMFICOM.Client.General.JDBCConnectionInfo",
-						true,
-						Environment.class.getClassLoader());
-//				Constructor cons = cl.getConstructor(new Class[] {});
-				ConnectionInterface ci = (ConnectionInterface )cl.newInstance();
-//				ConnectionInterface ci = (ConnectionInterface )(cons.newInstance(new Object[] {}));
-				connection = CONNECTION_RISD;
-				return ci;
-			}
-			catch (Exception ex)
-			{
-				ex.printStackTrace();
-				return new EmptyConnectionInfo();
-			}
-		}
-		else
-		if(connection.equals(CONNECTION_RISD))
-			return new RISDConnectionInfo();
-		else
-		if(connection.equals(CONNECTION_EMPTY))
-			return new EmptyConnectionInfo();
-		else
-			return new EmptyConnectionInfo();
+		return ConnectionInterface.getInstance();
 	}
 
-	public static SessionInterface getDefaultSessionInterface(ConnectionInterface ci)
+	/**
+	 * @deprecated
+	 */
+	public static SessionInterface getDefaultSessionInterface(ConnectionInterface connection)
 	{
-		if(ci instanceof RISDConnectionInfo)
-			return new RISDSessionInfo(ci);
-		else
-		if(ci instanceof EmptyConnectionInfo)
-			return new EmptySessionInfo(ci);
-		return null;
+		return new RISDSessionInfo(connection);
 	}
 
-	public static DataSourceInterface getDefaultDataSourceInterface(SessionInterface si)
+	/**
+	 * @deprecated Use {@link ApplicationModel#getDataSource(SessionInterface)} instead.
+	 */
+	public static DataSourceInterface getDefaultDataSourceInterface(final SessionInterface session)
 	{
-		if(si instanceof RISDSessionInfo)
-			return new RISDDataSource(si);
-		else
-		if(si instanceof EmptySessionInfo)
-			return new EmptyDataSource(si);
-		return null;
+		return ApplicationModel.getInstance().getDataSource(session);
 	}
 
 	public static void addWindow(Window window)
