@@ -1,5 +1,5 @@
 /*
- * $Id: Thresh.java,v 1.1 2005/02/08 11:46:28 saa Exp $
+ * $Id: Thresh.java,v 1.2 2005/02/11 12:10:37 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,7 +13,7 @@ import java.io.IOException;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.1 $, $Date: 2005/02/08 11:46:28 $
+ * @version $Revision: 1.2 $, $Date: 2005/02/11 12:10:37 $
  * @module
  */
 
@@ -22,11 +22,11 @@ public class Thresh
 	// пол€ измен€ютс€ также через JNI-методы ModelFunction
 	protected int eventId;
 	protected int typeId; // 0: dA, 1: dL+dXL+dXR
-	protected double[] values;
+	protected double[] values; // dA or dL values
 	protected final static boolean[] IS_KEY_UPPER = new boolean[] { true, true, false, false }; // используетс€ в native-коде
-	protected int[] dxL; // null if not required
-	protected int[] dxR; // null if not required
-	protected int xMin;
+	protected int[] dxL; // defined only for L-type; null if not required
+	protected int[] dxR; // defined only for L-type; null if not required
+	protected int xMin; // внутри xMin..xMax р/г смещаетс€ равномерно, а вне - согласно dA/dL 
 	protected int xMax;
 	private Thresh()
 	{ // empty and very private

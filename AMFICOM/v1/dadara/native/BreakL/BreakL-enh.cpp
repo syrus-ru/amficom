@@ -269,11 +269,93 @@ int findFirstMin(ModelF &mf, int x0, int x1) _FindExtrTemplate(<)
 int findLastMax(ModelF &mf, int x0, int x1) _FindExtrTemplate(>=)
 int findLastMin(ModelF &mf, int x0, int x1) _FindExtrTemplate(<=)
 
+// добавляет узлы в ломаную, не делая повторных узлов и не расширяя ее ООФ
+// nodeList должно быть монотонно
+// Разрушает nodeList, а затем удаляет его
+void BreakL_AddInternalNodesFromTempList(ModelF &mf, int listSize, int *nodeList)
+{
+	int i;
+	int toAdd = 0;
+	int Np = mf.getNPars() / 2;
+	if (Np == 0)
+		return;
+
+	double *pars = mf.getP();
+	int p; // индекс добавляемого узла
+	for (i = 0, p = 0; i < listSize; i++)
+	{
+		int pos = nodeList[i];
+
+		if (i != 0 && pos == nodeList[i - 1])
+			continue;
+		int k = f_BREAKL_GETPOS(Np, pars, pos, -1);
+		if (k == 0)
+			continue; // точка слева он начала ломаной
+		if (k == Np)
+			continue; // точка справа от конца ломаной либо совпадает с последним узлом
+		int xk = (int )pars[k * 2 - 2];
+		if (pos <= xk)
+			continue; // узел уже есть
+
+		if (p != 0)
+		{
+			//fprintf(stderr, "i %d p %d pos %d nl[p-1] %d\n",
+			//	i, p, pos, nodeList[p - 1]);
+			//fflush(stderr);
+			assert(pos > nodeList[p - 1]); // проверяем монотонность
+
+			if (pos <= nodeList[p - 1])
+				continue; // игнорируем немонотонные входные узлы
+		}
+		// записываем узел в список на добавление
+		nodeList[p++] = pos;
+	}
+
+	if (p == 0)
+		return;
+
+	// создаем новый массив параметров
+	int newNp = Np + p;
+	double *newPars = new double[newNp * 2];
+	assert(newPars);
+
+	int q; // номер в списке добавляемых точек
+	// i - номер в списке входных узлов
+	int w; // номер в списке выходных узлов
+	for (i = 0, q = 0, w = 0; w < newNp; w++)
+	{
+		if (q < p && pars[2 * i] > nodeList[q])
+		{
+			int pos = nodeList[q];
+			newPars[2 * w] = pos;
+			newPars[2 * w + 1] = f_BREAKL_GETY(i, Np, pars, pos);
+			q++;
+		}
+		else
+		{
+			newPars[2 * w] = pars[2 * i];
+			newPars[2 * w + 1] = pars[2 * i + 1];
+			i++;
+		}
+	}
+
+	assert(i == Np); // XXX - доказать в алгоритме
+
+	//fprintf(stderr, "BreakL_AddInternalNodesFromTempList: p %d Np %d newNp %d\n", p, Np, newNp); fflush(stderr);
+
+	// заменяем параметры
+	mf.init(MF_ID_BREAKL, newNp * 2, newPars);
+
+	delete[] nodeList;
+}
+
 void BreakL_ChangeByThresh (ModelF &mf, ThreshArray &ta, int key)
 {
 	const int thNp = ta.getLength();
 	if (thNp <= 0)
 		return;
+
+	prf_b("BreakL_ChangeByThresh: entered");
 
 	// convert thresholds
 	COP0 *th = new COP0[thNp];
@@ -289,6 +371,24 @@ void BreakL_ChangeByThresh (ModelF &mf, ThreshArray &ta, int key)
 		th[j].dxR = ta.getDxR(j, key);
 	}
 
+	prf_b("BreakL_ChangeByThresh: add nodes");
+
+	// добавляем узлы в точках начала и конца всех событий
+	// это изменяет mf
+	{
+		int *nodeList = new int[thNp * 2];
+		assert(nodeList);
+		// NB: список не обязан быть без повторений, но должен быть монотонным
+		for (j = 0; j < thNp; j++)
+		{
+			nodeList[2 * j] = th[j].x0;
+			nodeList[2 * j + 1] = th[j].x1;
+		}
+		BreakL_AddInternalNodesFromTempList(mf, thNp * 2, nodeList);
+	}
+
+	prf_b("BreakL_ChangeByThresh: process AL threshs");
+
 	// process A and L threshs
 	{
 		XY *mfpars = (XY* )mf.getP();
@@ -301,12 +401,12 @@ void BreakL_ChangeByThresh (ModelF &mf, ThreshArray &ta, int key)
 		double Yx1L = 1; // не инициализируем, т.к. крайние события не м б типа L
 		double Yx0R = 0; // (инициализируем только для успокоения компилятора)
 
-		for (curMn = 0, curLTn = 0; curMn < mfNp; curMn++)
+		for (curMn = 0, curLTn = -1; curMn < mfNp; curMn++)
 		{
 			int curX = (int )mfpars[curMn].x;
 
 			// fix curLTn; keep Yx1_prev and Yx1_cur
-			while (curLTn < thNp - 1 && curX >= th[curLTn + 1].x0)
+			while (curLTn < 0 || curLTn < thNp - 1 && curX >= th[curLTn + 1].x0)
 			{
 				curLTn++;
 				Yx1L = mf.calcFun(th[curLTn].x1);
@@ -328,6 +428,8 @@ void BreakL_ChangeByThresh (ModelF &mf, ThreshArray &ta, int key)
 			}
 
 			// пространство между порогами
+
+			//fprintf(stderr, "LTn %d Mn %d 
 
 			int xL = th[curLTn].x1;
 			int xR = th[curLTn + 1].x0;
@@ -351,8 +453,10 @@ void BreakL_ChangeByThresh (ModelF &mf, ThreshArray &ta, int key)
 		}
 	}
 
+	prf_b("BreakL_ChangeByThresh: process DXLR threshd");
+
 	// apply dx-thresholds
-	{
+	/*{
 		int curT;
 		for (curT = 1; curT < thNp - 1; curT++)
 		{
@@ -411,16 +515,6 @@ void BreakL_ChangeByThresh (ModelF &mf, ThreshArray &ta, int key)
 				arr2[k] = (arr2[k] * -j + arr1b[k] * (dxR + j)) / (double )dxR;
 			}
 
-			if (curT == 20 && dxL == 2 && isUpper == 0)
-			{
-				FILE *f = fopen("data.tmp", "w");
-				assert(f);
-				for (j = 0; j < nEnh2; j++)
-				{
-					fprintf(f, "%d %g %g\n", j, arr1b[j], arr2[j]);
-				}
-				fclose(f);
-			}
 			// убираем возможные пересечения результата с оригиналом
 			int sign = isUpper ? 1 : -1;
 			for (j = 0; j < nEnh2; j++)
@@ -433,7 +527,97 @@ void BreakL_ChangeByThresh (ModelF &mf, ThreshArray &ta, int key)
 			delete[] arr2;
 			//fprintf(stderr, "#6\n"); fflush(stderr);
 		}
+	}*/
+	{
+		int curT;
+		for (curT = 1; curT < thNp - 1; curT++)
+		{
+			int dxL = th[curT].dxL;
+			int dxR = th[curT].dxR;
+
+			if (dxL < 0)
+				dxL = 0;
+			if (dxR < 0)
+				dxR = 0;
+
+			if (dxL == 0 && dxR == 0)
+				continue;
+
+			int xPrev = th[curT - 1].x1;
+			int xNext = th[curT + 1].x0;
+
+			int nBase0 = xNext - xPrev;
+			//fprintf(stderr, "Applying dxL/dxR thresholds: curT %d dxL %d dxR %d, nBase %d\n", curT, dxL, dxR, nBase0);
+
+			if (nBase0 <= 0)
+				continue;
+
+			int isUpper = ta.isUpper(key);
+
+			int W = dxL + dxR;
+
+			int nEnh1 = nBase0 + W;
+			int nEnh2 = nBase0 + W * 2; // "'2': Double-width enh"
+
+			// получаем событие, которое надо расширить, на ширине nBase0 + 2W
+			// расширять будем только на nBase0 + W, а остальное понадобится для контроля
+			// пересечения с исходной кривой
+			// NB: mf.getP() и mf.getNPars() могут возвращать разные значения в разные итерации,
+			// т.к. мы изменяем длину mf в конце итерации
+			double *arr1 = BreakLToArray(mf.getP(), mf.getNPars(), xPrev - dxL * 2, nEnh2);
+
+			// расширяем nBase0->nEnh2, забивая справа гориз. прямой; исходный вар-т не меняем
+			double *arr2a = new double[nEnh1];
+			assert(arr2a);
+			for (j = 0; j < nBase0; j++)
+				arr2a[j] = arr1[j + dxL * 2];
+			for (j = nBase0; j < nEnh1; j++)
+				arr2a[j] = arr2a[nBase0 - 1];
+
+			// собственно расширяем
+			enhance(arr2a, nEnh1, W, isUpper);
+
+			// оформляем переход
+			if (isUpper) // для верхнего порога - прямая до пересечения с исх. кривой
+			{
+				// переход справа
+				double yA = arr2a[nEnh1 - 1];
+				double yB = arr1[nEnh2 - 1];
+				for (j = 0; j < dxR; j++)
+				{
+					double yJ = yA + (yB - yA) * (j + 1) / dxR;
+					if (arr1[nEnh2 - dxR + j] >= yJ)
+						break;
+					else
+						arr1[nEnh2 - dxR + j] = yJ;
+				}
+				// переход слева
+				yA = arr2a[0];
+				yB = arr1[0];
+				for (j = dxL - 1; j >= 0; j--)
+				{
+					double yJ = yB + (yA - yB) * j / dxL;
+					if (arr1[j] >= yJ)
+						break;
+					else
+						arr1[j] = yJ;
+				}
+			}
+			// убираем возможные пересечения результата с оригиналом
+			int sign = isUpper ? 1 : -1;
+			for (j = 0; j < nEnh1; j++)
+				if (arr1[dxL + j] * sign < arr2a[j] * sign)
+					arr1[dxL + j] = arr2a[j];
+
+			// сохраняем в mf
+			BreakLSetRegionFromArray(mf, xPrev - dxL * 2, nEnh2, arr1);
+			delete[] arr1;
+			delete[] arr2a;
+			//fprintf(stderr, "#6\n"); fflush(stderr);
+		}
 	}
+
+	prf_b("BreakL_ChangeByThresh: done");
 
 	//fflush(stderr);
 

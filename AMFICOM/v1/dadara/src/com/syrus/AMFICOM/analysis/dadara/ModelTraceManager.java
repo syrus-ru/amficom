@@ -1,5 +1,5 @@
 /*
- * $Id: ModelTraceManager.java,v 1.4 2005/02/08 11:46:27 saa Exp $
+ * $Id: ModelTraceManager.java,v 1.5 2005/02/11 12:10:37 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,7 +17,7 @@ import java.util.LinkedList;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.4 $, $Date: 2005/02/08 11:46:27 $
+ * @version $Revision: 1.5 $, $Date: 2005/02/11 12:10:37 $
  * @module
  */
 public class ModelTraceManager
@@ -472,7 +472,7 @@ public class ModelTraceManager
 		}
 	}
 
-	private Thresh[] tl;
+	protected Thresh[] tl;
 
 	public class ThresholdHandle
 	{
@@ -480,15 +480,57 @@ public class ModelTraceManager
 		private int key;
 		protected int posX;
 		protected double posY;
-		protected ThresholdHandle(Thresh th, int key, int posX, double posY)
+		protected ThresholdHandle(int thId, int key, int posX, double posY)
 		{
-			this.th = th;
+			this.th = tl[thId];
 			this.key = key;
-			System.err.println("ThresholdHandle(): type=" + th.typeId + " X=" + posX + " L=" + th.xMin + " R=" + th.xMax);
-			if (posX < th.xMin)
-				posX = th.xMin;
-			if (posX > th.xMax)
-				posX = th.xMax;
+			int posMin = th.xMin;
+			int posMax = th.xMax;
+			if (th.typeId != 0 && thId > 0 && thId < tl.length - 1)
+			{
+				// уточняем положение точки привязки по ширине 98% максимума кривой
+				posMin = tl[thId - 1].xMax;
+				posMax = tl[thId + 1].xMin;
+				if (posMin < posMax)
+				{
+//					System.err.println("initial posMin=" + posMin + " posMax=" + posMax);
+					// получаем интересующий нас участок кривой
+					int x0 = posMin;
+					double[] yArr = getThresholdMT(key).getYArray(x0, posMax - posMin + 1);
+					// выбираем пороговый уровень
+					double level = 0.995; // XXX - подстроечный параметр для UI
+					double yMax = ReflectogramMath.getArrayMax(yArr);
+					double yLVal = getThresholdY(key, posMin);
+					double yRVal = getThresholdY(key, posMax);
+					double yLCut = yLVal + (yMax - yLVal) * level;
+					double yRCut = yRVal + (yMax - yRVal) * level;
+//					System.err.println("yMax=" + yMax + " yLCut=" + yLCut + " yRCut=" + yRCut);
+					// определяем начало и конец максимума по выбранному уровню
+					int i;
+					for (i = posMin; i <= posMax; i++)
+						if (yArr[i - x0] > yLCut)
+							break;
+					posMin = i;
+					for (i = posMax; i > posMin; i--)
+						if (yArr[i - x0] > yRCut)
+							break;
+					posMax = i;
+					// на случай, если кривая опущена ниже смежных порогов,
+					// отключаем ограничение координаты
+					// XXX: срабатывание не гарантировано, но вроде обычно срабатывает.
+					// Если не сработает - это коснется только удобства GUI, но не функциональности.
+					if (yLVal >= yMax)
+						posMin = th.xMin;
+					if (yRVal >= yMax)
+						posMax = th.xMax;
+				}
+			}
+//			System.err.println("ThresholdHandle(): id=" + thId + " type=" + th.typeId + " X=" + posX + " Lold=" + th.xMin + " Rold=" + th.xMax
+//				+ " L=" + posMin + " R=" + posMax);
+			if (posX < posMin)
+				posX = posMin;
+			if (posX > posMax)
+				posX = posMax;
 			this.posX = posX;
 			this.posY = posY;
 		}
@@ -509,20 +551,45 @@ public class ModelTraceManager
 		}
 	}
 
-	private Thresh getNearestThreshByX(int x0)
+	// определяем, к какому порогу лучше относится данная точка
+	// при выборе между A и A граница порога - посередине между порогами,
+	// при выборе между A и L - по уровню Y = (Y_A + Y_L)/2 
+	private int getNearestThreshByX(int key, int x)
 	{
 		for (int i = 0; i < tl.length - 1; i++)
 		{
 			int thisEnd = tl[i].xMax;
 			int nextBegin = tl[i + 1].xMin;
-			if (x0 < (thisEnd + nextBegin) / 2)
+			if (x > nextBegin)
+				continue;
+			int separator;
+			if (tl[i].typeId == 0 && tl[i + 1].typeId == 0)
 			{
-				System.err.println("getNearestThresholdByX: returning " + i);
-				return tl[i];
+				// между порогами, A-A
+				// устанавливаем границу раздела посередине
+				separator = (thisEnd + nextBegin) / 2;
+			}
+			else
+			{
+				// между порогами, A-L или L-A
+				// ищем границу раздела по уровню 1/2 высоты
+				int x0 = thisEnd;
+				int N = nextBegin - thisEnd;
+				double[] yArr = getThresholdMT(key).getYArray(x0, N);
+				double median = (yArr[0] + yArr[N - 1]) / 2.0;
+				separator = x0;
+				for (int k = 0; k < N; k++)
+					if (yArr[k] <= median ^ median <= yArr[0])
+						separator++;
+				//System.err.println("getNearestThreshByX: i=" + i + " x=" + x + " thisEnd=" + thisEnd + " nextBegin=" + nextBegin + " separator=" + separator);
+			}
+			if (x < separator)
+			{
+				return i;
 			}
 		}
-		// FIXME: empty tl will cause NullPointerException
-		return tl[tl.length - 1];
+		// note: empty tl would cause return of -1
+		return tl.length - 1;
 	}
 
 	private ArrayList getAllThreshByNEvent(int nEvent)
@@ -564,20 +631,19 @@ public class ModelTraceManager
 	 */
 	public ThresholdHandle getThresholdHandle(double x0, double y0, double xCapture, double yCapture, double prioFactor, int button)
 	{
-		Thresh th = getNearestThreshByX((int )x0);
-
 		if (xCapture <= 0.1)
-			xCapture = 0.1;
-		if (yCapture <= 1e-4)
-			yCapture = 1e-4; // XXX: специфичный для рефлектометрии параметр
+			xCapture = 0.1;  // XXX
 		if (xCapture > 5000)
 			xCapture = 5000; // XXX
-		
+		if (yCapture <= 1e-4)
+			yCapture = 1e-4; // XXX: специфичный для рефлектометрии параметр
+
 		int xRange = (int )(xCapture + 1);
 
-		// find nearest threshold curve; UP2/DOWN2 takes precedence over UP1/DOWN1
-		int key = 0;
-		double bestDR = -1;
+		// Определяем ближайшую пороговую кривую и ближайшую точку на этой кривой
+		// UP2/DOWN2 takes precedence over UP1/DOWN1
+		double bestDR = 2; // наибольшее расстояние=1; 2 => еще не найдено  
+		int bestKey = 0;
 		int bestX = 0;
 		int[] keys = new int[] { Threshold.UP1, Threshold.DOWN1, Threshold.UP2, Threshold.DOWN2 }; 
 		for (int k = 0; k < 4; k++)
@@ -585,8 +651,11 @@ public class ModelTraceManager
 			int xL = (int )x0 - xRange;
 			int W = xRange * 2;
 			double[] yArr = getThresholdMT(keys[k]).getYArray(xL, W + 1);
+
 			double xScale = xCapture;
 			double yScale = yCapture;
+			double curBestDR = 2; // >1 => еще не найдено
+			int curBestX = 0;
 			for (int i = 0; i <= W; i++)
 			{
 				double dX = (x0 - xL - i) / xScale;
@@ -617,23 +686,30 @@ public class ModelTraceManager
 						continue; // случай, когда мы ближе к правой точке будет рассмотрен на следующей итерации
 				}
 
-				if (dR <= 1 && (dR <= bestDR + prioFactor || bestDR < 0))
+				if (dR <= 1 && dR < curBestDR)
 				{
-					key = keys[k];
-					bestDR = dR;
-					// определяем вершину, ближайшую к ближайшей точек
-					bestX = xL + i;
+					curBestDR = dR;
+					// определяем вершину, ближайшую к точке отрезка, ближайшей к месту клика
+					curBestX = xL + i;
 					if (scalar > 0.5)
-						bestX++;
+						curBestX++;
 				}
 			}
+			if (curBestDR <= 1 && curBestDR <= bestDR + prioFactor)
+			{
+				bestKey = keys[k];
+				bestDR = curBestDR;
+				bestX = curBestX;
+			}
 		}
-		if (bestDR < 0)
+
+		if (bestDR > 1)
 			return null;
 
-		double bestY = getThresholdY(key, bestX);
-		ThresholdHandle handle = new ThresholdHandle(th, key, bestX, bestY);
-		handle.posY = getThresholdY(key, handle.posX);
+		double bestY = getThresholdY(bestKey, bestX);
+		int thId = getNearestThreshByX(bestKey, bestX);
+		ThresholdHandle handle = new ThresholdHandle(thId, bestKey, bestX, bestY);
+		handle.posY = getThresholdY(bestKey, handle.posX);
 		return handle;
 	}
 }

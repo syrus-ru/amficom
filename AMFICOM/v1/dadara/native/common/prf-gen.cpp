@@ -1,3 +1,7 @@
+// we compile prf-MSVC-rdtsc.cpp instead
+
+#if 0
+
 #include <time.h>
 #include <stdio.h>
 #include <assert.h>
@@ -120,3 +124,5 @@ void prf_print(FILE *f) // f == 0 is default (stdout)
 	fflush(f);
 }
 
+
+#endif

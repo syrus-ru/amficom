@@ -1,5 +1,5 @@
 /*
- * $Id: CoreAnalysisManager.java,v 1.8 2005/02/08 11:46:27 saa Exp $
+ * $Id: CoreAnalysisManager.java,v 1.9 2005/02/11 12:10:37 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@ package com.syrus.AMFICOM.analysis;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.8 $, $Date: 2005/02/08 11:46:27 $
+ * @version $Revision: 1.9 $, $Date: 2005/02/11 12:10:37 $
  * @module
  */
 
@@ -32,6 +32,8 @@ public class CoreAnalysisManager
 
 	private static native double[] gauss(double[] y, double center,
 			double amplitude, double sigma);
+	
+	private static native double nMedian(double[] y, int pos);
 
 	/**
 	 * @param waveletType число - номер вейвлета
@@ -267,5 +269,14 @@ public class CoreAnalysisManager
 	public static double calcNoise3s(double[] y)
 	{
 		return nCalcNoise3s(y);
+	}
+
+	public static double getMedian(double[] y, int pos)
+	{
+		return nMedian(y, pos);
+	}
+	public static double getMedian(double[] y)
+	{
+		return nMedian(y, y.length / 2);
 	}
 }

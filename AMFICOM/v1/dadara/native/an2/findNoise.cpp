@@ -24,7 +24,8 @@
 #include <stdlib.h>
 #include "findNoise.h"
 
-#include "../Common/prf.h"
+#include "../common/median.h"
+#include "../common/prf.h"
 
 // Для отбрасывания участков, где точность определяется 0.001дБ-представлением
 const double prec0 = 0.001 * 1.5;
@@ -115,13 +116,6 @@ static double dB2dy(double y0, double dB)
 	if (ret > 20.0) // XXX
 		ret = 20.0;
 	return ret;
-}
-
-static double destroyAndGetMedian(double *gist, int nsam, int pos)
-{
-	// FIXME: ускорить - есть простые алгоритмы со сложностью O(nsam)
-	qsort(gist, nsam, sizeof(double), dfcmp);
-	return gist[pos];
 }
 
 /*

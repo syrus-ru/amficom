@@ -7,6 +7,7 @@ OBJS= \
         EventParams.$(OBJ_EXT) \
         mat-solve.$(OBJ_EXT) \
         MathRef.$(OBJ_EXT) \
+        median.$(OBJ_EXT) \
         prf-MSVC-rdtsc.$(OBJ_EXT)
 #        prf-gen.$(OBJ_EXT)
 
