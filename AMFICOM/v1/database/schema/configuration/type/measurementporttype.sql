@@ -15,4 +15,4 @@ CREATE TABLE MeasurementPortType (
   REFERENCES Users (id) ON DELETE CASCADE
 );
 
-CREATE SEQUENCE mptype_seq ORDER;
+CREATE SEQUENCE MeasurementPortType_seq ORDER;
