@@ -1,5 +1,5 @@
 /*
- * $Id: TestCondition.java,v 1.3 2004/10/03 13:17:57 bob Exp $
+ * $Id: TestCondition.java,v 1.4 2004/10/06 05:39:40 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,7 +22,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.corba.TestCondition_Transferable;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2004/10/03 13:17:57 $
+ * @version $Revision: 1.4 $, $Date: 2004/10/06 05:39:40 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -37,6 +37,7 @@ public class TestCondition implements StorableObjectCondition {
 		this.domain = (Domain) ConfigurationStorableObjectPool.getStorableObject(new Identifier(transferable.domain_id), true);
 		this.start = new Date(transferable.start);
 		this.end = new Date(transferable.end);
+		setEntityCode(new Short(transferable.entity_code));
 	}
 
 	public TestCondition(Domain domain, Date start, Date end) {
@@ -77,12 +78,13 @@ public class TestCondition implements StorableObjectCondition {
 	}
 
 	public Object getTransferable() {
-		return new TestCondition_Transferable(
+		return new TestCondition_Transferable(this.entityCode.shortValue(),
 												(Identifier_Transferable) this.domain
 														.getId()
-														.getTransferable(),
+														.getTransferable(),												
 												this.start.getTime(),
-												this.end.getTime());
+												this.end.getTime()
+												);
 
 	}
 	

@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementSetupCondition.java,v 1.3 2004/10/04 13:17:12 bob Exp $
+ * $Id: MeasurementSetupCondition.java,v 1.4 2004/10/06 05:39:40 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -20,11 +20,10 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
-import com.syrus.AMFICOM.measurement.corba.MeasurementSetupConditionSort;
 import com.syrus.AMFICOM.measurement.corba.MeasurementSetupCondition_Transferable;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2004/10/04 13:17:12 $
+ * @version $Revision: 1.4 $, $Date: 2004/10/06 05:39:40 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -45,12 +44,12 @@ public class MeasurementSetupCondition implements StorableObjectCondition {
 
 	public MeasurementSetupCondition(MeasurementSetupCondition_Transferable transferable) throws DatabaseException,
 			CommunicationException {
-		int sort = transferable.sort.value();
+		this.entityCode = new Short(transferable.entity_code);
 
-		if (sort == MeasurementSetupConditionSort._MSC_SORT_MEASUREMENT_TYPE)
+		if (transferable.entity_code == ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE)
 			this.measurementType = (MeasurementType) MeasurementStorableObjectPool
 					.getStorableObject(new Identifier(transferable.object_id), true);
-		else if (sort == MeasurementSetupConditionSort._MSC_SORT_MONITORED_ELEMENT)
+		else if (transferable.entity_code == ObjectEntities.ME_ENTITY_CODE)
 			this.monitoredElement = (MonitoredElement) ConfigurationStorableObjectPool
 					.getStorableObject(new Identifier(transferable.object_id), true);
 	}
@@ -121,11 +120,11 @@ public class MeasurementSetupCondition implements StorableObjectCondition {
 		if (this.measurementType != null) {
 			transferable.object_id = (Identifier_Transferable) this.measurementType.getId()
 					.getTransferable();
-			transferable.sort = MeasurementSetupConditionSort.MSC_SORT_MEASUREMENT_TYPE;
+			transferable.entity_code = ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE;
 		} else if (this.monitoredElement != null) {
 			transferable.object_id = (Identifier_Transferable) this.monitoredElement.getId()
 					.getTransferable();
-			transferable.sort = MeasurementSetupConditionSort.MSC_SORT_MONITORED_ELEMENT;
+			transferable.entity_code = ObjectEntities.ME_ENTITY_CODE;
 		}
 		return transferable;
 	}

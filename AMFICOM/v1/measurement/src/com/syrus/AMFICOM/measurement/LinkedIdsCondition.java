@@ -1,5 +1,5 @@
 /*
- * $Id: LinkedIdsCondition.java,v 1.2 2004/10/05 12:55:29 bob Exp $
+ * $Id: LinkedIdsCondition.java,v 1.3 2004/10/06 05:39:40 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -21,11 +21,10 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
-import com.syrus.AMFICOM.measurement.corba.LinkedIdsConditionSort;
 import com.syrus.AMFICOM.measurement.corba.LinkedIdsCondition_Transferable;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2004/10/05 12:55:29 $
+ * @version $Revision: 1.3 $, $Date: 2004/10/06 05:39:40 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -47,19 +46,20 @@ public class LinkedIdsCondition implements StorableObjectCondition {
 			this.linkedIds.add(new Identifier(transferable.linked_ids[i]));
 		}
 		
-		switch(transferable.sort.value()){
-			case LinkedIdsConditionSort._LIC_SORT_TEST : 
+		switch(transferable.entity_code){
+			case ObjectEntities.MEASUREMENT_ENTITY_CODE : 
 				this.entityCode = MEASUREMENT_SHORT;
 				break;
-			case LinkedIdsConditionSort._LIC_SORT_MEASUREMENT : 
+			case ObjectEntities.RESULT_ENTITY_CODE : 
 				this.entityCode = RESULT_SHORT;
 				break;
 			default: this.entityCode = null;				
 		}
 	}
 	
-	public LinkedIdsCondition(List testIds) {
-		this.linkedIds = testIds;
+	public LinkedIdsCondition(List linkedIds, short entityCode) {
+		this.linkedIds = linkedIds;
+		this.entityCode = new Short(entityCode);
 	}
 
 	public Domain getDomain() {
@@ -121,21 +121,20 @@ public class LinkedIdsCondition implements StorableObjectCondition {
 		
 	}
 	
+	public void setLinkedIds(List linkedIds){
+		this.linkedIds = linkedIds;
+	}
 	
 	public Object getTransferable() {
 		
-		LinkedIdsConditionSort sort;
-
 		if (this.entityCode == null) {
 			throw new UnsupportedOperationException("entityCode doesn't set");
 		}
 		
-		switch(this.entityCode.shortValue()){
+		short s = this.entityCode.shortValue();
+		switch(s){
 			case ObjectEntities.MEASUREMENT_ENTITY_CODE :
-				sort = LinkedIdsConditionSort.LIC_SORT_TEST;
-				break;
 			case ObjectEntities.RESULT_ENTITY_CODE : 
-				sort = LinkedIdsConditionSort.LIC_SORT_MEASUREMENT;
 				break;
 			default:
 				throw new UnsupportedOperationException("entityCode is unknown");
@@ -152,7 +151,7 @@ public class LinkedIdsCondition implements StorableObjectCondition {
 		
 		transferable.domain_id = (Identifier_Transferable) this.domain.getId().getTransferable();
 		transferable.linked_ids = testId_Transferable;
-		transferable.sort = sort;
+		transferable.entity_code = s;
 		
 		return transferable;
 	}
