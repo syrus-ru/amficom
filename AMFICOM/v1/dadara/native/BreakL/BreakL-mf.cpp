@@ -2,7 +2,6 @@
 #include "BreakL-mf.h"
 #include "BreakL-enh.h"
 #include "../JNI/ThreshArray.h"
-#include "../common/prf.h"
 
 static int bsearchmh(double *pars, int npairs, double key)
 {
