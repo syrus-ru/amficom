@@ -1,5 +1,5 @@
 /*
- * $Id: MonitoredElementDatabase.java,v 1.8 2004/08/11 13:39:51 bob Exp $
+ * $Id: MonitoredElementDatabase.java,v 1.9 2004/08/12 11:36:29 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -24,13 +24,13 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2004/08/11 13:39:51 $
- * @author $Author: bob $
+ * @version $Revision: 1.9 $, $Date: 2004/08/12 11:36:29 $
+ * @author $Author: arseniy $
  * @module configuration_v1
  */
 
 public class MonitoredElementDatabase extends StorableObjectDatabase {
-    public static final String COLUMN_MEASUREMENT_PORT_ID = "meport_id";
+    public static final String COLUMN_MEASUREMENT_PORT_ID = "measurement_port_id";
     // sort NUMBER(2) NOT NULL,
     public static final String COLUMN_SORT = "sort";
     public static final String COLUMN_LOCAL_ADDRESS = "local_address";
