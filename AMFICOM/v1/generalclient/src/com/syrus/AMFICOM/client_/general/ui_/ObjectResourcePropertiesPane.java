@@ -1,5 +1,5 @@
 /*
- * $Id: ObjectResourcePropertiesPane.java,v 1.1 2004/10/26 08:18:31 stas Exp $
+ * $Id: ObjectResourcePropertiesPane.java,v 1.2 2005/03/11 16:10:18 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -7,6 +7,8 @@
  */
 
 package com.syrus.AMFICOM.client_.general.ui_;
+
+import javax.swing.JComponent;
 
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 
@@ -21,17 +23,18 @@ import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
  * <code style = "background-color: #fff7e9;"><b>final</b></code>).</li></ul>
  *
  * @author $Author: stas $
- * @version $Revision: 1.1 $, $Date: 2004/10/26 08:18:31 $
+ * @version $Revision: 1.2 $, $Date: 2005/03/11 16:10:18 $
  * @module generalclient_v1
  */
-public interface ObjectResourcePropertiesPane
-{
+public interface ObjectResourcePropertiesPane {
 	int DEF_HEIGHT = 24;
 
 	int DEF_WIDTH = 150;
-
+	
 	Object getObject();
 
+//	JComponent getGUI();
+	
 	void setObject(Object object);
 
 	void setContext(ApplicationContext aContext);

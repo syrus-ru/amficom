@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectTree.java,v 1.3 2005/03/10 09:21:16 stas Exp $
+ * $Id: StorableObjectTree.java,v 1.4 2005/03/11 16:10:18 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,24 +24,28 @@ import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.3 $, $Date: 2005/03/10 09:21:16 $
+ * @version $Revision: 1.4 $, $Date: 2005/03/11 16:10:18 $
  * @module generalclient_v1
  */
 
 public class StorableObjectTree extends JTree implements OperationListener,
 		DragGestureListener {
 	private static final long serialVersionUID = 3976731458805248816L;
+
 	DragSource dragSource = null;
+
 	boolean send_event = false;
-	
-	/** 
-	 * Variable to force drag-n-drop prohibit.
-	 * If true, then DragGestureListener implementing objects will dnd and others will not   
+
+	/**
+	 * Variable to force drag-n-drop prohibit. If true, then DragGestureListener
+	 * implementing objects will dnd and others will not
 	 */
 	boolean isDragDropEnabled = true;
 
 	Dispatcher dispatcher;
+
 	TreeDataModel otm;
+
 	StorableObjectTreeNode root;
 
 	public StorableObjectTree(Dispatcher disp, TreeDataModel otm) {
@@ -59,12 +63,14 @@ public class StorableObjectTree extends JTree implements OperationListener,
 
 	private void jbInit() throws Exception {
 		setRootVisible(true);
-		getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
-				
+		getSelectionModel().setSelectionMode(
+				TreeSelectionModel.SINGLE_TREE_SELECTION);
+
 		addTreeWillExpandListener(new TreeWillExpandListener() {
 			public void treeWillExpand(TreeExpansionEvent e) {
 				tree_treeWillExpand(e);
 			}
+
 			public void treeWillCollapse(TreeExpansionEvent e) {
 				// do nothing
 			}
@@ -74,9 +80,10 @@ public class StorableObjectTree extends JTree implements OperationListener,
 				tree_valueChanged(e);
 			}
 		});
-	
+
 		dragSource = new DragSource();
-		dragSource.createDefaultDragGestureRecognizer(this, DnDConstants.ACTION_MOVE, this);
+		dragSource.createDefaultDragGestureRecognizer(this,
+				DnDConstants.ACTION_MOVE, this);
 	}
 
 	public void setModel(TreeDataModel otm) {
@@ -86,7 +93,7 @@ public class StorableObjectTree extends JTree implements OperationListener,
 
 		List children = otm.getChildNodes(root);
 		for (Iterator it = children.iterator(); it.hasNext();) {
-			root.add((DefaultMutableTreeNode)it.next());
+			root.add((DefaultMutableTreeNode) it.next());
 		}
 		DefaultTreeModel tm = new DefaultTreeModel(root);
 		tm.setAsksAllowsChildren(true);
@@ -96,39 +103,48 @@ public class StorableObjectTree extends JTree implements OperationListener,
 			public void mouseClicked(MouseEvent e) {
 				TreePath path = getClosestPathForLocation(e.getX(), e.getY());
 				if (path != null) {
-					StorableObjectTreeNode node =	(StorableObjectTreeNode)path.getLastPathComponent();
+					StorableObjectTreeNode node = (StorableObjectTreeNode) path
+							.getLastPathComponent();
 					node.mouseClicked(e);
 					repaint();
 				}
 			}
+
 			public void mouseEntered(MouseEvent e) {
 				TreePath path = getSelectionPath();
 				if (path != null) {
-					StorableObjectTreeNode node =	(StorableObjectTreeNode)path.getLastPathComponent();
+					StorableObjectTreeNode node = (StorableObjectTreeNode) path
+							.getLastPathComponent();
 					node.mouseEntered(e);
 					repaint();
 				}
 			}
+
 			public void mouseExited(MouseEvent e) {
 				TreePath path = getSelectionPath();
 				if (path != null) {
-					StorableObjectTreeNode node =	(StorableObjectTreeNode)path.getLastPathComponent();
+					StorableObjectTreeNode node = (StorableObjectTreeNode) path
+							.getLastPathComponent();
 					node.mouseExited(e);
 					repaint();
 				}
 			}
+
 			public void mousePressed(MouseEvent e) {
 				TreePath path = getSelectionPath();
 				if (path != null) {
-					StorableObjectTreeNode node =	(StorableObjectTreeNode)path.getLastPathComponent();
+					StorableObjectTreeNode node = (StorableObjectTreeNode) path
+							.getLastPathComponent();
 					node.mousePressed(e);
 					repaint();
 				}
 			}
+
 			public void mouseReleased(MouseEvent e) {
 				TreePath path = getSelectionPath();
 				if (path != null) {
-					StorableObjectTreeNode node =	(StorableObjectTreeNode)path.getLastPathComponent();
+					StorableObjectTreeNode node = (StorableObjectTreeNode) path
+							.getLastPathComponent();
 					node.mouseReleased(e);
 					repaint();
 				}
@@ -145,7 +161,8 @@ public class StorableObjectTree extends JTree implements OperationListener,
 				StorableObjectTreeNode node = null;
 				TreePath tp = getSelectionPath();
 				if (tp != null) {
-					StorableObjectTreeNode startNode = (StorableObjectTreeNode)tp.getParentPath().getLastPathComponent();
+					StorableObjectTreeNode startNode = (StorableObjectTreeNode) tp
+							.getParentPath().getLastPathComponent();
 					node = getNodeForObject(startNode, o, true);
 				}
 				if (node == null)
@@ -153,37 +170,37 @@ public class StorableObjectTree extends JTree implements OperationListener,
 				if (node == null)
 					node = getNodeForObject(root, o, true);
 				if (node != null)
-					setSelectionPath(new TreePath(node.getPath()));				
-			} 
-			else if (select_event.REFRESH) {
+					setSelectionPath(new TreePath(node.getPath()));
+			} else if (select_event.REFRESH) {
 				Object o = ev.getSource();
 				if (o == null || o.equals("")) {
 					TreePath tp = getSelectionPath();
 					if (tp != null) {
-						StorableObjectTreeNode parentNode = (StorableObjectTreeNode)tp.getParentPath().getLastPathComponent();
+						StorableObjectTreeNode parentNode = (StorableObjectTreeNode) tp
+								.getParentPath().getLastPathComponent();
 						parentNode.setExpanded(false);
 						expandNode(parentNode);
 						updateUI();
 					}
-				} 
-				else {
+				} else {
 					StorableObjectTreeNode node = getNodeForObject(root, o, false);
 					if (node != null && node.getParent() != null) {
-						StorableObjectTreeNode parentNode = (StorableObjectTreeNode)node.getParent();
+						StorableObjectTreeNode parentNode = (StorableObjectTreeNode) node
+								.getParent();
 						parentNode.setExpanded(false);
 						expandNode(parentNode);
 						updateUI();
-					}	
+					}
 				}
-			} 
-			else if (select_event.DESELECT) {
+			} else if (select_event.DESELECT) {
 				getSelectionModel().clearSelection();
 			}
-		} 
+		}
 	}
 
 	public void tree_valueChanged(TreeSelectionEvent e) {
-		StorableObjectTreeNode node = (StorableObjectTreeNode)e.getPath().getLastPathComponent();
+		StorableObjectTreeNode node = (StorableObjectTreeNode) e.getPath()
+				.getLastPathComponent();
 		if (node == null)
 			return;
 
@@ -197,23 +214,27 @@ public class StorableObjectTree extends JTree implements OperationListener,
 			if (node.getAllowsChildren()) {
 				cl = otm.getNodeChildClass(node);
 				controller = otm.getNodeChildController(node);
-				
-				for (Enumeration enumeration = node.children(); enumeration.hasMoreElements();) {
-					Object childObj = ((StorableObjectTreeNode)enumeration.nextElement()).getUserObject();
+
+				for (Enumeration enumeration = node.children(); enumeration
+						.hasMoreElements();) {
+					Object childObj = ((StorableObjectTreeNode) enumeration.nextElement())
+							.getUserObject();
 					if (!(childObj instanceof String))
 						res.add(childObj);
 				}
-			} 
-		}
-		else {
+			}
+		} else {
 			if (node.isRoot())
 				return;
-			StorableObjectTreeNode parentNode = (StorableObjectTreeNode)node.getParent();
+			StorableObjectTreeNode parentNode = (StorableObjectTreeNode) node
+					.getParent();
 			cl = otm.getNodeChildClass(parentNode);
 			controller = otm.getNodeChildController(parentNode);
-						
-			for (Enumeration enumeration = parentNode.children(); enumeration.hasMoreElements();) {
-				Object childObj = ((StorableObjectTreeNode)enumeration.nextElement()).getUserObject();
+
+			for (Enumeration enumeration = parentNode.children(); enumeration
+					.hasMoreElements();) {
+				Object childObj = ((StorableObjectTreeNode) enumeration.nextElement())
+						.getUserObject();
 				if (!(childObj instanceof String))
 					res.add(childObj);
 			}
@@ -229,16 +250,17 @@ public class StorableObjectTree extends JTree implements OperationListener,
 	}
 
 	void tree_treeWillExpand(TreeExpansionEvent e) {
-		StorableObjectTreeNode node = (StorableObjectTreeNode)e.getPath().getLastPathComponent();
+		StorableObjectTreeNode node = (StorableObjectTreeNode) e.getPath()
+				.getLastPathComponent();
 		this.setCursor(new Cursor(Cursor.WAIT_CURSOR));
 		expandNode(node);
 		setSelectionPath(new TreePath(node.getPath()));
 		this.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 	}
-	
+
 	public void expandNode(StorableObjectTreeNode node) {
 		if (!node.isExpanded()) {
-			node.removeAllChildren();	
+			node.removeAllChildren();
 			List vec = otm.getChildNodes(node);
 			for (Iterator it = vec.iterator(); it.hasNext();) {
 				node.add((DefaultMutableTreeNode) it.next());
@@ -246,19 +268,20 @@ public class StorableObjectTree extends JTree implements OperationListener,
 			node.setExpanded(true);
 		}
 	}
-	
-	StorableObjectTreeNode getNodeForObject (StorableObjectTreeNode startNode, Object obj, boolean forceExpansion) {
+
+	StorableObjectTreeNode getNodeForObject(StorableObjectTreeNode startNode,
+			Object obj, boolean forceExpansion) {
 		if (startNode.getUserObject().equals(obj))
 			return startNode;
 		if (forceExpansion)
 			expandNode(startNode);
 		for (Enumeration en = startNode.children(); en.hasMoreElements();) {
-			StorableObjectTreeNode child = (StorableObjectTreeNode)en.nextElement();
+			StorableObjectTreeNode child = (StorableObjectTreeNode) en.nextElement();
 			if (child.getUserObject().equals(obj))
 				return child;
 		}
 		for (Enumeration en = startNode.children(); en.hasMoreElements();) {
-			StorableObjectTreeNode child = (StorableObjectTreeNode)en.nextElement();
+			StorableObjectTreeNode child = (StorableObjectTreeNode) en.nextElement();
 			StorableObjectTreeNode node = getNodeForObject(child, obj, forceExpansion);
 			if (node != null)
 				return node;
@@ -269,11 +292,13 @@ public class StorableObjectTree extends JTree implements OperationListener,
 	public void dragGestureRecognized(DragGestureEvent event) {
 		Point origin = event.getDragOrigin();
 		TreePath tp = getClosestPathForLocation(origin.x, origin.y);
-		StorableObjectTreeNode node = (StorableObjectTreeNode) tp.getLastPathComponent();
-		if (this.isDragDropEnabled) {
-			Object obj = node.getUserObject();
-			if (obj instanceof DragGestureListener)
-				((DragGestureListener)obj).dragGestureRecognized(event);
+		if (tp != null) {
+			StorableObjectTreeNode node = (StorableObjectTreeNode) tp.getLastPathComponent();
+			if (this.isDragDropEnabled) {
+				Object obj = node.getUserObject();
+				if (obj instanceof DragGestureListener)
+					((DragGestureListener) obj).dragGestureRecognized(event);
+			}
 		}
 	}
 }

@@ -263,5 +263,7 @@ public class AMFICOMMetalTheme extends DefaultMetalTheme
 			return getBlack();
 	}
 
-
+//	protected ColorUIResource getSecondary3() { return secondary3; }
+//  private static final ColorUIResource secondary3 = new ColorUIResource(
+//      234, 234, 234);
 }
