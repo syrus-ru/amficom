@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectPool.java,v 1.1 2004/11/25 10:21:06 bob Exp $
+ * $Id: StorableObjectPool.java,v 1.2 2004/12/07 09:54:19 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,7 +25,7 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2004/11/25 10:21:06 $
+ * @version $Revision: 1.2 $, $Date: 2004/12/07 09:54:19 $
  * @author $Author: bob $
  * @module general_v1
  */
@@ -336,6 +336,8 @@ public abstract class StorableObjectPool {
 	}
 
 	protected StorableObject putStorableObjectImpl(StorableObject storableObject) throws IllegalObjectEntityException {
+		if (storableObject == null)
+			return null;
 		Identifier objectId = storableObject.getId();
 		LRUMap objectPool = (LRUMap) this.objectPoolMap.get(new Short(objectId.getMajor()));
 		if (objectPool != null) { return (StorableObject) objectPool.put(objectId, storableObject); }
