@@ -1,5 +1,5 @@
 /*
- * $Id: BellcoreStructure.java,v 1.8 2004/11/22 14:03:36 stas Exp $
+ * $Id: BellcoreStructure.java,v 1.9 2004/12/08 13:55:21 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,9 +11,9 @@ package com.syrus.io;
 import java.util.Date;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2004/11/22 14:03:36 $
- * @author $Author: stas $
- * @module general_v1
+ * @version $Revision: 1.9 $, $Date: 2004/12/08 13:55:21 $
+ * @author $Author: bass $
+ * @module util
  */
 public class BellcoreStructure // extends ObjectResource
 {
@@ -61,31 +61,31 @@ public class BellcoreStructure // extends ObjectResource
 		switch (type)
 		{
 			case MAP:  // required
-					 if (!this.hasMap) { this.map = new Map(); this.hasMap = true; this.blocks++; }
-					 break;
+				if (!this.hasMap) { this.map = new Map(); this.hasMap = true; this.blocks++; }
+				break;
 			case GENPARAMS:  // required
-					 if (!this.hasGen) { this.genParams = new GenParams(); this.hasGen = true; this.blocks++; }
-					 break;
+				if (!this.hasGen) { this.genParams = new GenParams(); this.hasGen = true; this.blocks++; }
+				break;
 			case SUPPARAMS:  // required
-					 if (!this.hasSup) { this.supParams = new SupParams(); this.hasSup = true; this.blocks++; }
-					 break;
+				if (!this.hasSup) { this.supParams = new SupParams(); this.hasSup = true; this.blocks++; }
+				break;
 			case FXDPARAMS:  // required
-					 if (!this.hasFxd) { this.fxdParams = new FxdParams(); this.hasFxd = true; this.blocks++; }
-					 break;
+				if (!this.hasFxd) { this.fxdParams = new FxdParams(); this.hasFxd = true; this.blocks++; }
+				break;
 			case KEYEVENTS:
-					 if (!this.hasKey) { this.keyEvents = new KeyEvents(); this.hasKey = true; this.blocks++; }
-					 break;
+				if (!this.hasKey) { this.keyEvents = new KeyEvents(); this.hasKey = true; this.blocks++; }
+				break;
 			case LNKPARAMS:
-					 if (!this.hasLnk) { this.lnkParams = new LnkParams(); this.hasLnk = true; this.blocks++; }
-					 break;
+				if (!this.hasLnk) { this.lnkParams = new LnkParams(); this.hasLnk = true; this.blocks++; }
+				break;
 			case DATAPOINTS:
-					 if (!this.hasData) { this.dataPts = new DataPts(); this.hasData = true; this.blocks++; }
-					 break;
+				if (!this.hasData) { this.dataPts = new DataPts(); this.hasData = true; this.blocks++; }
+				break;
 			case SPECIAL:
-					 this.special[this.specials++] = new Special(); this.hasSpecial = true; this.blocks++;
-					 break;
+				this.special[this.specials++] = new Special(); this.hasSpecial = true; this.blocks++;
+				break;
 			case CKSUM: // required
-					 if (!this.hasMap) { this.cksum = new Cksum();  this.blocks++; }
+				if (!this.hasMap) { this.cksum = new Cksum();  this.blocks++; }
 		}
 	}
 
@@ -314,7 +314,7 @@ public class BellcoreStructure // extends ObjectResource
 
 	public double getIOR()
 	{
-		return ((double)fxdParams.GI) / 100000d;
+		return fxdParams.GI / 100000d;
 	}
 
 	public double getResolution()
@@ -328,7 +328,7 @@ public class BellcoreStructure // extends ObjectResource
 
 	public double getRange()
 	{
-		double range = (double)(fxdParams.AR - fxdParams.AO) * 3d / (double)fxdParams.GI * 1000;
+		double range = (fxdParams.AR - fxdParams.AO) * 3d / fxdParams.GI * 1000;
 		if (getUnits().equals("mt"))
 			range /= 1000d;
 		return range;

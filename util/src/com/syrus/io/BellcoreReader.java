@@ -1,5 +1,5 @@
 /*
- * $Id: BellcoreReader.java,v 1.4 2004/11/22 14:03:34 stas Exp $
+ * $Id: BellcoreReader.java,v 1.5 2004/12/08 13:56:43 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,9 +11,9 @@ package com.syrus.io;
 import java.io.*;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2004/11/22 14:03:34 $
- * @author $Author: stas $
- * @module general_v1
+ * @version $Revision: 1.5 $, $Date: 2004/12/08 13:56:43 $
+ * @author $Author: bass $
+ * @module util
  */
 public class BellcoreReader extends DataReader
 {
@@ -345,7 +345,7 @@ public class BellcoreReader extends DataReader
 			bs.fxdParams.GI = idis.readIInt();
 
 			idis.skipBytes(0x4);
-			double resolution = (double)idis.readIInt()/1000000.0; // в m
+			double resolution = idis.readIInt()/1000000.0; // в m
 
 			idis.skipBytes(0x1C);
 			bs.fxdParams.DTS = idis.readIInt();
