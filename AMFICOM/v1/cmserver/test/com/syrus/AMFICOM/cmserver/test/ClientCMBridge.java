@@ -1,5 +1,5 @@
 /*
- * $Id: ClientCMBridge.java,v 1.1 2004/09/27 11:59:03 bob Exp $
+ * $Id: ClientCMBridge.java,v 1.2 2004/09/27 12:23:55 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,7 +31,7 @@ import com.syrus.util.ClientLRUMap;
 import com.syrus.util.corba.JavaSoftORBUtil;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2004/09/27 11:59:03 $
+ * @version $Revision: 1.2 $, $Date: 2004/09/27 12:23:55 $
  * @author $Author: bob $
  * @module module
  */
@@ -56,22 +56,24 @@ public class ClientCMBridge {
 		accessIdentifier = new AccessIdentifier_Transferable();
 	}
 
-	public static void setDomain(Domain domain) {
-		accessIdentifier.domain_id = (Identifier_Transferable) domain.getId().getTransferable();
+	private static void setAccessIdentifier(AccessIdentifier_Transferable accessIdentifier){
 		ClientMeasurementObjectLoader.setAccessIdentifierTransferable(accessIdentifier);
 		ClientConfigurationObjectLoader.setAccessIdentifierTransferable(accessIdentifier);
+	}
+	
+	public static void setDomain(Domain domain) {
+		accessIdentifier.domain_id = (Identifier_Transferable) domain.getId().getTransferable();
+		setAccessIdentifier(accessIdentifier);
 	}
 
 	public static void setUser(User user) {
 		accessIdentifier.user_id = (Identifier_Transferable) user.getId().getTransferable();
-		ClientMeasurementObjectLoader.setAccessIdentifierTransferable(accessIdentifier);
-		ClientConfigurationObjectLoader.setAccessIdentifierTransferable(accessIdentifier);
+		setAccessIdentifier(accessIdentifier);
 	}
 
 	public static void setSessionId(Identifier sessionId) {
 		accessIdentifier.session_id = (Identifier_Transferable) sessionId.getTransferable();
-		ClientMeasurementObjectLoader.setAccessIdentifierTransferable(accessIdentifier);
-		ClientConfigurationObjectLoader.setAccessIdentifierTransferable(accessIdentifier);
+		setAccessIdentifier(accessIdentifier);
 	}
 
 	private static CMServer resolveCMServer(final String hostName) {

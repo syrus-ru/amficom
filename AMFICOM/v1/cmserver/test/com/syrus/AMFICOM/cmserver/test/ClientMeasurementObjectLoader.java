@@ -1,5 +1,5 @@
 /*
- * $Id: ClientMeasurementObjectLoader.java,v 1.4 2004/09/22 12:54:25 bob Exp $
+ * $Id: ClientMeasurementObjectLoader.java,v 1.5 2004/09/27 12:23:55 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,6 +29,7 @@ import com.syrus.AMFICOM.measurement.Measurement;
 import com.syrus.AMFICOM.measurement.MeasurementObjectLoader;
 import com.syrus.AMFICOM.measurement.MeasurementSetup;
 import com.syrus.AMFICOM.measurement.MeasurementType;
+import com.syrus.AMFICOM.measurement.Modeling;
 import com.syrus.AMFICOM.measurement.ParameterType;
 import com.syrus.AMFICOM.measurement.Result;
 import com.syrus.AMFICOM.measurement.Set;
@@ -39,6 +40,7 @@ import com.syrus.AMFICOM.measurement.corba.EvaluationType_Transferable;
 import com.syrus.AMFICOM.measurement.corba.MeasurementSetup_Transferable;
 import com.syrus.AMFICOM.measurement.corba.MeasurementType_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Measurement_Transferable;
+import com.syrus.AMFICOM.measurement.corba.Modeling_Transferable;
 import com.syrus.AMFICOM.measurement.corba.ParameterType_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Result_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Set_Transferable;
@@ -46,7 +48,7 @@ import com.syrus.AMFICOM.measurement.corba.TemporalPattern_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Test_Transferable;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2004/09/22 12:54:25 $
+ * @version $Revision: 1.5 $, $Date: 2004/09/27 12:23:55 $
  * @author $Author: bob $
  * @module cmserver_v1
  */
@@ -155,7 +157,22 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 			throw new CommunicationException(msg, e);
 		}
 	}
-
+	
+	public Modeling loadModeling(Identifier id) throws DatabaseException, CommunicationException {
+		try {
+			return new Modeling(this.server.transmitModeling((Identifier_Transferable) id
+					.getTransferable(), accessIdentifierTransferable));
+		} catch (CreateObjectException e) {
+			String msg = "ClientMeasurementObjectLoader.loadMeasurement | new Measurement(" + id.toString()
+					+ ")";
+			throw new RetrieveObjectException(msg, e);
+		} catch (AMFICOMRemoteException e) {
+			String msg = "ClientMeasurementObjectLoader.loadMeasurement | server.transmitMeasurement("
+					+ id.toString() + ")";
+			throw new CommunicationException(msg, e);
+		}
+	}
+	
 	public Measurement loadMeasurement(Identifier id) throws RetrieveObjectException, CommunicationException {
 		try {
 			return new Measurement(this.server.transmitMeasurement((Identifier_Transferable) id
@@ -311,6 +328,29 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 		}
 	}
 
+	public List loadModelings(List ids) throws DatabaseException, CommunicationException {
+		try {
+			Identifier_Transferable[] identifier_Transferables = new Identifier_Transferable[ids.size()];
+			int i = 0;
+			for (Iterator it = ids.iterator(); it.hasNext(); i++) {
+				Identifier id = (Identifier) it.next();
+				identifier_Transferables[i] = (Identifier_Transferable) id.getTransferable();
+			}
+			Modeling_Transferable[] transferables = this.server
+					.transmitModelings(identifier_Transferables,
+									accessIdentifierTransferable);
+			List list = new ArrayList(transferables.length);
+			for (int j = 0; j < transferables.length; j++) {
+				list.add(new Modeling(transferables[j]));
+			}
+			return list;
+		} catch (CreateObjectException e) {
+			throw new RetrieveObjectException(e);
+		} catch (AMFICOMRemoteException e) {
+			throw new CommunicationException(e);
+		}
+	}
+	
 	public List loadMeasurementSetups(List ids) throws DatabaseException, CommunicationException {
 		try {
 			Identifier_Transferable[] identifier_Transferables = new Identifier_Transferable[ids.size()];
