@@ -30,7 +30,7 @@ public class AComboBox extends JComboBox {
 			//Get the selected index. (The index param isn't
 			//always valid, so just use the value.)
 
-			setFont(font);
+			this.setFont(font);
 
 			if (isSelected) {
 				setBackground(list.getSelectionBackground());
