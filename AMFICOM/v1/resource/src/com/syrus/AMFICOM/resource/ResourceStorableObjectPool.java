@@ -1,5 +1,5 @@
 /*
- * $Id: ResourceStorableObjectPool.java,v 1.3 2004/12/28 16:59:32 bass Exp $
+ * $Id: ResourceStorableObjectPool.java,v 1.4 2005/01/17 17:17:46 max Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,8 +17,8 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.3 $, $Date: 2004/12/28 16:59:32 $
+ * @author $Author: max $
+ * @version $Revision: 1.4 $, $Date: 2005/01/17 17:17:46 $
  * @module resource_v1
  */
 public final class ResourceStorableObjectPool extends StorableObjectPool {
@@ -27,7 +27,7 @@ public final class ResourceStorableObjectPool extends StorableObjectPool {
 	
 	private static final int		IMAGERESOURCE_OBJECT_POOL_SIZE		= 4;
 	
-	private static ResourceObjectLoader	rObjectLoader;
+	private static DatabaseResourceObjectLoader	rObjectLoader;
 	private static ResourceStorableObjectPool instance;
 	
 	private ResourceStorableObjectPool() {
@@ -38,7 +38,7 @@ public final class ResourceStorableObjectPool extends StorableObjectPool {
 		super(cacheMapClass);
 	}
 	
-	public static void init(ResourceObjectLoader rObjectLoader1, Class cacheClass, final int size) {
+	public static void init(DatabaseResourceObjectLoader rObjectLoader1, Class cacheClass, final int size) {
 		Class clazz = null;
 		try {
 			clazz = Class.forName(cacheClass.getName());
@@ -50,7 +50,7 @@ public final class ResourceStorableObjectPool extends StorableObjectPool {
 		init(rObjectLoader1, size);
 	}
 	
-	public static void init(ResourceObjectLoader rObjectLoader1, final int size) {
+	public static void init(DatabaseResourceObjectLoader rObjectLoader1, final int size) {
 		if (instance == null)
 			instance = new ResourceStorableObjectPool();
 		instance.objectPoolMap = Collections.synchronizedMap(new Hashtable(size));
@@ -62,7 +62,7 @@ public final class ResourceStorableObjectPool extends StorableObjectPool {
 		instance.populatePools();
 	}
 	
-	public static void init(ResourceObjectLoader rObjectLoader1) {
+	public static void init(DatabaseResourceObjectLoader rObjectLoader1) {
 		if (instance == null)
 			instance = new ResourceStorableObjectPool();
 		
