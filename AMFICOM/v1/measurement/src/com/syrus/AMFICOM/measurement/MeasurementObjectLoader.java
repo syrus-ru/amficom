@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementObjectLoader.java,v 1.4 2004/09/27 12:24:10 bob Exp $
+ * $Id: MeasurementObjectLoader.java,v 1.5 2004/09/28 06:30:07 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,7 +15,7 @@ import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.general.CommunicationException;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2004/09/27 12:24:10 $
+ * @version $Revision: 1.5 $, $Date: 2004/09/28 06:30:07 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -74,4 +74,57 @@ public interface MeasurementObjectLoader {
 
 	List loadTemporalPatterns(List ids) throws DatabaseException, CommunicationException;
 	
+	public void saveParameterType(Identifier ParameterType) throws DatabaseException, CommunicationException;
+
+	public void saveMeasurementType(Identifier MeasurementType) throws DatabaseException, CommunicationException;
+
+	public void saveAnalysisType(Identifier AnalysisType) throws DatabaseException, CommunicationException;
+
+	public void saveEvaluationType(Identifier EvaluationType) throws DatabaseException, CommunicationException;
+
+	public void saveSet(Identifier Set) throws DatabaseException, CommunicationException;
+
+	public void saveMeasurementSetup(Identifier MeasurementSetup) throws DatabaseException, CommunicationException;
+
+	public void saveModeling(Identifier Modeling) throws DatabaseException, CommunicationException;
+
+	public void saveMeasurement(Identifier Measurement) throws DatabaseException, CommunicationException;
+
+	public void saveAnalysis(Identifier Analysis) throws DatabaseException, CommunicationException;
+
+	public void saveEvaluation(Identifier Evaluation) throws DatabaseException, CommunicationException;
+
+	public void saveTest(Identifier Test) throws DatabaseException, CommunicationException;
+
+	public void saveResult(Identifier Result) throws DatabaseException, CommunicationException;
+
+	public void saveTemporalPattern(Identifier TemporalPattern) throws DatabaseException, CommunicationException;
+
+	public void saveParameterTypes(List list) throws DatabaseException, CommunicationException;
+
+	public void saveMeasurementTypes(List list) throws DatabaseException, CommunicationException;
+
+	public void saveAnalysisTypes(List list) throws DatabaseException, CommunicationException;
+
+	public void saveEvaluationTypes(List list) throws DatabaseException, CommunicationException;
+
+	public void saveSets(List list) throws DatabaseException, CommunicationException;
+
+	public void saveModelings(List list) throws DatabaseException, CommunicationException;
+
+	public void saveMeasurementSetups(List list) throws DatabaseException, CommunicationException;
+
+	public void saveMeasurements(List list) throws DatabaseException, CommunicationException;
+
+	public void saveAnalyses(List list) throws DatabaseException, CommunicationException;
+
+	public void saveEvaluations(List list) throws DatabaseException, CommunicationException;
+
+	public void saveTests(List list) throws DatabaseException, CommunicationException;
+
+	public void saveResults(List list) throws DatabaseException, CommunicationException;
+
+	public void saveTemporalPatterns(List list) throws DatabaseException, CommunicationException;
+
+
 }
