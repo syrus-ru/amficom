@@ -1,5 +1,5 @@
 /*
- * $Id: EventDatabaseContext.java,v 1.6 2005/02/28 15:31:46 arseniy Exp $
+ * $Id: EventDatabaseContext.java,v 1.7 2005/03/01 16:43:43 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,7 +12,7 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/02/28 15:31:46 $
+ * @version $Revision: 1.7 $, $Date: 2005/03/01 16:43:43 $
  * @author $Author: arseniy $
  * @module event_v1
  */
@@ -23,7 +23,6 @@ public class EventDatabaseContext {
 
 	protected static StorableObjectDatabase	eventDatabase;
 	protected static StorableObjectDatabase	eventSourceDatabase;
-	protected static StorableObjectDatabase	eventParameterDatabase;
 //	protected static StorableObjectDatabase	alarmDatabase;
 
 	private EventDatabaseContext() {
@@ -33,8 +32,7 @@ public class EventDatabaseContext {
 	public static void init(StorableObjectDatabase eventTypeDatabase1,
 //													StorableObjectDatabase alarmTypeDatabase1,
 													StorableObjectDatabase eventDatabase1,
-													StorableObjectDatabase eventSourceDatabase1,
-													StorableObjectDatabase eventParameterDatabase1
+													StorableObjectDatabase eventSourceDatabase1
 //													StorableObjectDatabase alarmDatabase1
 													) {
 
@@ -49,9 +47,6 @@ public class EventDatabaseContext {
 
 		if (eventSourceDatabase1 != null)
 			eventSourceDatabase = eventSourceDatabase1;
-
-		if (eventParameterDatabase1 != null)
-			eventParameterDatabase = eventParameterDatabase1;
 
 //		if (alarmDatabase1 != null)
 //			alarmDatabase = alarmDatabase1;
@@ -72,9 +67,6 @@ public class EventDatabaseContext {
 
 			case ObjectEntities.EVENTSOURCE_ENTITY_CODE:
 				return eventSourceDatabase;
-
-			case ObjectEntities.EVENTPARAMETER_ENTITY_CODE:
-				return eventParameterDatabase;
 
 //			case ObjectEntities.ALARMTYPE_ENTITY_CODE:
 //				return alarmTypeDatabase;
@@ -97,10 +89,6 @@ public class EventDatabaseContext {
 
 	public static StorableObjectDatabase getEventSourceDatabase() {
 		return eventSourceDatabase;
-	}
-
-	public static StorableObjectDatabase getEventParameterDatabase() {
-		return eventParameterDatabase;
 	}
 
 //	public static StorableObjectDatabase getAlarmTypeDatabase() {
