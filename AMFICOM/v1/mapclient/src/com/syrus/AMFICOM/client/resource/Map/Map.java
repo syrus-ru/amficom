@@ -1,5 +1,5 @@
 /**
- * $Id: Map.java,v 1.7 2004/10/05 12:29:12 krupenn Exp $
+ * $Id: Map.java,v 1.8 2004/10/06 09:19:20 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -36,7 +36,7 @@ import java.util.List;
  * 
  * 
  * 
- * @version $Revision: 1.7 $, $Date: 2004/10/05 12:29:12 $
+ * @version $Revision: 1.8 $, $Date: 2004/10/06 09:19:20 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -464,17 +464,12 @@ public final class Map extends StubResource implements Serializable
 		return null;//new MapModel(this);
 	}
 
-	public static ObjectResourcePropertiesPane getPropertyPane1()
-	{
-		return null;
-	}
+	private static final String PROPERTY_PANE_CLASS_NAME = 
+			"com.syrus.AMFICOM.Client.Map.Props.MapPanel";
 
-	/**
-	 * получить панель свойств
-	 */
-	public static PropertiesPanel getPropertyPane()
+	public static String getPropertyPaneClassName()
 	{
-		return null;//new MapPane();
+		return PROPERTY_PANE_CLASS_NAME;
 	}
 
 	/**

@@ -5,7 +5,7 @@ import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourceListBox;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourcePropertiesPane;
 import com.syrus.AMFICOM.Client.Map.Props.BindingLabel;
-import com.syrus.AMFICOM.Client.Map.UI.ReusedGridBagConstraints;
+import com.syrus.AMFICOM.Client.General.UI.ReusedGridBagConstraints;
 import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalLinkBinding;
 import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalLinkElement;
 import com.syrus.AMFICOM.Client.Resource.ObjectResource;
@@ -115,14 +115,14 @@ public final class MapLinkBindPanel extends JPanel implements ObjectResourceProp
 		topDownLabel.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/topdown.gif")));
 		leftRightLabel.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/leftright.gif")));
 		
-		this.add(titleLabel, ReusedGridBagConstraints.get(0, 0, 4, 1, 0.0, 1.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, null, 0, 0));
-		this.add(cableList, ReusedGridBagConstraints.get(0, 1, 1, 2, 0.0, 1.0, GridBagConstraints.WEST, GridBagConstraints.VERTICAL, null, 100, 150));
-		this.add(Box.createVerticalGlue(), ReusedGridBagConstraints.get(1, 1, 1, 2, 0.0, 1.0, GridBagConstraints.WEST, GridBagConstraints.VERTICAL, null, 10, 150));
+		this.add(titleLabel, com.syrus.AMFICOM.Client.General.UI.ReusedGridBagConstraints.get(0, 0, 4, 1, 0.0, 1.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, null, 0, 0));
+		this.add(cableList, com.syrus.AMFICOM.Client.General.UI.ReusedGridBagConstraints.get(0, 1, 1, 2, 0.0, 1.0, GridBagConstraints.WEST, GridBagConstraints.VERTICAL, null, 100, 150));
+		this.add(Box.createVerticalGlue(), com.syrus.AMFICOM.Client.General.UI.ReusedGridBagConstraints.get(1, 1, 1, 2, 0.0, 1.0, GridBagConstraints.WEST, GridBagConstraints.VERTICAL, null, 10, 150));
 //		this.add(Box.createGlue(), ReusedGridBagConstraints.get(2, 1, 1, 1, 0.0, 1.0, GridBagConstraints.WEST, GridBagConstraints.NONE, null, 0, 0));
-		this.add(leftRightLabel, ReusedGridBagConstraints.get(3, 1, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, null, 0, 0));
-		this.add(topDownLabel, ReusedGridBagConstraints.get(2, 2, 1, 1, 0.0, 0.0, GridBagConstraints.NORTH, GridBagConstraints.NONE, null, 0, 0));
-		this.add(tunnelLayout.getPanel(), ReusedGridBagConstraints.get(3, 2, 1, 1, 1.0, 1.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, null, 0, 0));
-		this.add(jPanel1, ReusedGridBagConstraints.get(0, 3, 4, 1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, null, 0, 0));
+		this.add(leftRightLabel, com.syrus.AMFICOM.Client.General.UI.ReusedGridBagConstraints.get(3, 1, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, null, 0, 0));
+		this.add(topDownLabel, com.syrus.AMFICOM.Client.General.UI.ReusedGridBagConstraints.get(2, 2, 1, 1, 0.0, 0.0, GridBagConstraints.NORTH, GridBagConstraints.NONE, null, 0, 0));
+		this.add(tunnelLayout.getPanel(), com.syrus.AMFICOM.Client.General.UI.ReusedGridBagConstraints.get(3, 2, 1, 1, 1.0, 1.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, null, 0, 0));
+		this.add(jPanel1, com.syrus.AMFICOM.Client.General.UI.ReusedGridBagConstraints.get(0, 3, 4, 1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, null, 0, 0));
 	}
 
 	public ObjectResource getObjectResource()

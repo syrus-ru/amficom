@@ -9,8 +9,6 @@ public class MapApplicationModel extends ApplicationModel
 {
 	public MapApplicationModel()
 	{
-		super();
-
 		add("menuMap");
 		add("menuMapNew");
 		add("menuMapOpen");

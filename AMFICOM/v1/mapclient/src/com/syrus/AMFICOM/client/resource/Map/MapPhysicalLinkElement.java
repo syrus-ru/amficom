@@ -1,5 +1,5 @@
 /**
- * $Id: MapPhysicalLinkElement.java,v 1.18 2004/09/30 13:37:00 krupenn Exp $
+ * $Id: MapPhysicalLinkElement.java,v 1.19 2004/10/06 09:19:20 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -47,7 +47,7 @@ import java.util.List;
  * 
  * 
  * 
- * @version $Revision: 1.18 $, $Date: 2004/09/30 13:37:00 $
+ * @version $Revision: 1.19 $, $Date: 2004/10/06 09:19:20 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -342,14 +342,9 @@ public class MapPhysicalLinkElement extends MapLinkElement implements Serializab
 	private static final String PROPERTY_PANE_CLASS_NAME = 
 			"com.syrus.AMFICOM.Client.Map.Props.MapLinkPane";
 
-	public String getPropertyPaneClassName()
+	public static String getPropertyPaneClassName()
 	{
 		return PROPERTY_PANE_CLASS_NAME;
-	}
-
-	public static PropertiesPanel getPropertyPane()
-	{
-		return null;
 	}
 
 	public String getToolTipText()

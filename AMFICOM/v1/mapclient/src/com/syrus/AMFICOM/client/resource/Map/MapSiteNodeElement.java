@@ -1,5 +1,5 @@
 /**
- * $Id: MapSiteNodeElement.java,v 1.9 2004/09/29 15:03:34 krupenn Exp $
+ * $Id: MapSiteNodeElement.java,v 1.10 2004/10/06 09:19:20 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -40,7 +40,7 @@ import java.util.Iterator;
  * 
  * 
  * 
- * @version $Revision: 1.9 $, $Date: 2004/09/29 15:03:34 $
+ * @version $Revision: 1.10 $, $Date: 2004/10/06 09:19:20 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -286,16 +286,11 @@ public class MapSiteNodeElement extends MapNodeElement implements Serializable
 	private static final String PROPERTY_PANE_CLASS_NAME = 
 			"com.syrus.AMFICOM.Client.Map.Props.MapSitePane";
 
-	public String getPropertyPaneClassName()
+	public static String getPropertyPaneClassName()
 	{
 		return PROPERTY_PANE_CLASS_NAME;
 	}
 	
-	public static PropertiesPanel getPropertyPane()
-	{
-		return null;//new MapEquipmentPane();
-	}
-
 	//Проверка того что объект можно перемещать
 	public boolean isMovable()
 	{

@@ -70,7 +70,7 @@ public class RISDMapDataSource
 
 		try
 		{
-			ecode = ((RISDSessionInfo )getSession()).ci.server.LoadStatedAttributeTypes(
+			ecode = ((RISDSessionInfo )getSession()).ci.getServer().LoadStatedAttributeTypes(
 					((RISDSessionInfo )getSession()).accessIdentity, 
 					ids, 
 					ath);
@@ -128,7 +128,7 @@ public class RISDMapDataSource
 
 		try
 		{
-			ecode = si.ci.server.GetMapProtoElements(si.accessIdentity, ih, peh, lh);
+			ecode = si.ci.getServer().GetMapProtoElements(si.accessIdentity, ih, peh, lh);
 		}
 		catch (Exception ex)
 		{
@@ -207,7 +207,7 @@ public class RISDMapDataSource
 
 		try
 		{
-			ecode = ((RISDSessionInfo )getSession()).ci.server.GetStatedMapProtoElements(
+			ecode = ((RISDSessionInfo )getSession()).ci.getServer().GetStatedMapProtoElements(
 					((RISDSessionInfo )getSession()).accessIdentity, 
 					eids, 
 					lids, 
@@ -307,7 +307,7 @@ public class RISDMapDataSource
 
 		try
 		{
-			ecode = ((RISDSessionInfo )getSession()).ci.server.SaveMapProtoElements(
+			ecode = ((RISDSessionInfo )getSession()).ci.getServer().SaveMapProtoElements(
 					((RISDSessionInfo )getSession()).accessIdentity, 
 					images,
 					mpes,
@@ -337,7 +337,7 @@ public class RISDMapDataSource
 		int ecode;
 		try
 		{
-			ecode = ((RISDSessionInfo )getSession()).ci.server.RemoveMapProtoElements(
+			ecode = ((RISDSessionInfo )getSession()).ci.getServer().RemoveMapProtoElements(
 					((RISDSessionInfo )getSession()).accessIdentity,
 					nids, 
 					lids);
@@ -378,7 +378,7 @@ public class RISDMapDataSource
 
 		try
 		{
-			ecode = si.ci.server.SaveMapProtoElements(
+			ecode = si.ci.getServer().SaveMapProtoElements(
 					si.accessIdentity, 
 					images,
 					mpgs,
@@ -409,7 +409,7 @@ public class RISDMapDataSource
 		String []pids = new String[0];
 		try
 		{
-			ecode = si.ci.server.RemoveMapProtoElements(si.accessIdentity, ids, pids);
+			ecode = si.ci.getServer().RemoveMapProtoElements(si.accessIdentity, ids, pids);
 		}
 		catch (Exception ex)
 		{
@@ -472,7 +472,7 @@ public class RISDMapDataSource
 
 		try
 		{
-			ecode = ((RISDSessionInfo )getSession()).ci.server.GetStatedMaps(
+			ecode = ((RISDSessionInfo )getSession()).ci.getServer().GetStatedMaps(
 					((RISDSessionInfo )getSession()).accessIdentity, 
 					ids, 
 					ih, 
@@ -679,7 +679,7 @@ public class RISDMapDataSource
 
 		try
 		{
-			ecode = ((RISDSessionInfo )getSession()).ci.server.SaveMaps(
+			ecode = ((RISDSessionInfo )getSession()).ci.getServer().SaveMaps(
 					((RISDSessionInfo )getSession()).accessIdentity,
 					images,
 					maps,
@@ -723,7 +723,7 @@ public class RISDMapDataSource
 
 		try
 		{
-			ecode = ((RISDSessionInfo )getSession()).ci.server.RemoveMaps(
+			ecode = ((RISDSessionInfo )getSession()).ci.getServer().RemoveMaps(
 					((RISDSessionInfo )getSession()).accessIdentity,
 					maps,
 					leer,
@@ -805,7 +805,7 @@ public class RISDMapDataSource
 
 		try
 		{
-			ecode = ((RISDSessionInfo )getSession()).ci.server.RemoveMaps(
+			ecode = ((RISDSessionInfo )getSession()).ci.getServer().RemoveMaps(
 					((RISDSessionInfo )getSession()).accessIdentity,
 					maps,
 					sites,
