@@ -1,5 +1,5 @@
 /*
- * $Id: ModelingDatabase.java,v 1.18 2005/01/14 18:09:56 arseniy Exp $
+ * $Id: ModelingDatabase.java,v 1.19 2005/01/26 15:38:41 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,7 +33,7 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2005/01/14 18:09:56 $
+ * @version $Revision: 1.19 $, $Date: 2005/01/26 15:38:41 $
  * @author $Author: arseniy $
  * @module module_name
  */
@@ -140,7 +140,7 @@ public class ModelingDatabase extends StorableObjectDatabase {
 	}
 
   public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
-//        Modeling modeling = this.fromStorableObject(storableObject);
+  	Modeling modeling = this.fromStorableObject(storableObject);
     switch (retrieveKind) {
 			default:
 				return null;

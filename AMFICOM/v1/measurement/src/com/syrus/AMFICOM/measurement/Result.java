@@ -1,5 +1,5 @@
 /*
-al * $Id: Result.java,v 1.33 2005/01/21 17:04:03 arseniy Exp $
+al * $Id: Result.java,v 1.34 2005/01/26 15:38:41 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,7 +30,7 @@ import com.syrus.AMFICOM.measurement.corba.Result_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.33 $, $Date: 2005/01/21 17:04:03 $
+ * @version $Revision: 1.34 $, $Date: 2005/01/26 15:38:41 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -40,7 +40,6 @@ public class Result extends StorableObject {
 	 * Comment for <code>serialVersionUID</code>
 	 */
 	private static final long	serialVersionUID	= 3256999964965286967L;
-	private Measurement measurement;
 	private Action action;
 	private int sort;
 	private SetParameter[] parameters;
@@ -66,16 +65,14 @@ public class Result extends StorableObject {
 		switch (this.sort) {
 			case ResultSort._RESULT_SORT_MEASUREMENT:
 				try {
-					this.measurement = (Measurement)MeasurementStorableObjectPool.getStorableObject(new Identifier(rt.measurement_id), true);
+					this.action = (Measurement)MeasurementStorableObjectPool.getStorableObject(new Identifier(rt.measurement_id), true);
 				}
 				catch (ApplicationException ae) {
 					throw new CreateObjectException("Cannot create result -- " + ae.getMessage(), ae);
-				}
-				this.action = this.measurement;			
+				}			
 				break;
 			case ResultSort._RESULT_SORT_ANALYSIS:
 				try {
-					this.measurement = (Measurement)MeasurementStorableObjectPool.getStorableObject(new Identifier(rt.measurement_id), true);
 					this.action = (Analysis)MeasurementStorableObjectPool.getStorableObject(new Identifier(rt.analysis_id), true);
 				}
 				catch (ApplicationException ae) {
@@ -84,7 +81,6 @@ public class Result extends StorableObject {
 				break;
 			case ResultSort._RESULT_SORT_EVALUATION:
 				try {
-					this.measurement = (Measurement)MeasurementStorableObjectPool.getStorableObject(new Identifier(rt.measurement_id), true);
 					this.action = (Evaluation)MeasurementStorableObjectPool.getStorableObject(new Identifier(rt.evaluation_id), true);
 				}
 				catch (ApplicationException ae) {
@@ -117,17 +113,14 @@ public class Result extends StorableObject {
 
 	protected Result(Identifier id,
 								 Identifier creatorId,
-								 Measurement measurement,
 								 Action action,
 								 int sort,
 								 SetParameter[] parameters) {
-		super(id);
-		long time = System.currentTimeMillis();
-		super.created = new Date(time);
-		super.modified = new Date(time);
-		super.creatorId = creatorId;
-		super.modifierId = creatorId;
-		this.measurement = measurement;
+		super(id,
+				new Date(System.currentTimeMillis()),
+				new Date(System.currentTimeMillis()),
+				creatorId,
+				creatorId);
 		this.action = action;
 		this.sort = sort;
 		this.parameters = parameters;
@@ -152,20 +145,16 @@ public class Result extends StorableObject {
 		for (int i = 0; i < pts.length; i++)
 			pts[i] = (Parameter_Transferable)this.parameters[i].getTransferable();
 		return new Result_Transferable(super.getHeaderTransferable(),
-									   (this.sort != ResultSort._RESULT_SORT_MODELING)?(Identifier_Transferable)this.measurement.getId().getTransferable():(new Identifier_Transferable("")),
-									   (this.sort == ResultSort._RESULT_SORT_ANALYSIS)?(Identifier_Transferable)this.action.getId().getTransferable():(new Identifier_Transferable("")),
-									   (this.sort == ResultSort._RESULT_SORT_EVALUATION)?(Identifier_Transferable)this.action.getId().getTransferable():(new Identifier_Transferable("")),
-									   (this.sort == ResultSort._RESULT_SORT_MODELING)?(Identifier_Transferable)this.action.getId().getTransferable():(new Identifier_Transferable("")),
+									   (this.sort == ResultSort._RESULT_SORT_MEASUREMENT) ? (Identifier_Transferable) this.action.getId().getTransferable() : (new Identifier_Transferable("")),
+									   (this.sort == ResultSort._RESULT_SORT_ANALYSIS) ? (Identifier_Transferable) this.action.getId().getTransferable() : (new Identifier_Transferable("")),
+									   (this.sort == ResultSort._RESULT_SORT_EVALUATION) ? (Identifier_Transferable) this.action.getId().getTransferable() : (new Identifier_Transferable("")),
+									   (this.sort == ResultSort._RESULT_SORT_MODELING) ? (Identifier_Transferable) this.action.getId().getTransferable() : (new Identifier_Transferable("")),
 									   ResultSort.from_int(this.sort),
 									   pts);
 	}
 
-    public short getEntityCode() {
-        return ObjectEntities.RESULT_ENTITY_CODE;
-    }
-    
-	public Measurement getMeasurement() {
-		return this.measurement;
+	public short getEntityCode() {
+		return ObjectEntities.RESULT_ENTITY_CODE;
 	}
 
 	public Action getAction() {
@@ -184,14 +173,12 @@ public class Result extends StorableObject {
 											  Date modified,
 											  Identifier creatorId,
 											  Identifier modifierId,
-											  Measurement measurement,
 											  Action action,
 											  int sort) {
 		super.setAttributes(created,
 			modified,
 			creatorId,
 			modifierId);
-		this.measurement = measurement;
 		this.action = action;
 		this.sort = sort;
 	}
@@ -201,27 +188,26 @@ public class Result extends StorableObject {
 	}
 
 	protected static Result createInstance(Identifier creatorId,
-										   Measurement measurement,
 										   Action action,
 										   ResultSort sort,
 										   SetParameter[] parameters) throws CreateObjectException {
-		if (creatorId == null || measurement == null || action == null || sort == null ||
+		if (creatorId == null || action == null || sort == null ||
 				parameters == null || parameters.length == 0)
 			throw new IllegalArgumentException("Argument is 'null'");
-		
+
 		try {
 			return new Result(IdentifierPool.getGeneratedIdentifier(ObjectEntities.RESULT_ENTITY_CODE),
 				creatorId,
-				measurement,
 				action,
 				sort.value(),
 				parameters);
-		} catch (IllegalObjectEntityException e) {
+		}
+		catch (IllegalObjectEntityException e) {
 			throw new CreateObjectException("Result.createInstance | cannot generate identifier ", e);
 		}
 	}
-	
+
 	public List getDependencies() {		
-		return Collections.singletonList(this.measurement);
+		return Collections.singletonList(this.action);
 	}
 }

@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisDatabase.java,v 1.33 2005/01/14 18:09:56 arseniy Exp $
+ * $Id: AnalysisDatabase.java,v 1.34 2005/01/26 15:38:40 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -19,6 +19,7 @@ import com.syrus.AMFICOM.administration.DomainCondition;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
+import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
@@ -32,7 +33,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.33 $, $Date: 2005/01/14 18:09:56 $
+ * @version $Revision: 1.34 $, $Date: 2005/01/26 15:38:40 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -41,6 +42,7 @@ public class AnalysisDatabase extends StorableObjectDatabase {
 
 	public static final String COLUMN_TYPE_ID = "type_id";
 	public static final String COLUMN_MONITORED_ELEMENT_ID = "monitored_element_id";
+	public static final String COLUMN_MEASUREMENT_ID = "measurement_id";
 	public static final String COLUMN_CRITERIA_SET_ID = "criteria_set_id";
 
 	private static String columns;
@@ -67,14 +69,16 @@ public class AnalysisDatabase extends StorableObjectDatabase {
 			columns = super.getColumns(mode) + COMMA
 				+ COLUMN_TYPE_ID + COMMA
 				+ COLUMN_MONITORED_ELEMENT_ID + COMMA
+				+ COLUMN_MEASUREMENT_ID + COMMA
 				+ COLUMN_CRITERIA_SET_ID;
 		}
 		return columns;
-	}	
+	}
 
 	protected String getUpdateMultiplySQLValues(int mode) {
 		if (updateMultiplySQLValues == null) {
 			updateMultiplySQLValues = super.getUpdateMultiplySQLValues(mode) + COMMA
+				+ QUESTION + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION;
@@ -82,13 +86,27 @@ public class AnalysisDatabase extends StorableObjectDatabase {
 		return updateMultiplySQLValues;
 	}
 
+	protected String getUpdateSingleSQLValues(StorableObject storableObject)
+			throws IllegalDataException, UpdateObjectException {
+		Analysis analysis = this.fromStorableObject(storableObject);
+		Measurement measurement = analysis.getMeasurement();
+		String values = super.getUpdateSingleSQLValues(storableObject) + COMMA
+			+ DatabaseIdentifier.toSQLString(analysis.getType().getId()) + COMMA
+			+ DatabaseIdentifier.toSQLString(analysis.getMonitoredElementId()) + COMMA
+			+ ((measurement != null) ? (DatabaseIdentifier.toSQLString(measurement.getId())) : "") + COMMA
+			+ DatabaseIdentifier.toSQLString(analysis.getCriteriaSet().getId());
+		return values;
+	}
+
 	protected int setEntityForPreparedStatement(StorableObject storableObject, PreparedStatement preparedStatement, int mode)
 			throws IllegalDataException, UpdateObjectException {
 		Analysis analysis = this.fromStorableObject(storableObject);
+		Measurement measurement = analysis.getMeasurement();
 		int i = super.setEntityForPreparedStatement(storableObject, preparedStatement, mode);
 		try {
 			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, analysis.getType().getId()); 
-			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, analysis.getMonitoredElementId()); 
+			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, analysis.getMonitoredElementId());
+			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, (measurement != null) ? measurement.getId() : null);
 			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, analysis.getCriteriaSet().getId());
 		}
 		catch (SQLException sqle) {
@@ -97,26 +115,25 @@ public class AnalysisDatabase extends StorableObjectDatabase {
 		return i;
 	}
 
-	protected String getUpdateSingleSQLValues(StorableObject storableObject)
-			throws IllegalDataException, UpdateObjectException {
-		Analysis analysis = this.fromStorableObject(storableObject);
-		String values = super.getUpdateSingleSQLValues(storableObject) + COMMA
-			+ DatabaseIdentifier.toSQLString(analysis.getType().getId()) + COMMA
-			+ DatabaseIdentifier.toSQLString(analysis.getMonitoredElementId()) + COMMA
-			+ DatabaseIdentifier.toSQLString(analysis.getCriteriaSet().getId());
-		return values;
-	}
-
 	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
 			throws IllegalDataException, RetrieveObjectException, SQLException {
 		Analysis analysis = (storableObject == null) ? 
-				new Analysis(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID), null, null, null, null) : 
+				new Analysis(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID),
+								null,
+								null,
+								null,
+								null,
+								null) : 
 					this.fromStorableObject(storableObject);
 		AnalysisType analysisType;
+		Measurement measurement = null;
 		Set criteriaSet;
 		try {
-			analysisType = (AnalysisType)MeasurementStorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_TYPE_ID), true);			
-			criteriaSet = (Set)MeasurementStorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_CRITERIA_SET_ID), true);
+			analysisType = (AnalysisType) MeasurementStorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_TYPE_ID), true);
+			Identifier measurementId = DatabaseIdentifier.getIdentifier(resultSet, COLUMN_MEASUREMENT_ID);
+			if (measurementId != null)
+				measurement = (Measurement) MeasurementStorableObjectPool.getStorableObject(measurementId, true);
+			criteriaSet = (Set) MeasurementStorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_CRITERIA_SET_ID), true);
 		}
 		catch (ApplicationException ae) {
 			throw new RetrieveObjectException(ae);
@@ -127,7 +144,8 @@ public class AnalysisDatabase extends StorableObjectDatabase {
 							   DatabaseIdentifier.getIdentifier(resultSet, COLUMN_MODIFIER_ID),
 							   analysisType,
 							   DatabaseIdentifier.getIdentifier(resultSet, COLUMN_MONITORED_ELEMENT_ID),
-							   criteriaSet);		
+							   measurement,
+							   criteriaSet);
 		return analysis;
 	}
 
@@ -188,13 +206,14 @@ public class AnalysisDatabase extends StorableObjectDatabase {
 				+ SQL_SELECT + COLUMN_ID + SQL_FROM + ObjectEntities.ME_ENTITY + SQL_WHERE
 				+ DomainMember.COLUMN_DOMAIN_ID + EQUALS + DatabaseIdentifier.toSQLString(domain.getId())
 			+ CLOSE_BRACKET;
-		
+
 		try {
 			list = retrieveButIds(ids, condition);
-		}  catch (IllegalDataException ide) {			
+		}
+		catch (IllegalDataException ide) {
 			Log.debugMessage("AnalysisDatabase.retrieveButIdsByDomain | Error: " + ide.getMessage(), Log.DEBUGLEVEL09);
 		}
-		
+
 		return list;
 	}
 

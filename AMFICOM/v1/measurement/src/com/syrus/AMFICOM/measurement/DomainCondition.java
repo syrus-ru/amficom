@@ -1,5 +1,5 @@
 /*
- * $Id: DomainCondition.java,v 1.9 2005/01/14 18:09:56 arseniy Exp $
+ * $Id: DomainCondition.java,v 1.10 2005/01/26 15:38:40 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,7 +25,7 @@ import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/01/14 18:09:56 $
+ * @version $Revision: 1.10 $, $Date: 2005/01/26 15:38:40 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -145,18 +145,19 @@ public class DomainCondition extends com.syrus.AMFICOM.administration.DomainCond
 						}
 					}
 					break;
-				case ObjectEntities.RESULT_ENTITY_CODE:
-					Result result = (Result) storableObject;
-					Measurement measurement2 = result.getMeasurement();
-					{
-						MonitoredElement me = (MonitoredElement) ConfigurationStorableObjectPool.getStorableObject(measurement2.getMonitoredElementId(), true);
-						Domain meDomain = (Domain) AdministrationStorableObjectPool.getStorableObject(me.getDomainId(), true);
-						if (meDomain.isChild(domain)) {
-							condition = true;
-							break;
-						}
-					}
-					break;
+//	FIXME Maybe this clause not needed
+//				case ObjectEntities.RESULT_ENTITY_CODE:
+//					Result result = (Result) storableObject;
+//					Measurement measurement2 = result.getMeasurement();
+//					{
+//						MonitoredElement me = (MonitoredElement) ConfigurationStorableObjectPool.getStorableObject(measurement2.getMonitoredElementId(), true);
+//						Domain meDomain = (Domain) AdministrationStorableObjectPool.getStorableObject(me.getDomainId(), true);
+//						if (meDomain.isChild(domain)) {
+//							condition = true;
+//							break;
+//						}
+//					}
+//					break;
 				default:
 					condition = super.isConditionTrue(object);
 			}

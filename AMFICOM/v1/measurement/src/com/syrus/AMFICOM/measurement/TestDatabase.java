@@ -1,5 +1,5 @@
 /*
- * $Id: TestDatabase.java,v 1.57 2005/01/14 18:09:56 arseniy Exp $
+ * $Id: TestDatabase.java,v 1.58 2005/01/26 15:38:41 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,50 +9,50 @@
 package com.syrus.AMFICOM.measurement;
 
 import java.sql.Connection;
-import java.sql.Statement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.sql.Timestamp;
-import java.util.Date;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import com.syrus.AMFICOM.administration.Domain;
+import com.syrus.AMFICOM.administration.DomainMember;
+import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
+import com.syrus.AMFICOM.configuration.KISWrapper;
+import com.syrus.AMFICOM.configuration.MeasurementPortWrapper;
+import com.syrus.AMFICOM.configuration.MonitoredElement;
+import com.syrus.AMFICOM.configuration.MonitoredElementWrapper;
+import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.DatabaseIdentifier;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.ObjectNotFoundException;
+import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.general.StorableObject;
+import com.syrus.AMFICOM.general.StorableObjectCondition;
+import com.syrus.AMFICOM.general.StorableObjectDatabase;
+import com.syrus.AMFICOM.general.UpdateObjectException;
+import com.syrus.AMFICOM.general.VersionCollisionException;
+import com.syrus.AMFICOM.measurement.corba.MeasurementStatus;
+import com.syrus.AMFICOM.measurement.corba.ResultSort;
+import com.syrus.AMFICOM.measurement.corba.TestStatus;
+import com.syrus.AMFICOM.measurement.corba.TestTemporalType;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
-import com.syrus.AMFICOM.general.DatabaseIdentifier;
-import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.StorableObject;
-import com.syrus.AMFICOM.general.StorableObjectCondition;
-import com.syrus.AMFICOM.general.StorableObjectDatabase;
-import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.RetrieveObjectException;
-import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.UpdateObjectException;
-import com.syrus.AMFICOM.general.ObjectNotFoundException;
-import com.syrus.AMFICOM.general.VersionCollisionException;
-import com.syrus.AMFICOM.measurement.corba.MeasurementStatus;
-import com.syrus.AMFICOM.measurement.corba.TestStatus;
-import com.syrus.AMFICOM.measurement.corba.ResultSort;
-import com.syrus.AMFICOM.measurement.corba.TestTemporalType;
-import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
-import com.syrus.AMFICOM.administration.Domain;
-import com.syrus.AMFICOM.administration.DomainMember;
-import com.syrus.AMFICOM.configuration.MonitoredElement;
-import com.syrus.AMFICOM.configuration.MonitoredElementDatabase;
-import com.syrus.AMFICOM.configuration.MeasurementPortDatabase;
-import com.syrus.AMFICOM.configuration.KISDatabase;
 
 /**
- * @version $Revision: 1.57 $, $Date: 2005/01/14 18:09:56 $
+ * @version $Revision: 1.58 $, $Date: 2005/01/26 15:38:41 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -764,15 +764,15 @@ public class TestDatabase extends StorableObjectDatabase {
 				+ SQL_SELECT
 				+ COLUMN_ID
 				+ SQL_FROM + ObjectEntities.ME_ENTITY
-				+ SQL_WHERE + MonitoredElementDatabase.COLUMN_MEASUREMENT_PORT_ID + SQL_IN + OPEN_BRACKET
+				+ SQL_WHERE + MonitoredElementWrapper.COLUMN_MEASUREMENT_PORT_ID + SQL_IN + OPEN_BRACKET
 					+ SQL_SELECT
 					+ COLUMN_ID
 					+ SQL_FROM + ObjectEntities.MEASUREMENTPORT_ENTITY
-					+ SQL_WHERE + MeasurementPortDatabase.COLUMN_KIS_ID + SQL_IN + OPEN_BRACKET
+					+ SQL_WHERE + MeasurementPortWrapper.COLUMN_KIS_ID + SQL_IN + OPEN_BRACKET
 						+ SQL_SELECT
 						+ COLUMN_ID
 						+ SQL_FROM + ObjectEntities.KIS_ENTITY
-						+ SQL_WHERE + KISDatabase.COLUMN_MCM_ID + EQUALS + mcmIdStr
+						+ SQL_WHERE + KISWrapper.COLUMN_MCM_ID + EQUALS + mcmIdStr
 					+ CLOSE_BRACKET
 				+ CLOSE_BRACKET
 			+ CLOSE_BRACKET

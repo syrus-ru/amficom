@@ -1,5 +1,5 @@
 /*
- * $Id: ResultCondition.java,v 1.7 2005/01/14 18:09:56 arseniy Exp $
+ * $Id: ResultCondition.java,v 1.8 2005/01/26 15:38:41 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,9 +22,10 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.corba.ResultCondition_Transferable;
+import com.syrus.AMFICOM.measurement.corba.ResultSort;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/01/14 18:09:56 $
+ * @version $Revision: 1.8 $, $Date: 2005/01/26 15:38:41 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -59,9 +60,9 @@ public class ResultCondition implements StorableObjectCondition {
 
 	public boolean isConditionTrue(Object object) throws ApplicationException {
 		boolean condition = false;
-		if (object instanceof Result) {
+		if (object instanceof Result && ((Result) object).getSort().value() == ResultSort._RESULT_SORT_MEASUREMENT) {
 			Result result = (Result) object;
-			Test test = (Test)MeasurementStorableObjectPool.getStorableObject(result.getMeasurement().getTestId(), true);
+			Test test = (Test)MeasurementStorableObjectPool.getStorableObject(((Measurement) result.getAction()).getTestId(), true);
 			if ((test.getStartTime().getTime() >= this.start.getTime())
 					&& (test.getEndTime().getTime() <= this.end.getTime())
 					&& ((this.domain == null) || ((this.domain != null) && test

@@ -1,5 +1,5 @@
 /*
- * $Id: ResultSortCondition.java,v 1.5 2004/12/07 10:59:48 bass Exp $
+ * $Id: ResultSortCondition.java,v 1.6 2005/01/26 15:38:41 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -19,20 +19,19 @@ import com.syrus.AMFICOM.measurement.corba.ResultSort;
 import com.syrus.AMFICOM.measurement.corba.ResultSortCondition_Transferable;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2004/12/07 10:59:48 $
- * @author $Author: bass $
+ * @version $Revision: 1.6 $, $Date: 2005/01/26 15:38:41 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 public class ResultSortCondition implements StorableObjectCondition {
 
-	private static ResultSortCondition	instance	= null;
-	private static boolean				initialized	= false;
-	private static Object				lock		= new Object();
+	private static ResultSortCondition instance = null;
+	private static boolean initialized = false;
+	private static Object lock = new Object();
+	private Short entityCode = new Short(ObjectEntities.RESULT_ENTITY_CODE);
 
-	private Short						entityCode	= new Short(ObjectEntities.RESULT_ENTITY_CODE);
-
-	private Identifier					measurementId;
-	private ResultSort					resultSort;
+	private Identifier measurementId;
+	private ResultSort resultSort;
 
 	private ResultSortCondition() {
 		// empty
@@ -51,7 +50,7 @@ public class ResultSortCondition implements StorableObjectCondition {
 		return instance;
 	}
 	
-	public ResultSortCondition(ResultSortCondition_Transferable transferable){
+	public ResultSortCondition(ResultSortCondition_Transferable transferable) {
 		this.setEntityCode(transferable.entity_code);
 		this.measurementId = new Identifier(transferable.measurement_id);
 		this.resultSort = transferable.sort;

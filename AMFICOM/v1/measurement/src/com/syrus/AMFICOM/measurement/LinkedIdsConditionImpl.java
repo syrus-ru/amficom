@@ -1,5 +1,5 @@
 /*
- * $Id: LinkedIdsConditionImpl.java,v 1.2 2005/01/19 20:52:56 arseniy Exp $
+ * $Id: LinkedIdsConditionImpl.java,v 1.3 2005/01/26 15:38:40 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -19,18 +19,17 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ParameterType;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/01/19 20:52:56 $
+ * @version $Revision: 1.3 $, $Date: 2005/01/26 15:38:40 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
 class LinkedIdsConditionImpl extends com.syrus.AMFICOM.general.LinkedIdsCondition {
-
-	protected static final Short		ANALYSISTYPE_SHORT		= new Short(ObjectEntities.ANALYSISTYPE_ENTITY_CODE);
-	protected static final Short		EVALUATIONTYPE_SHORT	= new Short(ObjectEntities.EVALUATIONTYPE_ENTITY_CODE);
-	protected static final Short		MEASUREMENT_SHORT		= new Short(ObjectEntities.MEASUREMENT_ENTITY_CODE);
-	protected static final Short		RESULT_SHORT			= new Short(ObjectEntities.RESULT_ENTITY_CODE);
-	protected static final Short		MEASUREMENTTYPE_SHORT	= new Short(ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE);
-	protected static final Short		MS_SHORT				= new Short(ObjectEntities.MS_ENTITY_CODE);
+	protected static final Short ANALYSISTYPE_SHORT = new Short(ObjectEntities.ANALYSISTYPE_ENTITY_CODE);
+	protected static final Short EVALUATIONTYPE_SHORT = new Short(ObjectEntities.EVALUATIONTYPE_ENTITY_CODE);
+	protected static final Short MEASUREMENT_SHORT = new Short(ObjectEntities.MEASUREMENT_ENTITY_CODE);
+	protected static final Short RESULT_SHORT = new Short(ObjectEntities.RESULT_ENTITY_CODE);
+	protected static final Short MEASUREMENTTYPE_SHORT = new Short(ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE);
+	protected static final Short MS_SHORT = new Short(ObjectEntities.MS_ENTITY_CODE);
 	
 	private LinkedIdsConditionImpl(List linkedIds, Short entityCode) {
 		this.linkedIds = linkedIds;
@@ -143,26 +142,6 @@ class LinkedIdsConditionImpl extends com.syrus.AMFICOM.general.LinkedIdsConditio
 					}
 				}
 				break;
-			case ObjectEntities.RESULT_ENTITY_CODE:
-				if (object instanceof Result) {
-					Identifier resultMeasurementId = ((Result)object).getMeasurement().getId();
-					if (this.linkedIds == null) {
-						Identifier id = this.identifier;
-						if (id.equals(resultMeasurementId)) {
-							condition = true;
-							break;
-						}
-					} else {
-						for (Iterator it = this.linkedIds.iterator(); it.hasNext();) {
-							Identifier measurementId = (Identifier) it.next();
-							if (measurementId.equals(resultMeasurementId)) {
-								condition = true;
-								break;
-							}
-						}
-					}
-				}
-				break;
 			case ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE:
 				if (object instanceof MeasurementType) {
 					MeasurementType measurementType = (MeasurementType) object;
@@ -217,10 +196,8 @@ class LinkedIdsConditionImpl extends com.syrus.AMFICOM.general.LinkedIdsConditio
 						code = this.identifier.getMajor();
 						objectList = Collections.singletonList(this.identifier);
 					}
-					
-					 
-					
-					switch(code){
+
+					switch(code) {
 						case ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE:
 						{
 							for (Iterator iter = objectList.iterator(); iter.hasNext();) {
@@ -315,7 +292,7 @@ class LinkedIdsConditionImpl extends com.syrus.AMFICOM.general.LinkedIdsConditio
 		}
 
 	}
-	
+
 	public boolean isNeedMore(List list) {		
 		return true;
 	}

@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisType.java,v 1.46 2005/01/26 10:57:57 arseniy Exp $
+ * $Id: AnalysisType.java,v 1.47 2005/01/26 15:38:40 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,14 +31,18 @@ import com.syrus.AMFICOM.measurement.corba.AnalysisType_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.46 $, $Date: 2005/01/26 10:57:57 $
+ * @version $Revision: 1.47 $, $Date: 2005/01/26 15:38:40 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
 
 public class AnalysisType extends ActionType {
+	/**
+	 * Comment for <code>serialVersionUID</code>
+	 */
+	private static final long serialVersionUID = 3256722866476495413L;
 
-	private static final long	serialVersionUID	= 3257284751344874800L;
+	public static final String CODENAME_DADARA = "dadara";
 
 	private List inParameterTypes;
 	private List criteriaParameterTypes;

@@ -1,5 +1,5 @@
 /*
- * $Id: Action.java,v 1.17 2005/01/12 13:34:13 arseniy Exp $
+ * $Id: Action.java,v 1.18 2005/01/26 15:38:40 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,7 +16,7 @@ import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2005/01/12 13:34:13 $
+ * @version $Revision: 1.18 $, $Date: 2005/01/26 15:38:40 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -27,25 +27,31 @@ public abstract class Action extends StorableObject implements TypedObject {
 	ActionType type;
 	Identifier monitoredElementId;
 
+	Action parentAction;
+
 	Action(Identifier id) {
 		super(id);
 	}
 
 	Action(StorableObject_Transferable transferable,
 				  ActionType type,
-				  Identifier monitoredElementId) {
+				  Identifier monitoredElementId,
+				  Action parentAction) {
 		super(transferable);
 		this.type = type;
 		this.monitoredElementId = monitoredElementId;
+
+		this.parentAction = parentAction;
 	}
-	
+
 	Action(Identifier id,
 				  Date created,
 				  Date modified,
 				  Identifier creatorId,
 				  Identifier modifierId,
 				  ActionType type,
-				  Identifier monitoredElementId) {
+				  Identifier monitoredElementId,
+				  Action parentAction) {
 		super(id,
 					created,
 					modified,
@@ -53,6 +59,8 @@ public abstract class Action extends StorableObject implements TypedObject {
 					modifierId);
 		this.type = type;
 		this.monitoredElementId = monitoredElementId;
+
+		this.parentAction = parentAction;
 
 		super.currentVersion = super.getNextVersion();
 	}
@@ -70,20 +78,18 @@ public abstract class Action extends StorableObject implements TypedObject {
 											  Identifier creatorId,
 											  Identifier modifierId,
 											  ActionType type,
-											  Identifier monitoredElementId) {
+											  Identifier monitoredElementId,
+											  Action parentAction) {
 		super.setAttributes(created,
 			modified,
 			creatorId,
 			modifierId);
 		this.type = type;
 		this.monitoredElementId = monitoredElementId;
+
+		this.parentAction = parentAction;
 	}
 
-	public abstract Result createResult(Identifier creatorId,
-										Measurement measurement,
-										SetParameter[] parameters) throws CreateObjectException;
-	
-	public abstract Result createResult(Identifier creatorId,
-										SetParameter[] parameters) throws CreateObjectException;
+	public abstract Result createResult(Identifier resultCreatorId, SetParameter[] parameters) throws CreateObjectException;
 
 }

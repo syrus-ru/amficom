@@ -1,5 +1,5 @@
 /*
- * $Id: Evaluation.java,v 1.39 2005/01/12 13:34:13 arseniy Exp $
+ * $Id: Evaluation.java,v 1.40 2005/01/26 15:38:40 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,8 +8,8 @@
 
 package com.syrus.AMFICOM.measurement;
 
-import java.util.Collections;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -27,7 +27,7 @@ import com.syrus.AMFICOM.measurement.corba.Evaluation_Transferable;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
 
 /**
- * @version $Revision: 1.39 $, $Date: 2005/01/12 13:34:13 $
+ * @version $Revision: 1.40 $, $Date: 2005/01/26 15:38:40 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -57,10 +57,12 @@ public class Evaluation extends Action {
 	public Evaluation(Evaluation_Transferable et) throws CreateObjectException {
 		super(et.header,
 			  null,
-			  new Identifier(et.monitored_element_id));
+			  new Identifier(et.monitored_element_id),
+			  null);
 
 		try {
 			super.type = (EvaluationType)MeasurementStorableObjectPool.getStorableObject(new Identifier(et.type_id), true);
+			super.parentAction = (et.measurement_id.identifier_string.length() != 0) ? (Measurement) MeasurementStorableObjectPool.getStorableObject(new Identifier(et.measurement_id), true) : null;
 
 			this.thresholdSet = (Set)MeasurementStorableObjectPool.getStorableObject(new Identifier(et.threshold_set_id), true);
 		}
@@ -75,6 +77,7 @@ public class Evaluation extends Action {
 						 Identifier creatorId,
 						 EvaluationType type,
 						 Identifier monitoredElementId,
+						 Measurement measurement,
 						 Set thresholdSet) {
 		super(id,
 					new Date(System.currentTimeMillis()),
@@ -82,7 +85,8 @@ public class Evaluation extends Action {
 					creatorId,
 					creatorId,
 					type,
-					monitoredElementId);
+					monitoredElementId,
+					measurement);
 
 		this.thresholdSet = thresholdSet;
 
@@ -103,14 +107,19 @@ public class Evaluation extends Action {
 		return new Evaluation_Transferable(super.getHeaderTransferable(),
 										   (Identifier_Transferable)super.type.getId().getTransferable(),
 										   (Identifier_Transferable)super.monitoredElementId.getTransferable(),
+										   (super.parentAction != null) ? (Identifier_Transferable) super.parentAction.getId().getTransferable() : new Identifier_Transferable(""),
 										   (Identifier_Transferable)this.thresholdSet.getId().getTransferable());
 	}
 
 	public short getEntityCode() {
-        return ObjectEntities.EVALUATION_ENTITY_CODE;
-    }
-    
-    public Set getThresholdSet() {
+		return ObjectEntities.EVALUATION_ENTITY_CODE;
+	}
+
+	public Measurement getMeasurement() {
+		return (Measurement) super.parentAction;
+	}
+
+	public Set getThresholdSet() {
 		return this.thresholdSet;
 	}
 
@@ -120,39 +129,32 @@ public class Evaluation extends Action {
 											  Identifier modifierId,
 											  EvaluationType type,
 											  Identifier monitoredElementId,
+											  Measurement measurement,
 											  Set thresholdSet) {
 		super.setAttributes(created,
 			modified,
 			creatorId,
 			modifierId,
 			type,
-			monitoredElementId);
+			monitoredElementId,
+			measurement);
 		this.thresholdSet = thresholdSet;
 	}
 
-	public Result createResult(Identifier creatorId,
-							   Measurement measurement,
-							   SetParameter[] parameters) throws CreateObjectException {
-		return Result.createInstance(creatorId,
-			measurement,
-			this,
-			ResultSort.RESULT_SORT_EVALUATION,
-			parameters);
-	}
-	
-	
-	
-	/** 
-	 * @deprecated as unsupport method
+	/**
+	 * Create a new instance for client
+	 * @param creatorId
+	 * @param type
+	 * @param monitoredElementId
+	 * @param measurement
+	 * @param thresholdSet
+	 * @return a newly generated instance
+	 * @throws CreateObjectException
 	 */
-	public Result createResult(Identifier creatorId, SetParameter[] parameters)
-			throws CreateObjectException {
-		throw new UnsupportedOperationException("method isn't support");
-	}
-
 	public static Evaluation createInstance(Identifier creatorId,
 											EvaluationType type,
 											Identifier monitoredElementId,
+											Measurement measurement,
 											Set thresholdSet) throws CreateObjectException {
 		if (creatorId == null || type == null || monitoredElementId == null || thresholdSet == null)
 			throw new IllegalArgumentException("Argument is 'null'");		
@@ -162,13 +164,27 @@ public class Evaluation extends Action {
 				creatorId,
 				type,
 				monitoredElementId,
+				measurement,
 				thresholdSet);
-		} catch (IllegalObjectEntityException e) {
+		}
+		catch (IllegalObjectEntityException e) {
 			throw new CreateObjectException("Evaluation.createInstance | cannot generate identifier ", e);
 		}
 	}
-	
-	public List getDependencies() {		
-		return Collections.singletonList(this.thresholdSet);
+
+	public Result createResult(Identifier resultCreatorId, SetParameter[] resultParameters) throws CreateObjectException {
+		return Result.createInstance(resultCreatorId,
+				this,
+				ResultSort.RESULT_SORT_EVALUATION,
+				resultParameters);
+	}
+
+	public List getDependencies() {
+		List dependencies = new LinkedList();
+		//	Measurement if exists
+		if (super.parentAction != null)
+			dependencies.add(super.parentAction);
+		dependencies.add(this.thresholdSet);
+		return dependencies;
 	}
 }

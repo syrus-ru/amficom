@@ -1,5 +1,5 @@
 /*
- * $Id: Analysis.java,v 1.39 2005/01/12 13:34:13 arseniy Exp $
+ * $Id: Analysis.java,v 1.40 2005/01/26 15:38:40 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,9 +8,9 @@
 
 package com.syrus.AMFICOM.measurement;
 
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.LinkedList;
 
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierPool;
@@ -27,7 +27,7 @@ import com.syrus.AMFICOM.measurement.corba.Analysis_Transferable;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
 
 /**
- * @version $Revision: 1.39 $, $Date: 2005/01/12 13:34:13 $
+ * @version $Revision: 1.40 $, $Date: 2005/01/26 15:38:40 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -57,10 +57,12 @@ public class Analysis extends Action {
   public Analysis(Analysis_Transferable at) throws CreateObjectException {
 		super(at.header,
 			  null,
-			  new Identifier(at.monitored_element_id));
+			  new Identifier(at.monitored_element_id),
+			  null);
 
 		try {
 			super.type = (AnalysisType)MeasurementStorableObjectPool.getStorableObject(new Identifier(at.type_id), true);
+			super.parentAction = (at.measurement_id.identifier_string.length() != 0) ? (Measurement) MeasurementStorableObjectPool.getStorableObject(new Identifier(at.measurement_id), true) : null;
 
 			this.criteriaSet = (Set)MeasurementStorableObjectPool.getStorableObject(new Identifier(at.criteria_set_id), true);
 		}
@@ -75,6 +77,7 @@ public class Analysis extends Action {
 					   Identifier creatorId,
 					   AnalysisType type,
 					   Identifier monitoredElementId,
+					   Measurement measurement,
 					   Set criteriaSet) {
 		super(id,
 					new Date(System.currentTimeMillis()),
@@ -82,23 +85,39 @@ public class Analysis extends Action {
 					creatorId,
 					creatorId,
 					type,
-					monitoredElementId);
+					monitoredElementId,
+					measurement);
 
 		this.criteriaSet = criteriaSet;
-		
+
 		this.analysisDatabase = MeasurementDatabaseContext.analysisDatabase;
 
 	}
 
-	public short getEntityCode() {
-		return ObjectEntities.ANALYSIS_ENTITY_CODE;
+	public void insert() throws CreateObjectException {
+		try {
+			if (this.analysisDatabase != null)
+				this.analysisDatabase.update(this, StorableObjectDatabase.UPDATE_FORCE, null);
+		}
+		catch (ApplicationException ae) {
+			throw new CreateObjectException(ae.getMessage(), ae);
+		}
 	}
 
 	public Object getTransferable() {
 		return new Analysis_Transferable(super.getHeaderTransferable(),
 									(Identifier_Transferable)super.type.getId().getTransferable(),
 									(Identifier_Transferable)super.monitoredElementId.getTransferable(),
+									(super.parentAction != null) ? (Identifier_Transferable) super.parentAction.getId().getTransferable() : new Identifier_Transferable(""),
 									(Identifier_Transferable)this.criteriaSet.getId().getTransferable());
+	}
+
+	public short getEntityCode() {
+		return ObjectEntities.ANALYSIS_ENTITY_CODE;
+	}
+
+	public Measurement getMeasurement() {
+		return (Measurement)super.parentAction;
 	}
 
 	public Set getCriteriaSet() {
@@ -111,37 +130,32 @@ public class Analysis extends Action {
 																	Identifier modifierId,
 																	AnalysisType type,
 																	Identifier monitoredElementId,
+																	Measurement measurement,
 																	Set criteriaSet) {
 		super.setAttributes(created,
 												modified,
 												creatorId,
 												modifierId,
 												type,
-												monitoredElementId);
+												monitoredElementId,
+												measurement);
 		this.criteriaSet = criteriaSet;
 	}
 
-	public Result createResult(Identifier creatorId,
-							   Measurement measurement,
-							   SetParameter[] parameters) throws CreateObjectException {
-		return Result.createInstance(creatorId,
-			measurement,
-			this,
-			ResultSort.RESULT_SORT_ANALYSIS,
-			parameters);
-	}
-	
-	/** 
-	 * @deprecated as unsupport method
+	/**
+	 * Create a new instance for client
+	 * @param creatorId
+	 * @param type
+	 * @param monitoredElementId
+	 * @param measurement
+	 * @param criteriaSet
+	 * @return a newly generated instance
+	 * @throws CreateObjectException
 	 */
-	public Result createResult(Identifier creatorId, SetParameter[] parameters)
-			throws CreateObjectException {
-		throw new UnsupportedOperationException("method isn't support");
-	}
-
 	public static Analysis createInstance(Identifier creatorId,
 										  AnalysisType type,
 										  Identifier monitoredElementId,
+										  Measurement measurement,
 										  Set criteriaSet) throws CreateObjectException {
 		if (creatorId == null || type == null || monitoredElementId == null || criteriaSet == null)
 			throw new IllegalArgumentException("Argument is 'null'");		
@@ -151,6 +165,7 @@ public class Analysis extends Action {
 				creatorId,
 				type,
 				monitoredElementId,
+				measurement,
 				criteriaSet);
 		}
 		catch (IllegalObjectEntityException e) {
@@ -158,17 +173,19 @@ public class Analysis extends Action {
 		}
 	}
 
-	public void insert() throws CreateObjectException {
-		try {
-			if (this.analysisDatabase != null)
-				this.analysisDatabase.update(this, StorableObjectDatabase.UPDATE_FORCE, null);
-		}
-		catch (ApplicationException ae) {
-			throw new CreateObjectException(ae.getMessage(), ae);
-		}
+	public Result createResult(Identifier resultCreatorId, SetParameter[] resultParameters) throws CreateObjectException {
+		return Result.createInstance(resultCreatorId,
+				this,
+				ResultSort.RESULT_SORT_ANALYSIS,
+				resultParameters);
 	}
-	
-	public List getDependencies() {		
-		return Collections.singletonList(this.criteriaSet);
+
+	public List getDependencies() {
+		List dependencies = new LinkedList();
+		//	Measurement, if exists
+		if (super.parentAction != null)
+			dependencies.add(super.parentAction);
+		dependencies.add(this.criteriaSet);
+		return dependencies;
 	}
 }

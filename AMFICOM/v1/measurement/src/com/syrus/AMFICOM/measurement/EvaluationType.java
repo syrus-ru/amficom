@@ -1,5 +1,5 @@
 /*
- * $Id: EvaluationType.java,v 1.42 2005/01/26 10:57:57 arseniy Exp $
+ * $Id: EvaluationType.java,v 1.43 2005/01/26 15:38:40 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,17 +31,19 @@ import com.syrus.AMFICOM.measurement.corba.EvaluationType_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.42 $, $Date: 2005/01/26 10:57:57 $
+ * @version $Revision: 1.43 $, $Date: 2005/01/26 15:38:40 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
 
 public class EvaluationType extends ActionType {
-
 	/**
 	 * Comment for <code>serialVersionUID</code>
 	 */
-	private static final long	serialVersionUID	= 4049361932895007024L;
+	private static final long serialVersionUID = 3978420317305583161L;
+
+	public static final String CODENAME_DADARA = "dadara";
+
 	private List inParameterTypes;
 	private List thresholdParameterTypes;
 	private List etalonParameterTypes;

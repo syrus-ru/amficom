@@ -1,5 +1,5 @@
 /*
- * $Id: ModelingType.java,v 1.5 2005/01/26 10:57:57 arseniy Exp $
+ * $Id: ModelingType.java,v 1.6 2005/01/26 15:38:41 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,13 +31,18 @@ import com.syrus.AMFICOM.measurement.corba.ModelingType_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/01/26 10:57:57 $
+ * @version $Revision: 1.6 $, $Date: 2005/01/26 15:38:41 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
 
 public class ModelingType extends ActionType {
-	private static final long serialVersionUID = 7084162116179995833L;
+/**
+	 * Comment for <code>serialVersionUID</code>
+	 */
+	private static final long serialVersionUID = 3904963062178854712L;
+
+	public static final String CODENAME_DADARA = "dadara";
 
 	private List inParameterTypes;
 	private List outParameterTypes;

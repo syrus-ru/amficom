@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementType.java,v 1.47 2005/01/26 10:57:57 arseniy Exp $
+ * $Id: MeasurementType.java,v 1.48 2005/01/26 15:38:40 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,7 +33,7 @@ import com.syrus.AMFICOM.measurement.corba.MeasurementType_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.47 $, $Date: 2005/01/26 10:57:57 $
+ * @version $Revision: 1.48 $, $Date: 2005/01/26 15:38:40 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -42,7 +42,10 @@ public class MeasurementType extends ActionType {
 	/**
 	 * Comment for <code>serialVersionUID</code>
 	 */
-	private static final long	serialVersionUID	= 3256726169373062969L;
+	private static final long serialVersionUID = 3257570589907562804L;
+
+	public static final String CODENAME_REFLECTOMETRY = "reflectometry";
+
 	private List inParameterTypes;
 	private List outParameterTypes;
 	private List measurementPortTypes;

@@ -1,5 +1,5 @@
 /*
- * $Id: Test.java,v 1.73 2004/12/27 21:00:01 arseniy Exp $
+ * $Id: Test.java,v 1.74 2005/01/26 15:38:41 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -45,7 +45,7 @@ import com.syrus.AMFICOM.measurement.corba.TestTimeStamps_TransferablePackage.Co
 import com.syrus.AMFICOM.measurement.corba.TestTimeStamps_TransferablePackage.PeriodicalTestTimeStamps;
 
 /**
- * @version $Revision: 1.73 $, $Date: 2004/12/27 21:00:01 $
+ * @version $Revision: 1.74 $, $Date: 2005/01/26 15:38:41 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -269,27 +269,11 @@ public class Test extends StorableObject {
 		}
 	}
 
-//	public static Test getInstance(Test_Transferable tt) throws CreateObjectException {
-//		Test test = new Test(tt);
-//		
-//		test.testDatabase = MeasurementDatabaseContext.testDatabase;		
-//		try {
-//			if (test.testDatabase != null)
-//				test.testDatabase.insert(test);
-//		}
-//		catch (IllegalDataException e) {
-//			throw new CreateObjectException(e.getMessage(), e);
-//		}
-//		
-//		return test;
-//	}
-
-	
 	public short getEntityCode() {
-        return ObjectEntities.TEST_ENTITY_CODE;
-    }
-    
-    public AnalysisType getAnalysisType() {
+		return ObjectEntities.TEST_ENTITY_CODE;
+	}
+
+	public AnalysisType getAnalysisType() {
 		return this.analysisType;
 	}
 

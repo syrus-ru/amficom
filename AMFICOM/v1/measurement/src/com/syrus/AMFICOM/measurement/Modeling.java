@@ -1,5 +1,5 @@
 /*
- * $Id: Modeling.java,v 1.22 2005/01/12 13:34:13 arseniy Exp $
+ * $Id: Modeling.java,v 1.23 2005/01/26 15:38:41 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,11 +27,17 @@ import com.syrus.AMFICOM.measurement.corba.Modeling_Transferable;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
 
 /**
- * @version $Revision: 1.22 $, $Date: 2005/01/12 13:34:13 $
+ * @version $Revision: 1.23 $, $Date: 2005/01/26 15:38:41 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
 
+/**
+ * @author arseniy
+ *
+ * TODO To change the template for this generated type comment go to
+ * Window - Preferences - Java - Code Style - Code Templates
+ */
 public class Modeling extends Action {
 	
 	/**
@@ -59,7 +65,8 @@ public class Modeling extends Action {
 	public Modeling(Modeling_Transferable mt) throws CreateObjectException {
 		super(mt.header,
 			  null,
-			  new Identifier(mt.monitored_element_id));
+			  new Identifier(mt.monitored_element_id),
+			  null);
 
 		try {
 			super.type = (ModelingType)MeasurementStorableObjectPool.getStorableObject(new Identifier(mt.type_id), true);
@@ -87,19 +94,74 @@ public class Modeling extends Action {
 					creatorId,
 					creatorId,
 					type,
-					monitoredElementId);
+					monitoredElementId,
+					null);
 		this.name = name;
 		this.argumentSet = argumentSet;
 
 		this.modelingDatabase = MeasurementDatabaseContext.modelingDatabase;
 
 	}
-	
+
+	public void insert() throws CreateObjectException {
+		try {
+			if (this.modelingDatabase != null)
+				this.modelingDatabase.update(this, StorableObjectDatabase.UPDATE_FORCE, null);
+		}
+		catch (ApplicationException ae) {
+			throw new CreateObjectException(ae.getMessage(), ae);
+		}
+	}
+
+	public Object getTransferable() {
+		return new Modeling_Transferable(super.getHeaderTransferable(),
+									(Identifier_Transferable)super.type.getId().getTransferable(),
+									(Identifier_Transferable)super.monitoredElementId.getTransferable(),
+									new String(this.name),
+									(Identifier_Transferable)this.argumentSet.getId().getTransferable());
+	}
+
+  public short getEntityCode() {
+		return ObjectEntities.MODELING_ENTITY_CODE;
+	}
+
+	public String getName() {
+		return this.name;
+	}
+
+  public Set getArgumentSet() {
+		return this.argumentSet;
+	}
+
+	protected synchronized void setAttributes(Date created,
+																	Date modified,
+																	Identifier creatorId,
+																	Identifier modifierId,
+																	ModelingType type,
+																	Identifier monitoredElementId,
+																	String name,
+																	Set argumentSet) {
+		super.setAttributes(created,
+												modified,
+												creatorId,
+												modifierId,
+												type,
+												monitoredElementId,
+												null);
+		this.name = name;
+		this.argumentSet = argumentSet;
+	}
+
 	/**
-	 * create new instance for client
+	 * Create a new instance for client
+	 * @param creatorId
+	 * @param type
+	 * @param monitoredElementId
+	 * @param name
+	 * @param argumentSet
+	 * @return a newly generated instance
 	 * @throws CreateObjectException
 	 */
-
 	public static Modeling createInstance(Identifier creatorId,
 															ModelingType type,
 															Identifier monitoredElementId,
@@ -120,76 +182,15 @@ public class Modeling extends Action {
 		catch (IllegalObjectEntityException e) {
 			throw new CreateObjectException("Modeling.createInstance | cannot generate identifier ", e);
 		}
-		
 	}
 
-	public void insert() throws CreateObjectException {
-		try {
-			if (this.modelingDatabase != null)
-				this.modelingDatabase.update(this, StorableObjectDatabase.UPDATE_FORCE, null);
-		}
-		catch (ApplicationException ae) {
-			throw new CreateObjectException(ae.getMessage(), ae);
-		}
+	public Result createResult(Identifier resultCreatorId, SetParameter[] resultParameters) throws CreateObjectException {
+		return Result.createInstance(resultCreatorId,
+				this,
+				ResultSort.RESULT_SORT_MODELING,
+				resultParameters);
 	}
 
-	public Result createResult(Identifier creatorId,
-								Measurement measurement,
-								SetParameter[] parameters) throws CreateObjectException {
-		return Result.createInstance(creatorId,
-											null,
-											this,
-											ResultSort.RESULT_SORT_MODELING,
-											parameters);
-	}
-
-	public Result createResult(Identifier creatorId,		
-							   SetParameter[] parameters) throws CreateObjectException {
-		return Result.createInstance(creatorId,
-											null,
-											this,
-											ResultSort.RESULT_SORT_MODELING,
-											parameters);
-	}
-
-	public Object getTransferable() {
-		return new Modeling_Transferable(super.getHeaderTransferable(),
-									(Identifier_Transferable)super.type.getId().getTransferable(),
-									(Identifier_Transferable)super.monitoredElementId.getTransferable(),
-									new String(this.name),
-									(Identifier_Transferable)this.argumentSet.getId().getTransferable());
-	}
-
-	protected synchronized void setAttributes(Date created,
-																	Date modified,
-																	Identifier creatorId,
-																	Identifier modifierId,
-																	ModelingType type,
-																	Identifier monitoredElementId,
-																	String name,
-																	Set argumentSet) {
-		super.setAttributes(created,
-												modified,
-												creatorId,
-												modifierId,
-												type,
-												monitoredElementId);
-		this.name = name;
-		this.argumentSet = argumentSet;
-	}
-
-  public short getEntityCode() {
-		return ObjectEntities.MODELING_ENTITY_CODE;
-	}
-
-	public String getName() {
-		return this.name;
-	}
-
-  public Set getArgumentSet() {
-		return this.argumentSet;
-	}
-		
 	public List getDependencies() {
 		return Collections.singletonList(this.argumentSet);
 	}

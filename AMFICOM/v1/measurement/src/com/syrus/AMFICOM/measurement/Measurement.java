@@ -1,5 +1,5 @@
 /*
- * $Id: Measurement.java,v 1.43 2005/01/12 13:34:13 arseniy Exp $
+ * $Id: Measurement.java,v 1.44 2005/01/26 15:38:40 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,7 +30,7 @@ import com.syrus.AMFICOM.measurement.corba.Measurement_Transferable;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
 
 /**
- * @version $Revision: 1.43 $, $Date: 2005/01/12 13:34:13 $
+ * @version $Revision: 1.44 $, $Date: 2005/01/26 15:38:40 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -70,7 +70,8 @@ public class Measurement extends Action {
 	public Measurement(Measurement_Transferable mt) throws CreateObjectException {
 		super(mt.header,
 			  null,
-			  new Identifier(mt.monitored_element_id));
+			  new Identifier(mt.monitored_element_id),
+			  null);
 		try {
 			super.type = (MeasurementType)MeasurementStorableObjectPool.getStorableObject(new Identifier(mt.type_id), true);
 
@@ -104,7 +105,8 @@ public class Measurement extends Action {
 					creatorId,
 					creatorId,
 					type,
-					monitoredElementId);
+					monitoredElementId,
+					null);
 		this.name = name;
 		this.setup = setup;
 		this.startTime = startTime;
@@ -140,11 +142,11 @@ public class Measurement extends Action {
 											(Identifier_Transferable)this.testId.getTransferable());
 	}
 
-    public short getEntityCode() {
-        return ObjectEntities.MEASUREMENT_ENTITY_CODE;
-    }
-    
-    public MeasurementSetup getSetup() {
+	public short getEntityCode() {
+		return ObjectEntities.MEASUREMENT_ENTITY_CODE;
+	}
+
+	public MeasurementSetup getSetup() {
 		return this.setup;
 	}
 
@@ -188,8 +190,8 @@ public class Measurement extends Action {
 											  Identifier creatorId,
 											  Identifier modifierId,
 											  MeasurementType type,
-											  String name,
 											  Identifier monitoredElementId,
+											  String name,
 											  MeasurementSetup setup,
 											  Date startTime,
 											  long duration,
@@ -201,7 +203,8 @@ public class Measurement extends Action {
 			creatorId,
 			modifierId,
 			type,
-			monitoredElementId);
+			monitoredElementId,
+			null);
 		this.name = name;
 		this.setup = setup;
 		this.startTime = startTime;
@@ -211,6 +214,19 @@ public class Measurement extends Action {
 		this.testId = testId;
 	}
 
+	/**
+	 * Create a new instance for client
+	 * @param creatorId
+	 * @param type
+	 * @param monitoredElementId
+	 * @param name
+	 * @param setup
+	 * @param startTime
+	 * @param localAddress
+	 * @param testId
+	 * @return a newly generated instance
+	 * @throws CreateObjectException
+	 */
 	protected static Measurement createInstance(Identifier creatorId,
 												MeasurementType type,
 												Identifier monitoredElementId,
@@ -239,42 +255,31 @@ public class Measurement extends Action {
 		}
 	}
 
-	public Result createResult(Identifier creatorId,
-							   Measurement measurement,
-							   SetParameter[] parameters) throws CreateObjectException {
-		return Result.createInstance(creatorId,
-			this,
-			this,
-			ResultSort.RESULT_SORT_MEASUREMENT,
-			parameters);						
-	}
-	
-	/** 
-	 * @deprecated as unsupport method
-	 */
-	public Result createResult(Identifier creatorId, SetParameter[] parameters)
-			throws CreateObjectException {
-		throw new UnsupportedOperationException("method isn't support");
+	public Result createResult(Identifier resultCreatorId, SetParameter[] resultParameters) throws CreateObjectException {
+		return Result.createInstance(resultCreatorId,
+				this,
+				ResultSort.RESULT_SORT_MEASUREMENT,
+				resultParameters);
 	}
 
-	public Result retrieveResult(ResultSort resultSort) throws RetrieveObjectException, ObjectNotFoundException {
-		try {
-			return (Result)this.measurementDatabase.retrieveObject(this, RETRIEVE_RESULT, resultSort);
-		}
-		catch (IllegalDataException e) {
-			throw new RetrieveObjectException(e.getMessage(), e);
-		}
-	}
-	
+//	public Result retrieveResult(ResultSort resultSort) throws RetrieveObjectException, ObjectNotFoundException {
+//		try {
+//			return (Result)this.measurementDatabase.retrieveObject(this, RETRIEVE_RESULT, resultSort);
+//		}
+//		catch (IllegalDataException e) {
+//			throw new RetrieveObjectException(e.getMessage(), e);
+//		}
+//	}
+
 	public String getName() {
 		return this.name;
 	}
-	
+
 	public void setName(String name) {
 		this.name = name;
 		super.currentVersion = super.getNextVersion();
 	}
-	
+
 	public List getDependencies() {
 		List dependencies = new LinkedList();
 		dependencies.add(this.testId);
