@@ -17,7 +17,7 @@ IDL2JAVA=idlj
 IDL2JAVA_FLAGS=-fall -i $(IDL) -td $(SRC) -v
 #JAVAC=javac
 JAVAC=jikes
-JAVAC_CUSTOM_OPTIONS=-bootclasspath $(JAVA_HOME)/jre/lib/rt.jar -extdirs $(JAVA_HOME)/jre/lib/ext +E +Pno-modifier-order +Predundant-modifiers +Pswitchcheck +Pno-naming-convention -nowarn +T=2
+JIKES_OPTIONS=-bootclasspath $(JAVA_HOME)/jre/lib/rt.jar -extdirs $(JAVA_HOME)/jre/lib/ext +E +Pno-modifier-order +Predundant-modifiers +Pswitchcheck +Pno-naming-convention -nowarn +T=2
 JAVAC_OPTIONS=-d $(CLASSES)
 JAR=jar-3.3.1
 
@@ -31,7 +31,7 @@ $(LIBNAME):	mach
 	cp -vf $(LIBNAME) $(DEVLIB)/
 
 mach:	corba
-	$(JAVAC) $(JAVAC_CUSTOM_OPTIONS) $(JAVAC_OPTIONS) -classpath $(CLASSES):$(APPCLASSPATH) \
+	$(JAVAC) $(JIKES_OPTIONS) $(JAVAC_OPTIONS) -classpath $(CLASSES):$(APPCLASSPATH) \
 		$(SRC)/com/syrus/AMFICOM/configuration/ConfigurationDatabaseContext.java \
 		$(SRC)/com/syrus/AMFICOM/configuration/DomainMember.java \
 		$(SRC)/com/syrus/AMFICOM/configuration/KIS.java \
@@ -42,7 +42,7 @@ mach:	corba
 
 corba:
 	$(IDL2JAVA) $(IDL2JAVA_FLAGS) $(IDL)/configuration.idl
-	$(JAVAC) $(JAVAC_CUSTOM_OPTIONS) $(JAVAC_OPTIONS) -sourcepath $(SRC) -classpath $(APPCLASSPATH) \
+	$(JAVAC) $(JIKES_OPTIONS) $(JAVAC_OPTIONS) -sourcepath $(SRC) -classpath $(APPCLASSPATH) \
 		$(SRC)/com/syrus/AMFICOM/configuration/corba/*.java
 	touch corba
 

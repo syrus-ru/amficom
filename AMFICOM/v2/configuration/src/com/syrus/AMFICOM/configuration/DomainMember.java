@@ -7,17 +7,16 @@ import com.syrus.AMFICOM.general.StorableObject;
 public abstract class DomainMember extends StorableObject {
 	protected Identifier domain_id;
 
-	public DomainMember(Identifier id) {
+	protected DomainMember(Identifier id) {
 		super(id);
-		this.domain_id = null;
 	}
 
-	public DomainMember(Identifier id,
-											Date created,
-											Date modified,
-											Identifier creator_id,
-											Identifier modifier_id,
-											Identifier domain_id) {
+	protected DomainMember(Identifier id,
+												 Date created,
+												 Date modified,
+												 Identifier creator_id,
+												 Identifier modifier_id,
+												 Identifier domain_id) {
 		super(id,
 					created,
 					modified,

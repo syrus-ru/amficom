@@ -10,10 +10,8 @@ import com.syrus.AMFICOM.general.StorableObject_Database;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.configuration.corba.KIS_Transferable;
 
-public class KIS extends DomainMember {
+public class KIS extends Equipment {
 	private Identifier mcm_id;
-	private String name;
-	private String description;
 
 	private StorableObject_Database kisDatabase;
 /*
