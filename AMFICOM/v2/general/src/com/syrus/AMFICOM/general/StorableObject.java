@@ -7,19 +7,27 @@ public abstract class StorableObject implements TransferableObject {
 	protected Identifier id;
 	protected Date created;
 	protected Date modified;
+	protected Identifier creator_id;
+	protected Identifier modifier_id;
 
 	public StorableObject(Identifier id) {
 		this.id = id;
 		this.created = null;
 		this.modified = null;
+		this.creator_id = null;
+		this.modifier_id = null;
 	}
 
 	public StorableObject(Identifier id,
 												Date created,
-												Date modified) {
+												Date modified,
+												Identifier creator_id,
+												Identifier modifier_id) {
 		this.id = id;
 		this.created = created;
 		this.modified = modified;
+		this.creator_id = creator_id;
+		this.modifier_id = modifier_id;
 	}
 
 	public Identifier getId() {
@@ -34,9 +42,21 @@ public abstract class StorableObject implements TransferableObject {
 		return this.modified;
 	}
 
-	protected void setAttributes(Date created,
-															 Date modified) {
+	public Identifier getCreatorId() {
+		return this.creator_id;
+	}
+
+	public Identifier getModifierId() {
+		return this.modifier_id;
+	}
+
+	protected synchronized void setAttributes(Date created,
+																						Date modified,
+																						Identifier creator_id,
+																						Identifier modifier_id) {
 		this.created = created;
 		this.modified = modified;
+		this.creator_id = creator_id;
+		this.modifier_id = modifier_id;
 	}
 }
