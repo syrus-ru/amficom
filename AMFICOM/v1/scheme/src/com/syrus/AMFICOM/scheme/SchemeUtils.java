@@ -244,7 +244,7 @@ public class SchemeUtils
 		return pos == name.length() ? name : name.substring(pos + 1);
 	}
 
-	public double getOpticalLength(PathElement pe)
+	public static double getOpticalLength(PathElement pe)
 	{
 		switch (pe.type().value())
 		{
@@ -256,7 +256,7 @@ public class SchemeUtils
 		}
 	}
 
-	public void setOpticalLength(PathElement pe, double d)
+	public static void setOpticalLength(PathElement pe, double d)
 	{
 		switch (pe.type().value())
 		{
@@ -266,7 +266,7 @@ public class SchemeUtils
 		}
 	}
 
-	public double getPhysicalLength(PathElement pe)
+	public static double getPhysicalLength(PathElement pe)
 	{
 		switch (pe.type().value())
 		{
@@ -279,7 +279,7 @@ public class SchemeUtils
 		}
 	}
 
-	public void setPhysicalLength(PathElement pe, double d)
+	public static void setPhysicalLength(PathElement pe, double d)
 	{
 		switch (pe.type().value())
 		{
