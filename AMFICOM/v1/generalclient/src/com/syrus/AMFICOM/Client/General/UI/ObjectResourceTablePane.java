@@ -61,7 +61,7 @@ import javax.swing.table.TableColumnModel;
 
 public class ObjectResourceTablePane extends JScrollPane
 {
-	ObjectResourceTableModel tableModel;
+	public ObjectResourceTableModel tableModel;
 	ObjectResourceTableRenderer renderer;
 	ObjectResourceTableEditor editor;
 	ObjectResourceSorter sorter = null;

@@ -27,7 +27,7 @@
  * Original Author:  David Gilbert (for Object Refinery Limited);
  * Contributor(s):   -;
  *
- * $Id: ChartFrame.java,v 1.4 2004/08/05 12:07:03 bass Exp $
+ * $Id: ChartFrame.java,v 1.5 2004/08/11 11:45:06 peskovsky Exp $
  *
  * Changes
  * -------
@@ -93,7 +93,6 @@ import com.syrus.AMFICOM.Client.General.Lang.LangModelReport;
 
 import org.jfree.chart.plot.PiePlot;
 
-
 import com.syrus.AMFICOM.Client.General.Report.Statistics;
 import com.syrus.AMFICOM.Client.General.Report.ObjectResourceReportModel;
 
@@ -101,19 +100,19 @@ public class ChartFrame extends JInternalFrame
 {
 	public ReportChartPanel chartPanel = null;
 
-	RenderingObject renderingObject = null;
+	private RenderingObject renderingObject = null;
 
-	Statistics stat = null;
+	private Statistics stat = null;
 
-	Statistics[] stats = null;
+	private Statistics[] stats = null;
 
-	int[] objectsNumberAtInterval = null;
+	private int[] objectsNumberAtInterval = null;
 
-	Vector periodsBounds = null;
+	private Vector periodsBounds = null;
 
-	Class interval_size = null;
+	private Class interval_size = null;
 
-	JFreeChart chart = null;
+	private JFreeChart chart = null;
 
 	public ChartFrame(Statistics stat, RenderingObject ro)
 	{

@@ -1,12 +1,18 @@
 package com.syrus.AMFICOM.Client.Survey.Report;
 
+import javax.swing.JComponent;
 import java.util.Vector;
 import java.util.Iterator;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModelReport;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelSurvey;
 
+import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
+import com.syrus.AMFICOM.Client.Resource.SurveyDataSourceImage;
+
+import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.Report.*;
+
 /**
  * <p>Title: </p>
  * <p>Description: </p>
@@ -31,12 +37,24 @@ public class ObserveReportModel extends APOReportModel
 
 	public String getName()
 	{
-		return "surveyreportmodel";
+		return "observereportmodel";
 	}
 
 	public String getObjectsName()
 	{
-		return LangModelReport.getString("label_repSurveyResults");
+		return LangModelReport.getString("label_repObservation");
+	}
+
+	public int getReportKind(ObjectsReport rp)
+	{
+		int returnValue = 1;
+
+		if (rp.field.equals(alarm_scheme))
+      return -1;
+    else if (rp.field.equals(alarm_reflectogramm) || rp.field.equals(alarm_map))
+      return 0;
+    
+    return 1;
 	}
 
 	public String getLangForField(String field)
@@ -57,6 +75,59 @@ public class ObserveReportModel extends APOReportModel
 
 		return result;
 	}
+
+	public String getReportsName(ObjectsReport rp)
+	{
+		String return_value = this.getObjectsName() + ":"
+			+ getLangForField(rp.field);
+
+		return return_value;
+	}
+
+
+	public String getReportsReserveName(ObjectsReport rp) throws
+		CreateReportException
+	{
+		return "";
+	}
+
+	public JComponent createReport(
+		ObjectsReport rp,
+		int divisionsNumber,
+		ReportTemplate rt,
+		ApplicationContext aContext,
+		boolean fromAnotherModule)
+
+		throws CreateReportException
+	{
+		if (rp.getReserve() == null)
+			throw new CreateReportException(rp.getName(),
+				CreateReportException.cantImplement);
+
+		JComponent returnValue = null;
+/*		if (rp.getReserve() instanceof AMTReportTable)
+		{
+			EvaluationTableReport er = new EvaluationTableReport(rp, divisionsNumber);
+			returnValue = new ReportResultsTablePanel(
+				er.columnModel,
+				er.tableModel,
+				rt.findROforReport(rp));
+		}
+		else
+		{
+			returnValue = new EvaluationGraphPanel(rt.findROforReport(rp));
+		}*/
+		return returnValue;
+	}
+
+	public void loadRequiredObjects(
+		DataSourceInterface dsi,
+		ObjectsReport rp,
+		ReportTemplate rt)
+	{
+    new SurveyDataSourceImage(dsi).GetAlarms();
+	}
+
   
 	public void setData(ReportTemplate rt, Object data)
 	{
