@@ -1,5 +1,5 @@
 /*
- * $Id: Transceiver.java,v 1.24 2004/10/14 14:25:13 bob Exp $
+ * $Id: Transceiver.java,v 1.25 2004/10/15 11:17:30 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,7 +8,6 @@
 
 package com.syrus.AMFICOM.mcm;
 
-import java.util.Iterator;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
@@ -28,7 +27,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.24 $, $Date: 2004/10/14 14:25:13 $
+ * @version $Revision: 1.25 $, $Date: 2004/10/15 11:17:30 $
  * @author $Author: bob $
  * @module mcm_v1
  */
@@ -57,8 +56,6 @@ public class Transceiver extends SleepButWorkThread {
 	private Map testProcessors;//Map <Identifier measurementId, TestProcessor testProcessor>
   
 	private KISReport kisReport;//MCMTransciver library writes result into this variable
-	private List reportsList = new ArrayList();
-
 	/*	Variables for method processFall()	*/
 	private Measurement measurementToRemove;
   
@@ -149,69 +146,63 @@ public class Transceiver extends SleepButWorkThread {
 		      	
 		      if (this.kisReport == null) {
 		      	this.kisReport = this.receive(this.socket);
-		        this.reportsList.add(this.kisReport);
-		      }	else {
-					for(Iterator it = this.reportsList.iterator();it.hasNext();){
-						KISReport report = (KISReport)it.next();
-						this.reportsList.remove(report);
-		        
-						measurementId = report.getMeasurementId();
-						Log.debugMessage("Received report for measurement '" + measurementId + "'", Log.DEBUGLEVEL07);
-						measurement = null;
-						try {
+		      }	else {					        
+					measurementId = this.kisReport.getMeasurementId();
+					Log.debugMessage("Received report for measurement '" + measurementId + "'", Log.DEBUGLEVEL07);
+					measurement = null;
+					try {
 							measurement = (Measurement)MeasurementStorableObjectPool.getStorableObject(measurementId, true);
-						}
-						catch (ApplicationException ae) {
-							Log.errorException(ae);
-						}
-						if (measurement != null) {
-							testProcessor = (TestProcessor)this.testProcessors.remove(measurementId);
-							if (testProcessor != null) {
-								result = null;
-								try {
-									result = this.kisReport.createResult();
-									measurement.updateStatus(MeasurementStatus.MEASUREMENT_STATUS_ACQUIRED,
-																					 MeasurementControlModule.iAm.getUserId());
-									super.clearFalls();
-								}
-								catch (MeasurementException me) {
-									if (me.getCause() instanceof AMFICOMRemoteException) {
-										Log.debugMessage("Cannot get identifier - trying to wait", Log.DEBUGLEVEL07);
-										MeasurementControlModule.resetMServerConnection();
-										super.fallCode = FALL_CODE_GENERATE_IDENTIFIER;
-										super.sleepCauseOfFall();
-									}
-									else {
-										Log.errorException(me);
-										this.throwAwayKISReport();
-									}
-								}
-								catch (UpdateObjectException uoe) {
-									Log.errorException(uoe);
-								}
-		
-								if (result != null) {
-									testProcessor.addMeasurementResult(result);
-									this.kisReport = null;
-								}
-							}	//if (testProcessor != null)
-							else {
-								Log.errorMessage("Cannot find test processor for measurement '" + measurementId + "'; throwing away it's report");
-								this.throwAwayKISReport();
+					}
+					catch (ApplicationException ae) {
+						Log.errorException(ae);
+					}
+					if (measurement != null) {
+						testProcessor = (TestProcessor)this.testProcessors.remove(measurementId);
+						if (testProcessor != null) {
+							result = null;
+							try {
+								result = this.kisReport.createResult();
+								measurement.updateStatus(MeasurementStatus.MEASUREMENT_STATUS_ACQUIRED,
+														 MeasurementControlModule.iAm.getUserId());
+								super.clearFalls();
 							}
-						}	//if (measurement != null)
+							catch (MeasurementException me) {
+								if (me.getCause() instanceof AMFICOMRemoteException) {
+									Log.debugMessage("Cannot get identifier - trying to wait", Log.DEBUGLEVEL07);
+									MeasurementControlModule.resetMServerConnection();
+									super.fallCode = FALL_CODE_GENERATE_IDENTIFIER;
+									super.sleepCauseOfFall();
+								}
+								else {
+									Log.errorException(me);
+									this.throwAwayKISReport();
+								}
+							}
+							catch (UpdateObjectException uoe) {
+								Log.errorException(uoe);
+							}
+	
+							if (result != null) {
+								testProcessor.addMeasurementResult(result);
+								this.kisReport = null;
+							}
+						}	//if (testProcessor != null)
 						else {
-							Log.errorMessage("Cannot find measurement for id '" + measurementId + "'; throwing away it's report");
+							Log.errorMessage("Cannot find test processor for measurement '" + measurementId + "'; throwing away it's report");
 							this.throwAwayKISReport();
 						}
+					}	//if (measurement != null)
+					else {
+						Log.errorMessage("Cannot find measurement for id '" + measurementId + "'; throwing away it's report");
+						this.throwAwayKISReport();
+					}
 						
-						try {
-							sleep(super.initialTimeToSleep);
-						}
-						catch (InterruptedException ie) {
-							Log.errorException(ie);
-						}
-					} // for(Iterator it=this.reportsList.iterator();
+					try {
+						sleep(super.initialTimeToSleep);
+					}
+					catch (InterruptedException ie) {
+						Log.errorException(ie);
+					}					
 				}	//else if (this.kisReport == null)
 	      	} // else if (this.socket == -1)	      
 		}	//while

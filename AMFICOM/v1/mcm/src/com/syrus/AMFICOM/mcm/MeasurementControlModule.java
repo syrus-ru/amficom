@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementControlModule.java,v 1.32 2004/09/29 09:13:26 peskovsky Exp $
+ * $Id: MeasurementControlModule.java,v 1.33 2004/10/15 11:17:30 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -42,8 +42,8 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.32 $, $Date: 2004/09/29 09:13:26 $
- * @author $Author: peskovsky $
+ * @version $Revision: 1.33 $, $Date: 2004/10/15 11:17:30 $
+ * @author $Author: bob $
  * @module mcm_v1
  */
 
@@ -191,8 +191,8 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 	private static void activateKISTransceivers()
 	{
 	  transceivers = new Hashtable();
-	  String serviceName = "7500" + '\0';
-	  String hostName = "bass" + '\0';
+	  String serviceName = "7500";
+	  String hostName = "bass";
 
 /*
     try
@@ -210,12 +210,9 @@ public final class MeasurementControlModule extends SleepButWorkThread {
                        System.getProperty("java.library.path"));
     }
  */   
-    try
-    {
-	TCPServer tcpServer = new TCPServer(hostName,serviceName,transceivers);  
-    }
-    catch (Exception exc)
-    {
+    try {
+    	TCPServer tcpServer = new TCPServer(hostName,serviceName,transceivers);  
+    } catch (Exception exc) {
         Log.errorMessage("Failed creating TCPServer at service " + serviceName);
     }
 

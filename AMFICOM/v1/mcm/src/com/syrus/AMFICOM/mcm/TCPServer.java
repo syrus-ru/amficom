@@ -3,7 +3,6 @@ package com.syrus.AMFICOM.mcm;
 
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.util.Log;
-import java.util.Collections;
 import java.util.Map;
 import java.util.HashMap;
 
@@ -19,36 +18,53 @@ public class TCPServer implements Runnable {
 
 		public void run() {
 			while (true) {
-				byte[] kisIDChars = new byte[MAX_KIS_ID_LENGTH];
-				int connectedSocket = this.tcpServer.getConnectedSocket(this.tcpServer.listeningSocket, kisIDChars);
+				//byte[] kisIDChars = new byte[MAX_KIS_ID_LENGTH];
+				Object[] objects = this.tcpServer.getConnectedSocket(this.tcpServer.listeningSocket);
+				
+				Integer connectedSocket = null;
+				String id = null;
+				
+				if (objects == null){
+					Log.errorMessage("Can't get data from connected socket!");
+					continue;
+				}
+				
+				for(int i=0;i<objects.length;i++){
+					if (objects[i] instanceof String){
+						id = (String)objects[i];
+					} else{
+						if (objects[i] instanceof Integer){
+							connectedSocket = (Integer)objects[i];
+						}
+					}
+				}
 
-				if (connectedSocket == -1) {
+				if ((connectedSocket == null) || (connectedSocket.intValue() == -1)) {
 					Log.errorMessage("Can't establish connection!");
 					continue;
 				}
 
-				if (kisIDChars == null) {
+				if (id == null) {
 					Log.errorMessage("Failed to get KIS_ID kis!");
 					continue;
 				}
+				
+				Log.debugMessage("Java got the string: " + id + ", length = "
+						+ id.length(), Log.DEBUGLEVEL05);
+				Identifier kisId = new Identifier(id);
 
-				String gotString = new String(kisIDChars);
-				gotString = gotString.substring(0, gotString.indexOf(0));
-				System.out.println("Java got the string: " + gotString + ", length = "
-						+ Integer.toString(gotString.length()));
-				Identifier kisID = new Identifier(gotString);
+				TCPServer.kissockets.put(kisId, connectedSocket);
 
-				TCPServer.kissockets.put(kisID, new Integer(connectedSocket));
-
-				Transceiver transceiver = new Transceiver(kisID);
-				transceiver.start();
-				this.tcpServer.transceivers.put(kisID, transceiver);
-				Log.errorMessage("Started transceiver for kis '" + kisID.toString() + "'");
+				if (!this.tcpServer.transceivers.containsKey(kisId)){
+					Transceiver transceiver = new Transceiver(kisId);
+					transceiver.start();
+					this.tcpServer.transceivers.put(kisId, transceiver);
+					Log.debugMessage("Started transceiver for kis '" + kisId.toString() + "'", Log.DEBUGLEVEL05);
+				}
 			}
 		}
 	}
 
-	public static final int	MAX_KIS_ID_LENGTH	= 32;
 	protected static Map	kissockets			= new HashMap();
 
 	protected int			listeningSocket		= -1;
@@ -59,13 +75,8 @@ public class TCPServer implements Runnable {
 
 	public TCPServer(String hostName, String serviceName, Map transceivers) throws Exception {
 		this.transceivers = transceivers;
-		Collections.synchronizedMap(kissockets);
-		Collections.synchronizedMap(transceivers);
 
-		byte[] serviceNameChars = serviceName.getBytes();
-		byte[] hostNameChars = hostName.getBytes();
-
-		this.listeningSocket = this.getListeningSocket(hostNameChars, serviceNameChars);
+		this.listeningSocket = this.getListeningSocket(hostName, serviceName);
 		if (this.listeningSocket <= 0) {
 			Log.errorMessage("Can't create listening socket for service (port) " + serviceName + "!");
 			throw new Exception("Listening socket required for further work!");
@@ -82,9 +93,9 @@ public class TCPServer implements Runnable {
 		return socket.intValue();
 	}
 
-	public native int getConnectedSocket(int listeningSocket, byte[] kis_id);
+	public native Object[] getConnectedSocket(int listeningSocket);
 
-	public native int getListeningSocket(byte[] hostName, byte[] serviceName);
+	public native int getListeningSocket(String hostName, String serviceName);
 
 	public void run() {
 		try {
