@@ -171,7 +171,7 @@ module corba {
 
 		com::syrus::AMFICOM::general::corba::Identifier_Transferable domain_id;
 
-		com::syrus::AMFICOM::general::corba::Identifier_Transferable kis_id;
+		com::syrus::AMFICOM::general::corba::Identifier_Transferable meport_id;
 		MonitoredElementSort sort;
 		wstring local_address;
 	};
