@@ -1,0 +1,25 @@
+// Segment.cpp: implementation of the Segment class.
+//
+//////////////////////////////////////////////////////////////////////
+
+#include "Segment.h"
+
+//////////////////////////////////////////////////////////////////////
+// Construction/Destruction
+//////////////////////////////////////////////////////////////////////
+
+Segment::Segment() {
+}
+
+Segment::~Segment() {
+	delete[] this->data;
+}
+
+char* Segment::getData() const {
+	return this->data;
+}
+
+unsigned int Segment::getLength() const {
+	return this->length;
+}
+
