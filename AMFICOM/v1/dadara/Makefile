@@ -38,31 +38,12 @@ JAVAH_FLAGS := \
 $(call checkenve,JAVA_HOME)
 
 
-.PHONY:	clean cleanmach cleanhead arch install
+.PHONY:	clean cleanmach arch install
 
 
-$(LIBNAME):	.head .mach 
+$(LIBNAME):	.mach .native
 	$(JAR) -cf $@ \
 		-C $(CLASSDIR) com
-
-.head:	.mach
-	$(JAVAH) $(JAVAH_FLAGS) \
-		-d $(NATIVE_DIR) \
-		com.syrus.AMFICOM.analysis.CoreAnalysisManager
-	$(JAVAH) $(JAVAH_FLAGS) \
-		-d $(NATIVE_DIR) \
-		com.syrus.AMFICOM.analysis.dadara.ModelFunction
-	$(JAVAH) $(JAVAH_FLAGS) \
-		-d $(NATIVE_DIR) \
-		com.syrus.AMFICOM.analysis.dadara.SimpleReflectogramEvent
-	$(JAVAH) $(JAVAH_FLAGS) \
-		-d $(NATIVE_DIR) \
-		com.syrus.AMFICOM.analysis.dadara.ComplexReflectogramEvent
-	$(JAVAH) $(JAVAH_FLAGS) \
-		-d $(NATIVE_DIR) \
-		com.syrus.AMFICOM.analysis.dadara.Wavelet
-
-	touch $@
 
 .mach:	$(CLASSDIR)
 	$(JAVAC) $(JAVACFLAGS) \
@@ -71,27 +52,22 @@ $(LIBNAME):	.head .mach
 		$(wildcard $(SRCDIR)/com/syrus/AMFICOM/analysis/dadara/*.java)
 	touch $@
 
+.native:
+	$(MAKE) -C native
+
 $(CLASSDIR):
 	mkdir $@
 
 
-clean:	cleanmach cleanhead
+clean:	cleanmach
 	$(RM) $(LIBNAME)
+	$(MAKE) -C native $@
 
 cleanmach:
 	$(RM) \
 		$(wildcard $(CLASSDIR)/com/syrus/AMFICOM/analysis/*.class) \
 		$(wildcard $(CLASSDIR)/com/syrus/AMFICOM/analysis/dadara/*.class) \
 	$(RM) .mach
-
-cleanhead:
-	$(RM) \
-		$(NATIVE_DIR)/com_syrus_AMFICOM_analysis_CoreAnalysisManager.h \
-		$(NATIVE_DIR)/com_syrus_AMFICOM_analysis_dadara_ModelFunction.h \
-		$(NATIVE_DIR)/com_syrus_AMFICOM_analysis_dadara_SimpleReflectogramEvent.h \
-		$(NATIVE_DIR)/com_syrus_AMFICOM_analysis_dadara_ComplexReflectogramEvent.h \
-		$(NATIVE_DIR)/com_syrus_AMFICOM_analysis_dadara_Wavelet.h 
-	$(RM) .head
 
 #### Install ####
 .PHONY:	install
