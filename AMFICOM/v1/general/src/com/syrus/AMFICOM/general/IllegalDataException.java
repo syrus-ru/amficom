@@ -11,10 +11,6 @@ package com.syrus.AMFICOM.general;
  */
 public class IllegalDataException extends Exception {
 
-	public IllegalDataException() {
-		super();
-	}
-
 	/**
 	 * @param message
 	 */
