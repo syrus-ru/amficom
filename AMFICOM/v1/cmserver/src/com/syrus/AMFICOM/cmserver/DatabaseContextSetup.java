@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseContextSetup.java,v 1.12 2004/12/20 14:04:45 bob Exp $
+ * $Id: DatabaseContextSetup.java,v 1.13 2004/12/23 11:16:11 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,6 +8,7 @@
 
 package com.syrus.AMFICOM.cmserver;
 
+import com.syrus.AMFICOM.configuration.DatabaseConfigurationObjectLoader;
 import com.syrus.AMFICOM.configuration.CableLinkTypeDatabase;
 import com.syrus.AMFICOM.configuration.CableThreadDatabase;
 import com.syrus.AMFICOM.configuration.CableThreadTypeDatabase;
@@ -31,6 +32,7 @@ import com.syrus.AMFICOM.configuration.ServerDatabase;
 import com.syrus.AMFICOM.configuration.TransmissionPathDatabase;
 import com.syrus.AMFICOM.configuration.TransmissionPathTypeDatabase;
 import com.syrus.AMFICOM.configuration.UserDatabase;
+import com.syrus.AMFICOM.measurement.DatabaseMeasurementObjectLoader;
 import com.syrus.AMFICOM.measurement.AnalysisDatabase;
 import com.syrus.AMFICOM.measurement.AnalysisTypeDatabase;
 import com.syrus.AMFICOM.measurement.EvaluationDatabase;
@@ -49,16 +51,22 @@ import com.syrus.AMFICOM.measurement.TestDatabase;
 import com.syrus.util.ApplicationProperties;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2004/12/20 14:04:45 $
- * @author $Author: bob $
+ * @version $Revision: 1.13 $, $Date: 2004/12/23 11:16:11 $
+ * @author $Author: arseniy $
  * @module mserver_v1
  */
 
 public abstract class DatabaseContextSetup {
 	
-	public static final String CONFIGURATION_POOL_SIZE_KEY = "ConfigurationPoolSize";
-	public static final String MEASUREMENT_POOL_SIZE_KEY = "MeasurementPoolSize";
-	public static final String REFRESH_TIMEOUT_KEY = "RefreshTimeout";
+	public static final String KEY_CONFIGURATION_POOL_SIZE = "ConfigurationPoolSize";
+	public static final String KEY_MEASUREMENT_POOL_SIZE = "MeasurementPoolSize";
+	public static final String KEY_REFRESH_TIMEOUT = "RefreshTimeout";
+	public static final String KEY_DATABASE_LOADER_ONLY = "DatabaseLoaderOnly";
+
+	public static final int DEFAULT_CONFIGURATION_POOL_SIZE = 1000;
+	public static final int DEFAULT_MEASUREMENT_POOL_SIZE = 1000;
+	public static final int DEFAULT_REFRESH_TIMEOUT = 5;
+	public static final String DEFAULT_DATABASE_LOADER_ONLY = "false";
 
 	private DatabaseContextSetup() {
 		// empty
@@ -102,12 +110,17 @@ public abstract class DatabaseContextSetup {
 	}
 
 	public static void initObjectPools() {
-		ConfigurationStorableObjectPool.init(new CMServerConfigurationObjectLoader(ApplicationProperties.getInt(REFRESH_TIMEOUT_KEY, 5) * 1000L * 60L), 
-			ApplicationProperties.getInt(CONFIGURATION_POOL_SIZE_KEY, 1000));
-		
-		MeasurementStorableObjectPool.init(new CMServerMeasurementObjectLoader(ApplicationProperties.getInt(REFRESH_TIMEOUT_KEY, 5) * 1000L * 60L), 
-			ApplicationProperties.getInt(MEASUREMENT_POOL_SIZE_KEY, 1000));		
-//		MeasurementStorableObjectPool.init(new DatabaseMeasurementObjectLoader(), 
-//			ApplicationProperties.getInt(MEASUREMENT_POOL_SIZE_KEY, 1000));
+		boolean databaseLoaderOnly = Boolean.valueOf(ApplicationProperties.getString(KEY_DATABASE_LOADER_ONLY, DEFAULT_DATABASE_LOADER_ONLY)).booleanValue();
+		int configurationPoolSize = ApplicationProperties.getInt(KEY_CONFIGURATION_POOL_SIZE, DEFAULT_CONFIGURATION_POOL_SIZE);
+		int measurementPoolSize = ApplicationProperties.getInt(KEY_MEASUREMENT_POOL_SIZE, DEFAULT_MEASUREMENT_POOL_SIZE);
+		if (! databaseLoaderOnly) {
+			long refreshTimeout = ApplicationProperties.getInt(KEY_REFRESH_TIMEOUT, DEFAULT_REFRESH_TIMEOUT) * 1000L * 60L;
+			ConfigurationStorableObjectPool.init(new CMServerConfigurationObjectLoader(refreshTimeout), configurationPoolSize);
+			MeasurementStorableObjectPool.init(new CMServerMeasurementObjectLoader(refreshTimeout), measurementPoolSize);
+		}
+		else {
+			ConfigurationStorableObjectPool.init(new DatabaseConfigurationObjectLoader(), configurationPoolSize);
+			MeasurementStorableObjectPool.init(new DatabaseMeasurementObjectLoader(), measurementPoolSize);
+		}
 	}
 }

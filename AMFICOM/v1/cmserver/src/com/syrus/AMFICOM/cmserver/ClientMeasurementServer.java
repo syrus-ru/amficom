@@ -1,5 +1,5 @@
 /*
- * $Id: ClientMeasurementServer.java,v 1.26 2004/12/22 12:48:25 arseniy Exp $
+ * $Id: ClientMeasurementServer.java,v 1.27 2004/12/23 11:16:11 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,7 +26,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.26 $, $Date: 2004/12/22 12:48:25 $
+ * @version $Revision: 1.27 $, $Date: 2004/12/23 11:16:11 $
  * @author $Author: arseniy $
  * @module cmserver_v1
  */
@@ -80,17 +80,14 @@ public class ClientMeasurementServer extends SleepButWorkThread {
 	}
 
 	private static void establishDatabaseConnection() {
-		String dbHostName = ApplicationProperties.getString(KEY_DB_HOST_NAME,
-				Application.getInternetAddress());
+		String dbHostName = ApplicationProperties.getString(KEY_DB_HOST_NAME, Application.getInternetAddress());
 		String dbSid = ApplicationProperties.getString(KEY_DB_SID, DB_SID);
-		long dbConnTimeout = ApplicationProperties.getInt(
-				KEY_DB_CONNECTION_TIMEOUT, DB_CONNECTION_TIMEOUT) * 1000;
-		String dbLoginName = ApplicationProperties.getString(KEY_DB_LOGIN_NAME,
-				DB_LOGIN_NAME);
+		long dbConnTimeout = ApplicationProperties.getInt(KEY_DB_CONNECTION_TIMEOUT, DB_CONNECTION_TIMEOUT) * 1000;
+		String dbLoginName = ApplicationProperties.getString(KEY_DB_LOGIN_NAME, DB_LOGIN_NAME);
 		try {
-			DatabaseConnection.establishConnection(dbHostName, dbSid,
-					dbConnTimeout, dbLoginName);
-		} catch (Exception e) {
+			DatabaseConnection.establishConnection(dbHostName, dbSid, dbConnTimeout, dbLoginName);
+		}
+		catch (Exception e) {
 			Log.errorException(e);
 			System.exit(-1);
 		}
