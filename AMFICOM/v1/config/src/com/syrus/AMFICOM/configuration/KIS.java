@@ -1,5 +1,5 @@
 /*
- * $Id: KIS.java,v 1.44 2004/12/21 16:17:22 bob Exp $
+ * $Id: KIS.java,v 1.45 2004/12/22 09:57:52 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,7 +29,7 @@ import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.44 $, $Date: 2004/12/21 16:17:22 $
+ * @version $Revision: 1.45 $, $Date: 2004/12/22 09:57:52 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -290,6 +290,16 @@ public class KIS extends DomainMember implements Characterized {
 		return dependencies;
 	}
     
+	public void addCharacteristic(Characteristic characteristic) {
+		if (characteristic != null)
+			this.characteristics.add(characteristic);
+	}
+	
+	public void removeCharacteristic(Characteristic characteristic) {
+		if (characteristic != null)
+			this.characteristics.remove(characteristic);
+	}
+
 	public List getCharacteristics() {
         return Collections.unmodifiableList(this.characteristics);
     }

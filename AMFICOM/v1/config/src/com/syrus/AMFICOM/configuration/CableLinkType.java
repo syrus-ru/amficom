@@ -1,5 +1,5 @@
 /*
- * $Id: CableLinkType.java,v 1.2 2004/12/14 12:50:42 max Exp $
+ * $Id: CableLinkType.java,v 1.3 2004/12/22 09:57:52 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,8 +29,8 @@ import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2004/12/14 12:50:42 $
- * @author $Author: max $
+ * @version $Revision: 1.3 $, $Date: 2004/12/22 09:57:52 $
+ * @author $Author: bob $
  * @module config_v1
  */
 public class CableLinkType extends AbstractLinkType implements Characterized {
@@ -227,7 +227,17 @@ public class CableLinkType extends AbstractLinkType implements Characterized {
 
     public List getDependencies() {        
         return this.characteristics;
-    }
+    }    
+    
+	public void addCharacteristic(Characteristic characteristic) {
+		if (characteristic != null)
+			this.characteristics.add(characteristic);
+	}
+	
+	public void removeCharacteristic(Characteristic characteristic) {
+		if (characteristic != null)
+			this.characteristics.remove(characteristic);
+	}
     
     public List getCharacteristics() {
         return Collections.unmodifiableList(this.characteristics);

@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPath.java,v 1.31 2004/12/10 10:32:15 bob Exp $
+ * $Id: TransmissionPath.java,v 1.32 2004/12/22 09:57:52 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,7 +29,7 @@ import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.configuration.corba.TransmissionPath_Transferable;
 /**
- * @version $Revision: 1.31 $, $Date: 2004/12/10 10:32:15 $
+ * @version $Revision: 1.32 $, $Date: 2004/12/22 09:57:52 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -222,6 +222,16 @@ public class TransmissionPath extends MonitoredDomainMember implements Character
 
 	public Identifier getStartPortId() {
 		return this.startPortId;
+	}
+
+	public void addCharacteristic(Characteristic characteristic) {
+		if (characteristic != null)
+			this.characteristics.add(characteristic);
+	}
+	
+	public void removeCharacteristic(Characteristic characteristic) {
+		if (characteristic != null)
+			this.characteristics.remove(characteristic);
 	}
 
 	public List getCharacteristics() {

@@ -1,5 +1,5 @@
 /*
- * $Id: Domain.java,v 1.25 2004/12/09 16:12:48 arseniy Exp $
+ * $Id: Domain.java,v 1.26 2004/12/22 09:57:52 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,8 +9,8 @@
 package com.syrus.AMFICOM.configuration;
 
 /**
- * @version $Revision: 1.25 $, $Date: 2004/12/09 16:12:48 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.26 $, $Date: 2004/12/22 09:57:52 $
+ * @author $Author: bob $
  * @module configuration_v1
  */
 
@@ -115,6 +115,16 @@ public class Domain extends DomainMember implements Characterized {
 	public void setDescription(String description){
 		this.description = description;
 		super.currentVersion = super.getNextVersion();
+	}
+	
+	public void addCharacteristic(Characteristic characteristic) {
+		if (characteristic != null)
+			this.characteristics.add(characteristic);
+	}
+	
+	public void removeCharacteristic(Characteristic characteristic) {
+		if (characteristic != null)
+			this.characteristics.remove(characteristic);
 	}
 
 	public List getCharacteristics() {

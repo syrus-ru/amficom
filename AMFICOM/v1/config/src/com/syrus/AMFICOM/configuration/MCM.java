@@ -1,5 +1,5 @@
 /*
- * $Id: MCM.java,v 1.35 2004/12/20 14:03:04 bob Exp $
+ * $Id: MCM.java,v 1.36 2004/12/22 09:57:52 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,7 +28,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.configuration.corba.MCM_Transferable;
 
 /**
- * @version $Revision: 1.35 $, $Date: 2004/12/20 14:03:04 $
+ * @version $Revision: 1.36 $, $Date: 2004/12/22 09:57:52 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -185,6 +185,16 @@ public class MCM extends DomainMember implements Characterized {
 
 	public short getTCPPort() {
 		return this.tcpPort;
+	}
+
+	public void addCharacteristic(Characteristic characteristic) {
+		if (characteristic != null)
+			this.characteristics.add(characteristic);
+	}
+	
+	public void removeCharacteristic(Characteristic characteristic) {
+		if (characteristic != null)
+			this.characteristics.remove(characteristic);
 	}
 
 	public List getCharacteristics() {
