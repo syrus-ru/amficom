@@ -15,8 +15,7 @@ public class BellcoreWriter
 		this.bs = bs;
 		baos = new ByteArrayOutputStream();
 		idos = new IntelDataOutputStream(baos);
-		int specials = bs.specials;
-
+//		int specials = bs.specials;
 		write_map();
 
 		int i = 1;

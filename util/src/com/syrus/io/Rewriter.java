@@ -2,18 +2,18 @@ package com.syrus.io;
 
 public class Rewriter 
 {
-//	static public final const long serialVersionUID = 01L;
+//	public static final const long serialVersionUID = 01L;
 
-	protected Rewriter()
+	private Rewriter()
 	{
 	}
 
-	static public byte write(byte b)
+	public static byte write(byte b)
 	{
 		return b;
 	}
 
-	static public char write(char c)
+	public static char write(char c)
 	{
 		short s1 = (short )c;
 		short s2 = 0;
@@ -30,17 +30,17 @@ public class Rewriter
 		return (char )s2;
 	}
 
-	static public int write(int i)
+	public static int write(int i)
 	{
 		return i;
 	}
 
-	static public long write(long l)
+	public static long write(long l)
 	{
 		return l;
 	}
 
-	static public byte[] write(String s)
+	public static byte[] write(String s)
 	{
     	return s.getBytes();
 /*
@@ -62,27 +62,27 @@ public class Rewriter
 //		return s2;
 	}
 	
-	static public byte read(byte b)
+	public static byte read(byte b)
 	{
 		return b;
 	}
 
-	static public char read(char c)
+	public static char read(char c)
 	{
 		return write(c);
 	}
 
-	static public int read(int i)
+	public static int read(int i)
 	{
 		return i;
 	}
 
-	static public long read(long l)
+	public static long read(long l)
 	{
 		return l;
 	}
 
-	static public String read(byte[] bytes)
+	public static String read(byte[] bytes)
 	{
         String s = new String(bytes);
         return s;

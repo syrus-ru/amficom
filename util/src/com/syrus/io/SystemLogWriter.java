@@ -44,9 +44,9 @@ public class SystemLogWriter
 	{
 	}
 
-	static private boolean initiated = false;
+	private static boolean initiated = false;
 	
-	static public void initialize()
+	public static void initialize()
 	{
 		if(initiated)
 			return;
@@ -54,7 +54,7 @@ public class SystemLogWriter
 		initiated = true;
 	}
 
-	static public void closeLog()
+	public static void closeLog()
 	{
 		try
 		{
@@ -70,10 +70,12 @@ public class SystemLogWriter
 			}
 			catch(IOException ex)
 			{
+				;
 			}
 		}
 		catch(Exception e)
 		{
+			;
 		}
 	}
 }

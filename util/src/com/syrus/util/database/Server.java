@@ -9,6 +9,9 @@ public class Server {
 	private static String applicationName;
 	private static String internetAddress;
 
+	private Server() {
+	}
+
 	public static void init() {
 		init("server");
 	}

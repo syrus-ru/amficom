@@ -4,7 +4,4 @@
     <fileobject name=".cvsignore">
         <attr name="org.netbeans.modules.text.IsTextFile" boolvalue="true"/>
     </fileobject>
-    <fileobject name="ServerProperties.sqlj">
-        <attr name="org.netbeans.modules.text.IsTextFile" boolvalue="true"/>
-    </fileobject>
 </attributes>

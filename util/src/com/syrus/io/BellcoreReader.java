@@ -9,6 +9,8 @@ public class BellcoreReader extends DataReader
 	ByteArrayInputStream bais;
 	IntelDataInputStream idis;
 
+	private static final String IO_ERROR_MESSAGE = "I/O Error";
+
 	public BellcoreStructure getData (byte[] raw_data)
 	{
 		if (raw_data.length < 50)
@@ -82,7 +84,11 @@ public class BellcoreReader extends DataReader
 				bs.map.B_size[i] = idis.readIInt();
 			}
 		}
-		catch (IOException ex) {System.err.println("I/O error"); return 0;}
+		catch (IOException ioe)
+		{
+			System.err.println(IO_ERROR_MESSAGE);
+			return 0;
+		}
 		return 1;
 	}
 
@@ -108,7 +114,11 @@ public class BellcoreReader extends DataReader
 			bs.genParams.OP = idis.readIString();
 			bs.genParams.CMT = idis.readIString();
 		}
-		catch (IOException ex) {System.err.println("I/O error"); return 0;}
+		catch (IOException ioe)
+		{
+			System.err.println(IO_ERROR_MESSAGE);
+			return 0;
+		}
 		return 1;
 	}
 
@@ -126,7 +136,11 @@ public class BellcoreReader extends DataReader
 			bs.supParams.SR = idis.readIString();
 			bs.supParams.OT = idis.readIString();
 		}
-		catch (IOException ex) {System.err.println("I/O error"); return 0;}
+		catch (IOException ioe)
+		{
+			System.err.println(IO_ERROR_MESSAGE);
+			return 0;
+		}
 		return 1;
 	}
 
@@ -163,7 +177,11 @@ public class BellcoreReader extends DataReader
 			bs.fxdParams.RT = idis.readIUnsignedShort();
 			bs.fxdParams.ET = idis.readIUnsignedShort();
 		}
-		catch (IOException ex) {System.err.println("I/O error"); return 0;}
+		catch (IOException ioe)
+		{
+			System.err.println(IO_ERROR_MESSAGE);
+			return 0;
+		}
 		return 1;
 	}
 
@@ -203,7 +221,11 @@ public class BellcoreReader extends DataReader
 			bs.keyEvents.RLMP[0] = idis.readIInt();
 			bs.keyEvents.RLMP[1] = idis.readIInt();
 		}
-		catch (IOException ex) {System.err.println("I/O error"); return 0;}
+		catch (IOException ioe)
+		{
+			System.err.println(IO_ERROR_MESSAGE);
+			return 0;
+		}
 		return 1;
 	}
 
@@ -243,13 +265,16 @@ public class BellcoreReader extends DataReader
 				bs.lnkParams.CMT[i] = idis.readIString();
 			}
 		}
-		catch (IOException ex) {System.err.println("I/O error"); return 0;}
+		catch (IOException ioe)
+		{
+			System.err.println(IO_ERROR_MESSAGE);
+			return 0;
+		}
 		return 1;
 	}
 
 	int read_dataPts(int n)
 	{
-		int temp = 0;
 		if (bs.map.B_size[n] == 0)
 			return 0;
 		try
@@ -271,7 +296,11 @@ public class BellcoreReader extends DataReader
 				}
 			}
 		}
-		catch (IOException ex) {System.err.println("I/O error"); return 0;}
+		catch (IOException ioe)
+		{
+			System.err.println(IO_ERROR_MESSAGE);
+			return 0;
+		}
 		return 1;
 	}
 
@@ -296,7 +325,6 @@ public class BellcoreReader extends DataReader
 			bs.fxdParams.NPPW = new int [1];
 
 			idis.skipBytes(0x22a);
-			int length = -(idis.readIInt()-idis.readIInt())/1000000; // β κμ
 			bs.fxdParams.PWU[0] = idis.readIShort();
 			bs.genParams.NW = idis.readIShort();
 			bs.fxdParams.AW = (short)(bs.genParams.NW * 10);
@@ -306,17 +334,20 @@ public class BellcoreReader extends DataReader
 
 			idis.skipBytes(0x4);
 			double resolution = (double)idis.readIInt()/1000000.0; // β m
-			int time_taken = idis.readIShort();
 
 			idis.skipBytes(0x1C);
 			bs.fxdParams.DTS = idis.readIInt();
 
-			bs.fxdParams.DS[0] = (int)(resolution * bs.fxdParams.GI / 3d * 10d/*points*/);
+			bs.fxdParams.DS[0] = (int) (resolution * bs.fxdParams.GI / 3d * 10d/*points*/);
 			bs.fxdParams.NPPW[0] = bs.dataPts.TNDP;
-			bs.fxdParams.AR = (int)(resolution * bs.dataPts.TNDP * bs.fxdParams.GI / (3d * 1000/*meters*/) );
+			bs.fxdParams.AR = (int) (resolution * bs.dataPts.TNDP * bs.fxdParams.GI / (3d * 1000/*meters*/) );
 
 		}
-		catch (IOException ex) {System.err.println("I/O error"); return 0;}
+		catch (IOException ioe)
+		{
+			System.err.println(IO_ERROR_MESSAGE);
+			return 0;
+		}
 		return 1;
 	}
 
@@ -331,7 +362,11 @@ public class BellcoreReader extends DataReader
 			for (int i = 0; i < bs.map.B_size[n]; i++ )
 				bs.special[bs.specials-1].spec_data[i] = idis.readByte();
 		}
-		catch (IOException ex) {System.err.println("I/O error"); return 0;}
+		catch (IOException ioe)
+		{
+			System.err.println(IO_ERROR_MESSAGE);
+			return 0;
+		}
 		return 1;
 	}
 }

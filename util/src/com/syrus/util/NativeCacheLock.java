@@ -24,9 +24,6 @@ public class NativeCacheLock implements CacheLock {
 		}
 	}
 
-	public NativeCacheLock() {
-	}
-
 	public CacheLockObject lockWrite(String filename) {
 		if(!file_lock_loaded)
 			return null;

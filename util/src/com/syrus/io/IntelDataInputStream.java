@@ -63,7 +63,6 @@ public class IntelDataInputStream extends DataInputStream
 	public final String readIString() throws IOException
 	{
 		byte b[] = new byte[1];
-		byte NUL = 0x00;
 		String s = "";
 
 		while (true)

@@ -1,5 +1,5 @@
 /*
- * $Id: AuroraORBUtil.java,v 1.2 2004/05/06 11:48:10 bass Exp $
+ * $Id: AuroraORBUtil.java,v 1.3 2004/06/01 14:09:14 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,7 +12,7 @@ import java.util.Properties;
 import oracle.aurora.jndi.orb_dep.Orb;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2004/05/06 11:48:10 $
+ * @version $Revision: 1.3 $, $Date: 2004/06/01 14:09:14 $
  * @author $Author: bass $
  * @module util
  */

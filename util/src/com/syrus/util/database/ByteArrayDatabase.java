@@ -1,7 +1,6 @@
 package com.syrus.util.database;
 
 import java.io.OutputStream;
-import java.io.IOException;
 import java.sql.SQLException;
 import java.sql.Connection;
 import java.sql.Statement;

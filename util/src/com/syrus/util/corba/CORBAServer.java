@@ -10,7 +10,6 @@ import org.omg.CosNaming.NamingContextExtHelper;
 import org.omg.CosNaming.NameComponent;
 import java.util.Properties;
 import com.syrus.util.ApplicationProperties;
-import com.syrus.util.Log;
 
 public class CORBAServer /*extends Thread */{
 	public static final String DEFAULT_ORB_INITIAL_HOST = "127.0.0.1";

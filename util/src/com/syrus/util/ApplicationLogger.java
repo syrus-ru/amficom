@@ -1,11 +1,5 @@
 package com.syrus.util;
 
-import java.io.File;
-import java.io.PrintWriter;
-import java.io.FileWriter;
-import java.util.Date;
-import java.text.SimpleDateFormat;
-
 public class ApplicationLogger extends StolenLogger {
 	private static final String DEFAULTHOME = System.getProperty("user.home");
 	private static final String DEFAULTLOGPATH = DEFAULTHOME + "/logs";

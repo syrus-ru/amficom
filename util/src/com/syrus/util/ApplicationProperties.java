@@ -11,6 +11,9 @@ public class ApplicationProperties {
 	private static String fileName;
 	private static ResourceBundle resourceBundle;
 
+	private ApplicationProperties() {
+	}
+
 	public static void init(String applicationName) {
 		fileName = applicationName + ".properties";
 		try {

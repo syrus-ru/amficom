@@ -1,5 +1,5 @@
 /*
- * $Id: VisiBrokerORBUtil.java,v 1.1 2004/05/06 11:48:10 bass Exp $
+ * $Id: VisiBrokerORBUtil.java,v 1.2 2004/06/01 14:09:15 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,7 +12,7 @@ import java.util.Properties;
 import org.omg.CORBA.ORB;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2004/05/06 11:48:10 $
+ * @version $Revision: 1.2 $, $Date: 2004/06/01 14:09:15 $
  * @author $Author: bass $
  * @module util
  */

@@ -14,7 +14,7 @@ public class Log {
 
 	private static Logger logger;
 
-	public Log() {
+	private Log() {
 	}
 
 	public static void initialize(Logger logger1) {

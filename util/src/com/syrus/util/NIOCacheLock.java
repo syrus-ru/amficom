@@ -1,30 +1,8 @@
 package com.syrus.util;
 
 import java.io.*;
-import java.nio.*;
 import java.nio.channels.*;
 import java.util.*;
-
-class Entry implements CacheLockObject {
-	public static final int READ_LOCK = 0;
-	public static final int WRITE_LOCK = 1;
-
-	int type;
-	FileLock lock;
-	String filename;
-	Object stream;
-	
-	public Entry(int type, FileLock lock, String filename, Object stream) {
-		this.type = type;
-		this.lock = lock;
-		this.filename = filename;
-		this.stream = stream;
-	}
-
-	public Object getResource() {
-		return stream;
-	}
-}
 
 public class NIOCacheLock implements CacheLock {
 	Hashtable locks = new Hashtable();
@@ -52,8 +30,14 @@ public class NIOCacheLock implements CacheLock {
 				}
 			} 
 			catch (Exception ex) {
-				try { fl.release(); }
-				catch (Exception ex2) { }
+				try
+				{
+					fl.release();
+				}
+				catch (Exception ex2)
+				{
+					;
+				}
 //				ex.printStackTrace();
 			} 
 			return null;
@@ -76,8 +60,14 @@ public class NIOCacheLock implements CacheLock {
 				}
 			}
 			catch (Exception ex) {
-				try { fl.release(); }
-				catch (Exception ex2) { }
+				try
+				{
+					fl.release();
+				}
+				catch (Exception ex2)
+				{
+					;
+				}
 //				ex.printStackTrace();
 			} 
 			return null;
@@ -102,6 +92,7 @@ public class NIOCacheLock implements CacheLock {
 			} 
 			catch (Exception ex) {
 //				ex.printStackTrace();
+				;
 			} 
 			return true;
 		}
@@ -123,6 +114,7 @@ public class NIOCacheLock implements CacheLock {
 			} 
 			catch (Exception ex) {
 //				ex.printStackTrace();
+				;
 			} 
 			return true;
 		}

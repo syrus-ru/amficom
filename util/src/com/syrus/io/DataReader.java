@@ -21,7 +21,10 @@ public abstract class DataReader extends BellcoreStructure
 			FileInputStream fis = new FileInputStream(f);
 			fis.read(data);
 		}
-		catch (IOException ex){}
+		catch (IOException ex)
+		{
+			;
+		}
 		return data;
 	}
 }

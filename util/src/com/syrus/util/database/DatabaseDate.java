@@ -7,8 +7,7 @@ import java.sql.SQLException;
 import java.sql.ResultSet;
 
 public class DatabaseDate {
-
-	public DatabaseDate() {
+	private DatabaseDate() {
 	}
 
 	public static Date fromQuerySubString(ResultSet resultset, String column) throws SQLException {

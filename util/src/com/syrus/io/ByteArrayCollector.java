@@ -63,7 +63,9 @@ public class ByteArrayCollector
 			}
 		}
 		catch (EOFException eof)
-		{	}
+		{
+			;
+		}
 		catch (IOException io)
 		{
 			io.printStackTrace();

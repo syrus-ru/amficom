@@ -1,10 +1,5 @@
 package com.syrus.util;
 
-import java.util.Date;
-import java.io.PrintWriter;
-import java.io.FileWriter;
-import java.io.File;
-import java.text.SimpleDateFormat;
 import com.syrus.util.database.ServerProperties;
 
 public class ServerLogger extends StolenLogger {

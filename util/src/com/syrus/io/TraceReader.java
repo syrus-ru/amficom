@@ -56,6 +56,7 @@ public class TraceReader extends DataReader
 		catch (UnsatisfiedLinkError ex)
 		{
 			// do nothing
+			;
 		}
 
 	}

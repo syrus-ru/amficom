@@ -2,16 +2,13 @@ package com.syrus.util;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.util.ResourceBundle;
-import java.util.PropertyResourceBundle;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 
 public class Application {
 	private static String applicationName;
 	private static String internetAddress;
+
+	private Application() {
+	}
 
 	public static void init(String appName) {
 		applicationName = appName;

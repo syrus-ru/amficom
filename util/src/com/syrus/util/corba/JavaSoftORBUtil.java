@@ -1,5 +1,5 @@
 /*
- * $Id: JavaSoftORBUtil.java,v 1.1 2004/05/06 11:48:10 bass Exp $
+ * $Id: JavaSoftORBUtil.java,v 1.2 2004/06/01 14:09:14 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,7 +13,7 @@ import java.util.Properties;
 import org.omg.CORBA.ORB;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2004/05/06 11:48:10 $
+ * @version $Revision: 1.2 $, $Date: 2004/06/01 14:09:14 $
  * @author $Author: bass $
  * @module util
  */
@@ -46,7 +46,11 @@ public final class JavaSoftORBUtil extends ORBUtil {
 			throw new UnsupportedOperationException(
 				"Java specification major version is not 1.");
 
-		Class clazz = IIOPConnectionManager.class;
+		try {
+			Class.forName(IIOPConnectionManager.class.getName());
+		} catch (ClassNotFoundException cnfe) {
+			cnfe.printStackTrace();
+		}
 	}
 
 	private JavaSoftORBUtil() {
