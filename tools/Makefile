@@ -9,10 +9,11 @@ SERVICE_NAME=mongol
 
 JAVACFLAGS = -source 1.4
 SUNJAVACFLAGS = -target 1.4
-JIKESFLAGS = -target 1.4
+JIKESFLAGS = -target 1.4.2
 
 include ../tools/Makefile.inc
 $(call checkenve,JAVA_HOME)
+$(call checkenve,PMD_HOME)
 
 $(LIBNAME): .mach
 	$(JAR) -cf $@ \
@@ -28,5 +29,4 @@ clean:
 .mach:	$(CLASSDIR)
 	$(JAVAC) $(JAVACFLAGS) \
 		-classpath $(PMD_JARS) \
-		$(shell find . -name *java)
-	
+		$(shell find . -name '*\.java')
