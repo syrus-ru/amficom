@@ -120,7 +120,7 @@ public class MapMainFrame extends JInternalFrame implements OperationListener
 		elementsPanel.setLayout(new BorderLayout());
 		elementsPanel.add(elementsScrollPane, BorderLayout.CENTER);
 
-		mapMenuBar = new MapMenuBar();
+//		mapMenuBar = new MapMenuBar();
 
 		this.getContentPane().setLayout(new BorderLayout());
 		this.setBounds(0,0,600,400);
@@ -297,9 +297,9 @@ public class MapMainFrame extends JInternalFrame implements OperationListener
 	public void setModel(ApplicationModel aModel)
 	{
 		setCommands(aModel);
-		aModel.addListener(mapMenuBar);
+//		aModel.addListener(mapMenuBar);
 		aModel.addListener(mapToolBar);
-	    mapMenuBar.setModel(aModel);
+//	    mapMenuBar.setModel(aModel);
 		mapToolBar.setModel(aModel);
 //		mapPanel.setModel();
 
