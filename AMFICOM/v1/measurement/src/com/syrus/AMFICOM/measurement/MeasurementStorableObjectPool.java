@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementStorableObjectPool.java,v 1.15 2004/09/21 10:59:25 bob Exp $
+ * $Id: MeasurementStorableObjectPool.java,v 1.16 2004/09/21 14:28:14 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,7 +31,7 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2004/09/21 10:59:25 $
+ * @version $Revision: 1.16 $, $Date: 2004/09/21 14:28:14 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -420,6 +420,9 @@ public class MeasurementStorableObjectPool {
 			list = new LinkedList();
 			for (Iterator it = objectPool.iterator(); it.hasNext();) {
 				Test test = (Test) it.next();
+				Log.debugMessage("MeasurementStorableObjectPool.getTestsByTimeRange | test "
+									+ test.getId().toString(),
+										Log.DEBUGLEVEL07);
 				if ((test.getStartTime().getTime() >= start.getTime())
 						&& (test.getEndTime().getTime() <= end.getTime())
 						&& ((domain == null) || ((domain != null) && test
@@ -430,6 +433,24 @@ public class MeasurementStorableObjectPool {
 			}
 		}
 
+		return list;
+	}
+	
+	public static List getMeasurement(List testIds){
+		List list = null;
+		LRUMap objectPool = (LRUMap) objectPoolMap.get(new Short(ObjectEntities.MEASUREMENT_ENTITY_CODE));
+		if (objectPool != null){
+			list = new LinkedList();
+			for (Iterator iter = objectPool.iterator(); iter.hasNext();) {
+				Measurement measurement = (Measurement)iter.next();
+				for (Iterator it = testIds.iterator(); it.hasNext();) {
+					Identifier testId = (Identifier) it.next();
+					if (measurement.getTestId().equals(testId)){
+						list.add(measurement);
+					}
+				}
+			}					
+		}
 		return list;
 	}
 
@@ -556,11 +577,12 @@ public class MeasurementStorableObjectPool {
 			if (objectPool != null) {
 				object = (StorableObject) objectPool.put(objectId,
 						storableObject);
-			}
-			throw new IllegalObjectEntityException(
+			} else{
+				throw new IllegalObjectEntityException(
 					"MeasurementStorableObjectPool.putStorableObject | Illegal object entity: '"
 							+ objectId.getObjectEntity() + "'",
 					IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
+			}
 		}
 		return object;
 	}

@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementDatabase.java,v 1.25 2004/09/20 13:15:07 bob Exp $
+ * $Id: MeasurementDatabase.java,v 1.26 2004/09/21 14:28:14 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,6 +22,7 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 import com.syrus.AMFICOM.configuration.Domain;
 import com.syrus.AMFICOM.configuration.DomainMember;
+import com.syrus.AMFICOM.general.Identified;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObject;
@@ -36,7 +37,7 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
 
 /**
- * @version $Revision: 1.25 $, $Date: 2004/09/20 13:15:07 $
+ * @version $Revision: 1.26 $, $Date: 2004/09/21 14:28:14 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -385,4 +386,44 @@ public class MeasurementDatabase extends StorableObjectDatabase {
         
         return list;
     }
+	
+	public List retrieveButIdsByTest(List ids, List testIds) throws RetrieveObjectException {
+        List list = null;
+        
+        StringBuffer buffer = new StringBuffer();
+        int idsLength = testIds.size();
+        if ((testIds != null) && (idsLength > 0)){
+        	buffer.append(COLUMN_TEST_ID);
+        	buffer.append(SQL_IN);
+        	buffer.append(OPEN_BRACKET);
+        	int i = 1;         
+			for (Iterator it = testIds.iterator(); it.hasNext(); i++) {
+				Object object = it.next();
+				Identifier id = null;
+				if (object instanceof Identifier)
+					id = (Identifier) object;
+				else if (object instanceof Identified)
+					id = ((Identified)object).getId();
+				else throw new RetrieveObjectException("MeasurementDatabase.retrieveButIdsByTest | Object " +
+													object.getClass().getName()
+													+ " isn't Identifier or Identified");
+
+				if (id != null){
+					buffer.append(id.toSQLString());
+					if (i < idsLength)
+						buffer.append(COMMA);
+				}
+			}
+        	buffer.append(CLOSE_BRACKET);
+        }
+        
+        try {
+            list = retrieveButIds(ids, buffer.toString());
+        }  catch (IllegalDataException ide) {           
+            Log.debugMessage("MeasurementDatabase.retrieveButIdsByDomain | Error: " + ide.getMessage(), Log.DEBUGLEVEL09);
+        }
+        
+        return list;
+    }
+
 }

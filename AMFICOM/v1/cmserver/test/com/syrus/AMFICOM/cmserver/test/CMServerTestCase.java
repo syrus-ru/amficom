@@ -1,5 +1,5 @@
 /*
- * $Id: CMServerTestCase.java,v 1.1 2004/09/21 08:18:50 bob Exp $
+ * $Id: CMServerTestCase.java,v 1.2 2004/09/21 14:28:04 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,6 +10,7 @@ package com.syrus.AMFICOM.cmserver.test;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.Date;
 
 import junit.extensions.TestSetup;
 import junit.framework.Test;
@@ -32,10 +33,13 @@ import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
+import com.syrus.AMFICOM.measurement.corba.MeasurementSetup_Transferable;
+import com.syrus.AMFICOM.measurement.corba.Measurement_Transferable;
+import com.syrus.AMFICOM.measurement.corba.Test_Transferable;
 import com.syrus.util.corba.JavaSoftORBUtil;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2004/09/21 08:18:50 $
+ * @version $Revision: 1.2 $, $Date: 2004/09/21 14:28:04 $
  * @author $Author: bob $
  * @module module
  */
@@ -88,12 +92,13 @@ public class CMServerTestCase extends TestCase {
 
 			server = CMServerHelper.narrow(rootNamingCtx.resolve_str(hostName + "/CMServer"));
 
-			System.out.println("server reference have got : " + server.toString());
+			System.out.println("server reference have got : \n" + server.toString());
 
 			accessIdentifier_Transferable = new AccessIdentifier_Transferable();
 
 			Identifier id = new Identifier("Null_0");
-			accessIdentifier_Transferable.domain_id = (Identifier_Transferable) id.getTransferable();
+			Identifier domainId = new Identifier("Domain_19");
+			accessIdentifier_Transferable.domain_id = (Identifier_Transferable) domainId.getTransferable();
 			accessIdentifier_Transferable.user_id = (Identifier_Transferable) id.getTransferable();
 			accessIdentifier_Transferable.session_id = (Identifier_Transferable) id.getTransferable();
 
@@ -109,14 +114,15 @@ public class CMServerTestCase extends TestCase {
 	static void oneTimeTearDown() {
 	}
 
-	public void testRetriveDomain() throws AMFICOMRemoteException, CreateObjectException {
+	public void testTransmitDomain() throws AMFICOMRemoteException, CreateObjectException {
 
 		long time0 = System.currentTimeMillis();
 		Domain_Transferable[] domain_Transferables = server.transmitDomains(new Identifier_Transferable[0],
 											accessIdentifier_Transferable);
 		long time1 = System.currentTimeMillis();
-		System.out.println("retrieve " + domain_Transferables.length + " item(s) for " + (time1 - time0)
+		System.out.println("transmit " + domain_Transferables.length + " domain(s) for " + (time1 - time0)
 				+ " ms");
+
 		for (int i = 0; i < domain_Transferables.length; i++) {
 			Domain domain = new Domain(domain_Transferables[i]);
 		}
@@ -124,8 +130,55 @@ public class CMServerTestCase extends TestCase {
 		Domain_Transferable[] domain_Transferables2 = server.transmitDomains(new Identifier_Transferable[0],
 											accessIdentifier_Transferable);
 		long time3 = System.currentTimeMillis();
-		System.out.println("retrieve " + domain_Transferables2.length + " item(s) for " + (time3 - time2)
+		System.out.println("transmit " + domain_Transferables2.length + " domain(s) for " + (time3 - time2)
 				+ " ms");
+
+		Identifier_Transferable[] identifier_Transferable = new Identifier_Transferable[domain_Transferables2.length];
+		for (int i = 0; i < domain_Transferables2.length; i++) {
+			identifier_Transferable[i] = domain_Transferables2[i].id;
+		}
+
+		long time4 = System.currentTimeMillis();
+		Domain_Transferable[] domain_Transferables3 = server.transmitDomains(identifier_Transferable,
+											accessIdentifier_Transferable);
+		long time5 = System.currentTimeMillis();
+		System.out.println("transmit " + domain_Transferables3.length + " domain(s) by ids for "
+				+ (time5 - time4) + " ms");
+	}
+
+	public void testTransmitMeasurementSetup() throws AMFICOMRemoteException {
+		long time0 = System.currentTimeMillis();
+		MeasurementSetup_Transferable[] measurementSetup_Transferables = server
+				.transmitMeasurementSetups(new Identifier_Transferable[0],
+								accessIdentifier_Transferable);
+		long time1 = System.currentTimeMillis();
+		System.out.println("transmit " + measurementSetup_Transferables.length + " measurement setup(s) for "
+				+ (time1 - time0) + " ms");
+	}
+
+	public void testTransmitTestsAndMeasurements() throws AMFICOMRemoteException, CreateObjectException {
+		long time0 = System.currentTimeMillis();
+		// 2 month ago
+		Date start = new Date(System.currentTimeMillis() - 1000 * 60 * 60 * 24 * 31 * 2);
+		Date end = new Date(System.currentTimeMillis());
+		Test_Transferable[] test_Transferables = server.transmitTestsByTime(start.getTime(), end.getTime(),
+											accessIdentifier_Transferable);
+		long time1 = System.currentTimeMillis();
+		System.out.println("transmit " + test_Transferables.length + " test(s) for " + (time1 - time0) + " ms");
+
+		Identifier_Transferable[] identifier_Transferables = new Identifier_Transferable[test_Transferables.length];
+		for (int i = 0; i < identifier_Transferables.length; i++) {
+			com.syrus.AMFICOM.measurement.Test test = new com.syrus.AMFICOM.measurement.Test(
+														test_Transferables[i]);
+			identifier_Transferables[i] = test_Transferables[i].id;
+			System.out.println("test " + test.getId().toString() + " status :" + test.getStatus());
+		}
+		long time2 = System.currentTimeMillis();
+		Measurement_Transferable[] measurement_Transferables = server
+				.transmitMeasurementForTests(identifier_Transferables, accessIdentifier_Transferable);
+		long time3 = System.currentTimeMillis();
+		System.out.println("transmit " + measurement_Transferables.length + " measuremen(s) for "
+				+ (time3 - time2) + " ms");
 
 	}
 

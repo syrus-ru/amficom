@@ -1,5 +1,5 @@
 /*
- * $Id: ClientMeasurementServerTest.java,v 1.1 2004/09/21 05:42:03 bob Exp $
+ * $Id: ClientMeasurementServerTest.java,v 1.2 2004/09/21 14:28:04 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,6 +8,8 @@
 
 package com.syrus.AMFICOM.cmserver.test;
 
+import java.util.Date;
+
 import com.syrus.AMFICOM.cmserver.CMServerImpl;
 import com.syrus.AMFICOM.cmserver.DatabaseContextSetup;
 import com.syrus.AMFICOM.configuration.Domain;
@@ -15,13 +17,15 @@ import com.syrus.AMFICOM.configuration.corba.AccessIdentifier_Transferable;
 import com.syrus.AMFICOM.configuration.corba.Domain_Transferable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
+import com.syrus.AMFICOM.measurement.corba.Measurement_Transferable;
+import com.syrus.AMFICOM.measurement.corba.Test_Transferable;
 import com.syrus.util.Application;
 import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2004/09/21 05:42:03 $
+ * @version $Revision: 1.2 $, $Date: 2004/09/21 14:28:04 $
  * @author $Author: bob $
  * @module cmserver_v1
  */
@@ -45,22 +49,37 @@ public class ClientMeasurementServerTest {
 
 	public ClientMeasurementServerTest() {
 		try {
-			CMServerImpl impl = new CMServerImpl();
+			CMServerImpl server = new CMServerImpl();
 
 			AccessIdentifier_Transferable accessIdentifier_Transferable = new AccessIdentifier_Transferable();
 
 			Identifier id = new Identifier("Null_0");
-			accessIdentifier_Transferable.domain_id = (Identifier_Transferable) id.getTransferable();
+			
+			Identifier domainId = new Identifier("Domain_19");
+			accessIdentifier_Transferable.domain_id = (Identifier_Transferable) domainId.getTransferable();
 			accessIdentifier_Transferable.user_id = (Identifier_Transferable) id.getTransferable();
 			accessIdentifier_Transferable.session_id = (Identifier_Transferable) id.getTransferable();
 
-			Domain_Transferable[] domain_Transferables = impl
-					.transmitDomains(new Identifier_Transferable[0], accessIdentifier_Transferable);
+			long time0 = System.currentTimeMillis();
+			// 2 month ago
+			Date start = new Date(System.currentTimeMillis() - 1000 * 60 * 60 * 24 * 31 * 2);
+			Date end = new Date(System.currentTimeMillis());
+			Test_Transferable[] test_Transferables = server.transmitTestsByTime(start.getTime(), end.getTime(),
+												accessIdentifier_Transferable);
+			long time1 = System.currentTimeMillis();
+			System.out.println("transmit " + test_Transferables.length + " test(s) for " + (time1 - time0) + " ms");
 
-			for (int i = 0; i < domain_Transferables.length; i++) {
-				Domain domain = new Domain(domain_Transferables[i]);
-				System.out.println(domain.getId().toString());
+			Identifier_Transferable[] identifier_Transferables = new Identifier_Transferable[test_Transferables.length];
+			for (int i = 0; i < identifier_Transferables.length; i++) {
+				identifier_Transferables[i] = test_Transferables[i].id;
 			}
+			long time2 = System.currentTimeMillis();
+			Measurement_Transferable[] measurement_Transferables = server
+					.transmitMeasurementForTests(identifier_Transferables, accessIdentifier_Transferable);
+			long time3 = System.currentTimeMillis();
+			System.out.println("transmit " + measurement_Transferables.length + " measuremen(s) for "
+					+ (time3 - time2) + " ms");
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

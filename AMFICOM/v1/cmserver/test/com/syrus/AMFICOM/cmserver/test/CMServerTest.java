@@ -45,14 +45,34 @@ public class CMServerTest {
 			accessIdentifier_Transferable.user_id = (Identifier_Transferable) id.getTransferable();
 			accessIdentifier_Transferable.session_id = (Identifier_Transferable) id.getTransferable();
 
-			Domain_Transferable[] domain_Transferables = CMServerTest.server
-					.transmitDomains(new Identifier_Transferable[0], accessIdentifier_Transferable);
-
+			long time0 = System.currentTimeMillis();
+			Domain_Transferable[] domain_Transferables = server.transmitDomains(new Identifier_Transferable[0],
+												accessIdentifier_Transferable);
+			long time1 = System.currentTimeMillis();
+			System.out.println("retrieve " + domain_Transferables.length + " item(s) for " + (time1 - time0)
+					+ " ms");
 			for (int i = 0; i < domain_Transferables.length; i++) {
 				Domain domain = new Domain(domain_Transferables[i]);
-				System.out.println(domain.getId().toString());
 			}
-
+			long time2 = System.currentTimeMillis();
+			Domain_Transferable[] domain_Transferables2 = server.transmitDomains(new Identifier_Transferable[0],
+												accessIdentifier_Transferable);
+			long time3 = System.currentTimeMillis();
+			System.out.println("retrieve " + domain_Transferables2.length + " item(s) for " + (time3 - time2)
+					+ " ms");
+			
+			Identifier_Transferable[] identifier_Transferable = new Identifier_Transferable[domain_Transferables2.length];
+			for (int i = 0; i < domain_Transferables2.length; i++) {
+				identifier_Transferable[i] = domain_Transferables2[i].id;			
+			}
+			
+			long time4 = System.currentTimeMillis();
+			Domain_Transferable[] domain_Transferables3 = server.transmitDomains(identifier_Transferable,
+												accessIdentifier_Transferable);
+			long time5 = System.currentTimeMillis();
+			System.out.println("retrieve " + domain_Transferables3.length + " item(s) by ids for " + (time5 - time4)
+					+ " ms");
+			
 		} catch (AMFICOMRemoteException are) {
 			System.err.println("AMFICOMRemoteException code:" + are.code + " , " + are.getMessage());
 			System.err.println(are);
