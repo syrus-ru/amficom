@@ -1,5 +1,5 @@
 /*
- * $Id: CableThreadTypeDatabase.java,v 1.26 2005/03/10 15:20:11 arseniy Exp $
+ * $Id: CableThreadTypeDatabase.java,v 1.27 2005/03/11 10:17:12 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,8 +28,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.26 $, $Date: 2005/03/10 15:20:11 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.27 $, $Date: 2005/03/11 10:17:12 $
+ * @author $Author: bob $
  * @module config_v1
  */
 
@@ -41,10 +41,9 @@ public class CableThreadTypeDatabase extends StorableObjectDatabase {
 		return ObjectEntities.CABLETHREADTYPE_ENTITY;
 	}
 	
-	protected String getUpdateMultipleSQLValues() {
+	protected String getUpdateMultipleSQLValuesTmpl() {
 		if (updateMultipleSQLValues == null) {
-			updateMultipleSQLValues = super.getUpdateMultipleSQLValues() + COMMA
-					+ QUESTION + COMMA
+			updateMultipleSQLValues = QUESTION + COMMA
 					+ QUESTION + COMMA
 					+ QUESTION + COMMA
 					+ QUESTION + COMMA
@@ -53,22 +52,20 @@ public class CableThreadTypeDatabase extends StorableObjectDatabase {
 		return updateMultipleSQLValues;
 	}
 
-	protected String getColumns(int mode) {
+	protected String getColumnsTmpl() {
 		if (columns == null) {
-			columns = COMMA
-				+ StorableObjectWrapper.COLUMN_CODENAME + COMMA
+			columns = StorableObjectWrapper.COLUMN_CODENAME + COMMA
 				+ StorableObjectWrapper.COLUMN_DESCRIPTION + COMMA
 				+ StorableObjectWrapper.COLUMN_NAME + COMMA
 				+ CableThreadTypeWrapper.COLUMN_COLOR + COMMA
 				+ CableThreadTypeWrapper.COLUMN_LINK_TYPE_ID;
 		}
-		return super.getColumns(mode) + columns;
+		return columns;
 	}
 	
-	protected String getUpdateSingleSQLValues(StorableObject storableObject) throws IllegalDataException {
+	protected String getUpdateSingleSQLValuesTmpl(StorableObject storableObject) throws IllegalDataException {
 		CableThreadType cableThreadType = this.fromStorableObject(storableObject);
-		String sql = super.getUpdateSingleSQLValues(storableObject) + COMMA
-			+ APOSTOPHE + DatabaseString.toQuerySubString(cableThreadType.getCodename(), SIZE_CODENAME_COLUMN) + APOSTOPHE + COMMA
+		String sql = APOSTOPHE + DatabaseString.toQuerySubString(cableThreadType.getCodename(), SIZE_CODENAME_COLUMN) + APOSTOPHE + COMMA
 			+ APOSTOPHE + DatabaseString.toQuerySubString(cableThreadType.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTOPHE
             + APOSTOPHE + DatabaseString.toQuerySubString(cableThreadType.getName(), SIZE_NAME_COLUMN) + APOSTOPHE
 			+ APOSTOPHE + cableThreadType.getColor() + APOSTOPHE + COMMA
@@ -87,17 +84,15 @@ public class CableThreadTypeDatabase extends StorableObjectDatabase {
 		super.retrieveEntity(cableThreadType);
 	}
 	
-	protected int setEntityForPreparedStatement(StorableObject storableObject, PreparedStatement preparedStatement, int mode)
+	protected int setEntityForPreparedStatementTmpl(StorableObject storableObject, PreparedStatement preparedStatement, int startParameterNumber)
 			throws IllegalDataException, SQLException {
 		CableThreadType cableThreadType = this.fromStorableObject(storableObject);
-		int i;
-		i = super.setEntityForPreparedStatement(storableObject, preparedStatement, mode);
-		preparedStatement.setString(++i, cableThreadType.getCodename());
-		preparedStatement.setString(++i, cableThreadType.getDescription());
-		preparedStatement.setString(++i, cableThreadType.getName());
-		preparedStatement.setInt(++i, cableThreadType.getColor());
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++i, cableThreadType.getLinkType().getId());
-		return i;
+		preparedStatement.setString(++startParameterNumber, cableThreadType.getCodename());
+		preparedStatement.setString(++startParameterNumber, cableThreadType.getDescription());
+		preparedStatement.setString(++startParameterNumber, cableThreadType.getName());
+		preparedStatement.setInt(++startParameterNumber, cableThreadType.getColor());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, cableThreadType.getLinkType().getId());
+		return startParameterNumber;
 	}
 	
 	protected StorableObject updateEntityFromResultSet(

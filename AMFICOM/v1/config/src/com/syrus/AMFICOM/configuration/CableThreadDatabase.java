@@ -1,5 +1,5 @@
 /*
- * $Id: CableThreadDatabase.java,v 1.21 2005/03/10 15:20:11 arseniy Exp $
+ * $Id: CableThreadDatabase.java,v 1.22 2005/03/11 10:17:12 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,8 +28,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.21 $, $Date: 2005/03/10 15:20:11 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.22 $, $Date: 2005/03/11 10:17:12 $
+ * @author $Author: bob $
  * @module config_v1
  */
 public class CableThreadDatabase extends StorableObjectDatabase  {
@@ -48,63 +48,44 @@ public class CableThreadDatabase extends StorableObjectDatabase  {
 		return ObjectEntities.CABLETHREAD_ENTITY;
 	}
 
-	protected String getColumns(int mode) {
+	protected String getColumnsTmpl() {
 		if (columns == null) {
-			columns =  COMMA
-					+ DomainMember.COLUMN_DOMAIN_ID
-					+ COMMA
-					+ StorableObjectWrapper.COLUMN_TYPE_ID
-					+ COMMA
-					+ StorableObjectWrapper.COLUMN_NAME
-					+ COMMA
+			columns = DomainMember.COLUMN_DOMAIN_ID	+ COMMA
+					+ StorableObjectWrapper.COLUMN_TYPE_ID + COMMA
+					+ StorableObjectWrapper.COLUMN_NAME	+ COMMA
 					+ StorableObjectWrapper.COLUMN_DESCRIPTION;
 		}
-		return super.getColumns(mode) + columns;
+		return columns;
 	}
 
-	protected String getUpdateMultipleSQLValues() {
+	protected String getUpdateMultipleSQLValuesTmpl() {
 		if (updateMultipleSQLValues == null) {
-			updateMultipleSQLValues = super.getUpdateMultipleSQLValues()
-					+ COMMA
-					+ QUESTION
-					+ COMMA
-					+ QUESTION
-					+ COMMA
-					+ QUESTION
-					+ COMMA
+			updateMultipleSQLValues = QUESTION + COMMA
+					+ QUESTION + COMMA
+					+ QUESTION + COMMA
 					+ QUESTION;
 		}
 		return updateMultipleSQLValues;
 	}
 
-	protected String getUpdateSingleSQLValues(StorableObject storableObject) throws IllegalDataException {
+	protected String getUpdateSingleSQLValuesTmpl(StorableObject storableObject) throws IllegalDataException {
 		CableThread cableThread = this.fromStorableObject(storableObject);
 
-		String sql = super.getUpdateSingleSQLValues(storableObject)
-				+ COMMA
-				+ DatabaseIdentifier.toSQLString(cableThread.getDomainId())
-				+ COMMA
-				+ DatabaseIdentifier.toSQLString(cableThread.getType().getId())
-				+ APOSTOPHE
-				+ DatabaseString.toQuerySubString(cableThread.getName(), SIZE_NAME_COLUMN)
-				+ APOSTOPHE
-				+ COMMA
-				+ APOSTOPHE
-				+ DatabaseString.toQuerySubString(cableThread.getDescription(), SIZE_DESCRIPTION_COLUMN)
-				+ APOSTOPHE;
+		String sql = DatabaseIdentifier.toSQLString(cableThread.getDomainId()) + COMMA
+				+ DatabaseIdentifier.toSQLString(cableThread.getType().getId()) + COMMA
+				+ APOSTOPHE	+ DatabaseString.toQuerySubString(cableThread.getName(), SIZE_NAME_COLUMN)	+ APOSTOPHE	+ COMMA
+				+ APOSTOPHE	+ DatabaseString.toQuerySubString(cableThread.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTOPHE;
 		return sql;
 	}
 
-	protected int setEntityForPreparedStatement(StorableObject storableObject, PreparedStatement preparedStatement, int mode)
+	protected int setEntityForPreparedStatementTmpl(StorableObject storableObject, PreparedStatement preparedStatement, int startParameterNumber)
 			throws IllegalDataException, SQLException {
 		CableThread cableThread = this.fromStorableObject(storableObject);
-		int i;
-		i = super.setEntityForPreparedStatement(storableObject, preparedStatement, mode);
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++i, cableThread.getDomainId());
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++i, cableThread.getType().getId());
-		preparedStatement.setString(++i, cableThread.getName());
-		preparedStatement.setString(++i, cableThread.getDescription());
-		return i;
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, cableThread.getDomainId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, cableThread.getType().getId());
+		preparedStatement.setString(++startParameterNumber, cableThread.getName());
+		preparedStatement.setString(++startParameterNumber, cableThread.getDescription());
+		return startParameterNumber;
 	}
 
 	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)

@@ -1,5 +1,5 @@
 /*
- * $Id: PortDatabase.java,v 1.53 2005/03/05 21:37:24 arseniy Exp $
+ * $Id: PortDatabase.java,v 1.54 2005/03/11 10:17:12 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,8 +27,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.53 $, $Date: 2005/03/05 21:37:24 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.54 $, $Date: 2005/03/11 10:17:12 $
+ * @author $Author: bob $
  * @module config_v1
  */
 public class PortDatabase extends CharacterizableDatabase {
@@ -47,21 +47,19 @@ public class PortDatabase extends CharacterizableDatabase {
 		return ObjectEntities.PORT_ENTITY;
 	}
 
-	protected String getColumns(int mode) {		
+	protected String getColumnsTmpl() {		
 		if (columns == null) {
-			columns = COMMA
-				+ StorableObjectWrapper.COLUMN_TYPE_ID + COMMA
+			columns = StorableObjectWrapper.COLUMN_TYPE_ID + COMMA
 				+ StorableObjectWrapper.COLUMN_DESCRIPTION + COMMA
 				+ PortWrapper.COLUMN_EQUIPMENT_ID + COMMA
 				+ PortWrapper.COLUMN_SORT;		
 		}
-		return super.getColumns(mode) + columns;
+		return columns;
 	}
 
-	protected String getUpdateMultipleSQLValues() {
+	protected String getUpdateMultipleSQLValuesTmpl() {
 		if (updateMultipleSQLValues == null) {
-			updateMultipleSQLValues = super.getUpdateMultipleSQLValues() + COMMA
-				+ QUESTION + COMMA
+			updateMultipleSQLValues = QUESTION + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION;
@@ -70,12 +68,11 @@ public class PortDatabase extends CharacterizableDatabase {
 		return updateMultipleSQLValues;
 	}	
 
-	protected String getUpdateSingleSQLValues(StorableObject storableObject) throws IllegalDataException {
+	protected String getUpdateSingleSQLValuesTmpl(StorableObject storableObject) throws IllegalDataException {
 		Port port = this.fromStorableObject(storableObject);
 		Identifier typeId = port.getType().getId();
 		Identifier equipmentId = port.getEquipmentId();
-		return super.getUpdateSingleSQLValues(storableObject) + COMMA
-			+ DatabaseIdentifier.toSQLString(typeId) + COMMA
+		return DatabaseIdentifier.toSQLString(typeId) + COMMA
 			+ APOSTOPHE + DatabaseString.toQuerySubString(port.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTOPHE	+ COMMA
 			+ DatabaseIdentifier.toSQLString(equipmentId) + COMMA 
 			+ port.getSort();
@@ -121,18 +118,17 @@ public class PortDatabase extends CharacterizableDatabase {
 		}
 	}
 
-	protected int setEntityForPreparedStatement(StorableObject storableObject, PreparedStatement preparedStatement, int mode)
+	protected int setEntityForPreparedStatementTmpl(StorableObject storableObject, PreparedStatement preparedStatement, int startParameterNumber)
 		throws IllegalDataException, SQLException {
 		Port port = this.fromStorableObject(storableObject);
 		Identifier typeId = port.getType().getId();
 		Identifier equipmentId = port.getEquipmentId();
 
-		int i = super.setEntityForPreparedStatement(storableObject, preparedStatement, mode);
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++i, typeId);
-		DatabaseString.setString(preparedStatement, ++i, port.getDescription(), SIZE_DESCRIPTION_COLUMN);
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++i, equipmentId);
-		preparedStatement.setInt(++i, port.getSort());
-		return i;
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, typeId);
+		DatabaseString.setString(preparedStatement, ++startParameterNumber, port.getDescription(), SIZE_DESCRIPTION_COLUMN);
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, equipmentId);
+		preparedStatement.setInt(++startParameterNumber, port.getSort());
+		return startParameterNumber;
 	}
 
 }

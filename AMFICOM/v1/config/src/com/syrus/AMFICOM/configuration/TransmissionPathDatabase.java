@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPathDatabase.java,v 1.57 2005/03/05 21:37:24 arseniy Exp $
+ * $Id: TransmissionPathDatabase.java,v 1.58 2005/03/11 10:17:12 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,8 +27,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.57 $, $Date: 2005/03/05 21:37:24 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.58 $, $Date: 2005/03/11 10:17:12 $
+ * @author $Author: bob $
  * @module config_v1
  */
 
@@ -54,22 +54,21 @@ public class TransmissionPathDatabase extends CharacterizableDatabase {
 		return ObjectEntities.TRANSPATH_ENTITY;
 	}
 
-	protected String getColumns(int mode) {
+	protected String getColumnsTmpl() {
 		if (columns == null) {
-			columns = COMMA + DomainMember.COLUMN_DOMAIN_ID + COMMA
+			columns = DomainMember.COLUMN_DOMAIN_ID + COMMA
 					+ StorableObjectWrapper.COLUMN_TYPE_ID + COMMA
 					+ StorableObjectWrapper.COLUMN_NAME + COMMA
 					+ StorableObjectWrapper.COLUMN_DESCRIPTION + COMMA
 					+ TransmissionPathWrapper.COLUMN_START_PORT_ID + COMMA
 					+ TransmissionPathWrapper.COLUMN_FINISH_PORT_ID;
 		}
-		return super.getColumns(mode) + columns;
+		return columns;
 	}
 
-	protected String getUpdateMultipleSQLValues() {
+	protected String getUpdateMultipleSQLValuesTmpl() {
 		if (updateMultipleSQLValues == null) {
-			updateMultipleSQLValues = super.getUpdateMultipleSQLValues() + COMMA
-					+ QUESTION + COMMA
+			updateMultipleSQLValues = QUESTION + COMMA
 					+ QUESTION + COMMA
 					+ QUESTION + COMMA
 					+ QUESTION + COMMA
@@ -79,10 +78,9 @@ public class TransmissionPathDatabase extends CharacterizableDatabase {
 		return updateMultipleSQLValues;
 	}
 
-	protected String getUpdateSingleSQLValues(StorableObject storableObject) throws IllegalDataException {
+	protected String getUpdateSingleSQLValuesTmpl(StorableObject storableObject) throws IllegalDataException {
 		TransmissionPath transmissionPath = this.fromStorableObject(storableObject);
-		return super.getUpdateSingleSQLValues(storableObject) + COMMA
-				+ DatabaseIdentifier.toSQLString(transmissionPath.getDomainId()) + COMMA
+		return DatabaseIdentifier.toSQLString(transmissionPath.getDomainId()) + COMMA
 				+ DatabaseIdentifier.toSQLString(transmissionPath.getType().getId()) + COMMA
 				+ APOSTOPHE + DatabaseString.toQuerySubString(transmissionPath.getName(), SIZE_NAME_COLUMN) + APOSTOPHE + COMMA
 				+ APOSTOPHE + DatabaseString.toQuerySubString(transmissionPath.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTOPHE + COMMA
@@ -90,19 +88,17 @@ public class TransmissionPathDatabase extends CharacterizableDatabase {
 				+ DatabaseIdentifier.toSQLString(transmissionPath.getFinishPortId());
 	}
 
-	protected int setEntityForPreparedStatement(StorableObject storableObject,
+	protected int setEntityForPreparedStatementTmpl(StorableObject storableObject,
 												PreparedStatement preparedStatement,
-												int mode) throws IllegalDataException, SQLException {
+												int startParameterNumber) throws IllegalDataException, SQLException {
 		TransmissionPath transmissionPath = this.fromStorableObject(storableObject);
-		int i;
-		i = super.setEntityForPreparedStatement(storableObject, preparedStatement, mode);
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++i, transmissionPath.getDomainId());
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++i, transmissionPath.getType().getId());
-		DatabaseString.setString(preparedStatement, ++i, transmissionPath.getName(), SIZE_NAME_COLUMN);
-		DatabaseString.setString(preparedStatement, ++i, transmissionPath.getDescription(), SIZE_DESCRIPTION_COLUMN);
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++i, transmissionPath.getStartPortId());
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++i, transmissionPath.getFinishPortId());
-		return i;
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, transmissionPath.getDomainId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, transmissionPath.getType().getId());
+		DatabaseString.setString(preparedStatement, ++startParameterNumber, transmissionPath.getName(), SIZE_NAME_COLUMN);
+		DatabaseString.setString(preparedStatement, ++startParameterNumber, transmissionPath.getDescription(), SIZE_DESCRIPTION_COLUMN);
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, transmissionPath.getStartPortId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, transmissionPath.getFinishPortId());
+		return startParameterNumber;
 	}
 
 	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)

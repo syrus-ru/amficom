@@ -1,5 +1,5 @@
 /*
- * $Id: KISDatabase.java,v 1.68 2005/03/05 21:37:24 arseniy Exp $
+ * $Id: KISDatabase.java,v 1.69 2005/03/11 10:17:12 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -37,8 +37,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.68 $, $Date: 2005/03/05 21:37:24 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.69 $, $Date: 2005/03/11 10:17:12 $
+ * @author $Author: bob $
  * @module config_v1
  */
 
@@ -61,10 +61,9 @@ public class KISDatabase extends CharacterizableDatabase {
 		return ObjectEntities.KIS_ENTITY;
 	}
 
-	protected String getColumns(int mode) {
+	protected String getColumnsTmpl() {
 		if (columns == null) {
-			columns = COMMA
-				+ DomainMember.COLUMN_DOMAIN_ID + COMMA
+			columns = DomainMember.COLUMN_DOMAIN_ID + COMMA
 				+ StorableObjectWrapper.COLUMN_NAME + COMMA
 				+ StorableObjectWrapper.COLUMN_DESCRIPTION + COMMA
 				+ KISWrapper.COLUMN_HOSTNAME + COMMA
@@ -72,13 +71,12 @@ public class KISDatabase extends CharacterizableDatabase {
 				+ KISWrapper.COLUMN_EQUIPMENT_ID + COMMA
 				+ KISWrapper.COLUMN_MCM_ID;
 		}
-		return super.getColumns(mode) + columns;
+		return columns;
 	}
 
-	protected String getUpdateMultipleSQLValues() {
+	protected String getUpdateMultipleSQLValuesTmpl() {
 		if (updateMultipleSQLValues == null) {
-			updateMultipleSQLValues = super.getUpdateMultipleSQLValues() + COMMA
-				+ QUESTION + COMMA
+			updateMultipleSQLValues = QUESTION + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
@@ -89,10 +87,9 @@ public class KISDatabase extends CharacterizableDatabase {
 		return updateMultipleSQLValues;
 	}
 
-	protected String getUpdateSingleSQLValues(StorableObject storableObject) throws IllegalDataException {
+	protected String getUpdateSingleSQLValuesTmpl(StorableObject storableObject) throws IllegalDataException {
 		KIS kis = this.fromStorableObject(storableObject);
-		String sql = super.getUpdateSingleSQLValues(storableObject) + COMMA
-			+ DatabaseIdentifier.toSQLString(kis.getDomainId()) + COMMA
+		String sql = DatabaseIdentifier.toSQLString(kis.getDomainId()) + COMMA
 			+ APOSTOPHE + DatabaseString.toQuerySubString(kis.getName(), SIZE_NAME_COLUMN) + APOSTOPHE + COMMA
 			+ APOSTOPHE + DatabaseString.toQuerySubString(kis.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTOPHE + COMMA
 			+ APOSTOPHE + DatabaseString.toQuerySubString(kis.getHostName(), SIZE_HOSTNAME_COLUMN) + APOSTOPHE + COMMA
@@ -102,21 +99,19 @@ public class KISDatabase extends CharacterizableDatabase {
 		return sql;
 	}
 
-	protected int setEntityForPreparedStatement(StorableObject storableObject, PreparedStatement preparedStatement, int mode)
+	protected int setEntityForPreparedStatementTmpl(StorableObject storableObject, PreparedStatement preparedStatement, int startParameterNumber)
 			throws IllegalDataException, SQLException {
 		KIS kis = this.fromStorableObject(storableObject);
-		int i;
 		Identifier equipmentId = kis.getEquipmentId();
 		Identifier mcmId = kis.getMCMId();
-		i = super.setEntityForPreparedStatement(storableObject, preparedStatement, mode);
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++i, kis.getDomainId());
-		DatabaseString.setString(preparedStatement, ++i, kis.getName(), SIZE_NAME_COLUMN);
-		DatabaseString.setString(preparedStatement, ++i, kis.getDescription(), SIZE_DESCRIPTION_COLUMN);
-		DatabaseString.setString(preparedStatement, ++i, kis.getHostName(), SIZE_HOSTNAME_COLUMN);
-		preparedStatement.setInt( ++i, kis.getTCPPort());
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++i, equipmentId);
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++i, mcmId);
-		return i;
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, kis.getDomainId());
+		DatabaseString.setString(preparedStatement, ++startParameterNumber, kis.getName(), SIZE_NAME_COLUMN);
+		DatabaseString.setString(preparedStatement, ++startParameterNumber, kis.getDescription(), SIZE_DESCRIPTION_COLUMN);
+		DatabaseString.setString(preparedStatement, ++startParameterNumber, kis.getHostName(), SIZE_HOSTNAME_COLUMN);
+		preparedStatement.setInt( ++startParameterNumber, kis.getTCPPort());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, equipmentId);
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, mcmId);
+		return startParameterNumber;
 	}
 
 	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)

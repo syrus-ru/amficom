@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPortDatabase.java,v 1.47 2005/03/05 21:37:24 arseniy Exp $
+ * $Id: MeasurementPortDatabase.java,v 1.48 2005/03/11 10:17:12 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,8 +28,8 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.47 $, $Date: 2005/03/05 21:37:24 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.48 $, $Date: 2005/03/11 10:17:12 $
+ * @author $Author: bob $
  * @module config_v1
  */
 public class MeasurementPortDatabase extends CharacterizableDatabase {
@@ -44,22 +44,20 @@ public class MeasurementPortDatabase extends CharacterizableDatabase {
 		return ObjectEntities.MEASUREMENTPORT_ENTITY;
 	}
 
-	protected String getColumns(int mode) {
+	protected String getColumnsTmpl() {
 		if (columns == null) {
-			columns = COMMA
-				+ StorableObjectWrapper.COLUMN_TYPE_ID + COMMA
+			columns = StorableObjectWrapper.COLUMN_TYPE_ID + COMMA
 				+ StorableObjectWrapper.COLUMN_NAME + COMMA
 				+ StorableObjectWrapper.COLUMN_DESCRIPTION + COMMA
 				+ MeasurementPortWrapper.COLUMN_KIS_ID + COMMA
 				+ MeasurementPortWrapper.COLUMN_PORT_ID;
 		}
-		return super.getColumns(mode) + columns; 
+		return columns; 
 	}
 
-	protected String getUpdateMultipleSQLValues() {
+	protected String getUpdateMultipleSQLValuesTmpl() {
 		if (updateMultipleSQLValues == null) {
-			updateMultipleSQLValues = super.getUpdateMultipleSQLValues() + COMMA
-				+ QUESTION + COMMA
+			updateMultipleSQLValues = QUESTION + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
@@ -68,13 +66,12 @@ public class MeasurementPortDatabase extends CharacterizableDatabase {
 		return updateMultipleSQLValues;
 	}
 
-	protected String getUpdateSingleSQLValues(StorableObject storableObject) throws IllegalDataException {
+	protected String getUpdateSingleSQLValuesTmpl(StorableObject storableObject) throws IllegalDataException {
 		MeasurementPort measurementPort = this.fromStorableObject(storableObject);
 		Identifier typeId = measurementPort.getType().getId();
 		Identifier kisId = measurementPort.getKISId();
 		Identifier portId = measurementPort.getPortId();
-		String sql = super.getUpdateSingleSQLValues(storableObject) + COMMA
-			+ DatabaseIdentifier.toSQLString(typeId) + COMMA
+		String sql = DatabaseIdentifier.toSQLString(typeId) + COMMA
 			+ APOSTOPHE + DatabaseString.toQuerySubString(measurementPort.getName(), SIZE_NAME_COLUMN) + APOSTOPHE	+ COMMA
 			+ APOSTOPHE + DatabaseString.toQuerySubString(measurementPort.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTOPHE + COMMA
 			+ DatabaseIdentifier.toSQLString(kisId)	+ COMMA
@@ -82,20 +79,18 @@ public class MeasurementPortDatabase extends CharacterizableDatabase {
 		return sql;
 	}
 
-	protected int setEntityForPreparedStatement(StorableObject storableObject, PreparedStatement preparedStatement, int mode)
+	protected int setEntityForPreparedStatementTmpl(StorableObject storableObject, PreparedStatement preparedStatement, int startParameterNumber)
 			throws IllegalDataException, SQLException {
 		MeasurementPort measurementPort = this.fromStorableObject(storableObject);
 		Identifier typeId = measurementPort.getType().getId();
 		Identifier kisId = measurementPort.getKISId();
 		Identifier portId = measurementPort.getPortId();
-		int i;
-		i = super.setEntityForPreparedStatement(storableObject, preparedStatement, mode);
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++i, typeId);
-		DatabaseString.setString(preparedStatement, ++i, measurementPort.getName(), SIZE_NAME_COLUMN);
-		DatabaseString.setString(preparedStatement, ++i, measurementPort.getDescription(), SIZE_DESCRIPTION_COLUMN);
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++i, kisId);
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++i, portId);
-		return i;
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, typeId);
+		DatabaseString.setString(preparedStatement, ++startParameterNumber, measurementPort.getName(), SIZE_NAME_COLUMN);
+		DatabaseString.setString(preparedStatement, ++startParameterNumber, measurementPort.getDescription(), SIZE_DESCRIPTION_COLUMN);
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, kisId);
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, portId);
+		return startParameterNumber;
 	}
 
   private MeasurementPort fromStorableObject(StorableObject storableObject) throws IllegalDataException {

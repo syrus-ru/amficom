@@ -1,5 +1,5 @@
 /*
- * $Id: EquipmentDatabase.java,v 1.80 2005/03/05 21:37:24 arseniy Exp $
+ * $Id: EquipmentDatabase.java,v 1.81 2005/03/11 10:17:12 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,8 +27,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.80 $, $Date: 2005/03/05 21:37:24 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.81 $, $Date: 2005/03/11 10:17:12 $
+ * @author $Author: bob $
  * @module config_v1
  */
 
@@ -69,10 +69,9 @@ public class EquipmentDatabase extends CharacterizableDatabase {
 		return ObjectEntities.EQUIPMENT_ENTITY;
 	}
 
-	protected String getColumns(int mode) {
+	protected String getColumnsTmpl() {
 		if (columns == null) {
-			columns = COMMA
-				+ DomainMember.COLUMN_DOMAIN_ID + COMMA
+			columns = DomainMember.COLUMN_DOMAIN_ID + COMMA
 				+ StorableObjectWrapper.COLUMN_TYPE_ID + COMMA
 				+ StorableObjectWrapper.COLUMN_NAME + COMMA
 				+ StorableObjectWrapper.COLUMN_DESCRIPTION + COMMA
@@ -87,13 +86,12 @@ public class EquipmentDatabase extends CharacterizableDatabase {
 				+ EquipmentWrapper.COLUMN_SW_VERSION + COMMA
 				+ EquipmentWrapper.COLUMN_INVENTORY_NUMBER;
 		}
-		return super.getColumns(mode) + columns;
+		return columns;
 	}
 
-	protected String getUpdateMultipleSQLValues() {
+	protected String getUpdateMultipleSQLValuesTmpl() {
 		if (updateMultipleSQLValues == null) {
-			updateMultipleSQLValues = super.getUpdateMultipleSQLValues() + COMMA 
-				+ QUESTION + COMMA
+			updateMultipleSQLValues = QUESTION + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
@@ -111,10 +109,9 @@ public class EquipmentDatabase extends CharacterizableDatabase {
 		return updateMultipleSQLValues;
 	}
 
-	protected String getUpdateSingleSQLValues(StorableObject storableObject) throws IllegalDataException {
+	protected String getUpdateSingleSQLValuesTmpl(StorableObject storableObject) throws IllegalDataException {
 		Equipment equipment = this.fromStorableObject(storableObject);
-		String sql = super.getUpdateSingleSQLValues(storableObject) + COMMA
-			+ DatabaseIdentifier.toSQLString(equipment.getDomainId()) + COMMA
+		String sql = DatabaseIdentifier.toSQLString(equipment.getDomainId()) + COMMA
 			+ DatabaseIdentifier.toSQLString(equipment.getType().getId()) + COMMA
 			+ APOSTOPHE + DatabaseString.toQuerySubString(equipment.getName(), SIZE_NAME_COLUMN) + APOSTOPHE + COMMA
 			+ APOSTOPHE + DatabaseString.toQuerySubString(equipment.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTOPHE + COMMA
@@ -131,26 +128,24 @@ public class EquipmentDatabase extends CharacterizableDatabase {
 		return sql;
 	}
 
-	protected int setEntityForPreparedStatement(StorableObject storableObject, PreparedStatement preparedStatement, int mode)
+	protected int setEntityForPreparedStatementTmpl(StorableObject storableObject, PreparedStatement preparedStatement, int startParameterNumber)
 			throws IllegalDataException, SQLException {
 		Equipment equipment = this.fromStorableObject(storableObject);
-		int i;
-		i = super.setEntityForPreparedStatement(storableObject, preparedStatement, mode);
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++i, equipment.getDomainId());
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++i, equipment.getType().getId());
-		DatabaseString.setString(preparedStatement, ++i, equipment.getName(), SIZE_NAME_COLUMN);
-		DatabaseString.setString(preparedStatement, ++i, equipment.getDescription(), SIZE_DESCRIPTION_COLUMN);
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++i, equipment.getImageId());
-		DatabaseString.setString(preparedStatement, ++i, equipment.getSupplier(), SIZE_SUPPLIER_COLUMN);
-		DatabaseString.setString(preparedStatement, ++i, equipment.getSupplierCode(), SIZE_SUPPLIER_CODE_COLUMN);
-		preparedStatement.setFloat(++i, equipment.getLatitude());
-		preparedStatement.setFloat(++i, equipment.getLongitude());
-		DatabaseString.setString(preparedStatement, ++i, equipment.getHwSerial(), SIZE_HW_SERIAL_COLUMN);
-		DatabaseString.setString(preparedStatement, ++i, equipment.getHwVersion(), SIZE_HW_VERSION_COLUMN);
-		DatabaseString.setString(preparedStatement, ++i, equipment.getSwSerial(), SIZE_SW_SERIAL_COLUMN);
-		DatabaseString.setString(preparedStatement, ++i, equipment.getSwVersion(), SIZE_SW_VERSION_COLUMN);
-		DatabaseString.setString(preparedStatement, ++i, equipment.getInventoryNumber(), SIZE_INVENTOY_NUMBER_COLUMN);
-		return i;
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, equipment.getDomainId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, equipment.getType().getId());
+		DatabaseString.setString(preparedStatement, ++startParameterNumber, equipment.getName(), SIZE_NAME_COLUMN);
+		DatabaseString.setString(preparedStatement, ++startParameterNumber, equipment.getDescription(), SIZE_DESCRIPTION_COLUMN);
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, equipment.getImageId());
+		DatabaseString.setString(preparedStatement, ++startParameterNumber, equipment.getSupplier(), SIZE_SUPPLIER_COLUMN);
+		DatabaseString.setString(preparedStatement, ++startParameterNumber, equipment.getSupplierCode(), SIZE_SUPPLIER_CODE_COLUMN);
+		preparedStatement.setFloat(++startParameterNumber, equipment.getLatitude());
+		preparedStatement.setFloat(++startParameterNumber, equipment.getLongitude());
+		DatabaseString.setString(preparedStatement, ++startParameterNumber, equipment.getHwSerial(), SIZE_HW_SERIAL_COLUMN);
+		DatabaseString.setString(preparedStatement, ++startParameterNumber, equipment.getHwVersion(), SIZE_HW_VERSION_COLUMN);
+		DatabaseString.setString(preparedStatement, ++startParameterNumber, equipment.getSwSerial(), SIZE_SW_SERIAL_COLUMN);
+		DatabaseString.setString(preparedStatement, ++startParameterNumber, equipment.getSwVersion(), SIZE_SW_VERSION_COLUMN);
+		DatabaseString.setString(preparedStatement, ++startParameterNumber, equipment.getInventoryNumber(), SIZE_INVENTOY_NUMBER_COLUMN);
+		return startParameterNumber;
 	}
 
 	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)

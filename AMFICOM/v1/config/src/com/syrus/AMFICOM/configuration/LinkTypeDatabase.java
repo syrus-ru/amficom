@@ -1,5 +1,5 @@
 /*
- * $Id: LinkTypeDatabase.java,v 1.31 2005/03/05 21:37:24 arseniy Exp $
+ * $Id: LinkTypeDatabase.java,v 1.32 2005/03/11 10:17:12 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,8 +25,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.31 $, $Date: 2005/03/05 21:37:24 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.32 $, $Date: 2005/03/11 10:17:12 $
+ * @author $Author: bob $
  * @module config_v1
  */
 
@@ -42,24 +42,22 @@ public class LinkTypeDatabase extends CharacterizableDatabase {
 		return ObjectEntities.LINKTYPE_ENTITY;
 	}
 
-	protected String getUpdateMultipleSQLValues() {
+	protected String getUpdateMultipleSQLValuesTmpl() {
 		if (updateMultipleSQLValues == null) {
-			updateMultipleSQLValues = super.getUpdateMultipleSQLValues() + COMMA
-			+ QUESTION + COMMA
-			+ QUESTION + COMMA
-			+ QUESTION + COMMA
-			+ QUESTION + COMMA
-			+ QUESTION + COMMA
-			+ QUESTION + COMMA
-			+ QUESTION;
+			updateMultipleSQLValues = QUESTION + COMMA
+				+ QUESTION + COMMA
+				+ QUESTION + COMMA
+				+ QUESTION + COMMA
+				+ QUESTION + COMMA
+				+ QUESTION + COMMA
+				+ QUESTION;
 		}
 		return updateMultipleSQLValues;
 	}
 
-	protected String getColumns(int mode) {
+	protected String getColumnsTmpl() {
 		if (columns == null) {
-			columns = COMMA
-				+ StorableObjectWrapper.COLUMN_CODENAME + COMMA
+			columns = StorableObjectWrapper.COLUMN_CODENAME + COMMA
 				+ StorableObjectWrapper.COLUMN_DESCRIPTION + COMMA
 				+ StorableObjectWrapper.COLUMN_NAME + COMMA
 				+ LinkTypeWrapper.COLUMN_KIND + COMMA
@@ -67,13 +65,12 @@ public class LinkTypeDatabase extends CharacterizableDatabase {
 				+ LinkTypeWrapper.COLUMN_MANUFACTURER_CODE + COMMA
 				+ LinkTypeWrapper.COLUMN_IMAGE_ID;
 		}
-		return super.getColumns(mode) + columns;
+		return columns;
 	}
 
-	protected String getUpdateSingleSQLValues(StorableObject storableObject) throws IllegalDataException {
+	protected String getUpdateSingleSQLValuesTmpl(StorableObject storableObject) throws IllegalDataException {
 		LinkType linkType = this.fromStorableObject(storableObject);
-		String sql = super.getUpdateSingleSQLValues(storableObject) + COMMA
-			+ APOSTOPHE + DatabaseString.toQuerySubString(linkType.getCodename(), SIZE_CODENAME_COLUMN) + APOSTOPHE + COMMA
+		String sql = APOSTOPHE + DatabaseString.toQuerySubString(linkType.getCodename(), SIZE_CODENAME_COLUMN) + APOSTOPHE + COMMA
 			+ APOSTOPHE + DatabaseString.toQuerySubString(linkType.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTOPHE 
 			+ APOSTOPHE + DatabaseString.toQuerySubString(linkType.getName(), SIZE_NAME_COLUMN) + APOSTOPHE + COMMA
 			+ linkType.getSort().value() + COMMA
@@ -89,20 +86,18 @@ public class LinkTypeDatabase extends CharacterizableDatabase {
 		throw new IllegalDataException("LinkTypeDatabase.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
 	}
 
-	protected int setEntityForPreparedStatement(StorableObject storableObject,
-			PreparedStatement preparedStatement, int mode)
+	protected int setEntityForPreparedStatementTmpl(StorableObject storableObject,
+			PreparedStatement preparedStatement, int startParameterNumber)
 			throws IllegalDataException, SQLException {
 		LinkType linkType = this.fromStorableObject(storableObject);
-		int i;
-		i = super.setEntityForPreparedStatement(storableObject, preparedStatement, mode);
-		preparedStatement.setString( ++i, linkType.getCodename());
-		preparedStatement.setString( ++i, linkType.getDescription());
-		preparedStatement.setString( ++i, linkType.getName());
-		preparedStatement.setInt( ++i, linkType.getSort().value());
-		preparedStatement.setString( ++i, linkType.getManufacturer());
-		preparedStatement.setString( ++i, linkType.getManufacturerCode());
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++i, linkType.getImageId());
-		return i;
+		preparedStatement.setString( ++startParameterNumber, linkType.getCodename());
+		preparedStatement.setString( ++startParameterNumber, linkType.getDescription());
+		preparedStatement.setString( ++startParameterNumber, linkType.getName());
+		preparedStatement.setInt( ++startParameterNumber, linkType.getSort().value());
+		preparedStatement.setString( ++startParameterNumber, linkType.getManufacturer());
+		preparedStatement.setString( ++startParameterNumber, linkType.getManufacturerCode());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, linkType.getImageId());
+		return startParameterNumber;
 	}
 
 	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)

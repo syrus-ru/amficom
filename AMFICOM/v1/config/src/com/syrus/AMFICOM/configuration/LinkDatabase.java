@@ -1,5 +1,5 @@
 /*
- * $Id: LinkDatabase.java,v 1.36 2005/03/05 21:37:24 arseniy Exp $
+ * $Id: LinkDatabase.java,v 1.37 2005/03/11 10:17:12 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,8 +27,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.36 $, $Date: 2005/03/05 21:37:24 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.37 $, $Date: 2005/03/11 10:17:12 $
+ * @author $Author: bob $
  * @module config_v1
  */
 
@@ -54,10 +54,9 @@ public class LinkDatabase extends CharacterizableDatabase {
 		return ObjectEntities.LINK_ENTITY;
 	}
 
-	protected String getColumns(int mode) {
+	protected String getColumnsTmpl() {
 		if (columns == null) {
-			columns = COMMA
-				+ DomainMember.COLUMN_DOMAIN_ID + COMMA
+			columns = DomainMember.COLUMN_DOMAIN_ID + COMMA
 				+ StorableObjectWrapper.COLUMN_TYPE_ID + COMMA
 				+ LinkWrapper.COLUMN_SORT + COMMA
 				+ StorableObjectWrapper.COLUMN_NAME + COMMA
@@ -68,13 +67,12 @@ public class LinkDatabase extends CharacterizableDatabase {
 				+ LinkWrapper.COLUMN_COLOR + COMMA
 				+ LinkWrapper.COLUMN_MARK;
 		}
-		return super.getColumns(mode) + columns;
+		return columns;
 	}
 	
-	protected String getUpdateMultipleSQLValues() {
+	protected String getUpdateMultipleSQLValuesTmpl() {
 		if (updateMultipleSQLValues == null) {
-			updateMultipleSQLValues = super.getUpdateMultipleSQLValues() + COMMA 
-				+ QUESTION + COMMA
+			updateMultipleSQLValues = QUESTION + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
@@ -88,14 +86,13 @@ public class LinkDatabase extends CharacterizableDatabase {
 		return updateMultipleSQLValues;
 	}
 	
-	protected String getUpdateSingleSQLValues(StorableObject storableObject) throws IllegalDataException {
+	protected String getUpdateSingleSQLValuesTmpl(StorableObject storableObject) throws IllegalDataException {
 		Link link = this.fromStorableObject(storableObject);
 		String inventoryNo = DatabaseString.toQuerySubString(link.getInventoryNo(), SIZE_INVENTORY_NO_COLUMN);
 		String supplier = DatabaseString.toQuerySubString(link.getSupplier(), SIZE_SUPPLIER_COLUMN);
 		String supplierCode = DatabaseString.toQuerySubString(link.getSupplierCode(), SIZE_SUPPLIER_CODE_COLUMN);
 		String mark = DatabaseString.toQuerySubString(link.getMark(),SIZE_MARK_COLUMN);
-		String sql = super.getUpdateSingleSQLValues(storableObject) + COMMA
-			+ DatabaseIdentifier.toSQLString(link.getDomainId()) + COMMA
+		String sql = DatabaseIdentifier.toSQLString(link.getDomainId()) + COMMA
 			+ DatabaseIdentifier.toSQLString(link.getType().getId()) + COMMA
 			+ link.getSort().value() + COMMA
 			+ APOSTOPHE + DatabaseString.toQuerySubString(link.getName(), SIZE_NAME_COLUMN) + APOSTOPHE + COMMA
@@ -108,22 +105,20 @@ public class LinkDatabase extends CharacterizableDatabase {
 		return sql;
 	}
 	
-	protected int setEntityForPreparedStatement(StorableObject storableObject, PreparedStatement preparedStatement, int mode)
+	protected int setEntityForPreparedStatementTmpl(StorableObject storableObject, PreparedStatement preparedStatement, int startParameterNumber)
 			throws IllegalDataException, SQLException {
 		Link link = this.fromStorableObject(storableObject);
-		int i;
-		i = super.setEntityForPreparedStatement(storableObject, preparedStatement, mode);
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++i, link.getDomainId());
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++i, link.getType().getId());
-		preparedStatement.setInt( ++i, link.getSort().value());
-		preparedStatement.setString( ++i, link.getName());
-		preparedStatement.setString( ++i, link.getDescription());
-		preparedStatement.setString( ++i, link.getInventoryNo());
-		preparedStatement.setString( ++i, link.getSupplier());
-		preparedStatement.setString( ++i, link.getSupplierCode());
-		preparedStatement.setInt( ++i, link.getColor());
-		preparedStatement.setString( ++i, link.getMark());
-		return i;
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, link.getDomainId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, link.getType().getId());
+		preparedStatement.setInt( ++startParameterNumber, link.getSort().value());
+		preparedStatement.setString( ++startParameterNumber, link.getName());
+		preparedStatement.setString( ++startParameterNumber, link.getDescription());
+		preparedStatement.setString( ++startParameterNumber, link.getInventoryNo());
+		preparedStatement.setString( ++startParameterNumber, link.getSupplier());
+		preparedStatement.setString( ++startParameterNumber, link.getSupplierCode());
+		preparedStatement.setInt( ++startParameterNumber, link.getColor());
+		preparedStatement.setString( ++startParameterNumber, link.getMark());
+		return startParameterNumber;
 	}
 
 	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)

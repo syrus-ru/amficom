@@ -1,5 +1,5 @@
 /*
- * $Id: CableLinkTypeDatabase.java,v 1.24 2005/03/05 21:37:24 arseniy Exp $
+ * $Id: CableLinkTypeDatabase.java,v 1.25 2005/03/11 10:17:12 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -24,16 +24,14 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.24 $, $Date: 2005/03/05 21:37:24 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.25 $, $Date: 2005/03/11 10:17:12 $
+ * @author $Author: bob $
  * @module config_v1
  */
 public class CableLinkTypeDatabase extends CharacterizableDatabase {
 	private static final int SIZE_MANUFACTURER_COLUMN = 64; 
 
 	private static final int SIZE_MANUFACTURER_CODE_COLUMN = 64;
-
-	private static final String LINK_COLUMN_LINK_TYPE_ID = "link_type_id";
 
 	private static String columns;
 	private static String updateMultipleSQLValues;
@@ -42,10 +40,9 @@ public class CableLinkTypeDatabase extends CharacterizableDatabase {
 		return ObjectEntities.LINKTYPE_ENTITY;
 	}
 
-	protected String getUpdateMultipleSQLValues() {
+	protected String getUpdateMultipleSQLValuesTmpl() {
 		if (updateMultipleSQLValues == null) {
-			updateMultipleSQLValues = super.getUpdateMultipleSQLValues() + COMMA
-				+ QUESTION + COMMA
+			updateMultipleSQLValues = QUESTION + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
@@ -56,10 +53,9 @@ public class CableLinkTypeDatabase extends CharacterizableDatabase {
 		return updateMultipleSQLValues;
 	}
 
-	protected String getColumns(int mode) {
+	protected String getColumnsTmpl() {
 		if (columns == null) {
-			columns = COMMA
-				+ StorableObjectWrapper.COLUMN_CODENAME + COMMA
+			columns = StorableObjectWrapper.COLUMN_CODENAME + COMMA
 				+ StorableObjectWrapper.COLUMN_DESCRIPTION + COMMA
 				+ StorableObjectWrapper.COLUMN_NAME + COMMA
 				+ CableLinkTypeWrapper.COLUMN_KIND + COMMA
@@ -67,13 +63,12 @@ public class CableLinkTypeDatabase extends CharacterizableDatabase {
 				+ CableLinkTypeWrapper.COLUMN_MANUFACTURER_CODE + COMMA
 				+ CableLinkTypeWrapper.COLUMN_IMAGE_ID;
 		}
-		return super.getColumns(mode) + columns;
+		return columns;
 	}
 
-	protected String getUpdateSingleSQLValues(StorableObject storableObject) throws IllegalDataException {
+	protected String getUpdateSingleSQLValuesTmpl(StorableObject storableObject) throws IllegalDataException {
 		CableLinkType cableLinkType = this.fromStorableObject(storableObject);
-		String sql = super.getUpdateSingleSQLValues(storableObject) + COMMA
-			+ APOSTOPHE + DatabaseString.toQuerySubString(cableLinkType.getCodename(), SIZE_CODENAME_COLUMN) + APOSTOPHE + COMMA
+		String sql = APOSTOPHE + DatabaseString.toQuerySubString(cableLinkType.getCodename(), SIZE_CODENAME_COLUMN) + APOSTOPHE + COMMA
 			+ APOSTOPHE + DatabaseString.toQuerySubString(cableLinkType.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTOPHE 
 			+ APOSTOPHE + DatabaseString.toQuerySubString(cableLinkType.getName(), SIZE_NAME_COLUMN) + APOSTOPHE + COMMA
 			+ cableLinkType.getSort().value() + COMMA
@@ -89,19 +84,17 @@ public class CableLinkTypeDatabase extends CharacterizableDatabase {
 		throw new IllegalDataException("CableLinkTypeDatabase.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
 	}
 
-	protected int setEntityForPreparedStatement(StorableObject storableObject, PreparedStatement preparedStatement, int mode)
+	protected int setEntityForPreparedStatementTmpl(StorableObject storableObject, PreparedStatement preparedStatement, int startParameterNumber)
 			throws IllegalDataException, SQLException {
 		CableLinkType cableLinkType = this.fromStorableObject(storableObject);
-		int i;
-		i = super.setEntityForPreparedStatement(storableObject, preparedStatement, mode);
-		preparedStatement.setString( ++i, cableLinkType.getCodename());
-		preparedStatement.setString( ++i, cableLinkType.getDescription());
-		preparedStatement.setString( ++i, cableLinkType.getName());
-		preparedStatement.setInt( ++i, cableLinkType.getSort().value());
-		preparedStatement.setString( ++i, cableLinkType.getManufacturer());
-		preparedStatement.setString( ++i, cableLinkType.getManufacturerCode());
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++i, cableLinkType.getImageId());
-		return i;
+		preparedStatement.setString( ++startParameterNumber, cableLinkType.getCodename());
+		preparedStatement.setString( ++startParameterNumber, cableLinkType.getDescription());
+		preparedStatement.setString( ++startParameterNumber, cableLinkType.getName());
+		preparedStatement.setInt( ++startParameterNumber, cableLinkType.getSort().value());
+		preparedStatement.setString( ++startParameterNumber, cableLinkType.getManufacturer());
+		preparedStatement.setString( ++startParameterNumber, cableLinkType.getManufacturerCode());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, cableLinkType.getImageId());
+		return startParameterNumber;
 	}
 
 	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)

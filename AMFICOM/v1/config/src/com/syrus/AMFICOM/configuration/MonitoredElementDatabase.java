@@ -1,5 +1,5 @@
 /*
- * $Id: MonitoredElementDatabase.java,v 1.58 2005/03/10 15:20:11 arseniy Exp $
+ * $Id: MonitoredElementDatabase.java,v 1.59 2005/03/11 10:17:12 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -41,8 +41,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.58 $, $Date: 2005/03/10 15:20:11 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.59 $, $Date: 2005/03/11 10:17:12 $
+ * @author $Author: bob $
  * @module config_v1
  */
 
@@ -66,28 +66,30 @@ public class MonitoredElementDatabase extends StorableObjectDatabase {
 		return ObjectEntities.ME_ENTITY;
 	}
 
-	protected String getColumns(int mode) {
+	protected String getColumnsTmpl() {
 		if (columns == null) {
-			columns = COMMA + DomainMember.COLUMN_DOMAIN_ID + COMMA
+			columns = DomainMember.COLUMN_DOMAIN_ID + COMMA
 					+ StorableObjectWrapper.COLUMN_NAME + COMMA + MonitoredElementWrapper.COLUMN_MEASUREMENT_PORT_ID
 					+ COMMA + MonitoredElementWrapper.COLUMN_SORT + COMMA
 					+ MonitoredElementWrapper.COLUMN_LOCAL_ADDRESS;
 		}
-		return super.getColumns(mode) + columns;
+		return columns;
 	}
 
-	protected String getUpdateMultipleSQLValues() {
+	protected String getUpdateMultipleSQLValuesTmpl() {
 		if (updateMultipleSQLValues == null) {
-			updateMultipleSQLValues = super.getUpdateMultipleSQLValues() + COMMA + QUESTION + COMMA + QUESTION
-					+ COMMA + QUESTION + COMMA + QUESTION + COMMA + QUESTION;
+			updateMultipleSQLValues = QUESTION + COMMA 
+				+ QUESTION + COMMA 
+				+ QUESTION + COMMA 
+				+ QUESTION + COMMA 
+				+ QUESTION;
 		}
 		return updateMultipleSQLValues;
 	}
 
-	protected String getUpdateSingleSQLValues(StorableObject storableObject) throws IllegalDataException {
+	protected String getUpdateSingleSQLValuesTmpl(StorableObject storableObject) throws IllegalDataException {
 		MonitoredElement monitoredElement = this.fromStorableObject(storableObject);
-		String sql = super.getUpdateSingleSQLValues(storableObject) + COMMA
-				+ DatabaseIdentifier.toSQLString(monitoredElement.getDomainId()) + COMMA + APOSTOPHE
+		String sql = DatabaseIdentifier.toSQLString(monitoredElement.getDomainId()) + COMMA + APOSTOPHE
 				+ DatabaseString.toQuerySubString(monitoredElement.getName(), SIZE_NAME_COLUMN) + APOSTOPHE + COMMA
 				+ DatabaseIdentifier.toSQLString(monitoredElement.getMeasurementPortId()) + COMMA
 				+ monitoredElement.getSort().value() + COMMA + APOSTOPHE
@@ -96,19 +98,17 @@ public class MonitoredElementDatabase extends StorableObjectDatabase {
 		return sql;
 	}
 
-	protected int setEntityForPreparedStatement(StorableObject storableObject,
+	protected int setEntityForPreparedStatementTmpl(StorableObject storableObject,
 												PreparedStatement preparedStatement,
-												int mode) throws IllegalDataException, SQLException {
+												int startParameterNumber) throws IllegalDataException, SQLException {
 		MonitoredElement monitoredElement = this.fromStorableObject(storableObject);
-		int i;
-		i = super.setEntityForPreparedStatement(storableObject, preparedStatement, mode);
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++i, monitoredElement.getDomainId());
-		DatabaseString.setString(preparedStatement, ++i, monitoredElement.getName(), SIZE_NAME_COLUMN);
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++i, monitoredElement.getMeasurementPortId());
-		preparedStatement.setInt(++i, monitoredElement.getSort().value());
-		DatabaseString.setString(preparedStatement, ++i, monitoredElement.getLocalAddress(),
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, monitoredElement.getDomainId());
+		DatabaseString.setString(preparedStatement, ++startParameterNumber, monitoredElement.getName(), SIZE_NAME_COLUMN);
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, monitoredElement.getMeasurementPortId());
+		preparedStatement.setInt(++startParameterNumber, monitoredElement.getSort().value());
+		DatabaseString.setString(preparedStatement, ++startParameterNumber, monitoredElement.getLocalAddress(),
 			SIZE_LOCAL_ADDRESS_COLUMN);
-		return i;
+		return startParameterNumber;
 	}
 
 	public void retrieve(StorableObject storableObject) throws IllegalDataException, ObjectNotFoundException,
