@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementControlModule.java,v 1.61 2005/03/05 21:37:45 arseniy Exp $
+ * $Id: MeasurementControlModule.java,v 1.62 2005/03/14 15:44:34 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,18 +31,23 @@ import com.syrus.AMFICOM.configuration.KIS;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CORBAServer;
 import com.syrus.AMFICOM.general.CommunicationException;
+import com.syrus.AMFICOM.general.CompoundCondition;
+import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.SleepButWorkThread;
+import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
-import com.syrus.AMFICOM.measurement.MeasurementDatabaseContext;
+import com.syrus.AMFICOM.general.corba.OperationSort;
+import com.syrus.AMFICOM.general.corba.CompoundCondition_TransferablePackage.CompoundConditionSort;
+import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
 import com.syrus.AMFICOM.measurement.Result;
 import com.syrus.AMFICOM.measurement.Test;
-import com.syrus.AMFICOM.measurement.TestDatabase;
+import com.syrus.AMFICOM.measurement.TestWrapper;
 import com.syrus.AMFICOM.measurement.corba.Result_Transferable;
 import com.syrus.AMFICOM.measurement.corba.TestStatus;
 import com.syrus.AMFICOM.measurement.corba.TestTemporalType;
@@ -54,7 +59,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.61 $, $Date: 2005/03/05 21:37:45 $
+ * @version $Revision: 1.62 $, $Date: 2005/03/14 15:44:34 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -226,27 +231,55 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 
 	private static void prepareTestList() {
 		testList = Collections.synchronizedList(new ArrayList());
+		TypicalCondition tc;
+		CompoundCondition cc = null;
 		Collection tests;
-		TestDatabase testDatabase = (TestDatabase)MeasurementDatabaseContext.getTestDatabase();
+
+		tc = new TypicalCondition(TestStatus._TEST_STATUS_SCHEDULED,
+				0,
+				OperationSort.OPERATION_EQUALS,
+				ObjectEntities.TEST_ENTITY_CODE,
+				TestWrapper.COLUMN_STATUS);
+		LinkedIdsCondition lic = new LinkedIdsCondition(iAm.getId(), ObjectEntities.TEST_ENTITY_CODE);
+		try {
+			cc = new CompoundCondition(lic, CompoundConditionSort.AND, tc);
+		}
+		catch (CreateObjectException coe) {
+			//Never
+			Log.errorException(coe);
+		}
 
 		try {
-			tests = testDatabase.retrieveTestsForMCM(iAm.getId(), TestStatus.TEST_STATUS_SCHEDULED);
+			tests = MeasurementStorableObjectPool.getStorableObjectsByCondition(cc, true);
 			Log.debugMessage("Found " + tests.size() + " tests of status SCHEDULED", Log.DEBUGLEVEL07);
 			testList.addAll(tests);
 		}
-		catch (Exception e) {
-			Log.errorException(e);
+		catch (ApplicationException ae) {
+			Log.errorException(ae);
 		}
-		
+
+		tc = new TypicalCondition(TestStatus._TEST_STATUS_PROCESSING,
+				0,
+				OperationSort.OPERATION_EQUALS,
+				ObjectEntities.TEST_ENTITY_CODE,
+				TestWrapper.COLUMN_STATUS);
 		try {
-			tests = testDatabase.retrieveTestsForMCM(iAm.getId(), TestStatus.TEST_STATUS_PROCESSING);
+			cc = new CompoundCondition(lic, CompoundConditionSort.AND, tc);
+		}
+		catch (CreateObjectException coe) {
+			//Never
+			Log.errorException(coe);
+		}
+
+		try {
+			tests = MeasurementStorableObjectPool.getStorableObjectsByCondition(cc, true);
 			Log.debugMessage("Found " + tests.size() + " tests of status PROCESSING", Log.DEBUGLEVEL07);
 			for (Iterator it = tests.iterator(); it.hasNext();)
-				startTestProcessor((Test)it.next());
+				startTestProcessor((Test) it.next());
 		}
-		catch (Exception e) {
-			Log.errorException(e);
-		}		
+		catch (ApplicationException ae) {
+			Log.errorException(ae);
+		}
 	}
 
 	private static void prepareResultList() {
