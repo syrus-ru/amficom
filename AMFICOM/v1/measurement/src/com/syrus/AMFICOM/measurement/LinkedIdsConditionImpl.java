@@ -1,5 +1,5 @@
 /*
- * $Id: LinkedIdsConditionImpl.java,v 1.4 2005/01/27 16:02:57 arseniy Exp $
+ * $Id: LinkedIdsConditionImpl.java,v 1.5 2005/02/08 11:47:39 max Exp $
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
  * Проект: АМФИКОМ.
@@ -7,22 +7,23 @@
 
 package com.syrus.AMFICOM.measurement;
 
+import java.util.Collection;
 import java.util.Collections;
-import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
-import com.syrus.AMFICOM.configuration.MeasurementPortType;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.ParameterType;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/01/27 16:02:57 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.5 $, $Date: 2005/02/08 11:47:39 $
+ * @author $Author: max $
  * @module measurement_v1
  */
-class LinkedIdsConditionImpl extends com.syrus.AMFICOM.general.LinkedIdsCondition {
+class LinkedIdsConditionImpl extends LinkedIdsCondition {
 	protected static final Short ANALYSISTYPE_SHORT = new Short(ObjectEntities.ANALYSISTYPE_ENTITY_CODE);
 	protected static final Short EVALUATIONTYPE_SHORT = new Short(ObjectEntities.EVALUATIONTYPE_ENTITY_CODE);
 	protected static final Short MEASUREMENT_SHORT = new Short(ObjectEntities.MEASUREMENT_ENTITY_CODE);
@@ -36,7 +37,7 @@ class LinkedIdsConditionImpl extends com.syrus.AMFICOM.general.LinkedIdsConditio
 	}
 
 	private LinkedIdsConditionImpl(Identifier identifier, Short entityCode) {
-		this.identifier = identifier;
+		this.linkedIds = Collections.singletonList(identifier);
 		this.entityCode = entityCode;
 	}
 
@@ -62,226 +63,52 @@ class LinkedIdsConditionImpl extends com.syrus.AMFICOM.general.LinkedIdsConditio
 	 */
 	public boolean isConditionTrue(Object object) throws ApplicationException {
 		boolean condition = false;
+		List params;
 		switch (this.entityCode.shortValue()) {
 			case ObjectEntities.ANALYSISTYPE_ENTITY_CODE:
-				if (object instanceof AnalysisType) {
-					AnalysisType analysisType = (AnalysisType) object;
-					List criteriaParameterTypes = analysisType.getCriteriaParameterTypes();
-					if (this.linkedIds == null) {
-						Identifier criteriaParameterTypeId = this.identifier;
-						for (Iterator it = criteriaParameterTypes.iterator(); it.hasNext();) {
-							Identifier id = ((ParameterType) it.next()).getId();
-							if (criteriaParameterTypeId.equals(id)) {
-								condition = true;
-								break;
-							}
-						}
-					}
-					else {
-						for (Iterator it = this.linkedIds.iterator(); it.hasNext();) {
-							Identifier criteriaParameterTypeId = (Identifier) it.next();
-							for (Iterator it2 = criteriaParameterTypes.iterator(); it2.hasNext();) {
-								Identifier id = ((ParameterType) it2.next()).getId();
-								if (criteriaParameterTypeId.equals(id)) {
-									condition = true;
-									break;
-								}
-							}
-						}
-					}
-				}
+				AnalysisType analysisType = (AnalysisType) object;
+				params = analysisType.getCriteriaParameterTypes();
+				params.addAll(analysisType.getInParameterTypes());
+				params.addAll(analysisType.getOutParameterTypes());
+				params.addAll(analysisType.getEtalonParameterTypes());
+				condition = super.conditionTest(params);
 				break;
 			case ObjectEntities.EVALUATIONTYPE_ENTITY_CODE:
-				if (object instanceof EvaluationType) {
-					EvaluationType evaluationType = (EvaluationType) object;
-					List thresholdParameterTypes = evaluationType.getThresholdParameterTypes();
-					if (this.linkedIds == null) {
-						Identifier thresholdParameterTypeId = this.identifier;
-						for (Iterator it = thresholdParameterTypes.iterator(); it.hasNext();) {
-							Identifier id = ((ParameterType) it.next()).getId();
-							if (thresholdParameterTypeId.equals(id)) {
-								condition = true;
-								break;
-							}
-						}
-					}
-					else {
-						for (Iterator it = this.linkedIds.iterator(); it.hasNext();) {
-							Identifier thresholdParameterTypeId = (Identifier) it.next();
-							for (Iterator it2 = thresholdParameterTypes.iterator(); it2.hasNext();) {
-								Identifier id = ((ParameterType) it2.next()).getId();
-								if (thresholdParameterTypeId.equals(id)) {
-									condition = true;
-									break;
-								}
-							}
-						}
-					}
-				}
+				EvaluationType evaluationType = (EvaluationType) object;
+				params = evaluationType.getThresholdParameterTypes();
+				params.addAll(evaluationType.getInParameterTypes());
+				params.addAll(evaluationType.getOutParameterTypes());
+				params.addAll(evaluationType.getEtalonParameterTypes());
+				condition = super.conditionTest(params);				
 				break;
 			case ObjectEntities.MEASUREMENT_ENTITY_CODE:
-				if (object instanceof Measurement) {
-					Identifier testId = ((Measurement) object).getTestId();
-					if (this.linkedIds == null) {
-						if (this.identifier.equals(testId)) {
-							condition = true;
-							break;
-						}
-					}
-					else {
-						for (Iterator it = this.linkedIds.iterator(); it.hasNext();) {
-							Identifier id = (Identifier) it.next();
-							if (testId.equals(id)) {
-								condition = true;
-								break;
-							}
-						}
-					}
-				}
+				Identifier testId = ((Measurement) object).getTestId();
+				condition = super.conditionTest(testId);				
 				break;
 			case ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE:
-				if (object instanceof MeasurementType) {
-					MeasurementType measurementType = (MeasurementType) object;
-					List measurementPortTypes = measurementType.getMeasurementPortTypes();
-					if (measurementPortTypes != null) {
-						for (Iterator it = measurementPortTypes.iterator(); it.hasNext();) {
-							MeasurementPortType measurementPortType = (MeasurementPortType) it.next();
-							Identifier id2 = measurementPortType.getId();
-							if (!condition) {
-								if (this.linkedIds == null) {
-									Identifier id = this.identifier;
-									if (id.equals(id2)) {
-										condition = true;
-										break;
-									}
-								}
-								else {
-									for (Iterator iter = this.linkedIds.iterator(); iter.hasNext();) {
-										Identifier id = (Identifier) iter.next();
-										if (id2.equals(id)) {
-											condition = true;
-											break;
-										}
-
-									}
-								}
-							}
-						}
-					}
-					else {
-						condition = false;
-					}
-				}
-				break;
+				MeasurementType measurementType = (MeasurementType) object;
+				params = measurementType.getMeasurementPortTypes();
+				params.addAll(measurementType.getInParameterTypes());
+				params.addAll(measurementType.getOutParameterTypes());
+				return super.conditionTest(params);									
 			case ObjectEntities.MS_ENTITY_CODE:
-				if (object instanceof MeasurementSetup) {
-					MeasurementSetup measurementSetup = (MeasurementSetup) object;
-					/* choose type of linked objects */
-					short code = 0;
-					List objectList;
-					if (this.linkedIds != null) {
-						for (Iterator it = this.linkedIds.iterator(); it.hasNext();) {
-							Identifier id = (Identifier) it.next();
-							if (code == 0)
-								code = id.getMajor();
-							else
-								if (code != id.getMajor())
-									throw new UnsupportedOperationException("LinkedIdsCondition.isConditionTrue | there some different entities : "
-											+ ObjectEntities.codeToString(code)
-											+ " and "
-											+ ObjectEntities.codeToString(id.getMajor()));
-						}
-						objectList = this.linkedIds;
-					}
-					else {
-						/* work with simple identifier */
-						code = this.identifier.getMajor();
-						objectList = Collections.singletonList(this.identifier);
-					}
-
-					switch (code) {
-						case ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE:
-							for (Iterator iter = objectList.iterator(); iter.hasNext();) {
-								Identifier id = (Identifier) iter.next();
-								MeasurementType measurementType = (MeasurementType) MeasurementStorableObjectPool.getStorableObject(id, true);
-								SetParameter[] setParameters = measurementSetup.getParameterSet().getParameters();
-								for (int i = 0; (i < setParameters.length) && (!condition); i++) {
-									ParameterType parameterType = (ParameterType) setParameters[i].getType();
-									List inParameterTypes = measurementType.getInParameterTypes();
-									for (Iterator it = inParameterTypes.iterator(); it.hasNext();) {
-										Object element = it.next();
-										if (element instanceof ParameterType) {
-											ParameterType parameterType2 = (ParameterType) element;
-											if (parameterType.getId().equals(parameterType2.getId())) {
-												condition = true;
-												break;
-											}
-										}
-									}
-
-									if (!condition) {
-										List outParameterTypes = measurementType.getOutParameterTypes();
-										for (Iterator it = outParameterTypes.iterator(); it.hasNext();) {
-											Object element = it.next();
-											if (element instanceof ParameterType) {
-												ParameterType parameterType2 = (ParameterType) element;
-												if (parameterType.getId().equals(parameterType2.getId())) {
-													condition = true;
-													break;
-												}
-											}
-
-										}
-									}
-
-								}
-							}
-							break;
-						case ObjectEntities.ME_ENTITY_CODE:
-							for (Iterator it = measurementSetup.getMonitoredElementIds().iterator(); it.hasNext();) {
-								Identifier id2 = (Identifier) it.next();
-								if (!condition) {
-									for (Iterator iter = objectList.iterator(); iter.hasNext();) {
-										Identifier id = (Identifier) iter.next();
-										if (id.equals(id2)) {
-											condition = true;
-											break;
-										}
-									}
-								}
-							}
-							break;
-						default:
-							throw new UnsupportedOperationException("LinkedIdsCondition.isConditionTrue | unknown linked entity : "
-									+ ObjectEntities.codeToString(code));
-					}
-				}
+				MeasurementSetup measurementSetup = (MeasurementSetup) object;
+				params = new LinkedList();
+				params.addAll((Collection)measurementSetup.getParameterSet());
+				params.addAll((Collection)measurementSetup.getThresholdSet());
+				params.addAll((Collection)measurementSetup.getCriteriaSet());
+				params.addAll((Collection)measurementSetup.getEtalon());
+				params.addAll(measurementSetup.getMonitoredElementIds());
+				condition = super.conditionTest(params);
 				break;
 			case ObjectEntities.RESULT_ENTITY_CODE:
-				if (object instanceof Result) {
-					Identifier actionId = ((Result) object).getAction().getId();
-					if (this.linkedIds == null) {
-						if (actionId.equals(this.identifier)) {
-							condition = true;
-							break;
-						}
-					}
-					else {
-						for (Iterator it = this.linkedIds.iterator(); it.hasNext();) {
-							if (actionId.equals(it.next())) {
-								condition = true;
-								break;
-							}
-						}
-					}
-				}
-				break;
+				Identifier actionId = ((Result) object).getAction().getId();
+				condition = super.conditionTest(actionId);
+				break;				
 			default:
 				throw new UnsupportedOperationException("entityCode "
 						+ ObjectEntities.codeToString(this.entityCode.shortValue())
-						+ " is unknown for this condition");
-		}
-
+						+ " is unknown for this condition");		}
 		return condition;
 	}
 
