@@ -3,16 +3,12 @@ CLASSES=./classes
 IDL=./idl
 LOAD=../load
 LIB=../lib
-LIB8I=../lib8i
-EXTLIB=../extlib
+EXTLIB=../../extlib
 #ORACLE_HOME=/mnt/d/oracle/product/9.0.2
 
 VBCLASSPATH=$(ORACLE_HOME)/lib/vbjapp.jar:$(ORACLE_HOME)/lib/vbjorb.jar
-#VBCLASSPATH=$(EXTLIB)/ora8i/vbjapp.jar:$(EXTLIB)/ora8i/vbjorb.jar:$(EXTLIB)/ora8i/aurora_client.jar
 MYCLASSPATH=$(LIB)/ServerInterface_Survey.jar:$(LIB)/ServerInterface_Alarm.jar:$(LIB)/ServerInterface_General.jar:$(LIB)/server.jar:$(LIB)/util.jar:$(LIB)/utilserver.jar
-#MYCLASSPATH=$(LIB)/ServerInterface_Survey.jar:$(LIB)/ServerInterface_Alarm.jar:$(LIB)/ServerInterface_General.jar:$(LIB)/AMFICOMServerObject.jar:$(LIB8I)/util.jar
 SQLJCLASSPATH=$(JDEV_HOME)/sqlj/lib/translator.jar:$(JDEV_HOME)/sqlj/lib/runtime12.jar:$(JDEV_HOME)/jdbc/lib/classes12.jar
-#SQLJCLASSPATH=$(EXTLIB)/ora8i/translator.zip:$(EXTLIB)/ora8i/runtime12.zip:$(EXTLIB)/ora8i/classes12.zip
 
 #SERVERHOSTNAME=mgts
 #CONNECTSTRING=asia
