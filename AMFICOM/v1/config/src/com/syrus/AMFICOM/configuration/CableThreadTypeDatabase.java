@@ -1,5 +1,5 @@
 /*
- * $Id: CableThreadTypeDatabase.java,v 1.4 2004/12/09 14:21:36 max Exp $
+ * $Id: CableThreadTypeDatabase.java,v 1.5 2004/12/14 09:41:48 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,6 +13,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
@@ -29,7 +30,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2004/12/09 14:21:36 $
+ * @version $Revision: 1.5 $, $Date: 2004/12/14 09:41:48 $
  * @author $Author: max $
  * @module configuration_v1
  */
@@ -85,7 +86,7 @@ public class CableThreadTypeDatabase extends StorableObjectDatabase {
 			+ APOSTOPHE + DatabaseString.toQuerySubString(cableThreadType.getDescription()) + APOSTOPHE
             + APOSTOPHE + DatabaseString.toQuerySubString(cableThreadType.getName()) + APOSTOPHE
 			+ APOSTOPHE + DatabaseString.toQuerySubString(cableThreadType.getColor()) + APOSTOPHE + COMMA
-			+ DatabaseIdentifier.toSQLString(cableThreadType.getLinkTypeId());
+			+ DatabaseIdentifier.toSQLString(cableThreadType.getLinkType().getId());
 		return sql;
 	}
 	
@@ -111,7 +112,7 @@ public class CableThreadTypeDatabase extends StorableObjectDatabase {
 			preparedStatement.setString( ++i, cableThreadType.getDescription());
             preparedStatement.setString( ++i, cableThreadType.getName());
 			preparedStatement.setString( ++i, cableThreadType.getColor());
-			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, cableThreadType.getLinkTypeId());
+			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, cableThreadType.getLinkType().getId());
 		} catch (SQLException sqle) {
 			throw new UpdateObjectException("CableThreadTypeDatabase." +
 					"setEntityForPreparedStatement | Error " + sqle.getMessage(), sqle);
@@ -127,6 +128,14 @@ public class CableThreadTypeDatabase extends StorableObjectDatabase {
 			cableThreadType = new CableThreadType(DatabaseIdentifier.getIdentifier(resultSet,COLUMN_ID), null, null, null, 
 												  null, null, null);			
 		}
+        LinkType linkType;
+        try {
+            linkType = (LinkType)ConfigurationStorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_LINK_TYPE_ID), true);
+        }
+        catch (ApplicationException ae) {
+            throw new RetrieveObjectException(ae);
+        }
+        
 		cableThreadType.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
 									DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),									
 									DatabaseIdentifier.getIdentifier(resultSet, COLUMN_CREATOR_ID),
@@ -135,7 +144,7 @@ public class CableThreadTypeDatabase extends StorableObjectDatabase {
 									DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_DESCRIPTION)),
                                     DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_NAME)),
 									DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_COLOR)),
-									DatabaseIdentifier.getIdentifier(resultSet, COLUMN_LINK_TYPE_ID));
+									linkType);
 
 		
 		return cableThreadType;
