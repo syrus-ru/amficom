@@ -1,5 +1,5 @@
 /**
- * $Id: LangModelMap.java,v 1.8 2004/12/22 16:09:48 krupenn Exp $
+ * $Id: LangModelMap.java,v 1.9 2005/02/07 17:00:54 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -19,10 +19,9 @@ import java.util.ResourceBundle;
  * 
  * 
  * 
- * @version $Revision: 1.8 $, $Date: 2004/12/22 16:09:48 $
- * @module map_v2
+ * @version $Revision: 1.9 $, $Date: 2005/02/07 17:00:54 $
+ * @module mapclient_v2
  * @author $Author: krupenn $
- * @see
  */
 public final class LangModelMap
 {
@@ -32,7 +31,7 @@ public final class LangModelMap
 			ResourceBundle.getBundle(BUNDLE_NAME);
 
 	private LangModelMap()
-	{
+	{//empty
 	}
 
 	public static String getString(String keyName) 

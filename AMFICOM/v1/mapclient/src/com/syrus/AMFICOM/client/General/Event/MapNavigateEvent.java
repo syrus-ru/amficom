@@ -1,5 +1,5 @@
 /**
- * $Id: MapNavigateEvent.java,v 1.12 2004/12/27 15:49:27 krupenn Exp $
+ * $Id: MapNavigateEvent.java,v 1.13 2005/02/07 17:00:54 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -18,121 +18,120 @@ import com.syrus.AMFICOM.general.corba.IdentifierDefaultFactory;
  *
  *
  *
- * @version $Revision: 1.12 $, $Date: 2004/12/27 15:49:27 $
- * @module map_v2
+ * @version $Revision: 1.13 $, $Date: 2005/02/07 17:00:54 $
+ * @module mapclient_v2
  * @author $Author: krupenn $
  * @see
  */
 public class MapNavigateEvent extends MapEvent
 {
 	/**
-	 * Пользователь создал маркер
-	 * @param markerId
-	 * @param distance
-	 * @param spd
+	 * Пользователь создал маркер.
+	 * Используются поля {@link #markerId}, {@link #distance}, {@link #spd}
 	 */
 	public static final int MAP_MARKER_CREATED_EVENT = 1;
 	/**
-	 * Пользователь удалил маркер
-	 * @param markerId
+	 * Пользователь удалил маркер.
+	 * Используются поля {@link #markerId}
 	 */
 	public static final int MAP_MARKER_DELETED_EVENT = 2;
 	/**
-	 * Пользователь выделил маркер
-	 * @param markerId
+	 * Пользователь выделил маркер.
+	 * Используются поля {@link #markerId}
 	 */
 	public static final int MAP_MARKER_SELECTED_EVENT = 3;
 	/**
-	 * Пользователь передвинул маркер
-	 * @param markerId
-	 * @param distance
+	 * Пользователь передвинул маркер.
+	 * Используются поля {@link #markerId}, {@link #distance}
 	 */
 	public static final int MAP_MARKER_MOVED_EVENT = 4;
 	/**
-	 * Маркер был создан вне карты (например, в окне рефлектограмм)
-	 * @param markerId
-	 * @param distance
+	 * Маркер был создан вне карты (например, в окне рефлектограмм).
+	 * Используются поля {@link #markerId}, {@link #distance}
 	 */
 	public static final int DATA_MARKER_CREATED_EVENT = 5;
 	/**
-	 * Маркер события был создан вне карты (например, в окне рефлектограмм)
-	 * @param markerId
-	 * @param distance
+	 * Маркер события был создан вне карты (например, в окне рефлектограмм).
+	 * Используются поля {@link #markerId}, {@link #distance}
 	 */
 	public static final int DATA_EVENTMARKER_CREATED_EVENT = 6;
 	/**
-	 * Маркер сигнала тревоги был создан вне карты (например, в окне рефлектограмм)
-	 * @param markerId
-	 * @param distance
+	 * Маркер сигнала тревоги был создан вне карты (например, в окне 
+	 * рефлектограмм).
+	 * Используются поля {@link #markerId}, {@link #distance}
 	 */
 	public static final int DATA_ALARMMARKER_CREATED_EVENT = 7;
 	/**
-	 * Маркер был выделен вне карты (например, в окне рефлектограмм)
-	 * @param markerId
+	 * Маркер был выделен вне карты (например, в окне рефлектограмм).
+	 * Используются поля {@link #markerId}
 	 */
 	public static final int DATA_MARKER_SELECTED_EVENT = 8;
 	/**
-	 * Маркер был выделен вне карты (например, в окне рефлектограмм)
-	 * @param markerId
+	 * Маркер был выделен вне карты (например, в окне рефлектограмм).
+	 * Используются поля {@link #markerId}
 	 */
 	public static final int DATA_MARKER_DESELECTED_EVENT = 9;
 	/**
-	 * Маркер был удален вне карты (например, в окне рефлектограмм)
-	 * @param markerId
+	 * Маркер был удален вне карты (например, в окне рефлектограмм).
+	 * Используются поля {@link #markerId}
 	 */
 	public static final int DATA_MARKER_DELETED_EVENT = 10;
 	/**
-	 * @param markerId
-	 * @param distance
-	 * Маркер был передвинут вне карты (например, в окне рефлектограмм)
+	 * Маркер был передвинут вне карты (например, в окне рефлектограмм).
+	 * Используются поля {@link #markerId}, {@link #distance}
 	 */
 	public static final int DATA_MARKER_MOVED_EVENT = 11;
 	/**
-	 * Элемент выделен
-	 * @param source
+	 * Элемент выделен.
+	 * Используются поля {@link #source}
 	 */
 	public static final int MAP_ELEMENT_SELECTED_EVENT = 13;
 	/**
-	 * Снято выбеление элемента
-	 * @param source
+	 * Снято выбеление элемента.
+	 * Используются поля {@link #source}
 	 */
 	public static final int MAP_ELEMENT_DESELECTED_EVENT = 14;
 
 	/**
-	 * Тип события
+	 * Тип события.
 	 */
 	protected int mapEventType;
 
 	/**
-	 * Идентификатор маркера
+	 * Идентификатор маркера.
 	 */
 	protected Identifier markerId;
 
 	/**
-	 * Относительные координаты маркера
+	 * Относительные координаты маркера.
 	 */
 	protected double distance;
 
 	/**
-	 * Идентификаторы схемного пути
+	 * Идентификаторы схемного пути.
 	 */
 	protected Identifier schemePathId;
 
 	/**
-	 * Идентификаторы исследуемого объекта
+	 * Идентификаторы исследуемого объекта.
 	 */
 	protected Identifier meId;
 
 	/**
-	 * Идентификатор схемной Линии
+	 * Идентификатор схемной Линии.
 	 */
 	protected Identifier schemePathElementId;
 
 	/**
-	 * Декомпозитор пути измерений
+	 * Декомпозитор пути измерений.
 	 */
 	protected Object spd = null;
 	
+	/**
+	 * Фабричный класс, используется для конвертации идентификаторов
+	 * {@link com.syrus.AMFICOM.general.Identifier} и
+	 * {@link com.syrus.AMFICOM.general.corba.Identifier} и
+	 */
 	private static IdentifierDefaultFactory identifierFactory = new IdentifierDefaultFactory();
 
 	public MapNavigateEvent(
@@ -178,7 +177,7 @@ public class MapNavigateEvent extends MapEvent
 
 	public Identifier getMarkerId()
 	{
-		return markerId;
+		return this.markerId;
 	}
 
 	public void setDistance(double distance)
@@ -188,7 +187,7 @@ public class MapNavigateEvent extends MapEvent
 
 	public double getDistance()
 	{
-		return distance;
+		return this.distance;
 	}
 
 	public void setSchemePathId(com.syrus.AMFICOM.general.corba.Identifier schemePathId)
@@ -198,7 +197,9 @@ public class MapNavigateEvent extends MapEvent
 
 	public com.syrus.AMFICOM.general.corba.Identifier getSchemePathId()
 	{
-		return identifierFactory.newInstanceFromPrimitive(schemePathId.getMajor(), schemePathId.getMinor());
+		return identifierFactory.newInstanceFromPrimitive(
+				this.schemePathId.getMajor(), 
+				this.schemePathId.getMinor());
 	}
 
 	public void setMeId(Identifier meId)
@@ -208,7 +209,7 @@ public class MapNavigateEvent extends MapEvent
 
 	public Identifier getMeId()
 	{
-		return meId;
+		return this.meId;
 	}
 
 	public void setSchemePathElementId(com.syrus.AMFICOM.general.corba.Identifier schemePathElementId)
@@ -218,7 +219,9 @@ public class MapNavigateEvent extends MapEvent
 
 	public com.syrus.AMFICOM.general.corba.Identifier getSchemePathElementId()
 	{
-		return identifierFactory.newInstanceFromPrimitive(schemePathElementId.getMajor(), schemePathElementId.getMinor());
+		return identifierFactory.newInstanceFromPrimitive(
+				this.schemePathElementId.getMajor(), 
+				this.schemePathElementId.getMinor());
 	}
 /*
 	public void setDescriptor(Object descriptor)
@@ -238,71 +241,71 @@ public class MapNavigateEvent extends MapEvent
 
 	public Object getSchemePathDecompositor()
 	{
-		return spd;
+		return this.spd;
 	}
 
 	public boolean isMapMarkerCreated()
 	{
-		return mapEventType == MAP_MARKER_CREATED_EVENT;
+		return this.mapEventType == MAP_MARKER_CREATED_EVENT;
 	}
 
 	public boolean isMapMarkerDeleted()
 	{
-		return mapEventType == MAP_MARKER_DELETED_EVENT;
+		return this.mapEventType == MAP_MARKER_DELETED_EVENT;
 	}
 
 	public boolean isMapMarkerSelected()
 	{
-		return mapEventType == MAP_MARKER_SELECTED_EVENT;
+		return this.mapEventType == MAP_MARKER_SELECTED_EVENT;
 	}
 
 	public boolean isMapMarkerMoved()
 	{
-		return mapEventType == MAP_MARKER_MOVED_EVENT;
+		return this.mapEventType == MAP_MARKER_MOVED_EVENT;
 	}
 
 	public boolean isDataMarkerCreated()
 	{
-		return mapEventType == DATA_MARKER_CREATED_EVENT;
+		return this.mapEventType == DATA_MARKER_CREATED_EVENT;
 	}
 
 	public boolean isDataMarkerDeleted()
 	{
-		return mapEventType == DATA_MARKER_DELETED_EVENT;
+		return this.mapEventType == DATA_MARKER_DELETED_EVENT;
 	}
 
 	public boolean isDataMarkerSelected()
 	{
-		return mapEventType == DATA_MARKER_SELECTED_EVENT;
+		return this.mapEventType == DATA_MARKER_SELECTED_EVENT;
 	}
 
 	public boolean isDataMarkerDeselected()
 	{
-		return mapEventType == DATA_MARKER_DESELECTED_EVENT;
+		return this.mapEventType == DATA_MARKER_DESELECTED_EVENT;
 	}
 
 	public boolean isDataMarkerMoved()
 	{
-		return mapEventType == DATA_MARKER_MOVED_EVENT;
+		return this.mapEventType == DATA_MARKER_MOVED_EVENT;
 	}
 
 	public boolean isDataEventMarkerCreated()
 	{
-		return mapEventType == DATA_EVENTMARKER_CREATED_EVENT;
+		return this.mapEventType == DATA_EVENTMARKER_CREATED_EVENT;
 	}
 
 	public boolean isDataAlarmMarkerCreated()
 	{
-		return mapEventType == DATA_ALARMMARKER_CREATED_EVENT;
+		return this.mapEventType == DATA_ALARMMARKER_CREATED_EVENT;
 	}
 
 	public boolean isMapElementSelected()
 	{
-		return mapEventType == MAP_ELEMENT_SELECTED_EVENT;
+		return this.mapEventType == MAP_ELEMENT_SELECTED_EVENT;
 	}
 
 	public boolean isMapElementDeselected()
 	{
-		return mapEventType == MAP_ELEMENT_DESELECTED_EVENT;
+		return this.mapEventType == MAP_ELEMENT_DESELECTED_EVENT;
 	}
 }

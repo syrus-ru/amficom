@@ -1,5 +1,5 @@
 /**
- * $Id: MapEvent.java,v 1.9 2005/01/30 15:11:53 krupenn Exp $
+ * $Id: MapEvent.java,v 1.10 2005/02/07 17:00:54 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -15,10 +15,9 @@ package com.syrus.AMFICOM.Client.General.Event;
  * 
  * 
  * 
- * @version $Revision: 1.9 $, $Date: 2005/01/30 15:11:53 $
- * @module map_v2
+ * @version $Revision: 1.10 $, $Date: 2005/02/07 17:00:54 $
+ * @module mapclient_v2
  * @author $Author: krupenn $
- * @see
  */
 public class MapEvent extends OperationEvent 
 {
