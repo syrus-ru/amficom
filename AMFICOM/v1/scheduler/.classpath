@@ -26,5 +26,6 @@
 	<classpathentry kind="var" path="AMFICOM_HOME/lib/mapview.jar"/>
 	<classpathentry kind="src" path="/surveyresource_v1"/>
 	<classpathentry kind="src" path="/event_v1"/>
+	<classpathentry kind="src" path="/admin_v1"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>
