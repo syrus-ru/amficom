@@ -1,5 +1,5 @@
 /*
- * $Id: CMServerMeasurementObjectLoader.java,v 1.20 2005/02/08 12:45:33 bob Exp $
+ * $Id: CMServerMeasurementObjectLoader.java,v 1.21 2005/02/08 12:46:17 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -56,7 +56,7 @@ import com.syrus.AMFICOM.measurement.corba.Evaluation_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Measurement_Transferable;
 import com.syrus.util.Log;
 /**
- * @version $Revision: 1.20 $, $Date: 2005/02/08 12:45:33 $
+ * @version $Revision: 1.21 $, $Date: 2005/02/08 12:46:17 $
  * @author $Author: bob $
  * @module cmserver_v1
  */
@@ -80,18 +80,18 @@ public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementOb
     }
     
     private StorableObjectCondition_Transferable getConditionTransferable(StorableObjectCondition condition) {
-		StorableObjectCondition_Transferable condition_Transferable = new StorableObjectCondition_Transferable();
+		StorableObjectCondition_Transferable conditionTransferable = new StorableObjectCondition_Transferable();
 		Object transferable = condition.getTransferable();
 		if (condition instanceof LinkedIdsCondition) {
-			condition_Transferable.linkedIdsCondition((LinkedIdsCondition_Transferable) transferable);
+			conditionTransferable.linkedIdsCondition((LinkedIdsCondition_Transferable) transferable);
 		} else if (condition instanceof CompoundCondition) {
-			condition_Transferable.compoundCondition((CompoundCondition_Transferable) transferable);
+			conditionTransferable.compoundCondition((CompoundCondition_Transferable) transferable);
 		} else if (condition instanceof TypicalCondition) {
-			condition_Transferable.typicalCondition((TypicalCondition_Transferable) transferable);
+			conditionTransferable.typicalCondition((TypicalCondition_Transferable) transferable);
 		} else if (condition instanceof EquivalentCondition) {
-			condition_Transferable.equialentCondition((EquivalentCondition_Transferable) transferable);
+			conditionTransferable.equialentCondition((EquivalentCondition_Transferable) transferable);
 		} 
-		return condition_Transferable;
+		return conditionTransferable;
 	}
   
     public Set refresh(Set storableObjects) throws DatabaseException, CommunicationException {
