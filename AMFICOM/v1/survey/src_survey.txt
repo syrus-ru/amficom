@@ -34,8 +34,6 @@ src\com\syrus\AMFICOM\Client\Survey\SurveyMenuBar.java
 src\com\syrus\AMFICOM\Client\Survey\SurveyRun.java
 src\com\syrus\AMFICOM\Client\Survey\SurveyToolBar.java
 src\com\syrus\AMFICOM\Client\Survey\Alarm\AlarmChecker.java
-src\com\syrus\AMFICOM\Client\Survey\Alarm\AlarmDescriptor.java
-src\com\syrus\AMFICOM\Client\Survey\Alarm\AlarmDescriptorEvent.java
 src\com\syrus\AMFICOM\Client\Survey\Alarm\AlarmFrame.java
 src\com\syrus\AMFICOM\Client\Survey\Alarm\AlarmPopupFrame.java
 src\com\syrus\AMFICOM\Client\Survey\Alarm\AlarmToolBar.java

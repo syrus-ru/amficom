@@ -225,7 +225,6 @@ src\com\syrus\AMFICOM\Client\Resource\ImageResource.java
 src\com\syrus\AMFICOM\Client\Resource\MiscUtil.java
 src\com\syrus\AMFICOM\Client\Resource\MyDataFlavor.java
 src\com\syrus\AMFICOM\Client\Resource\ObjectResource.java
-src\com\syrus\AMFICOM\Client\Resource\ObjectResourceController.java
 src\com\syrus\AMFICOM\Client\Resource\ObjectResourceModel.java
 src\com\syrus\AMFICOM\Client\Resource\ObjectResourceNameSorter.java
 src\com\syrus\AMFICOM\Client\Resource\ObjectResourceSorter.java
@@ -281,4 +280,5 @@ src\com\syrus\AMFICOM\client_\general\ui_\ObjectResourceTable.java
 src\com\syrus\AMFICOM\client_\general\ui_\ObjectResourceTableModel.java
 src\com\syrus\AMFICOM\client_\general\ui_\StubComboBoxCellRenderer.java
 src\com\syrus\AMFICOM\client_\general\ui_\StubLabelCellRenderer.java
+src\com\syrus\AMFICOM\client_\resource\ObjectResourceController.java
 src\com\syrus\AMFICOM\corba\portable\client\ClientImpl.java
