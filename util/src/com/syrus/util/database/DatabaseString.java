@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseString.java,v 1.5 2004/12/10 15:38:59 bob Exp $
+ * $Id: DatabaseString.java,v 1.6 2004/12/29 12:12:49 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,18 +10,17 @@ package com.syrus.util.database;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-
 /**
- * @version $Revision: 1.5 $, $Date: 2004/12/10 15:38:59 $
- * @author $Author: bob $
+ * @version $Revision: 1.6 $, $Date: 2004/12/29 12:12:49 $
+ * @author $Author: arseniy $
  * @module util
  */
 public class DatabaseString {
-	
+
 	private DatabaseString(){
 		// empty
 	}
-	
+
 	/**
 	 * @deprecated use {@link #toQuerySubString(String, int)}
 	 * @param string string to sql query, null is also available
@@ -31,7 +30,7 @@ public class DatabaseString {
 	public static String toQuerySubString(String string){
 		return (string != null) ? string.replaceAll("(')", "$1$1") : "";
 	}
-	
+
 	/**
 	 * @param string string to sql query, null is also available
 	 * @param length maximum length to this string
@@ -43,7 +42,7 @@ public class DatabaseString {
 				(string.length() > length) ? string.substring(0, length) : string
 						).replaceAll("(')", "$1$1") : "";
 	}
-	
+
 	/**
 	 * 
 	 * @param preparedStatement
@@ -57,7 +56,7 @@ public class DatabaseString {
 		preparedStatement.setString(parameterIndex, 
 			(string != null) ? ((string.length() > length) ? string.substring(0, length) : string) : ""	);
 	}
-	
+
 	/**
 	 * @param string 
 	 * @return sql query without escape chars 

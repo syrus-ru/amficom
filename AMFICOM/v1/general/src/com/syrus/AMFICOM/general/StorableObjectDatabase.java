@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectDatabase.java,v 1.65 2004/12/27 14:42:08 bob Exp $
+ * $Id: StorableObjectDatabase.java,v 1.66 2004/12/29 12:11:13 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,8 +31,8 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.65 $, $Date: 2004/12/27 14:42:08 $
- * @author $Author: bob $
+ * @version $Revision: 1.66 $, $Date: 2004/12/29 12:11:13 $
+ * @author $Author: arseniy $
  * @module general_v1
  */
 
@@ -241,14 +241,14 @@ public abstract class StorableObjectDatabase {
 	protected String getColumns(int mode) {
 		if (columns == null) {
             String s = new String();
-            switch(mode) {
+            switch (mode) {
             case MODE_INSERT:
                  s = COLUMN_ID + COMMA;
                 break;
             case MODE_UPDATE:
                 break;
             default:
-                Log.errorMessage("StorableObjectDatabase.getColumns | Unknown mode " + mode);
+                Log.errorMessage("StorableObjectDatabase.getColumns | Unknown mode: " + mode);
             }
 			columns = s
 				+ COLUMN_CREATED + COMMA
@@ -980,10 +980,10 @@ public abstract class StorableObjectDatabase {
 
 		return result;
 	}	
-	
+
 	protected void updateEntity(StorableObject storableObject) throws IllegalDataException, UpdateObjectException {
 		String storableObjectIdStr = DatabaseIdentifier.toSQLString(storableObject.getId());
-		
+
 		String[] cols = this.getColumns(MODE_UPDATE).split(COMMA);
 		String[] values = this.parseInsertStringValues(this.getUpdateSingleSQLValues(storableObject), cols.length);
 		if (cols.length != values.length)
@@ -1006,7 +1006,7 @@ public abstract class StorableObjectDatabase {
 			buffer.append(storableObjectIdStr);
 			sql = buffer.toString();
 		}
-		
+
 		Statement statement = null;
 		Connection connection = DatabaseConnection.getConnection();
 		try {
@@ -1054,13 +1054,13 @@ public abstract class StorableObjectDatabase {
 			StringBuffer buffer = new StringBuffer(SQL_UPDATE);
 			buffer.append(this.getEnityName());
 			buffer.append(SQL_SET);
-			for(int i=0;i<cols.length;i++){
+			for(int i = 0; i < cols.length; i++) {
 				if(cols[i].equals(COLUMN_ID))
-                    continue;                
-                buffer.append(cols[i]);
+					continue;
+				buffer.append(cols[i]);
 				buffer.append(EQUALS);
 				buffer.append(values[i]);
-				if (i<cols.length-1)
+				if (i < cols.length - 1)
 					buffer.append(COMMA);
 			}
 			buffer.append(SQL_WHERE);
@@ -1074,37 +1074,40 @@ public abstract class StorableObjectDatabase {
 		Connection connection = DatabaseConnection.getConnection();
 		try {
 			preparedStatement = connection.prepareStatement(sql);
-			Log.debugMessage(this.getEnityName() + "Database.updateEntities | Trying: " + sql,
-								Log.DEBUGLEVEL09);
+			Log.debugMessage(this.getEnityName() + "Database.updateEntities | Trying: " + sql, Log.DEBUGLEVEL09);
 			for (Iterator it = storableObjects.iterator(); it.hasNext();) {
 
 				StorableObject storableObject = (StorableObject) it.next();
 				storableObjectIdCode = storableObject.getId().getIdentifierString();
 				int i = this.setEntityForPreparedStatement(storableObject, preparedStatement, MODE_UPDATE);
 				DatabaseIdentifier.setIdentifier(preparedStatement, ++i, storableObject.getId());
-				
-				Log.debugMessage(this.getEnityName() + "Database.updateEntities | Inserting  "
+
+				Log.debugMessage(this.getEnityName() + "Database.updateEntities | Updating "
 						+ this.getEnityName() + " " + storableObjectIdCode, Log.DEBUGLEVEL09);
 				preparedStatement.executeUpdate();
 			}
 			connection.commit();
-		} catch (SQLException sqle) {
+		}
+		catch (SQLException sqle) {
 			String mesg = this.getEnityName() + "Database.updateEntities | Cannot update "
 					+ this.getEnityName() + " '" + storableObjectIdCode + "' -- " + sqle.getMessage();
 			throw new UpdateObjectException(mesg, sqle);
-		} finally {
+		}
+		finally {
 			try {
 				if (preparedStatement != null)
 					preparedStatement.close();
 				preparedStatement = null;
-			} catch (SQLException sqle1) {
+			}
+			catch (SQLException sqle1) {
 				Log.errorException(sqle1);
-			} finally{
+			}
+			finally {
 				DatabaseConnection.releaseConnection(connection);
 			}
 		}
 	}
-	
+
 	private String[] parseInsertStringValues(String insertValues, int columnCount){
 		int length = insertValues.length();
 		Pattern pattern = Pattern.compile("(('(''|[^'])*')|([^',\\s]+)|(\\w+\\([^)]+\\)))\\s*(,|$)");

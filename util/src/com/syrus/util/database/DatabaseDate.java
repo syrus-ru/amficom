@@ -9,9 +9,9 @@ import java.sql.ResultSet;
 import com.syrus.util.Log;
 
 public class DatabaseDate {
-	
+
 	public static final SimpleDateFormat SDF = new SimpleDateFormat("yyyyMMdd HHmmss");
-	
+
 	private DatabaseDate() {
 		// private constuctor
 	}
