@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseConfigurationObjectLoader.java,v 1.19 2004/11/19 08:59:52 bob Exp $
+ * $Id: DatabaseConfigurationObjectLoader.java,v 1.20 2004/11/19 13:10:38 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,6 +14,7 @@ import java.util.Set;
 
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.DatabaseException;
+import com.syrus.AMFICOM.general.Identified;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
@@ -25,14 +26,114 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.19 $, $Date: 2004/11/19 08:59:52 $
- * @author $Author: bob $
+ * @version $Revision: 1.20 $, $Date: 2004/11/19 13:10:38 $
+ * @author $Author: max $
  * @module configuration_v1
  */
 
 public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoader {
 
-	public CharacteristicType loadCharacteristicType(Identifier id) throws DatabaseException {
+    private void delete(Identifier id, List ids) throws DatabaseException {
+        short entityCode = (id != null) ? id.getMajor() : 0;
+        if (id == null){
+            if (ids.isEmpty())
+                return;
+            Object obj = ids.iterator().next();
+            if (obj instanceof Identifier)
+                entityCode = ((Identifier)obj).getMajor();
+            else if (obj instanceof Identified)
+                entityCode = ((Identified)obj).getId().getMajor();
+        }
+        try{
+            StorableObjectDatabase database = null;
+            switch (entityCode) {
+                case ObjectEntities.CABLETHREADTYPE_ENTITY_CODE:
+                    database = ConfigurationDatabaseContext.getCableThreadTypeDatabase();
+                    break;
+                case ObjectEntities.CHARACTERISTICTYPE_ENTITY_CODE:
+                    database = ConfigurationDatabaseContext.getCharacteristicTypeDatabase();
+                    break;
+                case ObjectEntities.EQUIPMENTTYPE_ENTITY_CODE:
+                    database = ConfigurationDatabaseContext.getEquipmentTypeDatabase();
+                    break;
+                case ObjectEntities.KISTYPE_ENTITY_CODE:
+                    database = ConfigurationDatabaseContext.getKISTypeDatabase();
+                    break;
+                case ObjectEntities.PORTTYPE_ENTITY_CODE:
+                    database = ConfigurationDatabaseContext.getPortTypeDatabase();
+                    break;
+                case ObjectEntities.LINKTYPE_ENTITY_CODE:
+                    database = ConfigurationDatabaseContext.getLinkTypeDatabase();
+                    break;
+                case ObjectEntities.MEASUREMENTPORTTYPE_ENTITY_CODE:
+                    database = ConfigurationDatabaseContext.getMeasurementPortTypeDatabase();
+                    break;
+                case ObjectEntities.CHARACTERISTIC_ENTITY_CODE:
+                    database = ConfigurationDatabaseContext.getCharacteristicDatabase();
+                    break;
+                //          case ObjectEntities.PERMATTR_ENTITY_CODE:
+                //              loadedList =
+                // cObjectLoader.loadPermissionAttributes(ids);
+                //              break;
+                case ObjectEntities.USER_ENTITY_CODE:
+                    database = ConfigurationDatabaseContext.getUserDatabase();
+                    break;
+                case ObjectEntities.DOMAIN_ENTITY_CODE:
+                    database = ConfigurationDatabaseContext.getDomainDatabase();
+                    break;
+                case ObjectEntities.SERVER_ENTITY_CODE:
+                    database = ConfigurationDatabaseContext.getServerDatabase();
+                    break;
+                case ObjectEntities.MCM_ENTITY_CODE:
+                    database = ConfigurationDatabaseContext.getMCMDatabase();
+                    break;
+                case ObjectEntities.EQUIPMENT_ENTITY_CODE:
+                    database = ConfigurationDatabaseContext.getEquipmentDatabase();
+                    break;
+                case ObjectEntities.PORT_ENTITY_CODE:
+                    database = ConfigurationDatabaseContext.getPortDatabase();
+                    break;
+                case ObjectEntities.TRANSPATH_ENTITY_CODE:
+                    database = ConfigurationDatabaseContext.getTransmissionPathDatabase();
+                    break;
+                case ObjectEntities.KIS_ENTITY_CODE:
+                    database = ConfigurationDatabaseContext.getKISDatabase();
+                    break;
+                case ObjectEntities.LINK_ENTITY_CODE:
+                    database = ConfigurationDatabaseContext.getLinkDatabase();
+                    break;
+                case ObjectEntities.MEASUREMENTPORT_ENTITY_CODE:
+                    database = ConfigurationDatabaseContext.getMeasurementPortDatabase();
+                    break;
+                case ObjectEntities.ME_ENTITY_CODE:
+                    database = ConfigurationDatabaseContext.getMonitoredElementDatabase();
+                    break;
+                default:
+                    Log.errorMessage("DatabaseConfigurationObjectLoader.delete | Unknown entity: "
+                            + entityCode);                
+            }            
+            if (database != null){
+                if (id != null)
+                    database.delete(id);
+                else if (ids != null && !ids.isEmpty()){
+                    database.delete(ids);
+                }
+            }
+        }  catch (IllegalDataException e) {
+            Log.errorMessage("DatabaseMeasumentObjectLoader.delete | DatabaseException: " + e.getMessage());
+            throw new DatabaseException("DatabaseMeasumentObjectLoader.delete | DatabaseException: " + e.getMessage());
+        }
+    }
+        
+    public void delete(Identifier id) throws CommunicationException, DatabaseException {
+        delete(id, null);       
+    }
+    
+    public void delete(List ids) throws CommunicationException, DatabaseException {
+        delete(null, ids);
+    }
+    
+    public CharacteristicType loadCharacteristicType(Identifier id) throws DatabaseException {
 		return new CharacteristicType(id);
 	}
 
@@ -63,6 +164,11 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
     public LinkType loadLinkType(Identifier id) throws DatabaseException {
         return new LinkType(id);
     }
+    
+	public CableThreadType loadCableThreadType(Identifier id)
+			throws DatabaseException, CommunicationException {
+		return new CableThreadType(id);
+	}    
     
 //	public PermissionAttributes loadPermissionAttributes(Identifier id) throws DatabaseException {
 //		return new PermissionAttributes(id);
@@ -113,6 +219,20 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
 	}
     
     // for multiple objects
+    
+	public List loadCableThreadTypes(List ids) throws DatabaseException,
+			CommunicationException {
+		CableThreadTypeDatabase database = (CableThreadTypeDatabase) ConfigurationDatabaseContext.getCableThreadTypeDatabase();
+        List list = null;
+        try {
+        	list = database.retrieveByIds(ids, null);
+        } catch (IllegalDataException e) {
+            Log.errorMessage("DatabaseConfigurationObjectLoader.loadCharacteristicTypes | Illegal Storable Object: " + e.getMessage());
+            throw new DatabaseException("DatabaseConfigurationObjectLoader.loadCharacteristicTypes | Illegal Storable Object: " + e.getMessage());
+        }
+        return list;
+	}
+    
     public List loadCharacteristicTypes(List ids) throws DatabaseException {
         CharacteristicTypeDatabase database = (CharacteristicTypeDatabase)ConfigurationDatabaseContext.getCharacteristicTypeDatabase();
         List list = null;
@@ -388,6 +508,19 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
     }
 
     /* Load Configuration StorableObject but argument ids */
+
+	public List loadCableThreadTypesButIds(StorableObjectCondition condition,
+			List ids) throws DatabaseException, CommunicationException {
+		CableThreadTypeDatabase database = (CableThreadTypeDatabase) ConfigurationDatabaseContext.getCableThreadTypeDatabase();
+        List list = null;
+        try {
+        	list = database.retrieveByCondition(ids, condition);
+        } catch (IllegalDataException e) {
+            Log.errorMessage("DatabaseConfigurationObjectLoader.loadCableThreadTypesButIds | Illegal Storable Object: " + e.getMessage());
+            throw new DatabaseException("DatabaseConfigurationObjectLoader.loadCableThreadTypesButIds | Illegal Storable Object: " + e.getMessage());
+        }
+		return list;
+	}
     
     public List loadCharacteristicTypesButIds(StorableObjectCondition condition, List ids) throws DatabaseException {
         CharacteristicTypeDatabase database = (CharacteristicTypeDatabase)ConfigurationDatabaseContext.getCharacteristicTypeDatabase();
@@ -665,6 +798,24 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
             throw new DatabaseException("DatabaseConfigurationObjectLoader.saveKISType | VersionCollisionException: " + e.getMessage());
         }
     }
+     
+	public void saveCableThreadType(CharacteristicType characteristicType,
+			boolean force) throws VersionCollisionException, DatabaseException,
+			CommunicationException {
+		CableThreadTypeDatabase database = (CableThreadTypeDatabase)ConfigurationDatabaseContext.getCableThreadTypeDatabase();
+        try {
+			database.update(characteristicType, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
+        } catch (UpdateObjectException e) {
+            Log.errorMessage("DatabaseConfigurationObjectLoader.saveCableThreadType | UpdateObjectException: " + e.getMessage());
+            throw new DatabaseException("DatabaseConfigurationObjectLoader.saveCableThreadType | UpdateObjectException: " + e.getMessage());
+        } catch (IllegalDataException e) {
+            Log.errorMessage("DatabaseConfigurationObjectLoader.saveCableThreadType | Illegal Storable Object: " + e.getMessage());
+            throw new DatabaseException("DatabaseConfigurationObjectLoader.saveCableThreadType | Illegal Storable Object: " + e.getMessage());
+        } catch (VersionCollisionException e) {
+            Log.errorMessage("DatabaseConfigurationObjectLoader.saveCableThreadType | VersionCollisionException: " + e.getMessage());
+            throw new DatabaseException("DatabaseConfigurationObjectLoader.saveCableThreadType | VersionCollisionException: " + e.getMessage());
+        }
+	}
 
 	public void saveCharacteristic(Characteristic characteristic, boolean force) throws DatabaseException, CommunicationException{
 		CharacteristicDatabase database = (CharacteristicDatabase)ConfigurationDatabaseContext.getCharacteristicDatabase();
@@ -897,6 +1048,24 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
 			Log.errorMessage("DatabaseConfigurationObjectLoader.saveMonitoredElement | VersionCollisionException: " + e.getMessage());
             throw new DatabaseException("DatabaseConfigurationObjectLoader.saveMonitoredElement | VersionCollisionException: " + e.getMessage());
 		}
+	}
+
+	public void saveCableThreadTypes(List list, boolean force)
+			throws VersionCollisionException, DatabaseException,
+			CommunicationException {
+		CableThreadTypeDatabase database = (CableThreadTypeDatabase) ConfigurationDatabaseContext.getCableThreadTypeDatabase();
+        try {
+        database.update(list, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
+        } catch (UpdateObjectException e) {
+            Log.errorMessage("DatabaseConfigurationObjectLoader.saveCableThreadTypes | UpdateObjectException: " + e.getMessage());
+            throw new DatabaseException("DatabaseConfigurationObjectLoader.saveCableThreadTypes | UpdateObjectException: " + e.getMessage());
+        } catch (IllegalDataException e) {
+            Log.errorMessage("DatabaseConfigurationObjectLoader.saveCableThreadTypes | Illegal Storable Object: " + e.getMessage());
+            throw new DatabaseException("DatabaseConfigurationObjectLoader.saveCableThreadTypes | Illegal Storable Object: " + e.getMessage());
+        } catch (VersionCollisionException e) {
+            Log.errorMessage("DatabaseConfigurationObjectLoader.saveCableThreadTypes | VersionCollisionException: " + e.getMessage());
+            throw new DatabaseException("DatabaseConfigurationObjectLoader.saveCableThreadTypes | VersionCollisionException: " + e.getMessage());
+        }        
 	}
 
 	public void saveCharacteristicTypes(List list, boolean force) throws DatabaseException, CommunicationException{
