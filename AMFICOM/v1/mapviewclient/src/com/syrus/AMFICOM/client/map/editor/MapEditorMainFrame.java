@@ -1,5 +1,5 @@
 /**
- * $Id: MapEditorMainFrame.java,v 1.28 2005/03/17 12:29:50 peskovsky Exp $
+ * $Id: MapEditorMainFrame.java,v 1.29 2005/03/18 10:37:35 peskovsky Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -70,7 +70,6 @@ import com.syrus.AMFICOM.Client.Map.Command.Editor.MapEditorSaveMapCommand;
 import com.syrus.AMFICOM.Client.Map.Command.Editor.MapEditorSaveViewAsCommand;
 import com.syrus.AMFICOM.Client.Map.Command.Editor.MapEditorSaveViewCommand;
 import com.syrus.AMFICOM.Client.Map.Command.Editor.ViewMapAllCommand;
-import com.syrus.AMFICOM.Client.Map.Command.Editor.ViewMapElementsBarCommand;
 import com.syrus.AMFICOM.Client.Map.Command.Editor.ViewMapElementsCommand;
 import com.syrus.AMFICOM.Client.Map.Command.Editor.ViewMapPropertiesCommand;
 import com.syrus.AMFICOM.Client.Map.Command.Editor.ViewMapSetupCommand;
@@ -95,7 +94,7 @@ import com.syrus.AMFICOM.mapview.MapView;
  * 
  * 
  * 
- * @version $Revision: 1.28 $, $Date: 2005/03/17 12:29:50 $
+ * @version $Revision: 1.29 $, $Date: 2005/03/18 10:37:35 $
  * @module mapviewclient_v1
  * @author $Author: peskovsky $
  */
@@ -213,7 +212,6 @@ public class MapEditorMainFrame extends JFrame
 		aModel.setEnabled("menuExit", false);
 
 		aModel.setEnabled("menuView", false);
-		aModel.setEnabled("menuViewProto", false);
 		aModel.setEnabled("menuViewNavigator", false);
 		aModel.setEnabled("menuViewAttributes", false);
 		aModel.setEnabled("menuViewElements", false);
@@ -402,10 +400,6 @@ public class MapEditorMainFrame extends JFrame
 						this.desktopPane, 
 						this.aContext));
 
-		aModel.setCommand("menuViewProto", 
-				new ViewMapElementsBarCommand(
-						this.desktopPane, 
-						this.aContext));
 		aModel.setCommand("menuViewAttributes", 
 				new ViewMapPropertiesCommand(
 						this.desktopPane, 

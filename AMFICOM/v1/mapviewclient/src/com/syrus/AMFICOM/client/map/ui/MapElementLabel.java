@@ -1,5 +1,5 @@
 /**
- * $Id: MapElementLabel.java,v 1.10 2005/03/10 17:45:37 krupenn Exp $
+ * $Id: MapElementLabel.java,v 1.11 2005/03/18 10:37:35 peskovsky Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -44,8 +44,8 @@ import javax.swing.border.EtchedBorder;
  * 
  * 
  * 
- * @version $Revision: 1.10 $, $Date: 2005/03/10 17:45:37 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.11 $, $Date: 2005/03/18 10:37:35 $
+ * @author $Author: peskovsky $
  * @module mapviewclient_v1
  */
 public class MapElementLabel extends JLabel
@@ -70,7 +70,7 @@ public class MapElementLabel extends JLabel
 	Border normalBorder = new EtchedBorder(EtchedBorder.LOWERED, Color.gray, Color.gray);
 	Border selectedBorder = new EtchedBorder(EtchedBorder.LOWERED, Color.gray, Color.red);
 
-	static final int ELEMENT_DIMENSION = 30;
+	static final int ELEMENT_DIMENSION = 20;
 
 	public MapElementLabel(SiteNodeType proto)
 	{
@@ -109,6 +109,7 @@ public class MapElementLabel extends JLabel
 
 	public void dragDropEnd(DragSourceDropEvent dsde)
 	{//empty
+		this.setBorder(this.normalBorder);
 	}
 
 	public void dragEnter(DragSourceDragEvent dsde)

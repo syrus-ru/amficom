@@ -1,5 +1,5 @@
 /*
- * $Id: MapEditorWindowArranger.java,v 1.5 2005/03/17 12:56:19 bass Exp $
+ * $Id: MapEditorWindowArranger.java,v 1.6 2005/03/18 10:37:35 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,14 +15,13 @@ import com.syrus.AMFICOM.Client.General.Event.OperationListener;
 import com.syrus.AMFICOM.Client.General.UI.WindowArranger;
 import com.syrus.AMFICOM.Client.Map.Command.MapDesktopCommand;
 import com.syrus.AMFICOM.Client.Map.Operations.ControlsFrame;
-import com.syrus.AMFICOM.Client.Map.UI.MapElementsBarFrame;
 import com.syrus.AMFICOM.Client.Map.UI.MapFrame;
 import com.syrus.AMFICOM.Client.Map.UI.MapPropertyFrame;
 import com.syrus.AMFICOM.Client.Map.UI.MapSchemeTreeFrame;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.5 $, $Date: 2005/03/17 12:56:19 $
+ * @author $Author: peskovsky $
+ * @version $Revision: 1.6 $, $Date: 2005/03/18 10:37:35 $
  * @module mapviewclient_v1
  */
 
@@ -52,18 +51,10 @@ public class MapEditorWindowArranger extends WindowArranger
 		if (mapFrame != null)
 		{
 			normalize(mapFrame);		
-			mapFrame.setSize(3 * w/5, 11 * h/12);
+			mapFrame.setSize(3 * w/5, h);
 			mapFrame.setLocation(w/5, 0);
 		}
 
-		MapElementsBarFrame elemBarFrame = MapDesktopCommand.findMapElementsBarFrame(this.desktop);
-		if (elemBarFrame != null)
-		{
-			normalize(elemBarFrame);		
-			elemBarFrame.setSize(3 * w/5, h/12);
-			elemBarFrame.setLocation(w/5, 11 * h/12);
-		}
-		
 		//Правая сторона
 		MapPropertyFrame propFrame = MapDesktopCommand.findMapPropertyFrame(this.desktop);
 		if (propFrame != null)

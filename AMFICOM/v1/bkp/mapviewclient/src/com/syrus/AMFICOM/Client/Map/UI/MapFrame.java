@@ -1,5 +1,5 @@
 /**
- * $Id: MapFrame.java,v 1.29 2005/03/16 12:54:57 bass Exp $
+ * $Id: MapFrame.java,v 1.30 2005/03/18 10:37:35 peskovsky Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -81,8 +81,8 @@ import com.syrus.AMFICOM.scheme.SchemeStorableObjectPool;
  * 
  * 
  * 
- * @version $Revision: 1.29 $, $Date: 2005/03/16 12:54:57 $
- * @author $Author: bass $
+ * @version $Revision: 1.30 $, $Date: 2005/03/18 10:37:35 $
+ * @author $Author: peskovsky $
  * @module mapviewclient_v1
  */
 public class MapFrame extends JInternalFrame 
@@ -108,6 +108,11 @@ public class MapFrame extends JInternalFrame
 	 */
 	protected MapToolBar mapToolBar;
 
+	/**
+	 * Панель схемных объектов
+	 */
+	protected MapElementsBarPanel mapElementsPanel;
+	
 	/**
 	 * Экземпляр класса. Поскольку вид карты отнимает слишком много 
 	 * ресурсов памяти, в одной Жаба-машине может быть только один
@@ -177,7 +182,7 @@ public class MapFrame extends JInternalFrame
 		this.setTitle(LangModelMap.getString("Map"));
 		this.getContentPane().setLayout(new BorderLayout());
 
-		JPanel toolBarPanel = new JPanel();
+//		JPanel toolBarPanel = new JPanel();
 		JPanel mapPanel = new JPanel();
 		
 		// визуальный компонент обозревателя карты
@@ -188,15 +193,19 @@ public class MapFrame extends JInternalFrame
 		mapVisualComponent = this.mapViewer.getVisualComponent();
 
 		this.mapToolBar = new MapToolBar();
-		toolBarPanel.setLayout(new BorderLayout());
-		toolBarPanel.add(this.mapToolBar, BorderLayout.WEST);
+//		toolBarPanel.setLayout(new BorderLayout());
+//		toolBarPanel.add(this.mapToolBar, BorderLayout.WEST);
 
+		this.mapElementsPanel = new MapElementsBarPanel();
+		
 		mapPanel.setLayout(new BorderLayout());
 		mapPanel.add(mapVisualComponent, BorderLayout.CENTER);
 
-		this.getContentPane().add(toolBarPanel, BorderLayout.NORTH);
+//		this.getContentPane().add(toolBarPanel, BorderLayout.NORTH);
+		this.getContentPane().add(this.mapToolBar, BorderLayout.NORTH);		
 		this.getContentPane().add(mapPanel, BorderLayout.CENTER);
-
+		this.getContentPane().add(this.mapElementsPanel, BorderLayout.WEST);
+		
 		this.addComponentListener(new MapMainFrameComponentAdapter(this));
 		this.addInternalFrameListener(new MapMainFrameInternalFrameAdapter(this));
 	}
@@ -287,6 +296,9 @@ public class MapFrame extends JInternalFrame
 			aContext.getDispatcher().register(this, CatalogNavigateEvent.type);
 			aContext.getDispatcher().register(this, TreeListSelectionEvent.typ);
 			aContext.getDispatcher().register(this, TreeDataSelectionEvent.type);
+			
+			this.mapElementsPanel.setContext(this.aContext);		
+			this.mapElementsPanel.setEnableDisablePanel(true);
 		}
 		
 		this.getMapViewer().getLogicalNetLayer().setContext(aContext);

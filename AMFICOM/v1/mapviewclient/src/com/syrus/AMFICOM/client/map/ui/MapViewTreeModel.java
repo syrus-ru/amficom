@@ -1,5 +1,5 @@
 /**
- * $Id: MapViewTreeModel.java,v 1.4 2005/03/16 13:48:18 bass Exp $
+ * $Id: MapViewTreeModel.java,v 1.5 2005/03/18 10:37:35 peskovsky Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -39,8 +39,8 @@ import javax.swing.tree.TreeModel;
 
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/03/16 13:48:18 $
- * @author $Author: bass $
+ * @version $Revision: 1.5 $, $Date: 2005/03/18 10:37:35 $
+ * @author $Author: peskovsky $
  * @module mapviewclient_v1
  */
 public class MapViewTreeModel extends DefaultTreeModel implements TreeModel {
@@ -255,7 +255,7 @@ public class MapViewTreeModel extends DefaultTreeModel implements TreeModel {
 		Collections.sort(siteNodes, MapViewTreeModel.mapElementComparator);
 		for(Iterator it = siteNodes.iterator(); it.hasNext();) {
 			SiteNode site = (SiteNode )it.next();
-			siteChildrenNode.add(new StorableObjectTreeNode(site, getObjectName(site), siteChildrenNode.getIcon(), true));
+			siteChildrenNode.add(new StorableObjectTreeNode(site, getObjectName(site), (ImageIcon)(siteChildrenNode.getIcon()), true));
 		}
 				
 		return siteChildrenNode;
@@ -445,7 +445,7 @@ public class MapViewTreeModel extends DefaultTreeModel implements TreeModel {
 			SiteNode site = (SiteNode )it.next();
 			StorableObjectTreeNode childNode = (StorableObjectTreeNode )nodePresense.get(site);
 			if(childNode == null)
-				insertNodeInto(new StorableObjectTreeNode(site, getObjectName(site), node.getIcon(), true), node, i);
+				insertNodeInto(new StorableObjectTreeNode(site, getObjectName(site), (ImageIcon)(node.getIcon()), true), node, i);
 			i++;
 		}
 	}

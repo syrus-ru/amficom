@@ -1,5 +1,5 @@
 /**
- * $Id: MapElementsBarPanel.java,v 1.9 2005/02/22 11:00:15 krupenn Exp $
+ * $Id: MapElementsBarPanel.java,v 1.10 2005/03/18 10:37:35 peskovsky Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -15,6 +15,7 @@ import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.Map.Controllers.NodeTypeController;
 import com.syrus.AMFICOM.map.SiteNodeType;
 
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 
 import java.util.Collection;
@@ -27,14 +28,12 @@ import javax.swing.JPanel;
  * 
  * 
  * 
- * @version $Revision: 1.9 $, $Date: 2005/02/22 11:00:15 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.10 $, $Date: 2005/03/18 10:37:35 $
+ * @author $Author: peskovsky $
  * @module mapviewclient_v1
  */
 public final class MapElementsBarPanel extends JPanel 
 {
-	static final int ELEMENT_DIMENSION = 30;
-	
 	ApplicationContext aContext;
 
 	public MapElementsBarPanel()
@@ -52,7 +51,8 @@ public final class MapElementsBarPanel extends JPanel
 
 	private void jbInit()
 	{
-		this.setLayout(new FlowLayout(FlowLayout.LEFT));
+		this.setLayout(new FlowLayout(FlowLayout.CENTER));
+		this.setPreferredSize(new Dimension(MapElementLabel.ELEMENT_DIMENSION + 5, -1));		
 	}
 
 	public void setContext(ApplicationContext aContext)
