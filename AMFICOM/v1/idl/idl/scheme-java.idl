@@ -1,0 +1,27 @@
+/*
+ * $Id: scheme-java.idl,v 1.1 2004/11/29 19:21:58 bass Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
+ */
+
+#ifndef SCHEME_JAVA_IDL
+#define SCHEME_JAVA_IDL
+
+#include "configuration.idl"
+#include "general-vt.idl"
+
+module java {
+	module util {
+		abstract valuetype JavaUtilCharacterizable {
+			attribute ::com::syrus::AMFICOM::configuration::corba::CharacteristicSeq characteristics;
+			/**
+			 * Accessor pair for <code>sequence&lt;{@link com.syrus.AMFICOM.configuration.Characteristic}&gt;</code>.
+			 */
+			attribute List characteristicsImpl;
+		};
+	};
+};
+
+#endif // SCHEME_JAVA_IDL

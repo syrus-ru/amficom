@@ -1,0 +1,36 @@
+/*
+ * $Id: scheme-resource.idl,v 1.1 2004/11/29 19:21:58 bass Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
+ */
+
+#ifndef SCHEME_RESOURCE_IDL
+#define SCHEME_RESOURCE_IDL
+
+#include "resource.idl"
+
+module com {
+	module syrus {
+		module AMFICOM {
+			module resource {
+				native ImageResource;
+
+				abstract valuetype SchemeSymbolContainer {
+					attribute corba::ImageResource symbol;
+					attribute ImageResource symbolImpl;
+				};
+
+				abstract valuetype SchemeCellContainer: SchemeSymbolContainer {
+					attribute corba::ImageResource schemeCell;
+					attribute ImageResource schemeCellImpl;
+					attribute corba::ImageResource ugoCell;
+					attribute ImageResource ugoCellImpl;
+				};
+			};
+		};
+	};
+};
+
+#endif // SCHEME_RESOURCE_IDL

@@ -1,5 +1,5 @@
 /*
- * $Id: scheme-vt.idl,v 1.3 2004/11/25 16:36:09 bass Exp $
+ * $Id: scheme-vt.idl,v 1.4 2004/11/29 19:21:58 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,10 +17,10 @@
 #ifndef SCHEME_VT_IDL
 #define SCHEME_VT_IDL
 
-#include "configuration.idl"
-#include "general-vt.idl"
 #include "map.idl"
-#include "resource.idl"
+#include "scheme-configuration.idl"
+#include "scheme-java.idl"
+#include "scheme-resource.idl"
 
 module com {
 	module syrus {
@@ -44,7 +44,9 @@ module com {
 					valuetype AbstractSchemePort:
 							general::corba::StorableObject,
 							general::corba::Namable,
-							general::corba::Describable {
+							general::corba::Describable,
+							::java::util::JavaUtilCharacterizable,
+							configuration::ComSyrusAmficomConfigurationAbstractSchemePort {
 						enum DirectionType {
 							_IN,
 							_OUT
@@ -70,23 +72,12 @@ module com {
 						private DirectionType thisDirectionType;
 						private general::corba::IdentifierSeq characteristicIds;
 
-						readonly attribute SchemeDevice schemeDevice;
+						attribute SchemeDevice schemeDevice;
 						/**
 						 * @see #abstractSchemeLinkId
 						 */
-						readonly attribute AbstractSchemeLink abstractSchemeLink;
-						/**
-						 * @see #portTypeId
-						 */
-						readonly attribute configuration::corba::PortType portType;
-						/**
-						 * @see #portId
-						 */
-						readonly attribute configuration::corba::Port port;
-						readonly attribute configuration::corba::MeasurementPortType measurementPortType;
-						readonly attribute configuration::corba::MeasurementPort measurementPort;
-						readonly attribute DirectionType directionType;
-						attribute configuration::corba::CharacteristicSeq characteristics;
+						attribute AbstractSchemeLink abstractSchemeLink;
+						attribute DirectionType directionType;
 					};
 
 					valuetype SchemePort: AbstractSchemePort {
@@ -95,21 +86,19 @@ module com {
 						/**
 						 * @see AbstractSchemePort#abstractSchemeLinkId
 						 */
-						readonly attribute SchemeLink schemeLink;
+						attribute SchemeLink schemeLink;
 						/**
 						 * This is a circular dependency on {@link SchemeCableThread}, see {@link SchemeCableThread#schemePort()}.
+						 * Getter returns scheme cable thread attached to this scheme port.
 						 *
-						 * @return scheme cable thread attached to this scheme port.
 						 * @see #schemeCableThreadId
 						 * @see SchemeCableThread#schemePort()
 						 */
-						readonly attribute SchemeCableThread schemeCableThread;
+						attribute SchemeCableThread schemeCableThread;
 
 						SchemePort cloneInstance();
 
-						factory newInstance(
-							in general::corba::Identifier id
-						);
+						factory newInstance();
 					};
 
 					typedef sequence<SchemePort> SchemePortSeq;
@@ -118,13 +107,11 @@ module com {
 						/**
 						 * @see AbstractSchemePort#abstractSchemeLinkId
 						 */
-						readonly attribute SchemeCableLink schemeCableLink;
+						attribute SchemeCableLink schemeCableLink;
 
 						SchemeCablePort cloneInstance();
 
-						factory newInstance(
-							in general::corba::Identifier id
-						);
+						factory newInstance();
 					};
 
 					typedef sequence<SchemeCablePort> SchemeCablePortSeq;
@@ -132,22 +119,20 @@ module com {
 					valuetype SchemeDevice:
 							general::corba::StorableObject,
 							general::corba::Namable,
-							general::corba::Describable {
+							general::corba::Describable,
+							::java::util::JavaUtilCharacterizable {
 						private wstring thisName;
 						private wstring thisDescription;
 						private general::corba::IdentifierSeq schemePortIds;
 						private general::corba::IdentifierSeq schemeCablePortIds;
 						private general::corba::IdentifierSeq characteristicIds;
 
-						readonly attribute SchemePortSeq schemePorts;
-						readonly attribute SchemeCablePortSeq schemeCablePorts;
-						attribute configuration::corba::CharacteristicSeq characteristics;
+						attribute SchemePortSeq schemePorts;
+						attribute SchemeCablePortSeq schemeCablePorts;
 
 						SchemeDevice cloneInstance();
 
-						factory newInstance(
-							in general::corba::Identifier id
-						);
+						factory newInstance();
 					};
 
 					typedef sequence<SchemeDevice> SchemeDeviceSeq;
@@ -155,7 +140,8 @@ module com {
 					valuetype AbstractSchemeElement:
 							general::corba::StorableObject,
 							general::corba::Namable,
-							general::corba::Describable {
+							general::corba::Describable,
+							::java::util::JavaUtilCharacterizable {
 						private wstring thisName;
 						private wstring thisDescription;
 						private general::corba::Identifier schemeId;
@@ -166,7 +152,6 @@ module com {
 						 * @see #schemeId
 						 */
 						attribute Scheme scheme;
-						attribute configuration::corba::CharacteristicSeq characteristics;
 
 						/**
 						 * Transient attribute
@@ -174,7 +159,9 @@ module com {
 						attribute boolean alarmed;
 					};
 
-					valuetype AbstractSchemeLink: AbstractSchemeElement {
+					valuetype AbstractSchemeLink:
+							AbstractSchemeElement,
+							configuration::ComSyrusAmficomConfigurationAbstractSchemeLink {
 						/**
 						 * Depending on implementation, may reference either {@link SchemePort} or {@link SchemeCablePort}.
 						 */
@@ -204,10 +191,8 @@ module com {
 						 */
 						private double thisOpticalLength;
 
-						readonly attribute AbstractSchemePort sourceAbstractSchemePort;
-						readonly attribute AbstractSchemePort targetAbstractSchemePort;
-						attribute configuration::corba::AbstractLinkType abstractLinkType;
-						readonly attribute configuration::corba::Link link;
+						attribute AbstractSchemePort sourceAbstractSchemePort;
+						attribute AbstractSchemePort targetAbstractSchemePort;
 						/**
 						 * Getter returns physical length of this scheme link or scheme cable link.
 						 * @see #thisPhysicalLength
@@ -220,28 +205,24 @@ module com {
 						attribute double opticalLength;
 					};
 
-					valuetype SchemeLink: AbstractSchemeLink {
+					valuetype SchemeLink:
+							AbstractSchemeLink,
+							configuration::ComSyrusAmficomConfigurationSchemeLink {
 						private general::corba::Identifier siteId;
 
 						/**
 						 * @see AbstractSchemeLink#sourceAbstractSchemePortId
 						 */
-						readonly attribute SchemePort sourceSchemePort;
+						attribute SchemePort sourceSchemePort;
 						/**
 						 * @see AbstractSchemeLink#targetAbstractSchemePortId
 						 */
-						readonly attribute SchemePort targetSchemePort;
-						/**
-						 * @see AbstractSchemeLink#abstractLinkTypeId
-						 */
-						attribute configuration::corba::LinkType linkType;
-						readonly attribute CORBA::Map::MapSiteElement site;
+						attribute SchemePort targetSchemePort;
+						attribute CORBA::Map::MapSiteElement site;
 
 						SchemeLink cloneInstance();
 
-						factory newInstance(
-							in general::corba::Identifier id
-						);
+						factory newInstance();
 					};
 
 					typedef sequence<SchemeLink> SchemeLinkSeq;
@@ -249,7 +230,9 @@ module com {
 					valuetype SchemeCableThread:
 							general::corba::StorableObject,
 							general::corba::Namable,
-							general::corba::Describable {
+							general::corba::Describable,
+							::java::util::JavaUtilCharacterizable,
+							configuration::ComSyrusAmficomConfigurationSchemeCableThread {
 						private wstring thisName;
 						private wstring thisDescription;
 						private general::corba::Identifier cableThreadTypeId;
@@ -258,28 +241,24 @@ module com {
 						private general::corba::Identifier threadId;
 						private general::corba::IdentifierSeq characteristicIds;
 
-						readonly attribute configuration::corba::CableThreadType cableThreadType;
 						/**
 						 * This is a circular dependency on {@link SchemePort}, see {@link SchemePort#schemeCableThread()}.
+						 * Getter returns scheme port this scheme cable thread is attached to.
 						 *
-						 * @return scheme port this scheme cable thread is attached to.
 						 * @see #schemePortId
 						 * @see SchemePort#schemeCableThread()
 						 */
-						readonly attribute SchemePort schemePort;
+						attribute SchemePort schemePort;
 						/**
-						 * @return scheme cable link containing this scheme cable thread.
+						 * Getter returns scheme cable link containing this scheme cable thread.
+						 *
 						 * @see #schemeCableLinkId
 						 */
-						readonly attribute SchemeCableLink schemeCablelink;
-						readonly attribute configuration::corba::Link thread;
-						attribute configuration::corba::CharacteristicSeq characteristics;
+						attribute SchemeCableLink schemeCablelink;
 
 						SchemeCableThread cloneInstance();
 
-						factory newInstance(
-							in general::corba::Identifier id
-						);
+						factory newInstance();
 					};
 
 					typedef sequence<SchemeCableThread> SchemeCableThreadSeq;
@@ -299,48 +278,42 @@ module com {
 						private general::corba::Identifier startSiteId;
 						private general::corba::Identifier endSiteId;
 
-						readonly attribute long sequentialNumber;
-						readonly attribute CORBA::Map::MapPhysicalLinkElement physicalLink;
-						readonly attribute long rowX;
-						readonly attribute long placeY;
-						readonly attribute double startSpare;
-						readonly attribute double endSpare;
-						readonly attribute CORBA::Map::MapSiteElement startSite;
-						readonly attribute CORBA::Map::MapSiteElement endSite;
+						attribute long sequentialNumber;
+						attribute CORBA::Map::MapPhysicalLinkElement physicalLink;
+						attribute long rowX;
+						attribute long placeY;
+						attribute double startSpare;
+						attribute double endSpare;
+						attribute CORBA::Map::MapSiteElement startSite;
+						attribute CORBA::Map::MapSiteElement endSite;
 
 						CableChannelingItem cloneInstance();
 
-						factory newInstance(
-							in general::corba::Identifier id
-						);
+						factory newInstance();
 					};
 
 					typedef sequence<CableChannelingItem> CableChannelingItemSeq;
 
-					valuetype SchemeCableLink: AbstractSchemeLink {
+					valuetype SchemeCableLink:
+							AbstractSchemeLink,
+							configuration::ComSyrusAmficomConfigurationSchemeCableLink {
 						private general::corba::IdentifierSeq SchemeCableThreadIds;
 						private general::corba::IdentifierSeq CableChannelingItemIds;
 
 						/**
 						 * @see AbstractSchemeLink#sourceAbstractSchemePortId
 						 */
-						readonly attribute SchemeCablePort sourceSchemeCablePort;
+						attribute SchemeCablePort sourceSchemeCablePort;
 						/**
 						 * @see AbstractSchemeLink#targetAbstractSchemePortId
 						 */
-						readonly attribute SchemeCablePort targetSchemeCablePort;
-						/**
-						 * @see AbstractSchemeLink#abstractLinkTypeId
-						 */
-						attribute configuration::corba::CableLinkType cableLinkType;
-						readonly attribute SchemeCableThreadSeq schemeCableThreads;
-						readonly attribute CableChannelingItemSeq cableChannelingItems;
+						attribute SchemeCablePort targetSchemeCablePort;
+						attribute SchemeCableThreadSeq schemeCableThreads;
+						attribute CableChannelingItemSeq cableChannelingItems;
 
 						SchemeCableLink cloneInstance();
 
-						factory newInstance(
-							in general::corba::Identifier id
-						);
+						factory newInstance();
 					};
 
 					typedef sequence<SchemeCableLink> SchemeCableLinkSeq;
@@ -366,32 +339,30 @@ module com {
 						 */
 						private general::corba::Identifier schemeCableThreadId;
 						/**
-						 * Depending on {@link #type}, may reference either {@link SchemeLink} or {@link SchemeCableLink} or {@link SchemeElement}.
+						 * Depending on {@link #thisType}, may reference either {@link SchemeLink} or {@link SchemeCableLink} or {@link SchemeElement}.
 						 */
 						private general::corba::Identifier abstractSchemeElementId;
 						/**
-						 * Depending on {@link #type}, may reference either {@link SchemePort} or {@link SchemeCablePort}.
+						 * Depending on {@link #thisType}, may reference either {@link SchemePort} or {@link SchemeCablePort}.
 						 */
 						private general::corba::Identifier startAbstractSchemePortId;
 						/**
-						 * Depending on {@link #type}, may reference either {@link SchemePort} or {@link SchemeCablePort}.
+						 * Depending on {@link #thisType}, may reference either {@link SchemePort} or {@link SchemeCablePort}.
 						 */
 						private general::corba::Identifier endAbstractSchemePortId;
 						private general::corba::Identifier schemeId;
 
-						readonly attribute long sequentialNumber;
-						readonly attribute Type type;
-						readonly attribute SchemeCableThread schemeCableThread;
-						readonly attribute AbstractSchemeElement abstractSchemeElement;
-						readonly attribute AbstractSchemePort startAbstractSchemePort;
-						readonly attribute AbstractSchemePort endAbstractSchemePort;
-						readonly attribute Scheme scheme;
+						attribute long sequentialNumber;
+						attribute Type type;
+						attribute SchemeCableThread schemeCableThread;
+						attribute AbstractSchemeElement abstractSchemeElement;
+						attribute AbstractSchemePort startAbstractSchemePort;
+						attribute AbstractSchemePort endAbstractSchemePort;
+						attribute Scheme scheme;
 
 						PathElement cloneInstance();
 
-						factory newInstance(
-							in general::corba::Identifier id
-						);
+						factory newInstance();
 					};
 
 					typedef sequence<PathElement> PathElementSeq;
@@ -399,7 +370,9 @@ module com {
 					valuetype SchemePath:
 							general::corba::StorableObject,
 							general::corba::Namable,
-							general::corba::Describable {
+							general::corba::Describable,
+							::java::util::JavaUtilCharacterizable,
+							configuration::ComSyrusAmficomConfigurationSchemePath {
 						private wstring thisName;
 						private wstring thisDescription;
 						private general::corba::Identifier _typeId;
@@ -409,18 +382,13 @@ module com {
 						private general::corba::IdentifierSeq links;
 						private general::corba::IdentifierSeq characteristicIds;
 
-						readonly attribute configuration::corba::TransmissionPathType type;
-						readonly attribute SchemeElement startDevice;
-						readonly attribute SchemeElement endDevice;
-						readonly attribute configuration::corba::TransmissionPath path;
-						readonly attribute PathElementSeq links;
-						attribute configuration::corba::CharacteristicSeq characteristics;
+						attribute SchemeElement startDevice;
+						attribute SchemeElement endDevice;
+						attribute PathElementSeq links;
 
 						SchemePath cloneInstance();
 
-						factory newInstance(
-							in general::corba::Identifier id
-						);
+						factory newInstance();
 					};
 
 					typedef sequence<SchemePath> SchemePathSeq;
@@ -428,7 +396,10 @@ module com {
 					valuetype SchemeProtoElement:
 							general::corba::StorableObject,
 							general::corba::Namable,
-							general::corba::Describable {
+							general::corba::Describable,
+							resource::SchemeCellContainer,
+							::java::util::JavaUtilCharacterizable,
+							configuration::ComSyrusAmficomConfigurationSchemeProtoElement {
 						private wstring thisName;
 						private wstring thisDescription;
 						private general::corba::Identifier equipmentTypeId;
@@ -448,35 +419,24 @@ module com {
 						private general::corba::Identifier schemeCellId;
 						private general::corba::IdentifierSeq characteristicIds;
 
-						readonly attribute configuration::corba::EquipmentType equipmentType;
-						readonly attribute configuration::corba::Domain domain;
-						readonly attribute SchemeDeviceSeq devices;
-						readonly attribute SchemeLinkSeq links;
+						attribute SchemeDeviceSeq devices;
+						attribute SchemeLinkSeq links;
 						/**
 						 * Getter returns an array of this node's child nodes.
 						 * @see #protoElementIds
 						 */
-						readonly attribute SchemeProtoElementSeq protoElements;
-						attribute resource::corba::ImageResource symbol;
+						attribute SchemeProtoElementSeq protoElements;
 						attribute wstring label;
-						/**
-						 * @see #ugoCellId
-						 */
-						readonly attribute resource::corba::ImageResource ugoCell;
-						/**
-						 * @see #schemeCellId
-						 */
-						readonly attribute resource::corba::ImageResource schemeCell;
-						attribute configuration::corba::CharacteristicSeq characteristics;
 
 						SchemeProtoElement cloneInstance();
 
-						factory newInstance(
-							in general::corba::Identifier id
-						);
+						factory newInstance();
 					};
 
-					valuetype SchemeElement: AbstractSchemeElement {
+					valuetype SchemeElement:
+							AbstractSchemeElement,
+							resource::SchemeCellContainer,
+							configuration::ComSyrusAmficomConfigurationSchemeElement {
 						/**
 						 * May be empty. Probably is subject removal (see {@link #equipmentTypeId}).
 						 */
@@ -502,10 +462,7 @@ module com {
 						private general::corba::Identifier siteId;
 						private general::corba::Identifier symbolId;
 
-						readonly attribute SchemeProtoElement schemeProtoElement;
-						attribute configuration::corba::EquipmentType equipmentType;
-						attribute configuration::corba::Equipment equipment;
-						attribute configuration::corba::Rtu rtu;
+						attribute SchemeProtoElement schemeProtoElement;
 						attribute SchemeDeviceSeq schemeDevices;
 						attribute SchemeLinkSeq schemeLinks;
 						/**
@@ -516,25 +473,11 @@ module com {
 						 * Getter/setter pair for internalScheme property.
 						 */
 						attribute Scheme internalScheme;
-						/**
-						 * @see #ugoCellId
-						 */
-						readonly attribute resource::corba::ImageResource ugoCell;
-						/**
-						 * @see #schemeCellId
-						 */
-						readonly attribute resource::corba::ImageResource schemeCell;
 						attribute CORBA::Map::MapSiteElement site;
-						attribute resource::corba::ImageResource symbol;
 
 						SchemeElement cloneInstance();
 
-						factory newInstance(
-							in general::corba::Identifier id,
-							in SchemeProtoElement schemeProtoElement,
-							in Scheme internalScheme,
-							in Scheme scheme
-						);
+						factory newInstance();
 
 						/**
 						 * Transient attribute.
@@ -556,15 +499,13 @@ module com {
 						private double thisPrice;
 						private general::corba::IdentifierSeq schemePathIds;
 
-						readonly attribute Scheme scheme;
-						readonly attribute double price;
-						readonly attribute SchemePathSeq schemePaths;
+						attribute Scheme scheme;
+						attribute double price;
+						attribute SchemePathSeq schemePaths;
 
 						SchemeMonitoringSolution cloneInstance();
 
-						factory newInstance(
-							in general::corba::Identifier id
-						);
+						factory newInstance();
 					};
 
 					typedef sequence<SchemeMonitoringSolution> SchemeMonitoringSolutionSeq;
@@ -572,7 +513,9 @@ module com {
 					valuetype Scheme:
 							general::corba::StorableObject,
 							general::corba::Namable,
-							general::corba::Describable {
+							general::corba::Describable,
+							resource::SchemeCellContainer,
+							configuration::ComSyrusAmficomConfigurationScheme {
 						enum Type {
 							BUILDING,
 							CABLE_SUBNETWORK,
@@ -608,38 +551,19 @@ module com {
 						private long thisHeight;
 						private general::corba::Identifier mapId;
 
-						readonly attribute Type type;
-						/**
-						 * @see #ownerId
-						 */
-						readonly attribute configuration::corba::User owner;
-						/**
-						 * @see #domainId
-						 */
-						readonly attribute configuration::corba::Domain domain;
+						attribute Type type;
 						attribute SchemeElementSeq schemeElements;
 						attribute SchemeLinkSeq schemeLinks;
 						attribute SchemeCableLinkSeq schemeCableLinks;
 						attribute SchemeMonitoringSolution schemeMonitoringSolution;
-						attribute resource::corba::ImageResource symbol;
 						attribute wstring label;
-						/**
-						 * @see #ugoCellId
-						 */
-						readonly attribute resource::corba::ImageResource ugoCell;
-						/**
-						 * @see #schemeCellId
-						 */
-						readonly attribute resource::corba::ImageResource schemeCell;
 						attribute long width;
 						attribute long height;
 						attribute CORBA::Map::Map map;
 
 						Scheme cloneInstance();
 
-						factory newInstance(
-							in general::corba::Identifier id
-						);
+						factory newInstance();
 					};
 
 					typedef sequence<Scheme> SchemeSeq;
@@ -647,7 +571,8 @@ module com {
 					valuetype SchemeProtoGroup:
 							general::corba::StorableObject,
 							general::corba::Namable,
-							general::corba::Describable {
+							general::corba::Describable,
+							resource::SchemeSymbolContainer {
 						private wstring thisName;
 						private wstring thisDescription;
 						private general::corba::Identifier symbolId;
@@ -656,17 +581,14 @@ module com {
 						private general::corba::IdentifierSeq SchemeProtoGroupIds;
 						private general::corba::IdentifierSeq SchemeProtoElementIds;
 
-						attribute resource::corba::ImageResource symbol;
-						readonly attribute SchemeProtoGroup parent;
-						readonly attribute wstring schemeProtoElementClass;
-						readonly attribute SchemeProtoGroupSeq schemeProtoGroups;
-						readonly attribute SchemeProtoElementSeq schemeProtoElements;
+						attribute SchemeProtoGroup parent;
+						attribute wstring schemeProtoElementClass;
+						attribute SchemeProtoGroupSeq schemeProtoGroups;
+						attribute SchemeProtoElementSeq schemeProtoElements;
 
 						SchemeProtoGroup cloneInstance();
 
-						factory newInstance(
-							in general::corba::Identifier id
-						);
+						factory newInstance();
 					};
 
 					valuetype SchemeOptimizeInfo:
@@ -700,32 +622,30 @@ module com {
 						private ::CORBA::DoubleSeq thisSwitchNports;
 						private ::CORBA::WStringSeq thisSwitchNames;
 
-						readonly attribute Scheme scheme;
-						readonly attribute SchemeMonitoringSolution schemeMonitoringSolution;
-						readonly attribute OptimizationMode optimizationMode;
-						readonly attribute double iterations;
-						readonly attribute double price;
-						readonly attribute double wavelength;
-						readonly attribute double lenMargin;
-						readonly attribute double mutationRate;
-						readonly attribute double mutationDegree;
-						readonly attribute double rtuDeleteProb;
-						readonly attribute double rtuCreateProb;
-						readonly attribute double nodesSpliceProb;
-						readonly attribute double nodesCutProb;
-						readonly attribute double survivorRate;
-						readonly attribute ::CORBA::DoubleSeq reflPrices;
-						readonly attribute ::CORBA::WStringSeq reflNames;
-						readonly attribute ::CORBA::DoubleSeq reflRanges;
-						readonly attribute ::CORBA::DoubleSeq switchPrices;
-						readonly attribute ::CORBA::DoubleSeq switchNports;
-						readonly attribute ::CORBA::WStringSeq switchNames;
+						attribute Scheme scheme;
+						attribute SchemeMonitoringSolution schemeMonitoringSolution;
+						attribute OptimizationMode optimizationMode;
+						attribute double iterations;
+						attribute double price;
+						attribute double wavelength;
+						attribute double lenMargin;
+						attribute double mutationRate;
+						attribute double mutationDegree;
+						attribute double rtuDeleteProb;
+						attribute double rtuCreateProb;
+						attribute double nodesSpliceProb;
+						attribute double nodesCutProb;
+						attribute double survivorRate;
+						attribute ::CORBA::DoubleSeq reflPrices;
+						attribute ::CORBA::WStringSeq reflNames;
+						attribute ::CORBA::DoubleSeq reflRanges;
+						attribute ::CORBA::DoubleSeq switchPrices;
+						attribute ::CORBA::DoubleSeq switchNports;
+						attribute ::CORBA::WStringSeq switchNames;
 
 						SchemeOptimizeInfo cloneInstance();
 
-						factory newInstance(
-							in general::corba::Identifier id
-						);
+						factory newInstance();
 					};
 
 					typedef sequence<SchemeOptimizeInfo> SchemeOptimizeInfoSeq;
