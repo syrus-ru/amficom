@@ -1,5 +1,5 @@
 /*-
- * $Id: ErrorMessages.java,v 1.6 2005/03/24 16:55:42 bass Exp $
+ * $Id: ErrorMessages.java,v 1.7 2005/03/25 10:10:50 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,7 +11,7 @@ package com.syrus.AMFICOM.general;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.6 $, $Date: 2005/03/24 16:55:42 $
+ * @version $Revision: 1.7 $, $Date: 2005/03/25 10:10:50 $
  * @module general_v1
  */
 public interface ErrorMessages {
@@ -27,4 +27,6 @@ public interface ErrorMessages {
 	String OUT_OF_LIBRARY_HIERARCHY = "object doesn't belong to library hierarchy"; //$NON-NLS-1$
 	String UNSUPPORTED_CHILD_TYPE = "object doesn't realize any of interfaces supported within this library hierarchy"; //$NON-NLS-1$
 	String CHILDREN_PROHIBITED = "library hierarchy entry sterile"; //$NON-NLS-1$
+	String OBJECT_WILL_DELETE_ITSELF_FROM_POOL = "object will delete itself from pool"; //$NON-NLS-1$
+	String ACTION_WILL_RESULT_IN_NOTHING = "action will result in nothing"; //$NON-NLS-1$
 }
