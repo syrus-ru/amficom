@@ -1,11 +1,12 @@
 package com.syrus.AMFICOM.Client.Resource;
 
+import java.util.Collection;
 import java.util.Vector;
 
 public class MyUtil 
 {
 
-	static public void addToVector(Vector vec, Object []objs)
+	static public void addToCollection(Collection vec, Object []objs)
 	{
 		for(int i = 0; i < objs.length; i++)
 			vec.add(objs[i]);
