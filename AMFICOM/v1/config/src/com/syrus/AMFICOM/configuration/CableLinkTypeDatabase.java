@@ -1,5 +1,5 @@
 /*
- * $Id: CableLinkTypeDatabase.java,v 1.10 2005/02/03 14:38:06 arseniy Exp $
+ * $Id: CableLinkTypeDatabase.java,v 1.11 2005/02/03 20:15:05 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -39,7 +39,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/02/03 14:38:06 $
+ * @version $Revision: 1.11 $, $Date: 2005/02/03 20:15:05 $
  * @author $Author: arseniy $
  * @module config_v1
  */
@@ -48,9 +48,7 @@ public class CableLinkTypeDatabase extends StorableObjectDatabase {
 
 	private static final int SIZE_MANUFACTURER_CODE_COLUMN = 64;
 
-	private static final String LINK_COLUMN_CABLE_LINK_TYPE_ID = "cable_link_type_id";
-	private static final String LINK_COLUMN_CABLE_THREAD_TYPE_ID = "cable_thread_type_id";
-	private static final String CABLE_LINK_TYPE_LINK = "Cablethreadtypelink";
+	private static final String LINK_COLUMN_LINK_TYPE_ID = "link_type_id";
 
 	private static String columns;
 	private static String updateMultiplySQLValues;
@@ -107,44 +105,54 @@ public class CableLinkTypeDatabase extends StorableObjectDatabase {
 		throw new IllegalDataException("CableLinkTypeDatabase.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
 	}
 
-	private void retrieveCableThreadTypes(List storableObjects) throws RetrieveObjectException {
-		if (storableObjects == null || storableObjects.isEmpty())
+	private void retrieveCableThreadTypes(List cableLinkTypes) throws RetrieveObjectException, IllegalDataException {
+		if (cableLinkTypes == null || cableLinkTypes.isEmpty())
 			return;
-		try {
-			Map cableLinkTypeIdCableThreadTypeIds = super.retrieveLinkedEntities(storableObjects, CABLE_LINK_TYPE_LINK, LINK_COLUMN_CABLE_LINK_TYPE_ID, LINK_COLUMN_CABLE_THREAD_TYPE_ID);
-			for (Iterator it = cableLinkTypeIdCableThreadTypeIds.keySet().iterator(); it.hasNext();) {
-				CableLinkType cableLinkType = (CableLinkType) it.next();
-				List cableLinkTypeIds = (List) cableLinkTypeIdCableThreadTypeIds.get(cableLinkType);
-				cableLinkType.setCableThreadTypes0(ConfigurationStorableObjectPool.getStorableObjects(cableLinkTypeIds, true));               
+
+		Map cableThreadTypeIdsMap = super.retrieveLinkedEntityIds(cableLinkTypes,
+				ObjectEntities.CABLETHREADTYPE_ENTITY,
+				LINK_COLUMN_LINK_TYPE_ID,
+				StorableObjectWrapper.COLUMN_ID);
+		CableLinkType cableLinkType;
+		List cableThreadTypeIds;
+		for (Iterator it = cableLinkTypes.iterator(); it.hasNext();) {
+			cableLinkType = (CableLinkType) it.next();
+			cableThreadTypeIds = (List) cableThreadTypeIdsMap.get(cableLinkType.getId());
+
+			try {
+				cableLinkType.setCableThreadTypes0(ConfigurationStorableObjectPool.getStorableObjects(cableThreadTypeIds, true));
 			}
-		}
-		catch (DatabaseException e) {
-			throw new RetrieveObjectException("CableLikTypeDatabase.retreveCableThreadTypes | DatabaseException " + e);
-		}
-		catch (CommunicationException e) {
-			throw new RetrieveObjectException("CableLikTypeDatabase.retreveCableThreadTypes | CommunicationException " + e);
-		}
-		catch (IllegalDataException e) {
-			throw new RetrieveObjectException("CableLikTypeDatabase.retreveCableThreadTypes | IllegalDataException " + e);
+			catch (DatabaseException e) {
+				throw new RetrieveObjectException("Cannot get cable thread types from pool -- " + e.getMessage(), e);
+			}
+			catch (CommunicationException e) {
+				throw new RetrieveObjectException("Cannot get cable thread types from pool -- " + e.getMessage(), e);
+			}
 		}
 	}
 
-	private void updateCableThreadTypes(List storableObjects) throws UpdateObjectException {
-		if (storableObjects == null || storableObjects.isEmpty())
+	private void updateCableThreadTypes(List cableLinkTypes) throws UpdateObjectException {
+		if (cableLinkTypes == null || cableLinkTypes.isEmpty())
 			return;
 
-		Map cableLinkTypeIdCableThreadTypeIds = new HashMap();
-		for (Iterator it = storableObjects.iterator(); it.hasNext();) {
-			CableLinkType cableLinkType = (CableLinkType) it.next();
-				List cableThreadTypes = cableLinkType.getCableThreadTypes();
-				List cableThreadTypeIds = new ArrayList(cableThreadTypes.size());
-				for (Iterator iter = cableThreadTypes.iterator(); iter.hasNext();) {
-					CableThreadType cableThreadType = (CableThreadType) iter.next();
-					cableThreadTypeIds.add(cableThreadType.getId());                				
-				}
-				cableLinkTypeIdCableThreadTypeIds.put(cableLinkType.getId(), cableThreadTypeIds);
+		Map cableThreadTypeIdsMap = new HashMap();
+		CableLinkType cableLinkType;
+		List cableThreadTypes;
+		List cableThreadTypeIds;
+		for (Iterator it = cableLinkTypes.iterator(); it.hasNext();) {
+			cableLinkType = (CableLinkType) it.next();
+			cableThreadTypes = cableLinkType.getCableThreadTypes();
+			cableThreadTypeIds = new ArrayList(cableThreadTypes.size());
+			for (Iterator it1 = cableThreadTypes.iterator(); it1.hasNext();)
+				cableThreadTypeIds.add(((CableThreadType) it1.next()).getId());
+
+			cableThreadTypeIdsMap.put(cableLinkType.getId(), cableThreadTypeIds);
 		}
-		super.updateLinkedEntities(cableLinkTypeIdCableThreadTypeIds, CABLE_LINK_TYPE_LINK, LINK_COLUMN_CABLE_LINK_TYPE_ID, LINK_COLUMN_CABLE_THREAD_TYPE_ID);
+
+		super.updateLinkedEntities(cableThreadTypeIdsMap,
+				ObjectEntities.CABLETHREADTYPE_ENTITY,
+				LINK_COLUMN_LINK_TYPE_ID,
+				StorableObjectWrapper.COLUMN_ID);
 	}
 
 	public void retrieve(StorableObject storableObject) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
