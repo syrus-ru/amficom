@@ -1,5 +1,5 @@
 /*
- * $Id: PhysicalLinkDatabase.java,v 1.20 2005/03/11 10:48:11 bob Exp $
+ * $Id: PhysicalLinkDatabase.java,v 1.21 2005/04/01 11:11:05 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,7 +10,7 @@ package com.syrus.AMFICOM.map;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Collection;
+import java.util.Set;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CharacterizableDatabase;
@@ -29,7 +29,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.20 $, $Date: 2005/03/11 10:48:11 $
+ * @version $Revision: 1.21 $, $Date: 2005/04/01 11:11:05 $
  * @author $Author: bob $
  * @module map_v1
  */
@@ -182,7 +182,7 @@ public class PhysicalLinkDatabase extends CharacterizableDatabase {
 	}
 	
 	
-	public void insert(Collection storableObjects) throws IllegalDataException, CreateObjectException {
+	public void insert(Set storableObjects) throws IllegalDataException, CreateObjectException {
 		super.insertEntities(storableObjects);
 	}
 
@@ -199,7 +199,7 @@ public class PhysicalLinkDatabase extends CharacterizableDatabase {
 	}
 	
 	
-	public void update(Collection storableObjects, Identifier modifierId, int updateKind) throws VersionCollisionException, UpdateObjectException {
+	public void update(Set storableObjects, Identifier modifierId, int updateKind) throws VersionCollisionException, UpdateObjectException {
 		switch (updateKind) {
 			case UPDATE_CHECK:
 				super.checkAndUpdateEntities(storableObjects, modifierId, false);

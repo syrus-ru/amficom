@@ -1,5 +1,5 @@
 /*
- * $Id: XMLMapObjectLoader.java,v 1.6 2005/02/25 06:57:15 bob Exp $
+ * $Id: XMLMapObjectLoader.java,v 1.7 2005/04/01 11:11:05 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,8 +9,7 @@
 package com.syrus.AMFICOM.map;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Collection;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
@@ -24,7 +23,7 @@ import com.syrus.AMFICOM.general.StorableObjectXML;
 import com.syrus.AMFICOM.general.StorableObjectXMLDriver;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/02/25 06:57:15 $
+ * @version $Revision: 1.7 $, $Date: 2005/04/01 11:11:05 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -43,7 +42,7 @@ public final class XMLMapObjectLoader implements MapObjectLoader {
 		this.mapXML.flush();
 	}
 
-	public void delete(Collection ids) throws IllegalDataException {
+	public void delete(Set ids) throws IllegalDataException {
 		for (Iterator it = ids.iterator(); it.hasNext();) {
 			Identifier id = (Identifier) it.next();
 			this.mapXML.delete(id);
@@ -60,7 +59,7 @@ public final class XMLMapObjectLoader implements MapObjectLoader {
 		return this.mapXML.retrieve(id);
 	}
 
-	private Collection loadStorableObjectButIds(StorableObjectCondition condition, Collection ids) throws ApplicationException {
+	private Set loadStorableObjectButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
 		return this.mapXML.retrieveByCondition(ids, condition);
 	}
 
@@ -68,7 +67,7 @@ public final class XMLMapObjectLoader implements MapObjectLoader {
 		this.mapXML.updateObject(storableObject, force, SessionContext.getAccessIdentity().getUserId());
 	}
 
-	private void saveStorableObjects(Collection storableObjects, boolean force) throws ApplicationException {
+	private void saveStorableObjects(Set storableObjects, boolean force) throws ApplicationException {
 		for (Iterator it = storableObjects.iterator(); it.hasNext();) {
 			StorableObject storableObject = (StorableObject) it.next();
 			this.saveStorableObject(storableObject, force);
@@ -81,9 +80,9 @@ public final class XMLMapObjectLoader implements MapObjectLoader {
 		return (Collector) this.loadStorableObject(id);
 	}
 
-	public Collection loadCollectors(Collection ids) throws ApplicationException
+	public Set loadCollectors(Set ids) throws ApplicationException
 	{
-		Collection list = new ArrayList(ids.size());
+		Set list = new HashSet(ids.size());
 		for (Iterator it = ids.iterator(); it.hasNext();) {
 			Identifier id = (Identifier) it.next();
 			list.add(this.loadStorableObject(id));
@@ -96,9 +95,9 @@ public final class XMLMapObjectLoader implements MapObjectLoader {
 		return (Map) this.loadStorableObject(id);
 	}
 
-	public Collection loadMaps(Collection ids) throws ApplicationException
+	public Set loadMaps(Set ids) throws ApplicationException
 	{
-		Collection list = new ArrayList(ids.size());
+		Set list = new HashSet(ids.size());
 		for (Iterator it = ids.iterator(); it.hasNext();) {
 			Identifier id = (Identifier) it.next();
 			list.add(this.loadStorableObject(id));
@@ -111,9 +110,9 @@ public final class XMLMapObjectLoader implements MapObjectLoader {
 		return (Mark) this.loadStorableObject(id);
 	}
 
-	public Collection loadMarks(Collection ids) throws ApplicationException
+	public Set loadMarks(Set ids) throws ApplicationException
 	{
-		Collection list = new ArrayList(ids.size());
+		Set list = new HashSet(ids.size());
 		for (Iterator it = ids.iterator(); it.hasNext();) {
 			Identifier id = (Identifier) it.next();
 			list.add(this.loadStorableObject(id));
@@ -126,9 +125,9 @@ public final class XMLMapObjectLoader implements MapObjectLoader {
 		return (NodeLink) this.loadStorableObject(id);
 	}
 
-	public Collection loadNodeLinks(Collection ids) throws ApplicationException
+	public Set loadNodeLinks(Set ids) throws ApplicationException
 	{
-		Collection list = new ArrayList(ids.size());
+		Set list = new HashSet(ids.size());
 		for (Iterator it = ids.iterator(); it.hasNext();) {
 			Identifier id = (Identifier) it.next();
 			list.add(this.loadStorableObject(id));
@@ -141,9 +140,9 @@ public final class XMLMapObjectLoader implements MapObjectLoader {
 		return (PhysicalLink) this.loadStorableObject(id);
 	}
 
-	public Collection loadPhysicalLinks(Collection ids) throws ApplicationException
+	public Set loadPhysicalLinks(Set ids) throws ApplicationException
 	{
-		Collection list = new ArrayList(ids.size());
+		Set list = new HashSet(ids.size());
 		for (Iterator it = ids.iterator(); it.hasNext();) {
 			Identifier id = (Identifier) it.next();
 			list.add(this.loadStorableObject(id));
@@ -156,9 +155,9 @@ public final class XMLMapObjectLoader implements MapObjectLoader {
 		return (PhysicalLinkType) this.loadStorableObject(id);
 	}
 
-	public Collection loadPhysicalLinkTypes(Collection ids) throws ApplicationException
+	public Set loadPhysicalLinkTypes(Set ids) throws ApplicationException
 	{
-		Collection list = new ArrayList(ids.size());
+		Set list = new HashSet(ids.size());
 		for (Iterator it = ids.iterator(); it.hasNext();) {
 			Identifier id = (Identifier) it.next();
 			list.add(this.loadStorableObject(id));
@@ -171,9 +170,9 @@ public final class XMLMapObjectLoader implements MapObjectLoader {
 		return (SiteNode) this.loadStorableObject(id);
 	}
 
-	public Collection loadSiteNodes(Collection ids) throws ApplicationException
+	public Set loadSiteNodes(Set ids) throws ApplicationException
 	{
-		Collection list = new ArrayList(ids.size());
+		Set list = new HashSet(ids.size());
 		for (Iterator it = ids.iterator(); it.hasNext();) {
 			Identifier id = (Identifier) it.next();
 			list.add(this.loadStorableObject(id));
@@ -186,9 +185,9 @@ public final class XMLMapObjectLoader implements MapObjectLoader {
 		return (SiteNodeType) this.loadStorableObject(id);
 	}
 
-	public Collection loadSiteNodeTypes(Collection ids) throws ApplicationException
+	public Set loadSiteNodeTypes(Set ids) throws ApplicationException
 	{
-		Collection list = new ArrayList(ids.size());
+		Set list = new HashSet(ids.size());
 		for (Iterator it = ids.iterator(); it.hasNext();) {
 			Identifier id = (Identifier) it.next();
 			list.add(this.loadStorableObject(id));
@@ -201,9 +200,9 @@ public final class XMLMapObjectLoader implements MapObjectLoader {
 		return (TopologicalNode) this.loadStorableObject(id);
 	}
 
-	public Collection loadTopologicalNodes(Collection ids) throws ApplicationException
+	public Set loadTopologicalNodes(Set ids) throws ApplicationException
 	{
-		Collection list = new ArrayList(ids.size());
+		Set list = new HashSet(ids.size());
 		for (Iterator it = ids.iterator(); it.hasNext();) {
 			Identifier id = (Identifier) it.next();
 			list.add(this.loadStorableObject(id));
@@ -211,47 +210,47 @@ public final class XMLMapObjectLoader implements MapObjectLoader {
 		return list;
 	}
 
-	public Collection loadCollectorsButIds(StorableObjectCondition condition, Collection ids) throws ApplicationException
+	public Set loadCollectorsButIds(StorableObjectCondition condition, Set ids) throws ApplicationException
 	{
 		return this.loadStorableObjectButIds(condition, ids);
 	}
 
-	public Collection loadMapsButIds(StorableObjectCondition condition, Collection ids) throws ApplicationException
+	public Set loadMapsButIds(StorableObjectCondition condition, Set ids) throws ApplicationException
 	{
 		return this.loadStorableObjectButIds(condition, ids);
 	}
 
-	public Collection loadMarksButIds(StorableObjectCondition condition, Collection ids) throws ApplicationException
+	public Set loadMarksButIds(StorableObjectCondition condition, Set ids) throws ApplicationException
 	{
 		return this.loadStorableObjectButIds(condition, ids);
 	}
 
-	public Collection loadNodeLinksButIds(StorableObjectCondition condition, Collection ids) throws ApplicationException
+	public Set loadNodeLinksButIds(StorableObjectCondition condition, Set ids) throws ApplicationException
 	{
 		return this.loadStorableObjectButIds(condition, ids);
 	}
 
-	public Collection loadPhysicalLinksButIds(StorableObjectCondition condition, Collection ids) throws ApplicationException
+	public Set loadPhysicalLinksButIds(StorableObjectCondition condition, Set ids) throws ApplicationException
 	{
 		return this.loadStorableObjectButIds(condition, ids);
 	}
 
-	public Collection loadPhysicalLinkTypesButIds(StorableObjectCondition condition, Collection ids) throws ApplicationException
+	public Set loadPhysicalLinkTypesButIds(StorableObjectCondition condition, Set ids) throws ApplicationException
 	{
 		return this.loadStorableObjectButIds(condition, ids);
 	}
 
-	public Collection loadSiteNodesButIds(StorableObjectCondition condition, Collection ids) throws ApplicationException
+	public Set loadSiteNodesButIds(StorableObjectCondition condition, Set ids) throws ApplicationException
 	{
 		return this.loadStorableObjectButIds(condition, ids);
 	}
 
-	public Collection loadSiteNodeTypesButIds(StorableObjectCondition condition, Collection ids) throws ApplicationException
+	public Set loadSiteNodeTypesButIds(StorableObjectCondition condition, Set ids) throws ApplicationException
 	{
 		return this.loadStorableObjectButIds(condition, ids);
 	}
 
-	public Collection loadTopologicalNodesButIds(StorableObjectCondition condition, Collection ids) throws ApplicationException
+	public Set loadTopologicalNodesButIds(StorableObjectCondition condition, Set ids) throws ApplicationException
 	{
 		return this.loadStorableObjectButIds(condition, ids);
 	}
@@ -310,47 +309,47 @@ public final class XMLMapObjectLoader implements MapObjectLoader {
 		this.mapXML.flush();
 	}
 
-	public void saveCollectors(Collection list, boolean force) throws ApplicationException
+	public void saveCollectors(Set list, boolean force) throws ApplicationException
 	{
 		this.saveStorableObjects(list, force);
 	}
 
-	public void saveMaps(Collection list, boolean force) throws ApplicationException
+	public void saveMaps(Set list, boolean force) throws ApplicationException
 	{
 		this.saveStorableObjects(list, force);
 	}
 
-	public void saveMarks(Collection list, boolean force) throws ApplicationException
+	public void saveMarks(Set list, boolean force) throws ApplicationException
 	{
 		this.saveStorableObjects(list, force);
 	}
 
-	public void saveNodeLinks(Collection list, boolean force) throws ApplicationException
+	public void saveNodeLinks(Set list, boolean force) throws ApplicationException
 	{
 		this.saveStorableObjects(list, force);
 	}
 
-	public void savePhysicalLinks(Collection list, boolean force) throws ApplicationException
+	public void savePhysicalLinks(Set list, boolean force) throws ApplicationException
 	{
 		this.saveStorableObjects(list, force);
 	}
 
-	public void savePhysicalLinkTypes(Collection list, boolean force) throws ApplicationException
+	public void savePhysicalLinkTypes(Set list, boolean force) throws ApplicationException
 	{
 		this.saveStorableObjects(list, force);
 	}
 
-	public void saveSiteNodes(Collection list, boolean force) throws ApplicationException
+	public void saveSiteNodes(Set list, boolean force) throws ApplicationException
 	{
 		this.saveStorableObjects(list, force);
 	}
 
-	public void saveSiteNodeTypes(Collection list, boolean force) throws ApplicationException
+	public void saveSiteNodeTypes(Set list, boolean force) throws ApplicationException
 	{
 		this.saveStorableObjects(list, force);
 	}
 
-	public void saveTopologicalNodes(Collection list, boolean force) throws ApplicationException
+	public void saveTopologicalNodes(Set list, boolean force) throws ApplicationException
 	{
 		this.saveStorableObjects(list, force);
 	}

@@ -1,5 +1,5 @@
 /*
- * $Id: MapStorableObjectPool.java,v 1.9 2005/02/24 15:47:37 bob Exp $
+ * $Id: MapStorableObjectPool.java,v 1.10 2005/04/01 11:11:05 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,9 +8,9 @@
 
 package com.syrus.AMFICOM.map;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Hashtable;
+import java.util.Set;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
@@ -24,7 +24,7 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/02/24 15:47:37 $
+ * @version $Revision: 1.10 $, $Date: 2005/04/01 11:11:05 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -130,16 +130,16 @@ public final class MapStorableObjectPool extends StorableObjectPool {
 		return instance.getStorableObjectImpl(objectId, useLoader);
 	}
 
-	public static Collection getStorableObjects(Collection objectIds, boolean useLoader) throws ApplicationException {
+	public static Set getStorableObjects(Set objectIds, boolean useLoader) throws ApplicationException {
 		return instance.getStorableObjectsImpl(objectIds, useLoader);
 	}
 
-	public static Collection getStorableObjectsByCondition(StorableObjectCondition condition, boolean useLoader)
+	public static Set getStorableObjectsByCondition(StorableObjectCondition condition, boolean useLoader)
 			throws ApplicationException {
 		return instance.getStorableObjectsByConditionImpl(condition, useLoader);
 	}
 
-	public static Collection getStorableObjectsByConditionButIds(	Collection ids,
+	public static Set getStorableObjectsByConditionButIds(	Set ids,
 															StorableObjectCondition condition,
 															boolean useLoader) throws ApplicationException {
 		return instance.getStorableObjectsByConditionButIdsImpl(ids, condition, useLoader);
@@ -183,8 +183,8 @@ public final class MapStorableObjectPool extends StorableObjectPool {
 		return storableObject;
 	}
 
-	protected Collection loadStorableObjects(Short entityCode, Collection ids) throws ApplicationException {
-		Collection storableObjects;
+	protected Set loadStorableObjects(Short entityCode, Set ids) throws ApplicationException {
+		Set storableObjects;
 		switch (entityCode.shortValue()) {
 			case ObjectEntities.SITE_NODE_TYPE_ENTITY_CODE:
 				storableObjects = mObjectLoader.loadSiteNodeTypes(ids);
@@ -220,8 +220,8 @@ public final class MapStorableObjectPool extends StorableObjectPool {
 		return storableObjects;
 	}
 
-	protected Collection loadStorableObjectsButIds(StorableObjectCondition condition, Collection ids) throws ApplicationException {
-		Collection loadedCollection = null;
+	protected Set loadStorableObjectsButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
+		Set loadedCollection = null;
 		short entityCode = condition.getEntityCode().shortValue();
 		switch (entityCode) {
 			case ObjectEntities.SITE_NODE_TYPE_ENTITY_CODE:
@@ -259,7 +259,7 @@ public final class MapStorableObjectPool extends StorableObjectPool {
 		return loadedCollection;
 	}
 
-	protected void saveStorableObjects(short code, Collection list, boolean force) throws ApplicationException {
+	protected void saveStorableObjects(short code, Set list, boolean force) throws ApplicationException {
 		if (!list.isEmpty()) {
 			boolean alone = (list.size() == 1);
 
@@ -346,7 +346,7 @@ public final class MapStorableObjectPool extends StorableObjectPool {
 	 	mObjectLoader.delete(id);
 	}
 
-	protected void deleteStorableObjects(Collection ids) throws IllegalDataException {
+	protected void deleteStorableObjects(Set ids) throws IllegalDataException {
 		mObjectLoader.delete(ids);
 	}
 
@@ -354,7 +354,7 @@ public final class MapStorableObjectPool extends StorableObjectPool {
 		instance.deleteImpl(id);
 	}
 
-	public static void delete(Collection ids) throws IllegalDataException {
+	public static void delete(Set ids) throws IllegalDataException {
 		instance.deleteImpl(ids);
 	}
 

@@ -1,5 +1,5 @@
 /**
- * $Id: Mark.java,v 1.22 2005/03/24 14:10:15 arseniy Exp $
+ * $Id: Mark.java,v 1.23 2005/04/01 11:11:05 bob Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -10,6 +10,17 @@
  */
 
 package com.syrus.AMFICOM.map;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.ListIterator;
+import java.util.Set;
+import java.util.SortedSet;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
@@ -23,19 +34,9 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
-import com.syrus.AMFICOM.general.corba.*;
+import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.map.corba.Mark_Transferable;
-
-import java.util.*;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.ListIterator;
 
 /**
  * Метка на линии на топологической схеме. Метка частично характеризуется 
@@ -44,8 +45,8 @@ import java.util.ListIterator;
  * в связи с чем методы класса {@link AbstractNode}, работающие с линиями и 
  * фрагментами линий, переопределены и бросают 
  * <code>{@link UnsupportedOperationException}</code>.
- * @author $Author: arseniy $
- * @version $Revision: 1.22 $, $Date: 2005/03/24 14:10:15 $
+ * @author $Author: bob $
+ * @version $Revision: 1.23 $, $Date: 2005/04/01 11:11:05 $
  * @module map_v1
  */
 public class Mark extends AbstractNode {
@@ -115,8 +116,8 @@ public class Mark extends AbstractNode {
 		try {
 			this.physicalLink = (PhysicalLink) MapStorableObjectPool.getStorableObject(new Identifier(mt.physicalLinkId), true);
 
-			super.characteristics = new ArrayList(mt.characteristicIds.length);
-			ArrayList characteristicIds = new ArrayList(mt.characteristicIds.length);
+			super.characteristics = new HashSet(mt.characteristicIds.length);
+			Set characteristicIds = new HashSet(mt.characteristicIds.length);
 			for (int i = 0; i < mt.characteristicIds.length; i++)
 				characteristicIds.add(new Identifier(mt.characteristicIds[i]));
 			super.characteristics.addAll(GeneralStorableObjectPool.getStorableObjects(characteristicIds, true));
@@ -153,7 +154,7 @@ public class Mark extends AbstractNode {
 		this.street = street;
 		this.building = building;
 
-		super.characteristics = new LinkedList();
+		super.characteristics = new HashSet();
 
 		this.markDatabase = MapDatabaseContext.getMarkDatabase();
 	}
@@ -214,8 +215,8 @@ public class Mark extends AbstractNode {
 		}
 	}
 
-	public List getDependencies() {
-		return Collections.singletonList(this.physicalLink);
+	public Set getDependencies() {
+		return Collections.singleton(this.physicalLink);
 	}
 
 	public Object getTransferable() {
@@ -415,9 +416,10 @@ public class Mark extends AbstractNode {
 
 		double pathLength = 0;
 
-		ListIterator it = getPhysicalLink().getNodeLinks().listIterator(getPhysicalLink().getNodeLinks().size());
-		while (it.hasPrevious()) {
-			NodeLink nl = (NodeLink) it.previous();
+		SortedSet nodeLinks = getPhysicalLink().getNodeLinks();
+		List list = new ArrayList(nodeLinks);
+		for (ListIterator listIterator = list.listIterator(); listIterator.hasPrevious();) {
+			NodeLink nl = (NodeLink) listIterator.previous();
 			if (nl == this.nodeLink) {
 				pathLength += nl.getLengthLt() - this.getSizeInDoubleLt();
 				break;
@@ -453,7 +455,7 @@ public class Mark extends AbstractNode {
 	 * {@inheritDoc}<br>
 	 * Suppress since mark cannot be an end node
 	 */
-	public List getNodeLinks() {
+	public SortedSet getNodeLinks() {
 		throw new UnsupportedOperationException("Not implemented");
 	}
 
@@ -469,7 +471,7 @@ public class Mark extends AbstractNode {
 	 * {@inheritDoc}<br>
 	 * Suppress since mark cannot be an end node
 	 */
-	public List getPhysicalLinks() {
+	public SortedSet getPhysicalLinks() {
 		throw new UnsupportedOperationException("Not implemented");
 	}
 
@@ -477,7 +479,7 @@ public class Mark extends AbstractNode {
 	 * {@inheritDoc}<br>
 	 * Suppress since mark cannot be an end node
 	 */
-	public List getOppositeNodes() {
+	public SortedSet getOppositeNodes() {
 		throw new UnsupportedOperationException("Not implemented");
 	}
 
@@ -565,9 +567,9 @@ public class Mark extends AbstractNode {
 
 	/**
 	 * @param characteristics
-	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics(java.util.Collection)
+	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics(Set)
 	 */
-	public void setCharacteristics(final Collection characteristics) {
+	public void setCharacteristics(final Set characteristics) {
 		this.setCharacteristics0(characteristics);
 		this.changed = true;
 	}
@@ -581,9 +583,9 @@ public class Mark extends AbstractNode {
 
 	/**
 	 * @param characteristics
-	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics0(java.util.Collection)
+	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics0(Set)
 	 */
-	public void setCharacteristics0(final Collection characteristics) {
+	public void setCharacteristics0(final Set characteristics) {
 		this.characteristics.clear();
 		if (characteristics != null)
 			this.characteristics.addAll(characteristics);

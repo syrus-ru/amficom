@@ -1,5 +1,5 @@
 /**
- * $Id: Collector.java,v 1.26 2005/03/24 14:10:15 arseniy Exp $
+ * $Id: Collector.java,v 1.27 2005/04/01 11:11:05 bob Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -28,21 +28,19 @@ import com.syrus.AMFICOM.general.corba.*;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.map.corba.Collector_Transferable;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.Set;
 
 /**
  * Коллектор на топологической схеме, который характеризуется набором входящих
  * в него линий. Линии не обязаны быть связными.
  * 
- * @author $Author: arseniy $
- * @version $Revision: 1.26 $, $Date: 2005/03/24 14:10:15 $
+ * @author $Author: bob $
+ * @version $Revision: 1.27 $, $Date: 2005/04/01 11:11:05 $
  * @module map_v1
  */
 public class Collector extends StorableObject implements MapElement {
@@ -66,8 +64,8 @@ public class Collector extends StorableObject implements MapElement {
 	private String name;
 	private String description;
 
-	private List physicalLinks;
-	private List characteristics;
+	private Set physicalLinks;
+	private Set characteristics;
 
 	private StorableObjectDatabase collectorDatabase;
 
@@ -78,8 +76,8 @@ public class Collector extends StorableObject implements MapElement {
 
 	public Collector(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
-		this.physicalLinks = new LinkedList();
-		this.characteristics = new LinkedList();
+		this.physicalLinks = new HashSet();
+		this.characteristics = new HashSet();
 
 		this.collectorDatabase = MapDatabaseContext.getCollectorDatabase();
 		try {
@@ -96,14 +94,14 @@ public class Collector extends StorableObject implements MapElement {
 		this.description = mt.description;
 
 		try {
-			this.physicalLinks = new ArrayList(mt.physicalLinkIds.length);
-			ArrayList physicalLinkIds = new ArrayList(mt.physicalLinkIds.length);
+			this.physicalLinks = new HashSet(mt.physicalLinkIds.length);
+			HashSet physicalLinkIds = new HashSet(mt.physicalLinkIds.length);
 			for (int i = 0; i < mt.characteristicIds.length; i++)
 				physicalLinkIds.add(new Identifier(mt.physicalLinkIds[i]));
 			this.physicalLinks.addAll(MapStorableObjectPool.getStorableObjects(physicalLinkIds, true));
 
-			this.characteristics = new ArrayList(mt.characteristicIds.length);
-			ArrayList characteristicIds = new ArrayList(mt.characteristicIds.length);
+			this.characteristics = new HashSet(mt.characteristicIds.length);
+			HashSet characteristicIds = new HashSet(mt.characteristicIds.length);
 			for (int i = 0; i < mt.characteristicIds.length; i++)
 				characteristicIds.add(new Identifier(mt.characteristicIds[i]));
 			this.characteristics.addAll(GeneralStorableObjectPool.getStorableObjects(characteristicIds, true));
@@ -127,8 +125,8 @@ public class Collector extends StorableObject implements MapElement {
 		this.name = name;
 		this.description = description;
 
-		this.physicalLinks = new LinkedList();
-		this.characteristics = new LinkedList();
+		this.physicalLinks = new HashSet();
+		this.characteristics = new HashSet();
 
 		this.collectorDatabase = MapDatabaseContext.getCollectorDatabase();
 	}
@@ -153,8 +151,8 @@ public class Collector extends StorableObject implements MapElement {
 		}
 	}
 
-	public List getDependencies() {
-		List dependencies = new LinkedList();
+	public Set getDependencies() {
+		Set dependencies = new HashSet();
 		dependencies.addAll(this.physicalLinks);
 		return dependencies;
 	}
@@ -199,17 +197,17 @@ public class Collector extends StorableObject implements MapElement {
 		this.changed = true;
 	}
 
-	public List getPhysicalLinks() {
-		return Collections.unmodifiableList(this.physicalLinks);
+	public Set getPhysicalLinks() {
+		return Collections.unmodifiableSet(this.physicalLinks);
 	}
 
-	protected void setPhysicalLinks0(Collection physicalLinks) {
+	protected void setPhysicalLinks0(Set physicalLinks) {
 		this.physicalLinks.clear();
 		if (physicalLinks != null)
 			this.physicalLinks.addAll(physicalLinks);
 	}
 
-	public void setPhysicalLinks(List physicalLinks) {
+	public void setPhysicalLinks(Set physicalLinks) {
 		this.setPhysicalLinks0(physicalLinks);
 		this.changed = true;
 	}
@@ -366,7 +364,7 @@ public class Collector extends StorableObject implements MapElement {
 			exportMap.put(COLUMN_ID, this.id);
 			exportMap.put(COLUMN_NAME, this.name);
 			exportMap.put(COLUMN_DESCRIPTION, this.description);
-			List physicalLinkIds = new ArrayList(getPhysicalLinks().size());
+			Set physicalLinkIds = new HashSet(getPhysicalLinks().size());
 			for (Iterator it = getPhysicalLinks().iterator(); it.hasNext();) {
 				PhysicalLink link = (PhysicalLink) it.next();
 				physicalLinkIds.add(link.getId());
@@ -380,7 +378,7 @@ public class Collector extends StorableObject implements MapElement {
 		Identifier id1 = (Identifier) exportMap1.get(COLUMN_ID);
 		String name1 = (String) exportMap1.get(COLUMN_NAME);
 		String description1 = (String) exportMap1.get(COLUMN_DESCRIPTION);
-		List physicalLinkIds1 = (List) exportMap1.get(COLUMN_LINKS);
+		Set physicalLinkIds1 = (Set) exportMap1.get(COLUMN_LINKS);
 
 		if (id1 == null || creatorId == null || name1 == null || description1 == null || physicalLinkIds1 == null)
 			throw new IllegalArgumentException("Argument is 'null'");
@@ -399,8 +397,8 @@ public class Collector extends StorableObject implements MapElement {
 		}
 	}
 
-	public Collection getCharacteristics() {
-		return Collections.unmodifiableList(this.characteristics);
+	public Set getCharacteristics() {
+		return Collections.unmodifiableSet(this.characteristics);
 	}
 
 	public void addCharacteristic(Characteristic characteristic) {
@@ -413,7 +411,7 @@ public class Collector extends StorableObject implements MapElement {
 		this.changed = true;
 	}
 
-	public void setCharacteristics0(final Collection characteristics) {
+	public void setCharacteristics0(final Set characteristics) {
 		this.characteristics.clear();
 		if (characteristics != null)
 			this.characteristics.addAll(characteristics);
@@ -421,9 +419,9 @@ public class Collector extends StorableObject implements MapElement {
 
 	/**
 	 * @param characteristics
-	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics(java.util.Collection)
+	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics(java.util.Set)
 	 */
-	public void setCharacteristics(final Collection characteristics) {
+	public void setCharacteristics(final Set characteristics) {
 		this.setCharacteristics0(characteristics);
 		this.changed = true;
 	}

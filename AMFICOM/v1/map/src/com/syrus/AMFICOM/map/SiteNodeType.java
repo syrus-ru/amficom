@@ -1,5 +1,5 @@
 /**
- * $Id: SiteNodeType.java,v 1.18 2005/03/24 14:23:03 arseniy Exp $
+ * $Id: SiteNodeType.java,v 1.19 2005/04/01 11:11:05 bob Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -29,13 +29,11 @@ import com.syrus.AMFICOM.general.corba.*;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.map.corba.SiteNodeType_Transferable;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Collection;
+import java.util.Set;
 
 /**
  * Тип сетевого узла топологической схемы. Существует несколько 
@@ -43,8 +41,8 @@ import java.util.Collection;
  * {@link #codename}, соответствующим какому-либо значению {@link #WELL}, 
  * {@link #PIQUET}, {@link #ATS}, {@link #BUILDING}, {@link #UNBOUND}, 
  * {@link #CABLE_INLET}, {@link #TOWER}
- * @author $Author: arseniy $
- * @version $Revision: 1.18 $, $Date: 2005/03/24 14:23:03 $
+ * @author $Author: bob $
+ * @version $Revision: 1.19 $, $Date: 2005/04/01 11:11:05 $
  * @module map_v1
  */
 public class SiteNodeType extends StorableObjectType implements Characterizable {
@@ -70,7 +68,7 @@ public class SiteNodeType extends StorableObjectType implements Characterizable 
 	 */
 	private static final long serialVersionUID = 3690481316080464696L;
 
-	private Collection characteristics;
+	private Set characteristics;
 
 	private Identifier imageId;
 	private String name;
@@ -97,8 +95,8 @@ public class SiteNodeType extends StorableObjectType implements Characterizable 
 		this.topological = sntt.topological;
 
 		try {
-			this.characteristics = new ArrayList(sntt.characteristicIds.length);
-			ArrayList characteristicIds = new ArrayList(sntt.characteristicIds.length);
+			this.characteristics = new HashSet(sntt.characteristicIds.length);
+			Set characteristicIds = new HashSet(sntt.characteristicIds.length);
 			for (int i = 0; i < sntt.characteristicIds.length; i++)
 				characteristicIds.add(new Identifier(sntt.characteristicIds[i]));
 
@@ -129,7 +127,7 @@ public class SiteNodeType extends StorableObjectType implements Characterizable 
 		this.imageId = imageId;
 		this.topological = topological;
 
-		this.characteristics = new LinkedList();
+		this.characteristics = new HashSet();
 
 		this.siteNodeTypeDatabase = MapDatabaseContext.getSiteNodeTypeDatabase();
 	}
@@ -161,8 +159,8 @@ public class SiteNodeType extends StorableObjectType implements Characterizable 
 		}
 	}
 
-	public List getDependencies() {
-		return Collections.singletonList(this.imageId);
+	public Set getDependencies() {
+		return Collections.singleton(this.imageId);
 	}
 
 	public String getDescription() {
@@ -231,8 +229,8 @@ public class SiteNodeType extends StorableObjectType implements Characterizable 
 		this.topological = topological;
 	}
 
-	public Collection getCharacteristics() {
-		return Collections.unmodifiableCollection(this.characteristics);
+	public Set getCharacteristics() {
+		return Collections.unmodifiableSet(this.characteristics);
 	}
 
 	public void addCharacteristic(Characteristic characteristic) {
@@ -247,9 +245,9 @@ public class SiteNodeType extends StorableObjectType implements Characterizable 
 
 	/**
 	 * @param characteristics
-	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics(java.util.Collection)
+	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics(Set)
 	 */
-	public void setCharacteristics(final Collection characteristics) {
+	public void setCharacteristics(final Set characteristics) {
 		this.setCharacteristics0(characteristics);
 		this.changed = true;
 	}
@@ -263,9 +261,9 @@ public class SiteNodeType extends StorableObjectType implements Characterizable 
 
 	/**
 	 * @param characteristics
-	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics0(java.util.Collection)
+	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics0(Set)
 	 */
-	public void setCharacteristics0(final Collection characteristics) {
+	public void setCharacteristics0(final Set characteristics) {
 		this.characteristics.clear();
 		if (characteristics != null)
 			this.characteristics.addAll(characteristics);

@@ -1,5 +1,5 @@
 /*
- * $Id: CollectorWrapper.java,v 1.5 2005/02/03 08:38:02 bob Exp $
+ * $Id: CollectorWrapper.java,v 1.6 2005/04/01 11:11:05 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,15 +8,15 @@
 
 package com.syrus.AMFICOM.map;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/02/03 08:38:02 $
+ * @version $Revision: 1.6 $, $Date: 2005/04/01 11:11:05 $
  * @author $Author: bob $
  * @module map_v1
  */
@@ -39,7 +39,7 @@ public class CollectorWrapper implements StorableObjectWrapper {
 		String[] keysArray = new String[] { COLUMN_NAME, COLUMN_DESCRIPTION, COLUMN_CHARACTERISTICS,
 				LINK_COLUMN_PHYSICAL_LINK_ID};
 
-		this.keys = Collections.unmodifiableList(new ArrayList(Arrays.asList(keysArray)));
+		this.keys = Collections.unmodifiableList(Arrays.asList(keysArray));
 
 	}
 
@@ -105,9 +105,9 @@ public class CollectorWrapper implements StorableObjectWrapper {
 			else if (key.equals(COLUMN_DESCRIPTION))
 				collector.setDescription((String) value);
 			else if (key.equals(COLUMN_CHARACTERISTICS))
-				collector.setCharacteristics((List) value);
+				collector.setCharacteristics((Set) value);
 			else if (key.equals(LINK_COLUMN_PHYSICAL_LINK_ID))
-				collector.setPhysicalLinks((List) value);
+				collector.setPhysicalLinks((Set) value);
 		}
 	}
 

@@ -1,5 +1,5 @@
 /*
- * $Id: CollectorDatabase.java,v 1.24 2005/03/31 09:23:39 arseniy Exp $
+ * $Id: CollectorDatabase.java,v 1.25 2005/04/01 11:11:05 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,11 +12,11 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Set;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CharacterizableDatabase;
@@ -38,8 +38,8 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.24 $, $Date: 2005/03/31 09:23:39 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.25 $, $Date: 2005/04/01 11:11:05 $
+ * @author $Author: bob $
  * @module map_v1
  */
 public class CollectorDatabase extends CharacterizableDatabase {
@@ -60,10 +60,10 @@ public class CollectorDatabase extends CharacterizableDatabase {
 			throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
 		Collector collector = this.fromStorableObject(storableObject);
 		super.retrieveEntity(collector);
-		this.retrievePhysicalLinks(Collections.singletonList(collector));
+		this.retrievePhysicalLinks(Collections.singleton(collector));
 	}
 
-	private void retrievePhysicalLinks(Collection collectors) throws RetrieveObjectException, IllegalDataException {
+	private void retrievePhysicalLinks(Set collectors) throws RetrieveObjectException, IllegalDataException {
 		if (collectors == null || collectors.isEmpty())
 			return;
 		java.util.Map map = super.retrieveLinkedEntityIds(collectors,
@@ -72,7 +72,7 @@ public class CollectorDatabase extends CharacterizableDatabase {
 				CollectorWrapper.LINK_COLUMN_PHYSICAL_LINK_ID);
 		for (Iterator it = map.keySet().iterator(); it.hasNext();) {
 			Collector collector = (Collector) it.next();
-			Collection physicalLinkIds = (Collection) map.get(collector);
+			Set physicalLinkIds = (Set) map.get(collector);
 			try {
 				collector.setPhysicalLinks0(MapStorableObjectPool.getStorableObjects(physicalLinkIds, true));
 			}
@@ -148,7 +148,7 @@ public class CollectorDatabase extends CharacterizableDatabase {
 		Collector collector = this.fromStorableObject(storableObject);
 		super.insertEntity(collector);
 		try {
-			this.updatePhysicalLinks(Collections.singletonList(storableObject));
+			this.updatePhysicalLinks(Collections.singleton(storableObject));
 		}
 		catch (UpdateObjectException e) {
 			throw new CreateObjectException(e);
@@ -156,7 +156,7 @@ public class CollectorDatabase extends CharacterizableDatabase {
 
 	}
 
-	public void insert(Collection storableObjects) throws IllegalDataException, CreateObjectException {
+	public void insert(Set storableObjects) throws IllegalDataException, CreateObjectException {
 		super.insertEntities(storableObjects);
 		try {
 			this.updatePhysicalLinks(storableObjects);
@@ -178,10 +178,10 @@ public class CollectorDatabase extends CharacterizableDatabase {
 				super.checkAndUpdateEntity(storableObject, modifierId, true);
 				return;
 		}
-		this.updatePhysicalLinks(Collections.singletonList(storableObject));
+		this.updatePhysicalLinks(Collections.singleton(storableObject));
 	}
 
-	public void update(Collection storableObjects, Identifier modifierId, int updateKind)
+	public void update(Set storableObjects, Identifier modifierId, int updateKind)
 			throws VersionCollisionException,
 				UpdateObjectException {
 		switch (updateKind) {
@@ -196,7 +196,7 @@ public class CollectorDatabase extends CharacterizableDatabase {
 		this.updatePhysicalLinks(storableObjects);
 	}	
 
-	private void updatePhysicalLinks(Collection collectors) throws UpdateObjectException {
+	private void updatePhysicalLinks(Set collectors) throws UpdateObjectException {
 		if (collectors == null || collectors.isEmpty())
 			return;
 		java.util.Map collectorIdPhysicalLinkIdsMap = new HashMap();
@@ -208,8 +208,8 @@ public class CollectorDatabase extends CharacterizableDatabase {
 			catch (IllegalDataException e) {
 				throw new UpdateObjectException("CollectorDatabase.updatePhysicalLinks | cannot get collector ", e);
 			}
-			Collection physicalLinks = collector.getPhysicalLinks();
-			Collection physicalLinkIds = new ArrayList(physicalLinks.size());
+			Set physicalLinks = collector.getPhysicalLinks();
+			Set physicalLinkIds = new HashSet(physicalLinks.size());
 			for (Iterator iter = physicalLinks.iterator(); iter.hasNext();) {
 				PhysicalLink physicalLink = (PhysicalLink) iter.next();
 				physicalLinkIds.add(physicalLink.getId());
@@ -224,10 +224,10 @@ public class CollectorDatabase extends CharacterizableDatabase {
 	}
 
 	public void delete(Identifier id) throws IllegalDataException {
-		this.delete(Collections.singletonList(id));
+		this.delete(Collections.singleton(id));
 	}
 
-	public void delete(Collection ids) {
+	public void delete(Set ids) {
 		StringBuffer stringBuffer = new StringBuffer(SQL_DELETE_FROM + COLLECTOR_PHYSICAL_LINK + SQL_WHERE);
 		try {
 			stringBuffer.append(idsEnumerationString(ids, CollectorWrapper.LINK_COLUMN_COLLECTOR_ID, true));
@@ -266,11 +266,11 @@ public class CollectorDatabase extends CharacterizableDatabase {
 
 	public void delete(StorableObject storableObject) throws IllegalDataException {
 		Collector collector = this.fromStorableObject(storableObject);		
-		this.delete(Collections.singletonList(collector.getId()));		
+		this.delete(Collections.singleton(collector.getId()));		
 	}
 	
-	protected Collection retrieveByCondition(String conditionQuery) throws RetrieveObjectException, IllegalDataException {
-		Collection collection = super.retrieveByCondition(conditionQuery);
+	protected Set retrieveByCondition(String conditionQuery) throws RetrieveObjectException, IllegalDataException {
+		Set collection = super.retrieveByCondition(conditionQuery);
 		this.retrievePhysicalLinks(collection);
 		return collection;
 	}

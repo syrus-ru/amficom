@@ -1,5 +1,5 @@
 /**
- * $Id: PhysicalLink.java,v 1.36 2005/03/24 14:10:15 arseniy Exp $
+ * $Id: PhysicalLink.java,v 1.37 2005/04/01 11:11:05 bob Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -14,9 +14,13 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
@@ -48,8 +52,8 @@ import com.syrus.AMFICOM.map.corba.PhysicalLink_Transferable;
  * Предуствновленными являются  два типа - 
  * тоннель (<code>{@link PhysicalLinkType#TUNNEL}</code>) 
  * и коллектор (<code>{@link PhysicalLinkType#COLLECTOR}</code>).
- * @author $Author: arseniy $
- * @version $Revision: 1.36 $, $Date: 2005/03/24 14:10:15 $
+ * @author $Author: bob $
+ * @version $Revision: 1.37 $, $Date: 2005/04/01 11:11:05 $
  * @module map_v1
  * @todo make binding.dimension persistent (just as bindingDimension for PhysicalLinkType)
  * @todo nodeLinks should be transient
@@ -95,11 +99,11 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 	private boolean leftToRight;
 	private boolean topToBottom;
 
-	private Collection characteristics;
+	private Set characteristics;
 
 	private StorableObjectDatabase physicalLinkDatabase;
 
-	private transient List nodeLinks = null;
+	private transient SortedSet nodeLinks = null;
 	protected transient Map map;
 	protected transient boolean selected = false;
 	protected transient boolean selectionVisible = false;
@@ -141,14 +145,14 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 			this.startNode = (AbstractNode) MapStorableObjectPool.getStorableObject(new Identifier(plt.startNodeId), true);
 			this.endNode = (AbstractNode) MapStorableObjectPool.getStorableObject(new Identifier(plt.endNodeId), true);
 
-			this.nodeLinks = new ArrayList(plt.nodeLinkIds.length);
-			ArrayList nodeLinksIds = new ArrayList(plt.nodeLinkIds.length);
+			this.nodeLinks = new TreeSet();
+			Set nodeLinksIds = new HashSet(plt.nodeLinkIds.length);
 			for (int i = 0; i < plt.nodeLinkIds.length; i++)
 				nodeLinksIds.add(new Identifier(plt.nodeLinkIds[i]));
 			this.nodeLinks.addAll(MapStorableObjectPool.getStorableObjects(nodeLinksIds, true));
 
-			this.characteristics = new ArrayList(plt.characteristicIds.length);
-			ArrayList characteristicIds = new ArrayList(plt.characteristicIds.length);
+			this.characteristics = new HashSet(plt.characteristicIds.length);
+			Set characteristicIds = new HashSet(plt.characteristicIds.length);
 			for (int i = 0; i < plt.characteristicIds.length; i++)
 				characteristicIds.add(new Identifier(plt.characteristicIds[i]));
 			this.characteristics.addAll(GeneralStorableObjectPool.getStorableObjects(characteristicIds, true));
@@ -196,8 +200,8 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 		this.leftToRight = leftToRight;
 		this.topToBottom = topToBottom;
 
-		this.characteristics = new LinkedList();
-		this.nodeLinks = new LinkedList();
+		this.characteristics = new HashSet();
+		this.nodeLinks = new TreeSet();
 
 		this.physicalLinkDatabase = MapDatabaseContext.getPhysicalLinkDatabase();
 
@@ -278,8 +282,8 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 		}
 	}
 
-	public List getDependencies() {
-		return Collections.singletonList(this.physicalLinkType);
+	public Set getDependencies() {
+		return Collections.singleton(this.physicalLinkType);
 	}
 
 	public Object getTransferable() {
@@ -423,10 +427,10 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 		this.changed = true;
 	}
 
-	public List getNodeLinks() {
+	public SortedSet getNodeLinks() {
 		if (this.nodeLinks == null || this.nodeLinks.isEmpty())
 			this.nodeLinks = findNodeLinks();
-		return Collections.unmodifiableList(this.nodeLinks);
+		return (SortedSet) Collections.unmodifiableSet(this.nodeLinks);
 	}
 
 	public void setNodeLinks(final List nodeLinks) {
@@ -676,7 +680,8 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 				}
 			}
 			nodevec.add(this.getEndNode());
-			this.nodeLinks = list;
+			this.nodeLinks.clear();
+			this.nodeLinks.addAll(list);
 			this.nodeLinksSorted = true;
 			this.sortedNodes = nodevec;
 		}
@@ -685,33 +690,33 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 	/**
 	 * Получить следующий фрагмент по цепочке сортированных фрагментов.
 	 * 
-	 * @param nl
+	 * @param nodeLink
 	 *          фрагмент
 	 * @return следующий фрагмент, или <code>null</code>, если nl - последний в
 	 *         списке
 	 */
-	public NodeLink nextNodeLink(NodeLink nl) {
-		sortNodeLinks();
-		int index = getNodeLinks().indexOf(nl);
-		if (index == getNodeLinks().size() - 1)
+	public NodeLink nextNodeLink(NodeLink nodeLink) {
+		this.sortNodeLinks();
+		final SortedSet nodeLinksTailSet  = this.nodeLinks.tailSet(nodeLink);
+		if (nodeLinksTailSet.size() == 1)
 			return null;
-		return (NodeLink) getNodeLinks().get(index + 1);
+		final Iterator nodeLinksIterator = nodeLinksTailSet.iterator();
+		nodeLinksIterator.next();
+		return (NodeLink) nodeLinksIterator.next();
 	}
 
 	/**
 	 * Получить предыдущий фрагмент по цепочке сортированных фрагментов.
 	 * 
-	 * @param nl
+	 * @param nodeLink
 	 *          фрагмент
 	 * @return предыдущий фрагмент, или <code>null</code>, если nl - первый в
 	 *         списке
 	 */
-	public NodeLink previousNodeLink(NodeLink nl) {
-		sortNodeLinks();
-		int index = getNodeLinks().indexOf(nl);
-		if (index == 0)
-			return null;
-		return (NodeLink) getNodeLinks().get(index - 1);
+	public NodeLink previousNodeLink(NodeLink nodeLink) {
+		this.sortNodeLinks();
+		final SortedSet nodeLinksHeadSet = this.nodeLinks.headSet(nodeLink); 
+		return nodeLinksHeadSet.isEmpty() ? null : (NodeLink) nodeLinksHeadSet.last();
 	}
 
 	/**
@@ -829,7 +834,7 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 		this.setStartNode(mples.startNode);
 		this.setEndNode(mples.endNode);
 
-		this.nodeLinks = new LinkedList();
+		this.nodeLinks = new TreeSet();
 		for (Iterator it = mples.nodeLinks.iterator(); it.hasNext();) {
 			NodeLink mnle = (NodeLink) it.next();
 			mnle.setPhysicalLink(this);
@@ -948,12 +953,12 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 		}
 	}
 
-	private List findNodeLinks() {
+	private SortedSet findNodeLinks() {
 		return this.map.getNodeLinks(this);
 	}
 
-	public Collection getCharacteristics() {
-		return Collections.unmodifiableCollection(this.characteristics);
+	public Set getCharacteristics() {
+		return Collections.unmodifiableSet(this.characteristics);
 	}
 
 	public void addCharacteristic(Characteristic characteristic) {
@@ -968,9 +973,9 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 
 	/**
 	 * @param characteristics
-	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics(java.util.Collection)
+	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics(Set)
 	 */
-	public void setCharacteristics(final Collection characteristics) {
+	public void setCharacteristics(final Set characteristics) {
 		this.setCharacteristics0(characteristics);
 		this.changed = true;
 	}
@@ -984,9 +989,9 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 
 	/**
 	 * @param characteristics
-	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics0(java.util.Collection)
+	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics0(Set)
 	 */
-	public void setCharacteristics0(final Collection characteristics) {
+	public void setCharacteristics0(final Set characteristics) {
 		this.characteristics.clear();
 		if (characteristics != null)
 			this.characteristics.addAll(characteristics);

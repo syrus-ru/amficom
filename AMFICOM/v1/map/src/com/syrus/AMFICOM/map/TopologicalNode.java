@@ -1,5 +1,5 @@
 /**
- * $Id: TopologicalNode.java,v 1.24 2005/03/24 14:10:15 arseniy Exp $
+ * $Id: TopologicalNode.java,v 1.25 2005/04/01 11:11:05 bob Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -11,14 +11,12 @@
 
 package com.syrus.AMFICOM.map;
 
-import java.util.*;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.Set;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
@@ -33,7 +31,7 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
-import com.syrus.AMFICOM.general.corba.*;
+import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.map.corba.TopologicalNode_Transferable;
 
@@ -42,8 +40,8 @@ import com.syrus.AMFICOM.map.corba.TopologicalNode_Transferable;
  * быть концевым дл€ линии и дл€ фрагмента линии. ¬ физическом смысле
  * топологический узел соответствует точке изгиба линии и не требует 
  * дополнительной описательной информации.
- * @author $Author: arseniy $
- * @version $Revision: 1.24 $, $Date: 2005/03/24 14:10:15 $
+ * @author $Author: bob $
+ * @version $Revision: 1.25 $, $Date: 2005/04/01 11:11:05 $
  * @module map_v1
  * @todo physicalLink should be transient
  */
@@ -97,8 +95,8 @@ public class TopologicalNode extends AbstractNode {
 		this.active = tnt.active;
 
 		try {
-			this.characteristics = new ArrayList(tnt.characteristicIds.length);
-			ArrayList characteristicIds = new ArrayList(tnt.characteristicIds.length);
+			this.characteristics = new HashSet(tnt.characteristicIds.length);
+			Set characteristicIds = new HashSet(tnt.characteristicIds.length);
 			for (int i = 0; i < tnt.characteristicIds.length; i++)
 				characteristicIds.add(new Identifier(tnt.characteristicIds[i]));
 
@@ -128,7 +126,7 @@ public class TopologicalNode extends AbstractNode {
 				new DoublePoint(longitude, latitude));
 		this.active = active;
 
-		this.characteristics = new LinkedList();
+		this.characteristics = new HashSet();
 
 		this.topologicalNodeDatabase = MapDatabaseContext.getTopologicalNodeDatabase();
 	}
@@ -154,7 +152,7 @@ public class TopologicalNode extends AbstractNode {
 		this.physicalLink = physicalLink;
 		this.active = active;
 
-		this.characteristics = new LinkedList();
+		this.characteristics = new HashSet();
 
 		this.topologicalNodeDatabase = MapDatabaseContext.getTopologicalNodeDatabase();
 
@@ -245,8 +243,8 @@ public class TopologicalNode extends AbstractNode {
 		return TopologicalNode.createInstance0(creatorId, "", "", null, location);
 	}
 
-	public List getDependencies() {
-		return Collections.EMPTY_LIST;
+	public Set getDependencies() {
+		return Collections.EMPTY_SET;
 	}
 
 	public Object getTransferable() {
@@ -410,9 +408,9 @@ public class TopologicalNode extends AbstractNode {
 
 	/**
 	 * @param characteristics
-	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics(java.util.Collection)
+	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics(Set)
 	 */
-	public void setCharacteristics(final Collection characteristics) {
+	public void setCharacteristics(final Set characteristics) {
 		this.setCharacteristics0(characteristics);
 		this.changed = true;
 	}
@@ -426,9 +424,9 @@ public class TopologicalNode extends AbstractNode {
 
 	/**
 	 * @param characteristics
-	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics0(java.util.Collection)
+	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics0(Set)
 	 */
-	public void setCharacteristics0(final Collection characteristics) {
+	public void setCharacteristics0(final Set characteristics) {
 		this.characteristics.clear();
 		if (characteristics != null)
 			this.characteristics.addAll(characteristics);

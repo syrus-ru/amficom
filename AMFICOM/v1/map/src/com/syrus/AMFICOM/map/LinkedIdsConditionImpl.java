@@ -1,5 +1,5 @@
 /**
- * $Id: LinkedIdsConditionImpl.java,v 1.2 2005/03/24 13:10:07 arseniy Exp $
+ * $Id: LinkedIdsConditionImpl.java,v 1.3 2005/04/01 11:11:05 bob Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -9,9 +9,9 @@
 
 package com.syrus.AMFICOM.map;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.Set;
 
 import com.syrus.AMFICOM.administration.AdministrationStorableObjectPool;
 import com.syrus.AMFICOM.administration.Domain;
@@ -23,13 +23,13 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.2 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.3 $
+ * @author $Author: bob $
  * @module map_v1
  */
 class LinkedIdsConditionImpl extends com.syrus.AMFICOM.general.LinkedIdsCondition {
 
-	private LinkedIdsConditionImpl(Collection linkedIds, Short entityCode) {
+	private LinkedIdsConditionImpl(Set linkedIds, Short entityCode) {
 		super(); // First line must invoke superconstructor w/o parameters.
 		this.linkedIds = linkedIds;
 		this.entityCode = entityCode;
@@ -37,7 +37,7 @@ class LinkedIdsConditionImpl extends com.syrus.AMFICOM.general.LinkedIdsConditio
 
 	private LinkedIdsConditionImpl(Identifier identifier, Short entityCode) {
 		super(); // First line must invoke superconstructor w/o parameters.
-		this.linkedIds = Collections.singletonList(identifier);
+		this.linkedIds = Collections.singleton(identifier);
 		this.entityCode = entityCode;
 	}
 
@@ -97,7 +97,7 @@ class LinkedIdsConditionImpl extends com.syrus.AMFICOM.general.LinkedIdsConditio
 		}
 	}
 
-	public boolean isNeedMore(Collection collection) {
+	public boolean isNeedMore(Set set) {
 		return true;
 	}
 }

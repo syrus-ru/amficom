@@ -1,5 +1,5 @@
 /**
- * $Id: AbstractNode.java,v 1.14 2005/03/09 14:49:53 bass Exp $
+ * $Id: AbstractNode.java,v 1.15 2005/04/01 11:11:04 bob Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -16,19 +16,20 @@ import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 
 import java.util.Collections;
-import java.util.Collection;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 /**
  * Абстрактный класс, описывающий узловой элемент топологической схемы 
  * ({@link Map}). Узловой объект характеризуется наличием координат
  * ({@link #location}) и изображением ({@link #imageId}).
  * 
- * @author $Author: bass $
- * @version $Revision: 1.14 $, $Date: 2005/03/09 14:49:53 $
+ * @author $Author: bob $
+ * @version $Revision: 1.15 $, $Date: 2005/04/01 11:11:04 $
  * @module map_v1
  * @see SiteNode
  * @see TopologicalNode
@@ -40,7 +41,7 @@ public abstract class AbstractNode
 
 	static final long serialVersionUID = -2623880496462305233L;
 
-	protected List		characteristics;
+	protected Set		characteristics;
 
 	protected String	name;
 
@@ -78,7 +79,7 @@ public abstract class AbstractNode
 
 	protected AbstractNode(Identifier id) {
 		super(id);
-		this.characteristics = new LinkedList();
+		this.characteristics = new HashSet();
 	}
 
 	/**
@@ -120,12 +121,12 @@ public abstract class AbstractNode
 		this.name = name;
 		this.description = desription;
 		this.location.setLocation(location.getX(), location.getY());
-		this.characteristics = new LinkedList();
+		this.characteristics = new HashSet();
 	}
 
 	protected AbstractNode(StorableObject_Transferable transferable) {
 		super(transferable);
-		this.characteristics = new LinkedList();
+		this.characteristics = new HashSet();
 	}
 
 	public Identifier getImageId() {
@@ -137,8 +138,8 @@ public abstract class AbstractNode
 		this.changed = true;
 	}
 	
-	public Collection getCharacteristics() {
-		return Collections.unmodifiableList(this.characteristics);
+	public Set getCharacteristics() {
+		return Collections.unmodifiableSet(this.characteristics);
 	}
 
 	public void addCharacteristic(Characteristic ch)
@@ -202,13 +203,13 @@ public abstract class AbstractNode
 		this.changed = true;
 	}
 
-	protected void setCharacteristics0(final List characteristics) {
+	public void setCharacteristics0(final Set characteristics) {
 		this.characteristics.clear();
 		if (characteristics != null)
 			this.characteristics.addAll(characteristics);
 	}
 	
-	public void setCharacteristics(final List characteristics) {
+	public void setCharacteristics(final Set characteristics) {
 		this.setCharacteristics0(characteristics);
 		this.changed = true;
 	}
@@ -227,9 +228,9 @@ public abstract class AbstractNode
 	 * Получить список NodeLinks, содержащих заданный Node.
 	 * @return Список фрагментов
 	 */
-	public List getNodeLinks()
+	public SortedSet getNodeLinks()
 	{
-		List returnList = new LinkedList();
+		SortedSet returnList = new TreeSet();
 		for(Iterator it = getMap().getNodeLinks().iterator(); it.hasNext();)
 		{
 			NodeLink nodeLink = (NodeLink )it.next();
@@ -281,9 +282,9 @@ public abstract class AbstractNode
 	 * на данном узле.
 	 * @return список линий
 	 */
-	public List getPhysicalLinks()
+	public SortedSet getPhysicalLinks()
 	{
-		List returnList = new LinkedList();
+		SortedSet returnList = new TreeSet();
 
 		for(Iterator it = getMap().getPhysicalLinks().iterator(); it.hasNext();)
 		{
@@ -302,10 +303,10 @@ public abstract class AbstractNode
 	 * данного элемента.
 	 * @return список узлов
 	 */
-	public List getOppositeNodes()
+	public SortedSet getOppositeNodes()
 	{
 		Iterator e = getNodeLinks().iterator();
-		LinkedList returnList = new LinkedList();
+		SortedSet returnList = new TreeSet();
 
 		while (e.hasNext())
 		{

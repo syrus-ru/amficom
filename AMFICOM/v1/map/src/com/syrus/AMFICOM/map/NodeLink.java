@@ -1,5 +1,5 @@
 /**
- * $Id: NodeLink.java,v 1.27 2005/03/24 14:10:15 arseniy Exp $
+ * $Id: NodeLink.java,v 1.28 2005/04/01 11:11:05 bob Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,14 +11,12 @@
 
 package com.syrus.AMFICOM.map;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.Set;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
@@ -42,8 +40,8 @@ import com.syrus.AMFICOM.map.corba.NodeLink_Transferable;
  * отрезок, соединяющий два концевых узла ({@link AbstractNode}). Фрагменты 
  * не живут сами по себе, а входят в состав одной и только одной линии
  * ({@link PhysicalLink}).
- * @author $Author: arseniy $
- * @version $Revision: 1.27 $, $Date: 2005/03/24 14:10:15 $
+ * @author $Author: bob $
+ * @version $Revision: 1.28 $, $Date: 2005/04/01 11:11:05 $
  * @module map_v1
  */
 public class NodeLink extends StorableObject implements MapElement {
@@ -72,7 +70,7 @@ public class NodeLink extends StorableObject implements MapElement {
 	private AbstractNode endNode;
 	private double length;
 
-	private List characteristics;
+	private Set characteristics;
 
 	private StorableObjectDatabase nodeLinkDatabase;
 
@@ -104,8 +102,8 @@ public class NodeLink extends StorableObject implements MapElement {
 			this.startNode = (AbstractNode) MapStorableObjectPool.getStorableObject(new Identifier(nlt.startNodeId), true);
 			this.endNode = (AbstractNode) MapStorableObjectPool.getStorableObject(new Identifier(nlt.endNodeId), true);
 
-			this.characteristics = new ArrayList(nlt.characteristicIds.length);
-			ArrayList characteristicIds = new ArrayList(nlt.characteristicIds.length);
+			this.characteristics = new HashSet(nlt.characteristicIds.length);
+			Set characteristicIds = new HashSet(nlt.characteristicIds.length);
 			for (int i = 0; i < nlt.characteristicIds.length; i++)
 				characteristicIds.add(new Identifier(nlt.characteristicIds[i]));
 			this.characteristics.addAll(GeneralStorableObjectPool.getStorableObjects(characteristicIds, true));
@@ -135,7 +133,7 @@ public class NodeLink extends StorableObject implements MapElement {
 		this.endNode = endNode;
 		this.length = length;
 
-		this.characteristics = new LinkedList();
+		this.characteristics = new HashSet();
 
 		this.nodeLinkDatabase = MapDatabaseContext.getNodeLinkDatabase();
 
@@ -180,8 +178,8 @@ public class NodeLink extends StorableObject implements MapElement {
 		}
 	}
 
-	public List getDependencies() {
-		List dependencies = new LinkedList();
+	public Set getDependencies() {
+		Set dependencies = new HashSet();
 		dependencies.add(this.physicalLink);
 		dependencies.add(this.startNode);
 		dependencies.add(this.endNode);
@@ -461,8 +459,8 @@ public class NodeLink extends StorableObject implements MapElement {
 		}
 	}
 
-	public Collection getCharacteristics() {
-		return  Collections.unmodifiableList(this.characteristics);
+	public Set getCharacteristics() {
+		return  Collections.unmodifiableSet(this.characteristics);
 	}
 
 	public void addCharacteristic(Characteristic characteristic) {
@@ -477,9 +475,9 @@ public class NodeLink extends StorableObject implements MapElement {
 
 	/**
 	 * @param characteristics
-	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics(java.util.Collection)
+	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics(Set)
 	 */
-	public void setCharacteristics(final Collection characteristics) {
+	public void setCharacteristics(final Set characteristics) {
 		this.setCharacteristics0(characteristics);
 		this.changed = true;
 	}
@@ -493,9 +491,9 @@ public class NodeLink extends StorableObject implements MapElement {
 
 	/**
 	 * @param characteristics
-	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics0(java.util.Collection)
+	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics0(Set)
 	 */
-	public void setCharacteristics0(final Collection characteristics) {
+	public void setCharacteristics0(final Set characteristics) {
 		this.characteristics.clear();
 		if (characteristics != null)
 			this.characteristics.addAll(characteristics);

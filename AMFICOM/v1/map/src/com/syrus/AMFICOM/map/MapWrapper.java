@@ -1,5 +1,5 @@
 /*
- * $Id: MapWrapper.java,v 1.6 2005/03/04 14:25:49 krupenn Exp $
+ * $Id: MapWrapper.java,v 1.7 2005/04/01 11:11:05 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,13 +12,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/03/04 14:25:49 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.7 $, $Date: 2005/04/01 11:11:05 $
+ * @author $Author: bob $
  * @module map_v1
  */
 public class MapWrapper implements StorableObjectWrapper {
@@ -134,19 +135,19 @@ public class MapWrapper implements StorableObjectWrapper {
 			else if (key.equals(COLUMN_DOMAIN_ID))
 				map.setDomainId((Identifier) value);
 			else if (key.equals(LINK_COLUMN_COLLECTOR_ID))
-				map.setCollectors((List) value);
+				map.setCollectors((Set) value);
 			else if (key.equals(LINK_COLUMN_MARK_ID))
-				map.setMarks((List) value);
+				map.setMarks((Set) value);
 			else if (key.equals(LINK_COLUMN_NODE_LINK_ID))
-				map.setNodeLinks((List) value);
+				map.setNodeLinks((Set) value);
 			else if (key.equals(LINK_COLUMN_PHYSICAL_LINK_ID))
-				map.setPhysicalLinks((List) value);
+				map.setPhysicalLinks((Set) value);
 			else if (key.equals(LINK_COLUMN_SITE_NODE_ID))
-				map.setSiteNodes((List) value);
+				map.setSiteNodes((Set) value);
 			else if (key.equals(LINK_COLUMN_TOPOLOGICAL_NODE_ID))
-				map.setTopologicalNodes((List) value);
+				map.setTopologicalNodes((Set) value);
 			else if (key.equals(LINK_COLUMN_MAP_ID))
-				map.setMaps((List) value);
+				map.setMaps((Set) value);
 		}
 	}
 

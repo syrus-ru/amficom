@@ -1,5 +1,5 @@
 /*
- * $Id: SiteNodeWrapper.java,v 1.5 2005/02/03 08:38:02 bob Exp $
+ * $Id: SiteNodeWrapper.java,v 1.6 2005/04/01 11:11:05 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,16 +8,16 @@
 
 package com.syrus.AMFICOM.map;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/02/03 08:38:02 $
+ * @version $Revision: 1.6 $, $Date: 2005/04/01 11:11:05 $
  * @author $Author: bob $
  * @module map_v1
  */
@@ -50,7 +50,7 @@ public class SiteNodeWrapper implements StorableObjectWrapper {
 				COLUMN_IMAGE_ID, COLUMN_SITE_NODE_TYPE_ID, COLUMN_CITY, COLUMN_STREET, COLUMN_BUILDING,
 				COLUMN_CHARACTERISTICS};
 
-		this.keys = Collections.unmodifiableList(new ArrayList(Arrays.asList(keysArray)));
+		this.keys = Collections.unmodifiableList(Arrays.asList(keysArray));
 
 	}
 
@@ -75,7 +75,7 @@ public class SiteNodeWrapper implements StorableObjectWrapper {
 
 	public Class getPropertyClass(String key) {
 		if (key.equals(COLUMN_CHARACTERISTICS))
-			return List.class;
+			return Set.class;
 		return String.class;
 	}
 
@@ -141,7 +141,7 @@ public class SiteNodeWrapper implements StorableObjectWrapper {
 			else if (key.equals(COLUMN_BUILDING))
 				siteNode.setBuilding((String) value);
 			else if (key.equals(COLUMN_CHARACTERISTICS))
-				siteNode.setCharacteristics((List) value);
+				siteNode.setCharacteristics((Set) value);
 		}
 	}
 }

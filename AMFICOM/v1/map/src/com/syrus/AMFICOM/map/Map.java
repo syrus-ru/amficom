@@ -1,5 +1,5 @@
 /**
- * $Id: Map.java,v 1.23 2005/03/24 14:10:15 arseniy Exp $
+ * $Id: Map.java,v 1.24 2005/04/01 11:11:05 bob Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,16 +11,14 @@
 
 package com.syrus.AMFICOM.map;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import com.syrus.AMFICOM.administration.DomainMember;
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -41,8 +39,8 @@ import com.syrus.AMFICOM.map.corba.Map_Transferable;
  * узлов (сетевых и топологических), линий (состоящих из фрагментов), меток на 
  * линиях, коллекторов (объединяющих в себе линии).
  * 
- * @author $Author: arseniy $
- * @version $Revision: 1.23 $, $Date: 2005/03/24 14:10:15 $
+ * @author $Author: bob $
+ * @version $Revision: 1.24 $, $Date: 2005/04/01 11:11:05 $
  * @module map_v1
  * @todo make maps persistent 
  */
@@ -70,19 +68,19 @@ public class Map extends DomainMember {
 	private String name;
 	private String description;
 
-	private Collection siteNodes;
-	private Collection topologicalNodes;
-	private Collection nodeLinks;
-	private Collection physicalLinks;
-	private Collection marks;
-	private Collection collectors;
+	private Set siteNodes;
+	private Set topologicalNodes;
+	private Set nodeLinks;
+	private Set physicalLinks;
+	private Set marks;
+	private Set collectors;
 
 	private StorableObjectDatabase mapDatabase;
 
-	protected transient Collection maps = new LinkedList();
+	protected transient Set maps = new HashSet();
 	protected transient Set selectedElements = new HashSet();
-	protected transient Collection allElements = new LinkedList();
-	protected transient Collection nodeElements = new LinkedList();
+	protected transient Set allElements = new HashSet();
+	protected transient Set nodeElements = new HashSet();
 
 	public Map(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
@@ -102,8 +100,8 @@ public class Map extends DomainMember {
 		this.description = mt.description;
 
 		try {
-			this.siteNodes = new ArrayList(mt.siteNodeIds.length);
-			ArrayList siteNodeIds = new ArrayList(mt.siteNodeIds.length);
+			this.siteNodes = new HashSet(mt.siteNodeIds.length);
+			HashSet siteNodeIds = new HashSet(mt.siteNodeIds.length);
 			for (int i = 0; i < mt.siteNodeIds.length; i++)
 				siteNodeIds.add(new Identifier(mt.siteNodeIds[i]));
 			this.siteNodes.addAll(MapStorableObjectPool.getStorableObjects(siteNodeIds, true));
@@ -112,8 +110,8 @@ public class Map extends DomainMember {
 				((SiteNode) it.next()).setMap(this);
 			}
 
-			this.topologicalNodes = new ArrayList(mt.topologicalNodeIds.length);
-			ArrayList topologicalNodeIds = new ArrayList(mt.topologicalNodeIds.length);
+			this.topologicalNodes = new HashSet(mt.topologicalNodeIds.length);
+			HashSet topologicalNodeIds = new HashSet(mt.topologicalNodeIds.length);
 			for (int i = 0; i < mt.topologicalNodeIds.length; i++)
 				topologicalNodeIds.add(new Identifier(mt.topologicalNodeIds[i]));
 			this.topologicalNodes.addAll(MapStorableObjectPool.getStorableObjects(topologicalNodeIds, true));
@@ -122,8 +120,8 @@ public class Map extends DomainMember {
 				((TopologicalNode) it.next()).setMap(this);
 			}
 
-			this.nodeLinks = new ArrayList(mt.nodeLinkIds.length);
-			ArrayList nodeLinkIds = new ArrayList(mt.nodeLinkIds.length);
+			this.nodeLinks = new HashSet(mt.nodeLinkIds.length);
+			HashSet nodeLinkIds = new HashSet(mt.nodeLinkIds.length);
 			for (int i = 0; i < mt.nodeLinkIds.length; i++)
 				nodeLinkIds.add(new Identifier(mt.nodeLinkIds[i]));
 			this.nodeLinks.addAll(MapStorableObjectPool.getStorableObjects(nodeLinkIds, true));
@@ -132,8 +130,8 @@ public class Map extends DomainMember {
 				((NodeLink) it.next()).setMap(this);
 			}
 
-			this.physicalLinks = new ArrayList(mt.physicalLinkIds.length);
-			ArrayList physicalNodeLinkIds = new ArrayList(mt.physicalLinkIds.length);
+			this.physicalLinks = new HashSet(mt.physicalLinkIds.length);
+			HashSet physicalNodeLinkIds = new HashSet(mt.physicalLinkIds.length);
 			for (int i = 0; i < mt.physicalLinkIds.length; i++)
 				physicalNodeLinkIds.add(new Identifier(mt.physicalLinkIds[i]));
 			this.physicalLinks.addAll(MapStorableObjectPool.getStorableObjects(physicalNodeLinkIds, true));
@@ -142,8 +140,8 @@ public class Map extends DomainMember {
 				((PhysicalLink) it.next()).setMap(this);
 			}
 
-			this.marks = new ArrayList(mt.markIds.length);
-			ArrayList markIds = new ArrayList(mt.markIds.length);
+			this.marks = new HashSet(mt.markIds.length);
+			HashSet markIds = new HashSet(mt.markIds.length);
 			for (int i = 0; i < mt.markIds.length; i++)
 				markIds.add(new Identifier(mt.markIds[i]));
 			this.marks.addAll(MapStorableObjectPool.getStorableObjects(markIds, true));
@@ -152,8 +150,8 @@ public class Map extends DomainMember {
 				((Mark) it.next()).setMap(this);
 			}
 
-			this.collectors = new ArrayList(mt.collectorIds.length);
-			ArrayList collectorIds = new ArrayList(mt.collectorIds.length);
+			this.collectors = new HashSet(mt.collectorIds.length);
+			HashSet collectorIds = new HashSet(mt.collectorIds.length);
 			for (int i = 0; i < mt.collectorIds.length; i++)
 				collectorIds.add(new Identifier(mt.collectorIds[i]));
 			this.collectors.addAll(MapStorableObjectPool.getStorableObjects(collectorIds, true));
@@ -184,13 +182,13 @@ public class Map extends DomainMember {
 		this.name = name;
 		this.description = description;
 
-		this.siteNodes = new LinkedList();
-		this.topologicalNodes = new LinkedList();
-		this.nodeLinks = new LinkedList();
-		this.physicalLinks = new LinkedList();
-		this.marks = new LinkedList();
-		this.collectors = new LinkedList();
-		this.maps = new LinkedList();
+		this.siteNodes = new HashSet();
+		this.topologicalNodes = new HashSet();
+		this.nodeLinks = new HashSet();
+		this.physicalLinks = new HashSet();
+		this.marks = new HashSet();
+		this.collectors = new HashSet();
+		this.maps = new HashSet();
 		this.mapDatabase = MapDatabaseContext.getMapDatabase();
 	}
 
@@ -214,8 +212,8 @@ public class Map extends DomainMember {
 		}
 	}
 
-	public List getDependencies() {
-		List dependencies = new LinkedList();
+	public Set getDependencies() {
+		Set dependencies = new HashSet();
 		dependencies.addAll(this.siteNodes);
 		dependencies.addAll(this.topologicalNodes);
 		dependencies.addAll(this.nodeLinks);
@@ -268,11 +266,11 @@ public class Map extends DomainMember {
 				collectorIds);
 	}
 
-	public Collection getCollectors() {
-		return Collections.unmodifiableCollection(this.collectors);
+	public Set getCollectors() {
+		return Collections.unmodifiableSet(this.collectors);
 	}
 
-	protected void setCollectors0(Collection collectors) {
+	protected void setCollectors0(Set collectors) {
 		this.collectors.clear();
 		if (collectors != null) {
 			for (Iterator it = collectors.iterator(); it.hasNext();) {
@@ -283,7 +281,7 @@ public class Map extends DomainMember {
 		}
 	}
 
-	public void setCollectors(Collection collectors) {
+	public void setCollectors(Set collectors) {
 		this.setCollectors0(collectors);
 		this.changed = true;
 	}
@@ -301,11 +299,11 @@ public class Map extends DomainMember {
 		this.changed = true;
 	}	
 
-	public Collection getMarks() {
-		return Collections.unmodifiableCollection(this.marks);
+	public Set getMarks() {
+		return Collections.unmodifiableSet(this.marks);
 	}
 
-	protected void setMarks0(Collection marks) {
+	protected void setMarks0(Set marks) {
 		this.marks.clear();
 		if (marks != null) {
 			for (Iterator it = marks.iterator(); it.hasNext();) {
@@ -316,7 +314,7 @@ public class Map extends DomainMember {
 		}
 	}
 
-	public void setMarks(Collection marks) {
+	public void setMarks(Set marks) {
 		this.setMarks0(marks);
 		this.changed = true;
 	}
@@ -334,11 +332,11 @@ public class Map extends DomainMember {
 		this.changed = true;
 	}
 
-	public Collection getNodeLinks() {
-		return Collections.unmodifiableCollection(this.nodeLinks);
+	public Set getNodeLinks() {
+		return Collections.unmodifiableSet(this.nodeLinks);
 	}
 
-	protected void setNodeLinks0(Collection nodeLinks) {
+	protected void setNodeLinks0(Set nodeLinks) {
 		this.nodeLinks.clear();
 		if (nodeLinks != null) {
 			for (Iterator it = nodeLinks.iterator(); it.hasNext();) {
@@ -349,16 +347,16 @@ public class Map extends DomainMember {
 		}
 	}
 
-	public void setNodeLinks(Collection nodeLinks) {
+	public void setNodeLinks(Set nodeLinks) {
 		this.setNodeLinks0(nodeLinks);
 		this.changed = true;
 	}
 
-	public Collection getPhysicalLinks() {
-		return Collections.unmodifiableCollection(this.physicalLinks);
+	public Set getPhysicalLinks() {
+		return Collections.unmodifiableSet(this.physicalLinks);
 	}
 
-	protected void setPhysicalLinks0(Collection physicalLinks) {
+	protected void setPhysicalLinks0(Set physicalLinks) {
 		this.physicalLinks.clear();
 		if (physicalLinks != null) {
 			for (Iterator it = physicalLinks.iterator(); it.hasNext();) {
@@ -370,16 +368,16 @@ public class Map extends DomainMember {
 		this.changed = true;
 	}
 
-	public void setPhysicalLinks(Collection physicalLinks) {
+	public void setPhysicalLinks(Set physicalLinks) {
 		this.setPhysicalLinks0(physicalLinks);
 		this.changed = true;
 	}
 
-	public Collection getSiteNodes() {
-		return Collections.unmodifiableCollection(this.siteNodes);
+	public Set getSiteNodes() {
+		return Collections.unmodifiableSet(this.siteNodes);
 	}
 
-	protected void setSiteNodes0(Collection siteNodes) {
+	protected void setSiteNodes0(Set siteNodes) {
 		this.siteNodes.clear();
 		if (siteNodes != null) {
 			for (Iterator it = siteNodes.iterator(); it.hasNext();) {
@@ -390,16 +388,16 @@ public class Map extends DomainMember {
 		}
 	}
 
-	public void setSiteNodes(Collection siteNodes) {
+	public void setSiteNodes(Set siteNodes) {
 		this.setSiteNodes0(siteNodes);
 		this.changed = true;
 	}
 
-	public Collection getTopologicalNodes() {
-		return Collections.unmodifiableCollection(this.topologicalNodes);
+	public Set getTopologicalNodes() {
+		return Collections.unmodifiableSet(this.topologicalNodes);
 	}
 
-	protected void setTopologicalNodes0(Collection topologicalNodes) {
+	protected void setTopologicalNodes0(Set topologicalNodes) {
 		this.topologicalNodes.clear();
 		if (topologicalNodes != null) {
 			for (Iterator it = topologicalNodes.iterator(); it.hasNext();) {
@@ -410,22 +408,22 @@ public class Map extends DomainMember {
 		}
 	}
 
-	public void setTopologicalNodes(Collection topologicalNodes) {
+	public void setTopologicalNodes(Set topologicalNodes) {
 		this.setTopologicalNodes0(topologicalNodes);
 		this.changed = true;
 	}
 
-	public Collection getMaps() {
-		return Collections.unmodifiableCollection(this.maps);
+	public Set getMaps() {
+		return Collections.unmodifiableSet(this.maps);
 	}
 
-	protected void setMaps0(Collection maps) {
+	protected void setMaps0(Set maps) {
 		this.maps.clear();
 		if (maps != null)
 			this.maps.addAll(maps);
 	}
 
-	public void setMaps(Collection maps) {
+	public void setMaps(Set maps) {
 		this.setMaps0(maps);
 		this.changed = true;
 	}
@@ -443,8 +441,8 @@ public class Map extends DomainMember {
 		this.description = description;
 	}
 
-	public Collection getAllCollectors() {
-		Collection returnElements = new LinkedList();
+	public Set getAllCollectors() {
+		Set returnElements = new HashSet();
 		returnElements.addAll(this.collectors);
 		for (Iterator iter = this.maps.iterator(); iter.hasNext();) {
 			Map innerMap = (Map) iter.next();
@@ -453,8 +451,8 @@ public class Map extends DomainMember {
 		return returnElements;
 	}
 
-	public Collection getAllMarks() {
-		Collection returnElements = new LinkedList();
+	public Set getAllMarks() {
+		Set returnElements = new HashSet();
 		returnElements.addAll(this.marks);
 		for (Iterator iter = this.maps.iterator(); iter.hasNext();) {
 			Map innerMap = (Map) iter.next();
@@ -463,8 +461,8 @@ public class Map extends DomainMember {
 		return returnElements;
 	}
 
-	public Collection getAllNodeLinks() {
-		Collection returnElements = new LinkedList();
+	public Set getAllNodeLinks() {
+		Set returnElements = new HashSet();
 		returnElements.addAll(this.nodeLinks);
 		for (Iterator iter = this.maps.iterator(); iter.hasNext();) {
 			Map innerMap = (Map) iter.next();
@@ -473,8 +471,8 @@ public class Map extends DomainMember {
 		return returnElements;
 	}
 
-	public Collection getAllPhysicalLinks() {
-		Collection returnElements = new LinkedList();
+	public Set getAllPhysicalLinks() {
+		Set returnElements = new HashSet();
 		returnElements.addAll(this.physicalLinks);
 		for (Iterator iter = this.maps.iterator(); iter.hasNext();) {
 			Map innerMap = (Map) iter.next();
@@ -483,8 +481,8 @@ public class Map extends DomainMember {
 		return returnElements;
 	}
 
-	public Collection getAllSiteNodes() {
-		Collection returnElements = new LinkedList();
+	public Set getAllSiteNodes() {
+		Set returnElements = new HashSet();
 		returnElements.addAll(this.siteNodes);
 		for (Iterator iter = this.maps.iterator(); iter.hasNext();) {
 			Map innerMap = (Map) iter.next();
@@ -493,8 +491,8 @@ public class Map extends DomainMember {
 		return returnElements;
 	}
 
-	public Collection getAllTopologicalNodes() {
-		Collection returnElements = new LinkedList();
+	public Set getAllTopologicalNodes() {
+		Set returnElements = new HashSet();
 		returnElements.addAll(this.topologicalNodes);
 		for (Iterator iter = this.maps.iterator(); iter.hasNext();) {
 			Map innerMap = (Map) iter.next();
@@ -508,7 +506,7 @@ public class Map extends DomainMember {
 	 * 
 	 * @return список узлов
 	 */
-	public Collection getNodes() {
+	public Set getNodes() {
 		this.nodeElements.clear();
 		this.nodeElements.addAll(this.getAllSiteNodes());
 		this.nodeElements.addAll(this.getAllTopologicalNodes());
@@ -685,8 +683,8 @@ public class Map extends DomainMember {
 	 *          узел
 	 * @return список линий
 	 */
-	public Collection getPhysicalLinksAt(AbstractNode node) {
-		LinkedList returnNodeLink = new LinkedList();
+	public Set getPhysicalLinksAt(AbstractNode node) {
+		HashSet returnNodeLink = new HashSet();
 		Iterator e = this.getAllPhysicalLinks().iterator();
 
 		while (e.hasNext()) {
@@ -812,8 +810,8 @@ public class Map extends DomainMember {
 		return null;
 	}
 
-	public List getNodeLinks(PhysicalLink link) {
-		List nlinks = new ArrayList();
+	public SortedSet getNodeLinks(PhysicalLink link) {
+		SortedSet nlinks = new TreeSet();
 		for (Iterator it = this.nodeLinks.iterator(); it.hasNext();) {
 			NodeLink nodeLink = (NodeLink) it.next();
 			if (nodeLink.getPhysicalLink().equals(link))
@@ -864,7 +862,7 @@ public class Map extends DomainMember {
 	 * 
 	 * @return список всех элементов
 	 */
-	public Collection getAllElements() {
+	public Set getAllElements() {
 		this.allElements.clear();
 
 		this.allElements.addAll(this.getAllMarks());
@@ -875,7 +873,7 @@ public class Map extends DomainMember {
 		this.allElements.addAll(this.getAllPhysicalLinks());
 		this.allElements.addAll(this.getAllCollectors());
 
-		return Collections.unmodifiableCollection(this.allElements);
+		return Collections.unmodifiableSet(this.allElements);
 	}
 
 	/**

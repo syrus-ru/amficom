@@ -1,5 +1,5 @@
 /*
- * $Id: MapDatabase.java,v 1.23 2005/03/31 09:23:39 arseniy Exp $
+ * $Id: MapDatabase.java,v 1.24 2005/04/01 11:11:05 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,11 +12,11 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Set;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CharacterizableDatabase;
@@ -38,8 +38,8 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.23 $, $Date: 2005/03/31 09:23:39 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.24 $, $Date: 2005/04/01 11:11:05 $
+ * @author $Author: bob $
  * @module map_v1
  */
 public class MapDatabase extends CharacterizableDatabase {
@@ -113,13 +113,13 @@ public class MapDatabase extends CharacterizableDatabase {
 	public void retrieve(StorableObject storableObject) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
 		Map map = this.fromStorableObject(storableObject);
 		this.retrieveEntity(map);
-		Collection maps = Collections.singletonList(map);
+		Set maps = Collections.singleton(map);
 		
 		{
 			java.util.Map collectors = this.retrieveLinkedObjects(maps, _MAP_COLLECTOR);
 			for (Iterator it = collectors.keySet().iterator(); it.hasNext();) {
 				Identifier id = (Identifier) it.next();
-				Collection collectorIds = (Collection)collectors.get(id);
+				Set collectorIds = (Set)collectors.get(id);
 				if (id.equals(map.getId())){
 					try {
 						map.setCollectors0(MapStorableObjectPool.getStorableObjects(collectorIds, true));
@@ -134,7 +134,7 @@ public class MapDatabase extends CharacterizableDatabase {
 			java.util.Map marks = this.retrieveLinkedObjects(maps, _MAP_MARK);
 			for (Iterator it = marks.keySet().iterator(); it.hasNext();) {
 				Identifier id = (Identifier) it.next();
-				Collection markIds = (Collection)marks.get(id);
+				Set markIds = (Set)marks.get(id);
 				if (id.equals(map.getId())){
 					try {
 						map.setMarks0(MapStorableObjectPool.getStorableObjects(markIds, true));
@@ -149,7 +149,7 @@ public class MapDatabase extends CharacterizableDatabase {
 			java.util.Map nodeLinks = this.retrieveLinkedObjects(maps, _MAP_NODE_LINK);
 			for (Iterator it = nodeLinks.keySet().iterator(); it.hasNext();) {
 				Identifier id = (Identifier) it.next();
-				Collection nodeLinkIds = (Collection)nodeLinks.get(id);
+				Set nodeLinkIds = (Set)nodeLinks.get(id);
 				if (id.equals(map.getId())){
 					try {
 						map.setNodeLinks0(MapStorableObjectPool.getStorableObjects(nodeLinkIds, true));
@@ -164,7 +164,7 @@ public class MapDatabase extends CharacterizableDatabase {
 			java.util.Map physicalLinks = this.retrieveLinkedObjects(maps, _MAP_PHYSICAL_LINK);
 			for (Iterator it = physicalLinks.keySet().iterator(); it.hasNext();) {
 				Identifier id = (Identifier) it.next();
-				Collection physicalLinkIds = (Collection)physicalLinks.get(id);
+				Set physicalLinkIds = (Set)physicalLinks.get(id);
 				if (id.equals(map.getId())){
 					try {
 						map.setPhysicalLinks0(MapStorableObjectPool.getStorableObjects(physicalLinkIds, true));
@@ -179,7 +179,7 @@ public class MapDatabase extends CharacterizableDatabase {
 			java.util.Map siteNodes = this.retrieveLinkedObjects(maps, _MAP_SITE_NODE);
 			for (Iterator it = siteNodes.keySet().iterator(); it.hasNext();) {
 				Identifier id = (Identifier) it.next();
-				Collection siteNodeIds = (Collection)siteNodes.get(id);
+				Set siteNodeIds = (Set)siteNodes.get(id);
 				if (id.equals(map.getId())){
 					try {
 						map.setSiteNodes0(MapStorableObjectPool.getStorableObjects(siteNodeIds, true));
@@ -194,7 +194,7 @@ public class MapDatabase extends CharacterizableDatabase {
 			java.util.Map topologicalNodes = this.retrieveLinkedObjects(maps, _MAP_TOPOLOGICAL_NODE);
 			for (Iterator it = topologicalNodes.keySet().iterator(); it.hasNext();) {
 				Identifier id = (Identifier) it.next();
-				Collection topologicalNodeIds = (Collection)topologicalNodes.get(id);
+				Set topologicalNodeIds = (Set)topologicalNodes.get(id);
 				if (id.equals(map.getId())){
 					try {
 						map.setTopologicalNodes0(MapStorableObjectPool.getStorableObjects(topologicalNodeIds, true));
@@ -206,7 +206,7 @@ public class MapDatabase extends CharacterizableDatabase {
 		}
 	}	
 	
-	private java.util.Map retrieveLinkedObjects(Collection maps, int linkedTable) throws RetrieveObjectException, IllegalDataException{
+	private java.util.Map retrieveLinkedObjects(Set maps, int linkedTable) throws RetrieveObjectException, IllegalDataException{
 		if (maps == null || maps.isEmpty())
 			return Collections.EMPTY_MAP;
 		
@@ -287,7 +287,7 @@ public class MapDatabase extends CharacterizableDatabase {
 	public void insert(StorableObject storableObject) throws CreateObjectException, IllegalDataException {
 		Map map = this.fromStorableObject(storableObject);
 		super.insertEntity(map);
-		Collection maps = Collections.singletonList(map);
+		Set maps = Collections.singleton(map);
 		try {
 			this.updateLinkedObjectIds(maps, _MAP_COLLECTOR);
 			this.updateLinkedObjectIds(maps, _MAP_MARK);
@@ -301,7 +301,7 @@ public class MapDatabase extends CharacterizableDatabase {
 		}
 	}
 
-	public void insert(Collection storableObjects) throws IllegalDataException, CreateObjectException {
+	public void insert(Set storableObjects) throws IllegalDataException, CreateObjectException {
 		super.insertEntities(storableObjects);
 		try {
 			this.updateLinkedObjectIds(storableObjects, _MAP_COLLECTOR);
@@ -327,7 +327,7 @@ public class MapDatabase extends CharacterizableDatabase {
 				super.checkAndUpdateEntity(storableObject, modifierId, true);
 				return;
 		}
-		Collection maps = Collections.singletonList(storableObject);
+		Set maps = Collections.singleton(storableObject);
 		this.updateLinkedObjectIds(maps, _MAP_COLLECTOR);
 		this.updateLinkedObjectIds(maps, _MAP_MARK);
 		this.updateLinkedObjectIds(maps, _MAP_NODE_LINK);
@@ -336,7 +336,7 @@ public class MapDatabase extends CharacterizableDatabase {
 		this.updateLinkedObjectIds(maps, _MAP_TOPOLOGICAL_NODE);
 	}
 
-	public void update(Collection storableObjects, Identifier modifierId, int updateKind)
+	public void update(Set storableObjects, Identifier modifierId, int updateKind)
 			throws VersionCollisionException, UpdateObjectException {
 		switch (updateKind) {
 			case UPDATE_CHECK:
@@ -355,7 +355,7 @@ public class MapDatabase extends CharacterizableDatabase {
 		this.updateLinkedObjectIds(storableObjects, _MAP_TOPOLOGICAL_NODE);
 	}	
 
-	private void updateLinkedObjectIds(Collection maps, int linkedTable) throws UpdateObjectException {
+	private void updateLinkedObjectIds(Set maps, int linkedTable) throws UpdateObjectException {
 		if (maps == null || maps.isEmpty())
 			return;
 
@@ -379,7 +379,7 @@ public class MapDatabase extends CharacterizableDatabase {
 			catch (IllegalDataException e) {
 				throw new UpdateObjectException(e);
 			}
-			Collection linkedObjectList;
+			Set linkedObjectList;
 			switch (linkedTable) {
 				case _MAP_COLLECTOR:
 					linkedObjectList = map.getCollectors();
@@ -404,7 +404,7 @@ public class MapDatabase extends CharacterizableDatabase {
 							+ "Database.updateLinkedObjectIds | unknown linked table code:" + linkedTable);
 			}
 
-			Collection linkedObjectIds = new ArrayList(linkedObjectList.size());
+			Set linkedObjectIds = new HashSet(linkedObjectList.size());
 			for (Iterator it = linkedObjectList.iterator(); it.hasNext();) {
 				StorableObject storableObject2 = (StorableObject) it.next();
 				linkedObjectIds.add(storableObject2.getId());
@@ -417,10 +417,10 @@ public class MapDatabase extends CharacterizableDatabase {
 	}
 
 	public void delete(Identifier id) throws IllegalDataException {
-		this.delete(Collections.singletonList(id));
+		this.delete(Collections.singleton(id));
 	}
 
-	public void delete(Collection ids) {
+	public void delete(Set ids) {
 		super.delete(ids);
 
 		java.util.Map linkedObjectIds = new HashMap();
@@ -488,7 +488,7 @@ public class MapDatabase extends CharacterizableDatabase {
 
 	public void delete(StorableObject storableObject) throws IllegalDataException {
 		Map map = fromStorableObject(storableObject);
-		this.delete(Collections.singletonList(map.getId()));
+		this.delete(Collections.singleton(map.getId()));
 	}
 
 	private void deleteLinkedObjectIds(java.util.Map linkedObjectIds, int linkedTable) {
@@ -537,8 +537,8 @@ public class MapDatabase extends CharacterizableDatabase {
 		}
 	}
 
-	protected Collection retrieveByCondition(String conditionQuery) throws RetrieveObjectException, IllegalDataException {
-		Collection maps = super.retrieveByCondition(conditionQuery);
+	protected Set retrieveByCondition(String conditionQuery) throws RetrieveObjectException, IllegalDataException {
+		Set maps = super.retrieveByCondition(conditionQuery);
 		
 		java.util.Map mapIds = new HashMap();
 		for (Iterator it = maps.iterator(); it.hasNext();) {
@@ -551,7 +551,7 @@ public class MapDatabase extends CharacterizableDatabase {
 			for (Iterator it = collectors.keySet().iterator(); it.hasNext();) {
 				Identifier id = (Identifier) it.next();
 				Map map = (Map) mapIds.get(id);
-				Collection collectorIds = (Collection)collectors.get(id);				
+				Set collectorIds = (Set)collectors.get(id);				
 				if (id.equals(map.getId())){
 					try {
 						map.setCollectors0(MapStorableObjectPool.getStorableObjects(collectorIds, true));
@@ -567,7 +567,7 @@ public class MapDatabase extends CharacterizableDatabase {
 			for (Iterator it = marks.keySet().iterator(); it.hasNext();) {
 				Identifier id = (Identifier) it.next();
 				Map map = (Map) mapIds.get(id);
-				Collection markIds = (Collection)marks.get(id);
+				Set markIds = (Set)marks.get(id);
 				if (id.equals(map.getId())){
 					try {
 						map.setMarks0(MapStorableObjectPool.getStorableObjects(markIds, true));
@@ -583,7 +583,7 @@ public class MapDatabase extends CharacterizableDatabase {
 			for (Iterator it = nodeLinks.keySet().iterator(); it.hasNext();) {
 				Identifier id = (Identifier) it.next();
 				Map map = (Map) mapIds.get(id);
-				Collection nodeLinkIds = (Collection)nodeLinks.get(id);
+				Set nodeLinkIds = (Set)nodeLinks.get(id);
 				if (id.equals(map.getId())){
 					try {
 						map.setNodeLinks0(MapStorableObjectPool.getStorableObjects(nodeLinkIds, true));
@@ -599,7 +599,7 @@ public class MapDatabase extends CharacterizableDatabase {
 			for (Iterator it = physicalLinks.keySet().iterator(); it.hasNext();) {
 				Identifier id = (Identifier) it.next();
 				Map map = (Map) mapIds.get(id);
-				Collection physicalLinkIds = (Collection)physicalLinks.get(id);
+				Set physicalLinkIds = (Set)physicalLinks.get(id);
 				if (id.equals(map.getId())){
 					try {
 						map.setPhysicalLinks0(MapStorableObjectPool.getStorableObjects(physicalLinkIds, true));
@@ -615,7 +615,7 @@ public class MapDatabase extends CharacterizableDatabase {
 			for (Iterator it = siteNodes.keySet().iterator(); it.hasNext();) {
 				Identifier id = (Identifier) it.next();
 				Map map = (Map) mapIds.get(id);
-				Collection siteNodeIds = (Collection)siteNodes.get(id);
+				Set siteNodeIds = (Set)siteNodes.get(id);
 				if (id.equals(map.getId())){
 					try {
 						map.setSiteNodes0(MapStorableObjectPool.getStorableObjects(siteNodeIds, true));
@@ -631,7 +631,7 @@ public class MapDatabase extends CharacterizableDatabase {
 			for (Iterator it = topologicalNodes.keySet().iterator(); it.hasNext();) {
 				Identifier id = (Identifier) it.next();
 				Map map = (Map) mapIds.get(id);
-				Collection topologicalNodeIds = (Collection)topologicalNodes.get(id);
+				Set topologicalNodeIds = (Set)topologicalNodes.get(id);
 				if (id.equals(map.getId())){
 					try {
 						map.setTopologicalNodes0(MapStorableObjectPool.getStorableObjects(topologicalNodeIds, true));

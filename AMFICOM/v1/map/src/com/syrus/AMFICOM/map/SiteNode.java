@@ -1,5 +1,5 @@
 /**
- * $Id: SiteNode.java,v 1.25 2005/03/24 14:10:15 arseniy Exp $
+ * $Id: SiteNode.java,v 1.26 2005/04/01 11:11:05 bob Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,14 +11,12 @@
 
 package com.syrus.AMFICOM.map;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.Set;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
@@ -56,8 +54,8 @@ import com.syrus.AMFICOM.resource.ResourceStorableObjectPool;
  * Дополнительно описывается полями
  * {@link #city}, {@link #street}, {@link #building} для поиска по 
  * географическим параметрам. 
- * @author $Author: arseniy $
- * @version $Revision: 1.25 $, $Date: 2005/03/24 14:10:15 $
+ * @author $Author: bob $
+ * @version $Revision: 1.26 $, $Date: 2005/04/01 11:11:05 $
  * @module map_v1
  */
 public class SiteNode extends AbstractNode implements TypedObject {
@@ -118,8 +116,8 @@ public class SiteNode extends AbstractNode implements TypedObject {
 		try {
 			this.type = (SiteNodeType) MapStorableObjectPool.getStorableObject(new Identifier(snt.siteNodeTypeId), true);
 
-			this.characteristics = new ArrayList(snt.characteristicIds.length);
-			ArrayList characteristicIds = new ArrayList(snt.characteristicIds.length);
+			this.characteristics = new HashSet(snt.characteristicIds.length);
+			Set characteristicIds = new HashSet(snt.characteristicIds.length);
 			for (int i = 0; i < snt.characteristicIds.length; i++)
 				characteristicIds.add(new Identifier(snt.characteristicIds[i]));
 
@@ -157,7 +155,7 @@ public class SiteNode extends AbstractNode implements TypedObject {
 		this.street = street;
 		this.building = building;
 
-		this.characteristics = new LinkedList();
+		this.characteristics = new HashSet();
 
 		this.siteNodeDatabase = MapDatabaseContext.getSiteNodeDatabase();
 
@@ -217,8 +215,8 @@ public class SiteNode extends AbstractNode implements TypedObject {
 				"");
 	}
 
-	public List getDependencies() {
-		List dependencies = new LinkedList();
+	public Set getDependencies() {
+		Set dependencies = new HashSet();
 		dependencies.add(this.type);
 		dependencies.add(this.imageId);
 		return dependencies;
@@ -393,18 +391,18 @@ public class SiteNode extends AbstractNode implements TypedObject {
 					ObjectEntities.SITE_NODE_TYPE_ENTITY_CODE,
 					StorableObjectWrapper.COLUMN_CODENAME);
 
-			Collection collection = MapStorableObjectPool.getStorableObjectsByCondition(condition, true);
-			if (collection == null || collection.size() == 0) {
+			Set set = MapStorableObjectPool.getStorableObjectsByCondition(condition, true);
+			if (set == null || set.size() == 0) {
 				typeCodeName1 = SiteNodeType.BUILDING;
 
 				condition.setValue(typeCodeName1);
 
-				collection = MapStorableObjectPool.getStorableObjectsByCondition(condition, true);
-				if (collection == null || collection.size() == 0) {
+				set = MapStorableObjectPool.getStorableObjectsByCondition(condition, true);
+				if (set == null || set.size() == 0) {
 					throw new CreateObjectException("SiteNodeType \'" + SiteNodeType.BUILDING + "\' not found");
 				}
 			}
-			siteNodeType = (SiteNodeType) collection.iterator().next();
+			siteNodeType = (SiteNodeType) set.iterator().next();
 
 			Identifier imageId1;
 
@@ -413,18 +411,18 @@ public class SiteNode extends AbstractNode implements TypedObject {
 					ObjectEntities.IMAGE_RESOURCE_ENTITY_CODE,
 					StorableObjectWrapper.COLUMN_CODENAME);
 
-			collection = ResourceStorableObjectPool.getStorableObjectsByCondition(condition, true);
-			if (collection == null || collection.size() == 0) {
+			set = ResourceStorableObjectPool.getStorableObjectsByCondition(condition, true);
+			if (set == null || set.size() == 0) {
 				imageCodeName1 = SiteNodeType.BUILDING_IMAGE;
 
 				condition.setValue(imageCodeName1);
 
-				collection = ResourceStorableObjectPool.getStorableObjectsByCondition(condition, true);
-				if (collection == null || collection.size() == 0) {
+				set = ResourceStorableObjectPool.getStorableObjectsByCondition(condition, true);
+				if (set == null || set.size() == 0) {
 					throw new CreateObjectException("ImageResource \'" + SiteNodeType.BUILDING_IMAGE + "\' not found");
 				}
 			}
-			imageId1 = ((AbstractImageResource) collection.iterator().next()).getId();
+			imageId1 = ((AbstractImageResource) set.iterator().next()).getId();
 
 			return new SiteNode(id1, creatorId, 0L, imageId1, name1, description1, siteNodeType, x1, y1, city1, street1, building1);
 		}
@@ -435,9 +433,9 @@ public class SiteNode extends AbstractNode implements TypedObject {
 
 	/**
 	 * @param characteristics
-	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics(java.util.Collection)
+	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics(Set)
 	 */
-	public void setCharacteristics(final Collection characteristics) {
+	public void setCharacteristics(final Set characteristics) {
 		this.setCharacteristics0(characteristics);
 		this.changed = true;
 	}
@@ -451,9 +449,9 @@ public class SiteNode extends AbstractNode implements TypedObject {
 
 	/**
 	 * @param characteristics
-	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics0(java.util.Collection)
+	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics0(Set)
 	 */
-	public void setCharacteristics0(final Collection characteristics) {
+	public void setCharacteristics0(final Set characteristics) {
 		this.characteristics.clear();
 		if (characteristics != null)
 			this.characteristics.addAll(characteristics);

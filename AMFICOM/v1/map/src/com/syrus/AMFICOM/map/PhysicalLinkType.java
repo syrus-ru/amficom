@@ -1,5 +1,5 @@
 /**
- * $Id: PhysicalLinkType.java,v 1.22 2005/03/24 14:23:03 arseniy Exp $
+ * $Id: PhysicalLinkType.java,v 1.23 2005/04/01 11:11:05 bob Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -27,21 +27,19 @@ import com.syrus.AMFICOM.general.corba.*;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.map.corba.PhysicalLinkType_Transferable;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Collection;
+import java.util.Set;
 
 /**
  * “ип линии топологической схемы. —уществует несколько предустановленных 
  * типов линий, которые определ€ютс€ полем {@link #codename}, соответствующим
  * какому-либо значению {@link #TUNNEL}, {@link #COLLECTOR}, {@link #INDOOR}, 
  * {@link #SUBMARINE}, {@link #OVERHEAD}, {@link #UNBOUND}
- * @author $Author: arseniy $
- * @version $Revision: 1.22 $, $Date: 2005/03/24 14:23:03 $
+ * @author $Author: bob $
+ * @version $Revision: 1.23 $, $Date: 2005/04/01 11:11:05 $
  * @module map_v1
  */
 public class PhysicalLinkType extends StorableObjectType implements Characterizable {
@@ -64,7 +62,7 @@ public class PhysicalLinkType extends StorableObjectType implements Characteriza
 	 */
 	private static final long serialVersionUID = 3690191057812271924L;
 
-	private Collection characteristics;
+	private Set characteristics;
 
 	private String name;
 
@@ -95,8 +93,8 @@ public class PhysicalLinkType extends StorableObjectType implements Characteriza
 		this.name = pltt.name;
 
 		try {
-			this.characteristics = new ArrayList(pltt.characteristicIds.length);
-			ArrayList characteristicIds = new ArrayList(pltt.characteristicIds.length);
+			this.characteristics = new HashSet(pltt.characteristicIds.length);
+			Set characteristicIds = new HashSet(pltt.characteristicIds.length);
 			for (int i = 0; i < pltt.characteristicIds.length; i++)
 				characteristicIds.add(new Identifier(pltt.characteristicIds[i]));
 
@@ -128,7 +126,7 @@ public class PhysicalLinkType extends StorableObjectType implements Characteriza
 		else
 			this.bindingDimension = new IntDimension(bindingDimension.getWidth(), bindingDimension.getHeight());
 
-		this.characteristics = new LinkedList();
+		this.characteristics = new HashSet();
 
 		this.physicalLinkTypeDatabase = MapDatabaseContext.getPhysicalLinkTypeDatabase();
 	}
@@ -158,8 +156,8 @@ public class PhysicalLinkType extends StorableObjectType implements Characteriza
 		}
 	}
 
-	public List getDependencies() {
-		return Collections.EMPTY_LIST;
+	public Set getDependencies() {
+		return Collections.EMPTY_SET;
 	}
 
 	public Object getTransferable() {
@@ -241,8 +239,8 @@ public class PhysicalLinkType extends StorableObjectType implements Characteriza
 		super.setCodename0(codename);
 	}
 
-	public Collection getCharacteristics() {
-		return  Collections.unmodifiableCollection(this.characteristics);
+	public Set getCharacteristics() {
+		return  Collections.unmodifiableSet(this.characteristics);
 	}
 	
 	public void addCharacteristic(Characteristic characteristic){
@@ -258,9 +256,9 @@ public class PhysicalLinkType extends StorableObjectType implements Characteriza
 
 	/**
 	 * @param characteristics
-	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics(java.util.Collection)
+	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics(Set)
 	 */
-	public void setCharacteristics(final Collection characteristics) {
+	public void setCharacteristics(final Set characteristics) {
 		this.setCharacteristics0(characteristics);
 		this.changed = true;
 	}
@@ -274,9 +272,9 @@ public class PhysicalLinkType extends StorableObjectType implements Characteriza
 
 	/**
 	 * @param characteristics
-	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics0(java.util.Collection)
+	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics0(Set)
 	 */
-	public void setCharacteristics0(final Collection characteristics) {
+	public void setCharacteristics0(final Set characteristics) {
 		this.characteristics.clear();
 		if (characteristics != null)
 			this.characteristics.addAll(characteristics);
