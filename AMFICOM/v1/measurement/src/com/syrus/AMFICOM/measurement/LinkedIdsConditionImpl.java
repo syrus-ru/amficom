@@ -1,5 +1,5 @@
 /*
- * $Id: LinkedIdsConditionImpl.java,v 1.20 2005/03/14 13:51:32 bob Exp $
+ * $Id: LinkedIdsConditionImpl.java,v 1.21 2005/03/15 14:03:23 arseniy Exp $
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
  * Проект: АМФИКОМ.
@@ -19,8 +19,8 @@ import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
 
 /**
- * @version $Revision: 1.20 $, $Date: 2005/03/14 13:51:32 $
- * @author $Author: bob $
+ * @version $Revision: 1.21 $, $Date: 2005/03/15 14:03:23 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 class LinkedIdsConditionImpl extends LinkedIdsCondition {
@@ -136,9 +136,7 @@ class LinkedIdsConditionImpl extends LinkedIdsCondition {
 						condition = super.conditionTest(test.getMonitoredElement().getMeasurementPortId());
 						break;
 					case ObjectEntities.MCM_ENTITY_CODE:
-						MeasurementPort measurementPort = (MeasurementPort) ConfigurationStorableObjectPool.getStorableObject(test.getMonitoredElement().getMeasurementPortId(), true);
-						KIS kis = (KIS) ConfigurationStorableObjectPool.getStorableObject(measurementPort.getKISId(), true);
-						condition = super.conditionTest(kis.getMCMId());
+						condition = super.conditionTest(test.getMCMId());
 						break;
 				}
 				break;
