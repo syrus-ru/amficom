@@ -171,7 +171,8 @@ class ThresholdsToolBar extends TraceEventsToolBar
 				FIT_EVENT,
 				createToolButton(
 				fitEvButton,
-				UIManager.getDimension(ResourceKeys.SIZE_BUTTON),
+				null,
+				UIManager.getInsets(ResourceKeys.INSETS_NULL),
 				null,
 				LangModelAnalyse.getString("fittoevent"),
 				UIManager.getIcon(AnalysisResourceKeys.ICON_ANALYSIS_ZOOM_BOX),
@@ -187,7 +188,8 @@ class ThresholdsToolBar extends TraceEventsToolBar
 				ALL_TRESHOLDS,
 				createToolButton(
 				showThresholdButton,
-				UIManager.getDimension(ResourceKeys.SIZE_BUTTON),
+				null,
+				UIManager.getInsets(ResourceKeys.INSETS_NULL),
 				null,
 				LangModelAnalyse.getString("allThresholds"),
 				UIManager.getIcon(AnalysisResourceKeys.ICON_ANALYSIS_THRESHOLD),

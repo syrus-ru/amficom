@@ -1,5 +1,5 @@
 /*-
-* $Id: ToolBarPanel.java,v 1.1 2005/03/28 14:07:41 bob Exp $
+* $Id: ToolBarPanel.java,v 1.2 2005/04/06 15:46:45 bob Exp $
 *
 * Copyright © 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -9,6 +9,7 @@
 package com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI;
 
 import java.awt.Dimension;
+import java.awt.Insets;
 import java.awt.event.ActionListener;
 import java.util.HashMap;
 import java.util.Map;
@@ -21,7 +22,7 @@ import javax.swing.JToolBar;
 
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/03/28 14:07:41 $
+ * @version $Revision: 1.2 $, $Date: 2005/04/06 15:46:45 $
  * @author $Author: bob $
  * @module analysis_v1
  */
@@ -56,27 +57,34 @@ public class ToolBarPanel extends JToolBar
 		return actions;
 	}
 
-	AbstractButton createToolButton(
-			AbstractButton b,
-			Dimension preferred_size,
-			String text,
-			String tooltip,
-			Icon icon,
-			ActionListener actionListener,
-			boolean isEnabled)
-	{
-		if (preferred_size != null)
-			b.setPreferredSize(preferred_size);
-		if (text != null)
-			b.setText (text);
-		if (tooltip != null)
-			b.setToolTipText (tooltip);
-		if (icon != null)
-			b.setIcon(icon);
-		if (actionListener != null)
-			b.addActionListener(actionListener);
-		b.setEnabled(isEnabled);
-		b.setFocusable(false);
-		return b;
+	AbstractButton createToolButton(AbstractButton button,
+									Dimension preferredSize,
+									Insets margin,
+									String text,
+									String tooltip,
+									Icon icon,
+									ActionListener actionListener,
+									boolean isEnabled) {
+		if (preferredSize != null) {
+			button.setPreferredSize(preferredSize);
+		}
+		if (margin != null) {
+			button.setMargin(margin);
+		}
+		if (text != null) {
+			button.setText(text);
+		}
+		if (tooltip != null) {
+			button.setToolTipText(tooltip);
+		}
+		if (icon != null) {
+			button.setIcon(icon);
+		}
+		if (actionListener != null) {
+			button.addActionListener(actionListener);
+		}
+		button.setEnabled(isEnabled);
+		button.setFocusable(false);
+		return button;
 	}
 }

@@ -114,7 +114,8 @@ class HistogrammToolBar extends ScalableToolBar
 				BIND_MARK,
 				createToolButton(
 				markersTButton,
-				UIManager.getDimension(ResourceKeys.SIZE_BUTTON),
+				null,
+				UIManager.getInsets(ResourceKeys.INSETS_NULL),
 				null,
 				LangModelAnalyse.getString("bindToMarker"),
 				UIManager.getIcon(AnalysisResourceKeys.ICON_ANALYSIS_MARKER),

@@ -175,7 +175,8 @@ class AnalysisToolBar extends TraceEventsToolBar
 				loss,
 				createToolButton(
 				lossTButton,
-				UIManager.getDimension(ResourceKeys.SIZE_BUTTON),
+				null,
+				UIManager.getInsets(ResourceKeys.INSETS_NULL),
 				null,
 				LangModelAnalyse.getString("lossanalyse"),
 				UIManager.getIcon(AnalysisResourceKeys.ICON_ANALYSIS_LOSS),
@@ -191,7 +192,8 @@ class AnalysisToolBar extends TraceEventsToolBar
 				ref,
 				createToolButton(
 				reflectionTButton,
-				UIManager.getDimension(ResourceKeys.SIZE_BUTTON),
+				null,
+				UIManager.getInsets(ResourceKeys.INSETS_NULL),
 				null,
 				LangModelAnalyse.getString("reflectionanalyse"),
 				UIManager.getIcon(AnalysisResourceKeys.ICON_ANALYSIS_REFLECT),
@@ -207,7 +209,8 @@ class AnalysisToolBar extends TraceEventsToolBar
 				noana,
 				createToolButton(
 				noAnalysisTButton,
-				UIManager.getDimension(ResourceKeys.SIZE_BUTTON),
+				null,
+				UIManager.getInsets(ResourceKeys.INSETS_NULL),
 				null,
 				LangModelAnalyse.getString("noanalyse"),
 				UIManager.getIcon(AnalysisResourceKeys.ICON_ANALYSIS_NOANALYSIS),
@@ -223,7 +226,8 @@ class AnalysisToolBar extends TraceEventsToolBar
 				cA,
 				createToolButton(
 				centerAButton,
-				UIManager.getDimension(ResourceKeys.SIZE_BUTTON),
+				null,
+				UIManager.getInsets(ResourceKeys.INSETS_NULL),
 				null,
 				LangModelAnalyse.getString("centerA"),
 				UIManager.getIcon(AnalysisResourceKeys.ICON_ANALYSIS_CENTER_A),
@@ -239,7 +243,8 @@ class AnalysisToolBar extends TraceEventsToolBar
 				cB,
 				createToolButton(
 				centerBButton,
-				UIManager.getDimension(ResourceKeys.SIZE_BUTTON),
+				null,
+				UIManager.getInsets(ResourceKeys.INSETS_NULL),
 				null,
 				LangModelAnalyse.getString("centerB"),
 				UIManager.getIcon(AnalysisResourceKeys.ICON_ANALYSIS_CENTER_B),

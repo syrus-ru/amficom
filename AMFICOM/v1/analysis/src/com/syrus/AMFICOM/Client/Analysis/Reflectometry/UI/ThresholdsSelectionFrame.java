@@ -106,23 +106,23 @@ implements OperationListener, bsHashChangeListener
 		this.jTable = new ATable(this.tModelEmpty);
 		
 		JButton alysisInitialButton = new JButton();
+		alysisInitialButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_NULL));
+		
 		JButton analysisDefaultsButton = new JButton();
+		analysisDefaultsButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_NULL));
+		
 		JButton increaseThreshButton = new JButton();
+		increaseThreshButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_NULL));
+		
 		JButton decreaseThreshButton = new JButton();
+		decreaseThreshButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_NULL));
+		
 		
 		JButton previuosEventButton = new JButton();
+		previuosEventButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_NULL));
+		
 		JButton nextEventButton = new JButton();
-
-		{	// set up button size
-			JButton[] buttons = new JButton[] { alysisInitialButton, analysisDefaultsButton, increaseThreshButton, decreaseThreshButton, previuosEventButton, 
-					nextEventButton};
-			for (int i = 0; i < buttons.length; i++)
-			{
-				buttons[i].setMaximumSize(UIManager.getDimension(ResourceKeys.SIZE_BUTTON));
-				buttons[i].setMinimumSize(UIManager.getDimension(ResourceKeys.SIZE_BUTTON));
-				buttons[i].setPreferredSize(UIManager.getDimension(ResourceKeys.SIZE_BUTTON));
-			}
-		}
+		nextEventButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_NULL));
 
 		alysisInitialButton.setToolTipText(LangModelAnalyse.getString("analysisInitial"));
 		alysisInitialButton.setIcon(UIManager.getIcon(AnalysisResourceKeys.ICON_ANALYSIS_THRESHOLD_INITIAL));
@@ -218,7 +218,7 @@ implements OperationListener, bsHashChangeListener
 		jToolBar.add(analysisDefaultsButton);
 		jToolBar.add(decreaseThreshButton);
 		jToolBar.add(increaseThreshButton);
-		jToolBar.add(Box.createRigidArea(UIManager.getDimension(ResourceKeys.SIZE_BUTTON)));
+		jToolBar.add(new JToolBar.Separator());
 		jToolBar.add(previuosEventButton);
 		jToolBar.add(nextEventButton);
 

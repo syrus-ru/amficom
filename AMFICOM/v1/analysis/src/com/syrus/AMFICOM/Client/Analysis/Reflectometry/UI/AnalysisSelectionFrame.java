@@ -198,9 +198,10 @@ implements OperationListener, bsHashChangeListener, PrimaryMTMListener
 		JButton analysisInitialButton = new JButton();
 		JButton analysisDefaultsButton = new JButton();
 
-		analysisStartButton.setMaximumSize(UIManager.getDimension(ResourceKeys.SIZE_BUTTON));
-		analysisStartButton.setMinimumSize(UIManager.getDimension(ResourceKeys.SIZE_BUTTON));
-		analysisStartButton.setPreferredSize(UIManager.getDimension(ResourceKeys.SIZE_BUTTON));
+//		analysisStartButton.setMaximumSize(UIManager.getDimension(ResourceKeys.SIZE_BUTTON));
+//		analysisStartButton.setMinimumSize(UIManager.getDimension(ResourceKeys.SIZE_BUTTON));
+//		analysisStartButton.setPreferredSize(UIManager.getDimension(ResourceKeys.SIZE_BUTTON));
+		analysisStartButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_NULL));
 		analysisStartButton.setToolTipText(LangModelAnalyse.getString("analysisStart"));
 		analysisStartButton.setIcon(UIManager.getIcon(AnalysisResourceKeys.ICON_ANALYSIS_PERFORM_ANALYSIS));
 		analysisStartButton.addActionListener(new ActionListener()
@@ -211,9 +212,10 @@ implements OperationListener, bsHashChangeListener, PrimaryMTMListener
 			}
 		});
 
-		analysisInitialButton.setMaximumSize(UIManager.getDimension(ResourceKeys.SIZE_BUTTON));
-		analysisInitialButton.setMinimumSize(UIManager.getDimension(ResourceKeys.SIZE_BUTTON));
-		analysisInitialButton.setPreferredSize(UIManager.getDimension(ResourceKeys.SIZE_BUTTON));
+//		analysisInitialButton.setMaximumSize(UIManager.getDimension(ResourceKeys.SIZE_BUTTON));
+//		analysisInitialButton.setMinimumSize(UIManager.getDimension(ResourceKeys.SIZE_BUTTON));
+//		analysisInitialButton.setPreferredSize(UIManager.getDimension(ResourceKeys.SIZE_BUTTON));
+		analysisInitialButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_NULL));
 		analysisInitialButton.setToolTipText(LangModelAnalyse.getString("analysisInitial"));
 		analysisInitialButton.setIcon(UIManager.getIcon(AnalysisResourceKeys.ICON_ANALYSIS_INITIAL_ANALYSIS));
 		analysisInitialButton.addActionListener(new ActionListener()
@@ -225,9 +227,10 @@ implements OperationListener, bsHashChangeListener, PrimaryMTMListener
 		});
 
 
-		analysisDefaultsButton.setMaximumSize(UIManager.getDimension(ResourceKeys.SIZE_BUTTON));
-		analysisDefaultsButton.setMinimumSize(UIManager.getDimension(ResourceKeys.SIZE_BUTTON));
-		analysisDefaultsButton.setPreferredSize(UIManager.getDimension(ResourceKeys.SIZE_BUTTON));
+//		analysisDefaultsButton.setMaximumSize(UIManager.getDimension(ResourceKeys.SIZE_BUTTON));
+//		analysisDefaultsButton.setMinimumSize(UIManager.getDimension(ResourceKeys.SIZE_BUTTON));
+//		analysisDefaultsButton.setPreferredSize(UIManager.getDimension(ResourceKeys.SIZE_BUTTON));
+		analysisDefaultsButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_NULL));
 		analysisDefaultsButton.setToolTipText(LangModelAnalyse.getString("analysisDefaults"));
 		analysisDefaultsButton.setIcon(UIManager.getIcon(AnalysisResourceKeys.ICON_ANALYSIS_DEFAULT_ANALYSIS));
 		analysisDefaultsButton.addActionListener(new ActionListener()
@@ -243,7 +246,7 @@ implements OperationListener, bsHashChangeListener, PrimaryMTMListener
 		JToolBar jToolBar1 = new JToolBar();
 		jToolBar1.setFloatable(false);
 		jToolBar1.add(analysisStartButton);
-		jToolBar1.add(Box.createRigidArea(UIManager.getDimension(ResourceKeys.SIZE_BUTTON)));
+		jToolBar1.add(new JToolBar.Separator());
 		jToolBar1.add(analysisInitialButton);
 		jToolBar1.add(analysisDefaultsButton);
 

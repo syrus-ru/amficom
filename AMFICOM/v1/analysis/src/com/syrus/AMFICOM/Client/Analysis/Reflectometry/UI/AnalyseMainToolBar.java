@@ -19,19 +19,19 @@ public class AnalyseMainToolBar extends JToolBar implements ApplicationModelList
 {
 	private ApplicationModel aModel;
 
-	JButton sessionOpen = new JButton();
-	JButton traceDownload = new JButton();
-	JButton traceAddCompare = new JButton();
-	JButton traceRemoveCompare = new JButton();
+	private JButton sessionOpen = new JButton();
+	private JButton traceDownload = new JButton();
+	private JButton traceAddCompare = new JButton();
+	private JButton traceRemoveCompare = new JButton();
 
-	JButton buttonFileOpen = new JButton();
-	JButton fileAdd = new JButton();
-	JButton fileRemove = new JButton();
+	private JButton buttonFileOpen = new JButton();
+	private JButton fileAdd = new JButton();
+	private JButton fileRemove = new JButton();
 
-	JButton buttonFileClose = new JButton();
-	JButton buttonExit = new JButton();
+	private JButton buttonFileClose = new JButton();
+	private JButton buttonExit = new JButton();
 
-	public final static int img_siz = 16;
+//	public final static int img_siz = 16;
 
 	public AnalyseMainToolBar()
 	{
@@ -52,104 +52,100 @@ public class AnalyseMainToolBar extends JToolBar implements ApplicationModelList
 		AnalyseMainToolBar_this_actionAdapter actionAdapter =
 				new AnalyseMainToolBar_this_actionAdapter(this);
 
-		sessionOpen.setIcon(UIManager.getIcon(ResourceKeys.ICON_OPEN_SESSION));
-		sessionOpen.setMaximumSize(UIManager.getDimension(ResourceKeys.SIZE_BUTTON));
-		sessionOpen.setPreferredSize(UIManager.getDimension(ResourceKeys.SIZE_BUTTON));
-		sessionOpen.setToolTipText(LangModel.getString("menuSessionNew"));
-		sessionOpen.setName("menuSessionNew");
-		sessionOpen.addActionListener(actionAdapter);
-		traceDownload.setIcon(UIManager.getIcon(AnalysisResourceKeys.ICON_ANALYSIS_DOWNLOAD_TRACE));
-		traceDownload.setMaximumSize(UIManager.getDimension(ResourceKeys.SIZE_BUTTON));
-		traceDownload.setPreferredSize(UIManager.getDimension(ResourceKeys.SIZE_BUTTON));
-		traceDownload.setToolTipText(LangModelAnalyse.getString("menuTraceDownload"));
-		traceDownload.setName("menuTraceDownload");
-		traceDownload.addActionListener(actionAdapter);
-		traceAddCompare.setIcon(UIManager.getIcon(AnalysisResourceKeys.ICON_ANALYSIS_DOWNLOAD_ADD));
-		traceAddCompare.setMaximumSize(UIManager.getDimension(ResourceKeys.SIZE_BUTTON));
-		traceAddCompare.setPreferredSize(UIManager.getDimension(ResourceKeys.SIZE_BUTTON));
-		traceAddCompare.setToolTipText(LangModelAnalyse.getString("menuTraceAddCompare"));
-		traceAddCompare.setName("menuTraceAddCompare");
-		traceAddCompare.addActionListener(actionAdapter);
-		traceRemoveCompare.setIcon(UIManager.getIcon(AnalysisResourceKeys.ICON_ANALYSIS_DOWNLOAD_REMOVE ));
-		traceRemoveCompare.setMaximumSize(UIManager.getDimension(ResourceKeys.SIZE_BUTTON));
-		traceRemoveCompare.setPreferredSize(UIManager.getDimension(ResourceKeys.SIZE_BUTTON));
-		traceRemoveCompare.setToolTipText(LangModelAnalyse.getString("menuTraceRemoveCompare"));
-		traceRemoveCompare.setName("menuTraceRemoveCompare");
-		traceRemoveCompare.addActionListener(actionAdapter);
+		this.sessionOpen.setIcon(UIManager.getIcon(ResourceKeys.ICON_OPEN_SESSION));
+		this.sessionOpen.setMargin(UIManager.getInsets(ResourceKeys.INSETS_NULL));
+		this.sessionOpen.setToolTipText(LangModel.getString("menuSessionNew"));
+		this.sessionOpen.setName("menuSessionNew");
+		this.sessionOpen.addActionListener(actionAdapter);
+		
+		this.traceDownload.setIcon(UIManager.getIcon(AnalysisResourceKeys.ICON_ANALYSIS_DOWNLOAD_TRACE));
+		this.traceDownload.setMargin(UIManager.getInsets(ResourceKeys.INSETS_NULL));
+		this.traceDownload.setToolTipText(LangModelAnalyse.getString("menuTraceDownload"));
+		this.traceDownload.setName("menuTraceDownload");
+		this.traceDownload.addActionListener(actionAdapter);
+		
+		this.traceAddCompare.setIcon(UIManager.getIcon(AnalysisResourceKeys.ICON_ANALYSIS_DOWNLOAD_ADD));
+		this.traceAddCompare.setMargin(UIManager.getInsets(ResourceKeys.INSETS_NULL));
+		this.traceAddCompare.setToolTipText(LangModelAnalyse.getString("menuTraceAddCompare"));
+		this.traceAddCompare.setName("menuTraceAddCompare");
+		this.traceAddCompare.addActionListener(actionAdapter);
+		
+		this.traceRemoveCompare.setIcon(UIManager.getIcon(AnalysisResourceKeys.ICON_ANALYSIS_DOWNLOAD_REMOVE ));
+		this.traceRemoveCompare.setMargin(UIManager.getInsets(ResourceKeys.INSETS_NULL));
+		this.traceRemoveCompare.setToolTipText(LangModelAnalyse.getString("menuTraceRemoveCompare"));
+		this.traceRemoveCompare.setName("menuTraceRemoveCompare");
+		this.traceRemoveCompare.addActionListener(actionAdapter);
 
 
-		buttonFileOpen.setIcon(UIManager.getIcon(ResourceKeys.ICON_OPEN_FILE));
-		buttonFileOpen.setMaximumSize(UIManager.getDimension(ResourceKeys.SIZE_BUTTON));
-		buttonFileOpen.setPreferredSize(UIManager.getDimension(ResourceKeys.SIZE_BUTTON));
-		buttonFileOpen.setToolTipText(LangModelAnalyse.getString("menuFileOpen"));
-		buttonFileOpen.setName("menuFileOpen");
-		buttonFileOpen.addActionListener(actionAdapter);
-		fileAdd.setIcon(UIManager.getIcon(ResourceKeys.ICON_ADD_FILE));
-		fileAdd.setMaximumSize(UIManager.getDimension(ResourceKeys.SIZE_BUTTON));
-		fileAdd.setPreferredSize(UIManager.getDimension(ResourceKeys.SIZE_BUTTON));
-		fileAdd.setToolTipText(LangModelAnalyse.getString("menuFileAddCompare"));
-		fileAdd.setName("menuFileAddCompare");
-		fileAdd.addActionListener(actionAdapter);
-		fileRemove.setIcon(UIManager.getIcon(ResourceKeys.ICON_REMOVE_FILE));
-		fileRemove.setMaximumSize(UIManager.getDimension(ResourceKeys.SIZE_BUTTON));
-		fileRemove.setPreferredSize(UIManager.getDimension(ResourceKeys.SIZE_BUTTON));
-		fileRemove.setToolTipText(LangModelAnalyse.getString("menuFileRemoveCompare"));
-		fileRemove.setName("menuFileRemoveCompare");
-		fileRemove.addActionListener(actionAdapter);
+		this.buttonFileOpen.setIcon(UIManager.getIcon(ResourceKeys.ICON_OPEN_FILE));
+		this.buttonFileOpen.setMargin(UIManager.getInsets(ResourceKeys.INSETS_NULL));
+		this.buttonFileOpen.setToolTipText(LangModelAnalyse.getString("menuFileOpen"));
+		this.buttonFileOpen.setName("menuFileOpen");
+		this.buttonFileOpen.addActionListener(actionAdapter);
+		this.fileAdd.setIcon(UIManager.getIcon(ResourceKeys.ICON_ADD_FILE));
+		this.fileAdd.setMargin(UIManager.getInsets(ResourceKeys.INSETS_NULL));
+		this.fileAdd.setToolTipText(LangModelAnalyse.getString("menuFileAddCompare"));
+		this.fileAdd.setName("menuFileAddCompare");
+		this.fileAdd.addActionListener(actionAdapter);
+		this.fileRemove.setIcon(UIManager.getIcon(ResourceKeys.ICON_REMOVE_FILE));
+		this.fileRemove.setMargin(UIManager.getInsets(ResourceKeys.INSETS_NULL));
+		this.fileRemove.setToolTipText(LangModelAnalyse.getString("menuFileRemoveCompare"));
+		this.fileRemove.setName("menuFileRemoveCompare");
+		this.fileRemove.addActionListener(actionAdapter);
 
-		add(sessionOpen);
-		addSeparator();
-		add(buttonFileOpen);
-		add(fileAdd);
-		add(fileRemove);
-		addSeparator();
-		add(traceDownload);
-		add(traceAddCompare);
-		add(traceRemoveCompare);
+		super.add(this.sessionOpen);
+		super.addSeparator();
+		super.add(this.buttonFileOpen);
+		super.add(this.fileAdd);
+		super.add(this.fileRemove);
+		super.addSeparator();
+		super.add(this.traceDownload);
+		super.add(this.traceAddCompare);
+		super.add(this.traceRemoveCompare);
 	}
 
 	public void setModel(ApplicationModel a)
 	{
-		aModel = a;
+		this.aModel = a;
 	}
 
 	public ApplicationModel getModel()
 	{
-		return aModel;
+		return this.aModel;
 	}
 
 	public void modelChanged(String e[])
 	{
-		buttonFileOpen.setVisible(aModel.isVisible("menuFileOpen"));
-		buttonFileOpen.setEnabled(aModel.isEnabled("menuFileOpen"));
+		this.buttonFileOpen.setVisible(this.aModel.isVisible("menuFileOpen"));
+		this.buttonFileOpen.setEnabled(this.aModel.isEnabled("menuFileOpen"));
 
-		sessionOpen.setVisible(aModel.isVisible("menuSessionNew"));
-		sessionOpen.setEnabled(aModel.isEnabled("menuSessionNew"));
-		traceDownload.setVisible(aModel.isVisible("menuTraceDownload"));
-		traceDownload.setEnabled(aModel.isEnabled("menuTraceDownload"));
-		traceAddCompare.setVisible(aModel.isVisible("menuTraceAddCompare"));
-		traceAddCompare.setEnabled(aModel.isEnabled("menuTraceAddCompare"));
-		traceRemoveCompare.setVisible(aModel.isVisible("menuTraceRemoveCompare"));
-		traceRemoveCompare.setEnabled(aModel.isEnabled("menuTraceRemoveCompare"));
+		this.sessionOpen.setVisible(this.aModel.isVisible("menuSessionNew"));
+		this.sessionOpen.setEnabled(this.aModel.isEnabled("menuSessionNew"));
+		this.traceDownload.setVisible(this.aModel.isVisible("menuTraceDownload"));
+		this.traceDownload.setEnabled(this.aModel.isEnabled("menuTraceDownload"));
+		this.traceAddCompare.setVisible(this.aModel.isVisible("menuTraceAddCompare"));
+		this.traceAddCompare.setEnabled(this.aModel.isEnabled("menuTraceAddCompare"));
+		this.traceRemoveCompare.setVisible(this.aModel.isVisible("menuTraceRemoveCompare"));
+		this.traceRemoveCompare.setEnabled(this.aModel.isEnabled("menuTraceRemoveCompare"));
 
-		fileAdd.setEnabled(aModel.isEnabled("menuFileAddCompare"));
-		fileAdd.setVisible(aModel.isVisible("menuFileAddCompare"));
-		fileRemove.setEnabled(aModel.isEnabled("menuFileRemoveCompare"));
-		fileRemove.setVisible(aModel.isVisible("menuFileRemoveCompare"));
+		this.fileAdd.setEnabled(this.aModel.isEnabled("menuFileAddCompare"));
+		this.fileAdd.setVisible(this.aModel.isVisible("menuFileAddCompare"));
+		this.fileRemove.setEnabled(this.aModel.isEnabled("menuFileRemoveCompare"));
+		this.fileRemove.setVisible(this.aModel.isVisible("menuFileRemoveCompare"));
 
-		buttonFileClose.setVisible(aModel.isVisible("menuFileClose"));
-		buttonFileClose.setEnabled(aModel.isEnabled("menuFileClose"));
-		buttonExit.setVisible(aModel.isVisible("menuExit"));
-		buttonExit.setEnabled(aModel.isEnabled("menuExit"));
+		this.buttonFileClose.setVisible(this.aModel.isVisible("menuFileClose"));
+		this.buttonFileClose.setEnabled(this.aModel.isEnabled("menuFileClose"));
+		this.buttonExit.setVisible(this.aModel.isVisible("menuExit"));
+		this.buttonExit.setEnabled(this.aModel.isEnabled("menuExit"));
 	}
 
 	public void this_actionPerformed(ActionEvent e)
 	{
-		if(aModel == null)
+		if(this.aModel == null)
 			return;
 		AbstractButton jb = (AbstractButton )e.getSource();
 		String s = jb.getName();
-		Command command = aModel.getCommand(s);
+		Command command = this.aModel.getCommand(s);
 		command = (Command )command.clone();
 		command.execute();
 	}

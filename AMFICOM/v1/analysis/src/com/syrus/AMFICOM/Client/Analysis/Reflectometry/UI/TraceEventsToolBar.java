@@ -1,5 +1,5 @@
 /*-
-* $Id: TraceEventsToolBar.java,v 1.1 2005/03/28 14:07:41 bob Exp $
+* $Id: TraceEventsToolBar.java,v 1.2 2005/04/06 15:46:46 bob Exp $
 *
 * Copyright © 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -21,7 +21,7 @@ import com.syrus.AMFICOM.Client.Resource.ResourceKeys;
 
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/03/28 14:07:41 $
+ * @version $Revision: 1.2 $, $Date: 2005/04/06 15:46:46 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module analysis_v1
@@ -57,7 +57,8 @@ public class TraceEventsToolBar extends ScalableToolBar
 				events,
 				createToolButton(
 				eventsTButton,
-				UIManager.getDimension(ResourceKeys.SIZE_BUTTON),
+				null,
+				UIManager.getInsets(ResourceKeys.INSETS_NULL),
 				null,
 				LangModelAnalyse.getString("showevents"),
 				UIManager.getIcon(AnalysisResourceKeys.ICON_ANALYSIS_EVENTS),
@@ -73,7 +74,8 @@ public class TraceEventsToolBar extends ScalableToolBar
 				modeled,
 				createToolButton(
 				modeledTButton,
-				UIManager.getDimension(ResourceKeys.SIZE_BUTTON),
+				null,
+				UIManager.getInsets(ResourceKeys.INSETS_NULL),
 				null,
 				LangModelAnalyse.getString("showmodel"),
 				UIManager.getIcon(AnalysisResourceKeys.ICON_ANALYSIS_MODELED),

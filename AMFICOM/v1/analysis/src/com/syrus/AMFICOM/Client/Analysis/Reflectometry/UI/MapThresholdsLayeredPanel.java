@@ -75,7 +75,8 @@ class MapThresholdsToolBar extends MapMarkersToolBar
 				thresholds,
 				createToolButton(
 				showThresholdsButton,
-				UIManager.getDimension(ResourceKeys.SIZE_BUTTON),
+				null,
+				UIManager.getInsets(ResourceKeys.INSETS_NULL),
 				null,
 				"",
 				UIManager.getIcon(AnalysisResourceKeys.ICON_ANALYSIS_THRESHOLD),
