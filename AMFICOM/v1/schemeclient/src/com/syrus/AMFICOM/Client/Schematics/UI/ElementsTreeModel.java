@@ -54,7 +54,7 @@ public class ElementsTreeModel extends ObjectResourceTreeModel
 		if(node.getObject() instanceof String)
 		{
 			String s = (String )node.getObject();
-			if(s.equals(KISType.typ) ||
+/*			if(s.equals(KISType.typ) ||
 				 s.equals(EquipmentType.typ))
 				return new ObjectResourceCatalogActionModel(
 				ObjectResourceCatalogActionModel.PANEL,
@@ -63,7 +63,8 @@ public class ElementsTreeModel extends ObjectResourceTreeModel
 				ObjectResourceCatalogActionModel.NO_REMOVE_BUTTON,
 				ObjectResourceCatalogActionModel.PROPS_BUTTON,
 				ObjectResourceCatalogActionModel.NO_CANCEL_BUTTON);
-			else if(s.equals(LinkType.typ) ||
+			else */
+			if(s.equals(LinkType.typ) ||
 							s.equals(CableLinkType.typ) ||
 							s.equals(PortType.typ) ||
 							s.equals(CablePortType.typ) ||
@@ -95,8 +96,8 @@ public class ElementsTreeModel extends ObjectResourceTreeModel
 				return MapProtoGroup.class;
 			if(s.equals(MapProtoElement.typ))
 				return MapProtoElement.class;
-			if(s.equals(EquipmentType.typ))
-				return EquipmentType.class;
+//			if(s.equals(EquipmentType.typ))
+//				return EquipmentType.class;
 			if(s.equals(LinkType.typ))
 				return LinkType.class;
 			if(s.equals(CableLinkType.typ))
@@ -105,8 +106,8 @@ public class ElementsTreeModel extends ObjectResourceTreeModel
 				return PortType.class;
 			if(s.equals(CablePortType.typ))
 				return CablePortType.class;
-			if(s.equals(KISType.typ))
-				return KISType.class;
+//			if(s.equals(KISType.typ))
+//				return KISType.class;
 			if(s.equals(TransmissionPathType.typ))
 				return TransmissionPathType.class;
 			if(s.equals(AccessPortType.typ))
@@ -147,7 +148,7 @@ public class ElementsTreeModel extends ObjectResourceTreeModel
 			}
 			else if(s.equals("netdirectory"))
 			{
-				vec.add(new ObjectResourceTreeNode(EquipmentType.typ, LangModelConfig.getString("menuNetDirEquipmentText"), true));
+//				vec.add(new ObjectResourceTreeNode(EquipmentType.typ, LangModelConfig.getString("menuNetDirEquipmentText"), true));
 				vec.add(new ObjectResourceTreeNode(LinkType.typ, LangModelConfig.getString("menuNetDirLinkText"), true));
 				vec.add(new ObjectResourceTreeNode(CableLinkType.typ, LangModelConfig.getString("menuNetDirCableText"), true));
 				vec.add(new ObjectResourceTreeNode(PortType.typ, LangModelConfig.getString("menuNetDirPortText"), true));
@@ -155,11 +156,11 @@ public class ElementsTreeModel extends ObjectResourceTreeModel
 			}
 			else if(s.equals("jdirectory"))
 			{
-				vec.add(new ObjectResourceTreeNode(KISType.typ, LangModelConfig.getString("menuJDirKISText"), true));
+//				vec.add(new ObjectResourceTreeNode(KISType.typ, LangModelConfig.getString("menuJDirKISText"), true));
 				vec.add(new ObjectResourceTreeNode(AccessPortType.typ, LangModelConfig.getString("menuJDirAccessPointText"), true));
 				vec.add(new ObjectResourceTreeNode(TransmissionPathType.typ, LangModelConfig.getString("menuJDirPathText"), true));
 			}
-			else if(s.equals(EquipmentType.typ))
+/*			else if(s.equals(EquipmentType.typ))
 			{
 				if (Pool.getHash(EquipmentType.typ) != null)
 				{
@@ -179,7 +180,7 @@ public class ElementsTreeModel extends ObjectResourceTreeModel
 						vec.add(n);
 					}
 				}
-			}
+			}*/
 			else if(s.equals(LinkType.typ))
 			{
 				if (Pool.getHash(LinkType.typ) != null)
@@ -264,7 +265,7 @@ public class ElementsTreeModel extends ObjectResourceTreeModel
 					}
 				}
 			}
-			else if(s.equals(KISType.typ))
+	/*		else if(s.equals(KISType.typ))
 			{
 				if (Pool.getHash(EquipmentType.typ) != null)
 				{
@@ -286,7 +287,7 @@ public class ElementsTreeModel extends ObjectResourceTreeModel
 						vec.add(n);
 					}
 				}
-			}
+			}*/
 			else if(s.equals(TransmissionPathType.typ))
 			{
 				if (Pool.getHash(TransmissionPathType.typ) != null)
