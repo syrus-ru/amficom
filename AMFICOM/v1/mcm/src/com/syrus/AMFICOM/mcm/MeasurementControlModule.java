@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementControlModule.java,v 1.15 2004/08/03 17:21:40 arseniy Exp $
+ * $Id: MeasurementControlModule.java,v 1.16 2004/08/04 17:29:26 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,7 +16,9 @@ import java.util.Hashtable;
 import java.util.Iterator;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.SleepButWorkThread;
-//import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
+import com.syrus.AMFICOM.general.CORBAServer;
+import com.syrus.AMFICOM.general.CommunicationException;
+import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.configuration.MCM;
 import com.syrus.AMFICOM.configuration.KIS;
 import com.syrus.AMFICOM.measurement.Test;
@@ -24,16 +26,17 @@ import com.syrus.AMFICOM.measurement.Result;
 //import com.syrus.AMFICOM.measurement.corba.TestStatus;
 import com.syrus.AMFICOM.measurement.corba.TestTemporalType;
 import com.syrus.AMFICOM.measurement.corba.Result_Transferable;
-//import com.syrus.AMFICOM.server.corba.MeasurementServer;
-//import com.syrus.AMFICOM.server.corba.MeasurementServerHelper;
+import com.syrus.AMFICOM.mserver.corba.MServer;
+import com.syrus.AMFICOM.mserver.corba.MServerHelper;
 import com.syrus.util.Application;
 import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
-import com.syrus.util.corba.CORBAServer;
 import com.syrus.util.database.DatabaseConnection;
 
+import com.syrus.AMFICOM.general.ObjectEntities;
+
 /**
- * @version $Revision: 1.15 $, $Date: 2004/08/03 17:21:40 $
+ * @version $Revision: 1.16 $, $Date: 2004/08/04 17:29:26 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -63,8 +66,9 @@ public class MeasurementControlModule extends SleepButWorkThread {
 
 	/*	CORBA server	*/
 	private static CORBAServer corbaServer;
-//	/*	object reference to server	*/
-//	protected static MeasurementServer measurementServer;
+
+	/*	object reference to Measurement Server	*/
+	protected static MServer mServerRef;
 
 	private long forwardProcessing;
 	private boolean running;
@@ -81,53 +85,69 @@ public class MeasurementControlModule extends SleepButWorkThread {
 		/*	Establish connection with database	*/
 		establishDatabaseConnection();
 
-		/*	Initialize object drivers
-		 * 	for work with database*/
-		DatabaseContextSetup.initDatabaseContext();
-
-		/*	Load object types*/
-		DatabaseContextSetup.loadObjectTypes();
-
-		/*	Create map of test processors*/
-		testProcessors = new Hashtable(Collections.synchronizedMap(new Hashtable()));
-
-		/*	Retrieve information abot myself*/
-		try {
-			iAm = new MCM(new Identifier(ApplicationProperties.getString("ID", ID)));
-		}
-		catch (Exception e) {
-			Log.errorException(e);
-			System.exit(-1);
-		}
-
-		/*	Create and start transceiver for every KIS*/
-		activateKISTransceivers();
-
-		/*	Create and fill lists: testList - sheduled tests ordered by start_time;	*/
-		prepareTestList();
-		prepareResultList();
+//		/*	Initialize object drivers
+//		 * 	for work with database*/
+//		DatabaseContextSetup.initDatabaseContext();
+//
+//		/*	Load object types*/
+//		DatabaseContextSetup.loadObjectTypes();
+//
+//		/*	Create map of test processors*/
+//		testProcessors = new Hashtable(Collections.synchronizedMap(new Hashtable()));
+//
+//		/*	Retrieve information abot myself*/
+//		try {
+//			iAm = new MCM(new Identifier(ApplicationProperties.getString("ID", ID)));
+//		}
+//		catch (Exception e) {
+//			Log.errorException(e);
+//			System.exit(-1);
+//		}
+//
+//		/*	Create and start transceiver for every KIS*/
+//		activateKISTransceivers();
+//
+//		/*	Create and fill lists: testList - sheduled tests ordered by start_time;	*/
+//		prepareTestList();
+//		prepareResultList();
 
 		/*	Create CORBA server with servant(s)	*/
 		activateCORBAServer();
 
+		/*	Create reference to MServer*/
+		activateMServerReference();
+
 		/*	Start main loop	*/
 		MeasurementControlModule measurementControlModule = new MeasurementControlModule();
 		measurementControlModule.start();
-
-		/*	Start ORB	*/
-		corbaServer.run();
 	}
 
 	public void run() {
 		Result_Transferable[] rts;
 		while (this.running) {
-			if (!testList.isEmpty())
-				if (((Test)testList.get(0)).getStartTime().getTime() <= System.currentTimeMillis() + this.forwardProcessing)
-					startTestProcessor((Test)testList.remove(0));
+//			if (!testList.isEmpty())
+//				if (((Test)testList.get(0)).getStartTime().getTime() <= System.currentTimeMillis() + this.forwardProcessing)
+//					startTestProcessor((Test)testList.remove(0));
+//
+//			if (!resultList.isEmpty()) {
+//				
+//			}
 
-			if (!resultList.isEmpty()) {
-				
+			try {
+				Identifier id = new Identifier(mServerRef.getGeneratedIdentifier(ObjectEntities.MEASUREMENT_ENTITY));
+				System.out.println("Received id: " + id.toString());
+				super.clearFalls();
+				super.sleepCauseOfFall();
 			}
+			catch (AMFICOMRemoteException are) {
+				Log.errorException(are);
+			}
+			catch (org.omg.CORBA.COMM_FAILURE cf) {
+				Log.errorException(cf);
+				super.sleepCauseOfFall();
+			}
+
+			System.out.println(System.currentTimeMillis());
 
 			try {
 				sleep(super.initialTimeToSleep);
@@ -163,8 +183,8 @@ public class MeasurementControlModule extends SleepButWorkThread {
 	}
 
 	protected void shutdown() {/*!!	Need synchronization	*/
-//		this.running = false;
-//
+		this.running = false;
+
 //		Enumeration enumeration = ((Hashtable)testProcessors).elements();
 //		while (enumeration.hasMoreElements())
 //			((TestProcessor)enumeration.nextElement()).abort();
@@ -184,7 +204,7 @@ public class MeasurementControlModule extends SleepButWorkThread {
 //		catch (Exception e) {
 //			Log.errorException(e);
 //		}
-//		DatabaseConnection.closeConnection();
+		DatabaseConnection.closeConnection();
 	}
 
 	private static void establishDatabaseConnection() {
@@ -243,23 +263,27 @@ public class MeasurementControlModule extends SleepButWorkThread {
 	}
 
 	private static void activateCORBAServer() {
-//		/*	Create local CORBA server end activate servant*/
-//		try {
-//			corbaServer = new CORBAServer();
+		/*	Create local CORBA server end activate servant*/
+		try {
+			corbaServer = new CORBAServer();
 //			corbaServer.activateServant(new MCMImplementation(), iAm.getId().toString());
-//		}
-//		catch (Exception e) {
-//			Log.errorException(e);
-//			System.exit(-1);
-//		}
-//
-//		/*	Obtain reference to measurement server	*/
-//		try {
-//			measurementServer = MeasurementServerHelper.narrow(corbaServer.resolveReference(i_am.getServerId().toString()));
-//		}
-//		catch (Exception e) {
-//			Log.errorException(e);
-//			System.exit(-1);
-//		}
+			corbaServer.activateServant(new MCMImplementation(), "mcm_1");
+		}
+		catch (Exception e) {
+			Log.errorException(e);
+			System.exit(-1);
+		}
+	}
+
+	private static void activateMServerReference() {
+		/*	Obtain reference to measurement server	*/
+		try {
+//			mServerRef = MServerHelper.narrow(corbaServer.resolveReference(iAm.getServerId().toString()));
+			mServerRef = MServerHelper.narrow(corbaServer.resolveReference("server_1"));
+		}
+		catch (CommunicationException ce) {
+			Log.errorException(ce);
+			mServerRef = null;
+		}
 	}
 }

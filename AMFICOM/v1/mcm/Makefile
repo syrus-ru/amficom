@@ -12,7 +12,7 @@ SERVICE_NAME=mongol
 TRANSCEIVER_DIR=./transceiver
 DADARA_DIR=./dadara
 
-APPCLASSPATH = $(LIBDIR)/util.jar:$(LIBDIR)/general.jar:$(LIBDIR)/configuration.jar:$(LIBDIR)/measurement.jar:$(LIBDIR)/dadara.jar
+APPCLASSPATH = $(LIBDIR)/mserver_interface.jar:$(LIBDIR)/util.jar:$(LIBDIR)/general.jar:$(LIBDIR)/configuration.jar:$(LIBDIR)/measurement.jar:$(LIBDIR)/dadara.jar
 
 JAVAH=javah
 JAVAH_FLAGS = \
@@ -48,7 +48,6 @@ $(LIBNAME_INTERFACE):	.corba
 		-C $(CLASSDIR) com/syrus/AMFICOM/mcm/corba/MCMHelper.class \
 		-C $(CLASSDIR) com/syrus/AMFICOM/mcm/corba/MCMHolder.class
 
-
 .head:	.mach
 	$(JAVAH) $(JAVAH_FLAGS) \
 		-d $(TRANSCEIVER_DIR) \
@@ -65,6 +64,7 @@ $(LIBNAME_INTERFACE):	.corba
 		$(SRCDIR)/com/syrus/AMFICOM/mcm/TestProcessor.java \
 		$(SRCDIR)/com/syrus/AMFICOM/mcm/PeriodicalTestProcessor.java \
 		$(SRCDIR)/com/syrus/AMFICOM/mcm/MeasurementControlModule.java \
+		$(SRCDIR)/com/syrus/AMFICOM/mcm/MCMImplementation.java \
 		$(SRCDIR)/com/syrus/AMFICOM/mcm/KISReport.java \
 		$(SRCDIR)/com/syrus/AMFICOM/mcm/Transceiver.java \
 		$(SRCDIR)/com/syrus/AMFICOM/mcm/AnalysisException.java \
@@ -75,26 +75,6 @@ $(LIBNAME_INTERFACE):	.corba
 		$(SRCDIR)/com/syrus/AMFICOM/mcm/EvaluationManager.java \
 		$(SRCDIR)/com/syrus/AMFICOM/mcm/DadaraAnalysisManager.java \
 		$(SRCDIR)/com/syrus/AMFICOM/mcm/AnalysisEvaluationProcessor.java
-
-#		$(SRCDIR)/com/syrus/AMFICOM/mcm/AnalysisManager.java \
-#		$(SRCDIR)/com/syrus/AMFICOM/mcm/EvaluationManager.java \
-#		$(SRCDIR)/com/syrus/AMFICOM/mcm/DadaraAnalysisManager.java \
-#		$(SRCDIR)/com/syrus/AMFICOM/mcm/AnalysisEvaluationProcessor.java \
-#		$(SRCDIR)/com/syrus/AMFICOM/mcm/AnalysisException.java \
-#		$(SRCDIR)/com/syrus/AMFICOM/mcm/EvaluationException.java \
-#		$(SRCDIR)/com/syrus/AMFICOM/mcm/MeasurementControlModule.java \
-#		$(SRCDIR)/com/syrus/AMFICOM/mcm/DatabaseSetup.java #\
-#		$(SRCDIR)/com/syrus/AMFICOM/mcm/Transceiver.java \
-#		$(SRCDIR)/com/syrus/AMFICOM/mcm/KISReport.java \
-#		$(SRCDIR)/com/syrus/AMFICOM/mcm/MCMImplementation.java \
-#		$(SRCDIR)/com/syrus/AMFICOM/mcm/TestProcessor.java \
-#		$(SRCDIR)/com/syrus/AMFICOM/mcm/OnetimeTestProcessor.java \
-#		$(SRCDIR)/com/syrus/AMFICOM/mcm/PeriodicalTestProcessor.java \
-#		$(SRCDIR)/com/syrus/AMFICOM/mcm/ContinuousTestProcessor.java \
-#		$(SRCDIR)/com/syrus/AMFICOM/mcm/AnalysisManager.java \
-#		$(SRCDIR)/com/syrus/AMFICOM/mcm/EvaluationManager.java \
-#		$(SRCDIR)/com/syrus/AMFICOM/mcm/DadaraAnalysisManager.java \
-#		$(SRCDIR)/com/syrus/AMFICOM/mcm/DadaraEvaluationManager.java
 	touch $@
 
 .corba:	$(CLASSDIR)
