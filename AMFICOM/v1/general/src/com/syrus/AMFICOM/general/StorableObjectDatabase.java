@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectDatabase.java,v 1.28 2004/09/17 12:46:43 bob Exp $
+ * $Id: StorableObjectDatabase.java,v 1.29 2004/09/20 13:01:30 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -24,7 +24,7 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.28 $, $Date: 2004/09/17 12:46:43 $
+ * @version $Revision: 1.29 $, $Date: 2004/09/20 13:01:30 $
  * @author $Author: bob $
  * @module general_v1
  */
@@ -72,32 +72,35 @@ public abstract class StorableObjectDatabase {
 	public static final int 	UPDATE_FORCE 		= -2;
 	public static final int 	UPDATE_CHECK 		= -3;
 
-	protected static Connection	connection;
+	//protected static Connection	connection;
 	
 	private String updateColumnsString;
 	private String updateMultiplySQLValuesString;
 	private String retrieveQueryString;
 
 	public StorableObjectDatabase() {
-		connection = DatabaseConnection.getConnection();
+		//connection = DatabaseConnection.getConnection();
 	}
 
 	public void delete(StorableObject storableObject) {
 		String storableObjectIdStr = storableObject.getId().toSQLString();
 		Statement statement = null;
-		try {
+		Connection connection = DatabaseConnection.getConnection();
+		try {			
 			statement = connection.createStatement();
 			statement.executeUpdate(SQL_DELETE_FROM + this.getTableName() + SQL_WHERE + COLUMN_ID + EQUALS
-					+ storableObjectIdStr);
+					+ storableObjectIdStr);			
 		} catch (SQLException sqle1) {
 			Log.errorException(sqle1);
 		} finally {
 			try {
 				if (statement != null)
 					statement.close();
-				statement = null;
+				statement = null;				
 			} catch (SQLException sqle1) {
 				Log.errorException(sqle1);
+			} finally{
+				DatabaseConnection.closeConnection(connection);
 			}
 		}
 	}
@@ -161,6 +164,7 @@ public abstract class StorableObjectDatabase {
 					+ CLOSE_BRACKET + SQL_VALUES + OPEN_BRACKET 
 					+ this.getUpdateSingleSQLValues(storableObject) + CLOSE_BRACKET;
 			Statement statement = null;
+			Connection connection = DatabaseConnection.getConnection();
 			try {
 				statement = connection.createStatement();
 				Log.debugMessage(this.getEnityName() + "Database.insertEntity | Trying: " + sql,
@@ -176,9 +180,11 @@ public abstract class StorableObjectDatabase {
 				try {
 					if (statement != null)
 						statement.close();
-					statement = null;
+					statement = null;					
 				} catch (SQLException sqle1) {
 					Log.errorException(sqle1);
+				} finally{
+					DatabaseConnection.closeConnection(connection);
 				}
 			}
 		} catch(UpdateObjectException uoe){
@@ -214,6 +220,9 @@ public abstract class StorableObjectDatabase {
 				+ CLOSE_BRACKET;
 		PreparedStatement preparedStatement = null;
 		String storableObjectIdCode = null;
+		
+		Connection connection = DatabaseConnection.getConnection();
+		
 		try {
 			preparedStatement = connection.prepareStatement(sql);
 			Log.debugMessage(this.getEnityName() + "Database.insertEntities | Trying: " + sql,
@@ -239,9 +248,11 @@ public abstract class StorableObjectDatabase {
 			try {
 				if (preparedStatement != null)
 					preparedStatement.close();
-				preparedStatement = null;
+				preparedStatement = null;				
 			} catch (SQLException sqle1) {
 				Log.errorException(sqle1);
+			} finally{
+				DatabaseConnection.closeConnection(connection);
 			}
 		}
 	}
@@ -252,6 +263,7 @@ public abstract class StorableObjectDatabase {
 		String sql = retrieveQuery(COLUMN_ID + EQUALS + strorableObjectTypeIdStr);
 		Statement statement = null;
 		ResultSet resultSet = null;
+		Connection connection = DatabaseConnection.getConnection();
 		try {
 			statement = connection.createStatement();
 			Log.debugMessage(this.getEnityName() + "Database.retrieveEntity | Trying: " + sql,
@@ -273,8 +285,12 @@ public abstract class StorableObjectDatabase {
 					if (resultSet != null)
 						resultSet.close();
 				} finally {
+					try{
 					if (statement != null)
 						statement.close();
+					} finally {
+						DatabaseConnection.closeConnection(connection);
+					}
 				}
 			} catch (SQLException sqle) {
 				Log.errorException(sqle);
@@ -328,6 +344,7 @@ public abstract class StorableObjectDatabase {
 
 		Statement statement = null;
 		ResultSet resultSet = null;
+		Connection connection = DatabaseConnection.getConnection();
 		try {
 			statement = connection.createStatement();
 			Log.debugMessage(getEnityName() + "Database.checkAndUpdateEntity | Trying: " + sql, Log.DEBUGLEVEL09);
@@ -376,13 +393,14 @@ public abstract class StorableObjectDatabase {
 					+ atIdStr + "' -- " + sqle.getMessage();
 			throw new UpdateObjectException(mesg, sqle);
 		} finally {
-			try {
+			try {				
 				if (statement != null)
 					statement.close();
 				if (resultSet != null)
 					resultSet.close();
 				statement = null;
 				resultSet = null;
+				DatabaseConnection.closeConnection(connection);
 			} catch (SQLException sqle1) {
 				Log.errorException(sqle1);
 			}
@@ -595,6 +613,7 @@ public abstract class StorableObjectDatabase {
 
 		Statement statement = null;
 		ResultSet resultSet = null;
+		Connection connection = DatabaseConnection.getConnection();
 		try {
 			statement = connection.createStatement();
 			Log.debugMessage(this.getEnityName() + "Database.retriveByIdsOneQuery | Trying: " + sql,
@@ -615,9 +634,11 @@ public abstract class StorableObjectDatabase {
 				if (resultSet != null)
 					resultSet.close();
 				statement = null;
-				resultSet = null;
+				resultSet = null;				
 			} catch (SQLException sqle1) {
 				Log.errorException(sqle1);
+			} finally{
+				DatabaseConnection.closeConnection(connection);
 			}
 		}
 		return result;
@@ -644,6 +665,7 @@ public abstract class StorableObjectDatabase {
 
 		PreparedStatement stmt = null;
 		ResultSet resultSet = null;
+		Connection connection = DatabaseConnection.getConnection();
 		try {
 			stmt = connection.prepareStatement(sql.toString());
 			for (Iterator it = ids.iterator(); it.hasNext();) {
@@ -684,9 +706,11 @@ public abstract class StorableObjectDatabase {
 				if (stmt != null)
 					stmt.close();
 				stmt = null;
-				resultSet = null;
+				resultSet = null;				
 			} catch (SQLException sqle1) {
 				Log.errorException(sqle1);
+			} finally{
+				DatabaseConnection.closeConnection(connection);
 			}
 		}
 
@@ -720,6 +744,7 @@ public abstract class StorableObjectDatabase {
 		}
 		
 		Statement statement = null;
+		Connection connection = DatabaseConnection.getConnection();
 		try {
 			statement = connection.createStatement();
 			Log.debugMessage(this.getEnityName() + "Database.updateEntity | Trying: " + sql,
@@ -735,9 +760,11 @@ public abstract class StorableObjectDatabase {
 			try {
 				if (statement != null)
 					statement.close();
-				statement = null;
+				statement = null;				
 			} catch (SQLException sqle1) {
 				Log.errorException(sqle1);
+			} finally{
+				DatabaseConnection.closeConnection(connection);
 			}
 		}
 	}
@@ -776,6 +803,7 @@ public abstract class StorableObjectDatabase {
 		}
 		PreparedStatement preparedStatement = null;
 		String storableObjectIdCode = null;
+		Connection connection = DatabaseConnection.getConnection();
 		try {
 			preparedStatement = connection.prepareStatement(sql);
 			Log.debugMessage(this.getEnityName() + "Database.updateEntities | Trying: " + sql,
@@ -806,6 +834,8 @@ public abstract class StorableObjectDatabase {
 				preparedStatement = null;
 			} catch (SQLException sqle1) {
 				Log.errorException(sqle1);
+			} finally{
+				DatabaseConnection.closeConnection(connection);
 			}
 		}
 	}
