@@ -2,11 +2,18 @@ package com.syrus.AMFICOM.Client.Map.Mapinfo;
 
 import com.mapinfo.beans.tools.MapTool;
 import com.mapinfo.beans.vmapj.VisualMapJ;
+import com.mapinfo.dp.Attribute;
+import com.mapinfo.dp.Feature;
+import com.mapinfo.dp.FeatureSet;
+import com.mapinfo.dp.QueryParams;
+import com.mapinfo.dp.TableInfo;
+import com.mapinfo.dp.jdbc.QueryBuilder;
 import com.mapinfo.mapj.FeatureLayer;
 import com.mapinfo.mapj.LayerType;
 import com.mapinfo.mapj.MapJ;
 import com.mapinfo.unit.LinearUnit;
 import com.mapinfo.util.DoubleRect;
+import com.mapinfo.xmlprot.mxtj.bh;
 import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
 import com.syrus.AMFICOM.Client.General.Event.MapEvent;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
@@ -33,6 +40,7 @@ import java.io.ObjectInputStream;
 import java.io.OptionalDataException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -44,6 +52,7 @@ public class MapInfoLogicalNetLayer extends LogicalNetLayer
 	
 //	MapTool logicalLayerMapTool = null;
   protected MapJ localMapJ = null;
+  protected MapInfoNetMapViewer nmViewer = null;
 	
 	public static final double ZOOM_FACTOR = 2D;
 
@@ -398,12 +407,55 @@ public class MapInfoLogicalNetLayer extends LogicalNetLayer
 
 	public List findSpatialObjects(String searchText)
 	{
-		throw new UnsupportedOperationException();
+    List resultList = new ArrayList();
+    Iterator layersIt =  this.localMapJ.getLayers().iterator(LayerType.FEATURE);
+    for (;layersIt.hasNext();)
+    {
+      FeatureLayer currLayer = (FeatureLayer)layersIt.next();
+      
+      try
+      {
+        //Названия всех колонок - чтобы достать инфу об объекте
+        //Может они и не понадобятся!!!!!!!!
+        List allColumnNames = new ArrayList();
+        for (int i = 0; i < currLayer.getTableInfo().getColumnCount(); i++)
+          allColumnNames.add(currLayer.getTableInfo().getColumnName(i));
+
+        //Название колонки с надписями  
+        String labelColumnName = (String)currLayer.getLabelProperties().getLabelColumns().get(0);
+        //Её индекс в TableInfo
+        int labelColumnIndex = currLayer.getTableInfo().getColumnIndex(labelColumnName);
+        
+        //Поиск для "лэйбловой колонки"
+        FeatureSet fs = currLayer.searchByAttribute(
+          allColumnNames,
+          labelColumnName,
+          new Attribute(searchText),
+          QueryParams.ALL_PARAMS);
+            
+        Feature feature = null;
+        // Loop until FeatureSet.getNextFeature() returns null
+        while ( (feature = fs.getNextFeature()) != null )
+        {
+          String featureName = feature.getAttribute(labelColumnIndex).getString();
+          resultList.add(new MapInfoSpatialObject(feature,featureName));
+        }
+      }
+      catch (Exception exc)
+      {
+        exc.printStackTrace();
+      }
+    }
+    
+    return resultList;
 	}
 
 	public void centerSpatialObject(SpatialObject so)
 	{
-		throw new UnsupportedOperationException();
+    MapInfoSpatialObject miso = (MapInfoSpatialObject) so;
+    com.mapinfo.util.DoublePoint miDp = miso.getCenter();
+    DoublePoint dp = new DoublePoint(miDp.x,miDp.y);
+		this.setCenter(dp);
 	}
 
 	public void setMapViewer(NetMapViewer mapViewer)
@@ -416,9 +468,9 @@ public class MapInfoLogicalNetLayer extends LogicalNetLayer
 		
 		super.setMapViewer(mapViewer);
 		
-		MapInfoNetMapViewer snmv = (MapInfoNetMapViewer)mapViewer;
-		this.mapImagePanel = snmv.mapImagePanel;
-    this.localMapJ = snmv.localMapJ;
+		this.nmViewer = (MapInfoNetMapViewer)mapViewer;
+		this.mapImagePanel = nmViewer.mapImagePanel;
+    this.localMapJ = nmViewer.localMapJ;
 	}
   
   public String getMapMainParamString()
@@ -435,8 +487,8 @@ public class MapInfoLogicalNetLayer extends LogicalNetLayer
     for (;layersIt.hasNext();)
     {
       SpatialLayer spL = (SpatialLayer)layersIt.next();
-      result += "&" + ServletCommandNames.LAYER_VISIBLE + index + "=" + spL.isVisible();
-      result += "&" + ServletCommandNames.LAYER_LABELS_VISIBLE + index + "=" + spL.isLabelVisible();
+      result += "&" + ServletCommandNames.LAYER_VISIBLE + index + "=" + (spL.isVisible() ? 1:0);
+      result += "&" + ServletCommandNames.LAYER_LABELS_VISIBLE + index + "=" + (spL.isLabelVisible() ? 1:0);
       index++;
     }
     

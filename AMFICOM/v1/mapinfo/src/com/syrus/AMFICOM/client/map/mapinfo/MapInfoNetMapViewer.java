@@ -58,7 +58,7 @@ public class MapInfoNetMapViewer extends NetMapViewer
 	protected MapImagePanel mapImagePanel = null;
   protected MapJ localMapJ = null;  
   protected String mapperServletURL = "http://amficom:8081/samples47/servlet/cmapper";
-  protected String mapDefinitionFile = "\\\\amficom\\Mif\\mif.mdf";
+  protected String mapDefinitionFile = "\\\\amficom\\Mif\\mif1.mdf";
   
 	public void init()
 	{
