@@ -2,8 +2,10 @@
 @@measurementtype
 @@analysistype
 @@evaluationtype
+@@modelingtype
 @@mnttyppartyplink
 @@anatyppartyplink
 @@evatyppartyplink
+@@modtyppartyplink
 @@mnttypanatypevatyp
 @@mnttypmeasporttyplink
