@@ -2,11 +2,10 @@
 
 
 JAVA=$JAVA_HOME/bin/java
-LIB=$HOME/work/lib
-DEVLIB=$HOME/work/devlib
+LIB=../lib
 TRANSCEIVER=./transceiver
 DADARA=./dadara
-ORACLECLASSPATH=$JDEV_HOME/jdbc/lib/classes12.jar
-APPCLASSPATH=$DEVLIB/mcm.jar:$DEVLIB/mcm_interface.jar:$DEVLIB/measurementserver_interface.jar:$DEVLIB/measurement.jar:$DEVLIB/ServerInterface_General.jar:$LIB/util.jar:$LIB/io.jar:$LIB/Server.jar
+ORACLECLASSPATH=$ORACLE_HOME/jdbc/lib/classes12.jar
+APPCLASSPATH=$LIB/mcm.jar:$LIB/mcm_interface.jar:$LIB/measurementserver_interface.jar:$LIB/measurement.jar:$LIB/configuration.jar:$LIB/general.jar:$LIB/util.jar
 
 exec $JAVA -Djava.library.path=$TRANSCEIVER:$DADARA -classpath $APPCLASSPATH:$ORACLECLASSPATH com.syrus.AMFICOM.mcm.MeasurementControlModule
