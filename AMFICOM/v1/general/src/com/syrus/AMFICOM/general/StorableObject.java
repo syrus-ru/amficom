@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObject.java,v 1.8 2004/09/14 12:52:59 bob Exp $
+ * $Id: StorableObject.java,v 1.9 2004/11/04 08:51:15 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,9 +9,10 @@
 package com.syrus.AMFICOM.general;
 
 import java.util.Date;
+import java.util.List;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2004/09/14 12:52:59 $
+ * @version $Revision: 1.9 $, $Date: 2004/11/04 08:51:15 $
  * @author $Author: bob $
  * @module general_v1
  */
@@ -80,4 +81,6 @@ public abstract class StorableObject implements Identified, TransferableObject {
 		this.creatorId = creatorId;
 		this.modifierId = modifierId;
 	}
+	
+	protected abstract List getDependencies(); 
 }
