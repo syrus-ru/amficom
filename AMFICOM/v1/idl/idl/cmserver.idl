@@ -1,0 +1,879 @@
+#ifndef _CMSERVER_IDL_
+#define _CMSERVER_IDL_
+
+#include <general.idl>
+#include <measurement.idl>
+#include <configuration.idl>
+
+module com {
+module syrus {
+module AMFICOM {
+module cmserver {
+module corba {
+
+	interface CMServer : com::syrus::AMFICOM::general::corba::IdentifierGeneratorServer {
+/////////////////////////////////////////// Characteristic Recieve ////////////////////////////////////////////
+		void receiveCharacteristic(in com::syrus::AMFICOM::configuration::corba::Characteristic_Transferable characteristic_Transferable,
+								  in boolean force, 	
+						 		  in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+			
+		void receiveCharacteristics(in com::syrus::AMFICOM::configuration::corba::CharacteristicSeq_Transferable characteristics_Transferable,
+								  in boolean force, 	
+						 		  in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+			
+		void receiveCharacteristicType(in com::syrus::AMFICOM::configuration::corba::CharacteristicType_Transferable characteristicType_Transferable,
+								  in boolean force, 	
+						 		  in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+			
+		void receiveCharacteristicTypes(in com::syrus::AMFICOM::configuration::corba::CharacteristicTypeSeq_Transferable characteristicTypes_Transferable,
+								  in boolean force, 	
+						 		  in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+			
+		void receiveDomain(in com::syrus::AMFICOM::configuration::corba::Domain_Transferable domain_Transferable,
+								  in boolean force, 	
+						 		  in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+
+		void receiveDomains(in com::syrus::AMFICOM::configuration::corba::DomainSeq_Transferable domains_Transferable,
+								  in boolean force, 	
+						 		  in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+
+		void receiveEquipment(in com::syrus::AMFICOM::configuration::corba::Equipment_Transferable equipment_Transferable,
+								  in boolean force, 	
+						 		  in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+			
+		void receiveEquipments(in com::syrus::AMFICOM::configuration::corba::EquipmentSeq_Transferable equipments_Transferable,
+								  in boolean force, 	
+						 		  in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+			
+		void receiveEquipmentType(in com::syrus::AMFICOM::configuration::corba::EquipmentType_Transferable equipmentType_Transferable,
+								  in boolean force, 	
+						 		  in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+			
+		void receiveEquipmentTypes(in com::syrus::AMFICOM::configuration::corba::EquipmentTypeSeq_Transferable equipmentTypes_Transferable,
+								  in boolean force, 	
+						 		  in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+			
+		void receiveKIS(in com::syrus::AMFICOM::configuration::corba::KIS_Transferable kis_Transferable,
+								  in boolean force, 	
+						 		  in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+			
+		void receiveKISs(in com::syrus::AMFICOM::configuration::corba::KISSeq_Transferable kiss_Transferable,
+								  in boolean force, 	
+						 		  in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+			
+		void receiveMCM(in com::syrus::AMFICOM::configuration::corba::MCM_Transferable mcm_Transferable,
+								  in boolean force, 	
+						 		  in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+			
+		void receiveMCMs(in com::syrus::AMFICOM::configuration::corba::MCMSeq_Transferable mcms_Transferable,
+								  in boolean force, 	
+						 		  in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+			
+		void receiveMeasurementPort(in com::syrus::AMFICOM::configuration::corba::MeasurementPort_Transferable measurementPort_Transferable,
+								  in boolean force, 	
+						 		  in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+			
+		void receiveMeasurementPorts(in com::syrus::AMFICOM::configuration::corba::MeasurementPortSeq_Transferable measurementPorts_Transferable,
+								  in boolean force, 	
+						 		  in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+			
+		void receiveMeasurementPortType(in com::syrus::AMFICOM::configuration::corba::MeasurementPortType_Transferable measurementPortType_Transferable,
+								  in boolean force, 	
+						 		  in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+			
+		void receiveMeasurementPortTypes(in com::syrus::AMFICOM::configuration::corba::MeasurementPortTypeSeq_Transferable measurementPortTypes_Transferable,
+								  in boolean force, 	
+						 		  in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+			
+		void receiveMonitoredElement(in com::syrus::AMFICOM::configuration::corba::MonitoredElement_Transferable monitoredElement_Transferable,
+								  in boolean force, 	
+						 		  in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+			
+		void receiveMonitoredElements(in com::syrus::AMFICOM::configuration::corba::MonitoredElementSeq_Transferable monitoredElements_Transferable,
+								  in boolean force, 	
+						 		  in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+		
+		void receivePort(in com::syrus::AMFICOM::configuration::corba::Port_Transferable port_Transferable,
+								  in boolean force, 	
+						 		  in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+			
+		void receivePorts(in com::syrus::AMFICOM::configuration::corba::PortSeq_Transferable ports_Transferable,
+								  in boolean force, 	
+						 		  in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+			
+		void receivePortType(in com::syrus::AMFICOM::configuration::corba::PortType_Transferable portType_Transferable,
+								  in boolean force, 	
+						 		  in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+			
+		void receivePortTypes(in com::syrus::AMFICOM::configuration::corba::PortTypeSeq_Transferable portTypes_Transferable,
+								  in boolean force, 	
+						 		  in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+			
+		void receiveServer(in com::syrus::AMFICOM::configuration::corba::Server_Transferable server_Transferable,
+								  in boolean force, 	
+						 		  in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+			
+		void receiveServers(in com::syrus::AMFICOM::configuration::corba::ServerSeq_Transferable servers_Transferable,
+								  in boolean force, 	
+						 		  in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+			
+		void receiveTransmissionPath(in com::syrus::AMFICOM::configuration::corba::TransmissionPath_Transferable transmissionPath_Transferable,
+								  in boolean force, 	
+						 		  in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+			
+		void receiveTransmissionPaths(in com::syrus::AMFICOM::configuration::corba::TransmissionPathSeq_Transferable transmissionPaths_Transferable,
+								  in boolean force, 	
+						 		  in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+			
+		void receiveUser(in com::syrus::AMFICOM::configuration::corba::User_Transferable User_Transferable,
+								  in boolean force, 	
+						 		  in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+			
+		void receiveUsers(in com::syrus::AMFICOM::configuration::corba::UserSeq_Transferable users_Transferable,
+								  in boolean force, 	
+						 		  in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+
+//////////////////////////////////////////// Measurement Receive //////////////////////////////////////////////
+		void receiveAnalysis(in com::syrus::AMFICOM::measurement::corba::Analysis_Transferable analysis_Transferable,
+								  in boolean force, 	
+						 		  in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+			
+		void receiveAnalyses(in com::syrus::AMFICOM::measurement::corba::AnalysisSeq_Transferable sets,
+								  in boolean force, 	
+						 		  in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+		
+		void receiveAnalysisType(in com::syrus::AMFICOM::measurement::corba::AnalysisType_Transferable analysisType_Transferable,
+								  in boolean force, 	
+						 		  in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+			
+		void receiveAnalysisTypes(in com::syrus::AMFICOM::measurement::corba::AnalysisTypeSeq_Transferable sets,
+								  in boolean force, 	
+						 		  in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+			
+		void receiveEvaluation(in com::syrus::AMFICOM::measurement::corba::Evaluation_Transferable evaluation_Transferable,
+									in boolean force,
+						 		  	in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+		
+		void receiveEvaluations(in com::syrus::AMFICOM::measurement::corba::EvaluationSeq_Transferable sets,
+									in boolean force,
+						 		  	in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+			
+		void receiveEvaluationType(in com::syrus::AMFICOM::measurement::corba::EvaluationType_Transferable evaluationType_Transferable,
+									in boolean force,
+						 		  	in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+		
+		void receiveEvaluationTypes(in com::syrus::AMFICOM::measurement::corba::EvaluationTypeSeq_Transferable sets,
+									in boolean force,
+						 		  	in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+		
+		void receiveMeasurement(in com::syrus::AMFICOM::measurement::corba::Measurement_Transferable measurement_Transferable,
+									in boolean force,
+						 		  	in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+		
+		void receiveMeasurements(in com::syrus::AMFICOM::measurement::corba::MeasurementSeq_Transferable sets,
+									in boolean force,
+						 		  	in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+			
+		void receiveMeasurementSetup(in com::syrus::AMFICOM::measurement::corba::MeasurementSetup_Transferable measurementSetup_Transferable,
+									in boolean force,
+						 		  	in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+		
+		void receiveMeasurementSetups(in com::syrus::AMFICOM::measurement::corba::MeasurementSetupSeq_Transferable sets,
+									in boolean force,
+						 		  	in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+		
+		void receiveMeasurementType(in com::syrus::AMFICOM::measurement::corba::MeasurementType_Transferable measurementType_Transferable,
+									in boolean force,
+						 		  	in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+		
+		void receiveMeasurementTypes(in com::syrus::AMFICOM::measurement::corba::MeasurementTypeSeq_Transferable sets,
+									in boolean force,
+						 		  	in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+		
+		void receiveModeling(in com::syrus::AMFICOM::measurement::corba::Modeling_Transferable modeling_Transferable,
+									in boolean force,
+						 		  	in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+		
+		void receiveModelings(in com::syrus::AMFICOM::measurement::corba::ModelingSeq_Transferable sets,
+									in boolean force,
+						 		  	in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+				
+		void receiveParameterType(in com::syrus::AMFICOM::measurement::corba::ParameterType_Transferable parameterType_Transferable,
+								   in boolean force,
+						 		   in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+		
+		void receiveParameterTypes(in com::syrus::AMFICOM::measurement::corba::ParameterTypeSeq_Transferable sets,
+								   in boolean force,
+						 		   in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+			
+		void receiveResult(in com::syrus::AMFICOM::measurement::corba::Result_Transferable result_Transferable,
+								   in boolean force,
+						 		   in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+		
+		void receiveResults(in com::syrus::AMFICOM::measurement::corba::ResultSeq_Transferable sets,
+								   in boolean force,
+						 		   in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+			
+		void receiveSet(in com::syrus::AMFICOM::measurement::corba::Set_Transferable set_Transferable,
+						 in boolean force,
+						 in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+			
+		void receiveSets(in com::syrus::AMFICOM::measurement::corba::SetSeq_Transferable sets,
+						 in boolean force,
+						 in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+				
+		void receiveTemporalPattern(in com::syrus::AMFICOM::measurement::corba::TemporalPattern_Transferable temporalPattern_Transferable,
+								   in boolean force,
+						 		   in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+			
+		void receiveTemporalPatterns(in com::syrus::AMFICOM::measurement::corba::TemporalPatternSeq_Transferable sets,
+								   in boolean force,
+						 		   in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+		
+		void receiveTest(in com::syrus::AMFICOM::measurement::corba::Test_Transferable test_Transferable,
+						  in boolean force,
+						  in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);	
+		
+		void receiveTests(in com::syrus::AMFICOM::measurement::corba::TestSeq_Transferable tests,
+						  in boolean force,
+						  in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);	
+						
+///////////////////////////////////////// Configuration Transmit ///////////////////////////////////////////////
+		com::syrus::AMFICOM::configuration::corba::Characteristic_Transferable transmitCharacteristic(
+			in com::syrus::AMFICOM::general::corba::Identifier_Transferable id_Transferable,
+			in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+			
+		com::syrus::AMFICOM::configuration::corba::CharacteristicType_Transferable transmitCharacteristicType(
+			in com::syrus::AMFICOM::general::corba::Identifier_Transferable id_Transferable,
+			in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+			
+		com::syrus::AMFICOM::configuration::corba::Domain_Transferable transmitDomain(
+			in com::syrus::AMFICOM::general::corba::Identifier_Transferable id_Transferable,
+			in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+			
+		com::syrus::AMFICOM::configuration::corba::Equipment_Transferable transmitEquipment(
+			in com::syrus::AMFICOM::general::corba::Identifier_Transferable id_Transferable,
+			in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+			
+		com::syrus::AMFICOM::configuration::corba::EquipmentType_Transferable transmitEquipmentType(
+			in com::syrus::AMFICOM::general::corba::Identifier_Transferable id_Transferable,
+			in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+			
+		com::syrus::AMFICOM::configuration::corba::KIS_Transferable transmitKIS(
+			in com::syrus::AMFICOM::general::corba::Identifier_Transferable id_Transferable,
+			in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+			
+		com::syrus::AMFICOM::configuration::corba::MCM_Transferable transmitMCM(
+			in com::syrus::AMFICOM::general::corba::Identifier_Transferable id_Transferable,
+			in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+			
+		com::syrus::AMFICOM::configuration::corba::MeasurementPort_Transferable transmitMeasurementPort(
+			in com::syrus::AMFICOM::general::corba::Identifier_Transferable id_Transferable,
+			in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+			
+		com::syrus::AMFICOM::configuration::corba::MeasurementPortType_Transferable transmitMeasurementPortType(
+			in com::syrus::AMFICOM::general::corba::Identifier_Transferable id_Transferable,
+			in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+			
+		com::syrus::AMFICOM::configuration::corba::MonitoredElement_Transferable transmitMonitoredElement(
+			in com::syrus::AMFICOM::general::corba::Identifier_Transferable id_Transferable,
+			in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+			
+		com::syrus::AMFICOM::configuration::corba::Port_Transferable transmitPort(
+			in com::syrus::AMFICOM::general::corba::Identifier_Transferable id_Transferable,
+			in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+			
+		com::syrus::AMFICOM::configuration::corba::PortType_Transferable transmitPortType(
+			in com::syrus::AMFICOM::general::corba::Identifier_Transferable id_Transferable,
+			in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+			
+		com::syrus::AMFICOM::configuration::corba::Server_Transferable transmitServer(
+			in com::syrus::AMFICOM::general::corba::Identifier_Transferable id_Transferable,
+			in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+			
+		com::syrus::AMFICOM::configuration::corba::TransmissionPath_Transferable transmitTransmissionPath(
+			in com::syrus::AMFICOM::general::corba::Identifier_Transferable id_Transferable,
+			in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+			
+		com::syrus::AMFICOM::configuration::corba::User_Transferable transmitUser(
+			in com::syrus::AMFICOM::general::corba::Identifier_Transferable id_Transferable,
+			in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+
+					// Transmit Sequences		
+
+		com::syrus::AMFICOM::configuration::corba::CharacteristicSeq_Transferable transmitCharacteristics(
+			in com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable ids_Transferable,
+			in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+			
+		com::syrus::AMFICOM::configuration::corba::CharacteristicSeq_Transferable transmitCharacteristicsButIds(
+			in com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable ids_Transferable,
+			in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+			
+		com::syrus::AMFICOM::configuration::corba::CharacteristicTypeSeq_Transferable transmitCharacteristicTypes(
+			in com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable ids_Transferable,
+			in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+			
+		com::syrus::AMFICOM::configuration::corba::CharacteristicTypeSeq_Transferable transmitCharacteristicTypesButIds(
+			in com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable ids_Transferable,
+			in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+			
+		com::syrus::AMFICOM::configuration::corba::DomainSeq_Transferable transmitDomains(
+			in com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable ids_Transferable,
+			in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+			
+		com::syrus::AMFICOM::configuration::corba::DomainSeq_Transferable transmitDomainsButIds(
+			in com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable ids_Transferable,
+			in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+			
+		com::syrus::AMFICOM::configuration::corba::DomainSeq_Transferable transmitDomainsButIdsCondition(
+			in com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable ids_Transferable,
+			in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier,
+			in com::syrus::AMFICOM::configuration::corba::DomainCondition_Transferable domainCondition)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+			
+		com::syrus::AMFICOM::configuration::corba::EquipmentSeq_Transferable transmitEquipments(
+			in com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable ids_Transferable,
+			in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+		
+		com::syrus::AMFICOM::configuration::corba::EquipmentSeq_Transferable transmitEquipmentsButIds(
+			in com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable ids_Transferable,
+			in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+			
+		com::syrus::AMFICOM::configuration::corba::EquipmentSeq_Transferable transmitEquipmentsButIdsCondition(
+			in com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable ids_Transferable,
+			in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier,
+			in com::syrus::AMFICOM::configuration::corba::DomainCondition_Transferable domainCondition)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+			
+		com::syrus::AMFICOM::configuration::corba::EquipmentTypeSeq_Transferable transmitEquipmentTypes(
+			in com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable ids_Transferable,
+			in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+		
+		com::syrus::AMFICOM::configuration::corba::EquipmentTypeSeq_Transferable transmitEquipmentTypesButIds(
+			in com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable ids_Transferable,
+			in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+			
+		com::syrus::AMFICOM::configuration::corba::KISSeq_Transferable transmitKISs(
+			in com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable ids_Transferable,
+			in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+		
+		com::syrus::AMFICOM::configuration::corba::KISSeq_Transferable transmitKISsButIds(
+			in com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable ids_Transferable,
+			in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+		
+		com::syrus::AMFICOM::configuration::corba::KISSeq_Transferable transmitKISsButIdsCondition(
+			in com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable ids_Transferable,
+			in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier,
+			in com::syrus::AMFICOM::configuration::corba::DomainCondition_Transferable domainCondition)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+			
+		com::syrus::AMFICOM::configuration::corba::MCMSeq_Transferable transmitMCMs(
+			in com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable ids_Transferable,
+			in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+			
+		com::syrus::AMFICOM::configuration::corba::MCMSeq_Transferable transmitMCMsButIds(
+			in com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable ids_Transferable,
+			in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+			
+		com::syrus::AMFICOM::configuration::corba::MCMSeq_Transferable transmitMCMsButIdsCondition(
+			in com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable ids_Transferable,
+			in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier,
+			in com::syrus::AMFICOM::configuration::corba::DomainCondition_Transferable domainCondition)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+		
+		com::syrus::AMFICOM::configuration::corba::MeasurementPortSeq_Transferable transmitMeasurementPorts(
+			in com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable ids_Transferable,
+			in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+		
+		com::syrus::AMFICOM::configuration::corba::MeasurementPortSeq_Transferable transmitMeasurementPortsButIds(
+			in com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable ids_Transferable,
+			in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+			
+		com::syrus::AMFICOM::configuration::corba::MeasurementPortSeq_Transferable transmitMeasurementPortsButIdsCondition(
+			in com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable ids_Transferable,
+			in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier,
+			in com::syrus::AMFICOM::configuration::corba::DomainCondition_Transferable domainCondition)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+			
+		com::syrus::AMFICOM::configuration::corba::MeasurementPortTypeSeq_Transferable transmitMeasurementPortTypes(
+			in com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable ids_Transferable,
+			in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+			
+		com::syrus::AMFICOM::configuration::corba::MeasurementPortTypeSeq_Transferable transmitMeasurementPortTypesButIds(
+			in com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable ids_Transferable,
+			in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+		
+		com::syrus::AMFICOM::configuration::corba::MonitoredElementSeq_Transferable transmitMonitoredElements(
+			in com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable ids_Transferable,
+			in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+			
+		com::syrus::AMFICOM::configuration::corba::MonitoredElementSeq_Transferable transmitMonitoredElementsButIds(
+			in com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable ids_Transferable,
+			in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+			
+		com::syrus::AMFICOM::configuration::corba::MonitoredElementSeq_Transferable transmitMonitoredElementsButIdsCondition(
+			in com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable ids_Transferable,
+			in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier,
+			in com::syrus::AMFICOM::configuration::corba::DomainCondition_Transferable domainCondition)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+			
+		com::syrus::AMFICOM::configuration::corba::PortSeq_Transferable transmitPorts(
+			in com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable ids_Transferable,
+			in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+			
+		com::syrus::AMFICOM::configuration::corba::PortSeq_Transferable transmitPortsButIds(
+			in com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable ids_Transferable,
+			in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+			
+		com::syrus::AMFICOM::configuration::corba::PortSeq_Transferable transmitPortsButIdsCondition(
+			in com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable ids_Transferable,
+			in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier,
+			in com::syrus::AMFICOM::configuration::corba::DomainCondition_Transferable domainCondition)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+			
+		com::syrus::AMFICOM::configuration::corba::PortTypeSeq_Transferable transmitPortTypes(
+			in com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable ids_Transferable,
+			in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+			
+		com::syrus::AMFICOM::configuration::corba::PortTypeSeq_Transferable transmitPortTypesButIds(
+			in com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable ids_Transferable,
+			in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+			
+		com::syrus::AMFICOM::configuration::corba::ServerSeq_Transferable transmitServers(
+			in com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable ids_Transferable,
+			in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+			
+		com::syrus::AMFICOM::configuration::corba::ServerSeq_Transferable transmitServersButIds(
+			in com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable ids_Transferable,
+			in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+			
+		com::syrus::AMFICOM::configuration::corba::ServerSeq_Transferable transmitServersButIdsCondition(
+			in com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable ids_Transferable,
+			in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier,
+			in com::syrus::AMFICOM::configuration::corba::DomainCondition_Transferable domainCondition)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+			
+		com::syrus::AMFICOM::configuration::corba::TransmissionPathSeq_Transferable transmitTransmissionPaths(
+			in com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable ids_Transferable,
+			in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+			
+		com::syrus::AMFICOM::configuration::corba::TransmissionPathSeq_Transferable transmitTransmissionPathsButIds(
+			in com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable ids_Transferable,
+			in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+			
+		com::syrus::AMFICOM::configuration::corba::TransmissionPathSeq_Transferable transmitTransmissionPathsButIdsCondition(
+			in com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable ids_Transferable,
+			in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier,
+			in com::syrus::AMFICOM::configuration::corba::DomainCondition_Transferable domainCondition)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+			
+		com::syrus::AMFICOM::configuration::corba::UserSeq_Transferable transmitUsers(
+			in com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable ids_Transferable,
+			in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+			
+		com::syrus::AMFICOM::configuration::corba::UserSeq_Transferable transmitUsersButIds(
+			in com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable ids_Transferable,
+			in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+		
+		
+	
+///////////////////////////////////////// Measurement Transmit ///////////////////////////////////////////////
+
+		
+					// Transmit one object
+					
+		com::syrus::AMFICOM::measurement::corba::AnalysisType_Transferable transmitAnalysisType(
+			in com::syrus::AMFICOM::general::corba::Identifier_Transferable id,
+			in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);			
+			
+		com::syrus::AMFICOM::measurement::corba::EvaluationType_Transferable transmitEvaluationType(
+			in com::syrus::AMFICOM::general::corba::Identifier_Transferable id,
+			in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+			
+		com::syrus::AMFICOM::measurement::corba::MeasurementType_Transferable transmitMeasurementType(
+			in com::syrus::AMFICOM::general::corba::Identifier_Transferable id,
+			in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);			
+
+		com::syrus::AMFICOM::measurement::corba::ParameterType_Transferable transmitParameterType(
+			in com::syrus::AMFICOM::general::corba::Identifier_Transferable id,
+			in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);	
+
+		com::syrus::AMFICOM::measurement::corba::Analysis_Transferable transmitAnalysis(
+			in com::syrus::AMFICOM::general::corba::Identifier_Transferable id,
+			in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+			
+		com::syrus::AMFICOM::measurement::corba::Evaluation_Transferable transmitEvaluation(
+			in com::syrus::AMFICOM::general::corba::Identifier_Transferable id,
+			in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+						
+		com::syrus::AMFICOM::measurement::corba::Modeling_Transferable transmitModeling(
+			in com::syrus::AMFICOM::general::corba::Identifier_Transferable id,
+			in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+		
+		com::syrus::AMFICOM::measurement::corba::Measurement_Transferable transmitMeasurement(
+			in com::syrus::AMFICOM::general::corba::Identifier_Transferable id,
+			in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);		
+
+		com::syrus::AMFICOM::measurement::corba::MeasurementSetup_Transferable transmitMeasurementSetup(
+			in com::syrus::AMFICOM::general::corba::Identifier_Transferable id,
+			in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);						
+
+		com::syrus::AMFICOM::measurement::corba::Result_Transferable transmitResult(
+			in com::syrus::AMFICOM::general::corba::Identifier_Transferable id,
+			in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);				
+
+		com::syrus::AMFICOM::measurement::corba::Set_Transferable transmitSet(
+			in com::syrus::AMFICOM::general::corba::Identifier_Transferable id,
+			in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);				
+		
+		com::syrus::AMFICOM::measurement::corba::TemporalPattern_Transferable transmitTemporalPattern(
+			in com::syrus::AMFICOM::general::corba::Identifier_Transferable id,
+			in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+			
+		com::syrus::AMFICOM::measurement::corba::Test_Transferable transmitTest(
+			in com::syrus::AMFICOM::general::corba::Identifier_Transferable id,
+			in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);					
+					
+					// Transmit Sequences		
+
+		com::syrus::AMFICOM::measurement::corba::AnalysisTypeSeq_Transferable transmitAnalysisTypes(
+			in com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable ids,
+			in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+			
+		com::syrus::AMFICOM::measurement::corba::AnalysisTypeSeq_Transferable transmitAnalysisTypesButIds(
+			in com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable ids,
+			in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)			
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+			
+		com::syrus::AMFICOM::measurement::corba::AnalysisTypeSeq_Transferable transmitAnalysisTypesButIdsCondition(
+			in com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable ids,
+			in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier,
+			in com::syrus::AMFICOM::configuration::corba::LinkedIdsCondition_Transferable linkedIdsCondition_Transferable)			
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+					
+		com::syrus::AMFICOM::measurement::corba::EvaluationTypeSeq_Transferable transmitEvaluationTypes(
+			in com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable ids,
+			in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+			
+		com::syrus::AMFICOM::measurement::corba::EvaluationTypeSeq_Transferable transmitEvaluationTypesButIds(
+			in com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable ids,
+			in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+			
+		com::syrus::AMFICOM::measurement::corba::EvaluationTypeSeq_Transferable transmitEvaluationTypesButIdsCondition(
+			in com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable ids,
+			in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier,
+			in com::syrus::AMFICOM::configuration::corba::LinkedIdsCondition_Transferable linkedIdsCondition_Transferable)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);						
+
+		com::syrus::AMFICOM::measurement::corba::MeasurementTypeSeq_Transferable transmitMeasurementTypes(
+			in com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable ids,
+			in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+			
+		com::syrus::AMFICOM::measurement::corba::MeasurementTypeSeq_Transferable transmitMeasurementTypesButIds(
+			in com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable ids,
+			in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+			
+		com::syrus::AMFICOM::measurement::corba::ParameterTypeSeq_Transferable transmitParameterTypes(
+			in com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable ids,
+			in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+			
+		com::syrus::AMFICOM::measurement::corba::ParameterTypeSeq_Transferable transmitParameterTypesButIds(
+			in com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable ids,
+			in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+			
+		com::syrus::AMFICOM::measurement::corba::ParameterTypeSeq_Transferable transmitParameterTypesButIdsCondition(
+			in com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable ids,
+			in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier,
+			in com::syrus::AMFICOM::configuration::corba::StringFieldCondition_Transferable stringFieldCondition_Transferable)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+
+		com::syrus::AMFICOM::measurement::corba::AnalysisSeq_Transferable transmitAnalyses(
+			in com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable ids,
+			in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+			
+		com::syrus::AMFICOM::measurement::corba::AnalysisSeq_Transferable transmitAnalysesButIds(
+			in com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable ids,
+			in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+			
+		com::syrus::AMFICOM::measurement::corba::AnalysisSeq_Transferable transmitAnalysesButIdsCondition(
+			in com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable ids,
+			in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier,
+			in com::syrus::AMFICOM::configuration::corba::DomainCondition_Transferable domainCondition)			
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+			
+		com::syrus::AMFICOM::measurement::corba::EvaluationSeq_Transferable transmitEvaluations(
+			in com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable ids,
+			in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+			
+		com::syrus::AMFICOM::measurement::corba::EvaluationSeq_Transferable transmitEvaluationsButIdsCondition(
+			in com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable ids,
+			in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier,
+			in com::syrus::AMFICOM::configuration::corba::DomainCondition_Transferable domainCondition)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+			
+		com::syrus::AMFICOM::measurement::corba::EvaluationSeq_Transferable transmitEvaluationsButIds(
+			in com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable ids,
+			in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+		
+		com::syrus::AMFICOM::measurement::corba::ModelingSeq_Transferable transmitModelings(
+			in com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable ids,
+			in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+			
+		com::syrus::AMFICOM::measurement::corba::ModelingSeq_Transferable transmitModelingsButIds(
+			in com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable ids,
+			in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+			
+		com::syrus::AMFICOM::measurement::corba::ModelingSeq_Transferable transmitModelingsButIdsCondition(
+			in com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable ids,
+			in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier,
+			in com::syrus::AMFICOM::configuration::corba::DomainCondition_Transferable domainCondition)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+			
+		com::syrus::AMFICOM::measurement::corba::MeasurementSeq_Transferable transmitMeasurements(
+			in com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable ids,
+			in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+			
+		com::syrus::AMFICOM::measurement::corba::MeasurementSeq_Transferable transmitMeasurementsButIds(
+			in com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable ids,
+			in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+			
+		com::syrus::AMFICOM::measurement::corba::MeasurementSeq_Transferable transmitMeasurementsButIdsLinkedCondition(
+			in com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable ids,
+			in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier,
+			in com::syrus::AMFICOM::configuration::corba::LinkedIdsCondition_Transferable linkedIdsCondition_Transferable)			
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+			
+		com::syrus::AMFICOM::measurement::corba::MeasurementSeq_Transferable transmitMeasurementsButIdsDomainCondition(
+			in com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable ids,
+			in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier,
+			in com::syrus::AMFICOM::configuration::corba::DomainCondition_Transferable domainCondition)			
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+			
+		com::syrus::AMFICOM::measurement::corba::MeasurementSetupSeq_Transferable transmitMeasurementSetups(
+			in com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable ids,
+			in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+			
+		com::syrus::AMFICOM::measurement::corba::MeasurementSetupSeq_Transferable transmitMeasurementSetupsButIds(
+			in com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable ids,
+			in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+			
+		com::syrus::AMFICOM::measurement::corba::MeasurementSetupSeq_Transferable transmitMeasurementSetupsButIdsMeasurementSetupCondition(
+			in com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable ids,
+			in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier,
+			in com::syrus::AMFICOM::measurement::corba::MeasurementSetupCondition_Transferable measurementSetupCondition_Transferable)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+			
+		com::syrus::AMFICOM::measurement::corba::MeasurementSetupSeq_Transferable transmitMeasurementSetupsButIdsLinkedCondition(
+			in com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable ids,
+			in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier,
+			in com::syrus::AMFICOM::configuration::corba::LinkedIdsCondition_Transferable linkedIdsCondition_Transferable)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);			
+				
+		com::syrus::AMFICOM::measurement::corba::ResultSeq_Transferable transmitResults(
+			in com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable ids,
+			in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+			
+		com::syrus::AMFICOM::measurement::corba::ResultSeq_Transferable transmitResultsButIds(
+			in com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable ids,
+			in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+			
+		com::syrus::AMFICOM::measurement::corba::ResultSeq_Transferable transmitResultsButIdsDomainCondition(
+			in com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable ids,
+			in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier,
+			in com::syrus::AMFICOM::configuration::corba::DomainCondition_Transferable domainCondition)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+		
+		com::syrus::AMFICOM::measurement::corba::ResultSeq_Transferable transmitResultsButIdsLinkedCondition(
+			in com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable ids,
+			in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier,
+			in com::syrus::AMFICOM::configuration::corba::LinkedIdsCondition_Transferable linkedIdsCondition_Transferable)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+				
+		com::syrus::AMFICOM::measurement::corba::SetSeq_Transferable transmitSets(
+			in com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable ids,
+			in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+			
+		com::syrus::AMFICOM::measurement::corba::SetSeq_Transferable transmitSetsButIds(
+			in com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable ids,
+			in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+			
+		com::syrus::AMFICOM::measurement::corba::SetSeq_Transferable transmitSetsButIdsCondition(
+			in com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable ids,
+			in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier,
+			in com::syrus::AMFICOM::configuration::corba::DomainCondition_Transferable domainCondition)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+
+		com::syrus::AMFICOM::measurement::corba::TemporalPatternSeq_Transferable transmitTemporalPatterns(
+			in com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable ids,
+			in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+			
+		com::syrus::AMFICOM::measurement::corba::TemporalPatternSeq_Transferable transmitTemporalPatternsButIds(
+			in com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable ids,
+			in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);						
+			
+		com::syrus::AMFICOM::measurement::corba::TestSeq_Transferable transmitTests(
+			in com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable ids,
+			in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+			
+		com::syrus::AMFICOM::measurement::corba::TestSeq_Transferable transmitTestsButIds(
+			in com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable ids,
+			in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+		
+		com::syrus::AMFICOM::measurement::corba::TestSeq_Transferable transmitTestsButIdsCondition(
+			in com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable ids,
+			in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier,
+			in com::syrus::AMFICOM::measurement::corba::TestCondition_Transferable testCondition)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);	
+		
+				
+		
+	};
+};
+};
+};
+};
+};
+
+
+
+
+#endif
