@@ -1,26 +1,30 @@
+/*
+ * $Id: ObjectPermissionAttributesPanel.java,v 1.6 2004/09/27 13:08:45 bass Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ
+ */
+
 package com.syrus.AMFICOM.Client.Administrate.Object.UI;
 
-import java.awt.*;
-import java.text.*;
-
-import java.util.Date;
-import java.util.List;
-
-import javax.swing.*;
-
 import com.syrus.AMFICOM.Client.General.Model.*;
-import com.syrus.AMFICOM.Client.General.UI.*;
+import com.syrus.AMFICOM.Client.General.UI.GeneralPanel;
 import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.Resource.Object.*;
-import javax.swing.border.*;
-import java.awt.event.*;
-import java.awt.GridBagLayout;
-import java.awt.GridBagConstraints;
-import java.awt.Insets;
-import java.awt.Dimension;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import javax.swing.*;
+import javax.swing.border.TitledBorder;
 
-public class ObjectPermissionAttributesPanel extends GeneralPanel//PropertiesPanel
-{
+/**
+ * @author $Author: bass $
+ * @version $Revision: 1.6 $, $Date: 2004/09/27 13:08:45 $
+ * @module generalclient_v1
+ */
+public class ObjectPermissionAttributesPanel extends GeneralPanel {
   AdminObjectResource permissionObjectResource;
 
   User admin;
@@ -270,6 +274,4 @@ public class ObjectPermissionAttributesPanel extends GeneralPanel//PropertiesPan
   {
     rwxPanel.setEnabledWritingEditing(key);
   }
-
-
 }

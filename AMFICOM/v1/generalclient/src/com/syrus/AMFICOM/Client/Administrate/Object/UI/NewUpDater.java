@@ -1,27 +1,33 @@
+/*
+ * $Id: NewUpDater.java,v 1.6 2004/09/27 13:10:46 bass Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ
+ */
+
 package com.syrus.AMFICOM.Client.Administrate.Object.UI;
 
-import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
-import java.util.HashMap;
-import java.util.ArrayList;
-
-import java.util.Map;
-import javax.swing.*;
-
-import com.syrus.AMFICOM.Client.General.Model.*;
+import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.Resource.Object.*;
 import com.syrus.AMFICOM.Client.Resource.System.*;
+import java.util.*;
+import javax.swing.JOptionPane;
 
-public class NewUpDater{
-  private ApplicationContext aContext = new ApplicationContext();
-  private DataSourceInterface dsi;
+/**
+ * @author $Author: bass $
+ * @version $Revision: 1.6 $, $Date: 2004/09/27 13:10:46 $
+ * @module generalclient_v1
+ */
+public class NewUpDater {
+	private ApplicationContext aContext = new ApplicationContext();
 
+	private DataSourceInterface dsi;
 
   public NewUpDater(ApplicationContext aContext){
     this.aContext = aContext;
-    this.dsi = this.aContext.getDataSourceInterface();
+    this.dsi = this.aContext.getDataSource();
   }
 
 
