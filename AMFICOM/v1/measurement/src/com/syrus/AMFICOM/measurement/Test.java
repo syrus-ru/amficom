@@ -1,5 +1,5 @@
 /*
- * $Id: Test.java,v 1.75 2005/01/28 08:20:43 bob Exp $
+ * $Id: Test.java,v 1.76 2005/02/03 14:58:34 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -45,8 +45,8 @@ import com.syrus.AMFICOM.measurement.corba.TestTimeStamps_TransferablePackage.Co
 import com.syrus.AMFICOM.measurement.corba.TestTimeStamps_TransferablePackage.PeriodicalTestTimeStamps;
 
 /**
- * @version $Revision: 1.75 $, $Date: 2005/01/28 08:20:43 $
- * @author $Author: bob $
+ * @version $Revision: 1.76 $, $Date: 2005/02/03 14:58:34 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -89,8 +89,8 @@ public class Test extends StorableObject {
 		}
 	}
 
-	public Measurement createMeasurement(Identifier creatorId, Date startTime) throws CreateObjectException {
-			Measurement measurement = Measurement.createInstance(creatorId,
+	public Measurement createMeasurement(Identifier measurementCreatorId, Date startTime) throws CreateObjectException {
+			Measurement measurement = Measurement.createInstance(measurementCreatorId,
 																								this.measurementType,
 																								this.monitoredElement.getId(),
 																								"created by Test:'"
@@ -103,7 +103,7 @@ public class Test extends StorableObject {
 																								this.id);
 		measurement.insert();
 		super.modified = new Date(System.currentTimeMillis());
-		super.modifierId = (Identifier) creatorId.clone();
+		super.modifierId = (Identifier) measurementCreatorId.clone();
 		try {
 			this.testDatabase.update(this, UPDATE_MODIFIED, null);
 		}
@@ -447,10 +447,10 @@ public class Test extends StorableObject {
 	 * public ArrayList getMeasurements() { return this.measurements; }
 	 */
 
-	public void updateStatus(TestStatus status, Identifier modifierId) throws UpdateObjectException {
-		this.status = status.value();
+	public void updateStatus(TestStatus status1, Identifier modifierId1) throws UpdateObjectException {
+		this.status = status1.value();
 		super.modified = new Date(System.currentTimeMillis());
-		super.modifierId = (Identifier) modifierId.clone();
+		super.modifierId = (Identifier) modifierId1.clone();
 		try {
 			this.testDatabase = MeasurementDatabaseContext.testDatabase;
 			this.testDatabase.update(this, UPDATE_STATUS, null);

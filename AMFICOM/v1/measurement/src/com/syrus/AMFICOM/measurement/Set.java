@@ -1,5 +1,5 @@
 /*
- * $Id: Set.java,v 1.40 2005/02/01 11:35:40 arseniy Exp $
+ * $Id: Set.java,v 1.41 2005/02/03 14:58:34 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,7 +34,7 @@ import com.syrus.AMFICOM.measurement.corba.Parameter_Transferable;
 import com.syrus.util.HashCodeGenerator;
 
 /**
- * @version $Revision: 1.40 $, $Date: 2005/02/01 11:35:40 $
+ * @version $Revision: 1.41 $, $Date: 2005/02/03 14:58:34 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -159,10 +159,10 @@ public class Set extends StorableObject {
 	}
 
 	public void attachToMonitoredElement(Identifier monitoredElementId,
-																			 Identifier modifierId) throws UpdateObjectException {
+																			 Identifier modifierId1) throws UpdateObjectException {
 		if (this.isAttachedToMonitoredElement(monitoredElementId))
       return;
-		super.modifierId = (Identifier) modifierId.clone();
+		super.modifierId = (Identifier) modifierId1.clone();
 		try {
 			this.setDatabase.update(this, UPDATE_ATTACH_ME, monitoredElementId);
 		}
@@ -176,10 +176,10 @@ public class Set extends StorableObject {
 	}
 
 	public void detachFromMonitoredElement(Identifier monitoredElementId,
-																				 Identifier modifierId) throws UpdateObjectException {
+																				 Identifier modifierId1) throws UpdateObjectException {
     if (!this.isAttachedToMonitoredElement(monitoredElementId))
       return;
-		super.modifierId = (Identifier) modifierId.clone();
+		super.modifierId = (Identifier) modifierId1.clone();
 		try {
 	    this.setDatabase.update(this, UPDATE_DETACH_ME, monitoredElementId);
 		}
@@ -243,8 +243,13 @@ public class Set extends StorableObject {
 		this.description = description;
 	}
 
-	protected synchronized void setParameters(SetParameter[] parameters) {
+	protected synchronized void setParameters0(SetParameter[] parameters) {
 		this.parameters = parameters;
+	}
+
+	public void setParameters(SetParameter[] parameters) {
+		this.setParameters0(parameters);
+		super.currentVersion = super.getNextVersion();
 	}
 
 	protected synchronized void setMonitoredElementIds0(List monitoredElementIds) {

@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementSetup.java,v 1.42 2004/12/27 21:00:01 arseniy Exp $
+ * $Id: MeasurementSetup.java,v 1.43 2005/02/03 14:58:34 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,7 +30,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.corba.MeasurementSetup_Transferable;
 
 /**
- * @version $Revision: 1.42 $, $Date: 2004/12/27 21:00:01 $
+ * @version $Revision: 1.43 $, $Date: 2005/02/03 14:58:34 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -198,10 +198,10 @@ public class MeasurementSetup extends StorableObject {
 		return this.monitoredElementIds.contains(monitoredElementId);
 	}
 
-	public void attachToMonitoredElement(Identifier monitoredElementId, Identifier modifierId) throws UpdateObjectException {
+	public void attachToMonitoredElement(Identifier monitoredElementId, Identifier modifierId1) throws UpdateObjectException {
 		if (this.isAttachedToMonitoredElement(monitoredElementId))
 			return;
-		super.modifierId = (Identifier) modifierId.clone();
+		super.modifierId = (Identifier) modifierId1.clone();
 		try {
 			this.measurementSetupDatabase.update(this, UPDATE_ATTACH_ME, monitoredElementId);
 		}
@@ -217,10 +217,10 @@ public class MeasurementSetup extends StorableObject {
 		this.monitoredElementIds.add(monitoredElementId);
 	}
 
-	public void detachFromMonitoredElement(Identifier monitoredElementId, Identifier modifierId) throws UpdateObjectException {
+	public void detachFromMonitoredElement(Identifier monitoredElementId, Identifier modifierId1) throws UpdateObjectException {
 		if (!this.isAttachedToMonitoredElement(monitoredElementId))
 			return;
-		super.modifierId = (Identifier) modifierId.clone();
+		super.modifierId = (Identifier) modifierId1.clone();
 		try {
 			this.measurementSetupDatabase.update(this, UPDATE_DETACH_ME, monitoredElementId);
 		}
