@@ -6,6 +6,7 @@ import com.syrus.AMFICOM.Client.Resource.Map.MapElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalLinkElement;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapUnboundLinkElement;
 
+import com.syrus.AMFICOM.Client.Resource.MapView.MapUnboundNodeElement;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -41,6 +42,8 @@ public class UnboundLinkPopupMenu extends MapPopupMenu
 	public void setMapElement(MapElement me)
 	{
 		this.unbound = (MapUnboundLinkElement )me;
+		generateMenuItem.setVisible( !(unbound.getStartNode() instanceof MapUnboundNodeElement)
+			&& !(unbound.getEndNode() instanceof MapUnboundNodeElement));
 	}
 
 	private void jbInit() 
@@ -74,6 +77,8 @@ public class UnboundLinkPopupMenu extends MapPopupMenu
 			command.setLogicalNetLayer(logicalNetLayer);
 			logicalNetLayer.getCommandList().add(command);
 			logicalNetLayer.getCommandList().execute();
+
+			getLogicalNetLayer().repaint();
 		}
 	}
 

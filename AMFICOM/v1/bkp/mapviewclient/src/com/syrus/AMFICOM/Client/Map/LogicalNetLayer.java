@@ -1,5 +1,5 @@
 /**
- * $Id: LogicalNetLayer.java,v 1.15 2004/10/20 12:38:40 krupenn Exp $
+ * $Id: LogicalNetLayer.java,v 1.16 2004/10/26 13:32:01 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -16,6 +16,7 @@ import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
 import com.syrus.AMFICOM.Client.General.Event.MapEvent;
 import com.syrus.AMFICOM.Client.General.Event.MapNavigateEvent;
 import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
+import com.syrus.AMFICOM.Client.General.Event.SchemeNavigateEvent;
 import com.syrus.AMFICOM.Client.General.Event.TreeDataSelectionEvent;
 import com.syrus.AMFICOM.Client.General.Event.TreeListSelectionEvent;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
@@ -37,17 +38,28 @@ import com.syrus.AMFICOM.Client.Resource.Map.MapNodeProtoElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalLinkElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalNodeElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapSiteNodeElement;
+import com.syrus.AMFICOM.Client.Resource.MapView.MapAlarmMarker;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapCablePathElement;
+import com.syrus.AMFICOM.Client.Resource.MapView.MapEventMarker;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapMarker;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapMeasurementPathElement;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapSelection;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapView;
 import com.syrus.AMFICOM.Client.Resource.MapView.VoidMapElement;
 import com.syrus.AMFICOM.Client.Resource.Pool;
+import com.syrus.AMFICOM.Client.Resource.Scheme.PathDecompositor;
 import com.syrus.AMFICOM.Client.Resource.Scheme.Scheme;
 import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeCableLink;
 import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeElement;
 
+import com.syrus.AMFICOM.Client.Resource.Scheme.SchemePath;
+import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
+import com.syrus.AMFICOM.configuration.MonitoredElement;
+import com.syrus.AMFICOM.configuration.TransmissionPath;
+import com.syrus.AMFICOM.configuration.corba.MonitoredElementSort;
+import com.syrus.AMFICOM.general.CommunicationException;
+import com.syrus.AMFICOM.general.DatabaseException;
+import com.syrus.AMFICOM.general.Identifier;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Cursor;
@@ -71,7 +83,7 @@ import java.util.Set;
  * 
  * 
  * 
- * @version $Revision: 1.15 $, $Date: 2004/10/20 12:38:40 $
+ * @version $Revision: 1.16 $, $Date: 2004/10/26 13:32:01 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -593,7 +605,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 			com.execute();
 		}
 
-		if (getMapState().getShowMode() == MapState.SHOW_TRANSMISSION_PATH)
+		if (getMapState().getShowMode() == MapState.SHOW_MEASUREMENT_PATH)
 		{
 			elementsToDisplay.addAll(getMapView().getMap().getPhysicalLinks());
 			for(Iterator it = getMapView().getMeasurementPaths().iterator(); it.hasNext();)
@@ -829,152 +841,56 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 		if(ae.getActionCommand().equals(MapEvent.MAP_NAVIGATE))
 		{
 			MapNavigateEvent mne = (MapNavigateEvent )ae;
-/*
+
 			//Здесь принимаюттся собитыя по создению и управлению маркером
-			if(mne.DATA_MARKER_CREATED)
+			if(mne.isDataMarkerCreated())
 			{
-//				System.out.println("event_DATA_MARKER_CREATED id " + 
-//					mne.marker_id + " ME_ID " + mne.meID + " MPATH_ID " + mne.mappathID);
+				MapMeasurementPathElement path = mapView.getMeasurementPathByMonitoredElementId(mne.getMeId());
 
-				MapTransmissionPathElement path = null;
-				SchemePath the_sp = null;
-
-				for(Iterator it = getMapView().getTransmissionPath().iterator(); it.hasNext();)
-				{
-					MapTransmissionPathElement mappath = (MapTransmissionPathElement )it.next();
-					if(mappath.PATH_ID != null && !mappath.PATH_ID.equals(""))
-					{
-						SchemePath sp = (SchemePath )Pool.get(SchemePath.typ, mappath.PATH_ID);
-						if(sp != null && sp.path_id != null && !sp.path_id.equals(""))
-						{
-							TransmissionPath tp = (TransmissionPath )Pool.get(TransmissionPath.typ, sp.path_id);
-							if(tp != null && tp.monitored_element_id != null)
-								if(tp.monitored_element_id.equals(mne.meID))
-								{
-									path = mappath;
-									the_sp = sp;
-			//						break;
-								}
-						}
-						if(sp != null && sp.getId().equals(mne.mappathID))
-						{
-							path = mappath;
-							the_sp = sp;
-	//						break;
-						}
-					}
-				}
-
-				MapMarker marker;
 				if(path != null)
 				{
-					marker = new MapMarker(
-						mne.marker_id,
-	                    lnl().getMap(),
-	                    new Rectangle(14, 14),
-						"",
-						mne.distance,
-						path);
-					lnl().getMap().markers.add(marker);
-//					marker.spd = mne.spd;
-//					marker.spd.setSchemePath(the_sp);
-					marker.moveToFromStartLo(mne.distance);
+					MapMarker marker = new MapMarker(
+						mne.getMarkerId(),
+	                    getMapView(),
+						mne.getDistance(),
+						path,
+						mne.getMeId());
+					getMapView().addMarker(marker);
+					marker.moveToFromStartLo(mne.getDistance());
 				}
 			}
-			if(mne.DATA_EVENTMARKER_CREATED)
+			else
+			if(mne.isDataEventMarkerCreated())
 			{
-//				System.out.println("event_DATA_EVENTMARKER_CREATED id " + 
-//					mne.marker_id + " ME_ID " + mne.meID + " MPATH_ID " + mne.mappathID);
+				MapMeasurementPathElement path = mapView.getMeasurementPathByMonitoredElementId(mne.getMeId());
 
-				MapTransmissionPathElement path = null;
-				SchemePath the_sp = null;
-
-				for(Iterator it = lnl().getMap().getTransmissionPath().iterator(); it.hasNext();)
-				{
-					MapTransmissionPathElement mappath = (MapTransmissionPathElement )it.next();
-					if(mappath.PATH_ID != null && !mappath.PATH_ID.equals(""))
-					{
-						SchemePath sp = (SchemePath )Pool.get(SchemePath.typ, mappath.PATH_ID);
-						if(sp != null && sp.path_id != null && !sp.path_id.equals(""))
-						{
-							TransmissionPath tp = (TransmissionPath )Pool.get(TransmissionPath.typ, sp.path_id);
-							if(tp.monitored_element_id != null)
-								if(tp.monitored_element_id.equals(mne.meID))
-								{
-									path = mappath;
-									the_sp = sp;
-			//						break;
-								}
-						}
-						if(sp != null && sp.getId().equals(mne.mappathID))
-						{
-							path = mappath;
-							the_sp = sp;
-	//						break;
-						}
-					}
-				}
-
-				MapEventMarker marker;
 				if(path != null)
 				{
-					marker = new MapEventMarker(
-						mne.marker_id,
-	                    lnl().getMap(),
-	                    new Rectangle(14, 14),
-						"",
-						mne.distance,
-						path);
-					marker.descriptor = mne.descriptor;
-					lnl().getMap().markers.add(marker);
-//					marker.spd = mne.spd;
-//					marker.spd.setSchemePath(the_sp);
-					marker.moveToFromStartLo(mne.distance);
+					MapEventMarker marker = new MapEventMarker(
+						mne.getMarkerId(),
+	                    getMapView(),
+						mne.getDistance(),
+						path,
+						mne.getMeId());
+//					marker.descriptor = mne.descriptor;
+					getMapView().addMarker(marker);
+					marker.moveToFromStartLo(mne.getDistance());
 				}
 			}
-			if(mne.DATA_ALARMMARKER_CREATED)
+			else
+			if(mne.isDataAlarmMarkerCreated())
 			{
-//				System.out.println("event_DATA_ALARMMARKER_CREATED id " + 
-//					mne.marker_id + " ME_ID " + mne.meID + " MPATH_ID " + mne.mappathID);
-
-				MapTransmissionPathElement path = null;
-				SchemePath the_sp = null;
-
-				for(Iterator it = lnl().getMap().getTransmissionPath().iterator(); it.hasNext();)
-				{
-					MapTransmissionPathElement mappath = (MapTransmissionPathElement )it.next();
-					if(mappath.PATH_ID != null && !mappath.PATH_ID.equals(""))
-					{
-						SchemePath sp = (SchemePath )Pool.get(SchemePath.typ, mappath.PATH_ID);
-						if(sp != null && sp.path_id != null && !sp.path_id.equals(""))
-						{
-							TransmissionPath tp = (TransmissionPath )Pool.get(TransmissionPath.typ, sp.path_id);
-							if(tp.monitored_element_id != null)
-								if(tp.monitored_element_id.equals(mne.meID))
-								{
-									path = mappath;
-									the_sp = sp;
-			//						break;
-								}
-						}
-						if(sp != null && sp.getId().equals(mne.mappathID))
-						{
-							path = mappath;
-							the_sp = sp;
-	//						break;
-						}
-					}
-				}
+				MapMeasurementPathElement path = mapView.getMeasurementPathByMonitoredElementId(mne.getMeId());
 
 				MapAlarmMarker marker = null;
 				if(path != null)
 				{
-					for(Iterator it = lnl().getMap().markers.iterator(); it.hasNext();)
+					for(Iterator it = getMapView().getMarkers().iterator(); it.hasNext();)
 					{
 						try
 						{
 							marker = (MapAlarmMarker )it.next();
-							if(marker.path_id.equals(path.getId()))
+							if(marker.getMeasurementPath().equals(path))
 								break;
 							marker = null;
 						}
@@ -985,28 +901,25 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 					if(marker == null)
 					{
 						marker = new MapAlarmMarker(
-							mne.marker_id,
-							lnl().getMap(),
-							new Rectangle(14, 14),
-							"",
-							mne.distance,
+							mne.getMarkerId(),
+							getMapView(),
+							mne.getDistance(),
 							path,
-							mne.linkID);
-						marker.descriptor = mne.descriptor;
-						lnl().getMap().markers.add(marker);
+							mne.getMeId());
+//						marker.descriptor = mne.descriptor;
+						getMapView().addMarker(marker);
 					}
 					else
 					{
-						marker.id = mne.marker_id;
+						marker.setId(mne.getMarkerId());
 					}
-//					marker.spd = mne.spd;
-//					marker.spd.setSchemePath(the_sp);
-					marker.moveToFromStartLo(mne.distance);
+					marker.moveToFromStartLo(mne.getDistance());
 				}
-
+/*
 				boolean found = false;
 
-				MapPhysicalLinkElement link = findMapLinkByCableLink(mne.linkID);
+				MapPhysicalLinkElement link = 
+				getMapView().findCablePath(mne.getSchemePathElementId());
 				if(link != null)
 				{
 					link.setAlarmState(true);
@@ -1021,60 +934,43 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 						node.select();
 					}
 				}
+*/
 			}
-			if(mne.DATA_MARKER_MOVED)
+			else
+			if(mne.isDataMarkerMoved())
 			{
-//				System.out.println("event_DATA_MARKER_MOVED id " + 
-//					mne.marker_id + " ME_ID " + mne.meID + " MPATH_ID " + mne.mappathID);
-				MapMarker marker = lnl().getMap().getMarker(mne.marker_id);
+				MapMarker marker = getMapView().getMarker(mne.getMarkerId());
 				if(marker != null)
 				{
-					if(marker.spd == null)
-						marker.spd = (SchemePathDecompositor )mne.spd;
-					marker.moveToFromStartLo(mne.distance);
+					if(marker.getPathDecompositor() == null)
+						marker.setPathDecompositor((PathDecompositor )mne.getSchemePathDecompositor());
+					marker.moveToFromStartLo(mne.getDistance());
 				}
 			}
-			if(mne.DATA_MARKER_SELECTED)
+			else
+			if(mne.isDataMarkerSelected())
 			{
-//				System.out.println("event_DATA_MARKER_SELECTED id " + 
-//					mne.marker_id + " ME_ID " + mne.meID + " MPATH_ID " + mne.mappathID);
-				MapMarker marker = lnl().getMap().getMarker(mne.marker_id);
+				MapMarker marker = getMapView().getMarker(mne.getMarkerId());
 				if(marker != null)
-					marker.getMessage_Marker_Selected();
+					marker.setSelected(true);
 			}
-			if(mne.DATA_MARKER_DESELECTED)
+			else
+			if(mne.isDataMarkerDeselected())
 			{
-//				System.out.println("event_DATA_MARKER_DESELECTED id " + 
-//					mne.marker_id + " ME_ID " + mne.meID + " MPATH_ID " + mne.mappathID);
-				MapMarker marker = lnl().getMap().getMarker(mne.marker_id);
+				MapMarker marker = getMapView().getMarker(mne.getMarkerId());
 				if(marker != null)
-					marker.getMessage_Marker_Deselected();
+					marker.setSelected(false);
 			}
-			if(mne.DATA_MARKER_DELETED)
+			else
+			if(mne.isDataMarkerDeleted())
 			{
-//				System.out.println("event_DATA_MARKER_DELETED id " + 
-//					mne.marker_id + " ME_ID " + mne.meID + " MPATH_ID " + mne.mappathID);
-				MapMarker marker = lnl().getMap().getMarker(mne.marker_id);
+				MapMarker marker = getMapView().getMarker(mne.getMarkerId());
 				if(marker != null)
-					lnl().getMap().markers.remove(marker);
-			}
-			if(mne.DATA_EVENTMARKER_DELETED)
-			{
-//				System.out.println("event_DATA_EVENTMARKER_DELETED id " + 
-//					mne.marker_id + " ME_ID " + mne.meID + " MPATH_ID " + mne.mappathID);
-				MapMarker marker = lnl().getMap().getMarker(mne.marker_id);
-				if(marker != null)
-					lnl().getMap().markers.remove(marker);
-			}
-			if(mne.DATA_ALARMMARKER_DELETED)
-			{
-//				System.out.println("event_DATA_ALARMMARKER_DELETED id " + 
-//					mne.marker_id + " ME_ID " + mne.meID + " MPATH_ID " + mne.mappathID);
-				MapAlarmMarker marker = (MapAlarmMarker )lnl().getMap().getMarker(mne.marker_id);
-				if(marker != null)
+					getMapView().removeMarker(marker);
+				if(marker instanceof MapAlarmMarker)
 				{
-					lnl().getMap().markers.remove(marker);
-
+					MapAlarmMarker amarker = (MapAlarmMarker )marker;
+/*
 					MapPhysicalLinkElement link = findMapLinkByCableLink(marker.link_id);
 					if(link != null)
 					{
@@ -1090,23 +986,29 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 							node.deselect();
 						}
 					}
+*/
 				}
 			}
-*/
+			else
 			if(mne.isMapElementSelected())
+			{
 				if(performProcessing)
 				{
 					MapElement me = (MapElement )mne.getSource();
 					if(me != null)
 						me.setSelected(true);
 				}
+			}
+			else
 			if(mne.isMapElementDeselected())
+			{
 				if(performProcessing)
 				{
 					MapElement me = (MapElement )mne.getSource();
 					if(me != null)
 						me.setSelected(false);
 				}
+			}
 			repaint();
 		}
 		else
@@ -1140,111 +1042,86 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 				repaint();
 			} 
 		}
-/*
+		else
 		if(ae.getActionCommand().equals(SchemeNavigateEvent.type))
-			if(performProcessing)
 		{
+			if(performProcessing)
+			{
 			SchemeNavigateEvent sne = (SchemeNavigateEvent )ae;
-
-			if(sne.SCHEME_ELEMENT_SELECTED)
-			{
-//				System.out.println("SCHEME_ELEMENT_SELECTED");
-				SchemeElement[] ses = (SchemeElement[] )sne.getSource();
-				Scheme s = (Scheme )Pool.get(Scheme.typ, this.getMap().scheme_id);
-
-				for(Iterator it = lnl().getMap().getNodes().iterator(); it.hasNext();)
+				if(sne.SCHEME_ELEMENT_SELECTED)
 				{
-					Object obj = it.next();
-					if(	obj instanceof MapSiteNodeElement )
+					SchemeElement[] ses = (SchemeElement[] )sne.getSource();
+	
+					for(int i = 0; i < ses.length; i++)
 					{
-						MapSiteNodeElement mape = (MapSiteNodeElement )obj;
-						for(int i = 0; i < ses.length; i++)
-						{
-							SchemeElement se = s.getTopologicalElement(ses[i].getId());
-							if(mape.element_id.equals(se.getId()))
-								mape.select();
-						}
+						MapSiteNodeElement site = getMapView().findElement(ses[i]);
+						if(site != null)
+							site.setSelected(true);
 					}
 				}
-			}
-
-			if(sne.SCHEME_PATH_SELECTED)
-			{
-//				System.out.println("SCHEME_PATH_SELECTED");
-				SchemePath[] sps = (SchemePath[] )sne.getSource();
-				for(Iterator it = lnl().getMap().getTransmissionPath().iterator(); it.hasNext();)
+				else
+				if(sne.SCHEME_PATH_SELECTED)
 				{
-					MapTransmissionPathElement mappath = (MapTransmissionPathElement )it.next();
+					SchemePath[] sps = (SchemePath[] )sne.getSource();
+					
 					for(int i = 0; i < sps.length; i++)
-						if(mappath.PATH_ID.equals(sps[i].getId()))
-							mappath.select();
-				}
-			}
-
-			if(sne.SCHEME_CABLE_LINK_SELECTED)
-			{
-//				System.out.println("SCHEME_CABLE_LINK_SELECTED");
-				SchemeCableLink[] scs = (SchemeCableLink[] )sne.getSource();
-				for(Iterator it = lnl().getMap().getPhysicalLinks().iterator(); it.hasNext();)
-				{
-					MapPhysicalLinkElement link = (MapPhysicalLinkElement )it.next();
-					for(int i = 0; i < scs.length; i++)
-						if(link.LINK_ID.equals(scs[i].getId()))
-							link.select();
-				}
-			}
-
-			if(sne.SCHEME_ELEMENT_DESELECTED)
-			{
-//				System.out.println("SCHEME_ELEMENT_DESELECTED");
-				SchemeElement[] ses = (SchemeElement[] )sne.getSource();
-				Scheme s = (Scheme )Pool.get(Scheme.typ, this.getMap().scheme_id);
-
-				for(Iterator it = lnl().getMap().getNodes().iterator(); it.hasNext();)
-				{
-					Object obj = it.next();
-					if(	obj instanceof MapSiteNodeElement )
 					{
-						MapSiteNodeElement mape = (MapSiteNodeElement )obj;
-						for(int i = 0; i < ses.length; i++)
-						{
-							SchemeElement se = s.getTopologicalElement(ses[i].getId());
-							if(mape.element_id.equals(se.getId()))
-								mape.deselect();
-						}
+						MapMeasurementPathElement mmp = getMapView().findMeasurementPath(sps[i]);
+						if(mmp != null)
+							mmp.setSelected(true);
 					}
 				}
-			}
-
-			if(sne.SCHEME_PATH_DESELECTED)
-			{
-//				System.out.println("SCHEME_PATH_DESELECTED");
-				SchemePath[] sps = (SchemePath[] )sne.getSource();
-				for(Iterator it = lnl().getMap().getTransmissionPath().iterator(); it.hasNext();)
+				else
+				if(sne.SCHEME_CABLE_LINK_SELECTED)
 				{
-					MapTransmissionPathElement mappath = (MapTransmissionPathElement )it.next();
-					for(int i = 0; i < sps.length; i++)
-						if(mappath.PATH_ID.equals(sps[i].getId()))
-							mappath.deselect();
-				}
-			}
-
-			if(sne.SCHEME_CABLE_LINK_DESELECTED)
-			{
-//				System.out.println("SCHEME_CABLE_LINK_DESELECTED");
-				SchemeCableLink[] scs = (SchemeCableLink[] )sne.getSource();
-				for(Iterator it = lnl().getMap().getPhysicalLinks().iterator(); it.hasNext();)
-				{
-					MapPhysicalLinkElement link = (MapPhysicalLinkElement )it.next();
+					SchemeCableLink[] scs = (SchemeCableLink[] )sne.getSource();
 					for(int i = 0; i < scs.length; i++)
-						if(link.LINK_ID.equals(scs[i].getId()))
-							link.deselect();
+					{
+						MapCablePathElement mcp = getMapView().findCablePath(scs[i]);
+						if(mcp != null)
+							mcp.setSelected(true);
+					}
 				}
-			}
+				else
+				if(sne.SCHEME_ELEMENT_DESELECTED)
+				{
+					SchemeElement[] ses = (SchemeElement[] )sne.getSource();
+	
+					for(int i = 0; i < ses.length; i++)
+					{
+						MapSiteNodeElement site = getMapView().findElement(ses[i]);
+						if(site != null)
+							site.setSelected(false);
+					}
+				}
 
-			lnl().postDirtyEvent();
-			lnl().postPaintEvent();
+				if(sne.SCHEME_PATH_DESELECTED)
+				{
+					SchemePath[] sps = (SchemePath[] )sne.getSource();
+	
+					for(int i = 0; i < sps.length; i++)
+					{
+						MapMeasurementPathElement mmp = getMapView().findMeasurementPath(sps[i]);
+						if(mmp != null)
+							mmp.setSelected(false);
+					}
+				}
+	
+				if(sne.SCHEME_CABLE_LINK_DESELECTED)
+				{
+					SchemeCableLink[] scs = (SchemeCableLink[] )sne.getSource();
+					for(int i = 0; i < scs.length; i++)
+					{
+						MapCablePathElement mcp = getMapView().findCablePath(scs[i]);
+						if(mcp != null)
+							mcp.setSelected(false);
+					}
+				}
+	
+				repaint();
+			}
 		}
+/*
 		if(ae.getActionCommand().equals(CatalogNavigateEvent.type))
 			if(lnl().performProcessing)
 		{
@@ -1293,85 +1170,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 			lnl().postDirtyEvent();
 			lnl().postPaintEvent();
 		}
-		if(ae.getActionCommand().equals("placeElement"))
-		{
-			MapSchemeElementLabel el = (MapSchemeElementLabel )ae.getSource();
-			if(el.sElement instanceof SchemeElement)
-			{
-				SchemeElement se = (SchemeElement )el.sElement;
-//				lnl().placeElement(se, se.mpe, new SxDoublePoint(se.getLong(), se.getLat()));
-			}
-			else
-			if(el.sElement instanceof SchemeCableLink)
-			{
-				SchemeCableLink scl = (SchemeCableLink )el.sElement;
-				lnl().placeElement(scl, scl.mplpe);
-			}
-			else
-			if(el.sElement instanceof SchemePath)
-			{
-				SchemePath sp = (SchemePath )el.sElement;
-				lnl().placeElement(sp, sp.mtppe);
-			}
-			lnl().postDirtyEvent();
-			lnl().postPaintEvent();
-		}
 */
-	}
-
-	/**
-	 * 
-	 * @param link_id
-	 * @return 
-	 */
-	public MapSiteNodeElement findMapElementByCableLink(String link_id)
-	{
-/*
-		SchemeElement se = null;
-		Scheme sc = (Scheme )Pool.get(Scheme.typ, this.getMap().scheme_id);
-		Hashtable ht = Pool.getHash(SchemeCableLink.typ);
-		if(ht != null)
-			for(Enumeration enum = ht.elements(); enum.hasMoreElements();)
-			{
-				SchemeCableLink scl = (SchemeCableLink )enum.nextElement();
-				if(scl != null)
-					if(scl.cable_link_id != null && !scl.cable_link_id.equals(""))
-						if(scl.cable_link_id.equals(link_id))
-						{
-							se = sc.getSchemeElementByCablePort(scl.source_port_id);
-							se = sc.getTopologicalElement(se);
-//							se = sc.getTopLevelElement(se);
-							break;
-						}
-			}
-		if(se == null)
-		{
-			Hashtable ht2 = Pool.getHash(SchemeLink.typ);
-			if(ht2 != null)
-				for(Enumeration enum = ht2.elements(); enum.hasMoreElements();)
-				{
-					SchemeLink sl = (SchemeLink )enum.nextElement();
-					if(sl != null)
-						if(sl.link_id != null && !sl.link_id.equals(""))
-							if(sl.link_id.equals(link_id))
-							{
-								se = sc.getSchemeElementByPort(sl.source_port_id);
-								se = sc.getTopLevelElement(se);
-								break;
-							}
-				}
-		}
-		if(se != null)
-		{
-			for(Iterator it = lnl().getMap().getMapSiteNodeElements().iterator(); it.hasNext();)
-			{
-				MapSiteNodeElement node = (MapSiteNodeElement )it.next();
-				if(node.element_id != null && node.element_id.equals(se.getId()))
-					return node;
-			}
-		}
-*/
-		return null;
 	}
 
 	public void sendMapEvent(MapEvent me)
@@ -1391,7 +1190,6 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 	public void notifyMapEvent(MapElement mapElement)
 	{
 		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "notifyMapEvent(" + mapElement + ")");
-
 
 		if(doNotify)
 		{
@@ -1585,10 +1383,13 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 		MapElement curME = VoidMapElement.getInstance(this.getMapView());
 
 		Rectangle2D.Double visibleBounds = this.getVisibleBounds();
+		
+		MapView mapView = getMapView();
+		Map map = mapView.getMap();
 
 		//Здесь пробегаемся по всем элементам и если на каком-нибудь из них курсор
 		//то устанавливаем его текущим элементом
-		Iterator e = getMapView().getAllElements().iterator();
+		Iterator e = mapView.getAllElements().iterator();
 		while (e.hasNext())
 		{
 			MapElement mapElement = (MapElement )e.next();
@@ -1606,20 +1407,34 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 					else
 					if ( showMode == MapState.SHOW_PHYSICAL_LINK)
 					{
-						curME = getMapView().getMap().getPhysicalLink( 
+						curME = map.getPhysicalLink( 
 							((MapNodeLinkElement )mapElement).getPhysicalLinkId());
 					}
 					else
 					if ( showMode == MapState.SHOW_CABLE_PATH)
 					{
-						Iterator it = getMapView().getCablePaths((MapNodeLinkElement )mapElement).iterator();
+						Iterator it = mapView.getCablePaths((MapNodeLinkElement )mapElement).iterator();
 						if(it.hasNext())
 						{
 							curME = (MapCablePathElement)it.next();
 						}
 						else
 						{
-							curME = getMapView().getMap().getPhysicalLink( 
+							curME = map.getPhysicalLink( 
+								((MapNodeLinkElement )mapElement).getPhysicalLinkId());
+						}
+					}
+					else
+					if ( showMode == MapState.SHOW_MEASUREMENT_PATH)
+					{
+						Iterator it = mapView.getMeasurementPaths((MapNodeLinkElement )mapElement).iterator();
+						if(it.hasNext())
+						{
+							curME = (MapMeasurementPathElement )it.next();
+						}
+						else
+						{
+							curME = map.getPhysicalLink( 
 								((MapNodeLinkElement )mapElement).getPhysicalLinkId());
 						}
 					}
@@ -1629,10 +1444,19 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 				{
 					if ( showMode == MapState.SHOW_CABLE_PATH)
 					{
-						Iterator it = getMapView().getCablePaths((MapPhysicalLinkElement )mapElement).iterator();
+						Iterator it = mapView.getCablePaths((MapPhysicalLinkElement )mapElement).iterator();
 						if(it.hasNext())
 						{
 							curME = (MapCablePathElement)it.next();
+						}
+					}
+					else
+					if ( showMode == MapState.SHOW_MEASUREMENT_PATH)
+					{
+						Iterator it = mapView.getMeasurementPaths((MapPhysicalLinkElement )mapElement).iterator();
+						if(it.hasNext())
+						{
+							curME = (MapMeasurementPathElement )it.next();
 						}
 					}
 				}

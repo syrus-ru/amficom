@@ -1,5 +1,5 @@
 /*
- * $Id: MapEditorOpenViewCommand.java,v 1.7 2004/10/20 10:14:39 krupenn Exp $
+ * $Id: MapEditorOpenViewCommand.java,v 1.8 2004/10/26 13:32:01 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -29,15 +29,15 @@ import javax.swing.JDesktopPane;
  * пользователь выбрал MapContext, открывается окно карты и сопутствующие окна
  * и MapContext передается в окно карты
  * 
- * @version $Revision: 1.7 $, $Date: 2004/10/20 10:14:39 $
+ * @version $Revision: 1.8 $, $Date: 2004/10/26 13:32:01 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see MapOpenCommand
  */
 public class MapEditorOpenViewCommand extends VoidCommand
 {
-	ApplicationContext aContext;
-	JDesktopPane desktop;
+	protected ApplicationContext aContext;
+	protected JDesktopPane desktop;
 	
 	MapFrame mapFrame = null;
 	MapPropertyFrame propFrame = null;
@@ -63,13 +63,10 @@ public class MapEditorOpenViewCommand extends VoidCommand
 	public void execute()
 	{
 
-		if(mapFrame.getMapMainFrame() != null)
-		{
-			if(!mapFrame.getMapMainFrame().checkCanCloseMap())
-				return;
-			if(!mapFrame.getMapMainFrame().checkCanCloseMapView())
-				return;
-		}
+		if(!MapFrame.getMapMainFrame().checkCanCloseMap())
+			return;
+		if(!MapFrame.getMapMainFrame().checkCanCloseMapView())
+			return;
 
 		ApplicationModelFactory factory = new MapMapEditorApplicationModelFactory();
 

@@ -7,6 +7,8 @@ import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalLinkElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalNodeElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapSiteNodeElement;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapCablePathElement;
+import com.syrus.AMFICOM.Client.Resource.MapView.MapMarker;
+import com.syrus.AMFICOM.Client.Resource.MapView.MapMeasurementPathElement;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapSelection;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapUnboundLinkElement;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapUnboundNodeElement;
@@ -44,14 +46,10 @@ public final class MapPopupMenuManager
 			UnboundLinkPopupMenu.getInstance());
 		popupMap.put(VoidMapElement.class,
 			VoidElementPopupMenu.getInstance());
-//		popupMap.put(MapAlarmMarker.class,
-//			MapAlarmMarkerPopupMenu.getInstance());
-//		popupMap.put(MapEventMarker.class,
-//			MapEventMarkerPopupMenu.getInstance());
-//		popupMap.put(MapMarker.class,
-//			MapMarkerPopupMenu.getInstance());
-//		popupMap.put(MapPathElement.class,
-//			MapPathPopupMenu.getInstance());
+		popupMap.put(MapMarker.class,
+			MarkerPopupMenu.getInstance());
+		popupMap.put(MapMeasurementPathElement.class,
+			MeasurementPathPopupMenu.getInstance());
 	}
 	
 	public static MapPopupMenu getPopupMenu(MapElement me)

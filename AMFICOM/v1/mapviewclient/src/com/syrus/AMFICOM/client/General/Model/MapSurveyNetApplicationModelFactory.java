@@ -11,7 +11,7 @@ public class MapSurveyNetApplicationModelFactory
 		aModel.setUsable(MapApplicationModel.ACTION_EDIT_PROPERTIES, false);
 		aModel.setUsable(MapApplicationModel.ACTION_SAVE_MAP, false);
 
-		aModel.setUsable("mapModeNodeLink", false);
+		aModel.setUsable(MapApplicationModel.MODE_NODE_LINK, false);
 
 		return aModel;
 	}

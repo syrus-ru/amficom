@@ -1,5 +1,5 @@
 /**
- * $Id: DeleteSelectionCommand.java,v 1.5 2004/10/18 15:33:00 krupenn Exp $
+ * $Id: DeleteSelectionCommand.java,v 1.6 2004/10/26 13:32:01 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -36,7 +36,7 @@ import java.util.LinkedList;
  * 
  * 
  * 
- * @version $Revision: 1.5 $, $Date: 2004/10/18 15:33:00 $
+ * @version $Revision: 1.6 $, $Date: 2004/10/26 13:32:01 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -100,7 +100,6 @@ public class DeleteSelectionCommand extends MapActionCommandBundle
 //			}
 //		}
 //
-//		if ( logicalNetLayer.getContext().getApplicationModel().isEnabled("mapActionDeleteNode"))
 //		if(logicalNetLayer.getMapState().getShowMode() == MapState.SHOW_NODE_LINK)
 //		{
 //			for(e = map.getNodeLinks().iterator(); e.hasNext();)
@@ -117,7 +116,6 @@ public class DeleteSelectionCommand extends MapActionCommandBundle
 //
 //		// при удалении физической линии удаляются все ее фрагменты и 
 //		// топологические узлы
-//		if ( logicalNetLayer.getContext().getApplicationModel().isEnabled("mapActionDeleteNode"))
 //		if(logicalNetLayer.getMapState().getShowMode() == MapState.SHOW_PHYSICAL_LINK)
 //		{
 //			for(e = map.getPhysicalLinks().iterator(); e.hasNext();)
@@ -150,9 +148,7 @@ public class DeleteSelectionCommand extends MapActionCommandBundle
 		}
 */
 /*
-		if ( logicalNetLayer.getContext().getApplicationModel().isEnabled("mapActionDeletePath"))
 		{
-			System.out.println("mapActionDeletePath");
 			e = map.getTransmissionPath().iterator();
 			while (e.hasNext())
 			{
@@ -163,7 +159,6 @@ public class DeleteSelectionCommand extends MapActionCommandBundle
 				}
 			}
 		}
-		if ( logicalNetLayer.getContext().getApplicationModel().isEnabled("mapActionMarkerDelete"))
 		{
 			e = map.getMarkers().iterator();
 			while (e.hasNext())

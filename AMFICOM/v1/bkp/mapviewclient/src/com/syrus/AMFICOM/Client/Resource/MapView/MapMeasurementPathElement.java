@@ -1,5 +1,5 @@
 /**
- * $Id: MapMeasurementPathElement.java,v 1.8 2004/10/18 15:33:00 krupenn Exp $
+ * $Id: MapMeasurementPathElement.java,v 1.9 2004/10/26 13:32:01 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -15,11 +15,24 @@ import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
 import com.syrus.AMFICOM.Client.Resource.Map.MapElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapLinkElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapNodeElement;
+import com.syrus.AMFICOM.Client.Resource.Map.MapNodeLinkElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalNodeElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapSiteNodeElement;
 import com.syrus.AMFICOM.Client.Resource.Pool;
+import com.syrus.AMFICOM.Client.Resource.Scheme.PathElement;
+import com.syrus.AMFICOM.Client.Resource.Scheme.Scheme;
+import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeCableLink;
+import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeElement;
+import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeLink;
 import com.syrus.AMFICOM.Client.Resource.Scheme.SchemePath;
 
+import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
+import com.syrus.AMFICOM.configuration.MonitoredElement;
+import com.syrus.AMFICOM.configuration.TransmissionPath;
+import com.syrus.AMFICOM.configuration.corba.MonitoredElementSort;
+import com.syrus.AMFICOM.general.CommunicationException;
+import com.syrus.AMFICOM.general.DatabaseException;
+import com.syrus.AMFICOM.general.Identifier;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics;
@@ -33,14 +46,16 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.ListIterator;
 
 /**
  * элемент пути 
  * 
  * 
  * 
- * @version $Revision: 1.8 $, $Date: 2004/10/18 15:33:00 $
+ * @version $Revision: 1.9 $, $Date: 2004/10/26 13:32:01 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -50,26 +65,34 @@ public class MapMeasurementPathElement extends MapLinkElement implements Seriali
 	private static final long serialVersionUID = 02L;
 	public static final String typ = "mapmeasurementpathelement";
 
-	protected ArrayList sortedNodes = new ArrayList();
-	protected ArrayList sortedNodeLinks = new ArrayList();
-	protected boolean nodeLinksSorted = false;
+//	protected ArrayList sortedNodes = new ArrayList();
+//	protected ArrayList sortedNodeLinks = new ArrayList();
+//	protected boolean nodeLinksSorted = false;
 
-	protected ArrayList cablePaths = new ArrayList();
-	protected boolean cablePathsSorted = false;
+//	protected ArrayList cablePaths = new ArrayList();
+//	protected boolean cablePathsSorted = false;
 	
 	protected SchemePath schemePath;
-	
+	protected Scheme scheme;
+
 	protected String mapViewId = "";
 	
 	protected MapView mapView;
 
+	public Object clone(DataSourceInterface dataSource)
+		throws CloneNotSupportedException
+	{
+		throw new UnsupportedOperationException();
+	}
+
 	public String[][] getExportColumns()
 	{
-		return null;
+		throw new UnsupportedOperationException();
 	}
 
 	public void setColumn(String field, String value)
 	{
+		throw new UnsupportedOperationException();
 	}
 
 	public MapMeasurementPathElement(
@@ -107,59 +130,16 @@ public class MapMeasurementPathElement extends MapLinkElement implements Seriali
 		return this.mapView;
 	}
 
-	public Object clone(DataSourceInterface dataSource)
-	{
-/*
-		String cloned_id = (String)Pool.get(MapPropertiesManager.MAP_CLONED_IDS, id);
-		if (cloned_id != null)
-			return Pool.get(MapPathElement.typ, cloned_id);
-
-		MapPathElement mtpe = new MapPathElement(
-				dataSource.GetUId(MapPathElement.typ),
-				(MapNodeElement )startNode.clone(dataSource),
-				(MapNodeElement )endNode.clone(dataSource),
-				(Map )map.clone(dataSource) );
-				
-		mtpe.changed = changed;
-		mtpe.description = description;
-//		mtpe.endNode = (MapNodeElement )endNode.clone(dataSource);
-		mtpe.endNode_id = endNode_id;
-		mtpe.name = name;
-		mtpe.scheme_path_id = (String )Pool.get("schemeclonedids", scheme_path_id);
-		mtpe.selected = selected;
-		mtpe.show_alarmed = show_alarmed;
-//		mtpe.startNode = (MapNodeElement )startNode.clone(dataSource);
-		mtpe.startNode_id = startNode_id;
-		mtpe.type_id = type_id;
-
-		Pool.put(MapPathElement.typ, mtpe.getId(), mtpe);
-		Pool.put(MapPropertiesManager.MAP_CLONED_IDS, id, mtpe.getId());
-
-		mtpe.physicalLink_ids = new Vector(physicalLink_ids.size());
-		for (int i = 0; i < physicalLink_ids.size(); i++)
-			mtpe.physicalLink_ids.add(Pool.get(MapPropertiesManager.MAP_CLONED_IDS, (String )physicalLink_ids.get(i)));
-
-		mtpe.attributes = new Hashtable();
-		for(Enumeration enum = attributes.elements(); enum.hasMoreElements();)
-		{
-			ElementAttribute ea = (ElementAttribute )enum.nextElement();
-			ElementAttribute ea2 = (ElementAttribute )ea.clone(dataSource);
-			mtpe.attributes.put(ea2.type_id, ea2);
-		}
-
-		return mtpe;
-*/
-		return null;
-	}
-
 	//этот класс используетс€ дл€ востановлени€ данных из базы
 	public void setLocalFromTransferable()
 	{
+		throw new UnsupportedOperationException();
 	}
 
 	//этот класс используетс€ дл€ отпрвки данных в базу
 	public void setTransferableFromLocal()
 	{
+		throw new UnsupportedOperationException();
 	}
 
 	public String getTyp()
@@ -215,6 +195,7 @@ public class MapMeasurementPathElement extends MapLinkElement implements Seriali
 	{
 		this.schemePath = schemePath;
 		this.name = schemePath.getName();
+		this.scheme = (Scheme )Pool.get(Scheme.typ, schemePath.getSchemeId());
 	}
 
 	public SchemePath getSchemePath()
@@ -272,7 +253,6 @@ public class MapMeasurementPathElement extends MapLinkElement implements Seriali
 		paint(g, visibleBounds, str, color, isSelectionVisible());
 	}
 
-
 	public boolean isMouseOnThisObject(Point currentMousePoint)
 	{
 		for(Iterator it = getCablePaths().iterator(); it.hasNext();)
@@ -312,115 +292,241 @@ public class MapMeasurementPathElement extends MapLinkElement implements Seriali
 		return schemePath.getOpticalLength();
 	}
 
-	public List getCablePaths()
-	{	
-		return cablePaths;
-	}
-
-	/**
-	 * ¬нимание! концевые точки линии не обновл€ютс€
-	 */
-	public void removeCablePath(MapCablePathElement cpath)
+	public MapElement getMapElement(PathElement pe)
 	{
-		cablePaths.remove(cpath);
-		cablePathsSorted = false;
-	}
-
-	/**
-	 * ¬нимание! концевые точки линии не обновл€ютс€
-	 */
-	public void addCablePath(MapCablePathElement cpath)
-	{
-		cablePaths.add(cpath);
-		cablePathsSorted = false;
-	}
-
-	public void clearCablePaths()
-	{
-		cablePaths.clear();
-		cablePathsSorted = false;
-	}
-
-	public void sortCablePaths()
-	{
-		if(!cablePathsSorted)
+		MapElement me = null;
+		if(pe.getType() == PathElement.SCHEME_ELEMENT)
 		{
-			MapNodeElement smne = this.getStartNode();
-			ArrayList vec = new ArrayList();
-			while(!smne.equals(this.getEndNode()))
+			SchemeElement se = (SchemeElement )pe.getSchemeElement();
+			MapSiteNodeElement site = mapView.findElement(se);
+			if(site != null)
 			{
-				for(Iterator it = getCablePaths().iterator(); it.hasNext();)
-				{
-					MapCablePathElement cpath = (MapCablePathElement )it.next();
+				me = site;
+			}
+		}
+		else
+		if(pe.getType() == PathElement.LINK)
+		{
+			SchemeLink link = (SchemeLink )pe.getSchemeLink();
+			SchemeElement sse = scheme.getSchemeElementByPort(link.sourcePortId);
+			SchemeElement ese = scheme.getSchemeElementByPort(link.targetPortId);
+			MapSiteNodeElement ssite = mapView.findElement(sse);
+			MapSiteNodeElement esite = mapView.findElement(ese);
+			if(ssite != null && ssite == esite)
+			{
+				me = ssite;
+			}
+		}
+		else
+		if(pe.getType() == PathElement.CABLE_LINK)
+		{
+			SchemeCableLink clink = (SchemeCableLink )pe.getSchemeCableLink();
+			MapCablePathElement cp = mapView.findCablePath(clink);
+			if(cp != null)
+			{
+				me = cp;
+			}
+		}
+		return me;
+	}
 
-					if(cpath.getStartNode().equals(smne))
-					{
-						vec.add(cpath);
-						it.remove();
-						smne = cpath.getEndNode();
-						break;
-					}
-					else
-					if(cpath.getEndNode().equals(smne))
-					{
-						vec.add(cpath);
-						it.remove();
-						smne = cpath.getStartNode();
-						break;
-					}
+	// to avoid instantiation of multiple objects
+	protected List unsortedCablePaths = new LinkedList();
+
+	public List getCablePaths()
+	{
+		unsortedCablePaths.clear();
+		for(Iterator it = schemePath.links.iterator(); it.hasNext();)
+		{
+			PathElement pe = (PathElement )it.next();
+			if(pe.getType() == PathElement.SCHEME_ELEMENT)
+			{
+				SchemeElement se = (SchemeElement )pe.getSchemeElement();
+				MapSiteNodeElement site = mapView.findElement(se);
+				if(site != null)
+				{
+//					mPath.addCablePath(site);
 				}
 			}
-			this.cablePaths = vec;
-			cablePathsSorted = true;
+			else
+			if(pe.getType() == PathElement.LINK)
+			{
+				SchemeLink link = (SchemeLink )pe.getSchemeLink();
+				SchemeElement sse = scheme.getSchemeElementByPort(link.sourcePortId);
+				SchemeElement ese = scheme.getSchemeElementByPort(link.targetPortId);
+				MapSiteNodeElement ssite = mapView.findElement(sse);
+				MapSiteNodeElement esite = mapView.findElement(ese);
+				if(ssite == esite)
+				{
+//					mPath.addCablePath(ssite);
+				}
+			}
+			else
+			if(pe.getType() == PathElement.CABLE_LINK)
+			{
+				SchemeCableLink clink = (SchemeCableLink )pe.getSchemeCableLink();
+				MapCablePathElement cp = mapView.findCablePath(clink);
+				if(cp != null)
+				{
+					unsortedCablePaths.add(cp);
+				}
+			}
 		}
+		return unsortedCablePaths;
 	}
 
-	public MapCablePathElement nextCablePath(MapCablePathElement cablePath)
+	// to avoid instantiation of multiple objects
+	protected List sortedCablePaths = new LinkedList();
+	// to avoid instantiation of multiple objects
+	protected List sortedNodeLinks = new LinkedList();
+	// to avoid instantiation of multiple objects
+	protected List sortedNodes = new LinkedList();
+
+	public List getSortedNodeLinks()
 	{
-		int index = getCablePaths().indexOf(cablePath);
-		if(index == getCablePaths().size() - 1)
-			return cablePath;
+		return sortedNodeLinks;
+	}
+	
+	public List getSortedNodes()
+	{
+		return sortedNodes;
+	}
+	
+	public List getSortedCablePaths()
+	{
+		return sortedCablePaths;
+	}
+	
+	public MapNodeElement getStartNode()
+	{
+		MapSiteNodeElement[] mne = getMapView().getSideNodes(this.getSchemePath());
+		
+		return mne[0];
+	}
+	
+	public MapNodeElement getEndNode()
+	{
+		MapSiteNodeElement[] mne = getMapView().getSideNodes(this.getSchemePath());
+		
+		return mne[1];
+	}
+	
+	public void sortPathElements()
+	{
+		sortedCablePaths.clear();
+		sortedNodeLinks.clear();
+		sortedNodes.clear();
+		
+		MapNodeElement node = getStartNode();
+
+		sortedCablePaths.addAll(getCablePaths());
+		
+		for(Iterator it = sortedCablePaths.iterator(); it.hasNext();)
+		{
+			MapCablePathElement cpath = (MapCablePathElement )it.next();
+			cpath.sortNodeLinks();
+			if(cpath.getStartNode().equals(node))
+			{
+				sortedNodeLinks.addAll(cpath.getSortedNodeLinks());
+				sortedNodes.addAll(cpath.getSortedNodes());
+			}
+			else
+			{
+				for(ListIterator lit = cpath.getSortedNodeLinks().listIterator(cpath.getSortedNodeLinks().size()); lit.hasPrevious();)
+				{
+					sortedNodeLinks.add(lit.previous());
+				}
+				for(ListIterator lit = cpath.getSortedNodes().listIterator(cpath.getSortedNodes().size()); lit.hasPrevious();)
+				{
+					sortedNodes.add(lit.previous());
+				}
+			}
+			// to avoid duplicate entry
+			sortedNodes.remove(node);
+
+			node = cpath.getOtherNode(node);
+		}
+		sortedNodes.add(node);
+	}
+
+	public Identifier getMonitoredElementId()
+	{
+		Identifier meid = null;
+		MonitoredElement me = getMonitoredElement();
+		if(me != null)
+			meid = me.getId();
+		return meid;
+	}
+
+	public MonitoredElement getMonitoredElement()
+	{
+		MonitoredElement me = null;
+		try
+		{
+			com.syrus.AMFICOM.Client.Resource.ISM.TransmissionPath tp1 = getSchemePath().path;
+			com.syrus.AMFICOM.configuration.TransmissionPath tp = 
+				(com.syrus.AMFICOM.configuration.TransmissionPath )
+				ConfigurationStorableObjectPool.getStorableObject(
+					new Identifier(tp1.getId()), 
+					true);
+
+//how it should look like:
+//			com.syrus.AMFICOM.configuration.TransmissionPath tp = getSchemePath().path;
+
+			me = (MonitoredElement )
+				ConfigurationStorableObjectPool.getStorableObject(
+						(Identifier )(tp.getMonitoredElementIds().get(0)), 
+						true);
+
+		}
+		catch (CommunicationException e)
+		{
+		}
+		catch (DatabaseException e)
+		{
+		}
+		catch(Exception e)
+		{
+		}
+
+		return me;
+	}
+
+	public MapNodeLinkElement nextNodeLink(MapNodeLinkElement nl)
+	{
+		int index = getSortedNodeLinks().indexOf(nl);
+		if(index == getSortedNodeLinks().size() - 1)
+			return null;
 		else
-			return (MapCablePathElement )getCablePaths().get(index + 1);
+			return (MapNodeLinkElement )getSortedNodeLinks().get(index + 1);
 	}
 
-	public MapCablePathElement previousCablePath(MapCablePathElement cpath)
+	public MapNodeLinkElement previousNodeLink(MapNodeLinkElement nl)
 	{
-		int index = getCablePaths().indexOf(cpath);
+		int index = getSortedNodeLinks().indexOf(nl);
 		if(index == 0)
-			return cpath;
+			return null;
 		else
-			return (MapCablePathElement )getCablePaths().get(index - 1);
+			return (MapNodeLinkElement )getSortedNodeLinks().get(index - 1);
 	}
 
-	private void writeObject(java.io.ObjectOutputStream out) throws IOException
-	{
-		out.writeObject(id);
-		out.writeObject(name);
-		out.writeObject(description);
 
-		startNodeId = getStartNode().getId();
-		endNodeId = getEndNode().getId();
-
-		out.writeObject(startNodeId);
-		out.writeObject(endNodeId);
-
-		out.writeObject(attributes);
-	}
-
-	private void readObject(java.io.ObjectInputStream in)
-			throws IOException, ClassNotFoundException
-	{
-		id = (String )in.readObject();
-		name = (String )in.readObject();
-		description = (String )in.readObject();
-		startNodeId = (String )in.readObject();
-		endNodeId = (String )in.readObject();
-		attributes = (HashMap )in.readObject();
-
-		updateLocalFromTransferable();
-		Pool.put(getTyp(), getId(), this);
-		Pool.put("serverimage", getId(), this);
-	}
+//	public MapCablePathElement nextCablePath(MapCablePathElement cablePath)
+//	{
+//		int index = getCablePaths().indexOf(cablePath);
+//		if(index == getCablePaths().size() - 1)
+//			return cablePath;
+//		else
+//			return (MapCablePathElement )getCablePaths().get(index + 1);
+//	}
+//
+//	public MapCablePathElement previousCablePath(MapCablePathElement cpath)
+//	{
+//		int index = getCablePaths().indexOf(cpath);
+//		if(index == 0)
+//			return cpath;
+//		else
+//			return (MapCablePathElement )getCablePaths().get(index - 1);
+//	}
 
 }

@@ -33,7 +33,7 @@ TARGET_CLASS_LIST=src_map_view.txt
 TARGET_SRC=$(LIBSRC)\mapviewsource.jar
 
 SERVERCP=$(LIB)\corbaportable.jar;$(LIB)\corba.jar
-CLIENTCP=$(LIB)\util.jar;$(LIB)\filter.jar;$(LIB)\generalclient.jar;$(LIB)\administrate.jar;$(LIB)\configureclient.jar;$(LIB)\map.jar;$(LIB)\scheme.jar
+CLIENTCP=$(LIB)\util.jar;$(LIB)\filter.jar;$(LIB)\configuration.jar;$(LIB)\general.jar;$(LIB)\generalclient.jar;$(LIB)\administrate.jar;$(LIB)\configureclient.jar;$(LIB)\map.jar;$(LIB)\scheme.jar
 
 LAYOUTCP=$(EXTLIB)\layout.jar;$(EXTLIB)\kunststoff.jar
 SPATIALCP=$(EXTLIB)\ofx.spatialfx.jar

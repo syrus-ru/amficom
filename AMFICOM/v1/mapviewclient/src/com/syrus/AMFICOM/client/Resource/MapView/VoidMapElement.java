@@ -1,5 +1,5 @@
 /**
- * $Id: VoidMapElement.java,v 1.5 2004/10/19 11:48:28 krupenn Exp $
+ * $Id: VoidMapElement.java,v 1.6 2004/10/26 13:32:01 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -28,7 +28,7 @@ import java.awt.geom.Rectangle2D;
  * 
  * 
  * 
- * @version $Revision: 1.5 $, $Date: 2004/10/19 11:48:28 $
+ * @version $Revision: 1.6 $, $Date: 2004/10/26 13:32:01 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -73,7 +73,7 @@ public final class VoidMapElement extends StubResource implements MapElement
 	
 	public MapElementState getState()
 	{
-		throw new UnsupportedOperationException();
+		return new VoidMapState();
 	}
 
 	public boolean isVisible(Rectangle2D.Double visibleBounds)

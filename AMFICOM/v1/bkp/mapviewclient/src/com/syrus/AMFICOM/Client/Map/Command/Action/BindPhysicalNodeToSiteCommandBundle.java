@@ -1,5 +1,5 @@
 /**
- * $Id: BindPhysicalNodeToSiteCommandBundle.java,v 1.7 2004/10/20 10:14:39 krupenn Exp $
+ * $Id: BindPhysicalNodeToSiteCommandBundle.java,v 1.8 2004/10/26 13:32:01 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -31,7 +31,7 @@ import java.util.Iterator;
  *  принадлежит данный узел, делится на 2 части
  * 
  * 
- * @version $Revision: 1.7 $, $Date: 2004/10/20 10:14:39 $
+ * @version $Revision: 1.8 $, $Date: 2004/10/26 13:32:01 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -137,39 +137,7 @@ public class BindPhysicalNodeToSiteCommandBundle extends MapActionCommandBundle
 				null);
 		link.setStartNode(site);
 		cpath.sortLinks();
-/* MapActionBundleCommand
 
-		// определить начальный узел и начальный фрагмент физической линии
-		MapNodeLinkElement startNodeLink = link.getStartNodeLink();
-		MapNodeElement startNode = link.getStartNode();
-	
-		// неявный цикл по фракментам линии - перекидывать фрагменты в новую 
-		// физическую линию. движемся по фрагментам от первого пока не наткнемся
-		// на фрагмент, соседний с удаленным
-		for(;;)
-		{
-			// перекинуть фрагмент в новую линию
-			link.removeNodeLink(startNodeLink);
-			newLink.addNodeLink(startNodeLink);
-			startNodeLink.setPhysicalLinkId(newLink.getId());
-
-			// перейти к следующему узлу
-			startNode = startNodeLink.getOtherNode(startNode);
-
-			// если наткнулись на разрыв линии связи, то обновить
-			// концевые узлы и закончить
-			if(startNode == site)
-			{
-				newLink.setEndNode(site);
-				link.setStartNode(site);
-				cpath.sortLinks();
-				break;
-			}
-			
-			// перейти к следующему фрагменту
-			startNodeLink = startNode.getOtherNodeLink(startNodeLink);
-		}//for(;;)
-*/
 		logicalNetLayer.sendMapEvent(new MapEvent(this, MapEvent.MAP_CHANGED));
 	}
 }

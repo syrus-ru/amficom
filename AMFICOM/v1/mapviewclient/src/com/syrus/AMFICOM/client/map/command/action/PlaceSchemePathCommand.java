@@ -1,5 +1,5 @@
 /**
- * $Id: PlaceSchemePathCommand.java,v 1.3 2004/10/19 10:07:43 krupenn Exp $
+ * $Id: PlaceSchemePathCommand.java,v 1.4 2004/10/26 13:32:01 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -36,7 +36,7 @@ import java.util.Iterator;
  * Разместить элемент типа mpe на карте. используется при переносе 
  * (drag/drop), в точке point (в экранных координатах)
  * 
- * @version $Revision: 1.3 $, $Date: 2004/10/19 10:07:43 $
+ * @version $Revision: 1.4 $, $Date: 2004/10/26 13:32:01 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -125,7 +125,7 @@ public class PlaceSchemePathCommand extends MapActionCommandBundle
 				MapCablePathElement cp = mapView.findCablePath(clink);
 				if(cp != null)
 				{
-					mPath.addCablePath(cp);
+//					mPath.addCablePath(cp);
 				}
 			}
 		}

@@ -170,6 +170,11 @@ public final class SelectionPopupMenu extends MapPopupMenu
 		for(Iterator it = selection.getElements().iterator(); it.hasNext();)
 		{
 			MapElement me = (MapElement )it.next();
+			if(me instanceof MapCablePathElement)
+			{
+				super.generatePathCabling((MapCablePathElement )me, proto);
+			}
+			else
 			if(me instanceof MapUnboundLinkElement)
 			{
 				MapCablePathElement path = ((MapUnboundLinkElement )me).getCablePath();

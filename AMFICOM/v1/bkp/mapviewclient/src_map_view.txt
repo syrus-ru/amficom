@@ -1,9 +1,9 @@
-src\com\syrus\AMFICOM\Client\General\Model\DefaultMapEditorApplicationModelFactory.java
-src\com\syrus\AMFICOM\Client\General\Model\MapEditorApplicationModel.java
-src\com\syrus\AMFICOM\Client\General\Model\MapEditorApplicationModelFactory.java
 src\com\syrus\AMFICOM\Client\General\Model\DefaultMapApplicationModelFactory.java
+src\com\syrus\AMFICOM\Client\General\Model\DefaultMapEditorApplicationModelFactory.java
 src\com\syrus\AMFICOM\Client\General\Model\MapApplicationModel.java
 src\com\syrus\AMFICOM\Client\General\Model\MapApplicationModelFactory.java
+src\com\syrus\AMFICOM\Client\General\Model\MapEditorApplicationModel.java
+src\com\syrus\AMFICOM\Client\General\Model\MapEditorApplicationModelFactory.java
 src\com\syrus\AMFICOM\Client\General\Model\MapMapEditorApplicationModelFactory.java
 src\com\syrus\AMFICOM\Client\General\Model\MapModelingApplicationModelFactory.java
 src\com\syrus\AMFICOM\Client\General\Model\MapOptimizeApplicationModelFactory.java
@@ -25,6 +25,7 @@ src\com\syrus\AMFICOM\Client\Map\Command\Action\ChangePhysicalNodeActivityComman
 src\com\syrus\AMFICOM\Client\Map\Command\Action\CreateCablePathCommandAtomic.java
 src\com\syrus\AMFICOM\Client\Map\Command\Action\CreateCollectorCommandAtomic.java
 src\com\syrus\AMFICOM\Client\Map\Command\Action\CreateMarkCommandAtomic.java
+src\com\syrus\AMFICOM\Client\Map\Command\Action\CreateMarkerCommandAtomic.java
 src\com\syrus\AMFICOM\Client\Map\Command\Action\CreateMeasurementPathCommandAtomic.java
 src\com\syrus\AMFICOM\Client\Map\Command\Action\CreateNodeLinkCommandAtomic.java
 src\com\syrus\AMFICOM\Client\Map\Command\Action\CreateNodeLinkCommandBundle.java
@@ -120,7 +121,9 @@ src\com\syrus\AMFICOM\Client\Map\Popup\CablePathPopupMenu.java
 src\com\syrus\AMFICOM\Client\Map\Popup\LinkPopupMenu.java
 src\com\syrus\AMFICOM\Client\Map\Popup\MapPopupMenu.java
 src\com\syrus\AMFICOM\Client\Map\Popup\MapPopupMenuManager.java
+src\com\syrus\AMFICOM\Client\Map\Popup\MarkerPopupMenu.java
 src\com\syrus\AMFICOM\Client\Map\Popup\MarkPopupMenu.java
+src\com\syrus\AMFICOM\Client\Map\Popup\MeasurementPathPopupMenu.java
 src\com\syrus\AMFICOM\Client\Map\Popup\NodeLinkPopupMenu.java
 src\com\syrus\AMFICOM\Client\Map\Popup\NodePopupMenu.java
 src\com\syrus\AMFICOM\Client\Map\Popup\ProtoPopupMenu.java
@@ -218,3 +221,4 @@ src\com\syrus\AMFICOM\Client\Resource\MapView\MapUnboundLinkElement.java
 src\com\syrus\AMFICOM\Client\Resource\MapView\MapUnboundNodeElement.java
 src\com\syrus\AMFICOM\Client\Resource\MapView\MapView.java
 src\com\syrus\AMFICOM\Client\Resource\MapView\VoidMapElement.java
+src\com\syrus\AMFICOM\Client\Resource\MapView\VoidMapState.java

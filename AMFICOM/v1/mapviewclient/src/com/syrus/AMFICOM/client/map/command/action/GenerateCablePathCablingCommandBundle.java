@@ -1,5 +1,5 @@
 /**
- * $Id: GenerateCablePathCablingCommandBundle.java,v 1.6 2004/10/20 10:14:39 krupenn Exp $
+ * $Id: GenerateCablePathCablingCommandBundle.java,v 1.7 2004/10/26 13:32:01 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -35,7 +35,7 @@ import java.util.List;
  * 
  * 
  * 
- * @version $Revision: 1.6 $, $Date: 2004/10/20 10:14:39 $
+ * @version $Revision: 1.7 $, $Date: 2004/10/26 13:32:01 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -80,11 +80,12 @@ public class GenerateCablePathCablingCommandBundle extends MapActionCommandBundl
 		
 		// для последующего цикла необходима последовательность
 		// узлов от начального к конечному
-		MapSiteNodeElement site = (MapSiteNodeElement )path.getStartNode();
+		MapSiteNodeElement startsite = (MapSiteNodeElement )path.getStartNode();
+		MapSiteNodeElement endsite = null;
 		
 		// проверить, что узел является сетевым узлом (если это непривязанный
 		// элемент, сгенерировать на его месте сетевой узел)
-		site = this.checkSite(site);
+		startsite = this.checkSite(startsite);
 
 		// отдельный список, поскольку используется удаление
 		List list  = new LinkedList();
@@ -97,14 +98,14 @@ public class GenerateCablePathCablingCommandBundle extends MapActionCommandBundl
 			MapPhysicalLinkElement link = (MapPhysicalLinkElement )it.next();
 
 			// перейти к следующему узлу
-			if(site == link.getEndNode())
-				site = (MapSiteNodeElement )link.getStartNode();
+			if(startsite == link.getEndNode())
+				endsite = (MapSiteNodeElement )link.getStartNode();
 			else
-				site = (MapSiteNodeElement )link.getEndNode();
+				endsite = (MapSiteNodeElement )link.getEndNode();
 
 			// проверить, что узел является сетевым узлом (если это непривязанный
 			// элемент, сгенерировать на его месте сетевой узел)
-			site = this.checkSite(site);
+			endsite = this.checkSite(endsite);
 
 			// если непривязанная линия, генерировать тоннель
 			if(link instanceof MapUnboundLinkElement)
@@ -113,7 +114,7 @@ public class GenerateCablePathCablingCommandBundle extends MapActionCommandBundl
 				MapUnboundLinkElement un = (MapUnboundLinkElement )link;
 				super.removePhysicalLink(un);
 
-				link = super.createPhysicalLink(un.getStartNode(), un.getEndNode());
+				link = super.createPhysicalLink(startsite, endsite);
 				// фрагменты переносятся в новый сгенерированный тоннель
 				for(Iterator it2 = un.getNodeLinks().iterator(); it2.hasNext();)
 				{
@@ -123,6 +124,8 @@ public class GenerateCablePathCablingCommandBundle extends MapActionCommandBundl
 				}
 				path.addLink(link);
 				link.getBinding().add(path);
+
+				startsite = endsite;
 			}
 		}
 
@@ -139,45 +142,24 @@ public class GenerateCablePathCablingCommandBundle extends MapActionCommandBundl
 		MapSiteNodeElement site2 = site;
 		if(site instanceof MapUnboundNodeElement)
 		{
-			site2 = super.createSite(site.getAnchor(), proto);
-			super.removeNode(site);
+			CreateSiteCommandAtomic command = 
+					new CreateSiteCommandAtomic(
+						proto, 
+						site.getAnchor());
+			command.setLogicalNetLayer(logicalNetLayer);
+			command.execute();
+			super.add(command);
+			
+			site2 = command.getSite();
+	
+			BindUnboundNodeToSiteCommandBundle command2 = 
+					new BindUnboundNodeToSiteCommandBundle(
+						(MapUnboundNodeElement )site, 
+						site2);
+			command2.setLogicalNetLayer(logicalNetLayer);
+			command2.execute();
+			super.add(command2);
 
-			// привязать элементо к вновь созданному узлу
-			((MapUnboundNodeElement )site).getSchemeElement().siteId = site2.getId();
-
-			// проверить все линии, заканчивающиеся на
-			// непривязанном элементе, и обновить концевые узлы
-			for(Iterator it = path.getLinks().iterator(); it.hasNext();)
-			{
-				MapPhysicalLinkElement link = (MapPhysicalLinkElement )it.next();
-
-				// обновить концевые узлы линии
-				if(link.getStartNode().equals(site))
-					link.setStartNode(site2);
-				if(link.getEndNode().equals(site))
-					link.setEndNode(site2);
-
-				// обновить концевые узлы фрагментов линий
-				for(Iterator it2 = link.getNodeLinksAt(site).iterator(); it2.hasNext();)
-				{
-					MapNodeLinkElement nl = (MapNodeLinkElement )it2.next();
-					if(nl.getStartNode().equals(site))
-						nl.setStartNode(site2);
-					if(nl.getEndNode().equals(site))
-						nl.setEndNode(site2);
-				}
-			}
-
-			// обновить концевые узлы кабельных путей
-			for(Iterator it = mapView.getCablePaths(site).iterator(); it.hasNext();)
-			{
-				MapCablePathElement cpath = (MapCablePathElement )it.next();
-				if(cpath.getStartNode().equals(site))
-					cpath.setStartNode(site2);
-				else
-				if(cpath.getEndNode().equals(site))
-					cpath.setEndNode(site2);
-			}
 		}
 		return site2;
 	}

@@ -1,5 +1,5 @@
 /**
- * $Id: MeasureDistanceCommand.java,v 1.2 2004/10/19 10:41:03 krupenn Exp $
+ * $Id: MeasureDistanceCommand.java,v 1.3 2004/10/26 13:32:01 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -13,6 +13,7 @@ package com.syrus.AMFICOM.Client.Map.Command.Navigate;
 
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationModel;
+import com.syrus.AMFICOM.Client.General.Model.MapApplicationModel;
 import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
 import com.syrus.AMFICOM.Client.Map.MapState;
 
@@ -23,7 +24,7 @@ import java.awt.Cursor;
  * 
  * 
  * 
- * @version $Revision: 1.2 $, $Date: 2004/10/19 10:41:03 $
+ * @version $Revision: 1.3 $, $Date: 2004/10/26 13:32:01 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -48,25 +49,25 @@ public class MeasureDistanceCommand extends VoidCommand
 
 	public void execute()
 	{
-		if(aModel.isSelected("mapActionMeasureDistance"))
+		if(aModel.isSelected(MapApplicationModel.OPERATION_MEASURE_DISTANCE))
 		{
 			logicalNetLayer.getMapState().setActionMode(MapState.NULL_ACTION_MODE);
 			logicalNetLayer.getMapState().setOperationMode(MapState.NO_OPERATION);
 			logicalNetLayer.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 
-			aModel.setSelected("mapActionMeasureDistance", false);
-			aModel.fireModelChanged("");
+			aModel.setSelected(MapApplicationModel.OPERATION_MEASURE_DISTANCE, false);
+			aModel.fireModelChanged();
 		}
 		else
-		if(!aModel.isSelected("mapActionMeasureDistance"))
+		if(!aModel.isSelected(MapApplicationModel.OPERATION_MEASURE_DISTANCE))
 		{
-			aModel.setSelected("mapActionMeasureDistance", true);
+			aModel.setSelected(MapApplicationModel.OPERATION_MEASURE_DISTANCE, true);
 
-			aModel.setSelected("mapActionZoomBox", false);
-			aModel.setSelected("mapActionMoveToCenter", false);
-			aModel.setSelected("mapActionZoomToPoint", false);
-			aModel.setSelected("mapActionHandPan", false);
-			aModel.fireModelChanged("");
+			aModel.setSelected(MapApplicationModel.OPERATION_ZOOM_BOX, false);
+			aModel.setSelected(MapApplicationModel.OPERATION_MOVE_TO_CENTER, false);
+			aModel.setSelected(MapApplicationModel.OPERATION_ZOOM_TO_POINT, false);
+			aModel.setSelected(MapApplicationModel.OPERATION_HAND_PAN, false);
+			aModel.fireModelChanged();
 
 			logicalNetLayer.getMapState().setOperationMode(MapState.MEASURE_DISTANCE);
 			logicalNetLayer.setCursor(new Cursor(Cursor.CROSSHAIR_CURSOR));

@@ -1,5 +1,5 @@
 /**
- * $Id: MapPopupMenu.java,v 1.13 2004/10/20 10:14:39 krupenn Exp $
+ * $Id: MapPopupMenu.java,v 1.14 2004/10/26 13:32:01 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -60,7 +60,7 @@ import javax.swing.JPopupMenu;
  * 
  * 
  * 
- * @version $Revision: 1.13 $, $Date: 2004/10/20 10:14:39 $
+ * @version $Revision: 1.14 $, $Date: 2004/10/26 13:32:01 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -358,6 +358,9 @@ public abstract class MapPopupMenu extends JPopupMenu
 
 	protected void convertUnboundNodeToSite(MapUnboundNodeElement unbound, MapNodeProtoElement proto)
 	{
+		if(unbound.isRemoved())
+			return;
+
 		CreateSiteCommandAtomic command = new CreateSiteCommandAtomic(proto, unbound.getAnchor());
 		command.setLogicalNetLayer(logicalNetLayer);
 		getLogicalNetLayer().getCommandList().add(command);
@@ -380,6 +383,8 @@ public abstract class MapPopupMenu extends JPopupMenu
 		command.setLogicalNetLayer(logicalNetLayer);
 		getLogicalNetLayer().getCommandList().add(command);
 		getLogicalNetLayer().getCommandList().execute();
+
+		getLogicalNetLayer().repaint();
 	}
 	
 	protected void convertUnboundLinkToPhysicalLink(MapUnboundLinkElement unbound)
@@ -389,5 +394,7 @@ public abstract class MapPopupMenu extends JPopupMenu
 		command.setLogicalNetLayer(logicalNetLayer);
 		getLogicalNetLayer().getCommandList().add(command);
 		getLogicalNetLayer().getCommandList().execute();
+
+		getLogicalNetLayer().repaint();
 	}
 }

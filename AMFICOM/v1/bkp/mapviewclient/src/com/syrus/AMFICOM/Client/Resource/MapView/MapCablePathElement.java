@@ -1,5 +1,5 @@
 /**
- * $Id: MapCablePathElement.java,v 1.15 2004/10/20 10:14:39 krupenn Exp $
+ * $Id: MapCablePathElement.java,v 1.16 2004/10/26 13:32:01 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -46,7 +46,7 @@ import java.util.ListIterator;
  * 
  * 
  * 
- * @version $Revision: 1.15 $, $Date: 2004/10/20 10:14:39 $
+ * @version $Revision: 1.16 $, $Date: 2004/10/26 13:32:01 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -307,7 +307,8 @@ public class MapCablePathElement extends MapLinkElement implements Serializable
 		while( e.hasNext())
 		{
 			MapPhysicalLinkElement link = (MapPhysicalLinkElement )e.next();
-			length = length + link.getLengthLt();
+			if(! (link instanceof MapUnboundLinkElement))
+				length = length + link.getLengthLt();
 		}
 		return length;
 	}

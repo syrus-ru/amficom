@@ -1,5 +1,5 @@
 /**
- * $Id: MapView.java,v 1.16 2004/10/20 10:14:39 krupenn Exp $
+ * $Id: MapView.java,v 1.17 2004/10/26 13:32:01 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -33,6 +33,13 @@ import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeElement;
 import com.syrus.AMFICOM.Client.Resource.Scheme.SchemePath;
 import com.syrus.AMFICOM.Client.Resource.StubResource;
 
+import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
+import com.syrus.AMFICOM.configuration.MonitoredElement;
+import com.syrus.AMFICOM.configuration.TransmissionPath;
+import com.syrus.AMFICOM.configuration.corba.MonitoredElementSort;
+import com.syrus.AMFICOM.general.CommunicationException;
+import com.syrus.AMFICOM.general.DatabaseException;
+import com.syrus.AMFICOM.general.Identifier;
 import java.awt.geom.Point2D;
 
 import java.io.IOException;
@@ -51,7 +58,7 @@ import java.io.Serializable;
  * 
  * 
  * 
- * @version $Revision: 1.16 $, $Date: 2004/10/20 10:14:39 $
+ * @version $Revision: 1.17 $, $Date: 2004/10/26 13:32:01 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -96,7 +103,11 @@ public final class MapView extends StubResource implements Serializable
 	 */
 	public MapView(LogicalNetLayer logical)
 	{
-		Environment.log(Environment.LOG_LEVEL_FINER, "constructor call", getClass().getName(), "Map(" + logical + ")");
+		Environment.log(
+				Environment.LOG_LEVEL_FINER, 
+				"constructor call", 
+				getClass().getName(), 
+				"MapView(" + logical + ")");
 		setLogicalNetLayer(logical);
 		created = System.currentTimeMillis();
 
@@ -108,7 +119,11 @@ public final class MapView extends StubResource implements Serializable
 	 */
 	public MapView()
 	{
-		Environment.log(Environment.LOG_LEVEL_FINER, "constructor call", getClass().getName(), "Map()");
+		Environment.log(
+				Environment.LOG_LEVEL_FINER, 
+				"constructor call", 
+				getClass().getName(), 
+				"MapView()");
 		setLogicalNetLayer(null);
 		created = System.currentTimeMillis();
 
@@ -120,14 +135,22 @@ public final class MapView extends StubResource implements Serializable
 	 */
 	public MapView(MapView_Transferable transferable)
 	{
-		Environment.log(Environment.LOG_LEVEL_FINER, "constructor call", getClass().getName(), "Map(" + transferable + ")");
+		Environment.log(
+				Environment.LOG_LEVEL_FINER, 
+				"constructor call", 
+				getClass().getName(), 
+				"MapView(" + transferable + ")");
 		this.transferable = transferable;
 		setLocalFromTransferable();
 	}
 
 	public Object clone(DataSourceInterface dataSource)
 	{
-		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "clone(" + dataSource + ")");
+		Environment.log(
+				Environment.LOG_LEVEL_FINER, 
+				"method call", 
+				getClass().getName(), 
+				"clone(" + dataSource + ")");
 		
 		MapView mv = new MapView();
 		mv.id = dataSource.GetUId(com.syrus.AMFICOM.Client.Resource.MapView.MapView.typ);
@@ -160,7 +183,11 @@ public final class MapView extends StubResource implements Serializable
 	 */
 	public void setLocalFromTransferable()
 	{
-		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "setLocalFromTransferable()");
+		Environment.log(
+				Environment.LOG_LEVEL_FINER, 
+				"method call", 
+				getClass().getName(), 
+				"setLocalFromTransferable()");
 		int i;
 		int count;
 
@@ -190,7 +217,11 @@ public final class MapView extends StubResource implements Serializable
 	 */
 	public void setTransferableFromLocal()
 	{
-		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "setTransferableFromLocal()");
+		Environment.log(
+				Environment.LOG_LEVEL_FINER, 
+				"method call", 
+				getClass().getName(), 
+				"setTransferableFromLocal()");
 		
 		transferable.id = id;
 		transferable.name = name;
@@ -327,7 +358,11 @@ public final class MapView extends StubResource implements Serializable
 	 */
 	public boolean isOpened()
 	{
-		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "isOpened()");
+		Environment.log(
+				Environment.LOG_LEVEL_FINER, 
+				"method call", 
+				getClass().getName(), 
+				"isOpened()");
 		
 		return this.isOpened;
 	}
@@ -361,7 +396,11 @@ public final class MapView extends StubResource implements Serializable
 	 */
 	public void setLongLat( double longit, double latit)
 	{
-		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "setLongLat(" + longit + ", " + latit + ")");
+		Environment.log(
+				Environment.LOG_LEVEL_FINER, 
+				"method call", 
+				getClass().getName(), 
+				"setLongLat(" + longit + ", " + latit + ")");
 		
 		longitude = longit;
 		latitude = latit;
@@ -389,7 +428,11 @@ public final class MapView extends StubResource implements Serializable
 	 */
 	public void setLogicalNetLayer(LogicalNetLayer logical)
 	{
-		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "setLogicalNetLayer(" + logical + ")");
+		Environment.log(
+				Environment.LOG_LEVEL_FINER, 
+				"method call", 
+				getClass().getName(), 
+				"setLogicalNetLayer(" + logical + ")");
 		
 		logicalNetLayer = logical;
 
@@ -416,16 +459,6 @@ public final class MapView extends StubResource implements Serializable
 	{
 		return logicalNetLayer;
 	}
-
-	/**
-	 * Возвращает суммарную физическую (строительную) длину линий и кабелей
-	 * внутри элемента me, которые содержатся в пути sp и определяются
-	 * последовательностью pathelements, начиная с элемента pe
-	 */
-//	public PathElement countPhysicalLength(MapElement me, SchemePath sp, PathElement pe, Iterator pathelements)
-//	{
-//		return pe;
-//	}
 
 	public void addScheme(Scheme sch)
 	{
@@ -817,7 +850,11 @@ public final class MapView extends StubResource implements Serializable
 	 */
 	public void addCablePath(MapCablePathElement ob)
 	{
-		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "addTransmissionPath(" + ob + ")");
+		Environment.log(
+				Environment.LOG_LEVEL_FINER, 
+				"method call", 
+				getClass().getName(), 
+				"addTransmissionPath(" + ob + ")");
 
 		cablePaths.add(ob);
 	}
@@ -827,7 +864,11 @@ public final class MapView extends StubResource implements Serializable
 	 */
 	public void removeCablePath(MapCablePathElement ob)
 	{
-		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "removeCablePath(" + ob + ")");
+		Environment.log(
+				Environment.LOG_LEVEL_FINER, 
+				"method call", 
+				getClass().getName(), 
+				"removeCablePath(" + ob + ")");
 
 		cablePaths.remove(ob);
 		ob.setSelected(false);
@@ -836,7 +877,11 @@ public final class MapView extends StubResource implements Serializable
 
 	public List getCablePaths(MapPhysicalLinkElement mple)
 	{
-		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "getCablePaths(" + mple + ")");
+		Environment.log(
+				Environment.LOG_LEVEL_FINER, 
+				"method call", 
+				getClass().getName(), 
+				"getCablePaths(" + mple + ")");
 		
 		LinkedList returnVector = new LinkedList();
 		for(Iterator it = getCablePaths().iterator(); it.hasNext();)
@@ -850,7 +895,11 @@ public final class MapView extends StubResource implements Serializable
 
 	public List getCablePaths(MapNodeElement mne)
 	{
-		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "getCablePaths(" + mne + ")");
+		Environment.log(
+				Environment.LOG_LEVEL_FINER, 
+				"method call", 
+				getClass().getName(), 
+				"getCablePaths(" + mne + ")");
 
 		LinkedList returnVector = new LinkedList();
 		for(Iterator it = getCablePaths().iterator(); it.hasNext();)
@@ -865,7 +914,11 @@ public final class MapView extends StubResource implements Serializable
 
 	public List getCablePaths(MapNodeLinkElement mnle)
 	{
-		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "getCablePaths(" + mnle + ")");
+		Environment.log(
+				Environment.LOG_LEVEL_FINER, 
+				"method call", 
+				getClass().getName(), 
+				"getCablePaths(" + mnle + ")");
 
 		LinkedList returnVector = new LinkedList();
 		for(Iterator it = getCablePaths().iterator(); it.hasNext();)
@@ -891,7 +944,11 @@ public final class MapView extends StubResource implements Serializable
 	 */
 	public void addMeasurementPath(MapMeasurementPathElement ob)
 	{
-		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "addTransmissionPath(" + ob + ")");
+		Environment.log(
+				Environment.LOG_LEVEL_FINER, 
+				"method call", 
+				getClass().getName(), 
+				"addTransmissionPath(" + ob + ")");
 
 		measurementPaths.add(ob);
 	}
@@ -901,7 +958,11 @@ public final class MapView extends StubResource implements Serializable
 	 */
 	public void removeMeasurementPath(MapMeasurementPathElement ob)
 	{
-		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "removeTransmissionPath(" + ob + ")");
+		Environment.log(
+				Environment.LOG_LEVEL_FINER, 
+				"method call", 
+				getClass().getName(), 
+				"removeTransmissionPath(" + ob + ")");
 
 		measurementPaths.remove(ob);
 		ob.setSelected(false);
@@ -910,7 +971,11 @@ public final class MapView extends StubResource implements Serializable
 
 	public List getMeasurementPaths(MapPhysicalLinkElement mple)
 	{
-		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "getPaths(" + mple + ")");
+		Environment.log(
+				Environment.LOG_LEVEL_FINER, 
+				"method call", 
+				getClass().getName(), 
+				"getPaths(" + mple + ")");
 		
 		LinkedList returnVector = new LinkedList();
 		for(Iterator it = getMeasurementPaths().iterator(); it.hasNext();)
@@ -931,7 +996,11 @@ public final class MapView extends StubResource implements Serializable
 
 	public List getMeasurementPaths(MapNodeElement mne)
 	{
-		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "getPaths(" + mne + ")");
+		Environment.log(
+				Environment.LOG_LEVEL_FINER, 
+				"method call", 
+				getClass().getName(), 
+				"getPaths(" + mne + ")");
 
 		LinkedList returnVector = new LinkedList();
 		for(Iterator it = getCablePaths().iterator(); it.hasNext();)
@@ -953,10 +1022,14 @@ public final class MapView extends StubResource implements Serializable
 
 	public List getMeasurementPaths(MapNodeLinkElement mnle)
 	{
-		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "getPaths(" + mnle + ")");
+		Environment.log(
+				Environment.LOG_LEVEL_FINER, 
+				"method call", 
+				getClass().getName(), 
+				"getPaths(" + mnle + ")");
 
 		LinkedList returnVector = new LinkedList();
-		for(Iterator it = getCablePaths().iterator(); it.hasNext();)
+		for(Iterator it = getMeasurementPaths().iterator(); it.hasNext();)
 		{
 			MapMeasurementPathElement mp = (MapMeasurementPathElement )it.next();
 			for(Iterator it2 = mp.getCablePaths().iterator(); it2.hasNext();)
@@ -973,14 +1046,69 @@ public final class MapView extends StubResource implements Serializable
 		return returnVector;
 	}
 
+	public MapMeasurementPathElement getMeasurementPathByMonitoredElementId(Identifier meId)
+	{
+		MapMeasurementPathElement path = null;
+		try
+		{
+			MonitoredElement me = (MonitoredElement )
+				ConfigurationStorableObjectPool.getStorableObject(meId, true);
+			if(me.getSort().equals(MonitoredElementSort.MONITOREDELEMENT_SORT_TRANSMISSION_PATH))
+			{
+				Identifier tpId = (Identifier )(me.getMonitoredDomainMemberIds().get(0));
+				TransmissionPath tp = (TransmissionPath )
+					ConfigurationStorableObjectPool.getStorableObject(tpId, true);
+				if(tp != null)
+				{
+					for(Iterator it = getMeasurementPaths().iterator(); it.hasNext();)
+					{
+						MapMeasurementPathElement mp = (MapMeasurementPathElement )it.next();
+						if(mp.getSchemePath().path.equals(tp))
+						{
+							path = mp;
+							break;
+						}
+					}
+				}
+			}
+		}
+		catch (CommunicationException e)
+		{
+		}
+		catch (DatabaseException e)
+		{
+		}
+
+		return path;
+	}
+
 	/**
 	 * Удалить все маркеры
 	 */
 	public void removeMarkers()
 	{
-		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "removeMarkers()");
+		Environment.log(
+				Environment.LOG_LEVEL_FINER, 
+				"method call", 
+				getClass().getName(), 
+				"removeMarkers()");
 		
 		markers.clear();
+	}
+
+	/**
+	 * Удалить путь тестирования
+	 */
+	public void removeMarker(MapMarker ob)
+	{
+		Environment.log(
+				Environment.LOG_LEVEL_FINER, 
+				"method call", 
+				getClass().getName(), 
+				"removeMarker(" + ob + ")");
+
+		markers.remove(ob);
+		ob.setSelected(false);
 	}
 
 	/**
@@ -988,9 +1116,27 @@ public final class MapView extends StubResource implements Serializable
 	 */
 	public List getMarkers()
 	{
-		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "removeMarkers()");
+		Environment.log(
+				Environment.LOG_LEVEL_FINER, 
+				"method call", 
+				getClass().getName(), 
+				"removeMarkers()");
 		
 		return markers;
+	}
+
+	/**
+	 * Добавить новый путь тестирования
+	 */
+	public void addMarker(MapMarker ob)
+	{
+		Environment.log(
+				Environment.LOG_LEVEL_FINER, 
+				"method call", 
+				getClass().getName(), 
+				"addMarker(" + ob + ")");
+
+		markers.add(ob);
 	}
 
 	/**
@@ -998,7 +1144,11 @@ public final class MapView extends StubResource implements Serializable
 	 */
 	public MapMarker getMarker(String markerID)
 	{
-		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "getMarker(" + markerID + ")");
+		Environment.log(
+				Environment.LOG_LEVEL_FINER, 
+				"method call", 
+				getClass().getName(), 
+				"getMarker(" + markerID + ")");
 		
 		Iterator e = markers.iterator();
 		while( e.hasNext())
@@ -1015,7 +1165,11 @@ public final class MapView extends StubResource implements Serializable
 	 */
 	public List getAllElements()
 	{
-		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "getAllElements()");
+		Environment.log(
+				Environment.LOG_LEVEL_FINER, 
+				"method call", 
+				getClass().getName(), 
+				"getAllElements()");
 		
 		List returnVector = getMap().getAllElements();
 		
@@ -1050,7 +1204,11 @@ public final class MapView extends StubResource implements Serializable
 	 */
 	public void deselectAll()
 	{
-		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "deselectAll()");
+		Environment.log(
+				Environment.LOG_LEVEL_FINER, 
+				"method call", 
+				getClass().getName(), 
+				"deselectAll()");
 		
 		Iterator e = getAllElements().iterator();
 		while ( e.hasNext())
@@ -1071,7 +1229,11 @@ public final class MapView extends StubResource implements Serializable
 
 	private void writeObject(java.io.ObjectOutputStream out) throws IOException
 	{
-		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "writeObject(out)");
+		Environment.log(
+				Environment.LOG_LEVEL_FINER, 
+				"method call", 
+				getClass().getName(), 
+				"writeObject(out)");
 		
 		out.writeObject(id);
 		out.writeObject(name);
@@ -1100,7 +1262,11 @@ public final class MapView extends StubResource implements Serializable
 	private void readObject(java.io.ObjectInputStream in)
 			throws IOException, ClassNotFoundException
 	{
-		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "readObject(in)");
+		Environment.log(
+				Environment.LOG_LEVEL_FINER, 
+				"method call", 
+				getClass().getName(), 
+				"readObject(in)");
 		
 		id = (String )in.readObject();
 		name = (String )in.readObject();
@@ -1144,13 +1310,6 @@ public final class MapView extends StubResource implements Serializable
 	}
 
 /* from SiteNode
- * 
-	protected double physical_length = 0.0;
-
-	public double getPhysicalLength()
-	{
-		return physical_length;
-	}
 
 	//Возвращяет длинну линий внутри данного узла,
 	//пересчитанную на коэффициент топологической привязки

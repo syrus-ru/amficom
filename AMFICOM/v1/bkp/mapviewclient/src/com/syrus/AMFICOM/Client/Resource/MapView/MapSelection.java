@@ -1,5 +1,5 @@
 /**
- * $Id: MapSelection.java,v 1.9 2004/10/19 11:48:28 krupenn Exp $
+ * $Id: MapSelection.java,v 1.10 2004/10/26 13:32:01 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -31,7 +31,7 @@ import java.util.List;
  * 
  * 
  * 
- * @version $Revision: 1.9 $, $Date: 2004/10/19 11:48:28 $
+ * @version $Revision: 1.10 $, $Date: 2004/10/26 13:32:01 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -51,6 +51,7 @@ public final class MapSelection extends StubResource
 	private boolean physicalNodeSelection = true;
 	private boolean unboundNodeSelection = true;
 	private boolean unboundLinkSelection = true;
+	private boolean unboundCableSelection = true;
 	private boolean unboundSelection = true;
 	private boolean physicalLinkSelection = true;
 
@@ -133,6 +134,7 @@ public final class MapSelection extends StubResource
 		physicalNodeSelection = true;
 		unboundNodeSelection = true;
 		unboundLinkSelection = true;
+		unboundCableSelection = true;
 		unboundSelection = true;
 		physicalLinkSelection = true;
 
@@ -145,8 +147,11 @@ public final class MapSelection extends StubResource
 				unboundNodeSelection = false;
 			if(! (me instanceof MapUnboundLinkElement))
 				unboundLinkSelection = false;
+			if(! (me instanceof MapCablePathElement))
+				unboundCableSelection = false;
 			if(	! (me instanceof MapUnboundNodeElement) &&
-				! (me instanceof MapUnboundLinkElement))
+				! (me instanceof MapUnboundLinkElement) &&
+				! (me instanceof MapCablePathElement))
 				unboundSelection = false;
 			if(! (me instanceof MapPhysicalLinkElement))
 				physicalLinkSelection = false;
@@ -271,5 +276,11 @@ public final class MapSelection extends StubResource
 	public boolean isPhysicalLinkSelection()
 	{
 		return physicalLinkSelection;
+	}
+
+
+	public boolean isUnboundCableSelection()
+	{
+		return unboundCableSelection;
 	}
 }

@@ -1,5 +1,5 @@
 /**
- * $Id: MapActionCommandBundle.java,v 1.8 2004/10/19 10:07:43 krupenn Exp $
+ * $Id: MapActionCommandBundle.java,v 1.9 2004/10/26 13:32:01 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -41,7 +41,7 @@ import java.util.List;
  * 
  * 
  * 
- * @version $Revision: 1.8 $, $Date: 2004/10/19 10:07:43 $
+ * @version $Revision: 1.9 $, $Date: 2004/10/26 13:32:01 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -327,7 +327,7 @@ public class MapActionCommandBundle extends CommandBundle
 	 */
 	protected void removeMeasurementPathCables(MapMeasurementPathElement mPath)
 	{
-		mPath.clearCablePaths();
+//		mPath.clearCablePaths();
 	}
 
 

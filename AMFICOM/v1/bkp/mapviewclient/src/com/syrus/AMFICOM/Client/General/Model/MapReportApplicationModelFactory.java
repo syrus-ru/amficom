@@ -16,7 +16,7 @@ public class MapReportApplicationModelFactory
 		aModel.setUsable(MapApplicationModel.ACTION_SAVE_MAP_VIEW, false);
 		aModel.setUsable(MapApplicationModel.ACTION_USE_MARKER, false);
 
-		aModel.setUsable("mapModeNodeLink", false);
+		aModel.setUsable(MapApplicationModel.MODE_NODE_LINK, false);
 
 		return aModel;
 	}

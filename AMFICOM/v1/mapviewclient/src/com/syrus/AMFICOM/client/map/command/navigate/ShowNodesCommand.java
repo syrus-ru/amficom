@@ -1,5 +1,5 @@
 /**
- * $Id: ShowNodesCommand.java,v 1.3 2004/10/19 10:41:03 krupenn Exp $
+ * $Id: ShowNodesCommand.java,v 1.4 2004/10/26 13:32:01 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -14,10 +14,12 @@ package com.syrus.AMFICOM.Client.Map.Command.Navigate;
 import com.syrus.AMFICOM.Client.General.Command.Command;
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationModel;
+import com.syrus.AMFICOM.Client.General.Model.MapApplicationModel;
 import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
 import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
 
 import javax.swing.AbstractButton;
+import javax.swing.Icon;
 import javax.swing.ImageIcon;
 
 /**
@@ -25,7 +27,7 @@ import javax.swing.ImageIcon;
  * 
  * 
  * 
- * @version $Revision: 1.3 $, $Date: 2004/10/19 10:41:03 $
+ * @version $Revision: 1.4 $, $Date: 2004/10/26 13:32:01 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -58,23 +60,26 @@ public class ShowNodesCommand extends VoidCommand
 		return com;
 	}
 
+	Icon visibleIcon = new ImageIcon("images/nodes_visible.gif");
+	Icon invisibleIcon = new ImageIcon("images/nodes_invisible.gif");
+
 	public void execute()
 	{
 		if(MapPropertiesManager.isShowPhysicalNodes())
 		{
-			button.setIcon(new ImageIcon("images/nodes_invisible.gif"));
+			button.setIcon(invisibleIcon);
 			MapPropertiesManager.setShowPhysicalNodes(false);
 		}
 		else
-		if(!aModel.isSelected("mapModeViewNodes"))
+		if(!aModel.isSelected(MapApplicationModel.MODE_NODES))
 		{
-			button.setIcon(new ImageIcon("images/nodes_visible.gif"));
+			button.setIcon(visibleIcon);
 			MapPropertiesManager.setShowPhysicalNodes(true);
 		}
 
-		aModel.setSelected("mapModeViewNodes", 
+		aModel.setSelected(MapApplicationModel.MODE_NODES, 
 				MapPropertiesManager.isShowPhysicalNodes());
-		aModel.fireModelChanged("");
+		aModel.fireModelChanged();
 		logicalNetLayer.repaint();
 	}
 }

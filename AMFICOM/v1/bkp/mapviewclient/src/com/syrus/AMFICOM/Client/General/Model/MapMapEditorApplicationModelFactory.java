@@ -8,8 +8,8 @@ public class MapMapEditorApplicationModelFactory
 	{
 		ApplicationModel aModel = super.create();
 
-		aModel.setUsable(MapApplicationModel.ACTION_INDICATION, false);
-		aModel.setUsable(MapApplicationModel.ACTION_USE_MARKER, false);
+//		aModel.setUsable(MapApplicationModel.ACTION_INDICATION, false);
+//		aModel.setUsable(MapApplicationModel.ACTION_USE_MARKER, false);
 
 		return aModel;
 	}

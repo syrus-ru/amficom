@@ -1,5 +1,5 @@
 /*
- * $Id: MapSaveCommand.java,v 1.5 2004/10/19 14:10:03 krupenn Exp $
+ * $Id: MapSaveCommand.java,v 1.6 2004/10/26 13:32:01 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -22,6 +22,8 @@ import com.syrus.AMFICOM.Client.Map.Props.MapPanel;
 import com.syrus.AMFICOM.Client.Map.UI.MapFrame;
 import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
 
+import com.syrus.AMFICOM.Client.Resource.Map.Map;
+import com.syrus.AMFICOM.Client.Resource.Pool;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 
@@ -30,7 +32,7 @@ import java.awt.Toolkit;
  * 
  * 
  * 
- * @version $Revision: 1.5 $, $Date: 2004/10/19 14:10:03 $
+ * @version $Revision: 1.6 $, $Date: 2004/10/26 13:32:01 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -61,6 +63,8 @@ public class MapSaveCommand extends VoidCommand
 
 		if(dataSource == null)
 			return;
+			
+		Map map = mapFrame.getMapView().getMap();
 
 		aContext.getDispatcher().notify(new StatusMessageEvent(
 				StatusMessageEvent.STATUS_MESSAGE,
@@ -70,7 +74,7 @@ public class MapSaveCommand extends VoidCommand
 				Environment.getActiveWindow(), 
 				LangModelMap.getString("MapProperties"), 
 				true, 
-				mapFrame.getMapView().getMap(),
+				map,
 				MapPanel.getInstance());
 
 		Dimension screenSize =  Toolkit.getDefaultToolkit().getScreenSize();
@@ -90,8 +94,9 @@ public class MapSaveCommand extends VoidCommand
 //			aContext.getDispatcher().notify(new StatusMessageEvent(
 //					StatusMessageEvent.STATUS_PROGRESS_BAR, 
 //					true));
-			dataSource.RemoveFromMap(mapFrame.getMapView().getMap().getId());
-			dataSource.SaveMap(mapFrame.getMapView().getMap().getId());
+			Pool.put( Map.typ, map.getId(), map);
+			dataSource.RemoveFromMap(map.getId());
+			dataSource.SaveMap(map.getId());
 //			aContext.getDispatcher().notify(new StatusMessageEvent(
 //					StatusMessageEvent.STATUS_PROGRESS_BAR, 
 //					false));

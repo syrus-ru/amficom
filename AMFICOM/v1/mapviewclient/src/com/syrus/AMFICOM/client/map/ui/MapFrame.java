@@ -1,5 +1,5 @@
 /**
- * $Id: MapFrame.java,v 1.8 2004/10/20 12:38:40 krupenn Exp $
+ * $Id: MapFrame.java,v 1.9 2004/10/26 13:32:01 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -24,6 +24,7 @@ import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationModel;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
+import com.syrus.AMFICOM.Client.General.Model.MapApplicationModel;
 import com.syrus.AMFICOM.Client.General.Model.Module;
 import com.syrus.AMFICOM.Client.Map.Command.Navigate.CenterSelectionCommand;
 import com.syrus.AMFICOM.Client.Map.Command.Navigate.HandPanCommand;
@@ -43,12 +44,14 @@ import com.syrus.AMFICOM.Client.Map.NetMapViewer;
 import com.syrus.AMFICOM.Client.Resource.Map.Map;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapView;
 
+import com.syrus.AMFICOM.Client.Resource.Scheme.Scheme;
 import java.awt.BorderLayout;
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.event.ComponentEvent;
 import java.awt.geom.Point2D;
 
+import java.util.Iterator;
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 import javax.swing.JInternalFrame;
@@ -66,7 +69,7 @@ import javax.swing.event.InternalFrameEvent;
  * 
  * 
  * 
- * @version $Revision: 1.8 $, $Date: 2004/10/20 12:38:40 $
+ * @version $Revision: 1.9 $, $Date: 2004/10/26 13:32:01 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -256,19 +259,19 @@ public class MapFrame extends JInternalFrame
 
 	public void setCommands(ApplicationModel aModel)
 	{
-		aModel.setCommand("mapActionCenterSelection", new CenterSelectionCommand(null));
-		aModel.setCommand("mapModeNodeLink", new MapModeCommand(null, "mapModeNodeLink", MapState.SHOW_NODE_LINK));
-		aModel.setCommand("mapModeLink", new MapModeCommand(null, "mapModeLink", MapState.SHOW_PHYSICAL_LINK));
-		aModel.setCommand("mapModeCablePath", new MapModeCommand(null, "mapModeCablePath", MapState.SHOW_CABLE_PATH));
-		aModel.setCommand("mapModePath", new MapModeCommand(null, "mapModePath", MapState.SHOW_TRANSMISSION_PATH));
-		aModel.setCommand("mapActionZoomIn", new ZoomInCommand(null));
-		aModel.setCommand("mapActionZoomOut", new ZoomOutCommand(null));
-		aModel.setCommand("mapActionZoomToPoint", new ZoomToPointCommand(null));
-		aModel.setCommand("mapActionZoomBox", new ZoomBoxCommand(null));
-		aModel.setCommand("mapActionMoveToCenter", new MoveToCenterCommand(null));
-		aModel.setCommand("mapModeViewNodes", new ShowNodesCommand(null));
-		aModel.setCommand("mapActionHandPan", new HandPanCommand(null));
-		aModel.setCommand("mapActionMeasureDistance", new MeasureDistanceCommand(null));
+		aModel.setCommand(MapApplicationModel.OPERATION_CENTER_SELECTION, new CenterSelectionCommand(null));
+		aModel.setCommand(MapApplicationModel.MODE_NODE_LINK, new MapModeCommand(null, MapApplicationModel.MODE_NODE_LINK, MapState.SHOW_NODE_LINK));
+		aModel.setCommand(MapApplicationModel.MODE_LINK, new MapModeCommand(null, MapApplicationModel.MODE_LINK, MapState.SHOW_PHYSICAL_LINK));
+		aModel.setCommand(MapApplicationModel.MODE_CABLE_PATH, new MapModeCommand(null, MapApplicationModel.MODE_CABLE_PATH, MapState.SHOW_CABLE_PATH));
+		aModel.setCommand(MapApplicationModel.MODE_PATH, new MapModeCommand(null, MapApplicationModel.MODE_PATH, MapState.SHOW_MEASUREMENT_PATH));
+		aModel.setCommand(MapApplicationModel.OPERATION_ZOOM_IN, new ZoomInCommand(null));
+		aModel.setCommand(MapApplicationModel.OPERATION_ZOOM_OUT, new ZoomOutCommand(null));
+		aModel.setCommand(MapApplicationModel.OPERATION_ZOOM_TO_POINT, new ZoomToPointCommand(null));
+		aModel.setCommand(MapApplicationModel.OPERATION_ZOOM_BOX, new ZoomBoxCommand(null));
+		aModel.setCommand(MapApplicationModel.OPERATION_MOVE_TO_CENTER, new MoveToCenterCommand(null));
+		aModel.setCommand(MapApplicationModel.MODE_NODES, new ShowNodesCommand(null));
+		aModel.setCommand(MapApplicationModel.OPERATION_HAND_PAN, new HandPanCommand(null));
+		aModel.setCommand(MapApplicationModel.OPERATION_MEASURE_DISTANCE, new MeasureDistanceCommand(null));
 
 		aModel.fireModelChanged();
 	}
@@ -523,11 +526,17 @@ public class MapFrame extends JInternalFrame
 	public boolean checkCanCloseMap()
 	{
 		boolean canClose;
+		
+		if(getMapView() == null)
+			return true;
 	
 		Map map = getMapView().getMap();
 		
-		if(!getContext().getApplicationModel().isEnabled("mapsave"))
-			return false;
+		if(map == null)
+			return true;
+		
+		if(!getContext().getApplicationModel().isEnabled(MapApplicationModel.ACTION_SAVE_MAP))
+			return true;
 		
 		if(map.isChanged())
 		{
@@ -572,8 +581,11 @@ public class MapFrame extends JInternalFrame
 	
 		MapView mapView = getMapView();
 		
-		if(!getContext().getApplicationModel().isEnabled("mapsave"))
-			return false;
+		if(mapView == null)
+			return true;
+	
+		if(!getContext().getApplicationModel().isEnabled(MapApplicationModel.ACTION_SAVE_MAP_VIEW))
+			return true;
 
 		if(mapView.isChanged())
 		{
@@ -602,6 +614,12 @@ public class MapFrame extends JInternalFrame
 			if(ret == JOptionPane.YES_OPTION)
 			{
 				getContext().getDataSource().SaveMapView(mapView.getId());
+				for(Iterator it = mapView.getSchemes().iterator(); it.hasNext();)
+				{
+					Scheme scheme = (Scheme )it.next();
+					if(scheme.isChanged())
+						getContext().getDataSource().SaveScheme(scheme.getId());
+				}
 				canClose = true;
 			}
 			else

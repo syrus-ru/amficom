@@ -1,5 +1,5 @@
 /**
- * $Id: MapModeCommand.java,v 1.2 2004/10/19 10:41:03 krupenn Exp $
+ * $Id: MapModeCommand.java,v 1.3 2004/10/26 13:32:01 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -13,6 +13,7 @@ package com.syrus.AMFICOM.Client.Map.Command.Navigate;
 
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationModel;
+import com.syrus.AMFICOM.Client.General.Model.MapApplicationModel;
 import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
 
 /**
@@ -20,7 +21,7 @@ import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
  * 
  * 
  * 
- * @version $Revision: 1.2 $, $Date: 2004/10/19 10:41:03 $
+ * @version $Revision: 1.3 $, $Date: 2004/10/26 13:32:01 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -59,14 +60,14 @@ public class MapModeCommand extends VoidCommand
 		{
 			if(!aModel.isSelected(modeString))
 			{
-				aModel.setSelected("mapModeNodeLink", false);
-				aModel.setSelected("mapModeLink", false);
-				aModel.setSelected("mapModeCablePath", false);
-				aModel.setSelected("mapModePath", false);
+				aModel.setSelected(MapApplicationModel.MODE_NODE_LINK, false);
+				aModel.setSelected(MapApplicationModel.MODE_LINK, false);
+				aModel.setSelected(MapApplicationModel.MODE_CABLE_PATH, false);
+				aModel.setSelected(MapApplicationModel.MODE_PATH, false);
 	
 				aModel.setSelected(modeString, true);
 	
-				aModel.fireModelChanged("");
+				aModel.fireModelChanged();
 	
 				logicalNetLayer.getMapState().setShowMode(mode);
 				logicalNetLayer.repaint();

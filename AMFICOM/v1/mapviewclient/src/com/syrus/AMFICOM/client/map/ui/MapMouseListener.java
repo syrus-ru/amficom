@@ -1,5 +1,5 @@
 /**
- * $Id: MapMouseListener.java,v 1.8 2004/10/19 11:48:28 krupenn Exp $
+ * $Id: MapMouseListener.java,v 1.9 2004/10/26 13:32:01 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -15,6 +15,7 @@ import com.syrus.AMFICOM.Client.General.Event.MapEvent;
 import com.syrus.AMFICOM.Client.General.Event.MapNavigateEvent;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
+import com.syrus.AMFICOM.Client.General.Model.MapApplicationModel;
 import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
 import com.syrus.AMFICOM.Client.Map.MapState;
 import com.syrus.AMFICOM.Client.Map.Popup.MapPopupMenu;
@@ -45,7 +46,7 @@ import javax.swing.SwingUtilities;
  * 
  * 
  * 
- * @version $Revision: 1.8 $, $Date: 2004/10/19 11:48:28 $
+ * @version $Revision: 1.9 $, $Date: 2004/10/26 13:32:01 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -223,7 +224,9 @@ public final class MapMouseListener implements MouseListener
 
 					logicalNetLayer.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 
-					logicalNetLayer.getContext().getApplicationModel().setSelected("mapActionMeasureDistance", false);
+					logicalNetLayer.getContext().getApplicationModel().setSelected(
+							MapApplicationModel.OPERATION_MEASURE_DISTANCE, 
+							false);
 					logicalNetLayer.getContext().getApplicationModel().fireModelChanged();
 
 					JOptionPane.showMessageDialog(
@@ -232,11 +235,6 @@ public final class MapMouseListener implements MouseListener
 							LangModelMap.getString("MeasureDistance"),
 							JOptionPane.PLAIN_MESSAGE);
 
-//					Command com = logicalNetLayer.getContext().getApplicationModel().getCommand("mapActionMeasureDistance");
-//					com.setParameter("applicationModel", logicalNetLayer.getContext().getApplicationModel());
-//					com.setParameter("logicalNetLayer", logicalNetLayer);
-//					com.execute();
-					
 					break;
 				case MapState.ZOOM_TO_POINT :
 					Point2D.Double pp = logicalNetLayer.convertScreenToMap(me.getPoint());
@@ -245,14 +243,11 @@ public final class MapMouseListener implements MouseListener
 					logicalNetLayer.zoomIn();
 					logicalNetLayer.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 
-					logicalNetLayer.getContext().getApplicationModel().setSelected("mapActionZoomToPoint", false);
+					logicalNetLayer.getContext().getApplicationModel().setSelected(
+							MapApplicationModel.OPERATION_ZOOM_TO_POINT, 
+							false);
 					logicalNetLayer.getContext().getApplicationModel().fireModelChanged();
 
-//					Command com = logicalNetLayer.getContext().getApplicationModel().getCommand("mapActionZoomToPoint");
-//					com.setParameter("applicationModel", logicalNetLayer.getContext().getApplicationModel());
-//					com.setParameter("logicalNetLayer", logicalNetLayer);
-//					com.execute();
-					
 					logicalNetLayer.getMapView().setScale(logicalNetLayer.getScale());
 					logicalNetLayer.getMapView().setCenter(logicalNetLayer.getCenter());
 
@@ -260,14 +255,11 @@ public final class MapMouseListener implements MouseListener
 				case MapState.ZOOM_TO_RECT:
 					logicalNetLayer.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 					
-					logicalNetLayer.getContext().getApplicationModel().setSelected("mapActionZoomBox", false);
+					logicalNetLayer.getContext().getApplicationModel().setSelected(
+							MapApplicationModel.OPERATION_ZOOM_BOX, 
+							false);
 					logicalNetLayer.getContext().getApplicationModel().fireModelChanged();
 
-//					Command com2 = logicalNetLayer.getContext().getApplicationModel().getCommand("mapActionZoomBox");
-//					com2.setParameter("applicationModel", logicalNetLayer.getContext().getApplicationModel());
-//					com2.setParameter("logicalNetLayer", logicalNetLayer);
-//					com2.execute();
-					
 					if (!logicalNetLayer.getStartPoint().equals(logicalNetLayer.getEndPoint()))
 					{
 						logicalNetLayer.zoomToBox(
@@ -284,14 +276,11 @@ public final class MapMouseListener implements MouseListener
 					logicalNetLayer.setCenter(
 						logicalNetLayer.convertScreenToMap(me.getPoint()));
 					
-					logicalNetLayer.getContext().getApplicationModel().setSelected("mapActionMoveToCenter", false);
+					logicalNetLayer.getContext().getApplicationModel().setSelected(
+							MapApplicationModel.OPERATION_MOVE_TO_CENTER, 
+							false);
 					logicalNetLayer.getContext().getApplicationModel().fireModelChanged();
 
-//					Command com3 = logicalNetLayer.getContext().getApplicationModel().getCommand("mapActionMoveToCenter");
-//					com3.setParameter("applicationModel", logicalNetLayer.getContext().getApplicationModel());
-//					com3.setParameter("logicalNetLayer", logicalNetLayer);
-//					com3.execute();
-					
 					logicalNetLayer.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 
 					logicalNetLayer.getMapView().setCenter(
@@ -300,37 +289,14 @@ public final class MapMouseListener implements MouseListener
 				case MapState.MOVE_HAND:
 					Point2D.Double center = logicalNetLayer.getCenter();
 
-/*
-					Point screencenter = logicalNetLayer.convertMapToScreen(center);
-
-					int dx = me.getPoint().x - logicalNetLayer.getStartPoint().x;
-					int dy = me.getPoint().y - logicalNetLayer.getStartPoint().y;
-
-					System.out.print("center " + MiscUtil.fourdigits(screencenter.x) + ", " + MiscUtil.fourdigits(screencenter.y));
-					System.out.println("	shift " + MiscUtil.fourdigits(dx) + ", " + MiscUtil.fourdigits(dy));
-
-					screencenter.x += dx;
-					screencenter.y += dy;
-
-					System.out.println("newter " + MiscUtil.fourdigits(screencenter.x) + ", " + MiscUtil.fourdigits(screencenter.y));
-					System.out.println("");
-					
-					center = logicalNetLayer.convertScreenToMap(screencenter);
-*/				
 					Point2D.Double p1 = logicalNetLayer.convertScreenToMap(logicalNetLayer.getStartPoint());
 					Point2D.Double p2 = logicalNetLayer.convertScreenToMap(me.getPoint());
 					double dx = p1.x - p2.x;
 					double dy = p1.y - p2.y;
 
-//					System.out.print("center " + MiscUtil.fourdigits(center.x) + ", " + MiscUtil.fourdigits(center.y));
-//					System.out.println("	shift " + MiscUtil.fourdigits(dx) + ", " + MiscUtil.fourdigits(dy));
-					
 					center.x += dx;
 					center.y += dy;
 
-//					System.out.println("newter " + MiscUtil.fourdigits(center.x) + ", " + MiscUtil.fourdigits(center.y));
-//					System.out.println("");
-					
 					logicalNetLayer.setCenter(center);
 
 					logicalNetLayer.getMapView().setCenter(

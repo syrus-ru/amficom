@@ -18,6 +18,22 @@ public class MapApplicationModel extends ApplicationModel
 	public static final String ACTION_INDICATION = "indication";
 	public static final String ACTION_EDIT_PROPERTIES = "editproperties";
 
+	public static final String MODE_NODE_LINK = "mapModeNodeLink";
+	public static final String MODE_LINK = "mapModeLink";
+	public static final String MODE_CABLE_PATH = "mapModeCablePath";
+	public static final String MODE_PATH = "mapModePath";
+
+	public static final String MODE_NODES = "mapModeViewNodes";
+
+	public static final String OPERATION_ZOOM_IN = "mapActionZoomIn";
+	public static final String OPERATION_ZOOM_OUT = "mapActionZoomOut";
+	public static final String OPERATION_ZOOM_TO_POINT = "mapActionZoomToPoint";
+	public static final String OPERATION_ZOOM_BOX = "mapActionZoomBox";
+	public static final String OPERATION_CENTER_SELECTION = "mapActionCenterSelection";
+	public static final String OPERATION_MOVE_TO_CENTER = "mapActionMoveToCenter";
+	public static final String OPERATION_HAND_PAN = "mapActionHandPan";
+	public static final String OPERATION_MEASURE_DISTANCE = "mapActionMeasureDistance";
+
 	public MapApplicationModel()
 	{
 		super.add(ACTION_SAVE_MAP);
@@ -29,58 +45,21 @@ public class MapApplicationModel extends ApplicationModel
 		super.add(ACTION_INDICATION);
 		super.add(ACTION_EDIT_PROPERTIES);
 		
-		super.add("mapModeNodeLink");
-		super.add("mapModeLink");
-		super.add("mapModeCablePath");
-		super.add("mapModePath");
+		super.add(MODE_NODE_LINK);
+		super.add(MODE_LINK);
+		super.add(MODE_CABLE_PATH);
+		super.add(MODE_PATH);
 
-		super.add("mapActionZoomIn");
-		super.add("mapActionZoomOut");
-		super.add("mapActionZoomToPoint");
-		super.add("mapActionZoomBox");
-		super.add("mapActionCenterSelection");
-		super.add("mapActionMoveToCenter");
-		super.add("mapActionHandPan");
+		super.add(MODE_NODES);
 
-		super.add("mapModeViewNodes");
-		
-		super.add("mapActionMeasureDistance");
-
-//		super.add("mapActionMoveNode");
-//		super.add("mapActionMoveEquipment");
-//		super.add("mapActionMoveKIS");
-
-//		super.add("mapActionShowLink");
-//		super.add("mapActionShowEquipment");
-//		super.add("mapActionShowKIS");
-//		super.add("mapActionShowPath");
-
-//		super.add("mapActionCreateLink");
-//		super.add("mapActionCreateEquipment");
-//		super.add("mapActionCreateKIS");
-//		super.add("mapActionCreatePath");
-
-//		super.add("mapActionDeleteNode");
-//		super.add("mapActionDeleteEquipment");
-//		super.add("mapActionDeleteKIS");
-//		super.add("mapActionDeletePath");
-
-//		super.add("mapActionMarkerMove");
-//		super.add("mapActionMarkerCreate");
-//		super.add("mapActionMarkerDelete");
-
-//		super.add("mapActionMarkShow");
-//		super.add("mapActionMarkMove");
-//		super.add("mapActionMarkCreate");
-//		super.add("mapActionMarkDelete");
-
-//		super.add("mapActionIndication");
-
-//		super.add("mapActionViewProperties");
-//		super.add("mapActionEditProperties");
-
-//		super.add("mapActionShowProto");
-//		super.add("mapActionReload");
+		super.add(OPERATION_ZOOM_IN);
+		super.add(OPERATION_ZOOM_OUT);
+		super.add(OPERATION_ZOOM_TO_POINT);
+		super.add(OPERATION_ZOOM_BOX);
+		super.add(OPERATION_CENTER_SELECTION);
+		super.add(OPERATION_MOVE_TO_CENTER);
+		super.add(OPERATION_HAND_PAN);
+		super.add(OPERATION_MEASURE_DISTANCE);
 
 	}
 

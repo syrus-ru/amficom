@@ -1,5 +1,5 @@
 /**
- * $Id: BindUnboundNodeToSiteCommandBundle.java,v 1.5 2004/10/20 10:14:39 krupenn Exp $
+ * $Id: BindUnboundNodeToSiteCommandBundle.java,v 1.6 2004/10/26 13:32:01 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -19,6 +19,7 @@ import com.syrus.AMFICOM.Client.Resource.Map.MapNodeLinkElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalLinkElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapSiteNodeElement;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapCablePathElement;
+import com.syrus.AMFICOM.Client.Resource.MapView.MapMeasurementPathElement;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapUnboundNodeElement;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapView;
 import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeElement;
@@ -31,7 +32,7 @@ import java.util.List;
  * 
  * 
  * 
- * @version $Revision: 1.5 $, $Date: 2004/10/20 10:14:39 $
+ * @version $Revision: 1.6 $, $Date: 2004/10/26 13:32:01 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -73,7 +74,7 @@ public class BindUnboundNodeToSiteCommandBundle extends MapActionCommandBundle
 		map = mapView.getMap();
 		
 		// список кабельных путей, включающий прив€зываемый элемент
-		List cablePaths = logicalNetLayer.getMapView().getCablePaths(unbound);
+		List cablePaths = mapView.getCablePaths(unbound);
 		
 		// обновл€ютс€ концевые узлы кабельных путей
 		for(Iterator it = cablePaths.iterator(); it.hasNext();)
@@ -84,6 +85,16 @@ public class BindUnboundNodeToSiteCommandBundle extends MapActionCommandBundle
 			if(cp.getStartNode() == unbound)
 				cp.setStartNode(site);
 		}
+
+//		// обновл€ютс€ концевые узлы путей измерений
+//		for(Iterator it = mapView.getMeasurementPaths(unbound).iterator(); it.hasNext();)
+//		{
+//			MapMeasurementPathElement mp = (MapMeasurementPathElement )it.next();
+//			if(mp.getEndNode() == unbound)
+//				mp.setEndNode(site);
+//			if(mp.getStartNode() == unbound)
+//				mp.setStartNode(site);
+//		}
 
 		//ѕри прив€зывании мен€ютс€ концевые узлы линий и фрагментов линий
 		for(Iterator it = unbound.getNodeLinks().iterator(); it.hasNext();)
@@ -109,7 +120,6 @@ public class BindUnboundNodeToSiteCommandBundle extends MapActionCommandBundle
 				physicalLink.setStartNode(site);
 
 			super.registerStateChange(physicalLink, pls2, physicalLink.getState());
-			
 		}//while(e.hasNext())
 
 		super.removeNode(unbound);

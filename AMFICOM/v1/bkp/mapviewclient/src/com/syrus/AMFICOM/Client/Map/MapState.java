@@ -1,5 +1,5 @@
 /**
- * $Id: MapState.java,v 1.3 2004/09/16 10:39:53 krupenn Exp $
+ * $Id: MapState.java,v 1.4 2004/10/26 13:32:01 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -20,7 +20,7 @@ package com.syrus.AMFICOM.Client.Map;
  * 
  * 
  * 
- * @version $Revision: 1.3 $, $Date: 2004/09/16 10:39:53 $
+ * @version $Revision: 1.4 $, $Date: 2004/10/26 13:32:01 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -79,7 +79,7 @@ public final class MapState
 	/** Показывать прокладку кабелей */
 	static final public int SHOW_CABLE_PATH = 3;
 	/** Показывать пути */
-	static final public int SHOW_TRANSMISSION_PATH = 4;
+	static final public int SHOW_MEASUREMENT_PATH = 4;
 
 	/** Флаг режима отображения линий на карте */
 	public int showMode = SHOW_PHYSICAL_LINK;

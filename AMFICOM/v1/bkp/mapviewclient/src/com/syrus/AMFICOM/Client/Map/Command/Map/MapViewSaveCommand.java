@@ -1,5 +1,5 @@
 /*
- * $Id: MapViewSaveCommand.java,v 1.6 2004/10/20 10:14:39 krupenn Exp $
+ * $Id: MapViewSaveCommand.java,v 1.7 2004/10/26 13:32:01 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -22,15 +22,19 @@ import com.syrus.AMFICOM.Client.Map.Props.MapViewPanel;
 import com.syrus.AMFICOM.Client.Map.UI.MapFrame;
 import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
 
+import com.syrus.AMFICOM.Client.Resource.MapView.MapView;
+import com.syrus.AMFICOM.Client.Resource.Pool;
+import com.syrus.AMFICOM.Client.Resource.Scheme.Scheme;
 import java.awt.Dimension;
 import java.awt.Toolkit;
+import java.util.Iterator;
 
 /**
  * Класс $RCSfile: MapViewSaveCommand.java,v $ используется для сохранения топологической схемы на сервере
  * 
  * 
  * 
- * @version $Revision: 1.6 $, $Date: 2004/10/20 10:14:39 $
+ * @version $Revision: 1.7 $, $Date: 2004/10/26 13:32:01 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -69,12 +73,14 @@ public class MapViewSaveCommand extends VoidCommand
 			setResult(Command.RESULT_CANCEL);
 			return;
 		}
+		
+		MapView mapView = mapFrame.getMapView();
 
 		ObjectResourcePropertiesDialog dialog = new ObjectResourcePropertiesDialog(
 				Environment.getActiveWindow(), 
 				LangModelMap.getString("MapViewProperties"), 
 				true, 
-				mapFrame.getMapView(),
+				mapView,
 				MapViewPanel.getInstance());
 
 		Dimension screenSize =  Toolkit.getDefaultToolkit().getScreenSize();
@@ -95,7 +101,15 @@ public class MapViewSaveCommand extends VoidCommand
 					StatusMessageEvent.STATUS_MESSAGE,
 					LangModelMap.getString("MapSaving")));
 
-			dataSource.SaveMapView(mapFrame.getMapView().getId());
+			Pool.put( MapView.typ, mapView.getId(), mapView);
+			dataSource.SaveMapView(mapView.getId());
+			
+			for(Iterator it = mapView.getSchemes().iterator(); it.hasNext();)
+			{
+				Scheme scheme = (Scheme )it.next();
+				if(scheme.isChanged())
+					dataSource.SaveScheme(scheme.getId());
+			}
 
 			aContext.getDispatcher().notify(new StatusMessageEvent(
 					StatusMessageEvent.STATUS_MESSAGE,

@@ -1,5 +1,5 @@
 /**
- * $Id: MapToolBar.java,v 1.4 2004/10/19 11:48:28 krupenn Exp $
+ * $Id: MapToolBar.java,v 1.5 2004/10/26 13:32:01 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -13,6 +13,7 @@ import com.syrus.AMFICOM.Client.General.Command.Command;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationModel;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationModelListener;
+import com.syrus.AMFICOM.Client.General.Model.MapApplicationModel;
 import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
 
 import java.awt.Dimension;
@@ -35,7 +36,7 @@ import oracle.jdeveloper.layout.XYLayout;
  * 
  * 
  * 
- * @version $Revision: 1.4 $, $Date: 2004/10/19 11:48:28 $
+ * @version $Revision: 1.5 $, $Date: 2004/10/26 13:32:01 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -131,7 +132,7 @@ public final class MapToolBar extends JToolBar
 		zoomInButton.setPreferredSize(buttonSize);
 		zoomInButton.setMaximumSize(buttonSize);
 		zoomInButton.setMinimumSize(buttonSize);
-		zoomInButton.setName("mapActionZoomIn");
+		zoomInButton.setName(MapApplicationModel.OPERATION_ZOOM_IN);
 	
 		zoomOutButton.setIcon(new ImageIcon("images/zoom_out.gif"));
 		zoomOutButton.addActionListener(actionAdapter);
@@ -139,7 +140,7 @@ public final class MapToolBar extends JToolBar
 		zoomOutButton.setPreferredSize(buttonSize);
 		zoomOutButton.setMaximumSize(buttonSize);
 		zoomOutButton.setMinimumSize(buttonSize);
-		zoomOutButton.setName("mapActionZoomOut");
+		zoomOutButton.setName(MapApplicationModel.OPERATION_ZOOM_OUT);
 
 		zoomToPointButton.setIcon(new ImageIcon("images/zoom_to_point.gif"));
 		zoomToPointButton.addActionListener(actionAdapter);
@@ -147,7 +148,7 @@ public final class MapToolBar extends JToolBar
 		zoomToPointButton.setPreferredSize(buttonSize);
 		zoomToPointButton.setMaximumSize(buttonSize);
 		zoomToPointButton.setMinimumSize(buttonSize);
-		zoomToPointButton.setName("mapActionZoomToPoint");
+		zoomToPointButton.setName(MapApplicationModel.OPERATION_ZOOM_TO_POINT);
 
 		zoomToRectButton.setIcon(new ImageIcon("images/zoom_area.gif"));
 		zoomToRectButton.addActionListener(actionAdapter);
@@ -155,7 +156,7 @@ public final class MapToolBar extends JToolBar
 		zoomToRectButton.setPreferredSize(buttonSize);
 		zoomToRectButton.setMaximumSize(buttonSize);
 		zoomToRectButton.setMinimumSize(buttonSize);
-		zoomToRectButton.setName("mapActionZoomBox");
+		zoomToRectButton.setName(MapApplicationModel.OPERATION_ZOOM_BOX);
 
 		moveToCenterButton.setIcon(new ImageIcon("images/map_centr.gif"));
 		moveToCenterButton.addActionListener(actionAdapter);
@@ -163,7 +164,7 @@ public final class MapToolBar extends JToolBar
 		moveToCenterButton.setPreferredSize(buttonSize);
 		moveToCenterButton.setMaximumSize(buttonSize);
 		moveToCenterButton.setMinimumSize(buttonSize);
-		moveToCenterButton.setName("mapActionMoveToCenter");
+		moveToCenterButton.setName(MapApplicationModel.OPERATION_MOVE_TO_CENTER);
 
 		moveHandButton.setIcon(new ImageIcon("images/hand.gif"));
 		moveHandButton.addActionListener(actionAdapter);
@@ -171,7 +172,7 @@ public final class MapToolBar extends JToolBar
 		moveHandButton.setPreferredSize(buttonSize);
 		moveHandButton.setMaximumSize(buttonSize);
 		moveHandButton.setMinimumSize(buttonSize);
-		moveHandButton.setName("mapActionHandPan");
+		moveHandButton.setName(MapApplicationModel.OPERATION_HAND_PAN);
 
 		measureDistanceButton.setIcon(new ImageIcon("images/distance.gif"));
 		measureDistanceButton.addActionListener(actionAdapter);
@@ -179,7 +180,7 @@ public final class MapToolBar extends JToolBar
 		measureDistanceButton.setPreferredSize(buttonSize);
 		measureDistanceButton.setMaximumSize(buttonSize);
 		measureDistanceButton.setMinimumSize(buttonSize);
-		measureDistanceButton.setName("mapActionMeasureDistance");
+		measureDistanceButton.setName(MapApplicationModel.OPERATION_MEASURE_DISTANCE);
 
 		showNodesButton.setIcon(new ImageIcon("images/nodes_visible.gif"));
 		showNodesButton.addActionListener(actionAdapter);
@@ -187,7 +188,7 @@ public final class MapToolBar extends JToolBar
 		showNodesButton.setPreferredSize(buttonSize);
 		showNodesButton.setMaximumSize(buttonSize);
 		showNodesButton.setMinimumSize(buttonSize);
-		showNodesButton.setName("mapModeViewNodes");
+		showNodesButton.setName(MapApplicationModel.MODE_NODES);
 
 		showNodeLinkToggleButton.setIcon(new ImageIcon("images/nodelinkmode.gif"));
 		showNodeLinkToggleButton.addActionListener(actionAdapter);
@@ -195,7 +196,7 @@ public final class MapToolBar extends JToolBar
 		showNodeLinkToggleButton.setPreferredSize(buttonSize);
 		showNodeLinkToggleButton.setMaximumSize(buttonSize);
 		showNodeLinkToggleButton.setMinimumSize(buttonSize);
-		showNodeLinkToggleButton.setName("mapModeNodeLink");
+		showNodeLinkToggleButton.setName(MapApplicationModel.MODE_NODE_LINK);
 
 		showPhysicalToggleButton.setIcon(new ImageIcon("images/linkmode.gif"));
 		showPhysicalToggleButton.addActionListener(actionAdapter);
@@ -203,7 +204,7 @@ public final class MapToolBar extends JToolBar
 		showPhysicalToggleButton.setPreferredSize(buttonSize);
 		showPhysicalToggleButton.setMaximumSize(buttonSize);
 		showPhysicalToggleButton.setMinimumSize(buttonSize);
-		showPhysicalToggleButton.setName("mapModeLink");
+		showPhysicalToggleButton.setName(MapApplicationModel.MODE_LINK);
 
 //		showPhysicalToggleButton.setSelected(true);// режим по умолчанию
 
@@ -213,7 +214,7 @@ public final class MapToolBar extends JToolBar
 		showCablePathToggleButton.setPreferredSize(buttonSize);
 		showCablePathToggleButton.setMaximumSize(buttonSize);
 		showCablePathToggleButton.setMinimumSize(buttonSize);
-		showCablePathToggleButton.setName("mapModeCablePath");
+		showCablePathToggleButton.setName(MapApplicationModel.MODE_CABLE_PATH);
 
 		showTransPathToggleButton.setIcon(new ImageIcon("images/pathmode.gif"));
 		showTransPathToggleButton.addActionListener(actionAdapter);
@@ -221,7 +222,7 @@ public final class MapToolBar extends JToolBar
 		showTransPathToggleButton.setPreferredSize(buttonSize);
 		showTransPathToggleButton.setMaximumSize(buttonSize);
 		showTransPathToggleButton.setMinimumSize(buttonSize);
-		showTransPathToggleButton.setName("mapModePath");
+		showTransPathToggleButton.setName(MapApplicationModel.MODE_PATH);
 
 		centerObjectButton.setIcon(new ImageIcon("images/fit.gif"));
 		centerObjectButton.addActionListener(actionAdapter);
@@ -229,7 +230,7 @@ public final class MapToolBar extends JToolBar
 		centerObjectButton.setPreferredSize(buttonSize);
 		centerObjectButton.setMaximumSize(buttonSize);
 		centerObjectButton.setMinimumSize(buttonSize);
-		centerObjectButton.setName("mapActionCenterSelection");
+		centerObjectButton.setName(MapApplicationModel.OPERATION_CENTER_SELECTION);
 
 		optionsButton.setIcon(new ImageIcon("images/options.gif"));
 		optionsButton.addActionListener(new ActionListener()
@@ -298,21 +299,21 @@ public final class MapToolBar extends JToolBar
 //Включить выключить панель
 	public void setEnableDisablePanel(boolean b)
 	{
-		aModel.setEnabled("mapActionCenterSelection", b);
-		aModel.setEnabled("mapModeNodeLink", b);
-		aModel.setEnabled("mapModeLink", b);
-		aModel.setEnabled("mapModeCablePath", b);
-		aModel.setEnabled("mapModePath", b);
-		aModel.setEnabled("mapActionZoomIn", b);
-		aModel.setEnabled("mapActionZoomOut", b);
-		aModel.setEnabled("mapActionZoomToPoint", b);
-		aModel.setEnabled("mapActionZoomBox", b);
-		aModel.setEnabled("mapActionMoveToCenter", b);
-		aModel.setEnabled("mapModeViewNodes", b);
-		aModel.setEnabled("mapActionHandPan", b);
-		aModel.setEnabled("mapActionMeasureDistance", b);
+		aModel.setEnabled(MapApplicationModel.OPERATION_CENTER_SELECTION, b);
+		aModel.setEnabled(MapApplicationModel.MODE_NODE_LINK, b);
+		aModel.setEnabled(MapApplicationModel.MODE_LINK, b);
+		aModel.setEnabled(MapApplicationModel.MODE_CABLE_PATH, b);
+		aModel.setEnabled(MapApplicationModel.MODE_PATH, b);
+		aModel.setEnabled(MapApplicationModel.OPERATION_ZOOM_IN, b);
+		aModel.setEnabled(MapApplicationModel.OPERATION_ZOOM_OUT, b);
+		aModel.setEnabled(MapApplicationModel.OPERATION_ZOOM_TO_POINT, b);
+		aModel.setEnabled(MapApplicationModel.OPERATION_ZOOM_BOX, b);
+		aModel.setEnabled(MapApplicationModel.OPERATION_MOVE_TO_CENTER, b);
+		aModel.setEnabled(MapApplicationModel.MODE_NODES, b);
+		aModel.setEnabled(MapApplicationModel.OPERATION_HAND_PAN, b);
+		aModel.setEnabled(MapApplicationModel.OPERATION_MEASURE_DISTANCE, b);
 
-		aModel.fireModelChanged("");
+		aModel.fireModelChanged();
 
 		sp.setEnabled(b);
 	}
@@ -321,40 +322,40 @@ public final class MapToolBar extends JToolBar
 	{
 		aModel = a;
 
-		aModel.getCommand("mapActionCenterSelection").setParameter("applicationModel", aModel);
-		aModel.getCommand("mapModeNodeLink").setParameter("applicationModel", aModel);
-		aModel.getCommand("mapModeLink").setParameter("applicationModel", aModel);
-		aModel.getCommand("mapModeCablePath").setParameter("applicationModel", aModel);
-		aModel.getCommand("mapModePath").setParameter("applicationModel", aModel);
-		aModel.getCommand("mapActionZoomIn").setParameter("applicationModel", aModel);
-		aModel.getCommand("mapActionZoomOut").setParameter("applicationModel", aModel);
-		aModel.getCommand("mapActionZoomToPoint").setParameter("applicationModel", aModel);
-		aModel.getCommand("mapActionZoomBox").setParameter("applicationModel", aModel);
-		aModel.getCommand("mapActionMoveToCenter").setParameter("applicationModel", aModel);
-		aModel.getCommand("mapModeViewNodes").setParameter("applicationModel", aModel);
-		aModel.getCommand("mapActionHandPan").setParameter("applicationModel", aModel);
-		aModel.getCommand("mapActionMeasureDistance").setParameter("applicationModel", aModel);
+		aModel.getCommand(MapApplicationModel.OPERATION_CENTER_SELECTION).setParameter("applicationModel", aModel);
+		aModel.getCommand(MapApplicationModel.MODE_NODE_LINK).setParameter("applicationModel", aModel);
+		aModel.getCommand(MapApplicationModel.MODE_LINK).setParameter("applicationModel", aModel);
+		aModel.getCommand(MapApplicationModel.MODE_CABLE_PATH).setParameter("applicationModel", aModel);
+		aModel.getCommand(MapApplicationModel.MODE_PATH).setParameter("applicationModel", aModel);
+		aModel.getCommand(MapApplicationModel.OPERATION_ZOOM_IN).setParameter("applicationModel", aModel);
+		aModel.getCommand(MapApplicationModel.OPERATION_ZOOM_OUT).setParameter("applicationModel", aModel);
+		aModel.getCommand(MapApplicationModel.OPERATION_ZOOM_TO_POINT).setParameter("applicationModel", aModel);
+		aModel.getCommand(MapApplicationModel.OPERATION_ZOOM_BOX).setParameter("applicationModel", aModel);
+		aModel.getCommand(MapApplicationModel.OPERATION_MOVE_TO_CENTER).setParameter("applicationModel", aModel);
+		aModel.getCommand(MapApplicationModel.MODE_NODES).setParameter("applicationModel", aModel);
+		aModel.getCommand(MapApplicationModel.OPERATION_HAND_PAN).setParameter("applicationModel", aModel);
+		aModel.getCommand(MapApplicationModel.OPERATION_MEASURE_DISTANCE).setParameter("applicationModel", aModel);
 
-		aModel.getCommand("mapActionCenterSelection").setParameter("logicalNetLayer", logicalNetLayer);
-		aModel.getCommand("mapModeNodeLink").setParameter("logicalNetLayer", logicalNetLayer);
-		aModel.getCommand("mapModeLink").setParameter("logicalNetLayer", logicalNetLayer);
-		aModel.getCommand("mapModeCablePath").setParameter("logicalNetLayer", logicalNetLayer);
-		aModel.getCommand("mapModePath").setParameter("logicalNetLayer", logicalNetLayer);
-		aModel.getCommand("mapActionZoomIn").setParameter("logicalNetLayer", logicalNetLayer);
-		aModel.getCommand("mapActionZoomOut").setParameter("logicalNetLayer", logicalNetLayer);
-		aModel.getCommand("mapActionZoomToPoint").setParameter("logicalNetLayer", logicalNetLayer);
-		aModel.getCommand("mapActionZoomBox").setParameter("logicalNetLayer", logicalNetLayer);
-		aModel.getCommand("mapActionMoveToCenter").setParameter("logicalNetLayer", logicalNetLayer);
-		aModel.getCommand("mapModeViewNodes").setParameter("logicalNetLayer", logicalNetLayer);
-		aModel.getCommand("mapActionHandPan").setParameter("logicalNetLayer", logicalNetLayer);
-		aModel.getCommand("mapActionMeasureDistance").setParameter("logicalNetLayer", logicalNetLayer);
+		aModel.getCommand(MapApplicationModel.OPERATION_CENTER_SELECTION).setParameter("logicalNetLayer", logicalNetLayer);
+		aModel.getCommand(MapApplicationModel.MODE_NODE_LINK).setParameter("logicalNetLayer", logicalNetLayer);
+		aModel.getCommand(MapApplicationModel.MODE_LINK).setParameter("logicalNetLayer", logicalNetLayer);
+		aModel.getCommand(MapApplicationModel.MODE_CABLE_PATH).setParameter("logicalNetLayer", logicalNetLayer);
+		aModel.getCommand(MapApplicationModel.MODE_PATH).setParameter("logicalNetLayer", logicalNetLayer);
+		aModel.getCommand(MapApplicationModel.OPERATION_ZOOM_IN).setParameter("logicalNetLayer", logicalNetLayer);
+		aModel.getCommand(MapApplicationModel.OPERATION_ZOOM_OUT).setParameter("logicalNetLayer", logicalNetLayer);
+		aModel.getCommand(MapApplicationModel.OPERATION_ZOOM_TO_POINT).setParameter("logicalNetLayer", logicalNetLayer);
+		aModel.getCommand(MapApplicationModel.OPERATION_ZOOM_BOX).setParameter("logicalNetLayer", logicalNetLayer);
+		aModel.getCommand(MapApplicationModel.OPERATION_MOVE_TO_CENTER).setParameter("logicalNetLayer", logicalNetLayer);
+		aModel.getCommand(MapApplicationModel.MODE_NODES).setParameter("logicalNetLayer", logicalNetLayer);
+		aModel.getCommand(MapApplicationModel.OPERATION_HAND_PAN).setParameter("logicalNetLayer", logicalNetLayer);
+		aModel.getCommand(MapApplicationModel.OPERATION_MEASURE_DISTANCE).setParameter("logicalNetLayer", logicalNetLayer);
 
-		Command command = aModel.getCommand("mapModeViewNodes");
+		Command command = aModel.getCommand(MapApplicationModel.MODE_NODES);
 		command.setParameter("button", showNodesButton);
 
-		aModel.setSelected("mapModeLink", true);
-		aModel.setSelected("mapModeViewNodes", true);
-		aModel.fireModelChanged("");
+		aModel.setSelected(MapApplicationModel.MODE_LINK, true);
+		aModel.setSelected(MapApplicationModel.MODE_NODES, true);
+		aModel.fireModelChanged();
 	}
 
 	public ApplicationModel getModel()
@@ -364,54 +365,54 @@ public final class MapToolBar extends JToolBar
 
 	public void modelChanged(String e[])
 	{
-		zoomInButton.setVisible(aModel.isVisible("mapActionZoomIn"));
-		zoomInButton.setEnabled(aModel.isEnabled("mapActionZoomIn"));
+		zoomInButton.setVisible(aModel.isVisible(MapApplicationModel.OPERATION_ZOOM_IN));
+		zoomInButton.setEnabled(aModel.isEnabled(MapApplicationModel.OPERATION_ZOOM_IN));
 
-		zoomOutButton.setVisible(aModel.isVisible("mapActionZoomOut"));
-		zoomOutButton.setEnabled(aModel.isEnabled("mapActionZoomOut"));
+		zoomOutButton.setVisible(aModel.isVisible(MapApplicationModel.OPERATION_ZOOM_OUT));
+		zoomOutButton.setEnabled(aModel.isEnabled(MapApplicationModel.OPERATION_ZOOM_OUT));
 
-		centerObjectButton.setVisible(aModel.isVisible("mapActionCenterSelection"));
-		centerObjectButton.setEnabled(aModel.isEnabled("mapActionCenterSelection"));
+		centerObjectButton.setVisible(aModel.isVisible(MapApplicationModel.OPERATION_CENTER_SELECTION));
+		centerObjectButton.setEnabled(aModel.isEnabled(MapApplicationModel.OPERATION_CENTER_SELECTION));
 
-		zoomToPointButton.setVisible(aModel.isVisible("mapActionZoomToPoint"));
-		zoomToPointButton.setEnabled(aModel.isEnabled("mapActionZoomToPoint"));
-		zoomToPointButton.setSelected(aModel.isSelected("mapActionZoomToPoint"));
+		zoomToPointButton.setVisible(aModel.isVisible(MapApplicationModel.OPERATION_ZOOM_TO_POINT));
+		zoomToPointButton.setEnabled(aModel.isEnabled(MapApplicationModel.OPERATION_ZOOM_TO_POINT));
+		zoomToPointButton.setSelected(aModel.isSelected(MapApplicationModel.OPERATION_ZOOM_TO_POINT));
 
-		zoomToRectButton.setVisible(aModel.isVisible("mapActionZoomBox"));
-		zoomToRectButton.setEnabled(aModel.isEnabled("mapActionZoomBox"));
-		zoomToRectButton.setSelected(aModel.isSelected("mapActionZoomBox"));
+		zoomToRectButton.setVisible(aModel.isVisible(MapApplicationModel.OPERATION_ZOOM_BOX));
+		zoomToRectButton.setEnabled(aModel.isEnabled(MapApplicationModel.OPERATION_ZOOM_BOX));
+		zoomToRectButton.setSelected(aModel.isSelected(MapApplicationModel.OPERATION_ZOOM_BOX));
 
-		moveToCenterButton.setVisible(aModel.isVisible("mapActionMoveToCenter"));
-		moveToCenterButton.setEnabled(aModel.isEnabled("mapActionMoveToCenter"));
-		moveToCenterButton.setSelected(aModel.isSelected("mapActionMoveToCenter"));
+		moveToCenterButton.setVisible(aModel.isVisible(MapApplicationModel.OPERATION_MOVE_TO_CENTER));
+		moveToCenterButton.setEnabled(aModel.isEnabled(MapApplicationModel.OPERATION_MOVE_TO_CENTER));
+		moveToCenterButton.setSelected(aModel.isSelected(MapApplicationModel.OPERATION_MOVE_TO_CENTER));
 
-		moveHandButton.setVisible(aModel.isVisible("mapActionHandPan"));
-		moveHandButton.setEnabled(aModel.isEnabled("mapActionHandPan"));
-		moveHandButton.setSelected(aModel.isSelected("mapActionHandPan"));
+		moveHandButton.setVisible(aModel.isVisible(MapApplicationModel.OPERATION_HAND_PAN));
+		moveHandButton.setEnabled(aModel.isEnabled(MapApplicationModel.OPERATION_HAND_PAN));
+		moveHandButton.setSelected(aModel.isSelected(MapApplicationModel.OPERATION_HAND_PAN));
 
-		measureDistanceButton.setVisible(aModel.isVisible("mapActionMeasureDistance"));
-		measureDistanceButton.setEnabled(aModel.isEnabled("mapActionMeasureDistance"));
-		measureDistanceButton.setSelected(aModel.isSelected("mapActionMeasureDistance"));
+		measureDistanceButton.setVisible(aModel.isVisible(MapApplicationModel.OPERATION_MEASURE_DISTANCE));
+		measureDistanceButton.setEnabled(aModel.isEnabled(MapApplicationModel.OPERATION_MEASURE_DISTANCE));
+		measureDistanceButton.setSelected(aModel.isSelected(MapApplicationModel.OPERATION_MEASURE_DISTANCE));
 
-		showNodesButton.setVisible(aModel.isVisible("mapModeViewNodes"));
-		showNodesButton.setEnabled(aModel.isEnabled("mapModeViewNodes"));
-		showNodesButton.setSelected(aModel.isSelected("mapModeViewNodes"));
+		showNodesButton.setVisible(aModel.isVisible(MapApplicationModel.MODE_NODES));
+		showNodesButton.setEnabled(aModel.isEnabled(MapApplicationModel.MODE_NODES));
+		showNodesButton.setSelected(aModel.isSelected(MapApplicationModel.MODE_NODES));
 
-		showNodeLinkToggleButton.setVisible(aModel.isVisible("mapModeNodeLink"));
-		showNodeLinkToggleButton.setEnabled(aModel.isEnabled("mapModeNodeLink"));
-		showNodeLinkToggleButton.setSelected(aModel.isSelected("mapModeNodeLink"));
+		showNodeLinkToggleButton.setVisible(aModel.isVisible(MapApplicationModel.MODE_NODE_LINK));
+		showNodeLinkToggleButton.setEnabled(aModel.isEnabled(MapApplicationModel.MODE_NODE_LINK));
+		showNodeLinkToggleButton.setSelected(aModel.isSelected(MapApplicationModel.MODE_NODE_LINK));
 
-		showPhysicalToggleButton.setVisible(aModel.isVisible("mapModeLink"));
-		showPhysicalToggleButton.setEnabled(aModel.isEnabled("mapModeLink"));
-		showPhysicalToggleButton.setSelected(aModel.isSelected("mapModeLink"));
+		showPhysicalToggleButton.setVisible(aModel.isVisible(MapApplicationModel.MODE_LINK));
+		showPhysicalToggleButton.setEnabled(aModel.isEnabled(MapApplicationModel.MODE_LINK));
+		showPhysicalToggleButton.setSelected(aModel.isSelected(MapApplicationModel.MODE_LINK));
 
-		showCablePathToggleButton.setVisible(aModel.isVisible("mapModeCablePath"));
-		showCablePathToggleButton.setEnabled(aModel.isEnabled("mapModeCablePath"));
-		showCablePathToggleButton.setSelected(aModel.isSelected("mapModeCablePath"));
+		showCablePathToggleButton.setVisible(aModel.isVisible(MapApplicationModel.MODE_CABLE_PATH));
+		showCablePathToggleButton.setEnabled(aModel.isEnabled(MapApplicationModel.MODE_CABLE_PATH));
+		showCablePathToggleButton.setSelected(aModel.isSelected(MapApplicationModel.MODE_CABLE_PATH));
 
-		showTransPathToggleButton.setVisible(aModel.isVisible("mapModePath"));
-		showTransPathToggleButton.setEnabled(aModel.isEnabled("mapModePath"));
-		showTransPathToggleButton.setSelected(aModel.isSelected("mapModePath"));
+		showTransPathToggleButton.setVisible(aModel.isVisible(MapApplicationModel.MODE_PATH));
+		showTransPathToggleButton.setEnabled(aModel.isEnabled(MapApplicationModel.MODE_PATH));
+		showTransPathToggleButton.setSelected(aModel.isSelected(MapApplicationModel.MODE_PATH));
 	}
 
 	public void buttonPressed(ActionEvent e)
