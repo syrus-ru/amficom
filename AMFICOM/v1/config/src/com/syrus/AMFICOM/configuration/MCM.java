@@ -1,5 +1,5 @@
 /*
- * $Id: MCM.java,v 1.11 2004/08/10 19:01:09 arseniy Exp $
+ * $Id: MCM.java,v 1.12 2004/08/11 14:12:43 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,7 +22,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.configuration.corba.MCM_Transferable;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2004/08/10 19:01:09 $
+ * @version $Revision: 1.12 $, $Date: 2004/08/11 14:12:43 $
  * @author $Author: arseniy $
  * @module configuration_v1
  */
@@ -74,6 +74,27 @@ public class MCM extends DomainMember implements Characterized {
 		catch (IllegalDataException ide) {
 			throw new CreateObjectException(ide.getMessage(), ide);
 		}
+	}
+
+	private MCM(Identifier id,
+							Identifier creatorId,
+							Identifier domainId,
+							String name,
+							String description,
+							Identifier userId,
+							Identifier serverId) {
+		super(id,
+					new Date(System.currentTimeMillis()),
+					new Date(System.currentTimeMillis()),
+					creatorId,
+					creatorId,
+					domainId);
+		this.name = name;
+		this.description = description;
+		this.userId = userId;
+		this.serverId = serverId;
+
+		this.characteristicIds = new ArrayList();
 	}
 
 	public Object getTransferable() {
@@ -129,6 +150,22 @@ public class MCM extends DomainMember implements Characterized {
 
 	public List getKISIds() {
 		return this.kisIds;
+	}
+
+	public static MCM createInstance(Identifier id,
+																	 Identifier creatorId,
+																	 Identifier domainId,
+																	 String name,
+																	 String description,
+																	 Identifier userId,
+																	 Identifier serverId) {
+		return new MCM(id,
+									 creatorId,
+									 domainId,
+									 name,
+									 description,
+									 userId,
+									 serverId);
 	}
 
 	protected synchronized void setAttributes(Date created,
