@@ -1,54 +1,23 @@
-//////////////////////////////////////////////////////////////////////////////
-// *                                                                      * //
-// * Syrus Systems                                                        * //
-// * Департамент Системных Исследований и Разработок                      * //
-// *                                                                      * //
-// * Проект: АМФИКОМ - система Автоматизированного Многофункционального   * //
-// *         Интеллектуального Контроля и Объектного Мониторинга          * //
-// *                                                                      * //
-// *         реализация Интегрированной Системы Мониторинга               * //
-// *                                                                      * //
-// * Название: класс, описывающий свойства, одинаковые для всех объектов, * //
-// *           загружаемых в клиентское ПО с РИСД. Каждый объект          * //
-// *           содержит экземпляр данного класса и может использовать     * //
-// *           из него необходимые члены для хранения информации,         * //
-// *           связанной с обменом клиентского ПО с РИСД                  * //
-// *                                                                      * //
-// * Тип: Java 1.2.2                                                      * //
-// *                                                                      * //
-// * Автор: Крупенников А.В.                                              * //
-// *                                                                      * //
-// * Версия: 0.1                                                          * //
-// * От: 22 jan 2002                                                      * //
-// * Расположение: ISM\prog\java\AMFICOMConfigure\com\syrus\AMFICOM\      * //
-// *        Client\Resource\ObjectResource.java                           * //
-// *                                                                      * //
-// * Среда разработки: Oracle JDeveloper 3.2.2 (Build 915)                * //
-// *                                                                      * //
-// * Компилятор: Oracle javac (Java 2 SDK, Standard Edition, ver 1.2.2)   * //
-// *                                                                      * //
-// * Статус: разработка                                                   * //
-// *                                                                      * //
-// * Изменения:                                                           * //
-// *  Кем         Верс   Когда      Комментарии                           * //
-// * -----------  ----- ---------- -------------------------------------- * //
-// *                                                                      * //
-// * Описание:                                                            * //
-// *                                                                      * //
-//////////////////////////////////////////////////////////////////////////////
+/*
+ * $Id: StubDisplayModel.java,v 1.4 2004/09/25 19:51:45 bass Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ.
+ */
 
 package com.syrus.AMFICOM.Client.General.UI;
 
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourceDisplayModel;
 import com.syrus.AMFICOM.Client.Resource.ObjectResource;
-
 import java.awt.Color;
+import java.util.*;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Vector;
-import java.util.Enumeration;
-
+/**
+ * @author $Author: bass $
+ * @version $Revision: 1.4 $, $Date: 2004/09/25 19:51:45 $
+ * @module generalclient_v1
+ */
 public class StubDisplayModel implements ObjectResourceDisplayModel
 {
 	LinkedList cols = new LinkedList();
