@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementControlModule.java,v 1.39 2004/11/12 11:45:00 bob Exp $
+ * $Id: MeasurementControlModule.java,v 1.40 2004/11/15 20:14:20 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -45,8 +45,8 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.39 $, $Date: 2004/11/12 11:45:00 $
- * @author $Author: bob $
+ * @version $Revision: 1.40 $, $Date: 2004/11/15 20:14:20 $
+ * @author $Author: arseniy $
  * @module mcm_v1
  */
 
@@ -59,9 +59,8 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 	public static final String KEY_DB_CONNECTION_TIMEOUT = "DBConnectionTimeout";
 	public static final String KEY_DB_LOGIN_NAME = "DBLoginName";
 	public static final String KEY_SETUP_SERVER_ID = "SetupServerID";
-	public static final String KEY_TICK_TIME = "TickTime";
-	public static final String KEY_TCP_PORT = "TCPPort";
 	public static final String KEY_MAX_FALLS = "MaxFalls";
+	public static final String KEY_TICK_TIME = "TickTime";
 	public static final String KEY_FORWARD_PROCESSING = "ForwardProcessing";
 
 	public static final String ID = "mcm_1";
@@ -94,9 +93,9 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 
 	/*	object reference to Measurement Server	*/
 	protected static MServer mServerRef;
-	
-	/* TCPServer */
-	protected static TCPServer tcpServer;
+
+	/*	Reference to Transmission Manager*/
+	protected static TransmissionManager transmissionManager;
 
 	private long forwardProcessing;
 	private boolean running;
@@ -157,8 +156,8 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 		/*	Create map of test processors*/
 		testProcessors = new Hashtable(Collections.synchronizedMap(new Hashtable()));
 
-		/*	Create and start transceiver for every KIS*/
-		activateKISTransceivers();		
+
+		transmissionManager = new TransmissionManager();
 
 		/*	Start main loop	*/
 		final MeasurementControlModule measurementControlModule = new MeasurementControlModule();
@@ -171,16 +170,6 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 			}
 		});
 	}
-
-
-	static 
-	{
-		try {
-			System.loadLibrary("mcmtransceiver");
-		} catch (Throwable t) {
-			t.printStackTrace();
-		}
-	}	
 
 	private static void establishDatabaseConnection() {
 		String dbHostName = ApplicationProperties.getString(KEY_DB_HOST_NAME, Application.getInternetAddress());
@@ -196,84 +185,10 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 		}
 	}
 
-	private static void activateKISTransceivers()
-	{
-	  String hostName = null;
-		String port = ApplicationProperties.getString(KEY_TCP_PORT, String.valueOf(7500) );	
-		
-		try {
-			hostName = InetAddress.getLocalHost().getHostAddress();			
-			tcpServer = new TCPServer(hostName,port);
-			tcpServer.start();			
-		} catch (UnknownHostException e) {
-			Log.errorMessage("Failed get local host ip ");
-			Log.errorException(e);
-		} catch (UnknownServiceException e) {
-			Log.errorMessage("Failed creating TCPServer at service " + hostName + ':' + port);
-			Log.errorException(e);
-		}
- 
-		List kisIds = iAm.getKISIds();
-		transceivers = new Hashtable(kisIds.size());
-		Identifier kisId;
-		Transceiver transceiver;
-//		synchronized (kisIds) {
-//			for (Iterator it = kisIds.iterator(); it.hasNext();) {
-//				kisId = (Identifier)it.next();
-//				transceiver = new Transceiver(kisId);
-//				transceiver.start();
-//				transceivers.put(kisId, transceiver);
-//				Log.debugMessage("Started transceiver for kis '" + kisId.toString() + "'", Log.DEBUGLEVEL07);
-//			}
-//		}
-		
-		/**
-		 * TODO recast when kis'll be wait for connection from mcm 
-		 */
-		synchronized (kisIds){
-			for (Iterator it = kisIds.iterator(); it.hasNext();) {
-				kisId = (Identifier)it.next();
-				transceiver = (Transceiver)transceivers.get(kisId);
-				{
-					int fallsCounter = 0;
-					int maxFalls = ApplicationProperties.getInt("MaxFalls", MAX_FALLS);
-					int timeToSleep = ApplicationProperties.getInt("TickTime", TICK_TIME) * 1000;
-					
-					while (true){
-						Log.debugMessage("MeasurementControlModule.activateKISTransceivers | try activate transceiver for kis '" + kisId.getIdentifierString() + "'" , Log.DEBUGLEVEL05);
-						transceiver = (Transceiver)MeasurementControlModule.transceivers.get(kisId);
-						if (transceiver == null){
-							if (fallsCounter < maxFalls) {
-								Log.debugMessage("MeasurementControlModule.activateKISTransceivers | WARNING: the fall No." + fallsCounter + " of " + maxFalls  + " maximum", Log.DEBUGLEVEL05);
-								try {
-									sleep(timeToSleep);
-								}
-								catch (InterruptedException ie) {
-									Log.errorException(ie);
-								}
-								fallsCounter ++;
-								timeToSleep = timeToSleep * 2;
-							} else break;						
-						}				
-						else break;
-					}
-				}
-				if (transceiver == null){
-					Log.errorMessage("Cannot active KIS Transceiver for '" + kisId.getIdentifierString() + "'");
-					DatabaseConnection.closeConnection();
-					System.exit(-1);
-				}
-			}
-		}
-		
-	}
-
 	private static void prepareTestList() {
 		testList = Collections.synchronizedList(new ArrayList());
 		List tests;
-		
 		TestDatabase testDatabase = (TestDatabase)MeasurementDatabaseContext.getTestDatabase();
-		
 
 		try {
 			tests = testDatabase.retrieveTestsForMCM(iAm.getId(), TestStatus.TEST_STATUS_SCHEDULED);

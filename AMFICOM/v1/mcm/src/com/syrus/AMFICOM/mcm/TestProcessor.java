@@ -1,5 +1,5 @@
 /*
- * $Id: TestProcessor.java,v 1.28 2004/10/29 09:59:55 bob Exp $
+ * $Id: TestProcessor.java,v 1.29 2004/11/15 20:14:20 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,6 +14,7 @@ import java.util.List;
 
 import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 import com.syrus.AMFICOM.configuration.MeasurementPort;
+import com.syrus.AMFICOM.configuration.KIS;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.general.Identifier;
@@ -33,68 +34,62 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.28 $, $Date: 2004/10/29 09:59:55 $
- * @author $Author: bob $
+ * @version $Revision: 1.29 $, $Date: 2004/11/15 20:14:20 $
+ * @author $Author: arseniy $
  * @module mcm_v1
  */
 
 public abstract class TestProcessor extends SleepButWorkThread {	
+	private static final String KEY_FORGET_FRAME = "ForgetFrame";
 
-	private static final int TICK_TIME = 5;
-		
-	private static final String FORGET_FRAME_KEY = "ForgetFrame"; 
-		
+	private static final int FORGET_FRAME = 24 * 60 * 60;
+
 	Test test;
-	boolean running;
-	Transceiver transceiver;
+	KIS kis;
 	int numberOfScheduledMeasurements;
 	int numberOfReceivedMResults;
 	boolean lastMeasurementAcquisition;
 //	boolean startedWithProcessingTest;
-	/** Forget acquering results for measurement, ms */
 	long forgetFrame;
-
 	private List measurementResultList;	//List <Result measurementResult>
+	boolean running;
+
 
 	public TestProcessor(Test test) {
-		super(ApplicationProperties.getInt("TickTime", TICK_TIME) * 1000, ApplicationProperties.getInt("MaxFalls", MAX_FALLS));
+		super(ApplicationProperties.getInt(MeasurementControlModule.KEY_TICK_TIME, MeasurementControlModule.TICK_TIME) * 1000,
+					ApplicationProperties.getInt(MeasurementControlModule.KEY_MAX_FALLS, MeasurementControlModule.MAX_FALLS));
 
 		this.test = test;
-		this.running = true;
-		this.forgetFrame = ApplicationProperties.getInt(FORGET_FRAME_KEY, 60 * 60 * 24) * 1000;
-
-		this.measurementResultList = Collections.synchronizedList(new LinkedList());
 
 		try {
 			MeasurementPort mp = (MeasurementPort)ConfigurationStorableObjectPool.getStorableObject(this.test.getMonitoredElement().getMeasurementPortId(), true);
-			Identifier kisId = mp.getKISId();
-			this.transceiver = (Transceiver)MeasurementControlModule.transceivers.get(kisId);			
-			if (this.transceiver == null) {
-				Log.errorMessage("TestProcessor<init> | Cannot find transceiver for kis '" + kisId.toString() + "'");
-				this.abort();
-			} else{
-				this.numberOfScheduledMeasurements = this.numberOfReceivedMResults = 0;
-				this.lastMeasurementAcquisition = false;
-
-				switch (this.test.getStatus().value()) {
-					case TestStatus._TEST_STATUS_SCHEDULED:
-						//Normally
-						this.startWithScheduledTest();
-						break;
-					case TestStatus._TEST_STATUS_PROCESSING:
-						this.startWithProcessingTest();
-						break;
-					default:
-						Log.errorMessage("Unappropriate status " + this.test.getStatus().value() + " of test '" + this.test.getId() + "'");
-						this.abort();
-				}
-				
-				this.transceiver.setReadyToGo(true);
-			}
+			this.kis = (KIS)ConfigurationStorableObjectPool.getStorableObject(mp.getKISId(), true);
 		}
 		catch (ApplicationException ae) {
 			Log.errorException(ae);
 			this.abort();
+		}
+		if (! MeasurementControlModule.iAm.getKISs().contains(this.kis)) {
+			Log.errorMessage("TestProcessor<init> | Invalid kis: '" + kis.getId().toString() + "'");
+			this.abort();
+		}
+
+		this.numberOfScheduledMeasurements = this.numberOfReceivedMResults = 0;
+		this.lastMeasurementAcquisition = false;
+		this.forgetFrame = ApplicationProperties.getInt(KEY_FORGET_FRAME, FORGET_FRAME) * 1000;
+		this.measurementResultList = Collections.synchronizedList(new LinkedList());
+		this.running = true;
+		switch (this.test.getStatus().value()) {
+			case TestStatus._TEST_STATUS_SCHEDULED:
+				//Normally
+				this.startWithScheduledTest();
+				break;
+			case TestStatus._TEST_STATUS_PROCESSING:
+				this.startWithProcessingTest();
+				break;
+			default:
+				Log.errorMessage("Unappropriate status " + this.test.getStatus().value() + " of test '" + this.test.getId() + "'");
+				this.abort();
 		}		
 	}
 
@@ -111,53 +106,53 @@ public abstract class TestProcessor extends SleepButWorkThread {
 	}
 
 	private void startWithProcessingTest() {
-		Measurement lastMeasurement = null;
-		try {
-			lastMeasurement = this.test.retrieveLastMeasurement();
-		}
-		catch (DatabaseException de){
-			if (de instanceof ObjectNotFoundException) {
-				startWithScheduledTest();
-				return;
-			}
-			this.abort();
-		}
-
-		Result measurementResult = null;
-		if (lastMeasurement != null){
-			try{
-				this.numberOfScheduledMeasurements = this.test.retrieveNumberOfMeasurements();
-				this.numberOfReceivedMResults = this.test.retrieveNumberOfResults(ResultSort.RESULT_SORT_MEASUREMENT);
-				switch (lastMeasurement.getStatus().value()) {
-					case MeasurementStatus._MEASUREMENT_STATUS_SCHEDULED:
-						this.transceiver.addMeasurement(lastMeasurement, this);
-						break;
-					case MeasurementStatus._MEASUREMENT_STATUS_ACQUIRING:
-						this.transceiver.addAcquiringMeasurement(lastMeasurement, this);
-						break;
-					case MeasurementStatus._MEASUREMENT_STATUS_ACQUIRED:
-						measurementResult = lastMeasurement.retrieveResult(ResultSort.RESULT_SORT_MEASUREMENT);
-						this.addMeasurementResult(measurementResult);
-						break;
-					case MeasurementStatus._MEASUREMENT_STATUS_ANALYZED_OR_EVALUATED:
-						measurementResult = lastMeasurement.retrieveResult(ResultSort.RESULT_SORT_MEASUREMENT);
-						Result analysisResult = lastMeasurement.retrieveResult(ResultSort.RESULT_SORT_ANALYSIS);
-						Result evaluationResult = lastMeasurement.retrieveResult(ResultSort.RESULT_SORT_EVALUATION);
-						MeasurementControlModule.resultList.add(measurementResult);
-						if (analysisResult != null)
-							MeasurementControlModule.resultList.add(analysisResult);
-						if (evaluationResult != null)
-							MeasurementControlModule.resultList.add(evaluationResult);
-						lastMeasurement.updateStatus(MeasurementStatus.MEASUREMENT_STATUS_COMPLETED,
-																				 MeasurementControlModule.iAm.getUserId());
-						break;
-				}
-			}
-			catch (DatabaseException de) {
-				Log.errorException(de);
-				this.abort();
-			}
-		}
+//		Measurement lastMeasurement = null;
+//		try {
+//			lastMeasurement = this.test.retrieveLastMeasurement();
+//		}
+//		catch (DatabaseException de){
+//			if (de instanceof ObjectNotFoundException) {
+//				startWithScheduledTest();
+//				return;
+//			}
+//			this.abort();
+//		}
+//
+//		Result measurementResult = null;
+//		if (lastMeasurement != null) {
+//			try{
+//				this.numberOfScheduledMeasurements = this.test.retrieveNumberOfMeasurements();
+//				this.numberOfReceivedMResults = this.test.retrieveNumberOfResults(ResultSort.RESULT_SORT_MEASUREMENT);
+//				switch (lastMeasurement.getStatus().value()) {
+//					case MeasurementStatus._MEASUREMENT_STATUS_SCHEDULED:
+//						this.transceiver.addMeasurement(lastMeasurement, this);
+//						break;
+//					case MeasurementStatus._MEASUREMENT_STATUS_ACQUIRING:
+//						this.transceiver.addAcquiringMeasurement(lastMeasurement, this);
+//						break;
+//					case MeasurementStatus._MEASUREMENT_STATUS_ACQUIRED:
+//						measurementResult = lastMeasurement.retrieveResult(ResultSort.RESULT_SORT_MEASUREMENT);
+//						this.addMeasurementResult(measurementResult);
+//						break;
+//					case MeasurementStatus._MEASUREMENT_STATUS_ANALYZED_OR_EVALUATED:
+//						measurementResult = lastMeasurement.retrieveResult(ResultSort.RESULT_SORT_MEASUREMENT);
+//						Result analysisResult = lastMeasurement.retrieveResult(ResultSort.RESULT_SORT_ANALYSIS);
+//						Result evaluationResult = lastMeasurement.retrieveResult(ResultSort.RESULT_SORT_EVALUATION);
+//						MeasurementControlModule.resultList.add(measurementResult);
+//						if (analysisResult != null)
+//							MeasurementControlModule.resultList.add(analysisResult);
+//						if (evaluationResult != null)
+//							MeasurementControlModule.resultList.add(evaluationResult);
+//						lastMeasurement.updateStatus(MeasurementStatus.MEASUREMENT_STATUS_COMPLETED,
+//																				 MeasurementControlModule.iAm.getUserId());
+//						break;
+//				}
+//			}
+//			catch (DatabaseException de) {
+//				Log.errorException(de);
+//				this.abort();
+//			}
+//		}
 	}
 
 	protected final void addMeasurementResult(Result result) {
@@ -238,7 +233,8 @@ public abstract class TestProcessor extends SleepButWorkThread {
 		private boolean running;
 
 		TestStatusVerifier (Identifier testId, TestStatus testStatus) {
-			super(ApplicationProperties.getInt("TickTime", TICK_TIME) * 1000, ApplicationProperties.getInt("MaxFalls", MAX_FALLS));
+			super(ApplicationProperties.getInt(MeasurementControlModule.KEY_TICK_TIME, MeasurementControlModule.TICK_TIME) * 1000,
+						ApplicationProperties.getInt(MeasurementControlModule.KEY_MAX_FALLS, MeasurementControlModule.MAX_FALLS));
 
 			this.testId = testId;
 			this.testStatus = testStatus;
