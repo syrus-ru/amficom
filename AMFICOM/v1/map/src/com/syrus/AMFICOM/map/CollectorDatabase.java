@@ -1,5 +1,5 @@
 /*
- * $Id: CollectorDatabase.java,v 1.12 2005/02/04 06:44:07 bob Exp $
+ * $Id: CollectorDatabase.java,v 1.13 2005/02/07 10:33:10 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,7 +31,6 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
-import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.UpdateObjectException;
@@ -44,7 +43,7 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/02/04 06:44:07 $
+ * @version $Revision: 1.13 $, $Date: 2005/02/07 10:33:10 $
  * @author $Author: bob $
  * @module map_v1
  */
@@ -330,15 +329,6 @@ public class CollectorDatabase extends StorableObjectDatabase {
 		//return retriveByIdsPreparedStatement(ids, conditions);
 	}	
 	
-	public List retrieveByCondition(List ids, StorableObjectCondition condition) throws RetrieveObjectException,
-			IllegalDataException {
-		List list = null;
-		{
-			Log.errorMessage(getEnityName() + "Database.retrieveByCondition | Unknown condition class: " + condition);
-			list = this.retrieveButIds(ids);
-		}
-		return list;
-	}
 }
 
 

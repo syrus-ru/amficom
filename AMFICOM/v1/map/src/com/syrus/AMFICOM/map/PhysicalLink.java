@@ -1,5 +1,5 @@
 /**
- * $Id: PhysicalLink.java,v 1.23 2005/02/02 15:17:13 krupenn Exp $
+ * $Id: PhysicalLink.java,v 1.24 2005/02/07 10:33:10 bob Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -10,6 +10,14 @@
  */
 
 package com.syrus.AMFICOM.map;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
@@ -28,18 +36,12 @@ import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectType;
-import com.syrus.AMFICOM.general.StringFieldCondition;
+import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.TypedObject;
+import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
+import com.syrus.AMFICOM.general.corba.OperationSort;
 import com.syrus.AMFICOM.map.corba.PhysicalLink_Transferable;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
 
 /**
  * Линия топологический схемы. Линия имеет начальный и конечный узлы, 
@@ -49,8 +51,8 @@ import java.util.List;
  * Предуствновленными являются  два типа - 
  * тоннель (<code>{@link PhysicalLinkType#TUNNEL}</code>) 
  * и коллектор (<code>{@link PhysicalLinkType#COLLECTOR}</code>).
- * @author $Author: krupenn $
- * @version $Revision: 1.23 $, $Date: 2005/02/02 15:17:13 $
+ * @author $Author: bob $
+ * @version $Revision: 1.24 $, $Date: 2005/02/07 10:33:10 $
  * @module map_v1
  */
 public class PhysicalLink extends StorableObject implements Characterized, TypedObject, MapElement {
@@ -963,18 +965,18 @@ public class PhysicalLink extends StorableObject implements Characterized, Typed
   		try {
 			PhysicalLinkType physicalLinkType;
 
-			StringFieldCondition condition = new StringFieldCondition(
-					typeCodeName,
-					ObjectEntities.PHYSICAL_LINK_TYPE_ENTITY_CODE);
+			TypicalCondition condition = new TypicalCondition(
+				typeCodeName,
+				OperationSort.OPERATION_EQUALS,
+				new Short(ObjectEntities.PHYSICAL_LINK_TYPE_ENTITY_CODE),
+				StorableObjectWrapper.COLUMN_CODENAME);
 			
 			List list = MapStorableObjectPool.getStorableObjectsByCondition(condition, true);
 			if(list == null || list.size() == 0)
 			{
 				typeCodeName = PhysicalLinkType.TUNNEL;
 
-				condition = new StringFieldCondition(
-						typeCodeName,
-						ObjectEntities.PHYSICAL_LINK_TYPE_ENTITY_CODE);
+				condition.setValue(typeCodeName);
 				
 				list = MapStorableObjectPool.getStorableObjectsByCondition(condition, true);
 				if(list == null || list.size() == 0)

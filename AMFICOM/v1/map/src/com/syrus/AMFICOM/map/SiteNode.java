@@ -1,5 +1,5 @@
 /**
- * $Id: SiteNode.java,v 1.16 2005/02/02 14:48:45 krupenn Exp $
+ * $Id: SiteNode.java,v 1.17 2005/02/07 10:33:10 bob Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -10,6 +10,14 @@
  */
 
 package com.syrus.AMFICOM.map;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
@@ -26,21 +34,15 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectType;
-import com.syrus.AMFICOM.general.StringFieldCondition;
+import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.TypedObject;
+import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
+import com.syrus.AMFICOM.general.corba.OperationSort;
 import com.syrus.AMFICOM.map.corba.SiteNode_Transferable;
-
 import com.syrus.AMFICOM.resource.AbstractBitmapImageResource;
 import com.syrus.AMFICOM.resource.AbstractImageResource;
 import com.syrus.AMFICOM.resource.ResourceStorableObjectPool;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
 
 /**
  * Сетевой узел на топологической схеме. Характеризуется типом 
@@ -54,8 +56,8 @@ import java.util.List;
  * Дополнительно описывается полями
  * {@link #city}, {@link #street}, {@link #building} для поиска по 
  * географическим параметрам. 
- * @author $Author: krupenn $
- * @version $Revision: 1.16 $, $Date: 2005/02/02 14:48:45 $
+ * @author $Author: bob $
+ * @version $Revision: 1.17 $, $Date: 2005/02/07 10:33:10 $
  * @module map_v1
  */
 public class SiteNode extends AbstractNode implements TypedObject {
@@ -434,18 +436,18 @@ public class SiteNode extends AbstractNode implements TypedObject {
       		try {
 				SiteNodeType siteNodeType;
 	
-				StringFieldCondition condition = new StringFieldCondition(
+				TypicalCondition condition = new TypicalCondition(
 						typeCodeName,
-						ObjectEntities.SITE_NODE_TYPE_ENTITY_CODE);
+						OperationSort.OPERATION_EQUALS,
+						new Short(ObjectEntities.SITE_NODE_TYPE_ENTITY_CODE),
+						StorableObjectWrapper.COLUMN_CODENAME);
 				
 				List list = MapStorableObjectPool.getStorableObjectsByCondition(condition, true);
 				if(list == null || list.size() == 0)
 				{
 					typeCodeName = SiteNodeType.BUILDING;
 	
-					condition = new StringFieldCondition(
-							typeCodeName,
-							ObjectEntities.SITE_NODE_TYPE_ENTITY_CODE);
+					condition.setValue(typeCodeName);
 					
 					list = MapStorableObjectPool.getStorableObjectsByCondition(condition, true);
 					if(list == null || list.size() == 0)
@@ -457,18 +459,18 @@ public class SiteNode extends AbstractNode implements TypedObject {
 
 				Identifier imageId;
 	
-				condition = new StringFieldCondition(
-						imageCodeName,
-						ObjectEntities.IMAGE_RESOURCE_ENTITY_CODE);
+				condition = new TypicalCondition(
+					imageCodeName,
+					OperationSort.OPERATION_EQUALS,
+					new Short(ObjectEntities.IMAGE_RESOURCE_ENTITY_CODE),
+					StorableObjectWrapper.COLUMN_CODENAME);
 				
 				list = ResourceStorableObjectPool.getStorableObjectsByCondition(condition, true);
 				if(list == null || list.size() == 0)
 				{
 					imageCodeName = SiteNodeType.BUILDING_IMAGE;
 	
-					condition = new StringFieldCondition(
-							imageCodeName,
-							ObjectEntities.IMAGE_RESOURCE_ENTITY_CODE);
+					condition.setValue(imageCodeName);
 					
 					list = ResourceStorableObjectPool.getStorableObjectsByCondition(condition, true);
 					if(list == null || list.size() == 0)

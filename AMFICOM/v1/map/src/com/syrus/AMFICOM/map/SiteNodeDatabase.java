@@ -1,5 +1,5 @@
 /*
- * $Id: SiteNodeDatabase.java,v 1.10 2005/02/04 06:44:07 bob Exp $
+ * $Id: SiteNodeDatabase.java,v 1.11 2005/02/07 10:33:10 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -24,19 +24,17 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
-import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.general.corba.CharacteristicSort;
-import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/02/04 06:44:07 $
+ * @version $Revision: 1.11 $, $Date: 2005/02/07 10:33:10 $
  * @author $Author: bob $
  * @module map_v1
  */
@@ -248,15 +246,5 @@ public class SiteNodeDatabase extends StorableObjectDatabase {
         return siteNodes;
 		//return retriveByIdsPreparedStatement(ids, conditions);
 	}	
-	
-	public List retrieveByCondition(List ids, StorableObjectCondition condition) throws RetrieveObjectException,
-			IllegalDataException {
-		List list = null;
-		{
-			Log.errorMessage(getEnityName() + "Database.retrieveByCondition | Unknown condition class: " + condition);
-			list = this.retrieveButIds(ids);
-		}
-		return list;
-	}
 
 }
