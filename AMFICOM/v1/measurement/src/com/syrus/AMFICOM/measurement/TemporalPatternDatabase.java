@@ -1,5 +1,5 @@
 /*
- * $Id: TemporalPatternDatabase.java,v 1.20 2004/09/20 14:06:50 bob Exp $
+ * $Id: TemporalPatternDatabase.java,v 1.21 2004/10/17 14:19:08 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,7 +32,7 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.measurement.ora.CronStringArray;
 
 /**
- * @version $Revision: 1.20 $, $Date: 2004/09/20 14:06:50 $
+ * @version $Revision: 1.21 $, $Date: 2004/10/17 14:19:08 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -142,7 +142,7 @@ public class TemporalPatternDatabase extends StorableObjectDatabase {
 			+ CLOSE_BRACKET + SQL_VALUES + OPEN_BRACKET
 			+ getUpdateMultiplySQLValues()
 			+ CLOSE_BRACKET;
-			 connection.prepareStatement(sql);
+			preparedStatement = connection.prepareStatement(sql);
 		} finally {
 			DatabaseConnection.closeConnection(connection);
 		}
