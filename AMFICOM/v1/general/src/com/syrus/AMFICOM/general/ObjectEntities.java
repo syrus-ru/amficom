@@ -1,5 +1,5 @@
 /*
- * $Id: ObjectEntities.java,v 1.45 2005/01/31 07:05:14 arseniy Exp $
+ * $Id: ObjectEntities.java,v 1.46 2005/01/31 11:00:12 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,8 +9,8 @@
 package com.syrus.AMFICOM.general;
 
 /**
- * @version $Revision: 1.45 $, $Date: 2005/01/31 07:05:14 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.46 $, $Date: 2005/01/31 11:00:12 $
+ * @author $Author: bob $
  * @module general_v1
  */
 public final class ObjectEntities {
@@ -53,7 +53,7 @@ public final class ObjectEntities {
 	public static final String ALARM_ENTITY = "Alarm";
 
 	/*	Administration	*/
-	public static final String USER_ENTITY = "Users";
+	public static final String USER_ENTITY = "User";
 	public static final String DOMAIN_ENTITY = "Domain";
 	public static final String SERVER_ENTITY = "Server";
 	public static final String MCM_ENTITY = "MCM";
@@ -72,7 +72,7 @@ public final class ObjectEntities {
 	public static final String CABLE_THREAD_ENTITY = "CableThread";
 
 	/*	Measurement	*/
-	public static final String SET_ENTITY = "Sett";
+	public static final String SET_ENTITY = "Set";
 	public static final String SETPARAMETER_ENTITY = "SetParameter";
 	public static final String SETMELINK_ENTITY = "SetMELink";
 	public static final String MS_ENTITY = "MeasurementSetup";
