@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseMeasurementObjectLoader.java,v 1.18 2004/10/13 10:35:52 max Exp $
+ * $Id: DatabaseMeasurementObjectLoader.java,v 1.19 2004/10/18 14:19:01 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,8 +27,8 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2004/10/13 10:35:52 $
- * @author $Author: max $
+ * @version $Revision: 1.19 $, $Date: 2004/10/18 14:19:01 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
@@ -505,8 +505,8 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 		TestDatabase database = (TestDatabase)MeasurementDatabaseContext.getTestDatabase();
 		List list = null;
 		{
-			if (condition instanceof TestCondition){
-				TestCondition testCondition = (TestCondition) condition;
+			if (condition instanceof TemporalCondition){
+				TemporalCondition testCondition = (TemporalCondition) condition;
 				list = database.retrieveButIdsByTimeRange(ids, testCondition.getDomain(), testCondition.getStart(), testCondition.getEnd());
 			} else				
 				throw new DatabaseException("DatabaseMeasumentObjectLoader.loadTestsButIds | Condition class doesn't support : " + condition );
