@@ -1,3 +1,11 @@
+/*
+ * $Id: Analysis.java,v 1.16 2004/07/27 15:52:25 arseniy Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ.
+ */
+
 package com.syrus.AMFICOM.measurement;
 
 import java.util.Date;
@@ -11,6 +19,12 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Analysis_Transferable;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
 import com.syrus.AMFICOM.event.corba.AlarmLevel;
+
+/**
+ * @version $Revision: 1.16 $, $Date: 2004/07/27 15:52:25 $
+ * @author $Author: arseniy $
+ * @module measurement_v1
+ */
 
 public class Analysis extends Action {
 	private Set criteriaSet;

@@ -1,3 +1,11 @@
+/*
+ * $Id: ResultDatabase.java,v 1.10 2004/07/27 15:52:26 arseniy Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ.
+ */
+
 package com.syrus.AMFICOM.measurement;
 
 import java.util.ArrayList;
@@ -20,6 +28,11 @@ import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
 
+/**
+ * @version $Revision: 1.10 $, $Date: 2004/07/27 15:52:26 $
+ * @author $Author: arseniy $
+ * @module measurement_v1
+ */
 
 public class ResultDatabase extends StorableObjectDatabase {
 	

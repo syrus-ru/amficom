@@ -1,3 +1,11 @@
+/*
+ * $Id: TestDatabase.java,v 1.11 2004/07/27 15:52:26 arseniy Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ.
+ */
+
 package com.syrus.AMFICOM.measurement;
 
 import java.sql.Statement;
@@ -8,7 +16,6 @@ import java.util.Date;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 import com.syrus.AMFICOM.general.Identifier;
@@ -22,6 +29,12 @@ import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.measurement.corba.MeasurementStatus;
 import com.syrus.AMFICOM.configuration.MonitoredElement;
+
+/**
+ * @version $Revision: 1.11 $, $Date: 2004/07/27 15:52:26 $
+ * @author $Author: arseniy $
+ * @module measurement_v1
+ */
 
 public class TestDatabase extends StorableObjectDatabase {
 	public static final String COLUMN_ANALYSIS_TYPE_ID	= "analysis_type_id";

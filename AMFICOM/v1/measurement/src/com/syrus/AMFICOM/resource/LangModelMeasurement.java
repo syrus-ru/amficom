@@ -1,17 +1,22 @@
 /*
- * LangModelMeasurement.java
- * Created on 25.06.2004 10:15:19
- * 
+ * $Id: LangModelMeasurement.java,v 1.3 2004/07/27 15:54:44 arseniy Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ.
  */
+
 package com.syrus.AMFICOM.resource;
 
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
-
 /**
- * @author Vladimir Dolzhenko
+ * @version $ $, $Date: 2004/07/27 15:54:44 $
+ * @author $Author: arseniy $
+ * @module measurement_v1
  */
+
 public class LangModelMeasurement {
 	private static final String			BUNDLE_NAME			= "com.syrus.AMFICOM.resource.measurement";
 

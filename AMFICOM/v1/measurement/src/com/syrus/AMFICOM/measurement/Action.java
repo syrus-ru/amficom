@@ -1,3 +1,10 @@
+/*
+ * $Id: Action.java,v 1.10 2004/07/27 15:52:25 arseniy Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ.
+ */
 package com.syrus.AMFICOM.measurement;
 
 import java.util.Date;
@@ -7,6 +14,12 @@ import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.event.corba.AlarmLevel;
+
+/**
+ * @version $Revision: 1.10 $, $Date: 2004/07/27 15:52:25 $
+ * @author $Author: arseniy $
+ * @module measurement_v1
+ */
 
 public abstract class Action extends StorableObject implements TypedObject {
 	ActionType type;

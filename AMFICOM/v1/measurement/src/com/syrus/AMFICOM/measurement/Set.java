@@ -1,10 +1,17 @@
+/*
+ * $Id: Set.java,v 1.15 2004/07/27 15:52:26 arseniy Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ.
+ */
+
 package com.syrus.AMFICOM.measurement;
 
 import java.util.Date;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
@@ -17,6 +24,12 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.corba.SetSort;
 import com.syrus.AMFICOM.measurement.corba.Set_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Parameter_Transferable;
+
+/**
+ * @version $Revision: 1.15 $, $Date: 2004/07/27 15:52:26 $
+ * @author $Author: arseniy $
+ * @module measurement_v1
+ */
 
 public class Set extends StorableObject {
 	protected static final int UPDATE_ATTACH_ME = 1;

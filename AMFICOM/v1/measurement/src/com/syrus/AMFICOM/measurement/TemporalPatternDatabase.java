@@ -1,3 +1,11 @@
+/*
+ * $Id: TemporalPatternDatabase.java,v 1.6 2004/07/27 15:52:26 arseniy Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ.
+ */
+
 package com.syrus.AMFICOM.measurement;
 
 import java.sql.Statement;
@@ -18,6 +26,12 @@ import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.measurement.ora.CronStringArray;
+
+/**
+ * @version $Revision: 1.6 $, $Date: 2004/07/27 15:52:26 $
+ * @author $Author: arseniy $
+ * @module measurement_v1
+ */
 
 public class TemporalPatternDatabase extends StorableObjectDatabase {
 	public static final String COLUMN_DESCRIPTION 	= "description";

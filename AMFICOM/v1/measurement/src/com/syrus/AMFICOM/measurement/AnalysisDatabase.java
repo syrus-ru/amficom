@@ -1,3 +1,11 @@
+/*
+ * $Id: AnalysisDatabase.java,v 1.10 2004/07/27 15:52:25 arseniy Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ.
+ */
+
 package com.syrus.AMFICOM.measurement;
 
 import java.sql.Statement;
@@ -14,6 +22,12 @@ import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
+
+/**
+ * @version $Revision: 1.10 $, $Date: 2004/07/27 15:52:25 $
+ * @author $Author: arseniy $
+ * @module measurement_v1
+ */
 
 public class AnalysisDatabase extends StorableObjectDatabase {
 

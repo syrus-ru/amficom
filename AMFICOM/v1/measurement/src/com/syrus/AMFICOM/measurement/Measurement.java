@@ -1,3 +1,11 @@
+/*
+ * $Id: Measurement.java,v 1.17 2004/07/27 15:52:26 arseniy Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ.
+ */
+
 package com.syrus.AMFICOM.measurement;
 
 import java.util.Date;
@@ -13,6 +21,12 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Measurement_Transferable;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
 import com.syrus.AMFICOM.event.corba.AlarmLevel;
+
+/**
+ * @version $Revision: 1.17 $, $Date: 2004/07/27 15:52:26 $
+ * @author $Author: arseniy $
+ * @module measurement_v1
+ */
 
 public class Measurement extends Action {
 	public static final long DEFAULT_MEASUREMENT_DURATION = 3*60*1000;//milliseconds

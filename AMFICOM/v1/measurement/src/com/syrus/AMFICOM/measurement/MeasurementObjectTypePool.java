@@ -1,3 +1,11 @@
+/*
+ * $Id: MeasurementObjectTypePool.java,v 1.4 2004/07/27 15:52:26 arseniy Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ.
+ */
+
 package com.syrus.AMFICOM.measurement;
 
 import java.util.Map;
@@ -7,6 +15,12 @@ import java.util.Iterator;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.util.Log;
+
+/**
+ * @version $Revision: 1.4 $, $Date: 2004/07/27 15:52:26 $
+ * @author $Author: arseniy $
+ * @module measurement_v1
+ */
 
 public class MeasurementObjectTypePool {
 	private static Map identifierObjectTypes;

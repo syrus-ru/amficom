@@ -1,3 +1,11 @@
+/*
+ * $Id: SetDatabase.java,v 1.13 2004/07/27 15:52:26 arseniy Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ.
+ */
+
 package com.syrus.AMFICOM.measurement;
 
 import java.sql.Statement;
@@ -7,7 +15,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
 import oracle.sql.BLOB;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
@@ -21,6 +28,12 @@ import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
+
+/**
+ * @version $Revision: 1.13 $, $Date: 2004/07/27 15:52:26 $
+ * @author $Author: arseniy $
+ * @module measurement_v1
+ */
 
 public class SetDatabase extends StorableObjectDatabase {
 	

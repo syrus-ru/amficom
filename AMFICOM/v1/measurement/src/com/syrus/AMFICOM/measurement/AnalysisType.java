@@ -1,3 +1,11 @@
+/*
+ * $Id: AnalysisType.java,v 1.19 2004/07/27 15:52:25 arseniy Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ.
+ */
+
 package com.syrus.AMFICOM.measurement;
 
 import java.util.Date;
@@ -12,6 +20,12 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.corba.AnalysisType_Transferable;
+
+/**
+ * @version $Revision: 1.19 $, $Date: 2004/07/27 15:52:25 $
+ * @author $Author: arseniy $
+ * @module measurement_v1
+ */
 
 public class AnalysisType extends ActionType {
 
