@@ -1,5 +1,5 @@
 /*
- * $Id: ImageCatalogue.java,v 1.4 2004/09/14 13:23:05 bass Exp $
+ * $Id: ImageCatalogue.java,v 1.5 2004/09/27 16:06:49 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,13 +8,13 @@
 
 package com.syrus.AMFICOM.Client.Resource;
 
-import com.syrus.AMFICOM.Client.General.Model.Environment;
+import com.syrus.AMFICOM.Client.General.Model.ApplicationModel;
 import com.syrus.AMFICOM.Client.General.SessionInterface;
 import java.util.*;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.4 $, $Date: 2004/09/14 13:23:05 $
+ * @version $Revision: 1.5 $, $Date: 2004/09/27 16:06:49 $
  * @module generalclient_v1
  */
 public final class ImageCatalogue {
@@ -42,8 +42,7 @@ public final class ImageCatalogue {
 
 	private static ImageResource load(String name) {
 		ImageResource ir = null;
-		new DataSourceImage(Environment.getDefaultDataSourceInterface(SessionInterface.getActiveSession())).LoadImages(new String[] { name });
-
+		new DataSourceImage(ApplicationModel.getInstance().getDataSource(SessionInterface.getActiveSession())).LoadImages(new String[]{name});
 		try {
 			ir = (ImageResource) HASHTABLE.get(name);
 		} catch(Exception e) {

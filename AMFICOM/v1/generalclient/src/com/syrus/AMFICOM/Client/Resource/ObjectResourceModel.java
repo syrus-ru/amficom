@@ -1,55 +1,24 @@
-//////////////////////////////////////////////////////////////////////////////
-// *                                                                      * //
-// * Syrus Systems                                                        * //
-// * Департамент Системных Исследований и Разработок                      * //
-// *                                                                      * //
-// * Проект: АМФИКОМ - система Автоматизированного Многофункционального   * //
-// *         Интеллектуального Контроля и Объектного Мониторинга          * //
-// *                                                                      * //
-// *         реализация Интегрированной Системы Мониторинга               * //
-// *                                                                      * //
-// * Название: класс, описывающий свойства, одинаковые для всех объектов, * //
-// *           загружаемых в клиентское ПО с РИСД. Каждый объект          * //
-// *           содержит экземпляр данного класса и может использовать     * //
-// *           из него необходимые члены для хранения информации,         * //
-// *           связанной с обменом клиентского ПО с РИСД                  * //
-// *                                                                      * //
-// * Тип: Java 1.2.2                                                      * //
-// *                                                                      * //
-// * Автор: Крупенников А.В.                                              * //
-// *                                                                      * //
-// * Версия: 0.1                                                          * //
-// * От: 22 jan 2002                                                      * //
-// * Расположение: ISM\prog\java\AMFICOMConfigure\com\syrus\AMFICOM\      * //
-// *        Client\Resource\ObjectResource.java                           * //
-// *                                                                      * //
-// * Среда разработки: Oracle JDeveloper 3.2.2 (Build 915)                * //
-// *                                                                      * //
-// * Компилятор: Oracle javac (Java 2 SDK, Standard Edition, ver 1.2.2)   * //
-// *                                                                      * //
-// * Статус: разработка                                                   * //
-// *                                                                      * //
-// * Изменения:                                                           * //
-// *  Кем         Верс   Когда      Комментарии                           * //
-// * -----------  ----- ---------- -------------------------------------- * //
-// *                                                                      * //
-// * Описание:                                                            * //
-// *                                                                      * //
-//////////////////////////////////////////////////////////////////////////////
+/*
+ * $Id: ObjectResourceModel.java,v 1.6 2004/09/27 16:09:13 bass Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ
+ */
 
 package com.syrus.AMFICOM.Client.Resource;
 
-import com.syrus.AMFICOM.Client.General.UI.GeneralPanel;
-import com.syrus.AMFICOM.Client.General.UI.PropertiesPanel;
-
+import com.syrus.AMFICOM.Client.General.UI.*;
 import java.awt.Component;
+import java.util.*;
 
-import java.util.Collection;
-import java.util.LinkedList;
-import java.util.List;
-
-public class ObjectResourceModel{
-	
+/**
+ * @author $Author: bass $
+ * @version $Revision: 1.6 $, $Date: 2004/09/27 16:09:13 $
+ * @module generalclient_v1
+ */
+public class ObjectResourceModel
+{	
 	public static final String	COLUMN_ALARM_TYPE_NAME	= "alarm_type_name";
 	public static final String	COLUMN_GENERATED		= "generated";
 	public static final String	COLUMN_KIS_ID			= "kis_id";
@@ -71,7 +40,7 @@ public class ObjectResourceModel{
 	
 	protected ObjectResource or;
 	private LinkedList children = new LinkedList();
-	private PropertiesPanel panel = new GeneralPanel();
+	private ObjectResourcePropertiesPane panel = new GeneralPanel();
 
 	private LinkedList propertyColumns = new LinkedList();
 
@@ -113,7 +82,7 @@ public class ObjectResourceModel{
 		return "";
 	}
 
-	public PropertiesPanel getPropertyPane()
+	public ObjectResourcePropertiesPane getPropertyPane()
 	{
 		return panel;
 	}

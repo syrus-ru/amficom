@@ -1,28 +1,28 @@
+/*
+ * $Id: RISDDataSource.java,v 1.4 2004/09/27 16:10:36 bass Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ
+ */
+
 package com.syrus.AMFICOM.Client.Resource;
 
+import com.syrus.AMFICOM.CORBA.Admin.*;
 import com.syrus.AMFICOM.CORBA.Constants;
 import com.syrus.AMFICOM.CORBA.General.wstringSeqHolder;
-import com.syrus.AMFICOM.CORBA.Admin.CommandPermissionAttributesSeq_TransferableHolder;
-import com.syrus.AMFICOM.CORBA.Admin.CommandPermissionAttributes_Transferable;
-import com.syrus.AMFICOM.CORBA.Admin.DomainSeq_TransferableHolder;
-import com.syrus.AMFICOM.CORBA.Admin.Domain_Transferable;
-import com.syrus.AMFICOM.CORBA.Admin.UserSeq_TransferableHolder;
-import com.syrus.AMFICOM.CORBA.Admin.User_Transferable;
-import com.syrus.AMFICOM.CORBA.Resource.ImageResourceSeq_TransferableHolder;
-import com.syrus.AMFICOM.CORBA.Resource.ImageResource_Transferable;
-import com.syrus.AMFICOM.CORBA.Resource.ResourceDescriptor_Transferable;
-import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
-import com.syrus.AMFICOM.Client.General.SessionInterface;
-import com.syrus.AMFICOM.Client.Resource.Object.CommandPermissionAttributes;
-import com.syrus.AMFICOM.Client.Resource.Object.Domain;
-import com.syrus.AMFICOM.Client.Resource.Object.User;
-
+import com.syrus.AMFICOM.CORBA.Resource.*;
+import com.syrus.AMFICOM.Client.General.*;
+import com.syrus.AMFICOM.Client.Resource.Object.*;
 import com.syrus.io.Rewriter;
-
 import java.util.Vector;
-
 import org.omg.CORBA.StringHolder;
 
+/**
+ * @author $Author: bass $
+ * @version $Revision: 1.4 $, $Date: 2004/09/27 16:10:36 $
+ * @module generalclient_v1
+ */
 public class RISDDataSource 
 		extends EmptyDataSource
 		implements DataSourceInterface 
@@ -59,7 +59,7 @@ public class RISDDataSource
 
 		try
 		{
-			si.ci.server.ChangePassword(
+			si.ci.getServer().ChangePassword(
 					si.accessIdentity, 
 					Rewriter.write(oldpwd), 
 					Rewriter.write(newpwd));
@@ -78,7 +78,7 @@ public class RISDDataSource
 		try
 		{
 			StringHolder idholder = new StringHolder();
-			si.ci.server.GetUId(si.accessIdentity, type, idholder);
+			si.ci.getServer().GetUId(si.accessIdentity, type, idholder);
 			return idholder.value;
 		}
 		catch(Exception e)
@@ -99,7 +99,7 @@ public class RISDDataSource
 		ImageResourceSeq_TransferableHolder imholder = new ImageResourceSeq_TransferableHolder();
 		try
 		{
-			si.ci.server.GetImages(si.accessIdentity, id, imholder);
+			si.ci.getServer().GetImages(si.accessIdentity, id, imholder);
 		}
 		catch(Exception e)
 		{
@@ -429,7 +429,7 @@ public class RISDDataSource
 
 		try
 		{
-			ecode = si.ci.server.GetExecDescriptors(si.accessIdentity, eh);
+			ecode = si.ci.getServer().GetExecDescriptors(si.accessIdentity, eh);
 		}
 		catch (Exception ex)
 		{
@@ -479,7 +479,7 @@ public class RISDDataSource
 
 		try
 		{
-			ecode = si.ci.server.GetLoggedUserIds(si.accessIdentity, userids);
+			ecode = si.ci.getServer().GetLoggedUserIds(si.accessIdentity, userids);
 		}
 		catch (Exception ex)
 		{
@@ -614,7 +614,7 @@ public class RISDDataSource
 
 		try
 		{
-			ecode = si.ci.server.GetUserDescriptors(si.accessIdentity, ih, dh, uh);
+			ecode = si.ci.getServer().GetUserDescriptors(si.accessIdentity, ih, dh, uh);
 		}
 		catch (Exception ex)
 		{

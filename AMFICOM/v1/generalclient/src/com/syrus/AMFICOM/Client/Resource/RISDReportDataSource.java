@@ -1,16 +1,24 @@
+/*
+ * $Id: RISDReportDataSource.java,v 1.2 2004/09/27 16:11:31 bass Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ
+ */
+
 package com.syrus.AMFICOM.Client.Resource;
 
+import com.syrus.AMFICOM.CORBA.Report.*;
+import com.syrus.AMFICOM.Client.General.Report.ReportTemplate;
+import com.syrus.AMFICOM.Client.General.SessionInterface;
 import java.util.Vector;
 
-import com.syrus.AMFICOM.Client.General.SessionInterface;
-
-import com.syrus.AMFICOM.CORBA.Report.ReportTemplate_Transferable;
-import com.syrus.AMFICOM.CORBA.Report.ReportTemplateSeq_TransferableHolder;
-
-import com.syrus.AMFICOM.Client.General.Report.ReportTemplate;
-
-public class RISDReportDataSource
-		extends RISDDataSource
+/**
+ * @author $Author: bass $
+ * @version $Revision: 1.2 $, $Date: 2004/09/27 16:11:31 $
+ * @module generalclient_v1
+ */
+public class RISDReportDataSource extends RISDDataSource
 {
 	protected RISDReportDataSource()
 	{
@@ -45,8 +53,7 @@ public class RISDReportDataSource
 
 		try
 		{
-			si.ci.server.saveReportTemplates(si.accessIdentity, rts);
-//			si.ci.server.saveReportTemplates(si.accessIdentity,new ReportTemplate_Transferable[0]);
+			si.ci.getServer().saveReportTemplates(si.accessIdentity, rts);
 		}
 		catch (Exception ex)
 		{
@@ -74,7 +81,7 @@ public class RISDReportDataSource
 
 		try
 		{
-			si.ci.server.getStatedReportTemplates(si.accessIdentity, report_ids, rth);
+			si.ci.getServer().getStatedReportTemplates(si.accessIdentity, report_ids, rth);
 		}
 		catch (Exception ex)
 		{
@@ -103,7 +110,7 @@ public class RISDReportDataSource
 
 		try
 		{
-			si.ci.server.removeReportTemplates(si.accessIdentity, report_ids);
+			si.ci.getServer().removeReportTemplates(si.accessIdentity, report_ids);
 		}
 		catch (Exception ex)
 		{
