@@ -135,7 +135,7 @@ void ResultSegment::parseSegment() {
 		parcount ++;
 	}
 	if (parcount != this->parnumber) {
-		printf("ERROR: real number of result parameters %d does not match to nominal %d\n", parcount, this->parnumber);
+		printf("ERROR: real number of result parameters %u does not match to nominal %u\n", parcount, this->parnumber);
 		this->parnumber = parcount;
 	}
 }

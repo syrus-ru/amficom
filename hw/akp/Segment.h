@@ -29,3 +29,4 @@ protected:
 };
 
 #endif // !defined(AFX_BYTESEGMENT_H__364DFF5B_43B4_4D00_8F48_BF9E153BFC4F__INCLUDED_)
+

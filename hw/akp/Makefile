@@ -1,9 +1,12 @@
 OUT=akp.a
 OUTSO=libakp.so
-CPP=g++#-3.4.1
-CFLAGS=-O3 -Wall -W
+
+CXX=g++#-3.4.1
+CXXFLAGS=-O3 -Wall -W
+
 AR=ar
 ARFLAGS=rcsv
+
 OBJS=ByteArray.o \
 	Parameter.o \
 	Segment.o \
@@ -11,7 +14,10 @@ OBJS=ByteArray.o \
 	MCMInfoSegment.o \
 	MeasurementSegment.o \
 	ResultSegment.o
+#OBJS := $(patsubst %.cpp,%.o,$(wildcard *.cpp))
+
 ARCHFILE=akp.tar.gz
+
 
 .PHONY:	clean arch
 
@@ -19,13 +25,13 @@ $(OUT):	$(OBJS)
 	$(AR) $(ARFLAGS) $(OUT) $(OBJS)
 
 $(OUTSO):	$(OBJS)
-	$(CPP) -o $(OUTSO) -shared $(OBJS)
+	$(CXX) -o $(OUTSO) -shared $(OBJS)
 
-.cpp.o:
-	$(CPP) -c $(CFLAGS) -o $@ $<
+#%.o:	%.cpp
+#	$(CXX) -c $(CXXFLAGS) -o $@ $<
 
 clean:
-	rm -f $(OUT) $(OUTSO) $(OBJS)
+	$(RM) $(OUT) $(OUTSO) $(OBJS)
 
 arch:
 	tar -czvf $(ARCHFILE) *.cpp *.h Makefile

@@ -30,3 +30,4 @@ int operator == (const Parameter& p1, const Parameter& p2);
 int operator != (const Parameter& p1, const Parameter& p2);
 
 #endif // !defined(AFX_PARAMETER_H__A52964EC_5D35_4A45_80FA_250F9826327E__INCLUDED_)
+
