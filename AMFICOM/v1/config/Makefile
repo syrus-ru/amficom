@@ -49,8 +49,9 @@ clean:	cleanmach cleancorba
 
 .PHONY:	cleanmach
 cleanmach:
-	$(RM) $(addprefix $(CLASSDIR)/,$(subst .java,.class,$(SOURCES)))
-	$(RM) .mach
+	rm -rf $(CLASSDIR)/com/syrus/AMFICOM/configuration/*.class
+	rm -f .mach
+
 
 .PHONY:	cleancorba
 cleancorba:
@@ -69,5 +70,5 @@ arch:
 	tar -czvf $(ARCHFILE) \
 		Makefile \
 		$(IDLDIR)/configuration.idl \
-		$(addprefix $(SRCDIR)/,$(SOURCES))
+		$(SOURCES)
 
