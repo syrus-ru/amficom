@@ -1,0 +1,306 @@
+/*
+* $Id: MapView.java,v 1.1.1.1 2004/12/22 15:21:52 cvsadmin Exp $
+*
+* Copyright ¿ 2004 Syrus Systems.
+* Dept. of Science & Technology.
+* Project: AMFICOM.
+*/
+
+package com.syrus.AMFICOM.mapview;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+
+import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IdentifierPool;
+import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.IllegalObjectEntityException;
+import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.ObjectNotFoundException;
+import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.general.StorableObject;
+import com.syrus.AMFICOM.general.StorableObjectDatabase;
+import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
+import com.syrus.AMFICOM.map.corba.MapView_Transferable;
+
+/**
+ * @version $Revision: 1.1.1.1 $, $Date: 2004/12/22 15:21:52 $
+ * @author $Author: cvsadmin $
+ * @module mapview_v1
+ */
+public class MapView extends StorableObject {
+
+	/**
+	 * Comment for <code>serialVersionUID</code>
+	 */
+	private static final long	serialVersionUID	= 3256722862181200184L;
+
+	private Identifier domainId;
+	private String name;
+	private String description;
+
+	private double longitude;
+	private double latitude;
+	private double scale;
+	private double defaultScale;
+
+	private Identifier mapId;
+	/**
+	 *  List&lt;Identifier&gt;
+	 */
+	private List schemeIds;
+
+	private StorableObjectDatabase	mapViewDatabase;
+
+	public MapView(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
+		super(id);
+
+		this.mapViewDatabase = MapViewDatabaseContext.getMapViewDatabase();
+		try {
+			this.mapViewDatabase.retrieve(this);
+		} catch (IllegalDataException e) {
+			throw new RetrieveObjectException(e.getMessage(), e);
+		}
+	}
+
+	public MapView(MapView_Transferable mvt) {
+		super(mvt.header);
+		
+		this.domainId = new Identifier(mvt.domain_id);		
+
+		this.name = mvt.name;
+		this.description = mvt.description;
+		
+		this.longitude = mvt.longitude;
+		this.latitude = mvt.latitude;
+		this.scale = mvt.scale;
+		this.defaultScale = mvt.defaultScale;		
+
+		this.mapId = new Identifier(mvt.mapId);
+			
+		this.schemeIds = new ArrayList(mvt.schemeIds.length);
+		for (int i = 0; i < mvt.schemeIds.length; i++) {
+			this.schemeIds.add(new Identifier(mvt.schemeIds[i]));
+		}
+
+	}
+
+	protected MapView(final Identifier id, 
+				  final Identifier creatorId, 
+				  final Identifier domainId,
+				  final String name,
+				  final String description,
+				  final double longitude,
+				  final double latitude,
+				  final double scale,
+				  final double defaultScale,
+				  final Identifier mapId) {
+		super(id);
+		long time = System.currentTimeMillis();
+		super.created = new Date(time);
+		super.modified = new Date(time);
+		super.creatorId = creatorId;
+		super.modifierId = creatorId;
+		this.domainId = domainId;
+		this.name = name;
+		this.description = description;
+		this.longitude = longitude;
+		this.latitude = latitude;
+		this.scale = scale;
+		this.defaultScale = defaultScale;
+		this.mapId = mapId;
+
+		this.schemeIds = new LinkedList();
+
+		super.currentVersion = super.getNextVersion();
+
+		this.mapViewDatabase = MapViewDatabaseContext.getMapViewDatabase();
+	}
+
+	
+	public void insert() throws CreateObjectException {
+		this.mapViewDatabase = MapViewDatabaseContext.getMapViewDatabase();
+		try {
+			if (this.mapViewDatabase != null)
+				this.mapViewDatabase.insert(this);
+		} catch (IllegalDataException e) {
+			throw new CreateObjectException(e.getMessage(), e);
+		}
+	}
+
+	public static MapView createInstance(
+			final Identifier creatorId,
+			final Identifier domainId,
+			final String name,
+			final String description,
+			final double longitude,
+			final double latitude,
+			final double scale,
+			final double defaultScale,
+			final Identifier mapId) 
+		throws CreateObjectException {
+		if (domainId == null || name == null || description == null || mapId == null)
+			throw new IllegalArgumentException("Argument is 'null'");
+		try {
+			return new MapView(
+				IdentifierPool.getGeneratedIdentifier(ObjectEntities.MAP_ENTITY_CODE),
+					creatorId,
+					domainId,
+					name,
+					description,
+					longitude,
+					latitude,
+					scale,
+					defaultScale,
+					mapId);
+		} catch (IllegalObjectEntityException e) {
+			throw new CreateObjectException("MapView.createInstance | cannot generate identifier ", e);
+		}
+	}
+
+	public List getDependencies() {
+		List dependencies = new LinkedList();
+		dependencies.add(this.domainId);
+		dependencies.add(this.mapId);
+		dependencies.addAll(this.schemeIds);		
+		return dependencies;
+	}
+
+	public Object getTransferable() {
+		int i = 0;
+		Identifier_Transferable[] schemeIdsTransferable = new Identifier_Transferable[this.schemeIds.size()];
+		for (Iterator iterator = this.schemeIds.iterator(); iterator.hasNext();)
+			schemeIdsTransferable[i++] = (Identifier_Transferable) ((Identifier) iterator.next()).getTransferable();		
+
+		return new MapView_Transferable(super.getHeaderTransferable(),
+				(Identifier_Transferable)this.domainId.getTransferable(),
+				this.name,
+				this.description,
+				this.longitude,
+				this.latitude,
+				this.scale,
+				this.defaultScale,
+				(Identifier_Transferable)this.mapId.getTransferable(),
+				schemeIdsTransferable);
+	}
+
+	public List getSchemeIds() {
+		return  Collections.unmodifiableList(this.schemeIds);
+	}
+	
+	protected void setSchemeIds0(List schemeIds) {
+		this.schemeIds.clear();
+		if (schemeIds != null)
+			this.schemeIds.addAll(schemeIds);
+	}
+	
+	public void setSchemeIds(List schemeIds) {
+		this.setSchemeIds0(schemeIds);
+		super.currentVersion = super.getNextVersion();
+	}
+	
+	public String getDescription() {
+		return this.description;
+	}
+	
+	public void setDescription(String description) {
+		this.description = description;
+		super.currentVersion = super.getNextVersion();
+	}
+	
+	public Identifier getDomainId() {
+		return this.domainId;
+	}
+	
+	public void setDomainId(Identifier domainId) {
+		this.domainId = domainId;
+		super.currentVersion = super.getNextVersion();
+	}
+	
+	public String getName() {
+		return this.name;
+	}
+	
+	public void setName(String name) {
+		this.name = name;
+		super.currentVersion = super.getNextVersion();
+	}	
+	
+	protected synchronized void setAttributes(final Date created,
+											  final Date modified,
+											  final Identifier creatorId,
+											  final Identifier modifierId,											  
+											  final Identifier domainId,
+											  final String name,
+											  final String description,
+											  final double longitude,
+											  final double latitude,
+											  final double scale,
+											  final double defaultScale,
+											  final Identifier mapId) {
+			super.setAttributes(created,
+					modified,
+					creatorId,
+					modifierId);
+			this.domainId = domainId;
+			this.name = name;
+			this.description = description;
+			this.longitude = longitude;
+			this.latitude = latitude;
+			this.scale = scale;
+			this.defaultScale = defaultScale;
+			this.mapId = mapId;
+			
+	}
+
+	public double getDefaultScale() {
+		return this.defaultScale;
+	}
+	
+	public void setDefaultScale(double defaultScale) {
+		this.defaultScale = defaultScale;
+		super.currentVersion = super.getNextVersion();
+	}
+	
+	public double getLatitude() {
+		return this.latitude;
+	}
+	
+	public void setLatitude(double latitude) {
+		this.latitude = latitude;
+		super.currentVersion = super.getNextVersion();
+	}
+	
+	public double getLongitude() {
+		return this.longitude;
+	}
+	
+	public void setLongitude(double longitude) {
+		this.longitude = longitude;
+		super.currentVersion = super.getNextVersion();
+	}
+	
+	public Identifier getMapId() {
+		return this.mapId;
+	}
+	
+	public void setMapId(Identifier mapId) {
+		this.mapId = mapId;
+		super.currentVersion = super.getNextVersion();
+	}
+	
+	public double getScale() {
+		return this.scale;
+	}
+	
+	public void setScale(double scale) {
+		this.scale = scale;
+		super.currentVersion = super.getNextVersion();
+	}
+}
+
