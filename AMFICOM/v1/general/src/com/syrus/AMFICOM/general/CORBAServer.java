@@ -1,5 +1,5 @@
 /*
- * $Id: CORBAServer.java,v 1.7 2004/12/21 17:08:29 arseniy Exp $
+ * $Id: CORBAServer.java,v 1.8 2004/12/22 12:17:19 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,7 +35,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2004/12/21 17:08:29 $
+ * @version $Revision: 1.8 $, $Date: 2004/12/22 12:17:19 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -83,10 +83,24 @@ public class CORBAServer /*extends Thread */{
 			org.omg.CORBA.Object reference = this.poa.servant_to_reference(servant);
 			NameComponent[] nameComponents = this.namingContext.to_name(name);
 			this.namingContext.rebind(nameComponents, reference);
-			Log.debugMessage("Activating servant '" + name + "'", Log.DEBUGLEVEL05);
+			Log.debugMessage("Activated servant '" + name + "'", Log.DEBUGLEVEL05);
 		}
 		catch (UserException ue) {
-			throw new CommunicationException("Cannot activate servant", ue);
+			throw new CommunicationException("Cannot activate servant '" + name + "'", ue);
+		}
+	}
+
+	public void deactivateServant(String name) throws CommunicationException {
+		try {
+			NameComponent[] nameComponents = this.namingContext.to_name(name);
+			this.namingContext.unbind(nameComponents);
+			Log.debugMessage("Deactivated servant '" + name + "'", Log.DEBUGLEVEL05);
+		}
+		catch (org.omg.CosNaming.NamingContextPackage.NotFound nf) {
+			Log.errorMessage("Cannot deactivate servant '" + name + "' -- no such servant");
+		}
+		catch (UserException ue) {
+			throw new CommunicationException("Cannot deactivate servant '" + name + "'", ue);
 		}
 	}
 
