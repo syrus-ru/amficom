@@ -1,5 +1,5 @@
 /*
- * $Id: MCMMeasurementObjectLoader.java,v 1.25 2005/04/01 21:54:56 arseniy Exp $
+ * $Id: MCMMeasurementObjectLoader.java,v 1.26 2005/04/05 10:45:46 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -7,6 +7,8 @@
  */
 
 package com.syrus.AMFICOM.mcm;
+
+import java.util.HashSet;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CommunicationException;
@@ -21,11 +23,14 @@ import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.general.corba.ErrorCode;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.AnalysisType;
+import com.syrus.AMFICOM.measurement.AnalysisTypeDatabase;
 import com.syrus.AMFICOM.measurement.DatabaseMeasurementObjectLoader;
 import com.syrus.AMFICOM.measurement.EvaluationType;
+import com.syrus.AMFICOM.measurement.EvaluationTypeDatabase;
 import com.syrus.AMFICOM.measurement.MeasurementDatabaseContext;
 import com.syrus.AMFICOM.measurement.MeasurementSetup;
 import com.syrus.AMFICOM.measurement.MeasurementType;
+import com.syrus.AMFICOM.measurement.MeasurementTypeDatabase;
 import com.syrus.AMFICOM.measurement.Modeling;
 import com.syrus.AMFICOM.measurement.ModelingType;
 import com.syrus.AMFICOM.measurement.Set;
@@ -42,7 +47,7 @@ import com.syrus.AMFICOM.mserver.corba.MServer;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.25 $, $Date: 2005/04/01 21:54:56 $
+ * @version $Revision: 1.26 $, $Date: 2005/04/05 10:45:46 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -285,19 +290,168 @@ final class MCMMeasurementObjectLoader extends DatabaseMeasurementObjectLoader {
 
 
 
-	public java.util.Set loadAnalysisTypes(java.util.Set ids) throws ApplicationException {
-		throw new UnsupportedOperationException("Method not implemented, ids: " + ids);
+
+	public java.util.Set loadMeasurementTypes(java.util.Set ids) throws RetrieveObjectException {
+		MeasurementTypeDatabase database = MeasurementDatabaseContext.getMeasurementTypeDatabase();
+		java.util.Set objects = super.retrieveFromDatabase(database, ids);
+		Identifier_Transferable[] loadIdsT = null;
+		try {
+			loadIdsT = super.createLoadIdsTransferable(ids, objects);
+		}
+		catch (IllegalDataException ide) {
+			// Never
+			Log.errorException(ide);
+		}
+		if (loadIdsT.length == 0)
+			return objects;
+
+		java.util.Set loadedObjects = new HashSet();
+
+		try {
+			MServer mServerRef = MeasurementControlModule.mServerConnectionManager.getVerifiedMServerReference();
+			MeasurementType_Transferable[] transferables = mServerRef.transmitMeasurementTypes(loadIdsT);
+			for (int i = 0; i < transferables.length; i++) {
+				try {
+					loadedObjects.add(new MeasurementType(transferables[i]));
+				}
+				catch (CreateObjectException coe) {
+					Log.errorException(coe);
+				}
+			}
+		}
+		catch (CommunicationException ce) {
+			Log.errorException(ce);
+		}
+		catch (AMFICOMRemoteException are) {
+			Log.errorMessage("MCMMeasurementObjectLoader.loadMeasurementTypes | Cannot load objects from MeasurementServer");
+		}
+		catch (Throwable throwable) {
+			Log.errorException(throwable);
+		}
+
+		if (!loadedObjects.isEmpty()) {
+			objects.addAll(loadedObjects);
+
+			try {
+				database.insert(loadedObjects);
+			}
+			catch (ApplicationException ae) {
+				Log.errorException(ae);
+			}
+		}
+
+		return objects;
 	}
 
-	public java.util.Set loadEvaluationTypes(java.util.Set ids) throws ApplicationException {
-		throw new UnsupportedOperationException("Method not implemented, ids: " + ids);
+	public java.util.Set loadAnalysisTypes(java.util.Set ids) throws RetrieveObjectException {
+		AnalysisTypeDatabase database = MeasurementDatabaseContext.getAnalysisTypeDatabase();
+		java.util.Set objects = super.retrieveFromDatabase(database, ids);
+		Identifier_Transferable[] loadIdsT = null;
+		try {
+			loadIdsT = super.createLoadIdsTransferable(ids, objects);
+		}
+		catch (IllegalDataException ide) {
+			// Never
+			Log.errorException(ide);
+		}
+		if (loadIdsT.length == 0)
+			return objects;
+
+		java.util.Set loadedObjects = new HashSet();
+
+		try {
+			MServer mServerRef = MeasurementControlModule.mServerConnectionManager.getVerifiedMServerReference();
+			AnalysisType_Transferable[] transferables = mServerRef.transmitAnalysisTypes(loadIdsT);
+			for (int i = 0; i < transferables.length; i++) {
+				try {
+					loadedObjects.add(new AnalysisType(transferables[i]));
+				}
+				catch (CreateObjectException coe) {
+					Log.errorException(coe);
+				}
+			}
+		}
+		catch (CommunicationException ce) {
+			Log.errorException(ce);
+		}
+		catch (AMFICOMRemoteException are) {
+			Log.errorMessage("MCMMeasurementObjectLoader.loadAnalysisTypes | Cannot load objects from MeasurementServer");
+		}
+		catch (Throwable throwable) {
+			Log.errorException(throwable);
+		}
+
+		if (!loadedObjects.isEmpty()) {
+			objects.addAll(loadedObjects);
+
+			try {
+				database.insert(loadedObjects);
+			}
+			catch (ApplicationException ae) {
+				Log.errorException(ae);
+			}
+		}
+
+		return objects;
 	}
+
+	public java.util.Set loadEvaluationTypes(java.util.Set ids) throws RetrieveObjectException {
+		EvaluationTypeDatabase database = MeasurementDatabaseContext.getEvaluationTypeDatabase();
+		java.util.Set objects = super.retrieveFromDatabase(database, ids);
+		Identifier_Transferable[] loadIdsT = null;
+		try {
+			loadIdsT = super.createLoadIdsTransferable(ids, objects);
+		}
+		catch (IllegalDataException ide) {
+			// Never
+			Log.errorException(ide);
+		}
+		if (loadIdsT.length == 0)
+			return objects;
+
+		java.util.Set loadedObjects = new HashSet();
+
+		try {
+			MServer mServerRef = MeasurementControlModule.mServerConnectionManager.getVerifiedMServerReference();
+			EvaluationType_Transferable[] transferables = mServerRef.transmitEvaluationTypes(loadIdsT);
+			for (int i = 0; i < transferables.length; i++) {
+				try {
+					loadedObjects.add(new EvaluationType(transferables[i]));
+				}
+				catch (CreateObjectException coe) {
+					Log.errorException(coe);
+				}
+			}
+		}
+		catch (CommunicationException ce) {
+			Log.errorException(ce);
+		}
+		catch (AMFICOMRemoteException are) {
+			Log.errorMessage("MCMMeasurementObjectLoader.loadEvaluationTypes | Cannot load objects from MeasurementServer");
+		}
+		catch (Throwable throwable) {
+			Log.errorException(throwable);
+		}
+
+		if (!loadedObjects.isEmpty()) {
+			objects.addAll(loadedObjects);
+
+			try {
+				database.insert(loadedObjects);
+			}
+			catch (ApplicationException ae) {
+				Log.errorException(ae);
+			}
+		}
+
+		return objects;
+	}
+
+
+
+
 
 	public java.util.Set loadMeasurementSetups(java.util.Set ids) throws ApplicationException {
-		throw new UnsupportedOperationException("Method not implemented, ids: " + ids);
-	}
-
-	public java.util.Set loadMeasurementTypes(java.util.Set ids) throws ApplicationException {
 		throw new UnsupportedOperationException("Method not implemented, ids: " + ids);
 	}
 
