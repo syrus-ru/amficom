@@ -1,5 +1,5 @@
 /*
- * $Id: ParameterTypeDatabase.java,v 1.21 2004/09/08 10:59:12 bob Exp $
+ * $Id: ParameterTypeDatabase.java,v 1.22 2004/09/08 13:56:21 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,7 +28,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.21 $, $Date: 2004/09/08 10:59:12 $
+ * @version $Revision: 1.22 $, $Date: 2004/09/08 13:56:21 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -137,13 +137,8 @@ public class ParameterTypeDatabase extends StorableObjectDatabase  {
 			default:
 				return null;
 		}
-	}
+	}	
 	
-	
-	private void хуйняПонная(){
-		System.out.println( );
-	}
-
 	public void insert(StorableObject storableObject) throws IllegalDataException, CreateObjectException {
 		ParameterType parameterType = this.fromStorableObject(storableObject);
 		try {
