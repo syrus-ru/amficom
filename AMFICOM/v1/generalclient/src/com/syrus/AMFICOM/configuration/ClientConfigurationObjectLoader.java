@@ -1,5 +1,5 @@
 /*
- * $Id: ClientConfigurationObjectLoader.java,v 1.8 2004/12/15 12:01:09 bass Exp $
+ * $Id: ClientConfigurationObjectLoader.java,v 1.9 2004/12/17 09:05:05 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -58,8 +58,8 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.8 $, $Date: 2004/12/15 12:01:09 $
- * @author $Author: bass $
+ * @version $Revision: 1.9 $, $Date: 2004/12/17 09:05:05 $
+ * @author $Author: bob $
  * @module generalclient_v1
  */
 
@@ -631,16 +631,16 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
 						List list = new ArrayList(transferables.length);
 						for (int j = 0; j < transferables.length; j++) {
 
-								CableThreadType cableThreadType;
+								LinkType linkType;
 								CableLinkType cableLinkType;
 								switch(transferables[i].discriminator().value()) {
 										case AbstractLinkTypeSort._CABLE_LINK_TYPE:
 												cableLinkType = new CableLinkType(transferables[i].cableLinkType());
 												list.add(cableLinkType);
 												break;
-										case AbstractLinkTypeSort._CABLE_THREAD_TYPE:
-												cableThreadType = new CableThreadType(transferables[i].cableThreadType());
-												list.add(cableThreadType);
+										case AbstractLinkTypeSort._LINK_TYPE:
+												linkType = new LinkType(transferables[i].linkType());
+												list.add(linkType);
 												break;
 										default:
 												throw new CommunicationException("ClientConfigurationObjectLoader.loadLinkTypesButIds" +
@@ -669,16 +669,16 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
 						List list = new ArrayList(transferables.length);
 						for (int j = 0; j < transferables.length; j++) {
 
-								CableThreadType cableThreadType;
+								LinkType linkType;
 								CableLinkType cableLinkType;
 								switch(transferables[i].discriminator().value()) {
 										case AbstractLinkTypeSort._CABLE_LINK_TYPE:
 												cableLinkType = new CableLinkType(transferables[i].cableLinkType());
 												list.add(cableLinkType);
 												break;
-										case AbstractLinkTypeSort._CABLE_THREAD_TYPE:
-												cableThreadType = new CableThreadType(transferables[i].cableThreadType());
-												list.add(cableThreadType);
+										case AbstractLinkTypeSort._LINK_TYPE:
+												linkType = new LinkType(transferables[i].linkType());
+												list.add(linkType);
 												break;
 										default:
 												throw new CommunicationException("ClientConfigurationObjectLoader.loadLinkTypesButIds" +
