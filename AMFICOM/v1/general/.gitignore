@@ -20,3 +20,4 @@ lib
 SQLChecker.cache
 sqlj.properties
 doc
+javadoc.xml
