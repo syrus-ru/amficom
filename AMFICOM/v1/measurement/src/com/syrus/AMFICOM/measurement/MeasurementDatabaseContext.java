@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementDatabaseContext.java,v 1.17 2004/10/25 14:56:33 bob Exp $
+ * $Id: MeasurementDatabaseContext.java,v 1.18 2004/11/04 13:16:30 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,7 +14,7 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2004/10/25 14:56:33 $
+ * @version $Revision: 1.18 $, $Date: 2004/11/04 13:16:30 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -52,20 +52,44 @@ public class MeasurementDatabaseContext {
 													StorableObjectDatabase testDatabase1,
 													StorableObjectDatabase resultDatabase1,
 													StorableObjectDatabase temporalPatternDatabase1) {
-		parameterTypeDatabase = parameterTypeDatabase1;
-		measurementTypeDatabase = measurementTypeDatabase1;
-		analysisTypeDatabase = analysisTypeDatabase1;
-		evaluationTypeDatabase = evaluationTypeDatabase1;
+		if (parameterTypeDatabase1 != null)
+			parameterTypeDatabase = parameterTypeDatabase1;
+		
+		if (measurementTypeDatabase1 != null)
+			measurementTypeDatabase = measurementTypeDatabase1;
+		
+		if (analysisTypeDatabase1 != null)
+			analysisTypeDatabase = analysisTypeDatabase1;
+		
+		if (evaluationTypeDatabase1 != null)
+			evaluationTypeDatabase = evaluationTypeDatabase1;
 
-		setDatabase = setDatabase1;
-		modelingDatabase = modelingDatabase1;
-		measurementSetupDatabase = measurementSetupDatabase1;
-		measurementDatabase = measurementDatabase1;
-		analysisDatabase = analysisDatabase1;
-		evaluationDatabase = evaluationDatabase1;
-		testDatabase = testDatabase1;
-		resultDatabase = resultDatabase1;
-		temporalPatternDatabase = temporalPatternDatabase1;
+		if (setDatabase1 != null)
+			setDatabase = setDatabase1;
+		
+		if (modelingDatabase1 != null)
+			modelingDatabase = modelingDatabase1;
+		
+		if (measurementSetupDatabase1 != null)
+			measurementSetupDatabase = measurementSetupDatabase1;
+		
+		if (measurementDatabase1 != null)
+			measurementDatabase = measurementDatabase1;
+		
+		if (analysisDatabase1 != null)
+			analysisDatabase = analysisDatabase1;
+		
+		if (evaluationDatabase1 != null)
+			evaluationDatabase = evaluationDatabase1;
+		
+		if (testDatabase1 != null)
+			testDatabase = testDatabase1;
+		
+		if (resultDatabase1 != null)
+			resultDatabase = resultDatabase1;
+		
+		if (temporalPatternDatabase1 != null)
+			temporalPatternDatabase = temporalPatternDatabase1;
 		
 	}
     

@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPort.java,v 1.10 2004/11/04 09:05:13 bob Exp $
+ * $Id: MeasurementPort.java,v 1.11 2004/11/04 13:16:42 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,7 +9,6 @@
 package com.syrus.AMFICOM.configuration;
 
 import java.util.Date;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -27,7 +26,7 @@ import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2004/11/04 09:05:13 $
+ * @version $Revision: 1.11 $, $Date: 2004/11/04 13:16:42 $
  * @author $Author: bob $
  * @module configuration_v1
  */

@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectDatabase.java,v 1.36 2004/11/01 13:39:46 bob Exp $
+ * $Id: StorableObjectDatabase.java,v 1.37 2004/11/04 13:16:56 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,7 +25,7 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.36 $, $Date: 2004/11/01 13:39:46 $
+ * @version $Revision: 1.37 $, $Date: 2004/11/04 13:16:56 $
  * @author $Author: bob $
  * @module general_v1
  */
@@ -378,7 +378,7 @@ public abstract class StorableObjectDatabase {
 					if (update){
 						localStorableObject.setAttributes(localStorableObject.getCreated(), new Date(System.currentTimeMillis()), 
 														  localStorableObject.getCreatorId(), localStorableObject.getModifierId());
-						update(localStorableObject, UPDATE_TOTAL, null);
+						updateEntity(localStorableObject);
 					} else{
 						String msg = getEnityName() + "Database.checkAndUpdateEntity | " + getEnityName() + " conflict version ";
 						throw new VersionCollisionException(msg);

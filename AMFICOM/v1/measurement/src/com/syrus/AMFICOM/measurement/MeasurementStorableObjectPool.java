@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementStorableObjectPool.java,v 1.39 2004/11/04 09:03:45 bob Exp $
+ * $Id: MeasurementStorableObjectPool.java,v 1.40 2004/11/04 13:16:30 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,7 +33,7 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.39 $, $Date: 2004/11/04 09:03:45 $
+ * @version $Revision: 1.40 $, $Date: 2004/11/04 13:16:30 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -498,6 +498,46 @@ public class MeasurementStorableObjectPool {
 	private static void saveStorableObjects(short code, List list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException{
 		if (!list.isEmpty()){
 			boolean alone = (list.size()==1);
+			
+			// calculate dependencies to save
+			Map dependenciesMap = new HashMap();
+			for (Iterator it = list.iterator(); it.hasNext();) {
+				StorableObject storableObject = (StorableObject) it.next();
+				Log.debugMessage("MeasurementStorableObjectPool.saveStorableObjects | calculate dependencies for '" 
+								 + storableObject.getId() + "'", Log.DEBUGLEVEL08);
+				List dependencies = storableObject.getDependencies();
+				for (Iterator depIt = dependencies.iterator(); depIt.hasNext();) {
+					Identifier id = (Identifier) depIt.next();
+					Short major = new Short(id.getMajor());
+					List depList = (List)dependenciesMap.get(major);
+					if (depList == null){
+						depList = new LinkedList();
+						dependenciesMap.put(major, depList);
+					}
+					StorableObject stObj = MeasurementStorableObjectPool.getStorableObject(id, true);
+					if (stObj != null && stObj.isChanged() && !depList.contains(stObj))
+						depList.add(stObj);
+				}
+			}
+			
+			
+			// recursieve save dependencies
+			for (Iterator it = dependenciesMap.keySet().iterator(); it.hasNext();) {
+				Short major = (Short) it.next();
+				List depList = (List)dependenciesMap.get(major);
+				if (depList != null && !depList.isEmpty()){
+					Log.debugMessage("MeasurementStorableObjectPool.saveStorableObjects | recursieve save '" 
+									 + ObjectEntities.codeToString(major.shortValue()) + "'", Log.DEBUGLEVEL08);
+					saveStorableObjects(major.shortValue(), depList, force);
+				}
+			}
+			
+			for (Iterator it = list.iterator(); it.hasNext();) {
+				StorableObject storableObject = (StorableObject) it.next();
+				Log.debugMessage("MeasurementStorableObjectPool.saveStorableObjects | save '" 
+								 + storableObject.getId() + "'", Log.DEBUGLEVEL08);
+			}
+			
 			switch (code) {
 				case ObjectEntities.PARAMETERTYPE_ENTITY_CODE:
 					if (alone)
@@ -573,7 +613,7 @@ public class MeasurementStorableObjectPool {
 					break;
 				default:
 					Log
-							.errorMessage("MeasurementStorableObjectPool.flush | Unknown entityCode : "
+							.errorMessage("MeasurementStorableObjectPool.saveStorableObjects | Unknown entityCode : "
 									+ code);
 			}
 
@@ -638,8 +678,10 @@ public class MeasurementStorableObjectPool {
 				for(Iterator poolIt = objectPool.iterator();poolIt.hasNext();){
 					StorableObject storableObject = (StorableObject)poolIt.next();
 					if (storableObject.isChanged()){
-						list.add(storableObject);
-						Log.debugMessage("'" + storableObject.getId() + "' is changed", Log.DEBUGLEVEL05);
+						if (!list.contains(storableObject)){
+							list.add(storableObject);
+							Log.debugMessage("'" + storableObject.getId() + "' is changed", Log.DEBUGLEVEL10);
+						}
 					}
 				} 
 				short code = entityCode.shortValue();

@@ -1,5 +1,5 @@
 /*
- * $Id: SetDatabase.java,v 1.34 2004/11/03 12:04:52 bob Exp $
+ * $Id: SetDatabase.java,v 1.35 2004/11/04 13:16:30 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,6 +14,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -43,7 +44,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.34 $, $Date: 2004/11/03 12:04:52 $
+ * @version $Revision: 1.35 $, $Date: 2004/11/04 13:16:30 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -122,7 +123,7 @@ public class SetDatabase extends StorableObjectDatabase {
 		Set set = this.fromStorableObject(storableObject);
 		this.retrieveEntity(set);
 		this.retrieveSetParameters(set);
-		this.retrieveSetMELinks(set);
+		this.retrieveSetMELinksByOneQuery(Collections.singletonList(set));
 	}
 	
 	protected String retrieveQuery(String condition){
@@ -334,51 +335,6 @@ public class SetDatabase extends StorableObjectDatabase {
                 DatabaseConnection.closeConnection(connection);
             }
         }   
-	}
-
-	private void retrieveSetMELinks(Set set) throws RetrieveObjectException {
-		List meIds = new ArrayList();
-
-		String setIdStr = set.getId().toSQLString();
-		String sql = SQL_SELECT
-			+ LINK_COLUMN_ME_ID
-			+ SQL_FROM + ObjectEntities.SETMELINK_ENTITY
-			+ SQL_WHERE + LINK_COLUMN_SET_ID + EQUALS
-			+ setIdStr;
-		Statement statement = null;
-		ResultSet resultSet = null;
-		Connection connection = DatabaseConnection.getConnection();
-		try {
-			statement = connection.createStatement();
-			Log.debugMessage("SetDatabase.retrieveSetMELinks | Trying: " + sql, Log.DEBUGLEVEL09);
-			resultSet = statement.executeQuery(sql);
-			while (resultSet.next()){
-				/**
-				 * @todo when change DB Identifier model ,change getString() to getLong()
-				 */
-				meIds.add(new Identifier(resultSet.getString(LINK_COLUMN_ME_ID)));
-			}
-		}
-		catch (SQLException sqle) {
-			String mesg = "SetDatabase.retrieveSetMELinks | Cannot retrieve monitored element ids for set '" + setIdStr + "' -- " + sqle.getMessage();
-			throw new RetrieveObjectException(mesg, sqle);
-		}
-		finally {
-			try {
-				if (statement != null)
-					statement.close();
-				if (resultSet != null)
-					resultSet.close();
-				statement = null;
-				resultSet = null;
-			}
-			catch (SQLException sqle1) {
-				Log.errorException(sqle1);
-			} finally{
-				DatabaseConnection.closeConnection(connection);
-			}
-		}
-		set.setMonitoredElementIds(meIds);
 	}
     
     private void retrieveSetMELinksByOneQuery(List sets) throws RetrieveObjectException {

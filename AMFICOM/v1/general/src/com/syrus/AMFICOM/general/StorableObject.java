@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObject.java,v 1.9 2004/11/04 08:51:15 bob Exp $
+ * $Id: StorableObject.java,v 1.10 2004/11/04 13:16:56 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,7 +12,7 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2004/11/04 08:51:15 $
+ * @version $Revision: 1.10 $, $Date: 2004/11/04 13:16:56 $
  * @author $Author: bob $
  * @module general_v1
  */
@@ -82,5 +82,5 @@ public abstract class StorableObject implements Identified, TransferableObject {
 		this.modifierId = modifierId;
 	}
 	
-	protected abstract List getDependencies(); 
+	public abstract List getDependencies(); 
 }
