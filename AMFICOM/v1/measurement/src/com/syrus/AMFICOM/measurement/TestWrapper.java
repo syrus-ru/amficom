@@ -1,5 +1,5 @@
 /*
- * $Id: TestWrapper.java,v 1.3 2005/02/03 08:36:47 bob Exp $
+ * $Id: TestWrapper.java,v 1.4 2005/02/24 10:00:37 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,8 +21,8 @@ import com.syrus.AMFICOM.measurement.corba.TestStatus;
 import com.syrus.AMFICOM.measurement.corba.TestTemporalType;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/02/03 08:36:47 $
- * @author $Author: bob $
+ * @version $Revision: 1.4 $, $Date: 2005/02/24 10:00:37 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 public class TestWrapper implements StorableObjectWrapper {
@@ -37,7 +37,7 @@ public class TestWrapper implements StorableObjectWrapper {
 	public static final String	COLUMN_STATUS					= "status";
 	public static final String	COLUMN_TEMPORAL_PATTERN_ID		= "temporal_pattern_id";
 	public static final String	COLUMN_TEMPORAL_TYPE			= "temporal_type";
-	public static final String	LINK_COLMN_MEASUREMENT_SETUP_ID	= "measurement_setup_id";
+	public static final String	LINK_COLUMN_MEASUREMENT_SETUP_ID	= "measurement_setup_id";
 
 	private static TestWrapper	instance;
 
@@ -48,7 +48,7 @@ public class TestWrapper implements StorableObjectWrapper {
 		String[] keysArray = new String[] { COLUMN_TEMPORAL_TYPE, COLUMN_START_TIME, COLUMN_END_TIME,
 				COLUMN_TEMPORAL_PATTERN_ID, COLUMN_MEASUREMENT_TYPE_ID, COLUMN_ANALYSIS_TYPE_ID,
 				COLUMN_EVALUATION_TYPE_ID, COLUMN_STATUS, COLUMN_MONITORED_ELEMENT_ID, COLUMN_RETURN_TYPE,
-				COLUMN_DESCRIPTION, LINK_COLMN_MEASUREMENT_SETUP_ID};
+				COLUMN_DESCRIPTION, LINK_COLUMN_MEASUREMENT_SETUP_ID};
 
 		this.keys = Collections.unmodifiableList(new ArrayList(Arrays.asList(keysArray)));
 	}
@@ -93,7 +93,7 @@ public class TestWrapper implements StorableObjectWrapper {
 				return new Integer(test.getReturnType().value());
 			if (key.equals(COLUMN_DESCRIPTION))
 				return test.getDescription();
-			if (key.equals(LINK_COLMN_MEASUREMENT_SETUP_ID))
+			if (key.equals(LINK_COLUMN_MEASUREMENT_SETUP_ID))
 				return test.getMeasurementSetupIds();
 		}
 		return null;
@@ -128,7 +128,7 @@ public class TestWrapper implements StorableObjectWrapper {
 				test.setReturnType(TestReturnType.from_int(((Integer) value).intValue()));
 			else if (key.equals(COLUMN_DESCRIPTION))
 				test.setDescription((String) value);
-			else if (key.equals(LINK_COLMN_MEASUREMENT_SETUP_ID))
+			else if (key.equals(LINK_COLUMN_MEASUREMENT_SETUP_ID))
 				test.setMeasurementSetupIds((List) value);
 		}
 	}
