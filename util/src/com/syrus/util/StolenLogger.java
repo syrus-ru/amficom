@@ -10,17 +10,18 @@ public abstract class StolenLogger implements Logger {
 	static final String DELIMITER = ".";
 	static final String ERROR = "error";
 	static final String DEBUG = "debug";
-	static final String LOG_DEBUG_LEVEL_KEY = "LogDebugLevel";
-	static final String ECHO_DEBUG_KEY = "EchoDebug";
-	static final String ECHO_ERROR_KEY = "EchoError";
-	static final String THIS_LEVEL_ONLY_KEY = "LogOnlyThisLevel";
-	static final String LOG_PATH_KEY = "LogPath";
+	static final String KEY_LOG_DEBUG_LEVEL = "LogDebugLevel";
+	static final String KEY_ECHO_DEBUG = "EchoDebug";
+	static final String KEY_ECHO_ERROR = "EchoError";
+	static final String KEY_THIS_LEVEL_ONLY = "LogOnlyThisLevel";
+	static final String KEY_LOG_PATH = "LogPath";
+
 	static final String DEFAULT_APPNAME = "defaultApp";
 	static final String DEFAULT_HOSTNAME = "defaultHost";
-	static final String DEFAULTLOGECHODEBUG = "false";
-	static final String DEFAULTLOGECHOERROR = "false";
-	static final String DEFAULTLOGONLYTHISLEVEL = "false";
-	static final int DEFAULTLOGDEBUGLEVEL = 5;
+	static final String DEFAULT_LOG_ECHO_DEBUG = "false";
+	static final String DEFAULT_LOG_ECHO_ERROR = "false";
+	static final String DEFAULT_LOG_ONLY_THIS_LEVEL = "false";
+	static final int DEFAULT_LOG_DEBUG_LEVEL = 5;
 
 	private String appName;
 	private String hostName;

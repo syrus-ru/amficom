@@ -1,5 +1,5 @@
 /*
- * $Id: LRUMapSaver.java,v 1.4 2004/11/18 14:53:16 bob Exp $
+ * $Id: LRUMapSaver.java,v 1.5 2004/11/22 13:24:04 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,90 +23,93 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2004/11/18 14:53:16 $
- * @author $Author: bob $
+ * @version $Revision: 1.5 $, $Date: 2004/11/22 13:24:04 $
+ * @author $Author: arseniy $
  * @module module_name
  */
 public class LRUMapSaver {
-    
-    private static String pathNameOfSaveDir;
-    private static File saveDir;   
-        
-    private LRUMapSaver() {
-        // empty
-    }
-       
-    public static void save(LRUMap lruMap, String objectEntityName) {
-    	
-        File tempFile = null;
-        try {
-            if (pathNameOfSaveDir == null)
-            	pathNameOfSaveDir = ApplicationProperties.getString("lrumapsavedir", "SerializedLRUMaps");
-            if (saveDir == null || !saveDir.exists()) {
-            	saveDir = new File(pathNameOfSaveDir);
-               	saveDir.mkdir(); 
-            }
-            
-            File saveFile = new File(saveDir.getPath() + File.separator + objectEntityName + "LRUMap.serialized");
-            tempFile = new File(saveFile.getPath() + ".swp");        
-            ObjectOutputStream out = new ObjectOutputStream(
-                    new FileOutputStream(tempFile));                      
-            Log.debugMessage("LRUMapSaver.save | Trying to save LRUMap with " + objectEntityName +  
-                    " to file " + saveFile.getAbsolutePath(), Log.DEBUGLEVEL03);       
-            List keys = new LinkedList();
-            for (Iterator it = lruMap.keyIterator(); it.hasNext();) {
-				Object key = it.next();                      
+	private static final String KEY_CACHE_PATH = "CachePath";
+
+	private static final String DEFAULT_HOME = System.getProperty("user.home");
+	private static final String DEFAULT_CACHE_PATH = DEFAULT_HOME + "/logs";
+
+  private static String pathNameOfSaveDir;
+	private static File saveDir;   
+
+	private LRUMapSaver() {
+			// empty
+	}
+
+  public static void save(LRUMap lruMap, String objectEntityName) {
+		File tempFile = null;
+		try {
+			if (pathNameOfSaveDir == null)
+				pathNameOfSaveDir = ApplicationProperties.getString(KEY_CACHE_PATH, DEFAULT_CACHE_PATH);
+			if (saveDir == null || !saveDir.exists()) {
+				saveDir = new File(pathNameOfSaveDir);
+				saveDir.mkdir(); 
+			}
+
+			File saveFile = new File(saveDir.getPath() + File.separator + objectEntityName + "LRUMap.serialized");
+			tempFile = new File(saveFile.getPath() + ".swp");
+			ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(tempFile));
+			Log.debugMessage("LRUMapSaver.save | Trying to save LRUMap with " + objectEntityName + " to file " + saveFile.getAbsolutePath(), Log.DEBUGLEVEL10);
+			List keys = new LinkedList();
+			for (Iterator it = lruMap.keyIterator(); it.hasNext();) {
+				Object key = it.next();
 				keys.add(key);
 			}
-            if(keys == null || keys.isEmpty()) {
-                Log.debugMessage("LRUMapSaver.save | LruMap has no elements. Nothing to save.", Log.DEBUGLEVEL03);
-                return;
-            }
-            out.writeObject(objectEntityName);
-            out.writeObject(keys);
-            out.close();
-            tempFile.renameTo(saveFile);
-        } catch (FileNotFoundException fnfe) {
-            Log.errorMessage("LRUMapSaver.save | Error: " + fnfe.getMessage());        	
-        } catch (IOException ioe) {
-        	Log.errorMessage("LRUMapSaver.save | Error: " + ioe.getMessage());
-        } finally {
-        	if(tempFile != null)
-                tempFile.delete();
-        }
-        
-        
-    }
-    
-    public static List load(String objectEntityName) {
-        
-        try {
-            if (pathNameOfSaveDir == null)
-            	pathNameOfSaveDir = ApplicationProperties.getString("lrumapsavedir", "SerializedLRUMaps");
-            if (saveDir == null || !saveDir.exists()) {
-                saveDir = new File(pathNameOfSaveDir);
-                saveDir.mkdir(); 
-            }           
-            Log.debugMessage("LRUMapSaver.load | Trying to load LRUMap with " + objectEntityName , Log.DEBUGLEVEL10);
-            File saveFile = new File(saveDir.getPath() + File.separator + objectEntityName + "LRUMap.serialized");
-            ObjectInputStream in = new ObjectInputStream(
-                    new FileInputStream(saveFile));
-            String keyObjectEntityName = (String) in.readObject();
-            if (keyObjectEntityName == null || !keyObjectEntityName.equals(objectEntityName)) {
-            	Log.errorMessage("LRUMapSaver.load | Wrong input file "+ saveFile.getAbsolutePath() + ". Loading failed");
-                return null;
-            }            
-            List keys = (LinkedList) in.readObject();
-            return keys;
-        } catch (FileNotFoundException fnfe) {
-            Log.debugMessage("LRUMapSaver.load | Warning: " + fnfe.getMessage(), Log.DEBUGLEVEL09);
-            return null;
-        } catch (ClassNotFoundException cnfe) {
-            Log.errorMessage("LRUMapSaver.load | Error: " + cnfe.getMessage());
-            return null;
-        } catch (IOException ioe) {
-            Log.errorMessage("LRUMapSaver.load | Error: " + ioe.getMessage());
-            return null;
-        }
-    }
+			if(keys == null || keys.isEmpty()) {
+				Log.debugMessage("LRUMapSaver.save | LruMap has no elements. Nothing to save.", Log.DEBUGLEVEL10);
+				return;
+			}
+			out.writeObject(objectEntityName);
+			out.writeObject(keys);
+			out.close();
+			tempFile.renameTo(saveFile);
+		}
+		catch (FileNotFoundException fnfe) {
+			Log.errorMessage("LRUMapSaver.save | Error: " + fnfe.getMessage());        	
+		}
+		catch (IOException ioe) {
+			Log.errorMessage("LRUMapSaver.save | Error: " + ioe.getMessage());
+		}
+		finally {
+			if(tempFile != null)
+				tempFile.delete();
+		}
+	}
+
+	public static List load(String objectEntityName) {
+		try {
+			if (pathNameOfSaveDir == null)
+				pathNameOfSaveDir = ApplicationProperties.getString(KEY_CACHE_PATH, DEFAULT_CACHE_PATH);
+			if (saveDir == null || !saveDir.exists()) {
+				saveDir = new File(pathNameOfSaveDir);
+				saveDir.mkdir(); 
+			}
+			Log.debugMessage("LRUMapSaver.load | Trying to load LRUMap with " + objectEntityName , Log.DEBUGLEVEL10);
+			File saveFile = new File(saveDir.getPath() + File.separator + objectEntityName + "LRUMap.serialized");
+			ObjectInputStream in = new ObjectInputStream(new FileInputStream(saveFile));
+			String keyObjectEntityName = (String) in.readObject();
+			if (keyObjectEntityName == null || !keyObjectEntityName.equals(objectEntityName)) {
+				Log.errorMessage("LRUMapSaver.load | Wrong input file "+ saveFile.getAbsolutePath() + ". Loading failed");
+				return null;
+			}
+			List keys = (LinkedList) in.readObject();
+			return keys;
+		}
+		catch (FileNotFoundException fnfe) {
+			Log.debugMessage("LRUMapSaver.load | Warning: " + fnfe.getMessage(), Log.DEBUGLEVEL10);
+			return null;
+		}
+		catch (ClassNotFoundException cnfe) {
+			Log.errorMessage("LRUMapSaver.load | Error: " + cnfe.getMessage());
+			return null;
+		}
+		catch (IOException ioe) {
+			Log.errorMessage("LRUMapSaver.load | Error: " + ioe.getMessage());
+			return null;
+		}
+	}
 }
