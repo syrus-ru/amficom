@@ -635,7 +635,7 @@ public class ElementsPanel extends UgoPanel
 								se.pack();
 
 								if (this instanceof SchemePanel)
-									((SchemePanel)this).scheme.changed = true;
+									((SchemePanel)this).scheme.setChanged(true);
 							}
 						}
 					}

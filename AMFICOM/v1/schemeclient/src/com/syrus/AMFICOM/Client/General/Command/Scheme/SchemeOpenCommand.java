@@ -16,7 +16,7 @@ import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.Client.Resource.Scheme.Scheme;
 import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeDisplayModel;
 
-import com.syrus.AMFICOM.Client.Configure.Map.UI.MapChooserDialog;
+import com.syrus.AMFICOM.Client.Map.UI.MapChooserDialog;
 
 public class SchemeOpenCommand extends VoidCommand
 {
