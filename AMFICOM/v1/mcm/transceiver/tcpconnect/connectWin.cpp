@@ -1,3 +1,7 @@
+#ifdef _WIN32
+
+#define EMSGSIZE WSAEMSGSIZE
+
 #include "connect.h"
 
 void init ()
@@ -23,7 +27,7 @@ int inet_aton (char * cp, in_addr * pin)
   return 0;
 }
 
-void close (SOCKET connected_socket)
+void closeExt (SOCKET connected_socket)
 {
   if ( closesocket ( connected_socket ) )
     cout << errno << "Ошибка вызова close";
@@ -39,3 +43,4 @@ void bzero(void * b, int n)
 {
   memset (b,0,n);
 }
+#endif
