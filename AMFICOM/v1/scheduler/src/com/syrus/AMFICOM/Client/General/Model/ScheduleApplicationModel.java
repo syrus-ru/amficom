@@ -58,3 +58,4 @@ public class ScheduleApplicationModel extends ApplicationModel
 	}
 
 }
+

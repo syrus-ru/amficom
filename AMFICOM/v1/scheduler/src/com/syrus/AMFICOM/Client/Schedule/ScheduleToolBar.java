@@ -108,3 +108,4 @@ class ScheduleToolBar_this_actionAdapter implements java.awt.event.ActionListene
 		adaptee.this_actionPerformed(e);
 	}
 }
+

@@ -13,7 +13,7 @@ $(LIBNAME): .mach
 		-C $(CLASSDIR) com
 
 .mach:	$(CLASSDIR)
-	$(JAVAC) $(JAVACFLAGS) \
+	$(JAVAC) $(JAVACFLAGS) -nowarn \
 		-classpath $(AMFICOMCLASSPATH):$(EXTCLASSPATH) \
 		$(shell find $(SRCDIR) -name '*.java')
 	touch $@
@@ -35,3 +35,4 @@ cleanmach:
 arch:
 	tar -czvf $(ARCHFILE) \
 		Makefile
+

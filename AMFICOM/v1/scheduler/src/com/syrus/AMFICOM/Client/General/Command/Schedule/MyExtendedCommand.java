@@ -64,3 +64,4 @@ public class MyExtendedCommand extends VoidCommand
 		}
 	}
 }
+

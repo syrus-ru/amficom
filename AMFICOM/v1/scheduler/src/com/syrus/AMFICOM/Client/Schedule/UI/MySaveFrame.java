@@ -350,3 +350,4 @@ public class MySaveFrame extends JInternalFrame
 		internal_dispatcher.notify(new OperationEvent(val,0,"EvaluationType"));
 	}
 }
+

@@ -50,3 +50,4 @@ public class MyAllCommand extends VoidCommand
 		}
 	}
 }
+

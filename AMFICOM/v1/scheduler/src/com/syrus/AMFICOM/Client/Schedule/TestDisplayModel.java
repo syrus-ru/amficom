@@ -211,3 +211,4 @@ public class TestDisplayModel extends StubDisplayModel
 		return (PropertyEditor )getColumnRenderer(or, col_id);
 	}
 }
+

@@ -64,3 +64,4 @@ public class MyTableCommand extends VoidCommand
 		}
 	}
 }
+

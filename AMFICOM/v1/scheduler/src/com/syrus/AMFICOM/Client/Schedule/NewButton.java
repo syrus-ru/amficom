@@ -37,3 +37,4 @@ public class NewButton extends JButton
 		this.setBackground(col);
 	}
 }
+

@@ -642,4 +642,3 @@ class ScheduleMDIMain_this_componentAdapter extends java.awt.event.ComponentAdap
 	}
 }
 
-

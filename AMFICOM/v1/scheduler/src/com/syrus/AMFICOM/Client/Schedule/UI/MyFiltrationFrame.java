@@ -595,3 +595,4 @@ class MyCriteriaListRenderer extends DefaultListCellRenderer
 		return super.getListCellRendererComponent(list, text, index, isSelected, cellHasFocus);
 	}
 }
+

@@ -779,3 +779,4 @@ class DayCanvas extends Component implements MouseListener {
 	public void mouseEntered(MouseEvent e) {}
 	public void mouseExited(MouseEvent e) {}
 }
+

@@ -491,3 +491,4 @@ public class MyTableFrame extends JInternalFrame
 		updateContents(null);
 	}
 }
+

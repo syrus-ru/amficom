@@ -313,3 +313,4 @@ public class MyExtendedFrame extends JInternalFrame
 		}
 	}
 }
+
