@@ -1,5 +1,5 @@
 /*
- * $Id: LogicalSchemeUI.java,v 1.1 2005/02/22 09:02:39 bob Exp $
+ * $Id: LogicalSchemeUI.java,v 1.2 2005/02/22 09:33:46 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,7 +15,6 @@ import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Polygon;
 import java.awt.RenderingHints;
 import java.awt.Stroke;
 import java.awt.event.MouseEvent;
@@ -35,12 +34,17 @@ import javax.swing.JComponent;
 import javax.swing.SwingUtilities;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/02/22 09:02:39 $
+ * @version $Revision: 1.2 $, $Date: 2005/02/22 09:33:46 $
  * @author $Author: bob $
  * @module filter_v1
  */
 public class LogicalSchemeUI extends JComponent implements MouseListener, MouseMotionListener {
 
+	/**
+	 * Comment for <code>serialVersionUID</code>
+	 */
+	private static final long	serialVersionUID	= 3258408430686581815L;
+	
 	static final Color	EDGE_COLOR			= Color.GRAY;
 	static final Color	SELECTED_EDGE_COLOR	= Color.BLACK;
 	static final Color	ITEM_BG_COLOR		= new Color(220, 220, 220);
@@ -205,6 +209,21 @@ public class LogicalSchemeUI extends JComponent implements MouseListener, MouseM
 			this.countInitItems++;
 			if (this.items != null && this.countInitItems == this.items.size())
 				this.arrange();
+			
+			// init misc graphical features
+			
+			if (this.boldStroke == null)
+				this.boldStroke = new BasicStroke(2.0f);
+	
+			if (this.regularStroke == null) 
+				this.regularStroke = new BasicStroke(1.0f);			
+			
+			if (this.regularFont == null)
+				this.regularFont = g2d.getFont();
+			
+			if (this.boldFont == null)
+				this.boldFont = new Font(this.regularFont.getName(), Font.BOLD, this.regularFont.getSize());
+
 		}
 
 		boolean selected = (this.selectedItems.contains(item))
@@ -217,11 +236,9 @@ public class LogicalSchemeUI extends JComponent implements MouseListener, MouseM
 				g2d.setColor(EDGE_COLOR);
 				if (item.equals(this.firstSelectedLineItem) && item2.equals(this.secondSelectedLineItem)) {
 					g2d.setColor(SELECTED_EDGE_COLOR);
-					if (this.boldStroke != null)
-						g2d.setStroke(this.boldStroke);
-				} else if (this.regularStroke != null) {
+					g2d.setStroke(this.boldStroke);
+				} else 
 					g2d.setStroke(this.regularStroke);
-				}
 				this.drawLineFromItemToItem(g2d, item, item2);
 			}
 		}
@@ -237,27 +254,11 @@ public class LogicalSchemeUI extends JComponent implements MouseListener, MouseM
 
 		if (selected) {
 			g2d.setColor(SELECTED_EDGE_COLOR);
-			if (this.boldFont == null)
-				this.boldFont = new Font(this.regularFont.getName(), Font.BOLD, this.regularFont.getSize());
-			g2d.setFont(this.boldFont);
-
-			if (this.boldStroke == null) {
-				float strokeThickness = 2.0f;
-				// A solid stroke
-				this.boldStroke = new BasicStroke(strokeThickness);
-			}
+			g2d.setFont(this.boldFont);			
 			g2d.setStroke(this.boldStroke);
 		} else {
-			if (this.regularFont == null)
-				this.regularFont = g2d.getFont();
-			else
-				g2d.setFont(this.regularFont);
-
-			if (this.regularStroke == null) {
-				this.regularStroke = new BasicStroke(1.0f);
-			}
+			g2d.setFont(this.regularFont);
 			g2d.setStroke(this.regularStroke);
-
 			g2d.setColor(EDGE_COLOR);
 		}
 
@@ -323,20 +324,20 @@ public class LogicalSchemeUI extends JComponent implements MouseListener, MouseM
 				if (item.maxParentCount == deep) {
 					rootItems.add(item);
 				} else {
-					int outputCount = 0;
-					for (Iterator iter = this.items.iterator(); outputCount == 0 && iter.hasNext();) {
+					boolean isRoot = true;
+					for (Iterator iter = this.items.iterator(); isRoot && iter.hasNext();) {
 						ViewItem item2 = (ViewItem) iter.next();
 						if (item2.children != null) {
 							for (Iterator iterator = item2.children.iterator(); iterator.hasNext();) {
 								ViewItem element = (ViewItem) iterator.next();
 								if (element.equals(item)) {
-									outputCount++;
+									isRoot = false;
 									break;
 								}
 							}
 						}
 					}
-					if (outputCount == 0)
+					if (isRoot)
 						rootItems.add(item);
 				}
 			}
@@ -456,7 +457,6 @@ public class LogicalSchemeUI extends JComponent implements MouseListener, MouseM
 		++deep;
 		for (Iterator iter = rootItems.iterator(); iter.hasNext(); i++) {
 			ViewItem rootItem = (ViewItem) iter.next();
-//			System.out.println("rootItem:" + rootItem.name);
 			levelItemVertical.clear();
 			itemLevelMap.clear();
 
@@ -534,7 +534,7 @@ public class LogicalSchemeUI extends JComponent implements MouseListener, MouseM
 				(int) (x3 - ARROW_WEIGHT * sin + 0.5)};
 		int[] yArray = new int[] { (int) (y3 - ARROW_WEIGHT * cos + 0.5), (int) (y0 + 0.5),
 				(int) (y3 + ARROW_WEIGHT * cos + 0.5)};
-		g2d.fill(new Polygon(xArray, yArray, 3));
+		g2d.fillPolygon(xArray, yArray, 3);
 		// g2d.draw(new Polygon(xArray, yArray, 2));
 	}
 
@@ -644,24 +644,8 @@ public class LogicalSchemeUI extends JComponent implements MouseListener, MouseM
 							double c2 = (c * c + b * b - a * a) / (2.0 * c);
 							h = (int) (Math.sqrt(b * b - c2 * c2) + 0.5);
 						}
-						// else {
-						// if (a > c) {
-						// double t = a;
-						// a = b;
-						// b = t;
-						// }
-						// if (a < c) {
-						// double c1 = (b * b - a * a - c * c) / (2.0 * c);
-						// h = (int) (Math.sqrt(a * a - c1 * c1) + 0.5);
-						// }
-						// }
+						
 						if (h <= SELECT_AREA) {
-							// System.out.println(item.name + " > "
-							// + otherItem.name);
-							// System.out.println(" a : " + a);
-							// System.out.println(" b : " + b);
-							// System.out.println(" c : " + c);
-							// System.out.println(" H : " + h);
 							this.firstSelectedLineItem = item;
 							this.secondSelectedLineItem = otherItem;
 							break;

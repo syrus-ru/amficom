@@ -1,5 +1,5 @@
 /*
-* $Id: LogicalConditionUI.java,v 1.1 2005/02/22 09:02:39 bob Exp $
+* $Id: LogicalConditionUI.java,v 1.2 2005/02/22 09:33:46 bob Exp $
 *
 * Copyright © 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -28,15 +28,18 @@ import com.syrus.AMFICOM.general.EquivalentCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.logic.LogicalItem;
 import com.syrus.AMFICOM.logic.LogicalSchemeUI;
-import com.syrus.AMFICOM.logic.ViewItem;
-
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/02/22 09:02:39 $
+ * @version $Revision: 1.2 $, $Date: 2005/02/22 09:33:46 $
  * @author $Author: bob $
  * @module filter_v1
  */
 public class LogicalConditionUI extends JPanel {
+
+	/**
+	 * Comment for <code>serialVersionUID</code>
+	 */
+	private static final long	serialVersionUID	= 3760566377651844662L;
 
 	public LogicalConditionUI() {
 		List items = new LinkedList();
