@@ -1,5 +1,5 @@
 /*
- * $Id: general.idl,v 1.26 2004/11/12 14:46:47 bass Exp $
+ * $Id: general.idl,v 1.27 2004/11/16 12:23:39 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,6 +9,10 @@
 #ifndef GENERAL_IDL
 #define GENERAL_IDL
 
+#ifdef REDUNDANT_DEPS
+#define SCHEME_COMMON
+#endif // REDUNDANT_DEPS
+
 module com
 {
 module syrus
@@ -16,8 +20,23 @@ module syrus
 module AMFICOM
 {
 
+#ifdef SCHEME_COMMON
+#ifdef REDUNDANT_DEPS
+
+module configuration {
+module corba {
+	valuetype User;
+};
+};
+
+#endif // REDUNDANT_DEPS
+#endif // SCHEME_COMMON
+
 module general {
 module corba {
+
+#ifndef SCHEME_COMMON
+
 	struct Identifier_Transferable {
 		wstring identifier_string;
 	};
@@ -28,26 +47,63 @@ module corba {
 		Identifier_Transferable id;
 		long long created;
 		long long modified;
-		com::syrus::AMFICOM::general::corba::Identifier_Transferable creator_id;
-		com::syrus::AMFICOM::general::corba::Identifier_Transferable modifier_id;
-		long long version;		
+		Identifier_Transferable creator_id;
+		Identifier_Transferable modifier_id;
+		long long version;
 	};
 
-#ifdef SCHEME_COMMON
+#else // SCHEME_COMMON
+
 	valuetype Identifier {
-		private short major;
-		private long long minor;
+#ifdef NUMERIC_IDENTIFIER
+		private short thisMajor;
+		private long long thisMinor;
+#else // NUMERIC_IDENTIFIER  
+		private string thisIdentifierString;
+#endif // NUMERIC_IDENTIFIER 
+		readonly attribute short major;
+		readonly attribute long long minor;
+		readonly attribute string identifierString;
+
+		Identifier cloneInstance();
+
+		factory newInstanceFromString(in string identifierString);
+		factory newInstanceFromPrimitive(in short major, in long long minor);
 	};
 
 	typedef sequence<Identifier> IdentifierSeq;
 
 	abstract valuetype Identifiable {
-		Identifier getId();
+		readonly attribute Identifier id;
 	};
 
-	abstract valuetype StorableObject: Identifiable {
+	abstract valuetype Namable {
+		attribute wstring name;
 	};
+
+	abstract valuetype Describable {
+		attribute wstring description;
+	};
+
+	valuetype StorableObject: Identifiable {
+		private Identifier thisId;
+		private long long thisCreated;
+		private long long thisModified;
+		private Identifier creatorId;
+		private Identifier modifierId;
+		private long long thisVersion;
+
+		readonly attribute long long created;
+		readonly attribute long long modified;
+#ifdef REDUNDANT_DEPS
+		readonly attribute configuration::corba::User creator;
+		readonly attribute configuration::corba::User modifier;
+#endif // REDUNDANT_DEPS
+		readonly attribute long long version;
+	};
+
 #endif // SCHEME_COMMON
+#ifndef SCHEME_COMMON
 
 	enum DataType {
 		DATA_TYPE_INTEGER,
@@ -109,14 +165,15 @@ module corba {
 		IdentifierSeq_Transferable getGeneratedIdentifierRange(in unsigned short entity, in unsigned long size) raises (AMFICOMRemoteException);
 	};
 
+#endif // SCHEME_COMMON
+
 };
 };
 
-module CORBA
-{
+#ifndef SCHEME_COMMON
 
-module General
-{
+module CORBA {
+module General {
 	exception AMFICOMRemoteException
 	{
 		long code;
@@ -237,8 +294,38 @@ module General
 
 };
 };
+
+#else // SCHEME_COMMON
+#ifdef REDUNDANT_DEPS
+
+module configuration {
+module corba {
+	valuetype User:
+			general::corba::StorableObject,
+			general::corba::Namable,
+			general::corba::Describable {
+		enum Sort {
+			SYSADMIN,
+			REGULAR,
+			SERVER,
+			MCM
+		};
+
+		private wstring login;
+		private Sort sort;
+		private wstring thisName;
+		private wstring thisDescription;
+	};
+
+	typedef sequence<User> UserSeq;
+};
+};
+
+#endif // REDUNDANT_DEPS
+#endif // SCHEME_COMMON
+
 };
 };
 };
 
-#endif
+#endif // GENERAL_IDL
