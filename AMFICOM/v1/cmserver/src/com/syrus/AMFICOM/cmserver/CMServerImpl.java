@@ -1,5 +1,5 @@
 /*
- * $Id: CMServerImpl.java,v 1.50 2004/10/19 11:09:50 bass Exp $
+ * $Id: CMServerImpl.java,v 1.51 2004/10/19 13:53:10 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -138,8 +138,8 @@ import com.syrus.AMFICOM.mserver.corba.MServer;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.50 $, $Date: 2004/10/19 11:09:50 $
- * @author $Author: bass $
+ * @version $Revision: 1.51 $, $Date: 2004/10/19 13:53:10 $
+ * @author $Author: bob $
  * @module cmserver_v1
  */
 
@@ -459,9 +459,9 @@ public class CMServerImpl implements CMServerOperations {
         try {
         
         for (int i = 0; i < evaluation_Transferables.length; i++) {
-            Evaluation Evaluation = new Evaluation(evaluation_Transferables[i]);
-            MeasurementStorableObjectPool.putStorableObject(Evaluation);
-            evaluationList.add(Evaluation);
+            Evaluation evaluation = new Evaluation(evaluation_Transferables[i]);
+            MeasurementStorableObjectPool.putStorableObject(evaluation);
+            evaluationList.add(evaluation);
         }
         
         EvaluationDatabase evaluationDatabase = (EvaluationDatabase) MeasurementDatabaseContext
@@ -542,9 +542,9 @@ public class CMServerImpl implements CMServerOperations {
 		try {
 
 			for (int i = 0; i < evaluationType_Transferables.length; i++) {
-				EvaluationType EvaluationType = new EvaluationType(evaluationType_Transferables[i]);
-				MeasurementStorableObjectPool.putStorableObject(EvaluationType);
-				evaluationTypeList.add(EvaluationType);
+				EvaluationType evaluationType = new EvaluationType(evaluationType_Transferables[i]);
+				MeasurementStorableObjectPool.putStorableObject(evaluationType);
+				evaluationTypeList.add(evaluationType);
 			}
 
 			EvaluationTypeDatabase evaluationTypeDatabase = (EvaluationTypeDatabase) MeasurementDatabaseContext
@@ -625,9 +625,9 @@ public class CMServerImpl implements CMServerOperations {
         try {
         
         for (int i = 0; i < measurement_Transferables.length; i++) {
-            Measurement Measurement = new Measurement(measurement_Transferables[i]);
-            MeasurementStorableObjectPool.putStorableObject(Measurement);
-            measurementList.add(Measurement);
+            Measurement measurement = new Measurement(measurement_Transferables[i]);
+            MeasurementStorableObjectPool.putStorableObject(measurement);
+            measurementList.add(measurement);
         }
         
         MeasurementDatabase measurementDatabase = (MeasurementDatabase) MeasurementDatabaseContext
