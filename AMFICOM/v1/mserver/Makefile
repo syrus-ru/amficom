@@ -43,7 +43,6 @@ $(LIBNAME_INTERFACE):	.corba
 	$(JAVAC) $(JAVACFLAGS) \
 		-classpath $(APPCLASSPATH):$(CLASSDIR) \
 		$(SRCDIR)/com/syrus/AMFICOM/mserver/DatabaseContextSetup.java \
-		$(SRCDIR)/com/syrus/AMFICOM/mserver/CORBAServer.java \
 		$(SRCDIR)/com/syrus/AMFICOM/mserver/MeasurementServer.java \
 		$(SRCDIR)/com/syrus/AMFICOM/mserver/MServerImplementation.java
 	touch $@

@@ -10,3 +10,4 @@
 *.log
 classes
 logs
+orb.db

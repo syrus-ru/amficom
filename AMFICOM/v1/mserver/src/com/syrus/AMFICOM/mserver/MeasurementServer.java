@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementServer.java,v 1.3 2004/08/03 17:22:13 arseniy Exp $
+ * $Id: MeasurementServer.java,v 1.4 2004/08/04 17:32:55 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,15 +16,17 @@ import java.util.Hashtable;
 import java.util.Iterator;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.SleepButWorkThread;
+import com.syrus.AMFICOM.general.CORBAServer;
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.configuration.Server;
+import com.syrus.AMFICOM.configuration.MCM;
 import com.syrus.util.Application;
 import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2004/08/03 17:22:13 $
+ * @version $Revision: 1.4 $, $Date: 2004/08/04 17:32:55 $
  * @author $Author: arseniy $
  * @module mserver_v1
  */
@@ -41,21 +43,22 @@ public class MeasurementServer extends SleepButWorkThread {
 	/*	CORBA server	*/
 	private static CORBAServer corbaServer;
 
-	private long tickTime;
+	/*	References to MCMs*/
+	private static Map mcmRefs;	/*	Map <Identifier mcmId, com.syrus.AMFICOM.mcm.corba.MCM mcmRef>*/
+
 	private boolean running;
 
 	public MeasurementServer() {
 		super(ApplicationProperties.getInt("TickTime", TICK_TIME) * 1000, ApplicationProperties.getInt("MaxFalls", MAX_FALLS));
-		this.tickTime = super.initialTimeToSleep;
 		this.running = true;
 	}
 
 	public static void main(String[] args) {
 		Application.init("mserver");
 
-//		/*	Establish connection with database	*/
-//		establishDatabaseConnection();
-//
+		/*	Establish connection with database	*/
+		establishDatabaseConnection();
+
 //		/*	Initialize object drivers
 //		 * 	for work with database*/
 //		DatabaseContextSetup.initDatabaseContext();
@@ -74,6 +77,9 @@ public class MeasurementServer extends SleepButWorkThread {
 
 		/*	Create CORBA server with servant(s)	*/
 		activateCORBAServer();
+
+		/*	Create map of references to MCMs*/
+		activateMCMReferences();
 
 		/*	Start main loop	*/
 		MeasurementServer measurementServer = new MeasurementServer();
@@ -96,9 +102,8 @@ public class MeasurementServer extends SleepButWorkThread {
 	private static void activateCORBAServer() {
 		try {
 			corbaServer = new CORBAServer();
-			corbaServer.activateServant(new MServerImplementation(), "mserver_1"/*iAm.getId().toString()*/);
-			org.omg.CORBA.Object ref = corbaServer.resolveReference("mserver_1");
-			System.out.println("ref: " + ref.toString());
+			//corbaServer.activateServant(new MServerImplementation(), iAm.getId().toString());
+			corbaServer.activateServant(new MServerImplementation(), "server_1");
 		}
 		catch (CommunicationException ce) {
 			Log.errorException(ce);
@@ -109,12 +114,54 @@ public class MeasurementServer extends SleepButWorkThread {
 			Log.errorException(e);
 		}
 	}
+	
+	private static void activateMCMReferences() {
+//		List mcms = iAm.getMCMs();
+//		mcmRefs = new Hashtable(mcms.size());
+//		Identifier mcmId;
+//		com.syrus.AMFICOM.mcm.corba.MCM mcmRef;
+//		for (Iterator iterator = mcms.iterator(); iterator.hasNext();) {
+//			mcmId = ((MCM)mcms.iterator()).getId();
+//			try {
+//				mcmRef = com.syrus.AMFICOM.mcm.corba.MCMHelper.narrow(corbaServer.resolveReference(mcmId.toString()));
+//			}
+//			catch (CommunicationException ce) {
+//				Log.errorException(ce);
+//				mcmRef = null;
+//			}
+//			if (mcmRef != null)
+//				mcmRefs.put(mcmId, mcmRef);
+//		}
+
+		mcmRefs = new Hashtable(1);
+		com.syrus.AMFICOM.mcm.corba.MCM mcmRef;
+		try {
+			mcmRef = com.syrus.AMFICOM.mcm.corba.MCMHelper.narrow(corbaServer.resolveReference("mcm_1"));
+		}
+		catch (CommunicationException ce) {
+			Log.errorException(ce);
+			mcmRef = null;
+		}
+		if (mcmRef != null)
+			mcmRefs.put("mcm_1", mcmRef);
+		else
+			System.out.println("ignoring null");
+	}
 
 	public void run() {
-		
+		while (this.running) {
+			System.out.println(System.currentTimeMillis());
+			try {
+				sleep(super.initialTimeToSleep);
+			}
+			catch (InterruptedException ie) {
+				Log.errorException(ie);
+			}
+		}
 	}
 	
 	protected void shutdown() {
-		
+		this.running = false;
+		DatabaseConnection.closeConnection();
 	}
 }
