@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseMeasurementObjectLoader.java,v 1.21 2004/10/19 11:09:27 bass Exp $
+ * $Id: DatabaseMeasurementObjectLoader.java,v 1.22 2004/10/20 09:02:13 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -21,8 +21,8 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.21 $, $Date: 2004/10/19 11:09:27 $
- * @author $Author: bass $
+ * @version $Revision: 1.22 $, $Date: 2004/10/20 09:02:13 $
+ * @author $Author: max $
  * @module measurement_v1
  */
 
@@ -56,15 +56,15 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 		return new MeasurementSetup(id);
 	}
 
-	public Measurement loadMeasurement(Identifier id) throws DatabaseException {
+	public Measurement loadMeasurement(Identifier id) throws DatabaseException, CommunicationException {
 		return new Measurement(id);
 	}
 
-	public Analysis loadAnalysis(Identifier id) throws DatabaseException {
+	public Analysis loadAnalysis(Identifier id) throws DatabaseException, CommunicationException {
 		return new Analysis(id);
 	}
 
-	public Evaluation loadEvaluation(Identifier id) throws DatabaseException {
+	public Evaluation loadEvaluation(Identifier id) throws DatabaseException, CommunicationException {
 		return new Evaluation(id);
 	}
 
