@@ -137,7 +137,7 @@ public class AlarmPopupFrame extends JInternalFrame
 //	String title, String text)
 	{
 		jList.add(ade);
-		texts.add(ade.text);
+		texts.add(ade.getText());
 	}
 
 	void listItemSelected()

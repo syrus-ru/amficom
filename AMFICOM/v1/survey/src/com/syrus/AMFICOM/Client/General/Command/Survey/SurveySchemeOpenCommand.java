@@ -1,12 +1,13 @@
 package com.syrus.AMFICOM.Client.General.Command.Survey;
 
 import java.awt.*;
+import java.util.List;
+
 import javax.swing.*;
 
 import com.syrus.AMFICOM.Client.Map.UI.*;
 import com.syrus.AMFICOM.Client.General.Command.*;
 import com.syrus.AMFICOM.Client.General.Event.*;
-import com.syrus.AMFICOM.Client.General.Lang.*;
 import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.General.Scheme.*;
 import com.syrus.AMFICOM.Client.General.UI.*;
@@ -43,7 +44,7 @@ public class SurveySchemeOpenCommand extends VoidCommand
 
 		SchemeChooserDialog mcd = new SchemeChooserDialog(dataSource);//mapFrame, "Выберите карту", true);
 
-		DataSet dataSet = new DataSet(Pool.getHash(Scheme.typ));
+		List dataSet = Pool.getList(Scheme.typ);
 		ObjectResourceDisplayModel odm = new SchemeDisplayModel();
 		mcd.setContents(odm, dataSet);
 

@@ -6,11 +6,8 @@ import com.syrus.AMFICOM.Client.Map.Setup.OfxControlsFrame;
 
 import java.awt.Dimension;
 
-import java.util.Vector;
-
 import javax.swing.JDesktopPane;
 
-//A0A
 public class SurveyViewMapSetupCommand extends VoidCommand
 {
 	ApplicationContext aContext;
@@ -19,6 +16,7 @@ public class SurveyViewMapSetupCommand extends VoidCommand
 
 	public SurveyViewMapSetupCommand()
 	{
+		// empty constructor
 	}
 
 	public SurveyViewMapSetupCommand(JDesktopPane desktop, ApplicationContext aContext)
@@ -46,6 +44,7 @@ public class SurveyViewMapSetupCommand extends VoidCommand
 			}
 			catch(Exception ex)
 			{
+				ex.printStackTrace();
 			}
 		}
 

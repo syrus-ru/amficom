@@ -1,31 +1,16 @@
 package com.syrus.AMFICOM.Client.General.Command.Survey;
 
-import java.awt.*;
-import javax.swing.*;
-import java.awt.event.*;
-import javax.swing.event.*;
-import java.util.Vector;
-import java.util.Date;
-import java.text.*;
 
-import com.syrus.AMFICOM.CORBA.Survey.*;
-import com.syrus.AMFICOM.Client.General.Lang.*;
 import com.syrus.AMFICOM.Client.General.Model.*;
-import com.syrus.AMFICOM.Client.Resource.*;
-//import com.syrus.AMFICOM.Client.Resource.Survey.*;
-import com.syrus.AMFICOM.Client.Resource.Result.*;
-//import com.syrus.AMFICOM.Client.Resource.Map.*;
-import com.syrus.AMFICOM.Client.Test.*;
-import com.syrus.AMFICOM.Client.Survey.*;
 import com.syrus.AMFICOM.Client.General.Command.*;
 
 public class TestRequestCommand extends VoidCommand
 {
 	ApplicationContext aContext;
-//	TestDialog td;
 
 	public TestRequestCommand()
 	{
+		// empty constructor
 	}
 
 	public TestRequestCommand(ApplicationContext aContext)

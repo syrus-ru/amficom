@@ -1,67 +1,19 @@
 // Copyright (c) Syrus Systems 2000 Syrus Systems
 package com.syrus.AMFICOM.Client.Survey;
 
-import com.syrus.AMFICOM.Client.Map.MapElementsFrame;
-import com.syrus.AMFICOM.Client.Map.MapMainFrame;
-import com.syrus.AMFICOM.Client.Map.MapPropertyFrame;
+import com.syrus.AMFICOM.Client.Map.*;
 import com.syrus.AMFICOM.Client.General.Checker;
-import com.syrus.AMFICOM.Client.General.Command.CloseAllInternalCommand;
-import com.syrus.AMFICOM.Client.General.Command.Config.OpenMapEditorCommand;
-import com.syrus.AMFICOM.Client.General.Command.Config.OpenSchemeEditorCommand;
-import com.syrus.AMFICOM.Client.General.Command.ExitCommand;
-import com.syrus.AMFICOM.Client.General.Command.HelpAboutCommand;
+import com.syrus.AMFICOM.Client.General.Command.*;
+import com.syrus.AMFICOM.Client.General.Command.Config.*;
 import com.syrus.AMFICOM.Client.General.Command.Scheme.SchemeCloseCommand;
-import com.syrus.AMFICOM.Client.General.Command.Session.SessionChangePasswordCommand;
-import com.syrus.AMFICOM.Client.General.Command.Session.SessionCloseCommand;
-import com.syrus.AMFICOM.Client.General.Command.Session.SessionConnectionCommand;
-import com.syrus.AMFICOM.Client.General.Command.Session.SessionDomainCommand;
-import com.syrus.AMFICOM.Client.General.Command.Session.SessionOpenCommand;
-import com.syrus.AMFICOM.Client.General.Command.Session.SessionOptionsCommand;
-import com.syrus.AMFICOM.Client.General.Command.Survey.CreateSurveyReportCommand;
-import com.syrus.AMFICOM.Client.General.Command.Survey.MapCloseCommand;
-import com.syrus.AMFICOM.Client.General.Command.Survey.OpenAlarmsCommand;
-import com.syrus.AMFICOM.Client.General.Command.Survey.OpenAnalysisCommand;
-import com.syrus.AMFICOM.Client.General.Command.Survey.OpenExtendedAnalysisCommand;
-import com.syrus.AMFICOM.Client.General.Command.Survey.OpenModelingCommand;
-import com.syrus.AMFICOM.Client.General.Command.Survey.OpenNormsCommand;
-import com.syrus.AMFICOM.Client.General.Command.Survey.OpenPrognosisCommand;
-import com.syrus.AMFICOM.Client.General.Command.Survey.OpenResultsCommand;
-import com.syrus.AMFICOM.Client.General.Command.Survey.OpenSchedulerCommand;
-import com.syrus.AMFICOM.Client.General.Command.Survey.OpenTestsCommand;
-import com.syrus.AMFICOM.Client.General.Command.Survey.SurveyViewAllCommand;
-import com.syrus.AMFICOM.Client.General.Command.Survey.SurveyViewAllSchemeCommand;
-import com.syrus.AMFICOM.Client.General.Command.Survey.SurveyViewMapSetupCommand;
-import com.syrus.AMFICOM.Client.General.Command.Survey.ViewSurveyNavigatorCommand;
-import com.syrus.AMFICOM.Client.General.Command.Window.WindowArrangeCommand;
-import com.syrus.AMFICOM.Client.General.Command.Window.WindowArrangeIconsCommand;
-import com.syrus.AMFICOM.Client.General.Command.Window.WindowCascadeCommand;
-import com.syrus.AMFICOM.Client.General.Command.Window.WindowCloseAllCommand;
-import com.syrus.AMFICOM.Client.General.Command.Window.WindowCloseCommand;
-import com.syrus.AMFICOM.Client.General.Command.Window.WindowListCommand;
-import com.syrus.AMFICOM.Client.General.Command.Window.WindowMinimizeAllCommand;
-import com.syrus.AMFICOM.Client.General.Command.Window.WindowRestoreAllCommand;
-import com.syrus.AMFICOM.Client.General.Command.Window.WindowTileHorizontalCommand;
-import com.syrus.AMFICOM.Client.General.Command.Window.WindowTileVerticalCommand;
+import com.syrus.AMFICOM.Client.General.Command.Session.*;
+import com.syrus.AMFICOM.Client.General.Command.Survey.*;
+import com.syrus.AMFICOM.Client.General.Command.Window.*;
 import com.syrus.AMFICOM.Client.General.ConnectionInterface;
-import com.syrus.AMFICOM.Client.General.Event.AlarmReceivedEvent;
-import com.syrus.AMFICOM.Client.General.Event.ContextChangeEvent;
-import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
-import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
-import com.syrus.AMFICOM.Client.General.Event.OperationListener;
-import com.syrus.AMFICOM.Client.General.Event.SchemeElementsEvent;
-import com.syrus.AMFICOM.Client.General.Event.StatusMessageEvent;
+import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Lang.LangModel;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelSurvey;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationModel;
-import com.syrus.AMFICOM.Client.General.Model.DefaultAlarmApplicationModelFactory;
-import com.syrus.AMFICOM.Client.General.Model.DefaultModelApplicationModelFactory;
-import com.syrus.AMFICOM.Client.General.Model.DefaultPredictionApplicationModelFactory;
-import com.syrus.AMFICOM.Client.General.Model.DefaultResultApplicationModelFactory;
-import com.syrus.AMFICOM.Client.General.Model.Environment;
-import com.syrus.AMFICOM.Client.General.Model.MapSurveyISMApplicationModelFactory;
-import com.syrus.AMFICOM.Client.General.Model.ReflectometryAnalyseApplicationModelFactory;
-import com.syrus.AMFICOM.Client.General.Model.SchematicsApplicationModelFactory;
+import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.General.Scheme.SchemePanelNoEdition;
 import com.syrus.AMFICOM.Client.General.SessionInterface;
 import com.syrus.AMFICOM.Client.General.UI.StatusBarModel;
@@ -253,8 +205,8 @@ public class SurveyMDIMain extends JFrame implements OperationListener {
 		statusBar.setText("domain", LangModel.getString("statusNoDomain"));
 		statusBar.setText("time", " ");
 		statusBar.organize();
-		statusBar.setDispatcher(Environment.the_dispatcher);
-		statusBar.setDispatcher(internal_dispatcher);
+		statusBar.addDispatcher(Environment.the_dispatcher);
+		statusBar.addDispatcher(internal_dispatcher);
 
 		// load values from properties file
 		try {
@@ -770,8 +722,8 @@ public class SurveyMDIMain extends JFrame implements OperationListener {
 				statusBar.setText("status", LangModel
 						.getString("statusConnecting"));
 			}
-			if (cce.CONNECTION_CHANGED)
-      {
+			if (cce.CONNECTION_CHANGED){
+				// nothing ???
 			}
 			if (cce.DOMAIN_SELECTED)
       {
@@ -845,11 +797,11 @@ public class SurveyMDIMain extends JFrame implements OperationListener {
 		DataSourceInterface dataSource = aContext.getDataSourceInterface();
 
 		ApplicationModel aModel = aContext.getApplicationModel();
-		aModel.disable("menuSessionNew");
-		aModel.enable("menuSessionClose");
-		aModel.enable("menuSessionOptions");
-		aModel.enable("menuSessionChangePassword");
-		aModel.enable("menuSessionDomain");
+		aModel.setEnabled("menuSessionNew",false);
+		aModel.setEnabled("menuSessionClose", true);
+		aModel.setEnabled("menuSessionOptions", true);
+		aModel.setEnabled("menuSessionChangePassword", true);
+		aModel.setEnabled("menuSessionDomain", true);
 		aModel.setEnabled("menuReport", true);    
 		aModel.fireModelChanged("");
 
@@ -859,7 +811,7 @@ public class SurveyMDIMain extends JFrame implements OperationListener {
 		statusBar.setText("user", aContext.getSessionInterface().getUser());
 
 		aContext.getDispatcher().notify(
-				new StatusMessageEvent("Инициализация данных..."));
+				new StatusMessageEvent(StatusMessageEvent.STATUS_MESSAGE, "Инициализация данных..."));
 		new SurveyDataSourceImage(dataSource).LoadParameterTypes();
 		new SurveyDataSourceImage(dataSource).LoadTestTypes();
 		new SurveyDataSourceImage(dataSource).LoadAnalysisTypes();
@@ -867,7 +819,7 @@ public class SurveyMDIMain extends JFrame implements OperationListener {
 		new SurveyDataSourceImage(dataSource).LoadModelingTypes();
 		dataSource.GetAlarmTypes();
 		aContext.getDispatcher().notify(
-				new StatusMessageEvent("Данные загружены"));
+				new StatusMessageEvent(StatusMessageEvent.STATUS_MESSAGE, "Данные загружены"));
 
 		domain_id = aContext.getSessionInterface().getDomainId();
 		if (domain_id != null && !domain_id.equals("")) {
@@ -886,7 +838,7 @@ public class SurveyMDIMain extends JFrame implements OperationListener {
 		new CloseAllInternalCommand(desktopPane).execute();
 
 		aContext.getDispatcher().notify(
-				new StatusMessageEvent("Инициализация данных..."));
+				new StatusMessageEvent(StatusMessageEvent.STATUS_MESSAGE, "Инициализация данных..."));
 		new SchemeDataSourceImage(dataSource).LoadNetDirectory();
 		new SchemeDataSourceImage(dataSource).LoadISMDirectory();
 		new ConfigDataSourceImage(dataSource).LoadNet();
@@ -897,7 +849,7 @@ public class SurveyMDIMain extends JFrame implements OperationListener {
 		new MapDataSourceImage(dataSource).LoadProtoElements();
 		new MapDataSourceImage(dataSource).LoadMaps();
 		aContext.getDispatcher().notify(
-				new StatusMessageEvent("Данные загружены"));
+				new StatusMessageEvent(StatusMessageEvent.STATUS_MESSAGE, "Данные загружены"));
 
 		ApplicationModel aModel = aContext.getApplicationModel();
 
@@ -913,11 +865,11 @@ public class SurveyMDIMain extends JFrame implements OperationListener {
 		aModel.setEnabled("menuMaintainAlarm", true);
 		aModel.setEnabled("menuReport", true);    
 
-		aModel.enable("menuVisualizeNetGIS");
-		aModel.enable("menuVisualizeNet");
-		aModel.enable("menuViewAll");
+		aModel.setEnabled("menuVisualizeNetGIS", true);
+		aModel.setEnabled("menuVisualizeNet", true);
+		aModel.setEnabled("menuViewAll", true);
 
-		aModel.enable("menuViewMapSetup");
+		aModel.setEnabled("menuViewMapSetup", true);
 
 		aModel.fireModelChanged("");
 
@@ -938,8 +890,7 @@ public class SurveyMDIMain extends JFrame implements OperationListener {
 		 */
 		ApplicationModel aModel = aContext.getApplicationModel();
 		setDefaultModel(aModel);
-		aModel.enable("menuSessionNew");
-		aModel.fireModelChanged("");
+		aModel.setEnabled("menuSessionNew", true);
 
 		new CloseAllInternalCommand(desktopPane).execute();
 

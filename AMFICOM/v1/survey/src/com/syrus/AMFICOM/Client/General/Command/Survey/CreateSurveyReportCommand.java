@@ -2,8 +2,6 @@ package com.syrus.AMFICOM.Client.General.Command.Survey;
 
 import com.syrus.AMFICOM.Client.Survey.Report.ObserveReportModel;
 import com.syrus.AMFICOM.Client.Survey.SurveyMDIMain;
-import java.util.ArrayList;
-import java.util.Iterator;
 
 import com.syrus.AMFICOM.Client.General.Command.OpenTypedTemplateCommand;
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;

@@ -3,7 +3,6 @@ package com.syrus.AMFICOM.Client.General.Command.Survey;
 import com.syrus.AMFICOM.Client.General.*;
 import com.syrus.AMFICOM.Client.General.Command.*;
 import com.syrus.AMFICOM.Client.General.Model.*;
-import com.syrus.AMFICOM.Client.General.Lang.*;
 import com.syrus.AMFICOM.Client.General.Event.*;
 
 public class OpenNormsCommand extends VoidCommand

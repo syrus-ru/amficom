@@ -1,16 +1,6 @@
 package com.syrus.AMFICOM.Client.General.Command.Survey;
 
-import java.awt.*;
-import javax.swing.*;
-import java.awt.event.*;
-import javax.swing.event.*;
-import java.util.Vector;
-import java.util.Date;
-import java.text.*;
-
-import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.General.*;
-import com.syrus.AMFICOM.Client.General.Lang.*;
 import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Command.*;
@@ -22,6 +12,7 @@ public class OpenSchedulerCommand extends VoidCommand
 
 	public OpenSchedulerCommand()
 	{
+//		 empty constructor
 	}
 
 	public OpenSchedulerCommand(Dispatcher dispatcher, ApplicationContext aContext)
