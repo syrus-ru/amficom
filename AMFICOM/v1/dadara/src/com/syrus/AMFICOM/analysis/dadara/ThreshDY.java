@@ -1,5 +1,5 @@
 /*
- * $Id: ThreshDY.java,v 1.7 2005/03/14 12:19:38 saa Exp $
+ * $Id: ThreshDY.java,v 1.8 2005/03/18 13:59:18 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,7 +13,7 @@ import java.io.IOException;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.7 $, $Date: 2005/03/14 12:19:38 $
+ * @version $Revision: 1.8 $, $Date: 2005/03/18 13:59:18 $
  * @module
  */
 public class ThreshDY extends Thresh
@@ -78,9 +78,8 @@ public class ThreshDY extends Thresh
 	public void changeAllBy(double delta)
 	{
 		for (int k = 0; k < 4; k++)
-		{
 			values[k] += (IS_KEY_UPPER[k] ? delta : -delta) * (IS_KEY_HARD[k] ? 2 : 1);
+		for (int k = 0; k < 4; k++)
 			correctAndSnap(k);
-		}
 	}
 }
