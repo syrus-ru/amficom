@@ -1,5 +1,5 @@
 /*
- * $Id: SiteNodeTypeDatabase.java,v 1.12 2005/02/24 15:47:38 bob Exp $
+ * $Id: SiteNodeTypeDatabase.java,v 1.13 2005/02/28 14:12:22 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,7 +31,7 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/02/24 15:47:38 $
+ * @version $Revision: 1.13 $, $Date: 2005/02/28 14:12:22 $
  * @author $Author: bob $
  * @module map_v1
  */
@@ -58,19 +58,19 @@ public class SiteNodeTypeDatabase extends StorableObjectDatabase {
 	
 	protected String getColumns(int mode) {
 		if (columns == null){
-			columns = super.getColumns(mode) + COMMA
+			columns = COMMA
 				+ StorableObjectWrapper.COLUMN_CODENAME + COMMA
 				+ StorableObjectWrapper.COLUMN_NAME + COMMA
 				+ StorableObjectWrapper.COLUMN_DESCRIPTION + COMMA
 				+ SiteNodeTypeWrapper.COLUMN_IMAGE_ID + COMMA
 				+ SiteNodeTypeWrapper.COLUMN_TOPOLOGICAL;
 		}
-		return columns;
+		return super.getColumns(mode) + columns;
 	}	
 	
-	protected String getUpdateMultiplySQLValues(int mode) {
+	protected String getUpdateMultiplySQLValues() {
 		if (updateMultiplySQLValues == null){
-			updateMultiplySQLValues = super.getUpdateMultiplySQLValues(mode) + COMMA
+			updateMultiplySQLValues = super.getUpdateMultiplySQLValues() + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA

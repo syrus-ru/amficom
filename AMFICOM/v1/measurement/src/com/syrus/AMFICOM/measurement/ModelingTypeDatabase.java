@@ -1,5 +1,5 @@
 /*
- * $Id: ModelingTypeDatabase.java,v 1.22 2005/02/28 11:14:01 arseniy Exp $
+ * $Id: ModelingTypeDatabase.java,v 1.23 2005/02/28 14:12:18 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -39,8 +39,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.22 $, $Date: 2005/02/28 11:14:01 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.23 $, $Date: 2005/02/28 14:12:18 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
@@ -61,12 +61,12 @@ public class ModelingTypeDatabase extends StorableObjectDatabase {
 
 	protected String getColumns(int mode) {
 		if (columns == null) {
-			columns = super.getColumns(mode) + COMMA
+			columns = COMMA
 				+ StorableObjectWrapper.COLUMN_CODENAME + COMMA
 				+ StorableObjectWrapper.COLUMN_DESCRIPTION;
 		}
 
-		return columns;
+		return super.getColumns(mode) + columns;
 	}
 
 	protected String getUpdateMultiplySQLValues() {

@@ -1,5 +1,5 @@
 /*
- * $Id: CableLinkTypeDatabase.java,v 1.20 2005/02/28 11:13:42 arseniy Exp $
+ * $Id: CableLinkTypeDatabase.java,v 1.21 2005/02/28 14:12:14 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -39,8 +39,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.20 $, $Date: 2005/02/28 11:13:42 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.21 $, $Date: 2005/02/28 14:12:14 $
+ * @author $Author: bob $
  * @module config_v1
  */
 public class CableLinkTypeDatabase extends StorableObjectDatabase {
@@ -73,16 +73,16 @@ public class CableLinkTypeDatabase extends StorableObjectDatabase {
 
 	protected String getColumns(int mode) {
 		if (columns == null) {
-			columns = super.getColumns(mode) + COMMA
+			columns = COMMA
 				+ StorableObjectWrapper.COLUMN_CODENAME + COMMA
 				+ StorableObjectWrapper.COLUMN_DESCRIPTION + COMMA
 				+ StorableObjectWrapper.COLUMN_NAME + COMMA
-				+ CableLinkTypeWrapper.COLUMN_SORT + COMMA
+				+ CableLinkTypeWrapper.COLUMN_KIND + COMMA
 				+ CableLinkTypeWrapper.COLUMN_MANUFACTURER + COMMA
 				+ CableLinkTypeWrapper.COLUMN_MANUFACTURER_CODE + COMMA
 				+ CableLinkTypeWrapper.COLUMN_IMAGE_ID;
 		}
-		return columns;
+		return super.getColumns(mode) + columns;
 	}
 
 	protected String getUpdateSingleSQLValues(StorableObject storableObject) throws IllegalDataException {
@@ -202,7 +202,7 @@ public class CableLinkTypeDatabase extends StorableObjectDatabase {
 																	DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_CODENAME)),
 																	DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_DESCRIPTION)),
 																	DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_NAME)),
-																	resultSet.getInt(CableLinkTypeWrapper.COLUMN_SORT),
+																	resultSet.getInt(CableLinkTypeWrapper.COLUMN_KIND),
 																	DatabaseString.fromQuerySubString(resultSet.getString(CableLinkTypeWrapper.COLUMN_MANUFACTURER)),
 																	DatabaseString.fromQuerySubString(resultSet.getString(CableLinkTypeWrapper.COLUMN_MANUFACTURER_CODE)),                                   
 																	DatabaseIdentifier.getIdentifier(resultSet, CableLinkTypeWrapper.COLUMN_IMAGE_ID));

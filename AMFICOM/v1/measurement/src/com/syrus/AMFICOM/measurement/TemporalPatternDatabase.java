@@ -1,5 +1,5 @@
 /*
- * $Id: TemporalPatternDatabase.java,v 1.43 2005/02/28 11:14:01 arseniy Exp $
+ * $Id: TemporalPatternDatabase.java,v 1.44 2005/02/28 14:12:18 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,8 +33,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.43 $, $Date: 2005/02/28 11:14:01 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.44 $, $Date: 2005/02/28 14:12:18 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
@@ -56,11 +56,11 @@ public class TemporalPatternDatabase extends StorableObjectDatabase {
 	
 	protected String getColumns(int mode) {
 		if (columns == null){
-			columns = super.getColumns(mode) + COMMA
+			columns = COMMA
 				+ StorableObjectWrapper.COLUMN_DESCRIPTION + COMMA
 				+ TemporalPatternWrapper.COLUMN_VALUE;
 		}
-		return columns;
+		return super.getColumns(mode) + columns;
 	}	
 
 	protected String getUpdateMultiplySQLValues() {

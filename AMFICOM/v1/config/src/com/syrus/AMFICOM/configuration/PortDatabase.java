@@ -1,5 +1,5 @@
 /*
- * $Id: PortDatabase.java,v 1.49 2005/02/28 11:13:42 arseniy Exp $
+ * $Id: PortDatabase.java,v 1.50 2005/02/28 14:12:14 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -37,8 +37,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.49 $, $Date: 2005/02/28 11:13:42 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.50 $, $Date: 2005/02/28 14:12:14 $
+ * @author $Author: bob $
  * @module config_v1
  */
 public class PortDatabase extends StorableObjectDatabase {
@@ -59,13 +59,13 @@ public class PortDatabase extends StorableObjectDatabase {
 
 	protected String getColumns(int mode) {		
 		if (columns == null) {
-			columns = super.getColumns(mode) + COMMA
+			columns = COMMA
 				+ StorableObjectWrapper.COLUMN_TYPE_ID + COMMA
 				+ StorableObjectWrapper.COLUMN_DESCRIPTION + COMMA
 				+ PortWrapper.COLUMN_EQUIPMENT_ID + COMMA
 				+ PortWrapper.COLUMN_SORT;		
 		}
-		return columns;
+		return super.getColumns(mode) + columns;
 	}
 
 	protected String getUpdateMultiplySQLValues() {

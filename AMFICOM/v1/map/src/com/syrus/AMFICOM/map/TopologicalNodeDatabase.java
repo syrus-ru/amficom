@@ -1,5 +1,5 @@
 /*
- * $Id: TopologicalNodeDatabase.java,v 1.14 2005/02/24 15:47:38 bob Exp $
+ * $Id: TopologicalNodeDatabase.java,v 1.15 2005/02/28 14:12:22 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -40,7 +40,7 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.14 $, $Date: 2005/02/24 15:47:38 $
+ * @version $Revision: 1.15 $, $Date: 2005/02/28 14:12:22 $
  * @author $Author: bob $
  * @module map_v1
  */
@@ -240,19 +240,19 @@ public class TopologicalNodeDatabase extends StorableObjectDatabase {
 	
 	protected String getColumns(int mode) {
 		if (columns == null){
-			columns = super.getColumns(mode) + COMMA
+			columns = COMMA
 				+ StorableObjectWrapper.COLUMN_NAME + COMMA
 				+ StorableObjectWrapper.COLUMN_DESCRIPTION + COMMA
 				+ TopologicalNodeWrapper.COLUMN_LONGITUDE + COMMA
 				+ TopologicalNodeWrapper.COLUMN_LATIUDE + COMMA 
 				+ TopologicalNodeWrapper.COLUMN_ACTIVE;
 		}
-		return columns;
+		return super.getColumns(mode) + columns;
 	}	
 	
-	protected String getUpdateMultiplySQLValues(int mode) {
+	protected String getUpdateMultiplySQLValues() {
 		if (updateMultiplySQLValues == null){
-			updateMultiplySQLValues = super.getUpdateMultiplySQLValues(mode) + COMMA
+			updateMultiplySQLValues = super.getUpdateMultiplySQLValues() + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA

@@ -1,5 +1,5 @@
 /*
- * $Id: LinkDatabase.java,v 1.32 2005/02/28 11:13:42 arseniy Exp $
+ * $Id: LinkDatabase.java,v 1.33 2005/02/28 14:12:14 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -38,8 +38,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.32 $, $Date: 2005/02/28 11:13:42 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.33 $, $Date: 2005/02/28 14:12:14 $
+ * @author $Author: bob $
  * @module config_v1
  */
 
@@ -67,7 +67,7 @@ public class LinkDatabase extends StorableObjectDatabase {
 
 	protected String getColumns(int mode) {
 		if (columns == null) {
-			columns = super.getColumns(mode) + COMMA
+			columns = COMMA
 				+ DomainMember.COLUMN_DOMAIN_ID + COMMA
 				+ StorableObjectWrapper.COLUMN_TYPE_ID + COMMA
 				+ LinkWrapper.COLUMN_SORT + COMMA
@@ -79,7 +79,7 @@ public class LinkDatabase extends StorableObjectDatabase {
 				+ LinkWrapper.COLUMN_COLOR + COMMA
 				+ LinkWrapper.COLUMN_MARK;
 		}
-		return columns;
+		return super.getColumns(mode) + columns;
 	}
 	
 	protected String getUpdateMultiplySQLValues() {

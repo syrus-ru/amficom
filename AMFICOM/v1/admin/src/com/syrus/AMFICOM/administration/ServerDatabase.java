@@ -1,5 +1,5 @@
 /*
- * $Id: ServerDatabase.java,v 1.15 2005/02/28 11:13:28 arseniy Exp $
+ * $Id: ServerDatabase.java,v 1.16 2005/02/28 14:11:59 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -40,8 +40,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2005/02/28 11:13:28 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.16 $, $Date: 2005/02/28 14:11:59 $
+ * @author $Author: bob $
  * @module administration_v1
  */
 
@@ -64,14 +64,14 @@ public class ServerDatabase extends StorableObjectDatabase {
 
 	protected String getColumns(int mode) {		
 		if (columns == null){
-			columns = super.getColumns(mode) + COMMA
+			columns = COMMA
 				+ DomainMember.COLUMN_DOMAIN_ID + COMMA
 				+ StorableObjectWrapper.COLUMN_NAME + COMMA
 				+ StorableObjectWrapper.COLUMN_DESCRIPTION + COMMA
 				+ ServerWrapper.COLUMN_HOSTNAME + COMMA
 				+ ServerWrapper.COLUMN_USER_ID;		
 		}
-		return columns;
+		return super.getColumns(mode) + columns;
 	}	
 	
 	protected String getUpdateMultiplySQLValues() {

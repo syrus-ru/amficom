@@ -1,5 +1,5 @@
 /*
- * $Id: LinkTypeWrapper.java,v 1.5 2005/02/03 08:37:00 bob Exp $
+ * $Id: LinkTypeWrapper.java,v 1.6 2005/02/28 14:12:14 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,7 +18,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/02/03 08:37:00 $
+ * @version $Revision: 1.6 $, $Date: 2005/02/28 14:12:14 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -27,7 +27,9 @@ public final class LinkTypeWrapper implements StorableObjectWrapper {
 	// codename VARCHAR2(32) NOT NULL,
 	// description VARCHAR2(256),
 	// sort NUMBER(2,0),
-	public static final String		COLUMN_SORT					= "sort";
+	public static final String		COLUMN_NATURE				= "nature";
+	
+	public static final String		COLUMN_KIND					= "kind";
 
 	// manufacturer VARCHAR2(64),
 	public static final String		COLUMN_MANUFACTURER			= "manufacturer";
@@ -44,7 +46,7 @@ public final class LinkTypeWrapper implements StorableObjectWrapper {
 
 	private LinkTypeWrapper() {
 		// empty private constructor
-		String[] keysArray = new String[] { COLUMN_CODENAME, COLUMN_DESCRIPTION, COLUMN_NAME, COLUMN_SORT,
+		String[] keysArray = new String[] { COLUMN_CODENAME, COLUMN_DESCRIPTION, COLUMN_NAME, COLUMN_KIND,
 				COLUMN_MANUFACTURER, COLUMN_MANUFACTURER_CODE, COLUMN_IMAGE_ID, COLUMN_CHARACTERISTICS};
 
 		this.keys = Collections.unmodifiableList(new ArrayList(Arrays.asList(keysArray)));
@@ -74,7 +76,7 @@ public final class LinkTypeWrapper implements StorableObjectWrapper {
 				return type.getDescription();
 			if (key.equals(COLUMN_NAME))
 				return type.getName();
-			if (key.equals(COLUMN_SORT))
+			if (key.equals(COLUMN_KIND))
 				return new Integer(type.getSort().value());
 			if (key.equals(COLUMN_MANUFACTURER))
 				return type.getManufacturer();
@@ -101,7 +103,7 @@ public final class LinkTypeWrapper implements StorableObjectWrapper {
 				type.setDescription((String) value);
 			else if (key.equals(COLUMN_CODENAME))
 				type.setCodename((String) value);
-			else if (key.equals(COLUMN_SORT))
+			else if (key.equals(COLUMN_KIND))
 				type.setSort(LinkTypeSort.from_int(((Integer) value).intValue()));
 			else if (key.equals(COLUMN_MANUFACTURER))
 				type.setManufacturer((String) value);

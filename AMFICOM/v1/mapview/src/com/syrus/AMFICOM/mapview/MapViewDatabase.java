@@ -1,5 +1,5 @@
 /*
-* $Id: MapViewDatabase.java,v 1.8 2005/02/24 15:57:09 bob Exp $
+* $Id: MapViewDatabase.java,v 1.9 2005/02/28 14:12:25 bob Exp $
 *
 * Copyright ¿ 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -46,7 +46,7 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/02/24 15:57:09 $
+ * @version $Revision: 1.9 $, $Date: 2005/02/28 14:12:25 $
  * @author $Author: bob $
  * @module mapview_v1
  */
@@ -115,7 +115,7 @@ public class MapViewDatabase extends StorableObjectDatabase {
 	
 	protected String getColumns(int mode) {
 		if (columns == null){
-			columns = super.getColumns(mode) + COMMA
+			columns = COMMA
 				+ COLUMN_DOMAIN_ID + COMMA
 				+ COLUMN_NAME + COMMA
 				+ COLUMN_DESCRIPTION + COMMA
@@ -125,12 +125,12 @@ public class MapViewDatabase extends StorableObjectDatabase {
 				+ COLUMN_DEFAULTSCALE + COMMA
 				+ COLUMN_MAP_ID;
 		}
-		return columns;
+		return super.getColumns(mode) + columns;
 	}	
 	
-	protected String getUpdateMultiplySQLValues(int mode) {
+	protected String getUpdateMultiplySQLValues() {
 		if (updateMultiplySQLValues == null){
-			updateMultiplySQLValues = super.getUpdateMultiplySQLValues(mode) + COMMA
+			updateMultiplySQLValues = super.getUpdateMultiplySQLValues() + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA

@@ -1,5 +1,5 @@
 /*
- * $Id: EventTypeDatabase.java,v 1.14 2005/02/28 11:16:19 arseniy Exp $
+ * $Id: EventTypeDatabase.java,v 1.15 2005/02/28 14:12:41 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -38,8 +38,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2005/02/28 11:16:19 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.15 $, $Date: 2005/02/28 14:12:41 $
+ * @author $Author: bob $
  * @module event_v1
  */
 
@@ -60,11 +60,11 @@ public class EventTypeDatabase extends StorableObjectDatabase {
 
 	protected String getColumns(int mode) {
 		if (columns == null) {
-			columns = super.getColumns(mode) + COMMA
+			columns = COMMA
 				+ StorableObjectWrapper.COLUMN_CODENAME + COMMA 
 				+ StorableObjectWrapper.COLUMN_DESCRIPTION;
 		}
-		return columns;
+		return super.getColumns(mode) + columns;
 	}
 
 	protected int setEntityForPreparedStatement(StorableObject storableObject, PreparedStatement preparedStatement, int mode)

@@ -1,5 +1,5 @@
 /*
- * $Id: TestDatabase.java,v 1.74 2005/02/28 11:14:01 arseniy Exp $
+ * $Id: TestDatabase.java,v 1.75 2005/02/28 14:12:18 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -48,8 +48,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.74 $, $Date: 2005/02/28 11:14:01 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.75 $, $Date: 2005/02/28 14:12:18 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
@@ -67,7 +67,7 @@ public class TestDatabase extends StorableObjectDatabase {
 	
 	protected String getColumns(int mode) {
 		if (columns == null){
-			columns = super.getColumns(mode) + COMMA
+			columns = COMMA
 				+ TestWrapper.COLUMN_TEMPORAL_TYPE + COMMA
 				+ TestWrapper.COLUMN_START_TIME + COMMA
 				+ TestWrapper.COLUMN_END_TIME + COMMA
@@ -80,7 +80,7 @@ public class TestDatabase extends StorableObjectDatabase {
 				+ TestWrapper.COLUMN_RETURN_TYPE + COMMA
 				+ StorableObjectWrapper.COLUMN_DESCRIPTION;
 		}
-		return columns;
+		return super.getColumns(mode) + columns;
 	}	
 
 	protected String getUpdateMultiplySQLValues() {

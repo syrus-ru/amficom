@@ -1,5 +1,5 @@
 /*
- * $Id: LinkTypeDatabase.java,v 1.27 2005/02/28 11:13:42 arseniy Exp $
+ * $Id: LinkTypeDatabase.java,v 1.28 2005/02/28 14:12:14 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,8 +34,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.27 $, $Date: 2005/02/28 11:13:42 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.28 $, $Date: 2005/02/28 14:12:14 $
+ * @author $Author: bob $
  * @module config_v1
  */
 
@@ -67,16 +67,16 @@ public class LinkTypeDatabase extends StorableObjectDatabase {
 
 	protected String getColumns(int mode) {
 		if (columns == null) {
-			columns = super.getColumns(mode) + COMMA
+			columns = COMMA
 				+ StorableObjectWrapper.COLUMN_CODENAME + COMMA
 				+ StorableObjectWrapper.COLUMN_DESCRIPTION + COMMA
 				+ StorableObjectWrapper.COLUMN_NAME + COMMA
-				+ LinkTypeWrapper.COLUMN_SORT + COMMA
+				+ LinkTypeWrapper.COLUMN_KIND + COMMA
 				+ LinkTypeWrapper.COLUMN_MANUFACTURER + COMMA
 				+ LinkTypeWrapper.COLUMN_MANUFACTURER_CODE + COMMA
 				+ LinkTypeWrapper.COLUMN_IMAGE_ID;
 		}
-		return columns;
+		return super.getColumns(mode) + columns;
 	}
 
 	protected String getUpdateSingleSQLValues(StorableObject storableObject) throws IllegalDataException {
@@ -144,7 +144,7 @@ public class LinkTypeDatabase extends StorableObjectDatabase {
 									DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_CODENAME)),
 									DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_DESCRIPTION)),
 									DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_NAME)),
-									resultSet.getInt(LinkTypeWrapper.COLUMN_SORT),
+									resultSet.getInt(LinkTypeWrapper.COLUMN_KIND),
 									DatabaseString.fromQuerySubString(resultSet.getString(LinkTypeWrapper.COLUMN_MANUFACTURER)),
 									DatabaseString.fromQuerySubString(resultSet.getString(LinkTypeWrapper.COLUMN_MANUFACTURER_CODE)),									
 									DatabaseIdentifier.getIdentifier(resultSet, LinkTypeWrapper.COLUMN_IMAGE_ID));

@@ -1,5 +1,5 @@
 /*
- * $Id: MCMDatabase.java,v 1.19 2005/02/28 11:13:28 arseniy Exp $
+ * $Id: MCMDatabase.java,v 1.20 2005/02/28 14:11:59 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -40,8 +40,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.19 $, $Date: 2005/02/28 11:13:28 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.20 $, $Date: 2005/02/28 14:11:59 $
+ * @author $Author: bob $
  * @module administration_v1
  */
 
@@ -64,7 +64,7 @@ public class MCMDatabase extends StorableObjectDatabase {
 
 	protected String getColumns(int mode) {
 		if (columns == null) {
-    		columns = super.getColumns(mode) + COMMA
+    		columns = COMMA
 				+ DomainMember.COLUMN_DOMAIN_ID + COMMA
 				+ StorableObjectWrapper.COLUMN_NAME + COMMA
 				+ StorableObjectWrapper.COLUMN_DESCRIPTION + COMMA
@@ -72,7 +72,7 @@ public class MCMDatabase extends StorableObjectDatabase {
 				+ MCMWrapper.COLUMN_USER_ID + COMMA
 				+ MCMWrapper.COLUMN_SERVER_ID;
 		}
-		return columns;
+		return super.getColumns(mode) + columns;
 	}
 
 	protected String getUpdateMultiplySQLValues() {

@@ -1,5 +1,5 @@
 /*
- * $Id: ImageResourceDatabase.java,v 1.14 2005/02/25 12:06:35 bass Exp $
+ * $Id: ImageResourceDatabase.java,v 1.15 2005/02/28 14:13:24 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -38,8 +38,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.14 $, $Date: 2005/02/25 12:06:35 $
+ * @author $Author: bob $
+ * @version $Revision: 1.15 $, $Date: 2005/02/28 14:13:24 $
  * @module resource_v1
  */
 
@@ -135,16 +135,16 @@ public final class ImageResourceDatabase extends StorableObjectDatabase {
     
 	protected String getColumns(int mode) {
 		if (columns == null) {
-			columns = super.getColumns(mode) + COMMA
+			columns = COMMA
 				+ StorableObjectWrapper.COLUMN_CODENAME + COMMA
 				+ COLUMN_SORT;
 		}
-		return columns;
+		return super.getColumns(mode) + columns;
 	}
 
-	protected String getUpdateMultiplySQLValues(int mode) {
+	protected String getUpdateMultiplySQLValues() {
 		if (updateMultiplySQLValues == null){
-			updateMultiplySQLValues = super.getUpdateMultiplySQLValues(mode) + COMMA
+			updateMultiplySQLValues = super.getUpdateMultiplySQLValues() + COMMA
 			+ QUESTION + COMMA
 			+ QUESTION;
 		}
