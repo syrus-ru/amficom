@@ -1,5 +1,5 @@
 /*
- * $Id: TestDatabase.java,v 1.36 2004/09/10 14:35:51 bob Exp $
+ * $Id: TestDatabase.java,v 1.37 2004/09/16 07:26:00 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,13 +35,15 @@ import com.syrus.AMFICOM.measurement.corba.TestStatus;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
 import com.syrus.AMFICOM.measurement.corba.TestTemporalType;
 import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
+import com.syrus.AMFICOM.configuration.Domain;
+import com.syrus.AMFICOM.configuration.DomainMember;
 import com.syrus.AMFICOM.configuration.MonitoredElement;
 import com.syrus.AMFICOM.configuration.MonitoredElementDatabase;
 import com.syrus.AMFICOM.configuration.MeasurementPortDatabase;
 import com.syrus.AMFICOM.configuration.KISDatabase;
 
 /**
- * @version $Revision: 1.36 $, $Date: 2004/09/10 14:35:51 $
+ * @version $Revision: 1.37 $, $Date: 2004/09/16 07:26:00 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -750,7 +752,7 @@ public class TestDatabase extends StorableObjectDatabase {
 		try {
 			list = retrieveByIds(null, condition);
 		}  catch (IllegalDataException ide) {			
-			Log.debugMessage("TestDatabase.retrieveTestsForMCM | Trying: " + ide, Log.DEBUGLEVEL09);
+			Log.debugMessage("TestDatabase.retrieveTestsForMCM | Error: " + ide.getMessage(), Log.DEBUGLEVEL09);
 		}
 		
 		return list;
@@ -762,25 +764,30 @@ public class TestDatabase extends StorableObjectDatabase {
 		try {
 			list = retrieveByIds(null, null);
 		}  catch (IllegalDataException ide) {			
-			Log.debugMessage("TestDatabase.retrieveAll | Trying: " + ide, Log.DEBUGLEVEL09);
+			Log.debugMessage("TestDatabase.retrieveAll | Error: " + ide.getMessage(), Log.DEBUGLEVEL09);
 		}
 		
 		return list;
 	}
 	
-	public List retrieveByTimeRange(Date start, Date end) throws RetrieveObjectException {
+	public List retrieveButIdsByTimeRange(List ids, Domain domain, Date start, Date end) throws RetrieveObjectException {
 		List list = null;
 		
 		/**
 		 * FIXME test conditions !!!
 		 */
 		String condition = COLUMN_START_TIME + " <= " + DatabaseDate.toUpdateSubString(end)
-			+ SQL_AND + COLUMN_END_TIME + " >= " + DatabaseDate.toUpdateSubString(start);
+			+ SQL_AND + COLUMN_END_TIME + " >= " + DatabaseDate.toUpdateSubString(start)
+			+ SQL_AND 
+			+ COLUMN_MONITORED_ELEMENT_ID + SQL_IN + OPEN_BRACKET
+				+ SQL_SELECT + COLUMN_ID + SQL_FROM + ObjectEntities.ME_ENTITY + SQL_WHERE
+				+ DomainMember.COLUMN_DOMAIN_ID + EQUALS + domain.getId().toSQLString()
+			+ CLOSE_BRACKET;
 		
 		try {
-			list = retrieveByIds(null, condition);
+			list = retriveButIds(ids, condition);
 		}  catch (IllegalDataException ide) {			
-			Log.debugMessage("TestDatabase.retrieveAll | Trying: " + ide, Log.DEBUGLEVEL09);
+			Log.debugMessage("TestDatabase.retrieveButIdsByTimeRange | Error: " + ide.getMessage(), Log.DEBUGLEVEL09);
 		}
 		
 		return list;
