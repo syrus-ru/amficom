@@ -1,5 +1,5 @@
 /*
- * $Id: EmptyClientResourceObjectLoader.java,v 1.2 2005/01/18 10:26:04 bob Exp $
+ * $Id: EmptyClientResourceObjectLoader.java,v 1.3 2005/01/18 10:26:17 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,9 +17,9 @@ import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/01/18 10:26:04 $
+ * @version $Revision: 1.3 $, $Date: 2005/01/18 10:26:17 $
  * @author $Author: bob $
- * @module resource_v1
+ * @module generalclient_v1
  */
 public class EmptyClientResourceObjectLoader implements ResourceObjectLoader{
 	
