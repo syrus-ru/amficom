@@ -1,5 +1,5 @@
 /*
- * $Id: LRUMap.java,v 1.14 2004/11/12 09:39:00 bob Exp $
+ * $Id: LRUMap.java,v 1.15 2004/11/12 11:55:37 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,7 +14,7 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2004/11/12 09:39:00 $
+ * @version $Revision: 1.15 $, $Date: 2004/11/12 11:55:37 $
  * @author $Author: bob $
  * @module util
  */
@@ -195,7 +195,7 @@ public class LRUMap implements Serializable {
 
     	    try {
     	    int modCountPrev = LRUMap.this.modCount; 
-    	    LRUMap.this.remove(LRUMap.this.array[this.cursor].key);
+    	    LRUMap.this.remove(LRUMap.this.array[this.lastRet].key);
     	    LRUMap.this.modCount = modCountPrev;
     		if (this.lastRet < this.cursor)
     		    this.cursor--;
