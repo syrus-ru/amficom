@@ -463,7 +463,7 @@ public class ReflectogramComparer
 			 int coord = ReflectogramMath.getEventCenter(data[i]);
 			 int type = data[i].getType();
 			 ReflectogramEvent et = ReflectogramMath.getEvent(coord, etalon);
-			 if(et.getType() == type) // Event is the same!;
+			 if(et != null && et.getType() == type) // Event is the same!;
 			 {
 				 if(type == ReflectogramEvent.CONNECTOR)
 				 {
@@ -509,7 +509,7 @@ public class ReflectogramComparer
 			 int coord = ReflectogramMath.getEventCenter(data[i]);
 			 int type = data[i].getType();
 			 ReflectogramEvent et = ReflectogramMath.getEvent(coord, etalon);
-			 if(et.getType() == type) // Event is the same!;
+			 if(et != null && et.getType() == type) // Event is the same!;
 			 {
 				 if(type == ReflectogramEvent.CONNECTOR)
 				 {
@@ -557,34 +557,46 @@ public class ReflectogramComparer
 			 return 0.;
 
 		 double ret = 0.;
-		 double a1;
-		 double a2;
+		 double a1 = 0;
+		 double a2 = 0;
 
-		 for(int i=0; i<data[data.length-1].begin && i<etalon[etalon.length-1].begin; i++)
-		 {
-			 a1 = ReflectogramMath.getEvent(i, data).refAmplitude(i);
-			 a2 = ReflectogramMath.getEvent(i, etalon).refAmplitude(i);
-			 if(Math.abs(ret) < Math.abs(a1-a2))
-			 {
-				 ret = a1-a2;
-			 }
+		for(int i=0; i<data[data.length-1].begin && i<etalon[etalon.length-1].begin; i++)
+		{
+			ReflectogramEvent re = ReflectogramMath.getEvent(i, data);
+			if (re != null)
+				a1 = re.refAmplitude(i);
+			re = ReflectogramMath.getEvent(i, etalon);
+			if (re != null)
+				a2 = re.refAmplitude(i);
+			if(Math.abs(ret) < Math.abs(a1-a2))
+			{
+				ret = a1-a2;
+			}
 		 }
 		 return ret;
 	 }
 //-----------------------------------------------------------------------------
 	 public static double getLossDifference(ReflectogramEvent []etalon, ReflectogramEvent []data)
 	 {
-		 double a1, a2;
-		 double b1, b2;
+		 double a1 = 0, a2 = 0;
+		 double b1 = 0, b2 = 0;
 
 		 int length1 = ReflectogramMath.getLastSplash(data);
 		 int length2 = ReflectogramMath.getLastSplash(etalon);
 
-		 int  c = data[0].end;
-		 a1 = ReflectogramMath.getEvent(c, data).refAmplitude(c);
-		 a2 = ReflectogramMath.getEvent(length1, data).refAmplitude(length1);
-		 b1 = ReflectogramMath.getEvent(c, etalon).refAmplitude(c);
-		 b2 = ReflectogramMath.getEvent(length2, etalon).refAmplitude(length2);
+		int  c = data[0].end;
+		ReflectogramEvent re = ReflectogramMath.getEvent(c, data);
+		if (re != null)
+			a1 = re.refAmplitude(c);
+		re = ReflectogramMath.getEvent(length1, data);
+		if (re != null)
+			a2 = re.refAmplitude(length1);
+		re = ReflectogramMath.getEvent(c, etalon);
+		if (re != null)
+			b1 = re.refAmplitude(c);
+		re = ReflectogramMath.getEvent(length2, etalon);
+		if (re != null)
+			b2 = re.refAmplitude(length2);
 
 		 double ret = (a1-a2) - (b1-b2);
 
@@ -605,10 +617,19 @@ public class ReflectogramComparer
 
 		 for(int i=0; i<data[data.length-1].begin && i<etalon[etalon.length-1].begin; i++)
 		 {
-			 a1 = ReflectogramMath.getEvent(i, data).refAmplitude(i);
-			 a2 = ReflectogramMath.getEvent(i, etalon).refAmplitude(i);
-				 ret += (a1-a2);
-				 norma ++;
+			 ReflectogramEvent re = ReflectogramMath.getEvent(i, data);
+			 if (re != null)
+				a1 = re.refAmplitude(i);
+			 else
+				 a1 = 0;
+			 re = ReflectogramMath.getEvent(i, etalon);
+			 if (re != null)
+				a2 = re.refAmplitude(i);
+			 else
+				 a2 = 0;
+
+			 ret += (a1-a2);
+			 norma ++;
 		 }
 
 		 if(norma>0)
@@ -629,13 +650,18 @@ public class ReflectogramComparer
 			 return 0.;
 
 		 double ret = 0.;
-
+			double a1, a2;
 		 for(int i=data[nEvent].begin; i<data[nEvent].end; i++)
 		 {
 			 if(i<etalon[etalon.length-1].end)
 			 {
-				 double a1 = data[nEvent].refAmplitude(i);
-				 double a2 = ReflectogramMath.getEvent(i, etalon).refAmplitude(i);
+				 a1 = data[nEvent].refAmplitude(i);
+				 ReflectogramEvent re = ReflectogramMath.getEvent(i, etalon);
+				 if (re != null)
+					a2 = re.refAmplitude(i);
+				 else
+					 a2 = 0;
+
 				 if(Math.abs(ret)<Math.abs(a1-a2))
 				 {
 					 ret = a1-a2;
@@ -650,13 +676,18 @@ public class ReflectogramComparer
 	 public static double getMeanDeviation(ReflectogramEvent []data, ReflectogramEvent []etalon, int nEvent)
 	 {
 		 double ret = 0.;
+		 double a1, a2;
 		 int norma = 0;
 		 for(int i=data[nEvent].begin; i<data[nEvent].end; i++)
 		 {
 			 if(i<etalon[etalon.length-1].end)
 			 {
-				 double a1 = data[nEvent].refAmplitude(i);
-				 double a2 = ReflectogramMath.getEvent(i, etalon).refAmplitude(i);
+				 a1 = data[nEvent].refAmplitude(i);
+				 ReflectogramEvent re = ReflectogramMath.getEvent(i, etalon);
+				 if (re != null)
+					a2 = re.refAmplitude(i);
+				 else
+					 a2 = 0;
 				 ret += (a1-a2);
 				 norma ++;
 			 }
