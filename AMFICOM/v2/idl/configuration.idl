@@ -1,0 +1,48 @@
+#ifndef _CONFIGURATION_IDL_
+#define _CONFIGURATION_IDL_
+
+#include <general.idl>
+
+module com {
+module syrus {
+module AMFICOM {
+module configuration {
+module corba {
+
+	struct MonitoredElement_Transferable {
+		com::syrus::AMFICOM::general::corba::Identifier_Transferable id;
+		com::syrus::AMFICOM::general::corba::Identifier_Transferable kis_id;
+		wstring local_address;
+	};
+
+	struct KIS_Transferable {
+		com::syrus::AMFICOM::general::corba::Identifier_Transferable id;
+		com::syrus::AMFICOM::general::corba::Identifier_Transferable mcm_id;
+		wstring name;
+		wstring description;
+		//...
+	};
+
+	struct MCM_Transferable {
+		com::syrus::AMFICOM::general::corba::Identifier_Transferable id;
+		com::syrus::AMFICOM::general::corba::Identifier_Transferable server_id;
+		wstring hostname;
+		wstring name;
+		wstring description;
+	};
+
+	struct Server_Transferable {
+		com::syrus::AMFICOM::general::corba::Identifier_Transferable id;
+		wstring hostname;
+		wstring name;
+		wstring description;
+	};
+
+};
+};
+};
+};
+};
+
+#endif
+

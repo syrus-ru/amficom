@@ -1,0 +1,55 @@
+#ifndef _GENERAL_IDL_
+#define _GENERAL_IDL_
+
+module com {
+module syrus {
+module AMFICOM {
+module general {
+module corba {
+
+	typedef sequence <octet> octetSeq;
+	typedef sequence <wstring> wstringSeq;
+	typedef sequence <long> longSeq;
+
+	struct Identifier_Transferable {
+		long long identifier_code;
+	};
+
+	typedef sequence <Identifier_Transferable> IdentifierSeq_Transferable;
+
+	enum ErrorCode {
+		ERROR_NO_ERROR,
+		ERROR_RISD_ERROR,
+		ERROR_WRONG_PASSWORD,
+		ERROR_WRONG_LOGIN,
+		ERROR_NO_CONNECT,
+		ERROR_SAVE,
+		ERROR_INSUFFICIENT_PRIVILEGES,
+		ERROR_LOAD,
+		ERROR_UPDATE,
+		ERROR_EMPTY,
+		ERROR_UID,
+		ERROR_DELETE,
+		ERROR_PASSWORD_EXPIRED
+	};
+
+	enum CompletionStatus {
+		COMPLETED_YES,
+		COMPLETED_NO,
+		COMPLETED_PARTIALLY
+	};
+
+	exception AMFICOMRemoteException {
+		ErrorCode error_code;
+		CompletionStatus completion_status;
+		wstring message;
+	};
+
+};
+};
+};
+};
+};
+
+#endif
+
