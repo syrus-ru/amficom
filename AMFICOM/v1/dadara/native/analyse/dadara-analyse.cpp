@@ -4,14 +4,16 @@
 #include <math.h>
 
 #include "dadara-analyse.h"
-#include "../Common/com_syrus_AMFICOM_analysis_CoreAnalysisManager.h"
+#include "../common/com_syrus_AMFICOM_analysis_CoreAnalysisManager.h"
 #include "../analyse/InitialAnalysis.h"
 
-#include "../Common/EventParams.h"
-#include "../Common/EventP.h"
-#include "../Common/EPold2EPnew.h"
+#include "../common/EventParams.h"
+#include "../common/EventP.h"
+#include "../common/EPold2EPnew.h"
 
 #include "../JNI/Java-bridge.h"
+
+#include "../common/prf.h"
 
 #ifdef DEBUG_DADARA_ANALYSE
 	#ifndef _WIN32
@@ -38,7 +40,7 @@ Java_com_syrus_AMFICOM_analysis_CoreAnalysisManager_analyse2(
 	jint reflectiveSize, 
 	jint nonReflectiveSize)
 {
-
+	prf_b("analyse2() - enter");
 #ifdef DEBUG_DADARA_ANALYSE
 
 	#ifdef _WIN32
@@ -109,6 +111,8 @@ Java_com_syrus_AMFICOM_analysis_CoreAnalysisManager_analyse2(
 	fprintf(dbg_stream, "#0\n");
 #endif
 
+	prf_b("analyse2() - starting IA");
+
 	// FIXIT: InitialAnalysis changes input array.
 	// The original analyse() code both changed input array and used JNI_ABORT, so the result is undeterminable.
 	// If it was not expected to change anything in Java arrays, then it should make a local copy. -- FIXIT
@@ -124,6 +128,8 @@ Java_com_syrus_AMFICOM_analysis_CoreAnalysisManager_analyse2(
 		connFallParams,
 		reflectiveSize, 
 		nonReflectiveSize);
+
+	prf_b("analyse2() - processing IA results");
 
 #ifdef DEBUG_DADARA_ANALYSE
 	fprintf(dbg_stream, "#1\n");
@@ -181,6 +187,8 @@ Java_com_syrus_AMFICOM_analysis_CoreAnalysisManager_analyse2(
 	fprintf( dbg_stream, "# re freed\n");
 #endif
 
+	prf_b("analyse2() - sending to JNI");
+
 	// send to JNI
 	double meanAtt = ia->getMeanAttenuation();
 
@@ -207,6 +215,8 @@ Java_com_syrus_AMFICOM_analysis_CoreAnalysisManager_analyse2(
 	if (dbg_stream != stderr && dbg_stream != stdout)
 		fclose( dbg_stream );
 #endif
+
+	prf_e();
 
 	return ret_obj;
 }
