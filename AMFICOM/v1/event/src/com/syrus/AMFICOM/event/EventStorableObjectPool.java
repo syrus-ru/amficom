@@ -1,5 +1,5 @@
 /*
- * $Id: EventStorableObjectPool.java,v 1.13 2005/04/01 09:00:59 bob Exp $
+ * $Id: EventStorableObjectPool.java,v 1.14 2005/04/04 15:33:46 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -24,8 +24,8 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/04/01 09:00:59 $
- * @author $Author: bob $
+ * @version $Revision: 1.14 $, $Date: 2005/04/04 15:33:46 $
+ * @author $Author: arseniy $
  * @module event_v1
  */
 
@@ -78,11 +78,9 @@ public class EventStorableObjectPool extends StorableObjectPool {
 		eObjectLoader = eObjectLoader1;
 
 		instance.addObjectPool(ObjectEntities.EVENTTYPE_ENTITY_CODE, size);
-//		instance.addObjectPool(ObjectEntities.ALARMTYPE_ENTITY_CODE, size);
 
 		instance.addObjectPool(ObjectEntities.EVENT_ENTITY_CODE, size);
 		instance.addObjectPool(ObjectEntities.EVENTSOURCE_ENTITY_CODE, size);
-//		instance.addObjectPool(ObjectEntities.ALARM_ENTITY_CODE, size);
 
 		instance.populatePools();
 	}
@@ -96,11 +94,9 @@ public class EventStorableObjectPool extends StorableObjectPool {
 		eObjectLoader = eObjectLoader1;
 
 		instance.addObjectPool(ObjectEntities.EVENTTYPE_ENTITY_CODE, EVENTTYPE_OBJECT_POOL_SIZE);
-//		instance.addObjectPool(ObjectEntities.ALARMTYPE_ENTITY_CODE, ALARMTYPE_OBJECT_POOL_SIZE);
 
 		instance.addObjectPool(ObjectEntities.EVENT_ENTITY_CODE, EVENT_OBJECT_POOL_SIZE);
 		instance.addObjectPool(ObjectEntities.EVENTSOURCE_ENTITY_CODE, EVENTSOURCE_OBJECT_POOL_SIZE);
-//		instance.addObjectPool(ObjectEntities.ALARM_ENTITY_CODE, ALARM_OBJECT_POOL_SIZE);
 
 		instance.populatePools();
 	}
@@ -135,18 +131,12 @@ public class EventStorableObjectPool extends StorableObjectPool {
 			case ObjectEntities.EVENTTYPE_ENTITY_CODE:
 				storableObject = eObjectLoader.loadEventType(objectId);
 				break;
-//			case ObjectEntities.ALARMTYPE_ENTITY_CODE:
-//				storableObject = eObjectLoader.loadAlarmType(objectId);
-//				break;
 			case ObjectEntities.EVENT_ENTITY_CODE:
 				storableObject = eObjectLoader.loadEvent(objectId);
 				break;
 			case ObjectEntities.EVENTSOURCE_ENTITY_CODE:
 				storableObject = eObjectLoader.loadEventSource(objectId);
 				break;
-//			case ObjectEntities.ALARM_ENTITY_CODE:
-//				storableObject = eObjectLoader.loadAlarm(objectId);
-//				break;
 			default:
 				Log.errorMessage("EventStorableObjectPool.loadStorableObject | Unknown entity: '" + ObjectEntities.codeToString(objectId.getMajor()) + "', entity code: " + objectId.getMajor());
 				storableObject = null;
@@ -160,18 +150,12 @@ public class EventStorableObjectPool extends StorableObjectPool {
 			case ObjectEntities.EVENTTYPE_ENTITY_CODE:
 				storableObjects = eObjectLoader.loadEventTypes(ids);
 				break;
-//			case ObjectEntities.ALARMTYPE_ENTITY_CODE:
-//				storableObjects = eObjectLoader.loadAlarmTypes(ids);
-//				break;
 			case ObjectEntities.EVENT_ENTITY_CODE:
 				storableObjects = eObjectLoader.loadEvents(ids);
 				break;
 			case ObjectEntities.EVENTSOURCE_ENTITY_CODE:
 				storableObjects = eObjectLoader.loadEventSources(ids);
 				break;
-//			case ObjectEntities.ALARM_ENTITY_CODE:
-//				storableObjects = eObjectLoader.loadAlarms(ids);
-//				break;
 			default:
 				Log.errorMessage("EventStorableObjectPool.loadStorableObjects | Unknown entity: '" + ObjectEntities.codeToString(entityCode.shortValue()) + "', entity code: " + entityCode);
 				storableObjects = null;
@@ -186,18 +170,12 @@ public class EventStorableObjectPool extends StorableObjectPool {
 			case ObjectEntities.EVENTTYPE_ENTITY_CODE:
 				loadedObjects = eObjectLoader.loadEventTypesButIds(condition, ids);
 				break;
-//			case ObjectEntities.ALARMTYPE_ENTITY_CODE:
-//				loadedObjects = eObjectLoader.loadAlarmTypesButIds(condition, ids);
-//				break;
 			case ObjectEntities.EVENT_ENTITY_CODE:
 				loadedObjects = eObjectLoader.loadEventsButIds(condition, ids);
 				break;
 			case ObjectEntities.EVENTSOURCE_ENTITY_CODE:
 				loadedObjects = eObjectLoader.loadEventSourcesButIds(condition, ids);
 				break;
-//			case ObjectEntities.ALARM_ENTITY_CODE:
-//				loadedObjects = eObjectLoader.loadAlarmsButIds(condition, ids);
-//				break;
 			default:
 				Log.errorMessage("EventStorableObjectPool.loadStorableObjectsButIds | Unknown entity: '" + ObjectEntities.codeToString(entityCode) + "', entity code: " + entityCode);
 				loadedObjects = null;
@@ -216,12 +194,6 @@ public class EventStorableObjectPool extends StorableObjectPool {
 					else 
 						eObjectLoader.saveEventTypes(storableObjects, force);
 					break;
-//				case ObjectEntities.ALARMTYPE_ENTITY_CODE:
-//					if (alone)
-//						eObjectLoader.saveAlarmType((AlarmType)storableObjects.iterator().next(), force);
-//					else 
-//						eObjectLoader.saveAlarmTypes(storableObjects, force);
-//					break;
 				case ObjectEntities.EVENT_ENTITY_CODE:
 					if (alone)
 						eObjectLoader.saveEvent((Event)storableObjects.iterator().next(), force);
@@ -234,12 +206,6 @@ public class EventStorableObjectPool extends StorableObjectPool {
 					else 
 						eObjectLoader.saveEventSources(storableObjects, force);
 					break;
-//				case ObjectEntities.ALARM_ENTITY_CODE:
-//					if (alone)
-//						eObjectLoader.saveAlarm((Alarm)storableObjects.iterator().next(), force);
-//					else 
-//						eObjectLoader.saveAlarms(storableObjects, force);
-//					break;
 				default:
 					Log.errorMessage("EventStorableObjectPool.saveStorableObjects | Unknown entity: '" + ObjectEntities.codeToString(code) + "', entity code: " + code);
 			}
