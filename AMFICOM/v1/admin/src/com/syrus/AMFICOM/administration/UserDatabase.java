@@ -1,5 +1,5 @@
 /*
- * $Id: UserDatabase.java,v 1.19 2005/03/10 15:19:38 arseniy Exp $
+ * $Id: UserDatabase.java,v 1.20 2005/03/11 09:26:27 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,8 +27,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.19 $, $Date: 2005/03/10 15:19:38 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.20 $, $Date: 2005/03/11 09:26:27 $
+ * @author $Author: bob $
  * @module administration_v1
  */
 
@@ -47,21 +47,19 @@ public class UserDatabase extends StorableObjectDatabase {
 		return '"' + ObjectEntities.USER_ENTITY + '"';
 	}	
 
-	protected String getColumns(int mode) {		
+	protected String getColumnsTmpl() {		
 		if (columns == null){
-			columns = COMMA
-				+ UserWrapper.COLUMN_LOGIN + COMMA
+			columns = UserWrapper.COLUMN_LOGIN + COMMA
 				+ UserWrapper.COLUMN_SORT + COMMA
 				+ StorableObjectWrapper.COLUMN_NAME + COMMA
 				+ StorableObjectWrapper.COLUMN_DESCRIPTION;		
 		}
-		return super.getColumns(mode) + columns;
+		return columns;
 	}	
 	
-	protected String getUpdateMultipleSQLValues() {
+	protected String getUpdateMultipleSQLValuesTmpl() {
 		if (updateMultipleSQLValues == null){
-			updateMultipleSQLValues = super.getUpdateMultipleSQLValues() + COMMA
-				+ QUESTION + COMMA
+			updateMultipleSQLValues = QUESTION + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION;		
@@ -69,10 +67,9 @@ public class UserDatabase extends StorableObjectDatabase {
 		return updateMultipleSQLValues;
 	}	
 	
-	protected String getUpdateSingleSQLValues(StorableObject storableObject) throws IllegalDataException {
+	protected String getUpdateSingleSQLValuesTmpl(StorableObject storableObject) throws IllegalDataException {
 		User user = this.fromStorableObject(storableObject);
-		return super.getUpdateSingleSQLValues(storableObject) + COMMA
-			+ APOSTOPHE + DatabaseString.toQuerySubString(user.getLogin(), SIZE_LOGIN_COLUMN) + APOSTOPHE + COMMA
+		return APOSTOPHE + DatabaseString.toQuerySubString(user.getLogin(), SIZE_LOGIN_COLUMN) + APOSTOPHE + COMMA
 			+ Integer.toString(user.getSort().value()) + COMMA
 			+ APOSTOPHE + DatabaseString.toQuerySubString(user.getName(), SIZE_NAME_COLUMN) + APOSTOPHE + COMMA
 			+ APOSTOPHE + DatabaseString.toQuerySubString(user.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTOPHE;
@@ -111,15 +108,14 @@ public class UserDatabase extends StorableObjectDatabase {
 	}	
 	
 	
-	protected int setEntityForPreparedStatement(StorableObject storableObject, PreparedStatement preparedStatement,int mode)
+	protected int setEntityForPreparedStatementTmpl(StorableObject storableObject, PreparedStatement preparedStatement, int startParameterNumber)
 			throws IllegalDataException, SQLException {
 		User user = this.fromStorableObject(storableObject);
-		int i = super.setEntityForPreparedStatement(storableObject, preparedStatement, mode);
-		DatabaseString.setString(preparedStatement, ++i, user.getLogin(), SIZE_LOGIN_COLUMN);
-		preparedStatement.setInt(++i, user.getSort().value());
-		DatabaseString.setString(preparedStatement, ++i, user.getName(), SIZE_NAME_COLUMN);
-		DatabaseString.setString(preparedStatement, ++i, user.getDescription(), SIZE_DESCRIPTION_COLUMN);
-		return i;
+		DatabaseString.setString(preparedStatement, ++startParameterNumber, user.getLogin(), SIZE_LOGIN_COLUMN);
+		preparedStatement.setInt(++startParameterNumber, user.getSort().value());
+		DatabaseString.setString(preparedStatement, ++startParameterNumber, user.getName(), SIZE_NAME_COLUMN);
+		DatabaseString.setString(preparedStatement, ++startParameterNumber, user.getDescription(), SIZE_DESCRIPTION_COLUMN);
+		return startParameterNumber;
 	}
 	
 	public void insert(StorableObject storableObject) throws IllegalDataException, CreateObjectException {

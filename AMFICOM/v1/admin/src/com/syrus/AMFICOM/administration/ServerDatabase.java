@@ -1,5 +1,5 @@
 /*
- * $Id: ServerDatabase.java,v 1.19 2005/03/05 21:35:39 arseniy Exp $
+ * $Id: ServerDatabase.java,v 1.20 2005/03/11 09:26:27 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,8 +30,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.19 $, $Date: 2005/03/05 21:35:39 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.20 $, $Date: 2005/03/11 09:26:27 $
+ * @author $Author: bob $
  * @module administration_v1
  */
 
@@ -52,22 +52,20 @@ public class ServerDatabase extends CharacterizableDatabase {
 		return ObjectEntities.SERVER_ENTITY;
 	}
 
-	protected String getColumns(int mode) {		
+	protected String getColumnsTmpl() {		
 		if (columns == null){
-			columns = COMMA
-				+ DomainMember.COLUMN_DOMAIN_ID + COMMA
+			columns = DomainMember.COLUMN_DOMAIN_ID + COMMA
 				+ StorableObjectWrapper.COLUMN_NAME + COMMA
 				+ StorableObjectWrapper.COLUMN_DESCRIPTION + COMMA
 				+ ServerWrapper.COLUMN_HOSTNAME + COMMA
 				+ ServerWrapper.COLUMN_USER_ID;		
 		}
-		return super.getColumns(mode) + columns;
+		return columns;
 	}	
 	
-	protected String getUpdateMultipleSQLValues() {
+	protected String getUpdateMultipleSQLValuesTmpl() {
 		if (updateMultipleSQLValues == null){
-			updateMultipleSQLValues = super.getUpdateMultipleSQLValues() + COMMA
-				+ QUESTION + COMMA
+			updateMultipleSQLValues = QUESTION + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
@@ -76,10 +74,9 @@ public class ServerDatabase extends CharacterizableDatabase {
 		return updateMultipleSQLValues;
 	}	
 
-	protected String getUpdateSingleSQLValues(StorableObject storableObject) throws IllegalDataException {
+	protected String getUpdateSingleSQLValuesTmpl(StorableObject storableObject) throws IllegalDataException {
 		Server server = this.fromStorableObject(storableObject);
-		return super.getUpdateSingleSQLValues(storableObject) + COMMA
-			+ DatabaseIdentifier.toSQLString(server.getDomainId()) + COMMA
+		return DatabaseIdentifier.toSQLString(server.getDomainId()) + COMMA
 			+ APOSTOPHE + DatabaseString.toQuerySubString(server.getName(), SIZE_NAME_COLUMN) + APOSTOPHE + COMMA
 			+ APOSTOPHE + DatabaseString.toQuerySubString(server.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTOPHE + COMMA
 			+ APOSTOPHE + DatabaseString.toQuerySubString(server.getHostName(), SIZE_HOSTNAME_COLUMN) + APOSTOPHE + COMMA
@@ -111,16 +108,15 @@ public class ServerDatabase extends CharacterizableDatabase {
 		return server;
 	}
 
-	protected int setEntityForPreparedStatement(StorableObject storableObject, PreparedStatement preparedStatement, int mode)
+	protected int setEntityForPreparedStatementTmpl(StorableObject storableObject, PreparedStatement preparedStatement, int startParameterNumber)
 		throws IllegalDataException, SQLException {
 		Server server = this.fromStorableObject(storableObject);
-		int i = super.setEntityForPreparedStatement(storableObject, preparedStatement, mode);
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++i, server.getDomainId());
-		DatabaseString.setString(preparedStatement, ++i, server.getName(), SIZE_NAME_COLUMN);
-		DatabaseString.setString(preparedStatement, ++i, server.getDescription(), SIZE_DESCRIPTION_COLUMN);
-		DatabaseString.setString(preparedStatement, ++i, server.getHostName(), SIZE_HOSTNAME_COLUMN);
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++i, server.getUserId());
-		return i;
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, server.getDomainId());
+		DatabaseString.setString(preparedStatement, ++startParameterNumber, server.getName(), SIZE_NAME_COLUMN);
+		DatabaseString.setString(preparedStatement, ++startParameterNumber, server.getDescription(), SIZE_DESCRIPTION_COLUMN);
+		DatabaseString.setString(preparedStatement, ++startParameterNumber, server.getHostName(), SIZE_HOSTNAME_COLUMN);
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, server.getUserId());
+		return startParameterNumber;
 	}
 
 	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg)

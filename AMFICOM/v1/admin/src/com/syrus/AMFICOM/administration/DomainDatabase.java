@@ -1,5 +1,5 @@
 /*
- * $Id: DomainDatabase.java,v 1.22 2005/03/05 21:35:39 arseniy Exp $
+ * $Id: DomainDatabase.java,v 1.23 2005/03/11 09:26:27 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,8 +27,8 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.22 $, $Date: 2005/03/05 21:35:39 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.23 $, $Date: 2005/03/11 09:26:27 $
+ * @author $Author: bob $
  * @module administration_v1
  */
 
@@ -46,31 +46,28 @@ public class DomainDatabase extends CharacterizableDatabase {
 		return ObjectEntities.DOMAIN_ENTITY;
 	}
 	
-	protected String getColumns(int mode) {
+	protected String getColumnsTmpl() {
 		if (columns == null) {
-			columns = COMMA
-			+ DomainMember.COLUMN_DOMAIN_ID + COMMA
+			columns = DomainMember.COLUMN_DOMAIN_ID + COMMA
 			+ StorableObjectWrapper.COLUMN_NAME + COMMA
 			+ StorableObjectWrapper.COLUMN_DESCRIPTION;
 		}
-		return super.getColumns(mode) + columns;
+		return columns;
 	}
 	
-	protected String getUpdateMultipleSQLValues() {
+	protected String getUpdateMultipleSQLValuesTmpl() {
 		if (updateMultipleSQLValues == null) {
-			updateMultipleSQLValues = super.getUpdateMultipleSQLValues() + COMMA
-			+ QUESTION + COMMA
+			updateMultipleSQLValues = QUESTION + COMMA
 			+ QUESTION + COMMA
 			+ QUESTION;
 		}
 		return updateMultipleSQLValues;
 	}
 	
-	protected String getUpdateSingleSQLValues(StorableObject storableObject) throws IllegalDataException {
+	protected String getUpdateSingleSQLValuesTmpl(StorableObject storableObject) throws IllegalDataException {
 		Domain domain = this.fromStorableObject(storableObject);
 		Identifier domainId = domain.getDomainId();
-		String sql = super.getUpdateSingleSQLValues(storableObject) + COMMA
-			+ DatabaseIdentifier.toSQLString(domainId) + COMMA
+		String sql = DatabaseIdentifier.toSQLString(domainId) + COMMA
 			+ APOSTOPHE + DatabaseString.toQuerySubString(domain.getName(), SIZE_NAME_COLUMN) + APOSTOPHE + COMMA
 			+ APOSTOPHE + DatabaseString.toQuerySubString(domain.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTOPHE;
 		return sql;
@@ -99,16 +96,14 @@ public class DomainDatabase extends CharacterizableDatabase {
 		return domain;
 	}
 
-	protected int setEntityForPreparedStatement(StorableObject storableObject,
-			PreparedStatement preparedStatement, int mode) throws IllegalDataException, SQLException {
+	protected int setEntityForPreparedStatementTmpl(StorableObject storableObject,
+			PreparedStatement preparedStatement, int startParameterNumber) throws IllegalDataException, SQLException {
 		Domain domain = this.fromStorableObject(storableObject);
 		Identifier domainId = domain.getDomainId();
-		int i;
-		i = super.setEntityForPreparedStatement(storableObject, preparedStatement, mode);
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++i, domainId);
-		DatabaseString.setString(preparedStatement, ++i, domain.getName(), SIZE_NAME_COLUMN);
-		DatabaseString.setString(preparedStatement, ++i, domain.getDescription(), SIZE_DESCRIPTION_COLUMN);
-		return i;
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, domainId);
+		DatabaseString.setString(preparedStatement, ++startParameterNumber, domain.getName(), SIZE_NAME_COLUMN);
+		DatabaseString.setString(preparedStatement, ++startParameterNumber, domain.getDescription(), SIZE_DESCRIPTION_COLUMN);
+		return startParameterNumber;
 	}
 		
 	
