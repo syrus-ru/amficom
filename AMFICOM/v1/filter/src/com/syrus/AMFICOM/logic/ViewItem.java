@@ -1,5 +1,5 @@
 /*
- * $Id: ViewItem.java,v 1.4 2005/03/14 09:06:47 bob Exp $
+ * $Id: ViewItem.java,v 1.5 2005/03/14 14:19:36 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,8 +17,10 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import com.syrus.util.Log;
+
 /**
- * @version $Revision: 1.4 $, $Date: 2005/03/14 09:06:47 $
+ * @version $Revision: 1.5 $, $Date: 2005/03/14 14:19:36 $
  * @author $Author: bob $
  * @module filter_v1
  */
@@ -33,7 +35,7 @@ public class ViewItem extends AbstractItem implements Item, ItemListener {
 
 	private int			minY				= 0;
 	private int			maxY				= 0;
-
+	
 	private boolean		sortedChildren		= false;
 
 	static Comparator	ycomparator			= new Comparator() {
@@ -102,11 +104,11 @@ public class ViewItem extends AbstractItem implements Item, ItemListener {
 	private void addChild(	Item childItem,
 							boolean addToSource) {
 
-		System.out.println("ViewItem.addChild | this.name: " + (this.service ? "service" : this.sourceItem.getName()) + "\n\t name: "
-				+ childItem.getName());
+		Log.debugMessage("ViewItem.addChild | this.name: " + (this.service ? "service" : this.sourceItem.getName()) + "\n\t name: "
+				+ childItem.getName(), Log.FINEST);
 		if (this.children == null)
 			this.children = new LinkedList();
-		if (this.service || this.getChildrenCount() <= this.sourceItem.getMaxChildrenCount()) {
+		if (this.service || this.getChildrenCount() < this.sourceItem.getMaxChildrenCount()) {
 			ViewItem viewItem;
 			if (childItem instanceof ViewItem) {
 				viewItem = (ViewItem) childItem;
@@ -157,8 +159,9 @@ public class ViewItem extends AbstractItem implements Item, ItemListener {
 			viewItem = (ViewItem) item2ItemViewMap.get(childItem);
 
 		if (this.children != null) {
-			System.out.println("ViewItem.removeChild | this.name: " +(this.service ? "service" :  this.sourceItem.getName()) + "\n\t name: "
-					+ childItem.getName());
+			
+			Log.debugMessage("ViewItem.removeChild | this.name: " +(this.service ? "service" :  this.sourceItem.getName()) + "\n\t name: "
+					+ childItem.getName(), Log.FINEST);
 			this.children.remove(viewItem);
 		}
 
@@ -184,8 +187,8 @@ public class ViewItem extends AbstractItem implements Item, ItemListener {
 
 	private void addParent(	Item parent,
 							boolean addToSource) {
-		System.out.println("ViewItem.addParent | this.name: " + this.sourceItem.getName() + " \n\t name: "
-				+ parent.getName());
+		Log.debugMessage("ViewItem.addParent | this.name: " + this.sourceItem.getName() + " \n\t name: "
+				+ parent.getName(), Log.FINEST);
 		ViewItem viewItem;
 		if (parent instanceof ViewItem) {
 			viewItem = (ViewItem) parent;
@@ -253,8 +256,8 @@ public class ViewItem extends AbstractItem implements Item, ItemListener {
 			viewItem = (ViewItem) item2ItemViewMap.get(parent);
 
 		if (this.parents != null) {
-			System.out.println("ViewItem.removeParent | this.name: " + this.sourceItem.getName() + " \n\t name: "
-					+ parent.getName());
+			Log.debugMessage("ViewItem.removeParent | this.name: " + this.sourceItem.getName() + " \n\t name: "
+					+ parent.getName(), Log.FINEST);
 			this.parents.remove(viewItem);
 		}
 		if (removeFromSource)
