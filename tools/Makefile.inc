@@ -1,5 +1,5 @@
 #
-# $Id: Makefile.inc,v 1.15 2004/08/12 05:46:26 bob Exp $
+# $Id: Makefile.inc,v 1.16 2004/08/26 05:00:29 arseniy Exp $
 #
 # vim:set ft=make:
 #
@@ -78,7 +78,7 @@ SQLJFLAGS = \
 	-cache=true \
 	-checkfilename=true \
 	-checksource=true \
-	-codegen=iso \
+	-codegen=oracle \
 	-compile=true \
 	-compiler-encoding-flag=false \
 	-explain=true \
