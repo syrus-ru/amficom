@@ -30,11 +30,7 @@ public class ReportBuilderRun
 			{
 				e.printStackTrace();
 			}
-			LangModelReport.initialize();
-//			LangModelSurvey.initialize();
 			LangModelConfig.initialize();
-			LangModelSchematics.initialize();
-			LangModelAnalyse.initialize();
 			LangModelModel.initialize();
 			LangModelPrediction.initialize();
 

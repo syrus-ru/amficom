@@ -70,14 +70,14 @@ public class TimeGraphProperties extends JDialog
 	 this.setResizable(false);
 	 this.setSize(new Dimension(286,100));
 
-	 jLabel1.setText(LangModelReport.String("label_Intervalvalue"));
-	 jButton1.setText(LangModelReport.String("label_input"));
+	 jLabel1.setText(LangModelReport.getString("label_Intervalvalue"));
+	 jButton1.setText(LangModelReport.getString("label_input"));
 	 jButton1.addActionListener(new java.awt.event.ActionListener() {
 		public void actionPerformed(ActionEvent e) {
 			jButton1_actionPerformed(e);
 		}
 	 });
-	 jButton2.setText(LangModelReport.String("label_cancel"));
+	 jButton2.setText(LangModelReport.getString("label_cancel"));
 	 jButton2.addActionListener(new java.awt.event.ActionListener() {
 		public void actionPerformed(ActionEvent e) {
 			jButton2_actionPerformed(e);
@@ -93,12 +93,12 @@ public class TimeGraphProperties extends JDialog
 	}
 
 	void setControlsData(){
-	 jComboBox1.addItem(LangModelReport.String("label_hour"));
-	 jComboBox1.addItem(LangModelReport.String("label_day"));
-	 jComboBox1.addItem(LangModelReport.String("label_week"));
-	 jComboBox1.addItem(LangModelReport.String("label_month"));
-	 jComboBox1.addItem(LangModelReport.String("label_quarter"));
-	 jComboBox1.addItem(LangModelReport.String("label_year"));
+	 jComboBox1.addItem(LangModelReport.getString("label_hour"));
+	 jComboBox1.addItem(LangModelReport.getString("label_day"));
+	 jComboBox1.addItem(LangModelReport.getString("label_week"));
+	 jComboBox1.addItem(LangModelReport.getString("label_month"));
+	 jComboBox1.addItem(LangModelReport.getString("label_quarter"));
+	 jComboBox1.addItem(LangModelReport.getString("label_year"));
 	}
 
 	void jButton2_actionPerformed(ActionEvent e) {
@@ -106,17 +106,17 @@ public class TimeGraphProperties extends JDialog
 	}
 
 	void jButton1_actionPerformed(ActionEvent e) {
-	 if (jComboBox1.getSelectedItem().equals(LangModelReport.String("label_hour")))
+	 if (jComboBox1.getSelectedItem().equals(LangModelReport.getString("label_hour")))
 		TimeGraphProperties.interval_value =  Hour.class;
-	 if (jComboBox1.getSelectedItem().equals(LangModelReport.String("label_day")))
+	 if (jComboBox1.getSelectedItem().equals(LangModelReport.getString("label_day")))
 		TimeGraphProperties.interval_value =  Day.class;
-	 if (jComboBox1.getSelectedItem().equals(LangModelReport.String("label_week")))
+	 if (jComboBox1.getSelectedItem().equals(LangModelReport.getString("label_week")))
 		TimeGraphProperties.interval_value =  Week.class;
-	 if (jComboBox1.getSelectedItem().equals(LangModelReport.String("label_month")))
+	 if (jComboBox1.getSelectedItem().equals(LangModelReport.getString("label_month")))
 		TimeGraphProperties.interval_value =  Month.class;
-	 if (jComboBox1.getSelectedItem().equals(LangModelReport.String("label_quarter")))
+	 if (jComboBox1.getSelectedItem().equals(LangModelReport.getString("label_quarter")))
 		TimeGraphProperties.interval_value =  Quarter.class;
-	 if (jComboBox1.getSelectedItem().equals(LangModelReport.String("label_year")))
+	 if (jComboBox1.getSelectedItem().equals(LangModelReport.getString("label_year")))
 		TimeGraphProperties.interval_value =  Year.class;
 
 	 this.dispose();

@@ -113,7 +113,7 @@ public class AvailableReportsTreeModel extends ObjectResourceTreeModel
 	{
 		return new ObjectResourceTreeNode(
 			"root",
-			LangModelReport.String("label_availableReports"),
+			LangModelReport.getString("label_availableReports"),
 			true);
 	}
 
@@ -158,7 +158,7 @@ public class AvailableReportsTreeModel extends ObjectResourceTreeModel
 			{
 				ObjectResourceTreeNode ortn = new ObjectResourceTreeNode(
 					"reportRoot",
-					LangModelReport.String("label_availableReports"), //Отчёты без привязки к конкретному оборудованию
+					LangModelReport.getString("label_availableReports"), //Отчёты без привязки к конкретному оборудованию
 					true);
 
 				vec.add(ortn);
@@ -166,7 +166,7 @@ public class AvailableReportsTreeModel extends ObjectResourceTreeModel
 
 				ortn = new ObjectResourceTreeNode(
 					"templateElementRoot",
-					LangModelReport.String("label_availableTemplElems"), //Отчёты с привязкой к конкретному оборудованию,
+					LangModelReport.getString("label_availableTemplElems"), //Отчёты с привязкой к конкретному оборудованию,
 					true); //тесту, карте итд
 
 				vec.add(ortn);
@@ -188,14 +188,14 @@ public class AvailableReportsTreeModel extends ObjectResourceTreeModel
 
 				/*        ortn = new ObjectResourceTreeNode(
 				 "",
-				 LangModelReport.String("label_repSboiSistemy"),
+				 LangModelReport.getString("label_repSboiSistemy"),
 				 true);
 				 vec.add(ortn);
 				 registerSearchableNode("", ortn);*/
 
 				/*        ortn = new ObjectResourceTreeNode(
 				 "",
-				 LangModelReport.String("label_repStat"),
+				 LangModelReport.getString("label_repStat"),
 				 true);
 				 vec.add(ortn);
 				 registerSearchableNode("", ortn);*/
@@ -211,7 +211,7 @@ public class AvailableReportsTreeModel extends ObjectResourceTreeModel
 
 				ortn = new ObjectResourceTreeNode(
 					"EquipmentChars",
-					LangModelConfig.String("label_equipChars"),
+					LangModelConfig.getString("label_equipChars"),
 					true);
 
 				vec.add(ortn);
@@ -219,7 +219,7 @@ public class AvailableReportsTreeModel extends ObjectResourceTreeModel
 
 				ortn = new ObjectResourceTreeNode(
 					"label_repPhysicalScheme",
-					LangModelReport.String("label_repPhysicalScheme"),
+					LangModelReport.getString("label_repPhysicalScheme"),
 					true);
 
 				vec.add(ortn);
@@ -227,21 +227,21 @@ public class AvailableReportsTreeModel extends ObjectResourceTreeModel
 
 						  ortn = new ObjectResourceTreeNode(
 				 "label_repTopologicalScheme",
-				 LangModelReport.String("label_repTopologicalScheme"),
+				 LangModelReport.getString("label_repTopologicalScheme"),
 				 true);
 				 vec.add(ortn);
 				 registerSearchableNode("", ortn);
 
 				/*        ortn = new ObjectResourceTreeNode(
 				 "",
-				 LangModelReport.String("label_repAbonentsPassports"),
+				 LangModelReport.getString("label_repAbonentsPassports"),
 				 true);
 				 vec.add(ortn);
 				 registerSearchableNode("", ortn);*/
 
 				/*        ortn = new ObjectResourceTreeNode(
 				 "",
-				 LangModelReport.String("label_repMetrologicalPoverka"),
+				 LangModelReport.getString("label_repMetrologicalPoverka"),
 				 true);
 				 vec.add(ortn);
 				 registerSearchableNode("", ortn);*/
@@ -260,14 +260,14 @@ public class AvailableReportsTreeModel extends ObjectResourceTreeModel
 
 				/*        ortn = new ObjectResourceTreeNode(
 				 "",
-				 LangModelReport.String("label_repSboiSistemy"),
+				 LangModelReport.getString("label_repSboiSistemy"),
 				 true);
 				 vec.add(ortn);
 				 registerSearchableNode("", ortn);*/
 
 				/*        ortn = new ObjectResourceTreeNode(
 				 "",
-				 LangModelReport.String("label_repStat"),
+				 LangModelReport.getString("label_repStat"),
 				 true);
 				 vec.add(ortn);
 				 registerSearchableNode("", ortn);*/
@@ -319,14 +319,14 @@ public class AvailableReportsTreeModel extends ObjectResourceTreeModel
 
 				/*        ortn = new ObjectResourceTreeNode(
 				 new OptimizationReportModel(),
-				 LangModelReport.String("label_repOptimizationResults"),
+				 LangModelReport.getString("label_repOptimizationResults"),
 				 true);
 				 vec.add(ortn);
 				 registerSearchableNode("", ortn);*/
 
 				ortn = new ObjectResourceTreeNode(
 					"EquipmentChars",
-					LangModelConfig.String("label_equipChars"),
+					LangModelConfig.getString("label_equipChars"),
 					true);
 
 				vec.add(ortn);
@@ -334,14 +334,14 @@ public class AvailableReportsTreeModel extends ObjectResourceTreeModel
 
 				/*        ortn = new ObjectResourceTreeNode(
 				 "",
-				 LangModelReport.String("label_repAbonentsPassports"),
+				 LangModelReport.getString("label_repAbonentsPassports"),
 				 true);
 				 vec.add(ortn);
 				 registerSearchableNode("", ortn);*/
 
 				/*        ortn = new ObjectResourceTreeNode(
 				 "",
-				 LangModelReport.String("label_repMetrologicalPoverka"),
+				 LangModelReport.getString("label_repMetrologicalPoverka"),
 				 true);
 				 vec.add(ortn);
 				 registerSearchableNode("", ortn);*/
@@ -353,7 +353,7 @@ public class AvailableReportsTreeModel extends ObjectResourceTreeModel
 				{
 					ObjectResourceTreeNode ortn = new ObjectResourceTreeNode(
 						"mufta",
-						LangModelConfig.String("mufta"),
+						LangModelConfig.getString("mufta"),
 						true);
 
 					vec.add(ortn);
@@ -361,7 +361,7 @@ public class AvailableReportsTreeModel extends ObjectResourceTreeModel
 
 					ortn = new ObjectResourceTreeNode(
 						"switch",
-						LangModelConfig.String("switch"),
+						LangModelConfig.getString("switch"),
 						true);
 
 					vec.add(ortn);
@@ -369,7 +369,7 @@ public class AvailableReportsTreeModel extends ObjectResourceTreeModel
 
 					ortn = new ObjectResourceTreeNode(
 						"cross",
-						LangModelConfig.String("cross"),
+						LangModelConfig.getString("cross"),
 						true);
 
 					vec.add(ortn);
@@ -377,7 +377,7 @@ public class AvailableReportsTreeModel extends ObjectResourceTreeModel
 
 					ortn = new ObjectResourceTreeNode(
 						"multiplexor",
-						LangModelConfig.String("multiplexer"),
+						LangModelConfig.getString("multiplexer"),
 						true);
 
 					vec.add(ortn);
@@ -385,7 +385,7 @@ public class AvailableReportsTreeModel extends ObjectResourceTreeModel
 
 					ortn = new ObjectResourceTreeNode(
 						"filter",
-						LangModelConfig.String("filter"),
+						LangModelConfig.getString("filter"),
 						true);
 
 					vec.add(ortn);
@@ -393,7 +393,7 @@ public class AvailableReportsTreeModel extends ObjectResourceTreeModel
 
 					ortn = new ObjectResourceTreeNode(
 						"transmitter",
-						LangModelConfig.String("transmitter"),
+						LangModelConfig.getString("transmitter"),
 						true);
 
 					vec.add(ortn);
@@ -401,7 +401,7 @@ public class AvailableReportsTreeModel extends ObjectResourceTreeModel
 
 					ortn = new ObjectResourceTreeNode(
 						"reciever",
-						LangModelConfig.String("reciever"), //поменять на receiver
+						LangModelConfig.getString("reciever"), //поменять на receiver
 						true);
 
 					vec.add(ortn);
@@ -409,7 +409,7 @@ public class AvailableReportsTreeModel extends ObjectResourceTreeModel
 
 					ortn = new ObjectResourceTreeNode(
 						"tester",
-						LangModelConfig.String("tester"),
+						LangModelConfig.getString("tester"),
 						true);
 
 					vec.add(ortn);
@@ -488,7 +488,7 @@ public class AvailableReportsTreeModel extends ObjectResourceTreeModel
 				 catch (CreateReportException cre){}
 				 ObjectResourceTreeNode ortn = new ObjectResourceTreeNode(
 				 or,
-					 LangModelReport.String(ObjectResourceReportModel.rt_objectsReport),
+					 LangModelReport.getString(ObjectResourceReportModel.rt_objectsReport),
 				 true,
 				 new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/new.gif").getScaledInstance(16, 16, Image.SCALE_SMOOTH)));
 				 ortn.setDragDropEnabled(true);
@@ -512,7 +512,7 @@ public class AvailableReportsTreeModel extends ObjectResourceTreeModel
 					for (Enumeration en = ht.elements(); en.hasMoreElements(); )
 					{
 						String type = (String) en.nextElement();
-						String name = LangModelSchematics.String(type);
+						String name = LangModelSchematics.getString(type);
 						if (type.equals(""))
 							name = "Схема";
 
@@ -817,7 +817,7 @@ getObject();
 
 						ObjectResourceTreeNode ortn = new ObjectResourceTreeNode(
 							curReport,
-							LangModelReport.String(curReport.view_type),
+							LangModelReport.getString(curReport.view_type),
 							true,
 							new ImageIcon(Toolkit.getDefaultToolkit().getImage(
 							"images/new.gif").getScaledInstance(16, 16,
@@ -1075,22 +1075,22 @@ getObject();
 		{
 			ObjectResourceTreeNode ortn;
 			ortn = new ObjectResourceTreeNode(MapEquipmentNodeElement.typ,
-				LangModelConfig.String("label_nodes"), true);
+				LangModelConfig.getString("label_nodes"), true);
 			vec.add(ortn);
 			registerSearchableNode(MapEquipmentNodeElement.typ, ortn);
 
 //				vec.add(new ObjectResourceTreeNode(MapKISNodeElement.typ, "Узлы с КИС", true));
 			ortn = new ObjectResourceTreeNode(MapPhysicalLinkElement.typ,
-				LangModelConfig.String("label_links"), true);
+				LangModelConfig.getString("label_links"), true);
 			vec.add(ortn);
 			registerSearchableNode(MapPhysicalLinkElement.typ, ortn);
 			ortn = new ObjectResourceTreeNode(MapPhysicalNodeElement.typ,
-				LangModelConfig.String(
+				LangModelConfig.getString(
 				"label_topologicalNodes"), true);
 			vec.add(ortn);
 			registerSearchableNode(MapPhysicalNodeElement.typ, ortn);
 			ortn = new ObjectResourceTreeNode(MapTransmissionPathElement.typ,
-				LangModelConfig.String(
+				LangModelConfig.getString(
 				"menuJCatPathText"), true);
 			vec.add(ortn);
 			registerSearchableNode(MapTransmissionPathElement.typ, ortn);
@@ -1098,7 +1098,7 @@ getObject();
 		else if (node.getObject()instanceof MapEquipmentNodeElement)
 		{
 			vec.add(new ObjectResourceTreeNode(MapPhysicalLinkElement.typ,
-				LangModelConfig.String(
+				LangModelConfig.getString(
 				"label_inputLinks"), true));
 		}
 		else if (node.getObject()instanceof MapPhysicalLinkElement)
@@ -1112,14 +1112,14 @@ getObject();
 		else if (node.getObject()instanceof Scheme)
 		{
 			vec.add(new ObjectResourceTreeNode(SchemeElement.typ,
-				LangModelConfig.String("label_nodes"), true));
+				LangModelConfig.getString("label_nodes"), true));
 			vec.add(new ObjectResourceTreeNode(SchemeLink.typ,
-				LangModelConfig.String("label_links"), true));
+				LangModelConfig.getString("label_links"), true));
 			vec.add(new ObjectResourceTreeNode(SchemeCableLink.typ,
-				LangModelConfig.String("label_cablelinks"),
+				LangModelConfig.getString("label_cablelinks"),
 				true));
 			vec.add(new ObjectResourceTreeNode(SchemePath.typ,
-				LangModelConfig.String("menuJCatPathText"), true));
+				LangModelConfig.getString("menuJCatPathText"), true));
 		}
 ///конец топологии
 
@@ -1164,7 +1164,7 @@ getObject();
 
 			ObjectResourceTreeNode ortn = new ObjectResourceTreeNode(
 				or,
-				LangModelReport.String(ObjectResourceReportModel.rt_objectsReport),
+				LangModelReport.getString(ObjectResourceReportModel.rt_objectsReport),
 				true,
 				new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/new.gif").
 				getScaledInstance(16, 16, Image.SCALE_SMOOTH)));

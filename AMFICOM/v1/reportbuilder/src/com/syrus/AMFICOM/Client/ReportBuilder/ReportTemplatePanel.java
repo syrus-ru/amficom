@@ -408,7 +408,7 @@ public class ReportTemplatePanel extends JPanel
 			JPopupMenu pm = new JPopupMenu();
 
 			JMenuItem mi1 = new JMenuItem();
-			mi1.setText(LangModelReport.String("popup_font"));
+			mi1.setText(LangModelReport.getString("popup_font"));
 			mi1.addActionListener(new java.awt.event.ActionListener()
 			{
 				public void actionPerformed(ActionEvent el)
@@ -428,16 +428,16 @@ public class ReportTemplatePanel extends JPanel
 			});
 
 			JMenuItem mi2 = new JMenuItem();
-			mi2.setText(LangModelReport.String("popup_priv_vert"));
+			mi2.setText(LangModelReport.getString("popup_priv_vert"));
 			mi2.addActionListener(new java.awt.event.ActionListener()
 			{
 				public void actionPerformed(ActionEvent el)
 				{
 					Vector selectItems = new Vector();
-					selectItems.add(LangModelReport.String(FirmedTextPane.
+					selectItems.add(LangModelReport.getString(FirmedTextPane.
 						toFieldsTop));
-					selectItems.add(LangModelReport.String(FirmedTextPane.toTop));
-					selectItems.add(LangModelReport.String(FirmedTextPane.toBottom));
+					selectItems.add(LangModelReport.getString(FirmedTextPane.toTop));
+					selectItems.add(LangModelReport.getString(FirmedTextPane.toBottom));
 
 					FirmedTextPane tp = (FirmedTextPane) selectedObject;
 					String oldValue = tp.verticalFirmTo;
@@ -447,26 +447,26 @@ public class ReportTemplatePanel extends JPanel
 					firmingType = null;
 					firmingType = (String) JOptionPane.showInputDialog(
 						Environment.getActiveWindow(),
-						LangModelReport.String("vybor_priv1"),
-						LangModelReport.String("vybor_priv2"),
+						LangModelReport.getString("vybor_priv1"),
+						LangModelReport.getString("vybor_priv2"),
 						JOptionPane.QUESTION_MESSAGE,
 						null,
 						selectItems.toArray(),
-						LangModelReport.String(oldValue));
+						LangModelReport.getString(oldValue));
 
 					if (firmingType == null)
 						return;
 
 					// Если мы выбрали привязку по полю
-					if (firmingType.equals(LangModelReport.String(FirmedTextPane.
+					if (firmingType.equals(LangModelReport.getString(FirmedTextPane.
 						toFieldsTop)))
 						firmingType = FirmedTextPane.toFieldsTop;
 
-					if (firmingType.equals(LangModelReport.String(FirmedTextPane.
+					if (firmingType.equals(LangModelReport.getString(FirmedTextPane.
 						toTop)))
 						firmingType = FirmedTextPane.toTop;
 
-					if (firmingType.equals(LangModelReport.String(FirmedTextPane.
+					if (firmingType.equals(LangModelReport.getString(FirmedTextPane.
 						toBottom)))
 						firmingType = FirmedTextPane.toBottom;
 
@@ -487,16 +487,16 @@ public class ReportTemplatePanel extends JPanel
 			});
 
 			JMenuItem mi3 = new JMenuItem();
-			mi3.setText(LangModelReport.String("popup_priv_horiz"));
+			mi3.setText(LangModelReport.getString("popup_priv_horiz"));
 			mi3.addActionListener(new java.awt.event.ActionListener()
 			{
 				public void actionPerformed(ActionEvent el)
 				{
 					Vector selectItems = new Vector();
-					selectItems.add(LangModelReport.String(FirmedTextPane.
+					selectItems.add(LangModelReport.getString(FirmedTextPane.
 						toFieldsLeft));
-					selectItems.add(LangModelReport.String(FirmedTextPane.toLeft));
-					selectItems.add(LangModelReport.String(FirmedTextPane.toRight));
+					selectItems.add(LangModelReport.getString(FirmedTextPane.toLeft));
+					selectItems.add(LangModelReport.getString(FirmedTextPane.toRight));
 
 					FirmedTextPane tp = (FirmedTextPane) selectedObject;
 					String oldValue = tp.horizontalFirmTo;
@@ -506,26 +506,26 @@ public class ReportTemplatePanel extends JPanel
 					firmingType = null;
 					firmingType = (String) JOptionPane.showInputDialog(
 						Environment.getActiveWindow(),
-						LangModelReport.String("vybor_priv1"),
-						LangModelReport.String("vybor_priv2"),
+						LangModelReport.getString("vybor_priv1"),
+						LangModelReport.getString("vybor_priv2"),
 						JOptionPane.QUESTION_MESSAGE,
 						null,
 						selectItems.toArray(),
-						LangModelReport.String(oldValue));
+						LangModelReport.getString(oldValue));
 
 					if (firmingType == null)
 						return;
 
 					// Если мы выбрали привязку по полю
-					if (firmingType.equals(LangModelReport.String(FirmedTextPane.
+					if (firmingType.equals(LangModelReport.getString(FirmedTextPane.
 						toFieldsLeft)))
 						firmingType = FirmedTextPane.toFieldsLeft;
 
-					if (firmingType.equals(LangModelReport.String(FirmedTextPane.
+					if (firmingType.equals(LangModelReport.getString(FirmedTextPane.
 						toLeft)))
 						firmingType = FirmedTextPane.toLeft;
 
-					if (firmingType.equals(LangModelReport.String(FirmedTextPane.
+					if (firmingType.equals(LangModelReport.getString(FirmedTextPane.
 						toRight)))
 						firmingType = FirmedTextPane.toRight;
 
@@ -546,7 +546,7 @@ public class ReportTemplatePanel extends JPanel
 			});
 
 			JMenuItem mi4 = new JMenuItem();
-			mi4.setText(LangModelReport.String("popup_cancel_priv"));
+			mi4.setText(LangModelReport.getString("popup_cancel_priv"));
 			mi4.addActionListener(new java.awt.event.ActionListener()
 			{
 				public void actionPerformed(ActionEvent el)
@@ -895,7 +895,7 @@ public class ReportTemplatePanel extends JPanel
 					JPopupMenu pm = new JPopupMenu();
 
 					JMenuItem mi2 = new JMenuItem();
-					mi2.setText(LangModelReport.String("popup_vertRazb"));
+					mi2.setText(LangModelReport.getString("popup_vertRazb"));
 					mi2.addActionListener(new java.awt.event.ActionListener()
 					{
 						public void actionPerformed(ActionEvent el)
@@ -905,7 +905,7 @@ public class ReportTemplatePanel extends JPanel
 								String inputValue = (String) JOptionPane.
 									showInputDialog(
 									Environment.getActiveWindow(),
-									LangModelReport.String("label_vertRazb"),
+									LangModelReport.getString("label_vertRazb"),
 									Integer.toString(
 									selectedRenderingObject.getTableDivisionsNumber()));
 
@@ -921,8 +921,8 @@ public class ReportTemplatePanel extends JPanel
 								{
 									JOptionPane.showMessageDialog(
 										Environment.getActiveWindow(),
-										LangModelReport.String("error_numb_req"),
-										LangModelReport.String("label_error"),
+										LangModelReport.getString("error_numb_req"),
+										LangModelReport.getString("label_error"),
 										JOptionPane.ERROR_MESSAGE);
 								}
 							}
@@ -955,7 +955,7 @@ public class ReportTemplatePanel extends JPanel
 		}
 		else
 		{
-			if (this.itemToAdd.equals(LangModelReport.String("label_lb")))
+			if (this.itemToAdd.equals(LangModelReport.getString("label_lb")))
 			{
 				FirmedTextPane newTextPane = new FirmedTextPane();
 				selectedObject = newTextPane;
@@ -974,7 +974,7 @@ public class ReportTemplatePanel extends JPanel
 
 				reportTemplate.labels.add(newTextPane);
 			}
-			else if (this.itemToAdd.equals(LangModelReport.String("label_im")))
+			else if (this.itemToAdd.equals(LangModelReport.getString("label_im")))
 			{
 				try
 				{
@@ -1719,7 +1719,7 @@ getHeight();
 				{
 					TimeGraphProperties tgpDialog = new TimeGraphProperties(
 						null,
-						LangModelReport.String("label_diagrProp"),
+						LangModelReport.getString("label_diagrProp"),
 						true);
 					tgpDialog.setLocation(300, 300);
 					tgpDialog.setVisible(true);
@@ -1738,8 +1738,8 @@ getHeight();
 					{
 						JOptionPane.showMessageDialog(
 							Environment.getActiveWindow(),
-							LangModelReport.String("error_emptyObjectReport"),
-							LangModelReport.String("label_error"),
+							LangModelReport.getString("error_emptyObjectReport"),
+							LangModelReport.getString("label_error"),
 							JOptionPane.ERROR_MESSAGE);
 						return;
 					}
@@ -1751,8 +1751,8 @@ getHeight();
 					{
 						JOptionPane.showMessageDialog(
 							Environment.getActiveWindow(),
-							LangModelReport.String("label_noSchemeSet"),
-							LangModelReport.String("label_error"),
+							LangModelReport.getString("label_noSchemeSet"),
+							LangModelReport.getString("label_error"),
 							JOptionPane.ERROR_MESSAGE);
 						return;
 					}
@@ -1768,8 +1768,8 @@ getHeight();
 					{
 						JOptionPane.showMessageDialog(
 							Environment.getActiveWindow(),
-							LangModelReport.String("label_noselectedTopology"),
-							LangModelReport.String("label_error"),
+							LangModelReport.getString("label_noselectedTopology"),
+							LangModelReport.getString("label_error"),
 							JOptionPane.ERROR_MESSAGE);
 						return;
 					}
@@ -1792,8 +1792,8 @@ getHeight();
 					{
 						JOptionPane.showMessageDialog(
 							Environment.getActiveWindow(),
-							LangModelReport.String("label_noSelectedSolution"),
-							LangModelReport.String("label_error"),
+							LangModelReport.getString("label_noSelectedSolution"),
+							LangModelReport.getString("label_error"),
 							JOptionPane.ERROR_MESSAGE);
 						return;
 					}

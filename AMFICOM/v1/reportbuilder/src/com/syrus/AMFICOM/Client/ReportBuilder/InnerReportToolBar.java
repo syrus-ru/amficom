@@ -156,14 +156,14 @@ public class InnerReportToolBar extends JToolBar implements
 
 		addLabelButton.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage(
 			"images/addtext.gif").getScaledInstance(16, 16, Image.SCALE_SMOOTH)));
-		addLabelButton.setToolTipText(LangModelReport.String("label_addLabel"));
+		addLabelButton.setToolTipText(LangModelReport.getString("label_addLabel"));
 		addLabelButton.setMaximumSize(buttonSize);
 		addLabelButton.setPreferredSize(buttonSize);
 
 		addImageButton.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage(
 			"images/graph_report.gif").getScaledInstance(16, 16,
 			Image.SCALE_SMOOTH)));
-		addImageButton.setToolTipText(LangModelReport.String("label_addImage"));
+		addImageButton.setToolTipText(LangModelReport.getString("label_addImage"));
 		addImageButton.setMaximumSize(buttonSize);
 		addImageButton.setPreferredSize(buttonSize);
 
@@ -171,7 +171,7 @@ public class InnerReportToolBar extends JToolBar implements
 															  getImage(
 			"images/delete.gif").getScaledInstance(16, 16,
 																Image.SCALE_SMOOTH)));
-		deleteObjectButton.setToolTipText(LangModelReport.String(
+		deleteObjectButton.setToolTipText(LangModelReport.getString(
 			"label_deleteObject"));
 		deleteObjectButton.setMaximumSize(buttonSize);
 		deleteObjectButton.setPreferredSize(buttonSize);
@@ -179,14 +179,14 @@ public class InnerReportToolBar extends JToolBar implements
 		changeViewButton.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().
 															getImage(
 			"images/view_report.gif").getScaledInstance(16, 16, Image.SCALE_SMOOTH)));
-		changeViewButton.setToolTipText(LangModelReport.String("label_viewReport"));
+		changeViewButton.setToolTipText(LangModelReport.getString("label_viewReport"));
 		changeViewButton.setMaximumSize(buttonSize);
 		changeViewButton.setPreferredSize(buttonSize);
 
 		saveReportButton.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().
 															getImage(
 			"images/save_report.gif").getScaledInstance(16, 16, Image.SCALE_SMOOTH)));
-		saveReportButton.setToolTipText(LangModelReport.String("label_saveReport"));
+		saveReportButton.setToolTipText(LangModelReport.getString("label_saveReport"));
 		saveReportButton.setMaximumSize(buttonSize);
 		saveReportButton.setPreferredSize(buttonSize);
 
@@ -195,7 +195,7 @@ public class InnerReportToolBar extends JToolBar implements
 			"images/print_report.gif").
 															 getScaledInstance(16, 16,
 			Image.SCALE_SMOOTH)));
-		printReportButton.setToolTipText(LangModelReport.String("label_print"));
+		printReportButton.setToolTipText(LangModelReport.getString("label_print"));
 		printReportButton.setMaximumSize(buttonSize);
 		printReportButton.setPreferredSize(buttonSize);
 
@@ -271,7 +271,7 @@ public class InnerReportToolBar extends JToolBar implements
 	{
 		if (addLabelButton.isSelected())
 		{
-			mainWindow.layoutWOCPanel.itemToAdd = LangModelReport.String(
+			mainWindow.layoutWOCPanel.itemToAdd = LangModelReport.getString(
 				"label_lb");
 			addImageButton.setSelected(false);
 		}
@@ -283,7 +283,7 @@ else
 	{
 		if (addImageButton.isSelected())
 		{
-			mainWindow.layoutWOCPanel.itemToAdd = LangModelReport.String(
+			mainWindow.layoutWOCPanel.itemToAdd = LangModelReport.getString(
 				"label_im");
 			addLabelButton.setSelected(false);
 		}
@@ -305,8 +305,8 @@ else
 				{
 					JOptionPane.showMessageDialog(
 						Environment.getActiveWindow(),
-						LangModelReport.String("label_crossesExist"),
-						LangModelReport.String("label_error"),
+						LangModelReport.getString("label_crossesExist"),
+						LangModelReport.getString("label_error"),
 						JOptionPane.ERROR_MESSAGE);
 
 					return;
@@ -319,8 +319,8 @@ else
 					mainWindow.layoutWOCPanel.imagableRect);
 
 				changeViewButton.setToolTipText(
-					LangModelReport.String("label_viewTemplatesScheme"));
-				mainWindow.layoutScrollPane.setTitle(LangModelReport.String(
+					LangModelReport.getString("label_viewTemplatesScheme"));
+				mainWindow.layoutScrollPane.setTitle(LangModelReport.getString(
 					"label_reportForTemplate"));
 				changeViewButton.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().
 					getImage(
@@ -378,7 +378,7 @@ else
 				JOptionPane.showMessageDialog(
 					Environment.getActiveWindow(),
 					cre.getMessage(),
-					LangModelReport.String("label_error"),
+					LangModelReport.getString("label_error"),
 					JOptionPane.ERROR_MESSAGE);
 
 				mainWindow.layoutWOCPanel.repaint();
@@ -391,7 +391,7 @@ else
 			for (int i = 0; i < objectRenderers.size(); i++)
 				((RenderingObject) objectRenderers.get(i)).saveColumnWidths();
 
-			changeViewButton.setToolTipText(LangModelReport.String(
+			changeViewButton.setToolTipText(LangModelReport.getString(
 				"label_viewReport"));
 			changeViewButton.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().
 																getImage(
@@ -399,7 +399,7 @@ else
 																getScaledInstance(16, 16,
 				Image.SCALE_SMOOTH)));
 
-			mainWindow.layoutScrollPane.setTitle(LangModelReport.String(
+			mainWindow.layoutScrollPane.setTitle(LangModelReport.getString(
 				"label_templateScheme"));
 			mainWindow.layoutScrollPane.getContentPane().removeAll();
 			mainWindow.layoutScrollPane.getContentPane().add(mainWindow.

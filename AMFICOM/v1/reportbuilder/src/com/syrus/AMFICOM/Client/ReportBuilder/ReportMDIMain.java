@@ -143,7 +143,7 @@ public class ReportMDIMain extends JFrame implements OperationListener
 
 		setLocation(0, 0);
 
-		this.setTitle(LangModelReport.String("label_rtbWindowTitle"));
+		this.setTitle(LangModelReport.getString("label_rtbWindowTitle"));
 		this.addComponentListener(new TemplateMDIMain_this_componentAdapter(this));
 		this.addWindowListener(new java.awt.event.WindowAdapter()
 		{
@@ -200,10 +200,10 @@ public class ReportMDIMain extends JFrame implements OperationListener
 		statusBar.setWidth("user", 100);
 		statusBar.setWidth("time", 50);
 
-		statusBar.setText("status", LangModel.String("statusReady"));
-		statusBar.setText("server", LangModel.String("statusNoConnection"));
-		statusBar.setText("session", LangModel.String("statusNoSession"));
-		statusBar.setText("user", LangModel.String("statusNoUser"));
+		statusBar.setText("status", LangModel.getString("statusReady"));
+		statusBar.setText("server", LangModel.getString("statusNoConnection"));
+		statusBar.setText("session", LangModel.getString("statusNoSession"));
+		statusBar.setText("user", LangModel.getString("statusNoUser"));
 		statusBar.setText("time", " ");
 		statusBar.organize();
 
@@ -341,7 +341,7 @@ public class ReportMDIMain extends JFrame implements OperationListener
 				{
 					setConnectionOpened();
 
-					statusBar.setText("status", LangModelReport.String("statusReady"));
+					statusBar.setText("status", LangModelReport.getString("statusReady"));
 					statusBar.setText("server", aContext.getConnectionInterface().getServiceURL());
 				}
 			}
@@ -350,8 +350,8 @@ public class ReportMDIMain extends JFrame implements OperationListener
 				ConnectionInterface cci = (ConnectionInterface)cce.getSource();
 				if(aContext.getConnectionInterface().equals(cci))
 				{
-					statusBar.setText("status", LangModelReport.String("statusDisconnected"));
-					statusBar.setText("server", LangModelReport.String("statusNoConnection"));
+					statusBar.setText("status", LangModelReport.getString("statusDisconnected"));
+					statusBar.setText("server", LangModelReport.getString("statusNoConnection"));
 
 					setConnectionClosed();
 
@@ -362,8 +362,8 @@ public class ReportMDIMain extends JFrame implements OperationListener
 				ConnectionInterface cci = (ConnectionInterface)cce.getSource();
 				if(aContext.getConnectionInterface().equals(cci))
 				{
-					statusBar.setText("status", LangModelReport.String("statusError"));
-					statusBar.setText("server", LangModelReport.String("statusConnectionError"));
+					statusBar.setText("status", LangModelReport.getString("statusError"));
+					statusBar.setText("server", LangModelReport.getString("statusConnectionError"));
 
 					setConnectionFailed();
 				}
@@ -398,7 +398,7 @@ public class ReportMDIMain extends JFrame implements OperationListener
 				JOptionPane.showMessageDialog(
 						Environment.getActiveWindow(),
 						"Can't create filer panel!",
-						LangModelReport.String("label_error"),
+						LangModelReport.getString("label_error"),
 						JOptionPane.ERROR_MESSAGE);
 
 				selectReportsPanel.setSize(
@@ -538,7 +538,7 @@ public class ReportMDIMain extends JFrame implements OperationListener
 			JScrollPane scrPane = new JScrollPane(layoutWOCPanel);
 			layoutScrollPane.getContentPane().add(scrPane, BorderLayout.CENTER);
 			desktopPane.add(layoutScrollPane);
-			layoutScrollPane.setTitle(LangModelReport.String("label_templateScheme"));
+			layoutScrollPane.setTitle(LangModelReport.getString("label_templateScheme"));
 			layoutScrollPane.setFrameIcon(
 					new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/general.gif").getScaledInstance(16, 16, Image.SCALE_SMOOTH)));
 

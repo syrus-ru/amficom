@@ -64,7 +64,7 @@ public class FontChooserDialog extends JDialog
 	private void jbInit()
 	{
 		border1 = BorderFactory.createBevelBorder(BevelBorder.LOWERED,Color.white,Color.white,new Color(103, 101, 98),new Color(148, 145, 140));
-		this.setTitle(LangModelReport.String("label_chooseFont"));
+		this.setTitle(LangModelReport.getString("label_chooseFont"));
 		this.setResizable(false);
 		this.setSize(new Dimension(299, 287));
 		this.setModal(true);
@@ -76,24 +76,24 @@ public class FontChooserDialog extends JDialog
 
 		this.getContentPane().setLayout(new GridBagLayout());
 		fontParamsPanel.setLayout(gridBagLayout1);
-		fontNameLabel.setText(LangModelReport.String("label_fontName"));
-		fontSizeLabel.setText(LangModelReport.String("label_fontSize"));
+		fontNameLabel.setText(LangModelReport.getString("label_fontName"));
+		fontSizeLabel.setText(LangModelReport.getString("label_fontSize"));
 		examplePanel.setLayout(borderLayout1);
-		exampTitleLabel.setText(LangModelReport.String("label_fontExample"));
+		exampTitleLabel.setText(LangModelReport.getString("label_fontExample"));
 		exampLabel.setBorder(border1);
 		exampLabel.setText("aAbBcC123");
 		exampLabelPanel.setLayout(borderLayout2);
 		applyButton.setPreferredSize(new Dimension(99, 24));
-		applyButton.setText(LangModelReport.String("label_apply"));
+		applyButton.setText(LangModelReport.getString("label_apply"));
 		applyButton.addActionListener(new FontChooserDialog1_applyButton_actionAdapter(this));
 		cancelButton.setPreferredSize(new Dimension(79, 24));
-		cancelButton.setText(LangModelReport.String("label_cancel"));
+		cancelButton.setText(LangModelReport.getString("label_cancel"));
 		cancelButton.addActionListener(new FontChooserDialog1_cancelButton_actionAdapter(this));
 		boldCheckBox.setFont(new java.awt.Font("Dialog", 1, 13));
-		boldCheckBox.setText(LangModelReport.String("label_fontBold"));
+		boldCheckBox.setText(LangModelReport.getString("label_fontBold"));
 		boldCheckBox.addActionListener(new FontChooserDialog1_boldCheckBox_actionAdapter(this));
 		italicCheckBox.setFont(new java.awt.Font("Dialog", 2, 13));
-		italicCheckBox.setText(LangModelReport.String("label_fontItalic"));
+		italicCheckBox.setText(LangModelReport.getString("label_fontItalic"));
 		italicCheckBox.addActionListener(new FontChooserDialog1_italicCheckBox_actionAdapter(this));
 		fontNameComboBox.addActionListener(new FontChooserDialog1_fontNameComboBox_actionAdapter(this));
 		fontSizeComboBox.addActionListener(new FontChooserDialog1_fontSizeComboBox_actionAdapter(this));

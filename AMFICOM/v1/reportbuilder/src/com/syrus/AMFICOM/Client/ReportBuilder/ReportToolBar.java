@@ -147,7 +147,7 @@ public class ReportToolBar
 																						getImage("images/new.gif").
 																						getScaledInstance(16, 16,
 				Image.SCALE_SMOOTH)));
-		newTemplateButton.setToolTipText(LangModelReport.String("label_newTemplate"));
+		newTemplateButton.setToolTipText(LangModelReport.getString("label_newTemplate"));
 		newTemplateButton.setMaximumSize(buttonSize);
 		newTemplateButton.setPreferredSize(buttonSize);
 
@@ -155,7 +155,7 @@ public class ReportToolBar
 																						 getImage(
 				"images/load_template.gif").getScaledInstance(16, 16,
 				Image.SCALE_SMOOTH)));
-		openTemplateButton.setToolTipText(LangModelReport.String(
+		openTemplateButton.setToolTipText(LangModelReport.getString(
 				"label_openTemplate"));
 		openTemplateButton.setMaximumSize(buttonSize);
 		openTemplateButton.setPreferredSize(buttonSize);
@@ -164,7 +164,7 @@ public class ReportToolBar
 																						 getImage(
 				"images/save_template.gif").getScaledInstance(16, 16,
 				Image.SCALE_SMOOTH)));
-		saveTemplateButton.setToolTipText(LangModelReport.String(
+		saveTemplateButton.setToolTipText(LangModelReport.getString(
 				"label_saveTemplate"));
 		saveTemplateButton.setMaximumSize(buttonSize);
 		saveTemplateButton.setPreferredSize(buttonSize);
@@ -173,7 +173,7 @@ public class ReportToolBar
 																						 getImage(
 				"images/openfile.gif").getScaledInstance(16, 16,
 				Image.SCALE_SMOOTH)));
-		importTemplateButton.setToolTipText(LangModelReport.String(
+		importTemplateButton.setToolTipText(LangModelReport.getString(
 				"label_importTemplate"));
 		importTemplateButton.setMaximumSize(buttonSize);
 		importTemplateButton.setPreferredSize(buttonSize);
@@ -182,7 +182,7 @@ public class ReportToolBar
 																						 getImage(
 				"images/save.gif").getScaledInstance(16, 16,
 				Image.SCALE_SMOOTH)));
-		exportTemplateButton.setToolTipText(LangModelReport.String(
+		exportTemplateButton.setToolTipText(LangModelReport.getString(
 				"label_exportTemplate"));
 		exportTemplateButton.setMaximumSize(buttonSize);
 		exportTemplateButton.setPreferredSize(buttonSize);
@@ -252,8 +252,8 @@ public class ReportToolBar
 		{
 			JOptionPane.showMessageDialog(
 				Environment.getActiveWindow(),
-				LangModelReport.String("label_crossesExist"),
-				LangModelReport.String("label_error"),
+				LangModelReport.getString("label_crossesExist"),
+				LangModelReport.getString("label_error"),
 				JOptionPane.ERROR_MESSAGE);
 
 			return;
@@ -280,8 +280,8 @@ public class ReportToolBar
 		{
 			int resultValue = JOptionPane.showConfirmDialog(
 					mainWindow,
-					LangModelReport.String("label_saveChanges"),
-					LangModelReport.String("label_confirm"),
+					LangModelReport.getString("label_saveChanges"),
+					LangModelReport.getString("label_confirm"),
 					JOptionPane.YES_NO_CANCEL_OPTION);
 
 			if (resultValue == JOptionPane.CANCEL_OPTION)
@@ -318,8 +318,8 @@ public class ReportToolBar
 		{
 			int resultValue = JOptionPane.showConfirmDialog(
 					mainWindow,
-					LangModelReport.String("label_saveChanges"),
-					LangModelReport.String("label_confirm"),
+					LangModelReport.getString("label_saveChanges"),
+					LangModelReport.getString("label_confirm"),
 					JOptionPane.YES_NO_CANCEL_OPTION);
 
 			if (resultValue == JOptionPane.CANCEL_OPTION)
@@ -344,7 +344,7 @@ public class ReportToolBar
 	{
 		if (JOptionPane.showConfirmDialog(
 			Environment.getActiveWindow(),
-			LangModelReport.String("label_confImportTemplates"),
+			LangModelReport.getString("label_confImportTemplates"),
 			"",
 			JOptionPane.YES_NO_OPTION,
 			JOptionPane.QUESTION_MESSAGE) == JOptionPane.NO_OPTION)

@@ -93,9 +93,9 @@ public class SelectTemplate extends JDialog
 		super(frame,"",true);
 
 		if (mode == SelectTemplate.OPEN)
-			this.setTitle(LangModelReport.String("label_openTemplate"));
+			this.setTitle(LangModelReport.getString("label_openTemplate"));
 		if (mode == SelectTemplate.SAVE)
-			this.setTitle(LangModelReport.String("label_saveTemplate"));
+			this.setTitle(LangModelReport.getString("label_saveTemplate"));
 
 		this.owner = frame;
 		this.mode = mode;
@@ -128,9 +128,9 @@ public class SelectTemplate extends JDialog
 
 		openSaveButton.setMargin(new Insets(2, 2, 2, 2));
 		if (mode == OPEN)
-			openSaveButton.setText(LangModelReport.String("label_open"));
+			openSaveButton.setText(LangModelReport.getString("label_open"));
 		if (mode == SAVE)
-			openSaveButton.setText(LangModelReport.String("label_save"));
+			openSaveButton.setText(LangModelReport.getString("label_save"));
 
 		openSaveButton.setEnabled(false);
 
@@ -141,7 +141,7 @@ public class SelectTemplate extends JDialog
 				openSaveButton_actionPerformed(e);
 			}
 		});
-		cancelButton.setText(LangModelReport.String("label_cancel"));
+		cancelButton.setText(LangModelReport.getString("label_cancel"));
 		cancelButton.setMargin(new Insets(2, 2, 2, 2));
 
 		cancelButton.addActionListener(new ActionListener()
@@ -152,7 +152,7 @@ public class SelectTemplate extends JDialog
 			}
 		});
 		removeButton.setMargin(new Insets(2, 2, 2, 2));
-		removeButton.setText(LangModelReport.String("label_delete"));
+		removeButton.setText(LangModelReport.getString("label_delete"));
 		removeButton.setEnabled(false);
 
 		removeButton.addActionListener(new ActionListener()
@@ -246,7 +246,7 @@ public class SelectTemplate extends JDialog
 		comboData[6] = ReportTemplate.rtt_Optimization;
 
 		for (int i = 0; i < comboData.length; i++)
-			templateTypesComboBox.addItem(LangModelReport.String(comboData[i]));
+			templateTypesComboBox.addItem(LangModelReport.getString(comboData[i]));
 	}
 
 	private void openSaveButton_actionPerformed(ActionEvent e)
@@ -259,8 +259,8 @@ public class SelectTemplate extends JDialog
 			{
 				JOptionPane.showMessageDialog(
 						Environment.getActiveWindow(),
-						LangModelReport.String("error_noTemplate"),
-						LangModelReport.String("label_error"),
+						LangModelReport.getString("error_noTemplate"),
+						LangModelReport.getString("label_error"),
 						JOptionPane.ERROR_MESSAGE);
 				return;
 			}
@@ -294,8 +294,8 @@ public class SelectTemplate extends JDialog
 			{
 				int replace = JOptionPane.showConfirmDialog(
 						Environment.getActiveWindow(),
-						LangModelReport.String("label_templateExists"),
-						LangModelReport.String("label_confirm"),
+						LangModelReport.getString("label_templateExists"),
+						LangModelReport.getString("label_confirm"),
 						JOptionPane.YES_NO_OPTION);
 				if (replace == JOptionPane.NO_OPTION)
 					return;

@@ -40,37 +40,23 @@ public class ReportMain
 
 		frame.addWindowListener(new WindowAdapter() { public void windowClosing(WindowEvent e) { System.exit(0); } });
 
-//		Environment.addWindow(frame);
 		frame.setVisible(true);
 	}
 
 	public static void main(String[] args)
 	{
-//		System.out.println(LangModel.resourceBundle + " vs " + LangModelAdmin.resourceBundle);
-
 		Environment.initialize();
 		try
 		{
-//      UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 			UIManager.setLookAndFeel(Environment.getLookAndFeel());
 		}
 		catch (Exception e)
 		{
 			e.printStackTrace();
 		}
-//		System.out.println(LangModel.resourceBundle + " vs " + LangModelAdmin.resourceBundle);
-		LangModelReport.initialize();
-//		LangModelSurvey.initialize();
 		LangModelConfig.initialize();
-		LangModelSchematics.initialize();
-		LangModelAnalyse.initialize();
 		LangModelModel.initialize();
 		LangModelPrediction.initialize();
-
-//		System.out.println(LangModel.resourceBundle + " vs " + LangModelAdmin.resourceBundle);
-
-		// test!!!
-//		new com.syrus.AMFICOM.Client.Test.LoadTestAdmin();
 
 		new ReportMain(new ReportDefaultApplicationModelFactory());
 	}
