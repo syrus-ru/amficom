@@ -1,5 +1,5 @@
 /*
-* $Id: Wrapper.java,v 1.1 2005/02/03 08:12:17 bob Exp $
+* $Id: Wrapper.java,v 1.2 2005/02/22 07:23:43 bass Exp $
 *
 * Copyright ¿ 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -22,10 +22,10 @@ import java.util.List;
  * wrapper's constructor must be private and its instance must be obtained
  * using a static method <code>getInstance()</code>. 
  *
- * @author $Author: bob $
- * @version $Revision: 1.1 $, $Date: 2005/02/03 08:12:17 $
+ * @author $Author: bass $
+ * @version $Revision: 1.2 $, $Date: 2005/02/22 07:23:43 $
  * @see <a href = "http://bass.science.syrus.ru/java/Bitter%20Java.pdf">&laquo;Bitter Java&raquo; by Bruce A. Tate</a>
- * @module general_v1
+ * @module util
  */
 public interface Wrapper {
 
@@ -52,7 +52,6 @@ public interface Wrapper {
 	 * Name of the entity represented by <code>key</code>.
 	 *
 	 * @param key see {@link #getKeys()}
-	 * @return
 	 */
 	String getName(final String key);
 
@@ -77,7 +76,6 @@ public interface Wrapper {
 	 * </tbody></table>
 	 * 
 	 * @param key entity key, see {@link #getKeys()}
-	 * @return
 	 */
 	Object getPropertyValue(final String key);
 	
@@ -92,9 +90,8 @@ public interface Wrapper {
 	/**
 	 * Model value witch linked to entity key.
 	 * 
-	 * @param Object object
+	 * @param object
 	 * @param key entity key
-	 * @return
 	 */
 	Object getValue(final Object object, final String key);
 
@@ -111,7 +108,7 @@ public interface Wrapper {
 	/**
 	 * Sets the value for Model entity.
 	 *
-	 * @param Object object
+	 * @param object
 	 * @param key entity key
 	 * @param value value, which will be assigned to Model
 	 */
