@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPathDatabase.java,v 1.4 2004/08/09 13:40:41 bob Exp $
+ * $Id: TransmissionPathDatabase.java,v 1.5 2004/08/11 06:50:44 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,6 +12,7 @@ import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -28,7 +29,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2004/08/09 13:40:41 $
+ * @version $Revision: 1.5 $, $Date: 2004/08/11 06:50:44 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -57,6 +58,7 @@ public class TransmissionPathDatabase extends StorableObjectDatabase {
 	public void retrieve(StorableObject storableObject) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
 		TransmissionPath transmissionPath = this.fromStorableObject(storableObject);
 		this.retrieveTransmissionPath(transmissionPath);
+		this.retrieveTransmissionPathMELink(transmissionPath);
 	}
 
 	private void retrieveTransmissionPath(TransmissionPath transmissionPath) throws ObjectNotFoundException, RetrieveObjectException {
@@ -136,6 +138,58 @@ public class TransmissionPathDatabase extends StorableObjectDatabase {
 			}
 		}
 	}
+	
+	private void retrieveTransmissionPathMELink(TransmissionPath transmissionPath) throws RetrieveObjectException{
+		String sql;
+		String tpIdStr = transmissionPath.getId().toSQLString();
+		{
+		StringBuffer buffer = new StringBuffer();
+		buffer.append(StorableObjectDatabase.SQL_SELECT);		
+		buffer.append(LINK_COLUMN_MONITORED_ELEMENT_ID);
+		buffer.append(StorableObjectDatabase.SQL_FROM);
+		buffer.append(ObjectEntities.TRANSPATHMELINK_ENTITY);
+		buffer.append(StorableObjectDatabase.SQL_WHERE);
+		buffer.append(LINK_COLUMN_TRANSMISSION_PATH_ID);
+		buffer.append(StorableObjectDatabase.EQUALS);
+		buffer.append(tpIdStr);
+		sql = buffer.toString();
+		}
+		
+		Statement statement = null;
+		ResultSet resultSet = null;
+		try {
+			statement = connection.createStatement();
+			Log.debugMessage("TransmissionPathDatabase.retrieveEquipmentMELink | Trying: " + sql, Log.DEBUGLEVEL05);
+			resultSet = statement.executeQuery(sql);
+			List meLink = new ArrayList();
+			while (resultSet.next()) {				
+				/**
+				* @todo when change DB Identifier model ,change getString() to getLong()
+				*/
+				Identifier meId = new Identifier(resultSet.getString(LINK_COLUMN_MONITORED_ELEMENT_ID));
+				meLink.add(meId);				
+			}
+			transmissionPath.setMonitoredElementIds(meLink);
+		}
+		catch (SQLException sqle) {
+			String mesg = "TransmissionPathDatabase.retrieveEquipmentMELink | Cannot retrieve transmission path " + tpIdStr;
+			throw new RetrieveObjectException(mesg, sqle);
+		}
+		finally {
+			try {
+				if (statement != null)
+					statement.close();
+				if (resultSet != null)
+					resultSet.close();
+				statement = null;
+				resultSet = null;
+			}
+			catch (SQLException sqle1) {
+				Log.errorException(sqle1);
+			}
+		}
+	}
+
 
 	public Object retrieveObject(StorableObject storableObject, int retrieve_kind, Object arg) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException{
 		TransmissionPath transmissionPath = this.fromStorableObject(storableObject);
