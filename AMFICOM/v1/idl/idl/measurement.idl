@@ -329,6 +329,10 @@ module corba {
 			long long start;
 			long long end;
 	};
+
+	struct MeasurementSetupCondition_Transferable {
+			com::syrus::AMFICOM::general::corba::Identifier_Transferable measurement_type_id;
+	};
 	
 };
 };
