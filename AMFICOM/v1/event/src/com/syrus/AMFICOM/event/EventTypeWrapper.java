@@ -1,5 +1,5 @@
 /*
- * $Id: EventTypeWrapper.java,v 1.1 2005/01/31 13:15:50 arseniy Exp $
+ * $Id: EventTypeWrapper.java,v 1.2 2005/02/03 14:50:21 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,10 +9,10 @@ package com.syrus.AMFICOM.event;
 
 import java.util.List;
 
-import com.syrus.AMFICOM.general.Wrapper;
+import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/01/31 13:15:50 $
+ * @version $Revision: 1.2 $, $Date: 2005/02/03 14:50:21 $
  * @author $Author: arseniy $
  * @module event_v1
  */
