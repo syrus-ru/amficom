@@ -49,7 +49,7 @@ JNIEXPORT jboolean JNICALL Java_com_syrus_AMFICOM_mcm_Transceiver_transmit(JNIEn
 	env->ReleaseStringUTFChars(j_id, jbuffer);
 	ByteArray* bmeasurement_id = new ByteArray(l, buffer);
 //measurement_type_id
-	fid = env->GetFieldID(measurement_class, "type_id", "Ljava/lang/String;");
+	fid = env->GetFieldID(measurement_class, "typeId", "Ljava/lang/String;");
 	jstring j_measurement_type_id = (jstring)env->GetObjectField(j_measurement, fid);
 	l = env->GetStringUTFLength(j_measurement_type_id);
 	buffer = new char[l];
@@ -58,7 +58,7 @@ JNIEXPORT jboolean JNICALL Java_com_syrus_AMFICOM_mcm_Transceiver_transmit(JNIEn
 	env->ReleaseStringUTFChars(j_measurement_type_id, jbuffer);
 	ByteArray* bmeasurement_type_id = new ByteArray(l, buffer);
 //local_address
-	fid = env->GetFieldID(measurement_class, "local_address", "Ljava/lang/String;");
+	fid = env->GetFieldID(measurement_class, "localAddress", "Ljava/lang/String;");
 	jstring j_local_address = (jstring)env->GetObjectField(j_measurement, fid);
 	l = env->GetStringUTFLength(j_local_address);
 	buffer = new char[l];
@@ -71,7 +71,7 @@ JNIEXPORT jboolean JNICALL Java_com_syrus_AMFICOM_mcm_Transceiver_transmit(JNIEn
 	jobject j_measurement_setup = env->GetObjectField(j_measurement, fid);
 
 	jclass measurement_setup_class = env->GetObjectClass(j_measurement_setup);
-	fid = env->GetFieldID(measurement_setup_class, "parameter_set", "Lcom/syrus/AMFICOM/measurement/Set;");
+	fid = env->GetFieldID(measurement_setup_class, "parameterSet", "Lcom/syrus/AMFICOM/measurement/Set;");
 	env->DeleteLocalRef(measurement_setup_class);
 	jobject j_parameter_set = env->GetObjectField(j_measurement_setup, fid);
 	env->DeleteLocalRef(j_measurement_setup);
@@ -92,7 +92,7 @@ JNIEXPORT jboolean JNICALL Java_com_syrus_AMFICOM_mcm_Transceiver_transmit(JNIEn
 		j_parameter = env->GetObjectArrayElement(j_parameters, s);
 		set_parameter_class = env->GetObjectClass(j_parameter);
 
-		fid = env->GetFieldID(set_parameter_class, "type_id", "Ljava/lang/String;");
+		fid = env->GetFieldID(set_parameter_class, "typeId", "Ljava/lang/String;");
 		j_parameter_type_id = (jstring)env->GetObjectField(j_parameter, fid);
 		l = env->GetStringUTFLength(j_parameter_type_id);
 		buffer = new char[l];

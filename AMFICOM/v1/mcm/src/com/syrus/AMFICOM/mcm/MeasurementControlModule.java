@@ -8,7 +8,6 @@ import java.util.Hashtable;
 import java.util.Enumeration;
 import java.util.Iterator;
 import com.syrus.AMFICOM.general.Identifier;
-//import com.syrus.AMFICOM.util.DatabaseSetup;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.configuration.MCM;
 import com.syrus.AMFICOM.configuration.KIS;
@@ -61,92 +60,41 @@ public class MeasurementControlModule extends Thread {
 		Application.init("mcm");
 
 		/*	Establish connection with database	*/
-		String dbHostName = ApplicationProperties.getString("DBHostName", Application.getInternetAddress());
-		String dbSid = ApplicationProperties.getString("DBSID", DB_SID);
-		long dbConnTimeout = ApplicationProperties.getInt("DBConnectionTimeout", DB_CONNECTION_TIMEOUT)*1000;
+		establishDatabaseConnection();
+
+		/*	Initialize object drivers
+		 * 	for work with database*/
+		DatabaseSetup.initDatabaseContext();
+
+		/*	Create map of test processors*/
+		testProcessors = new Hashtable(Collections.synchronizedMap(new Hashtable()));
+
+		/*	Retrieve information abot myself*/
+		MCM iAm = null;
 		try {
-			DatabaseConnection.establishConnection(dbHostName, dbSid, dbConnTimeout);
+			iAm = new MCM(new Identifier(ApplicationProperties.getString("ID", ID)));
 		}
 		catch (Exception e) {
 			Log.errorException(e);
 			System.exit(-1);
 		}
 
-		/*	This initializes stubs 
-		 * 	for working with database*/
-		//DatabaseSetup.initDatabaseContext();
+		/*	Create and start transceiver for every KIS*/
+		activateKISTransceivers(iAm);
 
-//		testProcessors = new Hashtable(Collections.synchronizedMap(new Hashtable()));
-//
-//		/*	Retrieve information abot myself
-//		 * 	Create transceiver for every KIS*/
-//		transceivers = null;
-//		MCM i_am = null;
-//		try {
-//			i_am = new MCM(new Identifier(ApplicationProperties.getString("ID", ID)));
-//		}
-//		catch (Exception e) {
-//			Log.errorException(e);
-//			System.exit(-1);
-//		}
-//		ArrayList kiss = i_am.getKISs();
-//		transceivers = new Hashtable(kiss.size());
-//		Identifier kis_id;
-//		Transceiver transceiver;
-//		for (Iterator it = kiss.iterator(); it.hasNext();) {
-//			kis_id = ((KIS)it.next()).getId();
-//			transceiver = new Transceiver(kis_id.toString());
-//			transceiver.start();
-//			transceivers.put(kis_id, transceiver);
-//			Log.debugMessage("Started transceiver for kis '" + kis_id.toString() + "'", Log.DEBUGLEVEL03);
-//		}
-//
-//		/*	Create and fill lists: testList - sheduled tests ordered by start_time;	*/
-//		testList = Collections.synchronizedList(new ArrayList());
-//		try {
-//			testList.addAll(i_am.retrieveTestsOrderByStartTime(TestStatus.TEST_STATUS_SCHEDULED));
-//		}
-//		catch (Exception e) {
-//			Log.errorException(e);
-//		}
-//		/*!!	resultList - results (return later...)	!!*/
-//		resultList = Collections.synchronizedList(new ArrayList());
-//
-//		/*	Processing tests - process right NOW! */
-//		try {
-//			List tests = i_am.retrieveTestsOrderByStartTime(TestStatus.TEST_STATUS_PROCESSING);
-//			for (Iterator it = tests.iterator(); it.hasNext();)
-//				startTestProcessor((Test)it.next());
-//		}
-//		catch (Exception e) {
-//			Log.errorException(e);
-//		}
-//
-//		/*	Create CORBA server with servant(s)	*/
-//		try {
-//			corbaServer = new CORBAServer();
-//			corbaServer.activateServant(new MCMImplementation(), i_am.getId().toString());
-//		}
-//		catch (Exception e) {
-//			Log.errorException(e);
-//			System.exit(-1);
-//		}
-//
-//		/*	Obtain reference to measurement server	*/
-//		try {
-//			measurementServer = MeasurementServerHelper.narrow(corbaServer.resolveReference(i_am.getServerId().toString()));
-//		}
-//		catch (Exception e) {
-//			Log.errorException(e);
-//			System.exit(-1);
-//		}
-//
-//		/*	Start main loop	*/
-//		MeasurementControlModule measurementControlModule = new MeasurementControlModule();
-//		measurementControlModule.start();
-//
-//		/*	Start ORB	*/
-//		corbaServer.run();
+		/*	Create and fill lists: testList - sheduled tests ordered by start_time;	*/
+		prepareTestList(iAm);
+		prepareResultList(iAm);
+
+		/*	Create CORBA server with servant(s)	*/
+		activateCORBAServer(iAm);
+
+		/*	Start main loop	*/
+		MeasurementControlModule measurementControlModule = new MeasurementControlModule();
+		measurementControlModule.start();
+
+		/*	Start ORB	*/
+		corbaServer.run();
 	}
 
 	public void run() {
@@ -237,4 +185,78 @@ public class MeasurementControlModule extends Thread {
 //		}
 //		DatabaseConnection.closeConnection();
 //	}
+
+	private static void establishDatabaseConnection() {
+		String dbHostName = ApplicationProperties.getString("DBHostName", Application.getInternetAddress());
+		String dbSid = ApplicationProperties.getString("DBSID", DB_SID);
+		long dbConnTimeout = ApplicationProperties.getInt("DBConnectionTimeout", DB_CONNECTION_TIMEOUT)*1000;
+		try {
+			DatabaseConnection.establishConnection(dbHostName, dbSid, dbConnTimeout);
+		}
+		catch (Exception e) {
+			Log.errorException(e);
+			System.exit(-1);
+		}
+	}
+
+	private static void activateKISTransceivers(MCM iAm) {
+		List kiss = iAm.getKISs();
+		transceivers = new Hashtable(kiss.size());
+		Identifier kisId;
+		Transceiver transceiver;
+		for (Iterator it = kiss.iterator(); it.hasNext();) {
+			kisId = ((KIS)it.next()).getId();
+			transceiver = new Transceiver(kisId.toString());
+			transceiver.start();
+			transceivers.put(kisId, transceiver);
+			Log.debugMessage("Started transceiver for kis '" + kisId.toString() + "'", Log.DEBUGLEVEL03);
+		}
+	}
+
+	private static void prepareTestList(MCM iAm) {
+		testList = Collections.synchronizedList(new ArrayList());
+
+//		try {
+//			testList.addAll(i_am.retrieveTestsOrderByStartTime(TestStatus.TEST_STATUS_SCHEDULED));
+//		}
+//		catch (Exception e) {
+//			Log.errorException(e);
+//		}
+//
+//		/*	Processing tests - process right NOW! */
+//		try {
+//			List tests = i_am.retrieveTestsOrderByStartTime(TestStatus.TEST_STATUS_PROCESSING);
+//			for (Iterator it = tests.iterator(); it.hasNext();)
+//				startTestProcessor((Test)it.next());
+//		}
+//		catch (Exception e) {
+//			Log.errorException(e);
+//		}
+	}
+
+	private static void prepareResultList(MCM iAm) {
+		/*!!	resultList - results (return later...)	!!*/
+		resultList = Collections.synchronizedList(new ArrayList());
+	}
+
+	private static void activateCORBAServer(MCM iAm) {
+//		/*	Create local CORBA server end activate servant*/
+//		try {
+//			corbaServer = new CORBAServer();
+//			corbaServer.activateServant(new MCMImplementation(), iAm.getId().toString());
+//		}
+//		catch (Exception e) {
+//			Log.errorException(e);
+//			System.exit(-1);
+//		}
+//
+//		/*	Obtain reference to measurement server	*/
+//		try {
+//			measurementServer = MeasurementServerHelper.narrow(corbaServer.resolveReference(i_am.getServerId().toString()));
+//		}
+//		catch (Exception e) {
+//			Log.errorException(e);
+//			System.exit(-1);
+//		}
+	}
 }

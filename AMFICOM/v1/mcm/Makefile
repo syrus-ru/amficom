@@ -75,14 +75,15 @@ $(LIBNAME): .mach
 .mach:	.corba $(CLASSDIR)
 	$(JAVAC) $(JAVAC_FLAGS) \
 		-classpath $(APPCLASSPATH):$(CLASSDIR) \
-		$(SRCDIR)/com/syrus/AMFICOM/mcm/MeasurementControlModule.java #\
+		$(SRCDIR)/com/syrus/AMFICOM/mcm/MeasurementControlModule.java \
+		$(SRCDIR)/com/syrus/AMFICOM/mcm/DatabaseSetup.java \
 		$(SRCDIR)/com/syrus/AMFICOM/mcm/Transceiver.java \
+		$(SRCDIR)/com/syrus/AMFICOM/mcm/KISReport.java \
+		$(SRCDIR)/com/syrus/AMFICOM/mcm/MCMImplementation.java #\
 		$(SRCDIR)/com/syrus/AMFICOM/mcm/TestProcessor.java \
 		$(SRCDIR)/com/syrus/AMFICOM/mcm/OnetimeTestProcessor.java \
 		$(SRCDIR)/com/syrus/AMFICOM/mcm/PeriodicalTestProcessor.java \
 		$(SRCDIR)/com/syrus/AMFICOM/mcm/ContinuousTestProcessor.java \
-		$(SRCDIR)/com/syrus/AMFICOM/mcm/KISReport.java \
-		$(SRCDIR)/com/syrus/AMFICOM/mcm/MCMImplementation.java \
 		$(SRCDIR)/com/syrus/AMFICOM/mcm/AnalysisManager.java \
 		$(SRCDIR)/com/syrus/AMFICOM/mcm/EvaluationManager.java \
 		$(SRCDIR)/com/syrus/AMFICOM/analysis/dadara/DadaraAnalysisManager.java \
