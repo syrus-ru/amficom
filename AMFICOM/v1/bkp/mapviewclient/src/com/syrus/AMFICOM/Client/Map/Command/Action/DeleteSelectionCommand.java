@@ -1,5 +1,5 @@
 /**
- * $Id: DeleteSelectionCommand.java,v 1.7 2004/11/01 15:40:10 krupenn Exp $
+ * $Id: DeleteSelectionCommand.java,v 1.8 2004/11/11 18:09:29 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -36,7 +36,7 @@ import java.util.LinkedList;
  * 
  * 
  * 
- * @version $Revision: 1.7 $, $Date: 2004/11/01 15:40:10 $
+ * @version $Revision: 1.8 $, $Date: 2004/11/11 18:09:29 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -234,11 +234,12 @@ public class DeleteSelectionCommand extends MapActionCommandBundle
 		
 		// выполнить все команды в списке
 		super.execute();
-		
+
 		MapElement mapElement = VoidMapElement.getInstance(logicalNetLayer.getMapView());
 
-		logicalNetLayer.sendMapEvent(new MapEvent(mapElement, MapEvent.MAP_CHANGED));
+		logicalNetLayer.setCurrentMapElement(mapElement);
 		logicalNetLayer.sendMapEvent(new MapNavigateEvent(mapElement, MapNavigateEvent.MAP_ELEMENT_SELECTED_EVENT));
+		logicalNetLayer.sendMapEvent(new MapEvent(mapElement, MapEvent.MAP_CHANGED));
 	}
 
 

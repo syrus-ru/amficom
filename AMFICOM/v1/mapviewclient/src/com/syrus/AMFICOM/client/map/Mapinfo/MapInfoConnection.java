@@ -6,29 +6,31 @@ public class MapInfoConnection extends MapConnection
 {
 	public boolean connect()
 	{
-		return false;
+		throw new UnsupportedOperationException();
 	}
 
 	public boolean release()
 	{
-		return false;
+		throw new UnsupportedOperationException();
 	}
 
 	public void setPath(String path)
 	{
+		throw new UnsupportedOperationException();
 	}
 	
 	public void setView(String name)
 	{
+		throw new UnsupportedOperationException();
 	}
 
 	public String getPath()
 	{
-		return null;
+		throw new UnsupportedOperationException();
 	}
 	
 	public String getView()
 	{
-		return null;
+		throw new UnsupportedOperationException();
 	}
 }

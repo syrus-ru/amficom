@@ -1,5 +1,5 @@
 /**
- * $Id: OfxLogicalNetLayer.java,v 1.4 2004/11/10 16:00:54 krupenn Exp $
+ * $Id: OfxLogicalNetLayer.java,v 1.5 2004/11/11 18:09:29 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -10,14 +10,18 @@
 
 package com.syrus.AMFICOM.Client.Map.ObjectFX;
 
+import com.ofx.base.SxDistance;
 import com.ofx.component.MapViewer;
 import com.ofx.geometry.SxDoublePoint;
+import com.ofx.geometry.SxGeometry;
 import com.ofx.geometry.SxRectangle;
 import com.ofx.mapViewer.SxMapLayer;
 import com.ofx.mapViewer.SxMapViewer;
 import com.ofx.query.SxQueryResultInterface;
 import com.ofx.repository.SxSpatialObject;
 
+import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
+import com.syrus.AMFICOM.Client.General.Event.MapEvent;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
 import com.syrus.AMFICOM.Client.Map.NetMapViewer;
@@ -43,7 +47,7 @@ import java.util.Vector;
  * 
  * 
  * 
- * @version $Revision: 1.4 $, $Date: 2004/11/10 16:00:54 $
+ * @version $Revision: 1.5 $, $Date: 2004/11/11 18:09:29 $
  * @module Ьфз_м2
  * @author $Author: krupenn $
  * @see
@@ -97,26 +101,31 @@ public class OfxLogicalNetLayer extends LogicalNetLayer
 		Point2D.Double p2 = convertScreenToMap(new Point((int )screenDistance, 0));
 		double d = distance(p1, p2);
 
-		double d2 = screenDistance * spatialViewer.getScale();
-
-		return d2;
+		return d;
+//		double d2 = screenDistance * spatialViewer.getScale();
 	}
-	
+
 	public double convertMapToScreen(double topologicalDistance)
 	{
-		double d = topologicalDistance / spatialViewer.getScale();
-
-		return d;
-
-//		Point p1 = convertMapToScreen(new Point2D.Double(0, 0));
-//		Point p2 = convertMapToScreen(new Point2D.Double(topologicalDistance, 0));
-//		double length = Math.sqrt(
-//			(p2.x - p1.x) * (p2.x - p1.x) +
-//			(p2.y - p1.y) * (p2.y - p1.y) );
-//		
-//		return length;
+		throw new UnsupportedOperationException();
+//		double d = topologicalDistance / spatialViewer.getScale();
+//		return d;
 	}
 
+	public Point2D.Double pointAtDistance(
+			Point2D.Double startPoint, 
+			Point2D.Double endPoint, 
+			double dist)
+	{
+		Point2D.Double point = new Point2D.Double(startPoint.x, startPoint.y);
+		double len = distance(
+				startPoint, 
+				endPoint);
+		point.x += (endPoint.x - startPoint.x) / len * dist;
+		point.y += (endPoint.y - startPoint.y) / len * dist;
+		return point;
+	}
+	
 	/**
 	 * Получить дистанцию между двумя точками в географических координатах
 	 * Алгорита мычисления дастанции остается загадкой, так как не
@@ -125,25 +134,6 @@ public class OfxLogicalNetLayer extends LogicalNetLayer
 	public double distance(Point2D.Double from, Point2D.Double to)
 	{
 		return spatialViewer.distance(from.x, from.y, to.x, to.y);
-/*
-		double a1 = from.x * 3.14 / 180;
-		double a2 = from.y * 3.14 / 180;
-		double b1 = to.x * 3.14 / 180;
-		double b2 = to.y * 3.14 / 180;
-
-		double r = 6400000;
-
-		double d = r * Math.sqrt(
-			( Math.cos(a1) * Math.cos(a2) - Math.cos(b1) * Math.cos(b2)) *
-			( Math.cos(a1) * Math.cos(a2) - Math.cos(b1) * Math.cos(b2)) +
-
-			( Math.sin(a1) * Math.cos(a2) - Math.sin(b1) * Math.cos(b2)) *
-			( Math.sin(a1) * Math.cos(a2) - Math.sin(b1) * Math.cos(b2)) +
-
-			( Math.sin(a2) - Math.sin(b2)) * ( Math.sin(a2) - Math.sin(b2)) );
-
-		return d;
-*/
 	}
 
 	/**
@@ -295,6 +285,20 @@ public class OfxLogicalNetLayer extends LogicalNetLayer
 	public void zoomToBox(Point2D.Double from, Point2D.Double to)
 	{
 		spatialViewer.zoomToRect(from.x, from.y, to.x, to.y);
+		updateZoom();
+	}
+
+	public void updateZoom()
+	{
+		super.updateZoom();
+
+		if(aContext == null)
+			return;
+		Dispatcher disp = aContext.getDispatcher();
+		if(disp == null)
+			return;
+		Double p = new Double(getScale());
+		disp.notify(new MapEvent(p, MapEvent.MAP_VIEW_SCALE_CHANGED));
 	}
 
 	public void handDragged(MouseEvent me)

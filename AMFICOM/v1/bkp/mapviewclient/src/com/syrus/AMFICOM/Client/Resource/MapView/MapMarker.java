@@ -1,5 +1,5 @@
 /**
- * $Id: MapMarker.java,v 1.16 2004/11/10 16:00:55 krupenn Exp $
+ * $Id: MapMarker.java,v 1.17 2004/11/11 18:09:30 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -64,7 +64,7 @@ import javax.swing.ImageIcon;
  * 
  * 
  * 
- * @version $Revision: 1.16 $, $Date: 2004/11/10 16:00:55 $
+ * @version $Revision: 1.17 $, $Date: 2004/11/11 18:09:30 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -810,8 +810,15 @@ public class MapMarker extends MapNodeElement
 				nodeLink = nl;
 				startNode = sn;
 				endNode = nl.getOtherNode(sn);
-				adjustPosition(converter.convertMapToScreen(
-						topologicalDistance - cumulativeDistance));
+
+				double distanceFromStart = topologicalDistance - cumulativeDistance;
+				Point2D.Double newPoint = converter.pointAtDistance(
+						startNode.getAnchor(), 
+						endNode.getAnchor(),
+						distanceFromStart);
+				setAnchor(newPoint);
+
+//				adjustPosition(converter.convertMapToScreen(distanceFromStart));
 				break;
 			}
 			else

@@ -23,6 +23,7 @@ public class MapInfoNetMapViewer extends NetMapViewer
 	 */
 	public void setMap(String dataBasePath, String dataBaseView)
 	{
+		throw new UnsupportedOperationException();
 	}
 	
 	/**
@@ -30,6 +31,7 @@ public class MapInfoNetMapViewer extends NetMapViewer
 	 */
 	public void closeMap()
 	{
+		throw new UnsupportedOperationException();
 	}
 	
 	/**
@@ -37,6 +39,7 @@ public class MapInfoNetMapViewer extends NetMapViewer
 	 */
 	public void setConnection(MapConnection conn)
 	{
+		throw new UnsupportedOperationException();
 	}
 	
 	/**
@@ -44,7 +47,7 @@ public class MapInfoNetMapViewer extends NetMapViewer
 	 */
 	public MapConnection getConnection()
 	{
-		return null;
+		throw new UnsupportedOperationException();
 	}
 	
 	/**
@@ -52,39 +55,37 @@ public class MapInfoNetMapViewer extends NetMapViewer
 	 */
 	public JComponent getVisualComponent()
 	{
-		return null;
+		throw new UnsupportedOperationException();
 	}
 
-	/**
-	 * 
-	 */
 	public LogicalNetLayer getLogicalNetLayer()
 	{
-		return null;
+		throw new UnsupportedOperationException();
 	}
 
 	public JComponent getJComponent()
 	{
-		return null;
+		throw new UnsupportedOperationException();
 	}
 	
 	public Component getComponent()
 	{
-		return null;
+		throw new UnsupportedOperationException();
 	}
 	
 	public List getAvailableViews()
 	{
-		return null;
+		throw new UnsupportedOperationException();
 	}
 	
 	public void setView(String dataBaseView)
 	{
+		throw new UnsupportedOperationException();
 	}
 
 	public List getLayers()
 	{
-		return null;
+		throw new UnsupportedOperationException();
 	}
 	
 }

@@ -24,7 +24,7 @@ public class MapInfoLogicalNetLayer extends LogicalNetLayer
 	 */
 	public Point convertMapToScreen(Point2D.Double point)
 	{
-		return null;
+		throw new UnsupportedOperationException();
 	}
 	
 	/**
@@ -32,17 +32,25 @@ public class MapInfoLogicalNetLayer extends LogicalNetLayer
 	 */
 	public Point2D.Double convertScreenToMap(Point point)
 	{
-		return null;
+		throw new UnsupportedOperationException();
 	}
 
 	public double convertScreenToMap(double screenDistance)
 	{
-		return 0.0D;
+		throw new UnsupportedOperationException();
 	}
 	
 	public double convertMapToScreen(double topologicalDistance)
 	{
-		return 0.0D;
+		throw new UnsupportedOperationException();
+	}
+
+	public Point2D.Double pointAtDistance(
+			Point2D.Double startPoint, 
+			Point2D.Double endPoint, 
+			double dist)
+	{
+		throw new UnsupportedOperationException();
 	}
 
 	/**
@@ -50,7 +58,7 @@ public class MapInfoLogicalNetLayer extends LogicalNetLayer
 	 */
 	public double distance(Point2D.Double from, Point2D.Double to)
 	{
-		return 0D;
+		throw new UnsupportedOperationException();
 	}
 
 	/**
@@ -58,6 +66,7 @@ public class MapInfoLogicalNetLayer extends LogicalNetLayer
 	 */
 	public void setCenter(Point2D.Double center)
 	{
+		throw new UnsupportedOperationException();
 	}
 
 	/**
@@ -65,12 +74,12 @@ public class MapInfoLogicalNetLayer extends LogicalNetLayer
 	 */
 	public Point2D.Double getCenter()
 	{
-		return null;
+		throw new UnsupportedOperationException();
 	}
 
 	public Rectangle2D.Double getVisibleBounds()
 	{
-		return null;
+		throw new UnsupportedOperationException();
 	}
 
 	/**
@@ -78,6 +87,7 @@ public class MapInfoLogicalNetLayer extends LogicalNetLayer
 	 */
 	public void release()
 	{
+		throw new UnsupportedOperationException();
 	}
 
 	/**
@@ -85,6 +95,7 @@ public class MapInfoLogicalNetLayer extends LogicalNetLayer
 	 */
 	public void repaint()
 	{
+		throw new UnsupportedOperationException();
 	}
 	
 	/**
@@ -92,6 +103,7 @@ public class MapInfoLogicalNetLayer extends LogicalNetLayer
 	 */
 	public void setCursor(Cursor cursor)
 	{
+		throw new UnsupportedOperationException();
 	}
 
 	/**
@@ -99,7 +111,7 @@ public class MapInfoLogicalNetLayer extends LogicalNetLayer
 	 */
 	public double getScale()
 	{
-		return 1D;
+		throw new UnsupportedOperationException();
 	}
 
 	/**
@@ -107,6 +119,7 @@ public class MapInfoLogicalNetLayer extends LogicalNetLayer
 	 */
 	public void setScale(double scale)
 	{
+		throw new UnsupportedOperationException();
 	}
 
 	/**
@@ -114,6 +127,7 @@ public class MapInfoLogicalNetLayer extends LogicalNetLayer
 	 */
 	public void scaleTo(double scale—oef)
 	{
+		throw new UnsupportedOperationException();
 	}
 
 	/**
@@ -121,6 +135,7 @@ public class MapInfoLogicalNetLayer extends LogicalNetLayer
 	 */
 	public void zoomIn()
 	{
+		throw new UnsupportedOperationException();
 	}
 
 	/**
@@ -128,6 +143,7 @@ public class MapInfoLogicalNetLayer extends LogicalNetLayer
 	 */
 	public void zoomOut()
 	{
+		throw new UnsupportedOperationException();
 	}
 	
 	/**
@@ -136,19 +152,22 @@ public class MapInfoLogicalNetLayer extends LogicalNetLayer
 	 */
 	public void zoomToBox(Point2D.Double from, Point2D.Double to)
 	{
+		throw new UnsupportedOperationException();
 	}
 
 	public void handDragged(MouseEvent me)
 	{
+		throw new UnsupportedOperationException();
 	}
 
 	public List findSpatialObjects(String searchText)
 	{
-		return new LinkedList();
+		throw new UnsupportedOperationException();
 	}
 
 	public void centerSpatialObject(SpatialObject so)
 	{
+		throw new UnsupportedOperationException();
 	}
 
 }

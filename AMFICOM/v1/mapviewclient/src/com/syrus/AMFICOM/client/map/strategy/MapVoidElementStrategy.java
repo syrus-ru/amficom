@@ -1,5 +1,5 @@
 /**
- * $Id: MapVoidElementStrategy.java,v 1.8 2004/10/19 11:48:28 krupenn Exp $
+ * $Id: MapVoidElementStrategy.java,v 1.9 2004/11/11 18:09:29 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -38,7 +38,7 @@ import javax.swing.SwingUtilities;
  * 
  * 
  * 
- * @version $Revision: 1.8 $, $Date: 2004/10/19 11:48:28 $
+ * @version $Revision: 1.9 $, $Date: 2004/11/11 18:09:29 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -86,34 +86,40 @@ public final class MapVoidElementStrategy implements  MapStrategy
 
 		if(SwingUtilities.isLeftMouseButton(me))
 		{
-			if (actionMode == MapState.NULL_ACTION_MODE &&
-				mouseMode == MapState.MOUSE_DRAGGED)
+			if(mouseMode == MapState.MOUSE_PRESSED)
 			{
-				mapState.setActionMode(MapState.SELECT_MARKER_ACTION_MODE);
+				if (actionMode == MapState.NULL_ACTION_MODE)
+				{
+					logicalNetLayer.deselectAll();
+				}
 			}
 			else
-			if (actionMode == MapState.NULL_ACTION_MODE &&
-				mouseMode == MapState.MOUSE_PRESSED)
+			if (mouseMode == MapState.MOUSE_DRAGGED)
 			{
-				logicalNetLayer.deselectAll();
+				if (actionMode == MapState.NULL_ACTION_MODE &&
+					operationMode == MapState.NO_OPERATION)
+				{
+					mapState.setActionMode(MapState.SELECT_MARKER_ACTION_MODE);
+				}
 			}
 			else
-			if (actionMode == MapState.SELECT_MARKER_ACTION_MODE &&
-				operationMode == MapState.NO_OPERATION &&
-				mouseMode == MapState.MOUSE_RELEASED)
+			if (mouseMode == MapState.MOUSE_RELEASED)
 			{
-				mapState.setActionMode(MapState.NULL_ACTION_MODE);
-
-				int startX = logicalNetLayer.getStartPoint().x;
-				int startY = logicalNetLayer.getStartPoint().y;
-				int endX = me.getPoint().x;
-				int endY = me.getPoint().y;
-				Rectangle selectionRect = new Rectangle(
-						Math.min(startX, endX),
-						Math.min(startY, endY),
-						Math.abs(endX - startX),
-						Math.abs(endY - startY));
-				selectElementsInRect(selectionRect);
+				if (actionMode == MapState.SELECT_MARKER_ACTION_MODE &&
+					operationMode == MapState.NO_OPERATION)
+				{
+//				mapState.setActionMode(MapState.NULL_ACTION_MODE);
+					int startX = logicalNetLayer.getStartPoint().x;
+					int startY = logicalNetLayer.getStartPoint().y;
+					int endX = me.getPoint().x;
+					int endY = me.getPoint().y;
+					Rectangle selectionRect = new Rectangle(
+							Math.min(startX, endX),
+							Math.min(startY, endY),
+							Math.abs(endX - startX),
+							Math.abs(endY - startY));
+					selectElementsInRect(selectionRect);
+				}
 			}
 		}
 	}

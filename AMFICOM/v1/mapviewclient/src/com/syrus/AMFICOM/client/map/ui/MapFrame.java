@@ -1,5 +1,5 @@
 /**
- * $Id: MapFrame.java,v 1.10 2004/11/01 15:40:10 krupenn Exp $
+ * $Id: MapFrame.java,v 1.11 2004/11/11 18:09:30 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -69,7 +69,7 @@ import javax.swing.event.InternalFrameEvent;
  * 
  * 
  * 
- * @version $Revision: 1.10 $, $Date: 2004/11/01 15:40:10 $
+ * @version $Revision: 1.11 $, $Date: 2004/11/11 18:09:30 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -287,6 +287,7 @@ public class MapFrame extends JInternalFrame
 				this.aContext.getDispatcher().unregister(this, MapEvent.MAP_NAVIGATE);
 				this.aContext.getDispatcher().unregister(this, MapEvent.PLACE_ELEMENT);
 				this.aContext.getDispatcher().unregister(this, MapEvent.MAP_VIEW_CENTER_CHANGED);
+				this.aContext.getDispatcher().unregister(this, MapEvent.MAP_VIEW_SCALE_CHANGED);
 				this.aContext.getDispatcher().unregister(this, MapEvent.MAP_CHANGED);
 				this.aContext.getDispatcher().unregister(this, MapEvent.MAP_VIEW_CHANGED);
 				this.aContext.getDispatcher().unregister(this, SchemeNavigateEvent.type);
@@ -306,6 +307,7 @@ public class MapFrame extends JInternalFrame
 			aContext.getDispatcher().register(this, MapEvent.MAP_NAVIGATE);
 			aContext.getDispatcher().register(this, MapEvent.PLACE_ELEMENT);
 			aContext.getDispatcher().register(this, MapEvent.MAP_VIEW_CENTER_CHANGED);
+			aContext.getDispatcher().register(this, MapEvent.MAP_VIEW_SCALE_CHANGED);
 			aContext.getDispatcher().register(this, MapEvent.MAP_CHANGED);
 			aContext.getDispatcher().register(this, MapEvent.MAP_VIEW_CHANGED);
 			aContext.getDispatcher().register(this, SchemeNavigateEvent.type);
@@ -375,6 +377,12 @@ public class MapFrame extends JInternalFrame
 		{
 			Point2D.Double p = (Point2D.Double )ae.getSource();
 			mapToolBar.showLatLong(p.x, p.y);
+		}
+		else
+		if(ae.getActionCommand().equals(MapEvent.MAP_VIEW_SCALE_CHANGED))
+		{
+			Double p = (Double )ae.getSource();
+			mapToolBar.showScale(p.doubleValue());
 		}
 		else
 		if(ae.getActionCommand().equals(MapEvent.MAP_VIEW_SELECTED))

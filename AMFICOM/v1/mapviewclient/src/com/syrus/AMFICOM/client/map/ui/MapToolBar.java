@@ -1,5 +1,5 @@
 /**
- * $Id: MapToolBar.java,v 1.6 2004/11/10 16:00:55 krupenn Exp $
+ * $Id: MapToolBar.java,v 1.7 2004/11/11 18:09:30 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -21,6 +21,7 @@ import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import java.awt.geom.Point2D;
 import javax.swing.AbstractButton;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
@@ -31,13 +32,15 @@ import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
 
 import oracle.jdeveloper.layout.XYLayout;
+import java.awt.event.KeyListener;
+import java.awt.event.KeyEvent;
 
 /**
  * Панель инструментов окна карты
  * 
  * 
  * 
- * @version $Revision: 1.6 $, $Date: 2004/11/10 16:00:55 $
+ * @version $Revision: 1.7 $, $Date: 2004/11/11 18:09:30 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -66,10 +69,13 @@ public final class MapToolBar extends JToolBar
 	private JToggleButton showTransPathToggleButton = new JToggleButton();
 
 	private LogicalNetLayer logicalNetLayer;
+
 	private JLabel latitudeLabel = new JLabel();
 	private JTextField latitudeTextField = new JTextField();
 	private JLabel longitudeLabel = new JLabel();
 	private JTextField longitudeField = new JTextField();
+	private JLabel scaleLabel = new JLabel();
+	private JTextField scaleField = new JTextField();
 
 	private JButton optionsButton = new JButton();
 
@@ -119,6 +125,17 @@ public final class MapToolBar extends JToolBar
 		}
 	}
 
+	public void showScale (double scale)
+	{
+		try
+		{
+			scaleField.setText(MapPropertiesManager.getScaleFormat().format(scale));
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+	}
 	
 	private void jbInit()
 	{
@@ -261,6 +278,58 @@ public final class MapToolBar extends JToolBar
 		longitudeField.setMaximumSize(fieldSize);
 		longitudeField.setMinimumSize(fieldSize);
 
+		scaleLabel.setText(LangModelMap.getString("Scale"));
+		scaleField.setText("0.0");
+		scaleField.setPreferredSize(fieldSize);
+		scaleField.setMaximumSize(fieldSize);
+		scaleField.setMinimumSize(fieldSize);
+
+		scaleField.addKeyListener(new KeyListener()
+			{
+				public void keyPressed(KeyEvent e) 
+				{
+					if(e.getKeyCode() == KeyEvent.VK_ENTER)
+					{
+						try
+						{
+							double scale = Double.parseDouble(scaleField.getText());
+							if(scale > 0)
+								getLogicalNetLayer().setScale(scale);
+						}
+						catch(Exception ex)
+						{
+						}
+					}
+				}
+				public void keyReleased(KeyEvent e) {}
+				public void keyTyped(KeyEvent e) {}
+			});
+
+		KeyListener longlatKeyListener = new KeyListener()
+			{
+				public void keyPressed(KeyEvent e)
+				{
+					if(e.getKeyCode() == KeyEvent.VK_ENTER)
+					{
+						try
+						{
+							double lon = Double.parseDouble(longitudeField.getText());
+							double lat = Double.parseDouble(latitudeTextField.getText());
+							getLogicalNetLayer().setCenter(
+								new Point2D.Double(lat, lon));
+						}
+						catch(Exception ex)
+						{
+							System.out.println(ex.getMessage());
+						}
+					}
+				}
+				public void keyReleased(KeyEvent e) {}
+				public void keyTyped(KeyEvent e) {}
+			};
+		latitudeTextField.addKeyListener(longlatKeyListener);
+		longitudeField.addKeyListener(longlatKeyListener);
+
 		sp = new NodeSizePanel(logicalNetLayer);
 		penp = new MapPenBarPanel(logicalNetLayer);
 
@@ -288,11 +357,14 @@ public final class MapToolBar extends JToolBar
 		this.add(longitudeLabel);
 		this.add(longitudeField);
 		this.addSeparator();
+		this.add(scaleLabel);
+		this.add(scaleField);
+		this.addSeparator();
 		this.add(sp);
 		this.addSeparator();
 		this.add(optionsButton);
-		this.addSeparator();
-		this.add(penp);
+//		this.addSeparator();
+//		this.add(penp);
 	}
 
 //Включить выключить панель
