@@ -1,5 +1,5 @@
 /**
- * $Id: NodeTypeController.java,v 1.11 2005/03/04 14:37:38 krupenn Exp $
+ * $Id: NodeTypeController.java,v 1.12 2005/03/10 17:44:18 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,7 +11,9 @@
 
 package com.syrus.AMFICOM.Client.Map.Controllers;
 
+import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
 import java.awt.Graphics;
+import java.awt.Image;
 import java.awt.Point;
 import java.awt.geom.Rectangle2D;
 import java.util.Collection;
@@ -44,7 +46,7 @@ import com.syrus.AMFICOM.resource.corba.ImageResource_TransferablePackage.ImageR
 /**
  * контроллер типа сетевого узла.
  * @author $Author: krupenn $
- * @version $Revision: 1.11 $, $Date: 2005/03/04 14:37:38 $
+ * @version $Revision: 1.12 $, $Date: 2005/03/10 17:44:18 $
  * @module mapviewclient_v1
  */
 public class NodeTypeController extends AbstractNodeController
@@ -144,6 +146,11 @@ public class NodeTypeController extends AbstractNodeController
 	public static String getImageFileName(String codename)
 	{
 		return (String )imageFileNames.get(codename);
+	}
+
+	public static Image getImage(SiteNodeType type)
+	{
+		return MapPropertiesManager.getImage(type.getImageId());
 	}
 
 	/**
