@@ -47,12 +47,12 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 
 // модель приложения
-public class ApplicationModel extends Object
+public class ApplicationModel
 {
 	// запись об элементе модели включает имя элемента, связанную с ним команду и
 	// флаги видимости и доступности команды пользователю.
 	// конструктора без параметров нет, так как элемент определяется идентификатором
-	class ApplicationEntry extends Object
+	class ApplicationEntry
 	{
 		boolean selected = false;	// выделен ли пункт (для пункта меню - отмечен
 									// галочкой, для западающей кнопки - западание
@@ -136,15 +136,16 @@ public class ApplicationModel extends Object
 	// список объектов, принимающих уведомление об изменениях в модели
 	public ApplicationModel()
 	{
+		// nothing
 	}
 
 	// при дублировании модели дублируются все элементы и объекты, принимающие
 	// информацию об изменениях в модели
 	public ApplicationModel(ApplicationModel aModel)
 	{
-		int i;
+		
 			// копируются Слушатели изменения модели
-		for (i = aModel.listenerList.getListenerCount() - 1; i >= 0; i--)
+		for (int i = aModel.listenerList.getListenerCount() - 1; i >= 0; i--)
 		{
 			listenerList.add(
 					aModel.listenerList.getListenerClass(i),
@@ -153,10 +154,9 @@ public class ApplicationModel extends Object
 			// инициализируется список элементов
 		appHash = new Hashtable();
 //		appHash = new com.syrus.AMFICOM.Client.Test.Hashtable();
-		Enumeration e;
 			// копируются элементы модели, с тем, чтобы в каждой модели элементы
 			// изменялись независимо
-		for(e = aModel.appHash.keys(); e.hasMoreElements();)
+		for(Enumeration e = aModel.appHash.keys(); e.hasMoreElements();)
 		{
 			String key = (String )e.nextElement();
 			ApplicationEntry entry = (ApplicationEntry )aModel.appHash.get(key);
