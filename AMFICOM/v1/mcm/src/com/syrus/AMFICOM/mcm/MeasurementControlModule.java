@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementControlModule.java,v 1.62 2005/03/14 15:44:34 arseniy Exp $
+ * $Id: MeasurementControlModule.java,v 1.63 2005/03/15 16:22:47 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -19,13 +19,8 @@ import java.util.List;
 import java.util.Map;
 
 import com.syrus.AMFICOM.administration.AdministrationStorableObjectPool;
-import com.syrus.AMFICOM.administration.Domain;
 import com.syrus.AMFICOM.administration.MCM;
 import com.syrus.AMFICOM.administration.Server;
-import com.syrus.AMFICOM.administration.User;
-import com.syrus.AMFICOM.administration.corba.Domain_Transferable;
-import com.syrus.AMFICOM.administration.corba.MCM_Transferable;
-import com.syrus.AMFICOM.administration.corba.Server_Transferable;
 import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 import com.syrus.AMFICOM.configuration.KIS;
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -59,7 +54,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.62 $, $Date: 2005/03/14 15:44:34 $
+ * @version $Revision: 1.63 $, $Date: 2005/03/15 16:22:47 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -72,7 +67,6 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 	public static final String KEY_DB_SID = "DBSID";
 	public static final String KEY_DB_CONNECTION_TIMEOUT = "DBConnectionTimeout";
 	public static final String KEY_DB_LOGIN_NAME = "DBLoginName";
-	public static final String KEY_SETUP_SERVER_ID = "SetupServerID";
 	public static final String KEY_MAX_FALLS = "MaxFalls";
 	public static final String KEY_TICK_TIME = "TickTime";
 	public static final String KEY_FORWARD_PROCESSING = "ForwardProcessing";
@@ -144,11 +138,7 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 	public static void main(String[] args) {
 		Application.init(APPLICATION_NAME);
 
-		/*	If flag -setup is specified run in setup mode (exit after all)*/
-		if (args.length > 0 && args[0].equals("-setup"))
-			setup();
-		else
-			normalStartup();
+		normalStartup();
 	}
 
 	private static void normalStartup() {
@@ -359,10 +349,10 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 		Test test;
 		Result_Transferable[] resultsT;
 		while (this.running) {
-			if (! testList.isEmpty()) {
-				if (((Test)testList.get(0)).getStartTime().getTime() <= System.currentTimeMillis() + this.forwardProcessing) {
-						test = (Test)testList.remove(0);
-						Log.debugMessage("Starting test processor for test '" + test.getId() + "'", Log.DEBUGLEVEL07);
+			if (!testList.isEmpty()) {
+				if (((Test) testList.get(0)).getStartTime().getTime() <= System.currentTimeMillis() + this.forwardProcessing) {
+					test = (Test) testList.remove(0);
+					Log.debugMessage("Starting test processor for test '" + test.getId() + "'", Log.DEBUGLEVEL07);
 					startTestProcessor(test);
 				}
 			}
@@ -372,7 +362,7 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 					resultsT = createTransferables();
 					if (resultsT.length > 0) {
 						try {
-							mServerRef.receiveResults(resultsT, (Identifier_Transferable)iAm.getId().getTransferable());
+							mServerRef.receiveResults(resultsT, (Identifier_Transferable) iAm.getId().getTransferable());
 							resultList.clear();
 							super.clearFalls();
 						}
@@ -388,16 +378,17 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 						}
 					}
 				}
-			}	//if (mServerRef != null)
+			} // if (mServerRef != null)
 			else
 				resetMServerConnection();
 
-			try {				
+			try {
 				sleep(super.initialTimeToSleep);
 			}
 			catch (InterruptedException ie) {
 				Log.errorException(ie);
 			}
+
 		}//while
 	}
 
@@ -511,154 +502,6 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 			((Transceiver)transceivers.get(it.next())).shutdown();
 		deactivateCORBAServer();
 		DatabaseConnection.closeConnection();
-	}
-
-
-	private static void setup() {
-		String setupServerId = ApplicationProperties.getString(KEY_SETUP_SERVER_ID, null);
-		if (setupServerId == null) {
-			Log.errorMessage("Cannot find key '" + KEY_SETUP_SERVER_ID + "' in file " + ApplicationProperties.getFileName());
-			System.exit(-1);
-		}
-
-		activateCORBASetupServer();
-		activateSetupServerReference(setupServerId);
-
-		/*	Establish connection with database	*/
-		establishDatabaseConnection();
-
-		/*	Initialize object drivers
-		 * 	for work with database*/
-		DatabaseContextSetup.initDatabaseContext();
-
-		/*	Load object types*/
-		DatabaseContextSetup.initObjectPools();
-
-		Identifier id;
-		User user;
-		Domain domain;
-		Server server;
-		MCM mcm;
-
-		id = new Identifier(ApplicationProperties.getString(KEY_ID, ID));
-		MCM_Transferable mcmT = null;
-		try {
-			Log.debugMessage("Fetching MCM '" + id + "' from server", Log.DEBUGLEVEL05);
-			mcmT = mServerRef.transmitMCM((Identifier_Transferable)id.getTransferable());
-		}
-		catch (Exception e) {
-			Log.errorException(e);
-			DatabaseConnection.closeConnection();
-			System.exit(-1);
-		}
-
-
-		id = new Identifier(mcmT.domain_id);
-		Domain_Transferable domainT = null;
-		try {
-			Log.debugMessage("Fetching domain '" + id + "' (mcm domain) from server", Log.DEBUGLEVEL05);
-			domainT = mServerRef.transmitDomain((Identifier_Transferable)id.getTransferable());
-		}
-		catch (Exception e) {
-			Log.errorException(e);
-			DatabaseConnection.closeConnection();
-			System.exit(-1);
-		}
-
-		try {
-			id = new Identifier(domainT.header.creator_id);
-			Log.debugMessage("Getting user '" + id + "' (domain creator)", Log.DEBUGLEVEL05);
-			user = (User)AdministrationStorableObjectPool.getStorableObject(id, true);
-	
-			id = new Identifier(domainT.header.modifier_id);
-			Log.debugMessage("Getting user '" + id + "' (domain modifier)", Log.DEBUGLEVEL05);
-			user = (User)AdministrationStorableObjectPool.getStorableObject(id, true);
-	
-			id = new Identifier(domainT.header.id);
-			Log.debugMessage("Getting domain '" + id + "' ", Log.DEBUGLEVEL05);
-			domain = (Domain)AdministrationStorableObjectPool.getStorableObject(id, true);
-		}
-		catch (ApplicationException ae) {
-			Log.errorException(ae);
-			System.exit(-1);
-		}
-
-
-		id = new Identifier(mcmT.server_id);
-		Server_Transferable serverT = null;
-		try {
-			Log.debugMessage("Fetching server '" + id + "' (mcm server) from server", Log.DEBUGLEVEL05);
-			serverT = mServerRef.transmitServer((Identifier_Transferable)id.getTransferable());
-		}
-		catch (Exception e) {
-			Log.errorException(e);
-			DatabaseConnection.closeConnection();
-			System.exit(-1);
-		}
-
-		try {
-			id = new Identifier(serverT.header.creator_id);
-			Log.debugMessage("Getting user '" + id + "' (server creator)", Log.DEBUGLEVEL05);
-			user = (User)AdministrationStorableObjectPool.getStorableObject(id, true);
-	
-			id = new Identifier(serverT.header.modifier_id);
-			Log.debugMessage("Getting user '" + id + "' (server modifier)", Log.DEBUGLEVEL05);
-			user = (User)AdministrationStorableObjectPool.getStorableObject(id, true);
-	
-			id = new Identifier(serverT.user_id);
-			Log.debugMessage("Getting user '" + id + "' (server user)", Log.DEBUGLEVEL05);
-			user = (User)AdministrationStorableObjectPool.getStorableObject(id, true);
-	
-			id = new Identifier(serverT.header.id);
-			Log.debugMessage("Getting server '" + id + "' ", Log.DEBUGLEVEL05);
-			server = (Server)AdministrationStorableObjectPool.getStorableObject(id, true);
-	
-	
-			id = new Identifier(mcmT.header.creator_id);
-			Log.debugMessage("Getting user '" + id + "' (mcm creator)", Log.DEBUGLEVEL05);
-			user = (User)AdministrationStorableObjectPool.getStorableObject(id, true);
-	
-			id = new Identifier(mcmT.header.modifier_id);
-			Log.debugMessage("Getting user '" + id + "' (mcm modifier)", Log.DEBUGLEVEL05);
-			user = (User)AdministrationStorableObjectPool.getStorableObject(id, true);
-	
-			id = new Identifier(mcmT.user_id);
-			Log.debugMessage("Getting user '" + id + "' (mcm user)", Log.DEBUGLEVEL05);
-			user = (User)AdministrationStorableObjectPool.getStorableObject(id, true);
-	
-			id = new Identifier(mcmT.header.id);
-			Log.debugMessage("Getting MCM '" + id + "' ", Log.DEBUGLEVEL05);
-			mcm = (MCM)AdministrationStorableObjectPool.getStorableObject(id, true);
-		}
-		catch (ApplicationException ae) {
-			Log.errorException(ae);
-			System.exit(-1);
-		}
-
-		/*	Close database connection*/
-		DatabaseConnection.closeConnection();
-	}
-
-	private static void activateCORBASetupServer() {
-		/*	Create local CORBA server*/
-		try {
-			corbaServer = new CORBAServer();
-		}
-		catch (Exception e) {
-			Log.errorException(e);
-			System.exit(-1);
-		}
-	}
-
-	private static void activateSetupServerReference(String setupServerId) {
-		/*	Obtain reference to setup server	*/
-		try {
-			mServerRef = MServerHelper.narrow(corbaServer.resolveReference(setupServerId));
-		}
-		catch (CommunicationException ce) {
-			Log.errorException(ce);
-			System.exit(-1);
-		}
 	}
 
 }
