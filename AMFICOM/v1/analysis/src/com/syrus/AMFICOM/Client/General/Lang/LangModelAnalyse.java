@@ -41,9 +41,9 @@ public class LangModelAnalyse
 				try
 				{
 					throw new Exception("key '"
-												+ keyName + "Text"
-												+ "' "
-												+ "not found");
+						+ keyName + "Text"
+						+ "' "
+						+ "not found");
 				}
 				catch (Exception exc)
 				{
@@ -55,6 +55,20 @@ public class LangModelAnalyse
 				exc.printStackTrace();
 			}
 		}
+		// workaround:
+		// Редактор свойств для Eclipse от Долженко не
+		// умеет сохранять пустые строки, но без них
+		// наследие анализа не работает.
+		// Пришлось заменить их все
+		// ключевым словом __EMPTY__, и вот здесь
+		// они переводятся обратно в пустые.
+		// TODO: Исправить код GUI анализа так, чтобы
+		// он не пользовался пустыми строками,
+		// ЛИБО исправить редактор свойств,
+		// чтобы умел сохранять ключи с пустыми строками.
+		// //saa, 2004-12
+		if (string.equals("__EMPTY__"))
+		    string = "";
 		return string;
 	}
 }
