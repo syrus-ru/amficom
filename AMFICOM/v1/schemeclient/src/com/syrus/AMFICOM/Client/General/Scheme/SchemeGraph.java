@@ -522,6 +522,12 @@ public class SchemeGraph extends GPGraph
 		((ShemeMarqueeHandler)getMarqueeHandler()).setGraphEditable(b);
 	}
 
+	public void setSendEvents(boolean b)
+	{
+		make_notifications = false;
+		((ShemeMarqueeHandler)getMarqueeHandler()).setSendEvents(b);
+	}
+
 	/**
 	 * MarqueeHandler that can insert cells.
 	 */
@@ -549,6 +555,7 @@ public class SchemeGraph extends GPGraph
 
 		transient ProtoElement setting_proto = null;
 		private transient boolean isEditable = true;
+		private transient boolean sendEvents = true;
 
 		// Update Undo/Redo Button State based on Undo Manager
 		protected void updateHistoryButtons(GraphUndoManager undoManager)
@@ -560,6 +567,11 @@ public class SchemeGraph extends GPGraph
 		void setGraphEditable(boolean b)
 		{
 			isEditable = b;
+		}
+
+		void setSendEvents(boolean b)
+		{
+			sendEvents = b;
 		}
 
 		void enableButtons(Object[] cells)
@@ -688,6 +700,9 @@ public class SchemeGraph extends GPGraph
 				selectionNotify();
 				return;
 			}*/
+			if (!sendEvents)
+				return;
+
 			if (!SwingUtilities.isRightMouseButton(event))
 			{
 				if (event != null && !event.isConsumed() && bounds != null && !s.isSelected())// && !r.isSelected() && !e.isSelected())

@@ -290,10 +290,12 @@ public class ProtoElement extends ObjectResource implements Serializable
 		}
 
 		EquipmentType eqt = (EquipmentType)Pool.get(EquipmentType.typ, equipment_type_id);
-		EquipmentType new_eqt = (EquipmentType)eqt.clone();
-		new_eqt.characteristics = ResourceUtil.copyCharacteristics(dataSource, eqt.characteristics);
-		new_eqt.id = dataSource.GetUId(EquipmentType.typ);
-		Pool.put(EquipmentType.typ, new_eqt.getId(), new_eqt);
+
+		EquipmentType new_eqt = eqt;
+//    EquipmentType new_eqt = (EquipmentType)eqt.clone();
+// 		new_eqt.characteristics = ResourceUtil.copyCharacteristics(dataSource, eqt.characteristics);
+//		new_eqt.id = dataSource.GetUId(EquipmentType.typ);
+//		Pool.put(EquipmentType.typ, new_eqt.getId(), new_eqt);
 
 		ProtoElement proto = new ProtoElement(dataSource.GetUId(ProtoElement.typ));
 		proto.modified = modified;

@@ -165,9 +165,6 @@ public class ElementsTreeModel extends ObjectResourceTreeModel
 				{
 					DataSet dSet = new DataSet(Pool.getHash(EquipmentType.typ));
 
-					for (Enumeration en = dSet.elements(); en.hasMoreElements();)
-						System.out.println(((EquipmentType)en.nextElement()).getId());
-
 					ObjectResourceFilter filter = new ObjectResourceDomainFilter(dsi.getSession().getDomainId());
 					dSet = filter.filter(dSet);
 					ObjectResourceSorter sorter = EquipmentType.getDefaultSorter();

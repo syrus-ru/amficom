@@ -77,6 +77,8 @@ public class SchemeOpenCommand extends VoidCommand
 
 			aContext.getDispatcher().notify(new SchemeElementsEvent(this, scheme,
 					SchemeElementsEvent.OPEN_PRIMARY_SCHEME_EVENT));
+
+			Pool.put(Scheme.typ, "currentscheme", scheme);
 		}
 	}
 
