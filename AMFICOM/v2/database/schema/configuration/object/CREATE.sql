@@ -1,2 +1,2 @@
-@@kis
+@@equipment
 @@monitoredelement

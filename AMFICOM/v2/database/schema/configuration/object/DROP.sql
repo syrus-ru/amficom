@@ -1,6 +1,6 @@
 DROP TABLE monitoredelement;
-DROP TABLE kis;
+DROP TABLE equipment;
 
 DROP SEQUENCE monitoredelement_seq;
-DROP SEQUENCE kis_seq;
+DROP SEQUENCE equipment_seq;
 

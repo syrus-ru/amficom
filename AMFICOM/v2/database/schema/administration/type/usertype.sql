@@ -1,4 +1,4 @@
-CREATE TABLE Users(
+CREATE TABLE UserType(
  id NUMBER(20, 0),
  created DATE NOT NULL,
  modified DATE NOT NULL,
@@ -16,4 +16,4 @@ CREATE TABLE Users(
   REFERENCES Users (id) ON DELETE CASCADE ENABLE
 );
 
-CREATE SEQUENCE users_seq ORDER;
+CREATE SEQUENCE usertype_seq ORDER;
