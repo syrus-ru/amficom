@@ -1,13 +1,9 @@
 package com.syrus.AMFICOM.Client.General.Report;
 
 import java.awt.Dimension;
-
-
-
 import javax.swing.JScrollPane;
 
-
-import oracle.jdeveloper.layout.XYLayout;
+//import oracle.jdeveloper.layout.XYLayout;
 
 import com.syrus.AMFICOM.Client.General.UI.ATable;
 
@@ -29,7 +25,6 @@ public class ReportResultsTablePanel extends JScrollPane
 	private RenderingObject ro = null;
 
 	private ATable statTable = null;
-	private XYLayout xYLayout1 = new XYLayout();
 
 	public ReportResultsTablePanel(
 			DividableTableColumnModel columnModel,
