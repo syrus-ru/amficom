@@ -1,5 +1,5 @@
 /*
- * $Id: ARServerImpl.java,v 1.6 2005/02/08 11:51:44 bob Exp $
+ * $Id: ARServerImpl.java,v 1.7 2005/02/22 11:13:55 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,11 +8,10 @@
 package com.syrus.AMFICOM.arserver;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
-import java.util.List;
 
 import com.syrus.AMFICOM.arserver.corba.ARServerPOA;
-import com.syrus.AMFICOM.configuration.corba.AccessIdentifier_Transferable;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.CompoundCondition;
@@ -33,6 +32,7 @@ import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
+import com.syrus.AMFICOM.general.corba.AccessIdentifier_Transferable;
 import com.syrus.AMFICOM.general.corba.CompletionStatus;
 import com.syrus.AMFICOM.general.corba.ErrorCode;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
@@ -50,8 +50,8 @@ import com.syrus.AMFICOM.resource.corba.ImageResource_TransferablePackage.ImageR
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/02/08 11:51:44 $
- * @author $Author: bob $
+ * @version $Revision: 1.7 $, $Date: 2005/02/22 11:13:55 $
+ * @author $Author: max $
  * @module arserver_v1
  */
 public class ARServerImpl extends ARServerPOA {
@@ -108,7 +108,7 @@ public class ARServerImpl extends ARServerPOA {
 			AccessIdentifier_Transferable accessIdentifier)
 			throws AMFICOMRemoteException {
 		Log.debugMessage("ARServerImplementation.deleteList | Trying to delete... ", Log.DEBUGLEVEL03);
-		List idList = new ArrayList(id_Transferables.length);
+		Collection idList = new ArrayList(id_Transferables.length);
 		for (int i = 0; i < id_Transferables.length; i++) {
             idList.add(new Identifier(id_Transferables[i]));			
 		}
@@ -157,7 +157,7 @@ public class ARServerImpl extends ARServerPOA {
 			}         	
 			ResourceStorableObjectPool.putStorableObject(abstractImageResource);
 			ImageResourceDatabase database = (ImageResourceDatabase) ResourceDatabaseContext.getImageResourceDatabase();
-			database.update(abstractImageResource, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
+			database.update(abstractImageResource, new Identifier(accessIdentifier.user_id), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 		} catch (UpdateObjectException e) {
 			Log.errorException(e);
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_SAVE, CompletionStatus.COMPLETED_NO, e
@@ -191,7 +191,7 @@ public class ARServerImpl extends ARServerPOA {
         */
         Log.debugMessage("ARServerImplementation.receiveImageResources | Received "
             + imageResource_Transferables.length + " ImageResources", Log.DEBUGLEVEL07);
-        List imageResourceList = new ArrayList(imageResource_Transferables.length);
+        Collection imageResourceList = new ArrayList(imageResource_Transferables.length);
         try {
 			for (int i = 0; i < imageResource_Transferables.length; i++) {
 				imageResource_Transferables[i].header.modifier_id = accessIdentifier.user_id;
@@ -223,8 +223,9 @@ public class ARServerImpl extends ARServerPOA {
 			ImageResourceDatabase database = (ImageResourceDatabase) ResourceDatabaseContext
 					.getImageResourceDatabase();
 			database.update(imageResourceList,
+					new Identifier(accessIdentifier.user_id),
 					force ? StorableObjectDatabase.UPDATE_FORCE
-							: StorableObjectDatabase.UPDATE_CHECK, null);
+							: StorableObjectDatabase.UPDATE_CHECK);
 		} catch (UpdateObjectException e) {
 			Log.errorException(e);
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_SAVE,
@@ -290,9 +291,9 @@ public class ARServerImpl extends ARServerPOA {
                     + (ids_Transferable.length == 0 ? "all" : Integer
                             .toString(ids_Transferable.length))
                     + " item(s) in domain: " + domainId.toString(), Log.DEBUGLEVEL07);
-            List list;
+            Collection list;
             if (ids_Transferable.length > 0) {
-                List idsList = new ArrayList(ids_Transferable.length);
+                Collection idsList = new ArrayList(ids_Transferable.length);
                 for (int i = 0; i < ids_Transferable.length; i++)
                     idsList.add(new Identifier(ids_Transferable[i]));
                 list = ResourceStorableObjectPool.getStorableObjects(idsList, true);
@@ -338,9 +339,9 @@ public class ARServerImpl extends ARServerPOA {
                     + (identifier_Transferables.length == 0 ? "all" : Integer
                             .toString(identifier_Transferables.length))
                     + " item(s) in domain: " + domainId.toString(), Log.DEBUGLEVEL07);
-            List list;
+            Collection list;
             if (identifier_Transferables.length > 0) {
-                List idsList = new ArrayList(identifier_Transferables.length);
+                Collection idsList = new ArrayList(identifier_Transferables.length);
                 for (int i = 0; i < identifier_Transferables.length; i++)
                     idsList.add(new Identifier(identifier_Transferables[i]));
 
@@ -389,10 +390,10 @@ public class ARServerImpl extends ARServerPOA {
 						: Integer.toString(identifier_Transferables.length))
 				+ " item(s) ", Log.DEBUGLEVEL07);
 		try {
-			List list;
+			Collection list;
 			StorableObjectCondition condition = this.restoreCondition(storableObjectCondition_Transferable);
 			if (identifier_Transferables.length > 0) {
-				List idsList = new ArrayList(identifier_Transferables.length);
+				Collection idsList = new ArrayList(identifier_Transferables.length);
 				for (int i = 0; i < identifier_Transferables.length; i++)
 					idsList.add(new Identifier(identifier_Transferables[i]));
 
