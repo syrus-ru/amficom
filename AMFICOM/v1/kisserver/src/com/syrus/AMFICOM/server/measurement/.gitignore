@@ -1,0 +1,17 @@
+AgentSettings.java
+Analysis.java
+AnalysisType.java
+CriteriaSet.java
+Etalon.java
+EtalonType.java
+Evaluation.java
+EvaluationType.java
+Modeling.java
+ModelingType.java
+Result.java
+TestArgumentSet.java
+Test.java
+TestSetup.java
+TestType.java
+ThresholdSet.java
+*.generated.java

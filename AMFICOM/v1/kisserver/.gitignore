@@ -1,0 +1,17 @@
+agsets
+mach
+impl
+corba
+misc
+*.jar
+*.jpr*
+*.jpx*
+*.trc
+*.tar
+*.gz
+*.swp
+sav
+classes
+sql
+1
+bkp

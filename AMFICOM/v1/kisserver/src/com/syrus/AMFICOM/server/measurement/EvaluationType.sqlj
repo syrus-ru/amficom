@@ -1,0 +1,137 @@
+package com.syrus.AMFICOM.server.measurement;
+
+import java.util.LinkedList;
+import java.util.Vector;
+import java.sql.SQLException;
+import java.sql.Timestamp;
+import com.syrus.AMFICOM.CORBA.Survey.ActionParameterType_Transferable;
+import com.syrus.AMFICOM.CORBA.Survey.EvaluationType_Transferable;
+
+public class EvaluationType {
+	private String id;
+  private String name;
+  private String description;
+	private Timestamp modified;
+	private EtalonType etalonType;
+  private ParameterType[] type_parameters;
+  private ParameterType[] type_arguments;
+  private ParameterType[] type_thresholds;
+
+	public EvaluationType(String id) throws SQLException {
+		this.id = id;
+		String ettyp;
+		#sql {SELECT name,
+                 description,
+								 modified,
+								 etalon_type_id
+            INTO :(this.name),
+                 :(this.description),
+								 :(this.modified),
+								 :ettyp
+            FROM amficom.evaluationtypes
+            WHERE id = :(this.id) };
+		this.name = (this.name == null)?"":this.name;
+		this.description = (this.description == null)?"":this.description;
+
+		this.etalonType = new EtalonType(ettyp);
+
+		this.type_parameters = ParameterType.retrieveParameterTypes(this.id, "evaluation", "parameter");
+		this.type_arguments = ParameterType.retrieveParameterTypes(this.id, "evaluation", "argument");
+    this.type_thresholds = ParameterType.retrieveParameterTypes(this.id, "evaluation", "threshold");
+	}
+
+	public EvaluationType(EvaluationType_Transferable evaluation_type_t) throws SQLException {
+		this.id = evaluation_type_t.id;
+		this.name = evaluation_type_t.name;
+		this.description = evaluation_type_t.description;
+		this.modified = new Timestamp(System.currentTimeMillis());
+		this.etalonType = new EtalonType(evaluation_type_t.etalon_type_id);
+
+		#sql {INSERT INTO amficom.evaluationtypes (id,
+																							 name,
+																							 description,
+																							 modified,
+																							 etalon_type_id)
+						VALUES (:(this.id),
+										:(this.name),
+										:(this.description),
+										:(this.modified),
+										:(evaluation_type_t.etalon_type_id)) };
+		#sql { COMMIT };
+
+		this.type_parameters = new ParameterType[evaluation_type_t.parameters.length];
+		for (int i = 0; i < this.type_parameters.length; i++)
+			this.type_parameters[i] = new ParameterType(evaluation_type_t.parameters[i], "evaluation", "parameter");
+		this.type_arguments = new ParameterType[evaluation_type_t.arguments.length];
+		for (int i = 0; i < this.type_arguments.length; i++)
+			this.type_arguments[i] = new ParameterType(evaluation_type_t.arguments[i], "evaluation", "argument");
+		this.type_thresholds = new ParameterType[evaluation_type_t.thresholds.length];
+		for (int i = 0; i < this.type_thresholds.length; i++)
+			this.type_thresholds[i] = new ParameterType(evaluation_type_t.thresholds[i], "evaluation", "threshold");
+	}
+
+	public String getId() {
+    return this.id;
+  }
+
+	public ParameterType[] getTypeArguments() {
+		return this.type_arguments;
+	}
+
+	public ParameterType[] getTypeParameters() {
+		return this.type_parameters;
+	}
+
+	public ParameterType[] getTypeThresholds() {
+		return this.type_thresholds;
+	}
+
+	public EvaluationType_Transferable getTransferable() {
+		ActionParameterType_Transferable[] parameters_type_t = new ActionParameterType_Transferable[this.type_parameters.length];
+    for (int i = 0; i < parameters_type_t.length; i++)
+      parameters_type_t[i] = this.type_parameters[i].getTransferable();
+		ActionParameterType_Transferable[] arguments_type_t = new ActionParameterType_Transferable[this.type_arguments.length];
+    for (int i = 0; i < arguments_type_t.length; i++)
+      arguments_type_t[i] = this.type_arguments[i].getTransferable();
+		ActionParameterType_Transferable[] thresholds_type_t = new ActionParameterType_Transferable[this.type_thresholds.length];
+    for (int i = 0; i < thresholds_type_t.length; i++)
+      thresholds_type_t[i] = this.type_thresholds[i].getTransferable();
+
+		return new EvaluationType_Transferable(this.id,
+																					 (this.name == null)?"":this.name,
+																					 (this.description == null)?"":this.description,
+																					 this.etalonType.getId(),
+																					 this.etalonType.getName(),
+																					 this.modified.getTime(),
+																					 parameters_type_t,
+																					 arguments_type_t,
+																					 thresholds_type_t);
+	}
+
+	#sql private static iterator EvaluationTypesIterator(String evaluation_type_id);
+
+  protected static Vector retrieveEvaluationTypeIds(String test_type_id) throws SQLException {
+    EvaluationTypesIterator evTypIt;
+    #sql evTypIt = {SELECT evaluation_type_id
+                      FROM amficom.evaluationtesttypelinks
+                      WHERE test_type_id = :test_type_id };
+    Vector vector = new Vector();
+    while (evTypIt.next()) {
+			vector.add(evTypIt.evaluation_type_id());
+    }
+    evTypIt.close();
+    return vector;
+  }
+
+	public static EvaluationType[] retrieveEvaluationTypes() throws SQLException {
+		EvaluationTypesIterator evTypIt;
+		#sql evTypIt = {SELECT id evaluation_type_id
+                      FROM amficom.evaluationtypes };
+    LinkedList llevtyp = new LinkedList();
+		while (evTypIt.next()) {
+			llevtyp.add(new EvaluationType(evTypIt.evaluation_type_id()));
+		}
+		evTypIt.close();
+		return (EvaluationType[])llevtyp.toArray(new EvaluationType[llevtyp.size()]);
+	}
+}

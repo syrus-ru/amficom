@@ -1,0 +1,30 @@
+package com.syrus.AMFICOM.server.measurement;
+
+import java.util.LinkedList;
+import java.sql.SQLException;
+import com.syrus.util.Log;
+
+public class AgentSettings {
+
+  #sql private static iterator KISIdentitiesIterator (String id);
+
+  public static String[] getKISIdentities(String agent_id) {
+    LinkedList ll = new LinkedList();
+    KISIdentitiesIterator kisidIt = null;
+    try {
+      #sql kisidIt = {SELECT id
+												FROM amficom.equipments
+												WHERE agent_id = :agent_id };
+      while(kisidIt.next())
+        ll.add(kisidIt.id());
+      kisidIt.close();
+    }
+    catch (SQLException e) {
+      Log.errorMessage("AMFICOMKIS.getKISIdentities | Failed to get KIS identities");
+      Log.errorException(e);
+      return null;
+    }
+    Log.debugMessage("AMFICOMKIS | Retrieved " + ll.size() + " KIS identities for agent id: " + agent_id, Log.DEBUGLEVEL03);
+    return (String[])ll.toArray(new String[ll.size()]);
+  }
+}

@@ -1,0 +1,220 @@
+package com.syrus.AMFICOM.server.event;
+
+import java.sql.Timestamp;
+import java.sql.SQLException;
+import java.util.LinkedList;
+import com.syrus.AMFICOM.server.ResourcedbInterface;
+import com.syrus.AMFICOM.CORBA.General.AlarmStatus;
+import com.syrus.AMFICOM.CORBA.Alarm.Alarm_Transferable;
+import com.syrus.util.Log;
+
+public class Alarm {
+  private String id;
+  private int status;
+  private String event_id;
+  private Timestamp generated;
+	private Timestamp assigned;
+	private String assigned_to;
+	private Timestamp fixed;
+	private String fixed_by;
+	private Timestamp deleted;
+	private Timestamp modified;
+	private String comments;
+  private String type_id;
+	private String domain_id;
+
+	public Alarm(String id) throws SQLException {
+		this.id = id;
+		#sql { SELECT status,
+									event_id,
+									generated,
+									assigned,
+									assigned_to,
+									fixed,
+									fixed_by,
+									deleted,
+									modified,
+									comments,
+									type_id,
+									domain_id									
+						 INTO :(this.status),
+									:(this.event_id),
+									:(this.generated),
+									:(this.assigned),
+									:(this.assigned_to),
+									:(this.fixed),
+									:(this.fixed_by),
+									:(this.deleted),
+									:(this.modified),
+									:(this.comments),
+									:(this.type_id),
+									:(this.domain_id)
+						 FROM amficom.alarms
+						 WHERE id = :(this.id) };
+	}
+
+  public Alarm(Event event, String type_id) throws SQLException {
+    this.status = AlarmStatus._ALARM_STATUS_GENERATED;
+    this.event_id = event.getId();
+    this.generated = (Timestamp)event.getCreated().clone();//new Timestamp(System.currentTimeMillis());
+		this.modified = new Timestamp(System.currentTimeMillis());
+    this.type_id = type_id;
+		this.domain_id = (new EventSource(event.getSourceId())).getDomainId();
+
+    this.id = ResourcedbInterface.getUId("alarm");
+    #sql {INSERT INTO amficom.alarms (id,
+                                      status,
+																			event_id,
+																			generated,
+																			modified,
+																			type_id,
+																			domain_id)
+            VALUES (:(this.id),
+                    :(this.status),
+                    :(this.event_id),
+                    :(this.generated),
+										:(this.modified),
+                    :(this.type_id),
+										:(this.domain_id)) };
+		#sql {COMMIT };
+  }
+
+  public String getId() {
+    return this.id;
+  }
+
+  public int getStatus() {
+    return this.status;
+  }
+
+  public String getEventId() {
+    return this.event_id;
+  }
+
+  public Timestamp getGenerated() {
+    return this.generated;
+  }
+
+	public Timestamp getFixed() {
+    return this.fixed;
+  }
+
+	public String getFixedBy() {
+    return this.fixed_by;
+  }
+
+	public Timestamp getAssigned() {
+    return this.assigned;
+  }
+
+	public String getAssignedTo() {
+    return this.assigned_to;
+  }
+
+	public Timestamp getModified() {
+    return this.modified;
+  }
+
+  public String getTypeId() {
+    return this.type_id;
+  }
+
+	public Alarm_Transferable getTransferable() {
+		Event event;
+		try {
+			event = new Event(this.event_id);
+		}
+		catch (Exception e) {
+			Log.errorException(e);
+			return null;
+		}
+		return new Alarm_Transferable(this.id,
+																	this.generated.getTime(),
+																	this.modified.getTime(),
+																	event.getSourceId(),
+																	(this.fixed == null)?0:this.fixed.getTime(),
+																	(this.assigned == null)?0:this.assigned.getTime(),
+																	(this.comments == null)?"":this.comments,
+																	this.type_id,
+																	(this.fixed_by == null)?"":this.fixed_by,
+																	AlarmStatus.from_int(this.status),
+																	(this.assigned_to == null)?"":this.assigned_to,
+																	this.event_id);
+																	
+	}
+
+	public void assignTo(String user_id) throws SQLException {
+		this.setModified();
+		this.assigned_to = user_id;
+		this.status = AlarmStatus._ALARM_STATUS_ASSIGNED;
+		this.assigned = new Timestamp(System.currentTimeMillis());
+		#sql {UPDATE amficom.alarms
+						SET assigned_to = :(this.assigned_to),
+								status = :(this.status),
+								assigned = :(this.assigned)
+						WHERE id = :(this.id) };
+		#sql {COMMIT };
+	}
+
+	public void setComments(String comments) throws SQLException {
+		this.setModified();
+		this.comments = comments;
+		#sql {UPDATE amficom.alarms
+						SET comments = :(this.comments)
+						WHERE id = :(this.id) };
+		#sql {COMMIT };
+	}
+
+	public void setFixed(String user_id) throws SQLException {
+		this.setModified();
+		this.status = AlarmStatus._ALARM_STATUS_FIXED;
+		this.fixed = new Timestamp(System.currentTimeMillis());
+		this.fixed_by = user_id;
+		#sql {UPDATE amficom.alarms
+						SET fixed = :(this.fixed),
+								status = :(this.status),
+								fixed_by = :(this.fixed_by)
+						WHERE id = :(this.id) };
+	}
+
+	public void delete() throws SQLException {
+		this.setModified();
+		this.status = AlarmStatus._ALARM_STATUS_DELETED;
+		this.deleted = new Timestamp(System.currentTimeMillis());
+		#sql {UPDATE amficom.alarms
+						SET deleted = :(this.deleted),
+								status = :(this.status)
+						WHERE id = :(this.id) };
+		#sql {COMMIT };
+	}
+
+	public boolean isModified() throws SQLException {
+		Timestamp new_modified;
+		#sql {SELECT modified
+						INTO :new_modified
+						FROM amficom.alarms
+						WHERE id = :(this.id) };
+		return new_modified.after(this.modified);
+	}
+
+	private void setModified() throws SQLException {
+		this.modified = new Timestamp(System.currentTimeMillis());
+		#sql {UPDATE amficom.alarms SET modified = :(this.modified) WHERE id = :(this.id) };
+		#sql {COMMIT };
+	}
+
+	#sql private static iterator AlarmIdsIterator(String id);
+
+	public static Alarm[] retrieveAlarms(String domain_id) throws SQLException {
+		AlarmIdsIterator aIt;
+		#sql aIt = {SELECT id 
+									FROM amficom.alarms
+									WHERE domain_id = :domain_id
+										AND status <> :(AlarmStatus._ALARM_STATUS_DELETED) };
+		LinkedList ll = new LinkedList();
+		while (aIt.next())
+			ll.add(new Alarm(aIt.id()));
+		aIt.close();
+		return (Alarm[])ll.toArray(new Alarm[ll.size()]);
+	}
+}

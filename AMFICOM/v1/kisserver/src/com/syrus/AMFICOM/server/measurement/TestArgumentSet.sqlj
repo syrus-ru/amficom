@@ -1,0 +1,218 @@
+package com.syrus.AMFICOM.server.measurement;
+
+import java.sql.Timestamp;
+import java.sql.SQLException;
+import java.util.Vector;
+import java.util.LinkedList;
+import com.syrus.AMFICOM.CORBA.Survey.ClientTestArgumentSet_Transferable;
+import com.syrus.AMFICOM.CORBA.Survey.ClientParameter_Transferable;
+import com.syrus.AMFICOM.CORBA.KIS.Parameter_Transferable;
+import com.syrus.util.Log;
+
+public class TestArgumentSet {
+	private String id;
+  private String test_type_id;
+  private String name;
+  private Timestamp created;
+  private String created_by;
+	private SetParameter[] arguments;
+  private Vector monitored_elements;
+
+  #sql private iterator TestArgumentSetMELinkIterator (String monitored_element_id);
+
+	public TestArgumentSet(String id) throws SQLException {
+    this.id = id;
+		#sql {SELECT test_type_id,
+                 name,
+                 created,
+                 created_by
+            INTO :(this.test_type_id),
+                 :(this.name),
+                 :(this.created),
+                 :(this.created_by)
+            FROM amficom.testargumentsets
+            WHERE id = :(this.id) };
+		this.name = (this.name == null)?"":this.name;
+		this.created_by = (this.created_by == null)?"":this.created_by;
+
+		this.arguments = SetParameter.retrieveParameters(this.id, "test", "argument");
+
+    TestArgumentSetMELinkIterator melnkIt;
+    #sql melnkIt = {SELECT monitored_element_id
+                      FROM amficom.testargumentsetmelinks
+                      WHERE set_id = :(this.id) };
+    this.monitored_elements = new Vector();
+    while (melnkIt.next())
+      this.monitored_elements.add(melnkIt.monitored_element_id());
+		melnkIt.close();
+		Log.debugMessage("TestArgumentSet.<init> | Retrieved " + this.monitored_elements.size() + " monitored element identities for test argument set id: '" + this.id + "'", Log.DEBUGLEVEL05);
+	}
+
+	public TestArgumentSet(ClientTestArgumentSet_Transferable ctat) throws Exception {
+		this.id = ctat.id;
+//------------------------
+		Log.debugMessage("************* CREATING TESTARGUMENT SET: '" + this.id + "'", Log.DEBUGLEVEL05);
+//------------------------
+    this.test_type_id = ctat.test_type_id;
+    this.name = ctat.name;
+    this.created_by = ctat.created_by;
+    this.created = new Timestamp(System.currentTimeMillis());
+
+		#sql {INSERT INTO amficom.testargumentsets (id,
+																								name,
+																								test_type_id,
+								                                created,
+									                              created_by)
+						VALUES (:(this.id),
+							      :(this.name),
+								    :(this.test_type_id),
+									  :(this.created),
+										:(this.created_by) ) };
+
+		this.arguments = new SetParameter[ctat.arguments.length];
+		for (int i = 0; i < this.arguments.length; i++)
+			this.arguments[i] = new SetParameter(ctat.arguments[i],
+																					 this.id,
+																					 "test",
+																					 "argument");
+
+    #sql { COMMIT };
+
+    this.monitored_elements = new Vector(0);
+	}
+
+	public String getId() {
+    return this.id;
+  }
+
+  public String getTestTypeId() {
+    return this.test_type_id;
+  }
+
+  public String getName() {
+    return this.name;
+  }
+
+  public Timestamp getCreated() {
+    return this.created;
+  }
+
+  public String getCreatedBy() {
+    return this.created_by;
+  }
+
+  public SetParameter[] getArguments() {
+    return this.arguments;
+  }
+
+	public ClientTestArgumentSet_Transferable getTransferable() throws SQLException {
+		ClientParameter_Transferable[] arguments_t = new ClientParameter_Transferable[this.arguments.length];
+		for (int i = 0; i < arguments_t.length; i++)
+			arguments_t[i] = this.arguments[i].getClientTransferable();
+    return new ClientTestArgumentSet_Transferable(this.id,
+		                                              this.name,
+				                                          this.created.getTime(),
+						                                      this.created_by,
+								                                  this.test_type_id,
+										                              arguments_t);
+  }
+
+	public Parameter_Transferable[] getKISArguments() throws SQLException {
+		Parameter_Transferable[] kis_arguments = new Parameter_Transferable[this.arguments.length];
+		for (int i = 0; i < kis_arguments.length; i++)
+			kis_arguments[i] = this.arguments[i].getTransferable();
+		return kis_arguments;
+	}
+
+	public void update(ClientTestArgumentSet_Transferable ctat) throws Exception {
+//------------------------
+		Log.debugMessage("************* UPDATING TESTARGUMENT SET: '" + this.id + "'", Log.DEBUGLEVEL05);
+//------------------------
+		if (ctat.id.compareTo(this.id) != 0)
+			return;
+
+		this.test_type_id = ctat.test_type_id;
+    this.name = ctat.name;
+    this.created_by = ctat.created_by;
+    //this.created = new Timestamp(System.currentTimeMillis());
+
+		#sql {UPDATE amficom.testargumentsets
+							SET name = :(this.name),
+									test_type_id = :(this.test_type_id),
+									created = :(this.created),
+									created_by = :(this.created_by)
+							WHERE id = :(this.id) };
+		for (int i = 0; i < this.arguments.length; i++)
+			this.arguments[i].update(ctat.arguments[i]);
+		#sql { COMMIT };
+	}
+
+	public void attachToMonitoredElement(String monitored_element_id) throws SQLException {
+    if (this.isAttachedToMonitoredElement(monitored_element_id))
+      return;
+    #sql {INSERT INTO amficom.testargumentsetmelinks (set_id,
+																											monitored_element_id)
+            VALUES (:(this.id),
+                    :monitored_element_id) };
+		#sql { COMMIT };
+    this.monitored_elements.add(monitored_element_id);
+  }
+
+  public void detachFromMonitoredElement(String monitored_element_id) throws SQLException {
+    if (!this.isAttachedToMonitoredElement(monitored_element_id))
+      return;
+    #sql {DELETE FROM amficom.testargumentsetmelinks
+            WHERE set_id = :(this.id)
+              AND monitored_element_id = :monitored_element_id };
+		#sql { COMMIT };
+    this.monitored_elements.remove(monitored_element_id);
+  }
+
+  public Vector getAttachedMonitoredElements() {
+    return this.monitored_elements;
+  }
+
+  public boolean isAttachedToMonitoredElement(String monitored_element_id) {
+    return this.monitored_elements.contains(monitored_element_id);
+  }
+
+	#sql private static iterator TestArgumentSetIterator(String id);
+
+  public static TestArgumentSet[] retrieveTestArgumentSets() throws SQLException {
+    TestArgumentSetIterator tasetIt;
+    #sql tasetIt = {SELECT id FROM amficom.testargumentsets };
+    LinkedList linkedlist = new LinkedList();
+    while (tasetIt.next())
+      linkedlist.add(new TestArgumentSet(tasetIt.id()));
+    tasetIt.close();
+    return (TestArgumentSet[])linkedlist.toArray(new TestArgumentSet[linkedlist.size()]);
+  }
+
+  public static TestArgumentSet[] retrieveTestArgumentSets(String monitored_element_id) throws SQLException {
+    TestArgumentSetIterator tasetIt;
+    #sql tasetIt = { SELECT set_id id
+                        FROM amficom.testargumentsetmelinks
+                        WHERE monitored_element_id = :monitored_element_id};
+    LinkedList linkedlist = new LinkedList();
+    while (tasetIt.next())
+      linkedlist.add(new TestArgumentSet(tasetIt.id()));
+    tasetIt.close();
+    return (TestArgumentSet[])linkedlist.toArray(new TestArgumentSet[linkedlist.size()]);
+  }
+
+  public static TestArgumentSet[] retrieveTestArgumentSets(String monitored_element_id, String test_type_id) throws SQLException {
+    TestArgumentSetIterator tasetIt;
+    #sql tasetIt = { SELECT id
+                        FROM amficom.testargumentsets
+                        WHERE test_type_id = :test_type_id
+                          AND id IN (
+                            SELECT set_id 
+                              FROM amficom.testargumentsetmelinks
+                              WHERE monitored_element_id = :monitored_element_id) };
+    LinkedList linkedlist = new LinkedList();
+    while (tasetIt.next())
+      linkedlist.add(new TestArgumentSet(tasetIt.id()));
+    tasetIt.close();
+    return (TestArgumentSet[])linkedlist.toArray(new TestArgumentSet[linkedlist.size()]);
+  }
+}
