@@ -7,3 +7,4 @@
 @@kistype.sql
 @@linktype.sql
 @@link.sql
+@@transpathtype.sql

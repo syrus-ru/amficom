@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseContextSetup.java,v 1.4 2004/10/25 13:24:35 max Exp $
+ * $Id: DatabaseContextSetup.java,v 1.5 2004/10/27 08:17:50 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -19,6 +19,7 @@ import com.syrus.AMFICOM.configuration.LinkTypeDatabase;
 import com.syrus.AMFICOM.configuration.PortTypeDatabase;
 import com.syrus.AMFICOM.configuration.MeasurementPortTypeDatabase;
 import com.syrus.AMFICOM.configuration.CharacteristicDatabase;
+import com.syrus.AMFICOM.configuration.TransmissionPathTypeDatabase;
 import com.syrus.AMFICOM.configuration.UserDatabase;
 import com.syrus.AMFICOM.configuration.DomainDatabase;
 import com.syrus.AMFICOM.configuration.ServerDatabase;
@@ -48,7 +49,7 @@ import com.syrus.AMFICOM.measurement.ResultDatabase;
 import com.syrus.AMFICOM.measurement.TemporalPatternDatabase;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2004/10/25 13:24:35 $
+ * @version $Revision: 1.5 $, $Date: 2004/10/27 08:17:50 $
  * @author $Author: max $
  * @module mserver_v1
  */
@@ -75,6 +76,7 @@ public abstract class DatabaseContextSetup {
 																			new PortDatabase(),
 																			new MeasurementPortDatabase(),
 																			new TransmissionPathDatabase(),
+                                                                            new TransmissionPathTypeDatabase(),
 																			new KISDatabase(),
 																			new MonitoredElementDatabase(),
                                                                             new LinkDatabase());

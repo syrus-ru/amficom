@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPath.java,v 1.15 2004/09/27 11:59:58 bob Exp $
+ * $Id: TransmissionPath.java,v 1.16 2004/10/27 08:18:52 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -19,20 +19,23 @@ import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.StorableObjectType;
+import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.configuration.corba.TransmissionPath_Transferable;
 /**
- * @version $Revision: 1.15 $, $Date: 2004/09/27 11:59:58 $
- * @author $Author: bob $
+ * @version $Revision: 1.16 $, $Date: 2004/10/27 08:18:52 $
+ * @author $Author: max $
  * @module configuration_v1
  */
 
-public class TransmissionPath extends MonitoredDomainMember implements Characterized {
+public class TransmissionPath extends MonitoredDomainMember implements Characterized, TypedObject {
 	
 	protected static final int		UPDATE_ATTACH_ME	= 1;
 	protected static final int		UPDATE_DETACH_ME	= 2;
 	
-	private List characteristics;
+	private TransmissionPathType type;
+    private List characteristics;
 	private String name;
 	private String description;	
 	private Identifier startPortId;
@@ -125,9 +128,15 @@ public class TransmissionPath extends MonitoredDomainMember implements Character
 			for (int i = 0; i < tpt.characteristic_ids.length; i++)
 				this.characteristics.add(ConfigurationStorableObjectPool.getStorableObject(new Identifier(tpt.characteristic_ids[i]), true));
 		}
-		catch (ApplicationException ae) {
+        catch (ApplicationException ae) {
 			throw new CreateObjectException(ae);
 		}
+        try {
+            this.type = (TransmissionPathType) ConfigurationStorableObjectPool.getStorableObject(new Identifier(tpt.type_id), true);
+        }
+        catch (ApplicationException ae) {
+            throw new CreateObjectException(ae);
+        }  
 	}
 	
 	public static TransmissionPath getInstance(TransmissionPath_Transferable tpt) throws CreateObjectException {
@@ -167,6 +176,7 @@ public class TransmissionPath extends MonitoredDomainMember implements Character
 																						 meIds,
 																						 new String(this.name),
 																						 new String(this.description),
+                                                                                         (Identifier_Transferable)this.type.getId().getTransferable(),
 																						 (Identifier_Transferable)this.startPortId.getTransferable(),
 																						 (Identifier_Transferable)this.finishPortId.getTransferable(),
 																						 charIds);
@@ -175,6 +185,10 @@ public class TransmissionPath extends MonitoredDomainMember implements Character
 	public String getName() {
 		return this.name;
 	}
+    
+    public StorableObjectType getType() {       
+        return this.type;
+    }
 
 	public String getDescription() {
 		return this.description;

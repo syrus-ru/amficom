@@ -1,5 +1,5 @@
 /*
- * $Id: ConfigurationDatabaseContext.java,v 1.24 2004/10/25 13:32:07 max Exp $
+ * $Id: ConfigurationDatabaseContext.java,v 1.25 2004/10/27 08:18:52 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,7 +11,7 @@ package com.syrus.AMFICOM.configuration;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 
 /**
- * @version $Revision: 1.24 $, $Date: 2004/10/25 13:32:07 $
+ * @version $Revision: 1.25 $, $Date: 2004/10/27 08:18:52 $
  * @author $Author: max $
  * @module configuration_v1
  */
@@ -23,6 +23,7 @@ public class ConfigurationDatabaseContext {
 	protected static StorableObjectDatabase measurementPortTypeDatabase;
 	protected static StorableObjectDatabase linkTypeDatabase;
     protected static StorableObjectDatabase kisTypeDatabase;
+    protected static StorableObjectDatabase transmissionPathTypeDatabase;
 	
 	protected static StorableObjectDatabase characteristicDatabase;
 	protected static StorableObjectDatabase userDatabase;
@@ -56,6 +57,7 @@ public class ConfigurationDatabaseContext {
 													StorableObjectDatabase portDatabase1,
 													StorableObjectDatabase measurementPortDatabase1,
 													StorableObjectDatabase transmissionPathDatabase1,
+                                                    StorableObjectDatabase transmissionPathTypeDatabase1,
 													StorableObjectDatabase kisDatabase1,
 													StorableObjectDatabase monitoredElementDatabase1,
 													StorableObjectDatabase linkDatabase1) {
@@ -75,6 +77,7 @@ public class ConfigurationDatabaseContext {
 		portDatabase = portDatabase1;
 		measurementPortDatabase = measurementPortDatabase1;
 		transmissionPathDatabase = transmissionPathDatabase1;
+        transmissionPathTypeDatabase = transmissionPathTypeDatabase1;
 		kisDatabase = kisDatabase1;
 		monitoredElementDatabase = monitoredElementDatabase1;
 		linkDatabase = linkDatabase1;
@@ -130,6 +133,9 @@ public class ConfigurationDatabaseContext {
 	public static StorableObjectDatabase getTransmissionPathDatabase() {
 		return transmissionPathDatabase;
 	}
+    public static StorableObjectDatabase getTransmissionPathTypeDatabase() {
+        return transmissionPathTypeDatabase;
+    }
 	public static StorableObjectDatabase getUserDatabase() {
 		return userDatabase;
 	}
