@@ -50,7 +50,7 @@ public class HistogrammPanel extends ScaledGraphPanel
 
 		init();
 
-		ModelTraceManager mtm = Heap.getMTMByKey(RefUpdateEvent.PRIMARY_TRACE);
+		ModelTraceManager mtm = Heap.getMTMPrimary();
 		if (mtm != null)
 			updateHistogrammData(0, mtm.getModelTrace().getLength() - 1);
 		else

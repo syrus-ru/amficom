@@ -135,14 +135,15 @@ public class AnalysisFrame extends ScalableFrame implements bsHashChangeListener
 		}
 	}
 
-	public void addEtalon(String id)
+	public void addEtalon()
 	{
-		if (traces.get(id) != null)
+		if (traces.get(Heap.ETALON_TRACE_KEY) != null)
 			return;
 
-		BellcoreStructure bs = Heap.getAnyBSTraceByKey(id);
+		BellcoreStructure bs = Heap.getBSEtalonTrace();
 		if (bs != null)
-			addTrace (id);
+			addTrace (Heap.ETALON_TRACE_KEY);
+		/* XXX: remove it: Стас говорит что это неактуально
 		else
 		{
 			if (bs.measurementId == null)
@@ -150,19 +151,6 @@ public class AnalysisFrame extends ScalableFrame implements bsHashChangeListener
 
 			int n = 0;
 			double deltaX = 0;
-
-//			Measurement m = null;
-//			try
-//			{
-//				m = (Measurement)MeasurementStorableObjectPool.getStorableObject(
-//								new Identifier(bs.measurementId), true);
-//			}
-//			catch(ApplicationException ex)
-//			{
-//				System.err.println("Exception retrieving measurenent with " + bs.measurementId);
-//				ex.printStackTrace();
-//				return;
-//			}
 
 			MeasurementSetup ms = Heap.getContextMeasurementSetup();
 			if (ms == null)
@@ -187,14 +175,14 @@ public class AnalysisFrame extends ScalableFrame implements bsHashChangeListener
 					return;
 				n = (int)(len * 1000 / deltaX);
 
-				SimpleGraphPanel oldpanel = (SimpleGraphPanel)traces.get(id);
+				SimpleGraphPanel oldpanel = (SimpleGraphPanel)traces.get(Heap.ETALON_TRACE_KEY);
 				if (oldpanel != null)
 				{
 					((ScalableLayeredPanel)panel).removeGraphPanel(oldpanel);
-					traces.remove(id);
+					traces.remove(Heap.ETALON_TRACE_KEY);
 				}
 
-				ModelTraceManager mtm = Heap.getMTMByKey(id);
+				ModelTraceManager mtm = Heap.getMTMEtalon();
 				if (mtm != null)
 				{
 					double[] y = new double[n];
@@ -203,14 +191,14 @@ public class AnalysisFrame extends ScalableFrame implements bsHashChangeListener
 					epPanel.setColorModel(AnalysisUtil.ETALON);
 					((ScalableLayeredPanel)panel).addGraphPanel(epPanel);
 					panel.updScale2fit();
-					traces.put(id, epPanel);
+					traces.put(Heap.ETALON_TRACE_KEY, epPanel);
 				}
 			}
 			catch (IOException ex)
 			{
 				ex.printStackTrace();
 			}
-		}
+		}*/
 	}
 
 	public void removeEtalon(String etId)
@@ -238,7 +226,7 @@ public class AnalysisFrame extends ScalableFrame implements bsHashChangeListener
 
 	public void etalonMTMCUpdated()
 	{
-		addEtalon(Heap.ETALON_TRACE_KEY);
+		addEtalon();
 	}
 
 	public void etalonMTMRemoved()

@@ -49,7 +49,7 @@ public class SaveAnalysisCommand extends VoidCommand
 		}
 
 		RefAnalysis refanalysis = Heap.getRefAnalysisByKey(Heap.PRIMARY_TRACE_KEY);
-		ModelTraceManager mtm = Heap.getMTMByKey(Heap.PRIMARY_TRACE_KEY);
+		ModelTraceManager mtm = Heap.getMTMPrimary();
 
 		Measurement m = null;
 		try

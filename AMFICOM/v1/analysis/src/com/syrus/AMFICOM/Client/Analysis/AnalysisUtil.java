@@ -224,7 +224,7 @@ public class AnalysisUtil
 	{
 		Set thresholdSet = ms.getThresholdSet();
 
-		ModelTraceManager mtm = Heap.getMTMByKey(AnalysisUtil.ETALON);
+		ModelTraceManager mtm = Heap.getMTMEtalon();
 		if (mtm == null)
 			return;
 

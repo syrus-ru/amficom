@@ -108,7 +108,7 @@ implements OperationListener, bsHashChangeListener, EtalonMTMListener
 						a = Heap.getRefAnalysisByKey(id);
 						bs = Heap.getAnyBSTraceByKey(id);
 						res_km = bs.getResolution() / 1000.0;
-						dataMTM = Heap.getMTMByKey(Heap.PRIMARY_TRACE_KEY);
+						dataMTM = Heap.getMTMPrimary();
 						if(dataMTM != null && etalonMTM != null)
 							makeAlignedDataMT();
 						else alignedDataMT = null;
@@ -535,7 +535,7 @@ implements OperationListener, bsHashChangeListener, EtalonMTMListener
 
 	public void etalonMTMCUpdated()
 	{
-		etalonMTM = Heap.getMTMByKey(AnalysisUtil.ETALON);
+		etalonMTM = Heap.getMTMEtalon();
 		if(dataMTM != null)
 			makeAlignedDataMT();
 		else

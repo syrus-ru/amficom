@@ -81,7 +81,7 @@ public class SaveTestSetupCommand extends VoidCommand
 
 		if ((type & ETALON) != 0 || (type & THRESHOLDS) != 0)
 		{
-			ModelTraceManager mtm = Heap.getMTMByKey(Heap.PRIMARY_TRACE_KEY);
+			ModelTraceManager mtm = Heap.getMTMPrimary();
 			if (mtm == null)
 			{
 				JOptionPane.showMessageDialog(

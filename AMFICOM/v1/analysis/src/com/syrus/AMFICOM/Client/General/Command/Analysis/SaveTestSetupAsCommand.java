@@ -77,7 +77,7 @@ public class SaveTestSetupAsCommand extends VoidCommand
 			return;
 
 		Identifier userId = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).getAccessIdentifier().user_id);
-		ModelTraceManager mtm = Heap.getMTMByKey(Heap.PRIMARY_TRACE_KEY);
+		ModelTraceManager mtm = Heap.getMTMPrimary();
 		newms.setCriteriaSet(AnalysisUtil.createCriteriaSetFromParams(
 				userId,
 				newms.getMonitoredElementIds()));

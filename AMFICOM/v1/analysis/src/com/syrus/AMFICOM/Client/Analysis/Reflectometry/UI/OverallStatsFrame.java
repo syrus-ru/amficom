@@ -189,8 +189,8 @@ implements OperationListener, bsHashChangeListener, EtalonMTMListener
 
 	private void setWholeData()
 	{
-		ModelTraceManager etalonMTM = Heap.getMTMByKey(Heap.ETALON_TRACE_KEY);
-		ModelTraceManager dataMTM = Heap.getMTMByKey(RefUpdateEvent.PRIMARY_TRACE);
+		ModelTraceManager etalonMTM = Heap.getMTMEtalon();
+		ModelTraceManager dataMTM = Heap.getMTMPrimary();
 		if(etalonMTM == null || dataMTM == null || dataMTM.getNEvents() == 0)
 		{
 			tabbedPane.setSelectedIndex(0);

@@ -59,14 +59,15 @@ implements OperationListener, bsHashChangeListener, EtalonMTMListener
 	{
 	}
 
-	public void addEtalon(String id)
+	public void addEtalon()
 	{
-		if (traces.get(id) != null)
+		if (traces.get(Heap.ETALON_TRACE_KEY) != null)
 			return;
 
-		BellcoreStructure bs = Heap.getAnyBSTraceByKey(id);
+		BellcoreStructure bs = Heap.getBSEtalonTrace();
 		if (bs != null)
-			addTrace (id);
+			addTrace (Heap.ETALON_TRACE_KEY);
+		/* не нужно?
 		else
 		{
 			int n = 0;
@@ -117,7 +118,7 @@ implements OperationListener, bsHashChangeListener, EtalonMTMListener
 			{
 				ex.printStackTrace();
 			}
-		}
+		}*/
 	}
 
 	void removeEtalon(String etId)
@@ -208,7 +209,7 @@ implements OperationListener, bsHashChangeListener, EtalonMTMListener
 
 	public void etalonMTMCUpdated()
 	{
-		addEtalon(Heap.ETALON_TRACE_KEY);
+		addEtalon();
 	}
 
 	public void etalonMTMRemoved()

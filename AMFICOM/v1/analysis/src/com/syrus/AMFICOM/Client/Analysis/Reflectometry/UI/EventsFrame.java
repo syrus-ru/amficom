@@ -461,7 +461,7 @@ implements OperationListener, bsHashChangeListener, EtalonMTMListener
 	{
 		if (key.equals(Heap.PRIMARY_TRACE_KEY))
 		{
-			this.data = Heap.getMTMByKey(Heap.PRIMARY_TRACE_KEY).getComplexEvents();
+			this.data = Heap.getMTMPrimary().getComplexEvents();
 			etalon = null;
 			setNoComparedWithEtalonColor();
 			if (Heap.getRefAnalysisByKey(Heap.PRIMARY_TRACE_KEY) != null)

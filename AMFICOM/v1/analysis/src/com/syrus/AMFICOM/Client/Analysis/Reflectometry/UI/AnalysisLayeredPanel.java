@@ -53,7 +53,7 @@ public class AnalysisLayeredPanel extends TraceEventsLayeredPanel implements Ope
 						{
 							((AnalysisPanel)panel).updEvents(id);
 
-							ModelTraceManager mtm = Heap.getMTMByKey(id);
+							ModelTraceManager mtm = Heap.getMTMPrimary();
 							((AnalysisPanel)panel).updateTrace(mtm); // FIXME: нужно UpdateMTM или UpdateTrace?
 							((AnalysisPanel)panel).updMarkers();
 							jLayeredPane.repaint();

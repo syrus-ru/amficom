@@ -129,8 +129,8 @@ public class LoadTraceFromDatabaseCommand extends VoidCommand
 	
 			new InitialAnalysisCommand().execute();
 	
-			ModelTraceManager mtmEtalon = Heap.getMTMByKey(AnalysisUtil.ETALON);
-			ModelTraceManager mtmEvents = Heap.getMTMByKey(RefUpdateEvent.PRIMARY_TRACE);
+			ModelTraceManager mtmEtalon = Heap.getMTMEtalon();
+			ModelTraceManager mtmEvents = Heap.getMTMPrimary();
 	
 			if (mtmEtalon != null && mtmEvents != null)
 			{
