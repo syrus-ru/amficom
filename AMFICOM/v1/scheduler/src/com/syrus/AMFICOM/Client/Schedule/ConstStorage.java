@@ -5,8 +5,6 @@
  */
 package com.syrus.AMFICOM.Client.Schedule;
 
-import java.text.SimpleDateFormat;
-
 /**
  * @author Vladimir Dolzhenko
  * 
@@ -33,11 +31,6 @@ public interface ConstStorage {
 	final String			COLUMN_NAME_TEMPORAL_TYPE	= "temporal_type";
 	final String			COLUMN_NAME_TEST_TYPE_ID	= "test_type_id";
 	final String			COLUMN_NAME_USER_ID			= "user_id";
-
-	final String			DATE_FORMAT					= "dd.MM.yy HH:mm:ss";
-	final SimpleDateFormat	SIMPLE_DATE_FORMAT			= new SimpleDateFormat(
-																DATE_FORMAT);
-
 	final String			SYS_DOMAIN					= "sysdomain";
 
 }

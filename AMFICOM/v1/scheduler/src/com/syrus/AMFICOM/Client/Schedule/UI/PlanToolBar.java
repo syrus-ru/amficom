@@ -28,6 +28,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.SwingConstants;
+import javax.swing.UIManager;
 import javax.swing.WindowConstants;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -43,6 +44,7 @@ import com.syrus.AMFICOM.Client.General.UI.CalendarUI;
 import com.syrus.AMFICOM.Client.General.UI.DateSpinner;
 import com.syrus.AMFICOM.Client.General.UI.TimeSpinner;
 import com.syrus.AMFICOM.Client.General.lang.LangModelSchedule;
+import com.syrus.AMFICOM.Client.Resource.ResourceKeys;
 import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
 import com.syrus.AMFICOM.Client.Scheduler.General.UIStorage;
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -175,7 +177,7 @@ class PlanToolBar extends JPanel {
 			}
 		});
 
-		this.dateButton.setMargin(UIStorage.INSET_NULL);
+		this.dateButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_NULL));
 		this.dateButton.setFocusable(false);
 		this.dateButton.setToolTipText(LangModelSchedule.getString("Calendar")); //$NON-NLS-1$
 		this.dateButton.addActionListener(new ActionListener() {
@@ -209,7 +211,7 @@ class PlanToolBar extends JPanel {
 		});
 
 		//UIStorage.setRigidSize(this.filterButton, UIStorage.BUTTON_SIZE);
-		this.filterButton.setMargin(UIStorage.INSET_NULL);
+		this.filterButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_NULL));
 		this.filterButton.setFocusable(false);
 		this.filterButton.setIcon(UIStorage.FILTER_ICON);
 		this.filterButton.setToolTipText(LangModelSchedule.getString("Filtration")); //$NON-NLS-1$
@@ -292,13 +294,13 @@ class PlanToolBar extends JPanel {
 			UIStorage.setRigidSize(this.timeSpinner, d);
 		}
 		box.add(this.timeSpinner);
-		this.nowButton.setMargin(UIStorage.INSET_NULL);
+		this.nowButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_NULL));
 		box.add(this.nowButton);
 		box.add(Box.createHorizontalStrut(10));
 		box.add(this.applyButton);
 		JButton legendButton = new JButton(LangModelSchedule.getString("Legend"));
 		legendButton.setToolTipText(LangModelSchedule.getString("Legend"));
-		legendButton.setMargin(UIStorage.INSET_NULL);
+		legendButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_NULL));
 		box.add(Box.createHorizontalStrut(10));
 		box.add(legendButton);
 		{
@@ -353,7 +355,7 @@ class PlanToolBar extends JPanel {
 
 		this.applyButton.setIcon(UIStorage.REFRESH_ICON);
 		this.applyButton.setToolTipText(LangModelSchedule.getString("Apply")); //$NON-NLS-1$
-		this.applyButton.setMargin(UIStorage.INSET_NULL);
+		this.applyButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_NULL));
 
 		box.add(Box.createHorizontalGlue());
 		/**

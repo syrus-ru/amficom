@@ -7,6 +7,7 @@
 package com.syrus.AMFICOM.Client.Schedule;
 
 import java.awt.Component;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -16,6 +17,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import javax.swing.JOptionPane;
+import javax.swing.UIManager;
 
 import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
 import com.syrus.AMFICOM.Client.General.SessionInterface;
@@ -30,6 +32,7 @@ import com.syrus.AMFICOM.Client.General.UI.ObjectResourceTreeModel;
 import com.syrus.AMFICOM.Client.General.lang.LangModelSchedule;
 import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
 import com.syrus.AMFICOM.Client.Resource.RISDDataSource;
+import com.syrus.AMFICOM.Client.Resource.ResourceKeys;
 import com.syrus.AMFICOM.Client.Schedule.item.MeasurementTypeItem;
 import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 import com.syrus.AMFICOM.configuration.KIS;
@@ -441,14 +444,14 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 			Date endTime = this.testTimeStamps.getEndTime();
 			TestTemporalType temporalType = this.testTimeStamps.getTestTemporalType();
 			TemporalPattern temporalPattern = this.testTimeStamps.getTemporalPattern();
-
+			SimpleDateFormat sdf = (SimpleDateFormat) UIManager.get(ResourceKeys.SIMPLE_DATE_FORMAT);
 			if (test == null) {
 				try {
 					test = Test.createInstance(modifierId, startTime, endTime, temporalPattern == null ? null
 							: temporalPattern.getId(), temporalType, this.measurementType.getId(),
 						this.analysisType == null ? null : this.analysisType.getId(), this.evaluationType == null
 								? null : this.evaluationType.getId(), this.monitoredElement, this.returnType,
-						ConstStorage.SIMPLE_DATE_FORMAT.format(startTime), measurementSetupIds);
+						sdf.format(startTime), measurementSetupIds);
 
 					MeasurementStorableObjectPool.putStorableObject(test);
 				} catch (IllegalObjectEntityException e) {
@@ -463,7 +466,7 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 							? null : temporalPattern.getId(), this.measurementType.getId(), this.analysisType == null
 							? null : this.analysisType.getId(), this.evaluationType == null ? null
 							: this.evaluationType.getId(), test.getStatus().value(), this.monitoredElement,
-					this.returnType.value(), ConstStorage.SIMPLE_DATE_FORMAT.format(startTime));
+					this.returnType.value(), sdf.format(startTime));
 			}
 			try {
 				MeasurementStorableObjectPool.putStorableObject(test);

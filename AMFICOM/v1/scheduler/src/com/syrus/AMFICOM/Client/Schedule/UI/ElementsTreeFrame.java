@@ -4,12 +4,13 @@ package com.syrus.AMFICOM.Client.Schedule.UI;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 
+import javax.swing.Icon;
 import javax.swing.JInternalFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JTree;
+import javax.swing.UIManager;
 import javax.swing.event.TreeExpansionEvent;
 import javax.swing.event.TreeExpansionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -20,6 +21,7 @@ import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
 import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.lang.LangModelSchedule;
+import com.syrus.AMFICOM.Client.Resource.ResourceKeys;
 import com.syrus.AMFICOM.Client.Schedule.ElementsViewer;
 import com.syrus.AMFICOM.Client.Schedule.KISEditor;
 import com.syrus.AMFICOM.Client.Schedule.MeasurementTypeEditor;
@@ -27,7 +29,6 @@ import com.syrus.AMFICOM.Client.Schedule.MonitoredElementEditor;
 import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
 import com.syrus.AMFICOM.Client.Schedule.WindowCommand;
 import com.syrus.AMFICOM.Client.Schedule.item.MeasurementTypeItem;
-import com.syrus.AMFICOM.Client.Scheduler.General.UIStorage;
 import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 import com.syrus.AMFICOM.configuration.KIS;
 import com.syrus.AMFICOM.configuration.MeasurementPort;
@@ -62,7 +63,7 @@ public class ElementsTreeFrame extends JInternalFrame implements KISEditor, Moni
 	public ElementsTreeFrame(ApplicationContext aContext) {
 		this.aContext = aContext;
 		setTitle(LangModelSchedule.getString("Comonents_Tree")); //$NON-NLS-1$
-		setFrameIcon(UIStorage.GENERAL_ICON);
+		setFrameIcon((Icon) UIManager.get(ResourceKeys.ICON_GENERAL));
 		setResizable(true);
 		setClosable(true);
 		setIconifiable(true);

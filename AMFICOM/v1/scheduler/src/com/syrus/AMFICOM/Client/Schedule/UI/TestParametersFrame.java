@@ -3,7 +3,9 @@ package com.syrus.AMFICOM.Client.Schedule.UI;
 
 import java.awt.BorderLayout;
 
+import javax.swing.Icon;
 import javax.swing.JInternalFrame;
+import javax.swing.UIManager;
 
 import com.syrus.AMFICOM.Client.General.Command.Command;
 import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
@@ -11,9 +13,9 @@ import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
 import com.syrus.AMFICOM.Client.General.Event.OperationListener;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.lang.LangModelSchedule;
+import com.syrus.AMFICOM.Client.Resource.ResourceKeys;
 import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
 import com.syrus.AMFICOM.Client.Schedule.WindowCommand;
-import com.syrus.AMFICOM.Client.Scheduler.General.UIStorage;
 import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 import com.syrus.AMFICOM.configuration.MeasurementPort;
 import com.syrus.AMFICOM.configuration.MeasurementPortType;
@@ -33,7 +35,7 @@ public class TestParametersFrame extends JInternalFrame implements OperationList
 		this.aContext = aContext;
 		this.schedulerModel = (SchedulerModel) aContext.getApplicationModel();
 		setTitle(LangModelSchedule.getString("Measurement_options")); //$NON-NLS-1$
-		setFrameIcon(UIStorage.GENERAL_ICON);
+		setFrameIcon((Icon) UIManager.get(ResourceKeys.ICON_GENERAL));
 		setResizable(true);
 		setClosable(true);
 		setIconifiable(true);

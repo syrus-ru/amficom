@@ -5,15 +5,28 @@
 
 package com.syrus.AMFICOM.Client.Scheduler.General;
 
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.Cursor;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.FontMetrics;
+import java.awt.Graphics2D;
+import java.awt.Image;
+import java.awt.Insets;
+import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.geom.AffineTransform;
-import java.awt.image.*;
+import java.awt.image.AffineTransformOp;
+import java.awt.image.BufferedImage;
 import java.text.SimpleDateFormat;
 
-import javax.swing.*;
-
-import com.syrus.AMFICOM.Client.Schedule.ConstStorage;
+import javax.swing.Action;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
+import javax.swing.JComponent;
+import javax.swing.JRadioButton;
+import javax.swing.UIManager;
 
 /**
  * Storage for frequency used gui routines
@@ -24,15 +37,10 @@ public final class UIStorage {
 
 	public static final Dimension			BUTTON_SIZE				= new Dimension(30, 20);
 
-	public static final Insets				INSET_NULL				= new Insets(0, 0, 0, 0);
-
 	public static final Insets				INSETS1010				= new Insets(1, 0, 1, 0);
 	public static final Image				SCHEDULING_ICON_MINI	= Toolkit.getDefaultToolkit().getImage(
 																		"images/main/scheduling_mini.gif");
-
-	public static final Icon				GENERAL_ICON			= new ImageIcon(Toolkit.getDefaultToolkit()
-																			.getImage("images/general.gif"));		//$NON-NLS-1$
-
+	
 	public static final Icon				PLUS_ICON				= UIStorage.getStringIcon("+");				//$NON-NLS-1$
 
 	public static final Icon				MINUS_ICON				= UIStorage.getStringIcon("-");				//$NON-NLS-1$
@@ -42,9 +50,6 @@ public final class UIStorage {
 	public static final Icon				TIME_ICON				= UIStorage.getStringIcon("t");				//$NON-NLS-1$
 
 	public static final Icon				FILTER_ICON				= UIStorage.getStringIcon("F");				//$NON-NLS-1$
-
-	public static final Icon				OPEN_FILE_ICON			= new ImageIcon(Toolkit.getDefaultToolkit()
-																			.getImage("images/openfile.gif"));		//$NON-NLS-1$
 
 	public static final Icon				DELETE_ICON				= new ImageIcon(Toolkit.getDefaultToolkit()
 																			.getImage("images/delete.gif"));		//$NON-NLS-1$
@@ -66,10 +71,6 @@ public final class UIStorage {
 																			.getImage("images/refresh.gif"));		//$NON-NLS-1$
 	public static final Icon				SAVE_ICON				= new ImageIcon(Toolkit.getDefaultToolkit()
 																			.getImage("images/save.gif"));			//$NON-NLS-1$
-	public static final Icon				SESSION_OPEN_ICON		= new ImageIcon(Toolkit.getDefaultToolkit()
-																			.getImage("images/open_session.gif")
-																			.getScaledInstance(16, 16,
-																				Image.SCALE_SMOOTH));
 	public static final Icon				ZOOMIN_ICON				= new ImageIcon(Toolkit.getDefaultToolkit()
 																			.getImage("images/zoom_in.gif"));		//$NON-NLS-1$
 	public static final Icon				ZOOMOUT_ICON			= new ImageIcon(Toolkit.getDefaultToolkit()
@@ -87,7 +88,6 @@ public final class UIStorage {
 																				Font.PLAIN, 12);
 	public static final Font				MONOSPACED_14_FONT		= new Font("Monospaced", //$NON-NLS-1$
 																				Font.BOLD, 14);
-	public static final SimpleDateFormat	SDF						= ConstStorage.SIMPLE_DATE_FORMAT;
 	public static final SimpleDateFormat	HOUR_MINUTE_DATE_FORMAT	= new SimpleDateFormat("HH:mm");
 
 	private UIStorage() {

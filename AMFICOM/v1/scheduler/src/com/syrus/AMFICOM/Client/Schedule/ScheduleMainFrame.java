@@ -8,6 +8,7 @@ import java.awt.Toolkit;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.WindowEvent;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import javax.swing.BorderFactory;
@@ -16,6 +17,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JViewport;
+import javax.swing.UIManager;
 
 import com.syrus.AMFICOM.Client.General.ConnectionInterface;
 import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
@@ -41,6 +43,7 @@ import com.syrus.AMFICOM.Client.General.UI.StatusBarModel;
 import com.syrus.AMFICOM.Client.General.UI.WindowArranger;
 import com.syrus.AMFICOM.Client.General.lang.LangModelSchedule;
 import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
+import com.syrus.AMFICOM.Client.Resource.ResourceKeys;
 import com.syrus.AMFICOM.Client.Schedule.UI.ElementsTreeFrame;
 import com.syrus.AMFICOM.Client.Schedule.UI.PlanFrame;
 import com.syrus.AMFICOM.Client.Schedule.UI.SaveParametersFrame;
@@ -208,7 +211,8 @@ public class ScheduleMainFrame extends JFrame implements OperationListener {
 					setSessionOpened();
 
 					this.statusBar.setText("status", LangModel.getString("statusReady"));
-					this.statusBar.setText("session", ConstStorage.SIMPLE_DATE_FORMAT.format(new Date(this.aContext
+					SimpleDateFormat sdf = (SimpleDateFormat) UIManager.get(ResourceKeys.SIMPLE_DATE_FORMAT);
+					this.statusBar.setText("session", sdf.format(new Date(this.aContext
 							.getSessionInterface().getLogonTime())));
 					this.statusBar.setText("user", this.aContext.getSessionInterface().getUser());
 				}

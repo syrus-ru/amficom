@@ -7,6 +7,7 @@ import javax.swing.*;
 import com.syrus.AMFICOM.Client.General.Command.*;
 import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.General.Lang.LangModel;
+import com.syrus.AMFICOM.Client.Resource.ResourceKeys;
 import com.syrus.AMFICOM.Client.Scheduler.General.UIStorage;
 
 public class ScheduleMainToolBar extends JToolBar implements ApplicationModelListener {
@@ -19,7 +20,7 @@ public class ScheduleMainToolBar extends JToolBar implements ApplicationModelLis
 
 	public ScheduleMainToolBar() {
 		this.sessionOpen = new JButton();
-		this.sessionOpen.setIcon(UIStorage.SESSION_OPEN_ICON);
+		this.sessionOpen.setIcon(UIManager.getIcon(ResourceKeys.ICON_OPEN_SESSION));
 		UIStorage.setRigidSize(this.sessionOpen, UIStorage.BUTTON_SIZE);
 		this.sessionOpen.setToolTipText(LangModel.getString("menuSessionNew"));
 		this.sessionOpen.setName(ScheduleMainMenuBar.MENU_SESSION_NEW);

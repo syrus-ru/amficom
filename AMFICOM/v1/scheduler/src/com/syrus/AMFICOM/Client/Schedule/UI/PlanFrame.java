@@ -1,14 +1,18 @@
 package com.syrus.AMFICOM.Client.Schedule.UI;
 
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.SystemColor;
 
-import javax.swing.*;
+import javax.swing.Icon;
+import javax.swing.JInternalFrame;
+import javax.swing.JScrollPane;
+import javax.swing.UIManager;
 
 import com.syrus.AMFICOM.Client.General.Command.Command;
-import com.syrus.AMFICOM.Client.General.Model.*;
+import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.lang.LangModelSchedule;
+import com.syrus.AMFICOM.Client.Resource.ResourceKeys;
 import com.syrus.AMFICOM.Client.Schedule.WindowCommand;
-import com.syrus.AMFICOM.Client.Scheduler.General.UIStorage;
 
 public class PlanFrame extends JInternalFrame {
 
@@ -21,7 +25,7 @@ public class PlanFrame extends JInternalFrame {
 		//this.aContext = aContext;
 
 		setTitle(LangModelSchedule.getString("Plan.Title")); //$NON-NLS-1$
-		setFrameIcon(UIStorage.GENERAL_ICON);
+		setFrameIcon((Icon) UIManager.get(ResourceKeys.ICON_GENERAL));
 		setResizable(true);
 		setClosable(true);
 		setMaximizable(true);

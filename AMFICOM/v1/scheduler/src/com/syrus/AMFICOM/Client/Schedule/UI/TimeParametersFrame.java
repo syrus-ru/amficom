@@ -25,6 +25,7 @@ import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.DefaultListModel;
+import javax.swing.Icon;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JInternalFrame;
@@ -36,6 +37,7 @@ import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 import javax.swing.JSplitPane;
+import javax.swing.UIManager;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
@@ -47,6 +49,7 @@ import com.syrus.AMFICOM.Client.General.UI.CalendarUI;
 import com.syrus.AMFICOM.Client.General.UI.DateSpinner;
 import com.syrus.AMFICOM.Client.General.UI.TimeSpinner;
 import com.syrus.AMFICOM.Client.General.lang.LangModelSchedule;
+import com.syrus.AMFICOM.Client.Resource.ResourceKeys;
 import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
 import com.syrus.AMFICOM.Client.Schedule.TestTemporalStampsEditor;
 import com.syrus.AMFICOM.Client.Schedule.WindowCommand;
@@ -118,7 +121,7 @@ public class TimeParametersFrame extends JInternalFrame {
 			gbc.weighty = 0.0;
 			gbc.ipadx = 0;
 			gbc.ipady = 0;
-			gbc.insets = UIStorage.INSET_NULL;
+			gbc.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
 			Insets gbcInsetsDefault = gbc.insets;
 			gbc.fill = GridBagConstraints.BOTH;
 			this.setLayout(new GridBagLayout());
@@ -133,7 +136,7 @@ public class TimeParametersFrame extends JInternalFrame {
 			this.startTimeSpinner = new TimeSpinner();
 			this.startDateSpinner = new DateSpinner();
 			final JButton startDateButton = new JButton(UIStorage.CALENDAR_ICON);
-			startDateButton.setMargin(UIStorage.INSET_NULL);
+			startDateButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_NULL));
 			startDateButton.setDefaultCapable(false);
 
 			startDateButton.setFocusable(false);
@@ -164,7 +167,7 @@ public class TimeParametersFrame extends JInternalFrame {
 			this.endTimeSpinner = new TimeSpinner();
 			this.endDateSpinner = new DateSpinner();
 			final JButton endDateButton = new JButton(UIStorage.CALENDAR_ICON);
-			endDateButton.setMargin(UIStorage.INSET_NULL);
+			endDateButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_NULL));
 			endDateButton.setDefaultCapable(false);
 
 			endDateButton.setFocusable(false);
@@ -290,11 +293,11 @@ public class TimeParametersFrame extends JInternalFrame {
 
 			});
 
-			addTemporalPatternButton.setMargin(UIStorage.INSET_NULL);
+			addTemporalPatternButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_NULL));
 
 			final JButton removeTemporalPatternButton = new JButton(UIStorage.MINUS_ICON);
 			removeTemporalPatternButton.setEnabled(false);
-			removeTemporalPatternButton.setMargin(UIStorage.INSET_NULL);
+			removeTemporalPatternButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_NULL));
 
 			removeTemporalPatternButton.addActionListener(new ActionListener() {
 
@@ -599,7 +602,7 @@ public class TimeParametersFrame extends JInternalFrame {
 
 	public TimeParametersFrame(ApplicationContext aContext) {
 		setTitle(LangModelSchedule.getString("TemporalType.Title")); //$NON-NLS-1$
-		setFrameIcon(UIStorage.GENERAL_ICON);
+		setFrameIcon((Icon) UIManager.get(ResourceKeys.ICON_GENERAL));
 		setResizable(true);
 		setClosable(true);
 		setIconifiable(true);

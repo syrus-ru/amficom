@@ -19,10 +19,11 @@ import javax.swing.JSpinner;
 import javax.swing.JSplitPane;
 import javax.swing.JToggleButton;
 import javax.swing.SpinnerNumberModel;
+import javax.swing.UIManager;
 import javax.swing.WindowConstants;
 
 import com.syrus.AMFICOM.Client.General.lang.LangModelSchedule;
-import com.syrus.AMFICOM.Client.Scheduler.General.UIStorage;
+import com.syrus.AMFICOM.Client.Resource.ResourceKeys;
 import com.syrus.AMFICOM.measurement.TemporalPattern;
 
 /*
@@ -107,7 +108,7 @@ public class TimeStampUI {
 		gbc.weighty = 0.0;
 
 		final JButton checkButton = new JButton(LangModelSchedule.getString("Check"));
-		checkButton.setMargin(UIStorage.INSET_NULL);
+		checkButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_NULL));
 		checkButton.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {
