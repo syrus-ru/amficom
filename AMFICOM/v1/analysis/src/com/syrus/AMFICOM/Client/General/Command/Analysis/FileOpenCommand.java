@@ -94,17 +94,21 @@ public class FileOpenCommand extends VoidCommand
 		{
 			Environment.getActiveWindow().setCursor(new Cursor(Cursor.WAIT_CURSOR));
 			TraceReader tr = new TraceReader();
-			if (AnalyseMainFrameSimplified.DEBUG) // XXX: saa: probable security bypass
+			try
 			{
-				// этот код написан для отладочных целей и предназначен для
-				// считывания рефлектограммы из текстового файла,
-				// если не удается считать с помощью известного формата
-				try
+				bs = tr.getData(chooser.getSelectedFile());
+			}
+			catch (UnsatisfiedLinkError e)
+			{
+				bs = null;
+			}
+			if (bs == null)
+			{
+				if (true && AnalyseMainFrameSimplified.DEBUG) // XXX: saa: probable security bypass
 				{
-					bs = tr.getData(chooser.getSelectedFile());
-				}
-				catch (UnsatisfiedLinkError e)
-				{
+					// этот код написан для отладочных целей и предназначен для
+					// считывания рефлектограммы из текстового файла,
+					// если не удается считать с помощью известного формата
 					try
 					{
 						//bs = new BellcoreCreator(new double[] { 30, 30, 30, 22, 21, 20, 19, 10, 1, 1 }).getBS();
@@ -128,23 +132,18 @@ public class FileOpenCommand extends VoidCommand
 						e1.printStackTrace();
 					}
 				}
-			}
-			else
-			{
-				// код, который был "до меня" -- saa
-				bs = tr.getData(chooser.getSelectedFile());
-			}
-			if (bs == null)
-			{
-				bs = tr.getData(chooser.getSelectedFile());
-				if (bs == null)
+				else
 				{
-					JOptionPane.showMessageDialog (Environment.getActiveWindow(),
-							LangModelAnalyse.getString("messageReadError") + ":\n" + chooser.getSelectedFile().getAbsolutePath(),
-							LangModelAnalyse.getString("messageError"),
-							JOptionPane.OK_OPTION);
-					Environment.getActiveWindow().setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
-					return;
+					bs = tr.getData(chooser.getSelectedFile());
+					if (bs == null)
+					{
+						JOptionPane.showMessageDialog (Environment.getActiveWindow(),
+								LangModelAnalyse.getString("messageReadError") + ":\n" + chooser.getSelectedFile().getAbsolutePath(),
+								LangModelAnalyse.getString("messageError"),
+								JOptionPane.OK_OPTION);
+						Environment.getActiveWindow().setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+						return;
+					}
 				}
 			}
 			if (Pool.getMap("bellcorestructure") != null )
