@@ -5,8 +5,8 @@ ARCHFILE := $(subst _v1,,$(MODULE_NAME)).tar.gz
 
 IDLDIR = ../idl_v1/idl
 
-HOST = mongol
-SERVICE_NAME = mongol
+HOST = aldan
+SERVICE_NAME = hodja
 
 JAVACFLAGS = -source 1.3
 SUNJAVACFLAGS = -target 1.2
