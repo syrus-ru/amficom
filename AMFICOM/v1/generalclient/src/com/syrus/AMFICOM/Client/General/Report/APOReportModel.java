@@ -1,8 +1,8 @@
 package com.syrus.AMFICOM.Client.General.Report;
 
 import java.util.List;
-import java.util.Enumeration;
 import java.util.Iterator;
+import java.util.Set;
 
 /**
  * <p>Title: </p>
@@ -28,10 +28,10 @@ abstract public class APOReportModel extends ReportModel
 			RenderingObject curRenderer = (RenderingObject)it.next();
 			String itsTableTitle = curRenderer.getReportToRender().field;
 
-      Enumeration keysEnum = aReport.data.keys();
-			while (keysEnum.hasMoreElements())
+      Set keysSet = aReport.data.keySet();
+			for (Iterator keysIt = keysSet.iterator(); keysIt.hasNext();)
 			{
-				String curKey = (String)keysEnum.nextElement();
+				String curKey = (String)keysIt.next();
 				if (curKey.equals(getLangForField(itsTableTitle)))
 				{
 					try

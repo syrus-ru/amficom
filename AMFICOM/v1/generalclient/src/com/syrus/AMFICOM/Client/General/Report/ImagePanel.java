@@ -99,6 +99,27 @@ public final class ImagePanel extends JPanel
 		}
 	}
 
+	public ImagePanel(Image image, RenderingObject ro)
+		throws CreateReportException
+	{
+		if (image == null)
+		{
+			throw new CreateReportException("",CreateReportException.noImageSelected);
+		}
+
+		try
+		{
+			bImage = image;
+
+			this.setSize(ro.width,ro.height);
+			this.setPreferredSize(this.getSize());
+			this.setLocation(ro.x,ro.y);
+		}
+		catch (Exception exc)
+		{
+			throw new CreateReportException("",CreateReportException.noImageSelected);
+		}
+	}
 
 	public ImagePanel(ImagePane_Transferable ip_trans)
 	{
