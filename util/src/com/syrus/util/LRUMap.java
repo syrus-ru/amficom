@@ -1,5 +1,5 @@
 /*
- * $Id: LRUMap.java,v 1.11 2004/11/10 16:19:47 bob Exp $
+ * $Id: LRUMap.java,v 1.12 2004/11/12 07:43:15 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,8 +14,8 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2004/11/10 16:19:47 $
- * @author $Author: bob $
+ * @version $Revision: 1.12 $, $Date: 2004/11/12 07:43:15 $
+ * @author $Author: max $
  * @module util
  */
 
@@ -26,9 +26,9 @@ public class LRUMap implements Serializable {
 
 	protected Entry[] array;
 	
-	protected transient int modCount = 0;
+	transient protected int modCount = 0;
 	
-	protected transient int entityCount = 0;
+	protected int entityCount = 0;
 
 	public LRUMap() {
 		this (SIZE);
@@ -112,7 +112,7 @@ public class LRUMap implements Serializable {
 		throw new IllegalArgumentException("Key is NULL");
 	}
 
-	protected static class Entry {
+	protected class Entry implements Serializable{
 		Object key;
 		Object value;
 
@@ -130,7 +130,8 @@ public class LRUMap implements Serializable {
 		}
 	}
 	
-    protected class Itr implements Iterator {
+    protected class Itr implements Iterator, Serializable {
+
     	/**
     	 * Index of element to be returned by subsequent call to next.
     	 */
