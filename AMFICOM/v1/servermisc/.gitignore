@@ -16,3 +16,4 @@ sqlj.properties
 .sqlj
 .classpath
 .project
+Makefile.inc
