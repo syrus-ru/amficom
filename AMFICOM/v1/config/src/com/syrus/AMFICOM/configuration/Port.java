@@ -1,5 +1,5 @@
 /*
- * $Id: Port.java,v 1.1 2004/08/11 10:46:20 bob Exp $
+ * $Id: Port.java,v 1.2 2004/08/11 12:24:13 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -20,17 +20,18 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2004/08/11 10:46:20 $
+ * @version $Revision: 1.2 $, $Date: 2004/08/11 12:24:13 $
  * @author $Author: bob $
  * @module configuration_v1
  */
-public class Port extends DomainMember implements Characterized, TypedObject {
+public class Port extends StorableObject implements Characterized, TypedObject {
 
 	private PortType type;	
 	private String description;
@@ -58,8 +59,7 @@ public class Port extends DomainMember implements Characterized, TypedObject {
 					new Date(pt.created),
 					new Date(pt.modified),
 					new Identifier(pt.creator_id),
-					new Identifier(pt.modifier_id),
-					new Identifier(pt.domain_id));
+					new Identifier(pt.modifier_id));
 		
 		this.type = (PortType)ConfigurationObjectTypePool.getObjectType(new Identifier(pt.type_id));
 		this.description = new String(pt.description);
@@ -91,8 +91,7 @@ public class Port extends DomainMember implements Characterized, TypedObject {
 																			super.created.getTime(),
 																			super.modified.getTime(),
 																			(Identifier_Transferable)super.creatorId.getTransferable(),
-																			(Identifier_Transferable)super.modifierId.getTransferable(),
-																			(Identifier_Transferable)super.domainId.getTransferable(),
+																			(Identifier_Transferable)super.modifierId.getTransferable(),																			
 																			
 																			(Identifier_Transferable)this.type.getId().getTransferable(),																			
 																			new String(this.description),
@@ -130,7 +129,6 @@ public class Port extends DomainMember implements Characterized, TypedObject {
 																						Date modified,
 																						Identifier creatorId,
 																						Identifier modifierId,
-																						Identifier domainId,
 																						PortType type,																						
 																						String description,	
 																						Identifier equipmentId,
@@ -138,8 +136,7 @@ public class Port extends DomainMember implements Characterized, TypedObject {
 		super.setAttributes(created,
 												modified,
 												creatorId,
-												modifierId,
-												domainId);
+												modifierId);
 		this.type = type;
 		this.description = description;
 		this.equipmentId = equipmentId;

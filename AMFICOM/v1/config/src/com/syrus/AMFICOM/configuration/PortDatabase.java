@@ -1,5 +1,5 @@
 /*
- * $Id: PortDatabase.java,v 1.1 2004/08/11 10:46:20 bob Exp $
+ * $Id: PortDatabase.java,v 1.2 2004/08/11 12:24:13 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,15 +27,13 @@ import com.syrus.util.database.DatabaseDate;
 
 
 /**
- * @version $Revision: 1.1 $, $Date: 2004/08/11 10:46:20 $
+ * @version $Revision: 1.2 $, $Date: 2004/08/11 12:24:13 $
  * @author $Author: bob $
  * @module configuration_v1
  */
 public class PortDatabase extends StorableObjectDatabase {
 	// table :: Port
 
-	// domain_id VARCHAR2(32),
-    public static final String COLUMN_DOMAIN_ID     = "domain_id";
     // type_id VARCHAR2(32) NOT NULL,
     public static final String COLUMN_TYPE_ID       = "type_id";
 	// description VARCHAR2(256),
@@ -69,8 +67,6 @@ public class PortDatabase extends StorableObjectDatabase {
 		buffer.append(StorableObjectDatabase.COLUMN_CREATOR_ID);
 		buffer.append(StorableObjectDatabase.COMMA);
 		buffer.append(StorableObjectDatabase.COLUMN_MODIFIER_ID);
-		buffer.append(StorableObjectDatabase.COMMA);
-		buffer.append(DomainMember.COLUMN_DOMAIN_ID);
 		buffer.append(StorableObjectDatabase.COMMA);
 		buffer.append(COLUMN_TYPE_ID);
 		buffer.append(StorableObjectDatabase.COMMA);
@@ -112,10 +108,6 @@ public class PortDatabase extends StorableObjectDatabase {
 									* @todo when change DB Identifier model ,change getString() to getLong()
 									*/
 								  new Identifier(resultSet.getString(COLUMN_MODIFIER_ID)),
-								  /**
-									* @todo when change DB Identifier model ,change getString() to getLong()
-									*/
-								  new Identifier(resultSet.getString(COLUMN_DOMAIN_ID)),
 								  
 								  (portTypeIdCode != null)?((PortType)ConfigurationObjectTypePool.getObjectType(new Identifier(portTypeIdCode))):null,								  
 								  (description != null)?description:"",
@@ -182,12 +174,7 @@ public class PortDatabase extends StorableObjectDatabase {
 		/**
 		 * @todo when change DB Identifier model ,change String to long
 		 */
-		String portIdCode = port.getId().getCode();
-
-		/**
-		 * @todo when change DB Identifier model ,change String to long
-		 */
-		Identifier domainId = port.getDomainId();
+		String portIdCode = port.getId().getCode();	
 
 		/**
 		 * @todo when change DB Identifier model ,change String to long
@@ -207,14 +194,12 @@ public class PortDatabase extends StorableObjectDatabase {
 			+ COLUMN_MODIFIED + COMMA
 			+ COLUMN_CREATOR_ID + COMMA
 			+ COLUMN_MODIFIER_ID + COMMA
-			+ COLUMN_DOMAIN_ID + COMMA
 			+ COLUMN_TYPE_ID + COMMA			
 			+ COLUMN_DESCRIPTION + COMMA
 			+ COLUMN_EQUIPMENT_ID + COMMA
 			+ COLUMN_SORT  			
 			+ CLOSE_BRACKET
 			+ SQL_VALUES + OPEN_BRACKET
-			+ QUESTION + COMMA
 			+ QUESTION + COMMA
 			+ QUESTION + COMMA
 			+ QUESTION + COMMA
@@ -247,21 +232,16 @@ public class PortDatabase extends StorableObjectDatabase {
 			/**
 			  * @todo when change DB Identifier model ,change setString() to setLong()
 			  */
-			preparedStatement.setString(6, (domainId != null)?domainId.getCode():Identifier.getNullSQLString());
-
-			/**
-			  * @todo when change DB Identifier model ,change setString() to setLong()
-			  */
-			preparedStatement.setString(7, (typeId != null)?typeId.getCode():Identifier.getNullSQLString());
+			preparedStatement.setString(6, (typeId != null)?typeId.getCode():Identifier.getNullSQLString());
 			
-			preparedStatement.setString(8, port.getDescription());
+			preparedStatement.setString(7, port.getDescription());
 			
 			/**
 			  * @todo when change DB Identifier model ,change setString() to setLong()
 			  */
-			preparedStatement.setString(9, (equipmentId != null)?equipmentId.getCode():Identifier.getNullSQLString());
+			preparedStatement.setString(8, (equipmentId != null)?equipmentId.getCode():Identifier.getNullSQLString());
 			
-			preparedStatement.setInt(10, port.getSort());			
+			preparedStatement.setInt(9, port.getSort());			
 										
 			Log.debugMessage("PortDatabase.insertPort | Trying: " + sql, Log.DEBUGLEVEL05);
 			preparedStatement.executeUpdate();
