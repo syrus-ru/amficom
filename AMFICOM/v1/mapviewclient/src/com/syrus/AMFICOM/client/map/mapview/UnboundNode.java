@@ -1,5 +1,5 @@
 /**
- * $Id: UnboundNode.java,v 1.1 2004/12/24 15:42:14 krupenn Exp $
+ * $Id: UnboundNode.java,v 1.2 2005/01/30 15:38:18 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -27,21 +27,39 @@ import com.syrus.AMFICOM.scheme.corba.SchemeElement;
 import java.util.List;
 
 /**
- * уэел 
+ * Непривязанный элемент. Сооветствует элеименту схемы, не привязанному 
+ * ни к какому элементу топологической схемы.
  * 
- * 
- * 
- * @version $Revision: 1.1 $, $Date: 2004/12/24 15:42:14 $
- * @module
  * @author $Author: krupenn $
- * @see
+ * @version $Revision: 1.2 $, $Date: 2005/01/30 15:38:18 $
+ * @module mapviewclient_v1
  */
 public class UnboundNode extends SiteNode
 {
+	/**
+	 * элемент схемы.
+	 */
 	protected SchemeElement schemeElement;
 	
+	/**
+	 * Флаг того, что непривязанный элемент может быть привязан к элементу
+	 * карты. Используется при перемещении непривязанного элемента мышкой.
+	 * При перемещении его через элемент топологической карты флаг получает
+	 * значение <code>true</code>, что означает, что при отпускании мыши
+	 * схемный элемент {@link schemeElement} будет привязан к элементу.
+	 * При перемещении мыши за пределы элемента топологической карты 
+	 * флаг опять принимает значение <code>false</code>.
+	 */
 	protected boolean canBind = false;
 
+	/**
+	 * Конструктор.
+	 * @param schemeElement элемент схемы
+	 * @param id идентификатор непривязанного элемента
+	 * @param location географические координаты непривязанного элемента
+	 * @param map топологическая схема
+	 * @param pe тип элемента (должен быть {@link SiteNodeType#UNBOUND})
+	 */
 	public UnboundNode(
 		SchemeElement schemeElement,
 		Identifier id,
@@ -65,6 +83,18 @@ public class UnboundNode extends SiteNode
 		setSchemeElement(schemeElement);
 	}
 
+	/**
+	 * Создать новый непривязанный элемент.
+	 * Вызывается при дропе схемного элемента на окно карты
+	 * (см. {@link com.syrus.AMFICOM.Client.Map.UI.MapDropTargetListener#schemeElementDropped(SchemeElement, Point)}).
+	 * @param schemeElement элемент схемы
+	 * @param location географические координаты непривязанного элемента
+	 * @param map топологическая схема
+	 * @param pe тип элемента (должен быть {@link SiteNodeType#UNBOUND})
+	 * @return новый непривязанный элемент
+	 * @throws com.syrus.AMFICOM.general.CreateObjectException
+	 * 	если невозможно получить новый идентификатор
+	 */
 	public static UnboundNode createInstance(
 			SchemeElement schemeElement,
 			DoublePoint location,

@@ -1,5 +1,5 @@
 /**
- * $Id: LogicalNetLayer.java,v 1.37 2005/01/24 16:51:32 krupenn Exp $
+ * $Id: LogicalNetLayer.java,v 1.38 2005/01/30 15:38:17 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -40,7 +40,7 @@ import com.syrus.AMFICOM.Client.Map.mapview.Marker;
 import com.syrus.AMFICOM.Client.Map.mapview.MeasurementPath;
 import com.syrus.AMFICOM.Client.Map.mapview.Selection;
 import com.syrus.AMFICOM.Client.Map.mapview.VoidElement;
-import com.syrus.AMFICOM.Client.Resource.MapView.MapView;
+import com.syrus.AMFICOM.mapview.MapView;
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.general.Identifier;
@@ -80,10 +80,9 @@ import java.util.Set;
  * 
  * 
  * 
- * @version $Revision: 1.37 $, $Date: 2005/01/24 16:51:32 $
- * @module map_v2
  * @author $Author: krupenn $
- * @see
+ * @version $Revision: 1.38 $, $Date: 2005/01/30 15:38:17 $
+ * @module mapviewclient_v2
  */
 public abstract class LogicalNetLayer implements MapCoordinatesConverter
 {
@@ -91,24 +90,16 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 	
 	protected MapViewController mapViewController;
 
-	/**
-	 * Нить, управляющая анимацией на слое
-	 */
+	/** Нить, управляющая анимацией на слое. */
 	protected AnimateThread animateThread = null;
 
-	/**
-	 * Перменная показывающая что сейчас отображать
-	 */
+	/** Перменная показывающая что сейчас отображать. */
 	protected MapState mapState = new MapState();
 	
-	/**
-	 * Флаг видимости PhysicalNodeElement
-	 */
+	/** Флаг видимости топологических узлов. */
 	protected boolean showPhysicalNodeElement = true;
 	
-	/**
-	 * Содержимое карты
-	 */
+	/** Содержимое карты. */
 	protected MapView mapView = null;
 	
 	/**
@@ -121,63 +112,59 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 	 */
 	protected boolean performProcessing = true;
 	
+	/** Флаг отправки сообщений. */
 	protected boolean doNotify = true;
 	
-	/**
-	 * Текущий элемент
-	 */
+	/** Текущий элемент. */
 	protected MapElement currentMapElement = null;
 
-	/**
-	 * фиксированный элемент
+	/** 
+	 * фиксированный узел. 
+	 * Используется в режиме {@link MapState#MOVE_FIXDIST}.
 	 */
 	protected AbstractNode fixedNode = null;
 
+	/** 
+	 * Список фиксированных узлов. 
+	 * Используется в режиме {@link MapState#MOVE_FIXDIST}.
+	 */
 	protected List fixedNodeList = new LinkedList();
 
-	/**
-	 * Текущий тип создаваемых физических линий
-	 */
+	/** Текущий тип создаваемых физических линий. */
 	protected PhysicalLinkType currentPen = null;
 
+	/** Тип непривязанного схемного элемента. */
 	protected SiteNodeType unboundProto = null;
 
+	/** Тип непривязанного кабеля. */
 	protected PhysicalLinkType unboundLinkProto = null;
 	
-	/**
-	 * Текущая точка курсора мыши на карте (в экранных координатах)
-	 */	
-	public Point currentPoint = new Point(0, 0);
+	/** Текущая точка курсора мыши на карте (в экранных координатах). */	
+	protected Point currentPoint = new Point(0, 0);
 
-	/**
-	 * Контекст приложения
-	 */
+	/** Контекст приложения. */
 	protected ApplicationContext aContext = null;
 
-	/**
-	 * Объект, ответственный за управление отображением карты
-	 */
+	/** Объект, ответственный за управление отображением карты. */
 	protected NetMapViewer viewer = null;
 
 	/**
+	 * Начальная точка для операций пользователя на карте с помощью мыши.
 	 * При нажатии правой кнопки мыши и её перемещении, поля startX, startY получают
 	 * координаты начальной точки (где произошло нажатие), а поля endX, endY координаты
 	 * текущего положения мыши.
-	 * Начальная точка для операций пользователя на карте с помощью мыши
 	 */
 	protected Point startPoint = new Point(0, 0);
 
 	/**
+	 * Конечная точка для операций пользователя на карте с помощью мыши
 	 * При нажатии правой кнопки мыши и её перемещении, поля startX, startY получают
 	 * координаты начальной точки (где произошло нажатие), а поля endX, endY координаты
 	 * текущего положения мыши.
-	 * Конечная точка для операций пользователя на карте с помощью мыши
 	 */
 	protected Point endPoint = new Point(0, 0);
 
-	/**
-	 * 
-	 */	
+	/** Флаг того, что контекстное меню отображено. */	
 	
 	protected boolean menuShown = false;
 
@@ -185,109 +172,143 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 	 * Масштаб отображения объектов карты по умолчанию. Используется для
 	 * автоматического масштабирования отрисовки объектов. Коэффициент
 	 * увеличения размера отрисовываемого объекта определяется как отношение
-	 * defaultScale / currentScale
+	 * defaultScale / currentScale.
 	 */
 	protected double defaultScale = 0.00001;
 	
-	/**
-	 * Текуший масштаб отображения оюъектов карты
-	 */
+	/** Текуший масштаб отображения оюъектов карты. */
 	protected double currentScale = 0.00001;
 
 	/**
-	 * Получить экранные координаты по географическим координатам
+	 * Получить экранные координаты по географическим координатам.
+	 * @param point географическая координата
+	 * @return экранная координата
 	 */
 	public abstract Point convertMapToScreen(DoublePoint point);
 	
 	/**
-	 * Получить географические координаты по экранным
+	 * Получить географические координаты по экранным.
+	 * @param point экранная координата
+	 * @return географическая координата
 	 */
 	public abstract DoublePoint convertScreenToMap(Point point);
 
 	/**
-	 * Получить дистанцию между двумя точками в экранных координатах
+	 * Получить дистанцию между двумя точками в экранных координатах.
+	 * @param from географическая координата
+	 * @param to географическая координата
+	 * @return расстояние
 	 */
 	public abstract double distance(DoublePoint from, DoublePoint to);
 
 	/**
-	 * Установить центральную точку вида карты
+	 * Установить центральную точку вида карты.
+	 * @param center географическая координата центра
 	 */
 	public abstract void setCenter(DoublePoint center);
 
 	/**
-	 * Получить центральную точку вида карты
+	 * Получить центральную точку вида карты.
+	 * @return географическая координата центра
 	 */
 	public abstract DoublePoint getCenter();
 
+	/**
+	 * Получить видимую область в географических координатах.
+	 * @return видимая область
+	 */
 	public abstract Rectangle2D.Double getVisibleBounds();
 
+	/**
+	 * Произвести поиск географических объектов по подстроке.
+	 * @param searchText текст поиска
+	 * @return список найденных объектов ({@link SpatialObject})
+	 */
 	public abstract List findSpatialObjects(String searchText);
 	
+	/**
+	 * Центрировать географический объект.
+	 * @param so географический объект
+	 */
 	public abstract void centerSpatialObject(SpatialObject so);
 
 	/**
-	 * Освободить ресурсы компонента с картой и завершить отображение карты
+	 * Освободить ресурсы компонента с картой и завершить отображение карты.
 	 */
 	public abstract void release();
 
 	/**
-	 * Перерисовать содержимое компонента с картой
+	 * Перерисовать содержимое компонента с картой.
+	 * @param fullRepaint производить ли полную перерисовку.
+	 * <code>true</code> - перерисовываются географические объекты и элементы
+	 * топологической схемы. <code>false</code> - перерисовываются только 
+	 * элементы топологической схемы.
 	 */
 	public abstract void repaint(boolean fullRepaint);
 	
 	/**
-	 * Устанавить курсор мыши на компоненте отображения карты
+	 * Устанавить курсор мыши на компоненте отображения карты.
+	 * @param cursor курсор
 	 */
 	public abstract void setCursor(Cursor cursor);
 
+	/**
+	 * Получить установленный курсор.
+	 * @return курсор
+	 */
 	public abstract Cursor getCursor();
 
 	/**
-	 * Получить текущий масштаб вида карты
+	 * Получить текущий масштаб вида карты.
+	 * @return масштаб
 	 */
 	public abstract double getScale();
 
 	/**
-	 * Установить заданный масштаб вида карты
+	 * Установить заданный масштаб вида карты.
+	 * @param scale масштаб
 	 */
 	public abstract void setScale(double scale);
 
 	/**
-	 * Установить масштаб вида карты с заданным коэффициентом
+	 * Установить масштаб вида карты с заданным коэффициентом.
+	 * @param scaleСoef коэффициент масштабирования
 	 */
 	public abstract void scaleTo(double scaleСoef);
 
 	/**
-	 * Приблизить вид карты со стандартным коэффициентом
+	 * Приблизить вид карты со стандартным коэффициентом.
 	 */
 	public abstract void zoomIn();
 
 	/**
-	 * Отдалить вид карты со стандартным коэффициентом
+	 * Отдалить вид карты со стандартным коэффициентом.
 	 */
 	public abstract void zoomOut();
 	
 	/**
 	 * Приблизить вид выделенного участка карты (в координатах карты)
-	 * по координатам угловых точек
+	 * по координатам угловых точек.
+	 * @param from географическая координата
+	 * @param to географическая координата
 	 */
 	public abstract void zoomToBox(DoublePoint from, DoublePoint to);
 
 	/**
-	 * В режиме перемещения карты "лапкой" (MapState.HAND_MOVE) передвинута мышь
+	 * В режиме перемещения карты "лапкой" ({@link MapState#MOVE_HAND})
+	 * передвинута мышь.
+	 * @param me мышиное событие
 	 */	
 	public abstract void handDragged(MouseEvent me);
 	
 	/**
 	 * При изменении масштаба отображения карты необходимо обновить
-	 * масштаб отображения всех объектов на карте
+	 * масштаб отображения всех объектов на карте.
 	 */
 	public void updateZoom()
 	{
 		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "updateZoom()");
 		
-//		double sF = getDefaultScale() / getCurrentScale();
-
 		if(getMapView() == null)
 			return;
 		Map map = getMapView().getMap();
@@ -298,13 +319,13 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 			{
 				AbstractNode curNode = (AbstractNode)en.next();
 				((AbstractNodeController)getMapViewController().getController(curNode)).updateScaleCoefficient(curNode);
-//				curNode.setScaleCoefficient(sF);
 			}
 		}
 	}
 
 	/**
-	 * сеттер
+	 * Установить контекст приложения.
+	 * @param aContext контекст приложения
 	 */
 	public void setContext(ApplicationContext aContext)
 	{
@@ -312,7 +333,8 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 	}
 
 	/**
-	 * геттер
+	 * Получить контекст приложения.
+	 * @return контекст приложения
 	 */
 	public ApplicationContext getContext()
 	{
@@ -320,7 +342,8 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 	}
 
 	/**
-	 * сеттер
+	 * Установить отображатель.
+	 * @param mapViewer отображатель
 	 */
 	public void setMapViewer(NetMapViewer mapViewer)
 	{
@@ -330,7 +353,8 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 	}
 
 	/**
-	 * геттер
+	 * Получить отображатель.
+	 * @return отображатель
 	 */
 	public NetMapViewer getMapViewer()
 	{
@@ -338,7 +362,8 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 	}
 
 	/**
-	 * Инициализировать обозреватель заданным видом карты
+	 * Инициализировать обозреватель заданным видом карты.
+	 * @param mapView вид
 	 */
 	public void setMapView(MapView mapView)
 	{
@@ -369,7 +394,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 
 		if(this.mapView != null)
 		{
-			this.mapView.setLogicalNetLayer(null);
+//			this.mapView.setLogicalNetLayer(null);
 		}
 
 		this.mapView = mapView;
@@ -377,21 +402,13 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 		if(mapView == null)
 		{
 			System.out.println("mapView null!");
-//			try
-//			{
-//				this.mapView = new MapView(this, null);
-//			}
-//			catch (CreateObjectException e)
-//			{
-//				
-//			}
 		}
 		else
 		{
 			setScale(mapView.getScale());
 			setCenter(mapView.getCenter());
 
-			Iterator e = mapView.getAllElements().iterator();
+			Iterator e = getMapViewController().getAllElements().iterator();
 			while (e.hasNext())
 			{
 				MapElement mapElement = (MapElement )e.next();
@@ -407,7 +424,8 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 				}
 		}
 
-		this.mapView.setLogicalNetLayer(this);
+//		this.mapView.setLogicalNetLayer(this);
+		getMapViewController().setMapView(mapView);
 
 		//Поумолчанию текущий элемент Void
 		currentMapElement = VoidElement.getInstance(this.mapView);
@@ -418,7 +436,8 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 	}
 
 	/**
-	 * геттер
+	 * получить вид.
+	 * @return вид
 	 */
 	public MapView getMapView()
 	{
@@ -426,25 +445,19 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 	}
 
 	/**
-	 * сеттер
+	 * Установить топологическую карту.
+	 * @param map топологическая карта
 	 */
 	public void setMap( Map map)
 	{
 		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "setMap(" + map + ")");
 		
-//		try
-//		{
-//			setMapView(new MapView(this, map));
-//		}
-//		catch (CreateObjectException e)
-//		{
-//			
-//		}
 		getMapView().setMap(map);
 	}
 
 	/**
-	 * геттер
+	 * Получить масштаб элементов по умолчанию.
+	 * @return масштаб элементов по умолчанию
 	 */
 	public double getDefaultScale()
 	{
@@ -452,7 +465,8 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 	}
 	
 	/**
-	 * сеттер
+	 * Установить масштаб элементов по умолчанию.
+	 * @param defaultScale масштаб элементов по умолчанию
 	 */
 	public void setDefaultScale(double defaultScale)
 	{
@@ -463,7 +477,8 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 	}
 	
 	/**
-	 * получить текущий масштаб точечных элементов
+	 * Получить текущий масштаб точечных элементов.
+	 * @return текущий масштаб точечных элементов
 	 */
 	public double getCurrentScale()
 	{
@@ -471,7 +486,8 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 	}
 	
 	/**
-	 * сеттер
+	 * Установить текущий масштаб точечных элементов.
+	 * @param currentScale текущий масштаб точечных элементов
 	 */
 	public void setCurrentScale(double currentScale)
 	{
@@ -481,7 +497,8 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 	}
 	
 	/**
-	 * геттер
+	 * Получить текущее состояние слоя карты.
+	 * @return состояние слоя карты
 	 */
 	public MapState getMapState()
 	{
@@ -489,7 +506,8 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 	}
 
 	/**
-	 * сеттер
+	 * Установить текущее состояние слоя карты.
+	 * @param state новое состояние
 	 */
 	public void setMapState(MapState state)
 	{
@@ -499,7 +517,8 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 	}
 
 	/**
-	 * геттер
+	 * Получить текущую экранную точку.
+	 * @return текущая экранная точка
 	 */
 	public Point getCurrentPoint()
 	{
@@ -507,7 +526,8 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 	}
 	
 	/**
-	 * сеттер
+	 * Установить текущую экранную точку.
+	 * @param point текущая экранная точка
 	 */
 	public void setCurrentPoint(Point point)
 	{
@@ -515,7 +535,8 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 	}
 	
 	/**
-	 * передать команду на отображение координат текущей точки
+	 * Передать команду на отображение координат текущей точки в окне координат.
+	 * @param point экранная координата мыши
 	 */	
 	public void showLatLong(Point point)
 	{
@@ -529,7 +550,8 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 	}
 
 	/**
-	 * uеттер
+	 * Получить запомненную начальную экранную точку.
+	 * @return начальная экранная точка
 	 */
 	public Point getStartPoint()
 	{
@@ -537,7 +559,8 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 	}
 
 	/**
-	 * сеттер
+	 * Установить начальную экранную точку.
+	 * @param point начальная экранная точка
 	 */
 	public void setStartPoint(Point point)
 	{
@@ -545,7 +568,8 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 	}
 
 	/**
-	 * uеттер
+	 * Получить запомненную конечную экранную точку.
+	 * @return конечная экранная точка
 	 */
 	public Point getEndPoint()
 	{
@@ -553,20 +577,26 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 	}
 
 	/**
-	 * сеттер
+	 * Установить конечную экранную точку.
+	 * @param point конечная экранная точка
 	 */
 	public void setEndPoint(Point point)
 	{
 		endPoint = new Point(point);
 	}
 	
+	/**
+	 * Получить список команд, исполняемых на слое.
+	 * @return список команд
+	 */
 	public CommandList getCommandList()
 	{
 		return this.commandList;
 	}
 
 	/**
-	 * 
+	 * Получить флаг отображения контекстного меню.
+	 * @return флаг
 	 */
 	public boolean isMenuShown()
 	{
@@ -574,7 +604,8 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 	}
 
 	/**
-	 * 
+	 * Установить флаг отображения контекстного меню.
+	 * @param isMenuShown флаг
 	 */	
 	public void setMenuShown(boolean isMenuShown)
 	{
@@ -582,8 +613,8 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 	}
 
 	/**
-	 * отрисовать все элементы логического слоя топологической схемы
-	 * @param g
+	 * Отрисовать все элементы логического слоя топологической схемы.
+	 * @param g графический контекст
 	 */
 	public void paint(Graphics g)
 	{
@@ -607,10 +638,13 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 		p.setBackground(background);
 	}
 
-	protected static List elementsToDisplay = new LinkedList();
 	/**
-	 * Отрисовать линейные объекты
-	 * @param g
+	 * Списокотображаемых элементов.
+	 */
+	protected List elementsToDisplay = new LinkedList();
+	/**
+	 * Отрисовать линейные объекты.
+	 * @param g графический контекст
 	 */
 	public void drawLines(Graphics g)
 	{
@@ -632,7 +666,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 		if (getMapState().getShowMode() == MapState.SHOW_MEASUREMENT_PATH)
 		{
 			elementsToDisplay.addAll(getMapView().getMap().getPhysicalLinks());
-			for(Iterator it = getMapView().getMeasurementPaths().iterator(); it.hasNext();)
+			for(Iterator it = getMapViewController().getMeasurementPaths().iterator(); it.hasNext();)
 			{
 				MeasurementPath mpath = 
 					(MeasurementPath)it.next();
@@ -659,7 +693,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 		if (getMapState().getShowMode() == MapState.SHOW_CABLE_PATH)
 		{
 			elementsToDisplay.addAll(getMapView().getMap().getPhysicalLinks());
-			for(Iterator it = getMapView().getCablePaths().iterator(); it.hasNext();)
+			for(Iterator it = getMapViewController().getCablePaths().iterator(); it.hasNext();)
 			{
 				CablePath cpath = 
 					(CablePath)it.next();
@@ -697,7 +731,8 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 	}
 
 	/**
-	 * Рисует элементы наследники от класса Node
+	 * Отрисовать узлы.
+	 * @param g графический контекст
 	 */
 	public void drawNodes(Graphics g)
 	{
@@ -729,10 +764,11 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 	}
 
 	/**
-	 * Рисует временние линии 
+	 * Отрисовать временние линии.
 	 * 		- прямоугольник выбора объектов,
 	 * 		- вновь проводимую линию
 	 *      - прямоугольник масштабирования
+	 * @param g графический контекст
 	 */
 	public void drawTempLines(Graphics g)
 	{
@@ -780,6 +816,10 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 		}
 	}
 
+	/**
+	 * Отрисовать выделенные элементы.
+	 * @param g графический контекст
+	 */
 	public void drawSelection(Graphics g)
 	{
 		Rectangle2D.Double visibleBounds = this.getVisibleBounds();
@@ -793,13 +833,29 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 	}
 
 	/**
-	 * Обработка событий
+	 * Обработка событий.
+	 * @param ae событие
 	 */
 	public void operationPerformed(OperationEvent ae)
 	{
 		if(!performProcessing)
 			return;
 
+		if(ae.getActionCommand().equals(MapEvent.NEED_FULL_REPAINT))
+		{
+			repaint(true);
+		}
+		else
+		if(ae.getActionCommand().equals(MapEvent.NEED_REPAINT))
+		{
+			repaint(false);
+		}
+		else
+		if(ae.getActionCommand().equals(MapEvent.DESELECT_ALL))
+		{
+			getMapViewController().deselectAll();
+		}
+		else
 		if(ae.getActionCommand().equals(MapEvent.MAP_VIEW_CHANGED))
 		{
 //			getMapView().setChanged(true);
@@ -851,20 +907,20 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 			Object me = ae.getSource();
 			if(me instanceof SchemeElement)
 			{
-				getMapView().scanElement((SchemeElement )me);
-				getMapView().scanCables(((SchemeElement )me).scheme());
+				getMapViewController().scanElement((SchemeElement )me);
+				getMapViewController().scanCables(((SchemeElement )me).scheme());
 			}
 			else
 			if(me instanceof SchemeCableLink)
 			{
-				getMapView().scanCable((SchemeCableLink )me);
-				getMapView().scanPaths(((SchemeCableLink )me).scheme());
+				getMapViewController().scanCable((SchemeCableLink )me);
+				getMapViewController().scanPaths(((SchemeCableLink )me).scheme());
 			}
 			else
 			if(me instanceof CablePath)
 			{
-				getMapView().scanCable(((CablePath)me).getSchemeCableLink());
-				getMapView().scanPaths(((CablePath)me).getSchemeCableLink().scheme());
+				getMapViewController().scanCable(((CablePath)me).getSchemeCableLink());
+				getMapViewController().scanPaths(((CablePath)me).getSchemeCableLink().scheme());
 			}
 			else
 			if(me instanceof SiteNode)
@@ -887,7 +943,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 				MeasurementPath path;
 				try
 				{
-					path = mapView.getMeasurementPathByMonitoredElementId(mne.getMeId());
+					path = getMapViewController().getMeasurementPathByMonitoredElementId(mne.getMeId());
 				}
 				catch (CommunicationException e)
 				{
@@ -908,7 +964,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 						mne.getDistance(),
 						path,
 						mne.getMeId());
-					getMapView().addMarker(marker);
+					getMapViewController().addMarker(marker);
 
 					MarkerController mc = (MarkerController)getMapViewController().getController(marker);
 					mc.moveToFromStartLo(marker, mne.getDistance());
@@ -920,7 +976,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 				MeasurementPath path;
 				try
 				{
-					path = mapView.getMeasurementPathByMonitoredElementId(mne.getMeId());
+					path = getMapViewController().getMeasurementPathByMonitoredElementId(mne.getMeId());
 				}
 				catch (CommunicationException e)
 				{
@@ -942,7 +998,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 						path,
 						mne.getMeId());
 //					marker.descriptor = mne.descriptor;
-					getMapView().addMarker(marker);
+					getMapViewController().addMarker(marker);
 
 					MarkerController mc = (MarkerController)getMapViewController().getController(marker);
 
@@ -955,7 +1011,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 				MeasurementPath path;
 				try
 				{
-					path = mapView.getMeasurementPathByMonitoredElementId(mne.getMeId());
+					path = getMapViewController().getMeasurementPathByMonitoredElementId(mne.getMeId());
 				}
 				catch (CommunicationException e)
 				{
@@ -971,7 +1027,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 				AlarmMarker marker = null;
 				if(path != null)
 				{
-					for(Iterator it = getMapView().getMarkers().iterator(); it.hasNext();)
+					for(Iterator it = getMapViewController().getMarkers().iterator(); it.hasNext();)
 					{
 						try
 						{
@@ -994,7 +1050,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 							path,
 							mne.getMeId());
 //						marker.descriptor = mne.descriptor;
-						getMapView().addMarker(marker);
+						getMapViewController().addMarker(marker);
 					}
 					else
 					{
@@ -1029,7 +1085,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 			else
 			if(mne.isDataMarkerMoved())
 			{
-				Marker marker = getMapView().getMarker(mne.getMarkerId());
+				Marker marker = getMapViewController().getMarker(mne.getMarkerId());
 				if(marker != null)
 				{
 					if(marker.getPathDecompositor() == null)
@@ -1043,23 +1099,23 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 			else
 			if(mne.isDataMarkerSelected())
 			{
-				Marker marker = getMapView().getMarker(mne.getMarkerId());
+				Marker marker = getMapViewController().getMarker(mne.getMarkerId());
 				if(marker != null)
 					marker.setSelected(true);
 			}
 			else
 			if(mne.isDataMarkerDeselected())
 			{
-				Marker marker = getMapView().getMarker(mne.getMarkerId());
+				Marker marker = getMapViewController().getMarker(mne.getMarkerId());
 				if(marker != null)
 					marker.setSelected(false);
 			}
 			else
 			if(mne.isDataMarkerDeleted())
 			{
-				Marker marker = getMapView().getMarker(mne.getMarkerId());
+				Marker marker = getMapViewController().getMarker(mne.getMarkerId());
 				if(marker != null)
-					getMapView().removeMarker(marker);
+					getMapViewController().removeMarker(marker);
 				if(marker instanceof AlarmMarker)
 				{
 					AlarmMarker amarker = (AlarmMarker)marker;
@@ -1149,7 +1205,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 	
 					for(int i = 0; i < ses.length; i++)
 					{
-						SiteNode site = getMapView().findElement(ses[i]);
+						SiteNode site = getMapViewController().findElement(ses[i]);
 						if(site != null)
 							site.setSelected(true);
 					}
@@ -1161,7 +1217,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 					
 					for(int i = 0; i < sps.length; i++)
 					{
-						MeasurementPath mmp = getMapView().findMeasurementPath(sps[i]);
+						MeasurementPath mmp = getMapViewController().findMeasurementPath(sps[i]);
 						if(mmp != null)
 							mmp.setSelected(true);
 					}
@@ -1172,7 +1228,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 					SchemeCableLink[] scs = (SchemeCableLink[] )sne.getSource();
 					for(int i = 0; i < scs.length; i++)
 					{
-						CablePath mcp = getMapView().findCablePath(scs[i]);
+						CablePath mcp = getMapViewController().findCablePath(scs[i]);
 						if(mcp != null)
 							mcp.setSelected(true);
 					}
@@ -1184,7 +1240,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 	
 					for(int i = 0; i < ses.length; i++)
 					{
-						SiteNode site = getMapView().findElement(ses[i]);
+						SiteNode site = getMapViewController().findElement(ses[i]);
 						if(site != null)
 							site.setSelected(false);
 					}
@@ -1196,7 +1252,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 	
 					for(int i = 0; i < sps.length; i++)
 					{
-						MeasurementPath mmp = getMapView().findMeasurementPath(sps[i]);
+						MeasurementPath mmp = getMapViewController().findMeasurementPath(sps[i]);
 						if(mmp != null)
 							mmp.setSelected(false);
 					}
@@ -1207,7 +1263,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 					SchemeCableLink[] scs = (SchemeCableLink[] )sne.getSource();
 					for(int i = 0; i < scs.length; i++)
 					{
-						CablePath mcp = getMapView().findCablePath(scs[i]);
+						CablePath mcp = getMapViewController().findCablePath(scs[i]);
 						if(mcp != null)
 							mcp.setSelected(false);
 					}
@@ -1218,6 +1274,11 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 		}
 	}
 
+	/**
+	 * Отправить событие карты. Чтобы не отправить событие себе самому, 
+	 * используется флаг {@link #performProcessing}
+	 * @param me событие карты
+	 */
 	public void sendMapEvent(MapEvent me)
 	{
 		if(getContext() != null)
@@ -1230,7 +1291,8 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 	}
 
 	/**
-	 * Генерация сообщеия о выборке элемента карты
+	 * Генерация сообщеия о выборке элемента карты.
+	 * @param mapElement выбранный элемент карты
 	 */
 	public void notifyMapEvent(MapElement mapElement)
 	{
@@ -1249,7 +1311,8 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 	}
 
 	/**
-	 * Генерация сообщеия о выборке элемента карты
+	 * Генерация сообщеия о выборке элемента карты.
+	 * @param mapElement выбранный элемент карты
 	 */
 	public void notifySchemeEvent(MapElement mapElement)
 	{
@@ -1317,7 +1380,9 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 	}
 
 	/**
-	 * Получить текущий фиксированный элемент
+	 * Получить текущий фиксированный элемент.
+	 * Используется в режиме {@link MapState#MOVE_FIXDIST}.
+	 * @return текущий фиксированный элемент
 	 */
 	public AbstractNode getFixedNode()
 	{
@@ -1325,7 +1390,10 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 	}
 
 	/**
-	 * Получить Список узлов, соседних (через фрагменты) с фиксированным узлом
+	 * Получить Список узлов, соседних (через фрагменты) с фиксированным узлом.
+	 * Используется в режиме {@link MapState#MOVE_FIXDIST}.
+	 * @return список элементов. 
+	 * 
 	 */
 	public List getFixedNodeList()
 	{
@@ -1333,7 +1401,8 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 	}
 
 	/**
-	 * Получить текущий выбранный элемент
+	 * Получить текущий выбранный элемент.
+	 * @return текущий выбранный элемент
 	 */
 	public MapElement getCurrentMapElement()
 	{
@@ -1341,7 +1410,8 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 	}
 
 	/**
-	 * Установить текущий выбранный элемент
+	 * Установить текущий выбранный элемент.
+	 * @param curMapElement текущий выбранный элемент
 	 */
 	public void setCurrentMapElement(MapElement curMapElement)
 	{
@@ -1358,7 +1428,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 			{
 				if(canFixDist)
 				{
-					fixedNode = (AbstractNode)curMapElement;
+					fixedNode = (AbstractNode )curMapElement;
 					fixedNodeList.clear();
 					for(Iterator it = fixedNode.getNodeLinks().iterator(); it.hasNext();)
 					{
@@ -1381,7 +1451,9 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 	}
 
 	/**
-	 * Получить текущий элемент по экранной коордитате на карте
+	 * Получить текущий элемент по экранной коордитате на карте.
+	 * @param point экранная координата
+	 * @return элемент в точке
 	 */
 	public MapElement getMapElementAtPoint(Point point)
 	{
@@ -1394,12 +1466,11 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 		
 		//Здесь пробегаемся по всем элементам и если на каком-нибудь из них курсор
 		//то устанавливаем его текущим элементом
-		Iterator e = mapView.getAllElements().iterator();
+		Iterator e = getMapViewController().getAllElements().iterator();
 		while (e.hasNext())
 		{
 			MapElement mapElement = (MapElement )e.next();
 			MapElementController controller = getMapViewController().getController(mapElement);
-//			if(mapElement.isVisible(visibleBounds))
 			if(controller.isElementVisible(mapElement, visibleBounds))
 			if ( controller.isMouseOnElement(mapElement, point))
 			{
@@ -1419,7 +1490,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 					else
 					if ( showMode == MapState.SHOW_CABLE_PATH)
 					{
-						Iterator it = mapView.getCablePaths((NodeLink)mapElement).iterator();
+						Iterator it = getMapViewController().getCablePaths((NodeLink)mapElement).iterator();
 						if(it.hasNext())
 						{
 							curME = (CablePath)it.next();
@@ -1432,7 +1503,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 					else
 					if ( showMode == MapState.SHOW_MEASUREMENT_PATH)
 					{
-						Iterator it = mapView.getMeasurementPaths((NodeLink)mapElement).iterator();
+						Iterator it = getMapViewController().getMeasurementPaths((NodeLink)mapElement).iterator();
 						if(it.hasNext())
 						{
 							curME = (MeasurementPath)it.next();
@@ -1448,7 +1519,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 				{
 					if ( showMode == MapState.SHOW_CABLE_PATH)
 					{
-						Iterator it = mapView.getCablePaths((PhysicalLink)mapElement).iterator();
+						Iterator it = getMapViewController().getCablePaths((PhysicalLink)mapElement).iterator();
 						if(it.hasNext())
 						{
 							curME = (CablePath)it.next();
@@ -1457,7 +1528,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 					else
 					if ( showMode == MapState.SHOW_MEASUREMENT_PATH)
 					{
-						Iterator it = mapView.getMeasurementPaths((PhysicalLink)mapElement).iterator();
+						Iterator it = getMapViewController().getMeasurementPaths((PhysicalLink)mapElement).iterator();
 						if(it.hasNext())
 						{
 							curME = (MeasurementPath)it.next();
@@ -1471,13 +1542,13 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 	}
 
 	/**
-	 * Отменить выбор всем элементам
+	 * Отменить выбор всем элементам.
 	 */
 	public void deselectAll()
 	{
 		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "deselectAll()");
 
-		Iterator e = getMapView().getAllElements().iterator();
+		Iterator e = getMapViewController().getAllElements().iterator();
 		while ( e.hasNext())
 		{
 			MapElement mapElement = (MapElement)e.next();
@@ -1487,13 +1558,13 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 	}
 
 	/**
-	 * Выбрать все элеметны
+	 * Выбрать все элеметны.
 	 */
 	public void selectAll()
 	{
 		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "selectAll()");
 		
-		Iterator e = getMapView().getAllElements().iterator();
+		Iterator e = getMapViewController().getAllElements().iterator();
 
 		while(e.hasNext())
 		{
@@ -1503,52 +1574,42 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 	}
 
 	/**
-	 * Получить список выбранных элементов
+	 * Получить список выбранных элементов.
+	 * @return список элементов
 	 */	
 	public Set getSelectedElements()
 	{
-/*
-		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "getSelectedElements()");
-
-		List returnList = new LinkedList();
-		
-		Iterator e = getMapView().getAllElements().iterator();
-
-		while(e.hasNext())
-		{
-			MapElement curElement = (MapElement )e.next();
-			if(curElement.isSelected())
-				returnList.add(curElement);
-		}
-		
-		return returnList;
-*/
 		return getMapView().getMap().getSelectedElements();
 	}
 
 	/**
-	 * Проверка того, что хотя бы один элемент выбран
+	 * Проверка того, что хотя бы один элемент выбран.
+	 * @return <code>true</code> если есть выбранный элемент
 	 */
 	public boolean isSelectionEmpty()
 	{
-		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "isSelectionEmpty()");
-		
-		Iterator e = getMapView().getAllElements().iterator();
-
-		while (e.hasNext())
-		{
-			MapElement curElement = (MapElement)e.next();
-			if (curElement.isSelected())
-			{
-				return false;
-			}
-		}
-		return true;
+//		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "isSelectionEmpty()");
+//		
+//		Iterator e = getMapView().getAllElements().iterator();
+//
+//		while (e.hasNext())
+//		{
+//			MapElement curElement = (MapElement)e.next();
+//			if (curElement.isSelected())
+//			{
+//				return false;
+//			}
+//		}
+//		return true;
+		return getMapView().getMap().getSelectedElements().isEmpty();
 	}
 
 	/**
-	 * Получить MapNodeLinkElement, для которого булет произволиться
-	 * редактирование длины, по коордитате на карте
+	 * Получить фрагмент линии, для которого булет произволиться
+	 * редактирование длины, по коордитате на карте.
+	 * @param point экранная координата
+	 * @return фрагмент линии, или <code>null</code>, если фрагмента в данной
+	 * точке нет
 	 */
 	public NodeLink getEditedNodeLink(Point point)
 	{
@@ -1570,6 +1631,13 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 		return null;
 	}
 	
+	/**
+	 * Установить новую длину фрагмента линии - расстояние от узла node до
+	 * другого узла.
+	 * @param nodelink фрагмент линии
+	 * @param node узел, от которого откладывается расстояние
+	 * @param dist расстояние
+	 */
 	public void setNodeLinkSizeFrom(NodeLink nodelink, AbstractNode node, double dist)
 	{
 		DoublePoint anchor1 = node.getLocation();
@@ -1579,7 +1647,6 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 		
 		((NodeLinkController)getMapViewController().getController(nodelink))
 			.setSizeFrom(nodelink, node, dist);
-//		nodelink.setSizeFrom(node, dist);
 
 		DoublePoint anchor2 = node.getLocation();
 		cmd.setParameter(
@@ -1595,7 +1662,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 	}
 
 	/**
-	 * Выполнить удаление выбранных элементов
+	 * Выполнить удаление выбранных элементов.
 	 */
 	public void delete()
 	{
@@ -1607,7 +1674,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 	}
 
 	/**
-	 * Отменить последнюю выполненную команду пользователя
+	 * Отменить последнюю выполненную команду пользователя.
 	 */
 	public void undo()
 	{
@@ -1617,7 +1684,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 	}
 	
 	/**
-	 * Повторить отмененную команду прользователя
+	 * Повторить отмененную команду прользователя.
 	 */
 	public void redo()
 	{
@@ -1626,6 +1693,10 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 		sendMapEvent(new MapEvent(this, MapEvent.MAP_CHANGED));
 	}
 	
+	/**
+	 * Получить выбранный тип для создания новых линий.
+	 * @return тип линии
+	 */
 	public PhysicalLinkType getPen()
 	{
 		if(currentPen == null)
@@ -1638,6 +1709,10 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 		return currentPen;
 	}
 	
+	/**
+	 * Получить тип непривязанного узла.
+	 * @return тип узла
+	 */
 	public SiteNodeType getUnboundProto()
 	{
 		if(unboundProto == null)
@@ -1650,6 +1725,10 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 		return unboundProto;
 	}
 	
+	/**
+	 * Получить тип непривязанного кабеля.
+	 * @return тип непривязанного кабеля
+	 */
 	public PhysicalLinkType getUnboundPen()
 	{
 		if(unboundLinkProto == null)
@@ -1662,244 +1741,19 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 		return unboundLinkProto;
 	}
 	
+	/**
+	 * Выбрать тип линии для создания новых линий.
+	 * @param pen тип линии
+	 */
 	public void setPen(PhysicalLinkType pen)
 	{
 		this.currentPen = pen;
 	}
-/*
-	public Identifier getImageId(String codename, String filename)
-	{
-		try 
-		{
-			StringFieldCondition condition = new StringFieldCondition(
-				String.valueOf(ImageResourceSort._FILE),
-				ObjectEntities.IMAGE_RESOURCE_ENTITY_CODE,
-				StringFieldSort.STRINGSORT_INTEGER);
-			List bitMaps = ResourceStorableObjectPool.getStorableObjectsByCondition(condition, true);
 
-			for (Iterator it = bitMaps.iterator(); it.hasNext(); ) 
-			{
-				FileImageResource ir = (FileImageResource )it.next();
-				if(ir.getCodename().equals(codename))
-					return ir.getId();
-				
-			}
-		}
-		catch (ApplicationException ex) 
-		{
-			ex.printStackTrace();
-		}
-		try
-		{
-			Identifier creatorId = new Identifier(
-				aContext.getSessionInterface().getAccessIdentifier().user_id);
-			FileImageResource ir = FileImageResource.createInstance(
-				creatorId,
-				filename);
-			ResourceStorableObjectPool.putStorableObject(ir);
-			return ir.getId();
-		}
-		catch (CreateObjectException e)
-		{
-			e.printStackTrace();
-			return null;
-		}
-		catch (IllegalObjectEntityException e)
-		{
-			e.printStackTrace();
-			return null;
-		}
-	}
-
-	public SiteNodeType getSiteNodeType(
-			String codename)
-	{
-		StorableObjectCondition pTypeCondition = new StringFieldCondition(
-			codename,
-			ObjectEntities.SITE_NODE_TYPE_ENTITY_CODE,
-			StringFieldSort.STRINGSORT_BASE);
-
-		try
-		{
-			List pTypes =
-				MapStorableObjectPool.getStorableObjectsByCondition(pTypeCondition, true);
-			for (Iterator it = pTypes.iterator(); it.hasNext();)
-			{
-				SiteNodeType type = (SiteNodeType )it.next();
-				if (type.getCodename().equals(codename))
-					return type;
-			}
-		}
-		catch(ApplicationException ex)
-		{
-			System.err.println("Exception searching ParameterType. Creating new one.");
-			ex.printStackTrace();
-		}
-
-		try
-		{
-			Identifier creatorId = new Identifier(
-				aContext.getSessionInterface().getAccessIdentifier().user_id);
-			SiteNodeType snt = SiteNodeType.createInstance(
-				creatorId,
-				codename,
-				LangModelMap.getString(codename),
-				"",
-				getImageId(codename, NodeTypeController.getImageFileName(codename)),
-				true);
-				
-			MapStorableObjectPool.putStorableObject(snt);
-			return snt;
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-			return null;
-		}
-	}
-*/
-/*
-	public PhysicalLinkType getPhysicalLinkType(
-			String codename)
-	{
-		StorableObjectCondition pTypeCondition = new StringFieldCondition(
-			codename,
-			ObjectEntities.PHYSICAL_LINK_TYPE_ENTITY_CODE,
-			StringFieldSort.STRINGSORT_BASE);
-
-		try
-		{
-			List pTypes =
-				MapStorableObjectPool.getStorableObjectsByCondition(pTypeCondition, true);
-			for (Iterator it = pTypes.iterator(); it.hasNext();)
-			{
-				PhysicalLinkType type = (PhysicalLinkType )it.next();
-				if (type.getCodename().equals(codename))
-					return type;
-			}
-		}
-		catch(ApplicationException ex)
-		{
-			System.err.println("Exception searching ParameterType. Creating new one.");
-			ex.printStackTrace();
-		}
-
-		try
-		{
-			LinkTypeController ltc = (LinkTypeController)LinkTypeController.getInstance();
-			ltc.setLogicalNetLayer(this);
-
-			Identifier creatorId = new Identifier(
-				aContext.getSessionInterface().getAccessIdentifier().user_id);
-
-			PhysicalLinkType pType = PhysicalLinkType.createInstance(
-				creatorId,
-				codename,
-				LangModelMap.getString(codename),
-				"",
-				LinkTypeController.getBindDimension(codename));
-
-			ltc.setLineSize(pType, LinkTypeController.getLineThickness(codename));
-			ltc.setColor(pType, LinkTypeController.getLineColor(codename));
-
-			MapStorableObjectPool.putStorableObject(pType);
-			return pType;
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-			return null;
-		}
-	}
-*/
-/*
-	protected SiteNodeType getDefaultUnboundProto()
-	{
-		Identifier creatorId = new Identifier(
-			aContext.getSessionInterface().getAccessIdentifier().user_id);
-
-		return NodeTypeController.getSiteNodeType(creatorId, SiteNodeType.UNBOUND);
-	}
-*/
-/*
-	public List getPens()
-	{
-		Identifier creatorId = new Identifier(
-			aContext.getSessionInterface().getAccessIdentifier().user_id);
-
-		PhysicalLinkType mlpe = null;
-
-		mlpe = LinkTypeController.getPhysicalLinkType(creatorId, PhysicalLinkType.TUNNEL);
-		mlpe = LinkTypeController.getPhysicalLinkType(creatorId, PhysicalLinkType.COLLECTOR);
-
-		List list = null;
-		try
-		{
-			list =
-				MapStorableObjectPool.getStorableObjectsByConditionButIds(null, null, true);
-
-			list.remove(getUnboundPen());
-		}
-		catch(Exception e)
-		{
-			list = new LinkedList();
-		}
-		
-		return list;
-	}
-	
-	protected PhysicalLinkType getDefaultPen()
-	{
-		Identifier creatorId = new Identifier(
-			aContext.getSessionInterface().getAccessIdentifier().user_id);
-		return LinkTypeController.getPhysicalLinkType(creatorId, PhysicalLinkType.TUNNEL);
-	}
-
-	protected PhysicalLinkType getDefaultCable()
-	{
-		Identifier creatorId = new Identifier(
-			aContext.getSessionInterface().getAccessIdentifier().user_id);
-		return LinkTypeController.getPhysicalLinkType(creatorId, PhysicalLinkType.UNBOUND);
-	}
-*/
-/*	
-	List topologicalProtos = new LinkedList();
-
-	public List getTopologicalProtos()
-	{
-		SiteNodeType mnpe = null;
-
-		topologicalProtos.clear();
-		
-		Identifier creatorId = new Identifier(
-			aContext.getSessionInterface().getAccessIdentifier().user_id);
-
-		topologicalProtos.add(NodeTypeController.getSiteNodeType(creatorId, SiteNodeType.ATS));
-		topologicalProtos.add(NodeTypeController.getSiteNodeType(creatorId, SiteNodeType.BUILDING));
-		topologicalProtos.add(NodeTypeController.getSiteNodeType(creatorId, SiteNodeType.PIQUET));
-		topologicalProtos.add(NodeTypeController.getSiteNodeType(creatorId, SiteNodeType.WELL));
-		topologicalProtos.add(NodeTypeController.getSiteNodeType(creatorId, SiteNodeType.CABLE_INLET));
-
-		try
-		{
-			List list2 =
-				MapStorableObjectPool.getStorableObjectsByConditionButIds(null, null, true);
-
-			for(Iterator it = list2.iterator(); it.hasNext();)
-			{
-				mnpe = (SiteNodeType )it.next();
-				if(mnpe.isTopological())
-					topologicalProtos.add(mnpe);
-			}
-		}
-		catch(Exception e)
-		{
-		}
-		
-		topologicalProtos.remove(getUnboundProto());
-		return topologicalProtos;
-	}
-*/
+	/**
+	 * получить контроллер вида.
+	 * @return контроллер вида
+	 */
 	public MapViewController getMapViewController()
 	{
 		return com.syrus.AMFICOM.Client.Map.Controllers.MapViewController.getInstance(this);

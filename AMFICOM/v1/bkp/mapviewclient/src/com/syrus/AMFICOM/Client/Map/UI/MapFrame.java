@@ -1,5 +1,5 @@
 /**
- * $Id: MapFrame.java,v 1.22 2005/01/26 10:17:31 krupenn Exp $
+ * $Id: MapFrame.java,v 1.23 2005/01/30 15:38:18 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -50,7 +50,7 @@ import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.map.DoublePoint;
 import com.syrus.AMFICOM.map.Map;
-import com.syrus.AMFICOM.Client.Resource.MapView.MapView;
+import com.syrus.AMFICOM.mapview.MapView;
 
 import com.syrus.AMFICOM.scheme.SchemeStorableObjectPool;
 import com.syrus.AMFICOM.scheme.corba.Scheme;
@@ -79,7 +79,7 @@ import javax.swing.event.InternalFrameEvent;
  * 
  * 
  * 
- * @version $Revision: 1.22 $, $Date: 2005/01/26 10:17:31 $
+ * @version $Revision: 1.23 $, $Date: 2005/01/30 15:38:18 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -264,6 +264,9 @@ public class MapFrame extends JInternalFrame
 				this.aContext.getDispatcher().unregister(this, MapEvent.MAP_VIEW_SCALE_CHANGED);
 				this.aContext.getDispatcher().unregister(this, MapEvent.MAP_CHANGED);
 				this.aContext.getDispatcher().unregister(this, MapEvent.MAP_VIEW_CHANGED);
+				this.aContext.getDispatcher().unregister(this, MapEvent.NEED_FULL_REPAINT);
+				this.aContext.getDispatcher().unregister(this, MapEvent.NEED_REPAINT);
+				this.aContext.getDispatcher().unregister(this, MapEvent.DESELECT_ALL);
 				this.aContext.getDispatcher().unregister(this, SchemeNavigateEvent.type);
 				this.aContext.getDispatcher().unregister(this, CatalogNavigateEvent.type);
 				this.aContext.getDispatcher().unregister(this, TreeListSelectionEvent.typ);
@@ -282,6 +285,9 @@ public class MapFrame extends JInternalFrame
 			aContext.getDispatcher().register(this, MapEvent.MAP_VIEW_SCALE_CHANGED);
 			aContext.getDispatcher().register(this, MapEvent.MAP_CHANGED);
 			aContext.getDispatcher().register(this, MapEvent.MAP_VIEW_CHANGED);
+			aContext.getDispatcher().register(this, MapEvent.NEED_FULL_REPAINT);
+			aContext.getDispatcher().register(this, MapEvent.NEED_REPAINT);
+			aContext.getDispatcher().register(this, MapEvent.DESELECT_ALL);
 			aContext.getDispatcher().register(this, SchemeNavigateEvent.type);
 			aContext.getDispatcher().register(this, CatalogNavigateEvent.type);
 			aContext.getDispatcher().register(this, TreeListSelectionEvent.typ);
@@ -367,57 +373,6 @@ public class MapFrame extends JInternalFrame
 			mapToolBar.setEnableDisablePanel(false);
 		}
 		else
-		if(ae.getActionCommand().equals(MapEvent.MAP_VIEW_CHANGED))
-		{
-			getMapViewer().getLogicalNetLayer().operationPerformed(ae);
-		}
-		else
-		if(ae.getActionCommand().equals(MapEvent.MAP_CHANGED))
-		{
-			getMapViewer().getLogicalNetLayer().operationPerformed(ae);
-		}
-		else
-		if(ae.getActionCommand().equals(MapEvent.MAP_NAVIGATE))
-		{
-			getMapViewer().getLogicalNetLayer().operationPerformed(ae);
-		}
-		else
-		if(ae.getActionCommand().equals(TreeDataSelectionEvent.type))
-		{
-			getMapViewer().getLogicalNetLayer().operationPerformed(ae);
-		}
-		else
-		if(ae.getActionCommand().equals(TreeListSelectionEvent.typ))
-		{
-			getMapViewer().getLogicalNetLayer().operationPerformed(ae);
-		}
-		else
-		if(ae.getActionCommand().equals(SchemeNavigateEvent.type))
-		{
-			getMapViewer().getLogicalNetLayer().operationPerformed(ae);
-		}
-		else
-		if(ae.getActionCommand().equals(CatalogNavigateEvent.type))
-		{
-			getMapViewer().getLogicalNetLayer().operationPerformed(ae);
-		}
-		else
-		if(ae.getActionCommand().equals(MapEvent.PLACE_ELEMENT))
-		{
-			getMapViewer().getLogicalNetLayer().operationPerformed(ae);
-		}
-		else
-		if(ae.getActionCommand().equals(MapEvent.MAP_ELEMENT_CHANGED))
-		{
-			getMapViewer().getLogicalNetLayer().operationPerformed(ae);
-		}
-		else
-		if(ae.getActionCommand().equals(MapEvent.MAP_ELEMENT_SELECTED))
-		{
-			getMapViewer().getLogicalNetLayer().operationPerformed(ae);
-		}
-		else
-		if(ae.getActionCommand().equals(MapEvent.MAP_ELEMENT_DESELECTED))
 		{
 			getMapViewer().getLogicalNetLayer().operationPerformed(ae);
 		}

@@ -13,7 +13,7 @@ import com.syrus.AMFICOM.Client.General.UI.ObjectResourceChooserDialog;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourceTreeNode;
 import com.syrus.AMFICOM.Client.General.UI.UniTreePanel;
 import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
-import com.syrus.AMFICOM.Client.Resource.MapView.MapView;
+import com.syrus.AMFICOM.mapview.MapView;
 import com.syrus.AMFICOM.administration.AdministrationStorableObjectPool;
 import com.syrus.AMFICOM.administration.Domain;
 import com.syrus.AMFICOM.administration.DomainCondition;
@@ -117,7 +117,7 @@ public final class MapSchemeTreePanel extends JPanel
 				getScaledInstance(IMG_SIZE, IMG_SIZE, Image.SCALE_DEFAULT)));
 		menuSchemeAddToView.setMaximumSize(BUTTON_DIMENSION);
 		menuSchemeAddToView.setPreferredSize(BUTTON_DIMENSION);
-		menuSchemeAddToView.setToolTipText(LangModelMap.getString("menuSchemeAddToView"));
+		menuSchemeAddToView.setToolTipText(LangModelMap.getString("menuMapViewAddScheme"));
 		menuSchemeAddToView.addActionListener(new ActionListener()
 			{
 				public void actionPerformed(ActionEvent e)
@@ -130,7 +130,7 @@ public final class MapSchemeTreePanel extends JPanel
 				getScaledInstance(IMG_SIZE, IMG_SIZE, Image.SCALE_DEFAULT)));
 		menuSchemeRemoveFromView.setMaximumSize(BUTTON_DIMENSION);
 		menuSchemeRemoveFromView.setPreferredSize(BUTTON_DIMENSION);
-		menuSchemeRemoveFromView.setToolTipText(LangModelMap.getString("menuSchemeRemoveFromView"));
+		menuSchemeRemoveFromView.setToolTipText(LangModelMap.getString("menuMapViewRemoveScheme"));
 		menuSchemeRemoveFromView.addActionListener(new ActionListener()
 			{
 				public void actionPerformed(ActionEvent e)
@@ -340,10 +340,15 @@ public final class MapSchemeTreePanel extends JPanel
 			if(!mapView.getSchemes().contains(retObj))
 			{
 				mapView.addScheme((Scheme )retObj);
-				aContext.getDispatcher().notify(new MapEvent(
-						mapView,
-						MapEvent.MAP_VIEW_CHANGED));
-				mapView.getLogicalNetLayer().repaint(false);
+				Dispatcher disp = aContext.getDispatcher();
+				if(disp != null)
+				{
+					aContext.getDispatcher().notify(new MapEvent(
+							mapView,
+							MapEvent.MAP_VIEW_CHANGED));
+//					getLogicalNetLayer().repaint(false);
+					disp.notify(new MapEvent(this, MapEvent.NEED_REPAINT));
+				}
 			}
 			aContext.getDispatcher().notify(new StatusMessageEvent(
 					StatusMessageEvent.STATUS_MESSAGE,
@@ -358,10 +363,17 @@ public final class MapSchemeTreePanel extends JPanel
 		Scheme scheme = (Scheme )node.getObject();
 
 		mapView.removeScheme(scheme);
-		aContext.getDispatcher().notify(new MapEvent(
-				mapView,
-				MapEvent.MAP_VIEW_CHANGED));
-		mapView.getLogicalNetLayer().repaint(false);
+
+
+		Dispatcher disp = aContext.getDispatcher();
+		if(disp != null)
+		{
+			aContext.getDispatcher().notify(new MapEvent(
+					mapView,
+					MapEvent.MAP_VIEW_CHANGED));
+//			getLogicalNetLayer().repaint(false);
+			disp.notify(new MapEvent(this, MapEvent.NEED_REPAINT));
+		}
 
 		aContext.getDispatcher().notify(new StatusMessageEvent(
 				StatusMessageEvent.STATUS_MESSAGE,
@@ -398,7 +410,8 @@ public final class MapSchemeTreePanel extends JPanel
 			{
 				if(mapView != null)
 				{
-					mapView.deselectAll();
+//					getLogicalNetLayer().getMapViewController().deselectAll();
+					disp.notify(new MapEvent(this, MapEvent.DESELECT_ALL));
 					disp.notify(new MapEvent(this, MapEvent.SELECTION_CHANGED));
 				}
 

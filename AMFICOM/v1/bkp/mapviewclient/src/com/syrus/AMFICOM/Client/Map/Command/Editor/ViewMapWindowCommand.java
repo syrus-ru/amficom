@@ -1,5 +1,5 @@
 /**
- * $Id: ViewMapWindowCommand.java,v 1.11 2005/01/24 16:51:32 krupenn Exp $
+ * $Id: ViewMapWindowCommand.java,v 1.12 2005/01/30 15:38:17 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -24,7 +24,7 @@ import com.syrus.AMFICOM.Client.Map.Command.Map.MapViewNewCommand;
 import com.syrus.AMFICOM.Client.Map.Command.MapDesktopCommand;
 import com.syrus.AMFICOM.Client.Map.UI.MapFrame;
 import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
-import com.syrus.AMFICOM.Client.Resource.MapView.MapView;
+import com.syrus.AMFICOM.mapview.MapView;
 import com.syrus.AMFICOM.map.Map;
 
 import java.awt.Dimension;
@@ -36,7 +36,7 @@ import javax.swing.JDesktopPane;
  * 
  * 
  * 
- * @version $Revision: 1.11 $, $Date: 2005/01/24 16:51:32 $
+ * @version $Revision: 1.12 $, $Date: 2005/01/30 15:38:17 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -131,7 +131,7 @@ public class ViewMapWindowCommand extends VoidCommand
 		
 		mapView.setMap(map);
 
-		mapView.setLogicalNetLayer(frame.getMapViewer().getLogicalNetLayer());
+//		mapView.setLogicalNetLayer(frame.getMapViewer().getLogicalNetLayer());
 
 		frame.setMapView(mapView);
 	}

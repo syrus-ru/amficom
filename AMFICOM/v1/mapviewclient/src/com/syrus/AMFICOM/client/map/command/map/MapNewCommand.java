@@ -1,5 +1,5 @@
 /**
- * $Id: MapNewCommand.java,v 1.13 2005/01/13 15:16:24 krupenn Exp $
+ * $Id: MapNewCommand.java,v 1.14 2005/01/30 15:38:17 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -23,7 +23,7 @@ import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.map.Map;
-import com.syrus.AMFICOM.Client.Resource.MapView.MapView;
+import com.syrus.AMFICOM.mapview.MapView;
 import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.map.MapStorableObjectPool;
 
@@ -32,7 +32,7 @@ import com.syrus.AMFICOM.map.MapStorableObjectPool;
  * 
  * 
  * 
- * @version $Revision: 1.13 $, $Date: 2005/01/13 15:16:24 $
+ * @version $Revision: 1.14 $, $Date: 2005/01/30 15:38:17 $
  * @module
  * @author $Author: krupenn $
  * @see

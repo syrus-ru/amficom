@@ -1,5 +1,5 @@
 /**
- * $Id: DeleteNodeLinkCommandBundle.java,v 1.9 2005/01/12 14:23:19 krupenn Exp $
+ * $Id: DeleteNodeLinkCommandBundle.java,v 1.10 2005/01/30 15:38:17 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -22,7 +22,7 @@ import com.syrus.AMFICOM.map.TopologicalNode;
 import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.Client.Map.mapview.CablePath;
 import com.syrus.AMFICOM.Client.Map.mapview.UnboundLink;
-import com.syrus.AMFICOM.Client.Resource.MapView.MapView;
+import com.syrus.AMFICOM.mapview.MapView;
 
 import java.util.Iterator;
 
@@ -33,7 +33,7 @@ import java.util.Iterator;
  * состоит из последовательности атомарных действий
  * 
  * 
- * @version $Revision: 1.9 $, $Date: 2005/01/12 14:23:19 $
+ * @version $Revision: 1.10 $, $Date: 2005/01/30 15:38:17 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -337,7 +337,7 @@ public class DeleteNodeLinkCommandBundle extends MapActionCommandBundle
 		if(physicalLink.getStartNode() instanceof SiteNode
 			&& physicalLink.getEndNode() instanceof SiteNode)
 		{
-			for(Iterator it = mapView.getCablePaths(physicalLink).iterator(); it.hasNext();)
+			for(Iterator it = getLogicalNetLayer().getMapViewController().getCablePaths(physicalLink).iterator(); it.hasNext();)
 			{
 				CablePath cpath = (CablePath)it.next();
 				cpath.removeLink(physicalLink);

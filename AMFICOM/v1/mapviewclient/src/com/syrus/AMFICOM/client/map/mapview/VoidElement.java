@@ -1,5 +1,5 @@
 /**
- * $Id: VoidElement.java,v 1.3 2005/01/20 14:37:52 krupenn Exp $
+ * $Id: VoidElement.java,v 1.4 2005/01/30 15:38:18 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -19,17 +19,14 @@ import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.map.MapElementState;
 
 import java.util.List;
-import com.syrus.AMFICOM.Client.Resource.MapView.MapView;
+import com.syrus.AMFICOM.mapview.MapView;
 
 /**
- * Пустой элемент 
+ * Пустой элемент.
  * 
- * 
- * 
- * @version $Revision: 1.3 $, $Date: 2005/01/20 14:37:52 $
- * @module
  * @author $Author: krupenn $
- * @see
+ * @version $Revision: 1.4 $, $Date: 2005/01/30 15:38:18 $
+ * @module mapviewclient_v1
  */
 public final class VoidElement implements MapElement 
 {
@@ -47,15 +44,28 @@ public final class VoidElement implements MapElement
 		return singleton;
 	}
 
-//	public String[][] getExportColumns()
-//	{
-//		throw new UnsupportedOperationException();
-//	}
-//
-//	public void setColumn(String field, String value)
-//	{
-//		throw new UnsupportedOperationException();
-//	}
+	/**
+	 * {@inheritDoc} 
+	 */
+	public Map getMap()
+	{
+		return mapView.getMap();
+	}
+
+	public MapView getMapView()
+	{
+		return mapView;
+	}
+
+	/**
+	 * {@inheritDoc} 
+	 */
+	public String getToolTipText()
+	{
+		String s1 = getMapView().getName();
+
+		return s1;
+	}
 
 	private static final String PROPERTY_PANE_CLASS_NAME = "";
 
@@ -64,14 +74,14 @@ public final class VoidElement implements MapElement
 		return PROPERTY_PANE_CLASS_NAME;
 	}
 	
-	public MapElementState getState()
-	{
-		throw new UnsupportedOperationException();
-	}
-
 	public boolean isSelected()
 	{
 		return true;
+	}
+
+	public MapElementState getState()
+	{
+		throw new UnsupportedOperationException();
 	}
 
 	public void setSelected(boolean selected)
@@ -119,16 +129,6 @@ public final class VoidElement implements MapElement
 		throw new UnsupportedOperationException();
 	}
 	
-	public Map getMap()
-	{
-		return mapView.getMap();
-	}
-
-	public MapView getMapView()
-	{
-		return mapView;
-	}
-
 	public List getCharacteristics() 
 	{
 		throw new UnsupportedOperationException();
@@ -142,13 +142,6 @@ public final class VoidElement implements MapElement
 	public void removeCharacteristic(Characteristic ch)
 	{
 		throw new UnsupportedOperationException();
-	}
-
-	public String getToolTipText()
-	{
-		String s1 = getMapView().getName();
-
-		return s1;
 	}
 
 	public void revert(MapElementState state)

@@ -1,5 +1,5 @@
 /**
- * $Id: MarkerController.java,v 1.4 2005/01/21 16:19:57 krupenn Exp $
+ * $Id: MarkerController.java,v 1.5 2005/01/30 15:38:18 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -17,6 +17,7 @@ import com.syrus.AMFICOM.Client.Map.MapCoordinatesConverter;
 import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
 import com.syrus.AMFICOM.Client.Map.mapview.CablePath;
 import com.syrus.AMFICOM.Client.Map.mapview.Marker;
+import com.syrus.AMFICOM.Client.Map.mapview.MeasurementPath;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.DoublePoint;
@@ -43,7 +44,7 @@ import javax.swing.ImageIcon;
  * 
  * 
  * 
- * @version $Revision: 1.4 $, $Date: 2005/01/21 16:19:57 $
+ * @version $Revision: 1.5 $, $Date: 2005/01/30 15:38:18 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -264,23 +265,28 @@ public class MarkerController extends AbstractNodeController
 	public void moveToFromStartLf(Marker marker, double physicalDistance)
 	{
 		marker.setDistance(physicalDistance);
+		
+		MeasurementPath measurementPath = marker.getMeasurementPath();
 
-		double pathl = marker.getMeasurementPath().getLengthLf();
+		double pathl = measurementPath.getLengthLf();
 		if ( marker.getDistance() > pathl)
 			marker.setDistance(pathl);
 
 		MapElement me = null;
 		double pathLength = 0;
 		double localDistance = 0.0;
+		
+		MeasurementPathController pathController = (MeasurementPathController )
+			getLogicalNetLayer().getMapViewController().getController(measurementPath);
 
-		PathElement []pes = marker.getMeasurementPath().getSchemePath().links();
+		PathElement []pes = measurementPath.getSchemePath().links();
 		for(int i = 0; i < pes.length; i++)
 		{
 			PathElement pe = (PathElement )pes[i];
 			double d = SchemeUtils.getPhysicalLength(pe);
 			if(pathLength + d > marker.getDistance())
 			{
-				me = marker.getMeasurementPath().getMapElement(pe);
+				me = pathController.getMapElement(measurementPath, pe);
 				localDistance = marker.getDistance() - pathLength;
 				break;
 			}
@@ -312,6 +318,8 @@ public class MarkerController extends AbstractNodeController
 	public void setRelativeToNode(Marker marker, AbstractNode node)
 	{
 		marker.setStartNode(node);
+
+		MeasurementPath measurementPath = marker.getMeasurementPath();
 		
 		NodeLink nl = null;
 		
@@ -319,12 +327,12 @@ public class MarkerController extends AbstractNodeController
 		{
 			NodeLink nlink = (NodeLink)it.next();
 			if(nl == null 
-				|| marker.getMeasurementPath().getSortedNodeLinks().indexOf(nl)
-					> marker.getMeasurementPath().getSortedNodeLinks().indexOf(nlink))
+				|| measurementPath.getSortedNodeLinks().indexOf(nl)
+					> measurementPath.getSortedNodeLinks().indexOf(nlink))
 				nl = nlink;
 		}
-		if(marker.getMeasurementPath().getSortedNodes().indexOf(node) 
-			> marker.getMeasurementPath().getSortedNodes().indexOf(nl.getOtherNode(node)))
+		if(measurementPath.getSortedNodes().indexOf(node) 
+			> measurementPath.getSortedNodes().indexOf(nl.getOtherNode(node)))
 				node = nl.getOtherNode(node);
 		
 		marker.setEndNode(nl.getOtherNode(node));

@@ -1,5 +1,5 @@
 /*
- * $Id: MapCloseCommand.java,v 1.7 2005/01/26 10:17:31 krupenn Exp $
+ * $Id: MapCloseCommand.java,v 1.8 2005/01/30 15:38:17 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -17,7 +17,7 @@ import com.syrus.AMFICOM.Client.Map.UI.MapFrame;
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.map.Map;
-import com.syrus.AMFICOM.Client.Resource.MapView.MapView;
+import com.syrus.AMFICOM.mapview.MapView;
 import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.map.MapStorableObjectPool;
 
@@ -27,7 +27,7 @@ import com.syrus.AMFICOM.map.MapStorableObjectPool;
  * самого окна карты. При этом в азголовке окна отображается информация о том,
  * что активной карты нет, и карта центрируется по умолчанию
  * 
- * @version $Revision: 1.7 $, $Date: 2005/01/26 10:17:31 $
+ * @version $Revision: 1.8 $, $Date: 2005/01/30 15:38:17 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see

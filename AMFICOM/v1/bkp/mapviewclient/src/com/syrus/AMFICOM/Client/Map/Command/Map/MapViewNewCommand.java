@@ -1,5 +1,5 @@
 /**
- * $Id: MapViewNewCommand.java,v 1.11 2004/12/29 19:05:20 krupenn Exp $
+ * $Id: MapViewNewCommand.java,v 1.12 2005/01/30 15:38:17 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -24,7 +24,7 @@ import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.map.Map;
-import com.syrus.AMFICOM.Client.Resource.MapView.MapView;
+import com.syrus.AMFICOM.mapview.MapView;
 import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.mapview.MapViewStorableObjectPool;
 
@@ -33,7 +33,7 @@ import com.syrus.AMFICOM.mapview.MapViewStorableObjectPool;
  * 
  * 
  * 
- * @version $Revision: 1.11 $, $Date: 2004/12/29 19:05:20 $
+ * @version $Revision: 1.12 $, $Date: 2005/01/30 15:38:17 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -72,9 +72,18 @@ public class MapViewNewCommand extends VoidCommand
 
 		try
 		{
-			mapView = new MapView(creatorId, domainId, map);
+			mapView = com.syrus.AMFICOM.mapview.MapView.createInstance(
+					creatorId,
+					domainId,
+					LangModelMap.getString("New"),
+					"",
+					0.0D,
+					0.0D,
+					1.0D,
+					1.0D,
+					map);
 
-			MapViewStorableObjectPool.putStorableObject(mapView.getMapViewStorable());
+			MapViewStorableObjectPool.putStorableObject(mapView);
 		}
 		catch (CreateObjectException e)
 		{

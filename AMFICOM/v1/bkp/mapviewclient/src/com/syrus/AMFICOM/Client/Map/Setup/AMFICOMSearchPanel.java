@@ -1,5 +1,5 @@
 /*
- * Название: $Id: AMFICOMSearchPanel.java,v 1.6 2005/01/21 16:19:57 krupenn Exp $
+ * Название: $Id: AMFICOMSearchPanel.java,v 1.7 2005/01/30 15:38:18 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -19,7 +19,7 @@ import com.syrus.AMFICOM.Client.Map.UI.MapFrame;
 import com.syrus.AMFICOM.Client.Map.UI.SimpleMapElementController;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.MapElement;
-import com.syrus.AMFICOM.Client.Resource.MapView.MapView;
+import com.syrus.AMFICOM.mapview.MapView;
 import com.syrus.AMFICOM.Client.Resource.ObjectResource;
 import com.syrus.AMFICOM.client_.general.ui_.ObjectResourceTable;
 import com.syrus.AMFICOM.client_.general.ui_.ObjectResourceTableModel;
@@ -51,7 +51,7 @@ import javax.swing.table.JTableHeader;
  * 
  * 
  * 
- * @version $Revision: 1.6 $, $Date: 2005/01/21 16:19:57 $
+ * @version $Revision: 1.7 $, $Date: 2005/01/30 15:38:18 $
  * @author $Author: krupenn $
  * @see
  */
@@ -285,8 +285,7 @@ import javax.swing.table.JTableHeader;
 	 */
 	private void doCenter()
 	{
-//		map.deselectAll();
-		mapView.deselectAll();
+		mmf.getMapViewer().getLogicalNetLayer().getMapViewController().deselectAll();
 
 		int[] selection = table.getSelectedRows();
 		for (int i = 0; i < selection.length; i++)

@@ -1,5 +1,5 @@
 /**
- * $Id: MapViewOpenCommand.java,v 1.12 2005/01/21 16:19:57 krupenn Exp $
+ * $Id: MapViewOpenCommand.java,v 1.13 2005/01/30 15:38:17 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -20,7 +20,7 @@ import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.administration.AdministrationStorableObjectPool;
 import com.syrus.AMFICOM.client_.general.ui_.ObjectResourceChooserDialog;
 import com.syrus.AMFICOM.Client.Map.UI.MapFrame;
-import com.syrus.AMFICOM.Client.Map.UI.MapViewController;
+import com.syrus.AMFICOM.Client.Map.UI.MapViewTableController;
 import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
 import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 import com.syrus.AMFICOM.administration.Domain;
@@ -31,7 +31,7 @@ import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.map.Map;
-import com.syrus.AMFICOM.Client.Resource.MapView.MapView;
+import com.syrus.AMFICOM.mapview.MapView;
 import com.syrus.AMFICOM.Client.Resource.ObjectResource;
 import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.client_.general.ui_.ObjectResourceTableModel;
@@ -46,7 +46,7 @@ import javax.swing.JDesktopPane;
  * 
  * 
  * 
- * @version $Revision: 1.12 $, $Date: 2005/01/21 16:19:57 $
+ * @version $Revision: 1.13 $, $Date: 2005/01/30 15:38:17 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -116,7 +116,7 @@ public class MapViewOpenCommand extends VoidCommand
 			return;
 		}
 
-		ObjectResourceChooserDialog mcd = new ObjectResourceChooserDialog(MapViewController.getInstance(), ObjectEntities.MAP_ENTITY);//ObjectEntities.MAP_VIEW_ENTITY
+		ObjectResourceChooserDialog mcd = new ObjectResourceChooserDialog(com.syrus.AMFICOM.Client.Map.UI.MapViewTableController.getInstance(), ObjectEntities.MAP_ENTITY);//ObjectEntities.MAP_VIEW_ENTITY
 
 		mcd.setCanDelete(canDelete);
 

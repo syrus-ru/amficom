@@ -333,7 +333,7 @@ public final class MapLinkBindPanel
 		CreateUnboundLinkCommandBundle command = new CreateUnboundLinkCommandBundle(
 				link.getStartNode(),
 				link.getEndNode());
-		command.setLogicalNetLayer(path.getMapView().getLogicalNetLayer());
+		command.setLogicalNetLayer(lnl);
 		command.execute();
 
 		UnboundLink unbound = command.getUnbound();

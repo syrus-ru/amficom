@@ -1,5 +1,5 @@
 /*
- * Название: $Id: ControlsFrame.java,v 1.6 2005/01/21 16:19:57 krupenn Exp $
+ * Название: $Id: ControlsFrame.java,v 1.7 2005/01/30 15:38:18 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -17,7 +17,7 @@ import com.syrus.AMFICOM.Client.General.Event.OperationListener;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.Map.UI.MapFrame;
-import com.syrus.AMFICOM.Client.Resource.MapView.MapView;
+import com.syrus.AMFICOM.mapview.MapView;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -37,7 +37,7 @@ import javax.swing.JTabbedPane;
  * 
  * 
  * 
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  * @author $Author: krupenn $
  * @see
  */

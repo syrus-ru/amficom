@@ -1,5 +1,5 @@
 /**
- * $Id: MeasurementPathController.java,v 1.1 2004/12/24 15:42:12 krupenn Exp $
+ * $Id: MeasurementPathController.java,v 1.2 2005/01/30 15:38:18 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -21,6 +21,13 @@ import com.syrus.AMFICOM.Client.Map.mapview.MeasurementPath;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.MapElement;
 
+import com.syrus.AMFICOM.map.SiteNode;
+import com.syrus.AMFICOM.scheme.SchemeUtils;
+import com.syrus.AMFICOM.scheme.corba.PathElement;
+import com.syrus.AMFICOM.scheme.corba.PathElementPackage.Type;
+import com.syrus.AMFICOM.scheme.corba.SchemeCableLink;
+import com.syrus.AMFICOM.scheme.corba.SchemeElement;
+import com.syrus.AMFICOM.scheme.corba.SchemeLink;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics;
@@ -29,14 +36,13 @@ import java.awt.Stroke;
 import java.awt.geom.Rectangle2D;
 
 import java.util.Iterator;
-import com.syrus.AMFICOM.Client.Map.Controllers.MapViewController;
 
 /**
  * линейный элемента карты 
  * 
  * 
  * 
- * @version $Revision: 1.1 $, $Date: 2004/12/24 15:42:12 $
+ * @version $Revision: 1.2 $, $Date: 2005/01/30 15:38:18 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -184,6 +190,44 @@ public final class MeasurementPathController extends AbstractLinkController
 				return true;
 		}
 		return false;
+	}
+
+	public MapElement getMapElement(MeasurementPath path, PathElement pe)
+	{
+		MapElement me = null;
+		switch(pe.type().value())
+		{
+			case Type._SCHEME_ELEMENT:
+				SchemeElement se = (SchemeElement )pe.abstractSchemeElement();
+				SiteNode site = getLogicalNetLayer().getMapViewController().findElement(se);
+				if(site != null)
+				{
+					me = site;
+				}
+				break;
+			case Type._SCHEME_LINK:
+				SchemeLink link = (SchemeLink )pe.abstractSchemeElement();
+				SchemeElement sse = SchemeUtils.getSchemeElementByDevice(path.getSchemePath().scheme(), link.sourceSchemePort().schemeDevice());
+				SchemeElement ese = SchemeUtils.getSchemeElementByDevice(path.getSchemePath().scheme(), link.targetSchemePort().schemeDevice());
+				SiteNode ssite = getLogicalNetLayer().getMapViewController().findElement(sse);
+				SiteNode esite = getLogicalNetLayer().getMapViewController().findElement(ese);
+				if(ssite != null && ssite.equals(esite))
+				{
+					me = ssite;
+				}
+				break;
+			case Type._SCHEME_CABLE_LINK:
+				SchemeCableLink clink = (SchemeCableLink )pe.abstractSchemeElement();
+				CablePath cp = getLogicalNetLayer().getMapViewController().findCablePath(clink);
+				if(cp != null)
+				{
+					me = cp;
+				}
+				break;
+			default:
+				throw new UnsupportedOperationException();
+		}
+		return me;
 	}
 
 }

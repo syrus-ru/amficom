@@ -7,7 +7,7 @@
 package com.syrus.AMFICOM.Client.Map.Props;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
-import com.syrus.AMFICOM.Client.Resource.MapView.MapView;
+import com.syrus.AMFICOM.mapview.MapView;
 import com.syrus.AMFICOM.Client.Map.mapview.VoidElement;
 
 import java.util.ArrayList;

@@ -1,5 +1,5 @@
 /**
- * $Id: CreateMarkerCommandAtomic.java,v 1.8 2004/12/24 15:42:11 krupenn Exp $
+ * $Id: CreateMarkerCommandAtomic.java,v 1.9 2005/01/30 15:38:17 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -19,7 +19,7 @@ import com.syrus.AMFICOM.map.DoublePoint;
 import com.syrus.AMFICOM.Client.Map.Controllers.NodeLinkController;
 import com.syrus.AMFICOM.Client.Map.mapview.Marker;
 import com.syrus.AMFICOM.Client.Map.mapview.MeasurementPath;
-import com.syrus.AMFICOM.Client.Resource.MapView.MapView;
+import com.syrus.AMFICOM.mapview.MapView;
 import com.syrus.AMFICOM.Client.Map.Controllers.MarkerController;
 import com.syrus.AMFICOM.Client.Resource.Pool;
 
@@ -41,7 +41,7 @@ import com.syrus.AMFICOM.Client.Map.Controllers.MapViewController;
 /**
  * Команда создания метки на линии
  * 
- * @version $Revision: 1.8 $, $Date: 2004/12/24 15:42:11 $
+ * @version $Revision: 1.9 $, $Date: 2005/01/30 15:38:17 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -117,7 +117,7 @@ public class CreateMarkerCommandAtomic extends MapActionCommand
 							path,
 							dpoint);
 
-					mapView.addMarker(marker);
+					logicalNetLayer.getMapViewController().addMarker(marker);
 					
 					MarkerController mc = (MarkerController)getLogicalNetLayer().getMapViewController().getController(marker);
 	

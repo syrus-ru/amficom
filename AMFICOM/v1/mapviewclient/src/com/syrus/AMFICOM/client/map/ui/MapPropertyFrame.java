@@ -1,5 +1,5 @@
 /**
- * $Id: MapPropertyFrame.java,v 1.11 2004/12/27 16:49:35 krupenn Exp $
+ * $Id: MapPropertyFrame.java,v 1.12 2005/01/30 15:38:18 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -22,7 +22,7 @@ import com.syrus.AMFICOM.Client.Map.Props.MapElementPropertiesController;
 import com.syrus.AMFICOM.Client.Map.Props.MapPropsManager;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.MapElement;
-import com.syrus.AMFICOM.Client.Resource.MapView.MapView;
+import com.syrus.AMFICOM.mapview.MapView;
 import com.syrus.AMFICOM.Client.Resource.ObjectResource;
 import com.syrus.AMFICOM.client_.general.ui_.ObjectResourcePropertiesController;
 import com.syrus.AMFICOM.client_.general.ui_.ObjPropertyTable;
@@ -43,7 +43,7 @@ import javax.swing.event.TableModelListener;
  * 
  * 
  * 
- * @version $Revision: 1.11 $, $Date: 2004/12/27 16:49:35 $
+ * @version $Revision: 1.12 $, $Date: 2005/01/30 15:38:18 $
  * @module
  * @author $Author: krupenn $
  * @see

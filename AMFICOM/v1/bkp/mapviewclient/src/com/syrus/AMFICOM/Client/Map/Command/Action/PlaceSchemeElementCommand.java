@@ -1,5 +1,5 @@
 /**
- * $Id: PlaceSchemeElementCommand.java,v 1.8 2004/12/24 15:42:12 krupenn Exp $
+ * $Id: PlaceSchemeElementCommand.java,v 1.9 2005/01/30 15:38:17 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -19,7 +19,7 @@ import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.Client.Map.mapview.UnboundNode;
-import com.syrus.AMFICOM.Client.Resource.MapView.MapView;
+import com.syrus.AMFICOM.mapview.MapView;
 import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.scheme.corba.Scheme;
 import com.syrus.AMFICOM.scheme.corba.SchemeElement;
@@ -31,7 +31,7 @@ import java.awt.geom.Point2D;
  * –азместить c[tvysq элемент на карте в соответствии с прив€зкой
  * или по координатам
  * 
- * @version $Revision: 1.8 $, $Date: 2004/12/24 15:42:12 $
+ * @version $Revision: 1.9 $, $Date: 2005/01/30 15:38:17 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -101,7 +101,7 @@ public class PlaceSchemeElementCommand extends MapActionCommandBundle
 		MapView mapView = logicalNetLayer.getMapView();
 		map = mapView.getMap();
 
-		site = mapView.findElement(se);
+		site = logicalNetLayer.getMapViewController().findElement(se);
 		if(site == null)
 		{
 			MapElement me = logicalNetLayer.getMapElementAtPoint(point);
@@ -118,7 +118,7 @@ public class PlaceSchemeElementCommand extends MapActionCommandBundle
 				site = unbound;
 			}
 			
-			mapView.scanCables(se.scheme());
+			logicalNetLayer.getMapViewController().scanCables(se.scheme());
 		}
 
 		// операци€ закончена - оповестить слушателей

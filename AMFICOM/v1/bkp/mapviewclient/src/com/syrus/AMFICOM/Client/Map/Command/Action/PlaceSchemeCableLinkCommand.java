@@ -1,5 +1,5 @@
 /**
- * $Id: PlaceSchemeCableLinkCommand.java,v 1.9 2004/12/24 15:42:11 krupenn Exp $
+ * $Id: PlaceSchemeCableLinkCommand.java,v 1.10 2005/01/30 15:38:17 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -18,7 +18,7 @@ import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.Client.Map.mapview.CablePath;
 import com.syrus.AMFICOM.Client.Map.mapview.UnboundLink;
-import com.syrus.AMFICOM.Client.Resource.MapView.MapView;
+import com.syrus.AMFICOM.mapview.MapView;
 import com.syrus.AMFICOM.scheme.corba.CableChannelingItem;
 import com.syrus.AMFICOM.scheme.corba.SchemeCableLink;
 
@@ -29,7 +29,7 @@ import com.syrus.AMFICOM.map.PhysicalLinkBinding;
 /**
  * –азместить кабель на карте.
  * 
- * @version $Revision: 1.9 $, $Date: 2004/12/24 15:42:11 $
+ * @version $Revision: 1.10 $, $Date: 2005/01/30 15:38:17 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -77,12 +77,12 @@ public class PlaceSchemeCableLinkCommand extends MapActionCommandBundle
 		mapView = logicalNetLayer.getMapView();
 		map = mapView.getMap();
 		
-		SiteNode[] mne = mapView.getSideNodes(scl);
+		SiteNode[] mne = logicalNetLayer.getMapViewController().getSideNodes(scl);
 		
 		startNode = mne[0];
 		endNode = mne[1];
 		
-		cablePath = mapView.findCablePath(scl);
+		cablePath = logicalNetLayer.getMapViewController().findCablePath(scl);
 		// если кабельный путь уже есть - ничего не делать
 		if(cablePath != null)
 		{

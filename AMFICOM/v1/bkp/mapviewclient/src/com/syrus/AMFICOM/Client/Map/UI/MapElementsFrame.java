@@ -1,5 +1,5 @@
 /**
- * $Id: MapElementsFrame.java,v 1.8 2004/12/22 16:38:42 krupenn Exp $
+ * $Id: MapElementsFrame.java,v 1.9 2005/01/30 15:38:18 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -18,7 +18,7 @@ import com.syrus.AMFICOM.Client.General.Event.OperationListener;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.map.Map;
-import com.syrus.AMFICOM.Client.Resource.MapView.MapView;
+import com.syrus.AMFICOM.mapview.MapView;
 
 import java.awt.BorderLayout;
 import java.awt.Toolkit;
@@ -31,7 +31,7 @@ import javax.swing.JInternalFrame;
  * 
  * 
  * 
- * @version $Revision: 1.8 $, $Date: 2004/12/22 16:38:42 $
+ * @version $Revision: 1.9 $, $Date: 2005/01/30 15:38:18 $
  * @module
  * @author $Author: krupenn $
  * @see

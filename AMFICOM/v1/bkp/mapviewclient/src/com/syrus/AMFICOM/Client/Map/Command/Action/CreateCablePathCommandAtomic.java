@@ -1,5 +1,5 @@
 /**
- * $Id: CreateCablePathCommandAtomic.java,v 1.6 2004/12/24 15:42:11 krupenn Exp $
+ * $Id: CreateCablePathCommandAtomic.java,v 1.7 2005/01/30 15:38:17 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -27,7 +27,7 @@ import com.syrus.AMFICOM.Client.General.Model.Environment;
  * 
  * 
  * 
- * @version $Revision: 1.6 $, $Date: 2004/12/24 15:42:11 $
+ * @version $Revision: 1.7 $, $Date: 2005/01/30 15:38:17 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -81,7 +81,7 @@ public class CreateCablePathCommandAtomic extends MapActionCommand
 					endNode, 
 					logicalNetLayer.getMapView());
 	
-			logicalNetLayer.getMapView().addCablePath(cp);
+			logicalNetLayer.getMapViewController().addCablePath(cp);
 		}
 		catch (IllegalObjectEntityException e)
 		{
@@ -91,12 +91,12 @@ public class CreateCablePathCommandAtomic extends MapActionCommand
 	
 	public void redo()
 	{
-		logicalNetLayer.getMapView().addCablePath(cp);
+		logicalNetLayer.getMapViewController().addCablePath(cp);
 	}
 	
 	public void undo()
 	{
-		logicalNetLayer.getMapView().removeCablePath(cp);
+		logicalNetLayer.getMapViewController().removeCablePath(cp);
 	}
 }
 

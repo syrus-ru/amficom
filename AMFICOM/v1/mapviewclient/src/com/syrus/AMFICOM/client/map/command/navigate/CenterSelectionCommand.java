@@ -1,5 +1,5 @@
 /**
- * $Id: CenterSelectionCommand.java,v 1.9 2005/01/12 15:45:53 krupenn Exp $
+ * $Id: CenterSelectionCommand.java,v 1.10 2005/01/30 15:38:18 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -28,7 +28,7 @@ import com.syrus.AMFICOM.map.Map;
  * 
  * 
  * 
- * @version $Revision: 1.9 $, $Date: 2005/01/12 15:45:53 $
+ * @version $Revision: 1.10 $, $Date: 2005/01/30 15:38:18 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -76,7 +76,7 @@ public class CenterSelectionCommand extends VoidCommand
 			}
 		}
 
-		for(Iterator it = logicalNetLayer.getMapView().getMarkers().iterator(); it.hasNext();)
+		for(Iterator it = logicalNetLayer.getMapViewController().getMarkers().iterator(); it.hasNext();)
 		{
 			me = (MapElement)it.next();
 			if(me.isSelected())
@@ -112,7 +112,7 @@ public class CenterSelectionCommand extends VoidCommand
 			}
 		}
 
-		for(Iterator it = logicalNetLayer.getMapView().getCablePaths().iterator(); it.hasNext();)
+		for(Iterator it = logicalNetLayer.getMapViewController().getCablePaths().iterator(); it.hasNext();)
 		{
 			me = (MapElement)it.next();
 			if(me.isSelected())
@@ -124,7 +124,7 @@ public class CenterSelectionCommand extends VoidCommand
 			}
 		}
 
-		for(Iterator it = logicalNetLayer.getMapView().getMeasurementPaths().iterator(); it.hasNext();)
+		for(Iterator it = logicalNetLayer.getMapViewController().getMeasurementPaths().iterator(); it.hasNext();)
 		{
 			me = (MapElement)it.next();
 			if(me.isSelected())

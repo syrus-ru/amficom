@@ -1,5 +1,5 @@
 /**
- * $Id: MeasurementPath.java,v 1.3 2005/01/20 14:37:52 krupenn Exp $
+ * $Id: MeasurementPath.java,v 1.4 2005/01/30 15:38:18 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,10 +11,11 @@
 
 package com.syrus.AMFICOM.Client.Map.mapview;
 
-import com.syrus.AMFICOM.general.Characteristic;
+import com.syrus.AMFICOM.Client.Map.mapview.CablePath;
 import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 import com.syrus.AMFICOM.configuration.MonitoredElement;
 import com.syrus.AMFICOM.configuration.TransmissionPath;
+import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseException;
@@ -30,27 +31,31 @@ import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.map.MapElementState;
 import com.syrus.AMFICOM.map.NodeLink;
 import com.syrus.AMFICOM.map.SiteNode;
+import com.syrus.AMFICOM.mapview.MapView;
 import com.syrus.AMFICOM.scheme.SchemeUtils;
-import com.syrus.AMFICOM.scheme.corba.*;
+import com.syrus.AMFICOM.scheme.corba.PathElement;
 import com.syrus.AMFICOM.scheme.corba.PathElementPackage.Type;
+import com.syrus.AMFICOM.scheme.corba.Scheme;
+import com.syrus.AMFICOM.scheme.corba.SchemeCableLink;
+import com.syrus.AMFICOM.scheme.corba.SchemeElement;
+import com.syrus.AMFICOM.scheme.corba.SchemeLink;
+import com.syrus.AMFICOM.scheme.corba.SchemePath;
 
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
-import com.syrus.AMFICOM.Client.Map.mapview.CablePath;
-import com.syrus.AMFICOM.Client.Resource.MapView.MapView;
 
 /**
  * элемент пути 
  * 
  * 
  * 
- * @version $Revision: 1.3 $, $Date: 2005/01/20 14:37:52 $
+ * @version $Revision: 1.4 $, $Date: 2005/01/30 15:38:18 $
  * @module
  * @author $Author: krupenn $
- * @see
+ * @todo getCablePaths(), getStartNode(), getEndNode()
  */
 public class MeasurementPath implements MapElement
 {
@@ -327,49 +332,12 @@ public class MeasurementPath implements MapElement
 		return SchemeUtils.getOpticalLength(schemePath);
 	}
 
-	public MapElement getMapElement(PathElement pe)
-	{
-		MapElement me = null;
-		switch(pe.type().value())
-		{
-			case Type._SCHEME_ELEMENT:
-				SchemeElement se = (SchemeElement )pe.abstractSchemeElement();
-				SiteNode site = mapView.findElement(se);
-				if(site != null)
-				{
-					me = site;
-				}
-				break;
-			case Type._SCHEME_LINK:
-				SchemeLink link = (SchemeLink )pe.abstractSchemeElement();
-				SchemeElement sse = SchemeUtils.getSchemeElementByDevice(scheme, link.sourceSchemePort().schemeDevice());
-				SchemeElement ese = SchemeUtils.getSchemeElementByDevice(scheme, link.targetSchemePort().schemeDevice());
-				SiteNode ssite = mapView.findElement(sse);
-				SiteNode esite = mapView.findElement(ese);
-				if(ssite != null && ssite.equals(esite))
-				{
-					me = ssite;
-				}
-				break;
-			case Type._SCHEME_CABLE_LINK:
-				SchemeCableLink clink = (SchemeCableLink )pe.abstractSchemeElement();
-				CablePath cp = mapView.findCablePath(clink);
-				if(cp != null)
-				{
-					me = cp;
-				}
-				break;
-			default:
-				throw new UnsupportedOperationException();
-		}
-		return me;
-	}
-
 	// to avoid instantiation of multiple objects
 	protected List unsortedCablePaths = new LinkedList();
 
 	protected List getCablePaths()
 	{
+/*
 		synchronized(unsortedCablePaths)
 		{
 			unsortedCablePaths.clear();
@@ -410,6 +378,7 @@ public class MeasurementPath implements MapElement
 				}
 			}
 		}
+*/
 		return unsortedCablePaths;
 	}
 
@@ -437,14 +406,16 @@ public class MeasurementPath implements MapElement
 	
 	public AbstractNode getStartNode()
 	{
-		SiteNode[] mne = getMapView().getSideNodes(this.getSchemePath());
+//		SiteNode[] mne = getMapView().getSideNodes(this.getSchemePath());
+		SiteNode[] mne = new SiteNode[2];
 		
 		return mne[0];
 	}
 	
 	public AbstractNode getEndNode()
 	{
-		SiteNode[] mne = getMapView().getSideNodes(this.getSchemePath());
+//		SiteNode[] mne = getMapView().getSideNodes(this.getSchemePath());
+		SiteNode[] mne = new SiteNode[2];
 		
 		return mne[1];
 	}

@@ -1,5 +1,5 @@
 /*
- * $Id: MapImportCommand.java,v 1.17 2005/01/26 10:17:31 krupenn Exp $
+ * $Id: MapImportCommand.java,v 1.18 2005/01/30 15:38:17 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -18,7 +18,7 @@ import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.Map.Command.MapDesktopCommand;
 import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
 import com.syrus.AMFICOM.Client.Map.UI.MapFrame;
-import com.syrus.AMFICOM.Client.Resource.MapView.MapView;
+import com.syrus.AMFICOM.mapview.MapView;
 import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
@@ -50,7 +50,7 @@ import javax.swing.JDesktopPane;
  * самого окна карты. При этом в азголовке окна отображается информация о том,
  * что активной карты нет, и карта центрируется по умолчанию
  * 
- * @version $Revision: 1.17 $, $Date: 2005/01/26 10:17:31 $
+ * @version $Revision: 1.18 $, $Date: 2005/01/30 15:38:17 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -180,7 +180,7 @@ public class MapImportCommand extends ImportCommand
 			MapStorableObjectPool.putStorableObject(map);
 	
 			MapView mv = mapFrame.getMapView();
-			mv.removeSchemes();
+			mapFrame.getMapViewer().getLogicalNetLayer().getMapViewController().removeSchemes();
 			mv.setMap(map);
 			mapFrame.setMapView(mv);
 			

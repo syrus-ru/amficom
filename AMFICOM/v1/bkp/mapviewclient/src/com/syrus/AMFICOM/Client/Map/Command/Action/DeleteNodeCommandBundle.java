@@ -1,5 +1,5 @@
 /**
- * $Id: DeleteNodeCommandBundle.java,v 1.12 2004/12/24 15:42:11 krupenn Exp $
+ * $Id: DeleteNodeCommandBundle.java,v 1.13 2005/01/30 15:38:17 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -26,7 +26,7 @@ import com.syrus.AMFICOM.Client.Map.mapview.CablePath;
 import com.syrus.AMFICOM.Client.Map.mapview.Marker;
 import com.syrus.AMFICOM.Client.Map.mapview.UnboundLink;
 import com.syrus.AMFICOM.Client.Map.mapview.UnboundNode;
-import com.syrus.AMFICOM.Client.Resource.MapView.MapView;
+import com.syrus.AMFICOM.mapview.MapView;
 
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -38,7 +38,7 @@ import java.util.List;
  * 
  * 
  * 
- * @version $Revision: 1.12 $, $Date: 2004/12/24 15:42:11 $
+ * @version $Revision: 1.13 $, $Date: 2005/01/30 15:38:17 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -74,7 +74,7 @@ public class DeleteNodeCommandBundle extends MapActionCommandBundle
 		
 		// если удаляется сетевой узел (не непривязанный элемент),
 		// необходимо проверить все кабельные пути, включающие его
-		for(Iterator it = mapView.getCablePaths(node).iterator(); it.hasNext();)
+		for(Iterator it = getLogicalNetLayer().getMapViewController().getCablePaths(node).iterator(); it.hasNext();)
 		{
 			CablePath cpath = (CablePath)it.next();
 			
@@ -361,7 +361,7 @@ public class DeleteNodeCommandBundle extends MapActionCommandBundle
 
 		// отдельный список для удаления		
 		List cablePaths = new LinkedList();
-		cablePaths.addAll(mapView.getCablePaths(unbound));
+		cablePaths.addAll(getLogicalNetLayer().getMapViewController().getCablePaths(unbound));
 		
 		for(Iterator it = cablePaths.iterator(); it.hasNext();)
 		{
@@ -390,7 +390,7 @@ public class DeleteNodeCommandBundle extends MapActionCommandBundle
 		if ( !getContext().getApplicationModel().isEnabled(MapApplicationModel.ACTION_USE_MARKER))
 			return;
 
-		node.getMapView().removeMarker(node);
+		getLogicalNetLayer().getMapViewController().removeMarker(node);
 	}
 
 	public void execute()

@@ -1,5 +1,5 @@
 /**
- * $Id: MapSchemeTreeModel.java,v 1.6 2004/12/22 16:38:42 krupenn Exp $
+ * $Id: MapSchemeTreeModel.java,v 1.7 2005/01/30 15:38:18 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -14,7 +14,7 @@ package com.syrus.AMFICOM.Client.Map.UI;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourceTreeModel;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourceTreeNode;
 import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
-import com.syrus.AMFICOM.Client.Resource.MapView.MapView;
+import com.syrus.AMFICOM.mapview.MapView;
 import com.syrus.AMFICOM.Client.Resource.ObjectResource;
 import com.syrus.AMFICOM.Client.Resource.ObjectResourceSorter;
 import com.syrus.AMFICOM.Client.Resource.Pool;
@@ -81,7 +81,7 @@ import javax.swing.ImageIcon;
  *             		|____ (*) "path1"
  *             		|____ (*) "path2"
  * 
- * @version $Revision: 1.6 $, $Date: 2004/12/22 16:38:42 $
+ * @version $Revision: 1.7 $, $Date: 2005/01/30 15:38:18 $
  * @module
  * @author $Author: krupenn $
  * @see

@@ -1,5 +1,5 @@
 /**
- * $Id: BindUnboundNodeToSiteCommandBundle.java,v 1.9 2004/12/24 15:42:11 krupenn Exp $
+ * $Id: BindUnboundNodeToSiteCommandBundle.java,v 1.10 2005/01/30 15:38:17 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -21,7 +21,7 @@ import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.Client.Map.mapview.CablePath;
 import com.syrus.AMFICOM.Client.Map.mapview.MeasurementPath;
 import com.syrus.AMFICOM.Client.Map.mapview.UnboundNode;
-import com.syrus.AMFICOM.Client.Resource.MapView.MapView;
+import com.syrus.AMFICOM.mapview.MapView;
 import com.syrus.AMFICOM.scheme.corba.SchemeElement;
 
 import java.util.Iterator;
@@ -32,7 +32,7 @@ import java.util.List;
  * 
  * 
  * 
- * @version $Revision: 1.9 $, $Date: 2004/12/24 15:42:11 $
+ * @version $Revision: 1.10 $, $Date: 2005/01/30 15:38:17 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -74,7 +74,7 @@ public class BindUnboundNodeToSiteCommandBundle extends MapActionCommandBundle
 		map = mapView.getMap();
 		
 		// список кабельных путей, включающий привязываемый элемент
-		List cablePaths = mapView.getCablePaths(unbound);
+		List cablePaths = logicalNetLayer.getMapViewController().getCablePaths(unbound);
 		
 		// обновляются концевые узлы кабельных путей
 		for(Iterator it = cablePaths.iterator(); it.hasNext();)

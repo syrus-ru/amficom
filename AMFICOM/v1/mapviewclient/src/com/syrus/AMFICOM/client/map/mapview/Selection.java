@@ -1,5 +1,5 @@
 /**
- * $Id: Selection.java,v 1.4 2005/01/21 16:19:58 krupenn Exp $
+ * $Id: Selection.java,v 1.5 2005/01/30 15:38:18 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -31,14 +31,11 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * набор выбранных элементов 
+ * Набор выбранных элементов.
  * 
- * 
- * 
- * @version $Revision: 1.4 $, $Date: 2005/01/21 16:19:58 $
- * @module
  * @author $Author: krupenn $
- * @see
+ * @version $Revision: 1.5 $, $Date: 2005/01/30 15:38:18 $
+ * @module mapviewclient_v1
  * @todo copy/paste, properties
  */
 public final class Selection
@@ -52,11 +49,34 @@ public final class Selection
 	
 	protected LogicalNetLayer lnl;
 
+	/** 
+	 * Выбраны только топологические узлы. Используется для
+	 * вставки сетевых узлов вместо топологических. 
+	 */
 	private boolean physicalNodeSelection = true;
+	/** 
+	 * Выбраны только непривязанные узлы. Используется для генерации
+	 * узлов топологический схемы по непривязанным элементам.
+	 */
 	private boolean unboundNodeSelection = true;
+	/** 
+	 * Выбраны только непривязанные линии. Используется для генерации
+	 * топологических линий по непривязанным.
+	 */
 	private boolean unboundLinkSelection = true;
+	/** 
+	 * Выбраны только непривязанные кабельные пути. Используется для генерации
+	 * топологических линий по непривязанным с привязкой каделя к ним.
+	 */
 	private boolean unboundCableSelection = true;
+	/**
+	 * Выбраны только непривязанные элементы. Используется для генерации
+	 * топологических эоементов по непривязанным.
+	 */
 	private boolean unboundSelection = true;
+	/**
+	 * Выбраны только линии. Используется для работы с колодцами.
+	 */
 	private boolean physicalLinkSelection = true;
 
 	public Selection(LogicalNetLayer lnl)
@@ -117,6 +137,9 @@ public final class Selection
 		return location;
 	}
 
+	/**
+	 * Пересчитать ГМТ центров выделенных элементов.
+	 */
 	protected void recalcLocation()
 	{
 		MapElement me;
@@ -136,6 +159,9 @@ public final class Selection
 		location.setLocation(x, y);
 	}
 
+	/**
+	 * определить флаги выборки.
+	 */
 	private void recalcType()
 	{
 		physicalNodeSelection = true;

@@ -1,5 +1,5 @@
 /**
- * $Id: DeleteSelectionCommand.java,v 1.11 2004/12/24 15:42:11 krupenn Exp $
+ * $Id: DeleteSelectionCommand.java,v 1.12 2005/01/30 15:38:17 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -23,7 +23,7 @@ import com.syrus.AMFICOM.map.NodeLink;
 import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.Client.Map.mapview.CablePath;
 import com.syrus.AMFICOM.Client.Map.mapview.UnboundLink;
-import com.syrus.AMFICOM.Client.Resource.MapView.MapView;
+import com.syrus.AMFICOM.mapview.MapView;
 import com.syrus.AMFICOM.Client.Map.mapview.VoidElement;
 
 import java.util.Iterator;
@@ -35,7 +35,7 @@ import java.util.LinkedList;
  * 
  * 
  * 
- * @version $Revision: 1.11 $, $Date: 2004/12/24 15:42:11 $
+ * @version $Revision: 1.12 $, $Date: 2005/01/30 15:38:17 $
  * @module
  * @author $Author: krupenn $
  * @see

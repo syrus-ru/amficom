@@ -1,5 +1,5 @@
 /**
- * $Id: UnPlaceSchemeElementCommand.java,v 1.6 2004/12/24 15:42:12 krupenn Exp $
+ * $Id: UnPlaceSchemeElementCommand.java,v 1.7 2005/01/30 15:38:17 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -14,7 +14,7 @@ import com.syrus.AMFICOM.Client.General.Event.MapEvent;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.Client.Map.mapview.UnboundNode;
-import com.syrus.AMFICOM.Client.Resource.MapView.MapView;
+import com.syrus.AMFICOM.mapview.MapView;
 import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.scheme.corba.Scheme;
 import com.syrus.AMFICOM.scheme.corba.SchemeElement;
@@ -22,7 +22,7 @@ import com.syrus.AMFICOM.scheme.corba.SchemeElement;
 /**
  * убрать прив€зку схемного элемента с карты
  * 
- * @version $Revision: 1.6 $, $Date: 2004/12/24 15:42:12 $
+ * @version $Revision: 1.7 $, $Date: 2005/01/30 15:38:17 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -59,7 +59,7 @@ public class UnPlaceSchemeElementCommand extends MapActionCommandBundle
 
 		se.siteNodeImpl(null);
 
-		mapView.scanCables(se.scheme());
+		logicalNetLayer.getMapViewController().scanCables(se.scheme());
 
 		// операци€ закончена - оповестить слушателей
 		logicalNetLayer.sendMapEvent(new MapEvent(this, MapEvent.MAP_CHANGED));

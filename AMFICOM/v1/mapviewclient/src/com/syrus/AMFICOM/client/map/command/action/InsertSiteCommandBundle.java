@@ -1,5 +1,5 @@
 /**
- * $Id: InsertSiteCommandBundle.java,v 1.6 2004/12/24 15:42:11 krupenn Exp $
+ * $Id: InsertSiteCommandBundle.java,v 1.7 2005/01/30 15:38:17 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -25,7 +25,7 @@ import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.Client.Map.Controllers.SiteNodeController;
 import com.syrus.AMFICOM.Client.Map.mapview.CablePath;
 import com.syrus.AMFICOM.Client.Map.mapview.UnboundLink;
-import com.syrus.AMFICOM.Client.Resource.MapView.MapView;
+import com.syrus.AMFICOM.mapview.MapView;
 
 import java.util.Iterator;
 import com.syrus.AMFICOM.map.PhysicalLinkBinding;
@@ -34,7 +34,7 @@ import com.syrus.AMFICOM.Client.Map.Controllers.MapViewController;
 /**
  * вставить сетевой узел вместо топологического узла
  * 
- * @version $Revision: 1.6 $, $Date: 2004/12/24 15:42:11 $
+ * @version $Revision: 1.7 $, $Date: 2005/01/30 15:38:17 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -204,7 +204,7 @@ public class InsertSiteCommandBundle extends MapActionCommandBundle
 	
 			// проверить все кабельные пути, прохидящие по линии,
 			// и добавить новую линию
-			for(Iterator it = mapView.getCablePaths(link).iterator(); it.hasNext();)
+			for(Iterator it = logicalNetLayer.getMapViewController().getCablePaths(link).iterator(); it.hasNext();)
 			{
 				CablePath cpath = (CablePath)it.next();
 				cpath.addLink(newLink);

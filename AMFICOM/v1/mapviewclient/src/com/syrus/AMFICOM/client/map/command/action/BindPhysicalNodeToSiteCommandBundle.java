@@ -1,5 +1,5 @@
 /**
- * $Id: BindPhysicalNodeToSiteCommandBundle.java,v 1.10 2004/12/24 15:42:11 krupenn Exp $
+ * $Id: BindPhysicalNodeToSiteCommandBundle.java,v 1.11 2005/01/30 15:38:17 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -21,7 +21,7 @@ import com.syrus.AMFICOM.map.TopologicalNode;
 import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.Client.Map.mapview.CablePath;
 import com.syrus.AMFICOM.Client.Map.mapview.UnboundLink;
-import com.syrus.AMFICOM.Client.Resource.MapView.MapView;
+import com.syrus.AMFICOM.mapview.MapView;
 
 import java.util.Iterator;
 
@@ -31,7 +31,7 @@ import java.util.Iterator;
  *  принадлежит данный узел, делится на 2 части
  * 
  * 
- * @version $Revision: 1.10 $, $Date: 2004/12/24 15:42:11 $
+ * @version $Revision: 1.11 $, $Date: 2005/01/30 15:38:17 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -121,7 +121,7 @@ public class BindPhysicalNodeToSiteCommandBundle extends MapActionCommandBundle
 		newLink.setType(link.getType());
 
 		// single cpath, as long as link is UnboundLink
-		CablePath cpath = (CablePath)(mapView.getCablePaths(link).get(0));
+		CablePath cpath = (CablePath)(getLogicalNetLayer().getMapViewController().getCablePaths(link).get(0));
 		
 		// новая линия добавляется в кабельный путь
 		cpath.addLink(newLink);

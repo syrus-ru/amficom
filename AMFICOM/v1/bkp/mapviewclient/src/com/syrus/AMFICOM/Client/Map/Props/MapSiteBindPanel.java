@@ -10,7 +10,7 @@ import com.syrus.AMFICOM.Client.Map.Command.Action.UnPlaceSchemeCableLinkCommand
 import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
 import com.syrus.AMFICOM.Client.Map.mapview.CablePath;
 import com.syrus.AMFICOM.Client.Map.mapview.UnboundLink;
-import com.syrus.AMFICOM.Client.Resource.MapView.MapView;
+import com.syrus.AMFICOM.mapview.MapView;
 import com.syrus.AMFICOM.client_.general.ui_.ObjectResourcePropertiesPane;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.PhysicalLink;
@@ -173,10 +173,10 @@ public final class MapSiteBindPanel
 				{
 					DefaultMutableTreeNode node2 = (DefaultMutableTreeNode )node.getChildAt(j);
 					SchemeCableLink scl = (SchemeCableLink )node2.getUserObject();
-					CablePath cablePath = mapView.findCablePath(scl);
+					CablePath cablePath = getLogicalNetLayer().getMapViewController().findCablePath(scl);
 
 					UnPlaceSchemeCableLinkCommand command = new UnPlaceSchemeCableLinkCommand(cablePath);
-					command.setLogicalNetLayer(mapView.getLogicalNetLayer());
+					command.setLogicalNetLayer(getLogicalNetLayer());
 					command.execute();
 				}
 				break;
@@ -204,7 +204,7 @@ public final class MapSiteBindPanel
 
 		unboundElements.add(scl);
 	
-		CablePath cablePath = mapView.findCablePath(scl);
+		CablePath cablePath = getLogicalNetLayer().getMapViewController().findCablePath(scl);
 
 		List pathLinks = cablePath.getLinks();
 		List siteLinks = mapView.getMap().getPhysicalLinksAt(site);
@@ -236,7 +236,7 @@ public final class MapSiteBindPanel
 			RemoveUnboundLinkCommandBundle command = 
 					new RemoveUnboundLinkCommandBundle(
 						(UnboundLink)linkRight);
-			command.setLogicalNetLayer(mapView.getLogicalNetLayer());
+			command.setLogicalNetLayer(getLogicalNetLayer());
 			command.execute();
 		}
 		else
@@ -259,7 +259,7 @@ public final class MapSiteBindPanel
 			CreateUnboundLinkCommandBundle command = new CreateUnboundLinkCommandBundle(
 					linkLeft.getOtherNode(site),
 					linkRight.getOtherNode(site));
-			command.setLogicalNetLayer(mapView.getLogicalNetLayer());
+			command.setLogicalNetLayer(getLogicalNetLayer());
 			command.execute();
 
 			UnboundLink unbound = command.getUnbound();
@@ -310,9 +310,9 @@ public final class MapSiteBindPanel
 				
 				MapView mapView = getLogicalNetLayer().getMapView();
 
-				crossingPanel.setCable(mapView.findCablePath(scl));
+				crossingPanel.setCable(getLogicalNetLayer().getMapViewController().findCablePath(scl));
 
-				AbstractNode mne[] = mapView.getSideNodes(scl);
+				AbstractNode mne[] = getLogicalNetLayer().getMapViewController().getSideNodes(scl);
 				sen = !(mne[0].equals(site)) && !(mne[1].equals(site));
 			}
 			else
@@ -429,7 +429,7 @@ public final class MapSiteBindPanel
 				Scheme scheme = (Scheme )it.next();
 				schemeElements.addAll(SchemeUtils.getTopLevelElements(scheme));
 			}
-			List cableElementsTransit = mapView.getCablePaths(site);
+			List cableElementsTransit = getLogicalNetLayer().getMapViewController().getCablePaths(site);
 			List cableElementsDropped = new LinkedList();
 			for(Iterator it = cableElementsTransit.iterator(); it.hasNext();)
 			{

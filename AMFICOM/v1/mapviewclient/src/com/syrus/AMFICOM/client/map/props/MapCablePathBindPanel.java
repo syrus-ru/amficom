@@ -450,7 +450,7 @@ public final class MapCablePathBindPanel
 				RemoveUnboundLinkCommandBundle command = 
 						new RemoveUnboundLinkCommandBundle(
 							(UnboundLink)link);
-				command.setLogicalNetLayer(path.getMapView().getLogicalNetLayer());
+				command.setLogicalNetLayer(lnl);
 				command.execute();
 			}
 			else
@@ -481,7 +481,7 @@ public final class MapCablePathBindPanel
 				RemoveUnboundLinkCommandBundle command = 
 						new RemoveUnboundLinkCommandBundle(
 							(UnboundLink)link);
-				command.setLogicalNetLayer(path.getMapView().getLogicalNetLayer());
+				command.setLogicalNetLayer(lnl);
 				command.execute();
 			}
 		}
@@ -493,7 +493,7 @@ public final class MapCablePathBindPanel
 			CreateUnboundLinkCommandBundle command = new CreateUnboundLinkCommandBundle(
 					link.getStartNode(),
 					link.getEndNode());
-			command.setLogicalNetLayer(path.getMapView().getLogicalNetLayer());
+			command.setLogicalNetLayer(lnl);
 			command.execute();
 
 			UnboundLink unbound = command.getUnbound();
@@ -512,7 +512,7 @@ public final class MapCablePathBindPanel
 
 		CreateUnboundLinkCommandBundle command = new CreateUnboundLinkCommandBundle(
 			path.getStartNode(), path.getEndNode());
-		command.setLogicalNetLayer(path.getMapView().getLogicalNetLayer());
+		command.setLogicalNetLayer(lnl);
 		command.execute();
 
 		UnboundLink unbound = command.getUnbound();
@@ -535,7 +535,7 @@ public final class MapCablePathBindPanel
 				path.removeLink(unbound);
 
 				RemoveUnboundLinkCommandBundle command = new RemoveUnboundLinkCommandBundle(unbound);
-				command.setLogicalNetLayer(path.getMapView().getLogicalNetLayer());
+				command.setLogicalNetLayer(lnl);
 				command.execute();
 			}
 		}

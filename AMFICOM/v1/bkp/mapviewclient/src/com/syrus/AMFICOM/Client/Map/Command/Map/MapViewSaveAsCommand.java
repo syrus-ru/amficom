@@ -1,5 +1,5 @@
 /*
- * $Id: MapViewSaveAsCommand.java,v 1.9 2004/12/29 19:05:20 krupenn Exp $
+ * $Id: MapViewSaveAsCommand.java,v 1.10 2005/01/30 15:38:18 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -21,7 +21,7 @@ import com.syrus.AMFICOM.client_.general.ui_.ObjectResourcePropertiesDialog;
 import com.syrus.AMFICOM.Client.Map.Props.MapViewPanel;
 import com.syrus.AMFICOM.Client.Map.UI.MapFrame;
 import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
-import com.syrus.AMFICOM.Client.Resource.MapView.MapView;
+import com.syrus.AMFICOM.mapview.MapView;
 import com.syrus.AMFICOM.Client.Resource.Pool;
 
 import com.syrus.AMFICOM.configuration.corba.AccessIdentifier_Transferable;
@@ -43,7 +43,7 @@ import java.awt.Toolkit;
  * 
  * 
  * 
- * @version $Revision: 1.9 $, $Date: 2004/12/29 19:05:20 $
+ * @version $Revision: 1.10 $, $Date: 2005/01/30 15:38:18 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -79,9 +79,18 @@ public class MapViewSaveAsCommand extends VoidCommand
 
 		try
 		{
-			newMapView = new MapView(creatorId, domainId, mapView.getMap());
+			newMapView = com.syrus.AMFICOM.mapview.MapView.createInstance(
+					creatorId,
+					domainId,
+					LangModelMap.getString("New"),
+					"",
+					0.0D,
+					0.0D,
+					1.0D,
+					1.0D,
+					mapView.getMap());
 
-			MapViewStorableObjectPool.putStorableObject(newMapView.getMapViewStorable());
+			MapViewStorableObjectPool.putStorableObject(newMapView);
 
 			newMapView.setName(mapView.getName() + "(Copy)");
 		}

@@ -1,5 +1,5 @@
 /**
- * $Id: CableController.java,v 1.1 2004/12/24 15:42:12 krupenn Exp $
+ * $Id: CableController.java,v 1.2 2005/01/30 15:38:18 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -37,14 +37,14 @@ import java.awt.geom.Rectangle2D;
 import java.util.Iterator;
 import com.syrus.AMFICOM.Client.Map.Controllers.MapViewController;
 import com.syrus.AMFICOM.Client.Map.Controllers.MeasurementPathController;
-import com.syrus.AMFICOM.Client.Resource.MapView.MapView;
+import com.syrus.AMFICOM.mapview.MapView;
 
 /**
  * линейный элемента карты 
  * 
  * 
  * 
- * @version $Revision: 1.1 $, $Date: 2004/12/24 15:42:12 $
+ * @version $Revision: 1.2 $, $Date: 2005/01/30 15:38:18 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -52,6 +52,14 @@ import com.syrus.AMFICOM.Client.Resource.MapView.MapView;
 public final class CableController extends AbstractLinkController
 {
 	private static CableController instance = null;
+	
+	private static final String PROPERTY_PANE_CLASS_NAME = 
+			"com.syrus.AMFICOM.Client.Map.Props.MapCablePathPane";
+
+	public static String getPropertyPaneClassName()
+	{
+		return PROPERTY_PANE_CLASS_NAME;
+	}
 	
 	private CableController()
 	{
@@ -74,7 +82,7 @@ public final class CableController extends AbstractLinkController
 		boolean isv = cpath.isSelected();
 		if(!isv)
 		{
-			for(Iterator it = cpath.getMapView().getMeasurementPaths(cpath).iterator(); it.hasNext();)
+			for(Iterator it = getLogicalNetLayer().getMapViewController().getMeasurementPaths(cpath).iterator(); it.hasNext();)
 			{
 				MeasurementPath mp = (MeasurementPath)it.next();
 				MeasurementPathController mpc = (MeasurementPathController)getLogicalNetLayer().getMapViewController().getController(mp);

@@ -1,5 +1,5 @@
 /**
- * $Id: CablePath.java,v 1.3 2005/01/20 14:37:52 krupenn Exp $
+ * $Id: CablePath.java,v 1.4 2005/01/30 15:38:18 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,6 +11,9 @@
 
 package com.syrus.AMFICOM.Client.Map.mapview;
 
+import com.syrus.AMFICOM.Client.Map.mapview.CablePathBinding;
+import com.syrus.AMFICOM.Client.Map.mapview.UnboundLink;
+import com.syrus.AMFICOM.mapview.MapView;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
@@ -34,19 +37,15 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
-import com.syrus.AMFICOM.Client.Map.mapview.CablePathBinding;
-import com.syrus.AMFICOM.Client.Resource.MapView.MapView;
-import com.syrus.AMFICOM.Client.Map.mapview.UnboundLink;
 
 /**
- * элемент пути 
+ * элемент кабельного пути. Описывает привязку кабеля к топологическим линиям.
  * 
  * 
  * 
- * @version $Revision: 1.3 $, $Date: 2005/01/20 14:37:52 $
- * @module
  * @author $Author: krupenn $
- * @see
+ * @version $Revision: 1.4 $, $Date: 2005/01/30 15:38:18 $
+ * @module mapviewclient_v1
  */
 public class CablePath implements MapElement
 {
@@ -54,11 +53,11 @@ public class CablePath implements MapElement
 
 	protected Identifier id;
 
-	protected String	name;
+	protected String name;
 
-	protected String	description;
+	protected String description;
 
-	protected List		characteristics;
+	protected List characteristics;
 
 
 	protected transient boolean selected = false;
@@ -69,9 +68,8 @@ public class CablePath implements MapElement
 
 	protected transient Map map = null;
 
-	private AbstractNode					startNode;
-	private AbstractNode					endNode;
-
+	private AbstractNode startNode;
+	private AbstractNode endNode;
 
 	protected List sortedNodes = new LinkedList();
 	protected List sortedNodeLinks = new LinkedList();
@@ -87,15 +85,6 @@ public class CablePath implements MapElement
 	protected MapView mapView;
 	
 	protected CablePathBinding binding;
-
-//	public String[][] getExportColumns()
-//	{
-//		return null;
-//	}
-//
-//	public void setColumn(String field, String value)
-//	{
-//	}
 
 	public CablePath(
 			SchemeCableLink schemeCableLink,
@@ -176,17 +165,17 @@ public class CablePath implements MapElement
 	
 	public List getCharacteristics() 
 	{
-		return Collections.unmodifiableList(this.characteristics);
+		return Collections.unmodifiableList(schemeCableLink.characteristicsImpl().getValue());
 	}
 
 	public void addCharacteristic(Characteristic ch)
 	{
-		this.characteristics.add(ch);
+		schemeCableLink.addCharacteristic(ch);
 	}
 
 	public void removeCharacteristic(Characteristic ch)
 	{
-		this.characteristics.remove(ch);
+		schemeCableLink.removeCharacteristic(ch);
 	}
 	
 	public void setId(Identifier id)

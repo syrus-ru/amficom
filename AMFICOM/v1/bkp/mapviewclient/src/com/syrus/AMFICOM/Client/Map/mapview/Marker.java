@@ -1,5 +1,5 @@
 /**
- * $Id: Marker.java,v 1.3 2005/01/20 14:37:52 krupenn Exp $
+ * $Id: Marker.java,v 1.4 2005/01/30 15:38:18 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -31,7 +31,7 @@ import java.lang.UnsupportedOperationException;
 import java.util.Date;
 import java.util.List;
 import java.util.ListIterator;
-import com.syrus.AMFICOM.Client.Resource.MapView.MapView;
+import com.syrus.AMFICOM.mapview.MapView;
 import com.syrus.AMFICOM.Client.Map.mapview.MeasurementPath;
 import com.syrus.AMFICOM.Client.Map.mapview.CablePath;
 
@@ -56,7 +56,7 @@ import com.syrus.AMFICOM.Client.Map.mapview.CablePath;
  * 
  * 
  * 
- * @version $Revision: 1.3 $, $Date: 2005/01/20 14:37:52 $
+ * @version $Revision: 1.4 $, $Date: 2005/01/30 15:38:18 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see

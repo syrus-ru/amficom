@@ -1,5 +1,5 @@
 /**
- * $Id: PlaceSchemePathCommand.java,v 1.7 2004/12/24 15:42:12 krupenn Exp $
+ * $Id: PlaceSchemePathCommand.java,v 1.8 2005/01/30 15:38:17 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -19,7 +19,7 @@ import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.Client.Map.mapview.CablePath;
 import com.syrus.AMFICOM.Client.Map.mapview.MeasurementPath;
 import com.syrus.AMFICOM.Client.Map.mapview.UnboundLink;
-import com.syrus.AMFICOM.Client.Resource.MapView.MapView;
+import com.syrus.AMFICOM.mapview.MapView;
 import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.scheme.SchemeUtils;
 import com.syrus.AMFICOM.scheme.corba.*;
@@ -33,7 +33,7 @@ import java.util.Iterator;
  * Разместить элемент типа mpe на карте. используется при переносе 
  * (drag/drop), в точке point (в экранных координатах)
  * 
- * @version $Revision: 1.7 $, $Date: 2004/12/24 15:42:12 $
+ * @version $Revision: 1.8 $, $Date: 2005/01/30 15:38:17 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -78,12 +78,12 @@ public class PlaceSchemePathCommand extends MapActionCommandBundle
 		map = mapView.getMap();
 		Scheme scheme = path.scheme();
 		
-		SiteNode[] mne = mapView.getSideNodes(path);
+		SiteNode[] mne = logicalNetLayer.getMapViewController().getSideNodes(path);
 		
 		startNode = mne[0];
 		endNode = mne[1];
 		
-		mPath = mapView.findMeasurementPath(path);
+		mPath = logicalNetLayer.getMapViewController().findMeasurementPath(path);
 		if(mPath == null)
 			mPath = super.createMeasurementPath(path, startNode, endNode);
 		else
@@ -97,7 +97,7 @@ public class PlaceSchemePathCommand extends MapActionCommandBundle
 			{
 				case Type._SCHEME_ELEMENT:
 					SchemeElement se = (SchemeElement )pe.abstractSchemeElement();
-				SiteNode site = mapView.findElement(se);
+				SiteNode site = logicalNetLayer.getMapViewController().findElement(se);
 				if(site != null)
 				{
 //					mPath.addCablePath(site);
@@ -107,8 +107,8 @@ public class PlaceSchemePathCommand extends MapActionCommandBundle
 					SchemeLink link = (SchemeLink )pe.abstractSchemeElement();
 					SchemeElement sse = SchemeUtils.getSchemeElementByDevice(scheme, link.sourceSchemePort().schemeDevice());
 					SchemeElement ese = SchemeUtils.getSchemeElementByDevice(scheme, link.targetSchemePort().schemeDevice());
-					SiteNode ssite = mapView.findElement(sse);
-					SiteNode esite = mapView.findElement(ese);
+					SiteNode ssite = logicalNetLayer.getMapViewController().findElement(sse);
+					SiteNode esite = logicalNetLayer.getMapViewController().findElement(ese);
 					if(ssite == esite)
 					{
 	//					mPath.addCablePath(ssite);
@@ -116,7 +116,7 @@ public class PlaceSchemePathCommand extends MapActionCommandBundle
 					break;
 				case Type._SCHEME_CABLE_LINK:
 					SchemeCableLink clink = (SchemeCableLink )pe.abstractSchemeElement();
-					CablePath cp = mapView.findCablePath(clink);
+					CablePath cp = logicalNetLayer.getMapViewController().findCablePath(clink);
 					if(cp != null)
 					{
 	//					mPath.addCablePath(cp);

@@ -1,5 +1,5 @@
 /**
- * $Id: MapElementsPanel.java,v 1.11 2005/01/21 16:19:58 krupenn Exp $
+ * $Id: MapElementsPanel.java,v 1.12 2005/01/30 15:38:18 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -31,7 +31,7 @@ import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.Client.Map.mapview.CablePath;
 import com.syrus.AMFICOM.Client.Map.mapview.Marker;
 import com.syrus.AMFICOM.Client.Map.mapview.MeasurementPath;
-import com.syrus.AMFICOM.Client.Resource.MapView.MapView;
+import com.syrus.AMFICOM.mapview.MapView;
 import com.syrus.AMFICOM.client_.general.ui_.ObjectResourceTable;
 import com.syrus.AMFICOM.client_.general.ui_.ObjectResourceTableModel;
 import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
@@ -59,7 +59,7 @@ import javax.swing.event.ListSelectionListener;
  * видов элементов и талица элементов с полями "Идентификатор" и "Название"
  * 
  * 
- * @version $Revision: 1.11 $, $Date: 2005/01/21 16:19:58 $
+ * @version $Revision: 1.12 $, $Date: 2005/01/30 15:38:18 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -312,7 +312,7 @@ public final class MapElementsPanel extends JPanel
 				dataSet = map.getPhysicalLinks();
 			else
 			if(selection.equals(ELEMENTS_PATH))
-				dataSet = mapView.getMeasurementPaths();
+				dataSet = logicalNetLayer.getMapViewController().getMeasurementPaths();
 			else
 			if(selection.equals(ELEMENTS_NODE))
 				dataSet = map.getTopologicalNodes();
@@ -321,13 +321,13 @@ public final class MapElementsPanel extends JPanel
 				dataSet = map.getMarks();
 			else
 			if(selection.equals(ELEMENTS_MARKER))
-				dataSet = mapView.getMarkers();
+				dataSet = logicalNetLayer.getMapViewController().getMarkers();
 			else
 			if(selection.equals(ELEMENTS_COLLECTOR))
 				dataSet = map.getCollectors();
 			else
 			if(selection.equals(ELEMENTS_CABLE))
-				dataSet = mapView.getCablePaths();
+				dataSet = logicalNetLayer.getMapViewController().getCablePaths();
 //			else
 //			if(selection.equals(SchemeElement.typ))
 //			{

@@ -1,5 +1,5 @@
 /**
- * $Id: CreateMeasurementPathCommandAtomic.java,v 1.5 2004/12/24 15:42:11 krupenn Exp $
+ * $Id: CreateMeasurementPathCommandAtomic.java,v 1.6 2005/01/30 15:38:17 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -27,7 +27,7 @@ import com.syrus.AMFICOM.scheme.corba.SchemePath;
  * 
  * 
  * 
- * @version $Revision: 1.5 $, $Date: 2004/12/24 15:42:11 $
+ * @version $Revision: 1.6 $, $Date: 2005/01/30 15:38:17 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -80,7 +80,7 @@ public class CreateMeasurementPathCommandAtomic extends MapActionCommand
 					endNode, 
 					logicalNetLayer.getMapView());
 	
-			logicalNetLayer.getMapView().addMeasurementPath(mp);
+			logicalNetLayer.getMapViewController().addMeasurementPath(mp);
 		}
 		catch (IllegalObjectEntityException e)
 		{

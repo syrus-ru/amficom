@@ -1,5 +1,5 @@
 /*
- * $Id: MapViewSaveCommand.java,v 1.11 2005/01/21 16:19:57 krupenn Exp $
+ * $Id: MapViewSaveCommand.java,v 1.12 2005/01/30 15:38:18 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -22,7 +22,7 @@ import com.syrus.AMFICOM.Client.Map.Props.MapViewPanel;
 import com.syrus.AMFICOM.Client.Map.UI.MapFrame;
 import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
 
-import com.syrus.AMFICOM.Client.Resource.MapView.MapView;
+import com.syrus.AMFICOM.mapview.MapView;
 import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.DatabaseException;
@@ -41,7 +41,7 @@ import java.util.Iterator;
  * 
  * 
  * 
- * @version $Revision: 1.11 $, $Date: 2005/01/21 16:19:57 $
+ * @version $Revision: 1.12 $, $Date: 2005/01/30 15:38:18 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see

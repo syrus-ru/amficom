@@ -1,5 +1,5 @@
 /**
- * $Id: RemoveNodeCommandAtomic.java,v 1.6 2004/12/24 15:42:12 krupenn Exp $
+ * $Id: RemoveNodeCommandAtomic.java,v 1.7 2005/01/30 15:38:17 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -22,7 +22,7 @@ import com.syrus.AMFICOM.map.Map;
  * 
  * 
  * 
- * @version $Revision: 1.6 $, $Date: 2004/12/24 15:42:12 $
+ * @version $Revision: 1.7 $, $Date: 2005/01/30 15:38:17 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -53,7 +53,7 @@ public class RemoveNodeCommandAtomic extends MapActionCommand
 		logicalNetLayer.getMapView().getMap().removeNode(node);
 		if(node instanceof Marker)
 		{
-			logicalNetLayer.getMapView().removeMarker((Marker)node);
+			logicalNetLayer.getMapViewController().removeMarker((Marker)node);
 		}
 	}
 	

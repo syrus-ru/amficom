@@ -1,5 +1,5 @@
 /**
- * $Id: MapViewRemoveSchemeCommand.java,v 1.1 2005/01/26 16:24:29 krupenn Exp $
+ * $Id: MapViewRemoveSchemeCommand.java,v 1.2 2005/01/30 15:38:17 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -21,7 +21,7 @@ import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.Map.Command.MapDesktopCommand;
 import com.syrus.AMFICOM.Client.Map.UI.MapFrame;
 import com.syrus.AMFICOM.Client.Map.UI.SchemeController;
-import com.syrus.AMFICOM.Client.Resource.MapView.MapView;
+import com.syrus.AMFICOM.mapview.MapView;
 import com.syrus.AMFICOM.client_.general.ui_.ObjectResourceChooserDialog;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.scheme.corba.Scheme;
@@ -33,7 +33,7 @@ import javax.swing.JDesktopPane;
  * 
  * 
  * 
- * @version $Revision: 1.1 $, $Date: 2005/01/26 16:24:29 $
+ * @version $Revision: 1.2 $, $Date: 2005/01/30 15:38:17 $
  * @module
  * @author $Author: krupenn $
  * @see

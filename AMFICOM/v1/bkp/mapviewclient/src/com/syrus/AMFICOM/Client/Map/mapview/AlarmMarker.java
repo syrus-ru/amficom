@@ -3,7 +3,7 @@ package com.syrus.AMFICOM.Client.Map.mapview;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.Client.Map.mapview.Marker;
-import com.syrus.AMFICOM.Client.Resource.MapView.MapView;
+import com.syrus.AMFICOM.mapview.MapView;
 import com.syrus.AMFICOM.Client.Map.mapview.MeasurementPath;
 
 public class AlarmMarker extends Marker

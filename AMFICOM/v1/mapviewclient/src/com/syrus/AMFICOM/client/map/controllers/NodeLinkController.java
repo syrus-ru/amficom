@@ -1,5 +1,5 @@
 /**
- * $Id: NodeLinkController.java,v 1.2 2005/01/14 15:03:13 krupenn Exp $
+ * $Id: NodeLinkController.java,v 1.3 2005/01/30 15:38:18 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -40,7 +40,7 @@ import com.syrus.AMFICOM.Client.Map.Controllers.AbstractLinkController;
  * 
  * 
  * 
- * @version $Revision: 1.2 $, $Date: 2005/01/14 15:03:13 $
+ * @version $Revision: 1.3 $, $Date: 2005/01/30 15:38:18 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -395,7 +395,7 @@ public final class NodeLinkController extends AbstractLinkController
 		MapCoordinatesConverter converter = getLogicalNetLayer();
 
 		if(converter != null)
-			nodeLink.setLength(converter.distance(
+			nodeLink.setLengthLt(converter.distance(
 					nodeLink.getStartNode().getLocation(), 
 					nodeLink.getEndNode().getLocation()));
 	}
