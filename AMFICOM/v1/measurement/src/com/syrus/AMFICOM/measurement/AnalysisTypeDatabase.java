@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisTypeDatabase.java,v 1.53 2005/01/27 11:55:07 bob Exp $
+ * $Id: AnalysisTypeDatabase.java,v 1.54 2005/01/27 14:11:23 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -42,17 +42,12 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.53 $, $Date: 2005/01/27 11:55:07 $
+ * @version $Revision: 1.54 $, $Date: 2005/01/27 14:11:23 $
  * @author $Author: bob $
  * @module measurement_v1
  */
 
 public class AnalysisTypeDatabase extends StorableObjectDatabase {	
-
-	public static final String MODE_IN = "IN";
-	public static final String MODE_CRITERION = "CRI";
-	public static final String MODE_ETALON = "ETA";
-	public static final String MODE_OUT = "OUT";
 
 	public static final String LINK_COLUMN_ANALYSIS_TYPE_ID = "analysis_type_id";
 	public static final String PARAMETER_TYPE_ID = "parameter_type_id";
@@ -144,16 +139,16 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 			while (resultSet.next()) {
 				parameterMode = resultSet.getString(LINK_COLUMN_PARAMETER_MODE);
 				parameterTypeId = DatabaseIdentifier.getIdentifier(resultSet, LINK_COLUMN_PARAMETER_TYPE_ID);
-				if (parameterMode.equals(MODE_IN))
+				if (parameterMode.equals(AnalysisTypeWrapper.MODE_IN))
 					inParTyps.add((ParameterType) GeneralStorableObjectPool.getStorableObject(parameterTypeId, true));
 					else
-						if (parameterMode.equals(MODE_CRITERION))
+						if (parameterMode.equals(AnalysisTypeWrapper.MODE_CRITERION))
 							criteriaParTyps.add((ParameterType) GeneralStorableObjectPool.getStorableObject(parameterTypeId, true));
 						else
-							if (parameterMode.equals(MODE_ETALON))
+							if (parameterMode.equals(AnalysisTypeWrapper.MODE_ETALON))
 								etalonParTyps.add((ParameterType) GeneralStorableObjectPool.getStorableObject(parameterTypeId, true));
 							else
-								if (parameterMode.equals(MODE_OUT))
+								if (parameterMode.equals(AnalysisTypeWrapper.MODE_OUT))
 									outParTyps.add((ParameterType) GeneralStorableObjectPool.getStorableObject(parameterTypeId, true));
 								else
 									Log .errorMessage("AnalysisTypeDatabase.retrieveParameterTypes | ERROR: Unknown parameter mode '" + parameterMode + "' for parameterTypeId " + parameterTypeId);
@@ -246,7 +241,7 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 				parameterTypeId = DatabaseIdentifier.getIdentifier(resultSet, LINK_COLUMN_PARAMETER_TYPE_ID);
 				analysisTypeId = DatabaseIdentifier.getIdentifier(resultSet, LINK_COLUMN_ANALYSIS_TYPE_ID);
 
-				if (parameterMode.equals(MODE_IN)) {
+				if (parameterMode.equals(AnalysisTypeWrapper.MODE_IN)) {
 					inParameterTypes = (List)inParameterTypesMap.get(analysisTypeId);
 					if (inParameterTypes == null) {
 						inParameterTypes = new ArrayList();
@@ -255,7 +250,7 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 					inParameterTypes.add(GeneralStorableObjectPool.getStorableObject(parameterTypeId, true));
 				}
 				else
-					if (parameterMode.equals(MODE_CRITERION)) {
+					if (parameterMode.equals(AnalysisTypeWrapper.MODE_CRITERION)) {
 						criteriaParameterTypes = (List)criteriaParameterTypesMap.get(analysisTypeId);
 						if (criteriaParameterTypes == null) {
 							criteriaParameterTypes = new ArrayList();
@@ -264,7 +259,7 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 						criteriaParameterTypes.add(GeneralStorableObjectPool.getStorableObject(parameterTypeId, true));
 					}
 					else
-						if (parameterMode.equals(MODE_ETALON)) {
+						if (parameterMode.equals(AnalysisTypeWrapper.MODE_ETALON)) {
 							etalonParameterTypes = (List)etalonParameterTypesMap.get(analysisTypeId);
 							if (etalonParameterTypes == null) {
 								etalonParameterTypes = new ArrayList();
@@ -273,7 +268,7 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 							etalonParameterTypes.add(GeneralStorableObjectPool.getStorableObject(parameterTypeId, true));
 						}
 						else
-							if (parameterMode.equals(MODE_OUT)) {
+							if (parameterMode.equals(AnalysisTypeWrapper.MODE_OUT)) {
 								outParameterTypes = (List)outParameterTypesMap.get(analysisTypeId);
 								if (outParameterTypes == null) {
 									outParameterTypes = new ArrayList();
@@ -372,7 +367,7 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 				parameterTypeId = ((ParameterType) iterator.next()).getId();
 				DatabaseIdentifier.setIdentifier(preparedStatement, 1, analysisTypeId);
 				DatabaseIdentifier.setIdentifier(preparedStatement, 2, parameterTypeId);
-				parameterMode = MODE_IN;
+				parameterMode = AnalysisTypeWrapper.MODE_IN;
 				preparedStatement.setString(3, parameterMode);
 				Log.debugMessage("AnalysisTypeDatabase.insertParameterTypes | Inserting parameter type "
 						+ parameterTypeId + " of parameter mode '" + parameterMode + "' for analysis type "
@@ -383,7 +378,7 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 				parameterTypeId = ((ParameterType) iterator.next()).getId();
 				DatabaseIdentifier.setIdentifier(preparedStatement, 1, analysisTypeId);
 				DatabaseIdentifier.setIdentifier(preparedStatement, 2, parameterTypeId);
-				parameterMode = MODE_CRITERION;
+				parameterMode = AnalysisTypeWrapper.MODE_CRITERION;
 				preparedStatement.setString(3, parameterMode);
 				Log.debugMessage("AnalysisTypeDatabase.insertParameterTypes | Inserting parameter type "
 						+ parameterTypeId + " of parameter mode '" + parameterMode + "' for analysis type "
@@ -394,7 +389,7 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 				parameterTypeId = ((ParameterType) iterator.next()).getId();
 				DatabaseIdentifier.setIdentifier(preparedStatement, 1, analysisTypeId);
 				DatabaseIdentifier.setIdentifier(preparedStatement, 2, parameterTypeId);
-				parameterMode = MODE_ETALON;
+				parameterMode = AnalysisTypeWrapper.MODE_ETALON;
 				preparedStatement.setString(3, parameterMode);
 				Log.debugMessage("AnalysisTypeDatabase.insertParameterTypes | Inserting parameter type "
 						+ parameterTypeId + " of parameter mode '" + parameterMode + "' for analysis type "
@@ -405,7 +400,7 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 				parameterTypeId = ((ParameterType) iterator.next()).getId();
 				DatabaseIdentifier.setIdentifier(preparedStatement, 1, analysisTypeId);
 				DatabaseIdentifier.setIdentifier(preparedStatement, 2, parameterTypeId);
-				parameterMode = MODE_OUT;
+				parameterMode = AnalysisTypeWrapper.MODE_OUT;
 				preparedStatement.setString(3, parameterMode);
 				Log.debugMessage("AnalysisTypeDatabase.insertParameterTypes | Inserting parameter type "
 						+ parameterTypeId + " of parameter mode '" + parameterMode + "' for analysis type "
@@ -572,7 +567,7 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 					+ SQL_WHERE + SetDatabase.LINK_COLUMN_SET_ID + SQL_IN + OPEN_BRACKET + criteriaSetIdNames
 					+ CLOSE_BRACKET
 					+ CLOSE_BRACKET
-					+ SQL_AND + PARAMETER_MODE + EQUALS + APOSTOPHE + MODE_CRITERION + APOSTOPHE;
+					+ SQL_AND + PARAMETER_MODE + EQUALS + APOSTOPHE + AnalysisTypeWrapper.MODE_CRITERION + APOSTOPHE;
 
 			return this.retrieveByIds(ids, condition);
 		}

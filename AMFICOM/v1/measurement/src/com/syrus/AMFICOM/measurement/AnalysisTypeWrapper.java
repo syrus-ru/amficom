@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisTypeWrapper.java,v 1.1 2005/01/27 11:54:26 bob Exp $
+ * $Id: AnalysisTypeWrapper.java,v 1.2 2005/01/27 14:11:23 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,19 +22,19 @@ import com.syrus.AMFICOM.general.Wrapper;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/01/27 11:54:26 $
+ * @version $Revision: 1.2 $, $Date: 2005/01/27 14:11:23 $
  * @author $Author: bob $
  * @module measurement_v1
  */
 public class AnalysisTypeWrapper implements Wrapper {
 
-	public static final String			COLUMN_CODENAME					= "codename";
-	public static final String			COLUMN_DESCRIPTION				= "description";
+	public static final String			COLUMN_CODENAME		= "codename";
+	public static final String			COLUMN_DESCRIPTION	= "description";
 
-	public static final String			COLUMN_PARAMETER_TYPES_IN		= "in_params";
-	public static final String			COLUMN_PARAMETER_TYPES_OUT		= "out_params";
-	public static final String			COLUMN_PARAMETER_TYPES_CRI		= "criteris_params";
-	public static final String			COLUMN_PARAMETER_TYPES_ETALON	= "etalon_params";
+	public static final String			MODE_IN				= "IN";
+	public static final String			MODE_CRITERION		= "CRI";
+	public static final String			MODE_ETALON			= "ETA";
+	public static final String			MODE_OUT			= "OUT";
 
 	private static AnalysisTypeWrapper	instance;
 
@@ -44,9 +44,8 @@ public class AnalysisTypeWrapper implements Wrapper {
 		// empty private constructor
 		String[] keysArray = new String[] { StorableObjectDatabase.COLUMN_ID, StorableObjectDatabase.COLUMN_CREATED,
 				StorableObjectDatabase.COLUMN_CREATOR_ID, StorableObjectDatabase.COLUMN_MODIFIED,
-				StorableObjectDatabase.COLUMN_MODIFIER_ID, COLUMN_CODENAME, COLUMN_DESCRIPTION,
-				COLUMN_PARAMETER_TYPES_IN, COLUMN_PARAMETER_TYPES_OUT, COLUMN_PARAMETER_TYPES_CRI,
-				COLUMN_PARAMETER_TYPES_ETALON};
+				StorableObjectDatabase.COLUMN_MODIFIER_ID, COLUMN_CODENAME, COLUMN_DESCRIPTION, MODE_IN, MODE_OUT,
+				MODE_CRITERION, MODE_ETALON};
 
 		this.keys = Collections.unmodifiableList(new ArrayList(Arrays.asList(keysArray)));
 	}
@@ -83,13 +82,13 @@ public class AnalysisTypeWrapper implements Wrapper {
 				return analysisType.getCodename();
 			if (key.equals(COLUMN_DESCRIPTION))
 				return analysisType.getDescription();
-			if (key.equals(COLUMN_PARAMETER_TYPES_IN))
+			if (key.equals(MODE_IN))
 				return analysisType.getInParameterTypes();
-			if (key.equals(COLUMN_PARAMETER_TYPES_OUT))
+			if (key.equals(MODE_OUT))
 				return analysisType.getOutParameterTypes();
-			if (key.equals(COLUMN_PARAMETER_TYPES_CRI))
+			if (key.equals(MODE_CRITERION))
 				return analysisType.getCriteriaParameterTypes();
-			if (key.equals(COLUMN_PARAMETER_TYPES_ETALON))
+			if (key.equals(MODE_ETALON))
 				return analysisType.getEtalonParameterTypes();
 
 		}
@@ -107,7 +106,7 @@ public class AnalysisTypeWrapper implements Wrapper {
 				analysisType.setCodename((String) value);
 			else if (key.equals(COLUMN_DESCRIPTION))
 				analysisType.setDescription((String) value);
-			else if (key.equals(COLUMN_PARAMETER_TYPES_IN)) {
+			else if (key.equals(MODE_IN)) {
 				List paramTypeIdStr = (List) value;
 				List paramTypeIds = new ArrayList(paramTypeIdStr.size());
 				for (Iterator it = paramTypeIdStr.iterator(); it.hasNext();)
@@ -117,7 +116,7 @@ public class AnalysisTypeWrapper implements Wrapper {
 				} catch (ApplicationException e) {
 					Log.errorMessage("AnalysisTypeWrapper.setValue | key '" + key + "' caught " + e.getMessage());
 				}
-			} else if (key.equals(COLUMN_PARAMETER_TYPES_OUT)) {
+			} else if (key.equals(MODE_OUT)) {
 				List paramTypeIdStr = (List) value;
 				List paramTypeIds = new ArrayList(paramTypeIdStr.size());
 				for (Iterator it = paramTypeIdStr.iterator(); it.hasNext();)
@@ -127,7 +126,7 @@ public class AnalysisTypeWrapper implements Wrapper {
 				} catch (ApplicationException e) {
 					Log.errorMessage("AnalysisTypeWrapper.setValue | key '" + key + "' caught " + e.getMessage());
 				}
-			} else if (key.equals(COLUMN_PARAMETER_TYPES_CRI)) {
+			} else if (key.equals(MODE_CRITERION)) {
 				List paramTypeIdStr = (List) value;
 				List paramTypeIds = new ArrayList(paramTypeIdStr.size());
 				for (Iterator it = paramTypeIdStr.iterator(); it.hasNext();)
@@ -138,7 +137,7 @@ public class AnalysisTypeWrapper implements Wrapper {
 				} catch (ApplicationException e) {
 					Log.errorMessage("AnalysisTypeWrapper.setValue | key '" + key + "' caught " + e.getMessage());
 				}
-			} else if (key.equals(COLUMN_PARAMETER_TYPES_ETALON)) {
+			} else if (key.equals(MODE_ETALON)) {
 				List paramTypeIdStr = (List) value;
 				List paramTypeIds = new ArrayList(paramTypeIdStr.size());
 				for (Iterator it = paramTypeIdStr.iterator(); it.hasNext();)
@@ -167,8 +166,8 @@ public class AnalysisTypeWrapper implements Wrapper {
 	}
 
 	public Class getPropertyClass(String key) {
-		if (key.equals(COLUMN_PARAMETER_TYPES_IN) || key.equals(COLUMN_PARAMETER_TYPES_OUT)
-				|| key.equals(COLUMN_PARAMETER_TYPES_CRI) || key.equals(COLUMN_PARAMETER_TYPES_ETALON))
+		if (key.equals(MODE_IN) || key.equals(MODE_OUT)
+				|| key.equals(MODE_CRITERION) || key.equals(MODE_ETALON))
 			return List.class;
 		return String.class;
 	}
