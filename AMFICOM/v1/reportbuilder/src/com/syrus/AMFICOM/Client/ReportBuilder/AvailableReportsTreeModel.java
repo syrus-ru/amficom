@@ -58,6 +58,7 @@ import com.syrus.AMFICOM.Client.Optimize.Report.SelectSolutionFrame;
 
 import com.syrus.AMFICOM.Client.General.Report.ObjectResourceReportModel;
 import com.syrus.AMFICOM.Client.Survey.Report.AlarmReportModel;
+import com.syrus.AMFICOM.Client.Survey.Report.ObserveReportModel;
 import com.syrus.AMFICOM.Client.Configure.Report.EquipFeaturesReportModel;
 import com.syrus.AMFICOM.Client.Schematics.Report.SchemeReportModel;
 import com.syrus.AMFICOM.Client.Analysis.Report.EvaluationReportModel;
@@ -247,14 +248,24 @@ public class AvailableReportsTreeModel extends ObjectResourceTreeModel
 
 			else if (s.equals("templateElementRoot"))
 			{
-				AlarmReportModel alarmModel = new AlarmReportModel();
+/*				AlarmReportModel alarmModel = new AlarmReportModel();
 				ObjectResourceTreeNode ortn = new ObjectResourceTreeNode(
 					alarmModel,
 					alarmModel.getObjectsName(),
 					true);
 
 				vec.add(ortn);
+				registerSearchableNode("", ortn);*/
+        
+				ObserveReportModel observeModel = new ObserveReportModel();
+				ObjectResourceTreeNode ortn = new ObjectResourceTreeNode(
+					observeModel,
+					observeModel.getObjectsName(),
+					true);
+
+				vec.add(ortn);
 				registerSearchableNode("", ortn);
+        
 
 				/*        ortn = new ObjectResourceTreeNode(
 				 "",
