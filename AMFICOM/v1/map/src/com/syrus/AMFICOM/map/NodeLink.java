@@ -1,5 +1,5 @@
 /*
- * $Id: NodeLink.java,v 1.6 2004/12/03 17:54:58 bob Exp $
+ * $Id: NodeLink.java,v 1.7 2004/12/09 13:52:27 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,14 +9,12 @@
 package com.syrus.AMFICOM.map;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
 import com.syrus.AMFICOM.configuration.Characteristic;
-import com.syrus.AMFICOM.configuration.Characterized;
 import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
@@ -24,17 +22,16 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
-import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.map.corba.NodeLink_Transferable;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2004/12/03 17:54:58 $
+ * @version $Revision: 1.7 $, $Date: 2004/12/09 13:52:27 $
  * @author $Author: bob $
  * @module map_v1
  */
-public class NodeLink extends StorableObject implements Characterized {
+public class NodeLink extends AbstractLink {
 
 	/**
 	 * Comment for <code>serialVersionUID</code>
@@ -49,8 +46,6 @@ public class NodeLink extends StorableObject implements Characterized {
 	private AbstractNode					endNode;
 
 	private double					length;
-
-	private List					characteristics;
 
 	private StorableObjectDatabase	nodeLinkDatabase;
 
@@ -149,22 +144,6 @@ public class NodeLink extends StorableObject implements Characterized {
 					(Identifier_Transferable)this.endNode.getId().getTransferable(),
 					this.length,
 					charIds);
-	}
-
-	
-	public List getCharacteristics() {
-		return  Collections.unmodifiableList(this.characteristics);
-	}
-	
-	protected void setCharacteristics0(final List characteristics) {
-		this.characteristics.clear();
-		if (characteristics != null)
-			this.characteristics.addAll(characteristics);
-	}
-	
-	public void setCharacteristics(final List characteristics) {
-		this.setCharacteristics0(characteristics);
-		super.currentVersion = super.getNextVersion();
 	}
 
 	public AbstractNode getEndNode() {

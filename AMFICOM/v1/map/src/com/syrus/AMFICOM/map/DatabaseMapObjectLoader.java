@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseMapObjectLoader.java,v 1.3 2004/12/07 08:20:11 bob Exp $
+ * $Id: DatabaseMapObjectLoader.java,v 1.4 2004/12/09 13:52:27 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,11 +26,11 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2004/12/07 08:20:11 $
+ * @version $Revision: 1.4 $, $Date: 2004/12/09 13:52:27 $
  * @author $Author: bob $
  * @module map_v1
  */
-public final class DatabaseMapObjectLoader implements MapObjectLoader {
+public class DatabaseMapObjectLoader implements MapObjectLoader {
 
 	private StorableObjectDatabase getDatabase(short entityCode){
 		StorableObjectDatabase database = null;

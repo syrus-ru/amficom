@@ -1,5 +1,5 @@
 /*
- * $Id: PhysicalLinkType.java,v 1.7 2004/12/08 09:51:22 bob Exp $
+ * $Id: PhysicalLinkType.java,v 1.8 2004/12/09 13:52:27 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,6 +23,7 @@ import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
@@ -32,7 +33,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.map.corba.PhysicalLinkType_Transferable;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2004/12/08 09:51:22 $
+ * @version $Revision: 1.8 $, $Date: 2004/12/09 13:52:27 $
  * @author $Author: bob $
  * @module map_v1
  */
@@ -121,17 +122,21 @@ public class PhysicalLinkType extends StorableObjectType implements Characterize
 		   final String codename,
 		   final String name,
 		   final String description,
-		   final Identifier domainId) {
+		   final Identifier domainId) throws CreateObjectException {
 		
 		if (creatorId == null || codename == null || name == null || description == null || domainId == null)
 			throw new IllegalArgumentException("Argument is 'null'");
 		
-		return new PhysicalLinkType(IdentifierPool.generateId(ObjectEntities.PHYSICAL_LINK_TYPE_ENTITY_CODE),
-			creatorId,
-			codename,
-			name,
-			description,
-			domainId);
+		try {
+			return new PhysicalLinkType(IdentifierPool.getGeneratedIdentifier(ObjectEntities.PHYSICAL_LINK_TYPE_ENTITY_CODE),
+				creatorId,
+				codename,
+				name,
+				description,
+				domainId);
+		} catch (IllegalObjectEntityException e) {
+			throw new CreateObjectException("PhysicalLinkType.createInstance | cannot generate identifier ", e);
+		}
 	}
 
 	public List getCharacteristics() {

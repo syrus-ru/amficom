@@ -1,5 +1,5 @@
 /*
- * $Id: Collector.java,v 1.6 2004/12/03 17:54:58 bob Exp $
+ * $Id: Collector.java,v 1.7 2004/12/09 13:52:27 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,11 +30,11 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.map.corba.Collector_Transferable;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2004/12/03 17:54:58 $
+ * @version $Revision: 1.7 $, $Date: 2004/12/09 13:52:27 $
  * @author $Author: bob $
  * @module map_v1
  */
-public class Collector extends StorableObject implements Characterized {
+public class Collector extends AbstractLink {
 
 	/**
 	 * Comment for <code>serialVersionUID</code>
@@ -140,22 +140,7 @@ public class Collector extends StorableObject implements Characterized {
 								this.description,
 								physicalLinkIds,
 								charIds);
-	}
-
-	public List getCharacteristics() {
-		return Collections.unmodifiableList(this.characteristics);
-	}
-	
-	public void setCharacteristics(final List characteristics) {
-		this.setCharacteristics0(characteristics);
-		super.currentVersion = super.getNextVersion();
-	}
-	
-	protected void setCharacteristics0(final List characteristics) {
-		this.characteristics.clear();
-		if (characteristics != null)
-			this.characteristics.addAll(characteristics);
-	}
+	}	
 
 	public String getDescription() {
 		return this.description;
