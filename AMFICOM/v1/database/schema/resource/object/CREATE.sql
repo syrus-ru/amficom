@@ -1,1 +1,1 @@
-@@imageresource
+@@imageresource.sql
