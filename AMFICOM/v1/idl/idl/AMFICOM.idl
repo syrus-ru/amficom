@@ -26,7 +26,7 @@
 // *  Кем         Верс   Когда      Комментарии                           * //
 // * -----------  ----- ---------- -------------------------------------- * //
 // *                                                                      * //
-// * Описание:                                                                     * //
+// * Описание:                                                            * //
 // *                                                                      * //
 //////////////////////////////////////////////////////////////////////////////
 
@@ -69,8 +69,11 @@ interface AMFICOM
 			in Admin::AccessIdentity_Transferable accessIdentity)
 		raises (General::AMFICOMRemoteException);
 
-//        oneway void asyncPing(in Client client, in long long clientTimeMillis);
-//        oneway void asyncPingCallback(in long long serverTimeMillis, in long long clientTimeMillis);
+#if 0
+		oneway void asyncPing(in Client client, in long long clientTimeMillis);
+
+		oneway void asyncPingCallback(in long long serverTimeMillis, in long long clientTimeMillis);
+#endif
 
 	void syncPing(out long long serverTimeMillis)
 		raises (General::AMFICOMRemoteException);
@@ -736,6 +739,9 @@ interface AMFICOM
 //			out General::wstringSeq alarmids)
 		raises (General::AMFICOMRemoteException);
 
+	/**
+	 * @deprecated
+	 */
 	long LoadMaintenanceData(
 			in Admin::AccessIdentity_Transferable accessIdentity,
 			out Alarm::EventSourceTypeSeq_Transferable est,
@@ -743,12 +749,18 @@ interface AMFICOM
 			out Alarm::AlertingMessageUserSeq_Transferable amu)
 		raises (General::AMFICOMRemoteException);
 
+	/**
+	 * @deprecated
+	 */
 	long SaveMaintenanceData(
 			in Admin::AccessIdentity_Transferable accessIdentity,
 			in Alarm::AlertingMessageSeq_Transferable am,
 			in Alarm::AlertingMessageUserSeq_Transferable amu)
 		raises (General::AMFICOMRemoteException);
 
+	/**
+	 * @deprecated
+	 */
 	long RemoveMaintenanceData(
 			in Admin::AccessIdentity_Transferable accessIdentity,
 			in wstring amu_id)
@@ -1436,7 +1448,6 @@ interface AMFICOM
 		raises (General::AMFICOMRemoteException);
 
 //////////////////////////////////////////////////////////////////////////////
-
 };
 };
 };
@@ -1444,4 +1455,3 @@ interface AMFICOM
 };
 
 #endif
-

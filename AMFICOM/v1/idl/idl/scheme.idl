@@ -1,3 +1,11 @@
+/*
+ * $Id: scheme.idl,v 1.4 2004/06/03 08:14:20 bass Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ.
+ */
+
 #ifndef _scheme_idl_
 #define _scheme_idl_
 
@@ -267,7 +275,6 @@ module Scheme
 		SchemePathSeq_Transferable paths;
 	};
 	typedef sequence <SchemeMonitoringSolution_Transferable> SchemeMonitoringSolutionSeq_Transferable;
-
 };
 };
 };
@@ -275,4 +282,3 @@ module Scheme
 };
 
 #endif
-

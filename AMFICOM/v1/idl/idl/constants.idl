@@ -61,10 +61,12 @@ interface Constants
 	const long ERROR_PASSWORD_EXPIRED = 12;
 /*
 //	typedef wstring ErrorCodeArray[12];
-//	const ErrorCodeArray ErrorCode = {
+//	const ErrorCodeArray ErrorCode =
+//	{
 
 	ConstantDef ErrorCodes
-	const wstringSeq ErrorCode = {
+	const wstringSeq ErrorCode =
+	{
 		"ERROR_NO_ERROR",
 		"ERROR_RISD_ERROR",
 		"ERROR_WRONG_PASSWORD",
@@ -102,7 +104,7 @@ module Constant
 		const long ERROR_UID = 10;
 		const long ERROR_DELETING = 11;
 		const long ERROR_PASSWORD_EXPIRED = 12;
-    };
+	};
 
 	interface AlarmTypeConstants
 	{
@@ -123,6 +125,9 @@ module Constant
 		const string ID_VOICE = "voice";
 	};
 
+	/**
+	 * @deprecated
+	 */
 	interface EventSourceTypeConstants
 	{
 		const string ID_CLIENT_SOURCE = "clientsource";
@@ -171,13 +176,10 @@ module Constant
 		const string ID_INFO = "info";
 		const string ID_WARNING = "warning";
 	};
-
 };
-
 };
 };
 };
 };
 
 #endif
-

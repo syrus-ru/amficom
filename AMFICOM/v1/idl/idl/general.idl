@@ -46,8 +46,11 @@ module CORBA
 module General
 {
 	typedef sequence <octet> octetSeq;
+
 	typedef sequence <wstring> wstringSeq;
+
 	typedef sequence <long> longSeq;
+
    	typedef sequence <double> doubleSeq;
 
 	exception AMFICOMRemoteException
@@ -119,13 +122,10 @@ module General
 		EVENT_STATUS_GENERATED,
 		EVENT_STATUS_PROCESSED
 	};
-
 };
-
 };
 };
 };
 };
 
 #endif
-

@@ -1,3 +1,11 @@
+/*
+ * $Id: survey.idl,v 1.3 2004/06/03 08:14:20 bass Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ.
+ */
+
 #ifndef _survey_idl_
 #define _survey_idl_
 
@@ -148,7 +156,7 @@ module Survey
 		wstring threshold_set_id;
 		wstring etalon_id;
 
-		General::wstringSeq monitored_element_ids; 
+		General::wstringSeq monitored_element_ids;
 	};
 	typedef sequence <TestSetup_Transferable> TestSetupSeq_Transferable;
 
@@ -330,7 +338,6 @@ module Survey
 		ActionParameterTypeSeq_Transferable arguments;
 	};
 	typedef sequence <ModelingType_Transferable> ModelingTypeSeq_Transferable;
-
 };
 };
 };
@@ -338,4 +345,3 @@ module Survey
 };
 
 #endif
-

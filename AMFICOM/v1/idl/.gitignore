@@ -2,8 +2,11 @@ classes
 src
 load_corba.bat
 *.deploy
+*.jar
 *.jpr
 *.jpx
 *.tar
 *.gz
 *.swp
+.all
+.idl

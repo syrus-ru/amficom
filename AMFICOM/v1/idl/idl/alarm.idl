@@ -26,7 +26,7 @@
 // *  Кем         Верс   Когда      Комментарии                           * //
 // * -----------  ----- ---------- -------------------------------------- * //
 // *                                                                      * //
-// * Описание:                                                                     * //
+// * Описание:                                                            * //
 // *                                                                      * //
 //////////////////////////////////////////////////////////////////////////////
 
@@ -46,12 +46,19 @@ module CORBA
 
 module Alarm
 {
+	/**
+	 * @deprecated
+	 */
 	struct Message_Transferable
 	{
 		wstring id;
 		wstring text;
 		wstring event_id;
 	};
+
+	/**
+	 * @deprecated
+	 */
 	typedef sequence <Message_Transferable> MessageSeq_Transferable;
 
 	struct AlarmType_Transferable
@@ -105,6 +112,9 @@ module Alarm
 
 // Maintenance configuring
 
+	/**
+	 * @deprecated
+	 */
 	struct Rule_Transferable
 	{
 		wstring event_type_id;
@@ -113,14 +123,25 @@ module Alarm
 		wstring source_id;
 		boolean is_generated;
 	};
+
+	/**
+	 * @deprecated
+	 */
 	typedef sequence <Rule_Transferable> RuleSeq_Transferable;
 
+	/**
+	 * @deprecated
+	 */
 	struct EventSourceType_Transferable
 	{
 		wstring id;
 		wstring name;
 		RuleSeq_Transferable rules;
 	};
+
+	/**
+	 * @deprecated
+	 */
 	typedef sequence <EventSourceType_Transferable> EventSourceTypeSeq_Transferable;
 /*
 	struct MessageType_Transferable
@@ -150,6 +171,9 @@ module Alarm
 	};
 	typedef sequence <EventType_Transferable> EventTypeSeq_Transferable;
 */
+	/**
+	 * @deprecated
+	 */
 	struct AlertingMessage_Transferable
 	{
 		wstring id;
@@ -157,8 +181,15 @@ module Alarm
 		wstring event_type_id;
 		wstring message_type_id;
 	};
+
+	/**
+	 * @deprecated
+	 */
 	typedef sequence <AlertingMessage_Transferable> AlertingMessageSeq_Transferable;
 
+	/**
+	 * @deprecated
+	 */
 	struct AlertingMessageUser_Transferable
 	{
 		wstring id;
@@ -166,11 +197,12 @@ module Alarm
 		wstring alerting_type_id;
 		wstring alerting_message_id;
 	};
+
+	/**
+	 * @deprecated
+	 */
 	typedef sequence <AlertingMessageUser_Transferable> AlertingMessageUserSeq_Transferable;
-
-
 };
-
 };
 };
 };
