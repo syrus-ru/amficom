@@ -24,8 +24,9 @@ public abstract class StorableObject_Database {
 	public static final String	SQL_AND							= " AND ";
 	public static final String	SQL_DELETE_FROM					= " DELETE FROM ";
 	public static final String	SQL_FROM						= " FROM ";
-	public static final String	SQL_INSERT_INTO					= " INSERT INTO ";
+	public static final String	SQL_INSERT_INTO					= " INSERT INTO ";	
 	public static final String	SQL_OR							= " OR ";
+	public static final String	SQL_ORDER_BY					= " ORDER BY ";
 	public static final String	SQL_SELECT						= " SELECT ";
 	public static final String	SQL_SET							= " SET ";
 	public static final String	SQL_UPDATE						= " UPDATE ";
@@ -40,15 +41,11 @@ public abstract class StorableObject_Database {
 
 	public abstract void insert(StorableObject storableObject) throws Exception;
 
-	public abstract void retrieve(StorableObject storableObject)
+	public abstract void retrieve(StorableObject storableObject) throws Exception;
+
+	public abstract Object retrieveObject(StorableObject storableObject, int retrieve_kind, Object arg)
 			throws Exception;
 
-	public abstract Object retrieveObject(StorableObject storableObject,
-			int retrieve_kind,
-			Object arg) throws Exception;
-
-	public abstract void update(StorableObject storableObject,
-			int update_kind,
-			Object arg) throws Exception;
+	public abstract void update(StorableObject storableObject, int update_kind, Object arg) throws Exception;
 }
 
