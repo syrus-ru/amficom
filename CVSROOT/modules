@@ -60,3 +60,5 @@ filter	filter
 server	server
 #M	load	Initial data server load
 load	load
+#M	importmif	Patch for SpatialFX libraries which allows for TEXT spatial objects
+importmif	importmif
