@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementType.java,v 1.41 2004/12/09 15:52:53 arseniy Exp $
+ * $Id: MeasurementType.java,v 1.42 2004/12/16 13:20:09 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,8 +32,8 @@ import com.syrus.AMFICOM.measurement.corba.MeasurementType_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.41 $, $Date: 2004/12/09 15:52:53 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.42 $, $Date: 2004/12/16 13:20:09 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
@@ -82,13 +82,23 @@ public class MeasurementType extends ActionType {
 			  new String(mtt.description));
 
 		try {
-			this.inParameterTypes = new ArrayList(mtt.in_parameter_type_ids.length);
+			List inParameterTypeIds = new ArrayList(mtt.in_parameter_type_ids.length);
 			for (int i = 0; i < mtt.in_parameter_type_ids.length; i++)
-				this.inParameterTypes.add((ParameterType) MeasurementStorableObjectPool.getStorableObject(new Identifier(mtt.in_parameter_type_ids[i]), true));
-	
-			this.outParameterTypes = new ArrayList(mtt.out_parameter_type_ids.length);
+				inParameterTypeIds.add(new Identifier(mtt.in_parameter_type_ids[i]));
+			
+			this.inParameterTypes = MeasurementStorableObjectPool.getStorableObjects(inParameterTypeIds, true);
+			
+			List outParameterTypeIds = new ArrayList(mtt.out_parameter_type_ids.length);
 			for (int i = 0; i < mtt.out_parameter_type_ids.length; i++)
-				this.outParameterTypes.add((ParameterType) MeasurementStorableObjectPool.getStorableObject(new Identifier(mtt.out_parameter_type_ids[i]), true));
+				outParameterTypeIds.add(new Identifier(mtt.out_parameter_type_ids[i]));
+			
+			this.outParameterTypes = MeasurementStorableObjectPool.getStorableObjects(outParameterTypeIds, true);
+	
+			List measurementPortTypeIds = new ArrayList(mtt.measurement_port_type_ids.length);
+			for (int i = 0; i < mtt.measurement_port_type_ids.length; i++)
+				measurementPortTypeIds.add(new Identifier(mtt.measurement_port_type_ids[i]));
+			
+			this.measurementPortTypes = ConfigurationStorableObjectPool.getStorableObjects(measurementPortTypeIds, true);
 		}
 		catch (ApplicationException ae) {
 			throw new CreateObjectException(ae);
