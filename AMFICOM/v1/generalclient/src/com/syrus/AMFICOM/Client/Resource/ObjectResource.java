@@ -85,20 +85,15 @@ public abstract class ObjectResource extends Object
 		return typ;
 	}
 */	
-	/** 
-	 * @deprecated 
-	 */
+
 	public boolean isChanged()
 	{
 		return changed;
 	}
-
-	/** 
-	 * @deprecated 
-	 */
+	
 	public void setChanged(boolean changed)
 	{
-		this.changed = this.changed;
+		this.changed = changed;
 	}
 
 	public Enumeration getChildren(String key)
