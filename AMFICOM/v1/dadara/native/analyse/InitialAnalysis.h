@@ -121,7 +121,7 @@ class Splash
  	int end_conn_n;
     int end_conn;
 
-    double sign;  // площадь под всплеском
+    int sign;  // знак всплеска 
 
 	// инициализируем неопределёнными значениями ()
     Splash()
