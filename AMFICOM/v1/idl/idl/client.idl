@@ -1,0 +1,49 @@
+#ifndef _client_idl_
+#define _client_idl_
+
+#include <alarm.idl>
+#include <general.idl>
+
+module com
+{
+module syrus
+{
+module AMFICOM
+{
+module CORBA
+{
+//////////////////////////////////////////////////////////////////////////////
+// * Интерфейс объекта РИСД - сервера ИСМ
+// *
+//////////////////////////////////////////////////////////////////////////////
+interface AMFICOMClient
+{
+//	oneway void asyncPing(
+//		in Server server,
+//		in long long serverTimeMillis);
+
+//	oneway void asyncPingCallback(
+//		in long long clientTimeMillis,
+//		in long long serverTimeMillis);
+
+	void syncPing(
+		out long long clientTimeMillis)
+		raises (General::AMFICOMRemoteException);
+
+//	void reportAlarm(
+//		in Alarm::AlarmSeq_Transferable alarms,
+//		in Alarm::EventSourceSeq_Transferable eventsources,
+//		in Alarm::EventSeq_Transferable events)
+//		raises (General::AMFICOMRemoteException);
+
+	void reportMessage(
+		in Alarm::MessageSeq_Transferable messages)
+		raises (General::AMFICOMRemoteException);
+};
+
+};
+};
+};
+};
+
+#endif

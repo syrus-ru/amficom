@@ -1,0 +1,341 @@
+#ifndef _survey_idl_
+#define _survey_idl_
+
+#include <general.idl>
+
+module com
+{
+module syrus
+{
+module AMFICOM
+{
+module CORBA
+{
+module Survey
+{
+	struct ClientParameter_Transferable
+	{
+		wstring id;
+		wstring type_id;
+		sequence <octet> value;
+		wstring codename;
+		wstring parameter_type_id;
+	};
+	typedef sequence <ClientParameter_Transferable> ClientParameterSeq_Transferable;
+
+//************************** TEST -- RESULT *************************
+	struct ElementaryTestAlarm
+	{
+		long long elementary_start_time;
+		wstring alarm_id;
+		wstring alarm_name;
+	};
+	typedef sequence <ElementaryTestAlarm> ElementaryTestAlarmSeq;
+
+	struct ClientTest_Transferable
+	{
+		wstring id;
+		wstring test_type_id;
+		long long start_time;
+		long long deleted;
+		wstring kis_id;
+		wstring monitored_element_id;
+		wstring name;
+		long long modified;
+		wstring request_id;
+		General::TestTemporalType temporal_type;
+		General::TestTimeStamps time_stamps;
+		General::TestStatus status;
+
+		wstring analysis_id;
+		wstring evaluation_id;
+		General::TestReturnType return_type;
+		long long duration;
+
+		ElementaryTestAlarmSeq elementary_test_alarms;
+		General::wstringSeq result_ids;
+
+		wstring test_argument_set_id;
+		wstring test_setup_id;
+//		ClientParameterSeq_Transferable arguments;
+	};
+	typedef sequence <ClientTest_Transferable> ClientTestSeq_Transferable;
+
+	struct ClientTestRequest_Transferable
+	{
+		wstring id;
+		wstring name;
+		General::TestRequestStatus status;
+//		long status;
+		long long created;
+		wstring user_id;
+		long long deleted;
+		long long completion_time;
+		wstring status_text;
+
+		General::wstringSeq test_ids;
+	};
+	typedef sequence <ClientTestRequest_Transferable> ClientTestRequestSeq_Transferable;
+
+	struct ClientResult_Transferable
+	{
+		wstring id;
+
+		long long elementary_start_time;
+
+		wstring result_type;
+		wstring action_id;
+		wstring user_id;
+		wstring result_set_id;
+
+		ClientParameterSeq_Transferable parameters;
+	};
+	typedef sequence <ClientResult_Transferable> ClientResultSeq_Transferable;
+
+	struct ClientTestArgumentSet_Transferable
+	{
+		wstring id;
+		wstring name;
+		long long created;
+		wstring created_by;
+		wstring test_type_id;
+		sequence <ClientParameter_Transferable> arguments;
+	};
+	typedef sequence <ClientTestArgumentSet_Transferable> ClientTestArgumentSetSeq_Transferable;
+
+	struct ResultSet_Transferable
+	{
+		wstring id;
+		wstring name;
+		long long start_time;
+		long long end_time;
+
+		wstring domain_id;
+
+		long long created;
+		long long modified;
+
+		boolean active;
+		wstring comments;
+	};
+	typedef sequence <ResultSet_Transferable> ResultSetSeq_Transferable;
+
+	struct MeasurementDescriptor_Transferable
+	{
+		long long time;
+		ClientParameter_Transferable param;
+	};
+	typedef sequence <MeasurementDescriptor_Transferable> MeasurementDescriptorSeq_Transferable;
+
+//************************************************************************
+
+	struct TestSetup_Transferable
+	{
+		wstring id;
+		wstring name;
+		long long created;
+		long long modified;
+		wstring created_by;
+		wstring description;
+
+		wstring test_type_id;
+		wstring test_argument_set_id;
+
+		wstring analysis_type_id;
+		wstring criteria_set_id;
+
+		wstring evaluation_type_id;
+		wstring threshold_set_id;
+		wstring etalon_id;
+
+		General::wstringSeq monitored_element_ids; 
+	};
+	typedef sequence <TestSetup_Transferable> TestSetupSeq_Transferable;
+
+//***************************** ANALYSIS ****************************
+
+	struct ClientAnalysis_Transferable
+	{
+		wstring id;
+		wstring type_id;
+		wstring criteria_set_id;
+		wstring monitored_element_id;
+		wstring name;
+		long long modified;
+		wstring user_id;
+		long long deleted;
+		wstring description;
+		General::wstringSeq result_ids;
+		sequence <ClientParameter_Transferable> arguments;
+	};
+	typedef sequence <ClientAnalysis_Transferable> ClientAnalysisSeq_Transferable;
+
+	struct ClientCriteriaSet_Transferable
+	{
+		wstring id;
+		wstring name;
+		long long created;
+		wstring created_by;
+		wstring analysis_type_id;
+		sequence <ClientParameter_Transferable> criterias;
+	};
+	typedef sequence <ClientCriteriaSet_Transferable> ClientCriteriaSetSeq_Transferable;
+
+//******************************************************************************
+
+//*************************** EVALUATION ****************************
+
+	struct ClientEvaluation_Transferable
+	{
+		wstring threshold_set_id;
+		wstring type_id;
+		long long deleted;
+		wstring etalon_id;
+		wstring monitored_element_id;
+		wstring id;
+		long long modified;
+		wstring name;
+		wstring user_id;
+		wstring description;
+		General::wstringSeq result_ids;
+		sequence <ClientParameter_Transferable> arguments;
+	};
+	typedef sequence <ClientEvaluation_Transferable> ClientEvaluationSeq_Transferable;
+
+	struct ClientThresholdSet_Transferable
+	{
+		wstring id;
+		wstring evaluation_type_id;
+		wstring name;
+		long long created;
+		wstring created_by;
+		sequence <ClientParameter_Transferable> thresholds;
+	};
+	typedef sequence <ClientThresholdSet_Transferable> ClientThresholdSetSeq_Transferable;
+
+	struct ClientEtalon_Transferable
+	{
+		wstring id;
+		wstring type_id;
+		wstring name;
+		wstring description;
+		long long created;
+		long long modified;
+		sequence <ClientParameter_Transferable> etalon_parameters;
+	};
+	typedef sequence <ClientEtalon_Transferable> ClientEtalonSeq_Transferable;
+
+//******************************************************************************
+
+//**************************** MODELING *****************************
+
+	struct ClientModeling_Transferable
+	{
+		wstring id;
+		wstring name;
+		long long modified;
+		wstring user_id;
+		long long deleted;
+		wstring type_id;
+		wstring scheme_path_id;
+		wstring domain_id;
+
+		ClientParameterSeq_Transferable arguments;
+	};
+	typedef sequence <ClientModeling_Transferable> ClientModelingSeq_Transferable;
+
+//******************************************************************************
+
+//***************************** FORMAL ******************************
+
+	struct GlobalParameterType_Transferable
+	{
+		wstring id;
+		wstring name;
+		wstring codename;
+		wstring description;
+		wstring norm;
+		wstring value_type;
+		wstring unit;
+		wstring granularity;
+		wstring rangehi;
+		wstring rangelo;
+		wstring formula;
+
+		long long modified;
+	};
+	typedef sequence <GlobalParameterType_Transferable> GlobalParameterTypeSeq_Transferable;
+
+	struct ActionParameterType_Transferable
+	{
+		wstring id;
+		wstring name;
+		wstring codename;
+		wstring parameter_type_id;
+		wstring holder_type_id;
+	};
+	typedef sequence <ActionParameterType_Transferable> ActionParameterTypeSeq_Transferable;
+
+	struct TestType_Transferable
+	{
+		wstring id;
+		wstring name;
+		wstring description;
+		long long modified;
+
+		ActionParameterTypeSeq_Transferable parameters;
+		ActionParameterTypeSeq_Transferable arguments;
+
+		General::wstringSeq analysis_type_ids;
+		General::wstringSeq evaluation_type_ids;
+	};
+	typedef sequence <TestType_Transferable> TestTypeSeq_Transferable;
+
+	struct AnalysisType_Transferable
+	{
+		wstring id;
+		wstring name;
+		wstring description;
+		long long modified;
+
+		ActionParameterTypeSeq_Transferable parameters;
+		ActionParameterTypeSeq_Transferable arguments;
+		ActionParameterTypeSeq_Transferable criterias;
+	};
+	typedef sequence <AnalysisType_Transferable> AnalysisTypeSeq_Transferable;
+
+	struct EvaluationType_Transferable
+	{
+		wstring id;
+		wstring name;
+		wstring description;
+		wstring etalon_type_id;
+		wstring etalon_type_name;
+		long long modified;
+
+		ActionParameterTypeSeq_Transferable parameters;
+		ActionParameterTypeSeq_Transferable arguments;
+		ActionParameterTypeSeq_Transferable thresholds;
+	};
+	typedef sequence <EvaluationType_Transferable> EvaluationTypeSeq_Transferable;
+
+	struct ModelingType_Transferable
+	{
+		wstring id;
+		wstring name;
+		wstring description;
+		long long modified;
+
+		ActionParameterTypeSeq_Transferable parameters;
+		ActionParameterTypeSeq_Transferable arguments;
+	};
+	typedef sequence <ModelingType_Transferable> ModelingTypeSeq_Transferable;
+
+};
+};
+};
+};
+};
+
+#endif
+

@@ -1,0 +1,274 @@
+//////////////////////////////////////////////////////////////////////////////
+// *                                                                      * //
+// * Syrus Systems                                                        * //
+// * Департамент Системных Исследований и Разработок                      * //
+// *                                                                      * //
+// * Проект: АМФИКОМ - система Автоматизированного Многофункционального   * //
+// *         Интеллектуального Контроля и Объектного Мониторинга          * //
+// *                                                                      * //
+// *         реализация Интегрированной Системы Мониторинга               * //
+// *                                                                      * //
+// * Название: Реализация серверной части интерфейса прототипа РИСД       * //
+// *           (включает реализацию пакета pmServer и класса pmRISDImpl)  * //
+// * Тип: IDL                                                             * //
+// *                                                                      * //
+// * Автор: Крупенников А.В.                                              * //
+// *                                                                      * //
+// * Версия: 0.1                                                          * //
+// * От: 22 jan 2002                                                      * //
+// * Расположение: ISM\prog\java\AMFICOM\Object.idl                       * //
+// *                                                                      * //
+// * Компилятор: Oracle JDeveloper (javac)                                * //
+// *                                                                      * //
+// * Статус: разработка                                                   * //
+// *                                                                      * //
+// * Изменения:                                                           * //
+// *  Кем         Верс   Когда      Комментарии                           * //
+// * -----------  ----- ---------- -------------------------------------- * //
+// *                                                                      * //
+// * Описание:                                                                     * //
+// *                                                                      * //
+//////////////////////////////////////////////////////////////////////////////
+
+#ifndef _object_idl_
+#define _object_idl_
+
+#include <general.idl>
+
+module com
+{
+module syrus
+{
+module AMFICOM
+{
+module CORBA
+{
+
+module Admin
+{
+	struct ObjectPermissionAttributes_Transferable
+	{
+	  wstring id;
+	  wstring rwx;
+
+	  General::wstringSeq group_ids;
+	  General::wstringSeq category_ids;
+
+	  wstring owner_id;
+	  wstring name;
+	  wstring codename;
+	  long long created;
+	  wstring created_by;
+	  long long modified;
+	  wstring modified_by;
+	  wstring whyRejected;
+	};
+
+	struct Domain_Transferable
+	{
+		wstring id;
+		wstring name;
+		wstring codename;
+		wstring owner_id;
+		wstring description;
+
+		long long created;
+		wstring created_by;
+		long long modified;
+		wstring modified_by;
+
+		wstring domain_id;
+
+		General::wstringSeq domain_ids;
+		ObjectPermissionAttributes_Transferable permissions;
+	};
+	typedef sequence <Domain_Transferable> DomainSeq_Transferable;
+
+	struct OperatorCategory_Transferable
+	{
+		wstring id;
+		wstring name;
+		wstring codename;
+		wstring description;
+		long long modified;
+
+		General::wstringSeq user_ids;
+	};
+	typedef sequence <OperatorCategory_Transferable> OperatorCategorySeq_Transferable;
+
+	struct OperatorGroup_Transferable
+	{
+		wstring id;
+		wstring name;
+		wstring codename;
+		wstring description;
+
+		wstring owner_id;
+		long long created;
+		wstring created_by;
+		long long modified;
+		wstring modified_by;
+
+		General::wstringSeq user_ids;
+		General::wstringSeq exec_ids;
+	};
+	typedef sequence <OperatorGroup_Transferable> OperatorGroupSeq_Transferable;
+
+	struct OperatorProfile_Transferable
+	{
+		wstring id;
+		wstring name;
+		wstring codename;
+		wstring description;
+
+		long long created;
+		wstring created_by;
+		long long modified;
+		wstring modified_by;
+
+		wstring user_id;
+		wstring owner_id;
+
+		wstring login;
+		General::OctetSequence password;
+		long long password_expiry;
+
+		long long last_login;
+		wstring status;
+		wstring state;
+
+
+		long long disabled;
+		wstring disabled_comments;
+
+		wstring priority;
+		wstring logfile;
+
+		General::wstringSeq category_ids;
+		General::wstringSeq group_ids;
+
+		wstring first_name;
+		wstring second_name;
+		wstring last_name;
+		wstring phone_work;
+		wstring phone_home;
+		wstring phone_mobile;
+		wstring phone_emergency;
+
+		wstring pager_phone;
+		wstring pager_number;
+		wstring sms_number;
+
+		wstring address;
+		wstring language;
+		wstring organization;
+		wstring e_mail;
+	};
+	typedef sequence <OperatorProfile_Transferable> OperatorProfileSeq_Transferable;
+
+	struct AccessIdentity_Transferable
+	{
+		long long started;
+		wstring username;
+		wstring user_id;
+		wstring sess_id;
+		wstring domain_id;
+	};
+	typedef sequence <AccessIdentity_Transferable> AccessIdentitySeq_Transferable;
+
+	struct User_Transferable
+	{
+		wstring id;
+		wstring object_id;
+		wstring login;
+		wstring type;
+		long long last_login;
+		long long logged;
+		long sessions;
+
+		General::wstringSeq category_ids;
+		General::wstringSeq group_ids;
+	};
+	typedef sequence <User_Transferable> UserSeq_Transferable;
+
+	struct CommandPermissionAttributes_Transferable
+	{
+	  wstring id;
+	  wstring rwx;
+/*
+	  boolean userR;
+	  boolean userW;
+	  boolean userX;
+	  boolean groupR;
+	  boolean groupW;
+	  boolean groupX;
+	  boolean otherR;
+	  boolean otherW;
+	  boolean otherX;
+*/
+	  General::wstringSeq group_ids;
+	  General::wstringSeq category_ids;
+
+	  wstring owner_id;
+	  wstring name;
+	  wstring codename;
+	  long long created;
+	  wstring created_by;
+	  long long modified;
+	  wstring modified_by;
+	  wstring whyRejected;
+	};
+	typedef sequence <CommandPermissionAttributes_Transferable>
+		CommandPermissionAttributesSeq_Transferable;
+
+	struct Server_Transferable
+	{
+		wstring id;
+		wstring name;
+		wstring version;
+		wstring licence_id;
+		wstring location;
+		wstring contact;
+		wstring hostname;
+		long long created;
+		long long modified;
+		long sessions;
+	};
+	typedef sequence <Server_Transferable> ServerSeq_Transferable;
+
+	struct Agent_Transferable
+	{
+		wstring id;
+		wstring name;
+		wstring version;
+		wstring licence_id;
+		wstring location;
+		wstring contact;
+		wstring hostname;
+		long long created;
+		long long modified;
+	};
+	typedef sequence <Agent_Transferable> AgentSeq_Transferable;
+
+	struct Client_Transferable
+	{
+		wstring id;
+		wstring name;
+		wstring version;
+		wstring licence_id;
+		wstring location;
+		wstring contact;
+		wstring hostname;
+		long long created;
+		long long modified;
+	};
+	typedef sequence <Client_Transferable> ClientSeq_Transferable;
+
+};
+};
+};
+};
+};
+
+#endif
+
