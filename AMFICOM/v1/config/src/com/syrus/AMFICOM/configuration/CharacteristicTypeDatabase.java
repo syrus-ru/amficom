@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicTypeDatabase.java,v 1.14 2004/09/08 12:46:18 max Exp $
+ * $Id: CharacteristicTypeDatabase.java,v 1.15 2004/09/08 14:14:37 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,7 +28,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2004/09/08 12:46:18 $
+ * @version $Revision: 1.15 $, $Date: 2004/09/08 14:14:37 $
  * @author $Author: max $
  * @module configuration_v1
  */
@@ -122,12 +122,7 @@ public class CharacteristicTypeDatabase extends StorableObjectDatabase {
 	}
 
 	protected String retrieveQuery(String condition){
-		return SQL_SELECT
-		+ COLUMN_ID + COMMA
-		+ DatabaseDate.toQuerySubString(COLUMN_CREATED) + COMMA 
-		+ DatabaseDate.toQuerySubString(COLUMN_MODIFIED) + COMMA
-		+ COLUMN_CREATOR_ID + COMMA
-		+ COLUMN_MODIFIER_ID + COMMA
+		return super.retrieveQuery(condition)
 		+ COLUMN_CODENAME + COMMA
 		+ COLUMN_DESCRIPTION + COMMA
 		+ COLUMN_DATA_TYPE + COMMA

@@ -1,5 +1,5 @@
 /*
- * $Id: EquipmentTypeDatabase.java,v 1.7 2004/09/06 13:47:57 max Exp $
+ * $Id: EquipmentTypeDatabase.java,v 1.8 2004/09/08 14:14:37 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,7 +29,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2004/09/06 13:47:57 $
+ * @version $Revision: 1.8 $, $Date: 2004/09/08 14:14:37 $
  * @author $Author: max $
  * @module configuration_v1
  */
@@ -53,11 +53,7 @@ public class EquipmentTypeDatabase extends StorableObjectDatabase {
 	
 	protected String getUpdateMultiplySQLValues() {
 		if (this.updateMultiplySQLValues == null){
-			this.updateMultiplySQLValues = QUESTION + COMMA
-			+ QUESTION + COMMA
-			+ QUESTION + COMMA
-			+ QUESTION + COMMA
-			+ QUESTION + COMMA
+			this.updateMultiplySQLValues = super.getUpdateMultiplySQLValues()
 			+ QUESTION + COMMA
 			+ QUESTION;
 		}
@@ -66,11 +62,7 @@ public class EquipmentTypeDatabase extends StorableObjectDatabase {
 	
 	protected String getUpdateColumns() {
 		if (this.updateColumns == null){
-			this.updateColumns = COLUMN_ID + COMMA
-				+ COLUMN_CREATED + COMMA
-				+ COLUMN_MODIFIED + COMMA
-				+ COLUMN_CREATOR_ID + COMMA
-				+ COLUMN_MODIFIER_ID + COMMA
+			this.updateColumns = super.getUpdateColumns()
 				+ COLUMN_CODENAME + COMMA
 				+ COLUMN_DESCRIPTION;
 		}
@@ -80,12 +72,7 @@ public class EquipmentTypeDatabase extends StorableObjectDatabase {
 	protected String getUpdateSingleSQLValues(StorableObject storableObject)
 			throws IllegalDataException, UpdateObjectException {
 		EquipmentType equipmentType = fromStorableObject(storableObject);
-		String etIdStr = equipmentType.getId().toSQLString();
-		String sql = etIdStr + COMMA
-			+ DatabaseDate.toUpdateSubString(equipmentType.getCreated()) + COMMA
-			+ DatabaseDate.toUpdateSubString(equipmentType.getModified()) + COMMA
-			+ equipmentType.getCreatorId().toSQLString() + COMMA
-			+ equipmentType.getModifierId().toSQLString() + COMMA
+		String sql = super.getUpdateSingleSQLValues(storableObject)
 			+ APOSTOPHE + equipmentType.getCodename() + APOSTOPHE + COMMA
 			+ APOSTOPHE + equipmentType.getDescription() + APOSTOPHE;
 		return sql;
@@ -103,12 +90,7 @@ public class EquipmentTypeDatabase extends StorableObjectDatabase {
 	}
 	
 	protected String retrieveQuery(String condition){
-		return SQL_SELECT
-		+ COLUMN_ID + COMMA
-		+ DatabaseDate.toQuerySubString(COLUMN_CREATED) + COMMA 
-		+ DatabaseDate.toQuerySubString(COLUMN_MODIFIED) + COMMA
-		+ COLUMN_CREATOR_ID + COMMA
-		+ COLUMN_MODIFIER_ID + COMMA
+		return super.retrieveQuery(condition)
 		+ COLUMN_CODENAME + COMMA
 		+ COLUMN_DESCRIPTION
 		+ SQL_FROM + ObjectEntities.EQUIPMENTTYPE_ENTITY
@@ -122,13 +104,7 @@ public class EquipmentTypeDatabase extends StorableObjectDatabase {
 		EquipmentType equipmentType = fromStorableObject(storableObject);
 		String etIdStr = equipmentType.getId().getCode();
 		try {
-			preparedStatement.setString( 1, etIdStr);
-			preparedStatement.setTimestamp( 2, new Timestamp(equipmentType.
-					getCreated().getTime()));
-			preparedStatement.setTimestamp( 3, new Timestamp(equipmentType.
-					getModified().getTime()));
-			preparedStatement.setString( 4, equipmentType.getCreatorId().getCode());
-			preparedStatement.setString( 5, equipmentType.getModifierId().getCode());
+			super.setEntityForPreparedStatement(storableObject, preparedStatement);
 			preparedStatement.setString( 6, equipmentType.getCodename());
 			preparedStatement.setString( 7, equipmentType.getDescription());
 			preparedStatement.setString( 8, etIdStr);
@@ -141,7 +117,7 @@ public class EquipmentTypeDatabase extends StorableObjectDatabase {
 	protected StorableObject updateEntityFromResultSet(
 			StorableObject storableObject, ResultSet resultSet)
 			throws IllegalDataException, RetrieveObjectException, SQLException {
-		EquipmentType equipmentType = fromStorableObject(storableObject);
+		EquipmentType equipmentType = storableObject == null ? null : fromStorableObject(storableObject);
 		if (equipmentType == null){
 			/**
 			 * @todo when change DB Identifier model ,change getString() to getLong()

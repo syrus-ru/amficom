@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicDatabase.java,v 1.23 2004/09/08 12:46:18 max Exp $
+ * $Id: CharacteristicDatabase.java,v 1.24 2004/09/08 14:14:37 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,7 +31,7 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.configuration.corba.CharacteristicSort;
 
 /**
- * @version $Revision: 1.23 $, $Date: 2004/09/08 12:46:18 $
+ * @version $Revision: 1.24 $, $Date: 2004/09/08 14:14:37 $
  * @author $Author: max $
  * @module configuration_v1
  */
@@ -261,12 +261,7 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
 	
 
 	protected String retrieveQuery(String condition){
-		return SQL_SELECT
-		+ COLUMN_ID + COMMA
-		+ DatabaseDate.toQuerySubString(COLUMN_CREATED) + COMMA 
-		+ DatabaseDate.toQuerySubString(COLUMN_MODIFIED) + COMMA
-		+ COLUMN_CREATOR_ID + COMMA
-		+ COLUMN_MODIFIER_ID + COMMA
+		return super.retrieveQuery(condition)
 		+ COLUMN_TYPE_ID + COMMA
 		+ COLUMN_NAME + COMMA
 		+ COLUMN_DESCRIPTION + COMMA			

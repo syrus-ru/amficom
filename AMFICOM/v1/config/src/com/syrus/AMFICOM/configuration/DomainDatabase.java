@@ -1,5 +1,5 @@
 /*
- * $Id: DomainDatabase.java,v 1.8 2004/09/08 12:46:18 max Exp $
+ * $Id: DomainDatabase.java,v 1.9 2004/09/08 14:14:37 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,7 +30,7 @@ import com.syrus.util.database.DatabaseDate;
 
 
 /**
- * @version $Revision: 1.8 $, $Date: 2004/09/08 12:46:18 $
+ * @version $Revision: 1.9 $, $Date: 2004/09/08 14:14:37 $
  * @author $Author: max $
  * @module configuration_v1
  */
@@ -96,17 +96,12 @@ public class DomainDatabase extends StorableObjectDatabase {
 	}
 
 	protected String retrieveQuery(String condition){
-		return SQL_SELECT
-		+ COLUMN_ID + COMMA
-		+ DatabaseDate.toQuerySubString(COLUMN_CREATED) + COMMA
-		+ DatabaseDate.toQuerySubString(COLUMN_MODIFIED) + COMMA
-		+ COLUMN_CREATOR_ID + COMMA
-		+ COLUMN_MODIFIER_ID + COMMA
-		+ DomainMember.COLUMN_DOMAIN_ID + COMMA
-		+ COLUMN_NAME + COMMA
-		+ COLUMN_DESCRIPTION
-		+ SQL_FROM + ObjectEntities.DOMAIN_ENTITY
-		+ ( ((condition == null) || (condition.length() == 0) ) ? "" : SQL_WHERE + condition);
+		return super.retrieveQuery(condition)
+			+ DomainMember.COLUMN_DOMAIN_ID + COMMA
+			+ COLUMN_NAME + COMMA
+			+ COLUMN_DESCRIPTION
+			+ SQL_FROM + ObjectEntities.DOMAIN_ENTITY
+			+ ( ((condition == null) || (condition.length() == 0) ) ? "" : SQL_WHERE + condition);
 
 	}
 	

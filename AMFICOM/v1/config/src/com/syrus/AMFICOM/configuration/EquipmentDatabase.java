@@ -1,5 +1,5 @@
 /*
- * $Id: EquipmentDatabase.java,v 1.30 2004/09/08 12:46:18 max Exp $
+ * $Id: EquipmentDatabase.java,v 1.31 2004/09/08 14:14:37 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,7 +12,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.sql.Timestamp;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ArrayList;
@@ -33,7 +32,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.30 $, $Date: 2004/09/08 12:46:18 $
+ * @version $Revision: 1.31 $, $Date: 2004/09/08 14:14:37 $
  * @author $Author: max $
  * @module configuration_v1
  */
@@ -111,19 +110,14 @@ public class EquipmentDatabase extends StorableObjectDatabase {
 	}
 	
 	protected String retrieveQuery(String condition){
-		return SQL_SELECT
-		+ COLUMN_ID + COMMA
-		+ DatabaseDate.toQuerySubString(COLUMN_CREATED) + COMMA
-		+ DatabaseDate.toQuerySubString(COLUMN_MODIFIED) + COMMA
-		+ COLUMN_CREATOR_ID + COMMA
-		+ COLUMN_MODIFIER_ID + COMMA
-		+ DomainMember.COLUMN_DOMAIN_ID + COMMA
-		+ COLUMN_TYPE_ID + COMMA
-		+ COLUMN_NAME + COMMA
-		+ COLUMN_DESCRIPTION + COMMA
-		+ COLUMN_IMAGE_ID
-		+ SQL_FROM + ObjectEntities.EQUIPMENT_ENTITY
-		+ ( ((condition == null) || (condition.length() == 0) ) ? "" : SQL_WHERE + condition);
+		return super.retrieveQuery(condition)
+			+ DomainMember.COLUMN_DOMAIN_ID + COMMA
+			+ COLUMN_TYPE_ID + COMMA
+			+ COLUMN_NAME + COMMA
+			+ COLUMN_DESCRIPTION + COMMA
+			+ COLUMN_IMAGE_ID
+			+ SQL_FROM + ObjectEntities.EQUIPMENT_ENTITY
+			+ ( ((condition == null) || (condition.length() == 0) ) ? "" : SQL_WHERE + condition);
 
 	}
 	
