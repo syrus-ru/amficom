@@ -1,5 +1,5 @@
 /*
- * $Id: MServerImplementation.java,v 1.28 2005/03/05 21:38:01 arseniy Exp $
+ * $Id: MServerImplementation.java,v 1.29 2005/03/18 18:18:13 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -53,6 +53,7 @@ import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.general.corba.ParameterType_Transferable;
 import com.syrus.AMFICOM.general.corba.CharacteristicType_Transferable;
@@ -75,6 +76,7 @@ import com.syrus.AMFICOM.measurement.ResultDatabase;
 import com.syrus.AMFICOM.measurement.Set;
 import com.syrus.AMFICOM.measurement.TemporalPattern;
 import com.syrus.AMFICOM.measurement.Test;
+import com.syrus.AMFICOM.measurement.TestDatabase;
 import com.syrus.AMFICOM.measurement.corba.AnalysisType_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Analysis_Transferable;
 import com.syrus.AMFICOM.measurement.corba.EvaluationType_Transferable;
@@ -91,7 +93,7 @@ import com.syrus.AMFICOM.mserver.corba.MServerPOA;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.28 $, $Date: 2005/03/05 21:38:01 $
+ * @version $Revision: 1.29 $, $Date: 2005/03/18 18:18:13 $
  * @author $Author: arseniy $
  * @module mserver_v1
  */
@@ -943,12 +945,15 @@ public class MServerImplementation extends MServerPOA {
         }
 	}
 
-	public void updateTestStatus(Identifier_Transferable idT, TestStatus status) {
+	public void updateTestStatus(Identifier_Transferable idT, TestStatus status, Identifier_Transferable mcmUserIdT) {
 		Identifier id = new Identifier(idT);
-		Log.debugMessage("Updating status of test '" + id + "' to " + status.value(), Log.DEBUGLEVEL07);
+		Identifier mcmUserId = new Identifier(mcmUserIdT);
+		Log.debugMessage("Updating status of test '" + id + "' to " + status.value() + " on MCM '" + mcmUserId + "'", Log.DEBUGLEVEL07);
 		try {
-			Test test = (Test)MeasurementStorableObjectPool.getStorableObject(id, true);
-			test.updateStatus(status, MeasurementServer.iAm.getUserId());
+			Test test = (Test) MeasurementStorableObjectPool.getStorableObject(id, true);
+			test.setStatus(status);
+			TestDatabase testDatabase = (TestDatabase) MeasurementDatabaseContext.getTestDatabase();
+			testDatabase.update(test, mcmUserId, StorableObjectDatabase.UPDATE_FORCE);
 		}
 		catch (ApplicationException ae) {
 			Log.errorMessage("updateTestStatus | Cannot update status of test '" + id + "' -- " + ae.getMessage());
