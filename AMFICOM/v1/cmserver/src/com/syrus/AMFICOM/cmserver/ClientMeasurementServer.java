@@ -1,5 +1,5 @@
 /*
- * $Id: ClientMeasurementServer.java,v 1.8 2004/09/23 13:15:10 bob Exp $
+ * $Id: ClientMeasurementServer.java,v 1.9 2004/10/19 15:10:31 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,7 +12,9 @@ import com.syrus.AMFICOM.cmserver.corba.CMServer;
 import com.syrus.AMFICOM.cmserver.corba.CMServerPOATie;
 import com.syrus.AMFICOM.general.CORBAServer;
 import com.syrus.AMFICOM.general.CommunicationException;
+import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.SleepButWorkThread;
+import com.syrus.AMFICOM.mserver.corba.MServer;
 import com.syrus.util.Application;
 import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
@@ -26,8 +28,8 @@ import org.omg.CosNaming.NamingContextPackage.AlreadyBound;
 import org.omg.PortableServer.*;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2004/09/23 13:15:10 $
- * @author $Author: bob $
+ * @version $Revision: 1.9 $, $Date: 2004/10/19 15:10:31 $
+ * @author $Author: max $
  * @module cmserver_v1
  */
 public class ClientMeasurementServer extends SleepButWorkThread {
@@ -46,10 +48,12 @@ public class ClientMeasurementServer extends SleepButWorkThread {
 	public static final String	DB_LOGIN_NAME			= "amficom";
 
 	public static final int		TICK_TIME			= 5;
+    
+    protected static MServer mServerRef;    
 
 	/* CORBA server */
-	private static CORBAServer	corbaServer;
-
+	private static CORBAServer	iAm;
+    
 	private boolean			running;
 
 	public ClientMeasurementServer() {
@@ -136,8 +140,8 @@ public class ClientMeasurementServer extends SleepButWorkThread {
 
 	private static void _activateCORBAServer() {
 		try {
-			corbaServer = new CORBAServer();
-			corbaServer.activateServant(new CMServerPOATie(new CMServerImpl()), "CMServer");
+			iAm = new CORBAServer();
+			iAm.activateServant(new CMServerPOATie(new CMServerImpl()), "CMServer");
 		} catch (CommunicationException ce) {
 			Log.errorException(ce);
 			System.exit(-1);
@@ -205,4 +209,12 @@ public class ClientMeasurementServer extends SleepButWorkThread {
 		}
 		stopCORBAServer();
 	}
+
+    /**
+     * @param serverId
+     */
+    public static void activateMServerReferenceWithId(Identifier serverId) {
+        // TODO Auto-generated method stub
+        
+    }
 }
