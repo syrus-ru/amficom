@@ -7,6 +7,9 @@ CREATE TABLE LinkType (
 --
  codename VARCHAR2(32) NOT NULL,
  description VARCHAR2(256),
+--
+ name VARCHAR2(64),
+--
  sort NUMBER(2,0),
  manufacturer VARCHAR2(64),
  manufacturer_code VARCHAR2(64),
