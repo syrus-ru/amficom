@@ -506,7 +506,7 @@ public class ReflectogramEvent //implements Cloneable
         begin = dis.readInt();
         end = dis.readInt();
         delta_x = dis.readDouble();
-        mf.readFromDIS(dis);
+        mf = ModelFunction.createFromDIS(dis);
         int flags = dis.readInt();
         int i;
         for (i = 1; i != 0; i = i * 2)

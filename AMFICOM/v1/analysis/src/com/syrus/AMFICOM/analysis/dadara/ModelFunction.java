@@ -295,6 +295,18 @@ public class ModelFunction {
 			dos.writeDouble(pars[i]);
 	}
 
+	public static ModelFunction createFromDIS(DataInputStream dis) throws IOException {
+	    ModelFunction mf = new ModelFunction();
+
+	    mf.shapeID = dis.readInt();
+		int npars = dis.readInt();
+		mf.pars = new double[npars];
+		for (int i = 0; i < npars; i++)
+			mf.pars[i] = dis.readDouble();
+
+		return mf;
+	}
+
 	public void readFromDIS(DataInputStream dis) throws IOException {
 		shapeID = dis.readInt();
 		int npars = dis.readInt();

@@ -115,7 +115,6 @@ public class AnalysisUtil
 		}
 	}
 
-
 	public static AnalysisType getAnalysisType(Identifier userId, String codename)
 	{
 		StorableObjectCondition aTypeCondition = new StringFieldCondition(
