@@ -1,5 +1,5 @@
 /**
- * $Id: MapOpenCommand.java,v 1.18 2005/03/01 15:38:42 krupenn Exp $
+ * $Id: MapOpenCommand.java,v 1.19 2005/03/04 14:30:55 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,6 +11,7 @@
 
 package com.syrus.AMFICOM.Client.Map.Command.Map;
 
+import com.syrus.AMFICOM.Client.Map.UI.MapChooserDialog;
 import java.util.Collection;
 
 import javax.swing.JDesktopPane;
@@ -36,7 +37,7 @@ import com.syrus.AMFICOM.map.MapStorableObjectPool;
 /**
  * открыть карту. карта открывается в новом виде
  * @author $Author: krupenn $
- * @version $Revision: 1.18 $, $Date: 2005/03/01 15:38:42 $
+ * @version $Revision: 1.19 $, $Date: 2005/03/04 14:30:55 $
  * @module mapviewclient_v1
  */
 public class MapOpenCommand extends VoidCommand
@@ -99,7 +100,7 @@ public class MapOpenCommand extends VoidCommand
 			return;
 		}
 
-		ObjectResourceChooserDialog mcd = new ObjectResourceChooserDialog(
+		ObjectResourceChooserDialog mcd = new MapChooserDialog(
 				LangModelMap.getString("Map"),
 				MapTableController.getInstance());
 
