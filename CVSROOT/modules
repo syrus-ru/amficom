@@ -77,6 +77,8 @@ map_v1		AMFICOM/v1/map
 survey_v1	AMFICOM/v1/survey
 #M	filter_v1	Files common for client-side and server-side filtering
 filter_v1	AMFICOM/v1/filter
+#M	reportbuilder_v1	Report builder module
+reportbuilder_v1	AMFICOM/v1/reportbuilder
 #M	server_v1	AMFICOM Server instance (server-client interface)
 server_v1	AMFICOM/v1/server
 #M	servermisc_v1	Miscellaneous files for server-side modules
