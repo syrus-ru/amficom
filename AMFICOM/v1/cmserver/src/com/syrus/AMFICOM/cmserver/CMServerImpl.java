@@ -1,5 +1,5 @@
 /*
- * $Id: CMServerImpl.java,v 1.72 2004/11/25 15:42:17 bob Exp $
+ * $Id: CMServerImpl.java,v 1.73 2004/12/06 10:59:36 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -123,7 +123,7 @@ import com.syrus.AMFICOM.mserver.corba.MServer;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.72 $, $Date: 2004/11/25 15:42:17 $
+ * @version $Revision: 1.73 $, $Date: 2004/12/06 10:59:36 $
  * @author $Author: bob $
  * @module cmserver_v1
  */
@@ -5839,14 +5839,14 @@ public class CMServerImpl extends CMConfigurationMeasurementReceive {
                 }           
     		}
             int i=0;
-            Identifier_Transferable[] identifier_Transferables = new Identifier_Transferable[storableObjects.size()];
+            Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[storableObjects.size()];
             for (Iterator it = storableObjects.iterator(); it.hasNext(); i++) {
     			StorableObject so = (StorableObject) it.next();
-                identifier_Transferables[i] = (Identifier_Transferable) so.getId().getTransferable(); 
+                identifierTransferables[i] = (Identifier_Transferable) so.getId().getTransferable(); 
     		}        
-            Log.debugMessage("CMServer.transmitRefreshedConfigurationObjects | return " + identifier_Transferables.length
+            Log.debugMessage("CMServer.transmitRefreshedConfigurationObjects | return " + identifierTransferables.length
 							 + " item(s)", Log.DEBUGLEVEL05);
-            return identifier_Transferables;
+            return identifierTransferables;
         } catch (CommunicationException ce) {
             Log.errorException(ce);
             throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ce
@@ -5884,12 +5884,12 @@ public class CMServerImpl extends CMConfigurationMeasurementReceive {
                 }              
             }
             int i=0;
-            Identifier_Transferable[] identifier_Transferables = new Identifier_Transferable[storableObjects.size()];
+            Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[storableObjects.size()];
             for (Iterator it = storableObjects.iterator(); it.hasNext(); i++) {
                 StorableObject so = (StorableObject) it.next();
-                identifier_Transferables[i] = (Identifier_Transferable) so.getId().getTransferable(); 
+                identifierTransferables[i] = (Identifier_Transferable) so.getId().getTransferable(); 
             }        
-            return identifier_Transferables;
+            return identifierTransferables;
         } catch (CommunicationException ce) {
             Log.errorException(ce);
             throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ce

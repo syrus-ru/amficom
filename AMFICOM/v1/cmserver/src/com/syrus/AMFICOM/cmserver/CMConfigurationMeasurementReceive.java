@@ -1,5 +1,5 @@
 /*
- * $Id: CMConfigurationMeasurementReceive.java,v 1.1 2004/11/02 13:23:01 bob Exp $
+ * $Id: CMConfigurationMeasurementReceive.java,v 1.2 2004/12/06 10:59:36 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -65,12 +65,12 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.1 $, $Date: 2004/11/02 13:23:01 $
+ * @version $Revision: 1.2 $, $Date: 2004/12/06 10:59:36 $
  * @author $Author: bob $
  * @module module
  */
 public abstract class CMConfigurationMeasurementReceive extends CMConfigurationReceive {
-
+	static final long serialVersionUID = 2044666930827736818L;
 	//////////////////////////////////Measurement Receive/////////////////////////////////////////////
     public void receiveAnalysis( Analysis_Transferable analysis_Transferable, boolean force,
             AccessIdentifier_Transferable accessIdentifier)
@@ -903,10 +903,6 @@ public abstract class CMConfigurationMeasurementReceive extends CMConfigurationR
          Log.errorException(e);
          throw new AMFICOMRemoteException(ErrorCode.ERROR_VERSION_COLLISION,
                                              CompletionStatus.COMPLETED_NO, e.getMessage());
-         } catch (CreateObjectException e) {
-         Log.errorException(e);
-         throw new AMFICOMRemoteException(ErrorCode.ERROR_SAVE, CompletionStatus.COMPLETED_NO, e
-                 .getMessage());
          } catch (Throwable t) {
             Log.errorException(t);
             throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
@@ -950,10 +946,6 @@ public abstract class CMConfigurationMeasurementReceive extends CMConfigurationR
 			Log.errorException(e);
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_VERSION_COLLISION,
 												CompletionStatus.COMPLETED_NO, e.getMessage());
-		} catch (CreateObjectException e) {
-			Log.errorException(e);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_SAVE, CompletionStatus.COMPLETED_NO, e
-					.getMessage());
 		} catch (Throwable t) {
             Log.errorException(t);
             throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());

@@ -1,5 +1,5 @@
 /*
- * $Id: CMConfigurationReceive.java,v 1.4 2004/11/24 08:43:22 max Exp $
+ * $Id: CMConfigurationReceive.java,v 1.5 2004/12/06 10:59:36 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -87,11 +87,13 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.4 $, $Date: 2004/11/24 08:43:22 $
- * @author $Author: max $
+ * @version $Revision: 1.5 $, $Date: 2004/12/06 10:59:36 $
+ * @author $Author: bob $
  * @module module
  */
 public abstract class CMConfigurationReceive implements CMServerOperations {
+	
+	static final long serialVersionUID = 5462858483804681509L;
     //////////////////////////////Configuration Recieve///////////////////////////////////
 
 	public void receiveCableThreadType(
@@ -274,10 +276,6 @@ public abstract class CMConfigurationReceive implements CMServerOperations {
         Log.errorException(e);
         throw new AMFICOMRemoteException(ErrorCode.ERROR_VERSION_COLLISION,
                                             CompletionStatus.COMPLETED_NO, e.getMessage());
-        } catch (CreateObjectException e) {
-        Log.errorException(e);
-        throw new AMFICOMRemoteException(ErrorCode.ERROR_SAVE, CompletionStatus.COMPLETED_NO, e
-                .getMessage());
         } catch (Throwable t) {
             Log.errorException(t);
             throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
@@ -319,10 +317,6 @@ public abstract class CMConfigurationReceive implements CMServerOperations {
             Log.errorException(e);
             throw new AMFICOMRemoteException(ErrorCode.ERROR_VERSION_COLLISION,
                                                 CompletionStatus.COMPLETED_NO, e.getMessage());
-        } catch (CreateObjectException e) {
-            Log.errorException(e);
-            throw new AMFICOMRemoteException(ErrorCode.ERROR_SAVE, CompletionStatus.COMPLETED_NO, e
-                    .getMessage());
         } catch (Throwable t) {
             Log.errorException(t);
             throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
@@ -1083,10 +1077,6 @@ public abstract class CMConfigurationReceive implements CMServerOperations {
         Log.errorException(e);
         throw new AMFICOMRemoteException(ErrorCode.ERROR_VERSION_COLLISION,
                                             CompletionStatus.COMPLETED_NO, e.getMessage());
-        } catch (CreateObjectException e) {
-        Log.errorException(e);
-        throw new AMFICOMRemoteException(ErrorCode.ERROR_SAVE, CompletionStatus.COMPLETED_NO, e
-                .getMessage());
         } catch (Throwable t) {
             Log.errorException(t);
             throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
@@ -1125,10 +1115,6 @@ public abstract class CMConfigurationReceive implements CMServerOperations {
             Log.errorException(e);
             throw new AMFICOMRemoteException(ErrorCode.ERROR_VERSION_COLLISION,
                                                 CompletionStatus.COMPLETED_NO, e.getMessage());
-        } catch (CreateObjectException e) {
-            Log.errorException(e);
-            throw new AMFICOMRemoteException(ErrorCode.ERROR_SAVE, CompletionStatus.COMPLETED_NO, e
-                    .getMessage());
         } catch (Throwable t) {
             Log.errorException(t);
             throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
@@ -1558,10 +1544,6 @@ public abstract class CMConfigurationReceive implements CMServerOperations {
         Log.errorException(e);
         throw new AMFICOMRemoteException(ErrorCode.ERROR_VERSION_COLLISION,
                                             CompletionStatus.COMPLETED_NO, e.getMessage());
-        } catch (CreateObjectException e) {
-        Log.errorException(e);
-        throw new AMFICOMRemoteException(ErrorCode.ERROR_SAVE, CompletionStatus.COMPLETED_NO, e
-                .getMessage());
         } catch (Throwable t) {
             Log.errorException(t);
             throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
@@ -1602,10 +1584,6 @@ public abstract class CMConfigurationReceive implements CMServerOperations {
             Log.errorException(e);
             throw new AMFICOMRemoteException(ErrorCode.ERROR_VERSION_COLLISION,
                                                 CompletionStatus.COMPLETED_NO, e.getMessage());
-        } catch (CreateObjectException e) {
-            Log.errorException(e);
-            throw new AMFICOMRemoteException(ErrorCode.ERROR_SAVE, CompletionStatus.COMPLETED_NO, e
-                    .getMessage());
         } catch (Throwable t) {
             Log.errorException(t);
             throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
