@@ -157,4 +157,18 @@ public class Set extends StorableObject {
 	protected synchronized void setMonitoredElementIds(List monitoredElementIds) {
 		this.monitoredElementIds = monitoredElementIds;
 	}
+	/**
+	 * @param description The description to set.
+	 */
+	public void setDescription(String description) {
+		this.currentVersion = super.getNextVersion();
+		this.description = description;
+	}
+	/**
+	 * @param sort The sort to set.
+	 */
+	public void setSort(int sort) {
+		this.currentVersion = super.getNextVersion();
+		this.sort = sort;
+	}
 }

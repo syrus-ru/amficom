@@ -107,4 +107,20 @@ public class MeasurementType extends ActionType {
 		this.inParameterTypes = inParameterTypes;
 		this.outParameterTypes = outParameterTypes;
 	}
+	/**
+	 * client setter for inParameterTypes
+	 * @param inParameterTypes The inParameterTypes to set.
+	 */
+	public void setInParameterTypes(List inParameterTypes) {
+		this.currentVersion = super.getNextVersion();
+		this.inParameterTypes = inParameterTypes;
+	}
+	/**
+	 * client setter for outParameterTypes
+	 * @param outParameterTypes The outParameterTypes to set.
+	 */
+	public void setOutParameterTypes(List outParameterTypes) {
+		this.currentVersion = super.getNextVersion();
+		this.outParameterTypes = outParameterTypes;
+	}
 }

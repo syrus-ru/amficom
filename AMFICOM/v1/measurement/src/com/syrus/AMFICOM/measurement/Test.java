@@ -5,23 +5,10 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.Iterator;
 import com.syrus.util.Log;
-import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.StorableObject;
-import com.syrus.AMFICOM.general.StorableObjectDatabase;
-import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.RetrieveObjectException;
-import com.syrus.AMFICOM.general.UpdateObjectException;
-import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.ObjectNotFoundException;
+import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
-import com.syrus.AMFICOM.measurement.corba.TestTimeStamps_Transferable;
-import com.syrus.AMFICOM.measurement.corba.TestTimeStamps_TransferablePackage.ContinuousTestTimeStamps;
-import com.syrus.AMFICOM.measurement.corba.TestTimeStamps_TransferablePackage.PeriodicalTestTimeStamps;
-import com.syrus.AMFICOM.measurement.corba.TestStatus;
-import com.syrus.AMFICOM.measurement.corba.TestTemporalType;
-import com.syrus.AMFICOM.measurement.corba.TestReturnType;
-import com.syrus.AMFICOM.measurement.corba.MeasurementStatus;
-import com.syrus.AMFICOM.measurement.corba.Test_Transferable;
+import com.syrus.AMFICOM.measurement.corba.*;
+import com.syrus.AMFICOM.measurement.corba.TestTimeStamps_TransferablePackage.*;
 import com.syrus.AMFICOM.configuration.MonitoredElement;
 import com.syrus.AMFICOM.configuration.KIS;
 
@@ -41,7 +28,7 @@ public class Test extends StorableObject {
 	private int						returnType;
 	private String					description;
 	private MonitoredElement		monitoredElement;
-	private ArrayList				measurementSetupIds;
+	private List					measurementSetupIds;
 
 	private MeasurementSetup		mainMeasurementSetup;
 	private KIS						kis;
@@ -83,9 +70,9 @@ public class Test extends StorableObject {
 		catch (RetrieveObjectException roe) {
 			throw new CreateObjectException(roe.getMessage(), roe);
 		}
-		catch (ObjectNotFoundException e) {
-			throw new CreateObjectException(e.getMessage(), e);
-		}
+//		catch (ObjectNotFoundException e) {
+//			throw new CreateObjectException(e.getMessage(), e);
+//		}
 		this.returnType = tt.return_type.value();
 		this.description = new String(tt.description);
 		this.measurementSetupIds = new ArrayList(tt.measurement_setup_ids.length);
@@ -187,7 +174,7 @@ public class Test extends StorableObject {
 		return this.description;
 	}
 
-	public ArrayList getMeasurementSetupIds() {
+	public List getMeasurementSetupIds() {
 		return this.measurementSetupIds;
 	}
 
@@ -228,9 +215,9 @@ public class Test extends StorableObject {
 		catch (RetrieveObjectException roe) {
 			Log.errorException(roe);
 		}
-		catch (ObjectNotFoundException e) {
-			Log.errorException(e);
-		}
+//		catch (ObjectNotFoundException e) {
+//			Log.errorException(e);
+//		}
 	}
 
 	protected synchronized void setMeasurementSetupIds(ArrayList measurementSetupIds) {
@@ -361,5 +348,75 @@ public class Test extends StorableObject {
 			}
 			return ttst;
 		}
+	}
+	/**
+	 * @param analysisTypeId The analysisTypeId to set.
+	 */
+	public void setAnalysisTypeId(Identifier analysisTypeId) {
+		this.currentVersion = super.getNextVersion();
+		this.analysisTypeId = analysisTypeId;
+	}
+	/**
+	 * @param description The description to set.
+	 */
+	public void setDescription(String description) {
+		this.currentVersion = super.getNextVersion();
+		this.description = description;
+	}
+	/**
+	 * @param evaluationTypeId The evaluationTypeId to set.
+	 */
+	public void setEvaluationTypeId(Identifier evaluationTypeId) {
+		this.currentVersion = super.getNextVersion();
+		this.evaluationTypeId = evaluationTypeId;
+	}
+	/**
+	 * @param measurementSetupIds The measurementSetupIds to set.
+	 */
+	public void setMeasurementSetupIds(List measurementSetupIds) {
+		this.currentVersion = super.getNextVersion();
+		this.measurementSetupIds = measurementSetupIds;
+	}
+	/**
+	 * @param measurementTypeId The measurementTypeId to set.
+	 */
+	public void setMeasurementTypeId(Identifier measurementTypeId) {
+		this.currentVersion = super.getNextVersion();
+		this.measurementTypeId = measurementTypeId;
+	}
+	/**
+	 * @param monitoredElement The monitoredElement to set.
+	 */
+	public void setMonitoredElement(MonitoredElement monitoredElement) {
+		this.currentVersion = super.getNextVersion();
+		this.monitoredElement = monitoredElement;
+	}
+	/**
+	 * @param returnType The returnType to set.
+	 */
+	public void setReturnType(TestReturnType returnType) {
+		this.currentVersion = super.getNextVersion();
+		this.returnType = returnType.value();
+	}
+	/**
+	 * @param status The status to set.
+	 */
+	public void setStatus(TestStatus status) {
+		this.currentVersion = super.getNextVersion();
+		this.status = status.value();
+	}
+	/**
+	 * @param temporalPatternId The temporalPatternId to set.
+	 */
+	public void setTemporalPatternId(Identifier temporalPatternId) {
+		this.currentVersion = super.getNextVersion();
+		this.temporalPatternId = temporalPatternId;
+	}
+	/**
+	 * @param temporalType The temporalType to set.
+	 */
+	public void setTemporalType(TestTemporalType temporalType) {
+		this.currentVersion = super.getNextVersion();
+		this.temporalType = temporalType.value();
 	}
 }

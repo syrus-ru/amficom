@@ -124,4 +124,28 @@ public class AnalysisType extends ActionType {
 		this.criteriaParameterTypes = criteriaParameterTypes;
 		this.outParameterTypes = outParameterTypes;
 	}
+	/**
+	 * client setter for criteriaParameterTypes
+	 * @param criteriaParameterTypes The criteriaParameterTypes to set.
+	 */
+	public void setCriteriaParameterTypes(List criteriaParameterTypes) {
+		this.currentVersion = super.getNextVersion();
+		this.criteriaParameterTypes = criteriaParameterTypes;
+	}
+	/**
+	 * client setter for inParameterTypes
+	 * @param inParameterTypes The inParameterTypes to set.
+	 */
+	public void setInParameterTypes(List inParameterTypes) {
+		this.currentVersion = super.getNextVersion();
+		this.inParameterTypes = inParameterTypes;
+	}
+	/**
+	 * client setter for outParameterTypes
+	 * @param outParameterTypes The outParameterTypes to set.
+	 */
+	public void setOutParameterTypes(List outParameterTypes) {
+		this.currentVersion = super.getNextVersion();
+		this.outParameterTypes = outParameterTypes;
+	}
 }

@@ -803,11 +803,13 @@ public class TemporalPattern extends StorableObject {
 	}
 
 	public void removeAll() {
+		this.currentVersion = super.getNextVersion();
 		this.times = null;
 		this.templates.clear();
 	}
 
 	public void addTemplate(String template) {
+		this.currentVersion = super.getNextVersion();
 		this.times = null;
 		if (this.templates == null)
 			this.templates = new HashMap();
@@ -815,5 +817,12 @@ public class TemporalPattern extends StorableObject {
 		timeLine.setTemplate(template);
 		this.templates.put(timeLine, timeLine);
 		//setType(TIMESTAMPTYPE_PERIODIC);
+	}
+	/**
+	 * @param description The description to set.
+	 */
+	public void setDescription(String description) {
+		this.currentVersion = super.getNextVersion();
+		this.description = description;
 	}
 }

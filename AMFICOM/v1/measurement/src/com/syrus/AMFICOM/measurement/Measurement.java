@@ -225,4 +225,36 @@ public class Measurement extends Action {
 			throw new RetrieveObjectException(e.getMessage(), e);
 		}
 	}
+	/**
+	 * client setter for duration
+	 * @param duration The duration to set.
+	 */
+	public void setDuration(long duration) {
+		this.currentVersion = super.getNextVersion();
+		this.duration = duration;
+	}
+	/**
+	 * client setter for localAddress
+	 * @param localAddress The localAddress to set.
+	 */
+	public void setLocalAddress(String localAddress) {
+		this.currentVersion = super.getNextVersion();
+		this.localAddress = localAddress;
+	}
+	/**
+	 * client setter for setup
+	 * @param setup The setup to set.
+	 */
+	public void setSetup(MeasurementSetup setup) {
+		this.currentVersion = super.getNextVersion();
+		this.setup = setup;
+	}
+	/**
+	 * client setter for startTime
+	 * @param startTime The startTime to set.
+	 */
+	public void setStartTime(Date startTime) {
+		this.currentVersion = super.getNextVersion();
+		this.startTime = startTime;
+	}
 }

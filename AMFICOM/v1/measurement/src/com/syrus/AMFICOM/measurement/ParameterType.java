@@ -88,4 +88,12 @@ public class ParameterType extends StorableObjectType {
 												description);
 		this.name = name;
 	}
+	/**
+	 * client setter for name 
+	 * @param name The name to set.
+	 */
+	public void setName(String name) {
+		this.currentVersion = super.getNextVersion();
+		this.name = name;
+	}
 }

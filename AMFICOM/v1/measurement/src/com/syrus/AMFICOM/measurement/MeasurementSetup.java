@@ -192,4 +192,52 @@ public class MeasurementSetup extends StorableObject {
 	protected synchronized void setMonitoredElementIds(ArrayList monitoredElementIds) {
 		this.monitoredElementIds = monitoredElementIds;
 	}
+	/**
+	 * client setter for criteriaSet
+	 * @param criteriaSet The criteriaSet to set.
+	 */
+	public void setCriteriaSet(Set criteriaSet) {
+		this.currentVersion = super.getNextVersion();
+		this.criteriaSet = criteriaSet;
+	}
+	/**
+	 * client setter for description
+	 * @param description The description to set.
+	 */
+	public void setDescription(String description) {
+		this.currentVersion = super.getNextVersion();
+		this.description = description;
+	}
+	/**
+	 * client setter for etalon
+	 * @param etalon The etalon to set.
+	 */
+	public void setEtalon(Set etalon) {
+		this.currentVersion = super.getNextVersion();
+		this.etalon = etalon;
+	}
+	/**
+	 * client setter for measurementDuration
+	 * @param measurementDuration The measurementDuration to set.
+	 */
+	public void setMeasurementDuration(long measurementDuration) {
+		this.currentVersion = super.getNextVersion();
+		this.measurementDuration = measurementDuration;
+	}
+	/**
+	 * client setter for 
+	 * @param parameterSet The parameterSet to set.
+	 */
+	public void setParameterSet(Set parameterSet) {
+		this.currentVersion = super.getNextVersion();
+		this.parameterSet = parameterSet;
+	}
+	/**
+	 * client setter for thresholdSet
+	 * @param thresholdSet The thresholdSet to set.
+	 */
+	public void setThresholdSet(Set thresholdSet) {
+		this.currentVersion = super.getNextVersion();
+		this.thresholdSet = thresholdSet;
+	}
 }

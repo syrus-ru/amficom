@@ -141,4 +141,36 @@ public class EvaluationType extends ActionType {
 		this.etalonParameterTypes = etalonParameterTypes;
 		this.outParameterTypes = outParameterTypes;
 	}
+	/**
+	 * client setter for etalonParameterTypes
+	 * @param etalonParameterTypes The etalonParameterTypes to set.
+	 */
+	public void setEtalonParameterTypes(List etalonParameterTypes) {
+		this.currentVersion = super.getNextVersion();
+		this.etalonParameterTypes = etalonParameterTypes;
+	}
+	/**
+	 * client setter for inParameterTypes
+	 * @param inParameterTypes The inParameterTypes to set.
+	 */
+	public void setInParameterTypes(List inParameterTypes) {
+		this.currentVersion = super.getNextVersion();
+		this.inParameterTypes = inParameterTypes;
+	}
+	/**
+	 * client setter for outParameterTypes
+	 * @param outParameterTypes The outParameterTypes to set.
+	 */
+	public void setOutParameterTypes(List outParameterTypes) {
+		this.currentVersion = super.getNextVersion();
+		this.outParameterTypes = outParameterTypes;
+	}
+	/**
+	 * client setter for thresholdParameterTypes
+	 * @param thresholdParameterTypes The thresholdParameterTypes to set.
+	 */
+	public void setThresholdParameterTypes(List thresholdParameterTypes) {
+		this.currentVersion = super.getNextVersion();
+		this.thresholdParameterTypes = thresholdParameterTypes;
+	}
 }
