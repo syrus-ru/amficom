@@ -14,7 +14,7 @@ import com.syrus.AMFICOM.client_.general.ui_.ObjComboBox;
 import com.syrus.AMFICOM.configuration.*;
 import com.syrus.AMFICOM.configuration.corba.LinkTypeSort;
 import com.syrus.AMFICOM.general.*;
-import com.syrus.AMFICOM.scheme.corba.SchemeLink;
+import com.syrus.AMFICOM.scheme.SchemeLink;
 
 public class LinkPropsPanel extends JPanel
 {
@@ -170,8 +170,8 @@ public class LinkPropsPanel extends JPanel
 			{
 				if (links == null || links.length != 1)
 					return;
-				links[0].name(nameText.getText());
-				aContext.getDispatcher().notify(new SchemeElementsEvent(links[0].getId(), links[0].name(), SchemeElementsEvent.LINK_NAME_UPDATE_EVENT));
+				links[0].setName(nameText.getText());
+				aContext.getDispatcher().notify(new SchemeElementsEvent(links[0].getId(), links[0].getName(), SchemeElementsEvent.LINK_NAME_UPDATE_EVENT));
 			}
 			public void keyPressed(KeyEvent ae)
 					{}
@@ -313,7 +313,7 @@ public class LinkPropsPanel extends JPanel
 
 		if (links.length == 1)
 		{
-			nameText.setText(links[0].name());
+			nameText.setText(links[0].getName());
 			nameText.setCaretPosition(0);
 			optLen.setText(String.valueOf(links[0].opticalLength()));
 			strLen.setText(String.valueOf(links[0].physicalLength()));

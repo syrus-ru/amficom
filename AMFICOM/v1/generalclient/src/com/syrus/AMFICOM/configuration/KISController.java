@@ -71,11 +71,19 @@ public final class KISController implements ObjectResourceController {
 			else if (key.equals(COLUMN_TCP_PORT))
 				result = Short.toString(kis.getTCPPort());
 			else if (key.equals(COLUMN_MEASUREMENT_PORT_IDS)) {
-				List res = new ArrayList(kis.getMeasurementPortIds().size());
-				for (Iterator it = kis.getMeasurementPortIds().iterator(); it.hasNext();) {
-					res.add(((Identifier) it.next()).getIdentifierString());
-				}
-				result = res;
+				final Collection measurementPorts = kis
+						.getMeasurementPorts();
+				final Collection measurementPortIds = new ArrayList(
+						measurementPorts.size());
+				for (final Iterator measurementPortIterator = measurementPorts
+						.iterator(); measurementPortIterator
+						.hasNext();)
+					measurementPortIds
+							.add(((MeasurementPort) (measurementPortIterator
+									.next()))
+									.getId()
+									.getIdentifierString());
+				result = measurementPortIds;
 			} else if (key.equals(COLUMN_CHARACTERISTICS)) {
 				List res = new ArrayList(kis.getCharacteristics().size());
 				for (Iterator it = kis.getCharacteristics().iterator(); it.hasNext();) {

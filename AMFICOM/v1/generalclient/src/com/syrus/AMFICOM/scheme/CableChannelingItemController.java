@@ -6,7 +6,6 @@ import java.util.Collections;
 import java.util.List;
 
 import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
-import com.syrus.AMFICOM.scheme.corba.CableChannelingItem;
 
 public final class CableChannelingItemController implements ObjectResourceController
 {
@@ -85,15 +84,15 @@ public final class CableChannelingItemController implements ObjectResourceContro
 			else if (key.equals(COLUMN_MODIFIER_ID))
 				result = item.getModifierId().getIdentifierString();
 			else if (key.equals(COLUMN_DESCRIPTION))
-				result = item.description();
+				result = item.getDescription();
 			else if (key.equals(COLUMN_NAME))
-				result = item.name();
+				result = item.getName();
 			else if (key.equals(COLUMN_SEQUENTIAL_NUMBER))
 				result = Integer.toString(item.sequentialNumber());
 			else if (key.equals(COLUMN_START_SITE_NODE_ID))
-				result = item.startSiteNodeImpl().getId().getIdentifierString();
+				result = item.getStartSiteNode().getId().getIdentifierString();
 			else if (key.equals(COLUMN_END_SITE_NODE_ID))
-				result = item.endSiteNodeImpl().getId().getIdentifierString();
+				result = item.getEndSiteNode().getId().getIdentifierString();
 			else if (key.equals(COLUMN_START_SPARE))
 				result = Double.toString(item.startSpare());
 			else if (key.equals(COLUMN_END_SPARE))
@@ -103,7 +102,7 @@ public final class CableChannelingItemController implements ObjectResourceContro
 			else if (key.equals(COLUMN_PLACE_Y))
 				result = Integer.toString(item.placeY());
 			else if (key.equals(COLUMN_PHYSICAL_LINK_ID))
-				result = item.physicalLinkImpl().getId().getIdentifierString();
+				result = item.getPhysicalLink().getId().getIdentifierString();
 		}
 		return result;
 	}

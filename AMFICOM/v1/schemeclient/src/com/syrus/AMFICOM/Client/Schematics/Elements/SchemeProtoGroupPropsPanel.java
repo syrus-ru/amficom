@@ -11,7 +11,7 @@ import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.client_.general.ui_.ImagesDialog;
 import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.resource.BitmapImageResource;
-import com.syrus.AMFICOM.scheme.corba.SchemeProtoGroup;
+import com.syrus.AMFICOM.scheme.SchemeProtoGroup;
 
 public class SchemeProtoGroupPropsPanel extends JPanel
 {
@@ -121,9 +121,9 @@ public class SchemeProtoGroupPropsPanel extends JPanel
 	public void init(SchemeProtoGroup scheme_proto)
 	{
 		this.scheme_proto = scheme_proto;
-		mapProtoNameTextField.setText(scheme_proto.name());
+		mapProtoNameTextField.setText(scheme_proto.getName());
 		mapProtoNameTextField.setCaretPosition(0);
-		groupDescrTextArea.setText(scheme_proto.description());
+		groupDescrTextArea.setText(scheme_proto.getDescription());
 //		isKisCheckBox.setSelected(scheme_proto.is_visual);
 
 		ImageIcon icon;
@@ -175,8 +175,8 @@ public class SchemeProtoGroupPropsPanel extends JPanel
 			return;
 		}
 
-		scheme_proto.name(mapProtoNameTextField.getText());
-		scheme_proto.description(groupDescrTextArea.getText());
+		scheme_proto.setName(mapProtoNameTextField.getText());
+		scheme_proto.setDescription(groupDescrTextArea.getText());
 		scheme_proto.setSymbol(image);
 	}
 }

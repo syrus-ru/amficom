@@ -7,7 +7,7 @@ import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.UI.GeneralPanel;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.corba.*;
-import com.syrus.AMFICOM.scheme.corba.SchemePort;
+import com.syrus.AMFICOM.scheme.SchemePort;
 
 public class PortCharacteristicsPanel extends GeneralPanel
 {
@@ -77,15 +77,15 @@ public class PortCharacteristicsPanel extends GeneralPanel
 					true);
 		charPane.addCharacteristics(port.getCharacteristics(), portId);
 
-		if (port.port() != null)
+		if (port.getPort() != null)
 		{
 			charPane.setTypeSortMapping(
 					CharacteristicTypeSort.CHARACTERISTICTYPESORT_VISUAL,
 					CharacteristicSort.CHARACTERISTIC_SORT_PORT,
-					port.portImpl(),
-					port.portImpl().getId(),
+					port.getPort(),
+					port.getPort().getId(),
 					true);
-			charPane.addCharacteristics(port.portImpl().getCharacteristics(), port.portImpl().getId());
+			charPane.addCharacteristics(port.getPort().getCharacteristics(), port.getPort().getId());
 		}
 	}
 

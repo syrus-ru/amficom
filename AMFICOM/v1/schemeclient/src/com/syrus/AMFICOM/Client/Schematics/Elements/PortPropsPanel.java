@@ -15,7 +15,7 @@ import com.syrus.AMFICOM.client_.general.ui_.ObjComboBox;
 import com.syrus.AMFICOM.configuration.*;
 import com.syrus.AMFICOM.configuration.corba.PortTypeSort;
 import com.syrus.AMFICOM.general.*;
-import com.syrus.AMFICOM.scheme.corba.SchemePort;
+import com.syrus.AMFICOM.scheme.SchemePort;
 
 public class PortPropsPanel extends JPanel
 {
@@ -169,8 +169,8 @@ public class PortPropsPanel extends JPanel
 			{
 				if (ports == null || ports.length != 1)
 					return;
-				ports[0].name(nameText.getText());
-				aContext.getDispatcher().notify(new SchemeElementsEvent(ports[0].getId(), ports[0].name(), SchemeElementsEvent.PORT_NAME_UPDATE_EVENT));
+				ports[0].setName(nameText.getText());
+				aContext.getDispatcher().notify(new SchemeElementsEvent(ports[0].getId(), ports[0].getName(), SchemeElementsEvent.PORT_NAME_UPDATE_EVENT));
 			}
 			public void keyPressed(KeyEvent ae)
 					{}
@@ -183,8 +183,8 @@ public class PortPropsPanel extends JPanel
 			{
 				if (ports == null || ports.length != 1)
 					return;
-				ports[0].name(nameText.getText());
-				ports[0].description(descriptionTextArea.getText());
+				ports[0].setName(nameText.getText());
+				ports[0].setDescription(descriptionTextArea.getText());
 			}
 			public void keyPressed(KeyEvent ae)
 					{}
@@ -232,7 +232,7 @@ public class PortPropsPanel extends JPanel
 
 		if (ports.length != 0)
 		{
-			pt = ports[0].portTypeImpl();
+			pt = ports[0].getPortType();
 
 			if (pt != null)
 			{
@@ -246,10 +246,10 @@ public class PortPropsPanel extends JPanel
 				typeComboBox_stateChanged();
 			}
 
-			boolean b = ports[0].measurementPortType() != null;
+			boolean b = ports[0].getMeasurementPortType() != null;
 			for (int i = 0; i < ports.length; i++)
 			{
-				if (ports[i].measurementPortType() != null != b)
+				if (ports[i].getMeasurementPortType() != null != b)
 				{
 					isAccessCheckBox.setEnabled(false);
 					accessTypeComboBox.setEnabled(false);
@@ -261,7 +261,7 @@ public class PortPropsPanel extends JPanel
 
 			if (ports.length == 1)
 			{
-				nameText.setText(ports[0].name());
+				nameText.setText(ports[0].getName());
 				nameText.setCaretPosition(0);
 			}
 			else
@@ -307,7 +307,7 @@ public class PortPropsPanel extends JPanel
 			for (int i = 0; i < ports.length; i++)
 			{
 				//System.out.println("setting for " + ports[i].getId() + " access true");
-				ports[i].measurementPortTypeImpl(
+				ports[i].setMeasurementPortType(
 								((MeasurementPortType)accessTypeComboBox.getSelectedItem()));
 			}
 		}
@@ -337,7 +337,7 @@ public class PortPropsPanel extends JPanel
 		pt = (PortType)typeComboBox.getSelectedItem();
 
 		for (int i = 0; i < ports.length; i++)
-			ports[i].portTypeImpl(pt);
+			ports[i].setPortType(pt);
 		descriptionTextArea.setText(pt.getDescription());
 		//aContext.getDispatcher().notify(new OperationEvent(cpt, 1, "elementslistvaluechanged"));
 		aContext.getDispatcher().notify(new SchemeElementsEvent(ports, pt, SchemeElementsEvent.PORT_TYPE_UPDATE_EVENT));
@@ -374,7 +374,7 @@ public class PortPropsPanel extends JPanel
 						(PortTypeSort)sortComboBox.getSelectedItem());
 
 				for (int i = 0; i < ports.length; i++) {
-					ports[i].portTypeImpl(new_type);
+					ports[i].setPortType(new_type);
 
 				}
 				ConfigurationStorableObjectPool.putStorableObject(new_type);

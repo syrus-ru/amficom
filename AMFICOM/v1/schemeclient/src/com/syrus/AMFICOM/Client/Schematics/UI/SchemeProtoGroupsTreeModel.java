@@ -20,8 +20,8 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.scheme.corba.SchemeProtoElement;
-import com.syrus.AMFICOM.scheme.corba.SchemeProtoGroup;
+import com.syrus.AMFICOM.scheme.*;
+import com.syrus.AMFICOM.scheme.SchemeProtoElement;
 
 public class SchemeProtoGroupsTreeModel extends ObjectResourceTreeModel
 {
@@ -115,7 +115,7 @@ public class SchemeProtoGroupsTreeModel extends ObjectResourceTreeModel
 						else
 							icon = new ImageIcon(Toolkit.getDefaultToolkit().createImage(
 									group.getSymbol().getImage()).getScaledInstance(16, 16, Image.SCALE_SMOOTH));
-						vec.add(new ObjectResourceTreeNode(group, group.name(), true, icon,
+						vec.add(new ObjectResourceTreeNode(group, group.getName(), true, icon,
 								group.schemeProtoGroups().length == 0));
 					}
 				}
@@ -133,7 +133,7 @@ public class SchemeProtoGroupsTreeModel extends ObjectResourceTreeModel
 				else
 					icon = new ImageIcon(Toolkit.getDefaultToolkit().createImage(
 							group.getSymbol().getImage()).getScaledInstance(16, 16, Image.SCALE_SMOOTH));
-				vec.add(new ObjectResourceTreeNode(group, group.name(), true, icon,
+				vec.add(new ObjectResourceTreeNode(group, group.getName(), true, icon,
 						group.schemeProtoGroups().length == 0));
 			}
 		}

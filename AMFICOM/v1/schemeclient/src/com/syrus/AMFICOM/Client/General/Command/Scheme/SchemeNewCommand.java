@@ -4,10 +4,8 @@ import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.Event.SchemeElementsEvent;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.administration.*;
 import com.syrus.AMFICOM.general.*;
-import com.syrus.AMFICOM.scheme.corba.*;
-import com.syrus.AMFICOM.scheme.corba.Scheme;
+import com.syrus.AMFICOM.scheme.Scheme;
 
 public class SchemeNewCommand extends VoidCommand
 {
@@ -69,7 +67,7 @@ public class SchemeNewCommand extends VoidCommand
 		*/
 
 		Scheme scheme = Scheme.createInstance();
-		scheme.name("Новая схема");
+		scheme.setName("Новая схема");
 
 		final Identifier domainId = new Identifier(
 				((RISDSessionInfo) aContext

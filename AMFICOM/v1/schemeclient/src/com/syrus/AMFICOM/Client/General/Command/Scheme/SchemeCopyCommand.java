@@ -10,10 +10,9 @@ import com.syrus.AMFICOM.Client.General.Event.TreeListSelectionEvent;
 import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.General.Scheme.*;
 import com.syrus.AMFICOM.Client.Resource.*;
-import com.syrus.AMFICOM.administration.*;
 import com.syrus.AMFICOM.general.*;
+import com.syrus.AMFICOM.scheme.*;
 import com.syrus.AMFICOM.scheme.SchemeStorableObjectPool;
-import com.syrus.AMFICOM.scheme.corba.Scheme;
 
 public class SchemeCopyCommand extends VoidCommand
 {
@@ -50,7 +49,7 @@ public class SchemeCopyCommand extends VoidCommand
 		{
 
 			sd = new SaveDialog(aContext, aContext.getDispatcher(), "Сохранение схемы");
-			int ret = sd.init(scheme, scheme.name(), false);
+			int ret = sd.init(scheme, scheme.getName(), false);
 
 			if (ret == 0)
 				return;
@@ -65,8 +64,8 @@ public class SchemeCopyCommand extends VoidCommand
 		scheme.getUgoCell().setData((List)ugo_graph.getArchiveableState(ugo_graph.getRoots()));
 		scheme.getSchemeCell().setData((List)graph.getArchiveableState(graph.getRoots()));
 
-		scheme.name(sd.name);
-		scheme.description(sd.description);
+		scheme.setName(sd.name);
+		scheme.setDescription(sd.description);
 //		scheme.created = System.currentTimeMillis();
 
 		final Identifier domainId = new Identifier(
@@ -87,7 +86,7 @@ public class SchemeCopyCommand extends VoidCommand
 
 			JOptionPane.showMessageDialog(
 					Environment.getActiveWindow(),
-					"Схема " + scheme.name() + " успешно сохранена",
+					"Схема " + scheme.getName() + " успешно сохранена",
 					"Сообщение",
 					JOptionPane.INFORMATION_MESSAGE);
 
@@ -97,7 +96,7 @@ public class SchemeCopyCommand extends VoidCommand
 		catch (ApplicationException ex) {
 			ex.printStackTrace();
 			JOptionPane.showMessageDialog(Environment.getActiveWindow(), "Ошибка сохранения схемы " +
-																		scheme.name(), "Ошибка", JOptionPane.OK_OPTION);
+																		scheme.getName(), "Ошибка", JOptionPane.OK_OPTION);
 		}
 
 		Pool.removeMap("clonedids");

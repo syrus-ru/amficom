@@ -3,8 +3,8 @@ package com.syrus.AMFICOM.Client.General.Scheme;
 import java.awt.BorderLayout;
 
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
+import com.syrus.AMFICOM.scheme.*;
 import com.syrus.AMFICOM.scheme.SchemeUtils;
-import com.syrus.AMFICOM.scheme.corba.*;
 
 public class ElementsTabbedPane extends UgoTabbedPane
 {

@@ -7,7 +7,7 @@ import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.UI.GeneralPanel;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.corba.*;
-import com.syrus.AMFICOM.scheme.corba.SchemeLink;
+import com.syrus.AMFICOM.scheme.SchemeLink;
 
 public class LinkCharacteristicsPanel extends GeneralPanel
 {
@@ -76,15 +76,15 @@ public class LinkCharacteristicsPanel extends GeneralPanel
 					true);
 		charPane.addCharacteristics(link.getCharacteristics(), linkId);
 
-		if (link.link() != null)
+		if (link.getLink() != null)
 		{
 			charPane.setTypeSortMapping(
 					CharacteristicTypeSort.CHARACTERISTICTYPESORT_VISUAL,
 					CharacteristicSort.CHARACTERISTIC_SORT_LINK,
-					link.linkImpl(),
-					link.linkImpl().getId(),
+					link.getLink(),
+					link.getLink().getId(),
 					true);
-			charPane.addCharacteristics(link.linkImpl().getCharacteristics(), link.linkImpl().getId());
+			charPane.addCharacteristics(link.getLink().getCharacteristics(), link.getLink().getId());
 		}
 	}
 

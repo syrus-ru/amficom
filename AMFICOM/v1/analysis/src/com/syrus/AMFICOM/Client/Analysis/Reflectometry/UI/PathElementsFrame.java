@@ -20,8 +20,8 @@ import com.syrus.AMFICOM.administration.*;
 import com.syrus.AMFICOM.configuration.*;
 import com.syrus.AMFICOM.configuration.corba.MonitoredElementSort;
 import com.syrus.AMFICOM.general.*;
+import com.syrus.AMFICOM.scheme.*;
 import com.syrus.AMFICOM.scheme.SchemeStorableObjectPool;
-import com.syrus.AMFICOM.scheme.corba.SchemePath;
 import com.syrus.io.BellcoreStructure;
 
 public class PathElementsFrame extends AnalysisFrame

@@ -14,8 +14,8 @@ import com.syrus.AMFICOM.client_.general.ui_.ObjComboBox;
 import com.syrus.AMFICOM.configuration.*;
 import com.syrus.AMFICOM.configuration.corba.LinkTypeSort;
 import com.syrus.AMFICOM.general.*;
+import com.syrus.AMFICOM.scheme.*;
 import com.syrus.AMFICOM.scheme.SchemeStorableObjectPool;
-import com.syrus.AMFICOM.scheme.corba.*;
 
 public class CableLinkPropsPanel extends JPanel
 {
@@ -200,8 +200,8 @@ public class CableLinkPropsPanel extends JPanel
 			{
 				if (links == null || links.length != 1)
 					return;
-				links[0].name(nameText.getText());
-				aContext.getDispatcher().notify(new SchemeElementsEvent(links[0].getId(), links[0].name(), SchemeElementsEvent.CABLE_LINK_NAME_UPDATE_EVENT));
+				links[0].setName(nameText.getText());
+				aContext.getDispatcher().notify(new SchemeElementsEvent(links[0].getId(), links[0].getName(), SchemeElementsEvent.CABLE_LINK_NAME_UPDATE_EVENT));
 			}
 			public void keyPressed(KeyEvent ae)
 					{}
@@ -305,7 +305,7 @@ public class CableLinkPropsPanel extends JPanel
 	public void init(SchemeCableLink[] links)
 	{
 		this.links = links;
-		lt = links[0].cableLinkTypeImpl();
+		lt = links[0].getCableLinkType();
 
 		if (lt != null)
 		{
@@ -324,7 +324,7 @@ public class CableLinkPropsPanel extends JPanel
 			if (links[0].opticalLength() == 0 || links[0].physicalLength() == 0)
 				smooth_length = true;
 
-			nameText.setText(links[0].name());
+			nameText.setText(links[0].getName());
 			nameText.setCaretPosition(0);
 			optLen.setText(String.valueOf(links[0].opticalLength()));
 			strLen.setText(String.valueOf(links[0].physicalLength()));
@@ -394,7 +394,7 @@ public class CableLinkPropsPanel extends JPanel
 		{
 			for (int i = 0; i < links.length; i++)
 			{
-				links[i].cableLinkTypeImpl(lt);
+				links[i].setCableLinkType(lt);
 				Iterator it = lt.getCableThreadTypes().iterator();
 				for (int j = 0; j < old_num; j++)
 					links[i].schemeCableThreads()[j].cableThreadTypeImpl((CableThreadType)it.next());
@@ -402,7 +402,7 @@ public class CableLinkPropsPanel extends JPanel
 					SchemeCableThread newct = SchemeCableThread.createInstance();
 					CableThreadType type = (CableThreadType)it.next();
 					newct.cableThreadTypeImpl(type);
-					newct.name(String.valueOf(j));
+					newct.setName(String.valueOf(j));
 					newct.schemeCablelink(links[0]);
 				}
 			}
@@ -411,7 +411,7 @@ public class CableLinkPropsPanel extends JPanel
 		{
 			for (int i = 0; i < links.length; i++)
 			{
-				links[i].cableLinkTypeImpl(lt);
+				links[i].setCableLinkType(lt);
 				Iterator it = lt.getCableThreadTypes().iterator();
 				for (int j = 0; j < num; j++)
 					links[i].schemeCableThreads()[j].cableThreadTypeImpl((CableThreadType)it.next());

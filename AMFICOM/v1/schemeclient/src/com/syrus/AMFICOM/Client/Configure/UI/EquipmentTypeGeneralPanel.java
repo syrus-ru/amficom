@@ -9,8 +9,8 @@ import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.General.UI.GeneralPanel;
 import com.syrus.AMFICOM.Client.Resource.MiscUtil;
 import com.syrus.AMFICOM.configuration.EquipmentType;
+import com.syrus.AMFICOM.scheme.*;
 import com.syrus.AMFICOM.scheme.SchemeUtils;
-import com.syrus.AMFICOM.scheme.corba.SchemeProtoElement;
 
 public class EquipmentTypeGeneralPanel extends GeneralPanel
 {
@@ -151,8 +151,8 @@ public class EquipmentTypeGeneralPanel extends GeneralPanel
 		portsNumberField.setText(Long.toString(portsNumber));
 		cabelPortsNumberField.setText(Long.toString(cablePortsNumber));
 
-		nameField.setText(proto.name());
-		descTextArea.setText(proto.description());
+		nameField.setText(proto.getName());
+		descTextArea.setText(proto.getDescription());
 		if (equipmentType != null)
 		{
 			idField.setText(equipmentType.getId().getIdentifierString());
@@ -171,8 +171,8 @@ public class EquipmentTypeGeneralPanel extends GeneralPanel
 		{
 			if(MiscUtil.validName(nameField.getText()))
 			{
-				proto.name(nameField.getText());
-				proto.description(descTextArea.getText());
+				proto.setName(nameField.getText());
+				proto.setDescription(descTextArea.getText());
 				if (equipmentType != null)
 				{
 					equipmentType.setName(nameField.getText());

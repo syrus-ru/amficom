@@ -6,7 +6,7 @@ import javax.swing.*;
 
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.General.UI.AComboBox;
-import com.syrus.AMFICOM.scheme.corba.Scheme;
+import com.syrus.AMFICOM.scheme.Scheme;
 import oracle.jdeveloper.layout.VerticalFlowLayout;
 
 class GraphSizeFrame extends JDialog

@@ -14,7 +14,7 @@ import com.syrus.AMFICOM.client_.general.ui_.ObjComboBox;
 import com.syrus.AMFICOM.configuration.*;
 import com.syrus.AMFICOM.configuration.corba.PortTypeSort;
 import com.syrus.AMFICOM.general.*;
-import com.syrus.AMFICOM.scheme.corba.SchemeCablePort;
+import com.syrus.AMFICOM.scheme.SchemeCablePort;
 
 public class CablePortPropsPanel extends JPanel
 {
@@ -135,8 +135,8 @@ public class CablePortPropsPanel extends JPanel
 			{
 				if (ports == null || ports.length != 1)
 					return;
-				ports[0].name(nameText.getText());
-				aContext.getDispatcher().notify(new SchemeElementsEvent(ports[0].getId(), ports[0].name(), SchemeElementsEvent.CABLE_PORT_NAME_UPDATE_EVENT));
+				ports[0].setName(nameText.getText());
+				aContext.getDispatcher().notify(new SchemeElementsEvent(ports[0].getId(), ports[0].getName(), SchemeElementsEvent.CABLE_PORT_NAME_UPDATE_EVENT));
 			}
 			public void keyPressed(KeyEvent ae)
 					{}
@@ -191,7 +191,7 @@ public class CablePortPropsPanel extends JPanel
 	{
 		this.ports = ports;
 		if (ports.length > 0)
-			pt = ports[0].portTypeImpl();
+			pt = ports[0].getPortType();
 		else
 		{
 			setEditable(false);
@@ -211,7 +211,7 @@ public class CablePortPropsPanel extends JPanel
 
 		if (ports.length == 1)
 		{
-			nameText.setText(ports[0].name());
+			nameText.setText(ports[0].getName());
 			nameText.setCaretPosition(0);
 		}
 		else
@@ -263,7 +263,7 @@ public class CablePortPropsPanel extends JPanel
 		pt = (PortType)typeComboBox.getSelectedItem();
 
 		for (int i = 0; i < ports.length; i++)
-			ports[i].portTypeImpl(pt);
+			ports[i].setPortType(pt);
 		descriptionTextArea.setText(pt.getDescription());
 //		aContext.getDispatcher().notify(new OperationEvent(cpt, 1, "elementslistvaluechanged"));
 		aContext.getDispatcher().notify(new SchemeElementsEvent(ports, pt, SchemeElementsEvent.CABLE_PORT_TYPE_UPDATE_EVENT));

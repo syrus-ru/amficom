@@ -11,7 +11,8 @@ import com.jgraph.graph.DefaultGraphModel;
 import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelSchematics;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.scheme.corba.*;
+import com.syrus.AMFICOM.scheme.*;
+import com.syrus.AMFICOM.scheme.Scheme;
 
 public class SchemePanel extends ElementsPanel
 {
@@ -287,8 +288,8 @@ public class SchemePanel extends ElementsPanel
 				SchemeElement element = SchemeElement.createInstance();
 				element.internalScheme(sch);
 				element.scheme(getGraph().getScheme());
-				element.name(sch.name());
-				element.description(sch.description());
+				element.setName(sch.getName());
+				element.setDescription(sch.getDescription());
 				Arrays.asList(getGraph().getScheme().schemeElements()).add(element);
 				element.setSchemeCell(sch.getUgoCell());
 

@@ -36,8 +36,8 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
 import com.syrus.AMFICOM.measurement.MeasurementType;
 import com.syrus.AMFICOM.measurement.MeasurementTypeController;
-import com.syrus.AMFICOM.scheme.corba.SchemeProtoElement;
-import com.syrus.AMFICOM.scheme.corba.SchemeProtoGroup;
+import com.syrus.AMFICOM.scheme.*;
+import com.syrus.AMFICOM.scheme.SchemeProtoElement;
 
 
 public class ElementsTreeModel extends ObjectResourceTreeModel
@@ -337,7 +337,7 @@ public class ElementsTreeModel extends ObjectResourceTreeModel
 
 					for (Iterator it = groups.iterator(); it.hasNext(); ) {
 						SchemeProtoGroup group = (SchemeProtoGroup)it.next();
-						ObjectResourceTreeNode n = new ObjectResourceTreeNode(group, group.name(), true, true);
+						ObjectResourceTreeNode n = new ObjectResourceTreeNode(group, group.getName(), true, true);
 						vec.add(n);
 					}
 				}
@@ -362,7 +362,7 @@ public class ElementsTreeModel extends ObjectResourceTreeModel
 								map_group.getSymbol().getImage()).
 																 getScaledInstance(16, 16, Image.SCALE_SMOOTH));
 
-					vec.add(new ObjectResourceTreeNode(map_group, map_group.name(), true, icon,
+					vec.add(new ObjectResourceTreeNode(map_group, map_group.getName(), true, icon,
 							map_group.schemeProtoGroups().length == 0 && map_group.schemeProtoElements().length == 0));
 				}
 				if (vec.isEmpty())
@@ -371,7 +371,7 @@ public class ElementsTreeModel extends ObjectResourceTreeModel
 					{
 						SchemeProtoElement proto = parent_group.schemeProtoElements()[i];
 //						proto.scheme_proto_group = parent_group;
-						vec.add(new ObjectResourceTreeNode(proto, proto.name().length() == 0 ? "Без названия" : proto.name(), true, true));
+						vec.add(new ObjectResourceTreeNode(proto, proto.getName().length() == 0 ? "Без названия" : proto.getName(), true, true));
 					}
 				}
 			}

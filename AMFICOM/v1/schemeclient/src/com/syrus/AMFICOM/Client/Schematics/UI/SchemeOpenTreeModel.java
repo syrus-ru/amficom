@@ -17,10 +17,8 @@ import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.corba.*;
-import com.syrus.AMFICOM.general.corba.StringFieldSort;
 import com.syrus.AMFICOM.scheme.*;
 import com.syrus.AMFICOM.scheme.SchemeStorableObjectPool;
-import com.syrus.AMFICOM.scheme.corba.Scheme;
 import com.syrus.AMFICOM.scheme.corba.SchemePackage.Type;
 
 public class SchemeOpenTreeModel extends ObjectResourceTreeModel
@@ -132,7 +130,7 @@ public class SchemeOpenTreeModel extends ObjectResourceTreeModel
 
 					for (Iterator it = schemes.iterator(); it.hasNext(); ) {
 						Scheme sc = (Scheme)it.next();
-						vec.add(new ObjectResourceTreeNode(sc, sc.name(), true,
+						vec.add(new ObjectResourceTreeNode(sc, sc.getName(), true,
 								new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/scheme.gif"))));
 					}
 				}

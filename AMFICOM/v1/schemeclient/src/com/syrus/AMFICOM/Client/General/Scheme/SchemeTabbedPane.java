@@ -6,7 +6,8 @@ import javax.swing.*;
 
 import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Model.*;
-import com.syrus.AMFICOM.scheme.corba.*;
+import com.syrus.AMFICOM.scheme.*;
+import com.syrus.AMFICOM.scheme.Scheme;
 
 public class SchemeTabbedPane extends ElementsTabbedPane
 {
@@ -161,7 +162,7 @@ public class SchemeTabbedPane extends ElementsTabbedPane
 				{
 					int ret = JOptionPane.showConfirmDialog(
 							Environment.getActiveWindow(),
-							"Схема " + sch.name() + " уже открыта. Открыть сохраненную ранее версию?",
+							"Схема " + sch.getName() + " уже открыта. Открыть сохраненную ранее версию?",
 							"Подтверждение",
 							JOptionPane.YES_NO_CANCEL_OPTION);
 					if (ret == JOptionPane.YES_OPTION)
@@ -171,7 +172,7 @@ public class SchemeTabbedPane extends ElementsTabbedPane
 						setGraphChanged(false);
 					}
 				}
-				updateTitle(sch.name());
+				updateTitle(sch.getName());
 				return;
 			}
 		}
@@ -179,7 +180,7 @@ public class SchemeTabbedPane extends ElementsTabbedPane
 		SchemePanel p = new SchemePanel(aContext);
 		addPanel(p);
 		p.openScheme(sch);
-		updateTitle(sch.name());
+		updateTitle(sch.getName());
 		setGraphChanged(false);
 	}
 
@@ -195,7 +196,7 @@ public class SchemeTabbedPane extends ElementsTabbedPane
 				{
 					int ret = JOptionPane.showConfirmDialog(
 							Environment.getActiveWindow(),
-							"Элемент " + se.name() + " уже открыт. Открыть сохраненную ранее версию?",
+							"Элемент " + se.getName() + " уже открыт. Открыть сохраненную ранее версию?",
 							"Подтверждение",
 							JOptionPane.YES_NO_CANCEL_OPTION);
 					if (ret == JOptionPane.YES_OPTION)
@@ -211,7 +212,7 @@ public class SchemeTabbedPane extends ElementsTabbedPane
 		SchemePanel p = new SchemePanel(aContext);
 		addPanel(p);
 		p.openSchemeElement(se);
-		updateTitle(se.name());
+		updateTitle(se.getName());
 		setGraphChanged(false);
 	}
 

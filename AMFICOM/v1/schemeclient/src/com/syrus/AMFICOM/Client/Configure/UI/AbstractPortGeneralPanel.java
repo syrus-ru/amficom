@@ -14,7 +14,7 @@ import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.client_.general.ui_.ObjComboBox;
 import com.syrus.AMFICOM.configuration.*;
 import com.syrus.AMFICOM.general.*;
-import com.syrus.AMFICOM.scheme.corba.AbstractSchemePort;
+import com.syrus.AMFICOM.scheme.AbstractSchemePort;
 
 public class AbstractPortGeneralPanel extends GeneralPanel
 {
@@ -128,14 +128,14 @@ public class AbstractPortGeneralPanel extends GeneralPanel
 		port = (AbstractSchemePort)or;
 
 		idField.setText(port.getId().getIdentifierString());
-		nameField.setText(port.name());
+		nameField.setText(port.getName());
 
-		typeBox.setSelectedItem(port.portType());
-		descTextArea.setText(port.description());
+		typeBox.setSelectedItem(port.getPortType().getTransferable());
+		descTextArea.setText(port.getDescription());
 
-		if(port.port() != null)
+		if(port.getPort() != null)
 		{
-			Port cp = port.portImpl();
+			Port cp = port.getPort();
 			equipField.setText(cp.getEquipmentId().getIdentifierString());
 		}
 		else
@@ -151,12 +151,12 @@ public class AbstractPortGeneralPanel extends GeneralPanel
 		try
 		{
 			if(MiscUtil.validName(nameField.getText()))
-				port.name(nameField.getText());
+				port.setName(nameField.getText());
 			else
 				return false;
 
-			port.portTypeImpl((PortType)typeBox.getSelectedItem());
-			port.description(descTextArea.getText());
+			port.setPortType((PortType)typeBox.getSelectedItem());
+			port.setDescription(descTextArea.getText());
 		}
 		catch(Exception ex)
 		{
@@ -170,7 +170,7 @@ public class AbstractPortGeneralPanel extends GeneralPanel
 		if(modify())
 		{
 			try {
-				ConfigurationStorableObjectPool.putStorableObject(port.portImpl());
+				ConfigurationStorableObjectPool.putStorableObject(port.getPort());
 			}
 			catch (ApplicationException ex) {
 			}

@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeTreeModel.java,v 1.3 2005/03/15 17:49:10 bass Exp $
+ * $Id: SchemeTreeModel.java,v 1.4 2005/03/16 13:05:34 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,7 +10,7 @@ package com.syrus.AMFICOM.client_.scheme.ui;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.3 $, $Date: 2005/03/15 17:49:10 $
+ * @version $Revision: 1.4 $, $Date: 2005/03/16 13:05:34 $
  * @module schemeclient_v1
  */
 
@@ -31,7 +31,6 @@ import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.general.corba.OperationSort;
 import com.syrus.AMFICOM.measurement.*;
 import com.syrus.AMFICOM.scheme.*;
-import com.syrus.AMFICOM.scheme.corba.*;
 import com.syrus.AMFICOM.scheme.corba.SchemePackage.Type;
 
 public class SchemeTreeModel implements SOTreeDataModel
@@ -106,21 +105,21 @@ public class SchemeTreeModel implements SOTreeDataModel
 			return ((MeasurementType)node.getUserObject()).getDescription();
 		
 		if (node.getUserObject() instanceof SchemeProtoGroup)
-			return ((SchemeProtoGroup)node.getUserObject()).name();
+			return ((SchemeProtoGroup)node.getUserObject()).getName();
 		if (node.getUserObject() instanceof Scheme)
-			return ((Scheme)node.getUserObject()).name();
+			return ((Scheme)node.getUserObject()).getName();
 		if (node.getUserObject() instanceof SchemeElement)
-			return ((SchemeElement)node.getUserObject()).name();
+			return ((SchemeElement)node.getUserObject()).getName();
 		if (node.getUserObject() instanceof SchemeLink)
-			return ((SchemeLink)node.getUserObject()).name();
+			return ((SchemeLink)node.getUserObject()).getName();
 		if (node.getUserObject() instanceof SchemeCableLink)
-			return ((SchemeCableLink)node.getUserObject()).name();
+			return ((SchemeCableLink)node.getUserObject()).getName();
 		if (node.getUserObject() instanceof SchemePath)
-			return ((SchemePath)node.getUserObject()).name();
+			return ((SchemePath)node.getUserObject()).getName();
 		if (node.getUserObject() instanceof SchemePort)
-			return ((SchemePort)node.getUserObject()).name();
+			return ((SchemePort)node.getUserObject()).getName();
 		if (node.getUserObject() instanceof SchemeCablePort)
-			return ((SchemeCablePort)node.getUserObject()).name();
+			return ((SchemeCablePort)node.getUserObject()).getName();
 		return "";
 	}
 

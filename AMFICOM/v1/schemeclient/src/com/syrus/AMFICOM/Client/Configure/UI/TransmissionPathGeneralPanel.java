@@ -14,7 +14,7 @@ import com.syrus.AMFICOM.Client.General.UI.GeneralPanel;
 import com.syrus.AMFICOM.Client.Resource.MiscUtil;
 import com.syrus.AMFICOM.configuration.*;
 import com.syrus.AMFICOM.general.*;
-import com.syrus.AMFICOM.scheme.corba.SchemePath;
+import com.syrus.AMFICOM.scheme.SchemePath;
 
 public class TransmissionPathGeneralPanel extends GeneralPanel
 {
@@ -141,8 +141,8 @@ public class TransmissionPathGeneralPanel extends GeneralPanel
 		path = (SchemePath)or;
 
 		idField.setText(path.getId().getIdentifierString());
-		nameField.setText(path.name());
-		equipField.setText(path.startDevice().name());
+		nameField.setText(path.getName());
+		equipField.setText(path.startDevice().getName());
 
 		if(path.path() != null)
 		{
@@ -183,7 +183,7 @@ public class TransmissionPathGeneralPanel extends GeneralPanel
 		try
 		{
 			if(MiscUtil.validName(nameField.getText()))
-				path.name(nameField.getText());
+				path.setName(nameField.getText());
 			else
 				return false;
 

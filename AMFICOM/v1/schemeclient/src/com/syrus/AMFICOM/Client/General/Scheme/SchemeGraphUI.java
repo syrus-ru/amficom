@@ -11,7 +11,7 @@ import java.awt.event.*;
 import com.jgraph.graph.*;
 import com.jgraph.pad.GPGraphUI;
 import com.jgraph.plaf.basic.*;
-import com.syrus.AMFICOM.scheme.corba.*;
+import com.syrus.AMFICOM.scheme.SchemeProtoElement;
 import com.syrus.AMFICOM.Client.General.Event.*;
 
 public class SchemeGraphUI extends GPGraphUI
@@ -301,13 +301,13 @@ public class SchemeGraphUI extends GPGraphUI
 				{
 					PortCell port = (PortCell)p.getParent();
 					if (port.getSchemePort() != null)
-						port.getSchemePort().name(name);
+						port.getSchemePort().setName(name);
 				}
 				else if (p.getParent() instanceof CablePortCell)
 				{
 					CablePortCell port = (CablePortCell)p.getParent();
 					if (port.getSchemeCablePort() != null)
-						port.getSchemeCablePort().name(name);
+						port.getSchemeCablePort().setName(name);
 				}
 			}
 		}
@@ -315,13 +315,13 @@ public class SchemeGraphUI extends GPGraphUI
 		{
 			DefaultLink link = (DefaultLink)selected;
 			if (link.getSchemeLink() != null)
-				link.getSchemeLink().name((String)link.getUserObject());
+				link.getSchemeLink().setName((String)link.getUserObject());
 		}
 		else if (selected instanceof DefaultCableLink)
 		{
 			DefaultCableLink link = (DefaultCableLink)selected;
 			if (link.getSchemeCableLink() != null)
-				link.getSchemeCableLink().name((String)link.getUserObject());
+				link.getSchemeCableLink().setName((String)link.getUserObject());
 		}
 	}
 

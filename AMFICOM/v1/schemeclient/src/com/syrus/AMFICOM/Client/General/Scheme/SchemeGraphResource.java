@@ -2,7 +2,8 @@ package com.syrus.AMFICOM.Client.General.Scheme;
 
 import java.util.*;
 
-import com.syrus.AMFICOM.scheme.corba.*;
+import com.syrus.AMFICOM.scheme.*;
+import com.syrus.AMFICOM.scheme.PathElement;
 
 public class SchemeGraphResource
 {

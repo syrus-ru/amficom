@@ -15,7 +15,8 @@ import com.syrus.AMFICOM.client_.general.ui_.ObjList;
 import com.syrus.AMFICOM.client_.general.ui_.ObjComboBox;
 import com.syrus.AMFICOM.configuration.*;
 import com.syrus.AMFICOM.general.*;
-import com.syrus.AMFICOM.scheme.corba.*;
+import com.syrus.AMFICOM.scheme.*;
+import com.syrus.AMFICOM.scheme.SchemeCableLink;
 
 public class CableLinkFibrePanel extends GeneralPanel
 {
@@ -147,7 +148,7 @@ public class CableLinkFibrePanel extends GeneralPanel
 		try
 		{
 			SchemeCableThread clt = (SchemeCableThread)threadsList.getSelectedValue();
-			clt.name(linksNameField.getText());
+			clt.setName(linksNameField.getText());
 		}
 		catch (Exception ex)
 		{
@@ -163,7 +164,7 @@ public class CableLinkFibrePanel extends GeneralPanel
 		SchemeCableThread clt = (SchemeCableThread)threadsList.getSelectedValue();
 
 		linksIdField.setText(clt.getId().getIdentifierString());
-		linksNameField.setText(clt.name());
+		linksNameField.setText(clt.getName());
 
 		LinkType type = clt.cableThreadTypeImpl().getLinkType();
 		linksTypeBox.setSelectedItem(type);

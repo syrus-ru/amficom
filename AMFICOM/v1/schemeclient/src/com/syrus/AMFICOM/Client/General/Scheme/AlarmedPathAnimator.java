@@ -7,8 +7,8 @@ import java.awt.Color;
 
 import com.jgraph.graph.DefaultEdge;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
+import com.syrus.AMFICOM.scheme.*;
 import com.syrus.AMFICOM.scheme.SchemeUtils;
-import com.syrus.AMFICOM.scheme.corba.*;
 import com.syrus.AMFICOM.scheme.corba.PathElementPackage.Type;
 
 public class AlarmedPathAnimator// extends Thread implements Runnable

@@ -12,8 +12,8 @@ import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.client_.general.ui_.ObjComboBox;
 import com.syrus.AMFICOM.configuration.*;
 import com.syrus.AMFICOM.general.*;
+import com.syrus.AMFICOM.scheme.*;
 import com.syrus.AMFICOM.scheme.SchemeUtils;
-import com.syrus.AMFICOM.scheme.corba.SchemeElement;
 
 public class EquipmentGeneralPanel extends GeneralPanel
 {
@@ -169,8 +169,8 @@ public class EquipmentGeneralPanel extends GeneralPanel
 		this.element = (SchemeElement)or;
 
 		idField.setText(element.getId().getIdentifierString());
-		nameField.setText(element.name());
-		descTextArea.setText(element.description());
+		nameField.setText(element.getName());
+		descTextArea.setText(element.getDescription());
 
 		typeBox.setSelectedItem(element.equipmentTypeImpl());
 		portsNumberField.setText(Long.toString(SchemeUtils.getPorts(element).size()));
@@ -228,11 +228,11 @@ public class EquipmentGeneralPanel extends GeneralPanel
 			}
 
 			if(MiscUtil.validName(nameField.getText()))
-				element.name(nameField.getText());
+				element.setName(nameField.getText());
 			else
 				return false;
 
-			element.description(descTextArea.getText());
+			element.setDescription(descTextArea.getText());
 			element.equipmentTypeImpl((EquipmentType)typeBox.getSelectedItem());
 			if (element.rtu() != null)
 			{

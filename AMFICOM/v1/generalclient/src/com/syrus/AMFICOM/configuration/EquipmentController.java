@@ -58,52 +58,57 @@ public final class EquipmentController implements ObjectResourceController {
 	public Object getValue(final Object object, final String key) {
 		Object result = null;
 		if (object instanceof Equipment) {
-			Equipment eq = (Equipment) object;
+			Equipment equipment = (Equipment) object;
 			if (key.equals(COLUMN_ID))
-				result = eq.getId().toString();
+				result = equipment.getId().toString();
 			else if (key.equals(COLUMN_CREATED))
-				result = eq.getCreated().toString();
+				result = equipment.getCreated().toString();
 			else if (key.equals(COLUMN_CREATOR_ID))
-				result = eq.getCreatorId().getIdentifierString();
+				result = equipment.getCreatorId().getIdentifierString();
 			else if (key.equals(COLUMN_MODIFIED))
-				result = eq.getModified().toString();
+				result = equipment.getModified().toString();
 			else if (key.equals(COLUMN_MODIFIER_ID))
-				result = eq.getModifierId().getIdentifierString();
+				result = equipment.getModifierId().getIdentifierString();
 			else if (key.equals(COLUMN_DESCRIPTION))
-				result = eq.getDescription();
+				result = equipment.getDescription();
 			else if (key.equals(COLUMN_NAME))
-				result = eq.getName();
+				result = equipment.getName();
 			else if (key.equals(COLUMN_TYPE_ID))
-				result = eq.getType().getId().getIdentifierString();
+				result = equipment.getType().getId().getIdentifierString();
 			else if (key.equals(COLUMN_IMAGE_ID))
-				result = eq.getImageId().getIdentifierString();
+				result = equipment.getImageId().getIdentifierString();
 			else if (key.equals(COLUMN_LONGITUDE))
-				result = Float.toString(eq.getLongitude());
+				result = Float.toString(equipment.getLongitude());
 			else if (key.equals(COLUMN_LATITUDE))
-				result = Float.toString(eq.getLatitude());
+				result = Float.toString(equipment.getLatitude());
 			else if (key.equals(COLUMN_SUPPLIER))
-				result = eq.getSupplier();
+				result = equipment.getSupplier();
 			else if (key.equals(COLUMN_SUPPLIER_CODE))
-				result = eq.getSupplierCode();
+				result = equipment.getSupplierCode();
 			else if (key.equals(COLUMN_HW_SERIAL))
-				result = eq.getHwSerial();
+				result = equipment.getHwSerial();
 			else if (key.equals(COLUMN_HW_VERSION))
-				result = eq.getHwVersion();
+				result = equipment.getHwVersion();
 			else if (key.equals(COLUMN_SW_SERIAL))
-				result = eq.getSwSerial();
+				result = equipment.getSwSerial();
 			else if (key.equals(COLUMN_SW_VERSION))
-				result = eq.getSwVersion();
+				result = equipment.getSwVersion();
 			else if (key.equals(COLUMN_INVENTORY_NUMBER))
-				result = eq.getInventoryNumber();
+				result = equipment.getInventoryNumber();
 			else if (key.equals(COLUMN_PORT_IDS)) {
-				List res = new ArrayList(eq.getPortIds().size());
-				for (Iterator it = eq.getCharacteristics().iterator(); it.hasNext();) {
-					res.add(((Identifier) it.next()).getIdentifierString());
-				}
-				result = res;
+				final Collection ports = equipment.getPorts();
+				final Collection portIds = new ArrayList(ports
+						.size());
+				for (final Iterator portIterator = ports
+						.iterator(); portIterator
+						.hasNext();)
+					portIds.add(((Port) (portIterator
+							.next())).getId()
+							.getIdentifierString());
+				result = portIds;
 			} else if (key.equals(COLUMN_CHARACTERISTICS)) {
-				List res = new ArrayList(eq.getCharacteristics().size());
-				for (Iterator it = eq.getCharacteristics().iterator(); it.hasNext();) {
+				List res = new ArrayList(equipment.getCharacteristics().size());
+				for (Iterator it = equipment.getCharacteristics().iterator(); it.hasNext();) {
 					Characteristic ch = (Characteristic) it.next();
 					res.add(ch.getId().getIdentifierString());
 				}

@@ -3,7 +3,6 @@ package com.syrus.AMFICOM.scheme;
 import java.util.*;
 
 import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
-import com.syrus.AMFICOM.scheme.corba.PathElement;
 import com.syrus.AMFICOM.general.*;
 
 public final class PathElementController implements ObjectResourceController
@@ -83,9 +82,9 @@ public final class PathElementController implements ObjectResourceController
 			else if (key.equals(COLUMN_MODIFIER_ID))
 				result = pe.getModifierId().getIdentifierString();
 			else if (key.equals(COLUMN_DESCRIPTION))
-				result = pe.description();
+				result = pe.getDescription();
 			else if (key.equals(COLUMN_NAME))
-				result = pe.name();
+				result = pe.getName();
 			else if (key.equals(COLUMN_SEQUENTIAL_NUMBER))
 				result = Integer.toString(pe.sequentialNumber());
 			else if (key.equals(COLUMN_SCHEME_ID))

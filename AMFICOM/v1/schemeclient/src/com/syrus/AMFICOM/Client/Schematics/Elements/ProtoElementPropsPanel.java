@@ -11,7 +11,8 @@ import com.syrus.AMFICOM.Client.General.Event.SchemeElementsEvent;
 import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.client_.general.ui_.*;
 import com.syrus.AMFICOM.configuration.*;
-import com.syrus.AMFICOM.scheme.corba.*;
+import com.syrus.AMFICOM.scheme.*;
+import com.syrus.AMFICOM.scheme.SchemeDevice;
 import com.syrus.AMFICOM.resource.*;
 
 public class ProtoElementPropsPanel extends JPanel
@@ -165,7 +166,7 @@ public class ProtoElementPropsPanel extends JPanel
 				if (eqt == null || proto == null)
 					return;
 				eqt.setName(nameTextField.getText());
-				proto.name(nameTextField.getText());
+				proto.setName(nameTextField.getText());
 			}
 			public void keyPressed(KeyEvent ae)
 					{}
@@ -237,11 +238,11 @@ public class ProtoElementPropsPanel extends JPanel
 		if (scheme_proto == null)
 			mapProtoTextField.setText("");
 		else
-			mapProtoTextField.setText(scheme_proto.name());
+			mapProtoTextField.setText(scheme_proto.getName());
 		mapProtoTextField.setCaretPosition(0);
 		mapProtoTextField.setEnabled(false);
 
-		nameTextField.setText(proto.name());
+		nameTextField.setText(proto.getName());
 		descriptionTextArea.setText(eqt.getDescription());
 		manufacturerTextField.setText(eqt.getManufacturer());
 		ugoNameTextField.setText(proto.label());
@@ -369,7 +370,7 @@ public class ProtoElementPropsPanel extends JPanel
 			if (!protos.contains(proto))
 				protos.add(proto);
 			proto.parent(scheme_proto);
-			mapProtoTextField.setText(scheme_proto.name());
+			mapProtoTextField.setText(scheme_proto.getName());
 			mapProtoTextField.setCaretPosition(0);
 		}
 	}

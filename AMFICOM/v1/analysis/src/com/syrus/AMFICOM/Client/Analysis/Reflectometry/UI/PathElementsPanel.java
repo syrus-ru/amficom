@@ -16,8 +16,8 @@ import java.awt.*;
 import java.awt.event.MouseEvent;
 
 import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
+import com.syrus.AMFICOM.scheme.*;
 import com.syrus.AMFICOM.scheme.PathDecomposer;
-import com.syrus.AMFICOM.scheme.corba.*;
 import com.syrus.AMFICOM.scheme.corba.PathElementPackage.Type;
 
 public class PathElementsPanel extends AnalysisPanel

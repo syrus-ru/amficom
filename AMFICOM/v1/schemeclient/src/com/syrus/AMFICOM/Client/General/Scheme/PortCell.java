@@ -2,8 +2,8 @@ package com.syrus.AMFICOM.Client.General.Scheme;
 
 import com.jgraph.pad.EllipseCell;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.scheme.*;
 import com.syrus.AMFICOM.scheme.SchemeStorableObjectPool;
-import com.syrus.AMFICOM.scheme.corba.SchemePort;
 
 public class PortCell extends EllipseCell
 {

@@ -12,8 +12,8 @@ import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.Scheme.*;
 import com.syrus.AMFICOM.Client.Resource.ResourceUtil;
 import com.syrus.AMFICOM.configuration.CableLinkType;
+import com.syrus.AMFICOM.scheme.*;
 import com.syrus.AMFICOM.scheme.SchemeUtils;
-import com.syrus.AMFICOM.scheme.corba.*;
 
 public class CableLayout implements OperationListener
 {
@@ -38,7 +38,7 @@ public class CableLayout implements OperationListener
 		panel.getGraph().setGraphEditable(false);
 		panel.getGraph().setAntiAliased(true);
 
-		CableLinkType type = link.cableLinkTypeImpl();
+		CableLinkType type = link.getCableLinkType();
 		int nModules = 8;
 		if (type.getCodename().equals("okst8") ||
 				type.getCodename().equals("okst16"))
@@ -150,7 +150,7 @@ public class CableLayout implements OperationListener
 		String name;
 
 		try {
-			int num = ResourceUtil.parseNumber(SchemeUtils.parseThreadName(thread.name()));
+			int num = ResourceUtil.parseNumber(SchemeUtils.parseThreadName(thread.getName()));
 			name = String.valueOf(num);
 		}
 		catch (Exception ex) {

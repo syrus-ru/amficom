@@ -7,8 +7,8 @@ import javax.swing.*;
 import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
+import com.syrus.AMFICOM.scheme.*;
 import com.syrus.AMFICOM.scheme.SchemeStorableObjectPool;
-import com.syrus.AMFICOM.scheme.corba.*;
 import com.syrus.AMFICOM.Client.Schematics.UI.*;
 
 public class ChooseMapGroupDialog extends JDialog implements OperationListener

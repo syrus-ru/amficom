@@ -5,8 +5,8 @@ import java.util.*;
 import javax.swing.JOptionPane;
 
 import com.syrus.AMFICOM.Client.General.Model.Environment;
+import com.syrus.AMFICOM.scheme.*;
 import com.syrus.AMFICOM.scheme.SchemeUtils;
-import com.syrus.AMFICOM.scheme.corba.*;
 import com.syrus.AMFICOM.scheme.corba.AbstractSchemePortPackage.DirectionType;
 import com.syrus.AMFICOM.scheme.corba.PathElementPackage.Type;
 
@@ -31,7 +31,7 @@ public class PathBuilder
 			{
 				if (state == PathBuilder.MULTIPLE_PORTS)
 					JOptionPane.showMessageDialog(Environment.getActiveWindow(), "Через элемент " +
-							pe.name() +
+							pe.getName() +
 							" невозможно однозначно провести путь.\nПожалуйста, введите следующий элемент пути вручную.",
 							"Ошибка", JOptionPane.OK_OPTION);
 
@@ -161,7 +161,7 @@ public class PathBuilder
 			{
 				if (state == PathBuilder.MULTIPLE_PORTS)
 					JOptionPane.showMessageDialog(Environment.getActiveWindow(),
-							"Через элемент " + pe.name() +
+							"Через элемент " + pe.getName() +
 							" невозможно однозначно провести путь.\nПожалуйста, введите следующий элемент пути вручную.",
 							"Ошибка", JOptionPane.OK_OPTION);
 
@@ -330,7 +330,7 @@ public class PathBuilder
 			for (Iterator it = SchemeUtils.getPorts(se).iterator(); it.hasNext();)
 			{
 				SchemePort p = (SchemePort)it.next();
-				if (p.measurementPortType() != null)
+				if (p.getMeasurementPortType() != null)
 				{
 					port = p;
 					accessPorts++;
@@ -475,7 +475,7 @@ public class PathBuilder
 		{
 			PathElement pe = (PathElement)pes.listIterator(pes.size()).previous();
 			JOptionPane.showMessageDialog(Environment.getActiveWindow(),
-							"Пожалуйста, проверьте коммутацию в элементе " + pe.name(),
+							"Пожалуйста, проверьте коммутацию в элементе " + pe.getName(),
 							"Ошибка", JOptionPane.OK_OPTION);
 			return null;
 		}

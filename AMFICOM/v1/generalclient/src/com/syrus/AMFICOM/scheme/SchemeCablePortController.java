@@ -5,7 +5,6 @@ import java.util.*;
 
 import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
 import com.syrus.AMFICOM.general.*;
-import com.syrus.AMFICOM.scheme.corba.SchemeCablePort;
 
 public final class SchemeCablePortController implements ObjectResourceController {
 
@@ -63,19 +62,19 @@ public final class SchemeCablePortController implements ObjectResourceController
 			else if (key.equals(COLUMN_MODIFIER_ID))
 				result = port.getModifierId().getIdentifierString();
 			else if (key.equals(COLUMN_DESCRIPTION))
-				result = port.description();
+				result = port.getDescription();
 			else if (key.equals(COLUMN_NAME))
-				result = port.name();
+				result = port.getName();
 			else if (key.equals(COLUMN_DIRECTION))
 				result = Integer.toString(port.directionType().value());
 			else if (key.equals(COLUMN_MEASUREMENT_PORT_ID))
-				result = port.measurementPortImpl().getId().getIdentifierString();
+				result = port.getMeasurementPort().getId().getIdentifierString();
 			else if (key.equals(COLUMN_MEASUREMENT_PORT_TYPE_ID))
-				result = port.measurementPortTypeImpl().getId().getIdentifierString();
+				result = port.getMeasurementPortType().getId().getIdentifierString();
 			else if (key.equals(COLUMN_PORT_ID))
-				result = port.portImpl().getId().getIdentifierString();
+				result = port.getPort().getId().getIdentifierString();
 			else if (key.equals(COLUMN_PORT_TYPE_ID))
-				result = port.portTypeImpl().getId().getIdentifierString();
+				result = port.getPortType().getId().getIdentifierString();
 			else if (key.equals(COLUMN_SCHEME_CABLE_LINK_ID))
 				result = port.schemeCableLink().getId().getIdentifierString();
 			else if (key.equals(COLUMN_SCHEME_DEVICE_ID))

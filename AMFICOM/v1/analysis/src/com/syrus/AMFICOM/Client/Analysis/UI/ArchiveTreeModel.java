@@ -12,8 +12,8 @@ import com.syrus.AMFICOM.configuration.*;
 import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.measurement.*;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
+import com.syrus.AMFICOM.scheme.*;
 import com.syrus.AMFICOM.scheme.SchemeStorableObjectPool;
-import com.syrus.AMFICOM.scheme.corba.SchemePath;
 import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourceTreeNode;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourceTreeModel;
@@ -181,7 +181,7 @@ public class ArchiveTreeModel extends ObjectResourceTreeModel
 						SchemePath path = (SchemePath)it.next();
 						ObjectResourceTreeNode n = new ObjectResourceTreeNode(
 								path,
-								path.name(),
+								path.getName(),
 								true,
 								new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/pathmode.gif").
 															getScaledInstance(15, 15, Image.SCALE_SMOOTH)));

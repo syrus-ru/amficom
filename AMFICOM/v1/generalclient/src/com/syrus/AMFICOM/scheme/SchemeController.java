@@ -6,10 +6,6 @@ import java.util.Collections;
 import java.util.List;
 
 import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
-import com.syrus.AMFICOM.scheme.corba.Scheme;
-import com.syrus.AMFICOM.scheme.corba.SchemeCableLink;
-import com.syrus.AMFICOM.scheme.corba.SchemeElement;
-import com.syrus.AMFICOM.scheme.corba.SchemeLink;
 
 public final class SchemeController implements ObjectResourceController
 {
@@ -101,9 +97,9 @@ public final class SchemeController implements ObjectResourceController
 			else if (key.equals(COLUMN_MODIFIER_ID))
 				result = scheme.getModifierId().getIdentifierString();
 			else if (key.equals(COLUMN_DESCRIPTION))
-				result = scheme.description();
+				result = scheme.getDescription();
 			else if (key.equals(COLUMN_NAME))
-				result = scheme.name();
+				result = scheme.getName();
 			else if (key.equals(COLUMN_LABEL))
 				result = scheme.label();
 			else if (key.equals(COLUMN_TYPE))

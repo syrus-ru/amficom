@@ -9,8 +9,8 @@ import oracle.jdeveloper.layout.XYConstraints;
 
 import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.client_.general.ui_.ObjectResourceTable;
+import com.syrus.AMFICOM.scheme.*;
 import com.syrus.AMFICOM.scheme.PathElementController;
-import com.syrus.AMFICOM.scheme.corba.SchemePath;
 
 public class TransmissionPathFibrePanel extends GeneralPanel
 {

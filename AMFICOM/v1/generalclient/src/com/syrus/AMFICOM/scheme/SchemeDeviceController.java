@@ -72,9 +72,9 @@ public final class SchemeDeviceController implements ObjectResourceController
 			else if (key.equals(COLUMN_MODIFIER_ID))
 				result = device.getModifierId().getIdentifierString();
 			else if (key.equals(COLUMN_DESCRIPTION))
-				result = device.description();
+				result = device.getDescription();
 			else if (key.equals(COLUMN_NAME))
-				result = device.name();
+				result = device.getName();
 			else if (key.equals(COLUMN_SCHEME_PORT_IDS)) {
 				SchemePort[] ports = device.schemePorts();
 				List res = new ArrayList(ports.length);

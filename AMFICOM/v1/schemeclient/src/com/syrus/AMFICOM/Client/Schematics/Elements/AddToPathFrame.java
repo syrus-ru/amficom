@@ -7,7 +7,8 @@ import java.awt.*;
 import javax.swing.JDialog;
 
 import com.syrus.AMFICOM.Client.General.UI.*;
-import com.syrus.AMFICOM.scheme.corba.*;
+import com.syrus.AMFICOM.scheme.*;
+import com.syrus.AMFICOM.scheme.SchemeCableLink;
 
 public class AddToPathFrame extends JDialog
 {
@@ -61,7 +62,7 @@ public class AddToPathFrame extends JDialog
 				v.add(resources[i]);
 				tm.addRow(
 						String.valueOf(tm.getRowCount() + 1),
-						new String[] {"текущая", "",  "", ((SchemeLink)resources[i]).name()}
+						new String[] {"текущая", "",  "", ((SchemeLink)resources[i]).getName()}
 						);
 			}
 			if (resources[i] instanceof SchemeCableLink)
@@ -70,8 +71,8 @@ public class AddToPathFrame extends JDialog
 				tm.addRow(
 						String.valueOf(tm.getRowCount() + 1),
 						new String[] {"текущая", "",
-						((SchemeCableLink)resources[i]).name(),
-						(((SchemeCableLink)resources[i]).schemeCableThreads()[0]).name()}
+						((SchemeCableLink)resources[i]).getName(),
+						(((SchemeCableLink)resources[i]).schemeCableThreads()[0]).getName()}
 						);
 			}
 		}

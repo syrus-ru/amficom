@@ -8,7 +8,7 @@ import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.client_.general.ui_.ObjectResourcePropertiesPane;
 import com.syrus.AMFICOM.configuration.*;
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.scheme.corba.SchemeProtoElement;
+import com.syrus.AMFICOM.scheme.SchemeProtoElement;
 
 public class EquipmentTypePane extends JPanel implements ObjectResourcePropertiesPane
 {

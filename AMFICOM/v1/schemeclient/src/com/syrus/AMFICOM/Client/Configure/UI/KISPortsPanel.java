@@ -13,7 +13,6 @@ import com.syrus.AMFICOM.Client.General.UI.GeneralPanel;
 import com.syrus.AMFICOM.client_.general.ui_.ObjComboBox;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.scheme.*;
-import com.syrus.AMFICOM.scheme.corba.*;
 
 public class KISPortsPanel extends GeneralPanel
 {
@@ -139,7 +138,7 @@ public class KISPortsPanel extends GeneralPanel
 		SchemePort prt = (SchemePort)portBox.getSelectedItem();
 		pgp.setObject(prt);
 
-		if (prt.measurementPort() != null)
+		if (prt.getMeasurementPort() != null)
 		{
 			set_AP_Selected(true);
 			accessPortCheckBox.setSelected(true);

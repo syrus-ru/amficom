@@ -3,7 +3,6 @@ package com.syrus.AMFICOM.Client.General.Scheme;
 import java.awt.*;
 
 import com.jgraph.graph.*;
-import com.syrus.AMFICOM.scheme.corba.SchemeCableLink;
 import com.syrus.AMFICOM.scheme.*;
 import com.syrus.AMFICOM.general.Identifier;
 

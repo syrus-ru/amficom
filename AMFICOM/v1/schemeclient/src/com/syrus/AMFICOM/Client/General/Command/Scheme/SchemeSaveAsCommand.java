@@ -14,9 +14,8 @@ import com.syrus.AMFICOM.Client.General.Scheme.*;
 import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.Schematics.Elements.SchemePropsPanel;
 import com.syrus.AMFICOM.general.*;
-import com.syrus.AMFICOM.administration.*;
+import com.syrus.AMFICOM.scheme.*;
 import com.syrus.AMFICOM.scheme.SchemeStorableObjectPool;
-import com.syrus.AMFICOM.scheme.corba.*;
 import com.syrus.AMFICOM.scheme.corba.SchemePackage.Type;
 
 public class SchemeSaveAsCommand extends VoidCommand
@@ -85,7 +84,7 @@ public class SchemeSaveAsCommand extends VoidCommand
 		while (true)
 		{
 			sd = new SaveDialog(aContext, aContext.getDispatcher(), "—охранение схемы");
-			int ret = sd.init(scheme, scheme.name()+ " (copy)", false);
+			int ret = sd.init(scheme, scheme.getName()+ " (copy)", false);
 			if (ret == 0)
 				return;
 
@@ -127,8 +126,8 @@ public class SchemeSaveAsCommand extends VoidCommand
 //			return;
 //		}
 
-		scheme.name(sd.name);
-		scheme.description(sd.description);
+		scheme.setName(sd.name);
+		scheme.setDescription(sd.description);
 		scheme.type(sd.type);
 
 		final Identifier domainId = new Identifier(
@@ -142,7 +141,7 @@ public class SchemeSaveAsCommand extends VoidCommand
 
 			JOptionPane.showMessageDialog(
 					Environment.getActiveWindow(),
-					"—хема " + scheme.name() + " успешно сохранена",
+					"—хема " + scheme.getName() + " успешно сохранена",
 					"—ообщение",
 					JOptionPane.INFORMATION_MESSAGE);
 
@@ -207,7 +206,7 @@ class SaveDialog extends JDialog
 	{
 		panel = new SchemePropsPanel(aContext, dispatcher, show_ugo);
 		panel.setSchemeName(initialName);
-		panel.setSchemeDescription(scheme.description());
+		panel.setSchemeDescription(scheme.getDescription());
 		panel.setSchemeType(scheme.type());
 	//	panel.init(graph.scheme, aContext.getDataSourceInterface());
 		getContentPane().setLayout(new BorderLayout());

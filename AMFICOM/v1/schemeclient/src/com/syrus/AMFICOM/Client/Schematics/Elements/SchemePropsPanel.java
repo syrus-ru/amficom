@@ -9,7 +9,7 @@ import com.syrus.AMFICOM.Client.General.Lang.LangModelSchematics;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.client_.general.ui_.*;
 import com.syrus.AMFICOM.Client.General.UI.AComboBox;
-import com.syrus.AMFICOM.scheme.corba.*;
+import com.syrus.AMFICOM.scheme.Scheme;
 import com.syrus.AMFICOM.scheme.corba.SchemePackage.Type;
 import com.syrus.AMFICOM.resource.*;
 
@@ -126,7 +126,7 @@ public class SchemePropsPanel extends JPanel
 			{
 				if (scheme == null)
 					return;
-				scheme.name(schemeNameTextField.getText());
+				scheme.setName(schemeNameTextField.getText());
 			}
 			public void keyPressed(KeyEvent ae)
 					{}
@@ -139,7 +139,7 @@ public class SchemePropsPanel extends JPanel
 			{
 				if (scheme == null)
 					return;
-				scheme.description(schemeDescrTextArea.getText());
+				scheme.setDescription(schemeDescrTextArea.getText());
 			}
 			public void keyPressed(KeyEvent ae)
 					{}
@@ -183,9 +183,9 @@ public class SchemePropsPanel extends JPanel
 	public void init(Scheme scheme)
 	{
 		this.scheme = scheme;
-		schemeNameTextField.setText(scheme.name());
+		schemeNameTextField.setText(scheme.getName());
 		schemeNameTextField.setCaretPosition(0);
-		schemeDescrTextArea.setText(scheme.description());
+		schemeDescrTextArea.setText(scheme.getDescription());
 		ugoNameTextField.setText(scheme.label());
 		ugoNameTextField.setCaretPosition(0);
 

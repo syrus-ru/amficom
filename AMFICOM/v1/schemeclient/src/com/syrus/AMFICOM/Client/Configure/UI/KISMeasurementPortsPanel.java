@@ -1,7 +1,5 @@
 package com.syrus.AMFICOM.Client.Configure.UI;
 
-import java.util.Collection;
-
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import javax.swing.*;
@@ -10,14 +8,13 @@ import com.syrus.AMFICOM.Client.General.Lang.LangModelConfig;
 import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.client_.general.ui_.ObjComboBox;
 import com.syrus.AMFICOM.configuration.*;
-import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
-import com.syrus.AMFICOM.scheme.corba.SchemeElement;
+import com.syrus.AMFICOM.scheme.SchemeElement;
 import oracle.jdeveloper.layout.VerticalFlowLayout;
 
 public class KISMeasurementPortsPanel extends GeneralPanel
 {
-	protected SchemeElement element;
+	private SchemeElement schemeElement;
 
 	private JLabel idLabel = new JLabel();
 	private ObjComboBox portBox = new ObjComboBox(MeasurementPortController.getInstance(),
@@ -75,24 +72,17 @@ public class KISMeasurementPortsPanel extends GeneralPanel
 
 	public Object getObject()
 	{
-		return element;
+		return this.schemeElement;
 	}
 
-	public void setObject(Object or)
+	public void setObject(final Object schemeElement)
 	{
-		element = (SchemeElement)or;
-		portBox.removeAll();
+		this.schemeElement = (SchemeElement) schemeElement;
+		this.portBox.removeAll();
 
-		if(element.rtu() != null)
-		{
-			try {
-				Collection portIds = element.rtuImpl().getMeasurementPortIds();
-				Collection ports = ConfigurationStorableObjectPool.getStorableObjects(portIds, true);
-				portBox.addElements(ports);
-			}
-			catch (ApplicationException ex) {
-			}
-		}
+		final KIS kis = this.schemeElement.rtuImpl();
+		if (kis != null)
+			this.portBox.addElements(kis.getMeasurementPorts());
 	}
 
 	void portBox_actionPerformed(ActionEvent e)

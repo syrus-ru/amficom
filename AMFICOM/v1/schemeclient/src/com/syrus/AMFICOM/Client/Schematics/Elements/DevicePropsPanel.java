@@ -12,8 +12,8 @@ import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.UI.AComboBox;
 import com.syrus.AMFICOM.client_.general.ui_.ObjComboBox;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
+import com.syrus.AMFICOM.scheme.*;
 import com.syrus.AMFICOM.scheme.SchemeCableThreadController;
-import com.syrus.AMFICOM.scheme.corba.*;
 
 public class DevicePropsPanel extends JPanel
 {
@@ -158,7 +158,7 @@ public class DevicePropsPanel extends JPanel
 		public Object getValueAt(int row, int col)
 		{
 			if (col == 0)
-				return ((SchemePort)super.getValueAt(row, col)).name();
+				return ((SchemePort)super.getValueAt(row, col)).getName();
 			return super.getValueAt(row, col);
 		}
 

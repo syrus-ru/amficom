@@ -12,8 +12,8 @@ import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.Resource.MiscUtil;
 import com.syrus.AMFICOM.configuration.*;
 import com.syrus.AMFICOM.general.*;
+import com.syrus.AMFICOM.scheme.*;
 import com.syrus.AMFICOM.scheme.SchemeStorableObjectPool;
-import com.syrus.AMFICOM.scheme.corba.*;
 
 public class SaveComponentDialog extends JDialog
 {
@@ -124,7 +124,7 @@ public class SaveComponentDialog extends JDialog
 			protos.add(proto);
 		proto.parent(scheme_proto);
 
-		proto.name(componentPanel.getProtoName());
+		proto.setName(componentPanel.getProtoName());
 		EquipmentType eqt = proto.equipmentTypeImpl();
 
 		try {
@@ -135,7 +135,7 @@ public class SaveComponentDialog extends JDialog
 
 			JOptionPane.showMessageDialog(
 					Environment.getActiveWindow(),
-					"Ёлемент "+ proto.name() +" успешно сохранен",
+					"Ёлемент "+ proto.getName() +" успешно сохранен",
 					"—ообщение",
 							JOptionPane.INFORMATION_MESSAGE);
 		}

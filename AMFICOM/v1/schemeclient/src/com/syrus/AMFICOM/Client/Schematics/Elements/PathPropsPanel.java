@@ -47,11 +47,8 @@ import com.syrus.AMFICOM.general.EquivalentCondition;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
-import com.syrus.AMFICOM.scheme.corba.PathElement;
-import com.syrus.AMFICOM.scheme.corba.SchemeCableLink;
-import com.syrus.AMFICOM.scheme.corba.SchemeElement;
-import com.syrus.AMFICOM.scheme.corba.SchemeLink;
-import com.syrus.AMFICOM.scheme.corba.SchemePath;
+import com.syrus.AMFICOM.scheme.*;
+import com.syrus.AMFICOM.scheme.PathElement;
 
 public class PathPropsPanel extends JPanel
 {
@@ -174,7 +171,7 @@ public class PathPropsPanel extends JPanel
 			{
 				if (path == null || path.type() == null)
 					return;
-				path.name(compNameTextField.getText());
+				path.setName(compNameTextField.getText());
 			}
 			public void keyPressed(KeyEvent ae)
 					{}
@@ -204,18 +201,18 @@ public class PathPropsPanel extends JPanel
 		skip_change = true;
 		this.path = path;
 
-		compNameTextField.setText(path.name());
+		compNameTextField.setText(path.getName());
 		compNameTextField.setCaretPosition(0);
 
 
 		if (path.endDevice() != null)
-			endDevTextField.setText(path.endDevice().name());
+			endDevTextField.setText(path.endDevice().getName());
 		else
 			endDevTextField.setText("");
 		endDevTextField.setCaretPosition(0);
 
 		if (path.startDevice() != null)
-			startDevTextField.setText(path.startDevice().name());
+			startDevTextField.setText(path.startDevice().getName());
 		else
 			startDevTextField.setText("");
 		startDevTextField.setCaretPosition(0);
@@ -229,7 +226,7 @@ public class PathPropsPanel extends JPanel
 		utp.getTree().setRootVisible(false);
 		scroll.getViewport().add(utp, BorderLayout.CENTER);
 
-		undoCompName = path.name();
+		undoCompName = path.getName();
 		undoTypeId = path.typeImpl();
 
 		undoPathLinks = new ArrayList();
@@ -320,7 +317,7 @@ public class PathPropsPanel extends JPanel
 			PathElement pe = PathBuilder.addSchemeElement(links, se);
 			if (pe != null)
 			{
-				startDevTextField.setText(se.name());
+				startDevTextField.setText(se.getName());
 				startDevTextField.setCaretPosition(0);
 				path.startDevice(se);
 			}
@@ -346,7 +343,7 @@ public class PathPropsPanel extends JPanel
 						"Конечным устройством не может быть схема", "Ошибка", JOptionPane.OK_OPTION);
 				return;
 			}
-			endDevTextField.setText(se.name());
+			endDevTextField.setText(se.getName());
 			endDevTextField.setCaretPosition(0);
 			path.endDevice(se);
 			element_to_add = null;
@@ -356,7 +353,7 @@ public class PathPropsPanel extends JPanel
 	public void undo()
 	{
 		path.typeImpl(undoTypeId);
-		path.name(undoCompName);
+		path.setName(undoCompName);
 
 		PathElement[] pes = new PathElement[undoPathLinks.size()];
 		Iterator it = undoPathLinks.iterator();
@@ -437,7 +434,7 @@ class PathTreeModel extends ObjectResourceTreeModel
 	{
 		return new ObjectResourceTreeNode(
 				"root",
-				path.name(),
+				path.getName(),
 				true,
 				new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/folder.gif")));
 	}

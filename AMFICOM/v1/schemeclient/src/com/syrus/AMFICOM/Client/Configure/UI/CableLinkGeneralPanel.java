@@ -6,7 +6,7 @@ import java.util.List;
 import com.syrus.AMFICOM.client_.general.ui_.ObjListModel;
 import com.syrus.AMFICOM.configuration.*;
 import com.syrus.AMFICOM.general.*;
-import com.syrus.AMFICOM.scheme.corba.SchemeCableLink;
+import com.syrus.AMFICOM.scheme.SchemeCableLink;
 
 public class CableLinkGeneralPanel extends AbstractLinkGeneralPanel
 {
@@ -35,7 +35,7 @@ public class CableLinkGeneralPanel extends AbstractLinkGeneralPanel
 					CableLinkTypeController.getInstance(),
 					clTypes,
 					StorableObjectWrapper.COLUMN_NAME));
-			typeBox.setSelectedItem(((SchemeCableLink)link).cableLinkType());
+			typeBox.setSelectedItem(((SchemeCableLink)link).getCableLinkType().getTransferable());
 		}
 		catch (ApplicationException ex) {
 		}
@@ -45,7 +45,7 @@ public class CableLinkGeneralPanel extends AbstractLinkGeneralPanel
 	{
 		if (super.modify())
 		{
-			((SchemeCableLink)link).cableLinkTypeImpl((CableLinkType)typeBox.getSelectedItem());
+			((SchemeCableLink)link).setCableLinkType((CableLinkType)typeBox.getSelectedItem());
 			return true;
 		}
 		return false;

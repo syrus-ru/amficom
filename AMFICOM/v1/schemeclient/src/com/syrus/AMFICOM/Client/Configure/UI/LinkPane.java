@@ -8,7 +8,7 @@ import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.client_.general.ui_.ObjectResourcePropertiesPane;
 import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.scheme.corba.SchemeLink;
+import com.syrus.AMFICOM.scheme.SchemeLink;
 
 public abstract class LinkPane extends JPanel implements ObjectResourcePropertiesPane
 {
@@ -81,9 +81,9 @@ public abstract class LinkPane extends JPanel implements ObjectResourcePropertie
 	public boolean save() {
 		if (modify()) {
 			if (chPanel.save()) {
-				if (link.link() != null) {
+				if (link.getLink() != null) {
 					try {
-						ConfigurationStorableObjectPool.putStorableObject(link.linkImpl());
+						ConfigurationStorableObjectPool.putStorableObject(link.getLink());
 						ConfigurationStorableObjectPool.flush(true);
 						return true;
 					} 

@@ -4,7 +4,6 @@ import java.util.*;
 
 import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
 import com.syrus.AMFICOM.general.*;
-import com.syrus.AMFICOM.scheme.corba.SchemeLink;
 
 public final class SchemeLinkController implements ObjectResourceController
 {
@@ -84,11 +83,11 @@ public final class SchemeLinkController implements ObjectResourceController
 			else if (key.equals(COLUMN_MODIFIER_ID))
 				result = link.getModifierId().getIdentifierString();
 			else if (key.equals(COLUMN_DESCRIPTION))
-				result = link.description();
+				result = link.getDescription();
 			else if (key.equals(COLUMN_NAME))
-				result = link.name();
+				result = link.getName();
 			else if (key.equals(COLUMN_LINK_ID))
-				result = link.linkImpl().getId().getIdentifierString();
+				result = link.getLink().getId().getIdentifierString();
 			else if (key.equals(COLUMN_TYPE_ID))
 				result = link.linkTypeImpl().getId().getIdentifierString();
 			else if (key.equals(COLUMN_SOURCE_SCHEME_PORT_ID))
@@ -96,7 +95,7 @@ public final class SchemeLinkController implements ObjectResourceController
 			else if (key.equals(COLUMN_TARGET_SCHEME_PORT_ID))
 				result = link.targetSchemePort().getId().getIdentifierString();
 			else if (key.equals(COLUMN_SITE_NODE_ID))
-				result = link.siteNodeImpl().getId().getIdentifierString();
+				result = link.getSiteNode().getId().getIdentifierString();
 			else if (key.equals(COLUMN_OPTICAL_LENGTH))
 				result = Double.toString(link.opticalLength());
 			else if (key.equals(COLUMN_PHYSICAL_LENGTH))

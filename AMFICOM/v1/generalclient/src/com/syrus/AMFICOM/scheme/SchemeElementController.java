@@ -96,9 +96,9 @@ public final class SchemeElementController implements ObjectResourceController
 			else if (key.equals(COLUMN_MODIFIER_ID))
 				result = element.getModifierId().getIdentifierString();
 			else if (key.equals(COLUMN_DESCRIPTION))
-				result = element.description();
+				result = element.getDescription();
 			else if (key.equals(COLUMN_NAME))
-				result = element.name();
+				result = element.getName();
 			else if (key.equals(COLUMN_LABEL))
 				result = element.label();
 			else if (key.equals(COLUMN_SYMBOL_ID))
@@ -116,7 +116,7 @@ public final class SchemeElementController implements ObjectResourceController
 			else if (key.equals(COLUMN_PROTO_ID))
 				result = element.schemeProtoElement().getId().getIdentifierString();
 			else if (key.equals(COLUMN_SITE_NODE_ID))
-				result = element.siteNodeImpl().getId().getIdentifierString();
+				result = element.getSiteNode().getId().getIdentifierString();
 			else if (key.equals(COLUMN_SCHEME_DEVICE_IDS)) {
 				SchemeDevice[] devices = element.schemeDevices();
 				List res = new ArrayList(devices.length);

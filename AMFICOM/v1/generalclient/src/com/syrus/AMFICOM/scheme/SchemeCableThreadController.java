@@ -3,7 +3,6 @@ package com.syrus.AMFICOM.scheme;
 import java.util.*;
 
 import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
-import com.syrus.AMFICOM.scheme.corba.SchemeCableThread;
 import com.syrus.AMFICOM.general.*;
 
 public final class SchemeCableThreadController implements ObjectResourceController
@@ -77,9 +76,9 @@ public final class SchemeCableThreadController implements ObjectResourceControll
 			else if (key.equals(COLUMN_MODIFIER_ID))
 				result = thread.getModifierId().getIdentifierString();
 			else if (key.equals(COLUMN_DESCRIPTION))
-				result = thread.description();
+				result = thread.getDescription();
 			else if (key.equals(COLUMN_NAME))
-				result = thread.name();
+				result = thread.getName();
 			else if (key.equals(COLUMN_TYPE_ID))
 				result = thread.cableThreadTypeImpl().getId().getIdentifierString();
 			else if (key.equals(COLUMN_THREAD_ID))

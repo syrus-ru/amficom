@@ -15,8 +15,8 @@ import com.syrus.AMFICOM.configuration.*;
 import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.general.corba.*;
 import com.syrus.AMFICOM.measurement.*;
+import com.syrus.AMFICOM.scheme.*;
 import com.syrus.AMFICOM.scheme.SchemeStorableObjectPool;
-import com.syrus.AMFICOM.scheme.corba.*;
 import com.syrus.AMFICOM.scheme.corba.SchemePackage.Type;
 
 public class SchemeTreeModel implements TreeDataModel
@@ -343,7 +343,7 @@ public class SchemeTreeModel implements TreeDataModel
 
 					for (Iterator it = groups.iterator(); it.hasNext(); ) {
 						SchemeProtoGroup group = (SchemeProtoGroup)it.next();
-						StorableObjectTreeNode n = new StorableObjectTreeNode(group, group.name(), true);
+						StorableObjectTreeNode n = new StorableObjectTreeNode(group, group.getName(), true);
 						vec.add(n);
 					}
 				}
@@ -366,7 +366,7 @@ public class SchemeTreeModel implements TreeDataModel
 					for(Iterator it = ds.iterator(); it.hasNext();)
 					{
 						Scheme sch = (Scheme)it.next();
-						vec.add(new StorableObjectTreeNode(sch, sch.name(), 
+						vec.add(new StorableObjectTreeNode(sch, sch.getName(), 
 							new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/scheme.gif")), false));
 					}
 				}
@@ -396,9 +396,9 @@ public class SchemeTreeModel implements TreeDataModel
 					{
 						SchemeElement element = (SchemeElement)it.next();
 						if (element.schemeLinks().length != 0 || element.schemeElements().length != 0)
-							vec.add(new StorableObjectTreeNode(element, element.name(), false));
+							vec.add(new StorableObjectTreeNode(element, element.getName(), false));
 						else
-							vec.add(new StorableObjectTreeNode(element, element.name(), true));
+							vec.add(new StorableObjectTreeNode(element, element.getName(), true));
 					}
 				}
 			}
@@ -411,7 +411,7 @@ public class SchemeTreeModel implements TreeDataModel
 					for(int i = 0; i < scheme.schemeLinks().length; i++)
 					{
 						SchemeLink link = scheme.schemeLinks()[i];
-						vec.add(new StorableObjectTreeNode(link, link.name(), true));
+						vec.add(new StorableObjectTreeNode(link, link.getName(), true));
 					}
 				}
 				else if (parent instanceof SchemeElement)
@@ -420,7 +420,7 @@ public class SchemeTreeModel implements TreeDataModel
 					for(int i = 0; i < el.schemeLinks().length; i++)
 					{
 						SchemeLink link = el.schemeLinks()[i];
-						vec.add(new StorableObjectTreeNode(link, link.name(), true));
+						vec.add(new StorableObjectTreeNode(link, link.getName(), true));
 					}
 				}
 			}
@@ -430,7 +430,7 @@ public class SchemeTreeModel implements TreeDataModel
 				for(int i = 0; i < parent.schemeCableLinks().length; i++)
 				{
 					SchemeCableLink link = parent.schemeCableLinks()[i];
-					vec.add(new StorableObjectTreeNode(link, link.name(), true));
+					vec.add(new StorableObjectTreeNode(link, link.getName(), true));
 				}
 			}
 			else if (s.equals("SchemePath"))
@@ -439,7 +439,7 @@ public class SchemeTreeModel implements TreeDataModel
 				for(int i = 0; i < parent.schemeMonitoringSolution().schemePaths().length; i++)
 				{
 					SchemePath path = parent.schemeMonitoringSolution().schemePaths()[i];
-					vec.add(new StorableObjectTreeNode(path, path.name(), true));
+					vec.add(new StorableObjectTreeNode(path, path.getName(), true));
 				}
 			}
 		}
@@ -458,7 +458,7 @@ public class SchemeTreeModel implements TreeDataModel
 
 					for (Iterator it = schemes.iterator(); it.hasNext(); ) {
 						Scheme sc = (Scheme)it.next();
-						vec.add(new StorableObjectTreeNode(sc, sc.name(),
+						vec.add(new StorableObjectTreeNode(sc, sc.getName(),
 								new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/scheme.gif"))));
 					}
 				}
@@ -481,7 +481,7 @@ public class SchemeTreeModel implements TreeDataModel
 						icon = new ImageIcon(Toolkit.getDefaultToolkit().createImage(map_group.getSymbol().getImage())
 																 .getScaledInstance(16, 16, Image.SCALE_SMOOTH));
 
-					vec.add(new StorableObjectTreeNode(map_group, map_group.name(), icon,
+					vec.add(new StorableObjectTreeNode(map_group, map_group.getName(), icon,
 							map_group.schemeProtoGroups().length == 0 && map_group.schemeProtoElements().length == 0));
 				}
 				if (vec.isEmpty())
@@ -490,7 +490,7 @@ public class SchemeTreeModel implements TreeDataModel
 					{
 						SchemeProtoElement proto = parent_group.schemeProtoElements()[i];
 //						proto.scheme_proto_group = parent_group;
-						vec.add(new StorableObjectTreeNode(proto, proto.name().length() == 0 ? "Без названия" : proto.name(), true));
+						vec.add(new StorableObjectTreeNode(proto, proto.getName().length() == 0 ? "Без названия" : proto.getName(), true));
 					}
 				}
 			}
@@ -543,12 +543,12 @@ public class SchemeTreeModel implements TreeDataModel
 						if (element.internalScheme() == null)
 						{
 							if (element.schemeLinks().length != 0 || element.schemeElements().length != 0)
-								vec.add(new StorableObjectTreeNode(element, element.name(), false));
+								vec.add(new StorableObjectTreeNode(element, element.getName(), false));
 							else
-								vec.add(new StorableObjectTreeNode(element, element.name(), true));
+								vec.add(new StorableObjectTreeNode(element, element.getName(), true));
 						}
 						else
-							vec.add(new StorableObjectTreeNode(element, element.internalScheme().name(), 
+							vec.add(new StorableObjectTreeNode(element, element.internalScheme().getName(), 
 									new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/scheme.gif")), false));
 					}
 				}

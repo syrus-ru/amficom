@@ -8,7 +8,7 @@ import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.corba.CharacteristicTypeSort;
-import com.syrus.AMFICOM.scheme.corba.SchemeCableLink;
+import com.syrus.AMFICOM.scheme.SchemeCableLink;
 
 public class CableLinkCharacteristicsPanel extends GeneralPanel
 {
@@ -77,15 +77,15 @@ public class CableLinkCharacteristicsPanel extends GeneralPanel
 					true);
 		charPane.addCharacteristics(link.getCharacteristics(), linkId);
 
-		if (link.link() != null)
+		if (link.getLink() != null)
 		{
 			charPane.setTypeSortMapping(
 					CharacteristicTypeSort.CHARACTERISTICTYPESORT_VISUAL,
 					CharacteristicSort.CHARACTERISTIC_SORT_CABLELINK,
-					link.linkImpl(),
-					link.linkImpl().getId(),
+					link.getLink(),
+					link.getLink().getId(),
 					true);
-			charPane.addCharacteristics(link.linkImpl().getCharacteristics(), link.linkImpl().getId());
+			charPane.addCharacteristics(link.getLink().getCharacteristics(), link.getLink().getId());
 		}
 	}
 

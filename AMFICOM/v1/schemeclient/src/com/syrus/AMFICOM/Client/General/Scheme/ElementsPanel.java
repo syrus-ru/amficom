@@ -11,7 +11,8 @@ import javax.swing.event.UndoableEditEvent;
 import com.jgraph.graph.*;
 import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.scheme.corba.*;
+import com.syrus.AMFICOM.scheme.*;
+import com.syrus.AMFICOM.scheme.Scheme;
 
 public class ElementsPanel extends UgoPanel
 		implements KeyListener

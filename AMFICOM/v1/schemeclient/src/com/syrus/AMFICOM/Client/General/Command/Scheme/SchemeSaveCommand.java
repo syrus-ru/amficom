@@ -12,9 +12,7 @@ import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.General.Scheme.*;
 import com.syrus.AMFICOM.Client.Resource.MiscUtil;
 import com.syrus.AMFICOM.general.*;
-import com.syrus.AMFICOM.administration.*;
 import com.syrus.AMFICOM.scheme.*;
-import com.syrus.AMFICOM.scheme.corba.*;
 
 public class SchemeSaveCommand extends VoidCommand
 {
@@ -66,7 +64,7 @@ public class SchemeSaveCommand extends VoidCommand
 						schemeTab.setGraphChanged(p[i].getGraph(), true);
 						JOptionPane.showMessageDialog(
 								Environment.getActiveWindow(),
-								"Ёлемент " + se.name() + " успешно сохранен в схеме " + s.name(),
+								"Ёлемент " + se.getName() + " успешно сохранен в схеме " + s.getName(),
 								"—ообщение",
 								JOptionPane.INFORMATION_MESSAGE);
 						break;
@@ -106,7 +104,7 @@ public class SchemeSaveCommand extends VoidCommand
 		{
 			sd = new SaveDialog(aContext, aContext.getDispatcher(), "—охранение схемы");
 			int ret = //sd.init(schemePanel.scheme.getName(), schemePanel.scheme.description, false);
-					sd.init(scheme, scheme.name(), false);
+					sd.init(scheme, scheme.getName(), false);
 			if (ret == 0)
 				return;
 
@@ -117,8 +115,8 @@ public class SchemeSaveCommand extends VoidCommand
 		}
 //		ComponentSaveCommand.saveTypes(aContext.getDataSourceInterface(), false);
 
-		scheme.name(sd.name);
-		scheme.description(sd.description);
+		scheme.setName(sd.name);
+		scheme.setDescription(sd.description);
 		scheme.type(sd.type);
 //		scheme.created = System.currentTimeMillis();
 
@@ -153,7 +151,7 @@ public class SchemeSaveCommand extends VoidCommand
 
 			JOptionPane.showMessageDialog(
 					Environment.getActiveWindow(),
-					"—хема " + scheme.name() + " успешно сохранена",
+					"—хема " + scheme.getName() + " успешно сохранена",
 					"—ообщение",
 					JOptionPane.INFORMATION_MESSAGE);
 

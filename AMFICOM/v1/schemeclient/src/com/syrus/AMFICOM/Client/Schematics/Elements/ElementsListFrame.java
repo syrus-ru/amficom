@@ -8,7 +8,6 @@ import com.syrus.AMFICOM.Client.General.Lang.LangModelSchematics;
 import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.General.Scheme.*;
 import com.syrus.AMFICOM.Client.Resource.MiscUtil;
-import com.syrus.AMFICOM.scheme.corba.*;
 import com.syrus.AMFICOM.scheme.*;
 import com.syrus.AMFICOM.general.*;
 
@@ -94,7 +93,7 @@ public class ElementsListFrame extends JInternalFrame implements OperationListen
 				{
 
 					SchemePath path = pathpanel.path;
-					if (!MiscUtil.validName(path.name()) ||
+					if (!MiscUtil.validName(path.getName()) ||
 							path.endDevice() == null ||
 							path.startDevice() == null ||
 							path.links().length == 0)

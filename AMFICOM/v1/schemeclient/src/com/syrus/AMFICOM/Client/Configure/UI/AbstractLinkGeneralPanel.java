@@ -10,9 +10,11 @@ import com.syrus.AMFICOM.Client.Resource.MiscUtil;
 import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.client_.general.ui_.ObjComboBox;
 import com.syrus.AMFICOM.configuration.*;
+import com.syrus.AMFICOM.configuration.corba.Link_Transferable;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
-import com.syrus.AMFICOM.scheme.corba.*;
+import com.syrus.AMFICOM.scheme.*;
+import com.syrus.AMFICOM.scheme.AbstractSchemeLink;
 
 public abstract class AbstractLinkGeneralPanel extends GeneralPanel {
 	protected AbstractSchemeLink link;
@@ -233,26 +235,26 @@ public abstract class AbstractLinkGeneralPanel extends GeneralPanel {
 		this.link = (AbstractSchemeLink) or;
 
 		this.idField.setText(this.link.getId().getIdentifierString());
-		this.nameField.setText(this.link.name());
+		this.nameField.setText(this.link.getName());
 		this.physLengthField.setText(String.valueOf(this.link.physicalLength()));
 		this.optLengthField.setText(String.valueOf(this.link.opticalLength()));
 
 		AbstractSchemePort sport = this.link.sourceAbstractSchemePort();
 		SchemeDevice sdev = sport.schemeDevice();
-		this.startEquipmentBox.setText(sdev.name());
-		this.startEquipmentPortBox.setText(sport.name());
+		this.startEquipmentBox.setText(sdev.getName());
+		this.startEquipmentPortBox.setText(sport.getName());
 
 		AbstractSchemePort eport = this.link.targetAbstractSchemePort();
 		SchemeDevice edev = eport.schemeDevice();
-		this.endEquipmentBox.setText(edev.name());
-		this.startEquipmentPortBox.setText(eport.name());
+		this.endEquipmentBox.setText(edev.getName());
+		this.startEquipmentPortBox.setText(eport.getName());
 
-		this.descTextArea.setText(this.link.description());
+		this.descTextArea.setText(this.link.getDescription());
 
-		if (this.link.link() != null) {
-			this.rnField.setText(this.link.link().inventoryNo);
-			this.supplierField.setText(this.link.link().supplier);
-			this.supplierCodeField.setText(this.link.link().supplierCode);
+		if (this.link.getLink() != null) {
+			this.rnField.setText(this.link.getLink().getInventoryNo());
+			this.supplierField.setText(this.link.getLink().getSupplier());
+			this.supplierCodeField.setText(this.link.getLink().getSupplierCode());
 		} else {
 			this.rnField.setText(""); //$NON-NLS-1$
 			this.supplierField.setText(""); //$NON-NLS-1$
@@ -269,16 +271,21 @@ public abstract class AbstractLinkGeneralPanel extends GeneralPanel {
 			this.link.opticalLength(d2);
 
 			if (MiscUtil.validName(this.nameField.getText()))
-				this.link.name(this.nameField.getText());
+				this.link.setName(this.nameField.getText());
 			else
 				return false;
 
-			this.link.description(this.descTextArea.getText());
+			this.link.setDescription(this.descTextArea.getText());
 
-			if (this.link.link() != null) {
-				this.link.link().inventoryNo = this.rnField.getText();
-				this.link.link().supplier = this.supplierField.getText();
-				this.link.link().supplierCode = this.supplierCodeField.getText();
+			if (this.link.getLink() != null) {
+				/**
+				 * @bug introduce Link#setInventoryNo(String) --
+				 *      currently absent. Changing an attribute
+				 *      for a transferable makes no sense.
+				 */
+				((Link_Transferable) (this.link.getLink().getTransferable())).inventoryNo = this.rnField.getText();
+				this.link.getLink().setSupplier(this.supplierField.getText());
+				this.link.getLink().setSupplierCode(this.supplierCodeField.getText());
 			}
 		}
 		catch (Exception ex) {
@@ -289,9 +296,9 @@ public abstract class AbstractLinkGeneralPanel extends GeneralPanel {
 
 	void saveButton_actionPerformed(ActionEvent e) {
 		if (modify()) {
-			if (this.link.link() != null) {
+			if (this.link.getLink() != null) {
 				try {
-					ConfigurationStorableObjectPool.putStorableObject(this.link.linkImpl());
+					ConfigurationStorableObjectPool.putStorableObject(this.link.getLink());
 				}
 				catch (ApplicationException ex) {
 					ex.printStackTrace();

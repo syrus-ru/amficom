@@ -8,7 +8,8 @@ import com.syrus.AMFICOM.Client.General.Event.SchemeElementsEvent;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.UI.ChoosableFileFilter;
 import com.syrus.AMFICOM.configuration.*;
-import com.syrus.AMFICOM.scheme.corba.*;
+import com.syrus.AMFICOM.scheme.*;
+import com.syrus.AMFICOM.scheme.SchemeElement;
 
 public class SchemeElementPropsPanel extends JPanel
 {
@@ -135,7 +136,7 @@ public class SchemeElementPropsPanel extends JPanel
 			{
 				if (element == null)
 					return;
-				element.name(titleTextField.getText());
+				element.setName(titleTextField.getText());
 			}
 			public void keyPressed(KeyEvent ae)
 					{}
@@ -148,7 +149,7 @@ public class SchemeElementPropsPanel extends JPanel
 			{
 				if (element == null)
 					return;
-				element.description(descriptionTextArea.getText());
+				element.setDescription(descriptionTextArea.getText());
 			}
 			public void keyPressed(KeyEvent ae)
 					{}
@@ -189,21 +190,21 @@ public class SchemeElementPropsPanel extends JPanel
 
 		SchemeProtoElement p = element.schemeProtoElement();
 		if (p != null && p.parent() != null)
-			mapProtoTextField.setText(p.parent().name());
+			mapProtoTextField.setText(p.parent().getName());
 		else
 			mapProtoTextField.setText("");
 		mapProtoTextField.setCaretPosition(0);
 
 		mapProtoTextField.setEnabled(false);
 
-		titleTextField.setText(element.name());
+		titleTextField.setText(element.getName());
 		titleTextField.setCaretPosition(0);
 		if (element.internalScheme() != null)
-			nameTextField.setText(element.internalScheme().name());
-		nameTextField.setText(element.name());
+			nameTextField.setText(element.internalScheme().getName());
+		nameTextField.setText(element.getName());
 		nameTextField.setCaretPosition(0);
 
-		descriptionTextArea.setText(element.description());
+		descriptionTextArea.setText(element.getDescription());
 		ugoNameTextField.setText(element.label());
 		ugoNameTextField.setCaretPosition(0);
 
@@ -220,8 +221,8 @@ public class SchemeElementPropsPanel extends JPanel
 			manufacturerTextField.setText("");
 		//manufacturerTextField.setEnabled(false);
 
-		undoType = element.name();
-		undoDescription = element.description();
+		undoType = element.getName();
+		undoDescription = element.getDescription();
 		undoUgoName = element.label();
 		updateUI();
 	}
@@ -230,8 +231,8 @@ public class SchemeElementPropsPanel extends JPanel
 	{
 		if (element != null)
 		{
-			element.name(undoType);
-			element.description(undoDescription);
+			element.setName(undoType);
+			element.setDescription(undoDescription);
 			element.label(undoUgoName);
 		}
 	}

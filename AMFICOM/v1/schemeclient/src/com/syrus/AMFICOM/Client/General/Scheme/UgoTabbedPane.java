@@ -5,7 +5,8 @@ import javax.swing.*;
 
 import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Model.*;
-import com.syrus.AMFICOM.scheme.corba.*;
+import com.syrus.AMFICOM.scheme.*;
+import com.syrus.AMFICOM.scheme.Scheme;
 
 public class UgoTabbedPane extends JPanel implements OperationListener
 {
@@ -47,14 +48,14 @@ public class UgoTabbedPane extends JPanel implements OperationListener
 			if (p.getGraph().getScheme() != null)
 				res = JOptionPane.showConfirmDialog(
 						Environment.getActiveWindow(),
-						"Схема \"" + p.getGraph().getScheme().name() +
+						"Схема \"" + p.getGraph().getScheme().getName() +
 						"\" была изменена. Вы действительно хотите закрыть схему?",
 						"Подтверждение",
 						JOptionPane.YES_NO_OPTION);
 			else if (p.getGraph().getSchemeElement() != null)
 				res = JOptionPane.showConfirmDialog(
 						Environment.getActiveWindow(),
-						"Элемент \"" + p.getGraph().getSchemeElement().name() +
+						"Элемент \"" + p.getGraph().getSchemeElement().getName() +
 						"\" был изменен. Вы действительно хотите закрыть схему?",
 						"Подтверждение",
 						JOptionPane.YES_NO_OPTION);

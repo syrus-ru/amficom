@@ -1,5 +1,5 @@
 /*
- * $Id: CableLinkTypeLayout.java,v 1.3 2005/03/15 17:49:10 bass Exp $
+ * $Id: CableLinkTypeLayout.java,v 1.4 2005/03/16 13:05:33 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,8 +9,6 @@
 package com.syrus.AMFICOM.Client.Configure.UI;
 
 import java.util.*;
-import java.util.List;
-
 import java.awt.*;
 
 import com.jgraph.graph.GraphConstants;
@@ -25,7 +23,7 @@ import com.syrus.AMFICOM.scheme.SchemeUtils;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.3 $, $Date: 2005/03/15 17:49:10 $
+ * @version $Revision: 1.4 $, $Date: 2005/03/16 13:05:33 $
  * @module schemeclient_v1
  */
 
