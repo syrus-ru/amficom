@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementServer.java,v 1.2 2004/08/02 14:51:56 arseniy Exp $
+ * $Id: MeasurementServer.java,v 1.3 2004/08/03 17:22:13 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,15 +16,15 @@ import java.util.Hashtable;
 import java.util.Iterator;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.SleepButWorkThread;
+import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.configuration.Server;
 import com.syrus.util.Application;
 import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
-import com.syrus.util.corba.CORBAServer;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2004/08/02 14:51:56 $
+ * @version $Revision: 1.3 $, $Date: 2004/08/03 17:22:13 $
  * @author $Author: arseniy $
  * @module mserver_v1
  */
@@ -53,24 +53,24 @@ public class MeasurementServer extends SleepButWorkThread {
 	public static void main(String[] args) {
 		Application.init("mserver");
 
-		/*	Establish connection with database	*/
-		establishDatabaseConnection();
-
-		/*	Initialize object drivers
-		 * 	for work with database*/
-		DatabaseContextSetup.initDatabaseContext();
-
-		/*	Load object types*/
-		DatabaseContextSetup.loadObjectTypes();
-
-		/*	Retrieve information abot myself*/
-		try {
-			iAm = new Server(new Identifier(ApplicationProperties.getString("ID", ID)));
-		}
-		catch (Exception e) {
-			Log.errorException(e);
-			System.exit(-1);
-		}
+//		/*	Establish connection with database	*/
+//		establishDatabaseConnection();
+//
+//		/*	Initialize object drivers
+//		 * 	for work with database*/
+//		DatabaseContextSetup.initDatabaseContext();
+//
+//		/*	Load object types*/
+//		DatabaseContextSetup.loadObjectTypes();
+//
+//		/*	Retrieve information abot myself*/
+//		try {
+//			iAm = new Server(new Identifier(ApplicationProperties.getString("ID", ID)));
+//		}
+//		catch (Exception e) {
+//			Log.errorException(e);
+//			System.exit(-1);
+//		}
 
 		/*	Create CORBA server with servant(s)	*/
 		activateCORBAServer();
@@ -94,8 +94,20 @@ public class MeasurementServer extends SleepButWorkThread {
 	}
 
 	private static void activateCORBAServer() {
-		corbaServer = new CORBAServer();
-		corbaServer.activateServant(new MServerImplementation());
+		try {
+			corbaServer = new CORBAServer();
+			corbaServer.activateServant(new MServerImplementation(), "mserver_1"/*iAm.getId().toString()*/);
+			org.omg.CORBA.Object ref = corbaServer.resolveReference("mserver_1");
+			System.out.println("ref: " + ref.toString());
+		}
+		catch (CommunicationException ce) {
+			Log.errorException(ce);
+			System.exit(-1);
+		}
+		catch (Exception e) {
+			Log.errorMessage("ERROR");
+			Log.errorException(e);
+		}
 	}
 
 	public void run() {

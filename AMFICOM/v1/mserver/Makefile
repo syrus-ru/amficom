@@ -10,12 +10,18 @@ SERVICE_NAME=mongol
 
 APPCLASSPATH = $(LIBDIR)/util.jar:$(LIBDIR)/general.jar:$(LIBDIR)/configuration.jar:$(LIBDIR)/measurement.jar:$(LIBDIR)/servermisc.jar
 
-IDL2JAVAFLAGS = -strict -I$(INCIDLDIR)
-
 include ../tools/Makefile.inc
 $(call checkenve,JAVA_HOME)
 $(call checkenve,ORACLE_HOME)
 $(call checkenve,IDL2JAVA)
+
+IDL2JAVA=$(JAVA_HOME)/bin/idlj
+IDL2JAVAFLAGS = \
+	-fall \
+	-i $(IDLDIR) \
+	-i $(INCIDLDIR) \
+	-td $(SRCDIR) \
+	-v
 
 
 $(LIBNAME): .mach
@@ -26,6 +32,8 @@ $(LIBNAME): .mach
 	$(JAVAC) $(JAVACFLAGS) \
 		-classpath $(APPCLASSPATH):$(CLASSDIR) \
 		$(SRCDIR)/com/syrus/AMFICOM/mserver/DatabaseContextSetup.java \
+		$(SRCDIR)/com/syrus/AMFICOM/mserver/CORBAServer.java \
+		$(SRCDIR)/com/syrus/AMFICOM/mserver/MeasurementServer.java \
 		$(SRCDIR)/com/syrus/AMFICOM/mserver/MServerImplementation.java
 	touch $@
 

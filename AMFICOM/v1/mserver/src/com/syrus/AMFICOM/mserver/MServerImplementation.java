@@ -1,5 +1,5 @@
 /*
- * $Id: MServerImplementation.java,v 1.3 2004/07/28 17:03:50 arseniy Exp $
+ * $Id: MServerImplementation.java,v 1.4 2004/08/03 17:22:13 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,21 +17,22 @@ import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.general.corba.CompletionStatus;
 import com.syrus.AMFICOM.general.corba.ErrorCode;
 import com.syrus.AMFICOM.measurement.corba.Test_Transferable;
-import com.syrus.AMFICOM.mserver.corba._MServerImplBase;
+import com.syrus.AMFICOM.mserver.corba.MServerPOA;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2004/07/28 17:03:50 $
+ * @version $Revision: 1.4 $, $Date: 2004/08/03 17:22:13 $
  * @author $Author: arseniy $
  * @module mserver_v1
  */
 
-public class MServerImplementation extends _MServerImplBase {
+public class MServerImplementation extends MServerPOA {
+	static final long serialVersionUID = 5984823427343263335L;
 
 	public MServerImplementation() {
 		
 	}
-	
+
 	public Identifier_Transferable getGeneratedIdentifier(String entity) throws AMFICOMRemoteException {
 		try {
 			Identifier identifier = IdentifierGenerator.generateIdentifier(entity);
@@ -50,7 +51,7 @@ public class MServerImplementation extends _MServerImplBase {
 																			 "Cannot create major/minor entries of identifier for entity: '" + entity + "'");
 		}	
 	}
-	
+
 	public Identifier_Transferable[] getGeneratedIdentifierRange(String entity, int size) throws AMFICOMRemoteException {
 		try {
 			Identifier[] identifiers = IdentifierGenerator.generateIdentifierRange(entity, size);
@@ -79,7 +80,7 @@ public class MServerImplementation extends _MServerImplBase {
 			
 		}
 	}
-	
+
 	public void ping(int i) throws AMFICOMRemoteException {
 		System.out.println("i == " + i);
 	}

@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementControlModule.java,v 1.14 2004/07/30 12:28:15 arseniy Exp $
+ * $Id: MeasurementControlModule.java,v 1.15 2004/08/03 17:21:40 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,7 +33,7 @@ import com.syrus.util.corba.CORBAServer;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2004/07/30 12:28:15 $
+ * @version $Revision: 1.15 $, $Date: 2004/08/03 17:21:40 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -84,7 +84,7 @@ public class MeasurementControlModule extends SleepButWorkThread {
 		/*	Initialize object drivers
 		 * 	for work with database*/
 		DatabaseContextSetup.initDatabaseContext();
-		
+
 		/*	Load object types*/
 		DatabaseContextSetup.loadObjectTypes();
 
