@@ -43,7 +43,7 @@ public class Server_Database extends StorableObject_Database {
 														 resultSet.getString("hostname"),
 														 DatabaseDate.fromQuerySubString(resultSet, "created"),
 														 DatabaseDate.fromQuerySubString(resultSet, "modified"),
-														 resultSet.getInt(sessions));
+														 resultSet.getInt("sessions"));
 			else
 				throw new Exception("No such server: " + server_id_str);
 		}

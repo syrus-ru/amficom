@@ -10,6 +10,7 @@ import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObject_Database;
 import com.syrus.AMFICOM.general.StorableObject_DatabaseContext;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
+import com.syrus.AMFICOM.configuration.KIS;
 import com.syrus.AMFICOM.administration.corba.MCM_Transferable;
 
 public class MCM extends StorableObject {
@@ -51,7 +52,12 @@ public class MCM extends StorableObject {
 
 		this.kiss = new ArrayList(mt.kis_ids.length);
 		for (int i = 0; i < mt.kis_ids.length; i++)
-			this.kiss.add(new KIS(new Identifier(mt.kis_ids[i])));
+			try {
+				this.kiss.add(new KIS(new Identifier(mt.kis_ids[i])));
+			}
+			catch (RetrieveObjectException roe) {
+				throw new CreateObjectException(roe.getMessage(), roe);
+			}
 
 		this.mcmDatabase = StorableObject_DatabaseContext.mcmDatabase;
 		try {

@@ -10,7 +10,7 @@ DEVLIB=../devlib
 LIBNAME=administration.jar
 ARCHFILE=administration.tar.gz
 
-APPCLASSPATH=$(LIB)/util.jar:$(DEVLIB)/general.jar
+APPCLASSPATH=$(LIB)/util.jar:$(DEVLIB)/general.jar:$(DEVLIB)/configuration.jar
 ORACLECLASSPATH=$(JDEV_HOME)/jdbc/lib/classes12.jar
 
 DBHOSTNAME=mongol
