@@ -44,6 +44,7 @@ import java.awt.Toolkit;
 import java.awt.event.MouseEvent;
 
 import java.util.Enumeration;
+import java.util.List;
 import java.util.Vector;
 
 import javax.swing.BorderFactory;
@@ -873,8 +874,8 @@ public class ResultFrame extends JInternalFrame implements OperationListener
 				TreeDataSelectionEvent ev = (TreeDataSelectionEvent)ae;
 				if (ev.getSelectionNumber() != -1)
 				{
-					DataSet data = ev.getDataSet();
-					ObjectResource resource = data.get(ev.getSelectionNumber());
+					List data = ev.getDataSet();
+					ObjectResource resource = (ObjectResource )data.get(ev.getSelectionNumber());
 
 					Pool.put("activecontext", "selected_id", resource.getId());
 

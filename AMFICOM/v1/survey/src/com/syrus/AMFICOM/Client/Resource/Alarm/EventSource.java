@@ -3,10 +3,11 @@ package com.syrus.AMFICOM.Client.Resource.Alarm;
 import com.syrus.AMFICOM.CORBA.Alarm.EventSource_Transferable;
 import com.syrus.AMFICOM.Client.Resource.ObjectResource;
 
+import com.syrus.AMFICOM.Client.Resource.StubResource;
 import java.io.IOException;
 import java.io.Serializable;
 
-public class EventSource extends ObjectResource implements Serializable
+public class EventSource extends StubResource implements Serializable
 {
 	private static final long serialVersionUID = 01L;
 	EventSource_Transferable transferable;

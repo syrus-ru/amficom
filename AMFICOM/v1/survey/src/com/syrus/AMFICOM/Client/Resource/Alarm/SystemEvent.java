@@ -4,11 +4,12 @@ import com.syrus.AMFICOM.CORBA.Alarm.Event_Transferable;
 import com.syrus.AMFICOM.CORBA.General.EventStatus;
 import com.syrus.AMFICOM.Client.Resource.ObjectResource;
 import com.syrus.AMFICOM.Client.Resource.Pool;
+import com.syrus.AMFICOM.Client.Resource.StubResource;
 
 import java.io.IOException;
 import java.io.Serializable;
 
-public class SystemEvent extends ObjectResource implements Serializable
+public class SystemEvent extends StubResource implements Serializable
 {
 	private static final long serialVersionUID = 01L;
 	Event_Transferable transferable;

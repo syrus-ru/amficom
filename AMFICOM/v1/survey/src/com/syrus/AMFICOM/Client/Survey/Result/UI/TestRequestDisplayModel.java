@@ -1,5 +1,7 @@
 package com.syrus.AMFICOM.Client.Survey.Result.UI;
 
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Vector;
 import com.syrus.AMFICOM.Client.General.UI.*;
 
@@ -10,16 +12,18 @@ public class TestRequestDisplayModel extends StubDisplayModel
 		super();
 	}
 	
-	public Vector getColumns()
+	List cols = new LinkedList();
 	{
-		Vector cols = new Vector();
-
 		cols.add("id");
 		cols.add("time");
 		cols.add("tests");
 		cols.add("start_time");
 		cols.add("end_time");
 		cols.add("status");
+	}
+	
+	public List getColumns()
+	{
 		return cols;
 	}
 

@@ -14,12 +14,13 @@ import com.syrus.AMFICOM.Client.Resource.Result.Evaluation;
 import com.syrus.AMFICOM.Client.Resource.Result.Result;
 import com.syrus.AMFICOM.Client.Resource.Result.Test;
 import com.syrus.AMFICOM.Client.Survey.General.ConstStorage;
+import com.syrus.AMFICOM.Client.Resource.StubResource;
 
 import java.io.*;
 
 import java.util.*;
 
-public class Alarm extends ObjectResource implements Serializable
+public class Alarm extends StubResource implements Serializable
 {
 	private static final long serialVersionUID = 01L;
 

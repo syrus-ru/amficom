@@ -11,7 +11,6 @@ public class SurveyRun
 {
 	public static void main(String[] args)
 	{
-		Environment.initialize();
 		try
 		{
 			UIManager.setLookAndFeel(Environment.getLookAndFeel());

@@ -1,6 +1,7 @@
 package com.syrus.AMFICOM.Client.Survey.Alarm;
 
 import com.syrus.AMFICOM.Client.Survey.SurveyMDIMain;
+import java.util.List;
 import java.util.*;
 import java.awt.*;
 import javax.swing.*;
@@ -291,7 +292,7 @@ public class AlarmFrame extends JInternalFrame
 
 	void alarmTableInit()
 	{
-		alarmPane.initialize(new AlarmDisplayModel(), new DataSet());
+		alarmPane.initialize(new AlarmDisplayModel(), new LinkedList());
 		alarmPane.setSorter(Alarm.getSorter());
 	}
 
@@ -316,7 +317,7 @@ public class AlarmFrame extends JInternalFrame
 		for	(int i = 0; i < deleted_alarms.size(); i++)
 			ht.remove(deleted_alarms.get(i));
 
-		DataSet ds = new DataSet(ht);
+		List ds = new DataSet(ht);
 		alarmPane.setContents(filter.filter(ds));
 		alarmPane.resortContents();
 

@@ -4,6 +4,7 @@ import java.text.*;
 import java.awt.*;
 import java.util.*;
 
+import java.util.List;
 import javax.swing.*;
 
 import com.syrus.AMFICOM.Client.General.UI.*;
@@ -254,7 +255,7 @@ public class ArchiveTreeModel extends ObjectResourceTreeModel
 			{
 				if (Pool.getHash(MonitoredElement.typ) != null)
 				{
-					DataSet dSet = new DataSet(Pool.getHash(MonitoredElement.typ));
+					List dSet = new DataSet(Pool.getHash(MonitoredElement.typ));
 
 					ObjectResourceFilter filter = new ObjectResourceDomainFilter(dsi.getSession().getDomainId());
 					dSet = filter.filter(dSet);
@@ -262,10 +263,9 @@ public class ArchiveTreeModel extends ObjectResourceTreeModel
 					sorter.setDataSet(dSet);
 					dSet = sorter.default_sort();
 
-					Enumeration enum = dSet.elements();
-					for(; enum.hasMoreElements();)
+					for(Iterator it = dSet.iterator(); it.hasNext();)
 					{
-						MonitoredElement me = (MonitoredElement )enum.nextElement();
+						MonitoredElement me = (MonitoredElement )it.next();
 						ObjectResourceTreeNode n = new ObjectResourceTreeNode(
 								me, 
 								me.getName(), 
@@ -287,7 +287,7 @@ public class ArchiveTreeModel extends ObjectResourceTreeModel
 
 				if (Pool.getHash(ResultSet.typ) != null)
 				{
-					DataSet dSet = new DataSet(Pool.getHash(ResultSet.typ));
+					List dSet = new DataSet(Pool.getHash(ResultSet.typ));
 //					Enumeration enum = Pool.getHash(ResultSet.typ).elements();
 
 					ObjectResourceFilter filter = new ObjectResourceDomainFilter(dsi.getSession().getDomainId());
@@ -296,10 +296,9 @@ public class ArchiveTreeModel extends ObjectResourceTreeModel
 					sorter.setDataSet(dSet);
 					dSet = sorter.default_sort();
 
-					Enumeration enum = dSet.elements();
-					for(; enum.hasMoreElements();)
+					for(Iterator it = dSet.iterator(); it.hasNext();)
 					{
-						ResultSet rs = (ResultSet )enum.nextElement();
+						ResultSet rs = (ResultSet )it.next();
 						if(rs.getDomainId().equals(me.domain_id))
 						{
 							ObjectResourceTreeNode n = new ObjectResourceTreeNode(rs, rs.getName(), true);
@@ -316,7 +315,7 @@ public class ArchiveTreeModel extends ObjectResourceTreeModel
 
 				String[] ids = (String[] )node.getParameter();
 
-				DataSet dSet = new DataSet();
+				List dSet = new DataSet();
 
 				for(int i = 0; i <ids.length; i++)
 				{
@@ -329,10 +328,9 @@ public class ArchiveTreeModel extends ObjectResourceTreeModel
 				sorter.setDataSet(dSet);
 				dSet = sorter.default_sort();
 
-				Enumeration enum = dSet.elements();
-				for(; enum.hasMoreElements();)
+				for(Iterator it = dSet.iterator(); it.hasNext();)
 				{
-					TestSetup ts = (TestSetup )enum.nextElement();
+					TestSetup ts = (TestSetup )it.next();
 					ObjectResourceTreeNode n = new ObjectResourceTreeNode(
 							ts, 
 							ts.getName(), 
@@ -353,17 +351,16 @@ public class ArchiveTreeModel extends ObjectResourceTreeModel
 
 				if (Pool.getHash(Test.typ) != null)
 				{
-					DataSet dSet = new DataSet(Pool.getHash(Test.typ));
+					List dSet = new DataSet(Pool.getHash(Test.typ));
 //					Enumeration enum = Pool.getHash(Test.typ).elements();
 
 					ObjectResourceSorter sorter = Test.getDefaultSorter();
 					sorter.setDataSet(dSet);
 					dSet = sorter.default_sort();
 
-					Enumeration enum = dSet.elements();
-					for(; enum.hasMoreElements();)
+					for(Iterator it = dSet.iterator(); it.hasNext();)
 					{
-						Test test = (Test )enum.nextElement();
+						Test test = (Test )it.next();
 						if(		test.getMonitoredElementId().equals(me.getId()) && 
 								test.getTestSetupId().equals(tsetup.getId()))
 						{
@@ -385,17 +382,16 @@ public class ArchiveTreeModel extends ObjectResourceTreeModel
 
 				if (Pool.getHash(Analysis.typ) != null)
 				{
-					DataSet dSet = new DataSet(Pool.getHash(Analysis.typ));
+					List dSet = new DataSet(Pool.getHash(Analysis.typ));
 //					Enumeration enum = Pool.getHash(Analysis.typ).elements();
 
 					ObjectResourceSorter sorter = Analysis.getDefaultSorter();
 					sorter.setDataSet(dSet);
 					dSet = sorter.default_sort();
 
-					Enumeration enum = dSet.elements();
-					for(; enum.hasMoreElements();)
+					for(Iterator it = dSet.iterator(); it.hasNext();)
 					{
-						Analysis anal = (Analysis )enum.nextElement();
+						Analysis anal = (Analysis )it.next();
 						if(anal.monitored_element_id.equals(me.getId()) && !anal.user_id.equals(""))
 						{
 							ObjectResourceTreeNode n = new ObjectResourceTreeNode(anal, anal.getName(), true, true);
@@ -427,17 +423,16 @@ public class ArchiveTreeModel extends ObjectResourceTreeModel
 
 				if (Pool.getHash(Modeling.typ) != null)
 				{
-					DataSet dSet = new DataSet(Pool.getHash(Modeling.typ));
+					List dSet = new DataSet(Pool.getHash(Modeling.typ));
 //					Enumeration enum = Pool.getHash(Modeling.typ).elements();
 
 					ObjectResourceSorter sorter = Modeling.getDefaultSorter();
 					sorter.setDataSet(dSet);
 					dSet = sorter.default_sort();
 
-					Enumeration enum = dSet.elements();
-					for(; enum.hasMoreElements();)
+					for(Iterator it = dSet.iterator(); it.hasNext();)
 					{
-						Modeling mod = (Modeling )enum.nextElement();
+						Modeling mod = (Modeling )it.next();
 						if(schvec.contains(mod.scheme_path_id))
 						{
 							ImageIcon ii = null;
@@ -545,7 +540,7 @@ public class ArchiveTreeModel extends ObjectResourceTreeModel
 
 					String[] r_ids = (String[] )parent1.getParameter();
 
-					DataSet dSet = new DataSet();
+					List dSet = new DataSet();
 
 					for(int i = 0; i < r_ids.length; i++)
 					{
@@ -566,10 +561,9 @@ public class ArchiveTreeModel extends ObjectResourceTreeModel
 					sorter.setDataSet(dSet);
 					dSet = sorter.default_sort();
 
-					Enumeration enum = dSet.elements();
-					for(; enum.hasMoreElements();)
+					for(Iterator it = dSet.iterator(); it.hasNext();)
 					{
-						Alarm alarm = (Alarm )enum.nextElement();
+						Alarm alarm = (Alarm )it.next();
 						ObjectResourceTreeNode n = new ObjectResourceTreeNode(
 								alarm, 
 								alarm.getName(), 
@@ -600,7 +594,7 @@ public class ArchiveTreeModel extends ObjectResourceTreeModel
 
 				String[] r_ids = (String[] )rsetnode.getParameter();
 
-				DataSet dSet = new DataSet();
+				List dSet = new DataSet();
 
 				for(int i = 0; i < r_ids.length; i++)
 				{
@@ -620,10 +614,9 @@ public class ArchiveTreeModel extends ObjectResourceTreeModel
 				sorter.setDataSet(dSet);
 				dSet = sorter.default_sort();
 
-				Enumeration enum = dSet.elements();
-				for(; enum.hasMoreElements();)
+				for(Iterator it = dSet.iterator(); it.hasNext();)
 				{
-					Result res = (Result )enum.nextElement();
+					Result res = (Result )it.next();
 					Alarm a = Alarm.getAlarmByTestResult(res.getId());
 					ImageIcon ii;
 					if(a == null)
@@ -644,7 +637,7 @@ public class ArchiveTreeModel extends ObjectResourceTreeModel
 			{
 				Test ts = (Test )node.getObject();
 
-				DataSet dSet = new DataSet();
+				List dSet = new DataSet();
 
 				for(int i = 0; i < ts.getResultIds().length; i++)
 				{
@@ -657,10 +650,9 @@ public class ArchiveTreeModel extends ObjectResourceTreeModel
 				sorter.setDataSet(dSet);
 				dSet = sorter.default_sort();
 
-				Enumeration enum = dSet.elements();
-				for(; enum.hasMoreElements();)
+				for(Iterator it = dSet.iterator(); it.hasNext();)
 				{
-					Result res = (Result )enum.nextElement();
+					Result res = (Result )it.next();
 					Alarm a = Alarm.getAlarmByTestResult(res.getId());
 					ImageIcon ii;
 					if(a == null)

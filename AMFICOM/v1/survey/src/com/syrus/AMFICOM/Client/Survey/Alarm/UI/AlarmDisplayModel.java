@@ -10,6 +10,7 @@ import com.syrus.AMFICOM.CORBA.Alarm.*;
 import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.Resource.Alarm.*;
 import com.syrus.AMFICOM.Client.General.UI.*;
+import java.util.List;
 
 public class AlarmDisplayModel extends StubDisplayModel
 {
@@ -18,16 +19,18 @@ public class AlarmDisplayModel extends StubDisplayModel
 		super();
 	}
 
-	public Vector getColumns()
+	List cols = new LinkedList();
 	{
-		Vector cols = new Vector();
-
 //		cols.add("id");
 		cols.add("source_name");
 		cols.add("generated");
 		cols.add("alarm_type_name");
 		cols.add("status");
 		cols.add("monitored_element_id");
+	}
+	
+	public List getColumns()
+	{
 		return cols;
 	}
 

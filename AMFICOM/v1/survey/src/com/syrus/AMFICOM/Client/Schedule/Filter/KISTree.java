@@ -44,11 +44,11 @@ public class KISTree extends FilterTree
 				FilterTreeNode tt_ = new FilterTreeNode(LangModelSchedule.getString("TestTypes"), "testtypes");
 				portnode.add(vol_);
 				portnode.add(tt_);
-				DataSet daSet = new DataSet(Pool.getHash(MonitoredElement.typ));
+				List daSet = new DataSet(Pool.getHash(MonitoredElement.typ));
 				daSet = filter.filter(daSet);
-				for(Enumeration enum = daSet.elements(); enum.hasMoreElements();)
+				for(Iterator it2 = daSet.iterator(); it2.hasNext();)
 				{
-					MonitoredElement me = (MonitoredElement )enum.nextElement();
+					MonitoredElement me = (MonitoredElement )it2.next();
 					if(me.access_port_id.equals(ap.getId()))
 					{
 						FilterTreeNode pathnode = new FilterTreeNode(me.getName(), me.getId());

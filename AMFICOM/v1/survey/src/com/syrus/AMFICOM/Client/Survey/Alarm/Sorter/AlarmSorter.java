@@ -22,7 +22,7 @@ public class AlarmSorter extends ObjectResourceSorter
 		super();
 	}
 
-	public AlarmSorter(DataSet dataSet)
+	public AlarmSorter(List dataSet)
 	{
 		super(dataSet);
 	}

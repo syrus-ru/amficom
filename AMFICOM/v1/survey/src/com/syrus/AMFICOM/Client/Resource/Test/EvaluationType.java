@@ -8,7 +8,7 @@ import com.syrus.AMFICOM.Client.Resource.Result.*;
 import com.syrus.AMFICOM.Client.Survey.General.ConstStorage;
 import com.syrus.AMFICOM.CORBA.Survey.*;
 
-public class EvaluationType extends ObjectResource implements Serializable {
+public class EvaluationType extends StubResource implements Serializable {
 
 	private static final long			serialVersionUID	= 01L;
 	public static final String			typ					= "evaluationtype";

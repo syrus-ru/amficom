@@ -24,7 +24,7 @@ public class TestSorter extends ObjectResourceSorter
 		super();
 	}
 
-	public TestSorter(DataSet dataSet)
+	public TestSorter(List dataSet)
 	{
 		super(dataSet);
 	}

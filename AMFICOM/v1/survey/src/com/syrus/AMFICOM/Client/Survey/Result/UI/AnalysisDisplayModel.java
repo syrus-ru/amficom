@@ -7,6 +7,7 @@ import java.util.*;
 import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.Resource.Result.*;
+import java.util.List;
 
 public class AnalysisDisplayModel extends StubDisplayModel
 {
@@ -73,14 +74,17 @@ public class AnalysisDisplayModel extends StubDisplayModel
 		return false;
 	}
 
-	public Vector getColumns()
+	List cols = new LinkedList();
 	{
-		Vector cols = new Vector();
 		cols.add("id");
 		cols.add("name");
 		cols.add("created");
 		cols.add("user_id");
 		cols.add("description");
+	}
+	
+	public List getColumns()
+	{
 		return cols;
 	}
 
