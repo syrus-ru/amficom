@@ -46,3 +46,5 @@ kisserver	AMFICOM/v1/kisserver
 akp		hw/akp
 trc		hw/trc
 t4		hw/t4
+
+util		util
