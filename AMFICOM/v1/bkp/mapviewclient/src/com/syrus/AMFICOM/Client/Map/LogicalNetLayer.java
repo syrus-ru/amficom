@@ -1,5 +1,5 @@
 /**
- * $Id: LogicalNetLayer.java,v 1.55 2005/03/30 10:28:23 bass Exp $
+ * $Id: LogicalNetLayer.java,v 1.56 2005/04/05 13:40:56 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -20,6 +20,7 @@ import java.awt.Point;
 import java.awt.Stroke;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Rectangle2D;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -76,8 +77,8 @@ import com.syrus.AMFICOM.scheme.*;
  * 
  * 
  * 
- * @author $Author: bass $
- * @version $Revision: 1.55 $, $Date: 2005/03/30 10:28:23 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.56 $, $Date: 2005/04/05 13:40:56 $
  * @module mapviewclient_v2
  */
 public abstract class LogicalNetLayer implements MapCoordinatesConverter
@@ -1559,15 +1560,17 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 	{
 		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "deselectAll()");
 
-		Iterator e = this.mapView.getAllElements().iterator();
-		while ( e.hasNext())
+		Collection selectedElements = new LinkedList();
+		selectedElements.addAll(this.mapView.getMap().getSelectedElements());
+		Iterator it = selectedElements.iterator();
+		while ( it.hasNext())
 		{
-			MapElement mapElement = (MapElement)e.next();
+			MapElement mapElement = (MapElement )it.next();
 			mapElement.setSelected(false);
 			
 			sendMapEvent(new MapNavigateEvent(mapElement, MapNavigateEvent.MAP_ELEMENT_DESELECTED_EVENT));			
 		}
-		getMapView().getMap().clearSelection();
+		this.mapView.getMap().clearSelection();
 	}
 
 	/**
@@ -1592,7 +1595,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 	 */	
 	public Set getSelectedElements()
 	{
-		return getMapView().getMap().getSelectedElements();
+		return this.mapView.getMap().getSelectedElements();
 	}
 
 	/**
