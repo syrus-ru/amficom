@@ -1,5 +1,5 @@
 /*
- * $Id: CMServerMeasurementObjectLoader.java,v 1.11 2004/12/24 11:46:59 bob Exp $
+ * $Id: CMServerMeasurementObjectLoader.java,v 1.12 2004/12/24 12:25:41 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -36,7 +36,6 @@ import com.syrus.AMFICOM.general.corba.LinkedIdsCondition_Transferable;
 import com.syrus.AMFICOM.measurement.Analysis;
 import com.syrus.AMFICOM.measurement.AnalysisDatabase;
 import com.syrus.AMFICOM.measurement.DatabaseMeasurementObjectLoader;
-import com.syrus.AMFICOM.measurement.DomainCondition;
 import com.syrus.AMFICOM.measurement.Evaluation;
 import com.syrus.AMFICOM.measurement.EvaluationDatabase;
 import com.syrus.AMFICOM.measurement.Measurement;
@@ -49,7 +48,7 @@ import com.syrus.AMFICOM.measurement.corba.Evaluation_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Measurement_Transferable;
 import com.syrus.util.Log;
 /**
- * @version $Revision: 1.11 $, $Date: 2004/12/24 11:46:59 $
+ * @version $Revision: 1.12 $, $Date: 2004/12/24 12:25:41 $
  * @author $Author: bob $
  * @module module_name
  */
