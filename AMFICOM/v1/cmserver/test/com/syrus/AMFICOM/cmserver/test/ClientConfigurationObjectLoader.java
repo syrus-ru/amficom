@@ -1,5 +1,5 @@
 /*
- * $Id: ClientConfigurationObjectLoader.java,v 1.7 2004/10/08 14:53:45 max Exp $
+ * $Id: ClientConfigurationObjectLoader.java,v 1.8 2004/10/11 07:44:08 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -54,15 +54,17 @@ import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
+import com.syrus.AMFICOM.general.corba.ErrorCode;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.DomainCondition;
 import com.syrus.AMFICOM.measurement.LinkedIdsCondition;
+import com.syrus.AMFICOM.measurement.corba.Evaluation_Transferable;
 import com.syrus.AMFICOM.measurement.corba.LinkedIdsCondition_Transferable;
 import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.7 $, $Date: 2004/10/08 14:53:45 $
+ * @version $Revision: 1.8 $, $Date: 2004/10/11 07:44:08 $
  * @author $Author: max $
  * @module cmserver_v1
  */
@@ -663,23 +665,73 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
 	}
     
     public void saveCharacteristicType(CharacteristicType characteristicType, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException{
-//    TODO auto generated stub
+        CharacteristicType_Transferable transferables = (CharacteristicType_Transferable)characteristicType.getTransferable();         
+        try {
+            this.server.receiveCharacteristicType(transferables, force, accessIdentifierTransferable);         
+        } catch (AMFICOMRemoteException e) {
+            String msg = "ClientConfigurationObjectLoader.saveCharacteristicType ";
+            
+            if (e.error_code.equals(ErrorCode.ERROR_VERSION_COLLISION))
+               throw new VersionCollisionException(msg, e);
+            
+            throw new CommunicationException(msg, e);       
+        }
      }
 
      public void saveEquipmentType(EquipmentType equipmentType, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException{
-//    TODO auto generated stub
+         EquipmentType_Transferable transferables = (EquipmentType_Transferable) equipmentType.getTransferable();         
+         try {
+             this.server.receiveEquipmentType(transferables, force, accessIdentifierTransferable);         
+         } catch (AMFICOMRemoteException e) {
+             String msg = "ClientConfigurationObjectLoader.saveEquipmentType ";
+             
+             if (e.error_code.equals(ErrorCode.ERROR_VERSION_COLLISION))
+                throw new VersionCollisionException(msg, e);
+             
+             throw new CommunicationException(msg, e);       
+         }
      }
 
      public void savePortType(PortType portType, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException{
-//    TODO auto generated stub
+         PortType_Transferable transferables = (PortType_Transferable) portType.getTransferable();         
+         try {
+             this.server.receivePortType(transferables, force, accessIdentifierTransferable);         
+         } catch (AMFICOMRemoteException e) {
+             String msg = "ClientConfigurationObjectLoader.savePortType ";
+             
+             if (e.error_code.equals(ErrorCode.ERROR_VERSION_COLLISION))
+                throw new VersionCollisionException(msg, e);
+             
+             throw new CommunicationException(msg, e);       
+         }
      }
 
      public void saveMeasurementPortType(MeasurementPortType measurementPortType, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException{
-//    TODO auto generated stub
+         MeasurementPortType_Transferable transferables = (MeasurementPortType_Transferable) measurementPortType.getTransferable();         
+         try {
+             this.server.receiveMeasurementPortType(transferables, force, accessIdentifierTransferable);         
+         } catch (AMFICOMRemoteException e) {
+             String msg = "ClientConfigurationObjectLoader.saveMeasurementPortType ";
+             
+             if (e.error_code.equals(ErrorCode.ERROR_VERSION_COLLISION))
+                throw new VersionCollisionException(msg, e);
+             
+             throw new CommunicationException(msg, e);       
+         }
      }
 
      public void saveCharacteristic(Characteristic characteristic, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException{
-//    TODO auto generated stub
+         Characteristic_Transferable transferables = (Characteristic_Transferable) characteristic.getTransferable();         
+         try {
+             this.server.receiveCharacteristic(transferables, force, accessIdentifierTransferable);         
+         } catch (AMFICOMRemoteException e) {
+             String msg = "ClientConfigurationObjectLoader.saveCharacteristic ";
+             
+             if (e.error_code.equals(ErrorCode.ERROR_VERSION_COLLISION))
+                throw new VersionCollisionException(msg, e);
+             
+             throw new CommunicationException(msg, e);       
+         }
      }
 
 //     public void savePermissionAttributes(PermissionAttributes permissionAttributes, Boolean force) throws VersionCollisionException, DatabaseException, CommunicationException{
@@ -687,43 +739,143 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
 //    }
 
      public void saveUser(User user, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException{
-//    TODO auto generated stub
+         User_Transferable transferables = (User_Transferable) user.getTransferable();         
+         try {
+             this.server.receiveUser(transferables, force, accessIdentifierTransferable);         
+         } catch (AMFICOMRemoteException e) {
+             String msg = "ClientConfigurationObjectLoader.saveUser ";
+             
+             if (e.error_code.equals(ErrorCode.ERROR_VERSION_COLLISION))
+                throw new VersionCollisionException(msg, e);
+             
+             throw new CommunicationException(msg, e);       
+         }
      }
 
      public void saveDomain(Domain domain, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException{
-//    TODO auto generated stub
+         Domain_Transferable transferables = (Domain_Transferable) domain.getTransferable();         
+         try {
+             this.server.receiveDomain(transferables, force, accessIdentifierTransferable);         
+         } catch (AMFICOMRemoteException e) {
+             String msg = "ClientConfigurationObjectLoader.saveDomain ";
+             
+             if (e.error_code.equals(ErrorCode.ERROR_VERSION_COLLISION))
+                throw new VersionCollisionException(msg, e);
+             
+             throw new CommunicationException(msg, e);       
+         }
      }
 
      public void saveServer(Server server, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException{
-//    TODO auto generated stub
+         Server_Transferable transferables = (Server_Transferable) server.getTransferable();         
+         try {
+             this.server.receiveServer(transferables, force, accessIdentifierTransferable);         
+         } catch (AMFICOMRemoteException e) {
+             String msg = "ClientConfigurationObjectLoader.saveDomain ";
+             
+             if (e.error_code.equals(ErrorCode.ERROR_VERSION_COLLISION))
+                throw new VersionCollisionException(msg, e);
+             
+             throw new CommunicationException(msg, e);       
+         }
      }
 
-     public void saveMCM(MCM mCM, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException{
-//    TODO auto generated stub
+     public void saveMCM(MCM mcm, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException{
+         MCM_Transferable transferables = (MCM_Transferable) mcm.getTransferable();         
+         try {
+             this.server.receiveMCM(transferables, force, accessIdentifierTransferable);         
+         } catch (AMFICOMRemoteException e) {
+             String msg = "ClientConfigurationObjectLoader.saveMCM ";
+             
+             if (e.error_code.equals(ErrorCode.ERROR_VERSION_COLLISION))
+                throw new VersionCollisionException(msg, e);
+             
+             throw new CommunicationException(msg, e);       
+         }
      }
 
      public void saveEquipment(Equipment equipment, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException{
-//    TODO auto generated stub
+         Equipment_Transferable transferables = (Equipment_Transferable) equipment.getTransferable();         
+         try {
+             this.server.receiveEquipment(transferables, force, accessIdentifierTransferable);         
+         } catch (AMFICOMRemoteException e) {
+             String msg = "ClientConfigurationObjectLoader.saveEquipment ";
+             
+             if (e.error_code.equals(ErrorCode.ERROR_VERSION_COLLISION))
+                throw new VersionCollisionException(msg, e);
+             
+             throw new CommunicationException(msg, e);       
+         }
      }
 
      public void savePort(Port port, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException{
-//    TODO auto generated stub
+         Port_Transferable transferables = (Port_Transferable) port.getTransferable();         
+         try {
+             this.server.receivePort(transferables, force, accessIdentifierTransferable);         
+         } catch (AMFICOMRemoteException e) {
+             String msg = "ClientConfigurationObjectLoader.saveEquipment ";
+             
+             if (e.error_code.equals(ErrorCode.ERROR_VERSION_COLLISION))
+                throw new VersionCollisionException(msg, e);
+             
+             throw new CommunicationException(msg, e);       
+         }
      }
 
      public void saveTransmissionPath(TransmissionPath transmissionPath, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException{
-//    TODO auto generated stub
+         TransmissionPath_Transferable transferables = (TransmissionPath_Transferable) transmissionPath.getTransferable();         
+         try {
+             this.server.receiveTransmissionPath(transferables, force, accessIdentifierTransferable);         
+         } catch (AMFICOMRemoteException e) {
+             String msg = "ClientConfigurationObjectLoader.save_Transferable ";
+             
+             if (e.error_code.equals(ErrorCode.ERROR_VERSION_COLLISION))
+                throw new VersionCollisionException(msg, e);
+             
+             throw new CommunicationException(msg, e);       
+         }
      }
 
-     public void saveKIS(KIS kIS, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException{
-//    TODO auto generated stub
+     public void saveKIS(KIS kis, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException{
+         KIS_Transferable transferables = (KIS_Transferable) kis.getTransferable();         
+         try {
+             this.server.receiveKIS(transferables, force, accessIdentifierTransferable);         
+         } catch (AMFICOMRemoteException e) {
+             String msg = "ClientConfigurationObjectLoader.save_Transferable ";
+             
+             if (e.error_code.equals(ErrorCode.ERROR_VERSION_COLLISION))
+                throw new VersionCollisionException(msg, e);
+             
+             throw new CommunicationException(msg, e);       
+         }
      }
 
      public void saveMeasurementPort(MeasurementPort measurementPort, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException{
-//    TODO auto generated stub
+         MeasurementPort_Transferable transferables = (MeasurementPort_Transferable) measurementPort.getTransferable();         
+         try {
+             this.server.receiveMeasurementPort(transferables, force, accessIdentifierTransferable);         
+         } catch (AMFICOMRemoteException e) {
+             String msg = "ClientConfigurationObjectLoader.save_Transferable ";
+             
+             if (e.error_code.equals(ErrorCode.ERROR_VERSION_COLLISION))
+                throw new VersionCollisionException(msg, e);
+             
+             throw new CommunicationException(msg, e);       
+         }
      }
 
      public void saveMonitoredElement(MonitoredElement monitoredElement, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException{
-//    TODO auto generated stub
+         MonitoredElement_Transferable transferables = (MonitoredElement_Transferable) monitoredElement.getTransferable();         
+         try {
+             this.server.receiveMonitoredElement(transferables, force, accessIdentifierTransferable);         
+         } catch (AMFICOMRemoteException e) {
+             String msg = "ClientConfigurationObjectLoader.save_Transferable ";
+             
+             if (e.error_code.equals(ErrorCode.ERROR_VERSION_COLLISION))
+                throw new VersionCollisionException(msg, e);
+             
+             throw new CommunicationException(msg, e);       
+         }
      }
 
      public void saveCharacteristicTypes(List list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException{
