@@ -1,17 +1,15 @@
+
 package com.syrus.AMFICOM.Client.Schedule;
 
 import java.awt.*;
 import java.awt.event.*;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.*;
 
 import javax.swing.*;
 
 import com.syrus.AMFICOM.Client.General.*;
 import com.syrus.AMFICOM.Client.General.Command.*;
+import com.syrus.AMFICOM.Client.General.Command.Schedule.CreateScheduleReportCommand;
 import com.syrus.AMFICOM.Client.General.Command.Session.*;
 import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Lang.LangModel;
@@ -27,37 +25,36 @@ import com.syrus.AMFICOM.Client.Resource.Result.TestArgumentSet;
 import com.syrus.AMFICOM.Client.Resource.Result.TestRequest;
 import com.syrus.AMFICOM.Client.Schedule.UI.*;
 import com.syrus.AMFICOM.Client.Survey.General.ConstStorage;
-import com.syrus.util.Log;
 
 public class ScheduleMainFrame extends JFrame implements OperationListener {
 
-	public static final String	CONTEXT_CHANGE		= "contextchange";
+	public static final String	CONTEXT_CHANGE	= "contextchange";
 
-//	public static final String	SCHEDULER_INI_FILE	= "schedule.ini";
+	//	public static final String SCHEDULER_INI_FILE = "schedule.ini";
 
-	ApplicationContext			aContext;
-	JDesktopPane				desktopPane			= new JDesktopPane();
+	ApplicationContext		aContext;
+	JDesktopPane			desktopPane	= new JDesktopPane();
 
-	Dispatcher					dispatcher;
+	Dispatcher			dispatcher;
 
-	JPanel						mainPanel			= new JPanel();
-	ScheduleMainMenuBar			menuBar				= new ScheduleMainMenuBar();
-	TestParametersFrame			paramsFrame;
+	JPanel				mainPanel	= new JPanel();
+	ScheduleMainMenuBar		menuBar		= new ScheduleMainMenuBar();
+	TestParametersFrame		paramsFrame;
 
-	PlanFrame					planFrame;
-	TestRequestFrame			propsFrame;
-	SaveParametersFrame			saveFrame;
-	JScrollPane					scrollPane			= new JScrollPane();
+	PlanFrame			planFrame;
+	TestRequestFrame		propsFrame;
+	SaveParametersFrame		saveFrame;
+	JScrollPane			scrollPane	= new JScrollPane();
 
-	StatusBarModel				statusBar			= new StatusBarModel(0);
+	StatusBarModel			statusBar	= new StatusBarModel(0);
 
-	JPanel						statusBarPanel		= new JPanel();
-	TableFrame					tableFrame;
-	TimeParametersFrame			timeFrame;
+	JPanel				statusBarPanel	= new JPanel();
+	TableFrame			tableFrame;
+	TimeParametersFrame		timeFrame;
 
-	ScheduleMainToolBar			toolBar				= new ScheduleMainToolBar();
-	ElementsTreeFrame			treeFrame;
-	JViewport					viewport			= new JViewport();
+	ScheduleMainToolBar		toolBar		= new ScheduleMainToolBar();
+	ElementsTreeFrame		treeFrame;
+	JViewport			viewport	= new JViewport();
 
 	public ScheduleMainFrame() {
 		this(new ApplicationContext());
@@ -72,7 +69,8 @@ public class ScheduleMainFrame extends JFrame implements OperationListener {
 
 			public void componentShown(ComponentEvent e) {
 				super.componentShown(e);
-				ScheduleMainFrame.this.desktopPane.setPreferredSize(ScheduleMainFrame.this.desktopPane.getSize());
+				ScheduleMainFrame.this.desktopPane.setPreferredSize(ScheduleMainFrame.this.desktopPane
+						.getSize());
 				new ScheduleWindowArranger(ScheduleMainFrame.this).arrange();
 			}
 		});
@@ -81,8 +79,8 @@ public class ScheduleMainFrame extends JFrame implements OperationListener {
 			public void windowClosing(WindowEvent e) {
 				ScheduleMainFrame.this.dispatcher.unregister(ScheduleMainFrame.this, CONTEXT_CHANGE);
 				Environment.the_dispatcher.unregister(ScheduleMainFrame.this, CONTEXT_CHANGE);
-				ScheduleMainFrame.this.aContext.getApplicationModel().getCommand(ScheduleMainMenuBar.MENU_EXIT)
-						.execute();
+				ScheduleMainFrame.this.aContext.getApplicationModel()
+						.getCommand(ScheduleMainMenuBar.MENU_EXIT).execute();
 			}
 		});
 
@@ -168,7 +166,8 @@ public class ScheduleMainFrame extends JFrame implements OperationListener {
 		Environment.log(Environment.LOG_LEVEL_INFO, "commandName:" + commandName, getClass().getName());
 		if (commandName.equals(SchedulerModel.COMMAND_CHANGE_STATUSBAR_STATE)) {
 			boolean value = ((Boolean) obj).booleanValue();
-			//Environment.log(Environment.LOG_LEVEL_INFO, "progressBar:" +
+			//Environment.log(Environment.LOG_LEVEL_INFO,
+			// "progressBar:" +
 			// value);
 			this.statusBar.setProgressBarEnable(value);
 		}
@@ -179,7 +178,8 @@ public class ScheduleMainFrame extends JFrame implements OperationListener {
 			ContextChangeEvent cce = (ContextChangeEvent) ae;
 			System.out.println("perform context change \"" + Long.toHexString(cce.change_type) + "\" at "
 					+ this.getTitle());
-			// ApplicationModel aModel = aContext.getApplicationModel();
+			// ApplicationModel aModel =
+			// aContext.getApplicationModel();
 			if (cce.SESSION_OPENED) {
 				SessionInterface ssi = (SessionInterface) cce.getSource();
 				if (this.aContext.getSessionInterface().equals(ssi)) {
@@ -189,8 +189,9 @@ public class ScheduleMainFrame extends JFrame implements OperationListener {
 					setSessionOpened();
 
 					this.statusBar.setText("status", LangModel.getString("statusReady"));
-					this.statusBar.setText("session", ConstStorage.SIMPLE_DATE_FORMAT.format(new Date(this.aContext
-							.getSessionInterface().getLogonTime())));
+					this.statusBar.setText("session", ConstStorage.SIMPLE_DATE_FORMAT
+							.format(new Date(this.aContext.getSessionInterface()
+									.getLogonTime())));
 					this.statusBar.setText("user", this.aContext.getSessionInterface().getUser());
 				}
 			}
@@ -212,7 +213,8 @@ public class ScheduleMainFrame extends JFrame implements OperationListener {
 					setConnectionOpened();
 
 					this.statusBar.setText("status", LangModel.getString("statusReady"));
-					this.statusBar.setText("server", this.aContext.getConnectionInterface().getServiceURL());
+					this.statusBar.setText("server", this.aContext.getConnectionInterface()
+							.getServiceURL());
 				}
 			}
 			if (cce.CONNECTION_CLOSED) {
@@ -258,6 +260,8 @@ public class ScheduleMainFrame extends JFrame implements OperationListener {
 		aModel.setEnabled(ScheduleMainMenuBar.MENU_VIEW_PROPERTIES, false);
 		aModel.setEnabled(ScheduleMainMenuBar.MENU_VIEW_TIME, false);
 		aModel.setEnabled(ScheduleMainMenuBar.MENU_VIEW_TABLE, false);
+		aModel.setEnabled(ScheduleMainMenuBar.MENU_REPORT, false);
+		aModel.setEnabled(ScheduleMainMenuBar.MENU_TEMPLATE_REPORT, false);
 		aModel.fireModelChanged("");
 	}
 
@@ -284,6 +288,8 @@ public class ScheduleMainFrame extends JFrame implements OperationListener {
 		aModel.setEnabled(ScheduleMainMenuBar.MENU_VIEW_PROPERTIES, true);
 		aModel.setEnabled(ScheduleMainMenuBar.MENU_VIEW_TIME, true);
 		aModel.setEnabled(ScheduleMainMenuBar.MENU_VIEW_TABLE, true);
+		aModel.setEnabled(ScheduleMainMenuBar.MENU_REPORT, true);
+		aModel.setEnabled(ScheduleMainMenuBar.MENU_TEMPLATE_REPORT, true);
 
 		aModel.fireModelChanged("");
 	}
@@ -381,13 +387,15 @@ public class ScheduleMainFrame extends JFrame implements OperationListener {
 	}
 
 	public void setSessionOpened() {
-		//this.checker = new Checker(aContext.getDataSourceInterface());
+		//this.checker = new
+		// Checker(aContext.getDataSourceInterface());
 
 		DataSourceInterface dataSource = this.aContext.getDataSourceInterface();
 
-		this.aContext.getDispatcher().notify(
-										new StatusMessageEvent(StatusMessageEvent.STATUS_MESSAGE, LangModelSchedule
-												.getString("Loading_BD")));
+		this.aContext.getDispatcher()
+				.notify(
+					new StatusMessageEvent(StatusMessageEvent.STATUS_MESSAGE, LangModelSchedule
+							.getString("Loading_BD")));
 		//		new SurveyDataSourceImage(dataSource).LoadParameterTypes();
 		//		new SurveyDataSourceImage(dataSource).LoadTestTypes();
 		//		new SurveyDataSourceImage(dataSource).LoadAnalysisTypes();
@@ -401,10 +409,10 @@ public class ScheduleMainFrame extends JFrame implements OperationListener {
 		sdsi.LoadAnalysisTypes();
 		sdsi.LoadEvaluationTypes();
 
-		this.aContext.getDispatcher().notify(
-												new StatusMessageEvent(StatusMessageEvent.STATUS_MESSAGE,
-																		LangModelSchedule
-																				.getString("Loding_BD_finished")));
+		this.aContext.getDispatcher()
+				.notify(
+					new StatusMessageEvent(StatusMessageEvent.STATUS_MESSAGE, LangModelSchedule
+							.getString("Loding_BD_finished")));
 
 		ApplicationModel aModel = this.aContext.getApplicationModel();
 		aModel.setEnabled(ScheduleMainMenuBar.MENU_SESSION_DOMAIN, true);
@@ -412,7 +420,8 @@ public class ScheduleMainFrame extends JFrame implements OperationListener {
 		aModel.fireModelChanged("");
 		String domainId = this.aContext.getSessionInterface().getDomainId();
 		if (domainId != null && !domainId.equals(""))
-			this.dispatcher.notify(new ContextChangeEvent(domainId, ContextChangeEvent.DOMAIN_SELECTED_EVENT));
+			this.dispatcher.notify(new ContextChangeEvent(domainId,
+									ContextChangeEvent.DOMAIN_SELECTED_EVENT));
 	}
 
 	protected void processWindowEvent(WindowEvent e) {
@@ -462,17 +471,17 @@ public class ScheduleMainFrame extends JFrame implements OperationListener {
 		this.dispatcher.register(this, CONTEXT_CHANGE);
 		Environment.the_dispatcher.register(this, CONTEXT_CHANGE);
 
-		aModel.setCommand(ScheduleMainMenuBar.MENU_SESSION_NEW, new SessionOpenCommand(Environment.the_dispatcher,
-																						this.aContext));
-		aModel.setCommand(ScheduleMainMenuBar.MENU_SESSION_CLOSE, new SessionCloseCommand(Environment.the_dispatcher,
-																							this.aContext));
+		aModel.setCommand(ScheduleMainMenuBar.MENU_SESSION_NEW,
+					new SessionOpenCommand(Environment.the_dispatcher, this.aContext));
+		aModel.setCommand(ScheduleMainMenuBar.MENU_SESSION_CLOSE,
+					new SessionCloseCommand(Environment.the_dispatcher, this.aContext));
 		aModel.setCommand(ScheduleMainMenuBar.MENU_SESSION_OPTIONS, new SessionOptionsCommand(this.aContext));
 		aModel.setCommand(ScheduleMainMenuBar.MENU_SESSION_CONNECTION,
-							new SessionConnectionCommand(Environment.the_dispatcher, this.aContext));
+					new SessionConnectionCommand(Environment.the_dispatcher, this.aContext));
 		aModel.setCommand(ScheduleMainMenuBar.MENU_SESSION_CHANGE_PASSWORD,
-							new SessionChangePasswordCommand(Environment.the_dispatcher, this.aContext));
-		aModel.setCommand(ScheduleMainMenuBar.MENU_SESSION_DOMAIN, new SessionDomainCommand(Environment.the_dispatcher,
-																							this.aContext));
+					new SessionChangePasswordCommand(Environment.the_dispatcher, this.aContext));
+		aModel.setCommand(ScheduleMainMenuBar.MENU_SESSION_DOMAIN,
+					new SessionDomainCommand(Environment.the_dispatcher, this.aContext));
 		aModel.setCommand(ScheduleMainMenuBar.MENU_EXIT, new ExitCommand(this));
 
 		aModel.setCommand(ScheduleMainMenuBar.MENU_VIEW_PLAN, this.planFrame.getCommand());
@@ -483,6 +492,10 @@ public class ScheduleMainFrame extends JFrame implements OperationListener {
 		aModel.setCommand(ScheduleMainMenuBar.MENU_VIEW_TIME, this.timeFrame.getCommand());
 		aModel.setCommand(ScheduleMainMenuBar.MENU_VIEW_TABLE, this.tableFrame.getCommand());
 
+		CreateScheduleReportCommand csrCommand = new CreateScheduleReportCommand(aContext);
+		csrCommand.setParameter(this);
+		aModel.setCommand(ScheduleMainMenuBar.MENU_TEMPLATE_REPORT, csrCommand);
+
 		aModel.setCommand(ScheduleMainMenuBar.MENU_HELP_ABOUT, new HelpAboutCommand(this));
 
 		setDefaultModel(aModel);
@@ -492,8 +505,10 @@ public class ScheduleMainFrame extends JFrame implements OperationListener {
 		if (ConnectionInterface.getActiveConnection() != null) {
 			this.aContext.setConnectionInterface(ConnectionInterface.getActiveConnection());
 			if (this.aContext.getConnectionInterface().isConnected())
-				this.dispatcher.notify(new ContextChangeEvent(this.aContext.getConnectionInterface(),
-																ContextChangeEvent.CONNECTION_OPENED_EVENT));
+				this.dispatcher
+						.notify(new ContextChangeEvent(
+										this.aContext.getConnectionInterface(),
+										ContextChangeEvent.CONNECTION_OPENED_EVENT));
 		} else {
 			this.aContext.setConnectionInterface(Environment.getDefaultConnectionInterface());
 			ConnectionInterface.setActiveConnection(this.aContext.getConnectionInterface());
@@ -502,10 +517,12 @@ public class ScheduleMainFrame extends JFrame implements OperationListener {
 		}
 		if (SessionInterface.getActiveSession() != null) {
 			this.aContext.setSessionInterface(SessionInterface.getActiveSession());
-			this.aContext.setConnectionInterface(this.aContext.getSessionInterface().getConnectionInterface());
+			this.aContext.setConnectionInterface(this.aContext.getSessionInterface()
+					.getConnectionInterface());
 			if (this.aContext.getSessionInterface().isOpened())
-				this.dispatcher.notify(new ContextChangeEvent(this.aContext.getSessionInterface(),
-																ContextChangeEvent.SESSION_OPENED_EVENT));
+				this.dispatcher
+						.notify(new ContextChangeEvent(this.aContext.getSessionInterface(),
+										ContextChangeEvent.SESSION_OPENED_EVENT));
 		} else {
 			this.aContext.setSessionInterface(Environment.getDefaultSessionInterface(this.aContext
 					.getConnectionInterface()));
@@ -526,9 +543,15 @@ public class ScheduleMainFrame extends JFrame implements OperationListener {
 		aModel.setEnabled(ScheduleMainMenuBar.MENU_VIEW_PROPERTIES, false);
 		aModel.setEnabled(ScheduleMainMenuBar.MENU_VIEW_TIME, false);
 		aModel.setEnabled(ScheduleMainMenuBar.MENU_VIEW_TABLE, false);
+		aModel.setEnabled(ScheduleMainMenuBar.MENU_REPORT, false);
+		aModel.setEnabled(ScheduleMainMenuBar.MENU_TEMPLATE_REPORT, false);
 		aModel.setEnabled(ScheduleMainMenuBar.MENU_HELP, true);
 		aModel.setEnabled(ScheduleMainMenuBar.MENU_HELP_ABOUT, true);
 
+	}
+
+	public PlanFrame getPlanFrame() {
+		return this.planFrame;
 	}
 }
 

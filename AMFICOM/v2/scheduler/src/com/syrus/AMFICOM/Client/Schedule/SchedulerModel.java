@@ -143,6 +143,9 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 		add(ScheduleMainMenuBar.MENU_VIEW_PROPERTIES);
 		add(ScheduleMainMenuBar.MENU_VIEW_TIME);
 		add(ScheduleMainMenuBar.MENU_VIEW_TABLE);
+		
+		add(ScheduleMainMenuBar.MENU_REPORT);
+		add(ScheduleMainMenuBar.MENU_TEMPLATE_REPORT);
 
 		add(ScheduleMainMenuBar.MENU_HELP);
 		add(ScheduleMainMenuBar.MENU_HELP_ABOUT);

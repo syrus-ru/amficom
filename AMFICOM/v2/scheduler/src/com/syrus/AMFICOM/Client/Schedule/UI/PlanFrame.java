@@ -50,4 +50,8 @@ public class PlanFrame extends JInternalFrame {
 	public Command getCommand() {
 		return this.command;
 	}
+	
+	public PlanPanel getPlanPanel(){
+		return this.mainPanel;
+	}
 }
