@@ -21,6 +21,8 @@ public class MCM extends DomainMember implements Characterized, TypedObject {
 	private String description;
 	private List characteristicIds;
 
+	private List kiss;
+
 	private StorableObjectDatabase mcmDatabase;
 
 	public MCM(Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
@@ -66,6 +68,10 @@ public class MCM extends DomainMember implements Characterized, TypedObject {
 		for (Iterator iterator = this.characteristicIds.iterator(); iterator.hasNext();)
 			charIds[i++] = (Identifier_Transferable)((Identifier)iterator.next()).getTransferable();
 
+		Identifier_Transferable[] kisIds = new Identifier_Transferable[this.kiss.size()];
+		for (Iterator iterator = this.kiss.iterator(); iterator.hasNext();)
+			kisIds[i++] = (Identifier_Transferable)((Identifier)iterator.next()).getTransferable();
+
 		return new MCM_Transferable((Identifier_Transferable)super.getId().getTransferable(),
 																super.created.getTime(),
 																super.modified.getTime(),
@@ -75,7 +81,8 @@ public class MCM extends DomainMember implements Characterized, TypedObject {
 																(Identifier_Transferable)this.typeId.getTransferable(),
 																new String(this.name),
 																new String(this.description),
-																charIds);
+																charIds,
+																kisIds);
 	}
 
 	public Identifier getTypeId() {
@@ -98,6 +105,10 @@ public class MCM extends DomainMember implements Characterized, TypedObject {
 		this.characteristicIds = characteristicIds;
 	}
 
+	public List getKISs() {
+		return this.kiss;
+	}
+
 	protected synchronized void setAttributes(Date created,
 																						Date modified,
 																						Identifier creatorId,
@@ -114,5 +125,9 @@ public class MCM extends DomainMember implements Characterized, TypedObject {
 		this.typeId = typeId;
 		this.name = name;
 		this.description = description;
+	}
+
+	protected synchronized void setKISs(List kiss) {
+		this.kiss = kiss;
 	}
 }
