@@ -458,6 +458,8 @@ public class TestLine extends JLabel implements TestsEditor, TestEditor {
 		// for (Iterator timeIt = times.iterator(); timeIt.hasNext();i++) {
 		// Date time = (Date) timeIt.next();
 		List testTimeLineList = (List) this.measurements.get(test.getId());
+		if (testTimeLineList == null)
+			return;
 		for (Iterator it = testTimeLineList.iterator(); it.hasNext(); i++) {
 			TestTimeLine testTimeLine = (TestTimeLine) it.next();
 

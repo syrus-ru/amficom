@@ -14,6 +14,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JTree;
 import javax.swing.UIManager;
 import javax.swing.tree.TreePath;
+import javax.swing.tree.TreeSelectionModel;
 
 import com.syrus.AMFICOM.Client.General.Command.Command;
 import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
@@ -127,30 +128,30 @@ public class ElementsTreeFrame extends JInternalFrame implements KISEditor, Moni
 	}
 
 	public void setKIS(KIS kis) {
-		this.paramMap.put(ObjectEntities.KIS_ENTITY, kis);
+//		this.paramMap.put(ObjectEntities.KIS_ENTITY, kis);
 		this.treePanel.expandAll(true);
 		this.selectItems();
 	}
 
 	public void setMeasurementType(MeasurementType measurementType) {
-		this.paramMap.put(ObjectEntities.MEASUREMENTTYPE_ENTITY, measurementType);
+//		this.paramMap.put(ObjectEntities.MEASUREMENTTYPE_ENTITY, measurementType);
 		this.treePanel.expandAll(true);
 		this.selectItems();
 
 	}
 
 	public void setMonitoredElement(MonitoredElement monitoredElement) {
-		try {
-			MeasurementPort measurementPort = (MeasurementPort) ConfigurationStorableObjectPool.getStorableObject(
-				monitoredElement.getMeasurementPortId(), true);
-			this.paramMap.put(ObjectEntities.MEASUREMENTPORT_ENTITY, measurementPort);
+//		try {
+//			MeasurementPort measurementPort = (MeasurementPort) ConfigurationStorableObjectPool.getStorableObject(
+//				monitoredElement.getMeasurementPortId(), true);
+//			this.paramMap.put(ObjectEntities.MEASUREMENTPORT_ENTITY, measurementPort);
 			this.paramMap.put(ObjectEntities.ME_ENTITY, monitoredElement);			
 			this.treePanel.expandAll(true);
 			this.selectItems();
 
-		} catch (ApplicationException e) {
-			SchedulerModel.showErrorMessage(this, e);
-		}
+//		} catch (ApplicationException e) {
+//			SchedulerModel.showErrorMessage(this, e);
+//		}
 	}
 	
 	private void selectItems() {
@@ -191,7 +192,7 @@ public class ElementsTreeFrame extends JInternalFrame implements KISEditor, Moni
 		this.schedulerModel = (SchedulerModel) this.aContext.getApplicationModel();
 		if (this.treePanel == null) {
 			final Dispatcher dispatcher = this.aContext.getDispatcher();
-			this.treePanel = new LogicalTreeUI(this.rootItem);
+			this.treePanel = new LogicalTreeUI(this.rootItem, false);
 			this.selectionListener = new SelectionListener() {
 
 				public void selectedItems(Collection items) {
