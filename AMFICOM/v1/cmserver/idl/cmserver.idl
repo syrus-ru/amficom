@@ -158,7 +158,7 @@ module corba {
 						 		  in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
 			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
 			
-		void receiveUsers(in com::syrus::AMFICOM::configuration::corba::UserSeq_Transferable Users_Transferable,
+		void receiveUsers(in com::syrus::AMFICOM::configuration::corba::UserSeq_Transferable users_Transferable,
 								  in boolean force, 	
 						 		  in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
 			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);

@@ -1,5 +1,5 @@
 /*
- * $Id: CMServerTestCase.java,v 1.17 2004/10/07 14:27:08 max Exp $
+ * $Id: CMServerTestCase.java,v 1.18 2004/10/11 14:59:44 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,7 +12,6 @@ package com.syrus.AMFICOM.cmserver.test;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import junit.extensions.TestSetup;
@@ -63,7 +62,7 @@ import com.syrus.util.ClientLRUMap;
 import com.syrus.util.corba.JavaSoftORBUtil;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2004/10/07 14:27:08 $
+ * @version $Revision: 1.18 $, $Date: 2004/10/11 14:59:44 $
  * @author $Author: max $
  * @module module
  */
