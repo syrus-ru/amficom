@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectXML.java,v 1.7 2005/01/31 13:54:06 bob Exp $
+ * $Id: StorableObjectXML.java,v 1.8 2005/02/01 06:04:01 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,7 +30,7 @@ import java.util.Map;
  * {@link com.syrus.AMFICOM.general.Characteristic}) which must have static
  * getInstance method.
  * 
- * @version $Revision: 1.7 $, $Date: 2005/01/31 13:54:06 $
+ * @version $Revision: 1.8 $, $Date: 2005/02/01 06:04:01 $
  * @author $Author: bob $
  * @module general_v1
  */
@@ -79,6 +79,11 @@ public class StorableObjectXML {
 				.get(StorableObjectDatabase.COLUMN_MODIFIED), (Identifier) objectMap
 				.get(StorableObjectDatabase.COLUMN_CREATOR_ID), (Identifier) objectMap
 				.get(StorableObjectDatabase.COLUMN_MODIFIER_ID));
+		objectMap.remove(StorableObjectDatabase.COLUMN_ID);
+		objectMap.remove(StorableObjectDatabase.COLUMN_CREATED);
+		objectMap.remove(StorableObjectDatabase.COLUMN_MODIFIED);
+		objectMap.remove(StorableObjectDatabase.COLUMN_CREATOR_ID);
+		objectMap.remove(StorableObjectDatabase.COLUMN_MODIFIER_ID);
 		for (Iterator it = objectMap.keySet().iterator(); it.hasNext();) {
 			String key = (String) it.next();
 			wrapper.setValue(storableObject, key, objectMap.get(key));
@@ -127,6 +132,11 @@ public class StorableObjectXML {
 			String key = (String) it.next();
 			objectMap.put(key, wrapper.getValue(storableObject, key));
 		}
+		objectMap.put(StorableObjectDatabase.COLUMN_ID, storableObject.getId());
+		objectMap.put(StorableObjectDatabase.COLUMN_CREATED, storableObject.getCreated());
+		objectMap.put(StorableObjectDatabase.COLUMN_MODIFIED, storableObject.getModified());
+		objectMap.put(StorableObjectDatabase.COLUMN_CREATOR_ID, storableObject.getCreatorId());
+		objectMap.put(StorableObjectDatabase.COLUMN_MODIFIER_ID, storableObject.getModifierId());
 		this.driver.putObjectMap(storableObject.getId(), objectMap);
 	}
 
