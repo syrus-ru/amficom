@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseConfigurationObjectLoader.java,v 1.6 2004/09/14 15:49:09 max Exp $
+ * $Id: DatabaseConfigurationObjectLoader.java,v 1.7 2004/09/15 10:31:54 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,9 +15,10 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2004/09/14 15:49:09 $
+ * @version $Revision: 1.7 $, $Date: 2004/09/15 10:31:54 $
  * @author $Author: max $
  * @module configuration_v1
  */
@@ -94,27 +95,62 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
     // for multiple objects
     public List loadCharacteristicTypes(List ids) throws DatabaseException {
         CharacteristicTypeDatabase database = (CharacteristicTypeDatabase)ConfigurationDatabaseContext.getCharacteristicTypeDatabase();
-        return database.retrieveByIds(ids, null);
+        List list = null;
+        try {
+            list = database.retrieveByIds(ids, null);
+		} catch (IllegalDataException e) {
+			Log.errorMessage("DatabaseConfigurationObjectLoader.loadCharacteristicTypes(List ids) | Illegal Storable Object: " + e.getMessage());
+			throw new DatabaseException("DatabaseConfigurationObjectLoader.loadCharacteristicTypes(List ids) | Illegal Storable Object: " + e.getMessage());
+        }
+        return list;
     }
 
     public List loadEquipmentTypes(List ids) throws DatabaseException {
         EquipmentTypeDatabase database = (EquipmentTypeDatabase)ConfigurationDatabaseContext.getEquipmentTypeDatabase(); 
-        return database.retrieveByIds(ids, null);
+        List list = null;
+        try {
+            list = database.retrieveByIds(ids, null);
+        } catch (IllegalDataException e) {
+            Log.errorMessage("DatabaseConfigurationObjectLoader.loadEquipmentTypes(List ids) | Illegal Storable Object: " + e.getMessage());
+            throw new DatabaseException("DatabaseConfigurationObjectLoader.loadEquipmentTypes(List ids) | Illegal Storable Object: " + e.getMessage());
+        }
+        return list;
     }
 
     public List loadPortTypes(List ids) throws DatabaseException {
         PortTypeDatabase database = (PortTypeDatabase)ConfigurationDatabaseContext.getPortTypeDatabase();
-        return database.retrieveByIds(ids, null);
+        List list = null;
+        try {
+            list = database.retrieveByIds(ids, null);
+        } catch (IllegalDataException e) {
+            Log.errorMessage("DatabaseConfigurationObjectLoader.loadPortTypes(List ids) | Illegal Storable Object: " + e.getMessage());
+            throw new DatabaseException("DatabaseConfigurationObjectLoader.loadPortTypes(List ids) | Illegal Storable Object: " + e.getMessage());
+        }
+        return list;
     }
 
     public List loadMeasurementPortTypes(List ids) throws DatabaseException {
         MeasurementPortTypeDatabase database = (MeasurementPortTypeDatabase)ConfigurationDatabaseContext.getMeasurementPortTypeDatabase();
-        return database.retrieveByIds(ids, null);
+        List list = null;
+        try {
+            list = database.retrieveByIds(ids, null);
+        } catch (IllegalDataException e) {
+            Log.errorMessage("DatabaseConfigurationObjectLoader.loadMeasurementPortTypes(List ids) | Illegal Storable Object: " + e.getMessage());
+            throw new DatabaseException("DatabaseConfigurationObjectLoader.loadMeasurementPortTypes(List ids) | Illegal Storable Object: " + e.getMessage());
+        }
+        return list;
     }
 
     public List loadCharacteristics(List ids) throws DatabaseException {
         CharacteristicDatabase database = (CharacteristicDatabase)ConfigurationDatabaseContext.getCharacteristicDatabase();
-        return database.retrieveByIds(ids, null);
+        List list = null;
+        try {
+            list = database.retrieveByIds(ids, null);
+        } catch (IllegalDataException e) {
+            Log.errorMessage("DatabaseConfigurationObjectLoader.loadCharacteristics(List ids) | Illegal Storable Object: " + e.getMessage());
+            throw new DatabaseException("DatabaseConfigurationObjectLoader.loadCharacteristics(List ids) | Illegal Storable Object: " + e.getMessage());
+        }
+        return list;
     }
 
 //  public PermissionAttributes loadPermissionAttributes(Identifier id) throws DatabaseException {
@@ -123,52 +159,122 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
 
     public List loadUsers(List ids) throws DatabaseException {
         UserDatabase database = (UserDatabase)ConfigurationDatabaseContext.getUserDatabase();
-        return database.retrieveByIds(ids, null);
+        List list = null;
+        try {
+            list = database.retrieveByIds(ids, null);
+        } catch (IllegalDataException e) {
+            Log.errorMessage("DatabaseConfigurationObjectLoader.loadUsers(List ids) | Illegal Storable Object: " + e.getMessage());
+            throw new DatabaseException("DatabaseConfigurationObjectLoader.loadUsers(List ids) | Illegal Storable Object: " + e.getMessage());
+        }
+        return list;
     }
 
     public List loadDomains(List ids) throws DatabaseException {
         DomainDatabase database = (DomainDatabase)ConfigurationDatabaseContext.getDomainDatabase();
-        return database.retrieveByIds(ids, null);
+        List list = null;
+        try {
+            list = database.retrieveByIds(ids, null);
+        } catch (IllegalDataException e) {
+            Log.errorMessage("DatabaseConfigurationObjectLoader.loadDomains(List ids) | Illegal Storable Object: " + e.getMessage());
+            throw new DatabaseException("DatabaseConfigurationObjectLoader.loadDomains(List ids) | Illegal Storable Object: " + e.getMessage());
+        }
+        return list;
     }
 
     public List loadServers(List ids) throws DatabaseException {
         ServerDatabase database = (ServerDatabase)ConfigurationDatabaseContext.getServerDatabase();
-        return database.retrieveByIds(ids, null);
+        List list = null;
+        try {
+            list = database.retrieveByIds(ids, null);
+        } catch (IllegalDataException e) {
+            Log.errorMessage("DatabaseConfigurationObjectLoader.loadDomains(List ids) | Illegal Storable Object: " + e.getMessage());
+            throw new DatabaseException("DatabaseConfigurationObjectLoader.loadDomains(List ids) | Illegal Storable Object: " + e.getMessage());
+        }
+        return list;
     }
 
     public List loadMCMs(List ids) throws DatabaseException {
         MCMDatabase database = (MCMDatabase)ConfigurationDatabaseContext.getMCMDatabase();
-        return database.retrieveByIds(ids, null);
+        List list = null;
+        try {
+            list = database.retrieveByIds(ids, null);
+        } catch (IllegalDataException e) {
+            Log.errorMessage("DatabaseConfigurationObjectLoader.loadMCMs(List ids) | Illegal Storable Object: " + e.getMessage());
+            throw new DatabaseException("DatabaseConfigurationObjectLoader.loadMCMs(List ids) | Illegal Storable Object: " + e.getMessage());
+        }
+        return list;
     }
 
     public List loadEquipments(List ids) throws DatabaseException {
         EquipmentDatabase database = (EquipmentDatabase)ConfigurationDatabaseContext.getEquipmentDatabase();
-        return database.retrieveByIds(ids, null);
+        List list = null;
+        try {
+            list = database.retrieveByIds(ids, null);
+        } catch (IllegalDataException e) {
+            Log.errorMessage("DatabaseConfigurationObjectLoader.loadEquipments(List ids) | Illegal Storable Object: " + e.getMessage());
+            throw new DatabaseException("DatabaseConfigurationObjectLoader.loadEquipments(List ids) | Illegal Storable Object: " + e.getMessage());
+        }
+        return list;
     }
 
     public List loadPorts(List ids) throws DatabaseException {
         PortDatabase database = (PortDatabase)ConfigurationDatabaseContext.getPortDatabase();
-        return database.retrieveByIds(ids, null); 
+        List list = null;
+        try {
+            list = database.retrieveByIds(ids, null);
+        } catch (IllegalDataException e) {
+            Log.errorMessage("DatabaseConfigurationObjectLoader.loadPorts(List ids) | Illegal Storable Object: " + e.getMessage());
+            throw new DatabaseException("DatabaseConfigurationObjectLoader.loadPorts(List ids) | Illegal Storable Object: " + e.getMessage());
+        }
+        return list;
     }
 
     public List loadTransmissionPaths(List ids) throws DatabaseException {
         TransmissionPathDatabase database = (TransmissionPathDatabase)ConfigurationDatabaseContext.getPortDatabase();
-        return database.retrieveByIds(ids, null);
+        List list = null;
+        try {
+            list = database.retrieveByIds(ids, null);
+        } catch (IllegalDataException e) {
+            Log.errorMessage("DatabaseConfigurationObjectLoader.loadTransmissionPaths(List ids) | Illegal Storable Object: " + e.getMessage());
+            throw new DatabaseException("DatabaseConfigurationObjectLoader.loadTransmissionPaths(List ids) | Illegal Storable Object: " + e.getMessage());
+        }
+        return list;
     }
 
     public List loadKISs(List ids) throws DatabaseException {
         KISDatabase database = (KISDatabase)ConfigurationDatabaseContext.getKISDatabase();
-        return database.retrieveByIds(ids, null);
+        List list = null;
+        try {
+            list = database.retrieveByIds(ids, null);
+        } catch (IllegalDataException e) {
+            Log.errorMessage("DatabaseConfigurationObjectLoader.loadKISs(List ids) | Illegal Storable Object: " + e.getMessage());
+            throw new DatabaseException("DatabaseConfigurationObjectLoader.loadKISs(List ids) | Illegal Storable Object: " + e.getMessage());
+        }
+        return list;
     }
 
     public List loadMeasurementPorts(List ids) throws DatabaseException {
         MeasurementPortDatabase database = (MeasurementPortDatabase)ConfigurationDatabaseContext.getMeasurementPortDatabase();
-        return database.retrieveByIds(ids, null);
+        List list = null;
+        try {
+            list = database.retrieveByIds(ids, null);
+        } catch (IllegalDataException e) {
+            Log.errorMessage("DatabaseConfigurationObjectLoader.loadMeasurementPorts(List ids) | Illegal Storable Object: " + e.getMessage());
+            throw new DatabaseException("DatabaseConfigurationObjectLoader.loadMeasurementPorts(List ids) | Illegal Storable Object: " + e.getMessage());
+        }
+        return list;
     }
 
     public List loadMonitoredElements(List ids) throws DatabaseException{
         MonitoredElementDatabase database = (MonitoredElementDatabase)ConfigurationDatabaseContext.getMonitoredElementDatabase();
-        return database.retrieveByIds(ids, null);
+        List list = null;
+        try {
+            list = database.retrieveByIds(ids, null);
+        } catch (IllegalDataException e) {
+            Log.errorMessage("DatabaseConfigurationObjectLoader.loadMonitoredElements(List ids) | Illegal Storable Object: " + e.getMessage());
+            throw new DatabaseException("DatabaseConfigurationObjectLoader.loadMonitoredElements(List ids) | Illegal Storable Object: " + e.getMessage());
+        }
+        return list;
     }
     
 }

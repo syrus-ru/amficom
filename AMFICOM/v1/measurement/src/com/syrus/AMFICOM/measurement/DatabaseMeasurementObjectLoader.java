@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseMeasurementObjectLoader.java,v 1.2 2004/09/14 16:09:12 max Exp $
+ * $Id: DatabaseMeasurementObjectLoader.java,v 1.3 2004/09/15 10:31:06 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,9 +13,11 @@ import java.util.List;
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.DatabaseException;
+import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2004/09/14 16:09:12 $
+ * @version $Revision: 1.3 $, $Date: 2004/09/15 10:31:06 $
  * @author $Author: max $
  * @module measurement_v1
  */
@@ -76,72 +78,156 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 	public List loadAnalyses(List ids) throws DatabaseException,
 			CommunicationException {
 		AnalysisDatabase database = (AnalysisDatabase)MeasurementDatabaseContext.getAnalysisDatabase();
-        return database.retrieveByIds(ids, null);
+        List list = null;
+        try {
+            list = database.retrieveByIds(ids, null);
+        } catch (IllegalDataException e) {
+            Log.errorMessage("DatabaseMeasumentObjectLoader.loadAnalyses(List ids) | Illegal Storable Object: " + e.getMessage());
+            throw new DatabaseException("DatabaseMeasumentObjectLoader.loadAnalyses(List ids) | Illegal Storable Object: " + e.getMessage());
+        }
+        return list;
 	}
     
 	public List loadAnalysisTypes(List ids) throws DatabaseException,
 			CommunicationException {
 		AnalysisTypeDatabase database = (AnalysisTypeDatabase)MeasurementDatabaseContext.getAnalysisTypeDatabase();
-        return database.retrieveByIds(ids, null);
+        List list = null;
+        try {
+            list = database.retrieveByIds(ids, null);
+        } catch (IllegalDataException e) {
+            Log.errorMessage("DatabaseMeasumentObjectLoader.loadAnalysisTypes(List ids) | Illegal Storable Object: " + e.getMessage());
+            throw new DatabaseException("DatabaseMeasumentObjectLoader.loadAnalysisTypes(List ids) | Illegal Storable Object: " + e.getMessage());
+        }
+        return list;
 	}
     
 	public List loadEvaluations(List ids) throws DatabaseException,
 			CommunicationException {
 		EvaluationDatabase database = (EvaluationDatabase)MeasurementDatabaseContext.getEvaluationDatabase();
-        return database.retrieveByIds(ids, null);
+        List list = null;
+        try {
+            list = database.retrieveByIds(ids, null);
+        } catch (IllegalDataException e) {
+            Log.errorMessage("DatabaseMeasumentObjectLoader.loadEvaluations(List ids) | Illegal Storable Object: " + e.getMessage());
+            throw new DatabaseException("DatabaseMeasumentObjectLoader.loadEvaluations(List ids) | Illegal Storable Object: " + e.getMessage());
+        }
+        return list;
 	}
     
 	public List loadEvaluationTypes(List ids) throws DatabaseException,
 			CommunicationException {
 		EvaluationTypeDatabase database = (EvaluationTypeDatabase)MeasurementDatabaseContext.getEvaluationTypeDatabase();
-        return database.retrieveByIds(ids, null);
+        List list = null;
+        try {
+            list = database.retrieveByIds(ids, null);
+        } catch (IllegalDataException e) {
+            Log.errorMessage("DatabaseMeasumentObjectLoader.loadEvaluationTypes(List ids) | Illegal Storable Object: " + e.getMessage());
+            throw new DatabaseException("DatabaseMeasumentObjectLoader.loadEvaluationTypes(List ids) | Illegal Storable Object: " + e.getMessage());
+        }
+        return list;
 	}
     
 	public List loadMeasurements(List ids) throws DatabaseException,
 			CommunicationException {
 		MeasurementDatabase database = (MeasurementDatabase)MeasurementDatabaseContext.getMeasurementDatabase();
-        return database.retrieveByIds(ids, null);
+        List list = null;
+        try {
+            list = database.retrieveByIds(ids, null);
+        } catch (IllegalDataException e) {
+            Log.errorMessage("DatabaseMeasumentObjectLoader.loadMeasurements(List ids) | Illegal Storable Object: " + e.getMessage());
+            throw new DatabaseException("DatabaseMeasumentObjectLoader.loadMeasurements(List ids) | Illegal Storable Object: " + e.getMessage());
+        }
+        return list;
 	}
     
 	public List loadMeasurementSetups(List ids) throws DatabaseException,
 			CommunicationException {
 		MeasurementSetupDatabase database = (MeasurementSetupDatabase)MeasurementDatabaseContext.getMeasurementSetupDatabase();
-        return database.retrieveByIds(ids, null);
+        List list = null;
+        try {
+            list = database.retrieveByIds(ids, null);
+        } catch (IllegalDataException e) {
+            Log.errorMessage("DatabaseMeasumentObjectLoader.loadMeasurementSetups(List ids) | Illegal Storable Object: " + e.getMessage());
+            throw new DatabaseException("DatabaseMeasumentObjectLoader.loadMeasurementSetups(List ids) | Illegal Storable Object: " + e.getMessage());
+        }
+        return list;
 	}
     
 	public List loadMeasurementTypes(List ids) throws DatabaseException,
 			CommunicationException {
 		MeasurementTypeDatabase database = (MeasurementTypeDatabase)MeasurementDatabaseContext.getMeasurementTypeDatabase();
-		return database.retrieveByIds(ids, null);
+		List list = null;
+        try {
+            list = database.retrieveByIds(ids, null);
+        } catch (IllegalDataException e) {
+            Log.errorMessage("DatabaseMeasumentObjectLoader.loadMeasurementTypes(List ids) | Illegal Storable Object: " + e.getMessage());
+            throw new DatabaseException("DatabaseMeasumentObjectLoader.loadMeasurementTypes(List ids) | Illegal Storable Object: " + e.getMessage());
+        }
+        return list;
     }
     
 	public List loadParameterTypes(List ids) throws DatabaseException,
 			CommunicationException {
 		ParameterTypeDatabase database = (ParameterTypeDatabase)MeasurementDatabaseContext.getParameterTypeDatabase();
-        return database.retrieveByIds(ids, null);
+        List list = null;
+        try {
+            list = database.retrieveByIds(ids, null);
+        } catch (IllegalDataException e) {
+            Log.errorMessage("DatabaseMeasumentObjectLoader.loadParameterTypes(List ids) | Illegal Storable Object: " + e.getMessage());
+            throw new DatabaseException("DatabaseMeasumentObjectLoader.loadParameterTypes(List ids) | Illegal Storable Object: " + e.getMessage());
+        }
+        return list;
 	}
     
 	public List loadResults(List ids) throws DatabaseException,
 			CommunicationException {
 		ResultDatabase database = (ResultDatabase)MeasurementDatabaseContext.getResultDatabase();
-        return database.retrieveByIds(ids, null);
+        List list = null;
+        try {
+            list = database.retrieveByIds(ids, null);
+        } catch (IllegalDataException e) {
+            Log.errorMessage("DatabaseMeasumentObjectLoader.loadResults(List ids) | Illegal Storable Object: " + e.getMessage());
+            throw new DatabaseException("DatabaseMeasumentObjectLoader.loadResults(List ids) | Illegal Storable Object: " + e.getMessage());
+        }
+        return list;
 	}
     
 	public List loadSets(List ids) throws DatabaseException,
 			CommunicationException {
 		SetDatabase database = (SetDatabase)MeasurementDatabaseContext.getSetDatabase();
-        return database.retrieveByIds(ids, null);
+        List list = null;
+        try {
+            list = database.retrieveByIds(ids, null);
+        } catch (IllegalDataException e) {
+            Log.errorMessage("DatabaseMeasumentObjectLoader.loadSets(List ids) | Illegal Storable Object: " + e.getMessage());
+            throw new DatabaseException("DatabaseMeasumentObjectLoader.loadSets(List ids) | Illegal Storable Object: " + e.getMessage());
+        }
+        return list;
 	}
     
 	public List loadTemporalPatterns(List ids) throws DatabaseException,
 			CommunicationException {
 		TemporalPatternDatabase database = (TemporalPatternDatabase)MeasurementDatabaseContext.getTemporalPatternDatabase();
-        return database.retrieveByIds(ids, null);
+        List list = null;
+        try {
+            list = database.retrieveByIds(ids, null);
+        } catch (IllegalDataException e) {
+            Log.errorMessage("DatabaseMeasumentObjectLoader.loadTemporalPatterns(List ids) | Illegal Storable Object: " + e.getMessage());
+            throw new DatabaseException("DatabaseMeasumentObjectLoader.loadTemporalPatterns(List ids) | Illegal Storable Object: " + e.getMessage());
+        }
+        return list;
 	}
     
 	public List loadTests(List ids) throws DatabaseException,
 			CommunicationException {
 		TestDatabase database = (TestDatabase)MeasurementDatabaseContext.getTestDatabase();
-        return database.retrieveByIds(ids, null);
+        List list = null;
+        try {
+            list = database.retrieveByIds(ids, null);
+        } catch (IllegalDataException e) {
+            Log.errorMessage("DatabaseMeasumentObjectLoader.loadTests(List ids) | Illegal Storable Object: " + e.getMessage());
+            throw new DatabaseException("DatabaseMeasumentObjectLoader.loadTests(List ids) | Illegal Storable Object: " + e.getMessage());
+        }
+        return list;
 	}
 }
