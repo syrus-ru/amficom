@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementDatabase.java,v 1.33 2004/10/27 14:27:50 bob Exp $
+ * $Id: MeasurementDatabase.java,v 1.34 2004/10/29 14:37:47 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,6 +14,7 @@ import java.sql.Statement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
@@ -39,7 +40,7 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
 
 /**
- * @version $Revision: 1.33 $, $Date: 2004/10/27 14:27:50 $
+ * @version $Revision: 1.34 $, $Date: 2004/10/29 14:37:47 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -442,7 +443,10 @@ public class MeasurementDatabase extends StorableObjectDatabase {
 		List list = null;
 		if (condition instanceof LinkedIdsCondition){
 			LinkedIdsCondition linkedIdsCondition = (LinkedIdsCondition)condition;
-			list = this.retrieveButIdsByTest(ids, linkedIdsCondition.getTestIds());
+			List testIds = linkedIdsCondition.getTestIds();
+			if (testIds == null)
+				testIds = Collections.singletonList(linkedIdsCondition.getIdentifier());
+			list = this.retrieveButIdsByTest(ids, testIds);
 		} else if (condition instanceof DomainCondition){
 			DomainCondition domainCondition = (DomainCondition)condition;
 			list = this.retrieveButIdsByDomain(ids, domainCondition.getDomain()); 

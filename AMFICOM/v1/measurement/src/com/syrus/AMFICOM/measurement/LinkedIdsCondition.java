@@ -1,5 +1,5 @@
 /*
- * $Id: LinkedIdsCondition.java,v 1.14 2004/10/27 09:39:25 bob Exp $
+ * $Id: LinkedIdsCondition.java,v 1.15 2004/10/29 14:37:47 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -21,7 +21,7 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2004/10/27 09:39:25 $
+ * @version $Revision: 1.15 $, $Date: 2004/10/29 14:37:47 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -272,6 +272,8 @@ public class LinkedIdsCondition extends com.syrus.AMFICOM.configuration.LinkedId
 
 		short s = this.entityCode.shortValue();
 		switch (s) {
+			case ObjectEntities.CHARACTERISTIC_ENTITY_CODE:
+				break;
 			case ObjectEntities.ANALYSISTYPE_ENTITY_CODE:
 			case ObjectEntities.EVALUATIONTYPE_ENTITY_CODE:
 			case ObjectEntities.MEASUREMENT_ENTITY_CODE:
