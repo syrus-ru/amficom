@@ -1,5 +1,5 @@
 /*
- * $Id: AccessIdentity.java,v 1.2 2005/02/11 11:34:11 bob Exp $
+ * $Id: AccessIdentity.java,v 1.3 2005/04/01 09:28:35 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,17 +14,17 @@ import com.syrus.AMFICOM.general.corba.AccessIdentifier_Transferable;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/02/11 11:34:11 $
- * @author $Author: bob $
+ * @version $Revision: 1.3 $, $Date: 2005/04/01 09:28:35 $
+ * @author $Author: arseniy $
  * @module general_v1
  */
 public class AccessIdentity implements TransferableObject {
 
-	private Identifier	domainId;
-	private Identifier	sessionId;
+	private Identifier domainId;
+	private Identifier sessionId;
 
-	private Date		start;
-	private Identifier	userId;
+	private Date start;
+	private Identifier userId;
 
 	public AccessIdentity(AccessIdentifier_Transferable transferable) {
 		this.start = new Date(transferable.started);
