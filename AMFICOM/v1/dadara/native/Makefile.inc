@@ -4,6 +4,7 @@ AN2_DIR = ./an2
 FIT_DIR = ./fit
 JNI_DIR = ./JNI
 BREAKL_DIR = ./BreakL
+THRESH_DIR = ./thresh
 CLASS_DIR = ../classes
 
 OUT = $(SO_PREFIX)dadara.$(SO_EXT)

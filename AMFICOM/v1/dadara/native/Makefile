@@ -1,10 +1,10 @@
 include Makefile.inc
 
-.PHONY:	clean common analyse fit an2 JNI BreakL head
+.PHONY:	clean common analyse fit an2 JNI thresh BreakL head
 .PHONY: all
 all: $(OUT)
 
-$(OUT):	common analyse fit an2 JNI BreakL
+$(OUT):	common analyse fit an2 JNI thresh BreakL
 	$(LD) $(LDFLAGS) \
 	$(COMMON_DIR)/*.$(OBJ_EXT) \
 	$(ANALYSE_DIR)/*.$(OBJ_EXT) \
@@ -12,6 +12,7 @@ $(OUT):	common analyse fit an2 JNI BreakL
 	$(FIT_DIR)/*.$(OBJ_EXT) \
 	$(JNI_DIR)/*.$(OBJ_EXT) \
 	$(BREAKL_DIR)/*.$(OBJ_EXT) \
+	$(THRESH_DIR)/*.$(OBJ_EXT) \
 	$(LD_OUTPUT_FLAG)$@ \
 	$(LDLIBS)
 
@@ -33,6 +34,9 @@ JNI:
 BreakL:
 	make -C ./BreakL
 
+thresh:
+	make -C ./thresh
+
 clean:
 	make -C common clean
 	make -C analyse clean
@@ -40,6 +44,7 @@ clean:
 	make -C an2 clean
 	make -C JNI clean
 	make -C BreakL clean
+	make -C thresh clean
 	rm -f $(OUT) dadara.exp dadara.lib 
 
 head:
