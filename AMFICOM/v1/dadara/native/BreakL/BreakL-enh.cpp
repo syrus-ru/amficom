@@ -513,6 +513,15 @@ int BreakL_ChangeByThresh (ModelF &mf, ThreshDXArray &taX, ThreshDYArray &taY, i
 		int curT;
 		for (curT = 0; curT < thNpX; curT++)
 		{
+			int xBegin = thX[curT].x0;
+			int xEnd = thX[curT].x1;
+
+			// начальное значение DX-порога (без учета расширения)
+			if (wannaDXDY == 1 && xBegin <= thCheckPosition && xEnd >= thCheckPosition)
+			{
+				rcID = curT;
+			}
+
 			int dxL = thX[curT].dxL;
 			int dxR = thX[curT].dxR;
 
@@ -523,9 +532,6 @@ int BreakL_ChangeByThresh (ModelF &mf, ThreshDXArray &taX, ThreshDYArray &taY, i
 
 			if (dxL == 0 && dxR == 0)
 				continue;
-
-			int xBegin = thX[curT].x0;
-			int xEnd = thX[curT].x1;
 
 			int nBase0 = xEnd - xBegin + 1;
 			//fprintf(stderr, "Applying dxL/dxR thresholds: curT %d dxL %d dxR %d, nBase %d; leftMode %d upper %d\n",
@@ -688,7 +694,7 @@ int BreakL_ChangeByThresh (ModelF &mf, ThreshDXArray &taX, ThreshDYArray &taY, i
 			//fprintf(stderr, "#6\n"); fflush(stderr);
 		}
 		// сохраняем запланированные изменения
-		prf_b("BreakL_ChangeByThresh: committing DX thresholds");
+		prf_b("BreakL_ChangeByThresh: committing DX thresholds: calc XRmax");
 		int i;
 		int XRmax = 0;
 		for (i = 0; i < updateRegions.getLength(); i++)
