@@ -1,5 +1,5 @@
 /**
- * $Id: PhysicalLinkState.java,v 1.1 2004/12/20 12:36:01 krupenn Exp $
+ * $Id: PhysicalLinkState.java,v 1.2 2005/01/17 15:05:24 bob Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -12,6 +12,8 @@
 package com.syrus.AMFICOM.map;
 
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.util.HashCodeGenerator;
+
 import java.util.LinkedList;
 import java.util.List;
 
@@ -20,9 +22,9 @@ import java.util.List;
  * 
  * 
  * 
- * @version $Revision: 1.1 $, $Date: 2004/12/20 12:36:01 $
+ * @version $Revision: 1.2 $, $Date: 2005/01/17 15:05:24 $
  * @module
- * @author $Author: krupenn $
+ * @author $Author: bob $
  * @see
  */
 public class PhysicalLinkState extends MapElementState
@@ -36,26 +38,36 @@ public class PhysicalLinkState extends MapElementState
 	public Identifier mapProtoId;
 	public String description;
 
-	public PhysicalLinkState(PhysicalLink mple)
+	public PhysicalLinkState(PhysicalLink physicalLink)
 	{
 		super();
-		name = mple.getName();
-		startNode = mple.getStartNode();
-		endNode = mple.getEndNode();
+		this.name = physicalLink.getName();
+		this.startNode = physicalLink.getStartNode();
+		this.endNode = physicalLink.getEndNode();
 
-		nodeLinks.addAll(mple.getNodeLinks());
-		mapProtoId = mple.getType().getId();
-		description = mple.getDescription();
+		this.nodeLinks.addAll(physicalLink.getNodeLinks());
+		this.mapProtoId = physicalLink.getType().getId();
+		this.description = physicalLink.getDescription();
 	}
 
-	public boolean equals(Object obj)
-	{
-		PhysicalLinkState mples = (PhysicalLinkState)obj;
-		return (this.name.equals(mples.name)
-			&& this.startNode.equals(mples.startNode)
-			&& this.endNode.equals(mples.endNode)
-			&& this.description.equals(mples.description)
-			&& this.mapProtoId.equals(mples.mapProtoId)
-			&& this.nodeLinks.equals(mples.nodeLinks));
+	public boolean equals(Object object){
+		PhysicalLinkState physicalLinkState = (PhysicalLinkState)object;
+		return (this.name.equals(physicalLinkState.name)
+			&& this.startNode.equals(physicalLinkState.startNode)
+			&& this.endNode.equals(physicalLinkState.endNode)
+			&& this.description.equals(physicalLinkState.description)
+			&& this.mapProtoId.equals(physicalLinkState.mapProtoId)
+			&& this.nodeLinks.equals(physicalLinkState.nodeLinks));
+	}
+	
+	public int hashCode() {
+		HashCodeGenerator codeGenerator = new HashCodeGenerator();
+		codeGenerator.addObject(this.name);
+		codeGenerator.addObject(this.startNode);
+		codeGenerator.addObject(this.endNode);
+		codeGenerator.addObjectArray(this.nodeLinks.toArray());
+		codeGenerator.addObject(this.mapProtoId);
+		codeGenerator.addObject(this.description);
+		return codeGenerator.getResult();
 	}
 }

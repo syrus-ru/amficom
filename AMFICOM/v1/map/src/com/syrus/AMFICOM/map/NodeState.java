@@ -1,5 +1,5 @@
 /**
- * $Id: NodeState.java,v 1.1 2004/12/20 12:36:01 krupenn Exp $
+ * $Id: NodeState.java,v 1.2 2005/01/17 15:05:24 bob Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -12,6 +12,8 @@
 package com.syrus.AMFICOM.map;
 
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.util.HashCodeGenerator;
+
 import java.util.HashMap;
 
 /**
@@ -19,9 +21,9 @@ import java.util.HashMap;
  * 
  * 
  * 
- * @version $Revision: 1.1 $, $Date: 2004/12/20 12:36:01 $
+ * @version $Revision: 1.2 $, $Date: 2005/01/17 15:05:24 $
  * @module
- * @author $Author: krupenn $
+ * @author $Author: bob $
  * @see
  */
 public class NodeState extends MapElementState
@@ -36,21 +38,31 @@ public class NodeState extends MapElementState
 	public NodeState(AbstractNode mne)
 	{
 		super();
-		name = mne.getName();
+		this.name = mne.getName();
 //		description = mne.getDescription();
-		imageId = mne.getImageId();
-		location = (DoublePoint)mne.getLocation().clone();
+		this.imageId = mne.getImageId();
+		this.location = (DoublePoint)mne.getLocation().clone();
 //		optimizerAttribute = mne.optimizerAttribute;
 
 	}
 
-	public boolean equals(Object obj)
-	{
-		NodeState mnes = (NodeState)obj;
+	public boolean equals(Object object) {
+		NodeState mnes = (NodeState)object;
 		return (this.name.equals(mnes.name)
 			&& this.description.equals(mnes.description)
 			&& this.imageId.equals(mnes.imageId)
 			&& this.location.equals(mnes.location)
 			&& this.optimizerAttribute.equals(mnes.optimizerAttribute));
+	}
+	
+	public int hashCode() {
+		HashCodeGenerator codeGenerator = new HashCodeGenerator();
+		codeGenerator.addObject(this.name);
+		codeGenerator.addObject(this.description);
+		codeGenerator.addObject(this.imageId);
+		codeGenerator.addObject(this.location);
+		codeGenerator.addObject(this.optimizerAttribute);
+		codeGenerator.addObject(this.attributes);
+		return codeGenerator.getResult();
 	}
 }

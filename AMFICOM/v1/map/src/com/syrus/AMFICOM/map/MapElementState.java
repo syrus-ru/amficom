@@ -1,12 +1,10 @@
 /**
- * $Id: MapElementState.java,v 1.1 2004/12/20 12:36:01 krupenn Exp $
+ * $Id: MapElementState.java,v 1.2 2005/01/17 15:05:24 bob Exp $
  *
  * Syrus Systems
  * Научно-технический центр
  * Проект: АМФИКОМ Автоматизированный МногоФункциональный
  *         Интеллектуальный Комплекс Объектного Мониторинга
- *
- * Платформа: java 1.4.1
  */
 
 package com.syrus.AMFICOM.map;
@@ -16,12 +14,10 @@ package com.syrus.AMFICOM.map;
  * 
  * 
  * 
- * @version $Revision: 1.1 $, $Date: 2004/12/20 12:36:01 $
- * @module
- * @author $Author: krupenn $
- * @see
+ * @version $Revision: 1.2 $, $Date: 2005/01/17 15:05:24 $
+ * @module map_v1
+ * @author $Author: bob $
  */
-public abstract class MapElementState 
-{
-	public abstract boolean equals(Object obj);
+public abstract class MapElementState {
+	public abstract boolean equals(Object object);
 }

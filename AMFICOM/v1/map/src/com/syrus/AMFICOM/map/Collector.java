@@ -1,5 +1,5 @@
 /*
- * $Id: Collector.java,v 1.14 2005/01/17 10:54:58 bob Exp $
+ * $Id: Collector.java,v 1.15 2005/01/17 15:05:24 bob Exp $
  *
  * Copyright ø 2004 Syrus Systems.
  * Ó¡’ﬁŒœ-‘≈»Œ…ﬁ≈”À…  √≈Œ‘“.
@@ -28,12 +28,13 @@ import com.syrus.AMFICOM.map.corba.Collector_Transferable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2005/01/17 10:54:58 $
+ * @version $Revision: 1.15 $, $Date: 2005/01/17 15:05:24 $
  * @author $Author: bob $
  * @module map_v1
  */
@@ -56,6 +57,8 @@ public class Collector
 	 * ÌÂÓ·ıÓ‰ËÏÓÒÚË ˝ÍÒÔÓÚ‡
 	 */
 	private static Object[][] exportColumns = null;
+	
+	private static java.util.Map exportMap = null;
 	
 	private String					name;
 	private String					description;
@@ -370,6 +373,9 @@ public class Collector
 		throw new UnsupportedOperationException();
 	}
 
+	/**
+	 * @deprecated use {@link #getExportMap()}
+	 */
 	public Object[][] exportColumns()
 	{
 		if(exportColumns == null)
@@ -393,7 +399,29 @@ public class Collector
 		
 		return exportColumns;
 	}
+	
+	
+	public java.util.Map getExportMap() {
+		if (exportMap == null)
+			exportMap = new HashMap();
+		synchronized(exportMap) {
+			exportMap.clear();
+			exportMap.put(COLUMN_ID, this.id);
+			exportMap.put(COLUMN_NAME, this.name);
+			exportMap.put(COLUMN_DESCRIPTION, this.description);
+			List physicalLinkIds = new ArrayList(getPhysicalLinks().size());
+			for(Iterator it = getPhysicalLinks().iterator(); it.hasNext();)	{
+				PhysicalLink link = (PhysicalLink )it.next();
+				physicalLinkIds.add(link.getId());
+			}
+			exportMap.put(COLUMN_DESCRIPTION, physicalLinkIds);
+			return Collections.unmodifiableMap(exportMap);
+		}		
+	}
 
+	/**
+	 * @deprecated use {@link #createInstance(Identifier, java.util.Map)}
+	 */
 	public static Collector createInstance(
 			Identifier creatorId,
 			Object[][] exportColumns)
@@ -448,6 +476,31 @@ public class Collector
 				PhysicalLink physicalLink = (PhysicalLink ) 
 					MapStorableObjectPool.getStorableObject(
 						physicalLinkId, false);
+				collector.addPhysicalLink(physicalLink);
+			}
+			return collector;
+		} catch (ApplicationException e) {
+			throw new CreateObjectException("Collector.createInstance |  ", e);
+		}
+	}
+	
+	public static Collector createInstance(Identifier creatorId,
+	                                       java.util.Map exportMap)
+	                           		throws CreateObjectException {
+		Identifier id = (Identifier) exportMap.get(COLUMN_ID);
+		String name = (String) exportMap.get(COLUMN_NAME);
+		String description = (String) exportMap.get(COLUMN_DESCRIPTION);
+		List physicalLinkIds = (List) exportMap.get(COLUMN_LINKS);
+		
+		if (id == null || creatorId == null || name == null || description == null || physicalLinkIds == null)
+			throw new IllegalArgumentException("Argument is 'null'");
+
+		try {
+			Collector collector = new Collector(id, creatorId, name, description);
+			for (Iterator it = physicalLinkIds.iterator(); it.hasNext();) {
+				Identifier physicalLinkId = (Identifier) it.next();
+				PhysicalLink physicalLink = (PhysicalLink) MapStorableObjectPool.getStorableObject(physicalLinkId,
+					false);
 				collector.addPhysicalLink(physicalLink);
 			}
 			return collector;

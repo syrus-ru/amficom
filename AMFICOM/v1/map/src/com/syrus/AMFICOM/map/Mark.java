@@ -1,5 +1,5 @@
 /*
- * $Id: Mark.java,v 1.11 2005/01/17 10:54:59 bob Exp $
+ * $Id: Mark.java,v 1.12 2005/01/17 15:05:24 bob Exp $
  *
  * Copyright ø 2004 Syrus Systems.
  * Ó¡’ﬁŒœ-‘≈»Œ…ﬁ≈”À…  √≈Œ‘“.
@@ -25,14 +25,16 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.map.corba.Mark_Transferable;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/01/17 10:54:59 $
+ * @version $Revision: 1.12 $, $Date: 2005/01/17 15:05:24 $
  * @author $Author: bob $
  * @module map_v1
  */
@@ -60,6 +62,8 @@ public class Mark extends AbstractNode implements Characterized {
 	 * ÌÂÓ·ıÓ‰ËÏÓÒÚË ˝ÍÒÔÓÚ‡
 	 */
 	private static Object[][] exportColumns = null;
+	
+	private static java.util.Map exportMap = null;
 
 	private PhysicalLink			physicalLink;
 
@@ -427,6 +431,9 @@ public class Mark extends AbstractNode implements Characterized {
 		setLocation(mnes.location);
 	}
 
+	/**
+	 * @deprecated use {@link #getExportMap()}
+	 */
 	public Object[][] exportColumns()
 	{
 		if(exportColumns == null)
@@ -456,7 +463,29 @@ public class Mark extends AbstractNode implements Characterized {
 		
 		return exportColumns;
 	}
-
+	
+	public java.util.Map getExportMap() {
+		if(exportMap == null)
+			exportMap = new HashMap();		
+		synchronized(exportMap) {
+			exportMap.clear();
+			exportMap.put(COLUMN_ID, this.id);
+			exportMap.put(COLUMN_NAME, this.name);
+			exportMap.put(COLUMN_DESCRIPTION, this.description);
+			exportMap.put(COLUMN_PHYSICAL_LINK_ID, this.physicalLink.getId());
+			exportMap.put(COLUMN_DISTANCE, String.valueOf(this.distance));
+			exportMap.put(COLUMN_X, String.valueOf(this.location.getX()));
+			exportMap.put(COLUMN_Y, String.valueOf(this.location.getY()));
+			exportMap.put(COLUMN_CITY, this.city);
+			exportMap.put(COLUMN_STREET, this.street);
+			exportMap.put(COLUMN_BUILDING, this.building);
+			return Collections.unmodifiableMap(exportMap);
+		}		
+	}
+	
+	/**
+	 * @deprecated use {@link #createInstance(Identifier, java.util.Map)}
+	 */
 	public static Mark createInstance(
 			Identifier creatorId,
 			Object[][] exportColumns)
@@ -539,5 +568,43 @@ public class Mark extends AbstractNode implements Characterized {
 			throw new CreateObjectException("Mark.createInstance |  ", e);
 		}
 	}
+	
+	public static Mark createInstance(Identifier creatorId,
+	                      			java.util.Map exportMap) throws CreateObjectException {
+			Identifier id = (Identifier) exportMap.get(COLUMN_ID);
+			String name = (String) exportMap.get(COLUMN_NAME);
+			String description = (String) exportMap.get(COLUMN_DESCRIPTION);
+      		Identifier physicalLinkId = (Identifier) exportMap.get(COLUMN_PHYSICAL_LINK_ID);
+      		double distance = Double.parseDouble((String) exportMap.get(COLUMN_DISTANCE));
+      		String city = (String) exportMap.get(COLUMN_CITY);
+      		String street = (String) exportMap.get(COLUMN_STREET);
+      		String building = (String) exportMap.get(COLUMN_BUILDING);
+      		double x = Double.parseDouble((String) exportMap.get(COLUMN_X));
+      		double y = Double.parseDouble((String) exportMap.get(COLUMN_Y));
+
+      		if (id == null || creatorId == null || name == null || description == null || physicalLinkId == null 
+      				|| city == null || street == null || building == null)
+      			throw new IllegalArgumentException("Argument is 'null'");
+
+      		try {
+      			PhysicalLink physicalLink = (PhysicalLink ) 
+      				MapStorableObjectPool.getStorableObject(
+      					physicalLinkId, false);
+      			return new Mark(
+      					id, 
+      					creatorId, 
+      					name,
+      					description,
+      					x, 
+      					y,
+      					physicalLink,
+      					distance,
+      					city,
+      					street,
+      					building);
+      		} catch (ApplicationException e) {
+      			throw new CreateObjectException("Mark.createInstance |  ", e);
+      		}
+      	}
 
 }

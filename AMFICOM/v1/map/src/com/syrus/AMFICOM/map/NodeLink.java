@@ -1,5 +1,5 @@
 /*
- * $Id: NodeLink.java,v 1.14 2005/01/17 10:54:59 bob Exp $
+ * $Id: NodeLink.java,v 1.15 2005/01/17 15:05:24 bob Exp $
  *
  * Copyright ø 2004 Syrus Systems.
  * Ó¡’ﬁŒœ-‘≈»Œ…ﬁ≈”À…  √≈Œ‘“.
@@ -30,12 +30,13 @@ import com.syrus.AMFICOM.map.corba.NodeLink_Transferable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2005/01/17 10:54:59 $
+ * @version $Revision: 1.15 $, $Date: 2005/01/17 15:05:24 $
  * @author $Author: bob $
  * @module map_v1
  */
@@ -58,6 +59,8 @@ public class NodeLink extends StorableObject implements Characterized, MapElemen
 	 * ÌÂÓ·ıÓ‰ËÏÓÒÚË ˝ÍÒÔÓÚ‡
 	 */
 	private static Object[][] exportColumns = null;
+
+	private static java.util.Map exportMap = null;
 
 	private String					name;
 
@@ -407,6 +410,9 @@ public class NodeLink extends StorableObject implements Characterized, MapElemen
 		return getLength();
 	}
 
+	/**
+	 * @deprecated use {@link #getExportMap()}
+	 */
 	public Object[][] exportColumns()
 	{
 		if(exportColumns == null)
@@ -428,7 +434,24 @@ public class NodeLink extends StorableObject implements Characterized, MapElemen
 
 		return exportColumns;
 	}
-
+	
+	public java.util.Map getExportMap() {
+		if(exportMap == null)
+			exportMap = new HashMap();		
+		synchronized(exportMap) {
+			exportMap.clear();
+			exportMap.put(COLUMN_ID, this.id);
+			exportMap.put(COLUMN_NAME, this.name);
+			exportMap.put(COLUMN_LENGTH, String.valueOf(this.length));
+			exportMap.put(COLUMN_PHYSICAL_LINK_ID, this.physicalLink.getId());
+			exportMap.put(COLUMN_START_NODE_ID, this.startNode.getId());
+			exportMap.put(COLUMN_END_NODE_ID, this.endNode.getId());
+			return Collections.unmodifiableMap(exportMap);
+		}		
+	}
+	/**
+	 * @deprecated use {@link #createInstance(Identifier, java.util.Map)}
+	 */
 	public static NodeLink createInstance(
 			Identifier creatorId,
 			Object[][] exportColumns)
@@ -497,5 +520,41 @@ public class NodeLink extends StorableObject implements Characterized, MapElemen
 		}
 	}
 
+	public static NodeLink createInstance(Identifier creatorId,
+	                          			java.util.Map exportColumns)
+	                          		throws CreateObjectException {
+		Identifier id = (Identifier) exportMap.get(COLUMN_ID);
+		String name = (String) exportMap.get(COLUMN_NAME);
+		double length = Double.parseDouble((String) exportMap.get(COLUMN_LENGTH));
+		Identifier physicalLinkId = (Identifier) exportMap.get(COLUMN_PHYSICAL_LINK_ID);
+  		Identifier startNodeId = (Identifier) exportMap.get(COLUMN_START_NODE_ID);
+  		Identifier endNodeId = (Identifier) exportMap.get(COLUMN_END_NODE_ID);
+	
 
+  		if (id == null || creatorId == null || name == null || physicalLinkId == null 
+  				|| startNodeId == null || endNodeId == null)
+  			throw new IllegalArgumentException("Argument is 'null'");
+	
+  		try {
+  			PhysicalLink physicalLink = (PhysicalLink ) 
+  				MapStorableObjectPool.getStorableObject(
+  					physicalLinkId, false);
+  			AbstractNode startNode = (AbstractNode )
+  				MapStorableObjectPool.getStorableObject(
+  					startNodeId, true);
+  			AbstractNode endNode = (AbstractNode )
+  				MapStorableObjectPool.getStorableObject(
+  					endNodeId, true);
+  			return new NodeLink(
+  					id, 
+  					creatorId, 
+  					name,
+  					physicalLink,
+  					startNode,
+  					endNode,
+  					length);
+  		} catch (ApplicationException e) {
+  			throw new CreateObjectException("NodeLink.createInstance |  ", e);
+  		}
+  	}
 }

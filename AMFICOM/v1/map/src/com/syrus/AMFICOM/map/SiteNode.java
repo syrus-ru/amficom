@@ -1,5 +1,5 @@
 /*
- * $Id: SiteNode.java,v 1.11 2005/01/17 10:54:59 bob Exp $
+ * $Id: SiteNode.java,v 1.12 2005/01/17 15:05:24 bob Exp $
  *
  * Copyright ї 2004 Syrus Systems.
  * оБХЮОП-ФЕИОЙЮЕУЛЙК ГЕОФТ.
@@ -28,13 +28,15 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.map.corba.SiteNode_Transferable;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/01/17 10:54:59 $
+ * @version $Revision: 1.12 $, $Date: 2005/01/17 15:05:24 $
  * @author $Author: bob $
  * @module map_v1
  */
@@ -61,7 +63,9 @@ public class SiteNode extends AbstractNode implements TypedObject {
 	 * массив параметров для экспорта. инициализируется только в случае
 	 * необходимости экспорта
 	 */
-	private static Object[][] exportColumns = null;
+	private static Object[][] exportColumns = null;	
+
+	private static java.util.Map exportMap = null;
 
 	private SiteNodeType			type;
 
@@ -360,6 +364,9 @@ public class SiteNode extends AbstractNode implements TypedObject {
 		}
 	}
 
+	/**
+	 * @deprecated use {@link #getExportMap()}
+	 */
 	public Object[][] exportColumns()
 	{
 		if(exportColumns == null)
@@ -389,7 +396,29 @@ public class SiteNode extends AbstractNode implements TypedObject {
 		
 		return exportColumns;
 	}
+	
+	public java.util.Map getExportMap() {
+		if(exportMap == null)
+			exportMap = new HashMap();		
+		synchronized(exportMap) {
+			exportMap.clear();
+			exportMap.put(COLUMN_ID, this.id);
+			exportMap.put(COLUMN_NAME, this.name);
+			exportMap.put(COLUMN_DESCRIPTION, this.description);
+			exportMap.put(COLUMN_PROTO_ID, this.type.getId());
+			exportMap.put(COLUMN_X, String.valueOf(this.location.getX()));
+			exportMap.put(COLUMN_Y, String.valueOf(this.location.getY()));
+			exportMap.put(COLUMN_CITY, this.city);
+			exportMap.put(COLUMN_STREET, this.street);
+			exportMap.put(COLUMN_BUILDING, this.building);
+			exportMap.put(COLUMN_IMAGE_ID, this.imageId);
+			return Collections.unmodifiableMap(exportMap);
+		}		
+	}
 
+	/**
+	 * @deprecated use {@link #createInstance(Identifier, java.util.Map)}
+	 */
 	public static SiteNode createInstance(
 			Identifier creatorId,
 			Object[][] exportColumns)
@@ -473,4 +502,41 @@ public class SiteNode extends AbstractNode implements TypedObject {
 		}
 	}
 
+	public static SiteNode createInstance(Identifier creatorId,
+	                                      java.util.Map exportMap) throws CreateObjectException {
+			Identifier id = (Identifier) exportMap.get(COLUMN_ID);
+			String name = (String) exportMap.get(COLUMN_NAME);
+			String description = (String) exportMap.get(COLUMN_DESCRIPTION);
+      		Identifier typeId = (Identifier) exportMap.get(COLUMN_PROTO_ID);
+      		String city = (String) exportMap.get(COLUMN_CITY);
+      		String street = (String) exportMap.get(COLUMN_STREET);
+      		String building = (String) exportMap.get(COLUMN_BUILDING);
+      		double x = Double.parseDouble((String) exportMap.get(COLUMN_X));
+      		double y = Double.parseDouble((String) exportMap.get(COLUMN_Y));
+      		Identifier imageId = (Identifier) exportMap.get(COLUMN_IMAGE_ID);
+
+      		if (id == null || creatorId == null || name == null || description == null || typeId == null 
+      				|| city == null || street == null || building == null || imageId == null)
+      			throw new IllegalArgumentException("Argument is 'null'");
+
+      		try {
+      			SiteNodeType siteNodeType = (SiteNodeType ) 
+      				MapStorableObjectPool.getStorableObject(
+      					typeId, false);
+      			return new SiteNode(
+      					id, 
+      					creatorId, 
+      					imageId,
+      					name,
+      					description,
+      					siteNodeType,
+      					x, 
+      					y,
+      					city,
+      					street,
+      					building);
+      		} catch (ApplicationException e) {
+      			throw new CreateObjectException("SiteNode.createInstance |  ", e);
+      		}
+      	}
 }

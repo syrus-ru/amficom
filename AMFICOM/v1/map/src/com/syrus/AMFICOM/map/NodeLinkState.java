@@ -1,27 +1,25 @@
 /**
- * $Id: NodeLinkState.java,v 1.1 2004/12/20 12:36:01 krupenn Exp $
+ * $Id: NodeLinkState.java,v 1.2 2005/01/17 15:05:24 bob Exp $
  *
  * Syrus Systems
  * Научно-технический центр
  * Проект: АМФИКОМ Автоматизированный МногоФункциональный
  *         Интеллектуальный Комплекс Объектного Мониторинга
- *
- * Платформа: java 1.4.1
  */
 
 package com.syrus.AMFICOM.map;
 
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.util.HashCodeGenerator;
 
 /**
  * состояние фрагмента линии 
  * 
  * 
  * 
- * @version $Revision: 1.1 $, $Date: 2004/12/20 12:36:01 $
- * @module
- * @author $Author: krupenn $
- * @see
+ * @version $Revision: 1.2 $, $Date: 2005/01/17 15:05:24 $
+ * @module map_v1
+ * @author $Author: bob $
  */
 public final class NodeLinkState extends MapElementState
 {
@@ -32,22 +30,31 @@ public final class NodeLinkState extends MapElementState
 
 	public Identifier physicalLinkId;
 
-	public NodeLinkState(NodeLink mnle)
-	{
+	public NodeLinkState(NodeLink nodeLink){
 		super();
-		name = mnle.getName();
-		startNode = mnle.getStartNode();
-		endNode = mnle.getEndNode();
+		this.name = nodeLink.getName();
+		this.startNode = nodeLink.getStartNode();
+		this.endNode = nodeLink.getEndNode();
 		
-		physicalLinkId = mnle.getPhysicalLink().getId();
+		this.physicalLinkId = nodeLink.getPhysicalLink().getId();
 	}
 
-	public boolean equals(Object obj)
-	{
-		NodeLinkState mnles = (NodeLinkState)obj;
+	public boolean equals(Object object) {
+		NodeLinkState mnles = (NodeLinkState)object;
 		return (this.name.equals(mnles.name)
 			&& this.startNode.equals(mnles.startNode)
 			&& this.endNode.equals(mnles.endNode)
 			&& this.physicalLinkId.equals(mnles.physicalLinkId));
+	}
+	
+	public int hashCode() {
+		HashCodeGenerator codeGenerator = new HashCodeGenerator();
+		codeGenerator.addInt(super.hashCode());
+		codeGenerator.addObject(this.name);
+		codeGenerator.addObject(this.startNode);
+		codeGenerator.addObject(this.endNode);
+		codeGenerator.addObject(this.physicalLinkId);
+
+		return codeGenerator.getResult();
 	}
 }

@@ -1,5 +1,5 @@
 /*
- * $Id: TopologicalNode.java,v 1.11 2005/01/17 10:54:59 bob Exp $
+ * $Id: TopologicalNode.java,v 1.12 2005/01/17 15:05:24 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,13 +26,15 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.map.corba.TopologicalNode_Transferable;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/01/17 10:54:59 $
+ * @version $Revision: 1.12 $, $Date: 2005/01/17 15:05:24 $
  * @author $Author: bob $
  * @module map_v1
  */
@@ -60,6 +62,8 @@ public class TopologicalNode extends AbstractNode {
 	 */
 	private static Object[][] exportColumns = null;
 
+	private static java.util.Map exportMap = null;
+	
 	private PhysicalLink			physicalLink;
 
 	/**
@@ -373,6 +377,9 @@ public class TopologicalNode extends AbstractNode {
 		}
 	}
 
+	/**
+	 * @deprecated use {@link #getExportMap()}
+	 */
 	public Object[][] exportColumns()
 	{
 		if(exportColumns == null)
@@ -396,7 +403,26 @@ public class TopologicalNode extends AbstractNode {
 		
 		return exportColumns;
 	}
+	
+	public java.util.Map getExportMap() {
+		if(exportMap == null)
+			exportMap = new HashMap();		
+		synchronized(exportMap) {
+			exportMap.clear();
+			exportMap.put(COLUMN_ID, this.id);
+			exportMap.put(COLUMN_NAME, this.name);
+			exportMap.put(COLUMN_DESCRIPTION, this.description);
+			exportMap.put(COLUMN_PHYSICAL_LINK_ID, this.physicalLink.getId());
+			exportMap.put(COLUMN_X, String.valueOf(this.location.getX()));
+			exportMap.put(COLUMN_Y, String.valueOf(this.location.getY()));
+			exportMap.put(COLUMN_ACTIVE, String.valueOf(this.active));
+			return Collections.unmodifiableMap(exportMap);
+		}		
+	}
 
+	/**
+	 * @deprecated use {@link #createInstance(Identifier, java.util.Map)}
+	 */
 	public static TopologicalNode createInstance(
 			Identifier creatorId,
 			Object[][] exportColumns)
@@ -465,5 +491,37 @@ public class TopologicalNode extends AbstractNode {
 			throw new CreateObjectException("TopologicalNode.createInstance |  ", e);
 		}
 	}
+	
+	
+	public static TopologicalNode createInstance(Identifier creatorId,
+		                      			java.util.Map exportMap) throws CreateObjectException {
+		Identifier id = (Identifier) exportMap.get(COLUMN_ID);
+		String name = (String) exportMap.get(COLUMN_NAME);
+		String description = (String) exportMap.get(COLUMN_DESCRIPTION);
+  		Identifier physicalLinkId = (Identifier) exportMap.get(COLUMN_PHYSICAL_LINK_ID);
+  		double x = Double.parseDouble((String) exportMap.get(COLUMN_X));
+  		double y = Double.parseDouble((String) exportMap.get(COLUMN_Y));
+  		boolean active = Boolean.valueOf((String)exportMap.get(COLUMN_ACTIVE)).booleanValue();
 
+  		if (id == null || creatorId == null || name == null || description == null || physicalLinkId == null)
+  			throw new IllegalArgumentException("Argument is 'null'");
+
+  		try {
+  			PhysicalLink physicalLink = (PhysicalLink) MapStorableObjectPool.getStorableObject(
+				physicalLinkId, false);
+			TopologicalNode node = new TopologicalNode(
+					id, 
+					creatorId, 
+					name,
+					description,
+					x, 
+					y,
+					active);
+			node.setPhysicalLink(physicalLink);
+
+			return node;
+  		} catch (ApplicationException e) {
+  			throw new CreateObjectException("Mark.createInstance |  ", e);
+  		}
+  	}
 }
