@@ -1,5 +1,5 @@
 /*
- * $Id: ObjectEntities.java,v 1.47 2005/02/01 15:06:02 arseniy Exp $
+ * $Id: ObjectEntities.java,v 1.48 2005/02/02 14:58:22 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,7 +9,7 @@
 package com.syrus.AMFICOM.general;
 
 /**
- * @version $Revision: 1.47 $, $Date: 2005/02/01 15:06:02 $
+ * @version $Revision: 1.48 $, $Date: 2005/02/02 14:58:22 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -50,6 +50,7 @@ public final class ObjectEntities {
 	/*	Event	*/
 	public static final String EVENTPARAMETER_ENTITY = "EventParameter";
 	public static final String EVENT_SOURCE_ENTITY = "EventSource";
+	public static final String EVENT_SOURCE_LINK_ENTITY = "EventSourceLink";
 	public static final String EVENT_ENTITY = "Event";
 	public static final String ALARM_ENTITY = "Alarm";
 
