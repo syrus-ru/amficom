@@ -118,7 +118,7 @@ public class Notifier
 						for (Iterator it = graph.getScheme().paths.iterator(); it.hasNext();)
 						{
 							SchemePath path = (SchemePath)it.next();
-							if (path.isLinkInPath(link.getId()))
+							if (path.isElementInPath(link.getId()))
 							{
 								selectedObjects = new SchemePath[1];
 								selectedObjects[0] = path;
@@ -141,7 +141,7 @@ public class Notifier
 						for (Iterator it = graph.getScheme().paths.iterator(); it.hasNext();)
 						{
 							SchemePath path = (SchemePath)it.next();
-							if (path.isLinkInPath(link.getId()))
+							if (path.isElementInPath(link.getId()))
 							{
 								selectedObjects = new SchemePath[1];
 								selectedObjects[0] = path;

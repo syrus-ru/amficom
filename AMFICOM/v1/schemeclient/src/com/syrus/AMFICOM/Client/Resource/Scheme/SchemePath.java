@@ -70,7 +70,7 @@ public class SchemePath extends StubResource
 
 		transferable = new SchemePath_Transferable();
 	}
-
+/*
 	public Object clone(DataSourceInterface dataSource)
 	{
 		String cloned_id = (String)Pool.get("clonedids", id);
@@ -106,7 +106,7 @@ public class SchemePath extends StubResource
 		Pool.put("clonedids", id, path.getId());
 		return path;
 	}
-
+*/
 	public String getName()
 	{
 		return name;
@@ -132,12 +132,12 @@ public class SchemePath extends StubResource
 		return typ;
 	}
 
-	public boolean isLinkInPath(String link_id)
+	public boolean isElementInPath(String link_id)
 	{
 		for (Iterator it = links.iterator(); it.hasNext();)
 		{
 			PathElement pe = (PathElement)it.next();
-			if (link_id.equals(pe.link_id))
+			if (link_id.equals(pe.getObjectId()))
 				return true;
 		}
 		return false;
@@ -171,15 +171,9 @@ public class SchemePath extends StubResource
 		{
 			PathElement pe = (PathElement)it.next();
 			if (pe.type == PathElement.CABLE_LINK)
-			{
-				SchemeCableLink link = (SchemeCableLink)Pool.get(SchemeCableLink.typ, pe.link_id);
-				length += link.physical_length;
-			}
+				length += pe.getSchemeCableLink().physical_length;
 			else if (pe.type == PathElement.LINK)
-			{
-				SchemeLink link = (SchemeLink)Pool.get(SchemeLink.typ, pe.link_id);
-				length += link.physical_length;
-			}
+				length += pe.getSchemeLink().physical_length;
 		}
 		return length;
 	}
@@ -187,22 +181,17 @@ public class SchemePath extends StubResource
 	public double getOpticalLength()
 	{
 		double length = 0;
-		for (Iterator it = links.iterator(); it.hasNext();)
+		for (Iterator it = links.iterator(); it.hasNext(); )
 		{
-			PathElement pe = (PathElement)it.next();
+			PathElement pe = (PathElement) it.next();
 			if (pe.type == PathElement.CABLE_LINK)
-			{
-				SchemeCableLink link = (SchemeCableLink)Pool.get(SchemeCableLink.typ, pe.link_id);
-				length += link.optical_length;
-			}
+				length += pe.getSchemeCableLink().optical_length;
 			else if (pe.type == PathElement.LINK)
-			{
-				SchemeLink link = (SchemeLink)Pool.get(SchemeLink.typ, pe.link_id);
-				length += link.optical_length;
-			}
+				length += pe.getSchemeLink().optical_length;
 		}
 		return length;
 	}
+
 
 	public void setLocalFromTransferable()
 	{
@@ -340,7 +329,7 @@ class SchemePathModel extends ObjectResourceModel
 			PathElement pe;
 			for( Iterator links = sp.links.iterator();  links.hasNext();)
 			{ pe = (PathElement) links.next();
-				id = pe.link_id;
+				id = pe.getObjectId();
 				name = pe.getName();
 				if(! links.hasNext())
 				{ // в конце стрелочку не ставим (если это последдний элемент, то выход)

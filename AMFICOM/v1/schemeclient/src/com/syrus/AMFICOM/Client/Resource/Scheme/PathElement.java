@@ -9,23 +9,27 @@ import com.syrus.AMFICOM.Client.Resource.Network.*;
 
 public class PathElement extends StubResource implements Serializable
 {
+	private static final long serialVersionUID = 02L;
+
 	public static final int SCHEME_ELEMENT = 1;
 	public static final int CABLE_LINK = 2;
 	public static final int LINK = 3;
 
 	protected int type = 0;
-
-	private static final long serialVersionUID = 01L;
 	public int n;
 
-	public String link_id = "";
-	public String thread_id = "";
+	private SchemeLink scheme_link;
+	private SchemeCableLink scheme_cable_link;
+	private SchemeElement scheme_element;
+	private String obj_id = "";
 
+	public String thread_id = "";
 	public String start_port_id = "";
 	public String end_port_id = "";
-
-	public String scheme_element_id = "";
+//	public String scheme_element_id = "";
 	public String scheme_id = "";
+
+	PathElement_Transferable transferable;
 
 	public PathElement()
 	{
@@ -33,12 +37,17 @@ public class PathElement extends StubResource implements Serializable
 
 	public PathElement(PathElement_Transferable transferable)
 	{
+		this.transferable = transferable;
 		n = transferable.n;
 		type = transferable.is_cable ? CABLE_LINK : LINK;
-		link_id = transferable.link_id;
-		thread_id = transferable.thread_id;
+		obj_id = transferable.link_id;
 	}
 
+	public void updateLocalFromTransferable()
+	{
+		setObject(type, obj_id);
+	}
+/*
 	public Object clone(DataSourceInterface dataSource)
 	{
 		PathElement pe = new PathElement();
@@ -52,7 +61,7 @@ public class PathElement extends StubResource implements Serializable
 		pe.end_port_id = end_port_id.length() == 0 ? "" : (String)Pool.get("clonedids", end_port_id);
 		return pe;
 	}
-
+*/
 	static public ObjectResourceSorter getSorter()
 	{
 		return new ObjectResourcePathSorter();
@@ -68,55 +77,126 @@ public class PathElement extends StubResource implements Serializable
 		this.type = type;
 	}
 
-	public String toString()
-	{
-		StringBuffer str = new StringBuffer();
-		str.append("type = ").append(type).append("\n");
-		str.append("scheme_element_id = ").append(scheme_element_id).append("\n");
-		str.append("link_id = ").append(link_id).append("\n");
-		str.append("thread_id = ").append(thread_id).append("\n");
-		if (type == SCHEME_ELEMENT)
-			str.append("name = ").append(((SchemeElement)Pool.get(SchemeElement.typ, scheme_element_id)).getName()).append("\n");
-		if (type == CABLE_LINK)
-			str.append("name = ").append(((SchemeCableLink)Pool.get(SchemeCableLink.typ, link_id)).getName()).append("\n");
-		if (type == LINK)
-			str.append("name = ").append(((SchemeLink)Pool.get(SchemeLink.typ, link_id)).getName()).append("\n");
-		return str.toString();
-	}
-
 	public String getName()
 	{
-		if (type == PathElement.SCHEME_ELEMENT)
+		switch (type)
 		{
-			SchemeElement se = (SchemeElement)Pool.get(SchemeElement.typ, scheme_element_id);
-			if (se.equipment_id.length() == 0)//Pool.get(Equipment.typ, se.equipment_id) == null)
-				return se.getName();
-			else
-				return ((Equipment)Pool.get("kisequipment", se.equipment_id)).getName();
+			case PathElement.SCHEME_ELEMENT:
+				if (scheme_element.equipment_id.length() == 0)
+					return scheme_element.getName();
+				else
+					return ((Equipment)Pool.get("kisequipment", scheme_element.equipment_id)).getName();
+			case PathElement.CABLE_LINK:
+				if (scheme_cable_link.cable_link_id.length() == 0)
+					return scheme_cable_link.getName();
+				else
+					return ((CableLink)Pool.get(CableLink.typ, scheme_cable_link.cable_link_id)).getName();
+			case PathElement.LINK:
+				if (scheme_link.link_id.length() == 0)
+					return scheme_link.getName();
+				else
+					return ((Link)Pool.get(Link.typ, scheme_link.link_id)).getName();
+			default:
+				return "";
 		}
-		else if (type == PathElement.CABLE_LINK)
+	}
+
+	public String getObjectId()
+	{
+		switch (type)
 		{
-			SchemeCableLink scl = (SchemeCableLink)Pool.get(SchemeCableLink.typ, link_id);
-			if (scl.cable_link_id.length() == 0)//Pool.get(CableLink.typ, scl.cable_link_id) == null)
-				return scl.getName();
-			else
-				return ((CableLink)Pool.get(CableLink.typ, scl.cable_link_id)).getName();
+			case PathElement.SCHEME_ELEMENT:
+					return scheme_element.getId();
+			case PathElement.CABLE_LINK:
+					return scheme_cable_link.getId();
+			case PathElement.LINK:
+					return scheme_link.getId();
+			default:
+				return "";
 		}
-		else if (type == PathElement.LINK)
+	}
+
+	public void setObject(int type, String obj_id)
+	{
+		switch (type)
 		{
-			SchemeLink sl = (SchemeLink)Pool.get(SchemeLink.typ, link_id);
-			if (sl.link_id.length() == 0)//Pool.get(Link.typ, sl.link_id) == null)
-				return sl.getName();
-			else
-				return ((Link)Pool.get(Link.typ, sl.link_id)).getName();
+			case PathElement.CABLE_LINK:
+				scheme_cable_link = (SchemeCableLink) Pool.get(SchemeCableLink.typ, obj_id);
+				break;
+			case PathElement.LINK:
+				scheme_link = (SchemeLink) Pool.get(SchemeLink.typ, obj_id);
+				break;
+			case PathElement.SCHEME_ELEMENT:
+				scheme_element = (SchemeElement) Pool.get(SchemeElement.typ, obj_id);
 		}
-		else
-			return "";
+	}
+
+	public double getOpticalLength()
+	{
+		switch (type)
+		{
+			case PathElement.CABLE_LINK:
+				return scheme_cable_link.getOpticalLength();
+			case PathElement.LINK:
+				return scheme_link.getOpticalLength();
+			default:
+				return 0;
+		}
+	}
+
+	public void setOpticalLength(double d)
+	{
+		switch (type)
+		{
+			case PathElement.CABLE_LINK:
+				scheme_cable_link.setOpticalLength(d);
+				break;
+			case PathElement.LINK:
+				scheme_link.setOpticalLength(d);
+		}
+	}
+
+	public double getPhysicalLength()
+	{
+		switch (type)
+		{
+			case PathElement.CABLE_LINK:
+				return scheme_cable_link.getPhysicalLength();
+			case PathElement.LINK:
+				return scheme_link.getPhysicalLength();
+			default:
+				return 0;
+		}
+	}
+
+	public void setPhysicalLength(double d)
+	{
+		switch (type)
+		{
+			case PathElement.CABLE_LINK:
+				scheme_cable_link.setPhysicalLength(d);
+				break;
+			case PathElement.LINK:
+				scheme_link.setPhysicalLength(d);
+		}
+	}
+
+	public double getKu()
+	{
+		switch (type)
+		{
+			case PathElement.CABLE_LINK:
+				return scheme_cable_link.getOpticalLength() / scheme_cable_link.getPhysicalLength();
+			case PathElement.LINK:
+				return scheme_link.getOpticalLength() / scheme_link.getPhysicalLength();
+			default:
+				return 1;
+		}
 	}
 
 	public Object getTransferable()
 	{
-		return new PathElement_Transferable(n, type == CABLE_LINK, link_id, thread_id);
+		return new PathElement_Transferable(n, type == CABLE_LINK, "", thread_id);
 	}
 
 //	public ObjectResourceModel getModel()
@@ -128,9 +208,8 @@ public class PathElement extends StubResource implements Serializable
 	{
 		out.writeInt(n);
 		out.writeInt(type);
-		out.writeObject(link_id);
+		out.writeObject(obj_id);
 		out.writeObject(thread_id);
-		out.writeObject(scheme_element_id);
 		out.writeObject(scheme_id);
 	}
 
@@ -139,11 +218,73 @@ public class PathElement extends StubResource implements Serializable
 	{
 		n = in.readInt();
 		type = in.readInt();
-		link_id = (String )in.readObject();
+		obj_id = (String )in.readObject();
 		thread_id = (String )in.readObject();
-		scheme_element_id = (String )in.readObject();
 		scheme_id = (String )in.readObject();
 	}
+
+	public SchemeCableLink getSchemeCableLink()
+	{
+		return scheme_cable_link;
+	}
+
+	public void setSchemeCableLink(SchemeCableLink scheme_cable_link)
+	{
+		this.scheme_cable_link = scheme_cable_link;
+	}
+
+	public SchemeElement getSchemeElement()
+	{
+		return scheme_element;
+	}
+
+	public void setSchemeElement(SchemeElement scheme_element)
+	{
+		this.scheme_element = scheme_element;
+	}
+
+	public SchemeLink getSchemeLink()
+	{
+		return scheme_link;
+	}
+
+	public void setSchemeLink(SchemeLink scheme_link)
+	{
+		this.scheme_link = scheme_link;
+	}
+
+	public ObjectResource getSourcePort()
+	{
+		switch (type)
+		{
+			case PathElement.CABLE_LINK:
+				return (SchemeCablePort)Pool.get(SchemeCablePort.typ, start_port_id);
+			case PathElement.LINK:
+				return (SchemePort)Pool.get(SchemePort.typ, start_port_id);
+			case PathElement.SCHEME_ELEMENT:
+				SchemePort port = (SchemePort)Pool.get(SchemePort.typ, start_port_id);
+				return port == null ? (ObjectResource)Pool.get(SchemeCablePort.typ, start_port_id) : port;
+			default:
+				return null;
+		}
+	}
+
+	public ObjectResource getTargetPort()
+	{
+		switch (type)
+		{
+			case PathElement.CABLE_LINK:
+				return (SchemeCablePort) Pool.get(SchemeCablePort.typ, end_port_id);
+			case PathElement.LINK:
+				return (SchemePort) Pool.get(SchemePort.typ, end_port_id);
+			case PathElement.SCHEME_ELEMENT:
+				SchemePort port = (SchemePort) Pool.get(SchemePort.typ, end_port_id);
+				return port == null ? (ObjectResource) Pool.get(SchemeCablePort.typ, end_port_id) : port;
+			default:
+				return null;
+		}
+	}
+
 }
 
 class ObjectResourcePathSorter extends ObjectResourceSorter

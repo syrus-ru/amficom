@@ -384,7 +384,7 @@ public class InsertToCatalogCommand extends VoidCommand
 				PathElement pe = (PathElement)it.next();
 				tpe.n = pe.n;
 				tpe.is_cable = pe.getType() == PathElement.CABLE_LINK;
-				tpe.link_id = (String)Pool.get("clonedids", pe.link_id);
+				tpe.link_id = (String)Pool.get("clonedids", pe.getObjectId());
 
 			//      SchemeLink link = (SchemeLink)Pool.get(SchemeLink.typ, pe.link_id);
 			//      tpe.link_id = link.link_id;

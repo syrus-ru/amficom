@@ -40,7 +40,7 @@ public class PathBuilder
 			if (pe.getType() == PathElement.SCHEME_ELEMENT)
 			{
 				PathElement newPE;
-				SchemeElement se = (SchemeElement)Pool.get(SchemeElement.typ, pe.scheme_element_id);
+				SchemeElement se = pe.getSchemeElement();
 				SchemePort port = se.getPort(pe.end_port_id);
 				if (port != null)
 				{
@@ -104,7 +104,7 @@ public class PathBuilder
 			if (pe.getType() == PathElement.SCHEME_ELEMENT)
 			{
 				PathElement newPE;
-				SchemeElement se = (SchemeElement)Pool.get(SchemeElement.typ, pe.scheme_element_id);
+				SchemeElement se = pe.getSchemeElement();
 				SchemePort port = se.getPort(pe.end_port_id);
 				if (port != null)
 				{
@@ -170,7 +170,7 @@ public class PathBuilder
 		while(true)
 		{
 			PathElement pe = (PathElement)path.links.listIterator(path.links.size()).previous();
-			if (path.end_device_id.equals(pe.scheme_element_id))
+			if (path.end_device_id.equals(pe.getObjectId()))
 			{
 				JOptionPane.showMessageDialog(Environment.getActiveWindow(),
 						"Построение пути успешно завершено", "Сообшение", JOptionPane.INFORMATION_MESSAGE);
@@ -193,7 +193,7 @@ public class PathBuilder
 			if (pe.getType() == PathElement.SCHEME_ELEMENT)
 			{
 				PathElement newPE;
-				SchemeElement se = (SchemeElement)Pool.get(SchemeElement.typ, pe.scheme_element_id);
+				SchemeElement se = pe.getSchemeElement();
 				SchemePort port = se.getPort(pe.end_port_id);
 				if (port != null)
 				{
@@ -265,14 +265,14 @@ public class PathBuilder
 
 			newPE = new PathElement();
 			newPE.setType(PathElement.SCHEME_ELEMENT);
-			newPE.scheme_element_id = se.getId();
+			newPE.setSchemeElement(se);
 			newPE.scheme_id = se.getSchemeId();
 			newPE.n = pe.n + 1;
 			newPE.start_port_id = pe.end_port_id;
 
 			if (pe.getType() == PathElement.LINK)
 			{
-				SchemeLink link = (SchemeLink)Pool.get(SchemeLink.typ, pe.link_id);
+				SchemeLink link = pe.getSchemeLink();
 				SchemePort start_port = se.getPort(pe.end_port_id);
 				if (start_port == null) //нет общих портов
 					return null;
@@ -314,7 +314,7 @@ public class PathBuilder
 			}
 			else if (pe.getType() == PathElement.CABLE_LINK)
 			{
-				SchemeCableLink link = (SchemeCableLink)Pool.get(SchemeCableLink.typ, pe.link_id);
+				SchemeCableLink link = pe.getSchemeCableLink();
 				SchemeCablePort start_port = se.getCablePort(pe.end_port_id);
 				if (start_port == null) //нет общих портов
 					return null;
@@ -376,7 +376,7 @@ public class PathBuilder
 			}
 			newPE = new PathElement();
 			newPE.setType(PathElement.SCHEME_ELEMENT);
-			newPE.scheme_element_id = se.getId();
+			newPE.setSchemeElement(se);
 			newPE.scheme_id = se.getSchemeId();
 			newPE.n = 1;
 			if (access_ports == 1)
@@ -395,7 +395,7 @@ public class PathBuilder
 			PathElement pe = (PathElement)lit.previous();
 			if (pe.getType() == PathElement.SCHEME_ELEMENT)
 			{
-				SchemeElement se = (SchemeElement)Pool.get(SchemeElement.typ, pe.scheme_element_id);
+				SchemeElement se = pe.getSchemeElement();
 
 				//если у предыдущего эл-та проставлен end_port_id, ищем по нему
 				if (pe.end_port_id.length() != 0)
@@ -434,7 +434,7 @@ public class PathBuilder
 
 		PathElement newPE = new PathElement();
 		newPE.setType(PathElement.LINK);
-		newPE.link_id = link.getId();
+		newPE.setSchemeLink(link);
 		newPE.scheme_id = link.getSchemeId();
 		newPE.n = number;
 
@@ -463,7 +463,7 @@ public class PathBuilder
 			PathElement pe = (PathElement)lit.previous();
 			if (pe.getType() == PathElement.SCHEME_ELEMENT)
 			{
-				SchemeElement se = (SchemeElement)Pool.get(SchemeElement.typ, pe.scheme_element_id);
+				SchemeElement se = pe.getSchemeElement();
 				//если у предыдущего эл-та проставлен end_port_id, ищем по нему
 				if (pe.end_port_id.length() != 0)
 				{
@@ -514,7 +514,7 @@ public class PathBuilder
 
 		PathElement newPE = new PathElement();
 		newPE.setType(PathElement.CABLE_LINK);
-		newPE.link_id = link.getId();
+		newPE.setSchemeCableLink(link);
 		newPE.thread_id = thread.getId();
 		newPE.scheme_id = link.getSchemeId();
 		newPE.n = number;

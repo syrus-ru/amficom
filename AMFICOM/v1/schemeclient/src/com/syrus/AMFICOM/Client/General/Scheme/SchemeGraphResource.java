@@ -48,7 +48,7 @@ public class SchemeGraphResource
 		ArrayList new_cells = new ArrayList();
 		ArrayList links = new ArrayList(path.links.size());
 		for (Iterator it = path.links.iterator(); it.hasNext(); )
-			links.add( ( (PathElement) it.next()).link_id);
+			links.add(((PathElement)it.next()).getObjectId());
 
 		for (int i = 0; i < cells.length; i++)
 		{
@@ -63,6 +63,12 @@ public class SchemeGraphResource
 				DefaultLink link = (DefaultLink) cells[i];
 				if (links.contains(link.getSchemeLinkId()))
 					new_cells.add(link);
+			}
+			else if (cells[i] instanceof DeviceGroup)
+			{
+				DeviceGroup group = (DeviceGroup)cells[i];
+				if (links.contains(group.getSchemeElementId()))
+					new_cells.add(group);
 			}
 		}
 		return new_cells.toArray();

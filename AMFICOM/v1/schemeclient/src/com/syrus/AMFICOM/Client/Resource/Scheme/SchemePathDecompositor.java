@@ -236,13 +236,7 @@ public class SchemePathDecompositor
 		{
 			if(pe[i].type == PathElement.CABLE_LINK) // CABLE LINK
 			{
-				SchemeCableLink schemeCableLink =
-						(SchemeCableLink)Pool.get(SchemeCableLink.typ, pe[i].link_id);
-				if(schemeCableLink == null)
-				{
-					System.out.println("Something wrong... - schemeCableLink == null");
-					return false;
-				}
+				SchemeCableLink schemeCableLink = pe[i].getSchemeCableLink();
 
 				LengthContainer lc = new LengthContainer(
 						schemeCableLink,
@@ -253,13 +247,8 @@ public class SchemePathDecompositor
 			}
 			else if (pe[i].type == PathElement.LINK)              // simple link
 			{
-				SchemeLink schemeLink =
-						(SchemeLink)Pool.get(SchemeLink.typ, pe[i].link_id);
-				if(schemeLink == null)
-				{
-					System.out.println("scheme link " + pe[i].link_id + " is null! PathElement index " + pe[i].n);
-					return false;
-				}
+				SchemeLink schemeLink = pe[i].getSchemeLink();
+
 				LengthContainer lc = new LengthContainer(
 						schemeLink,
 						schemeLink.getPhysicalLength(),

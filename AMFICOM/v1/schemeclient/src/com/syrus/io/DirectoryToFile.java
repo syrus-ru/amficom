@@ -1190,7 +1190,7 @@ public class DirectoryToFile
 						PathElement pe = (PathElement)lit.next();
 						pw.println (String.valueOf(pe.n));
 						pw.println (String.valueOf(pe.getType()));
-						pw.println (pe.link_id);
+						pw.println (pe.getObjectId());
 						pw.println (pe.thread_id);
 						pw.println (pe.start_port_id);
 						pw.println (pe.end_port_id);
@@ -2723,7 +2723,7 @@ public class DirectoryToFile
 								s = analyseString(isr.readASCIIString());
 								pe.setType(Integer.valueOf(s[0]).intValue());
 								s = analyseString(isr.readASCIIString());
-								pe.link_id = s[0];
+								pe.setObject(pe.getType(), s[0]);
 								s = analyseString(isr.readASCIIString());
 								pe.thread_id = s[0];
 								s = analyseString(isr.readASCIIString());

@@ -1386,7 +1386,7 @@ public class CopyDirectoryToFile
 								s = analyseString(isr.readASCIIString());
 								pe.setType(Integer.valueOf(s[0]).intValue());
 								s = analyseString(isr.readASCIIString());
-								pe.link_id = s[0];
+								pe.setObject(pe.getType(), s[0]);
 								s = analyseString(isr.readASCIIString());
 								pe.thread_id = s[0];
 								path.links.add(pe);

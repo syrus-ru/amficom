@@ -219,7 +219,7 @@ public class PathPropsPanel extends JPanel
 		for (Iterator it = path.links.iterator(); it.hasNext(); )
 		{
 			PathElement pe = (PathElement)it.next();
-			undoPeOrder.put(pe.link_id, new Integer(pe.n));
+			undoPeOrder.put(pe.getObjectId(), new Integer(pe.n));
 			undoPathLinks.add(pe);
 		}
 		updateUI();
@@ -268,7 +268,7 @@ public class PathPropsPanel extends JPanel
 		for (int i = 0; i < path.links.size(); i++)
 		{
 			PathElement pe = (PathElement)path.links.get(i);
-			if (pe.link_id.equals(link_id))
+			if (pe.getObjectId().equals(link_id))
 			{
 //				table.setSelected(pe);
 				break;
@@ -393,7 +393,7 @@ public class PathPropsPanel extends JPanel
 		for (Iterator it = undoPathLinks.iterator(); it.hasNext(); )
 		{
 			PathElement pe = (PathElement)it.next();
-			pe.n = ((Integer)undoPeOrder.get(pe.link_id)).intValue();
+			pe.n = ((Integer)undoPeOrder.get(pe.getObjectId())).intValue();
 			path.links.add(pe);
 		}
 	}
