@@ -1,5 +1,5 @@
 /*
- * $Id: ConfigurationDatabaseContext.java,v 1.31 2004/12/02 09:30:13 bob Exp $
+ * $Id: ConfigurationDatabaseContext.java,v 1.32 2004/12/09 15:04:32 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,8 +11,8 @@ package com.syrus.AMFICOM.configuration;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 
 /**
- * @version $Revision: 1.31 $, $Date: 2004/12/02 09:30:13 $
- * @author $Author: bob $
+ * @version $Revision: 1.32 $, $Date: 2004/12/09 15:04:32 $
+ * @author $Author: max $
  * @todo Declare all fields private as<ol>
  *       <li>they have public accessors; and</li>
  *       <li>there's {@link #init(StorableObjectDatabase, StorableObjectDatabase, StorableObjectDatabase, StorableObjectDatabase, StorableObjectDatabase, StorableObjectDatabase, StorableObjectDatabase, StorableObjectDatabase, StorableObjectDatabase, StorableObjectDatabase, StorableObjectDatabase, StorableObjectDatabase, StorableObjectDatabase, StorableObjectDatabase, StorableObjectDatabase, StorableObjectDatabase, StorableObjectDatabase, StorableObjectDatabase, StorableObjectDatabase)}
@@ -39,6 +39,7 @@ public final class ConfigurationDatabaseContext {
 	protected static StorableObjectDatabase kisDatabase;
 	protected static StorableObjectDatabase monitoredElementDatabase;
 	protected static StorableObjectDatabase linkDatabase;
+    protected static StorableObjectDatabase cableThreadDatabase;
 
 	private ConfigurationDatabaseContext() {
 		// private constructor 
@@ -62,7 +63,8 @@ public final class ConfigurationDatabaseContext {
 			final StorableObjectDatabase transmissionPathTypeDatabase,
 			final StorableObjectDatabase kisDatabase,
 			final StorableObjectDatabase monitoredElementDatabase,
-			final StorableObjectDatabase linkDatabase) {
+			final StorableObjectDatabase linkDatabase,
+            final StorableObjectDatabase cableThreadDatabase) {
 		ConfigurationDatabaseContext.characteristicTypeDatabase = characteristicTypeDatabase;
 		ConfigurationDatabaseContext.equipmentTypeDatabase = equipmentTypeDatabase;
 		ConfigurationDatabaseContext.portTypeDatabase = portTypeDatabase;
@@ -82,6 +84,7 @@ public final class ConfigurationDatabaseContext {
 		ConfigurationDatabaseContext.kisDatabase = kisDatabase;
 		ConfigurationDatabaseContext.monitoredElementDatabase = monitoredElementDatabase;
 		ConfigurationDatabaseContext.linkDatabase = linkDatabase;
+        ConfigurationDatabaseContext.linkDatabase = cableThreadDatabase;
 	}
 
 	public static StorableObjectDatabase getCharacteristicDatabase() {
@@ -111,6 +114,10 @@ public final class ConfigurationDatabaseContext {
 	public static StorableObjectDatabase getLinkDatabase() {
 		return linkDatabase;
 	}
+    
+    public static StorableObjectDatabase getCableThreadDatabase() {
+        return cableThreadDatabase;
+    }
 
 	public static StorableObjectDatabase getCableThreadTypeDatabase(){
 		return cableThreadTypeDatabase;
