@@ -1,5 +1,5 @@
 /*
- * $Id: EquipmentDatabase.java,v 1.54 2004/12/14 17:07:21 max Exp $
+ * $Id: EquipmentDatabase.java,v 1.55 2004/12/15 12:06:50 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -41,14 +41,14 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.54 $, $Date: 2004/12/14 17:07:21 $
+ * @version $Revision: 1.55 $, $Date: 2004/12/15 12:06:50 $
  * @author $Author: max $
  * @module configuration_v1
  */
 
 public class EquipmentDatabase extends StorableObjectDatabase {
-	// table :: Equipment
-	 // description VARCHAR2(256),
+    // table :: Equipment
+    // description VARCHAR2(256),
     public static final String COLUMN_DESCRIPTION   = "description";
     // image_id Identifier,
     public static final String COLUMN_IMAGE_ID      = "image_id";
@@ -56,6 +56,31 @@ public class EquipmentDatabase extends StorableObjectDatabase {
     public static final String COLUMN_NAME  = "name";
     // type_id Identifier NOT NULL,
     public static final String COLUMN_TYPE_ID       = "type_id";
+    // supplier VARCHAR2(128)
+    private static final int SIZE_SUPPLIER_COLUMN   = 128;
+    public static final String COLUMN_SUPPLIER      = "supplier";
+    // supplier_code VARCHAR2(128)
+    private static final int SIZE_SUPPLIER_CODE_COLUMN = 128;
+    public static final String COLUMN_SUPPLIER_CODE = "supplier_code";
+    // latitude NUMBER
+    public static final String COLUMN_LATITUDE      = "latitude";
+    // longitude NUMBER
+    public static final String COLUMN_LONGITUDE     = "longitude";
+    // hwSerial VARCHAR2(64)
+    private static final int SIZE_HW_SERIAL_COLUMN  = 64;
+    public static final String COLUMN_HW_SERIAL     = "hw_serial";
+    // hwVersion VARCHAR2(64)
+    private static final int SIZE_HW_VERSION_COLUMN = 64;
+    public static final String COLUMN_HW_VERSION    = "hw_version";
+    // swSerial VARCHAR2(64)
+    private static final int SIZE_SW_SERIAL_COLUMN  = 64;
+    public static final String COLUMN_SW_SERIAL     = "sw_serial";
+    // swVersion VARCHAR2(64)
+    private static final int SIZE_SW_VERSION_COLUMN = 64;
+    public static final String COLUMN_SW_VERSION    = "sw_version";
+    // inventory_number VARCHAR2(64)
+    private static final int SIZE_INVENTOY_NUMBER_COLUMN = 64;
+    public static final String COLUMN_INVENTORY_NUMBER = "inventory_number"; 
     
     // table :: EquipmentMELink
     // equipment_id Identifier,
@@ -85,7 +110,16 @@ public class EquipmentDatabase extends StorableObjectDatabase {
 				+ COLUMN_TYPE_ID + COMMA
 				+ COLUMN_NAME + COMMA
 				+ COLUMN_DESCRIPTION + COMMA
-				+ COLUMN_IMAGE_ID;
+				+ COLUMN_IMAGE_ID + COMMA
+				+ COLUMN_SUPPLIER + COMMA
+				+ COLUMN_SUPPLIER_CODE + COMMA
+                + COLUMN_LATITUDE + COMMA
+                + COLUMN_LONGITUDE + COMMA
+				+ COLUMN_HW_SERIAL + COMMA
+				+ COLUMN_HW_VERSION + COMMA
+				+ COLUMN_SW_SERIAL + COMMA
+				+ COLUMN_SW_VERSION + COMMA
+				+ COLUMN_INVENTORY_NUMBER;
 		}
 		return columns;
 	}
@@ -97,6 +131,15 @@ public class EquipmentDatabase extends StorableObjectDatabase {
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
+                + QUESTION + COMMA
+                + QUESTION + COMMA
+                + QUESTION + COMMA
+                + QUESTION + COMMA
+                + QUESTION + COMMA
+                + QUESTION + COMMA
+                + QUESTION + COMMA
+                + QUESTION + COMMA
+                + QUESTION + COMMA
 				+ QUESTION;
 		}
 		return updateMultiplySQLValues;
@@ -110,7 +153,16 @@ public class EquipmentDatabase extends StorableObjectDatabase {
 			+ DatabaseIdentifier.toSQLString(equipment.getType().getId()) + COMMA
 			+ APOSTOPHE + DatabaseString.toQuerySubString(equipment.getName(), SIZE_NAME_COLUMN) + APOSTOPHE + COMMA
 			+ APOSTOPHE + DatabaseString.toQuerySubString(equipment.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTOPHE + COMMA
-			+ DatabaseIdentifier.toSQLString(equipment.getImageId());
+            + DatabaseIdentifier.toSQLString(equipment.getImageId()) + COMMA
+            + APOSTOPHE + DatabaseString.toQuerySubString(equipment.getSupplier(), SIZE_SUPPLIER_COLUMN) + APOSTOPHE + COMMA
+            + APOSTOPHE + DatabaseString.toQuerySubString(equipment.getSupplierCode(), SIZE_SUPPLIER_CODE_COLUMN) + APOSTOPHE + COMMA
+            + APOSTOPHE + equipment.getLatitude() + APOSTOPHE + COMMA
+            + APOSTOPHE + equipment.getLongitude() + APOSTOPHE + COMMA
+            + APOSTOPHE + DatabaseString.toQuerySubString(equipment.getHwSerial(), SIZE_HW_SERIAL_COLUMN) + APOSTOPHE + COMMA
+            + APOSTOPHE + DatabaseString.toQuerySubString(equipment.getHwVersion(), SIZE_HW_VERSION_COLUMN) + APOSTOPHE + COMMA
+            + APOSTOPHE + DatabaseString.toQuerySubString(equipment.getSwSerial(), SIZE_SW_SERIAL_COLUMN) + APOSTOPHE + COMMA
+            + APOSTOPHE + DatabaseString.toQuerySubString(equipment.getSwVersion(), SIZE_SW_VERSION_COLUMN) + APOSTOPHE + COMMA
+            + APOSTOPHE + DatabaseString.toQuerySubString(equipment.getInventoryNumber(), SIZE_INVENTOY_NUMBER_COLUMN) + APOSTOPHE;
 		return sql;
 	}
 	
@@ -126,6 +178,15 @@ public class EquipmentDatabase extends StorableObjectDatabase {
 			DatabaseString.setString(preparedStatement, ++i, equipment.getName(), SIZE_NAME_COLUMN);
 			DatabaseString.setString(preparedStatement, ++i, equipment.getDescription(), SIZE_DESCRIPTION_COLUMN);
 			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, equipment.getImageId());
+            DatabaseString.setString(preparedStatement, ++i, equipment.getSupplier(), SIZE_SUPPLIER_COLUMN);
+            DatabaseString.setString(preparedStatement, ++i, equipment.getSupplierCode(), SIZE_SUPPLIER_CODE_COLUMN);
+            preparedStatement.setFloat(++i, equipment.getLatitude());
+            preparedStatement.setFloat(++i, equipment.getLongitude());
+            DatabaseString.setString(preparedStatement, ++i, equipment.getHwSerial(), SIZE_HW_SERIAL_COLUMN);
+            DatabaseString.setString(preparedStatement, ++i, equipment.getHwVersion(), SIZE_HW_VERSION_COLUMN);
+            DatabaseString.setString(preparedStatement, ++i, equipment.getSwSerial(), SIZE_SW_SERIAL_COLUMN);
+            DatabaseString.setString(preparedStatement, ++i, equipment.getSwVersion(), SIZE_SW_VERSION_COLUMN);
+            DatabaseString.setString(preparedStatement, ++i, equipment.getInventoryNumber(), SIZE_INVENTOY_NUMBER_COLUMN);
 		} catch (SQLException sqle) {
 			throw new UpdateObjectException("EquipmentDatabase." +
 					"setEntityForPreparedStatement | Error " + sqle.getMessage(), sqle);
@@ -159,16 +220,15 @@ public class EquipmentDatabase extends StorableObjectDatabase {
 								(name != null) ? name : "",
 								(description != null) ? description : "",
 								DatabaseIdentifier.getIdentifier(resultSet, COLUMN_IMAGE_ID),
-                                null,
-                                null,
-                                0,
-                                0,
-                                null,
-                                null,
-                                null,
-                                null,
-                                null);
-
+								DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_SUPPLIER)),
+								DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_SUPPLIER_CODE)),
+                                resultSet.getFloat(COLUMN_LONGITUDE),
+                                resultSet.getFloat(COLUMN_LATITUDE),
+								DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_HW_VERSION)),
+								DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_HW_SERIAL)),
+								DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_SW_VERSION)),
+								DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_SW_SERIAL)),
+								DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_INVENTORY_NUMBER)));
 		
 		return equipment;
 	}
