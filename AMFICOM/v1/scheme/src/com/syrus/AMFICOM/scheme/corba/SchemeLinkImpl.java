@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeLinkImpl.java,v 1.1 2004/11/24 10:03:58 bass Exp $
+ * $Id: SchemeLinkImpl.java,v 1.2 2004/11/24 14:16:19 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,7 +15,7 @@ import com.syrus.util.logging.ErrorHandler;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.1 $, $Date: 2004/11/24 10:03:58 $
+ * @version $Revision: 1.2 $, $Date: 2004/11/24 14:16:19 $
  * @module schemecommon_v1
  */
 final class SchemeLinkImpl extends SchemeLink implements Cloneable {
@@ -33,7 +33,7 @@ final class SchemeLinkImpl extends SchemeLink implements Cloneable {
 	}
 
 	public void abstractLinkType(
-			AbstractLinkType_Transferable newAbstractLinkType) {
+			AbstractLinkType_Transferable abstractLinkType) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -41,7 +41,7 @@ final class SchemeLinkImpl extends SchemeLink implements Cloneable {
 		throw new UnsupportedOperationException();
 	}
 
-	public void alarmed(boolean newAlarmed) {
+	public void alarmed(boolean alarmed) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -50,7 +50,7 @@ final class SchemeLinkImpl extends SchemeLink implements Cloneable {
 	}
 
 	public void characteristics(
-			Characteristic_Transferable[] newCharacteristics) {
+			Characteristic_Transferable[] characteristics) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -71,7 +71,7 @@ final class SchemeLinkImpl extends SchemeLink implements Cloneable {
 		throw new UnsupportedOperationException();
 	}
 
-	public void description(String newDescription) {
+	public void description(String description) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -87,7 +87,7 @@ final class SchemeLinkImpl extends SchemeLink implements Cloneable {
 		throw new UnsupportedOperationException();
 	}
 
-	public void linkType(LinkType_Transferable newLinkType) {
+	public void linkType(LinkType_Transferable linkType) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -99,7 +99,7 @@ final class SchemeLinkImpl extends SchemeLink implements Cloneable {
 		throw new UnsupportedOperationException();
 	}
 
-	public void name(String newName) {
+	public void name(String name) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -107,7 +107,7 @@ final class SchemeLinkImpl extends SchemeLink implements Cloneable {
 		throw new UnsupportedOperationException();
 	}
 
-	public void opticalLength(double newOpticalLength) {
+	public void opticalLength(double opticalLength) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -115,7 +115,7 @@ final class SchemeLinkImpl extends SchemeLink implements Cloneable {
 		throw new UnsupportedOperationException();
 	}
 
-	public void physicalLength(double newPhysicalLength) {
+	public void physicalLength(double physicalLength) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -123,7 +123,7 @@ final class SchemeLinkImpl extends SchemeLink implements Cloneable {
 		throw new UnsupportedOperationException();
 	}
 
-	public void scheme(Scheme newScheme) {
+	public void scheme(Scheme scheme) {
 		throw new UnsupportedOperationException();
 	}
 

@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeElementImpl.java,v 1.2 2004/11/24 10:03:58 bass Exp $
+ * $Id: SchemeElementImpl.java,v 1.3 2004/11/24 14:16:19 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.                                              
  * Dept. of Science & Technology.                                               
@@ -16,7 +16,7 @@ import com.syrus.util.logging.ErrorHandler;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.2 $, $Date: 2004/11/24 10:03:58 $
+ * @version $Revision: 1.3 $, $Date: 2004/11/24 14:16:19 $
  * @module schemecommon_v1
  */
 public final class SchemeElementImpl extends SchemeElement implements Cloneable {
@@ -63,7 +63,7 @@ public final class SchemeElementImpl extends SchemeElement implements Cloneable 
 		throw new UnsupportedOperationException();
 	}
 
-	public void characteristics(Characteristic_Transferable[] newCharacteristics) {
+	public void characteristics(Characteristic_Transferable[] characteristics) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -84,7 +84,7 @@ public final class SchemeElementImpl extends SchemeElement implements Cloneable 
 		throw new UnsupportedOperationException();
 	}
 
-	public void description(String newDescription) {
+	public void description(String description) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -92,7 +92,7 @@ public final class SchemeElementImpl extends SchemeElement implements Cloneable 
 		throw new UnsupportedOperationException();
 	}
 
-	public void equipment(Equipment_Transferable newEquipment) {
+	public void equipment(Equipment_Transferable equipment) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -100,7 +100,7 @@ public final class SchemeElementImpl extends SchemeElement implements Cloneable 
 		throw new UnsupportedOperationException();
 	}
 
-	public void equipmentType(EquipmentType_Transferable newEquipmentType) {
+	public void equipmentType(EquipmentType_Transferable equipmentType) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -112,7 +112,7 @@ public final class SchemeElementImpl extends SchemeElement implements Cloneable 
 		throw new UnsupportedOperationException();
 	}
 
-	public void internalScheme(Scheme newInternalScheme) {
+	public void internalScheme(Scheme internalScheme) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -124,7 +124,7 @@ public final class SchemeElementImpl extends SchemeElement implements Cloneable 
 		throw new UnsupportedOperationException();
 	}
 
-	public void name(String newName) {
+	public void name(String name) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -132,7 +132,7 @@ public final class SchemeElementImpl extends SchemeElement implements Cloneable 
 		throw new UnsupportedOperationException();
 	}
 
-	public void rtu(KIS_Transferable newRtu) {
+	public void rtu(KIS_Transferable rtu) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -140,7 +140,7 @@ public final class SchemeElementImpl extends SchemeElement implements Cloneable 
 		throw new UnsupportedOperationException();
 	}
 
-	public void scheme(Scheme newScheme) {
+	public void scheme(Scheme scheme) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -152,7 +152,7 @@ public final class SchemeElementImpl extends SchemeElement implements Cloneable 
 		throw new UnsupportedOperationException();
 	}
 
-	public void schemeDevices(SchemeDevice[] newSchemeDevices) {
+	public void schemeDevices(SchemeDevice[] schemeDevices) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -160,7 +160,7 @@ public final class SchemeElementImpl extends SchemeElement implements Cloneable 
 		throw new UnsupportedOperationException();
 	}
 
-	public void schemeElements(SchemeElement[] newSchemeElements) {
+	public void schemeElements(SchemeElement[] schemeElements) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -168,7 +168,7 @@ public final class SchemeElementImpl extends SchemeElement implements Cloneable 
 		throw new UnsupportedOperationException();
 	}
 
-	public void schemeLinks(SchemeLink[] newSchemeLinks) {
+	public void schemeLinks(SchemeLink[] schemeLinks) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -180,7 +180,7 @@ public final class SchemeElementImpl extends SchemeElement implements Cloneable 
 		throw new UnsupportedOperationException();
 	}
 
-	public void site(MapSiteElement_Transferable newSite) {
+	public void site(MapSiteElement_Transferable site) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -188,7 +188,7 @@ public final class SchemeElementImpl extends SchemeElement implements Cloneable 
 		throw new UnsupportedOperationException();
 	}
 
-	public void symbol(ImageResource_Transferable newSymbol) {
+	public void symbol(ImageResource_Transferable symbol) {
 		throw new UnsupportedOperationException();
 	}
 

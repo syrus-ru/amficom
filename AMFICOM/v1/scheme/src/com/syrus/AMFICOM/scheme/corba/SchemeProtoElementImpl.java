@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeProtoElementImpl.java,v 1.1 2004/11/24 10:03:58 bass Exp $
+ * $Id: SchemeProtoElementImpl.java,v 1.2 2004/11/24 14:16:19 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,7 +15,7 @@ import com.syrus.util.logging.ErrorHandler;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.1 $, $Date: 2004/11/24 10:03:58 $
+ * @version $Revision: 1.2 $, $Date: 2004/11/24 14:16:19 $
  * @module schemecommon_v1
  */
 final class SchemeProtoElementImpl extends SchemeProtoElement implements Cloneable {
@@ -33,7 +33,7 @@ final class SchemeProtoElementImpl extends SchemeProtoElement implements Cloneab
 	}
 
 	public void characteristics(
-			Characteristic_Transferable[] newCharacteristics) {
+			Characteristic_Transferable[] characteristics) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -54,7 +54,7 @@ final class SchemeProtoElementImpl extends SchemeProtoElement implements Cloneab
 		throw new UnsupportedOperationException();
 	}
 
-	public void description(String newDescription) {
+	public void description(String description) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -78,7 +78,7 @@ final class SchemeProtoElementImpl extends SchemeProtoElement implements Cloneab
 		throw new UnsupportedOperationException();
 	}
 
-	public void label(String newLabel) {
+	public void label(String label) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -94,7 +94,7 @@ final class SchemeProtoElementImpl extends SchemeProtoElement implements Cloneab
 		throw new UnsupportedOperationException();
 	}
 
-	public void name(String newName) {
+	public void name(String name) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -110,7 +110,7 @@ final class SchemeProtoElementImpl extends SchemeProtoElement implements Cloneab
 		throw new UnsupportedOperationException();
 	}
 
-	public void symbol(ImageResource_Transferable newSymbol) {
+	public void symbol(ImageResource_Transferable symbol) {
 		throw new UnsupportedOperationException();
 	}
 

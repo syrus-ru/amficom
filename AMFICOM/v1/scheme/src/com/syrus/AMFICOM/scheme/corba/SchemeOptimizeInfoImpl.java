@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeOptimizeInfoImpl.java,v 1.1 2004/11/24 10:03:58 bass Exp $
+ * $Id: SchemeOptimizeInfoImpl.java,v 1.2 2004/11/24 14:16:19 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,7 +14,7 @@ import com.syrus.util.logging.ErrorHandler;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.1 $, $Date: 2004/11/24 10:03:58 $
+ * @version $Revision: 1.2 $, $Date: 2004/11/24 14:16:19 $
  * @module schemecommon_v1
  */
 final class SchemeOptimizeInfoImpl extends SchemeOptimizeInfo implements Cloneable {
@@ -44,7 +44,7 @@ final class SchemeOptimizeInfoImpl extends SchemeOptimizeInfo implements Cloneab
 		throw new UnsupportedOperationException();
 	}
 
-	public void description(String newDescription) {
+	public void description(String description) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -76,7 +76,7 @@ final class SchemeOptimizeInfoImpl extends SchemeOptimizeInfo implements Cloneab
 		throw new UnsupportedOperationException();
 	}
 
-	public void name(String newName) {
+	public void name(String name) {
 		throw new UnsupportedOperationException();
 	}
 
