@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractDatabaseLinkedIdsCondition.java,v 1.2 2005/02/04 10:35:31 bob Exp $
+ * $Id: AbstractDatabaseLinkedIdsCondition.java,v 1.3 2005/02/08 11:55:12 max Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,8 +13,8 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/02/04 10:35:31 $
- * @author $Author: bob $
+ * @version $Revision: 1.3 $, $Date: 2005/02/08 11:55:12 $
+ * @author $Author: max $
  * @module general_v1
  */
 public abstract class AbstractDatabaseLinkedIdsCondition implements DatabaseStorableObjectCondition {
@@ -42,8 +42,6 @@ public abstract class AbstractDatabaseLinkedIdsCondition implements DatabaseStor
 		buffer.append(StorableObjectDatabase.OPEN_BRACKET);
 		int i = 1;
 		List ids = this.condition.getLinkedIds();
-		if (ids == null)
-			ids = Collections.singletonList(this.condition.getIdentifier());
 		for (Iterator it = ids.iterator(); it.hasNext(); i++) {
 			Object object = it.next();
 			Identifier id = null;
