@@ -3,12 +3,12 @@
    <ID class="oracle.jdeveloper.offlinedb.OfflineDBObjectID" uid="0c5bc3a3-00ff-1000-89a0-c73a017b6a50" type="TABLE" id="2"/>
    <columns>
       <Item id="3">
-         <ID class="oracle.jdeveloper.offlinedb.OfflineDBObjectID" uid="968ef65b-00ff-1000-8064-c73a015cd7f1" type="Column"/>
+         <ID class="oracle.jdeveloper.offlinedb.OfflineDBObjectID" uid="9be8b5cf-00ff-1000-804a-c73a015c515c" type="Column"/>
          <dataType identifier="oracle.jdeveloper.cm.ds.db.ora.OracleDatabase.ORA_VARCHAR2" id="0"/>
          <default/>
          <name>ID</name>
          <notNull>true</notNull>
-         <precision>64</precision>
+         <precision>32</precision>
          <properties class="java.util.HashMap">
             <Item>
                <Key>ID</Key>
@@ -27,7 +27,7 @@
          <scale/>
       </Item>
       <Item id="9">
-         <ID class="oracle.jdeveloper.offlinedb.OfflineDBObjectID" uid="968ef66f-00ff-1000-8065-c73a015cd7f1" type="Column"/>
+         <ID class="oracle.jdeveloper.offlinedb.OfflineDBObjectID" uid="9be8b5cf-00ff-1000-804b-c73a015c515c" type="Column"/>
          <dataType idref="0"/>
          <default/>
          <name>NAME</name>
@@ -51,7 +51,7 @@
          <scale/>
       </Item>
       <Item id="6">
-         <ID class="oracle.jdeveloper.offlinedb.OfflineDBObjectID" uid="968ef670-00ff-1000-8066-c73a015cd7f1" type="Column"/>
+         <ID class="oracle.jdeveloper.offlinedb.OfflineDBObjectID" uid="9be8b5cf-00ff-1000-804c-c73a015c515c" type="Column"/>
          <dataType idref="0"/>
          <default/>
          <name>IMAGE_ID</name>
@@ -75,7 +75,7 @@
          <scale/>
       </Item>
       <Item id="7">
-         <ID class="oracle.jdeveloper.offlinedb.OfflineDBObjectID" uid="968ef670-00ff-1000-8067-c73a015cd7f1" type="Column"/>
+         <ID class="oracle.jdeveloper.offlinedb.OfflineDBObjectID" uid="9be8b5cf-00ff-1000-804d-c73a015c515c" type="Column"/>
          <dataType idref="0"/>
          <default/>
          <name>CREATED_BY</name>
@@ -99,7 +99,7 @@
          <scale/>
       </Item>
       <Item id="4">
-         <ID class="oracle.jdeveloper.offlinedb.OfflineDBObjectID" uid="968ef670-00ff-1000-8068-c73a015cd7f1" type="Column"/>
+         <ID class="oracle.jdeveloper.offlinedb.OfflineDBObjectID" uid="9be8b5cf-00ff-1000-804e-c73a015c515c" type="Column"/>
          <dataType idref="0"/>
          <default/>
          <name>MODIFIED_BY</name>
@@ -123,7 +123,7 @@
          <scale/>
       </Item>
       <Item id="5">
-         <ID class="oracle.jdeveloper.offlinedb.OfflineDBObjectID" uid="968ef670-00ff-1000-8069-c73a015cd7f1" type="Column"/>
+         <ID class="oracle.jdeveloper.offlinedb.OfflineDBObjectID" uid="9be8b5cf-00ff-1000-804f-c73a015c515c" type="Column"/>
          <dataType idref="0"/>
          <default/>
          <name>OWNER_ID</name>
@@ -147,7 +147,7 @@
          <scale/>
       </Item>
       <Item>
-         <ID class="oracle.jdeveloper.offlinedb.OfflineDBObjectID" uid="968ef670-00ff-1000-806a-c73a015cd7f1" type="Column"/>
+         <ID class="oracle.jdeveloper.offlinedb.OfflineDBObjectID" uid="9be8b5cf-00ff-1000-8050-c73a015c515c" type="Column"/>
          <dataType idref="0"/>
          <default/>
          <name>DOMAIN_ID</name>
@@ -175,7 +175,7 @@
          <scale/>
       </Item>
       <Item>
-         <ID class="oracle.jdeveloper.offlinedb.OfflineDBObjectID" uid="968ef670-00ff-1000-806b-c73a015cd7f1" type="Column"/>
+         <ID class="oracle.jdeveloper.offlinedb.OfflineDBObjectID" uid="9be8b5cf-00ff-1000-8051-c73a015c515c" type="Column"/>
          <dataType idref="0"/>
          <default/>
          <name>OBJECT_PERMISSION_ID</name>
@@ -203,7 +203,7 @@
          <scale/>
       </Item>
       <Item>
-         <ID class="oracle.jdeveloper.offlinedb.OfflineDBObjectID" uid="968ef670-00ff-1000-806c-c73a015cd7f1" type="Column"/>
+         <ID class="oracle.jdeveloper.offlinedb.OfflineDBObjectID" uid="9be8b5cf-00ff-1000-8052-c73a015c515c" type="Column"/>
          <dataType identifier="oracle.jdeveloper.cm.ds.db.JdbcDatabase.ANSI_DATE" id="1"/>
          <default/>
          <name>CREATED</name>
@@ -227,7 +227,7 @@
          <scale/>
       </Item>
       <Item>
-         <ID class="oracle.jdeveloper.offlinedb.OfflineDBObjectID" uid="968ef670-00ff-1000-806d-c73a015cd7f1" type="Column"/>
+         <ID class="oracle.jdeveloper.offlinedb.OfflineDBObjectID" uid="9be8b5cf-00ff-1000-8053-c73a015c515c" type="Column"/>
          <dataType idref="1"/>
          <default/>
          <name>MODIFIED</name>
@@ -251,7 +251,7 @@
          <scale/>
       </Item>
       <Item>
-         <ID class="oracle.jdeveloper.offlinedb.OfflineDBObjectID" uid="968ef670-00ff-1000-806e-c73a015cd7f1" type="Column"/>
+         <ID class="oracle.jdeveloper.offlinedb.OfflineDBObjectID" uid="9be8b5cf-00ff-1000-8054-c73a015c515c" type="Column"/>
          <dataType idref="0"/>
          <default/>
          <name>CODENAME</name>
@@ -275,7 +275,7 @@
          <scale/>
       </Item>
       <Item>
-         <ID class="oracle.jdeveloper.offlinedb.OfflineDBObjectID" uid="968ef670-00ff-1000-806f-c73a015cd7f1" type="Column"/>
+         <ID class="oracle.jdeveloper.offlinedb.OfflineDBObjectID" uid="9be8b5cf-00ff-1000-8055-c73a015c515c" type="Column"/>
          <dataType idref="0"/>
          <default/>
          <name>DESCRIPTION</name>
@@ -549,7 +549,7 @@
    </constraints>
    <indexes>
       <Item>
-         <ID class="oracle.jdeveloper.offlinedb.OfflineDBObjectID" uid="968ef670-00ff-1000-8070-c73a015cd7f1" type="Index"/>
+         <ID class="oracle.jdeveloper.offlinedb.OfflineDBObjectID" uid="9be8b5cf-00ff-1000-8056-c73a015c515c" type="Index"/>
          <columns>
             <Item>
                <ID/>

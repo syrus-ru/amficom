@@ -1,5 +1,5 @@
 --
--- $Id: domains.sql,v 1.2 2004/10/14 09:08:34 bass Exp $
+-- $Id: domains.sql,v 1.3 2004/10/15 12:51:53 bass Exp $
 --
 -- Dependencies:
 --	amficom.imageresources;
@@ -8,7 +8,7 @@
 --
 
 CREATE TABLE amficom.domains (
-	id VARCHAR2(64) NOT NULL,
+	id VARCHAR2(32) NOT NULL,
 	name VARCHAR2(64) NOT NULL,
 --
 	image_id VARCHAR2(64),
