@@ -15,6 +15,7 @@ import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
+import javax.swing.JFrame;
 
 import oracle.jdeveloper.layout.XYConstraints;
 import oracle.jdeveloper.layout.XYLayout;
@@ -33,7 +34,7 @@ public class ObjectResourcePropertiesDialog extends JDialog
 	protected BorderLayout borderLayout1 = new BorderLayout();
 	protected  FlowLayout flowLayout1 = new FlowLayout();
 
-	public ObjectResourcePropertiesDialog(Frame frame, String title, boolean modal, ObjectResource or, PropertiesPanel panel)
+	public ObjectResourcePropertiesDialog(JFrame frame, String title, boolean modal, ObjectResource or, PropertiesPanel panel)
 	{
 		super(frame, title, modal);
 
