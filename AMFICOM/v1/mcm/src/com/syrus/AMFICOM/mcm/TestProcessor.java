@@ -1,5 +1,5 @@
 /*
- * $Id: TestProcessor.java,v 1.12 2004/07/30 12:28:15 arseniy Exp $
+ * $Id: TestProcessor.java,v 1.13 2004/07/30 14:51:25 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,11 +9,15 @@
 package com.syrus.AMFICOM.mcm;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Map;
+
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.SleepButWorkThread;
 import com.syrus.AMFICOM.general.UpdateObjectException;
+import com.syrus.AMFICOM.measurement.Measurement;
 import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.AMFICOM.measurement.Result;
 import com.syrus.AMFICOM.measurement.corba.TestStatus;
@@ -21,8 +25,8 @@ import com.syrus.util.Log;
 import com.syrus.util.ApplicationProperties;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2004/07/30 12:28:15 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.13 $, $Date: 2004/07/30 14:51:25 $
+ * @author $Author: bob $
  * @module mcm_v1
  */
 
@@ -33,7 +37,7 @@ public abstract class TestProcessor extends SleepButWorkThread {
 	boolean running;
 	Transceiver transceiver;
 	
-	protected List measurementResultQueue;//List <Result>
+	protected Map measurementResultQueue;//Map <Measurement, Result>
 
 	public TestProcessor(Test test) {
 		super(ApplicationProperties.getInt("TickTime", TICK_TIME) * 1000, ApplicationProperties.getInt("MaxFalls", MAX_FALLS));
@@ -41,7 +45,7 @@ public abstract class TestProcessor extends SleepButWorkThread {
 		this.test = test;
 		this.running = true;
 		
-		this.measurementResultQueue = Collections.synchronizedList(new ArrayList());
+		this.measurementResultQueue = Collections.synchronizedMap(new HashMap());
 		
 		Identifier kisId = this.test.getKIS().getId();
 		this.transceiver = (Transceiver)MeasurementControlModule.transceivers.get(kisId);
@@ -51,8 +55,8 @@ public abstract class TestProcessor extends SleepButWorkThread {
 		}
 	}
 	
-	protected void addMeasurementResult(Result result) {
-		this.measurementResultQueue.add(result);
+	protected void setMeasurementResult(Measurement measurement, Result result) {
+		this.measurementResultQueue.put(measurement, result);
 	}
 
 	public abstract void run();

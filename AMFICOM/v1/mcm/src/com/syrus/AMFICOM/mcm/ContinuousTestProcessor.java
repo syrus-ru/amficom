@@ -1,5 +1,5 @@
 /*
- * $Id: ContinuousTestProcessor.java,v 1.7 2004/07/30 14:33:40 bob Exp $
+ * $Id: ContinuousTestProcessor.java,v 1.8 2004/07/30 14:51:25 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,6 +17,7 @@ import com.syrus.AMFICOM.general.NewIdentifierPool;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
+import com.syrus.AMFICOM.measurement.Result;
 import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.AMFICOM.measurement.Measurement;
 import com.syrus.AMFICOM.measurement.corba.MeasurementStatus;
@@ -24,7 +25,7 @@ import com.syrus.AMFICOM.measurement.corba.TestStatus;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2004/07/30 14:33:40 $
+ * @version $Revision: 1.8 $, $Date: 2004/07/30 14:51:25 $
  * @author $Author: bob $
  * @module mcm_v1
  */
@@ -35,7 +36,7 @@ public class ContinuousTestProcessor extends TestProcessor {
 //	private TemporalPattern temporalPattern;
 //	private List timeStampsList;//List <Date>
 	
-	private Date startDate;
+	private Date nextTimeStamp;
 
 	public ContinuousTestProcessor(Test test) {
 		super(test);
@@ -59,7 +60,7 @@ public class ContinuousTestProcessor extends TestProcessor {
 		}
 
 		try {			
-			this.startDate = test.getStartTime();
+			this.nextTimeStamp = test.getStartTime();
 		}
 		catch (Exception e) {
 			Log.errorException(e);
@@ -108,8 +109,8 @@ public class ContinuousTestProcessor extends TestProcessor {
 		Identifier measurementId = null;
 		Measurement measurement = null;
 		while (super.running) {
-			if (this.startDate != null) {
-				if (this.startDate.getTime() <= System.currentTimeMillis()) {
+			if (this.nextTimeStamp != null) {
+				if (this.nextTimeStamp.getTime() <= System.currentTimeMillis()) {
 					try {
 						measurementId = NewIdentifierPool.getGeneratedIdentifier(ObjectEntities.MEASUREMENT_ENTITY, 10);
 						super.clearFalls();
@@ -128,7 +129,7 @@ public class ContinuousTestProcessor extends TestProcessor {
 					try {
 						measurement = super.test.createMeasurement(measurementId,
 																											 MeasurementControlModule.iAm.getUserId(),
-																											 this.startDate);
+																											 this.nextTimeStamp);
 						super.clearFalls();
 					}
 					catch (CreateObjectException coe) {
@@ -145,13 +146,13 @@ public class ContinuousTestProcessor extends TestProcessor {
 
 				//after all
 				//measurement = null;
-				this.startDate = null;
+				this.nextTimeStamp = null;
 			}
 			else {
-				// have got report after measurement ? 
-				KISReport report = super.transceiver.getKISPreport(measurement);
-				if (report != null)
-					this.startDate = new Date(System.currentTimeMillis());
+				// have got report after measurement ?				
+				Result result = (Result) super.measurementResultQueue.get(measurement);
+				if (result != null)
+					this.nextTimeStamp = new Date(System.currentTimeMillis());
 			}
 
 			try {
