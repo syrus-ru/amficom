@@ -104,6 +104,8 @@ surveyresource_v1	AMFICOM/v1/surveyresource
 analysis_v1	AMFICOM/v1/analysis
 #M	modeling_v1	Modeling module
 modeling_v1	AMFICOM/v1/modeling
+#M	event_v1	Events and alarms module
+event_v1	AMFICOM/v1/event
 #M	measurement_v1	Measurement module
 measurement_v1	AMFICOM/v1/measurement
 #M	prediction_v1	Prediction module
