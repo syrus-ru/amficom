@@ -28,6 +28,10 @@ public class ServiceItem extends AbstractItem {
 	public boolean allowsParents() {
 		return true;
 	}
+	
+	public boolean allowsChildren() {
+		return true;
+	}
 
 	public String getName() {
 		return this.name;
@@ -46,7 +50,7 @@ public class ServiceItem extends AbstractItem {
 			this.children.remove(childItem);
 		}
 
-	}
+	}	
 
 	public boolean isService() {
 		return true;

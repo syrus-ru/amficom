@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractItem.java,v 1.3 2005/03/23 15:04:49 bass Exp $
+ * $Id: AbstractItem.java,v 1.4 2005/03/24 08:04:57 bob Exp $
  *
  * Copyright ? 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,9 +13,11 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.syrus.util.Log;
+
 /**
- * @version $Revision: 1.3 $, $Date: 2005/03/23 15:04:49 $
- * @author $Author: bass $
+ * @version $Revision: 1.4 $, $Date: 2005/03/24 08:04:57 $
+ * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module filter_v1
  */
@@ -73,8 +75,8 @@ public abstract class AbstractItem implements Item {
 	}
 
 	public void addChild(Item childItem) {
-		System.out.println("AbstractItem.addChild | this.name: " + this.getName() + " \n\t name: "
-				+ childItem.getName());
+		Log.debugMessage("AbstractItem.addChild | this.name: " + this.getName() + " \n\t name: "
+				+ childItem.getName(), Log.FINEST);
 		if (this.children == null) {
 			this.children = new LinkedList();
 		}
@@ -97,8 +99,8 @@ public abstract class AbstractItem implements Item {
 	}
 
 	public void setParent(Item parent) {
-		System.out.println("AbstractItem.setParent | name:" + this.getName() + "\n\tparent:"
-				+ (parent == null ? "'null'" : parent.getName()));
+		Log.debugMessage("AbstractItem.setParent | name:" + this.getName() + "\n\tparent:"
+				+ (parent == null ? "'null'" : parent.getName()), Log.FINEST);
 
 		Item oldParent = this.parent;
 		if (parent == oldParent)
@@ -116,9 +118,17 @@ public abstract class AbstractItem implements Item {
 			this.parent.addChild(this);
 		}
 
+		this.fireParentChanged(this, oldParent, this.parent);
+	}
+	
+	protected void fireParentChanged(Item item, Item oldParent, Item newParent) {
 		for (int i = 0; i < this.listener.length; i++) {
-			this.listener[i].setParentPerformed(this, oldParent, this.parent);
+			this.listener[i].setParentPerformed(item, oldParent, newParent);
 		}
+//		if (this.parent instanceof AbstractItem) {
+//			AbstractItem abstractItem = (AbstractItem) this.parent;
+//			abstractItem.fireParentChanged(item, oldParent, newParent);
+//		}
 	}
 
 	public Item getParent() {
