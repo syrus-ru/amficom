@@ -1,2 +1,0 @@
-*
-						 * Value is either taken from entity pointed to by {@link #schemeProtoElementId} or assigned directly.

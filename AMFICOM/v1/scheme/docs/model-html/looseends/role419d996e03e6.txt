@@ -1,2 +1,0 @@
-*
-						 * Depending on implementation, may reference either {@link SchemePort} or {@link SchemeCablePort}.
