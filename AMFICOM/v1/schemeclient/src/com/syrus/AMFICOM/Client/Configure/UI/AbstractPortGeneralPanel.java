@@ -2,7 +2,6 @@ package com.syrus.AMFICOM.Client.Configure.UI;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.util.Collections;
 import java.util.List;
 import java.util.LinkedList;
 

@@ -73,7 +73,7 @@ public class CableLinkCharacteristicsPanel extends GeneralPanel
 					CharacteristicSort.CHARACTERISTIC_SORT_SCHEMECABLELINK,
 					link,
 					linkId,
-					false);
+					true);
 		charPane.addCharacteristics(link.characteristicsImpl().getValue(), linkId);
 
 		if (link.link() != null)

@@ -72,7 +72,7 @@ public class EquipmentCharacteristicsPanel extends GeneralPanel
 					CharacteristicSort.CHARACTERISTIC_SORT_SCHEMEELEMENT,
 					element,
 					elementId,
-					false);
+					true);
 		charPane.addCharacteristics(element.characteristicsImpl().getValue(), elementId);
 
 		if (element.equipment() != null)

@@ -73,7 +73,7 @@ public class LinkCharacteristicsPanel extends GeneralPanel
 					CharacteristicSort.CHARACTERISTIC_SORT_SCHEMELINK,
 					link,
 					linkId,
-					false);
+					true);
 		charPane.addCharacteristics(link.characteristicsImpl().getValue(), linkId);
 
 		if (link.link() != null)

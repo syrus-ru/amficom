@@ -74,7 +74,7 @@ public class PortCharacteristicsPanel extends GeneralPanel
 					CharacteristicSort.CHARACTERISTIC_SORT_SCHEMEPORT,
 					port,
 					portId,
-					false);
+					true);
 		charPane.addCharacteristics(port.characteristicsImpl().getValue(), portId);
 
 		if (port.port() != null)

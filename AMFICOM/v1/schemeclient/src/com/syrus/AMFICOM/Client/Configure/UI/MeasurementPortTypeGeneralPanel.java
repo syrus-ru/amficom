@@ -191,6 +191,7 @@ public class MeasurementPortTypeGeneralPanel extends GeneralPanel {
 		gbcPanel1.weightx = 1;
 		gbcPanel1.weighty = 1;
 		gbcPanel1.anchor = GridBagConstraints.NORTH;
+		gbcPanel1.insets = new Insets( 0,0,0,0 );
 		gbPanel1.setConstraints( scpTypeUsedList, gbcPanel1 );
 		pnPanel1.add( scpTypeUsedList );
 

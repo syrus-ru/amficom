@@ -66,10 +66,10 @@ public class EquipmentTypeCharacteristicsPanel extends GeneralPanel
 		for (int i = 0; i < sorts.length; i++)
 			charPane.setTypeSortMapping(
 					sorts[i],
-					CharacteristicSort.CHARACTERISTIC_SORT_LINKTYPE,
+					CharacteristicSort.CHARACTERISTIC_SORT_EQUIPMENTTYPE,
 					type,
 					type.getId(),
-					false);
+					true);
 		charPane.addCharacteristics(type.getCharacteristics(), type.getId());
 
 	}

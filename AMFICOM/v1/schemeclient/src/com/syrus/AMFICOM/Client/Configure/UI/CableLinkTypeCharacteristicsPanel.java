@@ -66,7 +66,7 @@ public class CableLinkTypeCharacteristicsPanel extends GeneralPanel
 		for (int i = 0; i < sorts.length; i++)
 			charPane.setTypeSortMapping(
 					sorts[i],
-					CharacteristicSort.CHARACTERISTIC_SORT_LINKTYPE,
+					CharacteristicSort.CHARACTERISTIC_SORT_CABLELINKTYPE,
 					type,
 					type.getId(),
 					true);

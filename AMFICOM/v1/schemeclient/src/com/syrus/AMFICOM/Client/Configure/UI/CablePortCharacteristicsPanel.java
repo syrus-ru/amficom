@@ -74,7 +74,8 @@ public class CablePortCharacteristicsPanel extends GeneralPanel
 					CharacteristicSort.CHARACTERISTIC_SORT_SCHEMECABLEPORT,
 					port,
 					portId,
-					false);
+					true);
+		
 		charPane.addCharacteristics(port.characteristicsImpl().getValue(), portId);
 
 		if (port.port() != null)

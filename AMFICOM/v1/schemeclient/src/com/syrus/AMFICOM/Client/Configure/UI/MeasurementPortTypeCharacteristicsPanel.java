@@ -4,7 +4,6 @@ import java.awt.BorderLayout;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModelConfig;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.Resource.ObjectResource;
 import com.syrus.AMFICOM.client_.general.ui_.GeneralPanel;
 import com.syrus.AMFICOM.configuration.MeasurementPortType;
 import com.syrus.AMFICOM.general.corba.*;
@@ -59,7 +58,7 @@ public class MeasurementPortTypeCharacteristicsPanel extends GeneralPanel
 		return type;
 	}
 
-	public void setObjectResource(ObjectResource or)
+	public void setObject(Object or)
 	{
 		this.type = (MeasurementPortType)or;
 		charPane.clear();
@@ -67,10 +66,10 @@ public class MeasurementPortTypeCharacteristicsPanel extends GeneralPanel
 		for (int i = 0; i < sorts.length; i++)
 			charPane.setTypeSortMapping(
 					sorts[i],
-					CharacteristicSort.CHARACTERISTIC_SORT_LINKTYPE,
+					CharacteristicSort.CHARACTERISTIC_SORT_MEASUREMENTPORTTYPE,
 					type,
 					type.getId(),
-					false);
+					true);
 		charPane.addCharacteristics(type.getCharacteristics(), type.getId());
 	}
 

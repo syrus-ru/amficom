@@ -2,7 +2,6 @@ package com.syrus.AMFICOM.Client.Configure.UI;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.List;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;

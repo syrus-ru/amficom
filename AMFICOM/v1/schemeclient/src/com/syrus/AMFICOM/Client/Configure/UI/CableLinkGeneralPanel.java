@@ -3,8 +3,6 @@ package com.syrus.AMFICOM.Client.Configure.UI;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
-import com.syrus.AMFICOM.administration.*;
 import com.syrus.AMFICOM.client_.general.ui_.ObjListModel;
 import com.syrus.AMFICOM.configuration.*;
 import com.syrus.AMFICOM.general.*;
