@@ -131,3 +131,5 @@ t4		hw/t4
 
 
 tools		tools
+
+optimize_test	test/optimize
