@@ -1,5 +1,5 @@
 /*
- * $Id: general-vt.idl,v 1.6 2004/12/15 14:22:55 bass Exp $
+ * $Id: general-vt.idl,v 1.7 2004/12/17 15:58:23 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -118,10 +118,12 @@ module com {
 						private Identifier thisId;
 						private long long thisCreated;
 						private long long thisModified;
-						private Identifier creatorId;
-						private Identifier modifierId;
+						private Identifier thisCreatorId;
+						private Identifier thisModifierId;
 						private long long thisVersion;
 
+						readonly attribute Identifier creatorId;
+						readonly attribute Identifier modifierId;
 						readonly attribute long long version;
 					};
 				};
