@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementDatabaseContext.java,v 1.14 2004/09/24 14:10:53 bob Exp $
+ * $Id: MeasurementDatabaseContext.java,v 1.15 2004/10/06 15:45:15 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,11 +8,21 @@
 
 package com.syrus.AMFICOM.measurement;
 
+import java.util.Iterator;
+import java.util.List;
+
+import org.apache.xalan.lib.sql.ObjectArray;
+
+import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
+import com.syrus.AMFICOM.configuration.Domain;
+import com.syrus.AMFICOM.configuration.MonitoredElement;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2004/09/24 14:10:53 $
- * @author $Author: bob $
+ * @version $Revision: 1.15 $, $Date: 2004/10/06 15:45:15 $
+ * @author $Author: max $
  * @module measurement_v1
  */
 
@@ -64,6 +74,57 @@ public class MeasurementDatabaseContext {
 		temporalPatternDatabase = temporalPatternDatabase1;
 		
 	}
+    
+    public static StorableObjectDatabase getDatabase(short entityCode ) {
+        
+        switch (entityCode) {
+            
+            case ObjectEntities.ANALYSIS_ENTITY_CODE:
+                return analysisDatabase;
+            
+            case ObjectEntities.ANALYSISTYPE_ENTITY_CODE:
+                return analysisTypeDatabase;
+                
+            case ObjectEntities.EVALUATION_ENTITY_CODE:
+                return evaluationDatabase;
+                
+            case ObjectEntities.EVALUATIONTYPE_ENTITY_CODE:
+                return evaluationTypeDatabase;
+                
+            case ObjectEntities.MEASUREMENT_ENTITY_CODE:
+                return measurementDatabase;
+                
+            case ObjectEntities.MS_ENTITY_CODE:
+                return measurementSetupDatabase;
+                
+            case ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE:
+                return measurementTypeDatabase;
+                
+            case ObjectEntities.MODELING_ENTITY_CODE:
+                return modelingDatabase;
+                
+            case ObjectEntities.PARAMETERTYPE_ENTITY_CODE:
+                return parameterTypeDatabase;
+                
+            case ObjectEntities.RESULT_ENTITY_CODE:
+                return resultDatabase;
+                
+            case ObjectEntities.SET_ENTITY_CODE:
+                return setDatabase;
+                
+            case ObjectEntities.TEMPORALPATTERN_ENTITY_CODE:
+                return temporalPatternDatabase;
+                
+            case ObjectEntities.TEST_ENTITY_CODE:
+                return testDatabase;
+                
+            default:
+                return null;                
+        }
+
+
+    }
+    
 	public static StorableObjectDatabase getAnalysisDatabase() {
 		return analysisDatabase;
 	}

@@ -1,5 +1,5 @@
 /*
- * $Id: Evaluation.java,v 1.24 2004/09/01 15:08:10 bob Exp $
+ * $Id: Evaluation.java,v 1.25 2004/10/06 15:45:15 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,6 +10,7 @@ package com.syrus.AMFICOM.measurement;
 
 import java.util.Date;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
@@ -22,8 +23,8 @@ import com.syrus.AMFICOM.measurement.corba.ResultSort;
 import com.syrus.AMFICOM.event.corba.AlarmLevel;
 
 /**
- * @version $Revision: 1.24 $, $Date: 2004/09/01 15:08:10 $
- * @author $Author: bob $
+ * @version $Revision: 1.25 $, $Date: 2004/10/06 15:45:15 $
+ * @author $Author: max $
  * @module measurement_v1
  */
 
@@ -112,7 +113,11 @@ public class Evaluation extends Action {
 																			 (Identifier_Transferable)this.thresholdSet.getId().getTransferable());
 	}
 
-	public Set getThresholdSet() {
+	public short getEntityCode() {
+        return ObjectEntities.EVALUATION_ENTITY_CODE;
+    }
+    
+    public Set getThresholdSet() {
 		return this.thresholdSet;
 	}
 

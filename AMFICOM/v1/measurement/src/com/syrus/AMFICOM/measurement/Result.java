@@ -1,5 +1,5 @@
 /*
- * $Id: Result.java,v 1.17 2004/09/01 15:08:11 bob Exp $
+ * $Id: Result.java,v 1.18 2004/10/06 15:45:16 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,6 +10,7 @@ package com.syrus.AMFICOM.measurement;
 
 import java.util.Date;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -25,8 +26,8 @@ import com.syrus.AMFICOM.measurement.corba.Parameter_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2004/09/01 15:08:11 $
- * @author $Author: bob $
+ * @version $Revision: 1.18 $, $Date: 2004/10/06 15:45:16 $
+ * @author $Author: max $
  * @module measurement_v1
  */
 
@@ -157,6 +158,10 @@ public class Result extends StorableObject {
 																	 AlarmLevel.from_int(this.alarmLevel));
 	}
 
+    public short getEntityCode() {
+        return ObjectEntities.RESULT_ENTITY_CODE;
+    }
+    
 	public Measurement getMeasurement() {
 		return this.measurement;
 	}

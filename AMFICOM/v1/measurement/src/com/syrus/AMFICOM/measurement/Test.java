@@ -1,5 +1,5 @@
 /*
- * $Id: Test.java,v 1.54 2004/09/30 14:34:31 bob Exp $
+ * $Id: Test.java,v 1.55 2004/10/06 15:45:16 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,6 +17,7 @@ import java.util.Iterator;
 import com.syrus.util.HashCodeGenerator;
 import com.syrus.util.Log;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -41,8 +42,8 @@ import com.syrus.AMFICOM.measurement.corba.TestTimeStamps_TransferablePackage.Co
 import com.syrus.AMFICOM.measurement.corba.TestTimeStamps_TransferablePackage.PeriodicalTestTimeStamps;
 
 /**
- * @version $Revision: 1.54 $, $Date: 2004/09/30 14:34:31 $
- * @author $Author: bob $
+ * @version $Revision: 1.55 $, $Date: 2004/10/06 15:45:16 $
+ * @author $Author: max $
  * @module measurement_v1
  */
 
@@ -262,7 +263,11 @@ public class Test extends StorableObject {
 	}
 
 	
-	public AnalysisType getAnalysisType() {
+	public short getEntityCode() {
+        return ObjectEntities.TEST_ENTITY_CODE;
+    }
+    
+    public AnalysisType getAnalysisType() {
 		return this.analysisType;
 	}
 

@@ -1,5 +1,5 @@
 /*
- * $Id: Modeling.java,v 1.3 2004/09/27 06:06:30 bob Exp $
+ * $Id: Modeling.java,v 1.4 2004/10/06 15:45:16 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,6 +14,7 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
@@ -23,8 +24,8 @@ import com.syrus.AMFICOM.measurement.corba.Modeling_Transferable;
 import com.syrus.util.HashCodeGenerator;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2004/09/27 06:06:30 $
- * @author $Author: bob $
+ * @version $Revision: 1.4 $, $Date: 2004/10/06 15:45:16 $
+ * @author $Author: max $
  * @module measurement_v1
  */
 
@@ -199,7 +200,11 @@ public class Modeling extends StorableObject {
 		return equals;
 	}
 
-	public Set getArgumentSet() {
+    public short getEntityCode() {
+        return ObjectEntities.MODELING_ENTITY_CODE;
+    }
+    
+    public Set getArgumentSet() {
 		return this.argumentSet;
 	}
 	public Identifier getMonitoredElementId() {

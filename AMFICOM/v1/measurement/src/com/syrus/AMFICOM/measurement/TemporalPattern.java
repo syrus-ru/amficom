@@ -1,5 +1,5 @@
 /*
- * $Id: TemporalPattern.java,v 1.39 2004/09/22 08:34:34 bob Exp $
+ * $Id: TemporalPattern.java,v 1.40 2004/10/06 15:45:16 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -20,6 +20,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
@@ -32,8 +33,8 @@ import com.syrus.AMFICOM.resource.LangModelMeasurement;
 import com.syrus.util.HashCodeGenerator;
 
 /**
- * @version $Revision: 1.39 $, $Date: 2004/09/22 08:34:34 $
- * @author $Author: bob $
+ * @version $Revision: 1.40 $, $Date: 2004/10/06 15:45:16 $
+ * @author $Author: max $
  * @module measurement_v1
  */
 
@@ -872,7 +873,11 @@ public class TemporalPattern extends StorableObject {
 		return new TemporalPattern(id, creatorId, description, cronStrings);
 	}
 
-	public String[] getCronStrings() {
+	public short getEntityCode() {
+        return ObjectEntities.TEMPORALPATTERN_ENTITY_CODE;
+    }
+    
+    public String[] getCronStrings() {
 		if ((this.cronStrings == null) || (this.cronStrings.length != this.templates.size()))
 			this.cronStrings = new String[this.templates.size()];
 		{

@@ -1,5 +1,5 @@
 /*
- * $Id: ParameterType.java,v 1.19 2004/09/01 15:08:11 bob Exp $
+ * $Id: ParameterType.java,v 1.20 2004/10/06 15:45:16 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,6 +10,7 @@ package com.syrus.AMFICOM.measurement;
 
 import java.util.Date;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
@@ -22,8 +23,8 @@ import com.syrus.AMFICOM.measurement.corba.ParameterType_Transferable;
 import com.syrus.util.HashCodeGenerator;
 
 /**
- * @version $Revision: 1.19 $, $Date: 2004/09/01 15:08:11 $
- * @author $Author: bob $
+ * @version $Revision: 1.20 $, $Date: 2004/10/06 15:45:16 $
+ * @author $Author: max $
  * @module measurement_v1
  */
 
@@ -111,7 +112,11 @@ public class ParameterType extends StorableObjectType {
 		return parameterType;
 	}
 
-	public Object getTransferable() {
+    public short getEntityCode() {
+        return ObjectEntities.PARAMETERTYPE_ENTITY_CODE;
+    }
+    
+    public Object getTransferable() {
 		return new ParameterType_Transferable((Identifier_Transferable)super.id.getTransferable(),
 																					super.created.getTime(),
 																					super.modified.getTime(),

@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementSetup.java,v 1.28 2004/09/07 15:20:59 bob Exp $
+ * $Id: MeasurementSetup.java,v 1.29 2004/10/06 15:45:16 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -25,8 +26,8 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.corba.MeasurementSetup_Transferable;
 
 /**
- * @version $Revision: 1.28 $, $Date: 2004/09/07 15:20:59 $
- * @author $Author: bob $
+ * @version $Revision: 1.29 $, $Date: 2004/10/06 15:45:16 $
+ * @author $Author: max $
  * @module measurement_v1
  */
 
@@ -229,7 +230,11 @@ public class MeasurementSetup extends StorableObject {
 																						 meIds);
 	}
 
-	public Set getParameterSet() {
+    public short getEntityCode() {
+        return ObjectEntities.MS_ENTITY_CODE;
+    }
+    
+    public Set getParameterSet() {
 		return this.parameterSet;
 	}
 

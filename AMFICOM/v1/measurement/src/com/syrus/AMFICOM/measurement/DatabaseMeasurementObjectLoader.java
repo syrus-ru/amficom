@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseMeasurementObjectLoader.java,v 1.13 2004/10/06 06:47:51 bob Exp $
+ * $Id: DatabaseMeasurementObjectLoader.java,v 1.14 2004/10/06 15:45:15 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,6 +16,7 @@ import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.UpdateObjectException;
@@ -23,8 +24,8 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2004/10/06 06:47:51 $
- * @author $Author: bob $
+ * @version $Revision: 1.14 $, $Date: 2004/10/06 15:45:15 $
+ * @author $Author: max $
  * @module measurement_v1
  */
 
@@ -820,7 +821,42 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 			}
 		}
 
-		public void saveAnalyses(List list, boolean force) throws DatabaseException, CommunicationException{
+		public void save(List list, boolean force) throws DatabaseException {
+            
+            short entityCode = ((StorableObject)list.get(1)).getEntityCode();
+            StorableObjectDatabase database = MeasurementDatabaseContext.getDatabase(entityCode);
+            try {
+                database.update(list, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
+            } catch (UpdateObjectException e) {
+                Log.errorMessage("DatabaseMeasumentObjectLoader.saveAnalysis | UpdateObjectException: " + e.getMessage());
+                throw new DatabaseException("DatabaseMeasumentObjectLoader.saveAnalysis | UpdateObjectException: " + e.getMessage());
+            } catch (IllegalDataException e) {
+                Log.errorMessage("DatabaseMeasumentObjectLoader.saveAnalysis | Illegal Storable Object: " + e.getMessage());
+                throw new DatabaseException("DatabaseMeasumentObjectLoader.saveAnalysis | Illegal Storable Object: " + e.getMessage());
+            } catch (VersionCollisionException e) {
+                Log.errorMessage("DatabaseMeasumentObjectLoader.saveAnalysis | VersionCollisionException: " + e.getMessage());
+                throw new DatabaseException("DatabaseMeasumentObjectLoader.saveAnalysis | VersionCollisionException: " + e.getMessage());
+            }		    
+        }
+        
+        public void save(StorableObject storableObject, boolean force) throws DatabaseException {
+            
+            StorableObjectDatabase database = MeasurementDatabaseContext.getDatabase(storableObject.getEntityCode());
+            try {
+                database.update(storableObject, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
+            } catch (UpdateObjectException e) {
+                Log.errorMessage("DatabaseMeasumentObjectLoader.saveAnalysis | UpdateObjectException: " + e.getMessage());
+                throw new DatabaseException("DatabaseMeasumentObjectLoader.saveAnalysis | UpdateObjectException: " + e.getMessage());
+            } catch (IllegalDataException e) {
+                Log.errorMessage("DatabaseMeasumentObjectLoader.saveAnalysis | Illegal Storable Object: " + e.getMessage());
+                throw new DatabaseException("DatabaseMeasumentObjectLoader.saveAnalysis | Illegal Storable Object: " + e.getMessage());
+            } catch (VersionCollisionException e) {
+                Log.errorMessage("DatabaseMeasumentObjectLoader.saveAnalysis | VersionCollisionException: " + e.getMessage());
+                throw new DatabaseException("DatabaseMeasumentObjectLoader.saveAnalysis | VersionCollisionException: " + e.getMessage());
+            }   
+        }
+        
+        public void saveAnalyses(List list, boolean force) throws DatabaseException, CommunicationException{
 			AnalysisDatabase database = (AnalysisDatabase)MeasurementDatabaseContext.getAnalysisDatabase();
 			try {
 				database.update(list, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);

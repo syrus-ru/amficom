@@ -1,5 +1,5 @@
 /*
- * $Id: Set.java,v 1.24 2004/09/07 15:21:00 bob Exp $
+ * $Id: Set.java,v 1.25 2004/10/06 15:45:16 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
@@ -30,8 +31,8 @@ import com.syrus.AMFICOM.measurement.corba.Parameter_Transferable;
 import com.syrus.util.HashCodeGenerator;
 
 /**
- * @version $Revision: 1.24 $, $Date: 2004/09/07 15:21:00 $
- * @author $Author: bob $
+ * @version $Revision: 1.25 $, $Date: 2004/10/06 15:45:16 $
+ * @author $Author: max $
  * @module measurement_v1
  */
 
@@ -206,7 +207,12 @@ public class Set extends StorableObject {
 																meIds);
 	}
 
-	public SetSort getSort() {
+
+    public short getEntityCode() {
+        return ObjectEntities.SET_ENTITY_CODE;
+    }
+    
+    public SetSort getSort() {
 		return SetSort.from_int(this.sort);
 	}
 

@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisType.java,v 1.28 2004/09/01 15:08:10 bob Exp $
+ * $Id: AnalysisType.java,v 1.29 2004/10/06 15:45:15 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,7 +12,11 @@ import java.util.Date;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Iterator;
+
+import org.w3c.dom.EntityReference;
+
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
@@ -25,8 +29,8 @@ import com.syrus.AMFICOM.measurement.corba.AnalysisType_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.28 $, $Date: 2004/09/01 15:08:10 $
- * @author $Author: bob $
+ * @version $Revision: 1.29 $, $Date: 2004/10/06 15:45:15 $
+ * @author $Author: max $
  * @module measurement_v1
  */
 
@@ -203,7 +207,11 @@ public class AnalysisType extends ActionType {
 																				 outParTypeIds);
 	}
 
-	public List getInParameterTypes() {
+	public short getEntityCode() {
+        return ObjectEntities.ANALYSISTYPE_ENTITY_CODE;
+    }
+    
+    public List getInParameterTypes() {
 		return this.inParameterTypes;
 	}
 

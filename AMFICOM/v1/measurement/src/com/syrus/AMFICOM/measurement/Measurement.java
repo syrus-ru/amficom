@@ -1,5 +1,5 @@
 /*
- * $Id: Measurement.java,v 1.26 2004/09/07 15:20:59 bob Exp $
+ * $Id: Measurement.java,v 1.27 2004/10/06 15:45:15 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,6 +11,7 @@ package com.syrus.AMFICOM.measurement;
 import java.util.Date;
 import com.syrus.AMFICOM.measurement.corba.MeasurementStatus;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
@@ -25,8 +26,8 @@ import com.syrus.AMFICOM.measurement.corba.ResultSort;
 import com.syrus.AMFICOM.event.corba.AlarmLevel;
 
 /**
- * @version $Revision: 1.26 $, $Date: 2004/09/07 15:20:59 $
- * @author $Author: bob $
+ * @version $Revision: 1.27 $, $Date: 2004/10/06 15:45:15 $
+ * @author $Author: max $
  * @module measurement_v1
  */
 
@@ -142,7 +143,11 @@ public class Measurement extends Action {
 																				(Identifier_Transferable)this.testId.getTransferable());
 	}
 
-	public MeasurementSetup getSetup() {
+    public short getEntityCode() {
+        return ObjectEntities.MEASUREMENT_ENTITY_CODE;
+    }
+    
+    public MeasurementSetup getSetup() {
 		return this.setup;
 	}
 

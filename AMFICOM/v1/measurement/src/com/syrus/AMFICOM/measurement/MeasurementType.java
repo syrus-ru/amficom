@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementType.java,v 1.24 2004/09/01 15:08:11 bob Exp $
+ * $Id: MeasurementType.java,v 1.25 2004/10/06 15:45:16 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.Iterator;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
@@ -25,8 +26,8 @@ import com.syrus.AMFICOM.measurement.corba.MeasurementType_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.24 $, $Date: 2004/09/01 15:08:11 $
- * @author $Author: bob $
+ * @version $Revision: 1.25 $, $Date: 2004/10/06 15:45:16 $
+ * @author $Author: max $
  * @module measurement_v1
  */
 
@@ -168,7 +169,11 @@ public class MeasurementType extends ActionType {
 																						outParTypeIds);
 	}
 
-	public List getInParameterTypes() {
+    public short getEntityCode() {
+        return ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE;
+    }
+    
+    public List getInParameterTypes() {
 		return this.inParameterTypes;
 	}
 
