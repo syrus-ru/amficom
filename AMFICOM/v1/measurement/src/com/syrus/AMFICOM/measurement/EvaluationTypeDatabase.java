@@ -30,6 +30,8 @@ public class EvaluationTypeDatabase extends StorableObjectDatabase {
 	public static final String	COLUMN_DESCRIPTION = "description";
 
 	public static final String	LINK_COLUMN_EVALUATION_TYPE_ID = "evaluation_type_id";
+	
+	public static final int CHARACTER_NUMBER_OF_RECORDS = 1;
 
 	private EvaluationType fromStorableObject(StorableObject storableObject) throws IllegalDataException {
 		if (storableObject instanceof EvaluationType)
@@ -422,5 +424,42 @@ public class EvaluationTypeDatabase extends StorableObjectDatabase {
 				Log.errorException(sqle1);
 			}
 		}
+	}
+	
+	protected static List retrieveAll() throws RetrieveObjectException {
+		List evaluationTypes = new ArrayList(CHARACTER_NUMBER_OF_RECORDS);
+		String sql = SQL_SELECT
+				+ COLUMN_ID
+				+ SQL_FROM + ObjectEntities.EVALUATIONTYPE_ENTITY;
+		Statement statement = null;
+		ResultSet resultSet = null;
+		try {
+			statement = connection.createStatement();
+			Log.debugMessage("EvaluationTypeDatabase.retrieveAll | Trying: " + sql, Log.DEBUGLEVEL05);
+			resultSet = statement.executeQuery(sql);
+			while (resultSet.next())
+				evaluationTypes.add(new EvaluationType(new Identifier(resultSet.getString(COLUMN_ID))));			
+		}
+		catch (ObjectNotFoundException onfe) {
+			Log.errorException(onfe);
+		}
+		catch (SQLException sqle) {
+			String mesg = "EvaluationTypeDatabase.retrieveAll | Cannot retrieve evaluation type";
+			throw new RetrieveObjectException(mesg, sqle);
+		}
+		finally {
+			try {
+				if (statement != null)
+					statement.close();
+				if (resultSet != null)
+					resultSet.close();
+				statement = null;
+				resultSet = null;
+			}
+			catch (SQLException sqle1) {
+				Log.errorException(sqle1);
+			}
+		}
+		return evaluationTypes;
 	}
 }

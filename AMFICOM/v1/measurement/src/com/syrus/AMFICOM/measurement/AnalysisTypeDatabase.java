@@ -30,6 +30,8 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 	public static final String	COLUMN_DESCRIPTION = "description";	
 	
 	public static final String	LINK_COLUMN_ANALYSIS_TYPE_ID = "analysis_type_id";
+	
+	public static final int CHARACTER_NUMBER_OF_RECORDS = 1;
 
 	private AnalysisType fromStorableObject(StorableObject storableObject) throws IllegalDataException {
 		if (storableObject instanceof AnalysisType)
@@ -412,5 +414,42 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 				Log.errorException(sqle1);
 			}
 		}
+	}
+	
+	protected static List retrieveAll() throws RetrieveObjectException {
+		List analysisTypes = new ArrayList(CHARACTER_NUMBER_OF_RECORDS);
+		String sql = SQL_SELECT
+				+ COLUMN_ID
+				+ SQL_FROM + ObjectEntities.ANALYSISTYPE_ENTITY;
+		Statement statement = null;
+		ResultSet resultSet = null;
+		try {
+			statement = connection.createStatement();
+			Log.debugMessage("AnalysisTypeDatabase.retrieveAll | Trying: " + sql, Log.DEBUGLEVEL05);
+			resultSet = statement.executeQuery(sql);
+			while (resultSet.next())
+				analysisTypes.add(new AnalysisType(new Identifier(resultSet.getString(COLUMN_ID))));			
+		}
+		catch (ObjectNotFoundException onfe) {
+			Log.errorException(onfe);
+		}
+		catch (SQLException sqle) {
+			String mesg = "AnalysisTypeDatabase.retrieveAll | Cannot retrieve analysis type";
+			throw new RetrieveObjectException(mesg, sqle);
+		}
+		finally {
+			try {
+				if (statement != null)
+					statement.close();
+				if (resultSet != null)
+					resultSet.close();
+				statement = null;
+				resultSet = null;
+			}
+			catch (SQLException sqle1) {
+				Log.errorException(sqle1);
+			}
+		}
+		return analysisTypes;
 	}
 }

@@ -156,6 +156,10 @@ public class ResultDatabase extends StorableObjectDatabase {
 			SetParameter parameter;
 			while (resultSet.next()) {
 				try {
+					/**
+					 * @todo when change DB Identifier model ,change getString() to getLong()
+					 */
+					ParameterType parameterType = MeasurementObjectTypePool.getParameterType(new Identifier(resultSet.getString(LINK_COLUMN_TYPE_ID)));
 					parameter = new SetParameter(/**
 																				* @todo when change DB Identifier model ,change getString() to getLong()
 																				*/
@@ -163,7 +167,7 @@ public class ResultDatabase extends StorableObjectDatabase {
 																				/**
 																					* @todo when change DB Identifier model ,change getString() to getLong()
 																					*/
-																				new Identifier(resultSet.getString(LINK_COLUMN_TYPE_ID)),
+																				parameterType,
 																				ByteArrayDatabase.toByteArray((BLOB)resultSet.getBlob(LINK_COLUMN_VALUE)));
 					arraylist.add(parameter);
 				}
@@ -327,33 +331,37 @@ public class ResultDatabase extends StorableObjectDatabase {
 			+ CLOSE_BRACKET;
 		PreparedStatement preparedStatement = null;
 		int i = 0;
+		Identifier parameterId = null;
+		Identifier parameterTypeId = null;
 		try {
 			preparedStatement = connection.prepareStatement(sql);
 			for (i = 0; i < setParameters.length; i++) {
+				parameterId = setParameters[i].getId();
+				parameterTypeId = setParameters[i].getType().getId();
 				/**
 				 * @todo when change DB Identifier model ,change setString() to setLong()
 				 */
-				preparedStatement.setString(1, setParameters[i].getId().getCode());
+				preparedStatement.setString(1, parameterId.getCode());
 				/**
 				 * @todo when change DB Identifier model ,change setString() to setLong()
 				 */
-				preparedStatement.setString(2, setParameters[i].getTypeId().getCode());
+				preparedStatement.setString(2, parameterTypeId.getCode());
 				/**
 				 * @todo when change DB Identifier model ,change setString() to setLong()
 				 */
 				preparedStatement.setString(3, resultIdCode);
 				preparedStatement.setBlob(4, BLOB.empty_lob());
-				Log.debugMessage("ResultDatabase.insertResultParameters | Inserting parameter " + setParameters[i].getTypeId().toString() + " for result " + resultIdCode, Log.DEBUGLEVEL05);
+				Log.debugMessage("ResultDatabase.insertResultParameters | Inserting parameter " + parameterTypeId.toString() + " for result " + resultIdCode, Log.DEBUGLEVEL05);
 				preparedStatement.executeUpdate();
 				ByteArrayDatabase badb = new ByteArrayDatabase(setParameters[i].getValue());
 				badb.saveAsBlob(connection, 
 								ObjectEntities.RESULTPARAMETER_ENTITY, 
-								LINK_COLUMN_VALUE, COLUMN_ID + EQUALS + setParameters[i].getId().toSQLString());
+								LINK_COLUMN_VALUE, COLUMN_ID + EQUALS + parameterId.toSQLString());
 			}
 			connection.commit();
 		}
 		catch (SQLException sqle) {
-			String mesg = "ResultDatabase.insertResultParameters | Cannot insert parameter " + setParameters[i].getId().toString() + " of type " + setParameters[i].getTypeId().toString() + " for result " + resultIdCode;
+			String mesg = "ResultDatabase.insertResultParameters | Cannot insert parameter " + parameterId.toString() + " of type " + parameterTypeId.toString() + " for result " + resultIdCode;
 			throw new CreateObjectException(mesg, sqle);
 		}
 		finally {

@@ -106,9 +106,9 @@ public class Test extends StorableObject {
 
 	private int temporalType;
 	private TestTimeStamps timeStamps;
-	private Identifier measurementTypeId;
-	private Identifier analysisTypeId;
-	private Identifier evaluationTypeId;
+	private MeasurementType measurementType;
+	private AnalysisType analysisType;
+	private EvaluationType evaluationType;
 	private int status;
 	private MonitoredElement monitoredElement;
 	private int	returnType;
@@ -140,17 +140,21 @@ public class Test extends StorableObject {
 					new Identifier(tt.modifier_id));
 		this.temporalType = tt.temporal_type.value();
 		this.timeStamps = new TestTimeStamps(tt.time_stamps);
-		this.measurementTypeId = new Identifier(tt.measurement_type_id);
 		/**
 		 * @todo when change DB Identifier model ,change identifier_string to
 		 *       identifier_code
 		 */
-		this.analysisTypeId = (tt.analysis_type_id.identifier_string != null) ? (new Identifier(tt.analysis_type_id)) : null;
+		this.measurementType = (MeasurementType)MeasurementObjectTypePool.getActionType(new Identifier(tt.measurement_type_id));
 		/**
 		 * @todo when change DB Identifier model ,change identifier_string to
 		 *       identifier_code
 		 */
-		this.evaluationTypeId = (tt.evaluation_type_id.identifier_string != null)	? (new Identifier(tt.evaluation_type_id)) : null;
+		this.analysisType = (tt.analysis_type_id.identifier_string != null) ? ((AnalysisType)MeasurementObjectTypePool.getActionType(new Identifier(tt.analysis_type_id))) : null;
+		/**
+		 * @todo when change DB Identifier model ,change identifier_string to
+		 *       identifier_code
+		 */
+		this.evaluationType = (tt.evaluation_type_id.identifier_string != null)	? ((EvaluationType)MeasurementObjectTypePool.getActionType(new Identifier(tt.evaluation_type_id))) : null;
 		this.status = tt.status.value();
 		try {
 			this.monitoredElement = new MonitoredElement(new Identifier(tt.monitored_element_id));
@@ -192,7 +196,7 @@ public class Test extends StorableObject {
 																			 Date startTime) throws CreateObjectException {
 		Measurement measurement = Measurement.createInstance(measurementId,
 																												 creatorId,
-																												 this.measurementTypeId,
+																												 this.measurementType,
 																												 this.monitoredElement.getId(),
 																												 this.mainMeasurementSetup,
 																												 startTime,
@@ -215,9 +219,9 @@ public class Test extends StorableObject {
 							 Date endTime,
 							 Identifier temporalPatternId,
 							 TestTemporalType temporalType,
-							 Identifier measurementTypeId,
-							 Identifier analysisTypeId,
-							 Identifier evaluationTypeId,
+							 MeasurementType measurementType,
+							 AnalysisType analysisType,
+							 EvaluationType evaluationType,
 							 MonitoredElement monitoredElement,
 							 TestReturnType returnType,
 							 String description,
@@ -233,9 +237,9 @@ public class Test extends StorableObject {
 																				 startTime,
 																				 endTime,
 																				 temporalPatternId);
-		this.measurementTypeId = measurementTypeId;
-		this.analysisTypeId = analysisTypeId;
-		this.evaluationTypeId = evaluationTypeId;
+		this.measurementType = measurementType;
+		this.analysisType = analysisType;
+		this.evaluationType = evaluationType;
 		this.monitoredElement = monitoredElement;
 		this.returnType = returnType.value();
 		this.description = description;
@@ -270,9 +274,9 @@ public class Test extends StorableObject {
 																		Date endTime,
 																		Identifier temporalPatternId,
 																		TestTemporalType temporalType,
-																		Identifier measurementTypeId,
-																		Identifier analysisTypeId,
-																		Identifier evaluationTypeId,
+																		MeasurementType measurementType,
+																		AnalysisType analysisType,
+																		EvaluationType evaluationType,
 																		MonitoredElement monitoredElement,
 																		TestReturnType returnType,
 																		String description,
@@ -283,9 +287,9 @@ public class Test extends StorableObject {
 										endTime,
 										temporalPatternId,
 										temporalType,
-										measurementTypeId,
-										analysisTypeId,
-										evaluationTypeId,
+										measurementType,
+										analysisType,
+										evaluationType,
 										monitoredElement,
 										returnType,
 										description,
@@ -294,8 +298,8 @@ public class Test extends StorableObject {
 	}
 
 
-	public Identifier getAnalysisTypeId() {
-		return this.analysisTypeId;
+	public AnalysisType getAnalysisType() {
+		return this.analysisType;
 	}
 
 	public String getDescription() {
@@ -306,8 +310,8 @@ public class Test extends StorableObject {
 		return this.timeStamps.endTime;
 	}
 
-	public Identifier getEvaluationTypeId() {
-		return this.evaluationTypeId;
+	public EvaluationType getEvaluationType() {
+		return this.evaluationType;
 	}
 
 	public KIS getKIS() {
@@ -318,8 +322,8 @@ public class Test extends StorableObject {
 		return this.measurementSetupIds;
 	}
 
-	public Identifier getMeasurementTypeId() {
-		return this.measurementTypeId;
+	public MeasurementType getMeasurementType() {
+		return this.measurementType;
 	}
 
 	public MonitoredElement getMonitoredElement() {
@@ -358,9 +362,9 @@ public class Test extends StorableObject {
 																 (Identifier_Transferable)super.modifierId.getTransferable(),
 																 TestTemporalType.from_int(this.temporalType),
 																 this.timeStamps.getTransferable(),
-																 (Identifier_Transferable)this.measurementTypeId.getTransferable(),
-																 (this.analysisTypeId != null) ? (Identifier_Transferable)this.analysisTypeId.getTransferable() : null,
-																 (this.evaluationTypeId != null) ? (Identifier_Transferable)this.evaluationTypeId.getTransferable() : null,
+																 (Identifier_Transferable)this.measurementType.getId().getTransferable(),
+																 (this.analysisType != null) ? (Identifier_Transferable)this.analysisType.getId().getTransferable() : null,
+																 (this.evaluationType != null) ? (Identifier_Transferable)this.evaluationType.getId().getTransferable() : null,
 																 TestStatus.from_int(this.status),
 																 (Identifier_Transferable)this.monitoredElement.getId().getTransferable(),
 																 TestReturnType.from_int(this.returnType),
@@ -379,9 +383,9 @@ public class Test extends StorableObject {
 	/**
 	 * @param analysisTypeId The analysisTypeId to set.
 	 */
-	public void setAnalysisTypeId(Identifier analysisTypeId) {
+	public void setAnalysisType(AnalysisType analysisType) {
 		this.currentVersion = super.getNextVersion();
-		this.analysisTypeId = analysisTypeId;
+		this.analysisType = analysisType;
 	}
 	/**
 	 * @param description The description to set.
@@ -393,9 +397,9 @@ public class Test extends StorableObject {
 	/**
 	 * @param evaluationTypeId The evaluationTypeId to set.
 	 */
-	public void setEvaluationTypeId(Identifier evaluationTypeId) {
+	public void setEvaluationTypeId(EvaluationType evaluationType) {
 		this.currentVersion = super.getNextVersion();
-		this.evaluationTypeId = evaluationTypeId;
+		this.evaluationType = evaluationType;
 	}
 //	/**
 //	 * @param measurementSetupIds The measurementSetupIds to set.
@@ -407,9 +411,9 @@ public class Test extends StorableObject {
 	/**
 	 * @param measurementTypeId The measurementTypeId to set.
 	 */
-	public void setMeasurementTypeId(Identifier measurementTypeId) {
+	public void setMeasurementType(MeasurementType measurementType) {
 		this.currentVersion = super.getNextVersion();
-		this.measurementTypeId = measurementTypeId;
+		this.measurementType = measurementType;
 	}
 	/**
 	 * @param monitoredElement The monitoredElement to set.
@@ -471,9 +475,9 @@ public class Test extends StorableObject {
 																						Date startTime,
 																						Date endTime,
 																						Identifier temporalPatternId,
-																						Identifier measurementTypeId,
-																						Identifier analysisTypeId,
-																						Identifier evaluationTypeId,
+																						MeasurementType measurementType,
+																						AnalysisType analysisType,
+																						EvaluationType evaluationType,
 																						int status,
 																						MonitoredElement monitoredElement,
 																						int returnType,
@@ -488,9 +492,9 @@ public class Test extends StorableObject {
 																				 endTime,
 																				 temporalPatternId);
 
-		this.measurementTypeId = measurementTypeId;
-		this.analysisTypeId = analysisTypeId;
-		this.evaluationTypeId = evaluationTypeId;
+		this.measurementType = measurementType;
+		this.analysisType = analysisType;
+		this.evaluationType = evaluationType;
 		this.status = status;
 		this.monitoredElement = monitoredElement;
 		this.returnType = returnType;

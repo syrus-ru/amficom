@@ -83,8 +83,6 @@ public class TestDatabase extends StorableObjectDatabase {
 				/**
 				 * @todo when change DB Identifier model ,change String to long
 				 */
-				//String ptTemplateIdCode = resultSet.getString("ptTemplateId");
-				//Date[] ttTimestamps = ((TimeStampArray)(((OracleResultSet)resultSet).getORAData("ttTimestamps", TimeStampArray.getORADataFactory()))).getArray();
 				String temportalPatternID = resultSet.getString(COLUMN_TEMPORAL_PATTERN_ID);
 				/**
 				 * @todo when change DB Identifier model ,change String to long
@@ -116,9 +114,9 @@ public class TestDatabase extends StorableObjectDatabase {
 													 /**
 													   * @todo when change DB Identifier model ,change getString() to getLong()
 													   */
-													 new Identifier(resultSet.getString(COLUMN_MEASUREMENT_TYPE_ID)),
-													 (analysisTypeIdCode != null)?(new Identifier(analysisTypeIdCode)):null,
-													 (evaluationTypeIdCode != null)?(new Identifier(evaluationTypeIdCode)):null,
+													 (MeasurementType)MeasurementObjectTypePool.getActionType(new Identifier(resultSet.getString(COLUMN_MEASUREMENT_TYPE_ID))),
+													 (analysisTypeIdCode != null)?((AnalysisType)MeasurementObjectTypePool.getActionType(new Identifier(analysisTypeIdCode))):null,
+													 (evaluationTypeIdCode != null)?((EvaluationType)MeasurementObjectTypePool.getActionType(new Identifier(evaluationTypeIdCode))):null,
 													 resultSet.getInt(COLUMN_STATUS),
 													 new MonitoredElement(new Identifier(monitoredElementIdCode)),
 													 resultSet.getInt(COLUMN_RETURN_TYPE),
@@ -286,8 +284,8 @@ public class TestDatabase extends StorableObjectDatabase {
 		Date startTime = test.getStartTime();
 		Date endTime = test.getEndTime();
 		Identifier temporalPatternId = test.getTemporalPatternId();		
-		Identifier analysisId = test.getAnalysisTypeId();
-		Identifier evaluationId = test.getEvaluationTypeId();
+		Identifier analysisId = test.getAnalysisType().getId();
+		Identifier evaluationId = test.getEvaluationType().getId();
 		String sql = SQL_INSERT_INTO + ObjectEntities.TEST_ENTITY
 			+ OPEN_BRACKET 
 			+ COLUMN_ID + COMMA 
@@ -350,7 +348,7 @@ public class TestDatabase extends StorableObjectDatabase {
 			/**
 			  * @todo when change DB Identifier model ,change setString() to setLong()
 			  */
-			preparedStatement.setString(10, test.getMeasurementTypeId().getCode());
+			preparedStatement.setString(10, test.getMeasurementType().getId().getCode());
 			/**
 			  * @todo when change DB Identifier model ,change setString() to setLong()
 			  */

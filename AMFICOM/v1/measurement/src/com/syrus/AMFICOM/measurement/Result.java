@@ -35,7 +35,7 @@ public class Result extends StorableObject {
 		}
 	}
 
-	public Result(Result_Transferable rt) throws CreateObjectException {
+	public Result(Result_Transferable rt) throws CreateObjectException, RetrieveObjectException, ObjectNotFoundException {
 		super(new Identifier(rt.id),
 					new Date(rt.created),
 					new Date(rt.modified),

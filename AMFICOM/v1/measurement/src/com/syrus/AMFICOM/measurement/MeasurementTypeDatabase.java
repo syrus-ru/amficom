@@ -27,6 +27,8 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 	public static final String	COLUMN_DESCRIPTION = "description";
 	
 	public static final String	LINK_COLUMN_MEASUREMENT_TYPE_ID = "measurement_type_id";
+	
+	public static final int CHARACTER_NUMBER_OF_RECORDS = 1;
 
 	private MeasurementType fromStorableObject(StorableObject storableObject) throws IllegalDataException {
 		if (storableObject instanceof MeasurementType)
@@ -378,5 +380,42 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 				Log.errorException(sqle1);
 			}
 		}
+	}
+	
+	protected static List retrieveAll() throws RetrieveObjectException {
+		List measurementTypes = new ArrayList(CHARACTER_NUMBER_OF_RECORDS);
+		String sql = SQL_SELECT
+				+ COLUMN_ID
+				+ SQL_FROM + ObjectEntities.MEASUREMENTTYPE_ENTITY;
+		Statement statement = null;
+		ResultSet resultSet = null;
+		try {
+			statement = connection.createStatement();
+			Log.debugMessage("MeasurementTypeDatabase.retrieveAll | Trying: " + sql, Log.DEBUGLEVEL05);
+			resultSet = statement.executeQuery(sql);
+			while (resultSet.next())
+				measurementTypes.add(new MeasurementType(new Identifier(resultSet.getString(COLUMN_ID))));			
+		}
+		catch (ObjectNotFoundException onfe) {
+			Log.errorException(onfe);
+		}
+		catch (SQLException sqle) {
+			String mesg = "MeasurementTypeDatabase.retrieveAll | Cannot retrieve measurement type";
+			throw new RetrieveObjectException(mesg, sqle);
+		}
+		finally {
+			try {
+				if (statement != null)
+					statement.close();
+				if (resultSet != null)
+					resultSet.close();
+				statement = null;
+				resultSet = null;
+			}
+			catch (SQLException sqle1) {
+				Log.errorException(sqle1);
+			}
+		}
+		return measurementTypes;
 	}
 }

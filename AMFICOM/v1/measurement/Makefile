@@ -39,6 +39,7 @@ $(LIBNAME): .mach
 	$(JAVAC) $(JAVACFLAGS) \
 		-classpath $(APPCLASSPATH):$(JDBCCLASSPATH):$(CLASSDIR) \
 		$(SRCDIR)/com/syrus/AMFICOM/resource/LangModelMeasurement.java \
+		$(SRCDIR)/com/syrus/AMFICOM/measurement/MeasurementObjectTypePool.java \
 		$(SRCDIR)/com/syrus/AMFICOM/measurement/MeasurementDatabaseContext.java \
 		$(SRCDIR)/com/syrus/AMFICOM/measurement/ParameterType.java \
 		$(SRCDIR)/com/syrus/AMFICOM/measurement/ParameterTypeDatabase.java \

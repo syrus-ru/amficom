@@ -66,7 +66,11 @@ public class MeasurementDatabase extends StorableObjectDatabase {
 			if (resultSet.next()) {
 				/**
 				 * @todo when change DB Identifier model ,change getString() to getLong()
-				 */				
+				 */
+				MeasurementType measurementType = (MeasurementType)MeasurementObjectTypePool.getActionType(new Identifier(resultSet.getString(COLUMN_TYPE_ID)));
+				/**
+				 * @todo when change DB Identifier model ,change getString() to getLong()
+				 */
 				MeasurementSetup measurementSetup = new MeasurementSetup(new Identifier(resultSet.getString(COLUMN_SETUP_ID)));
 				measurement.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
 											DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
@@ -78,10 +82,7 @@ public class MeasurementDatabase extends StorableObjectDatabase {
 											 * @todo when change DB Identifier model ,change getString() to getLong()
 											 */
 											new Identifier(resultSet.getString(COLUMN_MODIFIER_ID)),
-											/**
-											 * @todo when change DB Identifier model ,change getString() to getLong()
-											 */
-											new Identifier(resultSet.getString(COLUMN_TYPE_ID)),
+											measurementType,
 											/**
 											 * @todo when change DB Identifier model ,change getString() to getLong()
 											 */
@@ -216,7 +217,7 @@ public class MeasurementDatabase extends StorableObjectDatabase {
 			+ DatabaseDate.toUpdateSubString(measurement.getModified()) + COMMA
 			+ measurement.getCreatorId().toSQLString() + COMMA
 			+ measurement.getModifierId().toSQLString() + COMMA
-			+ measurement.getTypeId().toSQLString() + COMMA
+			+ measurement.getType().getId().toSQLString() + COMMA
 			+ measurement.getMonitoredElementId().toSQLString() + COMMA
 			+ measurement.getSetup().getId().toSQLString() + COMMA
 			+ DatabaseDate.toUpdateSubString(measurement.getStartTime()) + COMMA

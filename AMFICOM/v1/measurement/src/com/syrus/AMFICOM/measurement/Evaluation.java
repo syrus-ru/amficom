@@ -11,7 +11,6 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Evaluation_Transferable;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
 import com.syrus.AMFICOM.event.corba.AlarmLevel;
-import com.syrus.util.Log;
 
 public class Evaluation extends Action {
 	private Set thresholdSet;
@@ -36,9 +35,9 @@ public class Evaluation extends Action {
 					new Date(et.modified),
 					new Identifier(et.creator_id),
 					new Identifier(et.modifier_id),
-					new Identifier(et.type_id),
-					new Identifier(et.monitored_element_id),
-					new String(et.codename));
+					(EvaluationType)MeasurementObjectTypePool.getActionType(new Identifier(et.type_id)),
+					new Identifier(et.monitored_element_id));
+
 		try {
 			this.thresholdSet = new Set(new Identifier(et.threshold_set_id));
 		}
@@ -60,7 +59,7 @@ public class Evaluation extends Action {
 
 	private Evaluation(Identifier id,
 										 Identifier creatorId,
-										 Identifier typeId,
+										 EvaluationType type,
 										 Identifier monitoredElementId,
 										 Set thresholdSet) throws CreateObjectException {
 		super(id);
@@ -69,16 +68,8 @@ public class Evaluation extends Action {
 		super.modified = new Date(time);
 		super.creatorId = creatorId;
 		super.modifierId = creatorId;
-		super.typeId = typeId;
+		super.type = type;
 		super.monitoredElementId = monitoredElementId;
-		try {
-			EvaluationType evaluationType = new EvaluationType(this.typeId);
-			super.codename = evaluationType.getCodename();
-		}
-		catch (Exception e) {
-			Log.errorException(e);
-			super.codename = "";
-		}		
 
 		this.thresholdSet = thresholdSet;
 
@@ -99,9 +90,9 @@ public class Evaluation extends Action {
 																			 super.modified.getTime(),
 																			 (Identifier_Transferable)super.creatorId.getTransferable(),
 																			 (Identifier_Transferable)super.modifierId.getTransferable(),
-																			 (Identifier_Transferable)super.typeId.getTransferable(),
+																			 (Identifier_Transferable)super.type.getId().getTransferable(),
 																			 (Identifier_Transferable)super.monitoredElementId.getTransferable(),
-																			 new String(super.codename),
+																			 new String(super.type.getCodename()),
 																			 (Identifier_Transferable)this.thresholdSet.getId().getTransferable());
 	}
 
@@ -113,26 +104,15 @@ public class Evaluation extends Action {
 																						Date modified,
 																						Identifier creatorId,
 																						Identifier modifierId,
-																						Identifier typeId,
+																						EvaluationType type,
 																						Identifier monitoredElementId,
 																						Set thresholdSet) {
-		String codename1;
-		try {
-			EvaluationType evaluationType = new EvaluationType(typeId);
-			codename1 = evaluationType.getCodename();
-		}
-		catch (Exception e) {
-			Log.errorException(e);
-			codename1 = "";
-		}
-
 		super.setAttributes(created,
 												modified,
 												creatorId,
 												modifierId,
-												typeId,
-												monitoredElementId,
-												codename1);
+												type,
+												monitoredElementId);
 		this.thresholdSet = thresholdSet;
 	}
 
@@ -152,12 +132,12 @@ public class Evaluation extends Action {
 
 	public static Evaluation createInstance(Identifier id,
 																					Identifier creatorId,
-																					Identifier typeId,
+																					EvaluationType type,
 																					Identifier monitoredElementId,
 																					Set thresholdSet) throws CreateObjectException {
 		return new Evaluation(id,
 													creatorId,
-													typeId,
+													type,
 													monitoredElementId,
 													thresholdSet);
 	}

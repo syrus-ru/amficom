@@ -53,6 +53,10 @@ public class EvaluationDatabase extends StorableObjectDatabase {
 			resultSet = statement.executeQuery(sql);
 			if (resultSet.next()) {
 				/**
+				 * @todo when change DB Identifier model ,change getString() to getLong()
+				 */
+				EvaluationType evaluationType = new EvaluationType(new Identifier(resultSet.getString(COLUMN_TYPE_ID)));
+				/**
 				 * @todo when change DB Identifier model ,change getString() to
 				 *       getLong()
 				 */
@@ -65,7 +69,7 @@ public class EvaluationDatabase extends StorableObjectDatabase {
 																 DatabaseDate.fromQuerySubString(resultSet,COLUMN_MODIFIED),
 																 new Identifier(resultSet.getString(COLUMN_CREATOR_ID)),
 																 new Identifier(resultSet.getString(COLUMN_MODIFIER_ID)),
-																 new Identifier(resultSet.getString(COLUMN_TYPE_ID)),
+																 evaluationType,
 																 new Identifier(resultSet.getString(COLUMN_MONITORED_ELEMENT_ID)),
 																 thresholdSet);
 			}
@@ -141,7 +145,7 @@ public class EvaluationDatabase extends StorableObjectDatabase {
 			+ DatabaseDate.toUpdateSubString(evaluation.getModified()) + COMMA
 			+ evaluation.getCreatorId().toSQLString() + COMMA
 			+ evaluation.getModifierId().toSQLString() + COMMA
-			+ evaluation.getTypeId().toSQLString() + COMMA
+			+ evaluation.getType().getId().toSQLString() + COMMA
 			+ evaluation.getMonitoredElementId().toSQLString() + COMMA
 			+ evaluation.getThresholdSet().getId().toSQLString()
 			+ CLOSE_BRACKET;

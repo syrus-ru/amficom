@@ -11,7 +11,6 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Analysis_Transferable;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
 import com.syrus.AMFICOM.event.corba.AlarmLevel;
-import com.syrus.util.Log;
 
 public class Analysis extends Action {
 	private Set criteriaSet;
@@ -36,9 +35,8 @@ public class Analysis extends Action {
 					new Date(at.modified),
 					new Identifier(at.creator_id),
 					new Identifier(at.modifier_id),
-					new Identifier(at.type_id),
-					new Identifier(at.monitored_element_id),
-					new String(at.codename));
+					(AnalysisType)MeasurementObjectTypePool.getActionType(new Identifier(at.type_id)),
+					new Identifier(at.monitored_element_id));
 		try {
 			this.criteriaSet = new Set(new Identifier(at.criteria_set_id));
 		}
@@ -60,7 +58,7 @@ public class Analysis extends Action {
 
 	private Analysis(Identifier id,
 									 Identifier creatorId,
-									 Identifier typeId,
+									 AnalysisType type,
 									 Identifier monitoredElementId,
 									 Set criteriaSet) throws CreateObjectException {
 		super(id);
@@ -69,17 +67,9 @@ public class Analysis extends Action {
 		super.modified = new Date(time);
 		super.creatorId = creatorId;
 		super.modifierId = creatorId;
-		super.typeId = typeId;
+		super.type = type;
 		super.monitoredElementId = monitoredElementId;
-		try {
-			AnalysisType analysisType = new AnalysisType(this.typeId);
-			super.codename = analysisType.getCodename();
-		}
-		catch (Exception e) {
-			Log.errorException(e);
-			super.codename = "";
-		}
-
+	
 		this.criteriaSet = criteriaSet;
 
 		super.currentVersion = super.getNextVersion();
@@ -99,9 +89,9 @@ public class Analysis extends Action {
 																			super.modified.getTime(),
 																			(Identifier_Transferable)super.creatorId.getTransferable(),
 																			(Identifier_Transferable)super.modifierId.getTransferable(),
-																			(Identifier_Transferable)super.typeId.getTransferable(),
+																			(Identifier_Transferable)super.type.getId().getTransferable(),
 																			(Identifier_Transferable)super.monitoredElementId.getTransferable(),
-																			new String(super.codename),
+																			new String(super.type.getCodename()),
 																			(Identifier_Transferable)this.criteriaSet.getId().getTransferable());
 	}
 
@@ -113,26 +103,15 @@ public class Analysis extends Action {
 																						Date modified,
 																						Identifier creatorId,
 																						Identifier modifierId,
-																						Identifier typeId,
+																						AnalysisType type,
 																						Identifier monitoredElementId,
 																						Set criteriaSet) {
-		String codename1;
-		try {
-			AnalysisType analysisType = new AnalysisType(typeId);
-			codename1 = analysisType.getCodename();
-		}
-		catch (Exception e) {
-			Log.errorException(e);
-			codename1 = "";
-		}
-
 		super.setAttributes(created,
 												modified,
 												creatorId,
 												modifierId,
-												typeId,
-												monitoredElementId,
-												codename1);
+												type,
+												monitoredElementId);
 		this.criteriaSet = criteriaSet;
 	}
 
@@ -152,12 +131,12 @@ public class Analysis extends Action {
 
 	public static Analysis createInstance(Identifier id,
 																				Identifier creatorId,
-																				Identifier typeId,
+																				AnalysisType type,
 																				Identifier monitoredElementId,
 																				Set criteriaSet) throws CreateObjectException {
-																				return new Analysis(id,
+		return new Analysis(id,
 												creatorId,
-												typeId,
+												type,
 												monitoredElementId,
 												criteriaSet);
 	}

@@ -54,6 +54,10 @@ public class AnalysisDatabase extends StorableObjectDatabase {
 				/**
 				 * @todo when change DB Identifier model ,change getString() to getLong()
 				 */
+				AnalysisType analysisType = new AnalysisType(new Identifier(resultSet.getString(COLUMN_TYPE_ID)));
+				/**
+				 * @todo when change DB Identifier model ,change getString() to getLong()
+				 */
 				Set criteriaSet = new Set(new Identifier(resultSet.getString(COLUMN_CRITERIA_SET_ID)));
 				analysis.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
 															 DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
@@ -65,10 +69,7 @@ public class AnalysisDatabase extends StorableObjectDatabase {
 															 * @todo when change DB Identifier model ,change getString() to getLong()
 															 */
 															 new Identifier(resultSet.getString(COLUMN_MODIFIER_ID)),
-															/**
-															 * @todo when change DB Identifier model ,change getString() to getLong()
-															 */
-															 new Identifier(resultSet.getString(COLUMN_TYPE_ID)),
+															 analysisType,
 															/**
 															 * @todo when change DB Identifier model ,change getString() to getLong()
 															 */
@@ -148,7 +149,7 @@ public class AnalysisDatabase extends StorableObjectDatabase {
 			+ DatabaseDate.toUpdateSubString(analysis.getModified()) + COMMA
 			+ analysis.getCreatorId().toSQLString() + COMMA
 			+ analysis.getModifierId().toSQLString() + COMMA
-			+ analysis.getTypeId().toSQLString() + COMMA
+			+ analysis.getType().getId().toSQLString() + COMMA
 			+ analysis.getMonitoredElementId().toSQLString() + COMMA
 			+ analysis.getCriteriaSet().getId().toSQLString()
 			+ CLOSE_BRACKET;
