@@ -128,19 +128,20 @@ public class SaveAnalysisCommand extends VoidCommand
 			return;
 	    }
 
-		try
-		{
-			a.createResult(
-					userId,
-					m,
-					AlarmLevel.ALARM_LEVEL_NONE,
-					params);
-			MeasurementStorableObjectPool.putStorableObject(a);
-			MeasurementStorableObjectPool.flush(true);
-		}
-		catch(ApplicationException ex)
-		{
-			ex.printStackTrace();
-		}
+// FIXME: should be uncommented and fixed; hidden by saa because of modified module measurement_v1
+//		try
+//		{
+//			a.createResult(
+//					userId,
+//					m,
+//					AlarmLevel.ALARM_LEVEL_NONE,
+//					params);
+//			MeasurementStorableObjectPool.putStorableObject(a);
+//			MeasurementStorableObjectPool.flush(true);
+//		}
+//		catch(ApplicationException ex)
+//		{
+//			ex.printStackTrace();
+//		}
 	}
 }

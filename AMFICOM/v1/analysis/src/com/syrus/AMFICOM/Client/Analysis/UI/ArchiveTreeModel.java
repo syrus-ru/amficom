@@ -305,17 +305,17 @@ condition.setDomain(domain);
 					Result r = (Result)iter.next();
 					if (r.getSort().equals(ResultSort.RESULT_SORT_MEASUREMENT)) {
 						ImageIcon icon;
-						if (r.getAlarmLevel().equals(AlarmLevel.ALARM_LEVEL_HARD)) {
-							icon = new ImageIcon(Toolkit.getDefaultToolkit().getImage(
-									"images/alarm_bell_red.gif").
-																	 getScaledInstance(15, 15, Image.SCALE_SMOOTH));
-						}
-						else if (r.getAlarmLevel().equals(AlarmLevel.ALARM_LEVEL_SOFT)) {
-							icon = new ImageIcon(Toolkit.getDefaultToolkit().getImage(
-									"images/alarm_bell_yellow.gif").
-																	 getScaledInstance(15, 15, Image.SCALE_SMOOTH));
-						}
-						else {
+// FIXME: should be uncommented and fixed; hidden by saa because of modified module measurement_v1
+//						if (r.getAlarmLevel().equals(AlarmLevel.ALARM_LEVEL_HARD)) {
+//							icon = new ImageIcon(Toolkit.getDefaultToolkit().getImage(
+//									"images/alarm_bell_red.gif").getScaledInstance(15, 15, Image.SCALE_SMOOTH));
+//						}
+//						else if (r.getAlarmLevel().equals(AlarmLevel.ALARM_LEVEL_SOFT)) {
+//							icon = new ImageIcon(Toolkit.getDefaultToolkit().getImage(
+//									"images/alarm_bell_yellow.gif").getScaledInstance(15, 15, Image.SCALE_SMOOTH));
+//						}
+//						else
+						{
 							icon = new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/result.gif").
 																	 getScaledInstance(15, 15, Image.SCALE_SMOOTH));
 
