@@ -1,3 +1,0 @@
-@@serverproperty.sql
-@@users.sql
-
