@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseLinkedIdsCondition.java,v 1.1 2005/02/03 14:56:10 bob Exp $
+ * $Id: DatabaseLinkedIdsCondition.java,v 1.2 2005/02/04 09:18:15 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,7 +14,19 @@ import java.lang.reflect.InvocationTargetException;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/02/03 14:56:10 $
+ * 
+ * Database wrapper for LinkedIdsCondition.
+ * Implementation must be have name DatabaseLinkedIdsConditionImpl, extends 
+ * {@link com.syrus.AMFICOM.general.AbstractDatabaseLinkedIdsCondition} and
+ * have constructor
+ * 
+ * <pre>
+ * public DatabaseLinkedIdsConditionImpl(LinkedIdsCondition condition) {
+ *		super(condition);
+ *	}
+ * </pre> 
+ * 
+ * @version $Revision: 1.2 $, $Date: 2005/02/04 09:18:15 $
  * @author $Author: bob $
  * @module general_v1
  */
@@ -29,9 +41,7 @@ public class DatabaseLinkedIdsCondition extends AbstractDatabaseLinkedIdsConditi
 	public DatabaseLinkedIdsCondition(LinkedIdsCondition condition) {
 		super(condition);
 		final String className = "com.syrus.AMFICOM." + ObjectGroupEntities.getGroupName(condition.getEntityCode().shortValue()).toLowerCase().replaceAll("group$", "") + ".DatabaseLinkedIdsConditionImpl"; //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-		final String conditionClassName = "com.syrus.AMFICOM." + ObjectGroupEntities.getGroupName(condition.getEntityCode().shortValue()).toLowerCase().replaceAll("group$", "") + ".LinkedIdsConditionImpl"; //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 		try {
-			Class conditionClass = Class.forName(conditionClassName);
 			Constructor ctor;
 			ctor = Class.forName(className).getDeclaredConstructor(new Class[] { LinkedIdsCondition.class});
 			ctor.setAccessible(true);
