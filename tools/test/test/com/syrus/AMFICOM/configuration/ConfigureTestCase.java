@@ -1,5 +1,5 @@
 /*
- * $Id: ConfigureTestCase.java,v 1.5 2004/10/29 07:30:48 bob Exp $
+ * $Id: ConfigureTestCase.java,v 1.6 2004/12/29 08:56:39 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -20,6 +20,7 @@ import com.syrus.AMFICOM.configuration.DomainDatabase;
 import com.syrus.AMFICOM.configuration.User;
 import com.syrus.AMFICOM.configuration.UserDatabase;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.mserver.DatabaseContextSetup;
@@ -29,7 +30,7 @@ import com.syrus.util.database.DatabaseConnection;
 
 
 /**
- * @version $Revision: 1.5 $, $Date: 2004/10/29 07:30:48 $
+ * @version $Revision: 1.6 $, $Date: 2004/12/29 08:56:39 $
  * @author $Author: bob $
  * @module tools
  */
@@ -88,6 +89,8 @@ public class ConfigureTestCase extends TestCase{
 
 		ConfigureTestCase.creatorId = ((User) userList.get(0)).getId();
 		ConfigureTestCase.domainId = ((Domain) domainList.get(0)).getId();
+		
+		IdentifierPool.init(new DefaultIdentifierGeneratorServer());
 	}
 
 	static void oneTimeTearDown() {
