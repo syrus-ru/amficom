@@ -1,5 +1,5 @@
 /*
- * $Id: Result.java,v 1.36 2005/01/28 06:51:40 bob Exp $
+ * $Id: Result.java,v 1.37 2005/02/01 11:35:36 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,6 +10,7 @@ package com.syrus.AMFICOM.measurement;
 
 import java.util.Collections;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 
 import com.syrus.AMFICOM.general.Identifier;
@@ -30,8 +31,8 @@ import com.syrus.AMFICOM.measurement.corba.Result_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.36 $, $Date: 2005/01/28 06:51:40 $
- * @author $Author: bob $
+ * @version $Revision: 1.37 $, $Date: 2005/02/01 11:35:36 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -222,7 +223,14 @@ public class Result extends StorableObject {
 		}
 	}
 
-	public List getDependencies() {		
-		return Collections.singletonList(this.action);
+	public List getDependencies() {
+		List dependencies = new LinkedList();
+
+		for (int i = 0; i < this.parameters.length; i++)
+			dependencies.add(this.parameters[i].getType());
+
+		dependencies.add(this.action);
+
+		return dependencies;
 	}
 }
