@@ -1,5 +1,5 @@
 /*
- * $Id: configuration.idl,v 1.29 2004/10/08 07:26:12 max Exp $
+ * $Id: configuration.idl,v 1.30 2004/10/08 07:37:15 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -149,6 +149,8 @@ module corba {
 		com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable characteristic_ids;
 	};
 
+	typedef sequence <Server_Transferable> ServerSeq_Transferable;
+	
 //////////////////////////////////// MCM //////////////////////////////////
 	struct MCM_Transferable {
 		com::syrus::AMFICOM::general::corba::Identifier_Transferable id;
@@ -165,7 +167,9 @@ module corba {
 		com::syrus::AMFICOM::general::corba::Identifier_Transferable server_id;
 		com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable characteristic_ids;
 		com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable kis_ids;
-	};	
+	};
+	
+	typedef sequence <MCM_Transferable> MCMSeq_Transferable;
 
 ////////////////////// Characteristic /////////////////////
 	enum CharacteristicSort {
