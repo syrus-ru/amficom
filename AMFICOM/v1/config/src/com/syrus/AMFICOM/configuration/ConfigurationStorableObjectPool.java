@@ -1,5 +1,5 @@
 /*
- * $Id: ConfigurationStorableObjectPool.java,v 1.68 2005/03/09 15:40:52 arseniy Exp $
+ * $Id: ConfigurationStorableObjectPool.java,v 1.69 2005/03/18 17:29:13 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,33 +25,33 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.68 $, $Date: 2005/03/09 15:40:52 $
+ * @version $Revision: 1.69 $, $Date: 2005/03/18 17:29:13 $
  * @author $Author: arseniy $
  * @module config_v1
  */
 
 public final class ConfigurationStorableObjectPool extends StorableObjectPool {
 
-	private static final int			OBJECT_POOL_MAP_SIZE			= 16;		/* Number of entities */
+	private static final int OBJECT_POOL_MAP_SIZE = 16; /* Number of entities */
 
-	private static final int			CABLETHREADTYPE_OBJECT_POOL_SIZE	= 4;
-	private static final int			CABLELINKTYPE_OBJECT_POOL_SIZE	= 4;
-	private static final int			EQUIPMENTTYPE_OBJECT_POOL_SIZE		= 1;
-	private static final int			TRANSPATHTYPE_OBJECT_POOL_SIZE		= 1;
-	private static final int			LINKTYPE_OBJECT_POOL_SIZE	= 2;
-	// private static final int			KISTYPE_OBJECT_POOL_SIZE		= 1;
-	private static final int			PORTTYPE_OBJECT_POOL_SIZE		= 1;
-	private static final int			MEASUREMENTPORTTYPE_OBJECT_POOL_SIZE	= 1;
+	private static final int CABLETHREADTYPE_OBJECT_POOL_SIZE = 4;
+	private static final int CABLELINKTYPE_OBJECT_POOL_SIZE = 4;
+	private static final int EQUIPMENTTYPE_OBJECT_POOL_SIZE = 1;
+	private static final int TRANSPATHTYPE_OBJECT_POOL_SIZE = 1;
+	private static final int LINKTYPE_OBJECT_POOL_SIZE = 2;
+	// private static final int KISTYPE_OBJECT_POOL_SIZE = 1;
+	private static final int PORTTYPE_OBJECT_POOL_SIZE = 1;
+	private static final int MEASUREMENTPORTTYPE_OBJECT_POOL_SIZE = 1;
 
-	private static final int			LINK_OBJECT_POOL_SIZE	= 2;
-	private static final int			EQUIPMENT_OBJECT_POOL_SIZE		= 2;
-	private static final int			PORT_OBJECT_POOL_SIZE			= 2;
-	private static final int			TRANSPATH_OBJECT_POOL_SIZE		= 4;
-	private static final int			KIS_OBJECT_POOL_SIZE			= 1;
-	private static final int			MEASUREMENTPORT_OBJECT_POOL_SIZE	= 2;
-	private static final int			ME_OBJECT_POOL_SIZE			= 2;
+	private static final int LINK_OBJECT_POOL_SIZE = 2;
+	private static final int EQUIPMENT_OBJECT_POOL_SIZE = 2;
+	private static final int PORT_OBJECT_POOL_SIZE = 2;
+	private static final int TRANSPATH_OBJECT_POOL_SIZE = 4;
+	private static final int KIS_OBJECT_POOL_SIZE = 1;
+	private static final int MEASUREMENTPORT_OBJECT_POOL_SIZE = 2;
+	private static final int ME_OBJECT_POOL_SIZE = 2;
 
-	private static ConfigurationObjectLoader	cObjectLoader;
+	private static ConfigurationObjectLoader cObjectLoader;
 	private static ConfigurationStorableObjectPool instance;
 
 	private ConfigurationStorableObjectPool() {
@@ -87,7 +87,7 @@ public final class ConfigurationStorableObjectPool extends StorableObjectPool {
 		instance.addObjectPool(ObjectEntities.MEASUREMENTPORT_ENTITY_CODE, size);
 		instance.addObjectPool(ObjectEntities.ME_ENTITY_CODE, size);
 
-		instance.populatePools();		
+		instance.populatePools();
 	}
 
 	public static void init(ConfigurationObjectLoader cObjectLoader1) {
@@ -117,13 +117,6 @@ public final class ConfigurationStorableObjectPool extends StorableObjectPool {
 		instance.populatePools();
 	}
 
-	/**
-	 * 
-	 * @param cObjectLoader1
-	 * @param cacheClass
-	 *                class must extend LRUMap
-	 * @param size
-	 */
 	public static void init(ConfigurationObjectLoader cObjectLoader1, Class cacheClass, final int size) {
 		Class clazz = null;
 		try {
@@ -132,8 +125,22 @@ public final class ConfigurationStorableObjectPool extends StorableObjectPool {
 		}
 		catch (ClassNotFoundException e) {
 			Log.errorMessage("Cache class '" + cacheClass.getName() +"' cannot be found, use default");
+			instance = new ConfigurationStorableObjectPool();
 		}
 		init(cObjectLoader1, size);
+	}
+
+	public static void init(ConfigurationObjectLoader cObjectLoader1, Class cacheClass) {
+		Class clazz = null;
+		try {
+			clazz = Class.forName(cacheClass.getName());
+			instance = new ConfigurationStorableObjectPool(clazz);
+		}
+		catch (ClassNotFoundException e) {
+			Log.errorMessage("Cache class '" + cacheClass.getName() +"' cannot be found, use default");
+			instance = new ConfigurationStorableObjectPool();
+		}
+		init(cObjectLoader1);
 	}
 
 	public static void refresh() throws ApplicationException {
