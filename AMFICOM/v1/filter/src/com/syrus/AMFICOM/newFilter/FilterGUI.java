@@ -1,5 +1,5 @@
 /*
- * $Id: FilterGUI.java,v 1.1 2005/03/15 16:11:44 max Exp $
+ * $Id: FilterGUI.java,v 1.2 2005/03/16 13:26:42 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -36,7 +36,7 @@ import javax.swing.event.PopupMenuListener;
 import com.syrus.AMFICOM.general.ConditionWrapper;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/03/15 16:11:44 $
+ * @version $Revision: 1.2 $, $Date: 2005/03/16 13:26:42 $
  * @author $Author: max $
  * @module misc
  */
@@ -78,7 +78,7 @@ public class FilterGUI extends JFrame {
 	FilterGUI(ConditionWrapper wrapper) {
 
 		super();
-		this.filter = new Filter(wrapper, this);
+		//this.filter = new Filter(wrapper);
 		createFrame();
 	
 	}
@@ -168,7 +168,7 @@ public class FilterGUI extends JFrame {
 		
 		removeButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				filter.removeCondition();
+				//filter.removeCondition();
 			}			
 		});
 		

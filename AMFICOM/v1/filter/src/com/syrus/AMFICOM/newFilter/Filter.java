@@ -1,5 +1,5 @@
 /*
- * $Id: Filter.java,v 1.1 2005/03/15 16:11:44 max Exp $
+ * $Id: Filter.java,v 1.2 2005/03/16 13:26:42 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -7,6 +7,7 @@
  */
 package com.syrus.AMFICOM.newFilter;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
@@ -16,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.syrus.AMFICOM.general.ConditionWrapper;
+import com.syrus.AMFICOM.general.ConditionWrapperTemp;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
@@ -26,13 +28,16 @@ import com.syrus.AMFICOM.general.corba.OperationSort;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/03/15 16:11:44 $
+ * @version $Revision: 1.2 $, $Date: 2005/03/16 13:26:42 $
  * @author $Author: max $
  * @module misc
  */
 public class Filter {
 	
 	private FilterGUI filterGUI;
+	private Collection filterViews;
+	private String[] keys;
+	private Collection filteredEntities ;
 	private ConditionWrapper wrapper;
 	private short entityCode;
 	private Map keyCondition = new HashMap(); 
@@ -41,10 +46,18 @@ public class Filter {
 	private static final String	WRONG_STRING_MESSAGE	= "please, fill the field ";
 	private static final String	WRONG_LIST_MESSAGE		= "Select, from list ";
 		
-	public Filter(ConditionWrapper wrapper, FilterGUI filterGUI) {
-		this.wrapper = wrapper;
-		entityCode = wrapper.getEntityCode();
-		this.filterGUI = filterGUI;
+	public Filter(ConditionWrapperTemp wrapper) {
+		this(wrapper, null);
+	}
+	
+	public Filter(ConditionWrapperTemp wrapper, FilterGUI filterGUI) {
+		
+		this.filterViews = new ArrayList();
+		this.keys = wrapper.getKeys();
+		//this.filteredEntities = wrapper.get
+		//entityCode = wrapper.getEntityCode();
+		//if (filterGUI != null)
+		//this.add(filterGUI);
 		
 //		for (Iterator iter = wrapper.getKeys().iterator(); iter.hasNext();) {
 //			String key = (String) iter.next();
@@ -100,8 +113,9 @@ public class Filter {
 	}
 
 	public StorableObjectCondition getResultCondition() throws CreateObjectException, IllegalDataException {
-		LogicalConditionScheme logicalConditionScheme = new LogicalConditionScheme(this.getCreatedConditions());
-		return logicalConditionScheme.getResultCondition();				
+		//LogicalConditionScheme logicalConditionScheme = new LogicalConditionScheme(this.getCreatedConditions());
+		//return logicalConditionScheme.getResultCondition();
+		return null;
 	}
 
 	public void changeKey(String keyName) {
@@ -136,7 +150,7 @@ public class Filter {
 			filterGUI.linkedConditionList.setListData(linkedNames);
 			ListCondition listCondition = (ListCondition) this.keyTemporalCondition.get(key);
 			if(listCondition == null) {
-				listCondition = new ListCondition(new int[0]);
+				//listCondition = new ListCondition(new int[0],String[0]);
 				this.keyTemporalCondition.put(key, listCondition);
 			}
 			filterGUI.linkedConditionList.setListData(linkedNames);
@@ -275,12 +289,12 @@ public class Filter {
 		
 	}
 
-	public void removeCondition() {
-		int[] conditionIndex = filterGUI.conditionList.getSelectedIndices();
-		for (int i = 0; i < conditionIndex.length; i++) {
-			this.keyCondition.remove()
-			
-			filterGUI.conditionList.remove(conditionIndex[i]);
-		}
-	}
+//	public void removeCondition() {
+//		int[] conditionIndex = filterGUI.conditionList.getSelectedIndices();
+//		for (int i = 0; i < conditionIndex.length; i++) {
+//			this.keyCondition.remove()
+//			
+//			filterGUI.conditionList.remove(conditionIndex[i]);
+//		}
+//	}
 }
