@@ -1,5 +1,5 @@
 /*
- * $Id: CORBAServer.java,v 1.9 2005/01/11 16:20:48 arseniy Exp $
+ * $Id: CORBAServer.java,v 1.10 2005/04/02 15:38:17 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,7 +35,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/01/11 16:20:48 $
+ * @version $Revision: 1.10 $, $Date: 2005/04/02 15:38:17 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -140,7 +140,7 @@ public class CORBAServer /*extends Thread */{
 		Properties properties = System.getProperties();
 		String host = ApplicationProperties.getString("ORBInitialHost", DEFAULT_ORB_INITIAL_HOST);
 		int port = ApplicationProperties.getInt("ORBInitialPort", DEFAULT_ORB_INITIAL_PORT);
-		System.out.println("host: " + host + ", port: " + Integer.parseInt(Integer.toString(port)));
+		Log.debugMessage("CORBAServer.initORB | host: " + host + ", port: " + port, Log.DEBUGLEVEL09);
 		properties.setProperty("org.omg.CORBA.ORBInitialHost", host);
 		properties.setProperty("org.omg.CORBA.ORBInitialPort", Integer.toString(port));
 		String[] args = null;

@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseCompoundCondition.java,v 1.4 2005/03/21 09:05:10 bob Exp $
+ * $Id: DatabaseCompoundCondition.java,v 1.5 2005/04/02 15:38:17 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,8 +15,8 @@ import java.util.Iterator;
 import com.syrus.AMFICOM.general.corba.CompoundCondition_TransferablePackage.CompoundConditionSort;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/03/21 09:05:10 $
- * @author $Author: bob $
+ * @version $Revision: 1.5 $, $Date: 2005/04/02 15:38:17 $
+ * @author $Author: arseniy $
  * @module general_v1
  */
 public final class DatabaseCompoundCondition implements DatabaseStorableObjectCondition {
@@ -37,8 +37,6 @@ public final class DatabaseCompoundCondition implements DatabaseStorableObjectCo
 		String className = condition.getClass().getName();
 		int lastPoint = className.lastIndexOf('.');
 		String dbClassName = className.substring(0, lastPoint + 1) + "Database" + className.substring(lastPoint + 1);
-		// System.out.println("DatabaseCompoundCondition.reflectDatabaseCondition
-		// | dbClassName:" + dbClassName);
 		try {
 			Class clazz = Class.forName(dbClassName);
 			Constructor constructor = clazz.getConstructor(new Class[] { condition.getClass()});
