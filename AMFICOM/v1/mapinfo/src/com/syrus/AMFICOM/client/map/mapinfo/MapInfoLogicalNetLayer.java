@@ -253,7 +253,7 @@ public class MapInfoLogicalNetLayer extends LogicalNetLayer
 		
 			String uriString = ((MapInfoNetMapViewer )this.viewer).getConnection().getURL();
 			
-			Dimension mipSize = this.nmViewer.mapImagePanel.getSize();
+			Dimension mipSize = this.nmViewer.mapImagePanel.getSize();	
 			Point curCenterScreen = new Point(
 					(int)mipSize.getWidth() / 2,
 					(int)mipSize.getHeight() / 2);
@@ -263,13 +263,14 @@ public class MapInfoLogicalNetLayer extends LogicalNetLayer
 			int shiftX = lastCenterScreen.x - curCenterScreen.x;
 			int shiftY = lastCenterScreen.y - curCenterScreen.y;
 			
-			if (			((mipSize.width - Math.abs(shiftX)) *
+			if (			((mipSize.width - Math.abs(shiftX)) * //Если площадь пересечения старого изображения и нового меньше 1/4
 								 (mipSize.height - Math.abs(shiftY))
 								 < mipSize.width * mipSize.height / 4)
-						||	this.zoomChanged)
+						|| (mipSize.width - Math.abs(shiftX) < 0) //или был сдвиг больше чем на ширину/высоту экрана
+						|| (mipSize.height - Math.abs(shiftY) < 0)		 
+						||	this.zoomChanged) //или был изменён масштаб
 			{
-				//Если площадь пересечения старого изображения и нового меньше 1/4
-				//или был изменён масштаб - перерисовываем всю область карты
+				//Перерисовываем всю область карты
 				uriString += createRenderCommandString(
 						this.nmViewer.mapImagePanel.getWidth(),
 						this.nmViewer.mapImagePanel.getHeight(),
@@ -551,6 +552,8 @@ public class MapInfoLogicalNetLayer extends LogicalNetLayer
 					to.getX(), to.getY()));
 
 			updateZoom();
+			
+			this.zoomChanged = true;			
 		}
 		catch(Exception e)
 		{
