@@ -1,5 +1,5 @@
 /*
- * $Id: IdentifierImpl.java,v 1.3 2004/11/29 10:24:29 bass Exp $
+ * $Id: IdentifierImpl.java,v 1.4 2004/12/08 16:35:03 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,13 +9,13 @@
 package com.syrus.AMFICOM.general.corba;
 
 import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.util.logging.ErrorHandler;
 import com.syrus.util.HashCodeGenerator;
+import com.syrus.util.logging.ErrorHandler;
 import java.io.*;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.3 $, $Date: 2004/11/29 10:24:29 $
+ * @version $Revision: 1.4 $, $Date: 2004/12/08 16:35:03 $
  * @module general_v1
  */
 final class IdentifierImpl extends Identifier implements Cloneable, Comparable {
@@ -67,27 +67,24 @@ final class IdentifierImpl extends Identifier implements Cloneable, Comparable {
 	}
 
 	/**
+	 * @param anotherIdentifierImpl
+	 */
+	public int compareTo(final IdentifierImpl anotherIdentifierImpl) {
+		final short thisMajor = this.major();
+		final long thisMinor = this.minor();
+		final short thatMajor = anotherIdentifierImpl.major();
+		final long thatMinor = anotherIdentifierImpl.minor();
+		return thisMajor == thatMajor
+			? thisMinor <= thatMinor ? thisMinor < thatMinor ? -1 : 0 : 1
+			: thisMajor - thatMajor;
+	}
+
+	/**
+	 * @param o
 	 * @see Comparable#compareTo(Object)
 	 */
-	public int compareTo(final Object obj) {
-		if (obj instanceof IdentifierImpl) {
-			final IdentifierImpl that = (IdentifierImpl) obj;
-			final short major = this.major();
-			final long minor = this.minor();
-			final short thatMajor = that.major();
-			final long thatMinor = that.minor();
-			if ((major == thatMajor) && (minor == thatMinor))
-				return 0;
-			else if (major < thatMajor)
-				return -1;
-			else if (major > thatMajor)
-				return 1;
-			else if (minor < thatMinor)
-				return -1;
-			else //if (minor > thatMinor)
-				return 1;
-		}
-		return -1;
+	public int compareTo(final Object o) {
+		return compareTo((IdentifierImpl) o);
 	}
 
 	public boolean equals(final Object obj) {

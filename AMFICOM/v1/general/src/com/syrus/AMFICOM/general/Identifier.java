@@ -1,5 +1,5 @@
 /*
- * $Id: Identifier.java,v 1.17 2004/12/08 08:49:35 bass Exp $
+ * $Id: Identifier.java,v 1.18 2004/12/08 16:34:14 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,7 +13,7 @@ import java.io.Serializable;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2004/12/08 08:49:35 $
+ * @version $Revision: 1.18 $, $Date: 2004/12/08 16:34:14 $
  * @author $Author: bass $
  * @module general_v1
  */
@@ -64,25 +64,23 @@ public class Identifier implements
 		return id;
 	}
 
-	public int compareTo(Object obj) {
-		if(obj instanceof Identifier) {
-			short major1 = ((Identifier)obj).getMajor();
-			long minor1 = ((Identifier)obj).getMinor();
-			if (this.major == major1 && this.minor == minor1)
-				return 0;
-			else
-				if (this.major < major1)
-					return -1;
-				else
-					if (this.major > major1)
-						return 1;
-					else
-						if (this.minor < minor1)
-							return -1;
-						else
-							return 1;
-		}
-		return -1;
+	/**
+	 * @param anotherIdentifier
+	 */
+	public int compareTo(final Identifier anotherIdentifier) {
+		final short thatMajor = anotherIdentifier.getMajor();
+		final long thatMinor = anotherIdentifier.getMinor();
+		return this.major == thatMajor
+			? this.minor <= thatMinor ? this.minor < thatMinor ? -1 : 0 : 1
+			: this.major - thatMajor;
+	}
+
+	/**
+	 * @param o
+	 * @see java.lang.Comparable#compareTo(Object)
+	 */
+	public int compareTo(final Object o) {
+		return compareTo((Identifier) o);
 	}
 
 	public boolean equals(Object obj) {
