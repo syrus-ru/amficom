@@ -16,6 +16,7 @@ $(call checkenve,JAVA_HOME)
 $(call checkenve,ORACLE_HOME)
 $(call checkenve,IDL2JAVA)
 
+
 IDL2JAVA=$(JAVA_HOME)/bin/idlj
 IDL2JAVAFLAGS = \
 	-fall \
@@ -23,6 +24,16 @@ IDL2JAVAFLAGS = \
 	-i $(INCIDLDIR) \
 	-td $(SRCDIR) \
 	-v
+
+#JAVAC = $(JAVA_HOME)/bin/javac
+#JAVACFLAGS = \
+	-O \
+	-bootclasspath $(JAVA_HOME)/jre/lib/rt.jar \
+	-d $(CLASSDIR) \
+	-deprecation \
+	-encoding $(ENCODING) \
+	-extdirs $(JAVA_HOME)/jre/lib/ext \
+	-g
 
 
 all: $(LIBNAME) $(LIBNAME_INTERFACE)
@@ -61,7 +72,7 @@ $(CLASSDIR):
 
 .PHONY:	clean
 clean:	cleanmach cleancorba
-	rm -f $(LIBNAME)
+	rm -f $(LIBNAME) $(LIBNAME_INTERFACE)
 
 .PHONY:	cleanmach
 cleanmach:

@@ -33,6 +33,16 @@ IDL2JAVAFLAGS = \
 	-td $(SRCDIR) \
 	-v
 
+#JAVAC = $(JAVA_HOME)/bin/javac
+#JAVACFLAGS = \
+	-O \
+	-bootclasspath $(JAVA_HOME)/jre/lib/rt.jar \
+	-d $(CLASSDIR) \
+	-deprecation \
+	-encoding $(ENCODING) \
+	-extdirs $(JAVA_HOME)/jre/lib/ext \
+	-g
+
 
 all: $(LIBNAME) $(LIBNAME_INTERFACE)
 
@@ -91,7 +101,7 @@ $(CLASSDIR):
 
 .PHONY:	clean
 clean:	cleanmach cleancorba
-	rm -f $(LIBNAME)
+	rm -f $(LIBNAME) $(LIBNAME_INTERFACE)
 
 .PHONY:	cleanmach
 cleanmach:

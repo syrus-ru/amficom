@@ -8,4 +8,4 @@ DADARA=./dadara
 ORACLECLASSPATH=$ORACLE_HOME/jdbc/lib/classes12.jar
 APPCLASSPATH=$LIB/mcm.jar:$LIB/mserver_interface.jar:$LIB/measurement.jar:$LIB/configuration.jar:$LIB/general.jar:$LIB/util.jar
 
-exec $JAVA -Djava.library.path=$TRANSCEIVER:$DADARA -classpath $APPCLASSPATH:$ORACLECLASSPATH com.syrus.AMFICOM.mcm.MeasurementControlModule
+exec $JAVA -server -Djava.library.path=$TRANSCEIVER:$DADARA -classpath $APPCLASSPATH:$ORACLECLASSPATH com.syrus.AMFICOM.mcm.MeasurementControlModule

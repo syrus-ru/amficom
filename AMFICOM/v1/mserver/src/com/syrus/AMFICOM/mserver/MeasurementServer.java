@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementServer.java,v 1.4 2004/08/04 17:32:55 arseniy Exp $
+ * $Id: MeasurementServer.java,v 1.5 2004/08/06 16:09:26 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,14 +25,16 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
+import com.syrus.AMFICOM.mcm.corba._MCMStub;
+
 /**
- * @version $Revision: 1.4 $, $Date: 2004/08/04 17:32:55 $
+ * @version $Revision: 1.5 $, $Date: 2004/08/06 16:09:26 $
  * @author $Author: arseniy $
  * @module mserver_v1
  */
 
 public class MeasurementServer extends SleepButWorkThread {
-	public static final String ID = "mserver_1";
+	public static final String ID = "server_1";
 	public static final String DB_SID = "amficom";
 	public static final int DB_CONNECTION_TIMEOUT = 120;
 	public static final int TICK_TIME = 5;

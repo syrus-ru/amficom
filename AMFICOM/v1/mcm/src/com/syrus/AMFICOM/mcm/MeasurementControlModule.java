@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementControlModule.java,v 1.16 2004/08/04 17:29:26 arseniy Exp $
+ * $Id: MeasurementControlModule.java,v 1.17 2004/08/06 16:09:40 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,9 +34,10 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.NewIdentifierPool;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2004/08/04 17:29:26 $
+ * @version $Revision: 1.17 $, $Date: 2004/08/06 16:09:40 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -117,6 +118,9 @@ public class MeasurementControlModule extends SleepButWorkThread {
 		/*	Create reference to MServer*/
 		activateMServerReference();
 
+		/*	Initialize pool of Identifiers*/
+		NewIdentifierPool.init(mServerRef);
+
 		/*	Start main loop	*/
 		MeasurementControlModule measurementControlModule = new MeasurementControlModule();
 		measurementControlModule.start();
@@ -125,29 +129,13 @@ public class MeasurementControlModule extends SleepButWorkThread {
 	public void run() {
 		Result_Transferable[] rts;
 		while (this.running) {
-//			if (!testList.isEmpty())
-//				if (((Test)testList.get(0)).getStartTime().getTime() <= System.currentTimeMillis() + this.forwardProcessing)
-//					startTestProcessor((Test)testList.remove(0));
-//
-//			if (!resultList.isEmpty()) {
-//				
-//			}
+			if (!testList.isEmpty())
+				if (((Test)testList.get(0)).getStartTime().getTime() <= System.currentTimeMillis() + this.forwardProcessing)
+					startTestProcessor((Test)testList.remove(0));
 
-			try {
-				Identifier id = new Identifier(mServerRef.getGeneratedIdentifier(ObjectEntities.MEASUREMENT_ENTITY));
-				System.out.println("Received id: " + id.toString());
-				super.clearFalls();
-				super.sleepCauseOfFall();
+			if (!resultList.isEmpty()) {
+				
 			}
-			catch (AMFICOMRemoteException are) {
-				Log.errorException(are);
-			}
-			catch (org.omg.CORBA.COMM_FAILURE cf) {
-				Log.errorException(cf);
-				super.sleepCauseOfFall();
-			}
-
-			System.out.println(System.currentTimeMillis());
 
 			try {
 				sleep(super.initialTimeToSleep);
@@ -184,26 +172,6 @@ public class MeasurementControlModule extends SleepButWorkThread {
 
 	protected void shutdown() {/*!!	Need synchronization	*/
 		this.running = false;
-
-//		Enumeration enumeration = ((Hashtable)testProcessors).elements();
-//		while (enumeration.hasMoreElements())
-//			((TestProcessor)enumeration.nextElement()).abort();
-//
-//		testList.clear();
-//		resultList.clear();
-//		testProcessors.clear();
-//
-//		enumeration = ((Hashtable)transceivers).elements();
-//		while (enumeration.hasMoreElements())
-//			((Transceiver)enumeration.nextElement()).shutdown();
-//		transceivers.clear();
-//
-//		try {
-//			corbaServer.shutdown();
-//		}
-//		catch (Exception e) {
-//			Log.errorException(e);
-//		}
 		DatabaseConnection.closeConnection();
 	}
 
