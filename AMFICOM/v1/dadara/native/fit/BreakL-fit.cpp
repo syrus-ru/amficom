@@ -412,3 +412,4 @@ void BreakL_Fit (ModelF &mf, double *data0, int i0, int x0, int length, int quic
 {
 	BreakL_Fit_int(mf, data0 + i0, x0, length, quick, error1, error2, maxpoints, 0, linkFlags, linkData);
 }
+

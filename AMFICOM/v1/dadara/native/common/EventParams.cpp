@@ -355,3 +355,4 @@ double EventParams::linearFunction(double A_base_, double k_, int x_) {
 	ret = A_base_ + k_*arg;
 	return ret;
 }
+

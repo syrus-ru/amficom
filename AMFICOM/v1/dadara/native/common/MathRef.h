@@ -45,3 +45,4 @@ double  wLet9 (int arg, int freq, double norma);
 double wLet10 (int arg, int freq, double norma);
 
 #endif
+

@@ -8,3 +8,4 @@
 #define DEBUG_INITIAL_WIN_LOGF "c:\\log\\" "dadara-ia.log"
 
 #endif
+

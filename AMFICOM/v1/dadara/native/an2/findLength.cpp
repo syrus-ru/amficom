@@ -52,3 +52,4 @@ int findReflectogramLength(double *data, int len)
 	else
 		return len; // результат не найден? //XXX: возможно ли это?
 }
+

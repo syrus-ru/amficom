@@ -166,3 +166,4 @@ void EPold2EPnew(EventParams* epo, EventP &epn, double delta_x)
 
 	assert(epn.mf.isCorrect());
 }
+

@@ -35,3 +35,4 @@ void fit(ModelF &mf, double *y, int i0, int x0, int length, fit_stat_res &stat);
 void fit_linear_only(ModelF &mf, double *y, int i0, int x0, int length);
 
 #endif
+

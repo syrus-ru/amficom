@@ -469,3 +469,4 @@ Java_com_syrus_AMFICOM_analysis_AnalysisManager_analyse2(
 
 	return ret_obj;
 }
+

@@ -50,3 +50,4 @@ public:
 void catchEndingChar(void  *key);
 
 #endif // !defined(AFX_NEUROANALYSER_H__62BF66B3_3C0F_4257_A36A_C7DFA9AF9D69__INCLUDED_)
+

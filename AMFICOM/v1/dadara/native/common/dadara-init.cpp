@@ -10,3 +10,4 @@ BOOL APIENTRY DllMain( HANDLE hModule,
 		MF_init();
 	return TRUE;
 }
+

@@ -523,3 +523,4 @@ JNIEXPORT jdouble JNICALL Java_com_syrus_AMFICOM_analysis_CoreAnalysisManager_nC
 
 	return ret;
 }
+

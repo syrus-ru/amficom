@@ -45,3 +45,4 @@ Java_com_syrus_AMFICOM_analysis_CoreAnalysisManager_gauss(
 
 	return ret;
 }
+

@@ -97,3 +97,4 @@ double findNoise3s(double *data, int size)
 
 	return nlev;
 }
+

@@ -246,3 +246,4 @@ double wLet10(int arg, int freq, double norma)
 {
 	return (sin(arg*M_PI/freq/2.) - ((double)arg)/freq/2.)/norma;
 }
+
