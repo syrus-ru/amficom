@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseTypicalCondition.java,v 1.4 2005/02/08 11:47:07 arseniy Exp $
+ * $Id: DatabaseTypicalCondition.java,v 1.5 2005/03/21 09:05:10 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,19 +15,20 @@ import com.syrus.util.Log;
 
 /**
  * 
- * Database wrapper for TypicalCondition.
- * Implementation must be have name DatabaseTypicalConditionImpl, extends 
- * {@link com.syrus.AMFICOM.general.AbstractDatabaseTypicalCondition} and
- * have constructor
+ * Database wrapper for TypicalCondition. Implementation must be have name
+ * DatabaseTypicalConditionImpl, extends
+ * {@link com.syrus.AMFICOM.general.AbstractDatabaseTypicalCondition} and have
+ * constructor
  * 
  * <pre>
- * public DatabaseTypicalConditionImpl(TypicalCondition condition) {
- *		super(condition);
- *	}
- * </pre> 
  * 
- * @version $Revision: 1.4 $, $Date: 2005/02/08 11:47:07 $
- * @author $Author: arseniy $
+ * public DatabaseTypicalConditionImpl(TypicalCondition condition) {
+ * 	super(condition);
+ * }
+ * </pre>
+ * 
+ * @version $Revision: 1.5 $, $Date: 2005/03/21 09:05:10 $
+ * @author $Author: bob $
  * @module general_v1
  */
 public class DatabaseTypicalCondition extends AbstractDatabaseTypicalCondition {
@@ -36,7 +37,7 @@ public class DatabaseTypicalCondition extends AbstractDatabaseTypicalCondition {
 
 	private static final String					INVALID_UNDERLYING_IMPLEMENTATION	= "Invalid underlying implementation: ";	//$NON-NLS-1$
 
-	private static final String					DATABASE_TYPICAL_CONDITION_INIT			= "DatabaseTypicalCondition.<init>() | "; //$NON-NLS-1$
+	private static final String					DATABASE_TYPICAL_CONDITION_INIT		= "DatabaseTypicalCondition.<init>() | ";	//$NON-NLS-1$
 
 	public DatabaseTypicalCondition(TypicalCondition condition) {
 		super(condition);
@@ -63,9 +64,17 @@ public class DatabaseTypicalCondition extends AbstractDatabaseTypicalCondition {
 					+ className + " is abstract" //$NON-NLS-1$
 			, Log.WARNING);
 		} catch (InvocationTargetException ite) {
-			Log.debugMessage(DATABASE_TYPICAL_CONDITION_INIT + INVALID_UNDERLYING_IMPLEMENTATION
-					+ "constructor throws an exception in class " //$NON-NLS-1$
-					+ className, Log.WARNING);
+			final Throwable cause = ite.getCause();
+			if (cause instanceof AssertionError) {
+				final String message = cause.getMessage();
+				if (message == null)
+					assert false;
+				else
+					assert false : message;
+			} else
+				Log.debugMessage(DATABASE_TYPICAL_CONDITION_INIT + INVALID_UNDERLYING_IMPLEMENTATION
+						+ "constructor throws an exception in class " //$NON-NLS-1$
+						+ className, Log.WARNING);
 		} catch (IllegalAccessException iae) {
 			/*
 			 * Never.

@@ -1,5 +1,5 @@
 /*
- * $Id: TypicalCondition.java,v 1.13 2005/02/25 07:36:40 bob Exp $
+ * $Id: TypicalCondition.java,v 1.14 2005/03/21 09:05:10 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -119,7 +119,7 @@ import com.syrus.util.Log;
  * 
  * </ul>
  * 
- * @version $Revision: 1.13 $, $Date: 2005/02/25 07:36:40 $
+ * @version $Revision: 1.14 $, $Date: 2005/03/21 09:05:10 $
  * @author $Author: bob $
  * @module general_v1
  */
@@ -250,9 +250,18 @@ public class TypicalCondition implements StorableObjectCondition {
 					+ className + " is abstract" //$NON-NLS-1$
 					+ CREATING_A_DUMMY_CONDITION, Log.WARNING);
 		} catch (InvocationTargetException ite) {
-			Log.debugMessage(TYPICAL_CONDITION_INIT + INVALID_UNDERLYING_IMPLEMENTATION
-					+ "constructor throws an exception in class " //$NON-NLS-1$
-					+ className + CREATING_A_DUMMY_CONDITION, Log.WARNING);
+			final Throwable cause = ite.getCause();
+			if (cause instanceof AssertionError) {
+				final String message = cause.getMessage();
+				if (message == null)
+					assert false;
+				else
+					assert false : message;
+			} else {
+				Log.debugMessage(TYPICAL_CONDITION_INIT + INVALID_UNDERLYING_IMPLEMENTATION
+						+ "constructor throws an exception in class " //$NON-NLS-1$
+						+ className + CREATING_A_DUMMY_CONDITION, Log.WARNING);
+			}
 		} catch (IllegalAccessException iae) {
 			/*
 			 * Never.
@@ -348,9 +357,18 @@ public class TypicalCondition implements StorableObjectCondition {
 					+ className + " is abstract" //$NON-NLS-1$
 					+ CREATING_A_DUMMY_CONDITION, Log.WARNING);
 		} catch (InvocationTargetException ite) {
-			Log.debugMessage(TYPICAL_CONDITION_INIT + INVALID_UNDERLYING_IMPLEMENTATION
-					+ "constructor throws an exception in class " //$NON-NLS-1$
-					+ className + CREATING_A_DUMMY_CONDITION, Log.WARNING);
+			final Throwable cause = ite.getCause();
+			if (cause instanceof AssertionError) {
+				final String message = cause.getMessage();
+				if (message == null)
+					assert false;
+				else
+					assert false : message;
+			} else {
+				Log.debugMessage(TYPICAL_CONDITION_INIT + INVALID_UNDERLYING_IMPLEMENTATION
+						+ "constructor throws an exception in class " //$NON-NLS-1$
+						+ className + CREATING_A_DUMMY_CONDITION, Log.WARNING);
+			}
 		} catch (IllegalAccessException iae) {
 			/*
 			 * Never.
@@ -446,9 +464,18 @@ public class TypicalCondition implements StorableObjectCondition {
 					+ className + " is abstract" //$NON-NLS-1$
 					+ CREATING_A_DUMMY_CONDITION, Log.WARNING);
 		} catch (InvocationTargetException ite) {
-			Log.debugMessage(TYPICAL_CONDITION_INIT + INVALID_UNDERLYING_IMPLEMENTATION
-					+ "constructor throws an exception in class " //$NON-NLS-1$
-					+ className + CREATING_A_DUMMY_CONDITION, Log.WARNING);
+			final Throwable cause = ite.getCause();
+			if (cause instanceof AssertionError) {
+				final String message = cause.getMessage();
+				if (message == null)
+					assert false;
+				else
+					assert false : message;
+			} else {
+				Log.debugMessage(TYPICAL_CONDITION_INIT + INVALID_UNDERLYING_IMPLEMENTATION
+						+ "constructor throws an exception in class " //$NON-NLS-1$
+						+ className + CREATING_A_DUMMY_CONDITION, Log.WARNING);
+			}
 		} catch (IllegalAccessException iae) {
 			/*
 			 * Never.
@@ -530,9 +557,18 @@ public class TypicalCondition implements StorableObjectCondition {
 					+ className + " is abstract" //$NON-NLS-1$
 					+ CREATING_A_DUMMY_CONDITION, Log.WARNING);
 		} catch (InvocationTargetException ite) {
-			Log.debugMessage(TYPICAL_CONDITION_INIT + INVALID_UNDERLYING_IMPLEMENTATION
-					+ "constructor throws an exception in class " //$NON-NLS-1$
-					+ className + CREATING_A_DUMMY_CONDITION, Log.WARNING);
+			final Throwable cause = ite.getCause();
+			if (cause instanceof AssertionError) {
+				final String message = cause.getMessage();
+				if (message == null)
+					assert false;
+				else
+					assert false : message;
+			} else {
+				Log.debugMessage(TYPICAL_CONDITION_INIT + INVALID_UNDERLYING_IMPLEMENTATION
+						+ "constructor throws an exception in class " //$NON-NLS-1$
+						+ className + CREATING_A_DUMMY_CONDITION, Log.WARNING);
+			}
 		} catch (IllegalAccessException iae) {
 			/*
 			 * Never.
@@ -630,9 +666,18 @@ public class TypicalCondition implements StorableObjectCondition {
 					+ className + " is abstract" //$NON-NLS-1$
 					+ CREATING_A_DUMMY_CONDITION, Log.WARNING);
 		} catch (InvocationTargetException ite) {
-			Log.debugMessage(TYPICAL_CONDITION_INIT + INVALID_UNDERLYING_IMPLEMENTATION
-					+ "constructor throws an exception in class " //$NON-NLS-1$
-					+ className + CREATING_A_DUMMY_CONDITION, Log.WARNING);
+			final Throwable cause = ite.getCause();
+			if (cause instanceof AssertionError) {
+				final String message = cause.getMessage();
+				if (message == null)
+					assert false;
+				else
+					assert false : message;
+			} else {
+				Log.debugMessage(TYPICAL_CONDITION_INIT + INVALID_UNDERLYING_IMPLEMENTATION
+						+ "constructor throws an exception in class " //$NON-NLS-1$
+						+ className + CREATING_A_DUMMY_CONDITION, Log.WARNING);
+			}
 		} catch (IllegalAccessException iae) {
 			/*
 			 * Never.
@@ -762,9 +807,18 @@ public class TypicalCondition implements StorableObjectCondition {
 					+ className + " is abstract" //$NON-NLS-1$
 					+ CREATING_A_DUMMY_CONDITION, Log.WARNING);
 		} catch (InvocationTargetException ite) {
-			Log.debugMessage(TYPICAL_CONDITION_INIT + INVALID_UNDERLYING_IMPLEMENTATION
-					+ "constructor throws an exception in class " //$NON-NLS-1$
+			final Throwable cause = ite.getCause();
+			if (cause instanceof AssertionError) {
+				final String message = cause.getMessage();
+				if (message == null)
+					assert false;
+				else
+					assert false : message;
+			} else {
+				Log.debugMessage(TYPICAL_CONDITION_INIT + INVALID_UNDERLYING_IMPLEMENTATION
+						+ "constructor throws an exception in class " //$NON-NLS-1$
 					+ className + CREATING_A_DUMMY_CONDITION, Log.WARNING);
+			}
 		} catch (IllegalAccessException iae) {
 			/*
 			 * Never.

@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseLinkedIdsCondition.java,v 1.5 2005/03/09 15:37:22 arseniy Exp $
+ * $Id: DatabaseLinkedIdsCondition.java,v 1.6 2005/03/21 09:05:10 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,8 +26,8 @@ import com.syrus.util.Log;
  *	}
  * </pre> 
  * 
- * @version $Revision: 1.5 $, $Date: 2005/03/09 15:37:22 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.6 $, $Date: 2005/03/21 09:05:10 $
+ * @author $Author: bob $
  * @module general_v1
  */
 public class DatabaseLinkedIdsCondition extends AbstractDatabaseLinkedIdsCondition {
@@ -65,6 +65,14 @@ public class DatabaseLinkedIdsCondition extends AbstractDatabaseLinkedIdsConditi
 					+ className + " is abstract" //$NON-NLS-1$
 			, Log.WARNING);
 		} catch (InvocationTargetException ite) {
+			final Throwable cause = ite.getCause();
+			if (cause instanceof AssertionError) {
+				final String message = cause.getMessage();
+				if (message == null)
+					assert false;
+				else
+					assert false: message;
+			} else		
 			Log.debugMessage(LINKED_IDS_CONDITION_INIT + INVALID_UNDERLYING_IMPLEMENTATION
 					+ "constructor throws an exception in class " //$NON-NLS-1$
 					+ className, Log.WARNING);

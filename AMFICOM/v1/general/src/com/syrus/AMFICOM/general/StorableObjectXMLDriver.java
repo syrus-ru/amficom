@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectXMLDriver.java,v 1.16 2005/02/15 07:11:18 bob Exp $
+ * $Id: StorableObjectXMLDriver.java,v 1.17 2005/03/21 09:05:10 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -48,7 +48,7 @@ import com.syrus.util.Log;
 /**
  * XML Driver for storable object package, one per package.
  * 
- * @version $Revision: 1.16 $, $Date: 2005/02/15 07:11:18 $
+ * @version $Revision: 1.17 $, $Date: 2005/03/21 09:05:10 $
  * @author $Author: bob $
  * @module general_v1
  */
@@ -153,10 +153,19 @@ public class StorableObjectXMLDriver {
 											"StorableObjectXMLDriver.reflectStorableObject | Caught IllegalAccessException "
 													+ e.getMessage());
 		} catch (InvocationTargetException e) {
-			Throwable targetException = e.getTargetException();
-			throw new IllegalDataException(
-											"StorableObjectXMLDriver.reflectStorableObject | Caught InvocationTargetException "
-													+ targetException.getMessage(), targetException);
+			final Throwable cause = e.getCause();
+			if (cause instanceof AssertionError) {
+				final String message = cause.getMessage();
+				if (message == null)
+					assert false;
+				else
+					assert false: message;
+			} else		{
+				Throwable targetException = e.getTargetException();
+				throw new IllegalDataException(
+												"StorableObjectXMLDriver.reflectStorableObject | Caught InvocationTargetException "
+														+ targetException.getMessage(), targetException);
+			}
 		}
 		return storableObject;
 	}

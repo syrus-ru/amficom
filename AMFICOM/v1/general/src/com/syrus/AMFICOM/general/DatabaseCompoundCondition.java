@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseCompoundCondition.java,v 1.3 2005/02/17 14:20:14 bob Exp $
+ * $Id: DatabaseCompoundCondition.java,v 1.4 2005/03/21 09:05:10 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,7 +15,7 @@ import java.util.Iterator;
 import com.syrus.AMFICOM.general.corba.CompoundCondition_TransferablePackage.CompoundConditionSort;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/02/17 14:20:14 $
+ * @version $Revision: 1.4 $, $Date: 2005/03/21 09:05:10 $
  * @author $Author: bob $
  * @module general_v1
  */
@@ -26,7 +26,7 @@ public final class DatabaseCompoundCondition implements DatabaseStorableObjectCo
 	public DatabaseCompoundCondition(CompoundCondition delegate) {
 		this.delegate = delegate;
 	}
-	
+
 	public Short getEntityCode() {
 		return this.delegate.getEntityCode();
 	}
@@ -37,7 +37,8 @@ public final class DatabaseCompoundCondition implements DatabaseStorableObjectCo
 		String className = condition.getClass().getName();
 		int lastPoint = className.lastIndexOf('.');
 		String dbClassName = className.substring(0, lastPoint + 1) + "Database" + className.substring(lastPoint + 1);
-//		System.out.println("DatabaseCompoundCondition.reflectDatabaseCondition | dbClassName:" + dbClassName);
+		// System.out.println("DatabaseCompoundCondition.reflectDatabaseCondition
+		// | dbClassName:" + dbClassName);
 		try {
 			Class clazz = Class.forName(dbClassName);
 			Constructor constructor = clazz.getConstructor(new Class[] { condition.getClass()});
@@ -66,8 +67,17 @@ public final class DatabaseCompoundCondition implements DatabaseStorableObjectCo
 			String msg = "DatabaseStorableObjectCondition.reflectDatabaseCondition | Caught " + e.getMessage();
 			throw new IllegalDataException(msg, e);
 		} catch (InvocationTargetException e) {
-			String msg = "DatabaseStorableObjectCondition.reflectDatabaseCondition | Caught " + e.getMessage();
-			throw new IllegalDataException(msg, e);
+			final Throwable cause = e.getCause();
+			if (cause instanceof AssertionError) {
+				final String message = cause.getMessage();
+				if (message == null)
+					assert false;
+				else
+					assert false : message;
+			} else {
+				String msg = "DatabaseStorableObjectCondition.reflectDatabaseCondition | Caught " + e.getMessage();
+				throw new IllegalDataException(msg, e);
+			}
 		}
 		return databaseStorableObjectCondition;
 	}
@@ -98,11 +108,12 @@ public final class DatabaseCompoundCondition implements DatabaseStorableObjectCo
 						buffer.append(StorableObjectDatabase.CLOSE_BRACKET);
 						break;
 					default:
-						throw new IllegalDataException("DatabaseCompoundCondition.getSQLQuery | Unsupported condition sort");
+						throw new IllegalDataException(
+														"DatabaseCompoundCondition.getSQLQuery | Unsupported condition sort");
 
 				}
 			}
-		}		
+		}
 		return buffer.toString();
 	}
 
