@@ -2,8 +2,10 @@ classes
 docs
 lib
 model
+test
 .classpath
 .project
+.settings
 *.deploy
 *.jpr
 *.jpx

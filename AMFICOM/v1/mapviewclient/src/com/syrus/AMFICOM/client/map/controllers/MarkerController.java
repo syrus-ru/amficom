@@ -1,5 +1,5 @@
 /**
- * $Id: MarkerController.java,v 1.11 2005/02/25 13:49:16 krupenn Exp $
+ * $Id: MarkerController.java,v 1.12 2005/02/28 14:35:57 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -26,7 +26,7 @@ import com.syrus.AMFICOM.map.DoublePoint;
 import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.map.NodeLink;
 import com.syrus.AMFICOM.map.SiteNode;
-import com.syrus.AMFICOM.scheme.PathDecompositor;
+import com.syrus.AMFICOM.scheme.PathDecomposer;
 import com.syrus.AMFICOM.scheme.SchemeUtils;
 import com.syrus.AMFICOM.scheme.corba.PathElement;
 
@@ -43,8 +43,8 @@ import javax.swing.ImageIcon;
 
 /**
  * Контроллер маркера.
- * @author $Author: krupenn $
- * @version $Revision: 1.11 $, $Date: 2005/02/25 13:49:16 $
+ * @author $Author: bass $
+ * @version $Revision: 1.12 $, $Date: 2005/02/28 14:35:57 $
  * @module mapviewclient_v1
  */
 public class MarkerController extends AbstractNodeController
@@ -636,7 +636,7 @@ public class MarkerController extends AbstractNodeController
 	 */
 	public void notifyMarkerCreated(Marker marker)
 	{
-		marker.setPathDecompositor(new PathDecompositor(marker.getMeasurementPath().getSchemePath()));
+		marker.setPathDecompositor(new PathDecomposer(marker.getMeasurementPath().getSchemePath()));
 
 		getLogicalNetLayer().sendMapEvent(
 			new MapNavigateEvent(

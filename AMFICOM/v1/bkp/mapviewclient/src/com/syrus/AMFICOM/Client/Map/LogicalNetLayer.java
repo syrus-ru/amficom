@@ -1,5 +1,5 @@
 /**
- * $Id: LogicalNetLayer.java,v 1.48 2005/02/25 13:49:16 krupenn Exp $
+ * $Id: LogicalNetLayer.java,v 1.49 2005/02/28 14:35:57 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -69,7 +69,7 @@ import com.syrus.AMFICOM.mapview.Marker;
 import com.syrus.AMFICOM.mapview.MeasurementPath;
 import com.syrus.AMFICOM.mapview.Selection;
 import com.syrus.AMFICOM.mapview.VoidElement;
-import com.syrus.AMFICOM.scheme.PathDecompositor;
+import com.syrus.AMFICOM.scheme.PathDecomposer;
 import com.syrus.AMFICOM.scheme.corba.SchemeCableLink;
 import com.syrus.AMFICOM.scheme.corba.SchemeElement;
 import com.syrus.AMFICOM.scheme.corba.SchemePath;
@@ -79,8 +79,8 @@ import com.syrus.AMFICOM.scheme.corba.SchemePath;
  * 
  * 
  * 
- * @author $Author: krupenn $
- * @version $Revision: 1.48 $, $Date: 2005/02/25 13:49:16 $
+ * @author $Author: bass $
+ * @version $Revision: 1.49 $, $Date: 2005/02/28 14:35:57 $
  * @module mapviewclient_v2
  */
 public abstract class LogicalNetLayer implements MapCoordinatesConverter
@@ -1098,7 +1098,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 					if(marker != null)
 					{
 						if(marker.getPathDecompositor() == null)
-							marker.setPathDecompositor((PathDecompositor )mne.getSchemePathDecompositor());
+							marker.setPathDecompositor((PathDecomposer )mne.getSchemePathDecompositor());
 
 						MarkerController mc = (MarkerController)getMapViewController().getController(marker);
 

@@ -1,5 +1,5 @@
 /**
- * $Id: CableController.java,v 1.6 2005/02/18 12:19:45 krupenn Exp $
+ * $Id: CableController.java,v 1.7 2005/02/28 14:35:57 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -30,7 +30,7 @@ import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.scheme.SchemeStorableObjectPool;
 import com.syrus.AMFICOM.scheme.corba.CableChannelingItem;
-import com.syrus.AMFICOM.scheme.corba.CableChannelingItemDefaultFactory;
+import com.syrus.AMFICOM.scheme.corba.SchemeStorableObjectFactory;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics;
@@ -43,8 +43,8 @@ import java.util.Iterator;
 /**
  * Контроллер кабеля.
  * 
- * @author $Author: krupenn $
- * @version $Revision: 1.6 $, $Date: 2005/02/18 12:19:45 $
+ * @author $Author: bass $
+ * @version $Revision: 1.7 $, $Date: 2005/02/28 14:35:57 $
  * @module mapviewclient_v1
  */
 public final class CableController extends AbstractLinkController
@@ -54,11 +54,6 @@ public final class CableController extends AbstractLinkController
 	 */
 	private static CableController instance = null;
 
-	/**
-	 * Фабричный объект создания привязки кабеля к линии.
-	 */
-	private static CableChannelingItemDefaultFactory cciFactory = new CableChannelingItemDefaultFactory();
-	
 	private static final String PROPERTY_PANE_CLASS_NAME = 
 			"com.syrus.AMFICOM.Client.Map.Props.MapCablePathPane";
 
@@ -268,7 +263,7 @@ public final class CableController extends AbstractLinkController
 	 */
 	public static CableChannelingItem generateCCI(PhysicalLink link)
 	{
-		CableChannelingItem cci = cciFactory.newInstance();
+		CableChannelingItem cci = SchemeStorableObjectFactory.createCableChannelingItem();
 		cci.startSiteNodeImpl((SiteNode )link.getStartNode());
 		if(! (link instanceof UnboundLink))
 		{

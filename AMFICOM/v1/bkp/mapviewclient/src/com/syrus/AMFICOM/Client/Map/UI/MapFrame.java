@@ -1,5 +1,5 @@
 /**
- * $Id: MapFrame.java,v 1.26 2005/02/25 13:49:17 krupenn Exp $
+ * $Id: MapFrame.java,v 1.27 2005/02/28 14:35:57 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -82,8 +82,8 @@ import com.syrus.AMFICOM.scheme.corba.Scheme;
  * 
  * 
  * 
- * @version $Revision: 1.26 $, $Date: 2005/02/25 13:49:17 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.27 $, $Date: 2005/02/28 14:35:57 $
+ * @author $Author: bass $
  * @module mapviewclient_v1
  */
 public class MapFrame extends JInternalFrame 
@@ -494,7 +494,7 @@ public class MapFrame extends JInternalFrame
 				for(Iterator it = mapView.getSchemes().iterator(); it.hasNext();)
 				{
 					Scheme scheme = (Scheme )it.next();
-					if(scheme.changed())
+					if(scheme.isChanged())
 						try
 						{
 							SchemeStorableObjectPool.flush(true);// save scheme
