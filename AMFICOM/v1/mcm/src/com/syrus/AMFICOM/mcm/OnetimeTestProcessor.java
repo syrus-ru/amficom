@@ -19,7 +19,8 @@ public class OnetimeTestProcessor extends TestProcessor {
 			Identifier id = MeasurementControlModule.createIdentifier("measurement");
 			Log.debugMessage("OnetimeTestProcessor | Measurement id: '" + id.toString() + "'", Log.DEBUGLEVEL06);
 			measurement = super.test.createMeasurement(id,
-																								 super.test.getStartTime());
+																								 super.test.getStartTime(),
+																								 MeasurementControlModule.iAm.getUserId());
 /*
 				MeasurementControlModule.measurementServer.ping(1);*/
 		}
@@ -28,17 +29,17 @@ public class OnetimeTestProcessor extends TestProcessor {
 		}
 		if (measurement != null) {
 			super.transceiver.addMeasurement(measurement, this);
-			super.n_measurements ++;
+			super.nMeasurements ++;
 
 			while (super.running) {
 				try {
-					sleep(super.tick_time);
+					sleep(super.tickTime);
 				}
 				catch (InterruptedException ie) {
 					Log.errorException(ie);
 				}
 
-				if (super.n_reports < 1)
+				if (super.nReports < 1)
 					super.checkMeasurementResults();
 				else
 					break;

@@ -135,22 +135,24 @@ public abstract class TestProcessor extends Thread {
 			Result evaluationResult = null;
 			switch (measurement.getStatus().value()) {
 				case MeasurementStatus._MEASUREMENT_STATUS_MEASURED:
-					analysisResult = this.analyse(measurementResult);
+//					analysisResult = this.analyse(measurementResult);
 					if (analysisResult != null) {
 						try {
-							measurement.setStatus(MeasurementStatus.MEASUREMENT_STATUS_ANALYZED);
+							measurement.setStatus(MeasurementStatus.MEASUREMENT_STATUS_ANALYZED,
+																		MeasurementControlModule.iAm.getUserId());
 						}
 						catch (Exception e) {
 							Log.errorException(e);
 						}
 						MeasurementControlModule.resultList.add(analysisResult);
 					}
-					evaluationResult = this.evaluate(analysisResult, measurementResult);
+//					evaluationResult = this.evaluate(analysisResult, measurementResult);
 					if (evaluationResult != null)
 						MeasurementControlModule.resultList.add(evaluationResult);
 					MeasurementControlModule.resultList.add(measurementResult);
 					try {
-						measurement.setStatus(MeasurementStatus.MEASUREMENT_STATUS_COMPLETED);
+						measurement.setStatus(MeasurementStatus.MEASUREMENT_STATUS_COMPLETED,
+																	MeasurementControlModule.iAm.getUserId());
 					}
 					catch (Exception e) {
 						Log.errorException(e);
@@ -165,12 +167,13 @@ public abstract class TestProcessor extends Thread {
 						Log.errorException(e);
 						analysisResult = null;
 					}
-					evaluationResult = this.evaluate(analysisResult, measurementResult);
+//					evaluationResult = this.evaluate(analysisResult, measurementResult);
 					if (evaluationResult != null)
 						MeasurementControlModule.resultList.add(evaluationResult);
 					MeasurementControlModule.resultList.add(measurementResult);
 					try {
-						measurement.setStatus(MeasurementStatus.MEASUREMENT_STATUS_COMPLETED);
+						measurement.setStatus(MeasurementStatus.MEASUREMENT_STATUS_COMPLETED,
+																	MeasurementControlModule.iAm.getUserId());
 					}
 					catch (Exception e) {
 						Log.errorException(e);
@@ -183,67 +186,67 @@ public abstract class TestProcessor extends Thread {
 		}//if (!this.measurementResultQueue.isEmpty())
 	}
 
-	private Result analyse(Result measurementResult) {
-		Identifier analysisTypeId = this.test.getAnalysisTypeId();
-		if (!analysisTypeId.equals("")) {
-			Analysis analysis = null;
-			Measurement measurement = measurementResult.getMeasurement();
-			try {
-				/*!!	During creation of a test we must consider:
-				 * 		1. dependency among analysis_type_id, evaluation_type_id and measurement_type_id;
-				 *    2. appropriate MeasurementSetup, i. e. criteria, thresholds and etalon are present
-				 *       if necessary.
-				 *    */
-				analysis = Analysis.create(MeasurementControlModule.createIdentifier("analysis"),
-																	 MeasurementControlModule.iAm.getUserId(),
-																	 analysisTypeId,
-																	 measurement.getSetup().getCriteriaSet(),
-																	 this.test.getMonitoredElement().getId());
-			}
-			catch (Exception e) {
-				Log.errorException(e);
-			}
-			if (analysis != null) {
-				AnalysisManager analysisManager = AnalysisManager.getAnalysisManager(analysis_type_id);
-				if (analysisManager != null)
-					return analysisManager.analyse(analysis, measurementResult);
-				else
-					Log.errorMessage("Cannot find analysis manager for analysis type '" + analysis_type_id + "' of test '" + this.test.getId() + "'");
-			}
-		}
-		return null;
-	}
-
-	private Result evaluate(Result analysisResult, Result measurementResult) {
-		Identifier evaluationTypeId = this.test.getEvaluationTypeId();
-		if (!evaluationTypeId.equals("")) {
-			Evaluation evaluation = null;
-			Measurement measurement = measurementResult.getMeasurement();
-			try {
-				/*!!	During creation of a test we must consider:
-				 * 		1. dependency among analysis_type_id, evaluation_type_id and measurement_type_id;
-				 *    2. appropriate MeasurementSetup, i. e. criteria, thresholds and etalon are present.
-				 *    */
-				 evaluation = Evaluation.create(MeasurementControlModule.createIdentifier("evaluation"),
-																				MeasurementControlModule.iAm.getUserId(),
-																				evaluationTypeId,
-																				measurement.getSetup().getThresholdSet(),
-																				measurement.getSetup().getEtalon(),
-																				this.test.getMonitoredElement().getId());
-			}
-			catch (Exception e) {
-				Log.errorException(e);
-			}
-			if (evaluation != null) {
-				EvaluationManager evaluationManager = EvaluationManager.getEvaluationManager(evaluation_type_id);
-				if (evaluationManager != null)
-					return evaluationManager.evaluate(evaluation, analysisResult, measurementResult);
-				else
-					Log.errorMessage("Cannot find evaluation manager for evaluation type '" + evaluation_type_id + "' of test '" + this.test.getId() + "'");
-			}
-		}
-		return null;
-	}
+//	private Result analyse(Result measurementResult) {
+//		Identifier analysisTypeId = this.test.getAnalysisTypeId();
+//		if (!analysisTypeId.equals("")) {
+//			Analysis analysis = null;
+//			Measurement measurement = measurementResult.getMeasurement();
+//			try {
+//				/*!!	During creation of a test we must consider:
+//				 * 		1. dependency among analysis_type_id, evaluation_type_id and measurement_type_id;
+//				 *    2. appropriate MeasurementSetup, i. e. criteria, thresholds and etalon are present
+//				 *       if necessary.
+//				 *    */
+//				analysis = Analysis.create(MeasurementControlModule.createIdentifier("analysis"),
+//																	 MeasurementControlModule.iAm.getUserId(),
+//																	 analysisTypeId,
+//																	 measurement.getSetup().getCriteriaSet(),
+//																	 this.test.getMonitoredElement().getId());
+//			}
+//			catch (Exception e) {
+//				Log.errorException(e);
+//			}
+//			if (analysis != null) {
+//				AnalysisManager analysisManager = AnalysisManager.getAnalysisManager(analysis_type_id);
+//				if (analysisManager != null)
+//					return analysisManager.analyse(analysis, measurementResult);
+//				else
+//					Log.errorMessage("Cannot find analysis manager for analysis type '" + analysis_type_id + "' of test '" + this.test.getId() + "'");
+//			}
+//		}
+//		return null;
+//	}
+//
+//	private Result evaluate(Result analysisResult, Result measurementResult) {
+//		Identifier evaluationTypeId = this.test.getEvaluationTypeId();
+//		if (!evaluationTypeId.equals("")) {
+//			Evaluation evaluation = null;
+//			Measurement measurement = measurementResult.getMeasurement();
+//			try {
+//				/*!!	During creation of a test we must consider:
+//				 * 		1. dependency among analysis_type_id, evaluation_type_id and measurement_type_id;
+//				 *    2. appropriate MeasurementSetup, i. e. criteria, thresholds and etalon are present.
+//				 *    */
+//				 evaluation = Evaluation.create(MeasurementControlModule.createIdentifier("evaluation"),
+//																				MeasurementControlModule.iAm.getUserId(),
+//																				evaluationTypeId,
+//																				measurement.getSetup().getThresholdSet(),
+//																				measurement.getSetup().getEtalon(),
+//																				this.test.getMonitoredElement().getId());
+//			}
+//			catch (Exception e) {
+//				Log.errorException(e);
+//			}
+//			if (evaluation != null) {
+//				EvaluationManager evaluationManager = EvaluationManager.getEvaluationManager(evaluation_type_id);
+//				if (evaluationManager != null)
+//					return evaluationManager.evaluate(evaluation, analysisResult, measurementResult);
+//				else
+//					Log.errorMessage("Cannot find evaluation manager for evaluation type '" + evaluation_type_id + "' of test '" + this.test.getId() + "'");
+//			}
+//		}
+//		return null;
+//	}
 
 	void cleanup() {
 		this.measurementResultQueue.clear();

@@ -14,6 +14,7 @@ public class ContinuousTestProcessor extends TestProcessor {
 	private int status;
 
 	public ContinuousTestProcessor(Test test) {
+		super(test);
 	}
 
 	public void run() {

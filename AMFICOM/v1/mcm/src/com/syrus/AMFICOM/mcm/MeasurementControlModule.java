@@ -173,7 +173,7 @@ public class MeasurementControlModule extends Thread {
 	public void shutdown() {/*!!	Need synchronization	*/
 		this.running = false;
 
-		Enumeration enumeration = testProcessors.elements();
+		Enumeration enumeration = ((Hashtable)testProcessors).elements();
 		while (enumeration.hasMoreElements())
 			((TestProcessor)enumeration.nextElement()).abort();
 
@@ -181,7 +181,7 @@ public class MeasurementControlModule extends Thread {
 		resultList.clear();
 		testProcessors.clear();
 
-		enumeration = transceivers.elements();
+		enumeration = ((Hashtable)transceivers).elements();
 		while (enumeration.hasMoreElements())
 			((Transceiver)enumeration.nextElement()).shutdown();
 		transceivers.clear();

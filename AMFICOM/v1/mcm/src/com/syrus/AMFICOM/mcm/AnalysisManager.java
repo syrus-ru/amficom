@@ -9,6 +9,7 @@ import com.syrus.AMFICOM.event.corba.AlarmLevel;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
 import com.syrus.AMFICOM.measurement.Result;
 import com.syrus.AMFICOM.measurement.Analysis;
+import com.syrus.AMFICOM.measurement.Set;
 import com.syrus.AMFICOM.measurement.SetParameter;
 import com.syrus.util.Log;
 
@@ -22,15 +23,21 @@ public abstract class AnalysisManager {
       return null;
   }
 
-  public Result analyse(Analysis analysis, Result measurementResult) {
+  public Result analyse(Analysis analysis, Result measurementResult, Set etalon) {
 		SetParameter[] criteria = analysis.getCriteriaSet().getParameters();
 		Hashtable hcriteria = new Hashtable(criteria.length);
 		for (int i = 0; i < criteria.length; i++)
 			hcriteria.put(criteria[i].getTypeId(), criteria[i].getValue());
+
 		SetParameter[] measurementResultParameters = measurementResult.getParameters();
 		Hashtable hmeasurementResultParameters = new Hashtable(measurementResultParameters.length);
 		for (int i = 0; i < measurementResultParameters.length; i++)
 			hmeasurementResultParameters.put(measurementResultParameters[i].getTypeId(), measurementResultParameters[i].getValue());
+
+		SetParameter[] etalonParameters = etalon.getParameters();
+		Hashtable hetalonParameters = new Hashtable();
+		for (int i = 0; i < etalonParameters.length; i++)
+			hetalonParameters.put(etalonParameters[i].getTypeId(), etalonParameters[i].getValue());
 
 		Hashtable hanalysisResultParameters = this.analyse(hcriteria, hmeasurementResultParameters);
 

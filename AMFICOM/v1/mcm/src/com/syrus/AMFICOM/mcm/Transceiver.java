@@ -52,7 +52,8 @@ public class Transceiver extends Thread {
 				if (this.transmit(measurement)) {
 					this.measurementQueue.remove(measurement);
 					try {
-						measurement.setStatus(MeasurementStatus.MEASUREMENT_STATUS_PROCESSING);
+						measurement.setStatus(MeasurementStatus.MEASUREMENT_STATUS_PROCESSING,
+																	MeasurementControlModule.iAm.getUserId());
 					}
 					catch (Exception e) {
 						Log.errorException(e);
@@ -75,7 +76,8 @@ public class Transceiver extends Thread {
 						result = null;
 						try {
 							kisReport.createResult(measurement);
-							measurement.setStatus(MeasurementStatus.MEASUREMENT_STATUS_MEASURED);
+							measurement.setStatus(MeasurementStatus.MEASUREMENT_STATUS_MEASURED,
+																		MeasurementControlModule.iAm.getUserId());
 						}
 						catch (Exception e) {
 							Log.errorException(e);
@@ -136,7 +138,8 @@ public class Transceiver extends Thread {
 					this.testProcessors.remove(measurement);
 					this.processingMeasurements.remove(measurement.getId());
 					try {
-						measurement.setStatus(MeasurementStatus.MEASUREMENT_STATUS_ABORTED);
+						measurement.setStatus(MeasurementStatus.MEASUREMENT_STATUS_ABORTED,
+																	MeasurementControlModule.iAm.getUserId());
 					}
 					catch (Exception e) {
 						Log.errorException(e);
