@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseContextSetup.java,v 1.15 2005/01/19 20:59:10 arseniy Exp $
+ * $Id: DatabaseContextSetup.java,v 1.16 2005/02/21 13:01:33 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -57,18 +57,23 @@ import com.syrus.AMFICOM.measurement.TestDatabase;
 import com.syrus.util.ApplicationProperties;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2005/01/19 20:59:10 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.16 $, $Date: 2005/02/21 13:01:33 $
+ * @author $Author: bob $
  * @module cmserver_v1
  */
 
 public abstract class DatabaseContextSetup {
 	
+	public static final String KEY_GENERAL_POOL_SIZE = "GeneralPoolSize";
+	public static final String KEY_ADMINISTRATION_POOL_SIZE = "AdministrationPoolSize";
 	public static final String KEY_CONFIGURATION_POOL_SIZE = "ConfigurationPoolSize";
 	public static final String KEY_MEASUREMENT_POOL_SIZE = "MeasurementPoolSize";
 	public static final String KEY_REFRESH_TIMEOUT = "RefreshTimeout";
 	public static final String KEY_DATABASE_LOADER_ONLY = "DatabaseLoaderOnly";
 
+	
+	public static final int DEFAULT_GENERAL_POOL_SIZE = 1000;
+	public static final int DEFAULT_ADMINISTRATION_POOL_SIZE = 1000;
 	public static final int DEFAULT_CONFIGURATION_POOL_SIZE = 1000;
 	public static final int DEFAULT_MEASUREMENT_POOL_SIZE = 1000;
 	public static final int DEFAULT_REFRESH_TIMEOUT = 5;
@@ -121,11 +126,14 @@ public abstract class DatabaseContextSetup {
 
 	public static void initObjectPools() {
 		boolean databaseLoaderOnly = Boolean.valueOf(ApplicationProperties.getString(KEY_DATABASE_LOADER_ONLY, DEFAULT_DATABASE_LOADER_ONLY)).booleanValue();
+		
+		int generalPoolSize = ApplicationProperties.getInt(KEY_GENERAL_POOL_SIZE, DEFAULT_GENERAL_POOL_SIZE);
+		int administrationPoolSize = ApplicationProperties.getInt(KEY_ADMINISTRATION_POOL_SIZE, DEFAULT_ADMINISTRATION_POOL_SIZE);
 		int configurationPoolSize = ApplicationProperties.getInt(KEY_CONFIGURATION_POOL_SIZE, DEFAULT_CONFIGURATION_POOL_SIZE);
 		int measurementPoolSize = ApplicationProperties.getInt(KEY_MEASUREMENT_POOL_SIZE, DEFAULT_MEASUREMENT_POOL_SIZE);
 
-		AdministrationStorableObjectPool.init(new DatabaseAdministrationObjectLoader());
-		GeneralStorableObjectPool.init(new DatabaseGeneralObjectLoader());
+		GeneralStorableObjectPool.init(new DatabaseGeneralObjectLoader(), generalPoolSize);
+		AdministrationStorableObjectPool.init(new DatabaseAdministrationObjectLoader(), administrationPoolSize);		
 
 		if (! databaseLoaderOnly) {
 			long refreshTimeout = ApplicationProperties.getInt(KEY_REFRESH_TIMEOUT, DEFAULT_REFRESH_TIMEOUT) * 1000L * 60L;
