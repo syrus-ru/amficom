@@ -1,5 +1,5 @@
 /*
- * $Id: configuration.idl,v 1.53 2004/11/23 14:09:38 bob Exp $
+ * $Id: configuration.idl,v 1.54 2004/11/24 08:12:36 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -24,9 +24,6 @@ module corba {
 //		void getKIS() raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
 //	};
 
-	abstract valuetype DomainMember {
-		attribute general::corba::Identifier domaiId;
-	};
 
 //////////////////// AccessIdentifier ///////////////////
 	struct AccessIdentifier_Transferable {
@@ -70,17 +67,6 @@ module corba {
 	typedef sequence <EquipmentType_Transferable> EquipmentTypeSeq_Transferable;
 	typedef EquipmentType_Transferable EquipmentType;
 	typedef sequence<EquipmentType> EquipmentTypeSeq;
-
-/////////////////////// KISType /////////////////////
-	struct KISType_Transferable {
-		com::syrus::AMFICOM::general::corba::StorableObject_Transferable header;
-
-		wstring codename;
-		wstring description;
-		wstring name;
-	};
-	
-	typedef sequence <KISType_Transferable> KISTypeSeq_Transferable;
 	
 /////////////////////// TransmissionPathType /////////////////////
 	struct TransmissionPathType_Transferable {
@@ -358,7 +344,6 @@ module corba {
 		wstring description;
 		wstring hostname;
 		short tcp_port;
-		com::syrus::AMFICOM::general::corba::Identifier_Transferable type_id;
 		com::syrus::AMFICOM::general::corba::Identifier_Transferable equipment_id;
 		com::syrus::AMFICOM::general::corba::Identifier_Transferable mcm_id;
 
