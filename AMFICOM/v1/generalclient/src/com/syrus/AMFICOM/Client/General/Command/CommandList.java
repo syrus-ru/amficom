@@ -1,5 +1,5 @@
 /*
- * $Id: CommandList.java,v 1.7 2004/10/07 11:52:09 krupenn Exp $
+ * $Id: CommandList.java,v 1.8 2004/10/08 10:37:41 krupenn Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,7 +12,7 @@ import java.util.LinkedList;
 
 /**
  * @author $Author: krupenn $
- * @version $Revision: 1.7 $, $Date: 2004/10/07 11:52:09 $
+ * @version $Revision: 1.8 $, $Date: 2004/10/08 10:37:41 $
  * @module generalclient_v1
  */
 public class CommandList extends VoidCommand
@@ -79,7 +79,7 @@ public class CommandList extends VoidCommand
 	{
 		for(int i = 0; i < c; i++)
 		{
-			Command com = current.getPrevious();
+			Command com = getPrevious();
 			if( com != null)
 			{
 				current = com;
@@ -177,7 +177,7 @@ public class CommandList extends VoidCommand
 		{
 			// выполнить команду и переместить указатель
 			// списка выполненных команд
-			current = current.getPrevious();
+			current = getPrevious();
 			if(current != null)
 				current.execute();
 		}
@@ -193,7 +193,7 @@ public class CommandList extends VoidCommand
 
 		// выполнить команду и переместить указатель
 		// списка выполненных команд
-		current = current.getPrevious();
+		current = getPrevious();
 		if(current != null)
 			current.execute();
 	}
@@ -208,7 +208,7 @@ public class CommandList extends VoidCommand
 
 		// выполнить команду и переместить указатель
 		// списка выполненных команд
-		current = current.getPrevious();
+		current = getPrevious();
 		current.redo();
 	}
 
@@ -224,6 +224,14 @@ public class CommandList extends VoidCommand
 		// указатель списка выполненных команд
 		current.undo();
 		current = current.getNext();
+	}
+	
+	public Command getPrevious()
+	{
+		if(current == null)
+			return getBottom();
+		else
+			return current.getPrevious();
 	}
 	
 	/**
