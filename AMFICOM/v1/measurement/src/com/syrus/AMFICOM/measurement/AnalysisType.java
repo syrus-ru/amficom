@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisType.java,v 1.51 2005/02/14 11:00:52 arseniy Exp $
+ * $Id: AnalysisType.java,v 1.52 2005/02/14 12:02:39 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,7 +33,7 @@ import com.syrus.AMFICOM.measurement.corba.AnalysisType_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.51 $, $Date: 2005/02/14 11:00:52 $
+ * @version $Revision: 1.52 $, $Date: 2005/02/14 12:02:39 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -55,6 +55,11 @@ public class AnalysisType extends ActionType {
 
 	public AnalysisType(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
+
+		this.inParameterTypes = new ArrayList();
+		this.criteriaParameterTypes = new ArrayList();
+		this.etalonParameterTypes = new ArrayList();
+		this.outParameterTypes = new ArrayList();
 
 		this.analysisTypeDatabase = MeasurementDatabaseContext.analysisTypeDatabase;
 		try {
@@ -259,10 +264,7 @@ public class AnalysisType extends ActionType {
 	}
 
 	protected void setInParameterTypes0(Collection inParameterTypes) {
-		if (this.inParameterTypes == null)
-			this.inParameterTypes = new ArrayList();
-		else
-			this.inParameterTypes.clear();
+		this.inParameterTypes.clear();
 		if (inParameterTypes != null)
 			this.inParameterTypes.addAll(inParameterTypes);
 	}
@@ -279,10 +281,7 @@ public class AnalysisType extends ActionType {
 	}
 
 	protected void setCriteriaParameterTypes0(Collection criteriaParameterTypes) {
-		if (this.criteriaParameterTypes == null)
-			this.criteriaParameterTypes = new ArrayList();
-		else
-			this.criteriaParameterTypes.clear();
+		this.criteriaParameterTypes.clear();
 		if (criteriaParameterTypes != null)
 			this.criteriaParameterTypes.addAll(criteriaParameterTypes);
 	}
@@ -298,10 +297,7 @@ public class AnalysisType extends ActionType {
 	}
 
 	protected void setEtalonParameterTypes0(Collection etalonParameterTypes) {
-		if (this.etalonParameterTypes == null)
-			this.etalonParameterTypes = new ArrayList();
-		else
-			this.etalonParameterTypes.clear();
+		this.etalonParameterTypes.clear();
 		if (etalonParameterTypes != null)
 			this.etalonParameterTypes.addAll(etalonParameterTypes);
 	}
@@ -317,10 +313,7 @@ public class AnalysisType extends ActionType {
 	}
 
 	protected void setOutParameterTypes0(Collection outParameterTypes) {
-		if (this.outParameterTypes == null)
-			this.outParameterTypes = new ArrayList();
-		else
-			this.outParameterTypes.clear();
+		this.outParameterTypes.clear();
 		if (outParameterTypes != null)
 			this.outParameterTypes.addAll(outParameterTypes);
 	}

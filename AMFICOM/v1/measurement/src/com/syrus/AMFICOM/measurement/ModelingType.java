@@ -1,5 +1,5 @@
 /*
- * $Id: ModelingType.java,v 1.10 2005/02/14 11:00:52 arseniy Exp $
+ * $Id: ModelingType.java,v 1.11 2005/02/14 12:02:39 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,7 +33,7 @@ import com.syrus.AMFICOM.measurement.corba.ModelingType_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/02/14 11:00:52 $
+ * @version $Revision: 1.11 $, $Date: 2005/02/14 12:02:39 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -53,6 +53,9 @@ public class ModelingType extends ActionType {
 
 	public ModelingType(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
+
+		this.inParameterTypes = new ArrayList();
+		this.outParameterTypes = new ArrayList();
 
 		this.modelingTypeDatabase = MeasurementDatabaseContext.modelingTypeDatabase;
 		try {
@@ -176,10 +179,6 @@ public class ModelingType extends ActionType {
 											outParTypeIds);
 	}
 
-  public short getEntityCode() {
-		return ObjectEntities.MODELINGTYPE_ENTITY_CODE;
-	}
-
   public Collection getInParameterTypes() {
 		return Collections.unmodifiableCollection(this.inParameterTypes);
 	}
@@ -211,10 +210,7 @@ public class ModelingType extends ActionType {
 	}
 
 	protected void setInParameterTypes0(Collection inParameterTypes) {
-		if (this.inParameterTypes == null)
-			this.inParameterTypes = new ArrayList();
-		else
-			this.inParameterTypes.clear();
+		this.inParameterTypes.clear();
 		if (inParameterTypes != null)
 			this.inParameterTypes.addAll(inParameterTypes);
 	}
@@ -231,10 +227,7 @@ public class ModelingType extends ActionType {
 	}
 
 	protected void setOutParameterTypes0(Collection outParameterTypes) {
-		if (this.outParameterTypes == null)
-			this.outParameterTypes = new ArrayList();
-		else
-			this.outParameterTypes.clear();
+		this.outParameterTypes.clear();
 		if (outParameterTypes != null)
 			this.outParameterTypes.addAll(outParameterTypes);
 	}

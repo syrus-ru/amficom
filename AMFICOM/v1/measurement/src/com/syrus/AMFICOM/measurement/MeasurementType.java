@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementType.java,v 1.52 2005/02/14 11:00:52 arseniy Exp $
+ * $Id: MeasurementType.java,v 1.53 2005/02/14 12:02:39 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,7 +35,7 @@ import com.syrus.AMFICOM.measurement.corba.MeasurementType_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.52 $, $Date: 2005/02/14 11:00:52 $
+ * @version $Revision: 1.53 $, $Date: 2005/02/14 12:02:39 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -56,6 +56,10 @@ public class MeasurementType extends ActionType {
 
 	public MeasurementType(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
+
+		this.inParameterTypes = new ArrayList();
+		this.outParameterTypes = new ArrayList();
+		this.measurementPortTypes = new ArrayList();
 
 		this.measurementTypeDatabase = MeasurementDatabaseContext.measurementTypeDatabase;
 		try {
@@ -231,10 +235,7 @@ public class MeasurementType extends ActionType {
 	}
 
 	protected void setInParameterTypes0(Collection inParameterTypes) {
-		if (this.inParameterTypes == null)
-			this.inParameterTypes = new ArrayList();
-		else
-			this.inParameterTypes.clear();
+		this.inParameterTypes.clear();
 		if (inParameterTypes != null)
 			this.inParameterTypes.addAll(inParameterTypes);
 	}
@@ -251,10 +252,7 @@ public class MeasurementType extends ActionType {
 	}
 
 	protected void setOutParameterTypes0(Collection outParameterTypes) {
-		if (this.outParameterTypes == null)
-			this.outParameterTypes = new ArrayList();
-		else
-			this.outParameterTypes.clear();
+		this.outParameterTypes.clear();
 		if (outParameterTypes != null)
 			this.outParameterTypes.addAll(outParameterTypes);
 	}
