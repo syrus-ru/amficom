@@ -43,14 +43,14 @@ import com.syrus.io.BellcoreStructure;
 public class EventsFrame extends ATableFrame
 implements OperationListener
 {
-	public static final String linear = LangModelAnalyse.getString("eventTypeLinear");
-	public static final String connector = LangModelAnalyse.getString("eventTypeReflective");
-	public static final String loss = LangModelAnalyse.getString("eventTypeLoss");
-	public static final String gain = LangModelAnalyse.getString("eventTypeGain");
-	public static final String initiate = LangModelAnalyse.getString("eventTypeInitiate");
-	public static final String terminate = LangModelAnalyse.getString("eventTypeTerminate");
-	public static final String noid = LangModelAnalyse.getString("eventTypeNonIdentified");
-	public static final String dash = "-----";
+	public static final String LINEAR = LangModelAnalyse.getString("eventTypeLinear");
+	public static final String CONNECTOR = LangModelAnalyse.getString("eventTypeReflective");
+	public static final String LOSS = LangModelAnalyse.getString("eventTypeLoss");
+	public static final String GAIN = LangModelAnalyse.getString("eventTypeGain");
+	public static final String INITIATE = LangModelAnalyse.getString("eventTypeInitiate");
+	public static final String TERMINATE = LangModelAnalyse.getString("eventTypeTerminate");
+	public static final String NO_ID = LangModelAnalyse.getString("eventTypeNonIdentified");
+	public static final String DASH = "-----";
 
 	private ComplexReflectogramEvent []data;
 	//private ComplexReflectogramEvent []data_; -- не требуется, т.к. сравниваются только относительные параметры 
@@ -66,12 +66,12 @@ implements OperationListener
 	JPanel mainPanel = new JPanel();
 	JScrollPane scrollPane = new JScrollPane();
 	JViewport viewport = new JViewport();
-
+	
 	public EventsFrame()
 	{
 		this(new Dispatcher());
 	}
-
+	
 	public EventsFrame(Dispatcher dispatcher)
 	{
 		super();
@@ -344,21 +344,21 @@ implements OperationListener
 			{
 			case TraceEvent.INITIATE:
 				tModel.addRow(String.valueOf(i + 1), new Object[] {
-					 initiate,
-					 Double.toString(MathRef.round_3(res_km * (double)events[i].first_point)), //начало
+					 INITIATE,
+					 Double.toString(MathRef.round_3(res_km * events[i].first_point)), //начало
 					 Double.toString(MathRef.round_3(res_km * (events[i].last_point - events[i].first_point))), //протяженность
-					 dash, // отраж
-					 dash, // потери
-					 dash  // затух
+					 DASH, // отраж
+					 DASH, // потери
+					 DASH  // затух
 				});
 				break;
 			case TraceEvent.LINEAR:
 			    // TODO: использовать только один параметр в data[] вместо трех
 				tModel.addRow(String.valueOf(i + 1), new Object[] {
-					 linear,
-					 Double.toString(MathRef.round_3(res_km * (double)events[i].first_point)), //начало
+					 LINEAR,
+					 Double.toString(MathRef.round_3(res_km * events[i].first_point)), //начало
 					 Double.toString(MathRef.round_3(res_km * (events[i].last_point - events[i].first_point))), //протяженность
-					 dash, // отраж
+					 DASH, // отраж
 					 //Double.toString(MathRef.round_3(events[i].data[1] - events[i].data[0])), // потери
 					 Double.toString(MathRef.round_3(events[i].getLoss())), // потери
 					 Double.toString(MathRef.round_4(events[i].data[2] / res_km)) //затух
@@ -366,56 +366,56 @@ implements OperationListener
 				break;
 			case TraceEvent.NON_IDENTIFIED:
 				tModel.addRow(String.valueOf(i + 1), new Object[] {
-					 noid,
-					 Double.toString(MathRef.round_3(res_km * (double)events[i].first_point)), //начало
+					 NO_ID,
+					 Double.toString(MathRef.round_3(res_km * events[i].first_point)), //начало
 					 Double.toString(MathRef.round_3(res_km * (events[i].last_point - events[i].first_point))), //протяженность
-					 dash, // отраж
+					 DASH, // отраж
 					 //dash, // потери
 					 Double.toString(MathRef.round_3(events[i].getLoss())), // потери
-					 dash  // затух
+					 DASH  // затух
 				});
 				break;
 			case TraceEvent.CONNECTOR:
 				tModel.addRow(String.valueOf(i + 1), new Object[] {
-					 connector,
-					 Double.toString(MathRef.round_3(res_km * (double)events[i].first_point)), //начало
+					 CONNECTOR,
+					 Double.toString(MathRef.round_3(res_km * events[i].first_point)), //начало
 					 Double.toString(MathRef.round_3(res_km * (events[i].last_point - events[i].first_point))), //протяженность
 					 Double.toString(MathRef.round_2(MathRef.calcReflectance(sigma, events[i].data[0] - events[i].data[2]))), // отраж
 					 //Double.toString(MathRef.round_3(events[i].data[1] - events[i].data[0])), // потери
 					 Double.toString(MathRef.round_3(events[i].getLoss())), // потери
-					 dash  // затух
+					 DASH  // затух
 				});
 				break;
 			case TraceEvent.GAIN:
 				tModel.addRow(String.valueOf(i + 1), new Object[] {
-					 gain,
-					 Double.toString(MathRef.round_3 (res_km * (double)events[i].first_point)), //начало
+					 GAIN,
+					 Double.toString(MathRef.round_3 (res_km * events[i].first_point)), //начало
 					 Double.toString(MathRef.round_3 (res_km * (events[i].last_point - events[i].first_point))), //протяженность
-					 dash, // отраж
+					 DASH, // отраж
 					 //Double.toString( MathRef.round_3 ( events[i].data[2])), // потери
 					 Double.toString(MathRef.round_3(events[i].getLoss())), // потери
-					 dash  // затух
+					 DASH  // затух
 				});
 				break;
 			case TraceEvent.LOSS:
 				tModel.addRow(String.valueOf(i + 1), new Object[] {
-					 loss,
-					 Double.toString(MathRef.round_3 (res_km * (double)events[i].first_point)), //начало
+					 LOSS,
+					 Double.toString(MathRef.round_3 (res_km * events[i].first_point)), //начало
 					 Double.toString(MathRef.round_3 (res_km * (events[i].last_point - events[i].first_point))), //протяженность
-					 dash, // отраж
+					 DASH, // отраж
 					 //Double.toString( MathRef.round_3 ( events[i].data[2])), // потери
 					 Double.toString(MathRef.round_3(events[i].getLoss())), // потери
-					 dash  // затух
+					 DASH  // затух
 				});
 				break;
 			case TraceEvent.TERMINATE:
 				tModel.addRow(String.valueOf(i + 1), new Object[] {
-					 terminate,
-					 Double.toString(MathRef.round_3(res_km * (double)events[i].first_point)), //начало
+					 TERMINATE,
+					 Double.toString(MathRef.round_3(res_km * events[i].first_point)), //начало
 					 Double.toString(MathRef.round_3(res_km * (events[i].last_point - events[i].first_point))), //протяженность
 					 Double.toString(MathRef.round_2(MathRef.calcReflectance(sigma, events[i].data[0]-events[i].data[1]))), // отраж
-					 dash, // потери
-					 dash  // затух
+					 DASH, // потери
+					 DASH  // затух
 				});
 				break;
 			}

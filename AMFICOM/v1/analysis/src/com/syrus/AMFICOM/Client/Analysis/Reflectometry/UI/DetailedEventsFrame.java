@@ -55,13 +55,13 @@ public class DetailedEventsFrame extends JInternalFrame
 	JViewport viewportComp = new JViewport();
 	private JTabbedPane tabbedPane = new JTabbedPane();
 
-	private static String linear = EventsFrame.linear;
-	private static String connector = EventsFrame.connector; 
-	private static String gain = EventsFrame.gain;
-	private static String loss = EventsFrame.loss;
-	private static String initiate = EventsFrame.initiate;
-	private static String terminate = EventsFrame.terminate;
-	private static String noid = EventsFrame.noid;
+	private static String linear = EventsFrame.LINEAR;
+	private static String connector = EventsFrame.CONNECTOR; 
+	private static String gain = EventsFrame.GAIN;
+	private static String loss = EventsFrame.LOSS;
+	private static String initiate = EventsFrame.INITIATE;
+	private static String terminate = EventsFrame.TERMINATE;
+	private static String noid = EventsFrame.NO_ID;
 
 	public DetailedEventsFrame()
 	{
