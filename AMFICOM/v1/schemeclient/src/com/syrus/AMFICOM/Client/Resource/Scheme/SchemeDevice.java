@@ -52,6 +52,45 @@ public class SchemeDevice extends StubResource implements Serializable
 		return id;
 	}
 
+	public boolean isCrossRouteValid()
+	{
+		if (ports.isEmpty() || cableports.isEmpty())
+			return false;
+
+		//check ports
+		Collection pids = new ArrayList(ports.size());
+		for (Iterator it = ports.iterator(); it.hasNext();)
+			pids.add(((SchemePort)it.next()).getId());
+		for (Iterator it = crossroute.keySet().iterator(); it.hasNext();)
+		{
+			String pid = (String)it.next();
+			if (!pids.contains(pid))
+				return false;
+		}
+		//check threads
+		List cables = new LinkedList();
+		Collection tids = new ArrayList(crossroute.size());
+		for (Iterator it = cableports.iterator(); it.hasNext(); )
+		{
+			SchemeCablePort p = (SchemeCablePort)it.next();
+			if (p.cable_link_id.length() != 0)
+				cables.add(Pool.get(SchemeCableLink.typ, p.cable_link_id));
+		}
+		for (Iterator it = cables.iterator(); it.hasNext();)
+		{
+			SchemeCableLink cable = (SchemeCableLink)it.next();
+			for (Iterator tit = cable.cable_threads.iterator(); tit.hasNext();)
+				tids.add(((SchemeCableThread)tit.next()).getId());
+		}
+		for (Iterator it = crossroute.values().iterator(); it.hasNext();)
+		{
+			String pid = (String)it.next();
+			if (!tids.contains(pid))
+				return false;
+		}
+		return true;
+	}
+
 	public void createDefaultCrossRoute()
 	{
 		crossroute = new HashMap();

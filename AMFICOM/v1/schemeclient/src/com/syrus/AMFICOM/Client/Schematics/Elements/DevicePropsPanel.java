@@ -44,6 +44,8 @@ public class DevicePropsPanel extends JPanel
 	public void init(SchemeDevice dev, DataSourceInterface dataSource, boolean show_is_kis)
 	{
 		this.dev = dev;
+		if (!dev.isCrossRouteValid())
+			dev.createDefaultCrossRoute();
 	}
 
 	public void undo()
