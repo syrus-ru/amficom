@@ -1,5 +1,5 @@
 /*
- * $Id: ConfigurationStorableObjectPool.java,v 1.48 2004/11/25 13:23:26 bob Exp $
+ * $Id: ConfigurationStorableObjectPool.java,v 1.49 2004/12/02 09:30:13 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,12 +27,12 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.48 $, $Date: 2004/11/25 13:23:26 $
+ * @version $Revision: 1.49 $, $Date: 2004/12/02 09:30:13 $
  * @author $Author: bob $
  * @module configuration_v1
  */
 
-public class ConfigurationStorableObjectPool extends StorableObjectPool {
+public final class ConfigurationStorableObjectPool extends StorableObjectPool {
 
 	private static final int			OBJECT_POOL_MAP_SIZE			= 16;		/* Number of entities */
 

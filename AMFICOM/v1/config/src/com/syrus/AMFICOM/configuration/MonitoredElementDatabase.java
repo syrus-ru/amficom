@@ -1,5 +1,5 @@
 /*
- * $Id: MonitoredElementDatabase.java,v 1.29 2004/11/22 13:49:24 bob Exp $
+ * $Id: MonitoredElementDatabase.java,v 1.30 2004/12/02 09:30:14 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -39,7 +39,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.29 $, $Date: 2004/11/22 13:49:24 $
+ * @version $Revision: 1.30 $, $Date: 2004/12/02 09:30:14 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -415,9 +415,9 @@ public class MonitoredElementDatabase extends StorableObjectDatabase {
         }
     }
 
-	public Object retrieveObject(StorableObject storableObject, int retrieve_kind, Object arg) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException{
+	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException{
 		MonitoredElement monitoredElement = this.fromStorableObject(storableObject);
-		switch (retrieve_kind) {
+		switch (retrieveKind) {
 			default:
 				return null;
 		}

@@ -1,5 +1,5 @@
 /*
- * $Id: ConfigurationDatabaseContext.java,v 1.30 2004/12/01 15:41:47 bass Exp $
+ * $Id: ConfigurationDatabaseContext.java,v 1.31 2004/12/02 09:30:13 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,8 +11,8 @@ package com.syrus.AMFICOM.configuration;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 
 /**
- * @version $Revision: 1.30 $, $Date: 2004/12/01 15:41:47 $
- * @author $Author: bass $
+ * @version $Revision: 1.31 $, $Date: 2004/12/02 09:30:13 $
+ * @author $Author: bob $
  * @todo Declare all fields private as<ol>
  *       <li>they have public accessors; and</li>
  *       <li>there's {@link #init(StorableObjectDatabase, StorableObjectDatabase, StorableObjectDatabase, StorableObjectDatabase, StorableObjectDatabase, StorableObjectDatabase, StorableObjectDatabase, StorableObjectDatabase, StorableObjectDatabase, StorableObjectDatabase, StorableObjectDatabase, StorableObjectDatabase, StorableObjectDatabase, StorableObjectDatabase, StorableObjectDatabase, StorableObjectDatabase, StorableObjectDatabase, StorableObjectDatabase, StorableObjectDatabase)}
@@ -44,44 +44,44 @@ public final class ConfigurationDatabaseContext {
 		// private constructor 
 	}
 
-	public static void init(final StorableObjectDatabase newCharacteristicTypeDatabase,
-			final StorableObjectDatabase newEquipmentTypeDatabase,
-			final StorableObjectDatabase newPortTypeDatabase,
-			final StorableObjectDatabase newMeasurementPortTypeDatabase,
-			final StorableObjectDatabase newLinkTypeDatabase,
-			final StorableObjectDatabase newCableThreadTypeDatabase,
-			final StorableObjectDatabase newCharacteristicDatabase,
-			final StorableObjectDatabase newUserDatabase,
-			final StorableObjectDatabase newDomainDatabase,
-			final StorableObjectDatabase newServerDatabase,
-			final StorableObjectDatabase newMcmDatabase,
-			final StorableObjectDatabase newEquipmentDatabase,
-			final StorableObjectDatabase newPortDatabase,
-			final StorableObjectDatabase newMeasurementPortDatabase,
-			final StorableObjectDatabase newTransmissionPathDatabase,
-			final StorableObjectDatabase newTransmissionPathTypeDatabase,
-			final StorableObjectDatabase newKisDatabase,
-			final StorableObjectDatabase newMonitoredElementDatabase,
-			final StorableObjectDatabase newLinkDatabase) {
-		characteristicTypeDatabase = newCharacteristicTypeDatabase;
-		equipmentTypeDatabase = newEquipmentTypeDatabase;
-		portTypeDatabase = newPortTypeDatabase;
-		measurementPortTypeDatabase = newMeasurementPortTypeDatabase;
-		linkTypeDatabase = newLinkTypeDatabase;
-		cableThreadTypeDatabase = newCableThreadTypeDatabase;
-		characteristicDatabase = newCharacteristicDatabase;
-		userDatabase = newUserDatabase;
-		domainDatabase = newDomainDatabase;
-		serverDatabase = newServerDatabase;
-		mcmDatabase = newMcmDatabase;
-		equipmentDatabase = newEquipmentDatabase;
-		portDatabase = newPortDatabase;
-		measurementPortDatabase = newMeasurementPortDatabase;
-		transmissionPathDatabase = newTransmissionPathDatabase;
-		transmissionPathTypeDatabase = newTransmissionPathTypeDatabase;
-		kisDatabase = newKisDatabase;
-		monitoredElementDatabase = newMonitoredElementDatabase;
-		linkDatabase = newLinkDatabase;
+	public static void init(final StorableObjectDatabase characteristicTypeDatabase,
+			final StorableObjectDatabase equipmentTypeDatabase,
+			final StorableObjectDatabase portTypeDatabase,
+			final StorableObjectDatabase measurementPortTypeDatabase,
+			final StorableObjectDatabase linkTypeDatabase,
+			final StorableObjectDatabase cableThreadTypeDatabase,
+			final StorableObjectDatabase characteristicDatabase,
+			final StorableObjectDatabase userDatabase,
+			final StorableObjectDatabase domainDatabase,
+			final StorableObjectDatabase serverDatabase,
+			final StorableObjectDatabase mcmDatabase,
+			final StorableObjectDatabase equipmentDatabase,
+			final StorableObjectDatabase portDatabase,
+			final StorableObjectDatabase measurementPortDatabase,
+			final StorableObjectDatabase transmissionPathDatabase,
+			final StorableObjectDatabase transmissionPathTypeDatabase,
+			final StorableObjectDatabase kisDatabase,
+			final StorableObjectDatabase monitoredElementDatabase,
+			final StorableObjectDatabase linkDatabase) {
+		ConfigurationDatabaseContext.characteristicTypeDatabase = characteristicTypeDatabase;
+		ConfigurationDatabaseContext.equipmentTypeDatabase = equipmentTypeDatabase;
+		ConfigurationDatabaseContext.portTypeDatabase = portTypeDatabase;
+		ConfigurationDatabaseContext.measurementPortTypeDatabase = measurementPortTypeDatabase;
+		ConfigurationDatabaseContext.linkTypeDatabase = linkTypeDatabase;
+		ConfigurationDatabaseContext.cableThreadTypeDatabase = cableThreadTypeDatabase;
+		ConfigurationDatabaseContext.characteristicDatabase = characteristicDatabase;
+		ConfigurationDatabaseContext.userDatabase = userDatabase;
+		ConfigurationDatabaseContext.domainDatabase = domainDatabase;
+		ConfigurationDatabaseContext.serverDatabase = serverDatabase;
+		ConfigurationDatabaseContext.mcmDatabase = mcmDatabase;
+		ConfigurationDatabaseContext.equipmentDatabase = equipmentDatabase;
+		ConfigurationDatabaseContext.portDatabase = portDatabase;
+		ConfigurationDatabaseContext.measurementPortDatabase = measurementPortDatabase;
+		ConfigurationDatabaseContext.transmissionPathDatabase = transmissionPathDatabase;
+		ConfigurationDatabaseContext.transmissionPathTypeDatabase = transmissionPathTypeDatabase;
+		ConfigurationDatabaseContext.kisDatabase = kisDatabase;
+		ConfigurationDatabaseContext.monitoredElementDatabase = monitoredElementDatabase;
+		ConfigurationDatabaseContext.linkDatabase = linkDatabase;
 	}
 
 	public static StorableObjectDatabase getCharacteristicDatabase() {

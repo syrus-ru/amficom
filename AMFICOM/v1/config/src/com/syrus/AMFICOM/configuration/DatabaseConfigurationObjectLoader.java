@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseConfigurationObjectLoader.java,v 1.24 2004/11/24 08:48:55 max Exp $
+ * $Id: DatabaseConfigurationObjectLoader.java,v 1.25 2004/12/02 09:30:13 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,8 +26,8 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.24 $, $Date: 2004/11/24 08:48:55 $
- * @author $Author: max $
+ * @version $Revision: 1.25 $, $Date: 2004/12/02 09:30:13 $
+ * @author $Author: bob $
  * @module configuration_v1
  */
 
@@ -119,8 +119,8 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
 			}
 		}
 		catch (IllegalDataException e) {
-			Log.errorMessage("DatabaseMeasumentObjectLoader.delete | DatabaseException: " + e.getMessage());
-			throw new DatabaseException("DatabaseMeasumentObjectLoader.delete | DatabaseException: " + e.getMessage());
+			Log.errorMessage("DatabaseConfigurationObjectLoader.delete | DatabaseException: " + e.getMessage());
+			throw new DatabaseException("DatabaseConfigurationObjectLoader.delete | DatabaseException: " + e.getMessage());
 		}
 	}
 
