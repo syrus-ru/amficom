@@ -1,5 +1,5 @@
 /*
- * $Id: li'lmapletty.idl,v 1.13 2004/12/20 16:44:05 bob Exp $
+ * $Id: li'lmapletty.idl,v 1.14 2004/12/22 11:08:54 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -248,6 +248,8 @@ module com {
 					};
 					
 					typedef sequence<Map_Transferable> MapSeq_Transferable;
+					typedef Map_Transferable Map;
+					typedef sequence<Map> MapSeq;
 
 					struct MapView_Transferable {
 							general::corba::StorableObject_Transferable header;
