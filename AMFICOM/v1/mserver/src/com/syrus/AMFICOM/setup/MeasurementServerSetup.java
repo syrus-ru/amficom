@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementServerSetup.java,v 1.13 2004/10/26 12:30:58 max Exp $
+ * $Id: MeasurementServerSetup.java,v 1.14 2004/10/26 14:32:47 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,8 +28,8 @@ import com.syrus.util.ByteArray;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2004/10/26 12:30:58 $
- * @author $Author: max $
+ * @version $Revision: 1.14 $, $Date: 2004/10/26 14:32:47 $
+ * @author $Author: bob $
  * @module mserver_v1
  */
 
@@ -151,6 +151,7 @@ public class MeasurementServerSetup {
 			EquipmentType eqType = EquipmentType.createInstance(id,
 																													creatorId,
 																													"EqTypeKIS",
+																													"",
 																													"");
 			EquipmentType eqType1 = EquipmentType.getInstance((EquipmentType_Transferable)eqType.getTransferable());
 			return eqType;
@@ -167,7 +168,8 @@ public class MeasurementServerSetup {
             KISType kisType = KISType.createInstance(id,
             		creatorId,
 					"Type of KIS",
-                    "");            
+                    "",
+					"");            
             return KISType.getInstance((KISType_Transferable)kisType.getTransferable());
         }
         catch (Exception e) {
