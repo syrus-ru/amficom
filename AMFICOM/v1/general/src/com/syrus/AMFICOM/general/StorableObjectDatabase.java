@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectDatabase.java,v 1.40 2004/11/10 15:23:46 bob Exp $
+ * $Id: StorableObjectDatabase.java,v 1.41 2004/11/11 09:15:51 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,7 +26,7 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.40 $, $Date: 2004/11/10 15:23:46 $
+ * @version $Revision: 1.41 $, $Date: 2004/11/11 09:15:51 $
  * @author $Author: bob $
  * @module general_v1
  */
@@ -839,7 +839,9 @@ public abstract class StorableObjectDatabase {
 		}
 
 		String[] columns = this.getColumns().split(COMMA);
-		String[] values = this.parseInsertStringValues(this.getUpdateMultiplySQLValues(), columns.length);
+		// String[] values = this.parseInsertStringValues(this.getUpdateMultiplySQLValues(), columns.length);		
+		// here we can split multyply sql values by COMMA because of it is only QUESTIONS separeted by COMMA
+		String[] values = this.getUpdateMultiplySQLValues().split(COMMA);
 		if (columns.length != values.length)
 			throw new UpdateObjectException(this.getEnityName() + "Database.updateEntities | Count of columns ('"+columns.length+"') is not equals count of values ('"+values.length+"')");
 		String sql = null;
