@@ -447,6 +447,8 @@ public class StarterPanel
 	
 	protected void addComponents()
 	{
+		if(aModel == null)	
+			return;
 		this.removeAll();
 		
 		int counter = -1;
