@@ -16,6 +16,14 @@ module corba {
 //		void getKIS() raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
 //	};
 
+//////////////////// AccessIdentifier ///////////////////
+	struct AccessIdentifier_Transferable {
+		long long started;
+		com::syrus::AMFICOM::general::corba::Identifier_Transferable domain_id;
+		com::syrus::AMFICOM::general::corba::Identifier_Transferable user_id;		
+		com::syrus::AMFICOM::general::corba::Identifier_Transferable session_id;
+	};
+
 //////////////////// CharacteristicType ///////////////////
 
 	struct CharacteristicType_Transferable {
