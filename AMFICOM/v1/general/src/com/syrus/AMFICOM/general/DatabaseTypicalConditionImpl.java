@@ -1,5 +1,5 @@
 /*
-* $Id: DatabaseTypicalConditionImpl.java,v 1.2 2005/02/07 09:58:20 bob Exp $
+* $Id: DatabaseTypicalConditionImpl.java,v 1.3 2005/02/08 12:04:50 arseniy Exp $
 *
 * Copyright ¿ 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -15,34 +15,32 @@ import com.syrus.AMFICOM.general.TypicalCondition;
 
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/02/07 09:58:20 $
- * @author $Author: bob $
+ * @version $Revision: 1.3 $, $Date: 2005/02/08 12:04:50 $
+ * @author $Author: arseniy $
  * @module general_v1
  */
-public class DatabaseTypicalConditionImpl extends AbstractDatabaseTypicalCondition {
+class DatabaseTypicalConditionImpl extends AbstractDatabaseTypicalCondition {
 
-	DatabaseTypicalConditionImpl(TypicalCondition typicalCondition){
+	DatabaseTypicalConditionImpl(TypicalCondition typicalCondition) {
 		super(typicalCondition);
 	}
-	
+
 	protected String getColumnName() throws IllegalDataException {
-		String columnName = null;
 		/* check key support */
 		switch(super.condition.getEntityCode().shortValue()) {
 			case ObjectEntities.CHARACTERISTICTYPE_ENTITY_CODE:
-				if (this.condition.getKey().equals(StorableObjectWrapper.COLUMN_CODENAME)) {
+				if (this.condition.getKey().equals(StorableObjectWrapper.COLUMN_CODENAME))
 					return StorableObjectWrapper.COLUMN_CODENAME;
-				}
+				break;
 			case ObjectEntities.PARAMETERTYPE_ENTITY_CODE:
-				if (this.condition.getKey().equals(StorableObjectWrapper.COLUMN_CODENAME)) {
+				if (this.condition.getKey().equals(StorableObjectWrapper.COLUMN_CODENAME))
 					return StorableObjectWrapper.COLUMN_CODENAME;
-				}
 				break;
 			default:
 				throw new IllegalDataException("DatabaseTypicalConditionImpl.getColumnName | entity "
 					+ ObjectEntities.codeToString(this.condition.getEntityCode()) + " is not supported.");
 		}
-		return columnName;
+		return null;
 	}
 
 }
