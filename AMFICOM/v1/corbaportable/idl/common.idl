@@ -1,0 +1,44 @@
+/*
+ * $Id: common.idl,v 1.1 2004/06/22 12:27:24 bass Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ.
+ */
+
+#ifndef COMMON_IDL
+#define COMMON_IDL
+
+/**
+ * @version $Revision: 1.1 $, $Date: 2004/06/22 12:27:24 $
+ * @author $Author: bass $
+ */
+module com {
+	module syrus {
+		module AMFICOM {
+			module corba {
+				module portable {
+					module common {
+						valuetype Identifier {
+							private string<64> id;
+						};
+
+						typedef sequence<Identifier> IdentifierSeq;
+
+						exception MessageDeliveryFailedException {
+						};
+
+						typedef sequence<MessageDeliveryFailedException> MessageDeliveryFailedExceptionSeq;
+
+						exception DatabaseAccessException {
+						};
+
+						typedef sequence<DatabaseAccessException> DatabaseAccessExceptionSeq;
+					};
+				};
+			};
+		};
+	};
+};
+
+#endif

@@ -1,0 +1,47 @@
+/*
+ * $Id: EventUtilitiesImpl.sqlj,v 1.1 2004/06/22 12:27:24 bass Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ.
+ */
+
+package com.syrus.AMFICOM.corba.portable.reflect;
+
+import com.syrus.AMFICOM.corba.portable.reflect.common.MutableObjectResourceUtilitiesImpl;
+import java.sql.SQLException;
+import sqlj.runtime.ExecutionContext;
+import sqlj.runtime.ref.DefaultContext;
+
+/**
+ * @version $Revision: 1.1 $, $Date: 2004/06/22 12:27:24 $
+ * @author $Author: bass $
+ */
+final class EventUtilitiesImpl extends MutableObjectResourceUtilitiesImpl implements EventUtilitiesOperations {
+	EventUtilitiesImpl() {
+	}
+
+	protected String[] getIds(DefaultContext connCtx, ExecutionContext execCtx) throws SQLException {
+		throw new UnsupportedOperationException();
+	}
+
+	protected String getUUID(DefaultContext connCtx, ExecutionContext execCtx) throws SQLException {
+		String nextval;
+		if (connCtx == null) {
+			#sql {
+				SELECT amficom.sysev_seq.nextval INTO :nextval FROM sys.dual
+			};
+		} else if (execCtx == null) {
+			#sql [connCtx] {
+				SELECT amficom.sysev_seq.nextval INTO :nextval FROM sys.dual
+			};
+		} else {
+			#sql [connCtx, execCtx] {
+				SELECT amficom.sysev_seq.nextval INTO :nextval FROM sys.dual
+			};
+		}
+		return EventUtilities.UUID_PREFIX + nextval;
+	}
+
+	#sql final iterator IdIterator(String id);
+}

@@ -1,0 +1,129 @@
+/*
+ * $Id: EventSourceTypeUtilitiesImpl.sqlj,v 1.1 2004/06/22 12:27:24 bass Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ.
+ */
+
+package com.syrus.AMFICOM.corba.portable.reflect;
+
+import com.syrus.AMFICOM.corba.portable.common.DatabaseAccessException;
+import com.syrus.AMFICOM.corba.portable.reflect.common.*;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import sqlj.runtime.ExecutionContext;
+import sqlj.runtime.ref.DefaultContext;
+
+/**
+ * @version $Revision: 1.1 $, $Date: 2004/06/22 12:27:24 $
+ * @author $Author: bass $
+ */
+public final class EventSourceTypeUtilitiesImpl extends ImmutableObjectResourceUtilitiesImpl implements EventSourceTypeUtilitiesOperations {
+	public EventSourceTypeUtilitiesImpl() {
+	}
+
+	protected String[] getIds(DefaultContext connCtx, ExecutionContext execCtx) throws SQLException {
+		IdIterator idIterator;
+		if (connCtx == null) {
+			#sql idIterator = {
+				SELECT id FROM amficom.eventsourcetypes
+			};
+		} else if (execCtx == null) {
+			#sql [connCtx] idIterator = {
+				SELECT id FROM amficom.eventsourcetypes
+			};
+		} else {
+			#sql [connCtx, execCtx] idIterator = {
+				SELECT id FROM amficom.eventsourcetypes
+			};
+		}
+		ArrayList ids = new ArrayList();
+		while (idIterator.next())
+			ids.add(idIterator.id());
+		idIterator.close();
+		return (String[]) (ids.toArray(new String[ids.size()]));
+	}
+
+	protected String getCodename(String id, DefaultContext connCtx, ExecutionContext execCtx) throws SQLException {
+		String codename;
+		if (connCtx == null) {
+			#sql {
+				SELECT codename INTO :codename FROM amficom.eventsourcetypes WHERE id = :id
+			};
+		} else if (execCtx == null) {
+			#sql [connCtx] {
+				SELECT codename INTO :codename FROM amficom.eventsourcetypes WHERE id = :id
+			};
+		} else {
+			#sql [connCtx, execCtx] {
+				SELECT codename INTO :codename FROM amficom.eventsourcetypes WHERE id = :id
+			};
+		}
+		return ((codename == null) ? "" : codename);
+	}
+
+	protected String getName(String id, DefaultContext connCtx, ExecutionContext execCtx) throws SQLException {
+		String name;
+		if (connCtx == null) {
+			#sql {
+				SELECT name INTO :name FROM amficom.eventsourcetypes WHERE id = :id
+			};
+		} else if (execCtx == null) {
+			#sql [connCtx] {
+				SELECT name INTO :name FROM amficom.eventsourcetypes WHERE id = :id
+			};
+		} else {
+			#sql [connCtx, execCtx] {
+				SELECT name INTO :name FROM amficom.eventsourcetypes WHERE id = :id
+			};
+		}
+		return ((name == null) ? "" : name);
+	}
+
+	String getSourceTableName(String id, DefaultContext connCtx, ExecutionContext execCtx) throws SQLException {
+		String sourceTableName;
+		if (connCtx == null) {
+			#sql {
+				SELECT source_table_name INTO :sourceTableName FROM amficom.eventsourcetypes WHERE id = :id
+			};
+		} else if (execCtx == null) {
+			#sql [connCtx] {
+				SELECT source_table_name INTO :sourceTableName FROM amficom.eventsourcetypes WHERE id = :id
+			};
+		} else {
+			#sql [connCtx, execCtx] {
+				SELECT source_table_name INTO :sourceTableName FROM amficom.eventsourcetypes WHERE id = :id
+			};
+		}
+		if (sourceTableName.equals(EventSourceTypeImpl.SOURCE_TABLE_NAME_CLIENTS))
+			return ClientImpl.class.getName();
+		else if (sourceTableName.equals(EventSourceTypeImpl.SOURCE_TABLE_NAME_EQUIPMENTS))
+			return EquipmentImpl.class.getName();
+		else if (sourceTableName.equals(EventSourceTypeImpl.SOURCE_TABLE_NAME_ISMMAPCONTEXTS))
+			return ISMMapContextImpl.class.getName();
+		else if (sourceTableName.equals(EventSourceTypeImpl.SOURCE_TABLE_NAME_MAPCONTEXTS))
+			return MapContextImpl.class.getName();
+		else if (sourceTableName.equals(EventSourceTypeImpl.SOURCE_TABLE_NAME_SERVERS))
+			return ServerImpl.class.getName();
+		else if (sourceTableName.equals(EventSourceTypeImpl.SOURCE_TABLE_NAME_USERS))
+			return UserImpl.class.getName();
+		else
+			/*
+			 * Never.
+			 */
+			return AbstractEventSourceImpl.class.getName();
+	}
+
+	public String getSourceTableName(String id) throws DatabaseAccessException {
+		try {
+			DefaultContext connCtx = DefaultContext.getDefaultContext();
+			ExecutionContext execCtx = connCtx.getExecutionContext();
+			return getSourceTableName(id, connCtx, execCtx);
+		} catch (SQLException sqle) {
+			throw new DatabaseAccessException();
+		}
+	}
+
+	#sql final iterator IdIterator(String id);
+}
