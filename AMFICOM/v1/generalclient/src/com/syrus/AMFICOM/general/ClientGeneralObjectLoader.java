@@ -1,5 +1,5 @@
 /*
- * $Id: ClientGeneralObjectLoader.java,v 1.1 2005/01/20 08:11:59 bob Exp $
+ * $Id: ClientGeneralObjectLoader.java,v 1.2 2005/02/02 13:57:45 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,15 +18,17 @@ import com.syrus.AMFICOM.configuration.corba.AccessIdentifier_Transferable;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.general.corba.CharacteristicType_Transferable;
 import com.syrus.AMFICOM.general.corba.Characteristic_Transferable;
+import com.syrus.AMFICOM.general.corba.CompoundCondition_Transferable;
 import com.syrus.AMFICOM.general.corba.ErrorCode;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.general.corba.LinkedIdsCondition_Transferable;
 import com.syrus.AMFICOM.general.corba.ParameterType_Transferable;
+import com.syrus.AMFICOM.general.corba.StorableObjectCondition_Transferable;
 import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 import com.syrus.AMFICOM.general.corba.StringFieldCondition_Transferable;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/01/20 08:11:59 $
+ * @version $Revision: 1.2 $, $Date: 2005/02/02 13:57:45 $
  * @author $Author: bob $
  * @module generalclient_v1
  */
@@ -39,7 +41,20 @@ public class ClientGeneralObjectLoader implements GeneralObjectLoader {
 	public ClientGeneralObjectLoader(CMServer server) {
 		this.server = server;
 	}
-	
+
+	private StorableObjectCondition_Transferable getConditionTransferable(StorableObjectCondition condition) {
+		StorableObjectCondition_Transferable condition_Transferable = new StorableObjectCondition_Transferable();
+		Object transferable = condition.getTransferable();
+		if (condition instanceof LinkedIdsCondition) {
+			condition_Transferable.linkedIdsCondition((LinkedIdsCondition_Transferable) transferable);
+		} else if (condition instanceof StringFieldCondition) {
+			condition_Transferable.stringFieldCondition((StringFieldCondition_Transferable) transferable);
+		} else if (condition instanceof CompoundCondition) {
+			condition_Transferable.compoundCondition((CompoundCondition_Transferable) transferable);
+		}
+		return condition_Transferable;
+	}
+
 	public static void setAccessIdentifierTransferable(AccessIdentifier_Transferable accessIdentifier_Transferable) {
 		accessIdentifierTransferable = accessIdentifier_Transferable;
 	}
@@ -72,8 +87,7 @@ public class ClientGeneralObjectLoader implements GeneralObjectLoader {
 			return new Characteristic(this.server.transmitCharacteristic(
 				(Identifier_Transferable) id.getTransferable(), accessIdentifierTransferable));
 		} catch (CreateObjectException e) {
-			String msg = "ClientGeneralObjectLoader.loadCharacteristic | new Characteristic(" + id.toString()
-					+ ")";
+			String msg = "ClientGeneralObjectLoader.loadCharacteristic | new Characteristic(" + id.toString() + ")";
 			throw new RetrieveObjectException(msg, e);
 		} catch (AMFICOMRemoteException e) {
 			String msg = "ClientGeneralObjectLoader.loadCharacteristic | server.transmitCharacteristic("
@@ -154,15 +168,8 @@ public class ClientGeneralObjectLoader implements GeneralObjectLoader {
 				identifierTransferables[i] = (Identifier_Transferable) id.getTransferable();
 			}
 
-			ParameterType_Transferable[] transferables;
-			if (condition instanceof StringFieldCondition) {
-				StringFieldCondition stringFieldCondition = (StringFieldCondition) condition;
-				transferables = this.server.transmitParameterTypesButIdsCondition(identifierTransferables,
-					accessIdentifierTransferable, (StringFieldCondition_Transferable) stringFieldCondition
-							.getTransferable());
-			} else
-				transferables = this.server.transmitParameterTypesButIds(identifierTransferables,
-					accessIdentifierTransferable);
+			ParameterType_Transferable[] transferables = this.server.transmitParameterTypesButIdsCondition(
+				identifierTransferables, accessIdentifierTransferable, this.getConditionTransferable(condition));
 			List list = new ArrayList(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
 				list.add(new ParameterType(transferables[j]));
@@ -203,15 +210,8 @@ public class ClientGeneralObjectLoader implements GeneralObjectLoader {
 				Identifier id = (Identifier) it.next();
 				identifierTransferables[i] = (Identifier_Transferable) id.getTransferable();
 			}
-			Characteristic_Transferable[] transferables;
-			if (condition instanceof LinkedIdsCondition) {
-				LinkedIdsCondition linkedIdsCondition = (LinkedIdsCondition) condition;
-				transferables = this.server.transmitCharacteristicsButIdsCondition(identifierTransferables,
-					accessIdentifierTransferable, (LinkedIdsCondition_Transferable) linkedIdsCondition
-							.getTransferable());
-			} else
-				transferables = this.server.transmitCharacteristicsButIds(identifierTransferables,
-					accessIdentifierTransferable);
+			Characteristic_Transferable[] transferables = this.server.transmitCharacteristicsButIdsCondition(
+				identifierTransferables, accessIdentifierTransferable, this.getConditionTransferable(condition));
 			List list = new ArrayList(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
 				list.add(new Characteristic(transferables[j]));

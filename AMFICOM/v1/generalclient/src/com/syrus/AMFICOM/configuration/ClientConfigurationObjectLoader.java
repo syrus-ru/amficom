@@ -1,5 +1,5 @@
 /*
- * $Id: ClientConfigurationObjectLoader.java,v 1.14 2005/02/02 09:02:34 bob Exp $
+ * $Id: ClientConfigurationObjectLoader.java,v 1.15 2005/02/02 13:57:45 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,7 +14,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import com.syrus.AMFICOM.administration.corba.DomainCondition_Transferable;
 import com.syrus.AMFICOM.cmserver.corba.CMServer;
 import com.syrus.AMFICOM.configuration.corba.AbstractLinkTypeSort;
 import com.syrus.AMFICOM.configuration.corba.AbstractLinkType_Transferable;
@@ -35,23 +34,27 @@ import com.syrus.AMFICOM.configuration.corba.Port_Transferable;
 import com.syrus.AMFICOM.configuration.corba.TransmissionPathType_Transferable;
 import com.syrus.AMFICOM.configuration.corba.TransmissionPath_Transferable;
 import com.syrus.AMFICOM.general.CommunicationException;
+import com.syrus.AMFICOM.general.CompoundCondition;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
+import com.syrus.AMFICOM.general.StringFieldCondition;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
+import com.syrus.AMFICOM.general.corba.CompoundCondition_Transferable;
 import com.syrus.AMFICOM.general.corba.ErrorCode;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
+import com.syrus.AMFICOM.general.corba.LinkedIdsCondition_Transferable;
 import com.syrus.AMFICOM.general.corba.StorableObjectCondition_Transferable;
 import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
-import com.syrus.AMFICOM.measurement.DomainCondition;
-import com.syrus.util.Log;
+import com.syrus.AMFICOM.general.corba.StringFieldCondition_Transferable;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2005/02/02 09:02:34 $
+ * @version $Revision: 1.15 $, $Date: 2005/02/02 13:57:45 $
  * @author $Author: bob $
  * @module generalclient_v1
  */
@@ -61,6 +64,19 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
 	private static AccessIdentifier_Transferable	accessIdentifierTransferable;
 
 	private CMServer								server;
+	
+	private StorableObjectCondition_Transferable getConditionTransferable(StorableObjectCondition condition) {
+		StorableObjectCondition_Transferable condition_Transferable = new StorableObjectCondition_Transferable();
+		Object transferable = condition.getTransferable();
+		if (condition instanceof LinkedIdsCondition) {
+			condition_Transferable.linkedIdsCondition((LinkedIdsCondition_Transferable)transferable);
+		} else if (condition instanceof StringFieldCondition) {
+			condition_Transferable.stringFieldCondition((StringFieldCondition_Transferable) transferable);
+		} else if (condition instanceof CompoundCondition) {
+			condition_Transferable.compoundCondition((CompoundCondition_Transferable) transferable);
+		} 
+		return condition_Transferable;
+	}
 
 	public ClientConfigurationObjectLoader(CMServer server) {
 		this.server = server;
@@ -255,20 +271,8 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
 				Identifier id = (Identifier) it.next();
 				identifierTransferables[i] = (Identifier_Transferable) id.getTransferable();
 			}
-			if (condition instanceof DomainCondition) {
-				transferables = this.server.transmitEquipmentsButIdsCondition(identifierTransferables,
-					accessIdentifierTransferable, (DomainCondition_Transferable) condition.getTransferable());
-
-			} else {
-				transferables = this.server.transmitEquipmentsButIds(identifierTransferables,
-					accessIdentifierTransferable);
-				if (condition != null && !(condition instanceof DomainCondition)) {
-					Log.errorMessage("ClientConfigurationObjectLoader.loadEquipmentsButIds | " + "Class '"
-							+ condition.getClass().getName() + "' is not instanse of DomainCondition or ");
-				}
-
-			}
-			List list = new ArrayList(transferables.length);
+			transferables = this.server.transmitEquipmentsButIdsCondition(identifierTransferables,
+				accessIdentifierTransferable, this.getConditionTransferable(condition));			List list = new ArrayList(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
 				list.add(new Equipment(transferables[j]));
 			}
@@ -384,19 +388,8 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
 				Identifier id = (Identifier) it.next();
 				identifierTransferables[i] = (Identifier_Transferable) id.getTransferable();
 			}
-			if (condition instanceof DomainCondition) {
-				transferables = this.server.transmitKISsButIdsCondition(identifierTransferables,
-					accessIdentifierTransferable, (DomainCondition_Transferable) condition.getTransferable());
-
-			} else {
-				transferables = this.server.transmitKISsButIds(identifierTransferables, accessIdentifierTransferable);
-				if (condition != null && !(condition instanceof DomainCondition)) {
-					Log.errorMessage("ClientConfigurationObjectLoader.loadKISButIds | " + "Class '"
-							+ condition.getClass().getName() + "' is not instanse of DomainCondition or ");
-				}
-
-			}
-
+			transferables = this.server.transmitKISsButIdsCondition(identifierTransferables,
+				accessIdentifierTransferable, this.getConditionTransferable(condition));
 			List list = new ArrayList(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
 				list.add(new KIS(transferables[j]));
@@ -562,8 +555,8 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
 				Identifier id = (Identifier) it.next();
 				identifierTransferables[i] = (Identifier_Transferable) id.getTransferable();
 			}
-			transferables = this.server.transmitCableLinkTypesButIdsCondition(identifierTransferables,
-				(StorableObjectCondition_Transferable) condition.getTransferable(), accessIdentifierTransferable);
+			transferables = this.server.transmitCableLinkTypesButIdsCondition(identifierTransferables, accessIdentifierTransferable,
+				this.getConditionTransferable(condition));
 			List list = new ArrayList(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
 				list.add(new CableLinkType(transferables[j]));
@@ -586,8 +579,8 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
 				Identifier id = (Identifier) it.next();
 				identifierTransferables[i] = (Identifier_Transferable) id.getTransferable();
 			}
-			transferables = this.server.transmitCableThreadButIdsCondition(identifierTransferables,
-				(StorableObjectCondition_Transferable) condition.getTransferable(), accessIdentifierTransferable);
+			transferables = this.server.transmitCableThreadButIdsCondition(identifierTransferables, accessIdentifierTransferable,
+				this.getConditionTransferable(condition));
 			List list = new ArrayList(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
 				list.add(new CableThread(transferables[j]));
@@ -647,18 +640,9 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
 				Identifier id = (Identifier) it.next();
 				identifierTransferables[i] = (Identifier_Transferable) id.getTransferable();
 			}
-			if (condition instanceof DomainCondition) {
-				transferables = this.server.transmitMeasurementPortsButIdsCondition(identifierTransferables,
-					accessIdentifierTransferable, (DomainCondition_Transferable) condition.getTransferable());
-			} else {
-				transferables = this.server.transmitMeasurementPortsButIds(identifierTransferables,
-					accessIdentifierTransferable);
-				if (condition != null && !(condition instanceof DomainCondition)) {
-					Log.errorMessage("ClientConfigurationObjectLoader.loadMeasurementPortsButIds | " + "Class '"
-							+ condition.getClass().getName() + "' is not instanse of DomainCondition");
-				}
-
-			}
+			transferables = this.server.transmitMeasurementPortsButIdsCondition(identifierTransferables,
+				accessIdentifierTransferable,
+				this.getConditionTransferable(condition));
 			List list = new ArrayList(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
 				list.add(new MeasurementPort(transferables[j]));
@@ -773,18 +757,10 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
 				Identifier id = (Identifier) it.next();
 				identifierTransferables[i] = (Identifier_Transferable) id.getTransferable();
 			}
-			if (condition instanceof DomainCondition) {
-				transferables = this.server.transmitMonitoredElementsButIdsCondition(identifierTransferables,
-					accessIdentifierTransferable, (DomainCondition_Transferable) condition.getTransferable());
-			} else {
-				transferables = this.server.transmitMonitoredElementsButIds(identifierTransferables,
-					accessIdentifierTransferable);
-				if (condition != null && !(condition instanceof DomainCondition)) {
-					Log.errorMessage("ClientConfigurationObjectLoader.loadMeasurementPortsButIds | " + "Class '"
-							+ condition.getClass().getName() + "' is not instanse of DomainCondition");
-				}
-
-			}
+			
+			transferables = this.server.transmitMonitoredElementsButIdsCondition(identifierTransferables,
+				accessIdentifierTransferable, this.getConditionTransferable(condition));
+			
 			List list = new ArrayList(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
 				list.add(new MonitoredElement(transferables[j]));
@@ -840,16 +816,9 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
 				Identifier id = (Identifier) it.next();
 				identifierTransferables[i] = (Identifier_Transferable) id.getTransferable();
 			}
-			if (condition instanceof DomainCondition) {
-				transferables = this.server.transmitPortsButIdsCondition(identifierTransferables,
-					accessIdentifierTransferable, (DomainCondition_Transferable) condition.getTransferable());
-			} else {
-				transferables = this.server.transmitPortsButIds(identifierTransferables, accessIdentifierTransferable);
-				if (condition != null && !(condition instanceof DomainCondition)) {
-					Log.errorMessage("ClientConfigurationObjectLoader.loadMeasurementPortsButIds | " + "Class '"
-							+ condition.getClass().getName() + "' is not instanse of DomainCondition");
-				}
-			}
+			transferables = this.server.transmitPortsButIdsCondition(identifierTransferables,
+				accessIdentifierTransferable, this.getConditionTransferable(condition));
+			
 			List list = new ArrayList(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
 				list.add(new Port(transferables[j]));
@@ -968,17 +937,9 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
 				Identifier id = (Identifier) it.next();
 				identifierTransferables[i] = (Identifier_Transferable) id.getTransferable();
 			}
-			if (condition instanceof DomainCondition) {
-				transferables = this.server.transmitTransmissionPathsButIdsCondition(identifierTransferables,
-					accessIdentifierTransferable, (DomainCondition_Transferable) condition.getTransferable());
-			} else {
-				transferables = this.server.transmitTransmissionPathsButIds(identifierTransferables,
-					accessIdentifierTransferable);
-				if (condition != null && !(condition instanceof DomainCondition)) {
-					Log.errorMessage("ClientConfigurationObjectLoader.loadMeasurementPortsButIds | " + "Class '"
-							+ condition.getClass().getName() + "' is not instanse of DomainCondition");
-				}
-			}
+			transferables = this.server.transmitTransmissionPathsButIdsCondition(identifierTransferables,
+				accessIdentifierTransferable, this.getConditionTransferable(condition));
+			
 			List list = new ArrayList(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
 				list.add(new TransmissionPath(transferables[j]));

@@ -1,5 +1,5 @@
 /*
- * $Id: ClientAdministrationObjectLoader.java,v 1.2 2005/01/24 11:51:05 krupenn Exp $
+ * $Id: ClientAdministrationObjectLoader.java,v 1.3 2005/02/02 13:57:45 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,7 +8,11 @@
 
 package com.syrus.AMFICOM.administration;
 
-import com.syrus.AMFICOM.administration.corba.DomainCondition_Transferable;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+
 import com.syrus.AMFICOM.administration.corba.Domain_Transferable;
 import com.syrus.AMFICOM.administration.corba.MCM_Transferable;
 import com.syrus.AMFICOM.administration.corba.Server_Transferable;
@@ -16,30 +20,28 @@ import com.syrus.AMFICOM.administration.corba.User_Transferable;
 import com.syrus.AMFICOM.cmserver.corba.CMServer;
 import com.syrus.AMFICOM.configuration.corba.AccessIdentifier_Transferable;
 import com.syrus.AMFICOM.general.CommunicationException;
+import com.syrus.AMFICOM.general.CompoundCondition;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StringFieldCondition;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
+import com.syrus.AMFICOM.general.corba.CompoundCondition_Transferable;
 import com.syrus.AMFICOM.general.corba.ErrorCode;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
+import com.syrus.AMFICOM.general.corba.LinkedIdsCondition_Transferable;
+import com.syrus.AMFICOM.general.corba.StorableObjectCondition_Transferable;
 import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 import com.syrus.AMFICOM.general.corba.StringFieldCondition_Transferable;
-import com.syrus.AMFICOM.measurement.DomainCondition;
-import com.syrus.util.Log;
-
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/01/24 11:51:05 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.3 $, $Date: 2005/02/02 13:57:45 $
+ * @author $Author: bob $
  * @module generalclient_v1
  */
 public class ClientAdministrationObjectLoader implements AdministrationObjectLoader {
@@ -50,6 +52,19 @@ public class ClientAdministrationObjectLoader implements AdministrationObjectLoa
 
 	public ClientAdministrationObjectLoader(CMServer server) {
 		this.server = server;
+	}
+	
+	private StorableObjectCondition_Transferable getConditionTransferable(StorableObjectCondition condition) {
+		StorableObjectCondition_Transferable condition_Transferable = new StorableObjectCondition_Transferable();
+		Object transferable = condition.getTransferable();
+		if (condition instanceof LinkedIdsCondition) {
+			condition_Transferable.linkedIdsCondition((LinkedIdsCondition_Transferable)transferable);
+		} else if (condition instanceof StringFieldCondition) {
+			condition_Transferable.stringFieldCondition((StringFieldCondition_Transferable) transferable);
+		} else if (condition instanceof CompoundCondition) {
+			condition_Transferable.compoundCondition((CompoundCondition_Transferable) transferable);
+		} 
+		return condition_Transferable;
 	}
 
 	public static void setAccessIdentifierTransferable(AccessIdentifier_Transferable accessIdentifier_Transferable) {
@@ -126,20 +141,8 @@ public class ClientAdministrationObjectLoader implements AdministrationObjectLoa
 				Identifier id = (Identifier) it.next();
 				identifierTransferables[i] = (Identifier_Transferable) id.getTransferable();
 			}
-			if (condition instanceof DomainCondition) {
-				transferables = this.server.transmitDomainsButIdsCondition(identifierTransferables,
-					accessIdentifierTransferable, (DomainCondition_Transferable) condition.getTransferable());
-
-			} else {
-				transferables = this.server
-						.transmitDomainsButIds(identifierTransferables, accessIdentifierTransferable);
-				if (condition != null && !(condition instanceof DomainCondition)) {
-					Log.errorMessage("ClientAdministrationObjectLoader.loadMeasurementsButIds | " + "Class '"
-							+ condition.getClass().getName() + "' is not instanse of DomainCondition or ");
-				}
-
-			}
-
+			transferables = this.server.transmitDomainsButIdsCondition(identifierTransferables,
+				accessIdentifierTransferable, this.getConditionTransferable(condition));
 			List list = new ArrayList(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
 				list.add(new Domain(transferables[j]));
@@ -197,18 +200,8 @@ public class ClientAdministrationObjectLoader implements AdministrationObjectLoa
 				Identifier id = (Identifier) it.next();
 				identifierTransferables[i] = (Identifier_Transferable) id.getTransferable();
 			}
-			if (condition instanceof DomainCondition) {
-				transferables = this.server.transmitMCMsButIdsCondition(identifierTransferables,
-					accessIdentifierTransferable, (DomainCondition_Transferable) condition.getTransferable());
-
-			} else {
-				transferables = this.server.transmitMCMsButIds(identifierTransferables, accessIdentifierTransferable);
-				if (condition != null && !(condition instanceof DomainCondition)) {
-					Log.errorMessage("ClientAdministrationObjectLoader.loadMCMsButIds | " + "Class '"
-							+ condition.getClass().getName() + "' is not instanse of DomainCondition or ");
-				}
-
-			}
+			transferables = this.server.transmitMCMsButIdsCondition(identifierTransferables,
+				accessIdentifierTransferable, this.getConditionTransferable(condition));
 			List list = new ArrayList(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
 				list.add(new MCM(transferables[j]));
@@ -266,17 +259,8 @@ public class ClientAdministrationObjectLoader implements AdministrationObjectLoa
 				Identifier id = (Identifier) it.next();
 				identifierTransferables[i] = (Identifier_Transferable) id.getTransferable();
 			}
-			if (condition instanceof DomainCondition) {
-				transferables = this.server.transmitServersButIdsCondition(identifierTransferables,
-					accessIdentifierTransferable, (DomainCondition_Transferable) condition.getTransferable());
-			} else {
-				transferables = this.server
-						.transmitServersButIds(identifierTransferables, accessIdentifierTransferable);
-				if (condition != null && !(condition instanceof DomainCondition)) {
-					Log.errorMessage("ClientAdministrationObjectLoader.loadMeasurementPortsButIds | " + "Class '"
-							+ condition.getClass().getName() + "' is not instanse of DomainCondition");
-				}
-			}
+			transferables = this.server.transmitServersButIdsCondition(identifierTransferables,
+				accessIdentifierTransferable, this.getConditionTransferable(condition));
 			List list = new ArrayList(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
 				list.add(new Server(transferables[j]));
@@ -328,16 +312,11 @@ public class ClientAdministrationObjectLoader implements AdministrationObjectLoa
 				Identifier id = (Identifier) it.next();
 				identifierTransferables[i] = (Identifier_Transferable) id.getTransferable();
 			}
-			List list = null;
-			if (condition instanceof StringFieldCondition) {
-				StringFieldCondition stringFieldCondition = (StringFieldCondition) condition;
-				User_Transferable[] transferables = this.server.transmitUsersButIdsCondition(identifierTransferables,
-					accessIdentifierTransferable, (StringFieldCondition_Transferable) stringFieldCondition
-							.getTransferable());
-				list = new ArrayList(transferables.length);
-				for (int j = 0; j < transferables.length; j++) {
-					list.add(new User(transferables[j]));
-				}
+			User_Transferable[] transferables = this.server.transmitUsersButIdsCondition(identifierTransferables,
+				accessIdentifierTransferable, this.getConditionTransferable(condition));
+			List list = new ArrayList(transferables.length);
+			for (int j = 0; j < transferables.length; j++) {
+				list.add(new User(transferables[j]));
 			}
 			return list;
 		} catch (AMFICOMRemoteException e) {
