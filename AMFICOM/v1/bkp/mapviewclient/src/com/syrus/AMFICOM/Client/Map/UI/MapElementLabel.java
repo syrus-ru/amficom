@@ -1,5 +1,5 @@
 /**
- * $Id: MapElementLabel.java,v 1.6 2005/01/21 13:49:28 krupenn Exp $
+ * $Id: MapElementLabel.java,v 1.7 2005/01/21 16:19:58 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,11 +11,11 @@
 
 package com.syrus.AMFICOM.Client.Map.UI;
 
+import com.syrus.AMFICOM.Client.Map.Controllers.NodeTypeController;
 import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
 import com.syrus.AMFICOM.Client.Map.Popup.ProtoPopupMenu;
 import com.syrus.AMFICOM.map.SiteNodeType;
 
-import com.syrus.AMFICOM.Client.Map.Controllers.NodeTypeController;
 import java.awt.Color;
 import java.awt.Image;
 import java.awt.datatransfer.DataFlavor;
@@ -44,7 +44,7 @@ import javax.swing.border.EtchedBorder;
  * 
  * 
  * 
- * @version $Revision: 1.6 $, $Date: 2005/01/21 13:49:28 $
+ * @version $Revision: 1.7 $, $Date: 2005/01/21 16:19:58 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -71,7 +71,7 @@ public class MapElementLabel extends JLabel
 	Border normalBorder = new EtchedBorder(EtchedBorder.LOWERED, Color.gray, Color.gray);
 	Border selectedBorder = new EtchedBorder(EtchedBorder.LOWERED, Color.gray, Color.red);
 
-	final static int ELEMENT_DIMENSION = 30;
+	static final int ELEMENT_DIMENSION = 30;
 
 	public MapElementLabel(SiteNodeType proto)
 	{

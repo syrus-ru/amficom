@@ -1,5 +1,5 @@
 /**
- * $Id: MapMarkElementStrategy.java,v 1.11 2004/12/24 15:42:13 krupenn Exp $
+ * $Id: MapMarkElementStrategy.java,v 1.12 2005/01/21 16:19:58 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -39,7 +39,7 @@ import com.syrus.AMFICOM.Client.Map.Controllers.MapViewController;
  * 
  * 
  * 
- * @version $Revision: 1.11 $, $Date: 2004/12/24 15:42:13 $
+ * @version $Revision: 1.12 $, $Date: 2005/01/21 16:19:58 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -87,7 +87,7 @@ public final class MapMarkElementStrategy implements  MapStrategy
 		int mouseMode = mapState.getMouseMode();
 		int actionMode = mapState.getActionMode();
 
-		Point point = me.getPoint();
+		point = me.getPoint();
 
 		if(SwingUtilities.isLeftMouseButton(me))
 		{

@@ -1,5 +1,5 @@
 /*
- * Название: $Id: AMFICOMSearchPanel.java,v 1.5 2004/12/22 16:38:41 krupenn Exp $
+ * Название: $Id: AMFICOMSearchPanel.java,v 1.6 2005/01/21 16:19:57 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -13,6 +13,8 @@ package com.syrus.AMFICOM.Client.Map.Setup;
 import com.syrus.AMFICOM.Client.General.Command.Command;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.Map.Command.Navigate.CenterSelectionCommand;
+import com.syrus.AMFICOM.Client.Map.Controllers.MapElementController;
+import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
 import com.syrus.AMFICOM.Client.Map.UI.MapFrame;
 import com.syrus.AMFICOM.Client.Map.UI.SimpleMapElementController;
 import com.syrus.AMFICOM.map.Map;
@@ -49,7 +51,7 @@ import javax.swing.table.JTableHeader;
  * 
  * 
  * 
- * @version $Revision: 1.5 $, $Date: 2004/12/22 16:38:41 $
+ * @version $Revision: 1.6 $, $Date: 2005/01/21 16:19:57 $
  * @author $Author: krupenn $
  * @see
  */
@@ -229,21 +231,26 @@ import javax.swing.table.JTableHeader;
 		List vec = new LinkedList();
 		
 		Map map = mapView.getMap();
+//		MapElementController controller;
+//		LogicalNetLayer lnl = this.getMapFrame().getMapViewer().getLogicalNetLayer();
 		try
 		{
 			Iterator it;
 			for(it = map.getNodes().listIterator(); it.hasNext();)
 			{
-				ObjectResource or = (ObjectResource )it.next();
-				if(or.getName().indexOf(searchText) != -1)
-					vec.add(or);
+				MapElement me = (MapElement )it.next();
+
+//				controller = lnl.getMapViewController().getController(me);
+				
+				if(me.getName().indexOf(searchText) != -1)
+					vec.add(me);
 			}
 			
 			for(it = map.getPhysicalLinks().listIterator(); it.hasNext();)
 			{
-				ObjectResource or = (ObjectResource )it.next();
-				if(or.getName().indexOf(searchText) != -1)
-					vec.add(or);
+				MapElement me = (MapElement )it.next();
+				if(me.getName().indexOf(searchText) != -1)
+					vec.add(me);
 			}
 /*			
 			for(it = map.getTransmissionPath().listIterator(); it.hasNext();)
@@ -264,6 +271,7 @@ import javax.swing.table.JTableHeader;
 		}
 		catch(Exception ex)
 		{
+			ex.printStackTrace();
 		}
 
 		model.setContents(vec);

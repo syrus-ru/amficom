@@ -1,5 +1,5 @@
 /**
- * $Id: ViewMapNavigatorCommand.java,v 1.4 2005/01/21 13:49:27 krupenn Exp $
+ * $Id: ViewMapNavigatorCommand.java,v 1.5 2005/01/21 16:19:57 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -30,44 +30,21 @@ import javax.swing.JDesktopPane;
  * 
  * 
  * 
- * @version $Revision: 1.4 $, $Date: 2005/01/21 13:49:27 $
+ * @version $Revision: 1.5 $, $Date: 2005/01/21 16:19:57 $
  * @module
  * @author $Author: krupenn $
  * @see
  */
 public class ViewMapNavigatorCommand extends ViewNavigatorCommand
 {
-	public ApplicationContext aContext;
-	public JDesktopPane desktop;
 	public MapSchemeTreeFrame frame;
 	
 	public ViewMapNavigatorCommand(JDesktopPane desktop, ApplicationContext aContext)
 	{
 		super(aContext.getDispatcher(), desktop, "Навигатор объектов");
 
-		this.desktop = desktop;
-		this.aContext = aContext;
-	}
-
-	public void setParameter(String field, Object value)
-	{
-		if(field.equals("desktop"))
-			setDesktop((JDesktopPane)value);
-		else
-		if(field.equals("aContext"))
-			setApplicationContext((ApplicationContext )value);
-		else
-			super.setParameter(field, value);
-	}
-
-	public void setDesktop(JDesktopPane desktop)
-	{
-		this.desktop = desktop;
-	}
-
-	public void setApplicationContext(ApplicationContext aContext)
-	{
-		this.aContext = aContext;
+		super.desktop = desktop;
+		super.aContext = aContext;
 	}
 
 	public void execute()

@@ -1,5 +1,5 @@
 /**
- * $Id: MapEditorToolBar.java,v 1.6 2005/01/21 13:49:27 krupenn Exp $
+ * $Id: MapEditorToolBar.java,v 1.7 2005/01/21 16:19:57 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -33,7 +33,7 @@ import java.awt.event.ActionListener;
  * 
  * 
  * 
- * @version $Revision: 1.6 $, $Date: 2005/01/21 13:49:27 $
+ * @version $Revision: 1.7 $, $Date: 2005/01/21 16:19:57 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -83,8 +83,8 @@ public class MapEditorToolBar extends JToolBar implements ApplicationModelListen
 	 */
 	JButton menuViewSetup = new JButton();
 
-	public final static int imgSize = 16;
-	public final static int btnSize = 24;
+	public static final int IMG_SIZE = 16;
+	public static final int BTN_SIZE = 24;
 
 	public MapEditorToolBar()
 	{
@@ -111,10 +111,10 @@ public class MapEditorToolBar extends JToolBar implements ApplicationModelListen
 				}
 			};
 
-		Dimension buttonSize = new Dimension(btnSize, btnSize);
+		Dimension buttonSize = new Dimension(BTN_SIZE, BTN_SIZE);
 
 		sessionOpen.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/open_session.gif").
-				getScaledInstance(imgSize, imgSize, Image.SCALE_DEFAULT)));
+				getScaledInstance(IMG_SIZE, IMG_SIZE, Image.SCALE_DEFAULT)));
 		sessionOpen.setMaximumSize(buttonSize);
 		sessionOpen.setPreferredSize(buttonSize);
 		sessionOpen.setToolTipText(LangModel.getString("menuSessionNew"));
@@ -122,7 +122,7 @@ public class MapEditorToolBar extends JToolBar implements ApplicationModelListen
 		sessionOpen.addActionListener(actionAdapter);
 
 		buttonCloseSession.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/close_session.gif").
-				getScaledInstance(imgSize, imgSize, Image.SCALE_DEFAULT)));
+				getScaledInstance(IMG_SIZE, IMG_SIZE, Image.SCALE_DEFAULT)));
 		buttonCloseSession.setMaximumSize(buttonSize);
 		buttonCloseSession.setPreferredSize(buttonSize);
 		buttonCloseSession.setToolTipText(LangModel.getString("menuSessionClose"));
@@ -130,7 +130,7 @@ public class MapEditorToolBar extends JToolBar implements ApplicationModelListen
 //		buttonCloseSession.addActionListener(actionAdapter);
 
 		menuSessionDomain.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/domains.gif").
-				getScaledInstance(imgSize, imgSize, Image.SCALE_DEFAULT)));
+				getScaledInstance(IMG_SIZE, IMG_SIZE, Image.SCALE_DEFAULT)));
 		menuSessionDomain.setMaximumSize(buttonSize);
 		menuSessionDomain.setPreferredSize(buttonSize);
 		menuSessionDomain.setToolTipText(LangModel.getString("menuSessionDomain"));
@@ -138,7 +138,7 @@ public class MapEditorToolBar extends JToolBar implements ApplicationModelListen
 //		menuSessionDomain.addActionListener(actionAdapter);
 
 		menuMapNew.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/new.gif").
-				getScaledInstance(imgSize, imgSize, Image.SCALE_DEFAULT)));
+				getScaledInstance(IMG_SIZE, IMG_SIZE, Image.SCALE_DEFAULT)));
 		menuMapNew.setMaximumSize(buttonSize);
 		menuMapNew.setPreferredSize(buttonSize);
 		menuMapNew.setToolTipText(LangModelMap.getString("menuMapNew"));
@@ -146,7 +146,7 @@ public class MapEditorToolBar extends JToolBar implements ApplicationModelListen
 		menuMapNew.addActionListener(actionAdapter);
 
 		menuMapOpen.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/main/map_mini.gif").
-				getScaledInstance(imgSize, imgSize, Image.SCALE_DEFAULT)));
+				getScaledInstance(IMG_SIZE, IMG_SIZE, Image.SCALE_DEFAULT)));
 		menuMapOpen.setMaximumSize(buttonSize);
 		menuMapOpen.setPreferredSize(buttonSize);
 		menuMapOpen.setToolTipText(LangModelMap.getString("menuMapOpen"));
@@ -154,7 +154,7 @@ public class MapEditorToolBar extends JToolBar implements ApplicationModelListen
 		menuMapOpen.addActionListener(actionAdapter);
 
 		menuMapSave.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/save.gif").
-				getScaledInstance(imgSize, imgSize, Image.SCALE_DEFAULT)));
+				getScaledInstance(IMG_SIZE, IMG_SIZE, Image.SCALE_DEFAULT)));
 		menuMapSave.setMaximumSize(buttonSize);
 		menuMapSave.setPreferredSize(buttonSize);
 		menuMapSave.setToolTipText(LangModelMap.getString("menuMapSave"));
@@ -162,7 +162,7 @@ public class MapEditorToolBar extends JToolBar implements ApplicationModelListen
 		menuMapSave.addActionListener(actionAdapter);
 
 		menuMapViewNew.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/newview.gif").
-				getScaledInstance(imgSize, imgSize, Image.SCALE_DEFAULT)));
+				getScaledInstance(IMG_SIZE, IMG_SIZE, Image.SCALE_DEFAULT)));
 		menuMapViewNew.setMaximumSize(buttonSize);
 		menuMapViewNew.setPreferredSize(buttonSize);
 		menuMapViewNew.setToolTipText(LangModelMap.getString("menuMapViewNew"));
@@ -170,7 +170,7 @@ public class MapEditorToolBar extends JToolBar implements ApplicationModelListen
 		menuMapViewNew.addActionListener(actionAdapter);
 
 		menuMapViewOpen.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/openview.gif").
-				getScaledInstance(imgSize, imgSize, Image.SCALE_DEFAULT)));
+				getScaledInstance(IMG_SIZE, IMG_SIZE, Image.SCALE_DEFAULT)));
 		menuMapViewOpen.setMaximumSize(buttonSize);
 		menuMapViewOpen.setPreferredSize(buttonSize);
 		menuMapViewOpen.setToolTipText(LangModelMap.getString("menuMapViewOpen"));
@@ -178,7 +178,7 @@ public class MapEditorToolBar extends JToolBar implements ApplicationModelListen
 		menuMapViewOpen.addActionListener(actionAdapter);
 
 		menuMapViewSave.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/saveview.gif").
-				getScaledInstance(imgSize, imgSize, Image.SCALE_DEFAULT)));
+				getScaledInstance(IMG_SIZE, IMG_SIZE, Image.SCALE_DEFAULT)));
 		menuMapViewSave.setMaximumSize(buttonSize);
 		menuMapViewSave.setPreferredSize(buttonSize);
 		menuMapViewSave.setToolTipText(LangModelMap.getString("menuMapViewSave"));
@@ -186,7 +186,7 @@ public class MapEditorToolBar extends JToolBar implements ApplicationModelListen
 		menuMapViewSave.addActionListener(actionAdapter);
 
 		menuViewSetup.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/mapsetup.gif").
-				getScaledInstance(imgSize, imgSize, Image.SCALE_DEFAULT)));
+				getScaledInstance(IMG_SIZE, IMG_SIZE, Image.SCALE_DEFAULT)));
 		menuViewSetup.setMaximumSize(buttonSize);
 		menuViewSetup.setPreferredSize(buttonSize);
 		menuViewSetup.setToolTipText(LangModelMap.getString("menuViewSetup"));

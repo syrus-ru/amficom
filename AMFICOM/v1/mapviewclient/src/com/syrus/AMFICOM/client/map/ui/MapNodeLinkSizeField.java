@@ -1,5 +1,5 @@
 /**
- * $Id: MapNodeLinkSizeField.java,v 1.4 2004/12/22 16:38:42 krupenn Exp $
+ * $Id: MapNodeLinkSizeField.java,v 1.5 2005/01/21 16:19:58 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -30,7 +30,7 @@ import javax.swing.JTextField;
  * 
  * 
  * 
- * @version $Revision: 1.4 $, $Date: 2004/12/22 16:38:42 $
+ * @version $Revision: 1.5 $, $Date: 2005/01/21 16:19:58 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -58,15 +58,15 @@ public final class MapNodeLinkSizeField extends JTextField
 	{
 		this.setFont(MapPropertiesManager.getFont());
 
-		addKeyListener(new MapNodeLinkSizeField.MapNodeLinkSizeField_KeyAdapter(this));
-		addFocusListener(new MapNodeLinkSizeField.MapNodeLinkSizeField_FocusAdapter(this));
+		addKeyListener(new MapNodeLinkSizeField.MapNodeLinkSizeFieldKeyAdapter(this));
+		addFocusListener(new MapNodeLinkSizeField.MapNodeLinkSizeFieldFocusAdapter(this));
 	}
 
-	class MapNodeLinkSizeField_FocusAdapter extends FocusAdapter
+	class MapNodeLinkSizeFieldFocusAdapter extends FocusAdapter
 	{
 		MapNodeLinkSizeField adaptee;
 
-		MapNodeLinkSizeField_FocusAdapter(MapNodeLinkSizeField adaptee)
+		MapNodeLinkSizeFieldFocusAdapter(MapNodeLinkSizeField adaptee)
 		{
 			this.adaptee = adaptee;
 		}
@@ -84,11 +84,11 @@ public final class MapNodeLinkSizeField extends JTextField
 		}
 	}
 	
-	class MapNodeLinkSizeField_KeyAdapter extends java.awt.event.KeyAdapter
+	class MapNodeLinkSizeFieldKeyAdapter extends java.awt.event.KeyAdapter
 	{
 		MapNodeLinkSizeField adaptee;
 
-		MapNodeLinkSizeField_KeyAdapter(MapNodeLinkSizeField adaptee)
+		MapNodeLinkSizeFieldKeyAdapter(MapNodeLinkSizeField adaptee)
 		{
 			this.adaptee = adaptee;
 		}

@@ -1,5 +1,5 @@
 /**
- * $Id: MarkerController.java,v 1.3 2004/12/30 16:17:48 krupenn Exp $
+ * $Id: MarkerController.java,v 1.4 2005/01/21 16:19:57 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -15,6 +15,8 @@ import com.syrus.AMFICOM.Client.General.Event.MapNavigateEvent;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.Map.MapCoordinatesConverter;
 import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
+import com.syrus.AMFICOM.Client.Map.mapview.CablePath;
+import com.syrus.AMFICOM.Client.Map.mapview.Marker;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.DoublePoint;
@@ -35,18 +37,13 @@ import java.util.List;
 import java.util.ListIterator;
 
 import javax.swing.ImageIcon;
-import com.syrus.AMFICOM.Client.Map.Controllers.MapElementController;
-import com.syrus.AMFICOM.Client.Map.Controllers.AbstractNodeController;
-import com.syrus.AMFICOM.Client.Map.mapview.MeasurementPath;
-import com.syrus.AMFICOM.Client.Map.mapview.Marker;
-import com.syrus.AMFICOM.Client.Map.mapview.CablePath;
 
 /**
  * элемент карты - узел 
  * 
  * 
  * 
- * @version $Revision: 1.3 $, $Date: 2004/12/30 16:17:48 $
+ * @version $Revision: 1.4 $, $Date: 2005/01/21 16:19:57 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -415,7 +412,7 @@ public class MarkerController extends AbstractNodeController
 
 	public double getFromStartLengthLt(Marker marker)
 	{
-		double path_length = 0;
+		double pathLength = 0;
 /*
 		Vector nl = transmissionPath.sortNodeLinks();
 		Vector pl = transmissionPath.sortPhysicalLinks();

@@ -1,5 +1,5 @@
 /**
- * $Id: ViewMapWindowCommand.java,v 1.9 2005/01/21 13:49:27 krupenn Exp $
+ * $Id: ViewMapWindowCommand.java,v 1.10 2005/01/21 16:19:57 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -38,7 +38,7 @@ import javax.swing.JDesktopPane;
  * 
  * 
  * 
- * @version $Revision: 1.9 $, $Date: 2005/01/21 13:49:27 $
+ * @version $Revision: 1.10 $, $Date: 2005/01/21 16:19:57 $
  * @module
  * @author $Author: krupenn $
  * @see

@@ -118,7 +118,7 @@ public final class MapMarkerPropertiesController
 
 	public void setValue(Object object, final String key, final Object value)
 	{
-		Marker marker = (Marker)object;
+		Marker marker = (Marker )object;
 
 		MarkerController mc = (MarkerController)com.syrus.AMFICOM.Client.Map.Controllers.MarkerController.getInstance();
 
@@ -131,6 +131,7 @@ public final class MapMarkerPropertiesController
 			}
 			catch(NumberFormatException e)
 			{
+				System.out.println("Wrong number format");
 				return;
 			}
 		}

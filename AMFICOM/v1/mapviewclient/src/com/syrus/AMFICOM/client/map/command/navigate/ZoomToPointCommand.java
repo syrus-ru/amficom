@@ -1,5 +1,5 @@
 /**
- * $Id: ZoomToPointCommand.java,v 1.6 2005/01/12 15:45:53 krupenn Exp $
+ * $Id: ZoomToPointCommand.java,v 1.7 2005/01/21 16:19:57 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -24,7 +24,7 @@ import java.awt.Cursor;
  * 
  * 
  * 
- * @version $Revision: 1.6 $, $Date: 2005/01/12 15:45:53 $
+ * @version $Revision: 1.7 $, $Date: 2005/01/21 16:19:57 $
  * @module
  * @author $Author: krupenn $
  * @see

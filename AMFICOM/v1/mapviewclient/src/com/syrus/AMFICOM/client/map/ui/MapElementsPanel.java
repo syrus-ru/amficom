@@ -1,5 +1,5 @@
 /**
- * $Id: MapElementsPanel.java,v 1.10 2004/12/30 16:17:48 krupenn Exp $
+ * $Id: MapElementsPanel.java,v 1.11 2005/01/21 16:19:58 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -59,7 +59,7 @@ import javax.swing.event.ListSelectionListener;
  * видов элементов и талица элементов с полями "Идентификатор" и "Название"
  * 
  * 
- * @version $Revision: 1.10 $, $Date: 2004/12/30 16:17:48 $
+ * @version $Revision: 1.11 $, $Date: 2005/01/21 16:19:58 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -254,6 +254,7 @@ public final class MapElementsPanel extends JPanel
 		}
 		catch(Exception e)
 		{
+			e.printStackTrace();
 		}
 	}
 

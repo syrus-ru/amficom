@@ -1,5 +1,5 @@
 /*
- * Название: $Id: SpatialSearchPanel.java,v 1.3 2004/10/19 11:48:28 krupenn Exp $
+ * Название: $Id: SpatialSearchPanel.java,v 1.4 2005/01/21 16:19:57 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -40,7 +40,7 @@ import javax.swing.ListSelectionModel;
  * 
  * 
  * 
- * @version $Revision: 1.3 $, $Date: 2004/10/19 11:48:28 $
+ * @version $Revision: 1.4 $, $Date: 2005/01/21 16:19:57 $
  * @author $Author: krupenn $
  * @see
  */

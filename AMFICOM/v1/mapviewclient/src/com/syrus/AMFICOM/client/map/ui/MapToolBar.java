@@ -1,5 +1,5 @@
 /**
- * $Id: MapToolBar.java,v 1.14 2005/01/12 14:23:19 krupenn Exp $
+ * $Id: MapToolBar.java,v 1.15 2005/01/21 16:19:58 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -46,7 +46,7 @@ import java.awt.event.KeyEvent;
  * 
  * 
  * 
- * @version $Revision: 1.14 $, $Date: 2005/01/12 14:23:19 $
+ * @version $Revision: 1.15 $, $Date: 2005/01/21 16:19:58 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -342,6 +342,7 @@ public final class MapToolBar extends JToolBar
 						}
 						catch(Exception ex)
 						{
+							System.out.println("Wring number format");
 						}
 					}
 				}

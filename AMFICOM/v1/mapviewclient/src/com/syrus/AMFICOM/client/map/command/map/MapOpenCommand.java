@@ -1,5 +1,5 @@
 /**
- * $Id: MapOpenCommand.java,v 1.11 2005/01/20 14:37:52 krupenn Exp $
+ * $Id: MapOpenCommand.java,v 1.12 2005/01/21 16:19:57 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -46,7 +46,7 @@ import javax.swing.JDesktopPane;
  * 
  * 
  * 
- * @version $Revision: 1.11 $, $Date: 2005/01/20 14:37:52 $
+ * @version $Revision: 1.12 $, $Date: 2005/01/21 16:19:57 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -126,7 +126,7 @@ public class MapOpenCommand extends VoidCommand
 		mcd.setModal(true);
 		mcd.setVisible(true);
 
-		if(mcd.getReturnCode() == mcd.RET_CANCEL)
+		if(mcd.getReturnCode() == ObjectResourceChooserDialog.RET_CANCEL)
 		{
 			aContext.getDispatcher().notify(new StatusMessageEvent(
 					StatusMessageEvent.STATUS_MESSAGE,
@@ -135,7 +135,7 @@ public class MapOpenCommand extends VoidCommand
 			return;
 		}
 
-		if(mcd.getReturnCode() == mcd.RET_OK)
+		if(mcd.getReturnCode() == ObjectResourceChooserDialog.RET_OK)
 		{
 			map = (Map )mcd.getReturnObject();
 

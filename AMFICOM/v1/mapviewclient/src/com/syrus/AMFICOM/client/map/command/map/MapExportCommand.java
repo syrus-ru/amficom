@@ -1,5 +1,5 @@
 /*
- * $Id: MapExportCommand.java,v 1.9 2005/01/21 13:49:27 krupenn Exp $
+ * $Id: MapExportCommand.java,v 1.10 2005/01/21 16:19:57 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -33,7 +33,7 @@ import javax.swing.JDesktopPane;
  * самого окна карты. При этом в азголовке окна отображается информация о том,
  * что активной карты нет, и карта центрируется по умолчанию
  * 
- * @version $Revision: 1.9 $, $Date: 2005/01/21 13:49:27 $
+ * @version $Revision: 1.10 $, $Date: 2005/01/21 16:19:57 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see 
@@ -88,7 +88,7 @@ public class MapExportCommand extends ExportCommand
 		Map map = mapFrame.getMap();
 		java.util.Map exportColumns = null;
 		
-		String fileName = super.openFileForWriting(MapPropertiesManager.getLastDirectory());
+		String fileName = ExportCommand.openFileForWriting(MapPropertiesManager.getLastDirectory());
 		if(fileName == null)
 			return;
 		MapPropertiesManager.setLastDirectory(new File(fileName).getParent());

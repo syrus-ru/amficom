@@ -163,6 +163,7 @@ public final class MapMeasurementPathPropertiesController
 			} 
 			catch (NumberFormatException ex) 
 			{
+				System.out.println("Wrong number format");
 			} 
 		}
 		else
@@ -174,6 +175,7 @@ public final class MapMeasurementPathPropertiesController
 			} 
 			catch (NumberFormatException ex) 
 			{
+				System.out.println("Wrong number format");
 			} 
 		}
 	}

@@ -1,5 +1,5 @@
 /**
- * $Id: LogicalNetLayer.java,v 1.35 2005/01/21 14:54:26 krupenn Exp $
+ * $Id: LogicalNetLayer.java,v 1.36 2005/01/21 16:19:57 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -41,6 +41,8 @@ import com.syrus.AMFICOM.Client.Map.mapview.MeasurementPath;
 import com.syrus.AMFICOM.Client.Map.mapview.Selection;
 import com.syrus.AMFICOM.Client.Map.mapview.VoidElement;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapView;
+import com.syrus.AMFICOM.general.CommunicationException;
+import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.DoublePoint;
@@ -78,7 +80,7 @@ import java.util.Set;
  * 
  * 
  * 
- * @version $Revision: 1.35 $, $Date: 2005/01/21 14:54:26 $
+ * @version $Revision: 1.36 $, $Date: 2005/01/21 16:19:57 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -343,7 +345,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "setMapView(" + mapView + ")");
 		
 		if(animateThread != null)
-			animateThread.stop_running();
+			animateThread.stopRunning();
 
 		if(	getContext() != null
 			&& getContext().getDispatcher() != null)
@@ -734,9 +736,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 	 */
 	public void drawTempLines(Graphics g)
 	{
-		MapState mapState = getMapState();
-		
-		Graphics2D p = ( Graphics2D)g;
+		Graphics2D p = ( Graphics2D )g;
 		int startX = getStartPoint().x;
 		int startY = getStartPoint().y;
 		int endX = getEndPoint().x;
@@ -884,7 +884,21 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 			//Здесь принимаюттся собитыя по создению и управлению маркером
 			if(mne.isDataMarkerCreated())
 			{
-				MeasurementPath path = mapView.getMeasurementPathByMonitoredElementId(mne.getMeId());
+				MeasurementPath path;
+				try
+				{
+					path = mapView.getMeasurementPathByMonitoredElementId(mne.getMeId());
+				}
+				catch (CommunicationException e)
+				{
+					e.printStackTrace();
+					return;
+				}
+				catch (DatabaseException e)
+				{
+					e.printStackTrace();
+					return;
+				}
 
 				if(path != null)
 				{
@@ -903,7 +917,21 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 			else
 			if(mne.isDataEventMarkerCreated())
 			{
-				MeasurementPath path = mapView.getMeasurementPathByMonitoredElementId(mne.getMeId());
+				MeasurementPath path;
+				try
+				{
+					path = mapView.getMeasurementPathByMonitoredElementId(mne.getMeId());
+				}
+				catch (CommunicationException e)
+				{
+					e.printStackTrace();
+					return;
+				}
+				catch (DatabaseException e)
+				{
+					e.printStackTrace();
+					return;
+				}
 
 				if(path != null)
 				{
@@ -924,7 +952,21 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 			else
 			if(mne.isDataAlarmMarkerCreated())
 			{
-				MeasurementPath path = mapView.getMeasurementPathByMonitoredElementId(mne.getMeId());
+				MeasurementPath path;
+				try
+				{
+					path = mapView.getMeasurementPathByMonitoredElementId(mne.getMeId());
+				}
+				catch (CommunicationException e)
+				{
+					e.printStackTrace();
+					return;
+				}
+				catch (DatabaseException e)
+				{
+					e.printStackTrace();
+					return;
+				}
 
 				AlarmMarker marker = null;
 				if(path != null)
@@ -940,6 +982,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 						}
 						catch(Exception ex)
 						{
+							ex.printStackTrace();
 						}
 					}
 					if(marker == null)
@@ -1080,6 +1123,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 				} 
 				catch (Exception ex) 
 				{
+					ex.printStackTrace();
 				} 
 			}
 		}
@@ -1344,18 +1388,16 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "getMapElementAtPoint(" + point + ")");
 		
 		int showMode = getMapState().getShowMode();
-		MapElement curME = com.syrus.AMFICOM.Client.Map.mapview.VoidElement.getInstance(this.getMapView());
+		MapElement curME = VoidElement.getInstance(this.getMapView());
 
 		Rectangle2D.Double visibleBounds = this.getVisibleBounds();
 		
-		MapView mapView = getMapView();
-
 		//Здесь пробегаемся по всем элементам и если на каком-нибудь из них курсор
 		//то устанавливаем его текущим элементом
 		Iterator e = mapView.getAllElements().iterator();
 		while (e.hasNext())
 		{
-			MapElement mapElement = (MapElement)e.next();
+			MapElement mapElement = (MapElement )e.next();
 			MapElementController controller = getMapViewController().getController(mapElement);
 //			if(mapElement.isVisible(visibleBounds))
 			if(controller.isElementVisible(mapElement, visibleBounds))

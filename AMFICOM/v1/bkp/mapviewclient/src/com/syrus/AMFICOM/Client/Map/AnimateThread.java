@@ -1,5 +1,5 @@
 /**
- * $Id: AnimateThread.java,v 1.3 2004/12/29 19:05:20 krupenn Exp $
+ * $Id: AnimateThread.java,v 1.4 2005/01/21 16:19:56 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -21,7 +21,7 @@ import java.util.*;
  * 
  * 
  * 
- * @version $Revision: 1.3 $, $Date: 2004/12/29 19:05:20 $
+ * @version $Revision: 1.4 $, $Date: 2005/01/21 16:19:56 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -38,7 +38,7 @@ public class AnimateThread
 
 	LogicalNetLayer logicalNetLayer;
 
-	private volatile boolean is_running = true;
+	private volatile boolean isRunning = true;
 
 	public AnimateThread(LogicalNetLayer logical)
 	{
@@ -48,9 +48,9 @@ public class AnimateThread
 	/**
 	 * Остановить анимацию
 	 */
-	public void stop_running()
+	public void stopRunning()
 	{
-		is_running = false;
+		isRunning = false;
 	}
 	
 	public void run()

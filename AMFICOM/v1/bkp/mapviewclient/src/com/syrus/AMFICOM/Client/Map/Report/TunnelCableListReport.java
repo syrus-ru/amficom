@@ -9,15 +9,12 @@ import com.syrus.AMFICOM.Client.General.Report.ReportData;
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.map.Collector;
 import com.syrus.AMFICOM.map.IntPoint;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.MapStorableObjectPool;
 import com.syrus.AMFICOM.map.PhysicalLink;
-import com.syrus.AMFICOM.map.Collector;
-import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.scheme.corba.SchemeCableLink;
-
-import java.awt.Point;
 
 import java.util.ListIterator;
 
@@ -57,20 +54,22 @@ class TunnelCableListReportTableModel extends DividableTableModel
 	{
 		super (divisionsNumber,2);
 
-		Identifier physicalLink_id = (Identifier)report.getReserve();
-		if (physicalLink_id == null)
+		Identifier physicalLinkId = (Identifier)report.getReserve();
+		if (physicalLinkId == null)
 			throw new CreateReportException(report.getName(),CreateReportException.cantImplement);
 
 		PhysicalLink physicalLink = null;
 		try
 		{
-			physicalLink = (PhysicalLink)MapStorableObjectPool.getStorableObject(physicalLink_id,false);
+			physicalLink = (PhysicalLink)MapStorableObjectPool.getStorableObject(physicalLinkId,false);
 		}
 		catch (DatabaseException dExc)
 		{
+			dExc.printStackTrace();
 		}
 		catch (CommunicationException cExc)
 		{
+			cExc.printStackTrace();
 		}
      
 		if (physicalLink == null)

@@ -1,4 +1,3 @@
-src\com\syrus\AMFICOM\Client\General\Event\SchemeNavigateEvent.java
 src\com\syrus\AMFICOM\Client\General\Model\DefaultMapApplicationModelFactory.java
 src\com\syrus\AMFICOM\Client\General\Model\DefaultMapEditorApplicationModelFactory.java
 src\com\syrus\AMFICOM\Client\General\Model\MapApplicationModel.java

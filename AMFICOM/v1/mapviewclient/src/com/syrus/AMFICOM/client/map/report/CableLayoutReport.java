@@ -74,9 +74,11 @@ class CableLayoutReportTableModel extends DividableTableModel
 		}
 		catch (DatabaseException dExc)
 		{
+			dExc.printStackTrace();
 		}
 		catch (CommunicationException cExc)
 		{
+			cExc.printStackTrace();
 		}
 		
 		if (scLink == null)

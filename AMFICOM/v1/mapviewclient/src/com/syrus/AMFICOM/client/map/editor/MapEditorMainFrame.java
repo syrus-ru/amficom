@@ -1,5 +1,5 @@
 /**
- * $Id: MapEditorMainFrame.java,v 1.16 2005/01/21 13:49:27 krupenn Exp $
+ * $Id: MapEditorMainFrame.java,v 1.17 2005/01/21 16:19:57 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -34,6 +34,7 @@ import com.syrus.AMFICOM.Client.General.Model.ApplicationModel;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.General.Model.MapMapEditorApplicationModelFactory;
 import com.syrus.AMFICOM.Client.General.Model.Module;
+import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
 import com.syrus.AMFICOM.Client.General.SessionInterface;
 import com.syrus.AMFICOM.Client.General.UI.StatusBarModel;
 import com.syrus.AMFICOM.Client.Map.Command.Editor.MapEditorCloseMapCommand;
@@ -64,12 +65,10 @@ import com.syrus.AMFICOM.Client.Map.UI.MapPropertyFrame;
 import com.syrus.AMFICOM.Client.Map.UI.MapSchemeTreeFrame;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapView;
 import com.syrus.AMFICOM.administration.AdministrationStorableObjectPool;
-import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 import com.syrus.AMFICOM.administration.Domain;
 import com.syrus.AMFICOM.administration.User;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.io.IniFile;
 
 import java.awt.AWTEvent;
 import java.awt.BorderLayout;
@@ -81,9 +80,12 @@ import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.WindowEvent;
 
+import java.io.FileInputStream;
+
 import java.text.SimpleDateFormat;
 
 import java.util.Date;
+import java.util.Properties;
 
 import javax.swing.BorderFactory;
 import javax.swing.JDesktopPane;
@@ -98,7 +100,7 @@ import javax.swing.JViewport;
  * 
  * 
  * 
- * @version $Revision: 1.16 $, $Date: 2005/01/21 13:49:27 $
+ * @version $Revision: 1.17 $, $Date: 2005/01/21 16:19:57 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -112,7 +114,6 @@ public class MapEditorMainFrame extends JFrame
 
 	protected Identifier domainId;
 
-	protected static IniFile iniFile;
 	protected static String iniFileName = "Map.properties";
 
 	protected static SimpleDateFormat sdf =
@@ -300,7 +301,8 @@ public class MapEditorMainFrame extends JFrame
 		// load values from properties file
 		try
 		{
-			iniFile = new IniFile(iniFileName);
+			Properties properties = new Properties();
+			properties.load(new FileInputStream(iniFileName));
 			System.out.println("read ini file " + iniFileName);
 		}
 		catch(java.io.IOException e)
@@ -591,7 +593,7 @@ public class MapEditorMainFrame extends JFrame
 				if(aContext.getSessionInterface().equals(ssi))
 				{
 					if(!Checker.checkCommandByUserId(
-							aContext.getSessionInterface().getUserId(),
+							((RISDSessionInfo )aContext.getSessionInterface()).getUserIdentifier().toString(),
 							Checker.topologyEditing))
 					{
 						JOptionPane.showMessageDialog(null, LangModelMap.getString("NotEnoughRights"), LangModel.getString("Error"), JOptionPane.OK_OPTION);
@@ -774,9 +776,9 @@ public class MapEditorMainFrame extends JFrame
 
 		try
 		{
-			Identifier domain_id = new Identifier(aContext.getSessionInterface().getAccessIdentifier().domain_id);
+			domainId = new Identifier(aContext.getSessionInterface().getAccessIdentifier().domain_id);
 			Domain domain = (Domain )AdministrationStorableObjectPool.getStorableObject(
-					domain_id, true);
+					domainId, true);
 			statusBar.setText("domain", domain.getName());
 		}
 		catch(ApplicationException ex)

@@ -1,5 +1,5 @@
 /**
- * $Id: MoveMarkCommand.java,v 1.6 2004/12/24 15:42:11 krupenn Exp $
+ * $Id: MoveMarkCommand.java,v 1.7 2005/01/21 16:19:57 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -27,16 +27,13 @@ import com.syrus.AMFICOM.Client.Map.Controllers.MapViewController;
  * 
  * 
  * 
- * @version $Revision: 1.6 $, $Date: 2004/12/24 15:42:11 $
+ * @version $Revision: 1.7 $, $Date: 2005/01/21 16:19:57 $
  * @module
  * @author $Author: krupenn $
  * @see
  */
 public class MoveMarkCommand extends MapActionCommand
 {
-	LogicalNetLayer logicalNetLayer;
-	ApplicationContext aContext;
-
 	DoublePoint initialLocation;
 	double initialDistance;
 
@@ -69,12 +66,6 @@ public class MoveMarkCommand extends MapActionCommand
 		}
 	}
 
-	public void setLogicalNetLayer(LogicalNetLayer logicalNetLayer)
-	{
-		this.logicalNetLayer = logicalNetLayer;
-		this.aContext = logicalNetLayer.getContext();
-	}
-	
 	public void execute()
 	{
 		Environment.log(
@@ -83,7 +74,7 @@ public class MoveMarkCommand extends MapActionCommand
 				getClass().getName(), 
 				"execute()");
 
-		mc = (MarkController)logicalNetLayer.getMapViewController().getController(mark);
+		mc = (MarkController )super.logicalNetLayer.getMapViewController().getController(mark);
 
 		distance = mark.getDistance();
 		mc.moveToFromStartLt(mark, distance);

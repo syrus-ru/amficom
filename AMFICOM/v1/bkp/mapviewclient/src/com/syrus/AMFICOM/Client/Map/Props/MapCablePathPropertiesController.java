@@ -170,7 +170,8 @@ public final class MapCablePathPropertiesController
 			} 
 			catch (NumberFormatException ex) 
 			{
-			} 
+				System.out.println("Wrong number format");
+			}
 		}
 		else
 		if (key.equals(PROPERTY_PHYSICAL_LENGTH))
@@ -181,6 +182,7 @@ public final class MapCablePathPropertiesController
 			} 
 			catch (NumberFormatException ex) 
 			{
+				System.out.println("Wrong number format");
 			} 
 		}
 	}

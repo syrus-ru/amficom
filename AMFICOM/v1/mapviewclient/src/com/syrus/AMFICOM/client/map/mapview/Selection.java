@@ -1,5 +1,5 @@
 /**
- * $Id: Selection.java,v 1.3 2005/01/20 14:37:52 krupenn Exp $
+ * $Id: Selection.java,v 1.4 2005/01/21 16:19:58 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -12,6 +12,9 @@
 package com.syrus.AMFICOM.Client.Map.mapview;
 
 import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
+import com.syrus.AMFICOM.Client.Map.mapview.CablePath;
+import com.syrus.AMFICOM.Client.Map.mapview.UnboundLink;
+import com.syrus.AMFICOM.Client.Map.mapview.UnboundNode;
 import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.Identifier;
@@ -26,17 +29,13 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import com.syrus.AMFICOM.Client.Map.mapview.CablePath;
-import com.syrus.AMFICOM.Client.Resource.MapView.MapView;
-import com.syrus.AMFICOM.Client.Map.mapview.UnboundLink;
-import com.syrus.AMFICOM.Client.Map.mapview.UnboundNode;
 
 /**
  * набор выбранных элементов 
  * 
  * 
  * 
- * @version $Revision: 1.3 $, $Date: 2005/01/20 14:37:52 $
+ * @version $Revision: 1.4 $, $Date: 2005/01/21 16:19:58 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -59,15 +58,6 @@ public final class Selection
 	private boolean unboundCableSelection = true;
 	private boolean unboundSelection = true;
 	private boolean physicalLinkSelection = true;
-
-	public String[][] getExportColumns()
-	{
-		return null;
-	}
-
-	public void setColumn(String field, String value)
-	{
-	}
 
 	public Selection(LogicalNetLayer lnl)
 	{

@@ -73,9 +73,11 @@ class MarkerInfoReportTableModel extends DividableTableModel
 		}
 		catch (DatabaseException dExc)
 		{
+			dExc.printStackTrace();
 		}
 		catch (CommunicationException cExc)
 		{
+			cExc.printStackTrace();
 		}
 
 		MarkerController mc = (MarkerController)MarkerController.getInstance();
@@ -130,9 +132,11 @@ class MarkerInfoReportTableModel extends DividableTableModel
 		}
 		catch (DatabaseException dExc)
 		{
+			dExc.printStackTrace();
 		}
 		catch (CommunicationException cExc)
 		{
+			cExc.printStackTrace();
 		}
 		
     if (physicalLink == null)

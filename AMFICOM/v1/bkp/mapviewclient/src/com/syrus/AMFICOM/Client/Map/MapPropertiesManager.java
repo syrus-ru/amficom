@@ -1,5 +1,5 @@
 /**
- * $Id: MapPropertiesManager.java,v 1.4 2005/01/12 14:23:19 krupenn Exp $
+ * $Id: MapPropertiesManager.java,v 1.5 2005/01/21 16:19:57 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -20,7 +20,6 @@ import com.syrus.AMFICOM.map.DoublePoint;
 import com.syrus.AMFICOM.resource.AbstractImageResource;
 import com.syrus.AMFICOM.resource.FileImageResource;
 import com.syrus.AMFICOM.resource.ResourceStorableObjectPool;
-import com.syrus.io.IniFile;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -30,13 +29,18 @@ import java.awt.Image;
 import java.awt.MediaTracker;
 import java.awt.SystemColor;
 import java.awt.Toolkit;
-import java.awt.geom.Point2D;
+
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
+
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
+
 import javax.swing.ImageIcon;
 
 /**
@@ -53,7 +57,7 @@ import javax.swing.ImageIcon;
  * 
  * 
  * 
- * @version $Revision: 1.4 $, $Date: 2005/01/12 14:23:19 $
+ * @version $Revision: 1.5 $, $Date: 2005/01/21 16:19:57 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -63,7 +67,6 @@ public final class MapPropertiesManager
 	/**
 	 * Фаил откуда загружаются данные
 	 */
-	protected static IniFile iniFile;
 	protected static String iniFileName = "Map.properties";
 	
 	public static final String MAP_CLONED_IDS = "mapclonedids";
@@ -215,8 +218,9 @@ public final class MapPropertiesManager
 	{
 		try
 		{
-			iniFile = new IniFile(iniFileName);
-			MapPropertiesManager.setFromIniFile();
+			Properties properties = new Properties();
+			properties.load(new FileInputStream(iniFileName));
+			MapPropertiesManager.setFromIniFile(properties);
 		}
 		catch(java.io.IOException e)
 		{
@@ -351,21 +355,21 @@ public final class MapPropertiesManager
 	/**
 	 * Установить значения из инициализационного файла
 	 */
-	protected static void setFromIniFile()
+	protected static void setFromIniFile(Properties properties)
 	{
-		dataBasePath = iniFile.getValue(KEY_DATA_BASE_PATH);
-		dataBaseView = iniFile.getValue(KEY_DATA_BASE_VIEW);
-		dataBaseURL = iniFile.getValue(KEY_DATA_BASE_URL);
+		dataBasePath = properties.getProperty(KEY_DATA_BASE_PATH);
+		dataBaseView = properties.getProperty(KEY_DATA_BASE_VIEW);
+		dataBaseURL = properties.getProperty(KEY_DATA_BASE_URL);
 
-		mapType = iniFile.getValue(KEY_MAP_TYPE);
-		lastLong = iniFile.getValue(KEY_LAST_LONGITUDE);
-		lastLat = iniFile.getValue(KEY_LAST_LATITUDE);
-		lastZoom = iniFile.getValue(KEY_LAST_ZOOM);
-		lastDirectory = iniFile.getValue(KEY_LAST_DIRECTORY);
+		mapType = properties.getProperty(KEY_MAP_TYPE);
+		lastLong = properties.getProperty(KEY_LAST_LONGITUDE);
+		lastLat = properties.getProperty(KEY_LAST_LATITUDE);
+		lastZoom = properties.getProperty(KEY_LAST_ZOOM);
+		lastDirectory = properties.getProperty(KEY_LAST_DIRECTORY);
 //		selectionColor = iniFile.getValue("selectionColor");
 //		selectionStyle = iniFile.getValue("selectionStyle");
 //		showPhysicalNodes = iniFile.getValue("showNodes");
-		lastView = iniFile.getValue(KEY_LAST_VIEW);
+		lastView = properties.getProperty(KEY_LAST_VIEW);
 	}
 
 	/**
@@ -386,15 +390,20 @@ public final class MapPropertiesManager
 	public static void saveIniFile()
 	{
 		Environment.log(Environment.LOG_LEVEL_FINER, "method call MapPropertiesManager.saveIniFile()");
-		
-		iniFile.setValue( KEY_LAST_LONGITUDE, lastLong  );
-        iniFile.setValue( KEY_LAST_LATITUDE, lastLat );
-        iniFile.setValue( KEY_LAST_DIRECTORY, lastDirectory );
 
-        if ( iniFile.saveKeys() )
-        {
-			System.out.println("Params saved");
-        }
+		try
+		{
+			Properties properties = new Properties();
+			properties.load(new FileInputStream(iniFileName));
+			properties.setProperty(KEY_LAST_LONGITUDE, lastLong);
+			properties.setProperty(KEY_LAST_LATITUDE, lastLat);
+			properties.setProperty(KEY_LAST_DIRECTORY, lastDirectory);
+			properties.store(new FileOutputStream(iniFileName), null);
+		}
+		catch(java.io.IOException e)
+		{
+			System.out.println("Params not saved");
+		}
 	}
 
 	/** объекты, необходимые для отрисовки пиктограмм */

@@ -1,5 +1,5 @@
 /*
- * $Id: MapImportCommand.java,v 1.14 2005/01/21 13:49:27 krupenn Exp $
+ * $Id: MapImportCommand.java,v 1.15 2005/01/21 16:19:57 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,43 +11,35 @@
 package com.syrus.AMFICOM.Client.Map.Command.Map;
 
 import com.syrus.AMFICOM.Client.General.Command.Command;
+import com.syrus.AMFICOM.Client.General.Command.ImportCommand;
 import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
 import com.syrus.AMFICOM.Client.General.Event.MapEvent;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.Command.ImportCommand;
 import com.syrus.AMFICOM.Client.Map.Command.MapDesktopCommand;
 import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
 import com.syrus.AMFICOM.Client.Map.UI.MapFrame;
-import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
-import com.syrus.AMFICOM.administration.User;
-import com.syrus.AMFICOM.general.CommunicationException;
+import com.syrus.AMFICOM.Client.Resource.MapView.MapView;
 import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObject;
+import com.syrus.AMFICOM.map.Collector;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.map.MapStorableObjectPool;
 import com.syrus.AMFICOM.map.Mark;
 import com.syrus.AMFICOM.map.NodeLink;
 import com.syrus.AMFICOM.map.PhysicalLink;
-import com.syrus.AMFICOM.map.TopologicalNode;
-import com.syrus.AMFICOM.map.Collector;
 import com.syrus.AMFICOM.map.SiteNode;
-import com.syrus.AMFICOM.Client.Resource.MapView.MapView;
-import com.syrus.AMFICOM.Client.Resource.ObjectResource;
-import com.syrus.AMFICOM.Client.Resource.Pool;
-import com.syrus.AMFICOM.Client.Resource.ResourceUtil;
+import com.syrus.AMFICOM.map.TopologicalNode;
 
 import java.io.File;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
+
 import javax.swing.JDesktopPane;
 
 /**
@@ -56,7 +48,7 @@ import javax.swing.JDesktopPane;
  * самого окна карты. При этом в азголовке окна отображается информация о том,
  * что активной карты нет, и карта центрируется по умолчанию
  * 
- * @version $Revision: 1.14 $, $Date: 2005/01/21 13:49:27 $
+ * @version $Revision: 1.15 $, $Date: 2005/01/21 16:19:57 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -93,8 +85,6 @@ public class MapImportCommand extends ImportCommand
 		if(mapFrame == null)
 			return;
 			
-		ApplicationContext aContext = mapFrame.getContext();
-
 		try
 		{
 			System.out.println("Import map");
@@ -105,7 +95,7 @@ public class MapImportCommand extends ImportCommand
 			String type;
 			java.util.Map exportColumns;
 	
-			String fileName = super.openFileForReading(MapPropertiesManager.getLastDirectory());
+			String fileName = ImportCommand.openFileForReading(MapPropertiesManager.getLastDirectory());
 			if(fileName == null)
 				return;
 			MapPropertiesManager.setLastDirectory(new File(fileName).getParent());

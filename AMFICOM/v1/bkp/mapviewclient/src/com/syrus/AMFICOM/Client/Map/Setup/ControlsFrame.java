@@ -1,5 +1,5 @@
 /*
- * Название: $Id: ControlsFrame.java,v 1.5 2005/01/21 13:49:27 krupenn Exp $
+ * Название: $Id: ControlsFrame.java,v 1.6 2005/01/21 16:19:57 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -37,7 +37,7 @@ import javax.swing.JTabbedPane;
  * 
  * 
  * 
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  * @author $Author: krupenn $
  * @see
  */
@@ -147,6 +147,7 @@ import javax.swing.JTabbedPane;
 			} 
 			catch (Exception ex) 
 			{
+				ex.printStackTrace();
 			} 
 		}
 	}

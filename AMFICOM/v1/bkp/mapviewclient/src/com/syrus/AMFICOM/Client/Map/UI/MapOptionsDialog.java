@@ -354,6 +354,7 @@ public class MapOptionsDialog extends JDialog
 		}
 		catch(Exception e)
 		{
+			System.out.println("Wrong number format");
 			// cannot parse
 		}
 

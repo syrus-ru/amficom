@@ -1,5 +1,5 @@
 /**
- * $Id: MapView.java,v 1.29 2004/12/29 19:05:20 krupenn Exp $
+ * $Id: MapView.java,v 1.30 2005/01/21 16:19:58 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -60,7 +60,7 @@ import com.syrus.AMFICOM.Client.Map.mapview.UnboundNode;
  * 
  * 
  * 
- * @version $Revision: 1.29 $, $Date: 2004/12/29 19:05:20 $
+ * @version $Revision: 1.30 $, $Date: 2005/01/21 16:19:58 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -903,36 +903,28 @@ public final class MapView
 	}
 
 	public MeasurementPath getMeasurementPathByMonitoredElementId(Identifier meId)
+		throws CommunicationException, DatabaseException
 	{
 		MeasurementPath path = null;
-		try
+		MonitoredElement me = (MonitoredElement )
+			ConfigurationStorableObjectPool.getStorableObject(meId, true);
+		if(me.getSort().equals(MonitoredElementSort.MONITOREDELEMENT_SORT_TRANSMISSION_PATH))
 		{
-			MonitoredElement me = (MonitoredElement )
-				ConfigurationStorableObjectPool.getStorableObject(meId, true);
-			if(me.getSort().equals(MonitoredElementSort.MONITOREDELEMENT_SORT_TRANSMISSION_PATH))
+			Identifier tpId = (Identifier )(me.getMonitoredDomainMemberIds().get(0));
+			TransmissionPath tp = (TransmissionPath )
+				ConfigurationStorableObjectPool.getStorableObject(tpId, true);
+			if(tp != null)
 			{
-				Identifier tpId = (Identifier )(me.getMonitoredDomainMemberIds().get(0));
-				TransmissionPath tp = (TransmissionPath )
-					ConfigurationStorableObjectPool.getStorableObject(tpId, true);
-				if(tp != null)
+				for(Iterator it = getMeasurementPaths().iterator(); it.hasNext();)
 				{
-					for(Iterator it = getMeasurementPaths().iterator(); it.hasNext();)
+					MeasurementPath mp = (MeasurementPath)it.next();
+					if(mp.getSchemePath().pathImpl().equals(tp))
 					{
-						MeasurementPath mp = (MeasurementPath)it.next();
-						if(mp.getSchemePath().pathImpl().equals(tp))
-						{
-							path = mp;
-							break;
-						}
+						path = mp;
+						break;
 					}
 				}
 			}
-		}
-		catch (CommunicationException e)
-		{
-		}
-		catch (DatabaseException e)
-		{
 		}
 
 		return path;

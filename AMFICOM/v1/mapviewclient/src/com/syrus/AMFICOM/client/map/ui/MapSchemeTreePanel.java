@@ -9,15 +9,12 @@ import com.syrus.AMFICOM.Client.General.Event.StatusMessageEvent;
 import com.syrus.AMFICOM.Client.General.Lang.LangModel;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.Model.MapApplicationModel;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourceChooserDialog;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourceTreeNode;
 import com.syrus.AMFICOM.Client.General.UI.UniTreePanel;
 import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapView;
-import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.administration.AdministrationStorableObjectPool;
-import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 import com.syrus.AMFICOM.administration.Domain;
 import com.syrus.AMFICOM.administration.DomainCondition;
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -25,7 +22,6 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.scheme.SchemeStorableObjectPool;
 import com.syrus.AMFICOM.scheme.corba.*;
-import com.syrus.AMFICOM.client_.general.ui_.ObjectResourceTableModel;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -41,10 +37,9 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.TreePath;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
+import javax.swing.tree.TreePath;
 
 public final class MapSchemeTreePanel extends JPanel 
 		implements OperationListener, TreeSelectionListener
@@ -69,10 +64,10 @@ public final class MapSchemeTreePanel extends JPanel
 	JButton menuSchemeAddToView = new JButton();
 	JButton menuSchemeRemoveFromView = new JButton();
 
-	public final static int imgSize = 16;
-	public final static int btnSize = 24;
+	public static final int IMG_SIZE = 16;
+	public static final int BTN_SIZE = 24;
 
-	static final Dimension buttonSize = new Dimension(btnSize, btnSize);
+	static final Dimension BUTTON_DIMENSION = new Dimension(BTN_SIZE, BTN_SIZE);
 	
 	private MapView mapView = null;
 
@@ -119,9 +114,9 @@ public final class MapSchemeTreePanel extends JPanel
 		bindButtonsPanel.add(placeAllButton, BorderLayout.EAST);
 
 		menuSchemeAddToView.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/addtoview.gif").
-				getScaledInstance(imgSize, imgSize, Image.SCALE_DEFAULT)));
-		menuSchemeAddToView.setMaximumSize(buttonSize);
-		menuSchemeAddToView.setPreferredSize(buttonSize);
+				getScaledInstance(IMG_SIZE, IMG_SIZE, Image.SCALE_DEFAULT)));
+		menuSchemeAddToView.setMaximumSize(BUTTON_DIMENSION);
+		menuSchemeAddToView.setPreferredSize(BUTTON_DIMENSION);
 		menuSchemeAddToView.setToolTipText(LangModelMap.getString("menuSchemeAddToView"));
 		menuSchemeAddToView.addActionListener(new ActionListener()
 			{
@@ -132,9 +127,9 @@ public final class MapSchemeTreePanel extends JPanel
 			});
 
 		menuSchemeRemoveFromView.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/removefromview.gif").
-				getScaledInstance(imgSize, imgSize, Image.SCALE_DEFAULT)));
-		menuSchemeRemoveFromView.setMaximumSize(buttonSize);
-		menuSchemeRemoveFromView.setPreferredSize(buttonSize);
+				getScaledInstance(IMG_SIZE, IMG_SIZE, Image.SCALE_DEFAULT)));
+		menuSchemeRemoveFromView.setMaximumSize(BUTTON_DIMENSION);
+		menuSchemeRemoveFromView.setPreferredSize(BUTTON_DIMENSION);
 		menuSchemeRemoveFromView.setToolTipText(LangModelMap.getString("menuSchemeRemoveFromView"));
 		menuSchemeRemoveFromView.addActionListener(new ActionListener()
 			{
@@ -330,7 +325,7 @@ public final class MapSchemeTreePanel extends JPanel
 
 		mcd.setModal(true);
 		mcd.setVisible(true);
-		if(mcd.getReturnCode() == mcd.RET_CANCEL)
+		if(mcd.getReturnCode() == ObjectResourceChooserDialog.RET_CANCEL)
 		{
 			aContext.getDispatcher().notify(new StatusMessageEvent(
 					StatusMessageEvent.STATUS_MESSAGE,
@@ -338,7 +333,7 @@ public final class MapSchemeTreePanel extends JPanel
 			return;
 		}
 
-		if(mcd.getReturnCode() == mcd.RET_OK)
+		if(mcd.getReturnCode() == ObjectResourceChooserDialog.RET_OK)
 		{
 			Scheme retObj = (Scheme )mcd.getReturnObject();
 

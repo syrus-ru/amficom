@@ -1,5 +1,5 @@
 /**
- * $Id: SpatialObject.java,v 1.1 2004/09/13 12:33:42 krupenn Exp $
+ * $Id: SpatialObject.java,v 1.2 2005/01/21 16:19:57 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -18,7 +18,7 @@ package com.syrus.AMFICOM.Client.Map;
  * 
  * 
  * 
- * @version $Revision: 1.1 $, $Date: 2004/09/13 12:33:42 $
+ * @version $Revision: 1.2 $, $Date: 2005/01/21 16:19:57 $
  * @module
  * @author $Author: krupenn $
  * @see com.syrus.AMFICOM.Client.Map.Setup.SpatialSearchPanel

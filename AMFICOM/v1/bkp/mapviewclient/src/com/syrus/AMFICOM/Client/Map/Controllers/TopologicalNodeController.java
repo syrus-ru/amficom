@@ -1,5 +1,5 @@
 /**
- * $Id: TopologicalNodeController.java,v 1.3 2005/01/14 15:03:13 krupenn Exp $
+ * $Id: TopologicalNodeController.java,v 1.4 2005/01/21 16:19:57 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -33,16 +33,16 @@ import com.syrus.AMFICOM.Client.Map.Controllers.AbstractNodeController;
  * 
  * 
  * 
- * @version $Revision: 1.3 $, $Date: 2005/01/14 15:03:13 $
+ * @version $Revision: 1.4 $, $Date: 2005/01/21 16:19:57 $
  * @module
  * @author $Author: krupenn $
  * @see
  */
 public class TopologicalNodeController extends AbstractNodeController
 {
-	public final static Rectangle DEFAULT_BOUNDS = new Rectangle(10, 10);
-	public final static Rectangle MIN_BOUNDS = new Rectangle(2, 2);
-	public final static Rectangle MAX_BOUNDS = new Rectangle(15, 15);
+	public static final Rectangle DEFAULT_BOUNDS = new Rectangle(10, 10);
+	public static final Rectangle MIN_BOUNDS = new Rectangle(2, 2);
+	public static final Rectangle MAX_BOUNDS = new Rectangle(15, 15);
 
 	public static final String CLOSED_NODE = "node";
 	public static final String OPEN_NODE = "void";
@@ -50,11 +50,11 @@ public class TopologicalNodeController extends AbstractNodeController
 	public static final String CLOSED_NODE_IMAGE = "images/node.gif";
 	public static final String OPEN_NODE_IMAGE = "images/void.gif";
 
+	private static final String PROPERTY_PANE_CLASS_NAME = "";
+
 	private static boolean needInit = true;
 
 	private static TopologicalNodeController instance = null;
-	
-	private static final String PROPERTY_PANE_CLASS_NAME = "";
 
 	public static String getPropertyPaneClassName()
 	{

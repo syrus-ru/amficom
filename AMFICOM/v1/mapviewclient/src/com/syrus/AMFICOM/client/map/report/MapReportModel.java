@@ -57,22 +57,18 @@ public class MapReportModel extends APOReportModel
 
 	public String getReportsName(ObjectsReport rp)
 	{
-		String return_value = this.getObjectsName() + ":"
+		String returnValue = this.getObjectsName() + ":"
 			+ getLangForField(rp.field);
 		if (rp.reserveName != null)
-			return_value += rp.reserveName;
+			returnValue += rp.reserveName;
 
-		return return_value;
+		return returnValue;
 	}
 
 	public String getReportsReserveName(ObjectsReport rp) throws
 		CreateReportException
 	{
 		return "";
-	}
-
-	public MapReportModel()
-	{
 	}
 
 	public void loadRequiredObjects(

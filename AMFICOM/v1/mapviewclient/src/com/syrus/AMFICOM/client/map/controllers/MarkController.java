@@ -1,5 +1,5 @@
 /**
- * $Id: MarkController.java,v 1.3 2005/01/14 15:03:13 krupenn Exp $
+ * $Id: MarkController.java,v 1.4 2005/01/21 16:19:57 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -18,8 +18,8 @@ import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.DoublePoint;
 import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.map.Mark;
-
 import com.syrus.AMFICOM.map.NodeLink;
+
 import java.awt.BasicStroke;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -31,16 +31,13 @@ import java.util.Iterator;
 import java.util.List;
 
 import javax.swing.ImageIcon;
-import com.syrus.AMFICOM.Client.Map.Controllers.MapElementController;
-import com.syrus.AMFICOM.Client.Map.Controllers.AbstractNodeController;
-import com.syrus.AMFICOM.Client.Map.Controllers.NodeLinkController;
 
 /**
  * элемент карты - узел 
  * 
  * 
  * 
- * @version $Revision: 1.3 $, $Date: 2005/01/14 15:03:13 $
+ * @version $Revision: 1.4 $, $Date: 2005/01/21 16:19:57 $
  * @module
  * @author $Author: krupenn $
  * @see

@@ -1,5 +1,5 @@
 /**
- * $Id: MapActionCommandBundle.java,v 1.13 2004/12/24 15:42:11 krupenn Exp $
+ * $Id: MapActionCommandBundle.java,v 1.14 2005/01/21 16:19:57 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -43,7 +43,7 @@ import com.syrus.AMFICOM.map.PhysicalLinkBinding;
  * 
  * 
  * 
- * @version $Revision: 1.13 $, $Date: 2004/12/24 15:42:11 $
+ * @version $Revision: 1.14 $, $Date: 2005/01/21 16:19:57 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -100,19 +100,6 @@ public class MapActionCommandBundle extends CommandBundle
 		cmd.execute();
 		add(cmd);
 		return cmd.getUnbound();
-	}
-
-	/**
-	 * Создается топологический конечный узел в неактивном состоянии
-	 * @deprecated
-	 */
-	protected TopologicalNode createPhysicalNode(DoublePoint point)
-	{
-		CreatePhysicalNodeCommandAtomic cmd = new CreatePhysicalNodeCommandAtomic(point);
-		cmd.setLogicalNetLayer(logicalNetLayer);
-		cmd.execute();
-		add(cmd);
-		return cmd.getNode();
 	}
 
 	/**

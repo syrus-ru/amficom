@@ -2,27 +2,26 @@ package com.syrus.AMFICOM.Client.Map.Props;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.UI.ObjectResourceComboBox;
-import com.syrus.AMFICOM.Client.Map.Controllers.LinkTypeController;
-import com.syrus.AMFICOM.Client.Map.UI.SimpleMapElementController;
-import com.syrus.AMFICOM.client_.general.ui_.ObjComboBox;
-import com.syrus.AMFICOM.client_.general.ui_.ObjectResourcePropertiesPane;
 import com.syrus.AMFICOM.Client.General.UI.ReusedGridBagConstraints;
 import com.syrus.AMFICOM.Client.Map.Command.Action.CreateUnboundLinkCommandBundle;
 import com.syrus.AMFICOM.Client.Map.Command.Action.RemoveUnboundLinkCommandBundle;
+import com.syrus.AMFICOM.Client.Map.Controllers.LinkTypeController;
 import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
+import com.syrus.AMFICOM.Client.Map.UI.SimpleMapElementController;
+import com.syrus.AMFICOM.Client.Map.mapview.CablePath;
+import com.syrus.AMFICOM.Client.Map.mapview.UnboundLink;
+import com.syrus.AMFICOM.client_.general.ui_.ObjComboBox;
+import com.syrus.AMFICOM.client_.general.ui_.ObjectResourcePropertiesPane;
+import com.syrus.AMFICOM.client_.general.ui_.ObjectResourceTable;
+import com.syrus.AMFICOM.client_.general.ui_.ObjectResourceTableModel;
 import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.map.PhysicalLinkType;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.NodeLink;
 import com.syrus.AMFICOM.map.PhysicalLink;
-import com.syrus.AMFICOM.map.TopologicalNode;
+import com.syrus.AMFICOM.map.PhysicalLinkType;
 import com.syrus.AMFICOM.map.SiteNode;
-import com.syrus.AMFICOM.Client.Map.mapview.CablePath;
-import com.syrus.AMFICOM.Client.Map.mapview.UnboundLink;
+import com.syrus.AMFICOM.map.TopologicalNode;
 import com.syrus.AMFICOM.scheme.corba.CableChannelingItem;
-import com.syrus.AMFICOM.client_.general.ui_.ObjectResourceTable;
-import com.syrus.AMFICOM.client_.general.ui_.ObjectResourceTableModel;
 
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -42,9 +41,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-import com.syrus.AMFICOM.map.Map;
-import com.syrus.AMFICOM.map.PhysicalLinkBinding;
-import com.syrus.AMFICOM.Client.Map.mapview.CablePathBinding;
 
 public final class MapCablePathBindPanel
 		extends JPanel 
@@ -138,13 +134,13 @@ public final class MapCablePathBindPanel
 
 	private void jbInit()
 	{
-		SimpleMapElementController controller = 
+		SimpleMapElementController comboController = 
 				SimpleMapElementController.getInstance();
 
-		startLinkComboBox = new ObjComboBox(controller, SimpleMapElementController.KEY_NAME);
-		startNodeToComboBox = new ObjComboBox(controller, SimpleMapElementController.KEY_NAME);
-		endLinkComboBox = new ObjComboBox(controller, SimpleMapElementController.KEY_NAME);
-		endNodeToComboBox = new ObjComboBox(controller, SimpleMapElementController.KEY_NAME);
+		startLinkComboBox = new ObjComboBox(comboController, SimpleMapElementController.KEY_NAME);
+		startNodeToComboBox = new ObjComboBox(comboController, SimpleMapElementController.KEY_NAME);
+		endLinkComboBox = new ObjComboBox(comboController, SimpleMapElementController.KEY_NAME);
+		endNodeToComboBox = new ObjComboBox(comboController, SimpleMapElementController.KEY_NAME);
 
 		this.setLayout(gridBagLayout1);
 		this.setName(LangModelMap.getString("LinkBinding"));
@@ -571,25 +567,28 @@ public final class MapCablePathBindPanel
 	{
 		PhysicalLink selectedStartLink;
 		PhysicalLink selectedEndLink;
+		
+		Object selectedItem;
 	
-		try
+		selectedItem = startLinkComboBox.getSelectedItem();
+		if(selectedItem instanceof PhysicalLink)
 		{
-			selectedStartLink = (PhysicalLink )startLinkComboBox.getSelectedItem();
+			selectedStartLink = (PhysicalLink )selectedItem;
 			
 			UnboundLink unbound = (UnboundLink)path.nextLink(startLastBound);
 
 			if(unbound != null)
 				addLinkBinding(selectedStartLink, unbound, startNode);
 		}
-		catch (ClassCastException e)
+		else
 		{
-//			System.out.println("Not binding from start node");
 			selectedStartLink = null;
 		}
 
-		try
+		selectedItem = endLinkComboBox.getSelectedItem();
+		if(selectedItem instanceof PhysicalLink)
 		{
-			selectedEndLink = (PhysicalLink )endLinkComboBox.getSelectedItem();
+			selectedEndLink = (PhysicalLink )selectedItem;
 			
 			if(!selectedEndLink.equals(selectedStartLink))
 			{
@@ -598,10 +597,6 @@ public final class MapCablePathBindPanel
 				if(unbound != null)
 					addLinkBinding(selectedEndLink, unbound, endNode);
 			}
-		}
-		catch (ClassCastException e)
-		{
-//			System.out.println("Not binding from end node");
 		}
 		
 		model.setContents(path.getLinks());

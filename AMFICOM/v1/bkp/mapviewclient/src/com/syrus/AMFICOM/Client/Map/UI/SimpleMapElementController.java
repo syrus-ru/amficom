@@ -64,6 +64,7 @@ public final class SimpleMapElementController implements ObjectResourceControlle
 
 		if(object == null)
 		{
+			result = null;
 		}
 		else
 		if (key.equals(KEY_NAME))
@@ -79,12 +80,15 @@ public final class SimpleMapElementController implements ObjectResourceControlle
 			}
 			catch (InvocationTargetException iae)
 			{
+				result = null;
 			}
 			catch (IllegalAccessException iae)
 			{
+				result = null;
 			}
 			catch (NoSuchMethodException nsme)
 			{
+				result = null;
 			}
 			
 			if(result == null)
@@ -98,12 +102,15 @@ public final class SimpleMapElementController implements ObjectResourceControlle
 				}
 				catch (InvocationTargetException iae)
 				{
+					result = null;
 				}
 				catch (IllegalAccessException iae)
 				{
+					result = null;
 				}
 				catch (NoSuchMethodException nsme)
 				{
+					result = null;
 				}
 			}
 		}
@@ -131,6 +138,7 @@ public final class SimpleMapElementController implements ObjectResourceControlle
 		}
 		else
 		{
+			result = null;
 		}
 		return result;
 	}

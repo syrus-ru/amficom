@@ -1,5 +1,5 @@
 /**
- * $Id: MapFrame.java,v 1.19 2005/01/21 13:49:28 krupenn Exp $
+ * $Id: MapFrame.java,v 1.20 2005/01/21 16:19:58 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -79,7 +79,7 @@ import javax.swing.event.InternalFrameEvent;
  * 
  * 
  * 
- * @version $Revision: 1.19 $, $Date: 2005/01/21 13:49:28 $
+ * @version $Revision: 1.20 $, $Date: 2005/01/21 16:19:58 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -462,12 +462,10 @@ public class MapFrame extends JInternalFrame
 				+ " [" + LangModelMap.getString("nodemap") + "] "
 				+ "изменен. Сохранить?";
 				
-			String title = "Сохранение объекта";
-
 			int ret = JOptionPane.showConfirmDialog(
 					Environment.getActiveWindow(),
 					message,
-					title,
+					"Сохранение объекта",
 					JOptionPane.YES_NO_CANCEL_OPTION,
 					JOptionPane.QUESTION_MESSAGE);
 			if(ret == JOptionPane.CANCEL_OPTION)
@@ -538,12 +536,10 @@ public class MapFrame extends JInternalFrame
 				+ " [" + LangModel.getString("nodemapview") + "] "
 				+ "изменен. Сохранить?";
 				
-			String title = "Сохранение объекта";
-
 			int ret = JOptionPane.showConfirmDialog(
 					Environment.getActiveWindow(),
 					message,
-					title,
+					"Сохранение объекта",
 					JOptionPane.YES_NO_CANCEL_OPTION,
 					JOptionPane.QUESTION_MESSAGE);
 			if(ret == JOptionPane.CANCEL_OPTION)
