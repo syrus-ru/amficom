@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectXMLDriver.java,v 1.3 2005/01/25 06:10:48 bob Exp $
+ * $Id: StorableObjectXMLDriver.java,v 1.4 2005/01/25 08:06:53 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -41,7 +41,9 @@ import org.xml.sax.SAXException;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/01/25 06:10:48 $
+ * XML Driver for storable object package, one per package. 
+ * 
+ * @version $Revision: 1.4 $, $Date: 2005/01/25 08:06:53 $
  * @author $Author: bob $
  * @module general_v1
  */
