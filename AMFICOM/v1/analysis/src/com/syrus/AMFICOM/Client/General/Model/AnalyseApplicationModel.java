@@ -8,8 +8,6 @@ import javax.swing.ImageIcon;
 import javax.swing.UIDefaults;
 import javax.swing.UIManager;
 
-import com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.ColorManager;
-
 public class AnalyseApplicationModel extends ApplicationModel {
 
 	public static final String SELECT_PREVIOUS_EVENT = "SelectPreviousEvent";
