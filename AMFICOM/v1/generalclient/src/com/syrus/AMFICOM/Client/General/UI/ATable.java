@@ -1,24 +1,31 @@
 package com.syrus.AMFICOM.Client.General.UI;
 
+import java.awt.Color;
 import java.awt.Dimension;
+import java.util.Date;
+import java.util.Hashtable;
 import java.util.Vector;
 
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
+import javax.swing.UIDefaults;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
+
+import com.syrus.AMFICOM.client_.general.ui_.ADefaultTableCellRenderer;
 
 public class ATable extends JTable
 {
 	private int height = 4;
 	private int initialHeight = -1;
 
-	public ATable()
-	{
+	public ATable(){
 		super();
 		updateHeaderSize();
-	}
+	}	
 
 	public ATable(Vector rowData, Vector columnNames)
 	{
@@ -101,5 +108,52 @@ public class ATable extends JTable
 			jTableHeader.setPreferredSize(new Dimension(jTableHeader.getPreferredSize().width, height));
 		else
 			jTableHeader.setPreferredSize(new Dimension(jTableHeader.getPreferredSize().width, initialHeight));
+	}	
+	
+
+	/**
+	 * Creates default cell renderers for objects, numbers, doubles, dates,
+	 * booleans, and icons.
+	 * @see javax.swing.table.DefaultTableCellRenderer
+	 *
+	 */
+	protected void createDefaultRenderers() {
+		super.defaultRenderersByColumnClass = new UIDefaults();
+
+		// Objects
+		setLazyRenderer(Object.class, ADefaultTableCellRenderer.class.getName(), "getInstance");
+		
+		// Numbers
+		setLazyRenderer(Number.class, ADefaultTableCellRenderer.class.getName(), "getInstance");
+
+		// Doubles and Floats
+		setLazyRenderer(Float.class, ADefaultTableCellRenderer.class.getName(), "getInstance");
+		setLazyRenderer(Double.class, ADefaultTableCellRenderer.class.getName(), "getInstance");
+
+		// Dates
+		setLazyRenderer(Date.class, ADefaultTableCellRenderer.class.getName(), "getInstance");
+
+		// Icons and ImageIcons
+		setLazyRenderer(ImageIcon.class, ADefaultTableCellRenderer.class.getName(), "getInstance");
+		setLazyRenderer(Icon.class, ADefaultTableCellRenderer.class.getName(), "getInstance");
+		
+		setLazyRenderer(Color.class, ADefaultTableCellRenderer.class.getName(), "getInstance");
+
+		// Booleans
+		setLazyRenderer(Boolean.class, ADefaultTableCellRenderer.class.getName(), "getInstance");
+
+	}
+	
+	private void setLazyRenderer(	Class c,
+									String s,
+									String m) {
+		setLazyValue(defaultRenderersByColumnClass, c, s, m);
+	}
+	
+	private void setLazyValue(	Hashtable h,
+								Class c,
+								String s,
+								String m) {
+		h.put(c, new UIDefaults.ProxyLazyValue(s, m));
 	}
 }
