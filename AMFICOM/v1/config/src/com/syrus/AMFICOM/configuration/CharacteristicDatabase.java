@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicDatabase.java,v 1.47 2004/12/03 19:03:51 bob Exp $
+ * $Id: CharacteristicDatabase.java,v 1.48 2004/12/06 11:47:11 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -40,7 +40,7 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.configuration.corba.CharacteristicSort;
 
 /**
- * @version $Revision: 1.47 $, $Date: 2004/12/03 19:03:51 $
+ * @version $Revision: 1.48 $, $Date: 2004/12/06 11:47:11 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -290,8 +290,8 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
             StorableObject storableObject = (StorableObject)it.next();
             Identifier id = storableObject.getId();
             // check items for Characterized
-            if (storableObject instanceof Characterized){
-            	throw new IllegalDataException("CharacteristicDatabase.retrieveCharacteristicsByOneQuery | Illefal entity: entity " + id + " is not characterized ");
+            if (!(storableObject instanceof Characterized)){
+            	throw new IllegalDataException("CharacteristicDatabase.retrieveCharacteristicsByOneQuery | Illegal entity: entity " + id + " is not characterized ");
             }
             buff.append(DatabaseIdentifier.toSQLString(id));
             if (it.hasNext()){
