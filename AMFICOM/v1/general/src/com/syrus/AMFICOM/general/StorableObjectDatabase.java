@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectDatabase.java,v 1.92 2005/02/11 10:01:48 arseniy Exp $
+ * $Id: StorableObjectDatabase.java,v 1.93 2005/02/11 10:34:56 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,7 +33,7 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.92 $, $Date: 2005/02/11 10:01:48 $
+ * @version $Revision: 1.93 $, $Date: 2005/02/11 10:34:56 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -211,15 +211,26 @@ public abstract class StorableObjectDatabase {
 		return i;
 	}
 
+	/**
+	 * If <code>storableObject</code> is <code>null</code> creates new StorableObject
+	 * Else - fills it fields from <code>resultSet</code>
+	 * @param storableObject
+	 * @param resultSet
+	 * @return Storable Object with filled fields
+	 * @throws IllegalDataException
+	 * @throws RetrieveObjectException
+	 * @throws SQLException
+	 */
 	protected abstract StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
 			throws IllegalDataException, RetrieveObjectException, SQLException;
-	
 
 
 
 
-////////////////////// refresh /////////////////////////
+//////////////////////refresh /////////////////////////
+
 	/**
+	 * 
 	 * @param storableObjects
 	 * @return List&lt;Identifier&gt; of changed storable objects
 	 * @throws RetrieveObjectException
@@ -227,35 +238,29 @@ public abstract class StorableObjectDatabase {
 	public Set refresh(Set storableObjects) throws RetrieveObjectException {
 		if (storableObjects == null || storableObjects.isEmpty())
 			return Collections.EMPTY_SET;
-		String sql;
-		{
-			StringBuffer buffer = new StringBuffer(SQL_SELECT);
-			buffer.append(StorableObjectWrapper.COLUMN_ID);
-			buffer.append(SQL_FROM);
-			buffer.append(this.getEnityName());
-			buffer.append(SQL_WHERE);
-			buffer.append(" 1=0 ");
-			for (Iterator it = storableObjects.iterator(); it.hasNext();) {
-				StorableObject storableObject = (StorableObject) it.next();
-				buffer.append(SQL_OR);
-				buffer.append(OPEN_BRACKET);
-				buffer.append(StorableObjectWrapper.COLUMN_ID);
-				buffer.append(EQUALS);
-				buffer.append(DatabaseIdentifier.toSQLString(storableObject.getId()));
-				buffer.append(SQL_AND);
-				buffer.append(StorableObjectWrapper.COLUMN_MODIFIED);
-				buffer.append(StorableObjectDatabase.NOT_EQUALS);
-				buffer.append(DatabaseDate.toUpdateSubString(storableObject.getModified()));
-				// buffer.append(SQL_AND);
-				// buffer.append(COLUMN_MODIFIER_ID);
-				// buffer.append(EQUALS);
-				// buffer.append(DatabaseIdentifier.toSQLString(storableObject.getModifierId()));
-				buffer.append(CLOSE_BRACKET);
-			}
-			sql = buffer.toString();
-		}
 
-		Set ids = new HashSet();
+		Set changedObjectsIds = new HashSet();
+
+		StringBuffer stringBuffer = new StringBuffer(SQL_SELECT
+				+ StorableObjectWrapper.COLUMN_ID
+				+ SQL_FROM + this.getEnityName()
+				+ SQL_WHERE + "1=0");
+		StorableObject storableObject;
+		for (Iterator it = storableObjects.iterator(); it.hasNext();) {
+			storableObject = (StorableObject) it.next();
+			stringBuffer.append(SQL_OR);
+			stringBuffer.append(OPEN_BRACKET);
+			stringBuffer.append(StorableObjectWrapper.COLUMN_ID);
+			stringBuffer.append(EQUALS);
+			stringBuffer.append(DatabaseIdentifier.toSQLString(storableObject.getId()));
+			stringBuffer.append(SQL_AND);
+			stringBuffer.append(StorableObjectWrapper.COLUMN_VERSION);
+			stringBuffer.append(NOT_EQUALS);
+			stringBuffer.append(storableObject.getVersion());
+			stringBuffer.append(CLOSE_BRACKET);
+		}
+		String sql = stringBuffer.toString();
+
 		Statement statement = null;
 		ResultSet resultSet = null;
 		Connection connection = DatabaseConnection.getConnection();
@@ -263,10 +268,8 @@ public abstract class StorableObjectDatabase {
 			statement = connection.createStatement();
 			Log.debugMessage("StorableObjectDatabase.refresh | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql);
-			while (resultSet.next()) {
-				Identifier identifier = DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID);
-				ids.add(identifier);
-			}
+			while (resultSet.next())
+				changedObjectsIds.add(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID));
 		}
 		catch (SQLException sqle) {
 			String mesg = "StorableObjectDatabase.refresh | Cannot execute query " + sqle.getMessage();
@@ -288,13 +291,15 @@ public abstract class StorableObjectDatabase {
 				DatabaseConnection.releaseConnection(connection);
 			}
 		}
-		return ids;
+
+		return changedObjectsIds;
 	}
 
 
 
 
-////////////////////// retrieve /////////////////////////
+//////////////////////// retrieve /////////////////////////
+
 	public abstract void retrieve(StorableObject storableObject) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException;
 
 	public abstract List retrieveByIds(List ids, String condition) throws IllegalDataException, RetrieveObjectException;
