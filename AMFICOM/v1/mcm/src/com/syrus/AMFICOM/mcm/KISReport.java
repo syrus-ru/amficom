@@ -1,5 +1,5 @@
 /*
- * $Id: KISReport.java,v 1.16 2004/10/05 12:16:17 bob Exp $
+ * $Id: KISReport.java,v 1.17 2004/10/08 05:58:51 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,7 +28,7 @@ import com.syrus.AMFICOM.event.corba.AlarmLevel;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2004/10/05 12:16:17 $
+ * @version $Revision: 1.17 $, $Date: 2004/10/08 05:58:51 $
  * @author $Author: bob $
  * @module mcm_v1
  */
@@ -44,7 +44,7 @@ public class KISReport implements ParameterTypeCodenames {
     	MeasurementDatabaseContext.init(new ParameterTypeDatabase(), null, null, null, null, null, null,
 										null, null, null, null, null, null);
 		outParameterTypeIds = new HashMap(1);
-		addOutParameterTypeId(CODENAME_REFLECTOGRAMMA);
+		addOutParameterTypeId(ParameterTypeCodenames.REFLECTOGRAMMA);
 	}
 
 	public KISReport(String measurementIdStr,

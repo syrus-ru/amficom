@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementServerSetup.java,v 1.11 2004/10/05 08:10:43 bob Exp $
+ * $Id: MeasurementServerSetup.java,v 1.12 2004/10/08 05:58:54 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,7 +28,7 @@ import com.syrus.util.ByteArray;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2004/10/05 08:10:43 $
+ * @version $Revision: 1.12 $, $Date: 2004/10/08 05:58:54 $
  * @author $Author: bob $
  * @module mserver_v1
  */
@@ -369,6 +369,7 @@ public class MeasurementServerSetup {
 			MonitoredElement monitoredElement = MonitoredElement.createInstance(id,
 																																					creatorId,
 																																					domainId,
+																																					"ME",
 																																					mPortId,
 																																					MonitoredElementSort._MONITOREDELEMENT_SORT_TRANSMISSION_PATH,
 																																					"ME",
@@ -538,7 +539,8 @@ public class MeasurementServerSetup {
 																																			 codename,
 																																			 description,
 																																			 inParameterTypes,
-																																			 outParameterTypes);
+																																			 outParameterTypes,
+																																			 new ArrayList());
 			MeasurementType.getInstance((MeasurementType_Transferable)measurementType.getTransferable());
 		}
 		catch (Exception e) {
