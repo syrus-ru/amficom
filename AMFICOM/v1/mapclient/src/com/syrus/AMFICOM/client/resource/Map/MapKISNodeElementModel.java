@@ -1,6 +1,6 @@
 package com.syrus.AMFICOM.Client.Resource.Map;
 
-import com.syrus.AMFICOM.Client.Configure.Map.UI.MapKISPane;
+import com.syrus.AMFICOM.Client.Map.UI.MapKISPane;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourceComboBox;
 import com.syrus.AMFICOM.Client.General.UI.PropertiesPanel;
 import com.syrus.AMFICOM.Client.General.UI.TextFieldEditor;

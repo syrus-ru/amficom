@@ -1,4 +1,4 @@
-package com.syrus.AMFICOM.Client.Configure.Map.Popup;
+package com.syrus.AMFICOM.Client.Map.Popup;
 
 
 import javax.swing.*;
@@ -10,8 +10,8 @@ import com.syrus.AMFICOM.Client.General.Model.*;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
-import com.syrus.AMFICOM.Client.Configure.Map.UI.MapElementPropertiesDialog;
-import com.syrus.AMFICOM.Client.Configure.Map.MapMainFrame;
+import com.syrus.AMFICOM.Client.Map.UI.MapElementPropertiesDialog;
+import com.syrus.AMFICOM.Client.Map.MapMainFrame;
 
 import com.syrus.AMFICOM.Client.Resource.Map.MapContext;
 

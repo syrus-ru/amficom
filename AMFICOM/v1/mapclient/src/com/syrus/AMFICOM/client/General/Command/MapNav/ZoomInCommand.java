@@ -2,7 +2,7 @@ package com.syrus.AMFICOM.Client.General.Command.MapNav;
 
 import java.awt.Cursor;
 
-import com.syrus.AMFICOM.Client.Configure.Map.*;
+import com.syrus.AMFICOM.Client.Map.*;
 
 import com.syrus.AMFICOM.Client.General.Command.*;
 import com.syrus.AMFICOM.Client.General.Model.*;

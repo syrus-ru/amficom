@@ -1,4 +1,4 @@
-package com.syrus.AMFICOM.Client.Configure.Map.UI;
+package com.syrus.AMFICOM.Client.Map.UI;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourceDisplayModel;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourceTablePane;

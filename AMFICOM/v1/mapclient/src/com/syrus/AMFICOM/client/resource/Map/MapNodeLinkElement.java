@@ -4,11 +4,11 @@ import com.ofx.geometry.SxDoublePoint;
 
 import com.syrus.AMFICOM.CORBA.Map.MapNodeLinkElement_Transferable;
 import com.syrus.AMFICOM.CORBA.Scheme.ElementAttribute_Transferable;
-import com.syrus.AMFICOM.Client.Configure.Map.LogicalNetLayer;
-import com.syrus.AMFICOM.Client.Configure.Map.Strategy.AddPhysicalNodeElementStrategy;
-import com.syrus.AMFICOM.Client.Configure.Map.Strategy.MapStrategy;
-import com.syrus.AMFICOM.Client.Configure.Map.Strategy.VoidStrategy;
-import com.syrus.AMFICOM.Client.Configure.Map.UI.Display.MapNodeLinkElementDisplayModel;
+import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
+import com.syrus.AMFICOM.Client.Map.Strategy.AddPhysicalNodeElementStrategy;
+import com.syrus.AMFICOM.Client.Map.Strategy.MapStrategy;
+import com.syrus.AMFICOM.Client.Map.Strategy.VoidStrategy;
+import com.syrus.AMFICOM.Client.Map.UI.Display.MapNodeLinkElementDisplayModel;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.UI.DEF;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourceDisplayModel;

@@ -1,12 +1,12 @@
-package com.syrus.AMFICOM.Client.Configure.Map;
+package com.syrus.AMFICOM.Client.Map;
 
 import com.ofx.geometry.SxDoublePoint;
 import com.ofx.mapViewer.SxMapLayer;
 
-import com.syrus.AMFICOM.Client.Configure.Map.Popup.MyPopupMenu;
-import com.syrus.AMFICOM.Client.Configure.Map.Strategy.DeleteSelectionStrategy;
-import com.syrus.AMFICOM.Client.Configure.Map.Strategy.MapStrategy;
-import com.syrus.AMFICOM.Client.Configure.Map.Strategy.VoidStrategy;
+import com.syrus.AMFICOM.Client.Map.Popup.MyPopupMenu;
+import com.syrus.AMFICOM.Client.Map.Strategy.DeleteSelectionStrategy;
+import com.syrus.AMFICOM.Client.Map.Strategy.MapStrategy;
+import com.syrus.AMFICOM.Client.Map.Strategy.VoidStrategy;
 import com.syrus.AMFICOM.Client.General.Command.Command;
 import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
 import com.syrus.AMFICOM.Client.General.Event.MapNavigateEvent;

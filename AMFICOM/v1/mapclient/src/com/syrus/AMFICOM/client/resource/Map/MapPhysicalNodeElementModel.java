@@ -1,6 +1,6 @@
 package com.syrus.AMFICOM.Client.Resource.Map;
 
-import com.syrus.AMFICOM.Client.Configure.Map.Popup.PhysicalNodeElementPopupMenu;
+import com.syrus.AMFICOM.Client.Map.Popup.PhysicalNodeElementPopupMenu;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourceComboBox;
 import com.syrus.AMFICOM.Client.General.UI.TextFieldEditor;
 import com.syrus.AMFICOM.Client.General.Lang.LangModel;

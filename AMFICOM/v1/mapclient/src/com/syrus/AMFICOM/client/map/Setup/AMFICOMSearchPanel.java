@@ -1,5 +1,5 @@
 /*
- * Название: $Id: AMFICOMSearchPanel.java,v 1.1 2004/06/22 08:02:09 krupenn Exp $
+ * Название: $Id: AMFICOMSearchPanel.java,v 1.2 2004/06/22 09:54:32 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -8,11 +8,11 @@
  * Платформа: java 1.4.1
 */
 
-package com.syrus.AMFICOM.Client.Configure.Map.Setup;
+package com.syrus.AMFICOM.Client.Map.Setup;
 import com.ofx.geocoding.*;
 import com.ofx.mapViewer.*;
 
-import com.syrus.AMFICOM.Client.Configure.Map.*;
+import com.syrus.AMFICOM.Client.Map.*;
 import com.syrus.AMFICOM.Client.Resource.Map.*;
 import com.syrus.AMFICOM.Client.Resource.*;
 
@@ -40,7 +40,7 @@ import java.awt.event.KeyEvent;
  * 
  * 
  * 
- * @version $Revision: 1.1 $, $Date: 2004/06/22 08:02:09 $
+ * @version $Revision: 1.2 $, $Date: 2004/06/22 09:54:32 $
  * @author $Author: krupenn $
  * @see
  */

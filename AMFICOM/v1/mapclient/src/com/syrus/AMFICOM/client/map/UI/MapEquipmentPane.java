@@ -1,4 +1,4 @@
-package com.syrus.AMFICOM.Client.Configure.Map.UI;
+package com.syrus.AMFICOM.Client.Map.UI;
 
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.UI.PropertiesPanel;

@@ -1,4 +1,4 @@
-package com.syrus.AMFICOM.Client.Configure.Map.Popup;
+package com.syrus.AMFICOM.Client.Map.Popup;
 
 import javax.swing.*;
 import java.awt.*;
@@ -11,10 +11,10 @@ import com.syrus.AMFICOM.CORBA.Map.*;
 import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.Resource.Map.*;
 import com.syrus.AMFICOM.Client.Resource.Scheme.*;
-import com.syrus.AMFICOM.Client.Configure.Map.*;
-import com.syrus.AMFICOM.Client.Configure.Map.UI.*;
-import com.syrus.AMFICOM.Client.Configure.Map.Strategy.*;
-import com.syrus.AMFICOM.Client.Configure.Map.LogicalNetLayer;
+import com.syrus.AMFICOM.Client.Map.*;
+import com.syrus.AMFICOM.Client.Map.UI.*;
+import com.syrus.AMFICOM.Client.Map.Strategy.*;
+import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
 
 import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.General.Event.*;

@@ -2,13 +2,13 @@ package com.syrus.AMFICOM.Client.General.Command.Map;
 
 import javax.swing.*;
 
-import com.syrus.AMFICOM.Client.Configure.Map.Editor.*;
+import com.syrus.AMFICOM.Client.Map.Editor.*;
 import com.syrus.AMFICOM.Client.General.Command.*;
 import com.syrus.AMFICOM.Client.General.Command.Config.*;
 import com.syrus.AMFICOM.Client.General.Model.*;
-import com.syrus.AMFICOM.Client.Configure.Map.*;
-import com.syrus.AMFICOM.Client.Configure.Map.UI.*;
-import com.syrus.AMFICOM.Client.Configure.Map.UI.Display.*;
+import com.syrus.AMFICOM.Client.Map.*;
+import com.syrus.AMFICOM.Client.Map.UI.*;
+import com.syrus.AMFICOM.Client.Map.UI.Display.*;
 import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.Resource.Map.*;

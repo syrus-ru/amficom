@@ -1,4 +1,4 @@
-package com.syrus.AMFICOM.Client.Configure.Map.Popup;
+package com.syrus.AMFICOM.Client.Map.Popup;
 
 import com.syrus.AMFICOM.Client.General.Model.*;
 

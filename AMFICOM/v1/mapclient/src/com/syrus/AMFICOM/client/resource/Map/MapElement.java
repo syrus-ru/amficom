@@ -8,8 +8,8 @@ import java.util.*;
 
 import com.ofx.geometry.SxDoublePoint;
 
-import com.syrus.AMFICOM.Client.Configure.Map.*;
-import com.syrus.AMFICOM.Client.Configure.Map.Strategy.*;
+import com.syrus.AMFICOM.Client.Map.*;
+import com.syrus.AMFICOM.Client.Map.Strategy.*;
 import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.Resource.*;
 

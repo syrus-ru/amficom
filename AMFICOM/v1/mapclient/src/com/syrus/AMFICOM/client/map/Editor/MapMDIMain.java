@@ -1,8 +1,8 @@
 
 // Copyright (c) Syrus Systems 2000 Syrus Systems
-package com.syrus.AMFICOM.Client.Configure.Map.Editor;
+package com.syrus.AMFICOM.Client.Map.Editor;
 
-import com.syrus.AMFICOM.Client.Configure.Map.*;
+import com.syrus.AMFICOM.Client.Map.*;
 import com.syrus.AMFICOM.Client.General.Checker;
 import com.syrus.AMFICOM.Client.General.Command.Config.MapCatalogueCommand;
 import com.syrus.AMFICOM.Client.General.Command.Config.NewMapViewCommand;

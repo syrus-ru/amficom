@@ -1,4 +1,4 @@
-package com.syrus.AMFICOM.Client.Configure.Map.Editor;
+package com.syrus.AMFICOM.Client.Map.Editor;
 
 import java.awt.*;
 import java.awt.event.*;

@@ -1,7 +1,7 @@
-package com.syrus.AMFICOM.Client.Configure.Map.Popup;
+package com.syrus.AMFICOM.Client.Map.Popup;
 
 
-import com.syrus.AMFICOM.Client.Configure.Map.UI.MapElementPropertiesDialog;
+import com.syrus.AMFICOM.Client.Map.UI.MapElementPropertiesDialog;
 import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;

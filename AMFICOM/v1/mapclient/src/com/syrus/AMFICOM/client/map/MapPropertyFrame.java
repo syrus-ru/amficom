@@ -33,7 +33,7 @@
 // *                                                                      * //
 //////////////////////////////////////////////////////////////////////////////
 
-package com.syrus.AMFICOM.Client.Configure.Map;
+package com.syrus.AMFICOM.Client.Map;
 
 import com.syrus.AMFICOM.Client.General.*;
 

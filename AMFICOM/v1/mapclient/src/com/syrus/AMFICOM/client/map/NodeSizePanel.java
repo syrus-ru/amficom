@@ -1,8 +1,8 @@
-package com.syrus.AMFICOM.Client.Configure.Map;
+package com.syrus.AMFICOM.Client.Map;
 
 import javax.swing.*;
 import oracle.jdeveloper.layout.*;
-import com.syrus.AMFICOM.Client.Configure.Map.*;
+import com.syrus.AMFICOM.Client.Map.*;
 import com.syrus.AMFICOM.Client.Resource.Map.*;
 import javax.swing.JButton;
 import oracle.jdeveloper.layout.XYConstraints;

@@ -1,10 +1,10 @@
-package com.syrus.AMFICOM.Client.Configure.Map.Strategy;
+package com.syrus.AMFICOM.Client.Map.Strategy;
 
 import java.awt.*;
 import java.awt.event.*;
 
 import com.syrus.AMFICOM.Client.Resource.Map.*;
-import com.syrus.AMFICOM.Client.Configure.Map.*;
+import com.syrus.AMFICOM.Client.Map.*;
 import com.syrus.AMFICOM.Client.General.Model.*;
 
 public class ChangeEndPointStrategy implements  MapStrategy {

@@ -1,6 +1,6 @@
 package com.syrus.AMFICOM.Client.General.Command.Map;
 
-import com.syrus.AMFICOM.Client.Configure.Map.Editor.*;
+import com.syrus.AMFICOM.Client.Map.Editor.*;
 import com.syrus.AMFICOM.Client.General.Command.*;
 import com.syrus.AMFICOM.Client.General.Model.*;
 

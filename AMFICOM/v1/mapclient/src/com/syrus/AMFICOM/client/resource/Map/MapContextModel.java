@@ -13,8 +13,8 @@ import com.syrus.AMFICOM.Client.Resource.Scheme.*;
 import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.General.Event.*;
 
-import com.syrus.AMFICOM.Client.Configure.Map.*;
-import com.syrus.AMFICOM.Client.Configure.Map.UI.MapContextPane;
+import com.syrus.AMFICOM.Client.Map.*;
+import com.syrus.AMFICOM.Client.Map.UI.MapContextPane;
 
 //Данный класс используется для описания содержимого карты (её элементов и свойств)
 

@@ -1,4 +1,4 @@
-package com.syrus.AMFICOM.Client.Configure.Map.UI.Display;
+package com.syrus.AMFICOM.Client.Map.UI.Display;
 
 import java.util.*;
 import java.awt.*;
@@ -12,9 +12,9 @@ import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.Resource.Map.*;
 import com.syrus.AMFICOM.Client.General.UI.*;
 
-import com.syrus.AMFICOM.Client.Configure.Map.Strategy.*;
-import com.syrus.AMFICOM.Client.Configure.Map.*;
-import com.syrus.AMFICOM.Client.Configure.Map.UI.ISMMapContextPane;
+import com.syrus.AMFICOM.Client.Map.Strategy.*;
+import com.syrus.AMFICOM.Client.Map.*;
+import com.syrus.AMFICOM.Client.Map.UI.ISMMapContextPane;
 
 //Данный класс используется для описания содержимого карты (её элементов и свойств)
 

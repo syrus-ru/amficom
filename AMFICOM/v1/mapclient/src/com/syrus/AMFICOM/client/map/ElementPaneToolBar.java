@@ -1,11 +1,11 @@
-package com.syrus.AMFICOM.Client.Configure.Map;
+package com.syrus.AMFICOM.Client.Map;
 
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.*;
 import com.syrus.AMFICOM.Client.Resource.Map.*;
-import com.syrus.AMFICOM.Client.Configure.Map.UI.*;
+import com.syrus.AMFICOM.Client.Map.UI.*;
 
 //Ќа этой панельке располагаютс€ элементы которые будут наноситьс€ на карту
 

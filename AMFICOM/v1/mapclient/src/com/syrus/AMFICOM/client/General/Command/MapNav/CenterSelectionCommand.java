@@ -4,7 +4,7 @@ import java.util.*;
 import java.awt.Cursor;
 
 
-import com.syrus.AMFICOM.Client.Configure.Map.*;
+import com.syrus.AMFICOM.Client.Map.*;
 import com.syrus.AMFICOM.Client.Resource.Map.*;
 
 import com.syrus.AMFICOM.Client.General.Command.*;

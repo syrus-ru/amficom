@@ -2,7 +2,7 @@
 // Jad home page: http://www.geocities.com/SiliconValley/Bridge/8617/jad.html
 // Decompiler options: fullnames lnc 
 
-package com.syrus.AMFICOM.Client.Configure.Map.Setup;
+package com.syrus.AMFICOM.Client.Map.Setup;
 
 import com.ofx.base.*;
 import com.ofx.component.*;
@@ -272,7 +272,7 @@ public class LayerConfig extends JMapLegend
 
 	protected static void log(Exception exception)
 	{
-		com.syrus.AMFICOM.Client.Configure.Map.Setup.LayerConfig.env();
+		com.syrus.AMFICOM.Client.Map.Setup.LayerConfig.env();
 		SxEnvironment.log().println(exception);
 	}
 
@@ -301,7 +301,7 @@ public class LayerConfig extends JMapLegend
 			}
 			catch(java.lang.Exception exception)
 			{
-				com.syrus.AMFICOM.Client.Configure.Map.Setup.LayerConfig.log(exception);
+				com.syrus.AMFICOM.Client.Map.Setup.LayerConfig.log(exception);
 			}
 			return null;
 		}
@@ -320,7 +320,7 @@ public class LayerConfig extends JMapLegend
 			}
 			catch(java.lang.Exception exception)
 			{
-				com.syrus.AMFICOM.Client.Configure.Map.Setup.LayerConfig.log(exception);
+				com.syrus.AMFICOM.Client.Map.Setup.LayerConfig.log(exception);
 			}
 			return null;
 		}
@@ -378,7 +378,7 @@ public class LayerConfig extends JMapLegend
 			}
 			catch(Exception exception)
 			{
-				com.syrus.AMFICOM.Client.Configure.Map.Setup.LayerConfig.log(exception);
+				com.syrus.AMFICOM.Client.Map.Setup.LayerConfig.log(exception);
 			}
 			classVis = getSymbolIsVisible();
 			labelsVis = getTextIsVisible();
@@ -396,7 +396,7 @@ public class LayerConfig extends JMapLegend
 			}
 			catch(java.lang.Exception exception)
 			{
-				com.syrus.AMFICOM.Client.Configure.Map.Setup.LayerConfig.log(exception);
+				com.syrus.AMFICOM.Client.Map.Setup.LayerConfig.log(exception);
 			}
 		}
 	}

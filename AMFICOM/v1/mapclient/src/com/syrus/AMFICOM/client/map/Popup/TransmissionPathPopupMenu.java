@@ -1,4 +1,4 @@
-package com.syrus.AMFICOM.Client.Configure.Map.Popup;
+package com.syrus.AMFICOM.Client.Map.Popup;
 
 import javax.swing.*;
 import java.awt.*;
@@ -12,7 +12,7 @@ import com.syrus.AMFICOM.Client.General.Lang.*;
 import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.Resource.Map.*;
 import com.syrus.AMFICOM.Client.Resource.*;
-import com.syrus.AMFICOM.Client.Configure.Map.UI.*;
+import com.syrus.AMFICOM.Client.Map.UI.*;
 import com.syrus.AMFICOM.Client.General.Event.*;
 
 public class TransmissionPathPopupMenu

@@ -1,9 +1,9 @@
 package com.syrus.AMFICOM.Client.Resource.Map;
 
 import com.syrus.AMFICOM.CORBA.Map.MapContext_Transferable;
-import com.syrus.AMFICOM.Client.Configure.Map.LogicalNetLayer;
-import com.syrus.AMFICOM.Client.Configure.Map.UI.Display.MapContextDisplayModel;
-import com.syrus.AMFICOM.Client.Configure.Map.UI.MapContextPane;
+import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
+import com.syrus.AMFICOM.Client.Map.UI.Display.MapContextDisplayModel;
+import com.syrus.AMFICOM.Client.Map.UI.MapContextPane;
 import com.syrus.AMFICOM.Client.General.Event.CatalogNavigateEvent;
 import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
 import com.syrus.AMFICOM.Client.General.Event.MapNavigateEvent;

@@ -15,10 +15,10 @@ import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.Resource.Scheme.*;
 import com.syrus.AMFICOM.Client.Resource.SchemeDirectory.*;
 
-import com.syrus.AMFICOM.Client.Configure.Map.*;
-import com.syrus.AMFICOM.Client.Configure.Map.UI.*;
-import com.syrus.AMFICOM.Client.Configure.Map.Popup.*;
-import com.syrus.AMFICOM.Client.Configure.Map.Strategy.*;
+import com.syrus.AMFICOM.Client.Map.*;
+import com.syrus.AMFICOM.Client.Map.UI.*;
+import com.syrus.AMFICOM.Client.Map.Popup.*;
+import com.syrus.AMFICOM.Client.Map.Strategy.*;
 import com.syrus.AMFICOM.Client.General.UI.*;
 
 //A0A

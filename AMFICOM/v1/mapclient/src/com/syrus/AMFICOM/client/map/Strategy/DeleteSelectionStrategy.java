@@ -1,4 +1,4 @@
-package com.syrus.AMFICOM.Client.Configure.Map.Strategy;
+package com.syrus.AMFICOM.Client.Map.Strategy;
 
 import java.awt.*;
 import java.util.*;
@@ -7,7 +7,7 @@ import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Model.*;
 
-import com.syrus.AMFICOM.Client.Configure.Map.*;
+import com.syrus.AMFICOM.Client.Map.*;
 
 public class DeleteSelectionStrategy implements MapStrategy{
 

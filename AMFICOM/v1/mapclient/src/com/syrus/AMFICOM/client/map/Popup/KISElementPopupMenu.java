@@ -1,4 +1,4 @@
-package com.syrus.AMFICOM.Client.Configure.Map.Popup;
+package com.syrus.AMFICOM.Client.Map.Popup;
 
 /**
  * <p>Title: </p>
@@ -15,11 +15,11 @@ import java.awt.event.*;
 import com.syrus.AMFICOM.Client.Resource.Map.*;
 import com.syrus.AMFICOM.Client.General.Lang.*;
 import com.syrus.AMFICOM.Client.General.Model.*;
-import com.syrus.AMFICOM.Client.Configure.Map.UI.*;
+import com.syrus.AMFICOM.Client.Map.UI.*;
 import javax.swing.JMenuItem;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-import com.syrus.AMFICOM.Client.Configure.Map.UI.MapElementPropertiesDialog;
+import com.syrus.AMFICOM.Client.Map.UI.MapElementPropertiesDialog;
 
 public class KISElementPopupMenu
 		extends JPopupMenu 

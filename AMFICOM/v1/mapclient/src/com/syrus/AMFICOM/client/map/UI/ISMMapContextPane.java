@@ -1,6 +1,6 @@
-package com.syrus.AMFICOM.Client.Configure.Map.UI;
+package com.syrus.AMFICOM.Client.Map.UI;
 
-import com.syrus.AMFICOM.Client.Configure.Map.UI.MapContextPane;
+import com.syrus.AMFICOM.Client.Map.UI.MapContextPane;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourceComboBox;
 import com.syrus.AMFICOM.Client.Resource.Map.ISMMapContext;
 import com.syrus.AMFICOM.Client.Resource.Map.MapContext;
