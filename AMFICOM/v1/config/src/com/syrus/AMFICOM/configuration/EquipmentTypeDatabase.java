@@ -1,5 +1,5 @@
 /*
- * $Id: EquipmentTypeDatabase.java,v 1.5 2004/08/22 18:49:19 arseniy Exp $
+ * $Id: EquipmentTypeDatabase.java,v 1.6 2004/08/29 10:54:23 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,8 +8,10 @@
 
 package com.syrus.AMFICOM.configuration;
 
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
-import java.util.ArrayList;
+import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -26,8 +28,8 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2004/08/22 18:49:19 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.6 $, $Date: 2004/08/29 10:54:23 $
+ * @author $Author: bob $
  * @module configuration_v1
  */
 
@@ -48,17 +50,49 @@ public class EquipmentTypeDatabase extends StorableObjectDatabase {
 		this.retrieveEquipmentType(equipmentType);
 	}
 
+	private String retrieveEquipmentTypeQuery(String condition){
+		return SQL_SELECT
+		+ COLUMN_ID + COMMA
+		+ DatabaseDate.toQuerySubString(COLUMN_CREATED) + COMMA 
+		+ DatabaseDate.toQuerySubString(COLUMN_MODIFIED) + COMMA
+		+ COLUMN_CREATOR_ID + COMMA
+		+ COLUMN_MODIFIER_ID + COMMA
+		+ COLUMN_CODENAME + COMMA
+		+ COLUMN_DESCRIPTION
+		+ SQL_FROM + ObjectEntities.EQUIPMENTTYPE_ENTITY
+		+ ( ((condition == null) || (condition.length() == 0) ) ? "" : SQL_WHERE + condition);
+
+	}
+	
+	private EquipmentType updateEquipmentTypeFromResultSet(EquipmentType equipmentType, ResultSet resultSet) throws SQLException{
+		EquipmentType equipmentType1 = equipmentType;
+		if (equipmentType1 == null){
+			/**
+			 * @todo when change DB Identifier model ,change getString() to getLong()
+			 */
+			equipmentType1 = new EquipmentType(new Identifier(resultSet.getString(COLUMN_ID)), null, null, null);			
+		}
+		equipmentType1.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
+									DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
+									/**
+										* @todo when change DB Identifier model ,change getString() to getLong()
+										*/
+									new Identifier(resultSet.getString(COLUMN_CREATOR_ID)),
+									/**
+										* @todo when change DB Identifier model ,change getString() to getLong()
+										*/
+									new Identifier(resultSet.getString(COLUMN_MODIFIER_ID)),
+									resultSet.getString(COLUMN_CODENAME),
+									resultSet.getString(COLUMN_DESCRIPTION));
+
+		
+		return equipmentType1;
+	}
+	
+
 	private void retrieveEquipmentType(EquipmentType equipmentType) throws ObjectNotFoundException, RetrieveObjectException {
 		String etIdStr = equipmentType.getId().toSQLString();
-		String sql = SQL_SELECT
-			+ DatabaseDate.toQuerySubString(COLUMN_CREATED) + COMMA 
-			+ DatabaseDate.toQuerySubString(COLUMN_MODIFIED) + COMMA
-			+ COLUMN_CREATOR_ID + COMMA
-			+ COLUMN_MODIFIER_ID + COMMA
-			+ COLUMN_CODENAME + COMMA
-			+ COLUMN_DESCRIPTION
-			+ SQL_FROM + ObjectEntities.EQUIPMENTTYPE_ENTITY
-			+ SQL_WHERE	+ COLUMN_ID + EQUALS + etIdStr;
+		String sql = retrieveEquipmentTypeQuery(COLUMN_ID + EQUALS + etIdStr);
 		Statement statement = null;
 		ResultSet resultSet = null;
 		try {
@@ -66,18 +100,7 @@ public class EquipmentTypeDatabase extends StorableObjectDatabase {
 			Log.debugMessage("EquipmentTypeDatabase.retrieve | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql);
 			if (resultSet.next())
-				equipmentType.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
-																		DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
-																		/**
-																			* @todo when change DB Identifier model ,change getString() to getLong()
-																			*/
-																		new Identifier(resultSet.getString(COLUMN_CREATOR_ID)),
-																		/**
-																			* @todo when change DB Identifier model ,change getString() to getLong()
-																			*/
-																		new Identifier(resultSet.getString(COLUMN_MODIFIER_ID)),
-																		resultSet.getString(COLUMN_CODENAME),
-																		resultSet.getString(COLUMN_DESCRIPTION));
+				updateEquipmentTypeFromResultSet(equipmentType, resultSet);
 			else
 				throw new ObjectNotFoundException("No such equipment type: " + etIdStr);
 		}
@@ -185,44 +208,11 @@ public class EquipmentTypeDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	public static List retrieveAll() throws RetrieveObjectException {
-		List equipmentTypes = new ArrayList(CHARACTER_NUMBER_OF_RECORDS);
-		String sql = SQL_SELECT
-				+ COLUMN_ID
-				+ SQL_FROM + ObjectEntities.EQUIPMENTTYPE_ENTITY;
-		Statement statement = null;
-		ResultSet resultSet = null;
-		try {
-			statement = connection.createStatement();
-			Log.debugMessage("EquipmentTypeDatabase.retrieveAll | Trying: " + sql, Log.DEBUGLEVEL09);
-			resultSet = statement.executeQuery(sql);
-			while (resultSet.next())
-				equipmentTypes.add(new EquipmentType(new Identifier(resultSet.getString(COLUMN_ID))));			
-		}
-		catch (ObjectNotFoundException onfe) {
-			Log.errorException(onfe);
-		}
-		catch (SQLException sqle) {
-			String mesg = "EquipmentTypeDatabase.retrieveAll | Cannot retrieve equipment type";
-			throw new RetrieveObjectException(mesg, sqle);
-		}
-		finally {
-			try {
-				if (statement != null)
-					statement.close();
-				if (resultSet != null)
-					resultSet.close();
-				statement = null;
-				resultSet = null;
-			}
-			catch (SQLException sqle1) {
-				Log.errorException(sqle1);
-			}
-		}
-		return equipmentTypes;
+	public List retrieveAll() throws RetrieveObjectException {		
+		return retriveByIdsOneQuery(null);
 	}
 	
-	public static void delete(EquipmentType equipmentType) {
+	public void delete(EquipmentType equipmentType) {
 		String eqIdStr = equipmentType.getId().toSQLString();
 		Statement statement = null;
 		try {
@@ -250,4 +240,128 @@ public class EquipmentTypeDatabase extends StorableObjectDatabase {
 			}
 		}
 	}
+	
+	public List retrieveByIds(List ids) throws RetrieveObjectException {
+		if ((ids == null) || (ids.isEmpty()))
+			return retriveByIdsOneQuery(null);
+		return retriveByIdsOneQuery(ids);	
+		//return retriveByIdsPreparedStatement(ids);
+	}
+	
+	private List retriveByIdsOneQuery(List ids) throws RetrieveObjectException {
+		List result = new LinkedList();
+		String sql;
+		{
+			String condition = null;
+			if (ids!=null){
+				StringBuffer buffer = new StringBuffer(COLUMN_ID);
+				int idsLength = ids.size();
+				if (idsLength == 1){
+					buffer.append(EQUALS);
+					buffer.append(((Identifier)ids.iterator().next()).toSQLString());
+				} else{
+					buffer.append(SQL_IN);
+					buffer.append(OPEN_BRACKET);
+					
+					int i = 1;
+					for(Iterator it=ids.iterator();it.hasNext();i++){
+						Identifier id = (Identifier)it.next();
+						buffer.append(id.toSQLString());
+						if (i < idsLength)
+							buffer.append(COMMA);
+					}
+					
+					buffer.append(CLOSE_BRACKET);
+					condition = buffer.toString();
+				}
+			}
+			sql = retrieveEquipmentTypeQuery(condition);
+		}
+		
+		Statement statement = null;
+		ResultSet resultSet = null;
+		try {
+			statement = connection.createStatement();
+			Log.debugMessage("EquipmentTypeDatabase.retriveByIdsOneQuery | Trying: " + sql, Log.DEBUGLEVEL09);
+			resultSet = statement.executeQuery(sql);
+			while (resultSet.next()){
+				result.add(updateEquipmentTypeFromResultSet(null, resultSet));
+			}
+		}
+		catch (SQLException sqle) {
+			String mesg = "EquipmentTypeDatabase.retriveByIdsOneQuery | Cannot execute query " + sqle.getMessage();
+			throw new RetrieveObjectException(mesg, sqle);
+		}
+		finally {
+			try {
+				if (statement != null)
+					statement.close();
+				if (resultSet != null)
+					resultSet.close();
+				statement = null;
+				resultSet = null;
+			}
+			catch (SQLException sqle1) {
+				Log.errorException(sqle1);
+			}
+		}
+		return result;
+	}
+	
+	private List retriveByIdsPreparedStatement(List ids) throws RetrieveObjectException {
+		List result = new LinkedList();
+		String sql;
+		{
+			
+			int idsLength = ids.size();
+			if (idsLength == 1){
+				return retriveByIdsOneQuery(ids);
+			}
+			StringBuffer buffer = new StringBuffer(COLUMN_ID);
+			buffer.append(EQUALS);							
+			buffer.append(QUESTION);
+			
+			sql = retrieveEquipmentTypeQuery(buffer.toString());
+		}
+			
+		PreparedStatement stmt = null;
+		ResultSet resultSet = null;
+		try {
+			stmt = connection.prepareStatement(sql.toString());
+			for(Iterator it = ids.iterator();it.hasNext();){
+				Identifier id = (Identifier)it.next(); 
+				/**
+				 * @todo when change DB Identifier model ,change setString() to setLong()
+				 */
+				String idStr = id.getIdentifierString();
+				stmt.setString(1, idStr);
+				resultSet = stmt.executeQuery();
+				if (resultSet.next()){
+					result.add(updateEquipmentTypeFromResultSet(null, resultSet));
+				} else{
+					Log.errorMessage("EquipmentTypeDatabase.retriveByIdsPreparedStatement | No such equipment type: " + idStr);									
+				}
+				
+			}
+		}catch (SQLException sqle) {
+			String mesg = "EquipmentTypeDatabase.retriveByIdsPreparedStatement | Cannot retrieve equipment type " + sqle.getMessage();
+			throw new RetrieveObjectException(mesg, sqle);
+		}
+		finally {
+			try {
+				if (stmt != null)
+					stmt.close();
+				if (stmt != null)
+					stmt.close();
+				stmt = null;
+				resultSet = null;
+			}
+			catch (SQLException sqle1) {
+				Log.errorException(sqle1);
+			}
+		}			
+		
+		return result;
+	}
+
 }

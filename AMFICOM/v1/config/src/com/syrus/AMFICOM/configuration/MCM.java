@@ -1,5 +1,5 @@
 /*
- * $Id: MCM.java,v 1.15 2004/08/23 20:48:15 arseniy Exp $
+ * $Id: MCM.java,v 1.16 2004/08/29 10:54:23 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,8 +23,8 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.configuration.corba.MCM_Transferable;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2004/08/23 20:48:15 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.16 $, $Date: 2004/08/29 10:54:23 $
+ * @author $Author: bob $
  * @module configuration_v1
  */
 
@@ -86,7 +86,7 @@ public class MCM extends DomainMember implements Characterized {
 		}
 	}
 
-	private MCM(Identifier id,
+	protected MCM(Identifier id,
 							Identifier creatorId,
 							Identifier domainId,
 							String name,

@@ -1,5 +1,5 @@
 /*
- * $Id: KISDatabase.java,v 1.18 2004/08/23 20:48:15 arseniy Exp $
+ * $Id: KISDatabase.java,v 1.19 2004/08/29 10:54:23 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,10 +8,13 @@
 
 package com.syrus.AMFICOM.configuration;
 
+import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 
 import com.syrus.AMFICOM.general.Identifier;
@@ -28,8 +31,8 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2004/08/23 20:48:15 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.19 $, $Date: 2004/08/29 10:54:23 $
+ * @author $Author: bob $
  * @module configuration_v1
  */
 
@@ -57,21 +60,64 @@ public class KISDatabase extends StorableObjectDatabase {
 		this.retrieveKIS(kis);
 		this.retrieveKISMeasurementPortIds(kis);
 	}
+	
+	private String retrieveKISQuery(String condition){
+		return SQL_SELECT
+		+ COLUMN_ID + COMMA
+		+ DatabaseDate.toQuerySubString(StorableObjectDatabase.COLUMN_CREATED) + COMMA
+		+ DatabaseDate.toQuerySubString(StorableObjectDatabase.COLUMN_MODIFIED) + COMMA
+		+ COLUMN_CREATOR_ID + COMMA
+		+ COLUMN_MODIFIER_ID + COMMA
+		+ DomainMember.COLUMN_DOMAIN_ID + COMMA
+		+ COLUMN_NAME + COMMA
+		+ COLUMN_DESCRIPTION + COMMA
+		+ COLUMN_EQUIPMENT_ID + COMMA
+		+ COLUMN_MCM_ID
+		+ SQL_FROM + ObjectEntities.KIS_ENTITY
+		+ ( ((condition == null) || (condition.length() == 0) ) ? "" : SQL_WHERE + condition);
+
+	}
+	
+	private KIS updateKISFromResultSet(KIS kis, ResultSet resultSet) throws SQLException{
+		KIS kis1 = kis;
+		if (kis1 == null){
+			/**
+			 * @todo when change DB Identifier model ,change getString() to getLong()
+			 */
+			kis1 = new KIS(new Identifier(resultSet.getString(COLUMN_ID)), null, null, null, null, null, null);			
+		}
+		kis1.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
+							DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
+							/**
+								* @todo when change DB Identifier model ,change getString() to getLong()
+								*/
+							new Identifier(resultSet.getString(COLUMN_CREATOR_ID)),
+							/**
+								* @todo when change DB Identifier model ,change getString() to getLong()
+								*/
+							new Identifier(resultSet.getString(COLUMN_MODIFIER_ID)),
+							/**
+								* @todo when change DB Identifier model ,change getString() to getLong()
+								*/
+							new Identifier(resultSet.getString(DomainMember.COLUMN_DOMAIN_ID)),													
+							resultSet.getString(COLUMN_NAME),
+							resultSet.getString(COLUMN_DESCRIPTION),
+							/**
+								* @todo when change DB Identifier model ,change getString() to getLong()
+								*/
+							new Identifier(resultSet.getString(COLUMN_EQUIPMENT_ID)),
+							/**
+								* @todo when change DB Identifier model ,change getString() to getLong()
+								*/
+							new Identifier(resultSet.getString(COLUMN_MCM_ID)));
+		
+		return kis1;
+	}
+
 
 	private void retrieveKIS(KIS kis) throws ObjectNotFoundException, RetrieveObjectException {
 		String kisIdStr = kis.getId().toSQLString();
-		String sql = SQL_SELECT
-			+ DatabaseDate.toQuerySubString(StorableObjectDatabase.COLUMN_CREATED) + COMMA
-			+ DatabaseDate.toQuerySubString(StorableObjectDatabase.COLUMN_MODIFIED) + COMMA
-			+ COLUMN_CREATOR_ID + COMMA
-			+ COLUMN_MODIFIER_ID + COMMA
-			+ DomainMember.COLUMN_DOMAIN_ID + COMMA
-			+ COLUMN_NAME + COMMA
-			+ COLUMN_DESCRIPTION + COMMA
-			+ COLUMN_EQUIPMENT_ID + COMMA
-			+ COLUMN_MCM_ID
-			+ SQL_FROM + ObjectEntities.KIS_ENTITY
-			+ SQL_WHERE + COLUMN_ID + EQUALS + kisIdStr;
+		String sql = retrieveKISQuery(COLUMN_ID + EQUALS + kisIdStr);
 
 		Statement statement = null;
 		ResultSet resultSet = null;
@@ -79,32 +125,8 @@ public class KISDatabase extends StorableObjectDatabase {
 			statement = connection.createStatement();
 			Log.debugMessage("KISDatabase.retrieveKIS | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql);
-			if (resultSet.next()) {				
-				kis.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
-													DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
-													/**
-														* @todo when change DB Identifier model ,change getString() to getLong()
-														*/
-													new Identifier(resultSet.getString(COLUMN_CREATOR_ID)),
-													/**
-														* @todo when change DB Identifier model ,change getString() to getLong()
-														*/
-													new Identifier(resultSet.getString(COLUMN_MODIFIER_ID)),
-													/**
-														* @todo when change DB Identifier model ,change getString() to getLong()
-														*/
-													new Identifier(resultSet.getString(DomainMember.COLUMN_DOMAIN_ID)),													
-													resultSet.getString(COLUMN_NAME),
-													resultSet.getString(COLUMN_DESCRIPTION),
-													/**
-														* @todo when change DB Identifier model ,change getString() to getLong()
-														*/
-													new Identifier(resultSet.getString(COLUMN_EQUIPMENT_ID)),
-													/**
-														* @todo when change DB Identifier model ,change getString() to getLong()
-														*/
-													new Identifier(resultSet.getString(COLUMN_MCM_ID)));
-			}
+			if (resultSet.next()) 				
+				updateKISFromResultSet(kis, resultSet);
 			else
 				throw new ObjectNotFoundException("No such kis: " + kisIdStr);
 		}
@@ -317,7 +339,7 @@ public class KISDatabase extends StorableObjectDatabase {
 		}
 	}
 	
-	public static void delete(KIS kis) {
+	public void delete(KIS kis) {
 		String kisIdStr = kis.getId().toSQLString();
 		Statement statement = null;
 		try {
@@ -344,25 +366,60 @@ public class KISDatabase extends StorableObjectDatabase {
 		}
 	}
 	
-	public static List retrieveAll() throws RetrieveObjectException {
-		List kiss = new ArrayList(CHARACTER_NUMBER_OF_RECORDS);
-		String sql = SQL_SELECT
-				+ COLUMN_ID
-				+ SQL_FROM + ObjectEntities.KIS_ENTITY;
+	public List retrieveAll() throws RetrieveObjectException {		
+		return retriveByIdsOneQuery(null);
+	}
+	
+	
+	public List retrieveByIds(List ids) throws RetrieveObjectException {
+		if ((ids == null) || (ids.isEmpty()))
+			return retriveByIdsOneQuery(null);
+		return retriveByIdsOneQuery(ids);	
+		//return retriveByIdsPreparedStatement(ids);
+	}
+	
+	private List retriveByIdsOneQuery(List ids) throws RetrieveObjectException {
+		List result = new LinkedList();
+		String sql;
+		{
+			String condition = null;
+			if (ids!=null){
+				StringBuffer buffer = new StringBuffer(COLUMN_ID);
+				int idsLength = ids.size();
+				if (idsLength == 1){
+					buffer.append(EQUALS);
+					buffer.append(((Identifier)ids.iterator().next()).toSQLString());
+				} else{
+					buffer.append(SQL_IN);
+					buffer.append(OPEN_BRACKET);
+					
+					int i = 1;
+					for(Iterator it=ids.iterator();it.hasNext();i++){
+						Identifier id = (Identifier)it.next();
+						buffer.append(id.toSQLString());
+						if (i < idsLength)
+							buffer.append(COMMA);
+					}
+					
+					buffer.append(CLOSE_BRACKET);
+					condition = buffer.toString();
+				}
+			}
+			sql = retrieveKISQuery(condition);
+		}
+		
 		Statement statement = null;
 		ResultSet resultSet = null;
 		try {
 			statement = connection.createStatement();
-			Log.debugMessage("KISDatabase.retrieveAll | Trying: " + sql, Log.DEBUGLEVEL09);
+			Log.debugMessage("KISDatabase.retriveByIdsOneQuery | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql);
-			while (resultSet.next())
-				kiss.add(new KIS(new Identifier(resultSet.getString(COLUMN_ID))));			
-		}
-		catch (ObjectNotFoundException onfe) {
-			Log.errorException(onfe);
+			while (resultSet.next()){
+				result.add(updateKISFromResultSet(null, resultSet));
+			}
 		}
 		catch (SQLException sqle) {
-			String mesg = "KISDatabase.retrieveAll | Cannot retrieve kis";
+			String mesg = "KISDatabase.retriveByIdsOneQuery | Cannot execute query " + sqle.getMessage();
 			throw new RetrieveObjectException(mesg, sqle);
 		}
 		finally {
@@ -378,6 +435,64 @@ public class KISDatabase extends StorableObjectDatabase {
 				Log.errorException(sqle1);
 			}
 		}
-		return kiss;
+		return result;
 	}
+	
+	private List retriveByIdsPreparedStatement(List ids) throws RetrieveObjectException {
+		List result = new LinkedList();
+		String sql;
+		{
+			
+			int idsLength = ids.size();
+			if (idsLength == 1){
+				return retriveByIdsOneQuery(ids);
+			}
+			StringBuffer buffer = new StringBuffer(COLUMN_ID);
+			buffer.append(EQUALS);							
+			buffer.append(QUESTION);
+			
+			sql = retrieveKISQuery(buffer.toString());
+		}
+			
+		PreparedStatement stmt = null;
+		ResultSet resultSet = null;
+		try {
+			stmt = connection.prepareStatement(sql.toString());
+			for(Iterator it = ids.iterator();it.hasNext();){
+				Identifier id = (Identifier)it.next(); 
+				/**
+				 * @todo when change DB Identifier model ,change setString() to setLong()
+				 */
+				String idStr = id.getIdentifierString();
+				stmt.setString(1, idStr);
+				resultSet = stmt.executeQuery();
+				if (resultSet.next()){
+					result.add(updateKISFromResultSet(null, resultSet));
+				} else{
+					Log.errorMessage("KISDatabase.retriveByIdsPreparedStatement | No such kis: " + idStr);									
+				}
+				
+			}
+		}catch (SQLException sqle) {
+			String mesg = "KISDatabase.retriveByIdsPreparedStatement | Cannot retrieve kis " + sqle.getMessage();
+			throw new RetrieveObjectException(mesg, sqle);
+		}
+		finally {
+			try {
+				if (stmt != null)
+					stmt.close();
+				if (stmt != null)
+					stmt.close();
+				stmt = null;
+				resultSet = null;
+			}
+			catch (SQLException sqle1) {
+				Log.errorException(sqle1);
+			}
+		}			
+		
+		return result;
+	}
+
+
 }

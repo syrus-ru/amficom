@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPortTypeDatabase.java,v 1.3 2004/08/22 18:49:19 arseniy Exp $
+ * $Id: MeasurementPortTypeDatabase.java,v 1.4 2004/08/29 10:54:23 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,8 +8,10 @@
 
 package com.syrus.AMFICOM.configuration;
 
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
-import java.util.ArrayList;
+import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -26,8 +28,8 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2004/08/22 18:49:19 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.4 $, $Date: 2004/08/29 10:54:23 $
+ * @author $Author: bob $
  * @module configuration_v1
  */
 
@@ -47,18 +49,48 @@ public class MeasurementPortTypeDatabase extends StorableObjectDatabase {
 		MeasurementPortType measurementPortType = this.fromStorableObject(storableObject);
 		this.retrieveMeasurementPortType(measurementPortType);
 	}
+	
+	private String retrieveMeasurementPortTypeQuery(String condition){
+		return SQL_SELECT
+		+ COLUMN_ID + COMMA
+		+ DatabaseDate.toQuerySubString(COLUMN_CREATED) + COMMA 
+		+ DatabaseDate.toQuerySubString(COLUMN_MODIFIED) + COMMA
+		+ COLUMN_CREATOR_ID + COMMA
+		+ COLUMN_MODIFIER_ID + COMMA
+		+ COLUMN_CODENAME + COMMA
+		+ COLUMN_DESCRIPTION
+		+ SQL_FROM + ObjectEntities.MEASUREMENTPORTTYPE_ENTITY
+		+ ( ((condition == null) || (condition.length() == 0) ) ? "" : SQL_WHERE + condition);
+
+	}
+	
+	private MeasurementPortType updateMeasurementPortTypeFromResultSet(MeasurementPortType measurementPortType, ResultSet resultSet) throws SQLException{
+		MeasurementPortType measurementPortType1 = measurementPortType;
+		if (measurementPortType1 == null){
+			/**
+			 * @todo when change DB Identifier model ,change getString() to getLong()
+			 */
+			measurementPortType1 = new MeasurementPortType(new Identifier(resultSet.getString(COLUMN_ID)), null, null, null);			
+		}
+		measurementPortType1.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
+											DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
+											/**
+												* @todo when change DB Identifier model ,change getString() to getLong()
+												*/
+											new Identifier(resultSet.getString(COLUMN_CREATOR_ID)),
+											/**
+												* @todo when change DB Identifier model ,change getString() to getLong()
+												*/
+											new Identifier(resultSet.getString(COLUMN_MODIFIER_ID)),
+											resultSet.getString(COLUMN_CODENAME),
+											resultSet.getString(COLUMN_DESCRIPTION));
+		return measurementPortType1;
+	}
+
 
 	private void retrieveMeasurementPortType(MeasurementPortType measurementPortType) throws ObjectNotFoundException, RetrieveObjectException {
 		String ptIdStr = measurementPortType.getId().toSQLString();
-		String sql = SQL_SELECT
-			+ DatabaseDate.toQuerySubString(COLUMN_CREATED) + COMMA 
-			+ DatabaseDate.toQuerySubString(COLUMN_MODIFIED) + COMMA
-			+ COLUMN_CREATOR_ID + COMMA
-			+ COLUMN_MODIFIER_ID + COMMA
-			+ COLUMN_CODENAME + COMMA
-			+ COLUMN_DESCRIPTION
-			+ SQL_FROM + ObjectEntities.MEASUREMENTPORTTYPE_ENTITY
-			+ SQL_WHERE	+ COLUMN_ID + EQUALS + ptIdStr;
+		String sql = retrieveMeasurementPortTypeQuery(COLUMN_ID + EQUALS + ptIdStr);
 		Statement statement = null;
 		ResultSet resultSet = null;
 		try {
@@ -66,18 +98,7 @@ public class MeasurementPortTypeDatabase extends StorableObjectDatabase {
 			Log.debugMessage("MeasurementPortTypeDatabase.retrieve | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql);
 			if (resultSet.next())
-				measurementPortType.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
-																		DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
-																		/**
-																			* @todo when change DB Identifier model ,change getString() to getLong()
-																			*/
-																		new Identifier(resultSet.getString(COLUMN_CREATOR_ID)),
-																		/**
-																			* @todo when change DB Identifier model ,change getString() to getLong()
-																			*/
-																		new Identifier(resultSet.getString(COLUMN_MODIFIER_ID)),
-																		resultSet.getString(COLUMN_CODENAME),
-																		resultSet.getString(COLUMN_DESCRIPTION));
+				updateMeasurementPortTypeFromResultSet(measurementPortType, resultSet);
 			else
 				throw new ObjectNotFoundException("No such measurement port type: " + ptIdStr);
 		}
@@ -185,44 +206,11 @@ public class MeasurementPortTypeDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	public static List retrieveAll() throws RetrieveObjectException {
-		List measurementPortTypes = new ArrayList(CHARACTER_NUMBER_OF_RECORDS);
-		String sql = SQL_SELECT
-				+ COLUMN_ID
-				+ SQL_FROM + ObjectEntities.MEASUREMENTPORTTYPE_ENTITY;
-		Statement statement = null;
-		ResultSet resultSet = null;
-		try {
-			statement = connection.createStatement();
-			Log.debugMessage("MeasurementPortTypeDatabase.retrieveAll | Trying: " + sql, Log.DEBUGLEVEL09);
-			resultSet = statement.executeQuery(sql);
-			while (resultSet.next())
-				measurementPortTypes.add(new MeasurementPortType(new Identifier(resultSet.getString(COLUMN_ID))));			
-		}
-		catch (ObjectNotFoundException onfe) {
-			Log.errorException(onfe);
-		}
-		catch (SQLException sqle) {
-			String mesg = "MeasurementPortTypeDatabase.retrieveAll | Cannot retrieve measurement port type";
-			throw new RetrieveObjectException(mesg, sqle);
-		}
-		finally {
-			try {
-				if (statement != null)
-					statement.close();
-				if (resultSet != null)
-					resultSet.close();
-				statement = null;
-				resultSet = null;
-			}
-			catch (SQLException sqle1) {
-				Log.errorException(sqle1);
-			}
-		}
-		return measurementPortTypes;
+	public List retrieveAll() throws RetrieveObjectException {		
+		return retriveByIdsOneQuery(null);
 	}
 	
-	public static void delete(MeasurementPortType measurementPortType) {
+	public void delete(MeasurementPortType measurementPortType) {
 		String mtIdStr = measurementPortType.getId().toSQLString();
 		Statement statement = null;
 		try {
@@ -250,4 +238,128 @@ public class MeasurementPortTypeDatabase extends StorableObjectDatabase {
 			}
 		}
 	}
+	
+	public List retrieveByIds(List ids) throws RetrieveObjectException {
+		if ((ids == null) || (ids.isEmpty()))
+			return retriveByIdsOneQuery(null);
+		return retriveByIdsOneQuery(ids);	
+		//return retriveByIdsPreparedStatement(ids);
+	}
+	
+	private List retriveByIdsOneQuery(List ids) throws RetrieveObjectException {
+		List result = new LinkedList();
+		String sql;
+		{
+			String condition = null;
+			if (ids!=null){
+				StringBuffer buffer = new StringBuffer(COLUMN_ID);
+				int idsLength = ids.size();
+				if (idsLength == 1){
+					buffer.append(EQUALS);
+					buffer.append(((Identifier)ids.iterator().next()).toSQLString());
+				} else{
+					buffer.append(SQL_IN);
+					buffer.append(OPEN_BRACKET);
+					
+					int i = 1;
+					for(Iterator it=ids.iterator();it.hasNext();i++){
+						Identifier id = (Identifier)it.next();
+						buffer.append(id.toSQLString());
+						if (i < idsLength)
+							buffer.append(COMMA);
+					}
+					
+					buffer.append(CLOSE_BRACKET);
+					condition = buffer.toString();
+				}
+			}
+			sql = retrieveMeasurementPortTypeQuery(condition);
+		}
+		
+		Statement statement = null;
+		ResultSet resultSet = null;
+		try {
+			statement = connection.createStatement();
+			Log.debugMessage("MeasurementPortTypeDatabase.retriveByIdsOneQuery | Trying: " + sql, Log.DEBUGLEVEL09);
+			resultSet = statement.executeQuery(sql);
+			while (resultSet.next()){
+				result.add(updateMeasurementPortTypeFromResultSet(null, resultSet));
+			}
+		}
+		catch (SQLException sqle) {
+			String mesg = "MeasurementPortTypeDatabase.retriveByIdsOneQuery | Cannot execute query " + sqle.getMessage();
+			throw new RetrieveObjectException(mesg, sqle);
+		}
+		finally {
+			try {
+				if (statement != null)
+					statement.close();
+				if (resultSet != null)
+					resultSet.close();
+				statement = null;
+				resultSet = null;
+			}
+			catch (SQLException sqle1) {
+				Log.errorException(sqle1);
+			}
+		}
+		return result;
+	}
+	
+	private List retriveByIdsPreparedStatement(List ids) throws RetrieveObjectException {
+		List result = new LinkedList();
+		String sql;
+		{
+			
+			int idsLength = ids.size();
+			if (idsLength == 1){
+				return retriveByIdsOneQuery(ids);
+			}
+			StringBuffer buffer = new StringBuffer(COLUMN_ID);
+			buffer.append(EQUALS);							
+			buffer.append(QUESTION);
+			
+			sql = retrieveMeasurementPortTypeQuery(buffer.toString());
+		}
+			
+		PreparedStatement stmt = null;
+		ResultSet resultSet = null;
+		try {
+			stmt = connection.prepareStatement(sql.toString());
+			for(Iterator it = ids.iterator();it.hasNext();){
+				Identifier id = (Identifier)it.next(); 
+				/**
+				 * @todo when change DB Identifier model ,change setString() to setLong()
+				 */
+				String idStr = id.getIdentifierString();
+				stmt.setString(1, idStr);
+				resultSet = stmt.executeQuery();
+				if (resultSet.next()){
+					result.add(updateMeasurementPortTypeFromResultSet(null, resultSet));
+				} else{
+					Log.errorMessage("MeasurementPortTypeDatabase.retriveByIdsPreparedStatement | No such measurement port type: " + idStr);									
+				}
+				
+			}
+		}catch (SQLException sqle) {
+			String mesg = "MeasurementPortTypeDatabase.retriveByIdsPreparedStatement | Cannot retrieve measurement port type " + sqle.getMessage();
+			throw new RetrieveObjectException(mesg, sqle);
+		}
+		finally {
+			try {
+				if (stmt != null)
+					stmt.close();
+				if (stmt != null)
+					stmt.close();
+				stmt = null;
+				resultSet = null;
+			}
+			catch (SQLException sqle1) {
+				Log.errorException(sqle1);
+			}
+		}			
+		
+		return result;
+	}
+
 }

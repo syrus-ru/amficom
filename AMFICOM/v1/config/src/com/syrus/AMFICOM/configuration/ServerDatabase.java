@@ -1,5 +1,5 @@
 /*
- * $Id: ServerDatabase.java,v 1.14 2004/08/22 18:49:19 arseniy Exp $
+ * $Id: ServerDatabase.java,v 1.15 2004/08/29 10:54:24 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,9 +8,12 @@
 
 package com.syrus.AMFICOM.configuration;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.ArrayList;
 
@@ -28,8 +31,8 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2004/08/22 18:49:19 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.15 $, $Date: 2004/08/29 10:54:24 $
+ * @author $Author: bob $
  * @module configuration_v1
  */
 
@@ -51,24 +54,63 @@ public class ServerDatabase extends StorableObjectDatabase {
 	}
 
 	public void retrieve(StorableObject storableObject) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
+		CharacteristicDatabase characteristicDatabase = CharacteristicDatabase.getInstance();
 		Server server = this.fromStorableObject(storableObject);
 		this.retrieveServer(server);
-		server.setCharacteristics(CharacteristicDatabase.retrieveCharacteristics(server.getId(), CharacteristicSort.CHARACTERISTIC_SORT_SERVER));
+		server.setCharacteristics(characteristicDatabase.retrieveCharacteristics(server.getId(), CharacteristicSort.CHARACTERISTIC_SORT_SERVER));
 	}
+	
+	private String retrieveServerQuery(String condition){
+		return SQL_SELECT
+		+ COLUMN_ID + COMMA
+		+ DatabaseDate.toQuerySubString(COLUMN_CREATED) + COMMA
+		+ DatabaseDate.toQuerySubString(COLUMN_MODIFIED) + COMMA
+		+ COLUMN_CREATOR_ID + COMMA
+		+ COLUMN_MODIFIER_ID + COMMA
+		+ DomainMember.COLUMN_DOMAIN_ID + COMMA
+		+ COLUMN_NAME + COMMA
+		+ COLUMN_DESCRIPTION + COMMA
+		+ COLUMN_USER_ID
+		+ SQL_FROM + ObjectEntities.SERVER_ENTITY
+		+ ( ((condition == null) || (condition.length() == 0) ) ? "" : SQL_WHERE + condition);
+
+	}
+	
+	private Server updateServerFromResultSet(Server server, ResultSet resultSet) throws SQLException{
+		Server server1 = server;
+		if (server1 == null){
+			/**
+			 * @todo when change DB Identifier model ,change getString() to getLong()
+			 */
+			server1 = new Server(new Identifier(resultSet.getString(COLUMN_ID)), null, null, null, null, null);			
+		}
+		server1.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
+								DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
+								/**
+									* @todo when change DB Identifier model ,change getString() to getLong()
+									*/
+								new Identifier(resultSet.getString(COLUMN_CREATOR_ID)),
+								/**
+									* @todo when change DB Identifier model ,change getString() to getLong()
+									*/
+								new Identifier(resultSet.getString(COLUMN_MODIFIER_ID)),
+								/**
+									* @todo when change DB Identifier model ,change getString() to getLong()
+									*/
+								new Identifier(resultSet.getString(DomainMember.COLUMN_DOMAIN_ID)),													
+								resultSet.getString(COLUMN_NAME),
+								resultSet.getString(COLUMN_DESCRIPTION),													
+								/**
+									* @todo when change DB Identifier model ,change getString() to getLong()
+									*/
+								new Identifier(resultSet.getString(COLUMN_USER_ID)));
+		return server1;
+	}
+
 
 	private void retrieveServer(Server server) throws ObjectNotFoundException, RetrieveObjectException {
 		String serverIdStr = server.getId().toSQLString();
-		String sql = SQL_SELECT
-			+ DatabaseDate.toQuerySubString(COLUMN_CREATED) + COMMA
-			+ DatabaseDate.toQuerySubString(COLUMN_MODIFIED) + COMMA
-			+ COLUMN_CREATOR_ID + COMMA
-			+ COLUMN_MODIFIER_ID + COMMA
-			+ DomainMember.COLUMN_DOMAIN_ID + COMMA
-			+ COLUMN_NAME + COMMA
-			+ COLUMN_DESCRIPTION + COMMA
-			+ COLUMN_USER_ID
-			+ SQL_FROM + ObjectEntities.SERVER_ENTITY
-			+ SQL_WHERE + COLUMN_ID + EQUALS + serverIdStr;
+		String sql = retrieveServerQuery(COLUMN_ID + EQUALS + serverIdStr);
 
 		Statement statement = null;
 		ResultSet resultSet = null;
@@ -76,28 +118,8 @@ public class ServerDatabase extends StorableObjectDatabase {
 			statement = connection.createStatement();
 			Log.debugMessage("ServerDatabase.retrieveServer | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql);
-			if (resultSet.next()) {				
-				server.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
-													DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
-													/**
-														* @todo when change DB Identifier model ,change getString() to getLong()
-														*/
-													new Identifier(resultSet.getString(COLUMN_CREATOR_ID)),
-													/**
-														* @todo when change DB Identifier model ,change getString() to getLong()
-														*/
-													new Identifier(resultSet.getString(COLUMN_MODIFIER_ID)),
-													/**
-														* @todo when change DB Identifier model ,change getString() to getLong()
-														*/
-													new Identifier(resultSet.getString(DomainMember.COLUMN_DOMAIN_ID)),													
-													resultSet.getString(COLUMN_NAME),
-													resultSet.getString(COLUMN_DESCRIPTION),													
-													/**
-														* @todo when change DB Identifier model ,change getString() to getLong()
-														*/
-													new Identifier(resultSet.getString(COLUMN_USER_ID)));
-			}
+			if (resultSet.next()) 
+				updateServerFromResultSet(server, resultSet);
 			else
 				throw new ObjectNotFoundException("No such server: " + serverIdStr);
 		}
@@ -248,4 +270,128 @@ public class ServerDatabase extends StorableObjectDatabase {
 				return;
 		}
 	}
+	
+	public List retrieveByIds(List ids) throws RetrieveObjectException {
+		if ((ids == null) || (ids.isEmpty()))
+			return retriveByIdsOneQuery(null);
+		return retriveByIdsOneQuery(ids);	
+		//return retriveByIdsPreparedStatement(ids);
+	}
+	
+	private List retriveByIdsOneQuery(List ids) throws RetrieveObjectException {
+		List result = new LinkedList();
+		String sql;
+		{
+			String condition = null;
+			if (ids!=null){
+				StringBuffer buffer = new StringBuffer(COLUMN_ID);
+				int idsLength = ids.size();
+				if (idsLength == 1){
+					buffer.append(EQUALS);
+					buffer.append(((Identifier)ids.iterator().next()).toSQLString());
+				} else{
+					buffer.append(SQL_IN);
+					buffer.append(OPEN_BRACKET);
+					
+					int i = 1;
+					for(Iterator it=ids.iterator();it.hasNext();i++){
+						Identifier id = (Identifier)it.next();
+						buffer.append(id.toSQLString());
+						if (i < idsLength)
+							buffer.append(COMMA);
+					}
+					
+					buffer.append(CLOSE_BRACKET);
+					condition = buffer.toString();
+				}
+			}
+			sql = retrieveServerQuery(condition);
+		}
+		
+		Statement statement = null;
+		ResultSet resultSet = null;
+		try {
+			statement = connection.createStatement();
+			Log.debugMessage("ServerDatabase.retriveByIdsOneQuery | Trying: " + sql, Log.DEBUGLEVEL09);
+			resultSet = statement.executeQuery(sql);
+			while (resultSet.next()){
+				result.add(updateServerFromResultSet(null, resultSet));
+			}
+		}
+		catch (SQLException sqle) {
+			String mesg = "ServerDatabase.retriveByIdsOneQuery | Cannot execute query " + sqle.getMessage();
+			throw new RetrieveObjectException(mesg, sqle);
+		}
+		finally {
+			try {
+				if (statement != null)
+					statement.close();
+				if (resultSet != null)
+					resultSet.close();
+				statement = null;
+				resultSet = null;
+			}
+			catch (SQLException sqle1) {
+				Log.errorException(sqle1);
+			}
+		}
+		return result;
+	}
+	
+	private List retriveByIdsPreparedStatement(List ids) throws RetrieveObjectException {
+		List result = new LinkedList();
+		String sql;
+		{
+			
+			int idsLength = ids.size();
+			if (idsLength == 1){
+				return retriveByIdsOneQuery(ids);
+			}
+			StringBuffer buffer = new StringBuffer(COLUMN_ID);
+			buffer.append(EQUALS);							
+			buffer.append(QUESTION);
+			
+			sql = retrieveServerQuery(buffer.toString());
+		}
+			
+		PreparedStatement stmt = null;
+		ResultSet resultSet = null;
+		try {
+			stmt = connection.prepareStatement(sql.toString());
+			for(Iterator it = ids.iterator();it.hasNext();){
+				Identifier id = (Identifier)it.next(); 
+				/**
+				 * @todo when change DB Identifier model ,change setString() to setLong()
+				 */
+				String idStr = id.getIdentifierString();
+				stmt.setString(1, idStr);
+				resultSet = stmt.executeQuery();
+				if (resultSet.next()){
+					result.add(updateServerFromResultSet(null, resultSet));
+				} else{
+					Log.errorMessage("ServerDatabase.retriveByIdsPreparedStatement | No such server: " + idStr);									
+				}
+				
+			}
+		}catch (SQLException sqle) {
+			String mesg = "ServerDatabase.retriveByIdsPreparedStatement | Cannot retrieve server " + sqle.getMessage();
+			throw new RetrieveObjectException(mesg, sqle);
+		}
+		finally {
+			try {
+				if (stmt != null)
+					stmt.close();
+				if (stmt != null)
+					stmt.close();
+				stmt = null;
+				resultSet = null;
+			}
+			catch (SQLException sqle1) {
+				Log.errorException(sqle1);
+			}
+		}			
+		
+		return result;
+	}
+
 }

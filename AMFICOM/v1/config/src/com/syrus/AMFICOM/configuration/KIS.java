@@ -1,5 +1,5 @@
 /*
- * $Id: KIS.java,v 1.15 2004/08/18 18:08:05 arseniy Exp $
+ * $Id: KIS.java,v 1.16 2004/08/29 10:54:23 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,8 +22,8 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.configuration.corba.KIS_Transferable;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2004/08/18 18:08:05 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.16 $, $Date: 2004/08/29 10:54:23 $
+ * @author $Author: bob $
  * @module configuration_v1
  */
 
@@ -76,7 +76,7 @@ public class KIS extends DomainMember {
 		}
 	}
 	
-	private KIS(Identifier id,
+	protected KIS(Identifier id,
 							Identifier creatorId,
 							Identifier domainId,
 							String name,

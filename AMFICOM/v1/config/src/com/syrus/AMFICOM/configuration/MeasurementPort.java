@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPort.java,v 1.4 2004/08/23 20:48:15 arseniy Exp $
+ * $Id: MeasurementPort.java,v 1.5 2004/08/29 10:54:23 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -24,8 +24,8 @@ import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2004/08/23 20:48:15 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.5 $, $Date: 2004/08/29 10:54:23 $
+ * @author $Author: bob $
  * @module configuration_v1
  */
 public class MeasurementPort extends StorableObject implements TypedObject{
@@ -82,7 +82,7 @@ public class MeasurementPort extends StorableObject implements TypedObject{
 		}
 	}
 	
-	private MeasurementPort(Identifier id,
+	protected MeasurementPort(Identifier id,
 							Identifier creatorId,
 							MeasurementPortType type,
 							String name,

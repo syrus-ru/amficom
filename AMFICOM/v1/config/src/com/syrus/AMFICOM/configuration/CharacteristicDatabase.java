@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicDatabase.java,v 1.16 2004/08/27 15:18:15 bob Exp $
+ * $Id: CharacteristicDatabase.java,v 1.17 2004/08/29 10:54:23 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,7 +11,6 @@ package com.syrus.AMFICOM.configuration;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.ArrayList;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.sql.ResultSet;
@@ -31,7 +30,7 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.configuration.corba.CharacteristicSort;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2004/08/27 15:18:15 $
+ * @version $Revision: 1.17 $, $Date: 2004/08/29 10:54:23 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -60,6 +59,20 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
     public static final String COLUMN_TRANSMISSION_PATH_ID  = "transmission_path_id";
     // port_id VARCHAR2(32),
     public static final String COLUMN_PORT_ID  = "port_id";
+    
+    
+    private static CharacteristicDatabase instance;
+    
+    private CharacteristicDatabase(){
+    	// private constructor
+    }
+    
+    public static CharacteristicDatabase getInstance(){
+    	if (instance==null)
+    		instance = new CharacteristicDatabase();
+    	return instance;
+    }
+    
 
 
 	private Characteristic fromStorableObject(StorableObject storableObject) throws IllegalDataException {
@@ -437,20 +450,15 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
 				return;
 		}
 	}
-
-	public static List retrieveCharacteristics(Identifier characterizedId, CharacteristicSort sort) throws RetrieveObjectException {
-		List characteristics = new ArrayList();
+	
+	public List retrieveCharacteristics(Identifier characterizedId, CharacteristicSort sort) throws RetrieveObjectException {
+		List characteristics = new LinkedList();
 
 		String cdIdStr = characterizedId.toSQLString();
 		int sortValue = sort.value();
 		String sql;
 		{
-			StringBuffer buffer = new StringBuffer(SQL_SELECT);
-			buffer.append(COLUMN_ID);
-			buffer.append(SQL_FROM);
-			buffer.append(ObjectEntities.CHARACTERISTIC_ENTITY);
-			buffer.append(SQL_WHERE);
-			buffer.append(COLUMN_SORT);
+			StringBuffer buffer = new StringBuffer(COLUMN_SORT);
 			buffer.append(EQUALS);
 			buffer.append(sortValue);
 			buffer.append(SQL_AND);
@@ -478,7 +486,7 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
 			}
 			buffer.append(EQUALS);
 			buffer.append(cdIdStr);
-			sql = buffer.toString();
+			sql = retrieveCharacteristicQuery(buffer.toString());
 		}
 		Statement statement = null;
 		ResultSet resultSet = null;
@@ -486,13 +494,8 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
 			statement = connection.createStatement();
 			Log.debugMessage("CharacteristicDatabase.retrieveCharacteristics | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql);
-			while (resultSet.next()) {
-				try {
-					characteristics.add(new Characteristic(new Identifier(resultSet.getString(COLUMN_ID))));
-				}
-				catch (ObjectNotFoundException onfe) {
-					Log.errorException(onfe);
-				}
+			while (resultSet.next()){
+				characteristics.add(updateCharacteristicFromResultSet(null, resultSet));
 			}
 		}
 		catch (SQLException sqle) {
@@ -512,12 +515,15 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
 				Log.errorException(sqle1);
 			}
 		}
+		
+		
 		return characteristics;
+
 	}
 	
 	public List retrieveByIds(List ids) throws RetrieveObjectException {
 		if ((ids == null) || (ids.isEmpty()))
-			return new LinkedList();
+			return retriveByIdsOneQuery(null);
 		return retriveByIdsOneQuery(ids);	
 		//return retriveByIdsPreparedStatement(ids);
 	}
@@ -526,26 +532,30 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
 		List result = new LinkedList();
 		String sql;
 		{
-			StringBuffer buffer = new StringBuffer(COLUMN_ID);
-			int idsLength = ids.size();
-			if (idsLength == 1){
-				buffer.append(EQUALS);
-				buffer.append(((Identifier)ids.iterator().next()).toSQLString());
-			} else{
-				buffer.append(SQL_IN);
-				buffer.append(OPEN_BRACKET);
-				
-				int i = 1;
-				for(Iterator it=ids.iterator();it.hasNext();i++){
-					Identifier id = (Identifier)it.next();
-					buffer.append(id.toSQLString());
-					if (i < idsLength)
-						buffer.append(COMMA);
+			String condition = null;
+			if (ids!=null){
+				StringBuffer buffer = new StringBuffer(COLUMN_ID);
+				int idsLength = ids.size();
+				if (idsLength == 1){
+					buffer.append(EQUALS);
+					buffer.append(((Identifier)ids.iterator().next()).toSQLString());
+				} else{
+					buffer.append(SQL_IN);
+					buffer.append(OPEN_BRACKET);
+					
+					int i = 1;
+					for(Iterator it=ids.iterator();it.hasNext();i++){
+						Identifier id = (Identifier)it.next();
+						buffer.append(id.toSQLString());
+						if (i < idsLength)
+							buffer.append(COMMA);
+					}
+					
+					buffer.append(CLOSE_BRACKET);
+					condition = buffer.toString();
 				}
-				
-				buffer.append(CLOSE_BRACKET);
 			}
-			sql = retrieveCharacteristicQuery(buffer.toString());
+			sql = retrieveCharacteristicQuery(condition);
 		}
 		
 		Statement statement = null;

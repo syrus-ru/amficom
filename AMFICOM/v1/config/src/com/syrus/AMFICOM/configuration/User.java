@@ -1,5 +1,5 @@
 /*
- * $Id: User.java,v 1.5 2004/08/10 19:01:09 arseniy Exp $
+ * $Id: User.java,v 1.6 2004/08/29 10:54:24 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -21,8 +21,8 @@ import com.syrus.AMFICOM.configuration.corba.User_Transferable;
 import com.syrus.AMFICOM.configuration.corba.UserSort;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2004/08/10 19:01:09 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.6 $, $Date: 2004/08/29 10:54:24 $
+ * @author $Author: bob $
  * @module configuration_v1
  */
 
@@ -66,10 +66,10 @@ public class User extends StorableObject {
 		}
 	}
 
-	private User(Identifier id,
+	protected User(Identifier id,
 							 Identifier creatorId,
 							 String login,
-							 UserSort sort,
+							 int sort,
 							 String name,
 							 String description) {
 		super(id,
@@ -78,7 +78,7 @@ public class User extends StorableObject {
 					creatorId,
 					creatorId);
 		this.login = login;
-		this.sort = sort.value();
+		this.sort = sort;
 		this.name = name;
 		this.description = description;
 	}
@@ -120,7 +120,7 @@ public class User extends StorableObject {
 		return new User(id,
 										creatorId,
 										login,
-										sort,
+										sort.value(),
 										name,
 										description);
 	}

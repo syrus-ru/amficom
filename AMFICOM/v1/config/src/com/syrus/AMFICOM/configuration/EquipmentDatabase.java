@@ -1,5 +1,5 @@
 /*
- * $Id: EquipmentDatabase.java,v 1.26 2004/08/27 15:18:15 bob Exp $
+ * $Id: EquipmentDatabase.java,v 1.27 2004/08/29 10:54:23 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,7 +32,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.26 $, $Date: 2004/08/27 15:18:15 $
+ * @version $Revision: 1.27 $, $Date: 2004/08/29 10:54:23 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -125,11 +125,12 @@ public class EquipmentDatabase extends StorableObjectDatabase {
 
 	
 	public void retrieve(StorableObject storableObject) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
+		CharacteristicDatabase characteristicDatabase = CharacteristicDatabase.getInstance();
 		Equipment equipment = this.fromStorableObject(storableObject);
 		this.retrieveEquipment(equipment);
 		this.retrieveEquipmentPortIds(equipment);
 		this.retrieveEquipmentMEIds(equipment);
-		equipment.setCharacteristics(CharacteristicDatabase.retrieveCharacteristics(equipment.getId(), CharacteristicSort.CHARACTERISTIC_SORT_EQUIPMENT));
+		equipment.setCharacteristics(characteristicDatabase.retrieveCharacteristics(equipment.getId(), CharacteristicSort.CHARACTERISTIC_SORT_EQUIPMENT));
 	}
 
 	private void retrieveEquipment(Equipment equipment) throws ObjectNotFoundException, RetrieveObjectException {
@@ -470,46 +471,13 @@ public class EquipmentDatabase extends StorableObjectDatabase {
 		}
 	}
 	
-	public List retrieveAll() throws RetrieveObjectException {
-		List equipments = new ArrayList(CHARACTER_NUMBER_OF_RECORDS);
-		String sql = SQL_SELECT
-				+ COLUMN_ID
-				+ SQL_FROM + ObjectEntities.EQUIPMENT_ENTITY;
-		Statement statement = null;
-		ResultSet resultSet = null;
-		try {
-			statement = connection.createStatement();
-			Log.debugMessage("EquipmentDatabase.retrieveAll | Trying: " + sql, Log.DEBUGLEVEL09);
-			resultSet = statement.executeQuery(sql);
-			while (resultSet.next())
-				equipments.add(new Equipment(new Identifier(resultSet.getString(COLUMN_ID))));			
-		}
-		catch (ObjectNotFoundException onfe) {
-			Log.errorException(onfe);
-		}
-		catch (SQLException sqle) {
-			String mesg = "EquipmentDatabase.retrieveAll | Cannot retrieve equipment";
-			throw new RetrieveObjectException(mesg, sqle);
-		}
-		finally {
-			try {
-				if (statement != null)
-					statement.close();
-				if (resultSet != null)
-					resultSet.close();
-				statement = null;
-				resultSet = null;
-			}
-			catch (SQLException sqle1) {
-				Log.errorException(sqle1);
-			}
-		}
-		return equipments;
+	public List retrieveAll() throws RetrieveObjectException {		
+		return retriveByIdsOneQuery(null);
 	}
 	
 	public List retrieveByIds(List ids) throws RetrieveObjectException {
 		if ((ids == null) || (ids.isEmpty()))
-			return new LinkedList();
+			return retriveByIdsOneQuery(null);
 		return retriveByIdsOneQuery(ids);	
 		//return retriveByIdsPreparedStatement(ids);
 	}
@@ -518,40 +486,44 @@ public class EquipmentDatabase extends StorableObjectDatabase {
 		List result = new LinkedList();
 		String sql;
 		{
-			StringBuffer buffer = new StringBuffer(COLUMN_ID);
-			int idsLength = ids.size();
-			if (idsLength == 1){
-				buffer.append(EQUALS);
-				buffer.append(((Identifier)ids.iterator().next()).toSQLString());
-			} else{
-				buffer.append(SQL_IN);
-				buffer.append(OPEN_BRACKET);
-				
-				int i = 1;
-				for(Iterator it=ids.iterator();it.hasNext();i++){
-					Identifier id = (Identifier)it.next();
-					buffer.append(id.toSQLString());
-					if (i < idsLength)
-						buffer.append(COMMA);
+			String condition = null;
+			if (ids!=null){
+				StringBuffer buffer = new StringBuffer(COLUMN_ID);
+				int idsLength = ids.size();
+				if (idsLength == 1){
+					buffer.append(EQUALS);
+					buffer.append(((Identifier)ids.iterator().next()).toSQLString());
+				} else{
+					buffer.append(SQL_IN);
+					buffer.append(OPEN_BRACKET);
+					
+					int i = 1;
+					for(Iterator it=ids.iterator();it.hasNext();i++){
+						Identifier id = (Identifier)it.next();
+						buffer.append(id.toSQLString());
+						if (i < idsLength)
+							buffer.append(COMMA);
+					}
+					
+					buffer.append(CLOSE_BRACKET);
+					condition = buffer.toString();
 				}
-				
-				buffer.append(CLOSE_BRACKET);
 			}
-			sql = retrieveEquipmentQuery(buffer.toString());
+			sql = retrieveEquipmentQuery(condition);
 		}
 		
 		Statement statement = null;
 		ResultSet resultSet = null;
 		try {
 			statement = connection.createStatement();
-			Log.debugMessage("CharacteristicTypeDatabase.retriveByIdsOneQuery | Trying: " + sql, Log.DEBUGLEVEL09);
+			Log.debugMessage("EquipmentDatabase.retriveByIdsOneQuery | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql);
 			while (resultSet.next()){
 				result.add(updateEquipmentFromResultSet(null, resultSet));
 			}
 		}
 		catch (SQLException sqle) {
-			String mesg = "CharacteristicTypeDatabase.retriveByIdsOneQuery | Cannot execute query " + sqle.getMessage();
+			String mesg = "EquipmentDatabase.retriveByIdsOneQuery | Cannot execute query " + sqle.getMessage();
 			throw new RetrieveObjectException(mesg, sqle);
 		}
 		finally {
@@ -601,12 +573,12 @@ public class EquipmentDatabase extends StorableObjectDatabase {
 				if (resultSet.next()){
 					result.add(updateEquipmentFromResultSet(null, resultSet));
 				} else{
-					Log.errorMessage("CharacteristicTypeDatabase.retriveByIdsPreparedStatement | No such characteristic type: " + idStr);									
+					Log.errorMessage("EquipmentDatabase.retriveByIdsPreparedStatement | No such equipment: " + idStr);									
 				}
 				
 			}
 		}catch (SQLException sqle) {
-			String mesg = "CharacteristicTypeDatabase.retriveByIdsPreparedStatement | Cannot retrieve characteristic type " + sqle.getMessage();
+			String mesg = "EquipmentDatabase.retriveByIdsPreparedStatement | Cannot retrieve equipment " + sqle.getMessage();
 			throw new RetrieveObjectException(mesg, sqle);
 		}
 		finally {

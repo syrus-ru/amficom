@@ -1,5 +1,5 @@
 /*
- * $Id: PortDatabase.java,v 1.12 2004/08/26 11:09:26 bob Exp $
+ * $Id: PortDatabase.java,v 1.13 2004/08/29 10:54:24 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,10 +8,13 @@
 
 package com.syrus.AMFICOM.configuration;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 
 import com.syrus.AMFICOM.general.Identifier;
@@ -30,7 +33,7 @@ import com.syrus.util.database.DatabaseDate;
 
 
 /**
- * @version $Revision: 1.12 $, $Date: 2004/08/26 11:09:26 $
+ * @version $Revision: 1.13 $, $Date: 2004/08/29 10:54:24 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -55,81 +58,100 @@ public class PortDatabase extends StorableObjectDatabase {
 	}
 
 	public void retrieve(StorableObject storableObject) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
+		CharacteristicDatabase characteristicDatabase = CharacteristicDatabase.getInstance();
 		Port port = this.fromStorableObject(storableObject);
 		this.retrievePort(port);
-		port.setCharacteristics(CharacteristicDatabase.retrieveCharacteristics(port.getId(), CharacteristicSort.CHARACTERISTIC_SORT_MCM));
+		port.setCharacteristics(characteristicDatabase.retrieveCharacteristics(port.getId(), CharacteristicSort.CHARACTERISTIC_SORT_MCM));
 	}
-
-	private void retrievePort(Port port) throws ObjectNotFoundException, RetrieveObjectException{
-		String sql;
-		String portIdStr = port.getId().toSQLString();
-		{
-		StringBuffer buffer = new StringBuffer();
-		buffer.append(StorableObjectDatabase.SQL_SELECT);
-		buffer.append(DatabaseDate.toQuerySubString(StorableObjectDatabase.COLUMN_CREATED));
-		buffer.append(StorableObjectDatabase.COMMA);
-		buffer.append(DatabaseDate.toQuerySubString(StorableObjectDatabase.COLUMN_MODIFIED));
-		buffer.append(StorableObjectDatabase.COMMA);
-		buffer.append(StorableObjectDatabase.COLUMN_CREATOR_ID);
-		buffer.append(StorableObjectDatabase.COMMA);
-		buffer.append(StorableObjectDatabase.COLUMN_MODIFIER_ID);
-		buffer.append(StorableObjectDatabase.COMMA);
+	
+	private String retrievePortQuery(String condition){
+		StringBuffer buffer = new StringBuffer(SQL_SELECT);
+		buffer.append(COLUMN_ID);
+		buffer.append(COMMA);
+		buffer.append(DatabaseDate.toQuerySubString(COLUMN_CREATED));
+		buffer.append(COMMA);
+		buffer.append(DatabaseDate.toQuerySubString(COLUMN_MODIFIED));
+		buffer.append(COMMA);
+		buffer.append(COLUMN_CREATOR_ID);
+		buffer.append(COMMA);
+		buffer.append(COLUMN_MODIFIER_ID);
+		buffer.append(COMMA);
 		buffer.append(COLUMN_TYPE_ID);
-		buffer.append(StorableObjectDatabase.COMMA);
+		buffer.append(COMMA);
 		buffer.append(COLUMN_DESCRIPTION);
-		buffer.append(StorableObjectDatabase.COMMA);
+		buffer.append(COMMA);
 		buffer.append(COLUMN_EQUIPMENT_ID);
-		buffer.append(StorableObjectDatabase.COMMA);
+		buffer.append(COMMA);
 		buffer.append(COLUMN_SORT);
-		buffer.append(StorableObjectDatabase.SQL_FROM);
+		buffer.append(SQL_FROM);
 		buffer.append(ObjectEntities.PORT_ENTITY);
-		buffer.append(StorableObjectDatabase.SQL_WHERE);
-		buffer.append(StorableObjectDatabase.COLUMN_ID);
-		buffer.append(StorableObjectDatabase.EQUALS);
-		buffer.append(portIdStr);
-		sql = buffer.toString();
+		if ((condition != null) && (condition.length()>0)){
+			buffer.append(SQL_WHERE);
+			buffer.append(condition);
+		}
+
+		return buffer.toString();
+
+	}
+	
+	private Port updatePortFromResultSet(Port port, ResultSet resultSet) throws RetrieveObjectException, SQLException{
+		Port port1 = port;
+		if (port1 == null){
+			/**
+			 * @todo when change DB Identifier model ,change getString() to getLong()
+			 */
+			port1 = new Port(new Identifier(resultSet.getString(COLUMN_ID)), null, null, null, null, 0);			
+		}
+		PortType portType;
+		try {
+			/**
+			 * @todo when change DB Identifier model ,change String to long
+			 */
+			String portTypeIdCode = resultSet.getString(COLUMN_TYPE_ID);
+			portType = (portTypeIdCode != null) ? (PortType)ConfigurationStorableObjectPool.getStorableObject(new Identifier(portTypeIdCode), true) : null;
+		}
+		catch (ApplicationException ae) {
+			throw new RetrieveObjectException(ae);
 		}
 		
+		String description = resultSet.getString(COLUMN_DESCRIPTION);
+		port1.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
+						  DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),								  
+						  
+						  /**
+							* @todo when change DB Identifier model ,change getString() to getLong()
+							*/												
+						  new Identifier(resultSet.getString(COLUMN_CREATOR_ID)),
+						  /**
+							* @todo when change DB Identifier model ,change getString() to getLong()
+							*/
+						  new Identifier(resultSet.getString(COLUMN_MODIFIER_ID)),
+						  
+						  portType,								  
+						  (description != null) ? description : "",
+						  /**
+							* @todo when change DB Identifier model ,change getString() to getLong()
+							*/
+						  new Identifier(resultSet.getString(COLUMN_EQUIPMENT_ID)),
+						  resultSet.getInt(COLUMN_SORT));
+		return port1;
+	}
+	
+
+
+	private void retrievePort(Port port) throws ObjectNotFoundException, RetrieveObjectException{
+		
+		String portIdStr = port.getId().toSQLString();
+		String sql = retrievePortQuery(COLUMN_ID + EQUALS + portIdStr);
+	
 		Statement statement = null;
 		ResultSet resultSet = null;
 		try {
 			statement = connection.createStatement();
 			Log.debugMessage("PortDatabase.retrievePort | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql);
-			if (resultSet.next()) {
-				PortType portType;
-				try {
-					/**
-					 * @todo when change DB Identifier model ,change String to long
-					 */
-					String portTypeIdCode = resultSet.getString(COLUMN_TYPE_ID);
-					portType = (portTypeIdCode != null) ? (PortType)ConfigurationStorableObjectPool.getStorableObject(new Identifier(portTypeIdCode), true) : null;
-				}
-				catch (ApplicationException ae) {
-					throw new RetrieveObjectException(ae);
-				}
-				
-				String description = resultSet.getString(COLUMN_DESCRIPTION);
-				port.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
-								  DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),								  
-								  
-								  /**
-									* @todo when change DB Identifier model ,change getString() to getLong()
-									*/												
-								  new Identifier(resultSet.getString(COLUMN_CREATOR_ID)),
-								  /**
-									* @todo when change DB Identifier model ,change getString() to getLong()
-									*/
-								  new Identifier(resultSet.getString(COLUMN_MODIFIER_ID)),
-								  
-								  portType,								  
-								  (description != null) ? description : "",
-								  /**
-									* @todo when change DB Identifier model ,change getString() to getLong()
-									*/
-								  new Identifier(resultSet.getString(COLUMN_EQUIPMENT_ID)),
-								  resultSet.getInt(COLUMN_SORT));
-			}
+			if (resultSet.next()) 
+				updatePortFromResultSet(port, resultSet);
 			else
 				throw new ObjectNotFoundException("No such port: " + portIdStr);
 		}
@@ -341,4 +363,128 @@ public class PortDatabase extends StorableObjectDatabase {
 			}
 		}
 	}
+	
+	public List retrieveByIds(List ids) throws RetrieveObjectException {
+		if ((ids == null) || (ids.isEmpty()))
+			return retriveByIdsOneQuery(null);
+		return retriveByIdsOneQuery(ids);	
+		//return retriveByIdsPreparedStatement(ids);
+	}
+	
+	private List retriveByIdsOneQuery(List ids) throws RetrieveObjectException {
+		List result = new LinkedList();
+		String sql;
+		{
+			String condition = null;
+			if (ids!=null){
+				StringBuffer buffer = new StringBuffer(COLUMN_ID);
+				int idsLength = ids.size();
+				if (idsLength == 1){
+					buffer.append(EQUALS);
+					buffer.append(((Identifier)ids.iterator().next()).toSQLString());
+				} else{
+					buffer.append(SQL_IN);
+					buffer.append(OPEN_BRACKET);
+					
+					int i = 1;
+					for(Iterator it=ids.iterator();it.hasNext();i++){
+						Identifier id = (Identifier)it.next();
+						buffer.append(id.toSQLString());
+						if (i < idsLength)
+							buffer.append(COMMA);
+					}
+					
+					buffer.append(CLOSE_BRACKET);
+					condition = buffer.toString();
+				}
+			}
+			sql = retrievePortQuery(condition);
+		}
+		
+		Statement statement = null;
+		ResultSet resultSet = null;
+		try {
+			statement = connection.createStatement();
+			Log.debugMessage("PortDatabase.retriveByIdsOneQuery | Trying: " + sql, Log.DEBUGLEVEL09);
+			resultSet = statement.executeQuery(sql);
+			while (resultSet.next()){
+				result.add(updatePortFromResultSet(null, resultSet));
+			}
+		}
+		catch (SQLException sqle) {
+			String mesg = "PortDatabase.retriveByIdsOneQuery | Cannot execute query " + sqle.getMessage();
+			throw new RetrieveObjectException(mesg, sqle);
+		}
+		finally {
+			try {
+				if (statement != null)
+					statement.close();
+				if (resultSet != null)
+					resultSet.close();
+				statement = null;
+				resultSet = null;
+			}
+			catch (SQLException sqle1) {
+				Log.errorException(sqle1);
+			}
+		}
+		return result;
+	}
+	
+	private List retriveByIdsPreparedStatement(List ids) throws RetrieveObjectException {
+		List result = new LinkedList();
+		String sql;
+		{
+			
+			int idsLength = ids.size();
+			if (idsLength == 1){
+				return retriveByIdsOneQuery(ids);
+			}
+			StringBuffer buffer = new StringBuffer(COLUMN_ID);
+			buffer.append(EQUALS);							
+			buffer.append(QUESTION);
+			
+			sql = retrievePortQuery(buffer.toString());
+		}
+			
+		PreparedStatement stmt = null;
+		ResultSet resultSet = null;
+		try {
+			stmt = connection.prepareStatement(sql.toString());
+			for(Iterator it = ids.iterator();it.hasNext();){
+				Identifier id = (Identifier)it.next(); 
+				/**
+				 * @todo when change DB Identifier model ,change setString() to setLong()
+				 */
+				String idStr = id.getIdentifierString();
+				stmt.setString(1, idStr);
+				resultSet = stmt.executeQuery();
+				if (resultSet.next()){
+					result.add(updatePortFromResultSet(null, resultSet));
+				} else{
+					Log.errorMessage("PortDatabase.retriveByIdsPreparedStatement | No such port: " + idStr);									
+				}
+				
+			}
+		}catch (SQLException sqle) {
+			String mesg = "PortDatabase.retriveByIdsPreparedStatement | Cannot retrieve port " + sqle.getMessage();
+			throw new RetrieveObjectException(mesg, sqle);
+		}
+		finally {
+			try {
+				if (stmt != null)
+					stmt.close();
+				if (stmt != null)
+					stmt.close();
+				stmt = null;
+				resultSet = null;
+			}
+			catch (SQLException sqle1) {
+				Log.errorException(sqle1);
+			}
+		}			
+		
+		return result;
+	}
+
 }
