@@ -1,5 +1,5 @@
 /**
- * $Id: MarkController.java,v 1.1 2004/12/24 15:42:12 krupenn Exp $
+ * $Id: MarkController.java,v 1.2 2004/12/30 16:17:48 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -40,7 +40,7 @@ import com.syrus.AMFICOM.Client.Map.Controllers.NodeLinkController;
  * 
  * 
  * 
- * @version $Revision: 1.1 $, $Date: 2004/12/24 15:42:12 $
+ * @version $Revision: 1.2 $, $Date: 2004/12/30 16:17:48 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -70,7 +70,10 @@ public final class MarkController extends AbstractNodeController
 
 	public Image getImage(AbstractNode node)
 	{
-		Identifier imageId = getLogicalNetLayer().getImageId(IMAGE_NAME, IMAGE_PATH);
+		Identifier creatorId = new Identifier(
+			getLogicalNetLayer().getContext().getSessionInterface().getAccessIdentifier().user_id);
+
+		Identifier imageId = NodeTypeController.getImageId(creatorId, IMAGE_NAME, IMAGE_PATH);
 		if(MapPropertiesManager.getImage(imageId) == null)
 			MapPropertiesManager.setOriginalImage(imageId, new ImageIcon(IMAGE_PATH).getImage());
 		node.setImageId(imageId);

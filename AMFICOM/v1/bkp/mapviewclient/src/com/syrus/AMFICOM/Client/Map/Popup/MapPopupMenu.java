@@ -1,5 +1,5 @@
 /**
- * $Id: MapPopupMenu.java,v 1.21 2004/12/24 15:42:12 krupenn Exp $
+ * $Id: MapPopupMenu.java,v 1.22 2004/12/30 16:17:48 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -14,6 +14,8 @@ import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
 import com.syrus.AMFICOM.Client.General.Event.MapEvent;
 import com.syrus.AMFICOM.Client.General.Lang.LangModel;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
+import com.syrus.AMFICOM.Client.Map.Controllers.LinkTypeController;
+import com.syrus.AMFICOM.Client.Map.Controllers.NodeTypeController;
 import com.syrus.AMFICOM.client_.general.ui_.ObjectResourcePropertiesDialog;
 import com.syrus.AMFICOM.client_.general.ui_.ObjectResourcePropertiesPane;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourceSelectionDialog;
@@ -29,6 +31,7 @@ import com.syrus.AMFICOM.Client.Map.Command.Action.RemoveCollectorCommandAtomic;
 import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
 import com.syrus.AMFICOM.Client.Map.Props.MapPropertiesPane;
 import com.syrus.AMFICOM.Client.Map.Props.MapPropsManager;
+import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.map.MapElementState;
@@ -60,7 +63,7 @@ import javax.swing.JPopupMenu;
  * 
  * 
  * 
- * @version $Revision: 1.21 $, $Date: 2004/12/24 15:42:12 $
+ * @version $Revision: 1.22 $, $Date: 2004/12/30 16:17:48 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -164,7 +167,7 @@ public abstract class MapPopupMenu extends JPopupMenu
 	{
 		SiteNodeType proto = null;
 
-		List list = logicalNetLayer.getTopologicalProtos();
+		List list = NodeTypeController.getTopologicalProtos(logicalNetLayer.getContext());
 
 		ObjectResourceSelectionDialog dialog = new ObjectResourceSelectionDialog(list);
 			
@@ -289,6 +292,11 @@ public abstract class MapPopupMenu extends JPopupMenu
 	
 	protected void addLinkToCollector(Collector collector, PhysicalLink mple)
 	{
+		Identifier creatorId = new Identifier(
+			getLogicalNetLayer().getContext().getSessionInterface().getAccessIdentifier().user_id);
+			
+		PhysicalLinkType collectorType = LinkTypeController.getPhysicalLinkType(creatorId, PhysicalLinkType.UNBOUND);
+
 		Collector prevCollector = logicalNetLayer.getMapView().getMap().getCollector(mple);
 		if(prevCollector != null)
 			prevCollector.removePhysicalLink(mple);
@@ -296,7 +304,7 @@ public abstract class MapPopupMenu extends JPopupMenu
 		collector.addPhysicalLink(mple);
 
 		MapElementState state = mple.getState();
-		mple.setType(getLogicalNetLayer().getPhysicalLinkType(PhysicalLinkType.COLLECTOR));
+		mple.setType(collectorType);
 
 		MapElementStateChangeCommand command2 = new MapElementStateChangeCommand(mple, state, mple.getState());
 		command2.setLogicalNetLayer(logicalNetLayer);
@@ -316,11 +324,14 @@ public abstract class MapPopupMenu extends JPopupMenu
 	
 	protected void removeLinkFromCollector(Collector collector, PhysicalLink mple)
 	{
+		Identifier creatorId = new Identifier(
+			getLogicalNetLayer().getContext().getSessionInterface().getAccessIdentifier().user_id);
+
 		collector.removePhysicalLink(mple);
 
 		MapElementState state = mple.getState();
 
-		mple.setType(getLogicalNetLayer().getPhysicalLinkType(PhysicalLinkType.TUNNEL));
+		mple.setType(LinkTypeController.getPhysicalLinkType(creatorId, PhysicalLinkType.TUNNEL));
 
 		MapElementStateChangeCommand command = new MapElementStateChangeCommand(mple, state, mple.getState());
 		command.setLogicalNetLayer(logicalNetLayer);

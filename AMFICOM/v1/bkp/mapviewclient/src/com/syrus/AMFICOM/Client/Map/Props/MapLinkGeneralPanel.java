@@ -4,6 +4,7 @@ import com.syrus.AMFICOM.Client.General.Lang.LangModel;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourceComboBox;
+import com.syrus.AMFICOM.Client.Map.Controllers.LinkTypeController;
 import com.syrus.AMFICOM.Client.Map.UI.SimpleMapElementController;
 import com.syrus.AMFICOM.client_.general.ui_.ObjComboBox;
 import com.syrus.AMFICOM.client_.general.ui_.ObjectResourcePropertiesPane;
@@ -123,7 +124,7 @@ public class MapLinkGeneralPanel
 		addressPanel.setLayout(gridBagLayout2);
 		cityLabel.setText(LangModelMap.getString("City"));
 		streetLabel.setText(LangModelMap.getString("Street"));
-		buildingLabel.setText(LangModelMap.getString("Building"));
+		buildingLabel.setText(LangModelMap.getString("building"));
 
 		xLabel.setText("X");
 		mTextField.setPreferredSize(new Dimension(60, 23));
@@ -189,7 +190,7 @@ public class MapLinkGeneralPanel
 			nameTextField.setEnabled(true);
 			nameTextField.setText(link.getName());
 
-			List protos = getLogicalNetLayer().getPens();
+			List protos = LinkTypeController.getPens(getLogicalNetLayer().getContext());
 			
 			typeComboBox.setEnabled(true);
 			typeComboBox.addElements(protos);

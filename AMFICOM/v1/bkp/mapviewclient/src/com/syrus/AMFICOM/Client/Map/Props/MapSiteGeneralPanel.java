@@ -4,6 +4,7 @@ import com.syrus.AMFICOM.Client.General.Lang.LangModel;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourceComboBox;
+import com.syrus.AMFICOM.Client.Map.Controllers.NodeTypeController;
 import com.syrus.AMFICOM.Client.Map.UI.SimpleMapElementController;
 import com.syrus.AMFICOM.client_.general.ui_.ObjComboBox;
 import com.syrus.AMFICOM.client_.general.ui_.ObjectResourcePropertiesPane;
@@ -168,7 +169,7 @@ public class MapSiteGeneralPanel
 			nameTextField.setEnabled(true);
 			nameTextField.setText(site.getName());
 
-			List protos = getLogicalNetLayer().getTopologicalProtos();
+			List protos = NodeTypeController.getTopologicalProtos(getLogicalNetLayer().getContext());
 			
 			typeComboBox.setEnabled(true);
 			typeComboBox.addElements(protos);

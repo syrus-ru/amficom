@@ -43,10 +43,6 @@ public class MapElementPropertiesController
 	String PROPERTY_SELECTION_COUNT = "SelectionCount";
 
 	private List keys = new LinkedList();
-	{
-		keys.add("");
-		keys.add("");
-	}
 
 	public String getKey(final int index) 
 	{

@@ -1,5 +1,5 @@
 /**
- * $Id: MapElementsBarPanel.java,v 1.5 2004/12/22 16:38:42 krupenn Exp $
+ * $Id: MapElementsBarPanel.java,v 1.6 2004/12/30 16:17:48 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -12,6 +12,7 @@
 package com.syrus.AMFICOM.Client.Map.UI;
 
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
+import com.syrus.AMFICOM.Client.Map.Controllers.NodeTypeController;
 import com.syrus.AMFICOM.map.SiteNodeType;
 
 import java.awt.FlowLayout;
@@ -25,7 +26,7 @@ import javax.swing.JPanel;
  * 
  * 
  * 
- * @version $Revision: 1.5 $, $Date: 2004/12/22 16:38:42 $
+ * @version $Revision: 1.6 $, $Date: 2004/12/30 16:17:48 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -33,6 +34,8 @@ import javax.swing.JPanel;
 public final class MapElementsBarPanel extends JPanel 
 {
 	final static int ELEMENT_DIMENSION = 30;
+	
+	ApplicationContext aContext;
 
 	public MapElementsBarPanel()
 	{
@@ -45,7 +48,6 @@ public final class MapElementsBarPanel extends JPanel
 		{
 		  e.printStackTrace();
 		}
-		setProtoElements();
 	}
 
 	private void jbInit()
@@ -55,6 +57,8 @@ public final class MapElementsBarPanel extends JPanel
 
 	public void setContext(ApplicationContext aContext)
 	{
+		this.aContext = aContext;
+		setProtoElements();
 	}
 	
 	public void setProtoElements()
@@ -68,7 +72,7 @@ public final class MapElementsBarPanel extends JPanel
 		
 		for(Iterator it = elements.iterator(); it.hasNext();)
 		{
-			mpe = (SiteNodeType)it.next();
+			mpe = (SiteNodeType )it.next();
 			mel = new MapElementLabel(mpe);
 			mel.setToolTipText( mpe.getName());
 			this.add(mel);
@@ -84,8 +88,7 @@ public final class MapElementsBarPanel extends JPanel
 
 	private java.util.List getMapProtoElements()
 	{
-		MapFrame mf = MapFrame.getMapMainFrame();
-		return mf.getMapViewer().getLogicalNetLayer().getTopologicalProtos();
+		return NodeTypeController.getTopologicalProtos(aContext);
 	}
 }
 

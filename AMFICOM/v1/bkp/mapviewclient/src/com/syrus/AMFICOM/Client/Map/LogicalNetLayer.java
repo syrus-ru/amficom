@@ -1,5 +1,5 @@
 /**
- * $Id: LogicalNetLayer.java,v 1.31 2004/12/29 19:05:20 krupenn Exp $
+ * $Id: LogicalNetLayer.java,v 1.32 2004/12/30 16:17:47 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -32,6 +32,7 @@ import com.syrus.AMFICOM.Client.Map.Controllers.AbstractNodeController;
 import com.syrus.AMFICOM.Client.Map.Controllers.NodeTypeController;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StringFieldCondition;
@@ -102,7 +103,7 @@ import javax.swing.ImageIcon;
  * 
  * 
  * 
- * @version $Revision: 1.31 $, $Date: 2004/12/29 19:05:20 $
+ * @version $Revision: 1.32 $, $Date: 2004/12/30 16:17:47 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -1623,21 +1624,36 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 	public PhysicalLinkType getPen()
 	{
 		if(currentPen == null)
-			currentPen = getDefaultPen();
+		{
+			Identifier creatorId = new Identifier(
+				aContext.getSessionInterface().getAccessIdentifier().user_id);
+
+			currentPen = LinkTypeController.getDefaultPen(creatorId);
+		}
 		return currentPen;
 	}
 	
 	public SiteNodeType getUnboundProto()
 	{
 		if(unboundProto == null)
-			unboundProto = getDefaultUnboundProto();
+		{
+			Identifier creatorId = new Identifier(
+				aContext.getSessionInterface().getAccessIdentifier().user_id);
+
+			unboundProto = NodeTypeController.getDefaultUnboundProto(creatorId);
+		}
 		return unboundProto;
 	}
 	
 	public PhysicalLinkType getUnboundPen()
 	{
 		if(unboundLinkProto == null)
-			unboundLinkProto = getDefaultCable();
+		{
+			Identifier creatorId = new Identifier(
+				aContext.getSessionInterface().getAccessIdentifier().user_id);
+
+			unboundLinkProto = LinkTypeController.getDefaultUnboundPen(creatorId);
+		}
 		return unboundLinkProto;
 	}
 	
@@ -1645,7 +1661,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 	{
 		this.currentPen = pen;
 	}
-
+/*
 	public Identifier getImageId(String codename, String filename)
 	{
 		try 
@@ -1670,12 +1686,20 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 		}
 		try
 		{
+			Identifier creatorId = new Identifier(
+				aContext.getSessionInterface().getAccessIdentifier().user_id);
 			FileImageResource ir = FileImageResource.createInstance(
-				this.getMapView().getMap().getCreatorId(),
+				creatorId,
 				filename);
+			ResourceStorableObjectPool.putStorableObject(ir);
 			return ir.getId();
 		}
 		catch (CreateObjectException e)
+		{
+			e.printStackTrace();
+			return null;
+		}
+		catch (IllegalObjectEntityException e)
 		{
 			e.printStackTrace();
 			return null;
@@ -1709,20 +1733,27 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 
 		try
 		{
-			return SiteNodeType.createInstance(
-				this.getMapView().getMap().getCreatorId(),
+			Identifier creatorId = new Identifier(
+				aContext.getSessionInterface().getAccessIdentifier().user_id);
+			SiteNodeType snt = SiteNodeType.createInstance(
+				creatorId,
 				codename,
 				LangModelMap.getString(codename),
 				"",
-				getImageId(codename, com.syrus.AMFICOM.Client.Map.Controllers.NodeTypeController.getImageFileName(codename)),
+				getImageId(codename, NodeTypeController.getImageFileName(codename)),
 				true);
+				
+			MapStorableObjectPool.putStorableObject(snt);
+			return snt;
 		}
 		catch (Exception e)
 		{
+			e.printStackTrace();
 			return null;
 		}
 	}
-
+*/
+/*
 	public PhysicalLinkType getPhysicalLinkType(
 			String codename)
 	{
@@ -1750,38 +1781,51 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 
 		try
 		{
-			LinkTypeController ltc = (LinkTypeController)com.syrus.AMFICOM.Client.Map.Controllers.LinkTypeController.getInstance();
+			LinkTypeController ltc = (LinkTypeController)LinkTypeController.getInstance();
 			ltc.setLogicalNetLayer(this);
 
+			Identifier creatorId = new Identifier(
+				aContext.getSessionInterface().getAccessIdentifier().user_id);
+
 			PhysicalLinkType pType = PhysicalLinkType.createInstance(
-				this.getMapView().getMap().getCreatorId(),
+				creatorId,
 				codename,
 				LangModelMap.getString(codename),
 				"",
-				com.syrus.AMFICOM.Client.Map.Controllers.LinkTypeController.getBindDimension(codename));
+				LinkTypeController.getBindDimension(codename));
 
-			ltc.setLineSize(pType, com.syrus.AMFICOM.Client.Map.Controllers.LinkTypeController.getLineThickness(codename));
-			ltc.setColor(pType, com.syrus.AMFICOM.Client.Map.Controllers.LinkTypeController.getLineColor(codename));
+			ltc.setLineSize(pType, LinkTypeController.getLineThickness(codename));
+			ltc.setColor(pType, LinkTypeController.getLineColor(codename));
+
+			MapStorableObjectPool.putStorableObject(pType);
 			return pType;
 		}
 		catch (Exception e)
 		{
+			e.printStackTrace();
 			return null;
 		}
 	}
-
+*/
+/*
 	protected SiteNodeType getDefaultUnboundProto()
 	{
-		return getSiteNodeType(SiteNodeType.UNBOUND);
-	}
+		Identifier creatorId = new Identifier(
+			aContext.getSessionInterface().getAccessIdentifier().user_id);
 
+		return NodeTypeController.getSiteNodeType(creatorId, SiteNodeType.UNBOUND);
+	}
+*/
+/*
 	public List getPens()
 	{
+		Identifier creatorId = new Identifier(
+			aContext.getSessionInterface().getAccessIdentifier().user_id);
 
 		PhysicalLinkType mlpe = null;
 
-		mlpe = getPhysicalLinkType(PhysicalLinkType.TUNNEL);
-		mlpe = getPhysicalLinkType(PhysicalLinkType.COLLECTOR);
+		mlpe = LinkTypeController.getPhysicalLinkType(creatorId, PhysicalLinkType.TUNNEL);
+		mlpe = LinkTypeController.getPhysicalLinkType(creatorId, PhysicalLinkType.COLLECTOR);
 
 		List list = null;
 		try
@@ -1801,25 +1845,36 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 	
 	protected PhysicalLinkType getDefaultPen()
 	{
-		return getPhysicalLinkType(PhysicalLinkType.TUNNEL);
+		Identifier creatorId = new Identifier(
+			aContext.getSessionInterface().getAccessIdentifier().user_id);
+		return LinkTypeController.getPhysicalLinkType(creatorId, PhysicalLinkType.TUNNEL);
 	}
 
 	protected PhysicalLinkType getDefaultCable()
 	{
-		return getPhysicalLinkType(PhysicalLinkType.UNBOUND);
+		Identifier creatorId = new Identifier(
+			aContext.getSessionInterface().getAccessIdentifier().user_id);
+		return LinkTypeController.getPhysicalLinkType(creatorId, PhysicalLinkType.UNBOUND);
 	}
+*/
+/*	
+	List topologicalProtos = new LinkedList();
 
 	public List getTopologicalProtos()
 	{
 		SiteNodeType mnpe = null;
-		
-		mnpe = getSiteNodeType(SiteNodeType.ATS);
-		mnpe = getSiteNodeType(SiteNodeType.BUILDING);
-		mnpe = getSiteNodeType(SiteNodeType.PIQUET);
-		mnpe = getSiteNodeType(SiteNodeType.WELL);
-		mnpe = getSiteNodeType(SiteNodeType.CABLE_INLET);
 
-		List list = new LinkedList();
+		topologicalProtos.clear();
+		
+		Identifier creatorId = new Identifier(
+			aContext.getSessionInterface().getAccessIdentifier().user_id);
+
+		topologicalProtos.add(NodeTypeController.getSiteNodeType(creatorId, SiteNodeType.ATS));
+		topologicalProtos.add(NodeTypeController.getSiteNodeType(creatorId, SiteNodeType.BUILDING));
+		topologicalProtos.add(NodeTypeController.getSiteNodeType(creatorId, SiteNodeType.PIQUET));
+		topologicalProtos.add(NodeTypeController.getSiteNodeType(creatorId, SiteNodeType.WELL));
+		topologicalProtos.add(NodeTypeController.getSiteNodeType(creatorId, SiteNodeType.CABLE_INLET));
+
 		try
 		{
 			List list2 =
@@ -1829,17 +1884,17 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 			{
 				mnpe = (SiteNodeType )it.next();
 				if(mnpe.isTopological())
-					list.add(mnpe);
+					topologicalProtos.add(mnpe);
 			}
 		}
 		catch(Exception e)
 		{
 		}
 		
-		list.remove(getUnboundProto());
-		return list;
+		topologicalProtos.remove(getUnboundProto());
+		return topologicalProtos;
 	}
-
+*/
 	public MapViewController getMapViewController()
 	{
 		return com.syrus.AMFICOM.Client.Map.Controllers.MapViewController.getInstance(this);

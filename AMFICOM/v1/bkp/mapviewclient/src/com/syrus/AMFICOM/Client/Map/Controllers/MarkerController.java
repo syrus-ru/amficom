@@ -1,5 +1,5 @@
 /**
- * $Id: MarkerController.java,v 1.2 2004/12/29 19:05:20 krupenn Exp $
+ * $Id: MarkerController.java,v 1.3 2004/12/30 16:17:48 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -15,6 +15,7 @@ import com.syrus.AMFICOM.Client.General.Event.MapNavigateEvent;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.Map.MapCoordinatesConverter;
 import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
+import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.DoublePoint;
 import com.syrus.AMFICOM.map.MapElement;
@@ -45,7 +46,7 @@ import com.syrus.AMFICOM.Client.Map.mapview.CablePath;
  * 
  * 
  * 
- * @version $Revision: 1.2 $, $Date: 2004/12/29 19:05:20 $
+ * @version $Revision: 1.3 $, $Date: 2004/12/30 16:17:48 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -96,8 +97,11 @@ public class MarkerController extends AbstractNodeController
 	{
 		if(needInit)
 		{
+			Identifier creatorId = new Identifier(
+				getLogicalNetLayer().getContext().getSessionInterface().getAccessIdentifier().user_id);
+
 			MapPropertiesManager.setOriginalImage(
-				getLogicalNetLayer().getImageId(IMAGE_NAME, IMAGE_PATH),
+				NodeTypeController.getImageId(creatorId, IMAGE_NAME, IMAGE_PATH),
 				new ImageIcon(IMAGE_PATH).getImage());
 		}
 		super.paint(me, g, visibleBounds);

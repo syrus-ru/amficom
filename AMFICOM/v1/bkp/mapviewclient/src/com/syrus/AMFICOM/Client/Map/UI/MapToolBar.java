@@ -1,5 +1,5 @@
 /**
- * $Id: MapToolBar.java,v 1.12 2004/12/22 16:38:42 krupenn Exp $
+ * $Id: MapToolBar.java,v 1.13 2004/12/30 16:17:48 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -46,7 +46,7 @@ import java.awt.event.KeyEvent;
  * 
  * 
  * 
- * @version $Revision: 1.12 $, $Date: 2004/12/22 16:38:42 $
+ * @version $Revision: 1.13 $, $Date: 2004/12/30 16:17:48 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -118,7 +118,7 @@ public final class MapToolBar extends JToolBar
 	{
 		this.logicalNetLayer = logicalNetLayer;
 		sp.setLogicalNetLayer(logicalNetLayer);
-		penp.setLogicalNetLayer(logicalNetLayer);
+//		penp.setLogicalNetLayer(logicalNetLayer);
 	}
 
 	public void showLatLong (double latitude, double longitude)

@@ -1,5 +1,5 @@
 /**
- * $Id: TopologicalNodeController.java,v 1.1 2004/12/24 15:42:12 krupenn Exp $
+ * $Id: TopologicalNodeController.java,v 1.2 2004/12/30 16:17:48 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -13,6 +13,7 @@ package com.syrus.AMFICOM.Client.Map.Controllers;
 
 import com.syrus.AMFICOM.Client.Map.MapCoordinatesConverter;
 import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
+import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.map.TopologicalNode;
 
@@ -32,7 +33,7 @@ import com.syrus.AMFICOM.Client.Map.Controllers.AbstractNodeController;
  * 
  * 
  * 
- * @version $Revision: 1.1 $, $Date: 2004/12/24 15:42:12 $
+ * @version $Revision: 1.2 $, $Date: 2004/12/30 16:17:48 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -89,22 +90,28 @@ public class TopologicalNodeController extends AbstractNodeController
 
 	public void setActive(TopologicalNode node, boolean active)
 	{
+		Identifier creatorId = new Identifier(
+			getLogicalNetLayer().getContext().getSessionInterface().getAccessIdentifier().user_id);
+
 		node.setActive(active);
 		if(active)
-			node.setImageId(getLogicalNetLayer().getImageId(CLOSED_NODE, CLOSED_NODE_IMAGE));
+			node.setImageId(NodeTypeController.getImageId(creatorId, CLOSED_NODE, CLOSED_NODE_IMAGE));
 		else
-			node.setImageId(getLogicalNetLayer().getImageId(OPEN_NODE, OPEN_NODE_IMAGE));
+			node.setImageId(NodeTypeController.getImageId(creatorId, OPEN_NODE, OPEN_NODE_IMAGE));
 	}
 
 	public void paint (MapElement me, Graphics g, Rectangle2D.Double visibleBounds)
 	{
 		if(needInit)
 		{
+			Identifier creatorId = new Identifier(
+				getLogicalNetLayer().getContext().getSessionInterface().getAccessIdentifier().user_id);
+
 			MapPropertiesManager.setOriginalImage(
-				getLogicalNetLayer().getImageId(OPEN_NODE, OPEN_NODE_IMAGE),
+				NodeTypeController.getImageId(creatorId, OPEN_NODE, OPEN_NODE_IMAGE),
 				new ImageIcon(OPEN_NODE_IMAGE).getImage());
 			MapPropertiesManager.setOriginalImage(
-				getLogicalNetLayer().getImageId(CLOSED_NODE, CLOSED_NODE_IMAGE), 
+				NodeTypeController.getImageId(creatorId, CLOSED_NODE, CLOSED_NODE_IMAGE), 
 				new ImageIcon(CLOSED_NODE_IMAGE).getImage());
 		}
 

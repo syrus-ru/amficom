@@ -1,5 +1,5 @@
 /**
- * $Id: MapElementsPanel.java,v 1.9 2004/12/27 16:49:35 krupenn Exp $
+ * $Id: MapElementsPanel.java,v 1.10 2004/12/30 16:17:48 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -17,7 +17,9 @@ import com.syrus.AMFICOM.Client.General.Event.MapNavigateEvent;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.UI.AComboBox;
+import com.syrus.AMFICOM.Client.Map.Controllers.NodeTypeController;
 import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
+import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.map.Mark;
@@ -57,23 +59,23 @@ import javax.swing.event.ListSelectionListener;
  * видов элементов и талица элементов с полями "Идентификатор" и "Название"
  * 
  * 
- * @version $Revision: 1.9 $, $Date: 2004/12/27 16:49:35 $
+ * @version $Revision: 1.10 $, $Date: 2004/12/30 16:17:48 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
  */
 public final class MapElementsPanel extends JPanel
 {
-	public static final String ELEMENTS_SITE = "Site";
-	public static final String ELEMENTS_WELL = "Well";
-	public static final String ELEMENTS_PIQUET = "Piquet";
-	public static final String ELEMENTS_LINK = "Link";
-	public static final String ELEMENTS_COLLECTOR = "Collector";
-	public static final String ELEMENTS_CABLE = "Cable";
-	public static final String ELEMENTS_NODE = "Node";
-	public static final String ELEMENTS_MARK = "Mark";
-	public static final String ELEMENTS_PATH = "Path";
-	public static final String ELEMENTS_MARKER = "Marker";
+	public static final String ELEMENTS_SITE = "site";
+	public static final String ELEMENTS_WELL = "well";
+	public static final String ELEMENTS_PIQUET = "piquet";
+	public static final String ELEMENTS_LINK = "link";
+	public static final String ELEMENTS_COLLECTOR = "collector";
+	public static final String ELEMENTS_CABLE = "cable";
+	public static final String ELEMENTS_NODE = "node";
+	public static final String ELEMENTS_MARK = "mark";
+	public static final String ELEMENTS_PATH = "path";
+	public static final String ELEMENTS_MARKER = "marker";
 
 	Map map;
 	MapView mapView;
@@ -267,9 +269,12 @@ public final class MapElementsPanel extends JPanel
 
 		if(map != null && logicalNetLayer != null)
 		{
-			SiteNodeType well = logicalNetLayer.getSiteNodeType(SiteNodeType.WELL);
-			SiteNodeType piquet = logicalNetLayer.getSiteNodeType(SiteNodeType.PIQUET);
-			SiteNodeType cableinlet = logicalNetLayer.getSiteNodeType(SiteNodeType.CABLE_INLET);
+			Identifier creatorId = new Identifier(
+				aContext.getSessionInterface().getAccessIdentifier().user_id);
+
+			SiteNodeType well = NodeTypeController.getSiteNodeType(creatorId, SiteNodeType.WELL);
+			SiteNodeType piquet = NodeTypeController.getSiteNodeType(creatorId, SiteNodeType.PIQUET);
+			SiteNodeType cableinlet = NodeTypeController.getSiteNodeType(creatorId, SiteNodeType.CABLE_INLET);
 
 			if(selection.equals(ELEMENTS_SITE))
 			{

@@ -71,7 +71,7 @@ public final class CableBindingController implements ObjectResourceController
 			name = LangModelMap.getString("StartSpare");
 		else
 		if (key.equals(KEY_LINK))
-			name = LangModelMap.getString("Tunnel");
+			name = LangModelMap.getString("tunnel");
 		else
 		if (key.equals(KEY_END_SPARE))
 			name = LangModelMap.getString("EndSpare");

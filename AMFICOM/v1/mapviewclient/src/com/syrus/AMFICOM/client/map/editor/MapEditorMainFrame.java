@@ -1,5 +1,5 @@
 /**
- * $Id: MapEditorMainFrame.java,v 1.13 2004/12/28 17:35:12 krupenn Exp $
+ * $Id: MapEditorMainFrame.java,v 1.14 2004/12/30 16:17:48 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -97,7 +97,7 @@ import javax.swing.JViewport;
  * 
  * 
  * 
- * @version $Revision: 1.13 $, $Date: 2004/12/28 17:35:12 $
+ * @version $Revision: 1.14 $, $Date: 2004/12/30 16:17:48 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -548,7 +548,7 @@ public class MapEditorMainFrame extends JFrame
 				if (comp instanceof MapFrame)
 				{
 					((MapFrame)comp).setVisible(false);
-					((MapFrame)comp).setMapView(null);
+//					((MapFrame)comp).setMapView(null);
 					((MapFrame)comp).setContext(null);
 				}
 				else if (comp instanceof MapPropertyFrame)

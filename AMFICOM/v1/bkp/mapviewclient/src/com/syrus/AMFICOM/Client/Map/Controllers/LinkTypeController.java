@@ -1,5 +1,5 @@
 /**
- * $Id: LinkTypeController.java,v 1.1 2004/12/24 15:42:12 krupenn Exp $
+ * $Id: LinkTypeController.java,v 1.2 2004/12/30 16:17:48 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,14 +11,23 @@
 
 package com.syrus.AMFICOM.Client.Map.Controllers;
 
+import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
+import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.UI.LineComboBox;
 import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
 import com.syrus.AMFICOM.configuration.Characteristic;
 import com.syrus.AMFICOM.configuration.CharacteristicType;
+import com.syrus.AMFICOM.configuration.StringFieldCondition;
 import com.syrus.AMFICOM.configuration.corba.CharacteristicTypeSort;
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.StorableObjectCondition;
+import com.syrus.AMFICOM.general.corba.StringFieldSort;
 import com.syrus.AMFICOM.map.IntDimension;
 import com.syrus.AMFICOM.map.MapElement;
+import com.syrus.AMFICOM.map.MapStorableObjectPool;
 import com.syrus.AMFICOM.map.PhysicalLinkType;
 
 import java.awt.Color;
@@ -31,13 +40,15 @@ import java.util.HashMap;
 import java.util.Iterator;
 import com.syrus.AMFICOM.Client.Map.Controllers.MapElementController;
 import com.syrus.AMFICOM.Client.Map.Controllers.AbstractLinkController;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * линейный элемента карты 
  * 
  * 
  * 
- * @version $Revision: 1.1 $, $Date: 2004/12/24 15:42:12 $
+ * @version $Revision: 1.2 $, $Date: 2004/12/30 16:17:48 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -372,5 +383,91 @@ public final class LinkTypeController extends AbstractLinkController
 		if(ea == null)
 			return MapPropertiesManager.getAlarmedThickness();
 		return Integer.parseInt(ea.getValue());
+	}
+
+	public static PhysicalLinkType getPhysicalLinkType(
+			Identifier userId,
+			String codename)
+	{
+		StorableObjectCondition pTypeCondition = new StringFieldCondition(
+			codename,
+			ObjectEntities.PHYSICAL_LINK_TYPE_ENTITY_CODE,
+			StringFieldSort.STRINGSORT_BASE);
+
+		try
+		{
+			List pTypes =
+				MapStorableObjectPool.getStorableObjectsByCondition(pTypeCondition, true);
+			for (Iterator it = pTypes.iterator(); it.hasNext();)
+			{
+				PhysicalLinkType type = (PhysicalLinkType )it.next();
+				if (type.getCodename().equals(codename))
+					return type;
+			}
+		}
+		catch(ApplicationException ex)
+		{
+			System.err.println("Exception searching ParameterType. Creating new one.");
+			ex.printStackTrace();
+		}
+
+		try
+		{
+			LinkTypeController ltc = (LinkTypeController )LinkTypeController.getInstance();
+
+			PhysicalLinkType pType = PhysicalLinkType.createInstance(
+				userId,
+				codename,
+				LangModelMap.getString(codename),
+				"",
+				LinkTypeController.getBindDimension(codename));
+
+			ltc.setLineSize(pType, LinkTypeController.getLineThickness(codename));
+			ltc.setColor(pType, LinkTypeController.getLineColor(codename));
+
+			MapStorableObjectPool.putStorableObject(pType);
+			return pType;
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	public static List getPens(ApplicationContext aContext)
+	{
+		Identifier creatorId = new Identifier(
+			aContext.getSessionInterface().getAccessIdentifier().user_id);
+
+		PhysicalLinkType mlpe = null;
+
+		mlpe = LinkTypeController.getPhysicalLinkType(creatorId, PhysicalLinkType.TUNNEL);
+		mlpe = LinkTypeController.getPhysicalLinkType(creatorId, PhysicalLinkType.COLLECTOR);
+
+		List list = null;
+		try
+		{
+			list =
+				MapStorableObjectPool.getStorableObjectsByConditionButIds(null, null, true);
+
+			list.remove(getDefaultUnboundPen(creatorId));
+		}
+		catch(Exception e)
+		{
+			list = new LinkedList();
+		}
+		
+		return list;
+	}
+	
+	public static PhysicalLinkType getDefaultPen(Identifier creatorId)
+	{
+		return LinkTypeController.getPhysicalLinkType(creatorId, PhysicalLinkType.TUNNEL);
+	}
+
+	public static PhysicalLinkType getDefaultUnboundPen(Identifier creatorId)
+	{
+		return LinkTypeController.getPhysicalLinkType(creatorId, PhysicalLinkType.UNBOUND);
 	}
 }

@@ -73,7 +73,7 @@ public class MapCablePathGeneralPanel
 		nameLabel.setText(LangModelMap.getString("Name"));
 		nameLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
 
-		cableLabel.setText(LangModelMap.getString("Cable"));
+		cableLabel.setText(LangModelMap.getString("cable"));
 		cableLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
 
 		descLabel.setText(LangModelMap.getString("Description"));

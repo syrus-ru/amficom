@@ -1,5 +1,5 @@
 /**
- * $Id: AlarmMarkerController.java,v 1.1 2004/12/24 15:42:12 krupenn Exp $
+ * $Id: AlarmMarkerController.java,v 1.2 2004/12/30 16:17:48 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -14,6 +14,7 @@ package com.syrus.AMFICOM.Client.Map.Controllers;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
 import com.syrus.AMFICOM.Client.Map.Controllers.MapElementController;
+import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.MapElement;
 
@@ -30,7 +31,7 @@ import com.syrus.AMFICOM.Client.Map.mapview.MeasurementPath;
  * 
  * 
  * 
- * @version $Revision: 1.1 $, $Date: 2004/12/24 15:42:12 $
+ * @version $Revision: 1.2 $, $Date: 2004/12/30 16:17:48 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -77,19 +78,25 @@ public final class AlarmMarkerController extends MarkerController
 
 	public Image getAlarmedImage(AbstractNode node)
 	{
+		Identifier creatorId = new Identifier(
+			getLogicalNetLayer().getContext().getSessionInterface().getAccessIdentifier().user_id);
+
 		return MapPropertiesManager.getScaledImage(
-				getLogicalNetLayer().getImageId(IMAGE2_NAME, IMAGE2_PATH));
+				NodeTypeController.getImageId(creatorId, IMAGE2_NAME, IMAGE2_PATH));
 	}
 
 	public void paint(MapElement me, Graphics g, Rectangle2D.Double visibleBounds)
 	{
 		if(needInit)
 		{
+			Identifier creatorId = new Identifier(
+				getLogicalNetLayer().getContext().getSessionInterface().getAccessIdentifier().user_id);
+
 			MapPropertiesManager.setOriginalImage(
-				getLogicalNetLayer().getImageId(IMAGE_NAME, IMAGE_PATH),
+				NodeTypeController.getImageId(creatorId, IMAGE_NAME, IMAGE_PATH),
 				new ImageIcon(IMAGE_PATH).getImage());
 			MapPropertiesManager.setOriginalImage(
-				getLogicalNetLayer().getImageId(IMAGE2_NAME, IMAGE2_PATH),
+				NodeTypeController.getImageId(creatorId, IMAGE2_NAME, IMAGE2_PATH),
 				new ImageIcon(IMAGE2_PATH).getImage());
 		}
 		super.paint(me, g, visibleBounds);

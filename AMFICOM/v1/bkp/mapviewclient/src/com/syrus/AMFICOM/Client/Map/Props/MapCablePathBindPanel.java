@@ -3,6 +3,7 @@ package com.syrus.AMFICOM.Client.Map.Props;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourceComboBox;
+import com.syrus.AMFICOM.Client.Map.Controllers.LinkTypeController;
 import com.syrus.AMFICOM.Client.Map.UI.SimpleMapElementController;
 import com.syrus.AMFICOM.client_.general.ui_.ObjComboBox;
 import com.syrus.AMFICOM.client_.general.ui_.ObjectResourcePropertiesPane;
@@ -10,6 +11,7 @@ import com.syrus.AMFICOM.Client.General.UI.ReusedGridBagConstraints;
 import com.syrus.AMFICOM.Client.Map.Command.Action.CreateUnboundLinkCommandBundle;
 import com.syrus.AMFICOM.Client.Map.Command.Action.RemoveUnboundLinkCommandBundle;
 import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
+import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.map.PhysicalLinkType;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.NodeLink;
@@ -342,6 +344,11 @@ public final class MapCablePathBindPanel
 	
 	private void setBindingPanels()
 	{
+		Identifier creatorId = new Identifier(
+			getLogicalNetLayer().getContext().getSessionInterface().getAccessIdentifier().user_id);
+			
+		PhysicalLinkType unboundType = LinkTypeController.getPhysicalLinkType(creatorId, PhysicalLinkType.UNBOUND);
+
 		startNode = path.getStartUnboundNode();
 		
 		endNode = path.getEndUnboundNode();
@@ -365,7 +372,7 @@ public final class MapCablePathBindPanel
 		for(Iterator it = smnelinks.iterator(); it.hasNext();)
 		{
 			PhysicalLink mle = (PhysicalLink)it.next();
-			if(mle.getType().equals(getLogicalNetLayer().getPhysicalLinkType(PhysicalLinkType.UNBOUND)))
+			if(mle.getType().equals(unboundType))
 			{
 				it.remove();
 				startAvailableLinksCount--;
@@ -390,7 +397,7 @@ public final class MapCablePathBindPanel
 		for(Iterator it = emnelinks.iterator(); it.hasNext();)
 		{
 			PhysicalLink mle = (PhysicalLink)it.next();
-			if(mle.getType().equals(getLogicalNetLayer().getPhysicalLinkType(PhysicalLinkType.UNBOUND)))
+			if(mle.getType().equals(unboundType))
 			{
 				it.remove();
 				endAvailableLinksCount--;
