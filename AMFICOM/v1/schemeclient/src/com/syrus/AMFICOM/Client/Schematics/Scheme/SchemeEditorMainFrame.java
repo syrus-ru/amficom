@@ -23,7 +23,6 @@ import com.syrus.AMFICOM.Client.Resource.Network.*;
 import com.syrus.AMFICOM.Client.Resource.Scheme.*;
 import com.syrus.AMFICOM.Client.Schematics.Elements.*;
 import com.syrus.AMFICOM.Client.Schematics.UI.*;
-import com.syrus.AMFICOM.Client.Resource.MapDataSourceImage;
 
 public class SchemeEditorMainFrame extends JFrame
 																				implements OperationListener
@@ -191,7 +190,7 @@ public class SchemeEditorMainFrame extends JFrame
 		aContext.setDispatcher(internal_dispatcher);
 		internal_dispatcher.register(this, CreatePathEvent.typ);
 		internal_dispatcher.register(this, SchemeNavigateEvent.type);
-		internal_dispatcher.register(this, CatalogNavigateEvent.type);
+//		internal_dispatcher.register(this, CatalogNavigateEvent.type);
 		internal_dispatcher.register(this, "contextchange");
 		internal_dispatcher.register(this, "addschemeevent");
 		internal_dispatcher.register(this, "addschemeelementevent");
@@ -460,7 +459,7 @@ public class SchemeEditorMainFrame extends JFrame
 				aModel.fireModelChanged("");
 			}
 		}
-		else if (ae.getActionCommand().equals(CatalogNavigateEvent.type))
+	/*	else if (ae.getActionCommand().equals(CatalogNavigateEvent.type))
 		{
 			CatalogNavigateEvent cne = (CatalogNavigateEvent)ae;
 			if (cne.CATALOG_PATH_SELECTED)
@@ -477,7 +476,7 @@ public class SchemeEditorMainFrame extends JFrame
 				aModel.setEnabled("menuPathDelete", false);
 				aModel.fireModelChanged("");
 			}
-		}
+		}*/
 		else if (ae.getActionCommand().equals("addschemeevent"))
 		{
 			String scheme_id = (String)ae.getSource();

@@ -82,7 +82,6 @@ public class ElementsPanel extends UgoPanel
 	{
 		super.init_module();
 		dispatcher.register(this, SchemeNavigateEvent.type);
-		dispatcher.register(this, CatalogNavigateEvent.type);
 	}
 
 	private void jbInit() throws Exception
