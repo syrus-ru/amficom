@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPathType.java,v 1.26 2005/01/26 15:09:22 bob Exp $
+ * $Id: TransmissionPathType.java,v 1.27 2005/01/31 13:47:50 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,17 +11,16 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 
 import com.syrus.AMFICOM.configuration.corba.TransmissionPathType_Transferable;
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.Characterized;
+import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
@@ -32,8 +31,8 @@ import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.26 $, $Date: 2005/01/26 15:09:22 $
- * @author $Author: bob $
+ * @version $Revision: 1.27 $, $Date: 2005/01/31 13:47:50 $
+ * @author $Author: arseniy $
  * @module config_v1
  */
 
@@ -49,7 +48,7 @@ public class TransmissionPathType extends StorableObjectType implements Characte
 
 	public TransmissionPathType(Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
 		super(id);
-		this.characteristics = new LinkedList();
+		this.characteristics = new ArrayList();
 		this.transmissionPathTypeDatabase = ConfigurationDatabaseContext.transmissionPathTypeDatabase;
 		try {
 			this.transmissionPathTypeDatabase.retrieve(this);
@@ -89,7 +88,7 @@ public class TransmissionPathType extends StorableObjectType implements Characte
 					codename,
 					description);
 		this.name = name;
-		this.characteristics = new LinkedList();
+		this.characteristics = new ArrayList();
 
 		super.currentVersion = super.getNextVersion();
 
@@ -193,11 +192,9 @@ public class TransmissionPathType extends StorableObjectType implements Characte
 	}
 
 	protected void setCharacteristics0(final List characteristics) {
+		this.characteristics.clear();
 		if (characteristics != null)
-			this.characteristics.clear();
-		else
-			this.characteristics = new LinkedList();
-		this.characteristics.addAll(characteristics);
+			this.characteristics.addAll(characteristics);
 	}
 
 	public void setCharacteristics(final List characteristics) {

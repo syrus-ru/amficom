@@ -1,5 +1,5 @@
 /*
- * $Id: PortType.java,v 1.35 2005/01/26 15:09:22 bob Exp $
+ * $Id: PortType.java,v 1.36 2005/01/31 13:47:50 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,31 +12,29 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
-
-import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.IdentifierPool;
-import com.syrus.AMFICOM.general.IllegalObjectEntityException;
-import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.StorableObjectType;
-import com.syrus.AMFICOM.general.Characteristic;
-import com.syrus.AMFICOM.general.Characterized;
-import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
-import com.syrus.AMFICOM.general.StorableObjectDatabase;
-import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.ObjectNotFoundException;
-import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.RetrieveObjectException;
-import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 import com.syrus.AMFICOM.configuration.corba.PortTypeSort;
 import com.syrus.AMFICOM.configuration.corba.PortType_Transferable;
+import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.Characteristic;
+import com.syrus.AMFICOM.general.Characterized;
+import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IdentifierPool;
+import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.IllegalObjectEntityException;
+import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.ObjectNotFoundException;
+import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.general.StorableObjectDatabase;
+import com.syrus.AMFICOM.general.StorableObjectType;
+import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.35 $, $Date: 2005/01/26 15:09:22 $
- * @author $Author: bob $
+ * @version $Revision: 1.36 $, $Date: 2005/01/31 13:47:50 $
+ * @author $Author: arseniy $
  * @module config_v1
  */
 
@@ -51,7 +49,7 @@ public class PortType extends StorableObjectType implements Characterized {
 	public PortType(Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
 		super(id);
 
-		this.characteristics = new LinkedList();
+		this.characteristics = new ArrayList();
 		this.portTypeDatabase = ConfigurationDatabaseContext.portTypeDatabase;
 		try {
 			this.portTypeDatabase.retrieve(this);
@@ -94,7 +92,7 @@ public class PortType extends StorableObjectType implements Characterized {
 				description);
 		this.name = name;
 		this.sort = sort;
-		this.characteristics = new LinkedList();
+		this.characteristics = new ArrayList();
 
 		super.currentVersion = super.getNextVersion();
 

@@ -1,5 +1,5 @@
 /*
- * $Id: CableLinkType.java,v 1.13 2005/01/26 15:09:21 bob Exp $
+ * $Id: CableLinkType.java,v 1.14 2005/01/31 13:47:50 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,8 +32,8 @@ import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/01/26 15:09:21 $
- * @author $Author: bob $
+ * @version $Revision: 1.14 $, $Date: 2005/01/31 13:47:50 $
+ * @author $Author: arseniy $
  * @module config_v1
  */
 public class CableLinkType extends AbstractLinkType implements Characterized {
@@ -55,7 +55,7 @@ public class CableLinkType extends AbstractLinkType implements Characterized {
 	public CableLinkType(Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
 		super(id);
 
-		this.characteristics = new LinkedList();
+		this.characteristics = new ArrayList();
 		this.cableThreadTypes = new LinkedList();
 		this.cableLinkTypeDatabase = ConfigurationDatabaseContext.cableLinkTypeDatabase;
 		try {
@@ -112,7 +112,7 @@ public class CableLinkType extends AbstractLinkType implements Characterized {
 		this.manufacturer = manufacturer;
 		this.manufacturerCode = manufacturerCode;
 		this.imageId = imageId;
-		this.characteristics = new LinkedList();
+		this.characteristics = new ArrayList();
 		this.cableThreadTypes = new LinkedList();
 		this.cableLinkTypeDatabase = ConfigurationDatabaseContext.cableLinkTypeDatabase;
 	}
@@ -276,11 +276,9 @@ public class CableLinkType extends AbstractLinkType implements Characterized {
 	}
 
 	protected void setCharacteristics0(final List characteristics) {
+		this.characteristics.clear();
 		if (characteristics != null)
-			this.characteristics.clear();
-		else
-			this.characteristics = new LinkedList();
-		this.characteristics.addAll(characteristics);
+			this.characteristics.addAll(characteristics);
 	}
 
 	public void setCharacteristics(final List characteristics) {

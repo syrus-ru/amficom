@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPath.java,v 1.43 2005/01/26 15:09:22 bob Exp $
+ * $Id: TransmissionPath.java,v 1.44 2005/01/31 13:47:50 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,8 +32,8 @@ import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.configuration.corba.TransmissionPath_Transferable;
 /**
- * @version $Revision: 1.43 $, $Date: 2005/01/26 15:09:22 $
- * @author $Author: bob $
+ * @version $Revision: 1.44 $, $Date: 2005/01/31 13:47:50 $
+ * @author $Author: arseniy $
  * @module config_v1
  */
 
@@ -54,7 +54,7 @@ public class TransmissionPath extends MonitoredDomainMember implements Character
 	public TransmissionPath(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
-		this.characteristics = new LinkedList();
+		this.characteristics = new ArrayList();
 		this.monitoredElementIds = new LinkedList();
 		this.transmissionPathDatabase = ConfigurationDatabaseContext.transmissionPathDatabase;
 		try {
@@ -111,7 +111,7 @@ public class TransmissionPath extends MonitoredDomainMember implements Character
 		this.startPortId = startPortId;
 		this.finishPortId = finishPortId;
 
-		this.characteristics = new LinkedList();
+		this.characteristics = new ArrayList();
 		super.monitoredElementIds = new LinkedList();
 
 		super.currentVersion = super.getNextVersion();
@@ -263,11 +263,9 @@ public class TransmissionPath extends MonitoredDomainMember implements Character
 	}
 
 	protected void setCharacteristics0(final List characteristics) {
+		this.characteristics.clear();
 		if (characteristics != null)
-			this.characteristics.clear();
-		else
-			this.characteristics = new LinkedList();
-		this.characteristics.addAll(characteristics);
+			this.characteristics.addAll(characteristics);
 	}
 
 	public void setCharacteristics(final List characteristics) {

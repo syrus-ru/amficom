@@ -1,5 +1,5 @@
 /*
- * $Id: KIS.java,v 1.56 2005/01/28 10:12:50 arseniy Exp $
+ * $Id: KIS.java,v 1.57 2005/01/31 13:47:50 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,7 +33,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.administration.DomainMember;
 
 /**
- * @version $Revision: 1.56 $, $Date: 2005/01/28 10:12:50 $
+ * @version $Revision: 1.57 $, $Date: 2005/01/31 13:47:50 $
  * @author $Author: arseniy $
  * @module config_v1
  */
@@ -61,7 +61,7 @@ public class KIS extends DomainMember implements Characterized {
 		super(id);
 
 		this.measurementPortIds = new LinkedList();
-		this.characteristics = new LinkedList();
+		this.characteristics = new ArrayList();
 		this.kisDatabase = ConfigurationDatabaseContext.kisDatabase;
 		try {
 			this.kisDatabase.retrieve(this);
@@ -119,7 +119,7 @@ public class KIS extends DomainMember implements Characterized {
 		this.equipmentId = equipmentId;
 		this.mcmId = mcmId;
 		this.measurementPortIds = new LinkedList();
-		this.characteristics = new LinkedList();
+		this.characteristics = new ArrayList();
 
 		super.currentVersion = super.getNextVersion();
 
@@ -306,11 +306,9 @@ public class KIS extends DomainMember implements Characterized {
 	}
 
 	protected void setCharacteristics0(final List characteristics) {
+		this.characteristics.clear();
 		if (characteristics != null)
-			this.characteristics.clear();
-		else
-			this.characteristics = new LinkedList();
-		this.characteristics.addAll(characteristics);
+			this.characteristics.addAll(characteristics);
 	}
 
 	public void setCharacteristics(final List characteristics) {

@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPortType.java,v 1.27 2005/01/14 18:07:08 arseniy Exp $
+ * $Id: MeasurementPortType.java,v 1.28 2005/01/31 13:47:50 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,7 +33,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.configuration.corba.MeasurementPortType_Transferable;
 
 /**
- * @version $Revision: 1.27 $, $Date: 2005/01/14 18:07:08 $
+ * @version $Revision: 1.28 $, $Date: 2005/01/31 13:47:50 $
  * @author $Author: arseniy $
  * @module config_v1
  */
@@ -48,7 +48,7 @@ public class MeasurementPortType extends StorableObjectType implements Character
 	public MeasurementPortType(Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
 		super(id);
 
-		this.characteristics = new LinkedList();
+		this.characteristics = new ArrayList();
 		this.measurementPortTypeDatabase = ConfigurationDatabaseContext.measurementPortTypeDatabase;
 		try {
 			this.measurementPortTypeDatabase.retrieve(this);
@@ -88,7 +88,7 @@ public class MeasurementPortType extends StorableObjectType implements Character
 				  codename,
 				  description);				
 			this.name = name;
-			this.characteristics = new LinkedList();
+			this.characteristics = new ArrayList();
 
 			super.currentVersion = super.getNextVersion();
 
@@ -194,11 +194,9 @@ public class MeasurementPortType extends StorableObjectType implements Character
 	}
 
 	protected void setCharacteristics0(final List characteristics) {
+		this.characteristics.clear();
 		if (characteristics != null)
-			this.characteristics.clear();
-		else
-			this.characteristics = new LinkedList();
-		this.characteristics.addAll(characteristics);
+			this.characteristics.addAll(characteristics);
 	}
 
 	public void setCharacteristics(final List characteristics) {

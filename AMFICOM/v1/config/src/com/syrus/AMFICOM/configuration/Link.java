@@ -1,5 +1,5 @@
 /*
- * $Id: Link.java,v 1.31 2005/01/26 15:09:22 bob Exp $
+ * $Id: Link.java,v 1.32 2005/01/31 13:47:50 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,8 +35,8 @@ import com.syrus.AMFICOM.configuration.corba.LinkSort;
 import com.syrus.AMFICOM.configuration.corba.Link_Transferable;
 
 /**
- * @version $Revision: 1.31 $, $Date: 2005/01/26 15:09:22 $
- * @author $Author: bob $
+ * @version $Revision: 1.32 $, $Date: 2005/01/31 13:47:50 $
+ * @author $Author: arseniy $
  * @module config_v1
  */
 public class Link extends DomainMember implements Characterized, TypedObject {
@@ -62,7 +62,7 @@ public class Link extends DomainMember implements Characterized, TypedObject {
 	public Link(Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
 		super(id);
 
-		this.characteristics = new LinkedList();
+		this.characteristics = new ArrayList();
 		this.linkDatabase = ConfigurationDatabaseContext.linkDatabase;
 		try {
 			this.linkDatabase.retrieve(this);
@@ -130,7 +130,7 @@ public class Link extends DomainMember implements Characterized, TypedObject {
 		this.sort = sort;
 		this.color = color;
 		this.mark = mark;
-		this.characteristics = new LinkedList();
+		this.characteristics = new ArrayList();
 
 		super.currentVersion = super.getNextVersion();
 
@@ -303,11 +303,9 @@ public class Link extends DomainMember implements Characterized, TypedObject {
 	}
 
 	protected void setCharacteristics0(final List characteristics) {
+		this.characteristics.clear();
 		if (characteristics != null)
-			this.characteristics.clear();
-		else
-			this.characteristics = new LinkedList();
-		this.characteristics.addAll(characteristics);
+			this.characteristics.addAll(characteristics);
 	}
 
 	public void setCharacteristics(final List characteristics) {
