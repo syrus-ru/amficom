@@ -56,12 +56,13 @@ public class DetailedEventsFrame extends JInternalFrame
 	private static StringBuffer mt = new StringBuffer(" ").append(LangModelAnalyse.getString("mt"));
 	private static StringBuffer db = new StringBuffer(" ").append(LangModelAnalyse.getString("dB"));
 
-	private static String linear = LangModelAnalyse.getString("eventType" + String.valueOf(TraceEvent.LINEAR));
-	private static String connector = LangModelAnalyse.getString("eventType" + String.valueOf(TraceEvent.CONNECTOR));
-	private static String weld = LangModelAnalyse.getString("eventType" + String.valueOf(TraceEvent.WELD));
-	private static String initiate = LangModelAnalyse.getString("eventType" + String.valueOf(TraceEvent.INITIATE));
-	private static String terminate = LangModelAnalyse.getString("eventType" + String.valueOf(TraceEvent.TERMINATE));
-	private static String noid = LangModelAnalyse.getString("eventType" + String.valueOf(TraceEvent.NON_IDENTIFIED));
+	private static String linear = EventsFrame.linear;
+	private static String connector = EventsFrame.connector; 
+	private static String gain = EventsFrame.gain;
+	private static String loss = EventsFrame.loss;
+	private static String initiate = EventsFrame.initiate;
+	private static String terminate = EventsFrame.terminate;
+	private static String noid = EventsFrame.noid;
 
 	public DetailedEventsFrame()
 	{
@@ -277,7 +278,8 @@ public class DetailedEventsFrame extends JInternalFrame
 						LangModelAnalyse.getString("eventEndLevel")
 				},
 				null);
-		tModels.put(weld, spliceModel);
+		tModels.put(loss, spliceModel);
+		tModels.put(gain, spliceModel);
 
 		FixedSizeEditableTableModel terminateModel = new FixedSizeEditableTableModel(
 				new String[] {LangModelAnalyse.getString("eventDetailedParam"),
@@ -535,9 +537,21 @@ public class DetailedEventsFrame extends JInternalFrame
 						//String.valueOf(MathRef.round_3(ev.data[3])) // removed by saa
 					}, 1);
 					break;
-			case TraceEvent.WELD:
-				tModel = (FixedSizeEditableTableModel)tModels.get(weld);
-				tModel.setValueAt(weld,	0, 0);
+			case TraceEvent.LOSS:
+				tModel = (FixedSizeEditableTableModel)tModels.get(loss);
+				tModel.setValueAt(loss,	0, 0);
+				tModel.updateColumn(new Object[] { String.valueOf(num + 1),
+						new StringBuffer().append(MathRef.round_3((ev.last_point - ev.first_point)*res_km))
+								.append(km).toString(),
+						new StringBuffer().append(MathRef.round_2(ev.data[0]))
+								.append(db).toString(),
+						new StringBuffer().append(MathRef.round_2(ev.data[1]))
+								.append(db).toString()
+					}, 1);
+					break;
+			case TraceEvent.GAIN:
+				tModel = (FixedSizeEditableTableModel)tModels.get(gain);
+				tModel.setValueAt(gain,	0, 0);
 				tModel.updateColumn(new Object[] { String.valueOf(num + 1),
 						new StringBuffer().append(MathRef.round_3((ev.last_point - ev.first_point)*res_km))
 								.append(km).toString(),

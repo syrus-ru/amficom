@@ -77,7 +77,10 @@ public class TraceEventsPanel extends ScaledGraphPanel
 				{
 					case TraceEvent.LINEAR: g.setColor(linezoneColor); break;
 					case TraceEvent.INITIATE: g.setColor(deadzoneColor); break;
-					case TraceEvent.WELD: g.setColor(weldColor); break;
+					case TraceEvent.GAIN:
+						g.setColor(weldColor); break;
+					case TraceEvent.LOSS:
+						g.setColor(weldColor); break;
 					case TraceEvent.CONNECTOR: g.setColor(connectColor); break;
 					case TraceEvent.TERMINATE: g.setColor(endColor); break;
 					case TraceEvent.NON_IDENTIFIED: g.setColor(nonidColor); break;

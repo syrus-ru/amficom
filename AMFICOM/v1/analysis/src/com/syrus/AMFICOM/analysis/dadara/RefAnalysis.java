@@ -55,9 +55,10 @@ public class RefAnalysis
 				type = TraceEvent.CONNECTOR;
 				break;
 			case SimpleReflectogramEvent.LOSS:
-				// fall through
+				type = TraceEvent.LOSS;
+				break;
 			case SimpleReflectogramEvent.GAIN:
-				type = TraceEvent.WELD;
+				type = TraceEvent.GAIN;
 				break;
 			default:
 				type = TraceEvent.NON_IDENTIFIED;
@@ -88,7 +89,7 @@ public class RefAnalysis
 				events[i].data[2] = events[i].data[0]
 						- re[i].getALet(); // XXX
 				events[i].data[3] = 0; // FIXIT: больше не используется, убрать
-			} else if (type == TraceEvent.WELD) {
+			} else if (type == TraceEvent.LOSS || type == TraceEvent.GAIN) {
 				events[i].data = new double[3];
 				events[i].data[0] = top - asympB;
 				events[i].data[1] = top - asympE;

@@ -14,15 +14,16 @@ import com.syrus.AMFICOM.analysis.dadara.*;
 import com.syrus.io.BellcoreStructure;
 
 public class EventsFrame extends ATableFrame
-												 implements OperationListener
+implements OperationListener
 {
-	private static String linear = LangModelAnalyse.getString("eventType" + String.valueOf(TraceEvent.LINEAR));
-	private static String connector = LangModelAnalyse.getString("eventType" + String.valueOf(TraceEvent.CONNECTOR));
-	private static String weld = LangModelAnalyse.getString("eventType" + String.valueOf(TraceEvent.WELD));
-	private static String initiate = LangModelAnalyse.getString("eventType" + String.valueOf(TraceEvent.INITIATE));
-	private static String terminate = LangModelAnalyse.getString("eventType" + String.valueOf(TraceEvent.TERMINATE));
-	private static String noid = LangModelAnalyse.getString("eventType" + String.valueOf(TraceEvent.NON_IDENTIFIED));
-	private static String dash = "-----";
+	public static final String linear = LangModelAnalyse.getString("eventTypeLinear");
+	public static final String connector = LangModelAnalyse.getString("eventTypeReflective");
+	public static final String loss = LangModelAnalyse.getString("eventTypeLoss");
+	public static final String gain = LangModelAnalyse.getString("eventTypeGain");
+	public static final String initiate = LangModelAnalyse.getString("eventTypeInitiate");
+	public static final String terminate = LangModelAnalyse.getString("eventTypeTerminate");
+	public static final String noid = LangModelAnalyse.getString("eventTypeNonIdentified");
+	public static final String dash = "-----";
 
 	private ComplexReflectogramEvent []data;
 	//private ComplexReflectogramEvent []data_; -- не требуется, т.к. сравниваются только относительные параметры 
@@ -355,9 +356,19 @@ public class EventsFrame extends ATableFrame
 					 dash  // затух
 				});
 				break;
-			case TraceEvent.WELD:
+			case TraceEvent.GAIN:
 				tModel.addRow(String.valueOf(i + 1), new Object[] {
-					 weld,
+					 gain,
+					 Double.toString(MathRef.round_3 (res_km * (double)events[i].first_point)), //начало
+					 Double.toString(MathRef.round_3 (res_km * (events[i].last_point - events[i].first_point))), //протяженность
+					 dash, // отраж
+					 Double.toString( MathRef.round_3 ( events[i].data[2])), // потери
+					 dash  // затух
+				});
+				break;
+			case TraceEvent.LOSS:
+				tModel.addRow(String.valueOf(i + 1), new Object[] {
+					 loss,
 					 Double.toString(MathRef.round_3 (res_km * (double)events[i].first_point)), //начало
 					 Double.toString(MathRef.round_3 (res_km * (events[i].last_point - events[i].first_point))), //протяженность
 					 dash, // отраж

@@ -9,11 +9,12 @@ import java.io.IOException;
 public class TraceEvent
 {
 	public static final int LINEAR = 0;
-	public static final int NON_IDENTIFIED = 1;
-	public static final int INITIATE = 2;
-	public static final int WELD = 3;
-	public static final int CONNECTOR = 4;
-	public static final int TERMINATE = 5;
+	public static final int NON_IDENTIFIED = 10;
+	public static final int INITIATE = 20;
+	public static final int GAIN = 31;
+	public static final int LOSS = 32;
+	public static final int CONNECTOR = 40;
+	public static final int TERMINATE = 50;
 	//public static final int CONCAVITY = 7;
 	public static final int OVERALL_STATS = 100;
 
