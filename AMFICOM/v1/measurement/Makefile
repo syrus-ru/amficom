@@ -31,8 +31,11 @@ $(call checkenve,ORACLE_HOME)
 
 APPCLASSPATH := $(LIBDIR)/configuration.jar:$(LIBDIR)/administration.jar:$(LIBDIR)/general.jar:$(LIBDIR)/util.jar
 
+SOURCES := $(wildcard $(SRCDIR)/com/syrus/AMFICOM/measurement/*.java) \
+		$(SRCDIR)/com/syrus/AMFICOM/resource/LangModelMeasurement.java 
 
-SOURCES := com/syrus/AMFICOM/resource/LangModelMeasurement.java \
+
+#SOURCES := com/syrus/AMFICOM/resource/LangModelMeasurement.java \
 		com/syrus/AMFICOM/measurement/DatabaseMeasurementObjectLoader.java \
 		com/syrus/AMFICOM/measurement/MeasurementObjectLoader.java \
 		com/syrus/AMFICOM/measurement/MeasurementStorableObjectPool.java \
@@ -86,7 +89,7 @@ $(LIBNAME): .mach
 .mach:	.corba .ora $(CLASSDIR)
 	$(JAVAC) $(JAVACFLAGS) \
 		-classpath $(APPCLASSPATH):$(JDBCCLASSPATH):$(CLASSDIR) \
-		$(addprefix $(SRCDIR)/,$(SOURCES))
+		$(SOURCES)
 	touch $@
 
 .ora:	$(CLASSDIR)
@@ -116,7 +119,8 @@ clean:	cleanmach cleanora cleancorba
 
 .PHONY:	cleanmach
 cleanmach:
-	$(RM) $(addprefix $(CLASSDIR)/,$(subst .java,.class,$(SOURCES)))
+	$(RM) $(wildcard $(CLASSDIR)/com/syrus/AMFICOM/measurement/*.class) \
+		$(CLASSDIR)/com/syrus/AMFICOM/resource/LangModelMeasurement.class
 	$(RM) .mach
 
 .PHONY:	cleanora
@@ -142,7 +146,7 @@ arch:
 	tar -czvf $(ARCHFILE) \
 		Makefile \
 		$(IDLDIR)/measurement.idl \
-		$(addprefix $(SRCDIR)/,$(SOURCES))
+		$(SOURCES)
 		
 .PHONY: pmd
 pmd:
