@@ -1,5 +1,5 @@
 /*
- * $Id: CMServerImpl.java,v 1.42 2004/10/13 15:29:27 max Exp $
+ * $Id: CMServerImpl.java,v 1.43 2004/10/15 10:43:54 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,6 +13,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import com.syrus.AMFICOM.configuration.LinkedIdsCondition;
+import com.syrus.AMFICOM.configuration.corba.LinkedIdsCondition_Transferable;
 import com.syrus.AMFICOM.cmserver.corba.CMServerOperations;
 import com.syrus.AMFICOM.configuration.Characteristic;
 import com.syrus.AMFICOM.configuration.CharacteristicDatabase;
@@ -91,7 +93,6 @@ import com.syrus.AMFICOM.measurement.Evaluation;
 import com.syrus.AMFICOM.measurement.EvaluationDatabase;
 import com.syrus.AMFICOM.measurement.EvaluationType;
 import com.syrus.AMFICOM.measurement.EvaluationTypeDatabase;
-import com.syrus.AMFICOM.measurement.LinkedIdsCondition;
 import com.syrus.AMFICOM.measurement.Measurement;
 import com.syrus.AMFICOM.measurement.MeasurementDatabase;
 import com.syrus.AMFICOM.measurement.MeasurementDatabaseContext;
@@ -118,7 +119,7 @@ import com.syrus.AMFICOM.measurement.corba.AnalysisType_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Analysis_Transferable;
 import com.syrus.AMFICOM.measurement.corba.EvaluationType_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Evaluation_Transferable;
-import com.syrus.AMFICOM.measurement.corba.LinkedIdsCondition_Transferable;
+
 import com.syrus.AMFICOM.measurement.corba.MeasurementSetupCondition_Transferable;
 import com.syrus.AMFICOM.measurement.corba.MeasurementSetup_Transferable;
 import com.syrus.AMFICOM.measurement.corba.MeasurementType_Transferable;
@@ -127,7 +128,7 @@ import com.syrus.AMFICOM.measurement.corba.Modeling_Transferable;
 import com.syrus.AMFICOM.measurement.corba.ParameterType_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Result_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Set_Transferable;
-import com.syrus.AMFICOM.measurement.corba.StringFieldCondition_Transferable;
+
 import com.syrus.AMFICOM.measurement.corba.TemporalPattern_Transferable;
 import com.syrus.AMFICOM.measurement.corba.TestCondition_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Test_Transferable;
@@ -135,7 +136,7 @@ import com.syrus.AMFICOM.mserver.corba.MServer;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.42 $, $Date: 2004/10/13 15:29:27 $
+ * @version $Revision: 1.43 $, $Date: 2004/10/15 10:43:54 $
  * @author $Author: max $
  * @module cmserver_v1
  */
