@@ -1,5 +1,5 @@
 /*
- * $Id: ClientConfigurationObjectLoader.java,v 1.19 2005/02/14 15:17:39 max Exp $
+ * $Id: ClientConfigurationObjectLoader.java,v 1.20 2005/02/14 16:02:43 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,7 +17,6 @@ import java.util.Set;
 import com.syrus.AMFICOM.cmserver.corba.CMServer;
 import com.syrus.AMFICOM.configuration.corba.AbstractLinkTypeSort;
 import com.syrus.AMFICOM.configuration.corba.AbstractLinkType_Transferable;
-import com.syrus.AMFICOM.configuration.corba.AccessIdentifier_Transferable;
 import com.syrus.AMFICOM.configuration.corba.CableLinkType_Transferable;
 import com.syrus.AMFICOM.configuration.corba.CableThreadType_Transferable;
 import com.syrus.AMFICOM.configuration.corba.CableThread_Transferable;
@@ -47,6 +46,7 @@ import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
+import com.syrus.AMFICOM.general.corba.AccessIdentifier_Transferable;
 import com.syrus.AMFICOM.general.corba.CompoundCondition_Transferable;
 import com.syrus.AMFICOM.general.corba.EquivalentCondition_Transferable;
 import com.syrus.AMFICOM.general.corba.ErrorCode;
@@ -57,7 +57,7 @@ import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 import com.syrus.AMFICOM.general.corba.TypicalCondition_Transferable;
 
 /**
- * @version $Revision: 1.19 $, $Date: 2005/02/14 15:17:39 $
+ * @version $Revision: 1.20 $, $Date: 2005/02/14 16:02:43 $
  * @author $Author: max $
  * @module generalclient_v1
  */
