@@ -1,5 +1,5 @@
 /*
- * $Id: ResultSortCondition.java,v 1.1 2004/10/11 13:45:41 bob Exp $
+ * $Id: ResultSortCondition.java,v 1.2 2004/10/11 13:46:57 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,7 +17,7 @@ import com.syrus.AMFICOM.measurement.corba.ResultSort;
 import com.syrus.AMFICOM.measurement.corba.ResultSortCondition_Transferable;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2004/10/11 13:45:41 $
+ * @version $Revision: 1.2 $, $Date: 2004/10/11 13:46:57 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -96,4 +96,19 @@ public class ResultSortCondition implements StorableObjectCondition {
 													this.resultSort);
 	}
 
+	public Identifier getMeasurementId() {
+		return this.measurementId;
+	}
+	
+	public void setMeasurementId(Identifier measurementId) {
+		this.measurementId = measurementId;
+	}
+	
+	public ResultSort getResultSort() {
+		return this.resultSort;
+	}
+	
+	public void setResultSort(ResultSort resultSort) {
+		this.resultSort = resultSort;
+	}
 }
