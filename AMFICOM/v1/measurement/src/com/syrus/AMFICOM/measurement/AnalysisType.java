@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisType.java,v 1.24 2004/08/23 20:47:37 arseniy Exp $
+ * $Id: AnalysisType.java,v 1.25 2004/08/26 14:15:39 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,8 +25,8 @@ import com.syrus.AMFICOM.measurement.corba.AnalysisType_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.24 $, $Date: 2004/08/23 20:47:37 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.25 $, $Date: 2004/08/26 14:15:39 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
@@ -37,7 +37,7 @@ public class AnalysisType extends ActionType {
 	private List etalonParameterTypes;
 	private List outParameterTypes;
 
-	private StorableObjectDatabase	analysisTypeDatabase;
+	private StorableObjectDatabase	analysisTypeDatabase;	
 
 	public AnalysisType(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
@@ -104,7 +104,7 @@ public class AnalysisType extends ActionType {
 		}
 	}
 
-	private AnalysisType(Identifier id,
+	protected AnalysisType(Identifier id,
 											 Identifier creatorId,
 											 String codename,
 											 String description,
