@@ -182,7 +182,7 @@ public class ReportTemplatePanel extends JPanel
 
 	/**
 	 * Задаёт поля на шаблоне
-*/
+  */
 	public void setImagableRect()
 	{
 		java.awt.print.PageFormat defaultPage =

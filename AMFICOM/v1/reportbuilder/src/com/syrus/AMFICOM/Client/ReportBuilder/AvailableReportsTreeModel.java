@@ -1,5 +1,6 @@
 package com.syrus.AMFICOM.Client.ReportBuilder;
 
+import com.syrus.AMFICOM.Client.Schedule.Report.ScheduleReportModel;
 import java.awt.Toolkit;
 import java.awt.Color;
 import java.awt.Image;
@@ -8,7 +9,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 
 import java.util.ListIterator;
@@ -153,7 +153,7 @@ public class AvailableReportsTreeModel extends ObjectResourceTreeModel
 
 	public List getChildNodes(ObjectResourceTreeNode node)
 	{
-		List vec = new LinkedList();
+		List vec = new ArrayList();
 
 		//для строки - общая часть для дерева отчётов + деревья топологоии и схемы
 		if (node.getObject()instanceof String)
@@ -286,6 +286,15 @@ public class AvailableReportsTreeModel extends ObjectResourceTreeModel
 				ortn = new ObjectResourceTreeNode(
 					optModel,
 					optModel.getObjectsName(),
+					true);
+
+				vec.add(ortn);
+				registerSearchableNode("", ortn);
+
+				ScheduleReportModel schedModel = new ScheduleReportModel();
+				ortn = new ObjectResourceTreeNode(
+					schedModel,
+					schedModel.getObjectsName(),
 					true);
 
 				vec.add(ortn);
@@ -1167,7 +1176,7 @@ public class AvailableReportsTreeModel extends ObjectResourceTreeModel
 				rt_objectsReport, toAskObjects(node));
 			try
 			{
-				or.setReserve(new LinkedList());
+				or.setReserve(new ArrayList());
 			}
 			catch (CreateReportException cre)
 			{}

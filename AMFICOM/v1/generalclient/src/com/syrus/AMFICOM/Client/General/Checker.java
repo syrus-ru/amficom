@@ -606,15 +606,15 @@ public static final String predict  = "PREDICT";
  /**/
   private static boolean hasEqualElements(List a, List b)
   {
+    int index = 0;
     ListIterator aLIt = a.listIterator();
-    ListIterator bLIt = b.listIterator();
-    
-    for(;aLIt.hasNext();)
+    for(;aLIt.hasNext();index++)
     {
+      ListIterator bLIt = b.listIterator(index);
       for(;bLIt.hasNext();)
       {
-        String as = (String)aLIt.next();
-        String bs = (String)bLIt.next();
+        String as = aLIt.next();
+        String bs = bLIt.next();
         if(as.equals(bs))
           return true;
       }
@@ -625,15 +625,15 @@ public static final String predict  = "PREDICT";
  /**/
  private static boolean hasEqualElements(List a, List b, String s)
  {
+    int index = 0;
     ListIterator aLIt = a.listIterator();
-    ListIterator bLIt = b.listIterator();
-    
-    for(;aLIt.hasNext();)
+    for(;aLIt.hasNext();index++)
     {
+      ListIterator bLIt = b.listIterator(index);
       for(;bLIt.hasNext();)
       {
-        String as = (String)aLIt.next();
-        String bs = (String)bLIt.next();
+        String as = aLIt.next();
+        String bs = bLIt.next();
         if(as.equals(s) && bs.equals(s))
           return true;
       }
