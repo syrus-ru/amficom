@@ -51,7 +51,7 @@ public class ProgressBar extends JPanel
 	public void stop()
 	{
 		active = false;
-		thread.stop();
+		thread.active = false;
 	}
 
 	void refreshCoords()
@@ -149,32 +149,34 @@ public class ProgressBar extends JPanel
 
 class BarRepaintThread extends Thread
 {
-	ProgressBar bar = null;
-	int x;
-	int y;
-	int width;
-	int height;
+  public volatile boolean active = true;
 
-	public BarRepaintThread(ProgressBar bar)
-	{
+  ProgressBar bar = null;
+  int x;
+  int y;
+  int width;
+  int height;
+
+  public BarRepaintThread(ProgressBar bar)
+  {
 //		System.loadLibrary("ProgressBarRepainter");
-		this.bar = bar;
-		setPriority(Thread.MAX_PRIORITY);
-	}
+	  this.bar = bar;
+	  setPriority(Thread.MAX_PRIORITY);
+  }
 
-	public void run()
-	{
-		while (true)
-		{
-			try
-			{
-				bar.refreshCoords();
-				bar.repaint();
-				sleep(30);
-			}
-			catch (InterruptedException exc)
-			{
-			}
-		}
-	}
+  public void run()
+  {
+	  while (active)
+	  {
+		  try
+		  {
+			  bar.refreshCoords();
+			  bar.repaint();
+			  sleep(30);
+		  }
+		  catch (InterruptedException exc)
+		  {
+		  }
+	  }
+  }
 }
