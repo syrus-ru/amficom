@@ -1,1 +1,0 @@
-@@mapview/object/DROP.sql
