@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseLinkedIdsConditionImpl.java,v 1.17 2005/04/01 17:12:04 max Exp $
+ * $Id: DatabaseLinkedIdsConditionImpl.java,v 1.18 2005/04/05 15:57:51 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,8 +19,8 @@ import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2005/04/01 17:12:04 $
- * @author $Author: max $
+ * @version $Revision: 1.18 $, $Date: 2005/04/05 15:57:51 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 public class DatabaseLinkedIdsConditionImpl extends AbstractDatabaseLinkedIdsCondition {
@@ -95,7 +95,7 @@ public class DatabaseLinkedIdsConditionImpl extends AbstractDatabaseLinkedIdsCon
 				switch (super.condition.getLinkedEntityCode()) {
 					case ObjectEntities.ME_ENTITY_CODE:
 						query = super.getLinkedQuery(MeasurementSetupWrapper.LINK_COLUMN_MEASUREMENT_SETUP_ID, 
-									MeasurementSetupWrapper.LINK_COLUMN_ME_ID, 
+									MeasurementSetupWrapper.LINK_COLUMN_MONITORED_ELEMENT_ID, 
 									ObjectEntities.MSMELINK_ENTITY);
 						break;
 				}
