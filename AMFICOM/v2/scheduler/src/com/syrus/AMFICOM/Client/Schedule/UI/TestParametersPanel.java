@@ -191,16 +191,16 @@ public class TestParametersPanel extends JPanel implements OperationListener {
 								for (int i = 0; i < setParameters.length; i++)
 									list.add(setParameters[i].getId());
 								linkedIdsCondition.setLinkedIds(list);
+
+								List analysisTypes = MeasurementStorableObjectPool
+										.getStorableObjectsByCondition(linkedIdsCondition, true);
+
+								for (Iterator it = analysisTypes.iterator(); it.hasNext();) {
+									AnalysisType analysisType = (AnalysisType) it.next();
+									((ObjListModel) TestParametersPanel.this.analysisComboBox.getModel())
+											.addElement(analysisType);
+								}
 							}
-						}
-
-						List analysisTypes = MeasurementStorableObjectPool
-								.getStorableObjectsByCondition(linkedIdsCondition, true);
-
-						for (Iterator it = analysisTypes.iterator(); it.hasNext();) {
-							AnalysisType analysisType = (AnalysisType) it.next();
-							((ObjListModel) TestParametersPanel.this.analysisComboBox.getModel())
-									.addElement(analysisType);
 						}
 
 						TestParametersPanel.this.evaluationComboBox.removeAll();
@@ -213,14 +213,14 @@ public class TestParametersPanel extends JPanel implements OperationListener {
 								for (int i = 0; i < setParameters.length; i++)
 									list.add(setParameters[i].getId());
 								linkedIdsCondition.setLinkedIds(list);
+								List evaluationTypes = MeasurementStorableObjectPool
+										.getStorableObjectsByCondition(linkedIdsCondition, true);
+								for (Iterator it = evaluationTypes.iterator(); it.hasNext();) {
+									EvaluationType evaluationType = (EvaluationType) it.next();
+									((ObjListModel) TestParametersPanel.this.evaluationComboBox.getModel())
+											.addElement(evaluationType);
+								}
 							}
-						}
-						List evaluationTypes = MeasurementStorableObjectPool
-								.getStorableObjectsByCondition(linkedIdsCondition, true);
-						for (Iterator it = evaluationTypes.iterator(); it.hasNext();) {
-							EvaluationType evaluationType = (EvaluationType) it.next();
-							((ObjListModel) TestParametersPanel.this.evaluationComboBox.getModel())
-									.addElement(evaluationType);
 						}
 
 						for (Iterator it = TestParametersPanel.this.testPanels.keySet().iterator(); it.hasNext();) {

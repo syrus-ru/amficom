@@ -1,3 +1,4 @@
+
 package com.syrus.AMFICOM.Client.Schedule.UI;
 
 import java.awt.*;
@@ -251,7 +252,8 @@ public class PlanPanel extends JPanel implements OperationListener {
 						//						if ((scaleIndex > 0) && (scaleIndex <
 						// SCALES_MS.length))
 						//							diff = SCALES_MS[scaleIndex] / 2;
-						Date date = new Date(test.getStartTime().getTime() - diff);
+						//Date date = new Date(test.getStartTime().getTime() -
+						// diff);
 						//						System.out.println(ConstStorage.SIMPLE_DATE_FORMAT.format(date));
 						//
 						//						System.out.println(ConstStorage.SIMPLE_DATE_FORMAT.format(this.toolBar.timeSpinner.getModel()
@@ -259,10 +261,22 @@ public class PlanPanel extends JPanel implements OperationListener {
 						//						System.out.println(ConstStorage.SIMPLE_DATE_FORMAT.format(this.toolBar.dateSpinner.getModel()
 						//								.getValue()));
 
-						this.toolBar.timeSpinner.getModel().setValue(date);
-						this.toolBar.dateSpinner.getModel().setValue(date);
+						Date startDate = test.getStartTime();
+						//this.toolBar.timeSpinner.getModel().setValue(startDate);
+						//this.toolBar.dateSpinner.getModel().setValue(startDate);
+						//System.out.println(test.getStartTime().getTime() -
+						// this.scaleStart.getTime());
 						BoundedRangeModel model = this.parent.getHorizontalScrollBar().getModel();
-						model.setValue(model.getMinimum());
+
+						long scaleStartTime = this.scaleStart.getTime();
+						long scaleEndTime = this.scaleEnd.getTime();
+
+						model
+								.setValue(model.getMaximum() - 2 * this.margin - (int) ((scaleEndTime - startDate.getTime())
+										* model.getMaximum() / (scaleEndTime - scaleStartTime)));
+						System.out.println("visibleRect:" + this.parent.getVisibleRect().width);
+						System.out.println("min:" + model.getMinimum() + "\tmax:" + model.getMaximum());
+						System.out.println("value:" + model.getValue());
 					}
 					//				java.util.List tests = ((SchedulerModel)
 					// this.aContext.getApplicationModel()).getTests();
@@ -271,14 +285,14 @@ public class PlanPanel extends JPanel implements OperationListener {
 					//				if (tests != null) {
 					//					for (Iterator it = tests.iterator(); it.hasNext();) {
 					//						Test t = (Test) it.next();
-					//						if (t.getId().equals(test.getId())) {
+					//						if (t.getId().equals(selectedTest.getId())) {
 					//							found = true;
 					//							break;
 					//						}
 					//					}
 					//				}
 					//				if ((unsavedTests != null) &&
-					// (unsavedTests.contains(test)))
+					// (unsavedTests.contains(selectedTest)))
 					// {
 					//					found = true;
 					//				}
@@ -287,33 +301,36 @@ public class PlanPanel extends JPanel implements OperationListener {
 					if (found) {
 						TestLine testLine = (TestLine) this.testLines.get(test.getMonitoredElement().getId());
 						//System.out.println("testLine found");
-						//System.out.println("testLine.getTest(test.getId()):"
-						// + testLine.getTest(test.getId()));
+						//System.out.println("testLine.getTest(selectedTest.getId()):"
+						// + testLine.getTest(selectedTest.getId()));
 						found = testLine.getTest(test.getId()) != null;
 					}
 
 					//System.out.println("found:" + found);
 
 					if (!found) {
-						Environment.log(Environment.LOG_LEVEL_INFO, "new test catched"); //$NON-NLS-1$
-						//unsavedTests.add(test);
+						Environment.log(Environment.LOG_LEVEL_INFO, "new selectedTest catched"); //$NON-NLS-1$
+						//unsavedTests.add(selectedTest);
 						{
 							TestLine testLine;
 							if (this.testLines == null)
 								Environment.log(Environment.LOG_LEVEL_WARNING, "testLines is null"); //$NON-NLS-1$
 							if (test == null)
-								Environment.log(Environment.LOG_LEVEL_WARNING, "test is null"); //$NON-NLS-1$
+								Environment.log(Environment.LOG_LEVEL_WARNING, "selectedTest is null"); //$NON-NLS-1$
 							else if (test.getMonitoredElement().getId() == null)
-								Environment.log(Environment.LOG_LEVEL_WARNING, "test.monitored_element_id is null"); //$NON-NLS-1$
+								Environment.log(Environment.LOG_LEVEL_WARNING,
+												"selectedTest.monitored_element_id is null"); //$NON-NLS-1$
 							if (this.testLines.containsKey(test.getMonitoredElement().getId()))
 								testLine = (TestLine) this.testLines.get(test.getMonitoredElement().getId());
 							else {
 								MonitoredElement monitoredElement = test.getMonitoredElement();
-								//String meName = Pool.getName(MonitoredElement.typ, test.getMonitoredElementId());
+								//String meName =
+								// Pool.getName(MonitoredElement.typ,
+								// selectedTest.getMonitoredElementId());
 								testLine = new TestLine(this.aContext,
 								//parent.getViewport(),
-														monitoredElement.getName(), this.scaleStart.getTime(), this.scaleEnd.getTime(),
-														this.margin / 2);
+														monitoredElement.getName(), this.scaleStart.getTime(),
+														this.scaleEnd.getTime(), this.margin / 2);
 								testLine.setPreferredSize(new Dimension(0, 20));
 								this.testLines.put(monitoredElement.getId(), testLine);
 								add(testLine);
@@ -342,7 +359,8 @@ public class PlanPanel extends JPanel implements OperationListener {
 				Test test = (Test) ae.getSource();
 				Object key = it.next();
 				TestLine line = (TestLine) this.testLines.get(key);
-				//System.out.println("test "+test.getId()+" found at
+				//System.out.println("selectedTest "+selectedTest.getId()+"
+				// found at
 				// TestLine");
 				line.removeTest(test);
 				//System.out.println("line.isEmpty():"+line.isEmpty());
@@ -653,14 +671,15 @@ public class PlanPanel extends JPanel implements OperationListener {
 
 	private void updateTest(Test test) {
 		TestLine testLine;
-		//System.out.println("updateTest:" + test.getId());
-		MonitoredElement monitoredElement = test.getMonitoredElement();		
+		//System.out.println("updateTest:" + selectedTest.getId());
+		MonitoredElement monitoredElement = test.getMonitoredElement();
 		if (this.testLines.containsKey(monitoredElement.getId()))
 			testLine = (TestLine) this.testLines.get(monitoredElement.getId());
 		else {
 			testLine = new TestLine(this.aContext,
 			//parent.getViewport(),
-									monitoredElement.getName(), this.scaleStart.getTime(), this.scaleEnd.getTime(), this.margin / 2);
+									monitoredElement.getName(), this.scaleStart.getTime(), this.scaleEnd.getTime(),
+									this.margin / 2);
 			testLine.setPreferredSize(new Dimension(0, 25));
 			this.testLines.put(monitoredElement.getId(), testLine);
 		}

@@ -41,6 +41,7 @@ import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierPool;
+import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObject;
@@ -299,6 +300,9 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 			} catch (CommunicationException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+			} catch (IllegalDataException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 		} else if (commandName.equalsIgnoreCase(COMMAND_APPLY_TEST)) {
 			// apply test
@@ -489,7 +493,7 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 		}
 	}
 
-	private void commitChanges() throws VersionCollisionException, DatabaseException, CommunicationException {
+	private void commitChanges() throws VersionCollisionException, DatabaseException, CommunicationException, IllegalDataException {
 
 		/**
 		 * FIXME remove deleted tests
