@@ -1,15 +1,16 @@
 #ifndef TCPCONNECT_H
 #define TCPCONNECT_H
 
-//Type to describe socket file descriptor
-typedef int SOCKET;
+#include "crossplatf.h"
 
 //Size of header.
 //Header is a segment, containing helper data.
 //It is added to front of every data array before transmission.
-//Now it contains only length of data array.
+//Now it contains only length of a data array.
 #define HEADERSIZE 4
 
+//Constant to describe invalid socket
+#define SOCKET_INVALID 0xFFFFFFFF
 
 //Create and connect socket.
 //Return: socket descriptor on success, -1 on error.
@@ -27,8 +28,8 @@ unsigned int transmit(const SOCKET sockfd, const char* data, const unsigned int 
 SOCKET create_listening_socket(const short port);
 
 //Receive data from socket.
-//Waits on incoming event timeout seconds.
-//NOTE: Allocates new array of data and saves its size.
+//Waits on incoming event 'timeout' seconds.
+//NOTE: Allocates new array of data and saves its size to 'size'.
 //Return: 0 if no incoming events; 1 on successful read; -1 on error.
 int receive(const SOCKET sockfd, const int timeout, char*& data, unsigned int& size);
 
