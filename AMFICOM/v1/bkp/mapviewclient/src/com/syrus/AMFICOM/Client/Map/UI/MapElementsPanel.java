@@ -1,5 +1,5 @@
 /**
- * $Id: MapElementsPanel.java,v 1.17 2005/02/25 13:49:17 krupenn Exp $
+ * $Id: MapElementsPanel.java,v 1.18 2005/02/28 16:17:21 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,6 +11,7 @@
 
 package com.syrus.AMFICOM.Client.Map.UI;
 
+import com.syrus.AMFICOM.Client.Map.Controllers.MapViewController;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.SystemColor;
@@ -52,23 +53,12 @@ import com.syrus.AMFICOM.mapview.MapView;
  * видов элементов и талица элементов с полями "Идентификатор" и "Название"
  * 
  * 
- * @version $Revision: 1.17 $, $Date: 2005/02/25 13:49:17 $
+ * @version $Revision: 1.18 $, $Date: 2005/02/28 16:17:21 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */
 public final class MapElementsPanel extends JPanel
 {
-	public static final String ELEMENTS_SITE = "site";
-	public static final String ELEMENTS_WELL = "well";
-	public static final String ELEMENTS_PIQUET = "piquet";
-	public static final String ELEMENTS_LINK = "link";
-	public static final String ELEMENTS_COLLECTOR = "collector";
-	public static final String ELEMENTS_CABLE = "cable";
-	public static final String ELEMENTS_NODE = "node";
-	public static final String ELEMENTS_MARK = "mark";
-	public static final String ELEMENTS_PATH = "path";
-	public static final String ELEMENTS_MARKER = "marker";
-
 	Map map;
 	MapView mapView;
 	ApplicationContext aContext;
@@ -118,17 +108,17 @@ public final class MapElementsPanel extends JPanel
   
 	void jbInit()
 	{
-		this.typeComboBox.addItem(ELEMENTS_SITE);
-		this.typeComboBox.addItem(ELEMENTS_WELL);
-		this.typeComboBox.addItem(ELEMENTS_PIQUET);
-		this.typeComboBox.addItem(ELEMENTS_LINK);
-		this.typeComboBox.addItem(ELEMENTS_COLLECTOR);
-		this.typeComboBox.addItem(ELEMENTS_CABLE);
+		this.typeComboBox.addItem(MapViewController.ELEMENT_SITENODE);
+		this.typeComboBox.addItem(MapViewController.ELEMENT_WELL);
+		this.typeComboBox.addItem(MapViewController.ELEMENT_PIQUET);
+		this.typeComboBox.addItem(MapViewController.ELEMENT_PHYSICALLINK);
+		this.typeComboBox.addItem(MapViewController.ELEMENT_COLLECTOR);
+		this.typeComboBox.addItem(MapViewController.ELEMENT_CABLEPATH);
 //		this.typeComboBox.addItem(SchemeElement.typ);
-		this.typeComboBox.addItem(ELEMENTS_NODE);
-		this.typeComboBox.addItem(ELEMENTS_MARK);
-		this.typeComboBox.addItem(ELEMENTS_PATH);
-		this.typeComboBox.addItem(ELEMENTS_MARKER);
+		this.typeComboBox.addItem(MapViewController.ELEMENT_TOPOLOGICALNODE);
+		this.typeComboBox.addItem(MapViewController.ELEMENT_MARK);
+		this.typeComboBox.addItem(MapViewController.ELEMENT_MEASUREMENTPATH);
+		this.typeComboBox.addItem(MapViewController.ELEMENT_MARKER);
 
 		this.typeComboBox.addActionListener(new java.awt.event.ActionListener()
 		{
@@ -268,7 +258,7 @@ public final class MapElementsPanel extends JPanel
 			SiteNodeType piquet = NodeTypeController.getSiteNodeType(creatorId, SiteNodeType.PIQUET);
 //			SiteNodeType cableinlet = NodeTypeController.getSiteNodeType(creatorId, SiteNodeType.CABLE_INLET);
 
-			if(selection.equals(ELEMENTS_SITE))
+			if(selection.equals(MapViewController.ELEMENT_SITENODE))
 			{
 				for(Iterator it = this.map.getSiteNodes().iterator(); it.hasNext();)
 				{
@@ -279,7 +269,7 @@ public final class MapElementsPanel extends JPanel
 				}
 			}
 			else
-			if(selection.equals(ELEMENTS_WELL))
+			if(selection.equals(MapViewController.ELEMENT_WELL))
 			{
 				for(Iterator it = this.map.getSiteNodes().iterator(); it.hasNext();)
 				{
@@ -289,7 +279,7 @@ public final class MapElementsPanel extends JPanel
 				}
 			}
 			else
-			if(selection.equals(ELEMENTS_PIQUET))
+			if(selection.equals(MapViewController.ELEMENT_PIQUET))
 			{
 				for(Iterator it = this.map.getSiteNodes().iterator(); it.hasNext();)
 				{
@@ -299,25 +289,25 @@ public final class MapElementsPanel extends JPanel
 				}
 			}
 			else
-			if(selection.equals(ELEMENTS_LINK))
+			if(selection.equals(MapViewController.ELEMENT_PHYSICALLINK))
 				elements = this.map.getPhysicalLinks();
 			else
-			if(selection.equals(ELEMENTS_PATH))
+			if(selection.equals(MapViewController.ELEMENT_MEASUREMENTPATH))
 				elements = this.logicalNetLayer.getMapView().getMeasurementPaths();
 			else
-			if(selection.equals(ELEMENTS_NODE))
+			if(selection.equals(MapViewController.ELEMENT_TOPOLOGICALNODE))
 				elements = this.map.getTopologicalNodes();
 			else
-			if(selection.equals(ELEMENTS_MARK))
+			if(selection.equals(MapViewController.ELEMENT_MARK))
 				elements = this.map.getMarks();
 			else
-			if(selection.equals(ELEMENTS_MARKER))
+			if(selection.equals(MapViewController.ELEMENT_MARKER))
 				elements = this.logicalNetLayer.getMapView().getMarkers();
 			else
-			if(selection.equals(ELEMENTS_COLLECTOR))
+			if(selection.equals(MapViewController.ELEMENT_COLLECTOR))
 				elements = this.map.getCollectors();
 			else
-			if(selection.equals(ELEMENTS_CABLE))
+			if(selection.equals(MapViewController.ELEMENT_CABLEPATH))
 				elements = this.logicalNetLayer.getMapView().getCablePaths();
 //			else
 //			if(selection.equals(SchemeElement.typ))
