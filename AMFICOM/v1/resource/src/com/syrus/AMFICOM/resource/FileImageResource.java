@@ -1,5 +1,5 @@
 /*
- * $Id: FileImageResource.java,v 1.8 2005/02/08 10:22:50 bob Exp $
+ * $Id: FileImageResource.java,v 1.9 2005/02/15 08:13:16 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,7 +16,7 @@ import java.util.Date;
 
 /**
  * @author $Author: bob $
- * @version $Revision: 1.8 $, $Date: 2005/02/08 10:22:50 $
+ * @version $Revision: 1.9 $, $Date: 2005/02/15 08:13:16 $
  * @module resource_v1
  */
 public final class FileImageResource extends AbstractBitmapImageResource {
@@ -44,8 +44,9 @@ public final class FileImageResource extends AbstractBitmapImageResource {
 			final Date modified,
 			final Identifier creatorId,
 			final Identifier modifierId,
+			final long version,
 			final String fileName) {
-		super(id, created, modified, creatorId, modifierId);
+		super(id, created, modified, creatorId, modifierId, version);
 		this.fileName = fileName;
 	}
 
@@ -53,14 +54,17 @@ public final class FileImageResource extends AbstractBitmapImageResource {
 			final String fileName) throws CreateObjectException {
 		try {
 			final Date created1 = new Date();
-			return new FileImageResource(
+			FileImageResource fileImageResource = new FileImageResource(
 				IdentifierPool.getGeneratedIdentifier(
 					ObjectEntities.IMAGE_RESOURCE_ENTITY_CODE),
 				created1,
 				created1,
 				creatorId,
 				creatorId,
+				0L,
 				fileName);
+			fileImageResource.changed = true;
+			return fileImageResource;
 		} catch (IllegalObjectEntityException ioee) {
 			throw new CreateObjectException("FileImageResource.createInstance | cannot generate identifier ", ioee); //$NON-NLS-1$
 		}
@@ -110,7 +114,7 @@ public final class FileImageResource extends AbstractBitmapImageResource {
 	}
 
 	public void setFileName(final String fileName) {
-		this.currentVersion = getNextVersion();
+		this.changed = true;
 		setFileName0(fileName);
 	}
 
@@ -118,8 +122,9 @@ public final class FileImageResource extends AbstractBitmapImageResource {
 			final Date modified,
 			final Identifier creatorId,
 			final Identifier modifierId,
+			final long version,
 			final String fileName) {
-		super.setAttributes(created, modified, creatorId, modifierId);
+		super.setAttributes(created, modified, creatorId, modifierId, version);
 		this.fileName = fileName;
 	}
 

@@ -1,5 +1,5 @@
 /*
-* $Id: ResourceObjectLoader.java,v 1.6 2005/01/20 13:29:18 max Exp $
+* $Id: ResourceObjectLoader.java,v 1.7 2005/02/15 08:13:16 bob Exp $
 *
 * Copyright ¿ 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -8,7 +8,7 @@
 
 package com.syrus.AMFICOM.resource;
 
-import java.util.List;
+import java.util.Collection;
 import java.util.Set;
 
 import com.syrus.AMFICOM.general.CommunicationException;
@@ -20,25 +20,25 @@ import com.syrus.AMFICOM.general.StorableObjectCondition;
 
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/01/20 13:29:18 $
- * @author $Author: max $
+ * @version $Revision: 1.7 $, $Date: 2005/02/15 08:13:16 $
+ * @author $Author: bob $
  * @module resource_v1
  */
 public interface ResourceObjectLoader {
 	StorableObject loadImageResource(Identifier id) throws DatabaseException;
 
-	List loadImageResources(List ids) throws DatabaseException;
+	Collection loadImageResources(Collection ids) throws DatabaseException;
 
-	List loadImageResourcesButIds (StorableObjectCondition condition, List ids) throws DatabaseException;
+	Collection loadImageResourcesButIds (StorableObjectCondition condition, Collection ids) throws DatabaseException;
 	
 	Set refresh(Set storableObjects) throws DatabaseException;
 	
 	void saveImageResource(AbstractImageResource abstractImageResource, boolean force) throws DatabaseException;
 
-	void saveImageResources(List list, boolean force) throws DatabaseException;
+	void saveImageResources(Collection list, boolean force) throws DatabaseException;
 	
 	void delete(Identifier id) throws DatabaseException, CommunicationException;
 
-	void delete(List ids) throws DatabaseException, CommunicationException;
+	void delete(Collection ids) throws DatabaseException, CommunicationException;
 
 }

@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractImageResource.java,v 1.4 2004/12/21 10:37:42 arseniy Exp $
+ * $Id: AbstractImageResource.java,v 1.5 2005/02/15 08:13:16 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,8 +14,8 @@ import com.syrus.AMFICOM.resource.corba.ImageResource_TransferablePackage.ImageR
 import java.util.*;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.4 $, $Date: 2004/12/21 10:37:42 $
+ * @author $Author: bob $
+ * @version $Revision: 1.5 $, $Date: 2005/02/15 08:13:16 $
  * @module resource_v1
  */
 public abstract class AbstractImageResource extends StorableObject {
@@ -44,8 +44,9 @@ public abstract class AbstractImageResource extends StorableObject {
 			final Date created,
 			final Date modified,
 			final Identifier creatorId,
-			final Identifier modifierId) {
-		super(id, created, modified, creatorId, modifierId);
+			final Identifier modifierId,
+			final long version) {
+		super(id, created, modified, creatorId, modifierId, version);
 	}
 
 	/**
@@ -59,15 +60,7 @@ public abstract class AbstractImageResource extends StorableObject {
 		return Collections.EMPTY_LIST;
 	}
 
-	public abstract byte[] getImage();
-
-	/**
-	 * @throws CreateObjectException
-	 * @see StorableObject#insert()
-	 */
-	public void insert() throws CreateObjectException {
-		throw new UnsupportedOperationException();
-	}
+	public abstract byte[] getImage();	
 
 	ImageResourceSort getSort() {
 		if (this instanceof BitmapImageResource)

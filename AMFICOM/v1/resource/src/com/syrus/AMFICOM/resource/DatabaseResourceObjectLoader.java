@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseResourceObjectLoader.java,v 1.4 2005/01/18 10:24:57 bob Exp $
+ * $Id: DatabaseResourceObjectLoader.java,v 1.5 2005/02/15 08:13:16 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,7 +11,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.List;
+import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
 
@@ -22,6 +22,7 @@ import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.general.SessionContext;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
@@ -31,7 +32,7 @@ import com.syrus.AMFICOM.resource.corba.ImageResource_TransferablePackage.ImageR
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/01/18 10:24:57 $
+ * @version $Revision: 1.5 $, $Date: 2005/02/15 08:13:16 $
  * @author $Author: bob $
  * @module resource_v1
  */
@@ -64,9 +65,9 @@ public class DatabaseResourceObjectLoader implements ResourceObjectLoader {
 		}
 	}
 
-	public List loadImageResources(List ids) throws DatabaseException {
+	public Collection loadImageResources(Collection ids) throws DatabaseException {
 		ImageResourceDatabase database = (ImageResourceDatabase)ResourceDatabaseContext.getImageResourceDatabase();
-		List list = Collections.EMPTY_LIST;
+		Collection list = Collections.EMPTY_LIST;
 		try {
 			list = database.retrieveByIds(ids, null);
 		} catch (IllegalDataException e) {
@@ -76,9 +77,9 @@ public class DatabaseResourceObjectLoader implements ResourceObjectLoader {
 		return list;
 	}
 
-	public List loadImageResourcesButIds (StorableObjectCondition condition, List ids) throws DatabaseException {
+	public Collection loadImageResourcesButIds (StorableObjectCondition condition, Collection ids) throws DatabaseException {
 		ImageResourceDatabase database = (ImageResourceDatabase)ResourceDatabaseContext.getImageResourceDatabase();
-		List list = Collections.EMPTY_LIST;
+		Collection list = Collections.EMPTY_LIST;
 		try {
 			list = database.retrieveByCondition(ids, condition);
 		} catch (RetrieveObjectException e) {
@@ -132,10 +133,10 @@ public class DatabaseResourceObjectLoader implements ResourceObjectLoader {
 		}
 	}
 
-	public void saveImageResources(List list, boolean force) throws DatabaseException {
+	public void saveImageResources(Collection list, boolean force) throws DatabaseException {
 		ImageResourceDatabase database = (ImageResourceDatabase)ResourceDatabaseContext.getImageResourceDatabase();
 		try {
-			database.update(list, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
+			database.update(list, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 		} catch (UpdateObjectException e) {
 			Log.errorMessage("ResourceObjectLoader.saveImageResources | UpdateObjectException: " + e.getMessage()); //$NON-NLS-1$
 			throw new DatabaseException("ResourceObjectLoader.saveImageResources | UpdateObjectException: " + e.getMessage()); //$NON-NLS-1$
@@ -152,7 +153,7 @@ public class DatabaseResourceObjectLoader implements ResourceObjectLoader {
 		delete(id, null);		
 	}
 
-	public void delete(List ids) throws DatabaseException {
+	public void delete(Collection ids) throws DatabaseException {
 		if (ids == null || ids.isEmpty())
 			return;
 		/**
@@ -173,7 +174,7 @@ public class DatabaseResourceObjectLoader implements ResourceObjectLoader {
 			else
 				throw new DatabaseException("ResourceObjectLoader.delete | Object " + object.getClass().getName() + " isn't Identifier or Identified"); //$NON-NLS-1$ //$NON-NLS-2$
 			Short entityCode = new Short(identifier.getMajor());
-			List list = (List)map.get(entityCode);
+			Collection list = (Collection)map.get(entityCode);
 			if (list == null) {
 				list = new LinkedList();
 				map.put(entityCode, list);
@@ -184,7 +185,7 @@ public class DatabaseResourceObjectLoader implements ResourceObjectLoader {
 
 		for (Iterator it = map.keySet().iterator(); it.hasNext();) {
 			Short entityCode = (Short) it.next();
-			List list = (List)map.get(entityCode);
+			Collection list = (Collection)map.get(entityCode);
 			delete(null, list);
 		}
 
@@ -196,7 +197,7 @@ public class DatabaseResourceObjectLoader implements ResourceObjectLoader {
 	 * @param ids
 	 * @throws DatabaseException
 	 */
-	private void delete(Identifier id, List ids) throws DatabaseException {
+	private void delete(Identifier id, Collection ids) throws DatabaseException {
 		short entityCode = (id != null) ? id.getMajor() : 0;
 		if (id == null) {
 			if (ids.isEmpty())

@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractBitmapImageResource.java,v 1.4 2005/02/08 10:23:46 bob Exp $
+ * $Id: AbstractBitmapImageResource.java,v 1.5 2005/02/15 08:13:16 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,7 +14,7 @@ import java.util.Date;
 
 /**
  * @author $Author: bob $
- * @version $Revision: 1.4 $, $Date: 2005/02/08 10:23:46 $
+ * @version $Revision: 1.5 $, $Date: 2005/02/15 08:13:16 $
  * @module resource_v1
  */
 public abstract class AbstractBitmapImageResource extends AbstractImageResource {
@@ -28,8 +28,9 @@ public abstract class AbstractBitmapImageResource extends AbstractImageResource 
 			final Date created,
 			final Date modified,
 			final Identifier creatorId,
-			final Identifier modifierId) {
-		super(id, created, modified, creatorId, modifierId);
+			final Identifier modifierId,
+			final long version) {
+		super(id, created, modified, creatorId, modifierId, version);
 	}
 
 	protected AbstractBitmapImageResource(final ImageResource_Transferable imageResource) {
