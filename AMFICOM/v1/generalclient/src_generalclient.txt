@@ -45,10 +45,7 @@ src/com/syrus/AMFICOM/Client/General/Event/TestEvent.java
 src/com/syrus/AMFICOM/Client/General/Event/TreeDataSelectionEvent.java
 src/com/syrus/AMFICOM/Client/General/Event/TreeListSelectionEvent.java
 src/com/syrus/AMFICOM/Client/General/Lang/LangModel.java
-src/com/syrus/AMFICOM/Client/General/Lang/LangModel_ru.java
 src/com/syrus/AMFICOM/Client/General/Lang/LangModelReport.java
-src/com/syrus/AMFICOM/Client/General/Lang/LangModelReport_ru.java
-src/com/syrus/AMFICOM/Client/General/Lang/LangModelReport_en.java
 src/com/syrus/AMFICOM/Client/General/Log/LogInterface.java
 src/com/syrus/AMFICOM/Client/General/Model/ApplicationContext.java
 src/com/syrus/AMFICOM/Client/General/Model/ApplicationModel.java
