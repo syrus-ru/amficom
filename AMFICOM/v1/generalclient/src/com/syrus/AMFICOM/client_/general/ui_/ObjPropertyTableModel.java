@@ -10,8 +10,8 @@ import com.syrus.AMFICOM.Client.Resource.ObjectResource;
 import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2004/10/07 11:31:08 $
- * @author $Author: bob $
+ * @version $Revision: 1.2 $, $Date: 2004/12/22 13:25:16 $
+ * @author $Author: krupenn $
  * @module generalclient_v1
  */
 public class ObjPropertyTableModel extends AbstractTableModel {
@@ -122,6 +122,13 @@ public class ObjPropertyTableModel extends AbstractTableModel {
 			this.controller.setValue(this.object, key, map.get(obj));
 		} else
 			this.controller.setValue(this.object, key, obj);
+		this.fireTableDataChanged();
+	}
+
+
+	public void setController(ObjectResourceController controller)
+	{
+		this.controller = controller;
 		this.fireTableDataChanged();
 	}
 
