@@ -1,5 +1,5 @@
 /*
- * $Id: Test.java,v 1.51 2004/09/07 15:21:00 bob Exp $
+ * $Id: Test.java,v 1.52 2004/09/09 13:42:35 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -41,7 +41,7 @@ import com.syrus.AMFICOM.measurement.corba.TestTimeStamps_TransferablePackage.Co
 import com.syrus.AMFICOM.measurement.corba.TestTimeStamps_TransferablePackage.PeriodicalTestTimeStamps;
 
 /**
- * @version $Revision: 1.51 $, $Date: 2004/09/07 15:21:00 $
+ * @version $Revision: 1.52 $, $Date: 2004/09/09 13:42:35 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -136,8 +136,8 @@ public class Test extends StorableObject {
 		this.returnType = returnType;
 		this.description = description;
 		this.measurementSetupIds = measurementSetupIds;
-		this.measurementSetupIds = new LinkedList();
-
+		if (this.measurementSetupIds == null)
+			this.measurementSetupIds = new LinkedList();
 		this.status = TestStatus._TEST_STATUS_NEW;
 		
 		this.testDatabase = MeasurementDatabaseContext.testDatabase;
