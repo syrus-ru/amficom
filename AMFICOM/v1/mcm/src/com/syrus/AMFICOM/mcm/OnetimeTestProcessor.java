@@ -1,5 +1,5 @@
 /*
- * $Id: OnetimeTestProcessor.java,v 1.22 2005/03/25 22:21:50 arseniy Exp $
+ * $Id: OnetimeTestProcessor.java,v 1.23 2005/03/30 13:12:55 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,7 +16,7 @@ import com.syrus.AMFICOM.measurement.Measurement;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.22 $, $Date: 2005/03/25 22:21:50 $
+ * @version $Revision: 1.23 $, $Date: 2005/03/30 13:12:55 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -68,9 +68,10 @@ public class OnetimeTestProcessor extends TestProcessor {
 			}
 
 			this.processMeasurementResult();
-			Log.debugMessage("numberOfReceivedMResults: " + super.numberOfReceivedMResults 
-				   + ", numberOfScheduledMeasurements: " + super.numberOfScheduledMeasurements 
-				   + ", lastMeasurementAcquisition: " + this.lastMeasurementAcquisition, Log.DEBUGLEVEL07);
+			Log.debugMessage('\'' + super.test.getId().getIdentifierString() 
+					 + "' numberOfReceivedMResults: " + super.numberOfReceivedMResults 
+					 + ", numberOfScheduledMeasurements: " + super.numberOfScheduledMeasurements 
+					 + ", lastMeasurementAcquisition: " + super.lastMeasurementAcquisition, Log.DEBUGLEVEL07);
 			if (super.numberOfReceivedMResults == super.numberOfScheduledMeasurements && this.lastMeasurementAcquisition)
 				this.complete();
 			else {

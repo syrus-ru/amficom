@@ -1,5 +1,5 @@
 /*
- * $Id: PeriodicalTestProcessor.java,v 1.33 2005/03/15 16:20:38 arseniy Exp $
+ * $Id: PeriodicalTestProcessor.java,v 1.34 2005/03/30 13:12:55 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,7 +23,7 @@ import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.33 $, $Date: 2005/03/15 16:20:38 $
+ * @version $Revision: 1.34 $, $Date: 2005/03/30 13:12:55 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -59,20 +59,22 @@ public class PeriodicalTestProcessor extends TestProcessor {
 
 	private Date getCurrentTimeStamp() {
 		Date timeStamp = null;
-		if (! super.lastMeasurementAcquisition) {
-			if (! this.timeStampsList.isEmpty()) {
-				timeStamp = (Date)this.timeStampsList.remove(0);
+		if (!super.lastMeasurementAcquisition) {
+			if (!this.timeStampsList.isEmpty()) {
+				timeStamp = (Date) this.timeStampsList.remove(0);
 			}
 			else {
 				long start = System.currentTimeMillis();
 				if (start <= this.endTime) {
 					List times = this.temporalPattern.getTimes(start, Math.min(start + FRAME, this.endTime));
+//--------
 					System.out.println("From " + (new Date(start)) + " to " + (new Date(Math.min(start + FRAME, this.endTime))));
 					for (Iterator it = times.iterator(); it.hasNext();)
 						System.out.println("time: " + it.next());
+//--------
 					this.timeStampsList.addAll(times);
-					if (! this.timeStampsList.isEmpty())
-						timeStamp = (Date)this.timeStampsList.remove(0);
+					if (!this.timeStampsList.isEmpty())
+						timeStamp = (Date) this.timeStampsList.remove(0);
 				}
 				else
 					super.lastMeasurementAcquisition = true;
