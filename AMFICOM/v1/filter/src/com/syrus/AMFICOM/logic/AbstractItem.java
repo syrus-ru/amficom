@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractItem.java,v 1.5 2005/03/24 08:19:29 bass Exp $
+ * $Id: AbstractItem.java,v 1.6 2005/03/24 08:25:07 bob Exp $
  *
  * Copyright ? 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,8 +16,8 @@ import java.util.List;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/03/24 08:19:29 $
- * @author $Author: bass $
+ * @version $Revision: 1.6 $, $Date: 2005/03/24 08:25:07 $
+ * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module filter_v1
  */
@@ -125,10 +125,10 @@ public abstract class AbstractItem implements Item {
 		for (int i = 0; i < this.listener.length; i++) {
 			this.listener[i].setParentPerformed(item, oldParent, newParent);
 		}
-//		if (this.parent instanceof AbstractItem) {
-//			AbstractItem abstractItem = (AbstractItem) this.parent;
-//			abstractItem.fireParentChanged(item, oldParent, newParent);
-//		}
+		if (this.parent instanceof AbstractItem) {
+			AbstractItem abstractItem = (AbstractItem) this.parent;
+			abstractItem.fireParentChanged(item, oldParent, newParent);
+		}
 	}
 
 	public Item getParent() {
