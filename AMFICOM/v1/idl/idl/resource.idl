@@ -1,5 +1,5 @@
 /*
- * $Id: resource.idl,v 1.10 2004/12/15 09:42:49 bass Exp $
+ * $Id: resource.idl,v 1.11 2004/12/15 14:27:36 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,20 +18,20 @@ module com {
 		module AMFICOM {
 			module resource {
 				module corba {
-					union ImageResourceData switch (enum ImageResourceSort {
-							BITMAP,
-							FILE,
-							SCHEME}) {
-						case BITMAP:
-							struct BitmapImageResourceData {
-								general::corba::WString32 codename;
-								::CORBA::OctetSeq image;
-							} bitmapImageResourceData;
-						case FILE:
-							general::corba::WString256 fileName;
-						case SCHEME:
-							::CORBA::OctetSeq image;
-					};
+//					union ImageResourceData switch (enum ImageResourceSort {
+//							BITMAP,
+//							FILE,
+//							SCHEME}) {
+//						case BITMAP:
+//							struct BitmapImageResourceData {
+//								general::corba::WString32 codename;
+//								::CORBA::OctetSeq image;
+//							} bitmapImageResourceData;
+//						case FILE:
+//							general::corba::WString256 fileName;
+//						case SCHEME:
+//							::CORBA::OctetSeq image;
+//					};
 
 					/**
 					 * @todo Once migration to valuetypes is
@@ -40,7 +40,21 @@ module com {
 					 */
 					struct ImageResource_Transferable {
 						general::corba::StorableObject_Transferable header;
-						ImageResourceData data;
+//						ImageResourceData data;
+						union ImageResourceData switch (enum ImageResourceSort {
+								BITMAP,
+								FILE,
+								SCHEME}) {
+							case BITMAP:
+								struct BitmapImageResourceData {
+									general::corba::WString32 codename;
+									::CORBA::OctetSeq image;
+								} bitmapImageResourceData;
+							case FILE:
+								general::corba::WString256 fileName;
+							case SCHEME:
+								::CORBA::OctetSeq image;
+						} data;
 					};
 
 					typedef sequence<ImageResource_Transferable> ImageResourceSeq_Transferable;

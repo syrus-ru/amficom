@@ -1,5 +1,5 @@
 /*
- * $Id: general-vt.idl,v 1.5 2004/12/08 08:48:42 bass Exp $
+ * $Id: general-vt.idl,v 1.6 2004/12/15 14:22:55 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,6 +27,11 @@ module java {
 			Date getCreated();
 			Date getModified();
 			List getDependencies();
+
+			readonly attribute long long created;
+			readonly attribute Date createdImpl;
+			readonly attribute long long modified;
+			readonly attribute Date modifiedImpl;
 		};
 	};
 };
@@ -117,8 +122,6 @@ module com {
 						private Identifier modifierId;
 						private long long thisVersion;
 
-						readonly attribute long long created;
-						readonly attribute long long modified;
 						readonly attribute long long version;
 					};
 				};
