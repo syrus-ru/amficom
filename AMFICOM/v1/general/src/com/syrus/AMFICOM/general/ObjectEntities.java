@@ -1,5 +1,5 @@
 /*
- * $Id: ObjectEntities.java,v 1.16 2004/08/11 13:20:03 bob Exp $
+ * $Id: ObjectEntities.java,v 1.17 2004/08/11 15:15:57 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,8 +9,8 @@
 package com.syrus.AMFICOM.general;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2004/08/11 13:20:03 $
- * @author $Author: bob $
+ * @version $Revision: 1.17 $, $Date: 2004/08/11 15:15:57 $
+ * @author $Author: arseniy $
  * @module general_v1
  */
 
@@ -83,10 +83,12 @@ public abstract class ObjectEntities {
 	public static final short DOMAIN_ENTITY_CODE = 0x0104;
 	public static final short SERVER_ENTITY_CODE = 0x0105;
 	public static final short MCM_ENTITY_CODE = 0x0106;
-	public static final short EQUIPMENT_ENTITY_CODE = 0x0107;
-	public static final short TRANSPATH_ENTITY_CODE = 0x0108;
-	public static final short KIS_ENTITY_CODE = 0x0109;
-	public static final short ME_ENTITY_CODE = 0x010A;
+	public static final short MEASUREMENTPORT_ENTITY_CODE = 0x0107;
+	public static final short EQUIPMENT_ENTITY_CODE = 0x0108;
+	public static final short PORT_ENTITY_CODE = 0x0109;
+	public static final short TRANSPATH_ENTITY_CODE = 0x010A;
+	public static final short KIS_ENTITY_CODE = 0x010B;
+	public static final short ME_ENTITY_CODE = 0x010C;
 
 	/*	Measurement 385 -- 512	*/
 	public static final short SET_ENTITY_CODE = 0x0181;
