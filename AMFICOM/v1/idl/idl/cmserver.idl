@@ -75,6 +75,16 @@ module corba {
 						 		  in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
 			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
 			
+		void receiveKISType(in com::syrus::AMFICOM::configuration::corba::KISType_Transferable kisType_Transferable,
+								  in boolean force, 	
+						 		  in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+			
+		void receiveKISTypes(in com::syrus::AMFICOM::configuration::corba::KISTypeSeq_Transferable kisType_Transferables,
+								  in boolean force, 	
+						 		  in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+			
 		void receiveMCM(in com::syrus::AMFICOM::configuration::corba::MCM_Transferable mcm_Transferable,
 								  in boolean force, 	
 						 		  in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
