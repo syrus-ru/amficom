@@ -1,5 +1,5 @@
 /*
- * $Id: Transceiver.java,v 1.23 2004/10/13 14:35:49 peskovsky Exp $
+ * $Id: Transceiver.java,v 1.24 2004/10/14 14:25:13 bob Exp $
  *
  * Copyright ø 2004 Syrus Systems.
  * Ó¡’ﬁŒœ-‘≈»Œ…ﬁ≈”À…  √≈Œ‘“.
@@ -8,9 +8,9 @@
 
 package com.syrus.AMFICOM.mcm;
 
+import java.util.Iterator;
 import java.util.List;
 import java.util.ArrayList;
-import java.util.ListIterator;
 import java.util.Map;
 import java.util.Hashtable;
 import java.util.Collections;
@@ -28,8 +28,8 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.23 $, $Date: 2004/10/13 14:35:49 $
- * @author $Author: peskovsky $
+ * @version $Revision: 1.24 $, $Date: 2004/10/14 14:25:13 $
+ * @author $Author: bob $
  * @module mcm_v1
  */
 
@@ -39,44 +39,39 @@ public class Transceiver extends SleepButWorkThread {
 	/*	Error codes for method processFall()	*/
 	public static final int FALL_CODE_TRANSMIT_MEASUREMENT = 1;
 	public static final int FALL_CODE_GENERATE_IDENTIFIER = 2;
+	public static final int FALL_CODE_GET_SOCKET = 3;
 
 //	private final String taskFileName;
 //	private final String reportFileName;
-/*
- * œÓÚ Ì‡ ÍÓÚÓÓÏ ·Û‰ÂÚ ‡·ÓÚ‡Ú¸ mcmtransceiver (ÒÂ‚Â)
- */
  
-  private Identifier kisID = null;
-  private int socket = -1;
- 
-  private boolean running;
-
-	private List measurementQueue;//List <Measurement measurement>
+	private Identifier kisId = null;
+	
+	/**
+	 * mcmtransceiver socket
+	 */ 	 
+	private int socket = -1;
+	 
+	private boolean running;
+	
+	private List measurementQueue;//List<Measurement measurement>
 	private Map testProcessors;//Map <Identifier measurementId, TestProcessor testProcessor>
   
 	private KISReport kisReport;//MCMTransciver library writes result into this variable
-  private List reportsList = new ArrayList();
+	private List reportsList = new ArrayList();
 
 	/*	Variables for method processFall()	*/
 	private Measurement measurementToRemove;
   
-  private Thread receivingThread = null;
-	
 	public Transceiver(Identifier kisId) {
 		super(ApplicationProperties.getInt("KISTickTime", KIS_TICK_TIME) * 1000, ApplicationProperties.getInt("KISMaxFalls", KIS_MAX_FALLS));
 
-		this.kisID = kisId;
-    this.socket = TCPServer.getSocketForKisID(kisID);
-
-		this.running = true;
-		
+		this.kisId = kisId;
+		this.running = true;		
 		this.measurementQueue = Collections.synchronizedList(new ArrayList());
 		this.testProcessors = Collections.synchronizedMap(new Hashtable());
 		this.kisReport = null;
 
-		this.measurementToRemove = null;
-    
-    receivingThread = new Thread(new KISReportReceivingThread(this));
+		this.measurementToRemove = null;    
 	}
 
 	protected void addMeasurement(Measurement measurement, TestProcessor testProcessor) {
@@ -113,116 +108,122 @@ public class Transceiver extends SleepButWorkThread {
 		Result result;
 		
 		while (this.running) {
-      this.socket = TCPServer.getSocketForKisID(this.kisID);
-      if (this.socket == -1)
-      {
-        Log.errorMessage("Corresponding KIS (" + this.kisID.toString() +
-                         ")disconnected. Closing Transceiver.");
-        break;
-      }
-			if (! this.measurementQueue.isEmpty()) {
-				measurement = (Measurement)this.measurementQueue.get(0);
-				measurementId = measurement.getId();
-				if (this.transmit(
-          this.socket,
-          measurement.getId().toString(),
-					measurement.getType().getCodename(),
-					measurement.getLocalAddress(),
-					measurement.getSetup().getParameterTypeCodenames(),
-					measurement.getSetup().getParameterValues())) {
-					try {
-						measurement.updateStatus(MeasurementStatus.MEASUREMENT_STATUS_ACQUIRING,
-																		 MeasurementControlModule.iAm.getUserId());
-						MeasurementStorableObjectPool.putStorableObject(measurement);
-					}
-					catch (UpdateObjectException uoe) {
-						Log.errorException(uoe);
-					}
-					catch (IllegalObjectEntityException ioee) {
-						Log.errorException(ioee);
-					}
-					Log.debugMessage("Transmitted measurement '" + measurementId + "'", Log.DEBUGLEVEL07);
-					this.measurementQueue.remove(measurement);
-					super.clearFalls();
-				}
-				else {
-					Log.errorMessage("Cannot transmit measurement '" + measurementId + "'");
-					super.fallCode = FALL_CODE_TRANSMIT_MEASUREMENT;
-					this.measurementToRemove = measurement;
-					super.sleepCauseOfFall();
-				}
-			}	//if (! this.measurementQueue.isEmpty())
-
-      ListIterator lIt = this.reportsList.listIterator();
-			if (lIt.hasNext())
-      {
-        KISReport report = (KISReport)lIt.next();
-        this.reportsList.remove(report);
-        
-				measurementId = report.getMeasurementId();
-				Log.debugMessage("Received report for measurement '" + measurementId + "'", Log.DEBUGLEVEL07);
-				measurement = null;
-				try {
-					measurement = (Measurement)MeasurementStorableObjectPool.getStorableObject(measurementId, true);
-				}
-				catch (ApplicationException ae) {
-					Log.errorException(ae);
-				}
-				if (measurement != null) {
-					testProcessor = (TestProcessor)this.testProcessors.remove(measurementId);
-					if (testProcessor != null) {
-						result = null;
+	      this.socket = TCPServer.getSocketForKisID(this.kisId);
+	      if (this.socket == -1) {
+	        super.fallCode = FALL_CODE_GET_SOCKET;
+	        super.sleepCauseOfFall();
+	      } else {
+		      if (! this.measurementQueue.isEmpty()) {
+					measurement = (Measurement)this.measurementQueue.get(0);
+					measurementId = measurement.getId();
+					if (this.transmit(
+									  this.socket,
+									  measurement.getId().toString(),
+									  measurement.getType().getCodename(),
+									  measurement.getLocalAddress(),
+									  measurement.getSetup().getParameterTypeCodenames(),
+									  measurement.getSetup().getParameterValues())) {
 						try {
-							result = this.kisReport.createResult();
-							measurement.updateStatus(MeasurementStatus.MEASUREMENT_STATUS_ACQUIRED,
+							measurement.updateStatus(MeasurementStatus.MEASUREMENT_STATUS_ACQUIRING,
 																			 MeasurementControlModule.iAm.getUserId());
-							super.clearFalls();
-						}
-						catch (MeasurementException me) {
-							if (me.getCause() instanceof AMFICOMRemoteException) {
-								Log.debugMessage("Cannot get identifier - trying to wait", Log.DEBUGLEVEL07);
-								MeasurementControlModule.resetMServerConnection();
-								super.fallCode = FALL_CODE_GENERATE_IDENTIFIER;
-								super.sleepCauseOfFall();
-							}
-							else {
-								Log.errorException(me);
-								this.throwAwayKISReport();
-							}
+							MeasurementStorableObjectPool.putStorableObject(measurement);
 						}
 						catch (UpdateObjectException uoe) {
 							Log.errorException(uoe);
 						}
-
-						if (result != null) {
-							testProcessor.addMeasurementResult(result);
-							this.kisReport = null;
+						catch (IllegalObjectEntityException ioee) {
+							Log.errorException(ioee);
 						}
-					}	//if (testProcessor != null)
-					else {
-						Log.errorMessage("Cannot find test processor for measurement '" + measurementId + "'; throwing away it's report");
-						this.throwAwayKISReport();
+						Log.debugMessage("Transmitted measurement '" + measurementId + "'", Log.DEBUGLEVEL07);
+						this.measurementQueue.remove(measurement);
+						super.clearFalls();
 					}
-				}	//if (measurement != null)
-				else {
-					Log.errorMessage("Cannot find measurement for id '" + measurementId + "'; throwing away it's report");
-					this.throwAwayKISReport();
-				}
-				
-				try {
-					sleep(super.initialTimeToSleep);
-				}
-				catch (InterruptedException ie) {
-					Log.errorException(ie);
-				}
-			}	//else if (this.kisReport == null)
-
+					else {
+						Log.errorMessage("Cannot transmit measurement '" + measurementId + "'");
+						super.fallCode = FALL_CODE_TRANSMIT_MEASUREMENT;
+						this.measurementToRemove = measurement;
+						super.sleepCauseOfFall();
+					}
+				}	//if (! this.measurementQueue.isEmpty())
+		      
+		      	
+		      if (this.kisReport == null) {
+		      	this.kisReport = this.receive(this.socket);
+		        this.reportsList.add(this.kisReport);
+		      }	else {
+					for(Iterator it = this.reportsList.iterator();it.hasNext();){
+						KISReport report = (KISReport)it.next();
+						this.reportsList.remove(report);
+		        
+						measurementId = report.getMeasurementId();
+						Log.debugMessage("Received report for measurement '" + measurementId + "'", Log.DEBUGLEVEL07);
+						measurement = null;
+						try {
+							measurement = (Measurement)MeasurementStorableObjectPool.getStorableObject(measurementId, true);
+						}
+						catch (ApplicationException ae) {
+							Log.errorException(ae);
+						}
+						if (measurement != null) {
+							testProcessor = (TestProcessor)this.testProcessors.remove(measurementId);
+							if (testProcessor != null) {
+								result = null;
+								try {
+									result = this.kisReport.createResult();
+									measurement.updateStatus(MeasurementStatus.MEASUREMENT_STATUS_ACQUIRED,
+																					 MeasurementControlModule.iAm.getUserId());
+									super.clearFalls();
+								}
+								catch (MeasurementException me) {
+									if (me.getCause() instanceof AMFICOMRemoteException) {
+										Log.debugMessage("Cannot get identifier - trying to wait", Log.DEBUGLEVEL07);
+										MeasurementControlModule.resetMServerConnection();
+										super.fallCode = FALL_CODE_GENERATE_IDENTIFIER;
+										super.sleepCauseOfFall();
+									}
+									else {
+										Log.errorException(me);
+										this.throwAwayKISReport();
+									}
+								}
+								catch (UpdateObjectException uoe) {
+									Log.errorException(uoe);
+								}
+		
+								if (result != null) {
+									testProcessor.addMeasurementResult(result);
+									this.kisReport = null;
+								}
+							}	//if (testProcessor != null)
+							else {
+								Log.errorMessage("Cannot find test processor for measurement '" + measurementId + "'; throwing away it's report");
+								this.throwAwayKISReport();
+							}
+						}	//if (measurement != null)
+						else {
+							Log.errorMessage("Cannot find measurement for id '" + measurementId + "'; throwing away it's report");
+							this.throwAwayKISReport();
+						}
+						
+						try {
+							sleep(super.initialTimeToSleep);
+						}
+						catch (InterruptedException ie) {
+							Log.errorException(ie);
+						}
+					} // for(Iterator it=this.reportsList.iterator();
+				}	//else if (this.kisReport == null)
+	      	} // else if (this.socket == -1)	      
 		}	//while
 	}
 
 	protected void processFall() {
 		switch (super.fallCode) {
 			case FALL_CODE_NO_ERROR:
+				break;
+			case FALL_CODE_GET_SOCKET:
+		        Log.errorMessage("Corresponding KIS (" + this.kisId.toString() +
+                ") disconnected. Closing Transceiver.");
 				break;
 			case FALL_CODE_TRANSMIT_MEASUREMENT:
 				this.removeMeasurement();
@@ -253,7 +254,6 @@ public class Transceiver extends SleepButWorkThread {
 
 	protected void shutdown() {
 		this.running = false;
-    this.receivingThread.interrupt();
 		/*What to do with measurements ?!*/
 		this.cleanup();
 	}
@@ -300,49 +300,14 @@ public class Transceiver extends SleepButWorkThread {
 
 	//private native boolean transmit(Measurement measurement);
  
-	public native boolean transmit(int server_socket,
+	public native boolean transmit(int serverSocket,
                                   String measurementId,
 																	String measurementTypeCodename,
 																	String rtuCardIndex,
 																	String[] parameterTypeCodenames,
 																	byte[][] parameterValues);
 
-	public native KISReport receive(int server_socket);
+	public native KISReport receive(int serverSocket);
   
-  private class KISReportReceivingThread implements Runnable
-  {
-    private KISReportReceivingThread createdThread = null;
-    
-    private Transceiver transceiver = null;
-    
-    private KISReportReceivingThread(Transceiver tr)
-    {
-      this.transceiver = tr;
-    }
-    
-    public KISReportReceivingThread getInstance(Transceiver tr)
-    {
-      if (this.createdThread == null)
-        this.createdThread = new KISReportReceivingThread(tr);
-
-      return this.createdThread;
-    }
-    
-    public void run()
-    {
-      while (true)
-      {
-        transceiver.kisReport = transceiver.receive(transceiver.socket);
-        transceiver.reportsList.add(transceiver.kisReport);
-        try
-        {
-          this.wait(1000);
-        }
-        catch (InterruptedException exc)
-        {
-          exc.printStackTrace();
-        }
-      }
-    }
-  }
+  
 }
