@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectDatabase.java,v 1.16 2004/09/03 08:06:51 max Exp $
+ * $Id: StorableObjectDatabase.java,v 1.17 2004/09/03 10:43:32 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,6 +13,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -21,8 +22,8 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2004/09/03 08:06:51 $
- * @author $Author: max $
+ * @version $Revision: 1.17 $, $Date: 2004/09/03 10:43:32 $
+ * @author $Author: bob $
  * @module general_v1
  */
 
@@ -94,7 +95,7 @@ public abstract class StorableObjectDatabase {
 	public abstract void retrieve(StorableObject storableObject) throws IllegalDataException,
 			ObjectNotFoundException, RetrieveObjectException;
 
-	public abstract List retrieveByIds(List ids) throws RetrieveObjectException;
+	public abstract List retrieveByIds(List ids, String condition) throws RetrieveObjectException;
 
 	public abstract Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg)
 			throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException;
@@ -124,6 +125,7 @@ public abstract class StorableObjectDatabase {
 				Log.debugMessage(this.getEnityName() + "Database.insertEntity | Trying: " + sql,
 							Log.DEBUGLEVEL09);
 				statement.executeUpdate(sql);
+				connection.commit();
 			} catch (SQLException sqle) {
 				String mesg = this.getEnityName() + "Database.insertEntity | Cannot insert "
 						+ this.getEnityName() + " '" + storableObjectIdStr + "' -- "
@@ -174,6 +176,8 @@ public abstract class StorableObjectDatabase {
 						+ this.getEnityName() + " " + storableObjectIdCode, Log.DEBUGLEVEL09);
 				preparedStatement.executeUpdate();
 			}
+			
+			connection.commit();			
 		} catch (SQLException sqle) {
 			String mesg = this.getEnityName() + "Database.insertEntities | Cannot insert "
 					+ this.getEnityName() + " '" + storableObjectIdCode + "' -- " + sqle.getMessage();
@@ -234,10 +238,9 @@ public abstract class StorableObjectDatabase {
 								PreparedStatement preparedStatement)
 			throws IllegalDataException, UpdateObjectException;
 
-	protected void checkAndUpdateEntity(StorableObject localStorableObject) throws IllegalDataException, UpdateObjectException {
-		/**
-		 * @todo recast this method !
-		 */
+	protected void checkAndUpdateEntity(StorableObject localStorableObject,final boolean force) 
+					throws IllegalDataException, UpdateObjectException, VersionCollisionException {
+
 		String atIdStr = localStorableObject.getId().toSQLString();
 		String sql = retrieveQuery(COLUMN_ID + EQUALS + atIdStr);
 
@@ -247,11 +250,27 @@ public abstract class StorableObjectDatabase {
 		ResultSet resultSet = null;
 		try {
 			statement = connection.createStatement();
-			Log.debugMessage(getEnityName() + "Database.updateEntity | Trying: " + sql, Log.DEBUGLEVEL09);
+			Log.debugMessage(getEnityName() + "Database.checkAndUpdateEntity | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql);
 			try {
-				if (resultSet.next())
+				if (resultSet.next()){
 					updateEntityFromResultSet(storableObject, resultSet);
+					
+					boolean update = force;
+					if (!update)
+						update =	((storableObject.getModifierId().equals(localStorableObject.getModifierId()))&&
+						(Math.abs(storableObject.getModified().getTime()-localStorableObject.getModified().getTime())<1000));
+					
+					if (update){
+						localStorableObject.setAttributes(localStorableObject.getCreated(), new Date(System.currentTimeMillis()), 
+														  localStorableObject.getCreatorId(), localStorableObject.getModifierId());
+						updateEntity(localStorableObject);
+					} else{
+						String msg = getEnityName() + "Database.checkAndUpdateEntity | " + getEnityName() + " conflict version ";
+						throw new VersionCollisionException(msg);
+					}
+					
+				}
 				else {
 					try {
 						insert(localStorableObject);
@@ -290,7 +309,79 @@ public abstract class StorableObjectDatabase {
 		}
 	}
 	
-	protected void checkAndUpdateEntities(List localStorableObjects) throws UpdateObjectException{
+	protected void checkAndUpdateEntities(List localStorableObjects, boolean force) throws IllegalDataException, UpdateObjectException, VersionCollisionException{
+		
+		List idsList = new LinkedList();
+		for(Iterator it=localStorableObjects.iterator();it.hasNext();){
+			StorableObject storableObject = (StorableObject)it.next();
+			Identifier localId = storableObject.getId();
+			if (idsList.contains(localId))
+				throw new UpdateObjectException(getEnityName()+"Database.checkAndUpdateEntities | Input collection contains entity with the same id " + localId.getCode());
+			idsList.add(storableObject.getId());
+		}
+		
+		
+		List storableObjects = null;
+		try{
+			storableObjects = retrieveByIds(idsList, null);
+		}catch(RetrieveObjectException roe){
+			throw new UpdateObjectException(getEnityName()+"Database.checkAndUpdateEntities | Error during retrieving by ids -- " + roe.getMessage(), roe);
+		}
+		
+		List insertList = null;
+		List updateList = null;		
+		
+		for(Iterator localIter=localStorableObjects.iterator();localIter.hasNext();){
+			StorableObject localStorableObject = (StorableObject)localIter.next();
+			Identifier localId = localStorableObject.getId();
+			StorableObject storableObject = null;
+			
+			for(Iterator it=storableObjects.iterator();it.hasNext();){
+				StorableObject stObj = (StorableObject)it.next();
+				if (stObj.getId().equals(localId)){
+					storableObject = stObj;
+					// remove item to reduce searching time
+					it.remove();
+					break;
+				}
+			}
+			
+			if (storableObject == null){
+				if (insertList == null)
+					insertList = new LinkedList();
+				insertList.add(localStorableObject);
+			} else{
+				boolean update = force;
+				if (!update)
+					update = ((storableObject.getModifierId().equals(localStorableObject.getModifierId()))&&
+					(Math.abs(storableObject.getModified().getTime()-localStorableObject.getModified().getTime())<1000));
+				
+				if (update){
+					localStorableObject.setAttributes(localStorableObject.getCreated(), new Date(System.currentTimeMillis()), 
+													  localStorableObject.getCreatorId(), localStorableObject.getModifierId());
+					if (updateList == null)
+						updateList = new LinkedList();
+					updateList.add(localStorableObject);
+				} else{
+					String msg = getEnityName() + "Database.checkAndUpdateEntity | " + getEnityName() + " conflict version ";
+					throw new VersionCollisionException(msg);
+				}
+
+			}
+				
+		}
+		
+		if (insertList!=null)
+			try{		
+			insertEntities(insertList);
+			}catch(CreateObjectException coe){
+				String msg = getEnityName() + "Database.checkAndUpdateEntity | Error during insering new entities -- " + coe.getMessage();
+				throw new UpdateObjectException(msg, coe);
+			}
+		
+		if (updateList!=null)
+			updateEntities(updateList);
+		
 		
 	}
 
@@ -437,6 +528,7 @@ public abstract class StorableObjectDatabase {
 			Log.debugMessage(this.getEnityName() + "Database.updateEntity | Trying: " + sql,
 						Log.DEBUGLEVEL09);
 			statement.executeUpdate(sql);
+			connection.commit();
 		} catch (SQLException sqle) {
 			String mesg = this.getEnityName() + "Database.updateEntity | Cannot update "
 					+ this.getEnityName() + " '" + storableObjectIdStr + "' -- "
@@ -476,16 +568,12 @@ public abstract class StorableObjectDatabase {
 
 				StorableObject storableObject = (StorableObject) it.next();
 				storableObjectIdCode = storableObject.getId().getCode();
-				/**
-				  * @todo when change DB Identifier model ,change setString() to setLong()
-				  */
-				preparedStatement.setString(1, storableObjectIdCode);
-				
 				this.setEntityForPreparedStatement(storableObject, preparedStatement);
 				Log.debugMessage(this.getEnityName() + "Database.updateEntities | Inserting  "
 						+ this.getEnityName() + " " + storableObjectIdCode, Log.DEBUGLEVEL09);
 				preparedStatement.executeUpdate();
 			}
+			connection.commit();
 		} catch (SQLException sqle) {
 			String mesg = this.getEnityName() + "Database.updateEntities | Cannot update "
 					+ this.getEnityName() + " '" + storableObjectIdCode + "' -- " + sqle.getMessage();
