@@ -1,5 +1,5 @@
 /*
- * $Id: CMServerImpl.java,v 1.75 2004/12/16 10:20:28 bob Exp $
+ * $Id: CMServerImpl.java,v 1.76 2004/12/21 17:01:02 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -122,8 +122,8 @@ import com.syrus.AMFICOM.measurement.corba.Test_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.75 $, $Date: 2004/12/16 10:20:28 $
- * @author $Author: bob $
+ * @version $Revision: 1.76 $, $Date: 2004/12/21 17:01:02 $
+ * @author $Author: arseniy $
  * @module cmserver_v1
  */
 
@@ -140,104 +140,109 @@ public class CMServerImpl extends CMConfigurationMeasurementReceive {
     //////////////////////////////////Name Resolver/////////////////////////////////////////////////
 
     
-	public String lookupDomainName(Identifier_Transferable idTransferable)
-		throws AMFICOMRemoteException {
+	public String lookupDomainName(Identifier_Transferable idTransferable) throws AMFICOMRemoteException {
 		try {
 			Identifier id = new Identifier(idTransferable);
 			return ( (Domain)ConfigurationStorableObjectPool.getStorableObject(id, true) ).getName();
-		} catch (RetrieveObjectException roe) {
+		}
+		catch (RetrieveObjectException roe) {
 			Log.errorException(roe);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, roe
-					.getMessage());
-		} catch (ApplicationException e) {
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, roe.getMessage());
+		}
+		catch (ApplicationException e) {
 			Log.errorException(e);
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, e.getMessage());
-		} catch (Throwable t) {
-            Log.errorException(t);
-            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
-        }
+		}
+		catch (Throwable t) {
+			Log.errorException(t);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
+		}
 	}
 
-    public String lookupUserLogin(Identifier_Transferable identifier_Transferable)
-            throws AMFICOMRemoteException {
-        try {
-            Identifier id = new Identifier(identifier_Transferable);
-            return ( (User)ConfigurationStorableObjectPool.getStorableObject(id, true) ).getLogin();
-        } catch (RetrieveObjectException roe) {
-            Log.errorException(roe);
-            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, roe
-                    .getMessage());
-        } catch (ApplicationException e) {
-            Log.errorException(e);
-            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, e.getMessage());
-        } catch (Throwable t) {
-            Log.errorException(t);
-            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
-        }
-    }
+	public String lookupUserLogin(Identifier_Transferable identifier_Transferable) throws AMFICOMRemoteException {
+		try {
+			Identifier id = new Identifier(identifier_Transferable);
+			return ( (User)ConfigurationStorableObjectPool.getStorableObject(id, true) ).getLogin();
+		}
+		catch (RetrieveObjectException roe) {
+			Log.errorException(roe);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, roe.getMessage());
+		}
+		catch (ApplicationException e) {
+			Log.errorException(e);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, e.getMessage());
+		}
+		catch (Throwable t) {
+			Log.errorException(t);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
+		}
+	}
 
-    public String lookupUserName(Identifier_Transferable identifier_Transferable)
-            throws AMFICOMRemoteException {
-        try {
-            Identifier id = new Identifier(identifier_Transferable);
-            return ( (User)ConfigurationStorableObjectPool.getStorableObject(id, true) ).getName();
-        } catch (RetrieveObjectException roe) {
-            Log.errorException(roe);
-            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, roe
-                    .getMessage());
-        } catch (ApplicationException e) {
-            Log.errorException(e);
-            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, e.getMessage());
-        } catch (Throwable t) {
-            Log.errorException(t);
-            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
-        }
-    }
+	public String lookupUserName(Identifier_Transferable identifier_Transferable) throws AMFICOMRemoteException {
+		try {
+			Identifier id = new Identifier(identifier_Transferable);
+			return ( (User)ConfigurationStorableObjectPool.getStorableObject(id, true) ).getName();
+		}
+		catch (RetrieveObjectException roe) {
+			Log.errorException(roe);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, roe.getMessage());
+		}
+		catch (ApplicationException e) {
+			Log.errorException(e);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, e.getMessage());
+		}
+		catch (Throwable t) {
+			Log.errorException(t);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
+		}
+	}
 
-    public Identifier_Transferable reverseLookupDomainName(String domainName)
-            throws AMFICOMRemoteException {
-        try {
-        List list = ConfigurationStorableObjectPool.getStorableObjectsByCondition(new StringFieldCondition(domainName, ObjectEntities.DOMAIN_ENTITY_CODE), true);
-        if (list.isEmpty())
-        	throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, "list is empty");
-        Identifier id = ( (Domain)list.get(0) ).getId();
-        return (Identifier_Transferable)id.getTransferable();
-        } catch (RetrieveObjectException roe) {
-            Log.errorException(roe);
-            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, roe
-                    .getMessage());
-        } catch (ApplicationException e) {
-            Log.errorException(e);
-            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, e.getMessage());
-        } catch (Throwable t) {
-            Log.errorException(t);
-            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
-        }
-    }
+	public Identifier_Transferable reverseLookupDomainName(String domainName) throws AMFICOMRemoteException {
+		try {
+			List list = ConfigurationStorableObjectPool.getStorableObjectsByCondition(new StringFieldCondition(domainName, ObjectEntities.DOMAIN_ENTITY_CODE), true);
+			if (list.isEmpty())
+				throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, "list is empty");
+			Identifier id = ( (Domain)list.get(0) ).getId();
+			return (Identifier_Transferable)id.getTransferable();
+		}
+		catch (RetrieveObjectException roe) {
+			Log.errorException(roe);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, roe.getMessage());
+		}
+		catch (ApplicationException e) {
+			Log.errorException(e);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, e.getMessage());
+		}
+		catch (Throwable t) {
+			Log.errorException(t);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
+		}
+	}
 
-    public Identifier_Transferable reverseLookupUserLogin(String userLogin)
-            throws AMFICOMRemoteException {
-        try {
-        	Log.debugMessage("CMServerImpl.reverseLookupUserLogin | userLogin " + userLogin, Log.DEBUGLEVEL07);
-        	StringFieldCondition stringFieldCondition = StringFieldCondition.getInstance();
+	public Identifier_Transferable reverseLookupUserLogin(String userLogin) throws AMFICOMRemoteException {
+		try {
+			Log.debugMessage("CMServerImpl.reverseLookupUserLogin | userLogin " + userLogin, Log.DEBUGLEVEL07);
+			StringFieldCondition stringFieldCondition = StringFieldCondition.getInstance();
 			stringFieldCondition.setEntityCode(ObjectEntities.USER_ENTITY_CODE);
 			stringFieldCondition.setString(userLogin);
 			stringFieldCondition.setSort(StringFieldSort.STRINGSORT_USERLOGIN);
-            List list = ConfigurationStorableObjectPool.getStorableObjectsByCondition(stringFieldCondition, true);
-            Identifier  id = ( (User)list.get(0) ).getId();
-            return (Identifier_Transferable)id.getTransferable();
-        } catch (RetrieveObjectException roe) {
-            Log.errorException(roe);
-            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, roe
-                    .getMessage());
-        } catch (ApplicationException e) {
-            Log.errorException(e);
-            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, e.getMessage());
-        } catch (Throwable t) {
-            Log.errorException(t);
-            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
-        }
-    }
+			List list = ConfigurationStorableObjectPool.getStorableObjectsByCondition(stringFieldCondition, true);
+			Identifier  id = ( (User)list.get(0) ).getId();
+			return (Identifier_Transferable)id.getTransferable();
+		}
+		catch (RetrieveObjectException roe) {
+			Log.errorException(roe);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, roe.getMessage());
+		}
+		catch (ApplicationException e) {
+			Log.errorException(e);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, e.getMessage());
+		}
+		catch (Throwable t) {
+			Log.errorException(t);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
+		}
+	}
 
 	public Identifier_Transferable reverseLookupUserName(final String userName)
 			throws AMFICOMRemoteException {

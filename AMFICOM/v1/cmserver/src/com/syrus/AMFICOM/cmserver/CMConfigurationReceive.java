@@ -1,5 +1,5 @@
 /*
- * $Id: CMConfigurationReceive.java,v 1.7 2004/12/17 16:31:59 bob Exp $
+ * $Id: CMConfigurationReceive.java,v 1.8 2004/12/21 17:01:02 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,7 +10,7 @@ package com.syrus.AMFICOM.cmserver;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.syrus.AMFICOM.cmserver.corba.CMServerOperations;
+import com.syrus.AMFICOM.cmserver.corba.CMServerPOA;
 import com.syrus.AMFICOM.configuration.AbstractLinkType;
 import com.syrus.AMFICOM.configuration.CableLinkType;
 import com.syrus.AMFICOM.configuration.CableThreadType;
@@ -89,11 +89,11 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.7 $, $Date: 2004/12/17 16:31:59 $
- * @author $Author: bob $
+ * @version $Revision: 1.8 $, $Date: 2004/12/21 17:01:02 $
+ * @author $Author: arseniy $
  * @module module
  */
-public abstract class CMConfigurationReceive implements CMServerOperations {
+public abstract class CMConfigurationReceive extends CMServerPOA {
 	
 	static final long serialVersionUID = 5462858483804681509L;
     //////////////////////////////Configuration Recieve///////////////////////////////////

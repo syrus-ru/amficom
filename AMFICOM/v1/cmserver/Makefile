@@ -10,11 +10,9 @@ HOST=mongol
 SERVICE_NAME=mongol
 
 APPCLASSPATH = $(LIBDIR)/util.jar:$(LIBDIR)/general.jar:$(LIBDIR)/configuration.jar:$(LIBDIR)/measurement.jar:$(LIBDIR)/mcm_interface.jar
-###:$(LIBDIR)/servermisc.jar
 
 include ../tools/Makefile.inc
 $(call checkenve,JAVA_HOME)
-$(call checkenve,ORACLE_HOME)
 $(call checkenve,IDLJ)
 
 all: $(LIBNAME) $(LIBNAME_INTERFACE)
@@ -79,5 +77,5 @@ arch:
 		$(SRCDIR)/com/syrus/AMFICOM/cmserver/*.java
 
 
-lib: $(LIBNAME)
-	$(CP) $(LIBNAME) $(LIBDIR)
+install: $(LIBNAME) $(LIBNAME_INTERFACE)
+	$(CP) $(LIBNAME) $(LIBNAME_INTERFACE) $(LIBDIR)
