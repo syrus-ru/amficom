@@ -17,9 +17,10 @@ OBJ_EXT = o
 SO_EXT = so
 SO_PREFIX = lib
 
-LD = ld
-LDFLAGS = -shared
-LD_OUTPUT_FLAG = -o
+LD = g++
+LDFLAGS = -shared 
+LD_OUTPUT_FLAG = "-o "
+LDLIBS = -lm -lstdc++
 
 CXX = g++
 CFLAGS = -O2 -I$(JAVA_HOME)/include -I$(JAVA_HOME)/include/linux
