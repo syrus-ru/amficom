@@ -33,14 +33,14 @@ public class OfxSpatialLayer implements SpatialLayer
 
 		try
 		{
-			sc = SxClass.retrieve(className, sxMapViewer.getQuery());
-			bin = sxMapViewer.getBin(binName);
-			ri = bin.getRenderer(className);
-			sym = bin.getSymbology(className);
+			this.sc = SxClass.retrieve(className, sxMapViewer.getQuery());
+			this.bin = sxMapViewer.getBin(binName);
+			this.ri = this.bin.getRenderer(className);
+			this.sym = this.bin.getSymbology(className);
 		}
-		catch(java.lang.Exception exception)
+		catch(Exception exception)
 		{
-			exception.printStackTrace();;
+			exception.printStackTrace();
 		}
 		setLabel();
 	}
@@ -52,13 +52,13 @@ public class OfxSpatialLayer implements SpatialLayer
 
 		try
 		{
-			sc = SxClass.retrieve(className, sxMapViewer.getQuery());
-			ri = sc.getRenderer();
-			sym = sc.getSymbology();
+			this.sc = SxClass.retrieve(className, sxMapViewer.getQuery());
+			this.ri = this.sc.getRenderer();
+			this.sym = this.sc.getSymbology();
 		}
 		catch(Exception exception)
 		{
-			exception.printStackTrace();;
+			exception.printStackTrace();
 		}
 		
 		setLabel();
@@ -68,66 +68,64 @@ public class OfxSpatialLayer implements SpatialLayer
 	{
 		try
 		{
-			int dim = sc.getDimension();
+			int dim = this.sc.getDimension();
 			
-			imagePanel = new JPanel();
-			SxSymbolCanvas sxsymbolcanvas = new SxSymbolCanvas(sym);
-			sxsymbolcanvas.setRenderer(ri);
+			this.imagePanel = new JPanel();
+			SxSymbolCanvas sxsymbolcanvas = new SxSymbolCanvas(this.sym);
+			sxsymbolcanvas.setRenderer(this.ri);
 			sxsymbolcanvas.setDimension(dim);
 			
-			imagePanel.add(sxsymbolcanvas);
+			this.imagePanel.add(sxsymbolcanvas);
 		}
-		catch(java.lang.Exception exception)
+		catch(Exception exception)
 		{
-			imagePanel = null;
+			this.imagePanel = null;
 			exception.printStackTrace();
 		}
 	}
 
 	public boolean isVisible()
 	{
-		SxMapLayerInterface sxmaplayerinterface = sxMapViewer.getNamedLayer(className);
+		SxMapLayerInterface sxmaplayerinterface = this.sxMapViewer.getNamedLayer(this.className);
 		if(sxmaplayerinterface != null)
 			return sxmaplayerinterface.isEnabled();
-		else
-			return false;
+		return false;
 	}
 
 	public boolean isLabelVisible()
 	{
-		SxMapLayerInterface sxmaplayerinterface = sxMapViewer.getNamedLayer(className + "LABELS");
+		SxMapLayerInterface sxmaplayerinterface = this.sxMapViewer.getNamedLayer(this.className + "LABELS");
 		if(sxmaplayerinterface != null)
 			return sxmaplayerinterface.isEnabled();
-		else
-			return false;
+		return false;
 	}
 
 	public void setVisible(boolean visible)
 	{
-		SxMapLayerInterface sxmaplayerinterface = sxMapViewer.getNamedLayer(className);
+		SxMapLayerInterface sxmaplayerinterface = this.sxMapViewer.getNamedLayer(this.className);
 		if(sxmaplayerinterface != null)
 			sxmaplayerinterface.setEnabled(visible);
 			
-		sxMapViewer.postPaintEvent();
+		this.sxMapViewer.postPaintEvent();
 	}
 
 
 	public void setLabelVisible(boolean visible)
 	{
-		SxMapLayerInterface sxmaplayerinterface = sxMapViewer.getNamedLayer(className + "LABELS");
+		SxMapLayerInterface sxmaplayerinterface = this.sxMapViewer.getNamedLayer(this.className + "LABELS");
 		if(sxmaplayerinterface != null)
 			sxmaplayerinterface.setEnabled(visible);
 	}
 
 	public Component getLayerImage()
 	{
-		return imagePanel;
+		return this.imagePanel;
 	}
 	
 	public String getName()
 	{
-		if(binName != null)
-			return binName;
-		return className;
+		if(this.binName != null)
+			return this.binName;
+		return this.className;
 	}
 }

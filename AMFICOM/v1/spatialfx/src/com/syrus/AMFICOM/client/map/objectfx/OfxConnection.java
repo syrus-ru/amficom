@@ -1,12 +1,11 @@
 /**
- * $Id: OfxConnection.java,v 1.2 2005/01/12 14:24:07 krupenn Exp $
+ * $Id: OfxConnection.java,v 1.3 2005/02/10 11:37:49 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
  * Проект: АМФИКОМ
- *
- * Платформа: java 1.4.1
-*/
+ */
+
 package com.syrus.AMFICOM.Client.Map.ObjectFX;
 
 import com.ofx.base.SxEnvironment;
@@ -18,14 +17,10 @@ import com.syrus.AMFICOM.Client.Map.MapConnection;
 import java.util.Vector;
 
 /**
- * Реализация соединения с хранилищем данных в формате SpatialFX
- * 
- * 
- * 
- * @version $Revision: 1.2 $, $Date: 2005/01/12 14:24:07 $
- * @module
+ * Реализация соединения с хранилищем данных в формате SpatialFX.
+ * @version $Revision: 1.3 $, $Date: 2005/02/10 11:37:49 $
  * @author $Author: krupenn $
- * @see
+ * @module spatialfx_v1
  */
 public class OfxConnection extends MapConnection
 {
@@ -81,7 +76,7 @@ public class OfxConnection extends MapConnection
 	}
 
 	public void setURL(String url)
-	{
+	{//empty
 	}
 
 	public String getPath()
@@ -107,10 +102,10 @@ public class OfxConnection extends MapConnection
 				getClass().getName(), 
 				"connect()");
 		
-		String sessionName = OFX_DATABASE_PREFIX + dataBasePath;
+		String sessionName = OFX_DATABASE_PREFIX + this.dataBasePath;
 		
-        SxProperties.singleton().setProperty("ofx.userName", dbUserName);
-        SxProperties.singleton().setProperty("ofx.password", dbPassword);
+        SxProperties.singleton().setProperty("ofx.userName", this.dbUserName);
+        SxProperties.singleton().setProperty("ofx.password", this.dbPassword);
         SxProperties.singleton().setProperty("ofx.domainDimension", "3");
         com.ofx.query.SxQueryInterface qsi = SxEnvironment.singleton().getQuery();
         Vector theProperties = 
@@ -146,8 +141,8 @@ public class OfxConnection extends MapConnection
             result = qsi.openSession(
 					dbType, 
 					sessionName, 
-					dbUserName, 
-					dbPassword, 
+					this.dbUserName, 
+					this.dbPassword, 
 					dbURL, 
 					jdbcDriverClass, 
 					sdoAdminUserName);

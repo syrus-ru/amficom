@@ -1,5 +1,5 @@
 /**
- * $Id: OfxNetMapViewer.java,v 1.1 2004/12/01 16:53:11 krupenn Exp $
+ * $Id: OfxNetMapViewer.java,v 1.2 2005/02/10 11:37:49 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,15 +11,24 @@
 
 package com.syrus.AMFICOM.Client.Map.ObjectFX;
 
-import com.ofx.base.SxConstant;
+import java.awt.Component;
+import java.awt.dnd.DropTarget;
+import java.awt.dnd.DropTargetListener;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Vector;
+
+import javax.swing.JComponent;
+import javax.swing.ToolTipManager;
+
 import com.ofx.base.SxEnvironment;
 import com.ofx.component.swing.JMapViewer;
-import com.ofx.mapViewer.SxClassLayer;
 import com.ofx.mapViewer.SxMapLayerInterface;
 import com.ofx.mapViewer.SxMapViewer;
 import com.ofx.mapViewer.SxMarkerLayer;
-
-import com.ofx.repository.SxClass;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
 import com.syrus.AMFICOM.Client.Map.MapConnection;
@@ -33,29 +42,11 @@ import com.syrus.AMFICOM.Client.Map.UI.MapMouseMotionListener;
 import com.syrus.AMFICOM.Client.Map.UI.MapScrollPane;
 import com.syrus.AMFICOM.Client.Map.UI.MapToolTippedPanel;
 
-import java.awt.Component;
-import java.awt.dnd.DropTarget;
-import java.awt.dnd.DropTargetListener;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
-
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Vector;
-
-import javax.swing.JComponent;
-import javax.swing.ToolTipManager;
-
 /**
- *  
  * 
- * 
- * 
- * @version $Revision: 1.1 $, $Date: 2004/12/01 16:53:11 $
- * @module
+ * @version $Revision: 1.2 $, $Date: 2005/02/10 11:37:49 $
  * @author $Author: krupenn $
- * @see
+ * @module spatialfx_v1
  */
 public class OfxNetMapViewer extends NetMapViewer
 {
@@ -84,21 +75,21 @@ public class OfxNetMapViewer extends NetMapViewer
 	
 	public Component getComponent()
 	{
-		return jMapViewer;
+		return this.jMapViewer;
 	}
 	
 	public JMapViewer getJMapViewer()
 	{
-		return jMapViewer;
+		return this.jMapViewer;
 	}
 	
 	public JComponent getVisualComponent()
 	{
-		if(jMapViewer == null)
-			jMapViewer = new JMapViewer();
-		if(scrollPane == null)
-			scrollPane = new MapScrollPane(this);
-		return scrollPane;
+		if(this.jMapViewer == null)
+			this.jMapViewer = new JMapViewer();
+		if(this.scrollPane == null)
+			this.scrollPane = new MapScrollPane(this);
+		return this.scrollPane;
 	}
 
 	public void init()
@@ -111,49 +102,49 @@ public class OfxNetMapViewer extends NetMapViewer
 		
 		super.init();
 		
-		if(lnl != null)
+		if(this.lnl != null)
 		{
 //			this.removeMouseListener(ml);
 //			this.removeMouseMotionListener(mml);
-			jMapViewer.removeMouseListener(mttp.ls);
-			jMapViewer.removeMouseMotionListener(mttp.ls);
-			dropTarget.setActive(false);
-			ttm.unregisterComponent(mttp);
+			this.jMapViewer.removeMouseListener(this.mttp.toolTippedPanelListener);
+			this.jMapViewer.removeMouseMotionListener(this.mttp.toolTippedPanelListener);
+			this.dropTarget.setActive(false);
+			this.ttm.unregisterComponent(this.mttp);
 		}
 		try
 		{
-			lnl = new OfxLogicalNetLayer(this);
+			this.lnl = new OfxLogicalNetLayer(this);
 
 //			lnl.getMapState().setActionMode(MapState.DRAW_ACTION_MODE);
 
-			dtl = new MapDropTargetListener(lnl);
-			dropTarget = new DropTarget( jMapViewer.getMapCanvas(), dtl);
-			dropTarget.setActive(true);
+			this.dtl = new MapDropTargetListener(this.lnl);
+			this.dropTarget = new DropTarget( this.jMapViewer.getMapCanvas(), this.dtl);
+			this.dropTarget.setActive(true);
 
-			mttp = new MapToolTippedPanel(this);
-			jMapViewer.addMouseListener(mttp.ls);
-			jMapViewer.addMouseMotionListener(mttp.ls);
+			this.mttp = new MapToolTippedPanel(this);
+			this.jMapViewer.addMouseListener(this.mttp.toolTippedPanelListener);
+			this.jMapViewer.addMouseMotionListener(this.mttp.toolTippedPanelListener);
 
-			mka = new MapKeyAdapter(lnl);
-			getVisualComponent().addKeyListener(mka);
+			this.mka = new MapKeyAdapter(this.lnl);
+			getVisualComponent().addKeyListener(this.mka);
 			getVisualComponent().grabFocus();
 
-			ttm = ToolTipManager.sharedInstance();
-			ttm.registerComponent(mttp);
+			this.ttm = ToolTipManager.sharedInstance();
+			this.ttm.registerComponent(this.mttp);
 		}
 		catch(Exception e)
 		{
 			e.printStackTrace();
 		}
-		if(ml == null)
+		if(this.ml == null)
 		{
-			ml = new MapMouseListener(lnl);
-			jMapViewer.addMouseListener(ml);
+			this.ml = new MapMouseListener(this.lnl);
+			this.jMapViewer.addMouseListener(this.ml);
 		}
-		if(mml == null)
+		if(this.mml == null)
 		{
-			mml = new MapMouseMotionListener(lnl);
-			jMapViewer.addMouseMotionListener(mml);
+			this.mml = new MapMouseMotionListener(this.lnl);
+			this.jMapViewer.addMouseMotionListener(this.mml);
 		}
 	}
 
@@ -165,8 +156,8 @@ public class OfxNetMapViewer extends NetMapViewer
 				getClass().getName(), 
 				"saveConfig()");
 		
-		MapPropertiesManager.setCenter(lnl.getCenter());
-		MapPropertiesManager.setZoom(lnl.getScale());
+		MapPropertiesManager.setCenter(this.lnl.getCenter());
+		MapPropertiesManager.setZoom(this.lnl.getScale());
 		MapPropertiesManager.saveIniFile();
 	}
 
@@ -204,13 +195,13 @@ public class OfxNetMapViewer extends NetMapViewer
 		
 		try
 		{
-			SxMapViewer anSxMapViewer = jMapViewer.getSxMapViewer();
+			SxMapViewer anSxMapViewer = this.jMapViewer.getSxMapViewer();
 
 			if(!dbset)
-				jMapViewer.setDBName( dataBasePath);
-			jMapViewer.setMapName( dataBaseView);
+				this.jMapViewer.setDBName( dataBasePath);
+			this.jMapViewer.setMapName( dataBaseView);
 
-			anSxMapViewer.addLayer( "Network layer", lnl.spatialLayer);
+			anSxMapViewer.addLayer( "Network layer", this.lnl.spatialLayer);
 			
 			try 
 			{
@@ -221,6 +212,7 @@ public class OfxNetMapViewer extends NetMapViewer
 			} 
 			catch (Exception ex) 
 			{
+					ex.printStackTrace();
 			} 
 			
 			anSxMapViewer.removeNamedLayer("OFX LOGO");
@@ -242,7 +234,7 @@ public class OfxNetMapViewer extends NetMapViewer
 				"closeMap()");
 		
 		SxEnvironment.singleton().getQuery().close();
-		jMapViewer.closeSession();
+		this.jMapViewer.closeSession();
 		com.ofx.service.SxServiceFactory.shutdown();
 	}
 
@@ -256,7 +248,7 @@ public class OfxNetMapViewer extends NetMapViewer
 
 	public List getAvailableViews()
 	{
-		return jMapViewer.getAvailableMaps();
+		return this.jMapViewer.getAvailableMaps();
 	}
 	
 	public void setView(String dataBaseView)
@@ -279,7 +271,7 @@ public class OfxNetMapViewer extends NetMapViewer
 
 		int sortOrder = 301;// as used in Ofx.JMapLegend
 		
-		SxMapViewer sxMapViewer = jMapViewer.getSxMapViewer();
+		SxMapViewer sxMapViewer = this.jMapViewer.getSxMapViewer();
 		
 		{
 		Vector vector = sxMapViewer.getForegroundClasses(sortOrder);

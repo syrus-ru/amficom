@@ -1,5 +1,5 @@
 /**
- * $Id: OfxLogicalNetLayer.java,v 1.4 2004/12/30 12:56:24 krupenn Exp $
+ * $Id: OfxLogicalNetLayer.java,v 1.5 2005/02/10 11:37:49 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -10,36 +10,31 @@
 
 package com.syrus.AMFICOM.Client.Map.ObjectFX;
 
-import com.ofx.base.SxDistance;
+import java.awt.Cursor;
+import java.awt.Graphics;
+import java.awt.Point;
+import java.awt.event.MouseEvent;
+import java.awt.geom.Rectangle2D;
+import java.util.Enumeration;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Vector;
+
 import com.ofx.component.MapViewer;
 import com.ofx.geometry.SxDoublePoint;
-import com.ofx.geometry.SxGeometry;
 import com.ofx.geometry.SxRectangle;
 import com.ofx.mapViewer.SxMapLayer;
 import com.ofx.mapViewer.SxMapViewer;
 import com.ofx.query.SxQueryResultInterface;
 import com.ofx.repository.SxSpatialObject;
-
 import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
 import com.syrus.AMFICOM.Client.General.Event.MapEvent;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
 import com.syrus.AMFICOM.Client.Map.NetMapViewer;
 import com.syrus.AMFICOM.Client.Map.SpatialObject;
-
 import com.syrus.AMFICOM.map.DoublePoint;
-import java.awt.Cursor;
-import java.awt.Graphics;
-import java.awt.Point;
-import java.awt.event.MouseEvent;
-import java.awt.geom.Point2D;
-import java.awt.geom.Rectangle2D;
-
-import java.util.Enumeration;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Vector;
 
 /**
  * Реализация уровня логического отображения сети на карте средствами
@@ -48,10 +43,9 @@ import java.util.Vector;
  * 
  * 
  * 
- * @version $Revision: 1.4 $, $Date: 2004/12/30 12:56:24 $
- * @module Ьфз_м2
+ * @version $Revision: 1.5 $, $Date: 2005/02/10 11:37:49 $
  * @author $Author: krupenn $
- * @see
+ * @module spatialfx_v1
  */
 public class OfxLogicalNetLayer extends LogicalNetLayer 
 {
@@ -74,7 +68,7 @@ public class OfxLogicalNetLayer extends LogicalNetLayer
 				getClass().getName(), 
 				"SpatialLogicalNetLayer(" + viewer + ")");
 
-		spatialLayer = new AMFICOMSxMapLayer(this);
+		this.spatialLayer = new AMFICOMSxMapLayer(this);
 		setMapViewer(viewer);
 	}
 
@@ -84,7 +78,7 @@ public class OfxLogicalNetLayer extends LogicalNetLayer
 	public Point convertMapToScreen(DoublePoint point)
 	{
 		SxDoublePoint sdp = new SxDoublePoint(point.getX(), point.getY());
-		return spatialLayer.convertLongLatToScreen(sdp);
+		return this.spatialLayer.convertLongLatToScreen(sdp);
 	}
 	
 	/**
@@ -92,7 +86,7 @@ public class OfxLogicalNetLayer extends LogicalNetLayer
 	 */
 	public DoublePoint convertScreenToMap(Point point)
 	{
-		SxDoublePoint sdp = spatialLayer.convertScreenToLongLat(point);
+		SxDoublePoint sdp = this.spatialLayer.convertScreenToLongLat(point);
 		return new DoublePoint(sdp.getX(), sdp.getY());
 	}
 
@@ -103,13 +97,13 @@ public class OfxLogicalNetLayer extends LogicalNetLayer
 		double d = distance(p1, p2);
 
 		return d;
-//		double d2 = screenDistance * spatialViewer.getScale();
+//		double d2 = screenDistance * this.spatialViewer.getScale();
 	}
 
 	public double convertMapToScreen(double topologicalDistance)
 	{
 		throw new UnsupportedOperationException();
-//		double d = topologicalDistance / spatialViewer.getScale();
+//		double d = topologicalDistance / this.spatialViewer.getScale();
 //		return d;
 	}
 
@@ -135,7 +129,7 @@ public class OfxLogicalNetLayer extends LogicalNetLayer
 	 */
 	public double distance(DoublePoint from, DoublePoint to)
 	{
-		return spatialViewer.distance(from.getX(), from.getY(), to.getX(), to.getY());
+		return this.spatialViewer.distance(from.getX(), from.getY(), to.getX(), to.getY());
 	}
 
 	/**
@@ -149,7 +143,7 @@ public class OfxLogicalNetLayer extends LogicalNetLayer
 				getClass().getName(), 
 				"setCenter(" + center.getX() + ", " + center.getY() + ")");
 
-		spatialViewer.setCenter(center.getX(), center.getY());
+		this.spatialViewer.setCenter(center.getX(), center.getY());
 	}
 
 	/**
@@ -158,15 +152,15 @@ public class OfxLogicalNetLayer extends LogicalNetLayer
 	public DoublePoint getCenter()
 	{
 		DoublePoint center = new DoublePoint(
-			spatialViewer.getCenter()[0],
-			spatialViewer.getCenter()[1]);
+			this.spatialViewer.getCenter()[0],
+			this.spatialViewer.getCenter()[1]);
 		return center;
 	}
 
 	public Rectangle2D.Double getVisibleBounds()
 	{
-		SxRectangle sxRect = spatialViewer.getMapCanvas().getGroundRect();
-		sxRect = spatialViewer.convertDBToLatLong(sxRect);
+		SxRectangle sxRect = this.spatialViewer.getMapCanvas().getGroundRect();
+		sxRect = this.spatialViewer.convertDBToLatLong(sxRect);
 		Rectangle2D.Double rect = new Rectangle2D.Double(
 			sxRect.getBottomLeft().getX(),
 			sxRect.getBottomLeft().getY(),
@@ -186,7 +180,7 @@ public class OfxLogicalNetLayer extends LogicalNetLayer
 				getClass().getName(), 
 				"release()");
 		
-		spatialLayer.release();
+		this.spatialLayer.release();
 	}
 
 	/**
@@ -194,8 +188,8 @@ public class OfxLogicalNetLayer extends LogicalNetLayer
 	 */
 	public void repaint(boolean fullRepaint)
 	{
-		spatialLayer.postDirtyEvent();
-		spatialLayer.postPaintEvent();
+		this.spatialLayer.postDirtyEvent();
+		this.spatialLayer.postPaintEvent();
 	}
 	
 	/**
@@ -209,12 +203,12 @@ public class OfxLogicalNetLayer extends LogicalNetLayer
 				getClass().getName(), 
 				"setCursor(" + cursor.toString() + ")");
 		
-		spatialViewer.getMapCanvas().setCursor(cursor);
+		this.spatialViewer.getMapCanvas().setCursor(cursor);
 	}
 
 	public Cursor getCursor()
 	{
-		return spatialViewer.getMapCanvas().getCursor();
+		return this.spatialViewer.getMapCanvas().getCursor();
 	}
 
 	/**
@@ -222,7 +216,7 @@ public class OfxLogicalNetLayer extends LogicalNetLayer
 	 */
 	public double getScale()
 	{
-		return spatialViewer.getScale();
+		return this.spatialViewer.getScale();
 	}
 
 	/**
@@ -236,7 +230,7 @@ public class OfxLogicalNetLayer extends LogicalNetLayer
 				getClass().getName(), 
 				"setScale(" + scale + ")");
 		
-		spatialViewer.setScale(scale);
+		this.spatialViewer.setScale(scale);
 		updateZoom();
 	}
 
@@ -251,7 +245,7 @@ public class OfxLogicalNetLayer extends LogicalNetLayer
 				getClass().getName(), 
 				"scaleTo(" + scaleСoef + ")");
 		
-		spatialViewer.setScale(spatialViewer.getScale() * scaleСoef);
+		this.spatialViewer.setScale(this.spatialViewer.getScale() * scaleСoef);
 		updateZoom();
 	}
 
@@ -266,7 +260,7 @@ public class OfxLogicalNetLayer extends LogicalNetLayer
 				getClass().getName(), 
 				"zoomIn()");
 		
-		spatialViewer.zoomIn();
+		this.spatialViewer.zoomIn();
 		updateZoom();
 	}
 
@@ -281,7 +275,7 @@ public class OfxLogicalNetLayer extends LogicalNetLayer
 				getClass().getName(), 
 				"zoomOut()");
 		
-		spatialViewer.zoomOut();
+		this.spatialViewer.zoomOut();
 		updateZoom();
 	}
 	
@@ -291,7 +285,7 @@ public class OfxLogicalNetLayer extends LogicalNetLayer
 	 */
 	public void zoomToBox(DoublePoint from, DoublePoint to)
 	{
-		spatialViewer.zoomToRect(from.getX(), from.getY(), to.getX(), to.getY());
+		this.spatialViewer.zoomToRect(from.getX(), from.getY(), to.getX(), to.getY());
 		updateZoom();
 	}
 
@@ -299,9 +293,9 @@ public class OfxLogicalNetLayer extends LogicalNetLayer
 	{
 		super.updateZoom();
 
-		if(aContext == null)
+		if(this.aContext == null)
 			return;
-		Dispatcher disp = aContext.getDispatcher();
+		Dispatcher disp = this.aContext.getDispatcher();
 		if(disp == null)
 			return;
 		Double p = new Double(getScale());
@@ -311,10 +305,10 @@ public class OfxLogicalNetLayer extends LogicalNetLayer
 	public void handDragged(MouseEvent me)
 	{
 		java.awt.Point point = new Point(
-				me.getX() - (int )startPoint.getX(), 
-				me.getY() - (int )startPoint.getY());
-		spatialViewer.getMapCanvas().setBufferOffset(point);
-		spatialViewer.getMapCanvas().repaint();
+				me.getX() - (int )this.startPoint.getX(), 
+				me.getY() - (int )this.startPoint.getY());
+		this.spatialViewer.getMapCanvas().setBufferOffset(point);
+		this.spatialViewer.getMapCanvas().repaint();
 	}
 	
 	/**
@@ -340,7 +334,7 @@ public class OfxLogicalNetLayer extends LogicalNetLayer
 
 	public SxMapViewer getSpatialMapViewer()
 	{
-		return spatialViewer;
+		return this.spatialViewer;
 	}
 
 	public List findSpatialObjects(String searchText)
@@ -356,12 +350,12 @@ public class OfxLogicalNetLayer extends LogicalNetLayer
 		
 		try
 		{
-			vector = spatialViewer.getForegroundClasses();
+			vector = this.spatialViewer.getForegroundClasses();
 			for(Iterator it = vector.iterator(); it.hasNext();)
 			{
 				spatialClassName = (String )it.next();
 
-				objects = spatialViewer.getQuery().getObjects(spatialClassName);
+				objects = this.spatialViewer.getQuery().getObjects(spatialClassName);
 				for(Enumeration en = objects.elements(); en.hasMoreElements();)
 				{
 					SxSpatialObject obj = (SxSpatialObject )en.nextElement();
@@ -382,11 +376,11 @@ public class OfxLogicalNetLayer extends LogicalNetLayer
 				}
 			}
 
-			vector = spatialViewer.getBackgroundClasses();
+			vector = this.spatialViewer.getBackgroundClasses();
 			for(Iterator it = vector.iterator(); it.hasNext();)
 			{
 				spatialClassName = (String )it.next();
-				objects = spatialViewer.getQuery().getObjects(spatialClassName);
+				objects = this.spatialViewer.getQuery().getObjects(spatialClassName);
 				for(Enumeration en = objects.elements(); en.hasMoreElements();)
 				{
 					SxSpatialObject obj = (SxSpatialObject)en.nextElement();
@@ -409,6 +403,7 @@ public class OfxLogicalNetLayer extends LogicalNetLayer
 		}
 		catch(Exception ex)
 		{
+				ex.printStackTrace();
 		}
 
 		return found;
@@ -421,12 +416,15 @@ public class OfxLogicalNetLayer extends LogicalNetLayer
 			OfxSpatialObject oso = (OfxSpatialObject)so;
 			SxDoublePoint center = oso.getSxSpatialObject().geometry.getCenter();
 			System.out.print("Center " + center.getX() + ", " + center.getY());
-			center = spatialViewer.convertLatLongToMap(center);
+			center = this.spatialViewer.convertLatLongToMap(center);
 			System.out.println(" --> " + center.getX() + ", " + center.getY());
-			spatialViewer.setCenter(center.getX(), center.getY());
+			this.spatialViewer.setCenter(center.getX(), center.getY());
 		} 
 		catch (Exception ex) 
 		{
+			System.out.println("Cannot center object: ");
+			ex.printStackTrace();
+			
 		} 
 	}
 
@@ -442,7 +440,7 @@ public class OfxLogicalNetLayer extends LogicalNetLayer
 		
 		public void paint(Graphics g)
 		{
-			lnl.paint(g);
+			this.lnl.paint(g);
 		}
 	}
 }

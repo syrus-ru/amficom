@@ -17,11 +17,11 @@ public class OfxSpatialObject implements SpatialObject
 	
 	public String getLabel()
 	{
-		return label;
+		return this.label;
 	}
 	
 	public SxSpatialObject getSxSpatialObject()
 	{
-		return so;
+		return this.so;
 	}
 }
