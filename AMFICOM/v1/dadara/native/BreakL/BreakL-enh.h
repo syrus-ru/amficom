@@ -23,7 +23,7 @@ struct TTDY
 	int thId; // >=0, номер левого порога
 	double nextWei; // вес соседа справа (должен быть строго 0 для самого правого порога)
 	void set(int thId, double nextWei);
-	int getNearest();
+	int getNearest(); // номер порога с наибольшим весом
 	//void operator= (TTDY &that); // use default
 };
 #endif

@@ -1,5 +1,5 @@
 /*
- * $Id: ThreshDX.java,v 1.12 2005/03/28 12:20:40 bob Exp $
+ * $Id: ThreshDX.java,v 1.13 2005/03/30 12:50:02 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,14 +12,14 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 
 /**
- * @author $Author: bob $
- * @version $Revision: 1.12 $, $Date: 2005/03/28 12:20:40 $
+ * @author $Author: saa $
+ * @version $Revision: 1.13 $, $Date: 2005/03/30 12:50:02 $
  * @module
  */
 public class ThreshDX extends Thresh
 {
-	private int[] dX;
-	private boolean rise;
+	private int[] dX; // accessed from JNI
+	private boolean rise; // accessed from JNI
 
 	protected ThreshDX()
 	{ // do nothing
