@@ -1,5 +1,5 @@
 /*
- * $Id: ClientConfigurationObjectLoader.java,v 1.3 2004/11/17 09:41:00 max Exp $
+ * $Id: ClientConfigurationObjectLoader.java,v 1.4 2004/11/23 15:04:09 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -36,7 +36,10 @@ import com.syrus.AMFICOM.configuration.Server;
 import com.syrus.AMFICOM.configuration.TransmissionPath;
 import com.syrus.AMFICOM.configuration.TransmissionPathType;
 import com.syrus.AMFICOM.configuration.User;
+import com.syrus.AMFICOM.configuration.corba.AbstractLinkTypeSort;
+import com.syrus.AMFICOM.configuration.corba.AbstractLinkType_Transferable;
 import com.syrus.AMFICOM.configuration.corba.AccessIdentifier_Transferable;
+import com.syrus.AMFICOM.configuration.corba.CableThreadType_Transferable;
 import com.syrus.AMFICOM.configuration.corba.CharacteristicType_Transferable;
 import com.syrus.AMFICOM.configuration.corba.Characteristic_Transferable;
 import com.syrus.AMFICOM.configuration.corba.DomainCondition_Transferable;
@@ -77,7 +80,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.3 $, $Date: 2004/11/17 09:41:00 $
+ * @version $Revision: 1.4 $, $Date: 2004/11/23 15:04:09 $
  * @author $Author: max $
  * @module generalclient_v1
  */
@@ -87,8 +90,34 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
 	private CMServer				server;
 
 	private static AccessIdentifier_Transferable	accessIdentifierTransferable;
-
-	public ClientConfigurationObjectLoader(CMServer server) {
+	
+	public void delete(Identifier id) throws CommunicationException {
+		Identifier_Transferable identifier_Transferable = (Identifier_Transferable) id.getTransferable();
+        try {
+			this.server.delete(identifier_Transferable, accessIdentifierTransferable);
+        } catch (AMFICOMRemoteException e) {
+            String msg = "ClientConfigurationObjectLoader.delete | Couldn't delete id ="
+                    + id.toString() + ")";
+            throw new CommunicationException(msg, e);
+        }
+	}
+    
+    public void delete(List ids) throws CommunicationException {
+    	Identifier_Transferable[] identifier_Transferables = new Identifier_Transferable[ids.size()];
+        int i = 0;
+        for (Iterator it = ids.iterator(); it.hasNext(); i++) {
+			Identifier id = (Identifier) it.next();
+            identifier_Transferables[i] = (Identifier_Transferable) id.getTransferable();			
+		}
+        try {
+        	this.server.deleteList(identifier_Transferables, accessIdentifierTransferable);
+        } catch (AMFICOMRemoteException e) {
+            String msg = "ClientConfigurationObjectLoader.delete | AMFICOMRemoteException ";
+            throw new CommunicationException(msg, e);
+        }
+    }
+    
+    public ClientConfigurationObjectLoader(CMServer server) {
 		this.server = server;
 	}
 	
@@ -96,17 +125,29 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
 		accessIdentifierTransferable = accessIdentifier_Transferable;
 	}	
     
+    public CableThreadType loadCableThreadType(Identifier id)
+			throws DatabaseException, CommunicationException {
+        try {
+            return new CableThreadType(this.server.transmitCableThreadType((Identifier_Transferable) id
+                    .getTransferable(), accessIdentifierTransferable));
+        } catch (AMFICOMRemoteException e) {
+            String msg = "ClientConfigurationLoader.loadCharacteristicType | server.transmitCharacteristicType("
+                    + id.toString() + ")";
+            throw new CommunicationException(msg, e);
+        }
+	}
+    
     public CharacteristicType loadCharacteristicType(Identifier id) throws RetrieveObjectException,
 			CommunicationException {
         try {
             return new CharacteristicType(this.server.transmitCharacteristicType((Identifier_Transferable) id
                     .getTransferable(), accessIdentifierTransferable));
         } catch (CreateObjectException e) {
-            String msg = "ClientMeasurementObjectLoader.loadCharacteristicType | new CharacteristicType(" + id.toString()
+            String msg = "ClientConfigurationObjectLoader.loadCharacteristicType | new CharacteristicType(" + id.toString()
                     + ")";
             throw new RetrieveObjectException(msg, e);
         } catch (AMFICOMRemoteException e) {
-            String msg = "ClientMeasurementObjectLoader.loadCharacteristicType | server.transmitCharacteristicType("
+            String msg = "ClientConfigurationObjectLoader.loadCharacteristicType | server.transmitCharacteristicType("
                     + id.toString() + ")";
             throw new CommunicationException(msg, e);
         }
@@ -117,11 +158,11 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
             return new EquipmentType(this.server.transmitEquipmentType((Identifier_Transferable) id
                     .getTransferable(), accessIdentifierTransferable));
         } catch (CreateObjectException e) {
-            String msg = "ClientMeasurementObjectLoader.loadEquipmentType | new EquipmentType(" + id.toString()
+            String msg = "ClientConfigurationObjectLoader.loadEquipmentType | new EquipmentType(" + id.toString()
                     + ")";
             throw new RetrieveObjectException(msg, e);
         } catch (AMFICOMRemoteException e) {
-            String msg = "ClientMeasurementObjectLoader.loadEquipmentType | server.transmitEquipmentType("
+            String msg = "ClientConfigurationObjectLoader.loadEquipmentType | server.transmitEquipmentType("
                     + id.toString() + ")";
             throw new CommunicationException(msg, e);
         }
@@ -132,11 +173,11 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
             return new PortType(this.server.transmitPortType((Identifier_Transferable) id
                     .getTransferable(), accessIdentifierTransferable));
         } catch (CreateObjectException e) {
-            String msg = "ClientMeasurementObjectLoader.loadPortType | new PortType(" + id.toString()
+            String msg = "ClientConfigurationObjectLoader.loadPortType | new PortType(" + id.toString()
                     + ")";
             throw new RetrieveObjectException(msg, e);
         } catch (AMFICOMRemoteException e) {
-            String msg = "ClientMeasurementObjectLoader.loadPortType | server.transmitPortType("
+            String msg = "ClientConfigurationObjectLoader.loadPortType | server.transmitPortType("
                     + id.toString() + ")";
             throw new CommunicationException(msg, e);
         }
@@ -147,11 +188,11 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
             return new MeasurementPortType(this.server.transmitMeasurementPortType((Identifier_Transferable) id
                     .getTransferable(), accessIdentifierTransferable));
         } catch (CreateObjectException e) {
-            String msg = "ClientMeasurementObjectLoader.loadMeasurementPortType | new MeasurementPortType(" + id.toString()
+            String msg = "ClientConfigurationObjectLoader.loadMeasurementPortType | new MeasurementPortType(" + id.toString()
                     + ")";
             throw new RetrieveObjectException(msg, e);
         } catch (AMFICOMRemoteException e) {
-            String msg = "ClientMeasurementObjectLoader.loadMeasurementPortType | server.transmitMeasurementPortType("
+            String msg = "ClientConfigurationObjectLoader.loadMeasurementPortType | server.transmitMeasurementPortType("
                     + id.toString() + ")";
             throw new CommunicationException(msg, e);
         }
@@ -162,11 +203,11 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
             return new KISType(this.server.transmitKISType((Identifier_Transferable) id
                     .getTransferable(), accessIdentifierTransferable));
         } catch (CreateObjectException e) {
-            String msg = "ClientMeasurementObjectLoader.loadKISType | new KISType(" + id.toString()
+            String msg = "ClientConfigurationObjectLoader.loadKISType | new KISType(" + id.toString()
                     + ")";
             throw new RetrieveObjectException(msg, e);
         } catch (AMFICOMRemoteException e) {
-            String msg = "ClientMeasurementObjectLoader.loadKISType | server.transmitKISType("
+            String msg = "ClientConfigurationObjectLoader.loadKISType | server.transmitKISType("
                     + id.toString() + ")";
             throw new CommunicationException(msg, e);
         }
@@ -181,11 +222,11 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
             return new TransmissionPathType(this.server.transmitTransmissionPathType((Identifier_Transferable) id
                     .getTransferable(), accessIdentifierTransferable));
         } catch (CreateObjectException e) {
-            String msg = "ClientMeasurementObjectLoader.loadTransmissionPathType | new TransmissionPathType(" + id.toString()
+            String msg = "ClientConfigurationObjectLoader.loadTransmissionPathType | new TransmissionPathType(" + id.toString()
                     + ")";
             throw new RetrieveObjectException(msg, e);
         } catch (AMFICOMRemoteException e) {
-            String msg = "ClientMeasurementObjectLoader.loadTransmissionPathType | server.transmitTransmissionPathType("
+            String msg = "ClientConfigurationObjectLoader.loadTransmissionPathType | server.transmitTransmissionPathType("
                     + id.toString() + ")";
             throw new CommunicationException(msg, e);
         }
@@ -196,11 +237,11 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
             return new Characteristic(this.server.transmitCharacteristic((Identifier_Transferable) id
                     .getTransferable(), accessIdentifierTransferable));
         } catch (CreateObjectException e) {
-            String msg = "ClientMeasurementObjectLoader.loadCharacteristic | new Characteristic(" + id.toString()
+            String msg = "ClientConfigurationObjectLoader.loadCharacteristic | new Characteristic(" + id.toString()
                     + ")";
             throw new RetrieveObjectException(msg, e);
         } catch (AMFICOMRemoteException e) {
-            String msg = "ClientMeasurementObjectLoader.loadCharacteristic | server.transmitCharacteristic("
+            String msg = "ClientConfigurationObjectLoader.loadCharacteristic | server.transmitCharacteristic("
                     + id.toString() + ")";
             throw new CommunicationException(msg, e);
         }
@@ -211,7 +252,7 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
             return new LinkType(this.server.transmitLinkType((Identifier_Transferable) id
                     .getTransferable(), accessIdentifierTransferable));
         } catch (AMFICOMRemoteException e) {
-            String msg = "ClientMeasurementObjectLoader.loadKISType | server.transmitKISType("
+            String msg = "ClientConfigurationObjectLoader.loadKISType | server.transmitKISType("
                     + id.toString() + ")";
             throw new CommunicationException(msg, e);
         }
@@ -227,11 +268,11 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
             return new User(this.server.transmitUser((Identifier_Transferable) id
                     .getTransferable(), accessIdentifierTransferable));
         } catch (CreateObjectException e) {
-            String msg = "ClientMeasurementObjectLoader.loadUser | new User(" + id.toString()
+            String msg = "ClientConfigurationObjectLoader.loadUser | new User(" + id.toString()
                     + ")";
             throw new RetrieveObjectException(msg, e);
         } catch (AMFICOMRemoteException e) {
-            String msg = "ClientMeasurementObjectLoader.loadUser | server.transmitUser("
+            String msg = "ClientConfigurationObjectLoader.loadUser | server.transmitUser("
                     + id.toString() + ")";
             throw new CommunicationException(msg, e);
         }
@@ -242,11 +283,11 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
             return new Domain(this.server.transmitDomain((Identifier_Transferable) id
                     .getTransferable(), accessIdentifierTransferable));
         } catch (CreateObjectException e) {
-            String msg = "ClientMeasurementObjectLoader.loadDomain | new Domain(" + id.toString()
+            String msg = "ClientConfigurationObjectLoader.loadDomain | new Domain(" + id.toString()
                     + ")";
             throw new RetrieveObjectException(msg, e);
         } catch (AMFICOMRemoteException e) {
-            String msg = "ClientMeasurementObjectLoader.loadDomain | server.transmitDomain("
+            String msg = "ClientConfigurationObjectLoader.loadDomain | server.transmitDomain("
                     + id.toString() + ")";
             throw new CommunicationException(msg, e);
         }
@@ -257,11 +298,11 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
             return new Server(this.server.transmitServer((Identifier_Transferable) id
                     .getTransferable(), accessIdentifierTransferable));
         } catch (CreateObjectException e) {
-            String msg = "ClientMeasurementObjectLoader.loadServer | new Server(" + id.toString()
+            String msg = "ClientConfigurationObjectLoader.loadServer | new Server(" + id.toString()
                     + ")";
             throw new RetrieveObjectException(msg, e);
         } catch (AMFICOMRemoteException e) {
-            String msg = "ClientMeasurementObjectLoader.loadServer | server.transmiServer("
+            String msg = "ClientConfigurationObjectLoader.loadServer | server.transmiServer("
                     + id.toString() + ")";
             throw new CommunicationException(msg, e);
         }
@@ -272,11 +313,11 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
             return new MCM(this.server.transmitMCM((Identifier_Transferable) id
                     .getTransferable(), accessIdentifierTransferable));
         } catch (CreateObjectException e) {
-            String msg = "ClientMeasurementObjectLoader.loadMCM | new MCM(" + id.toString()
+            String msg = "ClientConfigurationObjectLoader.loadMCM | new MCM(" + id.toString()
                     + ")";
             throw new RetrieveObjectException(msg, e);
         } catch (AMFICOMRemoteException e) {
-            String msg = "ClientMeasurementObjectLoader.loadMCM | server.transmitMCM("
+            String msg = "ClientConfigurationObjectLoader.loadMCM | server.transmitMCM("
                     + id.toString() + ")";
             throw new CommunicationException(msg, e);
         }
@@ -287,11 +328,11 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
             return new Equipment(this.server.transmitEquipment((Identifier_Transferable) id
                     .getTransferable(), accessIdentifierTransferable));
         } catch (CreateObjectException e) {
-            String msg = "ClientMeasurementObjectLoader.loadAEquipment | new Equipment(" + id.toString()
+            String msg = "ClientConfigurationObjectLoader.loadAEquipment | new Equipment(" + id.toString()
                     + ")";
             throw new RetrieveObjectException(msg, e);
         } catch (AMFICOMRemoteException e) {
-            String msg = "ClientMeasurementObjectLoader.loadEquipment | server.transmitEquipment("
+            String msg = "ClientConfigurationObjectLoader.loadEquipment | server.transmitEquipment("
                     + id.toString() + ")";
             throw new CommunicationException(msg, e);
         }		
@@ -302,11 +343,11 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
             return new Port(this.server.transmitPort((Identifier_Transferable) id
                     .getTransferable(), accessIdentifierTransferable));
         } catch (CreateObjectException e) {
-            String msg = "ClientMeasurementObjectLoader.loadPort | new Port(" + id.toString()
+            String msg = "ClientConfigurationObjectLoader.loadPort | new Port(" + id.toString()
                     + ")";
             throw new RetrieveObjectException(msg, e);
         } catch (AMFICOMRemoteException e) {
-            String msg = "ClientMeasurementObjectLoader.loadPort | server.transmitPort("
+            String msg = "ClientConfigurationObjectLoader.loadPort | server.transmitPort("
                     + id.toString() + ")";
             throw new CommunicationException(msg, e);
         }
@@ -318,11 +359,11 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
             return new TransmissionPath(this.server.transmitTransmissionPath((Identifier_Transferable) id
                     .getTransferable(), accessIdentifierTransferable));
         } catch (CreateObjectException e) {
-            String msg = "ClientMeasurementObjectLoader.loadTransmissionPath | new TransmissionPath(" + id.toString()
+            String msg = "ClientConfigurationObjectLoader.loadTransmissionPath | new TransmissionPath(" + id.toString()
                     + ")";
             throw new RetrieveObjectException(msg, e);
         } catch (AMFICOMRemoteException e) {
-            String msg = "ClientMeasurementObjectLoader.loadTransmissionPath | server.transmitTransmissionPath("
+            String msg = "ClientConfigurationObjectLoader.loadTransmissionPath | server.transmitTransmissionPath("
                     + id.toString() + ")";
             throw new CommunicationException(msg, e);
         }
@@ -333,11 +374,11 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
             return new KIS(this.server.transmitKIS((Identifier_Transferable) id
                     .getTransferable(), accessIdentifierTransferable));
         } catch (CreateObjectException e) {
-            String msg = "ClientMeasurementObjectLoader.loadKIS | new KIS(" + id.toString()
+            String msg = "ClientConfigurationObjectLoader.loadKIS | new KIS(" + id.toString()
                     + ")";
             throw new RetrieveObjectException(msg, e);
         } catch (AMFICOMRemoteException e) {
-            String msg = "ClientMeasurementObjectLoader.loadKIS | server.transmitKIS("
+            String msg = "ClientConfigurationObjectLoader.loadKIS | server.transmitKIS("
                     + id.toString() + ")";
             throw new CommunicationException(msg, e);
         }
@@ -349,11 +390,11 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
             return new Link(this.server.transmitLink((Identifier_Transferable) id
                     .getTransferable(), accessIdentifierTransferable));
         } catch (CreateObjectException e) {
-            String msg = "ClientMeasurementObjectLoader.loadLink | new Link(" + id.toString()
+            String msg = "ClientConfigurationObjectLoader.loadLink | new Link(" + id.toString()
                     + ")";
             throw new RetrieveObjectException(msg, e);
         } catch (AMFICOMRemoteException e) {
-            String msg = "ClientMeasurementObjectLoader.loadLink | server.transmitLink("
+            String msg = "ClientConfigurationObjectLoader.loadLink | server.transmitLink("
                     + id.toString() + ")";
             throw new CommunicationException(msg, e);
         }
@@ -365,11 +406,11 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
             return new MeasurementPort(this.server.transmitMeasurementPort((Identifier_Transferable) id
                     .getTransferable(), accessIdentifierTransferable));
         } catch (CreateObjectException e) {
-            String msg = "ClientMeasurementObjectLoader.loadMeasurementPort | new MeasurementPort(" + id.toString()
+            String msg = "ClientConfigurationObjectLoader.loadMeasurementPort | new MeasurementPort(" + id.toString()
                     + ")";
             throw new RetrieveObjectException(msg, e);
         } catch (AMFICOMRemoteException e) {
-            String msg = "ClientMeasurementObjectLoader.loadMeasurementPort | server.transmitMeasurementPort("
+            String msg = "ClientConfigurationObjectLoader.loadMeasurementPort | server.transmitMeasurementPort("
                     + id.toString() + ")";
             throw new CommunicationException(msg, e);
         }
@@ -389,6 +430,49 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
 					+ id.toString() + ")";
 			throw new CommunicationException(msg, e);
 		}
+	}
+    
+	public List loadCableThreadTypes(List ids) throws CommunicationException {
+		try {
+            Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
+            int i = 0;
+            for (Iterator it = ids.iterator(); it.hasNext(); i++) {
+                Identifier id = (Identifier) it.next();
+                identifierTransferables[i] = (Identifier_Transferable) id.getTransferable();
+            }
+            CableThreadType_Transferable[] transferables = this.server
+                    .transmitCableThreadTypes(identifierTransferables,
+                                    accessIdentifierTransferable);
+            List list = new ArrayList(transferables.length);
+            for (int j = 0; j < transferables.length; j++) {
+                list.add(new CableThreadType(transferables[j]));
+            }
+            return list;
+        } catch (AMFICOMRemoteException e) {
+            throw new CommunicationException(e);
+        }
+	}
+    
+	public List loadCableThreadTypesButIds(StorableObjectCondition condition,
+			List ids) throws DatabaseException, CommunicationException {
+		try {
+            Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
+            int i = 0;
+            for (Iterator it = ids.iterator(); it.hasNext(); i++) {
+                Identifier id = (Identifier) it.next();
+                identifierTransferables[i] = (Identifier_Transferable) id.getTransferable();
+            }
+            CableThreadType_Transferable[] transferables = this.server
+                    .transmitCableThreadTypesButIds(identifierTransferables,
+                                    accessIdentifierTransferable);
+            List list = new ArrayList(transferables.length);
+            for (int j = 0; j < transferables.length; j++) {
+                list.add(new CableThreadType(transferables[j]));
+            }
+            return list;
+        } catch (AMFICOMRemoteException e) {
+            throw new CommunicationException(e);
+        }
 	}
 
 	public List loadCharacteristics(List ids) throws DatabaseException, CommunicationException {
@@ -586,12 +670,27 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
                 Identifier id = (Identifier) it.next();
                 identifierTransferables[i] = (Identifier_Transferable) id.getTransferable();
             }
-            LinkType_Transferable[] transferables = this.server
+            AbstractLinkType_Transferable[] transferables = this.server
                     .transmitLinkTypes(identifierTransferables,
                                     accessIdentifierTransferable);
             List list = new ArrayList(transferables.length);
             for (int j = 0; j < transferables.length; j++) {
-                list.add(new LinkType(transferables[j]));
+                
+                CableThreadType cableThreadType;
+                LinkType linkType;
+                switch(transferables[i].discriminator().value()) {
+                    case AbstractLinkTypeSort._CABLE_LINK_TYPE:
+                        linkType = new LinkType(transferables[i].cableLinkType());
+                        list.add(linkType);
+                        break;
+                    case AbstractLinkTypeSort._CABLE_THREAD_TYPE:
+                        cableThreadType = new CableThreadType(transferables[i].cableThreadType());
+                        list.add(cableThreadType);
+                        break;
+                    default:
+                        throw new CommunicationException("ClientConfigurationObjectLoader.loadLinkTypesButIds" +
+                                " | Wrong AbstractLinkTypeSort");                    
+                }                
             }
             return list;
         } catch (AMFICOMRemoteException e) {
@@ -608,12 +707,28 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
                 Identifier id = (Identifier) it.next();
                 identifierTransferables[i] = (Identifier_Transferable) id.getTransferable();
             }
-            LinkType_Transferable[] transferables = this.server
+            AbstractLinkType_Transferable[] transferables = this.server
                     .transmitLinkTypesButIds(identifierTransferables,
                                     accessIdentifierTransferable);
+            
             List list = new ArrayList(transferables.length);
             for (int j = 0; j < transferables.length; j++) {
-                list.add(new LinkType(transferables[j]));
+                
+                CableThreadType cableThreadType;
+                LinkType linkType;
+                switch(transferables[i].discriminator().value()) {
+                    case AbstractLinkTypeSort._CABLE_LINK_TYPE:
+                        linkType = new LinkType(transferables[i].cableLinkType());
+                        list.add(linkType);
+                        break;
+                    case AbstractLinkTypeSort._CABLE_THREAD_TYPE:
+                        cableThreadType = new CableThreadType(transferables[i].cableThreadType());
+                        list.add(cableThreadType);
+                        break;
+                    default:
+                        throw new CommunicationException("ClientConfigurationObjectLoader.loadLinkTypesButIds" +
+                                " | Wrong AbstractLinkTypeSort");                    
+                }                
             }
             return list;
         } catch (AMFICOMRemoteException e) {
@@ -994,6 +1109,22 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
             throw new CommunicationException(msg, e);       
         }
     }
+    
+	public void saveCableThreadType(CableThreadType cableThreadType,
+			boolean force) throws VersionCollisionException, DatabaseException,
+			CommunicationException {
+        CableThreadType_Transferable transferables = (CableThreadType_Transferable) cableThreadType.getTransferable();         
+        try {
+            this.server.receiveCableThreadType(transferables, force, accessIdentifierTransferable);         
+        } catch (AMFICOMRemoteException e) {
+            String msg = "ClientConfigurationObjectLoader.saveCableThreadType ";
+            
+            if (e.error_code.equals(ErrorCode.ERROR_VERSION_COLLISION))
+               throw new VersionCollisionException(msg, e);
+            
+            throw new CommunicationException(msg, e);       
+        }
+	}
 
      public void saveCharacteristic(Characteristic characteristic, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException{
          Characteristic_Transferable transferables = (Characteristic_Transferable) characteristic.getTransferable();         
@@ -1203,6 +1334,26 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
          }
      }
 
+	public void saveCableThreadTypes(List list, boolean force)
+			throws VersionCollisionException, DatabaseException,
+			CommunicationException {
+        CableThreadType_Transferable[] transferables = new CableThreadType_Transferable[list.size()];
+        int i=0;
+        for (Iterator it = list.iterator(); it.hasNext();i++) {
+            transferables[i] = (CableThreadType_Transferable)( (CableThreadType)it.next() ).getTransferable();                        
+        }
+        try {
+            this.server.receiveCableThreadTypes(transferables, force, accessIdentifierTransferable);         
+        } catch (AMFICOMRemoteException e) {
+           String msg = "ClientConfigurationObjectLoader.saveCableThreadTypes ";
+           
+           if (e.error_code.equals(ErrorCode.ERROR_VERSION_COLLISION))
+               throw new VersionCollisionException(msg, e);
+           
+           throw new CommunicationException(msg, e);       
+        }
+	}
+
      public void saveCharacteristicTypes(List list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException{
          CharacteristicType_Transferable[] transferables = new CharacteristicType_Transferable[list.size()];
          int i=0;
@@ -1212,7 +1363,7 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
          try {
              this.server.receiveCharacteristicTypes(transferables, force, accessIdentifierTransferable);         
          } catch (AMFICOMRemoteException e) {
-            String msg = "ClientMeasurementObjectLoader.saveCharacteristicTypes ";
+            String msg = "ClientConfigurationObjectLoader.saveCharacteristicTypes ";
             
             if (e.error_code.equals(ErrorCode.ERROR_VERSION_COLLISION))
                 throw new VersionCollisionException(msg, e);
@@ -1230,7 +1381,7 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
          try {
              this.server.receiveEquipmentTypes(transferables, force, accessIdentifierTransferable);         
          } catch (AMFICOMRemoteException e) {
-            String msg = "ClientMeasurementObjectLoader.saveEquipmentTypes ";
+            String msg = "ClientConfigurationObjectLoader.saveEquipmentTypes ";
             
             if (e.error_code.equals(ErrorCode.ERROR_VERSION_COLLISION))
                 throw new VersionCollisionException(msg, e);
@@ -1248,7 +1399,7 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
          try {
              this.server.receivePortTypes(transferables, force, accessIdentifierTransferable);         
          } catch (AMFICOMRemoteException e) {
-            String msg = "ClientMeasurementObjectLoader.savePortTypes ";
+            String msg = "ClientConfigurationObjectLoader.savePortTypes ";
             
             if (e.error_code.equals(ErrorCode.ERROR_VERSION_COLLISION))
                 throw new VersionCollisionException(msg, e);
@@ -1266,7 +1417,7 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
          try {
              this.server.receiveMeasurementPortTypes(transferables, force, accessIdentifierTransferable);         
          } catch (AMFICOMRemoteException e) {
-            String msg = "ClientMeasurementObjectLoader.saveMeasurementPortTypes ";
+            String msg = "ClientConfigurationObjectLoader.saveMeasurementPortTypes ";
             
             if (e.error_code.equals(ErrorCode.ERROR_VERSION_COLLISION))
                 throw new VersionCollisionException(msg, e);
@@ -1284,7 +1435,7 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
          try {
              this.server.receiveCharacteristics(transferables, force, accessIdentifierTransferable);         
          } catch (AMFICOMRemoteException e) {
-            String msg = "ClientMeasurementObjectLoader.saveCharacteristics ";
+            String msg = "ClientConfigurationObjectLoader.saveCharacteristics ";
             
             if (e.error_code.equals(ErrorCode.ERROR_VERSION_COLLISION))
                 throw new VersionCollisionException(msg, e);
@@ -1302,7 +1453,7 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
         try {
             this.server.receiveKISTypes(transferables, force, accessIdentifierTransferable);         
         } catch (AMFICOMRemoteException e) {
-           String msg = "ClientMeasurementObjectLoader.saveKISType ";
+           String msg = "ClientConfigurationObjectLoader.saveKISType ";
            
            if (e.error_code.equals(ErrorCode.ERROR_VERSION_COLLISION))
                throw new VersionCollisionException(msg, e);
@@ -1322,7 +1473,7 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
         try {
             this.server.receiveLinks(transferables, force, accessIdentifierTransferable);         
         } catch (AMFICOMRemoteException e) {
-           String msg = "ClientMeasurementObjectLoader.saveLinks ";
+           String msg = "ClientConfigurationObjectLoader.saveLinks ";
            
            if (e.error_code.equals(ErrorCode.ERROR_VERSION_COLLISION))
                throw new VersionCollisionException(msg, e);
@@ -1334,15 +1485,15 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
 	public void saveLinkTypes(List list, boolean force)
 			throws VersionCollisionException, DatabaseException,
 			CommunicationException {
-		LinkType_Transferable[] transferables = new LinkType_Transferable[list.size()];
+		AbstractLinkType_Transferable[] transferables = new AbstractLinkType_Transferable[list.size()];
         int i=0;
         for (Iterator it = list.iterator(); it.hasNext();i++) {
-            transferables[i] = (LinkType_Transferable)( (LinkType)it.next() ).getTransferable();                        
+            transferables[i] = (AbstractLinkType_Transferable)( (LinkType)it.next() ).getTransferable();                        
         }
         try {
             this.server.receiveLinkTypes(transferables, force, accessIdentifierTransferable);         
         } catch (AMFICOMRemoteException e) {
-           String msg = "ClientMeasurementObjectLoader.saveLinkTypes ";
+           String msg = "ClientConfigurationObjectLoader.saveLinkTypes ";
            
            if (e.error_code.equals(ErrorCode.ERROR_VERSION_COLLISION))
                throw new VersionCollisionException(msg, e);
@@ -1365,7 +1516,7 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
          try {
              this.server.receiveUsers(transferables, force, accessIdentifierTransferable);         
          } catch (AMFICOMRemoteException e) {
-            String msg = "ClientMeasurementObjectLoader.saveUsers ";
+            String msg = "ClientConfigurationObjectLoader.saveUsers ";
             
             if (e.error_code.equals(ErrorCode.ERROR_VERSION_COLLISION))
                 throw new VersionCollisionException(msg, e);
@@ -1383,7 +1534,7 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
          try {
              this.server.receiveDomains(transferables, force, accessIdentifierTransferable);         
          } catch (AMFICOMRemoteException e) {
-            String msg = "ClientMeasurementObjectLoader.saveDomains ";
+            String msg = "ClientConfigurationObjectLoader.saveDomains ";
             
             if (e.error_code.equals(ErrorCode.ERROR_VERSION_COLLISION))
                 throw new VersionCollisionException(msg, e);
@@ -1401,7 +1552,7 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
          try {
              this.server.receiveServers(transferables, force, accessIdentifierTransferable);         
          } catch (AMFICOMRemoteException e) {
-            String msg = "ClientMeasurementObjectLoader.saveServers ";
+            String msg = "ClientConfigurationObjectLoader.saveServers ";
             
             if (e.error_code.equals(ErrorCode.ERROR_VERSION_COLLISION))
                 throw new VersionCollisionException(msg, e);
@@ -1419,7 +1570,7 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
          try {
              this.server.receiveMCMs(transferables, force, accessIdentifierTransferable);         
          } catch (AMFICOMRemoteException e) {
-            String msg = "ClientMeasurementObjectLoader.saveMCMs ";
+            String msg = "ClientConfigurationObjectLoader.saveMCMs ";
             
             if (e.error_code.equals(ErrorCode.ERROR_VERSION_COLLISION))
                 throw new VersionCollisionException(msg, e);
@@ -1437,7 +1588,7 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
          try {
              this.server.receiveEquipments(transferables, force, accessIdentifierTransferable);         
          } catch (AMFICOMRemoteException e) {
-            String msg = "ClientMeasurementObjectLoader.saveEquipments ";
+            String msg = "ClientConfigurationObjectLoader.saveEquipments ";
             
             if (e.error_code.equals(ErrorCode.ERROR_VERSION_COLLISION))
                 throw new VersionCollisionException(msg, e);
@@ -1455,7 +1606,7 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
          try {
              this.server.receivePorts(transferables, force, accessIdentifierTransferable);         
          } catch (AMFICOMRemoteException e) {
-            String msg = "ClientMeasurementObjectLoader.savePorts ";
+            String msg = "ClientConfigurationObjectLoader.savePorts ";
             
             if (e.error_code.equals(ErrorCode.ERROR_VERSION_COLLISION))
                 throw new VersionCollisionException(msg, e);
@@ -1473,7 +1624,7 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
          try {
              this.server.receiveTransmissionPaths(transferables, force, accessIdentifierTransferable);         
          } catch (AMFICOMRemoteException e) {
-            String msg = "ClientMeasurementObjectLoader.saveTransmissionPaths ";
+            String msg = "ClientConfigurationObjectLoader.saveTransmissionPaths ";
             
             if (e.error_code.equals(ErrorCode.ERROR_VERSION_COLLISION))
                 throw new VersionCollisionException(msg, e);
@@ -1491,7 +1642,7 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
         try {
             this.server.receiveTransmissionPathTypes(transferables, force, accessIdentifierTransferable);         
         } catch (AMFICOMRemoteException e) {
-           String msg = "ClientMeasurementObjectLoader.saveTransmissionPathTypes ";
+           String msg = "ClientConfigurationObjectLoader.saveTransmissionPathTypes ";
            
            if (e.error_code.equals(ErrorCode.ERROR_VERSION_COLLISION))
                throw new VersionCollisionException(msg, e);
@@ -1511,7 +1662,7 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
          try {
              this.server.receiveKISs(transferables, force, accessIdentifierTransferable);         
          } catch (AMFICOMRemoteException e) {
-            String msg = "ClientMeasurementObjectLoader.saveKISs ";
+            String msg = "ClientConfigurationObjectLoader.saveKISs ";
             
             if (e.error_code.equals(ErrorCode.ERROR_VERSION_COLLISION))
                 throw new VersionCollisionException(msg, e);
@@ -1529,7 +1680,7 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
          try {
              this.server.receiveMeasurementPorts(transferables, force, accessIdentifierTransferable);         
          } catch (AMFICOMRemoteException e) {
-            String msg = "ClientMeasurementObjectLoader.saveMeasurementPorts ";
+            String msg = "ClientConfigurationObjectLoader.saveMeasurementPorts ";
             
             if (e.error_code.equals(ErrorCode.ERROR_VERSION_COLLISION))
                 throw new VersionCollisionException(msg, e);
@@ -1547,7 +1698,7 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
          try {
              this.server.receiveMonitoredElements(transferables, force, accessIdentifierTransferable);         
          } catch (AMFICOMRemoteException e) {
-            String msg = "ClientMeasurementObjectLoader.saveMonitoredElements ";
+            String msg = "ClientConfigurationObjectLoader.saveMonitoredElements ";
             
             if (e.error_code.equals(ErrorCode.ERROR_VERSION_COLLISION))
                 throw new VersionCollisionException(msg, e);
@@ -1726,7 +1877,7 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
                         .transmitDomainsButIds(identifierTransferables,
                                                     accessIdentifierTransferable);
                 if (condition != null && !(condition instanceof DomainCondition) ) {
-                    Log.errorMessage("ClientMeasurementObjectLoader.loadMeasurementsButIds | " +
+                    Log.errorMessage("ClientConfigurationObjectLoader.loadMeasurementsButIds | " +
                             "Class '" + condition.getClass().getName() + "' is not instanse of DomainCondition or ");
                 }
                 
@@ -1763,7 +1914,7 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
                         .transmitServersButIds(identifierTransferables,
                                                     accessIdentifierTransferable);
                 if (condition != null && !(condition instanceof DomainCondition) ) {
-                    Log.errorMessage("ClientMeasurementObjectLoader.loadMeasurementPortsButIds | " +
+                    Log.errorMessage("ClientConfigurationObjectLoader.loadMeasurementPortsButIds | " +
                             "Class '" + condition.getClass().getName() + "' is not instanse of DomainCondition");
                 }                
             }
@@ -1800,7 +1951,7 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
                         .transmitMCMsButIds(identifierTransferables,
                                                     accessIdentifierTransferable);
                 if (condition != null && !(condition instanceof DomainCondition) ) {
-                    Log.errorMessage("ClientMeasurementObjectLoader.loadMCMsButIds | " +
+                    Log.errorMessage("ClientConfigurationObjectLoader.loadMCMsButIds | " +
                             "Class '" + condition.getClass().getName() + "' is not instanse of DomainCondition or ");
                 }
                 
@@ -1837,7 +1988,7 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
                         .transmitEquipmentsButIds(identifierTransferables,
                                                     accessIdentifierTransferable);
                 if (condition != null && !(condition instanceof DomainCondition) ) {
-                    Log.errorMessage("ClientMeasurementObjectLoader.loadEquipmentsButIds | " +
+                    Log.errorMessage("ClientConfigurationObjectLoader.loadEquipmentsButIds | " +
                             "Class '" + condition.getClass().getName() + "' is not instanse of DomainCondition or ");
                 }
                 
@@ -1873,7 +2024,7 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
                         .transmitPortsButIds(identifierTransferables,
                                                     accessIdentifierTransferable);
                 if (condition != null && !(condition instanceof DomainCondition) ) {
-                    Log.errorMessage("ClientMeasurementObjectLoader.loadMeasurementPortsButIds | " +
+                    Log.errorMessage("ClientConfigurationObjectLoader.loadMeasurementPortsButIds | " +
                             "Class '" + condition.getClass().getName() + "' is not instanse of DomainCondition");
                 }                
             }
@@ -1908,7 +2059,7 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
                         .transmitTransmissionPathsButIds(identifierTransferables,
                                                     accessIdentifierTransferable);
                 if (condition != null && !(condition instanceof DomainCondition) ) {
-                    Log.errorMessage("ClientMeasurementObjectLoader.loadMeasurementPortsButIds | " +
+                    Log.errorMessage("ClientConfigurationObjectLoader.loadMeasurementPortsButIds | " +
                             "Class '" + condition.getClass().getName() + "' is not instanse of DomainCondition");
                 }                
             }
@@ -1944,7 +2095,7 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
                         .transmitKISsButIds(identifierTransferables,
                                                     accessIdentifierTransferable);
                 if (condition != null && !(condition instanceof DomainCondition) ) {
-                    Log.errorMessage("ClientMeasurementObjectLoader.loadKISButIds | " +
+                    Log.errorMessage("ClientConfigurationObjectLoader.loadKISButIds | " +
                             "Class '" + condition.getClass().getName() + "' is not instanse of DomainCondition or ");
                 }
                 
@@ -1981,7 +2132,7 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
                         .transmitMeasurementPortsButIds(identifierTransferables,
                                                     accessIdentifierTransferable);
                 if (condition != null && !(condition instanceof DomainCondition) ) {
-                    Log.errorMessage("ClientMeasurementObjectLoader.loadMeasurementPortsButIds | " +
+                    Log.errorMessage("ClientConfigurationObjectLoader.loadMeasurementPortsButIds | " +
                             "Class '" + condition.getClass().getName() + "' is not instanse of DomainCondition");
                 }
                 
@@ -2017,7 +2168,7 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
                         .transmitMonitoredElementsButIds(identifierTransferables,
                                                     accessIdentifierTransferable);
                 if (condition != null && !(condition instanceof DomainCondition) ) {
-                    Log.errorMessage("ClientMeasurementObjectLoader.loadMeasurementPortsButIds | " +
+                    Log.errorMessage("ClientConfigurationObjectLoader.loadMeasurementPortsButIds | " +
                             "Class '" + condition.getClass().getName() + "' is not instanse of DomainCondition");
                 }
                 
