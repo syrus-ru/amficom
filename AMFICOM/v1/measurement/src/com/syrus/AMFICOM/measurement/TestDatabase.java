@@ -1,5 +1,5 @@
 /*
- * $Id: TestDatabase.java,v 1.54 2004/12/10 16:24:55 bob Exp $
+ * $Id: TestDatabase.java,v 1.55 2004/12/29 10:11:46 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -52,8 +52,8 @@ import com.syrus.AMFICOM.configuration.MeasurementPortDatabase;
 import com.syrus.AMFICOM.configuration.KISDatabase;
 
 /**
- * @version $Revision: 1.54 $, $Date: 2004/12/10 16:24:55 $
- * @author $Author: bob $
+ * @version $Revision: 1.55 $, $Date: 2004/12/29 10:11:46 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -581,7 +581,7 @@ public class TestDatabase extends StorableObjectDatabase {
 			return;
 		}
 		
-		insertEntities(storableObjects);
+		this.insertEntities(storableObjects);
 		for (Iterator it = storableObjects.iterator(); it.hasNext();) {
 			Test test = (Test) it.next();
 			insertMeasurementSetupTestLinks(test);

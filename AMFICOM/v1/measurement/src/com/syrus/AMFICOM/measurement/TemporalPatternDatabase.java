@@ -1,5 +1,5 @@
 /*
- * $Id: TemporalPatternDatabase.java,v 1.28 2004/12/08 09:11:37 bob Exp $
+ * $Id: TemporalPatternDatabase.java,v 1.29 2004/12/29 10:11:46 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,8 +35,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.28 $, $Date: 2004/12/08 09:11:37 $
- * @author $Author: bob $
+ * @version $Revision: 1.29 $, $Date: 2004/12/29 10:11:46 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -119,7 +119,7 @@ public class TemporalPatternDatabase extends StorableObjectDatabase {
 	
 	
 	public void insert(List storableObjects) throws IllegalDataException, CreateObjectException {
-		super.insertEntities(storableObjects);
+		this.insertEntities(storableObjects);
 	}
 	
 	private PreparedStatement insertTemporalPatternPreparedStatement() throws SQLException{

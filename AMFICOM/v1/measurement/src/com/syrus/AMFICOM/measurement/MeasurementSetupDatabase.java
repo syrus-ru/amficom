@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementSetupDatabase.java,v 1.53 2004/12/28 12:14:59 bob Exp $
+ * $Id: MeasurementSetupDatabase.java,v 1.54 2004/12/29 10:11:46 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -43,8 +43,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.53 $, $Date: 2004/12/28 12:14:59 $
- * @author $Author: bob $
+ * @version $Revision: 1.54 $, $Date: 2004/12/29 10:11:46 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -99,7 +99,7 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 	
 	
 	public void insert(List storableObjects) throws IllegalDataException, CreateObjectException {
-		insertEntities(storableObjects);
+		this.insertEntities(storableObjects);
 		for(Iterator it=storableObjects.iterator();it.hasNext();){
 			MeasurementSetup measurementSetup = (MeasurementSetup) it.next();
 			this.insertMeasurementSetupMELinks(measurementSetup);

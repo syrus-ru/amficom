@@ -1,5 +1,5 @@
 /*
- * $Id: EvaluationTypeDatabase.java,v 1.43 2004/12/27 21:00:01 arseniy Exp $
+ * $Id: EvaluationTypeDatabase.java,v 1.44 2004/12/29 10:11:46 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -41,7 +41,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.43 $, $Date: 2004/12/27 21:00:01 $
+ * @version $Revision: 1.44 $, $Date: 2004/12/29 10:11:46 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -366,7 +366,7 @@ public class EvaluationTypeDatabase extends StorableObjectDatabase {
 	}
 
 	public void insert(List storableObjects) throws IllegalDataException, CreateObjectException {
-		insertEntities(storableObjects);
+		this.insertEntities(storableObjects);
 		for(Iterator it=storableObjects.iterator();it.hasNext();){
 			EvaluationType evaluationType = fromStorableObject((StorableObject)it.next());
 			insertParameterTypes(evaluationType);
