@@ -4,8 +4,6 @@ package com.syrus.AMFICOM.client_.resource;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
-import com.syrus.AMFICOM.Client.Resource.ObjectResource;
-
 /**
  * Controller provides data from Model (ObjectResource) using key set.
  * 
@@ -17,8 +15,8 @@ import com.syrus.AMFICOM.Client.Resource.ObjectResource;
  * controller's constructor must be private and its instance must be obtained
  * using a static method <code>getInstance()</code>. 
  *
- * @author $Author: krupenn $
- * @version $Revision: 1.1 $, $Date: 2004/08/26 10:26:51 $
+ * @author $Author: bob $
+ * @version $Revision: 1.2 $, $Date: 2004/10/06 13:16:46 $
  * @see <a href = "http://bass.syrus.ru/java/Bitter%20Java.pdf">&laquo;Bitter Java&raquo; by Bruce A. Tate</a>
  * @module generalclient_v1
  */
@@ -113,7 +111,7 @@ public interface ObjectResourceController {
 	 * @param key entity key
 	 * @return
 	 */
-	Object getValue(final ObjectResource objectResource, final String key);
+	Object getValue(final Object object, final String key);
 
 	/**
 	 * Returns <code>true</code> if the entity represented by
@@ -132,5 +130,5 @@ public interface ObjectResourceController {
 	 * @param key entity key
 	 * @param value value, which will be assigned to Model
 	 */
-	void setValue(ObjectResource objectResource, final String key, final Object value);
+	void setValue(Object object, final String key, final Object value);
 }

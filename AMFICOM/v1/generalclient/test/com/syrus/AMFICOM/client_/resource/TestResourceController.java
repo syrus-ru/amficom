@@ -17,7 +17,6 @@ import java.util.List;
 import java.util.Map;
 
 import com.syrus.AMFICOM.CORBA.General.TestStatus;
-import com.syrus.AMFICOM.Client.Resource.ObjectResource;
 import com.syrus.AMFICOM.client_.general.ui.MLabel;
 
 /**
@@ -93,10 +92,10 @@ public final class TestResourceController implements ObjectResourceController {
 		return name;
 	}
 
-	public Object getValue(final ObjectResource objectResource, final String key) {
+	public Object getValue(final Object object, final String key) {
 		Object result = null;
-		if (objectResource instanceof TestResource) {
-			TestResource testResource = (TestResource) objectResource;
+		if (object instanceof TestResource) {
+			TestResource testResource = (TestResource) object;
 			if (key.equals(KEY_ID))
 				result = testResource.getId();
 			else if (key.equals(KEY_NAME))
@@ -149,9 +148,9 @@ public final class TestResourceController implements ObjectResourceController {
 		return editable;
 	}
 
-	public void setValue(ObjectResource objectResource, final String key, final Object value) {
-		if (objectResource instanceof TestResource) {
-			TestResource testResource = (TestResource) objectResource;
+	public void setValue(Object object, final String key, final Object value) {
+		if (object instanceof TestResource) {
+			TestResource testResource = (TestResource) object;
 			if (key.equals(KEY_NAME))
 				testResource.setName((String) value);
 			else if (key.equals(KEY_STATUS)) {
