@@ -3,7 +3,6 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="test"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="src" path="/idl_v1"/>
 	<classpathentry kind="src" path="/filter_v1"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/AMFICOM library"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Extended library"/>
