@@ -9,7 +9,7 @@ CREATE TABLE Link (
  domain_id VARCHAR2(32),
 --
  type_id VARCHAR2(32) NOT NULL,
- sort NUMBER(2,0),
+ nature NUMBER(1) NOT NULL,
 --
  name VARCHAR2(128) NOT NULL,
  description VARCHAR2(256),
@@ -31,8 +31,12 @@ CREATE TABLE Link (
   REFERENCES Domain (id) ON DELETE CASCADE,
 --
  CONSTRAINT link_lnktype_fk FOREIGN KEY (type_id)
-  REFERENCES LinkType (id) ON DELETE CASCADE
+  REFERENCES LinkType (id) ON DELETE CASCADE,
+--
+ CONSTRAINT link_nature_chk CHECK (
+  nature >= 0 AND nature <= 1)
 );
 
-CREATE SEQUENCE link_seq ORDER;
+COMMENT ON COLUMN Link.nature IS '0 stands for Link, 1 for CableLink';
 
+CREATE SEQUENCE link_seq ORDER;
