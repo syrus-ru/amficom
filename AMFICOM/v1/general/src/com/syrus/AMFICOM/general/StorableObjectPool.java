@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectPool.java,v 1.16 2005/02/07 13:42:40 bob Exp $
+ * $Id: StorableObjectPool.java,v 1.17 2005/02/07 14:21:04 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,8 +26,8 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2005/02/07 13:42:40 $
- * @author $Author: bob $
+ * @version $Revision: 1.17 $, $Date: 2005/02/07 14:21:04 $
+ * @author $Author: arseniy $
  * @module general_v1
  */
 public abstract class StorableObjectPool {
@@ -127,7 +127,7 @@ public abstract class StorableObjectPool {
 		if (lruMap != null)
 			lruMap.remove(id);
 		else
-			Log.errorMessage("StorableObjectPool.flushImpl | Cannot find object pool for entity '" + ObjectEntities.codeToString(entityCode.shortValue()) + "' entity code: " + entityCode);
+			Log.errorMessage("StorableObjectPool.deleteImpl | Cannot find object pool for entity '" + ObjectEntities.codeToString(entityCode.shortValue()) + "' entity code: " + entityCode);
 
 		this.deleteStorableObject(id);
 	}
@@ -140,10 +140,10 @@ public abstract class StorableObjectPool {
 			if (lruMap != null)
 				lruMap.remove(id);
 			else
-				Log.errorMessage("StorableObjectPool.flushImpl | Cannot find object pool for entity '" + ObjectEntities.codeToString(entityCode.shortValue()) + "' entity code: " + entityCode);
+				Log.errorMessage("StorableObjectPool.deleteImpl | Cannot find object pool for entity '" + ObjectEntities.codeToString(entityCode.shortValue()) + "' entity code: " + entityCode);
 		}
 
-		deleteStorableObjects(ids);
+		this.deleteStorableObjects(ids);
 	}
 
 	protected abstract void deleteStorableObject(final Identifier id) throws DatabaseException, CommunicationException;
