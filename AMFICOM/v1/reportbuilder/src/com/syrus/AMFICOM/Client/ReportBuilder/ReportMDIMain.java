@@ -29,6 +29,7 @@ import com.syrus.AMFICOM.Client.General.Command.Session.SessionCloseCommand;
 import com.syrus.AMFICOM.Client.General.Command.Session.SessionChangePasswordCommand;
 import com.syrus.AMFICOM.Client.General.Command.Session.SessionOptionsCommand;
 import com.syrus.AMFICOM.Client.General.Command.Session.SessionConnectionCommand;
+import com.syrus.AMFICOM.Client.General.Command.Session.SessionDomainCommand;
 
 import com.syrus.AMFICOM.Client.General.Event.OperationListener;
 import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
@@ -234,6 +235,7 @@ public class ReportMDIMain extends JFrame implements OperationListener
 		aModel.setCommand("menuSessionOptions", new SessionOptionsCommand(aContext));
 		aModel.setCommand("menuSessionConnection", new SessionConnectionCommand(Environment.the_dispatcher, aContext));
 		aModel.setCommand("menuSessionChangePassword", new SessionChangePasswordCommand(Environment.the_dispatcher, aContext));
+		aModel.setCommand("menuSessionDomain", new SessionDomainCommand(Environment.the_dispatcher, aContext));
 		aModel.setCommand("menuExit", new ExitCommand(this));
 
 		aModel.add("menuHelpAbout", new HelpAboutCommand(this));
@@ -463,8 +465,10 @@ public class ReportMDIMain extends JFrame implements OperationListener
 				ApplicationModel aModel = aContext.getApplicationModel();
 
 				aModel.disable("menuSessionOpen");
+				aModel.enable("menuSessionClose");
 				aModel.enable("menuSessionOptions");
 				aModel.enable("menuSessionChangePassword");
+				aModel.enable("menuSessionDomain");
 
 				DataSourceInterface dsi = aContext.getDataSourceInterface();
 				new ConfigDataSourceImage(dsi).LoadNet();
@@ -486,8 +490,6 @@ public class ReportMDIMain extends JFrame implements OperationListener
 				toolBar.setTemplateToolBarState(true);
 				setTemplate(null);
 
-				aModel.setEnabled("menuAlarmAlert",true);
-				aModel.setEnabled("menuReportBuilder",true);
 				aModel.fireModelChanged("");
 //				aContext.getDispatcher().notify(new OperationEvent("",0,ReportBuilder.ev_stopProgressBar));
 				statusBar.enableProgressBar(false);
@@ -594,10 +596,7 @@ public class ReportMDIMain extends JFrame implements OperationListener
 		aModel.disable("menuSessionClose");
 		aModel.disable("menuSessionOptions");
 		aModel.disable("menuSessionChangePassword");
-
-		aModel.setEnabled("menuAlarmAlert",false);
-		aModel.setEnabled("menuReportBuilder",false);
-//    setModel(aModel);
+		aModel.disable("menuSessionDomain");
 
 		aModel.fireModelChanged("");
 		toolBar.setTemplateToolBarState(false);

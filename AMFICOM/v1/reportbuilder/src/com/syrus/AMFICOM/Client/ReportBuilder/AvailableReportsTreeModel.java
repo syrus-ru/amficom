@@ -538,11 +538,12 @@ public class AvailableReportsTreeModel extends ObjectResourceTreeModel
 				{
 					DataSet dSet = new DataSet(Pool.getHash(MapContext.typ));
 
-					/*          ObjectResourceFilter filter = new ObjectResourceDomainFilter(dsi.getSession().getDomainId());
-						 dSet = filter.filter(dSet);
-						 ObjectResourceSorter sorter = MapContext.getDefaultSorter();
-						 sorter.setDataSet(dSet);
-						 dSet = sorter.default_sort();*/
+					ObjectResourceFilter filter = new ObjectResourceDomainFilter(
+						aContext.getDataSourceInterface().getSession().getDomainId());
+					dSet = filter.filter(dSet);
+					ObjectResourceSorter sorter = MapContext.getDefaultSorter();
+					sorter.setDataSet(dSet);
+					dSet = sorter.default_sort();
 
 					Enumeration enumerer = dSet.elements();
 					for (; enumerer.hasMoreElements(); )
@@ -768,11 +769,12 @@ getObject();
 
 				DataSet dSet = new DataSet(Pool.getHash(Scheme.typ));
 
-				/*          ObjectResourceFilter filter = new ObjectResourceDomainFilter(dsi.getSession().getDomainId());
-				 dSet = filter.filter(dSet);
-				 ObjectResourceSorter sorter = Scheme.getDefaultSorter();
-				 sorter.setDataSet(dSet);
-				 dSet = sorter.default_sort();*/
+				ObjectResourceFilter filter = new ObjectResourceDomainFilter(
+					aContext.getDataSourceInterface().getSession().getDomainId());
+				dSet = filter.filter(dSet);
+				ObjectResourceSorter sorter = Scheme.getDefaultSorter();
+				sorter.setDataSet(dSet);
+				dSet = sorter.default_sort();
 
 				for (Enumeration enumer = dSet.elements(); enumer.hasMoreElements(); )
 				{

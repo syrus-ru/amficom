@@ -27,12 +27,10 @@ public class ReportApplicationModel extends ApplicationModel {
 		add("menuSessionOptions");
 		add("menuSessionConnection");
 		add("menuSessionChangePassword");
+		add("menuSessionDomain");
 		add("menuExit");
 		add("menuSession");
 		add("menuHelp");
-
-		add("menuAlarmAlert");
-		add("menuReportBuilder");
 	}
 
 	public DataSourceInterface getDataSource(SessionInterface si)
