@@ -1,5 +1,5 @@
 /*
- * $Id: TopologicalNodeDatabase.java,v 1.6 2005/01/17 10:54:59 bob Exp $
+ * $Id: TopologicalNodeDatabase.java,v 1.7 2005/01/26 07:54:25 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -40,23 +40,11 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/01/17 10:54:59 $
+ * @version $Revision: 1.7 $, $Date: 2005/01/26 07:54:25 $
  * @author $Author: bob $
  * @module map_v1
  */
 public class TopologicalNodeDatabase extends StorableObjectDatabase {
-	//	 name VARCHAR2(128),
-    public static final String COLUMN_NAME  = "name";
-    // description VARCHAR2(256),
-    public static final String COLUMN_DESCRIPTION   = "description";
-    // longitude NUMBER(12,6),
-    public static final String COLUMN_LONGITUDE     = "longitude";
-    // latiude NUMBER(12,6),
-    public static final String COLUMN_LATIUDE       = "latiude";
-    // active NUMBER(1),
-    public static final String COLUMN_ACTIVE        = "active";
-
-    
 	private static String columns;
 	
 	private static String updateMultiplySQLValues;
@@ -76,10 +64,10 @@ public class TopologicalNodeDatabase extends StorableObjectDatabase {
 	
 	private void retrievePhysicalLink(TopologicalNode node) throws RetrieveObjectException, ObjectNotFoundException{
 		String nodeIdStr = DatabaseIdentifier.toSQLString(node.getId()); 
-		String sql = SQL_SELECT + NodeLinkDatabase.COLUMN_PHYSICAL_LINK_ID + SQL_FROM
+		String sql = SQL_SELECT + NodeLinkWrapper.COLUMN_PHYSICAL_LINK_ID + SQL_FROM
 				+ ObjectEntities.NODE_LINK_ENTITY + SQL_WHERE 
-				+ NodeLinkDatabase.COLUMN_START_NODE_ID + EQUALS + nodeIdStr + SQL_OR
-				+ NodeLinkDatabase.COLUMN_END_NODE_ID + EQUALS + nodeIdStr;
+				+ NodeLinkWrapper.COLUMN_START_NODE_ID + EQUALS + nodeIdStr + SQL_OR
+				+ NodeLinkWrapper.COLUMN_END_NODE_ID + EQUALS + nodeIdStr;
 		Statement statement = null;
 		ResultSet resultSet = null;
 		Connection connection = DatabaseConnection.getConnection();
@@ -124,11 +112,11 @@ public class TopologicalNodeDatabase extends StorableObjectDatabase {
 		String startNodeIdStrs;
 		String endNodeIdStrs;
 		{
-			StringBuffer startNodeBuffer = new StringBuffer(NodeLinkDatabase.COLUMN_START_NODE_ID);
+			StringBuffer startNodeBuffer = new StringBuffer(NodeLinkWrapper.COLUMN_START_NODE_ID);
 			startNodeBuffer.append(SQL_IN);
 			startNodeBuffer.append(OPEN_BRACKET);
 			
-			StringBuffer endNodeBuffer = new StringBuffer(NodeLinkDatabase.COLUMN_END_NODE_ID);
+			StringBuffer endNodeBuffer = new StringBuffer(NodeLinkWrapper.COLUMN_END_NODE_ID);
 			endNodeBuffer.append(SQL_IN);
 			endNodeBuffer.append(OPEN_BRACKET);
 			
@@ -155,13 +143,13 @@ public class TopologicalNodeDatabase extends StorableObjectDatabase {
 						else {
 							startNodeBuffer.append(CLOSE_BRACKET);
 							startNodeBuffer.append(SQL_OR);
-							startNodeBuffer.append(NodeLinkDatabase.COLUMN_START_NODE_ID);				
+							startNodeBuffer.append(NodeLinkWrapper.COLUMN_START_NODE_ID);				
 							startNodeBuffer.append(SQL_IN);
 							startNodeBuffer.append(OPEN_BRACKET);
 							
 							endNodeBuffer.append(CLOSE_BRACKET);
 							endNodeBuffer.append(SQL_OR);
-							endNodeBuffer.append(NodeLinkDatabase.COLUMN_END_NODE_ID);				
+							endNodeBuffer.append(NodeLinkWrapper.COLUMN_END_NODE_ID);				
 							endNodeBuffer.append(SQL_IN);
 							endNodeBuffer.append(OPEN_BRACKET);
 						}
@@ -175,9 +163,9 @@ public class TopologicalNodeDatabase extends StorableObjectDatabase {
 			endNodeIdStrs = endNodeBuffer.toString();
 		}
 		String sql = SQL_SELECT 
-				+ NodeLinkDatabase.COLUMN_START_NODE_ID + COMMA
-				+ NodeLinkDatabase.COLUMN_END_NODE_ID + COMMA
-				+ NodeLinkDatabase.COLUMN_PHYSICAL_LINK_ID + COMMA 
+				+ NodeLinkWrapper.COLUMN_START_NODE_ID + COMMA
+				+ NodeLinkWrapper.COLUMN_END_NODE_ID + COMMA
+				+ NodeLinkWrapper.COLUMN_PHYSICAL_LINK_ID + COMMA 
 				+ SQL_FROM + ObjectEntities.NODE_LINK_ENTITY + SQL_WHERE 
 				+ startNodeIdStrs + SQL_OR + endNodeIdStrs;
 		 Statement statement = null;
@@ -189,8 +177,8 @@ public class TopologicalNodeDatabase extends StorableObjectDatabase {
 	            resultSet = statement.executeQuery(sql.toString());
 	            Map nodePhysicalLinkMap = new HashMap();
 	            while (resultSet.next()) {
-	                Identifier startNodeId = DatabaseIdentifier.getIdentifier(resultSet, NodeLinkDatabase.COLUMN_START_NODE_ID);
-	                Identifier endNodeId = DatabaseIdentifier.getIdentifier(resultSet, NodeLinkDatabase.COLUMN_END_NODE_ID);
+	                Identifier startNodeId = DatabaseIdentifier.getIdentifier(resultSet, NodeLinkWrapper.COLUMN_START_NODE_ID);
+	                Identifier endNodeId = DatabaseIdentifier.getIdentifier(resultSet, NodeLinkWrapper.COLUMN_END_NODE_ID);
 	                TopologicalNode node = null;
 	                for (Iterator it = topologicalNodes.iterator(); it.hasNext();) {
 	                	TopologicalNode nodeToCompare = (TopologicalNode) it.next();
@@ -210,7 +198,7 @@ public class TopologicalNodeDatabase extends StorableObjectDatabase {
 	                	continue;
 	                try {                    
 	                	physicalLink = (PhysicalLink) MapStorableObjectPool
-	                            .getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, NodeLinkDatabase.COLUMN_PHYSICAL_LINK_ID), true);
+	                            .getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, NodeLinkWrapper.COLUMN_PHYSICAL_LINK_ID), true);
 	                } catch (ApplicationException ae) {
 	                    throw new RetrieveObjectException(ae);
 	                }
@@ -253,11 +241,11 @@ public class TopologicalNodeDatabase extends StorableObjectDatabase {
 	protected String getColumns(int mode) {
 		if (columns == null){
 			columns = super.getColumns(mode) + COMMA
-				+ COLUMN_NAME + COMMA
-				+ COLUMN_DESCRIPTION + COMMA
-				+ COLUMN_LONGITUDE + COMMA
-				+ COLUMN_LATIUDE + COMMA 
-				+ COLUMN_ACTIVE;
+				+ TopologicalNodeWrapper.COLUMN_NAME + COMMA
+				+ TopologicalNodeWrapper.COLUMN_DESCRIPTION + COMMA
+				+ TopologicalNodeWrapper.COLUMN_LONGITUDE + COMMA
+				+ TopologicalNodeWrapper.COLUMN_LATIUDE + COMMA 
+				+ TopologicalNodeWrapper.COLUMN_ACTIVE;
 		}
 		return columns;
 	}	
@@ -313,11 +301,11 @@ public class TopologicalNodeDatabase extends StorableObjectDatabase {
 							   DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
 							   DatabaseIdentifier.getIdentifier(resultSet, COLUMN_CREATOR_ID),
 							   DatabaseIdentifier.getIdentifier(resultSet, COLUMN_MODIFIER_ID),
-							   DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_NAME)),
-							   DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_DESCRIPTION)),
-							   resultSet.getDouble(COLUMN_LONGITUDE),
-							   resultSet.getDouble(COLUMN_LATIUDE),
-							   resultSet.getInt(COLUMN_ACTIVE) == 1);		
+							   DatabaseString.fromQuerySubString(resultSet.getString(TopologicalNodeWrapper.COLUMN_NAME)),
+							   DatabaseString.fromQuerySubString(resultSet.getString(TopologicalNodeWrapper.COLUMN_DESCRIPTION)),
+							   resultSet.getDouble(TopologicalNodeWrapper.COLUMN_LONGITUDE),
+							   resultSet.getDouble(TopologicalNodeWrapper.COLUMN_LATIUDE),
+							   resultSet.getInt(TopologicalNodeWrapper.COLUMN_ACTIVE) == 1);		
 		return topologicalNode;
 	}
 
