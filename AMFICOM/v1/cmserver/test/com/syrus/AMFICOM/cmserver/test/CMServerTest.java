@@ -19,9 +19,9 @@ import org.omg.PortableServer.POAHelper;
 import com.syrus.AMFICOM.CORBA.General.AMFICOMRemoteException;
 import com.syrus.AMFICOM.cmserver.corba.CMServer;
 import com.syrus.AMFICOM.cmserver.corba.CMServerHelper;
-import com.syrus.AMFICOM.configuration.Domain;
-import com.syrus.AMFICOM.configuration.corba.AccessIdentifier_Transferable;
-import com.syrus.AMFICOM.configuration.corba.Domain_Transferable;
+import com.syrus.AMFICOM.administration.Domain;
+import com.syrus.AMFICOM.general.corba.AccessIdentifier_Transferable;
+import com.syrus.AMFICOM.administration.corba.Domain_Transferable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
@@ -66,7 +66,7 @@ public class CMServerTest {
 			
 			Identifier_Transferable[] identifier_Transferable = new Identifier_Transferable[domain_Transferables2.length];
 			for (int i = 0; i < domain_Transferables2.length; i++) {
-				identifier_Transferable[i] = domain_Transferables2[i].id;			
+				identifier_Transferable[i] = domain_Transferables2[i].header.id;			
 			}
 			
 			long time4 = System.currentTimeMillis();

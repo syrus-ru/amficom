@@ -16,3 +16,4 @@ gc
 SerializedLRUMaps
 .project
 .classpath
+.settings

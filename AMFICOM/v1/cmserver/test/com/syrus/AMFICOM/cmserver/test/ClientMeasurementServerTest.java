@@ -1,5 +1,5 @@
 /*
- * $Id: ClientMeasurementServerTest.java,v 1.8 2004/09/24 09:39:22 bob Exp $
+ * $Id: ClientMeasurementServerTest.java,v 1.9 2005/03/04 12:08:27 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,7 +10,7 @@ package com.syrus.AMFICOM.cmserver.test;
 
 import com.syrus.AMFICOM.cmserver.CMServerImpl;
 import com.syrus.AMFICOM.cmserver.DatabaseContextSetup;
-import com.syrus.AMFICOM.configuration.corba.AccessIdentifier_Transferable;
+import com.syrus.AMFICOM.general.corba.AccessIdentifier_Transferable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
@@ -22,8 +22,8 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2004/09/24 09:39:22 $
- * @author $Author: bob $
+ * @version $Revision: 1.9 $, $Date: 2005/03/04 12:08:27 $
+ * @author $Author: bass $
  * @module cmserver_v1
  */
 public class ClientMeasurementServerTest {
