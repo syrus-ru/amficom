@@ -1,5 +1,5 @@
 /*
- * $Id: measurement.idl,v 1.39 2004/12/24 12:51:45 arseniy Exp $
+ * $Id: measurement.idl,v 1.40 2004/12/24 14:06:56 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -154,7 +154,6 @@ module corba {
 		com::syrus::AMFICOM::general::corba::Identifier_Transferable type_id;
 		com::syrus::AMFICOM::general::corba::Identifier_Transferable monitored_element_id;
 		
-		wstring typeCodename;
 		wstring name;
 
 		com::syrus::AMFICOM::general::corba::Identifier_Transferable setup_id;
@@ -243,8 +242,6 @@ module corba {
     	com::syrus::AMFICOM::general::corba::Identifier_Transferable type_id;
 		com::syrus::AMFICOM::general::corba::Identifier_Transferable monitored_element_id;
 		
-		wstring typeCodename;
-
     	com::syrus::AMFICOM::general::corba::Identifier_Transferable criteria_set_id;
   };
   
@@ -258,8 +255,6 @@ module corba {
     	com::syrus::AMFICOM::general::corba::Identifier_Transferable type_id;
 		com::syrus::AMFICOM::general::corba::Identifier_Transferable monitored_element_id;
 		
-		wstring typeCodename;
-
     com::syrus::AMFICOM::general::corba::Identifier_Transferable threshold_set_id;
   };
   

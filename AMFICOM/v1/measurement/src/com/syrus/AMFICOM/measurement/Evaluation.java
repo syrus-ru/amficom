@@ -1,5 +1,5 @@
 /*
- * $Id: Evaluation.java,v 1.36 2004/12/09 15:52:53 arseniy Exp $
+ * $Id: Evaluation.java,v 1.37 2004/12/24 14:06:14 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,8 +28,8 @@ import com.syrus.AMFICOM.measurement.corba.Evaluation_Transferable;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
 
 /**
- * @version $Revision: 1.36 $, $Date: 2004/12/09 15:52:53 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.37 $, $Date: 2004/12/24 14:06:14 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
@@ -102,26 +102,10 @@ public class Evaluation extends Action {
 		}
 	}
 
-//	public static Evaluation getInstance(Evaluation_Transferable et) throws CreateObjectException {
-//		Evaluation evaluation = new Evaluation(et);
-//		
-//		evaluation.evaluationDatabase = MeasurementDatabaseContext.evaluationDatabase;
-//		try {
-//			if (evaluation.evaluationDatabase != null)
-//				evaluation.evaluationDatabase.insert(evaluation);
-//		}
-//		catch (IllegalDataException e) {
-//			throw new CreateObjectException(e.getMessage(), e);
-//		}
-//		
-//		return evaluation;
-//	}
-
 	public Object getTransferable() {
 		return new Evaluation_Transferable(super.getHeaderTransferable(),
 										   (Identifier_Transferable)super.type.getId().getTransferable(),
 										   (Identifier_Transferable)super.monitoredElementId.getTransferable(),
-										   new String(super.type.getCodename()),
 										   (Identifier_Transferable)this.thresholdSet.getId().getTransferable());
 	}
 
