@@ -1,5 +1,5 @@
 /*
- * $Id: JAlertingMessageDialogTestCase.java,v 1.1 2004/06/24 10:49:59 bass Exp $
+ * $Id: JAlertingMessageDialogTestCase.java,v 1.2 2004/08/06 06:29:14 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -21,7 +21,7 @@ import javax.swing.plaf.metal.MetalLookAndFeel;
 import junit.framework.*;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2004/06/24 10:49:59 $
+ * @version $Revision: 1.2 $, $Date: 2004/08/06 06:29:14 $
  * @author $Author: bass $
  */
 public class JAlertingMessageDialogTestCase extends TestCase {
@@ -249,7 +249,7 @@ public class JAlertingMessageDialogTestCase extends TestCase {
 		for (int i = 0; i < messageSeq.length; i++) {
 			jAlertingMessageDialog.appendMessage(messageSeq[i]);
 			try {
-				Thread.currentThread().sleep(1000);
+				Thread.sleep(1000);
 			} catch (InterruptedException ie) {
 				;
 			}
@@ -263,8 +263,7 @@ public class JAlertingMessageDialogTestCase extends TestCase {
 	}
 
 	public void testAlertingMessageDialogMetal()
-			throws ClassNotFoundException, IllegalAccessException,
-			InstantiationException, UnsupportedLookAndFeelException {
+			throws UnsupportedLookAndFeelException {
 		LookAndFeel lookAndFeel = new MetalLookAndFeel();
 		if (lookAndFeel.isSupportedLookAndFeel()) {
 			UIManager.setLookAndFeel(lookAndFeel);
@@ -273,8 +272,7 @@ public class JAlertingMessageDialogTestCase extends TestCase {
 	}
 
 	public void testAlertingMessageDialogKunststoff()
-			throws ClassNotFoundException, IllegalAccessException,
-			InstantiationException, UnsupportedLookAndFeelException {
+			throws UnsupportedLookAndFeelException {
 		LookAndFeel lookAndFeel = new KunststoffLookAndFeel();
 		if (lookAndFeel.isSupportedLookAndFeel()) {
 			UIManager.setLookAndFeel(lookAndFeel);
@@ -283,8 +281,7 @@ public class JAlertingMessageDialogTestCase extends TestCase {
 	}
 
 	public void testAlertingMessageDialogGTK()
-			throws ClassNotFoundException, IllegalAccessException,
-			InstantiationException, UnsupportedLookAndFeelException {
+			throws UnsupportedLookAndFeelException {
 		LookAndFeel lookAndFeel = new GTKLookAndFeel();
 		if (lookAndFeel.isSupportedLookAndFeel()) {
 			UIManager.setLookAndFeel(lookAndFeel);
@@ -293,8 +290,7 @@ public class JAlertingMessageDialogTestCase extends TestCase {
 	}
 
 	public void testAlertingMessageDialogMotif()
-			throws ClassNotFoundException, IllegalAccessException,
-			InstantiationException, UnsupportedLookAndFeelException {
+			throws UnsupportedLookAndFeelException {
 		LookAndFeel lookAndFeel = new MotifLookAndFeel();
 		if (lookAndFeel.isSupportedLookAndFeel()) {
 			UIManager.setLookAndFeel(lookAndFeel);
@@ -303,8 +299,7 @@ public class JAlertingMessageDialogTestCase extends TestCase {
 	}
 
 	public void testAlertingMessageDialogWindows()
-			throws ClassNotFoundException, IllegalAccessException,
-			InstantiationException, UnsupportedLookAndFeelException {
+			throws UnsupportedLookAndFeelException {
 		LookAndFeel lookAndFeel = new WindowsLookAndFeel();
 		if (lookAndFeel.isSupportedLookAndFeel()) {
 			UIManager.setLookAndFeel(lookAndFeel);

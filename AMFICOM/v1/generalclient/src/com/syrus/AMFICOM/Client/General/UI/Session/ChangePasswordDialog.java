@@ -1,287 +1,199 @@
-//////////////////////////////////////////////////////////////////////////////
-// *                                                                      * //
-// * Syrus Systems                                                        * //
-// * Департамент Системных Исследований и Разработок                      * //
-// *                                                                      * //
-// * Проект: АМФИКОМ - система Автоматизированного Многофункционального   * //
-// *         Интеллектуального Контроля и Объектного Мониторинга          * //
-// *                                                                      * //
-// *         реализация Интегрированной Системы Мониторинга               * //
-// *                                                                      * //
-// * Название: Диалоговое окно изменения пароля активного пользователя    * //
-// *                                                                      * //
-// * Тип: Java 1.2.2                                                      * //
-// *                                                                      * //
-// * Автор: Крупенников А.В.                                              * //
-// *                                                                      * //
-// * Версия: 1.0                                                          * //
-// * От: 22 jun 2002                                                      * //
-// * Расположение: ISM\prog\java\AMFICOMConfigure\com\syrus\AMFICOM\      * //
-// *        Client\Main\ChangePasswordDialog.java                         * //
-// *                                                                      * //
-// * Среда разработки: Oracle JDeveloper 3.2.2 (Build 915)                * //
-// *                                                                      * //
-// * Компилятор: Oracle javac (Java 2 SDK, Standard Edition, ver 1.2.2)   * //
-// *                                                                      * //
-// * Статус: разработка                                                   * //
-// *                                                                      * //
-// * Изменения:                                                           * //
-// *  Кем         Верс   Когда      Комментарии                           * //
-// * -----------  ----- ---------- -------------------------------------- * //
-// *                                                                      * //
-// * Описание:                                                            * //
-// *        модуль вызывается для изменения пароля текущего пользователя  * //
-// *        для этого модулю передается структура, описывающая текущую    * //
-// *        сессию. При Нажатии кнопки "Изменить" проверяется соответствие* //
-// *        введенного логина и старого пароля открытой сессии и равенство* //
-// *        введенного и повторенного нового пароля                       * //
-// *                                                                      * //
-//////////////////////////////////////////////////////////////////////////////
+/*
+ * $Id: ChangePasswordDialog.java,v 1.5 2004/08/06 06:31:59 bass Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ.
+ */
 
 package com.syrus.AMFICOM.Client.General.UI.Session;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModel;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.Model.Environment;
+import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.General.SessionInterface;
-import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
+import java.awt.event.*;
+import javax.swing.*;
+import oracle.jdeveloper.layout.*;
 
-import java.awt.BorderLayout;
-import java.awt.Frame;
-import java.awt.event.ActionEvent;
-
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JPasswordField;
-import javax.swing.JTextField;
-
-import oracle.jdeveloper.layout.XYConstraints;
-import oracle.jdeveloper.layout.XYLayout;
-
-public class ChangePasswordDialog extends JDialog
+/**
+ * Диалоговое окно изменения пароля активного пользователя. Модуль вызывается
+ * для изменения пароля текущего пользователя. Для этого модулю передается
+ * структура, описывающая текущую сессию. При нажатии кнопки
+ * &quot;Изменить&quot; проверяется соответствие введенного логина и старого
+ * пароля открытой сессии и равенство введённого и повторённого нового пароля.
+ *
+ * @author $Author: bass $
+ * @version $Revision: 1.5 $, $Date: 2004/08/06 06:31:59 $
+ * @module generalclient_v1
+ */
+public final class ChangePasswordDialog extends JDialog
 {
-	public ApplicationContext aContext;
+	ApplicationContext aContext;
+	int returnCode = 0;
 
-	JPanel jPanel1 = new JPanel();
+	private JPanel jPanel1 = new JPanel();
+	private JButton buttonOk = new JButton();
+	private JButton buttonHelp = new JButton();
+	private JButton buttonCancel = new JButton();
+	private XYLayout xYLayout1 = new XYLayout();
+	private JLabel jLabel1 = new JLabel();
+	private JLabel jLabel2 = new JLabel();
+	private JLabel jLabel3 = new JLabel();
+	private JLabel jLabel4 = new JLabel();
+	JTextField fieldUser = new JTextField();
+	JPasswordField fieldOldPassword = new JPasswordField();
+	JPasswordField fieldNewPassword = new JPasswordField();
+	JPasswordField fieldNewPassword2 = new JPasswordField();
 
-	JButton buttonOk = new JButton();
-	JButton buttonHelp = new JButton();
-	JButton buttonCancel = new JButton();
-
-	public int retCode = 0;
-	public final int RET_OK = 1;
-	public final int RET_CANCEL = 2;
-	XYLayout xYLayout1 = new XYLayout();
-	JLabel jLabel1 = new JLabel();
-	JLabel jLabel2 = new JLabel();
-	JLabel jLabel3 = new JLabel();
-	JLabel jLabel4 = new JLabel();
-	public JTextField fieldUser = new JTextField();
-	public JPasswordField fieldOldPassword = new JPasswordField();
-	public JPasswordField fieldNewPassword = new JPasswordField();
-	public JPasswordField fieldNewPassword2 = new JPasswordField();
-
-	protected ChangePasswordDialog(Frame parent, String title, boolean modal)
-	{
-		super(parent, title, modal);
-		try
-		{
-			jbInit();
-			pack();
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-		}
-	}
+	public static final int RET_OK = 1;
+	public static final int RET_CANCEL = 2;
 
 	public ChangePasswordDialog(ApplicationContext aContext)
 	{
-		this(Environment.getActiveWindow(), LangModel.getString("ChangePasswordTitle"), false);
+		super(Environment.getActiveWindow(), LangModel.getString("ChangePasswordTitle"), false);
+		jbInit();
+		pack();
 		this.aContext = aContext;
 	}
 
-	private void jbInit() throws Exception
+	private void jbInit()
 	{
 		this.setResizable(false);
-		jPanel1.setLayout(xYLayout1);
-		xYLayout1.setWidth(343);
-		xYLayout1.setHeight(158);
+		this.jPanel1.setLayout(this.xYLayout1);
+		this.xYLayout1.setWidth(343);
+		this.xYLayout1.setHeight(158);
 
-		jLabel1.setText(LangModel.getString("labelName"));
-		jLabel2.setText(LangModel.getString("labelOldPassword"));
-		jLabel3.setText(LangModel.getString("labelNewPassword"));
-		jLabel4.setText(LangModel.getString("labelNewPassword2"));
+		this.jLabel1.setText(LangModel.getString("labelName"));
+		this.jLabel2.setText(LangModel.getString("labelOldPassword"));
+		this.jLabel3.setText(LangModel.getString("labelNewPassword"));
+		this.jLabel4.setText(LangModel.getString("labelNewPassword2"));
 
-		getContentPane().add(jPanel1);
+		getContentPane().add(this.jPanel1);
 
-		buttonOk.setText(LangModel.getString("buttonChange"));
-		buttonOk.addActionListener(
-				new ChangePasswordDialog_buttonOk_actionAdapter(this));
-		buttonHelp.setText(LangModel.getString("buttonHelp"));
-		buttonHelp.addActionListener(
-				new ChangePasswordDialog_buttonHelp_actionAdapter(this));
-		buttonCancel.setText(LangModel.getString("buttonCancel"));
-		buttonCancel.addActionListener(
-				new ChangePasswordDialog_buttonCancel_actionAdapter(this));
-
-		jPanel1.add(jLabel1, new XYConstraints(11, 12, -1, -1));
-		jPanel1.add(jLabel2, new XYConstraints(11, 39, -1, -1));
-		jPanel1.add(jLabel3, new XYConstraints(11, 67, -1, -1));
-		jPanel1.add(jLabel4, new XYConstraints(11, 94, -1, -1));
-
-		jPanel1.add(fieldUser, new XYConstraints(133, 10, 201, -1));
-		jPanel1.add(fieldOldPassword, new XYConstraints(133, 37, 201, -1));
-		jPanel1.add(fieldNewPassword, new XYConstraints(133, 65, 201, -1));
-		jPanel1.add(fieldNewPassword2, new XYConstraints(133, 92, 201, -1));
-
-		jPanel1.add(buttonOk, new XYConstraints(11, 120, -1, 27));
-		jPanel1.add(buttonHelp, new XYConstraints(251, 120, -1, 27));
-		jPanel1.add(buttonCancel, new XYConstraints(131, 120, -1, 27));
-
-		fieldUser.requestFocus();
-	}
-
-	void buttonOk_actionPerformed(ActionEvent e)
-	{
-		String puser = fieldUser.getText();
-		String pold = new String(fieldOldPassword.getPassword());
-		String pnew = new String (fieldNewPassword.getPassword());
-		String pnew2 = new String(fieldNewPassword2.getPassword());
-
-		SessionInterface si = aContext.getSessionInterface();
-
-		if(!puser.equals(si.getUser()))
+		this.buttonOk.setText(LangModel.getString("buttonChange"));
+		this.buttonOk.addActionListener(new ActionListener()
 		{
-			fieldUser.setText("");
-			fieldOldPassword.setText("");
-			fieldNewPassword.setText("");
-			fieldNewPassword2.setText("");
-			JOptionPane.showMessageDialog(
-					this,
-					LangModel.getString("errorWrongName"),
-					LangModel.getString("errorTitleChangePassword"),
-					JOptionPane.ERROR_MESSAGE,
-					null);
-			return;
-		}
+			public void actionPerformed(ActionEvent e)
+			{
+				String puser = ChangePasswordDialog.this.fieldUser.getText();
+				String pold = new String(ChangePasswordDialog.this.fieldOldPassword.getPassword());
+				String pnew = new String (ChangePasswordDialog.this.fieldNewPassword.getPassword());
+				String pnew2 = new String(ChangePasswordDialog.this.fieldNewPassword2.getPassword());
+				
+				SessionInterface si = ChangePasswordDialog.this.aContext.getSessionInterface();
+				
+				if (!puser.equals(si.getUser()))
+				{
+					ChangePasswordDialog.this.fieldUser.setText("");
+					ChangePasswordDialog.this.fieldOldPassword.setText("");
+					ChangePasswordDialog.this.fieldNewPassword.setText("");
+					ChangePasswordDialog.this.fieldNewPassword2.setText("");
+					JOptionPane.showMessageDialog(
+							ChangePasswordDialog.this,
+							LangModel.getString("errorWrongName"),
+							LangModel.getString("errorTitleChangePassword"),
+							JOptionPane.ERROR_MESSAGE,
+							null);
+					return;
+				}
+				
+				if (!pold.equals(si.getPassword()))
+				{
+					ChangePasswordDialog.this.fieldOldPassword.setText("");
+					ChangePasswordDialog.this.fieldNewPassword.setText("");
+					ChangePasswordDialog.this.fieldNewPassword2.setText("");
+					JOptionPane.showMessageDialog(
+							ChangePasswordDialog.this,
+							LangModel.getString("errorWrongPassword"),
+							LangModel.getString("errorTitleChangePassword"),
+							JOptionPane.ERROR_MESSAGE,
+							null);
+					return;
+				}
+				
+				if (pnew.length() < 3)
+				{
+					ChangePasswordDialog.this.fieldNewPassword.setText("");
+					ChangePasswordDialog.this.fieldNewPassword2.setText("");
+					JOptionPane.showMessageDialog(
+							ChangePasswordDialog.this,
+							LangModel.getString("errorPasswordTooShort"),
+							LangModel.getString("errorTitleChangePassword"),
+							JOptionPane.ERROR_MESSAGE,
+							null);
+					return;
+				}
+				if (!pnew.equals(pnew2))
+				{
+					ChangePasswordDialog.this.fieldNewPassword.setText("");
+					ChangePasswordDialog.this.fieldNewPassword2.setText("");
+					JOptionPane.showMessageDialog(
+							ChangePasswordDialog.this,
+							LangModel.getString("errorWrongPassword2"),
+							LangModel.getString("errorTitleChangePassword"),
+							JOptionPane.ERROR_MESSAGE,
+							null);
+					return;
+				}
 
-		if(!pold.equals(si.getPassword()))
+				if (!ChangePasswordDialog.this.aContext.getDataSourceInterface().ChangePassword(pold, pnew))
+				{
+					JOptionPane.showMessageDialog(
+							ChangePasswordDialog.this,
+							"Ошибка изменения пароля",
+							LangModel.getString("errorTitleChangePassword"),
+							JOptionPane.ERROR_MESSAGE,
+							null);
+					return;
+				}
+				si.setPassword(pnew);
+				
+				ChangePasswordDialog.this.returnCode = RET_OK;
+				dispose();
+			}
+		});
+		this.buttonHelp.setText(LangModel.getString("buttonHelp"));
+		this.buttonHelp.addActionListener(new ActionListener()
 		{
-			fieldOldPassword.setText("");
-			fieldNewPassword.setText("");
-			fieldNewPassword2.setText("");
-			JOptionPane.showMessageDialog(
-					this,
-					LangModel.getString("errorWrongPassword"),
-					LangModel.getString("errorTitleChangePassword"),
-					JOptionPane.ERROR_MESSAGE,
-					null);
-			return;
-		}
-
-		if(pnew.length() < 3)
+			public void actionPerformed(ActionEvent e)
+			{
+				JOptionPane.showMessageDialog(
+						ChangePasswordDialog.this,
+						"Help system not installed",
+						"Help",
+						JOptionPane.INFORMATION_MESSAGE,
+						null);
+			}
+		});
+		this.buttonCancel.setText(LangModel.getString("buttonCancel"));
+		this.buttonCancel.addActionListener(new ActionListener()
 		{
-			fieldNewPassword.setText("");
-			fieldNewPassword2.setText("");
-			JOptionPane.showMessageDialog(
-					this,
-					LangModel.getString("errorPasswordTooShort"),
-					LangModel.getString("errorTitleChangePassword"),
-					JOptionPane.ERROR_MESSAGE,
-					null);
-			return;
-		}
-		if(!pnew.equals(pnew2))
-		{
-			fieldNewPassword.setText("");
-			fieldNewPassword2.setText("");
-			JOptionPane.showMessageDialog(
-					this,
-					LangModel.getString("errorWrongPassword2"),
-					LangModel.getString("errorTitleChangePassword"),
-					JOptionPane.ERROR_MESSAGE,
-					null);
-			return;
-		}
+			public void actionPerformed(ActionEvent e)
+			{
+				ChangePasswordDialog.this.returnCode = RET_CANCEL;
+				dispose();
+			}
+		});
 
-		if(!aContext.getDataSourceInterface().ChangePassword(pold, pnew))
-		{
-			JOptionPane.showMessageDialog(
-					this,
-					"Ошибка изменения пароля",
-					LangModel.getString("errorTitleChangePassword"),
-					JOptionPane.ERROR_MESSAGE,
-					null);
-			return;
-		}
-		si.setPassword(pnew);
+		this.jPanel1.add(this.jLabel1, new XYConstraints(11, 12, -1, -1));
+		this.jPanel1.add(this.jLabel2, new XYConstraints(11, 39, -1, -1));
+		this.jPanel1.add(this.jLabel3, new XYConstraints(11, 67, -1, -1));
+		this.jPanel1.add(this.jLabel4, new XYConstraints(11, 94, -1, -1));
 
-		retCode = RET_OK;
-		dispose();
+		this.jPanel1.add(this.fieldUser, new XYConstraints(133, 10, 201, -1));
+		this.jPanel1.add(this.fieldOldPassword, new XYConstraints(133, 37, 201, -1));
+		this.jPanel1.add(this.fieldNewPassword, new XYConstraints(133, 65, 201, -1));
+		this.jPanel1.add(this.fieldNewPassword2, new XYConstraints(133, 92, 201, -1));
+
+		this.jPanel1.add(this.buttonOk, new XYConstraints(11, 120, -1, 27));
+		this.jPanel1.add(this.buttonHelp, new XYConstraints(251, 120, -1, 27));
+		this.jPanel1.add(this.buttonCancel, new XYConstraints(131, 120, -1, 27));
+
+		this.fieldUser.requestFocus();
 	}
 
-	void buttonCancel_actionPerformed(ActionEvent e)
+	public int getReturnCode()
 	{
-		retCode = RET_CANCEL;
-		dispose();
-	}
-
-	void buttonHelp_actionPerformed(ActionEvent e)
-	{
-		JOptionPane.showMessageDialog(
-				this,
-				"Help system not installed",
-				"Help",
-				JOptionPane.INFORMATION_MESSAGE,
-				null);
-	}
-}
-
-class ChangePasswordDialog_buttonOk_actionAdapter
-		implements java.awt.event.ActionListener{
-	ChangePasswordDialog adaptee;
-
-	ChangePasswordDialog_buttonOk_actionAdapter(ChangePasswordDialog adaptee)
-	{
-		this.adaptee = adaptee;
-	}
-
-	public void actionPerformed(ActionEvent e)
-	{
-		adaptee.buttonOk_actionPerformed(e);
-	}
-}
-
-class ChangePasswordDialog_buttonCancel_actionAdapter
-		implements java.awt.event.ActionListener{
-	ChangePasswordDialog adaptee;
-
-	ChangePasswordDialog_buttonCancel_actionAdapter(ChangePasswordDialog adaptee)
-	{
-		this.adaptee = adaptee;
-	}
-
-	public void actionPerformed(ActionEvent e)
-	{
-		adaptee.buttonCancel_actionPerformed(e);
-	}
-}
-
-class ChangePasswordDialog_buttonHelp_actionAdapter
-		implements java.awt.event.ActionListener{
-	ChangePasswordDialog adaptee;
-
-	ChangePasswordDialog_buttonHelp_actionAdapter(ChangePasswordDialog adaptee)
-	{
-		this.adaptee = adaptee;
-	}
-
-	public void actionPerformed(ActionEvent e)
-	{
-		adaptee.buttonHelp_actionPerformed(e);
+		return this.returnCode;
 	}
 }
