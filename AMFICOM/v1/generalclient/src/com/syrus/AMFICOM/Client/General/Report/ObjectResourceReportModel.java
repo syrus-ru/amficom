@@ -1,43 +1,26 @@
-package com.syrus.AMFICOM.Client.General.Report;
-
-import javax.swing.JComponent;
-
-import java.util.List;
-import java.util.ListIterator;
-import java.util.Iterator;
-import java.util.ArrayList;
-import java.util.Map;
-import java.util.Date;
-import java.util.GregorianCalendar;
-
-import java.text.SimpleDateFormat;
-import java.text.ParsePosition;
-
-import org.jfree.data.time.Hour;
-import org.jfree.data.time.Day;
-import org.jfree.data.time.Week;
-import org.jfree.data.time.Month;
-import org.jfree.data.time.Quarter;
-import org.jfree.data.time.Year;
-
-import com.syrus.AMFICOM.Client.Resource.Pool;
-import com.syrus.AMFICOM.Client.Resource.ObjectResource;
-
-import com.syrus.AMFICOM.Client.General.Filter.ObjectResourceFilter;
-
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
-
-
-/**
- * <p>Title: </p>
- * <p>Description: </p>
- * <p>Copyright: Copyright (c) 2003</p>
- * <p>Company: </p>
- * @author unascribed
- * @version 1.0
+/*
+ * $Id: ObjectResourceReportModel.java,v 1.11 2004/09/27 09:14:49 bass Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ
  */
 
+package com.syrus.AMFICOM.Client.General.Report;
+
+import com.syrus.AMFICOM.Client.General.Filter.ObjectResourceFilter;
+import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
+import com.syrus.AMFICOM.Client.Resource.*;
+import java.text.*;
+import java.util.*;
+import javax.swing.JComponent;
+import org.jfree.data.time.*;
+
+/**
+ * @author $Author: bass $
+ * @version $Revision: 1.11 $, $Date: 2004/09/27 09:14:49 $
+ * @module generalclient_v1
+ */
 abstract public class ObjectResourceReportModel extends ReportModel
 {
   public static List reportObjects = null;
@@ -233,7 +216,7 @@ abstract public class ObjectResourceReportModel extends ReportModel
 	{
 		JComponent returnValue = null;
 
-		List reportObjects = getReportObjects(rt, rp,aContext.getDataSourceInterface());
+		List reportObjects = getReportObjects(rt, rp,aContext.getDataSource());
 
 		ObjectResourceReportModel model = (ObjectResourceReportModel) rp.model;
 		if (rp.view_type.equals(ObjectResourceReportModel.rt_statistics))

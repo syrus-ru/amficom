@@ -1,27 +1,23 @@
-package com.syrus.AMFICOM.Client.General.Report;
-
-import com.syrus.AMFICOM.Client.Resource.StubResource;
-import java.awt.datatransfer.Transferable;
-import java.awt.datatransfer.DataFlavor;
-
-import java.io.IOException;
-import java.io.Serializable;
-
-import com.syrus.AMFICOM.Client.Resource.ObjectResource;
-import com.syrus.AMFICOM.Client.Resource.MyDataFlavor;
-import java.util.ArrayList;
-import java.util.List;
-
-
-/**
- * <p>Title: </p>
- * <p>Description: </p>
- * <p>Copyright: Copyright (c) 2003</p>
- * <p>Company: </p>
- * @author unascribed
- * @version 1.0
+/*
+ * $Id: ObjectsReport.java,v 1.7 2004/09/27 09:12:42 bass Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ
  */
 
+package com.syrus.AMFICOM.Client.General.Report;
+
+import com.syrus.AMFICOM.Client.Resource.*;
+import java.awt.datatransfer.*;
+import java.io.*;
+import java.util.*;
+
+/**
+ * @author $Author: bass $
+ * @version $Revision: 1.7 $, $Date: 2004/09/27 09:12:42 $
+ * @module generalclient_v1
+ */
 public class ObjectsReport extends StubResource
 	implements Transferable,Serializable
 {
@@ -97,11 +93,6 @@ public class ObjectsReport extends StubResource
 	public void setLocalFromTransferable(){}
 	public void setTransferableFromLocal(){}
 	public void updateLocalFromTransferable(){}
-
-	public String getPropertyPaneClassName()
-	{
-		return "";
-	}
 
 //////////////////////////////////////////////////
 	public Object getTransferData(DataFlavor flavor)
