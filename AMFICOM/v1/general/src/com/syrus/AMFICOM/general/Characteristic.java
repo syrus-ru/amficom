@@ -1,5 +1,5 @@
 /*
- * $Id: Characteristic.java,v 1.19 2005/04/04 13:07:03 bass Exp $
+ * $Id: Characteristic.java,v 1.20 2005/04/04 16:04:41 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -19,7 +19,7 @@ import com.syrus.AMFICOM.general.corba.Characteristic_Transferable;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.19 $, $Date: 2005/04/04 13:07:03 $
+ * @version $Revision: 1.20 $, $Date: 2005/04/04 16:04:41 $
  * @author $Author: bass $
  * @module general_v1
  */
@@ -141,10 +141,10 @@ public class Characteristic extends StorableObject implements TypedObject {
 		catch (ApplicationException ae) {
 			throw new CreateObjectException(ae);
 		}
-		this.name = new String(ct.name);
-		this.description = new String(ct.description);
+		this.name = ct.name;
+		this.description = ct.description;
 		this.sort = ct.sort.value();
-		this.value = new String(ct.value);
+		this.value = ct.value;
 		this.characterizableId = new Identifier(ct.characterizable_id);
 		this.editable = ct.is_editable;
 		this.visible = ct.is_visible;
@@ -154,10 +154,10 @@ public class Characteristic extends StorableObject implements TypedObject {
 	public IDLEntity getTransferable() {
 		return new Characteristic_Transferable(super.getHeaderTransferable(),
 												 (Identifier_Transferable)this.type.getId().getTransferable(),
-												 new String(this.name),
-												 new String(this.description),
+												 this.name,
+												 this.description,
 												 CharacteristicSort.from_int(this.sort),
-												 new String(this.value),
+												 this.value,
 												 (Identifier_Transferable)this.characterizableId.getTransferable(),
 												 this.editable,
 												 this.visible);

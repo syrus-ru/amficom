@@ -1,5 +1,5 @@
 /*
- * $Id: User.java,v 1.11 2005/04/04 13:08:03 bass Exp $
+ * $Id: User.java,v 1.12 2005/04/04 16:02:31 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,7 +29,7 @@ import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/04/04 13:08:03 $
+ * @version $Revision: 1.12 $, $Date: 2005/04/04 16:02:31 $
  * @author $Author: bass $
  * @module administration_v1
  */
@@ -89,19 +89,19 @@ public class User extends StorableObject {
 	protected void fromTransferable(IDLEntity transferable) throws CreateObjectException {
 		User_Transferable ut = (User_Transferable) transferable;
 		super.fromTransferable(ut.header);
-		this.login = new String(ut.login);
+		this.login = ut.login;
 		this.sort = ut.sort.value();
-		this.name = new String(ut.name);
-		this.description = new String(ut.description);
+		this.name = ut.name;
+		this.description = ut.description;
 
 	}
 	
 	public IDLEntity getTransferable() {
 		return new User_Transferable(super.getHeaderTransferable(),
-									 new String(this.login),
+									 this.login,
 									 UserSort.from_int(this.sort),
-									 new String(this.name),
-									 new String(this.description));
+									 this.name,
+									 this.description);
 	}
 
 	public String getLogin() {

@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementType.java,v 1.58 2005/04/04 13:13:46 bass Exp $
+ * $Id: MeasurementType.java,v 1.59 2005/04/04 16:06:27 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,7 +34,7 @@ import com.syrus.AMFICOM.measurement.corba.MeasurementType_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.58 $, $Date: 2005/04/04 13:13:46 $
+ * @version $Revision: 1.59 $, $Date: 2005/04/04 16:06:27 $
  * @author $Author: bass $
  * @module measurement_v1
  */
@@ -153,8 +153,8 @@ public class MeasurementType extends ActionType {
 	protected void fromTransferable(IDLEntity transferable) throws CreateObjectException {
 		MeasurementType_Transferable mtt = (MeasurementType_Transferable)transferable;
 		super.fromTransferable(mtt.header,
-			  new String(mtt.codename),
-			  new String(mtt.description));
+			  mtt.codename,
+			  mtt.description);
 
 		try {
 			java.util.Set typeIds;
@@ -201,8 +201,8 @@ public class MeasurementType extends ActionType {
 		}
 
 		return new MeasurementType_Transferable(super.getHeaderTransferable(),
-												new String(super.codename),
-												(super.description != null) ? (new String(super.description)) : "",
+												super.codename,
+												super.description != null ? super.description : "",
 												inParTypeIds,	
 												outParTypeIds,
 												measurementPortTypeIds);

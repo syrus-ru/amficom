@@ -1,5 +1,5 @@
 /*
- * $Id: LinkType.java,v 1.39 2005/04/04 13:09:40 bass Exp $
+ * $Id: LinkType.java,v 1.40 2005/04/04 16:02:41 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,7 +35,7 @@ import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.39 $, $Date: 2005/04/04 13:09:40 $
+ * @version $Revision: 1.40 $, $Date: 2005/04/04 16:02:41 $
  * @author $Author: bass $
  * @module config_v1
  */
@@ -141,7 +141,7 @@ public class LinkType extends AbstractLinkType implements Characterizable {
 	protected void fromTransferable(IDLEntity transferable, String codename,
 			String description) throws CreateObjectException {
 		LinkType_Transferable ltt = (LinkType_Transferable) transferable; 
-		super.fromTransferable(ltt.header, new String(ltt.codename), new String(ltt.description));
+		super.fromTransferable(ltt.header, ltt.codename, ltt.description);
 
 		this.sort = ltt.sort.value();
 		this.manufacturer = ltt.manufacturer;
@@ -165,9 +165,9 @@ public class LinkType extends AbstractLinkType implements Characterizable {
 				charIds[i++] = (Identifier_Transferable)((Characteristic)iterator.next()).getId().getTransferable();
 
 		return new LinkType_Transferable(super.getHeaderTransferable(),
-								 new String(super.codename),
-								 (super.description != null) ? (new String(super.description)) : "",
-								 (this.name != null) ? (new String(this.name)) : "",
+								 super.codename,
+								 super.description != null ? super.description : "",
+								 this.name != null ? this.name : "",
 								 LinkTypeSort.from_int(this.sort), this.manufacturer, this.manufacturerCode,
 								 (Identifier_Transferable) this.imageId.getTransferable(),
 								 charIds);

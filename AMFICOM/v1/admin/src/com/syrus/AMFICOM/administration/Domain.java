@@ -1,5 +1,5 @@
 /*
- * $Id: Domain.java,v 1.15 2005/04/04 13:08:03 bass Exp $
+ * $Id: Domain.java,v 1.16 2005/04/04 16:02:30 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,7 +9,7 @@
 package com.syrus.AMFICOM.administration;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2005/04/04 13:08:03 $
+ * @version $Revision: 1.16 $, $Date: 2005/04/04 16:02:30 $
  * @author $Author: bass $
  * @module administration_v1
  */
@@ -91,8 +91,8 @@ public class Domain extends DomainMember implements Characterizable {
 	protected void fromTransferable(IDLEntity transferable) throws CreateObjectException {
 		Domain_Transferable dt = (Domain_Transferable)transferable;
 		super.fromTransferable(dt.header, (dt.domain_id.identifier_string.length() != 0) ? (new Identifier(dt.domain_id)) : null);
-		this.name = new String(dt.name);
-		this.description = new String(dt.description);
+		this.name = dt.name;
+		this.description = dt.description;
 
 		try {
 			this.characteristics = new HashSet(dt.characteristic_ids.length);
@@ -114,8 +114,8 @@ public class Domain extends DomainMember implements Characterizable {
 
 		return new Domain_Transferable(super.getHeaderTransferable(),
 									   (super.domainId != null) ? (Identifier_Transferable)super.domainId.getTransferable() : (new Identifier_Transferable("")),
-									   new String(this.name),
-									   new String(this.description),
+									   this.name,
+									   this.description,
 									   charIds);
 	}	
 	

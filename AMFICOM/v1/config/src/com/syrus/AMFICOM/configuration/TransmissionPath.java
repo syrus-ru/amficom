@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPath.java,v 1.55 2005/04/04 13:09:40 bass Exp $
+ * $Id: TransmissionPath.java,v 1.56 2005/04/04 16:02:41 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -36,7 +36,7 @@ import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 /**
- * @version $Revision: 1.55 $, $Date: 2005/04/04 13:09:40 $
+ * @version $Revision: 1.56 $, $Date: 2005/04/04 16:02:41 $
  * @author $Author: bass $
  * @module config_v1
  */
@@ -141,8 +141,8 @@ public class TransmissionPath extends DomainMember implements MonitoredDomainMem
 		super.fromTransferable(tpt.header,
 				new Identifier(tpt.domain_id));
 
-		this.name = new String(tpt.name);
-		this.description = new String(tpt.description);
+		this.name = tpt.name;
+		this.description = tpt.description;
 		this.startPortId = new Identifier(tpt.start_port_id);
 		this.finishPortId = new Identifier(tpt.finish_port_id);
 
@@ -166,8 +166,8 @@ public class TransmissionPath extends DomainMember implements MonitoredDomainMem
 
 		return new TransmissionPath_Transferable(super.getHeaderTransferable(),
 				(Identifier_Transferable) this.getDomainId().getTransferable(),
-				new String(this.name),
-				new String(this.description),
+				this.name,
+				this.description,
 				(Identifier_Transferable) this.type.getId().getTransferable(),
 				(Identifier_Transferable) this.startPortId.getTransferable(),
 				(Identifier_Transferable) this.finishPortId.getTransferable(),

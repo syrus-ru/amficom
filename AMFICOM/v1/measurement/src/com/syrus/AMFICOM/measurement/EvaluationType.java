@@ -1,5 +1,5 @@
 /*
- * $Id: EvaluationType.java,v 1.53 2005/04/04 13:13:46 bass Exp $
+ * $Id: EvaluationType.java,v 1.54 2005/04/04 16:06:27 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,7 +32,7 @@ import com.syrus.AMFICOM.measurement.corba.EvaluationType_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.53 $, $Date: 2005/04/04 13:13:46 $
+ * @version $Revision: 1.54 $, $Date: 2005/04/04 16:06:27 $
  * @author $Author: bass $
  * @module measurement_v1
  */
@@ -175,7 +175,7 @@ public class EvaluationType extends ActionType {
 
 	protected void fromTransferable(IDLEntity transferable) throws CreateObjectException {
 		EvaluationType_Transferable ett = (EvaluationType_Transferable)transferable;
-		super.fromTransferable(ett.header, new String(ett.codename), new String(ett.description));
+		super.fromTransferable(ett.header, ett.codename, ett.description);
 
 		try {
 			java.util.Set parTypIds;
@@ -240,8 +240,8 @@ public class EvaluationType extends ActionType {
 			measTypIds[i++] = (Identifier_Transferable) ((Identifier) iterator.next()).getTransferable();
 
 		return new EvaluationType_Transferable(super.getHeaderTransferable(),
-											   new String(super.codename),
-											   (super.description != null) ? (new String(super.description)) : "",
+											   super.codename,
+											   super.description != null ? super.description : "",
 											   inParTypeIds,
 											   thresholdParTypeIds,
 											   etalonParTypeIds,

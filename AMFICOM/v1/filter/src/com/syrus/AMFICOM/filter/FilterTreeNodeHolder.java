@@ -1,5 +1,5 @@
 /*
- * $Id: FilterTreeNodeHolder.java,v 1.2 2004/06/08 15:31:57 bass Exp $
+ * $Id: FilterTreeNodeHolder.java,v 1.3 2005/04/04 16:03:44 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,7 +11,7 @@ package com.syrus.AMFICOM.filter;
 import java.io.*;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2004/06/08 15:31:57 $
+ * @version $Revision: 1.3 $, $Date: 2005/04/04 16:03:44 $
  * @module filter_v1
  */
 public class FilterTreeNodeHolder implements Serializable
@@ -33,7 +33,7 @@ public class FilterTreeNodeHolder implements Serializable
 
 		this.children_ids = new String [children_ids.length];
 		for (int i = 0; i < this.children_ids.length; i++)
-			this.children_ids[i] = new String(children_ids[i]);
+			this.children_ids[i] = children_ids[i];
 	}
 
 	private void writeObject(ObjectOutputStream out) throws IOException

@@ -1,5 +1,5 @@
 /*
- * $Id: EventType.java,v 1.11 2005/04/04 13:08:53 bass Exp $
+ * $Id: EventType.java,v 1.12 2005/04/04 16:03:20 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,7 +35,7 @@ import com.syrus.AMFICOM.event.corba.EventType_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/04/04 13:08:53 $
+ * @version $Revision: 1.12 $, $Date: 2005/04/04 16:03:20 $
  * @author $Author: bass $
  * @module event_v1
  */
@@ -131,7 +131,7 @@ public class EventType extends StorableObjectType {
 	protected void fromTransferable(IDLEntity transferable) throws CreateObjectException {
 		EventType_Transferable ett = (EventType_Transferable) transferable;
 
-		super.fromTransferable(ett.header, new String(ett.codename), new String(ett.description));
+		super.fromTransferable(ett.header, ett.codename, ett.description);
 
 		try {
 			Set parTypeIds = new HashSet(ett.parameter_type_ids.length);
@@ -152,8 +152,8 @@ public class EventType extends StorableObjectType {
 			parTypeIds[i++] = (Identifier_Transferable) ((ParameterType) iterator.next()).getId().getTransferable();
 
 		return new EventType_Transferable(super.getHeaderTransferable(),
-										new String(super.codename),
-										(super.description != null) ? (new String(super.description)) : "",
+										super.codename,
+										super.description != null ? super.description : "",
 										parTypeIds);
 	}
 

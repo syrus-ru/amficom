@@ -1,5 +1,5 @@
 /*
- * $Id: MonitoredElement.java,v 1.43 2005/04/04 13:09:40 bass Exp $
+ * $Id: MonitoredElement.java,v 1.44 2005/04/04 16:02:41 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,7 +31,7 @@ import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.43 $, $Date: 2005/04/04 13:09:40 $
+ * @version $Revision: 1.44 $, $Date: 2005/04/04 16:02:41 $
  * @author $Author: bass $
  * @module config_v1
  */
@@ -138,7 +138,7 @@ public class MonitoredElement extends DomainMember {
 				  new Identifier(met.domain_id));
 		this.measurementPortId = new Identifier(met.measurement_port_id);
 		this.sort = met.sort.value();
-		this.localAddress = new String(met.local_address);
+		this.localAddress = met.local_address;
 		this.monitoredDomainMemberIds = new HashSet(met.monitored_domain_member_ids.length);
 
 		this.name = met.name;
@@ -157,7 +157,7 @@ public class MonitoredElement extends DomainMember {
 												 this.name,
 												 (Identifier_Transferable)this.measurementPortId.getTransferable(),
 												 MonitoredElementSort.from_int(this.sort),
-												 new String(this.localAddress),
+												 this.localAddress,
 												 mdmIds);
 	}
 

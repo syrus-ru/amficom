@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPathType.java,v 1.37 2005/04/04 13:09:40 bass Exp $
+ * $Id: TransmissionPathType.java,v 1.38 2005/04/04 16:02:41 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,7 +35,7 @@ import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.37 $, $Date: 2005/04/04 13:09:40 $
+ * @version $Revision: 1.38 $, $Date: 2005/04/04 16:02:41 $
  * @author $Author: bass $
  * @module config_v1
  */
@@ -109,7 +109,7 @@ public class TransmissionPathType extends StorableObjectType implements Characte
 	protected void fromTransferable(IDLEntity transferable)
 			throws CreateObjectException {
 		TransmissionPathType_Transferable tptt = (TransmissionPathType_Transferable) transferable;
-		super.fromTransferable(tptt.header, new String(tptt.codename), new String(tptt.description));
+		super.fromTransferable(tptt.header, tptt.codename, tptt.description);
 		this.name = tptt.name;
 		try {
 			this.characteristics = new HashSet(tptt.characteristic_ids.length);
@@ -127,9 +127,9 @@ public class TransmissionPathType extends StorableObjectType implements Characte
 		for (Iterator iterator = this.characteristics.iterator(); iterator.hasNext();)
 			charIds[i++] = (Identifier_Transferable) ((Characteristic) iterator.next()).getId().getTransferable();
 
-		return new TransmissionPathType_Transferable(super.getHeaderTransferable(), new String(super.codename),
-														(super.description != null) ? (new String(super.description))
-																: "", (this.name != null) ? (new String(this.name))
+		return new TransmissionPathType_Transferable(super.getHeaderTransferable(), super.codename,
+														super.description != null ? super.description
+																: "", this.name != null ? this.name
 																: "", charIds);
 	}
 

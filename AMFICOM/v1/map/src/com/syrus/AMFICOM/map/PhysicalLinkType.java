@@ -1,5 +1,5 @@
 /**
- * $Id: PhysicalLinkType.java,v 1.25 2005/04/04 13:15:58 bass Exp $
+ * $Id: PhysicalLinkType.java,v 1.26 2005/04/04 16:06:12 bass Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -41,7 +41,7 @@ import org.omg.CORBA.portable.IDLEntity;
  * какому-либо значению {@link #TUNNEL}, {@link #COLLECTOR}, {@link #INDOOR}, 
  * {@link #SUBMARINE}, {@link #OVERHEAD}, {@link #UNBOUND}
  * @author $Author: bass $
- * @version $Revision: 1.25 $, $Date: 2005/04/04 13:15:58 $
+ * @version $Revision: 1.26 $, $Date: 2005/04/04 16:06:12 $
  * @module map_v1
  */
 public class PhysicalLinkType extends StorableObjectType implements Characterizable {
@@ -148,7 +148,7 @@ public class PhysicalLinkType extends StorableObjectType implements Characteriza
 
 	protected void fromTransferable(IDLEntity transferable) throws CreateObjectException {
 		PhysicalLinkType_Transferable pltt = (PhysicalLinkType_Transferable) transferable;
-		super.fromTransferable(pltt.header, new String(pltt.codename), new String(pltt.description));
+		super.fromTransferable(pltt.header, pltt.codename, pltt.description);
 
 		this.name = pltt.name;
 

@@ -1,5 +1,5 @@
 /*
- * $Id: MCM.java,v 1.14 2005/04/04 13:08:03 bass Exp $
+ * $Id: MCM.java,v 1.15 2005/04/04 16:02:30 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,7 +34,7 @@ import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2005/04/04 13:08:03 $
+ * @version $Revision: 1.15 $, $Date: 2005/04/04 16:02:30 $
  * @author $Author: bass $
  * @module administration_v1
  */
@@ -100,9 +100,9 @@ public class MCM extends DomainMember implements Characterizable {
 	protected void fromTransferable(IDLEntity transferable) throws CreateObjectException {
 		MCM_Transferable mt = (MCM_Transferable)transferable;
 		super.fromTransferable(mt.header, new Identifier(mt.domain_id));
-		this.name = new String(mt.name);
-		this.description = new String(mt.description);
-		this.hostname = new String(mt.hostname);
+		this.name = mt.name;
+		this.description = mt.description;
+		this.hostname = mt.hostname;
 		this.userId = new Identifier(mt.user_id);
 		this.serverId = new Identifier(mt.server_id);
 
@@ -125,9 +125,9 @@ public class MCM extends DomainMember implements Characterizable {
 
 		return new MCM_Transferable(super.getHeaderTransferable(),
 									(Identifier_Transferable)super.domainId.getTransferable(),
-									new String(this.name),
-									new String(this.description),
-									new String(this.hostname),
+									this.name,
+									this.description,
+									this.hostname,
 									(Identifier_Transferable)this.userId.getTransferable(),
 									(Identifier_Transferable)this.serverId.getTransferable(),
 									charIds);

@@ -1,5 +1,5 @@
 /*
- * $Id: Analysis.java,v 1.49 2005/04/04 13:13:46 bass Exp $
+ * $Id: Analysis.java,v 1.50 2005/04/04 16:06:28 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,7 +28,7 @@ import com.syrus.AMFICOM.measurement.corba.Analysis_Transferable;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
 
 /**
- * @version $Revision: 1.49 $, $Date: 2005/04/04 13:13:46 $
+ * @version $Revision: 1.50 $, $Date: 2005/04/04 16:06:28 $
  * @author $Author: bass $
  * @module measurement_v1
  */
@@ -110,7 +110,7 @@ public class Analysis extends Action {
 				(Identifier_Transferable) super.monitoredElementId.getTransferable(),
 				(super.parentAction != null) ? (Identifier_Transferable) super.parentAction.getId().getTransferable()
 						: new Identifier_Transferable(""),
-				(this.name != null) ? new String(this.name) : "",
+				this.name != null ? this.name : "",
 				(Identifier_Transferable) this.criteriaSet.getId().getTransferable());
 	}
 

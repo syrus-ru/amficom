@@ -1,5 +1,5 @@
 /*
- * $Id: EquipmentType.java,v 1.51 2005/04/04 13:09:40 bass Exp $
+ * $Id: EquipmentType.java,v 1.52 2005/04/04 16:02:41 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,7 +35,7 @@ import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.51 $, $Date: 2005/04/04 13:09:40 $
+ * @version $Revision: 1.52 $, $Date: 2005/04/04 16:02:41 $
  * @author $Author: bass $
  * @module config_v1
  */
@@ -132,8 +132,8 @@ public class EquipmentType extends StorableObjectType implements Characterizable
 			throws CreateObjectException {
 		EquipmentType_Transferable ett = (EquipmentType_Transferable) transferable;
 		super.fromTransferable(ett.header,
-				new String(ett.codename),
-				new String(ett.description));
+				ett.codename,
+				ett.description);
 		this.name = ett.name;
 		this.manufacturer = ett.manufacturer;
 		this.manufacturerCode = ett.manufacturerCode;
@@ -153,11 +153,11 @@ public class EquipmentType extends StorableObjectType implements Characterizable
 			charIds[i++] = (Identifier_Transferable)((Characteristic)iterator.next()).getId().getTransferable();
 
 		return new EquipmentType_Transferable(super.getHeaderTransferable(),
-										new String(super.codename),
-										(super.description != null) ? (new String(super.description)) : "",
-										(this.name != null) ? (new String(this.name)) : "",
-										(this.manufacturer != null) ? (new String(this.manufacturer)) : "",
-										(this.manufacturerCode != null) ? (new String(this.manufacturerCode)) : "",
+										super.codename,
+										super.description != null ? super.description : "",
+										this.name != null ? this.name : "",
+										this.manufacturer != null ? this.manufacturer : "",
+										this.manufacturerCode != null ? this.manufacturerCode : "",
 										charIds);
 	}
 

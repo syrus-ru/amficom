@@ -1,5 +1,5 @@
 /*
- * $Id: ParameterType.java,v 1.13 2005/04/04 13:07:04 bass Exp $
+ * $Id: ParameterType.java,v 1.14 2005/04/04 16:04:41 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -19,7 +19,7 @@ import com.syrus.AMFICOM.general.corba.ParameterType_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/04/04 13:07:04 $
+ * @version $Revision: 1.14 $, $Date: 2005/04/04 16:04:41 $
  * @author $Author: bass $
  * @module general_v1
  */
@@ -116,15 +116,15 @@ public class ParameterType extends StorableObjectType {
 	protected void fromTransferable(IDLEntity transferable) throws CreateObjectException {
 		ParameterType_Transferable ptt = (ParameterType_Transferable) transferable;
 		super.fromTransferable(ptt.header, ptt.codename, ptt.description);
-		this.name = new String(ptt.name);
+		this.name = ptt.name;
 		this.dataType = ptt.data_type.value();
 	}
 	
   public IDLEntity getTransferable() {
 		return new ParameterType_Transferable(super.getHeaderTransferable(),
-											  new String(super.codename),
-											  (super.description != null) ? (new String(super.description)) : "",
-											  new String(this.name),
+											  super.codename,
+											  super.description != null ? super.description : "",
+											  this.name,
 											  DataType.from_int(this.dataType));
 	}
 

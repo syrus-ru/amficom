@@ -1,5 +1,5 @@
 /*
- * $Id: PortType.java,v 1.45 2005/04/04 13:09:40 bass Exp $
+ * $Id: PortType.java,v 1.46 2005/04/04 16:02:41 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -36,7 +36,7 @@ import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.45 $, $Date: 2005/04/04 13:09:40 $
+ * @version $Revision: 1.46 $, $Date: 2005/04/04 16:02:41 $
  * @author $Author: bass $
  * @module config_v1
  */
@@ -128,8 +128,8 @@ public class PortType extends StorableObjectType implements Characterizable {
 			throws CreateObjectException {
 		PortType_Transferable ptt = (PortType_Transferable) transferable;
 		super.fromTransferable(ptt.header,
-				new String(ptt.codename),
-				new String(ptt.description));
+				ptt.codename,
+				ptt.description);
 		this.name = ptt.name;
 		this.sort = ptt.sort.value();
 		try {
@@ -149,9 +149,9 @@ public class PortType extends StorableObjectType implements Characterizable {
 				charIds[i++] = (Identifier_Transferable)((Characteristic)iterator.next()).getId().getTransferable();
 
 		return new PortType_Transferable(super.getHeaderTransferable(),
-									 new String(super.codename),
-									 (super.description != null) ? (new String(super.description)) : "",
-									 (this.name != null) ? (new String(this.name)) : "",
+									 super.codename,
+									 super.description != null ? super.description : "",
+									 this.name != null ? this.name : "",
 									 PortTypeSort.from_int(this.sort),
 									 charIds);
 	}

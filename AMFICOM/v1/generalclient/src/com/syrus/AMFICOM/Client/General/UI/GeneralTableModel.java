@@ -111,7 +111,7 @@ public class GeneralTableModel extends AbstractTableModel
 		int j;
 		m_columnNames = new String[p_columns.length];
 		for (i = 0; i < p_columns.length; i++) // Copy column names
-			m_columnNames[i] = new String(p_columns[i]);
+			m_columnNames[i] = p_columns[i];
 
 		m_data = new Vector();  // Instantiate Data vector
 

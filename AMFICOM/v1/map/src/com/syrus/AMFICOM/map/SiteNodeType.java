@@ -1,5 +1,5 @@
 /**
- * $Id: SiteNodeType.java,v 1.21 2005/04/04 13:15:58 bass Exp $
+ * $Id: SiteNodeType.java,v 1.22 2005/04/04 16:06:12 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -44,7 +44,7 @@ import org.omg.CORBA.portable.IDLEntity;
  * {@link #PIQUET}, {@link #ATS}, {@link #BUILDING}, {@link #UNBOUND}, 
  * {@link #CABLE_INLET}, {@link #TOWER}
  * @author $Author: bass $
- * @version $Revision: 1.21 $, $Date: 2005/04/04 13:15:58 $
+ * @version $Revision: 1.22 $, $Date: 2005/04/04 16:06:12 $
  * @module map_v1
  */
 public class SiteNodeType extends StorableObjectType implements Characterizable {
@@ -149,7 +149,7 @@ public class SiteNodeType extends StorableObjectType implements Characterizable 
 
 	protected void fromTransferable(IDLEntity transferable) throws CreateObjectException {
 		SiteNodeType_Transferable sntt = (SiteNodeType_Transferable) transferable;
-		super.fromTransferable(sntt.header, new String(sntt.codename), new String(sntt.description));
+		super.fromTransferable(sntt.header, sntt.codename, sntt.description);
 
 		this.name = sntt.name;
 		this.imageId = new Identifier(sntt.imageId);

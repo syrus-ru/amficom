@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPortType.java,v 1.38 2005/04/04 13:09:40 bass Exp $
+ * $Id: MeasurementPortType.java,v 1.39 2005/04/04 16:02:41 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,7 +35,7 @@ import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.38 $, $Date: 2005/04/04 13:09:40 $
+ * @version $Revision: 1.39 $, $Date: 2005/04/04 16:02:41 $
  * @author $Author: bass $
  * @module config_v1
  */
@@ -120,8 +120,8 @@ public class MeasurementPortType extends StorableObjectType implements Character
 			throws CreateObjectException {
 		MeasurementPortType_Transferable mptt = (MeasurementPortType_Transferable) transferable;
 		super.fromTransferable(mptt.header,
-				  new String(mptt.codename),
-				  new String(mptt.description));		
+				  mptt.codename,
+				  mptt.description);		
 		this.name = mptt.name;
 		try {
 			this.characteristics = new HashSet(mptt.characteristic_ids.length);
@@ -140,9 +140,9 @@ public class MeasurementPortType extends StorableObjectType implements Character
 			charIds[i++] = (Identifier_Transferable)((Characteristic)iterator.next()).getId().getTransferable();
 
 		return new MeasurementPortType_Transferable(super.getHeaderTransferable(),
-													new String(super.codename),
-													(super.description != null) ? (new String(super.description)) : "",
-													(this.name != null) ? (new String(this.name)) : "",
+													super.codename,
+													super.description != null ? super.description : "",
+													this.name != null ? this.name : "",
 													charIds);
 	}
 

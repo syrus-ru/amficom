@@ -1,5 +1,5 @@
 /*
- * $Id: Measurement.java,v 1.58 2005/04/04 13:13:46 bass Exp $
+ * $Id: Measurement.java,v 1.59 2005/04/04 16:06:27 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,7 +31,7 @@ import com.syrus.AMFICOM.measurement.corba.ResultSort;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.58 $, $Date: 2005/04/04 13:13:46 $
+ * @version $Revision: 1.59 $, $Date: 2005/04/04 16:06:27 $
  * @author $Author: bass $
  * @module measurement_v1
  */
@@ -120,7 +120,7 @@ public class Measurement extends Action {
 		this.startTime = new Date(mt.start_time);
 		this.duration = mt.duration;
 		this.status = mt.status.value();
-		this.localAddress = new String(mt.local_address);
+		this.localAddress = mt.local_address;
 		this.testId = new Identifier(mt.test_id);
 	}
 	
@@ -133,7 +133,7 @@ public class Measurement extends Action {
 											this.startTime.getTime(),
 											this.duration,
 											MeasurementStatus.from_int(this.status),
-											new String(this.localAddress),
+											this.localAddress,
 											(Identifier_Transferable)this.testId.getTransferable());
 	}
 

@@ -1,5 +1,5 @@
 /*
- * $Id: KIS.java,v 1.69 2005/04/04 13:09:40 bass Exp $
+ * $Id: KIS.java,v 1.70 2005/04/04 16:02:41 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -37,7 +37,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.69 $, $Date: 2005/04/04 13:09:40 $
+ * @version $Revision: 1.70 $, $Date: 2005/04/04 16:02:41 $
  * @author $Author: bass $
  * @module config_v1
  */
@@ -177,8 +177,8 @@ public final class KIS extends DomainMember implements Characterizable {
 
 		return new KIS_Transferable(super.getHeaderTransferable(),
 				(Identifier_Transferable) this.getDomainId().getTransferable(),
-				new String(this.name),
-				new String(this.description),
+				this.name,
+				this.description,
 				this.hostname,
 				this.tcpPort,
 				(Identifier_Transferable) this.equipmentId.getTransferable(),

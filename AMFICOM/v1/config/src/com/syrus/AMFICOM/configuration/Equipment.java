@@ -1,5 +1,5 @@
 /*
- * $Id: Equipment.java,v 1.79 2005/04/04 13:09:41 bass Exp $
+ * $Id: Equipment.java,v 1.80 2005/04/04 16:02:41 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -39,7 +39,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.79 $, $Date: 2005/04/04 13:09:41 $
+ * @version $Revision: 1.80 $, $Date: 2005/04/04 16:02:41 $
  * @author $Author: bass $
  * @module config_v1
  */
@@ -209,18 +209,18 @@ public final class Equipment extends DomainMember implements MonitoredDomainMemb
 			throw new CreateObjectException(ae);
 		}
 
-		this.name = new String(et.name);
-		this.description = new String(et.description);
+		this.name = et.name;
+		this.description = et.description;
 		this.imageId = new Identifier(et.image_id);
-		this.supplier = new String(et.supplier);
-		this.supplier = new String(et.supplierCode);
+		this.supplier = et.supplier;
+		this.supplier = et.supplierCode;
 		this.longitude = et.longitude;
 		this.latitude = et.latitude;
-		this.hwSerial = new String(et.hwSerial);
-		this.hwVersion = new String(et.hwVersion);
-		this.swSerial = new String(et.swSerial);
-		this.swVersion = new String(et.swVersion);
-		this.inventoryNumber = new String(et.inventoryNumber);
+		this.hwSerial = et.hwSerial;
+		this.hwVersion = et.hwVersion;
+		this.swSerial = et.swSerial;
+		this.swVersion = et.swVersion;
+		this.inventoryNumber = et.inventoryNumber;
 
 		try {
 			this.characteristics = new HashSet(et.characteristic_ids.length);
@@ -241,17 +241,17 @@ public final class Equipment extends DomainMember implements MonitoredDomainMemb
 		return new Equipment_Transferable(super.getHeaderTransferable(),
 				(Identifier_Transferable) this.getDomainId().getTransferable(),
 				(Identifier_Transferable) this.type.getId().getTransferable(),
-				this.name != null ? new String(this.name) : "",
-				this.description != null ? new String(this.description) : "",
-				this.supplier != null ? new String(this.supplier) : "",
-				this.supplierCode != null ? new String(this.supplierCode) : "",
+				this.name != null ? this.name : "",
+				this.description != null ? this.description : "",
+				this.supplier != null ? this.supplier : "",
+				this.supplierCode != null ? this.supplierCode : "",
 				this.longitude,
 				this.latitude,
-				this.hwSerial != null ? new String(this.hwSerial) : "",
-				this.hwVersion != null ? new String(this.hwVersion) : "",
-				this.swSerial != null ? new String(this.swSerial) : "",
-				this.swVersion != null ? new String(this.swVersion) : "",
-				this.inventoryNumber != null ? new String(this.inventoryNumber) : "",
+				this.hwSerial != null ? this.hwSerial : "",
+				this.hwVersion != null ? this.hwVersion : "",
+				this.swSerial != null ? this.swSerial : "",
+				this.swVersion != null ? this.swVersion : "",
+				this.inventoryNumber != null ? this.inventoryNumber : "",
 				(Identifier_Transferable) this.imageId.getTransferable(),
 				charIds);
 	}

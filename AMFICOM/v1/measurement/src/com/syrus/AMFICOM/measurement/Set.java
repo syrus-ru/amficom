@@ -1,5 +1,5 @@
 /*
- * $Id: Set.java,v 1.53 2005/04/04 13:13:46 bass Exp $
+ * $Id: Set.java,v 1.54 2005/04/04 16:06:27 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,7 +35,7 @@ import com.syrus.AMFICOM.measurement.corba.Set_Transferable;
 import com.syrus.util.HashCodeGenerator;
 
 /**
- * @version $Revision: 1.53 $, $Date: 2005/04/04 13:13:46 $
+ * @version $Revision: 1.54 $, $Date: 2005/04/04 16:06:27 $
  * @author $Author: bass $
  * @module measurement_v1
  */
@@ -178,7 +178,7 @@ public class Set extends StorableObject {
 		Set_Transferable st = (Set_Transferable)transferable;
 		super.fromTransferable(st.header);
 		this.sort = st.sort.value();
-		this.description = new String(st.description);
+		this.description = st.description;
 
 		try {
 			this.parameters = new SetParameter[st.parameters.length];
@@ -205,7 +205,7 @@ public class Set extends StorableObject {
 
 		return new Set_Transferable(super.getHeaderTransferable(),
 				SetSort.from_int(this.sort),
-				new String(this.description),
+				this.description,
 				pts,
 				meIds);
 	}

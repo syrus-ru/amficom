@@ -1,5 +1,5 @@
 /**
- * $Id: VoidCommand.java,v 1.10 2004/10/07 11:52:09 krupenn Exp $
+ * $Id: VoidCommand.java,v 1.11 2005/04/04 16:05:43 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -18,9 +18,9 @@ import com.syrus.AMFICOM.Client.General.Model.Environment;
  * 
  * 
  * 
- * @version $Revision: 1.10 $, $Date: 2004/10/07 11:52:09 $
+ * @version $Revision: 1.11 $, $Date: 2005/04/04 16:05:43 $
  * @module
- * @author $Author: krupenn $
+ * @author $Author: bass $
  * @see
  */
 public class VoidCommand implements Command, Cloneable
@@ -46,7 +46,7 @@ public class VoidCommand implements Command, Cloneable
 	/** у пустой команды по умолчанию нет источника */ 
 	public VoidCommand()
 	{
-		source = new String("NULL");
+		source = "NULL";
 	}
 
 	/** получить */
@@ -58,7 +58,7 @@ public class VoidCommand implements Command, Cloneable
 	public VoidCommand(Object source)
 	{
 		if(source == null)
-			source = new String("NULL");
+			source = "NULL";
 		this.source = source;
 	}
 

@@ -1,5 +1,5 @@
 /*
- * $Id: CableLinkType.java,v 1.29 2005/04/04 13:09:40 bass Exp $
+ * $Id: CableLinkType.java,v 1.30 2005/04/04 16:02:41 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -36,7 +36,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.29 $, $Date: 2005/04/04 13:09:40 $
+ * @version $Revision: 1.30 $, $Date: 2005/04/04 16:02:41 $
  * @author $Author: bass $
  * @module config_v1
  */
@@ -171,12 +171,12 @@ public final class CableLinkType extends AbstractLinkType implements Characteriz
 			charIds[i++] = (Identifier_Transferable)((Characteristic)iterator.next()).getId().getTransferable();
 
 		return new CableLinkType_Transferable(super.getHeaderTransferable(),
-																		 new String(super.codename),
-																		 (super.description != null) ? (new String(super.description)) : "",
-																		 (this.name != null) ? (new String(this.name)) : "",
+																		 super.codename,
+																		 super.description != null ? super.description : "",
+																		 this.name != null ? this.name : "",
 																		 LinkTypeSort.from_int(this.sort),
-																		 new String(this.manufacturer),
-																		 new String(this.manufacturerCode),
+																		 this.manufacturer,
+																		 this.manufacturerCode,
 																		 (Identifier_Transferable) this.imageId.getTransferable(),
 																		 charIds);
 	}

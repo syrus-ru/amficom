@@ -11,18 +11,18 @@ public class MyActionEvent extends OperationEvent
 	public MyActionEvent(Object source, String ct, String cn)
 	{
 		super(source, 0, "execute");
-		command_type = new String(ct);
-		command_name = new String(cn);
+		command_type = ct;
+		command_name = cn;
 	}
 
 	public void setCommandType(String ct)
 	{
-		command_type = new String(ct);
+		command_type = ct;
 	}
 
 	public void setCommandName(String cn)
 	{
-		command_name = new String(cn);
+		command_name = cn;
 	}
 
 	public String getCommandType()

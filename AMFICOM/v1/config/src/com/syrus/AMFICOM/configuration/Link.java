@@ -1,5 +1,5 @@
 /*
- * $Id: Link.java,v 1.42 2005/04/04 13:09:40 bass Exp $
+ * $Id: Link.java,v 1.43 2005/04/04 16:02:41 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -37,7 +37,7 @@ import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.42 $, $Date: 2005/04/04 13:09:40 $
+ * @version $Revision: 1.43 $, $Date: 2005/04/04 16:02:41 $
  * @author $Author: bass $
  * @module config_v1
  */
@@ -194,8 +194,8 @@ public class Link extends DomainMember implements Characterizable, TypedObject {
 
 		return new Link_Transferable(super.getHeaderTransferable(),
 									 (Identifier_Transferable)this.getDomainId().getTransferable(),
-									 new String(this.name),
-									 new String(this.description),
+									 this.name,
+									 this.description,
 									 (Identifier_Transferable)this.type.getId().getTransferable(),
 									 LinkSort.from_int(this.sort),
 									 this.inventoryNo,

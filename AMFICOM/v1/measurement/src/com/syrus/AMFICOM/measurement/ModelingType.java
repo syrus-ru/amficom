@@ -1,5 +1,5 @@
 /*
- * $Id: ModelingType.java,v 1.15 2005/04/04 13:13:46 bass Exp $
+ * $Id: ModelingType.java,v 1.16 2005/04/04 16:06:27 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,7 +32,7 @@ import com.syrus.AMFICOM.measurement.corba.ModelingType_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2005/04/04 13:13:46 $
+ * @version $Revision: 1.16 $, $Date: 2005/04/04 16:06:27 $
  * @author $Author: bass $
  * @module measurement_v1
  */
@@ -177,8 +177,8 @@ public class ModelingType extends ActionType {
 			outParTypeIds[i++] = (Identifier_Transferable) ((ParameterType) iterator.next()).getId().getTransferable();
 
 		return new ModelingType_Transferable(super.getHeaderTransferable(),
-											new String(super.codename),
-											(super.description != null) ? (new String(super.description)) : "",
+											super.codename,
+											super.description != null ? super.description : "",
 											inParTypeIds,
 											outParTypeIds);
 	}

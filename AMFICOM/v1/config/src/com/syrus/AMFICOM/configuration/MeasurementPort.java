@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPort.java,v 1.44 2005/04/04 13:09:40 bass Exp $
+ * $Id: MeasurementPort.java,v 1.45 2005/04/04 16:02:41 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -37,7 +37,7 @@ import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.44 $, $Date: 2005/04/04 13:09:40 $
+ * @version $Revision: 1.45 $, $Date: 2005/04/04 16:02:41 $
  * @author $Author: bass $
  * @module config_v1
  */
@@ -147,8 +147,8 @@ public class MeasurementPort extends StorableObject implements Characterizable, 
 			throw new CreateObjectException(ae);
 		}
 
-		this.name = new String(mpt.name);
-		this.description = new String(mpt.description);
+		this.name = mpt.name;
+		this.description = mpt.description;
 
 		this.kisId = new Identifier(mpt.kis_id);
 		this.portId = new Identifier(mpt.port_id);	
@@ -170,8 +170,8 @@ public class MeasurementPort extends StorableObject implements Characterizable, 
 
 		return new MeasurementPort_Transferable(super.getHeaderTransferable(),
 												(Identifier_Transferable)this.type.getId().getTransferable(),
-												new String(this.name),
-												new String(this.description),
+												this.name,
+												this.description,
 												(Identifier_Transferable)this.kisId.getTransferable(),
 												(Identifier_Transferable)this.portId.getTransferable(),
 												charIds);

@@ -1,5 +1,5 @@
 /*
- * $Id: EventParameter.java,v 1.9 2005/04/04 13:08:53 bass Exp $
+ * $Id: EventParameter.java,v 1.10 2005/04/04 16:03:20 bass Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,7 +25,7 @@ import com.syrus.util.HashCodeGenerator;
 import org.omg.CORBA.portable.IDLEntity;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/04/04 13:08:53 $
+ * @version $Revision: 1.10 $, $Date: 2005/04/04 16:03:20 $
  * @author $Author: bass $
  * @module event_v1
  */
@@ -38,7 +38,7 @@ public class EventParameter implements Identifiable, TransferableObject, TypedOb
 	public EventParameter(EventParameter_Transferable ept) throws ApplicationException {
 		this.id = new Identifier(ept.id);
 		this.type = (ParameterType) GeneralStorableObjectPool.getStorableObject(new Identifier(ept.type_id), true);
-		this.value = new String(ept.value);
+		this.value = ept.value;
 	}
 
 	protected EventParameter(Identifier id, ParameterType type, String value) {
@@ -65,7 +65,7 @@ public class EventParameter implements Identifiable, TransferableObject, TypedOb
 	public IDLEntity getTransferable() {
 		return new EventParameter_Transferable((Identifier_Transferable) this.id.getTransferable(),
 				(Identifier_Transferable) this.type.getId().getTransferable(),
-				new String(this.value));
+				this.value);
 	}
 
 	public Identifier getId() {

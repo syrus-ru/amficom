@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicType.java,v 1.16 2005/04/04 13:07:03 bass Exp $
+ * $Id: CharacteristicType.java,v 1.17 2005/04/04 16:04:41 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -20,7 +20,7 @@ import com.syrus.AMFICOM.general.corba.DataType;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2005/04/04 13:07:03 $
+ * @version $Revision: 1.17 $, $Date: 2005/04/04 16:04:41 $
  * @author $Author: bass $
  * @module general_v1
  */
@@ -78,7 +78,7 @@ public class CharacteristicType extends StorableObjectType {
 	
 	protected void fromTransferable(IDLEntity transferable) throws CreateObjectException {
 		CharacteristicType_Transferable ctt = (CharacteristicType_Transferable) transferable;
-		super.fromTransferable(ctt.header, new String(ctt.codename), new String(ctt.description));
+		super.fromTransferable(ctt.header, ctt.codename, ctt.description);
 		this.dataType = ctt.data_type.value();
 		this.sort = ctt.sort.value();
 	}
@@ -120,8 +120,8 @@ public class CharacteristicType extends StorableObjectType {
 
 	public IDLEntity getTransferable() {
 		return new CharacteristicType_Transferable(super.getHeaderTransferable(),
-													 new String(super.codename),
-													 (super.description != null) ? (new String(super.description)) : "",
+													 super.codename,
+													 super.description != null ? super.description : "",
 													 DataType.from_int(this.dataType),
 													 CharacteristicTypeSort.from_int(this.sort));
 	}

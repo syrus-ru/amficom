@@ -1,5 +1,5 @@
 /*
- * $Id: TemporalPattern.java,v 1.67 2005/04/04 13:13:46 bass Exp $
+ * $Id: TemporalPattern.java,v 1.68 2005/04/04 16:06:27 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,7 +35,7 @@ import com.syrus.AMFICOM.resource.LangModelMeasurement;
 import com.syrus.util.HashCodeGenerator;
 
 /**
- * @version $Revision: 1.67 $, $Date: 2005/04/04 13:13:46 $
+ * @version $Revision: 1.68 $, $Date: 2005/04/04 16:06:27 $
  * @author $Author: bass $
  * @module measurement_v1
  */
@@ -899,7 +899,7 @@ public class TemporalPattern extends StorableObject {
 			int i = 0;
 			for (Iterator it = this.templates.iterator(); it.hasNext();) {
 				TimeLine line = (TimeLine) it.next();
-				this.cronStrings[i++] = new String(line.getTemplate());
+				this.cronStrings[i++] = line.getTemplate();
 			}
 		}
 		return this.cronStrings;
@@ -914,11 +914,11 @@ public class TemporalPattern extends StorableObject {
 		TemporalPattern_Transferable tpt = (TemporalPattern_Transferable)transferable;
 		super.fromTransferable(tpt.header);
 
-		this.description = new String(tpt.description);
+		this.description = tpt.description;
 
 		this.removeAll();
 		for (int i = 0; i < tpt.cron_strings.length; i++) {
-			this.addTemplate(new String(tpt.cron_strings[i]));
+			this.addTemplate(tpt.cron_strings[i]);
 		}
 
 		this.changed = false;
@@ -926,7 +926,7 @@ public class TemporalPattern extends StorableObject {
 	
 	public IDLEntity getTransferable() {
 		return new TemporalPattern_Transferable(super.getHeaderTransferable(),
-							new String(this.description), getCronStrings());
+							this.description, getCronStrings());
 	}
 
 	protected synchronized void setAttributes(	Date created,

@@ -1,5 +1,5 @@
 /*
- * $Id: Modeling.java,v 1.31 2005/04/04 13:13:46 bass Exp $
+ * $Id: Modeling.java,v 1.32 2005/04/04 16:06:27 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,7 +28,7 @@ import com.syrus.AMFICOM.measurement.corba.Modeling_Transferable;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
 
 /**
- * @version $Revision: 1.31 $, $Date: 2005/04/04 13:13:46 $
+ * @version $Revision: 1.32 $, $Date: 2005/04/04 16:06:27 $
  * @author $Author: bass $
  * @author arseniy
  * @module measurement_v1
@@ -108,7 +108,7 @@ public class Modeling extends Action {
 		return new Modeling_Transferable(super.getHeaderTransferable(),
 									(Identifier_Transferable)super.type.getId().getTransferable(),
 									(Identifier_Transferable)super.monitoredElementId.getTransferable(),
-									new String(this.name),
+									this.name,
 									(Identifier_Transferable)this.argumentSet.getId().getTransferable());
 	}
 

@@ -1,5 +1,5 @@
 /*
- * $Id: Server.java,v 1.15 2005/04/04 13:08:03 bass Exp $
+ * $Id: Server.java,v 1.16 2005/04/04 16:02:30 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,7 +35,7 @@ import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2005/04/04 13:08:03 $
+ * @version $Revision: 1.16 $, $Date: 2005/04/04 16:02:30 $
  * @author $Author: bass $
  * @module administration_v1
  */
@@ -101,9 +101,9 @@ public class Server extends DomainMember implements Characterizable {
 		Server_Transferable st = (Server_Transferable)transferable;
 		super.fromTransferable(st.header,
 			  new Identifier(st.domain_id));
-		this.name = new String(st.name);
-		this.description = new String(st.description);
-		this.hostname = new String(st.hostname);
+		this.name = st.name;
+		this.description = st.description;
+		this.hostname = st.hostname;
 		this.userId = new Identifier(st.user_id);
 
 		try {
@@ -125,9 +125,9 @@ public class Server extends DomainMember implements Characterizable {
 
 		return new Server_Transferable(super.getHeaderTransferable(),
 									   (Identifier_Transferable)super.domainId.getTransferable(),
-									   new String(this.name),
-									   new String(this.description),
-										 new String(this.hostname),
+									   this.name,
+									   this.description,
+										 this.hostname,
 									   (Identifier_Transferable)this.userId.getTransferable(),
 									   charIds);
 	}

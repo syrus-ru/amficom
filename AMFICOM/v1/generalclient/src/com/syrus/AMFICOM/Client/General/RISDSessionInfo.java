@@ -1,5 +1,5 @@
 /*
- * $Id: RISDSessionInfo.java,v 1.30 2005/04/04 12:56:01 bob Exp $
+ * $Id: RISDSessionInfo.java,v 1.31 2005/04/04 16:05:43 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Ќаучно-технический центр.
@@ -73,8 +73,8 @@ import com.syrus.util.corba.JavaSoftORBUtil;
 import com.syrus.util.prefs.IIOPConnectionManager;
 
 /**
- * @author $Author: bob $
- * @version $Revision: 1.30 $, $Date: 2005/04/04 12:56:01 $
+ * @author $Author: bass $
+ * @version $Revision: 1.31 $, $Date: 2005/04/04 16:05:43 $
  * @module generalclient_v1
  */
 public final class RISDSessionInfo extends SessionInterface {
@@ -139,8 +139,8 @@ public final class RISDSessionInfo extends SessionInterface {
 			 * создать новый экземпл€р сессии и открыть ее
 			 */
 			RISDSessionInfo si = new RISDSessionInfo(ci);
-			si.ISMuser = new String(u);
-			si.ISMpassword = new String(p);
+			si.ISMuser = u;
+			si.ISMpassword = p;
 			/*
 			 * если сесси€ не открыта, то возвращаетс€ null, и созданный здесь
 			 * экземпл€р автоматически уничтожаетс€

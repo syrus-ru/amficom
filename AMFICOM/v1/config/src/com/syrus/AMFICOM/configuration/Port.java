@@ -1,5 +1,5 @@
 /*
- * $Id: Port.java,v 1.50 2005/04/04 13:09:40 bass Exp $
+ * $Id: Port.java,v 1.51 2005/04/04 16:02:41 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -38,7 +38,7 @@ import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.50 $, $Date: 2005/04/04 13:09:40 $
+ * @version $Revision: 1.51 $, $Date: 2005/04/04 16:02:41 $
  * @author $Author: bass $
  * @module config_v1
  */
@@ -141,7 +141,7 @@ public class Port extends StorableObject implements Characterizable, TypedObject
 			throw new CreateObjectException(ae);
 		}
 
-		this.description = new String(pt.description);
+		this.description = pt.description;
 		this.equipmentId = new Identifier(pt.equipment_id);
 
 		this.sort = pt.sort.value();
@@ -166,7 +166,7 @@ public class Port extends StorableObject implements Characterizable, TypedObject
 
 		return new Port_Transferable(super.getHeaderTransferable(),
 									 (Identifier_Transferable)this.type.getId().getTransferable(),
-									 new String(this.description),
+									 this.description,
 									 (Identifier_Transferable)this.equipmentId.getTransferable(),
 									 PortSort.from_int(this.sort),
 									 charIds);

@@ -1,5 +1,5 @@
 /*
- * $Id: CableThread.java,v 1.17 2005/04/04 13:09:41 bass Exp $
+ * $Id: CableThread.java,v 1.18 2005/04/04 16:02:41 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,7 +30,7 @@ import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2005/04/04 13:09:41 $
+ * @version $Revision: 1.18 $, $Date: 2005/04/04 16:02:41 $
  * @author $Author: bass $
  * @module config_v1
  */
@@ -124,8 +124,8 @@ public class CableThread extends DomainMember implements TypedObject {
 	public IDLEntity getTransferable() {
 		return new CableThread_Transferable(super.getHeaderTransferable(),
 																 (Identifier_Transferable)this.getDomainId().getTransferable(),
-																 new String(this.name),
-																 new String(this.description),
+																 this.name,
+																 this.description,
 																 (Identifier_Transferable)this.type.getId().getTransferable());
 	}
 

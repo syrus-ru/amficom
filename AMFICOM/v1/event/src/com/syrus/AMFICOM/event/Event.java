@@ -1,5 +1,5 @@
 /*
- * $Id: Event.java,v 1.14 2005/04/04 13:08:53 bass Exp $
+ * $Id: Event.java,v 1.15 2005/04/04 16:03:20 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,7 +34,7 @@ import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2005/04/04 13:08:53 $
+ * @version $Revision: 1.15 $, $Date: 2005/04/04 16:03:20 $
  * @author $Author: bass $
  * @module event_v1
  */
@@ -141,7 +141,7 @@ public class Event extends StorableObject implements TypedObject {
 			throw new CreateObjectException(ae);
 		}
 
-		this.description = new String(et.description);
+		this.description = et.description;
 
 		this.eventParameters = new HashSet(et.parameters.length);
 		try {
