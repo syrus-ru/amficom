@@ -1,5 +1,5 @@
 /*
- * $Id: ConfigurationStorableObjectPool.java,v 1.39 2004/11/19 08:59:52 bob Exp $
+ * $Id: ConfigurationStorableObjectPool.java,v 1.40 2004/11/19 10:16:37 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -36,7 +36,7 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.39 $, $Date: 2004/11/19 08:59:52 $
+ * @version $Revision: 1.40 $, $Date: 2004/11/19 10:16:37 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -45,13 +45,16 @@ public class ConfigurationStorableObjectPool {
 
 	private static final int			OBJECT_POOL_MAP_SIZE			= 16;		/* Number of entities */
 
+	private static final int			CABLETHREADTYPE_OBJECT_POOL_SIZE	= 4;
 	private static final int			CHARACTERISTICTYPE_OBJECT_POOL_SIZE	= 9;
 	private static final int			EQUIPMENTTYPE_OBJECT_POOL_SIZE		= 1;
+	private static final int			LINKTYPE_OBJECT_POOL_SIZE	= 2;
 	private static final int			KISTYPE_OBJECT_POOL_SIZE		= 1;
 	private static final int			PORTTYPE_OBJECT_POOL_SIZE		= 1;
 	private static final int			MEASUREMENTPORTTYPE_OBJECT_POOL_SIZE	= 1;
 
 	private static final int			CHARACTERISTIC_OBJECT_POOL_SIZE		= 4;
+	private static final int			LINK_OBJECT_POOL_SIZE	= 2;
 	private static final int			PERMATTR_OBJECT_POOL_SIZE		= 4;
 	private static final int			USER_OBJECT_POOL_SIZE			= 4;
 	private static final int			DOMAIN_OBJECT_POOL_SIZE			= 4;
@@ -77,13 +80,16 @@ public class ConfigurationStorableObjectPool {
 		
 		cObjectLoader = cObjectLoader1;
 		
+		addObjectPool(ObjectEntities.CABLETHREADTYPE_ENTITY_CODE, size);
 		addObjectPool(ObjectEntities.CHARACTERISTICTYPE_ENTITY_CODE, size);
 		addObjectPool(ObjectEntities.EQUIPMENTTYPE_ENTITY_CODE, size);
 		addObjectPool(ObjectEntities.KISTYPE_ENTITY_CODE, size);
+		addObjectPool(ObjectEntities.LINKTYPE_ENTITY_CODE, size);
 		addObjectPool(ObjectEntities.PORTTYPE_ENTITY_CODE, size);
 		addObjectPool(ObjectEntities.MEASUREMENTPORTTYPE_ENTITY_CODE, size);
 		addObjectPool(ObjectEntities.CHARACTERISTIC_ENTITY_CODE, size);
-		addObjectPool(ObjectEntities.PERMATTR_ENTITY_CODE, size);
+		addObjectPool(ObjectEntities.PERMATTR_ENTITY_CODE, size);		
+		addObjectPool(ObjectEntities.LINK_ENTITY_CODE, size);
 		addObjectPool(ObjectEntities.USER_ENTITY_CODE, size);
 		addObjectPool(ObjectEntities.DOMAIN_ENTITY_CODE, size);
 		addObjectPool(ObjectEntities.SERVER_ENTITY_CODE, size);
@@ -103,15 +109,18 @@ public class ConfigurationStorableObjectPool {
 
 		cObjectLoader = cObjectLoader1;
 		
+		addObjectPool(ObjectEntities.CABLETHREADTYPE_ENTITY_CODE, CABLETHREADTYPE_OBJECT_POOL_SIZE);
 		addObjectPool(ObjectEntities.CHARACTERISTICTYPE_ENTITY_CODE, CHARACTERISTICTYPE_OBJECT_POOL_SIZE);
 		addObjectPool(ObjectEntities.EQUIPMENTTYPE_ENTITY_CODE, EQUIPMENTTYPE_OBJECT_POOL_SIZE);
 		addObjectPool(ObjectEntities.KISTYPE_ENTITY_CODE, KISTYPE_OBJECT_POOL_SIZE);
+		addObjectPool(ObjectEntities.LINKTYPE_ENTITY_CODE, LINKTYPE_OBJECT_POOL_SIZE);
 		addObjectPool(ObjectEntities.PORTTYPE_ENTITY_CODE, PORTTYPE_OBJECT_POOL_SIZE);
 		addObjectPool(ObjectEntities.MEASUREMENTPORTTYPE_ENTITY_CODE, MEASUREMENTPORTTYPE_OBJECT_POOL_SIZE);
 
 		addObjectPool(ObjectEntities.CHARACTERISTIC_ENTITY_CODE, CHARACTERISTIC_OBJECT_POOL_SIZE);
 		addObjectPool(ObjectEntities.PERMATTR_ENTITY_CODE, PERMATTR_OBJECT_POOL_SIZE);
 		addObjectPool(ObjectEntities.USER_ENTITY_CODE, USER_OBJECT_POOL_SIZE);
+		addObjectPool(ObjectEntities.LINK_ENTITY_CODE, LINK_OBJECT_POOL_SIZE);
 		addObjectPool(ObjectEntities.DOMAIN_ENTITY_CODE, DOMAIN_OBJECT_POOL_SIZE);
 		addObjectPool(ObjectEntities.SERVER_ENTITY_CODE, SERVER_OBJECT_POOL_SIZE);
 		addObjectPool(ObjectEntities.MCM_ENTITY_CODE, MCM_OBJECT_POOL_SIZE);
@@ -412,11 +421,17 @@ public class ConfigurationStorableObjectPool {
 			case ObjectEntities.CHARACTERISTICTYPE_ENTITY_CODE:
 				storableObject = cObjectLoader.loadCharacteristicType(objectId);
 				break;
+			case ObjectEntities.CABLETHREADTYPE_ENTITY_CODE:
+				storableObject = cObjectLoader.loadCableThreadType(objectId);
+				break;
 			case ObjectEntities.EQUIPMENTTYPE_ENTITY_CODE:
 				storableObject = cObjectLoader.loadEquipmentType(objectId);
 				break;
 			case ObjectEntities.KISTYPE_ENTITY_CODE:
 				storableObject = cObjectLoader.loadKISType(objectId);
+				break;
+			case ObjectEntities.LINKTYPE_ENTITY_CODE:
+				storableObject = cObjectLoader.loadLinkType(objectId);
 				break;
 			case ObjectEntities.PORTTYPE_ENTITY_CODE:
 				storableObject = cObjectLoader.loadPortType(objectId);
@@ -455,6 +470,9 @@ public class ConfigurationStorableObjectPool {
 			case ObjectEntities.KIS_ENTITY_CODE:
 				storableObject = cObjectLoader.loadKIS(objectId);
 				break;
+			case ObjectEntities.LINK_ENTITY_CODE:
+				storableObject = cObjectLoader.loadLink(objectId);
+				break;
 			case ObjectEntities.MEASUREMENTPORT_ENTITY_CODE:
 				storableObject = cObjectLoader.loadMeasurementPort(objectId);
 				break;
@@ -474,6 +492,9 @@ public class ConfigurationStorableObjectPool {
 			CommunicationException {
 		List loadedList = null;
 		switch (entityCode.shortValue()) {
+				case ObjectEntities.CABLETHREADTYPE_ENTITY_CODE:
+					loadedList = cObjectLoader.loadCableThreadTypes(ids);
+					break;
 				case ObjectEntities.CHARACTERISTICTYPE_ENTITY_CODE:
 					loadedList = cObjectLoader.loadCharacteristicTypes(ids);
 					break;
@@ -485,6 +506,9 @@ public class ConfigurationStorableObjectPool {
 					break;
 				case ObjectEntities.PORTTYPE_ENTITY_CODE:
 					loadedList = cObjectLoader.loadPortTypes(ids);
+					break;
+				case ObjectEntities.LINKTYPE_ENTITY_CODE:
+					loadedList = cObjectLoader.loadLinkTypes(ids);
 					break;
 				case ObjectEntities.MEASUREMENTPORTTYPE_ENTITY_CODE:
 					loadedList = cObjectLoader.loadMeasurementPortTypes(ids);
@@ -520,6 +544,9 @@ public class ConfigurationStorableObjectPool {
 				case ObjectEntities.KIS_ENTITY_CODE:
 					loadedList = cObjectLoader.loadKISs(ids);
 					break;
+				case ObjectEntities.LINK_ENTITY_CODE:
+					loadedList = cObjectLoader.loadLinks(ids);
+					break;
 				case ObjectEntities.MEASUREMENTPORT_ENTITY_CODE:
 					loadedList = cObjectLoader.loadMeasurementPorts(ids);
 					break;
@@ -540,6 +567,9 @@ public class ConfigurationStorableObjectPool {
 		List loadedList = null;
 		short entityCode = condition.getEntityCode().shortValue();
 		switch (entityCode) {
+				case ObjectEntities.CABLETHREADTYPE_ENTITY_CODE:
+					loadedList = cObjectLoader.loadCableThreadTypesButIds(condition, ids);
+					break;
 				case ObjectEntities.CHARACTERISTICTYPE_ENTITY_CODE:
 					loadedList = cObjectLoader.loadCharacteristicTypesButIds(condition, ids);
 					break;
@@ -551,6 +581,9 @@ public class ConfigurationStorableObjectPool {
 					break;
 				case ObjectEntities.PORTTYPE_ENTITY_CODE:
 					loadedList = cObjectLoader.loadPortTypesButIds(condition, ids);
+					break;
+				case ObjectEntities.LINKTYPE_ENTITY_CODE:
+					loadedList = cObjectLoader.loadLinkTypesButIds(condition, ids);
 					break;
 				case ObjectEntities.MEASUREMENTPORTTYPE_ENTITY_CODE:
 					loadedList = cObjectLoader.loadMeasurementPortTypesButIds(condition, ids);
@@ -585,6 +618,9 @@ public class ConfigurationStorableObjectPool {
 					break;
 				case ObjectEntities.KIS_ENTITY_CODE:
 					loadedList = cObjectLoader.loadKISsButIds(condition, ids);
+					break;
+				case ObjectEntities.LINK_ENTITY_CODE:
+					loadedList = cObjectLoader.loadLinksButIds(condition, ids);
 					break;
 				case ObjectEntities.MEASUREMENTPORT_ENTITY_CODE:
 					loadedList = cObjectLoader.loadMeasurementPortsButIds(condition, ids);
@@ -696,6 +732,15 @@ public class ConfigurationStorableObjectPool {
 			}
 			
 			switch (code) {
+				case ObjectEntities.CABLETHREADTYPE_ENTITY_CODE:
+					if (alone)
+						cObjectLoader
+						.saveCableThreadType(
+									(CharacteristicType) list
+											.get(0),
+									force);
+				else
+					cObjectLoader.saveCableThreadTypes(list, force);
 				case ObjectEntities.CHARACTERISTICTYPE_ENTITY_CODE:
 					if (alone)
 						cObjectLoader
@@ -837,3 +882,4 @@ public class ConfigurationStorableObjectPool {
 	}
 
 }
+
