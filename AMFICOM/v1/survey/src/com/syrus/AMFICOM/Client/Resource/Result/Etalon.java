@@ -193,7 +193,7 @@ public class Etalon extends ObjectResource implements Serializable {
 		// etalon_parameter
 		//					.getTransferable();
 		//		}
-		if (this.ethalonParameterList.size() == 0) {
+		if (this.ethalonParameterList.isEmpty()) {
 			this.transferable.etalon_parameters = new ClientParameter_Transferable[this.etalon_parameters
 					.size()];
 			for (int i = 0; i < this.transferable.etalon_parameters.length; i++) {

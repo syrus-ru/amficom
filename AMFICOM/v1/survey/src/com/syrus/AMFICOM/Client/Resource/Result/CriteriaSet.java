@@ -175,7 +175,7 @@ public class CriteriaSet extends ObjectResource implements Serializable {
 		//			transferable.criterias[i] = (ClientParameter_Transferable) criteria
 		//					.getTransferable();
 		//		}
-		if (this.criteriaList.size() == 0) {
+		if (this.criteriaList.isEmpty()) {
 			this.transferable.criterias = new ClientParameter_Transferable[this.criterias
 					.size()];
 			for (int i = 0; i < this.transferable.criterias.length; i++) {
@@ -190,7 +190,7 @@ public class CriteriaSet extends ObjectResource implements Serializable {
 				Object obj = this.criterias.get(i);
 				map.put(obj, obj);
 			}
-			for (Iterator it=criteriaList.iterator(); it.hasNext();) {
+			for (Iterator it = criteriaList.iterator(); it.hasNext();) {
 				Object obj = it.next();
 				map.put(obj, obj);
 			}

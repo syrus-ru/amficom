@@ -250,8 +250,8 @@ public class Evaluation extends ObjectResource implements Serializable {
 		for (int i = 0; i < this.transferable.arguments.length; i++) {
 			Parameter param = new Parameter(this.transferable.arguments[i]);
 			param.updateLocalFromTransferable();
-			param.setApt((ActionParameterType) et.sorted_arguments.get(param
-					.getCodename()));
+			param.setApt((ActionParameterType) et.getSortedArguments().get(
+					param.getCodename()));
 			//arguments.add(param);
 			this.addArgument(param);
 		}
@@ -336,7 +336,7 @@ public class Evaluation extends ObjectResource implements Serializable {
 		//			transferable.arguments[i] = (ClientParameter_Transferable) argument
 		//					.getTransferable();
 		//		}
-		if (this.argumentList.size() == 0) {
+		if (this.argumentList.isEmpty()) {
 			this.transferable.arguments = new ClientParameter_Transferable[this.arguments
 					.size()];
 			for (int i = 0; i < this.transferable.arguments.length; i++) {
@@ -351,7 +351,7 @@ public class Evaluation extends ObjectResource implements Serializable {
 				Object obj = this.arguments.get(i);
 				map.put(obj, obj);
 			}
-			for (Iterator it=this.argumentList.iterator();it.hasNext();) {
+			for (Iterator it = this.argumentList.iterator(); it.hasNext();) {
 				Object obj = it.next();
 				map.put(obj, obj);
 			}

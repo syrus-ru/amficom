@@ -297,8 +297,8 @@ public class Analysis extends ObjectResource implements Serializable {
 		for (int i = 0; i < this.transferable.arguments.length; i++) {
 			Parameter param = new Parameter(this.transferable.arguments[i]);
 			param.updateLocalFromTransferable();
-			param.setApt((ActionParameterType) at.sorted_arguments.get(param
-					.getCodename()));
+			param.setApt((ActionParameterType) at.getSortedArguments().get(
+					param.getCodename()));
 			this.addArgument(param);
 		}
 	}
@@ -373,7 +373,7 @@ public class Analysis extends ObjectResource implements Serializable {
 		//			transferable.arguments[i] =
 		// (ClientParameter_Transferable)argument.getTransferable();
 		//		}
-		if (this.argumentList.size() == 0) {
+		if (this.argumentList.isEmpty()) {
 			this.transferable.arguments = new ClientParameter_Transferable[this.arguments
 					.size()];
 			for (int i = 0; i < this.transferable.arguments.length; i++) {

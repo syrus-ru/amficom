@@ -403,7 +403,7 @@ public class Result extends ObjectResource implements Serializable {
 		transferable.user_id = user_id;
 		transferable.elementary_start_time = elementary_start_time;
 
-		if (parameterList.size() == 0) {
+		if (parameterList.isEmpty()) {
 			transferable.parameters = new ClientParameter_Transferable[parameters
 					.size()];
 			for (int i = 0; i < transferable.parameters.length; i++) {
@@ -486,7 +486,7 @@ public class Result extends ObjectResource implements Serializable {
 		/**
 		 * @todo only for backward parameters Vector implementation
 		 */
-		if (parameters.size() == 0) {
+		if (parameters.isEmpty()) {
 			transferable.parameters = new ClientParameter_Transferable[parameterList
 					.size()];
 			for (Iterator it = this.parameterList.iterator(); it.hasNext();) {

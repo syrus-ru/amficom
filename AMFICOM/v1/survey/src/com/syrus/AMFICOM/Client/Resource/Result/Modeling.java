@@ -222,8 +222,8 @@ public class Modeling extends ObjectResource implements Serializable {
 		for (int i = 0; i < transferable.arguments.length; i++) {
 			Parameter param = new Parameter(transferable.arguments[i]);
 			param.updateLocalFromTransferable();
-			param.setApt((ActionParameterType) mt.sorted_arguments.get(param
-					.getCodename()));
+			param.setApt((ActionParameterType) mt.getSortedArguments().get(
+					param.getCodename()));
 			this.addArgument(param);
 		}
 	}
@@ -280,7 +280,7 @@ public class Modeling extends ObjectResource implements Serializable {
 		//					.getTransferable();
 		//		}
 
-		if (argumentList.size() == 0) {
+		if (this.argumentList.isEmpty()) {
 			transferable.arguments = new ClientParameter_Transferable[arguments
 					.size()];
 			for (int i = 0; i < transferable.arguments.length; i++) {

@@ -173,7 +173,7 @@ public class ThresholdSet extends ObjectResource implements Serializable {
 		/**
 		 * @todo only for backward thresholds Vector implementation
 		 */
-		if (thresholds.size() == 0) {
+		if (thresholds.isEmpty()) {
 			transferable.thresholds = new ClientParameter_Transferable[thresholdList
 					.size()];
 			int i=0;
