@@ -1,5 +1,5 @@
 /*
- * $Id: CMServerTestCase.java,v 1.3 2004/09/22 07:20:55 bob Exp $
+ * $Id: CMServerTestCase.java,v 1.4 2004/09/22 08:05:29 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -43,16 +43,17 @@ import com.syrus.AMFICOM.measurement.corba.Test_Transferable;
 import com.syrus.util.corba.JavaSoftORBUtil;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2004/09/22 07:20:55 $
- * @author $Author: bob $
+ * @version $Revision: 1.4 $, $Date: 2004/09/22 08:05:29 $
+ * @author $Author: max $
  * @module module
  */
 public class CMServerTestCase extends TestCase {
 
 	private static CMServer				server;
 	private static AccessIdentifier_Transferable	accessIdentifier_Transferable;
-
-	public CMServerTestCase(String name) {
+	private static AccessIdentifier_Transferable[]  accessIdentifier_Transferables = new AccessIdentifier_Transferable[3];
+	
+    public CMServerTestCase(String name) {
 		super(name);
 	}
 
@@ -105,8 +106,13 @@ public class CMServerTestCase extends TestCase {
 			System.out.println("server reference have got : \n" + server.toString());
 
 			accessIdentifier_Transferable = new AccessIdentifier_Transferable();
-
-			Identifier id = new Identifier("Null_0");
+			
+            for (int i = 0; i < accessIdentifier_Transferables.length; i++) {
+                accessIdentifier_Transferables[i] = new AccessIdentifier_Transferable();
+			}
+                        
+            
+            Identifier id = new Identifier("Null_0");
 			Identifier domainId = new Identifier("Domain_19");
 			accessIdentifier_Transferable.domain_id = (Identifier_Transferable) domainId.getTransferable();
 			accessIdentifier_Transferable.user_id = (Identifier_Transferable) id.getTransferable();
@@ -155,8 +161,12 @@ public class CMServerTestCase extends TestCase {
 		System.out.println("transmit " + domain_Transferables3.length + " domain(s) by ids for "
 				+ (time5 - time4) + " ms");
 	}
+    
+    public testTransmitDomains() {
+    	
+    }
 
-	public void testTransmitMeasurementSetup() throws AMFICOMRemoteException {
+	public void _testTransmitMeasurementSetup() throws AMFICOMRemoteException {
 		long time0 = System.currentTimeMillis();
 		MeasurementSetup_Transferable[] measurementSetup_Transferables = server
 				.transmitMeasurementSetups(new Identifier_Transferable[0],
@@ -166,7 +176,7 @@ public class CMServerTestCase extends TestCase {
 				+ (time1 - time0) + " ms");
 	}
 
-	public void testTransmitTestsAndMeasurements() throws AMFICOMRemoteException, CreateObjectException {
+	public void _testTransmitTestsAndMeasurements() throws AMFICOMRemoteException, CreateObjectException {
 		long time0 = System.currentTimeMillis();
 		// 2 month ago
 		Date start = new Date(System.currentTimeMillis() - 1000 * 60 * 60 * 24 * 31 * 2);
