@@ -14,8 +14,7 @@ import com.syrus.AMFICOM.Client.Resource.Result.*;
 import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
 import com.syrus.AMFICOM.Client.Scheduler.General.UIStorage;
 
-public class TestLine extends JLabel implements ActionListener,
-		OperationListener {
+public class TestLine extends JLabel implements ActionListener, OperationListener {
 
 	public static final Color	COLOR_ABORDED		= Color.RED;
 	public static final Color	COLOR_COMPLETED		= Color.GREEN;
@@ -56,8 +55,7 @@ public class TestLine extends JLabel implements ActionListener,
 	// this);
 	// ;
 
-	public TestLine(ApplicationContext aContext, String title, long start,
-			long end, int margin) {
+	public TestLine(ApplicationContext aContext, String title, long start, long end, int margin) {
 		//this.aContext = aContext;
 		this.title = title;
 		this.start = start;
@@ -95,13 +93,12 @@ public class TestLine extends JLabel implements ActionListener,
 						Test test = (Test) TestLine.this.allTests.get(i);
 						TimeStamp timeStamp = test.getTimeStamp();
 						int st = TestLine.this.margin
-								+ (int) (TestLine.this.scale * (test.getTimeStamp()
-										.getPeriodStart() - TestLine.this.start)) - 1;
+								+ (int) (TestLine.this.scale * (test.getTimeStamp().getPeriodStart() - TestLine.this.start))
+								- 1;
 						int en = TestLine.this.margin
-								+ (int) (TestLine.this.scale * (test.getTimeStamp()
-										.getPeriodEnd() - TestLine.this.start)) + 1;
-						en = (en - st < MINIMAL_WIDTH) ? st + MINIMAL_WIDTH
-								: en;
+								+ (int) (TestLine.this.scale * (test.getTimeStamp().getPeriodEnd() - TestLine.this.start))
+								+ 1;
+						en = (en - st < MINIMAL_WIDTH) ? st + MINIMAL_WIDTH : en;
 						//					System.out.println("."+((x >= st) && (x <= en) && (y
 						// >=
 						// titleHeight / 2 + 4)));
@@ -119,8 +116,7 @@ public class TestLine extends JLabel implements ActionListener,
 									st = TestLine.this.margin
 											+ (int) (TestLine.this.scale * (times[j] - TestLine.this.start));
 									en = st + w;
-									if ((x >= st) && (x <= en)
-											&& (y >= TestLine.this.titleHeight / 2 + 4)) {
+									if ((x >= st) && (x <= en) && (y >= TestLine.this.titleHeight / 2 + 4)) {
 										condition = true;
 										//System.out.println("selected:" + j);
 										break;
@@ -128,8 +124,7 @@ public class TestLine extends JLabel implements ActionListener,
 								}
 								break;
 							default:
-								if ((x >= st) && (x <= en)
-										&& (y >= TestLine.this.titleHeight / 2 + 4)) {
+								if ((x >= st) && (x <= en) && (y >= TestLine.this.titleHeight / 2 + 4)) {
 									condition = true;
 								}
 								break;
@@ -139,12 +134,11 @@ public class TestLine extends JLabel implements ActionListener,
 							//System.out.println("test:" + test.id);
 							//							System.out.println("test.status.value():"
 							//									+ test.status.value());
-							System.out
-									.println("TestLine>onClick: test==null : " //$NON-NLS-1$
-											+ (test.isChanged()));
+							System.out.println("TestLine>onClick: test==null : " //$NON-NLS-1$
+									+ (test.isChanged()));
 							TestLine.this.skipTestUpdate = true;
 							TestLine.this.dispatcher.notify(new TestUpdateEvent(this, test,
-									TestUpdateEvent.TEST_SELECTED_EVENT));
+																				TestUpdateEvent.TEST_SELECTED_EVENT));
 							TestLine.this.skipTestUpdate = false;
 							TestLine.this.currentTest = test;
 							break;
@@ -182,13 +176,15 @@ public class TestLine extends JLabel implements ActionListener,
 		System.out.println(getClass().getName() + " commandName: " //$NON-NLS-1$
 				+ commandName);
 		if (commandName.equals(SchedulerModel.COMMAND_TEST_SAVED_OK)) {
-			for (Iterator it = this.unsavedTests.keySet().iterator(); it.hasNext();) {
-				Object key = it.next();
-				Test test = (Test) this.unsavedTests.get(key);
-				if (!test.isChanged()) {
-					System.out.println("remove " + key);
-					this.unsavedTests.remove(key);
-					this.tests.put(test.getId(), test);
+			if (this.unsavedTests != null) {
+				for (Iterator it = this.unsavedTests.keySet().iterator(); it.hasNext();) {
+					Object key = it.next();
+					Test test = (Test) this.unsavedTests.get(key);
+					if (!test.isChanged()) {						
+						System.out.println("remove " + key);
+						this.unsavedTests.remove(key);
+						this.tests.put(test.getId(), test);
+					}
 				}
 			}
 		}
@@ -200,7 +196,8 @@ public class TestLine extends JLabel implements ActionListener,
 
 	public void addTest(String id) {
 		Test test = (Test) Pool.get(Test.TYPE, id);
-		if (test != null) addTest(test);
+		if (test != null)
+			addTest(test);
 	}
 
 	public void addTest(Test test) {
@@ -221,7 +218,8 @@ public class TestLine extends JLabel implements ActionListener,
 				System.out.println("test is NOT changed");
 				tests.put(test.getId(), test);
 			}
-			if (allTests == null) allTests = new ArrayList();
+			if (allTests == null)
+				allTests = new ArrayList();
 			allTests.add(test);
 			this.revalidate();
 		}
@@ -232,8 +230,7 @@ public class TestLine extends JLabel implements ActionListener,
 			Graphics g = this.getGraphics();
 			if (g != null) {
 				flash = !flash;
-				for (Iterator it = unsavedTests.keySet().iterator(); it
-						.hasNext();) {
+				for (Iterator it = unsavedTests.keySet().iterator(); it.hasNext();) {
 					Test test = (Test) unsavedTests.get(it.next());
 					g.setColor(flash ? COLOR_SCHEDULED : COLOR_UNRECOGNIZED);
 					drawTestRect(g, test);
@@ -269,8 +266,7 @@ public class TestLine extends JLabel implements ActionListener,
 			g.clearRect(0, 0, width, this.titleHeight / 2 + 3);
 			g.setColor(Color.black);
 			g.drawString(title, 5, this.titleHeight / 2 + 2);
-			g.drawLine(0, this.titleHeight / 2 + 3, width,
-					this.titleHeight / 2 + 3);
+			g.drawLine(0, this.titleHeight / 2 + 3, width, this.titleHeight / 2 + 3);
 			g.drawLine(0, height - 1, width, height - 1);
 			//for (Iterator it = tests.values().iterator(); it.hasNext();) {
 			//			System.out.println(":" + allTests.size() + "\t"
@@ -282,20 +278,16 @@ public class TestLine extends JLabel implements ActionListener,
 				Test test = (Test) allTests.get(i);
 				if (test.getStatus().equals(TestStatus.TEST_STATUS_COMPLETED)) {
 					color = COLOR_COMPLETED;
-				} else if (test.getStatus().equals(
-						TestStatus.TEST_STATUS_SCHEDULED)) {
+				} else if (test.getStatus().equals(TestStatus.TEST_STATUS_SCHEDULED)) {
 					color = COLOR_SCHEDULED;
-				} else if (test.getStatus().equals(
-						TestStatus.TEST_STATUS_PROCESSING)) {
+				} else if (test.getStatus().equals(TestStatus.TEST_STATUS_PROCESSING)) {
 					color = COLOR_PROCCESSING;
-				} else if (test.getStatus().equals(
-						TestStatus.TEST_STATUS_ABORTED)) {
+				} else if (test.getStatus().equals(TestStatus.TEST_STATUS_ABORTED)) {
 					color = COLOR_ABORDED;
 				} else {
 					color = COLOR_UNRECOGNIZED;
 				}
-				if ((unsavedTests == null)
-						|| (!unsavedTests.containsValue(test))) {
+				if ((unsavedTests == null) || (!unsavedTests.containsValue(test))) {
 					g.setColor(color);
 					drawTestRect(g, test);
 				}
@@ -312,16 +304,15 @@ public class TestLine extends JLabel implements ActionListener,
 
 	public void removeTest(String id) {
 		Test test = (Test) tests.get(id);
-		if (allTests != null) allTests.remove(test);
+		if (allTests != null)
+			allTests.remove(test);
 		tests.remove(id);
 	}
 
 	private void drawTestRect(Graphics g, Test test) {
 		TimeStamp timeStamp = test.getTimeStamp();
-		int x = margin
-				+ (int) (scale * (test.getTimeStamp().getPeriodStart() - start));
-		int en = margin
-				+ (int) (scale * (test.getTimeStamp().getPeriodEnd() - start));
+		int x = margin + (int) (scale * (test.getTimeStamp().getPeriodStart() - start));
+		int en = margin + (int) (scale * (test.getTimeStamp().getPeriodEnd() - start));
 		int w = en - x + 1;
 		if (timeStamp.getType() == TimeStamp.TIMESTAMPTYPE_CONTINUOS)
 			w = (w > MINIMAL_WIDTH) ? w : MINIMAL_WIDTH;
@@ -341,8 +332,7 @@ public class TestLine extends JLabel implements ActionListener,
 					g.draw3DRect(x, y, w, h, true);
 					if (i == 0) {
 						Color c = g.getColor();
-						g.setColor(new Color(0, 255 - c.getGreen(), 255 - c
-								.getBlue()));
+						g.setColor(new Color(0, 255 - c.getGreen(), 255 - c.getBlue()));
 						g.drawRect(x + 1, y + 1, w - 2, h - 2);
 						//g.drawLine(x + 2, y + h / 4, x + w - 4, y + h / 4);
 						g.drawRect(x + w / 2, y + 1, 1, h - 2);
@@ -360,7 +350,7 @@ public class TestLine extends JLabel implements ActionListener,
 
 	private void initModule(Dispatcher dispatcher) {
 		this.dispatcher = dispatcher;
-		dispatcher.register(this, SchedulerModel.COMMAND_TEST_SAVED_OK);
+		this.dispatcher.register(this, SchedulerModel.COMMAND_TEST_SAVED_OK);
 	}
 
 }

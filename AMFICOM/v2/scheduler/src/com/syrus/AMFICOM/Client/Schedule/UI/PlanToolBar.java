@@ -292,14 +292,14 @@ class PlanToolBar extends JPanel {
 		date.set(Calendar.HOUR_OF_DAY, time.get(Calendar.HOUR_OF_DAY));
 		date.set(Calendar.MINUTE, time.get(Calendar.MINUTE));
 
-		panel.updateDate(date.getTime(), scaleComboBox.getSelectedIndex());
+		this.panel.updateDate(date.getTime(), this.scaleComboBox.getSelectedIndex());
 	}
 
 	//private void jbInit() throws Exception {
 	//}
 
 	private void saveTest() {
-		DataSourceInterface dataSource = aContext.getDataSourceInterface();
+		DataSourceInterface dataSource = this.aContext.getDataSourceInterface();
 		Hashtable unsavedTestArgumentSet = Pool.getChangedHash(TestArgumentSet.typ);
 		Hashtable unsavedAnalysis = Pool.getChangedHash(Analysis.typ);
 		Hashtable unsavedEvaluation = Pool.getChangedHash(Evaluation.typ);

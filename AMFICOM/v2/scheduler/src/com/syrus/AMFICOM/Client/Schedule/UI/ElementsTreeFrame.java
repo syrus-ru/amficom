@@ -9,6 +9,8 @@ import com.syrus.AMFICOM.Client.Scheduler.General.UIStorage;
 public class ElementsTreeFrame extends JInternalFrame {
 
 	private ApplicationContext	aContext;
+	
+	private ElementsTreePanel panel;
 
 	public ElementsTreeFrame(ApplicationContext aContext) {
 		this.aContext = aContext;
@@ -21,6 +23,8 @@ public class ElementsTreeFrame extends JInternalFrame {
 	}
 
 	public void init() {
-		setContentPane(new ElementsTreePanel(aContext));
+		if (this.panel==null)
+			this.panel = new ElementsTreePanel(this.aContext); 
+		setContentPane(this.panel);
 	}
 }

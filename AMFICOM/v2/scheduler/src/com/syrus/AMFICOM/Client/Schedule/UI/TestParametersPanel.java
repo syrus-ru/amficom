@@ -171,7 +171,7 @@ public class TestParametersPanel extends JPanel implements OperationListener {
 
 					for (Iterator it = TestParametersPanel.this.testPanels.keySet().iterator(); it.hasNext();) {
 						String key = (String) it.next();
-						ParametersTestPanel panel = (ParametersTestPanel) (TestParametersPanel.this.testPanels.get(key));			
+						ParametersTestPanel panel = (ParametersTestPanel) (TestParametersPanel.this.testPanels.get(key));
 						panel.setTestSetup(ts);
 					}
 
@@ -251,11 +251,11 @@ public class TestParametersPanel extends JPanel implements OperationListener {
 		this.dispatcher.register(this, COMMAND_ADD_PARAM_PANEL);
 		this.dispatcher.register(this, COMMAND_CHANGE_TEST_TYPE);
 		this.dispatcher.register(this, COMMAND_CHANGE_ME_TYPE);
+		this.dispatcher.register(this, SchedulerModel.COMMAND_CLEAN);
 	}
 
 	public void setTest(Test test) {
-		this.test = test;
-		testSetups.removeAll();
+		this.test = test;		
 		String meid = test.getMonitoredElementId();
 		String testtypeid = test.getTestTypeId();
 		if (surveyDsi == null)
@@ -274,23 +274,23 @@ public class TestParametersPanel extends JPanel implements OperationListener {
 			//testSetups.add(ts);
 			testMap.put(ts.getId(), ts);
 		}
-		//		updateTestSetupList();
-		//
-		//		boolean selected = false;
-		//		TestSetup testsetup = (TestSetup) Pool.get(TestSetup.TYPE,
-		//				test.test_setup_id);
-		//		if (testsetup != null) {
-		//			//orList.setSelected(testsetup);
-		//			System.out.println("selected:" + testsetup.id);
-		//			testSetups.setSelected(testsetup);
-		//			selected = true;
-		//		}
-		//		if (selected)
-		//			patternRadioButton.doClick();
-		//		else
-		//			paramsRadioButton.doClick();
-		//		useAnalysisBox.setEnabled(testSetups.getModel().getSize() > 0);
-		//System.out.println("end of setTest");
+				updateTestSetupList();
+		
+//				boolean selected = false;
+//				TestSetup testsetup = (TestSetup) Pool.get(TestSetup.typ,
+//						test.getTestSetupId());
+//				if (testsetup != null) {
+//					//orList.setSelected(testsetup);
+//					System.out.println("selected:" + testsetup.id);
+//					testSetups.setSelected(testsetup);
+//					selected = true;
+//				}
+//				if (selected)
+//					patternRadioButton.doClick();
+//				else
+//					paramsRadioButton.doClick();
+//				useAnalysisBox.setEnabled(testSetups.getModel().getSize() > 0);
+//		System.out.println("end of setTest");
 	}
 
 	private void getParameters() {
@@ -389,14 +389,20 @@ public class TestParametersPanel extends JPanel implements OperationListener {
 		} else if (commandName.equals(COMMAND_CHANGE_ME_TYPE)) {
 			String meId = (String) obj;
 			//			DataSourceInterface dsi = aContext.getDataSourceInterface();
-			if (surveyDsi == null)
-				surveyDsi = new SurveyDataSourceImage(aContext.getDataSourceInterface());
-			String[] testSetupME = surveyDsi.getTestSetupByME(meId);
+			if (this.surveyDsi == null)
+				this.surveyDsi = new SurveyDataSourceImage(aContext.getDataSourceInterface());
+			this.testMap.clear();
+			String[] testSetupME = this.surveyDsi.getTestSetupByME(meId);
 			for (int i = 0; i < testSetupME.length; i++) {
 				TestSetup ts = (TestSetup) Pool.get(TestSetup.typ, testSetupME[i]);
 				//testSetups.add(ts);
 				testMap.put(ts.getId(), ts);
 			}
+			updateTestSetupList();
+		} else if (commandName.equals(SchedulerModel.COMMAND_CLEAN)) {
+			this.testMap.clear();
+			this.patternRadioButton.doClick();
+			this.testPanels.clear();
 			updateTestSetupList();
 		}
 
@@ -407,22 +413,30 @@ public class TestParametersPanel extends JPanel implements OperationListener {
 		//System.out.println("updateTestSetupList");
 		//TestSetup selectedTs = (TestSetup)
 		// testSetups.getSelectedObjectResource();
-		testSetups.removeAll();
-		for (Iterator it = testMap.values().iterator(); it.hasNext();) {
+		this.testSetups.removeAll();
+		for (Iterator it = this.testMap.values().iterator(); it.hasNext();) {
 			TestSetup ts = (TestSetup) it.next();
-			testSetups.add(ts);
+			this.testSetups.add(ts);
 		}
 		//testSetups.setSelected(selectedTs);
-		if (test != null) {
-			//System.out.println("test.test_setup_id:" + test.test_setup_id);
-			TestSetup testsetup = (TestSetup) Pool.get(TestSetup.typ, test.getTestSetupId());
+		if (this.test != null) {
+			System.out.println("test.test_setup_id:" + this.test.getTestSetupId());		
+			
+			TestSetup testsetup = (TestSetup) Pool.get(TestSetup.typ, this.test.getTestSetupId());
+			System.out.println((testsetup==null)?"testSetup is null":"testSetupID:"+testsetup.getId());
 			if (testsetup != null) {
 				//orList.setSelected(testsetup);
-				//System.out.println("selected:" + testsetup.id);
-				testSetups.setSelected(testsetup);
-				patternRadioButton.doClick();
+				//System.out.println("selected:" + testsetup.id);				
+				ListModel lmodel = this.testSetups.getModel();
+				for(int i=0;i<lmodel.getSize();i++){
+					TestSetup ts2 = (TestSetup)lmodel.getElementAt(i);
+					System.out.println("ts2.getId():"+ts2.getId());
+				}
+				
+				this.testSetups.setSelected(testsetup);
+				this.patternRadioButton.doClick();
 
-				if ((test.getEvalution() != null) || (test.getAnalysis() != null)) {
+				if ((this.test.getEvalution() != null) || (this.test.getAnalysis() != null)) {
 					if (!useAnalysisBox.isSelected())
 						useAnalysisBox.doClick();
 				}
@@ -435,6 +449,8 @@ public class TestParametersPanel extends JPanel implements OperationListener {
 					selectComboBox(analysisComboBox, test.getAnalysis().getTypeId());
 				}
 
+			} else {
+				this.paramsRadioButton.doClick();
 			}
 		}
 	}

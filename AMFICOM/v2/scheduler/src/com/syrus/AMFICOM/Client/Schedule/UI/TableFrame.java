@@ -19,6 +19,7 @@ import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.Resource.ISM.*;
 import com.syrus.AMFICOM.Client.Resource.Result.*;
 import com.syrus.AMFICOM.Client.Resource.Test.TestType;
+import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
 import com.syrus.AMFICOM.Client.Scheduler.General.UIStorage;
 
 /**
@@ -77,8 +78,7 @@ public class TableFrame extends JInternalFrame implements OperationListener {
 		}
 	}
 
-	private class TestTableCellRenderer extends JLabel implements
-			TableCellRenderer {
+	private class TestTableCellRenderer extends JLabel implements TableCellRenderer {
 
 		//protected static Border noFocusBorder = new EmptyBorder(1, 1, 1, 1);
 
@@ -101,9 +101,12 @@ public class TableFrame extends JInternalFrame implements OperationListener {
 
 		// This method is called each time a cell in a column
 		// using this renderer needs to be rendered.
-		public Component getTableCellRendererComponent(JTable table,
-				Object value, boolean isSelected, boolean hasFocus,
-				int rowIndex, int vColIndex) {
+		public Component getTableCellRendererComponent(	JTable table,
+														Object value,
+														boolean isSelected,
+														boolean hasFocus,
+														int rowIndex,
+														int vColIndex) {
 			// 'value' is value contained in the cell located at
 			// (rowIndex, vColIndex)
 			//
@@ -114,11 +117,9 @@ public class TableFrame extends JInternalFrame implements OperationListener {
 			Test test = line.getTest();
 			if (test.getStatus().equals(TestStatus.TEST_STATUS_COMPLETED)) {
 				color = TestLine.COLOR_COMPLETED;
-			} else if (test.getStatus()
-					.equals(TestStatus.TEST_STATUS_SCHEDULED)) {
+			} else if (test.getStatus().equals(TestStatus.TEST_STATUS_SCHEDULED)) {
 				color = TestLine.COLOR_SCHEDULED;
-			} else if (test.getStatus().equals(
-					TestStatus.TEST_STATUS_PROCESSING)) {
+			} else if (test.getStatus().equals(TestStatus.TEST_STATUS_PROCESSING)) {
 				color = TestLine.COLOR_PROCCESSING;
 			} else if (test.getStatus().equals(TestStatus.TEST_STATUS_ABORTED)) {
 				color = TestLine.COLOR_ABORDED;
@@ -127,24 +128,18 @@ public class TableFrame extends JInternalFrame implements OperationListener {
 			}
 
 			if (isSelected) {
-				super
-						.setForeground((unselectedForeground != null) ? unselectedForeground
-								: table.getForeground());
+				super.setForeground((unselectedForeground != null) ? unselectedForeground : table.getForeground());
 				Font font = table.getFont();
-				font = new Font(font.getName(), Font.BOLD | Font.ITALIC, font
-						.getSize());
+				font = new Font(font.getName(), Font.BOLD | Font.ITALIC, font.getSize());
 				setFont(font);
 				Color c = table.getSelectionBackground();
 				double k = 0.3;
-				super.setBackground(new Color((int) (c.getRed() * (1.0 - k) + k
-						* color.getRed()) % 256, (int) (c.getGreen()
-						* (1.0 - k) + k * color.getGreen()) % 256, (int) (c
-						.getBlue()
-						* (1.0 - k) + k * color.getBlue()) % 256));
+				super.setBackground(new Color((int) (c.getRed() * (1.0 - k) + k * color.getRed()) % 256, (int) (c
+						.getGreen()
+						* (1.0 - k) + k * color.getGreen()) % 256,
+												(int) (c.getBlue() * (1.0 - k) + k * color.getBlue()) % 256));
 			} else {
-				super
-						.setForeground((unselectedForeground != null) ? unselectedForeground
-								: table.getForeground());
+				super.setForeground((unselectedForeground != null) ? unselectedForeground : table.getForeground());
 				setFont(table.getFont());
 				super.setBackground(color);
 			}
@@ -152,10 +147,8 @@ public class TableFrame extends JInternalFrame implements OperationListener {
 			if (hasFocus) {
 				setBorder(UIManager.getBorder("Table.focusCellHighlightBorder")); //$NON-NLS-1$
 				if (table.isCellEditable(rowIndex, vColIndex)) {
-					super.setForeground(UIManager
-							.getColor("Table.focusCellForeground")); //$NON-NLS-1$
-					super.setBackground(UIManager
-							.getColor("Table.focusCellBackground")); //$NON-NLS-1$
+					super.setForeground(UIManager.getColor("Table.focusCellForeground")); //$NON-NLS-1$
+					super.setBackground(UIManager.getColor("Table.focusCellBackground")); //$NON-NLS-1$
 				}
 			} else {
 				//setBorder(noFocusBorder);
@@ -198,15 +191,16 @@ public class TableFrame extends JInternalFrame implements OperationListener {
 
 	private class TestTableModel extends AbstractTableModel {
 
-		private int			columnCount	= 7;
+		private int				columnCount	= 7;
 
-		private boolean[]	sortOrders	= new boolean[columnCount];
+		private boolean[]		sortOrders	= new boolean[columnCount];
 
-		private ArrayList	testLines;
+		private java.util.List	testLines;
 
 		public void addRow(TestTableRow value) {
-			if (testLines == null) testLines = new ArrayList();
-			testLines.add(value);
+			if (this.testLines == null)
+				this.testLines = new ArrayList();
+			this.testLines.add(value);
 		}
 
 		public Class getColumnClass(int columnIndex) {
@@ -220,7 +214,7 @@ public class TableFrame extends JInternalFrame implements OperationListener {
 		}
 
 		public int getColumnCount() {
-			return columnCount;
+			return this.columnCount;
 		}
 
 		public String getColumnName(int columnIndex) {
@@ -262,19 +256,24 @@ public class TableFrame extends JInternalFrame implements OperationListener {
 		}
 
 		public Object getRow(int rowIndex) {
-			if (testLines == null) return null;
-			return testLines.get(rowIndex);
+			Object result = null;
+			if (this.testLines == null)
+				result = null;
+			else if (!this.testLines.isEmpty())
+				result = this.testLines.get(rowIndex);
+			return result;
 		}
 
 		public int getRowCount() {
 			int count = 0;
-			if (testLines != null) count = testLines.size();
+			if (testLines != null)
+				count = testLines.size();
 			return count;
 		}
 
-		public ArrayList getRowData(int rowIndex) {
+		public java.util.List getRowData(int rowIndex) {
 			TestTableRow line = (TestTableRow) getRow(rowIndex);
-			return line.getData();
+			return (line == null) ? null : line.getData();
 		}
 
 		public boolean getSortOrder(int columnIndex) {
@@ -283,8 +282,8 @@ public class TableFrame extends JInternalFrame implements OperationListener {
 
 		public int getTestRowIndex(Test test) {
 			int rowIndex = 0;
-			for (int i = 0; i < testLines.size(); i++) {
-				TestTableRow row = (TestTableRow) testLines.get(i);
+			for (int i = 0; i < this.testLines.size(); i++) {
+				TestTableRow row = (TestTableRow) this.testLines.get(i);
 				if (row.getTest().equals(test)) {
 					rowIndex = i;
 					break;
@@ -295,10 +294,11 @@ public class TableFrame extends JInternalFrame implements OperationListener {
 
 		public Object getValueAt(int rowIndex, int columnIndex) {
 			Object obj = null;
-			if (testLines != null) {
-				TestTableRow line = (TestTableRow) testLines.get(rowIndex);
-				ArrayList data = line.getData();
-				if (columnIndex < data.size()) obj = data.get(columnIndex);
+			if (this.testLines != null) {
+				TestTableRow line = (TestTableRow) this.testLines.get(rowIndex);
+				java.util.List data = line.getData();
+				if (columnIndex < data.size())
+					obj = data.get(columnIndex);
 			}
 			return obj;
 		}
@@ -312,11 +312,14 @@ public class TableFrame extends JInternalFrame implements OperationListener {
 		}
 
 		public void removeAll() {
-			if (testLines != null) testLines.clear();
+			if (testLines != null)
+				testLines.clear();
+
 		}
 
 		public void setValueAt(Object value, int rowIndex, int columnIndex) {
-			if (testLines == null) testLines = new ArrayList();
+			if (testLines == null)
+				testLines = new ArrayList();
 			TestTableRow line;
 			if (testLines.size() < rowIndex) {
 				line = new TestTableRow();
@@ -338,8 +341,7 @@ public class TableFrame extends JInternalFrame implements OperationListener {
 
 		public void sortRows(int columnIndex, boolean ascending) {
 			if (testLines != null)
-					Collections.sort(testLines, new ColumnSorter(columnIndex,
-							ascending));
+				Collections.sort(testLines, new ColumnSorter(columnIndex, ascending));
 		}
 
 	}
@@ -370,7 +372,7 @@ public class TableFrame extends JInternalFrame implements OperationListener {
 			return getData().get(index);
 		}
 
-		public ArrayList getData() {
+		public java.util.List getData() {
 			if (data == null) {
 				data = new ArrayList();
 				data.add(temporalType);
@@ -381,34 +383,35 @@ public class TableFrame extends JInternalFrame implements OperationListener {
 				data.add(time);
 				data.add(statusName);
 			}
-			return data;
+			return this.data;
 		}
 
 		public Test getTest() {
-			return test;
+			return this.test;
 		}
 
 		public void setTest(Test test) {
-			data = null;
+			//DataSourceInterface dsi =
+			// TableFrame.this.aContext.getDataSourceInterface();
+			//dsi.LoadKISDescriptors();
+			this.data = null;
 			this.test = test;
 			switch (test.getTimeStamp().getType()) {
 				case TimeStamp.TIMESTAMPTYPE_ONETIME:
 					this.temporalType = LangModelSchedule.getString("Onetime"); //$NON-NLS-1$
 					break;
 				case TimeStamp.TIMESTAMPTYPE_CONTINUOS:
-					this.temporalType = LangModelSchedule
-							.getString("Continual"); //$NON-NLS-1$
+					this.temporalType = LangModelSchedule.getString("Continual"); //$NON-NLS-1$
 					break;
 				case TimeStamp.TIMESTAMPTYPE_PERIODIC:
-					this.temporalType = LangModelSchedule
-							.getString("Periodical"); //$NON-NLS-1$
+					this.temporalType = LangModelSchedule.getString("Periodical"); //$NON-NLS-1$
 					break;
 			}
+
 			KIS kis = (KIS) Pool.get(KIS.typ, test.getKisId());
 			this.rtu = kis.name;
 			Vector accessPorts = kis.access_ports;
-			MonitoredElement me = (MonitoredElement) Pool.get(
-					MonitoredElement.typ, test.getMonitoredElementId());
+			MonitoredElement me = (MonitoredElement) Pool.get(MonitoredElement.typ, test.getMonitoredElementId());
 			AccessPort port = null;
 			for (int i = 0; i < accessPorts.size(); i++) {
 				AccessPort aport = (AccessPort) accessPorts.get(i);
@@ -417,23 +420,20 @@ public class TableFrame extends JInternalFrame implements OperationListener {
 					break;
 				}
 			}
-			if (port != null) this.port = port.name;
+			if (port != null)
+				this.port = port.name;
 			this.me = me.getName();
-			TestType testType = (TestType) Pool.get(TestType.typ, test
-					.getTestTypeId());
+			TestType testType = (TestType) Pool.get(TestType.typ, test.getTestTypeId());
 			this.testType = testType.getName();
-			this.time = UIStorage.SDF.format(new Date(test.getTimeStamp()
-					.getPeriodStart()));
+			this.time = UIStorage.SDF.format(new Date(test.getTimeStamp().getPeriodStart()));
 
 			//this.id = test.id;
 			//this.kis = test.kis;
 			if (test.getStatus().equals(TestStatus.TEST_STATUS_COMPLETED)) {
 				this.statusName = LangModelSchedule.getString("Done"); //$NON-NLS-1$
-			} else if (test.getStatus()
-					.equals(TestStatus.TEST_STATUS_SCHEDULED)) {
+			} else if (test.getStatus().equals(TestStatus.TEST_STATUS_SCHEDULED)) {
 				this.statusName = LangModelSchedule.getString("Scheduled"); //$NON-NLS-1$
-			} else if (test.getStatus().equals(
-					TestStatus.TEST_STATUS_PROCESSING)) {
+			} else if (test.getStatus().equals(TestStatus.TEST_STATUS_PROCESSING)) {
 				this.statusName = LangModelSchedule.getString("Running"); //$NON-NLS-1$
 			} else if (test.getStatus().equals(TestStatus.TEST_STATUS_ABORTED)) {
 				this.statusName = LangModelSchedule.getString("Aborted"); //$NON-NLS-1$
@@ -445,14 +445,13 @@ public class TableFrame extends JInternalFrame implements OperationListener {
 
 	}
 
-	/** 
+	/**
 	 * @todo only for testing mode
 	 */
 	public static void main(String[] args) {
 
 		TableFrame frame = new TableFrame(null);
-		JFrame mainFrame = new JFrame(LangModelSchedule
-				.getString("Tests_status_and_characters")); //$NON-NLS-1$
+		JFrame mainFrame = new JFrame(LangModelSchedule.getString("Tests_status_and_characters")); //$NON-NLS-1$
 		mainFrame.addWindowListener(new WindowAdapter() {
 
 			public void windowClosing(WindowEvent e) {
@@ -467,15 +466,16 @@ public class TableFrame extends JInternalFrame implements OperationListener {
 
 	Dispatcher			dispatcher;
 	JTable				listTable;
-	//private ApplicationContext aContext;
+	ApplicationContext	aContext;
 	private JPanel		panel;
 	ArrayList			savedTests;
 	boolean				skipTestUpdate	= false;
 	private ArrayList	unsavedTests;
 
 	public TableFrame(ApplicationContext aContext) {
-		//this.aContext = aContext;
-		if (aContext != null) initModule(aContext.getDispatcher());
+		this.aContext = aContext;
+		if (aContext != null)
+			initModule(aContext.getDispatcher());
 		init();
 	}
 
@@ -487,21 +487,22 @@ public class TableFrame extends JInternalFrame implements OperationListener {
 				Test test = tue.test;
 				boolean found = false;
 				if (savedTests != null) {
-					if (savedTests.contains(test)) found = true;
+					if (savedTests.contains(test))
+						found = true;
 				}
 				if (!found) {
 					if (unsavedTests != null) {
-						if (unsavedTests.contains(test)) found = true;
+						if (unsavedTests.contains(test))
+							found = true;
 					}
 				}
 
 				if (!found) {
 					if (test.isChanged()) {
 						if (unsavedTests == null)
-								unsavedTests = new ArrayList();
+							unsavedTests = new ArrayList();
 						unsavedTests.add(test);
-						TestTableModel model = (TestTableModel) listTable
-								.getModel();
+						TestTableModel model = (TestTableModel) listTable.getModel();
 						//model.removeAll();
 						TestTableRow row = new TestTableRow(test);
 						model.addRow(row);
@@ -510,14 +511,23 @@ public class TableFrame extends JInternalFrame implements OperationListener {
 					} else
 						savedTests.add(test);
 				} else {
-					int row = ((TestTableModel) listTable.getModel())
-							.getTestRowIndex(test);
-					listTable.setRowSelectionInterval(row, row);
+					int row = ((TestTableModel) listTable.getModel()).getTestRowIndex(test);
+					this.listTable.setRowSelectionInterval(row, row);
 				}
 			}
 
 		} else if (commandName.equals(PlanPanel.COMMAND_NAME_ALL_TESTS)) {
 			setSavedTests((DataSet) ae.getSource());
+		} else if (commandName.equals(SchedulerModel.COMMAND_CLEAN)) {
+			if (this.savedTests != null)
+				this.savedTests.clear();
+			if (this.unsavedTests != null)
+				this.unsavedTests.clear();
+			TestTableModel model = (TestTableModel)this.listTable.getModel();
+			model.removeAll();
+			this.listTable.revalidate();
+			this.listTable.repaint();
+			
 		}
 	}
 
@@ -525,7 +535,8 @@ public class TableFrame extends JInternalFrame implements OperationListener {
 		SwingUtilities.invokeLater(new Runnable() {
 
 			public void run() {
-				if (savedTests == null) savedTests = new ArrayList();
+				if (savedTests == null)
+					savedTests = new ArrayList();
 				TestTableModel model = (TestTableModel) listTable.getModel();
 				model.removeAll();
 				for (int i = 0; i < tests.size(); i++) {
@@ -551,40 +562,45 @@ public class TableFrame extends JInternalFrame implements OperationListener {
 			listTable.addMouseListener(new MouseAdapter() {
 
 				public void mouseClicked(MouseEvent evt) {
-					JTable table = ((JTable) evt.getSource());
+					final JTable table = ((JTable) evt.getSource());
 					if (SwingUtilities.isLeftMouseButton(evt)) {
 						int rowIndex = table.getSelectedRow();
-						TestTableModel model = (TestTableModel) table
-								.getModel();
-						TestTableRow line = (TestTableRow) model
-								.getRow(rowIndex);
-						//System.out.println("test:" + line.getTest());
-						Test test = line.getTest();
-						skipTestUpdate = true;
-						dispatcher.notify(new TestUpdateEvent(this, test,
-								TestUpdateEvent.TEST_SELECTED_EVENT));
-						skipTestUpdate = false;
+						TestTableModel model = (TestTableModel) table.getModel();
+						TestTableRow line = (TestTableRow) model.getRow(rowIndex);
+						if (model != null) {
+							//System.out.println("test:" + line.getTest());
+							Test test = line.getTest();
+							skipTestUpdate = true;
+							dispatcher.notify(new TestUpdateEvent(this, test, TestUpdateEvent.TEST_SELECTED_EVENT));
+							skipTestUpdate = false;
+						}
 					} else if (SwingUtilities.isRightMouseButton(evt)) {
 						final int[] rowIndices = table.getSelectedRows();
 						if ((rowIndices != null) && (rowIndices.length > 0)) {
-							final TestTableModel model = (TestTableModel) table
-									.getModel();
-							JPopupMenu popup = new JPopupMenu();
-							JMenuItem deleteTestMenuItem = new JMenuItem(
-									LangModelSchedule.getString("delete_tests")); //$NON-NLS-1$
+							final TestTableModel model = (TestTableModel) table.getModel();							
+							JMenuItem deleteTestMenuItem = new JMenuItem(LangModelSchedule.getString("delete_tests")); //$NON-NLS-1$
 							deleteTestMenuItem.addActionListener(new ActionListener() {
 
 								public void actionPerformed(ActionEvent e) {
 									for (int i = 0; i < rowIndices.length; i++) {
-										TestTableRow line = (TestTableRow) model
-												.getRow(rowIndices[i]);
+										TestTableRow line = (TestTableRow) model.getRow(rowIndices[i]);
+										model.remove(rowIndices[i]);
+										/**
+										 * @TODO send message to remove test !
+										 */
 										System.out.println("test:" //$NON-NLS-1$
 												+ line.getTest().getId());
 									}
+									table.revalidate();
+									table.repaint();
 								}
 							});
-							popup.add(deleteTestMenuItem);
-							popup.show(table, evt.getX(), evt.getY());
+							/**
+							 * @TODO remove comments when test will be correct remove from other panels
+							 */
+//							JPopupMenu popup = new JPopupMenu();
+//							popup.add(deleteTestMenuItem);
+//							popup.show(table, evt.getX(), evt.getY());
 						}
 					}
 
@@ -593,8 +609,7 @@ public class TableFrame extends JInternalFrame implements OperationListener {
 			{
 				//int vColIndex = 0;
 				for (int vColIndex = 0; vColIndex < tableModel.getColumnCount(); vColIndex++) {
-					TableColumn col = listTable.getColumnModel().getColumn(
-							vColIndex);
+					TableColumn col = listTable.getColumnModel().getColumn(vColIndex);
 					col.setCellRenderer(new TestTableCellRenderer());
 				}
 			}
@@ -608,8 +623,7 @@ public class TableFrame extends JInternalFrame implements OperationListener {
 
 					// The index of the column whose header was clicked
 					int columnIndex = colModel.getColumnIndexAtX(evt.getX());
-					int mColIndex = table
-							.convertColumnIndexToModel(columnIndex);
+					int mColIndex = table.convertColumnIndexToModel(columnIndex);
 					TestTableModel model = (TestTableModel) table.getModel();
 					String s;
 					if (model.getSortOrder(mColIndex))
@@ -617,14 +631,12 @@ public class TableFrame extends JInternalFrame implements OperationListener {
 					else
 						s = " ^ "; //$NON-NLS-1$
 					table.getColumnModel().getColumn(columnIndex)
-							.setHeaderValue(
-									s + model.getColumnName(mColIndex) + s);
+							.setHeaderValue(s + model.getColumnName(mColIndex) + s);
 
 					for (int i = 0; i < model.getColumnCount(); i++) {
 						if (i != mColIndex)
-								table.getColumnModel().getColumn(
-										table.convertColumnIndexToView(i))
-										.setHeaderValue(model.getColumnName(i));
+							table.getColumnModel().getColumn(table.convertColumnIndexToView(i))
+									.setHeaderValue(model.getColumnName(i));
 					}
 
 					// Force the header to resize and repaint itself
@@ -635,8 +647,7 @@ public class TableFrame extends JInternalFrame implements OperationListener {
 					if (columnIndex == -1) { return; }
 
 					// Determine if mouse was clicked between column heads
-					Rectangle headerRect = table.getTableHeader()
-							.getHeaderRect(columnIndex);
+					Rectangle headerRect = table.getTableHeader().getHeaderRect(columnIndex);
 					if (columnIndex == 0) {
 						headerRect.width -= 3; // Hard-coded constant
 					} else {
@@ -657,10 +668,8 @@ public class TableFrame extends JInternalFrame implements OperationListener {
 			});
 
 			panel.add(header, BorderLayout.NORTH);
-			panel.add(new JScrollPane(listTable,
-					ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
-					ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER),
-					BorderLayout.CENTER);
+			panel.add(new JScrollPane(listTable, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
+										ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER), BorderLayout.CENTER);
 			//panel.add(listPane, BorderLayout.CENTER);
 
 		}
@@ -682,6 +691,7 @@ public class TableFrame extends JInternalFrame implements OperationListener {
 		this.dispatcher = dispatcher;
 		this.dispatcher.register(this, TestUpdateEvent.TYPE);
 		this.dispatcher.register(this, PlanPanel.COMMAND_NAME_ALL_TESTS);
+		this.dispatcher.register(this, SchedulerModel.COMMAND_CLEAN);
 	}
 
 }

@@ -15,6 +15,7 @@ import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.Resource.ISM.*;
 import com.syrus.AMFICOM.Client.Resource.Result.*;
 
+import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
 import com.syrus.AMFICOM.Client.Schedule.Filter.*;
 import com.syrus.AMFICOM.Client.Scheduler.General.UIStorage;
 
@@ -48,17 +49,13 @@ public class PlanPanel extends JPanel implements OperationListener {
 	private static final String[]	SCALES					= new String[] {
 			"10 min", "1 hour", "6 hours", "1 day", "1 week", "1 month"};							//$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
 
-	protected static final Step[]	STEPS					= new Step[] {
-			new Step(Calendar.MINUTE, 1, 10, 6, 1),
-			new Step(Calendar.MINUTE, 10, 60, 5, 5),
-			new Step(Calendar.HOUR_OF_DAY, 1, 6, 6, 1),
-			new Step(Calendar.HOUR_OF_DAY, 4, 24, 4, 2),
-			new Step(Calendar.DAY_OF_MONTH, 1, 7, 4, 1),
+	protected static final Step[]	STEPS					= new Step[] { new Step(Calendar.MINUTE, 1, 10, 6, 1),
+			new Step(Calendar.MINUTE, 10, 60, 5, 5), new Step(Calendar.HOUR_OF_DAY, 1, 6, 6, 1),
+			new Step(Calendar.HOUR_OF_DAY, 4, 24, 4, 2), new Step(Calendar.DAY_OF_MONTH, 1, 7, 4, 1),
 			new Step(Calendar.DAY_OF_MONTH, 5, 30, 5, 1),	};
 	private ApplicationContext		aContext;
 
-	protected Calendar				cal						= Calendar
-																	.getInstance();
+	protected Calendar				cal						= Calendar.getInstance();
 
 	protected Point					currpos					= new Point();
 
@@ -81,9 +78,7 @@ public class PlanPanel extends JPanel implements OperationListener {
 	protected boolean				selectedByMouse			= false;
 
 	// real start time including minutes and seconds
-	protected Date					startDate				= new Date(
-																	System
-																			.currentTimeMillis());
+	protected Date					startDate				= new Date(System.currentTimeMillis());
 
 	protected Point					startpos				= new Point();
 
@@ -124,13 +119,13 @@ public class PlanPanel extends JPanel implements OperationListener {
 				// nothing
 			}
 
-			public void mousePressed(MouseEvent e) {				
-					startpos = e.getPoint();
-					currpos = e.getPoint();
-					if (e.getButton() == MouseEvent.BUTTON1) {
-						setCursor(UIStorage.CROSS_HAIR_CURSOR);
-						selectedByMouse = true;
-					}
+			public void mousePressed(MouseEvent e) {
+				startpos = e.getPoint();
+				currpos = e.getPoint();
+				if (e.getButton() == MouseEvent.BUTTON1) {
+					setCursor(UIStorage.CROSS_HAIR_CURSOR);
+					selectedByMouse = true;
+				}
 			}
 
 			public void mouseReleased(MouseEvent e) {
@@ -163,18 +158,22 @@ public class PlanPanel extends JPanel implements OperationListener {
 				int vy = 0;
 				int wy = getHeight();
 
-				if (PlanPanel.this.currpos.x < vx) PlanPanel.this.currpos.x = vx;
-				if (PlanPanel.this.currpos.x > vx + wx) PlanPanel.this.currpos.x = vx + wx;
-				if (PlanPanel.this.currpos.y < vy) PlanPanel.this.currpos.y = vy;
-				if (PlanPanel.this.currpos.y > vy + wy) PlanPanel.this.currpos.y = vy + wy;
-				if (PlanPanel.this.selectedByMouse) paintSelect(getGraphics().create());
+				if (PlanPanel.this.currpos.x < vx)
+					PlanPanel.this.currpos.x = vx;
+				if (PlanPanel.this.currpos.x > vx + wx)
+					PlanPanel.this.currpos.x = vx + wx;
+				if (PlanPanel.this.currpos.y < vy)
+					PlanPanel.this.currpos.y = vy;
+				if (PlanPanel.this.currpos.y > vy + wy)
+					PlanPanel.this.currpos.y = vy + wy;
+				if (PlanPanel.this.selectedByMouse)
+					paintSelect(getGraphics().create());
 			}
 
 			public void mouseMoved(MouseEvent e) {
 				// nothing
 			}
 		});
-
 
 		initModule(aContext.getDispatcher());
 		filter = new TestFilter();
@@ -185,8 +184,7 @@ public class PlanPanel extends JPanel implements OperationListener {
 
 	//private static final int TIME_OUT = 500;
 
-	public PlanPanel(JScrollPane parent, ApplicationContext aContext,
-			Date start, int scale) {
+	public PlanPanel(JScrollPane parent, ApplicationContext aContext, Date start, int scale) {
 		this(parent, aContext);
 		setScale(scale);
 		setStartDate(start);
@@ -244,16 +242,14 @@ public class PlanPanel extends JPanel implements OperationListener {
 
 	public void operationPerformed(OperationEvent ae) {
 		String commandName = ae.getActionCommand();
-		Environment.log(Environment.LOG_LEVEL_INFO, "commandName:"
-				+ commandName, getClass().getName());
+		Environment.log(Environment.LOG_LEVEL_INFO, "commandName:" + commandName, getClass().getName());
 		if (commandName.equals(TestUpdateEvent.TYPE)) {
 			TestUpdateEvent tue = (TestUpdateEvent) ae;
 			if (tue.testSelected) {
 				Test test = tue.test;
 				boolean found = false;
 				if (tests != null) {
-					for (Enumeration en = tests.elements(); en
-							.hasMoreElements();) {
+					for (Enumeration en = tests.elements(); en.hasMoreElements();) {
 						Test t = (Test) en.nextElement();
 						if (t.getId().equals(test.getId())) {
 							found = true;
@@ -265,31 +261,25 @@ public class PlanPanel extends JPanel implements OperationListener {
 					found = true;
 				}
 				if (!found) {
-					Environment.log(Environment.LOG_LEVEL_INFO,
-							"new test catched"); //$NON-NLS-1$
+					Environment.log(Environment.LOG_LEVEL_INFO, "new test catched"); //$NON-NLS-1$
 					unsavedTests.add(test);
 					{
 						TestLine testLine;
 						if (testLines == null)
-								System.out.println("testLines is null"); //$NON-NLS-1$
+							System.out.println("testLines is null"); //$NON-NLS-1$
 						if (test == null)
 							System.out.println("test is null"); //$NON-NLS-1$
 						else if (test.getMonitoredElementId() == null)
-								System.out
-										.println("test.monitored_element_id is null"); //$NON-NLS-1$
+							System.out.println("test.monitored_element_id is null"); //$NON-NLS-1$
 						if (testLines.containsKey(test.getMonitoredElementId()))
-							testLine = (TestLine) testLines.get(test
-									.getMonitoredElementId());
+							testLine = (TestLine) testLines.get(test.getMonitoredElementId());
 						else {
-							String meName = Pool.getName(MonitoredElement.typ,
-									test.getMonitoredElementId());
+							String meName = Pool.getName(MonitoredElement.typ, test.getMonitoredElementId());
 							testLine = new TestLine(aContext,
 							//parent.getViewport(),
-									meName, scaleStart.getTime(), scaleEnd
-											.getTime(), margin / 2);
+													meName, scaleStart.getTime(), scaleEnd.getTime(), margin / 2);
 							testLine.setPreferredSize(new Dimension(0, 20));
-							testLines.put(test.getMonitoredElementId(),
-									testLine);
+							testLines.put(test.getMonitoredElementId(), testLine);
 							add(testLine);
 						}
 						testLine.addTest(test);
@@ -299,18 +289,21 @@ public class PlanPanel extends JPanel implements OperationListener {
 				}
 			}
 			revalidate();
-			parent.repaint();
+			this.parent.repaint();
+		} else if (commandName.equals(SchedulerModel.COMMAND_CLEAN)){
+			this.testLines.clear();
+			removeAll();
+			revalidate();
+			this.parent.repaint();
 		}
 
 	}
 
 	public void setScale(int n) {
 		if (n < 0 || n >= SCALES.length) {
-			System.err
-					.println("Unsupported scale: " //$NON-NLS-1$
-							+ n
-							+ ". Use setScale(n);" //$NON-NLS-1$
-							+ " where n determine one of PlanPanel.getSupportedScales() element"); //$NON-NLS-1$
+			System.err.println("Unsupported scale: " //$NON-NLS-1$
+					+ n + ". Use setScale(n);" //$NON-NLS-1$
+					+ " where n determine one of PlanPanel.getSupportedScales() element"); //$NON-NLS-1$
 			return;
 		}
 		scale = n;
@@ -367,8 +360,9 @@ public class PlanPanel extends JPanel implements OperationListener {
 
 	}
 
-	protected void paintScaleDigits(Graphics g, long diff, double delta,
-			double subDelta) //, double sub_sub_delta)
+	protected void paintScaleDigits(Graphics g, long diff, double delta, double subDelta) //,
+	// double
+	// sub_sub_delta)
 	{
 		int h = getHeight() - 1;
 		//		int w = getWidth();
@@ -378,10 +372,10 @@ public class PlanPanel extends JPanel implements OperationListener {
 		if (subDelta > 60) {
 			tmpDelta = subDelta;
 			tmpDiff = diff / STEPS[actualScale].subscales;
-		} else if (actualScale == 0) sdf.applyPattern("HH:mm"); //$NON-NLS-1$
+		} else if (actualScale == 0)
+			sdf.applyPattern("HH:mm"); //$NON-NLS-1$
 
-		int shift = (int) g.getFontMetrics().getStringBounds(
-				sdf.format(cal.getTime()), g).getCenterX();
+		int shift = (int) g.getFontMetrics().getStringBounds(sdf.format(cal.getTime()), g).getCenterX();
 
 		cal.setTime(scaleStart);
 		g.setColor(Color.black);
@@ -389,27 +383,22 @@ public class PlanPanel extends JPanel implements OperationListener {
 		Color c = new Color(240, 240, 240);
 		while (cal.getTime().compareTo(scaleEnd) <= 0) {
 			g.setColor(c);
-			g.drawLine((int) (tmpDelta * counter) + margin, 0,
-					(int) (tmpDelta * counter) + margin, h);
+			g.drawLine((int) (tmpDelta * counter) + margin, 0, (int) (tmpDelta * counter) + margin, h);
 			g.setColor(Color.BLACK);
-			g.drawLine((int) (tmpDelta * counter) + margin, h,
-					(int) (tmpDelta * counter) + margin, h - 5);
+			g.drawLine((int) (tmpDelta * counter) + margin, h, (int) (tmpDelta * counter) + margin, h - 5);
 
 			String value = sdf.format(cal.getTime());
 			cal.setTimeInMillis(cal.getTimeInMillis() + tmpDiff);
-			g.drawString(value, (int) (tmpDelta * counter) + margin - shift,
-					h - 7);
+			g.drawString(value, (int) (tmpDelta * counter) + margin - shift, h - 7);
 			if (value.startsWith("00:00")) //$NON-NLS-1$
-					g.drawString(new SimpleDateFormat("dd.MM.yyyy").format(cal //$NON-NLS-1$
-							.getTime()),
-							(int) (tmpDelta * counter) + margin - 27, h - 17);
+				g.drawString(new SimpleDateFormat("dd.MM.yyyy").format(cal //$NON-NLS-1$
+						.getTime()), (int) (tmpDelta * counter) + margin - 27, h - 17);
 			counter++;
 		}
 		cal.setTime(scaleStart);
 	}
 
-	protected void paintScales(Graphics g, long diff, double delta,
-			double subDelta) {
+	protected void paintScales(Graphics g, long diff, double delta, double subDelta) {
 
 		int h = getHeight() - 1;
 		int w = getWidth();
@@ -426,8 +415,7 @@ public class PlanPanel extends JPanel implements OperationListener {
 		int counter = 0;
 		while (cal.getTime().compareTo(scaleEnd) <= 0) {
 			cal.setTimeInMillis(cal.getTimeInMillis() + tmpDiff);
-			g.drawLine((int) (tmpDelta * counter) + margin, h,
-					(int) (tmpDelta * counter) + margin, h - 3);
+			g.drawLine((int) (tmpDelta * counter) + margin, h, (int) (tmpDelta * counter) + margin, h - 3);
 			counter++;
 		}
 		cal.setTime(scaleStart);
@@ -459,7 +447,6 @@ public class PlanPanel extends JPanel implements OperationListener {
 
 	}
 
-
 	void updateDate(Date date, int scale) {
 		setScale(scale);
 		setStartDate(date);
@@ -471,13 +458,11 @@ public class PlanPanel extends JPanel implements OperationListener {
 	private void updateRealScale() {
 		actualScale = scale;
 
-		double k = (double) parent.getViewport().getViewRect().width
-				/ (double) getSize().width;
+		double k = (double) parent.getViewport().getViewRect().width / (double) getSize().width;
 		long visibleTime = (long) ((scaleEnd.getTime() - scaleStart.getTime()) * k);
 		while (visibleTime != 0 && actualScale > 0) {
 			cal.setTimeInMillis(0);
-			cal.add(STEPS[actualScale].scale, STEPS[actualScale].total
-					/ STEPS[actualScale].one);
+			cal.add(STEPS[actualScale].scale, STEPS[actualScale].total / STEPS[actualScale].one);
 			if (cal.getTimeInMillis() > visibleTime)
 				actualScale--;
 			else
@@ -492,7 +477,7 @@ public class PlanPanel extends JPanel implements OperationListener {
 
 		//double sub_delta = delta / STEPS[actualScale].subscales;
 		if (delta >= 0 && delta < 35 && actualScale < STEPS.length - 1)
-				actualScale++;
+			actualScale++;
 
 		switch (actualScale) {
 			case 1:
@@ -525,26 +510,22 @@ public class PlanPanel extends JPanel implements OperationListener {
 	}
 
 	void updateScale(double k) {
-		updateScale(k, (int) (parent.getViewport().getViewPosition().x
-				+ parent.getVisibleRect().width * (k * 0.5 - 0.5) - margin));
+		updateScale(k, (int) (parent.getViewport().getViewPosition().x + parent.getVisibleRect().width
+				* (k * 0.5 - 0.5) - margin));
 	}
 
 	void updateScale(double k, int view_x) {
-		if (getSize().width / parent.getVisibleRect().width >= maxZoom - 1
-				&& k > 1) {
+		if (getSize().width / parent.getVisibleRect().width >= maxZoom - 1 && k > 1) {
 			parent.repaint();
 			return;
 		}
 
 		if (getSize().width * k > maxZoom * parent.getVisibleRect().width)
-				k = (double) (maxZoom * parent.getVisibleRect().width)
-						/ (double) getSize().width;
+			k = (double) (maxZoom * parent.getVisibleRect().width) / (double) getSize().width;
 
-		setPreferredSize(new Dimension(
-				(int) ((getSize().width - 2 * margin) * k),
-				getPreferredSize().height));
-		setSize(new Dimension((int) ((getSize().width - 2 * margin) * k), Math
-				.max(getSize().height, getPreferredSize().height)));
+		setPreferredSize(new Dimension((int) ((getSize().width - 2 * margin) * k), getPreferredSize().height));
+		setSize(new Dimension((int) ((getSize().width - 2 * margin) * k), Math.max(getSize().height,
+																					getPreferredSize().height)));
 		/*
 		 * for (Iterator it = testLines.values().iterator(); it.hasNext();) {
 		 * TestLine testLine = (TestLine)it.next();
@@ -572,26 +553,23 @@ public class PlanPanel extends JPanel implements OperationListener {
 		//timer.start();
 		this.dispatcher = dispatcher;
 		this.dispatcher.register(this, TestUpdateEvent.TYPE);
+		this.dispatcher.register(this, SchedulerModel.COMMAND_CLEAN);
 	}
 
 	private void updateTests() {
-		Environment.log(Environment.LOG_LEVEL_INFO,
-				"updateTests", getClass().getName()); //$NON-NLS-1$
+		Environment.log(Environment.LOG_LEVEL_INFO, "updateTests", getClass().getName()); //$NON-NLS-1$
 		//		this.setCursor(UIStorage.WAIT_CURSOR);
-		aContext.getDispatcher().notify(
-				new StatusMessageEvent(LangModelSchedule
-						.getString("Updating_tests_from_BD"))); //$NON-NLS-1$
+		aContext.getDispatcher().notify(new StatusMessageEvent(LangModelSchedule.getString("Updating_tests_from_BD"))); //$NON-NLS-1$
 		DataSourceInterface dsi = aContext.getDataSourceInterface();
-		if (dsi == null) return;
+		if (dsi == null)
+			return;
 
 		//		dsi.GetTests(scaleStart.getTime(), scaleEnd.getTime());
 		SurveyDataSourceImage sDataSrcImg = new SurveyDataSourceImage(dsi);
-		String[] ids = sDataSrcImg.GetTests(scaleStart.getTime(), scaleEnd
-				.getTime());
+		String[] ids = sDataSrcImg.GetTests(scaleStart.getTime(), scaleEnd.getTime());
 
 		SimpleDateFormat lsdf = new SimpleDateFormat("dd.MM.yyyy HH:mm"); //$NON-NLS-1$
-		Environment.log(Environment.LOG_LEVEL_INFO, ids.length
-				+ " test(s) found from " //$NON-NLS-1$
+		Environment.log(Environment.LOG_LEVEL_INFO, ids.length + " test(s) found from " //$NON-NLS-1$
 				+ lsdf.format(scaleStart) + " till " //$NON-NLS-1$
 				+ lsdf.format(scaleEnd));
 
@@ -602,9 +580,9 @@ public class PlanPanel extends JPanel implements OperationListener {
 			Test test = (Test) Pool.get(Test.TYPE, ids[i]);
 			//			DataSourceInterface dsi = aContext.getDataSourceInterface();
 			if (test.getAnalysisId().length() > 0) //$NON-NLS-1$
-					dsi.GetAnalysis(test.getAnalysisId());
+				dsi.GetAnalysis(test.getAnalysisId());
 			if (test.getEvaluationId().length() > 0) //$NON-NLS-1$
-					dsi.GetEvaluation(test.getEvaluationId());
+				dsi.GetEvaluation(test.getEvaluationId());
 			//test.setChanged(false);
 
 			/**
@@ -614,13 +592,20 @@ public class PlanPanel extends JPanel implements OperationListener {
 			if (test != null) {
 				hash.put(test.getId(), test);
 			} else {
-				Environment.log(Environment.LOG_LEVEL_WARNING,
-						"test " + ids[i] + " is null"); //$NON-NLS-1$ //$NON-NLS-2$
+				Environment.log(Environment.LOG_LEVEL_WARNING, "test " + ids[i] + " is null"); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 
 		}
-		//фильтруем текущим фильтром
+		ObjectResourceDomainFilter ordf = new ObjectResourceDomainFilter(this.aContext.getSessionInterface()
+				.getDomainId());
+
+		System.out.println("this.aContext.getSessionInterface().getDomainId():"
+				+ this.aContext.getSessionInterface().getDomainId());
+
 		tests = new DataSet(hash);
+
+		tests = ordf.filter(tests);
+
 		tests = filter.filter(tests);
 
 		//подгружаем тестреквесты и недостающие тесты
@@ -632,8 +617,7 @@ public class PlanPanel extends JPanel implements OperationListener {
 		dsi.GetRequests();
 		HashSet loadTests = new HashSet();
 		for (Iterator it = treqs.iterator(); it.hasNext();) {
-			TestRequest treq = (TestRequest) Pool.get(TestRequest.TYP,
-					(String) it.next());
+			TestRequest treq = (TestRequest) Pool.get(TestRequest.TYP, (String) it.next());
 			if (treq != null) {
 				//				for (Enumeration en = treq.test_ids.elements();
 				//					en.hasMoreElements();
@@ -642,16 +626,15 @@ public class PlanPanel extends JPanel implements OperationListener {
 					java.util.List testIds = treq.getTestIds();
 					for (Iterator it2 = testIds.iterator(); it2.hasNext();) {
 						String testId = (String) it2.next();
-						Environment.log(Environment.LOG_LEVEL_INFO,
-								"test_id:" + testId); //$NON-NLS-1$
-						if (tests.get(testId) == null) loadTests.add(testId);
+						Environment.log(Environment.LOG_LEVEL_INFO, "test_id:" + testId); //$NON-NLS-1$
+						if (tests.get(testId) == null)
+							loadTests.add(testId);
 					}
 				}
 			}
 		}
 		if (!loadTests.isEmpty())
-				new SurveyDataSourceImage(dsi).GetTests((String[]) loadTests
-						.toArray(new String[loadTests.size()]));
+			new SurveyDataSourceImage(dsi).GetTests((String[]) loadTests.toArray(new String[loadTests.size()]));
 
 		// clear old tests
 		if (testLines == null)
@@ -665,15 +648,12 @@ public class PlanPanel extends JPanel implements OperationListener {
 			TestLine testLine;
 			Test test = (Test) en.nextElement();
 			if (testLines.containsKey(test.getMonitoredElementId()))
-				testLine = (TestLine) testLines.get(test
-						.getMonitoredElementId());
+				testLine = (TestLine) testLines.get(test.getMonitoredElementId());
 			else {
-				String meName = Pool.getName(MonitoredElement.typ, test
-						.getMonitoredElementId());
+				String meName = Pool.getName(MonitoredElement.typ, test.getMonitoredElementId());
 				testLine = new TestLine(aContext,
 				//parent.getViewport(),
-						meName, scaleStart.getTime(), scaleEnd.getTime(),
-						margin / 2);
+										meName, scaleStart.getTime(), scaleEnd.getTime(), margin / 2);
 				testLine.setPreferredSize(new Dimension(0, 20));
 				testLines.put(test.getMonitoredElementId(), testLine);
 			}
@@ -688,12 +668,10 @@ public class PlanPanel extends JPanel implements OperationListener {
 		//			testLine = (TestLine)it.next();
 		//			add(testLine);
 		//		}
-		setPreferredSize(new Dimension(getPreferredSize().width,
-				30 + 25 * testLines.values().size()));
+		setPreferredSize(new Dimension(getPreferredSize().width, 30 + 25 * testLines.values().size()));
 		parent.repaint();
 		//		this.setCursor(UIStorage.DEFAULT_CURSOR);
-		dispatcher.notify(new StatusMessageEvent(LangModelSchedule
-				.getString("Updating_tests_from_BD_finished"))); //$NON-NLS-1$
+		dispatcher.notify(new StatusMessageEvent(LangModelSchedule.getString("Updating_tests_from_BD_finished"))); //$NON-NLS-1$
 		dispatcher.notify(new OperationEvent(tests, 0, COMMAND_NAME_ALL_TESTS));
 	}
 }

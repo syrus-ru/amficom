@@ -26,9 +26,9 @@ import com.syrus.util.Log;
 
 public class ScheduleMainFrame extends JFrame implements OperationListener {
 
-	ApplicationContext	aContext;
+	ApplicationContext			aContext;
 
-	Dispatcher			dispatcher;
+	Dispatcher					dispatcher;
 
 	public static final String	SCHEDULER_INI_FILE	= "schedule.ini";
 
@@ -53,12 +53,12 @@ public class ScheduleMainFrame extends JFrame implements OperationListener {
 	TableFrame					tableFrame;
 
 	public ScheduleMainFrame(ApplicationContext aContext) {
-		this.aContext = aContext;		
+		this.aContext = aContext;
 		this.dispatcher = aContext.getDispatcher();
-		this.addComponentListener(new ComponentAdapter(){
-			
+		this.addComponentListener(new ComponentAdapter() {
+
 			public void componentShown(ComponentEvent e) {
-				super.componentShown(e);				
+				super.componentShown(e);
 				ScheduleMainFrame.this.desktopPane.setPreferredSize(ScheduleMainFrame.this.desktopPane.getSize());
 				new ScheduleWindowArranger(ScheduleMainFrame.this).arrange();
 			}
@@ -148,42 +148,43 @@ public class ScheduleMainFrame extends JFrame implements OperationListener {
 	void initModule() {
 		ApplicationModel aModel = this.aContext.getApplicationModel();
 
-		statusBar.distribute();
+		this.statusBar.distribute();
 		//		statusBar.setWidth("status", 100);
 		//		statusBar.setWidth("server", 250);
 		//		statusBar.setWidth("session", 200);
 		//		statusBar.setWidth("user", 100);
 		//		statusBar.setWidth("time", 50);
-		statusBar.setWidth("status", 300);
-		statusBar.setWidth("server", 250);
-		statusBar.setWidth("session", 200);
-		statusBar.setWidth("user", 100);
-		//statusBar.setWidth("domain", 150);
-		statusBar.setWidth("time", 50);
+		this.statusBar.setWidth("status", 300);
+		this.statusBar.setWidth("server", 250);
+		this.statusBar.setWidth("session", 200);
+		this.statusBar.setWidth("user", 100);
+		this.statusBar.setWidth("domain", 150);
+		this.statusBar.setWidth("time", 50);
 
-		statusBar.setText("status", LangModel.String("statusReady"));
-		statusBar.setText("server", LangModel.String("statusNoConnection"));
-		statusBar.setText("session", LangModel.String("statusNoSession"));
-		statusBar.setText("user", LangModel.String("statusNoUser"));
-		statusBar.setText("domain", LangModel.String("statusNoDomain"));
-		statusBar.setText("time", " ");
-		statusBar.organize();
+		this.statusBar.setText("status", LangModel.getString("statusReady"));
+		this.statusBar.setText("server", LangModel.getString("statusNoConnection"));
+		this.statusBar.setText("session", LangModel.getString("statusNoSession"));
+		this.statusBar.setText("user", LangModel.getString("statusNoUser"));
+		this.statusBar.setText("domain", LangModel.getString("statusNoDomain"));
+		this.statusBar.setText("time", " ");
+		this.statusBar.organize();
 
-		aContext.setDispatcher(dispatcher);
-		dispatcher.register(this, StatusMessageEvent.type);
-		dispatcher.register(this, RefChangeEvent.typ);
-		dispatcher.register(this, RefUpdateEvent.typ);
+		this.aContext.setDispatcher(this.dispatcher);
+		this.dispatcher.register(this, StatusMessageEvent.type);
+		this.dispatcher.register(this, RefChangeEvent.typ);
+		this.dispatcher.register(this, RefUpdateEvent.typ);
 
-		dispatcher.register(this, "contextchange");
+		this.dispatcher.register(this, "contextchange");
 		Environment.the_dispatcher.register(this, "contextchange");
 
-		aModel.setCommand("menuSessionNew", new SessionOpenCommand(Environment.the_dispatcher, aContext));
-		aModel.setCommand("menuSessionClose", new SessionCloseCommand(Environment.the_dispatcher, aContext));
-		aModel.setCommand("menuSessionOptions", new SessionOptionsCommand(aContext));
-		aModel.setCommand("menuSessionConnection", new SessionConnectionCommand(Environment.the_dispatcher, aContext));
+		aModel.setCommand("menuSessionNew", new SessionOpenCommand(Environment.the_dispatcher, this.aContext));
+		aModel.setCommand("menuSessionClose", new SessionCloseCommand(Environment.the_dispatcher, this.aContext));
+		aModel.setCommand("menuSessionOptions", new SessionOptionsCommand(this.aContext));
+		aModel.setCommand("menuSessionConnection", new SessionConnectionCommand(Environment.the_dispatcher,
+																				this.aContext));
 		aModel.setCommand("menuSessionChangePassword", new SessionChangePasswordCommand(Environment.the_dispatcher,
-																						aContext));
-		aModel.setCommand("menuSessionDomain", new SessionDomainCommand(Environment.the_dispatcher, aContext));
+																						this.aContext));
+		aModel.setCommand("menuSessionDomain", new SessionDomainCommand(Environment.the_dispatcher, this.aContext));
 		aModel.setCommand("menuExit", new ExitCommand(this));
 
 		setDefaultModel(aModel);
@@ -191,10 +192,10 @@ public class ScheduleMainFrame extends JFrame implements OperationListener {
 		aModel.fireModelChanged("");
 
 		if (ConnectionInterface.getActiveConnection() != null) {
-			aContext.setConnectionInterface(ConnectionInterface.getActiveConnection());
-			if (aContext.getConnectionInterface().isConnected())
-				dispatcher.notify(new ContextChangeEvent(aContext.getConnectionInterface(),
-															ContextChangeEvent.CONNECTION_OPENED_EVENT));
+			this.aContext.setConnectionInterface(ConnectionInterface.getActiveConnection());
+			if (this.aContext.getConnectionInterface().isConnected())
+				this.dispatcher.notify(new ContextChangeEvent(this.aContext.getConnectionInterface(),
+																ContextChangeEvent.CONNECTION_OPENED_EVENT));
 		} else {
 			aContext.setConnectionInterface(Environment.getDefaultConnectionInterface());
 			ConnectionInterface.setActiveConnection(aContext.getConnectionInterface());
@@ -351,6 +352,9 @@ public class ScheduleMainFrame extends JFrame implements OperationListener {
 	}
 
 	public void setDomainSelected() {
+		DataSourceInterface dataSource = aContext.getDataSourceInterface();
+		new ConfigDataSourceImage(dataSource).LoadISM();
+
 		ApplicationModel aModel = aContext.getApplicationModel();
 		aModel.enable("menuSessionClose");
 		aModel.enable("menuSessionOptions");
@@ -360,6 +364,9 @@ public class ScheduleMainFrame extends JFrame implements OperationListener {
 
 		String domainId = aContext.getSessionInterface().getDomainId();
 		statusBar.setText("domain", Pool.getName(Domain.typ, domainId));
+
+		treeFrame.init();
+		dispatcher.notify(new OperationEvent(this,0,SchedulerModel.COMMAND_CLEAN));
 
 		paramsFrame.setVisible(true);
 		propsFrame.setVisible(true);
@@ -383,7 +390,6 @@ public class ScheduleMainFrame extends JFrame implements OperationListener {
 		//		new SurveyDataSourceImage(dataSource).LoadModelingTypes();
 		//		new SchemeDataSourceImage(dataSource).LoadAttributeTypes();
 
-		new ConfigDataSourceImage(dataSource).LoadISM();
 		new SchemeDataSourceImage(dataSource).LoadISMDirectory();
 		SurveyDataSourceImage sdsi = new SurveyDataSourceImage(dataSource);
 		sdsi.LoadTestTypes();
@@ -391,8 +397,6 @@ public class ScheduleMainFrame extends JFrame implements OperationListener {
 		sdsi.LoadEvaluationTypes();
 
 		aContext.getDispatcher().notify(new StatusMessageEvent(LangModelSchedule.getString("Loding_BD_finished")));
-
-		treeFrame.init();
 
 		ApplicationModel aModel = aContext.getApplicationModel();
 		aModel.enable("menuSessionDomain");
