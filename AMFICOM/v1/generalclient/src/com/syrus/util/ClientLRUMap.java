@@ -1,5 +1,5 @@
 /*
- * $Id: ClientLRUMap.java,v 1.6 2004/12/07 10:31:58 arseniy Exp $
+ * $Id: ClientLRUMap.java,v 1.7 2004/12/07 10:36:34 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,7 +15,7 @@ import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.util.LRUMap;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2004/12/07 10:31:58 $
+ * @version $Revision: 1.7 $, $Date: 2004/12/07 10:36:34 $
  * @author $Author: arseniy $
  * @module generalclient_v1
  */
@@ -51,7 +51,7 @@ public class ClientLRUMap extends LRUMap {
 		}
 		//  array enlargement
 		super.entityCount++;
-		Entry[] array1 = new Entry[super.array.length + 10];
+		Entry[] array1 = new Entry[super.array.length + SIZE];
 		System.arraycopy(super.array, 0, array1, 0, super.array.length);
 		array1[super.array.length] = new Entry(trowedOutObject.getId(), trowedOutObject);
 		super.array = array1;
