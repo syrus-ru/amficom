@@ -1,5 +1,5 @@
 /*
- * $Id: SetTestCase.java,v 1.5 2004/10/18 09:46:19 bob Exp $
+ * $Id: SetTestCase.java,v 1.6 2004/10/29 07:30:48 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,7 +9,7 @@
 package test.com.syrus.AMFICOM.measurement;
 
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import junit.framework.Test;
@@ -36,7 +36,7 @@ import com.syrus.AMFICOM.measurement.corba.Set_Transferable;
 import com.syrus.util.ByteArray;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2004/10/18 09:46:19 $
+ * @version $Revision: 1.6 $, $Date: 2004/10/29 07:30:48 $
  * @author $Author: bob $
  * @module tools
  */
@@ -75,8 +75,7 @@ public class SetTestCase extends AbstractMesurementTestCase {
 		if (monitoredElementList.isEmpty())
 			fail("must be at less one monitored element at db");
 
-		List monitoredElementIds = new ArrayList();
-		monitoredElementIds.add(((MonitoredElement) monitoredElementList.get(0)).getId());
+		List monitoredElementIds = Collections.singletonList(((MonitoredElement) monitoredElementList.get(0)).getId());
 
 		ParameterType wvlenParam = parameterTypeDatabase.retrieveForCodename("ref_wvlen");
 		ParameterType trclenParam = parameterTypeDatabase.retrieveForCodename("ref_trclen");
@@ -88,7 +87,7 @@ public class SetTestCase extends AbstractMesurementTestCase {
 		SetParameter[] params = new SetParameter[6];
 
 		Identifier paramId = IdentifierGenerator.generateIdentifier(ObjectEntities.SETPARAMETER_ENTITY_CODE);
-		params[0] = new SetParameter(paramId, wvlenParam, new ByteArray((int) 1625).getBytes());
+		params[0] = new SetParameter(paramId, wvlenParam, new ByteArray((double) 1625).getBytes());
 
 		paramId = IdentifierGenerator.generateIdentifier(ObjectEntities.SETPARAMETER_ENTITY_CODE);
 		//params[1] = new SetParameter(paramId, trclenParam, new ByteArray((double) 131072).getBytes());
@@ -98,13 +97,13 @@ public class SetTestCase extends AbstractMesurementTestCase {
 		params[2] = new SetParameter(paramId, resParam, new ByteArray((double) 8).getBytes());
 
 		paramId = IdentifierGenerator.generateIdentifier(ObjectEntities.SETPARAMETER_ENTITY_CODE);
-		params[3] = new SetParameter(paramId, pulswdParam, new ByteArray((long) 1).getBytes());
+		params[3] = new SetParameter(paramId, pulswdParam, new ByteArray((long) 5000).getBytes());
 
 		paramId = IdentifierGenerator.generateIdentifier(ObjectEntities.SETPARAMETER_ENTITY_CODE);
-		params[4] = new SetParameter(paramId, iorParam, new ByteArray((double) 1.457).getBytes());
+		params[4] = new SetParameter(paramId, iorParam, new ByteArray((double) 1.46820).getBytes());
 
 		paramId = IdentifierGenerator.generateIdentifier(ObjectEntities.SETPARAMETER_ENTITY_CODE);
-		params[5] = new SetParameter(paramId, scansParam, new ByteArray((double) 4096).getBytes());
+		params[5] = new SetParameter(paramId, scansParam, new ByteArray((long) 4096).getBytes());
 
 		Identifier id = IdentifierGenerator.generateIdentifier(ObjectEntities.SET_ENTITY_CODE);
 		Set set = Set.createInstance(id, creatorId, SetSort.SET_SORT_MEASUREMENT_PARAMETERS, "testCaseSet",

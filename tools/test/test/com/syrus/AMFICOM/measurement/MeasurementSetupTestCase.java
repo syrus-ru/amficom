@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementSetupTestCase.java,v 1.5 2004/10/18 09:46:19 bob Exp $
+ * $Id: MeasurementSetupTestCase.java,v 1.6 2004/10/29 07:30:48 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,6 +9,7 @@
 package test.com.syrus.AMFICOM.measurement;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -38,7 +39,7 @@ import com.syrus.AMFICOM.measurement.SetDatabase;
 import com.syrus.AMFICOM.measurement.corba.MeasurementSetup_Transferable;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2004/10/18 09:46:19 $
+ * @version $Revision: 1.6 $, $Date: 2004/10/29 07:30:48 $
  * @author $Author: bob $
  * @module tools
  */
@@ -84,12 +85,11 @@ public class MeasurementSetupTestCase extends AbstractMesurementTestCase {
 		if (monitoredElementList.isEmpty())
 			fail("must be at less one monitored element at db");
 
-		List monitoredElementIds = new ArrayList();
-		monitoredElementIds.add(((MonitoredElement) monitoredElementList.get(0)).getId());
+		List monitoredElementIds = Collections.singletonList(((MonitoredElement) monitoredElementList.get(0)).getId());
 
-		Identifier id = IdentifierGenerator.generateIdentifier(ObjectEntities.MS_ENTITY_CODE);
+		Identifier measurementSetupId = IdentifierGenerator.generateIdentifier(ObjectEntities.MS_ENTITY_CODE);
 
-		MeasurementSetup mSetup = MeasurementSetup.createInstance(id, creatorId, set, null, null, null,
+		MeasurementSetup mSetup = MeasurementSetup.createInstance(measurementSetupId, creatorId, set, null, null, null,
 										"created by MeasurementSetupTestCase",
 										1000 * 60 * 10, monitoredElementIds);
 

@@ -1,5 +1,5 @@
 /*
- * $Id: ConfigureTestCase.java,v 1.4 2004/09/09 14:28:26 bob Exp $
+ * $Id: ConfigureTestCase.java,v 1.5 2004/10/29 07:30:48 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,7 +29,7 @@ import com.syrus.util.database.DatabaseConnection;
 
 
 /**
- * @version $Revision: 1.4 $, $Date: 2004/09/09 14:28:26 $
+ * @version $Revision: 1.5 $, $Date: 2004/10/29 07:30:48 $
  * @author $Author: bob $
  * @module tools
  */
@@ -37,7 +37,7 @@ public class ConfigureTestCase extends TestCase{
 
 	public static final int		DB_CONNECTION_TIMEOUT	= 120;
 
-	public static final String	DB_SID					= "amficom";
+	public static final String	DB_SID					= "mcm";
 	
 	public static Identifier domainId;
 

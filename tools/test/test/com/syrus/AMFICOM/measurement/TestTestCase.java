@@ -1,5 +1,5 @@
 /*
- * $Id: TestTestCase.java,v 1.9 2004/10/18 09:46:19 bob Exp $
+ * $Id: TestTestCase.java,v 1.10 2004/10/29 07:30:48 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,6 +9,7 @@
 package test.com.syrus.AMFICOM.measurement;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -33,7 +34,6 @@ import com.syrus.AMFICOM.measurement.MeasurementSetup;
 import com.syrus.AMFICOM.measurement.MeasurementSetupDatabase;
 import com.syrus.AMFICOM.measurement.MeasurementType;
 import com.syrus.AMFICOM.measurement.MeasurementTypeDatabase;
-import com.syrus.AMFICOM.measurement.SetDatabase;
 import com.syrus.AMFICOM.measurement.TemporalPattern;
 import com.syrus.AMFICOM.measurement.TemporalPatternDatabase;
 import com.syrus.AMFICOM.measurement.Test;
@@ -41,9 +41,10 @@ import com.syrus.AMFICOM.measurement.TestDatabase;
 import com.syrus.AMFICOM.measurement.corba.TestReturnType;
 import com.syrus.AMFICOM.measurement.corba.TestTemporalType;
 import com.syrus.AMFICOM.measurement.corba.Test_Transferable;
+import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2004/10/18 09:46:19 $
+ * @version $Revision: 1.10 $, $Date: 2004/10/29 07:30:48 $
  * @author $Author: bob $
  * @module tools
  */
@@ -65,7 +66,7 @@ public class TestTestCase extends AbstractMesurementTestCase {
 	}
 
 	public void testCreationPeriodicalTest() throws IdentifierGenerationException, IllegalObjectEntityException,
-			CreateObjectException, ObjectNotFoundException, RetrieveObjectException, IllegalDataException {
+			CreateObjectException, ObjectNotFoundException, RetrieveObjectException {
 
 		TestDatabase testDatabase = (TestDatabase) MeasurementDatabaseContext.getTestDatabase();
 		MeasurementSetupDatabase measurementSetupDatabase = (MeasurementSetupDatabase) MeasurementDatabaseContext
@@ -85,8 +86,7 @@ public class TestTestCase extends AbstractMesurementTestCase {
 			fail("must be at less one measurement setup at db");
 		}
 
-		List measurementSetupIds = new ArrayList();
-		measurementSetupIds.add(((MeasurementSetup) measurementSetupList.get(0)).getId());
+		List measurementSetupIds = Collections.singletonList(((MeasurementSetup) measurementSetupList.get(0)).getId());
 		
 		List measurementTypeList = measurementTypeDatabase.retrieveAll();
 
@@ -113,12 +113,15 @@ public class TestTestCase extends AbstractMesurementTestCase {
 
 		EvaluationType evaluationType = null;
 
-		Identifier id = IdentifierGenerator.generateIdentifier(ObjectEntities.TEST_ENTITY_CODE);
+		Identifier id = IdentifierGenerator.generateIdentifier(ObjectEntities.TEST_ENTITY_CODE);		
+		
 
-		Test test = Test.createInstance(id, creatorId, new Date(System.currentTimeMillis()), new Date(System
+		Date startDate = new Date(System.currentTimeMillis());
+		
+		Test test = Test.createInstance(id, creatorId, startDate , new Date(System
 				.currentTimeMillis() + 1000 * 60 * 60 * 24), temporalPettern, temporalType, measurementType, analysisType,
 										evaluationType, me, TestReturnType.TEST_RETURN_TYPE_WHOLE,
-										"cretated by TestTestCase", measurementSetupIds);
+										"cretated by TestTestCase at " + DatabaseDate.SDF.format(startDate) , measurementSetupIds);
 
 		Test test2 = Test.getInstance((Test_Transferable) test.getTransferable());
 

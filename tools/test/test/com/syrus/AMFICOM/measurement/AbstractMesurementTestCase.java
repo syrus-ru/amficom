@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractMesurementTestCase.java,v 1.3 2004/09/09 14:28:26 bob Exp $
+ * $Id: AbstractMesurementTestCase.java,v 1.4 2004/10/29 07:30:48 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,7 +29,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2004/09/09 14:28:26 $
+ * @version $Revision: 1.4 $, $Date: 2004/10/29 07:30:48 $
  * @author $Author: bob $
  * @module tools
  */
@@ -37,7 +37,7 @@ public abstract class AbstractMesurementTestCase extends TestCase {
 
 	public static final int		DB_CONNECTION_TIMEOUT	= 120;
 
-	public static final String	DB_SID			= "amficom";
+	public static final String	DB_SID			= "mcm";
 
 	public static Identifier	domainId;
 
@@ -102,9 +102,10 @@ public abstract class AbstractMesurementTestCase extends TestCase {
 	private static void establishDatabaseConnection() {
 		String dbHostName = ApplicationProperties.getString("DBHostName", Application.getInternetAddress());
 		String dbSid = ApplicationProperties.getString("DBSID", DB_SID);
+		String loginName = ApplicationProperties.getString("DBLoginName", "amficom");
 		long dbConnTimeout = ApplicationProperties.getInt("DBConnectionTimeout", DB_CONNECTION_TIMEOUT) * 1000;
 		try {
-			DatabaseConnection.establishConnection(dbHostName, dbSid, dbConnTimeout);
+			DatabaseConnection.establishConnection(dbHostName, dbSid, dbConnTimeout,loginName, false);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
