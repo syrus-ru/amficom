@@ -924,13 +924,8 @@ JNIEXPORT jdoubleArray JNICALL Java_com_syrus_AMFICOM_analysis_dadara_Wavelet_nM
 	get_arr(env, output, &wOut);
 
 	Wavelet *wavelet = createWavelet(type);
-	wavelet->transform(scale, yIn, inSize, iFrom, iTo, wOut);
+	wavelet->transform(scale, yIn, inSize, iFrom, iTo, wOut, norm);
 	delete wavelet;
-
-	int i;
-	double rnorm = 1.0 / norm;
-	for (i = 0; i < len; i++)
-		wOut[i] *= rnorm;
 
 	release_arr(env, input, yIn);
 	release_arr(env, output, wOut);

@@ -11,7 +11,7 @@ public:
 	virtual double normIntCheck(int s); // should be zero
 	virtual double normIntInt(int s);
 	virtual double normMx(int s);
-	virtual void transform(int s, double *in, int inLen, int iFrom, int iTo, double *out); // input range = [0..inLen-1]; out range = [0..iTo-iFrom]
+	virtual void transform(int s, double *in, int inLen, int iFrom, int iTo, double *out, double norma); // input range = [0..inLen-1]; out range = [0..iTo-iFrom]
 };
 
 class HaarWavelet : public Wavelet
@@ -19,7 +19,7 @@ class HaarWavelet : public Wavelet
 public:
 	int getMinScale();
 	double f(int s, int x);
-	void transform(int s, double *in, int inLen, int iFrom, int iTo, double *out);
+	void transform(int s, double *in, int inLen, int iFrom, int iTo, double *out, double norma);
 };
 
 class SineWavelet : public Wavelet
@@ -27,7 +27,7 @@ class SineWavelet : public Wavelet
 public:
 	int getMinScale();
 	double f(int s, int x);
-	void transform(int s, double *in, int inLen, int iFrom, int iTo, double *out);
+	void transform(int s, double *in, int inLen, int iFrom, int iTo, double *out, double norma);
 };
 
 class UserWavelet : public Wavelet

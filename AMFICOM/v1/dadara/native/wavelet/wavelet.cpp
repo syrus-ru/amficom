@@ -58,12 +58,21 @@ double Wavelet::normMx(int s)
 }
 
 // input range = [0..inLen-1]; out range = [0..iTo-iFrom]
-void Wavelet::transform(int s, double *in, int inLen, int iFrom, int iTo, double *out)
+void Wavelet::transform(int s, double *in, int inLen, int iFrom, int iTo, double *out, double norma)
 {
 	double* wData = new double[2 * s + 1];
 	assert(wData);
+
+	// get wavelet table
 	fArr(s, wData);
+
+	// normalize
+	double rnorm = 1.0 / norma;
 	int i;
+	for (i = 0; i <= s + s; i++)
+		wData[i] *= rnorm;
+
+	// convolute to output array
 	for (i = iFrom; i <= iTo; i++)
 	{
 		double sum = 0;
@@ -108,22 +117,26 @@ double SineWavelet::f(int s, int x)
 
 // quick Haar methods
 
+// NB: not tested yet
+
 // input range = [0..inLen-1]; out range = [0..iTo-iFrom]
-void HaarWavelet::transform(int s, double *in, int inLen, int iFrom, int iTo, double *out)
+void HaarWavelet::transform(int s, double *in, int inLen, int iFrom, int iTo, double *out, double norma)
 {
 	int iL = iFrom - s;
 	int iR = iTo + s;
 	int iMin = imax(iFrom - s, 0);
 	int iMax = imin(iTo + s, inLen - 1);
 
+	double rnorm = 1.0 / norma;
+
 	// prepare stats
 	double *sum = new double[iR - iL + 1]; // i.e., [iFrom - iTo + 2 * s + 1]
 	assert(sum);
 	int i;
 	double acc = 0;
-	for (i = iL;   i < iMin; i++) sum[i - iL] = acc += in[iMin];
-	for (i = iMin; i < iMax; i++) sum[i - iL] = acc += in[i];
-	for (i = iMax; i <= iR; i++)  sum[i - iL] = acc += in[iMax];
+	for (i = iL;   i < iMin; i++) sum[i - iL] = acc += in[iMin] * rnorm;
+	for (i = iMin; i < iMax; i++) sum[i - iL] = acc += in[i] * rnorm;
+	for (i = iMax; i <= iR; i++)  sum[i - iL] = acc += in[iMax] * rnorm;
 
 	// i == iFrom
 	out[0] = sum[iFrom - iL + s] - sum[iFrom - iL] - sum[iFrom - iL - 1];
@@ -139,8 +152,15 @@ void HaarWavelet::transform(int s, double *in, int inLen, int iFrom, int iTo, do
 // quick Sine methods
 
 // input range = [0..inLen-1]; out range = [0..iTo-iFrom]
-void SineWavelet::transform(int s, double *in, int inLen, int iFrom, int iTo, double *out)
+void SineWavelet::transform(int s, double *in, int inLen, int iFrom, int iTo, double *out, double norma)
 {
+	if (s < 40)
+	{
+		// our specific complex method is not efficient at small scales
+		Wavelet::transform(s, in, inLen, iFrom, iTo, out, norma);
+		return;
+	}
+	double rnorm = 1.0 / norma;
 	// prepare sine table
 	double *sine = new double[s * 2];
 	assert(sine);
@@ -149,18 +169,18 @@ void SineWavelet::transform(int s, double *in, int inLen, int iFrom, int iTo, do
 	int q = s / 2;
 	for (i = 1; i <= q; i++)
 	{
-		sine[s + s - i] = sine[s + i] = sin(M_PI * i / s);
+		sine[s + s - i] = sine[s + i] = sin(M_PI * i / s) * rnorm;
 		sine[i] = sine[s - i] = -sine[s + i];
 	}
 	// prepare cosine table
 	double *cosine = new double[s * 2];
 	assert(cosine);
-	cosine[0] = -1; cosine[s] = 1;
+	cosine[0] = -rnorm; cosine[s] = rnorm;
 	for (i = 1; i <= q; i++)
 	{
 		// odd s: we need to just cacl cosine table
 		// even s: we can use sine table
-		cosine[s - i] = cosine[s + i] = s % 2 ? cos(M_PI * i / s) : sine[s + q - i];
+		cosine[s - i] = cosine[s + i] = s % 2 ? cos(M_PI * i / s) * rnorm: sine[s + q - i];
 		cosine[i] = cosine[s + s - i] = -cosine[s + i];
 	}
 
