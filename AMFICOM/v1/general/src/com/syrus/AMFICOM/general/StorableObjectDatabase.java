@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectDatabase.java,v 1.131 2005/03/29 11:32:53 arseniy Exp $
+ * $Id: StorableObjectDatabase.java,v 1.132 2005/03/31 08:55:03 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,7 +33,7 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.131 $, $Date: 2005/03/29 11:32:53 $
+ * @version $Revision: 1.132 $, $Date: 2005/03/31 08:55:03 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -1131,7 +1131,7 @@ public abstract class StorableObjectDatabase {
 	 * @param linkedIdColumnName
 	 * @throws UpdateObjectException
 	 */
-	protected void updateLinkedEntities(Map idLinkedIdMap, String tableName, String idColumnName, String linkedIdColumnName)
+	protected void updateLinkedEntityIds(Map idLinkedIdMap, String tableName, String idColumnName, String linkedIdColumnName)
 			throws UpdateObjectException {
 		if (idLinkedIdMap == null || idLinkedIdMap.isEmpty())
 			return;
