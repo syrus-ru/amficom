@@ -1,5 +1,5 @@
 /*
- * $Id: ChangePasswordDialog.java,v 1.5 2004/08/06 06:31:59 bass Exp $
+ * $Id: ChangePasswordDialog.java,v 1.6 2004/09/25 19:34:28 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,7 +23,7 @@ import oracle.jdeveloper.layout.*;
  * пароля открытой сессии и равенство введённого и повторённого нового пароля.
  *
  * @author $Author: bass $
- * @version $Revision: 1.5 $, $Date: 2004/08/06 06:31:59 $
+ * @version $Revision: 1.6 $, $Date: 2004/09/25 19:34:28 $
  * @module generalclient_v1
  */
 public final class ChangePasswordDialog extends JDialog
@@ -136,7 +136,7 @@ public final class ChangePasswordDialog extends JDialog
 					return;
 				}
 
-				if (!ChangePasswordDialog.this.aContext.getDataSourceInterface().ChangePassword(pold, pnew))
+				if (!ChangePasswordDialog.this.aContext.getDataSource().ChangePassword(pold, pnew))
 				{
 					JOptionPane.showMessageDialog(
 							ChangePasswordDialog.this,

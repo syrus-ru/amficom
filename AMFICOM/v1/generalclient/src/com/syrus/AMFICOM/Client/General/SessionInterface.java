@@ -1,46 +1,21 @@
-//////////////////////////////////////////////////////////////////////////////
-// *                                                                      * //
-// * Syrus Systems                                                        * //
-// * Департамент Системных Исследований и Разработок                      * //
-// *                                                                      * //
-// * Проект: АМФИКОМ - система Автоматизированного Многофункционального   * //
-// *         Интеллектуального Контроля и Объектного Мониторинга          * //
-// *                                                                      * //
-// *         реализация Интегрированной Системы Мониторинга               * //
-// *                                                                      * //
-// * Название: класс содержит информацию о сессии работы пользователя     * //
-// *           с системой                                                 * //
-// *                                                                      * //
-// * Тип: Java 1.2.2                                                      * //
-// *                                                                      * //
-// * Автор: Крупенников А.В.                                              * //
-// *                                                                      * //
-// * Версия: 0.1                                                          * //
-// * От: 22 jan 2002                                                      * //
-// * Расположение: ISM\prog\java\AMFICOMConfigure\com\syrus\AMFICOM\      * //
-// *        Client\General\SessionInfo.java                               * //
-// *                                                                      * //
-// * Среда разработки: Oracle JDeveloper 3.2.2 (Build 915)                * //
-// *                                                                      * //
-// * Компилятор: Oracle javac (Java 2 SDK, Standard Edition, ver 1.2.2)   * //
-// *                                                                      * //
-// * Статус: разработка                                                   * //
-// *                                                                      * //
-// * Изменения:                                                           * //
-// *  Кем         Верс   Когда      Комментарии                           * //
-// * -----------  ----- ---------- -------------------------------------- * //
-// *                                                                      * //
-// * Описание:                                                            * //
-// *                                                                      * //
-//////////////////////////////////////////////////////////////////////////////
+/*
+ * $Id: SessionInterface.java,v 1.3 2004/09/25 19:32:20 bass Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ.
+ */
 
 package com.syrus.AMFICOM.Client.General;
 
 import java.util.Vector;
 
-public abstract class SessionInterface
-{
-
+/**
+ * @author $Author: bass $
+ * @version $Revision: 1.3 $, $Date: 2004/09/25 19:32:20 $
+ * @module generalclient_v1
+ */
+public abstract class SessionInterface {
 	static public final int SESSION_CLOSED = 0;	// вспомогательные константы
 	static public final int SESSION_OPENED = 1;	// состояния сессии
 
@@ -85,8 +60,7 @@ public abstract class SessionInterface
 	static public void setActiveSession(SessionInterface si)
 	{
 		if(si != null)
-//			if(si.isOpened())
-				active_session = si;
+			active_session = si;
 	}
 
 	static public SessionInterface getActiveSession()

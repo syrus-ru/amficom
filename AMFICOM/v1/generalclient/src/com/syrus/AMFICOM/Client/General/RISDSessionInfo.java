@@ -1,38 +1,10 @@
-//////////////////////////////////////////////////////////////////////////////
-// *                                                                      * //
-// * Syrus Systems                                                        * //
-// * Департамент Системных Исследований и Разработок                      * //
-// *                                                                      * //
-// * Проект: АМФИКОМ - система Автоматизированного Многофункционального   * //
-// *         Интеллектуального Контроля и Объектного Мониторинга          * //
-// *                                                                      * //
-// *         реализация Интегрированной Системы Мониторинга               * //
-// *                                                                      * //
-// * Название: класс содержит информацию о сессии работы пользователя     * //
-// *           с системой                                                 * //
-// *                                                                      * //
-// * Тип: Java 1.2.2                                                      * //
-// *                                                                      * //
-// * Автор: Крупенников А.В.                                              * //
-// *                                                                      * //
-// * Версия: 0.1                                                          * //
-// * От: 22 jan 2002                                                      * //
-// * Расположение: ISM\prog\java\AMFICOMConfigure\com\syrus\AMFICOM\      * //
-// *        Client\General\SessionInfo.java                               * //
-// *                                                                      * //
-// * Среда разработки: Oracle JDeveloper 3.2.2 (Build 915)                * //
-// *                                                                      * //
-// * Компилятор: Oracle javac (Java 2 SDK, Standard Edition, ver 1.2.2)   * //
-// *                                                                      * //
-// * Статус: разработка                                                   * //
-// *                                                                      * //
-// * Изменения:                                                           * //
-// *  Кем         Верс   Когда      Комментарии                           * //
-// * -----------  ----- ---------- -------------------------------------- * //
-// *                                                                      * //
-// * Описание:                                                            * //
-// *                                                                      * //
-//////////////////////////////////////////////////////////////////////////////
+/*
+ * $Id: RISDSessionInfo.java,v 1.8 2004/09/25 19:33:13 bass Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ.
+ */
 
 package com.syrus.AMFICOM.Client.General;
 
@@ -53,10 +25,11 @@ import org.omg.PortableServer.*;
 import org.omg.PortableServer.POAManagerPackage.AdapterInactive;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2004/07/27 06:31:57 $
- * @author $Author: bob $
+ * @author $Author: bass $
+ * @version $Revision: 1.8 $, $Date: 2004/09/25 19:33:13 $
+ * @module generalclient_v1
  */
-public class RISDSessionInfo extends SessionInterface {
+public final class RISDSessionInfo extends SessionInterface {
 	/**
 	 * Инициализационный файл.
 	 */
@@ -233,26 +206,18 @@ public class RISDSessionInfo extends SessionInterface {
 			AccessIdentity_TransferableHolder accessIdentityHolder = new AccessIdentity_TransferableHolder();
 			int ecode = Constants.ERROR_NO_CONNECT;
 
-			/*
-			 * если не указано соединение то берем соединение по умолчанию
-			 */
-			if (ci == null) {
-				System.out.println("ci for si " + getUser() + " was null");
-//				return null;
-				ci = new RISDConnectionInfo();
-			}
-
-			/*
-			 * если соединение не установлено то произвести соединение
-			 * с сервером
-			 */
-			if (! ci.isConnected()) {
-				System.out.println("ci " + ci.getServiceURL() + ci.getObjectName() + " for si " + ISMuser + " not connected");
-				if (ConnectionInterface.Connect(ci) == null)
+			if (ci == null)
+				ci = (RISDConnectionInfo) (RISDConnectionInfo.getInstance());
+			if (!ci.isConnected()) {
+				try {
+					ci.setConnected(true);
+				} catch (Exception e) {
+					/**
+					 * @todo Catch different exceptions separately.
+					 */
 					return null;
+				}
 			}
-//			} else
-//				ci = ConnectionInfo.active_connection;
 
 			clientStartup();
 			String ior = JavaSoftORBUtil.getInstance().getORB().object_to_string(client);
@@ -266,7 +231,7 @@ public class RISDSessionInfo extends SessionInterface {
 			 * открыть сессию
 			 */
 			try {
-				ecode = ci.server.Logon(getUser(), Rewriter.write(getPassword()), ior, accessIdentityHolder);
+				ecode = ci.getServer().Logon(getUser(), Rewriter.write(getPassword()), ior, accessIdentityHolder);
 			} catch (Exception e) {
 				System.err.println("Error " + e.getMessage());
 				e.printStackTrace();
@@ -349,12 +314,10 @@ public class RISDSessionInfo extends SessionInterface {
 		if (contains(this)) {
 			try {
 				System.out.println("closing session for " + accessIdentity.sess_id);
-				ci.server.Logoff(accessIdentity);
+				ci.getServer().Logoff(accessIdentity);
 		    } catch (Exception e) {
 		        e.printStackTrace();
 		    } 
-			ci.sessions--;
-
 			try {
 				clientShutdown();
 			} catch (UserException ue) {
@@ -379,8 +342,7 @@ public class RISDSessionInfo extends SessionInterface {
 			logRecord.setSourceMethodName("CloseSession()");
 			handler.publish(logRecord);
 
-//			si.ci.Disconnect();
-			ci.Disconnect();
+//			ci.setConnected(false);
 		}
 	}
 

@@ -1,154 +1,235 @@
-//////////////////////////////////////////////////////////////////////////////
-// *                                                                      * //
-// * Syrus Systems                                                        * //
-// * Департамент Системных Исследований и Разработок                      * //
-// *                                                                      * //
-// * Проект: АМФИКОМ - система Автоматизированного Многофункционального   * //
-// *         Интеллектуального Контроля и Объектного Мониторинга          * //
-// *                                                                      * //
-// *         реализация Интегрированной Системы Мониторинга               * //
-// *                                                                      * //
-// * Название: Информация соединения с сервером системы                   * //
-// *                                                                      * //
-// * Тип: Java 1.2.2                                                      * //
-// *                                                                      * //
-// * Автор: Крупенников А.В.                                              * //
-// *                                                                      * //
-// * Версия: 1.0                                                          * //
-// * От: 22 jun 2002                                                      * //
-// * Расположение: ISM\prog\java\AMFICOMConfigure\com\syrus\AMFICOM\      * //
-// *        Client\General\ConnectionInterface.java                       * //
-// *                                                                      * //
-// * Среда разработки: Oracle JDeveloper 3.2.2 (Build 915)                * //
-// *                                                                      * //
-// * Компилятор: Oracle javac (Java 2 SDK, Standard Edition, ver 1.2.2)   * //
-// *                                                                      * //
-// * Статус: разработка                                                   * //
-// *                                                                      * //
-// * Изменения:                                                           * //
-// *  Кем         Верс   Когда      Комментарии                           * //
-// * -----------  ----- ---------- -------------------------------------- * //
-// *                                                                      * //
-// * Описание:                                                            * //
-// *                                                                      * //
-//////////////////////////////////////////////////////////////////////////////
+/*
+ * $Id: ConnectionInterface.java,v 1.3 2004/09/25 19:31:42 bass Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ.
+ */
 
 package com.syrus.AMFICOM.Client.General;
 
+import com.syrus.AMFICOM.CORBA.AMFICOM;
+import java.lang.Object;
 import java.util.*;
+import org.omg.CORBA.*;
 
-public abstract class ConnectionInterface implements Cloneable
-{
-	static public final int CONNECTION_CLOSED = 0;// вспомогательные константы
-	static public final int CONNECTION_OPENED = 1;// состояния соединения
+/**
+ * @version $Revision: 1.3 $, $Date: 2004/09/25 19:31:42 $
+ * @author $Author: bass $
+ * @module generalclient_v1
+ */
+public abstract class ConnectionInterface {
+	private static final String DEFAULT_INSTANTIATING_CLASS_NAME = "com.syrus.AMFICOM.Client.General.RISDConnectionInfo";
 
-	static private Vector connections = new Vector();// список соединений
+	protected static ConnectionInterface instance = null;
 
-	static private ConnectionInterface active_connection;
-											// активное соединение с сервером
+	public abstract boolean isConnected();
 
-	// инициализация параметров соединения
-	// параметры берутся из файла настроек или по умолчанию
-	abstract public void initialize();
-	// установить значения параметров по умолчанию
-	abstract public void SetDefaults();
-	abstract public ConnectionInterface Connect();
-	// разорвать соединение с сервером
-	abstract public void Disconnect();
-	// есть ли соединение с сервером
-	abstract public boolean isConnected();
-	abstract public void setObjectName(String on);
-	abstract public String getObjectName();
-	abstract public void setServiceURL(String su);
-	abstract public String getServiceURL();
-	abstract public void setServerIP(String sip);
-	abstract public String getServerIP();
-	abstract public void setTCPport(String p);
-	abstract public String getTCPport();
-	abstract public void setSID(String sid);
-	abstract public String getSID();
-	abstract public void setUser(String u);
-	abstract public String getUser();
-	abstract public void setPassword(String p);
-	abstract public String getPassword();
-	abstract public String toString();
+	public abstract void setConnected(final boolean connected) throws UserException, SystemException;
 
-	protected Object clone() throws CloneNotSupportedException {
-		ConnectionInterface connectionInterface = null;
-		try {
-			connectionInterface = (ConnectionInterface) (super.clone());
-			/*
-			 * No internal fields to clone.
-			 */
-		} catch (CloneNotSupportedException cnse) {
-			/*
-			 * Never.
-			 */
-			cnse.printStackTrace();
-		}
-		return connectionInterface;
+	public static ConnectionInterface getInstance() {
+		if (instance == null)
+			synchronized (ConnectionInterface.class) {
+				if (instance == null)
+					try {
+						Class clazz;
+						ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+						String instantiatingClassName = System.getProperty("com.syrus.amficom.client.connection", DEFAULT_INSTANTIATING_CLASS_NAME);
+						if (classLoader != null)
+							clazz = Class.forName(instantiatingClassName, true, classLoader);
+						else
+							clazz = Class.forName(instantiatingClassName);
+						clazz.getMethod("getInstance", new Class[0]).invoke(clazz, new Object[0]);
+					} catch (Exception e) {
+						System.out.println("Internal error while obtaining a connection instance... exiting.");
+						e.printStackTrace();
+						System.exit(-1);
+					}
+			}
+		return instance;
 	}
 
-	public Object _clone() {
-		try {
-			return clone();
-		} catch (CloneNotSupportedException cnse) {
-			cnse.printStackTrace();
-			return null;
-		}
+	public abstract AMFICOM getServer();
+
+	public abstract String getServerName();
+
+	/**
+	 * @deprecated
+	 */
+	public static final int CONNECTION_CLOSED = 0;
+
+	/**
+	 * @deprecated
+	 */
+	public static final int CONNECTION_OPENED = 1;
+
+	/**
+	 * @deprecated
+	 */
+	private static Collection connections = new LinkedList();
+
+	/**
+	 * @deprecated
+	 */
+	private static ConnectionInterface connection;
+
+	/**
+	 * @deprecated
+	 */
+	public abstract void initialize();
+
+	/**
+	 * @deprecated
+	 */
+	public abstract void SetDefaults();
+
+	/**
+	 * @deprecated Use {@link #setConnected(boolean)} instead.
+	 */
+	public ConnectionInterface Connect() throws UserException, SystemException {
+		setConnected(true);
+		return this;
 	}
 
-	// произвести попытку соединения с сервером
-	static public ConnectionInterface Connect(ConnectionInterface ci)
-	{
+	/**
+	 * @deprecated Use {@link #setConnected(boolean)} instead.
+	 */
+	public void Disconnect() throws UserException, SystemException {
+		setConnected(false);
+	}
+
+	/**
+	 * @deprecated
+	 */
+	public abstract void setObjectName(String on);
+
+	/**
+	 * @deprecated
+	 */
+	public abstract String getObjectName();
+
+	/**
+	 * @deprecated Use {@link #getServerName()} instead.
+	 */
+	public String getServiceURL() {
+		return getServerName();
+	}
+
+	/**
+	 * @deprecated Does nothing.
+	 */
+	public void setServiceURL(String serviceUrl) {
+	}
+
+	/**
+	 * @deprecated Use {@link #getServerName()} instead.
+	 */
+	public String getServerIP() {
+		return getServerName();
+	}
+
+	/**
+	 * @deprecated Does nothing.
+	 */
+	public void setServerIP(String serverIp) {
+	}
+
+	/**
+	 * @deprecated
+	 */
+	public abstract void setTCPport(String p);
+
+	/**
+	 * @deprecated
+	 */
+	public abstract String getTCPport();
+
+	/**
+	 * @deprecated
+	 */
+	public abstract void setSID(String sid);
+
+	/**
+	 * @deprecated
+	 */
+	public abstract String getSID();
+
+	/**
+	 * @deprecated
+	 */
+	public abstract void setUser(String u);
+
+	/**
+	 * @deprecated
+	 */
+	public abstract String getUser();
+
+	/**
+	 * @deprecated
+	 */
+	public abstract void setPassword(String p);
+
+	/**
+	 * @deprecated
+	 */
+	public abstract String getPassword();
+
+	/**
+	 * @deprecated
+	 */
+	public static ConnectionInterface Connect(ConnectionInterface ci) throws UserException, SystemException {
 		if(ci == null)
 			return null;
 		return ci.Connect();
 	}
 
-	// разорвать соединение с сервером
-	static public void Disconnect(ConnectionInterface ci)
-	{
-		if(ci == null)
+	/**
+	 * @deprecated
+	 */
+	public static void Disconnect(ConnectionInterface ci) throws UserException, SystemException {
+		if (ci == null)
 			return;
 		ci.Disconnect();
 	}
 
-	static public void setActiveConnection(ConnectionInterface ci)
-	{
-		if(ci != null)
-//			if(ci.isConnected())
-				active_connection = ci;
+	/**
+	 * @deprecated Does nothing.
+	 */
+	public static void setActiveConnection(ConnectionInterface connection) {
 	}
 
-	static public ConnectionInterface getActiveConnection()
-	{
-		return active_connection;
+	/**
+	 * @deprecated Use {@link #getInstance()} instead.
+	 */
+	public static ConnectionInterface getActiveConnection() {
+		return getInstance();
 	}
 
-	static public void add(ConnectionInterface ci)
-	{
+	/**
+	 * @deprecated
+	 */
+	public static void add(ConnectionInterface ci) {
 		connections.add(ci);
 	}
 
-	static public void remove(ConnectionInterface ci)
-	{
+	/**
+	 * @deprecated
+	 */
+	public static void remove(ConnectionInterface ci) {
 		connections.remove(ci);
 	}
 
-	static public boolean contains(ConnectionInterface ci)
-	{
+	/**
+	 * @deprecated
+	 */
+	public static boolean contains(ConnectionInterface ci) {
 		return connections.contains(ci);
 	}
 
-	// вывести диагностическое сообщение
-	static public void Log(String s)
-	{
-		System.out.println (s);
-	}
-
-	static public void Log(Object s)
-	{
-		System.out.println (s.toString());
+	/**
+	 * @deprecated
+	 */
+	public static void Log(Object obj) {
+		System.out.println(obj);
 	}
 }
