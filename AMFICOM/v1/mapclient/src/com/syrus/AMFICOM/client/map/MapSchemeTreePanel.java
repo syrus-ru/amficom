@@ -201,9 +201,9 @@ public class MapSchemeTreePanel extends JPanel
 		MyMapSchemeTreeNode paths = new MyMapSchemeTreeNode("Пути", "path");
 		MyMapSchemeTreeNode topos = new MyMapSchemeTreeNode("Топологические узлы", "topo");
 
-		for(Enumeration enum = scheme.getTopLevelElements(); enum.hasMoreElements();)
+		for(Iterator it = scheme.getTopLevelElements().iterator(); it.hasNext();)
 		{
-			SchemeElement se = (SchemeElement )enum.nextElement();
+			SchemeElement se = (SchemeElement )it.next();
 			if(se.scheme_id != null && !se.scheme_id.equals(""))
 			{
 				Scheme sc = (Scheme )Pool.get(Scheme.typ, se.scheme_id);
@@ -225,16 +225,16 @@ public class MapSchemeTreePanel extends JPanel
 			}
 		}
 
-		for(Enumeration enum = scheme.getTopLevelCableLinks(); enum.hasMoreElements();)
+		for(Iterator it = scheme.getTopLevelCableLinks().iterator(); it.hasNext();)
 		{
-			ObjectResource se = (ObjectResource )enum.nextElement();
+			ObjectResource se = (ObjectResource )it.next();
 			MyMapSchemeTreeNode node = new MyMapSchemeTreeNode(se);
 			cables.add(node);
 		}
 
-		for(Enumeration enum = scheme.getTopLevelPaths(); enum.hasMoreElements();)
+		for(Iterator it = scheme.getTopLevelPaths().iterator(); it.hasNext();)
 		{
-			ObjectResource se = (ObjectResource )enum.nextElement();
+			ObjectResource se = (ObjectResource )it.next();
 			MyMapSchemeTreeNode node = new MyMapSchemeTreeNode(se);
 			paths.add(node);
 		}

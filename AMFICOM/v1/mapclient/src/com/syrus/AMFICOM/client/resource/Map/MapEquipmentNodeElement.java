@@ -361,9 +361,10 @@ public class MapEquipmentNodeElement extends MapNodeElement implements Serializa
 		SchemeElement se = (SchemeElement )Pool.get(SchemeElement.typ, this.element_id);
 
 		Vector vec = new Vector();
-		Enumeration e = se.getAllSchemesLinks();
-		for(;e.hasMoreElements();)
-			vec.add(e.nextElement());
+		for(Iterator it = se.getAllSchemesLinks().iterator(); it.hasNext();)
+		{
+			vec.add(it.next());
+		}
 
 		for(;;)
 		{
