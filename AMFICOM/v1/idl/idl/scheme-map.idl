@@ -1,5 +1,5 @@
 /*
- * $Id: scheme-map.idl,v 1.1 2004/12/17 14:49:51 bass Exp $
+ * $Id: scheme-map.idl,v 1.2 2004/12/20 09:57:40 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,9 +15,12 @@ module com {
 	module syrus {
 		module AMFICOM {
 			module map {
+				native PhysicalLink;
 				native SiteNode;
 
 				abstract valuetype ComSyrusAmficomMapCableChannelingItem {
+					attribute map::corba::PhysicalLink physicalLink;
+					attribute PhysicalLink physicalLinkImpl;
 					attribute map::corba::SiteNode startSiteNode;
 					attribute SiteNode startSiteNodeImpl;
 					attribute map::corba::SiteNode endSiteNode;

@@ -1,5 +1,5 @@
 /*
- * $Id: scheme-vt.idl,v 1.9 2004/12/17 14:49:51 bass Exp $
+ * $Id: scheme-vt.idl,v 1.10 2004/12/20 09:57:40 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -90,7 +90,8 @@ module com {
 						 * Getter returns scheme cable thread attached to this scheme port.
 						 *
 						 * @see #schemeCableThreadId
-						 * @see SchemeCableThread#schemePort()
+						 * @see SchemeCableThread#sourceSchemePort()
+						 * @see SchemeCableThread#targetSchemePort()
 						 */
 						attribute SchemeCableThread schemeCableThread;
 
@@ -234,7 +235,8 @@ module com {
 						private wstring thisName;
 						private wstring thisDescription;
 						private general::corba::Identifier cableThreadTypeId;
-						private general::corba::Identifier schemePortId;
+						private general::corba::Identifier sourceSchemePortId;
+						private general::corba::Identifier targetSchemePortId;
 						private general::corba::Identifier schemeCableLinkId;
 						private general::corba::Identifier threadId;
 						private general::corba::IdentifierSeq characteristicIds;
@@ -243,10 +245,18 @@ module com {
 						 * This is a circular dependency on {@link SchemePort}, see {@link SchemePort#schemeCableThread()}.
 						 * Getter returns scheme port this scheme cable thread is attached to.
 						 *
-						 * @see #schemePortId
+						 * @see #sourceSchemePortId
 						 * @see SchemePort#schemeCableThread()
 						 */
-						attribute SchemePort schemePort;
+						attribute SchemePort sourceSchemePort;
+						/**
+						 * This is a circular dependency on {@link SchemePort}, see {@link SchemePort#schemeCableThread()}.
+						 * Getter returns scheme port this scheme cable thread is attached to.
+						 *
+						 * @see #targetSchemePortId
+						 * @see SchemePort#schemeCableThread()
+						 */
+						attribute SchemePort targetSchemePort;
 						/**
 						 * Getter returns scheme cable link containing this scheme cable thread.
 						 *
@@ -278,7 +288,6 @@ module com {
 						private general::corba::Identifier endSiteNodeId;
 
 						attribute long sequentialNumber;
-						attribute CORBA::Map::MapPhysicalLinkElement physicalLink;
 						attribute long rowX;
 						attribute long placeY;
 						attribute double startSpare;
@@ -521,7 +530,12 @@ module com {
 						enum Type {
 							BUILDING,
 							CABLE_SUBNETWORK,
-							NETWORK
+							NETWORK,
+							FLOOR,
+							ROOM,
+							RACK,
+							BAY,
+							CARDCAGE
 						};
 
 						private wstring thisName;
