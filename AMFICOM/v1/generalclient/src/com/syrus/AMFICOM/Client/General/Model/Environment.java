@@ -1,5 +1,5 @@
 /*
- * $Id: Environment.java,v 1.15 2005/03/16 10:06:40 bob Exp $
+ * $Id: Environment.java,v 1.16 2005/03/21 17:05:38 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,11 +14,14 @@ import com.sun.java.swing.plaf.motif.MotifLookAndFeel;
 import com.sun.java.swing.plaf.windows.WindowsLookAndFeel;
 import com.syrus.AMFICOM.Client.General.*;
 import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
+import com.syrus.AMFICOM.Client.General.Lang.LangModel;
 import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
+import com.syrus.AMFICOM.Client.Resource.ResourceKeys;
 import com.syrus.io.IniFile;
 import java.awt.*;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.logging.*;
 import javax.swing.*;
@@ -28,7 +31,7 @@ import javax.swing.plaf.metal.*;
  * Класс Environment используется для хранения общей для приложения информации.
  * 
  * @author $Author: bob $
- * @version $Revision: 1.15 $, $Date: 2005/03/16 10:06:40 $
+ * @version $Revision: 1.16 $, $Date: 2005/03/21 17:05:38 $
  * @module generalclient_v1
  */
 public final class Environment
@@ -183,6 +186,7 @@ public final class Environment
 			String ll_val = iniFile.getValue(FIELD_LOG_LEVEL);
 			String lh_val = iniFile.getValue(FIELD_LOG_HANDLER);
 			initLog(lh_val, ll_val, lf_val);
+			initUIConstats();
 		}
 		catch(IOException e)
 		{
@@ -191,8 +195,25 @@ public final class Environment
 		}
 	}
 	
-	private Environment()
-	{
+	private Environment(){
+		assert false;
+	}
+	
+	private static void initUIConstats() {
+		UIManager.put(ResourceKeys.SIMPLE_DATE_FORMAT, new SimpleDateFormat(LangModel
+				.getString(ResourceKeys.SIMPLE_DATE_FORMAT)));
+		UIManager.put(ResourceKeys.ICON_OPEN_SESSION, new ImageIcon(Toolkit.getDefaultToolkit().getImage(
+			"images/open_session.gif").getScaledInstance(16, 16, Image.SCALE_SMOOTH)));
+		UIManager.put(ResourceKeys.ICON_GENERAL, new ImageIcon(Toolkit.getDefaultToolkit().getImage(
+			"images/general.gif")));
+		
+		UIManager.put(ResourceKeys.ICON_OPEN_FILE, new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/openfile.gif")));
+		
+		UIManager.put(ResourceKeys.ICON_ADD_FILE , new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/addfile.gif")));
+		UIManager.put(ResourceKeys.ICON_REMOVE_FILE , new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/removefile.gif")));
+		
+		
+		UIManager.put(ResourceKeys.INSETS_NULL, new Insets(0, 0, 0, 0));
 	}
 
 	public static String getDomainId()
