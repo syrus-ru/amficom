@@ -2,14 +2,11 @@ package com.syrus.AMFICOM.Client.Schematics.Elements;
 
 import java.awt.*;
 import java.awt.event.*;
-
 import javax.swing.*;
-import javax.swing.event.*;
 
 import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.Resource.Scheme.*;
-
-import com.syrus.AMFICOM.Client.Schematics.UI.*;
+import com.syrus.AMFICOM.Client.Schematics.UI.SchemeCableLinkFibrePanel;
 
 public class CableThreadSelectionDialog extends JDialog
 {

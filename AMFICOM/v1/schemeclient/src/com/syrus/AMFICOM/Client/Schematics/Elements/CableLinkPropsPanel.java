@@ -269,22 +269,20 @@ public class CableLinkPropsPanel extends JPanel
 	{
 		skip_changes = true;
 		classComboBox.removeAllItems();
-		Hashtable hash = new Hashtable();
+		Map hash = new HashMap();
 
 		if (Pool.getHash(CableLinkType.typ) != null)
 		{
-			for(Enumeration enum = Pool.getHash(CableLinkType.typ).elements(); enum.hasMoreElements();)
+			for(Iterator it = Pool.getHash(CableLinkType.typ).values().iterator(); it.hasNext();)
 			{
-				CableLinkType pt = (CableLinkType)enum.nextElement();
+				CableLinkType pt = (CableLinkType)it.next();
 				hash.put(pt.link_class, pt.link_class);
 			}
-			for(Enumeration enum = hash.elements(); enum.hasMoreElements(); )
-				classComboBox.addItem(enum.nextElement());
+			for(Iterator it = hash.values().iterator(); it.hasNext(); )
+				classComboBox.addItem(it.next());
 
 			if (lt != null)
-			{
 				classComboBox.setSelectedItem(lt.link_class);
-			}
 		}
 		skip_changes = false;
 	}
@@ -373,9 +371,9 @@ public class CableLinkPropsPanel extends JPanel
 
 		if (Pool.getHash(CableLinkType.typ) != null)
 		{
-			for(Enumeration enum = Pool.getHash(CableLinkType.typ).elements(); enum.hasMoreElements();)
+			for(Iterator it = Pool.getHash(CableLinkType.typ).values().iterator(); it.hasNext();)
 			{
-				CableLinkType clt = (CableLinkType)enum.nextElement();
+				CableLinkType clt = (CableLinkType)it.next();
 				if (clt.link_class.equals(selected_class))
 					typeComboBox.add(clt);
 			}

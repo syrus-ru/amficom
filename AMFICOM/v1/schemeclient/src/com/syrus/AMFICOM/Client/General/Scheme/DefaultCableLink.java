@@ -1,14 +1,10 @@
 package com.syrus.AMFICOM.Client.General.Scheme;
 
-import java.awt.Point;
-import java.awt.Rectangle;
-import java.util.HashSet;
-
-import com.syrus.AMFICOM.Client.Resource.Pool;
-import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeCableLink;
-import com.syrus.AMFICOM.Client.Resource.Scheme.SchemePath;
+import java.awt.*;
 
 import com.jgraph.graph.*;
+import com.syrus.AMFICOM.Client.Resource.Pool;
+import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeCableLink;
 
 public class DefaultCableLink extends DefaultEdge
 {

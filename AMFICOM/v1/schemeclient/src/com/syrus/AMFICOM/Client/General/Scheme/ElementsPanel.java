@@ -1,9 +1,9 @@
 package com.syrus.AMFICOM.Client.General.Scheme;
 
-import java.awt.*;
-import java.awt.event.*;
 import java.util.*;
 
+import java.awt.*;
+import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.event.UndoableEditEvent;
 
@@ -619,9 +619,9 @@ class ToolBarPanel extends UgoPanel.ToolBarPanel
 		super(panel);
 	}
 
-	protected Hashtable createGraphButtons (ElementsPanel p)
+	protected Map createGraphButtons (ElementsPanel p)
 	{
-		Hashtable buttons = new Hashtable();
+		Map buttons = new HashMap();
 
 		if (graph.getMarqueeHandler() instanceof SchemeGraph.ShemeMarqueeHandler)
 		{
@@ -727,9 +727,9 @@ class ToolBarPanel extends UgoPanel.ToolBarPanel
 
 
 			ButtonGroup group = new ButtonGroup();
-			for (Enumeration enum = buttons.elements(); enum.hasMoreElements();)
+			for (Iterator it = buttons.values().iterator(); it.hasNext();)
 			{
-				AbstractButton button = (AbstractButton)enum.nextElement();
+				AbstractButton button = (AbstractButton)it.next();
 				group.add(button);
 			}
 			mh.s.doClick();

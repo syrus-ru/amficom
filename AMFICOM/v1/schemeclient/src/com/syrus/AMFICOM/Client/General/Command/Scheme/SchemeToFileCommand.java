@@ -1,12 +1,10 @@
 package com.syrus.AMFICOM.Client.General.Command.Scheme;
 
-import java.io.FileOutputStream;
-import java.io.PrintWriter;
+import java.io.*;
 
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-
 import com.syrus.io.DirectoryToFile;
 
 public class SchemeToFileCommand extends VoidCommand

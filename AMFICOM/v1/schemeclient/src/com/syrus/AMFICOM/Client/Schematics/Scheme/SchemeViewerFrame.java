@@ -1,25 +1,19 @@
 package com.syrus.AMFICOM.Client.Schematics.Scheme;
 
-import java.awt.BorderLayout;
-import java.awt.Toolkit;
 import java.beans.PropertyVetoException;
 
-import javax.swing.ImageIcon;
-import javax.swing.JInternalFrame;
+import java.awt.*;
+import javax.swing.*;
 
-import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
-import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
-import com.syrus.AMFICOM.Client.General.Event.OperationListener;
-import com.syrus.AMFICOM.Client.General.Event.SchemeElementsEvent;
+import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.Scheme.SchemeGraph;
-import com.syrus.AMFICOM.Client.General.Scheme.UgoPanel;
+import com.syrus.AMFICOM.Client.General.Scheme.*;
 import com.syrus.AMFICOM.Client.Resource.Scheme.Scheme;
 
 public class SchemeViewerFrame extends JInternalFrame implements OperationListener
 {
-  public static final String schemeFrameDisplayed = "schemeFrameDisplayed";  
-  
+	public static final String schemeFrameDisplayed = "schemeFrameDisplayed";
+
 	public ApplicationContext aContext;
 	Dispatcher dispatcher;
 	public UgoPanel panel;

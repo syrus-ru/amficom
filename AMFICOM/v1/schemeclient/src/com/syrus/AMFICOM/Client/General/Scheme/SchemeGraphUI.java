@@ -1,15 +1,17 @@
 package com.syrus.AMFICOM.Client.General.Scheme;
 
+import java.io.IOException;
+import java.util.*;
+
 import java.awt.*;
 import java.awt.datatransfer.*;
 import java.awt.dnd.*;
 import java.awt.event.*;
-import java.io.IOException;
-import java.util.*;
 
 import com.jgraph.graph.*;
 import com.jgraph.pad.GPGraphUI;
 import com.jgraph.plaf.basic.*;
+import com.jgraph.plaf.basic.BasicGraphUI.*;
 import com.syrus.AMFICOM.Client.Resource.SchemeDirectory.ProtoElement;
 
 public class SchemeGraphUI extends GPGraphUI

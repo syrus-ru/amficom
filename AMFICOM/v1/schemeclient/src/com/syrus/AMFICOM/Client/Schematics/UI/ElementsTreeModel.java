@@ -1,15 +1,13 @@
 package com.syrus.AMFICOM.Client.Schematics.UI;
 
-import java.awt.*;
 import java.util.*;
 
+import java.awt.*;
 import javax.swing.ImageIcon;
 
-import com.syrus.AMFICOM.Client.General.Filter.*;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelConfig;
 import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.Resource.*;
-import com.syrus.AMFICOM.Client.Resource.ISMDirectory.TransmissionPathType;
 import com.syrus.AMFICOM.Client.Resource.ISMDirectory.*;
 import com.syrus.AMFICOM.Client.Resource.Map.MapProtoElement;
 import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.*;
@@ -321,11 +319,11 @@ public class ElementsTreeModel extends ObjectResourceTreeModel
 
 			else if (s.equals(MapProtoGroup.typ))
 			{
-				Hashtable map_groups = Pool.getHash(MapProtoGroup.typ);
+				Map map_groups = Pool.getHash(MapProtoGroup.typ);
 				if (map_groups != null)
-					for (Enumeration enum = map_groups.elements(); enum.hasMoreElements();)
+					for (Iterator it = map_groups.keySet().iterator(); it.hasNext();)
 					{
-						MapProtoGroup map_group = (MapProtoGroup)enum.nextElement();
+						MapProtoGroup map_group = (MapProtoGroup)it.next();
 						if (map_group.parent_id == null || map_group.parent_id.equals(""))
 							vec.add(new ObjectResourceTreeNode(map_group, map_group.getName(), true,
 									new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/folder.gif"))));

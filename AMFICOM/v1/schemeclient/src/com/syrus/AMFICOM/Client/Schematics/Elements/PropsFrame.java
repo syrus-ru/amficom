@@ -1,9 +1,10 @@
 package com.syrus.AMFICOM.Client.Schematics.Elements;
 
-import java.awt.*;
-import java.awt.event.*;
 import java.util.*;
 import java.util.List;
+
+import java.awt.*;
+import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.border.EtchedBorder;
 import javax.swing.event.*;
@@ -13,13 +14,13 @@ import com.syrus.AMFICOM.Client.Configure.UI.AddPropFrame;
 import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelSchematics;
 import com.syrus.AMFICOM.Client.General.Model.*;
+import com.syrus.AMFICOM.Client.General.Scheme.DeviceGroup;
 import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.Resource.Network.*;
 import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.*;
 import com.syrus.AMFICOM.Client.Resource.Scheme.*;
 import com.syrus.AMFICOM.Client.Resource.SchemeDirectory.*;
-import com.syrus.AMFICOM.Client.General.Scheme.DeviceGroup;
 import oracle.jdeveloper.layout.*;
 
 public class PropsFrame extends JInternalFrame
@@ -458,8 +459,8 @@ public class PropsFrame extends JInternalFrame
 	{
 		tModel.clearTable();
 		selected_item = "";
-		char_hash = new Hashtable(1);
-		attr_hash = new Hashtable(1);
+		char_hash = new HashMap(1);
+		attr_hash = new HashMap(1);
 		editable_property = false;
 		setPropsEditable(false);
 	}

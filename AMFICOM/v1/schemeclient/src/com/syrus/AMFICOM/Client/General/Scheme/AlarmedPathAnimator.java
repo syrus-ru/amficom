@@ -1,16 +1,13 @@
 package com.syrus.AMFICOM.Client.General.Scheme;
 
-import java.awt.Color;
 import java.util.*;
 
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.Resource.Pool;
-import com.syrus.AMFICOM.Client.Resource.Scheme.Scheme;
-import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeCableLink;
-import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeElement;
-import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeLink;
+import java.awt.Color;
 
 import com.jgraph.graph.DefaultEdge;
+import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
+import com.syrus.AMFICOM.Client.Resource.Pool;
+import com.syrus.AMFICOM.Client.Resource.Scheme.*;
 
 public class AlarmedPathAnimator// extends Thread implements Runnable
 {

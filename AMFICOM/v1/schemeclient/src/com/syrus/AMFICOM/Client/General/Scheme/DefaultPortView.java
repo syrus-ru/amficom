@@ -1,13 +1,13 @@
 package com.syrus.AMFICOM.Client.General.Scheme;
 
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.util.Map;
 
-import com.jgraph.*;
+import java.awt.*;
+
+import com.jgraph.JGraph;
 import com.jgraph.graph.*;
-import com.jgraph.pad.EllipseView;
+import com.jgraph.pad.*;
+import com.jgraph.pad.EllipseView.*;
 
 class DefaultPortView extends EllipseView
 {

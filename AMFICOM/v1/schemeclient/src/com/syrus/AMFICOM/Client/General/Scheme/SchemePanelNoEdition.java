@@ -1,8 +1,8 @@
 package com.syrus.AMFICOM.Client.General.Scheme;
 
-import java.awt.event.KeyEvent;
 import java.util.*;
 
+import java.awt.event.KeyEvent;
 
 import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelSchematics;
@@ -10,7 +10,7 @@ import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 
 public class SchemePanelNoEdition extends SchemePanel
 {
-	Hashtable animators = new Hashtable();
+	Map animators = new HashMap();
 
 	public SchemePanelNoEdition(ApplicationContext aContext)
 	{
@@ -122,12 +122,12 @@ public class SchemePanelNoEdition extends SchemePanel
 		}
 		else
 		{
-			for (Enumeration en = animators.elements(); en.hasMoreElements();)
+			for (Iterator it = animators.values().iterator(); it.hasNext();)
 			{
-				AlarmedPathAnimator ap = (AlarmedPathAnimator)en.nextElement();
+				AlarmedPathAnimator ap = (AlarmedPathAnimator)it.next();
 				ap.unmark();
 			}
-			animators = new Hashtable();
+			animators = new HashMap();
 		}
 	}
 }

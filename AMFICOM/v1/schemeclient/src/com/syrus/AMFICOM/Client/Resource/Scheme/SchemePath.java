@@ -1,16 +1,16 @@
 package com.syrus.AMFICOM.Client.Resource.Scheme;
 
-import java.awt.datatransfer.*;
 import java.io.*;
 import java.util.*;
 
+import java.awt.datatransfer.*;
+
 import com.syrus.AMFICOM.CORBA.Scheme.*;
-import com.syrus.AMFICOM.Client.Configure.UI.TransmissionPathPane;
-import com.syrus.AMFICOM.Client.Schematics.UI.*;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelSchematics;
 import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.Resource.Map.MapTransmissionPathProtoElement;
+import com.syrus.AMFICOM.Client.Schematics.UI.SchemePathPane;
 
 public class SchemePath extends StubResource
 		implements Transferable, Serializable

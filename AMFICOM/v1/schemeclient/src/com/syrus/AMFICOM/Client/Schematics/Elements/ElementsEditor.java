@@ -1,13 +1,9 @@
 package com.syrus.AMFICOM.Client.Schematics.Elements;
 
 import java.awt.Toolkit;
-
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.Model.SchematicsApplicationModelFactory;
 import javax.swing.UIManager;
 
-import com.syrus.AMFICOM.Client.General.Model.DefaultSchematicsApplicationModelFactory;
-import com.syrus.AMFICOM.Client.General.Model.Environment;
+import com.syrus.AMFICOM.Client.General.Model.*;
 
 
 public class ElementsEditor

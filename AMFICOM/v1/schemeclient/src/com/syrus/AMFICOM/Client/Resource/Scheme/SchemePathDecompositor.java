@@ -3,8 +3,8 @@ package com.syrus.AMFICOM.Client.Resource.Scheme;
 import java.util.*;
 
 import com.syrus.AMFICOM.Client.Resource.Pool;
-import com.syrus.AMFICOM.Client.Resource.Network.Characteristic;
 import com.syrus.AMFICOM.Client.Resource.ISM.LengthContainer;
+import com.syrus.AMFICOM.Client.Resource.Network.Characteristic;
 
 public class SchemePathDecompositor
 {
@@ -217,7 +217,6 @@ public class SchemePathDecompositor
 		if(sp == null)
 			return false;
 
-		Hashtable ht;
 		Characteristic c;
 		ElementAttribute ea;
 		double length;

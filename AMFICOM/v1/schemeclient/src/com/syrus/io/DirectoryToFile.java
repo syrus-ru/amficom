@@ -145,20 +145,20 @@ public class DirectoryToFile
 		if (Pool.getHash(EquipmentType.typ) != null)
 		{
 			Hashtable eqt_classes = new Hashtable();
-			for(Enumeration enum = Pool.getHash(EquipmentType.typ).elements(); enum.hasMoreElements();)
+			for(Iterator it = Pool.getHash(EquipmentType.typ).values().iterator(); it.hasNext();)
 			{
-				EquipmentType eqt = (EquipmentType )enum.nextElement();
+				EquipmentType eqt = (EquipmentType )it.next();
 				eqt_classes.put(eqt.eq_class, eqt.eq_class);
 			}
-			for(Enumeration eqt_classes_el = eqt_classes.elements(); eqt_classes_el.hasMoreElements(); )
+			for(Iterator eqt_classes_el = eqt_classes.values().iterator(); eqt_classes_el.hasNext(); )
 			{
-				String eqt_class = (String)eqt_classes_el.nextElement();
+				String eqt_class = (String)eqt_classes_el.next();
 
 				List vec = new ArrayList();
 				Map hash = new HashMap();
-				for(Enumeration enum = Pool.getHash(EquipmentType.typ).elements(); enum.hasMoreElements();)
+				for(Iterator it = Pool.getHash(EquipmentType.typ).values().iterator(); it.hasNext();)
 				{
-					EquipmentType eqt = (EquipmentType)enum.nextElement();
+					EquipmentType eqt = (EquipmentType)it.next();
 					if (eqt.eq_class.equals(eqt_class))
 						vec.add(eqt);
 				}
@@ -233,9 +233,9 @@ public class DirectoryToFile
 				pw.println ("@type " + PortType.typ);
 				pw.println();
 
-				for(Enumeration enum = Pool.getHash(PortType.typ).elements(); enum.hasMoreElements();)
+				for(Iterator it = Pool.getHash(PortType.typ).values().iterator(); it.hasNext();)
 				{
-					PortType pt = (PortType)enum.nextElement();
+					PortType pt = (PortType)it.next();
 					pw.println ("@name " + pt.getName());
 					pw.println ("@id " + pt.getId());
 					pw.println ("@p_class " + pt.p_class);
@@ -245,9 +245,9 @@ public class DirectoryToFile
 					pw.println ("@interface_id " + pt.interface_id);
 					pw.println ("@standard " + pt.standard);
 					pw.println ("@characteristics ");
-					for (Iterator it = pt.characteristics.values().iterator(); it.hasNext();)
+					for (Iterator cit = pt.characteristics.values().iterator(); cit.hasNext();)
 					{
-						Characteristic ch = (Characteristic)it.next();
+						Characteristic ch = (Characteristic)cit.next();
 						pw.println(ch.type_id + " " + ch.value);
 					}
 					pw.println ("@end of characteristics");
@@ -284,17 +284,17 @@ public class DirectoryToFile
 				pw.println ("@type " + TestPortType.typ);
 				pw.println();
 
-				for(Enumeration enum = Pool.getHash(TestPortType.typ).elements(); enum.hasMoreElements();)
+				for(Iterator it = Pool.getHash(TestPortType.typ).values().iterator(); it.hasNext();)
 				{
-					TestPortType tpt = (TestPortType)enum.nextElement();
+					TestPortType tpt = (TestPortType)it.next();
 					pw.println ("@name " + tpt.getName());
 					pw.println ("@id " + tpt.getId());
 					pw.println ("@description " + tpt.description);
 					pw.println ("@port_type_id " + tpt.port_type_id);
 					pw.println ("@characteristics ");
-					for (Iterator it = tpt.characteristics.values().iterator(); it.hasNext();)
+					for (Iterator cit = tpt.characteristics.values().iterator(); cit.hasNext();)
 					{
-						Characteristic ch = (Characteristic)it.next();
+						Characteristic ch = (Characteristic)cit.next();
 						pw.println(ch.type_id + " " + ch.value);
 					}
 					pw.println ("@end of characteristics");
@@ -332,23 +332,23 @@ public class DirectoryToFile
 				pw.println ("@type " + AccessPortType.typ);
 				pw.println();
 
-				for(Enumeration enum = Pool.getHash(AccessPortType.typ).elements(); enum.hasMoreElements();)
+				for(Iterator it = Pool.getHash(AccessPortType.typ).values().iterator(); it.hasNext();)
 				{
-					AccessPortType apt = (AccessPortType)enum.nextElement();
+					AccessPortType apt = (AccessPortType)it.next();
 					pw.println ("@name " + apt.getName());
 					pw.println ("@id " + apt.getId());
 					pw.println ("@description " + apt.description);
 					pw.println ("@access_type " + apt.access_type);
 					pw.println ("@characteristics ");
-					for (Iterator it = apt.characteristics.values().iterator(); it.hasNext();)
+					for (Iterator cit = apt.characteristics.values().iterator(); cit.hasNext();)
 					{
-						Characteristic ch = (Characteristic)it.next();
+						Characteristic ch = (Characteristic)cit.next();
 						pw.println(ch.type_id + " " + ch.value);
 					}
 					pw.println ("@end of characteristics");
 					pw.println ("@test_type_ids = ");
-					for (Iterator it = apt.test_type_ids.iterator(); it.hasNext();)
-						pw.println((String)it.next());
+					for (Iterator tit = apt.test_type_ids.iterator(); tit.hasNext();)
+						pw.println((String)tit.next());
 					pw.println ("@end of test_type_ids");
 					pw.println();
 					counter++;
@@ -383,9 +383,9 @@ public class DirectoryToFile
 				pw.println ("@type " + LinkType.typ);
 				pw.println();
 
-				for(Enumeration enum = Pool.getHash(LinkType.typ).elements(); enum.hasMoreElements();)
+				for(Iterator it = Pool.getHash(LinkType.typ).values().iterator(); it.hasNext();)
 				{
-					LinkType lt = (LinkType)enum.nextElement();
+					LinkType lt = (LinkType)it.next();
 					pw.println ("@name " + lt.getName());
 					pw.println ("@id " + lt.getId());
 					pw.println ("@codename " + lt.codename);
@@ -398,9 +398,9 @@ public class DirectoryToFile
 					pw.println ("@standard " + lt.standard);
 					pw.println ("@year " + lt.year);
 					pw.println ("@characteristics ");
-					for (Iterator it = lt.characteristics.values().iterator(); it.hasNext();)
+					for (Iterator cit = lt.characteristics.values().iterator(); cit.hasNext();)
 					{
-						Characteristic ch = (Characteristic)it.next();
+						Characteristic ch = (Characteristic)cit.next();
 						pw.println(ch.type_id + " " + ch.value);
 					}
 					pw.println ("@end of characteristics");
@@ -438,9 +438,9 @@ public class DirectoryToFile
 				pw.println ("@type " + CableLinkType.typ);
 				pw.println();
 
-				for(Enumeration enum = Pool.getHash(CableLinkType.typ).elements(); enum.hasMoreElements();)
+				for(Iterator it = Pool.getHash(CableLinkType.typ).values().iterator(); it.hasNext();)
 				{
-					CableLinkType lt = (CableLinkType)enum.nextElement();
+					CableLinkType lt = (CableLinkType)it.next();
 					pw.println ("@name " + lt.getName());
 					pw.println ("@id " + lt.getId());
 					pw.println ("@codename " + lt.codename);
@@ -453,9 +453,9 @@ public class DirectoryToFile
 					pw.println ("@standard " + lt.standard);
 					pw.println ("@year " + lt.year);
 					pw.println ("@characteristics ");
-					for (Iterator it = lt.characteristics.values().iterator(); it.hasNext();)
+					for (Iterator cit = lt.characteristics.values().iterator(); cit.hasNext();)
 					{
-						Characteristic ch = (Characteristic)it.next();
+						Characteristic ch = (Characteristic)cit.next();
 						pw.println(ch.type_id + " " + ch.value);
 					}
 					pw.println ("@end of characteristics");
@@ -480,21 +480,21 @@ public class DirectoryToFile
 		if (Pool.getHash(CharacteristicType.typ) != null)
 		{
 			Hashtable cht_classes = new Hashtable();
-			for(Enumeration enum = Pool.getHash(CharacteristicType.typ).elements(); enum.hasMoreElements();)
+			for(Iterator it = Pool.getHash(CharacteristicType.typ).values().iterator(); it.hasNext();)
 			{
-				CharacteristicType cht = (CharacteristicType)enum.nextElement();
+				CharacteristicType cht = (CharacteristicType)it.next();
 				cht_classes.put(cht.ch_class, cht.ch_class);
 			}
 
-			for(Enumeration cht_classes_el = cht_classes.elements(); cht_classes_el.hasMoreElements(); )
+			for(Iterator cht_classes_el = cht_classes.values().iterator(); cht_classes_el.hasNext(); )
 			{
-				String cht_class = (String)cht_classes_el.nextElement();
+				String cht_class = (String)cht_classes_el.next();
 
 				List vec = new ArrayList();
 				Map hash = new HashMap();
-				for(Enumeration enum = Pool.getHash(CharacteristicType.typ).elements(); enum.hasMoreElements();)
+				for(Iterator it = Pool.getHash(CharacteristicType.typ).values().iterator(); it.hasNext();)
 				{
-					CharacteristicType cht = (CharacteristicType)enum.nextElement();
+					CharacteristicType cht = (CharacteristicType)it.next();
 					if (cht.ch_class.equals(cht_class))
 						vec.add(cht);
 				}
@@ -562,9 +562,9 @@ public class DirectoryToFile
 				pw.println ("@type " + SchemeDevice.typ);
 				pw.println();
 
-				for(Enumeration enum = Pool.getHash(SchemeDevice.typ).elements(); enum.hasMoreElements();)
+				for(Iterator it = Pool.getHash(SchemeDevice.typ).values().iterator(); it.hasNext();)
 				{
-					device = (SchemeDevice)enum.nextElement();
+					device = (SchemeDevice)it.next();
 					pw.println ("@name " + device.getName());
 					pw.println ("@id " + device.getId());
 					pw.println ("@ports ");
@@ -615,9 +615,9 @@ public class DirectoryToFile
 				pw.println ("@type " + SchemePort.typ);
 				pw.println();
 
-				for(Enumeration enum = Pool.getHash(SchemePort.typ).elements(); enum.hasMoreElements();)
+				for(Iterator it = Pool.getHash(SchemePort.typ).values().iterator(); it.hasNext();)
 				{
-					port = (SchemePort)enum.nextElement();
+					port = (SchemePort)it.next();
 					pw.println ("@name " + port.getName());
 					pw.println ("@id " + port.getId());
 					pw.println ("@port_type_id " + port.port_type_id);
@@ -664,9 +664,9 @@ public class DirectoryToFile
 				pw.println ("@type " + SchemeCablePort.typ);
 				pw.println();
 
-				for(Enumeration enum = Pool.getHash(SchemeCablePort.typ).elements(); enum.hasMoreElements();)
+				for(Iterator it = Pool.getHash(SchemeCablePort.typ).values().iterator(); it.hasNext();)
 				{
-					port = (SchemeCablePort)enum.nextElement();
+					port = (SchemeCablePort)it.next();
 					pw.println ("@name " + port.getName());
 					pw.println ("@id " + port.getId());
 					pw.println ("@cable_port_type_id " + port.cable_port_type_id);
@@ -713,9 +713,9 @@ public class DirectoryToFile
 				pw.println ("@type " + SchemeLink.typ);
 				pw.println();
 
-				for(Enumeration enum = Pool.getHash(SchemeLink.typ).elements(); enum.hasMoreElements();)
+				for(Iterator it = Pool.getHash(SchemeLink.typ).values().iterator(); it.hasNext();)
 				{
-					link = (SchemeLink)enum.nextElement();
+					link = (SchemeLink)it.next();
 					pw.println ("@name " + link.getName());
 					pw.println ("@id " + link.getId());
 					pw.println ("@link_type_id " + link.link_type_id);
@@ -761,9 +761,9 @@ public class DirectoryToFile
 				pw.println ("@type " + SchemeCableLink.typ);
 				pw.println();
 
-				for(Enumeration enum = Pool.getHash(SchemeCableLink.typ).elements(); enum.hasMoreElements();)
+				for(Iterator it = Pool.getHash(SchemeCableLink.typ).values().iterator(); it.hasNext();)
 				{
-					link = (SchemeCableLink)enum.nextElement();
+					link = (SchemeCableLink)it.next();
 					pw.println ("@name " + link.getName());
 					pw.println ("@id " + link.getId());
 					pw.println ("@cable_link_type_id " + link.cable_link_type_id);
@@ -772,9 +772,9 @@ public class DirectoryToFile
 					pw.println ("@optical_length " + String.valueOf(link.optical_length));
 					pw.println ("@physical_length " + String.valueOf(link.physical_length));
 					pw.println ("@cable_threads ");
-					for (Iterator it = link.cable_threads.iterator(); it.hasNext();)
+					for (Iterator tit = link.cable_threads.iterator(); tit.hasNext();)
 					{
-						SchemeCableThread thread = (SchemeCableThread)it.next();
+						SchemeCableThread thread = (SchemeCableThread)tit.next();
 						pw.println (thread.getId());
 						pw.println (thread.getName());
 						pw.println (thread.link_type_id);
@@ -806,20 +806,20 @@ public class DirectoryToFile
 		if (Pool.getHash(ProtoElement.typ) != null)
 		{
 			Hashtable proto_classes = new Hashtable();
-			for(Enumeration enum = Pool.getHash(ProtoElement.typ).elements(); enum.hasMoreElements();)
+			for(Iterator it = Pool.getHash(ProtoElement.typ).values().iterator(); it.hasNext();)
 			{
-				proto = (ProtoElement)enum.nextElement();
+				proto = (ProtoElement)it.next();
 				type = (EquipmentType)Pool.get(EquipmentType.typ, proto.equipment_type_id);
 				proto_classes.put(type.eq_class, type.eq_class);
 			}
-			for(Enumeration proto_classes_el = proto_classes.elements(); proto_classes_el.hasMoreElements(); )
+			for(Iterator proto_classes_el = proto_classes.values().iterator(); proto_classes_el.hasNext(); )
 			{
-				String proto_class = (String)proto_classes_el.nextElement();
+				String proto_class = (String)proto_classes_el.next();
 
 				List vec = new ArrayList();
-				for(Enumeration enum = Pool.getHash(ProtoElement.typ).elements(); enum.hasMoreElements();)
+				for(Iterator it = Pool.getHash(ProtoElement.typ).values().iterator(); it.hasNext();)
 				{
-					proto = (ProtoElement)enum.nextElement();
+					proto = (ProtoElement)it.next();
 					type = (EquipmentType)Pool.get(EquipmentType.typ, proto.equipment_type_id);
 					if (type.eq_class.equals(proto_class))
 						vec.add(proto);
@@ -907,9 +907,9 @@ public class DirectoryToFile
 				pw.println ("@type " + MapProtoElement.typ);
 				pw.println();
 
-				for(Enumeration enum = Pool.getHash(MapProtoElement.typ).elements(); enum.hasMoreElements();)
+				for(Iterator it = Pool.getHash(MapProtoElement.typ).values().iterator(); it.hasNext();)
 				{
-					map_proto = (MapProtoElement)enum.nextElement();
+					map_proto = (MapProtoElement)it.next();
 					pw.println ("@id " + map_proto.getId());
 					pw.println ("@name " + map_proto.getName());
 					pw.println ("@description " + map_proto.description);
@@ -926,8 +926,8 @@ public class DirectoryToFile
 					writeVisualElement(proto_image_dir + map_proto.getId(), baos.toByteArray());
 
 					pw.println ("@protoelements ");
-					for (Enumeration e = map_proto.pe_ids.elements(); e.hasMoreElements();)
-						pw.println ((String)e.nextElement());
+					for (Iterator pit = map_proto.pe_ids.iterator(); pit.hasNext();)
+						pw.println ((String)pit.next());
 					pw.println ("@end of protoelements");
 					pw.println ();
 					counter++;
@@ -968,19 +968,19 @@ public class DirectoryToFile
 				pw.println ("@type " + MapProtoGroup.typ);
 				pw.println();
 
-				for(Enumeration enum = Pool.getHash(MapProtoGroup.typ).elements(); enum.hasMoreElements();)
+				for(Iterator it = Pool.getHash(MapProtoGroup.typ).values().iterator(); it.hasNext();)
 				{
-					map_proto = (MapProtoGroup)enum.nextElement();
+					map_proto = (MapProtoGroup)it.next();
 					pw.println ("@id " + map_proto.getId());
 					pw.println ("@name " + map_proto.getName());
 					pw.println ("@parent_id " + map_proto.parent_id);
 					pw.println ("@groups ");
-					for (Enumeration e = map_proto.group_ids.elements(); e.hasMoreElements();)
-						pw.println ((String)e.nextElement());
+					for (Iterator git = map_proto.group_ids.iterator(); git.hasNext();)
+						pw.println ((String)git.next());
 					pw.println ("@end of groups");
 					pw.println ("@mapprotos ");
-					for (Enumeration e = map_proto.mapproto_ids.elements(); e.hasMoreElements();)
-						pw.println ((String)e.nextElement());
+					for (Iterator mit = map_proto.mapproto_ids.iterator(); mit.hasNext();)
+						pw.println ((String)mit.next());
 					pw.println ("@end of mapprotos");
 
 					pw.println ();
@@ -1023,9 +1023,9 @@ public class DirectoryToFile
 				pw.println ("@type " + Scheme.typ);
 				pw.println();
 
-				for(Enumeration enum = Pool.getHash(Scheme.typ).elements(); enum.hasMoreElements();)
+				for(Iterator sit = Pool.getHash(Scheme.typ).values().iterator(); sit.hasNext();)
 				{
-					scheme = (Scheme)enum.nextElement();
+					scheme = (Scheme)sit.next();
 					pw.println ("@id " + scheme.getId());
 					pw.println ("@name " + scheme.getName());
 					pw.println ("@created " + String.valueOf(scheme.created));
@@ -1109,9 +1109,9 @@ public class DirectoryToFile
 				pw.println ("@type " + SchemeElement.typ);
 				pw.println();
 
-				for(Enumeration enum = Pool.getHash(SchemeElement.typ).elements(); enum.hasMoreElements();)
+				for(Iterator sit = Pool.getHash(SchemeElement.typ).values().iterator(); sit.hasNext();)
 				{
-					el = (SchemeElement)enum.nextElement();
+					el = (SchemeElement)sit.next();
 					pw.println ("@id " + el.getId());
 					pw.println ("@name " + el.getName());
 					//   pw.println ("@equipment_id " + el.equipment_id);
@@ -1176,18 +1176,18 @@ public class DirectoryToFile
 				pw.println ("@type " + SchemePath.typ);
 				pw.println();
 
-				for(Enumeration enum = Pool.getHash(SchemePath.typ).elements(); enum.hasMoreElements();)
+				for(Iterator it = Pool.getHash(SchemePath.typ).values().iterator(); it.hasNext();)
 				{
-					path = (SchemePath)enum.nextElement();
+					path = (SchemePath)it.next();
 					pw.println ("@id " + path.getId());
 					pw.println ("@name " + path.getName());
 					pw.println ("@start_device_id " + path.start_device_id);
 					pw.println ("@end_device_id " + path.end_device_id);
 					pw.println ("@type_id " + path.type_id);
 					pw.println ("@pathelements ");
-					for (Iterator it = path.links.iterator(); it.hasNext();)
+					for (Iterator lit = path.links.iterator(); lit.hasNext();)
 					{
-						PathElement pe = (PathElement)it.next();
+						PathElement pe = (PathElement)lit.next();
 						pw.println (String.valueOf(pe.n));
 						pw.println (String.valueOf(pe.is_cable));
 						pw.println (pe.link_id);

@@ -1,41 +1,20 @@
 package com.syrus.AMFICOM.Client.Schematics.UI;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.Toolkit;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.Enumeration;
-import java.util.Hashtable;
 import java.util.*;
 
-import javax.swing.BorderFactory;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTree;
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
 import javax.swing.border.EtchedBorder;
 
-import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
-import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
-import com.syrus.AMFICOM.Client.General.Event.OperationListener;
-import com.syrus.AMFICOM.Client.General.Event.SchemeElementsEvent;
-import com.syrus.AMFICOM.Client.General.Event.TreeDataSelectionEvent;
-import com.syrus.AMFICOM.Client.General.Event.TreeListSelectionEvent;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.Model.Environment;
-import com.syrus.AMFICOM.Client.General.UI.ObjectResourceTreeModel;
-import com.syrus.AMFICOM.Client.General.UI.UniTreePanel;
+import com.syrus.AMFICOM.Client.General.Event.*;
+import com.syrus.AMFICOM.Client.General.Model.*;
+import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.Client.Resource.Map.MapProtoElement;
-import com.syrus.AMFICOM.Client.Resource.Scheme.MapProtoGroup;
-import com.syrus.AMFICOM.Client.Resource.Scheme.Scheme;
+import com.syrus.AMFICOM.Client.Resource.Scheme.*;
 import com.syrus.AMFICOM.Client.Resource.SchemeDirectory.ProtoElement;
-
-import oracle.jdeveloper.layout.XYConstraints;
-import oracle.jdeveloper.layout.XYLayout;
+import oracle.jdeveloper.layout.*;
 
 public class ElementsNavigatorPanel extends JPanel implements OperationListener
 {
@@ -219,9 +198,9 @@ public class ElementsNavigatorPanel extends JPanel implements OperationListener
 				Pool.remove(MapProtoElement.typ, id);
 
 				ArrayList groups = new ArrayList();
-				for (Enumeration enum = Pool.getHash(MapProtoGroup.typ).elements(); enum.hasMoreElements();)
+				for(Iterator it = Pool.getHash(MapProtoGroup.typ).values().iterator(); it.hasNext();)
 				{
-					MapProtoGroup group = (MapProtoGroup)enum.nextElement();
+					MapProtoGroup group = (MapProtoGroup)it.next();
 					if (group.mapproto_ids.contains(id));
 					{
 						group.mapproto_ids.remove(id);
@@ -256,10 +235,10 @@ public class ElementsNavigatorPanel extends JPanel implements OperationListener
 
 				aContext.getDataSourceInterface().RemoveSchemeProtos(new String[] {proto_id});
 
-				Hashtable hash = Pool.getHash(MapProtoElement.typ);
-				for (Enumeration enum = hash.elements(); enum.hasMoreElements();)
+				Map hash = Pool.getHash(MapProtoElement.typ);
+				for (Iterator it = hash.keySet().iterator(); it.hasNext();)
 				{
-					MapProtoElement map_proto = (MapProtoElement)enum.nextElement();
+					MapProtoElement map_proto = (MapProtoElement)it.next();
 					if (map_proto.pe_ids.contains(proto_id))
 					{
 						map_proto.pe_ids.remove(proto_id);

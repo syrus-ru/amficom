@@ -1,28 +1,12 @@
 package com.syrus.AMFICOM.Client.General.Scheme;
 
-import java.util.ArrayList;
+import java.util.*;
 
-import com.syrus.AMFICOM.Client.General.Event.CatalogNavigateEvent;
-import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
-import com.syrus.AMFICOM.Client.General.Event.SchemeNavigateEvent;
-import com.syrus.AMFICOM.Client.Resource.ObjectResource;
-import com.syrus.AMFICOM.Client.Resource.Pool;
-import com.syrus.AMFICOM.Client.Resource.ISM.AccessPort;
-import com.syrus.AMFICOM.Client.Resource.ISM.KIS;
-import com.syrus.AMFICOM.Client.Resource.ISM.TransmissionPath;
-import com.syrus.AMFICOM.Client.Resource.Network.CableLink;
-import com.syrus.AMFICOM.Client.Resource.Network.CablePort;
-import com.syrus.AMFICOM.Client.Resource.Network.Equipment;
-import com.syrus.AMFICOM.Client.Resource.Network.Link;
-import com.syrus.AMFICOM.Client.Resource.Network.Port;
-import com.syrus.AMFICOM.Client.Resource.Scheme.Scheme;
-import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeCableLink;
-import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeCablePort;
-import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeDevice;
-import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeElement;
-import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeLink;
-import com.syrus.AMFICOM.Client.Resource.Scheme.SchemePath;
-import com.syrus.AMFICOM.Client.Resource.Scheme.SchemePort;
+import com.syrus.AMFICOM.Client.General.Event.*;
+import com.syrus.AMFICOM.Client.Resource.*;
+import com.syrus.AMFICOM.Client.Resource.ISM.*;
+import com.syrus.AMFICOM.Client.Resource.Network.*;
+import com.syrus.AMFICOM.Client.Resource.Scheme.*;
 import com.syrus.AMFICOM.Client.Resource.SchemeDirectory.ProtoElement;
 
 public class Notifier
@@ -428,8 +412,8 @@ public class Notifier
 				System.out.println("\t scheme_id = \"" + o[i].scheme_id + "\"");
 				System.out.println("\t equipment_id = \"" + o[i].equipment_id + "\"");
 				System.out.print("\t device_id =");
-				for (int j = 0; j < o[i].devices.size(); j++)
-					System.out.print(" \"" + ((SchemeDevice)o[i].devices.get(j)).getId() + "\"");
+				for (Iterator it = o[i].devices.iterator(); it.hasNext();)
+					System.out.print(" \"" + ((SchemeDevice)it.next()).getId() + "\"");
 				System.out.println();
 			}
 		}
@@ -450,8 +434,8 @@ public class Notifier
 				System.out.println("ProtoElement: " + o[i].getId());
 				System.out.println("\t equipment_type_id = \"" + o[i].equipment_type_id + "\"");
 				System.out.print("\t device_id =");
-				for (int j = 0; j < o[i].devices.size(); j++)
-					System.out.print(" \"" + ((SchemeDevice)o[i].devices.get(j)).getId() + "\"");
+				for (Iterator it = o[i].devices.iterator(); it.hasNext();)
+					System.out.print(" \"" + ((SchemeDevice)it.next()).getId() + "\"");
 				System.out.println();
 			}
 		}

@@ -1,10 +1,8 @@
 package com.syrus.AMFICOM.Client.General.Scheme;
 
-import com.syrus.AMFICOM.Client.Resource.Pool;
-import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeCablePort;
-import com.syrus.AMFICOM.Client.Resource.Scheme.SchemePort;
-
 import com.jgraph.graph.DefaultGraphCell;
+import com.syrus.AMFICOM.Client.Resource.Pool;
+import com.syrus.AMFICOM.Client.Resource.Scheme.*;
 
 public class BlockPortCell extends DefaultGraphCell
 {

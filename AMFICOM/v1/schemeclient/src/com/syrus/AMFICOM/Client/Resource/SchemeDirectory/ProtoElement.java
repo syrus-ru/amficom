@@ -4,6 +4,8 @@ import java.io.*;
 import java.util.*;
 import java.util.zip.*;
 
+import java.awt.datatransfer.*;
+
 import com.syrus.AMFICOM.CORBA.Scheme.*;
 import com.syrus.AMFICOM.Client.Configure.UI.EquipmentTypePane;
 import com.syrus.AMFICOM.Client.General.UI.*;
@@ -11,19 +13,6 @@ import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.Resource.Map.MapProtoElement;
 import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.EquipmentType;
 import com.syrus.AMFICOM.Client.Resource.Scheme.*;
-import java.awt.datatransfer.*;
-import java.io.*;
-import java.util.*;
-import java.util.zip.*;
-
-import com.syrus.AMFICOM.CORBA.Scheme.*;
-import com.syrus.AMFICOM.Client.General.Lang.LangModelSchematics;
-import com.syrus.AMFICOM.Client.General.UI.*;
-import com.syrus.AMFICOM.Client.Resource.*;
-import com.syrus.AMFICOM.Client.Resource.Map.MapProtoElement;
-import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.EquipmentType;
-
-import com.syrus.AMFICOM.Client.Schematics.UI.*;
 
 public class ProtoElement extends StubResource
 		implements Transferable, Serializable
@@ -201,7 +190,6 @@ public class ProtoElement extends StubResource
 			link.updateLocalFromTransferable();
 			Pool.put(SchemeLink.typ, link.getId(), link);
 		}
-
 	}
 
 	public long getModified()

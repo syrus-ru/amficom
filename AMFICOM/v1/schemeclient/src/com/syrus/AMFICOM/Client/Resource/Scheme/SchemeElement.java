@@ -1,9 +1,10 @@
 package com.syrus.AMFICOM.Client.Resource.Scheme;
 
-import java.awt.datatransfer.*;
 import java.io.*;
 import java.util.*;
 import java.util.zip.*;
+
+import java.awt.datatransfer.*;
 
 import com.syrus.AMFICOM.CORBA.Scheme.*;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelSchematics;

@@ -1,14 +1,11 @@
 package com.syrus.AMFICOM.Client.General.Command.Scheme;
 
-import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.*;
 
-import com.syrus.AMFICOM.Client.General.Command.OpenTypedTemplateCommand;
-import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
-import com.syrus.AMFICOM.Client.General.Scheme.*;
+import com.syrus.AMFICOM.Client.General.Command.*;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.Report.ReportTemplate;
 import com.syrus.AMFICOM.Client.General.Report.AMTReport;
+import com.syrus.AMFICOM.Client.General.Scheme.UgoPanel;
 
 public class CreateSchemeReportCommand extends VoidCommand
 {

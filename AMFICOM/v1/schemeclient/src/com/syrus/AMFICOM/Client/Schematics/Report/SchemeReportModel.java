@@ -1,24 +1,15 @@
 package com.syrus.AMFICOM.Client.Schematics.Report;
 
-import com.syrus.AMFICOM.Client.General.Report.APOReportModel;
-
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.Lang.LangModelSchematics;
-import com.syrus.AMFICOM.Client.General.Lang.LangModelReport;
-
-import com.syrus.AMFICOM.Client.General.Report.*;
-
-import com.syrus.AMFICOM.Client.General.Scheme.UgoPanel;
-import com.syrus.AMFICOM.Client.General.Scheme.SchemeGraph;
-import com.syrus.AMFICOM.Client.Resource.Scheme.Scheme;
-import com.syrus.AMFICOM.Client.Resource.Pool;
-
-import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
-import com.syrus.AMFICOM.Client.Resource.SchemeDataSourceImage;
+import java.util.*;
 
 import javax.swing.JComponent;
 
-import java.util.*;
+import com.syrus.AMFICOM.Client.General.Lang.*;
+import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
+import com.syrus.AMFICOM.Client.General.Report.*;
+import com.syrus.AMFICOM.Client.General.Scheme.UgoPanel;
+import com.syrus.AMFICOM.Client.Resource.*;
+import com.syrus.AMFICOM.Client.Resource.Scheme.Scheme;
 
 public class SchemeReportModel extends APOReportModel
 {

@@ -201,7 +201,7 @@ public class Scheme extends StubResource implements Serializable
 		Pool.put(Scheme.typ, scheme.getId(), scheme);
 		Pool.put("clonedids", id, scheme.getId());
 
-		Hashtable ht = Pool.getHash("clonedids");
+		Map ht = Pool.getHash("clonedids");
 		scheme.clones.put(id, scheme.getId());
 		for (Iterator it = elements.iterator(); it.hasNext();)
 		{

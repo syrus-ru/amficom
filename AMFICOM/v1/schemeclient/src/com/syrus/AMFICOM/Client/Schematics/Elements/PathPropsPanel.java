@@ -1,10 +1,10 @@
 package com.syrus.AMFICOM.Client.Schematics.Elements;
 
-import java.awt.*;
-import java.awt.event.*;
 import java.util.*;
 import java.util.List;
 
+import java.awt.*;
+import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.event.*;
 
@@ -16,7 +16,6 @@ import com.syrus.AMFICOM.Client.Resource.ISMDirectory.TransmissionPathType;
 import com.syrus.AMFICOM.Client.Resource.Network.Equipment;
 import com.syrus.AMFICOM.Client.Resource.Scheme.*;
 import com.syrus.AMFICOM.Client.Resource.SchemeDirectory.ProtoElement;
-import com.syrus.AMFICOM.Client.General.UI.PopupNameFrame;
 
 public class PathPropsPanel extends JPanel
 {
@@ -166,13 +165,13 @@ public class PathPropsPanel extends JPanel
 	private void setDefaults()
 	{
 		typeComboBox.removeAllItems();
-		Hashtable hash = new Hashtable();
+		Map hash = new HashMap();
 
 		if (Pool.getHash(TransmissionPathType.typ) != null)
 		{
-			for(Enumeration enum = Pool.getHash(TransmissionPathType.typ).elements(); enum.hasMoreElements();)
+			for(Iterator it = Pool.getHash(TransmissionPathType.typ).values().iterator(); it.hasNext();)
 			{
-				TransmissionPathType tpt = (TransmissionPathType)enum.nextElement();
+				TransmissionPathType tpt = (TransmissionPathType)it.next();
 				typeComboBox.add(tpt);
 			}
 		}

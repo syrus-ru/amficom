@@ -1,7 +1,6 @@
 package com.syrus.AMFICOM.Client.General.Command.Scheme;
 
-import javax.swing.JDesktopPane;
-import javax.swing.JInternalFrame;
+import javax.swing.*;
 
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 

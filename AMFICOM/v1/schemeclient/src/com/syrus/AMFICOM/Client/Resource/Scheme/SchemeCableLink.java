@@ -6,12 +6,12 @@ import java.util.*;
 import java.awt.datatransfer.*;
 
 import com.syrus.AMFICOM.CORBA.Scheme.*;
-import com.syrus.AMFICOM.Client.General.Lang.*;
+import com.syrus.AMFICOM.Client.General.Lang.LangModelSchematics;
 import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.Resource.*;
-import com.syrus.AMFICOM.Client.Resource.Map.*;
-import com.syrus.AMFICOM.Client.Resource.Network.*;
-import com.syrus.AMFICOM.Client.Schematics.UI.*;
+import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalLinkProtoElement;
+import com.syrus.AMFICOM.Client.Resource.Network.CableLink;
+import com.syrus.AMFICOM.Client.Schematics.UI.SchemeCableLinkPane;
 
 public class SchemeCableLink extends StubResource
 		implements Transferable, Serializable

@@ -2,8 +2,7 @@ package com.syrus.AMFICOM.Client.Schematics.Scheme;
 
 import javax.swing.UIManager;
 
-import com.syrus.AMFICOM.Client.General.Model.DefaultSchematicsApplicationModelFactory;
-import com.syrus.AMFICOM.Client.General.Model.Environment;
+import com.syrus.AMFICOM.Client.General.Model.*;
 
 public class SchemeEditorRun
 {

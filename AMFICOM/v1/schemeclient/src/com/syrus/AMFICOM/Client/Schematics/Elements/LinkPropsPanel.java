@@ -1,9 +1,9 @@
 package com.syrus.AMFICOM.Client.Schematics.Elements;
 
-import java.awt.*;
-import java.awt.event.*;
 import java.util.*;
 
+import java.awt.*;
+import java.awt.event.*;
 import javax.swing.*;
 
 import com.syrus.AMFICOM.Client.General.Event.SchemeElementsEvent;
@@ -12,7 +12,6 @@ import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.LinkType;
 import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeLink;
-import com.syrus.AMFICOM.Client.General.UI.PopupNameFrame;
 
 public class LinkPropsPanel extends JPanel
 {
@@ -256,17 +255,17 @@ public class LinkPropsPanel extends JPanel
 	{
 		skip_changes = true;
 		classComboBox.removeAllItems();
-		Hashtable hash = new Hashtable();
+		Map hash = new HashMap();
 
 		if (Pool.getHash(LinkType.typ) != null)
 		{
-			for(Enumeration enum = Pool.getHash(LinkType.typ).elements(); enum.hasMoreElements();)
+			for(Iterator it = Pool.getHash(LinkType.typ).values().iterator(); it.hasNext();)
 			{
-				LinkType pt = (LinkType)enum.nextElement();
+				LinkType pt = (LinkType)it.next();
 				hash.put(pt.link_class, pt.link_class);
 			}
-			for(Enumeration enum = hash.elements(); enum.hasMoreElements(); )
-				classComboBox.addItem(enum.nextElement());
+			for(Iterator it = hash.values().iterator(); it.hasNext(); )
+				classComboBox.addItem(it.next());
 
 			if (lt != null)
 			{
@@ -360,9 +359,9 @@ public class LinkPropsPanel extends JPanel
 
 		if (Pool.getHash(LinkType.typ) != null)
 		{
-			for(Enumeration enum = Pool.getHash(LinkType.typ).elements(); enum.hasMoreElements();)
+			for(Iterator it = Pool.getHash(LinkType.typ).values().iterator(); it.hasNext();)
 			{
-				LinkType lt = (LinkType)enum.nextElement();
+				LinkType lt = (LinkType)it.next();
 				if (lt.link_class.equals(selected_class))
 					typeComboBox.add(lt);
 			}

@@ -23,7 +23,7 @@ public class UgoPanel extends JPanel
 		implements Printable, OperationListener
 {
 	public Scheme scheme;
-	Map commands = new Hashtable();
+	Map commands = new HashMap();
 	ToolBarPanel toolbar;
 	SchemeGraph graph;
 	ApplicationContext aContext;
@@ -727,7 +727,7 @@ public class UgoPanel extends JPanel
 		map.remove(GraphConstants.POINTS);
 		if (cells != null && cells.length > 0 && !map.isEmpty()) {
 			CellView[] views = graph.getGraphLayoutCache().getMapping(cells);
-			Map viewMap = new Hashtable();
+			Map viewMap = new HashMap();
 			for (int i = 0; i < views.length; i++)
 				viewMap.put(views[i], GraphConstants.cloneMap(map));
 			graph.getGraphLayoutCache().edit(viewMap, null, null, null);
@@ -765,7 +765,7 @@ public class UgoPanel extends JPanel
 		public final Dimension btn_size = new Dimension(24, 24);
 		protected int position = 0;
 		UgoPanel panel;
-		Hashtable buttons = new Hashtable();
+		Map buttons = new HashMap();
 
 		public ToolBarPanel (UgoPanel panel)
 		{
@@ -786,9 +786,9 @@ public class UgoPanel extends JPanel
 			setLayout (new XYLayout());
 		}
 
-		protected Hashtable createGraphButtons (UgoPanel p)
+		protected Map createGraphButtons (UgoPanel p)
 		{
-			Hashtable buttons = new Hashtable();
+			Map buttons = new HashMap();
 
 			if (graph.getMarqueeHandler() instanceof SchemeGraph.ShemeMarqueeHandler)
 			{
@@ -799,11 +799,8 @@ public class UgoPanel extends JPanel
 										new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/pointer.gif")),
 										new MarqeeAction(graph), true));
 				ButtonGroup group = new ButtonGroup();
-				for (Enumeration enum = buttons.elements(); enum.hasMoreElements();)
-				{
-					AbstractButton button = (AbstractButton)enum.nextElement();
-					group.add(button);
-				}
+				for (Iterator it = buttons.values().iterator(); it.hasNext();)
+					group.add((AbstractButton)it.next());
 				mh.s.doClick();
 			}
 			return buttons;

@@ -2,9 +2,9 @@ package com.syrus.AMFICOM.Client.General.Command.Scheme;
 
 import javax.swing.*;
 
-import com.syrus.AMFICOM.Client.General.Command.*;
-import com.syrus.AMFICOM.Client.General.Model.*;
-import com.syrus.AMFICOM.Client.General.UI.*;
+import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
+import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
+import com.syrus.AMFICOM.Client.General.UI.ObjectResourceCatalogFrame;
 
 public class ShowCatalogFrameCommand extends VoidCommand
 {

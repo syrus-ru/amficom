@@ -1,15 +1,15 @@
 package com.syrus.AMFICOM.Client.Schematics.Report;
 
-import java.awt.*;
 import java.util.*;
 
+import java.awt.*;
 import javax.swing.ImageIcon;
 
 import com.syrus.AMFICOM.Client.Configure.Report.EquipFeaturesReportModel;
 import com.syrus.AMFICOM.Client.General.Lang.*;
 import com.syrus.AMFICOM.Client.General.Report.*;
 import com.syrus.AMFICOM.Client.General.UI.*;
-import com.syrus.AMFICOM.Client.Resource.*;
+import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.Client.Resource.Network.*;
 import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.*;
 import com.syrus.AMFICOM.Client.Resource.Scheme.*;
@@ -168,14 +168,14 @@ public class SchemeReportsTreeModel extends ObjectResourceTreeModel
 				s.equals("reciever") ||
 				s.equals("tester"))
 			{
-				Hashtable equipTypeHash = Pool.getHash(EquipmentType.typ);
+				Map equipTypeHash = Pool.getHash(EquipmentType.typ);
 				if (equipTypeHash == null)
 					return new Vector();
 
-				Enumeration equipTypeEnum = equipTypeHash.elements();
-				while (equipTypeEnum.hasMoreElements())
+				Iterator equipTypeEnum = equipTypeHash.values().iterator();
+				while (equipTypeEnum.hasNext())
 				{
-					EquipmentType eqType = (EquipmentType) equipTypeEnum.nextElement();
+					EquipmentType eqType = (EquipmentType) equipTypeEnum.next();
 					if (eqType.eq_class.equals(s))
 					{
 						ObjectsReport rep = new ObjectsReport(new
@@ -222,19 +222,18 @@ public class SchemeReportsTreeModel extends ObjectResourceTreeModel
 
 			else if (s.equals("label_repPhysicalScheme"))
 			{
-				Hashtable ht = new Hashtable();
+				Set ht = new HashSet();
 				if (Pool.getHash(Scheme.typ) != null)
 				{
-					for (Enumeration en = Pool.getHash(Scheme.typ).elements();
-						en.hasMoreElements(); )
+					for(Iterator it = Pool.getHash(Scheme.typ).values().iterator(); it.hasNext();)
 					{
-						Scheme sch = (Scheme) en.nextElement();
-						ht.put(sch.scheme_type, sch.scheme_type);
+						Scheme sch = (Scheme)it.next();
+						ht.add(sch.scheme_type);
 					}
 
-					for (Enumeration en = ht.elements(); en.hasMoreElements(); )
+					for (Iterator it = ht.iterator(); it.hasNext(); )
 					{
-						String type = (String) en.nextElement();
+						String type = (String)it.next();
 						String name = LangModelSchematics.getString(type);
 						if (type.equals(""))
 							name = "Ñץולא";

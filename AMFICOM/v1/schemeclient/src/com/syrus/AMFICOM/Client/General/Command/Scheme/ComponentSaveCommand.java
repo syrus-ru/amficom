@@ -1,28 +1,15 @@
 package com.syrus.AMFICOM.Client.General.Command.Scheme;
 
-import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.Hashtable;
+import java.util.*;
 
 import javax.swing.JOptionPane;
 
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.Model.Environment;
-import com.syrus.AMFICOM.Client.General.Scheme.DefaultCableLink;
-import com.syrus.AMFICOM.Client.General.Scheme.DefaultLink;
-import com.syrus.AMFICOM.Client.General.Scheme.DeviceGroup;
-import com.syrus.AMFICOM.Client.General.Scheme.GraphActions;
-import com.syrus.AMFICOM.Client.General.Scheme.SchemeGraph;
-import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
-import com.syrus.AMFICOM.Client.Resource.Pool;
-import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.CableLinkType;
-import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.CablePortType;
-import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.EquipmentType;
-import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.LinkType;
-import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.PortType;
+import com.syrus.AMFICOM.Client.General.Model.*;
+import com.syrus.AMFICOM.Client.General.Scheme.*;
+import com.syrus.AMFICOM.Client.Resource.*;
+import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.*;
 import com.syrus.AMFICOM.Client.Resource.SchemeDirectory.ProtoElement;
-
 import com.syrus.AMFICOM.Client.Schematics.Elements.SaveComponentDialog;
 
 public class ComponentSaveCommand extends VoidCommand
@@ -125,13 +112,13 @@ public class ComponentSaveCommand extends VoidCommand
 
 	public static void saveTypes(DataSourceInterface dsi, boolean save_all)
 	{
-		Hashtable port_types = (Pool.getHash(PortType.typ));
+		Map port_types = Pool.getHash(PortType.typ);
 		if (port_types != null)
 		{
 			ArrayList types = new ArrayList();
-			for (Enumeration en = port_types.elements(); en.hasMoreElements();)
+			for (Iterator it = port_types.values().iterator(); it.hasNext();)
 			{
-				PortType type = (PortType)en.nextElement();
+				PortType type = (PortType)it.next();
 				if (save_all || type.is_modified)
 				{
 					types.add(type.getId());
@@ -141,13 +128,13 @@ public class ComponentSaveCommand extends VoidCommand
 			if (!types.isEmpty())
 				dsi.SavePortTypes((String[])types.toArray(new String[types.size()]));
 		}
-		Hashtable cable_port_types = (Pool.getHash(CablePortType.typ));
+		Map cable_port_types = Pool.getHash(CablePortType.typ);
 		if (cable_port_types != null)
 		{
 			ArrayList types = new ArrayList();
-			for (Enumeration en = cable_port_types.elements(); en.hasMoreElements();)
+			for (Iterator it = cable_port_types.values().iterator(); it.hasNext();)
 			{
-				CablePortType type = (CablePortType)en.nextElement();
+				CablePortType type = (CablePortType)it.next();
 				if (save_all || type.is_modified)
 				{
 					types.add(type.getId());
@@ -157,13 +144,13 @@ public class ComponentSaveCommand extends VoidCommand
 			if (!types.isEmpty())
 				dsi.SaveCablePortTypes((String[])types.toArray(new String[types.size()]));
 		}
-		Hashtable link_types = (Pool.getHash(LinkType.typ));
+		Map link_types = Pool.getHash(LinkType.typ);
 		if (link_types != null)
 		{
 			ArrayList types = new ArrayList();
-			for (Enumeration en = link_types.elements(); en.hasMoreElements();)
+			for (Iterator it = link_types.values().iterator(); it.hasNext();)
 			{
-				LinkType type = (LinkType)en.nextElement();
+				LinkType type = (LinkType)it.next();
 				if (save_all || type.is_modified)
 				{
 					types.add(type.getId());
@@ -173,13 +160,13 @@ public class ComponentSaveCommand extends VoidCommand
 			if (!types.isEmpty())
 				dsi.SaveLinkTypes((String[])types.toArray(new String[types.size()]));
 		}
-		Hashtable cable_link_types = (Pool.getHash(CableLinkType.typ));
+		Map cable_link_types = Pool.getHash(CableLinkType.typ);
 		if (cable_link_types != null)
 		{
 			ArrayList types = new ArrayList();
-			for (Enumeration en = cable_link_types.elements(); en.hasMoreElements();)
+			for (Iterator it = cable_link_types.values().iterator(); it.hasNext();)
 			{
-				CableLinkType type = (CableLinkType)en.nextElement();
+				CableLinkType type = (CableLinkType)it.next();
 				if (save_all || type.is_modified)
 				{
 					types.add(type.getId());
@@ -189,13 +176,13 @@ public class ComponentSaveCommand extends VoidCommand
 			if (!types.isEmpty())
 				dsi.SaveCableLinkTypes((String[])types.toArray(new String[types.size()]));
 		}
-		Hashtable eq_types = (Pool.getHash(EquipmentType.typ));
+		Map eq_types = Pool.getHash(EquipmentType.typ);
 		if (eq_types != null)
 		{
 			ArrayList types = new ArrayList();
-			for (Enumeration en = eq_types.elements(); en.hasMoreElements();)
+			for (Iterator it = eq_types.values().iterator(); it.hasNext();)
 			{
-				EquipmentType type = (EquipmentType)en.nextElement();
+				EquipmentType type = (EquipmentType)it.next();
 				if (save_all || type.is_modified)
 				{
 					types.add(type.getId());

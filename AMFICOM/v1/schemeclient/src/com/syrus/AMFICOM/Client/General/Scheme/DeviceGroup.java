@@ -1,11 +1,9 @@
 package com.syrus.AMFICOM.Client.General.Scheme;
 
+import com.jgraph.graph.DefaultGraphCell;
 import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeElement;
 import com.syrus.AMFICOM.Client.Resource.SchemeDirectory.ProtoElement;
-
-import com.jgraph.graph.DefaultGraphCell;
-import java.io.*;
 
 public class DeviceGroup extends DefaultGraphCell
 {

@@ -50,45 +50,6 @@ public class SchemeDevice extends StubResource implements Serializable
 		return id;
 	}
 
-	public String getDomainId()
-	{
-		return "sysdomain";
-	}
-
-	public Enumeration getChildTypes()
-	{
-		ArrayList vec = new ArrayList(2);
-		vec.add("ports");
-		vec.add("cableports");
-		return Collections.enumeration(vec);
-	}
-
-	public Class getChildClass(String key)
-	{
-		if(key.equals("ports"))
-		{
-			return SchemePort.class;
-		}
-		else if(key.equals("cableports"))
-		{
-			return SchemeCablePort.class;
-		}
-		return ObjectResource.class;
-	}
-
-	public Enumeration getChildren(String key)
-	{
-		if(key.equals("ports"))
-		{
-			return Collections.enumeration(ports);
-		}
-		else if(key.equals("cableports"))
-		{
-			return Collections.enumeration(cableports);
-		}
-		return Collections.enumeration(new ArrayList(0));
-	}
-
 	public Object getTransferable()
 	{
 		return transferable;

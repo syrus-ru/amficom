@@ -1,14 +1,14 @@
 package com.syrus.AMFICOM.Client.General.Command.Scheme;
 
-import javax.swing.*;
-import java.util.*;
+import java.util.ArrayList;
+
+import javax.swing.JOptionPane;
 
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
-import com.syrus.AMFICOM.Client.General.Event.CreatePathEvent;
 import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.General.Scheme.*;
+import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.Client.Resource.Scheme.*;
-import com.syrus.AMFICOM.Client.Resource.*;
 
 public class PathAutoCreateCommand extends VoidCommand
 {

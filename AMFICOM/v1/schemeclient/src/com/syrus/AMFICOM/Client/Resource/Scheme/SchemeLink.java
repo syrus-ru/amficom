@@ -4,11 +4,11 @@ import java.io.*;
 import java.util.*;
 
 import com.syrus.AMFICOM.CORBA.Scheme.*;
-import com.syrus.AMFICOM.Client.General.Lang.*;
+import com.syrus.AMFICOM.Client.General.Lang.LangModelSchematics;
 import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.Resource.*;
-import com.syrus.AMFICOM.Client.Resource.Network.*;
-import com.syrus.AMFICOM.Client.Schematics.UI.*;
+import com.syrus.AMFICOM.Client.Resource.Network.Link;
+import com.syrus.AMFICOM.Client.Schematics.UI.SchemeLinkPane;
 
 public class SchemeLink extends StubResource implements Serializable
 {
@@ -253,7 +253,7 @@ public class SchemeLink extends StubResource implements Serializable
 		link_type_id = (String )in.readObject();
 		optical_length = in.readDouble();
 		physical_length = in.readDouble();
-		attributes = (Hashtable )in.readObject();
+		attributes = (Map )in.readObject();
 
 		transferable = new SchemeLink_Transferable();
 	}

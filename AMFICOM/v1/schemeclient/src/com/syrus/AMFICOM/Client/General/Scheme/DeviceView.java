@@ -1,11 +1,13 @@
 package com.syrus.AMFICOM.Client.General.Scheme;
 
+import java.util.*;
+
 import java.awt.*;
 import java.awt.event.MouseEvent;
-import java.util.*;
 
 import com.jgraph.JGraph;
 import com.jgraph.graph.*;
+import com.jgraph.graph.VertexView.*;
 
 public class DeviceView extends VertexView
 {

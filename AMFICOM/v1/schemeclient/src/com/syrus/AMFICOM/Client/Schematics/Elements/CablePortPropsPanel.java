@@ -1,40 +1,17 @@
 package com.syrus.AMFICOM.Client.Schematics.Elements;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.Point;
-import java.awt.SystemColor;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.util.Enumeration;
-import java.util.Hashtable;
+import java.util.*;
 
-import javax.swing.BorderFactory;
-import javax.swing.DefaultListCellRenderer;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JScrollPane;
-import javax.swing.JLabel;
-import javax.swing.JList;
-import javax.swing.JPanel;
-import javax.swing.JTextArea;
-import javax.swing.JTextField;
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
 
 import com.syrus.AMFICOM.Client.General.Event.SchemeElementsEvent;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.Model.Environment;
-import com.syrus.AMFICOM.Client.General.UI.ObjectResourceComboBox;
+import com.syrus.AMFICOM.Client.General.Model.*;
+import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.CablePortType;
 import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeCablePort;
-import com.syrus.AMFICOM.Client.General.UI.AComboBox;
-import com.syrus.AMFICOM.Client.General.UI.PopupNameFrame;
 
 public class CablePortPropsPanel extends JPanel
 {
@@ -186,17 +163,17 @@ public class CablePortPropsPanel extends JPanel
 	{
 		skip_changes = true;
 		classComboBox.removeAllItems();
-		Hashtable hash = new Hashtable();
+		Map hash = new HashMap();
 
 		if (Pool.getHash(CablePortType.typ) != null)
 		{
-			for(Enumeration enum = Pool.getHash(CablePortType.typ).elements(); enum.hasMoreElements();)
+			for(Iterator it = Pool.getHash(CablePortType.typ).values().iterator(); it.hasNext();)
 			{
-				CablePortType pt = (CablePortType)enum.nextElement();
+				CablePortType pt = (CablePortType)it.next();
 				hash.put(pt.p_class, pt.p_class);
 			}
-			for(Enumeration enum = hash.elements(); enum.hasMoreElements(); )
-				classComboBox.addItem(enum.nextElement());
+			for(Iterator it = hash.values().iterator(); it.hasNext(); )
+				classComboBox.addItem(it.next());
 
 			if (pt != null)
 			{
@@ -326,9 +303,9 @@ public class CablePortPropsPanel extends JPanel
 
 		if (Pool.getHash(CablePortType.typ) != null)
 		{
-			for(Enumeration enum = Pool.getHash(CablePortType.typ).elements(); enum.hasMoreElements();)
+			for(Iterator it = Pool.getHash(CablePortType.typ).values().iterator(); it.hasNext();)
 			{
-				CablePortType pt = (CablePortType)enum.nextElement();
+				CablePortType pt = (CablePortType)it.next();
 				if (pt.p_class.equals(selected_class))
 					typeComboBox.addItem(pt);
 			}

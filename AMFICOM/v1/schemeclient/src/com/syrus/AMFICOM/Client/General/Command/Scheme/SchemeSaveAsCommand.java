@@ -1,9 +1,9 @@
 package com.syrus.AMFICOM.Client.General.Command.Scheme;
 
-import java.awt.*;
-import java.awt.event.*;
 import java.util.*;
 
+import java.awt.*;
+import java.awt.event.*;
 import javax.swing.*;
 
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
@@ -13,7 +13,6 @@ import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.General.Scheme.*;
 import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.Resource.Scheme.*;
-
 import com.syrus.AMFICOM.Client.Schematics.Elements.SchemePropsPanel;
 
 public class SchemeSaveAsCommand extends VoidCommand
@@ -84,7 +83,7 @@ public class SchemeSaveAsCommand extends VoidCommand
 		ComponentSaveCommand.saveTypes(aContext.getDataSourceInterface(), false);
 
 		Scheme scheme = (Scheme)schemePanel.scheme.clone(aContext.getDataSourceInterface());
-		Hashtable ht = Pool.getHash("clonedids");
+//		Map ht = Pool.getHash("clonedids");
 //		scheme.serializable_ugo = ugo_graph.getArchiveableState(ugo_graph.getRoots());
 //		scheme.serializable_cell = graph.getArchiveableState(graph.getRoots());
 

@@ -1,9 +1,8 @@
 package com.syrus.AMFICOM.Client.General.Scheme;
 
+import com.jgraph.graph.DefaultGraphCell;
 import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeDevice;
-
-import com.jgraph.graph.DefaultGraphCell;
 
 public class DeviceCell extends DefaultGraphCell
 {

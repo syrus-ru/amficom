@@ -167,7 +167,7 @@ public class SchemePort extends StubResource implements Serializable
 		access_port_id = (String )in.readObject();
 		is_access_port = in.readBoolean();
 		direction_type = (String )in.readObject();
-		attributes = (Hashtable )in.readObject();
+		attributes = (Map )in.readObject();
 
 		transferable = new SchemePort_Transferable();
 	}

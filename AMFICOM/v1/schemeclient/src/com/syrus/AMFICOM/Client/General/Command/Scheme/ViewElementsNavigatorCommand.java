@@ -1,13 +1,11 @@
 package com.syrus.AMFICOM.Client.General.Command.Scheme;
 
 import java.awt.Dimension;
-
 import javax.swing.JDesktopPane;
 
 import com.syrus.AMFICOM.Client.General.Command.ViewNavigatorCommand;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
-
 import com.syrus.AMFICOM.Client.Schematics.UI.ElementsTreeModel;
 
 public class ViewElementsNavigatorCommand extends ViewNavigatorCommand

@@ -9,7 +9,7 @@ import javax.swing.*;
 
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.UI.AComboBox;
-import com.syrus.AMFICOM.Client.Resource.*;
+import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.Client.Resource.SchemeDirectory.ElementAttributeType;
 
 public class AddAttribFrame extends JDialog
@@ -20,7 +20,7 @@ public class AddAttribFrame extends JDialog
 	protected int res = CANCEL;
 	String selected = "Новый атрибут";
 
-	Hashtable h_named = new Hashtable();
+	Map h_named = new HashMap();
 	ElementAttributeType type = new ElementAttributeType();
 
 	private AComboBox jComboBox1 = new AComboBox();
@@ -178,7 +178,7 @@ public class AddAttribFrame extends JDialog
 	{
 		Map h = Pool.getHash(ElementAttributeType.typ);
 
-		Hashtable used = new Hashtable(attribs.size());
+		Map used = new HashMap(attribs.size());
 		for (Iterator it = attribs.iterator(); it.hasNext();)
 		{
 			List el = (List)it.next();

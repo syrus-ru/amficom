@@ -1,11 +1,9 @@
 package com.syrus.AMFICOM.Client.Resource;
 
+import java.util.*;
+
 import com.syrus.AMFICOM.Client.Resource.Network.Characteristic;
 import com.syrus.AMFICOM.Client.Resource.Scheme.ElementAttribute;
-
-import java.util.Iterator;
-import java.util.Map;
-import java.util.HashMap;
 
 public class ResourceUtil
 {

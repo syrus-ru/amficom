@@ -119,7 +119,7 @@ public class SchemeCableThread extends StubResource implements Serializable
 		name = (String )in.readObject();
 		link_type_id = (String )in.readObject();
 		thread_id = (String )in.readObject();
-		attributes = (Hashtable )in.readObject();
+		attributes = (Map )in.readObject();
 
 		transferable = new SchemeCableThread_Transferable();
 	}

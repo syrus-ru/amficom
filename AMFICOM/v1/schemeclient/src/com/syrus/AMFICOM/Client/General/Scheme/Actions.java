@@ -1,11 +1,11 @@
 package com.syrus.AMFICOM.Client.General.Scheme;
 
-import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.io.*;
 import java.util.*;
 import java.util.zip.*;
 
+import java.awt.*;
+import java.awt.event.ActionEvent;
 import javax.swing.*;
 
 import com.jgraph.graph.*;
@@ -393,7 +393,7 @@ class GroupAction extends AbstractAction
 			proto.label = text;
 
 			cells = new_cells.toArray();
-			Map viewMap = new Hashtable();
+			Map viewMap = new HashMap();
 
 			for (int i = 0; i < cells.length; i++)
 			{
@@ -406,7 +406,6 @@ class GroupAction extends AbstractAction
 			}
 
 			//make group created unresizable
-			//viewMap = new Hashtable();
 			Map m = GraphConstants.createMap();
 			GraphConstants.setSizeable(m, false);
 			viewMap.put(group, m);
@@ -1142,7 +1141,7 @@ class CreateSchemeUgoAction
 			cells = new_cells.toArray();
 
 			DeviceGroup group = new DeviceGroup();
-			Map viewMap = new Hashtable();
+			Map viewMap = new HashMap();
 			//make group created unresizable
 			Map m = GraphConstants.createMap();
 			GraphConstants.setSizeable(m, false);
@@ -1265,7 +1264,7 @@ class CreateBlockPortAction extends AbstractAction
 		GraphConstants.setEndFill(edgemap, false);
 		GraphConstants.setDisconnectable(edgemap, false);
 
-		Map viewMap = new Hashtable();
+		Map viewMap = new HashMap();
 		DefaultEdge edge = new DefaultEdge("");
 
 		viewMap.put(edge, edgemap);
@@ -1291,7 +1290,7 @@ class CreateBlockPortAction extends AbstractAction
 		if (dataSource == null)
 			return null;
 
-		Map viewMap = new Hashtable();
+		Map viewMap = new HashMap();
 		Map map;
 
 		// Create Vertex

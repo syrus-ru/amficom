@@ -1,21 +1,11 @@
 package com.syrus.AMFICOM.Client.Schematics.Report;
 
-import java.awt.Color;
-import java.awt.Rectangle;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.image.BufferedImage;
-
+import java.awt.*;
 import java.awt.event.*;
 
-import com.syrus.AMFICOM.Client.General.Report.RenderingObject;
-import com.syrus.AMFICOM.Client.General.Report.CreateReportException;
-
-import com.syrus.AMFICOM.Client.General.Scheme.SchemeGraph;
-import com.syrus.AMFICOM.Client.General.Scheme.SchemePanelNoEdition;
-
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
+import com.syrus.AMFICOM.Client.General.Report.*;
+import com.syrus.AMFICOM.Client.General.Scheme.*;
 
 public class SchemeRenderPanel extends SchemePanelNoEdition
 {

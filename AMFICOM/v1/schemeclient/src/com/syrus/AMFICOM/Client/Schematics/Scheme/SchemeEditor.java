@@ -1,14 +1,10 @@
 package com.syrus.AMFICOM.Client.Schematics.Scheme;
 
 import java.awt.Toolkit;
-
-import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.Model.SchematicsApplicationModelFactory;
 import javax.swing.UIManager;
 
-import com.syrus.AMFICOM.Client.General.Model.DefaultSchematicsApplicationModelFactory;
-import com.syrus.AMFICOM.Client.General.Model.Environment;
+import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
+import com.syrus.AMFICOM.Client.General.Model.*;
 
 
 public class SchemeEditor

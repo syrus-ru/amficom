@@ -1,14 +1,14 @@
 package com.syrus.AMFICOM.Client.Schematics.Elements;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import java.awt.*;
 import java.awt.event.*;
-import java.text.*;
-import java.util.*;
-
 import javax.swing.*;
 
 import com.syrus.AMFICOM.Client.General.*;
-import com.syrus.AMFICOM.Client.General.Command.*;
+import com.syrus.AMFICOM.Client.General.Command.ExitCommand;
 import com.syrus.AMFICOM.Client.General.Command.Scheme.*;
 import com.syrus.AMFICOM.Client.General.Command.Session.*;
 import com.syrus.AMFICOM.Client.General.Event.*;

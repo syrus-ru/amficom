@@ -1,7 +1,7 @@
 package com.syrus.AMFICOM.Client.Resource.Scheme;
 
-import java.util.*;
 import java.io.*;
+import java.util.Iterator;
 
 import com.syrus.AMFICOM.CORBA.Scheme.PathElement_Transferable;
 import com.syrus.AMFICOM.Client.Resource.*;

@@ -2,8 +2,8 @@ package com.syrus.AMFICOM.Client.Schematics.UI;
 
 import com.syrus.AMFICOM.Client.Configure.UI.CableLinkPane;
 import com.syrus.AMFICOM.Client.Resource.*;
-import com.syrus.AMFICOM.Client.Resource.Network.*;
-import com.syrus.AMFICOM.Client.Resource.Scheme.*;
+import com.syrus.AMFICOM.Client.Resource.Network.CableLink;
+import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeCableLink;
 
 public class SchemeCableLinkPane extends CableLinkPane
 {

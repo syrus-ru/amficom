@@ -1,20 +1,20 @@
 package com.syrus.AMFICOM.Client.Schematics.UI;
 
-import java.awt.*;
 import java.util.*;
 
-import javax.swing.*;
+import java.awt.*;
+import javax.swing.ImageIcon;
 
 import com.syrus.AMFICOM.Client.General.Filter.*;
 import com.syrus.AMFICOM.Client.General.Lang.*;
 import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.Resource.*;
-import com.syrus.AMFICOM.Client.Resource.Map.*;
-import com.syrus.AMFICOM.Client.Resource.Scheme.*;
-import com.syrus.AMFICOM.Client.Resource.ISM.*;
-import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.*;
+import com.syrus.AMFICOM.Client.Resource.ISM.AccessPort;
 import com.syrus.AMFICOM.Client.Resource.ISMDirectory.*;
-import com.syrus.AMFICOM.Client.Resource.SchemeDirectory.*;
+import com.syrus.AMFICOM.Client.Resource.Map.MapProtoElement;
+import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.*;
+import com.syrus.AMFICOM.Client.Resource.Scheme.*;
+import com.syrus.AMFICOM.Client.Resource.SchemeDirectory.ProtoElement;
 
 public class SchemeTreeModel extends ObjectResourceTreeModel
 {
@@ -225,7 +225,7 @@ public class SchemeTreeModel extends ObjectResourceTreeModel
 			}
 			else if(s.equals("scheme_types"))
 			{
-				Hashtable ht = new Hashtable();
+				Map ht = new HashMap();
 				if (Pool.getHash(Scheme.typ) != null)
 				{
 					Map dSet = Pool.getHash(Scheme.typ);
@@ -435,11 +435,11 @@ public class SchemeTreeModel extends ObjectResourceTreeModel
 
 			else if (s.equals(MapProtoGroup.typ))
 			{
-				Hashtable map_groups = Pool.getHash(MapProtoGroup.typ);
+				Map map_groups = Pool.getHash(MapProtoGroup.typ);
 				if (map_groups != null)
-					for (Enumeration enum = map_groups.elements(); enum.hasMoreElements();)
+					for (Iterator it = map_groups.keySet().iterator(); it.hasNext();)
 					{
-						MapProtoGroup map_group = (MapProtoGroup)enum.nextElement();
+						MapProtoGroup map_group = (MapProtoGroup)it.next();
 						if (map_group.parent_id == null || map_group.parent_id.equals(""))
 							vec.add(new ObjectResourceTreeNode(map_group, map_group.getName(), true,
 									new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/folder.gif"))));

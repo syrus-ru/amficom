@@ -3,8 +3,7 @@ package com.syrus.AMFICOM.Client.Schematics.Scheme;
 import javax.swing.JOptionPane;
 
 import com.syrus.AMFICOM.Client.General.Event.SchemeElementsEvent;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.Model.Environment;
+import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.General.Scheme.ElementsPanel;
 
 public class ElementsEditorFrame extends SchemeViewerFrame

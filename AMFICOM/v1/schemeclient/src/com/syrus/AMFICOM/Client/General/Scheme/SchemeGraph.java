@@ -407,7 +407,7 @@ public class SchemeGraph extends GPGraph
 			if (groups.length == 0)
 			{
 				getGraphLayoutCache().insert(cells, viewAttributes, cs, null, null);
-				return new Hashtable();
+				return new HashMap();
 			}
 
 			// клонируем селлы
@@ -448,7 +448,7 @@ public class SchemeGraph extends GPGraph
 			if (groups.length == 0)
 			{
 				getGraphLayoutCache().insert(cells, viewAttributes, cs, null, null);
-				return new Hashtable();
+				return new HashMap();
 			}
 
 			// клонируем селлы
@@ -739,7 +739,7 @@ public class SchemeGraph extends GPGraph
 						GraphConstants.setPoints(map, list);
 						GraphConstants.setLineEnd(map, GraphConstants.ARROW_NONE);
 						GraphConstants.setEndFill(map, true);
-						Map viewMap = new Hashtable();
+						Map viewMap = new HashMap();
 						DefaultEdge cell = new DefaultEdge("");
 						viewMap.put(cell, map);
 						Object[] insert = new Object[] { cell };

@@ -1,39 +1,19 @@
 package com.syrus.AMFICOM.Client.Schematics.Elements;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.Point;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.util.Enumeration;
-import java.util.Hashtable;
+import java.util.*;
 
-import javax.swing.BorderFactory;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
-import javax.swing.JLabel;
-import javax.swing.JScrollPane;
-import javax.swing.JPanel;
-import javax.swing.JTextArea;
-import javax.swing.JTextField;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+import javax.swing.event.*;
 
 import com.syrus.AMFICOM.Client.General.Event.SchemeElementsEvent;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.Model.Environment;
-import com.syrus.AMFICOM.Client.General.UI.ObjectResourceComboBox;
+import com.syrus.AMFICOM.Client.General.Model.*;
+import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.Client.Resource.ISMDirectory.AccessPortType;
 import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.PortType;
 import com.syrus.AMFICOM.Client.Resource.Scheme.SchemePort;
-import com.syrus.AMFICOM.Client.General.UI.AComboBox;
-import com.syrus.AMFICOM.Client.General.UI.PopupNameFrame;
 
 public class PortPropsPanel extends JPanel
 {
@@ -215,17 +195,17 @@ public class PortPropsPanel extends JPanel
 	{
 		skip_changes = true;
 		classComboBox.removeAllItems();
-		Hashtable hash = new Hashtable();
+		Map hash = new HashMap();
 
 		if (Pool.getHash(PortType.typ) != null)
 		{
-			for(Enumeration enum = Pool.getHash(PortType.typ).elements(); enum.hasMoreElements();)
+			for(Iterator it = Pool.getHash(PortType.typ).values().iterator(); it.hasNext();)
 			{
-				PortType pt = (PortType)enum.nextElement();
+				PortType pt = (PortType)it.next();
 				hash.put(pt.p_class, pt.p_class);
 			}
-			for(Enumeration enum = hash.elements(); enum.hasMoreElements(); )
-				classComboBox.addItem(enum.nextElement());
+			for(Iterator it = hash.values().iterator(); it.hasNext(); )
+				classComboBox.addItem(it.next());
 
 			if (pt != null)
 			{
@@ -359,9 +339,9 @@ public class PortPropsPanel extends JPanel
 
 		if (Pool.getHash(PortType.typ) != null)
 		{
-			for(Enumeration enum = Pool.getHash(PortType.typ).elements(); enum.hasMoreElements();)
+			for(Iterator it = Pool.getHash(PortType.typ).values().iterator(); it.hasNext();)
 			{
-				PortType pt = (PortType)enum.nextElement();
+				PortType pt = (PortType)it.next();
 				if (pt.p_class.equals(selected_class))
 					typeComboBox.addItem(pt);
 			}

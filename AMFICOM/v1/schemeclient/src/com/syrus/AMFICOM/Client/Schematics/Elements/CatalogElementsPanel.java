@@ -1,9 +1,9 @@
 package com.syrus.AMFICOM.Client.Schematics.Elements;
 
-import java.awt.*;
-import java.awt.event.*;
 import java.util.*;
 
+import java.awt.*;
+import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.event.*;
 
@@ -23,7 +23,7 @@ public class CatalogElementsPanel extends JPanel
 	private JLabel componentNameLabel = new JLabel();
 
 	ObjectResource schemeElement_selected;
-	Hashtable selected_ors = new Hashtable();
+	Map selected_ors = new HashMap();
 	private boolean skip = false;
 	ApplicationContext aContext;
 

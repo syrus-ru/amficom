@@ -65,10 +65,10 @@ public class InsertToCatalogCommand extends VoidCommand
 			return;
 		}
 
-		Hashtable elements_to_save = new Hashtable();
-		Hashtable links_to_save = new Hashtable();
-		Hashtable cable_links_to_save = new Hashtable();
-		Hashtable paths_to_save = new Hashtable();
+		Map elements_to_save = new HashMap();
+		Map links_to_save = new HashMap();
+		Map cable_links_to_save = new HashMap();
+		Map paths_to_save = new HashMap();
 
 		findElementsToSave (cells,
 												elements_to_save,
@@ -113,7 +113,7 @@ public class InsertToCatalogCommand extends VoidCommand
 			if (res != dialog.OK)
 				return false;
 
-			Hashtable mapping = dialog.getMapping();
+			Map mapping = dialog.getMapping();
 			boolean status = true;
 
 			for (Iterator it = elements_to_save.values().iterator(); it.hasNext();)
@@ -187,10 +187,10 @@ public class InsertToCatalogCommand extends VoidCommand
 	}
 
 	void findElementsToSave(Object[] cells,
-													Hashtable elements_to_save,
-													Hashtable links_to_save,
-													Hashtable cable_links_to_save,
-													Hashtable paths_to_save)
+													Map elements_to_save,
+													Map links_to_save,
+													Map cable_links_to_save,
+													Map paths_to_save)
 	{
 		for (int i = 0; i < cells.length; i++)
 		{

@@ -1,10 +1,10 @@
 package com.syrus.AMFICOM.Client.General.Scheme;
 
-import java.awt.*;
 import java.io.Serializable;
 import java.util.*;
 import java.util.List;
 
+import java.awt.*;
 import javax.swing.*;
 
 import com.jgraph.graph.DefaultGraphModel;
@@ -627,9 +627,9 @@ public class SchemePanel extends ElementsPanel
 			super(panel);
 		}
 
-		protected Hashtable createGraphButtons (ElementsPanel p)
+		protected Map createGraphButtons (ElementsPanel p)
 		{
-			Hashtable buttons = super.createGraphButtons(p);
+			Map buttons = super.createGraphButtons(p);
 
 			if (graph.getMarqueeHandler() instanceof SchemeGraph.ShemeMarqueeHandler)
 			{

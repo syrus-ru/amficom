@@ -1,19 +1,12 @@
 package com.syrus.AMFICOM.Client.Schematics.Elements;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.Toolkit;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.*;
+import java.util.Map;
 
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JPanel;
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
 
-import com.syrus.AMFICOM.Client.General.Model.Environment;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
+import com.syrus.AMFICOM.Client.General.Model.*;
 
 public class CatalogElementsDialog extends JDialog
 {
@@ -90,7 +83,7 @@ public class CatalogElementsDialog extends JDialog
 		return status;
 	}
 
-	public Hashtable getMapping()
+	public Map getMapping()
 	{
 		return panel.selected_ors;
 	}

@@ -1,18 +1,16 @@
 package com.syrus.AMFICOM.Client.Schematics.UI;
 
-import java.awt.*;
-import java.text.*;
+import java.text.SimpleDateFormat;
 
+import java.awt.*;
 import javax.swing.*;
 import javax.swing.event.*;
 
 import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.Resource.*;
-import com.syrus.AMFICOM.Client.Resource.Network.*;
-import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.*;
+import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.LinkType;
 import com.syrus.AMFICOM.Client.Resource.Scheme.*;
-
-import oracle.jdeveloper.layout.*;
+import oracle.jdeveloper.layout.VerticalFlowLayout;
 
 public class SchemeCableLinkFibrePanel extends GeneralPanel
 {

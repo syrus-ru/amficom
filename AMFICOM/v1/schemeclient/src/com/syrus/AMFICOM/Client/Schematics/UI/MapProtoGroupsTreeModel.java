@@ -1,21 +1,12 @@
 package com.syrus.AMFICOM.Client.Schematics.UI;
 
-import java.awt.Color;
-import java.awt.Image;
-import java.awt.Toolkit;
-import java.util.Enumeration;
-import java.util.Hashtable;
-import java.util.Vector;
+import java.util.*;
 
+import java.awt.*;
 import javax.swing.ImageIcon;
 
-import com.syrus.AMFICOM.Client.General.UI.ObjectResourceTreeModel;
-import com.syrus.AMFICOM.Client.General.UI.ObjectResourceTreeNode;
-import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
-import com.syrus.AMFICOM.Client.Resource.ImageCatalogue;
-import com.syrus.AMFICOM.Client.Resource.ImageResource;
-import com.syrus.AMFICOM.Client.Resource.ObjectResource;
-import com.syrus.AMFICOM.Client.Resource.Pool;
+import com.syrus.AMFICOM.Client.General.UI.*;
+import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.Resource.Map.MapProtoElement;
 import com.syrus.AMFICOM.Client.Resource.Scheme.MapProtoGroup;
 import com.syrus.AMFICOM.Client.Resource.SchemeDirectory.ProtoElement;
@@ -69,7 +60,7 @@ public class MapProtoGroupsTreeModel extends ObjectResourceTreeModel
 	public Vector getChildNodes(ObjectResourceTreeNode node)
 	{
 		Vector vec = new Vector();
-		Hashtable map_groups = Pool.getHash(MapProtoGroup.typ);
+		Map map_groups = Pool.getHash(MapProtoGroup.typ);
 
 		if(node.getObject() instanceof String)
 		{
@@ -79,9 +70,9 @@ public class MapProtoGroupsTreeModel extends ObjectResourceTreeModel
 			if(s.equals("root"))
 			{
 				if (map_groups != null)
-					for (Enumeration enum = map_groups.elements(); enum.hasMoreElements();)
+					for (Iterator it = map_groups.keySet().iterator(); it.hasNext();)
 					{
-						MapProtoGroup map_group = (MapProtoGroup)enum.nextElement();
+						MapProtoGroup map_group = (MapProtoGroup)it.next();
 						if (map_group.parent_id == null || map_group.parent_id.equals(""))
 							vec.add(new ObjectResourceTreeNode(map_group, map_group.getName(), true,
 									new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/folder.gif"))));

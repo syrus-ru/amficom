@@ -144,23 +144,23 @@ public class SaveComponentDialog extends JDialog
 		String[] eqtype_ids = (String[])createEqTypesList(proto).toArray(new String[0]);
 		dataSource.SaveEquipmentTypes(eqtype_ids);
 
-		Hashtable l_ids = createLinkIdsList(proto);
+		Map l_ids = createLinkIdsList(proto);
 		if (!l_ids.isEmpty())
 		{
 			String[] link_ids = new String[l_ids.size()];
 			int i = 0;
-			for (Enumeration enum = l_ids.keys(); enum.hasMoreElements();)
-				link_ids[i++] = (String)enum.nextElement();
+			for (Iterator it = l_ids.keySet().iterator(); it.hasNext();)
+				link_ids[i++] = (String)it.next();
 			dataSource.SaveLinkTypes(link_ids);
 		}
 
-		Hashtable p_ids = createPortIdsList(proto);
+		Map p_ids = createPortIdsList(proto);
 		if (!p_ids.isEmpty())
 		{
 			String[] port_ids = new String[p_ids.size()];
 			int i = 0;
-			for (Enumeration enum = p_ids.keys(); enum.hasMoreElements();)
-				port_ids[i++] = (String)enum.nextElement();
+			for (Iterator it = p_ids.keySet().iterator(); it.hasNext();)
+				port_ids[i++] = (String)it.next();
 			dataSource.SavePortTypes(port_ids);
 		}
 
@@ -198,9 +198,9 @@ public class SaveComponentDialog extends JDialog
 		return eq_ids;
 	}
 
-	Hashtable createLinkIdsList(ProtoElement proto)
+	Map createLinkIdsList(ProtoElement proto)
 	{
-		Hashtable l_ids = new Hashtable();
+		Map l_ids = new HashMap();
 		for (Iterator it = proto.protoelement_ids.iterator(); it.hasNext();)
 		{
 			ProtoElement p = (ProtoElement)Pool.get(ProtoElement.typ, (String)it.next());
@@ -214,9 +214,9 @@ public class SaveComponentDialog extends JDialog
 		return l_ids;
 	}
 
-	Hashtable createPortIdsList(ProtoElement proto)
+	Map createPortIdsList(ProtoElement proto)
 	{
-		Hashtable p_ids = new Hashtable();
+		Map p_ids = new HashMap();
 		for (Iterator it = proto.protoelement_ids.iterator(); it.hasNext();)
 		{
 			ProtoElement p = (ProtoElement)Pool.get(ProtoElement.typ, (String)it.next());
@@ -234,9 +234,9 @@ public class SaveComponentDialog extends JDialog
 		return p_ids;
 	}
 
-	Hashtable createCablePortIdsList(ProtoElement proto)
+	Map createCablePortIdsList(ProtoElement proto)
 	{
-		Hashtable p_ids = new Hashtable();
+		Map p_ids = new HashMap();
 		for (Iterator it = proto.protoelement_ids.iterator(); it.hasNext();)
 		{
 			ProtoElement p = (ProtoElement)Pool.get(ProtoElement.typ, (String)it.next());

@@ -1,9 +1,9 @@
 package com.syrus.AMFICOM.Client.Schematics.UI;
 
-import java.awt.*;
-import java.awt.event.*;
 import java.util.*;
 
+import java.awt.*;
+import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.border.EtchedBorder;
 
@@ -199,9 +199,9 @@ public class MapProtoNavigatorPanel extends JPanel implements OperationListener
 				Pool.remove(MapProtoElement.typ, id);
 
 				ArrayList groups = new ArrayList();
-				for (Enumeration enum = Pool.getHash(MapProtoGroup.typ).elements(); enum.hasMoreElements();)
+				for(Iterator it = Pool.getHash(MapProtoGroup.typ).values().iterator(); it.hasNext();)
 				{
-					MapProtoGroup group = (MapProtoGroup)enum.nextElement();
+					MapProtoGroup group = (MapProtoGroup)it.next();
 					if (group.mapproto_ids.contains(id));
 					{
 						group.mapproto_ids.remove(id);
