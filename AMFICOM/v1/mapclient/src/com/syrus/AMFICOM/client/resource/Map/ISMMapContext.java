@@ -123,7 +123,7 @@ public class ISMMapContext extends MapContext
 
 		mc.logicalNetLayer = this.logicalNetLayer;
 
-		super.changed = mc.changed;
+		super.setChanged(mc.isChanged());
 		super.codename = mc.codename;
 		super.created = mc.created;
 		super.created_by = mc.created_by;
