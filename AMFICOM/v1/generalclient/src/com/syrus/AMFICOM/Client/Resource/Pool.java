@@ -163,7 +163,7 @@ public final class Pool {
 		if (objTypeId != null) {
 			Map ht = (Map) objHash.get(objTypeId);
 			if (ht != null) {
-				result = new ArrayList();
+				result = new ArrayList(ht.size());
 				result.addAll(ht.values());
 				result.trimToSize();
 			}
