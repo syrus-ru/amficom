@@ -11,6 +11,7 @@ $LIB/cmserver_interface.jar:\
 $LIB/measurement.jar:\
 $LIB/configuration.jar:\
 $LIB/general.jar:\
+$LIB/event.jar:\
 $LIB/util.jar
 
 exec $JAVA -server -classpath $APPCLASSPATH:$ORACLECLASSPATH com.syrus.AMFICOM.cmserver.ClientMeasurementServer
