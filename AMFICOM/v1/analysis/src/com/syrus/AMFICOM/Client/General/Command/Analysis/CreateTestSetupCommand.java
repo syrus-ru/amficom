@@ -3,6 +3,7 @@ package com.syrus.AMFICOM.Client.General.Command.Analysis;
 import javax.swing.JOptionPane;
 
 import com.syrus.AMFICOM.Client.Analysis.AnalysisUtil;
+import com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.AnalyseMainFrameSimplified;
 import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.Event.RefChangeEvent;
@@ -15,12 +16,8 @@ import com.syrus.io.BellcoreStructure;
 
 public class CreateTestSetupCommand extends VoidCommand
 {
-	public static final int CANCEL = 0;
-	public static final int OK = 1;
 	ApplicationContext aContext;
 	String traceid;
-	int status = CANCEL;
-	MeasurementSetup measurementSetup;
 
 	public CreateTestSetupCommand(ApplicationContext aContext, String id)
 	{
@@ -39,7 +36,8 @@ public class CreateTestSetupCommand extends VoidCommand
 		if (bs == null)
 			return;
 
-		if (bs.monitoredElementId == null)
+		// for local debugging, allow creating test setups with no monitoredElement 
+		if (bs.monitoredElementId == null && !AnalyseMainFrameSimplified.DEBUG)
 		{
 			JOptionPane.showMessageDialog (
 					Environment.getActiveWindow(),
@@ -49,19 +47,6 @@ public class CreateTestSetupCommand extends VoidCommand
 			return;
 		}
 
-//		Measurement m = null;
-//		try
-//		{
-//			m = (Measurement)MeasurementStorableObjectPool.getStorableObject(
-//						 new Identifier(bs.measurementId), true);
-//		}
-//		catch(ApplicationException ex)
-//		{
-//			System.err.println("Exception retrieving measurenent with " + bs.measurementId);
-//			ex.printStackTrace();
-//			return;
-//		}
-//		MeasurementSetup ms = m.getSetup();
 		MeasurementSetup ms = (MeasurementSetup)Pool.get(AnalysisUtil.CONTEXT, "MeasurementSetup");
 
 		String name = JOptionPane.showInputDialog(
@@ -72,35 +57,38 @@ public class CreateTestSetupCommand extends VoidCommand
 		if (name == null || name.equals(""))
 			return;
 
+		Pool.remove(AnalysisUtil.CONTEXT, "MeasurementSetup");
+
+		MeasurementSetup measurementSetup;
 		try
 		{
-				measurementSetup = MeasurementSetup.createInstance(
-						((RISDSessionInfo)aContext.getSessionInterface()).getUserIdentifier(),
-						ms.getParameterSet(),
-						ms.getThresholdSet(),
-						ms.getEtalon(),
-						ms.getThresholdSet(),
-						name,
-						ms.getMeasurementDuration(),
-						ms.getMonitoredElementIds());
-				Pool.put(AnalysisUtil.CONTEXT, "MeasurementSetup", measurementSetup);
-			}
-			catch (CreateObjectException e)
-			{
-				// FIXME
-				System.err.println("CreateTestSetupCommand: CreateObjectException.");
+			measurementSetup = MeasurementSetup.createInstance(
+					((RISDSessionInfo)aContext.getSessionInterface()).getUserIdentifier(),
+					ms.getParameterSet(),
+					ms.getThresholdSet(),
+					ms.getEtalon(),
+					ms.getThresholdSet(),
+					name,
+					ms.getMeasurementDuration(),
+					ms.getMonitoredElementIds());
+			MeasurementStorableObjectPool.putStorableObject(measurementSetup);
+		}
+		catch (CreateObjectException e)
+		{
+			// FIXME
+			System.err.println("CreateTestSetupCommand: CreateObjectException.");
 			e.printStackTrace();
 			return;
-			}
-
-		try
-		{
-			MeasurementStorableObjectPool.putStorableObject(measurementSetup);
-			status = OK;
 		}
-		catch(IllegalObjectEntityException ex)
+		catch(IllegalObjectEntityException e)
 		{
+			// FIXME
+			System.err.println("CreateTestSetupCommand: IllegalObjectEntityException.");
+			e.printStackTrace();
+			return;
 		}
+		// будем считать status == OK, если в Pool есть объект MeasurementSetup
+		Pool.put(AnalysisUtil.CONTEXT, "MeasurementSetup", measurementSetup);
 
 		aContext.getDispatcher().notify(new RefChangeEvent(traceid,
 				RefChangeEvent.THRESHOLDS_CALC_EVENT));

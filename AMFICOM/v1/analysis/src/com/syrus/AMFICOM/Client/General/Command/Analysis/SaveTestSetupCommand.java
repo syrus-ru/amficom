@@ -66,21 +66,6 @@ public class SaveTestSetupCommand extends VoidCommand
 			return;
 		}
 
-//		Measurement m = null;
-//		try
-//		{
-//			m = (Measurement)MeasurementStorableObjectPool.getStorableObject(
-//						 new Identifier(bs.measurementId), true);
-//		}
-//		catch(ApplicationException ex)
-//		{
-//			System.err.println("Exception retrieving measurenent with " + bs.measurementId);
-//			ex.printStackTrace();
-//			return;
-//		}
-//
-//		MeasurementSetup ms = m.getSetup();
-
 		MeasurementSetup ms = (MeasurementSetup)Pool.get(AnalysisUtil.CONTEXT, "MeasurementSetup");
 		if (ms.getParameterSet() == null)
 		{
@@ -91,7 +76,8 @@ public class SaveTestSetupCommand extends VoidCommand
 			return;
 		}
 
-		Identifier user_id = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).getAccessIdentifier().user_id);
+		Identifier user_id = new Identifier(((RISDSessionInfo)aContext
+				.getSessionInterface()).getAccessIdentifier().user_id);
 		ms.setCriteriaSet(AnalysisUtil.createCriteriaSetFromParams(user_id, ms.getMonitoredElementIds()));
 
 		if ((type & ETALON) != 0 || (type & THRESHOLDS) != 0)

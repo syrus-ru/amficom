@@ -77,11 +77,11 @@ public class SaveTestSetupAsCommand extends VoidCommand
 
 		CreateTestSetupCommand command = new CreateTestSetupCommand(aContext, RefUpdateEvent.PRIMARY_TRACE);
 		command.execute();
-		if (command.status != CreateTestSetupCommand.OK)
+		MeasurementSetup newms = (MeasurementSetup)Pool.get(AnalysisUtil.CONTEXT, "MeasurementSetup");
+		if (newms == null)
 			return;
 
 		Identifier userId = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).getAccessIdentifier().user_id);
-		MeasurementSetup newms = command.measurementSetup;
 		ModelTraceManager mtm = (ModelTraceManager )Pool.get(ModelTraceManager.CODENAME, traceid);
 		newms.setCriteriaSet(AnalysisUtil.createCriteriaSetFromParams(
 				userId,
