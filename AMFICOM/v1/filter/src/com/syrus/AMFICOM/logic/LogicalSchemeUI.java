@@ -1,5 +1,5 @@
 /*
- * $Id: LogicalSchemeUI.java,v 1.8 2005/03/14 09:08:31 bob Exp $
+ * $Id: LogicalSchemeUI.java,v 1.9 2005/03/14 10:23:57 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -33,7 +33,7 @@ import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/03/14 09:08:31 $
+ * @version $Revision: 1.9 $, $Date: 2005/03/14 10:23:57 $
  * @author $Author: bob $
  * @module filter_v1
  */
@@ -59,6 +59,8 @@ public class LogicalSchemeUI extends JComponent implements MouseListener, MouseM
 
 	private Font				regularFont;
 	private Font				boldFont;
+
+	private FontMetrics			fontMetrics;
 
 	private Stroke				regularStroke;
 	private Stroke				boldStroke;
@@ -106,7 +108,7 @@ public class LogicalSchemeUI extends JComponent implements MouseListener, MouseM
 			if (item.getMaxParentCount() == 0 || item.getParents() == null || item.getParents().isEmpty()) {
 				this.addItem(item);
 			}
-		}		
+		}
 		this.newItem = null;
 	}
 
@@ -131,14 +133,14 @@ public class LogicalSchemeUI extends JComponent implements MouseListener, MouseM
 		this.regularFont = this.getFont();
 		this.boldFont = new Font(this.regularFont.getName(), Font.BOLD, this.regularFont.getSize());
 
-		FontMetrics fontMetrics = this.getFontMetrics(this.regularFont);
+		this.fontMetrics = this.getFontMetrics(this.regularFont);
 		if (this.fontXOffset == -1)
-			this.fontXOffset = fontMetrics.stringWidth("XX");
+			this.fontXOffset = this.fontMetrics.stringWidth("XX");
 		if (this.items != null) {
 			for (Iterator it = this.items.iterator(); it.hasNext();) {
 				ViewItem item = (ViewItem) it.next();
-				item.setWidth(fontMetrics.stringWidth(item.getName()) + 2 * this.fontXOffset);
-				item.setHeight((int) (1.5 * fontMetrics.getHeight()));
+				item.setWidth(this.fontMetrics.stringWidth(item.getName()) + 2 * this.fontXOffset);
+				item.setHeight((int) (1.5 * this.fontMetrics.getHeight()));
 			}
 		}
 		// init misc graphical features
@@ -300,7 +302,7 @@ public class LogicalSchemeUI extends JComponent implements MouseListener, MouseM
 			for (Iterator it = this.items.iterator(); it.hasNext();) {
 				ViewItem item = (ViewItem) it.next();
 				if (item.getMaxParentCount() == deep || item.getParents() == null || item.getParents().isEmpty()) {
-						rootItems.add(item);
+					rootItems.add(item);
 				}
 
 				if (item.getChildren() == null || item.getChildren().isEmpty())
@@ -546,6 +548,11 @@ public class LogicalSchemeUI extends JComponent implements MouseListener, MouseM
 			}
 		}
 
+		if (this.fontMetrics != null) {
+			this.newItem.setWidth(this.fontMetrics.stringWidth(item.getName()) + 2 * this.fontXOffset);
+			this.newItem.setHeight((int) (1.5 * this.fontMetrics.getHeight()));
+		}
+
 		// FontMetrics fontMetrics = this.getFontMetrics(this.regularFont);
 		// if (this.fontXOffset == -1)
 		// this.fontXOffset = fontMetrics.stringWidth("XX");
@@ -570,21 +577,7 @@ public class LogicalSchemeUI extends JComponent implements MouseListener, MouseM
 
 	private void fireSelectionChanged() {
 		if (this.selectionListeners.length > 0) {
-			Collection selections;
-			if (!this.selectedItems.isEmpty()) {
-				selections = new ArrayList(this.selectedItems.size());
-				for (Iterator it = this.selectedItems.iterator(); it.hasNext();) {
-					ViewItem element = (ViewItem) it.next();
-					selections.add(element.getSourceItem());
-				}
-
-			} else {
-				if (this.selectedItem != null)
-					selections = Collections.singletonList(this.selectedItem.getSourceItem());
-				else
-					selections = Collections.EMPTY_LIST;
-			}
-
+			Collection selections = this.getSelectedItems();
 			for (int i = 0; i < this.selectionListeners.length; i++) {
 				this.selectionListeners[i].selectedItems(selections);
 			}
@@ -824,5 +817,23 @@ public class LogicalSchemeUI extends JComponent implements MouseListener, MouseM
 		if (!this.selectedItems.isEmpty())
 			this.selectedItem = (ViewItem) this.selectedItems.iterator().next();
 		this.repaint();
+	}
+
+	public Collection getSelectedItems() {
+		Collection selections;
+		if (this.selectedItems != null && !this.selectedItems.isEmpty()) {
+			selections = new ArrayList(this.selectedItems.size());
+			for (Iterator it = this.selectedItems.iterator(); it.hasNext();) {
+				ViewItem element = (ViewItem) it.next();
+				selections.add(element.getSourceItem());
+			}
+
+		} else {
+			if (this.selectedItem != null)
+				selections = Collections.singletonList(this.selectedItem.getSourceItem());
+			else
+				selections = Collections.EMPTY_LIST;
+		}
+		return selections;
 	}
 }
