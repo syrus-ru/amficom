@@ -96,15 +96,15 @@ class CableLayoutReportTableModel extends DividableTableModel
 					report.getName(),
 					CreateReportException.poolObjNotExists);
 
-		this.length = scLink.cableChannelingItems().length + 1;
+		this.length = scLink.getCableChannelingItemsAsArray().length + 1;
 
 		this.tableData = new String[this.getBaseColumnCount()][];
 		for(int i = 0; i < this.getBaseColumnCount(); i++)
 			this.tableData[i] = new String[this.length];
 
-		for(int curCCI = 0; curCCI < scLink.cableChannelingItems().length; curCCI++)
+		for(int curCCI = 0; curCCI < scLink.getCableChannelingItemsAsArray().length; curCCI++)
 		{
-			CableChannelingItem chanellingItem = scLink.cableChannelingItems()[curCCI];
+			CableChannelingItem chanellingItem = scLink.getCableChannelingItemsAsArray()[curCCI];
 
 			String fullName = this.getSiteFullName(map, chanellingItem
 					.getStartSiteNode());
@@ -117,12 +117,12 @@ class CableLayoutReportTableModel extends DividableTableModel
 			this.tableData[0][curCCI] = fullName;
 
 			// Запас на входе
-			this.tableData[1][curCCI] = Double.toString(chanellingItem.startSpare());
+			this.tableData[1][curCCI] = Double.toString(chanellingItem.getStartSpare());
 
 			// Запас на выходе
 			if(curCCI != 0)
 				this.tableData[3][curCCI] = Double.toString(chanellingItem
-						.endSpare());
+						.getEndSpare());
 			else
 				this.tableData[3][curCCI] = "--";
 
@@ -150,8 +150,8 @@ class CableLayoutReportTableModel extends DividableTableModel
 							+ chanellingItem.getName();
 
 				int place = physicalLink.getBinding().getSequenceNumber(
-						chanellingItem.rowX(),
-						chanellingItem.placeY());
+						chanellingItem.getRowX(),
+						chanellingItem.getPlaceY());
 
 				// Место в тоннеле
 				tunnelInfo += "," + LangModelMap.getString("maptunnelposit")
@@ -164,7 +164,7 @@ class CableLayoutReportTableModel extends DividableTableModel
 			}
 
 			// Информация о замыкающем узле - имя + запас на входе
-			if(curCCI == scLink.cableChannelingItems().length - 1)
+			if(curCCI == scLink.getCableChannelingItemsAsArray().length - 1)
 			{
 				fullName = this.getSiteFullName(map, chanellingItem
 						.getEndSiteNode());

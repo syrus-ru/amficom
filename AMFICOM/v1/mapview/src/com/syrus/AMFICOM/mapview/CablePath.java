@@ -1,5 +1,5 @@
 /**
- * $Id: CablePath.java,v 1.8 2005/03/16 12:53:22 bass Exp $
+ * $Id: CablePath.java,v 1.9 2005/03/28 08:25:13 bass Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -40,7 +40,7 @@ import java.util.ListIterator;
 /**
  * Ёлемент кабельного пути. ќписывает прив€зку кабел€ к топологическим лини€м.
  * @author $Author: bass $
- * @version $Revision: 1.8 $, $Date: 2005/03/16 12:53:22 $
+ * @version $Revision: 1.9 $, $Date: 2005/03/28 08:25:13 $
  * @module mapviewclient_v1
  */
 public class CablePath implements MapElement
@@ -785,7 +785,7 @@ public class CablePath implements MapElement
 	public IntPoint getBindingPosition(PhysicalLink link)
 	{
 		CableChannelingItem cci = (CableChannelingItem )getBinding().get(link);
-		return new IntPoint(cci.rowX(), cci.placeY());
+		return new IntPoint(cci.getRowX(), cci.getPlaceY());
 	}
 
 	/**

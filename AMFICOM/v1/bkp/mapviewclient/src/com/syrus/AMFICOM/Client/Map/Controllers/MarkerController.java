@@ -1,5 +1,5 @@
 /**
- * $Id: MarkerController.java,v 1.14 2005/03/16 12:54:57 bass Exp $
+ * $Id: MarkerController.java,v 1.15 2005/03/28 08:25:11 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -44,7 +44,7 @@ import javax.swing.ImageIcon;
 /**
  * Контроллер маркера.
  * @author $Author: bass $
- * @version $Revision: 1.14 $, $Date: 2005/03/16 12:54:57 $
+ * @version $Revision: 1.15 $, $Date: 2005/03/28 08:25:11 $
  * @module mapviewclient_v1
  */
 public class MarkerController extends AbstractNodeController
@@ -348,7 +348,7 @@ public class MarkerController extends AbstractNodeController
 		MeasurementPathController pathController = (MeasurementPathController )
 			getLogicalNetLayer().getMapViewController().getController(measurementPath);
 
-		PathElement []pes = measurementPath.getSchemePath().links();
+		PathElement []pes = measurementPath.getSchemePath().getPathElementsAsArray();
 		for(int i = 0; i < pes.length; i++)
 		{
 			PathElement pe = pes[i];

@@ -1,5 +1,5 @@
 /**
- * $Id: CableController.java,v 1.10 2005/03/16 12:54:57 bass Exp $
+ * $Id: CableController.java,v 1.11 2005/03/28 08:25:11 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -41,7 +41,7 @@ import com.syrus.AMFICOM.scheme.SchemeStorableObjectPool;
  * Контроллер кабеля.
  * 
  * @author $Author: bass $
- * @version $Revision: 1.10 $, $Date: 2005/03/16 12:54:57 $
+ * @version $Revision: 1.11 $, $Date: 2005/03/28 08:25:11 $
  * @module mapviewclient_v1
  */
 public final class CableController extends AbstractLinkController
@@ -264,9 +264,9 @@ public final class CableController extends AbstractLinkController
 		cci.setStartSiteNode((SiteNode )link.getStartNode());
 		if(! (link instanceof UnboundLink))
 		{
-			cci.startSpare(MapPropertiesManager.getSpareLength());
+			cci.setStartSpare(MapPropertiesManager.getSpareLength());
 			cci.setPhysicalLink(link);
-			cci.endSpare(MapPropertiesManager.getSpareLength());
+			cci.setEndSpare(MapPropertiesManager.getSpareLength());
 		}
 		cci.setEndSiteNode((SiteNode )link.getEndNode());
 		

@@ -96,7 +96,7 @@ public final class CableBindingController implements ObjectResourceController
 			else
 			if (key.equals(KEY_START_SPARE))
 			{
-				result = (link instanceof UnboundLink) ? "" : String.valueOf(cci.startSpare());
+				result = (link instanceof UnboundLink) ? "" : String.valueOf(cci.getStartSpare());
 			}
 			else
 			if (key.equals(KEY_LINK))
@@ -108,7 +108,7 @@ public final class CableBindingController implements ObjectResourceController
 			else
 			if (key.equals(KEY_END_SPARE))
 			{
-				result = (link instanceof UnboundLink) ? "" : String.valueOf(cci.endSpare());
+				result = (link instanceof UnboundLink) ? "" : String.valueOf(cci.getEndSpare());
 			}
 			else
 			if (key.equals(KEY_END_NODE))
@@ -141,13 +141,13 @@ public final class CableBindingController implements ObjectResourceController
 			if (key.equals(KEY_START_SPARE))
 			{
 				if(cci.getPhysicalLink() != null)
-					cci.startSpare(Double.parseDouble((String )value));
+					cci.setStartSpare(Double.parseDouble((String )value));
 			}
 			else
 			if (key.equals(KEY_END_SPARE))
 			{
 				if(cci.getPhysicalLink() != null)
-					cci.endSpare(Double.parseDouble((String )value));
+					cci.setEndSpare(Double.parseDouble((String )value));
 			}
 		}
 	}

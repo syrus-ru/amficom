@@ -121,7 +121,7 @@ public class DevicePropsPanel extends JPanel
 			for (Iterator it = schemeCables.iterator(); it.hasNext();)
 			{
 				SchemeCableLink link = (SchemeCableLink)it.next();
-				sortedThreads.addAll(Arrays.asList(link.schemeCableThreads()));
+				sortedThreads.addAll(Arrays.asList(link.getSchemeCableThreadsAsArray()));
 			}
 
 			Object[][] data = new Object[ports.length][2];

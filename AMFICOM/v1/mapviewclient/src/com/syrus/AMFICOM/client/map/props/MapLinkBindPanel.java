@@ -289,8 +289,8 @@ public final class MapLinkBindPanel
 			binding.bind(or, pt.x, pt.y);
 			CablePath cp = (CablePath)or;
 			CableChannelingItem cci = (CableChannelingItem )(cp.getBinding().get(this.link));
-			cci.rowX(pt.x);
-			cci.placeY(pt.y);
+			cci.setRowX(pt.x);
+			cci.setPlaceY(pt.y);
 			this.tunnelLayout.updateElements();
 		}
 	}

@@ -72,7 +72,7 @@ public class AddToPathFrame extends JDialog
 						String.valueOf(tm.getRowCount() + 1),
 						new String[] {"текущая", "",
 						((SchemeCableLink)resources[i]).getName(),
-						(((SchemeCableLink)resources[i]).schemeCableThreads()[0]).getName()}
+						(((SchemeCableLink)resources[i]).getSchemeCableThreadsAsArray()[0]).getName()}
 						);
 			}
 		}

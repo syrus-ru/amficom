@@ -36,8 +36,8 @@ public class PathAutoCreateCommand extends VoidCommand
 	{
 		Scheme scheme = panel.getGraph().getScheme();
 		SchemePath path = panel.getGraph().getCurrentPath();
-		if (path.startDevice() == null ||
-				path.endDevice() == null)
+		if (path.getStartSchemeElement() == null ||
+				path.getEndSchemeElement() == null)
 		{
 			JOptionPane.showMessageDialog(Environment.getActiveWindow(),
 																		"Не введено начальное и/или конечное устройство",

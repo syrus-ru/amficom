@@ -94,9 +94,9 @@ public class ElementsListFrame extends JInternalFrame implements OperationListen
 
 					SchemePath path = pathpanel.path;
 					if (!MiscUtil.validName(path.getName()) ||
-							path.endDevice() == null ||
-							path.startDevice() == null ||
-							path.links().length == 0)
+							path.getEndSchemeElement() == null ||
+							path.getStartSchemeElement() == null ||
+							path.getPathElementsAsArray().length == 0)
 					{
 						String err = new String();
 						err += "Недостаточно данных для сохранения маршрута.\n";

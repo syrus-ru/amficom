@@ -98,7 +98,7 @@ public final class PathElementsPanel extends AnalysisPanel
 			if (startPE == null || endPE == null)
 				setGraphBounds(start, end);
 
-			List links = Arrays.asList(path.links());
+			List links = Arrays.asList(path.getPathElementsAsArray());
 			for (Iterator it = links.listIterator(links.indexOf(startPE)); it.hasNext();)
 			{
 				PathElement pe = (PathElement)it.next();

@@ -1,5 +1,5 @@
 /**
- * $Id: PlaceSchemeCableLinkCommand.java,v 1.16 2005/03/16 12:54:57 bass Exp $
+ * $Id: PlaceSchemeCableLinkCommand.java,v 1.17 2005/03/28 08:25:11 bass Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -28,7 +28,7 @@ import com.syrus.AMFICOM.scheme.CableChannelingItem;
  * –азместить кабель на карте.
  * 
  * @author $Author: bass $
- * @version $Revision: 1.16 $, $Date: 2005/03/16 12:54:57 $
+ * @version $Revision: 1.17 $, $Date: 2005/03/28 08:25:11 $
  * @module mapviewclient_v1
  */
 public class PlaceSchemeCableLinkCommand extends MapActionCommandBundle
@@ -88,9 +88,9 @@ public class PlaceSchemeCableLinkCommand extends MapActionCommandBundle
 			// идем по всем узлам кабельного пути от начального
 			SiteNode bufferStartSite = this.startNode;
 			// цикл по элементам прив€зки кабел€.
-			for(int i = 0; i < this.scl.cableChannelingItems().length; i++)
+			for(int i = 0; i < this.scl.getCableChannelingItemsAsArray().length; i++)
 			{
-				CableChannelingItem cci = this.scl.cableChannelingItems()[i];
+				CableChannelingItem cci = this.scl.getCableChannelingItemsAsArray()[i];
 				SiteNode smsne = cci.getStartSiteNode();
 				SiteNode emsne = cci.getEndSiteNode();
 
@@ -146,9 +146,9 @@ public class PlaceSchemeCableLinkCommand extends MapActionCommandBundle
 					else
 					{
 						link.getBinding().add(this.cablePath);
-						if(cci.rowX() != -1
-							&& cci.placeY() != -1)
-							link.getBinding().bind(this.cablePath, cci.rowX(), cci.placeY());
+						if(cci.getRowX() != -1
+							&& cci.getPlaceY() != -1)
+							link.getBinding().bind(this.cablePath, cci.getRowX(), cci.getPlaceY());
 			
 						this.cablePath.addLink(link, CableController.generateCCI(link));
 					}

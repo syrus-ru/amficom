@@ -44,12 +44,12 @@ public class CableLayout implements OperationListener
 				type.getCodename().equals("okst16"))
 			nModules = 6;
 
-		int tmp = (int)(2 * FIBER_RADIUS * Math.sqrt(Math.round((double)link.schemeCableThreads().length / (double)nModules + 0.499)));
+		int tmp = (int)(2 * FIBER_RADIUS * Math.sqrt(Math.round((double)link.getSchemeCableThreadsAsArray().length / (double)nModules + 0.499)));
 		if (tmp > radius)
 			radius = tmp;
 
 		createModules(nModules);
-		createFibers(nModules, Arrays.asList(link.schemeCableThreads()));
+		createFibers(nModules, Arrays.asList(link.getSchemeCableThreadsAsArray()));
 	}
 
 	private void createFibers(int nModules, List fibers)

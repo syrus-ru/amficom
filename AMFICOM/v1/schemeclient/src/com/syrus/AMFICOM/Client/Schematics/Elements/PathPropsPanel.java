@@ -171,7 +171,7 @@ public class PathPropsPanel extends JPanel
 					{ }
 			public void keyReleased(KeyEvent ae)
 			{
-				if (path == null || path.getTransmissionPathType() == null)
+				if (path == null || path.getTransmissionPath().getType() == null)
 					return;
 				path.setName(compNameTextField.getText());
 			}
@@ -207,20 +207,20 @@ public class PathPropsPanel extends JPanel
 		compNameTextField.setCaretPosition(0);
 
 
-		if (path.endDevice() != null)
-			endDevTextField.setText(path.endDevice().getName());
+		if (path.getEndSchemeElement() != null)
+			endDevTextField.setText(path.getEndSchemeElement().getName());
 		else
 			endDevTextField.setText("");
 		endDevTextField.setCaretPosition(0);
 
-		if (path.startDevice() != null)
-			startDevTextField.setText(path.startDevice().getName());
+		if (path.getStartSchemeElement() != null)
+			startDevTextField.setText(path.getStartSchemeElement().getName());
 		else
 			startDevTextField.setText("");
 		startDevTextField.setCaretPosition(0);
 
-		typeComboBox.setSelectedItem(path.getTransmissionPathType());
-		links = Arrays.asList(path.links());
+		typeComboBox.setSelectedItem(path.getTransmissionPath().getType());
+		links = Arrays.asList(path.getPathElementsAsArray());
 
 		PathTreeModel model = new PathTreeModel(path);
 		utp = new UniTreePanel(aContext.getDispatcher(), aContext, model);
@@ -229,13 +229,13 @@ public class PathPropsPanel extends JPanel
 		scroll.getViewport().add(utp, BorderLayout.CENTER);
 
 		undoCompName = path.getName();
-		undoTypeId = path.getTransmissionPathType();
+		undoTypeId = (TransmissionPathType) path.getTransmissionPath().getType();
 
 		undoPathLinks = new ArrayList();
 		undoPeOrder = new HashMap();
-		for (int i = 0 ; i < path.links().length; i++)
+		for (int i = 0 ; i < path.getPathElementsAsArray().length; i++)
 		{
-			PathElement pe = path.links()[i];
+			PathElement pe = path.getPathElementsAsArray()[i];
 			undoPeOrder.put(pe.getAbstractSchemeElement(), new Integer(pe.getSequentialNumber()));
 			undoPathLinks.add(pe);
 		}
@@ -250,7 +250,7 @@ public class PathPropsPanel extends JPanel
 		if (path == null)
 			return;
 		TransmissionPathType tpt = (TransmissionPathType)typeComboBox.getSelectedItem();
-		path.setTransmissionPathType(tpt);
+		path.getTransmissionPath().setType(tpt);
 	}
 
 	public void removeLink()
@@ -287,7 +287,7 @@ public class PathPropsPanel extends JPanel
 
 	public void addSelectedElements()
 	{
-		if (path.startDevice() == null)
+		if (path.getStartSchemeElement() == null)
 		{
 			JOptionPane.showMessageDialog(Environment.getActiveWindow(),
 																		"Не введено начальное устройство",
@@ -320,7 +320,7 @@ public class PathPropsPanel extends JPanel
 			{
 				startDevTextField.setText(se.getName());
 				startDevTextField.setCaretPosition(0);
-				path.startDevice(se);
+				path.setStartSchemeElement(se);
 			}
 			updatePathElements();
 			element_to_add = null;
@@ -346,14 +346,14 @@ public class PathPropsPanel extends JPanel
 			}
 			endDevTextField.setText(se.getName());
 			endDevTextField.setCaretPosition(0);
-			path.endDevice(se);
+			path.setEndSchemeElement(se);
 			element_to_add = null;
 		}
 	}
 
 	public void undo()
 	{
-		path.setTransmissionPathType(undoTypeId);
+		path.getTransmissionPath().setType(undoTypeId);
 		path.setName(undoCompName);
 
 		PathElement[] pes = new PathElement[undoPathLinks.size()];
@@ -363,7 +363,7 @@ public class PathPropsPanel extends JPanel
 			pes[i] = (PathElement)it.next();
 			pes[i].setSequentialNumber(((Integer)undoPeOrder.get(pes[i].getAbstractSchemeElement())).intValue());
 		}
-		path.links(pes);
+		path.setPathElementsAsArray(pes);
 	}
 
 	public String getCompName()
@@ -373,12 +373,12 @@ public class PathPropsPanel extends JPanel
 
 	public SchemeElement getEndDivice()
 	{
-		return path.endDevice();
+		return path.getEndSchemeElement();
 	}
 
 	public SchemeElement getStartDivice()
 	{
-		return path.startDevice();
+		return path.getStartSchemeElement();
 	}
 
 	void this_addTypeButtonActionPerformed()

@@ -1,5 +1,5 @@
 /*
-* $Id: MapView.java,v 1.16 2005/03/25 13:26:57 bass Exp $
+* $Id: MapView.java,v 1.17 2005/03/28 08:25:13 bass Exp $
 *
 * Copyright ї 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -49,7 +49,7 @@ import com.syrus.AMFICOM.scheme.SchemeUtils;
  * <br>&#9;- набор физических схем {@link Scheme}, которые проложены по данной
  * топологической схеме
  * @author $Author: bass $
- * @version $Revision: 1.16 $, $Date: 2005/03/25 13:26:57 $
+ * @version $Revision: 1.17 $, $Date: 2005/03/28 08:25:13 $
  * @module mapview_v1
  * @todo use getCenter, setCenter instead of pair longitude, latitude
  */
@@ -498,7 +498,7 @@ public class MapView extends DomainMember {
 				{
 					SchemeElement se = SchemeUtils.getTopologicalElement(
 							sch,
-							path.startDevice());
+							path.getStartSchemeElement());
 					return findElement(se);
 				}
 			}
@@ -529,7 +529,7 @@ public class MapView extends DomainMember {
 				{
 					SchemeElement se = SchemeUtils.getTopologicalElement(
 							sch,
-							path.endDevice());
+							path.getEndSchemeElement());
 					return findElement(se);
 				}
 			}

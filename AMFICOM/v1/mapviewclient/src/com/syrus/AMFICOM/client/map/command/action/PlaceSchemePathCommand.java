@@ -1,5 +1,5 @@
 /**
- * $Id: PlaceSchemePathCommand.java,v 1.15 2005/03/25 18:16:47 bass Exp $
+ * $Id: PlaceSchemePathCommand.java,v 1.16 2005/03/28 08:25:11 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -32,7 +32,7 @@ import com.syrus.AMFICOM.scheme.corba.PathElementKind;
  * (drag/drop), в точке point (в экранных координатах)
  * 
  * @author $Author: bass $
- * @version $Revision: 1.15 $, $Date: 2005/03/25 18:16:47 $
+ * @version $Revision: 1.16 $, $Date: 2005/03/28 08:25:11 $
  * @module mapviewclient_v1
  */
 public class PlaceSchemePathCommand extends MapActionCommandBundle
@@ -74,7 +74,7 @@ public class PlaceSchemePathCommand extends MapActionCommandBundle
 		this.mapView = this.logicalNetLayer.getMapView();
 		this.map = this.mapView.getMap();
 		try {
-			Scheme scheme = this.path.scheme();
+			Scheme scheme = this.path.getScheme();
 			this.startNode = this.mapView.getStartNode(this.path);
 			this.endNode = this.mapView.getEndNode(this.path);
 			this.measurementPath = this.mapView.findMeasurementPath(this.path);
@@ -83,9 +83,9 @@ public class PlaceSchemePathCommand extends MapActionCommandBundle
 			else
 			// если путь уже есть, все его составляющие наносятся заново
 				super.removeMeasurementPathCables(this.measurementPath);
-			for(int i = 0; i < this.path.links().length; i++)
+			for(int i = 0; i < this.path.getPathElementsAsArray().length; i++)
 			{
-				PathElement pe = this.path.links()[i];
+				PathElement pe = this.path.getPathElementsAsArray()[i];
 				switch(pe.getPathElementKind().value())
 				{
 					case PathElementKind._SCHEME_ELEMENT:

@@ -142,7 +142,7 @@ public class TransmissionPathGeneralPanel extends GeneralPanel
 
 		idField.setText(path.getId().getIdentifierString());
 		nameField.setText(path.getName());
-		equipField.setText(path.startDevice().getName());
+		equipField.setText(path.getStartSchemeElement().getName());
 
 		if(path.getTransmissionPath() != null)
 		{

@@ -88,19 +88,19 @@ public final class CableChannelingItemController implements ObjectResourceContro
 			else if (key.equals(COLUMN_NAME))
 				result = item.getName();
 			else if (key.equals(COLUMN_SEQUENTIAL_NUMBER))
-				result = Integer.toString(item.sequentialNumber());
+				result = Integer.toString(item.getSequentialNumber());
 			else if (key.equals(COLUMN_START_SITE_NODE_ID))
 				result = item.getStartSiteNode().getId().getIdentifierString();
 			else if (key.equals(COLUMN_END_SITE_NODE_ID))
 				result = item.getEndSiteNode().getId().getIdentifierString();
 			else if (key.equals(COLUMN_START_SPARE))
-				result = Double.toString(item.startSpare());
+				result = Double.toString(item.getStartSpare());
 			else if (key.equals(COLUMN_END_SPARE))
-				result = Double.toString(item.endSpare());
+				result = Double.toString(item.getEndSpare());
 			else if (key.equals(COLUMN_ROW_X))
-				result = Integer.toString(item.rowX());
+				result = Integer.toString(item.getRowX());
 			else if (key.equals(COLUMN_PLACE_Y))
-				result = Integer.toString(item.placeY());
+				result = Integer.toString(item.getPlaceY());
 			else if (key.equals(COLUMN_PHYSICAL_LINK_ID))
 				result = item.getPhysicalLink().getId().getIdentifierString();
 		}

@@ -147,13 +147,13 @@ public class PathBuilder
 
 	public boolean explore(Scheme scheme, SchemePath path)
 	{
-		List links = Arrays.asList(path.links());
+		List links = Arrays.asList(path.getPathElementsAsArray());
 
 		if (links.isEmpty())
 		{
-			if (path.startDevice() == null)
+			if (path.getStartSchemeElement() == null)
 				return false;
-			SchemeElement se = path.startDevice();
+			SchemeElement se = path.getStartSchemeElement();
 			PathElement pe = addSchemeElement(links, se);
 			if (pe == null)
 				return false;
@@ -162,7 +162,7 @@ public class PathBuilder
 		while(true)
 		{
 			PathElement pe = (PathElement)links.listIterator(links.size()).previous();
-			if (pe.getAbstractSchemeElement().equals(path.endDevice()))
+			if (pe.getAbstractSchemeElement().equals(path.getEndSchemeElement()))
 			{
 				JOptionPane.showMessageDialog(Environment.getActiveWindow(),
 						"Построение пути успешно завершено", "Сообшение", JOptionPane.INFORMATION_MESSAGE);
@@ -550,7 +550,7 @@ public class PathBuilder
 			SchemeCablePort port = (SchemeCablePort)it.next();
 			if (port.getSchemeCableLink() != null)
 			{
-				if (Arrays.asList(port.getSchemeCableLink().schemeCableThreads()).contains(thread))
+				if (Arrays.asList(port.getSchemeCableLink().getSchemeCableThreadsAsArray()).contains(thread))
 					return port;
 			}
 		}

@@ -44,7 +44,7 @@ public class PathNewCommand extends VoidCommand
 			return;
 		}
 		
-		path.scheme(graph.getScheme());
+		path.setScheme(graph.getScheme());
 		graph.setCurrentPath(path);
 
 		Identifier user_id = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).

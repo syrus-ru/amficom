@@ -10,7 +10,7 @@ public final class SchemePathController implements ObjectResourceController
 	public static final String COLUMN_START_DEVICE_ID = "start_device_id";
 	public static final String COLUMN_END_DEVICE_ID = "end_device_id";
 	public static final String COLUMN_PATH_ID = "path_id";
-	public static final String COLUMN_TYPE_ID = "type_id";
+//	public static final String COLUMN_TYPE_ID = "type_id";
 	public static final String COLUMN_SCHEME_ID = "scheme_id";
 	public static final String COLUMN_LINK_IDS = "link_ids";
 
@@ -84,16 +84,14 @@ public final class SchemePathController implements ObjectResourceController
 				result = path.getName();
 			else if (key.equals(COLUMN_PATH_ID))
 				result = path.getTransmissionPath().getId().getIdentifierString();
-			else if (key.equals(COLUMN_TYPE_ID))
-				result = path.getTransmissionPathType().getId().getIdentifierString();
 			else if (key.equals(COLUMN_START_DEVICE_ID))
-				result = path.startDevice().getId().getIdentifierString();
+				result = path.getStartSchemeElement().getId().getIdentifierString();
 			else if (key.equals(COLUMN_END_DEVICE_ID))
-				result = path.endDevice().getId().getIdentifierString();
+				result = path.getEndSchemeElement().getId().getIdentifierString();
 			else if (key.equals(COLUMN_SCHEME_ID))
-				result = path.scheme().getId().getIdentifierString();
+				result = path.getScheme().getId().getIdentifierString();
 			else if (key.equals(COLUMN_LINK_IDS)) {
-				PathElement[] pes = path.links();
+				PathElement[] pes = path.getPathElementsAsArray();
 				List res = new ArrayList(pes.length);
 				for (int i = 0; i < pes.length; i++) {
 					res.add(pes[i].getId().getIdentifierString());

@@ -1,5 +1,5 @@
 /**
- * $Id: MeasurementPath.java,v 1.14 2005/03/25 18:16:48 bass Exp $
+ * $Id: MeasurementPath.java,v 1.15 2005/03/28 08:25:13 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -41,7 +41,7 @@ import java.util.ListIterator;
  * Элемент пути.
  * 
  * @author $Author: bass $
- * @version $Revision: 1.14 $, $Date: 2005/03/25 18:16:48 $
+ * @version $Revision: 1.15 $, $Date: 2005/03/28 08:25:13 $
  * @module mapviewclient_v1
  */
 public class MeasurementPath implements MapElement
@@ -342,7 +342,7 @@ public class MeasurementPath implements MapElement
 	{
 		this.schemePath = schemePath;
 		this.name = schemePath.getName();
-		this.scheme = schemePath.scheme();
+		this.scheme = schemePath.getScheme();
 	}
 
 	/**
@@ -413,9 +413,9 @@ public class MeasurementPath implements MapElement
 		synchronized(this.unsortedCablePaths)
 		{
 			this.unsortedCablePaths.clear();
-			for(int i = 0; i < this.schemePath.links().length; i++)
+			for(int i = 0; i < this.schemePath.getPathElementsAsArray().length; i++)
 			{
-				PathElement pe = this.schemePath.links()[i];
+				PathElement pe = this.schemePath.getPathElementsAsArray()[i];
 				switch(pe.getPathElementKind().value())
 				{
 					case PathElementKind._SCHEME_ELEMENT:
