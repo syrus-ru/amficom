@@ -77,6 +77,8 @@ module corba {
 		com::syrus::AMFICOM::general::corba::Identifier_Transferable id;
 		com::syrus::AMFICOM::general::corba::Identifier_Transferable type_id;
 		sequence <octet> value;
+		
+		wstring typeCodename;
 	};
 
 	typedef sequence <Parameter_Transferable> ParameterSeq_Transferable;
@@ -138,6 +140,8 @@ module corba {
 
 		com::syrus::AMFICOM::general::corba::Identifier_Transferable type_id;
 		com::syrus::AMFICOM::general::corba::Identifier_Transferable monitored_element_id;
+		
+		wstring typeCodename;
 
 		com::syrus::AMFICOM::general::corba::Identifier_Transferable setup_id;
 		long long start_time;
@@ -166,11 +170,11 @@ module corba {
 /////////////////////// Test ////////////////////////
 
 	enum TestStatus {
-		TEST_STATUS_SCHEDULED,
-		TEST_STATUS_QUEUED,
-		TEST_STATUS_PROCESSING,
-		TEST_STATUS_COMPLETED,
-		TEST_STATUS_ABORTED
+		TEST_STATUS_SCHEDULED,	//Сохранён в БД
+		TEST_STATUS_QUEUED,			//Поставлен МУИ в очередь
+		TEST_STATUS_PROCESSING,	//Извлечён из очереди; первое измерение начинает выполняться
+		TEST_STATUS_COMPLETED,	//Последнее измерение завершено
+		TEST_STATUS_ABORTED			//Прерван
 	};
 
 	enum TestReturnType {
@@ -233,6 +237,8 @@ module corba {
 
     com::syrus::AMFICOM::general::corba::Identifier_Transferable type_id;
 		com::syrus::AMFICOM::general::corba::Identifier_Transferable monitored_element_id;
+		
+		wstring typeCodename;
 
     com::syrus::AMFICOM::general::corba::Identifier_Transferable criteria_set_id;
   };
@@ -248,6 +254,8 @@ module corba {
 
     com::syrus::AMFICOM::general::corba::Identifier_Transferable type_id;
 		com::syrus::AMFICOM::general::corba::Identifier_Transferable monitored_element_id;
+		
+		wstring typeCodename;
 
     com::syrus::AMFICOM::general::corba::Identifier_Transferable threshold_set_id;
   };
