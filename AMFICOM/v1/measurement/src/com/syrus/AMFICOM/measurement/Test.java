@@ -1,5 +1,5 @@
 /*
- * $Id: Test.java,v 1.79 2005/02/11 11:55:22 bob Exp $
+ * $Id: Test.java,v 1.80 2005/02/14 10:59:46 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -45,8 +45,8 @@ import com.syrus.AMFICOM.measurement.corba.TestTimeStamps_TransferablePackage.Co
 import com.syrus.AMFICOM.measurement.corba.TestTimeStamps_TransferablePackage.PeriodicalTestTimeStamps;
 
 /**
- * @version $Revision: 1.79 $, $Date: 2005/02/11 11:55:22 $
- * @author $Author: bob $
+ * @version $Revision: 1.80 $, $Date: 2005/02/14 10:59:46 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -94,18 +94,20 @@ public class Test extends StorableObject {
 	}
 
 	public Measurement createMeasurement(Identifier measurementCreatorId, Date startTime) throws CreateObjectException {
-			Measurement measurement = Measurement.createInstance(measurementCreatorId,
-																this.measurementType,
-																this.monitoredElement.getId(),
-																"created by Test:'"
-																	+ this.getDescription()
-																	+ "' at "
-																	+ DatabaseDate.SDF.format(new Date(System.currentTimeMillis())),
-																this.mainMeasurementSetup,
-																startTime,
-																this.monitoredElement.getLocalAddress(),
-																this.id);
-		measurement.insert();
+		Measurement measurement = Measurement.createInstance(measurementCreatorId,
+				this.measurementType,
+				this.monitoredElement.getId(),
+				"created by Test:'" + this.getDescription() + "' at " + DatabaseDate.SDF.format(new Date(System.currentTimeMillis())),
+				this.mainMeasurementSetup,
+				startTime,
+				this.monitoredElement.getLocalAddress(),
+				this.id);
+		try {
+			MeasurementDatabaseContext.measurementDatabase.update(measurement, measurementCreatorId, StorableObjectDatabase.UPDATE_FORCE);
+		}
+		catch (ApplicationException ae) {
+			throw new CreateObjectException("Cannot create measurement for test '" + this.id + "' -- " + ae.getMessage(), ae);
+		}
 		super.modified = new Date(System.currentTimeMillis());
 		super.modifierId = (Identifier) measurementCreatorId.clone();
 		try {
@@ -264,16 +266,6 @@ public class Test extends StorableObject {
 		}
 
 		this.testDatabase = MeasurementDatabaseContext.testDatabase;
-	}
-
-	public void insert() throws CreateObjectException {
-		try {
-			if (this.testDatabase != null)
-				this.testDatabase.update(this, this.creatorId, StorableObjectDatabase.UPDATE_FORCE);
-		}
-		catch (ApplicationException ae) {
-			throw new CreateObjectException(ae.getMessage(), ae);
-		}
 	}
 
 	public short getEntityCode() {
