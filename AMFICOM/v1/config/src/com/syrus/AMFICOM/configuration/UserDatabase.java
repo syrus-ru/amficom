@@ -1,5 +1,5 @@
 /*
- * $Id: UserDatabase.java,v 1.14 2004/09/16 07:57:11 bob Exp $
+ * $Id: UserDatabase.java,v 1.15 2004/09/20 14:13:38 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,7 +27,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2004/09/16 07:57:11 $
+ * @version $Revision: 1.15 $, $Date: 2004/09/20 14:13:38 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -158,26 +158,7 @@ public class UserDatabase extends StorableObjectDatabase {
 	
 	public void insert(StorableObject storableObject) throws IllegalDataException, CreateObjectException {
 		User user = this.fromStorableObject(storableObject);
-		try {
-			this.insertEntity(user);
-		}
-		catch (CreateObjectException e) {
-			try {
-				connection.rollback();
-			}
-			catch (SQLException sqle) {
-				Log.errorMessage("Exception in rolling back");
-				Log.errorException(sqle);
-			}
-			throw e;
-		}
-		try {
-			connection.commit();
-		}
-		catch (SQLException sqle) {
-			Log.errorMessage("Exception in commiting");
-			Log.errorException(sqle);
-		}
+		this.insertEntity(user);
 	}
 	
 	public void insert(List storableObjects) throws IllegalDataException, CreateObjectException {

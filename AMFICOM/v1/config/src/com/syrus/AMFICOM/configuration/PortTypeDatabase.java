@@ -1,5 +1,5 @@
 /*
- * $Id: PortTypeDatabase.java,v 1.12 2004/09/16 07:57:11 bob Exp $
+ * $Id: PortTypeDatabase.java,v 1.13 2004/09/20 14:13:38 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,7 +27,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2004/09/16 07:57:11 $
+ * @version $Revision: 1.13 $, $Date: 2004/09/20 14:13:38 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -126,26 +126,7 @@ public class PortTypeDatabase extends StorableObjectDatabase {
 
 	public void insert(StorableObject storableObject) throws IllegalDataException, CreateObjectException {
 		PortType portType = this.fromStorableObject(storableObject);
-		try {
-			this.insertEntity(portType);
-		}
-		catch (CreateObjectException e) {
-			try {
-				connection.rollback();
-			}
-			catch (SQLException sqle) {
-				Log.errorMessage("Exception in rolling back");
-				Log.errorException(sqle);
-			}
-			throw e;
-		}
-		try {
-			connection.commit();
-		}
-		catch (SQLException sqle) {
-			Log.errorMessage("Exception in commiting");
-			Log.errorException(sqle);
-		}
+		this.insertEntity(portType);
 	}
 	
 	public void insert(List storableObjects) throws IllegalDataException, CreateObjectException {

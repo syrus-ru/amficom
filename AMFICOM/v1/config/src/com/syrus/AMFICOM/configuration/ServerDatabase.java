@@ -1,5 +1,5 @@
 /*
- * $Id: ServerDatabase.java,v 1.19 2004/09/16 07:57:11 bob Exp $
+ * $Id: ServerDatabase.java,v 1.20 2004/09/20 14:13:38 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,6 +8,7 @@
 
 package com.syrus.AMFICOM.configuration;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -28,10 +29,11 @@ import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.configuration.corba.CharacteristicSort;
 import com.syrus.util.Log;
+import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.19 $, $Date: 2004/09/16 07:57:11 $
+ * @version $Revision: 1.20 $, $Date: 2004/09/20 14:13:38 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -186,6 +188,7 @@ public class ServerDatabase extends StorableObjectDatabase {
 
 		Statement statement = null;
 		ResultSet resultSet = null;
+		Connection connection = DatabaseConnection.getConnection();
 		try {
 			statement = connection.createStatement();
 			Log.debugMessage("ServerDatabase.retrieveServer | Trying: " + sql, Log.DEBUGLEVEL09);
@@ -209,6 +212,8 @@ public class ServerDatabase extends StorableObjectDatabase {
 			}
 			catch (SQLException sqle1) {
 				Log.errorException(sqle1);
+			} finally{
+				DatabaseConnection.closeConnection(connection);
 			}
 		}
 		return mcmIds;
@@ -216,26 +221,7 @@ public class ServerDatabase extends StorableObjectDatabase {
 
 	public void insert(StorableObject storableObject) throws IllegalDataException, CreateObjectException {
 		Server server = this.fromStorableObject(storableObject);
-		try {
-			this.insertEntity(server);
-		}
-		catch (CreateObjectException e) {
-			try {
-				connection.rollback();
-			}
-			catch (SQLException sqle) {
-				Log.errorMessage("Exception in rolling back");
-				Log.errorException(sqle);
-			}
-			throw e;
-		}
-		try {
-			connection.commit();
-		}
-		catch (SQLException sqle) {
-			Log.errorMessage("Exception in commiting");
-			Log.errorException(sqle);
-		}
+		this.insertEntity(server);
 	}
 	
 	
