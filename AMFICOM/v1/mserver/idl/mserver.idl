@@ -158,6 +158,16 @@ module corba {
 			raises (general::corba::AMFICOMRemoteException);
 
 
+
+
+		measurement::corba::MeasurementTypeSeq_Transferable transmitMeasurementTypesButIdsByCondition(
+						in general::corba::IdentifierSeq_Transferable ids_Transferable,
+						in general::corba::StorableObjectCondition_Transferable condition_Transferable)
+			raises (general::corba::AMFICOMRemoteException);
+
+
+
+
 		void updateTestStatus(in general::corba::Identifier_Transferable test_id,
 			in measurement::corba::TestStatus status,
 			in general::corba::Identifier_Transferable mcm_id);
