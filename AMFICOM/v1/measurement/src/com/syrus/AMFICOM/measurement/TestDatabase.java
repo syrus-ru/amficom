@@ -1,5 +1,5 @@
 /*
- * $Id: TestDatabase.java,v 1.22 2004/08/17 14:58:58 arseniy Exp $
+ * $Id: TestDatabase.java,v 1.23 2004/08/20 13:16:41 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -37,7 +37,7 @@ import com.syrus.AMFICOM.configuration.MeasurementPortDatabase;
 import com.syrus.AMFICOM.configuration.KISDatabase;
 
 /**
- * @version $Revision: 1.22 $, $Date: 2004/08/17 14:58:58 $
+ * @version $Revision: 1.23 $, $Date: 2004/08/20 13:16:41 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -545,12 +545,12 @@ public class TestDatabase extends StorableObjectDatabase {
 		Statement statement = null;
 		try {
 			statement = connection.createStatement();
-			Log.debugMessage("TestDatabase.updateStatus | Trying: " + sql, Log.DEBUGLEVEL05);
+			Log.debugMessage("TestDatabase.updateModified | Trying: " + sql, Log.DEBUGLEVEL05);
 			statement.executeUpdate(sql);
 			connection.commit();
 		}
 		catch (SQLException sqle) {
-			String mesg = "TestDatabase.updateStatus | Cannot update modified of test '" + testIdStr + "' -- " + sqle.getMessage();
+			String mesg = "TestDatabase.updateModified | Cannot update modified of test '" + testIdStr + "' -- " + sqle.getMessage();
 			throw new UpdateObjectException(mesg, sqle);
 		}
 		finally {
