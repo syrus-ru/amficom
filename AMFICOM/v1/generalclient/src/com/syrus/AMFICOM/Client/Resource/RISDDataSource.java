@@ -1,5 +1,5 @@
 /*
- * $Id: RISDDataSource.java,v 1.5 2004/10/05 11:46:05 bass Exp $
+ * $Id: RISDDataSource.java,v 1.6 2004/10/19 13:45:51 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -19,7 +19,7 @@ import org.omg.CORBA.*;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.5 $, $Date: 2004/10/05 11:46:05 $
+ * @version $Revision: 1.6 $, $Date: 2004/10/19 13:45:51 $
  * @module generalclient_v1
  */
 public class RISDDataSource 
@@ -59,7 +59,7 @@ public class RISDDataSource
 		try
 		{
 			si.ci.getServer().ChangePassword(
-					si.accessIdentity, 
+					si.getAccessIdentity(), 
 					Rewriter.write(oldpwd), 
 					Rewriter.write(newpwd));
 		}
@@ -77,7 +77,7 @@ public class RISDDataSource
 		try
 		{
 			StringHolder idholder = new StringHolder();
-			si.ci.getServer().GetUId(si.accessIdentity, type, idholder);
+			si.ci.getServer().GetUId(si.getAccessIdentity(), type, idholder);
 			return idholder.value;
 		}
 		catch(Exception e)
@@ -98,7 +98,7 @@ public class RISDDataSource
 		ImageResourceSeq_TransferableHolder imholder = new ImageResourceSeq_TransferableHolder();
 		try
 		{
-			si.ci.getServer().GetImages(si.accessIdentity, id, imholder);
+			si.ci.getServer().GetImages(si.getAccessIdentity(), id, imholder);
 		}
 		catch(Exception e)
 		{
@@ -428,7 +428,7 @@ public class RISDDataSource
 
 		try
 		{
-			ecode = si.ci.getServer().GetExecDescriptors(si.accessIdentity, eh);
+			ecode = si.ci.getServer().GetExecDescriptors(si.getAccessIdentity(), eh);
 		}
 		catch (Exception ex)
 		{
@@ -478,7 +478,7 @@ public class RISDDataSource
 
 		try
 		{
-			ecode = si.ci.getServer().GetLoggedUserIds(si.accessIdentity, userids);
+			ecode = si.ci.getServer().GetLoggedUserIds(si.getAccessIdentity(), userids);
 		}
 		catch (Exception ex)
 		{
@@ -613,7 +613,7 @@ public class RISDDataSource
 
 		try
 		{
-			ecode = si.ci.getServer().GetUserDescriptors(si.accessIdentity, ih, dh, uh);
+			ecode = si.ci.getServer().GetUserDescriptors(si.getAccessIdentity(), ih, dh, uh);
 		}
 		catch (Exception ex)
 		{
@@ -627,16 +627,6 @@ public class RISDDataSource
 			System.out.println ("Failed GetUserDescriptors! status = " + ecode);
 			return;
 		}
-/*
-		images = ih.value;
-		count = images.length;
-		System.out.println("...Done! " + count + " image(s) fetched");
-	    for (i = 0; i < count; i++)
-		{
-			image = new ImageResource(images[i]);
-			ImageCatalogue.add(image.getId(), image);
-	    }
-*/
 		domains = dh.value;
 		count = domains.length;
 		System.out.println("...Done! " + count + " domain(s) fetched");

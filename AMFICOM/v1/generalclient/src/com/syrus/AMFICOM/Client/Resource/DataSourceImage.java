@@ -1,5 +1,5 @@
 /*
- * $Id: DataSourceImage.java,v 1.6 2004/09/27 16:06:09 bass Exp $
+ * $Id: DataSourceImage.java,v 1.7 2004/10/19 13:45:51 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,7 +18,7 @@ import java.util.zip.*;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.6 $, $Date: 2004/09/27 16:06:09 $
+ * @version $Revision: 1.7 $, $Date: 2004/10/19 13:45:51 $
  * @module generalclient_v1
  */
 public class DataSourceImage
@@ -37,7 +37,6 @@ public class DataSourceImage
 	{
 		this.di = di;
 		// пролучить ссылку на каталог объектов на локальном диске
-//		load();
 	}
 
 	// получить список идентификаторов объектов, отсутствующих в отображении,
@@ -92,8 +91,6 @@ public class DataSourceImage
 	protected void load()
 	{
 		ConnectionInterface ci = di.getSession().getConnectionInterface();
-
-//		catalog = new Hashtable();
 	}
 
 	// получить каталог сераилизованных объектов фиксированного типа
@@ -108,10 +105,8 @@ public class DataSourceImage
         try
         {
 			lock_result = lock.lockRead(name);
-//            ObjectInputStream in = createInputStream(name);
             ObjectInputStream in = createInputStream((InputStream )lock_result.getResource());
             obj = in.readObject();
-//            in.close();
         }
         catch (NullPointerException ex)
         {
@@ -167,7 +162,6 @@ public class DataSourceImage
         try
         {
 			lock_result = lock.lockRead(name);
-//            ObjectInputStream in = createInputStream(name);
             ObjectInputStream in = createInputStream((InputStream )lock_result.getResource());
             obj = in.readObject();
             in.close();
@@ -187,7 +181,6 @@ public class DataSourceImage
         catch (Exception ex)
         {
 			System.out.println("Catalogue: " + type + ": " + ex.getMessage());
-//			ex.printStackTrace();
         }
 		finally
 		{
@@ -250,7 +243,6 @@ public class DataSourceImage
         try
         {
 			lock_result = lock.lockRead(name);
-//            ObjectInputStream in = createInputStream(name);
             ObjectInputStream in = createInputStream((InputStream )lock_result.getResource());
             obj = in.readObject();
             in.close();
@@ -329,7 +321,6 @@ public class DataSourceImage
         try
         {
 			lock_result = lock.lockWrite(name);
-//            out = createOutputStream(name);
             out = createOutputStream((OutputStream )lock_result.getResource());
             out.writeObject(h2);
             out.flush();
@@ -338,12 +329,10 @@ public class DataSourceImage
         catch (NullPointerException ex)
         {
 			System.out.println("Catalogue: " + type + ": " + ex.getMessage());
-//			ex.printStackTrace();
 		}
         catch (Exception ex)
         {
 			System.out.println("Catalogue: " + type + ": " + ex.getMessage());
-//			ex.printStackTrace();
         }
 		finally
 		{
@@ -378,7 +367,6 @@ public class DataSourceImage
         try
         {
 			lock_result = lock.lockWrite(name);
-//          out = createOutputStream(name);
             out = createOutputStream((OutputStream )lock_result.getResource());
             out.writeObject(h2);
             out.flush();
@@ -387,12 +375,10 @@ public class DataSourceImage
         catch (NullPointerException ex)
         {
 			System.out.println("Catalogue: " + type + ": " + ex.getMessage());
-//			ex.printStackTrace();
 		}
         catch (Exception ex)
         {
 			System.out.println("Catalogue: " + type + ": " + ex.getMessage());
-//			ex.printStackTrace();
         }
 		finally
 		{
@@ -458,7 +444,7 @@ public class DataSourceImage
 
 		try
 		{
-			ecode = si.ci.getServer().GetResourceDescriptors(si.accessIdentity, type, rdh);
+			ecode = si.ci.getServer().GetResourceDescriptors(si.getAccessIdentity(), type, rdh);
 		}
 		catch (Exception ex)
 		{
@@ -497,7 +483,7 @@ public class DataSourceImage
 
 		try
 		{
-			ecode = si.ci.getServer().GetDomainResourceDescriptors(si.accessIdentity, type, rdh);
+			ecode = si.ci.getServer().GetDomainResourceDescriptors(si.getAccessIdentity(), type, rdh);
 		}
 		catch (Exception ex)
 		{
@@ -535,7 +521,7 @@ public class DataSourceImage
 
 		try
 		{
-			ecode = si.ci.getServer().GetResourceDescriptorsByIds(si.accessIdentity, type, ids, rdh);
+			ecode = si.ci.getServer().GetResourceDescriptorsByIds(si.getAccessIdentity(), type, ids, rdh);
 		}
 		catch (Exception ex)
 		{
@@ -571,7 +557,7 @@ public class DataSourceImage
 
 		try
 		{
-			ecode = si.ci.getServer().GetResourceDescriptor(si.accessIdentity, type, id, rdh);
+			ecode = si.ci.getServer().GetResourceDescriptor(si.getAccessIdentity(), type, id, rdh);
 		}
 		catch (Exception ex)
 		{

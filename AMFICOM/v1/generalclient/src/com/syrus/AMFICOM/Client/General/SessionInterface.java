@@ -1,5 +1,5 @@
 /*
- * $Id: SessionInterface.java,v 1.3 2004/09/25 19:32:20 bass Exp $
+ * $Id: SessionInterface.java,v 1.4 2004/10/19 13:45:52 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,88 +12,89 @@ import java.util.Vector;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.3 $, $Date: 2004/09/25 19:32:20 $
+ * @version $Revision: 1.4 $, $Date: 2004/10/19 13:45:52 $
  * @module generalclient_v1
  */
 public abstract class SessionInterface {
-	static public final int SESSION_CLOSED = 0;	// вспомогательные константы
-	static public final int SESSION_OPENED = 1;	// состояния сессии
+	public static final int SESSION_CLOSED = 0;	// вспомогательные константы
+	public static final int SESSION_OPENED = 1;	// состояния сессии
 
-	static private Vector sessions = new Vector();	// открытые сессии
+	private static Vector sessions = new Vector();	// открытые сессии
 
-	static private SessionInterface active_session;	// активная сессия
+	private static SessionInterface active_session;	// активная сессия
 
-	// инициализация параметров сессии
-	// параметры берутся из файла настроек или по умолчанию
-	abstract public void initialize();
+	public void initialize() {
+	}
+
 	// открыть сессию с установленными для нее параметрами
-	abstract public SessionInterface OpenSession();
+	public abstract SessionInterface OpenSession();
 	// закрыть сессию
-	abstract public void CloseSession();
-	// установить значения параметров по умолчанию
-	abstract public void SetDefaults();
+	public abstract void CloseSession();
+
+	public void SetDefaults() {
+	}
+
 	// есть ли открытая сессия
-	abstract public boolean isOpened();
+	public abstract boolean isOpened();
 
-	abstract public void setUser(String u);
-	abstract public String getUser();
-	abstract public void setPassword(String p);
-	abstract public String getPassword();
-	abstract public void setLogonTime(long t);
-	abstract public long getLogonTime();
+	public abstract void setUser(String u);
+	public abstract String getUser();
+	public abstract void setPassword(String p);
+	public abstract String getPassword();
+	public abstract void setLogonTime(long t);
+	public abstract long getLogonTime();
 
-	abstract public String toString();
-	abstract public ConnectionInterface getConnectionInterface();
+	public abstract ConnectionInterface getConnectionInterface();
 
-	abstract public String getUserId();
+	public abstract String getUserId();
 
-	abstract public void setDomainId(String domain_id);
-	abstract public String getDomainId();
+	public abstract void setDomainId(String domain_id);
+	public abstract String getDomainId();
 
-	static public void CloseSession(SessionInterface si)
+	public static void CloseSession(SessionInterface si)
 	{
 		if(si == null)
 			return;
 		si.CloseSession();
 	}
 
-	static public void setActiveSession(SessionInterface si)
+	public static void setActiveSession(SessionInterface si)
 	{
 		if(si != null)
 			active_session = si;
 	}
 
-	static public SessionInterface getActiveSession()
+	public static SessionInterface getActiveSession()
 	{
 		return active_session;
 	}
 
-	static public void add(SessionInterface si)
+	public static void add(SessionInterface si)
 	{
 		sessions.add(si);
 	}
 
-	static public void remove(SessionInterface si)
+	public static void remove(SessionInterface si)
 	{
 		sessions.remove(si);
 	}
 
-	static public boolean contains(SessionInterface si)
+	public static boolean contains(SessionInterface si)
 	{
 		return sessions.contains(si);
 	}
 
-	static public boolean isEmpty()
+	public static boolean isEmpty()
 	{
 		return sessions.isEmpty();
 	}
 
-	static public void Log(String s)
+	public static void Log(String s)
 	{
 		System.out.println (s);
 	}
 
-	static public void Log(Object s)
+	public static void Log(Object s)
 	{
 		System.out.println (s.toString());
 	}

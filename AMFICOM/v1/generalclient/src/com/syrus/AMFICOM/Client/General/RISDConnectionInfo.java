@@ -1,5 +1,5 @@
 /*
- * $Id: RISDConnectionInfo.java,v 1.4 2004/09/25 19:31:05 bass Exp $
+ * $Id: RISDConnectionInfo.java,v 1.5 2004/10/19 13:45:52 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,16 +9,17 @@
 package com.syrus.AMFICOM.Client.General;
 
 import com.syrus.AMFICOM.CORBA.*;
+import com.syrus.AMFICOM.cmserver.corba.*;
+import com.syrus.util.corba.JavaSoftORBUtil;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import org.omg.CORBA.*;
 import org.omg.CosNaming.*;
-import com.syrus.util.corba.JavaSoftORBUtil;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.4 $, $Date: 2004/09/25 19:31:05 $
+ * @version $Revision: 1.5 $, $Date: 2004/10/19 13:45:52 $
  * @module generalclient_v1
  */
 public final class RISDConnectionInfo extends ConnectionInterface {
@@ -30,10 +31,20 @@ public final class RISDConnectionInfo extends ConnectionInterface {
 	private static RISDConnectionInfo instance = null;
 
 	/**
+	 * Server reference.
+	 *
 	 * @deprecated Use {@link #getServer()} instead.
 	 */
 	public AMFICOM server;
 
+	/**
+	 * Server reference.
+	 */
+	private CMServer cmServer;
+
+	/**
+	 * Server group name.
+	 */
 	private String serverName;
 
 	private Map serverMap = null;
@@ -101,8 +112,9 @@ public final class RISDConnectionInfo extends ConnectionInterface {
 					for (Iterator serverIterator = serverMap.keySet().iterator(); serverIterator.hasNext();) {
 						String serverName = (String) (serverIterator.next());
 						Map featureMap = (Map) (serverMap.get(serverName));
-						AMFICOM server = AMFICOMHelper.narrow((org.omg.CORBA.Object) (featureMap.get("Amficom"))); 
-						
+						AMFICOM server = AMFICOMHelper.narrow((org.omg.CORBA.Object) featureMap.get("Amficom"));
+						CMServer cmServer = CMServerHelper.narrow((org.omg.CORBA.Object) featureMap.get("CMServer"));
+
 						System.err.println(serverName);
 						for (Iterator featureIterator = featureMap.keySet().iterator(); featureIterator.hasNext();)
 							System.err.println('\t' + ((String) (featureIterator.next())));
@@ -112,6 +124,8 @@ public final class RISDConnectionInfo extends ConnectionInterface {
 						 */
 						if (this.server == null)
 							this.server = server;
+						if (this.cmServer == null)
+							this.cmServer = cmServer;
 						if (this.serverName == null)
 							this.serverName = serverName;
 					}
@@ -123,6 +137,7 @@ public final class RISDConnectionInfo extends ConnectionInterface {
 					if (serverMap != null)
 						serverMap.clear();
 					server = null;
+					cmServer = null;
 					serverName = null;
 				}
 			}
@@ -146,10 +161,31 @@ public final class RISDConnectionInfo extends ConnectionInterface {
 		return instance;
 	}
 
+	/**
+	 * @return a binding named "Amficom". This can also be obtained
+	 *         directly from the feature map for a certain
+	 *         <i>server group</i>. 
+	 */
 	public AMFICOM getServer() {
 		return server;
 	}
 
+	/**
+	 * @return a binding named "CMServer". This can also be obtained
+	 *         directly from the feature map for a certain
+	 *         <i>server group</i>. 
+	 */
+	public CMServer getCmServer() {
+		return cmServer;
+	}
+
+	/**
+	 * @return not actually a server name (as there may be several servers
+	 *         of different kind, no single one of them being dedicated),
+	 *         but a naming service subcontext, within which all servers
+	 *         (or, rather, bindings) reside (i. e. a <i>server group</i>
+	 *         name). 
+	 */
 	public String getServerName() {
 		return serverName;
 	}

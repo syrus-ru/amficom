@@ -1,5 +1,5 @@
 /*
- * $Id: RISDReportDataSource.java,v 1.2 2004/09/27 16:11:31 bass Exp $
+ * $Id: RISDReportDataSource.java,v 1.3 2004/10/19 13:45:51 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,7 +15,7 @@ import java.util.Vector;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.2 $, $Date: 2004/09/27 16:11:31 $
+ * @version $Revision: 1.3 $, $Date: 2004/10/19 13:45:51 $
  * @module generalclient_v1
  */
 public class RISDReportDataSource extends RISDDataSource
@@ -53,7 +53,7 @@ public class RISDReportDataSource extends RISDDataSource
 
 		try
 		{
-			si.ci.getServer().saveReportTemplates(si.accessIdentity, rts);
+			si.ci.getServer().saveReportTemplates(si.getAccessIdentity(), rts);
 		}
 		catch (Exception ex)
 		{
@@ -81,7 +81,7 @@ public class RISDReportDataSource extends RISDDataSource
 
 		try
 		{
-			si.ci.getServer().getStatedReportTemplates(si.accessIdentity, report_ids, rth);
+			si.ci.getServer().getStatedReportTemplates(si.getAccessIdentity(), report_ids, rth);
 		}
 		catch (Exception ex)
 		{
@@ -110,7 +110,7 @@ public class RISDReportDataSource extends RISDDataSource
 
 		try
 		{
-			si.ci.getServer().removeReportTemplates(si.accessIdentity, report_ids);
+			si.ci.getServer().removeReportTemplates(si.getAccessIdentity(), report_ids);
 		}
 		catch (Exception ex)
 		{

@@ -1,5 +1,5 @@
 /*
- * $Id: RISDObjectDataSource.java,v 1.2 2004/09/27 16:25:14 bass Exp $
+ * $Id: RISDObjectDataSource.java,v 1.3 2004/10/19 13:45:52 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,7 +18,7 @@ import java.util.Vector;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.2 $, $Date: 2004/09/27 16:25:14 $
+ * @version $Revision: 1.3 $, $Date: 2004/10/19 13:45:52 $
  * @module admin_v1
  */
 public class RISDObjectDataSource
@@ -57,12 +57,6 @@ public class RISDObjectDataSource
 		OperatorGroupSeq_TransferableHolder ogh = new OperatorGroupSeq_TransferableHolder();
 		OperatorGroup_Transferable groups[];
 		OperatorGroup group;
-//		OperatorRoleSeq_TransferableHolder orh = new OperatorRoleSeq_TransferableHolder();
-//		OperatorRole_Transferable roles[];
-//		OperatorRole role;
-//		OperatorPrivilegeSeq_TransferableHolder oph = new OperatorPrivilegeSeq_TransferableHolder();
-//		OperatorPrivilege_Transferable privileges[];
-//		OperatorPrivilege privilege;
 		OperatorProfileSeq_TransferableHolder oprh = new OperatorProfileSeq_TransferableHolder();
 		OperatorProfile_Transferable profiles[];
 		OperatorProfile profile;
@@ -78,7 +72,7 @@ public class RISDObjectDataSource
 
 		try
 		{
-			ecode = si.ci.getServer().GetObjects(si.accessIdentity, ih, dh, och, ogh, oprh, eh, uh);
+			ecode = si.ci.getServer().GetObjects(si.getAccessIdentity(), ih, dh, och, ogh, oprh, eh, uh);
 		}
 		catch (Exception ex)
 		{
@@ -91,16 +85,6 @@ public class RISDObjectDataSource
 			System.out.println ("Failed GetObjects! status = " + ecode);
 			return;
 		}
-/*
-		images = ih.value;
-		count = images.length;
-		System.out.println("...Done! " + count + " image(s) fetched");
-	    for (i = 0; i < count; i++)
-		{
-			image = new ImageResource(images[i]);
-			ImageCatalogue.add(image.getId(), image);
-	    }
-*/
 		domains = dh.value;
 		count = domains.length;
 		System.out.println("...Done! " + count + " domain(s) fetched");
@@ -130,27 +114,6 @@ public class RISDObjectDataSource
 			Pool.put(OperatorGroup.typ, group.getId(), group);
 			loaded_objects.add(group);
 	    }
-
-/*		roles = orh.value;
-		count = roles.length;
-		System.out.println("...Done! " + count + " role(s) fetched");
-	    for (i = 0; i < count; i++)
-		{
-			role = new OperatorRole(roles[i]);
-			Pool.put("operatorrole", role.getId(), role);
-			loaded_objects.add(role);
-	    }
-
-		privileges = oph.value;
-		count = privileges.length;
-		System.out.println("...Done! " + count + " privilege(s) fetched");
-	    for (i = 0; i < count; i++)
-		{
-			privilege = new OperatorPrivilege(privileges[i]);
-			Pool.put("operatorprivilege", privilege.getId(), privilege);
-			loaded_objects.add(privilege);
-	    }*/
-
 		profiles = oprh.value;
 		count = profiles.length;
 		System.out.println("...Done! " + count + " profile(s) fetched");
@@ -218,7 +181,7 @@ public class RISDObjectDataSource
 
 		try
 		{
-			ecode = si.ci.getServer().GetStatedObjects(si.accessIdentity, cat_ids, grp_ids, prof_ids, och, ogh, oprh);
+			ecode = si.ci.getServer().GetStatedObjects(si.getAccessIdentity(), cat_ids, grp_ids, prof_ids, och, ogh, oprh);
 		}
 		catch (Exception ex)
 		{
@@ -297,13 +260,11 @@ public class RISDObjectDataSource
 		try
 		{
 			ecode = si.ci.getServer().SaveObjects(
-					si.accessIdentity,
+					si.getAccessIdentity(),
 					images,
 					domain_t,
 					new OperatorCategory_Transferable[0],
 					new OperatorGroup_Transferable[0],
-//					new OperatorRole_Transferable[0],
-//					new OperatorPrivilege_Transferable[0],
 					new OperatorProfile_Transferable[0],
 					new CommandPermissionAttributes_Transferable[0],
 					new User_Transferable[0]);
@@ -340,13 +301,11 @@ public class RISDObjectDataSource
 		try
 		{
 			ecode = si.ci.getServer().SaveObjects(
-					si.accessIdentity,
+					si.getAccessIdentity(),
 					images,
 					new Domain_Transferable[0],
 					cat_t,
 					new OperatorGroup_Transferable[0],
-//					new OperatorRole_Transferable[0],
-//					new OperatorPrivilege_Transferable[0],
 					new OperatorProfile_Transferable[0],
 					new CommandPermissionAttributes_Transferable[0],
 					new User_Transferable[0]);
@@ -385,13 +344,11 @@ public class RISDObjectDataSource
 		try
 		{
 			ecode = si.ci.getServer().SaveObjects(
-					si.accessIdentity,
+					si.getAccessIdentity(),
 					images,
 					new Domain_Transferable[0],
 					new OperatorCategory_Transferable[0],
 					new OperatorGroup_Transferable[0],
-//					new OperatorRole_Transferable[0],
-//					new OperatorPrivilege_Transferable[0],
 					new OperatorProfile_Transferable[0],
 					new CommandPermissionAttributes_Transferable[0],
 					user_t);
@@ -428,13 +385,11 @@ public class RISDObjectDataSource
 		try
 		{
 			ecode = si.ci.getServer().SaveObjects(
-					si.accessIdentity,
+					si.getAccessIdentity(),
 					images,
 					new Domain_Transferable[0],
 					new OperatorCategory_Transferable[0],
 					group_t,
-//					new OperatorRole_Transferable[0],
-//					new OperatorPrivilege_Transferable[0],
 					new OperatorProfile_Transferable[0],
 					new CommandPermissionAttributes_Transferable[0],
 					new User_Transferable[0]);
@@ -470,13 +425,11 @@ public class RISDObjectDataSource
 		try
 		{
 			ecode = si.ci.getServer().SaveObjects(
-					si.accessIdentity,
+					si.getAccessIdentity(),
 					images,
 					new Domain_Transferable[0],
 					new OperatorCategory_Transferable[0],
 					new OperatorGroup_Transferable[0],
-//					new OperatorRole_Transferable[0],
-//					new OperatorPrivilege_Transferable[0],
 					profile_t,
 					new CommandPermissionAttributes_Transferable[0],
 					new User_Transferable[0]);
@@ -513,13 +466,11 @@ public class RISDObjectDataSource
 		try
 		{
 			ecode = si.ci.getServer().SaveObjects(
-					si.accessIdentity,
+					si.getAccessIdentity(),
 					images,
 					new Domain_Transferable[0],
 					new OperatorCategory_Transferable[0],
 					new OperatorGroup_Transferable[0],
-//					new OperatorRole_Transferable[0],
-//					new OperatorPrivilege_Transferable[0],
 					new OperatorProfile_Transferable[0],
 					exec_t,
 					new User_Transferable[0]);
@@ -550,7 +501,7 @@ public class RISDObjectDataSource
 		try
 		{
 			ecode = si.ci.getServer().RemoveObjects(
-					si.accessIdentity,
+					si.getAccessIdentity(),
 					domain_ids,
 					new String[] {},
 					new String[] {},
@@ -584,7 +535,7 @@ public class RISDObjectDataSource
 		try
 		{
 			ecode = si.ci.getServer().RemoveObjects(
-					si.accessIdentity,
+					si.getAccessIdentity(),
 					new String[] {},
 					new String[] {},
 					new String[] {},
@@ -618,7 +569,7 @@ public class RISDObjectDataSource
 		try
 		{
 			ecode = si.ci.getServer().RemoveObjects(
-					si.accessIdentity,
+					si.getAccessIdentity(),
 					new String[] {},
 					new String[] {},
 					group_ids,
@@ -652,7 +603,7 @@ public class RISDObjectDataSource
 		try
 		{
 			ecode = si.ci.getServer().RemoveObjects(
-					si.accessIdentity,
+					si.getAccessIdentity(),
 					new String[] {},
 					new String[] {},
 					new String[] {},
@@ -686,7 +637,7 @@ public class RISDObjectDataSource
 		try
 		{
 			ecode = si.ci.getServer().RemoveObjects(
-					si.accessIdentity,
+					si.getAccessIdentity(),
 					new String[] {},
 					new String[] {},
 					new String[] {},
@@ -733,7 +684,7 @@ public class RISDObjectDataSource
 
 		try
 		{
-			ecode = si.ci.getServer().GetAdminObjects(si.accessIdentity, sh, ch, ah);
+			ecode = si.ci.getServer().GetAdminObjects(si.getAccessIdentity(), sh, ch, ah);
 		}
 		catch (Exception ex)
 		{
@@ -811,7 +762,7 @@ public class RISDObjectDataSource
 
 		try
 		{
-			ecode = si.ci.getServer().GetStatedAdminObjects(si.accessIdentity, ser_ids, cli_ids, ag_ids, sh, ch, ah);
+			ecode = si.ci.getServer().GetStatedAdminObjects(si.getAccessIdentity(), ser_ids, cli_ids, ag_ids, sh, ch, ah);
 		}
 		catch (Exception ex)
 		{
@@ -883,7 +834,7 @@ public class RISDObjectDataSource
 		try
 		{
 			ecode = si.ci.getServer().SaveAdminObjects(
-					si.accessIdentity,
+					si.getAccessIdentity(),
 					server_t,
 					new Client_Transferable[0],
 					new Agent_Transferable[0]);
@@ -921,7 +872,7 @@ public class RISDObjectDataSource
 		try
 		{
 			ecode = si.ci.getServer().SaveAdminObjects(
-					si.accessIdentity,
+					si.getAccessIdentity(),
 					new Server_Transferable[0],
 					client_t,
 					new Agent_Transferable[0]);
@@ -959,7 +910,7 @@ public class RISDObjectDataSource
 		try
 		{
 			ecode = si.ci.getServer().SaveAdminObjects(
-					si.accessIdentity,
+					si.getAccessIdentity(),
 					new Server_Transferable[0],
 					new Client_Transferable[0],
 					agent_t);
@@ -991,7 +942,7 @@ public class RISDObjectDataSource
 		try
 		{
 			ecode = si.ci.getServer().RemoveAdminObjects(
-					si.accessIdentity,
+					si.getAccessIdentity(),
 					server_ids,
 					new String[] {},
 					new String[] {});
@@ -1022,7 +973,7 @@ public class RISDObjectDataSource
 		try
 		{
 			ecode = si.ci.getServer().RemoveAdminObjects(
-					si.accessIdentity,
+					si.getAccessIdentity(),
 					new String[] {},
 					client_ids,
 					new String[] {});
@@ -1053,7 +1004,7 @@ public class RISDObjectDataSource
 		try
 		{
 			ecode = si.ci.getServer().RemoveAdminObjects(
-					si.accessIdentity,
+					si.getAccessIdentity(),
 					new String[] {},
 					new String[] {},
 					agent_ids);

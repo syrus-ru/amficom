@@ -1,5 +1,5 @@
 /*
- * $Id: RISDSessionInfo.java,v 1.8 2004/09/25 19:33:13 bass Exp $
+ * $Id: RISDSessionInfo.java,v 1.9 2004/10/19 13:45:52 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Ќаучно-технический центр.
@@ -8,16 +8,15 @@
 
 package com.syrus.AMFICOM.Client.General;
 
-import com.syrus.AMFICOM.CORBA.Constants;
+import com.syrus.AMFICOM.CORBA.*;
 import com.syrus.AMFICOM.CORBA.Admin.*;
+import com.syrus.AMFICOM.cmserver.corba.CMServer;
+import com.syrus.AMFICOM.configuration.corba.AccessIdentifier_Transferable;
 import com.syrus.AMFICOM.corba.portable.client.*;
-import com.syrus.io.*;
+import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
+import com.syrus.io.Rewriter;
 import com.syrus.util.corba.JavaSoftORBUtil;
 import com.syrus.util.prefs.IIOPConnectionManager;
-import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.logging.*;
 import org.omg.CORBA.*;
 import org.omg.CosNaming.*;
 import org.omg.CosNaming.NamingContextPackage.*;
@@ -26,23 +25,10 @@ import org.omg.PortableServer.POAManagerPackage.AdapterInactive;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.8 $, $Date: 2004/09/25 19:33:13 $
+ * @version $Revision: 1.9 $, $Date: 2004/10/19 13:45:52 $
  * @module generalclient_v1
  */
 public final class RISDSessionInfo extends SessionInterface {
-	/**
-	 * »нициализационный файл.
-	 */
-	private static IniFile iniFile;
-
-	/**
-	 * »м€ инициализационного файла.
-	 */
-	private static final String iniFileName = "Session.properties";
-
-	/*
-	 * переменные дл€ организации сессии
-	 */
 	/**
 	 * ѕользователь системы.
 	 */
@@ -59,9 +45,16 @@ public final class RISDSessionInfo extends SessionInterface {
 	public RISDConnectionInfo ci;
 
 	/**
-	 * ”никальный идентификатор сессии.
+	 * Old-style session id.
+	 *
+	 * @deprecated Use {@link #getAccessIdentity()} instead.
 	 */
 	public AccessIdentity_Transferable accessIdentity;
+
+	/**
+	 * New-style session id.
+	 */
+	private AccessIdentifier_Transferable accessIdentifier;
 
 	/**
 	 * ¬рем€ начала сессии.
@@ -73,97 +66,17 @@ public final class RISDSessionInfo extends SessionInterface {
 	 */
 	public int session_state = SESSION_CLOSED;
 
-	private Handler handler;
-
 	/**
 	 * The client-side CORBA object.
 	 */
 	private Client client = null;
 
 	/**
-	 * Instance initializer
-	 */
-	{
-		handler = new ConsoleHandler();
-		handler.setLevel(Level.CONFIG);
-
-		LogRecord logRecord;
-		logRecord = new LogRecord(Level.FINEST, "Method entry");
-		logRecord.setSourceClassName(getClass().getName());
-		logRecord.setSourceMethodName("<init>");
-		handler.publish(logRecord);
-
-		/*
-		 * установить начальные значени€ параметров сессии
-		 */
-		initialize();
-
-		logRecord = new LogRecord(Level.FINEST, "Method exit");
-		logRecord.setSourceClassName(getClass().getName());
-		logRecord.setSourceMethodName("<init>");
-		handler.publish(logRecord);
-	}
-
-	/**
-	 * Ѕазовый конструктор без параметров.
-	 */
-	public RISDSessionInfo() {
-		LogRecord logRecord;
-		logRecord = new LogRecord(Level.FINEST, "Method entry");
-		logRecord.setSourceClassName(getClass().getName());
-		logRecord.setSourceMethodName("RISDSessionInfo()");
-		handler.publish(logRecord);
-
-		logRecord = new LogRecord(Level.FINEST, "Method exit");
-		logRecord.setSourceClassName(getClass().getName());
-		logRecord.setSourceMethodName("RISDSessionInfo()");
-		handler.publish(logRecord);
-	}
-
-	/**
 	 *  онструктор - нова€ сесси€ дл€ соединени€.
 	 */
 	public RISDSessionInfo(ConnectionInterface ci) {
-		LogRecord logRecord;
-		logRecord = new LogRecord(Level.FINEST, "Method entry");
-		logRecord.setSourceClassName(getClass().getName());
-		logRecord.setSourceMethodName("RISDSessionInfo(ConnectionInterface)");
-		handler.publish(logRecord);
-
 		if (ci instanceof RISDConnectionInfo)
 			this.ci = (RISDConnectionInfo) ci;
-
-		logRecord = new LogRecord(Level.FINEST, "Method exit");
-		logRecord.setSourceClassName(getClass().getName());
-		logRecord.setSourceMethodName("RISDSessionInfo(ConnectionInterface)");
-		handler.publish(logRecord);
-	}
-
-	/**
-	 * »нициализаци€ параметров сессии.
-	 * ѕараметры берутс€ из файла настроек или по умолчанию.
-	 */
-	public void initialize() {
-		/*
-		 * загрузить параметры из файла настроек
-		 */
-		try {
-			iniFile = new IniFile(iniFileName);
-			System.out.println("read ini file " + iniFileName);
-			/*
-			 * если файл настроек открыт, то вынуть из него значени€ параметров
-			 */
-			ISMuser = iniFile.getValue("userName");
-		} catch (IOException ioe) {
-			System.out.println("Error opening " + iniFileName + " - setting defaults");
-			/*
-			 * если ошибка открыти€ файла настроек, то ничего не делаем
-			 */
-			SetDefaults();
-		}
-	}
-
-	public void SetDefaults() {
 	}
 
 	/**
@@ -193,12 +106,6 @@ public final class RISDSessionInfo extends SessionInterface {
 	 * ќткрыть сессию с установленными дл€ нее параметрами.
 	 */
 	public SessionInterface OpenSession() {
-		LogRecord logRecord;
-		logRecord = new LogRecord(Level.FINEST, "Method entry");
-		logRecord.setSourceClassName(getClass().getName());
-		logRecord.setSourceMethodName("OpenSession()");
-		handler.publish(logRecord);
-
 		try {
 			/*
 			 * параметр дл€ возврата идентификатора сессии
@@ -221,11 +128,6 @@ public final class RISDSessionInfo extends SessionInterface {
 
 			clientStartup();
 			String ior = JavaSoftORBUtil.getInstance().getORB().object_to_string(client);
-
-			logRecord = new LogRecord(Level.CONFIG, "Started client object up and obtained a reference to it: " + ior);
-			logRecord.setSourceClassName(getClass().getName());
-			logRecord.setSourceMethodName("OpenSession()");
-			handler.publish(logRecord);
 
 			/*
 			 * открыть сессию
@@ -250,32 +152,40 @@ public final class RISDSessionInfo extends SessionInterface {
 				return null;
 			}
 
-			/*
-			 * сохранить полученный идентификатор сессии
-			 */
-			accessIdentity = accessIdentityHolder.value;
-			
-			setDomainId("");
+			this.LogonTime = System.currentTimeMillis();
+			this.session_state = SESSION_OPENED;
+			this.accessIdentity = accessIdentityHolder.value;
 
-			logRecord = new LogRecord(Level.CONFIG, "accessIdentity information:" + ((accessIdentity == null) ? ("\n\taccessIdentity: null") : ("\n\tstarted: " + accessIdentity.started + "\n\tdomain_id: " + accessIdentity.domain_id + "\n\tsess_id: " + accessIdentity.sess_id + "\n\tuser_id: " + accessIdentity.user_id + "\n\tusername: " + accessIdentity.username)));
-			logRecord.setSourceClassName(getClass().getName());
-			logRecord.setSourceMethodName("OpenSession()");
-			handler.publish(logRecord);
+			AMFICOM server = this.ci.getServer();
+			CMServer cmServer = this.ci.getCmServer();
 
-			/*
-			 * установить врем€ начала сессии
-			 */
-			LogonTime = System.currentTimeMillis();
-			Log("Logged on on " + new SimpleDateFormat("dd.MM.yyyy HH:mm:ss").format(new Date(LogonTime)) + " as " + ISMuser + " (sessid = " + accessIdentity.sess_id + ")");
+			final String oldUserId = this.accessIdentity.user_id;
+			final Identifier_Transferable userId
+				= cmServer.reverseLookupUserLogin(
+				server.lookupUserLogin(
+				new Identifier_Transferable(oldUserId)));
+			assert userId
+				.identifier_string
+				.equals(
+				cmServer.reverseLookupUserName(
+				server.lookupUserName(
+				new Identifier_Transferable(oldUserId)))
+				.identifier_string);
 
-			/*
-			 * добавить в список открытых сессий
-			 */
+			this.accessIdentifier = new AccessIdentifier_Transferable(
+				System.currentTimeMillis(),
+
+				cmServer.reverseLookupDomainName(
+				server.lookupDomainName(
+				new Identifier_Transferable(
+				this.accessIdentity.domain_id))),
+
+				userId,
+
+				new Identifier_Transferable("Null_0"));
+
+
 			add(this);
-			/*
-			 * состо€ние сессии - открыта
-			 */
-			session_state = SESSION_OPENED;
 			setActiveSession(this);
 
 			/**
@@ -302,32 +212,20 @@ public final class RISDSessionInfo extends SessionInterface {
 	 * «акрыть сессию.
 	 */
 	public void CloseSession() {
-		LogRecord logRecord;
-		logRecord = new LogRecord(Level.FINEST, "Method entry");
-		logRecord.setSourceClassName(getClass().getName());
-		logRecord.setSourceMethodName("CloseSession()");
-		handler.publish(logRecord);
-
 		/*
 		 * если сесси€ открыта, то закрыть
 		 */
 		if (contains(this)) {
 			try {
-				System.out.println("closing session for " + accessIdentity.sess_id);
 				ci.getServer().Logoff(accessIdentity);
-		    } catch (Exception e) {
-		        e.printStackTrace();
-		    } 
+			} catch (Exception e) {
+				e.printStackTrace();
+			} 
 			try {
 				clientShutdown();
 			} catch (UserException ue) {
 				ue.printStackTrace();
 			}
-
-			logRecord = new LogRecord(Level.CONFIG, "Shut client object down");
-			logRecord.setSourceClassName(getClass().getName());
-			logRecord.setSourceMethodName("CloseSession()");
-			handler.publish(logRecord);
 		}
 		session_state = SESSION_CLOSED;
 		/*
@@ -336,13 +234,6 @@ public final class RISDSessionInfo extends SessionInterface {
 		remove(this);
 		if (isEmpty()) {
 			setActiveSession(null);
-
-			logRecord = new LogRecord(Level.INFO, "The last session has been closed; closing connection...");
-			logRecord.setSourceClassName(getClass().getName());
-			logRecord.setSourceMethodName("CloseSession()");
-			handler.publish(logRecord);
-
-//			ci.setConnected(false);
 		}
 	}
 
@@ -388,14 +279,6 @@ public final class RISDSessionInfo extends SessionInterface {
 			CannotProceed,
 			InvalidName,
 			NotFound {
-		if (abnormalSessionTermination) {
-			LogRecord logRecord;
-			logRecord = new LogRecord(Level.WARNING,
-				"Failed to open session; shutting down client object...");
-			logRecord.setSourceClassName(getClass().getName());
-			logRecord.setSourceMethodName("clientShutdown(boolean)");
-			handler.publish(logRecord);
-		}
 		if (client != null) {
 			NamingContextExt namingContextExt = NamingContextExtHelper.narrow(
 				JavaSoftORBUtil.getInstance().getORB().
@@ -436,12 +319,19 @@ public final class RISDSessionInfo extends SessionInterface {
 		}
 	}
 
+	public AccessIdentity_Transferable getAccessIdentity() {
+		return this.accessIdentity;
+	}
+
+	public AccessIdentifier_Transferable getAccessIdentifier() {
+		return this.accessIdentifier;
+	}
+
 	/** 
 	 * ≈сть ли открыта€ сесси€.
 	 */
 	public boolean isOpened() {
 		return (session_state == SESSION_OPENED);
-//		return ! (sessions.isEmpty());
 	}
 
 	public void setUser(String ISMuser) {
@@ -482,9 +372,5 @@ public final class RISDSessionInfo extends SessionInterface {
 
 	public String getDomainId() {
 		return (this.accessIdentity == null) ? null : this.accessIdentity.domain_id;
-	}
-
-	public String toString() {
-		return "SessionInfo for user " + getUser() + " opened " + isOpened();
 	}
 }
