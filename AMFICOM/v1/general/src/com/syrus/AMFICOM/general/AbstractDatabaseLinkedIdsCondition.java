@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractDatabaseLinkedIdsCondition.java,v 1.11 2005/03/05 21:31:51 arseniy Exp $
+ * $Id: AbstractDatabaseLinkedIdsCondition.java,v 1.12 2005/03/09 15:37:30 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,7 +10,7 @@ package com.syrus.AMFICOM.general;
 
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/03/05 21:31:51 $
+ * @version $Revision: 1.12 $, $Date: 2005/03/09 15:37:30 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -41,8 +41,10 @@ public abstract class AbstractDatabaseLinkedIdsCondition implements DatabaseStor
 	protected String getLinkedQuery(final String linkedColumnIdName,
 									final String linkedColumnTargetName,
 									final String linkedTableName) throws IllegalDataException {
-		return this.getLinkedQuery(StorableObjectWrapper.COLUMN_ID, linkedColumnIdName, linkedColumnTargetName,
-			linkedTableName);
+		return this.getLinkedQuery(StorableObjectWrapper.COLUMN_ID,
+				linkedColumnIdName,
+				linkedColumnTargetName,
+				linkedTableName);
 
 	}
 
