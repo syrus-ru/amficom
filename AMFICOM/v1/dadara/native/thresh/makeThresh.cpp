@@ -81,13 +81,14 @@ void extendThreshToCover(THX *thX, THY *thY, int thXc, int thYc, int isUpper,
 	assert(ttdy);
 
 	// корректируем пороги согласно превышению на участках с однозначно определенным DY-порогом
+	// (похоже, это не столь уж и необходимо)
 	calcThAdd(thX, thY, thXc, thYc, isUpper, xMin, xMax, 0, ttdy,
-		yBase, yTemp, yTgt, thAdd, 0);
+		yBase, yTemp, yTgt, thAdd, 1);
 	addThAddToThY(thY, thYc, thAdd);
 
 	// корректируем пороги согласно превышению на всех участках
 	calcThAdd(thX, thY, thXc, thYc, isUpper, xMin, xMax, 0, ttdy,
-		yBase, yTemp, yTgt, thAdd, 1);
+		yBase, yTemp, yTgt, thAdd, 0);
 	addThAddToThY(thY, thYc, thAdd);
 
 	delete[] ttdy;
