@@ -45,7 +45,7 @@ public class Survey
 		}
 		frame.setLocation((screenSize.width - frameSize.width)/2, (screenSize.height - frameSize.height)/2);
 		frame.addWindowListener(new WindowAdapter() { public void windowClosing(WindowEvent e) { System.exit(0); } });
-*/
+*/		
 		frame.setIconImage(Toolkit.getDefaultToolkit().getImage("images/main/observe_mini.gif"));
 		frame.setVisible(true);
 	}
@@ -62,7 +62,7 @@ public class Survey
 			e.printStackTrace();
 		}
 		LangModelConfig.initialize();
-		LangModelSurvey.initialize();
+//		LangModelSurvey.initialize();
 		LangModelSchedule.initialize();
 		LangModelAnalyse.initialize();
 		new Survey(new DefaultSurveyApplicationModelFactory());
