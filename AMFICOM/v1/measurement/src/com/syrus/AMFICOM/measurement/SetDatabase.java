@@ -1,5 +1,5 @@
 /*
- * $Id: SetDatabase.java,v 1.42 2004/12/08 09:11:37 bob Exp $
+ * $Id: SetDatabase.java,v 1.43 2004/12/09 14:50:11 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -45,7 +45,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.42 $, $Date: 2004/12/08 09:11:37 $
+ * @version $Revision: 1.43 $, $Date: 2004/12/09 14:50:11 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -270,6 +270,8 @@ public class SetDatabase extends StorableObjectDatabase {
             for (Iterator iter = sets.iterator(); iter.hasNext();) {
                 Set set = (Set) iter.next();
                 List parameters = (List)setParametersMap.get(set);
+                if (parameters == null)
+                	parameters = Collections.EMPTY_LIST;
                 set.setParameters((SetParameter[]) parameters.toArray(new SetParameter[parameters.size()]));
             }
             
