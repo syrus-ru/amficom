@@ -1,115 +1,254 @@
 package com.syrus.AMFICOM.Client.Resource.Result;
 
 import java.io.*;
-import java.util.*;
 
 import com.syrus.AMFICOM.CORBA.Survey.*;
 import com.syrus.AMFICOM.Client.Resource.*;
-import com.syrus.AMFICOM.Client.Resource.Test.*;
+import com.syrus.AMFICOM.Client.Survey.General.ConstStorage;
 
-public class TestSetup extends ObjectResource implements Serializable
-{
-	private static final long serialVersionUID = 01L;
+public class TestSetup extends ObjectResource implements Serializable {
 
-	public static final String typ = "testsetup";
+	private static final long		serialVersionUID		= 01L;
 
-	private TestSetup_Transferable transferable;
+	public static final String		typ						= "testsetup";
 	/**
 	 * @deprecated use setter/getter pair to access this field
 	 */
-	public String id = "";
+	public String					analysis_type_id		= "";
 	/**
 	 * @deprecated use setter/getter pair to access this field
 	 */
-	public String name = "";
+	public long						created					= 0;
 	/**
 	 * @deprecated use setter/getter pair to access this field
-	 */	
-	public long created = 0;
+	 */
+	public String					created_by				= "";
 	/**
 	 * @deprecated use setter/getter pair to access this field
-	 */	
-	public long modified = 0;
+	 */
+	public String					criteria_set_id			= "";
 	/**
 	 * @deprecated use setter/getter pair to access this field
-	 */	
-	public String created_by = "";
+	 */
+	public String					description				= "";
 	/**
 	 * @deprecated use setter/getter pair to access this field
-	 */	
-	public String description = "";
+	 */
+	public String					etalon_id				= "";
 	/**
 	 * @deprecated use setter/getter pair to access this field
-	 */	
-	public String test_type_id = "";
+	 */
+	public String					evaluation_type_id		= "";
 	/**
 	 * @deprecated use setter/getter pair to access this field
-	 */	
-	public String test_argument_set_id = "";
+	 */
+	public String					id						= "";
 	/**
 	 * @deprecated use setter/getter pair to access this field
-	 */	
-	public String analysis_type_id = "";
+	 */
+	public long						modified				= 0;
 	/**
 	 * @deprecated use setter/getter pair to access this field
-	 */	
-	public String criteria_set_id = "";
+	 */
+	public String[]					monitored_element_ids;
 	/**
 	 * @deprecated use setter/getter pair to access this field
-	 */	
-	public String evaluation_type_id = "";
+	 */
+	public String					name					= "";
 	/**
 	 * @deprecated use setter/getter pair to access this field
-	 */	
-	public String threshold_set_id = "";
+	 */
+	public String					test_argument_set_id	= "";
 	/**
 	 * @deprecated use setter/getter pair to access this field
-	 */	
-	public String etalon_id = "";
+	 */
+	public String					test_type_id			= "";
 	/**
 	 * @deprecated use setter/getter pair to access this field
-	 */	
-	public String[] monitored_element_ids;
+	 */
+	public String					threshold_set_id		= "";
 
-	public TestSetup()
-	{
+	private TestSetup_Transferable	transferable;
+
+	public TestSetup() {
 		monitored_element_ids = new String[0];
 		transferable = new TestSetup_Transferable();
 	}
 
-	public TestSetup(TestSetup_Transferable transferable)
-	{
+	public TestSetup(TestSetup_Transferable transferable) {
 		this.transferable = transferable;
 		setLocalFromTransferable();
 	}
 
-	public String getName()
-	{
-		return name;
+	/**
+	 * @return Returns the analysisTypeId.
+	 */
+	public String getAnalysisTypeId() {
+		return analysis_type_id;
 	}
 
-	public String getId()
-	{
+	/**
+	 * @return Returns the created.
+	 */
+	public long getCreated() {
+		return created;
+	}
+
+	/**
+	 * @return Returns the createdBy.
+	 */
+	public String getCreatedBy() {
+		return created_by;
+	}
+
+	/**
+	 * @return Returns the criteriaSetId.
+	 */
+	public String getCriteriaSetId() {
+		return criteria_set_id;
+	}
+
+	/**
+	 * @return Returns the description.
+	 */
+	public String getDescription() {
+		return description;
+	}
+
+	public String getDomainId() {
+		return ConstStorage.SYS_DOMAIN;
+	}
+
+	/**
+	 * @return Returns the ethalonId.
+	 */
+	public String getEthalonId() {
+		return etalon_id;
+	}
+
+	/**
+	 * @return Returns the evaluationTypeId.
+	 */
+	public String getEvaluationTypeId() {
+		return evaluation_type_id;
+	}
+
+	public String getId() {
 		return id;
 	}
 
-	public String getTyp()
-	{
-		return typ;
+	/**
+	 * @return Returns the modified.
+	 */
+	public long getModified() {
+		return modified;
 	}
 
-	public String getDomainId()
-	{
-		return "sysdomain";
+	/**
+	 * @return Returns the monitoredElementIds.
+	 */
+	public String[] getMonitoredElementIds() {
+		return monitored_element_ids;
 	}
 
-	public Object getTransferable()
-	{
+	public String getName() {
+		return name;
+	}
+
+	/**
+	 * @return Returns the testArgumentSetId.
+	 */
+	public String getTestArgumentSetId() {
+		return test_argument_set_id;
+	}
+
+	/**
+	 * @return Returns the testTypeId.
+	 */
+	public String getTestTypeId() {
+		return test_type_id;
+	}
+
+	/**
+	 * @return Returns the thresholdSetId.
+	 */
+	public String getThresholdSetId() {
+		return threshold_set_id;
+	}
+
+	public Object getTransferable() {
 		return transferable;
 	}
 
-	public void setLocalFromTransferable()
-	{
+	public String getTyp() {
+		return typ;
+	}
+
+	/**
+	 * @param analysisTypeId
+	 *            The analysisTypeId to set.
+	 */
+	public void setAnalysisTypeId(String analysisTypeId) {
+		this.analysis_type_id = analysisTypeId;
+	}
+
+	/**
+	 * @param created
+	 *            The created to set.
+	 */
+	public void setCreated(long created) {
+		this.created = created;
+	}
+
+	/**
+	 * @param createdBy
+	 *            The createdBy to set.
+	 */
+	public void setCreatedBy(String createdBy) {
+		this.created_by = createdBy;
+	}
+
+	/**
+	 * @param criteriaSetId
+	 *            The criteriaSetId to set.
+	 */
+	public void setCriteriaSetId(String criteriaSetId) {
+		this.criteria_set_id = criteriaSetId;
+	}
+
+	/**
+	 * @param description
+	 *            The description to set.
+	 */
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	/**
+	 * @param ethalonId
+	 *            The ethalonId to set.
+	 */
+	public void setEthalonId(String ethalonId) {
+		this.etalon_id = ethalonId;
+	}
+
+	/**
+	 * @param evaluationTypeId
+	 *            The evaluationTypeId to set.
+	 */
+	public void setEvaluationTypeId(String evaluationTypeId) {
+		this.evaluation_type_id = evaluationTypeId;
+	}
+
+	/**
+	 * @param id
+	 *            The id to set.
+	 */
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public void setLocalFromTransferable() {
 		id = transferable.id;
 		name = transferable.name;
 		created = transferable.created;
@@ -130,8 +269,55 @@ public class TestSetup extends ObjectResource implements Serializable
 		monitored_element_ids = transferable.monitored_element_ids;
 	}
 
-	public void setTransferableFromLocal()
-	{
+	/**
+	 * @param modified
+	 *            The modified to set.
+	 */
+	public void setModified(long modified) {
+		this.modified = modified;
+	}
+
+	/**
+	 * @param monitoredElementIds
+	 *            The monitoredElementIds to set.
+	 */
+	public void setMonitoredElementIds(String[] monitoredElementIds) {
+		this.monitored_element_ids = monitoredElementIds;
+	}
+
+	/**
+	 * @param name
+	 *            The name to set.
+	 */
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	/**
+	 * @param testArgumentSetId
+	 *            The testArgumentSetId to set.
+	 */
+	public void setTestArgumentSetId(String testArgumentSetId) {
+		this.test_argument_set_id = testArgumentSetId;
+	}
+
+	/**
+	 * @param testTypeId
+	 *            The testTypeId to set.
+	 */
+	public void settestTypeId(String testTypeId) {
+		this.test_type_id = testTypeId;
+	}
+
+	/**
+	 * @param thresholdSetId
+	 *            The thresholdSetId to set.
+	 */
+	public void setThresholdSetId(String thresholdSetId) {
+		this.threshold_set_id = thresholdSetId;
+	}
+
+	public void setTransferableFromLocal() {
 		transferable.id = id;
 		transferable.name = name;
 		transferable.created = created;
@@ -152,12 +338,37 @@ public class TestSetup extends ObjectResource implements Serializable
 		transferable.monitored_element_ids = new String[0];
 	}
 
-	public void updateLocalFromTransferable()
-	{
+	public void updateLocalFromTransferable() {
+		// nothing to do
 	}
 
-	private void writeObject(java.io.ObjectOutputStream out) throws IOException
-	{
+	private void readObject(java.io.ObjectInputStream in) throws IOException,
+			ClassNotFoundException {
+		id = (String) in.readObject();
+		name = (String) in.readObject();
+		created = in.readLong();
+		modified = in.readLong();
+		created_by = (String) in.readObject();
+		description = (String) in.readObject();
+
+		test_type_id = (String) in.readObject();
+		test_argument_set_id = (String) in.readObject();
+
+		analysis_type_id = (String) in.readObject();
+		criteria_set_id = (String) in.readObject();
+
+		evaluation_type_id = (String) in.readObject();
+		threshold_set_id = (String) in.readObject();
+		etalon_id = (String) in.readObject();
+
+		Object o = in.readObject();
+		monitored_element_ids = (String[]) o;
+
+		transferable = new TestSetup_Transferable();
+		updateLocalFromTransferable();
+	}
+
+	private void writeObject(java.io.ObjectOutputStream out) throws IOException {
 		out.writeObject(id);
 		out.writeObject(name);
 		out.writeLong(created);
@@ -176,189 +387,6 @@ public class TestSetup extends ObjectResource implements Serializable
 		out.writeObject(etalon_id);
 		Object o = monitored_element_ids;
 		out.writeObject(o);
-	}
-
-	private void readObject(java.io.ObjectInputStream in)
-		throws IOException, ClassNotFoundException
-	{
-		id = (String )in.readObject();
-		name = (String )in.readObject();
-		created = in.readLong();
-		modified = in.readLong();
-		created_by = (String )in.readObject();
-		description = (String )in.readObject();
-
-		test_type_id = (String )in.readObject();
-		test_argument_set_id = (String )in.readObject();
-
-		analysis_type_id = (String )in.readObject();
-		criteria_set_id = (String )in.readObject();
-
-		evaluation_type_id = (String )in.readObject();
-		threshold_set_id = (String )in.readObject();
-		etalon_id = (String )in.readObject();
-
-		Object o = in.readObject();
-		monitored_element_ids = (String[] )o;
-
-		transferable = new TestSetup_Transferable();
-		updateLocalFromTransferable();
-	}
-	/**
-	 * @return Returns the analysisTypeId.
-	 */
-	public String getAnalysisTypeId() {
-		return analysis_type_id;
-	}
-	/**
-	 * @param analysisTypeId The analysisTypeId to set.
-	 */
-	public void setAnalysis_type_id(String analysisTypeId) {
-		this.analysis_type_id = analysisTypeId;
-	}
-	/**
-	 * @return Returns the created.
-	 */
-	public long getCreated() {
-		return created;
-	}
-	/**
-	 * @param created The created to set.
-	 */
-	public void setCreated(long created) {
-		this.created = created;
-	}
-	/**
-	 * @return Returns the createdBy.
-	 */
-	public String getCreatedBy() {
-		return created_by;
-	}
-	/**
-	 * @param createdBy The createdBy to set.
-	 */
-	public void setCreatedBy(String createdBy) {
-		this.created_by = createdBy;
-	}
-	/**
-	 * @return Returns the criteriaSetId.
-	 */
-	public String getCriteriaSetId() {
-		return criteria_set_id;
-	}
-	/**
-	 * @param criteriaSetId The criteriaSetId to set.
-	 */
-	public void setCriteriaSetId(String criteriaSetId) {
-		this.criteria_set_id = criteriaSetId;
-	}
-	/**
-	 * @return Returns the description.
-	 */
-	public String getDescription() {
-		return description;
-	}
-	/**
-	 * @param description The description to set.
-	 */
-	public void setDescription(String description) {
-		this.description = description;
-	}
-	/**
-	 * @return Returns the ethalonId.
-	 */
-	public String getEthalonId() {
-		return etalon_id;
-	}
-	/**
-	 * @param ethalonId The ethalonId to set.
-	 */
-	public void setEthalonId(String ethalonId) {
-		this.etalon_id = ethalonId;
-	}
-	/**
-	 * @return Returns the evaluationTypeId.
-	 */
-	public String getEvaluationTypeId() {
-		return evaluation_type_id;
-	}
-	/**
-	 * @param evaluationTypeId The evaluationTypeId to set.
-	 */
-	public void setEvaluationTypeId(String evaluationTypeId) {
-		this.evaluation_type_id = evaluationTypeId;
-	}
-	/**
-	 * @return Returns the modified.
-	 */
-	public long getModified() {
-		return modified;
-	}
-	/**
-	 * @param modified The modified to set.
-	 */
-	public void setModified(long modified) {
-		this.modified = modified;
-	}
-	/**
-	 * @return Returns the monitoredElementIds.
-	 */
-	public String[] getMonitoredElementIds() {
-		return monitored_element_ids;
-	}
-	/**
-	 * @param monitoredElementIds The monitoredElementIds to set.
-	 */
-	public void setMonitoredElementIds(String[] monitoredElementIds) {
-		this.monitored_element_ids = monitoredElementIds;
-	}
-	/**
-	 * @return Returns the testArgumentSetId.
-	 */
-	public String getTestArgumentSetId() {
-		return test_argument_set_id;
-	}
-	/**
-	 * @param testArgumentSetId The testArgumentSetId to set.
-	 */
-	public void setTestArgumentSetId(String testArgumentSetId) {
-		this.test_argument_set_id = testArgumentSetId;
-	}
-	/**
-	 * @return Returns the testTypeId.
-	 */
-	public String getTestTypeId() {
-		return test_type_id;
-	}
-	/**
-	 * @param testTypeId The testTypeId to set.
-	 */
-	public void settestTypeId(String testTypeId) {
-		this.test_type_id = testTypeId;
-	}
-	/**
-	 * @return Returns the thresholdSetId.
-	 */
-	public String getThresholdSetId() {
-		return threshold_set_id;
-	}
-	/**
-	 * @param thresholdSetId The thresholdSetId to set.
-	 */
-	public void setThresholdSetId(String thresholdSetId) {
-		this.threshold_set_id = thresholdSetId;
-	}
-	/**
-	 * @param id The id to set.
-	 */
-	public void setId(String id) {
-		this.id = id;
-	}
-	/**
-	 * @param name The name to set.
-	 */
-	public void setName(String name) {
-		this.name = name;
 	}
 }
 

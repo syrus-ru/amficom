@@ -5,33 +5,29 @@ import com.syrus.AMFICOM.CORBA.General.TestTemporalType;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelSurvey;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourceComboBox;
 import com.syrus.AMFICOM.Client.General.UI.TextFieldEditor;
-import com.syrus.AMFICOM.Client.Resource.ISM.TransmissionPath;
+import com.syrus.AMFICOM.Client.Resource.ISM.*;
+import com.syrus.AMFICOM.Client.Resource.Test.TestType;
+
 import com.syrus.AMFICOM.Client.Resource.ObjectResourceModel;
 import com.syrus.AMFICOM.Client.Resource.Pool;
+import com.syrus.AMFICOM.Client.Survey.General.ConstStorage;
 
 import java.awt.Component;
-
-import java.text.SimpleDateFormat;
-
 import java.util.Date;
 import java.util.Enumeration;
 
 public class TestModel extends ObjectResourceModel {
 
-	/**
-	 * @deprecated use setter/getter pair to access this field
-	 */
-	public Test	test;
+	protected Test	test;
 
 	public TestModel(Test test) {
 		this.test = test;
 	}
 
-	public String getColumnValue(String col_id) {
-		SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
-		String s = "";
+	public String getColumnValue(String colId) {
+		String s = null;
 		try {
-			if (col_id.equals("status")) {
+			if (colId.equals(ConstStorage.COLUMN_NAME_STATUS)) {
 				switch (test.status.value()) {
 					case TestStatus._TEST_STATUS_PROCESSING:
 						s = LangModelSurvey.String("labelDoing");
@@ -43,8 +39,7 @@ public class TestModel extends ObjectResourceModel {
 						s = LangModelSurvey.String("labelReadyToDo");
 						break;
 				}
-			}
-			if (col_id.equals("local_id")) {
+			} else if (colId.equals(ConstStorage.COLUMN_NAME_LOCAL_ID)) {
 				TransmissionPath path;
 				for (Enumeration e = Pool.getHash(TransmissionPath.typ)
 						.elements(); e.hasMoreElements();) {
@@ -56,24 +51,24 @@ public class TestModel extends ObjectResourceModel {
 					}
 				}
 				//				s = test.local_id;
-			}
-			if (col_id.equals("port_id")) {
+			} else if (colId.equals(ConstStorage.COLUMN_NAME_PORT_ID)) {
 				TransmissionPath path;
 				for (Enumeration e = Pool.getHash(TransmissionPath.typ)
 						.elements(); e.hasMoreElements();) {
 					path = (TransmissionPath) e.nextElement();
 					if (path.monitored_element_id
 							.equals(test.monitored_element_id)) {
-						s = Pool.getName("accessport", path.access_port_id);
+						s = Pool.getName(AccessPort.typ, path.access_port_id);
 						break;
 					}
 				}
 				//				s = test.local_id;
-			}
-			if (col_id.equals("kis_id")) s = Pool.getName("kis", test.kis_id);
-			if (col_id.equals("start_time"))
-					s = sdf.format(new Date(test.start_time));
-			if (col_id.equals("temporal_type")) {
+			} else if (colId.equals(ConstStorage.COLUMN_NAME_KIS_ID))
+				s = Pool.getName(KIS.typ, test.kis_id);
+			else if (colId.equals(ConstStorage.COLUMN_NAME_START_TIME))
+				s = ConstStorage.SIMPLE_DATE_FORMAT.format(new Date(
+						test.start_time));
+			else if (colId.equals(ConstStorage.COLUMN_NAME_TEMPORAL_TYPE)) {
 				switch (test.temporal_type.value()) {
 					case TestTemporalType._TEST_TEMPORAL_TYPE_ONETIME:
 						s = LangModelSurvey.String("labelOnetime");
@@ -85,11 +80,10 @@ public class TestModel extends ObjectResourceModel {
 						s = LangModelSurvey.String("labelTimeTable");
 						break;
 				}
-			}
-			if (col_id.equals("test_type_id"))
-					s = Pool.getName("testtype", test.test_type_id);
-			if (col_id.equals("request_id"))
-					s = Pool.getName("testrequest", test.request_id);
+			} else if (colId.equals(ConstStorage.COLUMN_NAME_TEST_TYPE_ID))
+				s = Pool.getName(TestType.typ, test.test_type_id);
+			else if (colId.equals(ConstStorage.COLUMN_NAME_REQUEST_ID))
+					s = Pool.getName(TestRequest.typ, test.request_id);
 		} catch (Exception e) {
 			System.out.println("error gettin field value - Test");
 			s = "";
@@ -97,38 +91,28 @@ public class TestModel extends ObjectResourceModel {
 		return s;
 	}
 
-	public Component getColumnRenderer(String col_id) {
-		SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yy HH:mm:ss");
-
-		if (col_id.equals("status"))
-				return new TextFieldEditor(getColumnValue("status"));
-		if (col_id.equals("kis_id")) return new TextFieldEditor(test.kis_id);
-		if (col_id.equals("start_time"))
-				return new TextFieldEditor(sdf
+	public Component getColumnRenderer(String colId) {
+		if (colId.equals(ConstStorage.COLUMN_NAME_STATUS))
+				return new TextFieldEditor(
+						getColumnValue(ConstStorage.COLUMN_NAME_STATUS));
+		if (colId.equals(ConstStorage.COLUMN_NAME_KIS_ID))
+				return new TextFieldEditor(test.kis_id);
+		if (colId.equals(ConstStorage.COLUMN_NAME_START_TIME))
+				return new TextFieldEditor(ConstStorage.SIMPLE_DATE_FORMAT
 						.format(new Date(test.start_time)));
-		if (col_id.equals("temporal_type"))
-				return new TextFieldEditor(getColumnValue("temporal_type"));
-		if (col_id.equals("test_type_id"))
-				return new ObjectResourceComboBox("testtype", test.test_type_id);
-		if (col_id.equals("request_id"))
-				return new ObjectResourceComboBox("testrequest",
+		if (colId.equals(ConstStorage.COLUMN_NAME_TEMPORAL_TYPE))
+				return new TextFieldEditor(
+						getColumnValue(ConstStorage.COLUMN_NAME_TEMPORAL_TYPE));
+		if (colId.equals(ConstStorage.COLUMN_NAME_TEST_TYPE_ID))
+				return new ObjectResourceComboBox(TestType.typ,
+						test.test_type_id);
+		if (colId.equals(ConstStorage.COLUMN_NAME_REQUEST_ID))
+				return new ObjectResourceComboBox(TestRequest.typ,
 						test.request_id);
 		return null;
 	}
 
-	public Component getColumnEditor(String col_id) {
-		return getColumnRenderer(col_id);
-	}
-	/**
-	 * @return Returns the test.
-	 */
-	public Test getTest() {
-		return test;
-	}
-	/**
-	 * @param test The test to set.
-	 */
-	public void setTest(Test test) {
-		this.test = test;
-	}
+	public Component getColumnEditor(String colId) {
+		return getColumnRenderer(colId);
+	}	
 }

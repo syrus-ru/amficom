@@ -2,93 +2,66 @@ package com.syrus.AMFICOM.Client.Resource.Result;
 
 import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.Resource.*;
+import com.syrus.AMFICOM.Client.Survey.General.*;
+
 import java.awt.*;
-import java.text.*;
 import java.util.*;
 
 public class ResultModel extends ObjectResourceModel {
 
-	public static final String	COLUMN_NAME_ID			= "id";
-	public static final String	COLUMN_NAME_RESULT_TYPE	= "result_type";
-	public static final String	COLUMN_NAME_CREATED		= "created";
-	public static final String	COLUMN_NAME_USER_ID		= "user_id";
-	public static final String	COLUMN_NAME_ACTION_ID	= "action_id";
+	protected Result	result;
 
-	/**
-	 * @deprecated use setter/getter pair to access this field
-	 */
-
-	public Result				r;
-
-	public ResultModel(Result r) {
-		this.r = r;
-	}
-
-	public String getColumnValue(String colId) {
-		SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yy HH:mm:ss");
-		String s = "";
-		try {
-			if (colId.equals(COLUMN_NAME_ID))
-				s = r.getId();
-			else if (colId.equals(COLUMN_NAME_RESULT_TYPE)) {
-				/**
-				 * @todo need to i18n !!!
-				 * XXX:  need to i18n !!!
-				 */
-				Hashtable actions = new Hashtable();
-				actions.put(Analysis.typ, "Анализ");
-				actions.put(Modeling.typ, "Моделирование");
-				actions.put(Evaluation.typ, "Оценка");
-				actions.put(Test.typ, "Тестирование");
-				actions.put(TestRequest.typ, "Запрос на тестирование");
-				s = (String) actions.get(r.getResultType());
-				if (s == null) s = "";
-			} else if (colId.equals(COLUMN_NAME_CREATED))
-				s = sdf.format(new Date(r.getModified()));
-			else if (colId.equals(COLUMN_NAME_USER_ID))
-				s = r.getUserId();
-			else if (colId.equals(COLUMN_NAME_ACTION_ID)) {
-				s = r.getActionId();
-			}
-		} catch (Exception e) {
-			//			System.out.println("error gettin field value - Result");
-			s = "";
-		}
-		return s;
-	}
-
-	public Component getColumnRenderer(String colId) {
-		SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yy HH:mm:ss");
-
-		if (colId.equals(COLUMN_NAME_ID))
-			return new TextFieldEditor(r.getId());
-		else if (colId.equals(COLUMN_NAME_RESULT_TYPE))
-			return new TextFieldEditor(r.getResultType());
-		else if (colId.equals(COLUMN_NAME_CREATED))
-			return new TextFieldEditor(sdf.format(new Date(r.getModified())));
-		else if (colId.equals(COLUMN_NAME_USER_ID))
-			return new TextFieldEditor(r.getUserId());
-		else if (colId.equals(COLUMN_NAME_ACTION_ID))
-				return new TextFieldEditor(r.getActionId());
-		return null;
+	public ResultModel(Result result) {
+		this.result = result;
 	}
 
 	public Component getColumnEditor(String colId) {
 		return getColumnRenderer(colId);
 	}
 
-	/**
-	 * @return Returns the result.
-	 */
-	public Result getResult() {
-		return r;
+	public Component getColumnRenderer(String colId) {
+		if (colId.equals(ConstStorage.COLUMN_NAME_ID))
+			return new TextFieldEditor(result.getId());
+		else if (colId.equals(ConstStorage.COLUMN_NAME_RESULT_TYPE))
+			return new TextFieldEditor(result.getResultType());
+		else if (colId.equals(ConstStorage.COLUMN_NAME_CREATED))
+			return new TextFieldEditor(ConstStorage.SIMPLE_DATE_FORMAT
+					.format(new Date(result.getModified())));
+		else if (colId.equals(ConstStorage.COLUMN_NAME_USER_ID))
+			return new TextFieldEditor(result.getUserId());
+		else if (colId.equals(ConstStorage.COLUMN_NAME_ACTION_ID))
+				return new TextFieldEditor(result.getActionId());
+		return null;
 	}
 
-	/**
-	 * @param result
-	 *            The result to set.
-	 */
-	public void setResult(Result result) {
-		this.r = result;
+	public String getColumnValue(String colId) {
+		String s = null;
+		try {
+			if (colId.equals(ConstStorage.COLUMN_NAME_ID))
+				s = result.getId();
+			else if (colId.equals(ConstStorage.COLUMN_NAME_RESULT_TYPE)) {
+
+				Hashtable actions = new Hashtable();
+				actions.put(Analysis.typ, I18N.getString("Analysis")); //$NON-NLS-1$
+				actions.put(Modeling.typ, I18N.getString("Modeling")); //$NON-NLS-1$
+				actions.put(Evaluation.typ, I18N.getString("Evaluation")); //$NON-NLS-1$
+				actions.put(Test.typ, I18N.getString("Testing")); //$NON-NLS-1$
+				actions.put(TestRequest.typ, I18N.getString("TestRequest")); //$NON-NLS-1$
+				s = (String) actions.get(result.getResultType());
+				if (s == null) s = ""; //$NON-NLS-1$
+			} else if (colId.equals(ConstStorage.COLUMN_NAME_CREATED))
+				s = ConstStorage.SIMPLE_DATE_FORMAT.format(new Date(result
+						.getModified()));
+			else if (colId.equals(ConstStorage.COLUMN_NAME_USER_ID))
+				s = result.getUserId();
+			else if (colId.equals(ConstStorage.COLUMN_NAME_ACTION_ID)) {
+				s = result.getActionId();
+			}
+		} catch (Exception e) {
+			//			System.out.println("error gettin field value - Result");
+			//s = "";
+		}
+		return s;
 	}
+
 }

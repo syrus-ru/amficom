@@ -5,80 +5,133 @@ import java.util.*;
 
 import com.syrus.AMFICOM.CORBA.Survey.*;
 import com.syrus.AMFICOM.Client.Resource.*;
+import com.syrus.AMFICOM.Client.Survey.General.ConstStorage;
 
-public class ThresholdSet extends ObjectResource implements Serializable
-{
-	private static final long serialVersionUID = 01L;
+public class ThresholdSet extends ObjectResource implements Serializable {
 
-	public static final String typ = "thresholdset";
+	private static final long				serialVersionUID	= 01L;
 
-	private ClientThresholdSet_Transferable transferable;
+	public static final String				typ					= "thresholdset";
 	/**
 	 * @deprecated use setter/getter pair to access this field
-	 */	
-	public String id = "";
+	 */
+	public long								created				= 0;
 	/**
 	 * @deprecated use setter/getter pair to access this field
-	 */	
-	public String name = "";
+	 */
+	public String							created_by			= "";
 	/**
 	 * @deprecated use setter/getter pair to access this field
-	 */	
-	public long created = 0;
+	 */
+	public String							evaluation_type_id	= "";
 	/**
 	 * @deprecated use setter/getter pair to access this field
-	 */	
-	public String created_by = "";
+	 */
+	public String							id					= "";
 	/**
 	 * @deprecated use setter/getter pair to access this field
-	 */	
-	public String evaluation_type_id = "";
+	 */
+	public String							name				= "";
+	private List							thresholdList;
 	/**
-	 * @deprecated use setter/getter pair for thresholdsList to access this field
-	 */	
-	public Vector thresholds;
-	private List thresholdsList;
+	 * @deprecated use setter/getter pair for thresholdList to access this field
+	 */
+	public Vector							thresholds;
 
-	public ThresholdSet()
-	{
+	private ClientThresholdSet_Transferable	transferable;
+
+	public ThresholdSet() {
 		transferable = new ClientThresholdSet_Transferable();
 		thresholds = new Vector();
-		thresholdsList = new ArrayList();
+		thresholdList = new ArrayList();
 	}
 
-	public ThresholdSet(ClientThresholdSet_Transferable transferable)
-	{
+	public ThresholdSet(ClientThresholdSet_Transferable transferable) {
 		this.transferable = transferable;
 		setLocalFromTransferable();
 	}
 
-	public String getName()
-	{
-		return name;
+	/**
+	 * @return Returns the created.
+	 */
+	public long getCreated() {
+		return created;
 	}
 
-	public String getId()
-	{
+	/**
+	 * @return Returns the createdBy.
+	 */
+	public String getCreatedBy() {
+		return created_by;
+	}
+
+	public String getDomainId() {
+		return ConstStorage.SYS_DOMAIN;
+	}
+
+	/**
+	 * @return Returns the evaluationTypeId.
+	 */
+	public String getEvaluationTypeId() {
+		return evaluation_type_id;
+	}
+
+	public String getId() {
 		return id;
 	}
 
-	public String getTyp()
-	{
-		return typ;
+	public String getName() {
+		return name;
 	}
 
-	public Object getTransferable()
-	{
+	/**
+	 * @return Returns the thresholdList.
+	 */
+	public List getThresholdList() {
+		return thresholdList;
+	}
+
+	public Object getTransferable() {
 		return transferable;
 	}
 
-	public String getDomainId()
-	{
-		return "sysdomain";
+	public String getTyp() {
+		return typ;
 	}
 
-	public void setLocalFromTransferable()
-	{
+	/**
+	 * @param created
+	 *            The created to set.
+	 */
+	public void setCreated(long created) {
+		this.created = created;
+	}
+
+	/**
+	 * @param createdBy
+	 *            The createdBy to set.
+	 */
+	public void setCreatedBy(String createdBy) {
+		this.created_by = createdBy;
+	}
+
+	/**
+	 * @param evaluationTypeId
+	 *            The evaluationTypeId to set.
+	 */
+	public void setEvaluationTypeId(String evaluationTypeId) {
+		this.evaluation_type_id = evaluationTypeId;
+	}
+
+	/**
+	 * @param id
+	 *            The id to set.
+	 */
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public void setLocalFromTransferable() {
 		id = transferable.id;
 		name = transferable.name;
 		created = transferable.created;
@@ -86,12 +139,28 @@ public class ThresholdSet extends ObjectResource implements Serializable
 		evaluation_type_id = transferable.evaluation_type_id;
 
 		thresholds.clear();
-		thresholdsList.clear();
-		for (int i=0; i<transferable.thresholds.length; i++){
+		thresholdList.clear();
+		for (int i = 0; i < transferable.thresholds.length; i++) {
 			Parameter param = new Parameter(transferable.thresholds[i]);
 			thresholds.add(param);
-			thresholdsList.add(param);
+			thresholdList.add(param);
 		}
+	}
+
+	/**
+	 * @param name
+	 *            The name to set.
+	 */
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	/**
+	 * @param thresholdList
+	 *            The thresholdList to set.
+	 */
+	public void setThresholdList(List thresholdsList) {
+		this.thresholdList = thresholdsList;
 	}
 
 	public void setTransferableFromLocal() {
@@ -105,10 +174,10 @@ public class ThresholdSet extends ObjectResource implements Serializable
 		 * @todo only for backward thresholds Vector implementation
 		 */
 		if (thresholds.size() == 0) {
-			transferable.thresholds = new ClientParameter_Transferable[thresholdsList
+			transferable.thresholds = new ClientParameter_Transferable[thresholdList
 					.size()];
-			for (int i = 0; i < thresholdsList.size(); i++) {
-				Parameter criteria = (Parameter) thresholdsList.get(i);
+			for (int i = 0; i < thresholdList.size(); i++) {
+				Parameter criteria = (Parameter) thresholdList.get(i);
 				criteria.setTransferableFromLocal();
 				transferable.thresholds[i] = (ClientParameter_Transferable) criteria
 						.getTransferable();
@@ -119,8 +188,8 @@ public class ThresholdSet extends ObjectResource implements Serializable
 				Object obj = thresholds.get(i);
 				map.put(obj, obj);
 			}
-			for (int i = 0; i < thresholdsList.size(); i++) {
-				Object obj = thresholdsList.get(i);
+			for (int i = 0; i < thresholdList.size(); i++) {
+				Object obj = thresholdList.get(i);
 				map.put(obj, obj);
 			}
 
@@ -137,95 +206,33 @@ public class ThresholdSet extends ObjectResource implements Serializable
 		}
 	}
 
-	public void updateLocalFromTransferable()
-	{
+	public void updateLocalFromTransferable() {
 		// empty method
 		// nothing to do
 	}
 
-	private void writeObject(java.io.ObjectOutputStream out) throws IOException
-	{
+	private void readObject(java.io.ObjectInputStream in) throws IOException,
+			ClassNotFoundException {
+		id = (String) in.readObject();
+		name = (String) in.readObject();
+		created = in.readLong();
+		created_by = (String) in.readObject();
+		evaluation_type_id = (String) in.readObject();
+		thresholds = (Vector) in.readObject();
+		thresholdList = (List) in.readObject();
+
+		transferable = new ClientThresholdSet_Transferable();
+		updateLocalFromTransferable();
+	}
+
+	private void writeObject(java.io.ObjectOutputStream out) throws IOException {
 		out.writeObject(id);
 		out.writeObject(name);
 		out.writeLong(created);
 		out.writeObject(created_by);
 		out.writeObject(evaluation_type_id);
 		out.writeObject(thresholds);
-	}
-
-	private void readObject(java.io.ObjectInputStream in)
-		throws IOException, ClassNotFoundException
-	{
-		id = (String )in.readObject();
-		name = (String )in.readObject();
-		created = in.readLong();
-		created_by = (String )in.readObject();
-		evaluation_type_id = (String )in.readObject();
-		thresholds = (Vector )in.readObject();
-
-		transferable = new ClientThresholdSet_Transferable();
-		updateLocalFromTransferable();
-	}
-	/**
-	 * @return Returns the created.
-	 */
-	public long getCreated() {
-		return created;
-	}
-	/**
-	 * @param created The created to set.
-	 */
-	public void setCreated(long created) {
-		this.created = created;
-	}
-	/**
-	 * @return Returns the createdBy.
-	 */
-	public String getCreatedBy() {
-		return created_by;
-	}
-	/**
-	 * @param createdBy The createdBy to set.
-	 */
-	public void setCreatedBy(String createdBy) {
-		this.created_by = createdBy;
-	}
-	/**
-	 * @return Returns the evaluationTypeId.
-	 */
-	public String getEvaluationTypeId() {
-		return evaluation_type_id;
-	}
-	/**
-	 * @param evaluationTypeId The evaluationTypeId to set.
-	 */
-	public void setEvaluationTypeId(String evaluationTypeId) {
-		this.evaluation_type_id = evaluationTypeId;
-	}
-	/**
-	 * @param id The id to set.
-	 */
-	public void setId(String id) {
-		this.id = id;
-	}
-	/**
-	 * @param name The name to set.
-	 */
-	public void setName(String name) {
-		this.name = name;
-	}
-	/**
-	 * @return Returns the thresholdsList.
-	 */
-	public List getThresholdsList() {
-		return thresholdsList;
-	}
-	/**
-	 * @param thresholdsList The thresholdsList to set.
-	 */
-	public void setThresholdsList(List thresholdsList) {
-		this.thresholdsList = thresholdsList;
+		out.writeObject(thresholdList);
 	}
 }
-
 

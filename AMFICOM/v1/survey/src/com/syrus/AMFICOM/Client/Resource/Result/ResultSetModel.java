@@ -1,70 +1,62 @@
 package com.syrus.AMFICOM.Client.Resource.Result;
 
-import com.syrus.AMFICOM.CORBA.General.TestStatus;
-import com.syrus.AMFICOM.CORBA.General.TestTemporalType;
-import com.syrus.AMFICOM.Client.General.Lang.*;
 import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.Resource.*;
-import com.syrus.AMFICOM.Client.Resource.ISM.*;
 import com.syrus.AMFICOM.Client.Resource.Object.*;
+import com.syrus.AMFICOM.Client.Survey.General.ConstStorage;
+import com.syrus.AMFICOM.Client.Survey.General.I18N;
+
 import java.awt.*;
-import java.text.*;
 import java.util.*;
 
-public class ResultSetModel extends ObjectResourceModel
-{
-	public ResultSet rs;
+public class ResultSetModel extends ObjectResourceModel {
 
-	public ResultSetModel(ResultSet rs)
-	{
-		this.rs = rs;
+	private ResultSet	resultSet;
+
+	public ResultSetModel(ResultSet resultSet) {
+		this.resultSet = resultSet;
 	}
 
-	public String getColumnValue(String col_id)
-	{
-		SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yy HH:mm:ss");
-		String s = "";
-		try
-		{
-			if(col_id.equals("domain_id"))
-				s = Pool.getName(Domain.typ, rs.domain_id);
-			if(col_id.equals("start_time"))
-				s = sdf.format(new Date(rs.start_time));
-			if(col_id.equals("end_time"))
-				s = sdf.format(new Date(rs.end_time));
-			if(col_id.equals("active"))
-			{
-				if(rs.active)
-					s = "Да";
+	public String getColumnValue(String col_id) {
+		String s = null;
+		try {
+			if (col_id.equals(ConstStorage.COLUMN_NAME_DOMAIN_ID))
+					s = Pool.getName(Domain.typ, resultSet.getDomainId());
+			if (col_id.equals(ConstStorage.COLUMN_NAME_START_TIME))
+					s = ConstStorage.SIMPLE_DATE_FORMAT.format(new Date(resultSet
+							.getStartTime()));
+			if (col_id.equals(ConstStorage.COLUMN_NAME_END_TIME))
+					s = ConstStorage.SIMPLE_DATE_FORMAT.format(new Date(resultSet
+							.getEndTime()));
+			if (col_id.equals(ConstStorage.COLUMN_NAME_ACTIVE)) {
+				if (resultSet.isActive())
+					s = I18N.getString("Yes"); //$NON-NLS-1$
 				else
-					s = "";
+					s = ""; //$NON-NLS-1$
 			}
-		}
-		catch(Exception e)
-		{
-//			System.out.println("error gettin field value - Result");
-			s = "";
+		} catch (Exception e) {
+			//			System.out.println("error gettin field value - Result");
+			s = ""; //$NON-NLS-1$
 		}
 		return s;
 	}
 
-	public Component getColumnRenderer(String col_id)
-	{
-		SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yy HH:mm:ss");
-
-		if(col_id.equals("domain_id"))
-			return new ObjectResourceComboBox(Pool.getHash(Domain.typ),rs.domain_id);
-		if(col_id.equals("start_time"))
-			return new TextFieldEditor(sdf.format(new Date(rs.start_time)));
-		if(col_id.equals("end_time"))
-			return new TextFieldEditor(sdf.format(new Date(rs.end_time)));
-		if(col_id.equals("active"))
-			return new TextFieldEditor(getColumnValue(col_id));
+	public Component getColumnRenderer(String colId) {
+		if (colId.equals(ConstStorage.COLUMN_NAME_DOMAIN_ID))
+				return new ObjectResourceComboBox(Pool.getHash(Domain.typ), resultSet
+						.getDomainId());
+		if (colId.equals(ConstStorage.COLUMN_NAME_START_TIME))
+				return new TextFieldEditor(ConstStorage.SIMPLE_DATE_FORMAT
+						.format(new Date(resultSet.getStartTime())));
+		if (colId.equals(ConstStorage.COLUMN_NAME_END_TIME))
+				return new TextFieldEditor(ConstStorage.SIMPLE_DATE_FORMAT
+						.format(new Date(resultSet.getEndTime())));
+		if (colId.equals(ConstStorage.COLUMN_NAME_ACTIVE))
+				return new TextFieldEditor(getColumnValue(colId));
 		return null;
 	}
 
-	public Component getColumnEditor(String col_id)
-	{
-		return getColumnRenderer(col_id);
+	public Component getColumnEditor(String colId) {
+		return getColumnRenderer(colId);
 	}
 }

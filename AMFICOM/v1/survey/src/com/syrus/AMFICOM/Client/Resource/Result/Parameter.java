@@ -2,6 +2,8 @@ package com.syrus.AMFICOM.Client.Resource.Result;
 
 import com.syrus.AMFICOM.CORBA.Survey.*;
 import com.syrus.AMFICOM.Client.Resource.*;
+import com.syrus.AMFICOM.Client.Survey.General.ConstStorage;
+
 import java.io.*;
 
 public class Parameter extends ObjectResource implements Serializable {
@@ -74,7 +76,7 @@ public class Parameter extends ObjectResource implements Serializable {
 	}
 
 	public String getDomainId() {
-		return "sysdomain";
+		return ConstStorage.SYS_DOMAIN;
 	}
 
 	/**
