@@ -1,19 +1,20 @@
-package com.syrus.AMFICOM.Client.Resource.Scheme;
+package com.syrus.AMFICOM.Client.Schematics.UI;
 
-import com.syrus.AMFICOM.Client.Configure.UI.*;
+import com.syrus.AMFICOM.Client.Configure.UI.CableLinkPane;
 import com.syrus.AMFICOM.Client.Resource.*;
-import com.syrus.AMFICOM.Client.Resource.Network.Link;
+import com.syrus.AMFICOM.Client.Resource.Network.*;
+import com.syrus.AMFICOM.Client.Resource.Scheme.*;
 
-public class SchemeLinkPane extends LinkPane
+public class SchemeCableLinkPane extends CableLinkPane
 {
-	SchemeLink sl;
+	SchemeCableLink scl;
 
-	public SchemeLinkPane()
+	public SchemeCableLinkPane()
 	{
 		super();
 	}
 
-	public SchemeLinkPane(SchemeLink l)
+	public SchemeCableLinkPane(SchemeCableLink l)
 	{
 		this();
 		setObjectResource(l);
@@ -21,23 +22,26 @@ public class SchemeLinkPane extends LinkPane
 
 	public ObjectResource getObjectResource()
 	{
-		return sl;
+		return scl;
 	}
 
 	public boolean setObjectResource(ObjectResource or)
 	{
-		this.sl = (SchemeLink )or;
-		Link link = (Link)Pool.get(Link.typ, sl.link_id);
+		this.scl = (SchemeCableLink )or;
+		CableLink link = (CableLink)Pool.get(CableLink.typ, scl.cable_link_id);
 		super.setObjectResource(link);
 
 		if(link != null)
 			return true;
 		return false;
+
 	}
 
-/*  public boolean modify()
+/*
+	public boolean modify()
 	{
 		if (gPanel.modify() &&
+				fPanel.modify() &&
 				chPanel.modify())
 			return true;
 		return false;
@@ -55,8 +59,8 @@ public class SchemeLinkPane extends LinkPane
 		if(modify())
 		{
 			DataSourceInterface dataSource = aContext.getDataSourceInterface();
-			dataSource.SaveLink(link.getId());
-				return true;
+			dataSource.SaveCableLink(link.getId());
+			return true;
 		}
 		else
 		{
@@ -80,7 +84,7 @@ public class SchemeLinkPane extends LinkPane
 		String []s = new String[1];
 
 		s[0] = link.id;
-		aContext.getDataSourceInterface().RemoveLinks(s);
+		aContext.getDataSourceInterface().RemoveCableLinks(s);
 
 		return true;
 	}

@@ -1,4 +1,4 @@
-package com.syrus.AMFICOM.Client.Resource.SchemeDirectory;
+package com.syrus.AMFICOM.Client.Schematics.UI;
 
 import java.util.Vector;
 
@@ -7,6 +7,7 @@ import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.EquipmentType;
+import com.syrus.AMFICOM.Client.Resource.SchemeDirectory.*;
 
 public class ProtoElementDisplayModel extends StubDisplayModel
 {

@@ -1,4 +1,4 @@
-package com.syrus.AMFICOM.Client.Resource.Scheme;
+package com.syrus.AMFICOM.Client.Schematics.UI;
 
 import java.awt.*;
 import com.syrus.AMFICOM.Client.Configure.UI.*;
@@ -6,6 +6,7 @@ import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.UI.PropertiesPanel;
 import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.Resource.Network.Equipment;
+import com.syrus.AMFICOM.Client.Resource.Scheme.*;
 
 public class SchemeElementPane extends PropertiesPanel
 {

@@ -1,4 +1,4 @@
-package com.syrus.AMFICOM.Client.Resource.Scheme;
+package com.syrus.AMFICOM.Client.Schematics.UI;
 
 import java.awt.Color;
 import java.text.SimpleDateFormat;
@@ -10,6 +10,7 @@ import com.syrus.AMFICOM.Client.General.UI.PropertyRenderer;
 import com.syrus.AMFICOM.Client.General.UI.StubDisplayModel;
 import com.syrus.AMFICOM.Client.General.UI.TextFieldEditor;
 import com.syrus.AMFICOM.Client.Resource.ObjectResource;
+import com.syrus.AMFICOM.Client.Resource.Scheme.*;
 
 public class SchemeDisplayModel extends StubDisplayModel
 {

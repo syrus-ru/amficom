@@ -1,8 +1,9 @@
-package com.syrus.AMFICOM.Client.Resource.Scheme;
+package com.syrus.AMFICOM.Client.Schematics.UI;
 
 import com.syrus.AMFICOM.Client.Configure.UI.TransmissionPathPane;
 import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.Resource.ISM.TransmissionPath;
+import com.syrus.AMFICOM.Client.Resource.Scheme.*;
 
 public class SchemePathPane extends TransmissionPathPane
 {

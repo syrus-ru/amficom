@@ -10,6 +10,7 @@ import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalLinkProtoElement;
 import com.syrus.AMFICOM.Client.Resource.Network.CableLink;
+import com.syrus.AMFICOM.Client.Schematics.UI.*;
 
 public class SchemeCableLink extends ObjectResource
 		implements Transferable, Serializable

@@ -64,6 +64,7 @@ import com.syrus.AMFICOM.CORBA.Scheme.SchemeElement_Transferable;
 import com.syrus.AMFICOM.CORBA.Scheme.SchemeLink_Transferable;
 import com.syrus.AMFICOM.CORBA.Scheme.SchemePath_Transferable;
 import com.syrus.AMFICOM.CORBA.Scheme.Scheme_Transferable;
+import com.syrus.AMFICOM.Client.Schematics.UI.*;
 
 public class Scheme extends ObjectResource implements Serializable
 {

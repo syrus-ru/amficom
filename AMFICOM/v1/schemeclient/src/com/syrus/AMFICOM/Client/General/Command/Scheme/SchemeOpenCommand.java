@@ -12,6 +12,7 @@ import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.Map.UI.MapChooserDialog;
 import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.Resource.Scheme.*;
+import com.syrus.AMFICOM.Client.Schematics.UI.*;
 
 public class SchemeOpenCommand extends VoidCommand
 {
