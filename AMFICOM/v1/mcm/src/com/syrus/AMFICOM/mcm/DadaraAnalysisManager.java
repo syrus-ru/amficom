@@ -8,12 +8,17 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.analysis.dadara.ReflectogramEvent;
+import com.syrus.AMFICOM.analysis.dadara.Threshold;
+import com.syrus.AMFICOM.analysis.dadara.ReflectogramComparer;
+import com.syrus.AMFICOM.analysis.dadara.ReflectogramAlarm;
 import com.syrus.AMFICOM.measurement.ParameterType;
 import com.syrus.AMFICOM.measurement.ParameterTypeDatabase;
 import com.syrus.AMFICOM.measurement.SetParameter;
 import com.syrus.AMFICOM.measurement.Set;
 import com.syrus.AMFICOM.measurement.Analysis;
+import com.syrus.AMFICOM.measurement.Evaluation;
 import com.syrus.AMFICOM.measurement.Result;
+import com.syrus.AMFICOM.event.corba.AlarmLevel;
 import com.syrus.io.BellcoreStructure;
 import com.syrus.io.BellcoreReader;
 import com.syrus.util.ByteArray;
@@ -23,7 +28,7 @@ import java.util.Date;
 import java.text.SimpleDateFormat;
 import java.io.FileOutputStream;
 
-public class DadaraAnalysisManager extends AnalysisManager {
+public class DadaraAnalysisManager implements AnalysisManager, EvaluationManager {
 	public static final String CODENAME_REFLECTOGRAMMA = "reflectogramma";
 	public static final String CODENAME_DADARA_TACTIC = "ref_uselinear";
 	public static final String CODENAME_DADARA_EVENT_SIZE = "ref_eventsize";
@@ -43,6 +48,7 @@ public class DadaraAnalysisManager extends AnalysisManager {
 	private static Map outParameterTypes;
 
 	private Map parameters;
+	private AlarmLevel alarmLevel;
 
 	static {
     try {
@@ -71,10 +77,21 @@ public class DadaraAnalysisManager extends AnalysisManager {
 		addOutParameterType(CODENAME_DADARA_ALARM_ARRAY);
 	}
 
+	public DadaraAnalysisManager(Result measurementResult,
+															 Analysis analysis,
+															 Evaluation evaluation,
+															 Set etalon) throws AnalysisException {
+		this.parameters = new Hashtable(13);
+		this.addSetParameters(measurementResult.getParameters());
+		this.addSetParameters(analysis.getCriteriaSet().getParameters());
+		this.addSetParameters(evaluation.getThresholdSet().getParameters());
+		this.addSetParameters(etalon.getParameters());
+  }
+
   public DadaraAnalysisManager(Result measurementResult,
 															 Analysis analysis,
 															 Set etalon) throws AnalysisException {
-		this.parameters = new Hashtable(20);
+		this.parameters = new Hashtable(12);
 		this.addSetParameters(measurementResult.getParameters());
 		this.addSetParameters(analysis.getCriteriaSet().getParameters());
 		this.addSetParameters(etalon.getParameters());
@@ -185,10 +202,10 @@ Log.debugMessage("$$$$$$$$$ Number of events == " + revents.length + "; tmp.leng
 				if (revents[i].getType() == ReflectogramEvent.CONNECTOR &&
 						Math.abs(revents[i].begin - endEvent.begin) < delta &&
 						Math.abs(revents[i].end - endEvent.end) < delta) {
-						ReflectogramEvent[] new_revents = new ReflectogramEvent[i+1];
+						ReflectogramEvent[] newRevents = new ReflectogramEvent[i+1];
 						for (int j = 0; j < i + 1; j++)
-							new_revents[j] = revents[j];
-						revents = new_revents;
+							newRevents[j] = revents[j];
+						revents = newRevents;
 						break;
 					}
 			}
@@ -212,7 +229,71 @@ Log.debugMessage("$$$$$$$$$ Number of events == " + revents.length + "; tmp.leng
 		arParameters[0] = new SetParameter(identifier,
 																			 parTypEventArray.getId(),
 																			 ReflectogramEvent.toByteArray(revents));
+
+		this.addSetParameters(arParameters);
+
 		return arParameters;
+	}
+
+	public SetParameter[] evaluate() throws EvaluationException {
+		byte[] etalonData = (byte[])this.parameters.get(CODENAME_DADARA_ETALON_EVENT_ARRAY);
+		ReflectogramEvent[] etalon = ReflectogramEvent.fromByteArray(etalonData);
+		byte[] thresholdData = (byte[])this.parameters.get(CODENAME_DADARA_THRESHOLDS);
+		Threshold[] ts = Threshold.fromByteArray(thresholdData);
+
+		ReflectogramComparer reflComparer;
+		byte[] reventsData = (byte[])this.parameters.get(CODENAME_DADARA_EVENT_ARRAY);
+		if (reventsData != null) {
+			ReflectogramEvent[] revents = ReflectogramEvent.fromByteArray(reventsData);
+			reflComparer = new ReflectogramComparer(revents,
+																							etalon,
+																							ts,
+																							false);
+		}
+		else {
+			Log.debugMessage("No analysis result, evaluating reflectogramma itself", Log.DEBUGLEVEL05);
+			byte[] rawData = (byte[])this.parameters.get(CODENAME_REFLECTOGRAMMA);
+			if (rawData == null) 
+				throw new EvaluationException("Cannot get parameter of codename: '" + CODENAME_REFLECTOGRAMMA + "'  from map");
+			BellcoreStructure bs = (new BellcoreReader()).getData(rawData);
+			double[] reflectogramma = new double[bs.dataPts.TNDP];
+			for (int i = 0; i < bs.dataPts.TPS[0]; i++)
+				reflectogramma[i] = (double)(65535 - bs.dataPts.DSF[0][i])/1000d;
+			reflComparer = new ReflectogramComparer(reflectogramma,
+																							etalon,
+																							ts,
+																							false);
+		}
+
+		ReflectogramAlarm[] ralarms = reflComparer.getAlarms();
+
+		SetParameter[] erParameters;
+		if (ralarms.length > 0) {
+			this.alarmLevel = AlarmLevel.ALARM_LEVEL_SOFT;
+			for (int i = 0; i < ralarms.length; i++)
+				if (ralarms[i].level == ReflectogramAlarm.LEVEL_HARD) {
+					this.alarmLevel = AlarmLevel.ALARM_LEVEL_HARD;
+					break;
+				}
+			Identifier identifier = MeasurementControlModule.getNewIdentifier(ObjectEntities.RESULTPARAMETER_ENTITY);
+			ParameterType parTypAlarmArray = (ParameterType)outParameterTypes.get(CODENAME_DADARA_ALARM_ARRAY);
+			if (parTypAlarmArray == null)
+				throw new EvaluationException("Cannot find in output map parameter type of codename: '" + CODENAME_DADARA_ALARM_ARRAY + "'");
+			erParameters = new SetParameter[1];
+			erParameters[0] = new SetParameter(identifier,
+																				 parTypAlarmArray.getId(),
+																				 ReflectogramAlarm.toByteArray(ralarms));
+		}
+		else {
+			this.alarmLevel = AlarmLevel.ALARM_LEVEL_NONE;
+			erParameters = new SetParameter[0];
+		}
+
+		return erParameters;
+	}
+
+	public AlarmLevel getAlarmLevel() {
+		return this.alarmLevel;
 	}
 
 	private void addSetParameters(SetParameter[] setParameters) throws AnalysisException {

@@ -17,7 +17,6 @@ import com.syrus.AMFICOM.measurement.corba.TestStatus;
 import com.syrus.AMFICOM.measurement.corba.TestTemporalType;
 import com.syrus.AMFICOM.measurement.corba.Test_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Result_Transferable;
-//import com.syrus.AMFICOM.server.ResourcedbInterface;
 //import com.syrus.AMFICOM.server.corba.MeasurementServer;
 //import com.syrus.AMFICOM.server.corba.MeasurementServerHelper;
 import com.syrus.util.Application;
@@ -27,7 +26,7 @@ import com.syrus.util.corba.CORBAServer;
 import com.syrus.util.database.DatabaseConnection;
 
 public class MeasurementControlModule extends Thread {
-	public static final String ID = "mcm1";
+	public static final String ID = "mcm_1";
 	public static final String DB_SID = "amficom";
 	public static final int DB_CONNECTION_TIMEOUT = 120;
 	public static final int TICK_TIME = 5;

@@ -197,11 +197,11 @@ public abstract class TestProcessor extends Thread {
 				 *    2. appropriate MeasurementSetup, i. e. criteria, thresholds and etalon are present
 				 *       if necessary.
 				 *    */
-				analysis = Analysis.create(MeasurementControlModule.getNewIdentifier("analysis"),
-																	 MeasurementControlModule.iAm.getUserId(),
-																	 analysisTypeId,
-																	 this.test.getMonitoredElement().getId(),
-																	 measurement.getSetup().getCriteriaSet());
+				analysis = Analysis.createInstance(MeasurementControlModule.getNewIdentifier("analysis"),
+																					 MeasurementControlModule.iAm.getUserId(),
+																					 analysisTypeId,
+																					 this.test.getMonitoredElement().getId(),
+																					 measurement.getSetup().getCriteriaSet());
 			}
 			catch (Exception e) {
 				Log.errorException(e);
@@ -227,12 +227,11 @@ public abstract class TestProcessor extends Thread {
 				 * 		1. dependency among analysis_type_id, evaluation_type_id and measurement_type_id;
 				 *    2. appropriate MeasurementSetup, i. e. criteria, thresholds and etalon are present.
 				 *    */
-				 evaluation = Evaluation.create(MeasurementControlModule.createIdentifier("evaluation"),
-																				MeasurementControlModule.iAm.getUserId(),
-																				evaluationTypeId,
-																				this.test.getMonitoredElement().getId(),
-																				measurement.getSetup().getThresholdSet(),
-																				measurement.getSetup().getEtalon());
+				 evaluation = Evaluation.createInstance(MeasurementControlModule.createIdentifier("evaluation"),
+																								MeasurementControlModule.iAm.getUserId(),
+																								evaluationTypeId,
+																								this.test.getMonitoredElement().getId(),
+																								measurement.getSetup().getThresholdSet());
 			}
 			catch (Exception e) {
 				Log.errorException(e);

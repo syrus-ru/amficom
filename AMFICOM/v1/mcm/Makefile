@@ -76,7 +76,11 @@ $(LIBNAME): .mach
 	$(JAVAC) $(JAVAC_FLAGS) -nowarn \
 		-classpath $(APPCLASSPATH):$(CLASSDIR) \
 		$(SRCDIR)/com/syrus/AMFICOM/mcm/AnalysisManager.java \
-		$(SRCDIR)/com/syrus/AMFICOM/mcm/DadaraAnalysisManager.java
+		$(SRCDIR)/com/syrus/AMFICOM/mcm/EvaluationManager.java \
+		$(SRCDIR)/com/syrus/AMFICOM/mcm/DadaraAnalysisManager.java \
+		$(SRCDIR)/com/syrus/AMFICOM/mcm/AnalysisEvaluationProcessor.java \
+		$(SRCDIR)/com/syrus/AMFICOM/mcm/AnalysisException.java \
+		$(SRCDIR)/com/syrus/AMFICOM/mcm/EvaluationException.java
 #		$(SRCDIR)/com/syrus/AMFICOM/mcm/MeasurementControlModule.java \
 		$(SRCDIR)/com/syrus/AMFICOM/mcm/DatabaseSetup.java \
 		$(SRCDIR)/com/syrus/AMFICOM/mcm/Transceiver.java \
