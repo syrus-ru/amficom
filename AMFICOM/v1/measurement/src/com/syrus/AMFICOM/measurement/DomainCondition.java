@@ -1,5 +1,5 @@
 /*
- * $Id: DomainCondition.java,v 1.5 2004/10/01 14:01:15 bob Exp $
+ * $Id: DomainCondition.java,v 1.6 2004/10/03 10:20:39 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,6 +14,7 @@ import java.util.List;
 import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 import com.syrus.AMFICOM.configuration.Domain;
 import com.syrus.AMFICOM.configuration.MonitoredElement;
+import com.syrus.AMFICOM.configuration.corba.DomainCondition_Transferable;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.DatabaseException;
@@ -22,10 +23,9 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
-import com.syrus.AMFICOM.measurement.corba.DomainCondition_Transferable;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2004/10/01 14:01:15 $
+ * @version $Revision: 1.6 $, $Date: 2004/10/03 10:20:39 $
  * @author $Author: bob $
  * @module measurement_v1
  */
