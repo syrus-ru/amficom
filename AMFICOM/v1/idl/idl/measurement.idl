@@ -1,5 +1,5 @@
 /*
- * $Id: measurement.idl,v 1.49 2005/01/19 20:38:48 arseniy Exp $
+ * $Id: measurement.idl,v 1.50 2005/01/27 07:51:12 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -147,7 +147,7 @@ module corba {
 
 		general::corba::Identifier_Transferable type_id;
 		general::corba::Identifier_Transferable monitored_element_id;
-		
+
 		general::corba::WString128 name;
 
 		general::corba::Identifier_Transferable setup_id;
@@ -231,28 +231,30 @@ module corba {
 //////////////////// Analysis ///////////////////////
 
 	struct Analysis_Transferable {
-	  general::corba::StorableObject_Transferable header;
+		general::corba::StorableObject_Transferable header;
 
-  	general::corba::Identifier_Transferable type_id;
+		general::corba::Identifier_Transferable type_id;
 		general::corba::Identifier_Transferable monitored_element_id;
+		general::corba::Identifier_Transferable measurement_id;
 
-    general::corba::Identifier_Transferable criteria_set_id;
+		general::corba::Identifier_Transferable criteria_set_id;
   };
-  
+
 	typedef sequence <Analysis_Transferable> AnalysisSeq_Transferable;
-	
+
 //////////////////// Evaluation /////////////////////
 
   struct Evaluation_Transferable {
-	  general::corba::StorableObject_Transferable header;
+		general::corba::StorableObject_Transferable header;
 
-  	general::corba::Identifier_Transferable type_id;
+		general::corba::Identifier_Transferable type_id;
 		general::corba::Identifier_Transferable monitored_element_id;
-		
-    general::corba::Identifier_Transferable threshold_set_id;
+		general::corba::Identifier_Transferable measurement_id;
+
+		general::corba::Identifier_Transferable threshold_set_id;
   };
 
-  typedef sequence <Evaluation_Transferable> EvaluationSeq_Transferable;
+	typedef sequence <Evaluation_Transferable> EvaluationSeq_Transferable;
 
 ////////////////////// Result ///////////////////////
 
