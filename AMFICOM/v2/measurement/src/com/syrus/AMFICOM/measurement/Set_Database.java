@@ -18,13 +18,15 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 
 public class Set_Database extends StorableObject_Database {
 
-	public void retrieve(StorableObject storableObject) throws Exception {
-		Set set = null;
+	private Set fromStorableObject(StorableObject storableObject) throws Exception {
 		if (storableObject instanceof Set)
-			set = (Set)storableObject;
+			return (Set)storableObject;
 		else
-			throw new Exception("Set_Database.retrieve | Illegal Storable Object: " + storableObject.getClass().getName());
+			throw new Exception("Set_Database.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
+	}
 
+	public void retrieve(StorableObject storableObject) throws Exception {
+		Set set = this.fromStorableObject(storableObject);
 		this.retrieveSet(set);
 		this.retrieveSetParameters(set);
 		this.retrieveSetMELinks(set);
@@ -32,7 +34,15 @@ public class Set_Database extends StorableObject_Database {
 
 	private void retrieveSet(Set set) throws Exception {
 		String set_id_str = set.getId().toString();
-		String sql = "SELECT sort, " + DatabaseDate.toQuerySubString("created") + ", creator_id, " + DatabaseDate.toQuerySubString("modified") + ", description FROM " + ObjectEntities.SET_ENTITY + " WHERE id = " + set_id_str;
+		String sql = "SELECT "
+			+ DatabaseDate.toQuerySubString("created") + ", " 
+			+ DatabaseDate.toQuerySubString("modified") + ", "
+			+ "creator_id, "
+			+ "modifier_id, "
+			+ "sort, "
+			+ "description"
+			+ " FROM " + ObjectEntities.SET_ENTITY
+			+ " WHERE id = " + set_id_str;
 		Statement statement = null;
 		ResultSet resultSet = null;
 		try {
@@ -41,10 +51,11 @@ public class Set_Database extends StorableObject_Database {
 			resultSet = statement.executeQuery(sql);
 			if (resultSet.next()) {
 				String description = resultSet.getString("description");
-				set.setAttributes(resultSet.getInt("sort"),
-													DatabaseDate.fromQuerySubString(resultSet, "created"),
-													new Identifier(resultSet.getLong("creator_id")),
+				set.setAttributes(DatabaseDate.fromQuerySubString(resultSet, "created"),
 													DatabaseDate.fromQuerySubString(resultSet, "modified"),
+													new Identifier(resultSet.getLong("creator_id")),
+													new Identifier(resultSet.getLong("modifier_id")),
+													resultSet.getInt("sort"),
 													(description != null)?description:"");
 			}
 			else
@@ -69,7 +80,12 @@ public class Set_Database extends StorableObject_Database {
 
 	private void retrieveSetParameters(Set set) throws Exception {
 		String set_id_str = set.getId().toString();
-		String sql = "SELECT id, type_id, value FROM " + ObjectEntities.SETPARAMETER_ENTITY + " WHERE set_id = " + set_id_str;
+		String sql = "SELECT "
+			+ "id, "
+			+ "type_id, "
+			+ "value"
+			+ " FROM " + ObjectEntities.SETPARAMETER_ENTITY
+			+ " WHERE set_id = " + set_id_str;
 		Statement statement = null;
 		ResultSet resultSet = null;
 		ArrayList arraylist = new ArrayList();
@@ -102,7 +118,10 @@ public class Set_Database extends StorableObject_Database {
 
 	private void retrieveSetMELinks(Set set) throws Exception {
 		String set_id_str = set.getId().toString();
-		String sql = "SELECT monitored_element_id FROM " + ObjectEntities.SETMELINK_ENTITY + " WHERE set_id = " + set_id_str;
+		String sql = "SELECT "
+			+ "monitored_element_id"
+			+ " FROM " + ObjectEntities.SETMELINK_ENTITY
+			+ " WHERE set_id = " + set_id_str;
 		Statement statement = null;
 		ResultSet resultSet = null;
 		ArrayList arraylist = new ArrayList();
@@ -132,12 +151,7 @@ public class Set_Database extends StorableObject_Database {
 	}
 
 	public Object retrieveObject(StorableObject storableObject, int retrieve_kind, Object arg) throws Exception {
-		Set set = null;
-		if (storableObject instanceof Set)
-			set = (Set)storableObject;
-		else
-			throw new Exception("Set_Database.retrieveObject | Illegal Storable Object: " + storableObject.getClass().getName());
-
+		Set set = this.fromStorableObject(storableObject);
 		switch (retrieve_kind) {
 			default:
 				return null;
@@ -145,12 +159,7 @@ public class Set_Database extends StorableObject_Database {
 	}
 
 	public void insert(StorableObject storableObject) throws Exception {
-		Set set = null;
-		if (storableObject instanceof Set)
-			set = (Set)storableObject;
-		else
-			throw new Exception("Set_Database.insert | Illegal Storable Object: " + storableObject.getClass().getName());
-
+		Set set = this.fromStorableObject(storableObject);
 		try {
 			this.insertSet(set);
 			this.insertSetParameters(set);
@@ -164,8 +173,17 @@ public class Set_Database extends StorableObject_Database {
 
 	private void insertSet(Set set) throws Exception {
 		String set_id_str = set.getId().toString();
-		String sql = "INSERT INTO " + ObjectEntities.SET_ENTITY + " (id, sort, created, creator_id, modified, description) VALUES ("
-							+ set_id_str + ", " + set.getSort().value() + ", " + DatabaseDate.toUpdateSubString(set.getCreated()) + ", " + set.getCreatorId().toString() + ", " + DatabaseDate.toUpdateSubString(set.getModified()) + ", '" + set.getDescription() + "')";
+		String sql = "INSERT INTO " + ObjectEntities.SET_ENTITY
+			+ " (id, created, modified, creator_id, modifier_id, sort, description)"
+			+ " VALUES ("
+			+ set_id_str + ", "
+			+ DatabaseDate.toUpdateSubString(set.getCreated()) + ", "
+			+ DatabaseDate.toUpdateSubString(set.getModified()) + ", "
+			+ set.getCreatorId().toString() + ", "
+			+ set.getModifierId().toString() + ", "
+			+ Integer.toString(set.getSort().value()) + ", '"
+			+ set.getDescription()
+			+ "')";
 		Statement statement = null;
 		try {
 			statement = connection.createStatement();
@@ -190,7 +208,9 @@ public class Set_Database extends StorableObject_Database {
 	private void insertSetParameters(Set set) throws Exception {
 		String set_id_str = set.getId().toString();
 		SetParameter[] setParameters = set.getParameters();
-		String sql = "INSERT INTO " + ObjectEntities.SETPARAMETER_ENTITY + " (id, type_id, set_id, value) VALUES (?, ?, ?, ?)";
+		String sql = "INSERT INTO " + ObjectEntities.SETPARAMETER_ENTITY
+			+ " (id, type_id, set_id, value)"
+			+ " VALUES (?, ?, ?, ?)";
 		PreparedStatement preparedStatement = null;
 		int i = 0;
 		try {
@@ -224,7 +244,9 @@ public class Set_Database extends StorableObject_Database {
 	private void insertSetMELinks(Set set) throws Exception {
 		long set_id_code = set.getId().getCode();
 		ArrayList me_ids = set.getMonitoredElementIds();
-		String sql = "INSERT INTO " + ObjectEntities.SETMELINK_ENTITY + " (set_id, monitored_element_id) VALUES (?, ?)";
+		String sql = "INSERT INTO " + ObjectEntities.SETMELINK_ENTITY
+			+ " (set_id, monitored_element_id)"
+			+ " VALUES (?, ?)";
 		PreparedStatement preparedStatement = null;
 		long me_id_code = 0;
 		try {
@@ -253,18 +275,15 @@ public class Set_Database extends StorableObject_Database {
 	}
 
 	public void update(StorableObject storableObject, int update_kind, Object obj) throws Exception {
-		Set set = null;
-		if (storableObject instanceof Set)
-			set = (Set)storableObject;
-		else
-			throw new Exception("Set_Database.update | Illegal Storable Object: " + storableObject.getClass().getName());
-
+		Set set = this.fromStorableObject(storableObject);
 		switch (update_kind) {
 			case Set.UPDATE_ATTACH_ME:
 				this.createMEAttachment(set, (Identifier)obj);
+				this.setModified(set);
 				break;
 			case Set.UPDATE_DETACH_ME:
 				this.deleteMEAttachment(set, (Identifier)obj);
+				this.setModified(set);
 				break;
 		}
 	}
@@ -272,12 +291,17 @@ public class Set_Database extends StorableObject_Database {
 	private void createMEAttachment(Set set, Identifier monitored_element_id) throws Exception {
 		String set_id_str = set.getId().toString();
 		String me_id_str = monitored_element_id.toString();
-		String sql = "INSERT INTO " + ObjectEntities.SETMELINK_ENTITY + " (set_id, monitored_element_id) VALUES (" + set_id_str + ", " + me_id_str + ")";
+		String sql = "INSERT INTO " + ObjectEntities.SETMELINK_ENTITY
+			+ " (set_id, monitored_element_id)"
+			+ " VALUES ("
+			+ set_id_str + ", "
+			+ me_id_str
+			+ ")";
 		Statement statement = null;
 		try {
 			statement = connection.createStatement();
 			Log.debugMessage("Set.createMEAttachment | Trying: " + sql, Log.DEBUGLEVEL05);
-			statement.executeQuery(sql);
+			statement.executeUpdate(sql);
 			connection.commit();
 		}
 		catch (SQLException sqle) {
@@ -297,16 +321,46 @@ public class Set_Database extends StorableObject_Database {
 	private void deleteMEAttachment(Set set, Identifier monitored_element_id) throws Exception {
 		String set_id_str = set.getId().toString();
 		String me_id_str = monitored_element_id.toString();
-		String sql = "DELETE FROM " + ObjectEntities.SETMELINK_ENTITY + " WHERE set_id = " + set_id_str + " AND monitored_element_id = " + me_id_str;
+		String sql = "DELETE FROM " + ObjectEntities.SETMELINK_ENTITY
+			+ " WHERE set_id = " + set_id_str
+				+ " AND monitored_element_id = " + me_id_str;
 		Statement statement = null;
 		try {
 			statement = connection.createStatement();
 			Log.debugMessage("Set_Database.deleteMEAttachment | Trying: " + sql, Log.DEBUGLEVEL05);
-			statement.executeQuery(sql);
+			statement.executeUpdate(sql);
 			connection.commit();
 		}
 		catch (SQLException sqle) {
 			String mesg = "Set_Database.deleteMEAttachment | Cannot detach set " + set_id_str + " from monitored element " + me_id_str;
+			throw new Exception(mesg, sqle);
+		}
+		finally {
+			try {
+				if (statement != null)
+					statement.close();
+				statement = null;
+			}
+			catch (SQLException sqle1) {}
+		}
+	}
+
+	private void setModified(Set set) throws Exception {
+		String set_id_str = set.getId().toString();
+		String sql = "UPDATE " + ObjectEntities.SET_ENTITY
+			+ " SET "
+			+ "modified = " + DatabaseDate.toUpdateSubString(set.getModified()) + ", "
+			+ "modifier_id = " + set.getModifierId().toString()
+			+ " WHERE id = " + set_id_str;
+		Statement statement = null;
+		try {
+			statement = connection.createStatement();
+			Log.debugMessage("Set_Database.setModified | Trying: " + sql, Log.DEBUGLEVEL05);
+			statement.executeUpdate(sql);
+			connection.commit();
+		}
+		catch (SQLException sqle) {
+			String mesg = "Set_Database.setModified | Cannot set modified for set " + set_id_str;
 			throw new Exception(mesg, sqle);
 		}
 		finally {

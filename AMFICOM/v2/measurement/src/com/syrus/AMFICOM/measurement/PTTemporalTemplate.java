@@ -17,9 +17,7 @@ import com.syrus.AMFICOM.measurement.corba.temporal_template.TimeQuantum_Transfe
 import com.syrus.AMFICOM.measurement.corba.temporal_template.DayTime_Transferable;
 
 public class PTTemporalTemplate extends StorableObject {
-
 	private String description;
-	private Date created;
 	private TimeQuantum period;
 	private LinkedList dayTimes; /*of DayTime*/
 	private LinkedList dates; /*of TimeQuantum*/
@@ -39,9 +37,12 @@ public class PTTemporalTemplate extends StorableObject {
 	}
 
 	public PTTemporalTemplate(PTTemporalTemplate_Transferable pttt_t) throws CreateObjectException {
-		super(new Identifier(pttt_t.id));
+		super(new Identifier(pttt_t.id),
+					new Date(pttt_t.created),
+					new Date(pttt_t.modified),
+					new Identifier(pttt_t.creator_id),
+					new Identifier(pttt_t.modifier_id));
 		this.description = new String(pttt_t.description);
-		this.created = new Date(pttt_t.created);
 		this.period = new TimeQuantum(pttt_t.period.scale, pttt_t.period.value);
 		this.dayTimes = new LinkedList();
 		for (int i = 0; i < pttt_t.day_times.length; i++)
@@ -60,12 +61,16 @@ public class PTTemporalTemplate extends StorableObject {
 	}
 
 	public PTTemporalTemplate(Identifier id,
+														Identifier creator_id,
 														String description,
 														int period_scale,
 														int period_value) {
-		super(id);
+		super(id,
+					new Date(System.currentTimeMillis()),
+					new Date(System.currentTimeMillis()),
+					creator_id,
+					creator_id);
 		this.description = description;
-		this.created = new Date(System.currentTimeMillis());
 		this.period = new TimeQuantum(period_scale, period_value);
 		this.dayTimes = new LinkedList();
 		this.dates = new LinkedList();
@@ -199,8 +204,11 @@ public class PTTemporalTemplate extends StorableObject {
 			dates_t[i++] = new TimeQuantum_Transferable(date.scale, date.value);
 		}
 		return new PTTemporalTemplate_Transferable((Identifier_Transferable)super.getId().getTransferable(),
+																							 super.created.getTime(),
+																							 super.modified.getTime(),
+																							 (Identifier_Transferable)super.creator_id.getTransferable(),
+																							 (Identifier_Transferable)super.modifier_id.getTransferable(),
 																							 new String(this.description),
-																							 this.created.getTime(),
 																							 new TimeQuantum_Transferable(this.period.scale, this.period.value),
 																							 day_times_t,
 																							 dates_t);
@@ -208,10 +216,6 @@ public class PTTemporalTemplate extends StorableObject {
 
 	public String getDescription() {
 		return this.description;
-	}
-
-	public Date getCreated() {
-		return this.created;
 	}
 
 	public TimeQuantum getPeriod() {
@@ -226,14 +230,19 @@ public class PTTemporalTemplate extends StorableObject {
 		return this.dates;
 	}
 
-	protected synchronized void setAttributes(String description,
-																						Date created,
+	protected synchronized void setAttributes(Date created,
+																						Date modified,
+																						Identifier creator_id,
+																						Identifier modifier_id,
+																						String description,
 																						TimeQuantum period,
 																						LinkedList dayTimes,
 																						LinkedList dates) {
-		this.id = id;
+		super.setAttributes(created,
+												modified,
+												creator_id,
+												modifier_id);
 		this.description = description;
-		this.created = created;
 		this.period = period;
 		this.dayTimes = dayTimes;
 		this.dates = dates;

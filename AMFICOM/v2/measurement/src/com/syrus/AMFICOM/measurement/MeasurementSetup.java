@@ -21,9 +21,6 @@ public class MeasurementSetup extends StorableObject {
 	private Set criteria_set;
 	private Set threshold_set;
 	private Set etalon;
-	private Date created;
-	private Identifier creator_id;
-	private Date modified;
 	private String description;
 	private long measurement_duration;
 	private ArrayList monitored_element_ids;
@@ -43,7 +40,11 @@ public class MeasurementSetup extends StorableObject {
 	}
 
 	public MeasurementSetup(MeasurementSetup_Transferable mst) throws CreateObjectException {
-		super(new Identifier(mst.id));
+		super(new Identifier(mst.id),
+					new Date(mst.created),
+					new Date(mst.modified),
+					new Identifier(mst.creator_id),
+					new Identifier(mst.modifier_id));
 		try {
 			this.parameter_set = new Set(new Identifier(mst.parameter_set_id));
 			this.criteria_set = (mst.criteria_set_id.identifier_code == 0)?(new Set(new Identifier(mst.criteria_set_id))):null;
@@ -53,9 +54,6 @@ public class MeasurementSetup extends StorableObject {
 		catch (RetrieveObjectException roe) {
 			throw new CreateObjectException(roe.getMessage(), roe);
 		}
-		this.created = new Date(mst.created);
-		this.creator_id = new Identifier(mst.creator_id);
-		this.modified = new Date(mst.modified);
 		this.description = new String(mst.description);
 		this.measurement_duration = mst.measurement_duration;
 		this.monitored_element_ids = new ArrayList(mst.monitored_element_ids.length);
@@ -75,9 +73,11 @@ public class MeasurementSetup extends StorableObject {
     return this.monitored_element_ids.contains(monitored_element_id);
   }
 
-	public void attachToMonitoredElement(Identifier monitored_element_id) throws UpdateObjectException {
+	public void attachToMonitoredElement(Identifier monitored_element_id,
+																			 Identifier modifier_id) throws UpdateObjectException {
 		if (this.isAttachedToMonitoredElement(monitored_element_id))
       return;
+		super.modifier_id = (Identifier)modifier_id.clone();
 		try {
 			this.measurementSetupDatabase.update(this, UPDATE_ATTACH_ME, monitored_element_id);
 		}
@@ -88,9 +88,11 @@ public class MeasurementSetup extends StorableObject {
 		this.monitored_element_ids.trimToSize();
 	}
 
-	public void detachFromMonitoredElement(Identifier monitored_element_id) throws UpdateObjectException {
+	public void detachFromMonitoredElement(Identifier monitored_element_id,
+																				 Identifier modifier_id) throws UpdateObjectException {
     if (!this.isAttachedToMonitoredElement(monitored_element_id))
       return;
+		super.modifier_id = (Identifier)modifier_id.clone();
 		try {
 	    this.measurementSetupDatabase.update(this, UPDATE_DETACH_ME, monitored_element_id);
 		}
@@ -107,13 +109,14 @@ public class MeasurementSetup extends StorableObject {
 			me_ids[i] = (Identifier_Transferable)((Identifier)this.monitored_element_ids.get(i)).getTransferable();
 
 		return new MeasurementSetup_Transferable((Identifier_Transferable)super.getId().getTransferable(),
+																						 super.created.getTime(),
+																						 super.modified.getTime(),
+																						 (Identifier_Transferable)super.creator_id.getTransferable(),
+																						 (Identifier_Transferable)super.modifier_id.getTransferable(),
 																						 (Identifier_Transferable)this.parameter_set.getId().getTransferable(),
 																						 (this.criteria_set == null)?(Identifier_Transferable)this.criteria_set.getId().getTransferable():new Identifier_Transferable(0),
 																						 (this.threshold_set == null)?(Identifier_Transferable)this.threshold_set.getId().getTransferable():new Identifier_Transferable(0),
 																						 (this.etalon == null)?(Identifier_Transferable)this.etalon.getId().getTransferable():new Identifier_Transferable(0),
-																						 this.created.getTime(),
-																						 (Identifier_Transferable)this.creator_id.getTransferable(),
-																						 this.modified.getTime(),
 																						 this.description,
 																						 this.measurement_duration,
 																						 me_ids);
@@ -135,18 +138,6 @@ public class MeasurementSetup extends StorableObject {
 		return this.etalon;
 	}
 
-	public Date getCreated() {
-		return this.created;
-	}
-
-	public Identifier getCreatorId() {
-		return this.creator_id;
-	}
-
-	public Date getModified() {
-		return this.modified;
-	}
-
 	public String getDescription() {
 		return this.description;
 	}
@@ -159,22 +150,24 @@ public class MeasurementSetup extends StorableObject {
 		return this.monitored_element_ids;
 	}
 
-	protected synchronized void setAttributes(Set parameter_set,
+	protected synchronized void setAttributes(Date created,
+																						Date modified,
+																						Identifier creator_id,
+																						Identifier modifier_id,
+																						Set parameter_set,
 																						Set criteria_set,
 																						Set threshold_set,
 																						Set etalon,
-																						Date created,
-																						Identifier creator_id,
-																						Date modified,
 																						String description,
 																						long measurement_duration) {
+		super.setAttributes(created,
+												modified,
+												creator_id,
+												modifier_id);
 		this.parameter_set = parameter_set;
 		this.criteria_set = criteria_set;
 		this.threshold_set = threshold_set;
 		this.etalon = etalon;
-		this.created = created;
-		this.creator_id = creator_id;
-		this.modified = modified;
 		this.description = description;
 		this.measurement_duration = measurement_duration;
 	}

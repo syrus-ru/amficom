@@ -35,7 +35,6 @@ public class Test extends StorableObject {
 	private int status;
 	private MonitoredElement monitoredElement;
 	private int return_type;
-	private Date modified;
 	private String description;
 	private ArrayList measurement_setup_ids;
 
@@ -57,7 +56,11 @@ public class Test extends StorableObject {
 	}
 
 	public Test(Test_Transferable tt) throws CreateObjectException {
-		super(new Identifier(tt.id));
+		super(new Identifier(tt.id),
+					new Date(tt.created),
+					new Date(tt.modified),
+					new Identifier(tt.creator_id),
+					new Identifier(tt.modifier_id));
 		this.temporal_type = tt.temporal_type.value();
 		this.timeStamps = new TestTimeStamps(tt.time_stamps);
 		this.measurement_type_id = new Identifier(tt.measurement_type_id);
@@ -71,7 +74,6 @@ public class Test extends StorableObject {
 			throw new CreateObjectException(roe.getMessage(), roe);
 		}
 		this.return_type = tt.return_type.value();
-		this.modified = new Date(tt.modified);
 		this.description = new String(tt.description);
 		this.measurement_setup_ids = new ArrayList(tt.measurement_setup_ids.length);
 		for (int i = 0; i < tt.measurement_setup_ids.length; i++)
@@ -100,6 +102,10 @@ public class Test extends StorableObject {
 		for (Iterator iterator = this.measurement_setup_ids.iterator(); iterator.hasNext();)
 			ms_ids[i++] = (Identifier_Transferable)((Identifier)iterator.next()).getTransferable();
 		return new Test_Transferable((Identifier_Transferable)this.id.getTransferable(),
+																 super.created.getTime(),
+																 super.modified.getTime(),
+																 (Identifier_Transferable)super.creator_id.getTransferable(),
+																 (Identifier_Transferable)super.modifier_id.getTransferable(),
 																 TestTemporalType.from_int(this.temporal_type),
 																 this.timeStamps.getTransferable(),
 																 (Identifier_Transferable)this.measurement_type_id.getTransferable(),
@@ -108,7 +114,6 @@ public class Test extends StorableObject {
 																 TestStatus.from_int(this.status),
 																 (Identifier_Transferable)this.monitoredElement.getId().getTransferable(),
 																 TestReturnType.from_int(this.return_type),
-																 this.modified.getTime(),
 																 new String(this.description),
 																 ms_ids);
 	}
@@ -161,10 +166,6 @@ public class Test extends StorableObject {
 		return TestReturnType.from_int(this.return_type);
 	}
 
-	public Date getModified() {
-		return this.modified;
-	}
-
 	public String getDescription() {
 		return this.description;
 	}
@@ -173,7 +174,11 @@ public class Test extends StorableObject {
 		return this.measurement_setup_ids;
 	}
 
-	protected synchronized void setAttributes(int temporal_type,
+	protected synchronized void setAttributes(Date created,
+																						Date modified,
+																						Identifier creator_id,
+																						Identifier modifier_id,
+																						int temporal_type,
 																						Date start_time,
 																						Date end_time,
 																						Identifier pt_template_id,
@@ -184,8 +189,11 @@ public class Test extends StorableObject {
 																						int status,
 																						MonitoredElement monitoredElement,
 																						int return_type,
-																						Date modified,
 																						String description) {
+		super.setAttributes(created,
+												modified,
+												creator_id,
+												modifier_id);
 		this.temporal_type = temporal_type;
 		this.timeStamps = new TestTimeStamps(temporal_type, start_time, end_time, pt_template_id, tt_timestamps);
 		this.measurement_type_id = measurement_type_id;
@@ -194,7 +202,6 @@ public class Test extends StorableObject {
 		this.status = status;
 		this.monitoredElement = monitoredElement;
 		this.return_type = return_type;
-		this.modified = modified;
 		this.description = description;
 
 		try {
@@ -224,9 +231,10 @@ public class Test extends StorableObject {
 		return this.measurements;
 	}*/
 
-	public void setStatus(TestStatus status) throws UpdateObjectException {
+	public void setStatus(TestStatus status, Identifier modifier_id) throws UpdateObjectException {
 		this.status = status.value();
-		this.modified = new Date(System.currentTimeMillis());
+		super.modified = new Date(System.currentTimeMillis());
+		super.modifier_id = (Identifier)modifier_id.clone();
 		try {
 			this.testDatabase.update(this, UPDATE_STATUS, null);
 		}
@@ -236,15 +244,18 @@ public class Test extends StorableObject {
 	}
 
 	public Measurement createMeasurement(Identifier measurement_id,
-																			 Date start_time) throws CreateObjectException {
-			Measurement measurement = new Measurement(measurement_id,
-																								this.measurement_type_id,
-																								this.monitoredElement.getId(),
-																								this.mainMeasurementSetup,
-																								start_time,
-																								this.monitoredElement.getLocalAddress(),
-																								this.id);
-			this.modified = new Date(System.currentTimeMillis());
+																			 Date start_time,
+																			 Identifier creator_id) throws CreateObjectException {
+			Measurement measurement = Measurement.create(measurement_id,
+																									 creator_id,
+																									 this.measurement_type_id,
+																									 this.monitoredElement.getId(),
+																									 this.mainMeasurementSetup,
+																									 start_time,
+																									 this.monitoredElement.getLocalAddress(),
+																									 this.id);
+			super.modified = new Date(System.currentTimeMillis());
+			super.modifier_id = (Identifier)creator_id.clone();
 			try {
 				this.testDatabase.update(this, UPDATE_MODIFIED, null);
 			}

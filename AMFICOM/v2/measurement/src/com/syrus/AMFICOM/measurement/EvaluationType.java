@@ -1,5 +1,6 @@
 package com.syrus.AMFICOM.measurement;
 
+import java.util.Date;
 import java.util.ArrayList;
 import java.util.Iterator;
 import com.syrus.AMFICOM.general.StorableObject;
@@ -32,7 +33,13 @@ public class EvaluationType extends ActionType {
 	}
 
 	public EvaluationType(EvaluationType_Transferable ett) throws CreateObjectException {
-		super(new Identifier(ett.id), new String(ett.codename), new String(ett.description));
+		super(new Identifier(ett.id),
+					new Date(ett.created),
+					new Date(ett.modified),
+					new Identifier(ett.creator_id),
+					new Identifier(ett.modifier_id),
+					new String(ett.codename),
+					new String(ett.description));
 
 		this.in_parameter_types = new ArrayList(ett.in_parameter_types.length);
 		for (int i = 0; i < ett.in_parameter_types.length; i++)
@@ -81,6 +88,10 @@ public class EvaluationType extends ActionType {
 			in_par_types[i++] = (Identifier_Transferable)((Identifier)iterator.next()).getTransferable();
 
 		return new EvaluationType_Transferable((Identifier_Transferable)super.id.getTransferable(),
+																					 super.created.getTime(),
+																					 super.modified.getTime(),
+																					 (Identifier_Transferable)super.creator_id.getTransferable(),
+																					 (Identifier_Transferable)super.modifier_id.getTransferable(),
 																					 new String(super.codename),
 																					 new String(super.description),
 																					 in_par_types,
@@ -105,15 +116,23 @@ public class EvaluationType extends ActionType {
 		return this.out_parameter_types;
 	}
 
-	protected void setAttributes(String codename,
-															 String description) {
-		super.codename = codename;
-		super.description = description;
+	protected synchronized void setAttributes(Date created,
+																						Date modified,
+																						Identifier creator_id,
+																						Identifier modifier_id,
+																						String codename,
+																						String description) {
+		super.setAttributes(created,
+												modified,
+												creator_id,
+												modifier_id,
+												codename,
+												description);
 	}
 
-	protected void setParameterTypes(ArrayList in_parameter_types,
-																	 ArrayList threshold_parameter_types,
-																	 ArrayList etalon_parameter_types,
+	protected synchronized void setParameterTypes(ArrayList in_parameter_types,
+																								ArrayList threshold_parameter_types,
+																								ArrayList etalon_parameter_types,
 																	 ArrayList out_parameter_types) {
 		this.in_parameter_types = in_parameter_types;
 		this.threshold_parameter_types = threshold_parameter_types;

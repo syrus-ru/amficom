@@ -26,15 +26,29 @@ import com.syrus.AMFICOM.measurement.ora.DayTimeArray;
 
 public class PTTemporalTemplate_Database extends StorableObject_Database {
 
-	public void retrieve(StorableObject storableObject) throws Exception {
-		PTTemporalTemplate pttt = null;
+	private PTTemporalTemplate fromStorableObject(StorableObject storableObject) throws Exception {
 		if (storableObject instanceof PTTemporalTemplate)
-			pttt = (PTTemporalTemplate)storableObject;
+			return (PTTemporalTemplate)storableObject;
 		else
-			throw new Exception("PTTemporalTemplate_Database.retrieve | Illegal Storable Object: " + storableObject.getClass().getName());
+			throw new Exception("PTTemporalTemplate_Database.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
+	}
 
+	public void retrieve(StorableObject storableObject) throws Exception {
+		PTTemporalTemplate pttt = this.fromStorableObject(storableObject);
+		this.retrievePTTemporalTemplate(pttt);
+	}
+
+	private void retrievePTTemporalTemplate(PTTemporalTemplate pttt) throws Exception {
 		String pttt_id_str = pttt.getId().toString();
-		String sql = "SELECT description, " + DatabaseDate.toQuerySubString("created") + ", value FROM " + ObjectEntities.PTTEMPORALTEMPLATE_ENTITY + " WHERE id = " + pttt_id_str;
+		String sql = "SELECT "
+			+ DatabaseDate.toQuerySubString("created") + ", " 
+			+ DatabaseDate.toQuerySubString("modified") + ", "
+			+ "creator_id, "
+			+ "modifier_id, "
+			+ "description, "
+			+ "value"
+			+ " FROM " + ObjectEntities.PTTEMPORALTEMPLATE_ENTITY
+			+ " WHERE id = " + pttt_id_str;
 		Statement statement = null;
 		ResultSet resultSet = null;
 		try {
@@ -58,8 +72,11 @@ public class PTTemporalTemplate_Database extends StorableObject_Database {
 					dates.add(new PTTemporalTemplate.TimeQuantum(datesArray[i].getScale().intValue(),
 																											 datesArray[i].getValue().intValue()));
 
-				pttt.setAttributes(resultSet.getString("description"),
-													 DatabaseDate.fromQuerySubString(resultSet, "created"),
+				pttt.setAttributes(DatabaseDate.fromQuerySubString(resultSet, "created"),
+													 DatabaseDate.fromQuerySubString(resultSet, "modified"),
+													 new Identifier(resultSet.getLong("creator_id")),
+													 new Identifier(resultSet.getLong("modifier_id")),
+													 resultSet.getString("description"),
 													 new PTTemporalTemplate.TimeQuantum(period.getScale().intValue(), period.getValue().intValue()),
 													 dayTimes,
 													 dates);
@@ -84,12 +101,7 @@ public class PTTemporalTemplate_Database extends StorableObject_Database {
 		}
 	}
 	public Object retrieveObject(StorableObject storableObject, int retrieve_kind, Object arg) throws Exception {
-		PTTemporalTemplate pttt = null;
-		if (storableObject instanceof PTTemporalTemplate)
-			pttt = (PTTemporalTemplate)storableObject;
-		else
-			throw new Exception("PTTemporalTemplate_Database.retrieveObject | Illegal Storable Object: " + storableObject.getClass().getName());
-
+		PTTemporalTemplate pttt = this.fromStorableObject(storableObject);
 		switch (retrieve_kind) {
 			default:
 				return null;
@@ -97,14 +109,34 @@ public class PTTemporalTemplate_Database extends StorableObject_Database {
 	}
 
 	public void insert(StorableObject storableObject) throws Exception {
-		PTTemporalTemplate pttt = null;
-		if (storableObject instanceof PTTemporalTemplate)
-			pttt = (PTTemporalTemplate)storableObject;
-		else
-			throw new Exception("PTTemporalTemplate_Database.insert | Illegal Storable Object: " + storableObject.getClass().getName());
+		PTTemporalTemplate pttt = this.fromStorableObject(storableObject);
+		try {
+			this.insertPTTemporalTemplate(pttt);
+		}
+		catch (Exception e) {
+			try {
+				connection.rollback();
+			}
+			catch (SQLException sqle) {
+				Log.errorMessage("Exception in rolling back");
+				Log.errorException(sqle);
+			}
+			throw e;
+		}
+		try {
+			connection.commit();
+		}
+		catch (SQLException sqle) {
+			Log.errorMessage("Exception in commiting");
+			Log.errorException(sqle);
+		}
+	}
 
+	private void insertPTTemporalTemplate(PTTemporalTemplate pttt) throws Exception {
 		long pttt_id_code = pttt.getId().getCode();
-		String sql = "INSERT INTO " + ObjectEntities.PTTEMPORALTEMPLATE_ENTITY + " (id, description, created, value) VALUES (?, ?, ?, ?)";
+		String sql = "INSERT INTO " + ObjectEntities.PTTEMPORALTEMPLATE_ENTITY
+			+ " (id, created, modified, creator_id, modifier_id, description, value)"
+			+ " VALUES (?, ?, ?, ?, ?, ?, ?)";
 		PreparedStatement preparedStatement = null;
 		try {
 				PTTemporalTemplate.TimeQuantum period = pttt.getPeriod();
@@ -135,12 +167,14 @@ public class PTTemporalTemplate_Database extends StorableObject_Database {
 																																 new TimeQuantumArray(datesArray));
 				preparedStatement = connection.prepareStatement(sql);
 				preparedStatement.setLong(1, pttt_id_code);
-				preparedStatement.setString(2, pttt.getDescription());
-				preparedStatement.setDate(3, new java.sql.Date(pttt.getCreated().getTime()));
-				((OraclePreparedStatement)preparedStatement).setORAData(4, temporalTemplate);
+				preparedStatement.setDate(2, new java.sql.Date(pttt.getCreated().getTime()));
+				preparedStatement.setDate(3, new java.sql.Date(pttt.getModified().getTime()));
+				preparedStatement.setLong(4, pttt.getCreatorId().getCode());
+				preparedStatement.setLong(5, pttt.getModifierId().getCode());
+				preparedStatement.setString(6, pttt.getDescription());
+				((OraclePreparedStatement)preparedStatement).setORAData(7, temporalTemplate);
 				Log.debugMessage("PTTemporalTemplate_Database.insert | Inserting template " + pttt_id_code, Log.DEBUGLEVEL05);
 				preparedStatement.executeUpdate();
-				connection.commit();
 		}
 		catch (SQLException sqle) {
 			String mesg = "PTTemporalTemplate_Database.insert | Cannot insert temporal template " + pttt_id_code;
@@ -157,10 +191,10 @@ public class PTTemporalTemplate_Database extends StorableObject_Database {
 	}
 
 	public void update(StorableObject storableObject, int update_kind, Object obj) throws Exception {
-		PTTemporalTemplate pttt = null;
-		if (storableObject instanceof PTTemporalTemplate)
-			pttt = (PTTemporalTemplate)storableObject;
-		else
-			throw new Exception("PTTemporalTemplate_Database.update | Illegal Storable Object: " + storableObject.getClass().getName());
+		PTTemporalTemplate pttt = this.fromStorableObject(storableObject);
+		switch (update_kind) {
+			default:
+				return;
+		}
 	}
 }

@@ -34,8 +34,8 @@ public class Analysis_Database extends StorableObject_Database {
 			+ "creator_id, "
 			+ "modifier_id, "
 			+ "type_id, "
+			+ "monitored_element_id"
 			+ "criteria_set_id, "
-			+ "monitored_element_id "
 			+ " FROM " + ObjectEntities.ANALYSIS_ENTITY
 			+ " WHERE id = " + analysis_id_str;
 		Statement statement = null;
@@ -51,8 +51,8 @@ public class Analysis_Database extends StorableObject_Database {
 															 new Identifier(resultSet.getLong("creator_id")),
 															 new Identifier(resultSet.getLong("modifier_id")),
 															 new Identifier(resultSet.getLong("type_id")),
-															 criteria_set,
-															 new Identifier(resultSet.getLong("monitored_element_id")));
+															 new Identifier(resultSet.getLong("monitored_element_id")),
+															 criteria_set);
 			}
 			else
 				throw new Exception("No such analysis: " + analysis_id_str);
@@ -107,19 +107,18 @@ public class Analysis_Database extends StorableObject_Database {
 	}
 
 	private void insertAnalysis(Analysis analysis) throws Exception {
-		Analysis analysis = this.fromStorableObject(storableObject);
 		String analysis_id_str = analysis.getId().toString();
 		String sql = "INSERT INTO " + ObjectEntities.ANALYSIS_ENTITY
-			+ " (id, type_id, criteria_set_id, monitored_element_id)"
+			+ " (id, created, modified, creator_id, modifier_id, type_id, monitored_element_id, criteria_set_id)"
 			+ " VALUES ("
 			+ analysis_id_str + ", "
-			+ DatabaseDate.toUpdateSubString(user.getCreated()) + ", "
-			+ DatabaseDate.toUpdateSubString(user.getModified()) + ", "
-			+ user.getCreatorId().toString() + ", "
-			+ user.getModifierId().toString() + ", "
+			+ DatabaseDate.toUpdateSubString(analysis.getCreated()) + ", "
+			+ DatabaseDate.toUpdateSubString(analysis.getModified()) + ", "
+			+ analysis.getCreatorId().toString() + ", "
+			+ analysis.getModifierId().toString() + ", "
 			+ analysis.getTypeId().toString() + ", "
-			+ analysis.getCriteriaSet().getId().toString() + ", "
-			+ analysis.getMonitoredElementId().toString()
+			+ analysis.getMonitoredElementId().toString() + ", "
+			+ analysis.getCriteriaSet().getId().toString()
 			+ ")";
 		Statement statement = null;
 		try {

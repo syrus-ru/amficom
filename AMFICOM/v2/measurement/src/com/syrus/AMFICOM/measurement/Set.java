@@ -21,9 +21,6 @@ public class Set extends StorableObject {
 	protected static final int UPDATE_DETACH_ME = 2;
 
 	private int sort;
-	private Date created;
-	private Identifier creator_id;
-	private Date modified;
 	private String description;
 	private SetParameter[] parameters;
 	private ArrayList monitored_element_ids;
@@ -43,11 +40,12 @@ public class Set extends StorableObject {
 	}
 
 	public Set(Set_Transferable st) throws CreateObjectException {
-		super(new Identifier(st.id));
+		super(new Identifier(st.id),
+					new Date(st.created),
+					new Date(st.modified),
+					new Identifier(st.creator_id),
+					new Identifier(st.modifier_id));
 		this.sort = st.sort.value();
-		this.created = new Date(st.created);
-		this.creator_id = new Identifier(st.creator_id);
-		this.modified = new Date(st.modified);
 		this.description = new String(st.description);
 
 		this.parameters = new SetParameter[st.parameters.length];
@@ -71,9 +69,11 @@ public class Set extends StorableObject {
     return this.monitored_element_ids.contains(monitored_element_id);
   }
 
-	public void attachToMonitoredElement(Identifier monitored_element_id) throws UpdateObjectException {
+	public void attachToMonitoredElement(Identifier monitored_element_id,
+																			 Identifier modifier_id) throws UpdateObjectException {
 		if (this.isAttachedToMonitoredElement(monitored_element_id))
       return;
+		super.modifier_id = (Identifier)modifier_id.clone();
 		try {
 			this.setDatabase.update(this, UPDATE_ATTACH_ME, monitored_element_id);
 		}
@@ -84,9 +84,11 @@ public class Set extends StorableObject {
 		this.monitored_element_ids.trimToSize();
 	}
 
-	public void detachFromMonitoredElement(Identifier monitored_element_id) throws UpdateObjectException {
+	public void detachFromMonitoredElement(Identifier monitored_element_id,
+																				 Identifier modifier_id) throws UpdateObjectException {
     if (!this.isAttachedToMonitoredElement(monitored_element_id))
       return;
+		super.modifier_id = (Identifier)modifier_id.clone();
 		try {
 	    this.setDatabase.update(this, UPDATE_DETACH_ME, monitored_element_id);
 		}
@@ -108,10 +110,11 @@ public class Set extends StorableObject {
 			me_ids[i++] = (Identifier_Transferable)((Identifier)iterator.next()).getTransferable();
 	
 		return new Set_Transferable((Identifier_Transferable)super.getId().getTransferable(),
+																super.created.getTime(),
+																super.modified.getTime(),
+																(Identifier_Transferable)super.creator_id.getTransferable(),
+																(Identifier_Transferable)super.modifier_id.getTransferable(),
 																SetSort.from_int(this.sort),
-																this.created.getTime(),
-																(Identifier_Transferable)this.creator_id.getTransferable(),
-																this.modified.getTime(),
 																new String(this.description),
 																pts,
 																me_ids);
@@ -119,18 +122,6 @@ public class Set extends StorableObject {
 
 	public SetSort getSort() {
 		return SetSort.from_int(this.sort);
-	}
-
-	public Date getCreated() {
-		return this.created;
-	}
-
-	public Identifier getCreatorId() {
-		return this.creator_id;
-	}
-
-	public Date getModified() {
-		return this.modified;
 	}
 
 	public String getDescription() {
@@ -145,15 +136,17 @@ public class Set extends StorableObject {
 		return this.monitored_element_ids;
 	}
 
-	protected synchronized void setAttributes(int sort,
-																						Date created,
-																						Identifier creator_id,
+	protected synchronized void setAttributes(Date created,
 																						Date modified,
+																						Identifier creator_id,
+																						Identifier modifier_id,
+																						int sort,
 																						String description) {
+		super.setAttributes(created,
+												modified,
+												creator_id,
+												modifier_id);
 		this.sort = sort;
-		this.created = created;
-		this.creator_id = creator_id;
-		this.modified = modified;
 		this.description = description;
 	}
 

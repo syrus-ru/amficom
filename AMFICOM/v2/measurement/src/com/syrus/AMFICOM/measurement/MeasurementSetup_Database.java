@@ -16,20 +16,34 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 
 public class MeasurementSetup_Database extends StorableObject_Database {
 
-	public void retrieve(StorableObject storableObject) throws Exception {
-		MeasurementSetup measurementSetup = null;
+	private MeasurementSetup fromStorableObject(StorableObject storableObject) throws Exception {
 		if (storableObject instanceof MeasurementSetup)
-			measurementSetup = (MeasurementSetup)storableObject;
+			return (MeasurementSetup)storableObject;
 		else
-			throw new Exception("MeasurementSetup_Database.retrieve | Illegal Storable Object: " + storableObject.getClass().getName());
+			throw new Exception("MeasurementSetup_Database.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
+	}
 
+	public void retrieve(StorableObject storableObject) throws Exception {
+		MeasurementSetup measurementSetup = this.fromStorableObject(storableObject);
 		this.retrieveMeasurementSetup(measurementSetup);
 		this.retrieveMeasurementSetupMELinks(measurementSetup);
 	}
 
 	private void retrieveMeasurementSetup(MeasurementSetup measurementSetup) throws Exception {
 		String ms_id_str = measurementSetup.getId().toString();
-		String sql = "SELECT parameter_set_id, criteria_set_id, threshold_set_id, etalon_id, " + DatabaseDate.toQuerySubString("created") + ", creator_id, " + DatabaseDate.toQuerySubString("modified") + ", description, measurement_duration FROM " + ObjectEntities.MS_ENTITY + " WHERE id = " + ms_id_str;
+		String sql = "SELECT "
+			+ DatabaseDate.toQuerySubString("created") + ", " 
+			+ DatabaseDate.toQuerySubString("modified") + ", "
+			+ "creator_id, "
+			+ "modifier_id, "
+			+ "parameter_set_id, "
+			+ "criteria_set_id, "
+			+ "threshold_set_id, "
+			+ "etalon_id, "
+			+ "description,"
+			+ "measurement_duration"
+			+ " FROM " + ObjectEntities.MS_ENTITY
+			+ " WHERE id = " + ms_id_str;
 		Statement statement = null;
 		ResultSet resultSet = null;
 		try {
@@ -46,13 +60,14 @@ public class MeasurementSetup_Database extends StorableObject_Database {
 				id_code = resultSet.getLong("etalon_id");
 				Set etalon = (id_code != 0)?(new Set(new Identifier(id_code))):null;
 				String description = resultSet.getString("description");
-				measurementSetup.setAttributes(parameter_set,
+				measurementSetup.setAttributes(DatabaseDate.fromQuerySubString(resultSet, "created"),
+																			 DatabaseDate.fromQuerySubString(resultSet, "modified"),
+																			 new Identifier(resultSet.getLong("creator_id")),
+																			 new Identifier(resultSet.getLong("modifier_id")),
+																			 parameter_set,
 																			 criteria_set,
 																			 threshold_set,
 																			 etalon,
-																			 DatabaseDate.fromQuerySubString(resultSet, "created"),
-																			 new Identifier(resultSet.getLong("creator_id")),
-																			 DatabaseDate.fromQuerySubString(resultSet, "modified"),
 																			 (description != null)?description:"",
 																			 resultSet.getLong("measurement_duration"));
 			}
@@ -78,7 +93,10 @@ public class MeasurementSetup_Database extends StorableObject_Database {
 
 	private void retrieveMeasurementSetupMELinks(MeasurementSetup measurementSetup) throws Exception {
 		String ms_id_str = measurementSetup.getId().toString();
-		String sql = "SELECT monitored_element_id FROM " + ObjectEntities.MSMELINK_ENTITY + " WHERE measurement_setup_id = " + ms_id_str;
+		String sql = "SELECT "
+			+ "monitored_element_id"
+			+ " FROM " + ObjectEntities.MSMELINK_ENTITY
+			+ " WHERE measurement_setup_id = " + ms_id_str;
 		Statement statement = null;
 		ResultSet resultSet = null;
 		ArrayList arraylist = new ArrayList();
@@ -108,12 +126,7 @@ public class MeasurementSetup_Database extends StorableObject_Database {
 	}
 
 	public Object retrieveObject(StorableObject storableObject, int retrieve_kind, Object arg) throws Exception {
-		MeasurementSetup measurementSetup = null;
-		if (storableObject instanceof MeasurementSetup)
-			measurementSetup = (MeasurementSetup)storableObject;
-		else
-			throw new Exception("MeasurementSetup_Database.retrieveObject | Illegal Storable Object: " + storableObject.getClass().getName());
-
+		MeasurementSetup measurementSetup = this.fromStorableObject(storableObject);
 		switch (retrieve_kind) {
 			default:
 				return null;
@@ -121,12 +134,7 @@ public class MeasurementSetup_Database extends StorableObject_Database {
 	}
 
 	public void insert(StorableObject storableObject) throws Exception {
-		MeasurementSetup measurementSetup = null;
-		if (storableObject instanceof MeasurementSetup)
-			measurementSetup = (MeasurementSetup)storableObject;
-		else
-			throw new Exception("MeasurementSetup_Database.insert | Illegal Storable Object: " + storableObject.getClass().getName());
-
+		MeasurementSetup measurementSetup = this.fromStorableObject(storableObject);
 		try {
 			this.insertMeasurementSetup(measurementSetup);
 			this.insertMeasurementSetupMELinks(measurementSetup);
@@ -158,9 +166,21 @@ public class MeasurementSetup_Database extends StorableObject_Database {
 		String criteria_set_id_substr = (criteriaSet != null)?(criteriaSet.getId().toString()):"0";
 		String threshold_set_id_substr = (thresholdSet != null)?(thresholdSet.getId().toString()):"0";
 		String etalon_id_substr = (etalon != null)?(etalon.getId().toString()):"0";
-		String sql = "INSERT INTO " + ObjectEntities.MS_ENTITY + " (id, parameter_set_id, criteria_set_id, threshold_set_id, etalon_id, created, creator_id, modified, description, measurement_duration) VALUES ("
-							+ ms_id_str + ", " + measurementSetup.getParameterSet().getId().toString() + ", " + criteria_set_id_substr + ", " + threshold_set_id_substr + ", " + etalon_id_substr + ", "
-							+ DatabaseDate.toUpdateSubString(measurementSetup.getCreated()) + ", " + measurementSetup.getCreatorId().toString() + ", " + DatabaseDate.toUpdateSubString(measurementSetup.getModified()) + ", '" + measurementSetup.getDescription() + "', " + measurementSetup.getMeasurementDuration() + ")";
+		String sql = "INSERT INTO " + ObjectEntities.MS_ENTITY
+			+ " (id, created, modified, creator_id, modifier_id, parameter_set_id, criteria_set_id, threshold_set_id, etalon_id, description, measurement_duration)"
+			+ " VALUES ("
+			+ ms_id_str + ", "
+			+ DatabaseDate.toUpdateSubString(measurementSetup.getCreated()) + ", "
+			+ DatabaseDate.toUpdateSubString(measurementSetup.getModified()) + ", "
+			+ measurementSetup.getCreatorId().toString() + ", "
+			+ measurementSetup.getModifierId().toString() + ", "
+			+ measurementSetup.getParameterSet().getId().toString() + ", "
+			+ criteria_set_id_substr + ", "
+			+ threshold_set_id_substr + ", "
+			+ etalon_id_substr + ", '"
+			+ measurementSetup.getDescription() + "', "
+			+ measurementSetup.getMeasurementDuration()
+			+ ")";
 		Statement statement = null;
 		try {
 			statement = connection.createStatement();
@@ -184,7 +204,9 @@ public class MeasurementSetup_Database extends StorableObject_Database {
 	private void insertMeasurementSetupMELinks(MeasurementSetup measurementSetup) throws Exception {
 		long ms_id_code = measurementSetup.getId().getCode();
 		ArrayList me_ids = measurementSetup.getMonitoredElementIds();
-		String sql = "INSERT INTO " + ObjectEntities.MSMELINK_ENTITY + " (measurement_setup_id, monitored_element_id) VALUES (?, ?)";
+		String sql = "INSERT INTO " + ObjectEntities.MSMELINK_ENTITY
+			+ " (measurement_setup_id, monitored_element_id)"
+			+ " VALUES (?, ?)";
 		PreparedStatement preparedStatement = null;
 		long me_id_code = 0;
 		try {
@@ -212,32 +234,52 @@ public class MeasurementSetup_Database extends StorableObject_Database {
 	}
 
 	public void update(StorableObject storableObject, int update_kind, Object obj) throws Exception {
-		MeasurementSetup measurementSetup = null;
-		if (storableObject instanceof MeasurementSetup)
-			measurementSetup = (MeasurementSetup)storableObject;
-		else
-			throw new Exception("MeasurementSetup_Database.update | Illegal Storable Object: " + storableObject.getClass().getName());
-
-		switch (update_kind) {
-			case MeasurementSetup.UPDATE_ATTACH_ME:
-				this.createMEAttachment(measurementSetup, (Identifier)obj);
-				break;
-			case MeasurementSetup.UPDATE_DETACH_ME:
-				this.deleteMEAttachment(measurementSetup, (Identifier)obj);
-				break;
+		MeasurementSetup measurementSetup = this.fromStorableObject(storableObject);
+		try {
+			switch (update_kind) {
+				case MeasurementSetup.UPDATE_ATTACH_ME:
+					this.createMEAttachment(measurementSetup, (Identifier)obj);
+					this.setModified(measurementSetup);
+					break;
+				case MeasurementSetup.UPDATE_DETACH_ME:
+					this.deleteMEAttachment(measurementSetup, (Identifier)obj);
+					this.setModified(measurementSetup);
+					break;
+			}
+		}
+		catch (Exception e) {
+			try {
+				connection.rollback();
+			}
+			catch (SQLException sqle) {
+				Log.errorMessage("Exception in rolling back");
+				Log.errorException(sqle);
+			}
+			throw e;
+		}
+		try {
+			connection.commit();
+		}
+		catch (SQLException sqle) {
+			Log.errorMessage("Exception in commiting");
+			Log.errorException(sqle);
 		}
 	}
 
-	protected void createMEAttachment(MeasurementSetup measurementSetup, Identifier monitored_element_id) throws Exception {
+	private void createMEAttachment(MeasurementSetup measurementSetup, Identifier monitored_element_id) throws Exception {
 		String ms_id_str = measurementSetup.getId().toString();
 		String me_id_str = monitored_element_id.toString();
-		String sql = "INSERT INTO " + ObjectEntities.MSMELINK_ENTITY + " (measurement_setup_id, monitored_element_id) VALUES (" + ms_id_str + ", " + me_id_str + ")";
+		String sql = "INSERT INTO " + ObjectEntities.MSMELINK_ENTITY
+			+ " (measurement_setup_id, monitored_element_id)"
+			+ " VALUES ("
+			+ ms_id_str + ", "
+			+ me_id_str
+			+ ")";
 		Statement statement = null;
 		try {
 			statement = connection.createStatement();
 			Log.debugMessage("MeasurementSetup_Database.createMEAttachment | Trying: " + sql, Log.DEBUGLEVEL05);
-			statement.executeQuery(sql);
-			connection.commit();
+			statement.executeUpdate(sql);
 		}
 		catch (SQLException sqle) {
 			String mesg = "MeasurementSetup_Database.createMEAttachment | Cannot attach measurement setup " + ms_id_str + " to monitored element " + me_id_str;
@@ -253,19 +295,47 @@ public class MeasurementSetup_Database extends StorableObject_Database {
 		}
 	}
 
-	protected void deleteMEAttachment(MeasurementSetup measurementSetup, Identifier monitored_element_id) throws Exception {
+	private void deleteMEAttachment(MeasurementSetup measurementSetup, Identifier monitored_element_id) throws Exception {
 		String ms_id_str = measurementSetup.getId().toString();
 		String me_id_str = monitored_element_id.toString();
-		String sql = "DELETE FROM " + ObjectEntities.MSMELINK_ENTITY + " WHERE measurement_setup_id = " + ms_id_str + " AND monitored_element_id = " + me_id_str;
+		String sql = "DELETE FROM " + ObjectEntities.MSMELINK_ENTITY
+			+ " WHERE measurement_setup_id = " + ms_id_str
+				+ " AND monitored_element_id = " + me_id_str;
 		Statement statement = null;
 		try {
 			statement = connection.createStatement();
 			Log.debugMessage("MeasurementSetup_Database.deleteMEAttachment | Trying: " + sql, Log.DEBUGLEVEL05);
-			statement.executeQuery(sql);
-			connection.commit();
+			statement.executeUpdate(sql);
 		}
 		catch (SQLException sqle) {
 			String mesg = "MeasurementSetup_Database.deleteMEAttachment | Cannot detach measurement setup " + ms_id_str + " from monitored element " + me_id_str;
+			throw new Exception(mesg, sqle);
+		}
+		finally {
+			try {
+				if (statement != null)
+					statement.close();
+				statement = null;
+			}
+			catch (SQLException sqle1) {}
+		}
+	}
+
+	private void setModified(MeasurementSetup measurementSetup) throws Exception {
+		String ms_id_str = measurementSetup.getId().toString();
+		String sql = "UPDATE " + ObjectEntities.MS_ENTITY
+			+ " SET "
+			+ "modified = " + DatabaseDate.toUpdateSubString(measurementSetup.getModified()) + ", "
+			+ "modifier_id = " + measurementSetup.getModifierId().toString()
+			+ " WHERE id = " + ms_id_str;
+		Statement statement = null;
+		try {
+			statement = connection.createStatement();
+			Log.debugMessage("MeasurementSetup_Database.setModified | Trying: " + sql, Log.DEBUGLEVEL05);
+			statement.executeUpdate(sql);
+		}
+		catch (SQLException sqle) {
+			String mesg = "MeasurementSetup_Database.setModified | Cannot set modified for measurement setup " + ms_id_str;
 			throw new Exception(mesg, sqle);
 		}
 		finally {

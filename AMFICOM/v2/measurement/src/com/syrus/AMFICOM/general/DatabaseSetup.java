@@ -10,8 +10,9 @@ import com.syrus.AMFICOM.measurement.Result_Database;
 import com.syrus.AMFICOM.measurement.PTTemporalTemplate_Database;
 import com.syrus.AMFICOM.configuration.MonitoredElement_Database;
 import com.syrus.AMFICOM.configuration.KIS_Database;
-import com.syrus.AMFICOM.configuration.MCM_Database;
-import com.syrus.AMFICOM.configuration.Server_Database;
+import com.syrus.AMFICOM.administration.MCM_Database;
+import com.syrus.AMFICOM.administration.Server_Database;
+import com.syrus.AMFICOM.administration.User_Database;
 import com.syrus.AMFICOM.measurement.ParameterType_Database;
 import com.syrus.AMFICOM.measurement.MeasurementType_Database;
 import com.syrus.AMFICOM.measurement.AnalysisType_Database;
@@ -29,8 +30,10 @@ public class DatabaseSetup {
 
 	public static MonitoredElement_Database monitoredElementDatabase;
 	public static KIS_Database kisDatabase;
+
 	public static MCM_Database mcmDatabase;
 	public static Server_Database serverDatabase;
+	public static User_Database userDatabase;
 
 	public static ParameterType_Database parameterTypeDatabase;
 	public static MeasurementType_Database measurementTypeDatabase;
@@ -62,29 +65,35 @@ public class DatabaseSetup {
 
 		monitoredElementDatabase = new MonitoredElement_Database();
 		kisDatabase = new KIS_Database();
+
 		mcmDatabase = new MCM_Database();
 		serverDatabase = new Server_Database();
+		userDatabase = new User_Database();
 
 		parameterTypeDatabase = new ParameterType_Database();
 		measurementTypeDatabase = new MeasurementType_Database();
 		analysisTypeDatabase = new AnalysisType_Database();
 		evaluationTypeDatabase = new EvaluationType_Database();
 		
-		StorableObject_DatabaseContext.init(setDatabase,
+		StorableObject_DatabaseContext.init(parameterTypeDatabase,
+																				measurementTypeDatabase,
+																				analysisTypeDatabase,
+																				evaluationTypeDatabase,
+
+																				mcmDatabase,
+																				serverDatabase,
+																				userDatabase,
+
+																				monitoredElementDatabase,
+																				kisDatabase,
+
+																				setDatabase,
 																				measurementSetupDatabase,
 																				measurementDatabase,
 																				analysisDatabase,
 																				evaluationDatabase,
 																				testDatabase,
 																				resultDatabase,
-																				ptTemporalTemplateDatabase,
-																				monitoredElementDatabase,
-																				kisDatabase,
-																				mcmDatabase,
-																				serverDatabase,
-																				parameterTypeDatabase,
-																				measurementTypeDatabase,
-																				analysisTypeDatabase,
-																				evaluationTypeDatabase);
+																				ptTemporalTemplateDatabase);
 	}
 }

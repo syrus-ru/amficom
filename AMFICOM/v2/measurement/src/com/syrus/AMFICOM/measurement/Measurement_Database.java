@@ -15,15 +15,35 @@ import com.syrus.AMFICOM.measurement.corba.ResultSort;
 
 public class Measurement_Database extends StorableObject_Database {
 
-	public void retrieve(StorableObject storableObject) throws Exception {
-		Measurement measurement = null;
+	private Measurement fromStorableObject(StorableObject storableObject) throws Exception {
 		if (storableObject instanceof Measurement)
-			measurement = (Measurement)storableObject;
+			return (Measurement)storableObject;
 		else
-			throw new Exception("Measurement_Database.retrieve | Illegal Storable Object: " + storableObject.getClass().getName());
+			throw new Exception("Measurement_Database.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
+	}
 
+	public void retrieve(StorableObject storableObject) throws Exception {
+		Measurement measurement = this.fromStorableObject(storableObject);
+		this.retrieveMeasurement(measurement);
+	}
+
+	private void retrieveMeasurement(Measurement measurement) throws Exception {
 		String measurement_id_str = measurement.getId().toString();
-		String sql = "SELECT type_id, setup_id, " + DatabaseDate.toQuerySubString("start_time") + ", duration, status, local_address, monitored_element_id, test_id, " + DatabaseDate.toQuerySubString("modified") + " FROM " + ObjectEntities.MEASUREMENT_ENTITY + " WHERE id = " + measurement_id_str;
+		String sql = "SELECT "
+			+ DatabaseDate.toQuerySubString("created") + ", " 
+			+ DatabaseDate.toQuerySubString("modified") + ", "
+			+ "creator_id, "
+			+ "modifier_id, "
+			+ "type_id, "
+			+ "monitored_element_id, "
+			+ "setup_id, "
+			+ DatabaseDate.toQuerySubString("start_time") + ", "
+			+ "duration, "
+			+ "status, "
+			+ "local_address, "
+			+ "test_id"
+			+ " FROM " + ObjectEntities.MEASUREMENT_ENTITY
+			+ " WHERE id = " + measurement_id_str;
 		Statement statement = null;
 		ResultSet resultSet = null;
 		try {
@@ -32,15 +52,18 @@ public class Measurement_Database extends StorableObject_Database {
 			resultSet = statement.executeQuery(sql);
 			if (resultSet.next()) {
 				MeasurementSetup measurementSetup = new MeasurementSetup(new Identifier(resultSet.getLong("setup_id")));
-				measurement.setAttributes(new Identifier(resultSet.getLong("type_id")),
+				measurement.setAttributes(DatabaseDate.fromQuerySubString(resultSet, "created"),
+																	DatabaseDate.fromQuerySubString(resultSet, "modified"),
+																	new Identifier(resultSet.getLong("creator_id")),
+																	new Identifier(resultSet.getLong("modifier_id")),
+																	new Identifier(resultSet.getLong("type_id")),
+																	new Identifier(resultSet.getLong("monitored_element_id")),
 																	measurementSetup,
 																	DatabaseDate.fromQuerySubString(resultSet, "start_time"),
 																	resultSet.getLong("duration"),
 																	resultSet.getInt("status"),
 																	resultSet.getString("local_address"),
-																	new Identifier(resultSet.getLong("monitored_element_id")),
-																	new Identifier(resultSet.getLong("test_id")),
-																	DatabaseDate.fromQuerySubString(resultSet, "modified"));
+																	new Identifier(resultSet.getLong("test_id")));
 			}
 			else
 				throw new Exception("No such measurement: " + measurement_id_str);
@@ -63,12 +86,7 @@ public class Measurement_Database extends StorableObject_Database {
 	}
 
 	public Object retrieveObject(StorableObject storableObject, int retrieve_kind, Object arg) throws Exception {
-		Measurement measurement = null;
-		if (storableObject instanceof Measurement)
-			measurement = (Measurement)storableObject;
-		else
-			throw new Exception("Measurement_Database.retrieveObject | Illegal Storable Object: " + storableObject.getClass().getName());
-
+		Measurement measurement = this.fromStorableObject(storableObject);
 		switch (retrieve_kind) {
 			case Measurement.RETRIEVE_RESULT:
 				return this.retrieveResult(measurement, (ResultSort)arg);
@@ -80,7 +98,11 @@ public class Measurement_Database extends StorableObject_Database {
 	private Result retrieveResult(Measurement measurement, ResultSort result_sort) throws Exception {
 		String measurement_id_str = measurement.getId().toString();
 		int result_sort_num = result_sort.value();
-		String sql = "SELECT id FROM " + ObjectEntities.RESULT_ENTITY + " WHERE measurement_id = " + measurement_id_str + " AND sort = " + Integer.toString(result_sort_num);
+		String sql = "SELECT "
+			+ "id"
+			+ " FROM " + ObjectEntities.RESULT_ENTITY
+			+ " WHERE measurement_id = " + measurement_id_str
+				+ " AND sort = " + Integer.toString(result_sort_num);
 		Statement statement = null;
 		ResultSet resultSet = null;
 		try {
@@ -110,21 +132,53 @@ public class Measurement_Database extends StorableObject_Database {
 	}
 
 	public void insert(StorableObject storableObject) throws Exception {
-		Measurement measurement = null;
-		if (storableObject instanceof Measurement)
-			measurement = (Measurement)storableObject;
-		else
-			throw new Exception("Measurement_Database.insert | Illegal Storable Object: " + storableObject.getClass().getName());
+		Measurement measurement = this.fromStorableObject(storableObject);
+		try {
+			this.insertMeasurement(measurement);
+		}
+		catch (Exception e) {
+			try {
+				connection.rollback();
+			}
+			catch (SQLException sqle) {
+				Log.errorMessage("Exception in rolling back");
+				Log.errorException(sqle);
+			}
+			throw e;
+		}
+		try {
+			connection.commit();
+		}
+		catch (SQLException sqle) {
+			Log.errorMessage("Exception in commiting");
+			Log.errorException(sqle);
+		}
+	}
 
+	private void insertMeasurement(Measurement measurement) throws Exception {
 		String measurement_id_str = measurement.getId().toString();
-		String sql = "INSERT INTO " + ObjectEntities.MEASUREMENT_ENTITY + " (id, type_id, setup_id, start_time, duration, status, local_address, monitored_element_id, test_id, modified) VALUES ("
-								+ measurement_id_str + ", " + measurement.getTypeId().toString() + ", " + measurement.getSetup().getId().toString() + ", " + DatabaseDate.toUpdateSubString(measurement.getStartTime()) + ", " + measurement.getDuration() + ", " + measurement.getStatus().value() + ", '" + measurement.getLocalAddress() + "', " + measurement.getMonitoredElementId().toString() + ", " + measurement.getTestId().toString() + ", " + DatabaseDate.toUpdateSubString(measurement.getModified()) + ")";
+		String sql = "INSERT INTO " + ObjectEntities.MEASUREMENT_ENTITY
+			+ " (id, created, modified, creator_id, modifier_id, type_id, monitored_element_id, setup_id, start_time, duration, status, local_address, test_id)"
+			+ " VALUES ("
+			+ measurement_id_str + ", "
+			+ DatabaseDate.toUpdateSubString(measurement.getCreated()) + ", "
+			+ DatabaseDate.toUpdateSubString(measurement.getModified()) + ", "
+			+ measurement.getCreatorId().toString() + ", "
+			+ measurement.getModifierId().toString() + ", "
+			+ measurement.getTypeId().toString() + ", "
+			+ measurement.getMonitoredElementId().toString() + ", "
+			+ measurement.getSetup().getId().toString() + ", "
+			+ DatabaseDate.toUpdateSubString(measurement.getStartTime()) + ", "
+			+ Long.toString(measurement.getDuration()) + ", "
+			+ Integer.toString(measurement.getStatus().value()) + ", '"
+			+ measurement.getLocalAddress() + "', "
+			+ measurement.getTestId().toString()
+			+ ")";
 		Statement statement = null;
 		try {
 			statement = connection.createStatement();
 			Log.debugMessage("Measurement_Database.insert | Trying: " + sql, Log.DEBUGLEVEL05);
 			statement.executeUpdate(sql);
-			connection.commit();
 		}
 		catch (SQLException sqle) {
 			String mesg = "Measurement_Database.insert | Cannot insert measurement " + measurement_id_str;
@@ -141,28 +195,46 @@ public class Measurement_Database extends StorableObject_Database {
 	}
 
 	public void update(StorableObject storableObject, int update_kind, Object obj) throws Exception {
-		Measurement measurement = null;
-		if (storableObject instanceof Measurement)
-			measurement = (Measurement)storableObject;
-		else
-			throw new Exception("Measurement_Database.update| Illegal Storable Object: " + storableObject.getClass().getName());
-
-		switch (update_kind) {
-			case Measurement.UPDATE_STATUS:
-				this.updateStatus(measurement);
-				break;
+		Measurement measurement = this.fromStorableObject(storableObject);
+		try {
+			switch (update_kind) {
+				case Measurement.UPDATE_STATUS:
+					this.updateStatus(measurement);
+					break;
+			}
+		}
+		catch (Exception e) {
+			try {
+				connection.rollback();
+			}
+			catch (SQLException sqle) {
+				Log.errorMessage("Exception in rolling back");
+				Log.errorException(sqle);
+			}
+			throw e;
+		}
+		try {
+			connection.commit();
+		}
+		catch (SQLException sqle) {
+			Log.errorMessage("Exception in commiting");
+			Log.errorException(sqle);
 		}
 	}
 
 	private void updateStatus(Measurement measurement) throws Exception {
 		String measurement_id_str = measurement.getId().toString();
-		String sql = "UPDATE " + ObjectEntities.MEASUREMENT_ENTITY + " SET status = " + measurement.getStatus().value() + ", modified = " + DatabaseDate.toUpdateSubString(measurement.getModified()) + " WHERE id = " + measurement_id_str;
+		String sql = "UPDATE " + ObjectEntities.MEASUREMENT_ENTITY
+			+ " SET "
+			+ "status = " + Integer.toString(measurement.getStatus().value()) + ", "
+			+ "modified = " + DatabaseDate.toUpdateSubString(measurement.getModified()) + ", "
+			+ "modifier_id = " + measurement.getModifierId().toString()
+			+ " WHERE id = " + measurement_id_str;
 		Statement statement = null;
 		try {
 			statement = connection.createStatement();
 			Log.debugMessage("Measurement_Database.updateStatus | Trying: " + sql, Log.DEBUGLEVEL05);
 			statement.executeUpdate(sql);
-			connection.commit();
 		}
 		catch (SQLException sqle) {
 			String mesg = "Measurement_Database.updateStatus | Cannot update status of measurement " + measurement_id_str;

@@ -14,15 +14,31 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 
 public class Evaluation_Database extends StorableObject_Database {
 
-	public void retrieve(StorableObject storableObject) throws Exception {
-		Evaluation evaluation = null;
+	private Evaluation fromStorableObject(StorableObject storableObject) throws Exception {
 		if (storableObject instanceof Evaluation)
-			evaluation = (Evaluation)storableObject;
+			return (Evaluation)storableObject;
 		else
-			throw new Exception("Evaluation_Database.retrieve | Illegal Storable Object: " + storableObject.getClass().getName());
+			throw new Exception("Evaluation_Database.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
+	}
 
+	public void retrieve(StorableObject storableObject) throws Exception {
+		Evaluation evaluation = this.fromStorableObject(storableObject);
+		this.retrieveEvaluation(evaluation);
+	}
+
+	private void retrieveEvaluation(Evaluation evaluation) throws Exception {
 		String evaluation_id_str = evaluation.getId().toString();
-		String sql = "SELECT type_id, threshold_set_id, etalon_id, monitored_element_id FROM " + ObjectEntities.EVALUATION_ENTITY + " WHERE id = " + evaluation_id_str;
+		String sql = "SELECT "
+			+ DatabaseDate.toQuerySubString("created") + ", " 
+			+ DatabaseDate.toQuerySubString("modified") + ", "
+			+ "creator_id, "
+			+ "modifier_id, "
+			+ "type_id, "
+			+ "monitored_element_id"
+			+ "threshold_set_id, "
+			+ "etalon_id, "
+			+ " FROM " + ObjectEntities.EVALUATION_ENTITY
+			+ " WHERE id = " + evaluation_id_str;
 		Statement statement = null;
 		ResultSet resultSet = null;
 		try {
@@ -32,10 +48,14 @@ public class Evaluation_Database extends StorableObject_Database {
 			if (resultSet.next()) {
 				Set threshold_set = new Set(new Identifier(resultSet.getLong("threshold_set_id")));
 				Set etalon = new Set(new Identifier(resultSet.getLong("etalon_id")));
-				evaluation.setAttributes(new Identifier(resultSet.getLong("type_id")),
+				evaluation.setAttributes(DatabaseDate.fromQuerySubString(resultSet, "created"),
+																 DatabaseDate.fromQuerySubString(resultSet, "modified"),
+																 new Identifier(resultSet.getLong("creator_id")),
+																 new Identifier(resultSet.getLong("modifier_id")),
+																 new Identifier(resultSet.getLong("type_id")),
+																 new Identifier(resultSet.getLong("monitored_element_id")),
 																 threshold_set,
-																 etalon,
-																 new Identifier(resultSet.getLong("monitored_element_id")));
+																 etalon);
 			}
 			else
 				throw new Exception("No such evaluation: " + evaluation_id_str);
@@ -58,12 +78,7 @@ public class Evaluation_Database extends StorableObject_Database {
 	}
 
 	public Object retrieveObject(StorableObject storableObject, int retrieve_kind, Object arg) throws Exception {
-		Evaluation evaluation = null;
-		if (storableObject instanceof Evaluation)
-			evaluation = (Evaluation)storableObject;
-		else
-			throw new Exception("Evaluation_Database.retrieveObject | Illegal Storable Object: " + storableObject.getClass().getName());
-
+		Evaluation evaluation = this.fromStorableObject(storableObject);
 		switch (retrieve_kind) {
 			default:
 				return null;
@@ -71,20 +86,49 @@ public class Evaluation_Database extends StorableObject_Database {
 	}
 
 	public void insert(StorableObject storableObject) throws Exception {
-		Evaluation evaluation = null;
-		if (storableObject instanceof Evaluation)
-			evaluation = (Evaluation)storableObject;
-		else
-			throw new Exception("Evaluation_Database.insert | Illegal Storable Object: " + storableObject.getClass().getName());
+		Evaluation evaluation = this.fromStorableObject(storableObject);
+		try {
+			this.insertEvaluation(evaluation);
+		}
+		catch (Exception e) {
+			try {
+				connection.rollback();
+			}
+			catch (SQLException sqle) {
+				Log.errorMessage("Exception in rolling back");
+				Log.errorException(sqle);
+			}
+			throw e;
+		}
+		try {
+			connection.commit();
+		}
+		catch (SQLException sqle) {
+			Log.errorMessage("Exception in commiting");
+			Log.errorException(sqle);
+		}
+	}
 
+	public void insertEvaluation(Evaluation evaluation) throws Exception {
 		String evaluation_id_str = evaluation.getId().toString();
-		String sql = "INSERT INTO " + ObjectEntities.EVALUATION_ENTITY + " (id, type_id, threshold_set_id, etalon_id, monitored_element_id) VALUES (" + evaluation_id_str + ", " + evaluation.getTypeId().toString() + ", " + evaluation.getThresholdSet().getId().toString() + ", " + evaluation.getEtalon().getId().toString() + ", " + evaluation.getMonitoredElementId().toString() + ")";
+		String sql = "INSERT INTO " + ObjectEntities.EVALUATION_ENTITY
+			+ " (id, created, modified, creator_id, modifier_id, type_id, monitored_element_id, threshold_set_id, etalon_id)"
+			+ " VALUES ("
+			+ evaluation_id_str + ", "
+			+ DatabaseDate.toUpdateSubString(evaluation.getCreated()) + ", "
+			+ DatabaseDate.toUpdateSubString(evaluation.getModified()) + ", "
+			+ evaluation.getCreatorId().toString() + ", "
+			+ evaluation.getModifierId().toString() + ", "
+			+ evaluation.getTypeId().toString() + ", "
+			+ evaluation.getMonitoredElementId().toString() + ", "
+			+ evaluation.getThresholdSet().getId().toString() + ", "
+			+ evaluation.getEtalon().getId().toString()
+			+ ")";
 		Statement statement = null;
 		try {
 			statement = connection.createStatement();
 			Log.debugMessage("Evaluation_Database.insert | Trying: " + sql, Log.DEBUGLEVEL05);
 			statement.executeUpdate(sql);
-			connection.commit();
 		}
 		catch (SQLException sqle) {
 			String mesg = "Evaluation_Database.insert | Cannot insert evaluation " + evaluation_id_str;
@@ -101,10 +145,10 @@ public class Evaluation_Database extends StorableObject_Database {
 	}
 
 	public void update(StorableObject storableObject, int update_kind, Object obj) throws Exception {
-		Evaluation evaluation = null;
-		if (storableObject instanceof Evaluation)
-			evaluation = (Evaluation)storableObject;
-		else
-			throw new Exception("Evaluation_Database.update | Illegal Storable Object: " + storableObject.getClass().getName());
+		Evaluation evaluation = this.fromStorableObject(storableObject);
+		switch (update_kind) {
+			default:
+				return;
+		}
 	}
 }

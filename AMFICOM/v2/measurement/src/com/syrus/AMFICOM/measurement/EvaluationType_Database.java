@@ -11,6 +11,7 @@ import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObject_Database;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.util.Log;
+import com.syrus.util.database.DatabaseDate;
 
 public class EvaluationType_Database extends StorableObject_Database {
 	public static final String MODE_IN = "IN";
@@ -18,20 +19,30 @@ public class EvaluationType_Database extends StorableObject_Database {
 	public static final String MODE_ETALON = "ETA";
 	public static final String MODE_OUT = "OUT";
 
-	public void retrieve(StorableObject storableObject) throws Exception {
-		EvaluationType evaluationType = null;
+	private EvaluationType fromStorableObject(StorableObject storableObject) throws Exception {
 		if (storableObject instanceof EvaluationType)
-			evaluationType = (EvaluationType)storableObject;
+			return (EvaluationType)storableObject;
 		else
-			throw new Exception("EvaluationType_Database.retrieve | Illegal Storable Object: " + storableObject.getClass().getName());
+			throw new Exception("EvaluationType_Database.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
+	}
 
+	public void retrieve(StorableObject storableObject) throws Exception {
+		EvaluationType evaluationType = this.fromStorableObject(storableObject);
 		this.retrieveEvaluationType(evaluationType);
 		this.retrieveParameterTypes(evaluationType);
 	}
 
 	private void retrieveEvaluationType(EvaluationType evaluationType) throws Exception {
 		String evaluation_type_id_str = evaluationType.getId().toString();
-		String sql = "SELECT codename, description FROM " + ObjectEntities.EVALUATIONTYPE_ENTITY + " WHERE id = " + evaluation_type_id_str;
+		String sql = "SELECT "
+			+ DatabaseDate.toQuerySubString("created") + ", " 
+			+ DatabaseDate.toQuerySubString("modified") + ", "
+			+ "creator_id, "
+			+ "modifier_id, "
+			+ "codename, "
+			+ "description"
+			+ " FROM " + ObjectEntities.EVALUATIONTYPE_ENTITY
+			+ " WHERE id = " + evaluation_type_id_str;
 		Statement statement = null;
 		ResultSet resultSet = null;
 		try {
@@ -39,7 +50,11 @@ public class EvaluationType_Database extends StorableObject_Database {
 			Log.debugMessage("EvaluationType_Database.retrieveEvaluationType | Trying: " + sql, Log.DEBUGLEVEL05);
 			resultSet = statement.executeQuery(sql);
 			if (resultSet.next())
-				evaluationType.setAttributes(resultSet.getString("codename"),
+				evaluationType.setAttributes(DatabaseDate.fromQuerySubString(resultSet, "created"),
+																		 DatabaseDate.fromQuerySubString(resultSet, "modified"),
+																		 new Identifier(resultSet.getLong("creator_id")),
+																		 new Identifier(resultSet.getLong("modifier_id")),
+																		 resultSet.getString("codename"),
 																		 resultSet.getString("description"));
 			else
 				throw new Exception("No such evaluation type: " + evaluation_type_id_str);
@@ -68,7 +83,11 @@ public class EvaluationType_Database extends StorableObject_Database {
 		ArrayList out_par_typs = new ArrayList();
 
 		String evaluation_type_id_str = evaluationType.getId().toString();
-		String sql = "SELECT parameter_type_id, parameter_mode FROM " + ObjectEntities.EVATYPPARTYPLINK_ENTITY + " WHERE evaluation_type_id = " + evaluation_type_id_str;
+		String sql = "SELECT "
+			+ "parameter_type_id, "
+			+ "parameter_mode"
+			+ " FROM " + ObjectEntities.EVATYPPARTYPLINK_ENTITY
+			+ " WHERE evaluation_type_id = " + evaluation_type_id_str;
 		Statement statement = null;
 		ResultSet resultSet = null;
 		try {
@@ -118,12 +137,7 @@ public class EvaluationType_Database extends StorableObject_Database {
 	}
 
 	public Object retrieveObject(StorableObject storableObject, int retrieve_kind, Object arg) throws Exception {
-		EvaluationType evaluationType = null;
-		if (storableObject instanceof EvaluationType)
-			evaluationType = (EvaluationType)storableObject;
-		else
-			throw new Exception("EvaluationType_Database.retrieveObject | Illegal Storable Object: " + storableObject.getClass().getName());
-
+		EvaluationType evaluationType = this.fromStorableObject(storableObject);
 		switch (retrieve_kind) {
 			default:
 				return null;
@@ -131,12 +145,7 @@ public class EvaluationType_Database extends StorableObject_Database {
 	}
 
 	public void insert(StorableObject storableObject) throws Exception {
-		EvaluationType evaluationType = null;
-		if (storableObject instanceof EvaluationType)
-			evaluationType = (EvaluationType)storableObject;
-		else
-			throw new Exception("EvaluationType_Database.insert | Illegal Storable Object: " + storableObject.getClass().getName());
-
+		EvaluationType evaluationType = this.fromStorableObject(storableObject);
 		try {
 			this.insertEvaluationType(evaluationType);
 			this.insertParameterTypes(evaluationType);
@@ -162,7 +171,17 @@ public class EvaluationType_Database extends StorableObject_Database {
 
 	private void insertEvaluationType(EvaluationType evaluationType) throws Exception {
 		String evaluation_type_id_str = evaluationType.getId().toString();
-		String sql = "INSERT INTO " + ObjectEntities.EVALUATIONTYPE_ENTITY + " (id, codename, description) VALUES (" + evaluation_type_id_str + ", '" + evaluationType.getCodename() + "', '" + evaluationType.getDescription() + "')";
+		String sql = "INSERT INTO " + ObjectEntities.EVALUATIONTYPE_ENTITY
+			+ " (id, codename, description)"
+			+ " VALUES ("
+			+ evaluation_type_id_str + ", "
+			+ DatabaseDate.toUpdateSubString(evaluationType.getCreated()) + ", "
+			+ DatabaseDate.toUpdateSubString(evaluationType.getModified()) + ", "
+			+ evaluationType.getCreatorId().toString() + ", "
+			+ evaluationType.getModifierId().toString() + ", '"
+			+ evaluationType.getCodename() + "', '"
+			+ evaluationType.getDescription()
+			+ "')";
 		Statement statement = null;
 		try {
 			statement = connection.createStatement();
@@ -189,7 +208,9 @@ public class EvaluationType_Database extends StorableObject_Database {
 		ArrayList etalon_par_typs = evaluationType.getEtalonParameterTypes();
 		ArrayList out_par_typs = evaluationType.getOutParameterTypes();
 		long evaluation_type_id_code = evaluationType.getId().getCode();
-		String sql = "INSERT INTO " + ObjectEntities.EVATYPPARTYPLINK_ENTITY + " (evaluation_type_id, parameter_type_id, parameter_mode) VALUES (?, ?, ?)";
+		String sql = "INSERT INTO " + ObjectEntities.EVATYPPARTYPLINK_ENTITY
+			+ " (evaluation_type_id, parameter_type_id, parameter_mode)"
+			+ " VALUES (?, ?, ?)";
 		PreparedStatement preparedStatement = null;
 		long parameter_type_id_code = 0;
 		String parameter_mode = null;
@@ -247,11 +268,11 @@ public class EvaluationType_Database extends StorableObject_Database {
 	}
 
 	public void update(StorableObject storableObject, int update_kind, Object obj) throws Exception {
-		EvaluationType evaluationType = null;
-		if (storableObject instanceof EvaluationType)
-			evaluationType = (EvaluationType)storableObject;
-		else
-			throw new Exception("EvaluationType_Database.update | Illegal Storable Object: " + storableObject.getClass().getName());
+		EvaluationType evaluationType = this.fromStorableObject(storableObject);
+		switch (update_kind) {
+			default:
+				return;
+		}
 	}
 
 	public void delete(EvaluationType evaluationType) {
@@ -277,7 +298,10 @@ public class EvaluationType_Database extends StorableObject_Database {
 	}
 
 	public static EvaluationType retrieveForCodename(String codename) throws Exception {
-		String sql = "SELECT id FROM " + ObjectEntities.EVALUATIONTYPE_ENTITY + " WHERE codename = '" + codename + "'";
+		String sql = "SELECT "
+			+ "id"
+			+ " FROM " + ObjectEntities.EVALUATIONTYPE_ENTITY
+			+ " WHERE codename = '" + codename + "'";
 		Statement statement = null;
 		ResultSet resultSet = null;
 		try {

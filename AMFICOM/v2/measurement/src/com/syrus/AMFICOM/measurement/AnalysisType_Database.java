@@ -11,26 +11,37 @@ import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObject_Database;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.util.Log;
+import com.syrus.util.database.DatabaseDate;
 
 public class AnalysisType_Database extends StorableObject_Database  {
 	public static final String MODE_IN = "IN";
 	public static final String MODE_CRITERION = "CRI";
 	public static final String MODE_OUT = "OUT";
 
-	public void retrieve(StorableObject storableObject) throws Exception {
-		AnalysisType analysisType = null;
+	private AnalysisType fromStorableObject(StorableObject storableObject) throws Exception {
 		if (storableObject instanceof AnalysisType)
-			analysisType = (AnalysisType)storableObject;
+			return (AnalysisType)storableObject;
 		else
-			throw new Exception("AnalysisType_Database.retrieve | Illegal Storable Object: " + storableObject.getClass().getName());
+			throw new Exception("AnalysisType_Database.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
+	}
 
+	public void retrieve(StorableObject storableObject) throws Exception {
+		AnalysisType analysisType = this.fromStorableObject(storableObject);
 		this.retrieveAnalysisType(analysisType);
 		this.retrieveParameterTypes(analysisType);
 	}
 
 	private void retrieveAnalysisType(AnalysisType analysisType) throws Exception {
 		String analysis_type_id_str = analysisType.getId().toString();
-		String sql = "SELECT codename, description FROM " + ObjectEntities.ANALYSISTYPE_ENTITY + " WHERE id = " + analysis_type_id_str;
+		String sql = "SELECT "
+			+ DatabaseDate.toQuerySubString("created") + ", " 
+			+ DatabaseDate.toQuerySubString("modified") + ", "
+			+ "creator_id, "
+			+ "modifier_id, "
+			+ "codename, "
+			+ "description"
+			+ " FROM " + ObjectEntities.ANALYSISTYPE_ENTITY
+			+ " WHERE id = " + analysis_type_id_str;
 		Statement statement = null;
 		ResultSet resultSet = null;
 		try {
@@ -38,7 +49,11 @@ public class AnalysisType_Database extends StorableObject_Database  {
 			Log.debugMessage("AnalysisType_Database.retrieveAnalysisType | Trying: " + sql, Log.DEBUGLEVEL05);
 			resultSet = statement.executeQuery(sql);
 			if (resultSet.next())
-				analysisType.setAttributes(resultSet.getString("codename"),
+				analysisType.setAttributes(DatabaseDate.fromQuerySubString(resultSet, "created"),
+																	 DatabaseDate.fromQuerySubString(resultSet, "modified"),
+																	 new Identifier(resultSet.getLong("creator_id")),
+																	 new Identifier(resultSet.getLong("modifier_id")),
+																	 resultSet.getString("codename"),
 																	 resultSet.getString("description"));
 			else
 				throw new Exception("No such analysis type: " + analysis_type_id_str);
@@ -66,7 +81,11 @@ public class AnalysisType_Database extends StorableObject_Database  {
 		ArrayList out_par_typs = new ArrayList();
 
 		String analysis_type_id_str = analysisType.getId().toString();
-		String sql = "SELECT parameter_type_id, parameter_mode FROM " + ObjectEntities.ANATYPPARTYPLINK_ENTITY + " WHERE analysis_type_id = " + analysis_type_id_str;
+		String sql = "SELECT "
+			+ "parameter_type_id, "
+			+ "parameter_mode"
+			+ " FROM " + ObjectEntities.ANATYPPARTYPLINK_ENTITY
+			+ " WHERE analysis_type_id = " + analysis_type_id_str;
 		Statement statement = null;
 		ResultSet resultSet = null;
 		try {
@@ -112,12 +131,7 @@ public class AnalysisType_Database extends StorableObject_Database  {
 	}
 
 	public Object retrieveObject(StorableObject storableObject, int retrieve_kind, Object arg) throws Exception {
-		AnalysisType analysisType = null;
-		if (storableObject instanceof AnalysisType)
-			analysisType = (AnalysisType)storableObject;
-		else
-			throw new Exception("AnalysisType_Database.retrieveObject | Illegal Storable Object: " + storableObject.getClass().getName());
-
+		AnalysisType analysisType = this.fromStorableObject(storableObject);
 		switch (retrieve_kind) {
 			default:
 				return null;
@@ -125,12 +139,7 @@ public class AnalysisType_Database extends StorableObject_Database  {
 	}
 
 	public void insert(StorableObject storableObject) throws Exception {
-		AnalysisType analysisType = null;
-		if (storableObject instanceof AnalysisType)
-			analysisType = (AnalysisType)storableObject;
-		else
-			throw new Exception("AnalysisType_Database.insert | Illegal Storable Object: " + storableObject.getClass().getName());
-
+		AnalysisType analysisType = this.fromStorableObject(storableObject);
 		try {
 			this.insertAnalysisType(analysisType);
 			this.insertParameterTypes(analysisType);
@@ -156,7 +165,17 @@ public class AnalysisType_Database extends StorableObject_Database  {
 
 	private void insertAnalysisType(AnalysisType analysisType) throws Exception {
 		String analysis_type_id_str = analysisType.getId().toString();
-		String sql = "INSERT INTO " + ObjectEntities.ANALYSISTYPE_ENTITY + " (id, codename, description) VALUES (" + analysis_type_id_str + ", '" + analysisType.getCodename() + "', '" + analysisType.getDescription() + "')";
+		String sql = "INSERT INTO " + ObjectEntities.ANALYSISTYPE_ENTITY
+			+ " (id, created, modified, creator_id, modifier_id, codename, description)"
+			+ " VALUES ("
+			+ analysis_type_id_str + ", "
+			+ DatabaseDate.toUpdateSubString(analysisType.getCreated()) + ", "
+			+ DatabaseDate.toUpdateSubString(analysisType.getModified()) + ", "
+			+ analysisType.getCreatorId().toString() + ", "
+			+ analysisType.getModifierId().toString() + ", '"
+			+ analysisType.getCodename() + "', '"
+			+ analysisType.getDescription()
+			+ "')";
 		Statement statement = null;
 		try {
 			statement = connection.createStatement();
@@ -182,7 +201,9 @@ public class AnalysisType_Database extends StorableObject_Database  {
 		ArrayList criteria_par_typs = analysisType.getCriteriaParameterTypes();
 		ArrayList out_par_typs = analysisType.getOutParameterTypes();
 		long analysis_type_id_code = analysisType.getId().getCode();
-		String sql = "INSERT INTO " + ObjectEntities.ANATYPPARTYPLINK_ENTITY + " (analysis_type_id, parameter_type_id, parameter_mode) VALUES (?, ?, ?)";
+		String sql = "INSERT INTO " + ObjectEntities.ANATYPPARTYPLINK_ENTITY
+			+ " (analysis_type_id, parameter_type_id, parameter_mode)"
+			+ " VALUES (?, ?, ?)";
 		PreparedStatement preparedStatement = null;
 		long parameter_type_id_code = 0;
 		String parameter_mode = null;
@@ -231,11 +252,11 @@ public class AnalysisType_Database extends StorableObject_Database  {
 	}
 
 	public void update(StorableObject storableObject, int update_kind, Object obj) throws Exception {
-		AnalysisType analysisType = null;
-		if (storableObject instanceof AnalysisType)
-			analysisType = (AnalysisType)storableObject;
-		else
-			throw new Exception("AnalysisType_Database.update | Illegal Storable Object: " + storableObject.getClass().getName());
+		AnalysisType analysisType = this.fromStorableObject(storableObject);
+		switch (update_kind) {
+			default:
+				return;
+		}
 	}
 
 	public void delete(AnalysisType analysisType) {
@@ -261,7 +282,10 @@ public class AnalysisType_Database extends StorableObject_Database  {
 	}
 
 	public static AnalysisType retrieveForCodename(String codename) throws Exception {
-		String sql = "SELECT id FROM " + ObjectEntities.ANALYSISTYPE_ENTITY + " WHERE codename = '" + codename + "'";
+		String sql = "SELECT "
+			+ "id"
+			+ " FROM " + ObjectEntities.ANALYSISTYPE_ENTITY
+			+ " WHERE codename = '" + codename + "'";
 		Statement statement = null;
 		ResultSet resultSet = null;
 		try {

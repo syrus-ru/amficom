@@ -41,9 +41,22 @@ public abstract class Action extends StorableObject {
 		return this.monitored_element_id;
 	}
 
+	protected synchronized void setAttributes(Date created,
+																						Date modified,
+																						Identifier creator_id,
+																						Identifier modifier_id,
+																						Identifier type_id,
+																						Identifier monitored_element_id) {
+		super.setAttributes(created,
+												modified,
+												creator_id,
+												modifier_id);
+		this.type_id = type_id;
+		this.monitored_element_id = monitored_element_id;
+	}
+
 	public abstract Result createResult(Identifier id,
 																			Identifier creator_id,
-																			Identifier modifier_id,
 																			Measurement measurement,
 																			AlarmLevel alarm_level,
 																			Identifier[] parameter_ids,

@@ -23,20 +23,40 @@ import com.syrus.AMFICOM.configuration.MonitoredElement;
 
 public class Test_Database extends StorableObject_Database {
 
-	public void retrieve(StorableObject storableObject) throws Exception {
-		Test test = null;
+	private Test fromStorableObject(StorableObject storableObject) throws Exception {
 		if (storableObject instanceof Test)
-			test = (Test)storableObject;
+			return (Test)storableObject;
 		else
-			throw new Exception("Test_Database.retrieve | Illegal Storable Object: " + storableObject.getClass().getName());
+			throw new Exception("Test_Database.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
+	}
 
+	public void retrieve(StorableObject storableObject) throws Exception {
+		Test test = this.fromStorableObject(storableObject);
 		this.retrieveTest(test);
 		this.retrieveMeasurementSetupTestLinks(test);
 	}
 
 	private void retrieveTest(Test test) throws Exception {
 		String test_id_str = test.getId().toString();
-		String sql = "SELECT temporal_type, " + DatabaseDate.toQuerySubString("start_time") + ", " + DatabaseDate.toQuerySubString("end_time") + ", pt_template_id, tt_timestamps, measurement_type_id, analysis_type_id, evaluation_type_id, status, monitored_element_id, return_type, modified, description FROM " + ObjectEntities.TEST_ENTITY + " WHERE id = " + test_id_str;
+		String sql = "SELECT "
+			+ DatabaseDate.toQuerySubString("created") + ", " 
+			+ DatabaseDate.toQuerySubString("modified") + ", "
+			+ "creator_id, "
+			+ "modifier_id, "
+			+ "temporal_type, "
+			+ DatabaseDate.toQuerySubString("start_time") + ", "
+			+ DatabaseDate.toQuerySubString("end_time") + ", "
+			+ "pt_template_id, "
+			+ "tt_timestamps, "
+			+ "measurement_type_id, "
+			+ "analysis_type_id, "
+			+ "evaluation_type_id, "
+			+ "status, "
+			+ "monitored_element_id, "
+			+ "return_type, "
+			+ "description"
+			+ " FROM " + ObjectEntities.TEST_ENTITY
+			+ " WHERE id = " + test_id_str;
 		Statement statement = null;
 		ResultSet resultSet = null;
 		try {
@@ -50,7 +70,11 @@ public class Test_Database extends StorableObject_Database {
 				long evaluation_type_id_code = resultSet.getLong("evaluation_type_id");
 				long monitored_element_id_code = resultSet.getLong("monitored_element_id");
 				String description = resultSet.getString("description");
-				test.setAttributes(resultSet.getInt("temporal_type"),
+				test.setAttributes(DatabaseDate.fromQuerySubString(resultSet, "created"),
+													 DatabaseDate.fromQuerySubString(resultSet, "modified"),
+													 new Identifier(resultSet.getLong("creator_id")),
+													 new Identifier(resultSet.getLong("modifier_id")),
+													 resultSet.getInt("temporal_type"),
 													 DatabaseDate.fromQuerySubString(resultSet, "start_time"),
 													 DatabaseDate.fromQuerySubString(resultSet, "end_time"),
 													 (pt_template_id_code != 0)?(new Identifier(pt_template_id_code)):null,
@@ -61,7 +85,6 @@ public class Test_Database extends StorableObject_Database {
 													 resultSet.getInt("status"),
 													 new MonitoredElement(new Identifier(monitored_element_id_code)),
 													 resultSet.getInt("return_type"),
-													 DatabaseDate.fromQuerySubString(resultSet, "modified"),
 													 (description != null)?description:"");
 			}
 			else
@@ -86,7 +109,10 @@ public class Test_Database extends StorableObject_Database {
 
 	private void retrieveMeasurementSetupTestLinks(Test test) throws Exception {
 		String test_id_str = test.getId().toString();
-		String sql = "SELECT measurement_setup_id FROM " + ObjectEntities.MSTESTLINK_ENTITY + " WHERE test_id = " + test_id_str;
+		String sql = "SELECT "
+			+ "measurement_setup_id"
+			+ " FROM " + ObjectEntities.MSTESTLINK_ENTITY
+			+ " WHERE test_id = " + test_id_str;
 		Statement statement = null;
 		ResultSet resultSet = null;
 		ArrayList arraylist = new ArrayList();
@@ -116,12 +142,7 @@ public class Test_Database extends StorableObject_Database {
 	}
 
 	public Object retrieveObject(StorableObject storableObject, int retrieve_kind, Object arg) throws Exception {
-		Test test = null;
-		if (storableObject instanceof Test)
-			test = (Test)storableObject;
-		else
-			throw new Exception("Test_Database.retrieveObject | Illegal Storable Object: " + storableObject.getClass().getName());
-
+		Test test = this.fromStorableObject(storableObject);
 		switch (retrieve_kind) {
 			case Test.RETRIEVE_MEASUREMENTS:
 				return this.retrieveMeasurementsOrderByStartTime(test, (MeasurementStatus)arg);
@@ -132,7 +153,12 @@ public class Test_Database extends StorableObject_Database {
 
 	private ArrayList retrieveMeasurementsOrderByStartTime(Test test, MeasurementStatus measurement_status) throws Exception {
 		String test_id_str = test.getId().toString();
-		String sql = "SELECT id FROM " + ObjectEntities.MEASUREMENT_ENTITY + " WHERE test_id = " + test_id_str + " AND status = " + Integer.toString(measurement_status.value()) + " ORDER BY start_time ASC";
+		String sql = "SELECT "
+			+ "id"
+			+ " FROM " + ObjectEntities.MEASUREMENT_ENTITY
+			+ " WHERE test_id = " + test_id_str 
+				+ " AND status = " + Integer.toString(measurement_status.value())
+			+ " ORDER BY start_time ASC";
 		Statement statement = null;
 		ResultSet resultSet = null;
 		ArrayList arraylist = new ArrayList();
@@ -162,12 +188,7 @@ public class Test_Database extends StorableObject_Database {
 	}
 
 	public void insert(StorableObject storableObject) throws Exception {
-		Test test = null;
-		if (storableObject instanceof Test)
-			test = (Test)storableObject;
-		else
-			throw new Exception("Test_Database.insert | Illegal Storable Object: " + storableObject.getClass().getName());
-
+		Test test = this.fromStorableObject(storableObject);
 		try {
 			this.insertTest(test);
 			this.insertMeasurementSetupTestLinks(test);
@@ -199,31 +220,36 @@ public class Test_Database extends StorableObject_Database {
 		Date[] tt_timestamps = test.getTTTimestamps();
 		Identifier analysis_id = test.getAnalysisTypeId();
 		Identifier evaluation_id = test.getEvaluationTypeId();
-		String sql = "INSERT INTO " + ObjectEntities.TEST_ENTITY + " (id, temporal_type, start_time, end_time, pt_template_id, tt_timestamps, measurement_type_id, analysis_type_id, evaluation_type_id, status, monitored_element_id, return_type, modified, description) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+		String sql = "INSERT INTO " + ObjectEntities.TEST_ENTITY
+			+ " (id, created, modified, creator_id, modifier_id, temporal_type, start_time, end_time, pt_template_id, tt_timestamps, measurement_type_id, analysis_type_id, evaluation_type_id, status, monitored_element_id, return_type, description)"
+			+ " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 		PreparedStatement preparedStatement = null;
 		try {
 			preparedStatement = connection.prepareStatement(sql);
 			preparedStatement.setLong(1, test_id_code);
-			preparedStatement.setInt(2, test.getTemporalType().value());
-			preparedStatement.setDate(3, (start_time != null)?(new java.sql.Date(start_time.getTime())):null);
-			preparedStatement.setDate(4, (end_time != null)?(new java.sql.Date(end_time.getTime())):null);
-			preparedStatement.setLong(5, (pt_template_id != null)?pt_template_id.getCode():0);
+			preparedStatement.setDate(2, new java.sql.Date(test.getCreated().getTime()));
+			preparedStatement.setDate(3, new java.sql.Date(test.getModified().getTime()));
+			preparedStatement.setLong(4, test.getCreatorId().getCode());
+			preparedStatement.setLong(5, test.getModifierId().getCode());
+			preparedStatement.setInt(6, test.getTemporalType().value());
+			preparedStatement.setDate(7, (start_time != null)?(new java.sql.Date(start_time.getTime())):null);
+			preparedStatement.setDate(8, (end_time != null)?(new java.sql.Date(end_time.getTime())):null);
+			preparedStatement.setLong(9, (pt_template_id != null)?pt_template_id.getCode():0);
 			if (tt_timestamps != null) {
 				Timestamp[] tss = new Timestamp[tt_timestamps.length];
 				for (int i = 0; i < tss.length; i++)
 					tss[i] = new Timestamp(tt_timestamps[i].getTime());
-				((OraclePreparedStatement)preparedStatement).setORAData(6, new TimeStampArray(tss));
+				((OraclePreparedStatement)preparedStatement).setORAData(10, new TimeStampArray(tss));
 			}
 			else
-				preparedStatement.setObject(6, new TimeStampArray());
-			preparedStatement.setLong(7, test.getMeasurementTypeId().getCode());
-			preparedStatement.setLong(8, (analysis_id != null)?analysis_id.getCode():0);
-			preparedStatement.setLong(9, (evaluation_id != null)?evaluation_id.getCode():0);
-			preparedStatement.setInt(10, test.getStatus().value());
-			preparedStatement.setLong(11, test.getMonitoredElement().getId().getCode());
-			preparedStatement.setInt(12, test.getReturnType().value());
-			preparedStatement.setDate(13, new java.sql.Date(test.getModified().getTime()));
-			preparedStatement.setString(14, test.getDescription());
+				preparedStatement.setObject(10, new TimeStampArray());
+			preparedStatement.setLong(11, test.getMeasurementTypeId().getCode());
+			preparedStatement.setLong(12, (analysis_id != null)?analysis_id.getCode():0);
+			preparedStatement.setLong(13, (evaluation_id != null)?evaluation_id.getCode():0);
+			preparedStatement.setInt(14, test.getStatus().value());
+			preparedStatement.setLong(15, test.getMonitoredElement().getId().getCode());
+			preparedStatement.setInt(16, test.getReturnType().value());
+			preparedStatement.setString(17, test.getDescription());
 			Log.debugMessage("Test_Database.insertTest | Inserting  test " + test_id_code, Log.DEBUGLEVEL05);
 			preparedStatement.executeUpdate();
 		}
@@ -244,7 +270,9 @@ public class Test_Database extends StorableObject_Database {
 	private void insertMeasurementSetupTestLinks(Test test) throws Exception {
 		long test_id_code = test.getId().getCode();
 		ArrayList ms_ids = test.getMeasurementSetupIds();
-		String sql = "INSERT INTO " + ObjectEntities.MSTESTLINK_ENTITY + " (test_id, measurement_setup_id) VALUES (?, ?)";
+		String sql = "INSERT INTO " + ObjectEntities.MSTESTLINK_ENTITY
+			+ " (test_id, measurement_setup_id)"
+			+ " VALUES (?, ?)";
 		PreparedStatement preparedStatement = null;
 		long ms_id_code = 0;
 		try {
@@ -272,12 +300,7 @@ public class Test_Database extends StorableObject_Database {
 	}
 
 	public void update(StorableObject storableObject, int update_kind, Object arg) throws Exception {
-		Test test = null;
-		if (storableObject instanceof Test)
-			test = (Test)storableObject;
-		else
-			throw new Exception("Test_Database.update | Illegal Storable Object: " + storableObject.getClass().getName());
-
+		Test test = this.fromStorableObject(storableObject);
 		switch (update_kind) {
 			case Test.UPDATE_STATUS:
 				this.updateStatus(test);
@@ -290,7 +313,12 @@ public class Test_Database extends StorableObject_Database {
 
 	private void updateStatus(Test test) throws Exception {
 		String test_id_str = test.getId().toString();
-		String sql = "UPDATE " + ObjectEntities.TEST_ENTITY + " SET status = " + test.getStatus().value() + ", modified = " + DatabaseDate.toUpdateSubString(test.getModified()) + " WHERE id = " + test_id_str;
+		String sql = "UPDATE " + ObjectEntities.TEST_ENTITY
+			+ " SET "
+			+ "status = " + Integer.toString(test.getStatus().value()) + ", "
+			+ "modified = " + DatabaseDate.toUpdateSubString(test.getModified()) + ", "
+			+ "modifier_id = " + test.getModifierId().toString()
+			+ " WHERE id = " + test_id_str;
 		Statement statement = null;
 		try {
 			statement = connection.createStatement();
@@ -314,7 +342,11 @@ public class Test_Database extends StorableObject_Database {
 
 	private void updateModified(Test test) throws Exception {
 		String test_id_str = test.getId().toString();
-		String sql = "UPDATE " + ObjectEntities.TEST_ENTITY + " SET modified = " + DatabaseDate.toUpdateSubString(test.getModified()) + " WHERE id = " + test_id_str;
+		String sql = "UPDATE " + ObjectEntities.TEST_ENTITY
+			+ " SET "
+			+ "modified = " + DatabaseDate.toUpdateSubString(test.getModified()) + ", "
+			+ "modifier_id = " + test.getModifierId().toString()
+			+ " WHERE id = " + test_id_str;
 		Statement statement = null;
 		try {
 			statement = connection.createStatement();

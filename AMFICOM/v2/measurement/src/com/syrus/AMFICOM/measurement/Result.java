@@ -1,5 +1,6 @@
 package com.syrus.AMFICOM.measurement;
 
+import java.util.Date;
 import com.syrus.util.Log;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.CreateObjectException;
@@ -35,7 +36,11 @@ public class Result extends StorableObject {
 	}
 
 	public Result(Result_Transferable rt) throws CreateObjectException, RetrieveObjectException {
-		super(new Identifier(rt.id));
+		super(new Identifier(rt.id),
+					new Date(rt.created),
+					new Date(rt.modified),
+					new Identifier(rt.creator_id),
+					new Identifier(rt.modifier_id));
 		this.measurement = new Measurement(new Identifier(rt.measurement_id));
 		this.sort = rt.sort.value();
 		this.alarm_level = rt.alarm_level.value();
@@ -64,15 +69,20 @@ public class Result extends StorableObject {
 		}
 	}
 
-	protected Result(Identifier id,
-									 Measurement measurement,
-									 Action action,
-									 ResultSort sort,
-									 AlarmLevel alarm_level,
-									 Identifier[] parameter_ids,
-									 Identifier[] parameter_type_ids,
-									 byte[][] parameter_values) throws CreateObjectException {
-		super(id);
+	private Result(Identifier id,
+								 Identifier creator_id,
+								 Measurement measurement,
+								 Action action,
+								 ResultSort sort,
+								 AlarmLevel alarm_level,
+								 Identifier[] parameter_ids,
+								 Identifier[] parameter_type_ids,
+								 byte[][] parameter_values) throws CreateObjectException {
+		super(id,
+					new Date(System.currentTimeMillis()),
+					new Date(System.currentTimeMillis()),
+					creator_id,
+					creator_id);
 		this.measurement = measurement;
 		this.action = action;
 		this.sort = sort.value();
@@ -98,6 +108,10 @@ public class Result extends StorableObject {
 		for (int i = 0; i < pts.length; i++)
 			pts[i] = (Parameter_Transferable)this.parameters[i].getTransferable();
 		return new Result_Transferable((Identifier_Transferable)this.id.getTransferable(),
+																	 super.created.getTime(),
+																	 super.modified.getTime(),
+																	 (Identifier_Transferable)super.creator_id.getTransferable(),
+																	 (Identifier_Transferable)super.modifier_id.getTransferable(),
 																	 (Identifier_Transferable)this.measurement.getId().getTransferable(),
 																	 (this.sort == ResultSort._RESULT_SORT_ANALYSIS)?(Identifier_Transferable)this.action.getId().getTransferable():new Identifier_Transferable(0),
 																	 (this.sort == ResultSort._RESULT_SORT_EVALUATION)?(Identifier_Transferable)this.action.getId().getTransferable():new Identifier_Transferable(0),
@@ -126,10 +140,18 @@ public class Result extends StorableObject {
 		return AlarmLevel.from_int(this.alarm_level);
 	}
 
-	protected synchronized void setAttributes(Measurement measurement,
+	protected synchronized void setAttributes(Date created,
+																						Date modified,
+																						Identifier creator_id,
+																						Identifier modifier_id,
+																						Measurement measurement,
 																						Action action,
 																						int sort,
 																						int alarm_level) {
+		super.setAttributes(created,
+												modified,
+												creator_id,
+												modifier_id);
 		this.measurement = measurement;
 		this.action = action;
 		this.sort = sort;
@@ -138,5 +160,25 @@ public class Result extends StorableObject {
 
 	protected synchronized void setParameters(SetParameter[] parameters) {
 		this.parameters = parameters;
+	}
+
+	protected static Result create(Identifier id,
+																 Identifier creator_id,
+																 Measurement measurement,
+																 Action action,
+																 ResultSort sort,
+																 AlarmLevel alarm_level,
+																 Identifier[] parameter_ids,
+																 Identifier[] parameter_type_ids,
+																 byte[][] parameter_values) throws CreateObjectException {
+		return new Result(id,
+											creator_id,
+											measurement,
+											action,
+											sort,
+											alarm_level,
+											parameter_ids,
+											parameter_type_ids,
+											parameter_values);
 	}
 }

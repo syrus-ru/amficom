@@ -20,20 +20,33 @@ import com.syrus.AMFICOM.measurement.corba.ResultSort;
 
 public class Result_Database extends StorableObject_Database {
 
-	public void retrieve(StorableObject storableObject) throws Exception {
-		Result result = null;
+	private Result fromStorableObject(StorableObject storableObject) throws Exception {
 		if (storableObject instanceof Result)
-			result = (Result)storableObject;
+			return (Result)storableObject;
 		else
-			throw new Exception("Result_Database.retrieve | Illegal Storable Object: " + storableObject.getClass().getName());
+			throw new Exception("Result_Database.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
+	}
 
+	public void retrieve(StorableObject storableObject) throws Exception {
+		Result result = this.fromStorableObject(storableObject);
 		this.retrieveResult(result);
 		this.retrieveResultParameters(result);
 	}
 
 	private void retrieveResult(Result result) throws Exception {
 		String result_id_str = result.getId().toString();
-		String sql = "SELECT measurement_id, analysis_id, evaluation_id, sort, alarm_level FROM " + ObjectEntities.RESULT_ENTITY + " WHERE id = " + result_id_str;
+		String sql = "SELECT "
+			+ DatabaseDate.toQuerySubString("created") + ", " 
+			+ DatabaseDate.toQuerySubString("modified") + ", "
+			+ "creator_id, "
+			+ "modifier_id, "
+			+ "measurement_id, "
+			+ "analysis_id, "
+			+ "evaluation_id, "
+			+ "sort, "
+			+ "alarm_level"
+			+ " FROM " + ObjectEntities.RESULT_ENTITY
+			+ " WHERE id = " + result_id_str;
 		Statement statement = null;
 		ResultSet resultSet = null;
 		try {
@@ -57,7 +70,11 @@ public class Result_Database extends StorableObject_Database {
 					default:
 						Log.errorMessage("Unkown sort: " + result_sort + " of result " + result_id_str);
 				}
-				result.setAttributes(measurement,
+				result.setAttributes(DatabaseDate.fromQuerySubString(resultSet, "created"),
+														 DatabaseDate.fromQuerySubString(resultSet, "modified"),
+														 new Identifier(resultSet.getLong("creator_id")),
+														 new Identifier(resultSet.getLong("modifier_id")),
+														 measurement,
 														 action,
 														 result_sort,
 														 resultSet.getInt("alarm_level"));
@@ -84,7 +101,12 @@ public class Result_Database extends StorableObject_Database {
 
 	private void retrieveResultParameters(Result result) throws Exception {
 		String result_id_str = result.getId().toString();
-		String sql = "SELECT id, type_id, value FROM " + ObjectEntities.RESULTPARAMETER_ENTITY + " WHERE result_id = " + result_id_str;
+		String sql = "SELECT "
+			+ "id, "
+			+ "type_id, "
+			+ "value"
+			+ " FROM " + ObjectEntities.RESULTPARAMETER_ENTITY
+			+ " WHERE result_id = " + result_id_str;
 		Statement statement = null;
 		ResultSet resultSet = null;
 		ArrayList arraylist = new ArrayList();
@@ -116,12 +138,7 @@ public class Result_Database extends StorableObject_Database {
 	}
 
 	public Object retrieveObject(StorableObject storableObject, int retrieve_kind, Object arg) throws Exception {
-		Result result = null;
-		if (storableObject instanceof Result)
-			result = (Result)storableObject;
-		else
-			throw new Exception("Result_Database.retrieveObject | Illegal Storable Object: " + storableObject.getClass().getName());
-
+		Result result = this.fromStorableObject(storableObject);
 		switch (retrieve_kind) {
 			default:
 				return null;
@@ -129,12 +146,7 @@ public class Result_Database extends StorableObject_Database {
 	}
 
 	public void insert(StorableObject storableObject) throws Exception {
-		Result result = null;
-		if (storableObject instanceof Result)
-			result = (Result)storableObject;
-		else
-			throw new Exception("Result_Database.insert | Illegal Storable Object: " + storableObject.getClass().getName());
-
+		Result result = this.fromStorableObject(storableObject);
 		try {
 			this.insertResult(result);
 			this.insertResultParameters(result);
@@ -147,20 +159,37 @@ public class Result_Database extends StorableObject_Database {
 
 	private void insertResult(Result result) throws Exception {
 		String result_id_str = result.getId().toString();
-		String sql = "INSERT INTO " + ObjectEntities.RESULT_ENTITY + " (id, measurement_id, analysis_id, evaluation_id, sort, alarm_level) VALUES (" + result_id_str + ", " + result.getMeasurement().getId().toString() + ", ";
+		String sql = "INSERT INTO " + ObjectEntities.RESULT_ENTITY
+			+ " (id, created, modified, creator_id, modifier_id, measurement_id, analysis_id, evaluation_id, sort, alarm_level)"
+			+ " VALUES ("
+			+ result_id_str + ", "
+			+ DatabaseDate.toUpdateSubString(result.getCreated()) + ", "
+			+ DatabaseDate.toUpdateSubString(result.getModified()) + ", "
+			+ result.getCreatorId().toString() + ", "
+			+ result.getModifierId().toString() + ", "
+			+ result.getMeasurement().getId().toString() + ", ";
 		int result_sort = result.getSort().value();
 		switch (result_sort) {
 			case ResultSort._RESULT_SORT_MEASUREMENT:
-				sql = sql + "0, 0, ";
+				sql = sql
+					+ "0, "
+					+ "0, ";
 				break;
 			case ResultSort._RESULT_SORT_ANALYSIS:
-				sql = sql + result.getAction().getId().toString() + ", 0, ";
+				sql = sql
+					+ result.getAction().getId().toString() + ", "
+					+ "0, ";
 				break;
 			case ResultSort._RESULT_SORT_EVALUATION:
-				sql = sql + "0, " + result.getAction().getId().toString() + ", ";
+				sql = sql
+					+ "0, "
+					+ result.getAction().getId().toString() + ", ";
 				break;
 		}
-		sql = sql + Integer.toString(result_sort) + ", " + result.getAlarmLevel().value() + ")";
+		sql = sql
+			+ Integer.toString(result_sort) + ", "
+			+ Integer.toString(result.getAlarmLevel().value())
+			+ ")";
 		Statement statement = null;
 		try {
 			statement = connection.createStatement();
@@ -185,7 +214,9 @@ public class Result_Database extends StorableObject_Database {
 	private void insertResultParameters(Result result) throws Exception {
 		long result_id_code = result.getId().getCode();
 		SetParameter[] setParameters = result.getParameters();
-		String sql = "INSERT INTO " + ObjectEntities.RESULTPARAMETER_ENTITY + " id, type_id, result_id, value) VALUES (?, ?, ?, ?)";
+		String sql = "INSERT INTO " + ObjectEntities.RESULTPARAMETER_ENTITY
+			+ " (id, type_id, result_id, value)"
+			+ " VALUES (?, ?, ?, ?)";
 		PreparedStatement preparedStatement = null;
 		int i = 0;
 		try {
@@ -217,11 +248,11 @@ public class Result_Database extends StorableObject_Database {
 	}
 
 	public void update(StorableObject storableObject, int update_kind, Object obj) throws Exception {
-		Result result = null;
-		if (storableObject instanceof Result)
-			result = (Result)storableObject;
-		else
-			throw new Exception("Result_Database.update | Illegal Storable Object: " + storableObject.getClass().getName());
+		Result result = this.fromStorableObject(storableObject);
+		switch (update_kind) {
+			default:
+				return;
+		}
 	}
 
 	private void delete(Result result) {

@@ -25,7 +25,6 @@ public class Measurement extends Action {
 	private int status;
 	private String local_address;
 	private Identifier test_id;
-	private Date modified;
 
 	private StorableObject_Database measurementDatabase;
 
@@ -42,7 +41,13 @@ public class Measurement extends Action {
 	}
 
 	public Measurement(Measurement_Transferable mt) throws CreateObjectException {
-		super(new Identifier(mt.id), new Identifier(mt.type_id), new Identifier(mt.monitored_element_id));
+		super(new Identifier(mt.id),
+					new Date(mt.created),
+					new Date(mt.modified),
+					new Identifier(mt.creator_id),
+					new Identifier(mt.modifier_id),
+					new Identifier(mt.type_id),
+					new Identifier(mt.monitored_element_id));
 		try {
 			this.setup = new MeasurementSetup(new Identifier(mt.setup_id));
 		}
@@ -54,7 +59,6 @@ public class Measurement extends Action {
 		this.status = mt.status.value();
 		this.local_address = new String(mt.local_address);
 		this.test_id = new Identifier(mt.test_id);
-		this.modified = new Date(mt.modified);
 
 		this.measurementDatabase = StorableObject_DatabaseContext.measurementDatabase;
 		try {
@@ -65,21 +69,27 @@ public class Measurement extends Action {
 		}
 	}
 
-	protected Measurement(Identifier id,
-												Identifier type_id,
-												Identifier monitored_element_id,
-												MeasurementSetup setup,
-												Date start_time,
-												String local_address,
-												Identifier test_id) throws CreateObjectException {
-		super(id, type_id, monitored_element_id);
+	private Measurement(Identifier id,
+											Identifier creator_id,
+											Identifier type_id,
+											Identifier monitored_element_id,
+											MeasurementSetup setup,
+											Date start_time,
+											String local_address,
+											Identifier test_id) throws CreateObjectException {
+		super(id,
+					new Date(System.currentTimeMillis()),
+					new Date(System.currentTimeMillis()),
+					creator_id,
+					creator_id,
+					type_id,
+					monitored_element_id);
 		this.setup = setup;
 		this.start_time = start_time;
 		this.duration = this.setup.getMeasurementDuration();
 		this.status = MeasurementStatus._MEASUREMENT_STATUS_SCHEDULED;
 		this.local_address = local_address;
 		this.test_id = test_id;
-		this.modified = new Date(System.currentTimeMillis());
 
 		this.measurementDatabase = StorableObject_DatabaseContext.measurementDatabase;
 		try {
@@ -92,15 +102,18 @@ public class Measurement extends Action {
 
 	public Object getTransferable() {
 		return new Measurement_Transferable((Identifier_Transferable)super.getId().getTransferable(),
+																				super.created.getTime(),
+																				super.modified.getTime(),
+																				(Identifier_Transferable)super.creator_id.getTransferable(),
+																				(Identifier_Transferable)super.modifier_id.getTransferable(),
 																				(Identifier_Transferable)super.type_id.getTransferable(),
+																				(Identifier_Transferable)super.monitored_element_id.getTransferable(),
 																				(Identifier_Transferable)this.setup.getId().getTransferable(),
 																				this.start_time.getTime(),
 																				this.duration,
 																				MeasurementStatus.from_int(this.status),
 																				new String(this.local_address),
-																				(Identifier_Transferable)this.monitored_element_id.getTransferable(),
-																				(Identifier_Transferable)this.test_id.getTransferable(),
-																				this.modified.getTime());
+																				(Identifier_Transferable)this.test_id.getTransferable());
 	}
 
 	public MeasurementSetup getSetup() {
@@ -127,13 +140,10 @@ public class Measurement extends Action {
 		return this.test_id;
 	}
 
-	public Date getModified() {
-		return this.modified;
-	}
-
-	public synchronized void setStatus(MeasurementStatus status) throws UpdateObjectException {
+	public synchronized void setStatus(MeasurementStatus status, Identifier modifier_id) throws UpdateObjectException {
 		this.status = status.value();
-		this.modified = new Date(System.currentTimeMillis());
+		super.modified = new Date(System.currentTimeMillis());
+		super.modifier_id = (Identifier)modifier_id.clone();
 		try {
 			this.measurementDatabase.update(this, UPDATE_STATUS, null);
 		}
@@ -142,40 +152,66 @@ public class Measurement extends Action {
 		}
 	}
 
-	protected synchronized void setAttributes(Identifier type_id,
+	protected synchronized void setAttributes(Date created,
+																						Date modified,
+																						Identifier creator_id,
+																						Identifier modifier_id,
+																						Identifier type_id,
+																						Identifier monitored_element_id,
 																						MeasurementSetup setup,
 																						Date start_time,
 																						long duration,
 																						int status,
 																						String local_address,
-																						Identifier monitored_element_id,
-																						Identifier test_id,
-																						Date modified) {
-		super.type_id = type_id;
+																						Identifier test_id) {
+		super.setAttributes(created,
+												modified,
+												creator_id,
+												modifier_id,
+												type_id,
+												monitored_element_id);
 		this.setup = setup;
 		this.start_time = start_time;
 		this.duration = duration;
 		this.status = status;
 		this.local_address = local_address;
-		super.monitored_element_id = monitored_element_id;
 		this.test_id = test_id;
-		this.modified = modified;
+	}
+
+	protected static Measurement create(Identifier id,
+																			Identifier creator_id,
+																			Identifier type_id,
+																			Identifier monitored_element_id,
+																			MeasurementSetup setup,
+																			Date start_time,
+																			String local_address,
+																			Identifier test_id) throws CreateObjectException {
+		return new Measurement(id,
+													 creator_id,
+													 type_id,
+													 monitored_element_id,
+													 setup,
+													 start_time,
+													 local_address,
+													 test_id);
 	}
 
 	public Result createResult(Identifier id,
+														 Identifier creator_id,
 														 Measurement measurement,
 														 AlarmLevel alarm_level,
 														 Identifier[] parameter_ids,
 														 Identifier[] parameter_type_ids,
 														 byte[][] parameter_values) throws CreateObjectException {
-		return new Result(id,
-											this,
-											this,
-											ResultSort.RESULT_SORT_MEASUREMENT,
-											alarm_level,
-											parameter_ids,
-											parameter_type_ids,
-											parameter_values);						
+		return Result.create(id,
+												 creator_id,
+												 this,
+												 this,
+												 ResultSort.RESULT_SORT_MEASUREMENT,
+												 alarm_level,
+												 parameter_ids,
+												 parameter_type_ids,
+												 parameter_values);						
 	}
 
 	public Result retrieveResult(ResultSort result_sort) throws RetrieveObjectException {
