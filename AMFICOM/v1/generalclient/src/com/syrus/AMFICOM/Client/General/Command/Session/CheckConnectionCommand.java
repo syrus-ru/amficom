@@ -1,12 +1,23 @@
+/*
+ * $Id: CheckConnectionCommand.java,v 1.4 2004/09/27 12:10:09 bass Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ
+ */
+
 package com.syrus.AMFICOM.Client.General.Command.Session;
 
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.ConnectionInterface;
-import com.syrus.AMFICOM.Client.General.Event.StatusMessageEvent;
-import com.syrus.AMFICOM.Client.General.Event.ContextChangeEvent;
-import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
+import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 
+/**
+ * @author $Author: bass $
+ * @version $Revision: 1.4 $, $Date: 2004/09/27 12:10:09 $
+ * @module generalclient_v1
+ */
 public class CheckConnectionCommand extends VoidCommand
 {
 	private Dispatcher dispatcher;
@@ -48,33 +59,29 @@ public class CheckConnectionCommand extends VoidCommand
 
 	public void execute()
 	{
-		ConnectionInterface ci = aContext.getConnectionInterface();
-		System.out.println("Checking connection " + ci.toString());
+		ConnectionInterface connection = ConnectionInterface.getInstance();
 		dispatcher.notify(new StatusMessageEvent(StatusMessageEvent.STATUS_MESSAGE, "Проверка соединения с сервером..."));
-		if(ConnectionInterface.getActiveConnection() != null)
-			if(ConnectionInterface.getActiveConnection().isConnected())
-				return;
-		if(ci.Connect() != null)
-
+		if (connection.isConnected())
+			return;
+		try
 		{
-			if(dispatcher != null)
+			connection.setConnected(true);
+			if (dispatcher != null)
 			{
 				dispatcher.notify(new StatusMessageEvent(StatusMessageEvent.STATUS_MESSAGE, "Соединение установлено"));
-				dispatcher.notify(new ContextChangeEvent(
-						ci,
-						ContextChangeEvent.CONNECTION_OPENED_EVENT));
+				dispatcher.notify(new ContextChangeEvent(connection, ContextChangeEvent.CONNECTION_OPENED_EVENT));
 			}
 		}
-		else
+		catch (Exception e)
 		{
+			/**
+			 * @todo Catch different exceptions separately. 
+			 */
 			if(dispatcher != null)
 			{
 				dispatcher.notify(new StatusMessageEvent(StatusMessageEvent.STATUS_MESSAGE, "Ошибка установления соединения"));
-				dispatcher.notify(new ContextChangeEvent(
-						ci,
-						ContextChangeEvent.CONNECTION_FAILED_EVENT));
+				dispatcher.notify(new ContextChangeEvent(connection, ContextChangeEvent.CONNECTION_FAILED_EVENT));
 			}
 		}
 	}
-
 }

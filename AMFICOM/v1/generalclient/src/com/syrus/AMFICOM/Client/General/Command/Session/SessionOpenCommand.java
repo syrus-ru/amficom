@@ -1,24 +1,30 @@
+/*
+ * $Id: SessionOpenCommand.java,v 1.9 2004/09/27 12:08:55 bass Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ
+ */
+
 package com.syrus.AMFICOM.Client.General.Command.Session;
 
-import com.syrus.AMFICOM.Client.General.Lang.LangModel;
-import com.syrus.AMFICOM.Client.General.SessionInterface;
+import com.syrus.AMFICOM.Client.General.*;
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
-import com.syrus.AMFICOM.Client.General.Event.StatusMessageEvent;
-import com.syrus.AMFICOM.Client.General.Event.ContextChangeEvent;
-import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
+import com.syrus.AMFICOM.Client.General.Event.*;
+import com.syrus.AMFICOM.Client.General.Lang.LangModel;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
+import com.syrus.AMFICOM.Client.General.Report.ReportBuilder;
 import com.syrus.AMFICOM.Client.General.UI.Session.SessionOpenDialog;
 import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
 import com.syrus.AMFICOM.Client.Resource.Object.Domain;
-import com.syrus.AMFICOM.Client.General.Checker;
+import java.awt.*;
 
-import com.syrus.AMFICOM.Client.General.Report.ReportBuilder;
-
-import java.awt.Dimension;
-import java.awt.Toolkit;
-
-
-public class SessionOpenCommand extends VoidCommand //implements Command
+/**
+ * @author $Author: bass $
+ * @version $Revision: 1.9 $, $Date: 2004/09/27 12:08:55 $
+ * @module generalclient_v1
+ */
+public class SessionOpenCommand extends VoidCommand
 {
 	private Dispatcher dispatcher;
 	private ApplicationContext aContext;
@@ -59,52 +65,25 @@ public class SessionOpenCommand extends VoidCommand //implements Command
 
 	public void execute()
 	{
-		if(aContext.getConnectionInterface() == null)
-		{
-			System.out.println("Connection null!!! :(");
-			dispatcher.notify(new ContextChangeEvent(
-					aContext.getConnectionInterface(),
-					ContextChangeEvent.CONNECTION_FAILED_EVENT));
-			return;
-		}
-		if(aContext.getConnectionInterface().isConnected() == false)
-		{
+		ConnectionInterface connection = ConnectionInterface.getInstance();
+		if(!connection.isConnected()) {
 			new CheckConnectionCommand(dispatcher, aContext).execute();
-//			aContext.getConnectionInterface().Connect();
+			if (!connection.isConnected())
+			{
+				dispatcher.notify(new ContextChangeEvent(connection, ContextChangeEvent.CONNECTION_FAILED_EVENT));
+				return;
+			}
 		}
-		if(aContext.getConnectionInterface().isConnected() == false)
-		{
-			System.out.println("Not connected!!! :(");
-			dispatcher.notify(new ContextChangeEvent(
-					aContext.getConnectionInterface(),
-					ContextChangeEvent.CONNECTION_FAILED_EVENT));
-			return;
-		}
-/*
-// for development purpose only!
-		SessionInterface si = aContext.getSessionInterface();
-		si.setUser("sys");
-		si.setPassword("sys");
-		if(si.OpenSession() == null)
-			return;
-		DataSourceInterface dsi = aContext.getApplicationModel().getDataSource(aContext.getSessionInterface());
-		dsi.LoadUserDescriptors();
-		dsi.LoadExecs();
-		si.setDomainId("sysdomain");
-		dispatcher.notify(new ContextChangeEvent(si, ContextChangeEvent.SESSION_OPENED_EVENT));
-//		dispatcher.notify(new ContextChangeEvent("sysdomain", ContextChangeEvent.DOMAIN_SELECTED_EVENT));
-
-		if(true)
-			return;
-*/
 		final SessionOpenDialog sDialog = new SessionOpenDialog();
 
 		dispatcher.notify(new StatusMessageEvent(StatusMessageEvent.STATUS_MESSAGE, "Открытие сессии..."));
-		dispatcher.notify(new ContextChangeEvent(
-				aContext.getSessionInterface(),
-				ContextChangeEvent.SESSION_CHANGING_EVENT));
+		dispatcher.notify(new ContextChangeEvent(aContext.getSessionInterface(), ContextChangeEvent.SESSION_CHANGING_EVENT));
 
-		sDialog.ci = aContext.getConnectionInterface();
+		/**
+		 * @todo SessionOpenDialog shouldn't hold any reference to
+		 *       the connection instance.
+		 */
+		sDialog.ci = connection;
 		sDialog.si = aContext.getSessionInterface();
 
 		sDialog.setModal(true);
@@ -128,7 +107,6 @@ public class SessionOpenCommand extends VoidCommand //implements Command
 			dispatcher.notify(new StatusMessageEvent(StatusMessageEvent.STATUS_MESSAGE, "Инициализация начальных данных"));
 
 			dispatcher.notify(new StatusMessageEvent(StatusMessageEvent.STATUS_PROGRESS_BAR, true));
-//		statusBar.enableProgressBar(true);
 
       ReportBuilder.invokeAsynchronously(new Runnable()
       {
@@ -141,11 +119,11 @@ public class SessionOpenCommand extends VoidCommand //implements Command
           SessionInterface sess = dataSource.getSession();
           
           // Берем сохраненный локально с прошлой сессии домен
-          String ev_domain_id = com.syrus.AMFICOM.Client.General.Model.Environment.getDomainId();
+          String evDomainId = com.syrus.AMFICOM.Client.General.Model.Environment.getDomainId();
           
           // Проверяем, может ли текущий пользователь с ним работать
-          if(Checker.checkObject(sess.getUserId(), Domain.typ, ev_domain_id, Checker.read))
-            sess.setDomainId(ev_domain_id);
+          if(Checker.checkObject(sess.getUserId(), Domain.typ, evDomainId, Checker.read))
+            sess.setDomainId(evDomainId);
           else
             sess.setDomainId("");
     
