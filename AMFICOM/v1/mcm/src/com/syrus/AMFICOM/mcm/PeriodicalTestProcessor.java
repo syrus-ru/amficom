@@ -1,5 +1,5 @@
 /*
- * $Id: PeriodicalTestProcessor.java,v 1.16 2004/08/23 20:48:29 arseniy Exp $
+ * $Id: PeriodicalTestProcessor.java,v 1.17 2004/08/24 10:06:59 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,7 +11,7 @@ package com.syrus.AMFICOM.mcm;
 import java.util.Date;
 import java.util.List;
 import java.util.Iterator;
-import java.util.ArrayList;
+import java.util.LinkedList;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.NewIdentifierPool;
@@ -26,8 +26,8 @@ import com.syrus.AMFICOM.measurement.TemporalPattern;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2004/08/23 20:48:29 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.17 $, $Date: 2004/08/24 10:06:59 $
+ * @author $Author: bob $
  * @module mcm_v1
  */
 
@@ -53,7 +53,7 @@ public class PeriodicalTestProcessor extends TestProcessor {
 			super.abort();
 		}
 
-		this.timeStampsList = new ArrayList(10);
+		this.timeStampsList = new LinkedList();
 		this.currentTimeStamp = null;
 	}
 
@@ -67,9 +67,10 @@ public class PeriodicalTestProcessor extends TestProcessor {
 				long start = System.currentTimeMillis();
 				if (start <= this.endTime) {
 					List times = this.temporalPattern.getTimes(start, Math.min(start + FRAME, this.endTime));
-System.out.println("From " + (new Date(start)) + " to " + (new Date(Math.min(start + FRAME, this.endTime))));
-for (Iterator it = times.iterator(); it.hasNext();)
-	System.out.println("time: " + ((Date)it.next()));
+					System.out.println("From " + (new Date(start)) + " to " 
+									   + (new Date(Math.min(start + FRAME, this.endTime))));
+					for (Iterator it = times.iterator(); it.hasNext();)
+						System.out.println("time: " + it.next());
 					this.timeStampsList.addAll(times);
 					if (! this.timeStampsList.isEmpty())
 						timeStamp = (Date)this.timeStampsList.remove(0);
@@ -141,7 +142,9 @@ for (Iterator it = times.iterator(); it.hasNext();)
 			}	//if (! super.lastMeasurementAcquisition)
 
 			super.processMeasurementResult();
-System.out.println("numberOfReceivedMResults: " + super.numberOfReceivedMResults + ", numberOfScheduledMeasurements: " + super.numberOfScheduledMeasurements + ", lastMeasurementAcquisition: " + lastMeasurementAcquisition);
+			System.out.println("numberOfReceivedMResults: " + super.numberOfReceivedMResults 
+							   + ", numberOfScheduledMeasurements: " + super.numberOfScheduledMeasurements 
+							   + ", lastMeasurementAcquisition: " + this.lastMeasurementAcquisition);
 			if (super.numberOfReceivedMResults == super.numberOfScheduledMeasurements && super.lastMeasurementAcquisition)
 				super.complete();
 
