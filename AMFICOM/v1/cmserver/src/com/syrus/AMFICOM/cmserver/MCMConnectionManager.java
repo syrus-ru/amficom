@@ -1,5 +1,5 @@
 /*
- * $Id: MCMConnectionManager.java,v 1.1 2005/03/31 16:04:13 arseniy Exp $
+ * $Id: MCMConnectionManager.java,v 1.2 2005/03/31 16:13:54 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,7 +27,7 @@ import com.syrus.AMFICOM.mcm.corba.MCMHelper;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/03/31 16:04:13 $
+ * @version $Revision: 1.2 $, $Date: 2005/03/31 16:13:54 $
  * @author $Author: arseniy $
  * @module cmserver_v1
  */
@@ -119,6 +119,7 @@ public class MCMConnectionManager extends Thread {
 	private void retrieveMCMIds() {
 		try {
 			Server server = (Server) AdministrationStorableObjectPool.getStorableObject(this.serverId, true);
+			this.mcmIds.clear();
 			this.mcmIds.addAll(server.retrieveMCMIds());
 		}
 		catch (ApplicationException ae) {
