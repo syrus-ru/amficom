@@ -4,6 +4,7 @@ images
 lib
 resources
 *.deploy
+*.jar
 *.jpr
 *.jpx
 *.properties
