@@ -1,5 +1,5 @@
 /*
- * $Id: CMServerTestCase.java,v 1.12 2004/09/23 13:15:10 bob Exp $
+ * $Id: CMServerTestCase.java,v 1.13 2004/09/24 13:40:46 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,9 +8,12 @@
 
 package com.syrus.AMFICOM.cmserver.test;
 
+
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import junit.extensions.TestSetup;
 import junit.framework.Test;
@@ -19,7 +22,6 @@ import junit.framework.TestSuite;
 
 import org.omg.CORBA.ORB;
 import org.omg.CORBA.UserException;
-import org.omg.CORBA.ORBPackage.InvalidName;
 import org.omg.CosNaming.NamingContextExt;
 import org.omg.CosNaming.NamingContextExtHelper;
 import org.omg.PortableServer.POA;
@@ -31,13 +33,20 @@ import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 import com.syrus.AMFICOM.configuration.corba.AccessIdentifier_Transferable;
 import com.syrus.AMFICOM.configuration.corba.Domain_Transferable;
 import com.syrus.AMFICOM.configuration.corba.MonitoredElement_Transferable;
-import com.syrus.AMFICOM.general.CORBAServer;
-import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IdentifierGenerationException;
+import com.syrus.AMFICOM.general.IllegalObjectEntityException;
+import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
+import com.syrus.AMFICOM.measurement.AnalysisType;
+import com.syrus.AMFICOM.measurement.EvaluationType;
 import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
+import com.syrus.AMFICOM.measurement.MeasurementType;
+import com.syrus.AMFICOM.measurement.ParameterType;
+import com.syrus.AMFICOM.measurement.Set;
+import com.syrus.AMFICOM.measurement.SetParameter;
 import com.syrus.AMFICOM.measurement.corba.AnalysisType_Transferable;
 import com.syrus.AMFICOM.measurement.corba.EvaluationType_Transferable;
 import com.syrus.AMFICOM.measurement.corba.MeasurementSetup_Transferable;
@@ -45,23 +54,23 @@ import com.syrus.AMFICOM.measurement.corba.MeasurementType_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Measurement_Transferable;
 import com.syrus.AMFICOM.measurement.corba.ParameterType_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Result_Transferable;
+import com.syrus.AMFICOM.measurement.corba.SetSort;
 import com.syrus.AMFICOM.measurement.corba.Set_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Test_Transferable;
 import com.syrus.util.ClientLRUMap;
 import com.syrus.util.corba.JavaSoftORBUtil;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2004/09/23 13:15:10 $
- * @author $Author: bob $
+ * @version $Revision: 1.13 $, $Date: 2004/09/24 13:40:46 $
+ * @author $Author: max $
  * @module module
  */
 public class CMServerTestCase extends TestCase {
 
 	private static CMServer				server;
-	private static AccessIdentifier_Transferable	accessIdentifier_Transferable;
-
-	private static AccessIdentifier_Transferable[]	accessIdentifier_Transferables	= new AccessIdentifier_Transferable[3];
-
+	private static AccessIdentifier_Transferable	accessIdentifier_Transferable;   
+    private static Identifier userId = new Identifier("Users_56");
+	
 	public CMServerTestCase(String name) {
 		super(name);
 	}
@@ -117,20 +126,18 @@ public class CMServerTestCase extends TestCase {
 								ClientLRUMap.class, 200);
 			ConfigurationStorableObjectPool.init(new ClientConfigurationObjectLoader(server),
 								ClientLRUMap.class, 200);
+            IdentifierPool.init(server);
 
 			System.out.println("server reference have got : \n" + server.toString());
 
 			accessIdentifier_Transferable = new AccessIdentifier_Transferable();
 
-			for (int i = 0; i < accessIdentifier_Transferables.length; i++) {
-				accessIdentifier_Transferables[i] = new AccessIdentifier_Transferable();
-			}
-
 			Identifier id = new Identifier("Null_0");
 
 			Identifier domainId = new Identifier("Domain_19");
+            
 			accessIdentifier_Transferable.domain_id = (Identifier_Transferable) domainId.getTransferable();
-			accessIdentifier_Transferable.user_id = (Identifier_Transferable) id.getTransferable();
+			accessIdentifier_Transferable.user_id = (Identifier_Transferable) userId.getTransferable();
 			accessIdentifier_Transferable.session_id = (Identifier_Transferable) id.getTransferable();
 
 			ClientMeasurementObjectLoader.setAccessIdentifierTransferable(accessIdentifier_Transferable);
@@ -151,9 +158,136 @@ public class CMServerTestCase extends TestCase {
 	}
 
 	static void oneTimeTearDown() {
+        
 	}
 
-	public void testTransmitDomainX() throws AMFICOMRemoteException, CreateObjectException {
+	public void testRecieveAnalysisTypes() throws AMFICOMRemoteException, CreateObjectException {
+	    
+        //      Checking recieveAnalysisTypes and transmitAnalysisTypes methods
+        
+        AnalysisType[]              analysisTypes =              new AnalysisType[3];
+        AnalysisType_Transferable[] analysisType_Transferables = new AnalysisType_Transferable[analysisTypes.length];
+        Identifier_Transferable[]   identifier_Transferables =   new Identifier_Transferable[analysisTypes.length];                      
+        List emptyList = new ArrayList();
+        for (int i = 0; i < analysisTypes.length; i++) {
+            Identifier id = IdentifierPool.generateId(ObjectEntities.ANALYSISTYPE_ENTITY_CODE);
+            analysisTypes[i] = AnalysisType.createInstance(id, userId, "Test"+ id , "This object was creates for test", emptyList, emptyList,emptyList,emptyList);            
+            analysisType_Transferables[i] = (AnalysisType_Transferable)analysisTypes[i].getTransferable();
+            identifier_Transferables[i] = (Identifier_Transferable) id.getTransferable();
+            System.out.println("the object has been created with codename " + "Test"+ id);
+        }
+        
+        server.receiveAnalysisTypes(analysisType_Transferables, accessIdentifier_Transferable);
+        AnalysisType_Transferable[] analysisType_Transferables2 = server.transmitAnalysisTypes(identifier_Transferables, accessIdentifier_Transferable);
+        for (int i = 0; i < analysisType_Transferables2.length; i++) {
+            Identifier id = new Identifier(analysisType_Transferables2[i].id);
+            System.out.println("the object has been recieved with codename " + (new AnalysisType(analysisType_Transferables2[i]).getCodename()));            
+        }
+        
+    }
+    
+    public void testRecieveEvaluationTypes() throws AMFICOMRemoteException {
+        
+        //      Checking recieveEvaluationTypes and transmitEvaluationTypes methods
+        
+        EvaluationType[]              evaluationTypes =              new EvaluationType[3];
+        EvaluationType_Transferable[] evaluationType_Transferables = new EvaluationType_Transferable[evaluationTypes.length];
+        Identifier_Transferable[]   identifier_Transferables =   new Identifier_Transferable[evaluationTypes.length];                      
+        List emptyList = new ArrayList();
+        for (int i = 0; i < evaluationTypes.length; i++) {
+            Identifier id = IdentifierPool.generateId(ObjectEntities.EVALUATIONTYPE_ENTITY_CODE);
+            evaluationTypes[i] = EvaluationType.createInstance(id, userId, "Test"+ id , "This object was creates for test", emptyList, emptyList,emptyList,emptyList);            
+            evaluationType_Transferables[i] = (EvaluationType_Transferable)evaluationTypes[i].getTransferable();
+            identifier_Transferables[i] = (Identifier_Transferable) id.getTransferable();
+            System.out.println("the object has been created with id " + id);
+        }
+        
+        server.receiveEvaluationTypes(evaluationType_Transferables, accessIdentifier_Transferable);
+        EvaluationType_Transferable[] EvaluationType_Transferables2 = server.transmitEvaluationTypes(identifier_Transferables, accessIdentifier_Transferable);
+        for (int i = 0; i < EvaluationType_Transferables2.length; i++) {
+            Identifier id = new Identifier(EvaluationType_Transferables2[i].id);
+            System.out.println("the object has been recieved with id " + id);            
+        }
+        
+    }
+    
+    public void testRecieveMeasurementTypes() throws AMFICOMRemoteException {
+        
+        //      Checking recieveMeasurementTypes and transmitMeasurementTypes methods
+        
+        MeasurementType[]              measurementTypes =              new MeasurementType[3];
+        MeasurementType_Transferable[] measurementType_Transferables = new MeasurementType_Transferable[measurementTypes.length];
+        Identifier_Transferable[]   identifier_Transferables =   new Identifier_Transferable[measurementTypes.length];                      
+        List emptyList = new ArrayList();
+        for (int i = 0; i < measurementTypes.length; i++) {
+            Identifier id = IdentifierPool.generateId(ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE);
+            measurementTypes[i] = MeasurementType.createInstance(id, userId, "Test"+ id , "This object was creates for test", emptyList, emptyList);            
+            measurementType_Transferables[i] = (MeasurementType_Transferable)measurementTypes[i].getTransferable();
+            identifier_Transferables[i] = (Identifier_Transferable) id.getTransferable();
+            System.out.println("the object has been created with id " + id);
+        }
+        
+        server.receiveMeasurementTypes(measurementType_Transferables, accessIdentifier_Transferable);
+        MeasurementType_Transferable[] measurementType_Transferables2 = server.transmitMeasurementTypes(identifier_Transferables, accessIdentifier_Transferable);
+        for (int i = 0; i < measurementType_Transferables2.length; i++) {
+            Identifier id = new Identifier(measurementType_Transferables2[i].id);
+            System.out.println("the object has been recieved with id " + id);            
+        }
+        
+    }
+    
+    public void testRecieveParameterTypes() throws AMFICOMRemoteException {
+        
+        //      Checking recieveParameterTypes and transmitParameterTypes methods
+        
+        ParameterType[]              parameterTypes =              new ParameterType[3];
+        ParameterType_Transferable[] parameterType_Transferables = new ParameterType_Transferable[parameterTypes.length];
+        Identifier_Transferable[]   identifier_Transferables =   new Identifier_Transferable[parameterTypes.length];                      
+        for (int i = 0; i < parameterTypes.length; i++) {
+            Identifier id = IdentifierPool.generateId(ObjectEntities.PARAMETERTYPE_ENTITY_CODE);
+            parameterTypes[i] = ParameterType.createInstance(id, userId, "Test"+ id , "This object was creates for test", "test");            
+            parameterType_Transferables[i] = (ParameterType_Transferable)parameterTypes[i].getTransferable();
+            identifier_Transferables[i] = (Identifier_Transferable) id.getTransferable();
+            System.out.println("the object has been created with id " + id);
+        }
+        
+        server.receiveParameterTypes(parameterType_Transferables, accessIdentifier_Transferable);
+        ParameterType_Transferable[] ParameterType_Transferables2 = server.transmitParameterTypes(identifier_Transferables, accessIdentifier_Transferable);
+        for (int i = 0; i < ParameterType_Transferables2.length; i++) {
+            Identifier id = new Identifier(ParameterType_Transferables2[i].id);
+            System.out.println("the object has been recieved with id " + id);            
+        }
+        
+    }
+    
+    public void testRecieveSets() throws AMFICOMRemoteException {
+        
+        //      Checking recievesets and transmitsets methods
+        
+        Set[]              sets =              new Set[3];
+        Set_Transferable[] set_Transferables = new Set_Transferable[sets.length];
+        Identifier_Transferable[]   identifier_Transferables =   new Identifier_Transferable[sets.length];                      
+        SetSort emptySetSort = SetSort.from_int(1);
+        List emptyList = new ArrayList();
+        for (int i = 0; i < sets.length; i++) {
+            Identifier id = IdentifierPool.generateId(ObjectEntities.SET_ENTITY_CODE);
+            sets[i] = Set.createInstance(id, userId, emptySetSort ,"test" , new SetParameter[0], emptyList);            
+            set_Transferables[i] = (Set_Transferable)sets[i].getTransferable();
+            identifier_Transferables[i] = (Identifier_Transferable) id.getTransferable();
+            System.out.println("the object has been created with id " + id);
+        }
+        
+        server.receiveSets(set_Transferables, accessIdentifier_Transferable);
+        Set_Transferable[] set_Transferables2 = server.transmitSets(identifier_Transferables, accessIdentifier_Transferable);
+        for (int i = 0; i < set_Transferables2.length; i++) {
+            Identifier id = new Identifier(set_Transferables2[i].id);
+            System.out.println("the object has been recieved with id " + id);            
+        }
+        
+    }
+    
+    
+    public void _testTransmitDomainX() throws AMFICOMRemoteException, CreateObjectException {
 
 		//      Checking method transmitDomains(null , acc)
 		System.out.println("Checking method transmitDomainX");
@@ -184,7 +318,7 @@ public class CMServerTestCase extends TestCase {
 				+ " identifier_Transferables  for " + (time5 - time4) + " ms");
 	}
 
-	public void testTransmitAnalysisTypeX() throws AMFICOMRemoteException {
+	public void _testTransmitAnalysisTypeX() throws AMFICOMRemoteException {
 		//      Checking method transmitAnalysisTypes(null , acc)
 		System.out.println("Checking method transmitAnalysisTypeX");
 		Identifier_Transferable identifier_Transferables[] = new Identifier_Transferable[0];
@@ -216,7 +350,7 @@ public class CMServerTestCase extends TestCase {
 				+ " analysisType_Transferables for " + (time5 - time4) + " ms");
 	}
 
-	public void testTransmitEvaluationTypeX() throws AMFICOMRemoteException {
+	public void _testTransmitEvaluationTypeX() throws AMFICOMRemoteException {
 		//      Checking method transmitEvaluationTypes(null , acc)
 		System.out.println("Checking method transmitEvaluationTypeX");
 		Identifier_Transferable identifier_Transferables[] = new Identifier_Transferable[0];
@@ -248,7 +382,7 @@ public class CMServerTestCase extends TestCase {
 				+ " evaluationType_Transferables  for " + (time5 - time4) + " ms");
 	}
 
-	public void testTransmitMeasurementTypeX() throws AMFICOMRemoteException {
+	public void _testTransmitMeasurementTypeX() throws AMFICOMRemoteException {
 		//      Checking method transmitMeasurementTypes(null , acc)
 		System.out.println("Checking method transmitMeasurementTypeX");
 		Identifier_Transferable identifier_Transferables[] = new Identifier_Transferable[0];
@@ -280,7 +414,7 @@ public class CMServerTestCase extends TestCase {
 				+ " measurementType_Transferables  for " + (time5 - time4) + " ms");
 	}
 
-	public void testTransmitMeasurementX() throws AMFICOMRemoteException {
+	public void _testTransmitMeasurementX() throws AMFICOMRemoteException {
 		//      Checking method transmitMeasurements(null , acc)
 		System.out.println("Checking method transmitMeasurementX");
 		Identifier_Transferable identifier_Transferables[] = new Identifier_Transferable[0];
@@ -311,7 +445,7 @@ public class CMServerTestCase extends TestCase {
 				+ " measurement_Transferables  for " + (time5 - time4) + " ms");
 	}
 
-	public void testTransmitMonitoredElementX() throws AMFICOMRemoteException {
+	public void _testTransmitMonitoredElementX() throws AMFICOMRemoteException {
 		//      Checking method transmitMonitoredElements(null , acc)
 		System.out.println("Checking method transmitMonitoredElementX");
 		Identifier_Transferable identifier_Transferables[] = new Identifier_Transferable[0];
@@ -343,7 +477,7 @@ public class CMServerTestCase extends TestCase {
 				+ " monitoredElement_Transferables  for " + (time5 - time4) + " ms");
 	}
 
-	public void testTransmitParameterTypeX() throws AMFICOMRemoteException {
+	public void _testTransmitParameterTypeX() throws AMFICOMRemoteException {
 		//      Checking method transmitParameterTypes(null , acc)
 		System.out.println("Checking method transmitParameterTypeX");
 		Identifier_Transferable identifier_Transferables[] = new Identifier_Transferable[0];
@@ -376,7 +510,7 @@ public class CMServerTestCase extends TestCase {
 				+ " parameterType_Transferables  for " + (time5 - time4) + " ms");
 	}
 
-	public void testTransmitResultX() throws AMFICOMRemoteException {
+	public void _testTransmitResultX() throws AMFICOMRemoteException {
 		//      Checking method transmitResults(null , acc)
 		System.out.println("Checking method transmitResultX");
 		Identifier_Transferable identifier_Transferables[] = new Identifier_Transferable[0];
@@ -410,7 +544,7 @@ public class CMServerTestCase extends TestCase {
 		}
 	}
 
-	public void testTransmitTestX() throws AMFICOMRemoteException {
+	public void _testTransmitTestX() throws AMFICOMRemoteException {
 		//      Checking method transmitTests(null , acc)
 		System.out.println("Checking method transmitTestX");
 		Identifier_Transferable identifier_Transferables[] = new Identifier_Transferable[0];
@@ -440,7 +574,7 @@ public class CMServerTestCase extends TestCase {
 				+ (time5 - time4) + " ms");
 	}
 
-	public void testTransmitSetX() throws AMFICOMRemoteException {
+	public void _testTransmitSetX() throws AMFICOMRemoteException {
 		//      Checking method transmitSets(null , acc)
 		System.out.println("Checking method transmitSetX");
 		Identifier_Transferable identifier_Transferables[] = new Identifier_Transferable[0];
@@ -470,7 +604,7 @@ public class CMServerTestCase extends TestCase {
 				+ (time5 - time4) + " ms");
 	}
 
-	public void testTransmitMeasurementSetup() throws AMFICOMRemoteException {
+	public void _testTransmitMeasurementSetup() throws AMFICOMRemoteException {
 
 		long time0 = System.currentTimeMillis();
 		MeasurementSetup_Transferable[] measurementSetup_Transferables = server
@@ -490,7 +624,7 @@ public class CMServerTestCase extends TestCase {
 				+ " ms");
 	}
 
-	public void testTransmitTestsAndMeasurements() throws AMFICOMRemoteException, CreateObjectException {
+	public void _testTransmitTestsAndMeasurements() throws AMFICOMRemoteException, CreateObjectException {
 
 		long time0 = System.currentTimeMillis();
 		// 2 month ago

@@ -23,6 +23,7 @@ import com.syrus.AMFICOM.configuration.Domain;
 import com.syrus.AMFICOM.configuration.corba.AccessIdentifier_Transferable;
 import com.syrus.AMFICOM.configuration.corba.Domain_Transferable;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.util.Log;
 import com.syrus.util.corba.JavaSoftORBUtil;
@@ -45,7 +46,9 @@ public class CMServerTest {
 			accessIdentifier_Transferable.user_id = (Identifier_Transferable) id.getTransferable();
 			accessIdentifier_Transferable.session_id = (Identifier_Transferable) id.getTransferable();
 
-			long time0 = System.currentTimeMillis();
+			Identifier testId = new Identifier(server.getGeneratedIdentifier(ObjectEntities.ANALYSISTYPE_ENTITY_CODE));
+            
+            long time0 = System.currentTimeMillis();
 			Domain_Transferable[] domain_Transferables = server.transmitDomains(new Identifier_Transferable[0],
 												accessIdentifier_Transferable);
 			long time1 = System.currentTimeMillis();
