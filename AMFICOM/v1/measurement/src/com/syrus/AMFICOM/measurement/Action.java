@@ -1,5 +1,5 @@
 /*
- * $Id: Action.java,v 1.18 2005/01/26 15:38:40 arseniy Exp $
+ * $Id: Action.java,v 1.19 2005/01/27 11:54:50 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,8 +16,8 @@ import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2005/01/26 15:38:40 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.19 $, $Date: 2005/01/27 11:54:50 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
@@ -68,9 +68,19 @@ public abstract class Action extends StorableObject implements TypedObject {
 	public StorableObjectType getType() {
 		return this.type;
 	}
+	
+	public void setType(ActionType type) {
+		this.type = type;
+		super.currentVersion = super.getNextVersion();
+	}
 
 	public Identifier getMonitoredElementId() {
 		return this.monitoredElementId;
+	}
+	
+	public void setMonitoredElementId(Identifier monitoredElementId) {
+		this.monitoredElementId = monitoredElementId;
+		super.currentVersion = super.getNextVersion();
 	}
 
 	protected synchronized void setAttributes(Date created,

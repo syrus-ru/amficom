@@ -1,5 +1,5 @@
 /*
- * $Id: Evaluation.java,v 1.40 2005/01/26 15:38:40 arseniy Exp $
+ * $Id: Evaluation.java,v 1.41 2005/01/27 11:54:50 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,8 +27,8 @@ import com.syrus.AMFICOM.measurement.corba.Evaluation_Transferable;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
 
 /**
- * @version $Revision: 1.40 $, $Date: 2005/01/26 15:38:40 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.41 $, $Date: 2005/01/27 11:54:50 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
@@ -118,9 +118,19 @@ public class Evaluation extends Action {
 	public Measurement getMeasurement() {
 		return (Measurement) super.parentAction;
 	}
+	
+	public void setMeasurement(Measurement measurement) {
+		super.parentAction = measurement;
+		super.currentVersion = super.getNextVersion();
+	}
 
 	public Set getThresholdSet() {
 		return this.thresholdSet;
+	}
+	
+	public void setThresholdSet(Set thresholdSet) {
+		this.thresholdSet = thresholdSet;
+		super.currentVersion = super.getNextVersion();
 	}
 
 	protected synchronized void setAttributes(Date created,
