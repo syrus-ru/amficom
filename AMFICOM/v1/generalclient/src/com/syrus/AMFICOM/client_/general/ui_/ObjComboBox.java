@@ -1,5 +1,5 @@
 /*
- * $Id: ObjComboBox.java,v 1.3 2004/10/07 06:07:45 bob Exp $
+ * $Id: ObjComboBox.java,v 1.4 2004/11/16 07:19:37 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,6 +8,7 @@
 
 package com.syrus.AMFICOM.client_.general.ui_;
 
+import java.util.LinkedList;
 import java.util.List;
 
 import com.syrus.AMFICOM.Client.General.UI.AComboBox;
@@ -15,7 +16,7 @@ import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
 
 /**
  * @author $Author: bob $
- * @version $Revision: 1.3 $, $Date: 2004/10/07 06:07:45 $
+ * @version $Revision: 1.4 $, $Date: 2004/11/16 07:19:37 $
  * @module generalclient_v1
  */
 public class ObjComboBox extends AComboBox {
@@ -32,6 +33,10 @@ public class ObjComboBox extends AComboBox {
 	
 	public ObjComboBox(ObjectResourceController controller, List objects, String key) {
 		this(new ObjListModel(controller, objects, key));
+	}
+
+	public ObjComboBox(ObjectResourceController controller, String key) {
+		this(new ObjListModel(controller, new LinkedList(), key));
 	}
 
 	public void setSelectedItem(Object anObject) {		
