@@ -1,5 +1,5 @@
 /*
- * $Id: ConfigurationObjectLoader.java,v 1.19 2004/11/19 10:16:09 bob Exp $
+ * $Id: ConfigurationObjectLoader.java,v 1.20 2004/11/19 12:09:39 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,7 +18,7 @@ import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 
 /**
- * @version $Revision: 1.19 $, $Date: 2004/11/19 10:16:09 $
+ * @version $Revision: 1.20 $, $Date: 2004/11/19 12:09:39 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -240,5 +240,9 @@ public interface ConfigurationObjectLoader {
 	void saveMonitoredElements(List list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
 
 	Set refresh(Set storableObjects) throws CommunicationException, DatabaseException;
+    
+    void delete(Identifier id) throws CommunicationException, DatabaseException;
+    
+    void delete(List ids) throws CommunicationException, DatabaseException;
 
 }
