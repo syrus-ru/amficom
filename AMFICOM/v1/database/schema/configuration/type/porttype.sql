@@ -9,7 +9,7 @@ CREATE TABLE PortType (
  description VARCHAR2(256),
 --
  name VARCHAR2(64),
- sort NUMBER(2,0),
+ sort NUMBER(2,0) NOT NULL,
 --
  CONSTRAINT porttype_pk PRIMARY KEY (id),
  CONSTRAINT porttype_creator_fk FOREIGN KEY (creator_id)
