@@ -429,7 +429,7 @@ public class ThresholdsSelectionFrame extends ATableFrame
 
 		public void setValueAt(Object value, int row, int col) {
 			super.setValueAt(value, row, col);
-			if (ep != null) {
+			if (ep != null && current_ev != -1) {
 				ep[current_ev].getThreshold().setThresholdValue(
 						((Double) value).doubleValue(), col, ep[current_ev],
 						row);
