@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractLinkType.java,v 1.6 2004/12/16 09:28:56 bob Exp $
+ * $Id: AbstractLinkType.java,v 1.7 2004/12/16 09:33:59 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,7 +16,7 @@ import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2004/12/16 09:28:56 $
+ * @version $Revision: 1.7 $, $Date: 2004/12/16 09:33:59 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -60,30 +60,11 @@ public abstract class AbstractLinkType extends StorableObjectType {
 	public void setDescription(final String description){
 		this.currentVersion = getNextVersion();
 		setDescription0(description);
-	}
-
-	/**
-	 * @todo This method is absolutely unnecessary.
-	 */
-	protected synchronized void setAttributes(Date created,
-			Date modified,
-			Identifier creator_id,
-			Identifier modifier_id,
-			String codename,
-			String description) {
-		super.setAttributes(created,
-			modified,
-			creator_id,
-			modifier_id,
-			codename,
-			description);
-	}
+	}	
 
 	protected void setDescription0(final String description) {
 		this.description = description;
-	}
-    
-    
+	}    
     
 	public abstract Identifier getImageId();
     
