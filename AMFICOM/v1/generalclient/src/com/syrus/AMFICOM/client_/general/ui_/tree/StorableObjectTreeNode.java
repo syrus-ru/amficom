@@ -1,0 +1,99 @@
+/*
+ * $Id: StorableObjectTreeNode.java,v 1.1 2005/03/05 11:33:03 stas Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
+ */
+
+package com.syrus.AMFICOM.client_.general.ui_.tree;
+
+import java.awt.event.*;
+import java.awt.event.MouseListener;
+
+import javax.swing.*;
+import javax.swing.tree.DefaultMutableTreeNode;
+
+/**
+ * @author $Author: stas $
+ * @version $Revision: 1.1 $, $Date: 2005/03/05 11:33:03 $
+ * @module generalclient_v1
+ */
+
+public class StorableObjectTreeNode extends DefaultMutableTreeNode implements MouseListener {
+	private static final long serialVersionUID = 3760850047289668145L;
+	private Object object;
+	private String name;
+	private ImageIcon icon;
+	
+	public StorableObjectTreeNode(Object obj, String name) {
+		this(obj, name, false);
+	}
+	
+	public StorableObjectTreeNode(Object obj, String name, boolean isFinal) {
+		this(obj, name, null, isFinal);
+	}
+	
+	public StorableObjectTreeNode(Object obj, String name, ImageIcon icon) {
+		this(obj, name, icon, false);
+	}
+	
+	public StorableObjectTreeNode(Object obj, String name, ImageIcon icon, boolean isFinal) {
+		this.object = obj;
+		this.name = name;
+		this.icon = icon;
+		this.setAllowsChildren(!isFinal);
+	}
+	
+	public String getName() {
+		return name;
+	}
+	
+	public Object getObject() {
+		return object;
+	}
+	
+	public Icon getIcon() {
+		return icon;
+	}
+
+	/**
+	 * @param e
+	 * @see java.awt.event.MouseListener#mouseClicked(java.awt.event.MouseEvent)
+	 */
+	public void mouseClicked(MouseEvent e) {
+		// do nothing
+	}
+
+	/**
+	 * @param e
+	 * @see java.awt.event.MouseListener#mouseEntered(java.awt.event.MouseEvent)
+	 */
+	public void mouseEntered(MouseEvent e) {
+		//	do nothing
+	}
+
+	/**
+	 * @param e
+	 * @see java.awt.event.MouseListener#mouseExited(java.awt.event.MouseEvent)
+	 */
+	public void mouseExited(MouseEvent e) {
+		// do nothing	
+	}
+
+	/**
+	 * @param e
+	 * @see java.awt.event.MouseListener#mousePressed(java.awt.event.MouseEvent)
+	 */
+	public void mousePressed(MouseEvent e) {
+		//do nothing
+	}
+
+	/**
+	 * @param e
+	 * @see java.awt.event.MouseListener#mouseReleased(java.awt.event.MouseEvent)
+	 */
+	public void mouseReleased(MouseEvent e) {
+		//do nothing
+	}
+}
