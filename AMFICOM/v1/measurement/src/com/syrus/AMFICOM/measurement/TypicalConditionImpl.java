@@ -1,5 +1,5 @@
 /*
- * $Id: TypicalConditionImpl.java,v 1.6 2005/03/01 16:34:23 arseniy Exp $
+ * $Id: TypicalConditionImpl.java,v 1.7 2005/03/14 14:52:47 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ import com.syrus.util.Log;
 import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/03/01 16:34:23 $
+ * @version $Revision: 1.7 $, $Date: 2005/03/14 14:52:47 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -109,14 +109,15 @@ class TypicalConditionImpl extends TypicalCondition {
 		Wrapper wrapper = null;
 		if (object instanceof Test) {
 			wrapper = TestWrapper.getInstance();
-		} else if (object instanceof MeasurementType) {
-			wrapper = MeasurementTypeWrapper.getInstance();
 		}
+		else
+			if (object instanceof MeasurementType) {
+				wrapper = MeasurementTypeWrapper.getInstance();
+			}
 		if (wrapper != null)
 			result = super.parseCondition(wrapper.getValue(object, this.key));
 		else
-			Log.errorMessage("TypicalConditionImpl.isConditionTrue | Class " + object.getClass().getName()
-					+ " is not supported");
+			Log.errorMessage("TypicalConditionImpl.isConditionTrue | Class " + object.getClass().getName() + " is not supported");
 		return result;
 	}
 

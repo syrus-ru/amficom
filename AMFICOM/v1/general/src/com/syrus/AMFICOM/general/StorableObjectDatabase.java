@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectDatabase.java,v 1.121 2005/03/11 09:08:19 bob Exp $
+ * $Id: StorableObjectDatabase.java,v 1.122 2005/03/14 14:53:28 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,8 +33,8 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.121 $, $Date: 2005/03/11 09:08:19 $
- * @author $Author: bob $
+ * @version $Revision: 1.122 $, $Date: 2005/03/14 14:53:28 $
+ * @author $Author: arseniy $
  * @module general_v1
  */
 
@@ -402,7 +402,7 @@ public abstract class StorableObjectDatabase {
 			}
 		}
 		catch (SQLException sqle) {
-			String mesg = this.getEnityName() + "Database.retrieveByCondition | Cannot execute query " + sqle.getMessage();
+			String mesg = this.getEnityName() + "Database.retrieveByCondition | Cannot execute query -- " + sqle.getMessage();
 			throw new RetrieveObjectException(mesg, sqle);
 		}
 		finally {
