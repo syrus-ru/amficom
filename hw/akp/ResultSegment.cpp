@@ -56,18 +56,21 @@ void ResultSegment::createSegment() {
 			parslen;
 
 	this->data = new char[this->length];
-	int mile = 0;//---Mozhno ne initsializovat' dlya bystroty. Togda nizhe vmesto mile += 1 budet mile = 1;
+	int mile = 0;
 	char* segment1;
-// Segment type
-	this->data[0] = SEGMENT_RESULT;
+
+	// Segment type
+	this->data[mile] = SEGMENT_RESULT;
 	mile += 1;
-//measurement_id
+
+	//measurement_id
 	segment1 = this->measurement_id->getSegment();
 	for (i = 0; i < INTSIZE + this->measurement_id->getLength(); i++)
 		this->data[i + mile] = segment1[i];
 	delete[] segment1;
 	mile += i;
-//parameters
+
+	//parameters
 	segment1 = (char*)&this->parnumber;
 	for (i = 0; i < INTSIZE; i++)
 		this->data[i + mile] = segment1[i];
@@ -86,7 +89,8 @@ void ResultSegment::createSegment() {
 void ResultSegment::parseSegment() {
 	unsigned int i, mile = 1, len;
 	char* buffer;
-//measurement_id
+
+	//measurement_id
 	len = *(unsigned int*)(this->data + mile);
 	mile += INTSIZE;
 
@@ -96,14 +100,16 @@ void ResultSegment::parseSegment() {
 	buffer[len] = 0;
 	this->measurement_id = new ByteArray(len, buffer);
 	mile += i;
-//parameters
+
+	//parameters
 	this->parnumber = *(unsigned int*)(this->data + mile);
 	mile += INTSIZE;
 
 	this->parameters = new Parameter*[this->parnumber];
 	unsigned int parcount = 0;
 	while (mile < this->length) {
-	//name
+
+		//name
 		len = *(unsigned int*)(this->data + mile);
 		mile += INTSIZE;
 
@@ -113,7 +119,8 @@ void ResultSegment::parseSegment() {
 		buffer[len] = 0;
 		ByteArray* par_name = new ByteArray(len, buffer);
 		mile += i;
-	//value
+
+		//value
 		len = *(unsigned int*)(this->data + mile);
 		mile += INTSIZE;
 
@@ -122,7 +129,8 @@ void ResultSegment::parseSegment() {
 			buffer[i] = this->data[i + mile];
 		ByteArray* par_value = new ByteArray(len, buffer);
 		mile += i;
-	//parameter
+
+		//parameter
 		this->parameters[parcount] = new Parameter(par_name, par_value);
 		parcount ++;
 	}
@@ -130,31 +138,4 @@ void ResultSegment::parseSegment() {
 		printf("ERROR: real number of result parameters %d does not match to nominal %d\n", parcount, this->parnumber);
 		this->parnumber = parcount;
 	}
-	
-/*	this->parameters = (Parameter**)calloc(this->length - mile + 1, 1);
-	this->parnumber = 0;
-	while (mile < this->length) {//while (parcount < this->parnumber)
-	//name
-		len = *(unsigned int*)(this->data + mile);
-		mile += INTSIZE;
-
-		buffer = new char[len + 1];
-		for (i = 0; i < len; i++)
-			buffer[i] = this->data[i + mile];
-		buffer[len] = 0;
-		ByteArray* par_name = new ByteArray(len, buffer);
-		mile += i;
-	//value
-		len = *(unsigned int*)(this->data + mile);
-		mile += INTSIZE;
-
-		buffer = new char[len];
-		for (i = 0; i < len; i++)
-			buffer[i] = this->data[i + mile];
-		ByteArray* par_value = new ByteArray(len, buffer);
-		mile += i;
-
-		this->parameters[this->parnumber] = new Parameter(par_name, par_value);
-		this->parnumber++;
-	}*/
 }

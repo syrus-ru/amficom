@@ -12,7 +12,7 @@
 #include "Segment.h"
 #include "Parameter.h"
 
-class MeasurementSegment : public Segment  {
+class MeasurementSegment : public Segment {
 public:
 	MeasurementSegment(ByteArray* measurement_id,
 			ByteArray* measurement_type_id,

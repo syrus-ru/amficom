@@ -9,7 +9,7 @@
 #pragma once
 #endif // _MSC_VER > 1000
 
-class ByteArray  {
+class ByteArray {
 public:
 	ByteArray(unsigned int length, char* data);
 	ByteArray(unsigned int length);

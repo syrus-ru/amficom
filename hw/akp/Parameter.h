@@ -11,7 +11,7 @@
 
 #include "ByteArray.h"
 
-class Parameter  {
+class Parameter {
 public:
 	Parameter(ByteArray* name, ByteArray* value);
 	virtual ~Parameter();

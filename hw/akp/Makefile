@@ -7,6 +7,8 @@ ARFLAGS=rcsv
 OBJS=ByteArray.o \
 	Parameter.o \
 	Segment.o \
+	KISInfoSegment.o \
+	MCMInfoSegment.o \
 	MeasurementSegment.o \
 	ResultSegment.o
 ARCHFILE=akp.tar.gz

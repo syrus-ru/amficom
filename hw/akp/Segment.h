@@ -9,13 +9,17 @@
 #pragma once
 #endif // _MSC_VER > 1000
 
-#include "protocoldefs.h"
+#include "akpdefs.h"
 
-class Segment  
-{
+class Segment {
 public:
 	Segment();
 	virtual ~Segment();
+
+	static Segment* createFromData(unsigned int length, char* data);
+	static SegmentType getSegmentType(char* data);
+
+	SegmentType getType() const;
 	char* getData() const;
 	unsigned int getLength() const;
 
