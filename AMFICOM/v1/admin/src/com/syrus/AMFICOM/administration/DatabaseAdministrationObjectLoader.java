@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseAdministrationObjectLoader.java,v 1.6 2005/02/07 12:15:38 arseniy Exp $
+ * $Id: DatabaseAdministrationObjectLoader.java,v 1.7 2005/02/08 09:21:54 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,7 +29,7 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/02/07 12:15:38 $
+ * @version $Revision: 1.7 $, $Date: 2005/02/08 09:21:54 $
  * @author $Author: arseniy $
  * @module administration_v1
  */
@@ -404,8 +404,8 @@ public class DatabaseAdministrationObjectLoader implements AdministrationObjectL
 		delete(id, null);
 	}
 
-	public void delete(List ids) throws CommunicationException, DatabaseException {
-		if (ids == null || ids.isEmpty())
+	public void delete(List objects) throws CommunicationException, DatabaseException, IllegalDataException {
+		if (objects == null || objects.isEmpty())
 			return;
 		/**
 		 * TODO: use Trove collection instead java.util.Map
@@ -415,7 +415,7 @@ public class DatabaseAdministrationObjectLoader implements AdministrationObjectL
 		/**
 		 * separate objects by kind of entity
 		 */
-		for (Iterator it = ids.iterator(); it.hasNext();) {
+		for (Iterator it = objects.iterator(); it.hasNext();) {
 			Object object = it.next();
 			Identifier identifier = null;
 			if (object instanceof Identifier)
@@ -424,7 +424,7 @@ public class DatabaseAdministrationObjectLoader implements AdministrationObjectL
 				if (object instanceof Identified)
 					identifier = ((Identified) object).getId();
 				else
-					throw new DatabaseException("DatabaseAdministrationObjectLoader.delete | Object "
+					throw new IllegalDataException("DatabaseAdministrationObjectLoader.delete | Object "
 							+ object.getClass().getName()
 							+ " isn't Identifier or Identified");
 			Short entityCode = new Short(identifier.getMajor());
@@ -443,12 +443,12 @@ public class DatabaseAdministrationObjectLoader implements AdministrationObjectL
 		}
 	}
 
-	private void delete(Identifier id, List ids) throws DatabaseException {
+	private void delete(Identifier id, List objects) throws DatabaseException {
 		short entityCode = (id != null) ? id.getMajor() : 0;
 		if (id == null) {
-			if (ids.isEmpty())
+			if (objects.isEmpty())
 				return;
-			Object obj = ids.iterator().next();
+			Object obj = objects.iterator().next();
 			if (obj instanceof Identifier)
 				entityCode = ((Identifier) obj).getMajor();
 			else
@@ -461,8 +461,8 @@ public class DatabaseAdministrationObjectLoader implements AdministrationObjectL
 				if (id != null)
 					database.delete(id);
 				else
-					if (ids != null && !ids.isEmpty()) {
-						database.delete(ids);
+					if (objects != null && !objects.isEmpty()) {
+						database.delete(objects);
 					}
 			}
 		}
