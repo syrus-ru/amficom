@@ -1,5 +1,5 @@
 /*
- * $Id: CMServerImpl.java,v 1.53 2004/10/20 06:05:17 bass Exp $
+ * $Id: CMServerImpl.java,v 1.54 2004/10/20 08:55:13 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -64,6 +64,7 @@ import com.syrus.AMFICOM.configuration.corba.PortType_Transferable;
 import com.syrus.AMFICOM.configuration.corba.Port_Transferable;
 import com.syrus.AMFICOM.configuration.corba.Server_Transferable;
 import com.syrus.AMFICOM.configuration.corba.StringFieldCondition_Transferable;
+import com.syrus.AMFICOM.configuration.corba.StringFieldSort;
 import com.syrus.AMFICOM.configuration.corba.TransmissionPath_Transferable;
 import com.syrus.AMFICOM.configuration.corba.User_Transferable;
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -138,8 +139,8 @@ import com.syrus.AMFICOM.mserver.corba.MServer;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.53 $, $Date: 2004/10/20 06:05:17 $
- * @author $Author: bass $
+ * @version $Revision: 1.54 $, $Date: 2004/10/20 08:55:13 $
+ * @author $Author: bob $
  * @module cmserver_v1
  */
 
@@ -150,6 +151,7 @@ public class CMServerImpl implements CMServerOperations {
     private MServer mServer;
     //////////////////////////////////Name Resolver/////////////////////////////////////////////////
 
+    
 	public String lookupDomainName(Identifier_Transferable idTransferable)
 		throws AMFICOMRemoteException {
 		try {
@@ -214,7 +216,11 @@ public class CMServerImpl implements CMServerOperations {
     public Identifier_Transferable reverseLookupUserLogin(String userLogin)
             throws AMFICOMRemoteException {
         try {
-            List list = ConfigurationStorableObjectPool.getStorableObjectsByCondition(new StringFieldCondition(userLogin, ObjectEntities.USER_ENTITY_CODE), true);
+        	StringFieldCondition stringFieldCondition = StringFieldCondition.getInstance();
+			stringFieldCondition.setEntityCode(ObjectEntities.USER_ENTITY_CODE);
+			stringFieldCondition.setString(userLogin);
+			stringFieldCondition.setSort(StringFieldSort.STRINGSORT_USERLOGIN);
+            List list = ConfigurationStorableObjectPool.getStorableObjectsByCondition(stringFieldCondition, true);
             Identifier  id = ( (User)list.get(0) ).getId();
             return (Identifier_Transferable)id.getTransferable();
         } catch (RetrieveObjectException roe) {
@@ -233,6 +239,7 @@ public class CMServerImpl implements CMServerOperations {
 			StringFieldCondition stringFieldCondition = StringFieldCondition.getInstance();
 			stringFieldCondition.setEntityCode(ObjectEntities.USER_ENTITY_CODE);
 			stringFieldCondition.setString(userName);
+			stringFieldCondition.setSort(StringFieldSort.STRINGSORT_USERNAME);
 			List list = ConfigurationStorableObjectPool.getStorableObjectsByCondition(stringFieldCondition, true);
 			Identifier  id = ( (User)list.get(0) ).getId();
 			return (Identifier_Transferable)id.getTransferable();
@@ -4336,7 +4343,9 @@ public class CMServerImpl implements CMServerOperations {
         }
     }
 
-    public User_Transferable[] transmitUsersButIds(Identifier_Transferable[] ids_Transferable, AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
+    public User_Transferable[] transmitUsersButIdsCondition(Identifier_Transferable[] ids_Transferable, 
+															AccessIdentifier_Transferable accessIdentifier,
+												   StringFieldCondition_Transferable stringFieldCondition_Transferable) throws AMFICOMRemoteException {
         try {
             Identifier domainId = new Identifier(accessIdentifier.domain_id);
             Domain domain = (Domain) ConfigurationStorableObjectPool.getStorableObject(domainId, true);
@@ -4350,8 +4359,10 @@ public class CMServerImpl implements CMServerOperations {
                 for (int i = 0; i < ids_Transferable.length; i++)
                     idsList.add(new Identifier(ids_Transferable[i]));
                 list = ConfigurationStorableObjectPool.getStorableObjectsButIds(new Short(ObjectEntities.USER_ENTITY_CODE),idsList, true);
-            } else
-                list = ConfigurationStorableObjectPool.getStorableObjectsByCondition(getDomainCondition(domain, ObjectEntities.USER_ENTITY_CODE), true);
+            } else{
+            	StringFieldCondition stringFieldCondition = new StringFieldCondition(stringFieldCondition_Transferable);
+                list = ConfigurationStorableObjectPool.getStorableObjectsByCondition(stringFieldCondition, true);
+            }
 
             User_Transferable[] transferables = new User_Transferable[list.size()];
             int i = 0;
