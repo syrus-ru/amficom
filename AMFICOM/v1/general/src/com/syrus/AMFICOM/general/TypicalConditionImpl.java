@@ -1,5 +1,5 @@
 /*
- * $Id: TypicalConditionImpl.java,v 1.5 2005/03/01 16:33:43 arseniy Exp $
+ * $Id: TypicalConditionImpl.java,v 1.6 2005/03/24 11:43:39 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,11 +13,10 @@ import java.util.Date;
 
 import com.syrus.AMFICOM.general.corba.OperationSort;
 import com.syrus.AMFICOM.general.corba.TypicalSort;
-import com.syrus.util.Log;
 import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/03/01 16:33:43 $
+ * @version $Revision: 1.6 $, $Date: 2005/03/24 11:43:39 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -102,22 +101,21 @@ class TypicalConditionImpl extends TypicalCondition {
 		return more;
 	}
 
-	public boolean isConditionTrue(Object object) throws ApplicationException {
-		boolean result = false;
-		Wrapper wrapper = null;
-		if (object instanceof ParameterType) {
+	public boolean isConditionTrue(Object object) throws IllegalObjectEntityException {
+		Wrapper wrapper;
+		if (object instanceof ParameterType)
 			wrapper = ParameterTypeWrapper.getInstance();
-		} else if (object instanceof CharacteristicType) {
-			wrapper = CharacteristicTypeWrapper.getInstance();
-		} else if (object instanceof Characteristic) {
-			wrapper = CharacteristicWrapper.getInstance();
-		}
-		if (wrapper != null)
-			result = super.parseCondition(wrapper.getValue(object, this.key));
 		else
-			Log.errorMessage("TypicalConditionImpl.isConditionTrue | Class " + object.getClass().getName()
-					+ " is not supported");
-		return result;
+			if (object instanceof CharacteristicType)
+				wrapper = CharacteristicTypeWrapper.getInstance();
+			else
+				if (object instanceof Characteristic)
+					wrapper = CharacteristicWrapper.getInstance();
+				else
+					throw new IllegalObjectEntityException(ENTITY_NOT_REGISTERED + object.getClass().getName(),
+							IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
+
+		return super.parseCondition(wrapper.getValue(object, this.key));
 	}
 
 }

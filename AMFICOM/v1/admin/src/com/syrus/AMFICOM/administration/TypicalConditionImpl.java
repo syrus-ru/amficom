@@ -1,9 +1,7 @@
 /*
- * $Id: TypicalConditionImpl.java,v 1.4 2005/03/01 16:33:58 arseniy Exp $
- *
- * Copyright ¿ 2004 Syrus Systems.
- * Dept. of Science & Technology.
- * Project: AMFICOM.
+ * $Id: TypicalConditionImpl.java,v 1.5 2005/03/24 11:46:40 arseniy Exp $
+ * Copyright ¿ 2004 Syrus Systems. Dept. of Science & Technology. Project:
+ * AMFICOM.
  */
 
 package com.syrus.AMFICOM.administration;
@@ -12,14 +10,14 @@ import java.util.Collection;
 import java.util.Date;
 
 import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.OperationSort;
 import com.syrus.AMFICOM.general.corba.TypicalSort;
-import com.syrus.util.Log;
 import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/03/01 16:33:58 $
+ * @version $Revision: 1.5 $, $Date: 2005/03/24 11:46:40 $
  * @author $Author: arseniy $
  * @module admin_v1
  */
@@ -67,10 +65,7 @@ class TypicalConditionImpl extends TypicalCondition {
 		this.key = key;
 	}
 
-	private TypicalConditionImpl(final String value,
-			final OperationSort operation,
-			final Short entityCode,
-			final String key) {
+	private TypicalConditionImpl(final String value, final OperationSort operation, final Short entityCode, final String key) {
 		super(); // First line must invoke superconstructor w/o parameters.
 		this.value = value;
 		this.type = TypicalSort._TYPE_STRING;
@@ -91,7 +86,7 @@ class TypicalConditionImpl extends TypicalCondition {
 		this.operation = operation.value();
 		this.entityCode = entityCode;
 		this.key = key;
-		
+
 	}
 
 	public boolean isNeedMore(Collection collection) throws ApplicationException {
@@ -104,24 +99,24 @@ class TypicalConditionImpl extends TypicalCondition {
 		return more;
 	}
 
-	public boolean isConditionTrue(Object object) throws ApplicationException {
-		boolean result = false;
-		Wrapper wrapper = null;
-		if (object instanceof User) {
+	public boolean isConditionTrue(Object object) throws IllegalObjectEntityException {
+		Wrapper wrapper;
+		if (object instanceof User)
 			wrapper = UserWrapper.getInstance();
-		} else if (object instanceof Domain) {
-			wrapper = DomainWrapper.getInstance();
-		} else if (object instanceof Server) {
-			wrapper = ServerWrapper.getInstance();
-		} else if (object instanceof MCM) {
-			wrapper = MCMWrapper.getInstance();
-		}
-		if (wrapper != null)
-			result = super.parseCondition(wrapper.getValue(object, this.key));
 		else
-			Log.errorMessage("TypicalConditionImpl.isConditionTrue | Class " + object.getClass().getName()
-					+ " is not supported");
-		return result;
+			if (object instanceof Domain)
+				wrapper = DomainWrapper.getInstance();
+			else
+				if (object instanceof Server)
+					wrapper = ServerWrapper.getInstance();
+				else
+					if (object instanceof MCM)
+						wrapper = MCMWrapper.getInstance();
+					else
+						throw new IllegalObjectEntityException(ENTITY_NOT_REGISTERED + object.getClass().getName(),
+								IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
+
+		return super.parseCondition(wrapper.getValue(object, this.key));
 	}
 
 }

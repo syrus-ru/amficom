@@ -1,5 +1,5 @@
 /*
- * $Id: TypicalConditionImpl.java,v 1.3 2005/03/01 16:34:39 arseniy Exp $
+ * $Id: TypicalConditionImpl.java,v 1.4 2005/03/24 11:47:17 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,14 +11,14 @@ import java.util.Collection;
 import java.util.Date;
 
 import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.OperationSort;
 import com.syrus.AMFICOM.general.corba.TypicalSort;
-import com.syrus.util.Log;
 import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/03/01 16:34:39 $
+ * @version $Revision: 1.4 $, $Date: 2005/03/24 11:47:17 $
  * @author $Author: arseniy $
  * @module event_v1
  */
@@ -102,20 +102,18 @@ class TypicalConditionImpl extends TypicalCondition {
 		return more;
 	}
 
-	public boolean isConditionTrue(Object object) throws ApplicationException {
-		boolean result = false;
-		Wrapper wrapper = null;
-		if (object instanceof EventType) {
+	public boolean isConditionTrue(Object object) throws IllegalObjectEntityException {
+		Wrapper wrapper;
+		if (object instanceof EventType)
 			wrapper = EventTypeWrapper.getInstance();
-		} else if (object instanceof Event) {
-			wrapper = EventWrapper.getInstance();
-		}
-		if (wrapper != null)
-			result = super.parseCondition(wrapper.getValue(object, this.key));
 		else
-			Log.errorMessage("TypicalConditionImpl.isConditionTrue | Class " + object.getClass().getName()
-					+ " is not supported");
-		return result;
+			if (object instanceof Event)
+				wrapper = EventWrapper.getInstance();
+			else
+				throw new IllegalObjectEntityException(ENTITY_NOT_REGISTERED + object.getClass().getName(),
+						IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
+
+		return super.parseCondition(wrapper.getValue(object, this.key));
 	}
 
 }

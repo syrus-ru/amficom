@@ -1,5 +1,5 @@
 /*
- * $Id: TypicalConditionImpl.java,v 1.5 2005/03/01 16:34:11 arseniy Exp $
+ * $Id: TypicalConditionImpl.java,v 1.6 2005/03/24 11:46:54 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,13 +12,13 @@ import java.util.Collection;
 import java.util.Date;
 
 import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.OperationSort;
 import com.syrus.AMFICOM.general.corba.TypicalSort;
-import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/03/01 16:34:11 $
+ * @version $Revision: 1.6 $, $Date: 2005/03/24 11:46:54 $
  * @author $Author: arseniy $
  * @module config_v1
  */
@@ -103,12 +103,9 @@ class TypicalConditionImpl extends TypicalCondition {
 		return more;
 	}
 
-	public boolean isConditionTrue(Object object) throws ApplicationException {
-		boolean result = false;
-//		Wrapper wrapper = null;
-		Log.errorMessage("TypicalConditionImpl.isConditionTrue | Class " + object.getClass().getName()
-					+ " is not supported");
-		return result;
+	public boolean isConditionTrue(Object object) throws IllegalObjectEntityException {
+		throw new IllegalObjectEntityException(ENTITY_NOT_REGISTERED + object.getClass().getName(),
+				IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
 	}
 
 }
