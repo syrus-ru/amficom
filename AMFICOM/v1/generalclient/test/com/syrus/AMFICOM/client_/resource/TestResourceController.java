@@ -22,7 +22,7 @@ import com.syrus.AMFICOM.client_.general.ui.MLabel;
 /**
  * @author Vladimir Dolzhenko
  */
-public final class TestResourceController implements ObjectResourceController {
+public class TestResourceController implements ObjectResourceController {
 
 	public static final String		KEY_ID			= "id";
 	public static final String		KEY_NAME		= "name";
@@ -32,14 +32,14 @@ public final class TestResourceController implements ObjectResourceController {
 	public static final String		KEY_TIME		= "time";
 	public static final String		KEY_CHANGED		= "changed";
 
-	private static TestResourceController	instance;
+	protected static TestResourceController	instance;
 
-	private List			keys;
+	protected List			keys;
 
-	private Map				statusMap;
-	private Map				values;
+	protected Map				statusMap;
+	protected Map				values;
 
-	private TestResourceController() {
+	protected TestResourceController() {
 		// empty private constructor
 		String[] keysArray = new String[] { KEY_ID, KEY_NAME, KEY_STATUS_COLOR, KEY_STATUS, KEY_TIME, KEY_CHANGED,
 				KEY_VALUES};	
