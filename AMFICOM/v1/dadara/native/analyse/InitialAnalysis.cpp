@@ -1,6 +1,6 @@
 //----------------------------------------
 #include "InitialAnalysis.h"
-#include "../Common/MathRef.h"
+#include "../common/MathRef.h"
 #include "Histogramm.h"
 
 #include <math.h>
