@@ -1,5 +1,5 @@
 /*
- * $Id: AdministrationResourceServer.java,v 1.1 2005/01/17 16:34:05 max Exp $
+ * $Id: AdministrationResourceServer.java,v 1.2 2005/01/17 16:54:21 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,7 +17,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/01/17 16:34:05 $
+ * @version $Revision: 1.2 $, $Date: 2005/01/17 16:54:21 $
  * @author $Author: max $
  * @module arserver_v1
  */
@@ -93,7 +93,7 @@ public class AdministrationResourceServer extends SleepButWorkThread {
 		/* Create local CORBA server end activate servant */
 		try {
 			corbaServer = new CORBAServer();
-			corbaServer.activateServant(new ARServerImpl(), "CMServer");
+			corbaServer.activateServant(new ARServerImpl(), "ARServer");
 		}
 		catch (CommunicationException ce) {
 			Log.errorException(ce);

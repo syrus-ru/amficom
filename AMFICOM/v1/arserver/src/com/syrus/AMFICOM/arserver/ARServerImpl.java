@@ -1,5 +1,5 @@
 /*
- * $Id: ARServerImpl.java,v 1.1 2005/01/17 16:34:05 max Exp $
+ * $Id: ARServerImpl.java,v 1.2 2005/01/17 16:54:21 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,7 +34,6 @@ import com.syrus.AMFICOM.general.corba.ErrorCode;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.general.corba.StringFieldCondition_Transferable;
 import com.syrus.AMFICOM.measurement.DomainCondition;
-import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
 import com.syrus.AMFICOM.resource.AbstractImageResource;
 import com.syrus.AMFICOM.resource.BitmapImageResource;
 import com.syrus.AMFICOM.resource.FileImageResource;
@@ -47,7 +46,7 @@ import com.syrus.AMFICOM.resource.corba.ImageResource_TransferablePackage.ImageR
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/01/17 16:34:05 $
+ * @version $Revision: 1.2 $, $Date: 2005/01/17 16:54:21 $
  * @author $Author: max $
  * @module arserver_v1
  */
@@ -100,7 +99,7 @@ public class ARServerImpl extends ARServerPOA {
 		/**
 		 * TODO check user for access
 		 */
-		Log.debugMessage("ARServerImplementation.receiveEvaluation | Received " + " imageResource", Log.DEBUGLEVEL07);
+		Log.debugMessage("ARServerImplementation.receiveImageResource | Received " + " imageResource", Log.DEBUGLEVEL07);
 		try {
 			imageResource_Transferable.header.modifier_id = accessIdentifier.user_id;
 			ImageResourceSort sort = imageResource_Transferable.data.discriminator();
@@ -216,7 +215,7 @@ public class ARServerImpl extends ARServerPOA {
 			AccessIdentifier_Transferable accessIdentifier)
 			throws AMFICOMRemoteException {
 		Identifier id = new Identifier(id_Transferable);
-        Log.debugMessage("ARServerImpl.transmitImage | require " + id.toString(), Log.DEBUGLEVEL07);
+        Log.debugMessage("ARServerImpl.transmitImageResource | require " + id.toString(), Log.DEBUGLEVEL07);
         try {
             AbstractImageResource abstractImageResource = (AbstractImageResource) ResourceStorableObjectPool.getStorableObject(id, true);
             return (ImageResource_Transferable) abstractImageResource.getTransferable();
@@ -248,7 +247,7 @@ public class ARServerImpl extends ARServerPOA {
 		try {
             Identifier domainId = new Identifier(accessIdentifier.domain_id);
             Domain domain = (Domain) ConfigurationStorableObjectPool.getStorableObject(domainId, true);
-            Log.debugMessage("CMServerImpl.transmitLinks | requiere "
+            Log.debugMessage("ARServerImpl.transmitImageResources | requiere "
                     + (ids_Transferable.length == 0 ? "all" : Integer
                             .toString(ids_Transferable.length))
                     + " item(s) in domain: " + domainId.toString(), Log.DEBUGLEVEL07);
@@ -347,7 +346,7 @@ public class ARServerImpl extends ARServerPOA {
 			AccessIdentifier_Transferable accessIdentifier,
 			StringFieldCondition_Transferable stringFieldCondition_Transferable)
 			throws AMFICOMRemoteException {
-		Log.debugMessage("CMServerImpl.transmitEvaluationTypesButIdsCondition | requiere "
+		Log.debugMessage("ARServerImpl.transmitImageResourcesButIdsCondition | requiere "
 				+ (identifier_Transferables.length == 0 ? "all"
 						: Integer.toString(identifier_Transferables.length))
 				+ " item(s) ", Log.DEBUGLEVEL07);
@@ -358,10 +357,10 @@ public class ARServerImpl extends ARServerPOA {
 				for (int i = 0; i < identifier_Transferables.length; i++)
 					idsList.add(new Identifier(identifier_Transferables[i]));
 
-				list = MeasurementStorableObjectPool.getStorableObjectsByConditionButIds(idsList,
+				list = ResourceStorableObjectPool.getStorableObjectsByConditionButIds(idsList,
 								new StringFieldCondition(stringFieldCondition_Transferable), true);
 			} else
-				list = MeasurementStorableObjectPool.getStorableObjectsByCondition(new StringFieldCondition(
+				list = ResourceStorableObjectPool.getStorableObjectsByCondition(new StringFieldCondition(
 								stringFieldCondition_Transferable), true);
 
 			ImageResource_Transferable[] transferables = new ImageResource_Transferable[list
