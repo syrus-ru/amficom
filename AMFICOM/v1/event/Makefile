@@ -17,8 +17,9 @@ APPCLASSPATH := $(LIBDIR)/general.jar:$(LIBDIR)/util.jar
 
 
 SOURCES := com/syrus/AMFICOM/event/EventType.java \
+	com/syrus/AMFICOM/event/EventTypeDatabase.java \
 	com/syrus/AMFICOM/event/Event.java \
-	com/syrus/AMFICOM/event/EventSource.java
+	com/syrus/AMFICOM/event/EventParameter.java
 
 
 $(LIBNAME): .mach

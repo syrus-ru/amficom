@@ -1,5 +1,5 @@
 /*
- * $Id: Event.java,v 1.1 2004/12/27 22:07:46 arseniy Exp $
+ * $Id: Event.java,v 1.2 2005/01/28 15:15:46 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,11 +28,12 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
+import com.syrus.AMFICOM.event.corba.EventParameter_Transferable;
 import com.syrus.AMFICOM.event.corba.Event_Transferable;
 import com.syrus.AMFICOM.event.corba.EventStatus;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2004/12/27 22:07:46 $
+ * @version $Revision: 1.2 $, $Date: 2005/01/28 15:15:46 $
  * @author $Author: arseniy $
  * @module event_v1
  */
@@ -45,6 +46,8 @@ public class Event extends StorableObject implements TypedObject {
 	private EventType type;
 	private int status;
 	private String description;
+
+	private EventParameter[] parameters;
 
 	private StorableObjectDatabase eventDatabase;
 
@@ -64,7 +67,7 @@ public class Event extends StorableObject implements TypedObject {
 		super(et.header);
 
 		try {
-			this.type = (EventType)EventStorableObjectPool.getStorableObject(new Identifier(et.type_id), true);
+			this.type = (EventType) EventStorableObjectPool.getStorableObject(new Identifier(et.type_id), true);
 		}
 		catch (ApplicationException ae) {
 			throw new CreateObjectException(ae);
@@ -73,13 +76,23 @@ public class Event extends StorableObject implements TypedObject {
 		this.status = et.status.value();
 		this.description = new String(et.description);
 
+		try {
+			this.parameters = new EventParameter[et.parameters.length];
+			for (int i = 0; i < this.parameters.length; i++)
+				this.parameters[i] = new EventParameter(et.parameters[i]);
+		}
+		catch (ApplicationException ae) {
+			throw new CreateObjectException(ae);
+		}
+
 		this.eventDatabase = EventDatabaseContext.eventDatabase;
 	}
 
 	protected Event(Identifier id,
 					   Identifier creatorId,
 					   EventType type,
-						 String description) {
+						 String description,
+						 EventParameter[] parameters) {
 		super(id,
 					new Date(System.currentTimeMillis()),
 					new Date(System.currentTimeMillis()),
@@ -88,6 +101,7 @@ public class Event extends StorableObject implements TypedObject {
 		this.type = type;
 		this.status = EventStatus._EVENT_STATUS_GENERATED;
 		this.description = description;
+		this.parameters = parameters;
 
 		super.currentVersion = super.getNextVersion();
 
@@ -99,12 +113,14 @@ public class Event extends StorableObject implements TypedObject {
 	 * @param creatorId
 	 * @param type
 	 * @param description
+	 * @param parameters
 	 * @return new instance
 	 * @throws com.syrus.AMFICOM.general.CreateObjectException
 	 */
 	public static Event createInstance(Identifier creatorId,
 													EventType type,
-													String description) throws CreateObjectException {
+													String description,
+													EventParameter[] parameters) throws CreateObjectException {
 		if (creatorId == null || type == null || description == null)
 			throw new IllegalArgumentException("Argument is 'null'");
 
@@ -112,7 +128,8 @@ public class Event extends StorableObject implements TypedObject {
 			return new Event(IdentifierPool.getGeneratedIdentifier(ObjectEntities.EVENT_ENTITY_CODE),
 											creatorId,
 											type,
-											description);
+											description,
+											parameters);
 		}
 		catch (IllegalObjectEntityException e) {
 			throw new CreateObjectException("Event.createInstance | cannot generate identifier ", e);
@@ -130,10 +147,14 @@ public class Event extends StorableObject implements TypedObject {
 	}
 
 	public Object getTransferable() {
+		EventParameter_Transferable[] ept = new EventParameter_Transferable[this.parameters.length];
+		for (int i = 0; i < ept.length; i++)
+			ept[i] = (EventParameter_Transferable) this.parameters[i].getTransferable();
 		return new Event_Transferable(super.getHeaderTransferable(),
-									(Identifier_Transferable)this.type.getId().getTransferable(),
-									EventStatus.from_int(this.status),
-									this.description);
+				(Identifier_Transferable) this.type.getId().getTransferable(),
+				EventStatus.from_int(this.status),
+				this.description,
+				ept);
 	}
 
 	public StorableObjectType getType() {
@@ -146,6 +167,10 @@ public class Event extends StorableObject implements TypedObject {
 
 	public String getDescription() {
 		return this.description;
+	}
+
+	public EventParameter[] getParameters() {
+		return this.parameters;
 	}
 
 	public void updateStatus(EventStatus status, Identifier modifierId) throws UpdateObjectException {
@@ -179,9 +204,15 @@ public class Event extends StorableObject implements TypedObject {
 		this.description = description;
 	}
 
+	protected synchronized void setParameters(EventParameter[] parameters) {
+		this.parameters = parameters;
+	}
+
 	public List getDependencies() {
 		List dependencies = new LinkedList();
 		dependencies.add(this.type);
+		for (int i = 0; i < this.parameters.length; i++)
+			dependencies.add(this.parameters[i].getType());
 		return dependencies;
 	}
 }
