@@ -1,5 +1,5 @@
 /*
- * $Id: Server.java,v 1.2 2005/01/31 13:48:11 arseniy Exp $
+ * $Id: Server.java,v 1.3 2005/02/01 11:36:51 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,8 +30,8 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.administration.corba.Server_Transferable;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/01/31 13:48:11 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.3 $, $Date: 2005/02/01 11:36:51 $
+ * @author $Author: bob $
  * @module administration_v1
  */
 
@@ -240,5 +240,20 @@ public class Server extends DomainMember implements Characterized {
 		dependencies.add(this.userId);
 		dependencies.addAll(this.characteristics);			
 		return dependencies;
+	}
+	
+	public void setHostName(String hostname) {
+		this.hostname = hostname;
+		super.currentVersion = super.getNextVersion();
+	}
+	
+	public void setName(String name) {
+		this.name = name;
+		super.currentVersion = super.getNextVersion();
+	}
+	
+	public void setUserId(Identifier userId) {
+		this.userId = userId;
+		super.currentVersion = super.getNextVersion();
 	}
 }
