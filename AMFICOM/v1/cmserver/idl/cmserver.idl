@@ -58,7 +58,7 @@ module corba {
 						 		   in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
 			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
 			
-		void receiveParameterResults(in com::syrus::AMFICOM::measurement::corba::ResultSeq_Transferable sets,
+		void receiveResults(in com::syrus::AMFICOM::measurement::corba::ResultSeq_Transferable sets,
 								   in boolean force,
 						 		   in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
 			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
