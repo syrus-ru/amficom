@@ -30,6 +30,9 @@
 // Для отбрасывания участков, где точность определяется 0.001дБ-представлением
 const double prec0 = 0.001 * 1.5;
 
+// начальный уровень шума по отношению к макс. уровню сигнала, дБ
+const double MAX_VALUE_TO_INITIAL_DB_NOISE = -10; // -5..-10..-15
+
 static int dfcmp(const void *a, const void *b)
 {
 	const double *x = (const double *)a;
@@ -163,6 +166,7 @@ void findNoiseArray(double *data, double *out, int size)
 		//fprintf(stdout, "%d %g %g\n", io, dv, dy2dB(ya[io], dv));
 		out[i + mofs] = dy2dB(y0, dv);
 	}
+    // расширяем до краев массива
 	for (i = 0; i < mofs; i++)
 	{
 		out[i] = out[mofs];
@@ -173,6 +177,20 @@ void findNoiseArray(double *data, double *out, int size)
 		out[i] = out[size - mlen + mofs - 1];
 		temp[i] = temp[size - mlen + mofs - 1];
 	}
+
+    // делаем поправку на начало рефлектограммы
+    {
+		// ищем абс. макс. усредненной р/г
+        double vMax = temp[0];
+        for (i = 0; i < size; i++)
+        {
+        	if (vMax < temp[i])
+            	vMax = temp[i];
+        }
+        // поправляем начальный уровень шума
+        if (out[0] > vMax + MAX_VALUE_TO_INITIAL_DB_NOISE)
+        	out[0] = vMax + MAX_VALUE_TO_INITIAL_DB_NOISE;
+    }
 
 	// строим кривую кумулятивного минимума
 	for (i = 1; i < size; i++)
