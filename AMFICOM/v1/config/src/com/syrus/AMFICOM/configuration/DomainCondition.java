@@ -1,5 +1,5 @@
 /*
- * $Id: DomainCondition.java,v 1.4 2004/10/04 06:40:19 bob Exp $
+ * $Id: DomainCondition.java,v 1.5 2004/10/21 08:01:02 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -7,6 +7,8 @@
  */
 
 package com.syrus.AMFICOM.configuration;
+
+import java.util.List;
 
 import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 import com.syrus.AMFICOM.configuration.Domain;
@@ -22,7 +24,7 @@ import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2004/10/04 06:40:19 $
+ * @version $Revision: 1.5 $, $Date: 2004/10/21 08:01:02 $
  * @author $Author: bob $
  * @module config_v1
  */
@@ -172,6 +174,11 @@ public class DomainCondition implements StorableObjectCondition {
 		}
 
 		return condition;
+	}
+	
+	
+	public boolean isNeedMore(List list) {
+		return true;
 	}
 
 	public Short getEntityCode() {

@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementSetupCondition.java,v 1.6 2004/10/19 11:37:14 bob Exp $
+ * $Id: MeasurementSetupCondition.java,v 1.7 2004/10/21 08:01:35 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,7 +25,7 @@ import com.syrus.AMFICOM.measurement.corba.MeasurementSetupCondition_Transferabl
 /**
  * @deprecated use {@link com.syrus.AMFICOM.measurement.LinkedIdsCondition}
  * 
- * @version $Revision: 1.6 $, $Date: 2004/10/19 11:37:14 $
+ * @version $Revision: 1.7 $, $Date: 2004/10/21 08:01:35 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -107,6 +107,10 @@ public class MeasurementSetupCondition implements StorableObjectCondition {
 			}
 		}
 		return condition;
+	}
+
+	public boolean isNeedMore(List list) throws ApplicationException {
+		return true;
 	}
 
 	public Short getEntityCode() {

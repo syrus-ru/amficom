@@ -1,11 +1,14 @@
 /*
- * $Id: StringFieldCondition.java,v 1.6 2004/10/20 13:21:02 bob Exp $
+ * $Id: StringFieldCondition.java,v 1.7 2004/10/21 08:01:02 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
  * Проект: АМФИКОМ.
  */
 package com.syrus.AMFICOM.configuration;
+
+import java.util.Iterator;
+import java.util.List;
 
 import com.syrus.AMFICOM.configuration.corba.StringFieldCondition_Transferable;
 import com.syrus.AMFICOM.configuration.corba.StringFieldSort;
@@ -14,7 +17,7 @@ import com.syrus.AMFICOM.general.StorableObjectCondition;
 
 
 /**
- * @version $Revision: 1.6 $, $Date: 2004/10/20 13:21:02 $
+ * @version $Revision: 1.7 $, $Date: 2004/10/21 08:01:02 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -93,6 +96,23 @@ public class StringFieldCondition implements StorableObjectCondition {
 		}
 		return condition;
 	}
+	
+	
+	public boolean isNeedMore(List list) throws ApplicationException {
+		boolean needMore = true;
+		if(list != null){
+			for (Iterator it = list.iterator(); it.hasNext();) {
+				Object object = it.next();
+				if (isConditionTrue(object)){
+					needMore = false;
+					break;
+				}
+				
+			}
+		}
+		return needMore;
+	}
+	
 
 	public Short getEntityCode() {
 		return this.entityCode;

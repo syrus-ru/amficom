@@ -1,5 +1,5 @@
 /*
- * $Id: ResultCondition.java,v 1.4 2004/10/18 14:26:09 bob Exp $
+ * $Id: ResultCondition.java,v 1.5 2004/10/21 08:01:35 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,6 +9,7 @@
 package com.syrus.AMFICOM.measurement;
 
 import java.util.Date;
+import java.util.List;
 
 import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 import com.syrus.AMFICOM.configuration.Domain;
@@ -23,7 +24,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.corba.ResultCondition_Transferable;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2004/10/18 14:26:09 $
+ * @version $Revision: 1.5 $, $Date: 2004/10/21 08:01:35 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -74,6 +75,10 @@ public class ResultCondition implements StorableObjectCondition {
 			}
 		}
 		return condition;
+	}
+	
+	public boolean isNeedMore(List list) throws ApplicationException {
+		return true;
 	}
 
 	public void setDomain(Domain domain) {

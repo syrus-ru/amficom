@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementStorableObjectPool.java,v 1.33 2004/10/21 05:27:53 bob Exp $
+ * $Id: MeasurementStorableObjectPool.java,v 1.34 2004/10/21 08:01:35 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,7 +33,7 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.33 $, $Date: 2004/10/21 05:27:53 $
+ * @version $Revision: 1.34 $, $Date: 2004/10/21 08:01:35 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -357,21 +357,23 @@ public class MeasurementStorableObjectPool {
 			
 			List loadedList = null;
 			
-			if (useLoader){								
-				List idsList = new ArrayList(list.size());
-				for (Iterator iter = list.iterator(); iter.hasNext();) {
-					StorableObject storableObject = (StorableObject) iter.next();
-					idsList.add(storableObject.getId());					
-				}
-				
-				if (ids != null){
-					for (Iterator iter = ids.iterator(); iter.hasNext();) {
-						Identifier id = (Identifier) iter.next();
-						idsList.add(id);					
+			if (useLoader){
+				if (condition.isNeedMore(list)){
+					List idsList = new ArrayList(list.size());
+					for (Iterator iter = list.iterator(); iter.hasNext();) {
+						StorableObject storableObject = (StorableObject) iter.next();
+						idsList.add(storableObject.getId());					
 					}
+					
+					if (ids != null){
+						for (Iterator iter = ids.iterator(); iter.hasNext();) {
+							Identifier id = (Identifier) iter.next();
+							idsList.add(id);					
+						}
+					}
+					
+					loadedList = loadStorableObjectsButIds(condition, idsList);
 				}
-				
-				loadedList = loadStorableObjectsButIds(condition, idsList);
 			}
 			
 			for (Iterator it = list.iterator(); it.hasNext();) {

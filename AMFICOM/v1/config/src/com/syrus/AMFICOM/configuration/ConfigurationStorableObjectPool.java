@@ -1,5 +1,5 @@
 /*
- * $Id: ConfigurationStorableObjectPool.java,v 1.21 2004/10/21 05:33:37 bob Exp $
+ * $Id: ConfigurationStorableObjectPool.java,v 1.22 2004/10/21 08:01:02 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,7 +32,7 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.21 $, $Date: 2004/10/21 05:33:37 $
+ * @version $Revision: 1.22 $, $Date: 2004/10/21 08:01:02 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -355,20 +355,22 @@ public class ConfigurationStorableObjectPool {
 			List loadedList = null;
 
 			if (useLoader) {
-				List idsList = new ArrayList(list.size());
-				for (Iterator iter = list.iterator(); iter.hasNext();) {
-					StorableObject storableObject = (StorableObject) iter.next();
-					idsList.add(storableObject.getId());
-				}
-
-				if (ids != null) {
-					for (Iterator iter = ids.iterator(); iter.hasNext();) {
-						Identifier id = (Identifier) iter.next();
-						idsList.add(id);
+				if (condition.isNeedMore(list)){
+					List idsList = new ArrayList(list.size());
+					for (Iterator iter = list.iterator(); iter.hasNext();) {
+						StorableObject storableObject = (StorableObject) iter.next();
+						idsList.add(storableObject.getId());
 					}
+	
+					if (ids != null) {
+						for (Iterator iter = ids.iterator(); iter.hasNext();) {
+							Identifier id = (Identifier) iter.next();
+							idsList.add(id);
+						}
+					}
+	
+					loadedList = loadStorableObjectsButIds(condition, idsList);
 				}
-
-				loadedList = loadStorableObjectsButIds(condition, idsList);
 			}
 
 			for (Iterator it = list.iterator(); it.hasNext();) {
