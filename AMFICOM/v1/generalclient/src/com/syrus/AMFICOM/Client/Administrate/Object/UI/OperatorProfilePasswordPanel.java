@@ -1,5 +1,5 @@
 /*
- * $Id: OperatorProfilePasswordPanel.java,v 1.1 2004/08/06 12:14:19 bass Exp $
+ * $Id: OperatorProfilePasswordPanel.java,v 1.2 2004/08/06 12:57:38 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,7 +22,7 @@ import javax.swing.*;
  * dependencies between <tt>generalclient_v1</tt> and <tt>admin_1</tt>.
  *
  * @author $Author: bass $
- * @version $Revision: 1.1 $, $Date: 2004/08/06 12:14:19 $
+ * @version $Revision: 1.2 $, $Date: 2004/08/06 12:57:38 $
  * @module generalclient_v1
  */
 final class OperatorProfilePasswordPanel extends GeneralPanel
@@ -87,7 +87,7 @@ final class OperatorProfilePasswordPanel extends GeneralPanel
 
 	private void jbInit()
 	{
-		this.jLabelLogin.setText("Логин");
+		this.jLabelLogin.setText(LangModel.getString("labelName"));
 		this.jLabelLogin.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
 		this.jLabelStatus.setText("");
 		this.jLabelStatus.setPreferredSize(new Dimension(2 * DEF_WIDTH, DEF_HEIGHT));
