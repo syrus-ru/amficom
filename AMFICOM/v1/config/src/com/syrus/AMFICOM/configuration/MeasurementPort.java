@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPort.java,v 1.15 2004/11/15 15:30:53 bob Exp $
+ * $Id: MeasurementPort.java,v 1.16 2004/11/16 15:54:24 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,7 +26,7 @@ import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2004/11/15 15:30:53 $
+ * @version $Revision: 1.16 $, $Date: 2004/11/16 15:54:24 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -198,5 +198,15 @@ public class MeasurementPort extends StorableObject implements TypedObject{
 		dependencies.add(this.kisId);
 		dependencies.add(this.portId);
 		return dependencies;
+	}
+	
+	public void setName(String name) {
+		this.currentVersion = super.getNextVersion();
+		this.name = name;
+	}
+	
+	public void setType(MeasurementPortType type) {
+		this.currentVersion = super.getNextVersion();
+		this.type = type;
 	}
 }
