@@ -19,7 +19,7 @@ import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
  * Abstract class for JLabel and simple Component (witch extends JLabel)
  * rendering at JTable
  * 
- * @version $Revision: 1.9 $, $Date: 2005/03/22 11:00:40 $
+ * @version $Revision: 1.10 $, $Date: 2005/03/22 11:22:54 $
  * @author $Author: bob $
  * @module generalclient_v1
  */
@@ -68,15 +68,15 @@ public abstract class AbstractLabelCellRenderer extends JLabel implements TableC
 													int rowIndex,
 													int vColIndex) {
 		this.component = this;
-		if (value instanceof String || value instanceof Number) {
-			setText((value == null) ? "" : value.toString());
-		} else if (value instanceof Component) {
+		if (value instanceof Component) {
 			this.component = (Component) value;
 		} else {
 			TableCellRenderer cellRenderer = (TableCellRenderer) this.renderers.get(value.getClass());
 			if (cellRenderer != null)
 				return cellRenderer.getTableCellRendererComponent(table, value, isSelected, hasFocus, rowIndex,
 					vColIndex);
+			this.setText((value == null) ? "" : value.toString()); 
+				
 		}
 
 		Object obj = null;

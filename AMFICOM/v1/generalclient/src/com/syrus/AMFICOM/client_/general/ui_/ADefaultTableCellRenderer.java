@@ -1,5 +1,5 @@
 /*
-* $Id: ADefaultTableCellRenderer.java,v 1.3 2005/03/22 11:00:40 bob Exp $
+* $Id: ADefaultTableCellRenderer.java,v 1.4 2005/03/22 11:22:54 bob Exp $
 *
 * Copyright © 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -23,7 +23,7 @@ import com.syrus.AMFICOM.Client.Resource.ResourceKeys;
 
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/03/22 11:00:40 $
+ * @version $Revision: 1.4 $, $Date: 2005/03/22 11:22:54 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module generalclient_v1
@@ -76,15 +76,14 @@ public class ADefaultTableCellRenderer extends JLabel implements TableCellRender
 													int rowIndex,
 													int vColIndex) {
 		this.component = this;
-		if (value instanceof String || value instanceof Number) {
-			setValue(value);
-		} else if (value instanceof Component) {
+		if (value instanceof Component) {
 			this.component = (Component) value;
 		} else {
 			TableCellRenderer cellRenderer = (TableCellRenderer) this.renderers.get(value.getClass());
 			if (cellRenderer != null)
 				return cellRenderer.getTableCellRendererComponent(table, value, isSelected, hasFocus, rowIndex,
 					vColIndex);
+			this.setValue(value);
 		}
 		
 		super.setBackground(table.getBackground());		
