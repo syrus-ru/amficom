@@ -29,6 +29,10 @@ public class AnalysisUtil
 {
 	public static final String ETALON = "etalon";
 	public static final String CONTEXT = "analysiscontext";
+	private static final String OT_analysisparameters = "analysisparameters";
+	private static final String OID_minuitanalysis = "minuitanalysis";
+	private static final String OID_minuitinitials = "minuitinitials";
+	private static final String OID_minuitdefaults = "minuitdefaults";
 
 	private AnalysisUtil()
 	{
@@ -293,9 +297,9 @@ public class AnalysisUtil
 		SetParameter[] params = new SetParameter[8];
 
 		double[] defaultMinuitParams;
-		defaultMinuitParams = (double[])Pool.get("analysisparameters", "minuitanalysis");
+		defaultMinuitParams = (double[])Pool.get(OT_analysisparameters, OID_minuitanalysis);
 		if (defaultMinuitParams == null)
-			defaultMinuitParams = (double[])Pool.get("analysisparameters", "minuitdefaults");
+			defaultMinuitParams = (double[])Pool.get(OT_analysisparameters, OID_minuitdefaults);
 
 		String[] parameterCodenames = new String[] {
 				ParameterTypeCodenames.MIN_EVENT_LEVEL,//0
@@ -305,7 +309,7 @@ public class AnalysisUtil
 				ParameterTypeCodenames.MAX_NOISE_LEVEL,//4
 				ParameterTypeCodenames.CONNECTOR_FORM_FACTOR,//5
 				ParameterTypeCodenames.STRATEGY,//6
-				ParameterTypeCodenames.WAVELET_TYPE,//7
+				ParameterTypeCodenames.WAVELET_TYPE//7
 		};
 
 		try
@@ -632,9 +636,9 @@ public class AnalysisUtil
 //	public static void setCriteriaSetFromParams(Set criteriaSet)
 //	{
 //		double[] defaultMinuitParams;
-//		defaultMinuitParams = (double[])Pool.get("analysisparameters", "minuitanalysis");
+//		defaultMinuitParams = (double[])Pool.get(xxx "analysisparameters", "minuitanalysis");
 //		if (defaultMinuitParams == null)
-//			defaultMinuitParams = (double[])Pool.get("analysisparameters", "minuitdefaults");
+//			defaultMinuitParams = (double[])Pool.get(xxx "analysisparameters", "minuitdefaults");
 //
 //		try
 //		{
@@ -668,7 +672,7 @@ public class AnalysisUtil
 
 	public static void setParamsFromCriteriaSet(Set criteriaSet)
 	{
-		double[] minuitParams = (double[])Pool.get("analysisparameters", "minuitanalysis");
+		double[] minuitParams = (double[])Pool.get(OT_analysisparameters, OID_minuitanalysis);
 
 		try
 		{
@@ -698,7 +702,7 @@ public class AnalysisUtil
 		{
 			ex.printStackTrace();
 		}
-		double[] minuitInitialParams = (double[])Pool.get("analysisparameters", "minuitinitials");
+		double[] minuitInitialParams = (double[])Pool.get(OT_analysisparameters, OID_minuitinitials);
 		for (int i = 0; i < minuitParams.length; i++)
 			minuitInitialParams[i] = minuitParams[i];
 	}

@@ -1,7 +1,7 @@
 /**
  * ReflectogramEvent.java
  * 
- * @version $Revision: 1.9 $, $Date: 2004/12/14 09:06:02 $
+ * @version $Revision: 1.10 $, $Date: 2004/12/15 12:02:20 $
  * @author $Author: saa $
  * @module general_v1
  */
@@ -531,14 +531,14 @@ public class ReflectogramEvent
 	 * когда, возможно, будут сохраняться не все параметры
 	 * и придется вычислять из с использованием смежных событий.
 	 * @param dis Входной поток
-	 * @throws IOException
+	 * @throws IOException, SignatureMismatchException
 	 */
-	private void readFromDIS(DataInputStream dis) throws IOException
+	private void readFromDIS(DataInputStream dis) throws IOException, SignatureMismatchException
 	{
 	    long tsig = dis.readLong();
 	    if (tsig != signature)
 	    {
-	        throw new IOException("Signature mismatch"); // XXX
+	        throw new SignatureMismatchException();
 	    }
 		begin = dis.readInt();
 		end = dis.readInt();
@@ -625,9 +625,16 @@ public class ReflectogramEvent
 				ret[i].readFromDIS(dis);
 			}
 			return ret;
-		} catch (IOException e)
+		}
+		catch (IOException e)
 		{
 			System.out.println("IOException caught: " + e);
+			e.printStackTrace();
+			return null; // XXX
+		}
+		catch (SignatureMismatchException e)
+		{
+			System.out.println("SignatureMismatchException caught: " + e);
 			e.printStackTrace();
 			return null; // XXX
 		}

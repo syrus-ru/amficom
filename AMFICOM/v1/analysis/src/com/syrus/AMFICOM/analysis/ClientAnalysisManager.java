@@ -1,5 +1,5 @@
 /*
- * $Id: ClientAnalysisManager.java,v 1.1 2004/12/14 10:51:16 saa Exp $
+ * $Id: ClientAnalysisManager.java,v 1.2 2004/12/15 12:02:20 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,17 +14,22 @@ import java.io.IOException;
 import java.util.Properties;
 
 import com.syrus.AMFICOM.Client.Resource.Pool;
+//import com.syrus.AMFICOM.analysis.dadara.AnalysisParameters;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.1 $, $Date: 2004/12/14 10:51:16 $
+ * @version $Revision: 1.2 $, $Date: 2004/12/15 12:02:20 $
  * @module
  */
 public class ClientAnalysisManager extends CoreAnalysisManager
 {
 	private final String propertiesFileName = "analysis.properties";
+	private static final String OT_analysisparameters = "analysisparameters";
+	private static final String OID_minuitanalysis = "minuitanalysis";
+	private static final String OID_minuitinitials = "minuitinitials";
+	private static final String OID_minuitdefaults = "minuitdefaults";
 
-	private static double[] defaultMinuitParams = { 0.04, //минимальный уровень события
+	double[] defaultMinuitParams = { 0.04, //минимальный уровень события
 			0.06, //минимальный уровень сварки
 			0.2, //минимальный уровень коннектора
 			3, //минимальный уровень конца
@@ -36,7 +41,7 @@ public class ClientAnalysisManager extends CoreAnalysisManager
 
 	public ClientAnalysisManager() {
 		double[] minuitParams;
-		Pool.put("analysisparameters", "minuitdefaults", defaultMinuitParams);
+		Pool.put(OT_analysisparameters, OID_minuitdefaults, defaultMinuitParams);
 
 		Properties properties = new Properties();
 		try {
@@ -49,16 +54,14 @@ public class ClientAnalysisManager extends CoreAnalysisManager
 		}
 
 		// сохраняем в Pool
-		Pool.put("analysisparameters", "minuitanalysis", minuitParams);
+		Pool.put(OT_analysisparameters, OID_minuitanalysis, minuitParams);
 		// сохраняем в Pool копию (double[] копируется целиком)
-		Pool.put("analysisparameters", "minuitinitials", minuitParams.clone());
+		Pool.put(OT_analysisparameters, OID_minuitinitials, minuitParams.clone());
 	}
 
 	public void saveIni() {
-	    double[] minuitParams = (double[]) Pool.get("analysisparameters",
-				"minuitanalysis");
-//		String type = (String) Pool.get("analysisparameters",
-//				"analysisdefaulttype");
+	    double[] minuitParams = (double[]) Pool.get(OT_analysisparameters,
+				OID_minuitanalysis);
 		Properties properties = new Properties();
 		try {
 			properties.load(new FileInputStream(propertiesFileName));

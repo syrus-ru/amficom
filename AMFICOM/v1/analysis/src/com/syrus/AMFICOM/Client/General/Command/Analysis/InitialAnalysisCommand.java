@@ -8,6 +8,11 @@ import com.syrus.AMFICOM.analysis.dadara.*;
 import com.syrus.io.BellcoreStructure;
 
 public class InitialAnalysisCommand extends VoidCommand {
+	private static final String OT_analysisparameters = "analysisparameters";
+	private static final String OID_minuitanalysis = "minuitanalysis";
+	private static final String OID_minuitinitials = "minuitinitials";
+	private static final String OID_minuitdefaults = "minuitdefaults";
+
 	public InitialAnalysisCommand() {
 	}
 
@@ -16,17 +21,17 @@ public class InitialAnalysisCommand extends VoidCommand {
 		BellcoreStructure bs = (BellcoreStructure)Pool.get("bellcorestructure", "primarytrace");
 		if (bs != null)
 		{
-			double delta_x = bs.getResolution();
+			//double delta_x = bs.getResolution();
 			double[] y = bs.getTraceData();
 
-			double[] params = (double[]) Pool.get("analysisparameters",
-					"minuitanalysis");
+			double[] params = (double[]) Pool.get(OT_analysisparameters,
+					OID_minuitanalysis);
 			if (params == null) {
 				new ClientAnalysisManager();
-				params = (double[]) Pool.get("analysisparameters",
-						"minuitanalysis");
+				params = (double[]) Pool.get(OT_analysisparameters,
+						OID_minuitanalysis);
 			}
-			
+
 			Map tracesMap = (Map )Pool.get("bellcoremap", "current");
 
 			double[] pars = new double[params.length];
@@ -35,21 +40,9 @@ public class InitialAnalysisCommand extends VoidCommand {
 			if (pars[6] > 1) //убрать фитировку
 				pars[6] = 1;
 
-			int reflSize = ReflectogramMath.getReflectiveEventSize(y, 0.5);
-			int nReflSize = ReflectogramMath.getNonReflectiveEventSize(
-					y,
-					1000,
-					bs.getIOR(),
-					delta_x);
-			if (nReflSize > 3 * reflSize / 5)
-				nReflSize = 3 * reflSize / 5;
-
-			double meanAttenuation[] = { 0 };
-
 			ReflectogramEvent[] ep = ClientAnalysisManager.makeAnalysis(
-					0, bs,
-					pars, meanAttenuation, reflSize, nReflSize, tracesMap);
-			
+					0, bs, pars, tracesMap);
+
 			// фитировка нужна для определения вспомогательных парметров
 //	        ep = AnalysisManager.fitTrace(
 //	            y, delta_x, ep, (int)params[6], meanAttenuation[0]);

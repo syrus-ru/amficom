@@ -1,5 +1,5 @@
 /*
- * $Id: CoreAnalysisManager.java,v 1.1 2004/12/14 10:51:16 saa Exp $
+ * $Id: CoreAnalysisManager.java,v 1.2 2004/12/15 12:02:20 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@ package com.syrus.AMFICOM.analysis;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.1 $, $Date: 2004/12/14 10:51:16 $
+ * @version $Revision: 1.2 $, $Date: 2004/12/15 12:02:20 $
  * @module
  */
 
@@ -17,6 +17,7 @@ import java.util.Map;
 
 import com.syrus.io.BellcoreStructure;
 import com.syrus.AMFICOM.analysis.dadara.ReflectogramEvent;
+import com.syrus.AMFICOM.analysis.dadara.ReflectogramMath;
 
 public class CoreAnalysisManager
 {
@@ -134,9 +135,6 @@ public class CoreAnalysisManager
 	 * @param strategy степень аппроксимации. Недокументировано.
 	 * @param bs рефлектограмма
 	 * @param pars недокументированный набор параметров для IA
-	 * @param out_meanAttenuation не используется
-	 * @param reflectiveSize хар. размер отраж. события (в точках?)
-	 * @param nonReflectiveSize хар. размер неотраж. события (в точках?)
 	 * @param bellcoreTraces хэш всех открытых р/г для определения пределов колебаний
 	 * @return массив событий
 	 */
@@ -144,18 +142,26 @@ public class CoreAnalysisManager
 	// strategy == 0: min fitting
 	public static ReflectogramEvent[] makeAnalysis(
 			int strategy, BellcoreStructure bs,
-			double[] pars, double[] out_meanAttenuation,
-			int reflectiveSize, int nonReflectiveSize, Map bellcoreTraces)
+			double[] pars, Map bellcoreTraces)
 	{
 	    // достаем данные
 	    double y[] = bs.getTraceData();
 	    double delta_x = bs.getResolution(); // метры
 
+		int reflSize = ReflectogramMath.getReflectiveEventSize(y, 0.5);
+		int nReflSize = ReflectogramMath.getNonReflectiveEventSize(
+				y,
+				1000,
+				bs.getIOR(),
+				delta_x);
+		if (nReflSize > 3 * reflSize / 5)
+			nReflSize = 3 * reflSize / 5;
+
 		// формирование событий
 		double[] meanAttenuation = { 0 }; // storage for meanAttenuation -- unused: XXX
 		ReflectogramEvent[] ep = analyse2((int) pars[7], y, delta_x, pars[5],
 				pars[0], pars[4], pars[3], pars[1], pars[2], meanAttenuation,
-				reflectiveSize, nonReflectiveSize);
+				reflSize, nReflSize);
 
 		// определяем уровень шума для фитировки
 		double noiseLevel = calcNoise3s(y);
@@ -181,7 +187,7 @@ public class CoreAnalysisManager
 		long t0 = System.currentTimeMillis();
 
 		System.out.println("fitTrace: strategy = " + strategy);
-		
+
 		ReflectogramEvent.FittingParameters fPars =
 		    new ReflectogramEvent.FittingParameters(
 				y,

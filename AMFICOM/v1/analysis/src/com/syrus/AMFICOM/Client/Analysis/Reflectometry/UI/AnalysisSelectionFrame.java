@@ -25,6 +25,10 @@ public class AnalysisSelectionFrame extends ATableFrame
 	private ParamTableModel tModelMinuit;
 	private ATable jTable;
 	private ColorManager cManager;
+	private static final String OT_analysisparameters = "analysisparameters";
+	private static final String OID_minuitanalysis = "minuitanalysis";
+	private static final String OID_minuitinitials = "minuitinitials";
+	private static final String OID_minuitdefaults = "minuitdefaults";
 
 	BorderLayout borderLayout = new BorderLayout();
 	JPanel mainPanel = new JPanel();
@@ -90,7 +94,7 @@ public class AnalysisSelectionFrame extends ATableFrame
 //						}
 					}
 
-					double[] minuitParams = (double[])Pool.get("analysisparameters", "minuitanalysis");
+					double[] minuitParams = (double[])Pool.get(OT_analysisparameters, OID_minuitanalysis);
 					setDefaults(minuitParams);
 					setVisible(true);
 				}
@@ -116,7 +120,7 @@ public class AnalysisSelectionFrame extends ATableFrame
 
 						if (ms.getCriteriaSet() != null)
 						{
-							double[] minuitParams = (double[])Pool.get("analysisparameters", "minuitanalysis");
+							double[] minuitParams = (double[])Pool.get(OT_analysisparameters, OID_minuitanalysis);
 							setDefaults(minuitParams);
 						}
 //					}
@@ -309,7 +313,7 @@ public class AnalysisSelectionFrame extends ATableFrame
 		minuitParams[6] = ((Double)getDoubleValueAt(jTable.getValueAt(6, 1), 6)).doubleValue();
 		minuitParams[7] = ((Integer)getDoubleValueAt(jTable.getValueAt(7, 1), 7)).doubleValue();
 
-		Pool.put("analysisparameters", "minuitanalysis", minuitParams);
+		Pool.put(OT_analysisparameters, OID_minuitanalysis, minuitParams);
 		new MinuitAnalyseCommand(dispatcher, "primarytrace", aContext).execute();
 		dispatcher.notify(new RefUpdateEvent("primarytrace", RefUpdateEvent.ANALYSIS_PERFORMED_EVENT));
 		dispatcher.notify(new RefUpdateEvent("primarytrace", RefUpdateEvent.THRESHOLDS_UPDATED_EVENT));
@@ -318,13 +322,13 @@ public class AnalysisSelectionFrame extends ATableFrame
 
 	void jButton2_actionPerformed(ActionEvent e)
 	{
-		double[] defaults = (double[])Pool.get("analysisparameters", "minuitinitials");
+		double[] defaults = (double[])Pool.get(OT_analysisparameters, OID_minuitinitials);
 		setDefaults(defaults);
 	}
 
 	void jButton3_actionPerformed(ActionEvent e)
 	{
-		double[] defaults = (double[])Pool.get("analysisparameters", "minuitdefaults");
+		double[] defaults = (double[])Pool.get(OT_analysisparameters, OID_minuitdefaults);
 		setDefaults(defaults);
 	}
 }

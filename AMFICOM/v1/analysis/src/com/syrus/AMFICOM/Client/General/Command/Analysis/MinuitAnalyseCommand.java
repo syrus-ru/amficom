@@ -17,10 +17,12 @@ import com.syrus.io.BellcoreStructure;
 public class MinuitAnalyseCommand extends VoidCommand
 {
 	private Dispatcher dispatcher;
-	private BellcoreStructure bs;
 	private String id;
 	private ApplicationContext aContext;
-
+	private static final String OT_analysisparameters = "analysisparameters";
+	private static final String OID_minuitanalysis = "minuitanalysis";
+	private static final String OID_minuitinitials = "minuitinitials";
+	private static final String OID_minuitdefaults = "minuitdefaults";
 
 	public MinuitAnalyseCommand(Dispatcher dispatcher, String id,
 															ApplicationContext aContext)
@@ -52,41 +54,27 @@ public class MinuitAnalyseCommand extends VoidCommand
 	public void execute()
 	{
 		long t0 = System.currentTimeMillis();
-	bs = (BellcoreStructure)Pool.get("bellcorestructure", id);
+		BellcoreStructure bs = (BellcoreStructure)Pool.get("bellcorestructure", id);
 		if (bs != null)
 		{
 			Environment.getActiveWindow().setCursor(new Cursor(Cursor.WAIT_CURSOR));
 
-			double delta_x = bs.getResolution();
+			//double delta_x = bs.getResolution();
 			double[] y = bs.getTraceData();
 
-			double[] params = (double[])Pool.get("analysisparameters", "minuitanalysis");
+			double[] params = (double[])Pool.get(OT_analysisparameters, OID_minuitanalysis);
 			if (params == null)
 			{
 		System.out.println("MinuitAnalysis.execute(): create AnalysisManager at dt/ms " + (System.currentTimeMillis()-t0));
 				new ClientAnalysisManager();
 		System.out.println("MinuitAnalysis.execute(): AnalysisManager created at dt/ms " + (System.currentTimeMillis()-t0));
-				params = (double[])Pool.get("analysisparameters", "minuitanalysis");
+				params = (double[])Pool.get(OT_analysisparameters, OID_minuitanalysis);
 			}
-			
+
 			Map tracesMap = (Map )Pool.get("bellcoremap", "current");
 
-			int reflSize = ReflectogramMath.getReflectiveEventSize(y, 0.5);
-			int nReflSize = ReflectogramMath.getNonReflectiveEventSize(
-					y,
-					1000,
-					bs.getIOR(),
-					delta_x);
-			if (nReflSize > 3 * reflSize / 5)
-				nReflSize = 3 * reflSize / 5;
-
-	  //System.out.println("MinuitAnalysis.execute(): starting analyseTrace+fitTrace at dt/ms " + (System.currentTimeMillis()-t0));
-
-	  double[] meanAttenuation = { 0 };
-
 	  ReflectogramEvent[] ep = ClientAnalysisManager.makeAnalysis(
-		  (int)params[6], bs, params, meanAttenuation, reflSize, nReflSize,
-		  tracesMap);
+		  (int)params[6], bs, params, tracesMap);
 
 	  //for (int i = 0; i < 2; i++) // FIXIT
 	  //ep = AnalysisManager.fitTrace(
