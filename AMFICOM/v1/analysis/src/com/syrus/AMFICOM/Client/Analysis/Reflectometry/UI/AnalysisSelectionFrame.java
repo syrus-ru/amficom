@@ -113,7 +113,7 @@ implements OperationListener
 		if(actionCommand.equals(RefChangeEvent.typ))
 		{
 			RefChangeEvent rce = (RefChangeEvent)ae;
-			if(rce.OPEN)
+			if(rce.isOpen())
 			{
 				String id = (String)(rce.getSource());
 				if (id.equals(RefUpdateEvent.PRIMARY_TRACE))
@@ -145,7 +145,7 @@ implements OperationListener
 					setVisible(true);
 				}
 			}
-			if(rce.THRESHOLDS_CALC)
+			if(rce.isThresholdsCalc())
 			{
 				String id = (String)(rce.getSource());
 
@@ -179,7 +179,7 @@ implements OperationListener
 //					}
 				}
 			}
-			if(rce.CLOSE)
+			if(rce.isClose())
 			{
 				String id = (String)(rce.getSource());
 				if (id.equals("all"))

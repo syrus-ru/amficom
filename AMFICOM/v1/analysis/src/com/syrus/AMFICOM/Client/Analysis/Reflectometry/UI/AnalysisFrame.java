@@ -74,25 +74,25 @@ public class AnalysisFrame extends ScalableFrame implements OperationListener
 		if(ae.getActionCommand().equals(RefChangeEvent.typ))
 		{
 			RefChangeEvent rce = (RefChangeEvent)ae;
-			if(rce.OPEN)
+			if(rce.isOpen())
 			{
 				String id = (String)(rce.getSource());
 				addTrace (id);
 				setVisible(true);
 			}
-			if(rce.CLOSE)
+			if(rce.isClose())
 			{
 				String id = (String)(rce.getSource());
 				removeTrace(id);
 				if (id.equals("all"))
 					setVisible (false);
 			}
-			if (rce.OPEN_ETALON)
+			if (rce.isEtalonOpen())
 			{
 				String etId = (String)rce.getSource();
 				addEtalon(etId);
 			}
-			if (rce.CLOSE_ETALON)
+			if (rce.isEtalonClose())
 			{
 				String etId = (String)rce.getSource();
 				removeEtalon(etId);

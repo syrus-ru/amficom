@@ -40,7 +40,6 @@ import com.syrus.AMFICOM.Client.Resource.ResourceKeys;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceManager;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceManager.ThreshEditor;
 import com.syrus.AMFICOM.client_.general.ui_.ADefaultTableCellRenderer;
-import com.syrus.io.BellcoreStructure;
 
 public class ThresholdsSelectionFrame extends ATableFrame
 	implements OperationListener
@@ -314,7 +313,7 @@ public class ThresholdsSelectionFrame extends ATableFrame
 	public void operationPerformed(OperationEvent ae) {
 		if (ae.getActionCommand().equals(RefChangeEvent.typ)) {
 			RefChangeEvent rce = (RefChangeEvent) ae;
-			if (rce.CLOSE) {
+			if (rce.isClose()) {
 				String id = (String) (rce.getSource());
 				if (id.equals("all")) {
 					this.mtm = null;

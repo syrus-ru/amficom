@@ -61,7 +61,7 @@ public class TraceSelectorFrame extends JInternalFrame
 		if(ae.getActionCommand().equals(RefChangeEvent.typ))
 		{
 			RefChangeEvent rce = (RefChangeEvent)ae;
-			if(rce.OPEN || rce.OPEN_ETALON)
+			if(rce.isOpen() || rce.isEtalonOpen())
 			{
 				String id = (String)(rce.getSource());
 				if (traces.contains(id))
@@ -77,7 +77,7 @@ public class TraceSelectorFrame extends JInternalFrame
 				setVisible(true);
 			}
 
-			if(rce.SELECT)
+			if(rce.isEventSelect())
 			{
 				here = true;
 				String id = (String)(rce.getSource());
@@ -86,7 +86,7 @@ public class TraceSelectorFrame extends JInternalFrame
 					jTable.setRowSelectionInterval(selected, selected);
 				here = false;
 			}
-			if(rce.CLOSE)
+			if(rce.isClose())
 			{
 				String id = (String)(rce.getSource());
 				if (id.equals("all"))

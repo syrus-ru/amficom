@@ -64,7 +64,7 @@ public class MarkersInfoFrame extends JInternalFrame implements OperationListene
 		if(ae.getActionCommand().equals(RefChangeEvent.typ))
 		{
 			RefChangeEvent rce = (RefChangeEvent)ae;
-			if (rce.OPEN)
+			if (rce.isOpen())
 			{
 				String id = (String)(rce.getSource());
 				if (id.equals(RefUpdateEvent.PRIMARY_TRACE))
@@ -74,7 +74,7 @@ public class MarkersInfoFrame extends JInternalFrame implements OperationListene
 					setVisible(true);
 				}
 			}
-			if (rce.CLOSE)
+			if (rce.isClose())
 			{
 				String id = (String)(rce.getSource());
 				if (id.equals("all"))

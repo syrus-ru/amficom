@@ -92,7 +92,7 @@ implements OperationListener
 		if(ae.getActionCommand().equals(RefChangeEvent.typ))
 		{
 			RefChangeEvent rce = (RefChangeEvent)ae;
-			if(rce.OPEN)
+			if(rce.isOpen())
 			{
 				String id = (String)(rce.getSource());
 				if (id.equals(RefUpdateEvent.PRIMARY_TRACE))
@@ -104,7 +104,7 @@ implements OperationListener
 					tabbedPane.setEnabledAt(1, false);
 				}
 			}
-			if(rce.CLOSE)
+			if(rce.isClose())
 			{
 				String id = (String)(rce.getSource());
 				if (id.equals("all"))
@@ -125,7 +125,7 @@ implements OperationListener
 				}
 			}
 
-			if(rce.OPEN_ETALON)
+			if(rce.isEtalonOpen())
 			{
 				wctModel.clearTable();
 				tabbedPane.setSelectedIndex(0);
@@ -136,7 +136,7 @@ implements OperationListener
 					tabbedPane.setEnabledAt(1, true);
 				}
 			}
-			if(rce.CLOSE_ETALON)
+			if(rce.isEtalonClose())
 			{
 				wctModel.clearTable();
 				tabbedPane.setSelectedIndex(0);

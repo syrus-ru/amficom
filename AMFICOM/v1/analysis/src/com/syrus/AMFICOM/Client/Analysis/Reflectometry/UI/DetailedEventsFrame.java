@@ -97,7 +97,7 @@ public class DetailedEventsFrame extends JInternalFrame
 		if(ae.getActionCommand().equals(RefChangeEvent.typ))
 		{
 			RefChangeEvent rce = (RefChangeEvent)ae;
-			if(rce.OPEN)
+			if(rce.isOpen())
 			{
 				String id = (String)(rce.getSource());
 				if (id.equals(Heap.PRIMARY_TRACE_KEY))
@@ -109,7 +109,7 @@ public class DetailedEventsFrame extends JInternalFrame
 					setVisible(true);
 				}
 			}
-			if(rce.CLOSE)
+			if(rce.isClose())
 			{
 				String id = (String)(rce.getSource());
 				if (id.equals("all"))
@@ -132,7 +132,7 @@ public class DetailedEventsFrame extends JInternalFrame
 					tabbedPane.setEnabledAt(1, false);
 				}
 			}
-			if(rce.OPEN_ETALON)
+			if(rce.isEtalonOpen())
 			{
 				etalonMTM = Heap.getMTMByKey(AnalysisUtil.ETALON);
 				if(dataMTM != null)
@@ -146,7 +146,7 @@ public class DetailedEventsFrame extends JInternalFrame
 				if(analysis_performed)
 					tabbedPane.setEnabledAt(1, true);
 			}
-			if(rce.CLOSE_ETALON)
+			if(rce.isEtalonClose())
 			{
 				alignedDataMT = null;
 				ctModel.clearTable();

@@ -101,7 +101,7 @@ implements OperationListener
 		if(actionCommand.equals(RefChangeEvent.typ))
 		{
 			RefChangeEvent rce = (RefChangeEvent)ae;
-			if(rce.OPEN)
+			if(rce.isOpen())
 			{
 				String id = (String)(rce.getSource());
 				if (id.equals(Heap.PRIMARY_TRACE_KEY))
@@ -119,7 +119,7 @@ implements OperationListener
 					setVisible(true);
 				}
 			}
-			if(rce.CLOSE)
+			if(rce.isClose())
 			{
 				String id = (String)(rce.getSource());
 
@@ -138,7 +138,7 @@ implements OperationListener
 					setVisible(false);
 				}
 			}
-			if(rce.OPEN_ETALON)
+			if(rce.isEtalonOpen())
 			{
 				String etId = (String)rce.getSource();
 
@@ -155,7 +155,7 @@ implements OperationListener
 
 				setComparedWithEtalonEventsColor();
 			}
-			if(rce.CLOSE_ETALON)
+			if(rce.isEtalonClose())
 			{
 				data = null;
 				etalon = null;

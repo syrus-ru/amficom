@@ -56,7 +56,7 @@ public class ThresholdsLayeredPanel extends TraceEventsLayeredPanel implements O
 		if(ae.getActionCommand().equals(RefChangeEvent.typ))
 		{
 			RefChangeEvent rce = (RefChangeEvent)ae;
-			if (rce.CLOSE)
+			if (rce.isClose())
 			{
 				String id = (String)(rce.getSource());
 				if (id.equals("all"))

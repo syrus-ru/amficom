@@ -70,7 +70,7 @@ implements OperationListener
 		if(ae.getActionCommand().equals(RefChangeEvent.typ))
 		{
 			RefChangeEvent rce = (RefChangeEvent)ae;
-			if(rce.OPEN)
+			if(rce.isOpen())
 			{
 				String id = (String)(rce.getSource());
 				if (id.equals(RefUpdateEvent.PRIMARY_TRACE))
@@ -78,12 +78,12 @@ implements OperationListener
 					setVisible(true);
 				}
 			}
-			if(rce.SELECT)
+			if(rce.isEventSelect())
 			{
 				String id = (String)(rce.getSource());
 				updTableModel (id);
 			}
-			if(rce.CLOSE)
+			if(rce.isClose())
 			{
 				String id = (String)(rce.getSource());
 				if (id.equals("all"))

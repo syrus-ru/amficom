@@ -420,7 +420,7 @@ public class AnalyseMainFrame extends JFrame
 		{
 			ApplicationModel aModel = aContext.getApplicationModel();
 			RefChangeEvent rce = (RefChangeEvent)ae;
-			if(rce.OPEN)
+			if(rce.isOpen())
 			{
 				String id = (String)(rce.getSource());
 				if (id.equals(RefUpdateEvent.PRIMARY_TRACE))
@@ -481,12 +481,12 @@ public class AnalyseMainFrame extends JFrame
 					aModel.fireModelChanged("");
 				}
 			}
-			if(rce.OPEN_ETALON)
+			if(rce.isEtalonOpen())
 			{
 				aModel.setEnabled("menuTraceCloseEtalon", true);
 				aModel.fireModelChanged("");
 			}
-			if(rce.CLOSE)
+			if(rce.isClose())
 			{
 				String id = (String)(rce.getSource());
 				if (Heap.hasEmptyAllBSMap())
@@ -563,12 +563,12 @@ public class AnalyseMainFrame extends JFrame
 					internal_dispatcher.notify(new RefChangeEvent(nextId, RefChangeEvent.SELECT_EVENT));
 				}
 			}
-			if(rce.CLOSE_ETALON)
+			if(rce.isEtalonOpen())
 			{
 				aModel.setEnabled("menuTraceCloseEtalon", false);
 				aModel.fireModelChanged(new String [] {"menuTraceCloseEtalon"});
 			}
-			if(rce.SELECT)
+			if(rce.isEventSelect())
 			{
 				String id = (String)(rce.getSource());
 				if (id.equals(RefUpdateEvent.PRIMARY_TRACE))
