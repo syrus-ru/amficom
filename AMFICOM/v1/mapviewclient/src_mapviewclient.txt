@@ -20,6 +20,7 @@ src\com\syrus\AMFICOM\Client\Map\MapState.java
 src\com\syrus\AMFICOM\Client\Map\NetMapViewer.java
 src\com\syrus\AMFICOM\Client\Map\SpatialLayer.java
 src\com\syrus\AMFICOM\Client\Map\SpatialObject.java
+src\com\syrus\AMFICOM\Client\Map\Command\MapDesktopCommand.java
 src\com\syrus\AMFICOM\Client\Map\Command\Action\BindPhysicalNodeToSiteCommandBundle.java
 src\com\syrus\AMFICOM\Client\Map\Command\Action\BindUnboundLinkToPhysicalLinkCommandBundle.java
 src\com\syrus\AMFICOM\Client\Map\Command\Action\BindUnboundNodeToSiteCommandBundle.java
@@ -84,17 +85,17 @@ src\com\syrus\AMFICOM\Client\Map\Command\Editor\ViewMapSetupCommand.java
 src\com\syrus\AMFICOM\Client\Map\Command\Editor\ViewMapWindowCommand.java
 src\com\syrus\AMFICOM\Client\Map\Command\Map\CreateMapReportCommand.java
 src\com\syrus\AMFICOM\Client\Map\Command\Map\MapCloseCommand.java
-src\com\syrus\AMFICOM\Client\Map\Command\Map\MapEditorAddSchemeToViewCommand.java
-src\com\syrus\AMFICOM\Client\Map\Command\Map\MapEditorRemoveSchemeFromViewCommand.java
 src\com\syrus\AMFICOM\Client\Map\Command\Map\MapExportCommand.java
 src\com\syrus\AMFICOM\Client\Map\Command\Map\MapImportCommand.java
 src\com\syrus\AMFICOM\Client\Map\Command\Map\MapNewCommand.java
 src\com\syrus\AMFICOM\Client\Map\Command\Map\MapOpenCommand.java
 src\com\syrus\AMFICOM\Client\Map\Command\Map\MapSaveAsCommand.java
 src\com\syrus\AMFICOM\Client\Map\Command\Map\MapSaveCommand.java
+src\com\syrus\AMFICOM\Client\Map\Command\Map\MapViewAddSchemeCommand.java
 src\com\syrus\AMFICOM\Client\Map\Command\Map\MapViewCloseCommand.java
 src\com\syrus\AMFICOM\Client\Map\Command\Map\MapViewNewCommand.java
 src\com\syrus\AMFICOM\Client\Map\Command\Map\MapViewOpenCommand.java
+src\com\syrus\AMFICOM\Client\Map\Command\Map\MapViewRemoveSchemeCommand.java
 src\com\syrus\AMFICOM\Client\Map\Command\Map\MapViewSaveAsCommand.java
 src\com\syrus\AMFICOM\Client\Map\Command\Map\MapViewSaveCommand.java
 src\com\syrus\AMFICOM\Client\Map\Command\Navigate\CenterSelectionCommand.java
