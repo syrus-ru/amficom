@@ -136,7 +136,7 @@ public class SurveySchemeOpenCommand extends VoidCommand
 		{
 			super(dataSource);
 		}
-	
+
 		public void jbInit() throws Exception
 		{
 			super.jbInit();

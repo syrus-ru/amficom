@@ -54,7 +54,6 @@ import com.syrus.AMFICOM.Client.Configure.Report.EquipFeaturesReportModel;
 import com.syrus.AMFICOM.Client.Schematics.Report.SchemeReportModel;
 
 import com.syrus.AMFICOM.Client.Map.Report.MapReportModel;
-import com.syrus.AMFICOM.Client.Optimize.Report.OptimizationReportModel;
 import com.syrus.AMFICOM.Client.Analysis.Report.EvaluationReportModel;
 import com.syrus.AMFICOM.Client.Analysis.Report.SurveyReportModel;
 import com.syrus.AMFICOM.Client.Analysis.Report.AnalysisReportModel;

@@ -14,9 +14,9 @@ import com.syrus.AMFICOM.Client.Resource.Test.*;
 import com.syrus.AMFICOM.Client.Resource.Alarm.*;
 import com.syrus.AMFICOM.Client.General.*;
 
-public class RISDSurveyTypeDataSource 
-		extends RISDConfigDataSource
-		implements DataSourceInterface 
+public class RISDSurveyTypeDataSource
+		extends RISDMapDataSource
+		implements DataSourceInterface
 {
 	protected RISDSurveyTypeDataSource()
 	{
@@ -61,11 +61,11 @@ public class RISDSurveyTypeDataSource
 		paramtypes = pth.value;
 		count = paramtypes.length;
 		System.out.println("...Done! " + count + " paramtype(s) fetched");
-	    for (i = 0; i < count; i++)
+		 for (i = 0; i < count; i++)
 		{
 			paramtype = new GlobalParameterType(paramtypes[i]);
 			Pool.put(GlobalParameterType.typ, paramtype.getId(), paramtype);
-	    }
+		 }
 	}
 
 	public void LoadParameterTypes(String[] ids)
@@ -102,11 +102,11 @@ public class RISDSurveyTypeDataSource
 		paramtypes = pth.value;
 		count = paramtypes.length;
 		System.out.println("...Done! " + count + " paramtype(s) fetched");
-	    for (i = 0; i < count; i++)
+		 for (i = 0; i < count; i++)
 		{
 			paramtype = new GlobalParameterType(paramtypes[i]);
 			Pool.put(GlobalParameterType.typ, paramtype.getId(), paramtype);
-	    }
+		 }
 	}
 
 	public void LoadTestTypes()
@@ -143,12 +143,12 @@ public class RISDSurveyTypeDataSource
 		testtypes = tth.value;
 		count = testtypes.length;
 		System.out.println("...Done! " + count + " testtype(s) fetched");
-	    for (i = 0; i < count; i++)
+		 for (i = 0; i < count; i++)
 		{
 			testtype = new TestType(testtypes[i]);
 			Pool.put("testtype", testtype.getId(), testtype);
 //			Pool.putName("testtype", testtype.getId(), testtype.getName());
-	    }
+		 }
 	}
 
 	public void LoadTestTypes(String[] ids)
@@ -185,12 +185,12 @@ public class RISDSurveyTypeDataSource
 		testtypes = tth.value;
 		count = testtypes.length;
 		System.out.println("...Done! " + count + " testtype(s) fetched");
-	    for (i = 0; i < count; i++)
+		 for (i = 0; i < count; i++)
 		{
 			testtype = new TestType(testtypes[i]);
 			Pool.put("testtype", testtype.getId(), testtype);
 //			Pool.putName("testtype", testtype.getId(), testtype.getName());
-	    }
+		 }
 	}
 
 	public void LoadAnalysisTypes()
@@ -227,11 +227,11 @@ public class RISDSurveyTypeDataSource
 		atypes = ath.value;
 		count = atypes.length;
 		System.out.println("...Done! " + count + " Analysistype(s) fetched");
-	    for (i = 0; i < count; i++)
+		 for (i = 0; i < count; i++)
 		{
 			atype = new AnalysisType(atypes[i]);
 			Pool.put(AnalysisType.typ, atype.getId(), atype);
-	    }
+		 }
 	}
 
 	public void LoadEvaluationTypes()
@@ -268,11 +268,11 @@ public class RISDSurveyTypeDataSource
 		etypes = eth.value;
 		count = etypes.length;
 		System.out.println("...Done! " + count + " Evaluationtype(s) fetched");
-	    for (i = 0; i < count; i++)
+		 for (i = 0; i < count; i++)
 		{
 			etype = new EvaluationType(etypes[i]);
 			Pool.put(EvaluationType.typ, etype.getId(), etype);
-	    }
+		 }
 	}
 
 	public void LoadAnalysisTypes(String[] ids)
@@ -309,11 +309,11 @@ public class RISDSurveyTypeDataSource
 		atypes = ath.value;
 		count = atypes.length;
 		System.out.println("...Done! " + count + " Analysistype(s) fetched");
-	    for (i = 0; i < count; i++)
+		 for (i = 0; i < count; i++)
 		{
 			atype = new AnalysisType(atypes[i]);
 			Pool.put(AnalysisType.typ, atype.getId(), atype);
-	    }
+		 }
 	}
 
 	public void LoadEvaluationTypes(String[] ids)
@@ -350,11 +350,11 @@ public class RISDSurveyTypeDataSource
 		etypes = eth.value;
 		count = etypes.length;
 		System.out.println("...Done! " + count + " Evaluationtype(s) fetched");
-	    for (i = 0; i < count; i++)
+		 for (i = 0; i < count; i++)
 		{
 			etype = new EvaluationType(etypes[i]);
 			Pool.put(EvaluationType.typ, etype.getId(), etype);
-	    }
+		 }
 	}
 
 	public void LoadModelingTypes()
@@ -391,11 +391,11 @@ public class RISDSurveyTypeDataSource
 		mtypes = mth.value;
 		count = mtypes.length;
 		System.out.println("...Done! " + count + " Modeling type(s) fetched");
-	    for (i = 0; i < count; i++)
+		 for (i = 0; i < count; i++)
 		{
 			mtype = new ModelingType(mtypes[i]);
 			Pool.put(ModelingType.typ, mtype.getId(), mtype);
-	    }
+		 }
 	}
 
 	public void LoadModelingTypes(String[] ids)
@@ -432,11 +432,11 @@ public class RISDSurveyTypeDataSource
 		mtypes = mth.value;
 		count = mtypes.length;
 		System.out.println("...Done! " + count + " Modeling type(s) fetched");
-	    for (i = 0; i < count; i++)
+		 for (i = 0; i < count; i++)
 		{
 			mtype = new ModelingType(mtypes[i]);
 			Pool.put(ModelingType.typ, mtype.getId(), mtype);
-	    }
+		 }
 	}
 
 }

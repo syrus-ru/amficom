@@ -257,7 +257,7 @@ public class SurveyMDIMain extends JFrame implements OperationListener {
 		/*
 		 * internal_dispatcher.register(this, "contextchange");
 		 * Environment.the_dispatcher.register(this, "contextchange");
-		 * 
+		 *
 		 * internal_dispatcher.register(this, "mapframeshownevent");
 		 * internal_dispatcher.register(this, "mapjframeshownevent");
 		 * internal_dispatcher.register(this, "mapcloseevent");
@@ -518,7 +518,7 @@ public class SurveyMDIMain extends JFrame implements OperationListener {
 				 * SchemePanel) { schemeAlarmUpdater = new
 				 * SchemeAlarmUpdater(aContext, (SchemePanel)frame.panel);
 				 * schemeAlarmUpdater.start(); // frame.startPathAnimator();
-				 * 
+				 *
 				 * break; } } } } else if (!schemeAlarmUpdater.flag)
 				 * schemeAlarmUpdater.start();
 				 */

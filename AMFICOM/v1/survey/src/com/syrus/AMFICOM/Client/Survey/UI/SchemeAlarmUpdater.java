@@ -4,7 +4,7 @@ import java.util.*;
 
 import com.syrus.AMFICOM.Client.Survey.*;
 import com.syrus.AMFICOM.CORBA.General.*;
-import com.syrus.AMFICOM.Client.Schematics.General.*;
+import com.syrus.AMFICOM.Client.General.Scheme.SchemePanel;
 import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.Resource.Alarm.*;
