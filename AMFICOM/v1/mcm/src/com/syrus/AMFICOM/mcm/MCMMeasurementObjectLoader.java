@@ -1,5 +1,5 @@
 /*
- * $Id: MCMMeasurementObjectLoader.java,v 1.3 2004/08/31 15:35:23 bob Exp $
+ * $Id: MCMMeasurementObjectLoader.java,v 1.4 2004/09/16 15:49:53 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,33 +8,52 @@
 
 package com.syrus.AMFICOM.mcm;
 
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.DatabaseException;
+import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.CommunicationException;
+import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.general.corba.ErrorCode;
+import com.syrus.AMFICOM.measurement.AnalysisDatabase;
+import com.syrus.AMFICOM.measurement.AnalysisTypeDatabase;
+import com.syrus.AMFICOM.measurement.EvaluationDatabase;
+import com.syrus.AMFICOM.measurement.EvaluationTypeDatabase;
+import com.syrus.AMFICOM.measurement.MeasurementDatabase;
+import com.syrus.AMFICOM.measurement.MeasurementDatabaseContext;
 import com.syrus.AMFICOM.measurement.MeasurementObjectLoader;
+import com.syrus.AMFICOM.measurement.MeasurementSetupDatabase;
+import com.syrus.AMFICOM.measurement.MeasurementTypeDatabase;
 import com.syrus.AMFICOM.measurement.ParameterType;
 import com.syrus.AMFICOM.measurement.MeasurementType;
 import com.syrus.AMFICOM.measurement.AnalysisType;
 import com.syrus.AMFICOM.measurement.EvaluationType;
+import com.syrus.AMFICOM.measurement.ParameterTypeDatabase;
+import com.syrus.AMFICOM.measurement.ResultDatabase;
 import com.syrus.AMFICOM.measurement.Set;
 import com.syrus.AMFICOM.measurement.MeasurementSetup;
 import com.syrus.AMFICOM.measurement.Measurement;
 import com.syrus.AMFICOM.measurement.Analysis;
 import com.syrus.AMFICOM.measurement.Evaluation;
+import com.syrus.AMFICOM.measurement.SetDatabase;
+import com.syrus.AMFICOM.measurement.TemporalPatternDatabase;
 import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.AMFICOM.measurement.Result;
 import com.syrus.AMFICOM.measurement.TemporalPattern;
+import com.syrus.AMFICOM.measurement.TestDatabase;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2004/08/31 15:35:23 $
- * @author $Author: bob $
+ * @version $Revision: 1.4 $, $Date: 2004/09/16 15:49:53 $
+ * @author $Author: max $
  * @module mcm_v1
  */
 
@@ -258,4 +277,353 @@ public final class MCMMeasurementObjectLoader implements MeasurementObjectLoader
 		}
 		return temporalPattern;
 	}
+    
+    public List loadAnalyses(List ids) throws DatabaseException,
+            CommunicationException {
+    	AnalysisDatabase database = (AnalysisDatabase)MeasurementDatabaseContext.getAnalysisDatabase();
+        try {
+            return database.retrieveByIds(ids, null);
+        } catch (IllegalDataException e) {
+            Log.errorMessage("MCMMeasumentObjectLoader.loadAnalyses | Illegal Storable Object: " + e.getMessage());
+            throw new DatabaseException("MCMMeasumentObjectLoader.loadAnalyses | Illegal Storable Object: " + e.getMessage());
+        }        
+    }
+    
+    public List loadAnalysisTypes(List ids) throws DatabaseException,
+            CommunicationException {
+        MeasurementDatabase database = (MeasurementDatabase)MeasurementDatabaseContext.getMeasurementDatabase();
+        List list;
+        List copyOfList;
+        AnalysisType analysisType;
+        try {
+            list = database.retrieveByIds(ids, null);
+            copyOfList = new LinkedList(list);
+            for (Iterator it = copyOfList.iterator(); it.hasNext();) {
+                Identifier id = ((StorableObject) it.next()).getId();
+                if(ids.contains(id)) it.remove();
+            }
+            for (Iterator it = copyOfList.iterator(); it.hasNext();) {
+                Identifier id = ((StorableObject) it.next()).getId();
+                Log.debugMessage("AnalysisType '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL08);
+                try {
+                    analysisType = AnalysisType.getInstance(MeasurementControlModule.mServerRef.transmitAnalysisType((Identifier_Transferable)id.getTransferable()));
+                    list.add(analysisType);
+                }
+                catch (org.omg.CORBA.SystemException se) {
+                    Log.errorException(se);
+                    MeasurementControlModule.activateMServerReference();
+                    throw new CommunicationException("System exception -- " + se.getMessage(), se);
+                }
+                catch (AMFICOMRemoteException are) {
+                    if (are.error_code.equals(ErrorCode.ERROR_NOT_FOUND))
+                        Log.errorMessage("Analysis type '" + id + "' not found on server database");
+                    else
+                        Log.errorMessage("Cannot retrieve analysis type '" + id + "' from server database -- " + are.message);
+                }
+                catch (CreateObjectException coe) {
+                    Log.errorException(coe);
+                }
+            }
+        } catch (IllegalDataException e) {
+            Log.errorMessage("MCMMeasumentObjectLoader.loadEvaluations | Illegal Storable Object: " + e.getMessage());
+            throw new DatabaseException("MCMMeasumentObjectLoader.loadEvaluations | Illegal Storable Object: " + e.getMessage());
+        }
+        return list;
+    }
+    
+	public List loadEvaluations(List ids) throws DatabaseException,
+			CommunicationException {
+		EvaluationDatabase database = (EvaluationDatabase)MeasurementDatabaseContext.getEvaluationDatabase();
+        try {
+            return database.retrieveByIds(ids, null);
+        } catch (IllegalDataException e) {
+            Log.errorMessage("MCMMeasumentObjectLoader.loadAnalysisTypes | Illegal Storable Object: " + e.getMessage());
+            throw new DatabaseException("MCMMeasumentObjectLoader.loadAnalysisTypes | Illegal Storable Object: " + e.getMessage());
+        } 
+	}
+    
+	public List loadEvaluationTypes(List ids) throws DatabaseException,
+			CommunicationException {
+		EvaluationTypeDatabase database = (EvaluationTypeDatabase)MeasurementDatabaseContext.getAnalysisTypeDatabase();
+        List list;
+        List copyOfList;
+        EvaluationType evaluationType;
+        try {
+            list = database.retrieveByIds(ids, null);
+            copyOfList = new LinkedList(list);
+            for (Iterator it = copyOfList.iterator(); it.hasNext();) {
+                Identifier id = ((StorableObject) it.next()).getId();
+                if(ids.contains(id)) it.remove();
+            }
+            for (Iterator it = copyOfList.iterator(); it.hasNext();) {
+                Identifier id = ((StorableObject) it.next()).getId();
+                Log.debugMessage("EvaluationType '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL08);
+                try {
+                    evaluationType = EvaluationType.getInstance(MeasurementControlModule.mServerRef.transmitEvaluationType((Identifier_Transferable)id.getTransferable()));
+                    list.add(evaluationType);
+                }
+                catch (org.omg.CORBA.SystemException se) {
+                    Log.errorException(se);
+                    MeasurementControlModule.activateMServerReference();
+                    throw new CommunicationException("System exception -- " + se.getMessage(), se);
+                }
+                catch (AMFICOMRemoteException are) {
+                    if (are.error_code.equals(ErrorCode.ERROR_NOT_FOUND))
+                        Log.errorMessage("Evaluation type '" + id + "' not found on server database");
+                    else
+                        Log.errorMessage("Cannot retrieve evaluation type '" + id + "' from server database -- " + are.message);
+                }
+                catch (CreateObjectException coe) {
+                    Log.errorException(coe);
+                }
+            }
+        } catch (IllegalDataException e) {
+            Log.errorMessage("MCMMeasumentObjectLoader.loadEvaluationType | Illegal Storable Object: " + e.getMessage());
+            throw new DatabaseException("MCMMeasumentObjectLoader.loadEvaluationType | Illegal Storable Object: " + e.getMessage());
+        }
+        return list;
+	}
+    
+	public List loadMeasurements(List ids) throws DatabaseException,
+			CommunicationException {
+		MeasurementDatabase database = (MeasurementDatabase)MeasurementDatabaseContext.getMeasurementDatabase();
+        try {
+            return database.retrieveByIds(ids, null);
+        } catch (IllegalDataException e) {
+            Log.errorMessage("MCMMeasumentObjectLoader.loadMeasurements | Illegal Storable Object: " + e.getMessage());
+            throw new DatabaseException("MCMMeasumentObjectLoader.loadMeasurements | Illegal Storable Object: " + e.getMessage());
+        } 
+	}
+    
+	public List loadMeasurementSetups(List ids) throws DatabaseException,
+			CommunicationException {
+		MeasurementSetupDatabase database = (MeasurementSetupDatabase)MeasurementDatabaseContext.getMeasurementSetupDatabase();
+        List list;
+        List copyOfList;
+        MeasurementSetup measurementSetup;
+        try {
+            list = database.retrieveByIds(ids, null);
+            copyOfList = new LinkedList(list);
+            for (Iterator it = copyOfList.iterator(); it.hasNext();) {
+                Identifier id = ((StorableObject) it.next()).getId();
+                if(ids.contains(id)) it.remove();
+            }
+            for (Iterator it = copyOfList.iterator(); it.hasNext();) {
+                Identifier id = ((StorableObject) it.next()).getId();
+                Log.debugMessage("MeasurementSetup '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL08);
+                try {
+                    measurementSetup = MeasurementSetup.getInstance(MeasurementControlModule.mServerRef.transmitMeasurementSetup((Identifier_Transferable)id.getTransferable()));
+                    list.add(measurementSetup);
+                }
+                catch (org.omg.CORBA.SystemException se) {
+                    Log.errorException(se);
+                    MeasurementControlModule.activateMServerReference();
+                    throw new CommunicationException("System exception -- " + se.getMessage(), se);
+                }
+                catch (AMFICOMRemoteException are) {
+                    if (are.error_code.equals(ErrorCode.ERROR_NOT_FOUND))
+                        Log.errorMessage("Measurement setup '" + id + "' not found on server database");
+                    else
+                        Log.errorMessage("Cannot retrieve measurement setup '" + id + "' from server database -- " + are.message);
+                }
+                catch (CreateObjectException coe) {
+                    Log.errorException(coe);
+                }
+            }
+        } catch (IllegalDataException e) {
+            Log.errorMessage("MCMMeasumentObjectLoader.loadMeasurementSetups | Illegal Storable Object: " + e.getMessage());
+            throw new DatabaseException("MCMMeasumentObjectLoader.loadMeasurementSetups | Illegal Storable Object: " + e.getMessage());
+        }
+        return list;
+	}
+    
+	public List loadMeasurementTypes(List ids) throws DatabaseException,
+			CommunicationException {
+		MeasurementTypeDatabase database = (MeasurementTypeDatabase)MeasurementDatabaseContext.getMeasurementTypeDatabase();
+        List list;
+        List copyOfList;
+        MeasurementType measurementType;
+        try {
+            list = database.retrieveByIds(ids, null);
+            copyOfList = new LinkedList(list);
+            for (Iterator it = copyOfList.iterator(); it.hasNext();) {
+                Identifier id = ((StorableObject) it.next()).getId();
+                if(ids.contains(id)) it.remove();
+            }
+            for (Iterator it = copyOfList.iterator(); it.hasNext();) {
+                Identifier id = ((StorableObject) it.next()).getId();
+                Log.debugMessage("MeasurementType '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL08);
+                try {
+                    measurementType = MeasurementType.getInstance(MeasurementControlModule.mServerRef.transmitMeasurementType((Identifier_Transferable)id.getTransferable()));
+                    list.add(measurementType);
+                }
+                catch (org.omg.CORBA.SystemException se) {
+                    Log.errorException(se);
+                    MeasurementControlModule.activateMServerReference();
+                    throw new CommunicationException("System exception -- " + se.getMessage(), se);
+                }
+                catch (AMFICOMRemoteException are) {
+                    if (are.error_code.equals(ErrorCode.ERROR_NOT_FOUND))
+                        Log.errorMessage("Measurement type '" + id + "' not found on server database");
+                    else
+                        Log.errorMessage("Cannot retrieve measurement type '" + id + "' from server database -- " + are.message);
+                }
+                catch (CreateObjectException coe) {
+                    Log.errorException(coe);
+                }
+            }
+        } catch (IllegalDataException e) {
+            Log.errorMessage("MCMMeasumentObjectLoader.loadMeasurementTypes | Illegal Storable Object: " + e.getMessage());
+            throw new DatabaseException("MCMMeasumentObjectLoader.loadMeasurementTypes | Illegal Storable Object: " + e.getMessage());
+        }
+        return list;
+	}
+    
+	public List loadParameterTypes(List ids) throws DatabaseException,
+			CommunicationException {
+		ParameterTypeDatabase database = (ParameterTypeDatabase)MeasurementDatabaseContext.getParameterTypeDatabase();
+        List list;
+        List copyOfList;
+        ParameterType parameterType;
+        try {
+            list = database.retrieveByIds(ids, null);
+            copyOfList = new LinkedList(list);
+            for (Iterator it = copyOfList.iterator(); it.hasNext();) {
+                Identifier id = ((StorableObject) it.next()).getId();
+                if(ids.contains(id)) it.remove();
+            }
+            for (Iterator it = copyOfList.iterator(); it.hasNext();) {
+                Identifier id = ((StorableObject) it.next()).getId();
+                Log.debugMessage("ParameterType '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL08);
+                try {
+                    parameterType = ParameterType.getInstance(MeasurementControlModule.mServerRef.transmitParameterType((Identifier_Transferable)id.getTransferable()));
+                    list.add(parameterType);
+                }
+                catch (org.omg.CORBA.SystemException se) {
+                    Log.errorException(se);
+                    MeasurementControlModule.activateMServerReference();
+                    throw new CommunicationException("System exception -- " + se.getMessage(), se);
+                }
+                catch (AMFICOMRemoteException are) {
+                    if (are.error_code.equals(ErrorCode.ERROR_NOT_FOUND))
+                        Log.errorMessage("Parameter type '" + id + "' not found on server database");
+                    else
+                        Log.errorMessage("Cannot retrieve parameter type '" + id + "' from server database -- " + are.message);
+                }
+                catch (CreateObjectException coe) {
+                    Log.errorException(coe);
+                }
+            }
+        } catch (IllegalDataException e) {
+            Log.errorMessage("MCMMeasumentObjectLoader.loadParameterTypes | Illegal Storable Object: " + e.getMessage());
+            throw new DatabaseException("MCMMeasumentObjectLoader.loadParameterTypes | Illegal Storable Object: " + e.getMessage());
+        }
+        return list;
+	}
+    
+	public List loadResults(List ids) throws DatabaseException,
+			CommunicationException {
+		ResultDatabase database = (ResultDatabase)MeasurementDatabaseContext.getResultDatabase();
+        try {
+            return database.retrieveByIds(ids, null);
+        } catch (IllegalDataException e) {
+            Log.errorMessage("MCMMeasumentObjectLoader.loadResults | Illegal Storable Object: " + e.getMessage());
+            throw new DatabaseException("MCMMeasumentObjectLoader.loadResults | Illegal Storable Object: " + e.getMessage());
+        }  
+	}
+    
+	public List loadSets(List ids) throws DatabaseException,
+			CommunicationException {
+        SetDatabase database = (SetDatabase)MeasurementDatabaseContext.getSetDatabase();
+        List list;
+        List copyOfList;
+        Set set;
+        try {
+            list = database.retrieveByIds(ids, null);
+            copyOfList = new LinkedList(list);
+            for (Iterator it = copyOfList.iterator(); it.hasNext();) {
+                Identifier id = ((StorableObject) it.next()).getId();
+                if(ids.contains(id)) it.remove();
+            }
+            for (Iterator it = copyOfList.iterator(); it.hasNext();) {
+                Identifier id = ((StorableObject) it.next()).getId();
+                Log.debugMessage("Set '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL08);
+                try {
+                    set = Set.getInstance(MeasurementControlModule.mServerRef.transmitSet((Identifier_Transferable)id.getTransferable()));
+                    list.add(set);
+                }
+                catch (org.omg.CORBA.SystemException se) {
+                    Log.errorException(se);
+                    MeasurementControlModule.activateMServerReference();
+                    throw new CommunicationException("System exception -- " + se.getMessage(), se);
+                }
+                catch (AMFICOMRemoteException are) {
+                    if (are.error_code.equals(ErrorCode.ERROR_NOT_FOUND))
+                        Log.errorMessage("Set '" + id + "' not found on server database");
+                    else
+                        Log.errorMessage("Cannot retrieve set '" + id + "' from server database -- " + are.message);
+                }
+                catch (CreateObjectException coe) {
+                    Log.errorException(coe);
+                }
+            }
+        } catch (IllegalDataException e) {
+            Log.errorMessage("MCMMeasumentObjectLoader.loadSets | Illegal Storable Object: " + e.getMessage());
+            throw new DatabaseException("MCMMeasumentObjectLoader.loadSets | Illegal Storable Object: " + e.getMessage());
+        }
+        return list;
+	}
+    
+	public List loadTemporalPatterns(List ids) throws DatabaseException,
+			CommunicationException {
+		TemporalPatternDatabase database = (TemporalPatternDatabase)MeasurementDatabaseContext.getTemporalPatternDatabase();
+        List list;
+        List copyOfList;
+        TemporalPattern temporalPattern;
+        try {
+            list = database.retrieveByIds(ids, null);
+            copyOfList = new LinkedList(list);
+            for (Iterator it = copyOfList.iterator(); it.hasNext();) {
+                Identifier id = ((StorableObject) it.next()).getId();
+                if(ids.contains(id)) it.remove();
+            }
+            for (Iterator it = copyOfList.iterator(); it.hasNext();) {
+                Identifier id = ((StorableObject) it.next()).getId();
+                Log.debugMessage("TemporalPattern '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL08);
+                try {
+                    temporalPattern = new TemporalPattern(MeasurementControlModule.mServerRef.transmitTemporalPattern((Identifier_Transferable)id.getTransferable()));
+                    list.add(temporalPattern);
+                }
+                catch (org.omg.CORBA.SystemException se) {
+                    Log.errorException(se);
+                    MeasurementControlModule.activateMServerReference();
+                    throw new CommunicationException("System exception -- " + se.getMessage(), se);
+                }
+                catch (AMFICOMRemoteException are) {
+                    if (are.error_code.equals(ErrorCode.ERROR_NOT_FOUND))
+                        Log.errorMessage("TemporalPattern '" + id + "' not found on server database");
+                    else
+                        Log.errorMessage("Cannot retrieve temporal pattern '" + id + "' from server database -- " + are.message);
+                }
+                catch (CreateObjectException coe) {
+                    Log.errorException(coe);
+                }
+            }
+        } catch (IllegalDataException e) {
+            Log.errorMessage("MCMMeasumentObjectLoader.loadTemporalPatterns | Illegal Storable Object: " + e.getMessage());
+            throw new DatabaseException("MCMMeasumentObjectLoader.loadTemporalPatterns | Illegal Storable Object: " + e.getMessage());
+        }
+        return list;
+	}
+    
+	public List loadTests(List ids) throws DatabaseException,
+			CommunicationException {
+		TestDatabase database = (TestDatabase)MeasurementDatabaseContext.getTestDatabase();
+        try {
+            return database.retrieveByIds(ids, null);
+        } catch (IllegalDataException e) {
+            Log.errorMessage("MCMMeasumentObjectLoader.loadTests | Illegal Storable Object: " + e.getMessage());
+            throw new DatabaseException("MCMMeasumentObjectLoader.loadTests | Illegal Storable Object: " + e.getMessage());
+        }
+    }
 }
