@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementControlModule.java,v 1.30 2004/09/20 06:35:15 peskovsky Exp $
+ * $Id: MeasurementControlModule.java,v 1.31 2004/09/23 10:27:09 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -42,7 +42,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.30 $, $Date: 2004/09/20 06:35:15 $
+ * @version $Revision: 1.31 $, $Date: 2004/09/23 10:27:09 $
  * @author $Author: peskovsky $
  * @module mcm_v1
  */
@@ -181,6 +181,17 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 	private static void activateKISTransceivers() {
 		transceivers = new Hashtable();
     String serviceName = "7500";
+
+    try
+    {
+      System.loadLibrary("mcmtransceiver");
+    }
+    catch (Exception exc)
+    {
+      Log.errorMessage("Failed to find mcmtransceiver library at " +
+                       System.getProperty("java.library.path"));
+    }
+
     try
     {
       TCPServer tcpServer = new TCPServer(serviceName,transceivers);  
