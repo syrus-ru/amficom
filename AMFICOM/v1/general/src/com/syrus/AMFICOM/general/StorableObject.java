@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObject.java,v 1.5 2004/08/06 13:43:44 arseniy Exp $
+ * $Id: StorableObject.java,v 1.6 2004/08/17 10:34:11 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,8 +11,8 @@ package com.syrus.AMFICOM.general;
 import java.util.Date;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2004/08/06 13:43:44 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.6 $, $Date: 2004/08/17 10:34:11 $
+ * @author $Author: bob $
  * @module general_v1
  */
 
@@ -25,6 +25,21 @@ public abstract class StorableObject implements Identified, TransferableObject {
 	protected Identifier	modifierId;
 	protected long			version			= 0;
 	protected long			currentVersion	= 0;
+
+	protected static final String KEY_VALUE_SEPERATOR = "=";
+	protected static final String ID 				= "id"+KEY_VALUE_SEPERATOR;
+	protected static final String ID_CREATED 		= "created"+KEY_VALUE_SEPERATOR;
+	protected static final String ID_MODIFIED 		= "modified"+KEY_VALUE_SEPERATOR;
+	protected static final String ID_CREATOR_ID 	= "creatorId"+KEY_VALUE_SEPERATOR;
+	protected static final String ID_MODIFIER_ID 	= "modifierId"+KEY_VALUE_SEPERATOR;
+	protected static final String ID_VERSION 		= "version"+KEY_VALUE_SEPERATOR;
+	
+	protected static final String NULL 				= "'null'";
+	/**
+	 * end of String line
+	 */
+	protected static final String EOSL				= ";\n";
+
 
 	protected StorableObject(Identifier id) {
 		this.id = id;
