@@ -1,5 +1,5 @@
 /**
- * $Id: LogicalNetLayer.java,v 1.50 2005/03/04 14:39:08 krupenn Exp $
+ * $Id: LogicalNetLayer.java,v 1.51 2005/03/10 17:43:58 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -80,7 +80,7 @@ import com.syrus.AMFICOM.scheme.corba.SchemePath;
  * 
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.50 $, $Date: 2005/03/04 14:39:08 $
+ * @version $Revision: 1.51 $, $Date: 2005/03/10 17:43:58 $
  * @module mapviewclient_v2
  */
 public abstract class LogicalNetLayer implements MapCoordinatesConverter
@@ -425,13 +425,6 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 			setScale(this.mapView.getScale());
 			setCenter(this.mapView.getCenter());
 
-//			Iterator e = this.mapView.getAllElements().iterator();
-//			while (e.hasNext())
-//			{
-//				MapElement mapElement = (MapElement )e.next();
-//				mapElement.setMap(this.mapView.getMap());
-//			}
-
 			if(this.aContext != null)
 				if(this.aContext.getApplicationModel() != null)
 					if (this.aContext.getApplicationModel().isEnabled(MapApplicationModel.ACTION_INDICATION))
@@ -441,7 +434,6 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 				}
 		}
 
-//		this.this.mapView.setLogicalNetLayer(this);
 		getMapViewController().setMapView(this.mapView);
 
 		//Поумолчанию текущий элемент Void
