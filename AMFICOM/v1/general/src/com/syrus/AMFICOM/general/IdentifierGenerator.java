@@ -1,5 +1,5 @@
 /*
- * $Id: IdentifierGenerator.java,v 1.4 2004/12/17 18:44:23 arseniy Exp $
+ * $Id: IdentifierGenerator.java,v 1.5 2004/12/20 13:32:57 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,6 +8,7 @@
 
 package com.syrus.AMFICOM.general;
 
+import java.util.List;
 import java.util.LinkedList;
 import java.sql.Statement;
 import java.sql.ResultSet;
@@ -16,7 +17,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2004/12/17 18:44:23 $
+ * @version $Revision: 1.5 $, $Date: 2004/12/20 13:32:57 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -33,14 +34,14 @@ public class IdentifierGenerator {
 	}
 
 	public static synchronized Identifier[] generateIdentifierRange(short entityCode, int rangeSize) throws IllegalObjectEntityException, IdentifierGenerationException {
-		LinkedList linkedlist = new LinkedList();
+		List list = new LinkedList();
 		short major = generateMajor(entityCode);
 		long minor;
 		for (int i = 0; i < rangeSize; i++) {
 			minor = generateMinor(entityCode);
-			linkedlist.add(new Identifier(major, minor));
+			list.add(new Identifier(major, minor));
 		}
-		return (Identifier[])linkedlist.toArray(new Identifier[linkedlist.size()]);
+		return (Identifier[])list.toArray(new Identifier[list.size()]);
 	}
 
 	private static short generateMajor(short entityCode) throws IllegalObjectEntityException {
