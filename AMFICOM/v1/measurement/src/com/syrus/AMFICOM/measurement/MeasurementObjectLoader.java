@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementObjectLoader.java,v 1.6 2004/09/28 06:45:44 bob Exp $
+ * $Id: MeasurementObjectLoader.java,v 1.7 2004/09/28 07:44:10 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,7 +15,7 @@ import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.general.CommunicationException;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2004/09/28 06:45:44 $
+ * @version $Revision: 1.7 $, $Date: 2004/09/28 07:44:10 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -74,56 +74,56 @@ public interface MeasurementObjectLoader {
 
 	List loadTemporalPatterns(List ids) throws DatabaseException, CommunicationException;
 	
-	public void saveParameterType(ParameterType parameterType) throws DatabaseException, CommunicationException;
+	public void saveParameterType(ParameterType parameterType, boolean force) throws DatabaseException, CommunicationException;
 
-	public void saveMeasurementType(MeasurementType measurementType) throws DatabaseException, CommunicationException;
+	public void saveMeasurementType(MeasurementType measurementType, boolean force) throws DatabaseException, CommunicationException;
 
-	public void saveAnalysisType(AnalysisType analysisType) throws DatabaseException, CommunicationException;
+	public void saveAnalysisType(AnalysisType analysisType, boolean force) throws DatabaseException, CommunicationException;
 
-	public void saveEvaluationType(EvaluationType evaluationType) throws DatabaseException, CommunicationException;
+	public void saveEvaluationType(EvaluationType evaluationType, boolean force) throws DatabaseException, CommunicationException;
 
-	public void saveSet(Set set) throws DatabaseException, CommunicationException;
+	public void saveSet(Set set, boolean force) throws DatabaseException, CommunicationException;
 
-	public void saveMeasurementSetup(MeasurementSetup measurementSetup) throws DatabaseException, CommunicationException;
+	public void saveMeasurementSetup(MeasurementSetup measurementSetup, boolean force) throws DatabaseException, CommunicationException;
 
-	public void saveModeling(Modeling modeling) throws DatabaseException, CommunicationException;
+	public void saveModeling(Modeling modeling, boolean force) throws DatabaseException, CommunicationException;
 
-	public void saveMeasurement(Measurement measurement) throws DatabaseException, CommunicationException;
+	public void saveMeasurement(Measurement measurement, boolean force) throws DatabaseException, CommunicationException;
 
-	public void saveAnalysis(Analysis analysis) throws DatabaseException, CommunicationException;
+	public void saveAnalysis(Analysis analysis, boolean force) throws DatabaseException, CommunicationException;
 
-	public void saveEvaluation(Evaluation evaluation) throws DatabaseException, CommunicationException;
+	public void saveEvaluation(Evaluation evaluation, boolean force) throws DatabaseException, CommunicationException;
 
-	public void saveTest(Test test) throws DatabaseException, CommunicationException;
+	public void saveTest(Test test, boolean force) throws DatabaseException, CommunicationException;
 
-	public void saveResult(Result result) throws DatabaseException, CommunicationException;
+	public void saveResult(Result result, boolean force) throws DatabaseException, CommunicationException;
 
-	public void saveTemporalPattern(TemporalPattern temporalPattern) throws DatabaseException, CommunicationException;
+	public void saveTemporalPattern(TemporalPattern temporalPattern, boolean force) throws DatabaseException, CommunicationException;
 
-	public void saveParameterTypes(List list) throws DatabaseException, CommunicationException;
+	public void saveParameterTypes(List list, boolean force) throws DatabaseException, CommunicationException;
 
-	public void saveMeasurementTypes(List list) throws DatabaseException, CommunicationException;
+	public void saveMeasurementTypes(List list, boolean force) throws DatabaseException, CommunicationException;
 
-	public void saveAnalysisTypes(List list) throws DatabaseException, CommunicationException;
+	public void saveAnalysisTypes(List list, boolean force) throws DatabaseException, CommunicationException;
 
-	public void saveEvaluationTypes(List list) throws DatabaseException, CommunicationException;
+	public void saveEvaluationTypes(List list, boolean force) throws DatabaseException, CommunicationException;
 
-	public void saveSets(List list) throws DatabaseException, CommunicationException;
+	public void saveSets(List list, boolean force) throws DatabaseException, CommunicationException;
 
-	public void saveModelings(List list) throws DatabaseException, CommunicationException;
+	public void saveModelings(List list, boolean force) throws DatabaseException, CommunicationException;
 
-	public void saveMeasurementSetups(List list) throws DatabaseException, CommunicationException;
+	public void saveMeasurementSetups(List list, boolean force) throws DatabaseException, CommunicationException;
 
-	public void saveMeasurements(List list) throws DatabaseException, CommunicationException;
+	public void saveMeasurements(List list, boolean force) throws DatabaseException, CommunicationException;
 
-	public void saveAnalyses(List list) throws DatabaseException, CommunicationException;
+	public void saveAnalyses(List list, boolean force) throws DatabaseException, CommunicationException;
 
-	public void saveEvaluations(List list) throws DatabaseException, CommunicationException;
+	public void saveEvaluations(List list, boolean force) throws DatabaseException, CommunicationException;
 
-	public void saveTests(List list) throws DatabaseException, CommunicationException;
+	public void saveTests(List list, boolean force) throws DatabaseException, CommunicationException;
 
-	public void saveResults(List list) throws DatabaseException, CommunicationException;
+	public void saveResults(List list, boolean force) throws DatabaseException, CommunicationException;
 
-	public void saveTemporalPatterns(List list) throws DatabaseException, CommunicationException;
+	public void saveTemporalPatterns(List list, boolean force) throws DatabaseException, CommunicationException;
 
 }
