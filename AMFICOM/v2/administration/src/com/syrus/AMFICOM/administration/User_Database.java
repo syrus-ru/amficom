@@ -99,7 +99,26 @@ public class User_Database extends StorableObject_Database {
 
 	public void insert(StorableObject storableObject) throws Exception {
 		User user = this.fromStorableObject(storableObject);
-		
+		try {
+			this.insertUser(user);
+		}
+		catch (Exception e) {
+			try {
+				connection.rollback();
+			}
+			catch (SQLException sqle) {
+				Log.errorMessage("Exception in rolling back");
+				Log.errorException(sqle);
+			}
+			throw e;
+		}
+		try {
+			connection.commit();
+		}
+		catch (SQLException sqle) {
+			Log.errorMessage("Exception in commiting");
+			Log.errorException(sqle);
+		}
 	}
 
 	private void insertUser(User user) throws Exception {
@@ -123,7 +142,6 @@ public class User_Database extends StorableObject_Database {
 			statement = connection.createStatement();
 			Log.debugMessage("User_Database.insertUser | Trying: " + sql, Log.DEBUGLEVEL05);
 			statement.executeUpdate(sql);
-			connection.commit();
 		}
 		catch (SQLException sqle) {
 			String mesg = "User_Database.insertUser | Cannot insert user " + user_id_str;

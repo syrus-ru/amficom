@@ -154,7 +154,26 @@ public class MCM_Database extends StorableObject_Database {
 
 	public void insert(StorableObject storableObject) throws Exception {
 		MCM mcm = this.fromStorableObject(storableObject);
-		this.insertMCM(mcm);
+		try {
+			this.insertMCM(mcm);
+		}
+		catch (Exception e) {
+			try {
+				connection.rollback();
+			}
+			catch (SQLException sqle) {
+				Log.errorMessage("Exception in rolling back");
+				Log.errorException(sqle);
+			}
+			throw e;
+		}
+		try {
+			connection.commit();
+		}
+		catch (SQLException sqle) {
+			Log.errorMessage("Exception in commiting");
+			Log.errorException(sqle);
+		}
 	}
 
 	public void insertMCM(MCM mcm) throws Exception {
@@ -179,7 +198,6 @@ public class MCM_Database extends StorableObject_Database {
 			statement = connection.createStatement();
 			Log.debugMessage("MCM_Database.insertMCM | Trying: " + sql, Log.DEBUGLEVEL05);
 			statement.executeUpdate(sql);
-			connection.commit();
 		}
 		catch (SQLException sqle) {
 			String mesg = "MCM_Database.insertMCM | Cannot insert mcm " + mcm_id_str;

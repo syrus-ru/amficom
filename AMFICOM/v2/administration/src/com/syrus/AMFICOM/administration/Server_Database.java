@@ -120,10 +120,29 @@ public class Server_Database extends StorableObject_Database {
 
 	public void insert(StorableObject storableObject) throws Exception {
 		Server server = this.fromStorableObject(storableObject);
-		this.insertServer(server);
+		try {
+			this.insertServer(server);
+		}
+		catch (Exception e) {
+			try {
+				connection.rollback();
+			}
+			catch (SQLException sqle) {
+				Log.errorMessage("Exception in rolling back");
+				Log.errorException(sqle);
+			}
+			throw e;
+		}
+		try {
+			connection.commit();
+		}
+		catch (SQLException sqle) {
+			Log.errorMessage("Exception in commiting");
+			Log.errorException(sqle);
+		}
 	}
 
-	public void insertServer(Server server) throws Exception {
+	private void insertServer(Server server) throws Exception {
 		String server_id_str = server.getId().toString();
 		String sql = "INSERT INTO " + ObjectEntities.SERVER_ENTITY
 			+ " (id, created, modified, creator_id, modifier_id, name, description, location, contact, hostname, created, modified, sessions)"
@@ -145,7 +164,6 @@ public class Server_Database extends StorableObject_Database {
 			statement = connection.createStatement();
 			Log.debugMessage("Server_Database.insertServer | Trying: " + sql, Log.DEBUGLEVEL05);
 			statement.executeUpdate(sql);
-			connection.commit();
 		}
 		catch (SQLException sqle) {
 			String mesg = "Server_Database.insertServer | Cannot insert server " + server_id_str;
