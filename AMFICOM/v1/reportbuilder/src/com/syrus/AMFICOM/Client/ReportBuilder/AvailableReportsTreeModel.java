@@ -385,7 +385,7 @@ public class AvailableReportsTreeModel extends ObjectResourceTreeModel
 
 					ortn = new ObjectResourceTreeNode(
 						"multiplexor",
-						LangModelConfig.getString("multiplexer"),
+						LangModelConfig.getString("multiplexor"),
 						true);
 
 					vec.add(ortn);
@@ -682,7 +682,7 @@ getObject();
 
 					String curName = ml.getName();
 					ObjectsReport curReport = new ObjectsReport(new MapReportModel(),
-						curName, MapReportModel.rep_topology, toAskObjects(node));
+						MapReportModel.rep_linkChars,"", toAskObjects(node));
 
 					try
 					{

@@ -1762,21 +1762,24 @@ getHeight();
 				}
 				if (transf_rep.field.equals(MapReportModel.rep_topology))
 				{
-					String scheme_id = SelectSolutionFrame.selectedScheme.id;
-
-					if (SelectSolutionFrame.selectedMap == null)
+					if (transf_rep.getReserve() == null)//////Возможно придётся везде ставить
 					{
-						JOptionPane.showMessageDialog(
-							Environment.getActiveWindow(),
-							LangModelReport.getString("label_noselectedTopology"),
-							LangModelReport.getString("label_error"),
-							JOptionPane.ERROR_MESSAGE);
-						return;
+						String scheme_id = SelectSolutionFrame.selectedScheme.id;
+
+						if (SelectSolutionFrame.selectedMap == null)
+						{
+							JOptionPane.showMessageDialog(
+								Environment.getActiveWindow(),
+								LangModelReport.getString("label_noselectedTopology"),
+								LangModelReport.getString("label_error"),
+								JOptionPane.ERROR_MESSAGE);
+							return;
+						}
+
+						String map_id = SelectSolutionFrame.selectedMap.id;
+
+						transf_rep.setReserve(scheme_id + ":" + map_id);
 					}
-
-					String map_id = SelectSolutionFrame.selectedMap.id;
-
-					transf_rep.setReserve(scheme_id + ":" + map_id);
 				}
 ////////////
 				if (transf_rep.field.equals(OptimizationReportModel.sourceData)
