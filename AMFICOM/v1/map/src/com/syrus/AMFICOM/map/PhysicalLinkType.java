@@ -1,5 +1,5 @@
 /*
- * $Id: PhysicalLinkType.java,v 1.13 2005/01/17 10:54:59 bob Exp $
+ * $Id: PhysicalLinkType.java,v 1.14 2005/01/20 14:44:30 krupenn Exp $
  *
  * Copyright њ 2004 Syrus Systems.
  * оЅ’ёќѕ-‘≈»ќ…ё≈”Ћ…  √≈ќ‘“.
@@ -33,8 +33,9 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/01/17 10:54:59 $
- * @author $Author: bob $
+ * внутренн€€ проводка
+ * @version $Revision: 1.14 $, $Date: 2005/01/20 14:44:30 $
+ * @author $Author: krupenn $
  * @module map_v1
  */
 public class PhysicalLinkType extends StorableObjectType implements Characterized {
@@ -46,7 +47,7 @@ public class PhysicalLinkType extends StorableObjectType implements Characterize
 	public static final String OVERHEAD = "overhead";
 	public static final String UNBOUND = "cable";
 
-	/**внутренн€€ проводка
+	/**
 	 * Comment for <code>serialVersionUID</code>
 	 */
 	private static final long	serialVersionUID	= 3690191057812271924L;

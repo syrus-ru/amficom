@@ -1,5 +1,5 @@
 /*
- * $Id: Map.java,v 1.11 2005/01/19 06:43:33 krupenn Exp $
+ * $Id: Map.java,v 1.12 2005/01/20 14:44:30 krupenn Exp $
  *
  * Copyright ї 2004 Syrus Systems.
  * оБХЮОП-ФЕИОЙЮЕУЛЙК ГЕОФТ.
@@ -33,7 +33,7 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/01/19 06:43:33 $
+ * @version $Revision: 1.12 $, $Date: 2005/01/20 14:44:30 $
  * @author $Author: krupenn $
  * @module map_v1
  */
@@ -53,11 +53,9 @@ public class Map extends StorableObject {
 	public static final String COLUMN_MODIFIED = "modified";
 
 	/** 
-	 * массив параметров для экспорта. инициализируется только в случае
+	 * набор параметров для экспорта. инициализируется только в случае
 	 * необходимости экспорта
 	 */
-	public static Object[][] exportColumns = null;
-
 	private static java.util.Map exportMap = null;
 
 	private Identifier				domainId;
@@ -682,20 +680,6 @@ public class Map extends StorableObject {
 			this.selectedElements.remove(me);
 	}
 
-	public Object[][] exportColumns() {
-		if (exportColumns == null) {
-			exportColumns = new Object[3][2];
-			exportColumns[0][0] = COLUMN_ID;
-			exportColumns[1][0] = COLUMN_NAME;
-			exportColumns[2][0] = COLUMN_DESCRIPTION;
-		}
-		exportColumns[0][1] = getId();
-		exportColumns[1][1] = getName();
-		exportColumns[2][1] = getDescription();
-
-		return exportColumns;
-	}
-
 	public java.util.Map getExportMap() {
 		if(exportMap == null)
 			exportMap = new HashMap();		
@@ -706,54 +690,6 @@ public class Map extends StorableObject {
 			exportMap.put(COLUMN_DESCRIPTION, this.description);
 			return Collections.unmodifiableMap(exportMap);
 		}		
-	}
-	
-	public static Map createInstance(
-			Identifier creatorId,
-			Identifier domainId,
-			Object[][] exportColumns)
-		throws CreateObjectException 
-	{
-		Identifier id = null;
-		String name = null;
-		String description = null;
-
-		Object field;
-		Object value;
-
-		if (creatorId == null || domainId == null)
-			throw new IllegalArgumentException("Argument is 'null'");
-
-		for(int i = 0; i < exportColumns.length; i++)
-		{
-			field = exportColumns[i][0];
-			value = exportColumns[i][1];
-
-			if(field.equals(COLUMN_ID))
-				id = (Identifier )value;
-			else
-			if(field.equals(COLUMN_NAME))
-				name = (String )value;
-			else
-			if(field.equals(COLUMN_DESCRIPTION))
-				description = (String )value;
-		}
-
-		if (id == null || name == null || description == null)
-			throw new IllegalArgumentException("Argument is 'null'");
-
-		try 
-		{
-			return new Map(
-				id,
-				creatorId,
-				domainId,
-				name,
-				description);
-		} catch (Exception e) 
-		{
-			throw new CreateObjectException("Map.createInstance |  ", e);
-		}
 	}
 
 	public static Map createInstance(

@@ -1,5 +1,5 @@
 /*
- * $Id: NodeLink.java,v 1.16 2005/01/18 06:22:21 bob Exp $
+ * $Id: NodeLink.java,v 1.17 2005/01/20 14:44:30 krupenn Exp $
  *
  * Copyright ї 2004 Syrus Systems.
  * оБХЮОП-ФЕИОЙЮЕУЛЙК ГЕОФТ.
@@ -36,8 +36,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2005/01/18 06:22:21 $
- * @author $Author: bob $
+ * @version $Revision: 1.17 $, $Date: 2005/01/20 14:44:30 $
+ * @author $Author: krupenn $
  * @module map_v1
  */
 public class NodeLink extends StorableObject implements Characterized, MapElement {
@@ -55,11 +55,9 @@ public class NodeLink extends StorableObject implements Characterized, MapElemen
 	public static final String COLUMN_END_NODE_ID = "end_node_id";
 
 	/** 
-	 * массив параметров для экспорта. инициализируется только в случае
+	 * набор параметров для экспорта. инициализируется только в случае
 	 * необходимости экспорта
 	 */
-	private static Object[][] exportColumns = null;
-
 	private static java.util.Map exportMap = null;
 
 	private String					name;
@@ -410,31 +408,6 @@ public class NodeLink extends StorableObject implements Characterized, MapElemen
 		return getLength();
 	}
 
-	/**
-	 * @deprecated use {@link #getExportMap()}
-	 */
-	public Object[][] exportColumns()
-	{
-		if(exportColumns == null)
-		{
-			exportColumns = new Object[6][2];
-			exportColumns[0][0] = COLUMN_ID;
-			exportColumns[1][0] = COLUMN_NAME;
-			exportColumns[2][0] = COLUMN_LENGTH;
-			exportColumns[3][0] = COLUMN_PHYSICAL_LINK_ID;
-			exportColumns[4][0] = COLUMN_START_NODE_ID;
-			exportColumns[5][0] = COLUMN_END_NODE_ID;
-		}
-		exportColumns[0][1] = getId();
-		exportColumns[1][1] = getName();
-		exportColumns[2][1] = String.valueOf(getLength());
-		exportColumns[3][1] = getPhysicalLink().getId();
-		exportColumns[4][1] = getStartNode().getId();
-		exportColumns[5][1] = getEndNode().getId();
-
-		return exportColumns;
-	}
-	
 	public java.util.Map getExportMap() {
 		if(exportMap == null)
 			exportMap = new HashMap();		
@@ -448,76 +421,6 @@ public class NodeLink extends StorableObject implements Characterized, MapElemen
 			exportMap.put(COLUMN_END_NODE_ID, this.endNode.getId());
 			return Collections.unmodifiableMap(exportMap);
 		}		
-	}
-	/**
-	 * @deprecated use {@link #createInstance(Identifier, java.util.Map)}
-	 */
-	public static NodeLink createInstance(
-			Identifier creatorId,
-			Object[][] exportColumns)
-		throws CreateObjectException 
-	{
-		Identifier id = null;
-		String name = null;
-		double length = -1.0D;
-		Identifier physicalLinkId = null;
-		Identifier startNodeId = null;
-		Identifier endNodeId = null;
-
-		Object field;
-		Object value;
-
-		if (creatorId == null)
-			throw new IllegalArgumentException("Argument is 'null'");
-
-		for(int i = 0; i < exportColumns.length; i++)
-		{
-			field = exportColumns[i][0];
-			value = exportColumns[i][1];
-
-			if(field.equals(COLUMN_ID))
-				id = (Identifier )value;
-			else
-			if(field.equals(COLUMN_NAME))
-				name = (String )value;
-			else
-			if(field.equals(COLUMN_LENGTH))
-				length = Double.parseDouble((String )value);
-			else
-			if(field.equals(COLUMN_PHYSICAL_LINK_ID))
-				physicalLinkId = (Identifier )value;
-			else
-			if(field.equals(COLUMN_START_NODE_ID))
-				startNodeId = (Identifier )value;
-			else
-			if(field.equals(COLUMN_END_NODE_ID))
-				endNodeId = (Identifier )value;
-		}
-		if (id == null || name == null || physicalLinkId == null 
-				|| startNodeId == null || endNodeId == null)
-			throw new IllegalArgumentException("Argument is 'null'");
-
-		try {
-			PhysicalLink physicalLink = (PhysicalLink ) 
-				MapStorableObjectPool.getStorableObject(
-					physicalLinkId, false);
-			AbstractNode startNode = (AbstractNode )
-				MapStorableObjectPool.getStorableObject(
-					startNodeId, true);
-			AbstractNode endNode = (AbstractNode )
-				MapStorableObjectPool.getStorableObject(
-					endNodeId, true);
-			return new NodeLink(
-					id, 
-					creatorId, 
-					name,
-					physicalLink,
-					startNode,
-					endNode,
-					length);
-		} catch (ApplicationException e) {
-			throw new CreateObjectException("NodeLink.createInstance |  ", e);
-		}
 	}
 
 	public static NodeLink createInstance(Identifier creatorId,

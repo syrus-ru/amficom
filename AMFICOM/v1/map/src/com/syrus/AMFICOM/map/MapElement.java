@@ -1,5 +1,5 @@
 /**
- * $Id: MapElement.java,v 1.5 2005/01/18 15:42:25 bass Exp $
+ * $Id: MapElement.java,v 1.6 2005/01/20 14:44:30 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -21,8 +21,8 @@ import java.util.List;
  * 
  * 
  * 
- * @author $Author: bass $
- * @version $Revision: 1.5 $, $Date: 2005/01/18 15:42:25 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.6 $, $Date: 2005/01/20 14:44:30 $
  * @module map_v1
  */
 public interface MapElement 
@@ -92,19 +92,10 @@ public interface MapElement
 	void removeCharacteristic(Characteristic characteristic);
 
 	/**
-	 * @deprecated use {@link #getExportMap()}
-	 * Возвращает массив параметров, описывающих топологическюу схему,
+	 * Возвращает набор параметров, описывающих топологическюу схему,
 	 * который используется для экспорта
 	 */
-	Object[][] exportColumns();
-	
 	java.util.Map getExportMap();
 
-	/**
-	 * установить параметр топологический схемы по переданному значению.
-	 * используется при импорте
-	 */	
-//	void setColumn(String field, String value);
-	
 }
 

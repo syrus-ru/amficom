@@ -1,5 +1,5 @@
 /*
- * $Id: PhysicalLink.java,v 1.16 2005/01/17 15:05:24 bob Exp $
+ * $Id: PhysicalLink.java,v 1.17 2005/01/20 14:44:30 krupenn Exp $
  *
  * Copyright ї 2004 Syrus Systems.
  * оБХЮОП-ФЕИОЙЮЕУЛЙК ГЕОФТ.
@@ -38,8 +38,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2005/01/17 15:05:24 $
- * @author $Author: bob $
+ * @version $Revision: 1.17 $, $Date: 2005/01/20 14:44:30 $
+ * @author $Author: krupenn $
  * @module map_v1
  */
 public class PhysicalLink extends StorableObject implements Characterized, TypedObject, MapElement {
@@ -61,11 +61,9 @@ public class PhysicalLink extends StorableObject implements Characterized, Typed
 	public static final String COLUMN_BUILDING = "building";	
 
 	/** 
-	 * массив параметров для экспорта. инициализируется только в случае
+	 * набор параметров для экспорта. инициализируется только в случае
 	 * необходимости экспорта
 	 */
-	private static Object[][] exportColumns = null;
-
 	private static java.util.Map exportMap = null;
 
 	private String					name;
@@ -785,45 +783,6 @@ public class PhysicalLink extends StorableObject implements Characterized, Typed
 		return this.selectionVisible;
 	}
 	
-	/**
-	 * @deprecated use {@link #getExportMap()}
-	 */
-	public Object[][] exportColumns()
-	{
-		if(exportColumns == null)
-		{
-			exportColumns = new Object[10][2];
-			exportColumns[0][0] = COLUMN_ID;
-			exportColumns[1][0] = COLUMN_NAME;
-			exportColumns[2][0] = COLUMN_DESCRIPTION;
-			exportColumns[3][0] = COLUMN_PROTO_ID;
-			exportColumns[4][0] = COLUMN_START_NODE_ID;
-			exportColumns[5][0] = COLUMN_END_NODE_ID;
-			exportColumns[6][0] = COLUMN_NODE_LINKS;
-			exportColumns[7][0] = COLUMN_CITY;
-			exportColumns[8][0] = COLUMN_STREET;
-			exportColumns[9][0] = COLUMN_BUILDING;
-		}
-		exportColumns[0][1] = getId();
-		exportColumns[1][1] = getName();
-		exportColumns[2][1] = getDescription();
-		exportColumns[3][1] = getType().getId();
-		exportColumns[4][1] = getStartNode().getId();
-		exportColumns[5][1] = getEndNode().getId();
-		List nodeLinkIds = new ArrayList(getNodeLinks().size());
-		for(Iterator it = getNodeLinks().iterator(); it.hasNext();)
-		{
-			NodeLink mnle = (NodeLink )it.next();
-			nodeLinkIds.add(mnle.getId());
-		}
-		exportColumns[6][1] = nodeLinkIds;
-		exportColumns[7][1] = getCity();
-		exportColumns[8][1] = getStreet();
-		exportColumns[9][1] = getBuilding();
-		
-		return exportColumns;
-	}
-
 	public java.util.Map getExportMap() {
 		if(exportMap == null)
 			exportMap = new HashMap();		
@@ -846,116 +805,6 @@ public class PhysicalLink extends StorableObject implements Characterized, Typed
 			exportMap.put(COLUMN_NODE_LINKS, nodeLinkIds);
 			return Collections.unmodifiableMap(exportMap);
 		}		
-	}
-	/**
-	 * @deprecated use {@link #createInstance(Identifier, java.util.Map)}
-	 */
-	public static PhysicalLink createInstance(
-			Identifier creatorId,
-			Object[][] exportColumns)
-		throws CreateObjectException 
-	{
-		Identifier id = null;
-		String name = null;
-		String description = null;
-		Identifier typeId = null;
-		Identifier startNodeId = null;
-		Identifier endNodeId = null;
-		List nodeLinkIds = null;
-		String city = null;
-		String street = null;
-		String building = null;
-
-		Object field;
-		Object value;
-
-		if (creatorId == null)
-			throw new IllegalArgumentException("Argument is 'null'");
-
-		for(int i = 0; i < exportColumns.length; i++)
-		{
-			field = exportColumns[i][0];
-			value = exportColumns[i][1];
-
-			if(field.equals(COLUMN_ID))
-				id = (Identifier )value;
-			else
-			if(field.equals(COLUMN_NAME))
-				name = (String )value;
-			else
-			if(field.equals(COLUMN_DESCRIPTION))
-				description = (String )value;
-			else
-			if(field.equals(COLUMN_PROTO_ID))
-				typeId = (Identifier )value;
-			else
-			if(field.equals(COLUMN_START_NODE_ID))
-				startNodeId = (Identifier )value;
-			else
-			if(field.equals(COLUMN_END_NODE_ID))
-				endNodeId = (Identifier )value;
-			else
-			if(field.equals(COLUMN_NODE_LINKS))
-			{
-				nodeLinkIds = (List )value;
-//				.clear();
-//				for(Iterator it = ResourceUtil.parseStrings(value).iterator(); it.hasNext();)
-//					nodeLinkIds.add(it.next());
-			}
-			else
-			if(field.equals(COLUMN_CITY))
-				city = (String )value;
-			else
-			if(field.equals(COLUMN_STREET))
-				street = (String )value;
-			else
-			if(field.equals(COLUMN_BUILDING))
-				building = (String )value;
-		}
-
-		if (id == null || name == null || description == null 
-				|| typeId == null || startNodeId == null || endNodeId == null
-				|| city == null || street == null || building == null)
-			throw new IllegalArgumentException("Argument is 'null'");
-
-		try {
-			PhysicalLinkType physicalLinkType = (PhysicalLinkType ) 
-				MapStorableObjectPool.getStorableObject(
-					typeId, false);
-			AbstractNode startNode = (AbstractNode )
-				MapStorableObjectPool.getStorableObject(
-					startNodeId, true);
-			AbstractNode endNode = (AbstractNode )
-				MapStorableObjectPool.getStorableObject(
-					endNodeId, true);
-			PhysicalLink link = new PhysicalLink(
-					id, 
-					creatorId, 
-					name,
-					description,
-					physicalLinkType, 
-					startNode,
-					endNode,
-					city,
-					street,
-					building,
-					physicalLinkType.getBindingDimension().getWidth(),
-					physicalLinkType.getBindingDimension().getHeight(),
-					true,
-					true);
-					
-			for(Iterator it = nodeLinkIds.iterator(); it.hasNext();)
-			{
-				Identifier nodeLinkId = (Identifier )it.next();
-				NodeLink nodeLink = (NodeLink ) 
-					MapStorableObjectPool.getStorableObject(
-						nodeLinkId, false);
-				link.addNodeLink(nodeLink);
-			}
-			return link;
-		} catch (ApplicationException e) {
-			throw new CreateObjectException("PhysicalLink.createInstance |  ", e);
-		}
 	}
 	
 	public static PhysicalLink createInstance(Identifier creatorId,
