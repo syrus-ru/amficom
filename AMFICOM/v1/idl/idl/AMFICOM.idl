@@ -12,6 +12,7 @@
 #include "survey.idl"
 #include "report.idl"
 #include "client.idl"
+#include "streams.idl"
 
 module com
 {
@@ -220,9 +221,9 @@ interface AMFICOM
 			out Map::MapPhysicalLinkElementSeq_Transferable linkseq)
 		raises (General::AMFICOMRemoteException);
 
-	long GetMap(
+	long GetStatedMaps(
 			in Admin::AccessIdentity_Transferable accessIdentity,
-			in wstring map_id,
+			in ::CORBA::WStringSeq map_ids,
 			out Resource::ImageResourceSeq_Transferable imageseq,
 			out Map::MapSeq_Transferable mapseq,
 			out Map::MapSiteElementSeq_Transferable siteseq,
@@ -245,32 +246,30 @@ interface AMFICOM
 
 	long RemoveMaps(
 			in Admin::AccessIdentity_Transferable accessIdentity,
-			in General::wstringSeq mapseq,
-			in General::wstringSeq siteseq,
-			in General::wstringSeq markseq,
-			in General::wstringSeq nodeseq,
-			in General::wstringSeq nodelinkseq,
-			in General::wstringSeq linkseq)
+			in ::CORBA::WStringSeq mapseq,
+			in ::CORBA::WStringSeq siteseq,
+			in ::CORBA::WStringSeq markseq,
+			in ::CORBA::WStringSeq nodeseq,
+			in ::CORBA::WStringSeq nodelinkseq,
+			in ::CORBA::WStringSeq linkseq)
 		raises (General::AMFICOMRemoteException);
 
-	long GetMapView(
+	long GetStatedMapViews(
 			in Admin::AccessIdentity_Transferable accessIdentity,
-			in wstring mv_id,
-			out Resource::ImageResourceSeq_Transferable imageseq,
+			in ::CORBA::WStringSeq mv_ids,
 			out Map::MapViewSeq_Transferable mvseq)
 //			out Map::MapPathElementSeq_Transferable pathseq)
 		raises (General::AMFICOMRemoteException);
 
 	long SaveMapViews(
 			in Admin::AccessIdentity_Transferable accessIdentity,
-			in Resource::ImageResourceSeq_Transferable imageseq,
 			in Map::MapViewSeq_Transferable mvseq)
 //			in Map::MapPathElementSeq_Transferable pathseq)
 		raises (General::AMFICOMRemoteException);
 
 	long RemoveMapViews(
 			in Admin::AccessIdentity_Transferable accessIdentity,
-			in General::wstringSeq mvseq)
+			in ::CORBA::WStringSeq mvseq)
 //			in General::wstringSeq pathseq)
 		raises (General::AMFICOMRemoteException);
 
@@ -288,8 +287,8 @@ interface AMFICOM
 
 	long GetStatedMapProtoElements(
 			in Admin::AccessIdentity_Transferable accessIdentity,
-			in General::wstringSeq element_ids,
-			in General::wstringSeq link_ids,
+			in ::CORBA::WStringSeq element_ids,
+			in ::CORBA::WStringSeq link_ids,
 //			in General::wstringSeq path_ids,
 			out Resource::ImageResourceSeq_Transferable imageseq,
 			out Map::MapNodeProtoElementSeq_Transferable protoseq,
@@ -300,14 +299,37 @@ interface AMFICOM
 	long SaveMapProtoElements(
 			in Admin::AccessIdentity_Transferable accessIdentity,
 			in Resource::ImageResourceSeq_Transferable imageseq,
-			in Map::MapNodeProtoElementSeq_Transferable protoseq)
+			in Map::MapNodeProtoElementSeq_Transferable protoseq,
+			in Map::MapLinkProtoElementSeq_Transferable linkseq)
 		raises (General::AMFICOMRemoteException);
 
 	long RemoveMapProtoElements(
 			in Admin::AccessIdentity_Transferable accessIdentity,
-			in General::wstringSeq proto_ids)
+			in ::CORBA::WStringSeq proto_ids,
+			in ::CORBA::WStringSeq link_ids)
+		raises (General::AMFICOMRemoteException);
+/*
+	long GetMapViewProtoElements(
+			in Admin::AccessIdentity_Transferable accessIdentity,
+			out Map::MapPathProtoElementSeq_Transferable pathseq)
 		raises (General::AMFICOMRemoteException);
 
+	long GetStatedMapViewProtoElements(
+			in Admin::AccessIdentity_Transferable accessIdentity,
+			in ::CORBA::WStringSeq path_ids,
+			out Map::MapPathProtoElementSeq_Transferable pathseq)
+		raises (General::AMFICOMRemoteException);
+
+	long SaveMapViewProtoElements(
+			in Admin::AccessIdentity_Transferable accessIdentity,
+			in Map::MapPathProtoElementSeq_Transferable pathseq)
+		raises (General::AMFICOMRemoteException);
+
+	long RemoveMapViewProtoElements(
+			in Admin::AccessIdentity_Transferable accessIdentity,
+			in ::CORBA::WStringSeq path_ids)
+		raises (General::AMFICOMRemoteException);
+*/
 /**
  * Attribute types
  */

@@ -1,5 +1,5 @@
 /**
- * $Id: map.idl,v 1.4 2004/09/10 10:01:53 krupenn Exp $
+ * $Id: map.idl,v 1.5 2004/09/12 14:33:39 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -107,8 +107,6 @@ module Map
 
 		wstring mapId;
 
-		wstring symbolId;
-
 		wstring physicalLinkId;
 
 		boolean active;
@@ -162,8 +160,6 @@ module Map
 		wstring latitude;
 
 		wstring mapId;
-
-		wstring symbolId;
 
 		wstring physicalLinkId;
 		
