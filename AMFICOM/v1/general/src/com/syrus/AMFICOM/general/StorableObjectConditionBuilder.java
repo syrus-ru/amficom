@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectConditionBuilder.java,v 1.1 2005/02/25 09:09:43 bob Exp $
+ * $Id: StorableObjectConditionBuilder.java,v 1.2 2005/03/17 13:40:35 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,6 +23,7 @@ public final class StorableObjectConditionBuilder {
 	}
 
 	public static StorableObjectCondition_Transferable getConditionTransferable(StorableObjectCondition condition) {
+		assert condition != null : "Supply EquivalentCondition instead";
 		StorableObjectCondition_Transferable conditionTransferable = new StorableObjectCondition_Transferable();
 		Object transferable = condition.getTransferable();
 		if (condition instanceof LinkedIdsCondition) {
