@@ -1,5 +1,5 @@
 /*
- * $Id: MonitoredElementDatabase.java,v 1.23 2004/10/29 15:03:39 max Exp $
+ * $Id: MonitoredElementDatabase.java,v 1.24 2004/11/04 13:33:05 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,9 +13,12 @@ import java.sql.Statement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Map;
 
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
@@ -35,7 +38,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.23 $, $Date: 2004/10/29 15:03:39 $
+ * @version $Revision: 1.24 $, $Date: 2004/11/04 13:33:05 $
  * @author $Author: max $
  * @module configuration_v1
  */
@@ -185,21 +188,22 @@ public class MonitoredElementDatabase extends StorableObjectDatabase {
 		List mdmIds = new ArrayList();
 		String meIdStr = monitoredElement.getId().toSQLString();
 		int meSort = monitoredElement.getSort().value();
-
+		String column;
 		String sql;	{
 			StringBuffer buffer = new StringBuffer(SQL_SELECT);
 			switch (meSort) {
 				case MonitoredElementSort._MONITOREDELEMENT_SORT_EQUIPMENT:	
 					buffer.append(LINK_COLUMN_EQUIPMENT_ID);
+                    column = LINK_COLUMN_EQUIPMENT_ID;
 					break;
 				case	MonitoredElementSort._MONITOREDELEMENT_SORT_TRANSMISSION_PATH:
 					buffer.append(LINK_COLUMN_TRANSMISSION_PATH_ID);
+                    column = LINK_COLUMN_TRANSMISSION_PATH_ID;
 					break;
 				default:
 					String mesg = "ERROR: Unknown sort of monitoredelement: " + meSort;
 					throw new RetrieveObjectException(mesg);
 			}
-			buffer.append(" mdm_id ");
 			buffer.append(SQL_FROM);
 			switch (meSort) {
 				case MonitoredElementSort._MONITOREDELEMENT_SORT_EQUIPMENT:	
@@ -230,7 +234,7 @@ public class MonitoredElementDatabase extends StorableObjectDatabase {
 				/**
 				* @todo when change DB Identifier model ,change getString() to getLong()
 				*/
-				mdmIds.add(new Identifier(resultSet.getString("mdm_id")));				
+				mdmIds.add(new Identifier(resultSet.getString(column)));				
 			}
 		}
 		catch (SQLException sqle) {
@@ -254,6 +258,208 @@ public class MonitoredElementDatabase extends StorableObjectDatabase {
 		}
 		monitoredElement.setMonitoredDomainMemberIds(mdmIds);
 	}
+    
+    private void retrieveMonitoredDomainMemberIdsByOneCuery (List monitoredElements) throws RetrieveObjectException {
+    	List monitoredElementWithEquipmentList = new LinkedList();
+        List monitoredElementWithTransmissionPathList = new LinkedList();
+        
+        for (Iterator it = monitoredElements.iterator(); it.hasNext();) {
+			MonitoredElement monitoredElement = (MonitoredElement) it.next();
+            if (monitoredElement.getSort().value() == MonitoredElementSort._MONITOREDELEMENT_SORT_EQUIPMENT)
+                monitoredElementWithEquipmentList.add(monitoredElement);
+            else if (monitoredElement.getSort().value() == MonitoredElementSort._MONITOREDELEMENT_SORT_TRANSMISSION_PATH)
+                monitoredElementWithTransmissionPathList.add(monitoredElement);
+            else {
+                String mesg = "ERROR: Unknown sort of monitoredelement: " + monitoredElement.getSort().value();
+                throw new RetrieveObjectException(mesg);
+            }
+		}
+        if (monitoredElementWithEquipmentList != null)
+            retrieveEquipmentIdsByOneQuery(monitoredElementWithEquipmentList);
+        if (monitoredElementWithTransmissionPathList != null)
+            retrieveTransmissionPathListIdsByOneQuery(monitoredElementWithTransmissionPathList);
+    }
+    
+    private void retrieveEquipmentIdsByOneQuery(List monitoredElementWithEquipmentList) throws RetrieveObjectException {
+    	if ((monitoredElementWithEquipmentList == null) || (monitoredElementWithEquipmentList.isEmpty()))
+            return;     
+        
+        StringBuffer sql = new StringBuffer(SQL_SELECT
+                + LINK_COLUMN_EQUIPMENT_ID + COMMA
+                + LINK_COLUMN_MONITORED_ELEMENT_ID
+                + SQL_FROM + ObjectEntities.EQUIPMENTMELINK_ENTITY
+                + SQL_WHERE + LINK_COLUMN_MONITORED_ELEMENT_ID
+                + SQL_IN + OPEN_BRACKET);
+        int i = 1;
+        for (Iterator it = monitoredElementWithEquipmentList.iterator(); it.hasNext();i++) {
+            MonitoredElement monitoredElement = (MonitoredElement)it.next();
+            sql.append(monitoredElement.getId().toSQLString());
+            if (it.hasNext()){
+                if (((i+1) % MAXIMUM_EXPRESSION_NUMBER != 0))
+                    sql.append(COMMA);
+                else {
+                    sql.append(CLOSE_BRACKET);
+                    sql.append(SQL_OR);
+                    sql.append(COLUMN_ID);
+                    sql.append(SQL_IN);
+                    sql.append(OPEN_BRACKET);
+                }                   
+            }
+        }
+        sql.append(CLOSE_BRACKET);
+        
+        Statement statement = null;
+        ResultSet resultSet = null;
+        Connection connection = DatabaseConnection.getConnection();
+        try {
+            statement = connection.createStatement();
+            Log.debugMessage("MonitoredElementDatabase.retrieveEquipmentIdsByOneQuery | Trying: " + sql, Log.DEBUGLEVEL09);
+            resultSet = statement.executeQuery(sql.toString());
+            Map meIdMap = new HashMap();
+            while (resultSet.next()) {
+                MonitoredElement monitoredElement = null;
+                String monitoredElemntId = resultSet.getString(LINK_COLUMN_MONITORED_ELEMENT_ID);
+                for (Iterator it = monitoredElementWithEquipmentList.iterator(); it.hasNext();) {
+                    MonitoredElement monitoredElementToCompare = (MonitoredElement) it.next();
+                    if (monitoredElementToCompare.getId().getIdentifierString().equals(monitoredElemntId)){
+                        monitoredElement = monitoredElementToCompare;
+                        break;
+                    }                   
+                }
+                
+                if (monitoredElement == null){
+                    String mesg = "MonitoredElementDatabase.retrieveEquipmentIdsByOneQuery | Cannot found correspond result for '" + monitoredElemntId +"'" ;
+                    throw new RetrieveObjectException(mesg);
+                }
+                    
+                
+                /**
+                 * @todo when change DB Identifier model ,change getString() to
+                 *       getLong()
+                 */
+                Identifier meId = new Identifier(resultSet.getString(LINK_COLUMN_EQUIPMENT_ID));
+                List meIds = (List)meIdMap.get(monitoredElement);
+                if (meIds == null){
+                    meIds = new LinkedList();
+                    meIdMap.put(monitoredElement, meIds);
+                }               
+                meIds.add(meId);              
+            }
+            
+            for (Iterator iter = monitoredElementWithEquipmentList.iterator(); iter.hasNext();) {
+                MonitoredElement monitoredElement = (MonitoredElement) iter.next();
+                List meIds = (List)meIdMap.get(monitoredElement);
+                monitoredElement.setMonitoredDomainMemberIds(meIds);
+            }
+            
+        } catch (SQLException sqle) {
+            String mesg = "MonitoredElementDatabase.retrieveEquipmentIdsByOneQuery | Cannot retrieve parameters for result -- " + sqle.getMessage();
+            throw new RetrieveObjectException(mesg, sqle);
+        } finally {
+            try {
+                if (statement != null)
+                    statement.close();
+                if (resultSet != null)
+                    resultSet.close();
+                statement = null;
+                resultSet = null;
+            } catch (SQLException sqle1) {
+                Log.errorException(sqle1);
+            } finally {
+                DatabaseConnection.closeConnection(connection);
+            }
+        }
+    }
+    
+    private void retrieveTransmissionPathListIdsByOneQuery(List transmissionPathList) throws RetrieveObjectException {
+    	if ((transmissionPathList == null) || (transmissionPathList.isEmpty()))
+            return;     
+        
+        StringBuffer sql = new StringBuffer(SQL_SELECT
+                + LINK_COLUMN_TRANSMISSION_PATH_ID + COMMA
+                + LINK_COLUMN_MONITORED_ELEMENT_ID
+                + SQL_FROM + ObjectEntities.TRANSPATHMELINK_ENTITY
+                + SQL_WHERE + LINK_COLUMN_MONITORED_ELEMENT_ID
+                + SQL_IN + OPEN_BRACKET);
+        int i = 1;
+        for (Iterator it = transmissionPathList.iterator(); it.hasNext();i++) {
+            MonitoredElement monitoredElement = (MonitoredElement)it.next();
+            sql.append(monitoredElement.getId().toSQLString());
+            if (it.hasNext()){
+                if (((i+1) % MAXIMUM_EXPRESSION_NUMBER != 0))
+                    sql.append(COMMA);
+                else {
+                    sql.append(CLOSE_BRACKET);
+                    sql.append(SQL_OR);
+                    sql.append(COLUMN_ID);
+                    sql.append(SQL_IN);
+                    sql.append(OPEN_BRACKET);
+                }                   
+            }
+        }
+        sql.append(CLOSE_BRACKET);
+        
+        Statement statement = null;
+        ResultSet resultSet = null;
+        Connection connection = DatabaseConnection.getConnection();
+        try {
+            statement = connection.createStatement();
+            Log.debugMessage("MonitoredElementDatabase.retrieveTransmissionPathListIdsByOneQuery | Trying: " + sql, Log.DEBUGLEVEL09);
+            resultSet = statement.executeQuery(sql.toString());
+            Map tpIdMap = new HashMap();
+            while (resultSet.next()) {
+                MonitoredElement monitoredElement = null;
+                String monitoredElemntId = resultSet.getString(LINK_COLUMN_MONITORED_ELEMENT_ID);
+                for (Iterator it = transmissionPathList.iterator(); it.hasNext();) {
+                    MonitoredElement monitoredElementToCompare = (MonitoredElement) it.next();
+                    if (monitoredElementToCompare.getId().getIdentifierString().equals(monitoredElemntId)){
+                        monitoredElement = monitoredElementToCompare;
+                        break;
+                    }                   
+                }
+                
+                if (monitoredElement == null){
+                    String mesg = "MonitoredElementDatabase.retrieveTransmissionPathListIdsByOneQuery | Cannot found correspond result for '" + monitoredElemntId +"'" ;
+                    throw new RetrieveObjectException(mesg);
+                }
+                    
+                
+                /**
+                 * @todo when change DB Identifier model ,change getString() to
+                 *       getLong()
+                 */
+                Identifier tpId = new Identifier(resultSet.getString(LINK_COLUMN_TRANSMISSION_PATH_ID));
+                List tpIds = (List)tpIdMap.get(monitoredElement);
+                if (tpIds == null){
+                    tpIds = new LinkedList();
+                    tpIdMap.put(monitoredElement, tpIds);
+                }               
+                tpIds.add(tpId);              
+            }
+            
+            for (Iterator iter = transmissionPathList.iterator(); iter.hasNext();) {
+                MonitoredElement monitoredElement = (MonitoredElement) iter.next();
+                List tpIds = (List)tpIdMap.get(monitoredElement);
+                monitoredElement.setMonitoredDomainMemberIds(tpIds);
+            }            
+        } catch (SQLException sqle) {
+            String mesg = "MonitoredElementDatabase.retrieveTransmissionPathListIdsByOneQuery | Cannot retrieve parameters for result -- " + sqle.getMessage();
+            throw new RetrieveObjectException(mesg, sqle);
+        } finally {
+            try {
+                if (statement != null)
+                    statement.close();
+                if (resultSet != null)
+                    resultSet.close();
+                statement = null;
+                resultSet = null;
+            } catch (SQLException sqle1) {
+                Log.errorException(sqle1);
+            } finally {
+                DatabaseConnection.closeConnection(connection);
+            }
+        }
+    }
 
 	public Object retrieveObject(StorableObject storableObject, int retrieve_kind, Object arg) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException{
 		MonitoredElement monitoredElement = this.fromStorableObject(storableObject);

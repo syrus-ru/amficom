@@ -1,5 +1,5 @@
 /*
- * $Id: EquipmentDatabase.java,v 1.40 2004/10/29 15:03:39 max Exp $
+ * $Id: EquipmentDatabase.java,v 1.41 2004/11/04 13:33:04 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,9 +13,12 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Map;
 
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
@@ -36,7 +39,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.40 $, $Date: 2004/10/29 15:03:39 $
+ * @version $Revision: 1.41 $, $Date: 2004/11/04 13:33:04 $
  * @author $Author: max $
  * @module configuration_v1
  */
@@ -243,6 +246,97 @@ public class EquipmentDatabase extends StorableObjectDatabase {
 		}
 		equipment.setPortIds(portIds);
 	}
+    
+    private void retrieveEquipmentPortIdsByOneQuery(List equipments) throws RetrieveObjectException {
+    	if ((equipments == null) || (equipments.isEmpty()))
+            return;     
+        
+        StringBuffer sql = new StringBuffer(SQL_SELECT
+                + COLUMN_ID + COMMA
+                + PortDatabase.COLUMN_EQUIPMENT_ID
+                + SQL_FROM + ObjectEntities.PORT_ENTITY
+                + SQL_WHERE + PortDatabase.COLUMN_EQUIPMENT_ID
+                + SQL_IN + OPEN_BRACKET);
+        int i = 1;
+        for (Iterator it = equipments.iterator(); it.hasNext();i++) {
+            Equipment equipment = (Equipment)it.next();
+            sql.append(equipment.getId().toSQLString());
+            if (it.hasNext()){
+                if (((i+1) % MAXIMUM_EXPRESSION_NUMBER != 0))
+                    sql.append(COMMA);
+                else {
+                    sql.append(CLOSE_BRACKET);
+                    sql.append(SQL_OR);
+                    sql.append(COLUMN_ID);
+                    sql.append(SQL_IN);
+                    sql.append(OPEN_BRACKET);
+                }                   
+            }
+        }
+        sql.append(CLOSE_BRACKET);
+        
+        Statement statement = null;
+        ResultSet resultSet = null;
+        Connection connection = DatabaseConnection.getConnection();
+        try {
+            statement = connection.createStatement();
+            Log.debugMessage("EquipmentDatabase.retrieveEquipmentPortIdsByOneQuery | Trying: " + sql, Log.DEBUGLEVEL09);
+            resultSet = statement.executeQuery(sql.toString());
+            Map epIdMap = new HashMap();
+            while (resultSet.next()) {
+                Equipment equipment = null;
+                String equipmentId = resultSet.getString(PortDatabase.COLUMN_EQUIPMENT_ID);
+                for (Iterator it = equipments.iterator(); it.hasNext();) {
+                    Equipment equipmentToCompare = (Equipment) it.next();
+                    if (equipmentToCompare.getId().getIdentifierString().equals(equipmentId)){
+                        equipment = equipmentToCompare;
+                        break;
+                    }                   
+                }
+                
+                if (equipment == null){
+                    String mesg = "EquipmentDatabase.retrieveEquipmentPortIdsByOneQuery | Cannot found correspond result for '" + equipmentId +"'" ;
+                    throw new RetrieveObjectException(mesg);
+                }
+                    
+                
+                /**
+                 * @todo when change DB Identifier model ,change getString() to
+                 *       getLong()
+                 */
+                Identifier epId = new Identifier(resultSet.getString(COLUMN_ID));
+                List epIds = (List)epIdMap.get(equipment);
+                if (epIds == null){
+                    epIds = new LinkedList();
+                    epIdMap.put(equipment, epIds);
+                }               
+                epIds.add(epId);              
+            }
+            
+            for (Iterator iter = equipments.iterator(); iter.hasNext();) {
+                Equipment equipment = (Equipment) iter.next();
+                List epIds = (List)epIdMap.get(equipment);
+                equipment.setPortIds(epIds);
+            }
+            
+        } catch (SQLException sqle) {
+            String mesg = "TestDatabase.retrieveMeasurementSetupTestLinksByOneQuery | Cannot retrieve parameters for result -- " + sqle.getMessage();
+            throw new RetrieveObjectException(mesg, sqle);
+        } finally {
+            try {
+                if (statement != null)
+                    statement.close();
+                if (resultSet != null)
+                    resultSet.close();
+                statement = null;
+                resultSet = null;
+            } catch (SQLException sqle1) {
+                Log.errorException(sqle1);
+            } finally {
+                DatabaseConnection.closeConnection(connection);
+            }
+        }
+    }
 
 	private void retrieveEquipmentMEIds(Equipment equipment) throws RetrieveObjectException {
 		List meIds = new ArrayList();
@@ -288,6 +382,97 @@ public class EquipmentDatabase extends StorableObjectDatabase {
 		}
 		equipment.setMonitoredElementIds(meIds);
 	}
+    
+    private void retrieveEquipmentMEIdsByOneQuery(List equipments) throws RetrieveObjectException {
+    	if ((equipments == null) || (equipments.isEmpty()))
+            return;     
+        
+        StringBuffer sql = new StringBuffer(SQL_SELECT
+                + LINK_COLUMN_MONITORED_ELEMENT_ID + COMMA
+                + LINK_COLUMN_EQUIPMENT_ID
+                + SQL_FROM + ObjectEntities.EQUIPMENTMELINK_ENTITY
+                + SQL_WHERE + LINK_COLUMN_EQUIPMENT_ID
+                + SQL_IN + OPEN_BRACKET);
+        int i = 1;
+        for (Iterator it = equipments.iterator(); it.hasNext();i++) {
+            Equipment equipment = (Equipment)it.next();
+            sql.append(equipment.getId().toSQLString());
+            if (it.hasNext()){
+                if (((i+1) % MAXIMUM_EXPRESSION_NUMBER != 0))
+                    sql.append(COMMA);
+                else {
+                    sql.append(CLOSE_BRACKET);
+                    sql.append(SQL_OR);
+                    sql.append(COLUMN_ID);
+                    sql.append(SQL_IN);
+                    sql.append(OPEN_BRACKET);
+                }                   
+            }
+        }
+        sql.append(CLOSE_BRACKET);
+        
+        Statement statement = null;
+        ResultSet resultSet = null;
+        Connection connection = DatabaseConnection.getConnection();
+        try {
+            statement = connection.createStatement();
+            Log.debugMessage("EquipmentDatabase.retrieveEquipmentMEIdsByOneQuery | Trying: " + sql, Log.DEBUGLEVEL09);
+            resultSet = statement.executeQuery(sql.toString());
+            Map meIdMap = new HashMap();
+            while (resultSet.next()) {
+                Equipment equipment = null;
+                String equipmentId = resultSet.getString(LINK_COLUMN_EQUIPMENT_ID);
+                for (Iterator it = equipments.iterator(); it.hasNext();) {
+                    Equipment equipmentToCompare = (Equipment) it.next();
+                    if (equipmentToCompare.getId().getIdentifierString().equals(equipmentId)){
+                        equipment = equipmentToCompare;
+                        break;
+                    }                   
+                }
+                
+                if (equipment == null){
+                    String mesg = "EquipmentDatabase.retrieveEquipmentMEIdsByOneQuery | Cannot found correspond result for '" + equipmentId +"'" ;
+                    throw new RetrieveObjectException(mesg);
+                }
+                    
+                
+                /**
+                 * @todo when change DB Identifier model ,change getString() to
+                 *       getLong()
+                 */
+                Identifier meId = new Identifier(resultSet.getString(LINK_COLUMN_MONITORED_ELEMENT_ID));
+                List meIds = (List)meIdMap.get(equipment);
+                if (meIds == null){
+                    meIds = new LinkedList();
+                    meIdMap.put(equipment, meIds);
+                }               
+                meIds.add(meId);              
+            }
+            
+            for (Iterator iter = equipments.iterator(); iter.hasNext();) {
+                Equipment equipment = (Equipment) iter.next();
+                List meIds = (List)meIdMap.get(equipment);
+                equipment.setPortIds(meIds);
+            }
+            
+        } catch (SQLException sqle) {
+            String mesg = "EquipmentDatabase.retrieveEquipmentMEIdsByOneQuery | Cannot retrieve parameters for result -- " + sqle.getMessage();
+            throw new RetrieveObjectException(mesg, sqle);
+        } finally {
+            try {
+                if (statement != null)
+                    statement.close();
+                if (resultSet != null)
+                    resultSet.close();
+                statement = null;
+                resultSet = null;
+            } catch (SQLException sqle1) {
+                Log.errorException(sqle1);
+            } finally {
+                DatabaseConnection.closeConnection(connection);
+            }
+        }
+    }
 
 	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
 		Equipment equipment = this.fromStorableObject(storableObject);
@@ -459,14 +644,18 @@ public class EquipmentDatabase extends StorableObjectDatabase {
 			list = super.retrieveByIdsOneQuery(null, condition);
 		else list = super.retrieveByIdsOneQuery(ids, condition);
 		
-		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(ConfigurationDatabaseContext.characteristicDatabase);
-		
-		for (Iterator iter = list.iterator(); iter.hasNext();) {
-			Equipment equipment = (Equipment) iter.next();
-			this.retrieveEquipmentPortIds(equipment);
-			this.retrieveEquipmentMEIds(equipment);		
-			equipment.setCharacteristics(characteristicDatabase.retrieveCharacteristics(equipment.getId(), CharacteristicSort.CHARACTERISTIC_SORT_EQUIPMENT));
-		}
+        if (list != null) {
+            retrieveEquipmentPortIdsByOneQuery(list);
+            retrieveEquipmentMEIdsByOneQuery(list); 
+            
+            CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(ConfigurationDatabaseContext.characteristicDatabase);
+            Map characteristicMap = characteristicDatabase.retrieveCharacteristicsByOneQuery(list, CharacteristicSort.CHARACTERISTIC_SORT_EQUIPMENT);
+            for (Iterator iter = list.iterator(); iter.hasNext();) {
+                Equipment equipment = (Equipment) iter.next();
+                List characteristics = (List)characteristicMap.get(equipment);
+                equipment.setCharacteristics(characteristics);
+            }
+        }
 		return list;
 	}
 	

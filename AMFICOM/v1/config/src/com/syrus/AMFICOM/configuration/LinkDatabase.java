@@ -1,5 +1,5 @@
 /*
- * $Id: LinkDatabase.java,v 1.3 2004/10/29 15:03:39 max Exp $
+ * $Id: LinkDatabase.java,v 1.4 2004/11/04 13:33:04 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,7 +32,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2004/10/29 15:03:39 $
+ * @version $Revision: 1.4 $, $Date: 2004/11/04 13:33:04 $
  * @author $Author: max $
  * @module configuration_v1
  */
@@ -318,12 +318,11 @@ public class LinkDatabase extends StorableObjectDatabase {
 			list = super.retrieveByIdsOneQuery(null, condition);
 		else list = super.retrieveByIdsOneQuery(ids, condition);
 		
-		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(ConfigurationDatabaseContext.characteristicDatabase);
-		
-		for (Iterator it = list.iterator(); it.hasNext();) {
-			Link link = (Link) it.next();
-			link.setCharacteristics(characteristicDatabase.retrieveCharacteristics(link.getId(), CharacteristicSort.CHARACTERISTIC_SORT_LINK));
-		}
+		if(list != null) {
+        CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(ConfigurationDatabaseContext.characteristicDatabase);
+		characteristicDatabase.retrieveCharacteristicsByOneQuery(list, CharacteristicSort.CHARACTERISTIC_SORT_LINK);
+        }
+        
 		return list;
 	}	
 

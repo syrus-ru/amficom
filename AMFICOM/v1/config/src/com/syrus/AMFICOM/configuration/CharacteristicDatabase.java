@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicDatabase.java,v 1.35 2004/10/29 15:03:39 max Exp $
+ * $Id: CharacteristicDatabase.java,v 1.36 2004/11/04 13:33:04 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,8 +8,11 @@
 
 package com.syrus.AMFICOM.configuration;
 
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
@@ -35,7 +38,7 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.configuration.corba.CharacteristicSort;
 
 /**
- * @version $Revision: 1.35 $, $Date: 2004/10/29 15:03:39 $
+ * @version $Revision: 1.36 $, $Date: 2004/11/04 13:33:04 $
  * @author $Author: max $
  * @module configuration_v1
  */
@@ -299,6 +302,90 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
 		}
 		return characteristics;
 	}
+    
+    public Map retrieveCharacteristicsByOneQuery(List list, CharacteristicSort sort) throws RetrieveObjectException, IllegalDataException {
+        
+        int sortValue = sort.value();
+        String sql;
+        StringBuffer buff = new StringBuffer(COLUMN_SORT
+                + EQUALS + sortValue
+                + SQL_AND + COLUMN_CHARACTERIZED_ID
+                + SQL_IN + OPEN_BRACKET);
+        int i = 1;
+        for (Iterator it = list.iterator(); it.hasNext();i++) {
+            StorableObject storableObject = (StorableObject)it.next();
+            buff.append(storableObject.getId().toSQLString());
+            if (it.hasNext()){
+                if (((i+1) % MAXIMUM_EXPRESSION_NUMBER != 0))
+                    buff.append(COMMA);
+                else {
+                    buff.append(CLOSE_BRACKET);
+                    buff.append(SQL_OR);
+                    buff.append(COLUMN_ID);
+                    buff.append(SQL_IN);
+                    buff.append(OPEN_BRACKET);
+                }                   
+            }
+        }
+        buff.append(CLOSE_BRACKET);        
+        sql = retrieveQuery(buff.toString());
+        
+        Statement statement = null;
+        ResultSet resultSet = null;
+        Connection connection = DatabaseConnection.getConnection();
+        try {
+            statement = connection.createStatement();
+            Log.debugMessage("CharacteristicDatabase.retrieveCharacteristicsByOneQuery | Trying: " + sql, Log.DEBUGLEVEL09);
+            resultSet = statement.executeQuery(sql.toString());
+            Map characteristicMap = new HashMap();
+            while (resultSet.next()) {
+                StorableObject storableObject = null;
+                String storableObjectId = resultSet.getString(COLUMN_CHARACTERIZED_ID);
+                for (Iterator it = list.iterator(); it.hasNext();) {
+                    StorableObject storableObjectToCompare = (StorableObject) it.next();
+                    if (storableObjectToCompare.getId().getIdentifierString().equals(storableObjectId)){
+                        storableObject = storableObjectToCompare;
+                        break;
+                    }                   
+                }
+                
+                if (storableObject == null){
+                    String mesg = "CharacteristicDatabase.retrieveCharacteristicsByOneQuery | Cannot found correspond result for '" + storableObjectId +"'" ;
+                    throw new RetrieveObjectException(mesg);
+                }
+                /**
+                 * @todo when change DB Identifier model ,change getString() to
+                 *       getLong()
+                 */
+                StorableObject characteristic = updateEntityFromResultSet(null, resultSet);
+                List characteristics = (List)characteristicMap.get(storableObject);
+                if (characteristics == null){
+                    characteristics = new LinkedList();
+                    characteristicMap.put(storableObject, characteristics);
+                }               
+                characteristics.add(characteristic);              
+            }
+            
+            return characteristicMap;
+            
+        } catch (SQLException sqle) {
+            String mesg = "TestDatabase.retrieveMeasurementSetupTestLinksByOneQuery | Cannot retrieve parameters for result -- " + sqle.getMessage();
+            throw new RetrieveObjectException(mesg, sqle);
+        } finally {
+            try {
+                if (statement != null)
+                    statement.close();
+                if (resultSet != null)
+                    resultSet.close();
+                statement = null;
+                resultSet = null;
+            } catch (SQLException sqle1) {
+                Log.errorException(sqle1);
+            } finally {
+                DatabaseConnection.closeConnection(connection);
+            }
+        }        
+    }
 	
 	public List retrieveByIds(List ids, String condition) throws IllegalDataException, RetrieveObjectException {
 		if ((ids == null) || (ids.isEmpty()))
@@ -321,5 +408,4 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
 		} else list =  this.retrieveButIds(ids);
 		return list;
 	}
-	
 }

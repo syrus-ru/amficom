@@ -1,5 +1,5 @@
 /*
- * $Id: KISDatabase.java,v 1.29 2004/11/02 11:53:45 bob Exp $
+ * $Id: KISDatabase.java,v 1.30 2004/11/04 13:33:04 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,8 +14,11 @@ import java.sql.Statement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObject;
@@ -35,8 +38,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.29 $, $Date: 2004/11/02 11:53:45 $
- * @author $Author: bob $
+ * @version $Revision: 1.30 $, $Date: 2004/11/04 13:33:04 $
+ * @author $Author: max $
  * @module configuration_v1
  */
 
@@ -251,6 +254,97 @@ public class KISDatabase extends StorableObjectDatabase {
 				return null;
 		}
 	}
+    
+    private void retrieveKISMeasurementPortIdsByOneQuery(List kiss) throws RetrieveObjectException {
+    	if ((kiss == null) || (kiss.isEmpty()))
+            return;     
+        
+        StringBuffer sql = new StringBuffer(SQL_SELECT
+                + COLUMN_ID + COMMA
+                + MeasurementPortDatabase.COLUMN_KIS_ID
+                + SQL_FROM + ObjectEntities.MEASUREMENTPORT_ENTITY
+                + SQL_WHERE + MeasurementPortDatabase.COLUMN_KIS_ID
+                + SQL_IN + OPEN_BRACKET);
+        int i = 1;
+        for (Iterator it = kiss.iterator(); it.hasNext();i++) {
+            KIS kis = (KIS)it.next();
+            sql.append(kis.getId().toSQLString());
+            if (it.hasNext()){
+                if (((i+1) % MAXIMUM_EXPRESSION_NUMBER != 0))
+                    sql.append(COMMA);
+                else {
+                    sql.append(CLOSE_BRACKET);
+                    sql.append(SQL_OR);
+                    sql.append(COLUMN_ID);
+                    sql.append(SQL_IN);
+                    sql.append(OPEN_BRACKET);
+                }                   
+            }
+        }
+        sql.append(CLOSE_BRACKET);
+        
+        Statement statement = null;
+        ResultSet resultSet = null;
+        Connection connection = DatabaseConnection.getConnection();
+        try {
+            statement = connection.createStatement();
+            Log.debugMessage("KISDatabase.retrieveKISMeasurementPortIdsByOneQuery | Trying: " + sql, Log.DEBUGLEVEL09);
+            resultSet = statement.executeQuery(sql.toString());
+            Map mpIdMap = new HashMap();
+            while (resultSet.next()) {
+                KIS kis = null;
+                String kisId = resultSet.getString(MeasurementPortDatabase.COLUMN_KIS_ID);
+                for (Iterator it = kiss.iterator(); it.hasNext();) {
+                    KIS kisToCompare = (KIS) it.next();
+                    if (kisToCompare.getId().getIdentifierString().equals(kisId)){
+                        kis = kisToCompare;
+                        break;
+                    }                   
+                }
+                
+                if (kis == null){
+                    String mesg = "KISDatabase.retrieveKISMeasurementPortIdsByOneQuery | Cannot found correspond result for '" + kisId +"'" ;
+                    throw new RetrieveObjectException(mesg);
+                }
+                    
+                
+                /**
+                 * @todo when change DB Identifier model ,change getString() to
+                 *       getLong()
+                 */
+                Identifier mpId = new Identifier(resultSet.getString(COLUMN_ID));
+                List mpIds = (List)mpIdMap.get(kis);
+                if (mpIds == null){
+                    mpIds = new LinkedList();
+                    mpIdMap.put(kis, mpIds);
+                }               
+                mpIds.add(mpId);              
+            }
+            
+            for (Iterator iter = kiss.iterator(); iter.hasNext();) {
+                KIS kis = (KIS) iter.next();
+                List mpIds = (List)mpIdMap.get(kis);
+                kis.setMeasurementPortIds(mpIds);
+            }
+            
+        } catch (SQLException sqle) {
+            String mesg = "TestDatabase.retrieveMeasurementSetupTestLinksByOneQuery | Cannot retrieve parameters for result -- " + sqle.getMessage();
+            throw new RetrieveObjectException(mesg, sqle);
+        } finally {
+            try {
+                if (statement != null)
+                    statement.close();
+                if (resultSet != null)
+                    resultSet.close();
+                statement = null;
+                resultSet = null;
+            } catch (SQLException sqle1) {
+                Log.errorException(sqle1);
+            } finally {
+                DatabaseConnection.closeConnection(connection);
+            }
+        }
+    }
 
 	private List retrieveMonitoredElements(KIS kis) throws RetrieveObjectException {
 		List monitoredElements = new ArrayList();
@@ -303,6 +397,97 @@ public class KISDatabase extends StorableObjectDatabase {
 		}
 		return monitoredElements;
 	}
+    
+    private void retrieveMonitoredElementsByOneQuery(List kiss) throws RetrieveObjectException {
+    	if ((kiss == null) || (kiss.isEmpty()))
+            return;     
+        
+        StringBuffer sql = new StringBuffer(SQL_SELECT
+                + COLUMN_ID + COMMA
+                + MeasurementPortDatabase.COLUMN_KIS_ID
+                + SQL_FROM + ObjectEntities.MEASUREMENTPORT_ENTITY
+                + SQL_WHERE + MeasurementPortDatabase.COLUMN_KIS_ID
+                + SQL_IN + OPEN_BRACKET);
+        int i = 1;
+        for (Iterator it = kiss.iterator(); it.hasNext();i++) {
+            KIS kis = (KIS)it.next();
+            sql.append(kis.getId().toSQLString());
+            if (it.hasNext()){
+                if (((i+1) % MAXIMUM_EXPRESSION_NUMBER != 0))
+                    sql.append(COMMA);
+                else {
+                    sql.append(CLOSE_BRACKET);
+                    sql.append(SQL_OR);
+                    sql.append(COLUMN_ID);
+                    sql.append(SQL_IN);
+                    sql.append(OPEN_BRACKET);
+                }                   
+            }
+        }
+        sql.append(CLOSE_BRACKET);
+        
+        Statement statement = null;
+        ResultSet resultSet = null;
+        Connection connection = DatabaseConnection.getConnection();
+        try {
+            statement = connection.createStatement();
+            Log.debugMessage("KISDatabase.retrieveKISMeasurementPortIdsByOneQuery | Trying: " + sql, Log.DEBUGLEVEL09);
+            resultSet = statement.executeQuery(sql.toString());
+            Map mpIdMap = new HashMap();
+            while (resultSet.next()) {
+                KIS kis = null;
+                String kisId = resultSet.getString(MeasurementPortDatabase.COLUMN_KIS_ID);
+                for (Iterator it = kiss.iterator(); it.hasNext();) {
+                    KIS kisToCompare = (KIS) it.next();
+                    if (kisToCompare.getId().getIdentifierString().equals(kisId)){
+                        kis = kisToCompare;
+                        break;
+                    }                   
+                }
+                
+                if (kis == null){
+                    String mesg = "KISDatabase.retrieveKISMeasurementPortIdsByOneQuery | Cannot found correspond result for '" + kisId +"'" ;
+                    throw new RetrieveObjectException(mesg);
+                }
+                    
+                
+                /**
+                 * @todo when change DB Identifier model ,change getString() to
+                 *       getLong()
+                 */
+                Identifier mpId = new Identifier(resultSet.getString(COLUMN_ID));
+                List mpIds = (List)mpIdMap.get(kis);
+                if (mpIds == null){
+                    mpIds = new LinkedList();
+                    mpIdMap.put(kis, mpIds);
+                }               
+                mpIds.add(mpId);              
+            }
+            
+            for (Iterator iter = kiss.iterator(); iter.hasNext();) {
+                KIS kis = (KIS) iter.next();
+                List mpIds = (List)mpIdMap.get(kis);
+                kis.setMeasurementPortIds(mpIds);
+            }
+            
+        } catch (SQLException sqle) {
+            String mesg = "KISDatabase.retrieveKISMeasurementPortIdsByOneQuery | Cannot retrieve parameters for result -- " + sqle.getMessage();
+            throw new RetrieveObjectException(mesg, sqle);
+        } finally {
+            try {
+                if (statement != null)
+                    statement.close();
+                if (resultSet != null)
+                    resultSet.close();
+                statement = null;
+                resultSet = null;
+            } catch (SQLException sqle1) {
+                Log.errorException(sqle1);
+            } finally {
+                DatabaseConnection.closeConnection(connection);
+            }
+        }
+    }
 
 	public void insert(StorableObject storableObject) throws IllegalDataException, CreateObjectException {
 		KIS kis = this.fromStorableObject(storableObject);
@@ -390,11 +575,12 @@ public class KISDatabase extends StorableObjectDatabase {
 			list = super.retrieveByIdsOneQuery(null, condition);
 		else 
 			list = super.retrieveByIdsOneQuery(ids, condition);
-		for (Iterator iter = list.iterator(); iter.hasNext();) {
-			KIS kis = (KIS) iter.next();
-			this.retrieveKISMeasurementPortIds(kis);
-			this.retrieveMonitoredElements(kis);		
-		}
+		
+        if (list != null) {
+            retrieveKISMeasurementPortIdsByOneQuery(list);
+    		retrieveMonitoredElementsByOneQuery(list);		
+        }
+        
 		return list;
 	}
 	

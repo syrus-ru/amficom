@@ -1,5 +1,5 @@
 /*
- * $Id: MCMDatabase.java,v 1.24 2004/10/29 15:03:39 max Exp $
+ * $Id: MCMDatabase.java,v 1.25 2004/11/04 13:33:05 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,7 +14,10 @@ import java.sql.Statement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.Map;
 
 import java.util.List;
 import com.syrus.AMFICOM.general.Identifier;
@@ -35,7 +38,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.24 $, $Date: 2004/10/29 15:03:39 $
+ * @version $Revision: 1.25 $, $Date: 2004/11/04 13:33:05 $
  * @author $Author: max $
  * @module configuration_v1
  */
@@ -223,6 +226,97 @@ public class MCMDatabase extends StorableObjectDatabase {
 		}
 		mcm.setKISIds(kisIds);
 	}
+    
+    private void retrieveKISIdsByOneQuery(List mcms) throws RetrieveObjectException {
+    	if ((mcms == null) || (mcms.isEmpty()))
+            return;     
+        
+        StringBuffer sql = new StringBuffer(SQL_SELECT
+                + COLUMN_ID + COMMA
+                + KISDatabase.COLUMN_MCM_ID
+                + SQL_FROM + ObjectEntities.KIS_ENTITY
+                + SQL_WHERE + KISDatabase.COLUMN_MCM_ID
+                + SQL_IN + OPEN_BRACKET);
+        int i = 1;
+        for (Iterator it = mcms.iterator(); it.hasNext();i++) {
+            MCM mcm = (MCM)it.next();
+            sql.append(mcm.getId().toSQLString());
+            if (it.hasNext()){
+                if (((i+1) % MAXIMUM_EXPRESSION_NUMBER != 0))
+                    sql.append(COMMA);
+                else {
+                    sql.append(CLOSE_BRACKET);
+                    sql.append(SQL_OR);
+                    sql.append(COLUMN_ID);
+                    sql.append(SQL_IN);
+                    sql.append(OPEN_BRACKET);
+                }                   
+            }
+        }
+        sql.append(CLOSE_BRACKET);
+        
+        Statement statement = null;
+        ResultSet resultSet = null;
+        Connection connection = DatabaseConnection.getConnection();
+        try {
+            statement = connection.createStatement();
+            Log.debugMessage("MCMDatabase.retrieveKISIdsByOneQuery | Trying: " + sql, Log.DEBUGLEVEL09);
+            resultSet = statement.executeQuery(sql.toString());
+            Map kisIdMap = new HashMap();
+            while (resultSet.next()) {
+                MCM mcm = null;
+                String mcmId = resultSet.getString(KISDatabase.COLUMN_MCM_ID);
+                for (Iterator it = mcms.iterator(); it.hasNext();) {
+                    MCM mcmToCompare = (MCM) it.next();
+                    if (mcmToCompare.getId().getIdentifierString().equals(mcmId)){
+                        mcm = mcmToCompare;
+                        break;
+                    }                   
+                }
+                
+                if (mcm == null){
+                    String mesg = "MCMDatabase.retrieveKISIdsByOneQuery | Cannot found correspond result for '" + mcmId +"'" ;
+                    throw new RetrieveObjectException(mesg);
+                }
+                    
+                
+                /**
+                 * @todo when change DB Identifier model ,change getString() to
+                 *       getLong()
+                 */
+                Identifier kisId = new Identifier(resultSet.getString(COLUMN_ID));
+                List kisIds = (List)kisIdMap.get(mcm);
+                if (kisIds == null){
+                    kisIds = new LinkedList();
+                    kisIdMap.put(mcm, kisIds);
+                }               
+                kisIds.add(kisId);              
+            }
+            
+            for (Iterator iter = mcms.iterator(); iter.hasNext();) {
+                MCM mcm = (MCM) iter.next();
+                List kisIds = (List)kisIdMap.get(mcm);
+                mcm.setKISIds(kisIds);
+            }
+            
+        } catch (SQLException sqle) {
+            String mesg = "MCMDatabase.retrieveKISIdsByOneQuery | Cannot retrieve parameters for result -- " + sqle.getMessage();
+            throw new RetrieveObjectException(mesg, sqle);
+        } finally {
+            try {
+                if (statement != null)
+                    statement.close();
+                if (resultSet != null)
+                    resultSet.close();
+                statement = null;
+                resultSet = null;
+            } catch (SQLException sqle1) {
+                Log.errorException(sqle1);
+            } finally {
+                DatabaseConnection.closeConnection(connection);
+            }
+        }
+    }
 
 	public Object retrieveObject(StorableObject storableObject, int retrieve_kind, Object arg)
 			throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
@@ -279,12 +373,18 @@ public class MCMDatabase extends StorableObjectDatabase {
 			list = super.retrieveByIdsOneQuery(null, condition);
 		else 
 			list = super.retrieveByIdsOneQuery(ids, condition);
-		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(ConfigurationDatabaseContext.characteristicDatabase);
-		for (Iterator iter = list.iterator(); iter.hasNext();) {
-			MCM mcm = (MCM) iter.next();
-			this.retrieveKISIds(mcm);
-			mcm.setCharacteristics(characteristicDatabase.retrieveCharacteristics(mcm.getId(), CharacteristicSort.CHARACTERISTIC_SORT_MCM));
-		}
+		
+        if (list != null) {
+            retrieveKISIdsByOneQuery(list);
+            
+            CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(ConfigurationDatabaseContext.characteristicDatabase);
+            Map characteristicMap = characteristicDatabase.retrieveCharacteristicsByOneQuery(list, CharacteristicSort.CHARACTERISTIC_SORT_MCM);
+            for (Iterator iter = list.iterator(); iter.hasNext();) {
+                TransmissionPath transmissionPath = (TransmissionPath) iter.next();
+                List characteristics = (List)characteristicMap.get(transmissionPath);
+                transmissionPath.setCharacteristics(characteristics);
+            }
+        }
 		return list;	
 		//return retriveByIdsPreparedStatement(ids);
 	}

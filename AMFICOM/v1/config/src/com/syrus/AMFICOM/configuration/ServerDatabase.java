@@ -1,5 +1,5 @@
 /*
- * $Id: ServerDatabase.java,v 1.24 2004/10/29 15:03:39 max Exp $
+ * $Id: ServerDatabase.java,v 1.25 2004/11/04 13:33:05 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,6 +16,7 @@ import java.sql.Statement;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Map;
 
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
@@ -35,7 +36,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.24 $, $Date: 2004/10/29 15:03:39 $
+ * @version $Revision: 1.25 $, $Date: 2004/11/04 13:33:05 $
  * @author $Author: max $
  * @module configuration_v1
  */
@@ -265,12 +266,15 @@ public class ServerDatabase extends StorableObjectDatabase {
 			list = retrieveByIdsOneQuery(null, condition);
 		else list = retrieveByIdsOneQuery(ids, condition);
 		
-		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(ConfigurationDatabaseContext.characteristicDatabase);
-		for(Iterator it=list.iterator();it.hasNext();){
-			Server server = (Server)it.next();
-			server.setCharacteristics(characteristicDatabase.retrieveCharacteristics(server.getId(), CharacteristicSort.CHARACTERISTIC_SORT_SERVER));
-		}
-		
+		if (list != null) {
+            CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(ConfigurationDatabaseContext.characteristicDatabase);
+            Map characteristicMap = characteristicDatabase.retrieveCharacteristicsByOneQuery(list, CharacteristicSort.CHARACTERISTIC_SORT_SERVER);
+             for (Iterator iter = list.iterator(); iter.hasNext();) {
+                TransmissionPath transmissionPath = (TransmissionPath) iter.next();
+                List characteristics = (List)characteristicMap.get(transmissionPath);
+                transmissionPath.setCharacteristics(characteristics);
+            }
+        }
 		return list;
 	}
 
