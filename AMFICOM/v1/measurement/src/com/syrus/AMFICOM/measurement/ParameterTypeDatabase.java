@@ -1,5 +1,5 @@
 /*
- * $Id: ParameterTypeDatabase.java,v 1.34 2004/11/10 15:24:02 bob Exp $
+ * $Id: ParameterTypeDatabase.java,v 1.35 2004/11/16 15:48:45 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,22 +8,22 @@
 
 package com.syrus.AMFICOM.measurement;
 
-import java.util.Collections;
-import java.util.List;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Collections;
+import java.util.List;
 
-import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.DatabaseIdentifier;
+import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.ObjectNotFoundException;
+import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
-import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.RetrieveObjectException;
-import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.UpdateObjectException;
-import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.general.corba.DataType;
 import com.syrus.util.Log;
@@ -31,7 +31,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.34 $, $Date: 2004/11/10 15:24:02 $
+ * @version $Revision: 1.35 $, $Date: 2004/11/16 15:48:45 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -99,27 +99,16 @@ public class ParameterTypeDatabase extends StorableObjectDatabase  {
 	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
 		throws IllegalDataException, RetrieveObjectException, SQLException {
 		ParameterType parameterType = (storableObject == null) ? 
-					new ParameterType(new Identifier(resultSet.getString(COLUMN_ID)), null, null, null, null, DataType._DATA_TYPE_DATA) : 
+					new ParameterType(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID), null, null, null, null, DataType._DATA_TYPE_DATA) : 
 					fromStorableObject(storableObject);
-		/**
-		 * @todo when change DB Identifier model ,change getString() to getLong()
-		 */
 		parameterType.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
-												DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
-												/**
-												 * @todo when change DB Identifier model ,change getString() to
-												 *       getLong()
-												 */
-												 new Identifier(resultSet.getString(COLUMN_CREATOR_ID)),
-												 /**
-												  * @todo when change DB Identifier model ,change getString() to
-												  *       getLong()
-												  */
-												 new Identifier(resultSet.getString(COLUMN_MODIFIER_ID)),
-												 DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_CODENAME)),
-												 DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_DESCRIPTION)),
-												 DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_NAME)),
-												 resultSet.getInt(COLUMN_SORT));
+									DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
+									DatabaseIdentifier.getIdentifier(resultSet, COLUMN_CREATOR_ID),
+									DatabaseIdentifier.getIdentifier(resultSet, COLUMN_MODIFIER_ID),
+									DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_CODENAME)),
+									DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_DESCRIPTION)),
+									DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_NAME)),
+									resultSet.getInt(COLUMN_SORT));
 		return parameterType;
 	}
 

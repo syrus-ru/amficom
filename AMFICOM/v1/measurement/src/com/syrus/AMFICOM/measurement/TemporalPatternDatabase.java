@@ -1,5 +1,5 @@
 /*
- * $Id: TemporalPatternDatabase.java,v 1.25 2004/11/10 15:24:02 bob Exp $
+ * $Id: TemporalPatternDatabase.java,v 1.26 2004/11/16 15:48:45 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,28 +14,28 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
-import oracle.jdbc.driver.OracleResultSet;
 import oracle.jdbc.driver.OraclePreparedStatement;
-import com.syrus.util.Log;
-import com.syrus.util.database.DatabaseConnection;
-import com.syrus.util.database.DatabaseDate;
-import com.syrus.util.database.DatabaseString;
+import oracle.jdbc.driver.OracleResultSet;
 
 import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
-import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.measurement.ora.CronStringArray;
+import com.syrus.util.Log;
+import com.syrus.util.database.DatabaseConnection;
+import com.syrus.util.database.DatabaseDate;
+import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.25 $, $Date: 2004/11/10 15:24:02 $
+ * @version $Revision: 1.26 $, $Date: 2004/11/16 15:48:45 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -91,15 +91,15 @@ public class TemporalPatternDatabase extends StorableObjectDatabase {
 	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
 			throws IllegalDataException, RetrieveObjectException, SQLException {
 		TemporalPattern temporalPattern = (storableObject == null) ?
-				new TemporalPattern(new Identifier(resultSet.getString(COLUMN_ID)), null, null, null):
+				new TemporalPattern(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID), null, null, null):
 				fromStorableObject(storableObject);
 		String[] cronStrings = ((CronStringArray)(((OracleResultSet)resultSet).getORAData(COLUMN_VALUE, CronStringArray.getORADataFactory()))).getArray();
 		temporalPattern.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
-																	DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
-																	new Identifier(resultSet.getString(COLUMN_CREATOR_ID)),
-																	new Identifier(resultSet.getString(COLUMN_MODIFIER_ID)),
-																	DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_DESCRIPTION)),
-																	cronStrings);
+									  DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
+									  DatabaseIdentifier.getIdentifier(resultSet, COLUMN_CREATOR_ID),
+									  DatabaseIdentifier.getIdentifier(resultSet, COLUMN_MODIFIER_ID),
+									  DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_DESCRIPTION)),
+									  cronStrings);
 		return temporalPattern;
 	}
 
@@ -153,7 +153,7 @@ public class TemporalPatternDatabase extends StorableObjectDatabase {
 	}	
 	
 	private void insertTemporalPattern(TemporalPattern temporalPattern) throws CreateObjectException {
-		String tpIdCode = temporalPattern.getId().toSQLString();
+		String tpIdCode = DatabaseIdentifier.toSQLString(temporalPattern.getId());
 		
 		PreparedStatement preparedStatement = null;
 		try {			

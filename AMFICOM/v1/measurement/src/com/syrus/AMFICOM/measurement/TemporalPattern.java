@@ -1,5 +1,5 @@
 /*
- * $Id: TemporalPattern.java,v 1.49 2004/11/12 11:44:53 bob Exp $
+ * $Id: TemporalPattern.java,v 1.50 2004/11/16 15:48:45 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,13 +31,17 @@ import com.syrus.AMFICOM.resource.LangModelMeasurement;
 import com.syrus.util.HashCodeGenerator;
 
 /**
- * @version $Revision: 1.49 $, $Date: 2004/11/12 11:44:53 $
+ * @version $Revision: 1.50 $, $Date: 2004/11/16 15:48:45 $
  * @author $Author: bob $
  * @module measurement_v1
  */
 
 public class TemporalPattern extends StorableObject {
 
+	/**
+	 * Comment for <code>serialVersionUID</code>
+	 */
+	private static final long	serialVersionUID	= 3256437014894163509L;
 	private static final String	I18N_KEY_MIN		= "min";
 	private static final String	I18N_KEY_HOUR		= "hour";
 	private static final String	I18N_KEY_DAY_OF_MONTH	= "dayOfMonth";

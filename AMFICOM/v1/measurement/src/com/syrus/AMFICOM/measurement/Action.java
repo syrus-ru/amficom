@@ -1,5 +1,5 @@
 /*
- * $Id: Action.java,v 1.12 2004/11/12 11:44:48 bob Exp $
+ * $Id: Action.java,v 1.13 2004/11/16 15:48:44 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,12 +17,14 @@ import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 import com.syrus.AMFICOM.event.corba.AlarmLevel;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2004/11/12 11:44:48 $
+ * @version $Revision: 1.13 $, $Date: 2004/11/16 15:48:44 $
  * @author $Author: bob $
  * @module measurement_v1
  */
 
 public abstract class Action extends StorableObject implements TypedObject {
+	static final long serialVersionUID = 8504255613322384909L;
+	
 	ActionType type;
 	Identifier monitoredElementId;
 

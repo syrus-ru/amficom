@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementType.java,v 1.32 2004/11/12 11:44:53 bob Exp $
+ * $Id: MeasurementType.java,v 1.33 2004/11/16 15:48:45 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,12 +30,16 @@ import com.syrus.AMFICOM.measurement.corba.MeasurementType_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.32 $, $Date: 2004/11/12 11:44:53 $
+ * @version $Revision: 1.33 $, $Date: 2004/11/16 15:48:45 $
  * @author $Author: bob $
  * @module measurement_v1
  */
 
 public class MeasurementType extends ActionType {
+	/**
+	 * Comment for <code>serialVersionUID</code>
+	 */
+	private static final long	serialVersionUID	= 3256726169373062969L;
 	private List inParameterTypes;
 	private List outParameterTypes;
 	private List measurementPortTypes;

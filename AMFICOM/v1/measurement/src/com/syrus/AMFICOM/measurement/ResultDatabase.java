@@ -1,5 +1,5 @@
 /*
- * $Id: ResultDatabase.java,v 1.36 2004/11/10 15:24:02 bob Exp $
+ * $Id: ResultDatabase.java,v 1.37 2004/11/16 15:48:45 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,6 +27,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.ByteArrayDatabase;
 import com.syrus.AMFICOM.configuration.Domain;
 import com.syrus.AMFICOM.configuration.DomainMember;
+import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.Identified;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
@@ -43,7 +44,7 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
 
 /**
- * @version $Revision: 1.36 $, $Date: 2004/11/10 15:24:02 $
+ * @version $Revision: 1.37 $, $Date: 2004/11/16 15:48:45 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -123,43 +124,43 @@ public class ResultDatabase extends StorableObjectDatabase {
 		int resultSort = result.getSort().value();
 		switch (resultSort) {
 			case ResultSort._RESULT_SORT_MEASUREMENT:
-				buffer.append(result.getMeasurement().getId().toSQLString());
+				buffer.append(DatabaseIdentifier.toSQLString(result.getMeasurement().getId()));
 				buffer.append(COMMA);				
-				buffer.append(Identifier.getNullSQLString());
+				buffer.append(DatabaseIdentifier.getNullSQLString());
 				buffer.append(COMMA);
-				buffer.append(Identifier.getNullSQLString());
+				buffer.append(DatabaseIdentifier.getNullSQLString());
 				buffer.append(COMMA);
-				buffer.append(Identifier.getNullSQLString());
+				buffer.append(DatabaseIdentifier.getNullSQLString());
 				buffer.append(COMMA);
 				break;
 			case ResultSort._RESULT_SORT_ANALYSIS:
-				buffer.append(result.getMeasurement().getId().toSQLString());
+				buffer.append(DatabaseIdentifier.toSQLString(result.getMeasurement().getId()));
 				buffer.append(COMMA);				
-				buffer.append(result.getAction().getId().toSQLString());
+				buffer.append(DatabaseIdentifier.toSQLString(result.getAction().getId()));
 				buffer.append(COMMA);
-				buffer.append(Identifier.getNullSQLString());
+				buffer.append(DatabaseIdentifier.getNullSQLString());
 				buffer.append(COMMA);
-				buffer.append(Identifier.getNullSQLString());
+				buffer.append(DatabaseIdentifier.getNullSQLString());
 				buffer.append(COMMA);
 				break;
 			case ResultSort._RESULT_SORT_EVALUATION:
-				buffer.append(result.getMeasurement().getId().toSQLString());
+				buffer.append(DatabaseIdentifier.toSQLString(result.getMeasurement().getId()));
 				buffer.append(COMMA);				
-				buffer.append(Identifier.getNullSQLString());
+				buffer.append(DatabaseIdentifier.getNullSQLString());
 				buffer.append(COMMA);
-				buffer.append(result.getAction().getId().toSQLString());
+				buffer.append(DatabaseIdentifier.toSQLString(result.getAction().getId()));
 				buffer.append(COMMA);
-				buffer.append(Identifier.getNullSQLString());
+				buffer.append(DatabaseIdentifier.getNullSQLString());
 				buffer.append(COMMA);
 				break;
 			case ResultSort._RESULT_SORT_MODELING:
-				buffer.append(Identifier.getNullSQLString());
+				buffer.append(DatabaseIdentifier.getNullSQLString());
 				buffer.append(COMMA);
-				buffer.append(Identifier.getNullSQLString());
+				buffer.append(DatabaseIdentifier.getNullSQLString());
 				buffer.append(COMMA);
-				buffer.append(Identifier.getNullSQLString());
+				buffer.append(DatabaseIdentifier.getNullSQLString());
 				buffer.append(COMMA);
-				buffer.append(result.getAction().getId().toSQLString());
+				buffer.append(DatabaseIdentifier.toSQLString(result.getAction().getId()));
 				buffer.append(COMMA);				
 			default:
 				Log.errorMessage("ResultDatabase.insertResult | Illegal sort: " + resultSort
@@ -178,105 +179,29 @@ public class ResultDatabase extends StorableObjectDatabase {
 		try {
 			int resultSort = result.getSort().value();
 			switch (resultSort) {
-				case ResultSort._RESULT_SORT_MEASUREMENT:
-					/**
-					 * @todo when change DB Identifier model ,change
-					 *       setString() to setLong()
-					 */
-					preparedStatement.setString(++i, result.getMeasurement().getId().getCode());
-					/**
-					 * @todo when change DB Identifier model
-					 *       ,change setString() to
-					 *       setLong()
-					 */
-					preparedStatement.setString(++i, "");
-					/**
-					 * @todo when change DB Identifier model
-					 *       ,change setString() to
-					 *       setLong()
-					 */
-					preparedStatement.setString(++i, "");
-					/**
-					 * @todo when change DB Identifier model
-					 *       ,change setString() to
-					 *       setLong()
-					 */
-					preparedStatement.setString(++i, "");
+				case ResultSort._RESULT_SORT_MEASUREMENT:					
+					DatabaseIdentifier.setIdentifier(preparedStatement, ++i, result.getMeasurement().getId());
+					DatabaseIdentifier.setIdentifier(preparedStatement, ++i, null);
+					DatabaseIdentifier.setIdentifier(preparedStatement, ++i, null);
+					DatabaseIdentifier.setIdentifier(preparedStatement, ++i, null);
 					break;
 				case ResultSort._RESULT_SORT_ANALYSIS:
-					/**
-					 * @todo when change DB Identifier model ,change
-					 *       setString() to setLong()
-					 */
-					preparedStatement.setString(++i, result.getMeasurement().getId().getCode());
-					/**
-					 * @todo when change DB Identifier model
-					 *       ,change setString() to
-					 *       setLong()
-					 */
-					preparedStatement.setString(++i, result.getAction().getId().getCode());
-					/**
-					 * @todo when change DB Identifier model
-					 *       ,change setString() to
-					 *       setLong()
-					 */
-					preparedStatement.setString(++i, "");
-					/**
-					 * @todo when change DB Identifier model
-					 *       ,change setString() to
-					 *       setLong()
-					 */
-					preparedStatement.setString(++i, "");
+					DatabaseIdentifier.setIdentifier(preparedStatement, ++i, result.getMeasurement().getId());
+					DatabaseIdentifier.setIdentifier(preparedStatement, ++i, result.getAction().getId());
+					DatabaseIdentifier.setIdentifier(preparedStatement, ++i, null);
+					DatabaseIdentifier.setIdentifier(preparedStatement, ++i, null);
 					break;
 				case ResultSort._RESULT_SORT_EVALUATION:
-					/**
-					 * @todo when change DB Identifier model ,change
-					 *       setString() to setLong()
-					 */
-					preparedStatement.setString(++i, result.getMeasurement().getId().getCode());
-					/**
-					 * @todo when change DB Identifier model
-					 *       ,change setString() to
-					 *       setLong()
-					 */
-					preparedStatement.setString(++i, "");
-					/**
-					 * @todo when change DB Identifier model
-					 *       ,change setString() to
-					 *       setLong()
-					 */
-					preparedStatement.setString(++i, result.getAction().getId().getCode());
-					/**
-					 * @todo when change DB Identifier model
-					 *       ,change setString() to
-					 *       setLong()
-					 */
-					preparedStatement.setString(++i, "");
+					DatabaseIdentifier.setIdentifier(preparedStatement, ++i, result.getMeasurement().getId());
+					DatabaseIdentifier.setIdentifier(preparedStatement, ++i, null);
+					DatabaseIdentifier.setIdentifier(preparedStatement, ++i, result.getAction().getId());
+					DatabaseIdentifier.setIdentifier(preparedStatement, ++i, null);
 					break;
 				case ResultSort._RESULT_SORT_MODELING:
-					/**
-					 * @todo when change DB Identifier model ,change
-					 *       setString() to setLong()
-					 */
-					preparedStatement.setString(++i, "");
-					/**
-					 * @todo when change DB Identifier model
-					 *       ,change setString() to
-					 *       setLong()
-					 */
-					preparedStatement.setString(++i, "");
-					/**
-					 * @todo when change DB Identifier model
-					 *       ,change setString() to
-					 *       setLong()
-					 */
-					preparedStatement.setString(++i, "");
-					/**
-					 * @todo when change DB Identifier model
-					 *       ,change setString() to
-					 *       setLong()
-					 */
-					preparedStatement.setString(++i, result.getAction().getId().getCode());
+					DatabaseIdentifier.setIdentifier(preparedStatement, ++i, null);
+					DatabaseIdentifier.setIdentifier(preparedStatement, ++i, null);
+					DatabaseIdentifier.setIdentifier(preparedStatement, ++i, null);					
+					DatabaseIdentifier.setIdentifier(preparedStatement, ++i, result.getAction().getId());
 					break;
 				default:
 					Log.errorMessage("ResultDatabase.insertResult | Illegal sort: " + resultSort
@@ -307,13 +232,9 @@ public class ResultDatabase extends StorableObjectDatabase {
 
 	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
 			throws IllegalDataException, RetrieveObjectException, SQLException {
-		Result result = (storableObject == null) ? new Result(new Identifier(resultSet.getString(COLUMN_ID)),
+		Result result = (storableObject == null) ? new Result(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID),
 									null, null, null, 0, 0, null)
 				: fromStorableObject(storableObject);
-		/**
-		 * @todo when change DB Identifier model ,change getString() to
-		 *       getLong()
-		 */
 		Measurement measurement = null;		
 		int resultSort = resultSet.getInt(COLUMN_SORT);
 		Action action = null;
@@ -321,7 +242,7 @@ public class ResultDatabase extends StorableObjectDatabase {
 			case ResultSort._RESULT_SORT_MEASUREMENT:
 				try {
 					measurement = (Measurement) MeasurementStorableObjectPool
-							.getStorableObject(new Identifier(resultSet.getString(COLUMN_MEASUREMENT_ID)),
+							.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_MEASUREMENT_ID),
 										true);
 				} catch (ApplicationException ae) {
 					throw new RetrieveObjectException(ae);
@@ -329,13 +250,9 @@ public class ResultDatabase extends StorableObjectDatabase {
 				action = measurement;
 				break;
 			case ResultSort._RESULT_SORT_ANALYSIS:
-				/**
-				 * @todo when change DB Identifier model ,change
-				 *       getString() to getLong()
-				 */
 				try {
 					measurement = (Measurement) MeasurementStorableObjectPool
-					.getStorableObject(new Identifier(resultSet.getString(COLUMN_MEASUREMENT_ID)),
+					.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_MEASUREMENT_ID),
 								true);
 
 					action = (Analysis) MeasurementStorableObjectPool
@@ -346,13 +263,9 @@ public class ResultDatabase extends StorableObjectDatabase {
 				}
 				break;
 			case ResultSort._RESULT_SORT_EVALUATION:
-				/**
-				 * @todo when change DB Identifier model ,change
-				 *       getString() to getLong()
-				 */
 				try {
 					measurement = (Measurement) MeasurementStorableObjectPool
-					.getStorableObject(new Identifier(resultSet.getString(COLUMN_MEASUREMENT_ID)),
+					.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_MEASUREMENT_ID),
 								true);
 					action = (Evaluation) MeasurementStorableObjectPool
 							.getStorableObject(new Identifier(resultSet
@@ -374,19 +287,14 @@ public class ResultDatabase extends StorableObjectDatabase {
 				Log.errorMessage("Unkown sort: " + resultSort + " of result "
 						+ result.getId().getCode());
 		}
-		result.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED), DatabaseDate
-				.fromQuerySubString(resultSet, COLUMN_MODIFIED),
-		/**
-		 * @todo when change DB Identifier model ,change getString() to
-		 *       getLong()
-		 */
-		new Identifier(resultSet.getString(COLUMN_CREATOR_ID)),
-		/**
-		 * @todo when change DB Identifier model ,change getString() to
-		 *       getLong()
-		 */
-		new Identifier(resultSet.getString(COLUMN_MODIFIER_ID)), measurement, action, resultSort, resultSet
-				.getInt(COLUMN_ALARM_LEVEL));
+		result.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED), 
+							 DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
+							 DatabaseIdentifier.getIdentifier(resultSet, COLUMN_CREATOR_ID),
+							 DatabaseIdentifier.getIdentifier(resultSet, COLUMN_MODIFIER_ID),
+							 measurement,
+							 action,
+							 resultSort,
+							 resultSet.getInt(COLUMN_ALARM_LEVEL));
 
 		return result;
 	}
@@ -394,7 +302,7 @@ public class ResultDatabase extends StorableObjectDatabase {
 	private void retrieveResultParameters(Result result) throws RetrieveObjectException {
 		List parameters = new LinkedList();
 
-		String resultIdStr = result.getId().toSQLString();
+		String resultIdStr = DatabaseIdentifier.toSQLString(result.getId());
 		String sql = SQL_SELECT + COLUMN_ID + COMMA + LINK_COLUMN_TYPE_ID + COMMA + LINK_COLUMN_VALUE
 				+ SQL_FROM + ObjectEntities.RESULTPARAMETER_ENTITY + SQL_WHERE + LINK_COLUMN_RESULT_ID
 				+ EQUALS + resultIdStr;
@@ -409,34 +317,13 @@ public class ResultDatabase extends StorableObjectDatabase {
 			ParameterType parameterType;
 			while (resultSet.next()) {
 				try {
-					/**
-					 * @todo when change DB Identifier model
-					 *       ,change getString() to
-					 *       getLong()
-					 */
 					parameterType = (ParameterType) MeasurementStorableObjectPool
-							.getStorableObject(new Identifier(resultSet
-									.getString(LINK_COLUMN_TYPE_ID)), true);
+							.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, LINK_COLUMN_TYPE_ID), true);
 				} catch (ApplicationException ae) {
 					throw new RetrieveObjectException(ae);
 				}
-				parameter = new SetParameter(/**
-							      * @todo when
-							      *       change DB
-							      *       Identifier
-							      *       model
-							      *       ,change
-							      *       getString()
-							      *       to
-							      *       getLong()
-							      */
-				new Identifier(resultSet.getString(COLUMN_ID)),
-				/**
-				 * @todo when change DB Identifier model ,change
-				 *       getString() to getLong()
-				 */
-				parameterType, ByteArrayDatabase.toByteArray((BLOB) resultSet
-						.getBlob(LINK_COLUMN_VALUE)));
+				parameter = new SetParameter(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID),
+											 parameterType, ByteArrayDatabase.toByteArray((BLOB) resultSet.getBlob(LINK_COLUMN_VALUE)));
 				parameters.add(parameter);
 			}
 		} catch (SQLException sqle) {
@@ -479,7 +366,7 @@ public class ResultDatabase extends StorableObjectDatabase {
 		int i = 1;
 		for (Iterator it = results.iterator(); it.hasNext();i++) {
 			Result result = (Result)it.next();
-			sql.append(result.getId().toSQLString());
+			sql.append(DatabaseIdentifier.toSQLString(result.getId()));
 			if (it.hasNext()){
 				if (((i+1) % MAXIMUM_EXPRESSION_NUMBER != 0))
 					sql.append(COMMA);
@@ -506,10 +393,10 @@ public class ResultDatabase extends StorableObjectDatabase {
 			Map resultParametersMap = new HashMap();
 			while (resultSet.next()) {
 				Result result = null;
-				String resultId = resultSet.getString(LINK_COLUMN_RESULT_ID);
+				Identifier resultId = DatabaseIdentifier.getIdentifier(resultSet, LINK_COLUMN_RESULT_ID);
 				for (Iterator it = results.iterator(); it.hasNext();) {
 					Result res = (Result) it.next();
-					if (res.getId().getIdentifierString().equals(resultId)){
+					if (res.getId().equals(resultId)){
 						result = res;
 						break;
 					}					
@@ -521,34 +408,13 @@ public class ResultDatabase extends StorableObjectDatabase {
 				}
 					
 				try {
-					/**
-					 * @todo when change DB Identifier model
-					 *       ,change getString() to
-					 *       getLong()
-					 */
 					parameterType = (ParameterType) MeasurementStorableObjectPool
-							.getStorableObject(new Identifier(resultSet
-									.getString(LINK_COLUMN_TYPE_ID)), true);
+							.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, LINK_COLUMN_TYPE_ID), true);
 				} catch (ApplicationException ae) {
 					throw new RetrieveObjectException(ae);
 				}
-				parameter = new SetParameter(/**
-							      * @todo when
-							      *       change DB
-							      *       Identifier
-							      *       model
-							      *       ,change
-							      *       getString()
-							      *       to
-							      *       getLong()
-							      */
-				new Identifier(resultSet.getString(COLUMN_ID)),
-				/**
-				 * @todo when change DB Identifier model ,change
-				 *       getString() to getLong()
-				 */
-				parameterType, ByteArrayDatabase.toByteArray((BLOB) resultSet
-						.getBlob(LINK_COLUMN_VALUE)));
+				parameter = new SetParameter(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID),
+											 parameterType, ByteArrayDatabase.toByteArray((BLOB) resultSet.getBlob(LINK_COLUMN_VALUE)));
 				List parameters = (List)resultParametersMap.get(result);
 				if (parameters == null){
 					parameters = new LinkedList();
@@ -591,47 +457,27 @@ public class ResultDatabase extends StorableObjectDatabase {
 							+ SQL_FROM + ObjectEntities.RESULTPARAMETER_ENTITY + SQL_WHERE 
 							+ LINK_COLUMN_RESULT_ID + EQUALS + QUESTION;
         if ((results != null) && (!results.isEmpty())){		
-			PreparedStatement statement = null;
+			PreparedStatement preparedStatement = null;
 			Connection connection = DatabaseConnection.getConnection();
 			try {
-				statement = connection.prepareStatement(sql);
+				preparedStatement = connection.prepareStatement(sql);
 				Log.debugMessage("ResultDatabase.retrieveResultParameters | Trying: " + sql, Log.DEBUGLEVEL09);
 				SetParameter parameter;
 				ParameterType parameterType;
 				for (Iterator it = results.iterator(); it.hasNext();) {
 					Result result = (Result) it.next();
-					String idStr = result.getId().getCode();
-					/**
-					 * @todo when change DB Identifier model ,change
-					 *       setString() to setLong()
-					 */				
-					statement.setString(1, idStr);
-					ResultSet resultSet = statement.executeQuery();
+					Identifier id = result.getId();
+					DatabaseIdentifier.setIdentifier(preparedStatement, 1, id);
+					ResultSet resultSet = preparedStatement.executeQuery();
 					while (resultSet.next()) {
 						try {
-							/**
-							 * @todo when change DB Identifier model
-							 *       ,change getString() to
-							 *       getLong()
-							 */
 							parameterType = (ParameterType) MeasurementStorableObjectPool
-									.getStorableObject(new Identifier(resultSet
-											.getString(LINK_COLUMN_TYPE_ID)), true);
+									.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, LINK_COLUMN_TYPE_ID), true);
 						} catch (ApplicationException ae) {
 							throw new RetrieveObjectException(ae);
 						}
-						parameter = new SetParameter(
-							/**
-							 * @todo when change DB Identifier model ,
-							 * change getString() to getLong()
-							 */
-						new Identifier(resultSet.getString(COLUMN_ID)),
-						/**
-						 * @todo when change DB Identifier model ,change
-						 *       getString() to getLong()
-						 */
-						parameterType, ByteArrayDatabase.toByteArray((BLOB) resultSet
-								.getBlob(LINK_COLUMN_VALUE)));
+						parameter = new SetParameter(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID),
+													 parameterType, ByteArrayDatabase.toByteArray((BLOB) resultSet.getBlob(LINK_COLUMN_VALUE)));
 						parameters.add(parameter);						
 					} 
 					
@@ -643,9 +489,9 @@ public class ResultDatabase extends StorableObjectDatabase {
 				throw new RetrieveObjectException(mesg, sqle);
 			} finally {
 				try {
-					if (statement != null)
-						statement.close();
-					statement = null;
+					if (preparedStatement != null)
+						preparedStatement.close();
+					preparedStatement = null;
 				} catch (SQLException sqle1) {
 					Log.errorException(sqle1);
 				} finally {
@@ -686,10 +532,7 @@ public class ResultDatabase extends StorableObjectDatabase {
 	}
 
 	private void insertResultParameters(Result result) throws CreateObjectException {
-		/**
-		 * @todo when change DB Identifier model ,change String to long
-		 */
-		String resultIdCode = result.getId().getCode();
+		Identifier resultId = result.getId();
 		SetParameter[] setParameters = result.getParameters();
 		String sql = SQL_INSERT_INTO + ObjectEntities.RESULTPARAMETER_ENTITY + OPEN_BRACKET + COLUMN_ID + COMMA
 				+ LINK_COLUMN_TYPE_ID + COMMA + LINK_COLUMN_RESULT_ID + COMMA + LINK_COLUMN_VALUE
@@ -705,24 +548,12 @@ public class ResultDatabase extends StorableObjectDatabase {
 			for (i = 0; i < setParameters.length; i++) {
 				parameterId = setParameters[i].getId();
 				parameterTypeId = setParameters[i].getType().getId();
-				/**
-				 * @todo when change DB Identifier model ,change
-				 *       setString() to setLong()
-				 */
-				preparedStatement.setString(1, parameterId.getCode());
-				/**
-				 * @todo when change DB Identifier model ,change
-				 *       setString() to setLong()
-				 */
-				preparedStatement.setString(2, parameterTypeId.getCode());
-				/**
-				 * @todo when change DB Identifier model ,change
-				 *       setString() to setLong()
-				 */
-				preparedStatement.setString(3, resultIdCode);
+				DatabaseIdentifier.setIdentifier(preparedStatement, 1, parameterId);
+				DatabaseIdentifier.setIdentifier(preparedStatement, 2, parameterTypeId);
+				DatabaseIdentifier.setIdentifier(preparedStatement, 3, resultId);
 				preparedStatement.setBlob(4, BLOB.empty_lob());
 				Log.debugMessage("ResultDatabase.insertResultParameters | Inserting parameter "
-						+ parameterTypeId.toString() + " for result " + resultIdCode,
+						+ parameterTypeId.toString() + " for result " + resultId,
 							Log.DEBUGLEVEL09);
 				preparedStatement.executeUpdate();
 				//				ByteArrayDatabase badb = new
@@ -730,13 +561,13 @@ public class ResultDatabase extends StorableObjectDatabase {
 				ByteArrayDatabase.saveAsBlob(setParameters[i].getValue(), connection,
 								ObjectEntities.RESULTPARAMETER_ENTITY,
 								LINK_COLUMN_VALUE, COLUMN_ID + EQUALS
-										+ parameterId.toSQLString());
+										+ DatabaseIdentifier.toSQLString(parameterId));
 			}
 			connection.commit();
 		} catch (SQLException sqle) {
 			String mesg = "ResultDatabase.insertResultParameters | Cannot insert parameter '"
 					+ parameterId.toString() + "' of type '" + parameterTypeId.toString()
-					+ "' for result '" + resultIdCode + "' -- " + sqle.getMessage();
+					+ "' for result '" + resultId + "' -- " + sqle.getMessage();
 			throw new CreateObjectException(mesg, sqle);
 		} finally {
 			try {
@@ -779,7 +610,7 @@ public class ResultDatabase extends StorableObjectDatabase {
 	}
 
 	private void delete(Result result) {
-		String resultIdStr = result.getId().toSQLString();
+		String resultIdStr = DatabaseIdentifier.toSQLString(result.getId());
 		Statement statement = null;
 		Connection connection = DatabaseConnection.getConnection();
 		try {
@@ -823,7 +654,7 @@ public class ResultDatabase extends StorableObjectDatabase {
 				+ ObjectEntities.MEASUREMENT_ENTITY + SQL_WHERE
 				+ MeasurementDatabase.COLUMN_MONITORED_ELEMENT_ID + SQL_IN + OPEN_BRACKET + SQL_SELECT
 				+ COLUMN_ID + SQL_FROM + ObjectEntities.ME_ENTITY + SQL_WHERE
-				+ DomainMember.COLUMN_DOMAIN_ID + EQUALS + domain.getId().toSQLString() + CLOSE_BRACKET
+				+ DomainMember.COLUMN_DOMAIN_ID + EQUALS + DatabaseIdentifier.toSQLString(domain.getId()) + CLOSE_BRACKET
 				+ CLOSE_BRACKET;
 
 		try {
@@ -861,7 +692,7 @@ public class ResultDatabase extends StorableObjectDatabase {
 												+ " isn't Identifier or Identified");
 
 				if (id != null) {
-					buffer.append(id.toSQLString());
+					buffer.append(DatabaseIdentifier.toSQLString(id));
 					if (it.hasNext()){
 						if (((i+1) % MAXIMUM_EXPRESSION_NUMBER != 0))
 							buffer.append(COMMA);
@@ -895,7 +726,7 @@ public class ResultDatabase extends StorableObjectDatabase {
 	private List retrieveButIdsByMeasurementAndSort(List ids, Identifier measurementId, ResultSort resultSort) throws RetrieveObjectException {
 		List list = null;
 
-		String sql = COLUMN_MEASUREMENT_ID + EQUALS + measurementId.toSQLString()
+		String sql = COLUMN_MEASUREMENT_ID + EQUALS + DatabaseIdentifier.toSQLString(measurementId)
 			+ SQL_AND + COLUMN_SORT + EQUALS + resultSort.value();
 		
 		try{

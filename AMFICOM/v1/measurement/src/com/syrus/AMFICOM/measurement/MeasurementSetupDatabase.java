@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementSetupDatabase.java,v 1.41 2004/11/10 15:24:02 bob Exp $
+ * $Id: MeasurementSetupDatabase.java,v 1.42 2004/11/16 15:48:45 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,6 +26,7 @@ import com.syrus.AMFICOM.configuration.DomainMember;
 import com.syrus.AMFICOM.configuration.MonitoredElement;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
@@ -42,7 +43,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.41 $, $Date: 2004/11/10 15:24:02 $
+ * @version $Revision: 1.42 $, $Date: 2004/11/16 15:48:45 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -158,8 +159,8 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 	
 
 	private void createMEAttachment(MeasurementSetup measurementSetup, Identifier monitoredElementId) throws UpdateObjectException {
-		String msIdStr = measurementSetup.getId().toSQLString();
-		String meIdStr = monitoredElementId.toSQLString();
+		String msIdStr = DatabaseIdentifier.toSQLString(measurementSetup.getId());
+		String meIdStr = DatabaseIdentifier.toSQLString(monitoredElementId);
 		String sql = SQL_INSERT_INTO
 			+ ObjectEntities.MSMELINK_ENTITY + OPEN_BRACKET
 			+ LINK_COLUMN_MEASUREMENT_SETUP_ID + COMMA
@@ -195,8 +196,8 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 	}
 
 	private void deleteMEAttachment(MeasurementSetup measurementSetup, Identifier monitoredElementId) throws IllegalDataException {
-		String msIdStr = measurementSetup.getId().toSQLString();
-		String meIdStr = monitoredElementId.toSQLString();
+		String msIdStr = DatabaseIdentifier.toSQLString(measurementSetup.getId());
+		String meIdStr = DatabaseIdentifier.toSQLString(monitoredElementId);
 		String sql = SQL_DELETE_FROM 
 			+ ObjectEntities.MSMELINK_ENTITY
 			+ SQL_WHERE
@@ -231,12 +232,12 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 	protected String getColumns() {
 		if (columns == null){			
 			columns = super.getColumns() + COMMA
-			+ COLUMN_PARAMETER_SET_ID + COMMA
-			+ COLUMN_CRITERIA_SET_ID + COMMA
-			+ COLUMN_THRESHOLD_SET_ID + COMMA
-			+ COLUMN_ETALON_ID + COMMA
-			+ COLUMN_DESCRIPTION + COMMA
-			+ COLUMN_MEASUREMENT_DURAION;
+				+ COLUMN_PARAMETER_SET_ID + COMMA
+				+ COLUMN_CRITERIA_SET_ID + COMMA
+				+ COLUMN_THRESHOLD_SET_ID + COMMA
+				+ COLUMN_ETALON_ID + COMMA
+				+ COLUMN_DESCRIPTION + COMMA
+				+ COLUMN_MEASUREMENT_DURAION;
 		}		
 		return columns;
 	}
@@ -261,11 +262,11 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 		Set criteriaSet = measurementSetup.getCriteriaSet();
 		Set thresholdSet = measurementSetup.getThresholdSet();
 		Set etalon = measurementSetup.getEtalon();
-		String criteriaSetIdSubstr = (criteriaSet != null) ? (criteriaSet.getId().toSQLString()) : Identifier.getNullSQLString();
-		String thresholdSetIdSubstr = (thresholdSet != null) ? (thresholdSet.getId().toSQLString()) : Identifier.getNullSQLString();
-		String etalonIdSubstr = (etalon != null) ? (etalon.getId().toSQLString()) : Identifier.getNullSQLString();
+		String criteriaSetIdSubstr = (criteriaSet != null) ? DatabaseIdentifier.toSQLString(criteriaSet.getId()) : DatabaseIdentifier.getNullSQLString();
+		String thresholdSetIdSubstr = (thresholdSet != null) ? DatabaseIdentifier.toSQLString(thresholdSet.getId()) : DatabaseIdentifier.getNullSQLString();
+		String etalonIdSubstr = (etalon != null) ? DatabaseIdentifier.toSQLString(etalon.getId()) : DatabaseIdentifier.getNullSQLString();
 		String values = super.getUpdateSingleSQLValues(storableObject) + COMMA
-			+ measurementSetup.getParameterSet().getId().toSQLString() + COMMA
+			+ DatabaseIdentifier.toSQLString(measurementSetup.getParameterSet().getId()) + COMMA
 			+ criteriaSetIdSubstr + COMMA
 			+ thresholdSetIdSubstr + COMMA
 			+ etalonIdSubstr + COMMA
@@ -281,27 +282,12 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 		Set criteriaSet = measurementSetup.getCriteriaSet();
 		Set thresholdSet = measurementSetup.getThresholdSet();
 		Set etalon = measurementSetup.getEtalon();
-		String criteriaSetIdSubstr = (criteriaSet != null) ? (criteriaSet.getId().getCode()) : "";
-		String thresholdSetIdSubstr = (thresholdSet != null) ? (thresholdSet.getId().getCode()) : "";
-		String etalonIdSubstr = (etalon != null) ? (etalon.getId().getCode()) : "";
 		int i = super.setEntityForPreparedStatement(storableObject, preparedStatement);
 		try {
-			/**
-			 * @todo when change DB Identifier model ,change setString() to setLong()
-			 */
-			preparedStatement.setString(++i, measurementSetup.getParameterSet().getId().getCode()); 
-			/**
-			 * @todo when change DB Identifier model ,change setString() to setLong()
-			 */
-			preparedStatement.setString(++i, criteriaSetIdSubstr); 
-			/**
-			 * @todo when change DB Identifier model ,change setString() to setLong()
-			 */
-			preparedStatement.setString(++i, thresholdSetIdSubstr);
-			/**
-			 * @todo when change DB Identifier model ,change setString() to setLong()
-			 */
-			preparedStatement.setString(++i, etalonIdSubstr);
+			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, measurementSetup.getParameterSet().getId()); 
+			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, (criteriaSet != null) ? criteriaSet.getId() : null);
+			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, (thresholdSet != null) ? thresholdSet.getId() : null);
+			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, (etalon != null) ? etalon.getId() : null);
 			preparedStatement.setString(++i, measurementSetup.getDescription());
 			preparedStatement.setLong(++i, measurementSetup.getMeasurementDuration());
 			
@@ -312,10 +298,7 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 	}
 
 	private void insertMeasurementSetupMELinks(MeasurementSetup measurementSetup) throws CreateObjectException {
-		/**
-		 * @todo when change DB Identifier model ,change String to long
-		 */
-		String msIdCode = measurementSetup.getId().getCode();
+		Identifier msId = measurementSetup.getId();
 		List meIds = measurementSetup.getMonitoredElementIds();
 		String sql = SQL_INSERT_INTO 
 				+ ObjectEntities.MSMELINK_ENTITY + OPEN_BRACKET
@@ -326,34 +309,23 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 				+ QUESTION
 				+ CLOSE_BRACKET;
 		PreparedStatement preparedStatement = null;
-		/**
-		 * @todo when change DB Identifier model ,change String to long
-		 */
-		String meIdCode = null;
+		Identifier meId = null;
 		Connection connection = DatabaseConnection.getConnection();
 		try {
 			preparedStatement = connection.prepareStatement(sql);
 			for (Iterator iterator = meIds.iterator(); iterator.hasNext();) {
-				/**
-				 * @todo when change DB Identifier model ,change setString() to
-				 *       setLong()
-				 */
-				preparedStatement.setString(1, msIdCode);
-				meIdCode = ((Identifier) iterator.next()).getCode();
-				/**
-				 * @todo when change DB Identifier model ,change setString() to
-				 *       setLong()
-				 */
-				preparedStatement.setString(2, meIdCode);
+				meId = (Identifier) iterator.next();
+				DatabaseIdentifier.setIdentifier(preparedStatement, 1, msId);				
+				DatabaseIdentifier.setIdentifier(preparedStatement, 2, meId);
 				Log.debugMessage("MeasurementSetupDatabase.insertMeasurementSetupMELinks | Inserting link for measurement setup "
-										+ msIdCode
+										+ msId
 										+ " and monitored element "
-										+ meIdCode, Log.DEBUGLEVEL09);
+										+ meId.getIdentifierString(), Log.DEBUGLEVEL09);
 				preparedStatement.executeUpdate();
 			}
 		}
 		catch (SQLException sqle) {
-			String mesg = "MeasurementSetupDatabase.insertMeasurementSetupMELinks | Cannot insert link for monitored element '" + meIdCode + "' and Measurement Setup '" + msIdCode + "' -- " + sqle.getMessage();
+			String mesg = "MeasurementSetupDatabase.insertMeasurementSetupMELinks | Cannot insert link for monitored element '" + meId.getIdentifierString() + "' and Measurement Setup '" + msId + "' -- " + sqle.getMessage();
 			throw new CreateObjectException(mesg, sqle);
 		}
 		finally {
@@ -373,37 +345,22 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
 			throws IllegalDataException, RetrieveObjectException, SQLException {
 		MeasurementSetup measurementSetup = (storableObject == null) ? 
-				new MeasurementSetup(new Identifier(resultSet.getString(COLUMN_ID)), null, null, null, 
+				new MeasurementSetup(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID), null, null, null, 
 									   null, null, null, 0, null) : 
 					fromStorableObject(storableObject);	
 		Set parameterSet;
 		Set criteriaSet;
 		Set thresholdSet;
 		Set etalon;
-		String idCode;
+		Identifier id;
 		try {
-			parameterSet = (Set)MeasurementStorableObjectPool.getStorableObject(new Identifier(resultSet.getString(COLUMN_PARAMETER_SET_ID)), true);
-			/**
-			 * @todo when change DB Identifier model ,change String to long
-			 */
-			/**
-			 * @todo when change DB Identifier model ,change getString() to
-			 *       getLong()
-			 */
-			idCode = resultSet.getString(COLUMN_CRITERIA_SET_ID);
-			criteriaSet = (idCode != null) ? (Set)MeasurementStorableObjectPool.getStorableObject(new Identifier(idCode), true) : null;
-			/**
-			 * @todo when change DB Identifier model ,change getString() to
-			 *       getLong()
-			 */
-			idCode = resultSet.getString(COLUMN_THRESHOLD_SET_ID);
-			thresholdSet = (idCode != null) ? (Set)MeasurementStorableObjectPool.getStorableObject(new Identifier(idCode), true) : null;
-			/**
-			 * @todo when change DB Identifier model ,change getString() to
-			 *       getLong()
-			 */
-			idCode = resultSet.getString(COLUMN_ETALON_ID);
-			etalon = (idCode != null) ? (Set)MeasurementStorableObjectPool.getStorableObject(new Identifier(idCode), true) : null;
+			parameterSet = (Set)MeasurementStorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_PARAMETER_SET_ID), true);			
+			id = DatabaseIdentifier.getIdentifier(resultSet, COLUMN_CRITERIA_SET_ID);
+			criteriaSet = (id != null) ? (Set)MeasurementStorableObjectPool.getStorableObject(id, true) : null;
+			id = DatabaseIdentifier.getIdentifier(resultSet, COLUMN_THRESHOLD_SET_ID);
+			thresholdSet = (id != null) ? (Set)MeasurementStorableObjectPool.getStorableObject(id, true) : null;			
+			id = DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ETALON_ID);
+			etalon = (id != null) ? (Set)MeasurementStorableObjectPool.getStorableObject(id, true) : null;
 		}
 		catch (ApplicationException ae) {
 			throw new RetrieveObjectException(ae);
@@ -412,15 +369,8 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 		String description = DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_DESCRIPTION));
 		measurementSetup.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
 									   DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
-									   /**
-									    * @todo when change DB Identifier model ,change getString() to getLong()
-									    */
-									   new Identifier(resultSet.getString(COLUMN_CREATOR_ID)),
-									   /**
-										* @todo when change DB Identifier model ,change getString() to
-										*       getLong()
-										*/
-									   new Identifier(resultSet.getString(COLUMN_MODIFIER_ID)),
+									   DatabaseIdentifier.getIdentifier(resultSet, COLUMN_CREATOR_ID),
+									   DatabaseIdentifier.getIdentifier(resultSet, COLUMN_MODIFIER_ID),
 									   parameterSet,
 									   criteriaSet,
 									   thresholdSet,
@@ -433,7 +383,7 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 	private void retrieveMeasurementSetupMELinks(MeasurementSetup measurementSetup) throws RetrieveObjectException {
 		List meIds = new ArrayList();
 
-		String msIdStr = measurementSetup.getId().toSQLString();
+		String msIdStr = DatabaseIdentifier.toSQLString(measurementSetup.getId());
 		String sql = SQL_SELECT
 			+ LINK_COLUMN_ME_ID
 			+ SQL_FROM + ObjectEntities.MSMELINK_ENTITY
@@ -447,11 +397,7 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 			Log.debugMessage("MeasurementSetupDatabase.retrieveMeasurementSetupMELinks | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql);
 			while (resultSet.next())
-				/**
-				 * @todo when change DB Identifier model ,change getString() to
-				 *       getLong()
-				 */
-				meIds.add(new Identifier(resultSet.getString(LINK_COLUMN_ME_ID)));
+				meIds.add(DatabaseIdentifier.getIdentifier(resultSet, LINK_COLUMN_ME_ID));
 		}
 		catch (SQLException sqle) {
 			String mesg = "MeasurementSetupDatabase.retrieveMeasurementSetupMELinks | Cannot retrieve monitored element ids for measurement setup '" + msIdStr + "' -- " + sqle.getMessage();
@@ -488,7 +434,7 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
         int i = 1;
         for (Iterator it = measurementSetups.iterator(); it.hasNext();i++) {
             MeasurementSetup measurementSetup = (MeasurementSetup)it.next();
-            sql.append(measurementSetup.getId().toSQLString());
+            sql.append(DatabaseIdentifier.toSQLString(measurementSetup.getId()));
             if (it.hasNext()){
                 if (((i+1) % MAXIMUM_EXPRESSION_NUMBER != 0))
                     sql.append(COMMA);
@@ -513,10 +459,10 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
             Map meIdMap = new HashMap();
             while (resultSet.next()) {
                 MeasurementSetup measurementSetup = null;
-                String measurementSetupId = resultSet.getString(LINK_COLUMN_MEASUREMENT_SETUP_ID);
+                Identifier measurementSetupId = DatabaseIdentifier.getIdentifier(resultSet, LINK_COLUMN_MEASUREMENT_SETUP_ID);
                 for (Iterator it = measurementSetups.iterator(); it.hasNext();) {
                     MeasurementSetup measurementSetupToCompare = (MeasurementSetup) it.next();
-                    if (measurementSetupToCompare.getId().getIdentifierString().equals(measurementSetupId)){
+                    if (measurementSetupToCompare.getId().equals(measurementSetupId)){
                         measurementSetup = measurementSetupToCompare;
                         break;
                     }                   
@@ -525,14 +471,9 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
                 if (measurementSetup == null){
                     String mesg = "MeasurementSetupDatabase.retrieveMeasurementSetupMELinksByOneQuery | Cannot found correspond result for '" + measurementSetupId +"'" ;
                     throw new RetrieveObjectException(mesg);
-                }
-                    
+                }                    
                 
-                /**
-                 * @todo when change DB Identifier model ,change getString() to
-                 *       getLong()
-                 */
-                Identifier meId = new Identifier(resultSet.getString(LINK_COLUMN_ME_ID));
+                Identifier meId = DatabaseIdentifier.getIdentifier(resultSet, LINK_COLUMN_ME_ID);
                 List meIds = (List)meIdMap.get(measurementSetup);
                 if (meIds == null){
                     meIds = new LinkedList();
@@ -626,7 +567,7 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 				+ SQL_SELECT + LINK_COLUMN_MEASUREMENT_SETUP_ID + SQL_FROM + ObjectEntities.MSMELINK_ENTITY
 				+ SQL_WHERE + LINK_COLUMN_ME_ID + SQL_IN + OPEN_BRACKET
 					+ SQL_SELECT + COLUMN_ID + SQL_FROM + ObjectEntities.ME_ENTITY + SQL_WHERE
-					+ DomainMember.COLUMN_DOMAIN_ID + EQUALS + domain.getId().toSQLString()
+					+ DomainMember.COLUMN_DOMAIN_ID + EQUALS + DatabaseIdentifier.toSQLString(domain.getId())
 					+ CLOSE_BRACKET
 				+ CLOSE_BRACKET;		
 		try {
@@ -646,7 +587,7 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 							+ SQL_WHERE + StorableObjectDatabase.LINK_COLUMN_PARAMETER_TYPE_ID + SQL_IN + OPEN_BRACKET			
 								+ SQL_SELECT + StorableObjectDatabase.LINK_COLUMN_PARAMETER_TYPE_ID
 								+ SQL_FROM + ObjectEntities.MNTTYPPARTYPLINK_ENTITY + SQL_WHERE
-								+ MeasurementTypeDatabase.LINK_COLUMN_MEASUREMENT_TYPE_ID + EQUALS + measurementType.getId().toSQLString()								
+								+ MeasurementTypeDatabase.LINK_COLUMN_MEASUREMENT_TYPE_ID + EQUALS + DatabaseIdentifier.toSQLString(measurementType.getId())								
 							+ CLOSE_BRACKET							
 			+ CLOSE_BRACKET;
 		
@@ -665,7 +606,7 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 		
 		String condition = COLUMN_ID + SQL_IN + OPEN_BRACKET
 					+ SQL_SELECT + LINK_COLUMN_MEASUREMENT_SETUP_ID + ObjectEntities.MSMELINK_ENTITY
-					+ SQL_WHERE + LINK_COLUMN_ME_ID + EQUALS + monitoredElement.getId().toSQLString()
+					+ SQL_WHERE + LINK_COLUMN_ME_ID + EQUALS + DatabaseIdentifier.toSQLString(monitoredElement.getId())
 				+ CLOSE_BRACKET;		
 		
 		try {
@@ -686,7 +627,7 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 	       	int i=1;
 	        for (Iterator it = measurementIds.iterator(); it.hasNext();i++) {
 	       		 Identifier id = (Identifier) it.next();
-	       		 measurementIdsStr.append( id.toSQLString() );
+	       		 measurementIdsStr.append( DatabaseIdentifier.toSQLString(id) );
 	       		 if (it.hasNext()){
 		       		 if (((i+1) % MAXIMUM_EXPRESSION_NUMBER != 0))
 		       		 	measurementIdsStr.append(COMMA);

@@ -1,5 +1,5 @@
 /*
- * $Id: ParameterType.java,v 1.25 2004/11/12 11:44:53 bob Exp $
+ * $Id: ParameterType.java,v 1.26 2004/11/16 15:48:45 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,12 +26,16 @@ import com.syrus.AMFICOM.measurement.corba.ParameterType_Transferable;
 import com.syrus.util.HashCodeGenerator;
 
 /**
- * @version $Revision: 1.25 $, $Date: 2004/11/12 11:44:53 $
+ * @version $Revision: 1.26 $, $Date: 2004/11/16 15:48:45 $
  * @author $Author: bob $
  * @module measurement_v1
  */
 
 public class ParameterType extends StorableObjectType {
+	/**
+	 * Comment for <code>serialVersionUID</code>
+	 */
+	private static final long	serialVersionUID	= 4050767108738528569L;
 	private String name;
 	private int sort;
 

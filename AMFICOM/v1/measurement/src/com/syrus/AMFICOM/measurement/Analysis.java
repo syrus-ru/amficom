@@ -1,5 +1,5 @@
 /*
- * $Id: Analysis.java,v 1.30 2004/11/12 11:44:53 bob Exp $
+ * $Id: Analysis.java,v 1.31 2004/11/16 15:48:44 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,12 +26,17 @@ import com.syrus.AMFICOM.measurement.corba.ResultSort;
 import com.syrus.AMFICOM.event.corba.AlarmLevel;
 
 /**
- * @version $Revision: 1.30 $, $Date: 2004/11/12 11:44:53 $
+ * @version $Revision: 1.31 $, $Date: 2004/11/16 15:48:44 $
  * @author $Author: bob $
  * @module measurement_v1
  */
 
 public class Analysis extends Action {
+	/**
+	 * Comment for <code>serialVersionUID</code>
+	 */
+	private static final long	serialVersionUID	= 3979266967062721849L;
+
 	private Set criteriaSet;
 
 	private StorableObjectDatabase analysisDatabase;

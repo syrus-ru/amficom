@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisTypeDatabase.java,v 1.37 2004/11/10 15:24:02 bob Exp $
+ * $Id: AnalysisTypeDatabase.java,v 1.38 2004/11/16 15:48:44 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -20,6 +20,8 @@ import java.sql.Statement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+
+import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObject;
@@ -38,7 +40,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.37 $, $Date: 2004/11/10 15:24:02 $
+ * @version $Revision: 1.38 $, $Date: 2004/11/16 15:48:44 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -110,25 +112,14 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 	
 	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet) throws IllegalDataException, RetrieveObjectException, SQLException{
 		AnalysisType analysisType = storableObject == null ? 
-				new AnalysisType(new Identifier(resultSet.getString(COLUMN_ID)), null,null,null,null,null,null,null) : 
+				new AnalysisType(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID), null,null,null,null,null,null,null) : 
 					fromStorableObject(storableObject);
-		/**
-		 * @todo when change DB Identifier model ,change getString() to getLong()
-		 */
 		analysisType.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
-												DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
-												/**
-												 * @todo when change DB Identifier model ,change getString() to
-												 *       getLong()
-												 */
-												 new Identifier(resultSet.getString(COLUMN_CREATOR_ID)),
-												 /**
-												  * @todo when change DB Identifier model ,change getString() to
-												  *       getLong()
-												  */
-												 new Identifier(resultSet.getString(COLUMN_MODIFIER_ID)),
-												 DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_CODENAME)),
-												 DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_DESCRIPTION)));
+								   DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
+								   DatabaseIdentifier.getIdentifier(resultSet, COLUMN_CREATOR_ID),
+								   DatabaseIdentifier.getIdentifier(resultSet, COLUMN_MODIFIER_ID),
+								   DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_CODENAME)),
+								   DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_DESCRIPTION)));
 		return analysisType;
 	}
 
@@ -138,7 +129,7 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 		List etalonParTyps = new ArrayList();
 		List outParTyps = new ArrayList();
 		
-		String analysisTypeIdStr = analysisType.getId().toSQLString();
+		String analysisTypeIdStr = DatabaseIdentifier.toSQLString(analysisType.getId());
 		String sql = SQL_SELECT
 			+ LINK_COLUMN_PARAMETER_TYPE_ID + COMMA
 			+ LINK_COLUMN_PARAMETER_MODE
@@ -152,24 +143,21 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 			Log.debugMessage("AnalysisTypeDatabase.retrieveParameterTypes | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql);
 			String parameterMode;
-			String parameterTypeIdCode;
+			Identifier parameterTypeIdCode;
 			while (resultSet.next()) {
-				/**
-				 * @todo when change DB Identifier model ,change getString() to getLong()
-				 */
 				parameterMode = resultSet.getString(LINK_COLUMN_PARAMETER_MODE);
-				parameterTypeIdCode = resultSet.getString(LINK_COLUMN_PARAMETER_TYPE_ID);
+				parameterTypeIdCode = DatabaseIdentifier.getIdentifier(resultSet, LINK_COLUMN_PARAMETER_TYPE_ID);
 				if (parameterMode.equals(MODE_IN))
-					inParTyps.add((ParameterType) MeasurementStorableObjectPool.getStorableObject(new Identifier(parameterTypeIdCode), true));
+					inParTyps.add((ParameterType) MeasurementStorableObjectPool.getStorableObject(parameterTypeIdCode, true));
 					else
 						if (parameterMode.equals(MODE_CRITERION))
-							criteriaParTyps.add((ParameterType) MeasurementStorableObjectPool.getStorableObject(new Identifier(parameterTypeIdCode), true));
+							criteriaParTyps.add((ParameterType) MeasurementStorableObjectPool.getStorableObject(parameterTypeIdCode, true));
 						else
 							if (parameterMode.equals(MODE_ETALON))
-								etalonParTyps.add((ParameterType) MeasurementStorableObjectPool.getStorableObject(new Identifier(parameterTypeIdCode), true));
+								etalonParTyps.add((ParameterType) MeasurementStorableObjectPool.getStorableObject(parameterTypeIdCode, true));
 							else
 								if (parameterMode.equals(MODE_OUT))
-									outParTyps.add((ParameterType) MeasurementStorableObjectPool.getStorableObject(new Identifier(parameterTypeIdCode), true));
+									outParTyps.add((ParameterType) MeasurementStorableObjectPool.getStorableObject(parameterTypeIdCode, true));
 								else
 									Log .errorMessage("AnalysisTypeDatabase.retrieveParameterTypes | ERROR: Unknown parameter mode for parameterTypeId " + parameterTypeIdCode);
 			}
@@ -220,7 +208,7 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
         int i=1;
         for (Iterator it = analysisTypes.iterator(); it.hasNext();i++) {
             AnalysisType analysisType = (AnalysisType)it.next();
-            sql.append(analysisType.getId().toSQLString());
+            sql.append(DatabaseIdentifier.toSQLString(analysisType.getId()));
             if (it.hasNext()){
                 if (((i+1) % MAXIMUM_EXPRESSION_NUMBER != 0))
                     sql.append(COMMA);
@@ -244,17 +232,17 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
             Log.debugMessage("AnalysisTypeDatabase.retrieveParameterTypesByOneQuery | Trying: " + sql, Log.DEBUGLEVEL09);
             resultSet = statement.executeQuery(sql.toString());
             String parameterMode;
-            String parameterTypeIdCode;
+            Identifier parameterTypeId;
             Map inParametersMap = new HashMap();
             Map criteriaParametersMap = new HashMap();
             Map etalonParametersMap = new HashMap();
             Map outParametersMap = new HashMap();
             while (resultSet.next()) {
                 AnalysisType analysisType = null;
-                String analysisTypeId = resultSet.getString(LINK_COLUMN_ANALYSIS_TYPE_ID);
+                Identifier analysisTypeId = DatabaseIdentifier.getIdentifier(resultSet, LINK_COLUMN_ANALYSIS_TYPE_ID);
                 for (Iterator it = analysisTypes.iterator(); it.hasNext();) {
                     AnalysisType analysisTypeToCompare = (AnalysisType) it.next();
-                    if (analysisTypeToCompare.getId().getIdentifierString().equals(analysisTypeId)){
+                    if (analysisTypeToCompare.getId().equals(analysisTypeId)){
                         analysisType = analysisTypeToCompare;
                         break;
                     }                   
@@ -265,14 +253,11 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
                     throw new RetrieveObjectException(mesg);
                 }
                     
-                /**
-                 * @todo when change DB Identifier model ,change getString() to getLong()
-                 */
                 parameterMode = resultSet.getString(LINK_COLUMN_PARAMETER_MODE);
-                parameterTypeIdCode = resultSet.getString(LINK_COLUMN_PARAMETER_TYPE_ID);
+                parameterTypeId = DatabaseIdentifier.getIdentifier(resultSet, LINK_COLUMN_PARAMETER_TYPE_ID);
                 ParameterType parameterType; 
                 if (parameterMode.equals(MODE_IN)) {
-                    parameterType = ((ParameterType) MeasurementStorableObjectPool.getStorableObject(new Identifier(parameterTypeIdCode), true));
+                    parameterType = ((ParameterType) MeasurementStorableObjectPool.getStorableObject(parameterTypeId, true));
                     List inParameters = (List)inParametersMap.get(analysisType);
                     if (inParameters == null){
                         inParameters = new LinkedList();
@@ -280,7 +265,7 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
                     }               
                     inParameters.add(parameterType);
                 } else if (parameterMode.equals(MODE_CRITERION)) {
-                	parameterType = ((ParameterType) MeasurementStorableObjectPool.getStorableObject(new Identifier(parameterTypeIdCode), true));
+                	parameterType = ((ParameterType) MeasurementStorableObjectPool.getStorableObject(parameterTypeId, true));
                 	List criteriaParameters = (List)criteriaParametersMap.get(analysisType);
                     if (criteriaParameters == null){
                         criteriaParameters = new LinkedList();
@@ -288,7 +273,7 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
                     }               
                     criteriaParameters.add(parameterType);
                 } else if (parameterMode.equals(MODE_ETALON)) {
-                	parameterType = ((ParameterType) MeasurementStorableObjectPool.getStorableObject(new Identifier(parameterTypeIdCode), true));
+                	parameterType = ((ParameterType) MeasurementStorableObjectPool.getStorableObject(parameterTypeId, true));
                     List etalonParameters = (List)etalonParametersMap.get(analysisType);
                     if (etalonParameters == null){
                         etalonParameters = new LinkedList();
@@ -296,14 +281,14 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
                     }               
                     etalonParameters.add(parameterType);
                 } else if (parameterMode.equals(MODE_OUT)) {
-                    parameterType = ((ParameterType) MeasurementStorableObjectPool.getStorableObject(new Identifier(parameterTypeIdCode), true));
+                    parameterType = ((ParameterType) MeasurementStorableObjectPool.getStorableObject(parameterTypeId, true));
                     List outParameters = (List)outParametersMap.get(analysisType);
                     if (outParameters == null){
                     	outParameters = new LinkedList();
                     	outParametersMap.put(analysisType, outParameters);
                     }
                 } else {
-                	Log .errorMessage("AnalysisTypeDatabase.retrieveParameterTypes | ERROR: Unknown parameter mode for parameterTypeId " + parameterTypeIdCode);
+                	Log .errorMessage("AnalysisTypeDatabase.retrieveParameterTypes | ERROR: Unknown parameter mode for parameterTypeId " + parameterTypeId);
                 }                
             }
             for (Iterator iter = analysisTypes.iterator(); iter.hasNext();) {
@@ -369,10 +354,7 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 		List criteriaParTyps = analysisType.getCriteriaParameterTypes();
 		List etalonParTyps = analysisType.getEtalonParameterTypes();
 		List outParTyps = analysisType.getOutParameterTypes();
-		/**
-		 * @todo when change DB Identifier model ,change String to long
-		 */
-		String analysisTypeIdCode = analysisType.getId().getCode();
+		Identifier analysisTypeId = analysisType.getId();
 		String sql = SQL_INSERT_INTO
 			+ ObjectEntities.ANATYPPARTYPLINK_ENTITY + OPEN_BRACKET
 			+ LINK_COLUMN_ANALYSIS_TYPE_ID + COMMA
@@ -384,75 +366,61 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 			+ QUESTION
 			+ CLOSE_BRACKET;
 		PreparedStatement preparedStatement = null;
-		/**
-		 * @todo when change DB Identifier model ,change String to long
-		 */		
-		String parameterTypeIdCode = null;
+		Identifier parameterTypeId = null;
 		String parameterMode = null;
 		Connection connection = DatabaseConnection.getConnection();
 		try {
 			preparedStatement = connection.prepareStatement(sql);
-			for (Iterator iterator = inParTyps.iterator(); iterator.hasNext();) {
-				preparedStatement.setString(1, analysisTypeIdCode);
-				parameterTypeIdCode = ((ParameterType) iterator.next()).getId().getCode();
-				/**
-				 * @todo when change DB Identifier model ,change setString() to setLong()
-				 */
-				preparedStatement.setString(2, parameterTypeIdCode);
+			for (Iterator iterator = inParTyps.iterator(); iterator.hasNext();) {				
+				
+				parameterTypeId = ((ParameterType) iterator.next()).getId();
+				DatabaseIdentifier.setIdentifier(preparedStatement, 1, analysisTypeId);
+				DatabaseIdentifier.setIdentifier(preparedStatement, 2, parameterTypeId);
 				parameterMode = MODE_IN;
 				preparedStatement.setString(3, parameterMode);
 				Log.debugMessage("AnalysisTypeDatabase.insertParameterTypes | Inserting parameter type "
-						+ parameterTypeIdCode + " of parameter mode '" + parameterMode + "' for analysis type "
-						+ analysisTypeIdCode, Log.DEBUGLEVEL09);
+						+ parameterTypeId + " of parameter mode '" + parameterMode + "' for analysis type "
+						+ analysisTypeId, Log.DEBUGLEVEL09);
 				preparedStatement.executeUpdate();
 			}
 			for (Iterator iterator = criteriaParTyps.iterator(); iterator.hasNext();) {
-				preparedStatement.setString(1, analysisTypeIdCode);
-				parameterTypeIdCode = ((ParameterType) iterator.next()).getId().getCode();
-				/**
-				 * @todo when change DB Identifier model ,change setString() to setLong()
-				 */
-				preparedStatement.setString(2, parameterTypeIdCode);
+				parameterTypeId = ((ParameterType) iterator.next()).getId();
+				DatabaseIdentifier.setIdentifier(preparedStatement, 1, analysisTypeId);
+				DatabaseIdentifier.setIdentifier(preparedStatement, 2, parameterTypeId);
 				parameterMode = MODE_CRITERION;
 				preparedStatement.setString(3, parameterMode);
 				Log.debugMessage("AnalysisTypeDatabase.insertParameterTypes | Inserting parameter type "
-						+ parameterTypeIdCode + " of parameter mode '" + parameterMode + "' for analysis type "
-						+ analysisTypeIdCode, Log.DEBUGLEVEL09);
+						+ parameterTypeId + " of parameter mode '" + parameterMode + "' for analysis type "
+						+ analysisTypeId, Log.DEBUGLEVEL09);
 				preparedStatement.executeUpdate();
 			}
 			for (Iterator iterator = etalonParTyps.iterator(); iterator.hasNext();) {
-				preparedStatement.setString(1, analysisTypeIdCode);
-				parameterTypeIdCode = ((ParameterType) iterator.next()).getId().getCode();
-				/**
-				 * @todo when change DB Identifier model ,change setString() to setLong()
-				 */
-				preparedStatement.setString(2, parameterTypeIdCode);
+				parameterTypeId = ((ParameterType) iterator.next()).getId();
+				DatabaseIdentifier.setIdentifier(preparedStatement, 1, analysisTypeId);
+				DatabaseIdentifier.setIdentifier(preparedStatement, 2, parameterTypeId);
 				parameterMode = MODE_ETALON;
 				preparedStatement.setString(3, parameterMode);
 				Log.debugMessage("AnalysisTypeDatabase.insertParameterTypes | Inserting parameter type "
-						+ parameterTypeIdCode + " of parameter mode '" + parameterMode + "' for analysis type "
-						+ analysisTypeIdCode, Log.DEBUGLEVEL09);
+						+ parameterTypeId + " of parameter mode '" + parameterMode + "' for analysis type "
+						+ analysisTypeId, Log.DEBUGLEVEL09);
 				preparedStatement.executeUpdate();
 			}
 			for (Iterator iterator = outParTyps.iterator(); iterator.hasNext();) {
-				preparedStatement.setString(1, analysisTypeIdCode);
-				parameterTypeIdCode = ((ParameterType) iterator.next()).getId().getCode();
-				/**
-				 * @todo when change DB Identifier model ,change setString() to setLong()
-				 */
-				preparedStatement.setString(2, parameterTypeIdCode);
+				parameterTypeId = ((ParameterType) iterator.next()).getId();
+				DatabaseIdentifier.setIdentifier(preparedStatement, 1, analysisTypeId);
+				DatabaseIdentifier.setIdentifier(preparedStatement, 2, parameterTypeId);
 				parameterMode = MODE_OUT;
 				preparedStatement.setString(3, parameterMode);
 				Log.debugMessage("AnalysisTypeDatabase.insertParameterTypes | Inserting parameter type "
-						+ parameterTypeIdCode + " of parameter mode '" + parameterMode + "' for analysis type "
-						+ analysisTypeIdCode, Log.DEBUGLEVEL09);
+						+ parameterTypeId + " of parameter mode '" + parameterMode + "' for analysis type "
+						+ analysisTypeId, Log.DEBUGLEVEL09);
 				preparedStatement.executeUpdate();
 			}
 		}
 		catch (SQLException sqle) {
 			String mesg = "AnalysisTypeDatabase.insertParameterTypes | Cannot insert parameter type '"
-					+ parameterTypeIdCode + "' of parameter mode '" + parameterMode + "' for analysis type '"
-					+ analysisTypeIdCode + "' -- " + sqle.getMessage();
+					+ parameterTypeId + "' of parameter mode '" + parameterMode + "' for analysis type '"
+					+ analysisTypeId + "' -- " + sqle.getMessage();
 			throw new CreateObjectException(mesg, sqle);
 		}
 		finally {
@@ -497,7 +465,7 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 	}
 	
 	public void delete(AnalysisType analysisType) {
-		String analysisTypeIdStr = analysisType.getId().toSQLString();
+		String analysisTypeIdStr = DatabaseIdentifier.toSQLString(analysisType.getId());
 		Statement statement = null;
 		Connection connection = DatabaseConnection.getConnection();
 		try {
@@ -586,7 +554,7 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 	        
 	        int i=1;
 	        for (Iterator it = criteriaSetIds.iterator(); it.hasNext();) {
-	            criteriaSetIdNames.append( ((Identifier) it.next()).getIdentifierString() );
+	            criteriaSetIdNames.append(DatabaseIdentifier.toSQLString((Identifier) it.next()));
 	            if (it.hasNext()){
 	                if (((i+1) % MAXIMUM_EXPRESSION_NUMBER != 0))
 	                    criteriaSetIdNames.append(COMMA);

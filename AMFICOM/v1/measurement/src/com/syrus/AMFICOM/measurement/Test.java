@@ -1,5 +1,5 @@
 /*
- * $Id: Test.java,v 1.64 2004/11/12 11:44:53 bob Exp $
+ * $Id: Test.java,v 1.65 2004/11/16 15:48:45 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -43,12 +43,16 @@ import com.syrus.AMFICOM.measurement.corba.TestTimeStamps_TransferablePackage.Co
 import com.syrus.AMFICOM.measurement.corba.TestTimeStamps_TransferablePackage.PeriodicalTestTimeStamps;
 
 /**
- * @version $Revision: 1.64 $, $Date: 2004/11/12 11:44:53 $
+ * @version $Revision: 1.65 $, $Date: 2004/11/16 15:48:45 $
  * @author $Author: bob $
  * @module measurement_v1
  */
 
 public class Test extends StorableObject {	
+	/**
+	 * Comment for <code>serialVersionUID</code>
+	 */
+	private static final long	serialVersionUID	= 3688785890592241972L;
 	protected static final int		RETRIEVE_MEASUREMENTS	= 1;
 	protected static final int		RETRIEVE_LAST_MEASUREMENT	= 2;
 	protected static final int		RETRIEVE_NUMBER_OF_MEASUREMENTS	= 3;

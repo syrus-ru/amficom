@@ -1,5 +1,5 @@
 /*
- * $Id: Measurement.java,v 1.33 2004/11/12 11:44:53 bob Exp $
+ * $Id: Measurement.java,v 1.34 2004/11/16 15:48:45 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,12 +29,16 @@ import com.syrus.AMFICOM.measurement.corba.ResultSort;
 import com.syrus.AMFICOM.event.corba.AlarmLevel;
 
 /**
- * @version $Revision: 1.33 $, $Date: 2004/11/12 11:44:53 $
+ * @version $Revision: 1.34 $, $Date: 2004/11/16 15:48:45 $
  * @author $Author: bob $
  * @module measurement_v1
  */
 
 public class Measurement extends Action {
+	/**
+	 * Comment for <code>serialVersionUID</code>
+	 */
+	private static final long	serialVersionUID	= 3544388098013476664L;
 	public static final long DEFAULT_MEASUREMENT_DURATION = 3*60*1000;//milliseconds
 	protected static final int RETRIEVE_RESULT = 1;
 	protected static final int UPDATE_STATUS = 1;

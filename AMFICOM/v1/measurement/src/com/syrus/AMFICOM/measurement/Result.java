@@ -1,5 +1,5 @@
 /*
- * $Id: Result.java,v 1.23 2004/11/12 11:44:53 bob Exp $
+ * $Id: Result.java,v 1.24 2004/11/16 15:48:45 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,12 +29,16 @@ import com.syrus.AMFICOM.measurement.corba.Parameter_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.23 $, $Date: 2004/11/12 11:44:53 $
+ * @version $Revision: 1.24 $, $Date: 2004/11/16 15:48:45 $
  * @author $Author: bob $
  * @module measurement_v1
  */
 
 public class Result extends StorableObject {
+	/**
+	 * Comment for <code>serialVersionUID</code>
+	 */
+	private static final long	serialVersionUID	= 3256999964965286967L;
 	private Measurement measurement;
 	private Action action;
 	private int sort;

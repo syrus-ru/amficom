@@ -1,5 +1,5 @@
 /*
- * $Id: Modeling.java,v 1.13 2004/11/12 11:44:53 bob Exp $
+ * $Id: Modeling.java,v 1.14 2004/11/16 15:48:45 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,13 +28,17 @@ import com.syrus.AMFICOM.measurement.corba.ResultSort;
 import com.syrus.util.HashCodeGenerator;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2004/11/12 11:44:53 $
+ * @version $Revision: 1.14 $, $Date: 2004/11/16 15:48:45 $
  * @author $Author: bob $
  * @module measurement_v1
  */
 
 public class Modeling extends Action {
 	
+	/**
+	 * Comment for <code>serialVersionUID</code>
+	 */
+	private static final long	serialVersionUID	= 3544387028533065264L;
 	private String name;
 	private String schemePathId;
 	private MeasurementType measurementType;

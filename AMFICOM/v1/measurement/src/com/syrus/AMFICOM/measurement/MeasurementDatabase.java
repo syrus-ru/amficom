@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementDatabase.java,v 1.38 2004/11/11 11:09:41 bob Exp $
+ * $Id: MeasurementDatabase.java,v 1.39 2004/11/16 15:48:45 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -24,6 +24,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 import com.syrus.AMFICOM.configuration.Domain;
 import com.syrus.AMFICOM.configuration.DomainMember;
+import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.Identified;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
@@ -40,7 +41,7 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
 
 /**
- * @version $Revision: 1.38 $, $Date: 2004/11/11 11:09:41 $
+ * @version $Revision: 1.39 $, $Date: 2004/11/16 15:48:45 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -108,15 +109,15 @@ public class MeasurementDatabase extends StorableObjectDatabase {
 			UpdateObjectException {
 		Measurement measurement = fromStorableObject(storableObject);
 		String values = super.getUpdateSingleSQLValues(storableObject) + COMMA
-			+ measurement.getType().getId().toSQLString() + COMMA
+			+ DatabaseIdentifier.toSQLString(measurement.getType().getId()) + COMMA
 			+ APOSTOPHE + DatabaseString.toQuerySubString(measurement.getName()) + APOSTOPHE + COMMA
-			+ measurement.getMonitoredElementId().toSQLString() + COMMA
-			+ measurement.getSetup().getId().toSQLString() + COMMA
+			+ DatabaseIdentifier.toSQLString(measurement.getMonitoredElementId()) + COMMA
+			+ DatabaseIdentifier.toSQLString(measurement.getSetup().getId()) + COMMA
 			+ DatabaseDate.toUpdateSubString(measurement.getStartTime()) + COMMA
 			+ Long.toString(measurement.getDuration()) + COMMA
 			+ Integer.toString(measurement.getStatus().value()) + COMMA
 			+ APOSTOPHE + DatabaseString.toQuerySubString(measurement.getLocalAddress()) + APOSTOPHE + COMMA
-			+ measurement.getTestId().toSQLString();
+			+ DatabaseIdentifier.toSQLString(measurement.getTestId());
 		return values;
 	}
 	
@@ -126,27 +127,15 @@ public class MeasurementDatabase extends StorableObjectDatabase {
 		Measurement measurement = fromStorableObject(storableObject);
 		int i = super.setEntityForPreparedStatement(storableObject, preparedStatement);
 		try {			
-			/**
-			 * @todo when change DB Identifier model ,change setString() to setLong()
-			 */
-			preparedStatement.setString(++i, measurement.getType().getId().getCode()); 
+			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, measurement.getType().getId()); 
 			preparedStatement.setString(++i, measurement.getName());
-			/**
-			 * @todo when change DB Identifier model ,change setString() to setLong()
-			 */
-			preparedStatement.setString(++i, measurement.getMonitoredElementId().getCode()); 
-			/**
-			 * @todo when change DB Identifier model ,change setString() to setLong()
-			 */
-			preparedStatement.setString(++i, measurement.getSetup().getId().getCode());
+			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, measurement.getMonitoredElementId()); 
+			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, measurement.getSetup().getId());
 			preparedStatement.setTimestamp(++i, new Timestamp(measurement.getStartTime().getTime()));
 			preparedStatement.setLong(++i, measurement.getDuration());
 			preparedStatement.setInt(++i, measurement.getStatus().value());
 			preparedStatement.setString(++i, measurement.getLocalAddress());
-			/**
-			 * @todo when change DB Identifier model ,change setString() to setLong()
-			 */
-			preparedStatement.setString(++i, measurement.getTestId().getCode());
+			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, measurement.getTestId());
 		} catch (SQLException sqle) {
 			throw new UpdateObjectException(getEnityName() + "Database.setEntityForPreparedStatement | Error " + sqle.getMessage(), sqle);
 		}
@@ -161,7 +150,7 @@ public class MeasurementDatabase extends StorableObjectDatabase {
 	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
 		throws IllegalDataException, RetrieveObjectException, SQLException {
 		Measurement measurement = (storableObject == null) ?
-				new Measurement(new Identifier(resultSet.getString(COLUMN_ID)), null, null, null, null, 
+				new Measurement(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID), null, null, null, null, 
 								   null, null, null, null) : 
 					fromStorableObject(storableObject);		
 		MeasurementType measurementType;
@@ -169,44 +158,26 @@ public class MeasurementDatabase extends StorableObjectDatabase {
 		MeasurementSetup measurementSetup;
 		
 		try {
-			/**
-			 * @todo when change DB Identifier model ,change getString() to getLong()
-			 */
-			measurementType = (MeasurementType)MeasurementStorableObjectPool.getStorableObject(new Identifier(resultSet.getString(COLUMN_TYPE_ID)), true);
+			measurementType = (MeasurementType)MeasurementStorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_TYPE_ID), true);
 			name = DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_NAME));
-			/**
-			 * @todo when change DB Identifier model ,change getString() to getLong()
-			 */
-			measurementSetup = (MeasurementSetup)MeasurementStorableObjectPool.getStorableObject(new Identifier(resultSet.getString(COLUMN_SETUP_ID)), true);
+			measurementSetup = (MeasurementSetup)MeasurementStorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_SETUP_ID), true);
 		}
 		catch (ApplicationException ae) {
 			throw new RetrieveObjectException(ae);
 		}
 		measurement.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
-									DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
-									/**
-									 * @todo when change DB Identifier model ,change getString() to getLong()
-									 */											
-									new Identifier(resultSet.getString(COLUMN_CREATOR_ID)),
-									/**
-									 * @todo when change DB Identifier model ,change getString() to getLong()
-									 */
-									new Identifier(resultSet.getString(COLUMN_MODIFIER_ID)),
-									measurementType,
-									name,
-									/**
-									 * @todo when change DB Identifier model ,change getString() to getLong()
-									 */
-									new Identifier(resultSet.getString(COLUMN_MONITORED_ELEMENT_ID)),
-									measurementSetup,
-									DatabaseDate.fromQuerySubString(resultSet, COLUMN_START_TIME),
-									resultSet.getLong(COLUMN_DURATION),
-									resultSet.getInt(COLUMN_STATUS),
-									DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_LOCAL_ADDRESS)),
-									/**
-									 * @todo when change DB Identifier model ,change getString() to getLong()
-									 */
-									new Identifier(resultSet.getString(COLUMN_TEST_ID)));
+								  DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
+								  DatabaseIdentifier.getIdentifier(resultSet, COLUMN_CREATOR_ID),
+								  DatabaseIdentifier.getIdentifier(resultSet, COLUMN_MODIFIER_ID),
+								  measurementType,
+								  name,
+								  DatabaseIdentifier.getIdentifier(resultSet, COLUMN_MONITORED_ELEMENT_ID),
+								  measurementSetup,
+								  DatabaseDate.fromQuerySubString(resultSet, COLUMN_START_TIME),
+								  resultSet.getLong(COLUMN_DURATION),
+								  resultSet.getInt(COLUMN_STATUS),
+								  DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_LOCAL_ADDRESS)),
+								  DatabaseIdentifier.getIdentifier(resultSet, COLUMN_TEST_ID));
 		return measurement;
 	}
 	
@@ -227,7 +198,7 @@ public class MeasurementDatabase extends StorableObjectDatabase {
 	}
 
 	private Result retrieveResult(Measurement measurement, ResultSort resultSort) throws ObjectNotFoundException, RetrieveObjectException {
-		String measurementIdStr = measurement.getId().toSQLString();
+		String measurementIdStr = DatabaseIdentifier.toSQLString(measurement.getId());
 		int resultSortNum = resultSort.value();
 		String sql = SQL_SELECT
 			+ COLUMN_ID
@@ -241,12 +212,9 @@ public class MeasurementDatabase extends StorableObjectDatabase {
 			statement = connection.createStatement();
 			Log.debugMessage("MeasurementDatabase.retrieveResult | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql);
-			if (resultSet.next()){
-				/**
-				 * @todo when change DB Identifier model ,change getString() to getLong()
-				 */
+			if (resultSet.next()){				
 				try {
-					return (Result)MeasurementStorableObjectPool.getStorableObject(new Identifier(resultSet.getString(COLUMN_ID)), true);
+					return (Result)MeasurementStorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID), true);
 				}
 				catch (ApplicationException ae) {
 					throw new RetrieveObjectException(ae);
@@ -326,13 +294,13 @@ public class MeasurementDatabase extends StorableObjectDatabase {
 	}
 
 	private void updateStatus(Measurement measurement) throws UpdateObjectException {
-		String measurementIdStr = measurement.getId().toSQLString();
+		String measurementIdStr = DatabaseIdentifier.toSQLString(measurement.getId());
 		String sql = SQL_UPDATE
 			+ ObjectEntities.MEASUREMENT_ENTITY
 			+ SQL_SET
 			+ COLUMN_STATUS + EQUALS + Integer.toString(measurement.getStatus().value()) + COMMA
 			+ COLUMN_MODIFIED + EQUALS + DatabaseDate.toUpdateSubString(measurement.getModified()) + COMMA
-			+ COLUMN_MODIFIER_ID + EQUALS + measurement.getModifierId().toSQLString()
+			+ COLUMN_MODIFIER_ID + EQUALS + DatabaseIdentifier.toSQLString(measurement.getModifierId())
 			+ SQL_WHERE + COLUMN_ID + EQUALS + measurementIdStr;
 		Statement statement = null;
 		Connection connection = DatabaseConnection.getConnection();
@@ -372,7 +340,7 @@ public class MeasurementDatabase extends StorableObjectDatabase {
         
         String condition = COLUMN_MONITORED_ELEMENT_ID + SQL_IN + OPEN_BRACKET
                 + SQL_SELECT + COLUMN_ID + SQL_FROM + ObjectEntities.ME_ENTITY + SQL_WHERE
-                + DomainMember.COLUMN_DOMAIN_ID + EQUALS + domain.getId().toSQLString()
+                + DomainMember.COLUMN_DOMAIN_ID + EQUALS + DatabaseIdentifier.toSQLString(domain.getId())
             + CLOSE_BRACKET;
         
         try {
@@ -405,7 +373,7 @@ public class MeasurementDatabase extends StorableObjectDatabase {
 													+ " isn't Identifier or Identified");
 
 				if (id != null){
-					buffer.append(id.toSQLString());
+					buffer.append(DatabaseIdentifier.toSQLString(id));
 					if (it.hasNext()){
 						if (((i+1) % MAXIMUM_EXPRESSION_NUMBER != 0))
 							buffer.append(COMMA);

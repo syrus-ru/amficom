@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisType.java,v 1.34 2004/11/12 11:44:53 bob Exp $
+ * $Id: AnalysisType.java,v 1.35 2004/11/16 15:48:44 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,13 +29,15 @@ import com.syrus.AMFICOM.measurement.corba.AnalysisType_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.34 $, $Date: 2004/11/12 11:44:53 $
+ * @version $Revision: 1.35 $, $Date: 2004/11/16 15:48:44 $
  * @author $Author: bob $
  * @module measurement_v1
  */
 
 public class AnalysisType extends ActionType {
 
+	private static final long	serialVersionUID	= 3257284751344874800L;
+	
 	private List inParameterTypes;
 	private List criteriaParameterTypes;
 	private List etalonParameterTypes;
