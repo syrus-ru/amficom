@@ -181,10 +181,8 @@ public class AnalysisSelectionFrame extends ATableFrame
 			}
 		} else if (actionCommand.equals(RefUpdateEvent.typ)) {
 			RefUpdateEvent refUpdateEvent = (RefUpdateEvent)ae;
-			System.out.println("RefUpdateEvent");
 			if (refUpdateEvent.eventSelected()) {
 				this.selectedEventId = refUpdateEvent.getSource();
-				System.out.println("RefUpdateEvent.eventSelected " + selectedEventId);
 			}
 		}
 	}
