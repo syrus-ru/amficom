@@ -1,5 +1,5 @@
 /*
- * $Id: Environment.java,v 1.3 2004/06/21 05:25:26 bob Exp $
+ * $Id: Environment.java,v 1.4 2004/07/09 11:42:03 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -33,8 +33,8 @@ import java.util.logging.*;
  * 
  * 
  * 
- * @version $Revision: 1.3 $, $Date: 2004/06/21 05:25:26 $
- * @author $Author: bob $
+ * @version $Revision: 1.4 $, $Date: 2004/07/09 11:42:03 $
+ * @author $Author: krupenn $
  * @see
  */
 public class Environment extends Singleton
@@ -105,8 +105,6 @@ public class Environment extends Singleton
 
 	static
 	{
-		LangModel.initialize();
-//		LangModelReport.initialize();
 		// load values from properties file
 		try
 		{

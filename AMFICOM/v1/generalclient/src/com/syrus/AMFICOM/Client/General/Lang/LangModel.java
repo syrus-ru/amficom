@@ -37,7 +37,7 @@ public class LangModel {
 																	.getBundle(BUNDLE_NAME);
 
 
-	public LangModel() {
+	private LangModel() {
 		//symbols = new DateFormatSymbols(locale);
 	}
 
@@ -47,7 +47,7 @@ public class LangModel {
 	public static String getComponentText(ResourceBundle lang,
 			String componentName) {
 		//return String(componentName + "Text");
-		return getString(componentName);
+		return getString(componentName + "Text");
 	}
 
 	/**
@@ -56,7 +56,7 @@ public class LangModel {
 	static public String getComponentToolTip(ResourceBundle lang,
 			String componentName) {
 		//return String(componentName + "ToolTip");
-		return getString(componentName);
+		return getString(componentName + "ToolTip");
 	}
 
 	/**
@@ -74,7 +74,7 @@ public class LangModel {
 		String string = null;
 		try {
 			string = RESOURCE_BUNDLE.getString(keyName);
-		} catch (MissingResourceException e) {
+		} catch (MissingResourceException e) {			
 
 			try {
 				throw new Exception("key '"
@@ -89,14 +89,14 @@ public class LangModel {
 	}
 
 	/**
-	 * @deprecated
+	 * @deprecated 
 	 */
 	public static void initialize() {
 		//initialize("com.syrus.AMFICOM.Client.General.Lang.LangModelSurvey");
 	}
 
 	/**
-	 * @deprecated
+	 * @deprecated 
 	 */
 	public static void initialize(String rb) {
 		//System.out.println("initialize lang - " + rb);
@@ -105,7 +105,7 @@ public class LangModel {
 	}
 
 	/**
-	 * @deprecated
+	 * @deprecated 
 	 */
 	public static boolean setLangModel(String l, String c) {
 		return true;
