@@ -4,9 +4,9 @@ public interface Logger {
 
 	void debugMessage(String mesg, int debugLevel);
 
-	void debugException(Exception exception, int debugLevel);
+	void debugException(Throwable throwable, int debugLevel);
 
 	void errorMessage(String mesg);
 
-	void errorException(Exception exception);
+	void errorException(Throwable throwable);
 }

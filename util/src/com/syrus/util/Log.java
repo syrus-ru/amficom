@@ -30,13 +30,13 @@ public class Log {
 		}
 	}
 
-	public static void debugException(Exception exception, int debugLevel) {
+	public static void debugException(Throwable throwable, int debugLevel) {
 		try { 
-			logger.debugException(exception, debugLevel);
+			logger.debugException(throwable, debugLevel);
 		}
 		catch (NullPointerException npe) {
-			System.out.println(exception.getMessage());
-			exception.printStackTrace();
+			System.out.println(throwable.getMessage());
+			throwable.printStackTrace();
 		}
 	}
 
@@ -49,13 +49,13 @@ public class Log {
 		}
 	}
 
-	public static void errorException(Exception exception) {
+	public static void errorException(Throwable throwable) {
 		try { 
-			logger.errorException(exception);
+			logger.errorException(throwable);
 		}
 		catch (NullPointerException npe) {
-			System.out.println(exception.getMessage());
-			exception.printStackTrace();
+			System.out.println(throwable.getMessage());
+			throwable.printStackTrace();
 		}
 	}
 }

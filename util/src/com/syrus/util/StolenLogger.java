@@ -70,19 +70,19 @@ public abstract class StolenLogger implements Logger {
 		}
 	}
 
-	public synchronized void debugException(Exception exception, int debugLevel) {
+	public synchronized void debugException(Throwable throwable, int debugLevel) {
 		this.checkLogRollover();
 		try {
 			if (!this.thisLevelOnly && debugLevel <= this.logDebugLevel || debugLevel == this.logDebugLevel) {
 				this.debugLog = new PrintWriter(new FileWriter(this.debugLogFileName, true), true);
 				logTimeStamp(this.debugLog);
-				this.debugLog.println("Exception: " + exception.getMessage());
-				exception.printStackTrace(this.debugLog);
+				this.debugLog.println("Exception: " + throwable.getMessage());
+				throwable.printStackTrace(this.debugLog);
 				this.debugLog.close();
 				if (this.echoDebug) {
 					echoTimeStamp();
-					System.out.println("Exception: " + exception.getMessage());
-					exception.printStackTrace();
+					System.out.println("Exception: " + throwable.getMessage());
+					throwable.printStackTrace();
 				}
 			}
 		}
@@ -111,18 +111,18 @@ public abstract class StolenLogger implements Logger {
 		}
 	}
 
-	public synchronized void errorException(Exception exception) {
+	public synchronized void errorException(Throwable throwable) {
 		this.checkLogRollover();
 		try {
 			this.errorLog = new PrintWriter(new FileWriter(this.errorLogFileName, true), true);
 			logTimeStamp(this.errorLog);
-			this.errorLog.println("Exception: " + exception.getMessage());
-				exception.printStackTrace(this.errorLog);
+			this.errorLog.println("Exception: " + throwable.getMessage());
+				throwable.printStackTrace(this.errorLog);
 				this.errorLog.close();
 				if (this.echoError) {
 					echoTimeStamp();
-					System.out.println("Exception: " + exception.getMessage());
-					exception.printStackTrace();
+					System.out.println("Exception: " + throwable.getMessage());
+					throwable.printStackTrace();
 				}
 		}
 		catch (Exception e) {
