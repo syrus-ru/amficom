@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementServerSetup.java,v 1.30 2005/03/10 21:08:15 arseniy Exp $
+ * $Id: MeasurementServerSetup.java,v 1.31 2005/03/24 17:02:39 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,6 +10,7 @@ package com.syrus.AMFICOM.setup;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -70,7 +71,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.30 $, $Date: 2005/03/10 21:08:15 $
+ * @version $Revision: 1.31 $, $Date: 2005/03/24 17:02:39 $
  * @author $Author: arseniy $
  * @module mserver_v1
  */
@@ -417,7 +418,7 @@ public final class MeasurementServerSetup {
 				"Reflectogramma",
 				DataType.DATA_TYPE_RAW);
 		outParTyps.add(parTypRefl);
-		createMeasurementType(creatorId, MeasurementType.CODENAME_REFLECTOMETRY, "Reflectometry", inParTyps, outParTyps);
+		Identifier measurementTypeId = createMeasurementType(creatorId, MeasurementType.CODENAME_REFLECTOMETRY, "Reflectometry", inParTyps, outParTyps);
 
 		inParTyps = new ArrayList(1);
 		inParTyps.add(parTypRefl);
@@ -481,7 +482,14 @@ public final class MeasurementServerSetup {
 				"Event array",
 				DataType.DATA_TYPE_RAW);
 		outParTyps.add(parTypEventArr);
-		createAnalysisType(creatorId, AnalysisType.CODENAME_DADARA, "DADARA", inParTyps, criParTyps, etaParTyps, outParTyps);
+		createAnalysisType(creatorId,
+				AnalysisType.CODENAME_DADARA,
+				"DADARA",
+				inParTyps,
+				criParTyps,
+				etaParTyps,
+				outParTyps,
+				Collections.singleton(measurementTypeId));
 
 		inParTyps = new ArrayList(1);
 		inParTyps.add(parTypRefl);
@@ -499,7 +507,14 @@ public final class MeasurementServerSetup {
 				"For DADARA analysis",
 				"Alarms",
 				DataType.DATA_TYPE_RAW));
-		createEvaluationType(creatorId, EvaluationType.CODENAME_DADARA, "DADARA", inParTyps, thrParTyps, etaParTyps, outParTyps);
+		createEvaluationType(creatorId,
+				EvaluationType.CODENAME_DADARA,
+				"DADARA",
+				inParTyps,
+				thrParTyps,
+				etaParTyps,
+				outParTyps,
+				Collections.singleton(measurementTypeId));
 	}
 
 	private static void checkParameterTypes() {
@@ -570,11 +585,11 @@ public final class MeasurementServerSetup {
 		}
 	}
 
-	private static void createMeasurementType(Identifier creatorId,
+	private static Identifier createMeasurementType(Identifier creatorId,
 			String codename,
 			String description,
-			List inParameterTypes,
-			List outParameterTypes) {
+			Collection inParameterTypes,
+			Collection outParameterTypes) {
 		try {
 			MeasurementType measurementType = MeasurementType.createInstance(creatorId,
 					codename,
@@ -583,19 +598,22 @@ public final class MeasurementServerSetup {
 					outParameterTypes,
 					new ArrayList());
 			MeasurementDatabaseContext.getMeasurementTypeDatabase().insert(measurementType);
+			return measurementType.getId();
 		}
 		catch (Exception e) {
 			Log.errorException(e);
+			return null;
 		}
 	}
 
 	private static void createAnalysisType(Identifier creatorId,
 			String codename,
 			String description,
-			List inParameterTypes,
-			List criParameterTypes,
-			List etaParameterTypes,
-			List outParameterTypes) {
+			Collection inParameterTypes,
+			Collection criParameterTypes,
+			Collection etaParameterTypes,
+			Collection outParameterTypes,
+			Collection measurementTypeIds) {
 		try {
 			AnalysisType analysisType = AnalysisType.createInstance(creatorId,
 					codename,
@@ -603,7 +621,8 @@ public final class MeasurementServerSetup {
 					inParameterTypes,
 					criParameterTypes,
 					etaParameterTypes,
-					outParameterTypes);
+					outParameterTypes,
+					measurementTypeIds);
 			MeasurementDatabaseContext.getAnalysisTypeDatabase().insert(analysisType);
 		}
 		catch (Exception e) {
@@ -614,10 +633,11 @@ public final class MeasurementServerSetup {
 	private static void createEvaluationType(Identifier creatorId,
 			String codename,
 			String description,
-			List inParameterTypes,
-			List thrParameterTypes,
-			List etaParameterTypes,
-			List outParameterTypes) {
+			Collection inParameterTypes,
+			Collection thrParameterTypes,
+			Collection etaParameterTypes,
+			Collection outParameterTypes,
+			Collection measurementTypeIds) {
 		try {
 			EvaluationType evaluationType = EvaluationType.createInstance(creatorId,
 					codename,
@@ -625,7 +645,8 @@ public final class MeasurementServerSetup {
 					inParameterTypes,
 					thrParameterTypes,
 					etaParameterTypes,
-					outParameterTypes);
+					outParameterTypes,
+					measurementTypeIds);
 			MeasurementDatabaseContext.getEvaluationTypeDatabase().insert(evaluationType);
 		}
 		catch (Exception e) {
