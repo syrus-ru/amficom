@@ -1,5 +1,5 @@
 /*
- * $Id: CMServerMeasurementObjectLoader.java,v 1.22 2005/02/15 07:47:57 bob Exp $
+ * $Id: CMServerMeasurementObjectLoader.java,v 1.23 2005/02/15 08:00:26 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,10 +8,10 @@
 package com.syrus.AMFICOM.cmserver;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Set;
 
 import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
@@ -57,7 +57,7 @@ import com.syrus.AMFICOM.measurement.corba.Evaluation_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Measurement_Transferable;
 import com.syrus.util.Log;
 /**
- * @version $Revision: 1.22 $, $Date: 2005/02/15 07:47:57 $
+ * @version $Revision: 1.23 $, $Date: 2005/02/15 08:00:26 $
  * @author $Author: bob $
  * @module cmserver_v1
  */
@@ -105,36 +105,13 @@ public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementOb
 			if (storableObjects.isEmpty())
 				return Collections.EMPTY_SET;
 
-			short entityCode = ((StorableObject) storableObjects.iterator().next()).getId().getMajor();
-
-			StorableObjectDatabase database = null;
+			short entityCode = ((StorableObject) storableObjects.iterator().next()).getId().getMajor();			
 			try {
-				switch (entityCode) {
-					/**
-					 * there is no reason to refresh other measurement entities due to they couldn't change out of CMServer
-					 */
-					case ObjectEntities.ANALYSIS_ENTITY_CODE:
-						database = MeasurementDatabaseContext.getAnalysisDatabase();
-						break;
-					case ObjectEntities.EVALUATION_ENTITY_CODE:
-						database = MeasurementDatabaseContext.getEvaluationDatabase();
-						break;
-					case ObjectEntities.MEASUREMENT_ENTITY_CODE:
-						database = MeasurementDatabaseContext.getMeasurementDatabase();
-						break;
-					case ObjectEntities.TEST_ENTITY_CODE:
-						database = MeasurementDatabaseContext.getTestDatabase();
-						break;
-					case ObjectEntities.RESULT_ENTITY_CODE:
-						database = MeasurementDatabaseContext.getResultDatabase();
-						break;
-					default:
-						Log.errorMessage("CMServerMeasurementObjectLoader.refresh | there is no reason to refresh " + ObjectEntities.codeToString(entityCode));                
-				}
+				StorableObjectDatabase database = MeasurementDatabaseContext.getDatabase(entityCode);
 				if (database != null)
 					return database.refresh(storableObjects);
 
-	      return Collections.EMPTY_SET;
+				return Collections.EMPTY_SET;
 			}
 			catch (DatabaseException e) {
 				Log.errorMessage("CMServerMeasurementObjectLoader.refresh | DatabaseException: " + e.getMessage());
@@ -154,7 +131,7 @@ public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementOb
 			if (mcmRef != null) {
 				try {
 					measurement = new Measurement(mcmRef.transmitMeasurement((Identifier_Transferable)id.getTransferable()));
-					measurement.insert();
+					MeasurementDatabaseContext.getDatabase(id.getMajor()).insert(measurement);
 				}
 				catch (org.omg.CORBA.SystemException se) {
 					Log.errorException(se);
@@ -169,6 +146,9 @@ public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementOb
 				}
 				catch (CreateObjectException coe) {
 					Log.errorException(coe);
+				} 
+				catch (IllegalDataException e) {
+					Log.errorMessage("Cannot get db for measurement '" + id + '\'');
 				}
 			}
 			else {
@@ -190,8 +170,7 @@ public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementOb
 			if (mcmRef != null) {
 				try {
 					analysis = new Analysis(mcmRef.transmitAnalysis((Identifier_Transferable)id.getTransferable()));
-					analysis.insert();
-				}
+					MeasurementDatabaseContext.getDatabase(id.getMajor()).insert(analysis);				}
 				catch (org.omg.CORBA.SystemException se) {
 					Log.errorException(se);
 					ClientMeasurementServer.activateMCMReferenceWithId(mcmId);
@@ -205,6 +184,9 @@ public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementOb
 				}
 				catch (CreateObjectException coe) {
 					Log.errorException(coe);
+				} 
+				catch (IllegalDataException e) {
+					Log.errorMessage("Cannot get db for analysis '" + id + '\'');
 				}
 			}
 			else {
@@ -226,7 +208,7 @@ public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementOb
 			if (mcmRef != null) {
 				try {
 					evaluation = new Evaluation(mcmRef.transmitEvaluation((Identifier_Transferable)id.getTransferable()));
-					evaluation.insert();
+					MeasurementDatabaseContext.getDatabase(id.getMajor()).insert(evaluation);
 				}
 				catch (org.omg.CORBA.SystemException se) {
 					Log.errorException(se);
@@ -242,6 +224,9 @@ public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementOb
 				catch (CreateObjectException coe) {
 					Log.errorException(coe);
 				}
+				catch (IllegalDataException e) {
+					Log.errorMessage("Cannot get db for evaluation '" + id + '\'');
+				}
 			}
 			else {
 				Log.errorMessage("Remote reference for MCM '" + mcmId + "' is null; will try to reactivate it");
@@ -251,10 +236,10 @@ public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementOb
 		return evaluation;
 	}
 
-	public List loadAnalyses(List ids) throws DatabaseException, CommunicationException {
+	public Collection loadAnalyses(Collection ids) throws DatabaseException, CommunicationException {
 		AnalysisDatabase database = (AnalysisDatabase)MeasurementDatabaseContext.getAnalysisDatabase();
-		List list;
-		List copyOfList;
+		Collection list;
+		Collection copyOfList;
 		Analysis analysis;
 		try {
 			list = database.retrieveByIds(ids, null);
@@ -264,7 +249,7 @@ public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementOb
 				if(ids.contains(id))
 					it.remove();
 			}
-			List loadedFromMCM = new LinkedList();
+			Collection loadedFromMCM = new LinkedList();
 			for (Iterator it = copyOfList.iterator(); it.hasNext();) {
 				Identifier id = ((StorableObject) it.next()).getId();
 				Log.debugMessage("Analysis '" + id + "' not found in database; trying to load from MCM '" + mcmId + "'", Log.DEBUGLEVEL08);
@@ -309,10 +294,10 @@ public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementOb
 		return list;
 	}
 
-	public List loadEvaluations(List ids) throws DatabaseException, CommunicationException {
+	public Collection loadEvaluations(Collection ids) throws DatabaseException, CommunicationException {
 		EvaluationDatabase database = (EvaluationDatabase)MeasurementDatabaseContext.getEvaluationDatabase();
-		List list;
-		List copyOfList;
+		Collection list;
+		Collection copyOfList;
 		Evaluation evaluation;
 		try {
 			list = database.retrieveByIds(ids, null);
@@ -322,7 +307,7 @@ public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementOb
 				if(ids.contains(id))
 					it.remove();
 			}
-			List loadedFromMCM = new LinkedList();
+			Collection loadedFromMCM = new LinkedList();
 			for (Iterator it = copyOfList.iterator(); it.hasNext();) {
 				Identifier id = ((StorableObject) it.next()).getId();
 				Log.debugMessage("Evaluation '" + id + "' not found in database; trying to load from MCM '" + mcmId + "'", Log.DEBUGLEVEL08);
@@ -367,10 +352,10 @@ public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementOb
 		return list;
 	}
 
-  public List loadMeasurements(List ids) throws DatabaseException, CommunicationException {
+  public Collection loadMeasurements(Collection ids) throws DatabaseException, CommunicationException {
 		MeasurementDatabase database = (MeasurementDatabase)MeasurementDatabaseContext.getMeasurementDatabase();
-		List list;
-		List copyOfList;
+		Collection list;
+		Collection copyOfList;
 		Measurement measurement;
 		try {
 			list = database.retrieveByIds(ids, null);
@@ -380,7 +365,7 @@ public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementOb
 				if(ids.contains(id))
 					it.remove();
 			}
-			List loadedFromMCM = new LinkedList();
+			Collection loadedFromMCM = new LinkedList();
 			for (Iterator it = copyOfList.iterator(); it.hasNext();) {
 				Identifier id = ((StorableObject) it.next()).getId();
 				Log.debugMessage("Measurement '" + id + "' not found in database; trying to load from MCM '" + mcmId + "'", Log.DEBUGLEVEL08);
@@ -425,10 +410,10 @@ public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementOb
 		return list;
 	}	
 
-	public List loadMeasurementsButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException {
+	public Collection loadMeasurementsButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException, CommunicationException {
 		MeasurementDatabase database = (MeasurementDatabase)MeasurementDatabaseContext.getMeasurementDatabase();
-		List list;
-		List ids2 = new ArrayList(ids);
+		Collection list;
+		Collection ids2 = new ArrayList(ids);
 		Measurement_Transferable[] measurementTransferables;
 
 		try {
@@ -443,11 +428,11 @@ public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementOb
 			}
 
 			{
-				List loadedFromMCM = new LinkedList();
-				List measurements = MeasurementStorableObjectPool.getStorableObjectsByCondition(condition, true);
-				List tests;
+				Collection loadedFromMCM = new LinkedList();
+				Collection measurements = MeasurementStorableObjectPool.getStorableObjectsByCondition(condition, true);
+				Collection tests;
 				{
-					List testIds = new ArrayList(measurements.size());
+					Collection testIds = new ArrayList(measurements.size());
 					for (Iterator it = measurements.iterator(); it.hasNext();) {
 						Measurement measurement = (Measurement) it.next();
 						testIds.add(measurement.getTestId());
@@ -498,10 +483,10 @@ public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementOb
 		
 	}
 
-	public List loadAnalysesButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException {
+	public Collection loadAnalysesButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException, CommunicationException {
 		AnalysisDatabase database = (AnalysisDatabase)MeasurementDatabaseContext.getAnalysisDatabase();
-		List list;
-		List ids2 = new ArrayList(ids);
+		Collection list;
+		Collection ids2 = new ArrayList(ids);
 		Analysis_Transferable[] analysesTransferables;
 
 		try {
@@ -517,7 +502,7 @@ public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementOb
 			com.syrus.AMFICOM.mcm.corba.MCM mcmRef = (com.syrus.AMFICOM.mcm.corba.MCM)ClientMeasurementServer.mcmRefs.get(mcmId);
 										 
 			analysesTransferables = mcmRef.transmitAnalysesButIds(this.getConditionTransferable(condition), identifierTransferables);
-			List loadedFromMCM = new LinkedList();
+			Collection loadedFromMCM = new LinkedList();
 			for (int j = 0; j < analysesTransferables.length; j++) 
 				loadedFromMCM.add(new Analysis(analysesTransferables[j]));			
 			try{
@@ -545,10 +530,10 @@ public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementOb
 		}
 	}
 
-	public List loadEvaluationsButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException {
+	public Collection loadEvaluationsButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException, CommunicationException {
 		EvaluationDatabase database = (EvaluationDatabase)MeasurementDatabaseContext.getEvaluationDatabase();
-		List list;
-		List ids2 = new ArrayList(ids);
+		Collection list;
+		Collection ids2 = new ArrayList(ids);
 		Evaluation_Transferable[] evaluationTransferables;
 		
 		try {
@@ -564,7 +549,7 @@ public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementOb
 			com.syrus.AMFICOM.mcm.corba.MCM mcmRef = (com.syrus.AMFICOM.mcm.corba.MCM)ClientMeasurementServer.mcmRefs.get(mcmId);
 													 
 			evaluationTransferables = mcmRef.transmitEvaluationsButIds(this.getConditionTransferable(condition), identifierTransferables);
-			List loadedFromMCM = new LinkedList();
+			Collection loadedFromMCM = new LinkedList();
 			for (int j = 0; j < evaluationTransferables.length; j++) 
 				loadedFromMCM.add(new Evaluation(evaluationTransferables[j]));			
 			try{
