@@ -1,5 +1,5 @@
 /*
- * $Id: TemporalPattern.java,v 1.41 2004/10/08 12:17:06 bob Exp $
+ * $Id: TemporalPattern.java,v 1.42 2004/10/08 14:19:00 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,32 +8,31 @@
 
 package com.syrus.AMFICOM.measurement;
 
-import java.util.LinkedList;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.ObjectNotFoundException;
+import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
-import com.syrus.AMFICOM.general.RetrieveObjectException;
-import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.ObjectNotFoundException;
-import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.corba.TemporalPattern_Transferable;
 import com.syrus.AMFICOM.resource.LangModelMeasurement;
 import com.syrus.util.HashCodeGenerator;
 
 /**
- * @version $Revision: 1.41 $, $Date: 2004/10/08 12:17:06 $
+ * @version $Revision: 1.42 $, $Date: 2004/10/08 14:19:00 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -588,7 +587,7 @@ public class TemporalPattern extends StorableObject {
 				System.out.println();
 			return timeValue;
 		}
-		
+
 		public String toString() {
 			return this.getDescription();
 		}
@@ -779,7 +778,7 @@ public class TemporalPattern extends StorableObject {
 	/**
 	 * Map of <{@link TimeLine},{@link TimeLine}>
 	 */
-	private HashMap			templates;
+	private List			templates;
 	private List			times;
 
 	private long			startTime		= 0;
@@ -833,7 +832,7 @@ public class TemporalPattern extends StorableObject {
 		}
 
 		super.currentVersion = super.getNextVersion();
-		
+
 		this.temporalPatternDatabase = MeasurementDatabaseContext.temporalPatternDatabase;
 	}
 
@@ -851,7 +850,7 @@ public class TemporalPattern extends StorableObject {
 		}
 
 		super.currentVersion = super.getNextVersion();
-		
+
 		this.temporalPatternDatabase = MeasurementDatabaseContext.temporalPatternDatabase;
 	}
 
@@ -878,17 +877,16 @@ public class TemporalPattern extends StorableObject {
 	}
 
 	public short getEntityCode() {
-        return ObjectEntities.TEMPORALPATTERN_ENTITY_CODE;
-    }
-    
-    public String[] getCronStrings() {
+		return ObjectEntities.TEMPORALPATTERN_ENTITY_CODE;
+	}
+
+	public String[] getCronStrings() {
 		if ((this.cronStrings == null) || (this.cronStrings.length != this.templates.size()))
 			this.cronStrings = new String[this.templates.size()];
 		{
 			int i = 0;
-			for (Iterator it = this.templates.keySet().iterator(); it.hasNext();) {
-				Object key = it.next();
-				TimeLine line = (TimeLine) this.templates.get(key);
+			for (Iterator it = this.templates.iterator(); it.hasNext();) {
+				TimeLine line = (TimeLine) it.next();
 				this.cronStrings[i++] = new String(line.getTemplate());
 			}
 		}
@@ -931,10 +929,12 @@ public class TemporalPattern extends StorableObject {
 
 	public Collection getTimeLines() {
 		Collection collection = null;
-		if (this.templates != null) {
-			collection = this.templates.values();
-			//System.out.println("collection.size():" +
-			// collection.size());
+		synchronized (this.templates) {
+			if (this.templates != null) {
+				collection = this.templates;
+				//System.out.println("collection.size():" +
+				// collection.size());
+			}
 		}
 		return collection;
 	}
@@ -1011,7 +1011,7 @@ public class TemporalPattern extends StorableObject {
 
 		if (this.times.isEmpty()) {
 			//int count = 0;
-			Collection list = this.templates.values();
+			Collection list = this.templates;
 			for (Iterator it = list.iterator(); it.hasNext();) {
 				TimeLine timeLine = (TimeLine) it.next();
 				timeLine.setStartPeriod(start);
@@ -1047,22 +1047,26 @@ public class TemporalPattern extends StorableObject {
 		else
 			this.times.clear();
 		if (this.templates == null)
-			this.templates = new HashMap();
-		TimeLine timeLine = new TimeLine();
-		timeLine.setTemplate(template);
-		this.templates.put(timeLine, timeLine);
+			this.templates = new LinkedList();
+		synchronized (this.templates) {
+			TimeLine timeLine = new TimeLine();
+			timeLine.setTemplate(template);
+			this.templates.add(timeLine);
+		}
 		//setType(TIMESTAMPTYPE_PERIODIC);
 	}
-	
-	public void removeTemplate(String template){
-		for (Iterator it = this.templates.keySet().iterator(); it.hasNext();) {
-			TimeLine timeLine = (TimeLine) it.next();
-			if (timeLine.getTemplate().equals(template)){
-				it.remove();
-				break;
+
+	public void removeTemplate(String template) {
+		for (Iterator it = this.templates.iterator(); it.hasNext();) {
+		TimeLine timeLine = (TimeLine) it.next();
+		if (timeLine.getTemplate().equals(template)) {
+			it.remove();
+			break;
 			}
-			
 		}
+
+		this.times.clear();
+		this.currentVersion = super.getNextVersion();
 	}
 
 	/**
