@@ -5,8 +5,6 @@ import com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.AnalysisPanel;
 
 import com.syrus.AMFICOM.Client.General.Report.RenderingObject;
 import com.syrus.AMFICOM.Client.General.Report.CreateReportException;
-import com.syrus.AMFICOM.Client.General.Report.AMTReportPanel;
-
 
 import javax.swing.JPanel;
 

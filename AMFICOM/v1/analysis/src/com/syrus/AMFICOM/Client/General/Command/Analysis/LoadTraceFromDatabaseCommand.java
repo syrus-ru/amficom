@@ -110,7 +110,7 @@ public class LoadTraceFromDatabaseCommand extends VoidCommand
 		}
 		Pool.put("bellcorestructure", "primarytrace", bs);
 
-		Test test = (Test)Pool.get(Test.typ, res.getActionId());
+		Test test = (Test)Pool.get(Test.TYPE, res.getActionId());
 		bs.title = res.getName();
 
 		TestSetup ts;

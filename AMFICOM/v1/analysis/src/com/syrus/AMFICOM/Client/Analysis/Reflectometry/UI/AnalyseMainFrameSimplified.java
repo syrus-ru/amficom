@@ -604,7 +604,7 @@ public class AnalyseMainFrameSimplified extends JFrame
 		new SurveyDataSourceImage(dataSource).LoadModelingTypes();
 
 		ApplicationModel aModel = aContext.getApplicationModel();
-		aModel.enable("menuSessionDomain");
+		aModel.setEnabled("menuSessionDomain", true);
 		aModel.setEnabled("menuSessionNew", false);
 		aModel.fireModelChanged("");
 		String domain_id = aContext.getSessionInterface().getDomainId();
@@ -615,9 +615,9 @@ public class AnalyseMainFrameSimplified extends JFrame
 	public void setDomainSelected()
 	{
 		ApplicationModel aModel = aContext.getApplicationModel();
-		aModel.enable("menuSessionClose");
-		aModel.enable("menuSessionOptions");
-		aModel.enable("menuSessionChangePassword");
+		aModel.setEnabled("menuSessionClose", true);
+		aModel.setEnabled("menuSessionOptions", true);
+		aModel.setEnabled("menuSessionChangePassword", true);
 
 		aModel.setEnabled("menuFileOpen", true);
 		aModel.setEnabled("menuFileOpenAs", true);
