@@ -1,5 +1,5 @@
 /*
- * $Id: TypicalCondition.java,v 1.12 2005/02/25 06:48:23 bass Exp $
+ * $Id: TypicalCondition.java,v 1.13 2005/02/25 07:36:40 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -119,8 +119,8 @@ import com.syrus.util.Log;
  * 
  * </ul>
  * 
- * @version $Revision: 1.12 $, $Date: 2005/02/25 06:48:23 $
- * @author $Author: bass $
+ * @version $Revision: 1.13 $, $Date: 2005/02/25 07:36:40 $
+ * @author $Author: bob $
  * @module general_v1
  */
 public class TypicalCondition implements StorableObjectCondition {
@@ -678,6 +678,9 @@ public class TypicalCondition implements StorableObjectCondition {
 
 	public TypicalCondition(TypicalCondition_Transferable transferable) {
 		final String className = "com.syrus.AMFICOM." + ObjectGroupEntities.getGroupName(transferable.entity_code).toLowerCase().replaceAll("group$", "") + ".TypicalConditionImpl"; //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+		Log.debugMessage(TYPICAL_CONDITION_INIT
+			+ "Try reflect class " + className , //$NON-NLS-1$
+		Log.INFO);
 		try {
 			Constructor ctor;
 			switch (transferable.type.value()) {
@@ -695,7 +698,7 @@ public class TypicalCondition implements StorableObjectCondition {
 						new Class[] { long.class, long.class, OperationSort.class, Short.class, String.class});
 					ctor.setAccessible(true);
 					this.delegate = (TypicalCondition) ctor.newInstance(new Object[] { new Long(transferable.value),
-							new Long(transferable.otherValue), new Integer(transferable.operation.value()),
+							new Long(transferable.otherValue), transferable.operation,
 							new Short(transferable.entity_code), transferable.key});
 
 					break;
@@ -704,7 +707,7 @@ public class TypicalCondition implements StorableObjectCondition {
 						new Class[] { double.class, double.class, OperationSort.class, Short.class, String.class});
 					ctor.setAccessible(true);
 					this.delegate = (TypicalCondition) ctor.newInstance(new Object[] { new Double(transferable.value),
-							new Double(transferable.otherValue), new Integer(transferable.operation.value()),
+							new Double(transferable.otherValue), transferable.operation,
 							new Short(transferable.entity_code), transferable.key});
 
 					break;
@@ -713,7 +716,7 @@ public class TypicalCondition implements StorableObjectCondition {
 						new Class[] { String.class, OperationSort.class, Short.class, String.class});
 					ctor.setAccessible(true);
 					this.delegate = (TypicalCondition) ctor.newInstance(new Object[] { transferable.value,
-							new Integer(transferable.operation.value()), new Short(transferable.entity_code),
+							transferable.operation, new Short(transferable.entity_code),
 							transferable.key});
 
 					break;
