@@ -1,5 +1,5 @@
 /**
- * $Id: Mark.java,v 1.26 2005/04/06 16:03:38 krupenn Exp $
+ * $Id: Mark.java,v 1.27 2005/04/06 17:38:27 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -47,7 +47,7 @@ import com.syrus.AMFICOM.map.corba.Mark_Transferable;
  * фрагментами линий, переопределены и бросают 
  * <code>{@link UnsupportedOperationException}</code>.
  * @author $Author: krupenn $
- * @version $Revision: 1.26 $, $Date: 2005/04/06 16:03:38 $
+ * @version $Revision: 1.27 $, $Date: 2005/04/06 17:38:27 $
  * @module map_v1
  */
 public class Mark extends AbstractNode {
@@ -455,7 +455,7 @@ public class Mark extends AbstractNode {
 	 * {@inheritDoc}<br>
 	 * Suppress since mark cannot be an end node
 	 */
-	public SortedSet getNodeLinks() {
+	public Set getNodeLinks() {
 		throw new UnsupportedOperationException("Not implemented");
 	}
 
@@ -471,7 +471,7 @@ public class Mark extends AbstractNode {
 	 * {@inheritDoc}<br>
 	 * Suppress since mark cannot be an end node
 	 */
-	public SortedSet getPhysicalLinks() {
+	public Set getPhysicalLinks() {
 		throw new UnsupportedOperationException("Not implemented");
 	}
 
@@ -479,7 +479,7 @@ public class Mark extends AbstractNode {
 	 * {@inheritDoc}<br>
 	 * Suppress since mark cannot be an end node
 	 */
-	public SortedSet getOppositeNodes() {
+	public Set getOppositeNodes() {
 		throw new UnsupportedOperationException("Not implemented");
 	}
 

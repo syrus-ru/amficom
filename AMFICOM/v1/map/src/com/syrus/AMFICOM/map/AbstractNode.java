@@ -1,5 +1,5 @@
 /**
- * $Id: AbstractNode.java,v 1.16 2005/04/02 15:29:51 arseniy Exp $
+ * $Id: AbstractNode.java,v 1.17 2005/04/06 17:38:27 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -31,8 +31,8 @@ import org.omg.CORBA.portable.IDLEntity;
  * ({@link Map}). Узловой объект характеризуется наличием координат
  * ({@link #location}) и изображением ({@link #imageId}).
  * 
- * @author $Author: arseniy $
- * @version $Revision: 1.16 $, $Date: 2005/04/02 15:29:51 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.17 $, $Date: 2005/04/06 17:38:27 $
  * @module map_v1
  * @see SiteNode
  * @see TopologicalNode
@@ -236,9 +236,9 @@ public abstract class AbstractNode
 	 * Получить список NodeLinks, содержащих заданный Node.
 	 * @return Список фрагментов
 	 */
-	public SortedSet getNodeLinks()
+	public Set getNodeLinks()
 	{
-		SortedSet returnList = new TreeSet();
+		Set returnNodeLinks = new HashSet();
 		for(Iterator it = getMap().getNodeLinks().iterator(); it.hasNext();)
 		{
 			NodeLink nodeLink = (NodeLink )it.next();
@@ -246,11 +246,11 @@ public abstract class AbstractNode
 			if ( (nodeLink.getEndNode().equals(this)) 
 				|| (nodeLink.getStartNode().equals(this)))
 			{
-				returnList.add(nodeLink);
+				returnNodeLinks.add(nodeLink);
 			}
 		}
 
-		return returnList;
+		return returnNodeLinks;
 	}
 
 	/**
@@ -290,9 +290,9 @@ public abstract class AbstractNode
 	 * на данном узле.
 	 * @return список линий
 	 */
-	public SortedSet getPhysicalLinks()
+	public Set getPhysicalLinks()
 	{
-		SortedSet returnList = new TreeSet();
+		Set returnLinks = new HashSet();
 
 		for(Iterator it = getMap().getPhysicalLinks().iterator(); it.hasNext();)
 		{
@@ -300,10 +300,10 @@ public abstract class AbstractNode
 			
 			if ( (physicalLink.getEndNode().equals(this)) 
 					|| (physicalLink.getStartNode().equals(this)) )
-				returnList.add(physicalLink);
+				returnLinks.add(physicalLink);
 		}
 
-		return returnList;
+		return returnLinks;
 	}
 
 	/**
@@ -311,22 +311,22 @@ public abstract class AbstractNode
 	 * данного элемента.
 	 * @return список узлов
 	 */
-	public SortedSet getOppositeNodes()
+	public Set getOppositeNodes()
 	{
 		Iterator e = getNodeLinks().iterator();
-		SortedSet returnList = new TreeSet();
+		Set returnNodes = new HashSet();
 
 		while (e.hasNext())
 		{
 			NodeLink nodeLink = (NodeLink )e.next();
 
 			if ( nodeLink.getEndNode().equals(this) )
-				returnList.add(nodeLink.getStartNode());
+				returnNodes.add(nodeLink.getStartNode());
 			else
-				returnList.add(nodeLink.getEndNode());
+				returnNodes.add(nodeLink.getEndNode());
 		}
 
-		return returnList;
+		return returnNodes;
 	}
 
 	/**
