@@ -1,5 +1,5 @@
 /*
- * $Id: Characteristic.java,v 1.17 2005/04/01 10:27:37 bass Exp $
+ * $Id: Characteristic.java,v 1.18 2005/04/01 14:12:32 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,13 +12,15 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.omg.CORBA.portable.IDLEntity;
+
 import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.corba.Characteristic_Transferable;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2005/04/01 10:27:37 $
- * @author $Author: bass $
+ * @version $Revision: 1.18 $, $Date: 2005/04/01 14:12:32 $
+ * @author $Author: bob $
  * @module general_v1
  */
 
@@ -49,23 +51,8 @@ public class Characteristic extends StorableObject implements TypedObject {
 	}
 
 	public Characteristic(Characteristic_Transferable ct) throws CreateObjectException {
-		super(ct.header);
-
-		try {
-			this.type = (CharacteristicType)GeneralStorableObjectPool.getStorableObject(new Identifier(ct.type_id), true);
-		}
-		catch (ApplicationException ae) {
-			throw new CreateObjectException(ae);
-		}
-		this.name = new String(ct.name);
-		this.description = new String(ct.description);
-		this.sort = ct.sort.value();
-		this.value = new String(ct.value);
-		this.characterizableId = new Identifier(ct.characterizable_id);
-		this.editable = ct.is_editable;
-		this.visible = ct.is_visible;
-
 		this.characteristicDatabase = GeneralDatabaseContext.getCharacteristicDatabase();
+		this.fromTransferable(ct);
 	}
 
 	protected Characteristic(Identifier id,
@@ -141,6 +128,27 @@ public class Characteristic extends StorableObject implements TypedObject {
 		catch (IllegalObjectEntityException e) {
 			throw new CreateObjectException("Characteristic.createInstance | cannot generate identifier ", e);
 		}
+	}	
+
+	protected void fromTransferable(IDLEntity transferable) throws CreateObjectException {
+		Characteristic_Transferable ct = (Characteristic_Transferable) transferable;
+		
+		super.fromTransferable(ct.header);
+		
+		try {
+			this.type = (CharacteristicType)GeneralStorableObjectPool.getStorableObject(new Identifier(ct.type_id), true);
+		}
+		catch (ApplicationException ae) {
+			throw new CreateObjectException(ae);
+		}
+		this.name = new String(ct.name);
+		this.description = new String(ct.description);
+		this.sort = ct.sort.value();
+		this.value = new String(ct.value);
+		this.characterizableId = new Identifier(ct.characterizable_id);
+		this.editable = ct.is_editable;
+		this.visible = ct.is_visible;
+		
 	}
 
 	public Object getTransferable() {

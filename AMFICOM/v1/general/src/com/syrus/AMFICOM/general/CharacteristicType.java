@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicType.java,v 1.13 2005/04/01 10:27:37 bass Exp $
+ * $Id: CharacteristicType.java,v 1.14 2005/04/01 14:12:32 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,13 +12,16 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.Set;
 
+import org.omg.CORBA.portable.IDLEntity;
+
 import com.syrus.AMFICOM.general.corba.CharacteristicTypeSort;
 import com.syrus.AMFICOM.general.corba.CharacteristicType_Transferable;
 import com.syrus.AMFICOM.general.corba.DataType;
+import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/04/01 10:27:37 $
- * @author $Author: bass $
+ * @version $Revision: 1.14 $, $Date: 2005/04/01 14:12:32 $
+ * @author $Author: bob $
  * @module general_v1
  */
 
@@ -43,13 +46,13 @@ public class CharacteristicType extends StorableObjectType {
 	}
 
 	public CharacteristicType(CharacteristicType_Transferable ctt) {
-		super(ctt.header,
-				new String(ctt.codename),
-				new String(ctt.description));
-		this.dataType = ctt.data_type.value();
-		this.sort = ctt.sort.value();
-
 		this.characteristicTypeDatabase = GeneralDatabaseContext.getCharacteristicTypeDatabase();
+		
+		try {
+			this.fromTransferable(ctt);
+		} catch (CreateObjectException e) {
+			Log.debugException(e, Log.WARNING);
+		}
 	}
 
 	protected CharacteristicType(Identifier id,
@@ -72,13 +75,22 @@ public class CharacteristicType extends StorableObjectType {
 
 		this.characteristicTypeDatabase = GeneralDatabaseContext.getCharacteristicTypeDatabase();
 	}
+	
+	protected void fromTransferable(IDLEntity transferable) throws CreateObjectException {
+		CharacteristicType_Transferable ctt = (CharacteristicType_Transferable) transferable;
+		super.fromTransferable(ctt.header, ctt.codename, ctt.description);
+		this.dataType = ctt.data_type.value();
+		this.sort = ctt.sort.value();
+	}
 
 	/**
 	 * create new instance for client
+	 * 
 	 * @param creatorId
 	 * @param codename
 	 * @param description
-	 * @param dataType see {@link DataType}
+	 * @param dataType
+	 *            see {@link DataType}
 	 * @throws CreateObjectException
 	 */
 	public static CharacteristicType createInstance(Identifier creatorId,

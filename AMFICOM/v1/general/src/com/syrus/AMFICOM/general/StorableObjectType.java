@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectType.java,v 1.14 2005/02/10 12:51:18 arseniy Exp $
+ * $Id: StorableObjectType.java,v 1.15 2005/04/01 14:12:32 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,11 +10,11 @@ package com.syrus.AMFICOM.general;
 
 import java.util.Date;
 
-import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
+import org.omg.CORBA.portable.IDLEntity;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2005/02/10 12:51:18 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.15 $, $Date: 2005/04/01 14:12:32 $
+ * @author $Author: bob $
  * @module general_v1
  */
 
@@ -41,8 +41,12 @@ public abstract class StorableObjectType extends StorableObject {
 		this.description = description;
 	}
 
-	public StorableObjectType(StorableObject_Transferable transferable, String codename, String description) {
-		super(transferable);
+	protected StorableObjectType() {
+		// empty
+	}
+	
+	protected void fromTransferable(IDLEntity transferable, String codename, String description) throws CreateObjectException {
+		super.fromTransferable(transferable);
 		this.codename = codename;
 		this.description = description;
 	}

@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractCloneableStorableObject.java,v 1.1 2005/03/15 17:46:14 bass Exp $
+ * $Id: AbstractCloneableStorableObject.java,v 1.2 2005/04/01 14:12:32 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,13 +8,13 @@
 
 package com.syrus.AMFICOM.general;
 
-import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
-import com.syrus.util.Log;
 import java.util.Date;
 
+import com.syrus.util.Log;
+
 /**
- * @author $Author: bass $
- * @version $Revision: 1.1 $, $Date: 2005/03/15 17:46:14 $
+ * @author $Author: bob $
+ * @version $Revision: 1.2 $, $Date: 2005/04/01 14:12:32 $
  * @module general_v1
  */
 public abstract class AbstractCloneableStorableObject extends StorableObject implements CloneableStorableObject {
@@ -42,12 +42,8 @@ public abstract class AbstractCloneableStorableObject extends StorableObject imp
 		super(id, created, modified, creatorId, modifierId, version);
 	}
 
-	/**
-	 * @param transferable
-	 */
-	protected AbstractCloneableStorableObject(
-			final StorableObject_Transferable transferable) {
-		super(transferable);
+	protected AbstractCloneableStorableObject() {
+		super();
 	}
 
 	/**

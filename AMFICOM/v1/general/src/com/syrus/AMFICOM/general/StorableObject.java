@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObject.java,v 1.47 2005/03/31 16:27:13 bob Exp $
+ * $Id: StorableObject.java,v 1.48 2005/04/01 14:12:32 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,6 +11,8 @@ package com.syrus.AMFICOM.general;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Set;
+
+import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
@@ -25,7 +27,7 @@ import com.syrus.util.Log;
  * same identifier, comparison of object references (in Java terms) is enough.
  *
  * @author $Author: bob $
- * @version $Revision: 1.47 $, $Date: 2005/03/31 16:27:13 $
+ * @version $Revision: 1.48 $, $Date: 2005/04/01 14:12:32 $
  * @module general_v1
  */
 public abstract class StorableObject implements Identifiable, TransferableObject, Serializable {
@@ -46,6 +48,9 @@ public abstract class StorableObject implements Identifiable, TransferableObject
 	private Identifier savedModifierId;
 	private long savedVersion;
 
+	protected StorableObject() {
+		// empty constructor
+	}
 	/**
 	 * Server-side constructor.
 	 *
@@ -86,8 +91,13 @@ public abstract class StorableObject implements Identifiable, TransferableObject
 		this.savedModifierId = null;
 		this.savedVersion = 0;
 	}
-
-	protected StorableObject(StorableObject_Transferable sot) {
+	
+	/**
+	 * Will be overridden by descendants.
+	 * @throws CreateObjectException 
+	 */
+	protected void fromTransferable(IDLEntity transferable) throws CreateObjectException {
+		StorableObject_Transferable sot = (StorableObject_Transferable) transferable;
 		this.id = new Identifier(sot.id);
 		this.created = new Date(sot.created);
 		this.modified = new Date(sot.modified);
@@ -99,7 +109,7 @@ public abstract class StorableObject implements Identifiable, TransferableObject
 
 		this.savedModified = null;
 		this.savedModifierId = null;
-		this.savedVersion = 0;
+		this.savedVersion = 0;		
 	}
 
 	public final Date getCreated() {

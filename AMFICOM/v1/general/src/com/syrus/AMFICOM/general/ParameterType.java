@@ -1,5 +1,5 @@
 /*
- * $Id: ParameterType.java,v 1.11 2005/04/01 10:27:37 bass Exp $
+ * $Id: ParameterType.java,v 1.12 2005/04/01 14:12:32 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,12 +12,15 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.Set;
 
+import org.omg.CORBA.portable.IDLEntity;
+
 import com.syrus.AMFICOM.general.corba.DataType;
 import com.syrus.AMFICOM.general.corba.ParameterType_Transferable;
+import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/04/01 10:27:37 $
- * @author $Author: bass $
+ * @version $Revision: 1.12 $, $Date: 2005/04/01 14:12:32 $
+ * @author $Author: bob $
  * @module general_v1
  */
 
@@ -42,11 +45,12 @@ public class ParameterType extends StorableObjectType {
 	}
 
 	public ParameterType(ParameterType_Transferable ptt) {
-		super(ptt.header,
-			  new String(ptt.codename),
-			  new String(ptt.description));
-		this.name = new String(ptt.name);
-		this.dataType = ptt.data_type.value();
+		try {
+			this.fromTransferable(ptt);
+		} catch (CreateObjectException e) {
+			Log.debugException(e, Log.WARNING);
+		}
+		this.parameterTypeDatabase = GeneralDatabaseContext.getParameterTypeDatabase();
 	}
 
 	protected ParameterType(Identifier id,
@@ -109,7 +113,13 @@ public class ParameterType extends StorableObjectType {
 		}
 	}
 
-
+	protected void fromTransferable(IDLEntity transferable) throws CreateObjectException {
+		ParameterType_Transferable ptt = (ParameterType_Transferable) transferable;
+		super.fromTransferable(ptt.header, ptt.codename, ptt.description);
+		this.name = new String(ptt.name);
+		this.dataType = ptt.data_type.value();
+	}
+	
   public Object getTransferable() {
 		return new ParameterType_Transferable(super.getHeaderTransferable(),
 											  new String(super.codename),
