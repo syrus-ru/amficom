@@ -1,6 +1,7 @@
 package com.syrus.AMFICOM.Client.Optimize;
 
 import java.awt.*;
+import java.util.Iterator;
 
 import javax.swing.*;
 import javax.swing.event.*;
@@ -123,10 +124,11 @@ public class OptimizeElementPanel extends JPanel implements OperationListener
     //Здесь очищаем выбранные элементы у таблицы
     myTable.clearSelection();
    java.util.List list = tablePane.getContents();
-    for( Iterator  i = list.iterator() ; ; i++)
-    {	SchemeElement se = (SchemeElement )list.get(i);
+   int i_cou=0;
+    for( Iterator  i = list.iterator() ; i.hasNext() ; i_cou++)
+    {	SchemeElement se = (SchemeElement )i.next();
       //if(se.isSelected())
-      {	myTable.getSelectionModel().addSelectionInterval(i, i);
+      {	myTable.getSelectionModel().addSelectionInterval(i_cou, i_cou);
       }
     }
     mouseSelect = true;

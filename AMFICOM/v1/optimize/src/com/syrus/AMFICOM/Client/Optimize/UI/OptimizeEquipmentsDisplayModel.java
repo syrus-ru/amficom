@@ -1,16 +1,21 @@
 package com.syrus.AMFICOM.Client.Optimize.UI;
 
-//import java.awt.*;
-import java.util.*;
+import java.awt.Color;
+import java.util.List;
+import java.util.ArrayList;
 
-import com.syrus.AMFICOM.Client.General.UI.*;
-import com.syrus.AMFICOM.Client.Optimize.*;
-import com.syrus.AMFICOM.Client.Resource.*;
-import com.syrus.AMFICOM.Client.Resource.Network.*;
-import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.*;
-import com.syrus.AMFICOM.Client.Resource.Scheme.*;
-import com.syrus.AMFICOM.Client.Resource.SchemeDirectory.*;
-import com.syrus.AMFICOM.Client.General.Command.Optimize.*;
+
+import com.syrus.AMFICOM.Client.General.UI.PropertyEditor;
+import com.syrus.AMFICOM.Client.General.UI.PropertyRenderer;
+import com.syrus.AMFICOM.Client.General.UI.StubDisplayModel;
+import com.syrus.AMFICOM.Client.Optimize.OptimizeMDIMain;
+import com.syrus.AMFICOM.Client.Resource.ObjectResource;
+import com.syrus.AMFICOM.Client.Resource.Pool;
+import com.syrus.AMFICOM.Client.Resource.Network.Equipment;
+import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.EquipmentType;
+import com.syrus.AMFICOM.Client.Resource.Scheme.ElementAttribute;
+import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeElement;
+import com.syrus.AMFICOM.Client.Resource.SchemeDirectory.ProtoElement;
 
 //модель таблицы для окна, в котором отображаются оптимизационные атрибуты КИСов ( fixed, active и т д )
 //================================================================================================================
@@ -134,18 +139,18 @@ public class OptimizeEquipmentsDisplayModel extends StubDisplayModel
   }
   //------------------------------------------------------------------------------------
   public Color getColumnColor (ObjectResource or, String col_id)
-  {	Color color = Color.cyan;
+  {	java.awt.Color color = java.awt.Color.CYAN;
     if(or instanceof SchemeElement)
     {  SchemeElement se = (SchemeElement)or;
        if(se.attributes.get("optimizerNodeAttribute") != null) // по умолчания всегда null
        { if( ((ElementAttribute)se.attributes.get("optimizerNodeAttribute")).value.equals("obligatory") )
-         { color = Color.green;
+         { color = Color.GREEN;
          }
          else if( ((ElementAttribute)se.attributes.get("optimizerNodeAttribute")).value.equals("restricted") )
-         { color = Color.yellow;
+         { color = java.awt.Color.YELLOW;
          }
          else if( ((ElementAttribute)se.attributes.get("optimizerNodeAttribute")).value.equals("optional") )
-         { color = Color.white;
+         { color = java.awt.Color.WHITE;
          }
        }
     }

@@ -1,6 +1,7 @@
 package com.syrus.AMFICOM.Client.Optimize.Report;
 
 import java.util.Vector;
+import java.util.Iterator;
 import java.util.Collection;
 import java.util.Hashtable;
 import java.util.Enumeration;
@@ -183,9 +184,9 @@ class OptEquipmentFeaturesTableModel extends DividableTableModel
 			length++;
 
 			Collection reflProp = curReflect.characteristics.values();
-			Iterator i = reflProp.iterator().hasNext()
-			while ( i.hasNext() )
-			{	Characteristic curChar = (Characteristic) i.next();
+			Iterator it = reflProp.iterator();
+			while ( it.hasNext() )
+			{	Characteristic curChar = (Characteristic) it.next();
 				firstColumn.add(curChar.name);
 				secondColumn.add(curChar.value);
 				length++;
@@ -220,9 +221,9 @@ class OptEquipmentFeaturesTableModel extends DividableTableModel
 			length++;
 
 			Collection switchProp = curSwitch.characteristics.values();
-			Itetrator i = switchProp.iterator();
-			while (i.hasnext())
-			{	Characteristic curChar = (Characteristic) i.next();
+			Iterator it = switchProp.iterator();
+			while (it.hasNext())
+			{	Characteristic curChar = (Characteristic) it.next();
 				firstColumn.add(curChar.name);
 				secondColumn.add(curChar.value);
 				length++;

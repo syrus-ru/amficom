@@ -3,7 +3,7 @@ package com.syrus.AMFICOM.Client.Optimize.UI;
 import java.text.*;
 import java.util.*;
 
-//import java.awt.*;
+import java.awt.Color;
 
 import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.Resource.*;
@@ -96,8 +96,8 @@ public class SolutionCompactDisplayModel extends StubDisplayModel
     return 100;
   }
   //-----------------------------------------------------------------------------
-  public Color getColumnColor (ObjectResource o, String col_id)
-  { return Color.white;
+  public  Color getColumnColor (ObjectResource o, String col_id)
+  { return Color.WHITE;
   }
   //-----------------------------------------------------------------------------
   public boolean isColumnColored (String col_id)

@@ -1,7 +1,9 @@
 // Класс просмотра оптимизированных путей (подробно по всем узлам) в таблице в текстовом виде
 package com.syrus.AMFICOM.Client.Optimize;
 
+
 import java.awt.*;
+import java.util.*;
 import java.awt.event.*;
 import java.beans.*;//для PropertyChangeListener
 
@@ -100,9 +102,9 @@ public class ViewSolutionFrame extends JInternalFrame implements ActionListener,
 	return;
 		}
     this.solutionRenderer.setOptimizeMode( this.mdiMain.optimizerContext.optimize_mode ); // передать установленный режим оптимизации
-    DataSet dataSet = new DataSet(this.mdiMain.scheme.paths);
-    if(dataSet.size() != 0)
-		{ this.tablePane.setContents(dataSet);
+    ArrayList dataList = new ArrayList(this.mdiMain.scheme.paths);
+    if(dataList.size() != 0)
+		{ this.tablePane.setContents(dataList);
     }
     else { ((ObjectResourceTableModel)this.tablePane.getTable().getModel()).clearTable(); }
     this.tablePane.updateUI();
@@ -110,7 +112,7 @@ public class ViewSolutionFrame extends JInternalFrame implements ActionListener,
 	}
 	//-------------------------------------------------------------------------------------------------------------
 	public void ClearTable()
-	{ this.tablePane.setContents(new DataSet());
+	{ this.tablePane.setContents(new ArrayList());
 	}
 	//-------------------------------------------------------------------------------------------------------------
 	// при получении stopevent обновляем содержимое таблицы текущим списком путей

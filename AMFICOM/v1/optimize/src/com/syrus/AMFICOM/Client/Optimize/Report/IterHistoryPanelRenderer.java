@@ -2,11 +2,9 @@ package com.syrus.AMFICOM.Client.Optimize.Report;
 
 import com.syrus.AMFICOM.Client.General.Report.RenderingObject;
 import com.syrus.AMFICOM.Client.General.Report.CreateReportException;
-import com.syrus.AMFICOM.Client.General.Report.AMTReportPanel;
-
+//import com.syrus.AMFICOM.Client.General.Report.AMTReportPanel;
 
 import javax.swing.JPanel;
-
 import java.awt.Graphics;
 import java.awt.Dimension;
 import java.awt.Color;

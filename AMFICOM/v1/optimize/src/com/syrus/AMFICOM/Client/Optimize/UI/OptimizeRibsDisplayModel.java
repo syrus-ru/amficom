@@ -1,6 +1,7 @@
 package com.syrus.AMFICOM.Client.Optimize.UI;
 
 //import java.awt.*;
+import java.awt.Color;
 import java.util.*;
 
 import com.syrus.AMFICOM.Client.General.UI.*;
@@ -30,9 +31,9 @@ public class OptimizeRibsDisplayModel extends StubDisplayModel
     //Далее функции иcполузуются для отображения свойств класса в таблице
     public List getColumns()
     {  if(this.listColumns==null)
-    	{ listColumnsl = new ArrayList();
-        { cols.add("optimizerRibAttribute");
-          cols.add("name");
+    	{ this.listColumns = new ArrayList();
+    	  this.listColumns.add("optimizerRibAttribute");
+    	  this.listColumns.add("name");
         }   
       return this.listColumns;
     }
@@ -91,7 +92,7 @@ public class OptimizeRibsDisplayModel extends StubDisplayModel
     }
     //------------------------------------------------------------------------------------
     public Color getColumnColor (ObjectResource or, String col_id)
-    {	Color color = Color.PINK;
+    { Color color =Color.PINK;
       if(or instanceof SchemeCableLink)
       {  SchemeCableLink scl = (SchemeCableLink)or;
          ElementAttribute el_at = (ElementAttribute)scl.attributes.get("optimizerRibAttribute");
@@ -111,14 +112,14 @@ public class OptimizeRibsDisplayModel extends StubDisplayModel
          if( el_at != null)
          { String scl_av = el_at.value;
            if( scl_av.equals("active") )
-           { color = Color.WHITE;}
+           { color = java.awt.Color.WHITE;}
            else if( scl_av.equals("passive") )
-           { color = Color.YELLOW;}
+           { color = java.awt.Color.YELLOW;}
            else if( scl_av.equals("tested") )
-           { color = Color.LIGHT_GRAY;}
+           { color = java.awt.Color.LIGHT_GRAY;}
          }
       }
-      if(color.equals(color.PINK))
+      if(color.equals(java.awt.Color.PINK))
       { int i=1;}//!!!
       return color;
     }
