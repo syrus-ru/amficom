@@ -1,5 +1,5 @@
 /*
- * $Id: TestDatabase.java,v 1.23 2004/08/20 13:16:41 arseniy Exp $
+ * $Id: TestDatabase.java,v 1.24 2004/08/22 18:45:56 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -37,7 +37,7 @@ import com.syrus.AMFICOM.configuration.MeasurementPortDatabase;
 import com.syrus.AMFICOM.configuration.KISDatabase;
 
 /**
- * @version $Revision: 1.23 $, $Date: 2004/08/20 13:16:41 $
+ * @version $Revision: 1.24 $, $Date: 2004/08/22 18:45:56 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -96,13 +96,13 @@ public class TestDatabase extends StorableObjectDatabase {
 		ResultSet resultSet = null;
 		try {
 			statement = connection.createStatement();
-			Log.debugMessage("TestDatabase.retrieveTest | Trying: " + sql, Log.DEBUGLEVEL05);
+			Log.debugMessage("TestDatabase.retrieveTest | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql);
 			if (resultSet.next()) {
 				/**
 				 * @todo when change DB Identifier model ,change String to long
 				 */
-				String temportalPatternID = resultSet.getString(COLUMN_TEMPORAL_PATTERN_ID);
+				String temportalPatternIdCode = resultSet.getString(COLUMN_TEMPORAL_PATTERN_ID);
 				/**
 				 * @todo when change DB Identifier model ,change String to long
 				 */
@@ -129,7 +129,7 @@ public class TestDatabase extends StorableObjectDatabase {
 													 resultSet.getInt(COLUMN_TEMPORAL_TYPE),
 													 DatabaseDate.fromQuerySubString(resultSet, COLUMN_START_TIME),
 													 DatabaseDate.fromQuerySubString(resultSet, COLUMN_END_TIME),
-													 (temportalPatternID != null) ? (new Identifier(temportalPatternID)) : null,													 
+													 (temportalPatternIdCode != null) ? (TemporalPattern)MeasurementStorableObjectPool.getStorableObject(new Identifier(temportalPatternIdCode), true) : null,													 
 													 /**
 													   * @todo when change DB Identifier model ,change getString() to getLong()
 													   */
@@ -174,7 +174,7 @@ public class TestDatabase extends StorableObjectDatabase {
 		ArrayList arraylist = new ArrayList();
 		try {
 			statement = connection.createStatement();
-			Log.debugMessage("TestDatabase.retrieveMeasurementSetupTestLinks | Trying: " + sql, Log.DEBUGLEVEL05);
+			Log.debugMessage("TestDatabase.retrieveMeasurementSetupTestLinks | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql);
 			while (resultSet.next()){
 				/**
@@ -230,7 +230,7 @@ public class TestDatabase extends StorableObjectDatabase {
 		ResultSet resultSet = null;
 		try {
 			statement = connection.createStatement();
-			Log.debugMessage("TestDatabase.retrieveMeasurementsOrderByStartTime | Trying: " + sql, Log.DEBUGLEVEL05);
+			Log.debugMessage("TestDatabase.retrieveMeasurementsOrderByStartTime | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql);
 			while (resultSet.next()){
 				/**
@@ -279,7 +279,7 @@ public class TestDatabase extends StorableObjectDatabase {
 		ResultSet resultSet = null;
 		try {
 			statement = connection.createStatement();
-			Log.debugMessage("TestDatabase.retrieveLastMeasurement | Trying: " + sql, Log.DEBUGLEVEL05);
+			Log.debugMessage("TestDatabase.retrieveLastMeasurement | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql);
 			if (resultSet.next())
 				return (Measurement)MeasurementStorableObjectPool.getStorableObject(new Identifier(resultSet.getString(COLUMN_ID)), true);
@@ -337,29 +337,29 @@ public class TestDatabase extends StorableObjectDatabase {
 		String testIdCode = test.getId().getCode();
 		Date startTime = test.getStartTime();
 		Date endTime = test.getEndTime();
-		Identifier temporalPatternId = test.getTemporalPatternId();		
+		TemporalPattern temporalPattern = test.getTemporalPattern();		
 		AnalysisType analysisType = test.getAnalysisType();
 		EvaluationType evaluationType = test.getEvaluationType();
 		
 		String sql = SQL_INSERT_INTO + ObjectEntities.TEST_ENTITY
-			+ OPEN_BRACKET 
-			+ COLUMN_ID + COMMA 
-			+ COLUMN_CREATED + COMMA 
-			+ COLUMN_MODIFIED + COMMA 
-			+ COLUMN_CREATOR_ID + COMMA 
+			+ OPEN_BRACKET
+			+ COLUMN_ID + COMMA
+			+ COLUMN_CREATED + COMMA
+			+ COLUMN_MODIFIED + COMMA
+			+ COLUMN_CREATOR_ID + COMMA
 			+ COLUMN_MODIFIER_ID + COMMA
 			+ COLUMN_TEMPORAL_TYPE + COMMA
 			+ COLUMN_START_TIME + COMMA
 			+ COLUMN_END_TIME + COMMA
-			+ COLUMN_TEMPORAL_PATTERN_ID + COMMA			
-			+ COLUMN_MEASUREMENT_TYPE_ID + COMMA 
+			+ COLUMN_TEMPORAL_PATTERN_ID + COMMA
+			+ COLUMN_MEASUREMENT_TYPE_ID + COMMA
 			+ COLUMN_ANALYSIS_TYPE_ID + COMMA
 			+ COLUMN_EVALUATION_TYPE_ID + COMMA
 			+ COLUMN_STATUS + COMMA
 			+ COLUMN_MONITORED_ELEMENT_ID + COMMA
 			+ COLUMN_RETURN_TYPE + COMMA
-			+ COLUMN_DESCRIPTION + CLOSE_BRACKET
-			+ SQL_VALUES + OPEN_BRACKET
+			+ COLUMN_DESCRIPTION
+			+ CLOSE_BRACKET + SQL_VALUES + OPEN_BRACKET
 			+ QUESTION + COMMA
 			+ QUESTION + COMMA
 			+ QUESTION + COMMA
@@ -394,12 +394,12 @@ public class TestDatabase extends StorableObjectDatabase {
 			  */
 			preparedStatement.setString(5, test.getModifierId().getCode());
 			preparedStatement.setInt(6, test.getTemporalType().value());
-			preparedStatement.setTimestamp(7, (startTime != null)?(new Timestamp(startTime.getTime())):null);
-			preparedStatement.setTimestamp(8, (endTime != null)?(new Timestamp(endTime.getTime())):null);
+			preparedStatement.setTimestamp(7, (startTime != null) ? (new Timestamp(startTime.getTime())) : null);
+			preparedStatement.setTimestamp(8, (endTime != null) ? (new Timestamp(endTime.getTime())) : null);
 			/**
 			  * @todo when change DB Identifier model ,change setString() to setLong()
 			  */
-			preparedStatement.setString(9, (temporalPatternId != null)?temporalPatternId.getCode():"");
+			preparedStatement.setString(9, (temporalPattern != null) ? temporalPattern.getId().getCode() : "");
 			/**
 			  * @todo when change DB Identifier model ,change setString() to setLong()
 			  */
@@ -407,11 +407,11 @@ public class TestDatabase extends StorableObjectDatabase {
 			/**
 			  * @todo when change DB Identifier model ,change setString() to setLong()
 			  */
-			preparedStatement.setString(11, (analysisType != null)?analysisType.getId().getCode():"");
+			preparedStatement.setString(11, (analysisType != null) ? analysisType.getId().getCode() : "");
 			/**
 			  * @todo when change DB Identifier model ,change setString() to setLong()
 			  */
-			preparedStatement.setString(12, (evaluationType != null)?evaluationType.getId().getCode():"");
+			preparedStatement.setString(12, (evaluationType != null) ? evaluationType.getId().getCode() : "");
 			preparedStatement.setInt(13, test.getStatus().value());
 			/**
 			  * @todo when change DB Identifier model ,change setString() to setLong()
@@ -419,7 +419,7 @@ public class TestDatabase extends StorableObjectDatabase {
 			preparedStatement.setString(14, test.getMonitoredElement().getId().getCode());
 			preparedStatement.setInt(15, test.getReturnType().value());
 			preparedStatement.setString(16, test.getDescription());
-			Log.debugMessage("TestDatabase.insertTest | Inserting  test " + testIdCode, Log.DEBUGLEVEL05);
+			Log.debugMessage("TestDatabase.insertTest | Inserting  test " + testIdCode, Log.DEBUGLEVEL09);
 			preparedStatement.executeUpdate();
 		}
 		catch (SQLException sqle) {
@@ -470,7 +470,7 @@ public class TestDatabase extends StorableObjectDatabase {
 				  * @todo when change DB Identifier model ,change setString() to setLong()
 				  */
 				preparedStatement.setString(2, msIdCode);
-				Log.debugMessage("TestDatabase.insertMeasurementSetupTestLinks | Inserting link for test " + testIdCode + " and measurement setup " + msIdCode, Log.DEBUGLEVEL05);
+				Log.debugMessage("TestDatabase.insertMeasurementSetupTestLinks | Inserting link for test " + testIdCode + " and measurement setup " + msIdCode, Log.DEBUGLEVEL09);
 				preparedStatement.executeUpdate();
 			}
 		}
@@ -515,7 +515,7 @@ public class TestDatabase extends StorableObjectDatabase {
 		Statement statement = null;
 		try {
 			statement = connection.createStatement();
-			Log.debugMessage("TestDatabase.updateStatus | Trying: " + sql, Log.DEBUGLEVEL05);
+			Log.debugMessage("TestDatabase.updateStatus | Trying: " + sql, Log.DEBUGLEVEL09);
 			statement.executeUpdate(sql);
 			connection.commit();
 		}
@@ -545,7 +545,7 @@ public class TestDatabase extends StorableObjectDatabase {
 		Statement statement = null;
 		try {
 			statement = connection.createStatement();
-			Log.debugMessage("TestDatabase.updateModified | Trying: " + sql, Log.DEBUGLEVEL05);
+			Log.debugMessage("TestDatabase.updateModified | Trying: " + sql, Log.DEBUGLEVEL09);
 			statement.executeUpdate(sql);
 			connection.commit();
 		}
@@ -578,7 +578,7 @@ public class TestDatabase extends StorableObjectDatabase {
 		ResultSet resultSet = null;
 		try {
 			statement = connection.createStatement();
-			Log.debugMessage("TestDatabase.retrieveTestsForMCM | Trying: " + sql, Log.DEBUGLEVEL05);
+			Log.debugMessage("TestDatabase.retrieveTestsForMCM | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql);
 			while (resultSet.next()){
 				/**
@@ -642,7 +642,7 @@ public class TestDatabase extends StorableObjectDatabase {
 		ResultSet resultSet = null;
 		try {
 			statement = connection.createStatement();
-			Log.debugMessage("TestDatabase.retrieveTestsForMCM | Trying: " + sql, Log.DEBUGLEVEL05);
+			Log.debugMessage("TestDatabase.retrieveTestsForMCM | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql);
 			while (resultSet.next()){
 				/**
@@ -698,7 +698,7 @@ public class TestDatabase extends StorableObjectDatabase {
 		ResultSet resultSet = null;
 		try {
 			statement = connection.createStatement();
-			Log.debugMessage("TestDatabase.retrieveAll | Trying: " + sql, Log.DEBUGLEVEL05);
+			Log.debugMessage("TestDatabase.retrieveAll | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql);
 			while (resultSet.next())
 				tests.add(new Test(new Identifier(resultSet.getString(COLUMN_ID))));			
@@ -736,7 +736,7 @@ public class TestDatabase extends StorableObjectDatabase {
 						+ SQL_WHERE
 						+ COLUMN_ID + EQUALS
 						+ testIdStr;
-			Log.debugMessage("TestDatabase.delete | Trying: " + sql, Log.DEBUGLEVEL05);
+			Log.debugMessage("TestDatabase.delete | Trying: " + sql, Log.DEBUGLEVEL09);
 			statement.executeUpdate(sql);
 			connection.commit();
 		}

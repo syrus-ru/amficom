@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementSetupDatabase.java,v 1.13 2004/08/17 14:58:58 arseniy Exp $
+ * $Id: MeasurementSetupDatabase.java,v 1.14 2004/08/22 18:45:56 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,7 +28,7 @@ import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2004/08/17 14:58:58 $
+ * @version $Revision: 1.14 $, $Date: 2004/08/22 18:45:56 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -141,7 +141,7 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 		Statement statement = null;
 		try {
 			statement = connection.createStatement();
-			Log.debugMessage("MeasurementSetupDatabase.createMEAttachment | Trying: " + sql, Log.DEBUGLEVEL05);
+			Log.debugMessage("MeasurementSetupDatabase.createMEAttachment | Trying: " + sql, Log.DEBUGLEVEL09);
 			statement.executeUpdate(sql);
 		}
 		catch (SQLException sqle) {
@@ -172,7 +172,7 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 		Statement statement = null;
 		try {
 			statement = connection.createStatement();
-			Log.debugMessage("MeasurementSetupDatabase.deleteMEAttachment | Trying: " + sql, Log.DEBUGLEVEL05);
+			Log.debugMessage("MeasurementSetupDatabase.deleteMEAttachment | Trying: " + sql, Log.DEBUGLEVEL09);
 			statement.executeUpdate(sql);
 		}
 		catch (SQLException sqle) {
@@ -229,7 +229,7 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 		Statement statement = null;
 		try {
 			statement = connection.createStatement();
-			Log.debugMessage("MeasurementSetupDatabase.insertMeasurementSetup | Trying: " + sql, Log.DEBUGLEVEL05);
+			Log.debugMessage("MeasurementSetupDatabase.insertMeasurementSetup | Trying: " + sql, Log.DEBUGLEVEL09);
 			statement.executeUpdate(sql);
 		}
 		catch (SQLException sqle) {
@@ -284,7 +284,7 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 				Log.debugMessage("MeasurementSetupDatabase.insertMeasurementSetupMELinks | Inserting link for measurement setup "
 										+ msIdCode
 										+ " and monitored element "
-										+ meIdCode, Log.DEBUGLEVEL05);
+										+ meIdCode, Log.DEBUGLEVEL09);
 				preparedStatement.executeUpdate();
 			}
 		}
@@ -324,7 +324,7 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 		ResultSet resultSet = null;
 		try {
 			statement = connection.createStatement();
-			Log.debugMessage("MeasurementSetupDatabase.retrieveMeasurementSetup | Trying: " + sql, Log.DEBUGLEVEL05);
+			Log.debugMessage("MeasurementSetupDatabase.retrieveMeasurementSetup | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql);
 			if (resultSet.next()) {
 				/**
@@ -408,7 +408,7 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 		ResultSet resultSet = null;
 		try {
 			statement = connection.createStatement();
-			Log.debugMessage("MeasurementSetupDatabase.retrieveMeasurementSetupMELinks | Trying: " + sql, Log.DEBUGLEVEL05);
+			Log.debugMessage("MeasurementSetupDatabase.retrieveMeasurementSetupMELinks | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql);
 			while (resultSet.next())
 				/**
@@ -448,7 +448,7 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 		Statement statement = null;
 		try {
 			statement = connection.createStatement();
-			Log.debugMessage("MeasurementSetupDatabase.setModified | Trying: " + sql, Log.DEBUGLEVEL05);
+			Log.debugMessage("MeasurementSetupDatabase.setModified | Trying: " + sql, Log.DEBUGLEVEL09);
 			statement.executeUpdate(sql);
 		}
 		catch (SQLException sqle) {
@@ -476,7 +476,7 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 		ResultSet resultSet = null;
 		try {
 			statement = connection.createStatement();
-			Log.debugMessage("MeasurementSetupDatabase.retrieveAll | Trying: " + sql, Log.DEBUGLEVEL05);
+			Log.debugMessage("MeasurementSetupDatabase.retrieveAll | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql);
 			while (resultSet.next())
 				ports.add(new MeasurementSetup(new Identifier(resultSet.getString(COLUMN_ID))));			
@@ -514,7 +514,7 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 						+ SQL_WHERE
 						+ COLUMN_ID + EQUALS
 						+ msIdStr;
-			Log.debugMessage("MeasurementSetupDatabase.delete | Trying: " + sql, Log.DEBUGLEVEL05);
+			Log.debugMessage("MeasurementSetupDatabase.delete | Trying: " + sql, Log.DEBUGLEVEL09);
 			statement.executeUpdate(sql);
 			connection.commit();
 		}

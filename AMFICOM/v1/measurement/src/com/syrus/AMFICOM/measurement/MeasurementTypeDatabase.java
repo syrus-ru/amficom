@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementTypeDatabase.java,v 1.16 2004/08/20 12:52:23 arseniy Exp $
+ * $Id: MeasurementTypeDatabase.java,v 1.17 2004/08/22 18:45:56 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,7 +28,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2004/08/20 12:52:23 $
+ * @version $Revision: 1.17 $, $Date: 2004/08/22 18:45:56 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -71,7 +71,7 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 		ResultSet resultSet = null;
 		try {
 			statement = connection.createStatement();
-			Log.debugMessage("MeasurementTypeDatabase.retrieveMeasurementType | Trying: " + sql, Log.DEBUGLEVEL05);
+			Log.debugMessage("MeasurementTypeDatabase.retrieveMeasurementType | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql);
 			if (resultSet.next())
 				measurementType.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
@@ -122,7 +122,7 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 		ResultSet resultSet = null;
 		try {
 			statement = connection.createStatement();
-			Log.debugMessage("MeasurementTypeDatabase.retrieveParameterType | Trying: " + sql, Log.DEBUGLEVEL05);
+			Log.debugMessage("MeasurementTypeDatabase.retrieveParameterType | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql);
 			String parameterMode;
 			/**
@@ -223,7 +223,7 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 		Statement statement = null;
 		try {
 			statement = connection.createStatement();
-			Log.debugMessage("MeasurementTypeDatabase.insertMeasurementType | Trying: " + sql, Log.DEBUGLEVEL05);
+			Log.debugMessage("MeasurementTypeDatabase.insertMeasurementType | Trying: " + sql, Log.DEBUGLEVEL09);
 			statement.executeUpdate(sql);
 		}
 		catch (SQLException sqle) {
@@ -281,7 +281,7 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 				preparedStatement.setString(2, parameterTypeIdCode);
 				parameterMode = MODE_IN;
 				preparedStatement.setString(3, parameterMode);
-				Log.debugMessage("MeasurementTypeDatabase.insertParameterTypes | Inserting parameter type " + parameterTypeIdCode + " of parameter mode '" + parameterMode + "' for measurement type " + measurementTypeIdCode, Log.DEBUGLEVEL05);
+				Log.debugMessage("MeasurementTypeDatabase.insertParameterTypes | Inserting parameter type " + parameterTypeIdCode + " of parameter mode '" + parameterMode + "' for measurement type " + measurementTypeIdCode, Log.DEBUGLEVEL09);
 				preparedStatement.executeUpdate();
 			}
 			for (Iterator iterator = outParTyps.iterator(); iterator.hasNext();) {
@@ -298,7 +298,7 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 				preparedStatement.setString(2, parameterTypeIdCode);
 				parameterMode = MODE_OUT;
 				preparedStatement.setString(3, parameterMode);
-				Log.debugMessage("MeasurementTypeDatabase.insertParameterTypes | Inserting parameter type '" + parameterTypeIdCode + "' of parameter mode '" + parameterMode + "' for measurement type '" + measurementTypeIdCode + "'", Log.DEBUGLEVEL05);
+				Log.debugMessage("MeasurementTypeDatabase.insertParameterTypes | Inserting parameter type '" + parameterTypeIdCode + "' of parameter mode '" + parameterMode + "' for measurement type '" + measurementTypeIdCode + "'", Log.DEBUGLEVEL09);
 				preparedStatement.executeUpdate();
 			}
 		}
@@ -363,7 +363,7 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 		ResultSet resultSet = null;
 		try {
 			statement = connection.createStatement();
-			Log.debugMessage("MeasurementTypeDatabase.retrieveForCodename | Trying: " + sql, Log.DEBUGLEVEL05);
+			Log.debugMessage("MeasurementTypeDatabase.retrieveForCodename | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql);
 			if (resultSet.next()){
 				/**
@@ -402,7 +402,7 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 		ResultSet resultSet = null;
 		try {
 			statement = connection.createStatement();
-			Log.debugMessage("MeasurementTypeDatabase.retrieveAll | Trying: " + sql, Log.DEBUGLEVEL05);
+			Log.debugMessage("MeasurementTypeDatabase.retrieveAll | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql);
 			while (resultSet.next())
 				measurementTypes.add(new MeasurementType(new Identifier(resultSet.getString(COLUMN_ID))));			

@@ -1,5 +1,5 @@
 /*
- * $Id: TemporalPatternDatabase.java,v 1.10 2004/08/17 14:58:58 arseniy Exp $
+ * $Id: TemporalPatternDatabase.java,v 1.11 2004/08/22 18:45:56 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,7 +32,7 @@ import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.measurement.ora.CronStringArray;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2004/08/17 14:58:58 $
+ * @version $Revision: 1.11 $, $Date: 2004/08/22 18:45:56 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -69,7 +69,7 @@ public class TemporalPatternDatabase extends StorableObjectDatabase {
 		ResultSet resultSet = null;
 		try {
 			statement = connection.createStatement();
-			Log.debugMessage("TemporalPatternDatabase.retrieveTemporalPattern | Trying: " + sql, Log.DEBUGLEVEL05);
+			Log.debugMessage("TemporalPatternDatabase.retrieveTemporalPattern | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql);
 			if (resultSet.next()) {
 				String[] cronStrings = ((CronStringArray)(((OracleResultSet)resultSet).getORAData(COLUMN_VALUE, CronStringArray.getORADataFactory()))).getArray();
@@ -145,9 +145,7 @@ public class TemporalPatternDatabase extends StorableObjectDatabase {
 			+ COLUMN_MODIFIER_ID + COMMA
 			+ COLUMN_DESCRIPTION + COMMA
 			+ COLUMN_VALUE
-			+ CLOSE_BRACKET
-			+ SQL_VALUES
-			+ OPEN_BRACKET
+			+ CLOSE_BRACKET + SQL_VALUES + OPEN_BRACKET
 			+ QUESTION + COMMA
 			+ QUESTION + COMMA
 			+ QUESTION + COMMA
@@ -165,7 +163,7 @@ public class TemporalPatternDatabase extends StorableObjectDatabase {
 			preparedStatement.setString(5, temporalPattern.getModifierId().getCode());
 			preparedStatement.setString(6, temporalPattern.getDescription());
 			((OraclePreparedStatement)preparedStatement).setORAData(7, new CronStringArray(temporalPattern.getCronStrings()));
-			Log.debugMessage("TemporalPatternDatabase.insertTemporalPattern | Inserting temporal pattern " + tpIdCode, Log.DEBUGLEVEL05);
+			Log.debugMessage("TemporalPatternDatabase.insertTemporalPattern | Inserting temporal pattern " + tpIdCode, Log.DEBUGLEVEL09);
 			preparedStatement.executeUpdate();
 		}
 		catch (SQLException sqle) {
@@ -201,7 +199,7 @@ public class TemporalPatternDatabase extends StorableObjectDatabase {
 		ResultSet resultSet = null;
 		try {
 			statement = connection.createStatement();
-			Log.debugMessage("TemporalPatternDatabase.retrieveAll | Trying: " + sql, Log.DEBUGLEVEL05);
+			Log.debugMessage("TemporalPatternDatabase.retrieveAll | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql);
 			while (resultSet.next())
 				temporalPatterns.add(new TemporalPattern(new Identifier(resultSet.getString(COLUMN_ID))));			
@@ -239,7 +237,7 @@ public class TemporalPatternDatabase extends StorableObjectDatabase {
 						+ SQL_WHERE
 						+ COLUMN_ID + EQUALS
 						+ tpIdStr;
-			Log.debugMessage("TemporalPatternDatabase.delete | Trying: " + sql, Log.DEBUGLEVEL05);
+			Log.debugMessage("TemporalPatternDatabase.delete | Trying: " + sql, Log.DEBUGLEVEL09);
 			statement.executeUpdate(sql);
 			connection.commit();
 		}

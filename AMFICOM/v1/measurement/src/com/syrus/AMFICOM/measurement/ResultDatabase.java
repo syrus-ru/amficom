@@ -1,5 +1,5 @@
 /*
- * $Id: ResultDatabase.java,v 1.13 2004/08/17 14:58:58 arseniy Exp $
+ * $Id: ResultDatabase.java,v 1.14 2004/08/22 18:45:56 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,7 +30,7 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2004/08/17 14:58:58 $
+ * @version $Revision: 1.14 $, $Date: 2004/08/22 18:45:56 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -84,7 +84,7 @@ public class ResultDatabase extends StorableObjectDatabase {
 		ResultSet resultSet = null;
 		try {
 			statement = connection.createStatement();
-			Log.debugMessage("ResultDatabase.retrieveResult | Trying: " + sql, Log.DEBUGLEVEL05);
+			Log.debugMessage("ResultDatabase.retrieveResult | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql);
 			if (resultSet.next()) {
 				/**
@@ -166,7 +166,7 @@ public class ResultDatabase extends StorableObjectDatabase {
 		ResultSet resultSet = null;
 		try {
 			statement = connection.createStatement();
-			Log.debugMessage("ResultDatabase.retrieveResultParameters | Trying: " + sql, Log.DEBUGLEVEL05);
+			Log.debugMessage("ResultDatabase.retrieveResultParameters | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql);
 			SetParameter parameter;
 			while (resultSet.next()) {
@@ -305,7 +305,7 @@ public class ResultDatabase extends StorableObjectDatabase {
 		Statement statement = null;
 		try {
 			statement = connection.createStatement();
-			Log.debugMessage("ResultDatabase.insertResult | Trying: " + sql, Log.DEBUGLEVEL05);
+			Log.debugMessage("ResultDatabase.insertResult | Trying: " + sql, Log.DEBUGLEVEL09);
 			statement.executeUpdate(sql);
 			connection.commit();
 		}
@@ -337,10 +337,8 @@ public class ResultDatabase extends StorableObjectDatabase {
 			+ COLUMN_ID + COMMA
 			+ LINK_COLUMN_TYPE_ID + COMMA
 			+ LINK_COLUMN_RESULT_ID + COMMA
-			+ LINK_COLUMN_VALUE + COMMA
-			+ CLOSE_BRACKET
-			+ SQL_VALUES
-			+ OPEN_BRACKET
+			+ LINK_COLUMN_VALUE
+			+ CLOSE_BRACKET + SQL_VALUES + OPEN_BRACKET
 			+ QUESTION + COMMA
 			+ QUESTION + COMMA
 			+ QUESTION + COMMA
@@ -368,10 +366,14 @@ public class ResultDatabase extends StorableObjectDatabase {
 				 */
 				preparedStatement.setString(3, resultIdCode);
 				preparedStatement.setBlob(4, BLOB.empty_lob());
-				Log.debugMessage("ResultDatabase.insertResultParameters | Inserting parameter " + parameterTypeId.toString() + " for result " + resultIdCode, Log.DEBUGLEVEL05);
+				Log.debugMessage("ResultDatabase.insertResultParameters | Inserting parameter " + parameterTypeId.toString() + " for result " + resultIdCode, Log.DEBUGLEVEL09);
 				preparedStatement.executeUpdate();
-				ByteArrayDatabase badb = new ByteArrayDatabase(setParameters[i].getValue());
-				badb.saveAsBlob(connection, ObjectEntities.RESULTPARAMETER_ENTITY, LINK_COLUMN_VALUE, COLUMN_ID + EQUALS + parameterId.toSQLString());
+//				ByteArrayDatabase badb = new ByteArrayDatabase(setParameters[i].getValue());
+				ByteArrayDatabase.saveAsBlob(setParameters[i].getValue(),
+																		 connection,
+																		 ObjectEntities.RESULTPARAMETER_ENTITY,
+																		 LINK_COLUMN_VALUE,
+																		 COLUMN_ID + EQUALS + parameterId.toSQLString());
 			}
 			connection.commit();
 		}

@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementSetup.java,v 1.21 2004/08/18 12:38:31 arseniy Exp $
+ * $Id: MeasurementSetup.java,v 1.22 2004/08/22 18:45:56 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,7 +23,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.corba.MeasurementSetup_Transferable;
 
 /**
- * @version $Revision: 1.21 $, $Date: 2004/08/18 12:38:31 $
+ * @version $Revision: 1.22 $, $Date: 2004/08/22 18:45:56 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -234,6 +234,22 @@ public class MeasurementSetup extends StorableObject {
 
 	public List getMonitoredElementIds() {
 		return this.monitoredElementIds;
+	}
+
+	public String[] getParameterTypeCodenames() {
+		SetParameter[] parameters = this.parameterSet.getParameters();
+		String[] parameterTypeCodenames = new String[parameters.length];
+		for (int i = 0; i < parameters.length; i++)
+			parameterTypeCodenames[i] = parameters[i].getType().getCodename();
+		return parameterTypeCodenames;
+	}
+
+	public byte[][] getParameterValues() {
+		SetParameter[] parameters = this.parameterSet.getParameters();
+		byte[][] parameterValues = new byte[parameters.length][];
+		for (int i = 0; i < parameters.length; i++)
+			parameterValues[i] = parameters[i].getValue();
+		return parameterValues;
 	}
 
 	protected synchronized void setAttributes(Date created,

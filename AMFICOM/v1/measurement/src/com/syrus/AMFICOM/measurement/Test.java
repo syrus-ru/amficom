@@ -1,5 +1,5 @@
 /*
- * $Id: Test.java,v 1.39 2004/08/19 13:08:46 bob Exp $
+ * $Id: Test.java,v 1.40 2004/08/22 18:45:56 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -36,8 +36,8 @@ import com.syrus.AMFICOM.measurement.corba.TestTimeStamps_TransferablePackage.Co
 import com.syrus.AMFICOM.measurement.corba.TestTimeStamps_TransferablePackage.PeriodicalTestTimeStamps;
 
 /**
- * @version $Revision: 1.39 $, $Date: 2004/08/19 13:08:46 $
- * @author $Author: bob $
+ * @version $Revision: 1.40 $, $Date: 2004/08/22 18:45:56 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -46,30 +46,40 @@ public class Test extends StorableObject {
 	private class TestTimeStamps {
 		Date endTime;
 		Date startTime;
-		Identifier temporalPatternId;
+		TemporalPattern temporalPattern;
 
 		private int	discriminator;		
 
 		TestTimeStamps(int temporalType,
 									 Date startTime,
 									 Date endTime,
-									 Identifier temporalPatternId) {
+									 TemporalPattern temporalPattern) {
 			this.discriminator = temporalType;
 			switch (temporalType) {
 				case TestTemporalType._TEST_TEMPORAL_TYPE_ONETIME:
 					this.startTime = startTime;
 					this.endTime = null;
-					this.temporalPatternId = null;
+					this.temporalPattern = null;
 					break;
 				case TestTemporalType._TEST_TEMPORAL_TYPE_PERIODICAL:
 					this.startTime = startTime;
 					this.endTime = endTime;
-					this.temporalPatternId = temporalPatternId;
+					this.temporalPattern = temporalPattern;
+					if (this.endTime == null) {
+						Log.errorMessage("ERROR: End time is NULL");
+						this.endTime = this.startTime;
+					}
+					if (this.temporalPattern == null)
+						Log.errorMessage("ERROR: Temporal pattern is NULL");
 					break;
 				case TestTemporalType._TEST_TEMPORAL_TYPE_CONTINUOUS:
 					this.startTime = startTime;
 					this.endTime = endTime;
-					this.temporalPatternId = null;
+					this.temporalPattern = null;
+					if (this.endTime == null) {
+						Log.errorMessage("ERROR: End time is NULL");
+						this.endTime = this.startTime;
+					}
 					break;
 				default:
 					Log.errorMessage("TestTimeStamps | Illegal temporal type: " + temporalType + " of test");
@@ -82,13 +92,13 @@ public class Test extends StorableObject {
 				case TestTemporalType._TEST_TEMPORAL_TYPE_ONETIME:
 					this.startTime = new Date(ttst.start_time());
 					this.endTime = null;
-					this.temporalPatternId = null;
+					this.temporalPattern = null;
 					break;
 				case TestTemporalType._TEST_TEMPORAL_TYPE_PERIODICAL:
 					PeriodicalTestTimeStamps ptts = ttst.ptts();
 					this.startTime = new Date(ptts.start_time);
 					this.endTime = new Date(ptts.end_time);
-					this.temporalPatternId = new Identifier(ptts.temporal_pattern_id);
+					this.temporalPattern = (TemporalPattern) MeasurementStorableObjectPool.getStorableObject(new Identifier(ptts.temporal_pattern_id), true);
 					break;
 				case TestTemporalType._TEST_TEMPORAL_TYPE_CONTINUOUS:
 					ContinuousTestTimeStamps ctts = ttst.ctts();
@@ -109,7 +119,7 @@ public class Test extends StorableObject {
 				case TestTemporalType._TEST_TEMPORAL_TYPE_PERIODICAL:
 					ttst.ptts(new PeriodicalTestTimeStamps(this.startTime.getTime(),
 																								 this.endTime.getTime(),
-																								 (Identifier_Transferable)this.temporalPatternId.getTransferable()));
+																								 (this.temporalPattern != null) ? (Identifier_Transferable)this.temporalPattern.getId().getTransferable() : (new Identifier_Transferable("")) ));
 					break;
 				case TestTemporalType._TEST_TEMPORAL_TYPE_CONTINUOUS:
 					ttst.ctts(new ContinuousTestTimeStamps(this.startTime.getTime(),
@@ -127,7 +137,7 @@ public class Test extends StorableObject {
 			hashCodeGenerator.addInt(this.discriminator);
 			hashCodeGenerator.addObject(this.startTime);
 			hashCodeGenerator.addObject(this.endTime);
-			hashCodeGenerator.addObject(this.temporalPatternId);
+			hashCodeGenerator.addObject(this.temporalPattern);
 			int result = hashCodeGenerator.getResult(); 
 			return result;
 		}
@@ -139,7 +149,7 @@ public class Test extends StorableObject {
 				if ((stamps.discriminator==this.discriminator)&&
 					(stamps.startTime==this.startTime)&&	
 					(stamps.endTime==this.endTime)&&
-					(stamps.temporalPatternId.equals(this.temporalPatternId)))
+					(stamps.temporalPattern.equals(this.temporalPattern)))
 					equals = true;
 			}
 			return equals;
@@ -246,7 +256,7 @@ public class Test extends StorableObject {
 							 Identifier creatorId,
 							 Date startTime,
 							 Date endTime,
-							 Identifier temporalPatternId,
+							 TemporalPattern temporalPattern,
 							 TestTemporalType temporalType,
 							 MeasurementType measurementType,
 							 AnalysisType analysisType,
@@ -265,7 +275,7 @@ public class Test extends StorableObject {
 		this.timeStamps = new TestTimeStamps(this.temporalType,
 																				 startTime,
 																				 endTime,
-																				 temporalPatternId);
+																				 temporalPattern);
 		this.measurementType = measurementType;
 		this.analysisType = analysisType;
 		this.evaluationType = evaluationType;
@@ -301,7 +311,7 @@ public class Test extends StorableObject {
 																		Identifier creatorId,
 																		Date startTime,
 																		Date endTime,
-																		Identifier temporalPatternId,
+																		TemporalPattern temporalPattern,
 																		TestTemporalType temporalType,
 																		MeasurementType measurementType,
 																		AnalysisType analysisType,
@@ -314,7 +324,7 @@ public class Test extends StorableObject {
 										creatorId,
 										startTime,
 										endTime,
-										temporalPatternId,
+										temporalPattern,
 										temporalType,
 										measurementType,
 										analysisType,
@@ -355,8 +365,8 @@ public class Test extends StorableObject {
 		return this.monitoredElement;
 	}
 
-	public Identifier getTemporalPatternId() {
-		return this.timeStamps.temporalPatternId;
+	public TemporalPattern getTemporalPattern() {
+		return this.timeStamps.temporalPattern;
 	}
 
 	public TestReturnType getReturnType() {
@@ -489,9 +499,9 @@ public class Test extends StorableObject {
 	/**
 	 * @param temporalPatternId The temporalPatternId to set.
 	 */
-	public void setTemporalPatternId(Identifier temporalPatternId) {
+	public void setTemporalPattern(TemporalPattern temporalPattern) {
 		this.currentVersion = super.getNextVersion();
-		this.timeStamps.temporalPatternId = temporalPatternId;
+		this.timeStamps.temporalPattern = temporalPattern;
 	}
 	/**
 	 * @param temporalType The temporalType to set.
@@ -508,7 +518,7 @@ public class Test extends StorableObject {
 																						int temporalType,
 																						Date startTime,
 																						Date endTime,
-																						Identifier temporalPatternId,
+																						TemporalPattern temporalPattern,
 																						MeasurementType measurementType,
 																						AnalysisType analysisType,
 																						EvaluationType evaluationType,
@@ -524,7 +534,7 @@ public class Test extends StorableObject {
 		this.timeStamps = new TestTimeStamps(temporalType,
 																				 startTime,
 																				 endTime,
-																				 temporalPatternId);
+																				 temporalPattern);
 
 		this.measurementType = measurementType;
 		this.analysisType = analysisType;
@@ -578,8 +588,8 @@ public class Test extends StorableObject {
 					( ((test.getEndTime() == null) && (getEndTime() == null) ) 
 							|| (Math.abs(test.getEndTime().getTime()-getEndTime().getTime())<1000) ) &&
 					(test.getTemporalType().equals(getTemporalType())) &&
-					( ((test.getTemporalPatternId()==null) && (getTemporalPatternId() == null)) 
-							|| (test.getTemporalPatternId().equals(getTemporalPatternId())) ) &&
+					( ((test.getTemporalPattern()==null) && (getTemporalPattern() == null)) 
+							|| (test.getTemporalPattern().equals(getTemporalPattern())) ) &&
 					( ((test.getAnalysisType()==null) && (getAnalysisType() == null)) 
 								|| (test.getAnalysisType().equals(getAnalysisType())) ) &&
 					( ((test.getEvaluationType()==null) && (getEvaluationType() == null)) 

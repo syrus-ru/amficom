@@ -1,5 +1,5 @@
 /*
- * $Id: EvaluationDatabase.java,v 1.11 2004/08/17 14:58:58 arseniy Exp $
+ * $Id: EvaluationDatabase.java,v 1.12 2004/08/22 18:45:56 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -24,7 +24,7 @@ import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2004/08/17 14:58:58 $
+ * @version $Revision: 1.12 $, $Date: 2004/08/22 18:45:56 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -62,8 +62,7 @@ public class EvaluationDatabase extends StorableObjectDatabase {
 		ResultSet resultSet = null;
 		try {
 			statement = connection.createStatement();
-			Log.debugMessage("EvaluationDatabase.retrieve | Trying: " + sql,
-					Log.DEBUGLEVEL05);
+			Log.debugMessage("EvaluationDatabase.retrieve | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql);
 			if (resultSet.next()) {
 				/**
@@ -166,7 +165,7 @@ public class EvaluationDatabase extends StorableObjectDatabase {
 		Statement statement = null;
 		try {
 			statement = connection.createStatement();
-			Log.debugMessage("EvaluationDatabase.insert | Trying: " + sql, Log.DEBUGLEVEL05);
+			Log.debugMessage("EvaluationDatabase.insert | Trying: " + sql, Log.DEBUGLEVEL09);
 			statement.executeUpdate(sql);
 		}
 		catch (SQLException sqle) {

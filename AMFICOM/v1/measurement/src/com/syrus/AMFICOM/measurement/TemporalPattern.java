@@ -1,5 +1,5 @@
 /*
- * $Id: TemporalPattern.java,v 1.29 2004/08/17 14:35:48 bob Exp $
+ * $Id: TemporalPattern.java,v 1.30 2004/08/22 18:45:56 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,8 +32,8 @@ import com.syrus.AMFICOM.resource.LangModelMeasurement;
 import com.syrus.util.HashCodeGenerator;
 
 /**
- * @version $Revision: 1.29 $, $Date: 2004/08/17 14:35:48 $
- * @author $Author: bob $
+ * @version $Revision: 1.30 $, $Date: 2004/08/22 18:45:56 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -243,8 +243,7 @@ public class TemporalPattern extends StorableObject {
 							case 3:
 								//day of month
 								this.dayOfMonth = parseExpression(
-																	LangModelMeasurement
-																			.getString(I18N_KEY_DAY_OF_MONTH),
+																	LangModelMeasurement.getString(I18N_KEY_DAY_OF_MONTH),
 																	subString, //$NON-NLS-1$
 																	1, 31);
 								break;
@@ -706,15 +705,20 @@ public class TemporalPattern extends StorableObject {
 		this.temporalPatternDatabase = MeasurementDatabaseContext.temporalPatternDatabase;
 		try {
 			this.temporalPatternDatabase.retrieve(this);
-		} catch (IllegalDataException ide) {
+		}
+		catch (IllegalDataException ide) {
 			throw new RetrieveObjectException(ide.getMessage(), ide);
 		}
 
 	}
 
 	public TemporalPattern(TemporalPattern_Transferable tpt) throws CreateObjectException {
-		super(new Identifier(tpt.id), new Date(tpt.created), new Date(tpt.modified), new Identifier(tpt.creator_id),
-				new Identifier(tpt.modifier_id));
+		super(new Identifier(tpt.id),
+					new Date(tpt.created),
+					new Date(tpt.modified),
+					new Identifier(tpt.creator_id),
+					new Identifier(tpt.modifier_id));
+
 		this.description = new String(tpt.description);
 		//this.cronStrings = new String[tpt.cronStrings.length];
 		removeAll();
@@ -731,7 +735,10 @@ public class TemporalPattern extends StorableObject {
 		}
 	}
 
-	private TemporalPattern(Identifier id, Identifier creatorId, String description, String[] cronStrings) {
+	private TemporalPattern(Identifier id,
+													Identifier creatorId,
+													String description,
+													String[] cronStrings) {
 		super(id);
 		long time = System.currentTimeMillis();
 		super.created = new Date(time);
@@ -749,7 +756,10 @@ public class TemporalPattern extends StorableObject {
 		super.currentVersion = super.getNextVersion();
 	}
 
-	private TemporalPattern(Identifier id, Identifier creatorId, String description, List cronString) {
+	private TemporalPattern(Identifier id,
+													Identifier creatorId,
+													String description,
+													List cronString) {
 		super(id);
 		long time = System.currentTimeMillis();
 		super.created = new Date(time);
@@ -773,15 +783,24 @@ public class TemporalPattern extends StorableObject {
 	 * @param cronString
 	 * @return
 	 */
-	public static TemporalPattern createInstance(	Identifier id,
-													Identifier creatorId,
-													String description,
-													List cronString) {
-		return new TemporalPattern(id, creatorId, description, cronString);
+	public static TemporalPattern createInstance(Identifier id,
+																							 Identifier creatorId,
+																							 String description,
+																							 List cronString) {
+		return new TemporalPattern(id,
+															 creatorId,
+															 description,
+															 cronString);
 	}
 
-	public static TemporalPattern create(Identifier id, Identifier creatorId, String description, String[] cronStrings) {
-		return new TemporalPattern(id, creatorId, description, cronStrings);
+	public static TemporalPattern createInstance(Identifier id,
+																							 Identifier creatorId,
+																							 String description,
+																							 String[] cronStrings) {
+		return new TemporalPattern(id,
+															 creatorId,
+															 description,
+															 cronStrings);
 	}
 
 	public String[] getCronStrings() {
@@ -803,19 +822,25 @@ public class TemporalPattern extends StorableObject {
 	}
 
 	public Object getTransferable() {
-		return new TemporalPattern_Transferable((Identifier_Transferable) this.id.getTransferable(), this.created
-				.getTime(), this.modified.getTime(), (Identifier_Transferable) this.creatorId.getTransferable(),
-												(Identifier_Transferable) this.modifierId.getTransferable(),
-												new String(this.description), getCronStrings());
+		return new TemporalPattern_Transferable((Identifier_Transferable) this.id.getTransferable(),
+																						this.created.getTime(),
+																						this.modified.getTime(),
+																						(Identifier_Transferable) this.creatorId.getTransferable(),
+																						(Identifier_Transferable) this.modifierId.getTransferable(),
+																						new String(this.description),
+																						getCronStrings());
 	}
 
-	protected synchronized void setAttributes(	Date created,
-												Date modified,
-												Identifier creatorId,
-												Identifier modifierId,
-												String description,
-												String[] cronStrings) {
-		super.setAttributes(created, modified, creatorId, modifierId);
+	protected synchronized void setAttributes(Date created,
+																						Date modified,
+																						Identifier creatorId,
+																						Identifier modifierId,
+																						String description,
+																						String[] cronStrings) {
+		super.setAttributes(created,
+												modified,
+												creatorId,
+												modifierId);
 		this.description = description;
 		this.cronStrings = cronStrings;
 		removeAll();

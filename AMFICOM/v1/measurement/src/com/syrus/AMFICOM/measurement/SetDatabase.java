@@ -1,5 +1,5 @@
 /*
- * $Id: SetDatabase.java,v 1.18 2004/08/19 12:21:44 arseniy Exp $
+ * $Id: SetDatabase.java,v 1.19 2004/08/22 18:45:56 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,7 +30,7 @@ import com.syrus.util.database.ByteArrayDatabase;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2004/08/19 12:21:44 $
+ * @version $Revision: 1.19 $, $Date: 2004/08/22 18:45:56 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -77,7 +77,7 @@ public class SetDatabase extends StorableObjectDatabase {
 		ResultSet resultSet = null;
 		try {
 			statement = connection.createStatement();
-			Log.debugMessage("SetDatabase.retrieveSet | Trying: " + sql, Log.DEBUGLEVEL05);
+			Log.debugMessage("SetDatabase.retrieveSet | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql);
 			if (resultSet.next()) {
 				String description = resultSet.getString(COLUMN_DESCRIPTION);
@@ -133,7 +133,7 @@ public class SetDatabase extends StorableObjectDatabase {
 		ResultSet resultSet = null;
 		try {
 			statement = connection.createStatement();
-			Log.debugMessage("SetDatabase.retrieveSetParameters | Trying: " + sql, Log.DEBUGLEVEL05);
+			Log.debugMessage("SetDatabase.retrieveSetParameters | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql);
 			SetParameter parameter;
 			while (resultSet.next()) {
@@ -192,7 +192,7 @@ public class SetDatabase extends StorableObjectDatabase {
 		ResultSet resultSet = null;
 		try {
 			statement = connection.createStatement();
-			Log.debugMessage("SetDatabase.retrieveSetMELinks | Trying: " + sql, Log.DEBUGLEVEL05);
+			Log.debugMessage("SetDatabase.retrieveSetMELinks | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql);
 			while (resultSet.next()){
 				/**
@@ -267,7 +267,7 @@ public class SetDatabase extends StorableObjectDatabase {
 		Statement statement = null;
 		try {
 			statement = connection.createStatement();
-			Log.debugMessage("SetDatabase.insertSet | Trying: " + sql, Log.DEBUGLEVEL05);
+			Log.debugMessage("SetDatabase.insertSet | Trying: " + sql, Log.DEBUGLEVEL09);
 			statement.executeUpdate(sql);
 			connection.commit();
 		}
@@ -325,13 +325,14 @@ public class SetDatabase extends StorableObjectDatabase {
 				 */
 				preparedStatement.setString(3, set.getId().getCode());
 				preparedStatement.setBlob(4, BLOB.empty_lob());
-				Log.debugMessage("SetDatabase.insertSetParameters | Inserting parameter " + parameterTypeId.toString() + " for set " + setIdStr, Log.DEBUGLEVEL05);
+				Log.debugMessage("SetDatabase.insertSetParameters | Inserting parameter " + parameterTypeId.toString() + " for set " + setIdStr, Log.DEBUGLEVEL09);
 				preparedStatement.executeUpdate();
-				ByteArrayDatabase badb = new ByteArrayDatabase(setParameters[i].getValue());
-				badb.saveAsBlob(connection, 
-								ObjectEntities.SETPARAMETER_ENTITY, 
-								LINK_COLUMN_VALUE, 
-								COLUMN_ID + EQUALS + parameterId.toSQLString());
+//				ByteArrayDatabase badb = new ByteArrayDatabase(setParameters[i].getValue());
+				ByteArrayDatabase.saveAsBlob(setParameters[i].getValue(),
+																		 connection,
+																		 ObjectEntities.SETPARAMETER_ENTITY,
+																		 LINK_COLUMN_VALUE,
+																		 COLUMN_ID + EQUALS + parameterId.toSQLString());
 			}
 			connection.commit();
 		}
@@ -384,7 +385,7 @@ public class SetDatabase extends StorableObjectDatabase {
 				 * @todo when change DB Identifier model ,change setString() to setLong()
 				 */
 				preparedStatement.setString(2, meIdCode);
-				Log.debugMessage("SetDatabase.insertSetMELinks | Inserting link for set " + setIdCode + " and monitored element " + meIdCode, Log.DEBUGLEVEL05);
+				Log.debugMessage("SetDatabase.insertSetMELinks | Inserting link for set " + setIdCode + " and monitored element " + meIdCode, Log.DEBUGLEVEL09);
 				preparedStatement.executeUpdate();
 			}
 			connection.commit();
@@ -438,7 +439,7 @@ public class SetDatabase extends StorableObjectDatabase {
 		Statement statement = null;
 		try {
 			statement = connection.createStatement();
-			Log.debugMessage("Set.createMEAttachment | Trying: " + sql, Log.DEBUGLEVEL05);
+			Log.debugMessage("Set.createMEAttachment | Trying: " + sql, Log.DEBUGLEVEL09);
 			statement.executeUpdate(sql);
 			connection.commit();
 		}
@@ -472,7 +473,7 @@ public class SetDatabase extends StorableObjectDatabase {
 		Statement statement = null;
 		try {
 			statement = connection.createStatement();
-			Log.debugMessage("SetDatabase.deleteMEAttachment | Trying: " + sql, Log.DEBUGLEVEL05);
+			Log.debugMessage("SetDatabase.deleteMEAttachment | Trying: " + sql, Log.DEBUGLEVEL09);
 			statement.executeUpdate(sql);
 			connection.commit();
 		}
@@ -504,7 +505,7 @@ public class SetDatabase extends StorableObjectDatabase {
 		Statement statement = null;
 		try {
 			statement = connection.createStatement();
-			Log.debugMessage("SetDatabase.setModified | Trying: " + sql, Log.DEBUGLEVEL05);
+			Log.debugMessage("SetDatabase.setModified | Trying: " + sql, Log.DEBUGLEVEL09);
 			statement.executeUpdate(sql);
 			connection.commit();
 		}
@@ -570,7 +571,7 @@ public class SetDatabase extends StorableObjectDatabase {
 		ResultSet resultSet = null;
 		try {
 			statement = connection.createStatement();
-			Log.debugMessage("SetDatabase.retrieveAll | Trying: " + sql, Log.DEBUGLEVEL05);
+			Log.debugMessage("SetDatabase.retrieveAll | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql);
 			while (resultSet.next())
 				sets.add(new Set(new Identifier(resultSet.getString(COLUMN_ID))));			

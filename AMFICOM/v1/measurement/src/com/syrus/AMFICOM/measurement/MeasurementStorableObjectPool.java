@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementStorableObjectPool.java,v 1.5 2004/08/16 08:17:58 arseniy Exp $
+ * $Id: MeasurementStorableObjectPool.java,v 1.6 2004/08/22 18:45:56 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -21,7 +21,7 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2004/08/16 08:17:58 $
+ * @version $Revision: 1.6 $, $Date: 2004/08/22 18:45:56 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -75,30 +75,36 @@ public class MeasurementStorableObjectPool {
 		LRUMap objectPool = new LRUMap(poolSize);
 		objectPoolMap.put(new Short(objectEntityCode), objectPool);
 	}
-
+	
 	public static StorableObject getStorableObject(Identifier objectId, boolean useLoader) {
-		short objectEntityCode = objectId.getMajor();
-		LRUMap objectPool = (LRUMap)objectPoolMap.get(new Short(objectEntityCode));
-		if (objectPool != null) {
-			StorableObject storableObject = (StorableObject)objectPool.get(objectId);
-			if (storableObject != null)
-				return storableObject;
-			else {
-				if (useLoader) {
-					try {
-						storableObject = loadStorableObject(objectId);
-						if (storableObject != null)
-							putStorableObject(storableObject);
+		if (objectId != null) {
+			short objectEntityCode = objectId.getMajor();
+			LRUMap objectPool = (LRUMap)objectPoolMap.get(new Short(objectEntityCode));
+			if (objectPool != null) {
+				StorableObject storableObject = (StorableObject)objectPool.get(objectId);
+				if (storableObject != null)
+					return storableObject;
+				else {
+					if (useLoader) {
+						try {
+							storableObject = loadStorableObject(objectId);
+							if (storableObject != null)
+								putStorableObject(storableObject);
+						}
+						catch (Exception e) {
+							Log.errorException(e);
+						}
 					}
-					catch (Exception e) {
-						Log.errorException(e);
-					}
+					return storableObject;
 				}
-				return storableObject;
+			}
+			else {
+				Log.errorMessage("MeasurementStorableObjectPool.getStorableObject | Cannot find object pool for objectId: '" + objectId.toString() + "' entity code: '" + objectEntityCode + "'");
+				return null;
 			}
 		}
 		else {
-			Log.errorMessage("MeasurementStorableObjectPool.getStorableObject | Cannot find object pool for objectId: '" + objectId.toString() + "' entity code: '" + objectEntityCode + "'");
+			Log.errorMessage("MeasurementStorableObjectPool.getStorableObject | NULL identifier supplied");
 			return null;
 		}
 	}

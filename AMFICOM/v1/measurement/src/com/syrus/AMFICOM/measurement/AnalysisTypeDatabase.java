@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisTypeDatabase.java,v 1.17 2004/08/20 12:52:23 arseniy Exp $
+ * $Id: AnalysisTypeDatabase.java,v 1.18 2004/08/22 18:45:56 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,7 +28,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2004/08/20 12:52:23 $
+ * @version $Revision: 1.18 $, $Date: 2004/08/22 18:45:56 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -74,7 +74,7 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 		ResultSet resultSet = null;
 		try {
 			statement = connection.createStatement();
-			Log.debugMessage("AnalysisTypeDatabase.retrieveAnalysisType | Trying: " + sql, Log.DEBUGLEVEL05);
+			Log.debugMessage("AnalysisTypeDatabase.retrieveAnalysisType | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql);
 			if (resultSet.next())
 				/**
@@ -132,7 +132,7 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 		ResultSet resultSet = null;
 		try {
 			statement = connection.createStatement();
-			Log.debugMessage("AnalysisTypeDatabase.retrieveParameterTypes | Trying: " + sql, Log.DEBUGLEVEL05);
+			Log.debugMessage("AnalysisTypeDatabase.retrieveParameterTypes | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql);
 			String parameterMode;
 			String parameterTypeIdCode;
@@ -240,7 +240,7 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 		Statement statement = null;
 		try {
 			statement = connection.createStatement();
-			Log.debugMessage("AnalysisTypeDatabase.insertAnalysisType | Trying: " + sql, Log.DEBUGLEVEL05);
+			Log.debugMessage("AnalysisTypeDatabase.insertAnalysisType | Trying: " + sql, Log.DEBUGLEVEL09);
 			statement.executeUpdate(sql);
 		}
 		catch (SQLException sqle) {
@@ -296,7 +296,7 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 				preparedStatement.setString(3, parameterMode);
 				Log.debugMessage("AnalysisTypeDatabase.insertParameterTypes | Inserting parameter type "
 						+ parameterTypeIdCode + " of parameter mode '" + parameterMode + "' for analysis type "
-						+ analysisTypeIdCode, Log.DEBUGLEVEL05);
+						+ analysisTypeIdCode, Log.DEBUGLEVEL09);
 				preparedStatement.executeUpdate();
 			}
 			for (Iterator iterator = criteriaParTyps.iterator(); iterator.hasNext();) {
@@ -310,7 +310,7 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 				preparedStatement.setString(3, parameterMode);
 				Log.debugMessage("AnalysisTypeDatabase.insertParameterTypes | Inserting parameter type "
 						+ parameterTypeIdCode + " of parameter mode '" + parameterMode + "' for analysis type "
-						+ analysisTypeIdCode, Log.DEBUGLEVEL05);
+						+ analysisTypeIdCode, Log.DEBUGLEVEL09);
 				preparedStatement.executeUpdate();
 			}
 			for (Iterator iterator = etalonParTyps.iterator(); iterator.hasNext();) {
@@ -324,7 +324,7 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 				preparedStatement.setString(3, parameterMode);
 				Log.debugMessage("AnalysisTypeDatabase.insertParameterTypes | Inserting parameter type "
 						+ parameterTypeIdCode + " of parameter mode '" + parameterMode + "' for analysis type "
-						+ analysisTypeIdCode, Log.DEBUGLEVEL05);
+						+ analysisTypeIdCode, Log.DEBUGLEVEL09);
 				preparedStatement.executeUpdate();
 			}
 			for (Iterator iterator = outParTyps.iterator(); iterator.hasNext();) {
@@ -338,7 +338,7 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 				preparedStatement.setString(3, parameterMode);
 				Log.debugMessage("AnalysisTypeDatabase.insertParameterTypes | Inserting parameter type "
 						+ parameterTypeIdCode + " of parameter mode '" + parameterMode + "' for analysis type "
-						+ analysisTypeIdCode, Log.DEBUGLEVEL05);
+						+ analysisTypeIdCode, Log.DEBUGLEVEL09);
 				preparedStatement.executeUpdate();
 			}
 		}
@@ -405,7 +405,7 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 		ResultSet resultSet = null;
 		try {
 			statement = connection.createStatement();
-			Log.debugMessage("AnalysisTypeDatabase.retrieveForCodename | Trying: " + sql, Log.DEBUGLEVEL05);
+			Log.debugMessage("AnalysisTypeDatabase.retrieveForCodename | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql);
 			if (resultSet.next())
 				return new AnalysisType(new Identifier(resultSet.getString(COLUMN_ID)));
@@ -439,7 +439,7 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 		ResultSet resultSet = null;
 		try {
 			statement = connection.createStatement();
-			Log.debugMessage("AnalysisTypeDatabase.retrieveAll | Trying: " + sql, Log.DEBUGLEVEL05);
+			Log.debugMessage("AnalysisTypeDatabase.retrieveAll | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql);
 			while (resultSet.next())
 				analysisTypes.add(new AnalysisType(new Identifier(resultSet.getString(COLUMN_ID))));			
