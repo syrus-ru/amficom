@@ -4,7 +4,7 @@ import java.util.*;
 
 public class TimeStamp {
 
-	public static final String	TYP						= "newtimestamp";
+	public static final String	TYPE						= "newtimestamp";
 	public static final int		TIMESTAMPTYPE_ONETIME	= 1;
 	public static final int		TIMESTAMPTYPE_CONTINUOS	= 2;
 	public static final int		TIMESTAMPTYPE_PERIODIC	= 3;
