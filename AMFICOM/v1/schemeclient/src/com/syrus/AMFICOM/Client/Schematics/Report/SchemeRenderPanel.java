@@ -15,6 +15,7 @@ import com.syrus.AMFICOM.Client.General.Report.RenderingObject;
 import com.syrus.AMFICOM.Client.General.Report.CreateReportException;
 import com.syrus.AMFICOM.Client.General.Scheme.SchemeGraph;
 
+
 public class SchemeRenderPanel extends JPanel
 {
 	public RenderingObject reportsRO = null;
@@ -26,7 +27,6 @@ public class SchemeRenderPanel extends JPanel
 	{
 		this.reportsRO = ro;
 		this.schemeGraph = sg;
-		schemeGraph.setBackground(new Color(220,220,220));
 
 		try
 		{
@@ -86,7 +86,13 @@ public class SchemeRenderPanel extends JPanel
 
 	public void paint (Graphics g)
 	{
-		super.paint(g);
+		g.setColor(Color.white);
+//		Dimension prefSize = reportsRO.rendererPanel.getPreferredSize();
+		g.fillRect(0,0,this.getWidth(),this.getHeight());
+		g.setColor(Color.black);
+		g.drawRect(0,0,this.getWidth() - 1,this.getHeight() - 1);
+
+		schemeGraph.setBackground(Color.white);
 
 		Rectangle bounds = schemeGraph.getCellBounds(schemeGraph.getRoots());
 		double scaleValue = this.getScale(bounds);
