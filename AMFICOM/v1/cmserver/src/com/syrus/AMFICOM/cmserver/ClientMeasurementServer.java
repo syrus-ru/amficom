@@ -1,5 +1,5 @@
 /*
- * $Id: ClientMeasurementServer.java,v 1.32 2005/04/01 17:42:50 arseniy Exp $
+ * $Id: ClientMeasurementServer.java,v 1.33 2005/04/01 21:23:41 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,7 +31,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.32 $, $Date: 2005/04/01 17:42:50 $
+ * @version $Revision: 1.33 $, $Date: 2005/04/01 21:23:41 $
  * @author $Author: arseniy $
  * @module cmserver_v1
  */
@@ -170,6 +170,7 @@ public class ClientMeasurementServer extends SleepButWorkThread {
 		catch (CommunicationException ce) {
 			Log.errorException(ce);
 			Log.errorMessage("Cannot resolve Measurement Server '" + mServerServantName + "'");
+			//@todo Generate event "Cannot resolve Measurement Server"
 			mServerRef = null;
 		}
 	}
@@ -181,9 +182,8 @@ public class ClientMeasurementServer extends SleepButWorkThread {
 	protected static MServer getVerifiedMServerReference() throws CommunicationException {
 		synchronized (lock) {
 
-			if (mServerRef == null) {
+			if (mServerRef == null)
 				resetMServerConnection();
-			}
 			else {
 				try {
 					mServerRef.ping((byte) 1);
@@ -196,6 +196,7 @@ public class ClientMeasurementServer extends SleepButWorkThread {
 			if (mServerRef != null)
 				return mServerRef;
 			throw new CommunicationException("Cannot establish connection with Measurement Server");
+
 		}
 	}
 
