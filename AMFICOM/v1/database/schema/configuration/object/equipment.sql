@@ -8,6 +8,7 @@ CREATE TABLE Equipment (
  domain_id Identifier,
 --
  type_id Identifier NOT NULL,
+--
  name VARCHAR2(64) NOT NULL,
  description VARCHAR2(256),
  image_id Identifier,
@@ -32,3 +33,4 @@ CREATE TABLE Equipment (
 );
 
 CREATE SEQUENCE equipment_seq ORDER;
+
