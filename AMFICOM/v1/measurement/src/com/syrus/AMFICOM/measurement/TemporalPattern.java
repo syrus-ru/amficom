@@ -1,5 +1,5 @@
 /*
- * $Id: TemporalPattern.java,v 1.30 2004/08/22 18:45:56 arseniy Exp $
+ * $Id: TemporalPattern.java,v 1.31 2004/08/24 11:40:33 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,8 +32,8 @@ import com.syrus.AMFICOM.resource.LangModelMeasurement;
 import com.syrus.util.HashCodeGenerator;
 
 /**
- * @version $Revision: 1.30 $, $Date: 2004/08/22 18:45:56 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.31 $, $Date: 2004/08/24 11:40:33 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
@@ -538,6 +538,16 @@ public class TemporalPattern extends StorableObject {
 			hashCodeGenerator.addObject(this.template);
 			hashCodeGenerator.addLong(this.startPeriod);
 			hashCodeGenerator.addLong(this.endPeriod);
+			hashCodeGenerator.addObject(this.minutes);
+			hashCodeGenerator.addObject(this.hours);
+			hashCodeGenerator.addObject(this.dayOfMonth);
+			hashCodeGenerator.addObject(this.month);
+			hashCodeGenerator.addObject(this.dayOfWeek);
+			hashCodeGenerator.addObject(this.description);
+			hashCodeGenerator.addObject(this.startsList);
+			hashCodeGenerator.addObject(this.endsList);
+			hashCodeGenerator.addObject(this.divisorList);
+			hashCodeGenerator.addObject(this.dateList);
 			int result = hashCodeGenerator.getResult();
 			hashCodeGenerator = null;
 			return result;
@@ -665,6 +675,9 @@ public class TemporalPattern extends StorableObject {
 			hashCodeGenerator.addIntArray(this.host);
 			hashCodeGenerator.addInt(this.max);
 			hashCodeGenerator.addInt(this.min);
+			hashCodeGenerator.addObject(this.pluralName);
+			hashCodeGenerator.addObject(this.name);
+			hashCodeGenerator.addObjectArray(this.names);
 			int result = hashCodeGenerator.getResult();
 			hashCodeGenerator = null;
 			return result;
@@ -694,7 +707,10 @@ public class TemporalPattern extends StorableObject {
 	private String					description;
 	private StorableObjectDatabase	temporalPatternDatabase;
 
-	private HashMap					templates;
+	/**
+	 * Map of < {@link TimeLine} , {@link TimeLine} >
+	 */
+	private HashMap					templates; 
 	private List					times;
 
 	private long					startTime			= 0;
