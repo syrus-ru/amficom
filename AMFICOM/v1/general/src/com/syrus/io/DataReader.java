@@ -1,9 +1,20 @@
-package com.syrus.AMFICOM.general;
+/*
+ * $Id: DataReader.java,v 1.1 2004/10/20 07:11:44 bass Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ
+ */
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
+package com.syrus.io;
 
+import java.io.*;
+
+/**
+ * @version $Revision: 1.1 $, $Date: 2004/10/20 07:11:44 $
+ * @author $Author: bass $
+ * @module general_v1
+ */
 public abstract class DataReader extends BellcoreStructure
 {
 	public abstract BellcoreStructure getData(byte[] b);

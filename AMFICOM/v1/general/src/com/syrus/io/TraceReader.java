@@ -1,40 +1,22 @@
-//////////////////////////////////////////////////////////////////////////////
-// *                                                                      * //
-// * Syrus Systems                                                        * //
-// * Департамент Системных Исследований и Разработок                      * //
-// *                                                                      * //
-// * Проект: прототип Интегрированной Системы Мониторинга                 * //
-// *                                                                      * //
-// * Название: Класс, обеспечивающий считывание рефлектограммы в форматах * //
-// *           ANDO, LP и для этого использующий библиотеку treader.      * //
-// *           Для чтения данных в форматах bellcore и wavetek использу-  * //
-// *           ются соответствующие классы.                               * //
-// * Тип: Java 1.4.0                                                      * //
-// *                                                                      * //
-// * Автор: Хольшин С.И.                                                  * //
-// *                                                                      * //
-// * Версия: 0.2                                                          * //
-// * От: 22 jul 2002                                                      * //
-// * Расположение: com\syrus\AMFICOM\Client\Data\Reflectometry\           * //
-// *                                                    \TraceReader.java * //
-// * Компилятор: Borland JBuilder 6.0                                     * //
-// *                                                                      * //
-// * Статус: разработка                                                   * //
-// *                                                                      * //
-// * Изменения:                                                           * //
-// *  Кем         Верс   Когда      Комментарии                           * //
-// * -----------  ----- ---------- -------------------------------------- * //
-// *                                                                      * //
-//////////////////////////////////////////////////////////////////////////////
+/*
+ * $Id: TraceReader.java,v 1.1 2004/10/20 07:11:45 bass Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ
+ */
 
-package com.syrus.AMFICOM.general;
+package com.syrus.io;
 
+import com.syrus.util.TraceDataReader;
 import java.io.File;
 import java.text.SimpleDateFormat;
 
-import com.syrus.io.ByteArrayConverter;
-import com.syrus.util.TraceDataReader;
-
+/**
+ * @version $Revision: 1.1 $, $Date: 2004/10/20 07:11:45 $
+ * @author $Author: bass $
+ * @module general_v1
+ */
 public class TraceReader extends DataReader
 {
 	public static final int BELLCORE = 3;

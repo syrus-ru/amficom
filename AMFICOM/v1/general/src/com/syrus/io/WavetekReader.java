@@ -1,11 +1,20 @@
-package com.syrus.AMFICOM.general;
+/*
+ * $Id: WavetekReader.java,v 1.1 2004/10/20 07:11:45 bass Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ
+ */
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
+package com.syrus.io;
 
-import com.syrus.io.ByteArrayConverter;
-import com.syrus.io.IntelDataInputStream;
+import java.io.*;
 
+/**
+ * @version $Revision: 1.1 $, $Date: 2004/10/20 07:11:45 $
+ * @author $Author: bass $
+ * @module general_v1
+ */
 public class WavetekReader extends DataReader
 {
 	BellcoreStructure bs;

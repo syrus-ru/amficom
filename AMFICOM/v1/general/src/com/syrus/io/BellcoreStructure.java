@@ -1,19 +1,19 @@
 /*
- * $Id: BellcoreStructure.java,v 1.1 2004/10/19 07:55:05 max Exp $
+ * $Id: BellcoreStructure.java,v 1.1 2004/10/20 07:11:44 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
  * Проект: АМФИКОМ.
  */
 
-package com.syrus.AMFICOM.general;
+package com.syrus.io;
 
 import com.syrus.AMFICOM.general.Identifier;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2004/10/19 07:55:05 $
- * @author $Author: max $
- * @module util
+ * @version $Revision: 1.1 $, $Date: 2004/10/20 07:11:44 $
+ * @author $Author: bass $
+ * @module general_v1
  */
 public class BellcoreStructure // extends ObjectResource
 {
