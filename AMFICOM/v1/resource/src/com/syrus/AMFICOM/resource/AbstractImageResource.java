@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractImageResource.java,v 1.2 2004/12/15 10:31:59 bass Exp $
+ * $Id: AbstractImageResource.java,v 1.3 2004/12/16 16:11:58 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,11 +10,12 @@ package com.syrus.AMFICOM.resource;
 
 import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.resource.corba.ImageResource_Transferable;
+import com.syrus.AMFICOM.resource.corba.ImageResource_TransferablePackage.ImageResourceDataPackage.ImageResourceSort;
 import java.util.*;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.2 $, $Date: 2004/12/15 10:31:59 $
+ * @version $Revision: 1.3 $, $Date: 2004/12/16 16:11:58 $
  * @module resource_v1
  */
 public abstract class AbstractImageResource extends StorableObject {
@@ -56,11 +57,21 @@ public abstract class AbstractImageResource extends StorableObject {
 		return Collections.EMPTY_LIST;
 	}
 
+	public abstract byte[] getImage();
+
 	/**
 	 * @throws CreateObjectException
 	 * @see StorableObject#insert()
 	 */
 	public void insert() throws CreateObjectException {
 		throw new UnsupportedOperationException();
+	}
+
+	ImageResourceSort getSort() {
+		if (this instanceof BitmapImageResource)
+			return ImageResourceSort.BITMAP;
+		else if (this instanceof FileImageResource)
+			return ImageResourceSort.FILE;
+		return ImageResourceSort.SCHEME;
 	}
 }

@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractBitmapImageResource.java,v 1.1 2004/12/15 10:31:59 bass Exp $
+ * $Id: AbstractBitmapImageResource.java,v 1.2 2004/12/16 16:11:58 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,7 +14,7 @@ import java.util.Date;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.1 $, $Date: 2004/12/15 10:31:59 $
+ * @version $Revision: 1.2 $, $Date: 2004/12/16 16:11:58 $
  * @module resource_v1
  */
 public abstract class AbstractBitmapImageResource extends AbstractImageResource {
@@ -35,6 +35,4 @@ public abstract class AbstractBitmapImageResource extends AbstractImageResource 
 	}
 
 	public abstract String getCodename();
-
-	public abstract byte[] getImage();
 }
