@@ -85,6 +85,8 @@ general_v1	AMFICOM/v1/general
 generalclient_v1	AMFICOM/v1/generalclient
 #M	admin_v1	Administrative module
 admin_v1	AMFICOM/v1/admin
+#M	adminclient_v1	Client administrative module
+adminclient_v1	AMFICOM/v1/adminclient
 #M	config_v1	Common configuring module
 config_v1	AMFICOM/v1/config
 #M	configclient_v1	Client configuring module
