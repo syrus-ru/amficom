@@ -1,7 +1,7 @@
 #ifndef _BREAKL_FIT_H
 #define _BREAKL_FIT_H
 
-#include "../Common/ModelF.h"
+#include "../common/ModelF.h"
 
 
 /*

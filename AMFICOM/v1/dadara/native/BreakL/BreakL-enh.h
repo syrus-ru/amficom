@@ -1,7 +1,7 @@
 #ifndef _BREAKL_ENH_H
 #define _BREAKL_ENH_H
 
-#include "../Common/ModelF.h"
+#include "../common/ModelF.h"
 #include "../JNI/ThreshArray.h"
 
 // 1: умеем отслеживать перемещение DX&DY-порогов

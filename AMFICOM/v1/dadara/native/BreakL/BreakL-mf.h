@@ -1,7 +1,7 @@
 #ifndef _BREAKL_BREAKL_MF_H
 #define _BREAKL_BREAKL_MF_H
 
-#include "../Common/ModelF.h"
+#include "../common/ModelF.h"
 
 double f_BREAKL(double *pars, int npars, double x, double *, int);
 void farr_BREAKL(double *pars, int npars, double x_s, double step, int N, double *output);
