@@ -1,3 +1,4 @@
+
 package com.syrus.AMFICOM.Client.General.Model;
 
 import java.awt.Toolkit;
@@ -5,11 +6,9 @@ import java.awt.Toolkit;
 import javax.swing.ImageIcon;
 import javax.swing.UIManager;
 
-public class AnalyseApplicationModel extends ApplicationModel
-{
+public class AnalyseApplicationModel extends ApplicationModel {
 
-	public AnalyseApplicationModel()
-	{
+	public AnalyseApplicationModel() {
 		add("menuSession");
 		add("menuSessionNew");
 		add("menuSessionClose");
@@ -31,7 +30,6 @@ public class AnalyseApplicationModel extends ApplicationModel
 		add("menuFileAddCompare");
 		add("menuFileRemoveCompare");
 		add("menuExit");
-
 
 		add("menuTrace");
 		add("menuTraceAddCompare");
@@ -78,7 +76,7 @@ public class AnalyseApplicationModel extends ApplicationModel
 		add("reflectometryFrame");
 		this.initUIConstats();
 	}
-	
+
 	private void initUIConstats() {
 		UIManager.put(AnalysisResourceKeys.ICON_ANALYSIS_MINI, Toolkit.getDefaultToolkit().getImage(
 			"images/main/analyse_mini.gif"));
@@ -98,21 +96,52 @@ public class AnalyseApplicationModel extends ApplicationModel
 				.getImage("images/noanalyse.gif")));
 		UIManager.put(AnalysisResourceKeys.ICON_ANALYSIS_PERFORM_ANALYSIS, new ImageIcon(Toolkit.getDefaultToolkit()
 				.getImage("images/perform_analysis.gif")));
-		UIManager.put(AnalysisResourceKeys.ICON_ANALYSIS_INITIAL_ANALYSIS, new ImageIcon(Toolkit.getDefaultToolkit().getImage(
-			"images/cs_initial.gif")));
-		UIManager.put(AnalysisResourceKeys.ICON_ANALYSIS_DEFAULT_ANALYSIS, 
-		new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/cs_default.gif")));
+		UIManager.put(AnalysisResourceKeys.ICON_ANALYSIS_INITIAL_ANALYSIS, new ImageIcon(Toolkit.getDefaultToolkit()
+				.getImage("images/cs_initial.gif")));
+		UIManager.put(AnalysisResourceKeys.ICON_ANALYSIS_DEFAULT_ANALYSIS, new ImageIcon(Toolkit.getDefaultToolkit()
+				.getImage("images/cs_default.gif")));
+		UIManager.put(AnalysisResourceKeys.ICON_ANALYSIS_DOWNLOAD_TRACE, new ImageIcon(Toolkit.getDefaultToolkit()
+				.getImage("images/download_trace.gif")));
+		UIManager.put(AnalysisResourceKeys.ICON_ANALYSIS_DOWNLOAD_ADD, new ImageIcon(Toolkit.getDefaultToolkit()
+				.getImage("images/download_add.gif")));
+		UIManager.put(AnalysisResourceKeys.ICON_ANALYSIS_DOWNLOAD_REMOVE, new ImageIcon(Toolkit.getDefaultToolkit()
+				.getImage("images/download_remove.gif")));
+		UIManager.put(AnalysisResourceKeys.ICON_ANALYSIS_MARKER, new ImageIcon(Toolkit.getDefaultToolkit().getImage(
+			"images/marker.gif")));
+		UIManager.put(AnalysisResourceKeys.ICON_ANALYSIS_DELETE_MARKER, new ImageIcon(Toolkit.getDefaultToolkit()
+				.getImage("images/marker_delete.gif")));
+		UIManager.put(AnalysisResourceKeys.ICON_ANALYSIS_THRESHOLD, new ImageIcon(Toolkit.getDefaultToolkit().getImage(
+			"images/threshold.gif")));
+		UIManager.put(AnalysisResourceKeys.ICON_ANALYSIS_ENLARGE_X, new ImageIcon(Toolkit.getDefaultToolkit().getImage(
+			"images/enlargex.gif")));
+		UIManager.put(AnalysisResourceKeys.ICON_ANALYSIS_ENLARGE_Y, new ImageIcon(Toolkit.getDefaultToolkit().getImage(
+			"images/enlargey.gif")));
+		UIManager.put(AnalysisResourceKeys.ICON_ANALYSIS_REDUCE_X, new ImageIcon(Toolkit.getDefaultToolkit().getImage(
+			"images/reducex.gif")));
+		UIManager.put(AnalysisResourceKeys.ICON_ANALYSIS_REDUCE_Y, new ImageIcon(Toolkit.getDefaultToolkit().getImage(
+			"images/reducey.gif")));
+		UIManager.put(AnalysisResourceKeys.ICON_ANALYSIS_FIT, new ImageIcon(Toolkit.getDefaultToolkit().getImage(
+			"images/fit.gif")));
+		UIManager.put(AnalysisResourceKeys.ICON_ANALYSIS_ZOOM_BOX, new ImageIcon(Toolkit.getDefaultToolkit().getImage(
+			"images/zoom_box.gif")));
+		UIManager.put(AnalysisResourceKeys.ICON_ANALYSIS_THRESHOLD_INITIAL, new ImageIcon(Toolkit.getDefaultToolkit()
+				.getImage("images/th_initial.gif")));
+		UIManager.put(AnalysisResourceKeys.ICON_ANALYSIS_THRESHOLD_DEFAULT, new ImageIcon(Toolkit.getDefaultToolkit()
+				.getImage("images/th_default.gif")));
+		UIManager.put(AnalysisResourceKeys.ICON_ANALYSIS_THRESHOLD_INCREASE, new ImageIcon(Toolkit.getDefaultToolkit()
+				.getImage("images/increaseThresh.gif")));
+		UIManager.put(AnalysisResourceKeys.ICON_ANALYSIS_THRESHOLD_DECREASE, new ImageIcon(Toolkit.getDefaultToolkit()
+				.getImage("images/decreaseThresh.gif")));
+		UIManager.put(AnalysisResourceKeys.ICON_ANALYSIS_EVENTS, new ImageIcon(Toolkit.getDefaultToolkit().getImage(
+			"images/events.gif")));
+		UIManager.put(AnalysisResourceKeys.ICON_ANALYSIS_MODELED, new ImageIcon(Toolkit.getDefaultToolkit().getImage(
+			"images/modeled.gif")));
 	}
-/*
-	public DataSourceInterface getDataSource(SessionInterface si)
-	{
-		String connection = Environment.getConnectionType();
-		if(connection.equals("RISD"))
-			//return new RISDSurveyDataSource(si);
-			return new RISDSurveyDataSource(si);
-		else
-		if(connection.equals("Empty"))
-			return new EmptySurveyDataSource(si);
-		return null;
-	}*/
+	/*
+	 * public DataSourceInterface getDataSource(SessionInterface si) { String
+	 * connection = Environment.getConnectionType();
+	 * if(connection.equals("RISD")) //return new RISDSurveyDataSource(si);
+	 * return new RISDSurveyDataSource(si); else if(connection.equals("Empty"))
+	 * return new EmptySurveyDataSource(si); return null; }
+	 */
 }
