@@ -130,12 +130,12 @@ static double FindTwoLinApproxSumS(ACC_Y &acc, int i0, int i1, int i2, double y0
 
 	calc_yarr_stat3(acc, i0, i1 - i0, mx, my, mxx, mxy, myy);
 	double vy0 = mxy - i0 * my - y0_fixed * mx + i0 * y0_fixed;
-	double vx0 = mxx - 2 * mx * i0 + i0 * i0;
+	double vx0 = mxx - 2 * mx * i0 + (double )i0 * i0;
 	ret += (i1 - i0) * (myy - my * my + dpow2(my - y0_fixed));
 
 	calc_yarr_stat3(acc, i1, i2 - i1, mx, my, mxx, mxy, myy);
 	double vy2 = mxy - i2 * my - y2_fixed * mx + i2 * y2_fixed;
-	double vx2 = mxx - 2 * mx * i2 + i2 * i2;
+	double vx2 = mxx - 2 * mx * i2 + (double )i2 * i2;
 	ret += (i2 - i1) * (myy - my * my + dpow2(my - y2_fixed));
 
 	vx0 /= i1 - i0;
@@ -535,7 +535,7 @@ void BreakL_Fit_int (ModelF &mf, double *data, int x_begin,
 				{
 					//fprintf(stderr, "rem-A: # %d-%d x(%d:%d:%d:%d -> %d): RMS %g -> %g\n",
 					//	k, k + 3, i0, i1, i2, i3, iA, sOld, sA);
-					fflush(stderr);
+					//fflush(stderr);
 					ax[k + 1] = iA;
 					ay[k + 1] = yA;
 					shift = 1;
