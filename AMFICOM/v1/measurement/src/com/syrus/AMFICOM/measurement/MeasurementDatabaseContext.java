@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementDatabaseContext.java,v 1.9 2004/07/27 15:52:26 arseniy Exp $
+ * $Id: MeasurementDatabaseContext.java,v 1.10 2004/07/28 11:58:31 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,7 +11,7 @@ package com.syrus.AMFICOM.measurement;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2004/07/27 15:52:26 $
+ * @version $Revision: 1.10 $, $Date: 2004/07/28 11:58:31 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -58,39 +58,4 @@ public abstract class MeasurementDatabaseContext {
 		temporalPatternDatabase = temporalPatternDatabase1;
 		testDatabase = testDatabase1;
 	}
-
-//	Эти методы должны быть в приложении с БД.
-//
-//	private static void loadParameterTypes() {
-//		parameterTypes = new Hashtable(ParameterTypeDatabase.CHARACTER_NUMBER_OF_RECORDS);
-//		try {
-//			List types = ParameterTypeDatabase.retrieveAll();
-//			for (Iterator iterator = types.iterator(); iterator.hasNext();)
-//				addParameterType((ParameterType)iterator.next());
-//		}
-//		catch (RetrieveObjectException roe) {
-//			Log.errorException(roe);
-//		}		
-//	}
-//	
-//	private static void loadActionTypes() {
-//		actionTypes = new Hashtable(MeasurementTypeDatabase.CHARACTER_NUMBER_OF_RECORDS + AnalysisTypeDatabase.CHARACTER_NUMBER_OF_RECORDS + EvaluationTypeDatabase.CHARACTER_NUMBER_OF_RECORDS);
-//		List types;
-//		try {
-//			types = MeasurementTypeDatabase.retrieveAll();
-//			for (Iterator iterator = types.iterator(); iterator.hasNext();)
-//				addActionType((MeasurementType)iterator.next());
-//
-//			types = AnalysisTypeDatabase.retrieveAll();
-//			for (Iterator iterator = types.iterator(); iterator.hasNext();)
-//				addActionType((AnalysisType)iterator.next());
-//
-//			types = EvaluationTypeDatabase.retrieveAll();
-//			for (Iterator iterator = types.iterator(); iterator.hasNext();)
-//				addActionType((EvaluationType)iterator.next());
-//		}
-//		catch (RetrieveObjectException roe) {
-//			Log.errorException(roe);
-//		}
-//	}
 }

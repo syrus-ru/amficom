@@ -1,5 +1,5 @@
 /*
- * $Id: EvaluationTypeDatabase.java,v 1.10 2004/07/27 15:52:26 arseniy Exp $
+ * $Id: EvaluationTypeDatabase.java,v 1.11 2004/07/28 11:58:31 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,7 +28,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2004/07/27 15:52:26 $
+ * @version $Revision: 1.11 $, $Date: 2004/07/28 11:58:31 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -440,7 +440,7 @@ public class EvaluationTypeDatabase extends StorableObjectDatabase {
 		}
 	}
 	
-	protected static List retrieveAll() throws RetrieveObjectException {
+	public static List retrieveAll() throws RetrieveObjectException {
 		List evaluationTypes = new ArrayList(CHARACTER_NUMBER_OF_RECORDS);
 		String sql = SQL_SELECT
 				+ COLUMN_ID
