@@ -1,64 +1,30 @@
-//////////////////////////////////////////////////////////////////////////////
-// *                                                                      * //
-// * Syrus Systems                                                        * //
-// * Департамент Системных Исследований и Разработок                      * //
-// *                                                                      * //
-// * Проект: АМФИКОМ - система Автоматизированного Многофункционального   * //
-// *         Интеллектуального Контроля и Объектного Мониторинга          * //
-// *                                                                      * //
-// *         реализация Интегрированной Системы Мониторинга               * //
-// *                                                                      * //
-// * Название: Диалоговое окно параметров сессии работы пользователя      * //
-// *         с системой                                                   * //
-// *                                                                      * //
-// * Тип: Java 1.2.2                                                      * //
-// *                                                                      * //
-// * Автор: Крупенников А.В.                                              * //
-// *                                                                      * //
-// * Версия: 1.0                                                          * //
-// * От: 1 jul 2002                                                       * //
-// * Расположение: ISM\prog\java\AMFICOMConfigure\com\syrus\AMFICOM\      * //
-// *        Client\Main\SessionInfoDialog.java                            * //
-// *                                                                      * //
-// * Среда разработки: Oracle JDeveloper 3.2.2 (Build 915)                * //
-// *                                                                      * //
-// * Компилятор: Oracle javac (Java 2 SDK, Standard Edition, ver 1.2.2)   * //
-// *                                                                      * //
-// * Статус: разработка                                                   * //
-// *                                                                      * //
-// * Изменения:                                                           * //
-// *  Кем         Верс   Когда      Комментарии                           * //
-// * -----------  ----- ---------- -------------------------------------- * //
-// *                                                                      * //
-// * Описание:                                                            * //
-// *                                                                      * //
-//////////////////////////////////////////////////////////////////////////////
+/*
+ * $Id: SessionInfoDialog.java,v 1.6 2004/09/25 19:42:21 bass Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ.
+ */
 
 package com.syrus.AMFICOM.Client.General.UI.Session;
 
+import com.syrus.AMFICOM.Client.General.*;
 import com.syrus.AMFICOM.Client.General.Lang.LangModel;
-import com.syrus.AMFICOM.Client.General.SessionInterface;
+import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.Resource.Object.Domain;
-import com.syrus.AMFICOM.Client.General.Model.Environment;
-
 import java.awt.Frame;
 import java.awt.event.ActionEvent;
-
 import java.text.SimpleDateFormat;
-
 import java.util.Date;
+import javax.swing.*;
+import oracle.jdeveloper.layout.*;
 
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JSeparator;
-import javax.swing.SwingConstants;
-
-import oracle.jdeveloper.layout.XYConstraints;
-import oracle.jdeveloper.layout.XYLayout;
-
+/**
+ * @author $Author: bass $
+ * @version $Revision: 1.6 $, $Date: 2004/09/25 19:42:21 $
+ * @module generalclient_v1
+ */
 public class SessionInfoDialog extends JDialog
 {
 	SessionInterface si;
@@ -116,7 +82,7 @@ public class SessionInfoDialog extends JDialog
 
 		this.si = si;
 
-		labelServer.setText(si.getConnectionInterface().getServerIP());
+		labelServer.setText(ConnectionInterface.getInstance().getServerName());
 		labelUser.setText(si.getUser());
 		labelCategory.setText("");
 		long lot = si.getLogonTime();
@@ -125,7 +91,6 @@ public class SessionInfoDialog extends JDialog
 		long st = cm - lot;
 		long st2 = st / 3600000;//hours
 		String s1 = String.valueOf(st2) + sdf2.format(new Date(st));
-//		labelSessionTotal.setText(sdf2.format(new Date(System.currentTimeMillis() - si.getLogonTime())));
 		labelSessionTotal.setText(s1);
 		labelConnectPeriod.setText(((ObjectResource)Pool.get(Domain.typ, si.getDomainId())).getName());
 		labelConnectLast.setText("");
