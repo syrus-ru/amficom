@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementDatabaseContext.java,v 1.18 2004/11/04 13:16:30 bob Exp $
+ * $Id: MeasurementDatabaseContext.java,v 1.19 2004/12/24 18:50:27 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,14 +8,12 @@
 
 package com.syrus.AMFICOM.measurement;
 
-
-
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2004/11/04 13:16:30 $
- * @author $Author: bob $
+ * @version $Revision: 1.19 $, $Date: 2004/12/24 18:50:27 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 

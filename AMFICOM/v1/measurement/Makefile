@@ -5,7 +5,7 @@ ARCHFILE = $(subst _v1,,$(MODULE_NAME)).tar.gz
 
 IDLDIR=../idl_v1/idl
 
-APPCLASSPATH = $(LIBDIR)/configuration.jar:$(LIBDIR)/general.jar:$(LIBDIR)/util.jar
+APPCLASSPATH = $(LIBDIR)/configuration.jar:$(LIBDIR)/event.jar:$(LIBDIR)/general.jar:$(LIBDIR)/util.jar
 
 HOST=mongol
 SERVICE_NAME=mongol
@@ -37,7 +37,8 @@ $(LIBNAME): .mach
 		$(SRCDIR)/com/syrus/AMFICOM/resource/measurement_ru.properties \
 		$(CLASSDIR)/com/syrus/AMFICOM/resource/
 	$(JAR) -cf $@ \
-		-C $(CLASSDIR) com/syrus/AMFICOM/event -C $(CLASSDIR) com/syrus/AMFICOM/measurement -C $(CLASSDIR) com/syrus/AMFICOM/resource
+		-C $(CLASSDIR) com/syrus/AMFICOM/measurement \
+		-C $(CLASSDIR) com/syrus/AMFICOM/resource
 
 .mach:	.corba .ora $(CLASSDIR)
 	$(JAVAC) $(JAVACFLAGS) \
@@ -98,12 +99,10 @@ $(LIBNAME): .mach
 	
 
 .corba:	$(CLASSDIR)
-	$(IDLJ) $(IDLJFLAGS) $(IDLDIR)/event.idl
 	$(IDLJ) $(IDLJFLAGS) $(IDLDIR)/measurement.idl
 	$(JAVAC) $(JAVACFLAGS) $(JAVAC_WARNOFF_FLAG) \
 		-classpath $(APPCLASSPATH) \
 		-sourcepath $(SRCDIR) \
-		$(SRCDIR)/com/syrus/AMFICOM/event/corba/*.java \
 		$(SRCDIR)/com/syrus/AMFICOM/measurement/corba/*.java 
 	touch $@
 
@@ -129,8 +128,6 @@ cleanora:
 cleancorba:
 	$(RM) -r $(SRCDIR)/com/syrus/AMFICOM/measurement/corba
 	$(RM) -r $(CLASSDIR)/com/syrus/AMFICOM/measurement/corba
-	$(RM) -r $(SRCDIR)/com/syrus/AMFICOM/event/corba
-	$(RM) -r $(CLASSDIR)/com/syrus/AMFICOM/event/corba
 	$(RM) .corba
 
 #### Install ####
