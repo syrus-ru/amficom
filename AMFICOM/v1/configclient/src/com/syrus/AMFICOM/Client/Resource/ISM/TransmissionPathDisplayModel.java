@@ -5,7 +5,7 @@ import java.util.*;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelConfig;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.UI.*;
-import com.syrus.AMFICOM.Client.Resource.*;
+import com.syrus.AMFICOM.Client.Resource.ObjectResource;
 
 public class TransmissionPathDisplayModel extends StubDisplayModel
 {
@@ -67,8 +67,8 @@ public class TransmissionPathDisplayModel extends StubDisplayModel
 			return new TextFieldEditor(tp.getName());
 //		if(col_id.equals("type_id"))
 //		  return new TextFieldEditor(Pool.getName("pathtype", tp.type_id));
-		if(col_id.equals("KIS_id"))
-			return new TextFieldEditor(Pool.getName("kis", tp.KIS_id));
+//		if(col_id.equals("KIS_id"))
+//			return new TextFieldEditor(Pool.getName("kis", tp.KIS_id));
 //		if(col_id.equals("end_equipment_id"))
 //		  return new TextFieldEditor(Pool.getName("equipment", tp.end_equipment_id));
 		return null;

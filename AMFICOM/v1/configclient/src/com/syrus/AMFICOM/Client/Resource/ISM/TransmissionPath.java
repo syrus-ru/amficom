@@ -1,68 +1,26 @@
-//////////////////////////////////////////////////////////////////////////////
-// *                                                                      * //
-// * Syrus Systems                                                        * //
-// * Департамент Системных Исследований и Разработок                      * //
-// *                                                                      * //
-// * Проект: АМФИКОМ - система Автоматизированного Многофункционального   * //
-// *         Интеллектуального Контроля и Объектного Мониторинга          * //
-// *                                                                      * //
-// *         реализация Интегрированной Системы Мониторинга               * //
-// *                                                                      * //
-// * Название: описание линии связи                                       * //
-// *                                                                      * //
-// * Тип: Java 1.2.2                                                      * //
-// *                                                                      * //
-// * Автор: Крупенников А.В.                                              * //
-// *                                                                      * //
-// * Версия: 0.1                                                          * //
-// * От: 22 jan 2002                                                      * //
-// * Расположение: ISM\prog\java\AMFICOMConfigure\com\syrus\AMFICOM\      * //
-// *        Client\Resource\Network\Link.java                             * //
-// *                                                                      * //
-// * Среда разработки: Oracle JDeveloper 3.2.2 (Build 915)                * //
-// *                                                                      * //
-// * Компилятор: Oracle javac (Java 2 SDK, Standard Edition, ver 1.2.2)   * //
-// *                                                                      * //
-// * Статус: разработка                                                   * //
-// *                                                                      * //
-// * Изменения:                                                           * //
-// *  Кем         Верс   Когда      Комментарии                           * //
-// * -----------  ----- ---------- -------------------------------------- * //
-// *                                                                      * //
-// * Описание:                                                            * //
-// *                                                                      * //
-//////////////////////////////////////////////////////////////////////////////
-
 package com.syrus.AMFICOM.Client.Resource.ISM;
 
 import java.io.*;
 import java.util.*;
 
-import com.syrus.AMFICOM.CORBA.ISM.*;
-import com.syrus.AMFICOM.CORBA.Network.Characteristic_Transferable;
+import com.syrus.AMFICOM.CORBA.General.Characteristic_Transferable;
+import com.syrus.AMFICOM.CORBA.ISM.TransmissionPath_Transferable;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourceDisplayModel;
 import com.syrus.AMFICOM.Client.Resource.*;
-import com.syrus.AMFICOM.Client.Resource.Network.*;
+import com.syrus.AMFICOM.Client.Resource.Network.Characteristic;
 
 public class TransmissionPath extends StubResource implements Serializable
 {
-	private static final long serialVersionUID = 01L;
+	private static final long serialVersionUID = 02L;
 	public static final String typ = "path";
 
 	public TransmissionPath_Transferable transferable;
 
 	public String id = "";
 	public String name = "";
-	public String description = "";
-	public String KIS_id = "";
-	public String access_port_id = "";
-	public String local_address = "";
-	public String monitored_element_id = "";
-	public String domain_id = "";
+	public String domainId = "";
 
 	public long modified;
-
-	public List links = new ArrayList();
 
 	public Map characteristics = new HashMap();
 
@@ -73,18 +31,10 @@ public class TransmissionPath extends StubResource implements Serializable
 
 	public TransmissionPath(
 			String id,
-			String name,
-			String description,
-			String KIS_id,
-			String access_port_id,
-			String local_address)
+			String name)
 	{
 		this.id = id;
 		this.name = name;
-		this.description = description;
-		this.KIS_id = KIS_id;
-		this.access_port_id = access_port_id;
-		this.local_address = local_address;
 
 		transferable = new TransmissionPath_Transferable();
 	}
@@ -99,19 +49,8 @@ public class TransmissionPath extends StubResource implements Serializable
 	{
 		id = transferable.id;
 		name = transferable.name;
-		description = transferable.description;
-		KIS_id = transferable.KIS_id;
-		access_port_id = transferable.access_port_id;
-		local_address = transferable.local_address;
-		monitored_element_id = transferable.monitored_element_id;
-		domain_id = transferable.domain_id;
-
+		domainId = transferable.domainId;
 		modified = transferable.modified;
-
-//		MiscUtil.addToVector(link_ids, transferable.link_ids);
-
-		for(int i = 0; i < transferable.links.length; i++)
-			links.add( new TransmissionPathElement(transferable.links[i]));
 
 		for(int i = 0; i < transferable.characteristics.length; i++)
 			characteristics.put(transferable.characteristics[i].type_id, new Characteristic(transferable.characteristics[i]));
@@ -121,23 +60,9 @@ public class TransmissionPath extends StubResource implements Serializable
 	{
 		transferable.id = id;
 		transferable.name = name;
-		transferable.description = description;
-		transferable.KIS_id = KIS_id;
-		transferable.access_port_id = access_port_id;
-		transferable.local_address = local_address;
-		transferable.monitored_element_id = monitored_element_id;
-		transferable.domain_id = domain_id;
+		transferable.domainId = domainId;
 
 		transferable.modified = modified;
-
-//		link_ids.copyInto(transferable.link_ids);
-		transferable.links = new TransmissionPathElement_Transferable[links.size()];
-		int counter = 0;
-		for(Iterator it = links.iterator(); it.hasNext();)
-		{
-			TransmissionPathElement link = (TransmissionPathElement)it.next();
-			transferable.links[counter++] = (TransmissionPathElement_Transferable )link.getTransferable();
-		}
 
 		int l = this.characteristics.size();
 		int i = 0;
@@ -167,7 +92,7 @@ public class TransmissionPath extends StubResource implements Serializable
 
 	public String getDomainId()
 	{
-		return domain_id;
+		return domainId;
 	}
 
 	public long getModified()
@@ -207,6 +132,7 @@ public class TransmissionPath extends StubResource implements Serializable
 		return "com.syrus.AMFICOM.Client.Configure.UI.TransmissionPathPane";
 	}
 
+/*
 	public List sortPorts()
 	{
 		ArrayList vec = new ArrayList();
@@ -282,19 +208,13 @@ public class TransmissionPath extends StubResource implements Serializable
 		}
 		return vec;
 	}
-
+*/
 	private void writeObject(java.io.ObjectOutputStream out) throws IOException
 	{
 		out.writeObject(id);
 		out.writeObject(name);
-		out.writeObject(description);
-		out.writeObject(KIS_id);
-		out.writeObject(access_port_id);
-		out.writeObject(local_address);
-		out.writeObject(monitored_element_id);
-		out.writeObject(domain_id);
+		out.writeObject(domainId);
 		out.writeLong(modified);
-		out.writeObject(links);
 		out.writeObject(characteristics);
 	}
 
@@ -303,14 +223,8 @@ public class TransmissionPath extends StubResource implements Serializable
 	{
 		id = (String )in.readObject();
 		name = (String )in.readObject();
-		description = (String )in.readObject();
-		KIS_id = (String )in.readObject();
-		access_port_id = (String )in.readObject();
-		local_address = (String )in.readObject();
-		monitored_element_id = (String )in.readObject();
-		domain_id = (String )in.readObject();
+		domainId = (String )in.readObject();
 		modified = in.readLong();
-		links = (List )in.readObject();
 		characteristics = (Map )in.readObject();
 
 		transferable = new TransmissionPath_Transferable();

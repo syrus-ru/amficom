@@ -69,8 +69,8 @@ public class MonitoredElementDisplayModel extends StubDisplayModel
 //		  return new TextFieldEditor(Pool.getName("pathtype", tp.type_id));
 		if(col_id.equals("KIS_id"))
 		{
-			AccessPort ap = (AccessPort )Pool.get(AccessPort.typ, me.access_port_id);
-			return new TextFieldEditor(Pool.getName("kis", ap.KIS_id));
+			MeasurementPort ap = (MeasurementPort)Pool.get(MeasurementPort.typ, me.measurementPortId);
+			return new TextFieldEditor(Pool.getName("kis", ap.kisId));
 		}
 //		if(col_id.equals("end_equipment_id"))
 //		  return new TextFieldEditor(Pool.getName("equipment", tp.end_equipment_id));
