@@ -1,5 +1,5 @@
 /*
- * $Id: LogicalTreeUI.java,v 1.8 2005/03/24 08:25:57 bob Exp $
+ * $Id: LogicalTreeUI.java,v 1.9 2005/03/25 16:35:02 bob Exp $
  *
  * Copyright ? 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,7 +22,6 @@ import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -46,7 +45,7 @@ import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/03/24 08:25:57 $
+ * @version $Revision: 1.9 $, $Date: 2005/03/25 16:35:02 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module filter_v1
@@ -314,8 +313,7 @@ public class LogicalTreeUI implements SelectionListener, AddDeleteItems {
 	public void setRootItem(Item rootItem) {
 		this.rootItem = rootItem;
 		if (this.treeModel == null) {
-			this.treeModel = new ItemTreeModel(this.rootItem);
-			this.rootItem.addChangeListener(this.treeModel.getItemListener());
+			this.treeModel = new ItemTreeModel(this.rootItem);			
 		}
 		List children = this.rootItem.getChildren();
 		if (children != null) {

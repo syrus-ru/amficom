@@ -1,5 +1,5 @@
 /*
- * $Id: LogicalSchemeUI.java,v 1.16 2005/03/25 09:45:51 bob Exp $
+ * $Id: LogicalSchemeUI.java,v 1.17 2005/03/25 16:35:02 bob Exp $
  *
  * Copyright ? 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -33,11 +33,11 @@ import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2005/03/25 09:45:51 $
+ * @version $Revision: 1.17 $, $Date: 2005/03/25 16:35:02 $
  * @author $Author: bob $
  * @module filter_v1
  */
-public class LogicalSchemeUI extends JComponent implements MouseListener, MouseMotionListener, SelectionListener {
+public class LogicalSchemeUI extends JComponent implements MouseListener, MouseMotionListener, SelectionListener, ItemListener {
 
 	/**
 	 * Comment for <code>serialVersionUID</code>
@@ -93,7 +93,7 @@ public class LogicalSchemeUI extends JComponent implements MouseListener, MouseM
 
 	private SelectionListener[]	selectionListeners	= new SelectionListener[0];
 
-	private AddDeleteItems[]	addDeleteItems		= new AddDeleteItems[0];
+//	private AddDeleteItems[]	addDeleteItems		= new AddDeleteItems[0];
 
 	public LogicalSchemeUI(Item rootItem) {
 		if (!rootItem.isService()) {
@@ -111,16 +111,19 @@ public class LogicalSchemeUI extends JComponent implements MouseListener, MouseM
 				rootItem2.addChild(rootItem);
 			}
 		}
-		if (this.rootServiceItem == null)
+		if (this.rootServiceItem == null) {
 			this.rootServiceItem = new ViewItem(rootItem);
+			rootItem.addChangeListener(this);
+		}
 		this.addMouseListener(this);
 		this.addMouseMotionListener(this);
 
 		this.selectedItems = new HashSet();
 
 		this.items = new LinkedList();
-		this.addItem(rootItem, false);
+		this.addItem(rootItem, false, false);
 		this.newItem = null;
+		
 	}
 
 	private static class Point {
@@ -137,6 +140,17 @@ public class LogicalSchemeUI extends JComponent implements MouseListener, MouseM
 			if (instance == null) instance = new Point();
 			return instance;
 		}
+	}
+	
+	public void setParentPerformed(	Item item,
+									Item oldParent,
+									Item newParent) {
+		if (newParent != null) {
+			if (!(item instanceof ViewItem)) {
+				addItem(item, false, false);
+			}
+		}
+
 	}
 
 	private void initItems() {
@@ -303,6 +317,7 @@ public class LogicalSchemeUI extends JComponent implements MouseListener, MouseM
 			int w = 10;
 
 			int componentWidth = this.getWidth();
+			System.out.println(componentWidth);
 			int componentHeight = this.getHeight();
 			{
 
@@ -315,15 +330,19 @@ public class LogicalSchemeUI extends JComponent implements MouseListener, MouseM
 						ViewItem viewItem2 = (ViewItem) iter.next();
 						width = viewItem2.getHierarchicalWidth();
 						count = viewItem2.getHierarchicalCount();
+						
 						if (count * w + width > componentWidth) {
 							w = (componentWidth - width) / count;
+							System.out.println(viewItem2.getName() + " recalc: " + w + ", width:" + width + ", count:" + count);
 						}
 					}
 				}
 			}
+			
+			System.out.println(w);
 
 			w = (w > EDGE_THICK) ? w : EDGE_THICK;
-
+			this.rootServiceItem.print(0);
 			this.rootServiceItem.separateChildrenY();
 			this.rootServiceItem.separateChildrenX(w);
 
@@ -510,9 +529,9 @@ public class LogicalSchemeUI extends JComponent implements MouseListener, MouseM
 			for (Iterator it = list.iterator(); it.hasNext();) {
 				ViewItem item = (ViewItem) it.next();
 				item.setParent(null);
-				for (int i = 0; i < this.addDeleteItems.length; i++) {
-					this.addDeleteItems[i].deleteItem(item.getSourceItem());
-				}
+//				for (int i = 0; i < this.addDeleteItems.length; i++) {
+//					this.addDeleteItems[i].deleteItem(item.getSourceItem());
+//				}
 				this.items.remove(item);
 
 			}
@@ -529,45 +548,53 @@ public class LogicalSchemeUI extends JComponent implements MouseListener, MouseM
 	}
 
 	public void addItem(Item item) {
-		this.addItem(item, true);
+		this.addItem(item, true, false);
 	}
 
-	private void addItem(Item item, boolean toRoot) {
+
+	private void addItem(Item item, boolean toRoot, boolean toParent) {
 		if (item instanceof ViewItem) {
 			this.newItem = (ViewItem) item;
 		} else {
 			this.newItem = (ViewItem) ViewItem.item2ItemViewMap.get(item);
 			if (this.newItem == null) {
 				this.newItem = new ViewItem(item);
-				ViewItem.item2ItemViewMap.put(item, this.newItem);
+				if (this.fontMetrics != null) {
+				this.newItem.setWidth(this.fontMetrics.stringWidth(this.newItem.getName()) + 2 * this.fontXOffset);
+				this.newItem.setHeight((int) (1.5 * this.fontMetrics.getHeight()));
+				}
 			}
 		}
-
-		if (this.fontMetrics != null) {
-			this.newItem.setWidth(this.fontMetrics.stringWidth(item.getName()) + 2 * this.fontXOffset);
-			this.newItem.setHeight((int) (1.5 * this.fontMetrics.getHeight()));
+		
+		ViewItem parent2 = (ViewItem) this.newItem.getParent();
+		Item parent3 = item.getParent();
+		ViewItem item2 = this.newItem;
+		
+		Item sourceParentItem2 = parent2 == null ? null : parent2.getSourceItem();
+		if (parent3 != null && (sourceParentItem2 == null || !sourceParentItem2.equals(parent3))) {
+			this.addItem(parent3, toRoot, true);
+			this.newItem = item2;
+			parent2 = (ViewItem) ViewItem.item2ItemViewMap.get(parent3);
+			parent2.addChild(this.newItem);
+			this.newItem.setParent(parent2);
 		}
-
-		// FontMetrics fontMetrics = this.getFontMetrics(this.regularFont);
-		// if (this.fontXOffset == -1)
-		// this.fontXOffset = fontMetrics.stringWidth("XX");
-		// this.newItem.setWidth(fontMetrics.stringWidth(item.getName()) + 2 *
-		// this.fontXOffset);
-		// this.newItem.setHeight((int) (1.5 * fontMetrics.getHeight()));
 
 		this.items.add(this.newItem);
 
 		if (toRoot) this.rootServiceItem.addChild(this.newItem);
 
-		for (int i = 0; i < this.addDeleteItems.length; i++) {
-			this.addDeleteItems[i].addItem(this.newItem.getSourceItem());
-		}
+//		for (int i = 0; i < this.addDeleteItems.length; i++) {
+//			this.addDeleteItems[i].addItem(this.newItem.getSourceItem());
+//		}
 
+		if (toParent)
+			return;
+		
 		List children = item.getChildren();
 		if (children != null && !children.isEmpty()) {
 			for (Iterator it = children.iterator(); it.hasNext();) {
-				Item item2 = (Item) it.next();
-				this.addItem(item2, toRoot);
+				Item item3 = (Item) it.next();
+				this.addItem(item3, toRoot, toParent);
 			}
 		}
 	}
@@ -768,28 +795,28 @@ public class LogicalSchemeUI extends JComponent implements MouseListener, MouseM
 		}
 	}
 
-	public void addAddDeleteItemListener(AddDeleteItems addDeleteItems) {
-		AddDeleteItems[] addDeleteItems1 = new AddDeleteItems[this.addDeleteItems.length + 1];
-		System.arraycopy(this.addDeleteItems, 0, addDeleteItems1, 1, this.addDeleteItems.length);
-		addDeleteItems1[0] = addDeleteItems;
-		this.addDeleteItems = addDeleteItems1;
-	}
-
-	public void removeAddDeleteItemListener(AddDeleteItems addDeleteItems) {
-		int index = -1;
-		for (int i = 0; i < this.addDeleteItems.length; i++) {
-			if (this.addDeleteItems[i].equals(addDeleteItems)) {
-				index = i;
-				break;
-			}
-		}
-		if (index >= -1) {
-			AddDeleteItems[] addDeleteItems2 = new AddDeleteItems[this.addDeleteItems.length - 1];
-			System.arraycopy(this.addDeleteItems, 0, addDeleteItems2, 0, index);
-			System.arraycopy(this.addDeleteItems, index + 1, addDeleteItems2, index, addDeleteItems2.length - index);
-			this.addDeleteItems = addDeleteItems2;
-		}
-	}
+//	public void addAddDeleteItemListener(AddDeleteItems addDeleteItems) {
+//		AddDeleteItems[] addDeleteItems1 = new AddDeleteItems[this.addDeleteItems.length + 1];
+//		System.arraycopy(this.addDeleteItems, 0, addDeleteItems1, 1, this.addDeleteItems.length);
+//		addDeleteItems1[0] = addDeleteItems;
+//		this.addDeleteItems = addDeleteItems1;
+//	}
+//
+//	public void removeAddDeleteItemListener(AddDeleteItems addDeleteItems) {
+//		int index = -1;
+//		for (int i = 0; i < this.addDeleteItems.length; i++) {
+//			if (this.addDeleteItems[i].equals(addDeleteItems)) {
+//				index = i;
+//				break;
+//			}
+//		}
+//		if (index >= -1) {
+//			AddDeleteItems[] addDeleteItems2 = new AddDeleteItems[this.addDeleteItems.length - 1];
+//			System.arraycopy(this.addDeleteItems, 0, addDeleteItems2, 0, index);
+//			System.arraycopy(this.addDeleteItems, index + 1, addDeleteItems2, index, addDeleteItems2.length - index);
+//			this.addDeleteItems = addDeleteItems2;
+//		}
+//	}
 
 	public void selectedItems(Collection selectedItems) {
 		this.selectedItems.clear();

@@ -1,5 +1,5 @@
 /*
- * $Id: ViewItem.java,v 1.10 2005/03/24 08:19:29 bass Exp $
+ * $Id: ViewItem.java,v 1.11 2005/03/25 16:35:02 bob Exp $
  *
  * Copyright ? 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,8 +17,8 @@ import java.util.LinkedList;
 import java.util.Map;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/03/24 08:19:29 $
- * @author $Author: bass $
+ * @version $Revision: 1.11 $, $Date: 2005/03/25 16:35:02 $
+ * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module filter_v1
  */
@@ -99,8 +99,6 @@ public class ViewItem extends AbstractItem implements Item {
 		} else
 			viewItem = (ViewItem) item2ItemViewMap.get(childItem);
 
-		super.addChild(viewItem);
-
 		if (this.children.contains(viewItem)) return;
 
 		if (this.getChildrenCount() < this.sourceItem.getMaxChildrenCount()) {
@@ -108,6 +106,7 @@ public class ViewItem extends AbstractItem implements Item {
 			this.children.add(viewItem);
 			this.sortedChildren = false;
 			if (addToSource) this.sourceItem.addChild(viewItem.getSourceItem());
+			super.addChild(viewItem);
 
 		} else
 			throw new UnsupportedOperationException("There cannot be more than "
@@ -142,9 +141,10 @@ public class ViewItem extends AbstractItem implements Item {
 		} else
 			viewItem = (ViewItem) item2ItemViewMap.get(parent);
 
+		this.sourceItem.setParent(viewItem == null ? null : viewItem.sourceItem);
+		
 		super.setParent(viewItem);
 
-		this.sourceItem.setParent(viewItem == null ? null : viewItem.sourceItem);
 	}
 
 	public int getChildrenCount() {
@@ -184,24 +184,20 @@ public class ViewItem extends AbstractItem implements Item {
 
 	public int getHierarchicalWidth() {
 		int w = 0;
-		if (super.parent != null) {
+		System.out.println(this.getName() + ", width: " + this.width);
+		if (super.parent != null && !super.parent.isService()) {
 			ViewItem viewItem = (ViewItem) super.parent;
-			int hw = viewItem.getHierarchicalWidth();
-			w = w > hw ? w : hw;
-		}
+			System.out.println("super.parent.getName()"+super.parent.getName());
+			w = viewItem.getHierarchicalWidth();
+		}		
 		return w + this.width;
 	}
 
 	public int getHierarchicalCount() {
 		int count = 0;
-		int w = 0;
-		if (super.parent != null) {
+		if (super.parent != null && !super.parent.isService()) {
 			ViewItem viewItem = (ViewItem) super.parent;
-			int hw = viewItem.getHierarchicalWidth();
-			if (hw > w) {
-				w = hw;
-				count = viewItem.getHierarchicalCount();
-			}
+			count = viewItem.getHierarchicalCount();
 		}
 		return count + 1;
 	}
@@ -240,7 +236,7 @@ public class ViewItem extends AbstractItem implements Item {
 	}
 
 	public void separateChildrenY() {
-		// System.out.println("separateChildrenY>" + this.getName());
+//		System.out.println("separateChildrenY>" + this.getName());
 		if (this.children != null && !this.children.isEmpty()) {
 			if (!this.sortedChildren) {
 				Collections.sort(this.children, ycomparator);

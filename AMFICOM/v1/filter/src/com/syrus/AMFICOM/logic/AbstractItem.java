@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractItem.java,v 1.7 2005/03/25 09:45:28 bob Exp $
+ * $Id: AbstractItem.java,v 1.8 2005/03/25 16:35:01 bob Exp $
  *
  * Copyright ? 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,6 +8,7 @@
 
 package com.syrus.AMFICOM.logic;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -16,7 +17,7 @@ import java.util.List;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/03/25 09:45:28 $
+ * @version $Revision: 1.8 $, $Date: 2005/03/25 16:35:01 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module filter_v1
@@ -75,8 +76,8 @@ public abstract class AbstractItem implements Item {
 	}
 
 	public void addChild(Item childItem) {
-		Log.debugMessage("AbstractItem.addChild | this.name: " + this.getName() + " \n\t name: "
-				+ childItem.getName(), Log.FINEST);
+		Log.debugMessage("AbstractItem.addChild | this.name: " + this.getName() + '(' + this.getClass().getName() + ')' + " \n\t name: "
+				+ childItem.getName()+ '(' + childItem.getClass().getName() + ')', Log.FINEST);
 		
 		if (!this.canHaveChildren())
 			throw new UnsupportedOperationException("Item " + this.getName() + " can not have children.");
@@ -91,8 +92,10 @@ public abstract class AbstractItem implements Item {
 			return;
 
 		if (this.isService() || childItem.canHaveParent()) {
-			this.children.add(childItem);
-			childItem.setParent(this);
+			if (childItem.getParent() != this) {
+				this.children.add(childItem);
+				childItem.setParent(this);
+			}
 		} else {
 			throw new UnsupportedOperationException("Parent for " + childItem.getName() + " isn't allow.");
 		}
@@ -103,10 +106,11 @@ public abstract class AbstractItem implements Item {
 	}
 
 	public void setParent(Item parent) {
-		Log.debugMessage("AbstractItem.setParent | name:" + this.getName() + "\n\tparent:"
-				+ (parent == null ? "'null'" : parent.getName()), Log.FINEST);
+		Log.debugMessage("AbstractItem.setParent | name:" + this.getName() + '(' + this.getClass().getName() + ')' +"\n\tparent:"
+				+ (parent == null ? "'null'" : parent.getName() + '(' + this.getClass().getName() + ')'), Log.FINEST);
 
 		Item oldParent = this.parent;
+		/* yeah, really compare reference */
 		if (parent == oldParent)
 			return;
 
@@ -119,7 +123,9 @@ public abstract class AbstractItem implements Item {
 
 		this.parent = parent;
 		if (this.parent != null) {
-			this.parent.addChild(this);
+			List children2 = this.parent.getChildren();
+			if (!children2.isEmpty() && children2.contains(this))
+				this.parent.addChild(this);
 		}
 
 		this.fireParentChanged(this, oldParent, this.parent);
@@ -127,15 +133,39 @@ public abstract class AbstractItem implements Item {
 	
 	protected void fireParentChanged(Item item, Item oldParent, Item newParent) {
 		for (int i = 0; i < this.listener.length; i++) {
-			this.listener[i].setParentPerformed(item, oldParent, newParent);
+			this.listener[i].setParentPerformed( item, oldParent, newParent);
+			Log.debugMessage(this.getClass().getName() + " " + this.getName() + " listener[" + i + "].setParentPerformed | item:" + item.getName()
+				+ ", oldParent:" + (oldParent == null ? "'null'" : oldParent.getName())
+				+ ", newParent:" + (newParent == null ? "'null'" : newParent.getName()), Log.FINEST);
 		}
-		if (this.parent instanceof AbstractItem) {
-			AbstractItem abstractItem = (AbstractItem) this.parent;
+		Item nonNullParent = this.parent == null ? oldParent : this.parent;
+		/* yeah, really compare reference */
+		if (nonNullParent == this)
+			return;
+		if (nonNullParent instanceof AbstractItem) {
+			AbstractItem abstractItem = (AbstractItem) nonNullParent;
 			abstractItem.fireParentChanged(item, oldParent, newParent);
 		}
 	}
 
 	public Item getParent() {
 		return this.parent;
+	}
+	
+	public void print(final int deep) { 
+		char[] cs = new char[deep];
+		for (int i = 0; i < cs.length; i++) {
+			cs[i] = '\t';
+		}
+		System.out.println(new String(cs) + this.getName());
+		if (this.children != null) {
+			for (Iterator it = this.children.iterator(); it.hasNext();) {
+				Item item = (Item) it.next();
+				if (item instanceof AbstractItem) {
+					AbstractItem abstractItem = (AbstractItem) item;
+					abstractItem.print(deep + 1);
+				}
+			}
+		}
 	}
 }

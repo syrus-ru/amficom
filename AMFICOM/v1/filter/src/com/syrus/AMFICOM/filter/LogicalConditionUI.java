@@ -1,5 +1,5 @@
 /*
- * $Id: LogicalConditionUI.java,v 1.11 2005/03/25 10:29:31 max Exp $
+ * $Id: LogicalConditionUI.java,v 1.12 2005/03/25 16:35:01 bob Exp $
  *
  * Copyright ? 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,8 +30,8 @@ import com.syrus.AMFICOM.logic.LogicalTreeUI;
 import com.syrus.AMFICOM.logic.ServiceItem;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/03/25 10:29:31 $
- * @author $Author: max $
+ * @version $Revision: 1.12 $, $Date: 2005/03/25 16:35:01 $
+ * @author $Author: bob $
  * @module filter_v1
  */
 public class LogicalConditionUI {
@@ -150,10 +150,11 @@ public class LogicalConditionUI {
 		if (this.logicalSchemeUI != null) {
 			logicalTreeUI.addSelectionListener(this.logicalSchemeUI);
 			this.logicalSchemeUI.addSelectionListener(logicalTreeUI);
-			this.logicalSchemeUI.addAddDeleteItemListener(logicalTreeUI);
+//			this.logicalSchemeUI.addAddDeleteItemListener(logicalTreeUI);
 		}
 		splitPane.setOneTouchExpandable(false);
 		splitPane.setResizeWeight(0.2);
+		this.populateRootItem();
 		return splitPane;
 	}
 
@@ -187,8 +188,7 @@ public class LogicalConditionUI {
 
 	private Item getRootItem() {
 		if (this.rootItem == null) {
-			this.rootItem = new ServiceItem();
-			this.populateRootItem();
+			this.rootItem = new ServiceItem();			
 		}
 		return this.rootItem;
 	}

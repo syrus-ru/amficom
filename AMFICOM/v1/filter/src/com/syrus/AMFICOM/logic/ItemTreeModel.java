@@ -1,5 +1,5 @@
-/*
- * $Id: ItemTreeModel.java,v 1.4 2005/03/25 09:46:15 bob Exp $
+/*-
+ * $Id: ItemTreeModel.java,v 1.5 2005/03/25 16:35:01 bob Exp $
  *
  * Copyright ? 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,7 +24,7 @@ import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/03/25 09:46:15 $
+ * @version $Revision: 1.5 $, $Date: 2005/03/25 16:35:01 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module filter_v1
@@ -56,6 +56,7 @@ public class ItemTreeModel implements TreeModel, ItemListener {
 
 	public ItemTreeModel(Item root) {
 		this.root = root;
+		this.root.addChangeListener(this.getItemListener());
 	}
 
 	protected static NameItemComparator getNameItemComparator() {
@@ -150,9 +151,11 @@ public class ItemTreeModel implements TreeModel, ItemListener {
 		for (int i = 0; i < childCount; i++) {
 			if (this.getChild(parent, i).equals(child)) {
 				newIndexs[0] = i;
+//				System.out.println("found");
 				break;
 			}
-		}
+		}		
+//		System.out.println("insert " + child.getName() + " to " + parent.getName() + " [ " + newIndexs[0] + " ] ");
 		nodesWereInserted(parent, objects, newIndexs);
 	}
 
@@ -395,12 +398,12 @@ public class ItemTreeModel implements TreeModel, ItemListener {
 			parent1 = this.root;
 		}
 		final Item parent = parent1;
-		SwingUtilities.invokeLater(new Runnable() {
+			SwingUtilities.invokeLater(new Runnable() {
 
-			public void run() {
-				insertNodeInto(parent, child);
-			}
-		});
+				public void run() {
+					insertNodeInto(parent, child);
+				}
+			});
 	}
 	
 	public void setParentPerformed(Item item, Item oldParent, Item newParent) {		
@@ -410,7 +413,7 @@ public class ItemTreeModel implements TreeModel, ItemListener {
 		if (newParent != null) {
 			addItem(newParent, item);
 		} else {
-			this.parentSortedChildren.remove(oldParent);
+			this.parentSortedChildren.remove(oldParent);			
 		}
 	}
 
