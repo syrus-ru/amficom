@@ -246,7 +246,7 @@ public class AnalysisSelectionFrame extends ATableFrame
 
 	private void updColorModel()
 	{
-		scrollPane.getViewport().setBackground(SystemColor.window);
+//		scrollPane.getViewport().setBackground(SystemColor.window);
 //		jTable.setBackground(SystemColor.window);
 //		jTable.setForeground(ColorManager.getColor("textColor"));
 //		jTable.setGridColor(ColorManager.getColor("tableGridColor"));
