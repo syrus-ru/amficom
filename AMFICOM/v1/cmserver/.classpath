@@ -6,7 +6,7 @@
 	<classpathentry kind="src" path="/config_v1"/>
 	<classpathentry kind="src" path="/measurement_v1"/>
 	<classpathentry kind="src" path="/admin_v1"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/mcm_interface"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/util"/>
+	<classpathentry kind="src" path="/util"/>
+	<classpathentry kind="var" path="AMFICOM_HOME/lib/mcm_interface.jar"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>
