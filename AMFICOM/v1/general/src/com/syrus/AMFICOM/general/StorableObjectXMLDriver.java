@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectXMLDriver.java,v 1.4 2005/01/25 08:06:53 bob Exp $
+ * $Id: StorableObjectXMLDriver.java,v 1.5 2005/01/27 13:17:51 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,6 +10,7 @@ package com.syrus.AMFICOM.general;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -41,9 +42,9 @@ import org.xml.sax.SAXException;
 import com.syrus.util.Log;
 
 /**
- * XML Driver for storable object package, one per package. 
+ * XML Driver for storable object package, one per package.
  * 
- * @version $Revision: 1.4 $, $Date: 2005/01/25 08:06:53 $
+ * @version $Revision: 1.5 $, $Date: 2005/01/27 13:17:51 $
  * @author $Author: bob $
  * @module general_v1
  */
@@ -165,12 +166,36 @@ public class StorableObjectXMLDriver {
 			if (map == null)
 				map = Collections.EMPTY_MAP;
 		} catch (TransformerException te) {
-			Log.errorMessage("StorableObjectXMLDriver.getObjectMap | Caught " + te.getMessage());
-			throw new RetrieveObjectException("StorableObjectXMLDriver.getObjectMap | Caught " + te.getMessage(), te);
+			String msg = "StorableObjectXMLDriver.getObjectMap | Caught " + te.getMessage();
+			Log.errorMessage(msg);
+			throw new RetrieveObjectException(msg, te);
 		}
 
 		return map;
 	}
+
+	public List getIdentifiers(short entityCode) throws IllegalDataException {
+
+		try {
+			NodeList idNodeList = XPathAPI.selectNodeList(this.doc, "//" + this.packageName + "/"
+					+ "*[starts-with(name(),'" + ObjectEntities.codeToString(entityCode) + "')]");
+			int size = idNodeList.getLength();
+			if (size == 0)
+				return Collections.EMPTY_LIST;
+
+			List idList = new ArrayList(size);
+			for (int i = 0; i < idNodeList.getLength(); i++) {
+				Node node = idNodeList.item(i);
+				idList.add(new Identifier(node.getNodeName()));
+			}
+			return idList;
+		} catch (TransformerException e) {
+			String msg = "StorableObjectXMLDriver.getIdentifiers | Caught " + e.getMessage()
+					+ " during retrieve identifiers for '" + ObjectEntities.codeToString(entityCode) + '\'';
+			Log.errorMessage(msg);
+			throw new IllegalDataException(msg, e);
+		}
+	}	
 
 	public void deleteObject(final Identifier identifier) throws IllegalDataException {
 		try {
@@ -185,8 +210,9 @@ public class StorableObjectXMLDriver {
 				this.root.removeChild(children);
 			}
 		} catch (TransformerException te) {
-			Log.errorMessage("StorableObjectXMLDriver.deleteObject | Caught " + te.getMessage());
-			throw new IllegalDataException("StorableObjectXMLDriver.deleteObject | Caught " + te.getMessage(), te);
+			String msg = "StorableObjectXMLDriver.deleteObject | Caught " + te.getMessage();
+			Log.errorMessage(msg);
+			throw new IllegalDataException(msg, te);
 		}
 	}
 
