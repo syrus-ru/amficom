@@ -1,5 +1,5 @@
 /*
- * $Id: ObjectGroupEntities.java,v 1.10 2005/01/25 06:35:27 bob Exp $
+ * $Id: ObjectGroupEntities.java,v 1.11 2005/02/09 13:52:30 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,8 +8,8 @@
 package com.syrus.AMFICOM.general;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/01/25 06:35:27 $
- * @author $Author: bob $
+ * @version $Revision: 1.11 $, $Date: 2005/02/09 13:52:30 $
+ * @author $Author: arseniy $
  * @module general_v1
  */
 public final class ObjectGroupEntities {
@@ -183,6 +183,10 @@ public final class ObjectGroupEntities {
 
 	public static boolean isInMapViewGroup(final String entityName) {
 		return isInMapViewGroup(ObjectEntities.stringToCode(entityName));
+	}
+
+	public static short getGroupCode(final Short entityCode) {
+		return getGroupCode(entityCode.shortValue());
 	}
 
 	public static short getGroupCode(final short entityCode) {
