@@ -17,6 +17,7 @@ import com.syrus.AMFICOM.Client.Resource.Test.*;
 import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.Resource.ISM.*;
 import com.syrus.AMFICOM.Client.Resource.ISMDirectory.*;
+import com.syrus.AMFICOM.Client.Schedule.ScheduleMainFrame;
 
 public class ElementsTreePanel extends JPanel implements OperationListener {
 
@@ -37,11 +38,10 @@ public class ElementsTreePanel extends JPanel implements OperationListener {
 	//private Object selectedObject;
 	private HashMap					paramMap;
 
-	public ElementsTreePanel(ApplicationContext aContext,
-			ObjectResourceTreeModel model) {
+	public ElementsTreePanel(ApplicationContext aContext) {
 		this.aContext = aContext;
 		this.dispatcher = aContext.getDispatcher();
-		this.model = model;
+		this.model = new TestsTreeModel(aContext);
 
 		try {
 			jbInit();
@@ -115,14 +115,44 @@ public class ElementsTreePanel extends JPanel implements OperationListener {
 		this.dispatcher.register(this, TestRequestFrame.COMMAND_DATA_REQUEST);
 	}
 
+	public HashMap getParameters() {
+		HashMap parameters = new HashMap();
+		JTree tree = getTree();
+		TreePath treePath = tree.getSelectionPath();
+		if (treePath != null) {
+			for (int i = 0; i < treePath.getPathCount(); i++) {
+				ObjectResourceTreeNode node = (ObjectResourceTreeNode) treePath
+						.getPathComponent(i);
+				Object obj = node.getObject();
+
+				if (obj instanceof TestType) {
+					TestType testType = (TestType) obj;
+					parameters.put(TestType.typ, testType);
+				} else if (obj instanceof KIS) {
+					KIS kis = (KIS) obj;
+					parameters.put(KIS.typ, kis);
+				} else if (obj instanceof AccessPort) {
+					AccessPort port = (AccessPort) obj;
+					parameters.put(AccessPort.typ, port);
+				} else if (obj instanceof MonitoredElement) {
+					MonitoredElement me = (MonitoredElement) obj;
+					parameters.put(MonitoredElement.typ, me);
+				}
+
+			}
+		}
+		return parameters;
+	}
+
 	public JTree getTree() {
 		return utp.getTree();
 	}
 
 	public void operationPerformed(OperationEvent oe) {
 		String commandName = oe.getActionCommand();
-		System.out
-				.println(getClass().getName() + " commandName:" + commandName);
+		if (ScheduleMainFrame.DEBUG)
+				System.out.println(getClass().getName() + " commandName:"
+						+ commandName);
 		if (commandName.equals(TreeDataSelectionEvent.type)) {
 			TreeDataSelectionEvent dse = (TreeDataSelectionEvent) oe;
 			//			selectedObject = dse.selectedObject;
@@ -137,19 +167,22 @@ public class ElementsTreePanel extends JPanel implements OperationListener {
 			}
 		} else if (commandName
 				.equalsIgnoreCase(TestRequestFrame.COMMAND_DATA_REQUEST)) {
-			/**
-			 * @todo must send data edit in this form 
-			 */
-			dispatcher.notify(new OperationEvent("", 0,
+
+			HashMap param = getParameters();
+			dispatcher.notify(new OperationEvent(param,
+					TestRequestFrame.DATA_ID_ELEMENTS,
 					TestRequestFrame.COMMAND_SEND_DATA));
 		} else if (commandName.equals(TestUpdateEvent.typ)) {
 			TestUpdateEvent tue = (TestUpdateEvent) oe;
 			if (tue.TEST_SELECTED) {
-				System.out.println("commandName.equals(TestUpdateEvent.typ)");
+				if (ScheduleMainFrame.DEBUG)
+						System.out
+								.println("commandName.equals(TestUpdateEvent.typ)");
 				Test test = tue.test;
 				TestType testType = (TestType) Pool.get(TestType.typ,
 						test.test_type_id);
-				//System.out.println("testType:" + testType.id + "\t"	+ testType.name);
+				//System.out.println("testType:" + testType.id + "\t" +
+				// testType.name);
 				KIS kis = (KIS) Pool.get(KIS.typ, test.kis_id);
 				Vector accessPorts = kis.access_ports;
 				//System.out.println("kis:" + kis.id + "\t" + kis.name);
@@ -160,8 +193,10 @@ public class ElementsTreePanel extends JPanel implements OperationListener {
 					AccessPort aport = (AccessPort) accessPorts.get(i);
 					if (me.access_port_id.equals(aport.getId())) {
 						port = aport;
-						//System.out.println("port:" + port.id + "\t" + port.name);
-						//System.out.println("me:" + me.element_id + "\t"	+ me.element_name);
+						//System.out.println("port:" + port.id + "\t" +
+						// port.name);
+						//System.out.println("me:" + me.element_id + "\t" +
+						// me.element_name);
 						break;
 					}
 				}
@@ -179,7 +214,7 @@ public class ElementsTreePanel extends JPanel implements OperationListener {
 		}
 	}
 
-	private void loadButton_actionPerformed() {
+	void loadButton_actionPerformed() {
 	}
 
 	private void delMapGroupButton_actionPerformed() {
@@ -194,8 +229,8 @@ public class ElementsTreePanel extends JPanel implements OperationListener {
 		expandAll(root, new TreePath(root), expand);
 	}
 
-	private void expandAll(ObjectResourceTreeNode node,
-			TreePath parent, boolean expand) {
+	private void expandAll(ObjectResourceTreeNode node, TreePath parent,
+			boolean expand) {
 		Vector vec = model.getChildNodes(node);
 		for (int i = 0; i < vec.size(); i++) {
 			ObjectResourceTreeNode n = (ObjectResourceTreeNode) vec.get(i);
@@ -251,153 +286,155 @@ public class ElementsTreePanel extends JPanel implements OperationListener {
 
 	}
 
-}
+	private class TestsTreeModel extends ObjectResourceTreeModel {
 
-class TestsTreeModel extends ObjectResourceTreeModel {
+		private DataSourceInterface		dsi;
 
-	private DataSourceInterface		dsi;
+		private ApplicationContext		aContext;
 
-	private ApplicationContext		aContext;
+		private Dispatcher				dispatcher;
 
-	private Dispatcher				dispatcher;
+		private ObjectResourceTreeNode	root;
 
-	private ObjectResourceTreeNode	root;
+		private TreeModel				model;
 
-	private TreeModel				model;
+		//	private Hashtable testTypeTable;
+		//
+		//	private Hashtable kisTable;
+		//
+		//	private Hashtable meTable;
 
-	//	private Hashtable testTypeTable;
-	//
-	//	private Hashtable kisTable;
-	//
-	//	private Hashtable meTable;
+		public TestsTreeModel(ApplicationContext aContext) {
+			this.aContext = aContext;
+			this.dsi = aContext.getDataSourceInterface();
+			this.dispatcher = aContext.getDispatcher();
 
-	public TestsTreeModel(ApplicationContext aContext) {
-		this.aContext = aContext;
-		this.dsi = aContext.getDataSourceInterface();
-		this.dispatcher = aContext.getDispatcher();
-
-		root = new ObjectResourceTreeNode("root", "Вид тестирования", true,
-				(ImageIcon) UIUtil.FOLDER_ICON);
-
-		Hashtable kisTable = Pool.getHash(KIS.typ);
-		Hashtable meTable = Pool.getHash(MonitoredElement.typ);
-		Hashtable aptTable = Pool.getHash(AccessPortType.typ);
-		for (Enumeration testTypeEn = Pool.getHash(TestType.typ).elements(); testTypeEn
-				.hasMoreElements();) {
-			TestType testType = (TestType) testTypeEn.nextElement();
-			ObjectResourceTreeNode testTypeNode = new ObjectResourceTreeNode(
-					testType, testType.getName(), true,
+			root = new ObjectResourceTreeNode("root", "Вид тестирования", true,
 					(ImageIcon) UIUtil.FOLDER_ICON);
-			root.add(testTypeNode);
-			if (kisTable != null) {
-				for (Enumeration kisTypeEnum = kisTable.elements(); kisTypeEnum
-						.hasMoreElements();) {
-					KIS kis = (KIS) kisTypeEnum.nextElement();
-					for (Enumeration en = kis.access_ports.elements(); en
+
+			Hashtable kisTable = Pool.getHash(KIS.typ);
+			Hashtable meTable = Pool.getHash(MonitoredElement.typ);
+			Hashtable aptTable = Pool.getHash(AccessPortType.typ);
+			for (Enumeration testTypeEn = Pool.getHash(TestType.typ).elements(); testTypeEn
+					.hasMoreElements();) {
+				TestType testType = (TestType) testTypeEn.nextElement();
+				ObjectResourceTreeNode testTypeNode = new ObjectResourceTreeNode(
+						testType, testType.getName(), true,
+						(ImageIcon) UIUtil.FOLDER_ICON);
+				root.add(testTypeNode);
+				if (kisTable != null) {
+					for (Enumeration kisTypeEnum = kisTable.elements(); kisTypeEnum
 							.hasMoreElements();) {
-						AccessPort acessPort = (AccessPort) en.nextElement();
-						AccessPortType apt = (AccessPortType) aptTable
-								.get(acessPort.type_id);
-						if (apt.test_type_ids.contains(testType.getId())) {
-							ObjectResourceTreeNode kisNode = new ObjectResourceTreeNode(
-									kis, kis.getName(), true,
-									(ImageIcon) UIUtil.TESTING_ICON, false);
-							testTypeNode.add(kisNode);
-							for (int i = 0; i < kis.access_ports.size(); i++) {
-								AccessPort aport = (AccessPort) kis.access_ports
-										.get(i);
-								{
-									ObjectResourceTreeNode accessPortNode = new ObjectResourceTreeNode(
-											aport, aport.getName(), true,
-											(ImageIcon) UIUtil.PORT_ICON, false);
-									kisNode.add(accessPortNode);
-									for (Enumeration meEnum = meTable
-											.elements(); meEnum
-											.hasMoreElements();) {
-										MonitoredElement me = (MonitoredElement) meEnum
-												.nextElement();
-										if (me.access_port_id.equals(aport
-												.getId())) {
-											ObjectResourceTreeNode meNode = new ObjectResourceTreeNode(
-													me,
-													me.getName(),
-													true,
-													(ImageIcon) UIUtil.PATHMODE_ICON,
-													true);
-											accessPortNode.add(meNode);
+						KIS kis = (KIS) kisTypeEnum.nextElement();
+						for (Enumeration en = kis.access_ports.elements(); en
+								.hasMoreElements();) {
+							AccessPort acessPort = (AccessPort) en
+									.nextElement();
+							AccessPortType apt = (AccessPortType) aptTable
+									.get(acessPort.type_id);
+							if (apt.test_type_ids.contains(testType.getId())) {
+								ObjectResourceTreeNode kisNode = new ObjectResourceTreeNode(
+										kis, kis.getName(), true,
+										(ImageIcon) UIUtil.TESTING_ICON, false);
+								testTypeNode.add(kisNode);
+								for (int i = 0; i < kis.access_ports.size(); i++) {
+									AccessPort aport = (AccessPort) kis.access_ports
+											.get(i);
+									{
+										ObjectResourceTreeNode accessPortNode = new ObjectResourceTreeNode(
+												aport, aport.getName(), true,
+												(ImageIcon) UIUtil.PORT_ICON,
+												false);
+										kisNode.add(accessPortNode);
+										for (Enumeration meEnum = meTable
+												.elements(); meEnum
+												.hasMoreElements();) {
+											MonitoredElement me = (MonitoredElement) meEnum
+													.nextElement();
+											if (me.access_port_id.equals(aport
+													.getId())) {
+												ObjectResourceTreeNode meNode = new ObjectResourceTreeNode(
+														me,
+														me.getName(),
+														true,
+														(ImageIcon) UIUtil.PATHMODE_ICON,
+														true);
+												accessPortNode.add(meNode);
+											}
 										}
 									}
 								}
+								break;
 							}
-							break;
 						}
 					}
 				}
 			}
+			model = new DefaultTreeModel(root);
+
 		}
-		model = new DefaultTreeModel(root);
 
-	}
+		public ObjectResourceTreeNode getRoot() {
+			return root;
+		}
 
-	public ObjectResourceTreeNode getRoot() {
-		return root;
-	}
+		public ImageIcon getNodeIcon(ObjectResourceTreeNode node) {
+			return null;
+		}
 
-	public ImageIcon getNodeIcon(ObjectResourceTreeNode node) {
-		return null;
-	}
+		public Color getNodeTextColor(ObjectResourceTreeNode node) {
+			return null;
+		}
 
-	public Color getNodeTextColor(ObjectResourceTreeNode node) {
-		return null;
-	}
+		public void nodeAfterSelected(ObjectResourceTreeNode node) {
+		}
 
-	public void nodeAfterSelected(ObjectResourceTreeNode node) {
-	}
+		public void nodeBeforeExpanded(ObjectResourceTreeNode node) {
+		}
 
-	public void nodeBeforeExpanded(ObjectResourceTreeNode node) {
-	}
-
-	public Class getNodeChildClass(ObjectResourceTreeNode node) {
-		Object obj = node.getObject();
-		Class ret = null;
-		if (obj instanceof String) {
-			if (node.getObject().equals("root")) ret = TestType.class;
-		} else if (obj instanceof TestType) {
-			//System.out.println("testType:" + ((TestType) obj).name);
-			ret = KIS.class;
-		} else if (obj instanceof KIS) {
-			KIS kis = (KIS) obj;
-			//System.out.println("KIS:" + kis.type_id);
-			Vector ports = kis.access_ports;
-			for (Enumeration e = ports.elements(); e.hasMoreElements();) {
-				AccessPort port = (AccessPort) e.nextElement();
+		public Class getNodeChildClass(ObjectResourceTreeNode node) {
+			Object obj = node.getObject();
+			Class ret = null;
+			if (obj instanceof String) {
+				if (node.getObject().equals("root")) ret = TestType.class;
+			} else if (obj instanceof TestType) {
+				//System.out.println("testType:" + ((TestType) obj).name);
+				ret = KIS.class;
+			} else if (obj instanceof KIS) {
+				KIS kis = (KIS) obj;
+				//System.out.println("KIS:" + kis.type_id);
+				Vector ports = kis.access_ports;
+				for (Enumeration e = ports.elements(); e.hasMoreElements();) {
+					AccessPort port = (AccessPort) e.nextElement();
+					dispatcher.notify(new OperationEvent(port.type_id, 0,
+							TestParametersPanel.COMMAND_CHANGE_PORT_TYPE));
+				}
+				ret = AccessPort.class;
+			} else if (obj instanceof AccessPort) {
+				//System.out.println("AccessPort:" + ((AccessPort)
+				// obj).type_id);
+				AccessPort port = (AccessPort) obj;
+				ret = MonitoredElement.class;
 				dispatcher.notify(new OperationEvent(port.type_id, 0,
 						TestParametersPanel.COMMAND_CHANGE_PORT_TYPE));
 			}
-			ret = AccessPort.class;
-		} else if (obj instanceof AccessPort) {
-			//System.out.println("AccessPort:" + ((AccessPort) obj).type_id);
-			AccessPort port = (AccessPort) obj;
-			ret = MonitoredElement.class;
-			dispatcher.notify(new OperationEvent(port.type_id, 0,
-					TestParametersPanel.COMMAND_CHANGE_PORT_TYPE));
+			return ret;
 		}
-		return ret;
+
+		public Vector getChildNodes(ObjectResourceTreeNode node) {
+
+			//		Object obj = node.getObject();
+			int count = node.getChildCount();
+			//		ObjectResourceTreeNode parent = (ObjectResourceTreeNode)
+			// node.getParent();
+			//		System.out.println("getChildNodes\t" + obj.getClass().getName()
+			//				+ "\tnode.getChildCount():" + count);
+
+			Vector vec = new Vector();
+			for (int i = 0; i < count; i++)
+				vec.add(model.getChild(node, i));
+			return vec;
+		}
+
 	}
-
-	public Vector getChildNodes(ObjectResourceTreeNode node) {
-
-		//		Object obj = node.getObject();
-		int count = node.getChildCount();
-		//		ObjectResourceTreeNode parent = (ObjectResourceTreeNode)
-		// node.getParent();
-		//		System.out.println("getChildNodes\t" + obj.getClass().getName()
-		//				+ "\tnode.getChildCount():" + count);
-
-		Vector vec = new Vector();
-		for (int i = 0; i < count; i++)
-			vec.add(model.getChild(node, i));
-		return vec;
-	}
-
 }
