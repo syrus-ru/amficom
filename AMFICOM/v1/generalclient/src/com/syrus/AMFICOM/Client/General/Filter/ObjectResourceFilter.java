@@ -2,9 +2,7 @@ package com.syrus.AMFICOM.Client.General.Filter;
 
 import com.syrus.AMFICOM.Client.General.Filter.FilterPanel;
 
-import java.io.*;
 import java.util.*;
-import com.syrus.AMFICOM.Client.General.Filter.FilterExpression;
 import com.syrus.AMFICOM.Client.Resource.ObjectResource;
 import com.syrus.AMFICOM.Client.Resource.DataSet;
 
@@ -12,6 +10,13 @@ import com.syrus.AMFICOM.filter.*;
 
 public abstract class ObjectResourceFilter implements Filter
 {
+	
+	public static final String COLUMN_FILTER_TYPE_STRING	=  "string";
+	public static final String COLUMN_FILTER_TYPE_LIST		=  "list";
+	public static final String COLUMN_FILTER_TYPE_TIME		=  "time";
+	public static final String COLUMN_FILTER_TYPE_NUMERIC	=  "numeric";
+	public static final String COLUMN_FILTER_TYPE_RANGE		=  "range";
+	
 	public LogicScheme logicScheme = null;
 	public String resource_typ = "";
 //	public Vector criteria = new Vector();
