@@ -1,0 +1,8 @@
+classes
+*.deploy
+*.jpr
+*.jpx*
+*.swp
+*.tar
+*.gz
+corba
