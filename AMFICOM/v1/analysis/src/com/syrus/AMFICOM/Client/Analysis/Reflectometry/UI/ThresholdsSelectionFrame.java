@@ -297,10 +297,10 @@ public class ThresholdsSelectionFrame extends ATableFrame
 				pColumns[i] = LangModelAnalyse.getString("thresholdsHeight");
 				break;
 			case ModelTraceManager.ThreshEditor.TYPE_DXF:
-				pColumns[i] = LangModelAnalyse.getString("thresholdsDXL");
+				pColumns[i] = LangModelAnalyse.getString("thresholdsDXF");
 				break;
 			case ModelTraceManager.ThreshEditor.TYPE_DXT:
-				pColumns[i] = LangModelAnalyse.getString("thresholdsDXR");
+				pColumns[i] = LangModelAnalyse.getString("thresholdsDXT");
 				break;
 			// default... - @todo
 			}

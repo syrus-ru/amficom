@@ -75,9 +75,9 @@ public class FileOpenCommand extends VoidCommand
 		catch (IOException ex)
 		{
 		}
-		//System.err.println("FileOpenCommand: execute: #3; lastDir = '" + lastDir + "'"); // FIXME: remove
-		JFileChooser chooser = new JFileChooser(lastDir); // XXX: почему-то тут иногда тормозит
-		//System.err.println("FileOpenCommand: execute: #3.1"); // FIXME: remove
+
+		JFileChooser chooser = new JFileChooser(lastDir); // XXX: при подмонтированных сетевых дисках с drive Letter-ами тут может тормозить
+
 		chooser.addChoosableFileFilter(new ChoosableFileFilter("sor", "Bellcore GR-196-CORE "));
 		chooser.addChoosableFileFilter(new ChoosableFileFilter(new String[] {"dat", "ref", "trc"}, "NetTest / Laser Precision "));
 		chooser.addChoosableFileFilter(new ChoosableFileFilter("tfw", "Acterna / Wavetek "));
