@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseCompoundCondition.java,v 1.2 2005/02/04 07:11:53 max Exp $
+ * $Id: DatabaseCompoundCondition.java,v 1.3 2005/02/17 14:20:14 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,12 +10,13 @@ package com.syrus.AMFICOM.general;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Iterator;
 
 import com.syrus.AMFICOM.general.corba.CompoundCondition_TransferablePackage.CompoundConditionSort;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/02/04 07:11:53 $
- * @author $Author: max $
+ * @version $Revision: 1.3 $, $Date: 2005/02/17 14:20:14 $
+ * @author $Author: bob $
  * @module general_v1
  */
 public final class DatabaseCompoundCondition implements DatabaseStorableObjectCondition {
@@ -72,32 +73,36 @@ public final class DatabaseCompoundCondition implements DatabaseStorableObjectCo
 	}
 
 	public String getSQLQuery() throws IllegalDataException {
-		StringBuffer buffer = new StringBuffer(StorableObjectDatabase.OPEN_BRACKET);
-		StorableObjectCondition firstCondition = this.delegate.getFirstCondition();
-		StorableObjectCondition secondCondition = this.delegate.getSecondCondition();
-		String query1 = this.reflectDatabaseCondition(firstCondition).getSQLQuery();
-		String query2 = this.reflectDatabaseCondition(secondCondition).getSQLQuery();
-		switch (this.delegate.getOperation()) {
-			case CompoundConditionSort._AND:
-				buffer.append(query1);
-				buffer.append(StorableObjectDatabase.CLOSE_BRACKET);
-				buffer.append(StorableObjectDatabase.SQL_AND);
+		boolean firstCondition = true;
+		StringBuffer buffer = new StringBuffer();
+		for (Iterator it = this.delegate.getConditions().iterator(); it.hasNext();) {
+			StorableObjectCondition condition = (StorableObjectCondition) it.next();
+			String query = this.reflectDatabaseCondition(condition).getSQLQuery();
+			if (firstCondition) {
+				firstCondition = false;
 				buffer.append(StorableObjectDatabase.OPEN_BRACKET);
-				buffer.append(query2);
+				buffer.append(query);
 				buffer.append(StorableObjectDatabase.CLOSE_BRACKET);
-				break;
-			case CompoundConditionSort._OR:
-				buffer.append(query1);
-				buffer.append(StorableObjectDatabase.CLOSE_BRACKET);
-				buffer.append(StorableObjectDatabase.SQL_OR);
-				buffer.append(StorableObjectDatabase.OPEN_BRACKET);
-				buffer.append(query2);
-				buffer.append(StorableObjectDatabase.CLOSE_BRACKET);
-				break;
-			default:
-				throw new IllegalDataException("DatabaseCompoundCondition.getSQLQuery | Unsupported condition sort");
+			} else {
+				switch (this.delegate.getOperation()) {
+					case CompoundConditionSort._AND:
+						buffer.append(StorableObjectDatabase.SQL_AND);
+						buffer.append(StorableObjectDatabase.OPEN_BRACKET);
+						buffer.append(query);
+						buffer.append(StorableObjectDatabase.CLOSE_BRACKET);
+						break;
+					case CompoundConditionSort._OR:
+						buffer.append(StorableObjectDatabase.SQL_OR);
+						buffer.append(StorableObjectDatabase.OPEN_BRACKET);
+						buffer.append(query);
+						buffer.append(StorableObjectDatabase.CLOSE_BRACKET);
+						break;
+					default:
+						throw new IllegalDataException("DatabaseCompoundCondition.getSQLQuery | Unsupported condition sort");
 
-		}
+				}
+			}
+		}		
 		return buffer.toString();
 	}
 

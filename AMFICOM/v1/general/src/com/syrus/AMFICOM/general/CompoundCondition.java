@@ -1,5 +1,5 @@
 /*
- * $Id: CompoundCondition.java,v 1.13 2005/02/11 16:09:06 bob Exp $
+ * $Id: CompoundCondition.java,v 1.14 2005/02/17 14:20:14 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,11 @@
 package com.syrus.AMFICOM.general;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Iterator;
 
 import org.omg.CORBA.Any;
 import org.omg.CORBA.ORB;
@@ -20,14 +24,13 @@ import com.syrus.AMFICOM.general.corba.LinkedIdsCondition_Transferable;
 import com.syrus.AMFICOM.general.corba.StorableObjectCondition_Transferable;
 import com.syrus.AMFICOM.general.corba.TypicalCondition_Transferable;
 import com.syrus.AMFICOM.general.corba.CompoundCondition_TransferablePackage.CompoundConditionSort;
-import com.syrus.util.Log;
 import com.syrus.util.corba.JavaSoftORBUtil;
 
 /**
- * Compound condition such as (A & B), (A | B) , (A ^ B) where A and B is
+ * Compound condition such as (A & B & C & ... etc), (A | B | C | ... etc) where A, B, C .. are
  * conditions (they can be also compound condition too)
  * 
- * @version $Revision: 1.13 $, $Date: 2005/02/11 16:09:06 $
+ * @version $Revision: 1.14 $, $Date: 2005/02/17 14:20:14 $
  * @author $Author: bob $
  * @module general_v1
  */
@@ -35,13 +38,17 @@ public class CompoundCondition implements StorableObjectCondition {
 
 	private static final ORB		ORB_INSTANCE	= JavaSoftORBUtil.getInstance().getORB();
 
-	private StorableObjectCondition	firstCondition;
 	private int						operation;
-	private StorableObjectCondition	secondCondition;
 
-	// private Short entityCode;
+	/**
+	 * Collection&lt;StorableObjectCondition&gt;
+	 */
+	private Collection				conditions;
 
-	private boolean doCompare(boolean firstResult, boolean secondResult) throws ApplicationException {
+	private Short entityCode  = new Short(ObjectEntities.UNKNOWN_ENTITY_CODE);
+
+	private boolean doCompare(	boolean firstResult,
+								boolean secondResult) throws ApplicationException {
 		switch (this.operation) {
 			case CompoundConditionSort._AND:
 				return firstResult && secondResult;
@@ -55,130 +62,143 @@ public class CompoundCondition implements StorableObjectCondition {
 	public CompoundCondition(StorableObjectCondition firstCondition,
 			CompoundConditionSort operation,
 			StorableObjectCondition secondCondition) throws CreateObjectException {
-		if (firstCondition.getEntityCode().intValue() != secondCondition.getEntityCode().intValue()) { throw new CreateObjectException(
-																																		"Unable to create CompoundCondition for conditions with different entity codes"); }
-		this.firstCondition = firstCondition;
+		this(Arrays.asList(new Object[] {firstCondition, secondCondition}) , operation);
+	}
+
+	public CompoundCondition(Collection conditions, CompoundConditionSort operation) throws CreateObjectException {
+		if (conditions == null)
+			throw new CreateObjectException("Unable to create CompoundCondition for null conditions");
+		
+		if (conditions.size() <= 1)
+			throw new CreateObjectException("Unable to create CompoundCondition for alone condition, use condition itself");
+
+		short code = ObjectEntities.UNKNOWN_ENTITY_CODE;
+
+		for (Iterator it = conditions.iterator(); it.hasNext();) {
+			Object object = it.next();
+			if (object instanceof StorableObjectCondition) {
+				StorableObjectCondition condition = (StorableObjectCondition) object;
+				if (code == ObjectEntities.UNKNOWN_ENTITY_CODE) {
+					this.entityCode = condition.getEntityCode();
+					code = this.entityCode.shortValue();
+				}
+				else if (code != condition.getEntityCode().shortValue())
+					throw new CreateObjectException(
+													"Unable to create CompoundCondition for conditions for different entities");
+			} else
+				throw new CreateObjectException(
+												"Unable to create CompoundCondition for conditions containing not StorableObjectCondition objects");
+		}
+
 		this.operation = operation.value();
-		this.secondCondition = secondCondition;
+		this.conditions = conditions;
+	}
+	
+	protected StorableObjectCondition restoreCondition(Serializable serializable)
+			throws IllegalDataException {
+		StorableObjectCondition condition;
+		if (serializable instanceof TypicalCondition_Transferable) {
+			TypicalCondition_Transferable tct = (TypicalCondition_Transferable) serializable;
+			condition = new TypicalCondition(tct);
+		} else if (serializable instanceof EquivalentCondition_Transferable) {
+			EquivalentCondition_Transferable ect = (EquivalentCondition_Transferable) serializable;
+			condition = new EquivalentCondition(ect);
+		} else if (serializable instanceof LinkedIdsCondition_Transferable) {
+			LinkedIdsCondition_Transferable lict = (LinkedIdsCondition_Transferable) serializable;
+			condition = new LinkedIdsCondition(lict);
+		} else if (serializable instanceof CompoundCondition_Transferable) {
+			CompoundCondition_Transferable cct = (CompoundCondition_Transferable) serializable;
+			condition = new CompoundCondition(cct);
+		} else {
+			throw new IllegalDataException("Wrong StorableObjectCondition " + serializable.getClass().getName());
+		}
+		return condition;
 	}
 
 	public CompoundCondition(CompoundCondition_Transferable transferable) throws IllegalDataException {
 		this.operation = transferable.sort.value();
 		Any[] anies = transferable.innerConditions;
-		if (anies.length == 2) {
-			Serializable serializable1 = anies[0].extract_Value();
-			Serializable serializable2 = anies[1].extract_Value();
-			if (serializable1 instanceof TypicalCondition_Transferable) {
-				TypicalCondition_Transferable tct = (TypicalCondition_Transferable) serializable1;
-				this.firstCondition = new TypicalCondition(tct);
-			} else if (serializable1 instanceof EquivalentCondition_Transferable) {
-				EquivalentCondition_Transferable ect = (EquivalentCondition_Transferable) serializable1;
-				this.firstCondition = new EquivalentCondition(ect);
-			} else if (serializable1 instanceof LinkedIdsCondition_Transferable) {
-				LinkedIdsCondition_Transferable lict = (LinkedIdsCondition_Transferable) serializable1;
-				this.firstCondition = new LinkedIdsCondition(lict);
-			} else if (serializable1 instanceof CompoundCondition_Transferable) {
-				CompoundCondition_Transferable cct = (CompoundCondition_Transferable) serializable1;
-				this.firstCondition = new CompoundCondition(cct);
-			} else {
-				throw new IllegalDataException("Wrong StorableObjectCondition " + serializable1.getClass().getName());
-			}
-
-			if (serializable1 instanceof TypicalCondition_Transferable) {
-				TypicalCondition_Transferable tct = (TypicalCondition_Transferable) serializable1;
-				this.secondCondition = new TypicalCondition(tct);
-			} else if (serializable1 instanceof EquivalentCondition_Transferable) {
-				EquivalentCondition_Transferable ect = (EquivalentCondition_Transferable) serializable1;
-				this.secondCondition = new EquivalentCondition(ect);
-			} else if (serializable2 instanceof LinkedIdsCondition_Transferable) {
-				LinkedIdsCondition_Transferable lict = (LinkedIdsCondition_Transferable) serializable2;
-				this.secondCondition = new LinkedIdsCondition(lict);
-			} else if (serializable2 instanceof CompoundCondition_Transferable) {
-				CompoundCondition_Transferable cct = (CompoundCondition_Transferable) serializable2;
-				this.secondCondition = new CompoundCondition(cct);
-			} else {
-				throw new IllegalDataException("Wrong StorableObjectCondition " + serializable2.getClass().getName());
-			}
-
-		} else
-			throw new IllegalDataException("Illegal condition count " + anies.length);
+		if (anies.length <= 1)
+			throw new IllegalDataException("Unable to create CompoundCondition for " + anies.length + "  condition");
+		this.conditions = new ArrayList(anies.length);
+		for (int i = 0; i < anies.length; i++) {
+			this.conditions.add(this.restoreCondition(anies[i].extract_Value()));
+		}
 	}
 
 	public boolean isConditionTrue(Object object) throws ApplicationException {
-		boolean firstResult = this.firstCondition.isConditionTrue(object);
-		Log.debugMessage("CompoundCondition.isConditionTrue | firstCondition is " + firstResult, Log.INFO);
-		boolean secondResult = this.secondCondition.isConditionTrue(object);
-		Log.debugMessage("CompoundCondition.isConditionTrue | secondCondition is " + secondResult, Log.INFO);
-		boolean result = doCompare(firstResult, secondResult);
-		Log.debugMessage("CompoundCondition.isConditionTrue | result is " + result, Log.INFO);
+		boolean firstItem = true;
+		boolean result = false;
+		
+		for (Iterator it = this.conditions.iterator(); it.hasNext();) {
+			StorableObjectCondition condition = (StorableObjectCondition) it.next();
+			if (firstItem) {
+				result = condition.isConditionTrue(object);
+				firstItem = false;
+			} else {
+				result = this.doCompare(result, condition.isConditionTrue(object));
+			}
+		}
+		
 		return result;
 	}
 
 	public boolean isNeedMore(Collection collection) throws ApplicationException {
-		boolean firstResult = this.firstCondition.isNeedMore(collection);
-		boolean secondResult = this.secondCondition.isNeedMore(collection);
-		return doCompare(firstResult, secondResult);
+		boolean firstItem = true;
+		boolean result = false;
+		
+		for (Iterator it = this.conditions.iterator(); it.hasNext();) {
+			StorableObjectCondition condition = (StorableObjectCondition) it.next();
+			if (firstItem) {
+				result = condition.isNeedMore(collection);
+				firstItem = false;
+			} else {
+				result = this.doCompare(result, condition.isNeedMore(collection));
+			}
+		}
+		return result;
 	}
 
 	public Short getEntityCode() {
-		return this.firstCondition.getEntityCode();
+		return this.entityCode;
 	}
 
 	public void setEntityCode(Short entityCode) {
 		throw new UnsupportedOperationException();
 	}
 
-	public Object getTransferable() {
-		CompoundCondition_Transferable transferable = new CompoundCondition_Transferable();
-		transferable.innerConditions = new org.omg.CORBA.Any[2];
-		StorableObjectCondition_Transferable transferable2 = new StorableObjectCondition_Transferable();
-		StorableObjectCondition_Transferable transferable3 = new StorableObjectCondition_Transferable();
-
-		if (this.firstCondition instanceof TypicalCondition) {
-			TypicalCondition typicalCondition = (TypicalCondition) this.firstCondition;
-			transferable2.typicalCondition((TypicalCondition_Transferable) typicalCondition.getTransferable());
-		} else if (this.firstCondition instanceof EquivalentCondition) {
-			EquivalentCondition equivalentCondition = (EquivalentCondition) this.firstCondition;
-			transferable2.equialentCondition((EquivalentCondition_Transferable) equivalentCondition.getTransferable());
-		} else if (this.firstCondition instanceof LinkedIdsCondition) {
-			LinkedIdsCondition linkedIdsCondition = (LinkedIdsCondition) this.firstCondition;
-			transferable2.linkedIdsCondition((LinkedIdsCondition_Transferable) linkedIdsCondition.getTransferable());
-		} else if (this.firstCondition instanceof CompoundCondition) {
-			CompoundCondition compoundCondition = (CompoundCondition) this.firstCondition;
-			transferable2.compoundCondition((CompoundCondition_Transferable) compoundCondition.getTransferable());
+	private StorableObjectCondition_Transferable getTransefable(StorableObjectCondition condition) {
+		StorableObjectCondition_Transferable transferable = new StorableObjectCondition_Transferable();
+		if (condition instanceof TypicalCondition) {
+			TypicalCondition typicalCondition = (TypicalCondition) condition;
+			transferable.typicalCondition((TypicalCondition_Transferable) typicalCondition.getTransferable());
+		} else if (condition instanceof EquivalentCondition) {
+			EquivalentCondition equivalentCondition = (EquivalentCondition) condition;
+			transferable.equialentCondition((EquivalentCondition_Transferable) equivalentCondition.getTransferable());
+		} else if (condition instanceof LinkedIdsCondition) {
+			LinkedIdsCondition linkedIdsCondition = (LinkedIdsCondition) condition;
+			transferable.linkedIdsCondition((LinkedIdsCondition_Transferable) linkedIdsCondition.getTransferable());
+		} else if (condition instanceof CompoundCondition) {
+			CompoundCondition compoundCondition = (CompoundCondition) condition;
+			transferable.compoundCondition((CompoundCondition_Transferable) compoundCondition.getTransferable());
 		}
-
-		if (this.secondCondition instanceof TypicalCondition) {
-			TypicalCondition typicalCondition = (TypicalCondition) this.secondCondition;
-			transferable2.typicalCondition((TypicalCondition_Transferable) typicalCondition.getTransferable());
-		} else if (this.secondCondition instanceof EquivalentCondition) {
-			EquivalentCondition equivalentCondition = (EquivalentCondition) this.secondCondition;
-			transferable2.equialentCondition((EquivalentCondition_Transferable) equivalentCondition.getTransferable());
-		} else if (this.secondCondition instanceof LinkedIdsCondition) {
-			LinkedIdsCondition linkedIdsCondition = (LinkedIdsCondition) this.secondCondition;
-			transferable3.linkedIdsCondition((LinkedIdsCondition_Transferable) linkedIdsCondition.getTransferable());
-		} else if (this.secondCondition instanceof CompoundCondition) {
-			CompoundCondition compoundCondition = (CompoundCondition) this.secondCondition;
-			transferable3.compoundCondition((CompoundCondition_Transferable) compoundCondition.getTransferable());
-		}
-
-		Any any1 = ORB_INSTANCE.create_any();
-		any1.insert_Value(transferable2);
-		transferable.innerConditions[0] = any1;
-
-		Any any2 = ORB_INSTANCE.create_any();
-		any1.insert_Value(transferable3);
-		transferable.innerConditions[2] = any2;
-
 		return transferable;
 	}
-
-	/**
-	 * @return Returns the firstCondition.
-	 */
-	public StorableObjectCondition getFirstCondition() {
-		return this.firstCondition;
+	
+	public Object getTransferable() {
+		CompoundCondition_Transferable transferable = new CompoundCondition_Transferable();
+		transferable.sort = CompoundConditionSort.from_int(this.operation);
+		transferable.innerConditions = new org.omg.CORBA.Any[this.conditions.size()];
+		int i = 0;
+		for (Iterator it = this.conditions.iterator(); it.hasNext();i++) {
+			StorableObjectCondition condition = (StorableObjectCondition) it.next();
+			Any any = ORB_INSTANCE.create_any();
+			any.insert_Value(this.getTransefable(condition));
+			transferable.innerConditions[i] = any;
+		}		
+		return transferable;
 	}
+	
 
 	/**
 	 * @return Returns the operation.
@@ -187,10 +207,7 @@ public class CompoundCondition implements StorableObjectCondition {
 		return this.operation;
 	}
 
-	/**
-	 * @return Returns the secondCondition.
-	 */
-	public StorableObjectCondition getSecondCondition() {
-		return this.secondCondition;
+	public Collection getConditions() {
+		return Collections.unmodifiableCollection(this.conditions);
 	}
 }
