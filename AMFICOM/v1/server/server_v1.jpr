@@ -1,0 +1,356 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<project nselem="project" class="oracle.jdeveloper.model.JProject" xmlns="http://xmlns.oracle.com/jdeveloper/9051/jproject">
+   <defaultPackage/>
+   <defaultPackages class="java.util.ArrayList">
+      <Item/>
+   </defaultPackages>
+   <dependencyList class="java.util.ArrayList">
+      <Item class="oracle.jdeveloper.library.ProjectLibrary">
+         <locked>true</locked>
+         <sourceOwnerURL path="../server.jws"/>
+         <sourceURL path="../../common/util/util.jpr"/>
+      </Item>
+      <Item class="oracle.jdeveloper.library.ProjectLibrary">
+         <locked>true</locked>
+         <sourceOwnerURL path="../server.jws"/>
+         <sourceURL path="../../common/idl_v1/idl_v1.jpr"/>
+      </Item>
+      <Item class="oracle.jdeveloper.library.ProjectLibrary">
+         <locked>true</locked>
+         <sourceOwnerURL path="../server.jws"/>
+         <sourceURL path="../../common/filter_v1/filter_v1.jpr"/>
+      </Item>
+      <Item class="oracle.jdeveloper.library.ProjectLibrary">
+         <locked>true</locked>
+         <sourceOwnerURL path="../server.jws"/>
+         <sourceURL path="../../common/corbaportable_v1/corbaportable_v1.jpr"/>
+      </Item>
+      <Item class="oracle.jdeveloper.library.ProjectLibrary">
+         <locked>true</locked>
+         <sourceOwnerURL path="../server.jws"/>
+         <sourceURL path="../servermisc_v1/servermisc_v1.jpr"/>
+      </Item>
+      <Item class="oracle.jdeveloper.library.ProjectLibrary">
+         <locked>true</locked>
+         <sourceOwnerURL path="../server.jws"/>
+         <sourceURL path="../kisserver_v1/kisserver_v1.jpr"/>
+      </Item>
+   </dependencyList>
+   <htmlRootDirectory path="docs/api/"/>
+   <j2eeWebAppName>server_v1</j2eeWebAppName>
+   <j2eeWebContextRoot>server_v1</j2eeWebContextRoot>
+   <listOfChildren class="oracle.ide.model.DataList"/>
+   <ownerMap/>
+   <projectDocPath>
+      <entries class="[Ljava.net.URL;"/>
+   </projectDocPath>
+   <projectLibraryList class="oracle.jdeveloper.library.JProjectLibraryList">
+      <jdkList class="java.util.ArrayList"/>
+      <libraryList class="java.util.ArrayList"/>
+   </projectLibraryList>
+   <projectSettings>
+      <activeConfigName>Development</activeConfigName>
+      <commonData class="java.util.HashMap">
+         <Item>
+            <Key>oracle.bm.commonIde.data.project.ModelerProjectSettings</Key>
+            <Value class="oracle.bm.commonIde.data.project.ModelerProjectSettings">
+               <modelersPath>
+                  <entries>
+                     <Item path="model/"/>
+                  </entries>
+               </modelersPath>
+               <modelersVersion>0.0</modelersVersion>
+            </Value>
+         </Item>
+         <Item>
+            <Key>oracle.jdeveloper.compiler.ant.AntConfiguration</Key>
+            <Value class="oracle.jdeveloper.compiler.ant.AntConfiguration">
+               <arguments class="java.lang.String"/>
+               <makeTarget/>
+               <projectBuildfile/>
+               <rebuildTarget/>
+               <showOutput>true</showOutput>
+            </Value>
+         </Item>
+         <Item>
+            <Key>oracle.jdeveloper.offlinedb.OfflineDBProjectSettings</Key>
+            <Value class="oracle.jdeveloper.offlinedb.OfflineDBProjectSettings">
+               <databasePath>
+                  <entries>
+                     <Item path="database/"/>
+                  </entries>
+               </databasePath>
+            </Value>
+         </Item>
+      </commonData>
+      <configurations class="java.util.TreeMap">
+         <Item>
+            <Key>Development</Key>
+            <Value class="oracle.jdeveloper.model.JProjectConfiguration">
+               <configData class="java.util.HashMap">
+                  <Item>
+                     <Key>oracle.jdeveloper.compiler.OjcConfiguration</Key>
+                     <Value class="oracle.jdeveloper.compiler.OjcConfiguration">
+                        <assertionsEnabled>true</assertionsEnabled>
+                        <copyRes>
+                           <Item>.gif</Item>
+                           <Item>.properties</Item>
+                           <Item>.jpg</Item>
+                           <Item>.jpeg</Item>
+                           <Item>.xml</Item>
+                           <Item>-apf.xml</Item>
+                        </copyRes>
+                        <debugInformation>true</debugInformation>
+                        <excludedClasses class="[Ljava.lang.String;"/>
+                        <internalEncoding>windows-1251</internalEncoding>
+                        <obfuscate>false</obfuscate>
+                        <reverseCopyRes>false</reverseCopyRes>
+                        <showDeprecations>true</showDeprecations>
+                        <showObjectDotStaticWarnings>true</showObjectDotStaticWarnings>
+                        <showPartialImportWarnings>false</showPartialImportWarnings>
+                        <showSelfDeprecations>true</showSelfDeprecations>
+                        <showUnusedImportWarnings>true</showUnusedImportWarnings>
+                        <showWarnings>true</showWarnings>
+                        <target>1.4</target>
+                        <updateImports>true</updateImports>
+                        <updateZipJarImports>false</updateZipJarImports>
+                     </Value>
+                  </Item>
+                  <Item>
+                     <Key>oracle.jdeveloper.javadoc.JProjectJavadoc</Key>
+                     <Value class="oracle.jdeveloper.javadoc.JProjectJavadoc">
+                        <embedDiagram>5</embedDiagram>
+                        <genDiagramDoc>true</genDiagramDoc>
+                        <generateAuthor>true</generateAuthor>
+                        <generateDeprecated>true</generateDeprecated>
+                        <generateIndex>true</generateIndex>
+                        <generateNavbar>true</generateNavbar>
+                        <generateSince>true</generateSince>
+                        <generateTree>true</generateTree>
+                        <generateVersion>true</generateVersion>
+                        <heapSize>32</heapSize>
+                        <imageFormat>1</imageFormat>
+                        <miscOptions class="java.lang.String"/>
+                        <oneOneFormat>false</oneOneFormat>
+                        <outputDirectory path="docs/api/"/>
+                        <scope>-private</scope>
+                     </Value>
+                  </Item>
+                  <Item>
+                     <Key>oracle.jdeveloper.runner.RunConfiguration</Key>
+                     <Value class="oracle.jdeveloper.runner.RunConfiguration">
+                        <VMName>ojvm</VMName>
+                        <XSLTInputFileURL/>
+                        <XSLTOutputFileURL/>
+                        <allowInput>true</allowInput>
+                        <alwaysUseTarget>false</alwaysUseTarget>
+                        <clearLogBeforeRun>true</clearLogBeforeRun>
+                        <compileBeforeRun>true</compileBeforeRun>
+                        <connectionName>jdbc_oracle_thin_AMFICOM_SYRUS_RU_1521_JAMAICA</connectionName>
+                        <javaOptions>-Dos.name=SunOS -Dos.version=5.10 -enableassertions -disablesystemassertions -Xfuture</javaOptions>
+                        <logCommand>true</logCommand>
+                        <logError>true</logError>
+                        <logExit>true</logExit>
+                        <logOutput>true</logOutput>
+                        <programArguments class="java.lang.String"/>
+                        <runActiveFile>true</runActiveFile>
+                        <runDirectoryURL path="."/>
+                        <targetURL path="src/com/syrus/AMFICOM/corba/portable/server/ServerMain.java"/>
+                        <useProxy>true</useProxy>
+                     </Value>
+                  </Item>
+                  <Item>
+                     <Key>oracle.jdevimpl.config.JProjectLibraries</Key>
+                     <Value class="oracle.jdevimpl.config.JProjectLibraries">
+                        <jdkName>1.4.2_04</jdkName>
+                        <jdkVersionNumber>1.4.2_04</jdkVersionNumber>
+                        <libraries>Oracle JDBC-20040121-10.1.0.2.0_g;SQLJ Runtime-10.1.0.0.0_ee;JUnit-3.8.1</libraries>
+                     </Value>
+                  </Item>
+                  <Item>
+                     <Key>oracle.jdevimpl.config.JProjectPaths</Key>
+                     <Value class="oracle.jdevimpl.config.JProjectPaths">
+                        <additionalClassPath>
+                           <entries class="[Ljava.net.URL;"/>
+                        </additionalClassPath>
+                        <outputDirectory path="classes/"/>
+                     </Value>
+                  </Item>
+                  <Item>
+                     <Key>oracle.jdevimpl.idl.config.IdlConfiguration</Key>
+                     <Value class="oracle.jdevimpl.idl.config.IdlConfiguration">
+                        <codeForIncludedFiles>false</codeForIncludedFiles>
+                        <noBindMethods>true</noBindMethods>
+                        <noComments>false</noComments>
+                        <noExampleCode>true</noExampleCode>
+                        <noSkeletonCode>false</noSkeletonCode>
+                        <noStubCode>false</noStubCode>
+                        <noTieCode>false</noTieCode>
+                        <noToString>false</noToString>
+                        <objectWrapper>false</objectWrapper>
+                        <packageName class="java.lang.String"/>
+                     </Value>
+                  </Item>
+                  <Item>
+                     <Key>oracle.jdevimpl.runner.codecoach.CCConfiguration</Key>
+                     <Value class="oracle.jdevimpl.runner.codecoach.CCConfiguration">
+                        <advices>ALL</advices>
+                        <exclude>java;javax;sun;sunw;org;oracle</exclude>
+                        <include>com.syrus</include>
+                        <level>9</level>
+                     </Value>
+                  </Item>
+                  <Item>
+                     <Key>oracle.jdevimpl.runner.debug.DebugConfiguration</Key>
+                     <Value class="oracle.jdevimpl.runner.debug.DebugConfiguration">
+                        <JPDAClassicDebugArguments>-Xdebug -Xnoagent -Djava.compiler=NONE -Xrunjdwp:transport=dt_socket,server=y,address=&lt;port></JPDAClassicDebugArguments>
+                        <JPDADebugArguments>-Xdebug -Xrunjdwp:transport=dt_socket,server=y,address=&lt;port></JPDADebugArguments>
+                        <OJVMDebugArguments>-XXdebug,quiet,port&lt;port></OJVMDebugArguments>
+                        <breakpointScope>global</breakpointScope>
+                        <remoteDebugging>false</remoteDebugging>
+                        <remoteDebuggingParameters class="java.util.HashMap"/>
+                        <remoteDebuggingParametersSaved>false</remoteDebuggingParametersSaved>
+                        <remoteDebuggingProtocol>ojvm</remoteDebuggingProtocol>
+                        <startOption>running</startOption>
+                        <tracingDisabled>java;javax;sun;sunw;com.sun;org.xml.sax</tracingDisabled>
+                        <tracingEnabled class="java.lang.String"/>
+                     </Value>
+                  </Item>
+                  <Item>
+                     <Key>oracle.jdevimpl.runner.profile.ProfileConfiguration</Key>
+                     <Value class="oracle.jdevimpl.runner.profile.ProfileConfiguration">
+                        <DMSstartID>20000</DMSstartID>
+                        <DMSstate>0</DMSstate>
+                        <eventColumnVisible>
+                           <Item>true</Item>
+                           <Item>true</Item>
+                           <Item>true</Item>
+                           <Item>true</Item>
+                           <Item>true</Item>
+                           <Item>true</Item>
+                        </eventColumnVisible>
+                        <events>
+G(All events;(
+G(VM Events;(
+E(0;GC;-16776961;1);
+E(10;Wait;-65485;1);
+E(11;Synch Blocks 0;-39322;1);
+E(12;Synch Blocks 1;-39322;1);
+E(13;Synch Blocks 2;-39322;1);
+E(20;Prepare Class;-16751002;1);
+E(21;Load Class;-16724992;1);
+E(22;Resolve Class;-16737997;1);));
+G(BC4J Events;(
+E(1000;JBO_MISCELLANEOUS;-4144960;1);
+E(1001;JDBC_SELECT;-256;1);
+E(1002;JDBC_CREATE_STATEMENT;-256;1);
+E(1003;JDBC_CONNECT;-256;1);
+E(1004;JDBC_CREATE_PREPARED_STATEMENT;-256;1);
+E(1005;JDBC_EXECUTE;-256;1);
+E(1006;METAOBJECT_LOAD;-65281;1);
+E(1007;EXECUTE_QUERY;-16776961;1);
+E(1008;BC4J_CREATE_COMPOBJ;-65281;1);
+E(1009;BC4J_CREATE_ROOTAM;-65281;1);
+E(1010;BC4J_CREATE_VIEWOBJECT;-65281;1);
+E(1011;BC4J_CREATE_AM;-65281;1);
+E(1012;BC4J_CREATE_VIEWLINK;-65281;1);
+E(1013;SQLB_DOENTITYDML;-16776961;1);
+E(1014;SQLB_DOENTITYSELECT;-16776961;1);
+E(1015;VIEWOBJECT_GETSTATEMENT;-16776961;1);
+E(1016;REMOTE_METHOD_CALL;-65536;1);));));</events>
+                        <excludedClasses>java;javax;sun;sunw;oracle</excludedClasses>
+                        <excludedInstances class="java.lang.String"/>
+                        <includedClasses>com.syrus</includedClasses>
+                        <includedInstances class="java.lang.String"/>
+                        <localProfiling>true</localProfiling>
+                        <memColumnVisible>
+                           <Item>true</Item>
+                           <Item>true</Item>
+                           <Item>true</Item>
+                           <Item>true</Item>
+                           <Item>true</Item>
+                           <Item>true</Item>
+                           <Item>true</Item>
+                           <Item>true</Item>
+                           <Item>true</Item>
+                           <Item>true</Item>
+                        </memColumnVisible>
+                        <memoryUpdateInterval>10</memoryUpdateInterval>
+                        <remoteHost class="java.lang.String"/>
+                        <remoteParametersSaved>false</remoteParametersSaved>
+                        <remotePort>4000</remotePort>
+                        <sampleColumnVisible>
+                           <Item>true</Item>
+                           <Item>true</Item>
+                           <Item>true</Item>
+                           <Item>true</Item>
+                           <Item>true</Item>
+                           <Item>true</Item>
+                           <Item>true</Item>
+                        </sampleColumnVisible>
+                        <sampleInterval>5</sampleInterval>
+                        <sliderDepth>20</sliderDepth>
+                        <useAPI>true</useAPI>
+                     </Value>
+                  </Item>
+                  <Item>
+                     <Key>oracle.jdevimpl.runner.xslt.XSLTConfiguration</Key>
+                     <Value class="oracle.jdevimpl.runner.xslt.XSLTConfiguration">
+                        <inputFileURL/>
+                        <outputFileURL/>
+                        <showInputFile>true</showInputFile>
+                        <showOutputFile>true</showOutputFile>
+                        <sourcePath>
+                           <entries class="[Ljava.net.URL;"/>
+                        </sourcePath>
+                     </Value>
+                  </Item>
+                  <Item>
+                     <Key>oracle.jdevimpl.sqlj.config.SqljConfiguration</Key>
+                     <Value class="oracle.jdevimpl.sqlj.config.SqljConfiguration">
+                        <additionalParameters>status=true cache=true</additionalParameters>
+                        <checkSemantics>true</checkSemantics>
+                        <codegen>oracle</codegen>
+                        <contextConnectionMap class="java.util.HashMap">
+                           <Item>
+                              <Key>&lt;none></Key>
+                              <Value>AMFICOM_at_SHAITAN</Value>
+                           </Item>
+                        </contextConnectionMap>
+                        <contextName>&lt;none></contextName>
+                        <useCache>false</useCache>
+                        <warnAll>false</warnAll>
+                        <warnNull>false</warnNull>
+                        <warnPortable>false</warnPortable>
+                        <warnPrecision>false</warnPrecision>
+                        <warnStrict>true</warnStrict>
+                        <warnVerbose>true</warnVerbose>
+                     </Value>
+                  </Item>
+                  <Item>
+                     <Key>WebappJspCompilerOptions</Key>
+                     <Value class="oracle.jdevimpl.webapp.jsp.JspCompilerOptions">
+                        <forgiveDuplicateDirectiveAttributes>false</forgiveDuplicateDirectiveAttributes>
+                        <requestTimeIntrospection>false</requestTimeIntrospection>
+                        <validate>true</validate>
+                        <validateTLD>true</validateTLD>
+                     </Value>
+                  </Item>
+               </configData>
+            </Value>
+         </Item>
+      </configurations>
+   </projectSettings>
+   <projectSourcePath>
+      <entries>
+         <Item path="../../amficom/server_v1/src/"/>
+         <Item path="../../amficom/server_v1/test/"/>
+      </entries>
+   </projectSourcePath>
+   <properties class="java.util.HashMap">
+      <Item>
+         <Key>useDynamicPaths</Key>
+         <Value class="java.lang.Boolean">true</Value>
+      </Item>
+   </properties>
+</project>
