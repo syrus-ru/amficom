@@ -1,5 +1,5 @@
 /*
- * $Id: RISDSessionInfo.java,v 1.26 2005/03/16 10:06:40 bob Exp $
+ * $Id: RISDSessionInfo.java,v 1.27 2005/03/21 11:55:37 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -74,7 +74,7 @@ import com.syrus.util.prefs.IIOPConnectionManager;
 
 /**
  * @author $Author: bob $
- * @version $Revision: 1.26 $, $Date: 2005/03/16 10:06:40 $
+ * @version $Revision: 1.27 $, $Date: 2005/03/21 11:55:37 $
  * @module generalclient_v1
  */
 public final class RISDSessionInfo extends SessionInterface {
@@ -224,16 +224,16 @@ public final class RISDSessionInfo extends SessionInterface {
 				try {
 					clientShutdown(true);
 				} catch (org.omg.CORBA.ORBPackage.InvalidName e) {
-					// TODO Auto-generated catch block
+					e.printStackTrace();
 					throw new ApplicationException(e);
 				} catch (CannotProceed e) {
-					// TODO Auto-generated catch block
+					e.printStackTrace();
 					throw new ApplicationException(e);
 				} catch (InvalidName e) {
-					// TODO Auto-generated catch block
+					e.printStackTrace();
 					throw new ApplicationException(e);
 				} catch (NotFound e) {
-					// TODO Auto-generated catch block
+					e.printStackTrace();
 					throw new ApplicationException(e);
 				}				
 			}
@@ -244,6 +244,8 @@ public final class RISDSessionInfo extends SessionInterface {
 
 			AMFICOM server = this.ci.getServer();
 			CMServer cmServer = this.ci.getCmServer();
+			if (server == null) { throw new ApplicationException("AMFICOM isn't resolved"); }
+			if (cmServer == null) { throw new ApplicationException("AMFICOM CMServer isn't resolved"); }
 
 			final String oldUserId = this.accessIdentity.user_id;
 			try {
@@ -295,8 +297,13 @@ public final class RISDSessionInfo extends SessionInterface {
 			setActiveSession(this);
 			return this;
 		} catch (AMFICOMRemoteException e) {
+			e.printStackTrace();
 			throw new ApplicationException(e);
 		}		
+		catch (SystemException e) {
+			e.printStackTrace();
+			throw new ApplicationException(e);
+		} 
 	}
 	
 	
