@@ -49,6 +49,14 @@ ByteArray* ByteArray::clone() const {
 	return new ByteArray(this->length, data1);
 }
 
+ByteArray* ByteArray::getReversed() const {
+	char* data1 = new char[this->length];
+	unsigned int i;
+	for (i = 0; i < this->length; i++)
+		data1[i] = this->data[this->length - 1 - i];
+	return new ByteArray(this->length, data1);
+}
+
 int operator == (const ByteArray& ba1, const ByteArray& ba2) {
 	unsigned int l = ba1.getLength();
 	if (l != ba2.getLength())

@@ -18,6 +18,7 @@ public:
 	char* getSegment() const;
 	char* getData() const; //---
 	ByteArray* clone() const;
+	ByteArray* getReversed() const;
 
 private:
 	unsigned int length;
