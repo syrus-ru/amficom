@@ -1,5 +1,5 @@
 /*
- * $Id: LinkType.java,v 1.15 2004/12/09 16:12:48 arseniy Exp $
+ * $Id: LinkType.java,v 1.16 2004/12/14 12:52:46 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,8 +29,8 @@ import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2004/12/09 16:12:48 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.16 $, $Date: 2004/12/14 12:52:46 $
+ * @author $Author: max $
  * @module configuration_v1
  */
 
@@ -187,10 +187,18 @@ public class LinkType extends AbstractLinkType implements Characterized {
 	public String getManufacturer() {
 		return this.manufacturer;
 	}
+    
+    public void setManufacturer(String manufacturer) {
+		this.manufacturer = manufacturer;
+	}
 	
 	public String getManufacturerCode() {
 		return this.manufacturerCode;
 	}
+    
+    public void setManufacturerCode(String manufacturerCode) {
+        this.manufacturerCode = manufacturerCode;
+    }
 	
 	public LinkTypeSort getSort() {
 		return LinkTypeSort.from_int(this.sort);
