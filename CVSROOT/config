@@ -14,3 +14,4 @@
 #LogHistory=TOFEWGCMAR
 
 SystemAuth=no
+LockDir=lock
