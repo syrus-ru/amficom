@@ -72,7 +72,7 @@ public class LangModel {
 	{
 		//System.out.println("keyName:" + keyName);
 		keyName = keyName.replaceAll(" ", "_");
-		String string = null;
+		String string = "";
 		try
 		{
 			string = RESOURCE_BUNDLE.getString(keyName);
@@ -87,10 +87,7 @@ public class LangModel {
 			{
 				try
 				{
-					throw new Exception("key '"
-											  + keyName + "Text"
-											  + "' "
-											  + "not found");
+					throw new Exception("key '" + keyName + "' not found");
 				}
 				catch (Exception exc)
 				{
