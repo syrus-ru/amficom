@@ -1,0 +1,328 @@
+/*
+ * $Id: ResultSetChecker.sqlj,v 1.1 2004/06/22 09:57:10 bass Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ.
+ */
+
+package com.syrus.AMFICOM.server.process;
+
+import com.syrus.AMFICOM.server.*;
+import java.sql.*;
+import java.text.SimpleDateFormat;
+import java.util.*;
+
+/**
+ * @version $Revision: 1.1 $, $Date: 2004/06/22 09:57:10 $
+ * @module serverprocess
+ */
+public final class ResultSetChecker extends Thread
+{
+	int timeInterval = 10000;
+
+	static SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yy HH:mm:ss");
+	LogWriter log;
+
+	private volatile boolean running = true;
+
+	public ResultSetChecker(LogWriter log)
+	{
+		this.log = log;
+	}
+
+	private ResultSetChecker()
+	{
+	}
+
+	public void stopRunning()
+	{
+		running = false;
+	}
+
+	public void run()
+	{
+		String It_id = "";
+		IdIterator idIt = null;
+
+		log.log("Result Set Checker:");
+		log.log("Starting operation");
+		try
+		{
+			while (running)
+			{
+				try
+				{
+					sleep( timeInterval );
+//					log.log("Woke up!");
+
+					try
+					{
+						#sql idIt = { select ID from AMFICOM.DOMAINS };
+
+						while (idIt.next())
+						{
+							try { It_id = idIt.id(); }
+							catch (SQLException e) {
+								;
+							}
+							if (It_id == null)
+								It_id = "";
+
+							checkResultSet(It_id);
+						}
+						idIt.close();
+//						log.log("idle");
+					}
+					catch (SQLException e)
+					{
+						log.log("error loading events: " + e.getMessage());
+						e.printStackTrace();
+					}
+					finally
+					{
+						try
+						{
+							idIt.close();
+						}
+						catch (Exception exe)
+						{
+							;
+						}
+					}
+				}
+				catch (InterruptedException e)
+				{
+					log.log("Error in execution: " + e.getMessage());
+					e.printStackTrace();
+				}
+			}
+		}
+		catch (Exception e)
+		{
+			log.log("Could not finish operation");
+		}
+		finally
+		{
+			log.log("Result Set Checker thread finished");
+		}
+	}
+
+	private void checkResultSet(String domain_id)
+	{
+		try
+		{
+			Timestamp active_start_time;
+			Timestamp active_end_time;
+			String active_id = "";
+			long active_period = 2592000000L;// default 2592000000 == 30 days
+
+			#sql { select ID, START_TIME, END_TIME, PERIOD
+				into :active_id, :active_start_time, :active_end_time, :active_period
+				from AMFICOM.RESULTSETS
+				where ACTIVE = 1 and DOMAIN_ID = :domain_id
+			};
+			if (active_start_time == null)
+			{
+				#sql { select CREATED into :active_start_time
+					from AMFICOM.RESULTSETS
+					where ID = :active_id
+				};
+				#sql { update AMFICOM.RESULTSETS set
+					START_TIME = :active_start_time
+					where ID = :active_id
+				};
+				#sql { commit };
+			}
+			if (active_end_time == null)
+			{
+//				active_end_time = correctEndTime(new Timestamp(System.currentTimeMillis()));
+				active_end_time = correctEndTime(active_start_time);
+
+				#sql { update AMFICOM.RESULTSETS set
+					END_TIME = :active_end_time
+					where ID = :active_id
+				};
+				#sql { commit };
+			}
+			if (active_end_time.getTime() <= System.currentTimeMillis())
+			{
+				log.log("Active result set for domain '" + domain_id + "' changed");
+				log.log("	Previous range : " + sdf.format(active_start_time) + " --- " + sdf.format(active_end_time));
+				String id = ResourcedbInterface.getUId("resultset");
+
+				Timestamp new_start_time = incrementTime(active_end_time);
+				Timestamp new_end_time = correctEndTime(new_start_time);
+
+				log.log("	New range      : " + sdf.format(new_start_time) + " --- " + sdf.format(new_end_time));
+				String name = id;
+				#sql { insert into resultsets(
+						ID,
+						NAME,
+						COMMENTS,
+						DOMAIN_ID,
+						ACTIVE,
+						PERIOD,
+						CREATED,
+						MODIFIED,
+						START_TIME,
+						END_TIME)
+					values(
+						:id,
+						:name,
+						'',
+						:domain_id,
+						1,
+						:active_period,
+						SYSDATE,
+						SYSDATE,
+						:active_end_time,
+						:new_end_time)
+				};
+				#sql { update resultsets set active = 0 where id = :active_id };
+				#sql { commit };
+			}
+		}
+		catch (Exception ex)
+		{
+//			if (ex.getErrorCode() == 2000)// no Result Set for this domain
+			try
+			{
+				String id2 = ResourcedbInterface.getUId("resultset");
+
+				Timestamp active_start_time = new Timestamp(System.currentTimeMillis());
+				Timestamp active_end_time = correctEndTime(active_start_time);
+				long active_period = 2592000000L;
+//				Timestamp active_end_time = new Timestamp(active_start_time.getTime() + active_period);
+
+				log.log("Active result set for domain '" + domain_id + "' instantiated");
+				log.log("	Range is       : " + sdf.format(active_start_time) + " --- " + sdf.format(active_end_time));
+
+				#sql { insert into resultsets(
+						ID,
+						NAME,
+						COMMENTS,
+						DOMAIN_ID,
+						ACTIVE,
+						PERIOD,
+						CREATED,
+						MODIFIED,
+						START_TIME,
+						END_TIME)
+					values(
+						:id2,
+						:id2,
+						'',
+						:domain_id,
+						1,
+						:active_period,
+						SYSDATE,
+						SYSDATE,
+						:active_start_time,
+						:active_end_time)
+				};
+				#sql { commit };
+			}
+			catch (Exception exx)
+			{
+				System.out.println("error creating new active result set for domain " + domain_id + " : " + exx.getMessage());
+				exx.printStackTrace();
+			}
+/*
+			else
+			{
+				System.out.println("error creating new active result set for domain " + domain_id + " : " + ex.getMessage());
+				ex.printStackTrace();
+			}
+*/
+		}
+
+	}
+
+	Timestamp correctEndTime(Timestamp ts)
+	{
+//		Timestamp return_ts = (Timestamp )ts.clone();
+/*
+		GregorianCalendar calendar = new GregorianCalendar(
+			ts.getYear(),
+			ts.getMonth(),
+			ts.getDate());
+		calendar.set(Calendar.DATE, calendar.getActualMaximum(Calendar.DATE));
+//		calendar.roll(Calendar.MONTH, true);
+//		calendar.roll(Calendar.DATE, false);
+//		calendar.roll(Calendar.HOUR_OF_DAY, false);
+//		calendar.roll(Calendar.MINUTE, false);
+//		calendar.roll(Calendar.SECOND, false);
+
+		Timestamp return_ts = new Timestamp(
+				calendar.get(Calendar.YEAR),
+				calendar.get(Calendar.MONTH),
+				calendar.get(Calendar.DATE),
+				calendar.get(Calendar.HOUR_OF_DAY),
+				calendar.get(Calendar.MINUTE),
+				calendar.get(Calendar.SECOND),
+				0);
+*/
+		GregorianCalendar calendar = new GregorianCalendar(
+			ts.getYear(),
+			ts.getMonth(),
+			ts.getDate());
+		calendar.set(Calendar.DATE, calendar.getActualMaximum(Calendar.DATE));
+
+		Timestamp return_ts = new Timestamp(
+				ts.getYear(),
+				ts.getMonth(),
+				calendar.getActualMaximum(Calendar.DATE),
+				23,
+				59,
+				59,
+				0);
+/*
+		return_ts.setDate(calendar.getActualMaximum(Calendar.DATE));
+		return_ts.setHours(23);
+		return_ts.setMinutes(59);
+		return_ts.setSeconds(59);
+		return_ts.setNanos(0);
+*/
+		return return_ts;
+
+/*
+		long t = ts.getTime();
+		long days = calendar.getActualMaximum(Calendar.DATE) - calendar.get(Calendar.DATE);
+		t += days * 24L * 60L * 60L * 1000L;
+		t += (23L * 60L * 60L + 59L * 60L + 59L) * 1000L;
+		return new Timestamp(t);
+*/
+	}
+
+	Timestamp incrementTime(Timestamp ts)
+	{
+/*
+		GregorianCalendar calendar = new GregorianCalendar(
+			ts.getYear(),
+			ts.getMonth(),
+			ts.getDate(),
+			ts.getHours(),
+			ts.getMinutes(),
+			ts.getSeconds());
+		calendar.roll(Calendar.DATE, true);
+		calendar.roll(Calendar.HOUR_OF_DAY, true);
+		calendar.roll(Calendar.MINUTE, true);
+		calendar.roll(Calendar.SECOND, true);
+
+		Timestamp return_ts = new Timestamp(
+				calendar.get(Calendar.YEAR),
+				calendar.get(Calendar.MONTH),
+				calendar.get(Calendar.DATE),
+				calendar.get(Calendar.HOUR_OF_DAY),
+				calendar.get(Calendar.MINUTE),
+				calendar.get(Calendar.SECOND),
+				0);
+*/
+		long t = ts.getTime();
+		t += 1000L;
+		return new Timestamp(t);
+	}
+
+	#sql private final iterator IdIterator(String id);
+}
