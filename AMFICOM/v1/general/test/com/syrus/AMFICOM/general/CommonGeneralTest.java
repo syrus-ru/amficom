@@ -1,5 +1,5 @@
 /*
- * $Id: CommonGeneralTest.java,v 1.1 2005/02/07 15:22:51 arseniy Exp $
+ * $Id: CommonGeneralTest.java,v 1.2 2005/02/16 21:28:35 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,11 +18,11 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/02/07 15:22:51 $
+ * @version $Revision: 1.2 $, $Date: 2005/02/16 21:28:35 $
  * @author $Author: arseniy $
  * @module general_v1
  */
-public class CommonGeneralTest extends TestCase {
+public abstract class CommonGeneralTest extends TestCase {
 	public static final String KEY_DB_HOST_NAME = "DBHostName";
 	public static final String KEY_DB_SID = "DBSID";
 	public static final String KEY_DB_CONNECTION_TIMEOUT = "DBConnectionTimeout";

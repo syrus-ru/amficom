@@ -1,11 +1,13 @@
 /*
- * $Id: CommonEventTest.java,v 1.4 2005/02/14 13:19:56 arseniy Exp $
+ * $Id: CommonEventTest.java,v 1.5 2005/02/16 21:28:10 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
  * Проект: АМФИКОМ.
  */
 package com.syrus.AMFICOM.event;
+
+import java.util.Date;
 
 import junit.extensions.TestSetup;
 import junit.framework.Test;
@@ -37,25 +39,28 @@ import com.syrus.AMFICOM.configuration.PortDatabase;
 import com.syrus.AMFICOM.configuration.PortTypeDatabase;
 import com.syrus.AMFICOM.configuration.TransmissionPathDatabase;
 import com.syrus.AMFICOM.configuration.TransmissionPathTypeDatabase;
+import com.syrus.AMFICOM.general.AccessIdentity;
 import com.syrus.AMFICOM.general.CharacteristicDatabase;
 import com.syrus.AMFICOM.general.CharacteristicTypeDatabase;
 import com.syrus.AMFICOM.general.DatabaseGeneralObjectLoader;
 import com.syrus.AMFICOM.general.DefaultIdentifierGeneratorServer;
 import com.syrus.AMFICOM.general.GeneralDatabaseContext;
 import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
+import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.ParameterTypeDatabase;
+import com.syrus.AMFICOM.general.SessionContext;
 import com.syrus.util.Application;
 import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/02/14 13:19:56 $
+ * @version $Revision: 1.5 $, $Date: 2005/02/16 21:28:10 $
  * @author $Author: arseniy $
  * @module event_v1
  */
-public class CommonEventTest extends TestCase {
+public abstract class CommonEventTest extends TestCase {
 	public static final String KEY_DB_HOST_NAME = "DBHostName";
 	public static final String KEY_DB_SID = "DBSID";
 	public static final String KEY_DB_CONNECTION_TIMEOUT = "DBConnectionTimeout";
@@ -89,6 +94,7 @@ public class CommonEventTest extends TestCase {
 		Application.init("tests");
 		establishDatabaseConnection();
 		initDatabaseContext();
+		initSessionContext();
 		initStorableObjectPools();
 		initIdentifierPool();
 	}
@@ -133,6 +139,13 @@ public class CommonEventTest extends TestCase {
 				new LinkDatabase(),
 				new CableThreadDatabase());
 		EventDatabaseContext.init(new EventTypeDatabase(), new EventDatabase(), new EventSourceDatabase());
+	}
+
+	private static void initSessionContext() {
+		SessionContext.init(new AccessIdentity(new Date(System.currentTimeMillis()),
+				new Identifier("Domain_2464"),
+				new Identifier("Users_58"),
+				new Identifier("sessiya_1")));
 	}
 
 	private static void initStorableObjectPools() {
