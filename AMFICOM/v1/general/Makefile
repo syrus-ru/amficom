@@ -16,6 +16,11 @@ ARCHFILE=general.tar.gz
 ORACLECLASSPATH = $(ORACLE_HOME)/jdbc/lib/classes12.jar:$(ORACLE_HOME)/sqlj/lib/translator.jar:$(ORACLE_HOME)/sqlj/lib/runtime12ee.jar
 APPCLASSPATH = $(LIBDIR)/util.jar
 
+include ../tools/Makefile.inc
+$(call checkenve,JAVA_HOME)
+$(call checkenve,ORACLE_HOME)
+$(call checkenve,IDL2JAVA)
+
 IDL2JAVA = idl2java
 IDL2JAVAFLAGS = \
 	-C \
@@ -48,8 +53,6 @@ JAVACFLAGS = \
 	-deprecation
 JAVACFLAGS := $(JAVACFLAGS) $(JIKESFLAGS)
 JAVAC_WARNOFF_FLAG=-nowarn
-
-JAR=jar-3.3.1
 
 
 $(LIBNAME): .mach
