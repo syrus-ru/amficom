@@ -1,7 +1,6 @@
 
 package com.syrus.AMFICOM.client_.general.ui_;
 
-import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -12,7 +11,6 @@ import java.util.Map;
 
 import javax.swing.DefaultCellEditor;
 import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.TableCellEditor;
@@ -23,16 +21,15 @@ import com.syrus.AMFICOM.Client.General.UI.AComboBox;
 import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2004/10/07 11:31:08 $
+ * @version $Revision: 1.2 $, $Date: 2004/10/07 12:20:22 $
  * @author $Author: bob $
  * @module generalclient_v1
  */
 public class ObjPropertyTable extends JTable {
 
+	private TableCellEditor		defaultTextFieldEditor;
 	protected TableCellEditor[][]	cellEditors;
 	private static final long	serialVersionUID	= -437251205606073016L;
-
-	private CellEditorHelper	cellEditor;
 
 	public ObjPropertyTable(ObjectResourceController controller, Object object) {
 		this(new ObjPropertyTableModel(controller, object));
@@ -109,23 +106,19 @@ public class ObjPropertyTable extends JTable {
 
 					}
 				});
-				this.cellEditor.setCellEditor(comboBox, mRowIndex, 1);
-
+				this.cellEditors[mRowIndex][1] = new DefaultCellEditor(comboBox);
 			} else {
 				Class clazz = model.controller.getPropertyClass(model.controller.getKey(mRowIndex));
-				if (clazz.equals(Boolean.class)){
+				if (clazz.equals(Boolean.class)) {
 					JCheckBox checkBox = new JCheckBox();
-					this.cellEditor.setCellEditor(checkBox, mRowIndex, 1);
+					this.cellEditors[mRowIndex][1] = new DefaultCellEditor(checkBox);
 				}
 			}
 		}
 	}
 
 	private void initialization() {
-		this.cellEditor = new CellEditorHelper(this.getModel().getRowCount(), this.getModel()
-				.getColumnCount());
 		this.cellEditors = new TableCellEditor[this.getModel().getRowCount()][this.getModel().getColumnCount()];
-		this.setCellEditor(this.cellEditor);
 		updateModel();
 		this.setColumnSelectionAllowed(false);
 		this.setRowSelectionAllowed(true);
@@ -199,17 +192,59 @@ public class ObjPropertyTable extends JTable {
 	public TableCellEditor getCellEditor(int row, int column) {
 		TableCellEditor tableCellEditor = this.cellEditors[row][column];
 		if (tableCellEditor == null) {
-			Component component = this.cellEditor.getComponent(row, column);
-			if (component instanceof JCheckBox) {
-				tableCellEditor = new DefaultCellEditor((JCheckBox) component);
-				this.cellEditors[row][column] = tableCellEditor;
-			} else if (component instanceof JComboBox) {
-				tableCellEditor = new DefaultCellEditor((JComboBox) component);
-				this.cellEditors[row][column] = tableCellEditor;
-			} else {
-				tableCellEditor = new DefaultCellEditor((JTextField) component);
-				this.cellEditors[row][column] = tableCellEditor;
+			if (column == 1) {
+				ObjPropertyTableModel model = (ObjPropertyTableModel) getModel();
+				int mRowIndex = row;
+				Object obj = model.controller.getPropertyValue(model.controller.getKey(mRowIndex));
+				if (obj instanceof Map) {
+					final Map map = (Map) obj;
+					AComboBox comboBox = new AComboBox();
+					List keys = new ArrayList(map.keySet());
+					Collections.sort(keys);
+					comboBox.setRenderer(LabelCheckBoxRenderer.getInstance());
+					for (Iterator it = keys.iterator(); it.hasNext();) {
+						comboBox.addItem(it.next());
+					}
+					keys.clear();
+					keys = null;
+					TableColumn sportColumn = getColumnModel().getColumn(1);
+					sportColumn.setCellEditor(new DefaultCellEditor(comboBox));
+
+					comboBox.addActionListener(new ActionListener() {
+
+						public void actionPerformed(ActionEvent e) {
+							AComboBox cb = (AComboBox) e.getSource();
+							if (cb.getItemCount() != map.keySet().size()) {
+								cb.removeAllItems();
+								List keys = new ArrayList(map.keySet());
+								Collections.sort(keys);
+								for (Iterator it = keys.iterator(); it.hasNext();) {
+									cb.addItem(it.next());
+								}
+								keys.clear();
+								keys = null;
+							}
+
+						}
+					});
+					this.cellEditors[mRowIndex][column] = new DefaultCellEditor(comboBox);
+					tableCellEditor = this.cellEditors[mRowIndex][column];
+				} else {
+					Class clazz = model.controller.getPropertyClass(model.controller
+							.getKey(mRowIndex));
+					if (clazz.equals(Boolean.class)) {
+						JCheckBox checkBox = new JCheckBox();
+						this.cellEditors[mRowIndex][1] = new DefaultCellEditor(checkBox);
+						tableCellEditor = this.cellEditors[mRowIndex][column];
+					}
+				}
+
 			}
+		}
+		if (tableCellEditor == null) {
+			if (this.defaultTextFieldEditor == null)
+				this.defaultTextFieldEditor = new DefaultCellEditor(new JTextField());
+			tableCellEditor = this.defaultTextFieldEditor;
 		}
 		return tableCellEditor;
 	}
