@@ -1,5 +1,5 @@
 /*
- * $Id: Set.java,v 1.48 2005/02/24 14:59:59 arseniy Exp $
+ * $Id: Set.java,v 1.49 2005/03/01 07:34:12 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -36,7 +36,7 @@ import com.syrus.AMFICOM.measurement.corba.Set_Transferable;
 import com.syrus.util.HashCodeGenerator;
 
 /**
- * @version $Revision: 1.48 $, $Date: 2005/02/24 14:59:59 $
+ * @version $Revision: 1.49 $, $Date: 2005/03/01 07:34:12 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -162,7 +162,7 @@ public class Set extends StorableObject {
 																			 Identifier modifierId1) throws UpdateObjectException {
 		if (this.isAttachedToMonitoredElement(monitoredElementId))
       return;
-		super.modifierId = (Identifier) modifierId1.clone();
+		super.modifierId = modifierId1;
 		this.monitoredElementIds.add(monitoredElementId);
 		try {
 			this.setDatabase.update(this, modifierId1, StorableObjectDatabase.UPDATE_FORCE);
@@ -177,7 +177,7 @@ public class Set extends StorableObject {
 																				 Identifier modifierId1) throws UpdateObjectException {
     if (!this.isAttachedToMonitoredElement(monitoredElementId))
       return;
-		super.modifierId = (Identifier) modifierId1.clone();
+		super.modifierId = modifierId1;
 		this.monitoredElementIds.remove(monitoredElementId);
 		try {
 	    this.setDatabase.update(this, modifierId1, StorableObjectDatabase.UPDATE_FORCE);

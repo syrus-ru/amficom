@@ -1,5 +1,5 @@
 /*
- * $Id: Test.java,v 1.85 2005/03/01 07:31:09 bob Exp $
+ * $Id: Test.java,v 1.86 2005/03/01 07:34:12 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -46,8 +46,8 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.85 $, $Date: 2005/03/01 07:31:09 $
- * @author $Author: bob $
+ * @version $Revision: 1.86 $, $Date: 2005/03/01 07:34:12 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -111,7 +111,7 @@ public class Test extends StorableObject {
 			throw new CreateObjectException("Cannot create measurement for test '" + this.id + "' -- " + ae.getMessage(), ae);
 		}
 		super.modified = new Date(System.currentTimeMillis());
-		super.modifierId = (Identifier) measurementCreatorId.clone();
+		super.modifierId = measurementCreatorId;
 		try {
 			this.testDatabase.update(this, measurementCreatorId, StorableObjectDatabase.UPDATE_FORCE);
 		}
@@ -454,7 +454,7 @@ public class Test extends StorableObject {
 	public void updateStatus(TestStatus status1, Identifier modifierId1) throws UpdateObjectException {
 		this.status = status1.value();
 		super.modified = new Date(System.currentTimeMillis());
-		super.modifierId = (Identifier) modifierId1.clone();
+		super.modifierId = modifierId1;
 		try {
 			this.testDatabase = MeasurementDatabaseContext.testDatabase;
 			this.testDatabase.update(this, modifierId1, StorableObjectDatabase.UPDATE_FORCE);
