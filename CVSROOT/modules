@@ -25,54 +25,70 @@
 # can be useful for creating a module that consists of many directories
 # spread out over the entire source repository.
 
-AMFICOMv2	&idl\
+#M	AMFICOM_v2	Composite module of AMFICOM version 2
+AMFICOM_v2	&idl\
 		&general\
 		&administration\
 		&configuration\
 		&measurement
 
-idl		AMFICOM/v2/idl
-general		AMFICOM/v2/general
-administration	AMFICOM/v2/administration
-configuration	AMFICOM/v2/configuration
-measurement	AMFICOM/v2/measurement
+idl_v2		AMFICOM/v2/idl
+general_v2	AMFICOM/v2/general
+admin_v2	AMFICOM/v2/administration
+config_v2	AMFICOM/v2/configuration
+measurement_v2	AMFICOM/v2/measurement
 
-mcm		AMFICOM/v2/mcm
+mcm_v2		AMFICOM/v2/mcm
 
-database	AMFICOM/v2/database
+database_v2	AMFICOM/v2/database
 
-AMFICOMv1	&kisserver
 
-kisserver	AMFICOM/v1/kisserver
+#M	AMFICOM_v1	Composite module of AMFICOM version 1
+AMFICOM_v1	&idl_v1\
+		&kisserver_v1\
+		&general_v1\
+		&admin_v1\
+		&config_v1\
+		&main_v1\
+		&map_v1\
+		&survey_v1\
+		&filter_v1\
+		&server_v1\
+		&server_misc_v1\
+		&load_v1\
+		&conn_jdbc_v1\
+		importmif_v1
+
+#M	idl_v1		Client-side AMFICOM CORBA object & interface
+idl_v1		AMFICOM/v1/idl
+#M	kisserver_v1	Agent-side AMFICOM CORBA object & interface
+kisserver_v1	AMFICOM/v1/kisserver
+#M	general_v1	Client common classes
+general_v1	AMFICOM/v1/general
+#M	admin_v1	Administrative module
+admin_v1	AMFICOM/v1/admin
+#M	config_v1	Configuring module
+config_v1	AMFICOM/v1/config
+#M	main_v1		Main module
+main_v1		AMFICOM/v1/main
+#M	map_v1		Mapping module
+map_v1		AMFICOM/v1/map
+#M	survey_v1	Survey module
+survey_v1	AMFICOM/v1/survey
+#M	filter_v1	Files common for client-side and server-side filtering
+filter_v1	AMFICOM/v1/filter
+#M	server_v1	AMFICOM Server instance (server-client interface)
+server_v1	AMFICOM/v1/server
+#M	server_misc_v1	Miscellaneous files for server-side modules
+server_misc_v1	AMFICOM/v1/servermisc
+#M	load_v1		Initial data server load
+load_v1		AMFICOM/v1/load
+#M	conn_jdbc_v1	Client-side JDBC connection stub
+conn_jdbc_v1	AMFICOM/v1/conn_jdbc
+#M	importmif_v1	Patch for SpatialFX libraries which allows for TEXT spatial objects
+importmif_v1	AMFICOM/v1/importmif
 
 akp		hw/akp
 trc		hw/trc
 t4		hw/t4
 
-util		util
-#M	idls	Client-side AMFICOM CORBA object & interface
-idls	idls
-#M	serveradd	Additional files for server-side modules
-serveradd	serveradd
-#M	filter	Files common for client-side and server-side filtering
-filter	filter
-#M	server	AMFICOM Server instance (server-client interface)
-server	server
-#M	load	Initial data server load
-load	load
-#M	importmif	Patch for SpatialFX libraries which allows for TEXT spatial objects
-importmif	importmif
-#M	general	Client common classes
-general_v1	general_v1
-#M	admin	Administrative module
-admin	admin
-#M	map	Mapping module
-map	map
-#M	config	Configuring module
-config	config
-#M	jdbc	Client-side JDBC connection stub
-jdbc	jdbc
-#M	main	Main module
-main	main
-#M	survey	Survey module
-survey	survey
