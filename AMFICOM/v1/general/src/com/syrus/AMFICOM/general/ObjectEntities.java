@@ -1,5 +1,5 @@
 /*
- * $Id: ObjectEntities.java,v 1.14 2004/08/10 19:04:51 arseniy Exp $
+ * $Id: ObjectEntities.java,v 1.15 2004/08/11 10:47:56 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,8 +9,8 @@
 package com.syrus.AMFICOM.general;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2004/08/10 19:04:51 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.15 $, $Date: 2004/08/11 10:47:56 $
+ * @author $Author: bob $
  * @module general_v1
  */
 
@@ -18,6 +18,7 @@ public abstract class ObjectEntities {
 	/*	Object Types	*/
 	public static final String CHARACTERISTICTYPE_ENTITY = "CharacteriscticType";
 	public static final String EQUIPMENTTYPE_ENTITY = "EquipmentType";
+	public static final String PORTTYPE_ENTITY = "PortType";
 
 	public static final String PARAMETERTYPE_ENTITY = "ParameterType";
 	public static final String MEASUREMENTTYPE_ENTITY = "MeasurementType";
@@ -38,6 +39,7 @@ public abstract class ObjectEntities {
 	public static final String MCM_ENTITY = "MCM";
 	public static final String EQUIPMENT_ENTITY = "Equipment";
 	public static final String EQUIPMENTMELINK_ENTITY = "EquipmentMELink";
+	public static final String PORT_ENTITY = "Port";
 	public static final String TRANSPATH_ENTITY = "TransmissionPath";
 	public static final String TRANSPATHMELINK_ENTITY = "TransmissionPathMELink";	
 	public static final String KIS_ENTITY = "KIS";
