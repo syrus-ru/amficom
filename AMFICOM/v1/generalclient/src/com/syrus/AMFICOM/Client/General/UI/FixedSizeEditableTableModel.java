@@ -1,9 +1,21 @@
+/*
+ * $Id: FixedSizeEditableTableModel.java,v 1.5 2004/09/27 13:52:39 bass Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ
+ */
+
 package com.syrus.AMFICOM.Client.General.UI;
 
 import java.util.*;
+import javax.swing.table.AbstractTableModel;
 
-import javax.swing.table.*;
-
+/**
+ * @author $Author: bass $
+ * @version $Revision: 1.5 $, $Date: 2004/09/27 13:52:39 $
+ * @module generalclient_v1
+ */
 public class FixedSizeEditableTableModel extends AbstractTableModel
 {
 	protected String[] columnNames;
@@ -12,15 +24,13 @@ public class FixedSizeEditableTableModel extends AbstractTableModel
 	protected int[] editable;
 
 	public FixedSizeEditableTableModel (String[] columnNames, // заголовки столбцов
-																			Object[] defaultValues,// дефолтные значения
-																			String[] rowTitles,    // заголовки (0й столбец) строк
-																			int[] editable)     // номера редактируемых столбцов
+			Object[] defaultValues,// дефолтные значения
+			String[] rowTitles,    // заголовки (0й столбец) строк
+			int[] editable)     // номера редактируемых столбцов
 	{
 		// Устанавливаем заголовки столбцов
-		this.columnNames = new String[columnNames.length];
+		this.columnNames = columnNames;
 		this.defaultValues = defaultValues;
-		for (int i = 0; i < columnNames.length; i++)
-			columnNames[i] = new String(columnNames[i]);
 
 		// устанавливаем заголовки строк
 		if (rowTitles != null)
@@ -149,10 +159,7 @@ public class FixedSizeEditableTableModel extends AbstractTableModel
 	public void updateColumn(Object[] updatedData, int col)
 	{
 		for (int i = 0; i < updatedData.length; i++)
-		{
-			List r = (List) rows.get(i);
-			r.set(col, updatedData[i]);
-		}
+			((List) (rows.get(i))).set(col, updatedData[i]);
 		super.fireTableDataChanged();
 	}
 
@@ -170,10 +177,8 @@ public class FixedSizeEditableTableModel extends AbstractTableModel
 	public boolean isCellEditable(int row, int col)
 	{
 		for (int i = 0; i < editable.length; i++)
-		{
 			if (col == editable[i])
 				return true;
-		}
 		return false;
 	}
 }
