@@ -1,6 +1,7 @@
 package com.syrus.AMFICOM.Client.Map.Mapinfo;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.mapinfo.mapj.MapJ;
@@ -46,6 +47,29 @@ public class MapInfoConnection extends MapConnection
 	{
 		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass()
 				.getName(), "connect()");
+		
+		// Инициализируем объект MapJ для локальных преобразований координат
+		this.localMapJ = new MapJ(); // this MapJ object
+
+		// Query for image locations and load the geoset
+		String mapDefinitionFile = getPath() + getView();
+		try
+		{
+			System.out.println("MapImagePanel - Loading geoset...");
+			this.localMapJ.loadMapDefinition(mapDefinitionFile);
+			System.out.println("MapImagePanel - Geoset " + mapDefinitionFile
+					+ " has been loaded.");
+		}
+		catch(IOException e)
+		{
+			System.out.println("MapImagePanel - Can't load geoset: "
+					+ mapDefinitionFile);
+			e.printStackTrace();
+		}
+
+		System.out.println("Units " + this.localMapJ.getDistanceUnits().toString());
+		this.localMapJ.setDistanceUnits(LinearUnit.meter);
+		
 		return true;
 	}
 
@@ -101,44 +125,15 @@ public class MapInfoConnection extends MapConnection
 	 */
 	public List getAvailableViews() throws MapDataException
 	{
-		// TODO Auto-generated method stub
-		return null;
+		List listToReturn = new ArrayList();
+		listToReturn.add(getPath() + getView());
+
+		return listToReturn;
 	}
 
+	
 	public MapJ getLocalMapJ()
 	{
-		if (this.localMapJ == null)
-			this.localMapJ = this.initMapJ(getPath() + getView());
-		
 		return this.localMapJ;
 	}
-	
-	/**
-	 * Инициализируем объект MapJ для локальных преобразований координат
-	 */
-	private MapJ initMapJ(String mapDefinitionFile)
-	{
-		MapJ myMap = new MapJ(); // this MapJ object
-
-		// Query for image locations and load the geoset
-		try
-		{
-			System.out.println("MapImagePanel - Loading geoset...");
-			myMap.loadMapDefinition(mapDefinitionFile);
-			System.out.println("MapImagePanel - Geoset " + mapDefinitionFile
-					+ " has been loaded.");
-		}
-		catch(IOException e)
-		{
-			System.out.println("MapImagePanel - Can't load geoset: "
-					+ mapDefinitionFile);
-			e.printStackTrace();
-		}
-
-		System.out.println("Units " + myMap.getDistanceUnits().toString());
-		myMap.setDistanceUnits(LinearUnit.meter);
-
-		return myMap;
-	}
-	
 }

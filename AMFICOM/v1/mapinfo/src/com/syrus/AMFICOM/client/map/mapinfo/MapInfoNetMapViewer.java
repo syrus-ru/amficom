@@ -172,29 +172,6 @@ public class MapInfoNetMapViewer extends NetMapViewer
 		return this.lnl;
 	}
 
-	JComponent visualComponent = null;
-	
-	public JComponent getJComponent()
-	{
-		return this.mapImagePanel;
-	}
-
-	public List getAvailableViews()
-	{
-		List listToReturn = new ArrayList();
-		listToReturn.add(getConnection().getPath() + getConnection().getView());
-
-		return listToReturn;
-	}
-
-	public void setView(String dataBaseView)
-	{
-		if(!getConnection().getView().equals(dataBaseView))
-		{
-//			setMap(getConnection().getPath(), dataBaseView);
-		}
-	}
-
 	public List getLayers()
 	{
 		List returnList = new ArrayList();
