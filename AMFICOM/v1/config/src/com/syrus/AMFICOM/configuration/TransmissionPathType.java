@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPathType.java,v 1.4 2004/11/12 10:25:32 bob Exp $
+ * $Id: TransmissionPathType.java,v 1.5 2004/11/15 13:50:27 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -19,16 +19,17 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectType;
-import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2004/11/12 10:25:32 $
+ * @version $Revision: 1.5 $, $Date: 2004/11/15 13:50:27 $
  * @author $Author: bob $
  * @module module_name
  */
 
 public class TransmissionPathType extends StorableObjectType {
-    
+	
+	static final long serialVersionUID = 5311725679846973948L;	
+	
     private String name;
     
     private StorableObjectDatabase transmissionPathTypeDatabase;

@@ -1,5 +1,5 @@
 /*
- * $Id: Domain.java,v 1.14 2004/11/12 10:25:32 bob Exp $
+ * $Id: Domain.java,v 1.15 2004/11/15 13:50:27 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,7 +9,7 @@
 package com.syrus.AMFICOM.configuration;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2004/11/12 10:25:32 $
+ * @version $Revision: 1.15 $, $Date: 2004/11/15 13:50:27 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -30,6 +30,8 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.configuration.corba.Domain_Transferable;
 
 public class Domain extends DomainMember implements Characterized {
+	static final long serialVersionUID = 6401785674412391641L;
+
 	private String name;
 	private String description;
 	private List characteristics;

@@ -1,5 +1,5 @@
 /*
- * $Id: User.java,v 1.12 2004/11/12 10:25:32 bob Exp $
+ * $Id: User.java,v 1.13 2004/11/15 13:50:27 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,12 +23,14 @@ import com.syrus.AMFICOM.configuration.corba.User_Transferable;
 import com.syrus.AMFICOM.configuration.corba.UserSort;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2004/11/12 10:25:32 $
+ * @version $Revision: 1.13 $, $Date: 2004/11/15 13:50:27 $
  * @author $Author: bob $
  * @module configuration_v1
  */
 
 public class User extends StorableObject {
+	static final long serialVersionUID = 7173419705878464356L;
+	
 	private String login;
 	private int sort;
 	private String name;

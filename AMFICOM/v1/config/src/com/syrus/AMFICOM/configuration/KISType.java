@@ -1,5 +1,5 @@
 /*
- * $Id: KISType.java,v 1.6 2004/11/12 10:25:32 bob Exp $
+ * $Id: KISType.java,v 1.7 2004/11/15 13:50:27 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -19,15 +19,16 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectType;
-import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2004/11/12 10:25:32 $
+ * @version $Revision: 1.7 $, $Date: 2004/11/15 13:50:27 $
  * @author $Author: bob $
  * @module module_name
  */
-public class KISType extends StorableObjectType {
-    
+public class KISType extends StorableObjectType {    
+
+	static final long serialVersionUID = 2648925418432386875L;
+
 	private String name;
 	
     private StorableObjectDatabase kisTypeDatabase;

@@ -1,5 +1,5 @@
 /*
- * $Id: KIS.java,v 1.27 2004/11/15 09:50:47 bob Exp $
+ * $Id: KIS.java,v 1.28 2004/11/15 13:50:27 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,14 +27,16 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.configuration.corba.KIS_Transferable;
 
 /**
- * @version $Revision: 1.27 $, $Date: 2004/11/15 09:50:47 $
+ * @version $Revision: 1.28 $, $Date: 2004/11/15 13:50:27 $
  * @author $Author: bob $
  * @module configuration_v1
  */
 
 public class KIS extends DomainMember implements TypedObject {
 	
-    protected static final int RETRIEVE_MONITORED_ELEMENTS = 1;
+	static final long serialVersionUID = 3881838689352814128L;
+
+	protected static final int RETRIEVE_MONITORED_ELEMENTS = 1;
 
 	private KISType type;
     private Identifier equipmentId;

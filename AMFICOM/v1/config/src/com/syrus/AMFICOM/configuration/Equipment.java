@@ -1,5 +1,5 @@
 /*
- * $Id: Equipment.java,v 1.32 2004/11/12 10:25:32 bob Exp $
+ * $Id: Equipment.java,v 1.33 2004/11/15 13:50:27 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,13 +26,15 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.configuration.corba.Equipment_Transferable;
 
 /**
- * @version $Revision: 1.32 $, $Date: 2004/11/12 10:25:32 $
+ * @version $Revision: 1.33 $, $Date: 2004/11/15 13:50:27 $
  * @author $Author: bob $
  * @module configuration_v1
  */
 
 public class Equipment extends MonitoredDomainMember implements Characterized, TypedObject {
 	
+	static final long serialVersionUID = -6115401698444070841L;
+
 	protected static final int		UPDATE_ATTACH_ME	= 1;
 	protected static final int		UPDATE_DETACH_ME	= 2;
 	

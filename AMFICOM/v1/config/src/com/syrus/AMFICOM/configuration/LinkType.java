@@ -1,5 +1,5 @@
 /*
- * $Id: LinkType.java,v 1.5 2004/11/12 10:25:32 bob Exp $
+ * $Id: LinkType.java,v 1.6 2004/11/15 13:50:27 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -24,13 +24,13 @@ import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2004/11/12 10:25:32 $
+ * @version $Revision: 1.6 $, $Date: 2004/11/15 13:50:27 $
  * @author $Author: bob $
  * @module configuration_v1
  */
 
 public class LinkType extends StorableObjectType {
-
+	static final long serialVersionUID = -3742889500686769011L;
     
 	private String name;
 	private int						sort;

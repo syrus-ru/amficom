@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicType.java,v 1.18 2004/11/12 10:25:32 bob Exp $
+ * $Id: CharacteristicType.java,v 1.19 2004/11/15 13:50:27 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,25 +12,26 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
-import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.StorableObjectType;
-import com.syrus.AMFICOM.general.StorableObjectDatabase;
-import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.ObjectNotFoundException;
-import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.RetrieveObjectException;
-import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
-import com.syrus.AMFICOM.general.corba.DataType;
 import com.syrus.AMFICOM.configuration.corba.CharacteristicTypeSort;
 import com.syrus.AMFICOM.configuration.corba.CharacteristicType_Transferable;
+import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.ObjectNotFoundException;
+import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.general.StorableObjectDatabase;
+import com.syrus.AMFICOM.general.StorableObjectType;
+import com.syrus.AMFICOM.general.corba.DataType;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2004/11/12 10:25:32 $
+ * @version $Revision: 1.19 $, $Date: 2004/11/15 13:50:27 $
  * @author $Author: bob $
  * @module configuration_v1
  */
 
 public class CharacteristicType extends StorableObjectType {
+	static final long serialVersionUID = 6153350736368296076L;
+
 	private int dataType;
 	private int sort;
 
