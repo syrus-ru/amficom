@@ -71,7 +71,6 @@ src\com\syrus\AMFICOM\Client\General\Event\MyActionEvent.java
 src\com\syrus\AMFICOM\Client\General\Event\OpenModuleEvent.java
 src\com\syrus\AMFICOM\Client\General\Event\OperationEvent.java
 src\com\syrus\AMFICOM\Client\General\Event\OperationListener.java
-src\com\syrus\AMFICOM\Client\General\Event\SchemeNavigateEvent.java
 src\com\syrus\AMFICOM\Client\General\Event\StatusMessageEvent.java
 src\com\syrus\AMFICOM\Client\General\Event\TestEvent.java
 src\com\syrus\AMFICOM\Client\General\Event\TreeDataSelectionEvent.java
@@ -180,6 +179,7 @@ src\com\syrus\AMFICOM\Client\General\UI\ObjectResourcePropertyTableEditor.java
 src\com\syrus\AMFICOM\Client\General\UI\ObjectResourcePropertyTableModel.java
 src\com\syrus\AMFICOM\Client\General\UI\ObjectResourcePropertyTablePane.java
 src\com\syrus\AMFICOM\Client\General\UI\ObjectResourcePropertyTableRenderer.java
+src\com\syrus\AMFICOM\Client\General\UI\ObjectResourceSelectionDialog.java
 src\com\syrus\AMFICOM\Client\General\UI\ObjectResourceTableEditor.java
 src\com\syrus\AMFICOM\Client\General\UI\ObjectResourceTableModel.java
 src\com\syrus\AMFICOM\Client\General\UI\ObjectResourceTablePane.java

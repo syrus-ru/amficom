@@ -4,7 +4,9 @@ LIBSRC=$(HOME)\..\AMFICOMCommon\src
 EXTLIB=d:\lib91
 ORACLE_HOME=d:\oracle\ora91
 SRC=$(HOME)\src
+SRCTEST=$(HOME)\test
 CLASSES=$(HOME)\classes
+CLASSES_TEST=$(HOME)\classes_test
 
 JAVAC=javac
 JAR=jar
@@ -12,6 +14,8 @@ JAR=jar
 TARGET=$(LIB)\generalclient.jar
 TARGET_CLASS_LIST=src_generalclient.txt
 TARGET_SRC=$(LIBSRC)\generalclientsource.jar
+
+TEST_CLASS_LIST=src_generalclienttest.txt
 
 SERVERCP=$(LIB)\corba.jar
 CLIENTCP=$(LIB)\utilclient.jar;$(LIB)\corbaportable-common.jar;$(LIB)\filter.jar
@@ -27,7 +31,7 @@ JUNITCP=$(EXTLIB)\junit.jar
 
 .PHONY:	$(TARGET)
 
-$(TARGET):	clean impl loc jar
+$(TARGET):	clean impl tst loc jar
 
 jar:
 	$(JAR) -cf $(TARGET) -C $(CLASSES) com
@@ -40,6 +44,14 @@ impl:
 		-classpath $(SERVERCP);$(CLIENTCP);$(LAYOUTCP);$(SPATIALCP);$(REPORTCP);$(JGRAPHCP);$(VBJCP);$(ORBCP);$(JUNITCP) \
 		-sourcepath $(SRC) \
 		@$(TARGET_CLASS_LIST)
+
+tst:
+	$(JAVAC) \
+		-deprecation \
+		-d $(CLASSES_TEST) \
+		-classpath $(CLASSES);$(SERVERCP);$(CLIENTCP);$(LAYOUTCP);$(SPATIALCP);$(REPORTCP);$(JGRAPHCP);$(VBJCP);$(ORBCP);$(JUNITCP) \
+		-sourcepath $(SRCTEST) \
+		@$(TEST_CLASS_LIST)
 
 loc:
 	cp -f \
