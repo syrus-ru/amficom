@@ -1,5 +1,5 @@
 /*
- * $Id: ClientMeasurementServerTest.java,v 1.4 2004/09/23 07:39:37 max Exp $
+ * $Id: ClientMeasurementServerTest.java,v 1.5 2004/09/23 08:28:01 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,27 +23,26 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2004/09/23 07:39:37 $
- * @author $Author: max $
+ * @version $Revision: 1.5 $, $Date: 2004/09/23 08:28:01 $
+ * @author $Author: bob $
  * @module cmserver_v1
  */
 public class ClientMeasurementServerTest {
 
-	public static final String	APPLICATION_NAME	= "cmserver";
-	
-	public static final String KEY_DB_HOST_NAME = "DBHostName";
-	public static final String KEY_DB_SID = "DBSID";
-	public static final String KEY_DB_CONNECTION_TIMEOUT = "DBConnectionTimeout";
-	public static final String KEY_DB_LOGIN_NAME = "DBLoginName";
-	public static final String	KEY_TICK_TIME		= "TickTime";
-	public static final String	KEY_MAX_FALLS		= "MaxFalls";
-	
-	public static final String DB_SID = "amficom";
-	public static final int DB_CONNECTION_TIMEOUT = 120;
-	public static final String DB_LOGIN_NAME = "amficom";
+	public static final String	APPLICATION_NAME		= "cmserver";
 
+	public static final String	KEY_DB_HOST_NAME		= "DBHostName";
+	public static final String	KEY_DB_SID			= "DBSID";
+	public static final String	KEY_DB_CONNECTION_TIMEOUT	= "DBConnectionTimeout";
+	public static final String	KEY_DB_LOGIN_NAME		= "DBLoginName";
+	public static final String	KEY_TICK_TIME			= "TickTime";
+	public static final String	KEY_MAX_FALLS			= "MaxFalls";
 
-	public static final int		TICK_TIME		= 5;
+	public static final String	DB_SID				= "amficom";
+	public static final int		DB_CONNECTION_TIMEOUT		= 120;
+	public static final String	DB_LOGIN_NAME			= "amficom";
+
+	public static final int		TICK_TIME			= 5;
 
 	public ClientMeasurementServerTest() {
 		try {
@@ -52,34 +51,43 @@ public class ClientMeasurementServerTest {
 			AccessIdentifier_Transferable accessIdentifier_Transferable = new AccessIdentifier_Transferable();
 
 			Identifier id = new Identifier("Null_0");
-			
+
 			Identifier domainId = new Identifier("Domain_19");
 			accessIdentifier_Transferable.domain_id = (Identifier_Transferable) domainId.getTransferable();
 			accessIdentifier_Transferable.user_id = (Identifier_Transferable) id.getTransferable();
 			accessIdentifier_Transferable.session_id = (Identifier_Transferable) id.getTransferable();
 
-            long time0 = System.currentTimeMillis();
-            // 2 month ago
-            Date start = new Date(System.currentTimeMillis() - 1000 * 60 * 60 * 24 * 31 * 2);
-            Date end = new Date(System.currentTimeMillis());
-            Test_Transferable[] test_Transferables = server.transmitTestsByTime(start.getTime(), end.getTime(),
-                                                accessIdentifier_Transferable);
-            long time1 = System.currentTimeMillis();
-            System.out.println("transmit " + test_Transferables.length + " test(s) for " + (time1 - time0) + " ms");
+			long time0 = System.currentTimeMillis();
+			// 2 month ago
+			//long diff = 1000L * 60L * 60L * 24L * 31L * 2L;
+			long diff = 0;
+			Date start = new Date(System.currentTimeMillis() - diff);
+			Date end = new Date(System.currentTimeMillis());
 
-            Identifier_Transferable[] identifier_Transferables = new Identifier_Transferable[test_Transferables.length];
-            for (int i = 0; i < identifier_Transferables.length; i++) {
-                com.syrus.AMFICOM.measurement.Test test = new com.syrus.AMFICOM.measurement.Test(
-                                                            test_Transferables[i]);
-                identifier_Transferables[i] = test_Transferables[i].id;
-                System.out.println("test " + test.getId().toString() + " status :" + test.getStatus().value());
-            }
-            long time2 = System.currentTimeMillis();
-            Measurement_Transferable[] measurement_Transferables = server
-                    .transmitMeasurementForTests(identifier_Transferables, accessIdentifier_Transferable);
-            long time3 = System.currentTimeMillis();
-            System.out.println("transmit " + measurement_Transferables.length + " measuremen(s) for "
-                    + (time3 - time2) + " ms");
+			System.out.println("start:" + start.toString());
+			System.out.println("end:" + end.toString());
+
+			Test_Transferable[] test_Transferables = server.transmitTestsByTime(start.getTime(), end
+					.getTime(), accessIdentifier_Transferable);
+			long time1 = System.currentTimeMillis();
+			System.out.println("transmit " + test_Transferables.length + " test(s) for " + (time1 - time0)
+					+ " ms");
+
+			Identifier_Transferable[] identifier_Transferables = new Identifier_Transferable[test_Transferables.length];
+			for (int i = 0; i < identifier_Transferables.length; i++) {
+				com.syrus.AMFICOM.measurement.Test test = new com.syrus.AMFICOM.measurement.Test(
+															test_Transferables[i]);
+				identifier_Transferables[i] = test_Transferables[i].id;
+				System.out.println("test " + test.getId().toString() + " status :"
+						+ test.getStatus().value());
+			}
+			long time2 = System.currentTimeMillis();
+			Measurement_Transferable[] measurement_Transferables = server
+					.transmitMeasurementForTests(identifier_Transferables,
+									accessIdentifier_Transferable);
+			long time3 = System.currentTimeMillis();
+			System.out.println("transmit " + measurement_Transferables.length + " measuremen(s) for "
+					+ (time3 - time2) + " ms");
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -92,25 +100,24 @@ public class ClientMeasurementServerTest {
 	}
 
 	private static void startup() {
-		/*	Establish connection with database	*/
+		/* Establish connection with database */
 		establishDatabaseConnection();
-		
+
 		DatabaseContextSetup.initDatabaseContext();
 		DatabaseContextSetup.initObjectPools();
 
 		/* Start main loop */
 		final ClientMeasurementServerTest clientMeasurementServer = new ClientMeasurementServerTest();
 	}
-	
+
 	private static void establishDatabaseConnection() {
 		String dbHostName = ApplicationProperties.getString(KEY_DB_HOST_NAME, Application.getInternetAddress());
 		String dbSid = ApplicationProperties.getString(KEY_DB_SID, DB_SID);
-		long dbConnTimeout = ApplicationProperties.getInt(KEY_DB_CONNECTION_TIMEOUT, DB_CONNECTION_TIMEOUT)*1000;
+		long dbConnTimeout = ApplicationProperties.getInt(KEY_DB_CONNECTION_TIMEOUT, DB_CONNECTION_TIMEOUT) * 1000;
 		String dbLoginName = ApplicationProperties.getString(KEY_DB_LOGIN_NAME, DB_LOGIN_NAME);
 		try {
 			DatabaseConnection.establishConnection(dbHostName, dbSid, dbConnTimeout, dbLoginName);
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			Log.errorException(e);
 			System.exit(-1);
 		}

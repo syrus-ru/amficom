@@ -1,5 +1,5 @@
 /*
- * $Id: CMServerImpl.java,v 1.16 2004/09/22 12:52:50 bob Exp $
+ * $Id: CMServerImpl.java,v 1.17 2004/09/23 08:28:01 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -73,7 +73,7 @@ import com.syrus.AMFICOM.measurement.corba.Test_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2004/09/22 12:52:50 $
+ * @version $Revision: 1.17 $, $Date: 2004/09/23 08:28:01 $
  * @author $Author: bob $
  * @module cmserver_v1
  */
@@ -972,9 +972,9 @@ public class CMServerImpl implements CMServerOperations {
 						.getMeasurementDatabase();
 				List listFromDatabase = database.retrieveButIds(list);
 				for (Iterator it = listFromDatabase.iterator(); it.hasNext();) {
-					Measurement set = (Measurement) it.next();
-					MeasurementStorableObjectPool.putStorableObject(set);
-					list.add(set);
+					Measurement measurement = (Measurement) it.next();
+					MeasurementStorableObjectPool.putStorableObject(measurement);
+					list.add(measurement);
 				}
 			}
 
@@ -1095,16 +1095,13 @@ public class CMServerImpl implements CMServerOperations {
 				listFromDatabase = database.retrieveButIdsByTest(list, testIdList);
 
 			} else {
-				list = MeasurementStorableObjectPool
-						.getStorableObjectsByDomain(ObjectEntities.MEASUREMENT_ENTITY_CODE,
-										domain);
-				listFromDatabase = database.retrieveButIdsByDomain(list, domain);
+				return transmitMeasurements(new Identifier_Transferable[0], accessIdentifier);
 			}
 
 			for (Iterator it = listFromDatabase.iterator(); it.hasNext();) {
-				Measurement set = (Measurement) it.next();
-				MeasurementStorableObjectPool.putStorableObject(set);
-				list.add(set);
+				Measurement measurement = (Measurement) it.next();
+				MeasurementStorableObjectPool.putStorableObject(measurement);
+				list.add(measurement);
 			}
 
 			Measurement_Transferable[] transferables = new Measurement_Transferable[list.size()];
