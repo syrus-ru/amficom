@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectXML.java,v 1.5 2005/01/26 09:03:06 bob Exp $
+ * $Id: StorableObjectXML.java,v 1.6 2005/01/27 13:17:35 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,9 +11,11 @@ package com.syrus.AMFICOM.general;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -26,7 +28,7 @@ import java.util.Map;
  * and belong to the same package
  * (i.g. {@link com.syrus.AMFICOM.general.CharacteristicWrapper} for {@link com.syrus.AMFICOM.general.Characteristic}) which must have static getInstance method.
  * 
- * @version $Revision: 1.5 $, $Date: 2005/01/26 09:03:06 $
+ * @version $Revision: 1.6 $, $Date: 2005/01/27 13:17:35 $
  * @author $Author: bob $
  * @module general_v1
  */
@@ -82,6 +84,34 @@ public class StorableObjectXML {
 		}
 		storableObject.resetVersion();
 		return storableObject;
+	}
+	
+	public List retrieveByCondition(List ids, StorableObjectCondition condition)  throws RetrieveObjectException, IllegalDataException{
+		List list = null;
+		List identifiers = this.driver.getIdentifiers(condition.getEntityCode().shortValue());
+		for (Iterator it = identifiers.iterator(); it.hasNext();) {
+			Identifier id = (Identifier) it.next();
+			if (ids == null || !ids.contains(id)) {
+				try {
+					StorableObject storableObject = retrieve(id);
+					if (condition.isConditionTrue(storableObject)) {
+						if (list==null)
+							list = new LinkedList();
+						list.add(storableObject);
+					}
+											
+				} catch (ObjectNotFoundException e) {
+					String msg = "StorableObjectXML.retrieveByCondition | object " + id.getIdentifierString() + " not found";
+					throw new RetrieveObjectException(msg, e);
+				} catch (ApplicationException e) {
+					String msg = "StorableObjectXML.retrieveByCondition | caught  " + e.getMessage() + " during check " + id.getIdentifierString() + " for condition ";
+					throw new RetrieveObjectException(msg, e);
+				} 
+			}
+		}
+		if (list == null)
+			list = Collections.EMPTY_LIST;
+		return list;
 	}
 
 	public void updateObject(final StorableObject storableObject) throws IllegalDataException,
