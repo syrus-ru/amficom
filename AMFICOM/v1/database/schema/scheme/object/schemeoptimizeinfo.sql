@@ -1,4 +1,4 @@
--- $Id: schemeoptimizeinfo.sql,v 1.3 2005/02/21 08:30:18 bass Exp $
+-- $Id: schemeoptimizeinfo.sql,v 1.4 2005/03/22 13:36:03 bass Exp $
 
 CREATE TABLE "SchemeOptimizeInfo" (
 	id VARCHAR2(32 CHAR) NOT NULL,
@@ -14,16 +14,16 @@ CREATE TABLE "SchemeOptimizeInfo" (
 --
 	optimization_mode NUMBER(10) NOT NULL,
 	iterations NUMBER(10) NOT NULL,
-	price NUMBER NOT NULL,
-	wave_length NUMBER NOT NULL,
-	len_margin NUMBER NOT NULL,
-	mutation_rate NUMBER NOT NULL,
-	mutation_degree NUMBER NOT NULL,
-	rtu_delete_prob NUMBER NOT NULL,
-	rtu_create_prob NUMBER NOT NULL,
-	nodes_splice_prob NUMBER NOT NULL,
-	nodes_cut_prob NUMBER NOT NULL,
-	survivor_rate NUMBER NOT NULL,
+	price BINARY_DOUBLE NOT NULL,
+	wave_length BINARY_DOUBLE NOT NULL,
+	len_margin BINARY_DOUBLE NOT NULL,
+	mutation_rate BINARY_DOUBLE NOT NULL,
+	mutation_degree BINARY_DOUBLE NOT NULL,
+	rtu_delete_prob BINARY_DOUBLE NOT NULL,
+	rtu_create_prob BINARY_DOUBLE NOT NULL,
+	nodes_splice_prob BINARY_DOUBLE NOT NULL,
+	nodes_cut_prob BINARY_DOUBLE NOT NULL,
+	survivor_rate BINARY_DOUBLE NOT NULL,
 	scheme_id VARCHAR2(32 CHAR) NOT NULL,
 --
 	CONSTRAINT schemeoptimizeinfo_pk PRIMARY KEY(id),
@@ -37,7 +37,7 @@ CREATE TABLE "SchemeOptimizeInfo" (
 		REFERENCES "Scheme"(id) ON DELETE CASCADE
 );
 
-COMMENT ON TABLE "SchemeOptimizeInfo" IS '$Id: schemeoptimizeinfo.sql,v 1.3 2005/02/21 08:30:18 bass Exp $';
+COMMENT ON TABLE "SchemeOptimizeInfo" IS '$Id: schemeoptimizeinfo.sql,v 1.4 2005/03/22 13:36:03 bass Exp $';
 
 CREATE SEQUENCE "SchemeOptimizeInfo_Seq" ORDER;
 
@@ -63,7 +63,7 @@ CREATE TABLE "SchemeOptimizeInfoRtu" (
 		REFERENCES "SchemeOptimizeInfo"(id) ON DELETE CASCADE
 );
 
-COMMENT ON TABLE "SchemeOptimizeInfoRtu" IS '$Id: schemeoptimizeinfo.sql,v 1.3 2005/02/21 08:30:18 bass Exp $';
+COMMENT ON TABLE "SchemeOptimizeInfoRtu" IS '$Id: schemeoptimizeinfo.sql,v 1.4 2005/03/22 13:36:03 bass Exp $';
 COMMENT ON COLUMN "SchemeOptimizeInfoRtu".price_usd IS 'RTU price in US dollars.';
 COMMENT ON COLUMN "SchemeOptimizeInfoRtu".range_db IS 'RTU range in decibels, from 0.00 to 128.00 db.';
 
@@ -91,7 +91,7 @@ CREATE TABLE "SchemeOptimizeInfoSwitch" (
 		REFERENCES "SchemeOptimizeInfo"(id) ON DELETE CASCADE
 );
 
-COMMENT ON TABLE "SchemeOptimizeInfoSwitch" IS '$Id: schemeoptimizeinfo.sql,v 1.3 2005/02/21 08:30:18 bass Exp $';
+COMMENT ON TABLE "SchemeOptimizeInfoSwitch" IS '$Id: schemeoptimizeinfo.sql,v 1.4 2005/03/22 13:36:03 bass Exp $';
 COMMENT ON COLUMN "SchemeOptimizeInfoSwitch".price_usd IS 'Optical switch price in US dollars.';
 COMMENT ON COLUMN "SchemeOptimizeInfoSwitch".no_of_ports IS 'Number of ports in this optical switch. Up to 256.';
 

@@ -1,4 +1,4 @@
--- $Id: schemecablelink.sql,v 1.2 2005/02/21 08:30:18 bass Exp $
+-- $Id: schemecablelink.sql,v 1.3 2005/03/22 13:36:03 bass Exp $
 
 CREATE TABLE "SchemeCableLink" (
 	id VARCHAR2(32 CHAR) NOT NULL,
@@ -12,8 +12,8 @@ CREATE TABLE "SchemeCableLink" (
 	name VARCHAR2(32 CHAR) NOT NULL,
 	description VARCHAR2(256 CHAR),
 --
-	physical_length NUMBER NOT NULL,
-	optical_length NUMBER NOT NULL,
+	physical_length BINARY_DOUBLE NOT NULL,
+	optical_length BINARY_DOUBLE NOT NULL,
 	cable_link_type_id VARCHAR2(32 CHAR),
 	cable_link_id VARCHAR2(32 CHAR),
 	source_scheme_cable_port_id VARCHAR2(32 CHAR),
@@ -47,6 +47,6 @@ CREATE TABLE "SchemeCableLink" (
 		AND cable_link_id IS NULL))
 );
 
-COMMENT ON TABLE "SchemeCableLink" IS '$Id: schemecablelink.sql,v 1.2 2005/02/21 08:30:18 bass Exp $';
+COMMENT ON TABLE "SchemeCableLink" IS '$Id: schemecablelink.sql,v 1.3 2005/03/22 13:36:03 bass Exp $';
 
 CREATE SEQUENCE "SchemeCableLink_Seq" ORDER;

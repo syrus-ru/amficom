@@ -12,13 +12,16 @@ CREATE TABLE CableThreadType (
  mark VARCHAR2(64),
  color VARCHAR2(32),
  link_type_id VARCHAR2(32),
+ cable_link_type_id VARCHAR2(32),
 --
  CONSTRAINT cthtype_pk PRIMARY KEY (id),
  CONSTRAINT cthtype_creator_fk FOREIGN KEY (creator_id)
   REFERENCES "User" (id) ON DELETE CASCADE,
  CONSTRAINT cthtype_modifier_fk FOREIGN KEY (modifier_id)
   REFERENCES "User" (id) ON DELETE CASCADE,
- CONSTRAINT cthtype_clinktype_fk FOREIGN KEY (link_type_id)
+ CONSTRAINT cthtype_linktype_fk FOREIGN KEY (link_type_id)
+  REFERENCES LinkType (id) ON DELETE CASCADE,
+ CONSTRAINT cthtype_clinktype_fk FOREIGN KEY (cable_link_type_id)
   REFERENCES LinkType (id) ON DELETE CASCADE
 );
 

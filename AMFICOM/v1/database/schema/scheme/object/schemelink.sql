@@ -1,4 +1,4 @@
--- $Id: schemelink.sql,v 1.2 2005/02/21 08:30:18 bass Exp $
+-- $Id: schemelink.sql,v 1.3 2005/03/22 13:36:03 bass Exp $
 
 CREATE TABLE "SchemeLink" (
 	id VARCHAR2(32 CHAR) NOT NULL,
@@ -12,8 +12,8 @@ CREATE TABLE "SchemeLink" (
 	name VARCHAR2(32 CHAR) NOT NULL,
 	description VARCHAR2(256 CHAR),
 --
-	physical_length NUMBER NOT NULL,
-	optical_length NUMBER NOT NULL,
+	physical_length BINARY_DOUBLE NOT NULL,
+	optical_length BINARY_DOUBLE NOT NULL,
 	link_type_id VARCHAR2(32 CHAR),
 	link_id VARCHAR2(32 CHAR),
 --
@@ -30,6 +30,6 @@ CREATE TABLE "SchemeLink" (
 		REFERENCES Link(id) ON DELETE CASCADE
 );
 
-COMMENT ON TABLE "SchemeLink" IS '$Id: schemelink.sql,v 1.2 2005/02/21 08:30:18 bass Exp $';
+COMMENT ON TABLE "SchemeLink" IS '$Id: schemelink.sql,v 1.3 2005/03/22 13:36:03 bass Exp $';
 
 CREATE SEQUENCE "SchemeLink_Seq" ORDER;
