@@ -1,5 +1,5 @@
 /*
- * $Id: LinkedIdsCondition.java,v 1.23 2004/12/28 10:29:48 bob Exp $
+ * $Id: LinkedIdsCondition.java,v 1.24 2004/12/28 10:31:43 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,7 +18,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
 
 /**
- * @version $Revision: 1.23 $, $Date: 2004/12/28 10:29:48 $
+ * @version $Revision: 1.24 $, $Date: 2004/12/28 10:31:43 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -198,28 +198,28 @@ class LinkedIdsCondition extends com.syrus.AMFICOM.general.LinkedIdsCondition {
 				if (object instanceof MeasurementSetup) {
 					MeasurementSetup measurementSetup = (MeasurementSetup) object;
 					/* choose type of linked objects */
-					short entityCode = 0;
+					short code = 0;
 					List objectList;
 					if (this.linkedIds != null){
 						for (Iterator it = this.linkedIds.iterator(); it.hasNext();) {
 							Identifier id = (Identifier) it.next();
-							if (entityCode == 0)
-								entityCode = id.getMajor();
+							if (code == 0)
+								code = id.getMajor();
 							else 
-								if (entityCode != id.getMajor())
+								if (code != id.getMajor())
 									throw new UnsupportedOperationException("LinkedIdsCondition.isConditionTrue | there some different entities : " 
-										+ ObjectEntities.codeToString(entityCode) + " and " + ObjectEntities.codeToString(id.getMajor()));
+										+ ObjectEntities.codeToString(code) + " and " + ObjectEntities.codeToString(id.getMajor()));
 						}
 						objectList = this.linkedIds;
 					} else{
 						/* work with simple identifier*/
-						entityCode = this.identifier.getMajor();
+						code = this.identifier.getMajor();
 						objectList = Collections.singletonList(this.identifier);
 					}
 					
 					 
 					
-					switch(entityCode){
+					switch(code){
 						case ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE:
 						{
 							for (Iterator iter = objectList.iterator(); iter.hasNext();) {
@@ -278,7 +278,7 @@ class LinkedIdsCondition extends com.syrus.AMFICOM.general.LinkedIdsCondition {
 							break;
 						default:
 							throw new UnsupportedOperationException("LinkedIdsCondition.isConditionTrue | unknown linked entity : " 
-								+ ObjectEntities.codeToString(entityCode));
+								+ ObjectEntities.codeToString(code));
 					}
 				}
 				break;
