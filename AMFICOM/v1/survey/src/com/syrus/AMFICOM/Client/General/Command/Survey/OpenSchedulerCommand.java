@@ -74,7 +74,6 @@ public class OpenSchedulerCommand extends VoidCommand
 
         System.out.println("Starting Scheduler window");
 
-		LangModelSchedule.initialize();
 		new com.syrus.AMFICOM.Client.Schedule.Schedule(new DefaultScheduleApplicationModelFactory());
 /*
 		try

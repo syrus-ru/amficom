@@ -58,8 +58,6 @@ public class OpenModelingCommand extends VoidCommand
 
 		  System.out.println("Starting Modeling window");
 
-		LangModelModel.initialize();
-		LangModelMap.initialize();
 		new com.syrus.AMFICOM.Client.Model.Model(new DefaultModelApplicationModelFactory());
 /*
 		try
