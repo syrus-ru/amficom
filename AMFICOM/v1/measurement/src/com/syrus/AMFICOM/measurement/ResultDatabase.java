@@ -159,7 +159,7 @@ public class ResultDatabase extends StorableObjectDatabase {
 					/**
 					 * @todo when change DB Identifier model ,change getString() to getLong()
 					 */
-					ParameterType parameterType = MeasurementObjectTypePool.getParameterType(new Identifier(resultSet.getString(LINK_COLUMN_TYPE_ID)));
+					ParameterType parameterType = (ParameterType)MeasurementObjectTypePool.getObjectType(new Identifier(resultSet.getString(LINK_COLUMN_TYPE_ID)));
 					parameter = new SetParameter(/**
 																				* @todo when change DB Identifier model ,change getString() to getLong()
 																				*/

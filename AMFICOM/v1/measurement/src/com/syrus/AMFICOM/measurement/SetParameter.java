@@ -14,7 +14,7 @@ public class SetParameter implements TransferableObject, TypedObject {
 
 	public SetParameter(Parameter_Transferable pt) {
 		this.id = new Identifier(pt.id);
-		this.type = MeasurementObjectTypePool.getParameterType(new Identifier(pt.type_id));
+		this.type = (ParameterType)MeasurementObjectTypePool.getObjectType(new Identifier(pt.type_id));
 		this.value = new byte[pt.value.length];
 		for (int i = 0; i < this.value.length; i++)
 			this.value[i] = pt.value[i];

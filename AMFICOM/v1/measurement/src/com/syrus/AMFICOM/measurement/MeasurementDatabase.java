@@ -67,7 +67,7 @@ public class MeasurementDatabase extends StorableObjectDatabase {
 				/**
 				 * @todo when change DB Identifier model ,change getString() to getLong()
 				 */
-				MeasurementType measurementType = (MeasurementType)MeasurementObjectTypePool.getActionType(new Identifier(resultSet.getString(COLUMN_TYPE_ID)));
+				MeasurementType measurementType = (MeasurementType)MeasurementObjectTypePool.getObjectType(new Identifier(resultSet.getString(COLUMN_TYPE_ID)));
 				/**
 				 * @todo when change DB Identifier model ,change getString() to getLong()
 				 */

@@ -113,9 +113,9 @@ public class TestDatabase extends StorableObjectDatabase {
 													 /**
 													   * @todo when change DB Identifier model ,change getString() to getLong()
 													   */
-													 (MeasurementType)MeasurementObjectTypePool.getActionType(new Identifier(resultSet.getString(COLUMN_MEASUREMENT_TYPE_ID))),
-													 (analysisTypeIdCode != null)?((AnalysisType)MeasurementObjectTypePool.getActionType(new Identifier(analysisTypeIdCode))):null,
-													 (evaluationTypeIdCode != null)?((EvaluationType)MeasurementObjectTypePool.getActionType(new Identifier(evaluationTypeIdCode))):null,
+													 (MeasurementType)MeasurementObjectTypePool.getObjectType(new Identifier(resultSet.getString(COLUMN_MEASUREMENT_TYPE_ID))),
+													 (analysisTypeIdCode != null)?((AnalysisType)MeasurementObjectTypePool.getObjectType(new Identifier(analysisTypeIdCode))):null,
+													 (evaluationTypeIdCode != null)?((EvaluationType)MeasurementObjectTypePool.getObjectType(new Identifier(evaluationTypeIdCode))):null,
 													 resultSet.getInt(COLUMN_STATUS),
 													 new MonitoredElement(new Identifier(monitoredElementIdCode)),
 													 resultSet.getInt(COLUMN_RETURN_TYPE),

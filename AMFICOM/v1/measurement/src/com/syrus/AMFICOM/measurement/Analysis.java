@@ -35,7 +35,7 @@ public class Analysis extends Action {
 					new Date(at.modified),
 					new Identifier(at.creator_id),
 					new Identifier(at.modifier_id),
-					(AnalysisType)MeasurementObjectTypePool.getActionType(new Identifier(at.type_id)),
+					(AnalysisType)MeasurementObjectTypePool.getObjectType(new Identifier(at.type_id)),
 					new Identifier(at.monitored_element_id));
 		try {
 			this.criteriaSet = new Set(new Identifier(at.criteria_set_id));

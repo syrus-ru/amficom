@@ -35,7 +35,7 @@ public class Evaluation extends Action {
 					new Date(et.modified),
 					new Identifier(et.creator_id),
 					new Identifier(et.modifier_id),
-					(EvaluationType)MeasurementObjectTypePool.getActionType(new Identifier(et.type_id)),
+					(EvaluationType)MeasurementObjectTypePool.getObjectType(new Identifier(et.type_id)),
 					new Identifier(et.monitored_element_id));
 
 		try {

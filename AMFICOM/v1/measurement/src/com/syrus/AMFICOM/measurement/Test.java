@@ -150,17 +150,17 @@ public class Test extends StorableObject {
 		 * @todo when change DB Identifier model ,change identifier_string to
 		 *       identifier_code
 		 */
-		this.measurementType = (MeasurementType)MeasurementObjectTypePool.getActionType(new Identifier(tt.measurement_type_id));
+		this.measurementType = (MeasurementType)MeasurementObjectTypePool.getObjectType(new Identifier(tt.measurement_type_id));
 		/**
 		 * @todo when change DB Identifier model ,change identifier_string to
 		 *       identifier_code
 		 */
-		this.analysisType = (tt.analysis_type_id.identifier_string != null) ? ((AnalysisType)MeasurementObjectTypePool.getActionType(new Identifier(tt.analysis_type_id))) : null;
+		this.analysisType = (tt.analysis_type_id.identifier_string != null) ? ((AnalysisType)MeasurementObjectTypePool.getObjectType(new Identifier(tt.analysis_type_id))) : null;
 		/**
 		 * @todo when change DB Identifier model ,change identifier_string to
 		 *       identifier_code
 		 */
-		this.evaluationType = (tt.evaluation_type_id.identifier_string != null)	? ((EvaluationType)MeasurementObjectTypePool.getActionType(new Identifier(tt.evaluation_type_id))) : null;
+		this.evaluationType = (tt.evaluation_type_id.identifier_string != null)	? ((EvaluationType)MeasurementObjectTypePool.getObjectType(new Identifier(tt.evaluation_type_id))) : null;
 		this.status = tt.status.value();
 		try {
 			this.monitoredElement = new MonitoredElement(new Identifier(tt.monitored_element_id));

@@ -46,7 +46,7 @@ public class Measurement extends Action {
 					new Date(mt.modified),
 					new Identifier(mt.creator_id),
 					new Identifier(mt.modifier_id),
-					(MeasurementType)MeasurementObjectTypePool.getActionType(new Identifier(mt.type_id)),
+					(MeasurementType)MeasurementObjectTypePool.getObjectType(new Identifier(mt.type_id)),
 					new Identifier(mt.monitored_element_id));
 		try {
 			this.setup = new MeasurementSetup(new Identifier(mt.setup_id));
