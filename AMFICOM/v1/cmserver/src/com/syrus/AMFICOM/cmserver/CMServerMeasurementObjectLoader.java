@@ -1,5 +1,5 @@
 /*
- * $Id: CMServerMeasurementObjectLoader.java,v 1.29 2005/03/17 13:45:12 arseniy Exp $
+ * $Id: CMServerMeasurementObjectLoader.java,v 1.30 2005/03/23 12:43:31 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -44,7 +44,7 @@ import com.syrus.AMFICOM.measurement.corba.Measurement_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.29 $, $Date: 2005/03/17 13:45:12 $
+ * @version $Revision: 1.30 $, $Date: 2005/03/23 12:43:31 $
  * @author $Author: arseniy $
  * @module cmserver_v1
  */
@@ -465,7 +465,7 @@ public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementOb
 			StorableObjectCondition_Transferable conditionT = StorableObjectConditionBuilder.getConditionTransferable(condition);
 			Collection loadedObjects = null;
 			try {
-				Analysis_Transferable[] transferables = mcmRef.transmitAnalysesButIds(conditionT, loadButIdsT);
+				Analysis_Transferable[] transferables = mcmRef.transmitAnalysesButIdsByCondition(loadButIdsT, conditionT);
 				loadedObjects = new ArrayList(transferables.length);
 				for (i = 0; i < transferables.length; i++)
 					loadedObjects.add(new Analysis(transferables[i]));
@@ -533,7 +533,7 @@ public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementOb
 			StorableObjectCondition_Transferable conditionT = StorableObjectConditionBuilder.getConditionTransferable(condition);
 			Collection loadedObjects = null;
 			try {
-				Evaluation_Transferable[] transferables = mcmRef.transmitEvaluationsButIds(conditionT, loadButIdsT);
+				Evaluation_Transferable[] transferables = mcmRef.transmitEvaluationsButIdsByCondition(loadButIdsT, conditionT);
 				loadedObjects = new ArrayList(transferables.length);
 				for (i = 0; i < transferables.length; i++)
 					loadedObjects.add(new Evaluation(transferables[i]));
@@ -601,7 +601,7 @@ public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementOb
 			StorableObjectCondition_Transferable conditionT = StorableObjectConditionBuilder.getConditionTransferable(condition);
 			Collection loadedObjects = null;
 			try {
-				Measurement_Transferable[] transferables = mcmRef.transmitMeasurementsButIds(conditionT, loadButIdsT);
+				Measurement_Transferable[] transferables = mcmRef.transmitMeasurementsButIdsByCondition(loadButIdsT, conditionT);
 				loadedObjects = new ArrayList(transferables.length);
 				for (i = 0; i < transferables.length; i++)
 					loadedObjects.add(new Measurement(transferables[i]));
