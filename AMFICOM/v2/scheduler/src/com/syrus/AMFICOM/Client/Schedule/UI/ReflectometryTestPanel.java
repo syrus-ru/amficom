@@ -146,14 +146,14 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements
 	public TestArgumentSet getParameters() {
 
 		DataSourceInterface dsi = aContext.getDataSourceInterface();
-		String test_setup_id;
-		String test_type_id;
+		String testSetupId;
+		String testTypeId;
 		if (test == null) {
-			test_setup_id = ""; //$NON-NLS-1$
-			test_type_id = TestParametersPanel.TEST_TYPE_TRACE_AND_ANALYSE;
+			testSetupId = ""; //$NON-NLS-1$
+			testTypeId = TestParametersPanel.TEST_TYPE_TRACE_AND_ANALYSE;
 		} else {
-			test_setup_id = test.getTestSetupId();
-			test_type_id = test.getTestTypeId();
+			testSetupId = test.getTestSetupId();
+			testTypeId = test.getTestTypeId();
 		}
 		TestArgumentSet tas = null;
 		//if (test_setup_id.equals(""))
@@ -168,7 +168,7 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements
 			 * @TODO recast to static final fields 
 			 */
 			//System.out.println("test_setup_id:" + test_setup_id);
-			TestSetup ts = (TestSetup) Pool.get(TestSetup.typ, test_setup_id);
+			TestSetup ts = (TestSetup) Pool.get(TestSetup.typ, testSetupId);
 			if (ts == null) {
 				ts = new TestSetup();
 				//System.out.println("new TestSetup()");
@@ -183,7 +183,7 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements
 			//System.out.println("tas:" + tas.id);
 			ActionParameterType apt;
 
-			TestType testType = (TestType) Pool.get(TestType.typ, test_type_id);
+			TestType testType = (TestType) Pool.get(TestType.typ, testTypeId);
 			apt = (ActionParameterType) testType.getSortedArguments().get(
 					PARAMETER_REFRACTION);
 			try {
@@ -307,7 +307,7 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements
 		Environment.log(Environment.LOG_LEVEL_INFO,"commandName:"+commandName,getClass().getName());
 		if (commandName.equals(TestUpdateEvent.TYPE)) {
 			TestUpdateEvent tue = (TestUpdateEvent) ae;
-			if (tue.TEST_SELECTED) {
+			if (tue.testSelected) {
 				setTest(tue.test);
 			}
 		}
@@ -346,16 +346,16 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements
 
 			} else if (key.equals(CHARACTER_MAX_REFRACTION)) {
 				try {
-					maxIndexOfRefraction = Double.parseDouble(character.value);
+					this.maxIndexOfRefraction = Double.parseDouble(character.value);
 				} catch (NumberFormatException nfe) {
-					// nothing to do
+					this.maxIndexOfRefraction = 0.0;
 				}
 
 			} else if (key.equals(CHARACTER_MIN_REFRACTION)) {
 				try {
-					minIndexOfRefraction = Double.parseDouble(character.value);
+					this.minIndexOfRefraction = Double.parseDouble(character.value);
 				} catch (NumberFormatException nfe) {
-					//					 nothing to do
+					this.minIndexOfRefraction = 0.0;
 				}
 			} else {
 				Matcher matcher = pattern.matcher(key);

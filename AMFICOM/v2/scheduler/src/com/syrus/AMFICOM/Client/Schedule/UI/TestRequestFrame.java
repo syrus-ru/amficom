@@ -45,8 +45,8 @@ public class TestRequestFrame extends JInternalFrame implements
 			TestUpdateEvent tue = (TestUpdateEvent) ae;
 			receivedTest = tue.test;
 
-			if (tue.TEST_SELECTED) {
-				TestRequest treq = (TestRequest) Pool.get(TestRequest.typ,
+			if (tue.testSelected) {
+				TestRequest treq = (TestRequest) Pool.get(TestRequest.TYP,
 						receivedTest.getRequestId());
 				if (treq == null)
 					System.out

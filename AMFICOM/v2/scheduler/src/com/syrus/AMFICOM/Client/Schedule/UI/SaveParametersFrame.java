@@ -145,7 +145,7 @@ public class SaveParametersFrame extends JInternalFrame implements
 					SchedulerModel.COMMAND_SEND_DATA));
 		} else if (commandName.equals(TestUpdateEvent.TYPE)) {
 			TestUpdateEvent tue = (TestUpdateEvent) ae;
-			if (tue.TEST_SELECTED) {
+			if (tue.testSelected) {
 				TestReturnType returnType = tue.test.getReturnType();
 				if (returnType.equals(TestReturnType.TEST_RETURN_TYPE_WHOLE)) {
 					allResultsButton.doClick();

@@ -4,7 +4,7 @@ import java.util.*;
 
 public class TimeStamp {
 
-	public static final String	typ						= "newtimestamp";
+	public static final String	TYP						= "newtimestamp";
 	public static final int		TIMESTAMPTYPE_ONETIME	= 1;
 	public static final int		TIMESTAMPTYPE_CONTINUOS	= 2;
 	public static final int		TIMESTAMPTYPE_PERIODIC	= 3;
@@ -157,21 +157,21 @@ public class TimeStamp {
 					break;
 			}
 
-			long period_t = cal.getTimeInMillis();
+			long periodT = cal.getTimeInMillis();
 			boolean first = true;
 
 			//System.out.println("testDate.size():" + testDate.size());
 			//System.out.println("testTime.size():" + testTime.size());
-			while (period_t <= periodEnd) {
+			while (periodT <= periodEnd) {
 				//boolean added = false;
-				for (Iterator d_it = testDate.iterator(); d_it.hasNext();) {
+				for (Iterator it = testDate.iterator(); it.hasNext();) {
 					//устанавливаем день
-					Time t = (Time) d_it.next();
+					Time t = (Time) it.next();
 					cal.add(t.getScale(), t.getValue()
 							- cal.getMinimum(t.getScale()));
 
 					// запоминаем начало дня
-					long day_t = cal.getTimeInMillis();
+					long dayT = cal.getTimeInMillis();
 					//for (Iterator t_it = testTime.iterator();
 					// t_it.hasNext();) {
 					for (int i = 0; i < testTime.size(); i++) {
@@ -204,10 +204,10 @@ public class TimeStamp {
 						}
 						//}
 						//возврат на начало дня
-						cal.setTimeInMillis(day_t);
+						cal.setTimeInMillis(dayT);
 					}
 					//возврат на начало периода
-					cal.setTimeInMillis(period_t);
+					cal.setTimeInMillis(periodT);
 				}
 				//прибавляем период
 				if (first)
@@ -215,7 +215,7 @@ public class TimeStamp {
 				else
 					cal.add(period.getScale(), period.getValue());
 				//if (!added) list.add(cal.getTime());
-				period_t = cal.getTimeInMillis();
+				periodT = cal.getTimeInMillis();
 			}
 
 			// add only periodic events

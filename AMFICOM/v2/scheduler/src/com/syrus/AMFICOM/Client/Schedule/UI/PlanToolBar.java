@@ -26,13 +26,13 @@ class PlanToolBar extends JPanel {
 
 	private class FlashIcon implements Icon {
 
-		private final static int	H		= TestLine.MINIMAL_WIDTH;
-		private final static int	W		= TestLine.MINIMAL_WIDTH;
+		private static final int	H		= TestLine.MINIMAL_WIDTH;
+		private static final int	W		= TestLine.MINIMAL_WIDTH;
 
 		private boolean				flash	= false;
 
 		public void flash() {
-			flash = !flash;
+			this.flash = !this.flash;
 		}
 
 		public int getIconHeight() {
@@ -48,8 +48,7 @@ class PlanToolBar extends JPanel {
 			Color foregroundColor = g.getColor();
 			g2d.setBackground(Color.lightGray);
 			g2d.clearRect(x, y, W + 1, H + 1);
-			g2d.setColor(flash ? TestLine.COLOR_SCHEDULED
-					: TestLine.COLOR_UNRECOGNIZED);
+			g2d.setColor(this.flash ? TestLine.COLOR_SCHEDULED : TestLine.COLOR_UNRECOGNIZED);
 			g2d.fillRect(x + 2, y + 2, W - 3, H - 3);
 			g2d.draw3DRect(x, y, W, H, true);
 			g.setColor(foregroundColor);
@@ -57,17 +56,13 @@ class PlanToolBar extends JPanel {
 	}
 
 	private static final boolean	CREATE_ALLOW	= false;
-	final static int				H				= 22;
+	static final int				H				= 22;
 	private JButton					applyButton		= new JButton();
-
-	private Dimension				btn_size		= new Dimension(24, 24);
-
-	private JButton					dateButton		= new JButton(
-															UIStorage.CALENDAR_ICON);
+	
+	private JButton					dateButton		= new JButton(UIStorage.CALENDAR_ICON);
 	JSpinner						dateSpinner		= new DateSpinner();
 
-	private JButton					nowButton		= new JButton(
-															UIStorage.TIME_ICON);
+	private JButton					nowButton		= new JButton(UIStorage.TIME_ICON);
 
 	PlanPanel						panel;
 	private ApplicationContext		aContext;
@@ -84,45 +79,6 @@ class PlanToolBar extends JPanel {
 			// nothing
 		}
 		this.panel = panel;
-
-		try {
-			jbInit();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
-	public static Icon getColorIcon(Color color) {
-		int x = 0;
-		int y = 0;
-		int w = TestLine.MINIMAL_WIDTH;
-		int h = TestLine.MINIMAL_WIDTH;
-		BufferedImage img = new BufferedImage(w + 1, h + 1,
-				BufferedImage.TYPE_INT_RGB);
-		Graphics2D g2d = (Graphics2D) img.getGraphics();
-		g2d.setBackground(Color.lightGray);
-		g2d.clearRect(x, y, w + 1, h + 1);
-		g2d.setColor(color);
-		g2d.fillRect(x + 2, y + 2, w - 3, h - 3);
-		g2d.draw3DRect(x, y, w, h, true);
-		Icon icon = new ImageIcon(img);
-		return icon;
-	}
-
-	void apply_changes() {
-		saveTest();
-		Calendar date = Calendar.getInstance();
-		date.setTime((Date) dateSpinner.getValue());
-		Calendar time = Calendar.getInstance();
-		time.setTime((Date) timeSpinner.getValue());
-
-		date.set(Calendar.HOUR_OF_DAY, time.get(Calendar.HOUR_OF_DAY));
-		date.set(Calendar.MINUTE, time.get(Calendar.MINUTE));
-
-		panel.updateDate(date.getTime(), scaleComboBox.getSelectedIndex());
-	}
-
-	private void jbInit() throws Exception {
 		setLayout(new GridBagLayout());
 		GridBagConstraints gbc = new GridBagConstraints();
 		gbc.anchor = GridBagConstraints.LAST_LINE_START;
@@ -134,8 +90,7 @@ class PlanToolBar extends JPanel {
 		String[] suportedScales = PlanPanel.getSupportedScales();
 		String[] scales = new String[suportedScales.length];
 		for (int i = 0; i < scales.length; i++)
-			scales[i] = new String(LangModelSchedule
-					.getString(suportedScales[i]));
+			scales[i] = new String(LangModelSchedule.getString(suportedScales[i]));
 		scaleComboBox = new AComboBox(scales);
 		scaleComboBox.setSelectedIndex(3);
 		dateButton.setMargin(UIStorage.INSET_NULL);
@@ -149,47 +104,46 @@ class PlanToolBar extends JPanel {
 				Date date = (Date) dateSpinner.getModel().getValue();
 				cal.setTime(date);
 
-				JDialog calendarDialog = CalendarUI.createDialogInstance(
-						Environment.getActiveWindow(), cal, true, true);
+				JDialog calendarDialog = CalendarUI
+						.createDialogInstance(Environment.getActiveWindow(), cal, true, true);
 				calendarDialog.setSize(new Dimension(200, 200));
 				calendarDialog.setResizable(false);
-				calendarDialog.setLocation(new Point(dateSpinner
-						.getLocationOnScreen().x - 35, dateSpinner
+				calendarDialog.setLocation(new Point(dateSpinner.getLocationOnScreen().x - 35, dateSpinner
 						.getLocationOnScreen().y
 						+ H));
 				calendarDialog.setVisible(true);
 				if (((CalendarUI) calendarDialog.getContentPane()).getStatus() == CalendarUI.STATUS_OK)
-						dateSpinner.getModel().setValue(cal.getTime());
+					dateSpinner.getModel().setValue(cal.getTime());
 			}
 		});
-		UIStorage.setRigidSize(zoomInButton, btn_size);
+		UIStorage.setRigidSize(zoomInButton, UIStorage.BUTTON_SIZE);
 		zoomInButton.setFocusable(false);
 		zoomInButton.setIcon(UIStorage.ZOOMIN_ICON);
 		zoomInButton.setToolTipText(LangModelSchedule.getString("ZoomIn")); //$NON-NLS-1$
 		zoomInButton.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {
-				panel.updateScale(1.25);
+				PlanToolBar.this.panel.updateScale(1.25);
 			}
 		});
-		UIStorage.setRigidSize(zoomOutButton, btn_size);
+		UIStorage.setRigidSize(zoomOutButton, UIStorage.BUTTON_SIZE);
 		zoomOutButton.setFocusable(false);
 		zoomOutButton.setIcon(UIStorage.ZOOMOUT_ICON);
 		zoomOutButton.setToolTipText(LangModelSchedule.getString("ZoomOut")); //$NON-NLS-1$
 		zoomOutButton.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {
-				panel.updateScale(.8);
+				PlanToolBar.this.panel.updateScale(.8);
 			}
 		});
-		UIStorage.setRigidSize(zoomNoneButton, btn_size);
+		UIStorage.setRigidSize(zoomNoneButton, UIStorage.BUTTON_SIZE);
 		zoomNoneButton.setFocusable(false);
 		zoomNoneButton.setIcon(UIStorage.NOZOOM_ICON);
 		zoomNoneButton.setToolTipText(LangModelSchedule.getString("ZoomNone")); //$NON-NLS-1$
 		zoomNoneButton.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {
-				panel.updScale2Fit();
+				PlanToolBar.this.panel.updateScale2Fit();
 			}
 		});
 
@@ -230,8 +184,7 @@ class PlanToolBar extends JPanel {
 		box.add(nowButton);
 		box.add(Box.createHorizontalStrut(10));
 		box.add(applyButton);
-		JButton legendButton = new JButton(LangModelSchedule
-				.getString("Legend"));
+		JButton legendButton = new JButton(LangModelSchedule.getString("Legend"));
 		legendButton.setToolTipText(LangModelSchedule.getString("Legend"));
 		legendButton.setMargin(UIStorage.INSET_NULL);
 		box.add(Box.createHorizontalStrut(10));
@@ -243,38 +196,30 @@ class PlanToolBar extends JPanel {
 			JPanel legendPanel = new JPanel(new GridLayout(0, 1));
 			legendPanel.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
 			final FlashIcon flashIcon = new FlashIcon();
-			final JLabel flashLabel = new JLabel(LangModelSchedule
-					.getString("Not_saved"), flashIcon, SwingConstants.LEFT);
-			javax.swing.Timer timer = new javax.swing.Timer(TestLine.TIME_OUT,
-					new ActionListener() {
+			final JLabel flashLabel = new JLabel(LangModelSchedule.getString("Not_saved"), flashIcon,
+													SwingConstants.LEFT);
+			javax.swing.Timer timer = new javax.swing.Timer(TestLine.TIME_OUT, new ActionListener() {
 
-						public void actionPerformed(ActionEvent e) {
-							flashIcon.flash();
-							flashLabel.repaint();
-							flashLabel.revalidate();
-						}
-					});
+				public void actionPerformed(ActionEvent e) {
+					flashIcon.flash();
+					flashLabel.repaint();
+					flashLabel.revalidate();
+				}
+			});
 
 			timer.start();
 
 			legendPanel.add(flashLabel);
-			legendPanel.add(new JLabel(
-					LangModelSchedule.getString("Scheduled"), PlanToolBar
-							.getColorIcon(TestLine.COLOR_SCHEDULED),
-					SwingConstants.LEFT));
-			legendPanel.add(new JLabel(LangModelSchedule.getString("Done"),
-					PlanToolBar.getColorIcon(TestLine.COLOR_COMPLETED),
-					SwingConstants.LEFT));
-			legendPanel.add(new JLabel(LangModelSchedule.getString("Running"),
-					PlanToolBar.getColorIcon(TestLine.COLOR_PROCCESSING),
-					SwingConstants.LEFT));
-			legendPanel.add(new JLabel(LangModelSchedule.getString("Aborted"),
-					PlanToolBar.getColorIcon(TestLine.COLOR_ABORDED),
-					SwingConstants.LEFT));
-			legendPanel.add(new JLabel(LangModelSchedule
-					.getString("Unrecognized"), PlanToolBar
-					.getColorIcon(TestLine.COLOR_UNRECOGNIZED),
-					SwingConstants.LEFT));
+			legendPanel.add(new JLabel(LangModelSchedule.getString("Scheduled"), PlanToolBar
+					.getColorIcon(TestLine.COLOR_SCHEDULED), SwingConstants.LEFT));
+			legendPanel.add(new JLabel(LangModelSchedule.getString("Done"), PlanToolBar
+					.getColorIcon(TestLine.COLOR_COMPLETED), SwingConstants.LEFT));
+			legendPanel.add(new JLabel(LangModelSchedule.getString("Running"), PlanToolBar
+					.getColorIcon(TestLine.COLOR_PROCCESSING), SwingConstants.LEFT));
+			legendPanel.add(new JLabel(LangModelSchedule.getString("Aborted"), PlanToolBar
+					.getColorIcon(TestLine.COLOR_ABORDED), SwingConstants.LEFT));
+			legendPanel.add(new JLabel(LangModelSchedule.getString("Unrecognized"), PlanToolBar
+					.getColorIcon(TestLine.COLOR_UNRECOGNIZED), SwingConstants.LEFT));
 			dialog.getContentPane().add(legendPanel);
 			dialog.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
 			dialog.pack();
@@ -284,8 +229,7 @@ class PlanToolBar extends JPanel {
 					JButton button = (JButton) e.getSource();
 					dialog.setLocationRelativeTo(button);
 					Point l = dialog.getLocation();
-					dialog.setLocation(l.x + dialog.getWidth() / 2, l.y
-							+ dialog.getHeight() / 2);
+					dialog.setLocation(l.x + dialog.getWidth() / 2, l.y + dialog.getHeight() / 2);
 					dialog.setVisible(!dialog.isVisible());
 				}
 			});
@@ -316,19 +260,50 @@ class PlanToolBar extends JPanel {
 		applyButton.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {
-				apply_changes();
+				applyChanges();
 			}
 		});
 
 	}
 
+	public static Icon getColorIcon(Color color) {
+		int x = 0;
+		int y = 0;
+		int w = TestLine.MINIMAL_WIDTH;
+		int h = TestLine.MINIMAL_WIDTH;
+		BufferedImage img = new BufferedImage(w + 1, h + 1, BufferedImage.TYPE_INT_RGB);
+		Graphics2D g2d = (Graphics2D) img.getGraphics();
+		g2d.setBackground(Color.lightGray);
+		g2d.clearRect(x, y, w + 1, h + 1);
+		g2d.setColor(color);
+		g2d.fillRect(x + 2, y + 2, w - 3, h - 3);
+		g2d.draw3DRect(x, y, w, h, true);
+		Icon icon = new ImageIcon(img);
+		return icon;
+	}
+
+	void applyChanges() {
+		saveTest();
+		Calendar date = Calendar.getInstance();
+		date.setTime((Date) dateSpinner.getValue());
+		Calendar time = Calendar.getInstance();
+		time.setTime((Date) timeSpinner.getValue());
+
+		date.set(Calendar.HOUR_OF_DAY, time.get(Calendar.HOUR_OF_DAY));
+		date.set(Calendar.MINUTE, time.get(Calendar.MINUTE));
+
+		panel.updateDate(date.getTime(), scaleComboBox.getSelectedIndex());
+	}
+
+	//private void jbInit() throws Exception {
+	//}
+
 	private void saveTest() {
 		DataSourceInterface dataSource = aContext.getDataSourceInterface();
-		Hashtable unsavedTestArgumentSet = Pool
-				.getChangedHash(TestArgumentSet.typ);
+		Hashtable unsavedTestArgumentSet = Pool.getChangedHash(TestArgumentSet.typ);
 		Hashtable unsavedAnalysis = Pool.getChangedHash(Analysis.typ);
 		Hashtable unsavedEvaluation = Pool.getChangedHash(Evaluation.typ);
-		Hashtable unsavedTestRequest = Pool.getChangedHash(TestRequest.typ);
+		Hashtable unsavedTestRequest = Pool.getChangedHash(TestRequest.TYP);
 		Hashtable unsavedTest = Pool.getChangedHash(Test.TYPE);
 
 		for (int i = 0; i < 5; i++) {
@@ -360,24 +335,21 @@ class PlanToolBar extends JPanel {
 					ObjectResource obj = (ObjectResource) table.get(key);
 					if (obj instanceof TestArgumentSet) {
 						TestArgumentSet tas = (TestArgumentSet) obj;
-						Environment.log(Environment.LOG_LEVEL_INFO,
-								"saveTestArgumentSet(" + tas.getId() + ")");
+						Environment.log(Environment.LOG_LEVEL_INFO, "saveTestArgumentSet(" + tas.getId() + ")");
 						if (CREATE_ALLOW) {
 							dataSource.saveTestArgumentSet(tas.getId());
 							tas.setChanged(false);
 						}
 					} else if (obj instanceof Analysis) {
 						Analysis an = (Analysis) obj;
-						Environment.log(Environment.LOG_LEVEL_INFO,
-								"createAnalysis(" + an.getId() + ");");
+						Environment.log(Environment.LOG_LEVEL_INFO, "createAnalysis(" + an.getId() + ");");
 						if (CREATE_ALLOW) {
 							dataSource.createAnalysis(an.getId());
 							an.setChanged(false);
 						}
 					} else if (obj instanceof Evaluation) {
 						Evaluation ev = (Evaluation) obj;
-						Environment.log(Environment.LOG_LEVEL_INFO,
-								"createEvaluation(" + ev.getId() + ")");
+						Environment.log(Environment.LOG_LEVEL_INFO, "createEvaluation(" + ev.getId() + ")");
 						if (CREATE_ALLOW) {
 							dataSource.createEvaluation(ev.getId());
 							ev.setChanged(false);
@@ -396,12 +368,10 @@ class PlanToolBar extends JPanel {
 						//System.out.println("list.size():" + list.size());
 						for (Iterator it2 = list.iterator(); it2.hasNext();) {
 							ids[j++] = (String) it2.next();
-							Environment.log(Environment.LOG_LEVEL_INFO, "ids["
-									+ (j - 1) + "]=" + ids[j - 1]);
+							Environment.log(Environment.LOG_LEVEL_INFO, "ids[" + (j - 1) + "]=" + ids[j - 1]);
 						}
 						//System.out.println("j:" + j);
-						Environment.log(Environment.LOG_LEVEL_INFO,
-								"RequestTest(" + testRequest.getId() + ")");
+						Environment.log(Environment.LOG_LEVEL_INFO, "RequestTest(" + testRequest.getId() + ")");
 						if (CREATE_ALLOW) {
 							testRequest.updateLocalFromTransferable();
 							dataSource.RequestTest(testRequest.getId(), ids);
@@ -410,19 +380,14 @@ class PlanToolBar extends JPanel {
 					} else if (obj instanceof Test) {
 						// nothing ???
 						Test test = (Test) obj;
-						Environment.log(Environment.LOG_LEVEL_INFO, "test:"
-								+ test.getId());
+						Environment.log(Environment.LOG_LEVEL_INFO, "test:" + test.getId());
 						test.setChanged(false);
 					}
-					Environment.log(Environment.LOG_LEVEL_INFO, "#" + i + " "
-							+ key + " " + obj.getClass().getName());
+					Environment.log(Environment.LOG_LEVEL_INFO, "#" + i + " " + key + " " + obj.getClass().getName());
 				}
 			}
 		}
-		aContext.getDispatcher()
-				.notify(
-						new OperationEvent("", 0,
-								SchedulerModel.COMMAND_TEST_SAVED_OK));
+		aContext.getDispatcher().notify(new OperationEvent("", 0, SchedulerModel.COMMAND_TEST_SAVED_OK));
 	}
 
 }

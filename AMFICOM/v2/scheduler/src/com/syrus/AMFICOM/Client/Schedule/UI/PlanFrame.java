@@ -37,7 +37,7 @@ public class PlanFrame extends JInternalFrame {
 		getContentPane().setLayout(new BorderLayout());
 		getContentPane().add(toolBar, BorderLayout.NORTH);
 		getContentPane().add(scroll, BorderLayout.CENTER);
-		toolBar.apply_changes();
+		toolBar.applyChanges();
 	}
 
 }

@@ -8,89 +8,51 @@ import javax.swing.*;
 import com.syrus.AMFICOM.Client.General.Command.*;
 import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.General.Lang.LangModel;
+import com.syrus.AMFICOM.Client.Scheduler.General.UIStorage;
 
-public class ScheduleMainToolBar extends JToolBar implements ApplicationModelListener
-{
-	private ApplicationModel aModel;
+public class ScheduleMainToolBar extends JToolBar implements ApplicationModelListener {
 
-	JButton sessionOpen = new JButton();
+	ApplicationModel	aModel;
 
-	public final static int img_siz = 16;
-	public final static int btn_siz = 24;
+	JButton						sessionOpen	= new JButton();
 
-	public ScheduleMainToolBar()
-	{
-		super();
+	public static final int		IMAGE_SIZE	= 16;
 
-		try
-		{
-			jbInit();
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-		}
-	}
-
-	private void jbInit() throws Exception
-	{
-		ScheduleMainToolBar_this_actionAdapter actionAdapter =
-				new ScheduleMainToolBar_this_actionAdapter(this);
-
-		Dimension buttonSize = new Dimension(btn_siz, btn_siz);
+	public ScheduleMainToolBar() {
 
 		sessionOpen.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/open_session.gif")
-																			.getScaledInstance(16, 16, Image.SCALE_SMOOTH)));
-		sessionOpen.setMaximumSize(buttonSize);
-		sessionOpen.setPreferredSize(buttonSize);
+				.getScaledInstance(16, 16, Image.SCALE_SMOOTH)));
+		UIStorage.setRigidSize(sessionOpen,UIStorage.BUTTON_SIZE);
 		sessionOpen.setToolTipText(LangModel.ToolTip("menuSessionNew"));
 		sessionOpen.setName("menuSessionNew");
-		sessionOpen.addActionListener(actionAdapter);
+		sessionOpen.addActionListener(new ActionListener() {
 
+			public void actionPerformed(ActionEvent e) {
+				if (ScheduleMainToolBar.this.aModel == null)
+					return;
+				AbstractButton jb = (AbstractButton) e.getSource();
+				String s = jb.getName();
+				Command command = ScheduleMainToolBar.this.aModel.getCommand(s);
+				command = (Command) command.clone();
+				command.execute();
+			}
+		});
 
 		add(sessionOpen);
 		addSeparator();
 	}
 
-	public void setModel(ApplicationModel a)
-	{
-		aModel = a;
+	public void setModel(ApplicationModel aModel) {
+		this.aModel = aModel;
 	}
 
-	public ApplicationModel getModel()
-	{
+	public ApplicationModel getModel() {
 		return aModel;
 	}
 
-	public void modelChanged(String e[])
-	{
+	public void modelChanged(String e[]) {
 		sessionOpen.setVisible(aModel.isVisible("menuSessionNew"));
 		sessionOpen.setEnabled(aModel.isEnabled("menuSessionNew"));
 	}
 
-	public void this_actionPerformed(ActionEvent e)
-	{
-		if(aModel == null)
-			return;
-		AbstractButton jb = (AbstractButton )e.getSource();
-		String s = jb.getName();
-		Command command = aModel.getCommand(s);
-		command = (Command )command.clone();
-		command.execute();
-	}
-}
-
-class ScheduleMainToolBar_this_actionAdapter implements java.awt.event.ActionListener
-{
-	ScheduleMainToolBar adaptee;
-
-	ScheduleMainToolBar_this_actionAdapter(ScheduleMainToolBar adaptee)
-	{
-		this.adaptee = adaptee;
-	}
-
-	public void actionPerformed(ActionEvent e)
-	{
-		adaptee.this_actionPerformed(e);
-	}
 }

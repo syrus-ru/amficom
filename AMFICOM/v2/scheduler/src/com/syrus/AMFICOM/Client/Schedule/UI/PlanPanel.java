@@ -45,10 +45,10 @@ public class PlanPanel extends JPanel implements OperationListener {
 
 	public static final String		COMMAND_NAME_ALL_TESTS	= "AllTests";							//$NON-NLS-1$
 
-	private static final String[]	scales					= new String[] {
+	private static final String[]	SCALES					= new String[] {
 			"10 min", "1 hour", "6 hours", "1 day", "1 week", "1 month"};							//$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
 
-	protected static final Step[]	steps					= new Step[] {
+	protected static final Step[]	STEPS					= new Step[] {
 			new Step(Calendar.MINUTE, 1, 10, 6, 1),
 			new Step(Calendar.MINUTE, 10, 60, 5, 5),
 			new Step(Calendar.HOUR_OF_DAY, 1, 6, 6, 1),
@@ -69,7 +69,7 @@ public class PlanPanel extends JPanel implements OperationListener {
 	protected int					margin					= 14;
 	private int						maxZoom					= 50;
 	protected JScrollPane			parent;
-	protected int					real_scale				= 0;
+	protected int					actualScale				= 0;
 	protected int					scale					= 0;
 	protected Date					scaleEnd;
 
@@ -78,7 +78,7 @@ public class PlanPanel extends JPanel implements OperationListener {
 
 	protected SimpleDateFormat		sdf						= new SimpleDateFormat();
 
-	protected boolean				select_by_mouse			= false;
+	protected boolean				selectedByMouse			= false;
 
 	// real start time including minutes and seconds
 	protected Date					startDate				= new Date(
@@ -102,12 +102,79 @@ public class PlanPanel extends JPanel implements OperationListener {
 	public PlanPanel(JScrollPane parent, ApplicationContext aContext) {
 		this.aContext = aContext;
 		this.parent = parent;
+		toolBar = new PlanToolBar(aContext, this);
 
-		try {
-			jbInit();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		setLayout(new VerticalFlowLayout());
+		//setLayout(new GridLayout(0,1));
+		setBackground(SystemColor.window);
+		setPreferredSize(new Dimension(600, 20));
+		//		setCursor(UIStorage.DEFAULT_CURSOR);
+
+		this.addMouseListener(new MouseListener() {
+
+			public void mouseClicked(MouseEvent e) {
+				// nothing
+			}
+
+			public void mouseEntered(MouseEvent e) {
+				// nothing
+			}
+
+			public void mouseExited(MouseEvent e) {
+				// nothing
+			}
+
+			public void mousePressed(MouseEvent e) {				
+					startpos = e.getPoint();
+					currpos = e.getPoint();
+					if (e.getButton() == MouseEvent.BUTTON1) {
+						setCursor(UIStorage.CROSS_HAIR_CURSOR);
+						selectedByMouse = true;
+					}
+			}
+
+			public void mouseReleased(MouseEvent e) {
+				if (e.getClickCount() > 0) {
+					setCursor(UIStorage.DEFAULT_CURSOR);
+
+					if (currpos.x == startpos.x) {
+						PlanPanel.this.parent.repaint();
+						return;
+					}
+					if (selectedByMouse) {
+						selectedByMouse = false;
+						double k = (PlanPanel.this.parent.getVisibleRect().width - 2 * margin)
+								/ Math.abs((double) (startpos.x - currpos.x));
+						int viewX = Math.min(startpos.x, currpos.x);
+						updateScale(k, viewX);
+					}
+				}
+			}
+		});
+		this.addMouseMotionListener(new MouseMotionListener() {
+
+			public void mouseDragged(MouseEvent e) {
+				PlanPanel.this.tmppos = PlanPanel.this.currpos;
+				PlanPanel.this.currpos = e.getPoint();
+
+				// check if we go out the borders of panel
+				int vx = 0;
+				int wx = getWidth();
+				int vy = 0;
+				int wy = getHeight();
+
+				if (PlanPanel.this.currpos.x < vx) PlanPanel.this.currpos.x = vx;
+				if (PlanPanel.this.currpos.x > vx + wx) PlanPanel.this.currpos.x = vx + wx;
+				if (PlanPanel.this.currpos.y < vy) PlanPanel.this.currpos.y = vy;
+				if (PlanPanel.this.currpos.y > vy + wy) PlanPanel.this.currpos.y = vy + wy;
+				if (PlanPanel.this.selectedByMouse) paintSelect(getGraphics().create());
+			}
+
+			public void mouseMoved(MouseEvent e) {
+				// nothing
+			}
+		});
+
 
 		initModule(aContext.getDispatcher());
 		filter = new TestFilter();
@@ -127,7 +194,7 @@ public class PlanPanel extends JPanel implements OperationListener {
 	}
 
 	public static String[] getSupportedScales() {
-		return scales;
+		return SCALES;
 	}
 
 	/**
@@ -181,7 +248,7 @@ public class PlanPanel extends JPanel implements OperationListener {
 				+ commandName, getClass().getName());
 		if (commandName.equals(TestUpdateEvent.TYPE)) {
 			TestUpdateEvent tue = (TestUpdateEvent) ae;
-			if (tue.TEST_SELECTED) {
+			if (tue.testSelected) {
 				Test test = tue.test;
 				boolean found = false;
 				if (tests != null) {
@@ -214,11 +281,11 @@ public class PlanPanel extends JPanel implements OperationListener {
 							testLine = (TestLine) testLines.get(test
 									.getMonitoredElementId());
 						else {
-							String me_name = Pool.getName(MonitoredElement.typ,
+							String meName = Pool.getName(MonitoredElement.typ,
 									test.getMonitoredElementId());
 							testLine = new TestLine(aContext,
 							//parent.getViewport(),
-									me_name, scaleStart.getTime(), scaleEnd
+									meName, scaleStart.getTime(), scaleEnd
 											.getTime(), margin / 2);
 							testLine.setPreferredSize(new Dimension(0, 20));
 							testLines.put(test.getMonitoredElementId(),
@@ -238,7 +305,7 @@ public class PlanPanel extends JPanel implements OperationListener {
 	}
 
 	public void setScale(int n) {
-		if (n < 0 || n >= scales.length) {
+		if (n < 0 || n >= SCALES.length) {
 			System.err
 					.println("Unsupported scale: " //$NON-NLS-1$
 							+ n
@@ -266,15 +333,15 @@ public class PlanPanel extends JPanel implements OperationListener {
 		}
 
 		//округляем до шага
-		int num = cal.get(steps[scale].scale);
-		while (num / steps[scale].align * steps[scale].align != num) {
-			cal.add(steps[scale].scale, -1);
-			num = cal.get(steps[scale].scale);
+		int num = cal.get(STEPS[scale].scale);
+		while (num / STEPS[scale].align * STEPS[scale].align != num) {
+			cal.add(STEPS[scale].scale, -1);
+			num = cal.get(STEPS[scale].scale);
 		}
 
 		scaleStart = cal.getTime();
 		//scroll calendar to end of period
-		cal.add(steps[scale].scale, steps[scale].total);
+		cal.add(STEPS[scale].scale, STEPS[scale].total);
 		scaleEnd = cal.getTime();
 		//scroll calendar to start point
 		cal.setTime(startDate);
@@ -285,33 +352,33 @@ public class PlanPanel extends JPanel implements OperationListener {
 
 		super.paintComponent(g);
 		cal.setTimeInMillis(0);
-		cal.add(steps[real_scale].scale, steps[real_scale].one);
+		cal.add(STEPS[actualScale].scale, STEPS[actualScale].one);
 		long diff = cal.getTimeInMillis();
 		double delta = (getWidth() - 2 * margin)
 				/ ((double) (scaleEnd.getTime() - scaleStart.getTime()) / (double) diff);
-		double sub_delta = delta / steps[real_scale].subscales;
+		double subDelta = delta / STEPS[actualScale].subscales;
 
-		paintScales(g, diff, delta, sub_delta);
+		paintScales(g, diff, delta, subDelta);
 		/*
 		 * for (Iterator it = testLines.values().iterator(); it.hasNext();) {
 		 * TestLine testLine = (TestLine)it.next(); testLine.paint(g); }
 		 */
-		paintScaleDigits(g, diff, delta, sub_delta);
+		paintScaleDigits(g, diff, delta, subDelta);
 
 	}
 
 	protected void paintScaleDigits(Graphics g, long diff, double delta,
-			double sub_delta) //, double sub_sub_delta)
+			double subDelta) //, double sub_sub_delta)
 	{
 		int h = getHeight() - 1;
 		//		int w = getWidth();
 
-		long _diff = diff;
-		double _delta = delta;
-		if (sub_delta > 60) {
-			_delta = sub_delta;
-			_diff = diff / steps[real_scale].subscales;
-		} else if (real_scale == 0) sdf.applyPattern("HH:mm"); //$NON-NLS-1$
+		long tmpDiff = diff;
+		double tmpDelta = delta;
+		if (subDelta > 60) {
+			tmpDelta = subDelta;
+			tmpDiff = diff / STEPS[actualScale].subscales;
+		} else if (actualScale == 0) sdf.applyPattern("HH:mm"); //$NON-NLS-1$
 
 		int shift = (int) g.getFontMetrics().getStringBounds(
 				sdf.format(cal.getTime()), g).getCenterX();
@@ -322,52 +389,52 @@ public class PlanPanel extends JPanel implements OperationListener {
 		Color c = new Color(240, 240, 240);
 		while (cal.getTime().compareTo(scaleEnd) <= 0) {
 			g.setColor(c);
-			g.drawLine((int) (_delta * counter) + margin, 0,
-					(int) (_delta * counter) + margin, h);
+			g.drawLine((int) (tmpDelta * counter) + margin, 0,
+					(int) (tmpDelta * counter) + margin, h);
 			g.setColor(Color.BLACK);
-			g.drawLine((int) (_delta * counter) + margin, h,
-					(int) (_delta * counter) + margin, h - 5);
+			g.drawLine((int) (tmpDelta * counter) + margin, h,
+					(int) (tmpDelta * counter) + margin, h - 5);
 
 			String value = sdf.format(cal.getTime());
-			cal.setTimeInMillis(cal.getTimeInMillis() + _diff);
-			g.drawString(value, (int) (_delta * counter) + margin - shift,
+			cal.setTimeInMillis(cal.getTimeInMillis() + tmpDiff);
+			g.drawString(value, (int) (tmpDelta * counter) + margin - shift,
 					h - 7);
 			if (value.startsWith("00:00")) //$NON-NLS-1$
 					g.drawString(new SimpleDateFormat("dd.MM.yyyy").format(cal //$NON-NLS-1$
 							.getTime()),
-							(int) (_delta * counter) + margin - 27, h - 17);
+							(int) (tmpDelta * counter) + margin - 27, h - 17);
 			counter++;
 		}
 		cal.setTime(scaleStart);
 	}
 
 	protected void paintScales(Graphics g, long diff, double delta,
-			double sub_delta) {
+			double subDelta) {
 
 		int h = getHeight() - 1;
 		int w = getWidth();
 
-		long _diff = diff;
-		double _delta = delta;
-		if (sub_delta > 10) {
-			_delta = sub_delta;
-			_diff = diff / steps[real_scale].subscales;
+		long tmpDiff = diff;
+		double tmpDelta = delta;
+		if (subDelta > 10) {
+			tmpDelta = subDelta;
+			tmpDiff = diff / STEPS[actualScale].subscales;
 		}
 
 		cal.setTime(scaleStart);
 		g.setColor(Color.black);
 		int counter = 0;
 		while (cal.getTime().compareTo(scaleEnd) <= 0) {
-			cal.setTimeInMillis(cal.getTimeInMillis() + _diff);
-			g.drawLine((int) (_delta * counter) + margin, h,
-					(int) (_delta * counter) + margin, h - 3);
+			cal.setTimeInMillis(cal.getTimeInMillis() + tmpDiff);
+			g.drawLine((int) (tmpDelta * counter) + margin, h,
+					(int) (tmpDelta * counter) + margin, h - 3);
 			counter++;
 		}
 		cal.setTime(scaleStart);
 
 		/*
 		 * int h = getHeight() - 1; int w = getWidth(); double range =
-		 * (double)steps[scale].total / (double)steps[scale].one; double step =
+		 * (double)STEPS[scale].total / (double)STEPS[scale].one; double step =
 		 * (double)(w - 2 * margin) / range; int tmp;
 		 * 
 		 * for (int i = 0; i <= Math.round(range); i++) { tmp = (int)(step*i);
@@ -375,9 +442,9 @@ public class PlanPanel extends JPanel implements OperationListener {
 		 * margin, h);
 		 * 
 		 * g.setColor(Color.black); g.drawLine(tmp + margin, h - 5, tmp +
-		 * margin, h); for (int j = 1; j < steps[scale].subscales; j++)
-		 * g.drawLine(tmp + (int)(step/(double)steps[scale].subscales*j) +
-		 * margin, h - 3, tmp + (int)(step/(double)steps[scale].subscales*j) +
+		 * margin, h); for (int j = 1; j < STEPS[scale].subscales; j++)
+		 * g.drawLine(tmp + (int)(step/(double)STEPS[scale].subscales*j) +
+		 * margin, h - 3, tmp + (int)(step/(double)STEPS[scale].subscales*j) +
 		 * margin, h); }
 		 */
 		g.drawLine(0, h, w, h);
@@ -392,100 +459,42 @@ public class PlanPanel extends JPanel implements OperationListener {
 
 	}
 
-	protected void upd_currpos(MouseEvent e) {
-		tmppos = currpos;
-		currpos = e.getPoint();
-
-		// check if we go out the borders of panel
-		int vx = 0;
-		int wx = getWidth();
-		int vy = 0;
-		int wy = getHeight();
-
-		if (currpos.x < vx) currpos.x = vx;
-		if (currpos.x > vx + wx) currpos.x = vx + wx;
-		if (currpos.y < vy) currpos.y = vy;
-		if (currpos.y > vy + wy) currpos.y = vy + wy;
-	}
-
-	/**
-	 * @todo recast without this stupid jbuilder pattern
-	 */
-
-	void this_mouseDragged(MouseEvent e) {
-		upd_currpos(e);
-		if (select_by_mouse) paintSelect(getGraphics().create());
-	}
-
-	/**
-	 * @todo recast without this stupid jbuilder pattern
-	 */
-
-	void this_mousePressed(MouseEvent e) {
-		startpos = e.getPoint();
-		currpos = e.getPoint();
-		if (e.getButton() == MouseEvent.BUTTON1) {
-			setCursor(UIStorage.CROSS_HAIR_CURSOR);
-			select_by_mouse = true;
-		}
-	}
-
-	/**
-	 * @todo recast without this stupid jbuilder pattern
-	 */
-	void this_mouseReleased(MouseEvent e) {
-		if (e.getClickCount() > 0) {
-			setCursor(UIStorage.DEFAULT_CURSOR);
-
-			if (currpos.x == startpos.x) {
-				parent.repaint();
-				return;
-			}
-			if (select_by_mouse) {
-				select_by_mouse = false;
-				double k = (parent.getVisibleRect().width - 2 * margin)
-						/ Math.abs((double) (startpos.x - currpos.x));
-				int view_x = Math.min(startpos.x, currpos.x);
-				updateScale(k, view_x);
-			}
-		}
-	}
 
 	void updateDate(Date date, int scale) {
 		setScale(scale);
 		setStartDate(date);
 		updateTests();
 		updateRealScale();
-		parent.updateUI();
+		parent.revalidate();
 	}
 
 	private void updateRealScale() {
-		real_scale = scale;
+		actualScale = scale;
 
 		double k = (double) parent.getViewport().getViewRect().width
 				/ (double) getSize().width;
-		long visible_time = (long) ((scaleEnd.getTime() - scaleStart.getTime()) * k);
-		while (visible_time != 0 && real_scale > 0) {
+		long visibleTime = (long) ((scaleEnd.getTime() - scaleStart.getTime()) * k);
+		while (visibleTime != 0 && actualScale > 0) {
 			cal.setTimeInMillis(0);
-			cal.add(steps[real_scale].scale, steps[real_scale].total
-					/ steps[real_scale].one);
-			if (cal.getTimeInMillis() > visible_time)
-				real_scale--;
+			cal.add(STEPS[actualScale].scale, STEPS[actualScale].total
+					/ STEPS[actualScale].one);
+			if (cal.getTimeInMillis() > visibleTime)
+				actualScale--;
 			else
 				break;
 		}
 
 		cal.setTimeInMillis(0);
-		cal.add(steps[real_scale].scale, steps[real_scale].one);
+		cal.add(STEPS[actualScale].scale, STEPS[actualScale].one);
 		long diff = cal.getTimeInMillis();
 		double delta = (getWidth() - 2 * margin)
 				/ ((double) (scaleEnd.getTime() - scaleStart.getTime()) / (double) diff);
 
-		//double sub_delta = delta / steps[real_scale].subscales;
-		if (delta >= 0 && delta < 35 && real_scale < steps.length - 1)
-				real_scale++;
+		//double sub_delta = delta / STEPS[actualScale].subscales;
+		if (delta >= 0 && delta < 35 && actualScale < STEPS.length - 1)
+				actualScale++;
 
-		switch (real_scale) {
+		switch (actualScale) {
 			case 1:
 				sdf.applyPattern("HH:mm"); //$NON-NLS-1$
 				break;
@@ -497,12 +506,12 @@ public class PlanPanel extends JPanel implements OperationListener {
 				sdf.applyPattern("HH:mm"); //$NON-NLS-1$
 				break;
 			case 5:
-				steps[5].total = cal.getActualMaximum(steps[5].scale);
+				STEPS[5].total = cal.getActualMaximum(STEPS[5].scale);
 			case 4:
 				sdf.applyPattern("dd.MM"); //$NON-NLS-1$
 		}
 		cal.setTime(startDate);
-		switch (real_scale) {
+		switch (actualScale) {
 			case 4:
 			case 5:
 				cal.set(Calendar.HOUR_OF_DAY, 0);
@@ -550,7 +559,7 @@ public class PlanPanel extends JPanel implements OperationListener {
 		parent.updateUI();
 	}
 
-	void updScale2Fit() {
+	void updateScale2Fit() {
 		setPreferredSize(new Dimension(600, getPreferredSize().height));
 		setSize(new Dimension(600, getPreferredSize().height));
 
@@ -563,49 +572,6 @@ public class PlanPanel extends JPanel implements OperationListener {
 		//timer.start();
 		this.dispatcher = dispatcher;
 		this.dispatcher.register(this, TestUpdateEvent.TYPE);
-	}
-
-	private void jbInit() throws Exception {
-		toolBar = new PlanToolBar(aContext, this);
-
-		setLayout(new VerticalFlowLayout());
-		//setLayout(new GridLayout(0,1));
-		setBackground(SystemColor.window);
-		setPreferredSize(new Dimension(600, 20));
-		//		setCursor(UIStorage.DEFAULT_CURSOR);
-
-		this.addMouseListener(new MouseListener() {
-
-			public void mouseClicked(MouseEvent e) {
-				// nothing
-			}
-
-			public void mouseEntered(MouseEvent e) {
-				// nothing
-			}
-
-			public void mouseExited(MouseEvent e) {
-				// nothing
-			}
-
-			public void mousePressed(MouseEvent e) {
-				this_mousePressed(e);
-			}
-
-			public void mouseReleased(MouseEvent e) {
-				this_mouseReleased(e);
-			}
-		});
-		this.addMouseMotionListener(new MouseMotionListener() {
-
-			public void mouseDragged(MouseEvent e) {
-				this_mouseDragged(e);
-			}
-
-			public void mouseMoved(MouseEvent e) {
-				// nothing
-			}
-		});
 	}
 
 	private void updateTests() {
@@ -659,14 +625,14 @@ public class PlanPanel extends JPanel implements OperationListener {
 
 		//подгружаем тестреквесты и недостающие тесты
 		HashSet treqs = new HashSet();
-		for (Enumeration enum = tests.elements(); enum.hasMoreElements();) {
-			Test test = (Test) enum.nextElement();
+		for (Enumeration en = tests.elements(); en.hasMoreElements();) {
+			Test test = (Test) en.nextElement();
 			treqs.add(test.getRequestId());
 		}
 		dsi.GetRequests();
-		HashSet add_tests = new HashSet();
+		HashSet loadTests = new HashSet();
 		for (Iterator it = treqs.iterator(); it.hasNext();) {
-			TestRequest treq = (TestRequest) Pool.get(TestRequest.typ,
+			TestRequest treq = (TestRequest) Pool.get(TestRequest.TYP,
 					(String) it.next());
 			if (treq != null) {
 				//				for (Enumeration en = treq.test_ids.elements();
@@ -678,14 +644,14 @@ public class PlanPanel extends JPanel implements OperationListener {
 						String testId = (String) it2.next();
 						Environment.log(Environment.LOG_LEVEL_INFO,
 								"test_id:" + testId); //$NON-NLS-1$
-						if (tests.get(testId) == null) add_tests.add(testId);
+						if (tests.get(testId) == null) loadTests.add(testId);
 					}
 				}
 			}
 		}
-		if (!add_tests.isEmpty())
-				new SurveyDataSourceImage(dsi).GetTests((String[]) add_tests
-						.toArray(new String[add_tests.size()]));
+		if (!loadTests.isEmpty())
+				new SurveyDataSourceImage(dsi).GetTests((String[]) loadTests
+						.toArray(new String[loadTests.size()]));
 
 		// clear old tests
 		if (testLines == null)
@@ -702,11 +668,11 @@ public class PlanPanel extends JPanel implements OperationListener {
 				testLine = (TestLine) testLines.get(test
 						.getMonitoredElementId());
 			else {
-				String me_name = Pool.getName(MonitoredElement.typ, test
+				String meName = Pool.getName(MonitoredElement.typ, test
 						.getMonitoredElementId());
 				testLine = new TestLine(aContext,
 				//parent.getViewport(),
-						me_name, scaleStart.getTime(), scaleEnd.getTime(),
+						meName, scaleStart.getTime(), scaleEnd.getTime(),
 						margin / 2);
 				testLine.setPreferredSize(new Dimension(0, 20));
 				testLines.put(test.getMonitoredElementId(), testLine);

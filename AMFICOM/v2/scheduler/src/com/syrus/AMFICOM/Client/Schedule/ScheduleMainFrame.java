@@ -19,15 +19,16 @@ import com.syrus.AMFICOM.Client.General.Lang.LangModelSchedule;
 import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.Resource.*;
+import com.syrus.AMFICOM.Client.Resource.Object.Domain;
 import com.syrus.AMFICOM.Client.Schedule.UI.*;
 import com.syrus.AMFICOM.Client.Survey.General.ConstStorage;
 import com.syrus.util.Log;
 
 public class ScheduleMainFrame extends JFrame implements OperationListener {
 
-	private ApplicationContext	aContext;
+	ApplicationContext	aContext;
 
-	private Dispatcher			dispatcher			= new Dispatcher();
+	Dispatcher			dispatcher			= new Dispatcher();
 
 	public static final String	SCHEDULER_INI_FILE	= "schedule.ini";
 
@@ -51,15 +52,23 @@ public class ScheduleMainFrame extends JFrame implements OperationListener {
 	SaveParametersFrame			saveFrame;
 	TableFrame					tableFrame;
 
-	public ScheduleMainFrame(ApplicationContext aContext) {
-		super();
-		setContext(aContext);
-
-		this.addComponentListener(new ScheduleMainFrame_this_componentAdapter(this));
+	public ScheduleMainFrame(ApplicationContext aContext) {		
+		initModule();
+		setContext(aContext);		
+		this.addComponentListener(new ComponentAdapter(){
+			
+			public void componentShown(ComponentEvent e) {
+				super.componentShown(e);				
+				ScheduleMainFrame.this.desktopPane.setPreferredSize(ScheduleMainFrame.this.desktopPane.getSize());
+				new ScheduleWindowArranger(ScheduleMainFrame.this).arrange();
+			}
+		});
 		this.addWindowListener(new java.awt.event.WindowAdapter() {
 
 			public void windowClosing(WindowEvent e) {
-				this_windowClosing();
+				ScheduleMainFrame.this.dispatcher.unregister(ScheduleMainFrame.this, "contextchange");
+				Environment.the_dispatcher.unregister(ScheduleMainFrame.this, "contextchange");
+				ScheduleMainFrame.this.aContext.getApplicationModel().getCommand("menuExit").execute();
 			}
 		});
 
@@ -134,7 +143,7 @@ public class ScheduleMainFrame extends JFrame implements OperationListener {
 		this(new ApplicationContext());
 	}
 
-	private void initModule() {
+	void initModule() {
 		ApplicationModel aModel = aContext.getApplicationModel();
 
 		statusBar.distribute();
@@ -347,8 +356,8 @@ public class ScheduleMainFrame extends JFrame implements OperationListener {
 
 		aModel.fireModelChanged("");
 
-		String domain_id = aContext.getSessionInterface().getDomainId();
-		statusBar.setText("domain", Pool.getName("domain", domain_id));
+		String domainId = aContext.getSessionInterface().getDomainId();
+		statusBar.setText("domain", Pool.getName(Domain.typ, domainId));
 
 		paramsFrame.setVisible(true);
 		propsFrame.setVisible(true);
@@ -387,9 +396,9 @@ public class ScheduleMainFrame extends JFrame implements OperationListener {
 		aModel.enable("menuSessionDomain");
 		aModel.setEnabled("menuSessionNew", false);
 		aModel.fireModelChanged("");
-		String domain_id = aContext.getSessionInterface().getDomainId();
-		if (domain_id != null && !domain_id.equals(""))
-			dispatcher.notify(new ContextChangeEvent(domain_id, ContextChangeEvent.DOMAIN_SELECTED_EVENT));
+		String domainId = aContext.getSessionInterface().getDomainId();
+		if (domainId != null && !domainId.equals(""))
+			dispatcher.notify(new ContextChangeEvent(domainId, ContextChangeEvent.DOMAIN_SELECTED_EVENT));
 	}
 
 	public void setSessionClosed() {
@@ -403,18 +412,6 @@ public class ScheduleMainFrame extends JFrame implements OperationListener {
 		aModel.fireModelChanged("");
 
 		statusBar.setText("domain", LangModel.String("statusNoDomain"));
-	}
-
-	protected void componentShown() {
-		initModule();
-		desktopPane.setPreferredSize(desktopPane.getSize());
-		new ScheduleWindowArranger(this).arrange();
-	}
-
-	protected void this_windowClosing() {
-		dispatcher.unregister(this, "contextchange");
-		Environment.the_dispatcher.unregister(this, "contextchange");
-		aContext.getApplicationModel().getCommand("menuExit").execute();
 	}
 
 	protected void processWindowEvent(WindowEvent e) {
@@ -452,7 +449,7 @@ class ScheduleWindowArranger extends WindowArranger {
 		int w = f.desktopPane.getSize().width;
 		int h = f.desktopPane.getSize().height;
 
-		int min_w = Math.max(250, w / 5);
+		int minWidth = Math.max(250, w / 5);
 
 		normalize(f.planFrame);
 		normalize(f.paramsFrame);
@@ -462,34 +459,21 @@ class ScheduleWindowArranger extends WindowArranger {
 		normalize(f.saveFrame);
 		normalize(f.tableFrame);
 
-		f.treeFrame.setSize(min_w, h / 2);
-		f.propsFrame.setSize(min_w, h / 4);
-		f.timeFrame.setSize(min_w, Math.max(330, h / 2));
-		f.saveFrame.setSize(min_w, 3 * h / 4 - f.timeFrame.getHeight());
-		f.paramsFrame.setSize(min_w, h / 2);
-		f.planFrame.setSize(w - 2 * min_w, h / 4 + f.timeFrame.getHeight());
-		f.tableFrame.setSize(w - 2 * min_w, h - f.planFrame.getHeight());
+		f.treeFrame.setSize(minWidth, h / 2);
+		f.propsFrame.setSize(minWidth, h / 4);
+		f.timeFrame.setSize(minWidth, Math.max(330, h / 2));
+		f.saveFrame.setSize(minWidth, 3 * h / 4 - f.timeFrame.getHeight());
+		f.paramsFrame.setSize(minWidth, h / 2);
+		f.planFrame.setSize(w - 2 * minWidth, h / 4 + f.timeFrame.getHeight());
+		f.tableFrame.setSize(w - 2 * minWidth, h - f.planFrame.getHeight());
 
 		f.treeFrame.setLocation(0, 0);
-		f.planFrame.setLocation(min_w, 0);
-		f.propsFrame.setLocation(w - min_w, 0);
-		f.timeFrame.setLocation(w - min_w, h / 4);
-		f.saveFrame.setLocation(w - min_w, h / 4 + f.timeFrame.getHeight());
+		f.planFrame.setLocation(minWidth, 0);
+		f.propsFrame.setLocation(w - minWidth, 0);
+		f.timeFrame.setLocation(w - minWidth, h / 4);
+		f.saveFrame.setLocation(w - minWidth, h / 4 + f.timeFrame.getHeight());
 		f.paramsFrame.setLocation(0, f.treeFrame.getHeight());
-		f.tableFrame.setLocation(min_w, f.planFrame.getHeight());
+		f.tableFrame.setLocation(minWidth, f.planFrame.getHeight());
 
-	}
-}
-
-class ScheduleMainFrame_this_componentAdapter extends java.awt.event.ComponentAdapter {
-
-	ScheduleMainFrame	adaptee;
-
-	ScheduleMainFrame_this_componentAdapter(ScheduleMainFrame adaptee) {
-		this.adaptee = adaptee;
-	}
-
-	public void componentShown(ComponentEvent e) {
-		adaptee.componentShown();
 	}
 }

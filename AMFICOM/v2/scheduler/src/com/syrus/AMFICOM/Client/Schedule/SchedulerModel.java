@@ -85,12 +85,12 @@ public class SchedulerModel implements OperationListener {
 			TestUpdateEvent tue = (TestUpdateEvent) ae;
 			receivedTest = tue.test;
 
-			if (tue.TEST_SELECTED) {
+			if (tue.testSelected) {
 				//this.getContentPane().removeAll();
 				//this.getContentPane().add(panel, BorderLayout.CENTER);
 				//updateUI();
 
-				TestRequest treq = (TestRequest) Pool.get(TestRequest.typ,
+				TestRequest treq = (TestRequest) Pool.get(TestRequest.TYP,
 						receivedTest.getRequestId());
 				if (treq == null)
 					System.out
@@ -160,11 +160,11 @@ public class SchedulerModel implements OperationListener {
 			} else if (obj instanceof TimeStamp) {
 				System.out.println("timestamp instanceof have got"); //$NON-NLS-1$
 				//receiveTimeStamp = (TimeStamp) obj;
-				receiveData.put(TimeStamp.typ, obj);
+				receiveData.put(TimeStamp.TYP, obj);
 			} else if (obj instanceof TestReturnType) {
 				returnType = (TestReturnType) obj;
 			} else if (obj instanceof TestRequest) {
-				receiveData.put(TestRequest.typ, obj);
+				receiveData.put(TestRequest.TYP, obj);
 			}
 			System.out.println("receiveDataCount:" + receiveDataCount); //$NON-NLS-1$
 			if (7 == receiveDataCount) {
@@ -207,7 +207,7 @@ public class SchedulerModel implements OperationListener {
 
 		test.setReturnType(returnType);
 		test.setUserId(aContext.getSessionInterface().getUserId());
-		test.setTimeStamp((TimeStamp) receiveData.get(TimeStamp.typ));
+		test.setTimeStamp((TimeStamp) receiveData.get(TimeStamp.TYP));
 		{
 
 			TestArgumentSet testArgumentSet = (TestArgumentSet) receiveData
@@ -265,7 +265,7 @@ public class SchedulerModel implements OperationListener {
 
 		}
 		TestRequest testRequest = (TestRequest) receiveData
-				.get(TestRequest.typ);
+				.get(TestRequest.TYP);
 
 		testRequest.addTest(test);
 		test.setRequestId(testRequest.getId());

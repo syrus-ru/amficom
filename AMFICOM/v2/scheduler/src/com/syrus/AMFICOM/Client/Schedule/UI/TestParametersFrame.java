@@ -22,23 +22,15 @@ public class TestParametersFrame extends JInternalFrame implements
 
 	public TestParametersFrame(ApplicationContext aContext) {
 		this.aContext = aContext;
-		try {
-			jbInit();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		initModule(aContext.getDispatcher());
-	}
-
-	private void jbInit() throws Exception {
 		setTitle(LangModelSchedule.getString("Measurement_options")); //$NON-NLS-1$
 		setFrameIcon(UIStorage.GENERAL_ICON);
 		setResizable(true);
 		setClosable(true);
 		setIconifiable(true);
 
-		panel = new TestParametersPanel(aContext);
+		this.panel = new TestParametersPanel(aContext);
 		this.getContentPane().add(panel, BorderLayout.CENTER);
+		initModule(aContext.getDispatcher());
 	}
 
 	private void initModule(Dispatcher dispatcher) {
@@ -57,7 +49,7 @@ public class TestParametersFrame extends JInternalFrame implements
 		if (commandName.equals(TestUpdateEvent.TYPE)) {
 			TestUpdateEvent tue = (TestUpdateEvent) ae;
 			Test test = tue.test;
-			if (tue.TEST_SELECTED) {
+			if (tue.testSelected) {
 				KIS kis = (KIS) Pool.get(KIS.typ, test.getKisId());
 				Vector ports = kis.access_ports;
 				for (Enumeration e = ports.elements(); e.hasMoreElements();) {

@@ -9,7 +9,7 @@ import com.syrus.AMFICOM.Client.Survey.General.ConstStorage;
 
 public class TestRequest extends ObjectResource {
 
-	public static final String				typ				= "testrequest";
+	public static final String				TYP				= "testrequest";
 	private long							completionTime	= 0;
 	private long							created			= 0;
 	private long							deleted			= 0;
@@ -94,7 +94,7 @@ public class TestRequest extends ObjectResource {
 	}
 
 	public String getTyp() {
-		return typ;
+		return TYP;
 	}
 
 	/**

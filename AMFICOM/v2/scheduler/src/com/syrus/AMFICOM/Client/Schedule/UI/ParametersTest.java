@@ -10,14 +10,17 @@ import com.syrus.AMFICOM.Client.Resource.Result.*;
 /**
  * @author Vladimir Dolzhenko
  * 
- * provide interface for varius parameter test panel 
- * i.g. ReflectometryTestPanel
+ * provide interface for varius parameter test panel i.g. ReflectometryTestPanel
  */
 public interface ParametersTest {
+
 	//String COMMAND_SEND_TEST = "SendTest";
-	String PARAMETER_ID_NAME = "testargument"; //$NON-NLS-1$
-	public TestArgumentSet getParameters();	
-	public String getPanelName();
-	public void setTest(Test test);
-	
+	String	PARAMETER_ID_NAME	= "testargument";	//$NON-NLS-1$
+
+	TestArgumentSet getParameters();
+
+	String getPanelName();
+
+	void setTest(Test test);
+
 }

@@ -108,52 +108,6 @@ public class TestParametersPanel extends JPanel implements OperationListener {
 		if (aContext != null) {
 			initModule(aContext.getDispatcher());
 		}
-		try {
-			jbInit();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
-	/**
-	 * Add test parameter panel for various TestTypes
-	 * 
-	 * @param command
-	 *            when dispatcher get this command name test parameter panel
-	 *            switch to panel
-	 * @param panel
-	 *            ParametersTestPanel
-	 */
-	public void addParameterPanel(String command, ParametersTestPanel panel) {
-		testPanels.put(command, panel);
-		switchPanel.add(panel, command);
-		paramsRadioButton.setEnabled(true);
-	}
-
-	public boolean isParameterPanelExists(String command) {
-		return testPanels.get(command) != null;
-	}
-
-	private void initModule(Dispatcher dispatcher) {
-		this.dispatcher = dispatcher;
-		//		this.dispatcher.register(this, COMMAND_KIS_TYPE);
-		//		this.dispatcher.register(this, COMMAND_PORT_TYPE);
-		//		this.dispatcher.register(this, COMMAND_STOP_ANALYSIS);
-		//		this.dispatcher.register(this, COMMAND_REMOVE_PARAM_FRAME);
-		//		this.dispatcher.register(this, COMMAND_REMOVE_3A_FRAME);
-		//		this.dispatcher.register(this, COMMAND_TEST_TYPE);
-		//		this.dispatcher.register(this, COMMAND_ME_TYPE);
-		//		this.dispatcher.register(this, COMMAND_VISUAL_TEST_PARAMS);
-		//		this.dispatcher.register(this, COMMAND_EXT_AFTER_USUAL_ROOT_FRAME);
-		////
-		this.dispatcher.register(this, SchedulerModel.COMMAND_DATA_REQUEST);
-		this.dispatcher.register(this, COMMAND_CHANGE_PARAM_PANEL);
-		this.dispatcher.register(this, COMMAND_ADD_PARAM_PANEL);
-		this.dispatcher.register(this, COMMAND_CHANGE_TEST_TYPE);
-		this.dispatcher.register(this, COMMAND_CHANGE_ME_TYPE);
-	}
-
-	private void jbInit() throws Exception {
 		setLayout(new BorderLayout());
 
 		patternRadioButton = UIStorage.createRadioButton(LangModelSchedule
@@ -268,6 +222,45 @@ public class TestParametersPanel extends JPanel implements OperationListener {
 
 		patternRadioButton.doClick();
 
+
+	}
+
+	/**
+	 * Add test parameter panel for various TestTypes
+	 * 
+	 * @param command
+	 *            when dispatcher get this command name test parameter panel
+	 *            switch to panel
+	 * @param panel
+	 *            ParametersTestPanel
+	 */
+	public void addParameterPanel(String command, ParametersTestPanel panel) {
+		testPanels.put(command, panel);
+		switchPanel.add(panel, command);
+		paramsRadioButton.setEnabled(true);
+	}
+
+	public boolean isParameterPanelExists(String command) {
+		return testPanels.get(command) != null;
+	}
+
+	private void initModule(Dispatcher dispatcher) {
+		this.dispatcher = dispatcher;
+		//		this.dispatcher.register(this, COMMAND_KIS_TYPE);
+		//		this.dispatcher.register(this, COMMAND_PORT_TYPE);
+		//		this.dispatcher.register(this, COMMAND_STOP_ANALYSIS);
+		//		this.dispatcher.register(this, COMMAND_REMOVE_PARAM_FRAME);
+		//		this.dispatcher.register(this, COMMAND_REMOVE_3A_FRAME);
+		//		this.dispatcher.register(this, COMMAND_TEST_TYPE);
+		//		this.dispatcher.register(this, COMMAND_ME_TYPE);
+		//		this.dispatcher.register(this, COMMAND_VISUAL_TEST_PARAMS);
+		//		this.dispatcher.register(this, COMMAND_EXT_AFTER_USUAL_ROOT_FRAME);
+		////
+		this.dispatcher.register(this, SchedulerModel.COMMAND_DATA_REQUEST);
+		this.dispatcher.register(this, COMMAND_CHANGE_PARAM_PANEL);
+		this.dispatcher.register(this, COMMAND_ADD_PARAM_PANEL);
+		this.dispatcher.register(this, COMMAND_CHANGE_TEST_TYPE);
+		this.dispatcher.register(this, COMMAND_CHANGE_ME_TYPE);
 	}
 
 	public void setTest(Test test) {
@@ -278,17 +271,17 @@ public class TestParametersPanel extends JPanel implements OperationListener {
 		if (surveyDsi == null)
 				surveyDsi = new SurveyDataSourceImage(aContext
 						.getDataSourceInterface());
-		String[] ts_me = surveyDsi.getTestSetupByME(meid);
-		String[] ts_tt = surveyDsi.getTestSetupByTestType(testtypeid);
-		for (int i = 0; i < ts_me.length; i++) {
+		String[] testSetupME = surveyDsi.getTestSetupByME(meid);
+		String[] testSetupTestType = surveyDsi.getTestSetupByTestType(testtypeid);
+		for (int i = 0; i < testSetupME.length; i++) {
 			//System.out.println("ts_me:" + ts_me[i]);
-			TestSetup ts = (TestSetup) Pool.get(TestSetup.typ, ts_me[i]);
+			TestSetup ts = (TestSetup) Pool.get(TestSetup.typ, testSetupME[i]);
 			//testSetups.add(ts);
 			testMap.put(ts.getId(), ts);
 		}
-		for (int i = 0; i < ts_tt.length; i++) {
+		for (int i = 0; i < testSetupTestType.length; i++) {
 			//System.out.println("ts_tt:" + ts_tt[i]);
-			TestSetup ts = (TestSetup) Pool.get(TestSetup.typ, ts_tt[i]);
+			TestSetup ts = (TestSetup) Pool.get(TestSetup.typ, testSetupTestType[i]);
 			//testSetups.add(ts);
 			testMap.put(ts.getId(), ts);
 		}
@@ -406,10 +399,10 @@ public class TestParametersPanel extends JPanel implements OperationListener {
 			if (surveyDsi == null)
 					surveyDsi = new SurveyDataSourceImage(aContext
 							.getDataSourceInterface());
-			String[] ts_tt = surveyDsi.getTestSetupByTestType(testtypeid);
-			for (int i = 0; i < ts_tt.length; i++) {
+			String[] testSetupTestType = surveyDsi.getTestSetupByTestType(testtypeid);
+			for (int i = 0; i < testSetupTestType.length; i++) {
 				//System.out.println(">" + ts_tt[i]);
-				TestSetup ts = (TestSetup) Pool.get(TestSetup.typ, ts_tt[i]);
+				TestSetup ts = (TestSetup) Pool.get(TestSetup.typ, testSetupTestType[i]);
 				//System.out.println("ts:" + ts.id);
 				//testSetups.add(ts);
 				testMap.put(ts.getId(), ts);
@@ -422,9 +415,9 @@ public class TestParametersPanel extends JPanel implements OperationListener {
 			if (surveyDsi == null)
 					surveyDsi = new SurveyDataSourceImage(aContext
 							.getDataSourceInterface());
-			String[] ts_me = surveyDsi.getTestSetupByME(meid);
-			for (int i = 0; i < ts_me.length; i++) {
-				TestSetup ts = (TestSetup) Pool.get(TestSetup.typ, ts_me[i]);
+			String[] testSetupME = surveyDsi.getTestSetupByME(meid);
+			for (int i = 0; i < testSetupME.length; i++) {
+				TestSetup ts = (TestSetup) Pool.get(TestSetup.typ, testSetupME[i]);
 				//testSetups.add(ts);
 				testMap.put(ts.getId(), ts);
 			}

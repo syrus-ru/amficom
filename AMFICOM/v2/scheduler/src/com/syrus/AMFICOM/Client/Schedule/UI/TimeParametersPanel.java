@@ -20,11 +20,9 @@ public class TimeParametersPanel extends JPanel implements OperationListener {
 
 	//public TestRequest treq;
 	//	private TestRequest treq;
-	private final static boolean		FULL_BUTTON_SET		= false;
+	private static final boolean		FULL_BUTTON_SET		= false;
 
 	private Test						test				= null;
-
-	protected static final Dimension	btn_size			= new Dimension(30, 20);
 
 	//	private ApplicationContext aContext;
 
@@ -97,21 +95,13 @@ public class TimeParametersPanel extends JPanel implements OperationListener {
 	TimeStampFiller						tempPanel;
 
 	public TimeParametersPanel() {
-		try {
-			jbInit();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		init();
 	}
 
 	public TimeParametersPanel(ApplicationContext aContext) {
 		//		this.aContext = aContext;
 		initModule(aContext.getDispatcher());
-		try {
-			jbInit();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		init();
 	}
 
 	private void initModule(Dispatcher dispatcher) {
@@ -144,7 +134,7 @@ public class TimeParametersPanel extends JPanel implements OperationListener {
 		mainFrame.setVisible(true);
 	}
 
-	private void jbInit() throws Exception {
+	private void init() {
 		final JPanel paramPatternPanel = new JPanel(new CardLayout());
 		final JPanel extraParamPanel = new JPanel(new CardLayout());
 		extraParamPanel.add(new JLabel(), PERIODIC_NULL_NAME);
@@ -574,7 +564,7 @@ public class TimeParametersPanel extends JPanel implements OperationListener {
 			/**
 			 * todo set TimeStamp from Test
 			 */
-			if (tue.TEST_SELECTED) {
+			if (tue.testSelected) {
 				/**
 				 * todo this is ONLY for backward compatibility
 				 */
@@ -803,7 +793,7 @@ public class TimeParametersPanel extends JPanel implements OperationListener {
 			add(new JLabel("Каждые"), gbc);
 			gbc.gridx++;
 			gbc.gridwidth = GridBagConstraints.RELATIVE;
-			//gbc.ipadx = TimeParametersPanel.btn_size.width;
+			//gbc.ipadx = TimeParametersPanel.BUTTON_SIZE.width;
 			add(minSpin, gbc);
 			gbc.ipadx = 0;
 			gbc.gridx++;
@@ -856,7 +846,7 @@ public class TimeParametersPanel extends JPanel implements OperationListener {
 			add(new JLabel("Каждые"), gbc);
 			gbc.gridwidth = GridBagConstraints.RELATIVE;
 			gbc.gridx++;
-			//gbc.ipadx = TimeParametersPanel.btn_size.width;
+			//gbc.ipadx = TimeParametersPanel.BUTTON_SIZE.width;
 			add(hourSpin, gbc);
 			gbc.gridwidth = GridBagConstraints.REMAINDER;
 			gbc.gridx++;
@@ -923,8 +913,8 @@ public class TimeParametersPanel extends JPanel implements OperationListener {
 				gbc.gridwidth = GridBagConstraints.RELATIVE;
 				gbc.gridheight = 2;
 				gbc.gridx++;
-				gbc.ipadx = TimeParametersPanel.btn_size.height;
-				gbc.ipady = TimeParametersPanel.btn_size.height;
+				gbc.ipadx = UIStorage.BUTTON_SIZE.width;
+				gbc.ipady = UIStorage.BUTTON_SIZE.height;
 				panel.add(scroll, gbc);
 				gbc.ipadx = 0;
 				gbc.ipady = 0;
@@ -1088,8 +1078,8 @@ public class TimeParametersPanel extends JPanel implements OperationListener {
 				gbc.gridwidth = GridBagConstraints.RELATIVE;
 				gbc.gridheight = 2;
 				gbc.gridx++;
-				gbc.ipadx = TimeParametersPanel.btn_size.height;
-				gbc.ipady = TimeParametersPanel.btn_size.height;
+				gbc.ipadx = UIStorage.BUTTON_SIZE.width;
+				gbc.ipady = UIStorage.BUTTON_SIZE.height;
 				panel.add(scroll, gbc);
 				gbc.ipadx = 0;
 				gbc.ipady = 0;
@@ -1334,8 +1324,8 @@ public class TimeParametersPanel extends JPanel implements OperationListener {
 				gbc.gridwidth = GridBagConstraints.RELATIVE;
 				gbc.gridheight = 2;
 				gbc.gridx++;
-				gbc.ipadx = TimeParametersPanel.btn_size.height;
-				gbc.ipady = TimeParametersPanel.btn_size.height;
+				gbc.ipadx = UIStorage.BUTTON_SIZE.width;
+				gbc.ipady = UIStorage.BUTTON_SIZE.height;
 				panel.add(scroll, gbc);
 				gbc.ipadx = 0;
 				gbc.ipady = 0;
@@ -1478,7 +1468,7 @@ public class TimeParametersPanel extends JPanel implements OperationListener {
 			add(new JLabel("Каждые"), gbc);
 			gbc.gridwidth = GridBagConstraints.RELATIVE;
 			gbc.gridx++;
-			//gbc.ipadx = TimeParametersPanel.btn_size.width;
+			//gbc.ipadx = TimeParametersPanel.BUTTON_SIZE.width;
 			gbc.anchor = GridBagConstraints.CENTER;
 			add(monthSpin, gbc);
 			gbc.anchor = GridBagConstraints.EAST;
@@ -1549,8 +1539,8 @@ public class TimeParametersPanel extends JPanel implements OperationListener {
 				gbc.gridwidth = GridBagConstraints.RELATIVE;
 				gbc.gridheight = 2;
 				gbc.gridx++;
-				gbc.ipadx = TimeParametersPanel.btn_size.height;
-				gbc.ipady = TimeParametersPanel.btn_size.height;
+				gbc.ipadx = UIStorage.BUTTON_SIZE.width;
+				gbc.ipady = UIStorage.BUTTON_SIZE.height;
 				panel.add(scroll, gbc);
 				gbc.ipadx = 0;
 				gbc.ipady = 0;
@@ -1631,8 +1621,8 @@ public class TimeParametersPanel extends JPanel implements OperationListener {
 				gbc.gridwidth = GridBagConstraints.RELATIVE;
 				gbc.gridheight = 2;
 				gbc.gridx++;
-				gbc.ipadx = TimeParametersPanel.btn_size.height;
-				gbc.ipady = TimeParametersPanel.btn_size.height;
+				gbc.ipadx = UIStorage.BUTTON_SIZE.width;
+				gbc.ipady = UIStorage.BUTTON_SIZE.height;
 				panel.add(dayscroll, gbc);
 				gbc.ipadx = 0;
 				gbc.ipady = 0;

@@ -570,9 +570,9 @@ public class TableFrame extends JInternalFrame implements OperationListener {
 							final TestTableModel model = (TestTableModel) table
 									.getModel();
 							JPopupMenu popup = new JPopupMenu();
-							JMenuItem delete_test = new JMenuItem(
+							JMenuItem deleteTestMenuItem = new JMenuItem(
 									LangModelSchedule.getString("delete_tests")); //$NON-NLS-1$
-							delete_test.addActionListener(new ActionListener() {
+							deleteTestMenuItem.addActionListener(new ActionListener() {
 
 								public void actionPerformed(ActionEvent e) {
 									for (int i = 0; i < rowIndices.length; i++) {
@@ -583,7 +583,7 @@ public class TableFrame extends JInternalFrame implements OperationListener {
 									}
 								}
 							});
-							popup.add(delete_test);
+							popup.add(deleteTestMenuItem);
 							popup.show(table, evt.getX(), evt.getY());
 						}
 					}

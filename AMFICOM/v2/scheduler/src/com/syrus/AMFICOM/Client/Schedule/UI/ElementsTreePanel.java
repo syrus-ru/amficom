@@ -225,11 +225,67 @@ public class ElementsTreePanel extends JPanel implements OperationListener {
 		this.dispatcher = aContext.getDispatcher();
 		this.model = new TestsTreeModel(aContext);
 
-		try {
-			jbInit();
-		} catch (Exception e) {
-			e.printStackTrace();
+		setLayout(new BorderLayout());
+
+		//Toolbar
+		loadButton = new JButton();
+		loadButton.setIcon(UIStorage.OPEN_FILE_ICON);
+		loadButton.setToolTipText(LangModelSchedule.getString("Open")); //$NON-NLS-1$
+		loadButton.setMargin(UIStorage.INSET_NULL);
+		loadButton.setBorder(BorderFactory
+				.createEtchedBorder(EtchedBorder.LOWERED));
+		loadButton.setFocusPainted(false);
+		loadButton.setEnabled(false);
+		loadButton.addActionListener(new ActionListener() {
+
+			public void actionPerformed(ActionEvent ev) {
+				/**
+				 * @todo do loading
+				 */
+				//loadButton_actionPerformed();
+			}
+		});
+
+		delMapGroupButton = new JButton();
+		delMapGroupButton.setMargin(UIStorage.INSET_NULL);
+		delMapGroupButton.setIcon(UIStorage.DELETE_ICON);
+		delMapGroupButton.setToolTipText(LangModelSchedule.getString("Delete")); //$NON-NLS-1$
+		delMapGroupButton.setBorder(BorderFactory
+				.createEtchedBorder(EtchedBorder.LOWERED));
+		delMapGroupButton.setFocusPainted(false);
+		delMapGroupButton.setEnabled(false);
+		delMapGroupButton.addActionListener(new ActionListener() {
+
+			public void actionPerformed(ActionEvent ev) {
+				/**
+				 * @todo do delete
+				 */
+				//delMapGroupButton_actionPerformed();
+			}
+		});
+
+		{
+			Dimension d = new Dimension(24, 24);
+			UIStorage.setRigidSize(delMapGroupButton, d);
+			UIStorage.setRigidSize(loadButton, d);
 		}
+
+		Box toolBar = new Box(BoxLayout.X_AXIS);
+		toolBar.add(loadButton);
+		toolBar.add(delMapGroupButton);
+		toolBar.add(Box.createHorizontalGlue());
+		add(toolBar, BorderLayout.NORTH);
+
+		// TREE
+		utp = new UniTreePanel(dispatcher, aContext, model);
+		utp.getTree().setRootVisible(true);
+		utp.getTree().getSelectionModel().setSelectionMode(
+				TreeSelectionModel.SINGLE_TREE_SELECTION);
+
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.getViewport().add(utp);
+		add(scrollPane, BorderLayout.CENTER);
+
 		initModule(dispatcher);
 	}
 
@@ -281,12 +337,12 @@ public class ElementsTreePanel extends JPanel implements OperationListener {
 		if (commandName.equals(TreeDataSelectionEvent.type)) {
 			TreeDataSelectionEvent dse = (TreeDataSelectionEvent) oe;
 			//			selectedObject = dse.selectedObject;
-			Class selected_class = dse.getDataClass();
+			Class selectedClass = dse.getDataClass();
 
-			if (selected_class.equals(MonitoredElement.class)) {
-				loadButton.setEnabled(true);
+			if (selectedClass.equals(MonitoredElement.class)) {
+				this.loadButton.setEnabled(true);
 			} else
-				loadButton.setEnabled(false);
+				this.loadButton.setEnabled(false);
 
 			if (dse.getSelectionNumber() != -1) {
 				// can smbody explain me this?
@@ -304,7 +360,7 @@ public class ElementsTreePanel extends JPanel implements OperationListener {
 		} else if (commandName.equals(TestUpdateEvent.TYPE)) {
 			if (!skipTestUpdate) {
 				TestUpdateEvent tue = (TestUpdateEvent) oe;
-				if (tue.TEST_SELECTED) {					
+				if (tue.testSelected) {					
 					Test test = tue.test;
 					TestType testType = (TestType) Pool.get(TestType.typ, test
 							.getTestTypeId());
@@ -419,68 +475,5 @@ public class ElementsTreePanel extends JPanel implements OperationListener {
 		this.dispatcher.register(this, TreeDataSelectionEvent.type);
 		this.dispatcher.register(this, TestUpdateEvent.TYPE);
 		this.dispatcher.register(this, SchedulerModel.COMMAND_DATA_REQUEST);
-	}
-
-	private void jbInit() throws Exception {
-		setLayout(new BorderLayout());
-
-		//Toolbar
-		loadButton = new JButton();
-		loadButton.setIcon(UIStorage.OPEN_FILE_ICON);
-		loadButton.setToolTipText(LangModelSchedule.getString("Open")); //$NON-NLS-1$
-		loadButton.setMargin(UIStorage.INSET_NULL);
-		loadButton.setBorder(BorderFactory
-				.createEtchedBorder(EtchedBorder.LOWERED));
-		loadButton.setFocusPainted(false);
-		loadButton.setEnabled(false);
-		loadButton.addActionListener(new ActionListener() {
-
-			public void actionPerformed(ActionEvent ev) {
-				/**
-				 * @todo do loading
-				 */
-				//loadButton_actionPerformed();
-			}
-		});
-
-		delMapGroupButton = new JButton();
-		delMapGroupButton.setMargin(UIStorage.INSET_NULL);
-		delMapGroupButton.setIcon(UIStorage.DELETE_ICON);
-		delMapGroupButton.setToolTipText(LangModelSchedule.getString("Delete")); //$NON-NLS-1$
-		delMapGroupButton.setBorder(BorderFactory
-				.createEtchedBorder(EtchedBorder.LOWERED));
-		delMapGroupButton.setFocusPainted(false);
-		delMapGroupButton.setEnabled(false);
-		delMapGroupButton.addActionListener(new ActionListener() {
-
-			public void actionPerformed(ActionEvent ev) {
-				/**
-				 * @todo do delete
-				 */
-				//delMapGroupButton_actionPerformed();
-			}
-		});
-
-		{
-			Dimension d = new Dimension(24, 24);
-			UIStorage.setRigidSize(delMapGroupButton, d);
-			UIStorage.setRigidSize(loadButton, d);
-		}
-
-		Box toolBar = new Box(BoxLayout.X_AXIS);
-		toolBar.add(loadButton);
-		toolBar.add(delMapGroupButton);
-		toolBar.add(Box.createHorizontalGlue());
-		add(toolBar, BorderLayout.NORTH);
-
-		// TREE
-		utp = new UniTreePanel(dispatcher, aContext, model);
-		utp.getTree().setRootVisible(true);
-		utp.getTree().getSelectionModel().setSelectionMode(
-				TreeSelectionModel.SINGLE_TREE_SELECTION);
-
-		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.getViewport().add(utp);
-		add(scrollPane, BorderLayout.CENTER);
 	}
 }

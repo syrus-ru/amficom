@@ -64,11 +64,117 @@ public class TestLine extends JLabel implements ActionListener,
 		this.end = end;
 		this.margin = margin;
 		initModule(aContext.getDispatcher());
-		try {
-			jbInit();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		this.addMouseListener(new MouseListener() {
+
+			public void mouseClicked(MouseEvent e) {
+				//				nothing
+			}
+
+			public void mouseEntered(MouseEvent e) {
+				//				nothing
+			}
+
+			public void mouseExited(MouseEvent e) {
+				//				nothing
+			}
+
+			public void mousePressed(MouseEvent e) {
+				if (TestLine.this.allTests != null) {
+					int x = e.getX();
+					int y = e.getY();
+					//int width = getWidth();
+					//				System.out.println("mousePressed: (" + x + "," + y +
+					// ")");
+					// double scale = (double) (width - 2 * margin)/ (double)
+					// (end - start);
+
+					//for (Iterator it = getTests().iterator(); it.hasNext();)
+					// {
+					for (int i = 0; i < TestLine.this.allTests.size(); i++) {
+						//	Test test = (Test) it.next();
+						Test test = (Test) TestLine.this.allTests.get(i);
+						TimeStamp timeStamp = test.getTimeStamp();
+						int st = TestLine.this.margin
+								+ (int) (TestLine.this.scale * (test.getTimeStamp()
+										.getPeriodStart() - TestLine.this.start)) - 1;
+						int en = TestLine.this.margin
+								+ (int) (TestLine.this.scale * (test.getTimeStamp()
+										.getPeriodEnd() - TestLine.this.start)) + 1;
+						en = (en - st < MINIMAL_WIDTH) ? st + MINIMAL_WIDTH
+								: en;
+						//					System.out.println("."+((x >= st) && (x <= en) && (y
+						// >=
+						// titleHeight / 2 + 4)));
+						int w = en - st + 1;
+						if (timeStamp.getType() == TimeStamp.TIMESTAMPTYPE_CONTINUOS)
+							w = (w > MINIMAL_WIDTH) ? w : MINIMAL_WIDTH;
+						else
+							w = MINIMAL_WIDTH;
+						en = st + w;
+						boolean condition = false;
+						switch (timeStamp.getType()) {
+							case TimeStamp.TIMESTAMPTYPE_PERIODIC:
+								long[] times = timeStamp.getTestTimes();
+								for (int j = 0; j < times.length; j++) {
+									st = TestLine.this.margin
+											+ (int) (TestLine.this.scale * (times[j] - TestLine.this.start));
+									en = st + w;
+									if ((x >= st) && (x <= en)
+											&& (y >= TestLine.this.titleHeight / 2 + 4)) {
+										condition = true;
+										//System.out.println("selected:" + j);
+										break;
+									}
+								}
+								break;
+							default:
+								if ((x >= st) && (x <= en)
+										&& (y >= TestLine.this.titleHeight / 2 + 4)) {
+									condition = true;
+								}
+								break;
+						}
+
+						if (condition) {
+							//System.out.println("test:" + test.id);
+							//							System.out.println("test.status.value():"
+							//									+ test.status.value());
+							System.out
+									.println("TestLine>onClick: test==null : " //$NON-NLS-1$
+											+ (test.isChanged()));
+							TestLine.this.skipTestUpdate = true;
+							TestLine.this.dispatcher.notify(new TestUpdateEvent(this, test,
+									TestUpdateEvent.TEST_SELECTED_EVENT));
+							TestLine.this.skipTestUpdate = false;
+							TestLine.this.currentTest = test;
+							break;
+						}
+					}
+				}
+
+			}
+
+			public void mouseReleased(MouseEvent e) {
+				if (TestLine.this.currentTest != null) {
+					TestLine.this.currentTest = null;
+				}
+
+			}
+		});
+		this.addMouseMotionListener(new MouseMotionListener() {
+
+			public void mouseDragged(MouseEvent e) {
+				if (TestLine.this.currentTest != null) {
+					//nothing
+				}
+
+			}
+
+			public void mouseMoved(MouseEvent e) {
+				//				nothing
+			}
+		});
+
 	}
 
 	public void operationPerformed(OperationEvent e) {
@@ -76,13 +182,13 @@ public class TestLine extends JLabel implements ActionListener,
 		System.out.println(getClass().getName() + " commandName: " //$NON-NLS-1$
 				+ commandName);
 		if (commandName.equals(SchedulerModel.COMMAND_TEST_SAVED_OK)) {
-			for (Iterator it = unsavedTests.keySet().iterator(); it.hasNext();) {
+			for (Iterator it = this.unsavedTests.keySet().iterator(); it.hasNext();) {
 				Object key = it.next();
-				Test test = (Test) unsavedTests.get(key);
+				Test test = (Test) this.unsavedTests.get(key);
 				if (!test.isChanged()) {
 					System.out.println("remove " + key);
-					unsavedTests.remove(key);
-					tests.put(test.getId(), test);
+					this.unsavedTests.remove(key);
+					this.tests.put(test.getId(), test);
 				}
 			}
 		}
@@ -255,119 +361,6 @@ public class TestLine extends JLabel implements ActionListener,
 	private void initModule(Dispatcher dispatcher) {
 		this.dispatcher = dispatcher;
 		dispatcher.register(this, SchedulerModel.COMMAND_TEST_SAVED_OK);
-	}
-
-	private void jbInit() throws Exception {
-		this.addMouseListener(new MouseListener() {
-
-			public void mouseClicked(MouseEvent e) {
-				//				nothing
-			}
-
-			public void mouseEntered(MouseEvent e) {
-				//				nothing
-			}
-
-			public void mouseExited(MouseEvent e) {
-				//				nothing
-			}
-
-			public void mousePressed(MouseEvent e) {
-				if (allTests != null) {
-					int x = e.getX();
-					int y = e.getY();
-					//int width = getWidth();
-					//				System.out.println("mousePressed: (" + x + "," + y +
-					// ")");
-					// double scale = (double) (width - 2 * margin)/ (double)
-					// (end - start);
-
-					//for (Iterator it = getTests().iterator(); it.hasNext();)
-					// {
-					for (int i = 0; i < allTests.size(); i++) {
-						//	Test test = (Test) it.next();
-						Test test = (Test) allTests.get(i);
-						TimeStamp timeStamp = test.getTimeStamp();
-						int st = margin
-								+ (int) (scale * (test.getTimeStamp()
-										.getPeriodStart() - start)) - 1;
-						int en = margin
-								+ (int) (scale * (test.getTimeStamp()
-										.getPeriodEnd() - start)) + 1;
-						en = (en - st < MINIMAL_WIDTH) ? st + MINIMAL_WIDTH
-								: en;
-						//					System.out.println("."+((x >= st) && (x <= en) && (y
-						// >=
-						// titleHeight / 2 + 4)));
-						int w = en - st + 1;
-						if (timeStamp.getType() == TimeStamp.TIMESTAMPTYPE_CONTINUOS)
-							w = (w > MINIMAL_WIDTH) ? w : MINIMAL_WIDTH;
-						else
-							w = MINIMAL_WIDTH;
-						en = st + w;
-						boolean condition = false;
-						switch (timeStamp.getType()) {
-							case TimeStamp.TIMESTAMPTYPE_PERIODIC:
-								long[] times = timeStamp.getTestTimes();
-								for (int j = 0; j < times.length; j++) {
-									st = margin
-											+ (int) (scale * (times[j] - start));
-									en = st + w;
-									if ((x >= st) && (x <= en)
-											&& (y >= titleHeight / 2 + 4)) {
-										condition = true;
-										//System.out.println("selected:" + j);
-										break;
-									}
-								}
-								break;
-							default:
-								if ((x >= st) && (x <= en)
-										&& (y >= titleHeight / 2 + 4)) {
-									condition = true;
-								}
-								break;
-						}
-
-						if (condition) {
-							//System.out.println("test:" + test.id);
-							//							System.out.println("test.status.value():"
-							//									+ test.status.value());
-							System.out
-									.println("TestLine>onClick: test==null : " //$NON-NLS-1$
-											+ (test.isChanged()));
-							skipTestUpdate = true;
-							dispatcher.notify(new TestUpdateEvent(this, test,
-									TestUpdateEvent.TEST_SELECTED_EVENT));
-							skipTestUpdate = false;
-							currentTest = test;
-							break;
-						}
-					}
-				}
-
-			}
-
-			public void mouseReleased(MouseEvent e) {
-				if (currentTest != null) {
-					currentTest = null;
-				}
-
-			}
-		});
-		this.addMouseMotionListener(new MouseMotionListener() {
-
-			public void mouseDragged(MouseEvent e) {
-				if (currentTest != null) {
-					//nothing
-				}
-
-			}
-
-			public void mouseMoved(MouseEvent e) {
-				//				nothing
-			}
-		});
 	}
 
 }

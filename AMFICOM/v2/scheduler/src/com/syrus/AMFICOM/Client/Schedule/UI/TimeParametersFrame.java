@@ -47,8 +47,8 @@ public class TimeParametersFrame extends JInternalFrame implements
 		if (commandName.equals(TestUpdateEvent.TYPE)) {
 			TestUpdateEvent tue = (TestUpdateEvent) ae;
 			Test test = tue.test;
-			if (tue.TEST_SELECTED) {
-				TestRequest treq = (TestRequest) Pool.get(TestRequest.typ, test
+			if (tue.testSelected) {
+				TestRequest treq = (TestRequest) Pool.get(TestRequest.TYP, test
 						.getRequestId());
 				if (treq != null) {
 					panel.setTestRequest(treq);

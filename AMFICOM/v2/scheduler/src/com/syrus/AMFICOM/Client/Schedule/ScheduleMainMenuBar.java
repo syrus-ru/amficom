@@ -1,6 +1,7 @@
 package com.syrus.AMFICOM.Client.Schedule;
 
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.*;
 
@@ -8,10 +9,9 @@ import com.syrus.AMFICOM.Client.General.Command.*;
 import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.General.Lang.LangModel;
 
-public class ScheduleMainMenuBar extends JMenuBar implements
-		ApplicationModelListener {
+public class ScheduleMainMenuBar extends JMenuBar implements ApplicationModelListener {
 
-	private ApplicationModel	aModel;
+	ApplicationModel	aModel;
 
 	JMenu						menuSession					= new JMenu();
 	JMenuItem					menuSessionNew				= new JMenuItem();
@@ -23,22 +23,18 @@ public class ScheduleMainMenuBar extends JMenuBar implements
 	JMenuItem					menuExit					= new JMenuItem();
 
 	public ScheduleMainMenuBar() {
-		super();
-		try {
-			jbInit();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
 
-	public ScheduleMainMenuBar(ApplicationModel aModel) {
-		this();
-		this.aModel = aModel;
-	}
-
-	private void jbInit() throws Exception {
-		ScheduleMainMenuBar_this_actionAdapter actionAdapter = new ScheduleMainMenuBar_this_actionAdapter(
-				this);
+		ActionListener actionAdapter = new ActionListener(){			
+			public void actionPerformed(ActionEvent e) {
+				if (ScheduleMainMenuBar.this.aModel == null)
+					return;
+				AbstractButton jb = (AbstractButton) e.getSource();
+				String s = jb.getName();
+				Command command = ScheduleMainMenuBar.this.aModel.getCommand(s);
+				command = (Command) command.clone();
+				command.execute();
+			}
+		};
 
 		this.menuSession.setText(LangModel.Text("menuSession"));
 		this.menuSession.setName("menuSession");
@@ -51,12 +47,10 @@ public class ScheduleMainMenuBar extends JMenuBar implements
 		this.menuSessionOptions.setText(LangModel.Text("menuSessionOptions"));
 		this.menuSessionOptions.setName("menuSessionOptions");
 		this.menuSessionOptions.addActionListener(actionAdapter);
-		this.menuSessionConnection.setText(LangModel
-				.Text("menuSessionConnection"));
+		this.menuSessionConnection.setText(LangModel.Text("menuSessionConnection"));
 		this.menuSessionConnection.setName("menuSessionConnection");
 		this.menuSessionConnection.addActionListener(actionAdapter);
-		this.menuSessionChangePassword.setText(LangModel
-				.Text("menuSessionChangePassword"));
+		this.menuSessionChangePassword.setText(LangModel.Text("menuSessionChangePassword"));
 		this.menuSessionChangePassword.setName("menuSessionChangePassword");
 		this.menuSessionChangePassword.addActionListener(actionAdapter);
 		this.menuSessionDomain.setText(LangModel.Text("menuSessionDomain"));
@@ -80,57 +74,29 @@ public class ScheduleMainMenuBar extends JMenuBar implements
 		this.add(this.menuSession);
 	}
 
+	public ScheduleMainMenuBar(ApplicationModel aModel) {
+		this();
+		this.aModel = aModel;
+	}
+
 	public void modelChanged(String e[]) {
 		this.menuSession.setVisible(this.aModel.isVisible("menuSession"));
 		this.menuSession.setEnabled(this.aModel.isEnabled("menuSession"));
 		this.menuSessionNew.setVisible(this.aModel.isVisible("menuSessionNew"));
 		this.menuSessionNew.setEnabled(this.aModel.isEnabled("menuSessionNew"));
-		this.menuSessionClose.setVisible(this.aModel
-				.isVisible("menuSessionClose"));
-		this.menuSessionClose.setEnabled(this.aModel
-				.isEnabled("menuSessionClose"));
-		this.menuSessionOptions.setVisible(this.aModel
-				.isVisible("menuSessionOptions"));
-		this.menuSessionOptions.setEnabled(this.aModel
-				.isEnabled("menuSessionOptions"));
-		this.menuSessionConnection.setVisible(this.aModel
-				.isVisible("menuSessionConnection"));
-		this.menuSessionConnection.setEnabled(this.aModel
-				.isEnabled("menuSessionConnection"));
-		this.menuSessionChangePassword.setVisible(this.aModel
-				.isVisible("menuSessionChangePassword"));
-		this.menuSessionChangePassword.setEnabled(this.aModel
-				.isEnabled("menuSessionChangePassword"));
-		this.menuSessionDomain.setVisible(this.aModel
-				.isVisible("menuSessionDomain"));
-		this.menuSessionDomain.setEnabled(this.aModel
-				.isEnabled("menuSessionDomain"));
+		this.menuSessionClose.setVisible(this.aModel.isVisible("menuSessionClose"));
+		this.menuSessionClose.setEnabled(this.aModel.isEnabled("menuSessionClose"));
+		this.menuSessionOptions.setVisible(this.aModel.isVisible("menuSessionOptions"));
+		this.menuSessionOptions.setEnabled(this.aModel.isEnabled("menuSessionOptions"));
+		this.menuSessionConnection.setVisible(this.aModel.isVisible("menuSessionConnection"));
+		this.menuSessionConnection.setEnabled(this.aModel.isEnabled("menuSessionConnection"));
+		this.menuSessionChangePassword.setVisible(this.aModel.isVisible("menuSessionChangePassword"));
+		this.menuSessionChangePassword.setEnabled(this.aModel.isEnabled("menuSessionChangePassword"));
+		this.menuSessionDomain.setVisible(this.aModel.isVisible("menuSessionDomain"));
+		this.menuSessionDomain.setEnabled(this.aModel.isEnabled("menuSessionDomain"));
 	}
 
 	public void setModel(ApplicationModel aModel) {
 		this.aModel = aModel;
-	}
-
-	public void this_actionPerformed(ActionEvent e) {
-		if (this.aModel == null) return;
-		AbstractButton jb = (AbstractButton) e.getSource();
-		String s = jb.getName();
-		Command command = this.aModel.getCommand(s);
-		command = (Command) command.clone();
-		command.execute();
-	}
-}
-
-class ScheduleMainMenuBar_this_actionAdapter implements
-		java.awt.event.ActionListener {
-
-	ScheduleMainMenuBar	adaptee;
-
-	ScheduleMainMenuBar_this_actionAdapter(ScheduleMainMenuBar adaptee) {
-		this.adaptee = adaptee;
-	}
-
-	public void actionPerformed(ActionEvent e) {
-		this.adaptee.this_actionPerformed(e);
 	}
 }
