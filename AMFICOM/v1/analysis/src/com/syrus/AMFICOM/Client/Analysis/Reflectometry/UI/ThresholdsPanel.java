@@ -77,14 +77,15 @@ public class ThresholdsPanel extends ReflectogramEventsPanel
 		
 		boolean allThresholds = this.isToPaintAllThresholds();
 		int currposF = (int) coord2indexF(this.currpos.x);
-		if (!allThresholds && !(simpleEvent.getBegin() <= currposF && currposF <= simpleEvent.getEnd()))
+		int mouseCouplingF = (int)coord2indexF(MOUSE_COUPLING);
+		if (!allThresholds && !(simpleEvent.getBegin() - mouseCouplingF <= currposF && currposF <= simpleEvent.getEnd() + mouseCouplingF))
 			return;
 		// если это текущее событие - пытаемся "ухватить" (drag) порог
 		this.c_TH = this.et_mtm.getThresholdHandle(
 			coord2indexF(this.currpos.x), // we need float value, without rounding
 			coord2value(this.currpos.y),
-			mouse_coupling / this.scaleX,
-			mouse_coupling / this.scaleY,
+			MOUSE_COUPLING / this.scaleX,
+			MOUSE_COUPLING / this.scaleY,
 			0.5,
 			isRbutton ? 1 : 0);		
 		
