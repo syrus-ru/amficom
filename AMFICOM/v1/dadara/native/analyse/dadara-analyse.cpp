@@ -210,4 +210,3 @@ Java_com_syrus_AMFICOM_analysis_CoreAnalysisManager_analyse2(
 
 	return ret_obj;
 }
-
