@@ -84,6 +84,7 @@ public class PropsFrame extends JInternalFrame implements OperationListener
 
 	void init_module(Dispatcher dispatcher)
 	{
+		this.dispatcher = dispatcher;
 		dispatcher.register(this, TreeDataSelectionEvent.type);
 		dispatcher.register(this, SchemeNavigateEvent.type);
 
