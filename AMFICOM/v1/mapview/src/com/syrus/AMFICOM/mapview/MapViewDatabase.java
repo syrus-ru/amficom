@@ -1,5 +1,5 @@
 /*
-* $Id: MapViewDatabase.java,v 1.12 2005/03/04 19:50:01 bass Exp $
+* $Id: MapViewDatabase.java,v 1.13 2005/03/10 13:05:06 bob Exp $
 *
 * Copyright ¿ 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -20,19 +20,17 @@ import java.util.Iterator;
 import java.util.Map;
 
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.CharacteristicDatabase;
+import com.syrus.AMFICOM.general.CharacterizableDatabase;
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
-import com.syrus.AMFICOM.general.GeneralDatabaseContext;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
-import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.VersionCollisionException;
@@ -46,11 +44,11 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/03/04 19:50:01 $
- * @author $Author: bass $
+ * @version $Revision: 1.13 $, $Date: 2005/03/10 13:05:06 $
+ * @author $Author: bob $
  * @module mapview_v1
  */
-public class MapViewDatabase extends StorableObjectDatabase {
+public class MapViewDatabase extends CharacterizableDatabase {
     // domain_id VARCHAR2(32),
     public static final String COLUMN_DOMAIN_ID     = "domain_id";
     // name VARCHAR2(128),
@@ -211,22 +209,12 @@ public class MapViewDatabase extends StorableObjectDatabase {
 	public void insert(StorableObject storableObject) throws CreateObjectException , IllegalDataException {
 		MapView mapView = this.fromStorableObject(storableObject);
 		super.insertEntity(mapView);
-		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)GeneralDatabaseContext.getCharacteristicDatabase();
-		Collection maps = Collections.singletonList(mapView);
-		try {
-			characteristicDatabase.updateCharacteristics(mapView);
-			this.updateSchemeIds(maps);
-		} catch (UpdateObjectException e) {
-			throw new CreateObjectException(e);
-		}
 	}
 	
 	
 	public void insert(Collection storableObjects) throws IllegalDataException, CreateObjectException {
-		insertEntities(storableObjects);
-		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)GeneralDatabaseContext.getCharacteristicDatabase();
+		super.insertEntities(storableObjects);
 		try {
-			characteristicDatabase.updateCharacteristics(storableObjects);
 			this.updateSchemeIds(storableObjects);
 		} catch (UpdateObjectException e) {
 			throw new CreateObjectException(e);
@@ -234,16 +222,13 @@ public class MapViewDatabase extends StorableObjectDatabase {
 	}
 
 	public void update(StorableObject storableObject, Identifier modifierId, int updateKind) throws VersionCollisionException, UpdateObjectException {
-		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)GeneralDatabaseContext.getCharacteristicDatabase();
 		switch (updateKind) {
 			case UPDATE_CHECK:
 				super.checkAndUpdateEntity(storableObject, modifierId, false);
-				characteristicDatabase.updateCharacteristics(storableObject);
 				break;
 			case UPDATE_FORCE:					
 			default:
 				super.checkAndUpdateEntity(storableObject, modifierId, true);
-				characteristicDatabase.updateCharacteristics(storableObject);
 				return;
 		}
 		Collection maps = Collections.singletonList(storableObject);
@@ -252,16 +237,13 @@ public class MapViewDatabase extends StorableObjectDatabase {
 	
 	
 	public void update(Collection storableObjects, Identifier modifierId, int updateKind) throws VersionCollisionException, UpdateObjectException {
-		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)GeneralDatabaseContext.getCharacteristicDatabase();
 		switch (updateKind) {
 			case UPDATE_CHECK:
 				super.checkAndUpdateEntities(storableObjects, modifierId, false);
-				characteristicDatabase.updateCharacteristics(storableObjects);
 				break;
 			case UPDATE_FORCE:					
 			default:
 				super.checkAndUpdateEntities(storableObjects, modifierId, true);		
-				characteristicDatabase.updateCharacteristics(storableObjects);
 				return;
 		}
 		this.updateSchemeIds(storableObjects);
@@ -290,19 +272,14 @@ public class MapViewDatabase extends StorableObjectDatabase {
 	        mapIdLinkedObjectIds.put(mapView.getId(), linkedObjectIds);
 		}
 		
-		try {
-			super.updateLinkedEntities(mapIdLinkedObjectIds, MAPVIEW_SCHEME, LINK_COLUMN_MAPVIEW_ID, LINK_COLUMN_SCHEME_ID);
-		}  catch (IllegalDataException e) {
-			throw new UpdateObjectException("MapViewDatabase.updateSchemeIds | cannot update map view scheme", e);
-		}
-
+		super.updateLinkedEntities(mapIdLinkedObjectIds, MAPVIEW_SCHEME, LINK_COLUMN_MAPVIEW_ID, LINK_COLUMN_SCHEME_ID);
 	}
 	
 	public void delete(Identifier id) throws IllegalDataException {
 		this.delete(Collections.singletonList(id));
 	}
 	
-	public void delete(Collection ids) throws IllegalDataException {
+	public void delete(Collection ids) {
 		super.delete(ids);
 		
 		java.util.Map linkedObjectIds = new HashMap();
@@ -314,7 +291,7 @@ public class MapViewDatabase extends StorableObjectDatabase {
 				MapView map = (MapView)MapViewStorableObjectPool.getStorableObject(mapId, true);
 				mapIds.put(mapId, map);
 			}catch(ApplicationException ae){
-				throw new IllegalDataException(this.getEnityName()+"Database.delete | Couldn't found map for " + mapId);
+				Log.errorMessage(this.getEnityName()+"Database.delete | Couldn't found map for " + mapId);
 			} 
 		}
 		
