@@ -63,7 +63,7 @@ load	load
 #M	importmif	Patch for SpatialFX libraries which allows for TEXT spatial objects
 importmif	importmif
 #M	general	Client common classes
-general_v1	general
+general_v1	general_v1
 #M	admin	Administrative module
 admin	admin
 #M	map	Mapping module
