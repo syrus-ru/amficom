@@ -1,5 +1,5 @@
 /*
- * $Id: MapDatabaseContext.java,v 1.3 2004/12/01 16:16:03 bob Exp $
+ * $Id: MapDatabaseContext.java,v 1.4 2004/12/02 12:10:27 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,11 +11,11 @@ package com.syrus.AMFICOM.map;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2004/12/01 16:16:03 $
+ * @version $Revision: 1.4 $, $Date: 2004/12/02 12:10:27 $
  * @author $Author: bob $
  * @module map_v1
  */
-public class MapDatabaseContext {
+public final class MapDatabaseContext {
 
 	private static StorableObjectDatabase	siteNodeTypeDatabase;
 	private static StorableObjectDatabase	physicalLinkTypeDatabase;
@@ -32,15 +32,15 @@ public class MapDatabaseContext {
 		// empty singleton constructor
 	}
 
-	public static void init(StorableObjectDatabase siteNodeTypeDatabase,
-							StorableObjectDatabase physicalLinkTypeDatabase,
-							StorableObjectDatabase collectorDatabase,
-							StorableObjectDatabase mapDatabase,
-							StorableObjectDatabase markDatabase,
-							StorableObjectDatabase nodeLinkDatabase,
-							StorableObjectDatabase physicalLinkDatabase,
-							StorableObjectDatabase siteNodeDatabase,
-							StorableObjectDatabase topologicalNodeDatabase) {
+	public static void init(final StorableObjectDatabase siteNodeTypeDatabase,
+							final StorableObjectDatabase physicalLinkTypeDatabase,
+							final StorableObjectDatabase collectorDatabase,
+							final StorableObjectDatabase mapDatabase,
+							final StorableObjectDatabase markDatabase,
+							final StorableObjectDatabase nodeLinkDatabase,
+							final StorableObjectDatabase physicalLinkDatabase,
+							final StorableObjectDatabase siteNodeDatabase,
+							final StorableObjectDatabase topologicalNodeDatabase) {
 		MapDatabaseContext.siteNodeTypeDatabase = siteNodeTypeDatabase;
 		MapDatabaseContext.physicalLinkTypeDatabase = physicalLinkTypeDatabase;
 

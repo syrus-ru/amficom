@@ -1,5 +1,5 @@
 /*
- * $Id: MapStorableObjectPool.java,v 1.1 2004/11/26 09:23:37 bob Exp $
+ * $Id: MapStorableObjectPool.java,v 1.2 2004/12/02 12:10:27 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,12 +26,12 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2004/11/26 09:23:37 $
+ * @version $Revision: 1.2 $, $Date: 2004/12/02 12:10:27 $
  * @author $Author: bob $
  * @module measurement_v1
  */
 
-public class MapStorableObjectPool extends StorableObjectPool {
+public final class MapStorableObjectPool extends StorableObjectPool {
 
 	private static final int				OBJECT_POOL_MAP_SIZE				= 14;	/*
 																						 * Number

@@ -39,6 +39,7 @@ $(LIBNAME): .mach
 		-classpath $(APPCLASSPATH):$(JDBCCLASSPATH):$(CLASSDIR) \
 		$(SRCDIR)/com/syrus/AMFICOM/map/MapStorableObjectPool.java \
 		$(SRCDIR)/com/syrus/AMFICOM/map/MapObjectLoader.java \
+		$(SRCDIR)/com/syrus/AMFICOM/map/DatabaseMapObjectLoader.java \
 		$(SRCDIR)/com/syrus/AMFICOM/map/MapDatabaseContext.java \
 		$(SRCDIR)/com/syrus/AMFICOM/map/SiteNodeType.java \
 		$(SRCDIR)/com/syrus/AMFICOM/map/SiteNodeTypeDatabase.java \
