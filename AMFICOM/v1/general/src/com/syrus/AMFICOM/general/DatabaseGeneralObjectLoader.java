@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseGeneralObjectLoader.java,v 1.3 2005/02/04 14:09:55 arseniy Exp $
+ * $Id: DatabaseGeneralObjectLoader.java,v 1.4 2005/02/07 12:13:20 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -19,7 +19,7 @@ import java.util.Set;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/02/04 14:09:55 $
+ * @version $Revision: 1.4 $, $Date: 2005/02/07 12:13:20 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -333,7 +333,7 @@ public class DatabaseGeneralObjectLoader implements GeneralObjectLoader {
 		for (Iterator it = map.keySet().iterator(); it.hasNext();) {
 			Short entityCode = (Short) it.next();
 			List list = (List) map.get(entityCode);
-			delete(null, list);
+			this.delete(null, list);
 		}
 	}
 

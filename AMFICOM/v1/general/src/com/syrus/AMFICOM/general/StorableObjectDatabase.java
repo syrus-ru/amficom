@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectDatabase.java,v 1.81 2005/02/04 13:00:48 arseniy Exp $
+ * $Id: StorableObjectDatabase.java,v 1.82 2005/02/07 12:13:20 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,7 +33,7 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.81 $, $Date: 2005/02/04 13:00:48 $
+ * @version $Revision: 1.82 $, $Date: 2005/02/07 12:13:20 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -817,7 +817,7 @@ public abstract class StorableObjectDatabase {
 					+ this.getEnityName()
 					+ ") classes");
 		String conditionQuery = databaseStorableObjectCondition.getSQLQuery();
-		List list = retrieveButIds(ids, conditionQuery);
+		List list = this.retrieveButIds(ids, conditionQuery);
 		return list;
 	}
 

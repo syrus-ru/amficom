@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectPool.java,v 1.14 2005/02/07 09:56:24 arseniy Exp $
+ * $Id: StorableObjectPool.java,v 1.15 2005/02/07 12:13:20 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,7 +26,7 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2005/02/07 09:56:24 $
+ * @version $Revision: 1.15 $, $Date: 2005/02/07 12:13:20 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -129,7 +129,7 @@ public abstract class StorableObjectPool {
 		else
 			Log.errorMessage("StorableObjectPool.flushImpl | Cannot find object pool for entity '" + ObjectEntities.codeToString(entityCode.shortValue()) + "' entity code: " + entityCode);
 
-		deleteStorableObject(id);
+		this.deleteStorableObject(id);
 	}
 
 	protected void deleteImpl(final List ids) throws DatabaseException, CommunicationException {

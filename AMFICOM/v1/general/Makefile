@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.28 2005/01/19 20:42:59 arseniy Exp $
+# $Id: Makefile,v 1.29 2005/02/07 12:13:20 arseniy Exp $
 #
 # vim:set ft=make:
 #
@@ -67,6 +67,22 @@ cleancorba:
 .PHONY:	install
 install: $(LIBNAME)
 	$(CP) $(LIBNAME) $(LIBDIR)
+
+#### Test ####
+TESTDIR = test
+TESTSOURCES := com/syrus/AMFICOM/general/DefaultIdentifierGeneratorServer.java
+JUNITCLASSPATH = /mnt/d/eclipse/3.1M4/plugins/org.junit_3.8.1/junit.jar
+
+.PHONY:	test
+test: $(LIBNAME)
+	$(JAVAC) $(JAVACFLAGS) \
+		-classpath $(LIBNAME):$(APPCLASSPATH):$(JUNITCLASSPATH) \
+		$(addprefix $(TESTDIR)/,$(TESTSOURCES))
+
+.PHONY:	cleantest
+cleantest:
+	$(RM) $(addprefix $(CLASSDIR)/,$(subst .java,*.class,$(TESTSOURCES)))
+
 
 #### Archive ####
 .PHONY:	arch
