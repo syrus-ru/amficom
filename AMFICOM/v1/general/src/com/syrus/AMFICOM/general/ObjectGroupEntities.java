@@ -1,5 +1,5 @@
 /*
- * $Id: ObjectGroupEntities.java,v 1.3 2004/11/23 15:20:10 bob Exp $
+ * $Id: ObjectGroupEntities.java,v 1.4 2004/11/23 15:21:12 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,7 +8,7 @@
 package com.syrus.AMFICOM.general;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2004/11/23 15:20:10 $
+ * @version $Revision: 1.4 $, $Date: 2004/11/23 15:21:12 $
  * @author $Author: bob $
  * @module module_name
  */
@@ -27,6 +27,7 @@ public class ObjectGroupEntities {
 		}
 
     public static short stringToCode(String groupString) {
+    	// recast using Trove Collections
         if(groupString.equals(MEASUREMENT_GROUP))
             return MEASUREMENT_GROUP_CODE;            
         if(groupString.equals(CONFIGURATION_GROUP))
@@ -35,6 +36,7 @@ public class ObjectGroupEntities {
     }
     
     public static String codeToString(short groupCode) {
+    	// recast using Trove Collections
     	switch (groupCode) {
         case MEASUREMENT_GROUP_CODE:
             return MEASUREMENT_GROUP;
