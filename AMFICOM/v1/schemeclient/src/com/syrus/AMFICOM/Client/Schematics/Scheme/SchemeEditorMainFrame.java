@@ -127,7 +127,9 @@ public class SchemeEditorMainFrame extends JFrame
 		panel.getGraph().setScheme(scheme);
 
 		schemeTab = new SchemeTabbedPane(aContext);
-		schemeTab.addSchemeTab(panel);
+		schemeTab.addPanel(panel);
+		schemeTab.updateTitle(scheme.getName());
+		schemeTab.setGraphChanged(false);
 
 		editorFrame = new PrimarySchemeEditorFrame(aContext, schemeTab);
 		editorFrame.setTitle(LangModelSchematics.getString("schemeMainTitle"));
@@ -487,37 +489,14 @@ public class SchemeEditorMainFrame extends JFrame
 			String scheme_id = (String)ae.getSource();
 			Scheme scheme = (Scheme)Pool.get(Scheme.typ, scheme_id);
 			scheme.unpack();
-
-			SchemePanel panel = new SchemePanel(aContext);
-			panel.openScheme(scheme);
-			schemeTab.addSchemeTab(panel);
+			schemeTab.openScheme(scheme);
 		}
 		else if (ae.getActionCommand().equals("addschemeelementevent"))
 		{
 			String se_id = (String)ae.getSource();
 			SchemeElement se = (SchemeElement)Pool.get(SchemeElement.typ, se_id);
 			se.unpack();
-
-			SchemePanel panel = new SchemePanel(aContext);
-			panel.openSchemeElement(se);
-			schemeTab.addSchemeTab(panel);
-
-//			ElementsPanel panel = new ElementsPanel(aContext);
-//			panel.setGraphSize(new Dimension());
-	/*		ElementsEditorFrame frame = new ElementsEditorFrame(aContext, panel);
-			frame.setDefaultCloseOperation(JInternalFrame.DISPOSE_ON_CLOSE);
-			frame.setTitle(se.getName());
-			desktopPane.add(frame);
-
-			int w = desktopPane.getSize().width;
-			int h = desktopPane.getSize().height;
-			frame.setSize(3*w/5, h / 2);
-			frame.setLocation(w/5, h / 2);//+ 25 * scheme_count
-			scheme_count++;
-			frame.setVisible(true);
-			frame.toFront();
-
-			panel.openSchemeElement(se);*/
+			schemeTab.openSchemeElement(se);
 		}
 	}
 

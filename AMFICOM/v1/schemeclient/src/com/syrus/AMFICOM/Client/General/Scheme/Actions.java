@@ -10,8 +10,8 @@ import javax.swing.*;
 
 import com.jgraph.graph.*;
 import com.jgraph.pad.GPLibraryPanel;
-import com.syrus.AMFICOM.Client.General.Event.SchemeElementsEvent;
-import com.syrus.AMFICOM.Client.General.Model.Environment;
+import com.syrus.AMFICOM.Client.General.Event.*;
+import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.*;
 import com.syrus.AMFICOM.Client.Resource.Scheme.*;
@@ -45,14 +45,14 @@ class MarqeeAction extends AbstractAction
 
 class DeleteAction extends AbstractAction
 {
-	DataSourceInterface dataSource;
+	ApplicationContext aContext;
 	SchemeGraph graph;
 	UgoPanel panel;
 
-	DeleteAction(UgoPanel panel, DataSourceInterface dataSource)
+	DeleteAction(UgoPanel panel, ApplicationContext aContext)
 	{
 		super(Constants.deleteKey);
-		this.dataSource = dataSource;
+		this.aContext = aContext;
 		this.panel = panel;
 		this.graph = panel.getGraph();
 	}
@@ -78,7 +78,7 @@ class DeleteAction extends AbstractAction
 							if (ret == JOptionPane.CANCEL_OPTION)
 								return;
 							if (ret == JOptionPane.YES_OPTION)
-								dataSource.RemoveEquipments(new String[] {element.equipment_id});
+								aContext.getDataSourceInterface().RemoveEquipments(new String[] {element.equipment_id});
 						}
 						else
 						{
@@ -111,7 +111,7 @@ class DeleteAction extends AbstractAction
 						if (ret == JOptionPane.CANCEL_OPTION)
 							return;
 						if (ret == JOptionPane.YES_OPTION)
-							dataSource.RemoveCableLinks(new String[] {link.cable_link_id});
+							aContext.getDataSourceInterface().RemoveCableLinks(new String[] {link.cable_link_id});
 					}
 					else
 					{
@@ -137,7 +137,7 @@ class DeleteAction extends AbstractAction
 						if (ret == JOptionPane.CANCEL_OPTION)
 							return;
 						if (ret == JOptionPane.YES_OPTION)
-							dataSource.RemoveLinks(new String[] {link.link_id});
+							aContext.getDataSourceInterface().RemoveLinks(new String[] {link.link_id});
 					}
 					else
 					{
@@ -249,7 +249,7 @@ class DeleteAction extends AbstractAction
 					new_cells.toArray(new Object[new_cells.size()])).toArray();
 			graph.getModel().remove(cells);
 			graph.selectionNotify();
-			graph.setGraphChanged(true);
+			aContext.getDispatcher().notify(new SchemeElementsEvent(this, graph, SchemeElementsEvent.SCHEME_CHANGED_EVENT));
 		}
 	}
 
@@ -900,10 +900,12 @@ class SetBackgroundSizeAction extends AbstractAction
 {
 	SchemePanel panel;
 	SchemeGraph graph;
+	ApplicationContext aContext;
 
-	SetBackgroundSizeAction(SchemePanel panel)
+	SetBackgroundSizeAction(ApplicationContext aContext, SchemePanel panel)
 	{
 		super(Constants.backgroundSize);
+		this.aContext = aContext;
 		this.panel = panel;
 		this.graph = panel.getGraph();
 	}
@@ -916,7 +918,7 @@ class SetBackgroundSizeAction extends AbstractAction
 		{
 			scheme.width = f.newsize.width;
 			scheme.height = f.newsize.height;
-			graph.setGraphChanged(true);
+			aContext.getDispatcher().notify(new SchemeElementsEvent(this, graph, SchemeElementsEvent.SCHEME_CHANGED_EVENT));
 			graph.setActualSize(f.newsize);
 			graph.update();
 		}

@@ -5,6 +5,7 @@ import java.util.*;
 import javax.swing.JOptionPane;
 
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
+import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.General.Scheme.*;
 import com.syrus.AMFICOM.Client.Resource.*;
@@ -84,7 +85,7 @@ public class InsertToCatalogCommand extends VoidCommand
 		{
 			if (save(dataSource, elements_to_save,links_to_save, cable_links_to_save, paths_to_save))
 			{
-				graph.setGraphChanged(true);
+				aContext.getDispatcher().notify(new SchemeElementsEvent(this, graph, SchemeElementsEvent.SCHEME_CHANGED_EVENT));
 //				if (ugo_panel != null)
 //					new SchemeSaveCommand(aContext, panel, ugo_panel).execute();
 			}

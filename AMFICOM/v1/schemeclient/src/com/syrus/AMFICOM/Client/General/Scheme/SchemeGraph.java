@@ -24,8 +24,6 @@ public class SchemeGraph extends GPGraph
 	public Dimension actualSize = Constants.A4;
 	Dispatcher dispatcher;
 	ApplicationContext aContext;
-//	UgoPanel panel;
-//	public SchemePath currentPath;
 	public String mode = Constants.LINK_MODE;
 
 	protected boolean show_grid_at_actual_size = false;
@@ -52,7 +50,7 @@ public class SchemeGraph extends GPGraph
 	{
 		super(model, view);
 		this.aContext = aContext;
-		graphResource = new SchemeGraphResource(this, aContext);
+		graphResource = new SchemeGraphResource(this);
 
 		setMarqueeHandler(new ShemeMarqueeHandler());
 		init_module();

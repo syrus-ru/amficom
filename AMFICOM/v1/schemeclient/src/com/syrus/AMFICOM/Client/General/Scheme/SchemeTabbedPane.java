@@ -1,12 +1,12 @@
 package com.syrus.AMFICOM.Client.General.Scheme;
 
-import java.util.Map;
-
+import java.util.*;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
+import com.syrus.AMFICOM.Client.General.Command.Scheme.SchemeSaveCommand;
+import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.Resource.Scheme.*;
 
 public class SchemeTabbedPane extends ElementsTabbedPane
@@ -28,7 +28,7 @@ public class SchemeTabbedPane extends ElementsTabbedPane
 					{
 						public void actionPerformed(ActionEvent ae)
 						{
-							tabs.removeTabAt(tabs.getSelectedIndex());
+							removePanel(getPanel());
 						}
 					});
 					close.setText("Закрыть \"" + tabs.getTitleAt(tabs.getSelectedIndex()) + "\"");
@@ -41,45 +41,161 @@ public class SchemeTabbedPane extends ElementsTabbedPane
 		add(tabs, BorderLayout.CENTER);
 	}
 
+	public UgoPanel[] getAllPanels()
+	{
+		Object[] comp = tabs.getComponents();
+		UgoPanel[] p = new UgoPanel[comp.length];
+		for (int i = 0; i < p.length; i++)
+			p[i] = (UgoPanel)comp[i];
+		return p;
+	}
+
 	public UgoPanel getPanel()
 	{
 		return (UgoPanel)tabs.getComponentAt(tabs.getSelectedIndex());
 	}
 
-	public void addSchemeTab(SchemePanel panel)
+	public void addPanel(UgoPanel panel)
 	{
 		Scheme scheme = panel.getGraph().getScheme();
 		SchemeElement se = panel.getGraph().getSchemeElement();
-		String name;
-		name = se == null ? "" : se.getName();
-		name = scheme == null ? name : scheme.getName();
-		tabs.addTab(name, panel);
+		tabs.addTab(
+				"",
+				new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/close_unchanged.gif")),
+				panel);
 		tabs.setSelectedComponent(panel);
 	}
 
-	protected void openScheme(Scheme sch)
+	public void updateTitle(String title)
 	{
-		SchemePanel panel = new SchemePanel(aContext);
-		panel.openScheme(sch);
-		addSchemeTab(panel);
+		tabs.setTitleAt(tabs.getSelectedIndex(), title);
 	}
 
-	protected boolean removeScheme(Scheme sch)
+	public boolean removePanel(UgoPanel panel)
 	{
-		SchemeGraph graph = getPanel().getGraph();
-		if (graph.getScheme() != null && sch != null && sch.getId().equals(graph.getScheme().getId()))
+		if (super.removePanel(panel))
 		{
-			GraphActions.clearGraph(graph);
+			tabs.remove(panel);
 			return true;
 		}
 		return false;
 	}
 
+	public void removeAllPanels()
+	{
+		Object[] comp = tabs.getComponents();
+		for (int i = 0; i < comp.length; i++)
+			remove((UgoPanel)comp[i]);
+	}
 
-	protected void openSchemeElement(SchemeElement se)
+	public void setGraphChanged(SchemeGraph graph, boolean b)
+	{
+		for (int i = 0; i < tabs.getTabCount(); i++)
+		{
+			UgoPanel panel = (UgoPanel)tabs.getComponentAt(i);
+			if (graph.equals(panel.getGraph()))
+			{
+				graph.setGraphChanged(b);
+				if (b)
+					tabs.setIconAt(i,
+							new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/close_changed.gif")));
+				else
+					tabs.setIconAt(i,
+							new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/close_unchanged.gif")));
+
+				return;
+			}
+		}
+	}
+
+
+	public void setGraphChanged(boolean b)
+	{
+		if (getPanel().getGraph().isGraphChanged() == b)
+			return;
+
+		super.setGraphChanged(b);
+		if (b)
+			tabs.setIconAt(tabs.getSelectedIndex(),
+					new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/close_changed.gif")));
+		else
+			tabs.setIconAt(tabs.getSelectedIndex(),
+					new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/close_unchanged.gif")));
+	}
+
+	public void openScheme(Scheme sch)
+	{
+		UgoPanel[] p = getAllPanels();
+		for (int i = 0; i < p.length; i++)
+		{
+			if (sch.equals(p[i].getGraph().getScheme()))
+			{
+				tabs.setSelectedComponent(p[i]);
+				if (p[i] instanceof SchemePanel && p[i].getGraph().isGraphChanged())
+				{
+					int ret = JOptionPane.showConfirmDialog(
+							Environment.getActiveWindow(),
+							"Схема " + sch.getName() + " уже открыта. Открыть сохраненную ранее версию?",
+							"Подтверждение",
+							JOptionPane.YES_NO_CANCEL_OPTION);
+					if (ret == JOptionPane.YES_OPTION)
+					{
+						GraphActions.clearGraph(p[i].getGraph());
+						((SchemePanel)p[i]).openScheme(sch);
+						setGraphChanged(false);
+					}
+				}
+				return;
+			}
+		}
+
+		SchemePanel panel = new SchemePanel(aContext);
+		addPanel(panel);
+		panel.openScheme(sch);
+		updateTitle(sch.getName());
+		setGraphChanged(false);
+	}
+
+	public void openSchemeElement(SchemeElement se)
+	{
+		UgoPanel[] p = getAllPanels();
+		for (int i = 0; i < p.length; i++)
+		{
+			if (se.equals(p[i].getGraph().getSchemeElement()))
+			{
+				tabs.setSelectedComponent(p[i]);
+				if (p[i] instanceof ElementsPanel && p[i].getGraph().isGraphChanged())
+				{
+					int ret = JOptionPane.showConfirmDialog(
+							Environment.getActiveWindow(),
+							"Элемент " + se.getName() + " уже открыт. Открыть сохраненную ранее версию?",
+							"Подтверждение",
+							JOptionPane.YES_NO_CANCEL_OPTION);
+					if (ret == JOptionPane.YES_OPTION)
+					{
+						GraphActions.clearGraph(p[i].getGraph());
+						((ElementsPanel) p[i]).openSchemeElement(se);
+						setGraphChanged(false);
+					}
+				}
+				return;
+			}
+		}
+		SchemePanel panel = new SchemePanel(aContext);
+		addPanel(panel);
+		panel.openSchemeElement(se);
+		updateTitle(se.getName());
+		setGraphChanged(false);
+	}
+
+	public boolean removeScheme(Scheme sch)
 	{
 		SchemeGraph graph = getPanel().getGraph();
-		graph.setScheme(null);
-		super.openSchemeElement(se);
+		if (graph.getScheme() != null && sch != null && sch.getId().equals(graph.getScheme().getId()))
+		{
+			removePanel(getPanel());
+			return true;
+		}
+		return false;
 	}
 }

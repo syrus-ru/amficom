@@ -141,7 +141,7 @@ public class UgoPanel extends JPanel
 			{
 				String id = (String)see.getSource();
 				String text = (String)see.obj;
-				DeviceGroup[] groups = GraphActions.findTopLevelGroups(graph, graph.getSelectionCells());
+				DeviceGroup[] groups = GraphActions.findTopLevelGroups(getGraph(), getGraph().getSelectionCells());
 				if (groups.length == 1)
 				{
 					DeviceGroup cell = (DeviceGroup)groups[0];
@@ -154,13 +154,13 @@ public class UgoPanel extends JPanel
 								Object child = en.nextElement();
 								if (child instanceof DeviceCell)
 								{
-									GraphActions.setText(graph, ((DeviceCell)child), text);
+									GraphActions.setText(getGraph(), ((DeviceCell)child), text);
 									break;
 								}
 							}
 						}
 						else
-							GraphActions.setText(graph, cell, text);
+							GraphActions.setText(getGraph(), cell, text);
 					}
 				}
 			}
@@ -168,7 +168,7 @@ public class UgoPanel extends JPanel
 			{
 				String id = (String)see.getSource();
 				ImageIcon icon = (ImageIcon)see.obj;
-				DeviceGroup[] groups = GraphActions.findTopLevelGroups(graph, graph.getSelectionCells());
+				DeviceGroup[] groups = GraphActions.findTopLevelGroups(getGraph(), getGraph().getSelectionCells());
 				if (groups.length == 1)
 				{
 					DeviceGroup cell = (DeviceGroup)groups[0];
@@ -181,40 +181,40 @@ public class UgoPanel extends JPanel
 								Object child = en.nextElement();
 								if (child instanceof DeviceCell)
 								{
-									GraphActions.setImage(graph, ((DeviceCell)child), icon);
+									GraphActions.setImage(getGraph(), ((DeviceCell)child), icon);
 									break;
 								}
 							}
 						}
 						else
-							GraphActions.setImage(graph, cell, icon);
+							GraphActions.setImage(getGraph(), cell, icon);
 					}
 				}
 			}
 			if (see.UGO_CREATE)
 			{
 				ArrayList v = (ArrayList)see.obj;
-				new CreateUgoAction(graph).create(v, aContext.getDataSourceInterface());
+				new CreateUgoAction(getGraph()).create(v, aContext.getDataSourceInterface());
 			}
 			if (see.SCHEME_UGO_CREATE)
 			{
 				ArrayList v = (ArrayList)see.obj;
-				new CreateSchemeUgoAction(graph).create(v);
+				new CreateSchemeUgoAction(getGraph()).create(v);
 			}
 			if (see.CABLE_PORT_NAME_UPDATE)
 			{
 				String id = (String)see.getSource();
 				String text = (String)see.obj;
 
-				Object[] cells = graph.getAll();
+				Object[] cells = getGraph().getAll();
 				for (int i = 0; i < cells.length; i++)
 				{
 					if (cells[i] instanceof CablePortCell &&
 							((CablePortCell)cells[i]).getSchemeCablePortId().equals(id))
-						GraphActions.setText(graph, cells[i], text);
+						GraphActions.setText(getGraph(), cells[i], text);
 					else if (cells[i] instanceof BlockPortCell &&
 							((BlockPortCell)cells[i]).getSchemeCablePortId().equals(id))
-						GraphActions.setText(graph, cells[i], text);
+						GraphActions.setText(getGraph(), cells[i], text);
 				}
 			}
 			if (see.PORT_NAME_UPDATE)
@@ -222,15 +222,15 @@ public class UgoPanel extends JPanel
 				String id = (String)see.getSource();
 				String text = (String)see.obj;
 
-				Object[] cells = graph.getAll();
+				Object[] cells = getGraph().getAll();
 				for (int i = 0; i < cells.length; i++)
 				{
 					if (cells[i] instanceof PortCell &&
 							((PortCell)cells[i]).getSchemePortId().equals(id))
-						GraphActions.setText(graph, cells[i], text);
+						GraphActions.setText(getGraph(), cells[i], text);
 					else if (cells[i] instanceof BlockPortCell &&
 						((BlockPortCell)cells[i]).getSchemePortId().equals(id))
-						GraphActions.setText(graph, cells[i], text);
+						GraphActions.setText(getGraph(), cells[i], text);
 				}
 			}
 			if (see.CABLE_LINK_NAME_UPDATE)
@@ -238,13 +238,13 @@ public class UgoPanel extends JPanel
 				String id = (String)see.getSource();
 				String text = (String)see.obj;
 
-				Object[] cells = graph.getAll();
+				Object[] cells = getGraph().getAll();
 				for (int i = 0; i < cells.length; i++)
 				{
 					if (cells[i] instanceof DefaultCableLink &&
 							((DefaultCableLink)cells[i]).getSchemeCableLinkId().equals(id))
 					{
-						GraphActions.setText(graph, cells[i], text);
+						GraphActions.setText(getGraph(), cells[i], text);
 						break;
 					}
 				}
@@ -254,13 +254,13 @@ public class UgoPanel extends JPanel
 				String id = (String)see.getSource();
 				String text = (String)see.obj;
 
-				Object[] cells = graph.getAll();
+				Object[] cells = getGraph().getAll();
 				for (int i = 0; i < cells.length; i++)
 				{
 					if (cells[i] instanceof DefaultLink &&
 							((DefaultLink)cells[i]).getSchemeLinkId().equals(id))
 					{
-						GraphActions.setText(graph, cells[i], text);
+						GraphActions.setText(getGraph(), cells[i], text);
 						break;
 					}
 				}
@@ -268,7 +268,7 @@ public class UgoPanel extends JPanel
 			if (see.PORT_TYPE_UPDATE)
 			{
 				SchemePort[] ports = (SchemePort[])see.getSource();
-				Object[] cells = graph.getAll();
+				Object[] cells = getGraph().getAll();
 
 				ArrayList connected_ports = new ArrayList();
 				ArrayList non_connected_ports = new ArrayList();
@@ -289,13 +289,13 @@ public class UgoPanel extends JPanel
 				if (((PortType)see.obj).p_class.equals("splice"))
 					color = Color.black;
 
-				GraphActions.setObjectsBackColor(graph, connected_ports.toArray(new PortCell[connected_ports.size()]), color);
-				GraphActions.setObjectsBackColor(graph, non_connected_ports.toArray(new PortCell[non_connected_ports.size()]), Color.yellow);
+				GraphActions.setObjectsBackColor(getGraph(), connected_ports.toArray(new PortCell[connected_ports.size()]), color);
+				GraphActions.setObjectsBackColor(getGraph(), non_connected_ports.toArray(new PortCell[non_connected_ports.size()]), Color.yellow);
 			}
 			if (see.CABLE_PORT_TYPE_UPDATE)
 			{
 				SchemeCablePort[] ports = (SchemeCablePort[])see.getSource();
-				Object[] cells = graph.getAll();
+				Object[] cells = getGraph().getAll();
 
 				ArrayList connected_ports = new ArrayList();
 				ArrayList non_connected_ports = new ArrayList();
@@ -312,15 +312,15 @@ public class UgoPanel extends JPanel
 							connected_ports.add(cells[i]);
 					}
 				}
-				GraphActions.setObjectsBackColor(graph, connected_ports.toArray(new CablePortCell[connected_ports.size()]), Color.white);
-				GraphActions.setObjectsBackColor(graph, non_connected_ports.toArray(new CablePortCell[non_connected_ports.size()]), Color.yellow);
+				GraphActions.setObjectsBackColor(getGraph(), connected_ports.toArray(new CablePortCell[connected_ports.size()]), Color.white);
+				GraphActions.setObjectsBackColor(getGraph(), non_connected_ports.toArray(new CablePortCell[non_connected_ports.size()]), Color.yellow);
 			}
 
 			if (see.OBJECT_TYPE_UPDATE)
 			{
 				ObjectResource res = (ObjectResource)ae.getSource();
 
-				Object[] cells = graph.getSelectionCells();
+				Object[] cells = getGraph().getSelectionCells();
 				ArrayList new_cells = new ArrayList(cells.length);
 				for (int i = 0; i < cells.length; i++)
 					if (!(cells[i] instanceof DefaultEdge) || cells[i] instanceof DefaultLink || cells[i] instanceof DefaultCableLink)
@@ -368,8 +368,8 @@ public class UgoPanel extends JPanel
 						else
 							connected_ports.add(ncells[i]);
 
-						GraphActions.setObjectsBackColor(graph, connected_ports.toArray(new PortCell[connected_ports.size()]), color);
-						GraphActions.setObjectsBackColor(graph, non_connected_ports.toArray(new PortCell[non_connected_ports.size()]), Color.yellow);
+						GraphActions.setObjectsBackColor(getGraph(), connected_ports.toArray(new PortCell[connected_ports.size()]), color);
+						GraphActions.setObjectsBackColor(getGraph(), non_connected_ports.toArray(new PortCell[non_connected_ports.size()]), Color.yellow);
 						for (int i = 0; i < ncells.length; i++)
 							((PortCell)ncells[i]).getSchemePort().port_type_id = res.getId();
 					}
@@ -381,7 +381,7 @@ public class UgoPanel extends JPanel
 						if (ncells[i] instanceof CablePortCell)
 							counter++;
 					if (counter == ncells.length)
-						GraphActions.setObjectsBackColor(graph, ncells, Color.white);
+						GraphActions.setObjectsBackColor(getGraph(), ncells, Color.white);
 					for (int i = 0; i < ncells.length; i++)
 						((CablePortCell)ncells[i]).getSchemeCablePort().cable_port_type_id = res.getId();
 				}
@@ -415,10 +415,10 @@ public class UgoPanel extends JPanel
 
 	public Scheme updateScheme()
 	{
-		Scheme scheme = graph.getScheme();
+		Scheme scheme = getGraph().getScheme();
 		if (scheme != null)
 		{
-			scheme.serializable_ugo = graph.getArchiveableState(graph.getRoots());
+			scheme.serializable_ugo = getGraph().getArchiveableState(getGraph().getRoots());
 			boolean res = scheme.pack();
 			if (!res)
 				return null;
@@ -426,11 +426,22 @@ public class UgoPanel extends JPanel
 		return scheme;
 	}
 
+	public SchemeElement updateSchemeElement()
+	{
+		SchemeElement scheme_element = getGraph().getSchemeElement();
+		if (scheme_element != null)
+		{
+			scheme_element.serializable_cell = getGraph().getArchiveableState(getGraph().getRoots());
+			scheme_element.pack();
+		}
+		return scheme_element;
+	}
+
 	protected void setProtoCell (ProtoElement proto, Point p)
 	{
 		if (!insert_ugo)
 			return;
-		GraphActions.clearGraph(graph);
+		GraphActions.clearGraph(getGraph());
 		repaint();
 	}
 
@@ -455,11 +466,11 @@ public class UgoPanel extends JPanel
 	public Map insertCell (Serializable serializable_cell, boolean remove_old, Point p)
 	{
 		if (remove_old)
-			GraphActions.clearGraph(graph);
+			GraphActions.clearGraph(getGraph());
 
 		if (serializable_cell != null && serializable_cell instanceof List)
 		{
-			Map clones = graph.copyFromArchivedState(serializable_cell, p);
+			Map clones = getGraph().copyFromArchivedState(serializable_cell, p);
 
 			List v = (List) serializable_cell;
 			Object[] cells = (Object[]) v.get(0);
@@ -480,7 +491,7 @@ public class UgoPanel extends JPanel
 		return null;
 	}
 
-	public void assignClonedIds(Object[] cells)
+	public static void assignClonedIds(Object[] cells)
 	{
 		for (int i = 0; i < cells.length; i++)
 		{
@@ -581,28 +592,28 @@ public class UgoPanel extends JPanel
 		if (pi > 0)
 			return Printable.NO_SUCH_PAGE;
 
-		graph.printAll(g);
+		getGraph().printAll(g);
 		return Printable.PAGE_EXISTS;
 	}
 
 	public void setSelectionAttributes(Map map) {
-		Object[] cells = DefaultGraphModel.getDescendants(graph.getModel(),
-				graph.getSelectionCells()).toArray();
+		Object[] cells = DefaultGraphModel.getDescendants(getGraph().getModel(),
+				getGraph().getSelectionCells()).toArray();
 		map = GraphConstants.cloneMap(map);
 		map.remove(GraphConstants.BOUNDS);
 		map.remove(GraphConstants.POINTS);
 		if (cells != null && cells.length > 0 && !map.isEmpty()) {
-			CellView[] views = graph.getGraphLayoutCache().getMapping(cells);
+			CellView[] views = getGraph().getGraphLayoutCache().getMapping(cells);
 			Map viewMap = new HashMap();
 			for (int i = 0; i < views.length; i++)
 				viewMap.put(views[i], GraphConstants.cloneMap(map));
-			graph.getGraphLayoutCache().edit(viewMap, null, null, null);
+			getGraph().getGraphLayoutCache().edit(viewMap, null, null, null);
 		}
 	}
 
 	public void setGraphSize (Dimension d)
 	{
-		graph.setPreferredSize(d);
+		getGraph().setPreferredSize(d);
 	}
 
 //******************************************************************************
@@ -620,7 +631,7 @@ public class UgoPanel extends JPanel
 
 		public void actionPerformed(ActionEvent e)
 		{
-			JComponent source = graph;
+			JComponent source = getGraph();
 			e = new ActionEvent(source, e.getID(), e.getActionCommand(), e.getModifiers());
 			action.actionPerformed(e);
 		}
@@ -654,14 +665,14 @@ public class UgoPanel extends JPanel
 		{
 			Map buttons = new HashMap();
 
-			if (graph.getMarqueeHandler() instanceof SchemeGraph.ShemeMarqueeHandler)
+			if (getGraph().getMarqueeHandler() instanceof SchemeGraph.ShemeMarqueeHandler)
 			{
-				SchemeGraph.ShemeMarqueeHandler mh = (SchemeGraph.ShemeMarqueeHandler) graph.getMarqueeHandler();
+				SchemeGraph.ShemeMarqueeHandler mh = (SchemeGraph.ShemeMarqueeHandler) getGraph().getMarqueeHandler();
 
 				buttons.put(Constants.marqueeTool,
 										createToolButton(mh.s, btn_size, null, null,
 										new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/pointer.gif")),
-										new MarqeeAction(graph), true));
+										new MarqeeAction(getGraph()), true));
 				ButtonGroup group = new ButtonGroup();
 				for (Iterator it = buttons.values().iterator(); it.hasNext();)
 					group.add((AbstractButton)it.next());

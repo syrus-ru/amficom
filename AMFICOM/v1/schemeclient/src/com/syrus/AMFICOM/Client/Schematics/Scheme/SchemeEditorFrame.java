@@ -16,12 +16,14 @@ public class SchemeEditorFrame extends SchemeViewerFrame
 
 	protected void closeFrame()
 	{
-		pane.getPanel().getGraph().setScheme(null);
+//		pane.getPanel().getGraph().setScheme(null);
 		super.closeFrame();
 	}
 
 	public void doDefaultCloseAction()
 	{
+		pane.removeAllPanels();
+		/*
 		SchemeGraph graph = pane.getPanel().getGraph();
 		if (graph.getScheme() !=  null && graph.isGraphChanged())
 		{
@@ -39,6 +41,6 @@ public class SchemeEditorFrame extends SchemeViewerFrame
 				return;
 		}
 		super.doDefaultCloseAction();
+	*/
 	}
-
 }

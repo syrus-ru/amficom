@@ -88,7 +88,6 @@ public class ComponentSaveCommand extends VoidCommand
 					SaveComponentDialog frame = new SaveComponentDialog(aContext);
 					frame.init(proto, aContext.getDataSourceInterface());
 
-					Pool.remove("serialized", "serialized");
 					//DirectoryToFile.writeAll();
 				}
 				else if (groups.length > 1)

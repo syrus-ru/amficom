@@ -26,8 +26,8 @@ public class ElementsPanel extends UgoPanel
 	{
 		public void undoableEditHappened(UndoableEditEvent e) {
 			super.undoableEditHappened(e);
-			((SchemeGraph.ShemeMarqueeHandler)graph.getMarqueeHandler()).updateHistoryButtons(this);
-			graph.setGraphChanged(true);
+			((SchemeGraph.ShemeMarqueeHandler)getGraph().getMarqueeHandler()).updateHistoryButtons(this);
+			aContext.getDispatcher().notify(new SchemeElementsEvent(this, graph, SchemeElementsEvent.SCHEME_CHANGED_EVENT));
 		}
 	};
 
@@ -129,47 +129,47 @@ public class ElementsPanel extends UgoPanel
 	{
 		if (ae.getActionCommand().equals(CatalogNavigateEvent.type))
 		{
-			if (graph.skip_notify)
+			if (SchemeGraph.skip_notify)
 				return;
-			graph.skip_notify = true;
+			SchemeGraph.skip_notify = true;
 			CatalogNavigateEvent ev = (CatalogNavigateEvent)ae;
 			//graph.removeSelectionCells();
 			if (ev.CATALOG_EQUIPMENT_SELECTED)
 			{
 				Equipment eq = (Equipment)((Object[])ev.getSource())[0];
-				graph.setSelectionCell(SchemeActions.findEquipmentById(graph, eq.getId()));
+				getGraph().setSelectionCell(SchemeActions.findEquipmentById(getGraph(), eq.getId()));
 			}
 			else if (ev.CATALOG_ACCESS_PORT_SELECTED)
 			{
 				AccessPort aport = (AccessPort)((Object[])ev.getSource())[0];
-				graph.setSelectionCell(SchemeActions.findAccessPortById(graph, aport.getId()));
+				getGraph().setSelectionCell(SchemeActions.findAccessPortById(getGraph(), aport.getId()));
 			}
 			else if (ev.CATALOG_PORT_SELECTED)
 			{
 				Port port = (Port)((Object[])ev.getSource())[0];
-				graph.setSelectionCell(SchemeActions.findPortById(graph, port.getId()));
+				getGraph().setSelectionCell(SchemeActions.findPortById(getGraph(), port.getId()));
 			}
 			else if (ev.CATALOG_CABLE_PORT_SELECTED)
 			{
 				CablePort port = (CablePort)((Object[])ev.getSource())[0];
-				graph.setSelectionCell(SchemeActions.findCablePortById(graph, port.getId()));
+				getGraph().setSelectionCell(SchemeActions.findCablePortById(getGraph(), port.getId()));
 			}
 			else if (ev.CATALOG_LINK_SELECTED)
 			{
 				Link link = (Link)((Object[])ev.getSource())[0];
-				graph.setSelectionCell(SchemeActions.findLinkById(graph, link.getId()));
+				getGraph().setSelectionCell(SchemeActions.findLinkById(getGraph(), link.getId()));
 			}
 			else if (ev.CATALOG_CABLE_LINK_SELECTED)
 			{
 				CableLink link = (CableLink)((Object[])ev.getSource())[0];
-				graph.setSelectionCell(SchemeActions.findCableLinkById(graph, link.getId()));
+				getGraph().setSelectionCell(SchemeActions.findCableLinkById(getGraph(), link.getId()));
 			}
 			else if (ev.CATALOG_PATH_SELECTED)
 			{
 				TransmissionPath path = (TransmissionPath)((Object[])ev.getSource())[0];
-				graph.setSelectionCells(graph.getGraphResource().getPathElements(path));
+				getGraph().setSelectionCells(getGraph().getGraphResource().getPathElements(path));
 			}
-			graph.skip_notify = false;
+			SchemeGraph.skip_notify = false;
 		}
 		else if (ae.getActionCommand().equals(SchemeNavigateEvent.type))
 		{
@@ -179,49 +179,49 @@ public class ElementsPanel extends UgoPanel
 				SchemePath path = (SchemePath) ( (Object[]) ev.getSource())[0];
 				if (path != null)
 				{
-					graph.setSelectionCells(graph.getGraphResource().getPathElements(path));
+					getGraph().setSelectionCells(getGraph().getGraphResource().getPathElements(path));
 					getGraph().getGraphResource().currentPath = path;
 				}
 			}
-			if (graph.skip_notify)
+			if (SchemeGraph.skip_notify)
 				return;
 
-			graph.skip_notify = true;
+			SchemeGraph.skip_notify = true;
 			//graph.removeSelectionCells();
 
 			if (ev.SCHEME_ALL_DESELECTED)
 			{
-				graph.removeSelectionCells();
+				getGraph().removeSelectionCells();
 			}
 			else if (ev.SCHEME_ELEMENT_SELECTED)
 			{
 				SchemeElement element = (SchemeElement)((Object[])ev.getSource())[0];
-				graph.setSelectionCell(SchemeActions.findSchemeElementById(graph, element.getId()));
+				getGraph().setSelectionCell(SchemeActions.findSchemeElementById(getGraph(), element.getId()));
 			}
 			else if (ev.SCHEME_PROTO_ELEMENT_SELECTED)
 			{
 				ProtoElement proto = (ProtoElement)((Object[])ev.getSource())[0];
-				graph.setSelectionCell(SchemeActions.findProtoElementById(graph, proto.getId()));
+				getGraph().setSelectionCell(SchemeActions.findProtoElementById(getGraph(), proto.getId()));
 			}
 			else if (ev.SCHEME_PORT_SELECTED)
 			{
 				SchemePort port = (SchemePort)((Object[])ev.getSource())[0];
-				graph.setSelectionCell(SchemeActions.findSchemePortById(graph, port.getId()));
+				getGraph().setSelectionCell(SchemeActions.findSchemePortById(getGraph(), port.getId()));
 			}
 			else if (ev.SCHEME_CABLE_PORT_SELECTED)
 			{
 				SchemeCablePort port = (SchemeCablePort)((Object[])ev.getSource())[0];
-				graph.setSelectionCell(SchemeActions.findSchemeCablePortById(graph, port.getId()));
+				getGraph().setSelectionCell(SchemeActions.findSchemeCablePortById(getGraph(), port.getId()));
 			}
 			else if (ev.SCHEME_LINK_SELECTED)
 			{
 				SchemeLink link = (SchemeLink)((Object[])ev.getSource())[0];
-				graph.setSelectionCell(SchemeActions.findSchemeLinkById(graph, link.getId()));
+				getGraph().setSelectionCell(SchemeActions.findSchemeLinkById(getGraph(), link.getId()));
 			}
 			else if (ev.SCHEME_CABLE_LINK_SELECTED)
 			{
 				SchemeCableLink link = (SchemeCableLink)((Object[])ev.getSource())[0];
-				graph.setSelectionCell(SchemeActions.findSchemeCableLinkById(graph, link.getId()));
+				getGraph().setSelectionCell(SchemeActions.findSchemeCableLinkById(getGraph(), link.getId()));
 
 		/*		String sp = link.source_port_id;
 				SchemeElement se = ((SchemePanel)this).scheme.getSchemeElementByCablePort(sp);
@@ -232,7 +232,7 @@ public class ElementsPanel extends UgoPanel
 				SchemeElement tte = ((SchemePanel)this).scheme.getTopLevelNonSchemeElement(te);
 				tp = link.target_port_id;*/
 			}
-			graph.skip_notify = false;
+			SchemeGraph.skip_notify = false;
 		}
 		else if (ae.getActionCommand().equals(CreatePathEvent.typ))
 		{
@@ -260,24 +260,13 @@ public class ElementsPanel extends UgoPanel
 
 	public void openSchemeElement(SchemeElement se)
 	{
-		graph.setScheme(null);
-		graph.setSchemeElement(se);
+		getGraph().setScheme(null);
+		getGraph().setSchemeElement(se);
 		se.unpack();
-		Map clones = graph.copyFromArchivedState(se.serializable_cell, new java.awt.Point(0, 0));
-		graph.setGraphChanged(false);
-		graph.selectionNotify();
+		Map clones = getGraph().copyFromArchivedState(se.serializable_cell, new java.awt.Point(0, 0));
+//		getGraph().setGraphChanged(false);
+		getGraph().selectionNotify();
 		//assignClonedIds(clones);
-	}
-
-	public SchemeElement updateSchemeElement()
-	{
-		SchemeElement scheme_element = graph.getSchemeElement();
-		if (scheme_element != null)
-		{
-			scheme_element.serializable_cell = graph.getArchiveableState(graph.getRoots());
-			scheme_element.pack();
-		}
-		return scheme_element;
 	}
 
 	protected void setProtoCell(ProtoElement proto, Point p)
@@ -305,32 +294,32 @@ public class ElementsPanel extends UgoPanel
 		// Execute Remove Action on Delete Key Press
 		if (e.getKeyCode() == KeyEvent.VK_DELETE)
 		{
-			if (!graph.isSelectionEmpty())
-				new DeleteAction(this, aContext.getDataSourceInterface()).actionPerformed(new ActionEvent(this, 0, ""));
+			if (!getGraph().isSelectionEmpty())
+				new DeleteAction(this, aContext).actionPerformed(new ActionEvent(this, 0, ""));
 		}
 		if (e.getKeyCode() == KeyEvent.VK_SPACE)
 		{
-			GraphActions.alignToGrid(graph, graph.getSelectionCells());
+			GraphActions.alignToGrid(getGraph(), getGraph().getSelectionCells());
 		}
 		// CTRL + ...
 		if (e.getModifiers() == KeyEvent.CTRL_MASK)
 		{
 			if (e.getKeyCode() == KeyEvent.VK_Z)
 			{
-				if (undoManager.canUndo(graph.getGraphLayoutCache()))
-					new UndoAction(graph, undoManager).actionPerformed(new ActionEvent(this, 0, ""));
+				if (undoManager.canUndo(getGraph().getGraphLayoutCache()))
+					new UndoAction(getGraph(), undoManager).actionPerformed(new ActionEvent(this, 0, ""));
 			}
 			if (e.getKeyCode() == KeyEvent.VK_SUBTRACT)
 			{
-				new ZoomOutAction(graph).actionPerformed(new ActionEvent(this, 0, ""));
+				new ZoomOutAction(getGraph()).actionPerformed(new ActionEvent(this, 0, ""));
 			}
 			if (e.getKeyCode() == KeyEvent.VK_ADD)
 			{
-				new ZoomInAction(graph).actionPerformed(new ActionEvent(this, 0, ""));
+				new ZoomInAction(getGraph()).actionPerformed(new ActionEvent(this, 0, ""));
 			}
 			if (e.getKeyCode() == KeyEvent.VK_MULTIPLY)
 			{
-				new ZoomActualAction(graph).actionPerformed(new ActionEvent(this, 0, ""));
+				new ZoomActualAction(getGraph()).actionPerformed(new ActionEvent(this, 0, ""));
 			}
 		}
 		// CTRL + SHIFT + ...
@@ -338,8 +327,8 @@ public class ElementsPanel extends UgoPanel
 		{
 			if (e.getKeyCode() == KeyEvent.VK_Z)
 			{
-				if (undoManager.canRedo(graph.getGraphLayoutCache()))
-					new RedoAction(graph, undoManager).actionPerformed(new ActionEvent(this, 0, ""));
+				if (undoManager.canRedo(getGraph().getGraphLayoutCache()))
+					new RedoAction(getGraph(), undoManager).actionPerformed(new ActionEvent(this, 0, ""));
 			}
 		}
 		// CTRL + ALT + ...
@@ -347,11 +336,11 @@ public class ElementsPanel extends UgoPanel
 		{
 			if (e.getKeyCode() == KeyEvent.VK_D)
 			{
-				graph.is_debug = !graph.is_debug;
+				getGraph().is_debug = !getGraph().is_debug;
 			}
 			if (e.getKeyCode() == KeyEvent.VK_ENTER)
 			{
-				Object[] cells = graph.getSelectionCells();
+				Object[] cells = getGraph().getSelectionCells();
 				if (cells.length == 1)
 				{
 					if (cells[0] instanceof CablePortCell)
@@ -379,7 +368,7 @@ public class ElementsPanel extends UgoPanel
 								int ret = JOptionPane.showConfirmDialog(null, "Заменить старый линк новым?");
 								if (ret == JOptionPane.YES_OPTION)
 								{
-									Scheme scheme = graph.getScheme();
+									Scheme scheme = getGraph().getScheme();
 									for (Iterator it = scheme.links.iterator(); it.hasNext();)
 									{
 										SchemeLink sl = (SchemeLink)it.next();
@@ -427,7 +416,7 @@ public class ElementsPanel extends UgoPanel
 								int ret = JOptionPane.showConfirmDialog(null, "Заменить старый кабельный линк новым?");
 								if (ret == JOptionPane.YES_OPTION)
 								{
-									Scheme scheme = graph.getScheme();
+									Scheme scheme = getGraph().getScheme();
 									for (Iterator it = scheme.cablelinks.iterator(); it.hasNext();)
 									{
 										SchemeCableLink sl = (SchemeCableLink)it.next();
@@ -475,7 +464,7 @@ public class ElementsPanel extends UgoPanel
 								int ret = JOptionPane.showConfirmDialog(null, "Заменить старый схемный элемент новым?");
 								if (ret == JOptionPane.YES_OPTION)
 								{
-									Scheme scheme = graph.getScheme();
+									Scheme scheme = getGraph().getScheme();
 									for (Iterator it = scheme.elements.iterator(); it.hasNext();)
 									{
 										SchemeElement se = (SchemeElement)it.next();
@@ -516,7 +505,7 @@ public class ElementsPanel extends UgoPanel
 			}
 			if (e.getKeyCode() == KeyEvent.VK_L)
 			{
-				Object[] cells = graph.getSelectionCells();
+				Object[] cells = getGraph().getSelectionCells();
 				if (cells.length == 1)
 				{
 					if (cells[0] instanceof DeviceGroup)
@@ -578,14 +567,14 @@ class ToolBarPanel extends UgoPanel.ToolBarPanel
 	{
 		Map buttons = new HashMap();
 
-		if (graph.getMarqueeHandler() instanceof SchemeGraph.ShemeMarqueeHandler)
+		if (getGraph().getMarqueeHandler() instanceof SchemeGraph.ShemeMarqueeHandler)
 		{
-			SchemeGraph.ShemeMarqueeHandler mh = (SchemeGraph.ShemeMarqueeHandler) graph.getMarqueeHandler();
+			SchemeGraph.ShemeMarqueeHandler mh = (SchemeGraph.ShemeMarqueeHandler) getGraph().getMarqueeHandler();
 
 			buttons.put(Constants.marqueeTool,
 									createToolButton(mh.s, btn_size, null, null,
 									new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/pointer.gif")),
-									new MarqeeAction(graph), true));
+									new MarqeeAction(getGraph()), true));
 			buttons.put("s_cell", mh.s_cell);
 			buttons.put(Constants.deviceTool,
 									createToolButton(mh.dev, btn_size, null, "устройство",
@@ -632,53 +621,53 @@ class ToolBarPanel extends UgoPanel.ToolBarPanel
 			buttons.put(Constants.groupKey,
 									createToolButton(mh.gr, btn_size, null, "создать компонент",
 									new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/group.gif")),
-									new GroupAction(graph), false));
+									new GroupAction(getGraph()), false));
 			buttons.put(Constants.ungroupKey,
 									createToolButton(mh.ugr, btn_size, null, "разобрать",
 									new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/ungroup.gif")),
-									new UngroupAction(graph), false));
+									new UngroupAction(getGraph()), false));
 			buttons.put(Constants.undoKey,
 									createToolButton(mh.undo, btn_size, null, "отменить",
 									new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/undo.gif")),
-									new UndoAction(graph, undoManager), false));
+									new UndoAction(getGraph(), undoManager), false));
 			buttons.put(Constants.redoKey,
 									createToolButton(mh.redo, btn_size, null, "вернуть",
 									new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/redo.gif")),
-									new RedoAction(graph, undoManager), false));
+									new RedoAction(getGraph(), undoManager), false));
 			buttons.put(Constants.zoomInKey,
 									createToolButton(mh.zi, btn_size, null, "увеличить",
 									new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/zoom_in.gif")),
-									new ZoomInAction(graph), true));
-									//new SaveLibraryAction(graph, libPanel), true));
+									new ZoomInAction(getGraph()), true));
+									//new SaveLibraryAction(getGraph(), libPanel), true));
 			buttons.put(Constants.zoomOutKey,
 									createToolButton(mh.zo, btn_size, null, "уменьшить",
 									new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/zoom_out.gif")),
-									new ZoomOutAction(graph), true));
-									//new OpenLibraryAction(graph, libPanel), true));
+									new ZoomOutAction(getGraph()), true));
+									//new OpenLibraryAction(getGraph(), libPanel), true));
 			buttons.put(Constants.zoomActualKey,
 									createToolButton(mh.za, btn_size, null, "фактический размер",
 									new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/zoom_actual.gif")),
-									new ZoomActualAction(graph), true));
+									new ZoomActualAction(getGraph()), true));
 			buttons.put(Constants.deleteKey,
 									createToolButton(mh.del, btn_size, null, "удалить",
 									new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/delete.gif")),
-									new DeleteAction(ElementsPanel.this, aContext.getDataSourceInterface()), false));
+									new DeleteAction(ElementsPanel.this, aContext), false));
 			buttons.put(Constants.hierarchyUpKey,
 									createToolButton(mh.hup, btn_size, null, "вверх",
 									new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/hand.gif")),
-									new HierarchyUpAction (graph), true));
+									new HierarchyUpAction (getGraph()), true));
 //			buttons.put(Constants.insertIntoLibraryKey,
 //									createToolButton(mh.addlib, btn_size, null, "сохранить компонент",
 //									new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/library.gif")),
-//									new InsertIntoLibraryAction (graph), false));
+//									new InsertIntoLibraryAction (getGraph()), false));
 			buttons.put(Constants.createTopLevelElementKey,
 									createToolButton(mh.ugo, btn_size, null, "создать УГО",
 									new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/component_ugo.gif")),
-									new CreateTopLevelElementAction (graph), false));
+									new CreateTopLevelElementAction (getGraph()), false));
 			buttons.put(Constants.blockPortKey,
 									createToolButton(mh.bp, btn_size, null, "связной порт",
 									new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/hierarchy_port.gif")),
-									new CreateBlockPortAction (graph), false));
+									new CreateBlockPortAction (getGraph()), false));
 
 
 			ButtonGroup group = new ButtonGroup();

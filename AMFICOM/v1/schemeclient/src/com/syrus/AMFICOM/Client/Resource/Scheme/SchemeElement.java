@@ -220,9 +220,9 @@ public class SchemeElement extends StubResource
 			for (Iterator it = element_ids.iterator(); it.hasNext();)
 			{
 				SchemeElement inner_se = (SchemeElement)Pool.get(SchemeElement.typ, (String)it.next());
-				v.add(inner_se);
 				for (Iterator it2 = inner_se.getAllChilds().iterator(); it2.hasNext(); )
 					v.add(it2.next());
+				v.add(inner_se);
 			}
 			return v;
 		}

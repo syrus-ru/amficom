@@ -34,7 +34,7 @@ public class PrimarySchemeEditorFrame extends //SchemeViewerFrame
 //			}
 			if (see.SCHEME_CHANGED)
 			{
-				pane.getPanel().getGraph().setGraphChanged(true);
+				pane.setGraphChanged(true);
 			}
 		}
 		super.operationPerformed(ae);
@@ -42,12 +42,6 @@ public class PrimarySchemeEditorFrame extends //SchemeViewerFrame
 
 	protected void closeFrame()
 	{
-		UgoPanel panel = pane.getPanel();
-		panel.getGraph().setScheme(null);
-		if (panel instanceof SchemePanel)
-			setTitle(LangModelSchematics.getString("schemeMainTitle"));
-		else
-			setTitle(LangModelSchematics.getString("elementsUGOTitle"));
 	}
 
 	/*

@@ -310,13 +310,13 @@ public class Scheme extends StubResource implements Serializable
 		transferable.label = label;
 		transferable.description = description;
 
-		HashSet all_elements = new HashSet();
+		LinkedHashSet all_elements = new LinkedHashSet();
 		for (Iterator it = elements.iterator(); it.hasNext();)
 		{
 			SchemeElement se = (SchemeElement)it.next();
-			all_elements.add(se);
-			for (Iterator it2 = se.getChildElements().iterator(); it2.hasNext();)
+			for (Iterator it2 = se.getAllChilds().iterator(); it2.hasNext();)
 				all_elements.add(it2.next());
+			all_elements.add(se);
 		}
 
 		transferable.elements = new SchemeElement_Transferable[all_elements.size()];
@@ -413,25 +413,18 @@ public class Scheme extends StubResource implements Serializable
 
 	public synchronized boolean pack()
 	{
-//		System.out.println("packing schemecell...");
 		schemecell = pack(serializable_cell);
-//		System.out.println("packing done!");
-//		System.out.println("packing schemeugo...");
 		ugo = pack(serializable_ugo);
-//		System.out.println("packing done!");
 
 		int i = 0;
-//		System.out.println("trying to unpack...");
 		while (unpack(schemecell) == null)
 		{
 			System.out.println();
-//			System.out.println("fail! retry...");
 			schemecell = pack(serializable_cell);
 			i++;
 			if (i == 3)
 				return false;
 		}
-//		System.out.println("all success!");
 
 		i = 0;
 		while (unpack(ugo) == null)
@@ -503,14 +496,14 @@ public class Scheme extends StubResource implements Serializable
 			bais.close();
 			return serializable;
 		}
-		catch (Exception e)
-		{
-			System.err.println("Exception unpacking scheme: " + e.toString());
-			return null;
-		}
 		catch (StackOverflowError e)
 		{
 			System.err.println("Error unpacking scheme: " + e.toString());
+			return null;
+		}
+		catch (Exception e)
+		{
+			System.err.println("Exception unpacking scheme: " + e.toString());
 			return null;
 		}
 	}

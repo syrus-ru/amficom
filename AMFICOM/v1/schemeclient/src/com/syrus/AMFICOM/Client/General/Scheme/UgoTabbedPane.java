@@ -3,10 +3,10 @@ package com.syrus.AMFICOM.Client.General.Scheme;
 import java.util.Map;
 
 import java.awt.*;
-import javax.swing.JPanel;
+import javax.swing.*;
 
 import com.syrus.AMFICOM.Client.General.Event.*;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
+import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.Resource.Scheme.Scheme;
 import com.syrus.AMFICOM.Client.Resource.SchemeDirectory.ProtoElement;
 
@@ -37,6 +37,45 @@ public class UgoTabbedPane extends JPanel implements OperationListener
 	public UgoPanel getPanel()
 	{
 		return panel;
+	}
+
+	public boolean removePanel(UgoPanel panel)
+	{
+		if (panel.getGraph().isGraphChanged())
+		{
+			int res = JOptionPane.CANCEL_OPTION;
+			if (panel.getGraph().getScheme() != null)
+				res = JOptionPane.showConfirmDialog(
+						Environment.getActiveWindow(),
+						"Схема была изменена. Вы действительно хотите закрыть схему?",
+						"Подтверждение",
+						JOptionPane.YES_NO_CANCEL_OPTION);
+			else if (panel.getGraph().getSchemeElement() != null)
+				res = JOptionPane.showConfirmDialog(
+						Environment.getActiveWindow(),
+						"Компонент был изменен. Вы действительно хотите закрыть схему?",
+						"Подтверждение",
+						JOptionPane.YES_NO_CANCEL_OPTION);
+
+			if (res != JOptionPane.OK_OPTION)
+			{
+//				SchemeSaveCommand ssc = new SchemeSaveCommand(aContext, this, null);
+//				ssc.execute();
+//				if (ssc.ret_code == SchemeSaveCommand.CANCEL)
+					return false;
+			}
+		}
+		return true;
+	}
+
+	public void removeAllPanels()
+	{
+		remove(panel);
+	}
+
+	public void setGraphChanged(boolean b)
+	{
+		getPanel().getGraph().setGraphChanged(b);
 	}
 
 	public void operationPerformed(OperationEvent ae)
@@ -90,14 +129,14 @@ public class UgoTabbedPane extends JPanel implements OperationListener
 				{
 					Scheme scheme = (Scheme) obj;
 					removeScheme(scheme);
-					graph.setGraphChanged(false);
+//					graph.setGraphChanged(false);
 				}
 				graph.skip_notify = false;
 			}
 		}
 	}
 
-	protected void openScheme(Scheme sch)
+	public void openScheme(Scheme sch)
 	{
 		SchemeGraph graph = getPanel().getGraph();
 		graph.setScheme(sch);
@@ -108,7 +147,7 @@ public class UgoTabbedPane extends JPanel implements OperationListener
 		graph.selectionNotify();
 	}
 
-	protected boolean removeScheme(Scheme sch)
+	public boolean removeScheme(Scheme sch)
 	{
 		SchemeGraph graph = getPanel().getGraph();
 		if (graph.getScheme() != null && sch.getId().equals(graph.getScheme().getId()))

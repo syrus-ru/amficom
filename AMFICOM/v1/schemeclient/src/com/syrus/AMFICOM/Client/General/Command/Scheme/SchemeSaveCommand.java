@@ -9,7 +9,7 @@ import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.General.Scheme.*;
 import com.syrus.AMFICOM.Client.Resource.*;
-import com.syrus.AMFICOM.Client.Resource.Scheme.Scheme;
+import com.syrus.AMFICOM.Client.Resource.Scheme.*;
 
 public class SchemeSaveCommand extends VoidCommand
 {
@@ -41,6 +41,7 @@ public class SchemeSaveCommand extends VoidCommand
 			return;
 
 		SchemeGraph graph = schemeTab.getPanel().getGraph();
+		SchemeGraph ugograph = ugoTab.getPanel().getGraph();
 		Scheme scheme = graph.getScheme();
 
 		if (graph.getRoots().length == 0)
@@ -49,12 +50,48 @@ public class SchemeSaveCommand extends VoidCommand
 			return;
 		}
 
-		if (ugoTab != null && ugoTab.getPanel().getGraph().getRoots().length == 0)
+		if (graph.getSchemeElement() != null) // сохраняем компонент
+		{
+			SchemeElement se = graph.getSchemeElement();
+			schemeTab.getPanel().updateSchemeElement();
+			UgoPanel[] p = schemeTab.getAllPanels();
+			for (int i = 0; i < p.length; i++)
+			{
+				Scheme s = p[i].getGraph().getScheme();
+				if (s != null)
+				{
+					if (s.getSchemeElement(se.getId()) != null)
+					{
+						schemeTab.setGraphChanged(p[i].getGraph(), true);
+						JOptionPane.showMessageDialog(
+								Environment.getActiveWindow(),
+								"Элемент " + se.getName() + " успешно сохранен в схеме " + s.getName(),
+								"Сообщение",
+								JOptionPane.INFORMATION_MESSAGE);
+						break;
+					}
+				}
+			}
+			schemeTab.setGraphChanged(false);
+			return;
+		}
+
+		if (ugograph.getScheme().equals(graph.getScheme()))
+		{
+			if (ugograph.getRoots().length == 0)
+			{
+				int ret = JOptionPane.showConfirmDialog(Environment.getActiveWindow(), "Схему нельзя будет включить в другую схему,\nт.к. не создано условное графическое обозначение схемы.\nПродолжить сохранение?", "Предупреждение", JOptionPane.YES_NO_OPTION);
+				if (ret == JOptionPane.NO_OPTION || ret == JOptionPane.CANCEL_OPTION)
+					return;
+			}
+		}
+		else if (scheme.serializable_ugo == null)
 		{
 			int ret = JOptionPane.showConfirmDialog(Environment.getActiveWindow(), "Схему нельзя будет включить в другую схему,\nт.к. не создано условное графическое обозначение схемы.\nПродолжить сохранение?", "Предупреждение", JOptionPane.YES_NO_OPTION);
 			if (ret == JOptionPane.NO_OPTION || ret == JOptionPane.CANCEL_OPTION)
 				return;
 		}
+
 
 //		if (scheme.getId().equals("") || scheme.getName().equals(""))
 //		{
@@ -89,11 +126,6 @@ public class SchemeSaveCommand extends VoidCommand
 		Pool.put(Scheme.typ, scheme.getId(), scheme);
 		//}
 
-		if (ugoTab != null)
-		{
-			scheme.serializable_ugo = ugoTab.getPanel().getGraph().getArchiveableState(ugoTab.getPanel().getGraph().getRoots());
-			//GraphActions.setResizable(ugoPanel.getGraph(), ugoPanel.getGraph().getAll(), false);
-		}
 		scheme.serializable_cell = graph.getArchiveableState(graph.getRoots());
 		boolean res = scheme.pack();
 
@@ -103,14 +135,16 @@ public class SchemeSaveCommand extends VoidCommand
 																		scheme.getName(), "Ошибка", JOptionPane.OK_OPTION);
 			return;
 		}
+		if (graph.getScheme().equals(ugograph.getScheme()))
+		{
+			scheme.serializable_ugo = ugograph.getArchiveableState(ugograph.getRoots());
+			ugoTab.setGraphChanged(false);
+		}
 
 		dataSource.SaveScheme(scheme.getId());
-		graph.setGraphChanged(false);
+		schemeTab.setGraphChanged(false);
 
-		if (ugoTab != null)
-			ugoTab.getPanel().getGraph().setGraphChanged(false);
-
-		aContext.getDispatcher().notify(new SchemeElementsEvent(this, scheme, SchemeElementsEvent.OPEN_PRIMARY_SCHEME_EVENT));
+//		aContext.getDispatcher().notify(new SchemeElementsEvent(this, scheme, SchemeElementsEvent.OPEN_PRIMARY_SCHEME_EVENT));
 
 		JOptionPane.showMessageDialog(
 						Environment.getActiveWindow(),
@@ -123,7 +157,6 @@ public class SchemeSaveCommand extends VoidCommand
 
 		aContext.getDispatcher().notify(new TreeListSelectionEvent(Scheme.typ, TreeListSelectionEvent.REFRESH_EVENT));
 
-		Pool.remove("serialized", "serialized");
 		ret_code = OK;
 	}
 }

@@ -14,23 +14,23 @@ import com.syrus.AMFICOM.Client.Resource.SchemeDirectory.ProtoElement;
 
 public class SchemeGraphResource
 {
-	ApplicationContext aContext;
-	Dispatcher dispatcher;
+//	ApplicationContext aContext;
+//	Dispatcher dispatcher;
 	SchemeGraph graph;
 	Scheme scheme;
 	SchemeElement schemeelement;
 	public SchemePath currentPath;
 
-	public SchemeGraphResource(SchemeGraph graph, ApplicationContext aContext)
+	public SchemeGraphResource(SchemeGraph graph)
 	{
 		this.graph = graph;
-		this.aContext = aContext;
+//		this.aContext = aContext;
 	}
 
-	public void init_module()
-	{
-		dispatcher = aContext.getDispatcher();
-	}
+//	public void init_module()
+//	{
+//		dispatcher = aContext.getDispatcher();
+//	}
 
 	public Object[] getPathElements(SchemePath path)
 	{

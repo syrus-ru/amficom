@@ -22,22 +22,21 @@ public class ElementsTabbedPane extends UgoTabbedPane
 	}
 
 
-	protected void openScheme(Scheme sch)
+	public void openScheme(Scheme sch)
 	{
 	}
 
-	protected void openSchemeElement(SchemeElement se)
+	public void openSchemeElement(SchemeElement se)
 	{
 		SchemeGraph graph = getPanel().getGraph();
 		graph.setScheme(null);
 		graph.setSchemeElement(se);
 		se.unpack();
 		Map clones = graph.copyFromArchivedState(se.serializable_cell, new java.awt.Point(0, 0));
-		graph.setGraphChanged(false);
 		graph.selectionNotify();
 	}
 
-	protected boolean removeScheme(Scheme sch)
+	public boolean removeScheme(Scheme sch)
 	{
 		SchemeGraph graph = getPanel().getGraph();
 		if (graph.getSchemeElement() != null)
