@@ -46,7 +46,7 @@ public class Map2GraphAdapter
          // не отмечаем, что граф создан, чтобы процесс не продолжался после выхода из этой функции
     return;
        }
-       int n_cablelinks = processAllCables();// рописатьвсе кабели
+       int n_cablelinks = processAllCables();// прописать все кабели
        if ( n_cablelinks == -1 ) // код ошибочного выхода из ф-ции
     return;
        int n_links = processAllLinks();// прописать все линки
