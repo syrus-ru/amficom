@@ -1,5 +1,5 @@
 /*
- * $Id: TestDatabase.java,v 1.28 2004/08/29 11:47:05 bob Exp $
+ * $Id: TestDatabase.java,v 1.29 2004/08/30 07:37:18 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,6 +33,7 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.measurement.corba.MeasurementStatus;
 import com.syrus.AMFICOM.measurement.corba.TestStatus;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
+import com.syrus.AMFICOM.measurement.corba.TestTemporalType;
 import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 import com.syrus.AMFICOM.configuration.MonitoredElement;
 import com.syrus.AMFICOM.configuration.MonitoredElementDatabase;
@@ -40,7 +41,7 @@ import com.syrus.AMFICOM.configuration.MeasurementPortDatabase;
 import com.syrus.AMFICOM.configuration.KISDatabase;
 
 /**
- * @version $Revision: 1.28 $, $Date: 2004/08/29 11:47:05 $
+ * @version $Revision: 1.29 $, $Date: 2004/08/30 07:37:18 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -62,6 +63,14 @@ public class TestDatabase extends StorableObjectDatabase {
 	public static final String LINK_COLMN_TEST_ID = "test_id";
 	
     public static final int CHARACTER_NUMBER_OF_RECORDS = 1;
+    
+    private static TestDatabase instance;
+    
+    public static TestDatabase getInstance(){
+    	if (instance == null)
+    		instance = new TestDatabase();
+    	return instance;
+    }
 	
 	private Test fromStorableObject(StorableObject storableObject) throws IllegalDataException {
 		if (storableObject instanceof Test)
@@ -104,7 +113,7 @@ public class TestDatabase extends StorableObjectDatabase {
 			/**
 			 * @todo when change DB Identifier model ,change getString() to getLong()
 			 */
-			test1 = new Test(new Identifier(resultSet.getString(COLUMN_ID)), null, null, null, null, 0, 
+			test1 = new Test(new Identifier(resultSet.getString(COLUMN_ID)), null, null, null, null, TestTemporalType._TEST_TEMPORAL_TYPE_ONETIME, 
 							 null, null, null, null, 0, null, null);
 		}
 		TemporalPattern temporalPattern;
@@ -696,61 +705,15 @@ public class TestDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	public static List retrieveTests(TestStatus status) throws RetrieveObjectException {
-		List tests = new ArrayList();
-
-		String sql = SQL_SELECT
-			+ COLUMN_ID
-			+ SQL_FROM + ObjectEntities.TEST_ENTITY
-			+ SQL_WHERE + COLUMN_STATUS + EQUALS + Integer.toString(status.value())
-			+ SQL_ORDER_BY + COLUMN_START_TIME + SQL_ASC;
-
-		Statement statement = null;
-		ResultSet resultSet = null;
-		try {
-			statement = connection.createStatement();
-			Log.debugMessage("TestDatabase.retrieveTestsForMCM | Trying: " + sql, Log.DEBUGLEVEL09);
-			resultSet = statement.executeQuery(sql);
-			while (resultSet.next()){
-				/**
-				  * @todo when change DB Identifier model, change getString() to getLong()
-				  */
-				try {
-					tests.add(new Test(new Identifier(resultSet.getString(COLUMN_ID))));
-				}
-				catch (ObjectNotFoundException onfe) {
-					Log.errorException(onfe);
-				}
-			}
-		}
-		catch (SQLException sqle) {
-			String mesg = "TestDatabase.retrieveTestsForMCM | Cannot retrieve test of status " + status.value() + " -- " + sqle.getMessage();
-			throw new RetrieveObjectException(mesg, sqle);
-		}
-		finally {
-			try {
-				if (statement != null)
-					statement.close();
-				if (resultSet != null)
-					resultSet.close();
-				statement = null;
-				resultSet = null;
-			}
-			catch (SQLException sqle1) {
-				Log.errorException(sqle1);
-			}
-		}
-		return tests;
+	public List retrieveTests(TestStatus status) throws RetrieveObjectException {		
+		return retriveByIdsOneQuery(null, COLUMN_STATUS + EQUALS + Integer.toString(status.value())
+									+ SQL_ORDER_BY + COLUMN_START_TIME + SQL_ASC);
 	}
 
-	public static List retrieveTestsForMCM(Identifier mcmId, TestStatus status) throws RetrieveObjectException {
-		List tests = new ArrayList();
-
+	public List retrieveTestsForMCM(Identifier mcmId, TestStatus status) throws RetrieveObjectException {
+		
 		String mcmIdStr = mcmId.toSQLString();
-		String sql = SQL_SELECT
-			+ COLUMN_ID
-			+ SQL_FROM + ObjectEntities.TEST_ENTITY
-			+ SQL_WHERE + COLUMN_MONITORED_ELEMENT_ID + SQL_IN + OPEN_BRACKET
+		String condition = COLUMN_MONITORED_ELEMENT_ID + SQL_IN + OPEN_BRACKET
 				+ SQL_SELECT
 				+ COLUMN_ID
 				+ SQL_FROM + ObjectEntities.ME_ENTITY
@@ -769,42 +732,7 @@ public class TestDatabase extends StorableObjectDatabase {
 				+ SQL_AND + COLUMN_STATUS + EQUALS + Integer.toString(status.value())
 			+ SQL_ORDER_BY + COLUMN_START_TIME + SQL_ASC;
 		
-		Statement statement = null;
-		ResultSet resultSet = null;
-		try {
-			statement = connection.createStatement();
-			Log.debugMessage("TestDatabase.retrieveTestsForMCM | Trying: " + sql, Log.DEBUGLEVEL09);
-			resultSet = statement.executeQuery(sql);
-			while (resultSet.next()){
-				/**
-				  * @todo when change DB Identifier model, change getString() to getLong()
-				  */
-				try {
-					tests.add(new Test(new Identifier(resultSet.getString(COLUMN_ID))));
-				}
-				catch (ObjectNotFoundException onfe) {
-					Log.errorException(onfe);
-				}
-			}
-		}
-		catch (SQLException sqle) {
-			String mesg = "TestDatabase.retrieveTestsForMCM | Cannot retrieve test of status " + status.value() + " for mcm '" + mcmIdStr + "' -- " + sqle.getMessage();
-			throw new RetrieveObjectException(mesg, sqle);
-		}
-		finally {
-			try {
-				if (statement != null)
-					statement.close();
-				if (resultSet != null)
-					resultSet.close();
-				statement = null;
-				resultSet = null;
-			}
-			catch (SQLException sqle1) {
-				Log.errorException(sqle1);
-			}
-		}
-		return tests;
+		return retriveByIdsOneQuery(null, condition);
 	}
 	
 	public List retrieveAll() throws RetrieveObjectException {

@@ -1,5 +1,5 @@
 /*
- * $Id: Test.java,v 1.43 2004/08/27 12:14:57 bob Exp $
+ * $Id: Test.java,v 1.44 2004/08/30 07:37:18 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -39,7 +39,7 @@ import com.syrus.AMFICOM.measurement.corba.TestTimeStamps_TransferablePackage.Co
 import com.syrus.AMFICOM.measurement.corba.TestTimeStamps_TransferablePackage.PeriodicalTestTimeStamps;
 
 /**
- * @version $Revision: 1.43 $, $Date: 2004/08/27 12:14:57 $
+ * @version $Revision: 1.44 $, $Date: 2004/08/30 07:37:18 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -182,7 +182,7 @@ public class Test extends StorableObject {
 		super.creatorId = creatorId;
 		super.modifierId = creatorId;
 		this.temporalType = temporalType;
-		if ((temporalPattern != null) && (startTime != null) && (endTime != null))
+		if (startTime != null)
 				this.timeStamps = new TestTimeStamps(this.temporalType,
 													 startTime,
 													 endTime,
@@ -301,6 +301,7 @@ public class Test extends StorableObject {
 		int i = 0;
 		for (Iterator iterator = this.measurementSetupIds.iterator(); iterator.hasNext();)
 			msIds[i++] = (Identifier_Transferable) ((Identifier) iterator.next()).getTransferable();
+		
 		return new Test_Transferable((Identifier_Transferable)this.id.getTransferable(),
 																 super.created.getTime(),
 																 super.modified.getTime(),
@@ -531,7 +532,8 @@ public class Test extends StorableObject {
 								|| (test.getEvaluationType().equals(getEvaluationType())) ) &&
 					(test.getMeasurementType().equals(getMeasurementType())) &&
 					(test.getMonitoredElement().equals(getMonitoredElement())) &&
-					(test.getMeasurementSetupIds().equals(getMeasurementSetupIds())) &&
+					( ((test.getMeasurementSetupIds()==null) && (getMeasurementSetupIds() == null)) 
+							|| (test.getMeasurementSetupIds().equals(getMeasurementSetupIds())) ) &&
 					(test.getReturnType().equals(getReturnType())) && 
 					(test.getStatus().equals(test.getStatus()))
 					)
