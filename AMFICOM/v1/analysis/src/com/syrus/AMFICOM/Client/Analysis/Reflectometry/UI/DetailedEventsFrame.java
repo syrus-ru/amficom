@@ -7,11 +7,11 @@ import javax.swing.*;
 import javax.swing.table.*;
 
 import com.syrus.AMFICOM.Client.Analysis.AnalysisUtil;
+import com.syrus.AMFICOM.Client.Analysis.Heap;
 import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
 import com.syrus.AMFICOM.Client.General.UI.*;
-import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.Client.Resource.ResourceKeys;
 import com.syrus.AMFICOM.analysis.dadara.*;
 import com.syrus.AMFICOM.client_.general.ui_.ADefaultTableCellRenderer;
@@ -107,7 +107,7 @@ public class DetailedEventsFrame extends JInternalFrame
 			if(rce.OPEN)
 			{
 				String id = (String)(rce.getSource());
-				if (id.equals(RefUpdateEvent.PRIMARY_TRACE))
+				if (id.equals(Heap.PRIMARY_TRACE_KEY))
 				{
 					alignedDataMT = null;
 //					ctModel.clearTable();
@@ -143,7 +143,7 @@ public class DetailedEventsFrame extends JInternalFrame
 			}
 			if(rce.OPEN_ETALON)
 			{
-				etalonMTM = (ModelTraceManager )Pool.get(ModelTraceManager.CODENAME, AnalysisUtil.ETALON);
+				etalonMTM = Heap.getMTMByKey(AnalysisUtil.ETALON);
 				ModelTrace etalonMT = etalonMTM.getModelTrace();
 				if(dataMTM != null)
 					makeAlignedDataMT();
@@ -172,14 +172,14 @@ public class DetailedEventsFrame extends JInternalFrame
 			if (rue.analysisPerformed())
 			{
 				String id = (String)(rue.getSource());
-				if (id.equals(RefUpdateEvent.PRIMARY_TRACE))
+				if (id.equals(Heap.PRIMARY_TRACE_KEY))
 				{
-					if ((RefAnalysis)Pool.get("refanalysis", id) != null)
+					if (Heap.getRefAnalysisByKey(id) != null)
 					{
-						a = (RefAnalysis)Pool.get("refanalysis", id);
-						bs = (BellcoreStructure)Pool.get("bellcorestructure", id);
+						a = Heap.getRefAnalysisByKey(id);
+						bs = Heap.getAnyBSTraceByKey(id);
 						res_km = bs.getResolution() / 1000.0;
-						dataMTM = (ModelTraceManager )Pool.get(ModelTraceManager.CODENAME, RefUpdateEvent.PRIMARY_TRACE);
+						dataMTM = Heap.getMTMByKey(Heap.PRIMARY_TRACE_KEY);
 						if(dataMTM != null && etalonMTM != null)
 							makeAlignedDataMT();
 						else alignedDataMT = null;
@@ -188,7 +188,7 @@ public class DetailedEventsFrame extends JInternalFrame
 						updateTableModel (selected);
 					}
 				}
-				if (Pool.get("eventparams", RefUpdateEvent.PRIMARY_TRACE) != null)
+				if (Heap.hasEventParamsForPrimaryTrace())
 					analysis_performed = true;
 				if(etalon_loaded)
 					tabbedPane.setEnabledAt(1, true);

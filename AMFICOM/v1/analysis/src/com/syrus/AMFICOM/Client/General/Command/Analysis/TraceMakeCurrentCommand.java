@@ -1,10 +1,10 @@
 package com.syrus.AMFICOM.Client.General.Command.Analysis;
 
+import com.syrus.AMFICOM.Client.Analysis.Heap;
 import com.syrus.AMFICOM.Client.General.Checker;
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.io.BellcoreStructure;
 
 public class TraceMakeCurrentCommand extends VoidCommand
@@ -52,10 +52,10 @@ public class TraceMakeCurrentCommand extends VoidCommand
 			return;
 		}
 
-		bs = (BellcoreStructure)Pool.get("bellcorestructure", "referencetrace");
-		new FileRemoveCommand(dispatcher, "referencetrace", aContext).execute();
+		bs = Heap.getBSReferenceTrace();
+		new FileRemoveCommand(dispatcher, Heap.REFERENCE_TRACE_KEY, aContext).execute();
 		new FileRemoveCommand(dispatcher, RefUpdateEvent.PRIMARY_TRACE, aContext).execute();
-		Pool.put("bellcorestructure", RefUpdateEvent.PRIMARY_TRACE, bs);
+		Heap.setBSPrimaryTrace(bs);
 
 		new InitialAnalysisCommand().execute();
 

@@ -2,10 +2,11 @@ package com.syrus.AMFICOM.Client.General.Command.Analysis;
 
 import java.util.Map;
 import java.awt.Cursor;
+
+import com.syrus.AMFICOM.Client.Analysis.Heap;
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 
 import com.syrus.AMFICOM.analysis.ClientAnalysisManager;
@@ -54,7 +55,7 @@ public class MinuitAnalyseCommand extends VoidCommand
 	public void execute()
 	{
 		long t0 = System.currentTimeMillis();
-		BellcoreStructure bs = (BellcoreStructure)Pool.get("bellcorestructure", id);
+		BellcoreStructure bs = Heap.getAnyBSTraceByKey(id);
 		if (bs != null)
 		{
 			Environment.getActiveWindow().setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
@@ -62,16 +63,16 @@ public class MinuitAnalyseCommand extends VoidCommand
 			//double deltaX = bs.getResolution();
 			double[] y = bs.getTraceData();
 
-			double[] params = (double[])Pool.get(OT_analysisparameters, OID_minuitanalysis);
+			double[] params = Heap.getMinuitAnalysisParams();
 			if (params == null)
 			{
 		System.out.println("MinuitAnalysis.execute(): create AnalysisManager at dt/ms " + (System.currentTimeMillis()-t0));
 				new ClientAnalysisManager();
 		System.out.println("MinuitAnalysis.execute(): AnalysisManager created at dt/ms " + (System.currentTimeMillis()-t0));
-				params = (double[])Pool.get(OT_analysisparameters, OID_minuitanalysis);
+				params = (double[])Heap.getMinuitAnalysisParams();
 			}
 
-			Map tracesMap = (Map )Pool.get("bellcoremap", "current");
+			Map tracesMap = Heap.getBsBellCoreMap();
 
 	  ModelTraceManager mtm = CoreAnalysisManager.makeAnalysis(
 		  (int)params[6], bs, params, tracesMap);
@@ -87,9 +88,9 @@ public class MinuitAnalyseCommand extends VoidCommand
 			a.decode(y, mtm);
 	  //System.out.println("MinuitAnalysis.execute(): decode complete at dt/ms " + (System.currentTimeMillis()-t0));
 
-			Pool.put("refanalysis", id, a);
+			Heap.setRefAnalysisByKey(id, a);
 
-			Pool.put(ModelTraceManager.CODENAME, id, mtm);
+			Heap.setMTMByKey(id, mtm);
 
 			Environment.getActiveWindow().setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 	  //System.out.println("MinuitAnalysis.execute(): pool & Cursor complete at dt/ms " + (System.currentTimeMillis()-t0));

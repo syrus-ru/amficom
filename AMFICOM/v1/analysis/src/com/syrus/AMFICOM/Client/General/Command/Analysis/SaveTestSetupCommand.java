@@ -3,11 +3,12 @@ package com.syrus.AMFICOM.Client.General.Command.Analysis;
 import javax.swing.JOptionPane;
 
 import com.syrus.AMFICOM.Client.Analysis.AnalysisUtil;
+import com.syrus.AMFICOM.Client.Analysis.Heap;
 import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.Client.General.Model.*;
-import com.syrus.AMFICOM.Client.Resource.*;
+import com.syrus.AMFICOM.Client.Resource.MiscUtil;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceManager;
 import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.measurement.*;
@@ -38,7 +39,7 @@ public class SaveTestSetupCommand extends VoidCommand
 
 	public void execute()
 	{
-		BellcoreStructure bs = (BellcoreStructure)Pool.get("bellcorestructure", traceid);
+		BellcoreStructure bs = Heap.getAnyBSTraceByKey(traceid);
 		if (bs == null)
 		{
 			JOptionPane.showMessageDialog(
@@ -66,7 +67,7 @@ public class SaveTestSetupCommand extends VoidCommand
 			return;
 		}
 
-		MeasurementSetup ms = (MeasurementSetup)Pool.get(AnalysisUtil.CONTEXT, "MeasurementSetup");
+		MeasurementSetup ms = Heap.getContextMeasurementSetup();
 		if (ms.getParameterSet() == null)
 		{
 			JOptionPane.showMessageDialog(
@@ -82,7 +83,7 @@ public class SaveTestSetupCommand extends VoidCommand
 
 		if ((type & ETALON) != 0 || (type & THRESHOLDS) != 0)
 		{
-			ModelTraceManager mtm = (ModelTraceManager )Pool.get(ModelTraceManager.CODENAME, traceid);
+			ModelTraceManager mtm = Heap.getMTMByKey(traceid);
 			if (mtm == null)
 			{
 				JOptionPane.showMessageDialog(

@@ -9,13 +9,13 @@ import javax.swing.JButton;
 import javax.swing.JToggleButton;
 import javax.swing.UIManager;
 
+import com.syrus.AMFICOM.Client.Analysis.Heap;
 import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
 import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
 import com.syrus.AMFICOM.Client.General.Event.OperationListener;
 import com.syrus.AMFICOM.Client.General.Event.RefUpdateEvent;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
-import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.Client.Resource.ResourceKeys;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceManager;
 
@@ -53,9 +53,7 @@ public class AnalysisLayeredPanel extends TraceEventsLayeredPanel implements Ope
 						{
 							((AnalysisPanel)panel).updEvents(id);
 
-							//ReflectogramEvent[] ep = ((ReflectogramEvent[])Pool.get("eventparams", id));
-							//((AnalysisPanel)panel).updateEvents(ep);
-							ModelTraceManager mtm = (ModelTraceManager )Pool.get(ModelTraceManager.CODENAME, id);
+							ModelTraceManager mtm = Heap.getMTMByKey(id);
 							((AnalysisPanel)panel).updateTrace(mtm); // FIXME: нужно UpdateMTM или UpdateTrace?
 							((AnalysisPanel)panel).updMarkers();
 							jLayeredPane.repaint();

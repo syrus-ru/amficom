@@ -3,10 +3,10 @@ package com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI;
 import java.awt.*;
 import javax.swing.*;
 
+import com.syrus.AMFICOM.Client.Analysis.Heap;
 import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.Client.General.UI.*;
-import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.Client.Resource.ResourceKeys;
 import com.syrus.AMFICOM.analysis.dadara.MathRef;
 import com.syrus.io.BellcoreStructure;
@@ -72,7 +72,7 @@ public class MarkersInfoFrame extends JInternalFrame implements OperationListene
 				String id = (String)(rce.getSource());
 				if (id.equals(RefUpdateEvent.PRIMARY_TRACE))
 				{
-					bs = (BellcoreStructure)Pool.get("bellcorestructure", id);
+					bs = Heap.getAnyBSTraceByKey(id);
 					sigma = MathRef.calcSigma(bs.getWavelength(), bs.getPulsewidth());
 					setVisible(true);
 				}

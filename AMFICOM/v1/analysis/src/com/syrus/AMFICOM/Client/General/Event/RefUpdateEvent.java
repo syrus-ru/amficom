@@ -1,5 +1,7 @@
 package com.syrus.AMFICOM.Client.General.Event;
 
+import com.syrus.AMFICOM.Client.Analysis.Heap;
+
 public class RefUpdateEvent extends OperationEvent
 {
 	private long flags = 0;
@@ -37,8 +39,8 @@ public class RefUpdateEvent extends OperationEvent
 
 	public static final String typ = "refupdate";
 
-	public static final String PRIMARY_TRACE = "primarytrace";
-	
+	public static final String PRIMARY_TRACE = Heap.PRIMARY_TRACE_KEY; // FIXME: remove
+
 	public RefUpdateEvent(Object source, long type)
 	{
 		super(source, 0, typ);

@@ -17,6 +17,7 @@ import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableModel;
 
 import com.syrus.AMFICOM.Client.Analysis.AnalysisUtil;
+import com.syrus.AMFICOM.Client.Analysis.Heap;
 import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
 import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
 import com.syrus.AMFICOM.Client.General.Event.OperationListener;
@@ -25,7 +26,6 @@ import com.syrus.AMFICOM.Client.General.Event.RefUpdateEvent;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.Client.General.UI.ATable;
 import com.syrus.AMFICOM.Client.General.UI.FixedSizeEditableTableModel;
-import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.Client.Resource.ResourceKeys;
 import com.syrus.AMFICOM.analysis.dadara.MathRef;
 import com.syrus.AMFICOM.analysis.dadara.ModelTrace;
@@ -159,7 +159,7 @@ implements OperationListener
 				if (id.equals(RefUpdateEvent.PRIMARY_TRACE))
 					updTableModel(id);
 
-				if (Pool.get("eventparams", RefUpdateEvent.PRIMARY_TRACE) != null)
+				if (Heap.hasEventParamsForPrimaryTrace())
 					analysis_performed = true;
 				if(etalon_loaded)
 				{
@@ -247,8 +247,8 @@ implements OperationListener
 
 	private void setWholeData()
 	{
-		ModelTraceManager etalonMTM = (ModelTraceManager )Pool.get(ModelTraceManager.CODENAME, AnalysisUtil.ETALON);
-		ModelTraceManager dataMTM = (ModelTraceManager )Pool.get(ModelTraceManager.CODENAME, RefUpdateEvent.PRIMARY_TRACE);
+		ModelTraceManager etalonMTM = Heap.getMTMByKey(AnalysisUtil.ETALON);
+		ModelTraceManager dataMTM = Heap.getMTMByKey(RefUpdateEvent.PRIMARY_TRACE);
 		if(etalonMTM == null || dataMTM == null || dataMTM.getNEvents() == 0)
 		{
 			tabbedPane.setSelectedIndex(0);
@@ -290,9 +290,9 @@ implements OperationListener
 
 	void updTableModel(String id)
 	{
-		BellcoreStructure bs = (BellcoreStructure)Pool.get("bellcorestructure", id);
+		BellcoreStructure bs = Heap.getAnyBSTraceByKey(id);
 
-		TraceEvent ev = ((RefAnalysis)Pool.get("refanalysis", id)).overallStats;
+		TraceEvent ev = Heap.getRefAnalysisByKey(id).overallStats;
 		if (ev == null)
 			return;
 

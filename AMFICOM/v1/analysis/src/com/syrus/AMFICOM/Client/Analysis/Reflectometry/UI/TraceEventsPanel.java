@@ -4,8 +4,8 @@ import java.awt.*;
 
 import javax.swing.UIManager;
 
+import com.syrus.AMFICOM.Client.Analysis.Heap;
 import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
-import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.analysis.dadara.*;
 
 public class TraceEventsPanel extends ScaledGraphPanel
@@ -32,8 +32,9 @@ public class TraceEventsPanel extends ScaledGraphPanel
 
 	public void updEvents(String id)
 	{
-		if (Pool.get("refanalysis", id) != null)
-			events = ((RefAnalysis)Pool.get("refanalysis", id)).events;
+		RefAnalysis ra = Heap.getRefAnalysisByKey(id);
+		if (ra != null)
+			events = ra.events;
 	}
 
 	protected void updColorModel()

@@ -5,6 +5,7 @@ import java.util.*;
 
 import javax.swing.*;
 
+import com.syrus.AMFICOM.Client.Analysis.Heap;
 import com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.AnalyseMainFrameSimplified;
 import com.syrus.AMFICOM.Client.General.Checker;
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
@@ -12,8 +13,8 @@ import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.General.UI.ChoosableFileFilter;
-import com.syrus.AMFICOM.Client.Resource.Pool;
-import com.syrus.io.*;
+import com.syrus.io.BellcoreStructure;
+import com.syrus.io.TraceReader;
 
 public class FileAddCommand extends VoidCommand
 {
@@ -82,9 +83,9 @@ public class FileAddCommand extends VoidCommand
 		{
 			System.out.println("DEBUG: the user has added file " + chooser.getSelectedFile().getAbsolutePath()); // FIXME: debugging purpose only
 			String id = chooser.getSelectedFile().getAbsolutePath().toLowerCase();
-			if (Pool.getMap("bellcorestructure") != null )
+			if (!Heap.getAllBSMap().isEmpty())
 			{
-				Iterator it = Pool.getMap("bellcorestructure").keySet().iterator();
+				Iterator it = Heap.getAllBSMap().keySet().iterator();
 				while (it.hasNext())
 				{
 					if (((String)it.next()).equals(id))
@@ -117,7 +118,7 @@ public class FileAddCommand extends VoidCommand
 				}
 			}
 			bs.title = chooser.getSelectedFile().getName();
-			Pool.put("bellcorestructure", id, bs);
+			Heap.putSecondaryTraceByKey(id, bs);
 			dispatcher.notify(new RefChangeEvent(id,
 											RefChangeEvent.OPEN_EVENT + RefChangeEvent.SELECT_EVENT));
 

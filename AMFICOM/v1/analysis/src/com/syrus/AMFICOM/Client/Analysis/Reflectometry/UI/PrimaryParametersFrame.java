@@ -14,6 +14,7 @@ import javax.swing.UIManager;
 import javax.swing.WindowConstants;
 import javax.swing.table.TableModel;
 
+import com.syrus.AMFICOM.Client.Analysis.Heap;
 import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
 import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
 import com.syrus.AMFICOM.Client.General.Event.OperationListener;
@@ -23,12 +24,11 @@ import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
 import com.syrus.AMFICOM.Client.General.UI.ATable;
 import com.syrus.AMFICOM.Client.General.UI.FixedSizeEditableTableModel;
-import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.Client.Resource.ResourceKeys;
 import com.syrus.io.BellcoreStructure;
 
 public class PrimaryParametersFrame extends ATableFrame
-																		implements OperationListener
+implements OperationListener
 {
 
 	private Dispatcher dispatcher;
@@ -163,7 +163,7 @@ public class PrimaryParametersFrame extends ATableFrame
 
 	void updTableModel(String id)
 	{
-		BellcoreStructure bs = (BellcoreStructure)Pool.get("bellcorestructure", id);
+		BellcoreStructure bs = Heap.getAnyBSTraceByKey(id);
 		if (bs == null)
 			return;
 

@@ -1,11 +1,11 @@
 package com.syrus.AMFICOM.Client.General.Command.Analysis;
 
 import com.syrus.AMFICOM.Client.Analysis.AnalysisUtil;
+import com.syrus.AMFICOM.Client.Analysis.Heap;
 import com.syrus.AMFICOM.Client.General.Checker;
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.io.BellcoreStructure;
 
 public class FileRemoveCommand extends VoidCommand
@@ -59,10 +59,9 @@ public class FileRemoveCommand extends VoidCommand
 		}
 
 
-		bs = (BellcoreStructure)(Pool.get("bellcorestructure", activeRefId));
+		bs = Heap.getAnyBSTraceByKey(activeRefId);
 		if (!activeRefId.equals(AnalysisUtil.ETALON))
-			//Pool.remove("bellcorestructure", activeRefId);
-			Pool.remove(bs);
+			Heap.removeAnyBSByName(activeRefId); // XXX: was Pool.remove(bs);
 		bs = null;
 		dispatcher.notify(new RefChangeEvent(activeRefId, RefChangeEvent.CLOSE_EVENT));
 		dispatcher.notify(new RefChangeEvent(RefUpdateEvent.PRIMARY_TRACE, RefChangeEvent.SELECT_EVENT));

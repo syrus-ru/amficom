@@ -5,9 +5,9 @@ import java.awt.event.MouseEvent;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
+import com.syrus.AMFICOM.Client.Analysis.Heap;
 import com.syrus.AMFICOM.Client.General.Event.RefUpdateEvent;
 import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
-import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.analysis.CoreAnalysisManager;
 import com.syrus.AMFICOM.analysis.dadara.*;
 
@@ -50,7 +50,7 @@ public class HistogrammPanel extends ScaledGraphPanel
 
 		init();
 
-		ModelTraceManager mtm = (ModelTraceManager )Pool.get(ModelTraceManager.CODENAME, RefUpdateEvent.PRIMARY_TRACE);
+		ModelTraceManager mtm = Heap.getMTMByKey(RefUpdateEvent.PRIMARY_TRACE);
 		if (mtm != null)
 			updateHistogrammData(0, mtm.getModelTrace().getLength() - 1);
 		else

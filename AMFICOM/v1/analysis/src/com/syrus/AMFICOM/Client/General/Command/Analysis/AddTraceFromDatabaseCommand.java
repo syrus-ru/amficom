@@ -2,12 +2,12 @@ package com.syrus.AMFICOM.Client.General.Command.Analysis;
 
 import javax.swing.JFrame;
 
+import com.syrus.AMFICOM.Client.Analysis.Heap;
 import com.syrus.AMFICOM.Client.Analysis.UI.ReflectogrammLoadDialog;
 import com.syrus.AMFICOM.Client.General.Checker;
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Model.*;
-import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.measurement.*;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
@@ -69,14 +69,14 @@ public class AddTraceFromDatabaseCommand extends VoidCommand
 
 		ReflectogrammLoadDialog dialog;
 		JFrame parent = Environment.getActiveWindow();
-		if(Pool.get("dialog", parent.getName()) != null)
+		if(Heap.getRLDialogByKey(parent.getName()) != null)
 		{
-			dialog = (ReflectogrammLoadDialog)Pool.get("dialog", parent.getName());
+			dialog = Heap.getRLDialogByKey(parent.getName());
 		}
 		else
 		{
 			dialog = new ReflectogrammLoadDialog (aContext);
-			Pool.put("dialog", parent.getName(), dialog);
+			Heap.setRLDialogByKey(parent.getName(), dialog);
 		}
 		dialog.show();
 
@@ -101,7 +101,7 @@ public class AddTraceFromDatabaseCommand extends VoidCommand
 
 		if (res.getSort().equals(ResultSort.RESULT_SORT_MEASUREMENT))
 			bs.title = ((Measurement)res.getAction()).getName();
-		Pool.put("bellcorestructure", bs.title, bs);
+		Heap.setAnyBSTraceByKey(bs.title, bs);
 
 		dispatcher.notify(new RefChangeEvent(bs.title,
 				RefChangeEvent.OPEN_EVENT + RefChangeEvent.SELECT_EVENT));

@@ -26,6 +26,7 @@ import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
 
+import com.syrus.AMFICOM.Client.Analysis.Heap;
 import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
 import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
 import com.syrus.AMFICOM.Client.General.Event.OperationListener;
@@ -35,7 +36,6 @@ import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.Client.General.Model.AnalyseApplicationModel;
 import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
 import com.syrus.AMFICOM.Client.General.UI.ATable;
-import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.Client.Resource.ResourceKeys;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceManager;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceManager.ThreshEditor;
@@ -330,7 +330,7 @@ public class ThresholdsSelectionFrame extends ATableFrame
 				String id = (String) (rue.getSource());
 				// if (id.equals(RefUpdateEvent.PRIMARY_TRACE))
 				{
-					mtm = (ModelTraceManager) Pool.get(ModelTraceManager.CODENAME, id);
+					mtm = Heap.getMTMByKey(id);
 					updateThresholds();
 				}
 			}
@@ -338,22 +338,9 @@ public class ThresholdsSelectionFrame extends ATableFrame
 				String id = (String) (rue.getSource());
 				// if (id.equals(RefUpdateEvent.PRIMARY_TRACE))
 				{
-					// System.out.println("thresholdsSelectionFrame:
-					// ANALYSIS_PERFORMED: source = '"+id+"'"); // FIXIT
-
-					ModelTraceManager mtm = (ModelTraceManager) Pool.get(ModelTraceManager.CODENAME, id);
-					// ReflectogramEvent[] ep =
-					// (ReflectogramEvent[])Pool.get("eventparams", id);
-					bs = (BellcoreStructure) Pool.get("bellcorestructure", id);
-
-					if (mtm != null) {
-						// FIXME:
-						// --- тут была попытка сохранить пороги при
-						// замене списка событий, и, в принципе, ее можно бы
-						// доделать, если только она будет делать что-то
-						// осмысленное
-						updateThresholds();
-					}
+					//mtm = Heap.getMTMByKey(id); // FIXME: what is MTM here?  
+					bs = Heap.getAnyBSTraceByKey(id);
+					updateThresholds();
 				}
 			}
 			if (rue.eventSelected()) {

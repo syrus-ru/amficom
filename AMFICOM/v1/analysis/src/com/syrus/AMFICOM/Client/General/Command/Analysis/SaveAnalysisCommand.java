@@ -3,12 +3,12 @@ package com.syrus.AMFICOM.Client.General.Command.Analysis;
 import javax.swing.JOptionPane;
 
 import com.syrus.AMFICOM.Client.Analysis.AnalysisUtil;
+import com.syrus.AMFICOM.Client.Analysis.Heap;
 import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.Client.General.Model.*;
-import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.analysis.dadara.*;
 import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.general.corba.DataType;
@@ -39,7 +39,7 @@ public class SaveAnalysisCommand extends VoidCommand
 
 	public void execute()
 	{
-		BellcoreStructure bs = (BellcoreStructure)Pool.get("bellcorestructure", traceid);
+		BellcoreStructure bs = Heap.getAnyBSTraceByKey(traceid);
 		if (bs.monitoredElementId == null)
 		{
 			JOptionPane.showMessageDialog(
@@ -57,8 +57,8 @@ public class SaveAnalysisCommand extends VoidCommand
 			return;
 		}
 
-		RefAnalysis refanalysis = (RefAnalysis)Pool.get("refanalysis", traceid);
-		ModelTraceManager mtm = (ModelTraceManager )Pool.get(ModelTraceManager.CODENAME, traceid);
+		RefAnalysis refanalysis = Heap.getRefAnalysisByKey(traceid);
+		ModelTraceManager mtm = Heap.getMTMByKey(traceid);
 
 		Measurement m = null;
 		try

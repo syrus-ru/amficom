@@ -6,13 +6,13 @@ import java.util.Properties;
 import java.awt.Cursor;
 import javax.swing.*;
 
+import com.syrus.AMFICOM.Client.Analysis.Heap;
 import com.syrus.AMFICOM.Client.General.Checker;
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.General.UI.ChoosableFileFilter;
-import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.io.*;
 
 public class FileOpenAsWavetekCommand extends VoidCommand
@@ -90,16 +90,16 @@ public class FileOpenAsWavetekCommand extends VoidCommand
 																				JOptionPane.OK_OPTION);
 				return;
 			}
-			if (Pool.getMap("bellcorestructure") != null )
+			if (!Heap.getAllBSMap().isEmpty())
 			{
-				if ((BellcoreStructure)Pool.get("bellcorestructure", RefUpdateEvent.PRIMARY_TRACE) != null)
+				if (Heap.getBSPrimaryTrace() != null)
 					new FileCloseCommand(dispatcher, aContext).execute();
 			}
 
 			String activeRefId = chooser.getSelectedFile().getAbsolutePath().toLowerCase();
 			bs.title = chooser.getSelectedFile().getName();
-			Pool.put("bellcorestructure", RefUpdateEvent.PRIMARY_TRACE, bs);
-			Pool.put("activecontext", "activepathid", "");
+			Heap.setBSPrimaryTrace(bs);
+			Heap.setActiveContextActivePathIDToEmptyString();
 
 			new InitialAnalysisCommand().execute();
 

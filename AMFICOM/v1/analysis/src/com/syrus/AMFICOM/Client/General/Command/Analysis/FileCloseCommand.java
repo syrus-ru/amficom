@@ -1,10 +1,10 @@
 package com.syrus.AMFICOM.Client.General.Command.Analysis;
 
+import com.syrus.AMFICOM.Client.Analysis.Heap;
 import com.syrus.AMFICOM.Client.General.Checker;
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.Resource.Pool;
 
 public class FileCloseCommand extends VoidCommand
 {
@@ -51,7 +51,7 @@ public class FileCloseCommand extends VoidCommand
 			return;
 		}
 
-		Pool.removeMap("bellcorestructure");
+		Heap.removeAllBS();
 		dispatcher.notify(new RefChangeEvent("all", RefChangeEvent.CLOSE_EVENT));
 	}
 }

@@ -3,13 +3,13 @@ package com.syrus.AMFICOM.Client.General.Command.Analysis;
 import javax.swing.JOptionPane;
 
 import com.syrus.AMFICOM.Client.Analysis.AnalysisUtil;
+import com.syrus.AMFICOM.Client.Analysis.Heap;
 import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.Event.RefChangeEvent;
 import com.syrus.AMFICOM.Client.General.Event.RefUpdateEvent;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.Client.General.Model.*;
-import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceManager;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.measurement.MeasurementSetup;
@@ -36,7 +36,7 @@ public class SaveTestSetupAsCommand extends VoidCommand
 
 	public void execute()
 	{
-		BellcoreStructure bs = (BellcoreStructure)Pool.get("bellcorestructure", traceid);
+		BellcoreStructure bs = Heap.getAnyBSTraceByKey(traceid);
 		if (bs == null)
 		{
 			JOptionPane.showMessageDialog(
@@ -66,7 +66,7 @@ public class SaveTestSetupAsCommand extends VoidCommand
 
 		if (((type & SaveTestSetupCommand.ETALON) != 0 ||
 				 (type & SaveTestSetupCommand.THRESHOLDS) != 0) &&
-				 Pool.get("eventparams", traceid) == null)
+				 !Heap.hasEventParamsForTrace(traceid))
 		{
 			JOptionPane.showMessageDialog(
 					Environment.getActiveWindow(),
@@ -77,12 +77,12 @@ public class SaveTestSetupAsCommand extends VoidCommand
 
 		CreateTestSetupCommand command = new CreateTestSetupCommand(aContext, RefUpdateEvent.PRIMARY_TRACE);
 		command.execute();
-		MeasurementSetup newms = (MeasurementSetup)Pool.get(AnalysisUtil.CONTEXT, "MeasurementSetup");
+		MeasurementSetup newms = Heap.getContextMeasurementSetup();
 		if (newms == null)
 			return;
 
 		Identifier userId = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).getAccessIdentifier().user_id);
-		ModelTraceManager mtm = (ModelTraceManager )Pool.get(ModelTraceManager.CODENAME, traceid);
+		ModelTraceManager mtm = Heap.getMTMByKey(traceid);
 		newms.setCriteriaSet(AnalysisUtil.createCriteriaSetFromParams(
 				userId,
 				newms.getMonitoredElementIds()));

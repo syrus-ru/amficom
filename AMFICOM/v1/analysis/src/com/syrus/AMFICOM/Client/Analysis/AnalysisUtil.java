@@ -7,7 +7,6 @@ import java.util.Iterator;
 import java.util.List;
 
 import com.syrus.AMFICOM.Client.General.Event.RefUpdateEvent;
-import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceManager;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
@@ -41,7 +40,7 @@ import com.syrus.util.ByteArray;
 
 public class AnalysisUtil
 {
-	public static final String ETALON = "etalon";
+	public static final String ETALON = Heap.ETALON_TRACE_KEY;
 	public static final String CONTEXT = "analysiscontext";
 	private static final String OT_analysisparameters = "analysisparameters";
 	private static final String OID_minuitanalysis = "minuitanalysis";
@@ -231,7 +230,7 @@ public class AnalysisUtil
 	{
 		Set thresholdSet = ms.getThresholdSet();
 
-		ModelTraceManager mtm = (ModelTraceManager )Pool.get(ModelTraceManager.CODENAME, AnalysisUtil.ETALON);
+		ModelTraceManager mtm = Heap.getMTMByKey(AnalysisUtil.ETALON);
 		if (mtm == null)
 			return;
 
@@ -260,13 +259,13 @@ public class AnalysisUtil
 			if (type.getCodename().equals(ParameterTypeCodenames.DADARA_ETALON_EVENTS))
 			{
 				mtm = ModelTraceManager.eventsAndTraceFromByteArray(params[i].getValue());
-				Pool.put(ModelTraceManager.CODENAME, ETALON, mtm);
-				Pool.put("etalon", ETALON, metas);
+				Heap.setMTMByKey(ETALON, mtm);
+				Heap.setEtalonEtalonMetas(metas);
 			}
 			else if (type.getCodename().equals(ParameterTypeCodenames.REFLECTOGRAMMA))
 			{
 				bsEt = new BellcoreReader().getData(params[i].getValue());
-				Pool.put("bellcorestructure", AnalysisUtil.ETALON, bsEt);
+				Heap.setBSEtalonTrace(bsEt);
 				bsEt.title = "Эталон (" + (ms.getDescription().equals("") ? ms.getId().getIdentifierString() : ms.getDescription()) + ")";
 			}
 		}
@@ -283,9 +282,9 @@ public class AnalysisUtil
 		SetParameter[] params = new SetParameter[8];
 
 		double[] defaultMinuitParams;
-		defaultMinuitParams = (double[])Pool.get(OT_analysisparameters, OID_minuitanalysis);
+		defaultMinuitParams = Heap.getMinuitAnalysisParams();
 		if (defaultMinuitParams == null)
-			defaultMinuitParams = (double[])Pool.get(OT_analysisparameters, OID_minuitdefaults);
+			defaultMinuitParams = Heap.getMinuitDefaultParams();
 
 		String[] parameterCodenames = new String[] {
 				ParameterTypeCodenames.MIN_EVENT_LEVEL,//0
@@ -351,7 +350,7 @@ public class AnalysisUtil
 			params[0] = SetParameter.createInstance(ptype,
 					mtm.eventsAndTraceToByteArray());
 
-			BellcoreStructure bs = (BellcoreStructure)Pool.get("bellcorestructure", RefUpdateEvent.PRIMARY_TRACE);
+			BellcoreStructure bs = Heap.getBSPrimaryTrace();
 
 			ptype = getParameterType(userId, ParameterTypeCodenames.REFLECTOGRAMMA, DataType.DATA_TYPE_RAW);
 			params[1] = SetParameter.createInstance(ptype,
@@ -387,7 +386,7 @@ public class AnalysisUtil
 			byte[] minLevel;
 			try
 			{
-				Double level = (Double)Pool.get("min_trace_level", RefUpdateEvent.PRIMARY_TRACE);
+				Double level = Heap.getMinTraceLevel();
 				minLevel = ByteArray.toByteArray(level == null ? 0d : level.doubleValue());
 			}
 			catch(Exception ex)
@@ -429,7 +428,7 @@ public class AnalysisUtil
 				try
 				{
 					Double minLevel = new Double(new ByteArray(params[i].getValue()).toDouble());
-					Pool.put("min_trace_level", RefUpdateEvent.PRIMARY_TRACE, minLevel);
+					Heap.setMinTraceLevel(minLevel);
 				}
 				catch (IOException ex)
 				{
@@ -638,7 +637,7 @@ public class AnalysisUtil
 
 	public static void setParamsFromCriteriaSet(Set criteriaSet)
 	{
-		double[] minuitParams = (double[])Pool.get(OT_analysisparameters, OID_minuitanalysis);
+		double[] minuitParams = Heap.getMinuitAnalysisParams();
 
 		try
 		{
@@ -668,7 +667,7 @@ public class AnalysisUtil
 		{
 			ex.printStackTrace();
 		}
-		double[] minuitInitialParams = (double[])Pool.get(OT_analysisparameters, OID_minuitinitials);
+		double[] minuitInitialParams = Heap.getMinuitInitialParams(); 
 		for (int i = 0; i < minuitParams.length; i++)
 			minuitInitialParams[i] = minuitParams[i];
 	}

@@ -1,5 +1,5 @@
 /*
- * $Id: ClientAnalysisManager.java,v 1.3 2004/12/23 10:36:57 saa Exp $
+ * $Id: ClientAnalysisManager.java,v 1.4 2005/03/29 16:00:51 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,20 +13,16 @@ import java.io.IOException;
 
 import java.util.Properties;
 
-import com.syrus.AMFICOM.Client.Resource.Pool;
+import com.syrus.AMFICOM.Client.Analysis.Heap;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.3 $, $Date: 2004/12/23 10:36:57 $
+ * @version $Revision: 1.4 $, $Date: 2005/03/29 16:00:51 $
  * @module
  */
 public class ClientAnalysisManager extends CoreAnalysisManager
 {
 	private final String propertiesFileName = "analysis.properties";
-	private static final String OT_analysisparameters = "analysisparameters";
-	private static final String OID_minuitanalysis = "minuitanalysis";
-	private static final String OID_minuitinitials = "minuitinitials";
-	private static final String OID_minuitdefaults = "minuitdefaults";
 
 	double[] defaultMinuitParams = { 0.04, //минимальный уровень события
 			0.06, //минимальный уровень сварки
@@ -40,7 +36,7 @@ public class ClientAnalysisManager extends CoreAnalysisManager
 
 	public ClientAnalysisManager() {
 		double[] minuitParams;
-		Pool.put(OT_analysisparameters, OID_minuitdefaults, defaultMinuitParams);
+		Heap.setMinuitDefaultParams(defaultMinuitParams);
 
 		Properties properties = new Properties();
 		try {
@@ -53,14 +49,13 @@ public class ClientAnalysisManager extends CoreAnalysisManager
 		}
 
 		// сохраняем в Pool
-		Pool.put(OT_analysisparameters, OID_minuitanalysis, minuitParams);
+		Heap.setMinuitAnalysisParams(minuitParams);
 		// сохраняем в Pool копию (double[] копируется целиком)
-		Pool.put(OT_analysisparameters, OID_minuitinitials, minuitParams.clone());
+		Heap.setMinuitInitialParams((double[])minuitParams.clone());
 	}
 
 	public void saveIni() {
-	    double[] minuitParams = (double[]) Pool.get(OT_analysisparameters,
-				OID_minuitanalysis);
+	    double[] minuitParams = Heap.getMinuitAnalysisParams();
 		Properties properties = new Properties();
 		try {
 			properties.load(new FileInputStream(propertiesFileName));

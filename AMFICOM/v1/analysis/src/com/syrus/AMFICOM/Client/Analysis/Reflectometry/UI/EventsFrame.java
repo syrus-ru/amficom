@@ -19,6 +19,7 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.table.TableModel;
 
 import com.syrus.AMFICOM.Client.Analysis.AnalysisUtil;
+import com.syrus.AMFICOM.Client.Analysis.Heap;
 import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
 import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
 import com.syrus.AMFICOM.Client.General.Event.OperationListener;
@@ -29,7 +30,6 @@ import com.syrus.AMFICOM.Client.General.Model.AnalyseApplicationModel;
 import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
 import com.syrus.AMFICOM.Client.General.UI.ATable;
 import com.syrus.AMFICOM.Client.General.UI.FixedSizeEditableTableModel;
-import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.Client.Resource.ResourceKeys;
 import com.syrus.AMFICOM.analysis.dadara.ComplexReflectogramEvent;
 import com.syrus.AMFICOM.analysis.dadara.MathRef;
@@ -105,15 +105,15 @@ implements OperationListener
 			if(rce.OPEN)
 			{
 				String id = (String)(rce.getSource());
-				if (id.equals(RefUpdateEvent.PRIMARY_TRACE))
+				if (id.equals(Heap.PRIMARY_TRACE_KEY))
 				{
-					this.data = ((ModelTraceManager )Pool.get(ModelTraceManager.CODENAME, RefUpdateEvent.PRIMARY_TRACE)).getComplexEvents();
+					this.data = Heap.getMTMByKey(Heap.PRIMARY_TRACE_KEY).getComplexEvents();
 					etalon = null;
 					setNoComparedWithEtalonColor();
-					if ((RefAnalysis)Pool.get("refanalysis", id) != null)
+					if (Heap.getRefAnalysisByKey(id) != null)
 					{
-						RefAnalysis a = (RefAnalysis)Pool.get("refanalysis", id);
-						BellcoreStructure bs = (BellcoreStructure)Pool.get("bellcorestructure", id);
+						RefAnalysis a = Heap.getRefAnalysisByKey(id);
+						BellcoreStructure bs = Heap.getAnyBSTraceByKey(id);
 						setTableModel(bs, a.events);
 						this.updateTableModel(0);
 					}
@@ -144,7 +144,7 @@ implements OperationListener
 				String etId = (String)rce.getSource();
 
 				if(etId != null)
-					etalon = ((ModelTraceManager )Pool.get(ModelTraceManager.CODENAME, etId)).getComplexEvents();
+					etalon = Heap.getMTMByKey(etId).getComplexEvents();
 				else
 					etalon = null;
 
@@ -171,10 +171,10 @@ implements OperationListener
 				String id = (String)(rue.getSource());
 				if (id.equals(RefUpdateEvent.PRIMARY_TRACE))
 				{
-					if ((RefAnalysis)Pool.get("refanalysis", id) != null)
+					if (Heap.getRefAnalysisByKey(id) != null)
 					{
-						RefAnalysis a = (RefAnalysis)Pool.get("refanalysis", id);
-						BellcoreStructure bs = (BellcoreStructure)Pool.get("bellcorestructure", id);
+						RefAnalysis a = Heap.getRefAnalysisByKey(id);
+						BellcoreStructure bs = Heap.getAnyBSTraceByKey(id);
 						setTableModel(bs, a.events);
 						if (selected >= a.events.length)
 							selected = a.events.length-1;

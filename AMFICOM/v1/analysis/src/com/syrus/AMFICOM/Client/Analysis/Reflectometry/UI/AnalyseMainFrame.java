@@ -7,6 +7,7 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
+import com.syrus.AMFICOM.Client.Analysis.Heap;
 import com.syrus.AMFICOM.Client.General.*;
 import com.syrus.AMFICOM.Client.General.Command.ExitCommand;
 import com.syrus.AMFICOM.Client.General.Command.Analysis.*;
@@ -17,7 +18,6 @@ import com.syrus.AMFICOM.Client.General.Lang.*;
 import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.General.Report.ReportTemplate;
 import com.syrus.AMFICOM.Client.General.UI.*;
-import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.Client.Resource.ResourceKeys;
 import com.syrus.AMFICOM.administration.Domain;
 import com.syrus.AMFICOM.analysis.ClientAnalysisManager;
@@ -466,12 +466,12 @@ public class AnalyseMainFrame extends JFrame
 
 					aModel.fireModelChanged("");
 
-					String name = ((BellcoreStructure)Pool.get("bellcorestructure", RefUpdateEvent.PRIMARY_TRACE)).title;
+					String name = Heap.getBSPrimaryTrace().title;
 					setTitle(LangModelAnalyse.getString("AnalyseExtTitle") + ": " + name);
 
 					updFrames(id);
 				}
-				else if (id.equals("referencetrace"))
+				else if (id.equals(Heap.REFERENCE_TRACE_KEY))
 				{
 					aModel.setEnabled("menuTraceReferenceMakeCurrent", true);
 					aModel.fireModelChanged(new String [] {"menuTraceReferenceMakeCurrent"});
@@ -491,7 +491,7 @@ public class AnalyseMainFrame extends JFrame
 			if(rce.CLOSE)
 			{
 				String id = (String)(rce.getSource());
-				if (Pool.getMap("bellcorestructure") == null)
+				if (Heap.getAllBSMap().isEmpty())
 				{
 					aModel.setEnabled("menuFileSave", false);
 					aModel.setEnabled("menuFileSaveAll", false);
@@ -544,12 +544,12 @@ public class AnalyseMainFrame extends JFrame
 				}
 				else
 				{
-					if (id.equals("referencetrace"))
+					if (id.equals(Heap.REFERENCE_TRACE_KEY))
 					{
 						aModel.setEnabled("menuTraceReferenceMakeCurrent", false);
 						aModel.fireModelChanged(new String [] {"menuTraceReferenceMakeCurrent"});
 					}
-					Iterator it = Pool.getMap("bellcorestructure").keySet().iterator();
+					Iterator it = Heap.getAllBSMap().keySet().iterator();
 					String nextId = (String)it.next();
 					if (nextId.equals(RefUpdateEvent.PRIMARY_TRACE))
 					{
@@ -721,13 +721,11 @@ public class AnalyseMainFrame extends JFrame
 
 	void updFrames(String id)
 	{
-		BellcoreStructure bs = (BellcoreStructure)Pool.get("bellcorestructure", id);
+		BellcoreStructure bs = Heap.getAnyBSTraceByKey(id); 
 		double deltaX = bs.getResolution();
-//		double[] y = bs.getTraceData();
 
-		double[] filtered = ((RefAnalysis)Pool.get("refanalysis", id)).filtered;
-		double[] noise = ((RefAnalysis)Pool.get("refanalysis", id)).noise;
-		//double[] normalyzed = ((RefAnalysis)Pool.get("refanalysis", id)).normalyzed;
+		double[] filtered = Heap.getRefAnalysisByKey(id).filtered;
+		double[] noise = Heap.getRefAnalysisByKey(id).noise;
 
 		noiseFrame.setGraph(noise, deltaX, false, id);
 		noiseFrame.updScales();

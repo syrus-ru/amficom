@@ -27,6 +27,7 @@ import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableModel;
 
 import com.syrus.AMFICOM.Client.Analysis.AnalysisUtil;
+import com.syrus.AMFICOM.Client.Analysis.Heap;
 import com.syrus.AMFICOM.Client.General.Command.Analysis.MinuitAnalyseCommand;
 import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
 import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
@@ -39,7 +40,6 @@ import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.UI.AComboBox;
 import com.syrus.AMFICOM.Client.General.UI.ATable;
 import com.syrus.AMFICOM.Client.General.UI.FixedSizeEditableTableModel;
-import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.Client.Resource.ResourceKeys;
 import com.syrus.AMFICOM.client_.general.ui_.ADefaultTableCellRenderer;
 import com.syrus.AMFICOM.measurement.MeasurementSetup;
@@ -123,7 +123,7 @@ public class AnalysisSelectionFrame extends ATableFrame
 				String id = (String)(rce.getSource());
 				if (id.equals(RefUpdateEvent.PRIMARY_TRACE))
 				{
-					BellcoreStructure bs = (BellcoreStructure)Pool.get("bellcorestructure", id);
+					BellcoreStructure bs = Heap.getAnyBSTraceByKey(id);
 					if (bs.measurementId == null)
 						setTitle(LangModelAnalyse.getString("analysisSelectionTitle") + " (" + LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_NO_PATTERN) + ')');
 					else
@@ -132,7 +132,7 @@ public class AnalysisSelectionFrame extends ATableFrame
 //						{
 //							Measurement m = (Measurement)MeasurementStorableObjectPool.getStorableObject(
 //												 new Identifier(bs.measurementId), true);
-							MeasurementSetup ms = (MeasurementSetup)Pool.get(AnalysisUtil.CONTEXT, "MeasurementSetup");
+							MeasurementSetup ms = Heap.getContextMeasurementSetup();
 							setTitle(LangModelAnalyse.getString("analysisSelectionTitle") + " ("
 								+ (ms == null ? LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_NO_PATTERN) : 
 									LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_PATTERN) + ':' + ms.getDescription()) + ')');
@@ -145,7 +145,7 @@ public class AnalysisSelectionFrame extends ATableFrame
 //						}
 					}
 
-					double[] minuitParams = (double[])Pool.get(OT_analysisparameters, OID_minuitanalysis);
+					double[] minuitParams = Heap.getMinuitAnalysisParams();
 					setDefaults(minuitParams);
 					setVisible(true);
 				}
@@ -154,7 +154,7 @@ public class AnalysisSelectionFrame extends ATableFrame
 			{
 				String id = (String)(rce.getSource());
 
-				BellcoreStructure bs = (BellcoreStructure)Pool.get("bellcorestructure", id);
+				BellcoreStructure bs = Heap.getAnyBSTraceByKey(id);
 				if (bs.measurementId == null)
 					setTitle(LangModelAnalyse.getString("analysisSelectionTitle") + " (" + LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_NO_PATTERN) + ')');
 				else
@@ -165,14 +165,14 @@ public class AnalysisSelectionFrame extends ATableFrame
 //											new Identifier(bs.measurementId), true);
 
 //						MeasurementSetup ms = m.getSetup();
-						MeasurementSetup ms = (MeasurementSetup)Pool.get(AnalysisUtil.CONTEXT, "MeasurementSetup");
+						MeasurementSetup ms = Heap.getContextMeasurementSetup();
 						setTitle(LangModelAnalyse.getString("analysisSelectionTitle")  + " ("
 							+ (ms == null ? LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_NO_PATTERN) : 
 								LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_PATTERN) + ':' + ms.getDescription()) + ')');
 
 						if (ms.getCriteriaSet() != null)
 						{
-							double[] minuitParams = (double[])Pool.get(OT_analysisparameters, OID_minuitanalysis);
+							double[] minuitParams = Heap.getMinuitAnalysisParams();
 							setDefaults(minuitParams);
 						}
 //					}
@@ -374,7 +374,7 @@ public class AnalysisSelectionFrame extends ATableFrame
 		minuitParams[6] = ((Double)getDoubleValueAt(jTable.getValueAt(6, 1), 6)).doubleValue();
 		minuitParams[7] = ((Integer)getDoubleValueAt(jTable.getValueAt(7, 1), 7)).doubleValue();
 
-		Pool.put(OT_analysisparameters, OID_minuitanalysis, minuitParams);
+		Heap.setMinuitAnalysisParams(minuitParams);
 		new MinuitAnalyseCommand(dispatcher, RefUpdateEvent.PRIMARY_TRACE, aContext).execute();
 		dispatcher.notify(new RefUpdateEvent(RefUpdateEvent.PRIMARY_TRACE, RefUpdateEvent.ANALYSIS_PERFORMED_EVENT));
 		dispatcher.notify(new RefUpdateEvent(RefUpdateEvent.PRIMARY_TRACE, RefUpdateEvent.THRESHOLDS_UPDATED_EVENT));
@@ -387,13 +387,13 @@ public class AnalysisSelectionFrame extends ATableFrame
 
 	void analysisInitialButton_actionPerformed(ActionEvent e)
 	{
-		double[] defaults = (double[])Pool.get(OT_analysisparameters, OID_minuitinitials);
+		double[] defaults = Heap.getMinuitInitialParams();
 		setDefaults(defaults);
 	}
 
 	void analysisDefaultsButton_actionPerformed(ActionEvent e)
 	{
-		double[] defaults = (double[])Pool.get(OT_analysisparameters, OID_minuitdefaults);
+		double[] defaults = Heap.getMinuitDefaultParams();
 		setDefaults(defaults);
 	}
 

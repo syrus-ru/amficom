@@ -7,6 +7,7 @@ import java.util.Properties;
 import java.awt.Cursor;
 import javax.swing.*;
 
+import com.syrus.AMFICOM.Client.Analysis.Heap;
 import com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.AnalyseMainFrameSimplified;
 import com.syrus.AMFICOM.Client.General.Checker;
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
@@ -14,7 +15,6 @@ import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.General.UI.ChoosableFileFilter;
-import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.io.*;
 
 public class FileOpenCommand extends VoidCommand
@@ -147,16 +147,16 @@ public class FileOpenCommand extends VoidCommand
 					}
 				}
 			}
-			if (Pool.getMap("bellcorestructure") != null )
+			if (!Heap.hasEmptyAllBSMap())
 			{
-				if ((BellcoreStructure)Pool.get("bellcorestructure", RefUpdateEvent.PRIMARY_TRACE) != null)
+				if (Heap.getBSPrimaryTrace() != null)
 					new FileCloseCommand(dispatcher, aContext).execute();
 			}
 
 			String activeRefId = chooser.getSelectedFile().getName();
 			bs.title = activeRefId;
-			Pool.put("bellcorestructure", RefUpdateEvent.PRIMARY_TRACE, bs);
-			Pool.put("activecontext", "activepathid", "");
+			Heap.setBSPrimaryTrace(bs);
+			Heap.setActiveContextActivePathIDToEmptyString();
 
 			Environment.getActiveWindow().setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 
@@ -166,10 +166,6 @@ public class FileOpenCommand extends VoidCommand
 			dispatcher.notify(new RefChangeEvent(RefUpdateEvent.PRIMARY_TRACE,
 											RefChangeEvent.OPEN_EVENT + RefChangeEvent.SELECT_EVENT));
 			dispatcher.notify(new RefUpdateEvent(RefUpdateEvent.PRIMARY_TRACE, RefUpdateEvent.ANALYSIS_PERFORMED_EVENT));
-
-//			dispatcher.notify(new RefUpdateEvent("etalon",
-//											RefUpdateEvent.THRESHOLDS_UPDATED_EVENT));
-
 			try
 			{
 				properties.setProperty("lastdir", chooser.getSelectedFile().getParent().toLowerCase());

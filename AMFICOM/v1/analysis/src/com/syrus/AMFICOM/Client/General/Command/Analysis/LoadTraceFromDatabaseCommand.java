@@ -4,12 +4,12 @@ import java.awt.Cursor;
 import javax.swing.JFrame;
 
 import com.syrus.AMFICOM.Client.Analysis.AnalysisUtil;
+import com.syrus.AMFICOM.Client.Analysis.Heap;
 import com.syrus.AMFICOM.Client.Analysis.UI.ReflectogrammLoadDialog;
 import com.syrus.AMFICOM.Client.General.*;
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Model.*;
-import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceManager;
 import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.measurement.*;
@@ -70,14 +70,14 @@ public class LoadTraceFromDatabaseCommand extends VoidCommand
 
 		ReflectogrammLoadDialog dialog;
 		JFrame parent = Environment.getActiveWindow();
-		if(Pool.get("dialog", parent.getName()) != null)
+		if(Heap.getRLDialogByKey(parent.getName()) != null)
 		{
-			dialog = (ReflectogrammLoadDialog)Pool.get("dialog", parent.getName());
+			dialog = Heap.getRLDialogByKey(parent.getName());
 		}
 		else
 		{
 			dialog = new ReflectogrammLoadDialog (aContext);
-			Pool.put("dialog", parent.getName(), dialog);
+			Heap.setRLDialogByKey(parent.getName(), dialog);
 		}
 
 		//Environment.getActiveWindow()
@@ -102,12 +102,12 @@ public class LoadTraceFromDatabaseCommand extends VoidCommand
 		if (bs == null)
 			return;
 
-		if (Pool.getMap("bellcorestructure") != null )
+		if (!Heap.hasEmptyAllBSMap())
 		{
-			if ((BellcoreStructure)Pool.get("bellcorestructure", RefUpdateEvent.PRIMARY_TRACE) != null)
+			if (Heap.getBSPrimaryTrace() != null)
 				new FileCloseCommand(dispatcher, aContext).execute();
 		}
-		Pool.put("bellcorestructure", RefUpdateEvent.PRIMARY_TRACE, bs);
+		Heap.setBSPrimaryTrace(bs);
 
 		if (res.getSort().equals(ResultSort.RESULT_SORT_MEASUREMENT)) {
 			Measurement m = (Measurement)res.getAction();
@@ -117,21 +117,21 @@ public class LoadTraceFromDatabaseCommand extends VoidCommand
 	
 			bs.measurementId = m.getId().getIdentifierString();
 			MeasurementSetup ms = m.getSetup();
-			Pool.put(AnalysisUtil.CONTEXT, "MeasurementSetup", ms);
+			Heap.setContextMeasurementSetup(ms);
 	
 			AnalysisUtil.load_CriteriaSet(userId, ms);
 	
 			if (ms.getEtalon() != null)
 				AnalysisUtil.load_Etalon(ms);
 			else
-				Pool.remove("bellcorestructure", AnalysisUtil.ETALON);
+				Heap.removeAnyBSByName(AnalysisUtil.ETALON);
 	
 			AnalysisUtil.load_Thresholds(userId, ms);
 	
 			new InitialAnalysisCommand().execute();
 	
-			ModelTraceManager mtmEtalon = (ModelTraceManager )Pool.get(ModelTraceManager.CODENAME, AnalysisUtil.ETALON);
-			ModelTraceManager mtmEvents = (ModelTraceManager )Pool.get(ModelTraceManager.CODENAME, RefUpdateEvent.PRIMARY_TRACE);
+			ModelTraceManager mtmEtalon = Heap.getMTMByKey(AnalysisUtil.ETALON);
+			ModelTraceManager mtmEvents = Heap.getMTMByKey(RefUpdateEvent.PRIMARY_TRACE);
 	
 			if (mtmEtalon != null && mtmEvents != null)
 			{

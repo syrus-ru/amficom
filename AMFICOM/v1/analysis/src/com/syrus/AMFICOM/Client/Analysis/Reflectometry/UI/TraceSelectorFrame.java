@@ -8,10 +8,10 @@ import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.table.AbstractTableModel;
 
+import com.syrus.AMFICOM.Client.Analysis.Heap;
 import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.Client.General.UI.FixedSizeEditableTableModel;
-import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.Client.Resource.ResourceKeys;
 import com.syrus.io.BellcoreStructure;
 
@@ -70,7 +70,7 @@ public class TraceSelectorFrame extends JInternalFrame
 				traces.add(id);
 
 				String title = id;
-				BellcoreStructure bs = (BellcoreStructure)Pool.get("bellcorestructure", id);
+				BellcoreStructure bs = Heap.getAnyBSTraceByKey(id);
 				if (bs != null)
 					title = bs.title;
 

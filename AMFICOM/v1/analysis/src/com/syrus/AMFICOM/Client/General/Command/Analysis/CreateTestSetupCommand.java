@@ -3,13 +3,13 @@ package com.syrus.AMFICOM.Client.General.Command.Analysis;
 import javax.swing.JOptionPane;
 
 import com.syrus.AMFICOM.Client.Analysis.AnalysisUtil;
+import com.syrus.AMFICOM.Client.Analysis.Heap;
 import com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.AnalyseMainFrameSimplified;
 import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.Event.RefChangeEvent;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.Client.General.Model.*;
-import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.measurement.*;
 import com.syrus.io.BellcoreStructure;
@@ -32,12 +32,11 @@ public class CreateTestSetupCommand extends VoidCommand
 
 	public void execute()
 	{
-		BellcoreStructure bs = (BellcoreStructure)Pool.get("bellcorestructure", traceid);
+		BellcoreStructure bs = Heap.getAnyBSTraceByKey(traceid);
 		if (bs == null)
 			return;
 
-		// for local debugging, allow creating test setups with no monitoredElement 
-		if (bs.monitoredElementId == null && !AnalyseMainFrameSimplified.DEBUG)
+		if (bs.monitoredElementId == null)
 		{
 			JOptionPane.showMessageDialog (
 					Environment.getActiveWindow(),
@@ -47,7 +46,7 @@ public class CreateTestSetupCommand extends VoidCommand
 			return;
 		}
 
-		MeasurementSetup ms = (MeasurementSetup)Pool.get(AnalysisUtil.CONTEXT, "MeasurementSetup");
+		MeasurementSetup ms = Heap.getContextMeasurementSetup();
 
 		String name = JOptionPane.showInputDialog(
 				Environment.getActiveWindow(),
@@ -57,7 +56,7 @@ public class CreateTestSetupCommand extends VoidCommand
 		if (name == null || name.equals(""))
 			return;
 
-		Pool.remove(AnalysisUtil.CONTEXT, "MeasurementSetup");
+		Heap.setContextMeasurementSetup(null);
 
 		MeasurementSetup measurementSetup;
 		try
@@ -87,8 +86,8 @@ public class CreateTestSetupCommand extends VoidCommand
 			e.printStackTrace();
 			return;
 		}
-		// будем считать status == OK, если в Pool есть объект MeasurementSetup
-		Pool.put(AnalysisUtil.CONTEXT, "MeasurementSetup", measurementSetup);
+		// будем считать status == OK, если в Heap.ContextMeasurementSetup != null
+		Heap.setContextMeasurementSetup(measurementSetup);
 
 		aContext.getDispatcher().notify(new RefChangeEvent(traceid,
 				RefChangeEvent.THRESHOLDS_CALC_EVENT));

@@ -20,6 +20,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JViewport;
 import javax.swing.UIManager;
 
+import com.syrus.AMFICOM.Client.Analysis.Heap;
 import com.syrus.AMFICOM.Client.General.Checker;
 import com.syrus.AMFICOM.Client.General.ConnectionInterface;
 import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
@@ -68,14 +69,12 @@ import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.General.Report.ReportTemplate;
 import com.syrus.AMFICOM.Client.General.UI.StatusBarModel;
 import com.syrus.AMFICOM.Client.General.UI.WindowArranger;
-import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.Client.Resource.ResourceKeys;
 import com.syrus.AMFICOM.administration.AdministrationStorableObjectPool;
 import com.syrus.AMFICOM.administration.Domain;
 import com.syrus.AMFICOM.analysis.ClientAnalysisManager;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.io.BellcoreStructure;
 
 public class ThresholdsMainFrame extends JFrame
 		implements OperationListener
@@ -486,12 +485,12 @@ public class ThresholdsMainFrame extends JFrame
 
 					aModel.fireModelChanged("");
 
-					String name = ((BellcoreStructure)Pool.get("bellcorestructure", RefUpdateEvent.PRIMARY_TRACE)).title;
+					String name = Heap.getBSPrimaryTrace().title;
 					setTitle(LangModelAnalyse.getString("ThresholdsTitle") + ": " + name);
 
 					thresholdsSelectionFrame.setVisible(true);
 				}
-				else if (id.equals("referencetrace"))
+				else if (id.equals(Heap.REFERENCE_TRACE_KEY))
 				{
 					aModel.setEnabled("menuTraceReferenceMakeCurrent", true);
 					aModel.fireModelChanged(new String [] {"menuTraceReferenceMakeCurrent"});
@@ -511,7 +510,7 @@ public class ThresholdsMainFrame extends JFrame
 			if(rce.CLOSE)
 			{
 				String id = (String)(rce.getSource());
-				if (Pool.getMap("bellcorestructure") == null)
+				if (Heap.getAllBSMap().isEmpty())
 				{
 					aModel.setEnabled("menuFileSave", false);
 					aModel.setEnabled("menuFileSaveAll", false);
@@ -562,12 +561,12 @@ public class ThresholdsMainFrame extends JFrame
 				}
 				else
 				{
-					if (id.equals("referencetrace"))
+					if (id.equals(Heap.REFERENCE_TRACE_KEY))
 					{
 						aModel.setEnabled("menuTraceReferenceMakeCurrent", false);
 						aModel.fireModelChanged(new String [] {"menuTraceReferenceMakeCurrent"});
 					}
-					Iterator it = Pool.getMap("bellcorestructure").keySet().iterator();
+					Iterator it = Heap.getAllBSMap().keySet().iterator();
 					String nextId = (String)it.next();
 					if (nextId.equals(RefUpdateEvent.PRIMARY_TRACE))
 					{

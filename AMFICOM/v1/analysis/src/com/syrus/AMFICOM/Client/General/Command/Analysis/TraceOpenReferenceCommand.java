@@ -5,12 +5,12 @@ import java.util.Properties;
 
 import javax.swing.JFileChooser;
 
+import com.syrus.AMFICOM.Client.Analysis.Heap;
 import com.syrus.AMFICOM.Client.General.Checker;
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.UI.ChoosableFileFilter;
-import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.io.*;
 
 public class TraceOpenReferenceCommand extends VoidCommand
@@ -83,15 +83,15 @@ public class TraceOpenReferenceCommand extends VoidCommand
 				 System.out.println("Error reading file: " + id);
 				 return;
 			}
-			if (Pool.getMap("bellcorestructure") != null )
+			if (!Heap.hasEmptyAllBSMap())
 			{
-				if (Pool.get("bellcorestructure", "referencetrace") != null)
+				if (Heap.getBSReferenceTrace() != null)
 					 new FileRemoveCommand (dispatcher, "referencetrace", aContext).execute();
 			}
 
 			String activeRefId = chooser.getSelectedFile().getAbsolutePath().toLowerCase();
 			bs.title = activeRefId;
-			Pool.put("bellcorestructure", "referencetrace", bs);
+			Heap.setBSReferenceTrace(bs);
 			dispatcher.notify(new RefChangeEvent("referencetrace",
 											RefChangeEvent.OPEN_EVENT));
 			try

@@ -5,10 +5,10 @@ import java.awt.event.MouseEvent;
 
 import javax.swing.UIManager;
 
+import com.syrus.AMFICOM.Client.Analysis.Heap;
 import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
-import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.analysis.dadara.*;
 
 public class ReflectogramEventsPanel extends TraceEventsPanel
@@ -60,12 +60,12 @@ public class ReflectogramEventsPanel extends TraceEventsPanel
 	public void updateMinTraceLevel(Double value)
 	{
 		min_trace_level = value;
-		Pool.put("min_trace_level", RefUpdateEvent.PRIMARY_TRACE, min_trace_level);
+		Heap.setMinTraceLevel(min_trace_level);
 	}
 
 	public void updateNoiseLevel()
 	{
-		RefAnalysis ana = (RefAnalysis)Pool.get("refanalysis", RefUpdateEvent.PRIMARY_TRACE);
+		RefAnalysis ana = Heap.getRefAnalysisByKey(RefUpdateEvent.PRIMARY_TRACE);
 		if (ana != null)
 		{
 			TraceEvent ev = ana.overallStats;
@@ -73,11 +73,10 @@ public class ReflectogramEventsPanel extends TraceEventsPanel
 				noise_level = ev.data[2];
 		}
 
-		min_trace_level = (Double)Pool.get("min_trace_level", RefUpdateEvent.PRIMARY_TRACE);
+		min_trace_level = Heap.getMinTraceLevel();
 		if (min_trace_level == null)
 		{
-			min_trace_level = new Double(noise_level - 3);
-			Pool.put("min_trace_level", RefUpdateEvent.PRIMARY_TRACE, min_trace_level);
+			updateMinTraceLevel(new Double(noise_level - 3));
 		}
 	}
 

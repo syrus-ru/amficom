@@ -4,9 +4,9 @@ import java.io.IOException;
 import java.util.*;
 
 import com.syrus.AMFICOM.Client.Analysis.AnalysisUtil;
+import com.syrus.AMFICOM.Client.Analysis.Heap;
 import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
-import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceManager;
 import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.measurement.*;
@@ -48,7 +48,7 @@ public class ThresholdsFrame extends SimpleResizableFrame implements OperationLi
 	{
 		this.dispatcher = dispatcher;
 		bellcoreTraces = new HashMap();
-		Pool.put("bellcoremap", "current", bellcoreTraces);
+		Heap.setBsBellCoreMap(bellcoreTraces);
 		dispatcher.register(this, RefChangeEvent.typ);
 	}
 
@@ -88,7 +88,7 @@ public class ThresholdsFrame extends SimpleResizableFrame implements OperationLi
 		if (traces.get(id) != null)
 			return;
 
-		BellcoreStructure bs = (BellcoreStructure)Pool.get("bellcorestructure", id);
+		BellcoreStructure bs = Heap.getAnyBSTraceByKey(id);
 		if (bs != null)
 			addTrace (id);
 		else
@@ -109,7 +109,7 @@ public class ThresholdsFrame extends SimpleResizableFrame implements OperationLi
 //				return;
 //			}
 
-			MeasurementSetup ms = (MeasurementSetup)Pool.get(AnalysisUtil.CONTEXT, "MeasurementSetup");
+			MeasurementSetup ms = Heap.getContextMeasurementSetup();
 			if (ms == null)
 				return;
 			SetParameter[] params = ms.getParameterSet().getParameters();
@@ -139,7 +139,7 @@ public class ThresholdsFrame extends SimpleResizableFrame implements OperationLi
 					traces.remove(id);
 				}
 
-				ModelTraceManager mtm = (ModelTraceManager )Pool.get(ModelTraceManager.CODENAME, id);
+				ModelTraceManager mtm = Heap.getMTMByKey(id);
 				if (mtm != null)
 				{
 					double[] y = mtm.getModelTrace().getYArrayZeroPad(0, n);
@@ -168,7 +168,7 @@ public class ThresholdsFrame extends SimpleResizableFrame implements OperationLi
 		if (traces.get(id) != null)
 			return;
 		SimpleGraphPanel p;
-		BellcoreStructure bs = (BellcoreStructure)Pool.get("bellcorestructure", id);
+		BellcoreStructure bs = Heap.getAnyBSTraceByKey(id);
 		bellcoreTraces.put(id, bs);
 
 		double deltaX = bs.getResolution();
@@ -177,7 +177,7 @@ public class ThresholdsFrame extends SimpleResizableFrame implements OperationLi
 		if (id.equals(RefUpdateEvent.PRIMARY_TRACE) || id.equals("modeledtrace"))
 		{
 			p = new ThresholdsPanel(panel, dispatcher, y, deltaX);
-			ModelTraceManager mtm = ((ModelTraceManager )Pool.get(ModelTraceManager.CODENAME, id));
+			ModelTraceManager mtm = Heap.getMTMByKey(id);
 			((ThresholdsPanel)p).updateTrace(mtm);
 			((ThresholdsPanel)p).updEvents(id);
 			((ThresholdsPanel)p).updateNoiseLevel();
@@ -205,7 +205,7 @@ public class ThresholdsFrame extends SimpleResizableFrame implements OperationLi
 			((ThresholdsLayeredPanel)panel).removeAllGraphPanels();
 			traces = new HashMap();
 			bellcoreTraces = new HashMap();
-			Pool.put("bellcoremap", "current", bellcoreTraces);
+			Heap.setBsBellCoreMap(bellcoreTraces);
 		}
 		else
 		{

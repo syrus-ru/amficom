@@ -1,9 +1,10 @@
 package com.syrus.AMFICOM.Client.General.Command.Analysis;
 
 import java.util.Map;
+
+import com.syrus.AMFICOM.Client.Analysis.Heap;
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.Event.RefUpdateEvent;
-import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.analysis.ClientAnalysisManager;
 import com.syrus.AMFICOM.analysis.CoreAnalysisManager;
 import com.syrus.AMFICOM.analysis.dadara.*;
@@ -20,21 +21,19 @@ public class InitialAnalysisCommand extends VoidCommand {
 
 	public void execute()
 	{
-		BellcoreStructure bs = (BellcoreStructure)Pool.get("bellcorestructure", RefUpdateEvent.PRIMARY_TRACE);
+		BellcoreStructure bs = Heap.getBSPrimaryTrace();
 		if (bs != null)
 		{
 			//double deltaX = bs.getResolution();
 			double[] y = bs.getTraceData();
 
-			double[] params = (double[]) Pool.get(OT_analysisparameters,
-					OID_minuitanalysis);
+			double[] params = Heap.getMinuitAnalysisParams();
 			if (params == null) {
 				new ClientAnalysisManager();
-				params = (double[]) Pool.get(OT_analysisparameters,
-						OID_minuitanalysis);
+				params = Heap.getMinuitAnalysisParams();
 			}
 
-			Map tracesMap = (Map )Pool.get("bellcoremap", "current");
+			Map tracesMap = Heap.getBsBellCoreMap();
 
 			double[] pars = new double[params.length];
 			for (int i = 0; i < params.length; i++)
@@ -52,9 +51,8 @@ public class InitialAnalysisCommand extends VoidCommand {
 	        RefAnalysis a = new RefAnalysis();
 			a.decode(y, mtm);
 
-			Pool.put("refanalysis", RefUpdateEvent.PRIMARY_TRACE, a);
-			//Pool.remove("eventparams", RefUpdateEvent.PRIMARY_TRACE);
-			Pool.put(ModelTraceManager.CODENAME, RefUpdateEvent.PRIMARY_TRACE, mtm);
+			Heap.setRefAnalysisByKey(RefUpdateEvent.PRIMARY_TRACE, a);
+			Heap.setMTMByKey(RefUpdateEvent.PRIMARY_TRACE, mtm);
 		}
 	}
 }

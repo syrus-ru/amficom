@@ -3,12 +3,12 @@ package com.syrus.AMFICOM.Client.General.Command.Analysis;
 import javax.swing.JOptionPane;
 
 import com.syrus.AMFICOM.Client.Analysis.AnalysisUtil;
+import com.syrus.AMFICOM.Client.Analysis.Heap;
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.Event.RefChangeEvent;
 import com.syrus.AMFICOM.Client.General.Event.RefUpdateEvent;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.Client.General.Model.*;
-import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.measurement.*;
 import com.syrus.io.BellcoreStructure;
 
@@ -39,7 +39,7 @@ public class LoadEtalonCommand extends VoidCommand
 
 	public void execute()
 	{
-		BellcoreStructure bs = (BellcoreStructure)Pool.get("bellcorestructure", RefUpdateEvent.PRIMARY_TRACE);
+		BellcoreStructure bs = Heap.getBSPrimaryTrace();
 		if (bs.measurementId == null)
 		{
 			JOptionPane.showMessageDialog(
@@ -63,7 +63,7 @@ public class LoadEtalonCommand extends VoidCommand
 //			return;
 //		}
 
-		MeasurementSetup ms = (MeasurementSetup)Pool.get(AnalysisUtil.CONTEXT, "MeasurementSetup");
+		MeasurementSetup ms = Heap.getContextMeasurementSetup();
 		if (ms != null)
 		if (ms.getEtalon() == null)
 		{

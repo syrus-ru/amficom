@@ -3,13 +3,13 @@ package com.syrus.AMFICOM.Client.General.Command.Analysis;
 import javax.swing.JOptionPane;
 
 import com.syrus.AMFICOM.Client.Analysis.AnalysisUtil;
+import com.syrus.AMFICOM.Client.Analysis.Heap;
 import com.syrus.AMFICOM.Client.Analysis.UI.TestSetupLoadDialog;
 import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.Client.General.Model.*;
-import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.measurement.MeasurementSetup;
 import com.syrus.io.BellcoreStructure;
@@ -32,7 +32,7 @@ public class LoadTestSetupCommand extends VoidCommand
 
 	public void execute()
 	{
-		BellcoreStructure bs = (BellcoreStructure)Pool.get("bellcorestructure", traceid);
+		BellcoreStructure bs = Heap.getAnyBSTraceByKey(traceid);
 		if (bs == null || bs.monitoredElementId == null)
 		{
 			JOptionPane.showMessageDialog(
@@ -51,12 +51,12 @@ public class LoadTestSetupCommand extends VoidCommand
 //			return;
 
 		MeasurementSetup ms = dialog.resource;
-		Pool.put(AnalysisUtil.CONTEXT, "MeasurementSetup", ms);
+		Heap.setContextMeasurementSetup(ms);
 
 		Identifier userId = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).getAccessIdentifier().user_id);
 //		bs.test_setup_id = ts.getId();
 
-		if (Pool.get("eventparams", AnalysisUtil.ETALON) != null)
+		if (Heap.hasEventParamsForEtalonTrace()) // если эталон есть (уже открыт) - то закрыть
 		{
 			aContext.getDispatcher().notify(new RefChangeEvent(AnalysisUtil.ETALON, RefChangeEvent.CLOSE_EVENT));
 			aContext.getDispatcher().notify(new RefChangeEvent(RefUpdateEvent.PRIMARY_TRACE, RefChangeEvent.SELECT_EVENT));

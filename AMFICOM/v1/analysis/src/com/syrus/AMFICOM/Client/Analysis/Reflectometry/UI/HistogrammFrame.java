@@ -1,8 +1,8 @@
 package com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI;
 
+import com.syrus.AMFICOM.Client.Analysis.Heap;
 import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
-import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.io.BellcoreStructure;
 
 public class HistogrammFrame extends ScalableFrame implements OperationListener
@@ -69,7 +69,7 @@ public class HistogrammFrame extends ScalableFrame implements OperationListener
 		{
 			HistogrammPanel p;
 
-			BellcoreStructure bs = (BellcoreStructure)Pool.get("bellcorestructure", id);
+			BellcoreStructure bs = Heap.getAnyBSTraceByKey(id);
 			if (bs == null)
 				return;
 

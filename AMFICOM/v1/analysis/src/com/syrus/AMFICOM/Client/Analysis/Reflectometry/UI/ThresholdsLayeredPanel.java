@@ -8,6 +8,7 @@ import javax.swing.JButton;
 import javax.swing.JToggleButton;
 import javax.swing.UIManager;
 
+import com.syrus.AMFICOM.Client.Analysis.Heap;
 import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
 import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
 import com.syrus.AMFICOM.Client.General.Event.OperationListener;
@@ -15,7 +16,6 @@ import com.syrus.AMFICOM.Client.General.Event.RefChangeEvent;
 import com.syrus.AMFICOM.Client.General.Event.RefUpdateEvent;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
-import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.Client.Resource.ResourceKeys;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceManager;
 
@@ -84,7 +84,7 @@ public class ThresholdsLayeredPanel extends TraceEventsLayeredPanel implements O
 						String id = (String)(rue.getSource());
 						//if (id.equals(RefUpdateEvent.PRIMARY_TRACE))
 						{
-							ModelTraceManager mtm = ((ModelTraceManager )Pool.get(ModelTraceManager.CODENAME, id));
+							ModelTraceManager mtm = Heap.getMTMByKey(id);
 							((ThresholdsPanel)panel).updEvents(id);
 							((ThresholdsPanel)panel).updateTrace(mtm);
 							updScale2fitCurrentEv(.2, 1.);
@@ -95,10 +95,7 @@ public class ThresholdsLayeredPanel extends TraceEventsLayeredPanel implements O
 					{
 						String id = (String)(rue.getSource());
 
-						//ReflectogramEvent[] ep = ((ReflectogramEvent[])Pool.get("eventparams", id));
-						//((ThresholdsPanel)panel).updateThresholds(ep);
-
-						ModelTraceManager mtm = ((ModelTraceManager )Pool.get(ModelTraceManager.CODENAME, id));
+						ModelTraceManager mtm = Heap.getMTMByKey(id);
 						((ThresholdsPanel)panel).updateThresholds(mtm);
 
 						updScale2fitCurrentEv(.2, 1.);

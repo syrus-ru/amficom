@@ -6,9 +6,9 @@ import java.util.HashMap;
 import java.awt.event.*;
 
 import com.syrus.AMFICOM.Client.Analysis.AnalysisUtil;
+import com.syrus.AMFICOM.Client.Analysis.Heap;
 import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
-import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceManager;
 import com.syrus.AMFICOM.configuration.*;
 import com.syrus.AMFICOM.general.*;
@@ -110,7 +110,7 @@ public class AnalysisFrame extends ScalableFrame implements OperationListener
 		if (traces.get(id) != null)
 			return;
 		SimpleGraphPanel p;
-		BellcoreStructure bs = (BellcoreStructure)Pool.get("bellcorestructure", id);
+		BellcoreStructure bs = Heap.getAnyBSTraceByKey(id);
 		if (bs == null)
 			return;
 
@@ -170,7 +170,7 @@ public class AnalysisFrame extends ScalableFrame implements OperationListener
 		if (traces.get(id) != null)
 			return;
 
-		BellcoreStructure bs = (BellcoreStructure)Pool.get("bellcorestructure", id);
+		BellcoreStructure bs = Heap.getAnyBSTraceByKey(id);
 		if (bs != null)
 			addTrace (id);
 		else
@@ -194,7 +194,7 @@ public class AnalysisFrame extends ScalableFrame implements OperationListener
 //				return;
 //			}
 
-			MeasurementSetup ms = (MeasurementSetup)Pool.get(AnalysisUtil.CONTEXT, "MeasurementSetup");
+			MeasurementSetup ms = Heap.getContextMeasurementSetup();
 			if (ms == null)
 				return;
 			SetParameter[] params = ms.getParameterSet().getParameters();
@@ -224,7 +224,7 @@ public class AnalysisFrame extends ScalableFrame implements OperationListener
 					traces.remove(id);
 				}
 
-				ModelTraceManager mtm = (ModelTraceManager )Pool.get(ModelTraceManager.CODENAME, id);
+				ModelTraceManager mtm = Heap.getMTMByKey(id);
 				if (mtm != null)
 				{
 					double[] y = new double[n];

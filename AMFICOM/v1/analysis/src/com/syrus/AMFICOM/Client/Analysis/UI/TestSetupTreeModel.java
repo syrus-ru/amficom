@@ -9,6 +9,7 @@ import java.util.List;
 
 import javax.swing.ImageIcon;
 
+import com.syrus.AMFICOM.Client.Analysis.Heap;
 import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
 import com.syrus.AMFICOM.Client.General.Event.RefUpdateEvent;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
@@ -18,7 +19,6 @@ import com.syrus.AMFICOM.Client.General.UI.ObjectResourceTreeModel;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourceTreeNode;
 import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
 
-import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 import com.syrus.AMFICOM.administration.Domain;
 import com.syrus.AMFICOM.configuration.MonitoredElement;
@@ -41,7 +41,7 @@ class TestSetupTreeModel extends ObjectResourceTreeModel
 
 	public ObjectResourceTreeNode getRoot()
 	{
-		BellcoreStructure bs = (BellcoreStructure)Pool.get("bellcorestructure", RefUpdateEvent.PRIMARY_TRACE);
+		BellcoreStructure bs = Heap.getBSPrimaryTrace();
 		try
 		{
 			MonitoredElement me = (MonitoredElement)ConfigurationStorableObjectPool.getStorableObject(
@@ -104,7 +104,7 @@ class TestSetupTreeModel extends ObjectResourceTreeModel
 
 			if(s.equals("root"))
 			{
-				BellcoreStructure bs = (BellcoreStructure)Pool.get("bellcorestructure", RefUpdateEvent.PRIMARY_TRACE);
+				BellcoreStructure bs = Heap.getBSPrimaryTrace();
 				if (bs != null && !bs.monitoredElementId.equals(""))
 				{
 					Identifier me_id = new Identifier(bs.monitoredElementId);

@@ -5,13 +5,13 @@ import java.util.Properties;
 
 import javax.swing.JFileChooser;
 
+import com.syrus.AMFICOM.Client.Analysis.Heap;
 import com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.AnalyseMainFrameSimplified;
 import com.syrus.AMFICOM.Client.General.Checker;
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.UI.ChoosableFileFilter;
-import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.io.*;
 
 public class FileSaveCommand extends VoidCommand
@@ -79,7 +79,7 @@ public class FileSaveCommand extends VoidCommand
 		int returnVal = chooser.showSaveDialog(null);
 		if(returnVal == JFileChooser.APPROVE_OPTION)
 		{
-			bs = (BellcoreStructure)(Pool.get("bellcorestructure", RefUpdateEvent.PRIMARY_TRACE));
+			bs = Heap.getBSPrimaryTrace();
 			try
 			{
 				FileOutputStream fos = new FileOutputStream(chooser.getSelectedFile());
