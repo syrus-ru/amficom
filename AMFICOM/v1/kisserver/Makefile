@@ -1,188 +1,180 @@
-SRC=./src
-CLASSES=./classes
-IDL=./idl
-LOAD=../load
-LIB=../lib
-EXTLIB=../../extlib
-#ORACLE_HOME=/mnt/d/oracle/product/9.0.2
+#
+# $Id: Makefile,v 1.4 2004/06/21 11:16:58 bass Exp $
+#
+# vim:set ft=make:
+#
 
-VBCLASSPATH=$(ORACLE_HOME)/lib/vbjapp.jar:$(ORACLE_HOME)/lib/vbjorb.jar
-MYCLASSPATH=$(LIB)/ServerInterface_Survey.jar:$(LIB)/ServerInterface_Alarm.jar:$(LIB)/ServerInterface_General.jar:$(LIB)/server.jar:$(LIB)/util.jar:$(LIB)/utilserver.jar
-SQLJCLASSPATH=$(JDEV_HOME)/sqlj/lib/translator.jar:$(JDEV_HOME)/sqlj/lib/runtime12.jar:$(JDEV_HOME)/jdbc/lib/classes12.jar
+MODULE_NAME = kisserver_v1
+MODULE_VERSION = $(shell date +%Y%m%d)
 
-#SERVERHOSTNAME=mgts
-#CONNECTSTRING=asia
-#SERVERHOSTNAME=ararat
-#CONNECTSTRING=ararat
-SERVERHOSTNAME=research
-CONNECTSTRING=shaitan
-#SERVERHOSTNAME=amficom
-#CONNECTSTRING=jamaica
-#SERVERHOSTNAME=mousebuster
-#CONNECTSTRING=andrei
+USER = AMFICOM
+PASSWORD = amficom
+HOST = RESEARCH
+SERVICE_NAME = SHAITAN
 
-IDL2JAVA=idl2java
-IDL2JAVAOPTIONS=-no_examples -no_tie -root_dir $(SRC)
-JAVAC=javac
-SQLJ=sqlj
-SQLJOPTIONS=-optcols -compiler-executable=$(JAVAC) -codegen=oraclejdbc -ser2class -status -u amficom/amficom -d $(CLASSES) -dir $(SRC) -url=jdbc:oracle:thin:@$(SERVERHOSTNAME):1521:$(CONNECTSTRING) -classpath $(CLASSES):$(MYCLASSPATH):$(SQLJCLASSPATH)
-JAR=jar-3.3.1
+LIBNAME = $(subst _v1,,$(MODULE_NAME)).jar
 
-LIBNAME=kisserver.jar
-ARCHFILE=kisserver.tar.gz
+SRC_SUFFIXES = \
+	.java \
+	.generated.java
 
+CLASS_SUFFIXES = \
+	.class \
+	$$%.class \
+	_SJProfile0.class \
+	_SJProfileKeys.class
 
-.PHONY:	clean cleanmach lp arch drop
+IDLDIR = idl
+SRCDIR = src
+CLASSDIR = classes
+ifeq ($(shell hostname -s),bass)
+LIBDIR = lib
+else
+LIBDIR = ../lib
+endif
+ENCODING = windows-1251
+JAVACFLAGS = -source 1.3 -sourcepath $(SRCDIR) -deprecation -g -O
+SUNJAVACFLAGS = -target 1.2
+JIKESFLAGS = \
+	-target 1.2 \
+	-bootclasspath $(JAVA_HOME)/jre/lib/rt.jar \
+	+E \
+	+P \
+	+Pmodifier-order \
+	+Predundant-modifiers \
+	+Pno-switchcheck \
+	+Pnaming-convention \
+	+T=8
+IDL2JAVAFLAGS = \
+	-C \
+	-H \
+	-no_bind \
+	-no_examples \
+	-narrow_compliance \
+	-portable \
+	-root_dir $(SRCDIR) \
+	-strict \
+	-no_toString
+SQLJFLAGS = \
+	-cache=true \
+	-checkfilename=true \
+	-checksource=true \
+	-codegen=iso \
+	-compile=true \
+	-compiler-encoding-flag=true \
+	-explain=true \
+	-linemap=true \
+	-parse=both \
+	-password "$(PASSWORD)" \
+	-profile=true \
+	-ser2class=true \
+	-status=false \
+	-url "jdbc:oracle:oci:@(DESCRIPTION=(ADDRESS_LIST=(ADDRESS=(PROTOCOL=TCP)(HOST=$(HOST))(PORT=1521)))(CONNECT_DATA=(SERVICE_NAME=$(SERVICE_NAME))))" \
+	-user "$(USER)" \
+	-warn=all
 
-$(LIBNAME):	impl
-	$(JAR) -cf ./$(LIBNAME)\
-		-C $(CLASSES) com/syrus/AMFICOM/server/measurement\
-		-C $(CLASSES) com/syrus/AMFICOM/server/event\
-		-C $(CLASSES) com/syrus/AMFICOM/CORBA
-	cp -f ./$(LIBNAME) $(LIB)
+include Makefile.inc
+$(call checkenve,JAVA_HOME)
+$(call checkenve,ORACLE_HOME)
+$(call checkenve,IDL2JAVA)
 
-impl:	mach agsets
-	$(JAVAC) -d $(CLASSES) -sourcepath $(SRC) -classpath $(VBCLASSPATH):$(MYCLASSPATH):$(SQLJCLASSPATH) $(SRC)/com/syrus/AMFICOM/server/measurement/AMFICOMKISImplementation.java
-	touch impl
+.PHONY: export
+export: $(LIBNAME)
 
-mach:	corba
-	$(SQLJ) $(SQLJOPTIONS)\
-		$(SRC)/com/syrus/AMFICOM/server/measurement/Action.java\
-		$(SRC)/com/syrus/AMFICOM/server/measurement/Analysis.sqlj\
-		$(SRC)/com/syrus/AMFICOM/server/measurement/CriteriaSet.sqlj\
-		$(SRC)/com/syrus/AMFICOM/server/measurement/Evaluation.sqlj\
-		$(SRC)/com/syrus/AMFICOM/server/measurement/Etalon.sqlj\
-		$(SRC)/com/syrus/AMFICOM/server/measurement/ThresholdSet.sqlj\
-		$(SRC)/com/syrus/AMFICOM/server/measurement/TestArgumentSet.sqlj\
-		$(SRC)/com/syrus/AMFICOM/server/measurement/SetParameter.java\
-		$(SRC)/com/syrus/AMFICOM/server/measurement/Modeling.sqlj\
-		$(SRC)/com/syrus/AMFICOM/server/measurement/Argument.java\
-		$(SRC)/com/syrus/AMFICOM/server/measurement/Parameter.java\
-		$(SRC)/com/syrus/AMFICOM/server/measurement/Test.sqlj\
-		$(SRC)/com/syrus/AMFICOM/server/measurement/Result.sqlj\
-		$(SRC)/com/syrus/AMFICOM/server/measurement/AnalysisType.sqlj\
-		$(SRC)/com/syrus/AMFICOM/server/measurement/EvaluationType.sqlj\
-		$(SRC)/com/syrus/AMFICOM/server/measurement/TestType.sqlj\
-		$(SRC)/com/syrus/AMFICOM/server/measurement/EtalonType.sqlj\
-		$(SRC)/com/syrus/AMFICOM/server/measurement/ModelingType.sqlj\
-		$(SRC)/com/syrus/AMFICOM/server/measurement/ParameterType.java\
-		$(SRC)/com/syrus/AMFICOM/server/measurement/TestSetup.sqlj\
-		$(SRC)/com/syrus/AMFICOM/server/event/EventSourceType.sqlj\
-		$(SRC)/com/syrus/AMFICOM/server/event/AlarmType.sqlj\
-		$(SRC)/com/syrus/AMFICOM/server/event/EventSource.sqlj\
-		$(SRC)/com/syrus/AMFICOM/server/event/Event.sqlj\
-		$(SRC)/com/syrus/AMFICOM/server/event/Alarm.sqlj\
-		$(SRC)/com/syrus/AMFICOM/server/event/Alerting.sqlj\
-		$(SRC)/com/syrus/AMFICOM/server/event/RuleParser.java
-	touch mach
+.PHONY: all
+all: .all
 
-agsets:	corba
-	$(SQLJ) $(SQLJOPTIONS) $(SRC)/com/syrus/AMFICOM/server/measurement/AgentSettings.sqlj
-	touch agsets
+.all: .idl .sqlj
+	$(JAVAC) \
+		$(JAVACFLAGS) \
+		-classpath $(AMFICOMCLASSPATH)$(AURORACLASSPATH):$(VBJCLASSPATH):$(JDBCCLASSPATH):$(SQLJCLASSPATH):$(CLASSDIR) \
+		-d $(CLASSDIR) \
+		-encoding $(ENCODING) \
+	 	$(shell find $(SRCDIR) -name '*.java')
+	touch $@
 
-corba:
-	$(IDL2JAVA) $(IDL2JAVAOPTIONS) $(IDL)/KIS.idl
-	$(IDL2JAVA) $(IDL2JAVAOPTIONS) $(IDL)/AMFICOMKIS.idl
-	$(JAVAC) -d $(CLASSES) -sourcepath $(SRC) -classpath $(VBCLASSPATH):$(MYCLASSPATH) $(SRC)/com/syrus/AMFICOM/CORBA/AMFICOMKIS.java
-	$(JAVAC) -d $(CLASSES) -sourcepath $(SRC) -classpath $(VBCLASSPATH):$(MYCLASSPATH) $(SRC)/com/syrus/AMFICOM/CORBA/AMFICOMKISHelper.java
-	$(JAVAC) -d $(CLASSES) -sourcepath $(SRC) -classpath $(VBCLASSPATH):$(MYCLASSPATH) $(SRC)/com/syrus/AMFICOM/CORBA/_AMFICOMKISImplBase.java
-	$(JAVAC) -d $(CLASSES) -sourcepath $(SRC) -classpath $(VBCLASSPATH):$(MYCLASSPATH) $(SRC)/com/syrus/AMFICOM/CORBA/KIS/*.java
-	touch corba
+.PHONY: idl
+idl: .idl
 
-lp:     $(LIBNAME)
-#	$(LOAD)/lp ./$(LIBNAME) $(SERVERHOSTNAME) $(CONNECTSTRING)
+.idl: $(SRCDIR) $(CLASSDIR)
+	$(IDL2JAVA) \
+		$(IDL2JAVAFLAGS) \
+		$(IDLDIR)/AMFICOMKIS.idl \
+		$(IDLDIR)/KIS.idl
+	touch $@
 
-drop:
-	dropjava -user amficom/amficom@$(CONNECTSTRING) -verbose $(LIBNAME)
+.PHONY: idlclean
+idlclean:
+	$(RM) -r \
+		.idl
 
-misc:
-	$(JAVAC) -d $(CLASSES) -sourcepath $(SRC) -classpath $(SQLJCLASSPATH):$(VBCLASSPATH) $(SRC)/com/syrus/AMFICOM/server/load/ConnectionManager.java
-	touch misc
+.PHONY: sqlj
+sqlj: .sqlj
 
-clean:	cleanmach
-	rm -f $(SRC)/com/syrus/AMFICOM/server/measurement/AgentSettings.java
-	rm -f $(SRC)/com/syrus/AMFICOM/server/measurement/AgentSettings.generated.java
-	rm -rf $(CLASSES)/com
-	rm -f ./$(LIBNAME)
-	rm -rf $(SRC)/com/syrus/AMFICOM/CORBA/
-	rm -f corba misc impl agsets
+.sqlj: $(CLASSDIR)
+	echo "sqlj.compiler-executable=$(JAVAC) $(JAVACFLAGS)" > sqlj.properties
+	$(SQLJ) \
+		$(SQLJFLAGS) \
+		-classpath $(AMFICOMCLASSPATH)$(JDBCCLASSPATH):$(SQLJCLASSPATH):$(CLASSDIR) \
+		-d $(CLASSDIR) \
+		-encoding $(ENCODING) \
+		$(SRCDIR)/com/syrus/AMFICOM/server/event/Alarm.sqlj \
+		$(SRCDIR)/com/syrus/AMFICOM/server/event/AlarmType.sqlj \
+		$(SRCDIR)/com/syrus/AMFICOM/server/event/Alerting.sqlj \
+		$(SRCDIR)/com/syrus/AMFICOM/server/event/Event.sqlj \
+		$(SRCDIR)/com/syrus/AMFICOM/server/event/EventSource.sqlj \
+		$(SRCDIR)/com/syrus/AMFICOM/server/event/EventSourceType.sqlj \
+		$(SRCDIR)/com/syrus/AMFICOM/server/measurement/AgentSettings.sqlj \
+		$(SRCDIR)/com/syrus/AMFICOM/server/measurement/Analysis.sqlj \
+		$(SRCDIR)/com/syrus/AMFICOM/server/measurement/AnalysisType.sqlj \
+		$(SRCDIR)/com/syrus/AMFICOM/server/measurement/CriteriaSet.sqlj \
+		$(SRCDIR)/com/syrus/AMFICOM/server/measurement/Etalon.sqlj \
+		$(SRCDIR)/com/syrus/AMFICOM/server/measurement/EtalonType.sqlj \
+		$(SRCDIR)/com/syrus/AMFICOM/server/measurement/Evaluation.sqlj \
+		$(SRCDIR)/com/syrus/AMFICOM/server/measurement/EvaluationType.sqlj \
+		$(SRCDIR)/com/syrus/AMFICOM/server/measurement/Modeling.sqlj \
+		$(SRCDIR)/com/syrus/AMFICOM/server/measurement/ModelingType.sqlj \
+		$(SRCDIR)/com/syrus/AMFICOM/server/measurement/Result.sqlj \
+		$(SRCDIR)/com/syrus/AMFICOM/server/measurement/Test.sqlj \
+		$(SRCDIR)/com/syrus/AMFICOM/server/measurement/TestArgumentSet.sqlj \
+		$(SRCDIR)/com/syrus/AMFICOM/server/measurement/TestSetup.sqlj \
+		$(SRCDIR)/com/syrus/AMFICOM/server/measurement/TestType.sqlj \
+		$(SRCDIR)/com/syrus/AMFICOM/server/measurement/ThresholdSet.sqlj \
+		$(SRCDIR)/com/syrus/AMFICOM/server/measurement/Action.java
+	$(RM) \
+		$(filter $(foreach source, $(subst .sqlj,, $(shell find $(SRCDIR) -name '*\.sqlj')), $(foreach src_suffix, $(SRC_SUFFIXES), $(source)$(src_suffix))), $(shell find $(SRCDIR) -name '*\.java')) \
+		$(foreach file, $(filter-out $(foreach class, $(subst $(SRCDIR),$(CLASSDIR), $(subst .sqlj,, $(shell find $(SRCDIR) -name '*\.sqlj'))), $(foreach class_suffix, $(CLASS_SUFFIXES), $(class)$(class_suffix))), $(shell find $(CLASSDIR) -name '*\.class')), '$(file)')
+	touch $@
 
-cleanmach:
-	rm -f $(SRC)/com/syrus/AMFICOM/server/measurement/Test.java
-	rm -f $(SRC)/com/syrus/AMFICOM/server/measurement/Test.generated.java
-	rm -f $(SRC)/com/syrus/AMFICOM/server/measurement/TestArgumentSet.java
-	rm -f $(SRC)/com/syrus/AMFICOM/server/measurement/TestArgumentSet.generated.java
-	rm -f $(SRC)/com/syrus/AMFICOM/server/measurement/Result.java
-	rm -f $(SRC)/com/syrus/AMFICOM/server/measurement/Result.generated.java
-	rm -f $(SRC)/com/syrus/AMFICOM/server/measurement/CriteriaSet.java
-	rm -f $(SRC)/com/syrus/AMFICOM/server/measurement/CriteriaSet.generated.java
-	rm -f $(SRC)/com/syrus/AMFICOM/server/measurement/Analysis.java
-	rm -f $(SRC)/com/syrus/AMFICOM/server/measurement/Analysis.generated.java
-	rm -f $(SRC)/com/syrus/AMFICOM/server/measurement/ThresholdSet.java
-	rm -f $(SRC)/com/syrus/AMFICOM/server/measurement/ThresholdSet.generated.java
-	rm -f $(SRC)/com/syrus/AMFICOM/server/measurement/Evaluation.java
-	rm -f $(SRC)/com/syrus/AMFICOM/server/measurement/Evaluation.generated.java
-	rm -f $(SRC)/com/syrus/AMFICOM/server/measurement/Modeling.java
-	rm -f $(SRC)/com/syrus/AMFICOM/server/measurement/Modeling.generated.java
-	rm -f $(SRC)/com/syrus/AMFICOM/server/measurement/Etalon.java
-	rm -f $(SRC)/com/syrus/AMFICOM/server/measurement/Etalon.generated.java
-	rm -f $(SRC)/com/syrus/AMFICOM/server/measurement/AnalysisType.java
-	rm -f $(SRC)/com/syrus/AMFICOM/server/measurement/AnalysisType.generated.java
-	rm -f $(SRC)/com/syrus/AMFICOM/server/measurement/EvaluationType.java
-	rm -f $(SRC)/com/syrus/AMFICOM/server/measurement/EvaluationType.generated.java
-	rm -f $(SRC)/com/syrus/AMFICOM/server/measurement/ModelingType.java
-	rm -f $(SRC)/com/syrus/AMFICOM/server/measurement/ModelingType.generated.java
-	rm -f $(SRC)/com/syrus/AMFICOM/server/measurement/TestType.java
-	rm -f $(SRC)/com/syrus/AMFICOM/server/measurement/TestType.generated.java
-	rm -f $(SRC)/com/syrus/AMFICOM/server/measurement/EtalonType.java
-	rm -f $(SRC)/com/syrus/AMFICOM/server/measurement/EtalonType.generated.java
-	rm -f $(SRC)/com/syrus/AMFICOM/server/measurement/TestSetup.java
-	rm -f $(SRC)/com/syrus/AMFICOM/server/measurement/TestSetup.generated.java
-	rm -f $(SRC)/com/syrus/AMFICOM/server/event/EventSourceType.java
-	rm -f $(SRC)/com/syrus/AMFICOM/server/event/EventSourceType.generated.java
-	rm -f $(SRC)/com/syrus/AMFICOM/server/event/AlarmType.java
-	rm -f $(SRC)/com/syrus/AMFICOM/server/event/AlarmType.generated.java
-	rm -f $(SRC)/com/syrus/AMFICOM/server/event/EventSource.java
-	rm -f $(SRC)/com/syrus/AMFICOM/server/event/EventSource.generated.java
-	rm -f $(SRC)/com/syrus/AMFICOM/server/event/Event.java
-	rm -f $(SRC)/com/syrus/AMFICOM/server/event/Event.generated.java
-	rm -f $(SRC)/com/syrus/AMFICOM/server/event/Alarm.java
-	rm -f $(SRC)/com/syrus/AMFICOM/server/event/Alarm.generated.java
-	rm -f $(SRC)/com/syrus/AMFICOM/server/event/Alerting.java
-	rm -f $(SRC)/com/syrus/AMFICOM/server/event/Alerting.generated.java
-	rm -f $(SRC)/com/syrus/AMFICOM/server/load/TestPopulator.java
-	rm -f $(SRC)/com/syrus/AMFICOM/server/load/TestPopulator.generated.java
-	rm -f mach
+.PHONY: sqljclean
+sqljclean:
+	$(RM) \
+		$(foreach file, $(filter $(foreach class, $(subst $(SRCDIR),$(CLASSDIR), $(subst .sqlj,, $(shell find $(SRCDIR) -name '*\.sqlj'))), $(foreach class_suffix, $(CLASS_SUFFIXES), $(class)$(class_suffix))), $(shell find $(CLASSDIR) -name '*\.class')), '$(file)') \
+		.sqlj
 
+$(SRCDIR) $(CLASSDIR):
+	mkdir -p $@
 
-arch:
-	tar -czvf $(ARCHFILE) \
-		Makefile rc specification.txt \
-		$(IDL) \
-		$(SRC)/com/syrus/AMFICOM/server/measurement/Action.java\
-		$(SRC)/com/syrus/AMFICOM/server/measurement/Analysis.sqlj\
-		$(SRC)/com/syrus/AMFICOM/server/measurement/CriteriaSet.sqlj\
-		$(SRC)/com/syrus/AMFICOM/server/measurement/Evaluation.sqlj\
-		$(SRC)/com/syrus/AMFICOM/server/measurement/Etalon.sqlj\
-		$(SRC)/com/syrus/AMFICOM/server/measurement/ThresholdSet.sqlj\
-		$(SRC)/com/syrus/AMFICOM/server/measurement/TestArgumentSet.sqlj\
-		$(SRC)/com/syrus/AMFICOM/server/measurement/SetParameter.java\
-		$(SRC)/com/syrus/AMFICOM/server/measurement/Modeling.sqlj\
-		$(SRC)/com/syrus/AMFICOM/server/measurement/Argument.java\
-		$(SRC)/com/syrus/AMFICOM/server/measurement/Parameter.java\
-		$(SRC)/com/syrus/AMFICOM/server/measurement/Test.sqlj\
-		$(SRC)/com/syrus/AMFICOM/server/measurement/Result.sqlj\
-		$(SRC)/com/syrus/AMFICOM/server/measurement/AnalysisType.sqlj\
-		$(SRC)/com/syrus/AMFICOM/server/measurement/EvaluationType.sqlj\
-		$(SRC)/com/syrus/AMFICOM/server/measurement/TestType.sqlj\
-		$(SRC)/com/syrus/AMFICOM/server/measurement/EtalonType.sqlj\
-		$(SRC)/com/syrus/AMFICOM/server/measurement/ModelingType.sqlj\
-		$(SRC)/com/syrus/AMFICOM/server/measurement/ParameterType.java\
-		$(SRC)/com/syrus/AMFICOM/server/measurement/TestSetup.sqlj\
-		$(SRC)/com/syrus/AMFICOM/server/event/EventSourceType.sqlj\
-		$(SRC)/com/syrus/AMFICOM/server/event/AlarmType.sqlj\
-		$(SRC)/com/syrus/AMFICOM/server/event/EventSource.sqlj\
-		$(SRC)/com/syrus/AMFICOM/server/event/Event.sqlj\
-		$(SRC)/com/syrus/AMFICOM/server/event/Alarm.sqlj\
-		$(SRC)/com/syrus/AMFICOM/server/event/Alerting.sqlj\
-		$(SRC)/com/syrus/AMFICOM/server/event/RuleParser.java
+.PHONY: clean
+clean: sqljclean idlclean
+	$(RM) \
+		$(foreach file, $(filter-out $(foreach class, $(subst $(SRCDIR),$(CLASSDIR), $(subst .sqlj,, $(shell find $(SRCDIR) -name '*\.sqlj'))), $(foreach class_suffix, $(CLASS_SUFFIXES), $(class)$(class_suffix))), $(shell find $(CLASSDIR) -name '*\.class')), '$(file)') \
+		.all
+
+.PHONY: dist
+dist: distclean
+	$(RM) ../$(MODULE_NAME)-$(MODULE_VERSION).tar*
+	cd .. && tar cf $(MODULE_NAME)-$(MODULE_VERSION).tar $(MODULE_NAME)
+	bzip2 -9 ../$(MODULE_NAME)-$(MODULE_VERSION).tar
+
+.PHONY: distclean
+distclean: clean
+	$(RM) -r \
+		$(CLASSDIR) \
+		SQLChecker.cache \
+		sqlj.properties \
+		*.jar
+
+$(LIBNAME): .all
+	$(JAR) cf $@ \
+		-C $(CLASSDIR) com
