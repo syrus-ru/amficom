@@ -24,24 +24,25 @@ public class LangModelAnalyse
 	public static String getString(String keyName)
 	{
 		//System.out.println("keyName:" + keyName);
-		keyName = keyName.replaceAll(" ", "_");
+		String keyName1 = keyName.replaceAll(" ", "_");
 		String string = null;
 		try
 		{
-			string = RESOURCE_BUNDLE.getString(keyName);
+			string = RESOURCE_BUNDLE.getString(keyName1);
 		}
 		catch (MissingResourceException e)
 		{
 			try
 			{
-				string = RESOURCE_BUNDLE.getString(keyName + "Text");
+				string = RESOURCE_BUNDLE.getString(keyName1 + "Text");
 			}
 			catch (MissingResourceException mre)
 			{
+				string = keyName;
 				try
 				{
 					throw new Exception("key '"
-						+ keyName + "Text"
+						+ keyName1 + "Text"
 						+ "' "
 						+ "not found");
 				}
