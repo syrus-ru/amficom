@@ -1,5 +1,5 @@
 #
-# $Id: Makefile.inc,v 1.16 2004/08/26 05:00:29 arseniy Exp $
+# $Id: Makefile.inc,v 1.17 2004/09/09 13:56:54 bass Exp $
 #
 # vim:set ft=make:
 #
@@ -15,9 +15,7 @@ SRC_SUFFIXES = \
 
 CLASS_SUFFIXES = \
 	.class \
-	$$%.class \
-	_SJProfile0.class \
-	_SJProfileKeys.class
+	$$%.class
 
 # User may override either of IDLDIR, SRCDIR, CLASSDIR
 IDLDIR ?= idl
@@ -35,30 +33,6 @@ endif
 checkenve = $(if $($(1)), , $(error $(1) is undefined. Define it prior to issuing `$(MAKE)'))
 checkenvw = $(if $($(1)), , $(warning $(1) is undefined. Define it prior to issuing `$(MAKE)'))
 pathsearch = $(firstword $(wildcard $(addsuffix /$(1), $(subst :, , $(PATH)))))
-orabase = $(dir $(ORACLE_HOME))
-orahomes9 = $(wildcard $(orabase)9.*)
-orahome9 = $(firstword $(orahomes9))
-
-idl2java = $(firstword $(wildcard $(addsuffix /bin/idl2java$(exesuffix), $(1))))
-IDL2JAVA = $(call idl2java,$(ORACLE_HOME))
-ifeq ($(IDL2JAVA),)
-IDL2JAVA = $(call idl2java,$(orahome9))
-endif
-ifeq ($(IDL2JAVA),)
-IDL2JAVA = $(call pathsearch,idl2java$(exesuffix))
-endif
-# -portable and -strict are temporarily removed: AMFICOMServer overrides
-# _execute() and _methods() from _AMFICOMImplBase.
-IDL2JAVAFLAGS += \
-	-C \
-	-H \
-	-I$(IDLDIR) \
-	-no_bind \
-	-no_examples \
-	-narrow_compliance \
-	-root_dir $(SRCDIR) \
-	-no_tie \
-	-no_toString
 
 # User may override database connection settings
 USER = AMFICOM
@@ -68,9 +42,6 @@ SERVICE_NAME ?= SHAITAN
 
 sqlj = $(firstword $(wildcard $(addsuffix /bin/sqlj$(exesuffix), $(1))))
 SQLJ = $(call sqlj,$(ORACLE_HOME))
-ifeq ($(SQLJ),)
-SQLJ = $(call sqlj,$(orahome9))
-endif
 ifeq ($(SQLJ),)
 SQLJ = $(call pathsearch,sqlj$(exesuffix))
 endif
@@ -86,45 +57,12 @@ SQLJFLAGS = \
 	-parse=both \
 	-password "$(PASSWORD)" \
 	-profile=true \
-	-ser2class=true \
 	-status=true \
 	-url "jdbc:oracle:oci:@(DESCRIPTION=(ADDRESS_LIST=(ADDRESS=(PROTOCOL=TCP)(HOST=$(HOST))(PORT=1521)))(CONNECT_DATA=(SERVICE_NAME=$(SERVICE_NAME))))" \
 	-user "$(USER)" \
 	-warn=all \
 	-d $(CLASSDIR) \
 	-encoding $(ENCODING)
-
-aurora_client_orbdep = $(wildcard $(ORACLE_HOME)/javavm/lib/aurora_client_orbdep.jar)
-ifeq ($(aurora_client_orbdep),)
-aurora_client_orbdep = $(wildcard $(ORACLE_HOME)/javavm/lib/aurora_client_orbdep.zip)
-endif
-ifeq ($(aurora_client_orbdep),)
-aurora_client_orbdep = $(wildcard $(orahome9)/javavm/lib/aurora_client_orbdep.jar)
-endif
-ifeq ($(aurora_client_orbdep),)
-aurora_client_orbdep = $(wildcard $(orahome9)/javavm/lib/aurora_client_orbdep.zip)
-endif
-aurora_client_orbindep = $(wildcard $(ORACLE_HOME)/javavm/lib/aurora_client_orbindep.jar)
-ifeq ($(aurora_client_orbindep),)
-aurora_client_orbindep = $(wildcard $(ORACLE_HOME)/javavm/lib/aurora_client_orbindep.zip)
-endif
-ifeq ($(aurora_client_orbindep),)
-aurora_client_orbindep = $(wildcard $(orahome9)/javavm/lib/aurora_client_orbindep.jar)
-endif
-ifeq ($(aurora_client_orbindep),)
-aurora_client_orbindep = $(wildcard $(orahome9)/javavm/lib/aurora_client_orbindep.zip)
-endif
-AURORACLASSPATH = $(aurora_client_orbdep):$(aurora_client_orbindep)
-
-vbjapp = $(wildcard $(ORACLE_HOME)/lib/vbjapp.jar)
-ifeq ($(vbjapp),)
-vbjapp = $(wildcard $(ORACLE_HOME)/lib/vbjapp.zip)
-endif
-vbjorb = $(wildcard $(ORACLE_HOME)/lib/vbjorb.jar)
-ifeq ($(vbjorb),)
-vbjorb = $(wildcard $(ORACLE_HOME)/lib/vbjorb.zip)
-endif
-VBJCLASSPATH = $(vbjapp):$(vbjorb)
 
 JDBCCLASSPATH = $(wildcard $(ORACLE_HOME)/jdbc/lib/ojdbc14.jar)
 ifeq ($(JDBCCLASSPATH),)
@@ -137,15 +75,15 @@ ifeq ($(JDBCCLASSPATH),)
 JDBCCLASSPATH = $(wildcard $(ORACLE_HOME)/jdbc/lib/classes12.zip)
 endif
 
-runtime12 = $(wildcard $(ORACLE_HOME)/sqlj/lib/runtime12.jar)
-ifeq ($(runtime12),)
-runtime12 = $(wildcard $(ORACLE_HOME)/sqlj/lib/runtime12.zip)
-endif
-ifeq ($(runtime12),)
 runtime12 = $(wildcard $(ORACLE_HOME)/sqlj/lib/runtime12ee.jar)
-endif
 ifeq ($(runtime12),)
 runtime12 = $(wildcard $(ORACLE_HOME)/sqlj/lib/runtime12ee.zip)
+endif
+ifeq ($(runtime12),)
+runtime12 = $(wildcard $(ORACLE_HOME)/sqlj/lib/runtime12.jar)
+endif
+ifeq ($(runtime12),)
+runtime12 = $(wildcard $(ORACLE_HOME)/sqlj/lib/runtime12.zip)
 endif
 translator = $(wildcard $(ORACLE_HOME)/sqlj/lib/translator.jar)
 ifeq ($(translator),)
@@ -157,9 +95,15 @@ SQLJCLASSPATH = $(runtime12):$(translator)
 AMFICOMCLASSPATH ?= $(shell find $(LIBDIR) -name '*\.[jz][ai][pr]' -printf '%p:')
 EXTCLASSPATH ?= $(shell find $(EXTLIBDIR) -name '*\.[jz][ai][pr]' -printf '%p:')
 
-jdevrt = $(wildcard $(ORACLE_HOME)/jdev/lib/jdev-rt.jar)
+jdevrt = $(wildcard $(ORACLE_HOME)/lib/jdev-rt.jar)
 ifeq ($(jdevrt),)
-jdevrt = $(wildcard $(orahome9)/jdev/lib/jdev-rt.jar)
+jdevrt = $(wildcard $(ORACLE_HOME)/jdev/lib/jdev-rt.jar)
+endif
+ifeq ($(jdevrt),)
+jdevrt = $(wildcard $(ORACLE_HOME)/lib/jdev-rt.zip)
+endif
+ifeq ($(jdevrt),)
+jdevrt = $(wildcard $(ORACLE_HOME)/jdev/lib/jdev-rt.zip)
 endif
 DEPRECATEDCLASSPATH = $(jdevrt)
 

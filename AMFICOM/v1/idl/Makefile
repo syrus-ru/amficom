@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.10 2004/07/06 13:50:59 bass Exp $
+# $Id: Makefile,v 1.11 2004/09/09 13:57:27 bass Exp $
 #
 # vim:set ft=make:
 #
@@ -18,14 +18,13 @@ LIBNAME_REPORT = ServerInterface_Report.jar
 LIBNAME_SCHEME = ServerInterface_Scheme.jar
 LIBNAME_SURVEY = ServerInterface_Survey.jar
 
-JAVACFLAGS = -source 1.3
-SUNJAVACFLAGS = -target 1.2
-JIKESFLAGS = -target 1.2
+JAVACFLAGS = -source 1.4
+SUNJAVACFLAGS = -target 1.4
+JIKESFLAGS = -target 1.4.2
 
 include ../tools/Makefile.inc
 $(call checkenve,JAVA_HOME)
 $(call checkenve,ORACLE_HOME)
-$(call checkenve,IDL2JAVA)
 
 .PHONY: export
 export: $(LIBNAME) $(LIBNAME_OBJECT) $(LIBNAME_ADMIN) $(LIBNAME_ALARM) $(LIBNAME_GENERAL) $(LIBNAME_ISM) $(LIBNAME_MAP) $(LIBNAME_NETWORK) $(LIBNAME_REPORT) $(LIBNAME_SCHEME) $(LIBNAME_SURVEY)
@@ -33,11 +32,11 @@ export: $(LIBNAME) $(LIBNAME_OBJECT) $(LIBNAME_ADMIN) $(LIBNAME_ALARM) $(LIBNAME
 .PHONY: all
 all: .all
 
-.all: .idl .sqlj
+.all: .idl
 	$(JAVAC) \
 		$(JAVACFLAGS) \
 		$(JAVAC_WARNOFF_FLAG) \
-		-classpath $(AMFICOMCLASSPATH)$(AURORACLASSPATH):$(VBJCLASSPATH):$(JDBCCLASSPATH):$(SQLJCLASSPATH):$(CLASSDIR) \
+		-classpath $(AMFICOMCLASSPATH)$(CLASSDIR) \
 		-sourcepath $(SRCDIR) \
 	 	$(shell find $(SRCDIR) -name '*.java')
 	touch $@
@@ -46,21 +45,19 @@ all: .all
 idl: .idl
 
 .idl: $(SRCDIR) $(CLASSDIR)
-	$(IDL2JAVA) \
-		$(IDL2JAVAFLAGS) \
-		$(IDLDIR)/AMFICOM.idl \
-		$(IDLDIR)/ISM.idl \
-		$(IDLDIR)/admin.idl \
-		$(IDLDIR)/alarm.idl \
-		$(IDLDIR)/client.idl \
-		$(IDLDIR)/constants.idl \
-		$(IDLDIR)/general.idl \
-		$(IDLDIR)/map.idl \
-		$(IDLDIR)/network.idl \
-		$(IDLDIR)/report.idl \
-		$(IDLDIR)/resource.idl \
-		$(IDLDIR)/scheme.idl \
-		$(IDLDIR)/survey.idl
+	$(IDLJ) $(IDLJFLAGS) $(IDLDIR)/AMFICOM.idl
+	$(IDLJ) $(IDLJFLAGS) $(IDLDIR)/ISM.idl
+	$(IDLJ) $(IDLJFLAGS) $(IDLDIR)/admin.idl
+	$(IDLJ) $(IDLJFLAGS) $(IDLDIR)/alarm.idl
+	$(IDLJ) $(IDLJFLAGS) $(IDLDIR)/client.idl
+	$(IDLJ) $(IDLJFLAGS) $(IDLDIR)/constants.idl
+	$(IDLJ) $(IDLJFLAGS) $(IDLDIR)/general.idl
+	$(IDLJ) $(IDLJFLAGS) $(IDLDIR)/map.idl
+	$(IDLJ) $(IDLJFLAGS) $(IDLDIR)/network.idl
+	$(IDLJ) $(IDLJFLAGS) $(IDLDIR)/report.idl
+	$(IDLJ) $(IDLJFLAGS) $(IDLDIR)/resource.idl
+	$(IDLJ) $(IDLJFLAGS) $(IDLDIR)/scheme.idl
+	$(IDLJ) $(IDLJFLAGS) $(IDLDIR)/survey.idl
 	touch $@
 
 .PHONY: idlclean
@@ -69,29 +66,12 @@ idlclean:
 		$(SRCDIR)/* \
 		.idl
 
-.PHONY: sqlj
-sqlj: .sqlj
-
-.sqlj: $(CLASSDIR)
-	echo "sqlj.compiler-executable=$(JAVAC) $(JAVACFLAGS) -sourcepath $(SRCDIR)" > sqlj.properties
-	$(RM) \
-		$(filter $(foreach source, $(subst .sqlj,, $(shell find $(SRCDIR) -name '*\.sqlj')), $(foreach src_suffix, $(SRC_SUFFIXES), $(source)$(src_suffix))), $(shell find $(SRCDIR) -name '*\.java')) \
-		$(foreach file, $(filter-out $(foreach class, $(subst $(SRCDIR),$(CLASSDIR), $(subst .sqlj,, $(shell find $(SRCDIR) -name '*\.sqlj'))), $(foreach class_suffix, $(CLASS_SUFFIXES), $(class)$(class_suffix))), $(shell find $(CLASSDIR) -name '*\.class')), '$(file)')
-	touch $@
-
-.PHONY: sqljclean
-sqljclean:
-	$(RM) \
-		$(foreach file, $(filter $(foreach class, $(subst $(SRCDIR),$(CLASSDIR), $(subst .sqlj,, $(shell find $(SRCDIR) -name '*\.sqlj'))), $(foreach class_suffix, $(CLASS_SUFFIXES), $(class)$(class_suffix))), $(shell find $(CLASSDIR) -name '*\.class')), '$(file)') \
-		.sqlj
-
 $(SRCDIR) $(CLASSDIR):
 	mkdir -p $@
 
 .PHONY: clean
-clean: sqljclean idlclean
+clean: idlclean
 	$(RM) \
-		$(foreach file, $(filter-out $(foreach class, $(subst $(SRCDIR),$(CLASSDIR), $(subst .sqlj,, $(shell find $(SRCDIR) -name '*\.sqlj'))), $(foreach class_suffix, $(CLASS_SUFFIXES), $(class)$(class_suffix))), $(shell find $(CLASSDIR) -name '*\.class')), '$(file)') \
 		.all
 
 .PHONY: dist
@@ -105,8 +85,6 @@ distclean: clean
 	$(RM) -r \
 		$(SRCDIR) \
 		$(CLASSDIR) \
-		SQLChecker.cache \
-		sqlj.properties \
 		*.jar
 
 $(LIBNAME): .all
@@ -118,13 +96,17 @@ $(LIBNAME_OBJECT): .all
 		-C $(CLASSDIR) com/syrus/AMFICOM/CORBA/AMFICOM.class \
 		-C $(CLASSDIR) com/syrus/AMFICOM/CORBA/AMFICOMHelper.class \
 		-C $(CLASSDIR) com/syrus/AMFICOM/CORBA/AMFICOMHolder.class \
-		-C $(CLASSDIR) com/syrus/AMFICOM/CORBA/_AMFICOMImplBase.class \
-		-C $(CLASSDIR) com/syrus/AMFICOM/CORBA/_st_AMFICOM.class \
+		-C $(CLASSDIR) com/syrus/AMFICOM/CORBA/AMFICOMOperations.class \
+		-C $(CLASSDIR) com/syrus/AMFICOM/CORBA/AMFICOMPOA.class \
+		-C $(CLASSDIR) com/syrus/AMFICOM/CORBA/AMFICOMPOATie.class \
+		-C $(CLASSDIR) com/syrus/AMFICOM/CORBA/_AMFICOMStub.class \
 		-C $(CLASSDIR) com/syrus/AMFICOM/CORBA/AMFICOMClient.class \
 		-C $(CLASSDIR) com/syrus/AMFICOM/CORBA/AMFICOMClientHelper.class \
 		-C $(CLASSDIR) com/syrus/AMFICOM/CORBA/AMFICOMClientHolder.class \
-		-C $(CLASSDIR) com/syrus/AMFICOM/CORBA/_AMFICOMClientImplBase.class \
-		-C $(CLASSDIR) com/syrus/AMFICOM/CORBA/_st_AMFICOMClient.class
+		-C $(CLASSDIR) com/syrus/AMFICOM/CORBA/AMFICOMClientOperations.class \
+		-C $(CLASSDIR) com/syrus/AMFICOM/CORBA/AMFICOMClientPOA.class \
+		-C $(CLASSDIR) com/syrus/AMFICOM/CORBA/AMFICOMClientPOATie.class \
+		-C $(CLASSDIR) com/syrus/AMFICOM/CORBA/_AMFICOMClientStub.class
 
 $(LIBNAME_ADMIN): .all
 	$(JAR) cf $@ \
@@ -142,8 +124,10 @@ $(LIBNAME_GENERAL): .all
 		-C $(CLASSDIR) com/syrus/AMFICOM/CORBA/Constants.class \
 		-C $(CLASSDIR) com/syrus/AMFICOM/CORBA/ConstantsHelper.class \
 		-C $(CLASSDIR) com/syrus/AMFICOM/CORBA/ConstantsHolder.class \
-		-C $(CLASSDIR) com/syrus/AMFICOM/CORBA/_ConstantsImplBase.class \
-		-C $(CLASSDIR) com/syrus/AMFICOM/CORBA/_st_Constants.class
+		-C $(CLASSDIR) com/syrus/AMFICOM/CORBA/ConstantsOperations.class \
+		-C $(CLASSDIR) com/syrus/AMFICOM/CORBA/ConstantsPOA.class \
+		-C $(CLASSDIR) com/syrus/AMFICOM/CORBA/ConstantsPOATie.class \
+		-C $(CLASSDIR) com/syrus/AMFICOM/CORBA/_ConstantsStub.class
 
 $(LIBNAME_ISM): .all
 	$(JAR) cf $@ \
