@@ -1,5 +1,5 @@
 /*
- * $Id: configuration.idl,v 1.35 2004/10/22 10:18:38 max Exp $
+ * $Id: configuration.idl,v 1.36 2004/10/22 10:45:40 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -114,6 +114,28 @@ module corba {
 	};
 
 	typedef sequence <MeasurementPortType_Transferable> MeasurementPortTypeSeq_Transferable;
+	
+/////////////////////// LinkType /////////////////////
+	enum LinkTypeSort {
+		LINKTYPE_SORT_FIBER
+	};
+	
+	struct LinkType_Transferable{
+		com::syrus::AMFICOM::general::corba::Identifier_Transferable id;
+	  long long created;
+	  long long modified;
+	  com::syrus::AMFICOM::general::corba::Identifier_Transferable creator_id;
+	  com::syrus::AMFICOM::general::corba::Identifier_Transferable modifier_id;
+	  
+	  wstring codename;
+	  wstring description;
+	  LinkTypeSort sort;
+	  wstring manufacturer;
+	  wstring manufacturerCode;
+	  com::syrus::AMFICOM::general::corba::Identifier_Transferable image_id;
+	  
+	};
+	typedef sequence <LinkType_Transferable> LinkTypeSeq_Transferable;
 
 //////////////////////////////////// User /////////////////////////////////
 	enum UserSort {
@@ -365,6 +387,24 @@ module corba {
 	};
 
 	typedef sequence <MonitoredElement_Transferable> MonitoredElementSeq_Transferable;
+
+///////////////////// Link /////////////////////
+	struct Link_Transferable {
+		com::syrus::AMFICOM::general::corba::Identifier_Transferable id;
+	  	long long created;
+	  	long long modified;
+		com::syrus::AMFICOM::general::corba::Identifier_Transferable creator_id;
+	  	com::syrus::AMFICOM::general::corba::Identifier_Transferable modifier_id;
+
+		com::syrus::AMFICOM::general::corba::Identifier_Transferable domain_id;
+		
+		wstring name;
+		wstring description;		
+		com::syrus::AMFICOM::general::corba::Identifier_Transferable type_id;		
+		wstring inventoryNo;
+		wstring supplier;
+		wstring supplierCode;
+	};
 
 //////////////// Conditions //////////////
 
