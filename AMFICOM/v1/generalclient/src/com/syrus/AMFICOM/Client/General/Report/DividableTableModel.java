@@ -14,17 +14,25 @@ import com.syrus.AMFICOM.Client.General.UI.GeneralTableModel;
 
 public abstract class DividableTableModel extends GeneralTableModel {
   private int divisionsNumber = 1;
+  private int baseColumnsNumber = 1;
 
   public DividableTableModel(int divisionsNumber,int columnsNumber)
   {
 	 super(divisionsNumber * columnsNumber);
-  }
-
-  public void setDivisionsNumber(int divNumber) {
-	 divisionsNumber = divNumber;
+   this.baseColumnsNumber = columnsNumber;
   }
 
   public int getDivisionsNumber() {
 	 return divisionsNumber;
   }
+  
+  public int getBaseColumnCount()
+  {
+    return baseColumnsNumber;
+  }
+  
+	public int getColumnCount()
+	{
+		return this.baseColumnsNumber * this.divisionsNumber;
+	}
 }
