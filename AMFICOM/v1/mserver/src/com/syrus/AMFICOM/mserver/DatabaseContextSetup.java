@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseContextSetup.java,v 1.13 2004/09/27 12:24:36 bob Exp $
+ * $Id: DatabaseContextSetup.java,v 1.14 2004/10/25 10:04:25 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,6 +13,9 @@ import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 import com.syrus.AMFICOM.configuration.ConfigurationDatabaseContext;
 import com.syrus.AMFICOM.configuration.CharacteristicTypeDatabase;
 import com.syrus.AMFICOM.configuration.EquipmentTypeDatabase;
+import com.syrus.AMFICOM.configuration.KISTypeDatabase;
+import com.syrus.AMFICOM.configuration.LinkDatabase;
+import com.syrus.AMFICOM.configuration.LinkTypeDatabase;
 import com.syrus.AMFICOM.configuration.PortTypeDatabase;
 import com.syrus.AMFICOM.configuration.MeasurementPortTypeDatabase;
 import com.syrus.AMFICOM.configuration.CharacteristicDatabase;
@@ -43,7 +46,7 @@ import com.syrus.AMFICOM.measurement.ResultDatabase;
 import com.syrus.AMFICOM.measurement.TemporalPatternDatabase;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2004/09/27 12:24:36 $
+ * @version $Revision: 1.14 $, $Date: 2004/10/25 10:04:25 $
  * @author $Author: bob $
  * @module mserver_v1
  */
@@ -58,6 +61,8 @@ public abstract class DatabaseContextSetup {
 																			new EquipmentTypeDatabase(),
 																			new PortTypeDatabase(),
 																			new MeasurementPortTypeDatabase(),
+																			new LinkTypeDatabase(),
+																			new KISTypeDatabase(),
 																			new CharacteristicDatabase(),
 																			new UserDatabase(),
 																			new DomainDatabase(),
@@ -68,7 +73,8 @@ public abstract class DatabaseContextSetup {
 																			new MeasurementPortDatabase(),
 																			new TransmissionPathDatabase(),
 																			new KISDatabase(),
-																			new MonitoredElementDatabase());
+																			new MonitoredElementDatabase(),
+																			new LinkDatabase());
 		MeasurementDatabaseContext.init(new ParameterTypeDatabase(),
 																		new MeasurementTypeDatabase(),
 																		new AnalysisTypeDatabase(),

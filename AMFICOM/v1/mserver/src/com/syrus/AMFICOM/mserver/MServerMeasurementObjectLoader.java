@@ -1,5 +1,5 @@
 /*
- * $Id: MServerMeasurementObjectLoader.java,v 1.11 2004/10/19 07:49:12 bob Exp $
+ * $Id: MServerMeasurementObjectLoader.java,v 1.12 2004/10/25 10:04:25 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -62,7 +62,7 @@ import com.syrus.AMFICOM.measurement.corba.Measurement_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2004/10/19 07:49:12 $
+ * @version $Revision: 1.12 $, $Date: 2004/10/25 10:04:25 $
  * @author $Author: bob $
  * @module mserver_v1
  */
@@ -662,21 +662,21 @@ public class MServerMeasurementObjectLoader implements MeasurementObjectLoader {
             MeasurementDatabase database = (MeasurementDatabase)MeasurementDatabaseContext.getMeasurementDatabase();
             List list;
             List ids2 = new ArrayList(ids);
-            Measurement_Transferable[] measurement_Transferables;
+            Measurement_Transferable[] measurementTransferables;
                                     
             try {
             	list = database.retrieveByCondition(ids2, condition);
                 for (Iterator it = list.iterator(); it.hasNext();) {
                     ids2.add( ((Analysis)it.next()).getId() );
                 }
-                Identifier_Transferable[] identifier_Transferables = new Identifier_Transferable[ids2.size()]; 
+                Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids2.size()]; 
                 int i = 0;
                 for (Iterator it = ids2.iterator(); it.hasNext(); i++) {
-                    identifier_Transferables[i] = (Identifier_Transferable)( (Identifier) it.next() ).getTransferable();
+                    identifierTransferables[i] = (Identifier_Transferable)( (Identifier) it.next() ).getTransferable();
                 }
                 com.syrus.AMFICOM.mcm.corba.MCM mcmRef = (com.syrus.AMFICOM.mcm.corba.MCM)MeasurementServer.mcmRefs.get(mcmId);
-                measurement_Transferables = mcmRef.transmitMeasurementsButIds( (LinkedIdsCondition_Transferable)((LinkedIdsCondition) condition).getTransferable() , identifier_Transferables);
-                list.add(measurement_Transferables);
+                measurementTransferables = mcmRef.transmitMeasurementsButIds( (LinkedIdsCondition_Transferable)((LinkedIdsCondition) condition).getTransferable() , identifierTransferables);
+                list.add(measurementTransferables);
                 return list;
                 
             } catch (org.omg.CORBA.SystemException se) {
@@ -697,7 +697,7 @@ public class MServerMeasurementObjectLoader implements MeasurementObjectLoader {
             AnalysisDatabase database = (AnalysisDatabase)MeasurementDatabaseContext.getAnalysisDatabase();
             List list;
             List ids2 = new ArrayList(ids);
-            Analysis_Transferable[] analyses_Transferables;
+            Analysis_Transferable[] analysesTransferables;
             
                                     
             try {
@@ -705,15 +705,15 @@ public class MServerMeasurementObjectLoader implements MeasurementObjectLoader {
                 for (Iterator it = list.iterator(); it.hasNext();) {
                     ids2.add( ((Analysis)it.next()).getId() );
                 }
-                Identifier_Transferable[] identifier_Transferables = new Identifier_Transferable[ids2.size()];
+                Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids2.size()];
                 int i = 0;
                 for (Iterator it = ids2.iterator(); it.hasNext(); i++) {
-                    identifier_Transferables[i] = (Identifier_Transferable)( (Identifier) it.next() ).getTransferable();
+                    identifierTransferables[i] = (Identifier_Transferable)( (Identifier) it.next() ).getTransferable();
                 }
                 com.syrus.AMFICOM.mcm.corba.MCM mcmRef = (com.syrus.AMFICOM.mcm.corba.MCM)MeasurementServer.mcmRefs.get(mcmId);
                                
-                analyses_Transferables = mcmRef.transmitAnalysesButIds((LinkedIdsCondition_Transferable)condition.getTransferable(), identifier_Transferables);
-                list.add(analyses_Transferables);
+                analysesTransferables = mcmRef.transmitAnalysesButIds((LinkedIdsCondition_Transferable)condition.getTransferable(), identifierTransferables);
+                list.add(analysesTransferables);
                 return list;
                 
             } catch (org.omg.CORBA.SystemException se) {
@@ -734,22 +734,22 @@ public class MServerMeasurementObjectLoader implements MeasurementObjectLoader {
             EvaluationDatabase database = (EvaluationDatabase)MeasurementDatabaseContext.getEvaluationDatabase();
             List list;
             List ids2 = new ArrayList(ids);
-            Evaluation_Transferable[] evaluation_Transferables;
+            Evaluation_Transferable[] evaluationTransferables;
             
             try {
             	list = database.retrieveByCondition(ids2, condition);
                 for (Iterator it = list.iterator(); it.hasNext();) {
                     ids2.add( ((Analysis)it.next()).getId() );
                 }
-                Identifier_Transferable[] identifier_Transferables = new Identifier_Transferable[ids2.size()];
+                Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids2.size()];
                 int i = 0;
                 for (Iterator it = ids2.iterator(); it.hasNext(); i++) {
-                    identifier_Transferables[i] = (Identifier_Transferable)( (Identifier) it.next() ).getTransferable();
+                    identifierTransferables[i] = (Identifier_Transferable)( (Identifier) it.next() ).getTransferable();
                 }
                 com.syrus.AMFICOM.mcm.corba.MCM mcmRef = (com.syrus.AMFICOM.mcm.corba.MCM)MeasurementServer.mcmRefs.get(mcmId);
                                      
-                evaluation_Transferables = mcmRef.transmitEvaluationsButIds((LinkedIdsCondition_Transferable)((LinkedIdsCondition) condition).getTransferable(), identifier_Transferables);
-                list.add(evaluation_Transferables);
+                evaluationTransferables = mcmRef.transmitEvaluationsButIds((LinkedIdsCondition_Transferable)((LinkedIdsCondition) condition).getTransferable(), identifierTransferables);
+                list.add(evaluationTransferables);
                 return list;               
             } catch (org.omg.CORBA.SystemException se) {
                 Log.errorException(se);

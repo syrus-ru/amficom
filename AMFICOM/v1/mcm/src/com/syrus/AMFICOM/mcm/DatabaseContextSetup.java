@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseContextSetup.java,v 1.9 2004/10/15 08:24:06 bass Exp $
+ * $Id: DatabaseContextSetup.java,v 1.10 2004/10/25 10:04:42 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,6 +12,9 @@ import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 import com.syrus.AMFICOM.configuration.ConfigurationDatabaseContext;
 import com.syrus.AMFICOM.configuration.CharacteristicTypeDatabase;
 import com.syrus.AMFICOM.configuration.EquipmentTypeDatabase;
+import com.syrus.AMFICOM.configuration.KISTypeDatabase;
+import com.syrus.AMFICOM.configuration.LinkDatabase;
+import com.syrus.AMFICOM.configuration.LinkTypeDatabase;
 import com.syrus.AMFICOM.configuration.PortTypeDatabase;
 import com.syrus.AMFICOM.configuration.MeasurementPortTypeDatabase;
 import com.syrus.AMFICOM.configuration.CharacteristicDatabase;
@@ -43,8 +46,8 @@ import com.syrus.AMFICOM.measurement.TemporalPatternDatabase;
 
 
 /**
- * @version $Revision: 1.9 $, $Date: 2004/10/15 08:24:06 $
- * @author $Author: bass $
+ * @version $Revision: 1.10 $, $Date: 2004/10/25 10:04:42 $
+ * @author $Author: bob $
  * @module mcm_v1
  */
 
@@ -55,33 +58,37 @@ public abstract class DatabaseContextSetup {
 
 	public static void initDatabaseContext() {
 		ConfigurationDatabaseContext.init(new CharacteristicTypeDatabase(),
-																			new EquipmentTypeDatabase(),
-																			new PortTypeDatabase(),
-																			new MeasurementPortTypeDatabase(),
-																			new CharacteristicDatabase(),
-																			new UserDatabase(),
-																			new DomainDatabase(),
-																			new ServerDatabase(),
-																			new MCMDatabase(),
-																			new EquipmentDatabase(),
-																			new PortDatabase(),
-																			new MeasurementPortDatabase(),
-																			new TransmissionPathDatabase(),
-																			new KISDatabase(),
-																			new MonitoredElementDatabase());
+										  new EquipmentTypeDatabase(),
+										  new PortTypeDatabase(),
+										  new MeasurementPortTypeDatabase(),
+										  new LinkTypeDatabase(),
+										  new KISTypeDatabase(),
+										  new CharacteristicDatabase(),
+										  new UserDatabase(),
+										  new DomainDatabase(),
+										  new ServerDatabase(),
+										  new MCMDatabase(),
+										  new EquipmentDatabase(),
+										  new PortDatabase(),
+										  new MeasurementPortDatabase(),
+										  new TransmissionPathDatabase(),
+										  new KISDatabase(),
+										  new MonitoredElementDatabase(),
+										  new LinkDatabase());
+		
 		MeasurementDatabaseContext.init(new ParameterTypeDatabase(),
-																		new MeasurementTypeDatabase(),
-																		new AnalysisTypeDatabase(),
-																		new EvaluationTypeDatabase(),
-																		new SetDatabase(),
-																		null,
-																		new MeasurementSetupDatabase(),
-																		new MeasurementDatabase(),
-																		new AnalysisDatabase(),
-																		new EvaluationDatabase(),
-																		new TestDatabase(),
-																		new ResultDatabase(),
-																		new TemporalPatternDatabase());
+										new MeasurementTypeDatabase(),
+										new AnalysisTypeDatabase(),
+										new EvaluationTypeDatabase(),
+										new SetDatabase(),
+										null,
+										new MeasurementSetupDatabase(),
+										new MeasurementDatabase(),
+										new AnalysisDatabase(),
+										new EvaluationDatabase(),
+										new TestDatabase(),
+										new ResultDatabase(),
+										new TemporalPatternDatabase());
 	}
 	
 	public static void initObjectPools() {

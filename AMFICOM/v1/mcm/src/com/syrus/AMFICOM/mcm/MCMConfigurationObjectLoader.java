@@ -1,5 +1,5 @@
 /*
- * $Id: MCMConfigurationObjectLoader.java,v 1.8 2004/10/03 12:46:44 bob Exp $
+ * $Id: MCMConfigurationObjectLoader.java,v 1.9 2004/10/25 10:04:42 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,6 +26,7 @@ import com.syrus.AMFICOM.configuration.EquipmentType;
 import com.syrus.AMFICOM.configuration.EquipmentTypeDatabase;
 import com.syrus.AMFICOM.configuration.KIS;
 import com.syrus.AMFICOM.configuration.KISDatabase;
+import com.syrus.AMFICOM.configuration.KISType;
 import com.syrus.AMFICOM.configuration.MCM;
 import com.syrus.AMFICOM.configuration.MCMDatabase;
 import com.syrus.AMFICOM.configuration.MeasurementPort;
@@ -53,13 +54,14 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
+import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.general.corba.ErrorCode;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2004/10/03 12:46:44 $
+ * @version $Revision: 1.9 $, $Date: 2004/10/25 10:04:42 $
  * @author $Author: bob $
  * @module mcm_v1
  */
@@ -436,6 +438,35 @@ public final class MCMConfigurationObjectLoader implements ConfigurationObjectLo
 		}
 		return kis;
 	}
+	
+	public KISType loadKISType(Identifier id) throws RetrieveObjectException, CommunicationException {
+		KISType kisType = null;
+		try {
+			kisType = new KISType(id);
+		}
+		catch (ObjectNotFoundException onfe) {
+			Log.debugMessage("KISType '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL07);
+			try {
+				kisType = KISType.getInstance(MeasurementControlModule.mServerRef.transmitKISType((Identifier_Transferable)id.getTransferable()));
+			}
+			catch (org.omg.CORBA.SystemException se) {
+				Log.errorException(se);
+				MeasurementControlModule.activateMServerReference();
+				throw new CommunicationException("System exception -- " + se.getMessage(), se);
+			}
+			catch (AMFICOMRemoteException are) {
+				if (are.error_code.equals(ErrorCode.ERROR_NOT_FOUND))
+					Log.errorMessage("KISType '" + id + "' not found on server database");
+				else
+					Log.errorMessage("Cannot retrieve KISType '" + id + "' from server database -- " + are.message);
+			}
+			catch (CreateObjectException coe) {
+				Log.errorException(coe);
+			}
+		}
+		return kisType;
+	}
+
 
 	public MeasurementPort loadMeasurementPort(Identifier id) throws RetrieveObjectException, CommunicationException {
 		MeasurementPort measurementPort = null;
@@ -697,6 +728,12 @@ public final class MCMConfigurationObjectLoader implements ConfigurationObjectLo
         }
         return list;
 	}
+	
+	
+	public List loadKISTypes(List ids) throws DatabaseException, CommunicationException {
+		//		 TODO method isn't complete
+		throw new UnsupportedOperationException("method isn't complete");
+	}	
     
 	public List loadKISs(List ids) throws DatabaseException,
 			CommunicationException {
@@ -1117,6 +1154,12 @@ public final class MCMConfigurationObjectLoader implements ConfigurationObjectLo
 		public void saveEquipmentType(EquipmentType equipmentType, boolean force) throws DatabaseException, CommunicationException {
 //		 TODO method isn't complete
 		throw new UnsupportedOperationException("method isn't complete");
+		}		
+		
+		public void saveKISType(KISType kisType, boolean force) throws VersionCollisionException, DatabaseException,
+				CommunicationException {
+//			 TODO method isn't complete
+			throw new UnsupportedOperationException("method isn't complete");
 		}
 
 		public void savePortType(PortType portType, boolean force) throws DatabaseException, CommunicationException {
@@ -1199,6 +1242,12 @@ public final class MCMConfigurationObjectLoader implements ConfigurationObjectLo
 		throw new UnsupportedOperationException("method isn't complete");
 		}
 
+		public void saveKISTypes(List list, boolean force) throws VersionCollisionException, DatabaseException,
+				CommunicationException {
+//			 TODO method isn't complete
+			throw new UnsupportedOperationException("method isn't complete");
+		}		
+
 		public void savePortTypes(List list, boolean force) throws DatabaseException, CommunicationException {
 //		 TODO method isn't complete
 		throw new UnsupportedOperationException("method isn't complete");
@@ -1279,6 +1328,14 @@ public final class MCMConfigurationObjectLoader implements ConfigurationObjectLo
 //			 TODO method isn't complete
 			throw new UnsupportedOperationException("method isn't complete");
 		}
+		
+		
+		public List loadKISTypesButIds(StorableObjectCondition condition, List ids) throws DatabaseException,
+				CommunicationException {
+//			 TODO method isn't complete
+			throw new UnsupportedOperationException("method isn't complete");
+
+		}
 
 		public List loadPortTypesButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException {
 //			 TODO method isn't complete
@@ -1288,7 +1345,7 @@ public final class MCMConfigurationObjectLoader implements ConfigurationObjectLo
 		public List loadMeasurementPortTypesButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException {
 //			 TODO method isn't complete
 			throw new UnsupportedOperationException("method isn't complete");
-		}
+		}		
 
 		public List loadCharacteristicsButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException {
 //			 TODO method isn't complete

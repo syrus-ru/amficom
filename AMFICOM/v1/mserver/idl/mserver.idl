@@ -28,6 +28,9 @@ module corba {
 
 		com::syrus::AMFICOM::configuration::corba::PortType_Transferable transmitPortType(in com::syrus::AMFICOM::general::corba::Identifier_Transferable id)
 			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+			
+		com::syrus::AMFICOM::configuration::corba::KISType_Transferable transmitKISType(in com::syrus::AMFICOM::general::corba::Identifier_Transferable id)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);			
 
 		com::syrus::AMFICOM::configuration::corba::MeasurementPortType_Transferable transmitMeasurementPortType(in com::syrus::AMFICOM::general::corba::Identifier_Transferable id)
 			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);

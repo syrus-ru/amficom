@@ -1,5 +1,5 @@
 /*
- * $Id: MServerImplementation.java,v 1.19 2004/10/20 11:16:46 max Exp $
+ * $Id: MServerImplementation.java,v 1.20 2004/10/25 10:04:25 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,6 +29,7 @@ import com.syrus.AMFICOM.general.corba.ErrorCode;
 
 import com.syrus.AMFICOM.configuration.CharacteristicType;
 import com.syrus.AMFICOM.configuration.EquipmentType;
+import com.syrus.AMFICOM.configuration.KISType;
 import com.syrus.AMFICOM.configuration.LinkedIdsCondition;
 import com.syrus.AMFICOM.configuration.PortType;
 import com.syrus.AMFICOM.configuration.MeasurementPortType;
@@ -45,6 +46,7 @@ import com.syrus.AMFICOM.configuration.MeasurementPort;
 import com.syrus.AMFICOM.configuration.MonitoredElement;
 import com.syrus.AMFICOM.configuration.corba.CharacteristicType_Transferable;
 import com.syrus.AMFICOM.configuration.corba.EquipmentType_Transferable;
+import com.syrus.AMFICOM.configuration.corba.KISType_Transferable;
 import com.syrus.AMFICOM.configuration.corba.LinkedIdsCondition_Transferable;
 import com.syrus.AMFICOM.configuration.corba.PortType_Transferable;
 import com.syrus.AMFICOM.configuration.corba.MeasurementPortType_Transferable;
@@ -90,13 +92,12 @@ import com.syrus.AMFICOM.mserver.corba.MServerPOA;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.19 $, $Date: 2004/10/20 11:16:46 $
- * @author $Author: max $
+ * @version $Revision: 1.20 $, $Date: 2004/10/25 10:04:25 $
+ * @author $Author: bob $
  * @module mserver_v1
  */
 
 public class MServerImplementation extends MServerPOA {
-	static final long serialVersionUID = 5984823427343263335L;
 
 	public MServerImplementation() {
 		
@@ -193,6 +194,25 @@ public class MServerImplementation extends MServerPOA {
 		try {
 			EquipmentType equipmentType = new EquipmentType(id);
 			return (EquipmentType_Transferable)equipmentType.getTransferable();
+		}
+		catch (ObjectNotFoundException onfe) {
+			Log.errorException(onfe);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_NOT_FOUND, CompletionStatus.COMPLETED_YES, onfe.getMessage());
+		}
+		catch (RetrieveObjectException roe) {
+			Log.errorException(roe);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, roe.getMessage());
+		} catch (Throwable t) {
+            Log.errorException(t);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
+        }
+	}
+	
+	public KISType_Transferable transmitKISType(Identifier_Transferable idT) throws AMFICOMRemoteException {
+		Identifier id = new Identifier(idT);
+		try {
+			KISType kisType = new KISType(id);
+			return (KISType_Transferable)kisType.getTransferable();
 		}
 		catch (ObjectNotFoundException onfe) {
 			Log.errorException(onfe);
