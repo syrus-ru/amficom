@@ -24,15 +24,12 @@ public:
     double xs[sz], xe[sz], ys[sz], ye[sz], col[sz];//использовалось для отладки при рисованити прямых
 #endif
 	InitialAnalysis(
-		double *data, int data_length,
+		double *data,
+        int data_length,
 		double delta_x,
 		double minimalThreshold,
 		double minimalWeld,
 		double minimalConnector,
-		double minimalEndingSplash,
-		double maximalNoise,
-		int waveletType,
-		double formFactor,
 		int reflectiveSize,
 		int nonReflectiveSize,
 		int lengthTillZero = 0,
@@ -40,8 +37,6 @@ public:
 
 	~InitialAnalysis();
 
-	int getEventSize();
-	int getEventsCount();
     ArrList& getEvents(){return *events;}
 #ifndef debug_VCL
 private:
@@ -63,7 +58,6 @@ private:
 	double minimalThreshold;
 	double minimalWeld;
 	double minimalConnector;
-	double minimalEndingSplash;
 
     int wlet_width; // базовая ширина вейвлета
     int reflectiveSize;// максимальная ширина коннектора

@@ -37,7 +37,7 @@ Java_com_syrus_AMFICOM_analysis_CoreAnalysisManager_analyse3(
 	jdouble min_level,
 	jdouble min_weld,
 	jdouble min_connector,
-	jdouble min_level_to_find_end,
+	jdouble min_level_to_find_end,// FIXME удалить
 	jint reflectiveSize,
 	jint nonReflectiveSize,
 	jint traceLength,
@@ -76,17 +76,14 @@ Java_com_syrus_AMFICOM_analysis_CoreAnalysisManager_analyse3(
 	// FIXIT: InitialAnalysis changes input array.
 	// The original analyse() code both changed input array and used JNI_ABORT, so the result is undeterminable.
 	// If it was not expected to change anything in Java arrays, then it should make a local copy. -- FIXIT
-	InitialAnalysis *ia = new InitialAnalysis(data, 
+	InitialAnalysis *ia = new InitialAnalysis(
+    	data,
 		data_l,
-		delta_x, 
-		min_level, 
-		min_weld, 
-		min_connector, 
-		min_level_to_find_end,
-		0,
-		0,
-		0,
-		reflectiveSize, 
+		delta_x,
+		min_level,
+		min_weld,
+		min_connector,
+		reflectiveSize,
 		nonReflectiveSize,
 		traceLength,
 		noiseData);

@@ -23,10 +23,6 @@ InitialAnalysis::InitialAnalysis(
 	double minimalThreshold,	//минимальный уровень события
 	double minimalWeld,			//минимальный уровень неотражательного события
 	double minimalConnector,	//минимальный уровень отражательного события
-	double minimalEndingSplash,	//минимальный уровень последнего отражения
-	double maximalNoise,		// <unused>
-	int waveletType,			// <unused>
-	double formFactor,			// <unused>
 	int reflectiveSize,			//характерная длина отражательного события
 	int nonReflectiveSize,		//характерная длина неотражательного события
 	int lengthTillZero,			//вычисленная заранее длина ( ==0 -> найти самим)
@@ -36,8 +32,8 @@ InitialAnalysis::InitialAnalysis(
 	logf = fopen(DEBUG_INITIAL_WIN_LOGF, "a");
 	assert(logf);
 	fprintf(logf, "=== IA invoked\n"
-		"len %d deltaX %g minTh %g minWeld %g minConn %g minES %g\n",
-		data_length, delta_x, minimalThreshold, minimalWeld, minimalConnector, minimalEndingSplash);
+		"len %d deltaX %g minTh %g minWeld %g minConn %g\n",
+		data_length, delta_x, minimalThreshold, minimalWeld, minimalConnector);
 	fprintf(logf, "refSize %d nRefSize %d lTZ %d extNoise %s\n",
 		reflectiveSize, nonReflectiveSize, lengthTillZero, externalNoise ? "present" : "absent");
 #endif
@@ -50,7 +46,6 @@ InitialAnalysis::InitialAnalysis(
 	this->minimalThreshold		= minimalThreshold;
 	this->minimalWeld			= minimalWeld;
 	this->minimalConnector		= minimalConnector;
-	this->minimalEndingSplash	= minimalEndingSplash;
 	this->data_length			= data_length;
 	this->data					= data;
     this->reflectiveSize		= reflectiveSize;
@@ -84,7 +79,7 @@ InitialAnalysis::InitialAnalysis(
 	else
 	{	int i;
 		for (i = 0; i < lastNonZeroPoint; i++)
-		{	noise[i] = externalNoise[i];
+		{	noise[i] = externalNoise[i];// FIXME - не учитывает THRESHOLD_TO_NOISE_RATIO		
         }
 	}
 
@@ -187,7 +182,6 @@ return;
 		// отмечаем , что найден новый коннектор
         if( dist<reflectiveSize*2			// если всплески близко
         	&& (sp1->sign>0 && sp2->sign<0) // первый положительный, а второй - отрицательный
-            //&& ( (sp1.square/sp2.square>0.1 && sp1.square/sp2.square<2.0) || events->getLength()==0) // всплески должны быть сравнимы (первый коннектор это мёртвая зона)
 			&& ( sp1->begin_conn_n !=-1 )
 
           )
@@ -299,7 +293,6 @@ void InitialAnalysis::findAllWletSplashes(double* f_wlet, ArrList& splashes)
         }
 		spl.sign = sign;
 
-        
         spl.begin_thr--;
         if(spl.begin_thr < spl.end_thr)// begin>end только если образ так и не пересёк ни разу верхний порог
         {   splashes.add(&spl);
@@ -339,8 +332,9 @@ void InitialAnalysis::fillNoiseArray(double *y, int data_length, int N, double N
 int InitialAnalysis::getLastPoint()
 {   int lastPoint = findReflectogramLength(data, data_length) - 1;
 	if (lastPoint < 0)
-		lastPoint = 0;
-	//if(lastPoint + 10 < data_length) lastPoint += 10; не понятно, зачем это вообзе надо 
+	{	lastPoint = 0;
+    }
+	//if(lastPoint + 10 < data_length) lastPoint += 10; не понятно, зачем это вообще надо 
     return lastPoint;
 }
 //------------------------------------------------------------------------------------------------------------
