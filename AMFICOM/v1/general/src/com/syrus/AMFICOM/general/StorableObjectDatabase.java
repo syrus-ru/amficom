@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectDatabase.java,v 1.7 2004/08/06 13:43:44 arseniy Exp $
+ * $Id: StorableObjectDatabase.java,v 1.8 2004/08/12 13:04:57 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,7 +12,7 @@ import java.sql.Connection;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2004/08/06 13:43:44 $
+ * @version $Revision: 1.8 $, $Date: 2004/08/12 13:04:57 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -36,6 +36,8 @@ public abstract class StorableObjectDatabase {
 	public static final String	QUESTION				= "?";
 
 	public static final String	SQL_AND					= " AND ";
+	public static final String	SQL_ASC					= " ASC ";
+	public static final String	SQL_DESC				= " DESC ";
 	public static final String	SQL_DELETE_FROM	= " DELETE FROM ";
 	public static final String	SQL_FROM				= " FROM ";
 	public static final String	SQL_INSERT_INTO	= " INSERT INTO ";

@@ -1,5 +1,5 @@
 /*
- * $Id: TestDatabase.java,v 1.16 2004/08/12 11:46:44 arseniy Exp $
+ * $Id: TestDatabase.java,v 1.17 2004/08/12 13:07:59 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,6 +28,7 @@ import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.measurement.corba.MeasurementStatus;
+import com.syrus.AMFICOM.measurement.corba.TestStatus;
 import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 import com.syrus.AMFICOM.configuration.MonitoredElement;
 import com.syrus.AMFICOM.configuration.MonitoredElementDatabase;
@@ -35,7 +36,7 @@ import com.syrus.AMFICOM.configuration.MeasurementPortDatabase;
 import com.syrus.AMFICOM.configuration.KISDatabase;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2004/08/12 11:46:44 $
+ * @version $Revision: 1.17 $, $Date: 2004/08/12 13:07:59 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -561,7 +562,7 @@ public class TestDatabase extends StorableObjectDatabase {
 	}
 
 	
-	public static List retrieveTestsForMCM(Identifier mcmId) throws RetrieveObjectException {
+	public static List retrieveTestsForMCM(Identifier mcmId, TestStatus status) throws RetrieveObjectException {
 		List tests = new ArrayList();
 
 		String mcmIdStr = mcmId.toSQLString();
@@ -583,7 +584,9 @@ public class TestDatabase extends StorableObjectDatabase {
 						+ SQL_WHERE + KISDatabase.COLUMN_MCM_ID + EQUALS + mcmIdStr
 					+ CLOSE_BRACKET
 				+ CLOSE_BRACKET
-			+ CLOSE_BRACKET;
+			+ CLOSE_BRACKET
+				+ SQL_AND + COLUMN_STATUS + EQUALS + Integer.toString(status.value())
+			+ SQL_ORDER_BY + COLUMN_START_TIME + SQL_ASC;
 		
 		Statement statement = null;
 		ResultSet resultSet = null;
@@ -593,7 +596,7 @@ public class TestDatabase extends StorableObjectDatabase {
 			resultSet = statement.executeQuery(sql);
 			while (resultSet.next()){
 				/**
-				  * @todo when change DB Identifier model ,change getString() to getLong()
+				  * @todo when change DB Identifier model, change getString() to getLong()
 				  */
 				try {
 					tests.add(new Test(new Identifier(resultSet.getString(COLUMN_ID))));

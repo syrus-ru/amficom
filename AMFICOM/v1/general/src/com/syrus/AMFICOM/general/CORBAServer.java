@@ -1,5 +1,5 @@
 /*
- * $Id: CORBAServer.java,v 1.2 2004/08/04 17:30:50 arseniy Exp $
+ * $Id: CORBAServer.java,v 1.3 2004/08/12 13:04:56 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,7 +32,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2004/08/04 17:30:50 $
+ * @version $Revision: 1.3 $, $Date: 2004/08/12 13:04:56 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -80,6 +80,7 @@ public class CORBAServer /*extends Thread */{
 			org.omg.CORBA.Object reference = this.poa.servant_to_reference(servant);
 			NameComponent[] nameComponents = this.namingContext.to_name(name);
 			this.namingContext.rebind(nameComponents, reference);
+			Log.debugMessage("Activating servant '" + name + "'", Log.DEBUGLEVEL05);
 		}
 		catch (UserException ue) {
 			throw new CommunicationException("Cannot activate servant", ue);
