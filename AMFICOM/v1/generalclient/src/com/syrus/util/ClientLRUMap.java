@@ -1,5 +1,5 @@
 /*
- * $Id: ClientLRUMap.java,v 1.5 2004/12/07 09:00:23 bob Exp $
+ * $Id: ClientLRUMap.java,v 1.6 2004/12/07 10:31:58 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,8 +15,8 @@ import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.util.LRUMap;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2004/12/07 09:00:23 $
- * @author $Author: bob $
+ * @version $Revision: 1.6 $, $Date: 2004/12/07 10:31:58 $
+ * @author $Author: arseniy $
  * @module generalclient_v1
  */
 
@@ -34,30 +34,29 @@ public class ClientLRUMap extends LRUMap {
 	public ClientLRUMap(int capacity) {
 		super(capacity);
 	}
-	
-    
+ 
 	public synchronized Object put(Object key, Object value) {
 		StorableObject trowedOutObject = (StorableObject) super.put(key, value);
-        if(trowedOutObject == null || !trowedOutObject.isChanged()) { 
-            return trowedOutObject;
-        } 
-        for (int i = super.array.length - 1; i >= 0; i--) {
-        	StorableObject storableObject = (StorableObject) super.array[i].value;
-        	if (!storableObject.isChanged()) {
-        		for(int j = super.array.length - 2; j >= i; j--)
-        			super.array[j] = super.array[j+1];
-        		super.array[super.array.length - 1] = new Entry(trowedOutObject.getId(), trowedOutObject);
-        		return storableObject;
-        	}
+		if(trowedOutObject == null || !trowedOutObject.isChanged()) {
+			return trowedOutObject;
 		}
-        //  array enlargement
-        super.entityCount++;
-        Entry[] array1 = new Entry[super.array.length + 10];
-        System.arraycopy(super.array, 0, array1, 0, super.array.length);
-        array1[super.array.length + 1] = new Entry(trowedOutObject.getId(), trowedOutObject);
-        super.array = array1;
-        return null;                
-    }
+		for (int i = super.array.length - 1; i >= 0; i--) {
+			StorableObject storableObject = (StorableObject) super.array[i].value;
+			if (!storableObject.isChanged()) {
+				for(int j = i; j < super.array.length - 1; j++)
+					super.array[j] = super.array[j + 1];
+				super.array[super.array.length - 1] = new Entry(trowedOutObject.getId(), trowedOutObject);
+				return storableObject;
+			}
+		}
+		//  array enlargement
+		super.entityCount++;
+		Entry[] array1 = new Entry[super.array.length + 10];
+		System.arraycopy(super.array, 0, array1, 0, super.array.length);
+		array1[super.array.length] = new Entry(trowedOutObject.getId(), trowedOutObject);
+		super.array = array1;
+		return null;
+	}
 	
 	public synchronized List getChanged(){
 		List list = null;
