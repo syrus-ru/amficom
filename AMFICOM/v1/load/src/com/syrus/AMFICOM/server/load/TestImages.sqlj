@@ -1,26 +1,13 @@
-
-// Copyright (c) Syrus Systems 2000 Syrus Systems
 package com.syrus.AMFICOM.server.load;
 
-import sqlj.runtime.*;
-import sqlj.runtime.ref.*;
-import java.sql.*;
-
-import sqlj.*;
-
-import java.io.*;
-
-import java.util.Vector;
-
-//Package for Oracle Extensions to JDBC
-import oracle.sql.*;
-import oracle.jdbc.driver.*;
-
-import com.syrus.AMFICOM.CORBA.*;
-import com.syrus.AMFICOM.CORBA.General.*;
+import com.syrus.AMFICOM.CORBA.Constants;
+import com.syrus.AMFICOM.CORBA.General.octetSeqHolder;
 import com.syrus.AMFICOM.CORBA.Resource.*;
-
 import com.syrus.AMFICOM.server.*;
+import java.io.*;
+import java.sql.SQLException;
+import java.util.Vector;
+import oracle.sql.BLOB;
 
 public class TestImages
 {

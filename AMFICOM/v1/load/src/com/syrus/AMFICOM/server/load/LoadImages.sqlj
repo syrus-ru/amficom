@@ -1,23 +1,10 @@
-
-// Copyright (c) Syrus Systems 2000 Syrus Systems
 package com.syrus.AMFICOM.server.load;
 
-import sqlj.runtime.*;
-import sqlj.runtime.ref.*;
-import java.sql.*;
-
-import sqlj.*;
-
-import java.io.*;
-
-import java.util.Vector;
-
-//Package for Oracle Extensions to JDBC
-import oracle.sql.*;
-import oracle.jdbc.driver.*;
-
 import com.syrus.AMFICOM.server.*;
-import com.syrus.io.*;
+import com.syrus.io.FileToDirectory;
+import java.io.*;
+import java.sql.SQLException;
+import oracle.sql.BLOB;
 
 public class LoadImages
 {

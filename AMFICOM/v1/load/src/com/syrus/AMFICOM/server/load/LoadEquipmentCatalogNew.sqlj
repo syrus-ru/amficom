@@ -1,15 +1,10 @@
-// Copyright (c) Syrus Systems 2000 Syrus Systems
 package com.syrus.AMFICOM.server.load;
 
-import sqlj.runtime.*;
-import sqlj.runtime.ref.*;
-import java.sql.*;
-import java.io.*;
-import java.util.*;
-
-import com.syrus.io.*;
 import com.syrus.AMFICOM.server.*;
-import com.syrus.io.FileToDirectory;
+import com.syrus.io.*;
+import java.io.*;
+import java.sql.SQLException;
+import java.util.*;
 
 public class LoadEquipmentCatalogNew
 {
@@ -31,7 +26,7 @@ public class LoadEquipmentCatalogNew
 		frame.log("Loading Net Catalogue data:");
 		try
 		{
-			connectionManager.m_ctx.getConnection().setAutoCommit(false);
+			connectionManager.getConnCtx().getConnection().setAutoCommit(false);
 		}
 		catch (Exception exx) {}
 		try

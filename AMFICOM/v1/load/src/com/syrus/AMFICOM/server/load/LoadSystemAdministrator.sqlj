@@ -1,14 +1,9 @@
-
-// Copyright (c) Syrus Systems 2000 Syrus Systems
 package com.syrus.AMFICOM.server.load;
 
-import sqlj.runtime.*;
-import sqlj.runtime.ref.*;
-import java.sql.*;
-
 import com.syrus.AMFICOM.server.*;
+import java.sql.SQLException;
 
-public class LoadSystemAdministrator extends Object
+public class LoadSystemAdministrator
 {
 	LogWriter frame;
 	ConnectionManager connectionManager;
@@ -26,7 +21,7 @@ public class LoadSystemAdministrator extends Object
 	public void run()
 	{
 		try{
-			connectionManager.m_ctx.getConnection().setAutoCommit(false);
+			connectionManager.getConnCtx().getConnection().setAutoCommit(false);
 		} catch (Exception exx) {}
 		frame.log("Loading system administration data:");
 		try

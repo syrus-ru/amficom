@@ -1,6 +1,5 @@
 package com.syrus.AMFICOM.server.load;
 
-import java.awt.*;
 import javax.swing.*;
 import javax.swing.border.*;
 import oracle.jdeveloper.layout.*;
