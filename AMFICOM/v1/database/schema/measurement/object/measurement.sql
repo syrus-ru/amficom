@@ -6,7 +6,7 @@ CREATE TABLE Measurement (
  modifier_id VARCHAR2(32) NOT NULL,
 --
  type_id VARCHAR2(32) NOT NULL,
- name VARCHAR2(64),
+ name VARCHAR2(128),
  monitored_element_id VARCHAR2(32) NOT NULL,
 --
  setup_id VARCHAR2(32) NOT NULL,
