@@ -1,5 +1,5 @@
 /*
- * $Id: measurement.idl,v 1.25 2004/10/06 06:47:58 bob Exp $
+ * $Id: measurement.idl,v 1.26 2004/10/07 13:57:10 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -46,6 +46,7 @@ module corba {
 
 		com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable in_parameter_type_ids;
 		com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable out_parameter_type_ids;
+		com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable measurement_port_type_ids;
 	};
 	
 	typedef sequence <MeasurementType_Transferable> MeasurementTypeSeq_Transferable;

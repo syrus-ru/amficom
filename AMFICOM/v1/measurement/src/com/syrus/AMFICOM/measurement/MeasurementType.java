@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementType.java,v 1.25 2004/10/06 15:45:16 max Exp $
+ * $Id: MeasurementType.java,v 1.26 2004/10/07 13:55:54 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,6 +12,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Iterator;
+
+import com.syrus.AMFICOM.configuration.MeasurementPortType;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
@@ -26,15 +28,16 @@ import com.syrus.AMFICOM.measurement.corba.MeasurementType_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.25 $, $Date: 2004/10/06 15:45:16 $
- * @author $Author: max $
+ * @version $Revision: 1.26 $, $Date: 2004/10/07 13:55:54 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
 public class MeasurementType extends ActionType {
 	private List inParameterTypes;
 	private List outParameterTypes;
-
+	private List measurementPortTypes;
+	
 	private StorableObjectDatabase	measurementTypeDatabase;
 
 	public MeasurementType(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
@@ -53,6 +56,8 @@ public class MeasurementType extends ActionType {
 				MeasurementStorableObjectPool.putStorableObject((ParameterType) it.next());
 			for (Iterator it = this.outParameterTypes.iterator(); it.hasNext();)
 				MeasurementStorableObjectPool.putStorableObject((ParameterType) it.next());
+			for (Iterator it = this.measurementPortTypes.iterator(); it.hasNext();)
+				MeasurementStorableObjectPool.putStorableObject((MeasurementPortType) it.next());
 		}
 		catch (IllegalObjectEntityException ioee) {
 			Log.errorException(ioee);
@@ -88,7 +93,8 @@ public class MeasurementType extends ActionType {
 													String codename,
 													String description,
 													List inParameterTypes,
-													List	outParameterTypes){
+													List	outParameterTypes,
+													List measurementPortTypes){
 		super(id);
 		long time = System.currentTimeMillis();
 		super.created = new Date(time);
@@ -99,6 +105,7 @@ public class MeasurementType extends ActionType {
 		super.description = description;
 		this.inParameterTypes = inParameterTypes;
 		this.outParameterTypes = outParameterTypes;
+		this.measurementPortTypes = measurementPortTypes;
 
 		super.currentVersion = super.getNextVersion();
 		
@@ -120,13 +127,15 @@ public class MeasurementType extends ActionType {
 																							 String codename,
 																							 String description,
 																							 List inParameterTypes,
-																							 List	outParameterTypes) {
+																							 List	outParameterTypes,
+																							 List measurementPortTypes) {
 		return new MeasurementType(id,
 															 creatorId,
 															 codename,
 															 description,
 															 inParameterTypes,
-															 outParameterTypes);
+															 outParameterTypes,
+															 measurementPortTypes);
 	}
 	
 	public static MeasurementType getInstance(MeasurementType_Transferable mtt) throws CreateObjectException {
@@ -157,6 +166,12 @@ public class MeasurementType extends ActionType {
 		i = 0;
 		for (Iterator iterator = this.outParameterTypes.iterator(); iterator.hasNext();)
 			outParTypeIds[i++] = (Identifier_Transferable) ((ParameterType) iterator.next()).getId().getTransferable();
+		
+		Identifier_Transferable[] measurementPortTypeIds = new Identifier_Transferable[this.measurementPortTypes.size()];
+		i = 0;
+		for (Iterator iterator = this.outParameterTypes.iterator(); iterator.hasNext();)
+			measurementPortTypeIds[i++] = (Identifier_Transferable) ((MeasurementPortType) iterator.next()).getId().getTransferable();
+
 
 		return new MeasurementType_Transferable((Identifier_Transferable)super.id.getTransferable(),
 																						super.created.getTime(),
@@ -166,7 +181,8 @@ public class MeasurementType extends ActionType {
 																						new String(super.codename),
 																						(super.description != null) ? (new String(super.description)) : "",
 																						inParTypeIds,
-																						outParTypeIds);
+																						outParTypeIds,
+																						measurementPortTypeIds);
 	}
 
     public short getEntityCode() {
@@ -215,5 +231,13 @@ public class MeasurementType extends ActionType {
 	public void setOutParameterTypes(List outParameterTypes) {
 		this.currentVersion = super.getNextVersion();
 		this.outParameterTypes = outParameterTypes;
+	}
+	
+	public List getMeasurementPortTypes() {
+		return this.measurementPortTypes;
+	}
+	
+	public void setMeasurementPortTypes(List measurementPortTypes) {
+		this.measurementPortTypes = measurementPortTypes;
 	}
 }

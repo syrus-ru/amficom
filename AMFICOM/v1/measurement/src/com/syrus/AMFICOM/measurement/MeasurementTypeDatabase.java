@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementTypeDatabase.java,v 1.28 2004/09/20 14:06:50 bob Exp $
+ * $Id: MeasurementTypeDatabase.java,v 1.29 2004/10/07 13:55:54 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,6 +17,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import com.syrus.AMFICOM.configuration.MeasurementPortType;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObject;
@@ -33,7 +34,7 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.28 $, $Date: 2004/09/20 14:06:50 $
+ * @version $Revision: 1.29 $, $Date: 2004/10/07 13:55:54 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -46,6 +47,8 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 	public static final String	COLUMN_DESCRIPTION = "description";
 	
 	public static final String	LINK_COLUMN_MEASUREMENT_TYPE_ID = "measurement_type_id";
+	public static final String	LINK_COLUMN_MEASUREMENT_PORT_TYPE_ID = "measurement_port_type_id";
+	
 	
 	public static final int CHARACTER_NUMBER_OF_RECORDS = 1;
 	
@@ -100,6 +103,7 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 		MeasurementType measurementType = this.fromStorableObject(storableObject);
 		this.retrieveEntity(measurementType);
 		this.retrieveParameterTypes(measurementType);
+		this.retrieveMeasurementPortTypes(measurementType);
 	}
 
 	protected String retrieveQuery(String condition){
@@ -116,7 +120,7 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 		throws IllegalDataException, RetrieveObjectException, SQLException {
 		MeasurementType measurementType = (storableObject == null) ? 
 				new MeasurementType(new Identifier(resultSet.getString(COLUMN_ID)), null, null, null, 
-									   null, null) : 
+									   null, null, null) : 
 					fromStorableObject(storableObject);
 		/**
 		 * @todo when change DB Identifier model ,change getString() to getLong()
@@ -202,6 +206,56 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 		measurementType.setParameterTypes(inParTyps,
 																			outParTyps);
 	}
+	
+	private void retrieveMeasurementPortTypes(MeasurementType measurementType) throws RetrieveObjectException {
+		List measurementPortTypes = new ArrayList();
+
+		String measurementTypeIdStr = measurementType.getId().toSQLString();
+		String sql = SQL_SELECT
+			+ LINK_COLUMN_MEASUREMENT_PORT_TYPE_ID
+			+ SQL_FROM + ObjectEntities.MNTTYMEASPORTTYPELINK_ENTITY
+			+ SQL_WHERE + LINK_COLUMN_MEASUREMENT_TYPE_ID + EQUALS + measurementTypeIdStr;
+		Statement statement = null;
+		ResultSet resultSet = null;
+		Connection connection = DatabaseConnection.getConnection();
+		try {
+			statement = connection.createStatement();
+			Log.debugMessage("MeasurementTypeDatabase.retrieveMeasurementPortTypes | Trying: " + sql, Log.DEBUGLEVEL09);
+			resultSet = statement.executeQuery(sql);
+			String measurementPortTypeIdCode;
+			while (resultSet.next()) {
+				/**
+				 * @todo when change DB Identifier model ,change getString() to getLong()
+				 */
+				measurementPortTypeIdCode = resultSet.getString(LINK_COLUMN_MEASUREMENT_PORT_TYPE_ID);
+				measurementPortTypes.add((MeasurementPortType) MeasurementStorableObjectPool.getStorableObject(new Identifier(measurementPortTypeIdCode), true));
+			}
+		}
+		catch (SQLException sqle) {
+			String mesg = "MeasurementTypeDatabase.retrieveMeasurementPortTypes | Cannot retrieve measurement port type ids for measurement type '" + measurementTypeIdStr + "' -- " + sqle.getMessage();
+			throw new RetrieveObjectException(mesg, sqle);
+		}
+		catch (ApplicationException ae) {
+			throw new RetrieveObjectException(ae);
+		}
+		finally {
+			try {
+				if (statement != null)
+					statement.close();
+				if (resultSet != null)
+					resultSet.close();
+				statement = null;
+				resultSet = null;
+			}
+			catch (SQLException sqle1) {
+				Log.errorException(sqle1);
+			} finally{
+				DatabaseConnection.closeConnection(connection);
+			}
+		}
+		((ArrayList)measurementPortTypes).trimToSize();
+		measurementType.setMeasurementPortTypes(measurementPortTypes);
+	}
 
 	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
 		MeasurementType measurementType = this.fromStorableObject(storableObject);
@@ -215,6 +269,7 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 		MeasurementType measurementType = this.fromStorableObject(storableObject);
 		this.insertEntity(measurementType);
 		this.insertParameterTypes(measurementType);
+		this.insertMeasurementPortTypes(measurementType);
 		
 	}
 	
@@ -222,7 +277,8 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 		insertEntities(storableObjects);
 		for(Iterator it=storableObjects.iterator();it.hasNext();){
 			MeasurementType measurementType = fromStorableObject((StorableObject)it.next());
-			insertParameterTypes(measurementType);
+			this.insertParameterTypes(measurementType);
+			this.insertMeasurementPortTypes(measurementType);
 		}
 
 	}
@@ -238,6 +294,25 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 		+ LINK_COLUMN_PARAMETER_MODE
 		+ CLOSE_BRACKET + SQL_VALUES + OPEN_BRACKET
 		+ QUESTION + COMMA
+		+ QUESTION + COMMA
+		+ QUESTION
+		+ CLOSE_BRACKET;
+		preparedStatement = connection.prepareStatement(sql);
+		} finally{
+			DatabaseConnection.closeConnection(connection);
+		}
+		return preparedStatement;
+	}
+	
+	private PreparedStatement insertMeasurementPortTypePreparedStatement() throws SQLException{
+		PreparedStatement preparedStatement = null;
+		Connection connection = DatabaseConnection.getConnection();
+		try {
+		String sql = SQL_INSERT_INTO
+		+ ObjectEntities.MNTTYMEASPORTTYPELINK_ENTITY + OPEN_BRACKET
+		+ LINK_COLUMN_MEASUREMENT_TYPE_ID + COMMA
+		+ LINK_COLUMN_MEASUREMENT_PORT_TYPE_ID
+		+ CLOSE_BRACKET + SQL_VALUES + OPEN_BRACKET
 		+ QUESTION + COMMA
 		+ QUESTION
 		+ CLOSE_BRACKET;
@@ -294,7 +369,33 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 		}
 
 	}
-	
+
+	private void updateMeasurementPortTypePrepareStatementValues(PreparedStatement preparedStatement,MeasurementType measurementType) throws SQLException{
+		List measurementPortTypes = measurementType.getMeasurementPortTypes();
+		String measurementTypeIdCode = measurementType.getId().getCode();
+		/**
+		 * @todo when change DB Identifier model ,change String to long
+		 */
+		String measurementPortTypeIdCode = null;
+		
+		for (Iterator iterator = measurementPortTypes.iterator(); iterator.hasNext();) {
+			/**
+			 * @todo when change DB Identifier model ,change setString() to
+			 *       setLong()
+			 */
+			preparedStatement.setString(1, measurementTypeIdCode);
+			measurementPortTypeIdCode = ((MeasurementPortType) iterator.next()).getId().getCode();
+			/**
+			 * @todo when change DB Identifier model ,change setString() to
+			 *       setLong()
+			 */
+			preparedStatement.setString(2, measurementPortTypeIdCode);
+			Log.debugMessage("MeasurementTypeDatabase.updateMeasurementPortTypePrepareStatementValues | Inserting measurement port type " + measurementPortTypeIdCode + "' for measurement type " + measurementTypeIdCode, Log.DEBUGLEVEL09);
+			preparedStatement.executeUpdate();
+		}
+
+	}
+
 	private void insertParameterTypes(MeasurementType measurementType) throws CreateObjectException {
 		/**
 		 * @todo when change DB Identifier model ,change String to long
@@ -308,6 +409,33 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 		}
 		catch (SQLException sqle) {
 			String mesg = "MeasurementTypeDatabase.insertParameterTypes | Cannot insert parameter type for measurement type '" + measurementTypeIdCode + "' -- " + sqle.getMessage();
+			throw new CreateObjectException(mesg, sqle);
+		}
+		finally {
+			try {
+				if (preparedStatement != null)
+					preparedStatement.close();
+				preparedStatement = null;
+			}
+			catch (SQLException sqle1) {
+				Log.errorException(sqle1);
+			}
+		}
+	}
+	
+	private void insertMeasurementPortTypes(MeasurementType measurementType) throws CreateObjectException {
+		/**
+		 * @todo when change DB Identifier model ,change String to long
+		 */
+		
+		PreparedStatement preparedStatement = null;
+		String measurementTypeIdCode = measurementType.getId().getCode();
+		try {
+			preparedStatement = insertMeasurementPortTypePreparedStatement();
+			updateMeasurementPortTypePrepareStatementValues(preparedStatement, measurementType);
+		}
+		catch (SQLException sqle) {
+			String mesg = "MeasurementTypeDatabase.insertMeasurementPortTypes | Cannot insert measurement port type for measurement type '" + measurementTypeIdCode + "' -- " + sqle.getMessage();
 			throw new CreateObjectException(mesg, sqle);
 		}
 		finally {
@@ -355,11 +483,15 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 		try {
 			statement = connection.createStatement();
 			statement.executeUpdate(SQL_DELETE_FROM
+									+ ObjectEntities.MNTTYMEASPORTTYPELINK_ENTITY
+									+ SQL_WHERE + LINK_COLUMN_MEASUREMENT_TYPE_ID + EQUALS + measurementTypeIdStr);
+			statement.executeUpdate(SQL_DELETE_FROM
 					+ ObjectEntities.MNTTYPPARTYPLINK_ENTITY
 					+ SQL_WHERE + LINK_COLUMN_MEASUREMENT_TYPE_ID + EQUALS + measurementTypeIdStr);
 			statement.executeUpdate(SQL_DELETE_FROM
 					+ ObjectEntities.MEASUREMENTTYPE_ENTITY 
 					+ SQL_WHERE + COLUMN_ID + EQUALS + measurementTypeIdStr);
+
 			connection.commit();
 		}
 		catch (SQLException sqle1) {
@@ -411,6 +543,7 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 		for(Iterator it=list.iterator();it.hasNext();){
 			MeasurementType measurementType = (MeasurementType)it.next();
 			retrieveParameterTypes(measurementType);
+			retrieveMeasurementPortTypes(measurementType);
 		}
 		
 		return list;
