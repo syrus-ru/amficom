@@ -1,5 +1,5 @@
 /*
- * $Id: ClientMeasurementObjectLoader.java,v 1.14 2005/02/02 12:11:51 bob Exp $
+ * $Id: ClientMeasurementObjectLoader.java,v 1.15 2005/02/02 12:19:51 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -50,7 +50,7 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2005/02/02 12:11:51 $
+ * @version $Revision: 1.15 $, $Date: 2005/02/02 12:19:51 $
  * @author $Author: bob $
  * @module generalclient_v1
  */
@@ -633,9 +633,9 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 				Identifier id = (Identifier) it.next();
 				identifierTransferables[i] = (Identifier_Transferable) id.getTransferable();
 			}
-			transferables = this.server.transmitModelingTypesButIdsCondition(identifierTransferables,
-				accessIdentifierTransferable,
-				(StorableObjectCondition_Transferable) condition.getTransferable());
+			transferables = this.server.transmitModelingTypesButIdsCondition(identifierTransferables,				
+				(StorableObjectCondition_Transferable) condition.getTransferable(),
+				accessIdentifierTransferable);
 
 			List list = new ArrayList(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
