@@ -1,5 +1,5 @@
 /*
- * $Id: scheme-vt.idl,v 1.20 2005/03/04 13:14:22 bass Exp $
+ * $Id: scheme-vt.idl,v 1.21 2005/03/04 13:41:45 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -111,6 +111,11 @@ module com {
 						attribute SchemeCableThread schemeCableThread;
 
 						SchemePort cloneInstance();
+
+						/**
+						 * @deprecated Use {@link #newInstance()} instead.
+						 */
+						factory newDefaultInstance();
 					};
 
 					typedef sequence<SchemePort> SchemePortSeq;
@@ -122,6 +127,11 @@ module com {
 						attribute SchemeCableLink schemeCableLink;
 
 						SchemeCablePort cloneInstance();
+
+						/**
+						 * @deprecated Use {@link #newInstance()} instead.
+						 */
+						factory newDefaultInstance();
 					};
 
 					typedef sequence<SchemeCablePort> SchemeCablePortSeq;
@@ -142,6 +152,11 @@ module com {
 						attribute SchemeCablePortSeq schemeCablePorts;
 
 						SchemeDevice cloneInstance();
+
+						/**
+						 * @deprecated Use {@link #newInstance()} instead.
+						 */
+						factory newDefaultInstance();
 					};
 
 					typedef sequence<SchemeDevice> SchemeDeviceSeq;
@@ -161,7 +176,7 @@ module com {
 						 * Getter returns scheme parent to this scheme link or scheme cable link or scheme element.
 						 * @see #schemeId
 						 */
-						attribute Scheme parentScheme;
+						attribute Scheme scheme;
 
 						/**
 						 * Transient attribute
@@ -231,6 +246,11 @@ module com {
 						attribute SchemePort targetSchemePort;
 
 						SchemeLink cloneInstance();
+
+						/**
+						 * @deprecated Use {@link #newInstance()} instead.
+						 */
+						factory newDefaultInstance();
 					};
 
 					typedef sequence<SchemeLink> SchemeLinkSeq;
@@ -275,6 +295,11 @@ module com {
 						attribute SchemeCableLink schemeCablelink;
 
 						SchemeCableThread cloneInstance();
+
+						/**
+						 * @deprecated Use {@link #newInstance()} instead.
+						 */
+						factory newDefaultInstance();
 
 						/**
 						 * Returns a scheme port this cable thread is attached to (within scheme
@@ -323,6 +348,11 @@ module com {
 						attribute double endSpare;
 
 						CableChannelingItem cloneInstance();
+
+						/**
+						 * @deprecated Use {@link #newInstance()} instead.
+						 */
+						factory newDefaultInstance();
 					};
 
 					typedef sequence<CableChannelingItem> CableChannelingItemSeq;
@@ -345,6 +375,11 @@ module com {
 						attribute CableChannelingItemSeq cableChannelingItems;
 
 						SchemeCableLink cloneInstance();
+
+						/**
+						 * @deprecated Use {@link #newInstance()} instead.
+						 */
+						factory newDefaultInstance();
 					};
 
 					typedef sequence<SchemeCableLink> SchemeCableLinkSeq;
@@ -389,9 +424,14 @@ module com {
 						attribute AbstractSchemeElement abstractSchemeElement;
 						attribute AbstractSchemePort startAbstractSchemePort;
 						attribute AbstractSchemePort endAbstractSchemePort;
-						attribute Scheme parentScheme;
+						attribute Scheme scheme;
 
 						PathElement cloneInstance();
+
+						/**
+						 * @deprecated Use {@link #newInstance()} instead.
+						 */
+						factory newDefaultInstance();
 					};
 
 					typedef sequence<PathElement> PathElementSeq;
@@ -409,16 +449,21 @@ module com {
 						private general::corba::Identifier startDeviceId;
 						private general::corba::Identifier endDeviceId;
 						private general::corba::Identifier pathId;
-						private general::corba::IdentifierSeq linkIds;
+						private general::corba::IdentifierSeq links;
 						private general::corba::IdentifierSeq characteristicIds;
 						private general::corba::Identifier schemeId;
 
 						attribute SchemeElement startDevice;
 						attribute SchemeElement endDevice;
 						attribute PathElementSeq links;
-						attribute Scheme parentScheme;
+						attribute Scheme scheme;
 
 						SchemePath cloneInstance();
+
+						/**
+						 * @deprecated Use {@link #newInstance()} instead.
+						 */
+						factory newDefaultInstance();
 					};
 
 					typedef sequence<SchemePath> SchemePathSeq;
@@ -461,6 +506,11 @@ module com {
 						attribute general::corba::WString64 label;
 
 						SchemeProtoElement cloneInstance();
+
+						/**
+						 * @deprecated Use {@link #newInstance()} instead.
+						 */
+						factory newDefaultInstance();
 					};
 
 					valuetype SchemeElement:
@@ -510,6 +560,11 @@ module com {
 						SchemeElement cloneInstance();
 
 						/**
+						 * @deprecated Use {@link #newInstance()} instead.
+						 */
+						factory newDefaultInstance();
+
+						/**
 						 * Transient attribute.
 						 */
 						attribute SchemePath alarmedPath;
@@ -529,11 +584,16 @@ module com {
 						private double thisPrice;
 						private general::corba::IdentifierSeq schemePathIds;
 
-						attribute Scheme parentScheme;
+						attribute Scheme scheme;
 						attribute double price;
 						attribute SchemePathSeq schemePaths;
 
 						SchemeMonitoringSolution cloneInstance();
+
+						/**
+						 * @deprecated Use {@link #newInstance()} instead.
+						 */
+						factory newDefaultInstance();
 					};
 
 					typedef sequence<SchemeMonitoringSolution> SchemeMonitoringSolutionSeq;
@@ -591,6 +651,11 @@ module com {
 						attribute long height;
 
 						Scheme cloneInstance();
+
+						/**
+						 * @deprecated Use {@link #newInstance()} instead.
+						 */
+						factory newDefaultInstance();
 					};
 
 					typedef sequence<Scheme> SchemeSeq;
@@ -642,6 +707,10 @@ module com {
 								in general::corba::WString32 name,
 								in SchemeProtoGroup parentSchemeProtoGroup);
 						factory getInstance(in general::corba::Identifier id);
+						/**
+						 * @deprecated Use {@link #newInstance()} instead.
+						 */
+						factory newDefaultInstance();
 					};
 
 					valuetype SchemeOptimizeInfo:
@@ -675,7 +744,7 @@ module com {
 						private ::CORBA::DoubleSeq thisSwitchNports;
 						private ::CORBA::WStringSeq thisSwitchNames;
 
-						attribute Scheme parentScheme;
+						attribute Scheme scheme;
 						attribute SchemeMonitoringSolution schemeMonitoringSolution;
 						attribute OptimizationMode optimizationMode;
 						attribute double iterations;
@@ -697,6 +766,11 @@ module com {
 						attribute ::CORBA::WStringSeq switchNames;
 
 						SchemeOptimizeInfo cloneInstance();
+
+						/**
+						 * @deprecated Use {@link #newInstance()} instead.
+						 */
+						factory newDefaultInstance();
 					};
 
 					typedef sequence<SchemeOptimizeInfo> SchemeOptimizeInfoSeq;
