@@ -1,6 +1,10 @@
-bak
+*.jar
+*.jpr*
+*.jpx*
+*.trc
+*.tar
+*.gz
+*.swp
+*.log
+*.sor
 classes
-analysis.jpx.local
-analysis.jpx.local~
-analysis.jpx~
-doc
