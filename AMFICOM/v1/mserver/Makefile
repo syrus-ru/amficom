@@ -9,7 +9,7 @@ IDLDIR=../idl_v1/idl
 HOST=mongol
 SERVICE_NAME=mongol
 
-APPCLASSPATH = $(LIBDIR)/mcm_interface.jar:$(LIBDIR)/util.jar:$(LIBDIR)/general.jar:$(LIBDIR)/configuration.jar:$(LIBDIR)/measurement.jar:$(LIBDIR)/servermisc.jar
+APPCLASSPATH = $(LIBDIR)/mcm_interface.jar:$(LIBDIR)/util.jar:$(LIBDIR)/general.jar:$(LIBDIR)/configuration.jar:$(LIBDIR)/measurement.jar
 
 include ../tools/Makefile.inc
 $(call checkenve,JAVA_HOME)
@@ -77,6 +77,11 @@ cleancorba:
 	rm -rf $(CLASSDIR)/com/syrus/AMFICOM/mserver/corba
 	rm -f .corba
 
+#### Install ####
+.PHONY:	install
+install: $(LIBNAME) $(LIBNAME_INTERFACE)
+	$(CP) $(LIBNAME) $(LIBNAME_INTERFACE) $(LIBDIR)
+
 #### Archive ####
 .PHONY:	arch
 arch:
@@ -84,5 +89,4 @@ arch:
 		Makefile \
 		idl/mserver.idl \
 		$(SRCDIR)/com/syrus/AMFICOM/mserver/*.java
-lib: $(LIBNAME)
-	$(CP) $(LIBNAME) $(LIBDIR)  
+

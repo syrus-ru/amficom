@@ -1,4 +1,5 @@
 resources
+classes
 lang
 lang_ru.pl
 language.properties_
@@ -6,4 +7,9 @@ sort.pl
 Configure.properties
 images
 *.jar
+*.swp
+*.tar
+*.gz
+*.jpr
+*.jpx
 .settings

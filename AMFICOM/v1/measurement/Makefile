@@ -112,26 +112,31 @@ $(CLASSDIR):
 
 .PHONY:	clean
 clean:	cleanmach cleanora cleancorba
-	rm -f $(LIBNAME)
+	$(RM) $(LIBNAME)
 
 .PHONY:	cleanmach
 cleanmach:
-	rm -rf $(CLASSDIR)/com/syrus/AMFICOM/measurement/*.class
-	rm -f .mach
+	$(RM) -r $(CLASSDIR)/com/syrus/AMFICOM/measurement/*.class
+	$(RM) .mach
 
 .PHONY:	cleanora
 cleanora:
-	rm -rf $(SRCDIR)/com/syrus/AMFICOM/measurement/ora
-	rm -rf $(CLASSDIR)/com/syrus/AMFICOM/measurement/ora
-	rm -f .ora
+	$(RM) -r $(SRCDIR)/com/syrus/AMFICOM/measurement/ora
+	$(RM) -r $(CLASSDIR)/com/syrus/AMFICOM/measurement/ora
+	$(RM) .ora
 
 .PHONY:	cleancorba
 cleancorba:
-	rm -rf $(SRCDIR)/com/syrus/AMFICOM/measurement/corba
-	rm -rf $(CLASSDIR)/com/syrus/AMFICOM/measurement/corba
-	rm -rf $(SRCDIR)/com/syrus/AMFICOM/event/corba
-	rm -rf $(CLASSDIR)/com/syrus/AMFICOM/event/corba
-	rm -f .corba
+	$(RM) -r $(SRCDIR)/com/syrus/AMFICOM/measurement/corba
+	$(RM) -r $(CLASSDIR)/com/syrus/AMFICOM/measurement/corba
+	$(RM) -r $(SRCDIR)/com/syrus/AMFICOM/event/corba
+	$(RM) -r $(CLASSDIR)/com/syrus/AMFICOM/event/corba
+	$(RM) -f .corba
+
+#### Install ####
+.PHONY:	install
+install: $(LIBNAME)
+	$(CP) $(LIBNAME) $(LIBDIR)
 
 #### Archive ####
 .PHONY:	arch
@@ -145,6 +150,3 @@ arch:
 pmd:
 	${JAVA} -classpath $(PMD_JARS) -jar $(PMD_JAR) src/com/syrus/AMFICOM/measurement text $(PMD_RULES) 
 
-#### Compile and install jar to libdir
-lib: $(LIBNAME)
-	$(CP) $(LIBNAME) $(LIBDIR)	

@@ -111,6 +111,7 @@ cleancorba: idlclean
 	$(RM) .corba
 
 #### Install ####
+.PHONY:	install
 install: $(LIBNAME)
 	$(CP) $(LIBNAME) $(LIBDIR)
 
