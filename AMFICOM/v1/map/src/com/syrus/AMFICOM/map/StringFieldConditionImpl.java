@@ -1,5 +1,5 @@
 /*
- * $Id: StringFieldCondition.java,v 1.3 2005/01/21 13:44:23 krupenn Exp $
+ * $Id: StringFieldConditionImpl.java,v 1.1 2005/01/24 10:53:49 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,13 +12,13 @@ import com.syrus.AMFICOM.general.corba.StringFieldSort;
 
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/01/21 13:44:23 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.1 $, $Date: 2005/01/24 10:53:49 $
+ * @author $Author: bob $
  * @module map_v1
  */
-public class StringFieldCondition extends com.syrus.AMFICOM.general.StringFieldCondition {
+final class StringFieldConditionImpl extends com.syrus.AMFICOM.general.StringFieldCondition {
 
-	private StringFieldCondition(final String string, final Short entityCode, final StringFieldSort sort) {
+	private StringFieldConditionImpl(final String string, final Short entityCode, final StringFieldSort sort) {
 		super();
 		this.string = string;
 		this.entityCode = entityCode;
