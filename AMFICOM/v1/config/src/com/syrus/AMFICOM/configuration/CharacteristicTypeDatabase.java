@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicTypeDatabase.java,v 1.4 2004/07/27 16:03:30 arseniy Exp $
+ * $Id: CharacteristicTypeDatabase.java,v 1.5 2004/07/28 12:49:46 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,11 +8,11 @@
 
 package com.syrus.AMFICOM.configuration;
 
+import java.util.List;
+import java.util.ArrayList;
 import java.sql.Statement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import com.syrus.util.Log;
-import com.syrus.util.database.DatabaseDate;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
@@ -22,6 +22,8 @@ import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.util.Log;
+import com.syrus.util.database.DatabaseDate;
 
 /**
  * @version $ $, $ $
@@ -35,6 +37,8 @@ public class CharacteristicTypeDatabase extends StorableObjectDatabase {
 	public static final String COLUMN_DATA_TYPE				= "data_type";
 	public static final String COLUMN_IS_EDITABLE			= "is_editable";
 	public static final String COLUMN_IS_VISIBLE			= "is_visible";
+
+	public static final int CHARACTER_NUMBER_OF_RECORDS = 1;
 
 	private CharacteristicType fromStorableObject(StorableObject storableObject) throws IllegalDataException {
 		if (storableObject instanceof CharacteristicType)
@@ -58,7 +62,7 @@ public class CharacteristicTypeDatabase extends StorableObjectDatabase {
 			+ COLUMN_DESCRIPTION + COMMA
 			+ COLUMN_DATA_TYPE + COMMA
 			+ COLUMN_IS_EDITABLE + COMMA
-			+ COLUMN_IS_VISIBLE + COMMA
+			+ COLUMN_IS_VISIBLE
 			+ SQL_FROM + ObjectEntities.CHARACTERISTICTYPE_ENTITY
 			+ SQL_WHERE	+ COLUMN_ID + EQUALS + ctIdStr;
 		Statement statement = null;
@@ -142,7 +146,7 @@ public class CharacteristicTypeDatabase extends StorableObjectDatabase {
 	private void insertCharacteristicType(CharacteristicType characteristicType) throws CreateObjectException {
 		String ctIdStr = characteristicType.getId().toSQLString();
 		String sql = SQL_INSERT_INTO
-			+ ObjectEntities.MEASUREMENTTYPE_ENTITY
+			+ ObjectEntities.CHARACTERISTICTYPE_ENTITY
 			+ OPEN_BRACKET
 			+ COLUMN_ID + COMMA
 			+ COLUMN_CREATED + COMMA
@@ -153,7 +157,7 @@ public class CharacteristicTypeDatabase extends StorableObjectDatabase {
 			+ COLUMN_DESCRIPTION + COMMA
 			+ COLUMN_DATA_TYPE + COMMA
 			+ COLUMN_IS_EDITABLE + COMMA
-			+ COLUMN_IS_VISIBLE + COMMA
+			+ COLUMN_IS_VISIBLE
 			+ CLOSE_BRACKET
 			+ SQL_VALUES
 			+ ctIdStr + COMMA
@@ -170,11 +174,11 @@ public class CharacteristicTypeDatabase extends StorableObjectDatabase {
 		Statement statement = null;
 		try {
 			statement = connection.createStatement();
-			Log.debugMessage("CharacteristicType_Database.insert | Trying: " + sql, Log.DEBUGLEVEL05);
+			Log.debugMessage("CharacteristicTypeDatabase.insert | Trying: " + sql, Log.DEBUGLEVEL05);
 			statement.executeUpdate(sql);
 		}
 		catch (SQLException sqle) {
-			String mesg = "CharacteristicType_Database.insert | Cannot insert characteristic type " + ctIdStr;
+			String mesg = "CharacteristicTypeDatabase.insert | Cannot insert characteristic type " + ctIdStr;
 			throw new CreateObjectException(mesg, sqle);
 		}
 		finally {
@@ -195,5 +199,42 @@ public class CharacteristicTypeDatabase extends StorableObjectDatabase {
 			default:
 				return;
 		}
+	}
+	
+	public static List retrieveAll() throws RetrieveObjectException {
+		List characteristicTypes = new ArrayList(CHARACTER_NUMBER_OF_RECORDS);
+		String sql = SQL_SELECT
+				+ COLUMN_ID
+				+ SQL_FROM + ObjectEntities.CHARACTERISTICTYPE_ENTITY;
+		Statement statement = null;
+		ResultSet resultSet = null;
+		try {
+			statement = connection.createStatement();
+			Log.debugMessage("CharacteristicTypeDatabase.retrieveAll | Trying: " + sql, Log.DEBUGLEVEL05);
+			resultSet = statement.executeQuery(sql);
+			while (resultSet.next())
+				characteristicTypes.add(new CharacteristicType(new Identifier(resultSet.getString(COLUMN_ID))));			
+		}
+		catch (ObjectNotFoundException onfe) {
+			Log.errorException(onfe);
+		}
+		catch (SQLException sqle) {
+			String mesg = "CharacteristicTypeDatabase.retrieveAll | Cannot retrieve characteristic type";
+			throw new RetrieveObjectException(mesg, sqle);
+		}
+		finally {
+			try {
+				if (statement != null)
+					statement.close();
+				if (resultSet != null)
+					resultSet.close();
+				statement = null;
+				resultSet = null;
+			}
+			catch (SQLException sqle1) {
+				Log.errorException(sqle1);
+			}
+		}
+		return characteristicTypes;
 	}
 }

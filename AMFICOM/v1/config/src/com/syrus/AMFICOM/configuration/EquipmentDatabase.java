@@ -1,5 +1,5 @@
 /*
- * $Id: EquipmentDatabase.java,v 1.6 2004/07/27 16:03:30 arseniy Exp $
+ * $Id: EquipmentDatabase.java,v 1.7 2004/07/28 12:49:46 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,7 +8,6 @@
 
 package com.syrus.AMFICOM.configuration;
 
-import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.util.database.DatabaseDate;
 

@@ -32,6 +32,7 @@ $(LIBNAME): .mach
 		$(SRCDIR)/com/syrus/AMFICOM/configuration/CharacteristicType.java \
 		$(SRCDIR)/com/syrus/AMFICOM/configuration/CharacteristicTypeDatabase.java \
 		$(SRCDIR)/com/syrus/AMFICOM/configuration/EquipmentType.java \
+		$(SRCDIR)/com/syrus/AMFICOM/configuration/EquipmentTypeDatabase.java \
 		$(SRCDIR)/com/syrus/AMFICOM/configuration/DomainMember.java \
 		$(SRCDIR)/com/syrus/AMFICOM/configuration/Characterized.java \
 		$(SRCDIR)/com/syrus/AMFICOM/configuration/Characteristic.java \

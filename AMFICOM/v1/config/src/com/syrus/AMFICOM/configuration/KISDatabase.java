@@ -1,5 +1,5 @@
 /*
- * $Id: KISDatabase.java,v 1.6 2004/07/27 16:03:30 arseniy Exp $
+ * $Id: KISDatabase.java,v 1.7 2004/07/28 12:49:46 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,13 +25,12 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $ $, $ $
+ * @version $Revision: 1.7 $, $Date: 2004/07/28 12:49:46 $
  * @author $Author: arseniy $
  * @module configuration_v1
  */
 
 public class KISDatabase extends StorableObjectDatabase {
-	
 	public static final String COLUMN_MCM_ID = "mcm_id";
 
 	private KIS fromStorableObject(StorableObject storableObject) throws IllegalDataException {
