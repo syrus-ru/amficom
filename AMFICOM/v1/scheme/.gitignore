@@ -5,6 +5,7 @@ classes
 test
 .corba
 .mach
+.idl
 *.swp
 *.tar
 *.gz
