@@ -9,6 +9,7 @@ import com.syrus.AMFICOM.Client.General.Event.StatusMessageEvent;
 import com.syrus.AMFICOM.Client.General.Lang.LangModel;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
+import com.syrus.AMFICOM.Client.General.Model.MapApplicationModel;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourceChooserDialog;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourceTreeNode;
 import com.syrus.AMFICOM.Client.General.UI.UniTreePanel;
@@ -36,6 +37,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreePath;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
@@ -164,6 +166,7 @@ public final class MapSchemeTreePanel extends JPanel
 		this.aContext = aContext;
 		if(aContext == null)
 			return;
+
 		Dispatcher disp = aContext.getDispatcher();
 		if(disp == null)
 			return;
@@ -297,7 +300,7 @@ public final class MapSchemeTreePanel extends JPanel
 
 		new SchemeDataSourceImage(dataSource).LoadSchemes();
 
-		ObjectResourceChooserDialog mcd = new ObjectResourceChooserDialog(com.syrus.AMFICOM.Client.Map.UI.SchemeController.getInstance(), Scheme.typ);
+		ObjectResourceChooserDialog mcd = new ObjectResourceChooserDialog(SchemeController.getInstance(), Scheme.typ);
 
 		List ss = Pool.getList(Scheme.typ);
 		mcd.setContents(ss);
@@ -345,6 +348,26 @@ public final class MapSchemeTreePanel extends JPanel
 	
 	private void removeFromView()
 	{
+		ObjectResourceTreeNode node = (ObjectResourceTreeNode )
+				treePanel.getTree().getSelectionPath().getLastPathComponent();
+		Scheme scheme = (Scheme )node.getObject();
+
+		MapFrame mapFrame = MapFrame.getMapMainFrame();
+		if(mapFrame == null)
+		{
+			System.out.println("mapviewer is NULL");
+		}
+		else
+		{
+			mapFrame.getMapView().removeScheme(scheme);
+			mapFrame.getContext().getDispatcher().notify(new MapEvent(
+					mapFrame.getMapView(),
+					MapEvent.MAP_VIEW_CHANGED));
+			mapFrame.getMapViewer().getLogicalNetLayer().repaint();
+		}
+		aContext.getDispatcher().notify(new StatusMessageEvent(
+				StatusMessageEvent.STATUS_MESSAGE,
+				LangModel.getString("Finished")));
 	}
 
 	public void valueChanged(TreeSelectionEvent e)
@@ -352,6 +375,7 @@ public final class MapSchemeTreePanel extends JPanel
 		ObjectResourceTreeNode node = (ObjectResourceTreeNode )e.getPath().getLastPathComponent();
 		Object sel = null;
 		long msgType = 0;
+		this.menuSchemeRemoveFromView.setEnabled(node.getObject() instanceof Scheme);
 		if(node.getObject() instanceof SchemeCableLink)
 		{
 			sel = new SchemeCableLink[] { (SchemeCableLink )node.getObject() };

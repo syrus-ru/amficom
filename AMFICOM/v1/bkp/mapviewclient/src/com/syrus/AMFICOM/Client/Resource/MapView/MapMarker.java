@@ -1,5 +1,5 @@
 /**
- * $Id: MapMarker.java,v 1.17 2004/11/11 18:09:30 krupenn Exp $
+ * $Id: MapMarker.java,v 1.18 2004/11/24 08:20:35 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -64,7 +64,7 @@ import javax.swing.ImageIcon;
  * 
  * 
  * 
- * @version $Revision: 1.17 $, $Date: 2004/11/11 18:09:30 $
+ * @version $Revision: 1.18 $, $Date: 2004/11/24 08:20:35 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -956,6 +956,12 @@ public class MapMarker extends MapNodeElement
 	public MapNodeElement getEndNode()
 	{
 		return endNode;
+	}
+
+
+	public MapCablePathElement getCablePath()
+	{
+		return cpath;
 	}
 
 }

@@ -1,5 +1,5 @@
 /**
- * $Id: MapView.java,v 1.20 2004/11/12 19:09:55 krupenn Exp $
+ * $Id: MapView.java,v 1.21 2004/11/24 08:20:35 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -15,6 +15,7 @@ import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.Map.Command.Action.PlaceSchemeCableLinkCommand;
 import com.syrus.AMFICOM.Client.Map.Command.Action.PlaceSchemeElementCommand;
 import com.syrus.AMFICOM.Client.Map.Command.Action.PlaceSchemePathCommand;
+import com.syrus.AMFICOM.Client.Map.Command.Action.RemoveNodeCommandAtomic;
 import com.syrus.AMFICOM.Client.Map.Command.Action.UnPlaceSchemeCableLinkCommand;
 import com.syrus.AMFICOM.Client.Map.Command.Action.UnPlaceSchemeElementCommand;
 import com.syrus.AMFICOM.Client.Map.Command.Action.UnPlaceSchemePathCommand;
@@ -58,7 +59,7 @@ import java.io.Serializable;
  * 
  * 
  * 
- * @version $Revision: 1.20 $, $Date: 2004/11/12 19:09:55 $
+ * @version $Revision: 1.21 $, $Date: 2004/11/24 08:20:35 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -481,11 +482,6 @@ public final class MapView extends StubResource implements Serializable
 			Scheme sch = (Scheme )getSchemes().get(0);
 			removeScheme(sch);
 		}
-//		for(Iterator it = getSchemes().iterator(); it.hasNext();)
-//		{
-//			Scheme sch = (Scheme )it.next();
-//			removeScheme(sch);
-//		}
 	}
 
 	public void scanElement(SchemeElement schemeElement)
@@ -594,18 +590,6 @@ public final class MapView extends StubResource implements Serializable
 				unplaceElement(mp);
 			}
 		}
-//		for(Iterator it = getMeasurementPaths().iterator(); it.hasNext();)
-//		{
-//			MapMeasurementPathElement mp = (MapMeasurementPathElement )it.next();
-//			if(schemePaths.contains(mp.getSchemePath()))
-//			{
-//				RemoveMeasurementPathCommandAtomic cmd = 
-//					new RemoveMeasurementPathCommandAtomic(mp);
-//				cmd.setLogicalNetLayer(logicalNetLayer);
-//				cmd.execute();
-//				removeMeasurementPath(mp);
-//			}
-//		}
 	}
 
 	public void removeCables(Scheme scheme)
@@ -620,15 +604,6 @@ public final class MapView extends StubResource implements Serializable
 				unplaceElement(cp);
 			}
 		}
-
-//		for(Iterator it = getCablePaths().iterator(); it.hasNext();)
-//		{
-//			MapCablePathElement cp = (MapCablePathElement )it.next();
-//			if(schemeCables.contains(cp.getSchemeCableLink()))
-//			{
-//				unplaceElement(cp);
-//			}
-//		}
 	}
 
 	public void removeElements(Scheme scheme)
@@ -640,7 +615,13 @@ public final class MapView extends StubResource implements Serializable
 			MapSiteNodeElement site = findElement(se);
 			if(site != null)
 			{
-				unplaceElement(site, se);
+				if(site instanceof MapUnboundNodeElement)
+				{
+					RemoveNodeCommandAtomic cmd = new RemoveNodeCommandAtomic(site);
+					cmd.setLogicalNetLayer(logicalNetLayer);
+					cmd.execute();
+//					unplaceElement(site, se);
+				}
 			}
 		}
 	}

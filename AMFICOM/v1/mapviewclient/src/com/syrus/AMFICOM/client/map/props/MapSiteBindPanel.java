@@ -19,6 +19,7 @@ import com.syrus.AMFICOM.Client.Resource.MapView.MapView;
 import com.syrus.AMFICOM.Client.Resource.ObjectResource;
 import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.Client.Resource.Scheme.CableChannelingItem;
+import com.syrus.AMFICOM.Client.Resource.Scheme.Scheme;
 import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeCableLink;
 import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeElement;
 
@@ -415,7 +416,12 @@ public final class MapSiteBindPanel extends JPanel implements ObjectResourceProp
 
 			MapView mapView = ((LogicalNetLayer )(site.getMap().getConverter())).getMapView();
 
-			List schemeElements = Pool.getList(SchemeElement.typ);
+			List schemeElements = new LinkedList();
+			for(Iterator it = mapView.getSchemes().iterator(); it.hasNext();)
+			{
+				Scheme scheme = (Scheme )it.next();
+				schemeElements.addAll(scheme.getTopLevelElements());
+			}
 			List cableElementsTransit = mapView.getCablePaths(site);
 			List cableElementsDropped = new LinkedList();
 			for(Iterator it = cableElementsTransit.iterator(); it.hasNext();)
