@@ -1,5 +1,5 @@
 /*
- * $Id: CMServerImpl.java,v 1.8 2004/09/20 06:45:56 max Exp $
+ * $Id: CMServerImpl.java,v 1.9 2004/09/20 07:45:39 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,6 +17,7 @@ import com.syrus.AMFICOM.cmserver.corba.CMServerOperations;
 import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 import com.syrus.AMFICOM.configuration.Domain;
 import com.syrus.AMFICOM.configuration.corba.AccessIdentifier_Transferable;
+import com.syrus.AMFICOM.configuration.corba.Domain_Transferable;
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseException;
@@ -57,7 +58,7 @@ import com.syrus.AMFICOM.measurement.corba.Test_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2004/09/20 06:45:56 $
+ * @version $Revision: 1.9 $, $Date: 2004/09/20 07:45:39 $
  * @author $Author: max $
  * @module cmserver_v1
  */
@@ -782,5 +783,65 @@ public class CMServerImpl implements CMServerOperations {
 										+ "' -- " + ige.getMessage());
 		}
 	}
-
+	
+	public Domain_Transferable transmitDomain(Identifier_Transferable identifier_Transferable,
+			AccessIdentifier_Transferable accessIdentifier)
+			throws AMFICOMRemoteException {
+		Identifier id = new Identifier(identifier_Transferable);
+        try {
+            Domain domain = (Domain) ConfigurationStorableObjectPool.getStorableObject(id, true);
+            return (Domain_Transferable) domain.getTransferable();
+        } catch (ObjectNotFoundException onfe) {
+            Log.errorException(onfe);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_NOT_FOUND, CompletionStatus.COMPLETED_YES,
+                                onfe.getMessage());
+        } catch (RetrieveObjectException roe) {
+            Log.errorException(roe);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, roe
+                    .getMessage());
+        } catch (CommunicationException ce) {
+            Log.errorException(ce);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ce
+                    .getMessage());
+        } catch (DatabaseException de) {
+            Log.errorException(de);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, de
+                    .getMessage());
+        }
+    }
+    
+	public Domain_Transferable[] transmitDomains(Identifier_Transferable[] ids,
+			AccessIdentifier_Transferable accessIdentifier)
+			throws AMFICOMRemoteException {
+		List idsList = new ArrayList();
+        Domain_Transferable[] idsTransfefableArray;
+        try {
+            for (int i = 0; i < ids.length; i++)
+                idsList.add(new Identifier(ids[i]));
+            List domainList = ConfigurationStorableObjectPool.getStorableObjects(idsList, true);
+            int i=0;
+            for (Iterator it = domainList.iterator(); it.hasNext();i++) {
+				idsTransfefableArray[i]= (Domain_Transferable) it.next();
+				
+			}
+            return idsTransfefableArray;
+        } catch (ObjectNotFoundException onfe) {
+            Log.errorException(onfe);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_NOT_FOUND, CompletionStatus.COMPLETED_YES,
+                                onfe.getMessage());
+        } catch (RetrieveObjectException roe) {
+            Log.errorException(roe);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, roe
+                    .getMessage());
+        } catch (CommunicationException ce) {
+            Log.errorException(ce);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ce
+                    .getMessage());
+        } catch (DatabaseException de) {
+            Log.errorException(de);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, de
+                    .getMessage());
+        }
+	}
+    
 }
