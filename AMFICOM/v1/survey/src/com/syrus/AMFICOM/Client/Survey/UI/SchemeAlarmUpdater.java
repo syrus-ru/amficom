@@ -49,9 +49,9 @@ public class SchemeAlarmUpdater extends Thread  implements Runnable
 		{
 			Scheme scheme = panel.scheme;
 
-			for(int i = 0; i < scheme.paths.size(); i++)
+			for(Iterator it=scheme.paths.iterator(); it.hasNext();)
 			{
-				SchemePath sp = (SchemePath )scheme.paths.get(i);
+				SchemePath sp = (SchemePath )it.next();
 				ElementAttribute ea = (ElementAttribute)sp.attributes.get("alarmed");
 
 				if(ea != null)
