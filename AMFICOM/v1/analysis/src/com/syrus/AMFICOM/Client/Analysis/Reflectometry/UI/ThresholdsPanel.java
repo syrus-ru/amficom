@@ -25,20 +25,7 @@ public class ThresholdsPanel extends ReflectogramEventsPanel
 
 	public ThresholdsPanel(ResizableLayeredPanel panel, Dispatcher dispatcher, double y[], double deltaX)
 	{
-		super (panel, dispatcher, y, deltaX);
-
-		try
-		{
-			jbInit();
-		}
-		catch(Exception ex)
-		{
-			ex.printStackTrace();
-		}
-	}
-
-	private void jbInit() throws Exception
-	{ // empty
+		super (panel, dispatcher, y, deltaX);		
 	}
 
 	public void updateThresholds(ModelTraceManager mtm)
@@ -85,17 +72,24 @@ public class ThresholdsPanel extends ReflectogramEventsPanel
 		else
 			isRbutton = false;
 
+		/* TODO */
+		SimpleReflectogramEvent simpleEvent = this.et_mtm.getSimpleEvent(this.c_event);
+		
+		boolean allThresholds = this.isToPaintAllThresholds();
+		int currposF = (int) coord2indexF(this.currpos.x);
+		if (!allThresholds && !(simpleEvent.getBegin() <= currposF && currposF <= simpleEvent.getEnd()))
+			return;
 		// если это текущее событие - пытаемся "ухватить" (drag) порог
-		c_TH = et_mtm.getThresholdHandle(
-			coord2indexF(currpos.x), // we need float value, without rounding
-			coord2value(currpos.y),
-			mouse_coupling / scaleX,
-			mouse_coupling / scaleY,
+		this.c_TH = this.et_mtm.getThresholdHandle(
+			coord2indexF(this.currpos.x), // we need float value, without rounding
+			coord2value(this.currpos.y),
+			mouse_coupling / this.scaleX,
+			mouse_coupling / this.scaleY,
 			0.5,
-			isRbutton ? 1 : 0);
+			isRbutton ? 1 : 0);		
+		
+		if (this.c_TH != null && (allThresholds || this.c_TH.isRelevantToNEvent(this.c_event))) {
 
-		if (c_TH != null)
-		{
 			// перемещаем мышь в точку захвата
 			try
 			{
