@@ -1,5 +1,5 @@
 /**
- * $Id: MapNodeElement.java,v 1.15 2004/10/18 15:21:50 krupenn Exp $
+ * $Id: MapNodeElement.java,v 1.16 2004/10/26 13:25:36 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -36,7 +36,7 @@ import java.util.List;
  * 
  * 
  * 
- * @version $Revision: 1.15 $, $Date: 2004/10/18 15:21:50 $
+ * @version $Revision: 1.16 $, $Date: 2004/10/26 13:25:36 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -162,6 +162,11 @@ public abstract class MapNodeElement extends StubResource
 	{
 		return MapPropertiesManager.getScaledImage(getImageId());
 	}
+	
+	public Image getAlarmedImage()
+	{
+		return getImage();
+	}
 
 	/**
 	 * установить идентификатор изображени€, по которому определ€етс€ 
@@ -274,6 +279,12 @@ public abstract class MapNodeElement extends StubResource
 		{
 			if ( MapPropertiesManager.isShowAlarmState() )
 			{
+				pg.drawImage(
+						getAlarmedImage(),
+						p.x - width / 2,
+						p.y - height / 2,
+						null);
+
 				pg.setStroke(MapPropertiesManager.getAlarmedStroke());
 				pg.setColor(MapPropertiesManager.getAlarmedColor());
 				pg.drawRect( 

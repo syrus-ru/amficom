@@ -1,5 +1,5 @@
 /**
- * $Id: MapPhysicalNodeElementState.java,v 1.2 2004/09/15 08:28:52 krupenn Exp $
+ * $Id: MapPhysicalNodeElementState.java,v 1.3 2004/10/26 13:25:36 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -16,7 +16,7 @@ package com.syrus.AMFICOM.Client.Resource.Map;
  * 
  * 
  * 
- * @version $Revision: 1.2 $, $Date: 2004/09/15 08:28:52 $
+ * @version $Revision: 1.3 $, $Date: 2004/10/26 13:25:36 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -32,5 +32,13 @@ public final class MapPhysicalNodeElementState extends MapNodeElementState
 
 		active = mpne.isActive();
 		physicalLinkId = mpne.physicalLinkId;
+	}
+
+	public boolean equals(Object obj)
+	{
+		MapPhysicalNodeElementState mpnes = (MapPhysicalNodeElementState )obj;
+		return super.equals(obj)
+			&& this.physicalLinkId.equals(mpnes.physicalLinkId)
+			&& this.active == mpnes.active;
 	}
 }

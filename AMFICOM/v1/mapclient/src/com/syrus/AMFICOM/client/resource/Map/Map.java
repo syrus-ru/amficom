@@ -1,5 +1,5 @@
 /**
- * $Id: Map.java,v 1.14 2004/10/20 10:13:59 krupenn Exp $
+ * $Id: Map.java,v 1.15 2004/10/26 13:25:36 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -34,7 +34,7 @@ import java.util.Set;
  * 
  * 
  * 
- * @version $Revision: 1.14 $, $Date: 2004/10/20 10:13:59 $
+ * @version $Revision: 1.15 $, $Date: 2004/10/26 13:25:36 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -654,7 +654,9 @@ public final class Map extends StubResource implements Serializable
 		ob.setRemoved(true);
 		removedElements.add(ob);
 		
-		getCollector(ob).removeLink(ob);
+		MapPipePathElement coll = getCollector(ob);
+		if(coll != null)
+			coll.removeLink(ob);
 	}
 
 	/**

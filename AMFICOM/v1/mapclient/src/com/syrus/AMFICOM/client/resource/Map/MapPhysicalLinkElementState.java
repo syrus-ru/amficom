@@ -1,5 +1,5 @@
 /**
- * $Id: MapPhysicalLinkElementState.java,v 1.1 2004/09/13 12:02:01 krupenn Exp $
+ * $Id: MapPhysicalLinkElementState.java,v 1.2 2004/10/26 13:25:36 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -18,7 +18,7 @@ import java.util.ArrayList;
  * 
  * 
  * 
- * @version $Revision: 1.1 $, $Date: 2004/09/13 12:02:01 $
+ * @version $Revision: 1.2 $, $Date: 2004/10/26 13:25:36 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -35,5 +35,13 @@ public class MapPhysicalLinkElementState extends MapLinkElementState
 
 		nodeLinks.addAll(mple.nodeLinks);
 		mapProtoId = mple.mapProtoId;
+	}
+
+	public boolean equals(Object obj)
+	{
+		MapPhysicalLinkElementState mples = (MapPhysicalLinkElementState )obj;
+		return super.equals(obj)
+			&& this.mapProtoId.equals(mples.mapProtoId)
+			&& this.nodeLinks.equals(mples.nodeLinks);
 	}
 }

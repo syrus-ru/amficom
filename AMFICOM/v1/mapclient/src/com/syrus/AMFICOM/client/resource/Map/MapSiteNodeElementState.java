@@ -1,5 +1,5 @@
 /**
- * $Id: MapSiteNodeElementState.java,v 1.1 2004/09/13 12:02:01 krupenn Exp $
+ * $Id: MapSiteNodeElementState.java,v 1.2 2004/10/26 13:25:36 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -16,14 +16,13 @@ package com.syrus.AMFICOM.Client.Resource.Map;
  * 
  * 
  * 
- * @version $Revision: 1.1 $, $Date: 2004/09/13 12:02:01 $
+ * @version $Revision: 1.2 $, $Date: 2004/10/26 13:25:36 $
  * @module
  * @author $Author: krupenn $
  * @see
  */
 public class MapSiteNodeElementState extends MapNodeElementState
 {
-	boolean active;
 	String mapProtoId;
 	
 	public MapSiteNodeElementState(MapSiteNodeElement msne)
@@ -31,5 +30,12 @@ public class MapSiteNodeElementState extends MapNodeElementState
 		super(msne);
 
 		mapProtoId = msne.mapProtoId;
+	}
+
+	public boolean equals(Object obj)
+	{
+		MapSiteNodeElementState msnes = (MapSiteNodeElementState )obj;
+		return super.equals(obj)
+			&& this.mapProtoId.equals(msnes.mapProtoId);
 	}
 }

@@ -1,5 +1,5 @@
 /**
- * $Id: MapLinkElement.java,v 1.11 2004/10/18 12:43:13 krupenn Exp $
+ * $Id: MapLinkElement.java,v 1.12 2004/10/26 13:25:36 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -32,7 +32,7 @@ import java.util.HashMap;
  * 
  * 
  * 
- * @version $Revision: 1.11 $, $Date: 2004/10/18 12:43:13 $
+ * @version $Revision: 1.12 $, $Date: 2004/10/26 13:25:36 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -272,6 +272,8 @@ public abstract class MapLinkElement extends StubResource implements MapElement
 			ElementAttributeType eat = (ElementAttributeType )Pool.get(
 					ElementAttributeType.typ, 
 					"thickness");
+			if(eat == null)
+				return;
 			ea = new ElementAttribute(
 					"attr" + System.currentTimeMillis(),
 					eat.getName(),
@@ -304,6 +306,8 @@ public abstract class MapLinkElement extends StubResource implements MapElement
 			ElementAttributeType eat = (ElementAttributeType )Pool.get(
 					ElementAttributeType.typ,
 					"style");
+			if(eat == null)
+				return;
 			ea = new ElementAttribute(
 					"attr" + System.currentTimeMillis(),
 					eat.getName(),
@@ -349,6 +353,8 @@ public abstract class MapLinkElement extends StubResource implements MapElement
 			ElementAttributeType eat = (ElementAttributeType )Pool.get(
 					ElementAttributeType.typ,
 					"color");
+			if(eat == null)
+				return;
 			ea = new ElementAttribute(
 					"attr" + System.currentTimeMillis(),
 					eat.getName(),
@@ -397,6 +403,8 @@ public abstract class MapLinkElement extends StubResource implements MapElement
 			ElementAttributeType eat = (ElementAttributeType )Pool.get(
 					ElementAttributeType.typ,
 					"alarmed_color");
+			if(eat == null)
+				return;
 			ea = new ElementAttribute(
 					"attr" + System.currentTimeMillis(),
 					eat.getName(),
@@ -429,6 +437,8 @@ public abstract class MapLinkElement extends StubResource implements MapElement
 			ElementAttributeType eat = (ElementAttributeType )Pool.get(
 					ElementAttributeType.typ, 
 					"alarmed_thickness");
+			if(eat == null)
+				return;
 			ea = new ElementAttribute(
 					"attr" + System.currentTimeMillis(),
 					eat.getName(),

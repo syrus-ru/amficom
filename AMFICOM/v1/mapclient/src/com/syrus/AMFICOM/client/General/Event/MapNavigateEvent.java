@@ -1,5 +1,5 @@
 /**
- * $Id: MapNavigateEvent.java,v 1.6 2004/10/18 13:21:08 krupenn Exp $
+ * $Id: MapNavigateEvent.java,v 1.7 2004/10/26 13:25:36 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -16,7 +16,7 @@ import com.syrus.AMFICOM.general.Identifier;
  * 
  * 
  * 
- * @version $Revision: 1.6 $, $Date: 2004/10/18 13:21:08 $
+ * @version $Revision: 1.7 $, $Date: 2004/10/26 13:25:36 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -53,43 +53,38 @@ public class MapNavigateEvent extends MapEvent
 	 */
 	public static final int DATA_MARKER_CREATED_EVENT = 5;
 	/**
-	 * Маркер был выделен вне карты (например, в окне рефлектограмм)
-	 * @param markerId
-	 */
-	public static final int DATA_MARKER_SELECTED_EVENT = 6;
-	/**
-	 * Маркер был удален вне карты (например, в окне рефлектограмм)
-	 * @param markerId
-	 */
-	public static final int DATA_MARKER_DELETED_EVENT = 7;
-	/**
-	 * @param markerId
-	 * @param distance
-	 * Маркер был передвинут вне карты (например, в окне рефлектограмм)
-	 */
-	public static final int DATA_MARKER_MOVED_EVENT = 8;
-	/**
 	 * Маркер события был создан вне карты (например, в окне рефлектограмм)
 	 * @param markerId
 	 * @param distance
 	 */
-	public static final int DATA_EVENTMARKER_CREATED_EVENT = 9;
-	/**
-	 * Маркер события был удален вне карты (например, в окне рефлектограмм)
-	 * @param markerId
-	 */
-	public static final int DATA_EVENTMARKER_DELETED_EVENT = 10;
+	public static final int DATA_EVENTMARKER_CREATED_EVENT = 6;
 	/**
 	 * Маркер сигнала тревоги был создан вне карты (например, в окне рефлектограмм)
 	 * @param markerId
 	 * @param distance
 	 */
-	public static final int DATA_ALARMMARKER_CREATED_EVENT = 11;
+	public static final int DATA_ALARMMARKER_CREATED_EVENT = 7;
 	/**
-	 * Маркер сигнала тревоги был удален вне карты (например, в окне рефлектограмм)
+	 * Маркер был выделен вне карты (например, в окне рефлектограмм)
 	 * @param markerId
 	 */
-	public static final int DATA_ALARMMARKER_DELETED_EVENT = 12;
+	public static final int DATA_MARKER_SELECTED_EVENT = 8;
+	/**
+	 * Маркер был выделен вне карты (например, в окне рефлектограмм)
+	 * @param markerId
+	 */
+	public static final int DATA_MARKER_DESELECTED_EVENT = 9;
+	/**
+	 * Маркер был удален вне карты (например, в окне рефлектограмм)
+	 * @param markerId
+	 */
+	public static final int DATA_MARKER_DELETED_EVENT = 10;
+	/**
+	 * @param markerId
+	 * @param distance
+	 * Маркер был передвинут вне карты (например, в окне рефлектограмм)
+	 */
+	public static final int DATA_MARKER_MOVED_EVENT = 11;
 	/**
 	 * Элемент выделен
 	 * @param source
@@ -279,6 +274,11 @@ public class MapNavigateEvent extends MapEvent
 		return mapEventType == DATA_MARKER_SELECTED_EVENT;
 	}
 
+	public boolean isDataMarkerDeselected()
+	{
+		return mapEventType == DATA_MARKER_DESELECTED_EVENT;
+	}
+
 	public boolean isDataMarkerMoved()
 	{
 		return mapEventType == DATA_MARKER_MOVED_EVENT;
@@ -289,19 +289,9 @@ public class MapNavigateEvent extends MapEvent
 		return mapEventType == DATA_EVENTMARKER_CREATED_EVENT;
 	}
 
-	public boolean isDataEventMarkerDeleted()
-	{
-		return mapEventType == DATA_EVENTMARKER_DELETED_EVENT;
-	}
-
 	public boolean isDataAlarmMarkerCreated()
 	{
 		return mapEventType == DATA_ALARMMARKER_CREATED_EVENT;
-	}
-
-	public boolean isDataAlarmMarkerDeleted()
-	{
-		return mapEventType == DATA_ALARMMARKER_DELETED_EVENT;
 	}
 
 	public boolean isMapElementSelected()

@@ -1,5 +1,5 @@
 /**
- * $Id: MapMarkElement.java,v 1.15 2004/10/18 12:43:13 krupenn Exp $
+ * $Id: MapMarkElement.java,v 1.16 2004/10/26 13:25:36 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -42,7 +42,7 @@ import javax.swing.ImageIcon;
  * 
  * 
  * 
- * @version $Revision: 1.15 $, $Date: 2004/10/18 12:43:13 $
+ * @version $Revision: 1.16 $, $Date: 2004/10/26 13:25:36 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -70,8 +70,6 @@ public final class MapMarkElement extends MapNodeElement implements Serializable
 
 	protected String linkId = "";
 	protected double distance = 0.0;
-
-	protected Point2D.Double bufferAnchor = new Point2D.Double( 0, 0);
 
 	protected MapNodeLinkElement nodeLink;
 
@@ -140,7 +138,6 @@ public final class MapMarkElement extends MapNodeElement implements Serializable
 		mme.anchor = new Point2D.Double(anchor.x, anchor.y);
 		mme.bounds = new Rectangle(bounds);
 		mme.alarmState = alarmState;
-		mme.bufferAnchor = new Point2D.Double(bufferAnchor.x, bufferAnchor.y);
 		mme.changed = changed;
 		mme.description = description;
 		mme.name = name;
