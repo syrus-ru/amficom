@@ -64,6 +64,12 @@ module corba {
 		configuration::corba::EquipmentType_Transferable transmitEquipmentType(in general::corba::Identifier_Transferable id)
 			raises (general::corba::AMFICOMRemoteException);
 
+		configuration::corba::TransmissionPathType_Transferable transmitTransmissionPathType(in general::corba::Identifier_Transferable id)
+			raises (general::corba::AMFICOMRemoteException);
+
+		configuration::corba::LinkType_Transferable transmitLinkType(in general::corba::Identifier_Transferable id)
+			raises (general::corba::AMFICOMRemoteException);							
+
 		configuration::corba::PortType_Transferable transmitPortType(in general::corba::Identifier_Transferable id)
 			raises (general::corba::AMFICOMRemoteException);							
 
@@ -71,6 +77,9 @@ module corba {
 			raises (general::corba::AMFICOMRemoteException);
 
 		configuration::corba::Equipment_Transferable transmitEquipment(in general::corba::Identifier_Transferable id)
+			raises (general::corba::AMFICOMRemoteException);
+
+		configuration::corba::Link_Transferable transmitLink(in general::corba::Identifier_Transferable id)
 			raises (general::corba::AMFICOMRemoteException);
 
 		configuration::corba::Port_Transferable transmitPort(in general::corba::Identifier_Transferable id)

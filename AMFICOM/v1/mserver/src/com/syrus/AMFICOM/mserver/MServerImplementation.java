@@ -1,5 +1,5 @@
 /*
- * $Id: MServerImplementation.java,v 1.30 2005/03/22 16:05:29 arseniy Exp $
+ * $Id: MServerImplementation.java,v 1.31 2005/03/22 18:19:54 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,20 +26,26 @@ import com.syrus.AMFICOM.administration.corba.User_Transferable;
 import com.syrus.AMFICOM.configuration.Equipment;
 import com.syrus.AMFICOM.configuration.EquipmentType;
 import com.syrus.AMFICOM.configuration.KIS;
+import com.syrus.AMFICOM.configuration.Link;
+import com.syrus.AMFICOM.configuration.LinkType;
 import com.syrus.AMFICOM.configuration.MeasurementPort;
 import com.syrus.AMFICOM.configuration.MeasurementPortType;
 import com.syrus.AMFICOM.configuration.MonitoredElement;
 import com.syrus.AMFICOM.configuration.Port;
 import com.syrus.AMFICOM.configuration.PortType;
 import com.syrus.AMFICOM.configuration.TransmissionPath;
+import com.syrus.AMFICOM.configuration.TransmissionPathType;
 import com.syrus.AMFICOM.configuration.corba.EquipmentType_Transferable;
 import com.syrus.AMFICOM.configuration.corba.Equipment_Transferable;
 import com.syrus.AMFICOM.configuration.corba.KIS_Transferable;
+import com.syrus.AMFICOM.configuration.corba.LinkType_Transferable;
+import com.syrus.AMFICOM.configuration.corba.Link_Transferable;
 import com.syrus.AMFICOM.configuration.corba.MeasurementPortType_Transferable;
 import com.syrus.AMFICOM.configuration.corba.MeasurementPort_Transferable;
 import com.syrus.AMFICOM.configuration.corba.MonitoredElement_Transferable;
 import com.syrus.AMFICOM.configuration.corba.PortType_Transferable;
 import com.syrus.AMFICOM.configuration.corba.Port_Transferable;
+import com.syrus.AMFICOM.configuration.corba.TransmissionPathType_Transferable;
 import com.syrus.AMFICOM.configuration.corba.TransmissionPath_Transferable;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.ParameterType;
@@ -95,7 +101,7 @@ import com.syrus.AMFICOM.mserver.corba.MServerPOA;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.30 $, $Date: 2005/03/22 16:05:29 $
+ * @version $Revision: 1.31 $, $Date: 2005/03/22 18:19:54 $
  * @author $Author: arseniy $
  * @module mserver_v1
  */
@@ -189,7 +195,7 @@ public class MServerImplementation extends MServerPOA {
 		Identifier id = new Identifier(idT);
 		try {
 			CharacteristicType characteristicType = new CharacteristicType(id);
-			return (CharacteristicType_Transferable)characteristicType.getTransferable();
+			return (CharacteristicType_Transferable) characteristicType.getTransferable();
 		}
 		catch (ObjectNotFoundException onfe) {
 			Log.errorException(onfe);
@@ -198,17 +204,38 @@ public class MServerImplementation extends MServerPOA {
 		catch (RetrieveObjectException roe) {
 			Log.errorException(roe);
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, roe.getMessage());
-		} catch (Throwable t) {
-            Log.errorException(t);
-            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
-        }
+		}
+		catch (Throwable t) {
+			Log.errorException(t);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
+		}
+	}
+
+	public TransmissionPathType_Transferable transmitTransmissionPathType(Identifier_Transferable idT) throws AMFICOMRemoteException {
+		Identifier id = new Identifier(idT);
+		try {
+			TransmissionPathType transmissionPathType = new TransmissionPathType(id);
+			return (TransmissionPathType_Transferable) transmissionPathType.getTransferable();
+		}
+		catch (ObjectNotFoundException onfe) {
+			Log.errorException(onfe);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_NOT_FOUND, CompletionStatus.COMPLETED_YES, onfe.getMessage());
+		}
+		catch (RetrieveObjectException roe) {
+			Log.errorException(roe);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, roe.getMessage());
+		}
+		catch (Throwable t) {
+			Log.errorException(t);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
+		}
 	}
 
 	public EquipmentType_Transferable transmitEquipmentType(Identifier_Transferable idT) throws AMFICOMRemoteException {
 		Identifier id = new Identifier(idT);
 		try {
 			EquipmentType equipmentType = new EquipmentType(id);
-			return (EquipmentType_Transferable)equipmentType.getTransferable();
+			return (EquipmentType_Transferable) equipmentType.getTransferable();
 		}
 		catch (ObjectNotFoundException onfe) {
 			Log.errorException(onfe);
@@ -217,17 +244,38 @@ public class MServerImplementation extends MServerPOA {
 		catch (RetrieveObjectException roe) {
 			Log.errorException(roe);
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, roe.getMessage());
-		} catch (Throwable t) {
-            Log.errorException(t);
-            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
-        }
+		}
+		catch (Throwable t) {
+			Log.errorException(t);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
+		}
 	}
-	
+
+	public LinkType_Transferable transmitLinkType(Identifier_Transferable idT) throws AMFICOMRemoteException {
+		Identifier id = new Identifier(idT);
+		try {
+			LinkType linkType = new LinkType(id);
+			return (LinkType_Transferable) linkType.getTransferable();
+		}
+		catch (ObjectNotFoundException onfe) {
+			Log.errorException(onfe);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_NOT_FOUND, CompletionStatus.COMPLETED_YES, onfe.getMessage());
+		}
+		catch (RetrieveObjectException roe) {
+			Log.errorException(roe);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, roe.getMessage());
+		}
+		catch (Throwable t) {
+			Log.errorException(t);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
+		}
+	}
+
 	public PortType_Transferable transmitPortType(Identifier_Transferable idT) throws AMFICOMRemoteException {
 		Identifier id = new Identifier(idT);
 		try {
 			PortType portType = new PortType(id);
-			return (PortType_Transferable)portType.getTransferable();
+			return (PortType_Transferable) portType.getTransferable();
 		}
 		catch (ObjectNotFoundException onfe) {
 			Log.errorException(onfe);
@@ -236,17 +284,18 @@ public class MServerImplementation extends MServerPOA {
 		catch (RetrieveObjectException roe) {
 			Log.errorException(roe);
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, roe.getMessage());
-		} catch (Throwable t) {
-            Log.errorException(t);
-            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
-        }
+		}
+		catch (Throwable t) {
+			Log.errorException(t);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
+		}
 	}
 
 	public MeasurementPortType_Transferable transmitMeasurementPortType(Identifier_Transferable idT) throws AMFICOMRemoteException {
 		Identifier id = new Identifier(idT);
 		try {
 			MeasurementPortType measurementPortType = new MeasurementPortType(id);
-			return (MeasurementPortType_Transferable)measurementPortType.getTransferable();
+			return (MeasurementPortType_Transferable) measurementPortType.getTransferable();
 		}
 		catch (ObjectNotFoundException onfe) {
 			Log.errorException(onfe);
@@ -259,17 +308,18 @@ public class MServerImplementation extends MServerPOA {
 		catch (Exception e) {
 			Log.errorException(e);
 			throw new AMFICOMRemoteException();
-		} catch (Throwable t) {
-            Log.errorException(t);
-            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
-        }
+		}
+		catch (Throwable t) {
+			Log.errorException(t);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
+		}
 	}
 
 	public Characteristic_Transferable transmitCharacteristic(Identifier_Transferable idT) throws AMFICOMRemoteException {
 		Identifier id = new Identifier(idT);
 		try {
 			Characteristic characteristic = new Characteristic(id);
-			return (Characteristic_Transferable)characteristic.getTransferable();
+			return (Characteristic_Transferable) characteristic.getTransferable();
 		}
 		catch (ObjectNotFoundException onfe) {
 			Log.errorException(onfe);
@@ -278,17 +328,18 @@ public class MServerImplementation extends MServerPOA {
 		catch (RetrieveObjectException roe) {
 			Log.errorException(roe);
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, roe.getMessage());
-		} catch (Throwable t) {
-            Log.errorException(t);
-            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
-        }
+		}
+		catch (Throwable t) {
+			Log.errorException(t);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
+		}
 	}
 
 	public User_Transferable transmitUser(Identifier_Transferable idT) throws AMFICOMRemoteException {
 		Identifier id = new Identifier(idT);
 		try {
 			User user = new User(id);
-			return (User_Transferable)user.getTransferable();
+			return (User_Transferable) user.getTransferable();
 		}
 		catch (ObjectNotFoundException onfe) {
 			Log.errorException(onfe);
@@ -297,17 +348,18 @@ public class MServerImplementation extends MServerPOA {
 		catch (RetrieveObjectException roe) {
 			Log.errorException(roe);
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, roe.getMessage());
-		} catch (Throwable t) {
-            Log.errorException(t);
-            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
-        }
+		}
+		catch (Throwable t) {
+			Log.errorException(t);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
+		}
 	}
 
 	public Domain_Transferable transmitDomain(Identifier_Transferable idT) throws AMFICOMRemoteException {
 		Identifier id = new Identifier(idT);
 		try {
 			Domain domain = new Domain(id);
-			return (Domain_Transferable)domain.getTransferable();
+			return (Domain_Transferable) domain.getTransferable();
 		}
 		catch (ObjectNotFoundException onfe) {
 			Log.errorException(onfe);
@@ -316,17 +368,18 @@ public class MServerImplementation extends MServerPOA {
 		catch (RetrieveObjectException roe) {
 			Log.errorException(roe);
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, roe.getMessage());
-		} catch (Throwable t) {
-            Log.errorException(t);
-            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
-        }
+		}
+		catch (Throwable t) {
+			Log.errorException(t);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
+		}
 	}
 
 	public Server_Transferable transmitServer(Identifier_Transferable idT) throws AMFICOMRemoteException {
 		Identifier id = new Identifier(idT);
 		try {
 			Server server = new Server(id);
-			return (Server_Transferable)server.getTransferable();
+			return (Server_Transferable) server.getTransferable();
 		}
 		catch (ObjectNotFoundException onfe) {
 			Log.errorException(onfe);
@@ -335,97 +388,18 @@ public class MServerImplementation extends MServerPOA {
 		catch (RetrieveObjectException roe) {
 			Log.errorException(roe);
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, roe.getMessage());
-		} catch (Throwable t) {
-            Log.errorException(t);
-            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
-        }
+		}
+		catch (Throwable t) {
+			Log.errorException(t);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
+		}
 	}
 
 	public MCM_Transferable transmitMCM(Identifier_Transferable idT) throws AMFICOMRemoteException {
 		Identifier id = new Identifier(idT);
 		try {
 			MCM mcm = new MCM(id);
-			return (MCM_Transferable)mcm.getTransferable();
-		}
-		catch (ObjectNotFoundException onfe) {
-			Log.errorException(onfe);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_NOT_FOUND, CompletionStatus.COMPLETED_YES, onfe.getMessage());
-		}
-		catch (RetrieveObjectException roe) {
-			Log.errorException(roe);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, roe.getMessage());
-		}
-		catch (Exception e)  {
-			Log.errorException(e);
-			throw new AMFICOMRemoteException();
-		} catch (Throwable t) {
-            Log.errorException(t);
-            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
-        }
-	}
-
-	public Equipment_Transferable transmitEquipment(Identifier_Transferable idT) throws AMFICOMRemoteException {
-		Identifier id = new Identifier(idT);
-		try {
-			Equipment equipment = new Equipment(id);
-			return (Equipment_Transferable)equipment.getTransferable();
-		}
-		catch (ObjectNotFoundException onfe) {
-			Log.errorException(onfe);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_NOT_FOUND, CompletionStatus.COMPLETED_YES, onfe.getMessage());
-		}
-		catch (RetrieveObjectException roe) {
-			Log.errorException(roe);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, roe.getMessage());
-		} catch (Throwable t) {
-            Log.errorException(t);
-            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
-        }
-	}
-
-	public Port_Transferable transmitPort(Identifier_Transferable idT) throws AMFICOMRemoteException {
-		Identifier id = new Identifier(idT);
-		try {
-			Port port = new Port(id);
-			return (Port_Transferable)port.getTransferable();
-		}
-		catch (ObjectNotFoundException onfe) {
-			Log.errorException(onfe);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_NOT_FOUND, CompletionStatus.COMPLETED_YES, onfe.getMessage());
-		}
-		catch (RetrieveObjectException roe) {
-			Log.errorException(roe);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, roe.getMessage());
-		} catch (Throwable t) {
-            Log.errorException(t);
-            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
-        }
-	}
-
-	public TransmissionPath_Transferable transmitTransmissionPath(Identifier_Transferable idT) throws AMFICOMRemoteException {
-		Identifier id = new Identifier(idT);
-		try {
-			TransmissionPath transmissionPath = new TransmissionPath(id);
-			return (TransmissionPath_Transferable)transmissionPath.getTransferable();
-		}
-		catch (ObjectNotFoundException onfe) {
-			Log.errorException(onfe);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_NOT_FOUND, CompletionStatus.COMPLETED_YES, onfe.getMessage());
-		}
-		catch (RetrieveObjectException roe) {
-			Log.errorException(roe);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, roe.getMessage());
-		} catch (Throwable t) {
-            Log.errorException(t);
-            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
-        }
-	}
-
-	public KIS_Transferable transmitKIS(Identifier_Transferable idT) throws AMFICOMRemoteException {
-		Identifier id = new Identifier(idT);
-		try {
-			KIS kis = new KIS(id);
-			return (KIS_Transferable)kis.getTransferable();
+			return (MCM_Transferable) mcm.getTransferable();
 		}
 		catch (ObjectNotFoundException onfe) {
 			Log.errorException(onfe);
@@ -438,36 +412,18 @@ public class MServerImplementation extends MServerPOA {
 		catch (Exception e) {
 			Log.errorException(e);
 			throw new AMFICOMRemoteException();
-		} catch (Throwable t) {
-            Log.errorException(t);
-            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
-        }
+		}
+		catch (Throwable t) {
+			Log.errorException(t);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
+		}
 	}
-	
-    public Measurement_Transferable transmitMeasurement(Identifier_Transferable id_Transferable) throws AMFICOMRemoteException {
-        Identifier id = new Identifier(id_Transferable);
-        try {
-            Measurement measurement = new Measurement(id);
-            return (Measurement_Transferable)measurement.getTransferable();
-        }
-        catch (ObjectNotFoundException onfe) {
-            Log.errorException(onfe);
-            throw new AMFICOMRemoteException(ErrorCode.ERROR_NOT_FOUND, CompletionStatus.COMPLETED_YES, onfe.getMessage());
-        }
-        catch (RetrieveObjectException roe) {
-            Log.errorException(roe);
-            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, roe.getMessage());
-        } catch (Throwable t) {
-            Log.errorException(t);
-            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
-        }
-    }
-    
-	public MeasurementPort_Transferable transmitMeasurementPort(Identifier_Transferable idT) throws AMFICOMRemoteException {
+
+	public Equipment_Transferable transmitEquipment(Identifier_Transferable idT) throws AMFICOMRemoteException {
 		Identifier id = new Identifier(idT);
 		try {
-			MeasurementPort measurementPort = new MeasurementPort(id);
-			return (MeasurementPort_Transferable)measurementPort.getTransferable();
+			Equipment equipment = new Equipment(id);
+			return (Equipment_Transferable) equipment.getTransferable();
 		}
 		catch (ObjectNotFoundException onfe) {
 			Log.errorException(onfe);
@@ -476,17 +432,142 @@ public class MServerImplementation extends MServerPOA {
 		catch (RetrieveObjectException roe) {
 			Log.errorException(roe);
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, roe.getMessage());
-		} catch (Throwable t) {
-            Log.errorException(t);
-            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
-        }
+		}
+		catch (Throwable t) {
+			Log.errorException(t);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
+		}
+	}
+
+	public Port_Transferable transmitPort(Identifier_Transferable idT) throws AMFICOMRemoteException {
+		Identifier id = new Identifier(idT);
+		try {
+			Port port = new Port(id);
+			return (Port_Transferable) port.getTransferable();
+		}
+		catch (ObjectNotFoundException onfe) {
+			Log.errorException(onfe);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_NOT_FOUND, CompletionStatus.COMPLETED_YES, onfe.getMessage());
+		}
+		catch (RetrieveObjectException roe) {
+			Log.errorException(roe);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, roe.getMessage());
+		}
+		catch (Throwable t) {
+			Log.errorException(t);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
+		}
+	}
+
+	public Link_Transferable transmitLink(Identifier_Transferable idT) throws AMFICOMRemoteException {
+		Identifier id = new Identifier(idT);
+		try {
+			Link link = new Link(id);
+			return (Link_Transferable) link.getTransferable();
+		}
+		catch (ObjectNotFoundException onfe) {
+			Log.errorException(onfe);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_NOT_FOUND, CompletionStatus.COMPLETED_YES, onfe.getMessage());
+		}
+		catch (RetrieveObjectException roe) {
+			Log.errorException(roe);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, roe.getMessage());
+		}
+		catch (Throwable t) {
+			Log.errorException(t);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
+		}
+	}
+
+	public TransmissionPath_Transferable transmitTransmissionPath(Identifier_Transferable idT) throws AMFICOMRemoteException {
+		Identifier id = new Identifier(idT);
+		try {
+			TransmissionPath transmissionPath = new TransmissionPath(id);
+			return (TransmissionPath_Transferable) transmissionPath.getTransferable();
+		}
+		catch (ObjectNotFoundException onfe) {
+			Log.errorException(onfe);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_NOT_FOUND, CompletionStatus.COMPLETED_YES, onfe.getMessage());
+		}
+		catch (RetrieveObjectException roe) {
+			Log.errorException(roe);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, roe.getMessage());
+		}
+		catch (Throwable t) {
+			Log.errorException(t);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
+		}
+	}
+
+	public KIS_Transferable transmitKIS(Identifier_Transferable idT) throws AMFICOMRemoteException {
+		Identifier id = new Identifier(idT);
+		try {
+			KIS kis = new KIS(id);
+			return (KIS_Transferable) kis.getTransferable();
+		}
+		catch (ObjectNotFoundException onfe) {
+			Log.errorException(onfe);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_NOT_FOUND, CompletionStatus.COMPLETED_YES, onfe.getMessage());
+		}
+		catch (RetrieveObjectException roe) {
+			Log.errorException(roe);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, roe.getMessage());
+		}
+		catch (Exception e) {
+			Log.errorException(e);
+			throw new AMFICOMRemoteException();
+		}
+		catch (Throwable t) {
+			Log.errorException(t);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
+		}
+	}
+
+	public Measurement_Transferable transmitMeasurement(Identifier_Transferable id_Transferable) throws AMFICOMRemoteException {
+		Identifier id = new Identifier(id_Transferable);
+		try {
+			Measurement measurement = new Measurement(id);
+			return (Measurement_Transferable) measurement.getTransferable();
+		}
+		catch (ObjectNotFoundException onfe) {
+			Log.errorException(onfe);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_NOT_FOUND, CompletionStatus.COMPLETED_YES, onfe.getMessage());
+		}
+		catch (RetrieveObjectException roe) {
+			Log.errorException(roe);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, roe.getMessage());
+		}
+		catch (Throwable t) {
+			Log.errorException(t);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
+		}
+	}
+
+	public MeasurementPort_Transferable transmitMeasurementPort(Identifier_Transferable idT) throws AMFICOMRemoteException {
+		Identifier id = new Identifier(idT);
+		try {
+			MeasurementPort measurementPort = new MeasurementPort(id);
+			return (MeasurementPort_Transferable) measurementPort.getTransferable();
+		}
+		catch (ObjectNotFoundException onfe) {
+			Log.errorException(onfe);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_NOT_FOUND, CompletionStatus.COMPLETED_YES, onfe.getMessage());
+		}
+		catch (RetrieveObjectException roe) {
+			Log.errorException(roe);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, roe.getMessage());
+		}
+		catch (Throwable t) {
+			Log.errorException(t);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
+		}
 	}
 
 	public MonitoredElement_Transferable transmitMonitoredElement(Identifier_Transferable idT) throws AMFICOMRemoteException {
 		Identifier id = new Identifier(idT);
 		try {
 			MonitoredElement monitoredElement = new MonitoredElement(id);
-			return (MonitoredElement_Transferable)monitoredElement.getTransferable();
+			return (MonitoredElement_Transferable) monitoredElement.getTransferable();
 		}
 		catch (ObjectNotFoundException onfe) {
 			Log.errorException(onfe);
@@ -495,21 +576,25 @@ public class MServerImplementation extends MServerPOA {
 		catch (RetrieveObjectException roe) {
 			Log.errorException(roe);
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, roe.getMessage());
-		} catch (Throwable t) {
-            Log.errorException(t);
-            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
-        }
+		}
+		catch (Throwable t) {
+			Log.errorException(t);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
+		}
 	}
 
 
-//	public MonitoredElement_Transferable[] transmitKISMonitoredElements(Identifier_Transferable kisId) throws AMFICOMRemoteException {
-//		Identifier id = new Identifier(kisId);
-//		try {
-//			KIS kis = new KIS(id);
-//			List monitoredElements = kis.retrieveMonitoredElements();
-//			MonitoredElement_Transferable[] mesT = new MonitoredElement_Transferable[monitoredElements.size()];
-//			int i = 0;
-//			for (Iterator it = monitoredElements.iterator(); it.hasNext();)
+// public MonitoredElement_Transferable[]
+// transmitKISMonitoredElements(Identifier_Transferable kisId) throws
+// AMFICOMRemoteException {
+// Identifier id = new Identifier(kisId);
+// try {
+// KIS kis = new KIS(id);
+// List monitoredElements = kis.retrieveMonitoredElements();
+// MonitoredElement_Transferable[] mesT = new
+// MonitoredElement_Transferable[monitoredElements.size()];
+// int i = 0;
+// for (Iterator it = monitoredElements.iterator(); it.hasNext();)
 //				mesT[i++] = (MonitoredElement_Transferable)((MonitoredElement)it.next()).getTransferable();
 //			return mesT;
 //		}
