@@ -1,5 +1,5 @@
 /*
- * $Id: ClientMeasurementServer.java,v 1.12 2004/10/20 09:59:34 bob Exp $
+ * $Id: ClientMeasurementServer.java,v 1.13 2004/10/20 10:55:46 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,7 +33,7 @@ import com.syrus.util.corba.JavaSoftORBUtil;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2004/10/20 09:59:34 $
+ * @version $Revision: 1.13 $, $Date: 2004/10/20 10:55:46 $
  * @author $Author: bob $
  * @module cmserver_v1
  */
@@ -201,8 +201,7 @@ public class ClientMeasurementServer extends SleepButWorkThread {
 
 			NameComponent serverPath[] = rootNamingCtx.to_name("CMServer");
 
-			childNamingCtx.unbind(serverPath);
-			rootNamingCtx.unbind(childPath);
+			childNamingCtx.unbind(serverPath);			
 
 		} catch (Exception e) {
 			Log.errorException(e);
