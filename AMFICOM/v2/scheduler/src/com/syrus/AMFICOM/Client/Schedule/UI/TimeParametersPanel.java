@@ -514,9 +514,6 @@ public class TimeParametersPanel extends JPanel implements OperationListener {
 					createButton.setEnabled(false);
 					applyButton.setEnabled(false);
 					dispatcher.notify(new OperationEvent("", 0, SchedulerModel.COMMAND_APPLY_TEST));
-					/**
-					 * @todo does we need enable create button always ?
-					 */
 					createButton.setEnabled(true);
 					applyButton.setEnabled(true);
 
@@ -573,9 +570,6 @@ public class TimeParametersPanel extends JPanel implements OperationListener {
 	public void operationPerformed(OperationEvent ae) {
 		String commandName = ae.getActionCommand();
 		if (commandName.equalsIgnoreCase(SchedulerModel.COMMAND_DATA_REQUEST)) {
-			/**
-			 * @todo must send data edit in this form
-			 */
 			TimeStamp timeStamp = this.getTimeStamp();
 			if (timeStamp != null)
 				dispatcher.notify(new OperationEvent(timeStamp, SchedulerModel.DATA_ID_TIMESTAMP,
@@ -586,9 +580,6 @@ public class TimeParametersPanel extends JPanel implements OperationListener {
 			if ((this.test == null) || (!this.test.getId().equals(test.getId()))) {				
 				this.test = tue.test;
 				enableTestStatus();
-				/**
-				 * todo set TimeStamp from Test
-				 */
 				if (tue.testSelected) {
 					/**
 					 * todo this is ONLY for backward compatibility

@@ -131,9 +131,6 @@ public class SaveParametersFrame extends JInternalFrame implements OperationList
 		String commandName = ae.getActionCommand();
 		Environment.log(Environment.LOG_LEVEL_INFO, "commandName:" + commandName, getClass().getName());
 		if (commandName.equalsIgnoreCase(SchedulerModel.COMMAND_DATA_REQUEST)) {
-			/**
-			 * @todo must send data edit in this form
-			 */
 			TestReturnType returnType = this.getParameter();
 			this.dispatcher.notify(new OperationEvent(returnType, SchedulerModel.DATA_ID_RETURN_TYPE,
 													SchedulerModel.COMMAND_SEND_DATA));

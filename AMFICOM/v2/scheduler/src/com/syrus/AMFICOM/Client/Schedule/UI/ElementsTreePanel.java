@@ -238,7 +238,7 @@ public class ElementsTreePanel extends JPanel implements OperationListener {
 
 			public void actionPerformed(ActionEvent ev) {
 				/**
-				 * @todo do loading
+				 * @todo do loading tree
 				 */
 				//loadButton_actionPerformed();
 			}
@@ -255,7 +255,7 @@ public class ElementsTreePanel extends JPanel implements OperationListener {
 
 			public void actionPerformed(ActionEvent ev) {
 				/**
-				 * @todo do delete
+				 * @todo do delete tree
 				 */
 				//delMapGroupButton_actionPerformed();
 			}

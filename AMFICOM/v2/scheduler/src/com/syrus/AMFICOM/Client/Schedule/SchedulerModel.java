@@ -386,10 +386,6 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 			if (test.getEvaluationId().length() > 0) //$NON-NLS-1$
 				dsi.GetEvaluation(test.getEvaluationId());
 
-			/**
-			 * todo fix problem due to null test
-			 */
-
 			if (test != null) {
 				hash.put(test.getId(), test);
 			} else {
