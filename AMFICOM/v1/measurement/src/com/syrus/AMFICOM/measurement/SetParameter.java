@@ -1,5 +1,5 @@
 /*
- * $Id: SetParameter.java,v 1.17 2005/01/19 20:52:56 arseniy Exp $
+ * $Id: SetParameter.java,v 1.18 2005/01/28 14:08:13 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,6 +9,7 @@
 package com.syrus.AMFICOM.measurement;
 
 
+import com.syrus.AMFICOM.general.Identified;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.TransferableObject;
 import com.syrus.AMFICOM.general.TypedObject;
@@ -25,12 +26,12 @@ import com.syrus.AMFICOM.measurement.corba.Parameter_Transferable;
 import com.syrus.util.HashCodeGenerator;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2005/01/19 20:52:56 $
+ * @version $Revision: 1.18 $, $Date: 2005/01/28 14:08:13 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
 
-public class SetParameter implements TransferableObject, TypedObject {
+public class SetParameter implements TransferableObject, TypedObject, Identified {
 	private Identifier id;
 	private ParameterType type;
 	private byte[] value;	
