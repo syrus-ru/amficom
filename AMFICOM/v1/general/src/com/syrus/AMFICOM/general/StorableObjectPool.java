@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectPool.java,v 1.56 2005/04/01 08:45:04 arseniy Exp $
+ * $Id: StorableObjectPool.java,v 1.57 2005/04/01 13:20:04 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,6 +11,7 @@ package com.syrus.AMFICOM.general;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -24,7 +25,7 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.56 $, $Date: 2005/04/01 08:45:04 $
+ * @version $Revision: 1.57 $, $Date: 2005/04/01 13:20:04 $
  * @author $Author: arseniy $
  * @module general_v1
  */
