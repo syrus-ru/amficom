@@ -1,5 +1,5 @@
 /*
- * $Id: CMMeasurementReceive.java,v 1.3 2005/02/02 11:36:45 bob Exp $
+ * $Id: CMMeasurementReceive.java,v 1.4 2005/02/10 12:09:02 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -20,6 +20,7 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.general.corba.CompletionStatus;
 import com.syrus.AMFICOM.general.corba.ErrorCode;
+import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 import com.syrus.AMFICOM.measurement.Analysis;
 import com.syrus.AMFICOM.measurement.AnalysisDatabase;
 import com.syrus.AMFICOM.measurement.AnalysisType;
@@ -38,6 +39,8 @@ import com.syrus.AMFICOM.measurement.MeasurementType;
 import com.syrus.AMFICOM.measurement.MeasurementTypeDatabase;
 import com.syrus.AMFICOM.measurement.Modeling;
 import com.syrus.AMFICOM.measurement.ModelingDatabase;
+import com.syrus.AMFICOM.measurement.ModelingType;
+import com.syrus.AMFICOM.measurement.ModelingTypeDatabase;
 import com.syrus.AMFICOM.measurement.Result;
 import com.syrus.AMFICOM.measurement.ResultDatabase;
 import com.syrus.AMFICOM.measurement.Set;
@@ -63,7 +66,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/02/02 11:36:45 $
+ * @version $Revision: 1.4 $, $Date: 2005/02/10 12:09:02 $
  * @author $Author: bob $
  * @module cmserver_v1
  */
@@ -72,7 +75,7 @@ public abstract class CMMeasurementReceive extends CMConfigurationReceive {
 	private static final long serialVersionUID = 2044666930827736818L;
 
 //////////////////////////////////Measurement Receive/////////////////////////////////////////////
-	public void receiveAnalysis( Analysis_Transferable analysis_Transferable,
+	public StorableObject_Transferable receiveAnalysis( Analysis_Transferable analysis_Transferable,
 									boolean force,
 									AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
 		/**
@@ -85,6 +88,7 @@ public abstract class CMMeasurementReceive extends CMConfigurationReceive {
 			MeasurementStorableObjectPool.putStorableObject(analysis);
 			AnalysisDatabase analysisDatabase = (AnalysisDatabase) MeasurementDatabaseContext.getAnalysisDatabase();
 			analysisDatabase.update(analysis, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
+			return analysis.getHeaderTransferable();
 		}
 		catch (UpdateObjectException e) {
 			Log.errorException(e);
@@ -112,7 +116,7 @@ public abstract class CMMeasurementReceive extends CMConfigurationReceive {
 		}
 	}
 
-  public void receiveAnalyses(Analysis_Transferable[] analysis_Transferables,
+  public StorableObject_Transferable[] receiveAnalyses(Analysis_Transferable[] analysis_Transferables,
 									boolean force,
 									AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
 		/**
@@ -129,6 +133,7 @@ public abstract class CMMeasurementReceive extends CMConfigurationReceive {
 			}
 			AnalysisDatabase analysisDatabase = (AnalysisDatabase) MeasurementDatabaseContext.getAnalysisDatabase();
 			analysisDatabase.update(analysisList, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
+			return super.getListHeaders(analysisList);
 		}
 		catch (UpdateObjectException e) {
 			Log.errorException(e);
@@ -156,7 +161,7 @@ public abstract class CMMeasurementReceive extends CMConfigurationReceive {
 		}
 	}
 
-	public void receiveAnalysisType(AnalysisType_Transferable analysisType_Transferable,
+	public StorableObject_Transferable receiveAnalysisType(AnalysisType_Transferable analysisType_Transferable,
 									boolean force,
 									AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
 		/**
@@ -169,6 +174,7 @@ public abstract class CMMeasurementReceive extends CMConfigurationReceive {
 			MeasurementStorableObjectPool.putStorableObject(analysisType);
 			AnalysisTypeDatabase analysisTypeDatabase = (AnalysisTypeDatabase) MeasurementDatabaseContext.getAnalysisTypeDatabase();
 			analysisTypeDatabase.update(analysisType, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
+			return analysisType.getHeaderTransferable();
 		}
 		catch (UpdateObjectException e) {
 			Log.errorException(e);
@@ -196,7 +202,7 @@ public abstract class CMMeasurementReceive extends CMConfigurationReceive {
 		}
 	}
 
-	public void receiveAnalysisTypes(AnalysisType_Transferable[] analysisType_Transferables,
+	public StorableObject_Transferable[] receiveAnalysisTypes(AnalysisType_Transferable[] analysisType_Transferables,
 									boolean force,
 									AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
 	/**
@@ -214,6 +220,7 @@ public abstract class CMMeasurementReceive extends CMConfigurationReceive {
 			}
 		AnalysisTypeDatabase analysisTypeDatabase = (AnalysisTypeDatabase) MeasurementDatabaseContext.getAnalysisTypeDatabase();
 		analysisTypeDatabase.update(analysisTypeList, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
+		return super.getListHeaders(analysisTypeList);
 		}
 		catch (UpdateObjectException e) {
 			Log.errorException(e);
@@ -244,7 +251,7 @@ public abstract class CMMeasurementReceive extends CMConfigurationReceive {
     /* (non-Javadoc)
      * @see com.syrus.AMFICOM.cmserver.corba.CMServerOperations#receiveEvaluation(com.syrus.AMFICOM.measurement.corba.Evaluation_Transferable, boolean, com.syrus.AMFICOM.configuration.corba.AccessIdentifier_Transferable)
      */
-	public void receiveEvaluation(Evaluation_Transferable evaluation_Transferable,
+	public StorableObject_Transferable receiveEvaluation(Evaluation_Transferable evaluation_Transferable,
 									boolean force,
 									AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
 		/**
@@ -257,6 +264,7 @@ public abstract class CMMeasurementReceive extends CMConfigurationReceive {
 			MeasurementStorableObjectPool.putStorableObject(evaluation);
 			EvaluationDatabase evaluationDatabase = (EvaluationDatabase) MeasurementDatabaseContext.getEvaluationDatabase();
 			evaluationDatabase.update(evaluation, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
+			return evaluation.getHeaderTransferable();
 		}
 		catch (UpdateObjectException e) {
 			Log.errorException(e);
@@ -284,7 +292,7 @@ public abstract class CMMeasurementReceive extends CMConfigurationReceive {
 		}
 	}
 
-	public void receiveEvaluations(Evaluation_Transferable[] evaluation_Transferables,
+	public StorableObject_Transferable[] receiveEvaluations(Evaluation_Transferable[] evaluation_Transferables,
 									boolean force,
 									AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
 		/**
@@ -301,6 +309,7 @@ public abstract class CMMeasurementReceive extends CMConfigurationReceive {
 			}
 			EvaluationDatabase evaluationDatabase = (EvaluationDatabase) MeasurementDatabaseContext.getEvaluationDatabase();
 			evaluationDatabase.update(evaluationList, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
+			return super.getListHeaders(evaluationList);
 		}
 		catch (UpdateObjectException e) {
 			Log.errorException(e);
@@ -328,7 +337,7 @@ public abstract class CMMeasurementReceive extends CMConfigurationReceive {
 		}
 	}
 
-	public void receiveEvaluationType(EvaluationType_Transferable evaluationType_Transferable,
+	public StorableObject_Transferable receiveEvaluationType(EvaluationType_Transferable evaluationType_Transferable,
 									boolean force,
 									AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
 		/**
@@ -341,6 +350,7 @@ public abstract class CMMeasurementReceive extends CMConfigurationReceive {
 			MeasurementStorableObjectPool.putStorableObject(evaluationType);
 			EvaluationTypeDatabase evaluationTypeDatabase = (EvaluationTypeDatabase) MeasurementDatabaseContext.getEvaluationTypeDatabase();
 			evaluationTypeDatabase.update(evaluationType, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
+			return evaluationType.getHeaderTransferable();
 		}
 		catch (UpdateObjectException e) {
 			Log.errorException(e);
@@ -368,7 +378,7 @@ public abstract class CMMeasurementReceive extends CMConfigurationReceive {
 		}
 	}
 
-	public void receiveEvaluationTypes(EvaluationType_Transferable[] evaluationType_Transferables,
+	public StorableObject_Transferable[] receiveEvaluationTypes(EvaluationType_Transferable[] evaluationType_Transferables,
 									boolean force,
 									AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
 		/**
@@ -385,6 +395,7 @@ public abstract class CMMeasurementReceive extends CMConfigurationReceive {
 		}
 		EvaluationTypeDatabase evaluationTypeDatabase = (EvaluationTypeDatabase) MeasurementDatabaseContext.getEvaluationTypeDatabase();
 		evaluationTypeDatabase.update(evaluationTypeList, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
+		return super.getListHeaders(evaluationTypeList);
 		}
 		catch (UpdateObjectException e) {
 			Log.errorException(e);
@@ -412,7 +423,7 @@ public abstract class CMMeasurementReceive extends CMConfigurationReceive {
 		}
 	}
 
-	public void receiveMeasurement(Measurement_Transferable measurement_Transferable,
+	public StorableObject_Transferable receiveMeasurement(Measurement_Transferable measurement_Transferable,
 									boolean force,
 									AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
 		/**
@@ -425,6 +436,7 @@ public abstract class CMMeasurementReceive extends CMConfigurationReceive {
 			MeasurementStorableObjectPool.putStorableObject(measurement);
 			MeasurementDatabase measurementDatabase = (MeasurementDatabase) MeasurementDatabaseContext.getMeasurementDatabase();
 			measurementDatabase.update(measurement, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
+			return measurement.getHeaderTransferable();
 		}
 		catch (UpdateObjectException e) {
 			Log.errorException(e);
@@ -452,7 +464,7 @@ public abstract class CMMeasurementReceive extends CMConfigurationReceive {
 		}
 	}
 
-	public void receiveMeasurements(Measurement_Transferable[] measurement_Transferables,
+	public StorableObject_Transferable[] receiveMeasurements(Measurement_Transferable[] measurement_Transferables,
 									boolean force,
 									AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
 		/**
@@ -469,6 +481,7 @@ public abstract class CMMeasurementReceive extends CMConfigurationReceive {
 			}
 			MeasurementDatabase measurementDatabase = (MeasurementDatabase) MeasurementDatabaseContext.getMeasurementDatabase();
 			measurementDatabase.update(measurementList, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
+			return super.getListHeaders(measurementList);
 		}
 		catch (UpdateObjectException e) {
 			Log.errorException(e);
@@ -496,7 +509,7 @@ public abstract class CMMeasurementReceive extends CMConfigurationReceive {
 		}
 	}
 
-	public void receiveMeasurementSetup(MeasurementSetup_Transferable measurementSetup_Transferable,
+	public StorableObject_Transferable receiveMeasurementSetup(MeasurementSetup_Transferable measurementSetup_Transferable,
 									boolean force,
 									AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
 		/**
@@ -509,6 +522,7 @@ public abstract class CMMeasurementReceive extends CMConfigurationReceive {
 			MeasurementStorableObjectPool.putStorableObject(measurementSetup);
 			MeasurementSetupDatabase measurementSetupDatabase = (MeasurementSetupDatabase) MeasurementDatabaseContext.getMeasurementSetupDatabase();
 			measurementSetupDatabase.update(measurementSetup, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
+			return measurementSetup.getHeaderTransferable();
 		}
 		catch (UpdateObjectException e) {
 			Log.errorException(e);
@@ -536,7 +550,7 @@ public abstract class CMMeasurementReceive extends CMConfigurationReceive {
 		}
 	}
 
-	public void receiveMeasurementSetups(MeasurementSetup_Transferable[] measurementSetup_Transferables,
+	public StorableObject_Transferable[] receiveMeasurementSetups(MeasurementSetup_Transferable[] measurementSetup_Transferables,
 									boolean force,
 									AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
 		/**
@@ -554,6 +568,7 @@ public abstract class CMMeasurementReceive extends CMConfigurationReceive {
 			}
 		MeasurementSetupDatabase measurementSetupDatabase = (MeasurementSetupDatabase) MeasurementDatabaseContext.getMeasurementSetupDatabase();
 		measurementSetupDatabase.update(measurementSetupList, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
+		return super.getListHeaders(measurementSetupList);
 		}
 		catch (UpdateObjectException e) {
 			Log.errorException(e);
@@ -581,7 +596,7 @@ public abstract class CMMeasurementReceive extends CMConfigurationReceive {
 		}
 	}
 
-	public void receiveMeasurementType(MeasurementType_Transferable measurementType_Transferable,
+	public StorableObject_Transferable receiveMeasurementType(MeasurementType_Transferable measurementType_Transferable,
 									boolean force,
 									AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
 		/**
@@ -594,6 +609,7 @@ public abstract class CMMeasurementReceive extends CMConfigurationReceive {
 			MeasurementStorableObjectPool.putStorableObject(measurementType);
 			MeasurementTypeDatabase measurementTypeDatabase = (MeasurementTypeDatabase) MeasurementDatabaseContext.getMeasurementTypeDatabase();
 			measurementTypeDatabase.update(measurementType, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
+			return measurementType.getHeaderTransferable();
 		}
 		catch (UpdateObjectException e) {
 		Log.errorException(e);
@@ -621,7 +637,7 @@ public abstract class CMMeasurementReceive extends CMConfigurationReceive {
 		}
 	}
 
-	public void receiveMeasurementTypes(MeasurementType_Transferable[] measurementType_Transferables,
+	public StorableObject_Transferable[] receiveMeasurementTypes(MeasurementType_Transferable[] measurementType_Transferables,
 									boolean force,
 									AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
 		/**
@@ -638,6 +654,7 @@ public abstract class CMMeasurementReceive extends CMConfigurationReceive {
 			}
 			MeasurementTypeDatabase measurementTypeDatabase = (MeasurementTypeDatabase) MeasurementDatabaseContext .getMeasurementTypeDatabase();
 			measurementTypeDatabase.update(measurementTypeList, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
+			return super.getListHeaders(measurementTypeList);
 		}
 		catch (UpdateObjectException e) {
 			Log.errorException(e);
@@ -665,7 +682,7 @@ public abstract class CMMeasurementReceive extends CMConfigurationReceive {
 		}
 	}
 
-	public void receiveModeling(Modeling_Transferable modeling_Transferable,
+	public StorableObject_Transferable receiveModeling(Modeling_Transferable modeling_Transferable,
 									boolean force, AccessIdentifier_Transferable accessIdentifier)
 									throws AMFICOMRemoteException {
 		/**
@@ -678,6 +695,7 @@ public abstract class CMMeasurementReceive extends CMConfigurationReceive {
 			MeasurementStorableObjectPool.putStorableObject(modeling);
 			ModelingDatabase modelingDatabase = (ModelingDatabase) MeasurementDatabaseContext.getModelingDatabase();
 			modelingDatabase.update(modeling, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
+			return modeling.getHeaderTransferable();
 		}
 		catch (UpdateObjectException e) {
 			Log.errorException(e);
@@ -705,37 +723,20 @@ public abstract class CMMeasurementReceive extends CMConfigurationReceive {
 		}
 	}
 	
-	public void receiveModelingType(ModelingType_Transferable modelingType_Transferable,
-									boolean force,
-									AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
-		// TODO Auto-generated method stub
-
-	}
-	
-	public void receiveModelingTypes(	ModelingType_Transferable[] modelingTypes_Transferable,
-										boolean force,
-										AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
-		// TODO Auto-generated method stub
-
-	}
-
-	public void receiveModelings(Modeling_Transferable[] modeling_Transferables,
+	public StorableObject_Transferable receiveModelingType(ModelingType_Transferable modelingType_Transferable,
 									boolean force,
 									AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
 		/**
-		* TODO check user for access
-		*/
-		Log.debugMessage("CMMeasurementReceive.receiveModelings | Received " + modeling_Transferables.length + " Modelings", Log.DEBUGLEVEL07);
-		List modelingList = new ArrayList(modeling_Transferables.length);
+		 * TODO check user for access
+		 */
+		Log.debugMessage("CMMeasurementReceive.receiveModelingType | Received " + " modeling", Log.DEBUGLEVEL07);
 		try {
-			for (int i = 0; i < modeling_Transferables.length; i++) {
-				modeling_Transferables[i].header.modifier_id = accessIdentifier.user_id;
-				Modeling modeling = new Modeling(modeling_Transferables[i]);
-				MeasurementStorableObjectPool.putStorableObject(modeling);
-				modelingList.add(modeling);
-			}
-			ModelingDatabase modelingDatabase = (ModelingDatabase) MeasurementDatabaseContext.getModelingDatabase();
-			modelingDatabase.update(modelingList, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
+			modelingType_Transferable.header.modifier_id = accessIdentifier.user_id;
+			ModelingType modelingType = new ModelingType(modelingType_Transferable);
+			MeasurementStorableObjectPool.putStorableObject(modelingType);
+			ModelingTypeDatabase modelingTypeDatabase = (ModelingTypeDatabase) MeasurementDatabaseContext.getModelingTypeDatabase();
+			modelingTypeDatabase.update(modelingType, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
+			return modelingType.getHeaderTransferable();
 		}
 		catch (UpdateObjectException e) {
 			Log.errorException(e);
@@ -749,7 +750,7 @@ public abstract class CMMeasurementReceive extends CMConfigurationReceive {
 			Log.errorException(e);
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_ILLEGAL_OBJECT_ENTITY, CompletionStatus.COMPLETED_NO, e.getMessage());
 		}
-		catch (VersionCollisionException e){
+		catch (VersionCollisionException e) {
 			Log.errorException(e);
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_VERSION_COLLISION, CompletionStatus.COMPLETED_NO, e.getMessage());
 		}
@@ -761,9 +762,99 @@ public abstract class CMMeasurementReceive extends CMConfigurationReceive {
 			Log.errorException(t);
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
 		}
+	}	
+
+	public StorableObject_Transferable[] receiveModelingTypes(ModelingType_Transferable[] modelingType_Transferables,
+									boolean force,
+									AccessIdentifier_Transferable accessIdentifier)
+			throws AMFICOMRemoteException {
+		/**
+		 * TODO check user for access
+		 */
+		Log.debugMessage("CMMeasurementReceive.receiveModelingTypes | Received " + modelingType_Transferables.length
+				+ " modelingTypes", Log.DEBUGLEVEL07);
+		List modelingTypeList = new ArrayList(modelingType_Transferables.length);
+		try {
+			for (int i = 0; i < modelingType_Transferables.length; i++) {
+				modelingType_Transferables[i].header.modifier_id = accessIdentifier.user_id;
+				ModelingType modelingType = new ModelingType(modelingType_Transferables[i]);
+				MeasurementStorableObjectPool.putStorableObject(modelingType);
+				modelingTypeList.add(modelingType);
+			}
+			ModelingTypeDatabase modelingTypeDatabase = (ModelingTypeDatabase) MeasurementDatabaseContext
+					.getModelingTypeDatabase();
+			modelingTypeDatabase.update(modelingTypeList, force ? StorableObjectDatabase.UPDATE_FORCE
+					: StorableObjectDatabase.UPDATE_CHECK, null);
+			return super.getListHeaders(modelingTypeList);
+		} catch (UpdateObjectException e) {
+			Log.errorException(e);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_SAVE, CompletionStatus.COMPLETED_NO, e.getMessage());
+		} catch (IllegalDataException e) {
+			Log.errorException(e);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_ILLEGAL_OBJECT_ENTITY, CompletionStatus.COMPLETED_NO, e
+					.getMessage());
+		} catch (IllegalObjectEntityException e) {
+			Log.errorException(e);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_ILLEGAL_OBJECT_ENTITY, CompletionStatus.COMPLETED_NO, e
+					.getMessage());
+		} catch (VersionCollisionException e) {
+			Log.errorException(e);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_VERSION_COLLISION, CompletionStatus.COMPLETED_NO, e
+					.getMessage());
+		} catch (CreateObjectException e) {
+			Log.errorException(e);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_SAVE, CompletionStatus.COMPLETED_NO, e.getMessage());
+		} catch (Throwable t) {
+			Log.errorException(t);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
+		}
 	}
 
-	public void receiveResult(Result_Transferable result_Transferable,
+	public StorableObject_Transferable[] receiveModelings(	Modeling_Transferable[] modeling_Transferables,
+																boolean force,
+																AccessIdentifier_Transferable accessIdentifier)
+			throws AMFICOMRemoteException {
+		/**
+		 * TODO check user for access
+		 */
+		Log.debugMessage("CMMeasurementReceive.receiveModelings | Received " + modeling_Transferables.length
+				+ " modelings", Log.DEBUGLEVEL07);
+		List modelingList = new ArrayList(modeling_Transferables.length);
+		try {
+			for (int i = 0; i < modeling_Transferables.length; i++) {
+				modeling_Transferables[i].header.modifier_id = accessIdentifier.user_id;
+				Modeling modeling = new Modeling(modeling_Transferables[i]);
+				MeasurementStorableObjectPool.putStorableObject(modeling);
+				modelingList.add(modeling);
+			}
+			ModelingDatabase modelingDatabase = (ModelingDatabase) MeasurementDatabaseContext.getModelingDatabase();
+			modelingDatabase.update(modelingList, force ? StorableObjectDatabase.UPDATE_FORCE
+					: StorableObjectDatabase.UPDATE_CHECK, null);
+			return super.getListHeaders(modelingList);
+		} catch (UpdateObjectException e) {
+			Log.errorException(e);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_SAVE, CompletionStatus.COMPLETED_NO, e.getMessage());
+		} catch (IllegalDataException e) {
+			Log.errorException(e);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_ILLEGAL_OBJECT_ENTITY, CompletionStatus.COMPLETED_NO, e
+					.getMessage());
+		} catch (IllegalObjectEntityException e) {
+			Log.errorException(e);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_ILLEGAL_OBJECT_ENTITY, CompletionStatus.COMPLETED_NO, e
+					.getMessage());
+		} catch (VersionCollisionException e) {
+			Log.errorException(e);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_VERSION_COLLISION, CompletionStatus.COMPLETED_NO, e
+					.getMessage());
+		} catch (CreateObjectException e) {
+			Log.errorException(e);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_SAVE, CompletionStatus.COMPLETED_NO, e.getMessage());
+		} catch (Throwable t) {
+			Log.errorException(t);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
+		}
+	}
+	public StorableObject_Transferable receiveResult(Result_Transferable result_Transferable,
 									boolean force,
 									AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
 		/**
@@ -776,6 +867,7 @@ public abstract class CMMeasurementReceive extends CMConfigurationReceive {
 			MeasurementStorableObjectPool.putStorableObject(result);
 			ResultDatabase resultDatabase = (ResultDatabase) MeasurementDatabaseContext.getResultDatabase();
 			resultDatabase.update(result, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
+			return result.getHeaderTransferable();
 		}
 		catch (UpdateObjectException e) {
 			Log.errorException(e);
@@ -803,7 +895,7 @@ public abstract class CMMeasurementReceive extends CMConfigurationReceive {
 		}
 	}
 
-	public void receiveResults(Result_Transferable[] result_Transferables,
+	public StorableObject_Transferable[] receiveResults(Result_Transferable[] result_Transferables,
 									boolean force,
 									AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
 		/**
@@ -820,6 +912,7 @@ public abstract class CMMeasurementReceive extends CMConfigurationReceive {
 			}
 			ResultDatabase resultDatabase = (ResultDatabase) MeasurementDatabaseContext.getResultDatabase();
 			resultDatabase.update(resultList, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
+			return super.getListHeaders(resultList);
 		}
 		catch (UpdateObjectException e) {
 			Log.errorException(e);
@@ -847,7 +940,7 @@ public abstract class CMMeasurementReceive extends CMConfigurationReceive {
 		}
 	}
 
-	public void receiveTest(Test_Transferable test_Transferable,
+	public StorableObject_Transferable receiveTest(Test_Transferable test_Transferable,
 									boolean force,
 									AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
 		/**
@@ -860,6 +953,7 @@ public abstract class CMMeasurementReceive extends CMConfigurationReceive {
 			MeasurementStorableObjectPool.putStorableObject(test);
 			TestDatabase testDatabase = (TestDatabase) MeasurementDatabaseContext.getTestDatabase();
 			testDatabase.update(test, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
+			return test.getHeaderTransferable();
 		}
 		catch (UpdateObjectException e) {
 			Log.errorException(e);
@@ -887,7 +981,7 @@ public abstract class CMMeasurementReceive extends CMConfigurationReceive {
 		}
 	}
 
-	public void receiveTests(Test_Transferable[] test_Transferables,
+	public StorableObject_Transferable[] receiveTests(Test_Transferable[] test_Transferables,
 									boolean force,
 									AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
 		/**
@@ -904,6 +998,7 @@ public abstract class CMMeasurementReceive extends CMConfigurationReceive {
 			}
 			TestDatabase testDatabase = (TestDatabase) MeasurementDatabaseContext.getTestDatabase();
 			testDatabase.update(testList, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
+			return super.getListHeaders(testList);
 		}
 		catch (UpdateObjectException e) {
 			Log.errorException(e);
@@ -931,7 +1026,7 @@ public abstract class CMMeasurementReceive extends CMConfigurationReceive {
 		}
 	}
 
-	public void receiveTemporalPattern(TemporalPattern_Transferable temporalPattern_Transferable,
+	public StorableObject_Transferable receiveTemporalPattern(TemporalPattern_Transferable temporalPattern_Transferable,
 									boolean force,
 									AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
 		/**
@@ -944,6 +1039,7 @@ public abstract class CMMeasurementReceive extends CMConfigurationReceive {
 			MeasurementStorableObjectPool.putStorableObject(temporalPattern);
 			TemporalPatternDatabase temporalPatternDatabase = (TemporalPatternDatabase) MeasurementDatabaseContext.getTemporalPatternDatabase();
 			temporalPatternDatabase.update(temporalPattern, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
+			return temporalPattern.getHeaderTransferable();
 		}
 		catch (UpdateObjectException e) {
 			Log.errorException(e);
@@ -971,7 +1067,7 @@ public abstract class CMMeasurementReceive extends CMConfigurationReceive {
 		}
 	}
 
-	public void receiveTemporalPatterns(TemporalPattern_Transferable[] temporalPattern_Transferables,
+	public StorableObject_Transferable[] receiveTemporalPatterns(TemporalPattern_Transferable[] temporalPattern_Transferables,
 									boolean force,
 									AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
 		/**
@@ -988,6 +1084,7 @@ public abstract class CMMeasurementReceive extends CMConfigurationReceive {
 			}
 			TemporalPatternDatabase temporalPatternDatabase = (TemporalPatternDatabase) MeasurementDatabaseContext.getTemporalPatternDatabase();
 			temporalPatternDatabase.update(temporalPatternList, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
+			return super.getListHeaders(temporalPatternList);
 		}
 		catch (UpdateObjectException e) {
 			Log.errorException(e);
@@ -1015,7 +1112,7 @@ public abstract class CMMeasurementReceive extends CMConfigurationReceive {
 		}
 	}
 
-	public void receiveSet(Set_Transferable set_Transferable,
+	public StorableObject_Transferable receiveSet(Set_Transferable set_Transferable,
 									boolean force,
 									AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
 		/**
@@ -1028,6 +1125,7 @@ public abstract class CMMeasurementReceive extends CMConfigurationReceive {
 			MeasurementStorableObjectPool.putStorableObject(set);
 			SetDatabase setDatabase = (SetDatabase) MeasurementDatabaseContext.getSetDatabase();
 			setDatabase.update(set, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
+			return set.getHeaderTransferable();
 		}
 		catch (UpdateObjectException e) {
 			Log.errorException(e);
@@ -1055,7 +1153,7 @@ public abstract class CMMeasurementReceive extends CMConfigurationReceive {
 		}
 	}
 
-	public void receiveSets(Set_Transferable[] set_Transferables,
+	public StorableObject_Transferable[] receiveSets(Set_Transferable[] set_Transferables,
 									boolean force,
 									AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
 		/**
@@ -1072,6 +1170,7 @@ public abstract class CMMeasurementReceive extends CMConfigurationReceive {
 			}
 			SetDatabase setDatabase = (SetDatabase) MeasurementDatabaseContext.getSetDatabase();
 			setDatabase.update(setList, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
+			return super.getListHeaders(setList);
 		}
 		catch (UpdateObjectException e) {
 			Log.errorException(e);

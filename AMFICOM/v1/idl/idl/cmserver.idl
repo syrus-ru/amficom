@@ -25,355 +25,355 @@ module corba {
 				raises (general::corba::AMFICOMRemoteException);
 
 /////////////////////////////////////////// General Recieve ////////////////////////////////////////////		
-		void receiveParameterType(in general::corba::ParameterType_Transferable parameterType_Transferable,
+		general::corba::StorableObject_Transferable receiveParameterType(in general::corba::ParameterType_Transferable parameterType_Transferable,
 						in boolean force,
 						in configuration::corba::AccessIdentifier_Transferable accessIdentifier)
 			raises (general::corba::AMFICOMRemoteException);
 
-		void receiveParameterTypes(in general::corba::ParameterTypeSeq_Transferable sets,
+		general::corba::StorableObjectSeq_Transferable receiveParameterTypes(in general::corba::ParameterTypeSeq_Transferable sets,
 						in boolean force,
 						in configuration::corba::AccessIdentifier_Transferable accessIdentifier)
 			raises (general::corba::AMFICOMRemoteException);
 
-		void receiveCharacteristicType(in general::corba::CharacteristicType_Transferable characteristicType_Transferable,
+		general::corba::StorableObject_Transferable receiveCharacteristicType(in general::corba::CharacteristicType_Transferable characteristicType_Transferable,
 						in boolean force, 	
 						in configuration::corba::AccessIdentifier_Transferable accessIdentifier)
 			raises (general::corba::AMFICOMRemoteException);
 
-		void receiveCharacteristicTypes(in general::corba::CharacteristicTypeSeq_Transferable characteristicTypes_Transferable,
+		general::corba::StorableObjectSeq_Transferable receiveCharacteristicTypes(in general::corba::CharacteristicTypeSeq_Transferable characteristicTypes_Transferable,
 						in boolean force, 	
 						in configuration::corba::AccessIdentifier_Transferable accessIdentifier)
 			raises (general::corba::AMFICOMRemoteException);
 
-		void receiveCharacteristic(in general::corba::Characteristic_Transferable characteristic_Transferable,
+		general::corba::StorableObject_Transferable receiveCharacteristic(in general::corba::Characteristic_Transferable characteristic_Transferable,
 						in boolean force, 	
 						in configuration::corba::AccessIdentifier_Transferable accessIdentifier)
 			raises (general::corba::AMFICOMRemoteException);
 
-		void receiveCharacteristics(in general::corba::CharacteristicSeq_Transferable characteristics_Transferable,
+		general::corba::StorableObjectSeq_Transferable receiveCharacteristics(in general::corba::CharacteristicSeq_Transferable characteristics_Transferable,
 						in boolean force, 	
 						in configuration::corba::AccessIdentifier_Transferable accessIdentifier)
 			raises (general::corba::AMFICOMRemoteException);
 
 /////////////////////////////////////////// Administration Recieve ////////////////////////////////////////////
-		void receiveUser(in administration::corba::User_Transferable User_Transferable,
+		general::corba::StorableObject_Transferable receiveUser(in administration::corba::User_Transferable User_Transferable,
 						in boolean force, 	
 						in configuration::corba::AccessIdentifier_Transferable accessIdentifier)
 			raises (general::corba::AMFICOMRemoteException);
 
-		void receiveUsers(in administration::corba::UserSeq_Transferable users_Transferable,
+		general::corba::StorableObjectSeq_Transferable receiveUsers(in administration::corba::UserSeq_Transferable users_Transferable,
 						in boolean force, 	
 						in configuration::corba::AccessIdentifier_Transferable accessIdentifier)
 			raises (general::corba::AMFICOMRemoteException);
 
-		void receiveDomain(in administration::corba::Domain_Transferable domain_Transferable,
+		general::corba::StorableObject_Transferable receiveDomain(in administration::corba::Domain_Transferable domain_Transferable,
 						in boolean force, 	
 						in configuration::corba::AccessIdentifier_Transferable accessIdentifier)
 			raises (general::corba::AMFICOMRemoteException);
 
-		void receiveDomains(in administration::corba::DomainSeq_Transferable domains_Transferable,
+		general::corba::StorableObjectSeq_Transferable receiveDomains(in administration::corba::DomainSeq_Transferable domains_Transferable,
 						in boolean force, 	
 						in configuration::corba::AccessIdentifier_Transferable accessIdentifier)
 			raises (general::corba::AMFICOMRemoteException);
 
-		void receiveServer(in administration::corba::Server_Transferable server_Transferable,
+		general::corba::StorableObject_Transferable receiveServer(in administration::corba::Server_Transferable server_Transferable,
 						in boolean force, 	
 						in configuration::corba::AccessIdentifier_Transferable accessIdentifier)
 			raises (general::corba::AMFICOMRemoteException);
 
-		void receiveServers(in administration::corba::ServerSeq_Transferable servers_Transferable,
+		general::corba::StorableObjectSeq_Transferable receiveServers(in administration::corba::ServerSeq_Transferable servers_Transferable,
 						in boolean force, 	
 						in configuration::corba::AccessIdentifier_Transferable accessIdentifier)
 			raises (general::corba::AMFICOMRemoteException);
 
-		void receiveMCM(in administration::corba::MCM_Transferable mcm_Transferable,
+		general::corba::StorableObject_Transferable receiveMCM(in administration::corba::MCM_Transferable mcm_Transferable,
 						in boolean force, 	
 						in configuration::corba::AccessIdentifier_Transferable accessIdentifier)
 			raises (general::corba::AMFICOMRemoteException);
 
-		void receiveMCMs(in administration::corba::MCMSeq_Transferable mcms_Transferable,
+		general::corba::StorableObjectSeq_Transferable receiveMCMs(in administration::corba::MCMSeq_Transferable mcms_Transferable,
 						in boolean force, 	
 						in configuration::corba::AccessIdentifier_Transferable accessIdentifier)
 			raises (general::corba::AMFICOMRemoteException);
 
 /////////////////////////////////////////// Configuration Recieve ////////////////////////////////////////////
-		void receiveCableThread(in configuration::corba::CableThread_Transferable cableThread_Transferable,
+		general::corba::StorableObject_Transferable receiveCableThread(in configuration::corba::CableThread_Transferable cableThread_Transferable,
 						in boolean force, 	
 						in configuration::corba::AccessIdentifier_Transferable accessIdentifier)
 			raises (general::corba::AMFICOMRemoteException);
 
-		void receiveCableThreads(in configuration::corba::CableThreadSeq_Transferable cableThreads_Transferable,
+		general::corba::StorableObjectSeq_Transferable receiveCableThreads(in configuration::corba::CableThreadSeq_Transferable cableThreads_Transferable,
 						in boolean force, 	
 						in configuration::corba::AccessIdentifier_Transferable accessIdentifier)
 			raises (general::corba::AMFICOMRemoteException);
 			
-		void receiveCableLinkType(in configuration::corba::CableLinkType_Transferable cableLinkType_Transferable,
+		general::corba::StorableObject_Transferable receiveCableLinkType(in configuration::corba::CableLinkType_Transferable cableLinkType_Transferable,
 						in boolean force, 	
 						in configuration::corba::AccessIdentifier_Transferable accessIdentifier)
 			raises (general::corba::AMFICOMRemoteException);
 
-		void receiveCableLinkTypes(in configuration::corba::CableLinkTypeSeq_Transferable cableLinkTypes_Transferable,
+		general::corba::StorableObjectSeq_Transferable receiveCableLinkTypes(in configuration::corba::CableLinkTypeSeq_Transferable cableLinkTypes_Transferable,
 						in boolean force, 	
 						in configuration::corba::AccessIdentifier_Transferable accessIdentifier)
 			raises (general::corba::AMFICOMRemoteException);
 			
-		void receiveCableThreadType(in configuration::corba::CableThreadType_Transferable cableThreadType_Transferable,
+		general::corba::StorableObject_Transferable receiveCableThreadType(in configuration::corba::CableThreadType_Transferable cableThreadType_Transferable,
 						in boolean force, 	
 						in configuration::corba::AccessIdentifier_Transferable accessIdentifier)
 			raises (general::corba::AMFICOMRemoteException);
 
-		void receiveCableThreadTypes(in configuration::corba::CableThreadTypeSeq cableThreadTypes_Transferable,
+		general::corba::StorableObjectSeq_Transferable receiveCableThreadTypes(in configuration::corba::CableThreadTypeSeq cableThreadTypes_Transferable,
 						in boolean force, 	
 						in configuration::corba::AccessIdentifier_Transferable accessIdentifier)
 			raises (general::corba::AMFICOMRemoteException);
 
-		void receiveEquipment(in configuration::corba::Equipment_Transferable equipment_Transferable,
+		general::corba::StorableObject_Transferable receiveEquipment(in configuration::corba::Equipment_Transferable equipment_Transferable,
 						in boolean force, 	
 						in configuration::corba::AccessIdentifier_Transferable accessIdentifier)
 			raises (general::corba::AMFICOMRemoteException);
 
-		void receiveEquipments(in configuration::corba::EquipmentSeq_Transferable equipments_Transferable,
+		general::corba::StorableObjectSeq_Transferable receiveEquipments(in configuration::corba::EquipmentSeq_Transferable equipments_Transferable,
 						in boolean force, 	
 						in configuration::corba::AccessIdentifier_Transferable accessIdentifier)
 			raises (general::corba::AMFICOMRemoteException);
 
-		void receiveEquipmentType(in configuration::corba::EquipmentType_Transferable equipmentType_Transferable,
+		general::corba::StorableObject_Transferable receiveEquipmentType(in configuration::corba::EquipmentType_Transferable equipmentType_Transferable,
 						in boolean force, 	
 						in configuration::corba::AccessIdentifier_Transferable accessIdentifier)
 			raises (general::corba::AMFICOMRemoteException);
 
-		void receiveEquipmentTypes(in configuration::corba::EquipmentTypeSeq_Transferable equipmentTypes_Transferable,
+		general::corba::StorableObjectSeq_Transferable receiveEquipmentTypes(in configuration::corba::EquipmentTypeSeq_Transferable equipmentTypes_Transferable,
 						in boolean force, 	
 						in configuration::corba::AccessIdentifier_Transferable accessIdentifier)
 			raises (general::corba::AMFICOMRemoteException);
 
-		void receiveKIS(in configuration::corba::KIS_Transferable kis_Transferable,
+		general::corba::StorableObject_Transferable receiveKIS(in configuration::corba::KIS_Transferable kis_Transferable,
 						in boolean force, 	
 						in configuration::corba::AccessIdentifier_Transferable accessIdentifier)
 			raises (general::corba::AMFICOMRemoteException);
 
-		void receiveKISs(in configuration::corba::KISSeq_Transferable kiss_Transferable,
+		general::corba::StorableObjectSeq_Transferable receiveKISs(in configuration::corba::KISSeq_Transferable kiss_Transferable,
 						in boolean force, 	
 						in configuration::corba::AccessIdentifier_Transferable accessIdentifier)
 			raises (general::corba::AMFICOMRemoteException);			
 
-		void receiveLink(in configuration::corba::Link_Transferable link_Transferable,
+		general::corba::StorableObject_Transferable receiveLink(in configuration::corba::Link_Transferable link_Transferable,
 						in boolean force, 	
 						in configuration::corba::AccessIdentifier_Transferable accessIdentifier)
 			raises (general::corba::AMFICOMRemoteException);
 
-		void receiveLinks(in configuration::corba::LinkSeq_Transferable link_Transferables,
+		general::corba::StorableObjectSeq_Transferable receiveLinks(in configuration::corba::LinkSeq_Transferable link_Transferables,
 						in boolean force, 	
 						in configuration::corba::AccessIdentifier_Transferable accessIdentifier)
 			raises (general::corba::AMFICOMRemoteException);
 
-		void receiveLinkType(in configuration::corba::LinkType_Transferable linkType_Transferable,
+		general::corba::StorableObject_Transferable receiveLinkType(in configuration::corba::LinkType_Transferable linkType_Transferable,
 						in boolean force, 	
 						in configuration::corba::AccessIdentifier_Transferable accessIdentifier)
 			raises (general::corba::AMFICOMRemoteException);
 
-		void receiveLinkTypes(in configuration::corba::AbstractLinkTypeSeq_Transferable linkType_Transferables,
+		general::corba::StorableObjectSeq_Transferable receiveLinkTypes(in configuration::corba::AbstractLinkTypeSeq_Transferable linkType_Transferables,
 						in boolean force, 	
 						in configuration::corba::AccessIdentifier_Transferable accessIdentifier)
 			raises (general::corba::AMFICOMRemoteException);
 
-		void receiveMeasurementPort(in configuration::corba::MeasurementPort_Transferable measurementPort_Transferable,
+		general::corba::StorableObject_Transferable receiveMeasurementPort(in configuration::corba::MeasurementPort_Transferable measurementPort_Transferable,
 						in boolean force, 	
 						in configuration::corba::AccessIdentifier_Transferable accessIdentifier)
 			raises (general::corba::AMFICOMRemoteException);
 
-		void receiveMeasurementPorts(in configuration::corba::MeasurementPortSeq_Transferable measurementPorts_Transferable,
+		general::corba::StorableObjectSeq_Transferable receiveMeasurementPorts(in configuration::corba::MeasurementPortSeq_Transferable measurementPorts_Transferable,
 						in boolean force, 	
 						in configuration::corba::AccessIdentifier_Transferable accessIdentifier)
 			raises (general::corba::AMFICOMRemoteException);
 
-		void receiveMeasurementPortType(in configuration::corba::MeasurementPortType_Transferable measurementPortType_Transferable,
+		general::corba::StorableObject_Transferable receiveMeasurementPortType(in configuration::corba::MeasurementPortType_Transferable measurementPortType_Transferable,
 						in boolean force, 	
 						in configuration::corba::AccessIdentifier_Transferable accessIdentifier)
 			raises (general::corba::AMFICOMRemoteException);
 
-		void receiveMeasurementPortTypes(in configuration::corba::MeasurementPortTypeSeq_Transferable measurementPortTypes_Transferable,
+		general::corba::StorableObjectSeq_Transferable receiveMeasurementPortTypes(in configuration::corba::MeasurementPortTypeSeq_Transferable measurementPortTypes_Transferable,
 						in boolean force, 	
 						in configuration::corba::AccessIdentifier_Transferable accessIdentifier)
 			raises (general::corba::AMFICOMRemoteException);
 
-		void receiveMonitoredElement(in configuration::corba::MonitoredElement_Transferable monitoredElement_Transferable,
+		general::corba::StorableObject_Transferable receiveMonitoredElement(in configuration::corba::MonitoredElement_Transferable monitoredElement_Transferable,
 						in boolean force, 	
 						in configuration::corba::AccessIdentifier_Transferable accessIdentifier)
 			raises (general::corba::AMFICOMRemoteException);
 
-		void receiveMonitoredElements(in configuration::corba::MonitoredElementSeq_Transferable monitoredElements_Transferable,
+		general::corba::StorableObjectSeq_Transferable receiveMonitoredElements(in configuration::corba::MonitoredElementSeq_Transferable monitoredElements_Transferable,
 						in boolean force, 	
 						in configuration::corba::AccessIdentifier_Transferable accessIdentifier)
 			raises (general::corba::AMFICOMRemoteException);
 
-		void receivePort(in configuration::corba::Port_Transferable port_Transferable,
+		general::corba::StorableObject_Transferable receivePort(in configuration::corba::Port_Transferable port_Transferable,
 						in boolean force, 	
 						in configuration::corba::AccessIdentifier_Transferable accessIdentifier)
 			raises (general::corba::AMFICOMRemoteException);
 
-		void receivePorts(in configuration::corba::PortSeq_Transferable ports_Transferable,
+		general::corba::StorableObjectSeq_Transferable receivePorts(in configuration::corba::PortSeq_Transferable ports_Transferable,
 						in boolean force, 	
 						in configuration::corba::AccessIdentifier_Transferable accessIdentifier)
 			raises (general::corba::AMFICOMRemoteException);
 
-		void receivePortType(in configuration::corba::PortType_Transferable portType_Transferable,
+		general::corba::StorableObject_Transferable receivePortType(in configuration::corba::PortType_Transferable portType_Transferable,
 						in boolean force, 	
 						in configuration::corba::AccessIdentifier_Transferable accessIdentifier)
 			raises (general::corba::AMFICOMRemoteException);
 
-		void receivePortTypes(in configuration::corba::PortTypeSeq_Transferable portTypes_Transferable,
+		general::corba::StorableObjectSeq_Transferable receivePortTypes(in configuration::corba::PortTypeSeq_Transferable portTypes_Transferable,
 						in boolean force, 	
 						in configuration::corba::AccessIdentifier_Transferable accessIdentifier)
 			raises (general::corba::AMFICOMRemoteException);
 
-		void receiveTransmissionPath(in configuration::corba::TransmissionPath_Transferable transmissionPath_Transferable,
+		general::corba::StorableObject_Transferable receiveTransmissionPath(in configuration::corba::TransmissionPath_Transferable transmissionPath_Transferable,
 						in boolean force, 	
 						in configuration::corba::AccessIdentifier_Transferable accessIdentifier)
 			raises (general::corba::AMFICOMRemoteException);
 
-		void receiveTransmissionPaths(in configuration::corba::TransmissionPathSeq_Transferable transmissionPaths_Transferable,
+		general::corba::StorableObjectSeq_Transferable receiveTransmissionPaths(in configuration::corba::TransmissionPathSeq_Transferable transmissionPaths_Transferable,
 						in boolean force, 	
 						in configuration::corba::AccessIdentifier_Transferable accessIdentifier)
 			raises (general::corba::AMFICOMRemoteException);
 
-		void receiveTransmissionPathType(in configuration::corba::TransmissionPathType_Transferable transmissionPathType_Transferable,
+		general::corba::StorableObject_Transferable receiveTransmissionPathType(in configuration::corba::TransmissionPathType_Transferable transmissionPathType_Transferable,
 						in boolean force, 	
 						in configuration::corba::AccessIdentifier_Transferable accessIdentifier)
 			raises (general::corba::AMFICOMRemoteException);
 
-		void receiveTransmissionPathTypes(in configuration::corba::TransmissionPathTypeSeq_Transferable transmissionPathTypes_Transferable,
+		general::corba::StorableObjectSeq_Transferable receiveTransmissionPathTypes(in configuration::corba::TransmissionPathTypeSeq_Transferable transmissionPathTypes_Transferable,
 						in boolean force, 	
 						in configuration::corba::AccessIdentifier_Transferable accessIdentifier)
 			raises (general::corba::AMFICOMRemoteException);
 
 //////////////////////////////////////////// Measurement Receive //////////////////////////////////////////////
-		void receiveAnalysis(in measurement::corba::Analysis_Transferable analysis_Transferable,
+		general::corba::StorableObject_Transferable receiveAnalysis(in measurement::corba::Analysis_Transferable analysis_Transferable,
 						in boolean force, 	
 						in configuration::corba::AccessIdentifier_Transferable accessIdentifier)
 			raises (general::corba::AMFICOMRemoteException);
 
-		void receiveAnalyses(in measurement::corba::AnalysisSeq_Transferable sets,
+		general::corba::StorableObjectSeq_Transferable receiveAnalyses(in measurement::corba::AnalysisSeq_Transferable sets,
 						in boolean force, 	
 						in configuration::corba::AccessIdentifier_Transferable accessIdentifier)
 			raises (general::corba::AMFICOMRemoteException);
 
-		void receiveAnalysisType(in measurement::corba::AnalysisType_Transferable analysisType_Transferable,
+		general::corba::StorableObject_Transferable receiveAnalysisType(in measurement::corba::AnalysisType_Transferable analysisType_Transferable,
 						in boolean force, 	
 						in configuration::corba::AccessIdentifier_Transferable accessIdentifier)
 			raises (general::corba::AMFICOMRemoteException);
 
-		void receiveAnalysisTypes(in measurement::corba::AnalysisTypeSeq_Transferable sets,
+		general::corba::StorableObjectSeq_Transferable receiveAnalysisTypes(in measurement::corba::AnalysisTypeSeq_Transferable sets,
 						in boolean force, 	
 						in configuration::corba::AccessIdentifier_Transferable accessIdentifier)
 			raises (general::corba::AMFICOMRemoteException);
 
-		void receiveEvaluation(in measurement::corba::Evaluation_Transferable evaluation_Transferable,
+		general::corba::StorableObject_Transferable receiveEvaluation(in measurement::corba::Evaluation_Transferable evaluation_Transferable,
 						in boolean force,
 						in configuration::corba::AccessIdentifier_Transferable accessIdentifier)
 			raises (general::corba::AMFICOMRemoteException);
 
-		void receiveEvaluations(in measurement::corba::EvaluationSeq_Transferable sets,
+		general::corba::StorableObjectSeq_Transferable receiveEvaluations(in measurement::corba::EvaluationSeq_Transferable sets,
 						in boolean force,
 						in configuration::corba::AccessIdentifier_Transferable accessIdentifier)
 			raises (general::corba::AMFICOMRemoteException);
 
-		void receiveEvaluationType(in measurement::corba::EvaluationType_Transferable evaluationType_Transferable,
+		general::corba::StorableObject_Transferable receiveEvaluationType(in measurement::corba::EvaluationType_Transferable evaluationType_Transferable,
 						in boolean force,
 						in configuration::corba::AccessIdentifier_Transferable accessIdentifier)
 			raises (general::corba::AMFICOMRemoteException);
 
-		void receiveEvaluationTypes(in measurement::corba::EvaluationTypeSeq_Transferable sets,
+		general::corba::StorableObjectSeq_Transferable receiveEvaluationTypes(in measurement::corba::EvaluationTypeSeq_Transferable sets,
 						in boolean force,
 						in configuration::corba::AccessIdentifier_Transferable accessIdentifier)
 			raises (general::corba::AMFICOMRemoteException);
 
-		void receiveMeasurement(in measurement::corba::Measurement_Transferable measurement_Transferable,
+		general::corba::StorableObject_Transferable receiveMeasurement(in measurement::corba::Measurement_Transferable measurement_Transferable,
 						in boolean force,
 						in configuration::corba::AccessIdentifier_Transferable accessIdentifier)
 			raises (general::corba::AMFICOMRemoteException);
 
-		void receiveMeasurements(in measurement::corba::MeasurementSeq_Transferable sets,
+		general::corba::StorableObjectSeq_Transferable receiveMeasurements(in measurement::corba::MeasurementSeq_Transferable sets,
 						in boolean force,
 						in configuration::corba::AccessIdentifier_Transferable accessIdentifier)
 			raises (general::corba::AMFICOMRemoteException);
 
-		void receiveMeasurementSetup(in measurement::corba::MeasurementSetup_Transferable measurementSetup_Transferable,
+		general::corba::StorableObject_Transferable receiveMeasurementSetup(in measurement::corba::MeasurementSetup_Transferable measurementSetup_Transferable,
 						in boolean force,
 						in configuration::corba::AccessIdentifier_Transferable accessIdentifier)
 			raises (general::corba::AMFICOMRemoteException);
 
-		void receiveMeasurementSetups(in measurement::corba::MeasurementSetupSeq_Transferable sets,
+		general::corba::StorableObjectSeq_Transferable receiveMeasurementSetups(in measurement::corba::MeasurementSetupSeq_Transferable sets,
 						in boolean force,
 						in configuration::corba::AccessIdentifier_Transferable accessIdentifier)
 			raises (general::corba::AMFICOMRemoteException);
 
-		void receiveMeasurementType(in measurement::corba::MeasurementType_Transferable measurementType_Transferable,
+		general::corba::StorableObject_Transferable receiveMeasurementType(in measurement::corba::MeasurementType_Transferable measurementType_Transferable,
 						in boolean force,
 						in configuration::corba::AccessIdentifier_Transferable accessIdentifier)
 			raises (general::corba::AMFICOMRemoteException);
 
-		void receiveMeasurementTypes(in measurement::corba::MeasurementTypeSeq_Transferable sets,
+		general::corba::StorableObjectSeq_Transferable receiveMeasurementTypes(in measurement::corba::MeasurementTypeSeq_Transferable sets,
 						in boolean force,
 						in configuration::corba::AccessIdentifier_Transferable accessIdentifier)
 			raises (general::corba::AMFICOMRemoteException);
 
-		void receiveModeling(in measurement::corba::Modeling_Transferable modeling_Transferable,
+		general::corba::StorableObject_Transferable receiveModeling(in measurement::corba::Modeling_Transferable modeling_Transferable,
 						in boolean force,
 						in configuration::corba::AccessIdentifier_Transferable accessIdentifier)
 			raises (general::corba::AMFICOMRemoteException);
 
-		void receiveModelings(in measurement::corba::ModelingSeq_Transferable modelings_Transferable,
+		general::corba::StorableObjectSeq_Transferable receiveModelings(in measurement::corba::ModelingSeq_Transferable modelings_Transferable,
 						in boolean force,
 						in configuration::corba::AccessIdentifier_Transferable accessIdentifier)
 			raises (general::corba::AMFICOMRemoteException);
 			
-		void receiveModelingType(in measurement::corba::ModelingType_Transferable modelingType_Transferable,
+		general::corba::StorableObject_Transferable receiveModelingType(in measurement::corba::ModelingType_Transferable modelingType_Transferable,
 						in boolean force,
 						in configuration::corba::AccessIdentifier_Transferable accessIdentifier)
 			raises (general::corba::AMFICOMRemoteException);
 
-		void receiveModelingTypes(in measurement::corba::ModelingTypeSeq_Transferable modelingTypes_Transferable,
+		general::corba::StorableObjectSeq_Transferable receiveModelingTypes(in measurement::corba::ModelingTypeSeq_Transferable modelingTypes_Transferable,
 						in boolean force,
 						in configuration::corba::AccessIdentifier_Transferable accessIdentifier)
 			raises (general::corba::AMFICOMRemoteException);
 
-		void receiveResult(in measurement::corba::Result_Transferable result_Transferable,
+		general::corba::StorableObject_Transferable receiveResult(in measurement::corba::Result_Transferable result_Transferable,
 						in boolean force,
 						in configuration::corba::AccessIdentifier_Transferable accessIdentifier)
 			raises (general::corba::AMFICOMRemoteException);
 
-		void receiveResults(in measurement::corba::ResultSeq_Transferable sets,
+		general::corba::StorableObjectSeq_Transferable receiveResults(in measurement::corba::ResultSeq_Transferable sets,
 						in boolean force,
 						in configuration::corba::AccessIdentifier_Transferable accessIdentifier)
 			raises (general::corba::AMFICOMRemoteException);
 
-		void receiveSet(in measurement::corba::Set_Transferable set_Transferable,
+		general::corba::StorableObject_Transferable receiveSet(in measurement::corba::Set_Transferable set_Transferable,
 						in boolean force,
 						in configuration::corba::AccessIdentifier_Transferable accessIdentifier)
 			raises (general::corba::AMFICOMRemoteException);
 
-		void receiveSets(in measurement::corba::SetSeq_Transferable sets,
+		general::corba::StorableObjectSeq_Transferable receiveSets(in measurement::corba::SetSeq_Transferable sets,
 						in boolean force,
 						in configuration::corba::AccessIdentifier_Transferable accessIdentifier)
 			raises (general::corba::AMFICOMRemoteException);
 
-		void receiveTemporalPattern(in measurement::corba::TemporalPattern_Transferable temporalPattern_Transferable,
+		general::corba::StorableObject_Transferable receiveTemporalPattern(in measurement::corba::TemporalPattern_Transferable temporalPattern_Transferable,
 						in boolean force,
 						in configuration::corba::AccessIdentifier_Transferable accessIdentifier)
 			raises (general::corba::AMFICOMRemoteException);
 			
-		void receiveTemporalPatterns(in measurement::corba::TemporalPatternSeq_Transferable sets,
+		general::corba::StorableObjectSeq_Transferable receiveTemporalPatterns(in measurement::corba::TemporalPatternSeq_Transferable sets,
 						in boolean force,
 						in configuration::corba::AccessIdentifier_Transferable accessIdentifier)
 			raises (general::corba::AMFICOMRemoteException);
 
-		void receiveTest(in measurement::corba::Test_Transferable test_Transferable,
+		general::corba::StorableObject_Transferable receiveTest(in measurement::corba::Test_Transferable test_Transferable,
 						in boolean force,
 						in configuration::corba::AccessIdentifier_Transferable accessIdentifier)
 			raises (general::corba::AMFICOMRemoteException);	
 
-		void receiveTests(in measurement::corba::TestSeq_Transferable tests,
+		general::corba::StorableObjectSeq_Transferable receiveTests(in measurement::corba::TestSeq_Transferable tests,
 						in boolean force,
 						in configuration::corba::AccessIdentifier_Transferable accessIdentifier)
 			raises (general::corba::AMFICOMRemoteException);
