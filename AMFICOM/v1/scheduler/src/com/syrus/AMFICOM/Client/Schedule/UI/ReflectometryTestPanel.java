@@ -52,7 +52,6 @@ import com.syrus.AMFICOM.general.corba.OperationSort;
 import com.syrus.AMFICOM.general.corba.CompoundCondition_TransferablePackage.CompoundConditionSort;
 import com.syrus.AMFICOM.measurement.MeasurementSetup;
 import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
-import com.syrus.AMFICOM.measurement.MeasurementType;
 import com.syrus.AMFICOM.measurement.Set;
 import com.syrus.AMFICOM.measurement.SetParameter;
 import com.syrus.AMFICOM.measurement.Test;
@@ -161,7 +160,6 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 
 	private JTextField				refractTextField			= new JTextField();
 
-	private Test					test;
 	private AComboBox				waveLengthComboBox			= new AComboBox();
 
 	private Identifier				meId;
@@ -190,203 +188,175 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 	public Set getSet() {
 		Set set = null;
 		try {
-			MeasurementType measurementType;
-			if (this.test == null) {
-				TypicalCondition typicalCondition = new TypicalCondition(TEST_TYPE, OperationSort.OPERATION_EQUALS,
-																			ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE,
+
+			TypicalCondition waveLengthCondition = new TypicalCondition(ParameterTypeCodenames.TRACE_WAVELENGTH,
+																		OperationSort.OPERATION_EQUALS,
+																		ObjectEntities.PARAMETERTYPE_ENTITY_CODE,
+																		StorableObjectWrapper.COLUMN_CODENAME);
+
+			TypicalCondition traceLengthCondition = new TypicalCondition(ParameterTypeCodenames.TRACE_LENGTH,
+																			OperationSort.OPERATION_EQUALS,
+																			ObjectEntities.PARAMETERTYPE_ENTITY_CODE,
 																			StorableObjectWrapper.COLUMN_CODENAME);
-				measurementType = (MeasurementType) (MeasurementStorableObjectPool.getStorableObjectsByCondition(
-					typicalCondition, true).iterator().next());
-			} else {
-				measurementType = (MeasurementType) MeasurementStorableObjectPool
-				.getStorableObject(this.test.getMeasurementTypeId(), true);
+
+			TypicalCondition resolutionCondition = new TypicalCondition(ParameterTypeCodenames.TRACE_RESOLUTION,
+																		OperationSort.OPERATION_EQUALS,
+																		ObjectEntities.PARAMETERTYPE_ENTITY_CODE,
+																		StorableObjectWrapper.COLUMN_CODENAME);
+
+			TypicalCondition pulseWidthCondition = new TypicalCondition(ParameterTypeCodenames.TRACE_PULSE_WIDTH,
+																		OperationSort.OPERATION_EQUALS,
+																		ObjectEntities.PARAMETERTYPE_ENTITY_CODE,
+																		StorableObjectWrapper.COLUMN_CODENAME);
+
+			TypicalCondition indexOfRefractionCondition = new TypicalCondition(
+																				ParameterTypeCodenames.TRACE_INDEX_OF_REFRACTION,
+																				OperationSort.OPERATION_EQUALS,
+																				ObjectEntities.PARAMETERTYPE_ENTITY_CODE,
+																				StorableObjectWrapper.COLUMN_CODENAME);
+
+			TypicalCondition averageCountCondition = new TypicalCondition(ParameterTypeCodenames.TRACE_AVERAGE_COUNT,
+																			OperationSort.OPERATION_EQUALS,
+																			ObjectEntities.PARAMETERTYPE_ENTITY_CODE,
+																			StorableObjectWrapper.COLUMN_CODENAME);
+
+			Collection conditions = new ArrayList(6);
+			conditions.add(waveLengthCondition);
+			conditions.add(traceLengthCondition);
+			conditions.add(resolutionCondition);
+			conditions.add(pulseWidthCondition);
+			conditions.add(indexOfRefractionCondition);
+			conditions.add(averageCountCondition);
+
+			CompoundCondition compoundCondition = new CompoundCondition(conditions, CompoundConditionSort.OR);
+
+			Collection parameterTypes = GeneralStorableObjectPool
+					.getStorableObjectsByCondition(compoundCondition, true);
+
+			ParameterType wvlenParameterType = null;
+			ParameterType trclenParameterType = null;
+			ParameterType resParameterType = null;
+			ParameterType pulswdParameterType = null;
+			ParameterType iorParameterType = null;
+			ParameterType scansParameterType = null;
+
+			for (Iterator iter = parameterTypes.iterator(); iter.hasNext();) {
+				ParameterType parameterType = (ParameterType) iter.next();
+				String codeName = parameterType.getCodename();
+				if (codeName.equals(waveLengthCondition.getValue()))
+					wvlenParameterType = parameterType;
+				else if (codeName.equals(traceLengthCondition.getValue()))
+					trclenParameterType = parameterType;
+				else if (codeName.equals(resolutionCondition.getValue()))
+					resParameterType = parameterType;
+				else if (codeName.equals(pulseWidthCondition.getValue()))
+					pulswdParameterType = parameterType;
+				else if (codeName.equals(indexOfRefractionCondition.getValue()))
+					iorParameterType = parameterType;
+				else if (codeName.equals(averageCountCondition.getValue()))
+					scansParameterType = parameterType;
 			}
 
-			// if (test_setup_id.equals(""))
-			{
-				try {
+			if (wvlenParameterType == null)
+				throw new IllegalArgumentException("Cannot find parameter type "
+						+ ParameterTypeCodenames.TRACE_WAVELENGTH);
 
-						TypicalCondition waveLengthCondition = new TypicalCondition(
-																					ParameterTypeCodenames.TRACE_WAVELENGTH,
-																					OperationSort.OPERATION_EQUALS,
-																					ObjectEntities.PARAMETERTYPE_ENTITY_CODE,
-																					StorableObjectWrapper.COLUMN_CODENAME);
+			if (trclenParameterType == null)
+				throw new IllegalArgumentException("Cannot find parameter type " + ParameterTypeCodenames.TRACE_LENGTH);
+			if (trclenParameterType == null)
+				throw new IllegalArgumentException("Cannot find parameter type "
+						+ ParameterTypeCodenames.TRACE_RESOLUTION);
 
-						TypicalCondition traceLengthCondition = new TypicalCondition(
-																						ParameterTypeCodenames.TRACE_LENGTH,
-																						OperationSort.OPERATION_EQUALS,
-																						ObjectEntities.PARAMETERTYPE_ENTITY_CODE,
-																						StorableObjectWrapper.COLUMN_CODENAME);
+			if (pulswdParameterType == null)
+				throw new IllegalArgumentException("Cannot find parameter type "
+						+ ParameterTypeCodenames.TRACE_PULSE_WIDTH);
 
-						TypicalCondition resolutionCondition = new TypicalCondition(
-																					ParameterTypeCodenames.TRACE_RESOLUTION,
-																					OperationSort.OPERATION_EQUALS,
-																					ObjectEntities.PARAMETERTYPE_ENTITY_CODE,
-																					StorableObjectWrapper.COLUMN_CODENAME);
+			if (iorParameterType == null)
+				throw new IllegalArgumentException("Cannot find parameter type "
+						+ ParameterTypeCodenames.TRACE_INDEX_OF_REFRACTION);
 
-						TypicalCondition pulseWidthCondition = new TypicalCondition(
-																					ParameterTypeCodenames.TRACE_PULSE_WIDTH,
-																					OperationSort.OPERATION_EQUALS,
-																					ObjectEntities.PARAMETERTYPE_ENTITY_CODE,
-																					StorableObjectWrapper.COLUMN_CODENAME);
+			if (scansParameterType == null)
+				throw new IllegalArgumentException("Cannot find parameter type "
+						+ ParameterTypeCodenames.TRACE_AVERAGE_COUNT);
 
-						TypicalCondition indexOfRefractionCondition = new TypicalCondition(
-																							ParameterTypeCodenames.TRACE_INDEX_OF_REFRACTION,
-																							OperationSort.OPERATION_EQUALS,
-																							ObjectEntities.PARAMETERTYPE_ENTITY_CODE,
-																							StorableObjectWrapper.COLUMN_CODENAME);
+			SetParameter[] params = new SetParameter[6];
 
-						TypicalCondition averageCountCondition = new TypicalCondition(
-																						ParameterTypeCodenames.TRACE_AVERAGE_COUNT,
-																						OperationSort.OPERATION_EQUALS,
-																						ObjectEntities.PARAMETERTYPE_ENTITY_CODE,
-																						StorableObjectWrapper.COLUMN_CODENAME);
+			ByteArray byteArray;
 
-						Collection conditions = new ArrayList(6);
-						conditions.add(waveLengthCondition);
-						conditions.add(traceLengthCondition);
-						conditions.add(resolutionCondition);
-						conditions.add(pulseWidthCondition);
-						conditions.add(indexOfRefractionCondition);
-						conditions.add(averageCountCondition);
+			Object wave = this.waveLengthComboBox.getSelectedItem();
+			if (wave == null)
+				throw new IllegalArgumentException(LangModelSchedule.getString("wave_length_is_not_set"));
 
-						CompoundCondition compoundCondition = new CompoundCondition(conditions,
-																					CompoundConditionSort.OR);
-						
-						
-						Collection parameterTypes = GeneralStorableObjectPool.getStorableObjectsByCondition(
-							compoundCondition, true);
-						
-						ParameterType wvlenParameterType = null;
-						ParameterType trclenParameterType = null;
-						ParameterType resParameterType = null;
-						ParameterType pulswdParameterType = null;
-						ParameterType iorParameterType = null;
-						ParameterType scansParameterType = null;
-						
-						for (Iterator iter = parameterTypes.iterator(); iter.hasNext();) {
-							ParameterType parameterType = (ParameterType) iter.next();
-							String codeName = parameterType.getCodename();
-							if (codeName.equals(waveLengthCondition.getValue()))
-								wvlenParameterType = parameterType;
-							else if (codeName.equals(traceLengthCondition.getValue()))
-								trclenParameterType = parameterType; 
-							else if (codeName.equals(resolutionCondition.getValue()))
-								resParameterType = parameterType;
-							else if (codeName.equals(pulseWidthCondition.getValue()))
-								pulswdParameterType = parameterType;
-							else if (codeName.equals(indexOfRefractionCondition.getValue()))
-								iorParameterType = parameterType;
-							else if (codeName.equals(averageCountCondition.getValue()))
-								scansParameterType = parameterType;		
-						}	
-						
+			String waveStr = wave.toString();
+			if ((waveStr == null) || (waveStr.length() == 0))
+				throw new IllegalArgumentException(LangModelSchedule.getString("wave_length_is_not_set"));
+			byteArray = new ByteArray(((int) Double.parseDouble(waveStr)));
 
-					if (wvlenParameterType == null)
-						throw new IllegalArgumentException("Cannot find parameter type "
-								+ ParameterTypeCodenames.TRACE_WAVELENGTH);
+			params[0] = SetParameter.createInstance(wvlenParameterType, byteArray.getBytes());
 
-					if (trclenParameterType == null)
-						throw new IllegalArgumentException("Cannot find parameter type "
-								+ ParameterTypeCodenames.TRACE_LENGTH);
-					if (trclenParameterType == null)
-						throw new IllegalArgumentException("Cannot find parameter type "
-								+ ParameterTypeCodenames.TRACE_RESOLUTION);
+			Object distance = this.maxDistanceComboBox.getSelectedItem();
+			if (distance == null)
+				throw new IllegalArgumentException(LangModelSchedule.getString("distance_is_not_set"));
 
-					if (pulswdParameterType == null)
-						throw new IllegalArgumentException("Cannot find parameter type "
-								+ ParameterTypeCodenames.TRACE_PULSE_WIDTH);
+			String distanceStr = distance.toString();
+			if ((distanceStr == null) || (distanceStr.length() == 0))
+				throw new IllegalArgumentException(LangModelSchedule.getString("distance_is_not_set"));
+			byteArray = new ByteArray(Double.parseDouble(distanceStr));
 
-					if (iorParameterType == null)
-						throw new IllegalArgumentException("Cannot find parameter type "
-								+ ParameterTypeCodenames.TRACE_INDEX_OF_REFRACTION);
+			params[1] = SetParameter.createInstance(trclenParameterType, byteArray.getBytes());
 
-					if (scansParameterType == null)
-						throw new IllegalArgumentException("Cannot find parameter type "
-								+ ParameterTypeCodenames.TRACE_AVERAGE_COUNT);
+			Object resolution = this.resolutionComboBox.getSelectedItem();
+			if (resolution == null)
+				throw new IllegalArgumentException(LangModelSchedule.getString("resolution_is_not_set"));
+			String resolutionStr = resolution.toString();
+			if ((resolutionStr == null) || (resolutionStr.length() == 0))
+				throw new IllegalArgumentException(LangModelSchedule.getString("resolution_is_not_set"));
+			byteArray = new ByteArray(Double.parseDouble(resolutionStr));
 
-					SetParameter[] params = new SetParameter[6];
+			params[2] = SetParameter.createInstance(resParameterType, byteArray.getBytes());
 
-					ByteArray byteArray;
+			Object pulse = this.pulseWidthComboBox.getSelectedItem();
+			if (pulse == null)
+				throw new IllegalArgumentException(LangModelSchedule.getString("pulse_width_is_not_set"));
+			String pulseStr = pulse.toString();
+			if ((pulseStr == null) || (pulseStr.length() == 0))
+				throw new IllegalArgumentException(LangModelSchedule.getString("pulse_width_is_not_set"));
 
-					Object wave = this.waveLengthComboBox.getSelectedItem();
-					if (wave == null)
-						throw new IllegalArgumentException(LangModelSchedule.getString("wave_length_is_not_set"));
+			byteArray = new ByteArray(Long.parseLong(pulseStr));
 
-					String waveStr = wave.toString();
-					if ((waveStr == null) || (waveStr.length() == 0))
-						throw new IllegalArgumentException(LangModelSchedule.getString("wave_length_is_not_set"));
-					byteArray = new ByteArray(((int) Double.parseDouble(waveStr)));
+			params[3] = SetParameter.createInstance(pulswdParameterType, byteArray.getBytes());
 
-					params[0] = SetParameter.createInstance(wvlenParameterType, byteArray.getBytes());
+			String refract = this.refractTextField.getText();
+			if ((refract == null) || (refract.length() == 0))
+				throw new IllegalArgumentException(LangModelSchedule.getString("index_of_refraction_is_not_set")); //$NON-NLS-1$
+			byteArray = new ByteArray(Double.parseDouble(refract));
 
-					Object distance = this.maxDistanceComboBox.getSelectedItem();
-					if (distance == null)
-						throw new IllegalArgumentException(LangModelSchedule.getString("distance_is_not_set"));
+			params[4] = SetParameter.createInstance(iorParameterType, byteArray.getBytes());
 
-					String distanceStr = distance.toString();
-					if ((distanceStr == null) || (distanceStr.length() == 0))
-						throw new IllegalArgumentException(LangModelSchedule.getString("distance_is_not_set"));
-					byteArray = new ByteArray(Double.parseDouble(distanceStr));
+			Object average = this.averageQuantityComboBox.getSelectedItem();
+			if (average == null)
+				throw new IllegalArgumentException(LangModelSchedule.getString("average_quantity_is_not_set"));
+			String averageStr = average.toString();
+			if ((averageStr == null) || (averageStr.length() == 0))
+				throw new IllegalArgumentException(LangModelSchedule.getString("average_quantity_is_not_set"));
 
-					params[1] = SetParameter.createInstance(trclenParameterType, byteArray.getBytes());
+			byteArray = new ByteArray(Double.parseDouble(averageStr));
 
-					Object resolution = this.resolutionComboBox.getSelectedItem();
-					if (resolution == null)
-						throw new IllegalArgumentException(LangModelSchedule.getString("resolution_is_not_set"));
-					String resolutionStr = resolution.toString();
-					if ((resolutionStr == null) || (resolutionStr.length() == 0))
-						throw new IllegalArgumentException(LangModelSchedule.getString("resolution_is_not_set"));
-					byteArray = new ByteArray(Double.parseDouble(resolutionStr));
+			params[5] = SetParameter.createInstance(scansParameterType, byteArray.getBytes());
 
-					params[2] = SetParameter.createInstance(resParameterType, byteArray.getBytes());
+			RISDSessionInfo sessionInterface = (RISDSessionInfo) this.aContext.getSessionInterface();
+			set = Set.createInstance(sessionInterface.getUserIdentifier(), SetSort.SET_SORT_MEASUREMENT_PARAMETERS,
+				"Set created by Scheduler", params, Collections.singletonList(this.meId));
+			MeasurementStorableObjectPool.putStorableObject(set);
 
-					Object pulse = this.pulseWidthComboBox.getSelectedItem();
-					if (pulse == null)
-						throw new IllegalArgumentException(LangModelSchedule.getString("pulse_width_is_not_set"));
-					String pulseStr = pulse.toString();
-					if ((pulseStr == null) || (pulseStr.length() == 0))
-						throw new IllegalArgumentException(LangModelSchedule.getString("pulse_width_is_not_set"));
-
-					byteArray = new ByteArray(Long.parseLong(pulseStr));
-
-					params[3] = SetParameter.createInstance(pulswdParameterType, byteArray.getBytes());
-
-					String refract = this.refractTextField.getText();
-					if ((refract == null) || (refract.length() == 0))
-						throw new IllegalArgumentException(LangModelSchedule
-								.getString("index_of_refraction_is_not_set")); //$NON-NLS-1$
-					byteArray = new ByteArray(Double.parseDouble(refract));
-
-					params[4] = SetParameter.createInstance(iorParameterType, byteArray.getBytes());
-
-					Object average = this.averageQuantityComboBox.getSelectedItem();
-					if (average == null)
-						throw new IllegalArgumentException(LangModelSchedule.getString("average_quantity_is_not_set"));
-					String averageStr = average.toString();
-					if ((averageStr == null) || (averageStr.length() == 0))
-						throw new IllegalArgumentException(LangModelSchedule.getString("average_quantity_is_not_set"));
-
-					byteArray = new ByteArray(Double.parseDouble(averageStr));
-
-					params[5] = SetParameter.createInstance(scansParameterType, byteArray.getBytes());
-
-					RISDSessionInfo sessionInterface = (RISDSessionInfo) this.aContext.getSessionInterface();
-					set = Set.createInstance(sessionInterface.getUserIdentifier(),
-						SetSort.SET_SORT_MEASUREMENT_PARAMETERS, "Set created by Scheduler", params, Collections
-								.singletonList(this.meId));
-					MeasurementStorableObjectPool.putStorableObject(set);
-
-				} catch (IOException ioe) {
-					ioe.printStackTrace();
-				} catch (IllegalArgumentException e) {
-					String message = e.getMessage();
-					// System.out.println(message);
-					Environment.log(Environment.LOG_LEVEL_WARNING, message);
-					SchedulerModel.showErrorMessage(this, e);
-					set = null;
-				}
-			}
+		} catch (IOException ioe) {
+			ioe.printStackTrace();
+		} catch (IllegalArgumentException e) {
+			String message = e.getMessage();
+			// System.out.println(message);
+			Environment.log(Environment.LOG_LEVEL_WARNING, message);
+			SchedulerModel.showErrorMessage(this, e);
+			set = null;
 		} catch (ApplicationException ae) {
 			SchedulerModel.showErrorMessage(this, ae);
 			this.schedulerModel.setBreakData();
@@ -584,7 +554,6 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 			 * FIXME fix set the same test
 			 */
 			{
-				this.test = test;
 				/**
 				 * FIXME how set for many measurementSetup ???
 				 */
