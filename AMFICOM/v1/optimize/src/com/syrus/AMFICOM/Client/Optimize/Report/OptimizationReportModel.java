@@ -33,7 +33,6 @@ import javax.swing.JComponent;
 import java.util.Vector;
 
 import com.syrus.AMFICOM.Client.Analysis.Report.EvaluationTableReport;
-import com.syrus.AMFICOM.Client.Analysis.Report.EvaluationGraphPanel;
 
 public class OptimizationReportModel extends APOReportModel
 {
@@ -333,10 +332,7 @@ public class OptimizationReportModel extends APOReportModel
 
 		else if (rp.field.equals(OptimizationReportModel.iterationsHistory))
 		{
-			returnValue = (JComponent)rp.getReserve();
-      RenderingObject ro = rt.findROforReport(rp);
-      returnValue.setSize(ro.width,ro.height);
-      returnValue.setPreferredSize(returnValue.getSize());
+      returnValue = new IterHistoryPanelRenderer(rt.findROforReport(rp));
 		}
 
 		return returnValue;
