@@ -7,7 +7,7 @@ import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalLinkElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalNodeElement;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapSelection;
 import com.syrus.AMFICOM.Client.Resource.Map.MapSiteNodeElement;
-import com.syrus.AMFICOM.Client.Resource.Map.VoidMapElement;
+import com.syrus.AMFICOM.Client.Resource.MapView.VoidMapElement;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapCablePathElement;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapUnboundNodeElement;
 
@@ -39,7 +39,7 @@ public final class MapPopupMenuManager
 			SitePopupMenu.getInstance());
 		popupMap.put(MapUnboundNodeElement.class,
 			UnboundPopupMenu.getInstance());
-		popupMap.put(VoidMapElement.class,
+		popupMap.put(com.syrus.AMFICOM.Client.Resource.MapView.VoidMapElement.class,
 			VoidElementPopupMenu.getInstance());
 //		popupMap.put(MapAlarmMarker.class,
 //			MapAlarmMarkerPopupMenu.getInstance());

@@ -1,5 +1,5 @@
 /**
- * $Id: LogicalNetLayer.java,v 1.5 2004/09/29 15:12:40 krupenn Exp $
+ * $Id: LogicalNetLayer.java,v 1.6 2004/09/30 13:38:11 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -36,7 +36,8 @@ import com.syrus.AMFICOM.Client.Resource.Map.MapNodeProtoElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalLinkElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalNodeElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapSiteNodeElement;
-import com.syrus.AMFICOM.Client.Resource.Map.VoidMapElement;
+import com.syrus.AMFICOM.Client.Resource.MapView.MapMeasurementPathElement;
+import com.syrus.AMFICOM.Client.Resource.MapView.VoidMapElement;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapCablePathElement;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapMarker;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapView;
@@ -64,7 +65,7 @@ import java.util.List;
  * 
  * 
  * 
- * @version $Revision: 1.5 $, $Date: 2004/09/29 15:12:40 $
+ * @version $Revision: 1.6 $, $Date: 2004/09/30 13:38:11 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -367,7 +368,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 		this.mapView.setLogicalNetLayer(this);
 
 		//Поумолчанию текущий элемент Void
-		currentMapElement = VoidMapElement.getInstance(this.mapView.getMap());
+		currentMapElement = VoidMapElement.getInstance(this.mapView);
 		
 		repaint();
 	}
@@ -578,6 +579,29 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 			com.execute();
 		}
 
+		if (getMapState().getShowMode() == MapState.SHOW_TRANSMISSION_PATH)
+		{
+			elementsToDisplay.addAll(getMapView().getMap().getPhysicalLinks());
+			for(Iterator it = getMapView().getMeasurementPaths().iterator(); it.hasNext();)
+			{
+				MapMeasurementPathElement mpath = 
+					(MapMeasurementPathElement )it.next();
+				mpath.paint(g, visibleBounds);
+				for(Iterator it2 = mpath.getCablePaths().iterator(); it2.hasNext();)
+				{
+					MapCablePathElement cpath = 
+						(MapCablePathElement )it2.next();
+					elementsToDisplay.removeAll(cpath.getLinks());
+				}
+			}
+			for(Iterator it = elementsToDisplay.iterator(); it.hasNext();)
+			{
+				MapPhysicalLinkElement mple = 
+					(MapPhysicalLinkElement )it.next();
+				mple.paint(g, visibleBounds);
+			}
+		}
+		else
 		if (getMapState().getShowMode() == MapState.SHOW_CABLE_PATH)
 		{
 			elementsToDisplay.addAll(getMapView().getMap().getPhysicalLinks());
@@ -1522,7 +1546,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "getMapElementAtPoint(" + point + ")");
 		
 		int showMode = getMapState().getShowMode();
-		MapElement curME = VoidMapElement.getInstance(this.getMapView().getMap());
+		MapElement curME = VoidMapElement.getInstance(this.getMapView());
 
 		Rectangle2D.Double visibleBounds = this.getVisibleBounds();
 

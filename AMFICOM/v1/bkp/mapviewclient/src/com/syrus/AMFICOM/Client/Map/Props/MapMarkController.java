@@ -7,39 +7,42 @@
 package com.syrus.AMFICOM.Client.Map.Props;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
-import com.syrus.AMFICOM.Client.Resource.Map.MapNodeLinkElement;
+import com.syrus.AMFICOM.Client.Resource.Map.MapMarkElement;
+import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalNodeElement;
 import com.syrus.AMFICOM.Client.Resource.ObjectResource;
 import com.syrus.AMFICOM.client_.general.ui_.ObjectResourcePropertiesController;
+
+import java.awt.geom.Point2D;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
-public final class MapNodeLinkController 
+public final class MapMarkController 
 		implements ObjectResourcePropertiesController 
 {
 
-	private static MapNodeLinkController instance;
+	private static MapMarkController instance;
 
 	private List keys;
 
-	private MapNodeLinkController() 
+	private MapMarkController() 
 	{
 		String[] keysArray = new String[] { 
-				PROPERTY_NAME,
-				PROPERTY_TOPOLOGICAL_LENGTH,
-				PROPERTY_START_NODE_ID,
-				PROPERTY_END_NODE_ID,
+				PROPERTY_NAME, 
+				PROPERTY_LATITUDE,
+				PROPERTY_LONGITUDE,
 				PROPERTY_PHYSICAL_LINK_ID};
 	
 		this.keys = Collections.unmodifiableList(new ArrayList(Arrays.asList(keysArray)));
 	}
 
-	public static MapNodeLinkController getInstance() 
+	public static MapMarkController getInstance() 
 	{
 		if (instance == null)
-			instance = new MapNodeLinkController();
+			instance = new MapMarkController();
 		return instance;
 	}
 	
@@ -64,31 +67,26 @@ public final class MapNodeLinkController
 	public Object getValue(final ObjectResource object, final String key)
 	{
 		Object result = null;
-		MapNodeLinkElement nodeLink = (MapNodeLinkElement )object;
+		MapMarkElement mark = (MapMarkElement )object;
 
 		if (key.equals(PROPERTY_NAME))
 		{
-			result = nodeLink.getName();
+			result = mark.getName();
 		}
 		else
-		if (key.equals(PROPERTY_TOPOLOGICAL_LENGTH))
+		if (key.equals(PROPERTY_LATITUDE))
 		{
-			result = String.valueOf(nodeLink.getLengthLt());
+			result = String.valueOf(mark.getAnchor().x);
 		}
 		else
-		if (key.equals(PROPERTY_START_NODE_ID))
+		if (key.equals(PROPERTY_LONGITUDE))
 		{
-			result = nodeLink.getStartNode();
-		}
-		else
-		if (key.equals(PROPERTY_END_NODE_ID))
-		{
-			result = nodeLink.getEndNode();
+			result = String.valueOf(mark.getAnchor().y);
 		}
 		else
 		if (key.equals(PROPERTY_PHYSICAL_LINK_ID))
 		{
-			result = nodeLink.getMap().getPhysicalLink(nodeLink.getPhysicalLinkId());
+			result = mark.getLink();
 		}
 
 		return result;
@@ -103,11 +101,39 @@ public final class MapNodeLinkController
 
 	public void setValue(ObjectResource objectResource, final String key, final Object value)
 	{
-		MapNodeLinkElement nodeLink = (MapNodeLinkElement )objectResource;
+		MapMarkElement node = (MapMarkElement )objectResource;
 
 		if (key.equals(PROPERTY_NAME))
 		{
-			nodeLink.setName((String )value);
+			node.setName((String )value);
+		}
+		else
+		if (key.equals(PROPERTY_LATITUDE))
+		{
+			try
+			{
+				Point2D.Double pt = node.getAnchor();
+				pt.x = Double.parseDouble((String )value);
+				node.setAnchor(pt);
+			}
+			catch(NumberFormatException e)
+			{
+				return;
+			}
+		}
+		else
+		if (key.equals(PROPERTY_LONGITUDE))
+		{
+			try
+			{
+				Point2D.Double pt = node.getAnchor();
+				pt.y = Double.parseDouble((String )value);
+				node.setAnchor(pt);
+			}
+			catch(NumberFormatException e)
+			{
+				return;
+			}
 		}
 	}
 

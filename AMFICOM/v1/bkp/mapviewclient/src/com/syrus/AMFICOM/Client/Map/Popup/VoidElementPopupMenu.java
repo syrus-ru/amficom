@@ -6,7 +6,7 @@ import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.Map.Command.Action.CreateSiteCommand;
 import com.syrus.AMFICOM.Client.Resource.Map.MapElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapNodeProtoElement;
-import com.syrus.AMFICOM.Client.Resource.Map.VoidMapElement;
+import com.syrus.AMFICOM.Client.Resource.MapView.VoidMapElement;
 
 import java.awt.Dimension;
 import java.awt.Toolkit;
@@ -71,7 +71,7 @@ public class VoidElementPopupMenu extends MapPopupMenu
 
 	private void showProperties()
 	{
-		super.showProperties(VoidMapElement.getInstance(getLogicalNetLayer().getMapView().getMap()));
+		super.showProperties(VoidMapElement.getInstance(getLogicalNetLayer().getMapView()));
 	}
 
 	private void addSite()

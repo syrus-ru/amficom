@@ -52,6 +52,8 @@ public class PropertiesCellRenderer extends DefaultTableCellRenderer
 		}
 		else
 		{
+			Object propVal = model.getController().getPropertyValue(model.getController().getKey(row));
+			
 			renderer = super.getTableCellRendererComponent(
 				table, value, isSelected, hasFocus, row, column);
 		}

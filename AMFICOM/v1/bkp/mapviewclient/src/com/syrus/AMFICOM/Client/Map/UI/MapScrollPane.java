@@ -1,5 +1,5 @@
 /**
- * $Id: MapScrollPane.java,v 1.2 2004/09/15 08:21:49 krupenn Exp $
+ * $Id: MapScrollPane.java,v 1.3 2004/09/30 13:38:11 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -23,7 +23,7 @@ import javax.swing.JScrollBar;
  * 
  * 
  * 
- * @version $Revision: 1.2 $, $Date: 2004/09/15 08:21:49 $
+ * @version $Revision: 1.3 $, $Date: 2004/09/30 13:38:11 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -31,23 +31,23 @@ import javax.swing.JScrollBar;
 public final class MapScrollPane extends JPanel
 {
 	//Устанавливаем верхнюю, нижнюю границу
-	double horiz_left = -0.118503;
-	double horiz_right = 0.236697;
+//	double horiz_left = -0.118503;
+//	double horiz_right = 0.236697;
 
 	//Устанавливаем левую, правую границу
-	double vert_left = 0.241678;
-	double vert_right = -0.060722;
+//	double vert_left = 0.241678;
+//	double vert_right = -0.060722;
 
-	double horiz_incr = 0;
-	double vert_incr = 0;
+//	double horiz_incr = 0;
+//	double vert_incr = 0;
 
-	JScrollBar horScrollBar;
-	JScrollBar vertScrollBar;
+//	JScrollBar horScrollBar;
+//	JScrollBar vertScrollBar;
 
 	NetMapViewer viewer;
 
 	//Флаг того что нужно обновить без срабатывания listener
-	boolean updateWithoutListen = false;
+//	boolean updateWithoutListen = false;
 
 
 	public MapScrollPane(NetMapViewer viewer)

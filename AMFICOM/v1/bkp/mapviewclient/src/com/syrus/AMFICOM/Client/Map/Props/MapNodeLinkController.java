@@ -86,7 +86,7 @@ public final class MapNodeLinkController
 			result = nodeLink.getEndNode();
 		}
 		else
-		if (key.equals(PROPERTY_NAME))
+		if (key.equals(PROPERTY_PHYSICAL_LINK_ID))
 		{
 			result = nodeLink.getMap().getPhysicalLink(nodeLink.getPhysicalLinkId());
 		}

@@ -1,5 +1,5 @@
 /**
- * $Id: DeleteSelectionCommand.java,v 1.1 2004/09/13 12:33:42 krupenn Exp $
+ * $Id: DeleteSelectionCommand.java,v 1.2 2004/09/30 13:38:11 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -22,7 +22,7 @@ import com.syrus.AMFICOM.Client.Resource.Map.MapElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapNodeElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapNodeLinkElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalLinkElement;
-import com.syrus.AMFICOM.Client.Resource.Map.VoidMapElement;
+import com.syrus.AMFICOM.Client.Resource.MapView.VoidMapElement;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapCablePathElement;
 
 import java.util.Iterator;
@@ -34,7 +34,7 @@ import java.util.LinkedList;
  * 
  * 
  * 
- * @version $Revision: 1.1 $, $Date: 2004/09/13 12:33:42 $
+ * @version $Revision: 1.2 $, $Date: 2004/09/30 13:38:11 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -230,7 +230,7 @@ public class DeleteSelectionCommand extends MapActionCommandBundle
 		// выполнить все команды в списке
 		super.execute();
 		
-		MapElement mapElement = VoidMapElement.getInstance(logicalNetLayer.getMapView().getMap());
+		MapElement mapElement = VoidMapElement.getInstance(logicalNetLayer.getMapView());
 
 		logicalNetLayer.sendMapEvent(new MapEvent(mapElement, MapEvent.MAP_CHANGED));
 		logicalNetLayer.sendMapEvent(new MapNavigateEvent(mapElement, MapNavigateEvent.MAP_ELEMENT_SELECTED_EVENT));

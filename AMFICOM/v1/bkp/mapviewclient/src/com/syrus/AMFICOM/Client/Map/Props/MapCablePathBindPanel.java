@@ -25,6 +25,7 @@ import java.awt.event.ActionListener;
 import java.util.LinkedList;
 import java.util.List;
 
+import java.util.ListIterator;
 import javax.swing.ComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -75,7 +76,7 @@ public final class MapCablePathBindPanel extends JPanel implements ObjectResourc
 	MapNodeElement startNode;
 	MapNodeElement endNode;
 	
-	List channellingItems;
+	List channelingItems;
 
 	public MapCablePathBindPanel()
 	{
@@ -193,6 +194,9 @@ public final class MapCablePathBindPanel extends JPanel implements ObjectResourc
 		endNodeTextField.setText("");
 		startLinkComboBox.removeAll();
 		endLinkComboBox.removeAll();
+
+		startLinkComboBox.setEditable(true);
+		endLinkComboBox.setEditable(true);
 		
 		if(path == null)
 		{
@@ -200,12 +204,12 @@ public final class MapCablePathBindPanel extends JPanel implements ObjectResourc
 		else
 		{
 			controller.setMap(path.getMap());
-			channellingItems = new LinkedList();
+			channelingItems = new LinkedList();
 			if(path.getSchemeCableLink().channelingItems == null)
 				path.getSchemeCableLink().channelingItems = new LinkedList();
-			channellingItems.addAll(path.getSchemeCableLink().channelingItems);
+			channelingItems.addAll(path.getSchemeCableLink().channelingItems);
 			
-			model.setContents(channellingItems);
+			model.setContents(channelingItems);
 			
 			setBindingPanels();
 		}
@@ -213,18 +217,18 @@ public final class MapCablePathBindPanel extends JPanel implements ObjectResourc
 	
 	private void setBindingPanels()
 	{
-		startNode = (MapNodeElement )path.getStartUnbound();
+		startNode = getStartUnbound();
 		
 		if(startNode == null)
 			return;// no unbound elements
 
-		endNode = (MapNodeElement )path.getEndUnbound();
+		endNode = getEndUnbound();
 
 		startNodeTextField.setText(startNode.getName());
 		endNodeTextField.setText(endNode.getName());
 
-		MapPhysicalLinkElement smle = path.getStartLastBoundLink();
-		MapPhysicalLinkElement emle = path.getEndLastBoundLink();
+		MapPhysicalLinkElement smle = getStartLastBoundLink();
+		MapPhysicalLinkElement emle = getEndLastBoundLink();
 		
 		List smnelinks = path.getMap().getPhysicalLinksAt(startNode);
 		if(smle != null)
@@ -250,6 +254,9 @@ public final class MapCablePathBindPanel extends JPanel implements ObjectResourc
 		startLinkComboBox.setSelected(null);
 		endLinkComboBox.setContents(emnelinks, true);
 		endLinkComboBox.setSelected(null);
+		
+		startLinkComboBox.setEditable(startNode.equals(path.getEndNode()));
+		endLinkComboBox.setEditable(endNode.equals(path.getStartNode()));
 	}
 
 	private void addBinding()
@@ -267,13 +274,16 @@ public final class MapCablePathBindPanel extends JPanel implements ObjectResourc
 		cci.startSpare = MapPropertiesManager.getSpareLength();
 		cci.physicalLinkId = mle.getId();
 		cci.endSpare = MapPropertiesManager.getSpareLength();
-		cci.endSiteId = endNode.getId();
+		cci.endSiteId = mle.getOtherNode(startNode).getId();
 		
-		channellingItems.add(cci);
+		channelingItems.add(cci);
 		
-		model.getContents().add(cci);
+//		model.getContents().add(cci);
+		model.fireTableDataChanged();
 		
 		setBindingPanels();
+
+//		table.updateUI();
 	}
 
 	private void addChainBinding()
@@ -288,12 +298,85 @@ public final class MapCablePathBindPanel extends JPanel implements ObjectResourc
 				{
 					ObjectResource or = (ObjectResource )cbmodel.getElementAt(i);
 					if(or.getId().length() != 0)
+					{
+						cbmodel.setSelectedItem(or);
 						break;
+					}
 				}
 			}
 			else
 				break;
 		}
+	}
+
+	public MapNodeElement getStartUnbound()
+	{
+		MapNodeElement bufferSite = path.getStartNode();
+		
+		for(Iterator it = channelingItems.iterator(); it.hasNext();)
+		{
+			CableChannelingItem cci = (CableChannelingItem )it.next();
+			if(! cci.startSiteId.equals(bufferSite.getId()))
+			{
+				return bufferSite;
+			}
+			bufferSite = path.getMap().getMapSiteNodeElement(cci.endSiteId);
+		}
+		return bufferSite;
+	}
+	
+	public MapNodeElement getEndUnbound()
+	{
+		MapNodeElement bufferSite = path.getEndNode();
+		
+		for(ListIterator it = channelingItems.listIterator(channelingItems.size()); it.hasPrevious();)
+		{
+			CableChannelingItem cci = (CableChannelingItem )it.previous();
+			if(! cci.endSiteId.equals(bufferSite.getId()))
+			{
+				return bufferSite;
+			}
+			bufferSite = path.getMap().getMapSiteNodeElement(cci.startSiteId);
+		}
+		return bufferSite;
+	}
+
+	public MapPhysicalLinkElement getStartLastBoundLink()
+	{
+		MapNodeElement bufferSite = path.getStartNode();
+		MapPhysicalLinkElement link = null;
+		
+		for(Iterator it = channelingItems.iterator(); it.hasNext();)
+		{
+			CableChannelingItem cci = (CableChannelingItem )it.next();
+			if(! cci.startSiteId.equals(bufferSite.getId()))
+			{
+				return link;
+			}
+			bufferSite = path.getMap().getMapSiteNodeElement(cci.endSiteId);
+			link = path.getMap().getPhysicalLink(cci.physicalLinkId);
+		}
+		return link;
+	}
+
+	public MapPhysicalLinkElement getEndLastBoundLink()
+	{
+		MapNodeElement bufferSite = path.getEndNode();
+		MapPhysicalLinkElement link = null;
+
+		List ccis = (List )channelingItems;
+		
+		for(ListIterator it = ccis.listIterator(ccis.size()); it.hasPrevious();)
+		{
+			CableChannelingItem cci = (CableChannelingItem )it.previous();
+			if(! cci.endSiteId.equals(bufferSite.getId()))
+			{
+				return link;
+			}
+			bufferSite = path.getMap().getMapSiteNodeElement(cci.startSiteId);
+			link = path.getMap().getPhysicalLink(cci.physicalLinkId);
+		}
+		return link;
 	}
 
 	public void setContext(ApplicationContext aContext)
@@ -304,7 +387,7 @@ public final class MapCablePathBindPanel extends JPanel implements ObjectResourc
 	{
 		try 
 		{
-			path.getSchemeCableLink().channelingItems = this.channellingItems;
+			path.getSchemeCableLink().channelingItems = this.channelingItems;
 			return true;
 		} 
 		catch (Exception ex) 

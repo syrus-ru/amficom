@@ -7,7 +7,8 @@
 package com.syrus.AMFICOM.Client.Map.Props;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
-import com.syrus.AMFICOM.Client.Resource.Map.MapNodeLinkElement;
+import com.syrus.AMFICOM.Client.Resource.MapView.MapView;
+import com.syrus.AMFICOM.Client.Resource.MapView.VoidMapElement;
 import com.syrus.AMFICOM.Client.Resource.ObjectResource;
 import com.syrus.AMFICOM.client_.general.ui_.ObjectResourcePropertiesController;
 
@@ -16,30 +17,26 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-public final class MapNodeLinkController 
+public final class MapVoidElementController 
 		implements ObjectResourcePropertiesController 
 {
 
-	private static MapNodeLinkController instance;
+	private static MapVoidElementController instance;
 
 	private List keys;
 
-	private MapNodeLinkController() 
+	private MapVoidElementController() 
 	{
 		String[] keysArray = new String[] { 
-				PROPERTY_NAME,
-				PROPERTY_TOPOLOGICAL_LENGTH,
-				PROPERTY_START_NODE_ID,
-				PROPERTY_END_NODE_ID,
-				PROPERTY_PHYSICAL_LINK_ID};
+				PROPERTY_NAME};
 	
 		this.keys = Collections.unmodifiableList(new ArrayList(Arrays.asList(keysArray)));
 	}
 
-	public static MapNodeLinkController getInstance() 
+	public static MapVoidElementController getInstance() 
 	{
 		if (instance == null)
-			instance = new MapNodeLinkController();
+			instance = new MapVoidElementController();
 		return instance;
 	}
 	
@@ -64,31 +61,13 @@ public final class MapNodeLinkController
 	public Object getValue(final ObjectResource object, final String key)
 	{
 		Object result = null;
-		MapNodeLinkElement nodeLink = (MapNodeLinkElement )object;
+
+		VoidMapElement ve = (VoidMapElement )object;
+		MapView mapView = ve.getMapView();
 
 		if (key.equals(PROPERTY_NAME))
 		{
-			result = nodeLink.getName();
-		}
-		else
-		if (key.equals(PROPERTY_TOPOLOGICAL_LENGTH))
-		{
-			result = String.valueOf(nodeLink.getLengthLt());
-		}
-		else
-		if (key.equals(PROPERTY_START_NODE_ID))
-		{
-			result = nodeLink.getStartNode();
-		}
-		else
-		if (key.equals(PROPERTY_END_NODE_ID))
-		{
-			result = nodeLink.getEndNode();
-		}
-		else
-		if (key.equals(PROPERTY_PHYSICAL_LINK_ID))
-		{
-			result = nodeLink.getMap().getPhysicalLink(nodeLink.getPhysicalLinkId());
+			result = mapView.getName();
 		}
 
 		return result;
@@ -103,11 +82,12 @@ public final class MapNodeLinkController
 
 	public void setValue(ObjectResource objectResource, final String key, final Object value)
 	{
-		MapNodeLinkElement nodeLink = (MapNodeLinkElement )objectResource;
+		VoidMapElement ve = (VoidMapElement )objectResource;
+		MapView mapView = ve.getMapView();
 
 		if (key.equals(PROPERTY_NAME))
 		{
-			nodeLink.setName((String )value);
+			mapView.setName((String )value);
 		}
 	}
 

@@ -1,5 +1,5 @@
 /**
- * $Id: MapVoidElementStrategy.java,v 1.2 2004/09/17 11:39:25 krupenn Exp $
+ * $Id: MapVoidElementStrategy.java,v 1.3 2004/09/30 13:38:11 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -21,7 +21,8 @@ import com.syrus.AMFICOM.Client.Resource.Map.MapElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapNodeElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapNodeLinkElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalLinkElement;
-import com.syrus.AMFICOM.Client.Resource.Map.VoidMapElement;
+import com.syrus.AMFICOM.Client.Resource.MapView.MapView;
+import com.syrus.AMFICOM.Client.Resource.MapView.VoidMapElement;
 
 import java.awt.Point;
 import java.awt.Rectangle;
@@ -36,7 +37,7 @@ import javax.swing.SwingUtilities;
  * 
  * 
  * 
- * @version $Revision: 1.2 $, $Date: 2004/09/17 11:39:25 $
+ * @version $Revision: 1.3 $, $Date: 2004/09/30 13:38:11 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -47,6 +48,7 @@ public final class MapVoidElementStrategy implements  MapStrategy
 	ApplicationContext aContext;
 	
 	Map map;
+	MapView mapView;
 
 	private static MapVoidElementStrategy instance = new MapVoidElementStrategy();
 
@@ -61,7 +63,8 @@ public final class MapVoidElementStrategy implements  MapStrategy
 	
 	public void setMapElement(MapElement me)
 	{
-		this.map = ((VoidMapElement )me).getMap();
+		this.mapView = ((VoidMapElement)me).getMapView();
+		this.map = ((VoidMapElement)me).getMap();
 	}
 
 	public void setLogicalNetLayer(LogicalNetLayer logicalNetLayer)

@@ -129,6 +129,9 @@ public class MapLinkGeneralPanel extends JPanel implements ObjectResourcePropert
 			descTextArea.setEnabled(false);
 			descTextArea.setText("");
 
+			mTextField.setText("");
+			nTextField.setText("");
+
 			cityTextField.setText("");
 			streetTextField.setText("");
 			buildingTextField.setText("");
@@ -141,6 +144,9 @@ public class MapLinkGeneralPanel extends JPanel implements ObjectResourcePropert
 			typeComboBox.setSelected(link.getMapProtoId());
 			descTextArea.setEnabled(true);
 			descTextArea.setText(link.getDescription());
+
+			mTextField.setText(String.valueOf(link.getBinding().getDimension().width));
+			nTextField.setText(String.valueOf(link.getBinding().getDimension().height));
 
 			cityTextField.setText(link.getCity());
 			streetTextField.setText(link.getStreet());
@@ -166,8 +172,8 @@ public class MapLinkGeneralPanel extends JPanel implements ObjectResourcePropert
 			
 			int m = Integer.parseInt(mTextField.getText());
 			int n = Integer.parseInt(nTextField.getText());
-			
-			link.getBinding().setDimension(new Dimension(m, n));
+			if(!link.getBinding().getDimension().equals(new Dimension(m, n)))
+				link.getBinding().setDimension(new Dimension(m, n));
 			return true;
 		} 
 		catch (Exception ex) 

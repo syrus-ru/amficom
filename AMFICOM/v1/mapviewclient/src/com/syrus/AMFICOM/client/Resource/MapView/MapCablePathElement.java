@@ -1,5 +1,5 @@
 /**
- * $Id: MapCablePathElement.java,v 1.7 2004/09/27 07:41:34 krupenn Exp $
+ * $Id: MapCablePathElement.java,v 1.8 2004/09/30 13:38:11 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -13,6 +13,7 @@ package com.syrus.AMFICOM.Client.Resource.MapView;
 
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourceDisplayModel;
 import com.syrus.AMFICOM.Client.General.UI.PropertiesPanel;
+import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
 import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
 import com.syrus.AMFICOM.Client.Resource.Map.MapElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapLinkElement;
@@ -48,7 +49,7 @@ import java.util.ListIterator;
  * 
  * 
  * 
- * @version $Revision: 1.7 $, $Date: 2004/09/27 07:41:34 $
+ * @version $Revision: 1.8 $, $Date: 2004/09/30 13:38:11 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -246,130 +247,6 @@ public class MapCablePathElement extends MapLinkElement implements Serializable
 		return schemeCableLink;
 	}
 
-	public MapNodeElement getStartUnbound()
-	{
-		MapNodeElement bufferSite = getStartNode();
-		
-		for(Iterator it = getSchemeCableLink().channelingItems.iterator(); it.hasNext();)
-		{
-			CableChannelingItem cci = (CableChannelingItem )it.next();
-			if(! cci.startSiteId.equals(bufferSite.getId()))
-			{
-				return bufferSite;
-			}
-			bufferSite = map.getMapSiteNodeElement(cci.endSiteId);
-		}
-		return null;
-	}
-	
-	public MapNodeElement getStartUnbound1()
-	{
-		MapNodeElement mne = getStartNode();
-		for(Iterator it = getLinks().iterator(); it.hasNext();)
-		{
-			MapPhysicalLinkElement link = (MapPhysicalLinkElement )it.next();
-			if(link instanceof MapUnboundLinkElement)
-				return mne;
-			mne = link.getOtherNode(mne);
-		}
-		return null;
-	}
-
-	public MapNodeElement getEndUnbound()
-	{
-		MapNodeElement bufferSite = getEndNode();
-		
-		List ccis = (List )getSchemeCableLink().channelingItems;
-		
-		for(ListIterator it = ccis.listIterator(ccis.size()); it.hasPrevious();)
-		{
-			CableChannelingItem cci = (CableChannelingItem )it.previous();
-			if(! cci.endSiteId.equals(bufferSite.getId()))
-			{
-				return bufferSite;
-			}
-			bufferSite = map.getMapSiteNodeElement(cci.startSiteId);
-		}
-		return null;
-	}
-	
-	public MapNodeElement getEndUnbound1()
-	{
-		MapNodeElement mne = getEndNode();
-		for(ListIterator it = getLinks().listIterator(getLinks().size()); it.hasPrevious();)
-		{
-			MapPhysicalLinkElement link = (MapPhysicalLinkElement )it.previous();
-			if(link instanceof MapUnboundLinkElement)
-				return mne;
-			mne = link.getOtherNode(mne);
-		}
-		return null;
-	}
-
-	public MapPhysicalLinkElement getStartLastBoundLink()
-	{
-		MapNodeElement bufferSite = getStartNode();
-		MapPhysicalLinkElement link = null;
-		
-		for(Iterator it = getSchemeCableLink().channelingItems.iterator(); it.hasNext();)
-		{
-			CableChannelingItem cci = (CableChannelingItem )it.next();
-			if(! cci.startSiteId.equals(bufferSite.getId()))
-			{
-				return link;
-			}
-			bufferSite = map.getMapSiteNodeElement(cci.endSiteId);
-			link = map.getPhysicalLink(cci.physicalLinkId);
-		}
-		return null;
-	}
-
-	public MapLinkElement getStartLastBoundLink1()
-	{
-		MapPhysicalLinkElement blink = null;
-		for(Iterator it = getLinks().iterator(); it.hasNext();)
-		{
-			MapPhysicalLinkElement link = (MapPhysicalLinkElement )it.next();
-			if(link instanceof MapUnboundLinkElement)
-				return blink;
-			blink = link;
-		}
-		return null;
-	}
-
-	public MapPhysicalLinkElement getEndLastBoundLink()
-	{
-		MapNodeElement bufferSite = getEndNode();
-		MapPhysicalLinkElement link = null;
-
-		List ccis = (List )getSchemeCableLink().channelingItems;
-		
-		for(ListIterator it = ccis.listIterator(ccis.size()); it.hasPrevious();)
-		{
-			CableChannelingItem cci = (CableChannelingItem )it.previous();
-			if(! cci.endSiteId.equals(bufferSite.getId()))
-			{
-				return link;
-			}
-			bufferSite = map.getMapSiteNodeElement(cci.startSiteId);
-			link = map.getPhysicalLink(cci.physicalLinkId);
-		}
-		return null;
-	}
-
-	public MapLinkElement getEndLastBoundLink1()
-	{
-		MapPhysicalLinkElement blink = null;
-		for(ListIterator it = getLinks().listIterator(getLinks().size()); it.hasPrevious();)
-		{
-			MapPhysicalLinkElement link = (MapPhysicalLinkElement )it.previous();
-			if(link instanceof MapUnboundLinkElement)
-				return blink;
-			blink = link;
-		}
-		return null;
-	}
-
 	public boolean isSelectionVisible()
 	{
 		return isSelected();
@@ -452,6 +329,21 @@ public class MapCablePathElement extends MapLinkElement implements Serializable
 	public double getLengthLf()
 	{
 		return schemeCableLink.getPhysicalLength();
+	}
+
+	public double getLengthLo()
+	{
+		return schemeCableLink.getOpticalLength();
+	}
+
+	public void setLengthLf(double len)
+	{
+		schemeCableLink.setPhysicalLength(len);
+	}
+
+	public void setLengthLo(double len)
+	{
+		schemeCableLink.setOpticalLength(len);
 	}
 
 	public double getDistanceFromStartLt(Point pt)
@@ -668,4 +560,52 @@ public class MapCablePathElement extends MapLinkElement implements Serializable
 		Pool.put("serverimage", getId(), this);
 	}
 
+	/**
+	 * Получить толщину линии
+	 */
+	public int getLineSize ()
+	{
+		return MapPropertiesManager.getUnboundThickness();
+	}
+
+	/**
+	 * Получить вид линии
+	 */
+	public String getStyle ()
+	{
+		return MapPropertiesManager.getStyle();
+	}
+
+	/**
+	 * Получить стиль линии
+	 */
+	public Stroke getStroke ()
+	{
+		return MapPropertiesManager.getStroke();
+	}
+
+	/**
+	 * Получить цвет
+	 */
+	public Color getColor()
+	{
+		return MapPropertiesManager.getUnboundLinkColor();
+	}
+
+	/**
+	 * получить цвет при наличии сигнала тревоги
+	 */
+	public Color getAlarmedColor()
+	{
+		return MapPropertiesManager.getAlarmedColor();
+	}
+
+	/**
+	 * получить толщину линии при наличи сигнала тревоги
+	 */
+	public int getAlarmedLineSize ()
+	{
+		return MapPropertiesManager.getAlarmedThickness();
+	}
+	
 }

@@ -1,5 +1,5 @@
 /**
- * $Id: MapPhysicalLinkElement.java,v 1.17 2004/09/29 16:07:35 krupenn Exp $
+ * $Id: MapPhysicalLinkElement.java,v 1.18 2004/09/30 13:37:00 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -47,7 +47,7 @@ import java.util.List;
  * 
  * 
  * 
- * @version $Revision: 1.17 $, $Date: 2004/09/29 16:07:35 $
+ * @version $Revision: 1.18 $, $Date: 2004/09/30 13:37:00 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -401,7 +401,7 @@ public class MapPhysicalLinkElement extends MapLinkElement implements Serializab
 		updateLengthLt();
 
 		boolean showName = false;
-		if(MapPropertiesManager.isShowPhysicalNodes())
+		if(MapPropertiesManager.isShowLinkNames())
 		{
 			showName = true;
 		}

@@ -1,5 +1,5 @@
 /**
- * $Id: MapMeasurementPathElement.java,v 1.3 2004/09/27 07:41:34 krupenn Exp $
+ * $Id: MapMeasurementPathElement.java,v 1.4 2004/09/30 13:38:11 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -28,8 +28,8 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.Stroke;
-
 import java.awt.geom.Rectangle2D;
+
 import java.io.IOException;
 import java.io.Serializable;
 
@@ -43,7 +43,7 @@ import java.util.List;
  * 
  * 
  * 
- * @version $Revision: 1.3 $, $Date: 2004/09/27 07:41:34 $
+ * @version $Revision: 1.4 $, $Date: 2004/09/30 13:38:11 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -328,6 +328,11 @@ public class MapMeasurementPathElement extends MapLinkElement implements Seriali
 	public double getLengthLf()
 	{
 		return schemePath.getPhysicalLength();
+	}
+
+	public double getLengthLo()
+	{
+		return schemePath.getOpticalLength();
 	}
 
 	public List getCablePaths()
