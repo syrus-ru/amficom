@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseContextSetup.java,v 1.17 2005/02/22 14:13:39 arseniy Exp $
+ * $Id: DatabaseContextSetup.java,v 1.18 2005/03/22 18:13:38 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,11 +31,11 @@ import com.syrus.AMFICOM.configuration.PortDatabase;
 import com.syrus.AMFICOM.configuration.PortTypeDatabase;
 import com.syrus.AMFICOM.configuration.TransmissionPathDatabase;
 import com.syrus.AMFICOM.configuration.TransmissionPathTypeDatabase;
-import com.syrus.AMFICOM.general.ParameterTypeDatabase;
 import com.syrus.AMFICOM.general.CharacteristicDatabase;
 import com.syrus.AMFICOM.general.CharacteristicTypeDatabase;
 import com.syrus.AMFICOM.general.GeneralDatabaseContext;
 import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
+import com.syrus.AMFICOM.general.ParameterTypeDatabase;
 import com.syrus.AMFICOM.measurement.AnalysisDatabase;
 import com.syrus.AMFICOM.measurement.AnalysisTypeDatabase;
 import com.syrus.AMFICOM.measurement.EvaluationDatabase;
@@ -52,7 +52,7 @@ import com.syrus.AMFICOM.measurement.TestDatabase;
 
 
 /**
- * @version $Revision: 1.17 $, $Date: 2005/02/22 14:13:39 $
+ * @version $Revision: 1.18 $, $Date: 2005/03/22 18:13:38 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -106,9 +106,9 @@ public abstract class DatabaseContextSetup {
 	}
 	
 	public static void initObjectPools() {
-		AdministrationStorableObjectPool.init(new MCMAdministrationObjectLoader());
 		GeneralStorableObjectPool.init(new MCMGeneralObjectLoader());
-		MeasurementStorableObjectPool.init(new MCMMeasurementObjectLoader());
+		AdministrationStorableObjectPool.init(new MCMAdministrationObjectLoader());
 		ConfigurationStorableObjectPool.init(new MCMConfigurationObjectLoader());
+		MeasurementStorableObjectPool.init(new MCMMeasurementObjectLoader());
 	}
 }

@@ -1,5 +1,5 @@
 /*
-* $Id: MCMAdministrationObjectLoader.java,v 1.8 2005/03/22 17:14:25 arseniy Exp $
+* $Id: MCMAdministrationObjectLoader.java,v 1.9 2005/03/22 18:10:13 arseniy Exp $
 *
 * Copyright © 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -36,7 +36,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/03/22 17:14:25 $
+ * @version $Revision: 1.9 $, $Date: 2005/03/22 18:10:13 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -212,6 +212,7 @@ final class MCMAdministrationObjectLoader extends DatabaseAdministrationObjectLo
 	/*
 	 * MCM do not need in all below methods
 	 * */
+
 	public Collection loadUsers(Collection ids) throws ApplicationException {
 		throw new UnsupportedOperationException("Method not implemented, ids: " + ids);
 	}
