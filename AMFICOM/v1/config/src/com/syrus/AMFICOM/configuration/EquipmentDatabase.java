@@ -1,5 +1,5 @@
 /*
- * $Id: EquipmentDatabase.java,v 1.70 2005/02/19 20:34:06 arseniy Exp $
+ * $Id: EquipmentDatabase.java,v 1.71 2005/02/24 09:26:13 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -45,7 +45,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.70 $, $Date: 2005/02/19 20:34:06 $
+ * @version $Revision: 1.71 $, $Date: 2005/02/24 09:26:13 $
  * @author $Author: arseniy $
  * @module config_v1
  */
@@ -280,81 +280,25 @@ public class EquipmentDatabase extends StorableObjectDatabase {
 
 	private void retrieveEquipmentPortIdsByOneQuery(Collection equipments) throws RetrieveObjectException {
 		if ((equipments == null) || (equipments.isEmpty()))
-			return;     
+			return;
 
-		StringBuffer sql = new StringBuffer(SQL_SELECT
-															+ StorableObjectWrapper.COLUMN_ID + COMMA
-															+ PortWrapper.COLUMN_EQUIPMENT_ID
-															+ SQL_FROM + ObjectEntities.PORT_ENTITY
-															+ SQL_WHERE + PortWrapper.COLUMN_EQUIPMENT_ID
-															+ SQL_IN + OPEN_BRACKET);
-		int i = 1;
-		for (Iterator it = equipments.iterator(); it.hasNext();i++) {
-			Equipment equipment = (Equipment)it.next();
-			sql.append(DatabaseIdentifier.toSQLString(equipment.getId()));
-			if (it.hasNext()) {
-				if (((i+1) % MAXIMUM_EXPRESSION_NUMBER != 0))
-					sql.append(COMMA);
-				else {
-					sql.append(CLOSE_BRACKET);
-					sql.append(SQL_OR);
-					sql.append(PortWrapper.COLUMN_EQUIPMENT_ID);
-					sql.append(SQL_IN);
-					sql.append(OPEN_BRACKET);
-				}                   
-			}
-		}
-		sql.append(CLOSE_BRACKET);
-
-		Statement statement = null;
-		ResultSet resultSet = null;
-		Connection connection = DatabaseConnection.getConnection();
+		Map portIdsMap = null;
 		try {
-			statement = connection.createStatement();
-			Log.debugMessage("EquipmentDatabase.retrieveEquipmentPortIdsByOneQuery | Trying: " + sql, Log.DEBUGLEVEL09);
-			resultSet = statement.executeQuery(sql.toString());
-
-			Map epIdMap = new HashMap();
-			Identifier equipmentId;
-			List epIds;
-			while (resultSet.next()) {
-				equipmentId = DatabaseIdentifier.getIdentifier(resultSet, PortWrapper.COLUMN_EQUIPMENT_ID);
-				epIds = (List) epIdMap.get(equipmentId);
-				if (epIds == null) {
-					epIds = new LinkedList();
-					epIdMap.put(equipmentId, epIds);
-				}
-				epIds.add(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID));
-			}
-
-			Equipment equipment;
-			for (Iterator it = equipments.iterator(); it.hasNext();) {
-				equipment = (Equipment) it.next();
-				equipmentId = equipment.getId();
-				epIds = (List) epIdMap.get(equipmentId);
-
-				equipment.setPortIds0(epIds);
-			}
+			portIdsMap = this.retrieveLinkedEntityIds(equipments, ObjectEntities.PORT_ENTITY, PortWrapper.COLUMN_EQUIPMENT_ID, StorableObjectWrapper.COLUMN_ID);
 		}
-		catch (SQLException sqle) {
-			String mesg = "EquipmentDatabase.retrieveEquipmentPortIdsByOneQuery | Cannot retrieve parameters for result -- " + sqle.getMessage();
-			throw new RetrieveObjectException(mesg, sqle);
+		catch (IllegalDataException e) {
+			throw new RetrieveObjectException(e);
 		}
-		finally {
-			try {
-				if (statement != null)
-					statement.close();
-				if (resultSet != null)
-					resultSet.close();
-				statement = null;
-				resultSet = null;
-			}
-			catch (SQLException sqle1) {
-				Log.errorException(sqle1);
-			}
-			finally {
-				DatabaseConnection.releaseConnection(connection);
-			}
+
+		Equipment equipment;
+		Identifier equipmentId;
+		Collection portIds;
+		for (Iterator it = equipments.iterator(); it.hasNext();) {
+			equipment = (Equipment) it.next();
+			equipmentId = equipment.getId();
+			portIds = (Collection) portIdsMap.get(equipmentId);
+
+			equipment.setPortIds0(portIds);
 		}
 	}
 
