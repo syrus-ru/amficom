@@ -1,5 +1,5 @@
 /*
- * $Id: LRUMapSaver.java,v 1.2 2004/11/17 12:56:25 max Exp $
+ * $Id: LRUMapSaver.java,v 1.3 2004/11/17 13:07:16 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,7 +23,7 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2004/11/17 12:56:25 $
+ * @version $Revision: 1.3 $, $Date: 2004/11/17 13:07:16 $
  * @author $Author: max $
  * @module module_name
  */
@@ -99,7 +99,7 @@ public class LRUMapSaver {
             List keys = (LinkedList) in.readObject();
             return keys;
         } catch (FileNotFoundException fnfe) {
-            Log.errorMessage("LRUMapSaver.save | Error: " + fnfe.getMessage());
+            Log.errorMessage("LRUMapSaver.save | Warning: " + fnfe.getMessage());
             return null;
         } catch (ClassNotFoundException cnfe) {
             Log.errorMessage("LRUMapSaver.save | Error: " + cnfe.getMessage());

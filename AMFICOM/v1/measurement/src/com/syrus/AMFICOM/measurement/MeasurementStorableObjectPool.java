@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementStorableObjectPool.java,v 1.47 2004/11/17 09:24:57 max Exp $
+ * $Id: MeasurementStorableObjectPool.java,v 1.48 2004/11/17 13:02:54 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -36,7 +36,7 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.47 $, $Date: 2004/11/17 09:24:57 $
+ * @version $Revision: 1.48 $, $Date: 2004/11/17 13:02:54 $
  * @author $Author: max $
  * @module measurement_v1
  */
@@ -168,6 +168,8 @@ public class MeasurementStorableObjectPool {
             			+ " must extends LRUMap");
             }
             List keys = LRUMapSaver.load(ObjectEntities.codeToString(objectEntityCode));
+            if (keys == null)
+                return;
             for (Iterator it = keys.iterator(); it.hasNext();) {
 				Identifier id = (Identifier) it.next();
                 StorableObject so = getStorableObject(id, true);
