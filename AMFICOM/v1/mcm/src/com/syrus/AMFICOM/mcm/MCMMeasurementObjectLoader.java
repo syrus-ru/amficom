@@ -1,5 +1,5 @@
 /*
- * $Id: MCMMeasurementObjectLoader.java,v 1.17 2005/03/05 21:37:45 arseniy Exp $
+ * $Id: MCMMeasurementObjectLoader.java,v 1.18 2005/03/10 15:23:06 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -43,7 +43,7 @@ import com.syrus.AMFICOM.measurement.TemporalPatternDatabase;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2005/03/05 21:37:45 $
+ * @version $Revision: 1.18 $, $Date: 2005/03/10 15:23:06 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -257,7 +257,7 @@ final class MCMMeasurementObjectLoader extends DatabaseMeasurementObjectLoader {
 		Collection loadedObjects = new LinkedList();
 		AnalysisType analysisType;
 		try {
-			collection = database.retrieveByIds(ids, null);
+			collection = database.retrieveByIdsByCondition(ids, null);
 			copyOfList = new LinkedList(collection);
 			for (Iterator it = copyOfList.iterator(); it.hasNext();) {
 				Identifier id = ((StorableObject) it.next()).getId();
@@ -309,7 +309,7 @@ final class MCMMeasurementObjectLoader extends DatabaseMeasurementObjectLoader {
 		Collection loadedObjects = new LinkedList();
 		EvaluationType evaluationType;
 		try {
-			collection = database.retrieveByIds(ids, null);
+			collection = database.retrieveByIdsByCondition(ids, null);
 			copyOfList = new LinkedList(collection);
 			for (Iterator it = copyOfList.iterator(); it.hasNext();) {
 				Identifier id = ((StorableObject) it.next()).getId();
@@ -365,7 +365,7 @@ final class MCMMeasurementObjectLoader extends DatabaseMeasurementObjectLoader {
 		Collection loadedObjects = new LinkedList();
 		MeasurementSetup measurementSetup;
 		try {
-			collection = database.retrieveByIds(ids, null);
+			collection = database.retrieveByIdsByCondition(ids, null);
 			copyOfList = new LinkedList(collection);
 			for (Iterator it = copyOfList.iterator(); it.hasNext();) {
 				Identifier id = ((StorableObject) it.next()).getId();
@@ -417,7 +417,7 @@ final class MCMMeasurementObjectLoader extends DatabaseMeasurementObjectLoader {
 		Collection loadedObjects = new LinkedList();
 		MeasurementType measurementType;
 		try {
-			collection = database.retrieveByIds(ids, null);
+			collection = database.retrieveByIdsByCondition(ids, null);
 			copyOfList = new LinkedList(collection);
 			for (Iterator it = copyOfList.iterator(); it.hasNext();) {
 				Identifier id = ((StorableObject) it.next()).getId();
@@ -469,7 +469,7 @@ final class MCMMeasurementObjectLoader extends DatabaseMeasurementObjectLoader {
 		Collection loadedObjects = new LinkedList();
 		Set set;
 		try {
-			collection = database.retrieveByIds(ids, null);
+			collection = database.retrieveByIdsByCondition(ids, null);
 			copyOfList = new LinkedList(collection);
 			for (Iterator it = copyOfList.iterator(); it.hasNext();) {
 				Identifier id = ((StorableObject) it.next()).getId();
@@ -521,7 +521,7 @@ final class MCMMeasurementObjectLoader extends DatabaseMeasurementObjectLoader {
 		Collection loadedObjects = new LinkedList();
 		TemporalPattern temporalPattern;
 		try {
-			collection = database.retrieveByIds(ids, null);
+			collection = database.retrieveByIdsByCondition(ids, null);
 			copyOfList = new LinkedList(collection);
 			for (Iterator it = copyOfList.iterator(); it.hasNext();) {
 				Identifier id = ((StorableObject) it.next()).getId();

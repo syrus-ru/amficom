@@ -1,5 +1,5 @@
 /*
- * $Id: MCMConfigurationObjectLoader.java,v 1.18 2005/03/05 21:37:44 arseniy Exp $
+ * $Id: MCMConfigurationObjectLoader.java,v 1.19 2005/03/10 15:23:06 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -52,7 +52,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2005/03/05 21:37:44 $
+ * @version $Revision: 1.19 $, $Date: 2005/03/10 15:23:06 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -358,7 +358,7 @@ final class MCMConfigurationObjectLoader extends DatabaseConfigurationObjectLoad
 		Collection loadedObjects = new LinkedList();
 		Equipment equipment;
 		try {
-			collection = database.retrieveByIds(ids, null);
+			collection = database.retrieveByIdsByCondition(ids, null);
 			copyOfList = new LinkedList(collection);
 			for (Iterator it = copyOfList.iterator(); it.hasNext();) {
 				Identifier id = ((StorableObject) it.next()).getId();
@@ -410,7 +410,7 @@ final class MCMConfigurationObjectLoader extends DatabaseConfigurationObjectLoad
 		Collection loadedObjects = new LinkedList();
 		EquipmentType equipmentType;
 		try {
-			collection = database.retrieveByIds(ids, null);
+			collection = database.retrieveByIdsByCondition(ids, null);
 			copyOfList = new LinkedList(collection);
 			for (Iterator it = copyOfList.iterator(); it.hasNext();) {
 				Identifier id = ((StorableObject) it.next()).getId();
@@ -462,7 +462,7 @@ final class MCMConfigurationObjectLoader extends DatabaseConfigurationObjectLoad
 		Collection loadedObjects = new LinkedList();
 		KIS kis;
 		try {
-			collection = database.retrieveByIds(ids, null);
+			collection = database.retrieveByIdsByCondition(ids, null);
 			copyOfList = new LinkedList(collection);
 			for (Iterator it = copyOfList.iterator(); it.hasNext();) {
 				Identifier id = ((StorableObject) it.next()).getId();
@@ -514,7 +514,7 @@ final class MCMConfigurationObjectLoader extends DatabaseConfigurationObjectLoad
 		Collection loadedObjects = new LinkedList();
 		MeasurementPort measurementPort;
 		try {
-			collection = database.retrieveByIds(ids, null);
+			collection = database.retrieveByIdsByCondition(ids, null);
 			copyOfList = new LinkedList(collection);
 			for (Iterator it = copyOfList.iterator(); it.hasNext();) {
 				Identifier id = ((StorableObject) it.next()).getId();
@@ -566,7 +566,7 @@ final class MCMConfigurationObjectLoader extends DatabaseConfigurationObjectLoad
 		Collection loadedObjects = new LinkedList();
 		MeasurementPortType measurementPortType;
 		try {
-			collection = database.retrieveByIds(ids, null);
+			collection = database.retrieveByIdsByCondition(ids, null);
 			copyOfList = new LinkedList(collection);
 			for (Iterator it = copyOfList.iterator(); it.hasNext();) {
 				Identifier id = ((StorableObject) it.next()).getId();
@@ -618,7 +618,7 @@ final class MCMConfigurationObjectLoader extends DatabaseConfigurationObjectLoad
 		Collection loadedObjects = new LinkedList();
 		MonitoredElement monitoredElement;
 		try {
-			list = database.retrieveByIds(ids, null);
+			list = database.retrieveByIdsByCondition(ids, null);
 			copyOfList = new LinkedList(list);
 			for (Iterator it = copyOfList.iterator(); it.hasNext();) {
 				Identifier id = ((StorableObject) it.next()).getId();
@@ -669,7 +669,7 @@ final class MCMConfigurationObjectLoader extends DatabaseConfigurationObjectLoad
 		Collection loadedObjects = new LinkedList();
 		Port port;
 		try {
-			collection = database.retrieveByIds(ids, null);
+			collection = database.retrieveByIdsByCondition(ids, null);
 			copyOfList = new LinkedList(collection);
 			for (Iterator it = copyOfList.iterator(); it.hasNext();) {
 				Identifier id = ((StorableObject) it.next()).getId();
@@ -720,7 +720,7 @@ final class MCMConfigurationObjectLoader extends DatabaseConfigurationObjectLoad
 		Collection loadedObjects = new LinkedList();
 		PortType portType;
 		try {
-			collection = database.retrieveByIds(ids, null);
+			collection = database.retrieveByIdsByCondition(ids, null);
 			copyOfList = new LinkedList(collection);
 			for (Iterator it = copyOfList.iterator(); it.hasNext();) {
 				Identifier id = ((StorableObject) it.next()).getId();
@@ -771,7 +771,7 @@ final class MCMConfigurationObjectLoader extends DatabaseConfigurationObjectLoad
 		Collection loadedObjects = new LinkedList();
 		TransmissionPath transmissionPath;
 		try {
-			collection = database.retrieveByIds(ids, null);
+			collection = database.retrieveByIdsByCondition(ids, null);
 			copyOfList = new LinkedList(collection);
 			for (Iterator it = copyOfList.iterator(); it.hasNext();) {
 				Identifier id = ((StorableObject) it.next()).getId();

@@ -1,5 +1,5 @@
 /*
- * $Id: CMServerMeasurementObjectLoader.java,v 1.27 2005/03/10 12:52:52 arseniy Exp $
+ * $Id: CMServerMeasurementObjectLoader.java,v 1.28 2005/03/10 15:23:38 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -48,7 +48,7 @@ import com.syrus.AMFICOM.measurement.corba.Evaluation_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Measurement_Transferable;
 import com.syrus.util.Log;
 /**
- * @version $Revision: 1.27 $, $Date: 2005/03/10 12:52:52 $
+ * @version $Revision: 1.28 $, $Date: 2005/03/10 15:23:38 $
  * @author $Author: arseniy $
  * @module cmserver_v1
  */
@@ -219,7 +219,7 @@ public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementOb
 		Collection copyOfList;
 		Analysis analysis;
 		try {
-			list = database.retrieveByIds(ids, null);
+			list = database.retrieveByIdsByCondition(ids, null);
 			copyOfList = new LinkedList(list);
 			for (Iterator it = copyOfList.iterator(); it.hasNext();) {
 				Identifier id = ((StorableObject) it.next()).getId();
@@ -277,7 +277,7 @@ public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementOb
 		Collection copyOfList;
 		Evaluation evaluation;
 		try {
-			list = database.retrieveByIds(ids, null);
+			list = database.retrieveByIdsByCondition(ids, null);
 			copyOfList = new LinkedList(list);
 			for (Iterator it = copyOfList.iterator(); it.hasNext();) {
 				Identifier id = ((StorableObject) it.next()).getId();
@@ -335,7 +335,7 @@ public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementOb
 		Collection copyOfList;
 		Measurement measurement;
 		try {
-			list = database.retrieveByIds(ids, null);
+			list = database.retrieveByIdsByCondition(ids, null);
 			copyOfList = new LinkedList(list);
 			for (Iterator it = copyOfList.iterator(); it.hasNext();) {
 				Identifier id = ((StorableObject) it.next()).getId();

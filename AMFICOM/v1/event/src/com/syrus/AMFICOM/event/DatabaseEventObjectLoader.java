@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseEventObjectLoader.java,v 1.10 2005/03/10 12:54:34 arseniy Exp $
+ * $Id: DatabaseEventObjectLoader.java,v 1.11 2005/03/10 15:24:28 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,7 +27,7 @@ import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/03/10 12:54:34 $
+ * @version $Revision: 1.11 $, $Date: 2005/03/10 15:24:28 $
  * @author $Author: arseniy $
  * @module event_v1
  */
@@ -51,7 +51,7 @@ public class DatabaseEventObjectLoader implements EventObjectLoader {
 		EventTypeDatabase eventTypeDatabase = (EventTypeDatabase) EventDatabaseContext.eventTypeDatabase;
 		Collection collection = null;
 		try {
-			collection = eventTypeDatabase.retrieveByIds(ids, null);
+			collection = eventTypeDatabase.retrieveByIdsByCondition(ids, null);
 		}
 		catch (IllegalDataException e) {
 			String mesg = "DatabaseEventObjectLoader.loadEventTypes | Illegal Storable Object: " + e.getMessage();
@@ -65,7 +65,7 @@ public class DatabaseEventObjectLoader implements EventObjectLoader {
 		EventDatabase eventDatabase = (EventDatabase) EventDatabaseContext.eventDatabase;
 		Collection collection = null;
 		try {
-			collection = eventDatabase.retrieveByIds(ids, null);
+			collection = eventDatabase.retrieveByIdsByCondition(ids, null);
 		}
 		catch (IllegalDataException e) {
 			String mesg = "DatabaseEventObjectLoader.loadEvents | Illegal Storable Object: " + e.getMessage();
@@ -79,7 +79,7 @@ public class DatabaseEventObjectLoader implements EventObjectLoader {
 		EventSourceDatabase eventSourceDatabase = (EventSourceDatabase) EventDatabaseContext.eventSourceDatabase;
 		Collection collection = null;
 		try {
-			collection = eventSourceDatabase.retrieveByIds(ids, null);
+			collection = eventSourceDatabase.retrieveByIdsByCondition(ids, null);
 		}
 		catch (IllegalDataException e) {
 			String mesg = "DatabaseEventObjectLoader.loadEventSources | Illegal Storable Object: " + e.getMessage();

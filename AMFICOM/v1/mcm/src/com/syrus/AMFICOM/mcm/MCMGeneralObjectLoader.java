@@ -1,5 +1,5 @@
 /*
-* $Id: MCMGeneralObjectLoader.java,v 1.4 2005/03/05 21:37:45 arseniy Exp $
+* $Id: MCMGeneralObjectLoader.java,v 1.5 2005/03/10 15:23:06 arseniy Exp $
 *
 * Copyright © 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -37,7 +37,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/03/05 21:37:45 $
+ * @version $Revision: 1.5 $, $Date: 2005/03/10 15:23:06 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -149,7 +149,7 @@ final class MCMGeneralObjectLoader extends DatabaseGeneralObjectLoader {
 		Collection loadedObjects = new LinkedList();
 		ParameterType parameterType;
 		try {
-			collection = database.retrieveByIds(ids, null);
+			collection = database.retrieveByIdsByCondition(ids, null);
 			copyOfList = new LinkedList(collection);
 			for (Iterator it = copyOfList.iterator(); it.hasNext();) {
 				Identifier id = ((StorableObject) it.next()).getId();
@@ -201,7 +201,7 @@ final class MCMGeneralObjectLoader extends DatabaseGeneralObjectLoader {
 		Collection loadedObjects = new LinkedList();
 		Characteristic characteristic;
 		try {
-			collection = database.retrieveByIds(ids, null);
+			collection = database.retrieveByIdsByCondition(ids, null);
 			copyOfList = new LinkedList(collection);
 			for (Iterator it = copyOfList.iterator(); it.hasNext();) {
 				Identifier id = ((StorableObject) it.next()).getId();
@@ -254,7 +254,7 @@ final class MCMGeneralObjectLoader extends DatabaseGeneralObjectLoader {
 		Collection loadedObjects = new LinkedList();
 		CharacteristicType characteristicType;
 		try {
-			collection = database.retrieveByIds(ids, null);
+			collection = database.retrieveByIdsByCondition(ids, null);
 			copyOfList = new LinkedList(collection);
 			for (Iterator it = copyOfList.iterator(); it.hasNext();) {
 				Identifier id = ((StorableObject) it.next()).getId();
