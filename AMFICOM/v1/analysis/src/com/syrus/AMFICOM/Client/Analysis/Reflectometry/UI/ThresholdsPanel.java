@@ -4,8 +4,10 @@ import java.awt.*;
 import java.awt.event.MouseEvent;
 
 import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
 
 import com.syrus.AMFICOM.Client.General.Event.*;
+import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
 import com.syrus.AMFICOM.analysis.dadara.*;
 
 public class ThresholdsPanel extends ReflectogramEventsPanel
@@ -20,10 +22,8 @@ public class ThresholdsPanel extends ReflectogramEventsPanel
 	protected int c_event = 0;
 	protected ModelTraceManager.ThresholdHandle c_TH = null;
 	protected boolean isRbutton = false;
-
-	// XXX: read colors from file?
-	protected static Color warningThresholdColor = new Color(255, 220, 0);
-	protected static Color alarmThresholdColor = new Color(255, 150, 60);
+	private Color[] colors;
+	private int[] keys;
 
 	public ThresholdsPanel(ResizableLayeredPanel panel, Dispatcher dispatcher, double y[], double deltaX)
 	{
@@ -245,15 +245,22 @@ public class ThresholdsPanel extends ReflectogramEventsPanel
 		if (et_mtm == null)
 			return;
 
-		int[] keys = { Thresh.SOFT_UP, Thresh.SOFT_DOWN, Thresh.HARD_UP, Thresh.HARD_DOWN };
-		Color[] p_colors = {warningThresholdColor, warningThresholdColor, alarmThresholdColor, alarmThresholdColor };
+		if (keys == null) {
+			keys = new int[] { Thresh.SOFT_UP, Thresh.SOFT_DOWN, Thresh.HARD_UP, Thresh.HARD_DOWN};
+		}
+		if (colors == null) {
+			colors = new Color[] { UIManager.getColor(AnalysisResourceKeys.COLOR_WARNING_THRESHOLD),
+					UIManager.getColor(AnalysisResourceKeys.COLOR_WARNING_THRESHOLD),
+					UIManager.getColor(AnalysisResourceKeys.COLOR_ALARM_THRESHOLD),
+					UIManager.getColor(AnalysisResourceKeys.COLOR_ALARM_THRESHOLD)};
+		}
 		SimpleReflectogramEvent sre = nEvent >= 0
 				? et_mtm.getSimpleEvent(nEvent)
 				: null;
 		for (int k = 0; k < 4; k++)
 		{
 			int key = keys[k];
-			g.setColor(p_colors[k]);
+			g.setColor(colors[k]);
 			// XXX: нет draw_joint_of_two_model_curves
 			drawModelCurve(g, et_mtm.getThresholdMT(key), sre);
 		}
