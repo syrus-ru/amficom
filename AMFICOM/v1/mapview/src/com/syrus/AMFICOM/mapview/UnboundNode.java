@@ -1,5 +1,5 @@
 /**
- * $Id: UnboundNode.java,v 1.2 2005/02/01 15:11:29 krupenn Exp $
+ * $Id: UnboundNode.java,v 1.3 2005/02/02 08:54:45 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -31,7 +31,7 @@ import java.util.List;
  * ни к какому элементу топологической схемы.
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.2 $, $Date: 2005/02/01 15:11:29 $
+ * @version $Revision: 1.3 $, $Date: 2005/02/02 08:54:45 $
  * @module mapviewclient_v1
  */
 public class UnboundNode extends SiteNode
@@ -61,15 +61,16 @@ public class UnboundNode extends SiteNode
 	 * @param pe тип элемента (должен быть {@link SiteNodeType#UNBOUND})
 	 */
 	protected UnboundNode(
-		SchemeElement schemeElement,
 		Identifier id,
+		Identifier creatorId,
+		SchemeElement schemeElement,
 		DoublePoint location,
 		Map map,
 		SiteNodeType pe)
 	{
 		super(
 				id, 
-				map.getCreatorId(), 
+				creatorId, 
 				pe.getImageId(), 
 				pe.getName(), 
 				"", 
@@ -96,6 +97,7 @@ public class UnboundNode extends SiteNode
 	 * 	если невозможно получить новый идентификатор
 	 */
 	public static UnboundNode createInstance(
+			Identifier creatorId,
 			SchemeElement schemeElement,
 			DoublePoint location,
 			Map map,
@@ -111,8 +113,9 @@ public class UnboundNode extends SiteNode
 				LocalIdentifierGenerator.generateIdentifier(ObjectEntities.SITE_NODE_ENTITY_CODE);
 //				IdentifierPool.getGeneratedIdentifier(ObjectEntities.SITE_NODE_ENTITY_CODE);
 			return new UnboundNode(
-				schemeElement,
 				ide,
+				creatorId,
+				schemeElement,
 				location,
 				map,
 				pe);

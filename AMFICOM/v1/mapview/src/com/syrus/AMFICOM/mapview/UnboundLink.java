@@ -1,5 +1,5 @@
 /**
- * $Id: UnboundLink.java,v 1.2 2005/02/01 15:11:29 krupenn Exp $
+ * $Id: UnboundLink.java,v 1.3 2005/02/02 08:54:45 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -30,7 +30,7 @@ import java.util.List;
  * {@link CablePath} в случае, когда кабель не привязан на каком-либо участке 
  * между узлами.
  * @author $Author: krupenn $
- * @version $Revision: 1.2 $, $Date: 2005/02/01 15:11:29 $
+ * @version $Revision: 1.3 $, $Date: 2005/02/02 08:54:45 $
  * @module mapviewclient_v1
  */
 public class UnboundLink extends PhysicalLink
@@ -39,15 +39,17 @@ public class UnboundLink extends PhysicalLink
 	
 	protected UnboundLink(
 			Identifier id,
+			Identifier creatorId,
 			AbstractNode stNode, 
 			AbstractNode eNode, 
 			Map map,
 			PhysicalLinkType proto)
 	{
-		super(id, map.getCreatorId(), id.toString(), "", proto, stNode, eNode, "", "", "", 0, 0, true, true);
+		super(id, creatorId, id.toString(), "", proto, stNode, eNode, "", "", "", 0, 0, true, true);
 	}
 
 	public static UnboundLink createInstance(
+			Identifier creatorId,
 			AbstractNode stNode, 
 			AbstractNode eNode, 
 			Map map,
@@ -63,6 +65,7 @@ public class UnboundLink extends PhysicalLink
 				LocalIdentifierGenerator.generateIdentifier(ObjectEntities.PHYSICAL_LINK_ENTITY_CODE);
 			return new UnboundLink(
 				ide,
+				creatorId,
 				stNode, 
 				eNode, 
 				map,

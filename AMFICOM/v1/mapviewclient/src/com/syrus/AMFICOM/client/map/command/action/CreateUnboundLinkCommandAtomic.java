@@ -1,5 +1,5 @@
 /**
- * $Id: CreateUnboundLinkCommandAtomic.java,v 1.8 2005/02/01 11:34:56 krupenn Exp $
+ * $Id: CreateUnboundLinkCommandAtomic.java,v 1.9 2005/02/02 08:58:39 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -29,7 +29,7 @@ import com.syrus.AMFICOM.Client.Resource.Pool;
  * 
  * 
  * 
- * @version $Revision: 1.8 $, $Date: 2005/02/01 11:34:56 $
+ * @version $Revision: 1.9 $, $Date: 2005/02/02 08:58:39 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -70,6 +70,7 @@ public class CreateUnboundLinkCommandAtomic extends MapActionCommand
 		try
 		{
 			link = com.syrus.AMFICOM.mapview.UnboundLink.createInstance(
+					logicalNetLayer.getUserId(),
 					startNode, 
 					endNode, 
 					map,

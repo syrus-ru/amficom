@@ -1,5 +1,5 @@
 /**
- * $Id: Marker.java,v 1.3 2005/02/01 15:11:28 krupenn Exp $
+ * $Id: Marker.java,v 1.4 2005/02/02 08:54:45 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -50,7 +50,7 @@ import java.util.ListIterator;
  * 
  * 
  * 
- * @version $Revision: 1.3 $, $Date: 2005/02/01 15:11:28 $
+ * @version $Revision: 1.4 $, $Date: 2005/02/02 08:54:45 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -86,6 +86,7 @@ public class Marker extends AbstractNode
 	 */
 	protected Marker(
 			Identifier id, 
+			Identifier creatorId,
 			MapView mapView,
 			AbstractNode startNode,
 			AbstractNode endNode,
@@ -94,7 +95,7 @@ public class Marker extends AbstractNode
 			Identifier monitoredElementId,
 			DoublePoint dpoint)
 	{
-		this(id, mapView, 0.0, path, monitoredElementId, String.valueOf(id.getMinor()));
+		this(id, creatorId, mapView, 0.0, path, monitoredElementId, String.valueOf(id.getMinor()));
 		
 		this.startNode = startNode;
 		this.endNode = endNode;
@@ -103,6 +104,7 @@ public class Marker extends AbstractNode
 	}
 
 	public static Marker createInstance(
+			Identifier creatorId,
 			MapView mapView,
 			AbstractNode startNode,
 			AbstractNode endNode,
@@ -122,6 +124,7 @@ public class Marker extends AbstractNode
 				LocalIdentifierGenerator.generateIdentifier(ObjectEntities.SITE_NODE_ENTITY_CODE);
 			return new Marker(
 				ide,
+				creatorId,
 				mapView,
 				startNode,
 				endNode,
@@ -152,6 +155,7 @@ public class Marker extends AbstractNode
 	 */
 	public Marker(
 			Identifier id, 
+			Identifier creatorId,
 			MapView mapView,
 			double opticalDistance, 
 			MeasurementPath path,
@@ -163,7 +167,7 @@ public class Marker extends AbstractNode
 		long time = System.currentTimeMillis();
 		super.created = new Date(time);
 		super.modified = new Date(time);
-		super.creatorId = mapView.getMap().getCreatorId();
+		super.creatorId = creatorId;
 		super.modifierId = super.creatorId;
 		super.name = id.toString();
 		super.description = "";
@@ -186,6 +190,7 @@ public class Marker extends AbstractNode
 	}
 
 	public static Marker createInstance(
+			Identifier creatorId,
 			MapView mapView,
 			double opticalDistance, 
 			MeasurementPath path,
@@ -202,6 +207,7 @@ public class Marker extends AbstractNode
 				LocalIdentifierGenerator.generateIdentifier(ObjectEntities.SITE_NODE_ENTITY_CODE);
 			return new Marker(
 				ide,
+				creatorId,
 				mapView,
 				opticalDistance, 
 				path,

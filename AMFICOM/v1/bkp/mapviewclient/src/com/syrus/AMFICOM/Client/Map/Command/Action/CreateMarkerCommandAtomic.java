@@ -1,5 +1,5 @@
 /**
- * $Id: CreateMarkerCommandAtomic.java,v 1.12 2005/02/01 14:35:56 krupenn Exp $
+ * $Id: CreateMarkerCommandAtomic.java,v 1.13 2005/02/02 08:58:39 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -43,7 +43,7 @@ import com.syrus.AMFICOM.Client.Map.Controllers.MapViewController;
 /**
  * Команда создания метки на линии
  * 
- * @version $Revision: 1.12 $, $Date: 2005/02/01 14:35:56 $
+ * @version $Revision: 1.13 $, $Date: 2005/02/02 08:58:39 $
  * @module map_v2
  * @author $Author: krupenn $
  */
@@ -111,6 +111,7 @@ public class CreateMarkerCommandAtomic extends MapActionCommand
 				try
 				{
 					marker = com.syrus.AMFICOM.mapview.Marker.createInstance(
+							logicalNetLayer.getUserId(),
 							mapView, 
 							node,
 							mnle.getOtherNode(node),

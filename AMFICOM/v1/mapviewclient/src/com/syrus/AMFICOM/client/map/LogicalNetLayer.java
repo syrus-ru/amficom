@@ -1,5 +1,5 @@
 /**
- * $Id: LogicalNetLayer.java,v 1.41 2005/02/01 14:35:56 krupenn Exp $
+ * $Id: LogicalNetLayer.java,v 1.42 2005/02/02 08:58:39 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -82,7 +82,7 @@ import java.util.Set;
  * 
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.41 $, $Date: 2005/02/01 14:35:56 $
+ * @version $Revision: 1.42 $, $Date: 2005/02/02 08:58:39 $
  * @module mapviewclient_v2
  */
 public abstract class LogicalNetLayer implements MapCoordinatesConverter
@@ -145,6 +145,9 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 
 	/** Контекст приложения. */
 	protected ApplicationContext aContext = null;
+
+	/** Идентификатор пользователя. Используется для создания новых объектов. */
+	protected Identifier userId = null;
 
 	/** Объект, ответственный за управление отображением карты. */
 	protected NetMapViewer viewer = null;
@@ -369,6 +372,8 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 	public void setMapView(MapView mapView)
 	{
 		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "setMapView(" + mapView + ")");
+
+		userId = new Identifier(aContext.getSessionInterface().getAccessIdentifier().user_id);
 		
 		if(animateThread != null)
 			animateThread.stopRunning();
@@ -961,6 +966,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 				{
 					Marker marker = new Marker(
 						mne.getMarkerId(),
+						getUserId(),
 	                    getMapView(),
 						mne.getDistance(),
 						path,
@@ -995,6 +1001,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 				{
 					EventMarker marker = new EventMarker(
 						mne.getMarkerId(),
+						getUserId(),
 	                    getMapView(),
 						mne.getDistance(),
 						path,
@@ -1047,6 +1054,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 					{
 						marker = new AlarmMarker(
 							mne.getMarkerId(),
+							getUserId(),
 							getMapView(),
 							mne.getDistance(),
 							path,
@@ -1759,5 +1767,10 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 	public MapViewController getMapViewController()
 	{
 		return com.syrus.AMFICOM.Client.Map.Controllers.MapViewController.getInstance(this);
+	}
+
+	public Identifier getUserId()
+	{
+		return userId;
 	}
 }
