@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementTypeDatabase.java,v 1.54 2005/01/21 14:39:19 arseniy Exp $
+ * $Id: MeasurementTypeDatabase.java,v 1.55 2005/01/21 17:04:03 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -45,7 +45,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.54 $, $Date: 2005/01/21 14:39:19 $
+ * @version $Revision: 1.55 $, $Date: 2005/01/21 17:04:03 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -460,10 +460,10 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 		this.insertMeasurementPortTypes(measurementType);
 		
 	}
-	
+
 	public void insert(List storableObjects) throws IllegalDataException, CreateObjectException {
 		this.insertEntities(storableObjects);
-		for(Iterator it=storableObjects.iterator();it.hasNext();){
+		for (Iterator it = storableObjects.iterator(); it.hasNext();) {
 			MeasurementType measurementType = this.fromStorableObject((StorableObject)it.next());
 			this.insertParameterTypes(measurementType);
 			this.insertMeasurementPortTypes(measurementType);
@@ -475,15 +475,15 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 		Connection connection = DatabaseConnection.getConnection();
 		try {
 			String sql = SQL_INSERT_INTO
-			+ ObjectEntities.MNTTYPPARTYPLINK_ENTITY + OPEN_BRACKET
-			+ LINK_COLUMN_MEASUREMENT_TYPE_ID + COMMA
-			+ LINK_COLUMN_PARAMETER_TYPE_ID + COMMA
-			+ LINK_COLUMN_PARAMETER_MODE
-			+ CLOSE_BRACKET + SQL_VALUES + OPEN_BRACKET
-			+ QUESTION + COMMA
-			+ QUESTION + COMMA
-			+ QUESTION
-			+ CLOSE_BRACKET;
+				+ ObjectEntities.MNTTYPPARTYPLINK_ENTITY + OPEN_BRACKET
+				+ LINK_COLUMN_MEASUREMENT_TYPE_ID + COMMA
+				+ LINK_COLUMN_PARAMETER_TYPE_ID + COMMA
+				+ LINK_COLUMN_PARAMETER_MODE
+				+ CLOSE_BRACKET + SQL_VALUES + OPEN_BRACKET
+				+ QUESTION + COMMA
+				+ QUESTION + COMMA
+				+ QUESTION
+				+ CLOSE_BRACKET;
 			preparedStatement = connection.prepareStatement(sql);
 		}
 		finally {
@@ -491,33 +491,34 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 		}
 		return preparedStatement;
 	}
-	
-	private PreparedStatement insertMeasurementPortTypePreparedStatement() throws SQLException{
+
+	private PreparedStatement insertMeasurementPortTypePreparedStatement() throws SQLException {
 		PreparedStatement preparedStatement = null;
 		Connection connection = DatabaseConnection.getConnection();
 		try {
-		String sql = SQL_INSERT_INTO
-			+ ObjectEntities.MNTTYMEASPORTTYPELINK_ENTITY + OPEN_BRACKET
-			+ LINK_COLUMN_MEASUREMENT_TYPE_ID + COMMA
-			+ LINK_COLUMN_MEASUREMENT_PORT_TYPE_ID
-			+ CLOSE_BRACKET + SQL_VALUES + OPEN_BRACKET
-			+ QUESTION + COMMA
-			+ QUESTION
-			+ CLOSE_BRACKET;
-		preparedStatement = connection.prepareStatement(sql);
-		} finally{
+			String sql = SQL_INSERT_INTO
+				+ ObjectEntities.MNTTYMEASPORTTYPELINK_ENTITY + OPEN_BRACKET
+				+ LINK_COLUMN_MEASUREMENT_TYPE_ID + COMMA
+				+ LINK_COLUMN_MEASUREMENT_PORT_TYPE_ID
+				+ CLOSE_BRACKET + SQL_VALUES + OPEN_BRACKET
+				+ QUESTION + COMMA
+				+ QUESTION
+				+ CLOSE_BRACKET;
+			preparedStatement = connection.prepareStatement(sql);
+		}
+		finally {
 			DatabaseConnection.releaseConnection(connection);
 		}
 		return preparedStatement;
 	}
-	
-	private void updatePrepareStatementValues(PreparedStatement preparedStatement,MeasurementType measurementType) throws SQLException{
+
+	private void updatePrepareStatementValues(PreparedStatement preparedStatement, MeasurementType measurementType) throws SQLException {
 		List inParTyps = measurementType.getInParameterTypes();
 		List outParTyps = measurementType.getOutParameterTypes();
 		Identifier measurementTypeId = measurementType.getId();
 		Identifier parameterTypeId = null;
 		String parameterMode = null;
-		
+
 		for (Iterator iterator = inParTyps.iterator(); iterator.hasNext();) {
 			parameterTypeId = ((ParameterType) iterator.next()).getId();
 			DatabaseIdentifier.setIdentifier(preparedStatement, 1, measurementTypeId);
@@ -556,11 +557,11 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 		PreparedStatement preparedStatement = null;
 		Identifier measurementTypeId = measurementType.getId();
 		try {
-			preparedStatement = insertParameterTypesPreparedStatement();
-			updatePrepareStatementValues(preparedStatement, measurementType);
+			preparedStatement = this.insertParameterTypesPreparedStatement();
+			this.updatePrepareStatementValues(preparedStatement, measurementType);
 		}
 		catch (SQLException sqle) {
-			String mesg = "MeasurementTypeDatabase.insertParameterTypes | Cannot insert parameter type for measurement type '" + measurementTypeId.getIdentifierString() + "' -- " + sqle.getMessage();
+			String mesg = "MeasurementTypeDatabase.insertParameterTypes | Cannot insert parameter type for measurement type '" + measurementTypeId + "' -- " + sqle.getMessage();
 			throw new CreateObjectException(mesg, sqle);
 		}
 		finally {
@@ -579,11 +580,11 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 		PreparedStatement preparedStatement = null;
 		Identifier measurementTypeId = measurementType.getId();
 		try {
-			preparedStatement = insertMeasurementPortTypePreparedStatement();
-			updateMeasurementPortTypePrepareStatementValues(preparedStatement, measurementType);
+			preparedStatement = this.insertMeasurementPortTypePreparedStatement();
+			this.updateMeasurementPortTypePrepareStatementValues(preparedStatement, measurementType);
 		}
 		catch (SQLException sqle) {
-			String mesg = "MeasurementTypeDatabase.insertMeasurementPortTypes | Cannot insert measurement port type for measurement type '" + measurementTypeId.getIdentifierString() + "' -- " + sqle.getMessage();
+			String mesg = "MeasurementTypeDatabase.insertMeasurementPortTypes | Cannot insert measurement port type for measurement type '" + measurementTypeId + "' -- " + sqle.getMessage();
 			throw new CreateObjectException(mesg, sqle);
 		}
 		finally {
@@ -699,13 +700,14 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 	}
 
 	protected int setEntityForPreparedStatement(StorableObject storableObject, PreparedStatement preparedStatement, int mode)
-		throws IllegalDataException, UpdateObjectException {
+			throws IllegalDataException, UpdateObjectException {
 		MeasurementType measurementType = this.fromStorableObject(storableObject);
 		int i = super.setEntityForPreparedStatement(storableObject, preparedStatement, mode);
 			try {				
 				DatabaseString.setString(preparedStatement, ++i, measurementType.getCodename(), SIZE_CODENAME_COLUMN);
 				DatabaseString.setString(preparedStatement, ++i, measurementType.getDescription(), SIZE_DESCRIPTION_COLUMN);
-			} catch (SQLException sqle) {
+			}
+			catch (SQLException sqle) {
 				throw new UpdateObjectException(getEnityName() + "Database.setEntityForPreparedStatement | Error " + sqle.getMessage(), sqle);
 			}
 		return i;
