@@ -1,5 +1,5 @@
 /**
- * $Id: MapEvent.java,v 1.5 2004/10/15 14:09:00 krupenn Exp $
+ * $Id: MapEvent.java,v 1.6 2004/11/11 18:08:57 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -15,7 +15,7 @@ package com.syrus.AMFICOM.Client.General.Event;
  * 
  * 
  * 
- * @version $Revision: 1.5 $, $Date: 2004/10/15 14:09:00 $
+ * @version $Revision: 1.6 $, $Date: 2004/11/11 18:08:57 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -35,6 +35,8 @@ public class MapEvent extends OperationEvent
 	public static final String MAP_VIEW_CHANGED = "mapviewchangedevent";
 	/** помен€лись координаты курсора на карте */
 	public static final String MAP_VIEW_CENTER_CHANGED = "maplatlong";
+	/** помен€лс€ масштаб на карте */
+	public static final String MAP_VIEW_SCALE_CHANGED = "mapscale";
 
 	/** окно с картой активировано */
 	public static final String MAP_SELECTED = "mapselectedevent";

@@ -1,5 +1,5 @@
 /**
- * $Id: MapCoordinatesConverter.java,v 1.3 2004/11/10 15:58:30 krupenn Exp $
+ * $Id: MapCoordinatesConverter.java,v 1.4 2004/11/11 18:08:57 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -19,7 +19,7 @@ import java.awt.geom.Point2D;
  * 
  * 
  * 
- * @version $Revision: 1.3 $, $Date: 2004/11/10 15:58:30 $
+ * @version $Revision: 1.4 $, $Date: 2004/11/11 18:08:57 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -56,6 +56,19 @@ public interface MapCoordinatesConverter
 	 * @return 
 	 */
 	double convertMapToScreen(double topologicalDistance);
+
+	/**
+	 * получить точку на линии (startPoint, endPoint), отлежащий от
+	 * точки startPoint на дистанцию dist
+	 * @param startPoint
+	 * @param endPoint
+	 * @param dist
+	 * @return 
+	 */
+	Point2D.Double pointAtDistance(
+			Point2D.Double startPoint, 
+			Point2D.Double endPoint, 
+			double dist);
 
 	/**
 	 * найти расстояние между двумя точками в географической системе координат

@@ -1,5 +1,5 @@
 /**
- * $Id: MapMarkElement.java,v 1.18 2004/11/10 15:58:30 krupenn Exp $
+ * $Id: MapMarkElement.java,v 1.19 2004/11/11 18:08:57 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -42,7 +42,7 @@ import javax.swing.ImageIcon;
  * 
  * 
  * 
- * @version $Revision: 1.18 $, $Date: 2004/11/10 15:58:30 $
+ * @version $Revision: 1.19 $, $Date: 2004/11/11 18:08:57 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -366,8 +366,13 @@ public final class MapMarkElement extends MapNodeElement implements Serializable
 			nodeLink.updateLengthLt();
 			if(cumulativeDistance + nodeLink.getLengthLt() > topologicalDistance)
 			{
-				adjustPosition(converter.convertMapToScreen(
-						topologicalDistance - cumulativeDistance));
+				double distanceFromStart = topologicalDistance - cumulativeDistance;
+				Point2D.Double newPoint = converter.pointAtDistance(
+						startNode.getAnchor(), 
+						nodeLink.getOtherNode(startNode).getAnchor(),
+						distanceFromStart);
+				setAnchor(newPoint);
+//				adjustPosition(converter.convertMapToScreen(distanceFromStart));
 				break;
 			}
 

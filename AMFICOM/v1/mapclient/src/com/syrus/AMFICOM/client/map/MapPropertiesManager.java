@@ -1,5 +1,5 @@
 /**
- * $Id: MapPropertiesManager.java,v 1.10 2004/11/10 15:58:30 krupenn Exp $
+ * $Id: MapPropertiesManager.java,v 1.11 2004/11/11 18:08:57 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -26,6 +26,8 @@ import java.awt.MediaTracker;
 import java.awt.SystemColor;
 import java.awt.geom.Point2D;
 
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
 import java.util.HashMap;
 import java.util.Map;
@@ -44,7 +46,7 @@ import java.util.Map;
  * 
  * 
  * 
- * @version $Revision: 1.10 $, $Date: 2004/11/10 15:58:30 $
+ * @version $Revision: 1.11 $, $Date: 2004/11/11 18:08:57 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -196,8 +198,9 @@ public final class MapPropertiesManager
 	 */	
 	protected static boolean showLinkNames = false;
 	
-	private static NumberFormat distanceFormat;
-	private static NumberFormat coordinatesFormat;
+	private static DecimalFormat scaleFormat;
+	private static DecimalFormat distanceFormat;
+	private static DecimalFormat coordinatesFormat;
 	
 	static
 	{
@@ -211,15 +214,32 @@ public final class MapPropertiesManager
 			MapPropertiesManager.setDefaults();
 		}
 
-		coordinatesFormat = NumberFormat.getNumberInstance();
+		DecimalFormatSymbols dfs;
+
+		coordinatesFormat = (DecimalFormat )NumberFormat.getNumberInstance();
 		coordinatesFormat.setMaximumFractionDigits(4);
 		coordinatesFormat.setMinimumFractionDigits(4);
 		coordinatesFormat.setMinimumIntegerDigits(1);
+		dfs = coordinatesFormat.getDecimalFormatSymbols();
+		dfs.setDecimalSeparator('.');
+		coordinatesFormat.setDecimalFormatSymbols(dfs);
 
-		distanceFormat = NumberFormat.getNumberInstance();
+		distanceFormat = (DecimalFormat )NumberFormat.getNumberInstance();
 		distanceFormat.setMaximumFractionDigits(1);
 		distanceFormat.setMinimumFractionDigits(1);
 		distanceFormat.setMinimumIntegerDigits(1);
+		dfs = distanceFormat.getDecimalFormatSymbols();
+		dfs.setDecimalSeparator('.');
+		distanceFormat.setDecimalFormatSymbols(dfs);
+
+		scaleFormat = (DecimalFormat )NumberFormat.getNumberInstance();
+		scaleFormat.setMinimumIntegerDigits(1);
+		scaleFormat.setMinimumFractionDigits(1);
+		scaleFormat.setGroupingUsed(false);
+		scaleFormat.setMaximumFractionDigits(340);
+		dfs = scaleFormat.getDecimalFormatSymbols();
+		dfs.setDecimalSeparator('.');
+		scaleFormat.setDecimalFormatSymbols(dfs);
 	}
 	
 	/**
@@ -908,5 +928,11 @@ public final class MapPropertiesManager
 	public static NumberFormat getCoordinatesFormat()
 	{
 		return coordinatesFormat;
+	}
+
+
+	public static NumberFormat getScaleFormat()
+	{
+		return scaleFormat;
 	}
 }
