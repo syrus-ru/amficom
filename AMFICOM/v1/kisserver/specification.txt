@@ -1,0 +1,528 @@
+
+
+
+			Test
+
+
+	Конструкторы.
+
+public Test(ClientTest_Transferable tt) throws SQLException
+	Создать и сохранить в БД новый тест.
+
+public Test(String id) throws SQLException
+	Восстановить из БД тест с идентификатором id.
+
+
+	Методы.
+
+public void delete() throws SQLException
+	Отметить данный тест в БД как удалённый.
+
+public Analysis getAnalysis()
+	Получить объект анализа для данного теста. Если данный тест проводится без анализа, возвращается null.
+
+public ClientTest_Transferable getClientTransferable() throws SQLException
+	Получить клиентскую CORBA-структуру.
+
+public Timestamp getEndTime()
+	Получить время окончания теста (имеет смысл только для периодического временного типа).
+
+public Evaluation getEvaluation()
+	Получить объект оценки для данного теста. Если данный тест проводится без оценки, возвращается null.
+
+public String getId()
+	Получить идентификатор данного теста.
+
+public String getKISId()
+	Получить идентификатор КИС данного теста.
+
+public Timestamp getModified()
+	Получить время последнего изменения данного теста.
+
+public String getName()
+	Получить имя данного теста.
+
+public Timestamp getPeriod()
+	Получить период измерений данного теста (имеет смысл только для периодического временного типа).
+
+public int getStatus()
+	Получить статус данного теста.
+
+public int getTemporalType()
+	Получить временной тип данного теста.
+
+public Timestamp[] getTI()
+	Получить временные метки данного теста (имеет смысл только для временного типа "по расписанию").
+
+public Test_Transferable getTransferable() throws SQLException
+	Получить агентскую CORBA-структуру.
+
+public String getTypeId()
+	Получить идентификатор типа данного теста.
+
+public boolean isModified() throws SQLException
+	Истинно, если запись в БД, соответствующая данному тесту, обновлялась позже, чем данный объект 
+	прочитывался из БД в последний раз. Т. е., сравниваются значение поля modified в таблице БД и значение
+	поля modified данного объекта, и если первое позже последнего - возвращается true.
+
+public static Test[] retrieveAbortedTests(String agent_id) throws SQLException
+	Восстановить из БД все тесты, прерванные пользователем, для всех КИСов, которые обслуживаются агентом
+	agent_id. Это тесты, у которых статус SCHEDULED и deleted не NULL.
+
+public static Test[] retrieveScheduledTests(String agent_id, long interval) throws SQLException
+	Восстановить из БД все тесты, у которых статус SCHEDULED, КИС обслуживается агентом agent_id, а время 
+	начала измерений лежит в интервале [SYSDATE, SYSDATE + interval].
+
+public static Test retrieveTestForAnalysis(String analysis_id) throws SQLException
+	Восстановить из БД тест, который проводился с анализом analysis_id.
+
+public static Test retrieveTestForEvaluation(String evaluation_id) throws SQLException
+	Восстановить из БД тест, который проводился с оценкой evaluation_id.
+
+public static Test[] retrieveTests() throws SQLException
+	Восстановить из БД все тесты, не помеченные, как удалённые.
+
+public static Test[] retrieveTests(String domain_id) throws SQLException
+	Восстановить из БД все тесты для данного домена, не помеченные, как удалённые.
+
+public void update(ClientTest_Transferable tt) throws SQLException
+	Обновить даный тест. В действительности, обновляются только временные характеристики теста - 
+	start_time, period, end_time и ti (нужное - в зависимости от временного типа).
+
+
+
+		Analysis
+
+
+	Конструкторы.
+
+public Analysis(ClientAnalysis_Transferable analysis_t) throws SQLException
+	Создать и сохранить в БД новый анализ.
+
+public Analysis(String id) throws SQLException
+	Восстановить из БД анализ с идентификатором id.
+
+
+	Методы.
+
+public ClientAnalysis_Transferable getClientTransferable() throws SQLException
+	Получить клиентскую CORBA-структуру.
+
+public static Analysis_Transferable getDefaultTransferable()
+	Возвращает "пустышку" агентской CORBA-структуры.
+
+public String getId()
+	Получить идентификатор данного анализа.
+
+public Test getTest() throws SQLException
+	Получить тест, с которым проводился данный анализ.
+
+public Analysis_Transferable getTransferable() throws SQLException
+	Получить агентскую CORBA-структуру.
+
+public String getTypeId()
+	Получить идентификатор типа данного анализа.
+
+public static Analysis retrieveAnalysis(String test_id) throws SQLException
+	Получить анализ по идентификатору теста.
+
+public static Analysis[] retrieveAnalysises() throws SQLException
+	Восстановить из БД все анализы.
+
+public static Analysis[] retrieveAnalysises(String domain_id) throws SQLException
+	Восстановить из БД все анализы для данного домена.
+
+public static Analysis[] retrieveUserAnalysises(String domain_id) throws SQLException
+	Восстановить из БД все пользовательские (т. е. - проведённые на клиенте) анализы для данного домена.
+
+public void update(ClientAnalysis_Transferable analysis_t) throws SQLException
+	Обновить данный анализ. Обновляются все поля, кроме аргументов. По идентификатору 
+	analysis_t.criteria_set_id подгружается новый набор критериев.
+
+
+
+		Evaluation.
+
+
+	Конструкторы.
+
+public Evaluation(ClientEvaluation_Transferable evaluation_t) throws SQLException
+	Создать и сохранить в БД новую оценку.
+
+public Evaluation(String id) throws SQLException
+	Восстановить из БД оценку с идентификатором id.
+
+
+	Методы.
+
+public ClientEvaluation_Transferable getClientTransferable() throws SQLException
+	Получить клиентскую CORBA-структуру.
+
+public static Evaluation_Transferable getDefaultTransferable()
+	Возвращает "пустышку" агентской CORBA-структуры.
+
+public String getId()
+	Получить идентификатор данной оценки.
+
+public Test getTest() throws SQLException
+	Получить тест, с которым проводилась данная оценка.
+
+public Evaluation_Transferable getTransferable() throws SQLException
+	Получить агентскую CORBA-структуру.
+
+public String getTypeId()
+	Получить идентификатор типа данной оценки.
+
+public static Evaluation retrieveEvaluation(String test_id) throws SQLException
+	Получить оценку по идентификатору теста.
+
+public static Evaluation[] retrieveEvaluations() throws SQLException
+	Восстановить из БД все оценки.
+
+public static Evaluation[] retrieveEvaluations(String domain_id) throws SQLException
+	Восстановить из БД все оценки для данного домена.
+
+public static Evaluation[] retrieveUserEvaluations(String domain_id) throws SQLException
+	Восстановить из БД все пользовательские (т. е. - проведённые на клиенте) оценки для данного домена.
+
+public void update(ClientEvaluation_Transferable evaluation_t) throws SQLException
+	Обновить данную оценку. Обновляются все поля, кроме аргументов. По идентификатору 
+	evaluation_t.etalon_id подгружается новый эталон, по идентификатору evaluation_t.threshold_set_id - 
+	новый набор порогов.
+
+
+
+		CriteriaSet
+
+
+	Конструкторы.
+
+public CriteriaSet(ClientCriteriaSet_Transferable criteria_set_t) throws SQLException
+	Создать и сохранить в БД новый набор критериев.
+
+public CriteriaSet(String id) throws SQLException
+	Восстановить из БД набор критериев с идентификатором id.
+
+
+	Методы.
+
+public void attachToMonitoredElement(String monitored_element_id) throws SQLException
+	Назначить данный набор критериев для волокна monitored_element_id.
+
+public void detachFromMonitoredElement(String monitored_element_id) throws SQLException
+	Отменить назначение данного набора критериев для волокна monitored_element_id.
+
+public String getAnalysisTypeId()
+	Получить идентификатор типа анализа, для которого используется данный набор критериев.
+
+public Vector getAttachedMonitoredElements()
+	Получить вектор, в котором хранятся строки-идентификаторы волокон (monitored_element_id).
+
+public Timestamp getCreated()
+	Получить время создания.
+
+public String getCreatedBy()
+	Получить идентификатор пользователя-создателя.
+
+public SetParameter[] getCriteria()
+	Получить массив критериев данного набора.
+
+public String getId()
+	Получить идентификатор набора критериев.
+
+public Parameter_Transferable[] getKISCriteria() throws SQLException
+	Получить массив агентских CORBA-структур критериев данного набора.
+
+public String getName()
+	Получить имя набора критериев.
+
+public ClientCriteriaSet_Transferable getTransferable() throws SQLException
+	Получить клиентскую CORBA-структуру.
+
+public boolean isAttachedToMonitoredElement(String monitored_element_id)
+	Проверить, назначен ли данный набор критериев волокну monitored_element_id.
+
+public static CriteriaSet[] retrieveCriteriaSets() throws SQLException
+	Восстановить из БД все наборы критериев.
+
+public static CriteriaSet[] retrieveCriteriaSets(String monitored_element_id) throws SQLException
+	Восстановить из БД наборы критериев, назначенных волокну monitored_element_id.
+
+public static CriteriaSet[] retrieveCriteriaSets(String monitored_element_id,
+						 String analysis_type_id) throws SQLException
+	Восстановить из БД наборы критериев, назначенных волокну monitored_element_id 
+	для типа анализа analysis_type_id.
+
+public void update(ClientCriteriaSet_Transferable criteria_set_t) throws SQLException
+	Обновить данный набор критериев. Обновляются все поля. У критериев обновляются 
+	только числовые величины.
+
+
+
+		ThresholdSet
+
+	Всё аналогично CriteriaSet.
+
+
+
+		TestArgumentSet
+
+	Всё аналогично CriteriaSet.
+
+
+
+		Etalon
+
+
+	Конструкторы.
+
+public Etalon(ClientEtalon_Transferable etalon_t) throws SQLException
+public Etalon(String id) throws SQLException
+
+
+	Методы.
+
+public void attachToMonitoredElement(String monitored_element_id) throws SQLException
+
+public void detachFromMonitoredElement(String monitored_element_id) throws SQLException
+
+public Vector getAttachedMonitoredElements()
+
+public ClientEtalon_Transferable getClientTransferable() throws SQLException
+
+public static Etalon_Transferable getDefaultTransferable()
+
+public String getId()
+
+public Etalon_Transferable getTransferable() throws SQLException
+
+public boolean isAttachedToMonitoredElement(String monitored_element_id)
+
+public boolean isModified() throws SQLException
+
+public static Etalon[] retrieveEtalons() throws SQLException
+
+public static Etalon[] retrieveEtalons(String monitored_element_id) throws SQLException
+
+public void update(ClientEtalon_Transferable etalon_t) throws SQLException
+
+
+
+		Result
+
+
+	Конструкторы.
+
+public Result(ClientResult_Transferable crest) throws SQLException
+	Для клиента.
+
+public Result(Result_Transferable rest) throws SQLException
+	Для агента.
+
+public Result(String id) throws SQLException
+	Восстановить из БД.
+
+
+	Методы.
+
+public String getActionId()
+	Получить идентификатор действия (теста || анализа || оценки || моделирования)
+
+public ClientResult_Transferable getClientTransferable() throws SQLException
+	Получить клиентскую CORBA-структуру.
+
+public Timestamp getElementaryStartTime()
+	Получить время начала измерения для элементарного теста.
+
+public String getId()
+	Получить идентификатор.
+
+public Parameter[] getParameters()
+	Получить массив параметров.
+
+public String getResultSetId()
+	Получить идентификатор набора результатов, которому принадлежит данный результат.
+
+public String getResultType()
+	Получить идентификатор типа данного результата.
+
+public String getUserId()
+	Получить идентификатор пользователя - создателя данного результата.
+
+public static Result[] retrieveResults(String result_type, String action_id) throws SQLException
+	Восстановить из БД все результаты типа result_type действия action_id.
+
+
+
+		EventSourceType
+
+
+	Конструкторы.
+
+public EventSourceType(String id) throws SQLException
+	Восстановить из БД по идентификатору тип источника событий.
+
+
+	Методы.
+
+public boolean canGenerateEventOfType(String event_type_id)
+	Истинно, если источник данного типа может создавать события типа event_type_id.
+
+public String getCodename()
+
+public String getDefaultReaction(String event_type_id)
+	Получить правило по умолчанию для обработки события типа event_type_id,
+	возникшего на источнике данного типа.
+
+public String[] getGenerableEventTypes()
+	Получить массив идентификаторов типов событий, которые могут возникать на источнике данного типа.
+
+public String getId()
+
+public String getSourceTableName()
+	Получить имя таблицы БД, в которой хранятся объекты-источники данного типа.
+
+
+
+		EventSource
+
+
+	Конструкторы.
+
+public EventSource(String id) throws SQLException
+	Восстановить из БД источник событий по идентификатору. Для типа данного источника восстанавливаются
+	типы событий, которые на нём могут возникать, и для каждого них устанавливается правило обработки,
+	совпадающее с правилом по умолчанию для типа данного источника. Поменять правило обработки события
+	какого-либо типа можно с помощью метода setRule данного класса.
+
+public EventSource(String type_id,
+                   String object_source_id,
+                   String description) throws SQLException
+	Создать и сохранить в БД источник событий типа type_id, с объектом-источником object_source_id.
+
+
+	Методы.
+
+public boolean canGenerateEventOfType (String event_type_id)
+	Истинно, если данный источник может создавать события типа event_type_id.
+
+public String getDomainId()
+
+public String getId()
+
+public static String getIdByObjectId(String object_source_id) throws SQLException
+	Восстановить из БД идентификатор источника событий, если известен идентификатор его объекта-источника.
+
+public String getRule(String event_type_id)
+	Получить правило, по которому обрабатывается событие типа event_type_id,
+	возникшее на данном источнике.
+
+public EventSource_Transferable getTransferable()
+
+public String getTypeId()
+
+public void setRule(String event_type_id, String rule) throws SQLException
+	Установить для обработки событий типа event_type_id, возникающих на данном источнике, правило rule.
+
+
+
+
+
+		Event
+
+
+	Конструкторы.
+
+public Event(String descriptor,
+             String description,
+             String source_id,
+             String type_id) throws SQLException
+	Создать событие типа type_id с источника source_id (не путать с object_source_id!).
+
+public Event(String id) throws SQLException
+	Восстановить из БД событие по идентификатору.
+
+
+	Методы.
+
+public Timestamp getCreated()
+
+public String getDescription()
+
+public String getDescriptor()
+
+public static LinkedList getGeneratedEvents()
+	Восстановить из БД все события со статусом GENERATED.
+
+public String getId()
+
+public String getSourceId()
+
+public int getStatus()
+
+public Event_Transferable getTransferable()
+
+public String getTypeId()
+
+public void updateStatus(int status) throws SQLException
+	Обновить статус данного события.
+
+
+
+		Alarm
+
+
+	Конструкторы.
+
+public Alarm(Event event, String type_id) throws SQLException
+	Создать сигнал тревоги типа type_id, по событию event.
+
+public Alarm(String id) throws SQLException
+	Восстановить из БД сигнал тревоги по идентификатору.
+
+
+	Методы.
+
+public void assignTo(String user_id) throws SQLException
+	Назначить данный сигнал тревоги пользователю user_id.
+
+public void delete() throws SQLException
+	Отметить данный сигнал тревоги как удалённый.
+
+public Timestamp getAssigned()
+	Получить время назначения пользователю.
+
+public String getAssignedTo()
+	Получить идентификатор пользователя, которому назначен данный сигнал тревоги.
+
+public String getEventId()
+
+public Timestamp getFixed()
+
+public String getFixedBy()
+
+public Timestamp getGenerated()
+
+public String getId()
+
+public Timestamp getModified()
+
+public String getSourceId()
+
+public int getStatus()
+
+public Alarm_Transferable getTransferable()
+
+public String getTypeId()
+
+public boolean isModified() throws SQLException
+	Аналогично методу isModified() класса Test.
+
+public static Alarm[] retrieveAlarms(String domain_id) throws SQLException
+	Восстановить из БД все сигналы тревоги для домена domain_id.
+
+public void setComments(String comments) throws SQLException
+
+public void setFixed(String user_id) throws SQLException
+
+
