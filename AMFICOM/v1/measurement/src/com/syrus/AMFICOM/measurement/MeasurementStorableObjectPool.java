@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementStorableObjectPool.java,v 1.46 2004/11/17 08:22:30 bob Exp $
+ * $Id: MeasurementStorableObjectPool.java,v 1.47 2004/11/17 09:24:57 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,13 +13,13 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Hashtable;
 
-import com.syrus.AMFICOM.CORBA.General.AMFICOMRemoteException;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
@@ -36,8 +36,8 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.46 $, $Date: 2004/11/17 08:22:30 $
- * @author $Author: bob $
+ * @version $Revision: 1.47 $, $Date: 2004/11/17 09:24:57 $
+ * @author $Author: max $
  * @module measurement_v1
  */
 
@@ -197,6 +197,42 @@ public class MeasurementStorableObjectPool {
 					+ " InvocationTargetException " + e.getMessage());
 		}
 	}
+    
+    public static void refresh() throws DatabaseException, CommunicationException {        
+        try {         
+            Log.debugMessage("MeasurementStorableObjectPool.refresh | trying to refresh Pool...", Log.DEBUGLEVEL03);
+            java.util.Set storableObjects = new HashSet();
+            java.util.Set returnedStorableObjectsIds = new HashSet();
+            java.util.Set entityCodes = objectPoolMap.keySet();
+            
+            for (Iterator it = entityCodes.iterator(); it.hasNext();) {
+                Short entityCode = (Short) it.next();
+                LRUMap lruMap = (LRUMap) objectPoolMap.get(entityCode);
+                
+                for (Iterator it2 = lruMap.iterator(); it2.hasNext();) {
+                    storableObjects.add(it2.next());                
+                }
+                if (storableObjects == null || storableObjects.isEmpty()) {
+                    Log.debugMessage("MeasurementStorableObjectPool.refresh | LruMap has no elements",Log.DEBUGLEVEL08);
+                    continue;
+                }
+                returnedStorableObjectsIds = mObjectLoader.refresh(storableObjects);
+                
+                for (Iterator it3 = lruMap.keyIterator(); it3.hasNext();) {
+                    Identifier id = (Identifier) it3.next();
+                    if (returnedStorableObjectsIds.contains(id)) {
+                        lruMap.remove(id);
+                    }                               
+                }           
+            }
+        } catch (DatabaseException e) {
+            Log.errorMessage("MeasurementStorableObjectPool.refresh | DatabaseException: " + e.getMessage());
+            throw new DatabaseException("MeasurementStorableObjectPool.refresh", e);
+        } catch (CommunicationException e) {
+            Log.errorMessage("MeasurementStorableObjectPool.refresh | CommunicationException: " + e.getMessage());
+            throw new CommunicationException("MeasurementStorableObjectPool.refresh", e);
+        }
+    }
 
 	public static StorableObject getStorableObject(Identifier objectId, boolean useLoader)
 			throws DatabaseException, CommunicationException {
