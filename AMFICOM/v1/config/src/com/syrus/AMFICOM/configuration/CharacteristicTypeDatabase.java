@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicTypeDatabase.java,v 1.10 2004/08/29 10:54:23 bob Exp $
+ * $Id: CharacteristicTypeDatabase.java,v 1.11 2004/09/03 14:20:37 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,8 +29,8 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2004/08/29 10:54:23 $
- * @author $Author: bob $
+ * @version $Revision: 1.11 $, $Date: 2004/09/03 14:20:37 $
+ * @author $Author: max $
  * @module configuration_v1
  */
 
@@ -43,6 +43,92 @@ public class CharacteristicTypeDatabase extends StorableObjectDatabase {
 
 	public static final int CHARACTER_NUMBER_OF_RECORDS = 1;
 
+	private String updateColumns;
+	private String updateMultiplySQLValues;
+	
+	protected String getEnityName() {
+		return "CharacteristicType";
+	}
+	
+	protected String getTableName() {
+		return ObjectEntities.CHARACTERISTICTYPE_ENTITY;
+	}
+	
+	
+	
+	protected String getUpdateColumns() {
+		if (this.updateColumns == null){
+			this.updateColumns  = COLUMN_ID + COMMA
+				+ COLUMN_CREATED + COMMA
+				+ COLUMN_MODIFIED + COMMA
+				+ COLUMN_CREATOR_ID + COMMA
+				+ COLUMN_MODIFIER_ID + COMMA
+				+ COLUMN_CODENAME + COMMA
+				+ COLUMN_DESCRIPTION + COMMA
+				+ COLUMN_DATA_TYPE + COMMA
+				+ COLUMN_IS_EDITABLE + COMMA
+				+ COLUMN_IS_VISIBLE;
+		}
+		return this.updateColumns;
+	}
+	
+	protected String getUpdateMultiplySQLValues() {
+		if (this.updateMultiplySQLValues == null){
+			this.updateMultiplySQLValues  = QUESTION + COMMA
+				+ QUESTION + COMMA
+				+ QUESTION + COMMA
+				+ QUESTION + COMMA
+				+ QUESTION + COMMA
+				+ QUESTION + COMMA
+				+ QUESTION + COMMA
+				+ QUESTION + COMMA
+				+ QUESTION + COMMA
+				+ QUESTION;
+		}
+		return this.updateMultiplySQLValues;
+	}
+	
+	protected String getUpdateSingleSQLValues(StorableObject storableObject)
+			throws IllegalDataException, UpdateObjectException {
+		CharacteristicType characteristicType = fromStorableObject(storableObject); 
+		String ctIdStr = characteristicType.getId().toSQLString();
+		String sql = ctIdStr + COMMA
+			+ DatabaseDate.toUpdateSubString(characteristicType.getCreated()) + COMMA
+			+ DatabaseDate.toUpdateSubString(characteristicType.getModified()) + COMMA
+			+ characteristicType.getCreatorId().toSQLString() + COMMA
+			+ characteristicType.getModifierId().toSQLString() + COMMA
+			+ APOSTOPHE + characteristicType.getCodename() + APOSTOPHE + COMMA
+			+ APOSTOPHE + characteristicType.getDescription() + APOSTOPHE + COMMA
+			+ Integer.toString(characteristicType.getDataType().value()) + COMMA
+			+ (characteristicType.isEditable()?"1":"0") + COMMA
+			+ (characteristicType.isVisible()?"1":"0")
+			+ CLOSE_BRACKET;
+		return sql;
+	}
+	
+	protected void setEntityForPreparedStatement(StorableObject storableObject,
+			PreparedStatement preparedStatement) throws IllegalDataException,
+			UpdateObjectException {
+		CharacteristicType characteristicType = fromStorableObject(storableObject); 
+		String ctIdStr = characteristicType.getId().getCode();
+		try {
+			preparedStatement.setString( 1, ctIdStr);
+			preparedStatement.setString( 2, DatabaseDate.toUpdateSubString(characteristicType.getCreated()));
+			preparedStatement.setString( 3, DatabaseDate.toUpdateSubString(characteristicType.getModified()));
+			preparedStatement.setString( 4, characteristicType.getCreatorId().getCode());
+			preparedStatement.setString( 5, characteristicType.getModifierId().getCode());
+			preparedStatement.setString( 6, characteristicType.getCodename());
+			preparedStatement.setString( 7, characteristicType.getDescription());
+			preparedStatement.setInt( 8, characteristicType.getDataType().value());
+			preparedStatement.setInt( 9, characteristicType.isEditable()?'1':'0');
+			preparedStatement.setInt( 10, characteristicType.isVisible()?'1':'0');
+			preparedStatement.setString( 11, ctIdStr);
+		} catch (SQLException sqle) {
+			throw new UpdateObjectException("CharacteristicTypeDatabase.setEntityForPreparedStatement | Error " + sqle.getMessage(), sqle);
+		}
+	}
+	
+	
 	private CharacteristicType fromStorableObject(StorableObject storableObject) throws IllegalDataException {
 		if (storableObject instanceof CharacteristicType)
 			return (CharacteristicType)storableObject;
@@ -51,10 +137,10 @@ public class CharacteristicTypeDatabase extends StorableObjectDatabase {
 
 	public void retrieve(StorableObject storableObject) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
 		CharacteristicType characteristicType = this.fromStorableObject(storableObject);
-		this.retrieveCharacteristicType(characteristicType);
+		this.retrieveEntity(characteristicType);
 	}
 
-	private String retrieveCharacteristicTypeQuery(String condition){
+	protected String retrieveQuery(String condition){
 		return SQL_SELECT
 		+ COLUMN_ID + COMMA
 		+ DatabaseDate.toQuerySubString(COLUMN_CREATED) + COMMA 
@@ -71,16 +157,19 @@ public class CharacteristicTypeDatabase extends StorableObjectDatabase {
 
 	}
 	
-	private CharacteristicType updateCharacteristicTypeFromResultSet(CharacteristicType characteristicType, ResultSet resultSet) throws SQLException{
-		CharacteristicType characteristicType1 = characteristicType;
+	protected StorableObject updateEntityFromResultSet(
+			StorableObject storableObject, ResultSet resultSet)
+			throws IllegalDataException, RetrieveObjectException, SQLException {
+		CharacteristicType characteristicType = fromStorableObject(storableObject);
+		
 		if (characteristicType == null){
 			/**
 			 * @todo when change DB Identifier model ,change getString() to getLong()
 			 */
-			characteristicType1 = new CharacteristicType(new Identifier(resultSet.getString(COLUMN_ID)), null, null, null, 0,
+			characteristicType = new CharacteristicType(new Identifier(resultSet.getString(COLUMN_ID)), null, null, null, 0,
 										   false, false);			
 		}
-		characteristicType1.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
+		characteristicType.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
 										 DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
 										 /**
 											* @todo when change DB Identifier model ,change getString() to
@@ -99,42 +188,11 @@ public class CharacteristicTypeDatabase extends StorableObjectDatabase {
 										 (resultSet.getInt(COLUMN_IS_VISIBLE) == 0)?false:true);
 
 		
-		return characteristicType1;
+		return characteristicType;
 	}
 
 	
-	private void retrieveCharacteristicType(CharacteristicType characteristicType) throws ObjectNotFoundException, RetrieveObjectException {
-		String ctIdStr = characteristicType.getId().toSQLString();
-		String sql = retrieveCharacteristicTypeQuery(COLUMN_ID + EQUALS + ctIdStr);
-		Statement statement = null;
-		ResultSet resultSet = null;
-		try {
-			statement = connection.createStatement();
-			Log.debugMessage("CharacteristicTypeDatabase.retrieve | Trying: " + sql, Log.DEBUGLEVEL09);
-			resultSet = statement.executeQuery(sql);
-			if (resultSet.next())
-				updateCharacteristicTypeFromResultSet(characteristicType, resultSet);
-			else
-				throw new ObjectNotFoundException("No such characteristic type: " + ctIdStr);
-		}
-		catch (SQLException sqle) {
-			String mesg = "CharacteristicTypeDatabase.retrieve | Cannot retrieve characteristic type " + ctIdStr;
-			throw new RetrieveObjectException(mesg, sqle);
-		}
-		finally {
-			try {
-				if (statement != null)
-					statement.close();
-				if (resultSet != null)
-					resultSet.close();
-				statement = null;
-				resultSet = null;
-			}
-			catch (SQLException sqle1) {
-				Log.errorException(sqle1);
-			}
-		}
-	}
+	
 
 	public Object retrieveObject(StorableObject storableObject, int retrieve_kind, Object arg) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
 		CharacteristicType characteristicType = this.fromStorableObject(storableObject);
@@ -147,7 +205,7 @@ public class CharacteristicTypeDatabase extends StorableObjectDatabase {
 	public void insert(StorableObject storableObject) throws IllegalDataException, CreateObjectException {
 		CharacteristicType characteristicType = this.fromStorableObject(storableObject);
 		try {
-			this.insertCharacteristicType(characteristicType);
+			super.insertEntity(characteristicType);
 		}
 		catch (CreateObjectException e) {
 			try {
@@ -168,56 +226,7 @@ public class CharacteristicTypeDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	private void insertCharacteristicType(CharacteristicType characteristicType) throws CreateObjectException {
-		String ctIdStr = characteristicType.getId().toSQLString();
-		String sql = SQL_INSERT_INTO
-			+ ObjectEntities.CHARACTERISTICTYPE_ENTITY
-			+ OPEN_BRACKET
-			+ COLUMN_ID + COMMA
-			+ COLUMN_CREATED + COMMA
-			+ COLUMN_MODIFIED + COMMA
-			+ COLUMN_CREATOR_ID + COMMA
-			+ COLUMN_MODIFIER_ID + COMMA
-			+ COLUMN_CODENAME + COMMA
-			+ COLUMN_DESCRIPTION + COMMA
-			+ COLUMN_DATA_TYPE + COMMA
-			+ COLUMN_IS_EDITABLE + COMMA
-			+ COLUMN_IS_VISIBLE
-			+ CLOSE_BRACKET
-			+ SQL_VALUES
-			+ OPEN_BRACKET
-			+ ctIdStr + COMMA
-			+ DatabaseDate.toUpdateSubString(characteristicType.getCreated()) + COMMA
-			+ DatabaseDate.toUpdateSubString(characteristicType.getModified()) + COMMA
-			+ characteristicType.getCreatorId().toSQLString() + COMMA
-			+ characteristicType.getModifierId().toSQLString() + COMMA
-			+ APOSTOPHE + characteristicType.getCodename() + APOSTOPHE + COMMA
-			+ APOSTOPHE + characteristicType.getDescription() + APOSTOPHE + COMMA
-			+ Integer.toString(characteristicType.getDataType().value()) + COMMA
-			+ (characteristicType.isEditable()?"1":"0") + COMMA
-			+ (characteristicType.isVisible()?"1":"0")
-			+ CLOSE_BRACKET;
-		Statement statement = null;
-		try {
-			statement = connection.createStatement();
-			Log.debugMessage("CharacteristicTypeDatabase.insert | Trying: " + sql, Log.DEBUGLEVEL09);
-			statement.executeUpdate(sql);
-		}
-		catch (SQLException sqle) {
-			String mesg = "CharacteristicTypeDatabase.insert | Cannot insert characteristic type " + ctIdStr;
-			throw new CreateObjectException(mesg, sqle);
-		}
-		finally {
-			try {
-				if (statement != null)
-					statement.close();
-				statement = null;
-			}
-			catch (SQLException sqle1) {
-				Log.errorException(sqle1);
-			}
-		}
-	}
+	
 
 	public void update(StorableObject storableObject, int update_kind, Object obj) throws IllegalDataException, UpdateObjectException {
 		CharacteristicType characteristicType = this.fromStorableObject(storableObject);
@@ -227,160 +236,15 @@ public class CharacteristicTypeDatabase extends StorableObjectDatabase {
 		}
 	}
 	
-	public List retrieveAll() throws RetrieveObjectException {		
-		return retriveByIdsOneQuery(null);
+	public List retrieveAll() throws IllegalDataException, RetrieveObjectException {		
+		return retriveByIdsOneQuery(null, null);
 	}
 	
-	public void delete(CharacteristicType characteristicType) {
-		String cdIdStr = characteristicType.getId().toSQLString();
-		Statement statement = null;
-		try {
-			statement = connection.createStatement();
-			String sql = SQL_DELETE_FROM
-						+ ObjectEntities.CHARACTERISTICTYPE_ENTITY
-						+ SQL_WHERE
-						+ COLUMN_ID + EQUALS
-						+ cdIdStr;
-			Log.debugMessage("CharacteristicTypeDatabase.delete | Trying: " + sql, Log.DEBUGLEVEL09);
-			statement.executeUpdate(sql);
-			connection.commit();
-		}
-		catch (SQLException sqle1) {
-			Log.errorException(sqle1);
-		}
-		finally {
-			try {
-				if(statement != null)
-					statement.close();
-				statement = null;
-			}
-			catch(SQLException sqle1) {
-				Log.errorException(sqle1);
-			}
-		}
-	}
-	
-	public List retrieveByIds(List ids) throws RetrieveObjectException {
+	public List retrieveByIds(List ids, String condition) throws IllegalDataException, RetrieveObjectException {
 		if ((ids == null) || (ids.isEmpty()))
-			return retriveByIdsOneQuery(null);
-		return retriveByIdsOneQuery(ids);	
-		//return retriveByIdsPreparedStatement(ids);
-	}
-	
-	private List retriveByIdsOneQuery(List ids) throws RetrieveObjectException {
-		List result = new LinkedList();
-		String sql;
-		{
-			String condition = null;
-			if (ids!=null){
-				StringBuffer buffer = new StringBuffer(COLUMN_ID);
-				int idsLength = ids.size();
-				if (idsLength == 1){
-					buffer.append(EQUALS);
-					buffer.append(((Identifier)ids.iterator().next()).toSQLString());
-				} else{
-					buffer.append(SQL_IN);
-					buffer.append(OPEN_BRACKET);
-					
-					int i = 1;
-					for(Iterator it=ids.iterator();it.hasNext();i++){
-						Identifier id = (Identifier)it.next();
-						buffer.append(id.toSQLString());
-						if (i < idsLength)
-							buffer.append(COMMA);
-					}
-					
-					buffer.append(CLOSE_BRACKET);
-					condition = buffer.toString();
-				}
-			}
-			sql = retrieveCharacteristicTypeQuery(condition);
-		}
-		
-		Statement statement = null;
-		ResultSet resultSet = null;
-		try {
-			statement = connection.createStatement();
-			Log.debugMessage("CharacteristicTypeDatabase.retriveByIdsOneQuery | Trying: " + sql, Log.DEBUGLEVEL09);
-			resultSet = statement.executeQuery(sql);
-			while (resultSet.next()){
-				result.add(updateCharacteristicTypeFromResultSet(null, resultSet));
-			}
-		}
-		catch (SQLException sqle) {
-			String mesg = "CharacteristicTypeDatabase.retriveByIdsOneQuery | Cannot execute query " + sqle.getMessage();
-			throw new RetrieveObjectException(mesg, sqle);
-		}
-		finally {
-			try {
-				if (statement != null)
-					statement.close();
-				if (resultSet != null)
-					resultSet.close();
-				statement = null;
-				resultSet = null;
-			}
-			catch (SQLException sqle1) {
-				Log.errorException(sqle1);
-			}
-		}
-		return result;
-	}
-	
-	private List retriveByIdsPreparedStatement(List ids) throws RetrieveObjectException {
-		List result = new LinkedList();
-		String sql;
-		{
-			
-			int idsLength = ids.size();
-			if (idsLength == 1){
-				return retriveByIdsOneQuery(ids);
-			}
-			StringBuffer buffer = new StringBuffer(COLUMN_ID);
-			buffer.append(EQUALS);							
-			buffer.append(QUESTION);
-			
-			sql = retrieveCharacteristicTypeQuery(buffer.toString());
-		}
-			
-		PreparedStatement stmt = null;
-		ResultSet resultSet = null;
-		try {
-			stmt = connection.prepareStatement(sql.toString());
-			for(Iterator it = ids.iterator();it.hasNext();){
-				Identifier id = (Identifier)it.next(); 
-				/**
-				 * @todo when change DB Identifier model ,change setString() to setLong()
-				 */
-				String idStr = id.getIdentifierString();
-				stmt.setString(1, idStr);
-				resultSet = stmt.executeQuery();
-				if (resultSet.next()){
-					result.add(updateCharacteristicTypeFromResultSet(null, resultSet));
-				} else{
-					Log.errorMessage("CharacteristicTypeDatabase.retriveByIdsPreparedStatement | No such characteristic type: " + idStr);									
-				}
-				
-			}
-		}catch (SQLException sqle) {
-			String mesg = "CharacteristicTypeDatabase.retriveByIdsPreparedStatement | Cannot retrieve characteristic type " + sqle.getMessage();
-			throw new RetrieveObjectException(mesg, sqle);
-		}
-		finally {
-			try {
-				if (stmt != null)
-					stmt.close();
-				if (stmt != null)
-					stmt.close();
-				stmt = null;
-				resultSet = null;
-			}
-			catch (SQLException sqle1) {
-				Log.errorException(sqle1);
-			}
-		}			
-		
-		return result;
-	}
+			return retriveByIdsOneQuery(null, condition);
+		return retriveByIdsOneQuery(ids, condition);	
+		//return retriveByIdsPreparedStatement(ids, condition);
+	}	
 
 }

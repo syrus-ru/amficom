@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicDatabase.java,v 1.19 2004/09/03 11:06:00 max Exp $
+ * $Id: CharacteristicDatabase.java,v 1.20 2004/09/03 14:20:37 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,7 +32,7 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.configuration.corba.CharacteristicSort;
 
 /**
- * @version $Revision: 1.19 $, $Date: 2004/09/03 11:06:00 $
+ * @version $Revision: 1.20 $, $Date: 2004/09/03 14:20:37 $
  * @author $Author: max $
  * @module configuration_v1
  */
@@ -338,7 +338,7 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
 				default:
 					throw new UpdateObjectException("Unknown sort: " + sort + " for characteristic: " + cIdStr);
 			}
-		preparedStatement.setString( 17, "");
+		preparedStatement.setString( 17, cIdStr );
 		} catch (SQLException sqle) {
 			throw new UpdateObjectException("CharacteristicDatabase.setEntityForPreparedStatement | Error " + sqle.getMessage(), sqle);
 		}
@@ -380,8 +380,8 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
 
 	}
 	
-	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet) throws RetrieveObjectException, SQLException{
-		Characteristic characteristic1 = (Characteristic) storableObject;
+	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet) throws RetrieveObjectException, SQLException, IllegalDataException {
+		Characteristic characteristic1 = fromStorableObject(storableObject);
 		if (characteristic1 == null){
 			/**
 			 * @todo when change DB Identifier model ,change getString() to getLong()
@@ -514,7 +514,7 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
 		}
 	}
 	
-	public List retrieveCharacteristics(Identifier characterizedId, CharacteristicSort sort) throws RetrieveObjectException {
+	public List retrieveCharacteristics(Identifier characterizedId, CharacteristicSort sort) throws RetrieveObjectException, IllegalDataException {
 		List characteristics = new LinkedList();
 
 		String cdIdStr = characterizedId.toSQLString();
