@@ -70,9 +70,9 @@ public class Test extends StorableObject {
 		catch (RetrieveObjectException roe) {
 			throw new CreateObjectException(roe.getMessage(), roe);
 		}
-//		catch (ObjectNotFoundException e) {
-//			throw new CreateObjectException(e.getMessage(), e);
-//		}
+		catch (ObjectNotFoundException e) {
+			throw new CreateObjectException(e.getMessage(), e);
+		}
 		this.returnType = tt.return_type.value();
 		this.description = new String(tt.description);
 		this.measurementSetupIds = new ArrayList(tt.measurement_setup_ids.length);
@@ -215,9 +215,9 @@ public class Test extends StorableObject {
 		catch (RetrieveObjectException roe) {
 			Log.errorException(roe);
 		}
-//		catch (ObjectNotFoundException e) {
-//			Log.errorException(e);
-//		}
+		catch (ObjectNotFoundException e) {
+			Log.errorException(e);
+		}
 	}
 
 	protected synchronized void setMeasurementSetupIds(ArrayList measurementSetupIds) {
