@@ -1,5 +1,5 @@
 /*
- * $Id: ClientMeasurementObjectLoader.java,v 1.27 2005/04/04 13:07:46 bob Exp $
+ * $Id: ClientMeasurementObjectLoader.java,v 1.28 2005/04/06 09:02:44 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,9 +12,13 @@ import java.util.HashSet;
 import java.util.Iterator;
 
 import org.omg.CORBA.SystemException;
+import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.cmserver.corba.CMServer;
+import com.syrus.AMFICOM.configuration.CableLinkType;
+import com.syrus.AMFICOM.general.AbstractClientObjectLoader;
 import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.SessionContext;
@@ -42,12 +46,12 @@ import com.syrus.AMFICOM.measurement.corba.TemporalPattern_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Test_Transferable;
 
 /**
- * @version $Revision: 1.27 $, $Date: 2005/04/04 13:07:46 $
+ * @version $Revision: 1.28 $, $Date: 2005/04/06 09:02:44 $
  * @author $Author: bob $
  * @module generalclient_v1
  */
 
-public final class ClientMeasurementObjectLoader implements MeasurementObjectLoader {
+public final class ClientMeasurementObjectLoader extends AbstractClientObjectLoader implements MeasurementObjectLoader {
 
 	private CMServer								server;
 
@@ -87,11 +91,27 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 			throw new IllegalDataException("System corba exception:" + e.getMessage(), e);
 		}
 	}
+	
+	private StorableObject fromTransferable(Identifier id, IDLEntity transferable) throws CreateObjectException {
+		StorableObject so = null;
+		try {
+			so = MeasurementStorableObjectPool.getStorableObject(id, false);
+		} catch (ApplicationException e) {
+			// nothing do
+		}
+		if (so != null)
+			super.fromTransferable(so, transferable);
+		return so;
+	}
 
 	public MeasurementType loadMeasurementType(Identifier id) throws ApplicationException {
 		try {
-			return new MeasurementType(this.server.transmitMeasurementType((Identifier_Transferable) id
-					.getTransferable(), getAccessIdentifierTransferable()));
+			MeasurementType_Transferable mtt = this.server.transmitMeasurementType((Identifier_Transferable) id
+				.getTransferable(), getAccessIdentifierTransferable());
+			MeasurementType measurementType = (MeasurementType) this.fromTransferable(id, mtt);
+			if (measurementType == null)
+				measurementType = new MeasurementType(mtt);
+			return measurementType;	
 		} catch (AMFICOMRemoteException e) {
 			String msg = "ClientMeasurementObjectLoader.loadMeasurementType | server.transmitMeasurementType("
 					+ id.toString() + ")";
@@ -103,8 +123,12 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 
 	public AnalysisType loadAnalysisType(Identifier id) throws ApplicationException {
 		try {
-			return new AnalysisType(this.server.transmitAnalysisType((Identifier_Transferable) id.getTransferable(),
-				getAccessIdentifierTransferable()));
+			AnalysisType_Transferable att = this.server.transmitAnalysisType((Identifier_Transferable) id.getTransferable(),
+				getAccessIdentifierTransferable());
+			AnalysisType analysisType = (AnalysisType) this.fromTransferable(id, att);
+			if (analysisType == null)
+				analysisType = new AnalysisType(att);
+			return analysisType;	
 		} catch (AMFICOMRemoteException e) {
 			String msg = "ClientMeasurementObjectLoader.loadAnalysisType | server.transmitAnalysisType("
 					+ id.toString() + ")";
@@ -116,8 +140,12 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 
 	public EvaluationType loadEvaluationType(Identifier id) throws ApplicationException {
 		try {
-			return new EvaluationType(this.server.transmitEvaluationType(
-				(Identifier_Transferable) id.getTransferable(), getAccessIdentifierTransferable()));
+			EvaluationType_Transferable ett = this.server.transmitEvaluationType(
+				(Identifier_Transferable) id.getTransferable(), getAccessIdentifierTransferable());
+			EvaluationType evaluationType = (EvaluationType) this.fromTransferable(id, ett);
+			if (evaluationType == null)
+				evaluationType = new EvaluationType(ett);
+			return evaluationType;	
 		} catch (AMFICOMRemoteException e) {
 			String msg = "ClientMeasurementObjectLoader.loadEvaluationType | server.transmitEvaluationType("
 					+ id.toString() + ")";
@@ -129,8 +157,12 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 
 	public Set loadSet(Identifier id) throws ApplicationException {
 		try {
-			return new Set(this.server.transmitSet((Identifier_Transferable) id.getTransferable(),
-				getAccessIdentifierTransferable()));
+			Set_Transferable st = this.server.transmitSet((Identifier_Transferable) id.getTransferable(),
+				getAccessIdentifierTransferable());
+			Set set = (Set) this.fromTransferable(id, st);
+			if (set == null)
+				set = new Set(st);
+			return set;	
 		} catch (AMFICOMRemoteException e) {
 			String msg = "ClientMeasurementObjectLoader.loadSet | server.transmitSet(" + id.toString() + ")";
 			throw new ApplicationException(msg, e);
@@ -141,8 +173,12 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 
 	public MeasurementSetup loadMeasurementSetup(Identifier id) throws ApplicationException {
 		try {
-			return new MeasurementSetup(this.server.transmitMeasurementSetup((Identifier_Transferable) id
-					.getTransferable(), getAccessIdentifierTransferable()));
+			MeasurementSetup_Transferable mst = this.server.transmitMeasurementSetup((Identifier_Transferable) id
+				.getTransferable(), getAccessIdentifierTransferable());
+			MeasurementSetup measurementSetup = (MeasurementSetup) this.fromTransferable(id, mst);
+			if (measurementSetup == null)
+				measurementSetup = new MeasurementSetup(mst);
+			return measurementSetup;	
 		} catch (AMFICOMRemoteException e) {
 			String msg = "ClientMeasurementObjectLoader.loadMeasurementSetup | server.transmitMeasurementSetup("
 					+ id.toString() + ")";
@@ -154,10 +190,14 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 
 	public Modeling loadModeling(Identifier id) throws ApplicationException {
 		try {
-			return new Modeling(this.server.transmitModeling((Identifier_Transferable) id.getTransferable(),
-				getAccessIdentifierTransferable()));
+			Modeling_Transferable mt = this.server.transmitModeling((Identifier_Transferable) id.getTransferable(),
+				getAccessIdentifierTransferable());
+			Modeling modeling = (Modeling) this.fromTransferable(id, mt);
+			if (modeling == null)
+				modeling = new Modeling(mt);
+			return modeling;
 		} catch (AMFICOMRemoteException e) {
-			String msg = "ClientMeasurementObjectLoader.loadMeasurement | server.transmitMeasurement(" + id.toString()
+			String msg = "ClientMeasurementObjectLoader.loadModeling | server.transmitMeasurement(" + id.toString()
 					+ ")";
 			throw new ApplicationException(msg, e);
 		} catch (SystemException e) {
@@ -167,10 +207,14 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 
 	public ModelingType loadModelingType(Identifier id) throws ApplicationException {
 		try {
-			return new ModelingType(this.server.transmitModelingType((Identifier_Transferable) id.getTransferable(),
-				getAccessIdentifierTransferable()));
+			ModelingType_Transferable mtt = this.server.transmitModelingType((Identifier_Transferable) id.getTransferable(),
+				getAccessIdentifierTransferable());
+			ModelingType modelingType = (ModelingType) this.fromTransferable(id, mtt);
+			if (modelingType == null)
+				modelingType = new ModelingType(mtt);
+			return modelingType;
 		} catch (AMFICOMRemoteException e) {
-			String msg = "ClientMeasurementObjectLoader.loadMeasurement | server.transmitMeasurement(" + id.toString()
+			String msg = "ClientMeasurementObjectLoader.loadModelingType | server.transmitMeasurement(" + id.toString()
 					+ ")";
 			throw new ApplicationException(msg, e);
 		} catch (SystemException e) {
@@ -180,8 +224,12 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 
 	public Measurement loadMeasurement(Identifier id) throws ApplicationException {
 		try {
-			return new Measurement(this.server.transmitMeasurement((Identifier_Transferable) id.getTransferable(),
-				getAccessIdentifierTransferable()));
+			Measurement_Transferable mt = this.server.transmitMeasurement((Identifier_Transferable) id.getTransferable(),
+				getAccessIdentifierTransferable());
+			Measurement measurement = (Measurement) this.fromTransferable(id, mt);
+			if (measurement == null)
+				measurement = new Measurement(mt);
+			return measurement;
 		} catch (AMFICOMRemoteException e) {
 			String msg = "ClientMeasurementObjectLoader.loadMeasurement | server.transmitMeasurement(" + id.toString()
 					+ ")";
@@ -193,8 +241,12 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 
 	public Analysis loadAnalysis(Identifier id) throws ApplicationException {
 		try {
-			return new Analysis(this.server.transmitAnalysis((Identifier_Transferable) id.getTransferable(),
-				getAccessIdentifierTransferable()));
+			Analysis_Transferable at = this.server.transmitAnalysis((Identifier_Transferable) id.getTransferable(),
+				getAccessIdentifierTransferable());
+			Analysis analysis = (Analysis) this.fromTransferable(id, at);
+			if (analysis == null)
+				analysis = new Analysis(at);
+			return analysis;
 		} catch (AMFICOMRemoteException e) {
 			String msg = "ClientMeasurementObjectLoader.loadAnalysis | server.transmitAnalysis(" + id.toString() + ")";
 			throw new ApplicationException(msg, e);
@@ -205,8 +257,12 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 
 	public Evaluation loadEvaluation(Identifier id) throws ApplicationException {
 		try {
-			return new Evaluation(this.server.transmitEvaluation((Identifier_Transferable) id.getTransferable(),
-				getAccessIdentifierTransferable()));
+			Evaluation_Transferable et = this.server.transmitEvaluation((Identifier_Transferable) id.getTransferable(),
+				getAccessIdentifierTransferable());
+			Evaluation evaluation = (Evaluation) this.fromTransferable(id, et);
+			if (evaluation == null)
+				evaluation = new Evaluation(et);
+			return evaluation;
 		} catch (AMFICOMRemoteException e) {
 			String msg = "ClientMeasurementObjectLoader.loadEvaluation | server.transmitEvaluation(" + id.toString()
 					+ ")";
@@ -218,8 +274,12 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 
 	public Test loadTest(Identifier id) throws ApplicationException {
 		try {
-			return new Test(this.server.transmitTest((Identifier_Transferable) id.getTransferable(),
-				getAccessIdentifierTransferable()));
+			Test_Transferable tt = this.server.transmitTest((Identifier_Transferable) id.getTransferable(),
+				getAccessIdentifierTransferable());
+			Test test = (Test) this.fromTransferable(id, tt);
+			if (test == null)
+				test = new Test(tt);
+			return test;
 		} catch (AMFICOMRemoteException e) {
 			String msg = "ClientTestObjectLoader.loadTest | server.transmitTest(" + id.toString() + ")";
 			throw new ApplicationException(msg, e);
@@ -230,8 +290,12 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 
 	public Result loadResult(Identifier id) throws ApplicationException {
 		try {
-			return new Result(this.server.transmitResult((Identifier_Transferable) id.getTransferable(),
-				getAccessIdentifierTransferable()));
+			Result_Transferable rt = this.server.transmitResult((Identifier_Transferable) id.getTransferable(),
+				getAccessIdentifierTransferable());
+			Result result = (Result) this.fromTransferable(id, rt);
+			if (result == null)
+				result = new Result(rt);
+			return result;
 		} catch (AMFICOMRemoteException e) {
 			String msg = "ClientMeasurementObjectLoader.loadResult | server.transmitResult(" + id.toString() + ")";
 			throw new ApplicationException(msg, e);
@@ -242,8 +306,12 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 
 	public TemporalPattern loadTemporalPattern(Identifier id) throws ApplicationException {
 		try {
-			return new TemporalPattern(this.server.transmitTemporalPattern((Identifier_Transferable) id
-					.getTransferable(), getAccessIdentifierTransferable()));
+			TemporalPattern_Transferable tpt = this.server.transmitTemporalPattern((Identifier_Transferable) id
+					.getTransferable(), getAccessIdentifierTransferable());
+			TemporalPattern temporalPattern = (TemporalPattern) this.fromTransferable(id, tpt);
+			if (temporalPattern == null)
+				temporalPattern = new TemporalPattern(tpt);
+			return temporalPattern;
 		} catch (AMFICOMRemoteException e) {
 			String msg = "ClientMeasurementObjectLoader.loadTemporalPattern | server.transmitTemporalPattern("
 					+ id.toString() + ")";
@@ -265,7 +333,10 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 				getAccessIdentifierTransferable());
 			java.util.Set set = new HashSet(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
-				set.add(new Analysis(transferables[j]));
+				Analysis analysis = (Analysis) this.fromTransferable(new Identifier(transferables[j].header.id), transferables[j]);
+				if (analysis == null)
+					analysis = new Analysis(transferables[j]);
+				set.add(analysis);
 			}
 			return set;
 		} catch (AMFICOMRemoteException e) {
@@ -310,7 +381,10 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 				getAccessIdentifierTransferable());
 			java.util.Set set = new HashSet(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
-				set.add(new AnalysisType(transferables[j]));
+				AnalysisType analysisType = (AnalysisType) this.fromTransferable(new Identifier(transferables[j].header.id), transferables[j]);
+				if (analysisType == null)
+					analysisType = new AnalysisType(transferables[j]);
+				set.add(analysisType);
 			}
 			return set;
 		} catch (AMFICOMRemoteException e) {
@@ -356,7 +430,10 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 				getAccessIdentifierTransferable());
 			java.util.Set set = new HashSet(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
-				set.add(new Evaluation(transferables[j]));
+				Evaluation evaluation = (Evaluation) this.fromTransferable(new Identifier(transferables[j].header.id), transferables[j]);
+				if (evaluation == null)
+					evaluation = new Evaluation(transferables[j]);
+				set.add(evaluation);
 			}
 			return set;
 		} catch (AMFICOMRemoteException e) {
@@ -402,7 +479,10 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 				getAccessIdentifierTransferable());
 			java.util.Set set = new HashSet(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
-				set.add(new EvaluationType(transferables[j]));
+				EvaluationType evaluationType = (EvaluationType) this.fromTransferable(new Identifier(transferables[j].header.id), transferables[j]);
+				if (evaluationType == null)
+					evaluationType = new EvaluationType(transferables[j]);
+				set.add(evaluationType);
 			}
 			return set;
 		} catch (AMFICOMRemoteException e) {
@@ -449,7 +529,10 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 				getAccessIdentifierTransferable());
 			java.util.Set set = new HashSet(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
-				set.add(new Measurement(transferables[j]));
+				Measurement measurement = (Measurement) this.fromTransferable(new Identifier(transferables[j].header.id), transferables[j]);
+				if (measurement == null)
+					measurement = new Measurement(transferables[j]);
+				set.add(measurement);
 			}
 			return set;
 		} catch (AMFICOMRemoteException e) {
@@ -496,7 +579,10 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 				getAccessIdentifierTransferable());
 			java.util.Set set = new HashSet(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
-				set.add(new Modeling(transferables[j]));
+				Modeling modeling = (Modeling) this.fromTransferable(new Identifier(transferables[j].header.id), transferables[j]);
+				if (modeling == null)
+					modeling = new Modeling(transferables[j]);
+				set.add(modeling);
 			}
 			return set;
 		} catch (AMFICOMRemoteException e) {
@@ -518,7 +604,10 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 				getAccessIdentifierTransferable());
 			java.util.Set set = new HashSet(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
-				set.add(new ModelingType(transferables[j]));
+				ModelingType modelingType = (ModelingType) this.fromTransferable(new Identifier(transferables[j].header.id), transferables[j]);
+				if (modelingType == null)
+					modelingType = new ModelingType(transferables[j]);
+				set.add(modelingType);
 			}
 			return set;
 		} catch (AMFICOMRemoteException e) {
@@ -589,7 +678,10 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 				identifierTransferables, getAccessIdentifierTransferable());
 			java.util.Set set = new HashSet(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
-				set.add(new MeasurementSetup(transferables[j]));
+				MeasurementSetup measurementSetup = (MeasurementSetup) this.fromTransferable(new Identifier(transferables[j].header.id), transferables[j]);
+				if (measurementSetup == null)
+					measurementSetup = new MeasurementSetup(transferables[j]);
+				set.add(measurementSetup);
 			}
 			return set;
 		} catch (AMFICOMRemoteException e) {
@@ -639,7 +731,10 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 				identifierTransferables, getAccessIdentifierTransferable());
 			java.util.Set set = new HashSet(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
-				set.add(new MeasurementType(transferables[j]));
+				MeasurementType measurementType = (MeasurementType) this.fromTransferable(new Identifier(transferables[j].header.id), transferables[j]);
+				if (measurementType == null)
+					measurementType = new MeasurementType(transferables[j]);
+				set.add(measurementType);
 			}
 			return set;
 		} catch (AMFICOMRemoteException e) {
@@ -684,7 +779,10 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 				getAccessIdentifierTransferable());
 			java.util.Set set = new HashSet(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
-				set.add(new Result(transferables[j]));
+				Result result = (Result) this.fromTransferable(new Identifier(transferables[j].header.id), transferables[j]);
+				if (result == null)
+					result = new Result(transferables[j]);
+				set.add(result);
 			}
 			return set;
 		} catch (AMFICOMRemoteException e) {
@@ -730,7 +828,10 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 				getAccessIdentifierTransferable());
 			java.util.Set set = new HashSet(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
-				set.add(new Set(transferables[j]));
+				Set set2 = (Set) this.fromTransferable(new Identifier(transferables[j].header.id), transferables[j]);
+				if (set2 == null)
+					set2 = new Set(transferables[j]);
+				set.add(set2);
 			}
 			return set;
 		} catch (AMFICOMRemoteException e) {
@@ -775,7 +876,10 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 				identifierTransferables, getAccessIdentifierTransferable());
 			java.util.Set set = new HashSet(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
-				set.add(new TemporalPattern(transferables[j]));
+				TemporalPattern temporalPattern = (TemporalPattern) this.fromTransferable(new Identifier(transferables[j].header.id), transferables[j]);
+				if (temporalPattern == null)
+					temporalPattern = new TemporalPattern(transferables[j]);
+				set.add(temporalPattern);
 			}
 			return set;
 		} catch (AMFICOMRemoteException e) {
@@ -820,7 +924,10 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 				getAccessIdentifierTransferable());
 			java.util.Set set = new HashSet(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
-				set.add(new Test(transferables[j]));
+				Test test = (Test) this.fromTransferable(new Identifier(transferables[j].header.id), transferables[j]);
+				if (test == null)
+					test = new Test(transferables[j]);
+				set.add(test);
 			}
 			return set;
 		} catch (AMFICOMRemoteException e) {
