@@ -1,5 +1,5 @@
 /*
- * $Id: ItemTreeModel.java,v 1.3 2005/03/21 13:06:43 bob Exp $
+ * $Id: ItemTreeModel.java,v 1.4 2005/03/25 09:46:15 bob Exp $
  *
  * Copyright ? 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,7 +24,7 @@ import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/03/21 13:06:43 $
+ * @version $Revision: 1.4 $, $Date: 2005/03/25 09:46:15 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module filter_v1
@@ -129,8 +129,7 @@ public class ItemTreeModel implements TreeModel, ItemListener {
 	}
 
 	public boolean isLeaf(Object node) {
-		List children = ((Item) node).getChildren();
-		return children.isEmpty();
+		return !((Item)node).canHaveChildren();
 	}
 
 	public void valueForPathChanged(TreePath path, Object newValue) {
