@@ -42,3 +42,6 @@ mcm		AMFICOM/v2/mcm
 AMFICOMv1	&kisserver
 
 kisserver	AMFICOM/v1/kisserver
+
+akp		hw/akp
+trc		hw/trc
