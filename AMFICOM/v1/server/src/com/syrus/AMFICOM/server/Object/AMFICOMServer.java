@@ -1,5 +1,5 @@
 /*
- * $Id: AMFICOMServer.java,v 1.4 2004/06/29 07:12:57 bass Exp $
+ * $Id: AMFICOMServer.java,v 1.5 2004/07/23 06:53:38 krupenn Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,8 +32,8 @@ import java.util.Vector;
 import org.omg.CORBA.*;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2004/06/29 07:12:57 $
- * @author $Author: bass $
+ * @version $Revision: 1.5 $, $Date: 2004/07/23 06:53:38 $
+ * @author $Author: krupenn $
  * @module server_v1
  */
 public class AMFICOMServer extends _AMFICOMImplBase
@@ -41,7 +41,7 @@ public class AMFICOMServer extends _AMFICOMImplBase
 	AMFICOMdbInterface dbInterface = new AMFICOMdbInterface();
 
 	static ServerTrafficReporterStream strs = new ServerTrafficReporterStream();
-	static boolean measuretraffic = true;
+	static boolean measuretraffic = false;
 
 	protected AlarmReceiverMap alarmReceiverMap;
 	
