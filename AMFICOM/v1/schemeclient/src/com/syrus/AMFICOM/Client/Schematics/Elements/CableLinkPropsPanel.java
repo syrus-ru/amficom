@@ -217,11 +217,11 @@ public class CableLinkPropsPanel extends JPanel
 				try
 				{
 					double d = Double.parseDouble(optLen.getText());
-					links[0].opticalLength(d);
+					links[0].setOpticalLength(d);
 					optLen.setForeground(nameText.getForeground());
 					if (smooth_length)
 					{
-						links[0].physicalLength(d);
+						links[0].setPhysicalLength(d);
 						strLen.setText(optLen.getText());
 						strLen.setForeground(nameText.getForeground());
 					}
@@ -245,11 +245,11 @@ public class CableLinkPropsPanel extends JPanel
 				try
 				{
 					double d = Double.parseDouble(strLen.getText());
-					links[0].physicalLength(d);
+					links[0].setPhysicalLength(d);
 					strLen.setForeground(nameText.getForeground());
 					if (smooth_length)
 					{
-						links[0].opticalLength(d);
+						links[0].setOpticalLength(d);
 						optLen.setText(strLen.getText());
 						optLen.setForeground(nameText.getForeground());
 					}
@@ -321,13 +321,13 @@ public class CableLinkPropsPanel extends JPanel
 
 		if (links.length == 1)
 		{
-			if (links[0].opticalLength() == 0 || links[0].physicalLength() == 0)
+			if (links[0].getOpticalLength() == 0 || links[0].getPhysicalLength() == 0)
 				smooth_length = true;
 
 			nameText.setText(links[0].getName());
 			nameText.setCaretPosition(0);
-			optLen.setText(String.valueOf(links[0].opticalLength()));
-			strLen.setText(String.valueOf(links[0].physicalLength()));
+			optLen.setText(String.valueOf(links[0].getOpticalLength()));
+			strLen.setText(String.valueOf(links[0].getPhysicalLength()));
 		}
 		else
 		{

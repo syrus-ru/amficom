@@ -213,7 +213,7 @@ public class LinkPropsPanel extends JPanel
 				try
 				{
 					double d = Double.parseDouble(optLen.getText());
-					links[0].opticalLength(d);
+					links[0].setOpticalLength(d);
 					optLen.setForeground(nameText.getForeground());
 				}
 				catch (NumberFormatException e)
@@ -235,7 +235,7 @@ public class LinkPropsPanel extends JPanel
 				try
 				{
 					double d = Double.parseDouble(strLen.getText());
-					links[0].physicalLength(d);
+					links[0].setPhysicalLength(d);
 					strLen.setForeground(nameText.getForeground());
 				}
 				catch (NumberFormatException e)
@@ -315,8 +315,8 @@ public class LinkPropsPanel extends JPanel
 		{
 			nameText.setText(links[0].getName());
 			nameText.setCaretPosition(0);
-			optLen.setText(String.valueOf(links[0].opticalLength()));
-			strLen.setText(String.valueOf(links[0].physicalLength()));
+			optLen.setText(String.valueOf(links[0].getOpticalLength()));
+			strLen.setText(String.valueOf(links[0].getPhysicalLength()));
 		}
 		else
 		{

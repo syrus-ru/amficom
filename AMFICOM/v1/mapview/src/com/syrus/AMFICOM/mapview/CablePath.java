@@ -1,5 +1,5 @@
 /**
- * $Id: CablePath.java,v 1.9 2005/03/28 08:25:13 bass Exp $
+ * $Id: CablePath.java,v 1.10 2005/03/28 12:02:14 bass Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -40,7 +40,7 @@ import java.util.ListIterator;
 /**
  * Ёлемент кабельного пути. ќписывает прив€зку кабел€ к топологическим лини€м.
  * @author $Author: bass $
- * @version $Revision: 1.9 $, $Date: 2005/03/28 08:25:13 $
+ * @version $Revision: 1.10 $, $Date: 2005/03/28 12:02:14 $
  * @module mapviewclient_v1
  */
 public class CablePath implements MapElement
@@ -494,7 +494,7 @@ public class CablePath implements MapElement
 	 */
 	public double getLengthLf()
 	{
-		return this.schemeCableLink.physicalLength();
+		return this.schemeCableLink.getPhysicalLength();
 	}
 
 	/**
@@ -503,7 +503,7 @@ public class CablePath implements MapElement
 	 */
 	public double getLengthLo()
 	{
-		return this.schemeCableLink.opticalLength();
+		return this.schemeCableLink.getOpticalLength();
 	}
 
 	/**
@@ -512,7 +512,7 @@ public class CablePath implements MapElement
 	 */
 	public void setLengthLf(double len)
 	{
-		this.schemeCableLink.physicalLength(len);
+		this.schemeCableLink.setPhysicalLength(len);
 	}
 
 	/**
@@ -521,7 +521,7 @@ public class CablePath implements MapElement
 	 */
 	public void setLengthLo(double len)
 	{
-		this.schemeCableLink.opticalLength(len);
+		this.schemeCableLink.setOpticalLength(len);
 	}
 
 	/**
@@ -531,7 +531,7 @@ public class CablePath implements MapElement
 	 */
 	public double getKd()
 	{
-		double phLen = this.schemeCableLink.physicalLength();
+		double phLen = this.schemeCableLink.getPhysicalLength();
 		if(phLen == 0.0D)
 			return 1.0;
 		double topLen = this.getLengthLt();

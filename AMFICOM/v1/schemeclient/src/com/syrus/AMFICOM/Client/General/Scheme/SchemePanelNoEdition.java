@@ -41,8 +41,8 @@ public class SchemePanelNoEdition extends SchemePanel
 			if (see.CREATE_ALARMED_LINK)
 			{
 				SchemeElement se = (SchemeElement)see.obj;
-				SchemePath path = se.alarmedPath();
-				startPathAnimator(path, se.alarmedPathElement());
+				SchemePath path = se.getAlarmedPath();
+				startPathAnimator(path, se.getAlarmedPathElement());
 			}
 
 			if (!see.OPEN_PRIMARY_SCHEME)

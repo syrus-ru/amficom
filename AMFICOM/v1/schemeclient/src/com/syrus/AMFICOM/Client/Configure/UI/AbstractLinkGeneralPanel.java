@@ -236,8 +236,8 @@ public abstract class AbstractLinkGeneralPanel extends GeneralPanel {
 
 		this.idField.setText(this.link.getId().getIdentifierString());
 		this.nameField.setText(this.link.getName());
-		this.physLengthField.setText(String.valueOf(this.link.physicalLength()));
-		this.optLengthField.setText(String.valueOf(this.link.opticalLength()));
+		this.physLengthField.setText(String.valueOf(this.link.getPhysicalLength()));
+		this.optLengthField.setText(String.valueOf(this.link.getOpticalLength()));
 
 		AbstractSchemePort sport = this.link.getSourceAbstractSchemePort();
 		SchemeDevice sdev = sport.getParentSchemeDevice();
@@ -267,8 +267,8 @@ public abstract class AbstractLinkGeneralPanel extends GeneralPanel {
 			double d1 = Double.parseDouble(this.physLengthField.getText());
 			double d2 = Double.parseDouble(this.optLengthField.getText());
 
-			this.link.physicalLength(d1);
-			this.link.opticalLength(d2);
+			this.link.setPhysicalLength(d1);
+			this.link.setOpticalLength(d2);
 
 			if (MiscUtil.validName(this.nameField.getText()))
 				this.link.setName(this.nameField.getText());

@@ -82,7 +82,7 @@ public final class SchemeCableThreadController implements ObjectResourceControll
 			else if (key.equals(COLUMN_TYPE_ID))
 				result = thread.getCableThreadType().getId().getIdentifierString();
 			else if (key.equals(COLUMN_THREAD_ID))
-				result = thread.getThread().getId().getIdentifierString();
+				result = thread.getLink().getId().getIdentifierString();
 			else if (key.equals(COLUMN_SOURCE_SCHEME_PORT_ID))
 				result = thread.getSourceSchemePort().getId().getIdentifierString();
 			else if (key.equals(COLUMN_TARGET_SCHEME_PORT_ID))

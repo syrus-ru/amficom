@@ -149,8 +149,8 @@ public class AlarmedPathAnimator// extends Thread implements Runnable
 								for (Enumeration e = ((DeviceGroup)cells[i]).children(); e.hasMoreElements(); )
 									edges_to_paint.add(e.nextElement());
 								se.setAlarmed(true);
-								se.alarmedPath(path);
-								se.alarmedPathElement(alarmedPE);
+								se.setAlarmedPath(path);
+								se.setAlarmedPathElement(alarmedPE);
 								return edges_to_paint.toArray();
 							}
 						}
@@ -177,8 +177,8 @@ public class AlarmedPathAnimator// extends Thread implements Runnable
 									for (Enumeration e = ((DeviceGroup)cells[i]).children(); e.hasMoreElements(); )
 										edges_to_paint.add(e.nextElement());
 									se.setAlarmed(true);
-									se.alarmedPath(path);
-									se.alarmedPathElement(alarmedPE);
+									se.setAlarmedPath(path);
+									se.setAlarmedPathElement(alarmedPE);
 									return edges_to_paint.toArray();
 								}
 						}
@@ -188,8 +188,8 @@ public class AlarmedPathAnimator// extends Thread implements Runnable
 								for (Enumeration e = ((DeviceGroup)cells[i]).children(); e.hasMoreElements(); )
 									edges_to_paint.add(e.nextElement());
 								se.setAlarmed(true);
-								se.alarmedPath(path);
-								se.alarmedPathElement(alarmedPE);
+								se.setAlarmedPath(path);
+								se.setAlarmedPathElement(alarmedPE);
 								return edges_to_paint.toArray();
 							}
 						}
@@ -216,8 +216,8 @@ public class AlarmedPathAnimator// extends Thread implements Runnable
 									for (Enumeration e = ((DeviceGroup)cells[i]).children(); e.hasMoreElements(); )
 										edges_to_paint.add(e.nextElement());
 									se.setAlarmed(true);
-									se.alarmedPath(path);
-									se.alarmedPathElement(alarmedPE);
+									se.setAlarmedPath(path);
+									se.setAlarmedPathElement(alarmedPE);
 									return edges_to_paint.toArray();
 								}
 						}
@@ -227,8 +227,8 @@ public class AlarmedPathAnimator// extends Thread implements Runnable
 								for (Enumeration e = ((DeviceGroup)cells[i]).children(); e.hasMoreElements(); )
 									edges_to_paint.add(e.nextElement());
 								se.setAlarmed(true);
-								se.alarmedPath(path);
-								se.alarmedPathElement(alarmedPE);
+								se.setAlarmedPath(path);
+								se.setAlarmedPathElement(alarmedPE);
 								return edges_to_paint.toArray();
 							}
 						}

@@ -162,8 +162,8 @@ public class SchemeElementPropsPanel extends JPanel
 			{
 				if (element == null)
 					return;
-				element.label(ugoNameTextField.getText());
-				aContext.getDispatcher().notify(new SchemeElementsEvent(element.getId(), element.label(), SchemeElementsEvent.UGO_TEXT_UPDATE_EVENT));
+				element.setLabel(ugoNameTextField.getText());
+				aContext.getDispatcher().notify(new SchemeElementsEvent(element.getId(), element.getLabel(), SchemeElementsEvent.UGO_TEXT_UPDATE_EVENT));
 			}
 			public void keyPressed(KeyEvent ae)
 					{}
@@ -201,7 +201,7 @@ public class SchemeElementPropsPanel extends JPanel
 		nameTextField.setCaretPosition(0);
 
 		descriptionTextArea.setText(element.getDescription());
-		ugoNameTextField.setText(element.label());
+		ugoNameTextField.setText(element.getLabel());
 		ugoNameTextField.setCaretPosition(0);
 
 		if (element != null)
@@ -219,7 +219,7 @@ public class SchemeElementPropsPanel extends JPanel
 
 		undoType = element.getName();
 		undoDescription = element.getDescription();
-		undoUgoName = element.label();
+		undoUgoName = element.getLabel();
 		updateUI();
 	}
 
@@ -229,7 +229,7 @@ public class SchemeElementPropsPanel extends JPanel
 		{
 			element.setName(undoType);
 			element.setDescription(undoDescription);
-			element.label(undoUgoName);
+			element.setLabel(undoUgoName);
 		}
 	}
 
