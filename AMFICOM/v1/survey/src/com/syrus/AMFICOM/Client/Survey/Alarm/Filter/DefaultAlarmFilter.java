@@ -1,0 +1,81 @@
+package com.syrus.AMFICOM.Client.Survey.Alarm.Filter;
+
+import com.syrus.AMFICOM.Client.General.Lang.*;
+import com.syrus.AMFICOM.Client.General.UI.*;
+import com.syrus.AMFICOM.Client.General.Filter.*;
+import com.syrus.AMFICOM.Client.Resource.*;
+import com.syrus.AMFICOM.Client.Resource.Alarm.*;
+import com.syrus.AMFICOM.Client.Resource.ISM.*;
+import com.syrus.AMFICOM.Client.Resource.ISMDirectory.*;
+import com.syrus.AMFICOM.Client.Resource.Result.*;
+import com.syrus.AMFICOM.Client.Resource.Test.*;
+import com.syrus.AMFICOM.Client.Schedule.Filter.*;
+import com.syrus.AMFICOM.CORBA.General.*;
+import java.util.*;
+import java.text.SimpleDateFormat;
+
+public class DefaultAlarmFilter extends AlarmFilter
+{
+	static SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yy HH:mm:ss");
+
+	// Фильтр по умолчанию производит фильтрацию по времени (сигналы тревоги
+	// за последние сутки) и по статусу (новые сигналы тревоги)
+	public DefaultAlarmFilter()
+	{
+		super();
+
+		FilterExpression fe = new FilterExpression();
+		Vector vec = new Vector();
+		String col_name = "";
+
+		Calendar hc = Calendar.getInstance();
+		hc.set(Calendar.MILLISECOND, 0);
+		hc.set(Calendar.SECOND, 0);
+		hc.set(Calendar.MINUTE, 0);
+		hc.set(Calendar.HOUR_OF_DAY, 0);
+
+		long loval = hc.getTimeInMillis();
+//		long loval = System.currentTimeMillis();
+		long hival = System.currentTimeMillis();
+
+		vec.add("time");
+		vec.add(String.valueOf(loval));
+		vec.add(String.valueOf(hival));
+		
+		col_name = getFilterColumnName("time");
+		fe.setName(LangModel.String("labelFiltration") +
+				" \'" + col_name + 
+				"\' " + LangModel.String("labelTimeOt") + 
+				" " + sdf.format(new Date(loval)) + 
+				" " + LangModel.String("labelTimeDo") +
+				" " + sdf.format(new Date(hival)));
+		fe.setVec(vec);
+		fe.setId("time");
+		addCriterium(fe);
+
+		fe = new FilterExpression();
+		vec = new Vector();
+
+		AlarmStatusTree ast = new AlarmStatusTree();
+		ast.setTree(null);
+		ast.a1.state = 2;// set list value "GENERATED" to 'checked'
+		ast.root.state = 1;// set root status to 'has checked nodes'
+		TreeModelClone tm = (TreeModelClone )ast.tree.getModel();
+		TreeModelClone new_tm = tm.myclone();
+
+		vec.add("list");
+		vec.add(new_tm);
+
+		col_name = getFilterColumnName("status");
+		fe.setVec(vec);
+		fe.setName(LangModel.String("labelFiltration") +
+				" \'" + col_name +
+				"\' " + LangModel.String("labelPoSpisku"));
+		fe.setId("status");
+		addCriterium(fe);
+
+		this.logicScheme.organizeStandartScheme();
+//		this.logicScheme.restoreSchemeByText(String expression, Vector filterExpressions)
+
+	}
+}
