@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractMesurementTestCase.java,v 1.1 2005/02/04 14:18:32 bob Exp $
+ * $Id: AbstractMesurementTestCase.java,v 1.2 2005/02/15 07:39:50 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,7 +8,7 @@
 
 package com.syrus.AMFICOM.measurement;
 
-import java.util.List;
+import java.util.Collection;
 
 import junit.extensions.TestSetup;
 import junit.framework.Test;
@@ -30,7 +30,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/02/04 14:18:32 $
+ * @version $Revision: 1.2 $, $Date: 2005/02/15 07:39:50 $
  * @author $Author: bob $
  * @module tools
  */
@@ -70,29 +70,29 @@ public abstract class AbstractMesurementTestCase extends TestCase {
 		DatabaseContextSetup.initObjectPools();
 		UserDatabase userDatabase = (UserDatabase) AdministrationDatabaseContext.getUserDatabase();
 		DomainDatabase domainDatabase = (DomainDatabase) AdministrationDatabaseContext.getDomainDatabase();
-		List userList = null;
-		List domainList = null;
+		Collection userCollection = null;
+		Collection domainCollection = null;
 
 		try {
-			userList = userDatabase.retrieveByIds(null, null);
-			domainList = domainDatabase.retrieveByIds(null, null);
+			userCollection = userDatabase.retrieveByIds(null, null);
+			domainCollection = domainDatabase.retrieveByIds(null, null);
 		} catch (RetrieveObjectException roe) {
 			roe.printStackTrace();
 		} catch (IllegalDataException ide) {
 			ide.printStackTrace();
 		}
 
-		if ((userList == null) || (userList.isEmpty()))
+		if ((userCollection == null) || (userCollection.isEmpty()))
 			fail("must be at less one user at db");
 
-		if ((domainList == null) || (domainList.isEmpty()))
+		if ((domainCollection == null) || (domainCollection.isEmpty()))
 			fail("must be at less one domain at db");
 
 		//AbstractMesurementTestCase.creatorId = new
 		// Identifier("Users_1");
-		AbstractMesurementTestCase.creatorId = ((User) userList.get(0)).getId();
+		AbstractMesurementTestCase.creatorId = ((User) userCollection.iterator().next()).getId();
 		//AbstractMesurementTestCase.domainId = new Identifier("Domain_1");
-		AbstractMesurementTestCase.domainId = ((Domain) domainList.get(0)).getId();
+		AbstractMesurementTestCase.domainId = ((Domain) domainCollection.iterator().next()).getId();
 		
 		 IdentifierPool.init(new DefaultIdentifierGeneratorServer());
 //		IdentifierPool.init(new XMLIdentifierGeneratorServer());
