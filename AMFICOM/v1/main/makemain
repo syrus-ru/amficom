@@ -10,6 +10,7 @@ JAVAC=javac
 JAR=jar
 
 TARGET=$(LIB)\main.jar
+TARGET_RUN=$(LIB)\run\mainrun.jar
 TARGET_CLASS_LIST=src_main.txt
 TARGET_SRC=$(LIBSRC)\mainsource.jar
 
@@ -41,6 +42,7 @@ $(TARGET):	clean impl loc jar
 
 jar:
 	$(JAR) -cf $(TARGET) -C $(CLASSES) com
+	$(JAR) -cf $(TARGET_RUN) -C $(CLASSES) com\syrus\AMFICOM\Client\Main\MainRun.class
 	$(JAR) -cf $(TARGET_SRC) -C $(SRC) com
 
 impl:
@@ -56,4 +58,4 @@ loc:
 
 clean:
 	rm -rf $(CLASSES)\com
-	rm -f $(TARGET) $(TARGET_SRC)
+	rm -f $(TARGET) $(TARGET_RUN) $(TARGET_SRC)

@@ -5,6 +5,7 @@ src/com/syrus/AMFICOM/Client/General/Model/DefaultMainApplicationModelFactory.ja
 src/com/syrus/AMFICOM/Client/General/Model/MainApplicationModel.java
 src/com/syrus/AMFICOM/Client/General/Model/MainApplicationModelFactory.java
 src/com/syrus/AMFICOM/Client/Main/Main.java
+src/com/syrus/AMFICOM/Client/Main/MainRun.java
 src/com/syrus/AMFICOM/Client/Main/StarterFrame.java
 src/com/syrus/AMFICOM/Client/Main/StarterMenuBar.java
 src/com/syrus/AMFICOM/Client/Main/StarterPanel.java
