@@ -1,5 +1,5 @@
 /*
- * $Id: Modeling.java,v 1.8 2004/10/18 09:44:28 bob Exp $
+ * $Id: Modeling.java,v 1.9 2004/10/18 11:42:12 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,8 +10,6 @@ package com.syrus.AMFICOM.measurement;
 
 import java.util.Date;
 
-import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
-import com.syrus.AMFICOM.configuration.MonitoredElement;
 import com.syrus.AMFICOM.event.corba.AlarmLevel;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
@@ -28,7 +26,7 @@ import com.syrus.AMFICOM.measurement.corba.ResultSort;
 import com.syrus.util.HashCodeGenerator;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2004/10/18 09:44:28 $
+ * @version $Revision: 1.9 $, $Date: 2004/10/18 11:42:12 $
  * @author $Author: bob $
  * @module measurement_v1
  */
