@@ -1,5 +1,5 @@
 /*
- * $Id: ConfigurationStorableObjectPool.java,v 1.45 2004/11/25 10:22:02 bob Exp $
+ * $Id: ConfigurationStorableObjectPool.java,v 1.46 2004/11/25 10:37:15 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,7 +27,7 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.45 $, $Date: 2004/11/25 10:22:02 $
+ * @version $Revision: 1.46 $, $Date: 2004/11/25 10:37:15 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -70,7 +70,8 @@ public class ConfigurationStorableObjectPool extends StorableObjectPool {
 	}
 
 	public static void init(ConfigurationObjectLoader cObjectLoader1, final int size) {
-		instance = new ConfigurationStorableObjectPool();
+		if (instance == null)
+			instance = new ConfigurationStorableObjectPool();
 		
 		instance.objectPoolMap = Collections.synchronizedMap(new Hashtable(OBJECT_POOL_MAP_SIZE));
 		
@@ -101,7 +102,8 @@ public class ConfigurationStorableObjectPool extends StorableObjectPool {
 	}
 
 	public static void init(ConfigurationObjectLoader cObjectLoader1) {
-		instance = new ConfigurationStorableObjectPool();
+		if (instance == null)
+			instance = new ConfigurationStorableObjectPool();
 		
 		instance.objectPoolMap = Collections.synchronizedMap(new Hashtable(OBJECT_POOL_MAP_SIZE));
 
