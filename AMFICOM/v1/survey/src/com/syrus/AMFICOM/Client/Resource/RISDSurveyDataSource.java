@@ -216,7 +216,10 @@ public class RISDSurveyDataSource
 		{
 			e.printStackTrace();
 		}
-		Filter_Transferable filter = new Filter_Transferable("alarm", logic_scheme);
+		Filter_Transferable filter = new Filter_Transferable();
+		filter.resource_typ = "alarm";
+		filter.logic_scheme = logic_scheme;
+		filter.id = "";
 
 //test
 /*
