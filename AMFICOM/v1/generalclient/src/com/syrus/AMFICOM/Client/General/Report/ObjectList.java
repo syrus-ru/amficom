@@ -19,10 +19,10 @@ import com.syrus.AMFICOM.Client.General.Report.CreateReportException;
  * @version 1.0
  */
 
-public class ObjectList
+public final class ObjectList
 		extends ReportData
 {
-	public Vector objects = null;
+//	public Vector objects = null;
 
 	public DividableTableColumnModel columnModel = null;
 	public DividableTableModel tableModel = null;
@@ -31,7 +31,7 @@ public class ObjectList
 										Vector objects,
 										ObjectsReport or) throws CreateReportException
 	{
-		this.objects = objects;
+//		this.objects = objects;
 
 		if (! (or.model instanceof ObjectResourceReportModel))
 			throw new CreateReportException(or.getName(),
@@ -52,7 +52,7 @@ public class ObjectList
 	}
 }
 
-class ObjectListColumnModel
+final class ObjectListColumnModel
 		extends DividableTableColumnModel
 {
 	public ObjectListColumnModel(
@@ -71,14 +71,14 @@ class ObjectListColumnModel
 	}
 }
 
-class objectListModel
+final class objectListModel
 		extends DividableTableModel
 {
-	Vector objects = null;
-	Vector columnIDs = null;
-	Vector columnNames = null;
-	int length = 0;
-	int width = 0;
+	private Vector objects = null;
+	private Vector columnIDs = null;
+	private Vector columnNames = null;
+	private int length = 0;
+	private int width = 0;
 
 	public objectListModel(
 			int divisionsNumber,

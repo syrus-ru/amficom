@@ -12,12 +12,12 @@ import com.syrus.AMFICOM.Client.General.Lang.LangModelReport;
  * @version 1.0
  */
 
-public class CreateReportException extends Exception
+public final class CreateReportException extends Exception
 {
-  public static String cantImplement = "label_cantImpl";
-  public static String templatePiece = "label_templatePiece";
-  public static String poolObjNotExists = "label_poolObjNotExists";
-  public static String generalError = "label_generalCRError";
+  public static final String cantImplement = "label_cantImpl";
+  public static final String templatePiece = "label_templatePiece";
+  public static final String poolObjNotExists = "label_poolObjNotExists";
+  public static final String generalError = "label_generalCRError";
   public static String noImageSelected = "label_generalCRError";
 
   public String reportName = "";

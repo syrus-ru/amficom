@@ -19,32 +19,32 @@ import com.syrus.AMFICOM.CORBA.Report.FirmedTextPane_Transferable;
  * @version 1.0
  */
 
-public class FirmedTextPane extends JTextPane
+public final class FirmedTextPane extends JTextPane
 {
 	/**
 	 * ѕрив€зка по вертикали к верхнему краю пол€ шаблона
 	 */
-	public static String toFieldsTop = "priv_templ_top";
+	public static final String toFieldsTop = "priv_templ_top";
 	/**
 	 * ѕрив€зка по вертикали к верхнему краю элемента шаблона
 	 */
-	public static String toTop = "priv_obj_top";
+	public static final String toTop = "priv_obj_top";
 	/**
 	 * ѕрив€зка по вертикали к нижнему краю элемента шаблона
 	 */
-	public static String toBottom = "priv_obj_bottom";
+	public static final String toBottom = "priv_obj_bottom";
 	/**
 	 * ѕрив€зка по горизонтали к левому краю пол€ шаблона
 	 */
-	public static String toFieldsLeft = "priv_templ_left";
+	public static final String toFieldsLeft = "priv_templ_left";
 	/**
 	 * ѕрив€зка по горизонтали к левому краю элемента шаблона
 	 */
-	public static String toLeft = "priv_obj_left";
+	public static final String toLeft = "priv_obj_left";
 	/**
 	 * ѕрив€зка по горизонтали к правому краю элемента шаблона
 	 */
-	public static String toRight = "priv_obj_right";
+	public static final String toRight = "priv_obj_right";
 	/**
 	 * Ёлемент шаблона, к которому осуществлена прив€зка по вертикали
 	 */

@@ -33,12 +33,12 @@ import com.syrus.AMFICOM.CORBA.Report.ImagePane_Transferable;
  * @version 1.0
  */
 
-public class ImagePanel extends JPanel
+public final class ImagePanel extends JPanel
 {
-	public Image bImage = null;
 	public String fileName = "";
 
 	static private int imagesTransferred = 0;
+	private Image bImage = null;
 
 	public ImagePanel(int x, int y)
 		throws CreateReportException

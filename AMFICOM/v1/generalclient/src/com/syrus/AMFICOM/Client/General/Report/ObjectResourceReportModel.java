@@ -42,23 +42,23 @@ import com.syrus.AMFICOM.Client.General.Report.*;
 
 abstract public class ObjectResourceReportModel extends ReportModel
 {
-	public static String rt_statistics = "rep_stat_po_polju";
+	public static final String rt_statistics = "rep_stat_po_polju";
 
-	public static String rt_timefunction = "rep_graphic";
+	public static final String rt_timefunction = "rep_graphic";
 
-	public static String rt_gistogram = "rep_gistogram";
+	public static final String rt_gistogram = "rep_gistogram";
 
-	public static String rt_pieChart = "rep_diagr_pirog";
+	public static final String rt_pieChart = "rep_diagr_pirog";
 
-	public static String rt_pie2DChart = "rep_diagr_pirog2D";
+	public static final String rt_pie2DChart = "rep_diagr_pirog2D";
 
-	public static String rt_barChart = "rep_stolb_diagr";
+	public static final String rt_barChart = "rep_stolb_diagr";
 
-	public static String rt_bar2DChart = "rep_stolb_diagr2D";
+	public static final String rt_bar2DChart = "rep_stolb_diagr2D";
 
-	public static String rt_objectsReport = "rep_spis_obj";
+	public static final String rt_objectsReport = "rep_spis_obj";
 
-	public static String rt_objProperies = "rep_obj_properties";
+	public static final String rt_objProperies = "rep_obj_properties";
 
 	public String getName()
 	{
@@ -98,12 +98,12 @@ abstract public class ObjectResourceReportModel extends ReportModel
 		availableViews = getAvailableViews();
 	}
 
-	public Vector getAllColumnIDs()
+	public final Vector getAllColumnIDs()
 	{
 		return allColumnIDs;
 	}
 
-	public Vector getColumnNamesbyIDs(Vector IDs)
+	public final Vector getColumnNamesbyIDs(Vector IDs)
 	{
 		Vector result = new Vector(IDs.size());
 
@@ -113,7 +113,7 @@ abstract public class ObjectResourceReportModel extends ReportModel
 		return result;
 	}
 
-	public String getColumnNamebyID(String ID)
+	public final String getColumnNamebyID(String ID)
 	{
 		for (int i = 0; i < allColumnIDs.size(); i++)
 			if (allColumnIDs.get(i).equals(ID))
@@ -122,7 +122,7 @@ abstract public class ObjectResourceReportModel extends ReportModel
 		return null;
 	}
 
-	public int getColumnSizebyID(String ID)
+	public final int getColumnSizebyID(String ID)
 	{
 		for (int i = 0; i < allColumnIDs.size(); i++)
 			if (allColumnIDs.get(i).equals(ID))
@@ -131,7 +131,7 @@ abstract public class ObjectResourceReportModel extends ReportModel
 		return 0;
 	}
 
-	public String getColumnIDbyName(String name)
+	public final String getColumnIDbyName(String name)
 	{
 		for (int i = 0; i < allColumnNames.size(); i++)
 			if (((String) allColumnNames.get(i)).equals(name))
@@ -140,7 +140,7 @@ abstract public class ObjectResourceReportModel extends ReportModel
 		return null;
 	}
 
-	public Vector getAvailableViewTypesforField(String ID)
+	public final Vector getAvailableViewTypesforField(String ID)
 	{
 		if (ID == null)
 			return new Vector();
@@ -152,7 +152,7 @@ abstract public class ObjectResourceReportModel extends ReportModel
 		return (Vector) result;
 	}
 
-	static public Vector getReports(Vector reports)
+	private static final Vector getReports(Vector reports)
 	{
 		Vector result = new Vector(reports.size());
 		for (int i = 0; i < reports.size(); i++)
@@ -160,7 +160,7 @@ abstract public class ObjectResourceReportModel extends ReportModel
 		return result;
 	}
 
-	public String getReportsReserveName(ObjectsReport rp) throws
+	public final String getReportsReserveName(ObjectsReport rp) throws
 		CreateReportException
 	{
 		String reserve_str = (String) rp.getReserve();
@@ -179,7 +179,7 @@ else
 				CreateReportException.poolObjNotExists);
 	}
 
-	public Vector getReportObjects(
+	private final Vector getReportObjects(
 		ReportTemplate rt,
 		ObjectsReport or,
 		DataSourceInterface dsi)
@@ -231,8 +231,6 @@ else
 		JComponent returnValue = null;
 
 		Vector reportObjects = getReportObjects(rt, rp,aContext.getDataSourceInterface());
-		if (reportObjects.size() == 0)
-			throw new CreateReportException (rp.getName(),CreateReportException.cantImplement);
 
 		ObjectResourceReportModel model = (ObjectResourceReportModel) rp.model;
 		if (rp.view_type.equals(ObjectResourceReportModel.rt_statistics))
