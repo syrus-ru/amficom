@@ -1,5 +1,5 @@
 /**
- * $Id: MapViewTreeModel.java,v 1.3 2005/03/10 17:43:26 krupenn Exp $
+ * $Id: MapViewTreeModel.java,v 1.4 2005/03/16 13:48:18 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -14,7 +14,6 @@ package com.syrus.AMFICOM.Client.Map.UI;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.Map.Controllers.MapViewController;
 import com.syrus.AMFICOM.Client.Map.Controllers.NodeTypeController;
-import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
 import com.syrus.AMFICOM.client_.general.ui_.tree.StorableObjectTreeNode;
 import com.syrus.AMFICOM.map.Collector;
 import com.syrus.AMFICOM.map.Map;
@@ -34,16 +33,14 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.TreeMap;
-
 import javax.swing.ImageIcon;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeModel;
 
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/03/10 17:43:26 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.4 $, $Date: 2005/03/16 13:48:18 $
+ * @author $Author: bass $
  * @module mapviewclient_v1
  */
 public class MapViewTreeModel extends DefaultTreeModel implements TreeModel {

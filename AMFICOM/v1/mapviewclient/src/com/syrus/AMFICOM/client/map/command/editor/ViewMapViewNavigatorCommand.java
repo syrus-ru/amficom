@@ -1,5 +1,5 @@
 /**
- * $Id: ViewMapViewNavigatorCommand.java,v 1.1 2005/03/10 17:51:06 krupenn Exp $
+ * $Id: ViewMapViewNavigatorCommand.java,v 1.2 2005/03/16 13:48:18 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -15,9 +15,6 @@ import com.syrus.AMFICOM.Client.General.Command.Command;
 import com.syrus.AMFICOM.Client.General.Command.ViewNavigatorCommand;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.Map.Command.MapDesktopCommand;
-import com.syrus.AMFICOM.Client.Map.UI.MapSchemeTreeFrame;
-import com.syrus.AMFICOM.Client.Map.UI.MapSchemeTreePanel;
-
 import com.syrus.AMFICOM.Client.Map.UI.MapViewTreeFrame;
 import com.syrus.AMFICOM.Client.Map.UI.MapViewTreePanel;
 import java.awt.BorderLayout;
@@ -26,12 +23,11 @@ import java.awt.Toolkit;
 
 import javax.swing.ImageIcon;
 import javax.swing.JDesktopPane;
-import javax.swing.JInternalFrame;
 
 /**
  * отобразить окно привязки схем к карте 
- * @author $Author: krupenn $
- * @version $Revision: 1.1 $, $Date: 2005/03/10 17:51:06 $
+ * @author $Author: bass $
+ * @version $Revision: 1.2 $, $Date: 2005/03/16 13:48:18 $
  * @module mapviewclient_v1
  */
 public class ViewMapViewNavigatorCommand extends ViewNavigatorCommand

@@ -1,5 +1,5 @@
 /**
- * $Id: MapEditorMainFrame.java,v 1.26 2005/03/11 10:43:37 krupenn Exp $
+ * $Id: MapEditorMainFrame.java,v 1.27 2005/03/16 13:48:18 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -72,7 +72,6 @@ import com.syrus.AMFICOM.Client.Map.Command.Editor.MapEditorSaveViewCommand;
 import com.syrus.AMFICOM.Client.Map.Command.Editor.ViewMapAllCommand;
 import com.syrus.AMFICOM.Client.Map.Command.Editor.ViewMapElementsBarCommand;
 import com.syrus.AMFICOM.Client.Map.Command.Editor.ViewMapElementsCommand;
-import com.syrus.AMFICOM.Client.Map.Command.Editor.ViewMapNavigatorCommand;
 import com.syrus.AMFICOM.Client.Map.Command.Editor.ViewMapPropertiesCommand;
 import com.syrus.AMFICOM.Client.Map.Command.Editor.ViewMapSetupCommand;
 import com.syrus.AMFICOM.Client.Map.Command.Editor.ViewMapWindowCommand;
@@ -96,9 +95,9 @@ import com.syrus.AMFICOM.mapview.MapView;
  * 
  * 
  * 
- * @version $Revision: 1.26 $, $Date: 2005/03/11 10:43:37 $
+ * @version $Revision: 1.27 $, $Date: 2005/03/16 13:48:18 $
  * @module mapviewclient_v1
- * @author $Author: krupenn $
+ * @author $Author: bass $
  */
 public class MapEditorMainFrame extends JFrame 
 	implements OperationListener, Module

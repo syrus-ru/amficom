@@ -1,5 +1,5 @@
 /*
- * $Id: MapEditorWindowArranger.java,v 1.2 2005/03/11 10:43:37 krupenn Exp $
+ * $Id: MapEditorWindowArranger.java,v 1.3 2005/03/16 13:48:18 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,14 +17,13 @@ import com.syrus.AMFICOM.Client.General.UI.WindowArranger;
 import com.syrus.AMFICOM.Client.Map.Command.MapDesktopCommand;
 import com.syrus.AMFICOM.Client.Map.Operations.ControlsFrame;
 import com.syrus.AMFICOM.Client.Map.UI.MapElementsBarFrame;
-import com.syrus.AMFICOM.Client.Map.UI.MapElementsFrame;
 import com.syrus.AMFICOM.Client.Map.UI.MapFrame;
 import com.syrus.AMFICOM.Client.Map.UI.MapPropertyFrame;
 import com.syrus.AMFICOM.Client.Map.UI.MapSchemeTreeFrame;
 
 /**
- * @author $Author: krupenn $
- * @version $Revision: 1.2 $, $Date: 2005/03/11 10:43:37 $
+ * @author $Author: bass $
+ * @version $Revision: 1.3 $, $Date: 2005/03/16 13:48:18 $
  * @module mapviewclient_v1
  */
 

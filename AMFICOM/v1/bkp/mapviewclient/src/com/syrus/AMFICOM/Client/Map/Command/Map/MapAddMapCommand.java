@@ -1,5 +1,5 @@
 /**
- * $Id: MapAddMapCommand.java,v 1.1 2005/03/04 14:30:27 krupenn Exp $
+ * $Id: MapAddMapCommand.java,v 1.2 2005/03/16 13:48:18 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -29,17 +29,13 @@ import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.MapStorableObjectPool;
 import com.syrus.AMFICOM.mapview.MapView;
-import com.syrus.AMFICOM.scheme.SchemeStorableObjectPool;
-
 import java.util.Collection;
-import java.util.List;
-
 import javax.swing.JDesktopPane;
 
 /**
  * добавить в вид схему из списка
- * @author $Author: krupenn $
- * @version $Revision: 1.1 $, $Date: 2005/03/04 14:30:27 $
+ * @author $Author: bass $
+ * @version $Revision: 1.2 $, $Date: 2005/03/16 13:48:18 $
  * @module mapviewclient_v1
  */
 public class MapAddMapCommand extends VoidCommand

@@ -1,5 +1,5 @@
 /**
- * $Id: ViewMapAllCommand.java,v 1.7 2005/03/11 10:43:37 krupenn Exp $
+ * $Id: ViewMapAllCommand.java,v 1.8 2005/03/16 13:48:18 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -16,15 +16,14 @@ import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationModelFactory;
-import com.syrus.AMFICOM.Client.General.UI.WindowArranger;
 import com.syrus.AMFICOM.Client.Map.Editor.MapEditorWindowArranger;
 
 import javax.swing.JDesktopPane;
 
 /**
  * отобразить стандартный набор окон модуля "Редактор топологических схем"
- * @author $Author: krupenn $
- * @version $Revision: 1.7 $, $Date: 2005/03/11 10:43:37 $
+ * @author $Author: bass $
+ * @version $Revision: 1.8 $, $Date: 2005/03/16 13:48:18 $
  * @module mapviewclient_v1
  */
 public class ViewMapAllCommand extends VoidCommand

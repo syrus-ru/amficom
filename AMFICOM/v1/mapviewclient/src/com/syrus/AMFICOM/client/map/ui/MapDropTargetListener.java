@@ -1,5 +1,5 @@
 /**
- * $Id: MapDropTargetListener.java,v 1.18 2005/03/16 12:54:57 bass Exp $
+ * $Id: MapDropTargetListener.java,v 1.19 2005/03/16 13:48:18 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -24,7 +24,6 @@ import java.awt.dnd.DropTargetListener;
 
 import javax.swing.JOptionPane;
 
-import com.syrus.AMFICOM.Client.General.Event.MapEvent;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
 import com.syrus.AMFICOM.Client.Map.MapConnectionException;
@@ -45,7 +44,7 @@ import com.syrus.AMFICOM.scheme.SchemeCableLink;
  * 
  * 
  * 
- * @version $Revision: 1.18 $, $Date: 2005/03/16 12:54:57 $
+ * @version $Revision: 1.19 $, $Date: 2005/03/16 13:48:18 $
  * @author $Author: bass $
  * @module mapviewclient_v1
  */
