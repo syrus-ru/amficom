@@ -8,7 +8,7 @@ import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.util.Enumeration;
 import java.util.Hashtable;
-import java.util.Vector;
+import java.util.*;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -45,7 +45,7 @@ public class TestSetupLoadDialog extends JDialog implements OperationListener
 
 	JButton okButton;
 	JButton cancelButton;
-	DataSet data;
+	List data;
 	JScrollPane scrollPane = new JScrollPane();
 
 	public TestSetupLoadDialog(ApplicationContext aContext)
@@ -129,8 +129,8 @@ public class TestSetupLoadDialog extends JDialog implements OperationListener
 					&& ev.getSelectionNumber() != -1)
 			{
 				okButton.setEnabled(true);
-				data = ev.getDataSet();
-				resource = data.get(ev.getSelectionNumber());
+				data = ev.getList();
+				resource = (ObjectResource)data.get(ev.getSelectionNumber());
 			}
 			else
 			{
@@ -242,14 +242,11 @@ class TestSetupTreeModel extends ObjectResourceTreeModel
 						}
 					}
 
-					DataSet dSet = new DataSet(testsHt);
 					ObjectResourceSorter sorter = TestSetup.getDefaultSorter();
-					sorter.setDataSet(dSet);
-					dSet = sorter.default_sort();
-					Enumeration enum = dSet.elements();
-					for(; enum.hasMoreElements();)
+					sorter.setDataSet(testsHt);
+					for(Iterator it = sorter.default_sort().iterator(); it.hasNext();)
 					{
-						TestSetup t = (TestSetup)enum.nextElement();
+						TestSetup t = (TestSetup)it.next();
 						ortn = new ObjectResourceTreeNode(t, t.getName(), true, true);
 						vec.add(ortn);
 					}

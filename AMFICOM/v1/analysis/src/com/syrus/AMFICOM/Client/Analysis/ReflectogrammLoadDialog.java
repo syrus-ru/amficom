@@ -3,6 +3,7 @@ package com.syrus.AMFICOM.Client.Analysis;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.util.*;
+import java.util.List;
 
 import javax.swing.*;
 
@@ -31,7 +32,6 @@ public class ReflectogrammLoadDialog extends JDialog implements OperationListene
 		private JButton cancelButton;
 		private JButton updateButton1 = new JButton();
 
-		DataSet data;
 		JScrollPane scrollPane = new JScrollPane();
 
 		private boolean AlwaysGetEtalons = true;
@@ -199,8 +199,8 @@ public class ReflectogrammLoadDialog extends JDialog implements OperationListene
 						&& ev.getSelectionNumber() != -1)
 				{
 					okButton.setEnabled(true);
-					data = ev.getDataSet();
-					resource = data.get(ev.getSelectionNumber());
+					List data = ev.getList();
+					resource = (ObjectResource)data.get(ev.getSelectionNumber());
 
 					if(AlwaysGetEtalons)
 						setEtalon();
@@ -698,15 +698,12 @@ class ReflectogrammTreeModel extends ObjectResourceTreeModel
 			}
 			else if(s.equals(MonitoredElement.typ))
 			{
-				DataSet dSet = new DataSet(Pool.getHash(MonitoredElement.typ));
 				ObjectResourceSorter sorter = MonitoredElement.getDefaultSorter();
-				sorter.setDataSet(dSet);
-				dSet = sorter.default_sort();
+				sorter.setDataSet(Pool.getHash(MonitoredElement.typ));
 
-				Enumeration enum = dSet.elements();
-				for(; enum.hasMoreElements();)
+				for(Iterator it = sorter.default_sort().iterator(); it.hasNext();)
 				{
-					MonitoredElement me = (MonitoredElement )enum.nextElement();
+					MonitoredElement me = (MonitoredElement )it.next();
 					if(me.domain_id.equals(domainID))
 					{
 						ortn = new ObjectResourceTreeNode(me, me.getName(), true);
@@ -735,14 +732,12 @@ class ReflectogrammTreeModel extends ObjectResourceTreeModel
 						}
 					}
 
-					DataSet dSet = new DataSet(testsHt);
 					ObjectResourceSorter sorter = Test.getDefaultSorter();
-					sorter.setDataSet(dSet);
-					dSet = sorter.default_sort();
-					Enumeration enum = dSet.elements();
-					for(; enum.hasMoreElements();)
+					sorter.setDataSet(testsHt);
+
+					for(Iterator it = sorter.default_sort().iterator(); it.hasNext();)
 					{
-						Test t = (Test)enum.nextElement();
+						Test t = (Test)it.next();
 						ortn = new ObjectResourceTreeNode(t, t.getName(), true, getIcon(Test.typ));
 						vec.add(ortn);
 					}
@@ -753,11 +748,9 @@ class ReflectogrammTreeModel extends ObjectResourceTreeModel
 				DataSet dSet = new DataSet(t.getResults());
 				ObjectResourceSorter sorter = Result.getDefaultSorter();
 				sorter.setDataSet(dSet);
-				dSet = sorter.default_sort();
-				Enumeration enum = dSet.elements();
-				for(; enum.hasMoreElements();)
+				for(Iterator it = sorter.default_sort().iterator(); it.hasNext();)
 				{
-					Result r = (Result)enum.nextElement();
+					Result r = (Result)it.next();
 					ortn = new ObjectResourceTreeNode(r, r.getName(), true, getIcon(Result.typ), true);
 					vec.add(ortn);
 				}
