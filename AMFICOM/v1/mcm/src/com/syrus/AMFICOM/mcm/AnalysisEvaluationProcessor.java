@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisEvaluationProcessor.java,v 1.14 2004/12/17 16:14:58 saa Exp $
+ * $Id: AnalysisEvaluationProcessor.java,v 1.15 2005/01/12 13:34:57 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,7 +11,6 @@ package com.syrus.AMFICOM.mcm;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.event.corba.AlarmLevel;
 import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
 import com.syrus.AMFICOM.measurement.AnalysisType;
 import com.syrus.AMFICOM.measurement.EvaluationType;
@@ -26,8 +25,8 @@ import com.syrus.AMFICOM.measurement.Result;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2004/12/17 16:14:58 $
- * @author $Author: saa $
+ * @version $Revision: 1.15 $, $Date: 2005/01/12 13:34:57 $
+ * @author $Author: arseniy $
  * @module mcm_v1
  */
 
@@ -144,7 +143,6 @@ public abstract class AnalysisEvaluationProcessor {
 		try {
 			analysisResult = analysis.createResult(MeasurementControlModule.iAm.getUserId(),
 																						 measurementResult.getMeasurement(),
-																						 AlarmLevel.ALARM_LEVEL_NONE,
 																						 arParameters);
 		}
 		catch (CreateObjectException coe) {
@@ -157,7 +155,6 @@ public abstract class AnalysisEvaluationProcessor {
 		try {
 			evaluationResult = evaluation.createResult(MeasurementControlModule.iAm.getUserId(),
 																								 measurementResult.getMeasurement(),
-																								 evaluationManager.getAlarmLevel(),
 																								 erParameters);
 		}
 		catch (CreateObjectException coe) {

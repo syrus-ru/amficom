@@ -1,5 +1,5 @@
 /*
- * $Id: KISReport.java,v 1.22 2004/12/15 14:09:13 arseniy Exp $
+ * $Id: KISReport.java,v 1.23 2005/01/12 13:34:57 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -21,11 +21,10 @@ import com.syrus.AMFICOM.measurement.ParameterTypeDatabase;
 import com.syrus.AMFICOM.measurement.SetParameter;
 import com.syrus.AMFICOM.measurement.Measurement;
 import com.syrus.AMFICOM.measurement.Result;
-import com.syrus.AMFICOM.event.corba.AlarmLevel;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.22 $, $Date: 2004/12/15 14:09:13 $
+ * @version $Revision: 1.23 $, $Date: 2005/01/12 13:34:57 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -62,8 +61,7 @@ public class KISReport implements ParameterTypeCodenames {
 			}
 
 			Result result = measurement.createResult(MeasurementControlModule.iAm.getUserId(),
-																			null,
-																			AlarmLevel.ALARM_LEVEL_NONE,							
+																			null,							
 																			parameters);
 			result.insert();
 			return result;
