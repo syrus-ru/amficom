@@ -1,5 +1,5 @@
 /*
- * $Id: SiteNodeType.java,v 1.6 2004/12/03 13:26:34 bob Exp $
+ * $Id: SiteNodeType.java,v 1.7 2004/12/03 17:54:58 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,7 +30,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.map.corba.SiteNodeType_Transferable;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2004/12/03 13:26:34 $
+ * @version $Revision: 1.7 $, $Date: 2004/12/03 17:54:58 $
  * @author $Author: bob $
  * @module map_v1
  */
@@ -155,14 +155,18 @@ public class SiteNodeType extends StorableObjectType implements Characterized {
 	public boolean isTopological() {
 		return this.topological;
 	}
-
-	public void setCharacteristics(final List characteristics) {
+	
+	protected void setCharacteristics0(final List characteristics) {
 		this.characteristics.clear();
 		if (characteristics != null)
 			this.characteristics.addAll(characteristics);
+	}
+	
+	public void setCharacteristics(final List characteristics) {
+		this.setCharacteristics0(characteristics);
 		super.currentVersion = super.getNextVersion();
 	}
-
+	
 	public void setDescription(final String description) {
 		super.description = description;
 		super.currentVersion = super.getNextVersion();

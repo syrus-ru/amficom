@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractNode.java,v 1.1 2004/12/01 15:43:25 bob Exp $
+ * $Id: AbstractNode.java,v 1.2 2004/12/03 17:54:58 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,7 +18,7 @@ import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2004/12/01 15:43:25 $
+ * @version $Revision: 1.2 $, $Date: 2004/12/03 17:54:58 $
  * @author $Author: bob $
  * @module map_v1
  */
@@ -83,10 +83,14 @@ public abstract class AbstractNode extends StorableObject implements Characteriz
 		return this.name;
 	}
 
-	public void setCharacteristics(final List characteristics) {
+	protected void setCharacteristics0(final List characteristics) {
 		this.characteristics.clear();
 		if (characteristics != null)
 			this.characteristics.addAll(characteristics);
+	}
+	
+	public void setCharacteristics(final List characteristics) {
+		this.setCharacteristics0(characteristics);
 		super.currentVersion = super.getNextVersion();
 	}
 

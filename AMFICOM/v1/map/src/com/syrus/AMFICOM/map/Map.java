@@ -1,5 +1,5 @@
 /*
- * $Id: Map.java,v 1.4 2004/12/03 13:26:34 bob Exp $
+ * $Id: Map.java,v 1.5 2004/12/03 17:54:58 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,7 +27,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.map.corba.Map_Transferable;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2004/12/03 13:26:34 $
+ * @version $Revision: 1.5 $, $Date: 2004/12/03 17:54:58 $
  * @author $Author: bob $
  * @module map_v1
  */
@@ -209,10 +209,14 @@ public class Map extends StorableObject {
 		return  Collections.unmodifiableList(this.collectors);
 	}
 	
-	public void setCollectors(List collectors) {
+	protected void setCollectors0(List collectors) {
 		this.collectors.clear();
 		if (collectors != null)
 			this.collectors.addAll(collectors);
+	}
+	
+	public void setCollectors(List collectors) {
+		this.setCollectors0(collectors);
 		super.currentVersion = super.getNextVersion();
 	}
 	
@@ -238,10 +242,14 @@ public class Map extends StorableObject {
 		return  Collections.unmodifiableList(this.marks);
 	}
 	
-	public void setMarks(List marks) {
+	protected void setMarks0(List marks) {
 		this.marks.clear();
 		if (marks != null)
 			this.marks.addAll(marks);
+	}
+	
+	public void setMarks(List marks) {
+		this.setMarks0(marks);
 		super.currentVersion = super.getNextVersion();
 	}
 	
@@ -258,10 +266,14 @@ public class Map extends StorableObject {
 		return  Collections.unmodifiableList(this.nodeLinks);
 	}
 	
-	public void setNodeLinks(List nodeLinks) {
+	protected void setNodeLinks0(List nodeLinks) {
 		this.nodeLinks.clear();
 		if (nodeLinks != null)
 			this.nodeLinks.addAll(nodeLinks);
+	}
+	
+	public void setNodeLinks(List nodeLinks) {
+		this.setNodeLinks0(nodeLinks);
 		super.currentVersion = super.getNextVersion();
 	}
 	
@@ -269,10 +281,15 @@ public class Map extends StorableObject {
 		return  Collections.unmodifiableList(this.physicalLinks);
 	}
 	
-	public void setPhysicalLinks(List physicalLinks) {
+	protected void setPhysicalLinks0(List physicalLinks) {
 		this.physicalLinks.clear();
 		if (physicalLinks != null)
 			this.physicalLinks.addAll(physicalLinks);
+		super.currentVersion = super.getNextVersion();
+	}
+	
+	public void setPhysicalLinks(List physicalLinks) {
+		this.setPhysicalLinks0(physicalLinks);
 		super.currentVersion = super.getNextVersion();
 	}
 	
@@ -280,10 +297,14 @@ public class Map extends StorableObject {
 		return  Collections.unmodifiableList(this.siteNodes);
 	}
 	
-	public void setSiteNodes(List siteNodes) {
+	protected void setSiteNodes0(List siteNodes) {
 		this.siteNodes.clear();
 		if (siteNodes != null)
 			this.siteNodes.addAll(siteNodes);
+	}
+	
+	public void setSiteNodes(List siteNodes) {
+		this.setSiteNodes0(siteNodes);
 		super.currentVersion = super.getNextVersion();
 	}
 	
@@ -291,10 +312,14 @@ public class Map extends StorableObject {
 		return  Collections.unmodifiableList(this.topologicalNodes);
 	}
 	
-	public void setTopologicalNodes(List topologicalNodes) {
+	protected void setTopologicalNodes0(List topologicalNodes) {
 		this.topologicalNodes.clear();
 		if (topologicalNodes != null)
 			this.topologicalNodes.addAll(topologicalNodes);
+	}
+	
+	public void setTopologicalNodes(List topologicalNodes) {
+		this.setTopologicalNodes0(topologicalNodes);
 		super.currentVersion = super.getNextVersion();
 	}
 	

@@ -1,5 +1,5 @@
 /*
- * $Id: Mark.java,v 1.4 2004/12/03 13:26:34 bob Exp $
+ * $Id: Mark.java,v 1.5 2004/12/03 17:54:58 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,7 +30,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.map.corba.Mark_Transferable;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2004/12/03 13:26:34 $
+ * @version $Revision: 1.5 $, $Date: 2004/12/03 17:54:58 $
  * @author $Author: bob $
  * @module map_v1
  */
@@ -174,14 +174,17 @@ public class Mark extends StorableObject implements Characterized {
 		return  Collections.unmodifiableList(this.characteristics);
 	}
 	
-	public void setCharacteristics(final List characteristics) {
+	protected void setCharacteristics0(final List characteristics) {
 		this.characteristics.clear();
 		if (characteristics != null)
 			this.characteristics.addAll(characteristics);
+	}
+	
+	public void setCharacteristics(final List characteristics) {
+		this.setCharacteristics0(characteristics);
 		super.currentVersion = super.getNextVersion();
 	}
-
-
+	
 	public String getBuilding() {
 		return this.building;
 	}
