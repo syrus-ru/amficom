@@ -9,3 +9,5 @@ classes
 arserver.jar
 arserver_interface.jar
 .settings
+.classpath
+.project
