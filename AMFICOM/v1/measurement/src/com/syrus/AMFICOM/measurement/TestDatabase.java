@@ -1,5 +1,5 @@
 /*
- * $Id: TestDatabase.java,v 1.68 2005/02/11 18:39:52 arseniy Exp $
+ * $Id: TestDatabase.java,v 1.69 2005/02/18 18:12:24 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -51,7 +51,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.68 $, $Date: 2005/02/11 18:39:52 $
+ * @version $Revision: 1.69 $, $Date: 2005/02/18 18:12:24 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -804,14 +804,10 @@ public class TestDatabase extends StorableObjectDatabase {
 	}
 	
 	public void delete(Identifier id) throws IllegalDataException {
-		throw new IllegalDataException("Deleting tests is imprincipal");
+		throw new IllegalDataException("Deleting tests is incorrect");
 	}
 	
 	public void delete(List ids) throws IllegalDataException {
-		throw new IllegalDataException("Deleting tests is imprincipal");
-	}
-	
-	public void delete(StorableObject storableObject) throws IllegalDataException {
-		throw new IllegalDataException("Deleting tests is imprincipal");
+		throw new IllegalDataException("Deleting tests is incorrect");
 	}
 }
