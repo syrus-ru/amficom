@@ -62,7 +62,7 @@ clean:	cleanmach cleancorba
 
 .PHONY:	cleanmach
 cleanmach:
-	$(RM) $(addprefix $(CLASSDIR)/,$(subst .java,.class,$(SOURCES)))
+	$(RM) $(addprefix $(CLASSDIR)/,$(subst .java,*.class,$(SOURCES)))
 	$(RM) .mach
 
 .PHONY:	cleancorba
