@@ -1,5 +1,5 @@
 /*
- * $Id: CMMeasurementReceive.java,v 1.5 2005/02/14 13:50:04 arseniy Exp $
+ * $Id: CMMeasurementReceive.java,v 1.6 2005/02/14 15:32:39 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -67,7 +67,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/02/14 13:50:04 $
+ * @version $Revision: 1.6 $, $Date: 2005/02/14 15:32:39 $
  * @author $Author: arseniy $
  * @module cmserver_v1
  */
@@ -84,7 +84,6 @@ public abstract class CMMeasurementReceive extends CMConfigurationReceive {
 		*/
 		Log.debugMessage("CMMeasurementReceive.receiveAnalysis | Received " + " analysis", Log.DEBUGLEVEL07);
 		try {
-			analysis_Transferable.header.modifier_id = accessIdentifier.user_id;
 			Analysis analysis = new Analysis(analysis_Transferable);
 			MeasurementStorableObjectPool.putStorableObject(analysis);
 			AnalysisDatabase analysisDatabase = (AnalysisDatabase) MeasurementDatabaseContext.getAnalysisDatabase();
@@ -128,7 +127,6 @@ public abstract class CMMeasurementReceive extends CMConfigurationReceive {
 		List analysisList = new ArrayList(analysis_Transferables.length);
 		try {
 			for (int i = 0; i < analysis_Transferables.length; i++) {
-				analysis_Transferables[i].header.modifier_id = accessIdentifier.user_id;
 				Analysis analysisType = new Analysis(analysis_Transferables[i]);
 				MeasurementStorableObjectPool.putStorableObject(analysisType);
 				analysisList.add(analysisType);
@@ -172,7 +170,6 @@ public abstract class CMMeasurementReceive extends CMConfigurationReceive {
 		*/
 		Log.debugMessage("CMMeasurementReceive.receiveAnalysisType | Received " + " analysisType", Log.DEBUGLEVEL07);
 		try {
-			analysisType_Transferable.header.modifier_id = accessIdentifier.user_id;
 			AnalysisType analysisType = new AnalysisType(analysisType_Transferable);
 			MeasurementStorableObjectPool.putStorableObject(analysisType);
 			AnalysisTypeDatabase analysisTypeDatabase = (AnalysisTypeDatabase) MeasurementDatabaseContext.getAnalysisTypeDatabase();
@@ -217,7 +214,6 @@ public abstract class CMMeasurementReceive extends CMConfigurationReceive {
 		List analysisTypeList = new ArrayList(analysisType_Transferables.length);
 		try {
 			for (int i = 0; i < analysisType_Transferables.length; i++) {
-				analysisType_Transferables[i].header.modifier_id = accessIdentifier.user_id;
 				AnalysisType analysisType = new AnalysisType(analysisType_Transferables[i]);
 				MeasurementStorableObjectPool.putStorableObject(analysisType);
 				analysisTypeList.add(analysisType);
@@ -264,7 +260,6 @@ public abstract class CMMeasurementReceive extends CMConfigurationReceive {
 		 */
 		Log.debugMessage("CMMeasurementReceive.receiveEvaluation | Received " + " evaluation", Log.DEBUGLEVEL07);
 		try {
-			evaluation_Transferable.header.modifier_id = accessIdentifier.user_id;
 			Evaluation evaluation = new Evaluation(evaluation_Transferable);
 			MeasurementStorableObjectPool.putStorableObject(evaluation);
 			EvaluationDatabase evaluationDatabase = (EvaluationDatabase) MeasurementDatabaseContext.getEvaluationDatabase();
@@ -308,7 +303,6 @@ public abstract class CMMeasurementReceive extends CMConfigurationReceive {
 		List evaluationList = new ArrayList(evaluation_Transferables.length);
 		try {
 			for (int i = 0; i < evaluation_Transferables.length; i++) {
-				evaluation_Transferables[i].header.modifier_id = accessIdentifier.user_id;
 				Evaluation evaluation = new Evaluation(evaluation_Transferables[i]);
 				MeasurementStorableObjectPool.putStorableObject(evaluation);
 				evaluationList.add(evaluation);
@@ -352,7 +346,6 @@ public abstract class CMMeasurementReceive extends CMConfigurationReceive {
 		 */
 		Log.debugMessage("CMMeasurementReceive.receiveEvaluationType | Received " + " evaluationType", Log.DEBUGLEVEL07);
 		try {
-			evaluationType_Transferable.header.modifier_id = accessIdentifier.user_id;
 			EvaluationType evaluationType = new EvaluationType(evaluationType_Transferable);
 			MeasurementStorableObjectPool.putStorableObject(evaluationType);
 			EvaluationTypeDatabase evaluationTypeDatabase = (EvaluationTypeDatabase) MeasurementDatabaseContext.getEvaluationTypeDatabase();
@@ -396,7 +389,6 @@ public abstract class CMMeasurementReceive extends CMConfigurationReceive {
 		List evaluationTypeList = new ArrayList(evaluationType_Transferables.length);
 		try {
 			for (int i = 0; i < evaluationType_Transferables.length; i++) {
-				evaluationType_Transferables[i].header.modifier_id = accessIdentifier.user_id;
 				EvaluationType evaluationType = new EvaluationType(evaluationType_Transferables[i]);
 				MeasurementStorableObjectPool.putStorableObject(evaluationType);
 				evaluationTypeList.add(evaluationType);
@@ -440,7 +432,6 @@ public abstract class CMMeasurementReceive extends CMConfigurationReceive {
 		 */
 		Log.debugMessage("CMMeasurementReceive.receiveMeasurement | Received " + " measurement", Log.DEBUGLEVEL07);
 		try {
-			measurement_Transferable.header.modifier_id = accessIdentifier.user_id;
 			Measurement measurement = new Measurement(measurement_Transferable);
 			MeasurementStorableObjectPool.putStorableObject(measurement);
 			MeasurementDatabase measurementDatabase = (MeasurementDatabase) MeasurementDatabaseContext.getMeasurementDatabase();
@@ -484,7 +475,6 @@ public abstract class CMMeasurementReceive extends CMConfigurationReceive {
 		List measurementList = new ArrayList(measurement_Transferables.length);
 		try {
 			for (int i = 0; i < measurement_Transferables.length; i++) {
-				measurement_Transferables[i].header.modifier_id = accessIdentifier.user_id;
 				Measurement measurement = new Measurement(measurement_Transferables[i]);
 				MeasurementStorableObjectPool.putStorableObject(measurement);
 				measurementList.add(measurement);
@@ -527,8 +517,7 @@ public abstract class CMMeasurementReceive extends CMConfigurationReceive {
 		 * TODO check user for access
 		 */
 		Log.debugMessage("CMMeasurementReceive.receiveMeasurementSetup | Received " + " measurementSetup", Log.DEBUGLEVEL07);
-		try {         		
-			measurementSetup_Transferable.header.modifier_id = accessIdentifier.user_id; 
+		try {
 			MeasurementSetup measurementSetup = new MeasurementSetup(measurementSetup_Transferable);
 			MeasurementStorableObjectPool.putStorableObject(measurementSetup);
 			MeasurementSetupDatabase measurementSetupDatabase = (MeasurementSetupDatabase) MeasurementDatabaseContext.getMeasurementSetupDatabase();
@@ -573,7 +562,6 @@ public abstract class CMMeasurementReceive extends CMConfigurationReceive {
 		List measurementSetupList = new ArrayList(measurementSetup_Transferables.length);
 		try {
 			for (int i = 0; i < measurementSetup_Transferables.length; i++) {
-				measurementSetup_Transferables[i].header.modifier_id = accessIdentifier.user_id;
 				MeasurementSetup measurementSetup = new MeasurementSetup(measurementSetup_Transferables[i]);
 				MeasurementStorableObjectPool.putStorableObject(measurementSetup);
 				measurementSetupList.add(measurementSetup);
@@ -617,7 +605,6 @@ public abstract class CMMeasurementReceive extends CMConfigurationReceive {
 		 */
 		Log.debugMessage("CMMeasurementReceive.receiveMeasurementType | Received " + " measurementType", Log.DEBUGLEVEL07);
 		try {
-			measurementType_Transferable.header.modifier_id = accessIdentifier.user_id;
 			MeasurementType measurementType = new MeasurementType(measurementType_Transferable);
 			MeasurementStorableObjectPool.putStorableObject(measurementType);
 			MeasurementTypeDatabase measurementTypeDatabase = (MeasurementTypeDatabase) MeasurementDatabaseContext.getMeasurementTypeDatabase();
@@ -661,7 +648,6 @@ public abstract class CMMeasurementReceive extends CMConfigurationReceive {
 		List measurementTypeList = new ArrayList(measurementType_Transferables.length);
 		try {
 			for (int i = 0; i < measurementType_Transferables.length; i++) {
-				measurementType_Transferables[i].header.modifier_id = accessIdentifier.user_id;
 				MeasurementType measurementType = new MeasurementType(measurementType_Transferables[i]);
 				MeasurementStorableObjectPool.putStorableObject(measurementType);
 				measurementTypeList.add(measurementType);
@@ -705,7 +691,6 @@ public abstract class CMMeasurementReceive extends CMConfigurationReceive {
 		 */
 		Log.debugMessage("CMMeasurementReceive.receiveModeling | Received " + " modeling", Log.DEBUGLEVEL07);
 		try {
-			modeling_Transferable.header.modifier_id = accessIdentifier.user_id;
 			Modeling modeling = new Modeling(modeling_Transferable);
 			MeasurementStorableObjectPool.putStorableObject(modeling);
 			ModelingDatabase modelingDatabase = (ModelingDatabase) MeasurementDatabaseContext.getModelingDatabase();
@@ -747,7 +732,6 @@ public abstract class CMMeasurementReceive extends CMConfigurationReceive {
 		 */
 		Log.debugMessage("CMMeasurementReceive.receiveModelingType | Received " + " modeling", Log.DEBUGLEVEL07);
 		try {
-			modelingType_Transferable.header.modifier_id = accessIdentifier.user_id;
 			ModelingType modelingType = new ModelingType(modelingType_Transferable);
 			MeasurementStorableObjectPool.putStorableObject(modelingType);
 			ModelingTypeDatabase modelingTypeDatabase = (ModelingTypeDatabase) MeasurementDatabaseContext.getModelingTypeDatabase();
@@ -793,7 +777,6 @@ public abstract class CMMeasurementReceive extends CMConfigurationReceive {
 		List modelingTypeList = new ArrayList(modelingType_Transferables.length);
 		try {
 			for (int i = 0; i < modelingType_Transferables.length; i++) {
-				modelingType_Transferables[i].header.modifier_id = accessIdentifier.user_id;
 				ModelingType modelingType = new ModelingType(modelingType_Transferables[i]);
 				MeasurementStorableObjectPool.putStorableObject(modelingType);
 				modelingTypeList.add(modelingType);
@@ -839,7 +822,6 @@ public abstract class CMMeasurementReceive extends CMConfigurationReceive {
 		List modelingList = new ArrayList(modeling_Transferables.length);
 		try {
 			for (int i = 0; i < modeling_Transferables.length; i++) {
-				modeling_Transferables[i].header.modifier_id = accessIdentifier.user_id;
 				Modeling modeling = new Modeling(modeling_Transferables[i]);
 				MeasurementStorableObjectPool.putStorableObject(modeling);
 				modelingList.add(modeling);
@@ -879,7 +861,6 @@ public abstract class CMMeasurementReceive extends CMConfigurationReceive {
 		 */
 		Log.debugMessage("CMMeasurementReceive.receiveResult | Received " + " result", Log.DEBUGLEVEL07);
 		try {
-			result_Transferable.header.modifier_id = accessIdentifier.user_id;
 			Result result = new Result(result_Transferable);
 			MeasurementStorableObjectPool.putStorableObject(result);
 			ResultDatabase resultDatabase = (ResultDatabase) MeasurementDatabaseContext.getResultDatabase();
@@ -923,7 +904,6 @@ public abstract class CMMeasurementReceive extends CMConfigurationReceive {
 		List resultList = new ArrayList(result_Transferables.length);
 		try {
 			for (int i = 0; i < result_Transferables.length; i++) {
-				result_Transferables[i].header.modifier_id = accessIdentifier.user_id;
 				Result result = new Result(result_Transferables[i]);
 				MeasurementStorableObjectPool.putStorableObject(result);
 				resultList.add(result);
@@ -967,7 +947,6 @@ public abstract class CMMeasurementReceive extends CMConfigurationReceive {
 		 */
 		Log.debugMessage("CMMeasurementReceive.receiveTest | Received " + " test", Log.DEBUGLEVEL07);
 		try {
-			test_Transferable.header.modifier_id = accessIdentifier.user_id;
 			Test test = new Test(test_Transferable);
 			MeasurementStorableObjectPool.putStorableObject(test);
 			TestDatabase testDatabase = (TestDatabase) MeasurementDatabaseContext.getTestDatabase();
@@ -1011,7 +990,6 @@ public abstract class CMMeasurementReceive extends CMConfigurationReceive {
 		List testList = new ArrayList(test_Transferables.length);
 		try {
 			for (int i = 0; i < test_Transferables.length; i++) {
-				test_Transferables[i].header.modifier_id = accessIdentifier.user_id;
 				Test test = new Test(test_Transferables[i]);
 				MeasurementStorableObjectPool.putStorableObject(test);
 				testList.add(test);
@@ -1055,7 +1033,6 @@ public abstract class CMMeasurementReceive extends CMConfigurationReceive {
 		 */
 		Log.debugMessage("CMMeasurementReceive.receiveTemporalPattern | Received " + " temporalPattern", Log.DEBUGLEVEL07);
 		try {
-			temporalPattern_Transferable.header.modifier_id = accessIdentifier.user_id;
 			TemporalPattern temporalPattern = new TemporalPattern(temporalPattern_Transferable);
 			MeasurementStorableObjectPool.putStorableObject(temporalPattern);
 			TemporalPatternDatabase temporalPatternDatabase = (TemporalPatternDatabase) MeasurementDatabaseContext.getTemporalPatternDatabase();
@@ -1099,7 +1076,6 @@ public abstract class CMMeasurementReceive extends CMConfigurationReceive {
 		List temporalPatternList = new ArrayList(temporalPattern_Transferables.length);
 		try {
 			for (int i = 0; i < temporalPattern_Transferables.length; i++) {
-				temporalPattern_Transferables[i].header.modifier_id = accessIdentifier.user_id;
 				TemporalPattern temporalPattern = new TemporalPattern(temporalPattern_Transferables[i]);
 				MeasurementStorableObjectPool.putStorableObject(temporalPattern);
 				temporalPatternList.add(temporalPattern);
@@ -1143,7 +1119,6 @@ public abstract class CMMeasurementReceive extends CMConfigurationReceive {
 		 */
 		Log.debugMessage("CMMeasurementReceive.receiveSet | Received " + " set", Log.DEBUGLEVEL07);
 		try {
-			set_Transferable.header.modifier_id = accessIdentifier.user_id;
 			Set set = new Set(set_Transferable);
 			MeasurementStorableObjectPool.putStorableObject(set);
 			SetDatabase setDatabase = (SetDatabase) MeasurementDatabaseContext.getSetDatabase();
@@ -1187,7 +1162,6 @@ public abstract class CMMeasurementReceive extends CMConfigurationReceive {
 		List setList = new ArrayList(set_Transferables.length);
 		try {
 			for (int i = 0; i < set_Transferables.length; i++) {
-				set_Transferables[i].header.modifier_id = accessIdentifier.user_id;
 				Set set = new Set(set_Transferables[i]);
 				MeasurementStorableObjectPool.putStorableObject(set);
 				setList.add(set);

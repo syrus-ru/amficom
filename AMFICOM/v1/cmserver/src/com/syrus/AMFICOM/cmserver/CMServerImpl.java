@@ -1,5 +1,5 @@
 /*
- * $Id: CMServerImpl.java,v 1.89 2005/02/08 11:51:56 bob Exp $
+ * $Id: CMServerImpl.java,v 1.90 2005/02/14 15:32:39 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,6 +10,7 @@ package com.syrus.AMFICOM.cmserver;
 
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
@@ -18,7 +19,7 @@ import com.syrus.AMFICOM.administration.Domain;
 import com.syrus.AMFICOM.administration.User;
 import com.syrus.AMFICOM.administration.UserWrapper;
 import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
-import com.syrus.AMFICOM.configuration.corba.AccessIdentifier_Transferable;
+import com.syrus.AMFICOM.general.corba.AccessIdentifier_Transferable;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.DatabaseException;
@@ -42,8 +43,8 @@ import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.89 $, $Date: 2005/02/08 11:51:56 $
- * @author $Author: bob $
+ * @version $Revision: 1.90 $, $Date: 2005/02/14 15:32:39 $
+ * @author $Author: arseniy $
  * @module cmserver_v1
  */
 
@@ -117,11 +118,11 @@ public class CMServerImpl extends CMMeasurementTransmit {
 			TypicalCondition condition = new TypicalCondition(domainName, OperationSort.OPERATION_EQUALS,
 																ObjectEntities.DOMAIN_ENTITY_CODE,
 																StorableObjectWrapper.COLUMN_NAME);
-			List list = AdministrationStorableObjectPool.getStorableObjectsByCondition(condition, true);
-			if (list.isEmpty())
+			Collection collection = AdministrationStorableObjectPool.getStorableObjectsByCondition(condition, true);
+			if (collection.isEmpty())
 				throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO,
 													"list is empty");
-			Identifier id = ((Domain) list.get(0)).getId();
+			Identifier id = ((Domain) collection.iterator().next()).getId();
 			return (Identifier_Transferable) id.getTransferable();
 		} catch (RetrieveObjectException roe) {
 			Log.errorException(roe);
@@ -141,8 +142,8 @@ public class CMServerImpl extends CMMeasurementTransmit {
 			TypicalCondition condition = new TypicalCondition(userLogin, OperationSort.OPERATION_EQUALS,
 																ObjectEntities.USER_ENTITY_CODE,
 																UserWrapper.COLUMN_LOGIN);
-			List list = AdministrationStorableObjectPool.getStorableObjectsByCondition(condition, true);
-			Identifier id = ((User) list.get(0)).getId();
+			Collection collection = AdministrationStorableObjectPool.getStorableObjectsByCondition(condition, true);
+			Identifier id = ((User) collection.iterator().next()).getId();
 			return (Identifier_Transferable) id.getTransferable();
 		} catch (RetrieveObjectException roe) {
 			Log.errorException(roe);
@@ -163,8 +164,8 @@ public class CMServerImpl extends CMMeasurementTransmit {
 			TypicalCondition condition = new TypicalCondition(userName, OperationSort.OPERATION_EQUALS,
 																ObjectEntities.USER_ENTITY_CODE,
 																StorableObjectWrapper.COLUMN_NAME);
-			List list = AdministrationStorableObjectPool.getStorableObjectsByCondition(condition, true);
-			Identifier id = ((User) list.get(0)).getId();
+			Collection collection = AdministrationStorableObjectPool.getStorableObjectsByCondition(condition, true);
+			Identifier id = ((User) collection.iterator().next()).getId();
 			return (Identifier_Transferable) id.getTransferable();
 		} catch (RetrieveObjectException roe) {
 			Log.errorException(roe);

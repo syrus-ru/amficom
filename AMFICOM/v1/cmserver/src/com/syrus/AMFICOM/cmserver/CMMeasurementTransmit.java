@@ -1,5 +1,5 @@
 /*
- * $Id: CMMeasurementTransmit.java,v 1.5 2005/02/02 13:57:37 bob Exp $
+ * $Id: CMMeasurementTransmit.java,v 1.6 2005/02/14 15:32:39 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,12 +9,13 @@
 package com.syrus.AMFICOM.cmserver;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import com.syrus.AMFICOM.configuration.corba.AccessIdentifier_Transferable;
+import com.syrus.AMFICOM.general.corba.AccessIdentifier_Transferable;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.DatabaseException;
@@ -65,8 +66,8 @@ import com.syrus.AMFICOM.measurement.corba.Test_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/02/02 13:57:37 $
- * @author $Author: bob $
+ * @version $Revision: 1.6 $, $Date: 2005/02/14 15:32:39 $
+ * @author $Author: arseniy $
  * @module cmserver_v1
  */
 public abstract class CMMeasurementTransmit extends CMConfigurationTransmit {
@@ -137,21 +138,21 @@ public abstract class CMMeasurementTransmit extends CMConfigurationTransmit {
 						+ (identifier_Transferables.length == 0 ? "all" : Integer
 								.toString(identifier_Transferables.length)) + " item(s) in domain: "
 						+ domainId.toString(), Log.DEBUGLEVEL07);
-			List list;
+			Collection collection;
 			if (identifier_Transferables.length > 0) {
 				List idsList = new ArrayList(identifier_Transferables.length);
 				for (int i = 0; i < identifier_Transferables.length; i++)
 					idsList.add(new Identifier(identifier_Transferables[i]));
 
-				list = MeasurementStorableObjectPool.getStorableObjects(idsList, true);
+				collection = MeasurementStorableObjectPool.getStorableObjects(idsList, true);
 
 			} else
-				list = MeasurementStorableObjectPool.getStorableObjectsByCondition(
+				collection = MeasurementStorableObjectPool.getStorableObjectsByCondition(
 					new EquivalentCondition(ObjectEntities.EVALUATION_ENTITY_CODE), true);
 
-			Evaluation_Transferable[] transferables = new Evaluation_Transferable[list.size()];
+			Evaluation_Transferable[] transferables = new Evaluation_Transferable[collection.size()];
 			int i = 0;
-			for (Iterator it = list.iterator(); it.hasNext(); i++) {
+			for (Iterator it = collection.iterator(); it.hasNext(); i++) {
 				Evaluation evaluation = (Evaluation) it.next();
 				transferables[i] = (Evaluation_Transferable) evaluation.getTransferable();
 			}
@@ -186,22 +187,22 @@ public abstract class CMMeasurementTransmit extends CMConfigurationTransmit {
 						+ (identifier_Transferables.length == 0 ? "all" : Integer
 								.toString(identifier_Transferables.length)) + " item(s) in domain: "
 						+ domainId.toString(), Log.DEBUGLEVEL07);
-			List list = null;
+			Collection collection = null;
 			if (identifier_Transferables.length > 0) {
 				List idsList = new ArrayList(identifier_Transferables.length);
 				for (int i = 0; i < identifier_Transferables.length; i++)
 					idsList.add(new Identifier(identifier_Transferables[i]));
 
-				list = MeasurementStorableObjectPool.getStorableObjectsByConditionButIds(idsList,
+				collection = MeasurementStorableObjectPool.getStorableObjectsByConditionButIds(idsList,
 					new EquivalentCondition(ObjectEntities.EVALUATION_ENTITY_CODE), true);
 
 			} else
-				list = MeasurementStorableObjectPool.getStorableObjectsByCondition(
+				collection = MeasurementStorableObjectPool.getStorableObjectsByCondition(
 					new EquivalentCondition(ObjectEntities.EVALUATION_ENTITY_CODE), true);
 
-			Evaluation_Transferable[] transferables = new Evaluation_Transferable[list.size()];
+			Evaluation_Transferable[] transferables = new Evaluation_Transferable[collection.size()];
 			int i = 0;
-			for (Iterator it = list.iterator(); it.hasNext(); i++) {
+			for (Iterator it = collection.iterator(); it.hasNext(); i++) {
 				Evaluation evaluation = (Evaluation) it.next();
 				transferables[i] = (Evaluation_Transferable) evaluation.getTransferable();
 			}
@@ -234,21 +235,21 @@ public abstract class CMMeasurementTransmit extends CMConfigurationTransmit {
 				+ (identifier_Transferables.length == 0 ? "all" : Integer.toString(identifier_Transferables.length))
 				+ " item(s) ", Log.DEBUGLEVEL07);
 		try {
-			List list = null;
+			Collection collection = null;
 			StorableObjectCondition condition = this.restoreCondition(condition_Transferable);
 			if (identifier_Transferables.length > 0) {
 				List idsList = new ArrayList(identifier_Transferables.length);
 				for (int i = 0; i < identifier_Transferables.length; i++)
 					idsList.add(new Identifier(identifier_Transferables[i]));
 
-				list = MeasurementStorableObjectPool.getStorableObjectsByConditionButIds(idsList, condition, true);
+				collection = MeasurementStorableObjectPool.getStorableObjectsByConditionButIds(idsList, condition, true);
 
 			} else
-				list = MeasurementStorableObjectPool.getStorableObjectsByCondition(condition, true);
+				collection = MeasurementStorableObjectPool.getStorableObjectsByCondition(condition, true);
 
-			Evaluation_Transferable[] transferables = new Evaluation_Transferable[list.size()];
+			Evaluation_Transferable[] transferables = new Evaluation_Transferable[collection.size()];
 			int i = 0;
-			for (Iterator it = list.iterator(); it.hasNext(); i++) {
+			for (Iterator it = collection.iterator(); it.hasNext(); i++) {
 				Evaluation evaluation = (Evaluation) it.next();
 				transferables[i] = (Evaluation_Transferable) evaluation.getTransferable();
 			}
@@ -584,21 +585,21 @@ public abstract class CMMeasurementTransmit extends CMConfigurationTransmit {
 								.toString(identifier_Transferables.length)) + " item(s) in domain: "
 						+ domainId.toString(), Log.DEBUGLEVEL07);
 
-			List list = null;
+			Collection collection = null;
 			if (identifier_Transferables.length > 0) {
 				List idsList = new ArrayList(identifier_Transferables.length);
 				for (int i = 0; i < identifier_Transferables.length; i++)
 					idsList.add(new Identifier(identifier_Transferables[i]));
 
-				list = MeasurementStorableObjectPool.getStorableObjects(idsList, true);
+				collection = MeasurementStorableObjectPool.getStorableObjects(idsList, true);
 			} else
-				list = MeasurementStorableObjectPool.getStorableObjectsByCondition(
+				collection = MeasurementStorableObjectPool.getStorableObjectsByCondition(
 					new EquivalentCondition(ObjectEntities.ANALYSISTYPE_ENTITY_CODE), true);
 
-			AnalysisType_Transferable[] transferables = new AnalysisType_Transferable[list.size()];
+			AnalysisType_Transferable[] transferables = new AnalysisType_Transferable[collection.size()];
 
 			int i = 0;
-			for (Iterator it = list.iterator(); it.hasNext(); i++) {
+			for (Iterator it = collection.iterator(); it.hasNext(); i++) {
 				AnalysisType analysisType = (AnalysisType) it.next();
 				transferables[i] = (AnalysisType_Transferable) analysisType.getTransferable();
 			}
@@ -635,22 +636,22 @@ public abstract class CMMeasurementTransmit extends CMConfigurationTransmit {
 								.toString(identifier_Transferables.length)) + " item(s) in domain: "
 						+ domainId.toString(), Log.DEBUGLEVEL07);
 
-			List list = null;
+			Collection collection = null;
 			if (identifier_Transferables.length > 0) {
 				List idsList = new ArrayList(identifier_Transferables.length);
 				for (int i = 0; i < identifier_Transferables.length; i++)
 					idsList.add(new Identifier(identifier_Transferables[i]));
 
-				list = MeasurementStorableObjectPool.getStorableObjectsByConditionButIds(idsList,
+				collection = MeasurementStorableObjectPool.getStorableObjectsByConditionButIds(idsList,
 					new EquivalentCondition(ObjectEntities.ANALYSISTYPE_ENTITY_CODE), true);
 			} else
-				list = MeasurementStorableObjectPool.getStorableObjectsByCondition(
+				collection = MeasurementStorableObjectPool.getStorableObjectsByCondition(
 					new EquivalentCondition(ObjectEntities.ANALYSISTYPE_ENTITY_CODE), true);
 
-			AnalysisType_Transferable[] transferables = new AnalysisType_Transferable[list.size()];
+			AnalysisType_Transferable[] transferables = new AnalysisType_Transferable[collection.size()];
 
 			int i = 0;
-			for (Iterator it = list.iterator(); it.hasNext(); i++) {
+			for (Iterator it = collection.iterator(); it.hasNext(); i++) {
 				AnalysisType analysisType = (AnalysisType) it.next();
 				transferables[i] = (AnalysisType_Transferable) analysisType.getTransferable();
 			}
@@ -683,21 +684,21 @@ public abstract class CMMeasurementTransmit extends CMConfigurationTransmit {
 				+ (identifier_Transferables.length == 0 ? "all" : Integer.toString(identifier_Transferables.length))
 				+ " item(s) ", Log.DEBUGLEVEL07);
 		try {
-			List list = null;
+			Collection collection = null;
 			StorableObjectCondition condition = this.restoreCondition(condition_Transferable);
 			if (identifier_Transferables.length > 0) {
 				List idsList = new ArrayList(identifier_Transferables.length);
 				for (int i = 0; i < identifier_Transferables.length; i++)
 					idsList.add(new Identifier(identifier_Transferables[i]));
 
-				list = MeasurementStorableObjectPool.getStorableObjectsByConditionButIds(idsList, condition, true);
+				collection = MeasurementStorableObjectPool.getStorableObjectsByConditionButIds(idsList, condition, true);
 			} else
-				list = MeasurementStorableObjectPool.getStorableObjectsByCondition(condition, true);
+				collection = MeasurementStorableObjectPool.getStorableObjectsByCondition(condition, true);
 
-			AnalysisType_Transferable[] transferables = new AnalysisType_Transferable[list.size()];
+			AnalysisType_Transferable[] transferables = new AnalysisType_Transferable[collection.size()];
 
 			int i = 0;
-			for (Iterator it = list.iterator(); it.hasNext(); i++) {
+			for (Iterator it = collection.iterator(); it.hasNext(); i++) {
 				AnalysisType analysisType = (AnalysisType) it.next();
 				transferables[i] = (AnalysisType_Transferable) analysisType.getTransferable();
 			}
@@ -733,21 +734,21 @@ public abstract class CMMeasurementTransmit extends CMConfigurationTransmit {
 						+ (identifier_Transferables.length == 0 ? "all" : Integer
 								.toString(identifier_Transferables.length)) + " item(s) in domain: "
 						+ domainId.toString(), Log.DEBUGLEVEL07);
-			List list;
+			Collection collection;
 			if (identifier_Transferables.length > 0) {
 				List idsList = new ArrayList(identifier_Transferables.length);
 				for (int i = 0; i < identifier_Transferables.length; i++)
 					idsList.add(new Identifier(identifier_Transferables[i]));
 
-				list = MeasurementStorableObjectPool.getStorableObjects(idsList, true);
+				collection = MeasurementStorableObjectPool.getStorableObjects(idsList, true);
 
 			} else
-				list = MeasurementStorableObjectPool.getStorableObjectsByCondition(
+				collection = MeasurementStorableObjectPool.getStorableObjectsByCondition(
 					new EquivalentCondition(ObjectEntities.EVALUATIONTYPE_ENTITY_CODE), true);
 
-			EvaluationType_Transferable[] transferables = new EvaluationType_Transferable[list.size()];
+			EvaluationType_Transferable[] transferables = new EvaluationType_Transferable[collection.size()];
 			int i = 0;
-			for (Iterator it = list.iterator(); it.hasNext(); i++) {
+			for (Iterator it = collection.iterator(); it.hasNext(); i++) {
 				EvaluationType evaluationType = (EvaluationType) it.next();
 				transferables[i] = (EvaluationType_Transferable) evaluationType.getTransferable();
 			}
@@ -783,22 +784,22 @@ public abstract class CMMeasurementTransmit extends CMConfigurationTransmit {
 						+ (identifier_Transferables.length == 0 ? "all" : Integer
 								.toString(identifier_Transferables.length)) + " item(s) in domain: "
 						+ domainId.toString(), Log.DEBUGLEVEL07);
-			List list;
+			Collection collection;
 			if (identifier_Transferables.length > 0) {
 				List idsList = new ArrayList(identifier_Transferables.length);
 				for (int i = 0; i < identifier_Transferables.length; i++)
 					idsList.add(new Identifier(identifier_Transferables[i]));
 
-				list = MeasurementStorableObjectPool.getStorableObjectsByConditionButIds(idsList,
+				collection = MeasurementStorableObjectPool.getStorableObjectsByConditionButIds(idsList,
 					new EquivalentCondition(ObjectEntities.EVALUATIONTYPE_ENTITY_CODE), true);
 
 			} else
-				list = MeasurementStorableObjectPool.getStorableObjectsByCondition(
+				collection = MeasurementStorableObjectPool.getStorableObjectsByCondition(
 					new EquivalentCondition(ObjectEntities.EVALUATIONTYPE_ENTITY_CODE), true);
 
-			EvaluationType_Transferable[] transferables = new EvaluationType_Transferable[list.size()];
+			EvaluationType_Transferable[] transferables = new EvaluationType_Transferable[collection.size()];
 			int i = 0;
-			for (Iterator it = list.iterator(); it.hasNext(); i++) {
+			for (Iterator it = collection.iterator(); it.hasNext(); i++) {
 				EvaluationType evaluationType = (EvaluationType) it.next();
 				transferables[i] = (EvaluationType_Transferable) evaluationType.getTransferable();
 			}
@@ -831,21 +832,21 @@ public abstract class CMMeasurementTransmit extends CMConfigurationTransmit {
 				+ (identifier_Transferables.length == 0 ? "all" : Integer.toString(identifier_Transferables.length))
 				+ " item(s) ", Log.DEBUGLEVEL07);
 		try {
-			List list;
+			Collection collection;
 			StorableObjectCondition condition = this.restoreCondition(condition_Transferable);
 			if (identifier_Transferables.length > 0) {
 				List idsList = new ArrayList(identifier_Transferables.length);
 				for (int i = 0; i < identifier_Transferables.length; i++)
 					idsList.add(new Identifier(identifier_Transferables[i]));
 
-				list = MeasurementStorableObjectPool.getStorableObjectsByConditionButIds(idsList, condition, true);
+				collection = MeasurementStorableObjectPool.getStorableObjectsByConditionButIds(idsList, condition, true);
 
 			} else
-				list = MeasurementStorableObjectPool.getStorableObjectsByCondition(condition, true);
+				collection = MeasurementStorableObjectPool.getStorableObjectsByCondition(condition, true);
 
-			EvaluationType_Transferable[] transferables = new EvaluationType_Transferable[list.size()];
+			EvaluationType_Transferable[] transferables = new EvaluationType_Transferable[collection.size()];
 			int i = 0;
-			for (Iterator it = list.iterator(); it.hasNext(); i++) {
+			for (Iterator it = collection.iterator(); it.hasNext(); i++) {
 				EvaluationType evaluationType = (EvaluationType) it.next();
 				transferables[i] = (EvaluationType_Transferable) evaluationType.getTransferable();
 			}
@@ -880,21 +881,21 @@ public abstract class CMMeasurementTransmit extends CMConfigurationTransmit {
 						+ (identifier_Transferables.length == 0 ? "all" : Integer
 								.toString(identifier_Transferables.length)) + " item(s) in domain: "
 						+ domainId.toString(), Log.DEBUGLEVEL07);
-			List list = null;
+			Collection collection = null;
 			if (identifier_Transferables.length > 0) {
 				List idsList = new ArrayList(identifier_Transferables.length);
 				for (int i = 0; i < identifier_Transferables.length; i++)
 					idsList.add(new Identifier(identifier_Transferables[i]));
 
-				list = MeasurementStorableObjectPool.getStorableObjects(idsList, true);
+				collection = MeasurementStorableObjectPool.getStorableObjects(idsList, true);
 
 			} else
-				list = MeasurementStorableObjectPool.getStorableObjectsByCondition(
+				collection = MeasurementStorableObjectPool.getStorableObjectsByCondition(
 					new EquivalentCondition(ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE), true);
 
-			MeasurementType_Transferable[] transferables = new MeasurementType_Transferable[list.size()];
+			MeasurementType_Transferable[] transferables = new MeasurementType_Transferable[collection.size()];
 			int i = 0;
-			for (Iterator it = list.iterator(); it.hasNext(); i++) {
+			for (Iterator it = collection.iterator(); it.hasNext(); i++) {
 				MeasurementType measurementType = (MeasurementType) it.next();
 				transferables[i] = (MeasurementType_Transferable) measurementType.getTransferable();
 			}
@@ -929,22 +930,22 @@ public abstract class CMMeasurementTransmit extends CMConfigurationTransmit {
 						+ (identifier_Transferables.length == 0 ? "all" : Integer
 								.toString(identifier_Transferables.length)) + " item(s) in domain: "
 						+ domainId.toString(), Log.DEBUGLEVEL07);
-			List list = null;
+			Collection collection = null;
 			if (identifier_Transferables.length > 0) {
 				List idsList = new ArrayList(identifier_Transferables.length);
 				for (int i = 0; i < identifier_Transferables.length; i++)
 					idsList.add(new Identifier(identifier_Transferables[i]));
 
-				list = MeasurementStorableObjectPool.getStorableObjectsByConditionButIds(idsList,
+				collection = MeasurementStorableObjectPool.getStorableObjectsByConditionButIds(idsList,
 					new EquivalentCondition(ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE), true);
 
 			} else
-				list = MeasurementStorableObjectPool.getStorableObjectsByCondition(
+				collection = MeasurementStorableObjectPool.getStorableObjectsByCondition(
 					new EquivalentCondition(ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE), true);
 
-			MeasurementType_Transferable[] transferables = new MeasurementType_Transferable[list.size()];
+			MeasurementType_Transferable[] transferables = new MeasurementType_Transferable[collection.size()];
 			int i = 0;
-			for (Iterator it = list.iterator(); it.hasNext(); i++) {
+			for (Iterator it = collection.iterator(); it.hasNext(); i++) {
 				MeasurementType measurementType = (MeasurementType) it.next();
 				transferables[i] = (MeasurementType_Transferable) measurementType.getTransferable();
 			}
@@ -978,21 +979,21 @@ public abstract class CMMeasurementTransmit extends CMConfigurationTransmit {
 				"CMMeasurementTransmit.transmitMeasurementTypesButIdsCondition | requiere "
 						+ (identifier_Transferables.length == 0 ? "all" : Integer
 								.toString(identifier_Transferables.length)) + " item(s) ", Log.DEBUGLEVEL07);
-			List list = null;
+			Collection collection = null;
 			StorableObjectCondition condition = this.restoreCondition(condition_Transferable);
 			if (identifier_Transferables.length > 0) {
 				List idsList = new ArrayList(identifier_Transferables.length);
 				for (int i = 0; i < identifier_Transferables.length; i++)
 					idsList.add(new Identifier(identifier_Transferables[i]));
 
-				list = MeasurementStorableObjectPool.getStorableObjectsByConditionButIds(idsList, condition, true);
+				collection = MeasurementStorableObjectPool.getStorableObjectsByConditionButIds(idsList, condition, true);
 
 			} else
-				list = MeasurementStorableObjectPool.getStorableObjectsByCondition(condition, true);
+				collection = MeasurementStorableObjectPool.getStorableObjectsByCondition(condition, true);
 
-			MeasurementType_Transferable[] transferables = new MeasurementType_Transferable[list.size()];
+			MeasurementType_Transferable[] transferables = new MeasurementType_Transferable[collection.size()];
 			int i = 0;
-			for (Iterator it = list.iterator(); it.hasNext(); i++) {
+			for (Iterator it = collection.iterator(); it.hasNext(); i++) {
 				MeasurementType measurementType = (MeasurementType) it.next();
 				transferables[i] = (MeasurementType_Transferable) measurementType.getTransferable();
 			}
@@ -1029,21 +1030,21 @@ public abstract class CMMeasurementTransmit extends CMConfigurationTransmit {
 								.toString(identifier_Transferables.length)) + " item(s) in domain: "
 						+ domainId.toString(), Log.DEBUGLEVEL07);
 
-			List list = null;
+			Collection collection = null;
 			if (identifier_Transferables.length > 0) {
 				List idsList = new ArrayList(identifier_Transferables.length);
 				for (int i = 0; i < identifier_Transferables.length; i++)
 					idsList.add(new Identifier(identifier_Transferables[i]));
 
-				list = MeasurementStorableObjectPool.getStorableObjects(idsList, true);
+				collection = MeasurementStorableObjectPool.getStorableObjects(idsList, true);
 			} else
-				list = MeasurementStorableObjectPool.getStorableObjectsByCondition(
+				collection = MeasurementStorableObjectPool.getStorableObjectsByCondition(
 					new EquivalentCondition(ObjectEntities.ANALYSIS_ENTITY_CODE), true);
 
-			Analysis_Transferable[] transferables = new Analysis_Transferable[list.size()];
+			Analysis_Transferable[] transferables = new Analysis_Transferable[collection.size()];
 
 			int i = 0;
-			for (Iterator it = list.iterator(); it.hasNext(); i++) {
+			for (Iterator it = collection.iterator(); it.hasNext(); i++) {
 				Analysis analysis = (Analysis) it.next();
 				transferables[i] = (Analysis_Transferable) analysis.getTransferable();
 			}
@@ -1078,20 +1079,20 @@ public abstract class CMMeasurementTransmit extends CMConfigurationTransmit {
 						+ (identifier_Transferables.length == 0 ? "all" : Integer
 								.toString(identifier_Transferables.length)) + " item(s) in domain: "
 						+ domainId.toString(), Log.DEBUGLEVEL07);
-			List list;
+			Collection collection;
 			if (identifier_Transferables.length > 0) {
 				List idsList = new ArrayList(identifier_Transferables.length);
 				for (int i = 0; i < identifier_Transferables.length; i++)
 					idsList.add(new Identifier(identifier_Transferables[i]));
-				list = MeasurementStorableObjectPool.getStorableObjectsByConditionButIds(idsList,
+				collection = MeasurementStorableObjectPool.getStorableObjectsByConditionButIds(idsList,
 					new EquivalentCondition(ObjectEntities.ANALYSIS_ENTITY_CODE), true);
 			} else
-				list = MeasurementStorableObjectPool.getStorableObjectsByCondition(
+				collection = MeasurementStorableObjectPool.getStorableObjectsByCondition(
 					new EquivalentCondition(ObjectEntities.ANALYSIS_ENTITY_CODE), true);
 
-			Analysis_Transferable[] transferables = new Analysis_Transferable[list.size()];
+			Analysis_Transferable[] transferables = new Analysis_Transferable[collection.size()];
 			int i = 0;
-			for (Iterator it = list.iterator(); it.hasNext(); i++) {
+			for (Iterator it = collection.iterator(); it.hasNext(); i++) {
 				Analysis analysis = (Analysis) it.next();
 				transferables[i] = (Analysis_Transferable) analysis.getTransferable();
 			}
@@ -1123,20 +1124,20 @@ public abstract class CMMeasurementTransmit extends CMConfigurationTransmit {
 				+ (identifier_Transferables.length == 0 ? "all" : Integer.toString(identifier_Transferables.length))
 				+ " item(s) ", Log.DEBUGLEVEL07);
 		try {
-			List list;
+			Collection collection;
 			StorableObjectCondition condition = this.restoreCondition(condition_Transferable);
 			if (identifier_Transferables.length > 0) {
 				List idsList = new ArrayList(identifier_Transferables.length);
 				for (int i = 0; i < identifier_Transferables.length; i++)
 					idsList.add(new Identifier(identifier_Transferables[i]));
 
-				list = MeasurementStorableObjectPool.getStorableObjectsByConditionButIds(idsList, condition, true);
+				collection = MeasurementStorableObjectPool.getStorableObjectsByConditionButIds(idsList, condition, true);
 			} else
-				list = MeasurementStorableObjectPool.getStorableObjectsByCondition(condition, true);
+				collection = MeasurementStorableObjectPool.getStorableObjectsByCondition(condition, true);
 
-			Analysis_Transferable[] transferables = new Analysis_Transferable[list.size()];
+			Analysis_Transferable[] transferables = new Analysis_Transferable[collection.size()];
 			int i = 0;
-			for (Iterator it = list.iterator(); it.hasNext(); i++) {
+			for (Iterator it = collection.iterator(); it.hasNext(); i++) {
 				Analysis analysis = (Analysis) it.next();
 				transferables[i] = (Analysis_Transferable) analysis.getTransferable();
 			}
@@ -1170,21 +1171,21 @@ public abstract class CMMeasurementTransmit extends CMConfigurationTransmit {
 						+ (identifier_Transferables.length == 0 ? "all" : Integer
 								.toString(identifier_Transferables.length)) + " item(s) in domain: "
 						+ domainId.toString(), Log.DEBUGLEVEL07);
-			List list;
+			Collection collection;
 			if (identifier_Transferables.length > 0) {
 				List idsList = new ArrayList(identifier_Transferables.length);
 				for (int i = 0; i < identifier_Transferables.length; i++)
 					idsList.add(new Identifier(identifier_Transferables[i]));
 
-				list = MeasurementStorableObjectPool.getStorableObjects(idsList, true);
+				collection = MeasurementStorableObjectPool.getStorableObjects(idsList, true);
 
 			} else
-				list = MeasurementStorableObjectPool.getStorableObjectsByCondition(
+				collection = MeasurementStorableObjectPool.getStorableObjectsByCondition(
 					new EquivalentCondition(ObjectEntities.MODELING_ENTITY_CODE), true);
 
-			Modeling_Transferable[] transferables = new Modeling_Transferable[list.size()];
+			Modeling_Transferable[] transferables = new Modeling_Transferable[collection.size()];
 			int i = 0;
-			for (Iterator it = list.iterator(); it.hasNext(); i++) {
+			for (Iterator it = collection.iterator(); it.hasNext(); i++) {
 				Modeling modeling = (Modeling) it.next();
 				transferables[i] = (Modeling_Transferable) modeling.getTransferable();
 			}
@@ -1220,21 +1221,21 @@ public abstract class CMMeasurementTransmit extends CMConfigurationTransmit {
 						+ (identifier_Transferables.length == 0 ? "all" : Integer
 								.toString(identifier_Transferables.length)) + " item(s) in domain: "
 						+ domainId.toString(), Log.DEBUGLEVEL07);
-			List list;
+			Collection collection;
 			if (identifier_Transferables.length > 0) {
 				List idsList = new ArrayList(identifier_Transferables.length);
 				for (int i = 0; i < identifier_Transferables.length; i++)
 					idsList.add(new Identifier(identifier_Transferables[i]));
 
-				list = MeasurementStorableObjectPool.getStorableObjects(idsList, true);
+				collection = MeasurementStorableObjectPool.getStorableObjects(idsList, true);
 
 			} else
-				list = MeasurementStorableObjectPool.getStorableObjectsByCondition(
+				collection = MeasurementStorableObjectPool.getStorableObjectsByCondition(
 					new EquivalentCondition(ObjectEntities.MODELING_ENTITY_CODE), true);
 
-			ModelingType_Transferable[] transferables = new ModelingType_Transferable[list.size()];
+			ModelingType_Transferable[] transferables = new ModelingType_Transferable[collection.size()];
 			int i = 0;
-			for (Iterator it = list.iterator(); it.hasNext(); i++) {
+			for (Iterator it = collection.iterator(); it.hasNext(); i++) {
 				ModelingType modeling = (ModelingType) it.next();
 				transferables[i] = (ModelingType_Transferable) modeling.getTransferable();
 			}
@@ -1271,22 +1272,22 @@ public abstract class CMMeasurementTransmit extends CMConfigurationTransmit {
 						+ (identifier_Transferables.length == 0 ? "all" : Integer
 								.toString(identifier_Transferables.length)) + " item(s) in domain: "
 						+ domainId.toString(), Log.DEBUGLEVEL07);
-			List list;
+			Collection collection;
 			if (identifier_Transferables.length > 0) {
 				List idsList = new ArrayList(identifier_Transferables.length);
 				for (int i = 0; i < identifier_Transferables.length; i++)
 					idsList.add(new Identifier(identifier_Transferables[i]));
 
-				list = MeasurementStorableObjectPool.getStorableObjectsByConditionButIds(idsList,
+				collection = MeasurementStorableObjectPool.getStorableObjectsByConditionButIds(idsList,
 					new EquivalentCondition(ObjectEntities.MODELING_ENTITY_CODE), true);
 
 			} else
-				list = MeasurementStorableObjectPool.getStorableObjectsByCondition(
+				collection = MeasurementStorableObjectPool.getStorableObjectsByCondition(
 					new EquivalentCondition(ObjectEntities.MODELING_ENTITY_CODE), true);
 
-			Modeling_Transferable[] transferables = new Modeling_Transferable[list.size()];
+			Modeling_Transferable[] transferables = new Modeling_Transferable[collection.size()];
 			int i = 0;
-			for (Iterator it = list.iterator(); it.hasNext(); i++) {
+			for (Iterator it = collection.iterator(); it.hasNext(); i++) {
 				Modeling modeling = (Modeling) it.next();
 				transferables[i] = (Modeling_Transferable) modeling.getTransferable();
 			}
@@ -1319,22 +1320,22 @@ public abstract class CMMeasurementTransmit extends CMConfigurationTransmit {
 		Log.debugMessage("CMMeasurementTransmit.transmitModelingTypesButIds | requiere "
 				+ (ids.length == 0 ? "all" : Integer.toString(ids.length)) + " item(s) ", Log.DEBUGLEVEL07);
 		try {
-			List list;
+			Collection collection;
 			if (ids.length > 0) {
 				List idsList = new ArrayList(ids.length);
 				for (int i = 0; i < ids.length; i++)
 					idsList.add(new Identifier(ids[i]));
 
-				list = MeasurementStorableObjectPool.getStorableObjectsByConditionButIds(idsList, this
+				collection = MeasurementStorableObjectPool.getStorableObjectsByConditionButIds(idsList, this
 						.restoreCondition(condition_Transferable), true);
 
 			} else
-				list = MeasurementStorableObjectPool.getStorableObjectsByCondition(
+				collection = MeasurementStorableObjectPool.getStorableObjectsByCondition(
 					new EquivalentCondition(ObjectEntities.MODELINGTYPE_ENTITY_CODE), true);
 
-			ModelingType_Transferable[] transferables = new ModelingType_Transferable[list.size()];
+			ModelingType_Transferable[] transferables = new ModelingType_Transferable[collection.size()];
 			int i = 0;
-			for (Iterator it = list.iterator(); it.hasNext(); i++) {
+			for (Iterator it = collection.iterator(); it.hasNext(); i++) {
 				ModelingType modeling = (ModelingType) it.next();
 				transferables[i] = (ModelingType_Transferable) modeling.getTransferable();
 			}
@@ -1368,21 +1369,21 @@ public abstract class CMMeasurementTransmit extends CMConfigurationTransmit {
 				+ (identifier_Transferables.length == 0 ? "all" : Integer.toString(identifier_Transferables.length))
 				+ " item(s) ", Log.DEBUGLEVEL07);
 		try {
-			List list;
+			Collection collection;
 			StorableObjectCondition condition = this.restoreCondition(storableObjectCondition_Transferable);
 			if (identifier_Transferables.length > 0) {
 				List idsList = new ArrayList(identifier_Transferables.length);
 				for (int i = 0; i < identifier_Transferables.length; i++)
 					idsList.add(new Identifier(identifier_Transferables[i]));
 
-				list = MeasurementStorableObjectPool.getStorableObjectsByConditionButIds(idsList, condition, true);
+				collection = MeasurementStorableObjectPool.getStorableObjectsByConditionButIds(idsList, condition, true);
 
 			} else
-				list = MeasurementStorableObjectPool.getStorableObjectsByCondition(condition, true);
+				collection = MeasurementStorableObjectPool.getStorableObjectsByCondition(condition, true);
 
-			Modeling_Transferable[] transferables = new Modeling_Transferable[list.size()];
+			Modeling_Transferable[] transferables = new Modeling_Transferable[collection.size()];
 			int i = 0;
-			for (Iterator it = list.iterator(); it.hasNext(); i++) {
+			for (Iterator it = collection.iterator(); it.hasNext(); i++) {
 				Modeling modeling = (Modeling) it.next();
 				transferables[i] = (Modeling_Transferable) modeling.getTransferable();
 			}
@@ -1415,19 +1416,19 @@ public abstract class CMMeasurementTransmit extends CMConfigurationTransmit {
 			Log.debugMessage("CMMeasurementTransmit.transmitMeasurements | requiere "
 					+ (ids_Transferable.length == 0 ? "all" : Integer.toString(ids_Transferable.length))
 					+ " item(s) in domain: " + domainId.toString(), Log.DEBUGLEVEL07);
-			List list;
+			Collection collection;
 			if (ids_Transferable.length > 0) {
 				List idsList = new ArrayList(ids_Transferable.length);
 				for (int i = 0; i < ids_Transferable.length; i++)
 					idsList.add(new Identifier(ids_Transferable[i]));
-				list = MeasurementStorableObjectPool.getStorableObjects(idsList, true);
+				collection = MeasurementStorableObjectPool.getStorableObjects(idsList, true);
 			} else
-				list = MeasurementStorableObjectPool.getStorableObjectsByCondition(
+				collection = MeasurementStorableObjectPool.getStorableObjectsByCondition(
 					new EquivalentCondition(ObjectEntities.MEASUREMENT_ENTITY_CODE), true);
 
-			Measurement_Transferable[] transferables = new Measurement_Transferable[list.size()];
+			Measurement_Transferable[] transferables = new Measurement_Transferable[collection.size()];
 			int i = 0;
-			for (Iterator it = list.iterator(); it.hasNext(); i++) {
+			for (Iterator it = collection.iterator(); it.hasNext(); i++) {
 				Measurement measurement = (Measurement) it.next();
 				transferables[i] = (Measurement_Transferable) measurement.getTransferable();
 			}
@@ -1461,22 +1462,22 @@ public abstract class CMMeasurementTransmit extends CMConfigurationTransmit {
 						+ (identifier_Transferables.length == 0 ? "all" : Integer
 								.toString(identifier_Transferables.length)) + " item(s) in domain: "
 						+ domainId.toString(), Log.DEBUGLEVEL07);
-			List list;
+			Collection collection;
 			if (identifier_Transferables.length > 0) {
 				List idsList = new ArrayList(identifier_Transferables.length);
 				for (int i = 0; i < identifier_Transferables.length; i++)
 					idsList.add(new Identifier(identifier_Transferables[i]));
 
-				list = MeasurementStorableObjectPool.getStorableObjectsByConditionButIds(idsList,
+				collection = MeasurementStorableObjectPool.getStorableObjectsByConditionButIds(idsList,
 					new EquivalentCondition(ObjectEntities.MEASUREMENT_ENTITY_CODE), true);
 
 			} else
-				list = MeasurementStorableObjectPool.getStorableObjectsByCondition(
+				collection = MeasurementStorableObjectPool.getStorableObjectsByCondition(
 					new EquivalentCondition(ObjectEntities.MEASUREMENT_ENTITY_CODE), true);
 
-			Measurement_Transferable[] transferables = new Measurement_Transferable[list.size()];
+			Measurement_Transferable[] transferables = new Measurement_Transferable[collection.size()];
 			int i = 0;
-			for (Iterator it = list.iterator(); it.hasNext(); i++) {
+			for (Iterator it = collection.iterator(); it.hasNext(); i++) {
 				Measurement measurement = (Measurement) it.next();
 				transferables[i] = (Measurement_Transferable) measurement.getTransferable();
 			}
@@ -1509,21 +1510,21 @@ public abstract class CMMeasurementTransmit extends CMConfigurationTransmit {
 				+ (identifier_Transferables.length == 0 ? "all" : Integer.toString(identifier_Transferables.length))
 				+ " item(s) ", Log.DEBUGLEVEL07);
 		try {
-			List list;
+			Collection collection;
 			StorableObjectCondition condition = this.restoreCondition(condition_Transferable);
 			if (identifier_Transferables.length > 0) {
 				List idsList = new ArrayList(identifier_Transferables.length);
 				for (int i = 0; i < identifier_Transferables.length; i++)
 					idsList.add(new Identifier(identifier_Transferables[i]));
 
-				list = MeasurementStorableObjectPool.getStorableObjectsByConditionButIds(idsList, condition, true);
+				collection = MeasurementStorableObjectPool.getStorableObjectsByConditionButIds(idsList, condition, true);
 
 			} else
-				list = MeasurementStorableObjectPool.getStorableObjectsByCondition(condition, true);
+				collection = MeasurementStorableObjectPool.getStorableObjectsByCondition(condition, true);
 
-			Measurement_Transferable[] transferables = new Measurement_Transferable[list.size()];
+			Measurement_Transferable[] transferables = new Measurement_Transferable[collection.size()];
 			int i = 0;
-			for (Iterator it = list.iterator(); it.hasNext(); i++) {
+			for (Iterator it = collection.iterator(); it.hasNext(); i++) {
 				Measurement measurement = (Measurement) it.next();
 				transferables[i] = (Measurement_Transferable) measurement.getTransferable();
 			}
@@ -1561,19 +1562,19 @@ public abstract class CMMeasurementTransmit extends CMConfigurationTransmit {
 						+ (identifier_Transferables.length == 0 ? "all" : Integer
 								.toString(identifier_Transferables.length)) + " item(s) in domain: "
 						+ domainId.toString(), Log.DEBUGLEVEL07);
-			List list;
+			Collection collection;
 			if (identifier_Transferables.length > 0) {
 				List idsList = new ArrayList(identifier_Transferables.length);
 				for (int i = 0; i < identifier_Transferables.length; i++)
 					idsList.add(new Identifier(identifier_Transferables[i]));
-				list = MeasurementStorableObjectPool.getStorableObjects(idsList, true);
+				collection = MeasurementStorableObjectPool.getStorableObjects(idsList, true);
 			} else
-				list = MeasurementStorableObjectPool.getStorableObjectsByCondition(
+				collection = MeasurementStorableObjectPool.getStorableObjectsByCondition(
 					new EquivalentCondition(ObjectEntities.MS_ENTITY_CODE), true);
 
-			MeasurementSetup_Transferable[] transferables = new MeasurementSetup_Transferable[list.size()];
+			MeasurementSetup_Transferable[] transferables = new MeasurementSetup_Transferable[collection.size()];
 			int i = 0;
-			for (Iterator it = list.iterator(); it.hasNext(); i++) {
+			for (Iterator it = collection.iterator(); it.hasNext(); i++) {
 				MeasurementSetup measurementSetup = (MeasurementSetup) it.next();
 				transferables[i] = (MeasurementSetup_Transferable) measurementSetup.getTransferable();
 			}
@@ -1607,20 +1608,20 @@ public abstract class CMMeasurementTransmit extends CMConfigurationTransmit {
 						+ (identifier_Transferables.length == 0 ? "all" : Integer
 								.toString(identifier_Transferables.length)) + " item(s) in domain: "
 						+ domainId.toString(), Log.DEBUGLEVEL07);
-			List list;
+			Collection collection;
 			if (identifier_Transferables.length > 0) {
 				List idsList = new ArrayList(identifier_Transferables.length);
 				for (int i = 0; i < identifier_Transferables.length; i++)
 					idsList.add(new Identifier(identifier_Transferables[i]));
-				list = MeasurementStorableObjectPool.getStorableObjectsByConditionButIds(idsList,
+				collection = MeasurementStorableObjectPool.getStorableObjectsByConditionButIds(idsList,
 					new EquivalentCondition(ObjectEntities.MS_ENTITY_CODE), true);
 			} else
-				list = MeasurementStorableObjectPool.getStorableObjectsByCondition(
+				collection = MeasurementStorableObjectPool.getStorableObjectsByCondition(
 					new EquivalentCondition(ObjectEntities.MS_ENTITY_CODE), true);
 
-			MeasurementSetup_Transferable[] transferables = new MeasurementSetup_Transferable[list.size()];
+			MeasurementSetup_Transferable[] transferables = new MeasurementSetup_Transferable[collection.size()];
 			int i = 0;
-			for (Iterator it = list.iterator(); it.hasNext(); i++) {
+			for (Iterator it = collection.iterator(); it.hasNext(); i++) {
 				MeasurementSetup measurementSetup = (MeasurementSetup) it.next();
 				transferables[i] = (MeasurementSetup_Transferable) measurementSetup.getTransferable();
 			}
@@ -1652,19 +1653,19 @@ public abstract class CMMeasurementTransmit extends CMConfigurationTransmit {
 				+ (identifier_Transferables.length == 0 ? "all" : Integer.toString(identifier_Transferables.length))
 				+ " item(s) ", Log.DEBUGLEVEL07);
 		try {
-			List list;
+			Collection collection;
 			StorableObjectCondition condition = this.restoreCondition(condition_Transferable);
 			if (identifier_Transferables.length > 0) {
 				List idsList = new ArrayList(identifier_Transferables.length);
 				for (int i = 0; i < identifier_Transferables.length; i++)
 					idsList.add(new Identifier(identifier_Transferables[i]));
-				list = MeasurementStorableObjectPool.getStorableObjectsByConditionButIds(idsList, condition, true);
+				collection = MeasurementStorableObjectPool.getStorableObjectsByConditionButIds(idsList, condition, true);
 			} else
-				list = MeasurementStorableObjectPool.getStorableObjectsByCondition(condition, true);
+				collection = MeasurementStorableObjectPool.getStorableObjectsByCondition(condition, true);
 
-			MeasurementSetup_Transferable[] transferables = new MeasurementSetup_Transferable[list.size()];
+			MeasurementSetup_Transferable[] transferables = new MeasurementSetup_Transferable[collection.size()];
 			int i = 0;
-			for (Iterator it = list.iterator(); it.hasNext(); i++) {
+			for (Iterator it = collection.iterator(); it.hasNext(); i++) {
 				MeasurementSetup measurementSetup = (MeasurementSetup) it.next();
 				transferables[i] = (MeasurementSetup_Transferable) measurementSetup.getTransferable();
 			}
@@ -1698,21 +1699,21 @@ public abstract class CMMeasurementTransmit extends CMConfigurationTransmit {
 						+ (identifier_Transferables.length == 0 ? "all" : Integer
 								.toString(identifier_Transferables.length)) + " item(s) in domain: "
 						+ domainId.toString(), Log.DEBUGLEVEL07);
-			List list;
+			Collection collection;
 			if (identifier_Transferables.length > 0) {
 				List idsList = new ArrayList(identifier_Transferables.length);
 				for (int i = 0; i < identifier_Transferables.length; i++)
 					idsList.add(new Identifier(identifier_Transferables[i]));
 
-				list = MeasurementStorableObjectPool.getStorableObjects(idsList, true);
+				collection = MeasurementStorableObjectPool.getStorableObjects(idsList, true);
 
 			} else
-				list = MeasurementStorableObjectPool.getStorableObjectsByCondition(
+				collection = MeasurementStorableObjectPool.getStorableObjectsByCondition(
 					new EquivalentCondition(ObjectEntities.RESULT_ENTITY_CODE), true);
 
-			Result_Transferable[] transferables = new Result_Transferable[list.size()];
+			Result_Transferable[] transferables = new Result_Transferable[collection.size()];
 			int i = 0;
-			for (Iterator it = list.iterator(); it.hasNext(); i++) {
+			for (Iterator it = collection.iterator(); it.hasNext(); i++) {
 				Result result = (Result) it.next();
 				transferables[i] = (Result_Transferable) result.getTransferable();
 			}
@@ -1747,22 +1748,22 @@ public abstract class CMMeasurementTransmit extends CMConfigurationTransmit {
 						+ (identifier_Transferables.length == 0 ? "all" : Integer
 								.toString(identifier_Transferables.length)) + " item(s) in domain: "
 						+ domainId.toString(), Log.DEBUGLEVEL07);
-			List list;
+			Collection collection;
 			if (identifier_Transferables.length > 0) {
 				List idsList = new ArrayList(identifier_Transferables.length);
 				for (int i = 0; i < identifier_Transferables.length; i++)
 					idsList.add(new Identifier(identifier_Transferables[i]));
 
-				list = MeasurementStorableObjectPool.getStorableObjectsByConditionButIds(idsList,
+				collection = MeasurementStorableObjectPool.getStorableObjectsByConditionButIds(idsList,
 					new EquivalentCondition(ObjectEntities.RESULT_ENTITY_CODE), true);
 
 			} else
-				list = MeasurementStorableObjectPool.getStorableObjectsByCondition(
+				collection = MeasurementStorableObjectPool.getStorableObjectsByCondition(
 					new EquivalentCondition(ObjectEntities.RESULT_ENTITY_CODE), true);
 
-			Result_Transferable[] transferables = new Result_Transferable[list.size()];
+			Result_Transferable[] transferables = new Result_Transferable[collection.size()];
 			int i = 0;
-			for (Iterator it = list.iterator(); it.hasNext(); i++) {
+			for (Iterator it = collection.iterator(); it.hasNext(); i++) {
 				Result result = (Result) it.next();
 				transferables[i] = (Result_Transferable) result.getTransferable();
 			}
@@ -1795,21 +1796,21 @@ public abstract class CMMeasurementTransmit extends CMConfigurationTransmit {
 				+ (identifier_Transferables.length == 0 ? "all" : Integer.toString(identifier_Transferables.length))
 				+ " item(s) ", Log.DEBUGLEVEL07);
 		try {
-			List list;
+			Collection collection;
 			StorableObjectCondition condition = this.restoreCondition(condition_Transferable);
 			if (identifier_Transferables.length > 0) {
 				List idsList = new ArrayList(identifier_Transferables.length);
 				for (int i = 0; i < identifier_Transferables.length; i++)
 					idsList.add(new Identifier(identifier_Transferables[i]));
 
-				list = MeasurementStorableObjectPool.getStorableObjectsByConditionButIds(idsList, condition, true);
+				collection = MeasurementStorableObjectPool.getStorableObjectsByConditionButIds(idsList, condition, true);
 
 			} else
-				list = MeasurementStorableObjectPool.getStorableObjectsByCondition(condition, true);
+				collection = MeasurementStorableObjectPool.getStorableObjectsByCondition(condition, true);
 
-			Result_Transferable[] transferables = new Result_Transferable[list.size()];
+			Result_Transferable[] transferables = new Result_Transferable[collection.size()];
 			int i = 0;
-			for (Iterator it = list.iterator(); it.hasNext(); i++) {
+			for (Iterator it = collection.iterator(); it.hasNext(); i++) {
 				Result result = (Result) it.next();
 				transferables[i] = (Result_Transferable) result.getTransferable();
 			}
@@ -1841,22 +1842,22 @@ public abstract class CMMeasurementTransmit extends CMConfigurationTransmit {
 		Log.debugMessage("CMMeasurementTransmit.transmitResultsButIdsActionCondition | requiere "
 				+ (ids.length == 0 ? "all" : Integer.toString(ids.length)) + " item(s) ", Log.DEBUGLEVEL07);
 		try {
-			List list;
+			Collection collection;
 			if (ids.length > 0) {
 				List idsList = new ArrayList(ids.length);
 				for (int i = 0; i < ids.length; i++)
 					idsList.add(new Identifier(ids[i]));
 
-				list = MeasurementStorableObjectPool.getStorableObjectsByConditionButIds(idsList,
+				collection = MeasurementStorableObjectPool.getStorableObjectsByConditionButIds(idsList,
 					new ActionCondition(actionCondition_Transferable), true);
 
 			} else
-				list = MeasurementStorableObjectPool.getStorableObjectsByCondition(
+				collection = MeasurementStorableObjectPool.getStorableObjectsByCondition(
 					new ActionCondition(actionCondition_Transferable), true);
 
-			Result_Transferable[] transferables = new Result_Transferable[list.size()];
+			Result_Transferable[] transferables = new Result_Transferable[collection.size()];
 			int i = 0;
-			for (Iterator it = list.iterator(); it.hasNext(); i++) {
+			for (Iterator it = collection.iterator(); it.hasNext(); i++) {
 				Result result = (Result) it.next();
 				transferables[i] = (Result_Transferable) result.getTransferable();
 			}
@@ -1880,184 +1881,54 @@ public abstract class CMMeasurementTransmit extends CMConfigurationTransmit {
 		}
 	}
 
-	// public Result_Transferable[]
-	// transmitResultsButIdsResultCondition(Identifier_Transferable[]
-	// identifier_Transferables,
-	// AccessIdentifier_Transferable accessIdentifier,
-	// ResultCondition_Transferable resultCondition_Transferable) throws
-	// AMFICOMRemoteException {
-	// Log.debugMessage("CMMeasurementTransmit.transmitResultsButIdsLinkedResultCondition
-	// | requiere "
-	// + (identifier_Transferables.length == 0 ? "all" :
-	// Integer.toString(identifier_Transferables.length))
-	// + " item(s) ", Log.DEBUGLEVEL07);
-	// try {
-	// List list;
-	// if (identifier_Transferables.length > 0) {
-	// List idsList = new ArrayList(identifier_Transferables.length);
-	// for (int i = 0; i < identifier_Transferables.length; i++)
-	// idsList.add(new Identifier(identifier_Transferables[i]));
-	//
-	// list =
-	// MeasurementStorableObjectPool.getStorableObjectsByConditionButIds(idsList,
-	// new ResultCondition(resultCondition_Transferable),
-	// true);
-	//
-	// }
-	// else
-	// list = MeasurementStorableObjectPool.getStorableObjectsByCondition(new
-	// ResultCondition(resultCondition_Transferable),
-	// true);
-	//
-	// Result_Transferable[] transferables = new
-	// Result_Transferable[list.size()];
-	// int i = 0;
-	// for (Iterator it = list.iterator(); it.hasNext(); i++) {
-	// Result result = (Result) it.next();
-	// transferables[i] = (Result_Transferable) result.getTransferable();
-	// }
-	//
-	// return transferables;
-	//
-	// }
-	// catch (RetrieveObjectException roe) {
-	// Log.errorException(roe);
-	// throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE,
-	// CompletionStatus.COMPLETED_NO, roe.getMessage());
-	// }
-	// catch (IllegalDataException ide) {
-	// Log.errorException(ide);
-	// throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE,
-	// CompletionStatus.COMPLETED_NO, ide.getMessage());
-	// }
-	// catch (IllegalObjectEntityException ioee) {
-	// Log.errorException(ioee);
-	// throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE,
-	// CompletionStatus.COMPLETED_NO, ioee.getMessage());
-	// }
-	// catch (ApplicationException e) {
-	// Log.errorException(e);
-	// throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE,
-	// CompletionStatus.COMPLETED_NO, e.getMessage());
-	// }
-	// catch (Throwable t) {
-	// Log.errorException(t);
-	// throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE,
-	// CompletionStatus.COMPLETED_NO, t.getMessage());
-	// }
-	// }
-	//
-	// public Result_Transferable[]
-	// transmitResultsButIdsResultSortCondition(Identifier_Transferable[]
-	// identifier_Transferables,
-	// AccessIdentifier_Transferable accessIdentifier,
-	// ResultSortCondition_Transferable resultSortCondition_Transferable) throws
-	// AMFICOMRemoteException {
-	// Log.debugMessage("CMMeasurementTransmit.transmitResultsButIdsLinkedResultSortCondition
-	// | requiere "
-	// + (identifier_Transferables.length == 0 ? "all" :
-	// Integer.toString(identifier_Transferables.length))
-	// + " item(s) ", Log.DEBUGLEVEL07);
-	// try {
-	// List list;
-	// if (identifier_Transferables.length > 0) {
-	// List idsList = new ArrayList(identifier_Transferables.length);
-	// for (int i = 0; i < identifier_Transferables.length; i++)
-	// idsList.add(new Identifier(identifier_Transferables[i]));
-	//
-	// list =
-	// MeasurementStorableObjectPool.getStorableObjectsByConditionButIds(idsList,
-	// new ResultSortCondition(resultSortCondition_Transferable),
-	// true);
-	//
-	// }
-	// else
-	// list = MeasurementStorableObjectPool.getStorableObjectsByCondition(new
-	// ResultSortCondition(resultSortCondition_Transferable),
-	// true);
-	//
-	// Result_Transferable[] transferables = new
-	// Result_Transferable[list.size()];
-	// int i = 0;
-	// for (Iterator it = list.iterator(); it.hasNext(); i++) {
-	// Result result = (Result) it.next();
-	// transferables[i] = (Result_Transferable) result.getTransferable();
-	// }
-	//
-	// return transferables;
-	//
-	// }
-	// catch (RetrieveObjectException roe) {
-	// Log.errorException(roe);
-	// throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE,
-	// CompletionStatus.COMPLETED_NO, roe.getMessage());
-	// }
-	// catch (IllegalDataException ide) {
-	// Log.errorException(ide);
-	// throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE,
-	// CompletionStatus.COMPLETED_NO, ide.getMessage());
-	// }
-	// catch (IllegalObjectEntityException ioee) {
-	// Log.errorException(ioee);
-	// throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE,
-	// CompletionStatus.COMPLETED_NO, ioee.getMessage());
-	// }
-	// catch (ApplicationException e) {
-	// Log.errorException(e);
-	// throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE,
-	// CompletionStatus.COMPLETED_NO, e.getMessage());
-	// }
-	// catch (Throwable t) {
-	// Log.errorException(t);
-	// throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE,
-	// CompletionStatus.COMPLETED_NO, t.getMessage());
-	// }
-	// }
-
-	public Set_Transferable[] transmitSets(	Identifier_Transferable[] identifier_Transferables,
-											AccessIdentifier_Transferable accessIdentifier)
-			throws AMFICOMRemoteException {
+	public Set_Transferable[] transmitSets(Identifier_Transferable[] identifier_Transferables,
+			AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
 		try {
 			Identifier domainId = new Identifier(accessIdentifier.domain_id);
-			Log.debugMessage(
-				"CMMeasurementTransmit.transmitSets | requiere "
-						+ (identifier_Transferables.length == 0 ? "all" : Integer
-								.toString(identifier_Transferables.length)) + " item(s) in domain: "
-						+ domainId.toString(), Log.DEBUGLEVEL07);
-			List list;
+			Log.debugMessage("CMMeasurementTransmit.transmitSets | requiere "
+					+ (identifier_Transferables.length == 0 ? "all" : Integer.toString(identifier_Transferables.length))
+					+ " item(s) in domain: "
+					+ domainId.toString(), Log.DEBUGLEVEL07);
+			Collection collection;
 			if (identifier_Transferables.length > 0) {
 				List idsList = new ArrayList(identifier_Transferables.length);
 				for (int i = 0; i < identifier_Transferables.length; i++)
 					idsList.add(new Identifier(identifier_Transferables[i]));
 
-				list = MeasurementStorableObjectPool.getStorableObjects(idsList, true);
+				collection = MeasurementStorableObjectPool.getStorableObjects(idsList, true);
 
-			} else
-				list = MeasurementStorableObjectPool.getStorableObjectsByCondition(
-					new EquivalentCondition(ObjectEntities.SET_ENTITY_CODE), true);
+			}
+			else
+				collection = MeasurementStorableObjectPool.getStorableObjectsByCondition(new EquivalentCondition(ObjectEntities.SET_ENTITY_CODE),
+						true);
 
-			Set_Transferable[] transferables = new Set_Transferable[list.size()];
+			Set_Transferable[] transferables = new Set_Transferable[collection.size()];
 			int i = 0;
-			for (Iterator it = list.iterator(); it.hasNext(); i++) {
+			for (Iterator it = collection.iterator(); it.hasNext(); i++) {
 				Set set = (Set) it.next();
 				transferables[i] = (Set_Transferable) set.getTransferable();
 			}
 
 			return transferables;
 
-		} catch (RetrieveObjectException roe) {
+		}
+		catch (RetrieveObjectException roe) {
 			Log.errorException(roe);
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, roe.getMessage());
-		} catch (IllegalDataException ide) {
+		}
+		catch (IllegalDataException ide) {
 			Log.errorException(ide);
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ide.getMessage());
-		} catch (IllegalObjectEntityException ioee) {
+		}
+		catch (IllegalObjectEntityException ioee) {
 			Log.errorException(ioee);
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ioee.getMessage());
-		} catch (ApplicationException e) {
+		}
+		catch (ApplicationException e) {
 			Log.errorException(e);
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, e.getMessage());
-		} catch (Throwable t) {
+		}
+		catch (Throwable t) {
 			Log.errorException(t);
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
 		}
@@ -2073,22 +1944,22 @@ public abstract class CMMeasurementTransmit extends CMConfigurationTransmit {
 						+ (identifier_Transferables.length == 0 ? "all" : Integer
 								.toString(identifier_Transferables.length)) + " item(s) in domain: "
 						+ domainId.toString(), Log.DEBUGLEVEL07);
-			List list;
+			Collection collection;
 			if (identifier_Transferables.length > 0) {
 				List idsList = new ArrayList(identifier_Transferables.length);
 				for (int i = 0; i < identifier_Transferables.length; i++)
 					idsList.add(new Identifier(identifier_Transferables[i]));
 
-				list = MeasurementStorableObjectPool.getStorableObjectsByConditionButIds(idsList,
+				collection = MeasurementStorableObjectPool.getStorableObjectsByConditionButIds(idsList,
 					new EquivalentCondition(ObjectEntities.SET_ENTITY_CODE), true);
 
 			} else
-				list = MeasurementStorableObjectPool.getStorableObjectsByCondition(
+				collection = MeasurementStorableObjectPool.getStorableObjectsByCondition(
 					new EquivalentCondition(ObjectEntities.SET_ENTITY_CODE), true);
 
-			Set_Transferable[] transferables = new Set_Transferable[list.size()];
+			Set_Transferable[] transferables = new Set_Transferable[collection.size()];
 			int i = 0;
-			for (Iterator it = list.iterator(); it.hasNext(); i++) {
+			for (Iterator it = collection.iterator(); it.hasNext(); i++) {
 				Set set = (Set) it.next();
 				transferables[i] = (Set_Transferable) set.getTransferable();
 			}
@@ -2121,21 +1992,21 @@ public abstract class CMMeasurementTransmit extends CMConfigurationTransmit {
 				+ (identifier_Transferables.length == 0 ? "all" : Integer.toString(identifier_Transferables.length))
 				+ " item(s) ", Log.DEBUGLEVEL07);
 		try {
-			List list;
+			Collection collection;
 			StorableObjectCondition condition = this.restoreCondition(condition_Transferable);
 			if (identifier_Transferables.length > 0) {
 				List idsList = new ArrayList(identifier_Transferables.length);
 				for (int i = 0; i < identifier_Transferables.length; i++)
 					idsList.add(new Identifier(identifier_Transferables[i]));
 
-				list = MeasurementStorableObjectPool.getStorableObjectsByConditionButIds(idsList, condition, true);
+				collection = MeasurementStorableObjectPool.getStorableObjectsByConditionButIds(idsList, condition, true);
 
 			} else
-				list = MeasurementStorableObjectPool.getStorableObjectsByCondition(condition, true);
+				collection = MeasurementStorableObjectPool.getStorableObjectsByCondition(condition, true);
 
-			Set_Transferable[] transferables = new Set_Transferable[list.size()];
+			Set_Transferable[] transferables = new Set_Transferable[collection.size()];
 			int i = 0;
-			for (Iterator it = list.iterator(); it.hasNext(); i++) {
+			for (Iterator it = collection.iterator(); it.hasNext(); i++) {
 				Set set = (Set) it.next();
 				transferables[i] = (Set_Transferable) set.getTransferable();
 			}
@@ -2170,21 +2041,21 @@ public abstract class CMMeasurementTransmit extends CMConfigurationTransmit {
 						+ (identifier_Transferables.length == 0 ? "all" : Integer
 								.toString(identifier_Transferables.length)) + " item(s) in domain: "
 						+ domainId.toString(), Log.DEBUGLEVEL07);
-			List list;
+			Collection collection;
 			if (identifier_Transferables.length > 0) {
 				List idsList = new ArrayList(identifier_Transferables.length);
 				for (int i = 0; i < identifier_Transferables.length; i++)
 					idsList.add(new Identifier(identifier_Transferables[i]));
 
-				list = MeasurementStorableObjectPool.getStorableObjects(idsList, true);
+				collection = MeasurementStorableObjectPool.getStorableObjects(idsList, true);
 
 			} else
-				list = MeasurementStorableObjectPool.getStorableObjectsByCondition(
+				collection = MeasurementStorableObjectPool.getStorableObjectsByCondition(
 					new EquivalentCondition(ObjectEntities.TEMPORALPATTERN_ENTITY_CODE), true);
 
-			TemporalPattern_Transferable[] transferables = new TemporalPattern_Transferable[list.size()];
+			TemporalPattern_Transferable[] transferables = new TemporalPattern_Transferable[collection.size()];
 			int i = 0;
-			for (Iterator it = list.iterator(); it.hasNext(); i++) {
+			for (Iterator it = collection.iterator(); it.hasNext(); i++) {
 				TemporalPattern temporalPattern = (TemporalPattern) it.next();
 				transferables[i] = (TemporalPattern_Transferable) temporalPattern.getTransferable();
 			}
@@ -2219,22 +2090,22 @@ public abstract class CMMeasurementTransmit extends CMConfigurationTransmit {
 						+ (identifier_Transferables.length == 0 ? "all" : Integer
 								.toString(identifier_Transferables.length)) + " item(s) in domain: "
 						+ domainId.toString(), Log.DEBUGLEVEL07);
-			List list;
+			Collection collection;
 			if (identifier_Transferables.length > 0) {
 				List idsList = new ArrayList(identifier_Transferables.length);
 				for (int i = 0; i < identifier_Transferables.length; i++)
 					idsList.add(new Identifier(identifier_Transferables[i]));
 
-				list = MeasurementStorableObjectPool.getStorableObjectsByConditionButIds(idsList,
+				collection = MeasurementStorableObjectPool.getStorableObjectsByConditionButIds(idsList,
 					new EquivalentCondition(ObjectEntities.TEMPORALPATTERN_ENTITY_CODE), true);
 
 			} else
-				list = MeasurementStorableObjectPool.getStorableObjectsByCondition(
+				collection = MeasurementStorableObjectPool.getStorableObjectsByCondition(
 					new EquivalentCondition(ObjectEntities.TEMPORALPATTERN_ENTITY_CODE), true);
 
-			TemporalPattern_Transferable[] transferables = new TemporalPattern_Transferable[list.size()];
+			TemporalPattern_Transferable[] transferables = new TemporalPattern_Transferable[collection.size()];
 			int i = 0;
-			for (Iterator it = list.iterator(); it.hasNext(); i++) {
+			for (Iterator it = collection.iterator(); it.hasNext(); i++) {
 				TemporalPattern temporalPattern = (TemporalPattern) it.next();
 				transferables[i] = (TemporalPattern_Transferable) temporalPattern.getTransferable();
 			}
@@ -2269,21 +2140,21 @@ public abstract class CMMeasurementTransmit extends CMConfigurationTransmit {
 						+ (identifier_Transferables.length == 0 ? "all" : Integer
 								.toString(identifier_Transferables.length)) + " item(s) in domain: "
 						+ domainId.toString(), Log.DEBUGLEVEL07);
-			List list;
+			Collection collection;
 			if (identifier_Transferables.length > 0) {
 				List idsList = new ArrayList(identifier_Transferables.length);
 				for (int i = 0; i < identifier_Transferables.length; i++)
 					idsList.add(new Identifier(identifier_Transferables[i]));
 
-				list = MeasurementStorableObjectPool.getStorableObjects(idsList, true);
+				collection = MeasurementStorableObjectPool.getStorableObjects(idsList, true);
 
 			} else
-				list = MeasurementStorableObjectPool.getStorableObjectsByCondition(
+				collection = MeasurementStorableObjectPool.getStorableObjectsByCondition(
 					new EquivalentCondition(ObjectEntities.TEST_ENTITY_CODE), true);
 
-			Test_Transferable[] transferables = new Test_Transferable[list.size()];
+			Test_Transferable[] transferables = new Test_Transferable[collection.size()];
 			int i = 0;
-			for (Iterator it = list.iterator(); it.hasNext(); i++) {
+			for (Iterator it = collection.iterator(); it.hasNext(); i++) {
 				Test test = (Test) it.next();
 				transferables[i] = (Test_Transferable) test.getTransferable();
 			}
@@ -2318,22 +2189,22 @@ public abstract class CMMeasurementTransmit extends CMConfigurationTransmit {
 						+ (identifier_Transferables.length == 0 ? "all" : Integer
 								.toString(identifier_Transferables.length)) + " item(s) in domain: "
 						+ domainId.toString(), Log.DEBUGLEVEL07);
-			List list;
+			Collection collection;
 			if (identifier_Transferables.length > 0) {
 				List idsList = new ArrayList(identifier_Transferables.length);
 				for (int i = 0; i < identifier_Transferables.length; i++)
 					idsList.add(new Identifier(identifier_Transferables[i]));
 
-				list = MeasurementStorableObjectPool.getStorableObjectsByConditionButIds(idsList,
+				collection = MeasurementStorableObjectPool.getStorableObjectsByConditionButIds(idsList,
 					new EquivalentCondition(ObjectEntities.TEST_ENTITY_CODE), true);
 
 			} else
-				list = MeasurementStorableObjectPool.getStorableObjectsByCondition(
+				collection = MeasurementStorableObjectPool.getStorableObjectsByCondition(
 					new EquivalentCondition(ObjectEntities.TEST_ENTITY_CODE), true);
 
-			Test_Transferable[] transferables = new Test_Transferable[list.size()];
+			Test_Transferable[] transferables = new Test_Transferable[collection.size()];
 			int i = 0;
-			for (Iterator it = list.iterator(); it.hasNext(); i++) {
+			for (Iterator it = collection.iterator(); it.hasNext(); i++) {
 				Test test = (Test) it.next();
 				transferables[i] = (Test_Transferable) test.getTransferable();
 			}
@@ -2366,21 +2237,21 @@ public abstract class CMMeasurementTransmit extends CMConfigurationTransmit {
 				+ (identifier_Transferables.length == 0 ? "all" : Integer.toString(identifier_Transferables.length))
 				+ " item(s) ", Log.DEBUGLEVEL07);
 		try {
-			List list;
+			Collection collection;
 			StorableObjectCondition condition = this.restoreCondition(condition_Transferable);
 			if (identifier_Transferables.length > 0) {
 				List idsList = new ArrayList(identifier_Transferables.length);
 				for (int i = 0; i < identifier_Transferables.length; i++)
 					idsList.add(new Identifier(identifier_Transferables[i]));
 
-				list = MeasurementStorableObjectPool.getStorableObjectsByConditionButIds(idsList, condition, true);
+				collection = MeasurementStorableObjectPool.getStorableObjectsByConditionButIds(idsList, condition, true);
 
 			} else
-				list = MeasurementStorableObjectPool.getStorableObjectsByCondition(condition, true);
+				collection = MeasurementStorableObjectPool.getStorableObjectsByCondition(condition, true);
 
-			Test_Transferable[] transferables = new Test_Transferable[list.size()];
+			Test_Transferable[] transferables = new Test_Transferable[collection.size()];
 			int i = 0;
-			for (Iterator it = list.iterator(); it.hasNext(); i++) {
+			for (Iterator it = collection.iterator(); it.hasNext(); i++) {
 				Test test = (Test) it.next();
 				transferables[i] = (Test_Transferable) test.getTransferable();
 			}
@@ -2406,18 +2277,16 @@ public abstract class CMMeasurementTransmit extends CMConfigurationTransmit {
 	}
 
 	// Refresh objects from a pool
-	public Identifier_Transferable[] transmitRefreshedMeasurementObjects(	StorableObject_Transferable[] storableObjects_Transferables,
-																			AccessIdentifier_Transferable accessIdentifier)
-			throws AMFICOMRemoteException {
+	public Identifier_Transferable[] transmitRefreshedMeasurementObjects(StorableObject_Transferable[] storableObjects_Transferables,
+			AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
 		try {
 			Map storableObjectMap = new HashMap();
 			for (int i = 0; i < storableObjects_Transferables.length; i++) {
-				storableObjectMap.put(new Identifier(storableObjects_Transferables[i].id),
-					storableObjects_Transferables[i]);
+				storableObjectMap.put(new Identifier(storableObjects_Transferables[i].id), storableObjects_Transferables[i]);
 			}
 			MeasurementStorableObjectPool.refresh();
-			List storableObjects = MeasurementStorableObjectPool.getStorableObjects(new ArrayList(storableObjectMap
-					.keySet()), true);
+			Collection storableObjects = MeasurementStorableObjectPool.getStorableObjects(new ArrayList(storableObjectMap.keySet()),
+					true);
 			for (Iterator it = storableObjects.iterator(); it.hasNext();) {
 				StorableObject so = (StorableObject) it.next();
 				StorableObject_Transferable sot = (StorableObject_Transferable) storableObjectMap.get(so.getId());
@@ -2426,7 +2295,8 @@ public abstract class CMMeasurementTransmit extends CMConfigurationTransmit {
 				Identifier sotModifierId = new Identifier(sot.modifier_id);
 				if ((Math.abs(sot.created - so.getCreated().getTime()) < 1000)
 						&& (Math.abs(sot.modified - so.getModified().getTime()) < 1000)
-						&& sotCreatorId.equals(so.getCreatorId()) && sotModifierId.equals(so.getModifierId())) {
+						&& sotCreatorId.equals(so.getCreatorId())
+						&& sotModifierId.equals(so.getModifierId())) {
 					it.remove();
 				}
 			}
@@ -2437,13 +2307,16 @@ public abstract class CMMeasurementTransmit extends CMConfigurationTransmit {
 				identifierTransferables[i] = (Identifier_Transferable) so.getId().getTransferable();
 			}
 			return identifierTransferables;
-		} catch (CommunicationException ce) {
+		}
+		catch (CommunicationException ce) {
 			Log.errorException(ce);
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ce.getMessage());
-		} catch (DatabaseException de) {
+		}
+		catch (DatabaseException de) {
 			Log.errorException(de);
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, de.getMessage());
-		} catch (Throwable e) {
+		}
+		catch (Throwable e) {
 			Log.errorException(e);
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, e.getMessage());
 		}

@@ -1,5 +1,5 @@
 /*
- * $Id: CMGeneralTransmit.java,v 1.4 2005/02/02 13:57:37 bob Exp $
+ * $Id: CMGeneralTransmit.java,v 1.5 2005/02/14 15:32:39 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,6 +9,7 @@
 package com.syrus.AMFICOM.cmserver;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -19,7 +20,7 @@ import com.syrus.AMFICOM.administration.User;
 import com.syrus.AMFICOM.administration.corba.MCM_Transferable;
 import com.syrus.AMFICOM.administration.corba.User_Transferable;
 import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
-import com.syrus.AMFICOM.configuration.corba.AccessIdentifier_Transferable;
+import com.syrus.AMFICOM.general.corba.AccessIdentifier_Transferable;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.CharacteristicType;
@@ -49,8 +50,8 @@ import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/02/02 13:57:37 $
- * @author $Author: bob $
+ * @version $Revision: 1.5 $, $Date: 2005/02/14 15:32:39 $
+ * @author $Author: arseniy $
  * @module cmserver_v1
  */
 
@@ -119,19 +120,19 @@ public abstract class CMGeneralTransmit extends CMMeasurementReceive {
 			Log.debugMessage("CMGeneralTransmit.transmitUsers | require "
 					+ (ids_Transferable.length == 0 ? "all" : Integer.toString(ids_Transferable.length)) + " item(s)",
 				Log.DEBUGLEVEL07);
-			List list;
+			Collection collection;
 			if (ids_Transferable.length > 0) {
 				List idsList = new ArrayList(ids_Transferable.length);
 				for (int i = 0; i < ids_Transferable.length; i++)
 					idsList.add(new Identifier(ids_Transferable[i]));
-				list = ConfigurationStorableObjectPool.getStorableObjects(idsList, true);
+				collection = ConfigurationStorableObjectPool.getStorableObjects(idsList, true);
 			} else
-				list = ConfigurationStorableObjectPool.getStorableObjectsByCondition(
+				collection = ConfigurationStorableObjectPool.getStorableObjectsByCondition(
 					new EquivalentCondition(ObjectEntities.USER_ENTITY_CODE), true);
 
-			User_Transferable[] transferables = new User_Transferable[list.size()];
+			User_Transferable[] transferables = new User_Transferable[collection.size()];
 			int i = 0;
-			for (Iterator it = list.iterator(); it.hasNext(); i++) {
+			for (Iterator it = collection.iterator(); it.hasNext(); i++) {
 				User user = (User) it.next();
 				transferables[i] = (User_Transferable) user.getTransferable();
 			}
@@ -163,20 +164,20 @@ public abstract class CMGeneralTransmit extends CMMeasurementReceive {
 			Log.debugMessage("CMGeneralTransmit.transmitUsersButIdsCondition | requiere "
 					+ (ids_Transferable.length == 0 ? "all" : Integer.toString(ids_Transferable.length)) + " item(s)",
 				Log.DEBUGLEVEL07);
-			List list;
+			Collection collection;
 			if (ids_Transferable.length > 0) {
 				List idsList = new ArrayList(ids_Transferable.length);
 				for (int i = 0; i < ids_Transferable.length; i++)
 					idsList.add(new Identifier(ids_Transferable[i]));
-				list = GeneralStorableObjectPool.getStorableObjectsByConditionButIds(idsList,
+				collection = GeneralStorableObjectPool.getStorableObjectsByConditionButIds(idsList,
 					new EquivalentCondition(ObjectEntities.USER_ENTITY_CODE), true);
 			} else
-				list = GeneralStorableObjectPool.getStorableObjectsByCondition(
+				collection = GeneralStorableObjectPool.getStorableObjectsByCondition(
 					new EquivalentCondition(ObjectEntities.USER_ENTITY_CODE), true);
 
-			User_Transferable[] transferables = new User_Transferable[list.size()];
+			User_Transferable[] transferables = new User_Transferable[collection.size()];
 			int i = 0;
-			for (Iterator it = list.iterator(); it.hasNext(); i++) {
+			for (Iterator it = collection.iterator(); it.hasNext(); i++) {
 				User user = (User) it.next();
 				transferables[i] = (User_Transferable) user.getTransferable();
 			}
@@ -233,19 +234,19 @@ public abstract class CMGeneralTransmit extends CMMeasurementReceive {
 			Log.debugMessage("CMGeneralTransmit.transmitMCMs | require "
 					+ (ids_Transferable.length == 0 ? "all" : Integer.toString(ids_Transferable.length)) + " item(s)",
 				Log.DEBUGLEVEL07);
-			List list;
+			Collection collection;
 			if (ids_Transferable.length > 0) {
 				List idsList = new ArrayList(ids_Transferable.length);
 				for (int i = 0; i < ids_Transferable.length; i++)
 					idsList.add(new Identifier(ids_Transferable[i]));
-				list = ConfigurationStorableObjectPool.getStorableObjects(idsList, true);
+				collection = ConfigurationStorableObjectPool.getStorableObjects(idsList, true);
 			} else
-				list = ConfigurationStorableObjectPool.getStorableObjectsByCondition(
+				collection = ConfigurationStorableObjectPool.getStorableObjectsByCondition(
 					new EquivalentCondition(ObjectEntities.MCM_ENTITY_CODE), true);
 
-			MCM_Transferable[] transferables = new MCM_Transferable[list.size()];
+			MCM_Transferable[] transferables = new MCM_Transferable[collection.size()];
 			int i = 0;
-			for (Iterator it = list.iterator(); it.hasNext(); i++) {
+			for (Iterator it = collection.iterator(); it.hasNext(); i++) {
 				MCM mcm = (MCM) it.next();
 				transferables[i] = (MCM_Transferable) mcm.getTransferable();
 			}
@@ -277,20 +278,20 @@ public abstract class CMGeneralTransmit extends CMMeasurementReceive {
 			Log.debugMessage("CMGeneralTransmit.transmitMCMsButIdsCondition | requiere "
 					+ (ids_Transferable.length == 0 ? "all" : Integer.toString(ids_Transferable.length)) + " item(s)",
 				Log.DEBUGLEVEL07);
-			List list;
+			Collection collection;
 			if (ids_Transferable.length > 0) {
 				List idsList = new ArrayList(ids_Transferable.length);
 				for (int i = 0; i < ids_Transferable.length; i++)
 					idsList.add(new Identifier(ids_Transferable[i]));
-				list = GeneralStorableObjectPool.getStorableObjectsByConditionButIds(idsList,
+				collection = GeneralStorableObjectPool.getStorableObjectsByConditionButIds(idsList,
 					new EquivalentCondition(ObjectEntities.MCM_ENTITY_CODE), true);
 			} else
-				list = GeneralStorableObjectPool.getStorableObjectsByCondition(
+				collection = GeneralStorableObjectPool.getStorableObjectsByCondition(
 					new EquivalentCondition(ObjectEntities.MCM_ENTITY_CODE), true);
 
-			MCM_Transferable[] transferables = new MCM_Transferable[list.size()];
+			MCM_Transferable[] transferables = new MCM_Transferable[collection.size()];
 			int i = 0;
-			for (Iterator it = list.iterator(); it.hasNext(); i++) {
+			for (Iterator it = collection.iterator(); it.hasNext(); i++) {
 				MCM mcm = (MCM) it.next();
 				transferables[i] = (MCM_Transferable) mcm.getTransferable();
 			}
@@ -376,19 +377,19 @@ public abstract class CMGeneralTransmit extends CMMeasurementReceive {
 			Log.debugMessage("CMGeneralTransmit.transmitCharacteristics | require "
 					+ (ids_Transferable.length == 0 ? "all" : Integer.toString(ids_Transferable.length)) + " item(s)",
 				Log.DEBUGLEVEL07);
-			List list;
+			Collection collection;
 			if (ids_Transferable.length > 0) {
 				List idsList = new ArrayList(ids_Transferable.length);
 				for (int i = 0; i < ids_Transferable.length; i++)
 					idsList.add(new Identifier(ids_Transferable[i]));
-				list = ConfigurationStorableObjectPool.getStorableObjects(idsList, true);
+				collection = ConfigurationStorableObjectPool.getStorableObjects(idsList, true);
 			} else
-				list = ConfigurationStorableObjectPool.getStorableObjectsByCondition(
+				collection = ConfigurationStorableObjectPool.getStorableObjectsByCondition(
 					new EquivalentCondition(ObjectEntities.CHARACTERISTIC_ENTITY_CODE), true);
 
-			Characteristic_Transferable[] transferables = new Characteristic_Transferable[list.size()];
+			Characteristic_Transferable[] transferables = new Characteristic_Transferable[collection.size()];
 			int i = 0;
-			for (Iterator it = list.iterator(); it.hasNext(); i++) {
+			for (Iterator it = collection.iterator(); it.hasNext(); i++) {
 				Characteristic characteristic = (Characteristic) it.next();
 				transferables[i] = (Characteristic_Transferable) characteristic.getTransferable();
 			}
@@ -419,20 +420,20 @@ public abstract class CMGeneralTransmit extends CMMeasurementReceive {
 			Log.debugMessage("CMGeneralTransmit.transmitCharacteristicsButIds | requiere "
 					+ (ids_Transferable.length == 0 ? "all" : Integer.toString(ids_Transferable.length)) + " item(s)",
 				Log.DEBUGLEVEL07);
-			List list;
+			Collection collection;
 			if (ids_Transferable.length > 0) {
 				List idsList = new ArrayList(ids_Transferable.length);
 				for (int i = 0; i < ids_Transferable.length; i++)
 					idsList.add(new Identifier(ids_Transferable[i]));
-				list = ConfigurationStorableObjectPool.getStorableObjectsByConditionButIds(idsList,
+				collection = ConfigurationStorableObjectPool.getStorableObjectsByConditionButIds(idsList,
 					new EquivalentCondition(ObjectEntities.CHARACTERISTIC_ENTITY_CODE), true);
 			} else
-				list = ConfigurationStorableObjectPool.getStorableObjectsByCondition(
+				collection = ConfigurationStorableObjectPool.getStorableObjectsByCondition(
 					new EquivalentCondition(ObjectEntities.CHARACTERISTIC_ENTITY_CODE), true);
 
-			Characteristic_Transferable[] transferables = new Characteristic_Transferable[list.size()];
+			Characteristic_Transferable[] transferables = new Characteristic_Transferable[collection.size()];
 			int i = 0;
-			for (Iterator it = list.iterator(); it.hasNext(); i++) {
+			for (Iterator it = collection.iterator(); it.hasNext(); i++) {
 				Characteristic characteristic = (Characteristic) it.next();
 				transferables[i] = (Characteristic_Transferable) characteristic.getTransferable();
 			}
@@ -464,19 +465,19 @@ public abstract class CMGeneralTransmit extends CMMeasurementReceive {
 			Log.debugMessage("CMGeneralTransmit.transmitCharacteristicsButIdsCondition | requiere "
 					+ (ids_Transferable.length == 0 ? "all" : Integer.toString(ids_Transferable.length)) + " item(s) ",
 				Log.DEBUGLEVEL07);
-			List list;
+			Collection collection;
 			StorableObjectCondition condition = this.restoreCondition(condition_Transferable);
 			if (ids_Transferable.length > 0) {
 				List idsList = new ArrayList(ids_Transferable.length);
 				for (int i = 0; i < ids_Transferable.length; i++)
 					idsList.add(new Identifier(ids_Transferable[i]));
-				list = GeneralStorableObjectPool.getStorableObjectsByConditionButIds(idsList, condition, true);
+				collection = GeneralStorableObjectPool.getStorableObjectsByConditionButIds(idsList, condition, true);
 			} else
-				list = GeneralStorableObjectPool.getStorableObjectsByCondition(condition, true);
+				collection = GeneralStorableObjectPool.getStorableObjectsByCondition(condition, true);
 
-			Characteristic_Transferable[] transferables = new Characteristic_Transferable[list.size()];
+			Characteristic_Transferable[] transferables = new Characteristic_Transferable[collection.size()];
 			int i = 0;
-			for (Iterator it = list.iterator(); it.hasNext(); i++) {
+			for (Iterator it = collection.iterator(); it.hasNext(); i++) {
 				Characteristic characteristic = (Characteristic) it.next();
 				transferables[i] = (Characteristic_Transferable) characteristic.getTransferable();
 			}
@@ -507,19 +508,19 @@ public abstract class CMGeneralTransmit extends CMMeasurementReceive {
 			Log.debugMessage("CMGeneralTransmit.transmitCharacteristicTypes | requiere "
 					+ (ids_Transferable.length == 0 ? "all" : Integer.toString(ids_Transferable.length)) + " item(s)",
 				Log.DEBUGLEVEL07);
-			List list;
+			Collection collection;
 			if (ids_Transferable.length > 0) {
 				List idsList = new ArrayList(ids_Transferable.length);
 				for (int i = 0; i < ids_Transferable.length; i++)
 					idsList.add(new Identifier(ids_Transferable[i]));
-				list = GeneralStorableObjectPool.getStorableObjects(idsList, true);
+				collection = GeneralStorableObjectPool.getStorableObjects(idsList, true);
 			} else
-				list = GeneralStorableObjectPool.getStorableObjectsByCondition(
+				collection = GeneralStorableObjectPool.getStorableObjectsByCondition(
 					new EquivalentCondition(ObjectEntities.CHARACTERISTICTYPE_ENTITY_CODE), true);
 
-			CharacteristicType_Transferable[] transferables = new CharacteristicType_Transferable[list.size()];
+			CharacteristicType_Transferable[] transferables = new CharacteristicType_Transferable[collection.size()];
 			int i = 0;
-			for (Iterator it = list.iterator(); it.hasNext(); i++) {
+			for (Iterator it = collection.iterator(); it.hasNext(); i++) {
 				CharacteristicType characteristicType = (CharacteristicType) it.next();
 				transferables[i] = (CharacteristicType_Transferable) characteristicType.getTransferable();
 			}
@@ -550,20 +551,20 @@ public abstract class CMGeneralTransmit extends CMMeasurementReceive {
 			Log.debugMessage("CMGeneralTransmit.transmitCharacteristicTypes | requiere "
 					+ (ids_Transferable.length == 0 ? "all" : Integer.toString(ids_Transferable.length)) + " item(s)",
 				Log.DEBUGLEVEL07);
-			List list;
+			Collection collection;
 			if (ids_Transferable.length > 0) {
 				List idsList = new ArrayList(ids_Transferable.length);
 				for (int i = 0; i < ids_Transferable.length; i++)
 					idsList.add(new Identifier(ids_Transferable[i]));
-				list = GeneralStorableObjectPool.getStorableObjectsByConditionButIds(idsList,
+				collection = GeneralStorableObjectPool.getStorableObjectsByConditionButIds(idsList,
 					new EquivalentCondition(ObjectEntities.CHARACTERISTIC_ENTITY_CODE), true);
 			} else
-				list = GeneralStorableObjectPool.getStorableObjectsByCondition(
+				collection = GeneralStorableObjectPool.getStorableObjectsByCondition(
 					new EquivalentCondition(ObjectEntities.CHARACTERISTICTYPE_ENTITY_CODE), true);
 
-			CharacteristicType_Transferable[] transferables = new CharacteristicType_Transferable[list.size()];
+			CharacteristicType_Transferable[] transferables = new CharacteristicType_Transferable[collection.size()];
 			int i = 0;
-			for (Iterator it = list.iterator(); it.hasNext(); i++) {
+			for (Iterator it = collection.iterator(); it.hasNext(); i++) {
 				CharacteristicType characteristicType = (CharacteristicType) it.next();
 				transferables[i] = (CharacteristicType_Transferable) characteristicType.getTransferable();
 			}
@@ -595,21 +596,21 @@ public abstract class CMGeneralTransmit extends CMMeasurementReceive {
 				"CMGeneralTransmit.transmitParameterTypes | requiere "
 						+ (identifier_Transferables.length == 0 ? "all" : Integer
 								.toString(identifier_Transferables.length)) + " item(s)", Log.DEBUGLEVEL07);
-			List list;
+			Collection collection;
 			if (identifier_Transferables.length > 0) {
 				List idsList = new ArrayList(identifier_Transferables.length);
 				for (int i = 0; i < identifier_Transferables.length; i++)
 					idsList.add(new Identifier(identifier_Transferables[i]));
 
-				list = MeasurementStorableObjectPool.getStorableObjects(idsList, true);
+				collection = MeasurementStorableObjectPool.getStorableObjects(idsList, true);
 
 			} else
-				list = MeasurementStorableObjectPool.getStorableObjectsByCondition(
+				collection = MeasurementStorableObjectPool.getStorableObjectsByCondition(
 					new EquivalentCondition(ObjectEntities.PARAMETERTYPE_ENTITY_CODE), true);
 
-			ParameterType_Transferable[] transferables = new ParameterType_Transferable[list.size()];
+			ParameterType_Transferable[] transferables = new ParameterType_Transferable[collection.size()];
 			int i = 0;
-			for (Iterator it = list.iterator(); it.hasNext(); i++) {
+			for (Iterator it = collection.iterator(); it.hasNext(); i++) {
 				ParameterType parameterType = (ParameterType) it.next();
 				transferables[i] = (ParameterType_Transferable) parameterType.getTransferable();
 			}
@@ -642,22 +643,22 @@ public abstract class CMGeneralTransmit extends CMMeasurementReceive {
 				"CMGeneralTransmit.transmitParameterTypesButIds | requiere "
 						+ (identifier_Transferables.length == 0 ? "all" : Integer
 								.toString(identifier_Transferables.length)) + " item(s)", Log.DEBUGLEVEL07);
-			List list;
+			Collection collection;
 			if (identifier_Transferables.length > 0) {
 				List idsList = new ArrayList(identifier_Transferables.length);
 				for (int i = 0; i < identifier_Transferables.length; i++)
 					idsList.add(new Identifier(identifier_Transferables[i]));
 
-				list = MeasurementStorableObjectPool.getStorableObjectsByConditionButIds(idsList,
+				collection = MeasurementStorableObjectPool.getStorableObjectsByConditionButIds(idsList,
 					new EquivalentCondition(ObjectEntities.PARAMETERTYPE_ENTITY_CODE), true);
 
 			} else
-				list = MeasurementStorableObjectPool.getStorableObjectsByCondition(
+				collection = MeasurementStorableObjectPool.getStorableObjectsByCondition(
 					new EquivalentCondition(ObjectEntities.PARAMETERTYPE_ENTITY_CODE), true);
 
-			ParameterType_Transferable[] transferables = new ParameterType_Transferable[list.size()];
+			ParameterType_Transferable[] transferables = new ParameterType_Transferable[collection.size()];
 			int i = 0;
-			for (Iterator it = list.iterator(); it.hasNext(); i++) {
+			for (Iterator it = collection.iterator(); it.hasNext(); i++) {
 				ParameterType parameterType = (ParameterType) it.next();
 				transferables[i] = (ParameterType_Transferable) parameterType.getTransferable();
 			}
@@ -690,21 +691,21 @@ public abstract class CMGeneralTransmit extends CMMeasurementReceive {
 				+ (identifier_Transferables.length == 0 ? "all" : Integer.toString(identifier_Transferables.length))
 				+ " item(s) ", Log.DEBUGLEVEL07);
 		try {
-			List list;
+			Collection collection;
 			StorableObjectCondition condition = this.restoreCondition(condition_Transferable);
 			if (identifier_Transferables.length > 0) {
 				List idsList = new ArrayList(identifier_Transferables.length);
 				for (int i = 0; i < identifier_Transferables.length; i++)
 					idsList.add(new Identifier(identifier_Transferables[i]));
 
-				list = MeasurementStorableObjectPool.getStorableObjectsByConditionButIds(idsList, condition, true);
+				collection = MeasurementStorableObjectPool.getStorableObjectsByConditionButIds(idsList, condition, true);
 
 			} else
-				list = MeasurementStorableObjectPool.getStorableObjectsByCondition(condition, true);
+				collection = MeasurementStorableObjectPool.getStorableObjectsByCondition(condition, true);
 
-			ParameterType_Transferable[] transferables = new ParameterType_Transferable[list.size()];
+			ParameterType_Transferable[] transferables = new ParameterType_Transferable[collection.size()];
 			int i = 0;
-			for (Iterator it = list.iterator(); it.hasNext(); i++) {
+			for (Iterator it = collection.iterator(); it.hasNext(); i++) {
 				ParameterType parameterType = (ParameterType) it.next();
 				transferables[i] = (ParameterType_Transferable) parameterType.getTransferable();
 			}
@@ -740,8 +741,7 @@ public abstract class CMGeneralTransmit extends CMMeasurementReceive {
 					storableObjects_Transferables[i]);
 			}
 			GeneralStorableObjectPool.refresh();
-			List storableObjects = GeneralStorableObjectPool.getStorableObjects(new ArrayList(storableObjectMap
-					.keySet()), true);
+			Collection storableObjects = GeneralStorableObjectPool.getStorableObjects(new ArrayList(storableObjectMap.keySet()), true);
 			for (Iterator it = storableObjects.iterator(); it.hasNext();) {
 				StorableObject so = (StorableObject) it.next();
 				StorableObject_Transferable sot = (StorableObject_Transferable) storableObjectMap.get(so.getId());

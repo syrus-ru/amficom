@@ -1,5 +1,5 @@
 /*
- * $Id: CMGeneralReceive.java,v 1.8 2005/02/14 13:50:04 arseniy Exp $
+ * $Id: CMGeneralReceive.java,v 1.9 2005/02/14 15:32:39 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -47,7 +47,7 @@ import com.syrus.AMFICOM.general.corba.StorableObjectCondition_TransferablePacka
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/02/14 13:50:04 $
+ * @version $Revision: 1.9 $, $Date: 2005/02/14 15:32:39 $
  * @author $Author: arseniy $
  * @module cmserver_v1
  */
@@ -98,7 +98,6 @@ public abstract class CMGeneralReceive extends CMServerPOA {
 		 */
 		Log.debugMessage("CMGeneralReceive.receiveParameterType | Received " + " parameterType", Log.DEBUGLEVEL07);
 		try {
-			parameterType_Transferable.header.modifier_id = accessIdentifier.user_id;
 			ParameterType parameterType = new ParameterType(parameterType_Transferable);
 			GeneralStorableObjectPool.putStorableObject(parameterType);
 			ParameterTypeDatabase parameterTypeDatabase = (ParameterTypeDatabase) GeneralDatabaseContext
@@ -138,7 +137,6 @@ public abstract class CMGeneralReceive extends CMServerPOA {
 		List parameterTypeList = new ArrayList(parameterType_Transferables.length);
 		try {
 			for (int i = 0; i < parameterType_Transferables.length; i++) {
-				parameterType_Transferables[i].header.modifier_id = accessIdentifier.user_id;
 				ParameterType parameterType = new ParameterType(parameterType_Transferables[i]);
 				GeneralStorableObjectPool.putStorableObject(parameterType);
 				parameterTypeList.add(parameterType);
@@ -174,7 +172,6 @@ public abstract class CMGeneralReceive extends CMServerPOA {
 										AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
 		Log.debugMessage("CMGeneralReceive.receiveCharacteristic | Received " + " characteristic", Log.DEBUGLEVEL07);
 		try {
-			characteristic_Transferable.header.modifier_id = accessIdentifier.user_id;
 			Characteristic characteristic = new Characteristic(characteristic_Transferable);
 			GeneralStorableObjectPool.putStorableObject(characteristic);
 			CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase) GeneralDatabaseContext
@@ -214,7 +211,6 @@ public abstract class CMGeneralReceive extends CMServerPOA {
 		List characteristicList = new ArrayList(characteristic_Transferables.length);
 		try {
 			for (int i = 0; i < characteristic_Transferables.length; i++) {
-				characteristic_Transferables[i].header.modifier_id = accessIdentifier.user_id;
 				Characteristic characteristic = new Characteristic(characteristic_Transferables[i]);
 				GeneralStorableObjectPool.putStorableObject(characteristic);
 				characteristicList.add(characteristic);
@@ -256,7 +252,6 @@ public abstract class CMGeneralReceive extends CMServerPOA {
 		Log.debugMessage("CMGeneralReceive.receiveCharacteristicType | Received " + " characteristicTypes",
 			Log.DEBUGLEVEL07);
 		try {
-			characteristicType_Transferable.header.modifier_id = accessIdentifier.user_id;
 			CharacteristicType characteristicType = new CharacteristicType(characteristicType_Transferable);
 			GeneralStorableObjectPool.putStorableObject(characteristicType);
 			CharacteristicTypeDatabase characteristicTypeDatabase = (CharacteristicTypeDatabase) GeneralDatabaseContext
@@ -294,7 +289,6 @@ public abstract class CMGeneralReceive extends CMServerPOA {
 		List characteristicTypeList = new ArrayList(characteristicType_Transferables.length);
 		try {
 			for (int i = 0; i < characteristicType_Transferables.length; i++) {
-				characteristicType_Transferables[i].header.modifier_id = accessIdentifier.user_id;
 				CharacteristicType characteristicType = new CharacteristicType(characteristicType_Transferables[i]);
 				GeneralStorableObjectPool.putStorableObject(characteristicType);
 				characteristicTypeList.add(characteristicType);
