@@ -1,5 +1,5 @@
 /*
- * $Id: resource.idl,v 1.8 2004/11/25 16:36:09 bass Exp $
+ * $Id: resource.idl,v 1.9 2004/11/25 16:42:10 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -38,7 +38,7 @@ module com {
 					 *       inside.
 					 */
 					struct ImageResource_Transferable {
-						general::corba::Identifier_Transferable id;
+						general::corba::StorableObject_Transferable header;
 						ImageResourceData data;
 					};
 
