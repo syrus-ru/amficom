@@ -1,5 +1,5 @@
 /*
- * $Id: LRUMap.java,v 1.8 2004/09/30 10:07:11 bob Exp $
+ * $Id: LRUMap.java,v 1.9 2004/10/03 12:43:37 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,7 +14,7 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2004/09/30 10:07:11 $
+ * @version $Revision: 1.9 $, $Date: 2004/10/03 12:43:37 $
  * @author $Author: bob $
  * @module util
  */
@@ -52,10 +52,26 @@ public class LRUMap implements Serializable {
     public Iterator iterator() {
     	return new Itr();
     }
+    
+    public int indexOf(Object key){
+    	int index = -1;
+    	if (key != null){
+	    	for(int i=0;i<this.array.length;i++){
+	    		Entry entry = this.array[i];
+	    		if ((entry != null) && (entry.key.equals(key))) {
+	    				index = i;
+	    				break;
+	    			}
+	    		}
+	    	}    	
+    	return index;
+    }
 	
 	public synchronized Object put(Object key, Object value) {
 		this.modCount++;
-		this.entityCount += (this.entityCount == this.array.length) ? 0 : 1;  
+		this.entityCount += (this.entityCount == this.array.length) ? 0 : 1;
+		if (indexOf(key) >= 0)
+			remove(key);
 		Entry newEntry = new Entry(key, value);
 		Object ret = null;
 		if (this.array[this.array.length - 1] != null)
