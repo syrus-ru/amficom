@@ -113,7 +113,8 @@ public class LangModelSchedule {
 								+ key + "' key.");
 				throw new Exception(s);
 			} catch (Exception exc) {
-				exc.printStackTrace();
+				System.out.println(exc.getMessage());
+//				exc.printStackTrace();
 			}
 			if (key != null) string = LangModelSurvey.getString(key);
 

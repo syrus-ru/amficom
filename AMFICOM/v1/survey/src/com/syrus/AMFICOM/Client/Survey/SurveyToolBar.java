@@ -50,7 +50,7 @@ public class SurveyToolBar extends JToolBar implements ApplicationModelListener
 		sessionOpen.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/open_session.gif").getScaledInstance(16, 16, Image.SCALE_SMOOTH)));
 		sessionOpen.setMaximumSize(buttonSize);
 		sessionOpen.setPreferredSize(buttonSize);
-		sessionOpen.setToolTipText(LangModel.ToolTip("menuSessionNew"));
+		sessionOpen.setToolTipText(LangModel.getString("menuSessionNew"));
 		sessionOpen.setName("menuSessionNew");
 		sessionOpen.addActionListener(actionAdapter);
 

@@ -686,7 +686,7 @@ public class SurveyMDIMain extends JFrame implements OperationListener {
 			}
 			if (cce.SESSION_CHANGING) {
 				statusBar.setText("status", LangModel
-						.String("statusSettingSession"));
+						.getString("statusSettingSession"));
 			}
 			if (cce.SESSION_CHANGED) {
 				// nothing
@@ -712,7 +712,7 @@ public class SurveyMDIMain extends JFrame implements OperationListener {
 			}
 			if (cce.CONNECTION_CHANGING) {
 				statusBar.setText("status", LangModel
-						.String("statusConnecting"));
+						.getString("statusConnecting"));
 			}
 			if (cce.CONNECTION_CHANGED) {
 			}

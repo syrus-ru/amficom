@@ -829,7 +829,7 @@ public class ResultFrame extends JInternalFrame implements OperationListener
 		splitPane.setOneTouchExpandable(false);
 		splitPane.setResizeWeight(.5);
 
-		jTabbedPane1.add(LangModelSurvey.String("Parameters"), splitPane);
+		jTabbedPane1.add(LangModelSurvey.getString("Parameters"), splitPane);
 
 		this.getContentPane().add(jTabbedPane1, BorderLayout.CENTER);
 		this.setVisible(true);
