@@ -74,3 +74,5 @@ config	config
 jdbc	jdbc
 #M	main	Main module
 main	main
+#M	survey	Survey module
+survey	survey
