@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementTypePropertiesManager.java,v 1.2 2005/03/16 13:05:34 bass Exp $
+ * $Id: MeasurementTypePropertiesManager.java,v 1.3 2005/03/17 14:45:35 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,12 +8,12 @@
 
 package com.syrus.AMFICOM.client_.configuration.ui;
 
-import com.syrus.AMFICOM.client_.general.ui_.*;
+import com.syrus.AMFICOM.client_.general.ui_.StorableObjectEditor;
 import com.syrus.AMFICOM.client_.scheme.ui.PropertiesMananager;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.2 $, $Date: 2005/03/16 13:05:34 $
+ * @author $Author: stas $
+ * @version $Revision: 1.3 $, $Date: 2005/03/17 14:45:35 $
  * @module schemeclient_v1
  */
 

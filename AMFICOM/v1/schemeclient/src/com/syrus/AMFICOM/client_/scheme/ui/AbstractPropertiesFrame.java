@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractPropertiesFrame.java,v 1.3 2005/03/14 13:36:18 stas Exp $
+ * $Id: AbstractPropertiesFrame.java,v 1.4 2005/03/17 14:45:35 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,7 +20,7 @@ import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.3 $, $Date: 2005/03/14 13:36:18 $
+ * @version $Revision: 1.4 $, $Date: 2005/03/17 14:45:35 $
  * @module schemeclient_v1
  */
 
@@ -87,6 +87,7 @@ public abstract class AbstractPropertiesFrame extends JInternalFrame
 		this.controller = controller;
 
 		JComponent comp = emptyPane;
+		this.editor = null;
 		if (this.controller != null) {
 			PropertiesMananager manager = getPropertiesPaneManager();
 			if (manager != null) {

@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementTypeGeneralPanel.java,v 1.1 2005/03/14 13:36:18 stas Exp $
+ * $Id: MeasurementTypeGeneralPanel.java,v 1.2 2005/03/17 14:45:35 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,7 +25,7 @@ import com.syrus.AMFICOM.measurement.MeasurementType;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.1 $, $Date: 2005/03/14 13:36:18 $
+ * @version $Revision: 1.2 $, $Date: 2005/03/17 14:45:35 $
  * @module schemeclient_v1
  */
 
@@ -36,11 +36,11 @@ public class MeasurementTypeGeneralPanel implements StorableObjectEditor {
 	JLabel lbNameLabel = new JLabel(Constants.TEXT_NAME);
 	JTextField tfNameText = new JTextField();
 	JLabel lbParametersLabel = new JLabel(Constants.TEXT_PARAMETERS);
-	ParametersModel parametersModel = new ParametersModel();
-	StorableObjectTree trParametersTree;
+	SONode parametersRoot;
+	JTree trParametersTree;
 	JLabel lbPortTypesLabel = new JLabel(Constants.TEXT_MEASUREMENT_PORT_TYPES);
-	PortsModel portsModel = new PortsModel();
-	StorableObjectTree trPortTypesTree;
+	SONode portsRoot;
+	JTree trPortTypesTree;
 	JPanel pnGeneralPanel = new JPanel();
 	List allInPTypes;
 	List allOutPTypes;
@@ -62,10 +62,16 @@ public class MeasurementTypeGeneralPanel implements StorableObjectEditor {
 
 	private void jbInit() throws Exception {
 		Dispatcher dispatcher = new Dispatcher();
-		trParametersTree = new StorableObjectTree(dispatcher, parametersModel);
+		ParametersModel parametersModel = new ParametersModel();
+		parametersRoot = new SOMutableNode(parametersModel, Constants.ROOT);
+		trParametersTree = new Tree(dispatcher, parametersRoot);
 		trParametersTree.setRootVisible(false);
-		trPortTypesTree = new StorableObjectTree(dispatcher, portsModel);
+		
+		PortsModel portsModel = new PortsModel();
+		portsRoot = new SOMutableNode(portsModel, Constants.ROOT);
+		trPortTypesTree = new Tree(dispatcher, portsRoot);
 		trPortTypesTree.setRootVisible(false);
+				
 		allInPTypes = getParameterTypes("input");
 		allOutPTypes = getParameterTypes("output");
 		allMPTypes = getMeasurementPortTypes();
@@ -191,18 +197,18 @@ public class MeasurementTypeGeneralPanel implements StorableObjectEditor {
 			Collection outPTypes = this.type.getOutParameterTypes();
 
 			for (Iterator it = allInPTypes.iterator(); it.hasNext();) {
-				CheckableTreeNode node = (CheckableTreeNode)it.next();
+				SOCheckableNode node = (SOCheckableNode)it.next();
 				node.setChecked(inPTypes.contains(node.getUserObject()));
 			}
 			for (Iterator it = allOutPTypes.iterator(); it.hasNext();) {
-				CheckableTreeNode node = (CheckableTreeNode)it.next();
+				SOCheckableNode node = (SOCheckableNode)it.next();
 				node.setChecked(outPTypes.contains(node.getUserObject()));
 			}
 			trParametersTree.updateUI();
 				
 			Collection mPTypes = this.type.getMeasurementPortTypes();
 			for (Iterator it = allMPTypes.iterator(); it.hasNext();) {
-				CheckableTreeNode node = (CheckableTreeNode)it.next();
+				SOCheckableNode node = (SOCheckableNode)it.next();
 				node.setChecked(mPTypes.contains(node.getUserObject()));
 			}
 			trPortTypesTree.updateUI();
@@ -210,16 +216,16 @@ public class MeasurementTypeGeneralPanel implements StorableObjectEditor {
 		else {
 			tfNameText.setText(Constants.TEXT_EMPTY);
 			for (Iterator it = allInPTypes.iterator(); it.hasNext();) {
-				CheckableTreeNode node = (CheckableTreeNode)it.next();
+				SOCheckableNode node = (SOCheckableNode)it.next();
 				node.setChecked(false);
 			}
 			for (Iterator it = allOutPTypes.iterator(); it.hasNext();) {
-				CheckableTreeNode node = (CheckableTreeNode)it.next();
+				SOCheckableNode node = (SOCheckableNode)it.next();
 				node.setChecked(false);
 			}
 			trParametersTree.updateUI();
 			for (Iterator it = allMPTypes.iterator(); it.hasNext();) {
-				CheckableTreeNode node = (CheckableTreeNode)it.next();
+				SOCheckableNode node = (SOCheckableNode)it.next();
 				node.setChecked(false);
 			}
 			trPortTypesTree.updateUI();
@@ -234,7 +240,7 @@ public class MeasurementTypeGeneralPanel implements StorableObjectEditor {
 			Collection outPTypes = new LinkedList(this.type.getOutParameterTypes());
 
 			for (Iterator it = allInPTypes.iterator(); it.hasNext();) {
-				CheckableTreeNode node = (CheckableTreeNode) it.next();
+				SOCheckableNode node = (SOCheckableNode) it.next();
 				if (node.isChecked() && !inPTypes.contains(node.getUserObject()))
 					inPTypes.add(node.getUserObject());
 				if (!node.isChecked() && inPTypes.contains(node.getUserObject()))
@@ -242,7 +248,7 @@ public class MeasurementTypeGeneralPanel implements StorableObjectEditor {
 			}
 			type.setInParameterTypes(inPTypes);
 			for (Iterator it = allOutPTypes.iterator(); it.hasNext();) {
-				CheckableTreeNode node = (CheckableTreeNode) it.next();
+				SOCheckableNode node = (SOCheckableNode) it.next();
 				if (node.isChecked() && !outPTypes.contains(node.getUserObject()))
 					outPTypes.add(node.getUserObject());
 				if (!node.isChecked() && outPTypes.contains(node.getUserObject()))
@@ -252,7 +258,7 @@ public class MeasurementTypeGeneralPanel implements StorableObjectEditor {
 
 			Collection mPTypes = new LinkedList(this.type.getMeasurementPortTypes());
 			for (Iterator it = allMPTypes.iterator(); it.hasNext();) {
-				CheckableTreeNode node = (CheckableTreeNode) it.next();
+				SOCheckableNode node = (SOCheckableNode) it.next();
 				if (node.isChecked() && !mPTypes.contains(node.getUserObject()))
 					mPTypes.add(node.getUserObject());
 				if (!node.isChecked() && mPTypes.contains(node.getUserObject()))
@@ -263,10 +269,11 @@ public class MeasurementTypeGeneralPanel implements StorableObjectEditor {
 	}
 	
 	List getParameterTypes(String way) {
-		for (Enumeration en = parametersModel.getRoot().children(); en.hasMoreElements();) {
-			StorableObjectTreeNode node = (StorableObjectTreeNode)en.nextElement();
+		for (Enumeration en = parametersRoot.children(); en.hasMoreElements();) {
+			SONode node = (SONode)en.nextElement();
 			if (node.getUserObject().equals(way)) {
-				trParametersTree.expandNode(node);
+				node.setExpanded(true);
+				node.updateChildNodes();
 				List parameters = new ArrayList(node.getChildCount());
 				for (Enumeration en2 = node.children(); en2.hasMoreElements();)
 					parameters.add(en2.nextElement());
@@ -277,52 +284,54 @@ public class MeasurementTypeGeneralPanel implements StorableObjectEditor {
 	}
 	
 	List getMeasurementPortTypes() {
-		List ports = new ArrayList(portsModel.getRoot().getChildCount());
-		for (Enumeration en = portsModel.getRoot().children(); en.hasMoreElements();) {
+		List ports = new ArrayList(portsRoot.getChildCount());
+		for (Enumeration en = portsRoot.children(); en.hasMoreElements();) {
 			ports.add(en.nextElement());
 		}
 		return ports;
 	}
 	
-	class ParametersModel implements TreeDataModel {
-		StorableObjectTreeNode root = new StorableObjectTreeNode("root", "root");
-		public ParametersModel() {
+	class ParametersModel implements SOTreeDataModel {
+		public Color getNodeColor(SONode node) {
+			return Color.BLACK;
 		}
-
-		public StorableObjectTreeNode getRoot() {
-			return root;
-		}
-
-		public Color getNodeTextColor(StorableObjectTreeNode node) {
+		
+		public Icon getNodeIcon(SONode node) {
 			return null;
 		}
-
-		public Class getNodeChildClass(StorableObjectTreeNode node) {
+		
+		public String getNodeName(SONode node) {
 			if (node.getUserObject() instanceof String) {
-				String s = (String) node.getUserObject();
-				if (s.equals("root"))
-					return ParameterType.class;
+				String s = (String)node.getUserObject();
+				if (s.equals(Constants.ROOT))
+					return Constants.ROOT;
+				if (s.equals(Constants.INPUT))
+					return Constants.TEXT_INPUT;
+				if (s.equals(Constants.OUTPUT))
+					return Constants.TEXT_OUTPUT;
 			}
-			return null;
+			if (node.getUserObject() instanceof ParameterType) {
+				return ((ParameterType)node.getUserObject()).getName();				
+			}
+			throw new UnsupportedOperationException("Unsupported object"); //$NON-NLS-1$
 		}
 
-		public ObjectResourceController getNodeChildController(
-				StorableObjectTreeNode node) {
-			if (node.getUserObject() instanceof String) {
-				String s = (String) node.getUserObject();
-				if (s.equals("root"))
-					return ParameterTypeController.getInstance();
-			}
-			return null;
+		public ObjectResourceController getNodeController(SONode node) {
+			return ParameterTypeController.getInstance();
 		}
 
-		public List getChildNodes(StorableObjectTreeNode node) {
-			List vec = new ArrayList();
+		public void updateChildNodes(SONode node) {
+			if(!node.isExpanded())
+				return;
+			List contents = node.getChildrenUserObjects();
+			
 			if (node.getUserObject() instanceof String) {
 				String s = (String) node.getUserObject();
 				if (s.equals("root")) {
-					vec.add(new StorableObjectTreeNode("input", Constants.TEXT_INPUT));
-					vec.add(new StorableObjectTreeNode("output", Constants.TEXT_OUTPUT));
+					if(!contents.contains(Constants.INPUT))
+						node.add(new SOMutableNode(this, Constants.INPUT));
+					if(!contents.contains(Constants.OUTPUT))
+						node.add(new SOMutableNode(this, Constants.OUTPUT));
 				}
 				else {
 					EquivalentCondition condition = new EquivalentCondition(
@@ -331,7 +340,8 @@ public class MeasurementTypeGeneralPanel implements StorableObjectEditor {
 						Collection pTypes = GeneralStorableObjectPool.getStorableObjectsByCondition(condition, true);
 						for (Iterator it = pTypes.iterator(); it.hasNext();) {
 							ParameterType t = (ParameterType) it.next();
-							vec.add(new CheckableTreeNode(t, t.getName(), true));
+							if (!contents.contains(t))
+								node.add(new SOCheckableNode(this, t, false));
 						}
 					} 
 					catch (ApplicationException e) {
@@ -340,55 +350,47 @@ public class MeasurementTypeGeneralPanel implements StorableObjectEditor {
 					}
 				}
 			}
-			return vec;
 		}
 	}
 	
-	class PortsModel implements TreeDataModel {
-		StorableObjectTreeNode root = new StorableObjectTreeNode("root", "root");
-		public PortsModel() {
+	class PortsModel implements SOTreeDataModel {
+		public Color getNodeColor(SONode node) {
+			return Color.BLACK;
 		}
-
-		public StorableObjectTreeNode getRoot() {
-			return root;
-		}
-
-		public Color getNodeTextColor(StorableObjectTreeNode node) {
+		
+		public Icon getNodeIcon(SONode node) {
 			return null;
 		}
-
-		public Class getNodeChildClass(StorableObjectTreeNode node) {
+		
+		public String getNodeName(SONode node) {
 			if (node.getUserObject() instanceof String) {
-				String s = (String) node.getUserObject();
-				if (s.equals("root"))
-					return MeasurementPortType.class;
+				return Constants.ROOT;
 			}
-			return null;
+			if (node.getUserObject() instanceof MeasurementPortType) {
+				return ((MeasurementPortType)node.getUserObject()).getName();				
+			}
+			throw new UnsupportedOperationException("Unsupported object"); //$NON-NLS-1$
 		}
 
-		public ObjectResourceController getNodeChildController(
-				StorableObjectTreeNode node) {
-			if (node.getUserObject() instanceof String) {
-				String s = (String) node.getUserObject();
-				if (s.equals("root"))
-					return MeasurementPortTypeController.getInstance();
-			}
-			return null;
+		public ObjectResourceController getNodeController(SONode node) {
+			return MeasurementPortTypeController.getInstance();
 		}
 
-		public List getChildNodes(StorableObjectTreeNode node) {
-			List vec = new ArrayList();
+		public void updateChildNodes(SONode node) {
+			if(!node.isExpanded())
+				return;
+			List contents = node.getChildrenUserObjects();
+			
 			if (node.getUserObject() instanceof String) {
 				String s = (String) node.getUserObject();
 				if (s.equals("root")) {
-					EquivalentCondition condition = new EquivalentCondition(
-							ObjectEntities.MEASUREMENTPORTTYPE_ENTITY_CODE);
+					EquivalentCondition condition = new EquivalentCondition(ObjectEntities.MEASUREMENTPORTTYPE_ENTITY_CODE);
 					try {
-						Collection mpTypes = ConfigurationStorableObjectPool
-								.getStorableObjectsByCondition(condition, true);
+						Collection mpTypes = ConfigurationStorableObjectPool.getStorableObjectsByCondition(condition, true);
 						for (Iterator it = mpTypes.iterator(); it.hasNext();) {
 							MeasurementPortType t = (MeasurementPortType) it.next();
-							vec.add(new CheckableTreeNode(t, t.getName(), true));
+							if (!contents.contains(t))
+								node.add(new SOCheckableNode(this, t, false));
 						}
 					} catch (ApplicationException e) {
 						// TODO Auto-generated catch block
@@ -396,7 +398,6 @@ public class MeasurementTypeGeneralPanel implements StorableObjectEditor {
 					}
 				}
 			}
-			return vec;
 		}
 	}
 }

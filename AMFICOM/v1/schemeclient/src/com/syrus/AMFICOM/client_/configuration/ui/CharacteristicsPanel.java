@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicsPanel.java,v 1.4 2005/03/14 13:36:18 stas Exp $
+ * $Id: CharacteristicsPanel.java,v 1.5 2005/03/17 14:45:35 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -33,7 +33,7 @@ import com.syrus.AMFICOM.general.corba.*;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.4 $, $Date: 2005/03/14 13:36:18 $
+ * @version $Revision: 1.5 $, $Date: 2005/03/17 14:45:35 $
  * @module schemeclient_v1
  */
 
@@ -51,7 +51,7 @@ public abstract class CharacteristicsPanel implements
 
 	JPanel pnPanel0 = new JPanel(); 
 	PropsADToolBar toolBar;
-	StorableObjectTree utp;
+	Tree utp;
 	JTable jTable;
 	PropsTableModel tModel;
 
@@ -126,7 +126,7 @@ public abstract class CharacteristicsPanel implements
 		scrollPane.setPreferredSize(new Dimension(100, 50));
 
 		PropsTreeModel model = new PropsTreeModel();
-		utp = new StorableObjectTree(this.dispatcher, model);
+		utp = new Tree(this.dispatcher, new SOMutableNode(model, "root"));
 		utp.setRootVisible(false);
 		utp.setBorder(BorderFactory.createLoweredBevelBorder());
 
@@ -227,10 +227,11 @@ public abstract class CharacteristicsPanel implements
 	public void operationPerformed(OperationEvent ae) {
 		if (ae.getActionCommand().equals(TreeDataSelectionEvent.type)) {
 			TreeDataSelectionEvent ev = (TreeDataSelectionEvent) ae;
-			if (ev.getDataClass().equals(CharacteristicTypeSort.class)) {
+			if (ev.getSelectedObject() instanceof CharacteristicTypeSort) {
 				selectedTypeSort = (CharacteristicTypeSort) ev.getSelectedObject();
 				setPropsEditable(editableSorts.contains(selectedTypeSort));
-			} else
+			} 
+			else
 				showNoSelection();
 
 			elementSelected(selectedTypeSort);
@@ -256,7 +257,7 @@ public abstract class CharacteristicsPanel implements
 
 		tModel.clearTable();
 		for (Iterator it = characteristics.values().iterator(); it.hasNext();) {
-			List chars = (List) it.next();
+			Collection chars = (Collection) it.next();
 			if (chars != null)
 				for (Iterator it2 = chars.iterator(); it2.hasNext();) {
 					Characteristic ch = (Characteristic) it2.next();
@@ -488,64 +489,68 @@ public abstract class CharacteristicsPanel implements
 	}
 }
 
-class PropsTreeModel implements TreeDataModel {
-
-	public PropsTreeModel() {
-	}
-
-	public StorableObjectTreeNode getRoot() {
-		return new StorableObjectTreeNode(
-				"root", Constants.TEXT_EMPTY, //$NON-NLS-1$ 
-				new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/folder.gif")));
-	}
-
-	public ImageIcon getNodeIcon(StorableObjectTreeNode node) {
+class PropsTreeModel implements SOTreeDataModel {
+	public Icon getNodeIcon(SONode node) {
 		return null;
 	}
 
-	public Color getNodeTextColor(StorableObjectTreeNode node) {
-		return null;
+	public Color getNodeColor(SONode node) {
+		return Color.BLACK;
+	}
+	
+	public String getNodeName(SONode node) {
+		if (node.getUserObject() instanceof String) {
+			return Constants.ROOT;
+		}
+		if (node.getUserObject() instanceof CharacteristicTypeSort) {
+			CharacteristicTypeSort sort = (CharacteristicTypeSort)node.getUserObject();
+			switch (sort.value()) {
+				case CharacteristicTypeSort._CHARACTERISTICTYPESORT_OPTICAL:
+					return Constants.CHARACTERISTICTYPESORT_OPTICAL;
+				case CharacteristicTypeSort._CHARACTERISTICTYPESORT_ELECTRICAL:
+					return Constants.CHARACTERISTICTYPESORT_ELECTRICAL;
+				case CharacteristicTypeSort._CHARACTERISTICTYPESORT_OPERATIONAL:
+					return Constants.CHARACTERISTICTYPESORT_OPERATIONAL;
+				case CharacteristicTypeSort._CHARACTERISTICTYPESORT_INTERFACE:
+					return Constants.CHARACTERISTICTYPESORT_INTERFACE;
+				case CharacteristicTypeSort._CHARACTERISTICTYPESORT_VISUAL:
+					return Constants.CHARACTERISTICTYPESORT_VISUAL;
+				default:
+					throw new UnsupportedOperationException("Unsupported CharacteristicTypeSort"); //$NON-NLS-1$
+			}
+		}
+		throw new UnsupportedOperationException("Unsupported object"); //$NON-NLS-1$
 	}
 
-	public void nodeAfterSelected(StorableObjectTreeNode node) {
-	}
-
-	public void nodeBeforeExpanded(StorableObjectTreeNode node) {
-	}
-
-	public Class getNodeChildClass(StorableObjectTreeNode node) {
-		return CharacteristicTypeSort.class;
-	}
-
-	public ObjectResourceController getNodeChildController(
-			StorableObjectTreeNode node) {
+	public ObjectResourceController getNodeController(SONode node) {
 		return CharacteristicTypeController.getInstance();
 	}
 
-	public List getChildNodes(StorableObjectTreeNode node) {
-		List vec = new ArrayList(5);
+	public void updateChildNodes(SONode node) {
+		if(!node.isExpanded())
+			return;
+		List contents = node.getChildrenUserObjects();
 
 		if (node.getUserObject() instanceof String) {
 			String s = (String) node.getUserObject();
 
-			if (s.equals("root")) {
-				vec.add(new StorableObjectTreeNode(
-						CharacteristicTypeSort.CHARACTERISTICTYPESORT_OPTICAL,
-						Constants.CHARACTERISTICTYPESORT_OPTICAL, true));
-				vec.add(new StorableObjectTreeNode(
-						CharacteristicTypeSort.CHARACTERISTICTYPESORT_ELECTRICAL,
-						Constants.CHARACTERISTICTYPESORT_ELECTRICAL, true));
-				vec.add(new StorableObjectTreeNode(
-						CharacteristicTypeSort.CHARACTERISTICTYPESORT_OPERATIONAL,
-						Constants.CHARACTERISTICTYPESORT_OPERATIONAL, true));
-				vec.add(new StorableObjectTreeNode(
-						CharacteristicTypeSort.CHARACTERISTICTYPESORT_INTERFACE,
-						Constants.CHARACTERISTICTYPESORT_INTERFACE, true));
-				vec.add(new StorableObjectTreeNode(
-						CharacteristicTypeSort.CHARACTERISTICTYPESORT_VISUAL,
-						Constants.CHARACTERISTICTYPESORT_VISUAL, true));
+			if (s.equals(Constants.ROOT)) {
+				if(!contents.contains(CharacteristicTypeSort.CHARACTERISTICTYPESORT_OPTICAL))
+					node.add(new SOMutableNode(this,
+							CharacteristicTypeSort.CHARACTERISTICTYPESORT_OPTICAL, false));
+				if(!contents.contains(CharacteristicTypeSort.CHARACTERISTICTYPESORT_ELECTRICAL))
+					node.add(new SOMutableNode(this,
+							CharacteristicTypeSort.CHARACTERISTICTYPESORT_ELECTRICAL, false));
+				if(!contents.contains(CharacteristicTypeSort.CHARACTERISTICTYPESORT_OPERATIONAL))
+					node.add(new SOMutableNode(this,
+							CharacteristicTypeSort.CHARACTERISTICTYPESORT_OPERATIONAL, false));
+				if(!contents.contains(CharacteristicTypeSort.CHARACTERISTICTYPESORT_INTERFACE))
+					node.add(new SOMutableNode(this,
+							CharacteristicTypeSort.CHARACTERISTICTYPESORT_INTERFACE, false));
+				if(!contents.contains(CharacteristicTypeSort.CHARACTERISTICTYPESORT_VISUAL))
+					node.add(new SOMutableNode(this,
+							CharacteristicTypeSort.CHARACTERISTICTYPESORT_VISUAL, false));
 			}
 		}
-		return vec;
 	}
 }

@@ -1,5 +1,5 @@
 /*
- * $Id: Constants.java,v 1.3 2005/03/11 16:10:46 stas Exp $
+ * $Id: Constants.java,v 1.4 2005/03/17 14:45:35 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,7 +12,7 @@ import java.awt.Dimension;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.3 $, $Date: 2005/03/11 16:10:46 $
+ * @version $Revision: 1.4 $, $Date: 2005/03/17 14:45:35 $
  * @module schemeclient_v1
  */
 
@@ -24,6 +24,10 @@ public class Constants {
 	public static final Dimension TEXT_AREA_SIZE = new Dimension(100, 30);
 	public static final int OK = 1;
 	public static final int CANCEL = 0;
+	
+	public static final String ROOT = "root"; //$NON-NLS-1$
+	public static final String INPUT = "input"; //$NON-NLS-1$
+	public static final String OUTPUT = "output"; //$NON-NLS-1$
 	
 	public static final String TEXT_EMPTY = ""; //$NON-NLS-1$
 	public static final String TEXT_NAME = Messages.getString("Constants.name"); //$NON-NLS-1$
