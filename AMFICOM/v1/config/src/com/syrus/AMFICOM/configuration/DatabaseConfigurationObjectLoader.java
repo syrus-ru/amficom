@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseConfigurationObjectLoader.java,v 1.4 2004/08/17 18:24:06 arseniy Exp $
+ * $Id: DatabaseConfigurationObjectLoader.java,v 1.5 2004/09/14 14:53:47 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,12 +8,17 @@
 
 package com.syrus.AMFICOM.configuration;
 
+import java.util.Iterator;
+import java.util.List;
+
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.DatabaseException;
+import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.RetrieveObjectException;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2004/08/17 18:24:06 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.5 $, $Date: 2004/09/14 14:53:47 $
+ * @author $Author: max $
  * @module configuration_v1
  */
 
@@ -85,4 +90,85 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
 	public MonitoredElement loadMonitoredElement(Identifier id) throws DatabaseException {
 		return new MonitoredElement(id);
 	}
+    
+    // for multiple objects
+    public List loadCharacteristicTypes(List ids) throws DatabaseException, RetrieveObjectException, IllegalDataException {
+        CharacteristicTypeDatabase database = (CharacteristicTypeDatabase)ConfigurationDatabaseContext.getCharacteristicTypeDatabase();
+        return database.retrieveByIds(ids, null);
+    }
+
+    public List loadEquipmentTypes(List ids) throws DatabaseException, RetrieveObjectException, IllegalDataException {
+        EquipmentTypeDatabase database = (EquipmentTypeDatabase)ConfigurationDatabaseContext.getEquipmentTypeDatabase(); 
+        return database.retrieveByIds(ids, null);
+    }
+
+    public List loadPortTypes(List ids) throws DatabaseException, RetrieveObjectException, IllegalDataException {
+        PortTypeDatabase database = (PortTypeDatabase)ConfigurationDatabaseContext.getPortTypeDatabase();
+        return database.retrieveByIds(ids, null);
+    }
+
+    public List loadMeasurementPortTypes(List ids) throws DatabaseException, RetrieveObjectException, IllegalDataException {
+        MeasurementPortTypeDatabase database = (MeasurementPortTypeDatabase)ConfigurationDatabaseContext.getMeasurementPortTypeDatabase();
+        return database.retrieveByIds(ids, null);
+    }
+
+    public List loadCharacteristics(List ids) throws DatabaseException, RetrieveObjectException, IllegalDataException {
+        CharacteristicDatabase database = (CharacteristicDatabase)ConfigurationDatabaseContext.getCharacteristicDatabase();
+        return database.retrieveByIds(ids, null);
+    }
+
+//  public PermissionAttributes loadPermissionAttributes(Identifier id) throws DatabaseException {
+//      return new PermissionAttributes(id);
+//  }
+
+    public List loadUsers(List ids) throws DatabaseException, RetrieveObjectException, IllegalDataException {
+        UserDatabase database = (UserDatabase)ConfigurationDatabaseContext.getUserDatabase();
+        return database.retrieveByIds(ids, null);
+    }
+
+    public List loadDomains(List ids) throws DatabaseException, RetrieveObjectException, IllegalDataException {
+        DomainDatabase database = (DomainDatabase)ConfigurationDatabaseContext.getDomainDatabase();
+        return database.retrieveByIds(ids, null);
+    }
+
+    public List loadServers(List ids) throws DatabaseException, RetrieveObjectException, IllegalDataException {
+        ServerDatabase database = (ServerDatabase)ConfigurationDatabaseContext.getServerDatabase();
+        return database.retrieveByIds(ids, null);
+    }
+
+    public List loadMCMs(List ids) throws DatabaseException, RetrieveObjectException, IllegalDataException {
+        MCMDatabase database = (MCMDatabase)ConfigurationDatabaseContext.getMCMDatabase();
+        return database.retrieveByIds(ids, null);
+    }
+
+    public List loadEquipments(List ids) throws DatabaseException, RetrieveObjectException, IllegalDataException {
+        EquipmentDatabase database = (EquipmentDatabase)ConfigurationDatabaseContext.getEquipmentDatabase();
+        return database.retrieveByIds(ids, null);
+    }
+
+    public List loadPorts(List ids) throws DatabaseException, RetrieveObjectException, IllegalDataException {
+        PortDatabase database = (PortDatabase)ConfigurationDatabaseContext.getPortDatabase();
+        return database.retrieveByIds(ids, null); 
+    }
+
+    public List loadTransmissionPaths(List ids) throws DatabaseException, RetrieveObjectException, IllegalDataException {
+        TransmissionPathDatabase database = (TransmissionPathDatabase)ConfigurationDatabaseContext.getPortDatabase();
+        return database.retrieveByIds(ids, null);
+    }
+
+    public List loadKISs(List ids) throws DatabaseException, RetrieveObjectException, IllegalDataException {
+        KISDatabase database = (KISDatabase)ConfigurationDatabaseContext.getKISDatabase();
+        return database.retrieveByIds(ids, null);
+    }
+
+    public List loadMeasurementPorts(List ids) throws DatabaseException, RetrieveObjectException, IllegalDataException {
+        MeasurementPortDatabase database = (MeasurementPortDatabase)ConfigurationDatabaseContext.getMeasurementPortDatabase();
+        return database.retrieveByIds(ids, null);
+    }
+
+    public List loadMonitoredElements(List ids) throws DatabaseException, RetrieveObjectException, IllegalDataException{
+        MonitoredElementDatabase database = (MonitoredElementDatabase)ConfigurationDatabaseContext.getMonitoredElementDatabase();
+        return database.retrieveByIds(ids, null);
+    }
+    
 }
