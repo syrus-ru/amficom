@@ -1,5 +1,5 @@
 /*
- * $Id: KIS.java,v 1.13 2004/08/13 14:08:14 bob Exp $
+ * $Id: KIS.java,v 1.14 2004/08/18 12:37:48 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,12 +22,14 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.configuration.corba.KIS_Transferable;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2004/08/13 14:08:14 $
- * @author $Author: bob $
+ * @version $Revision: 1.14 $, $Date: 2004/08/18 12:37:48 $
+ * @author $Author: arseniy $
  * @module configuration_v1
  */
 
 public class KIS extends DomainMember {
+	public static final int RETRIEVE_MONITORED_ELEMENTS = 1;
+
 	private Identifier mcmId;
 	private String name;
 	private String description;
@@ -144,6 +146,15 @@ public class KIS extends DomainMember {
 
 	public String getDescription() {
 		return this.description;
+	}
+
+	public List retrieveMonitoredElements() throws RetrieveObjectException, ObjectNotFoundException {
+		try {
+			return (List)this.kisDatabase.retrieveObject(this, RETRIEVE_MONITORED_ELEMENTS, null);
+		}
+		catch (IllegalDataException e) {
+			throw new RetrieveObjectException(e.getMessage(), e);
+		}
 	}
 
 	protected synchronized void setAttributes(Date created,

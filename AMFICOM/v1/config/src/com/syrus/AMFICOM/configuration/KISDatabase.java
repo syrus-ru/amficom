@@ -1,5 +1,5 @@
 /*
- * $Id: KISDatabase.java,v 1.14 2004/08/17 09:04:11 bob Exp $
+ * $Id: KISDatabase.java,v 1.15 2004/08/18 12:37:48 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,8 +29,8 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2004/08/17 09:04:11 $
- * @author $Author: bob $
+ * @version $Revision: 1.15 $, $Date: 2004/08/18 12:37:48 $
+ * @author $Author: arseniy $
  * @module configuration_v1
  */
 
@@ -58,38 +58,23 @@ public class KISDatabase extends StorableObjectDatabase {
 
 	private void retrieveKIS(KIS kis) throws ObjectNotFoundException, RetrieveObjectException {
 		String kisIdStr = kis.getId().toSQLString();
-		String sql;		
-		{
-		StringBuffer buffer = new StringBuffer();
-		buffer.append(StorableObjectDatabase.SQL_SELECT);
-		buffer.append(DatabaseDate.toQuerySubString(StorableObjectDatabase.COLUMN_CREATED));
-		buffer.append(StorableObjectDatabase.COMMA);
-		buffer.append(DatabaseDate.toQuerySubString(StorableObjectDatabase.COLUMN_MODIFIED));
-		buffer.append(StorableObjectDatabase.COMMA);
-		buffer.append(StorableObjectDatabase.COLUMN_CREATOR_ID);
-		buffer.append(StorableObjectDatabase.COMMA);
-		buffer.append(StorableObjectDatabase.COLUMN_MODIFIER_ID);
-		buffer.append(StorableObjectDatabase.COMMA);
-		buffer.append(DomainMember.COLUMN_DOMAIN_ID);
-		buffer.append(StorableObjectDatabase.COMMA);
-		buffer.append(COLUMN_NAME);
-		buffer.append(StorableObjectDatabase.COMMA);
-		buffer.append(COLUMN_DESCRIPTION);
-		buffer.append(StorableObjectDatabase.COMMA);
-		buffer.append(COLUMN_MCM_ID);
-		buffer.append(StorableObjectDatabase.SQL_FROM);
-		buffer.append(ObjectEntities.KIS_ENTITY);
-		buffer.append(StorableObjectDatabase.SQL_WHERE);
-		buffer.append(StorableObjectDatabase.COLUMN_ID);
-		buffer.append(StorableObjectDatabase.EQUALS);
-		buffer.append(kisIdStr);
-		sql = buffer.toString();
-		}
+		String sql = SQL_SELECT
+			+ DatabaseDate.toQuerySubString(StorableObjectDatabase.COLUMN_CREATED) + COMMA
+			+ DatabaseDate.toQuerySubString(StorableObjectDatabase.COLUMN_MODIFIED) + COMMA
+			+ COLUMN_CREATOR_ID + COMMA
+			+ COLUMN_MODIFIER_ID + COMMA
+			+ DomainMember.COLUMN_DOMAIN_ID + COMMA
+			+ COLUMN_NAME + COMMA
+			+ COLUMN_DESCRIPTION + COMMA
+			+ COLUMN_MCM_ID
+			+ SQL_FROM + ObjectEntities.KIS_ENTITY
+			+ SQL_WHERE + COLUMN_ID + EQUALS + kisIdStr;
+
 		Statement statement = null;
 		ResultSet resultSet = null;
 		try {
 			statement = connection.createStatement();
-			Log.debugMessage("KISDatabase.retrieve | Trying: " + sql, Log.DEBUGLEVEL05);
+			Log.debugMessage("KISDatabase.retrieveKIS | Trying: " + sql, Log.DEBUGLEVEL05);
 			resultSet = statement.executeQuery(sql);
 			if (resultSet.next()) {				
 				kis.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
@@ -117,7 +102,7 @@ public class KISDatabase extends StorableObjectDatabase {
 				throw new ObjectNotFoundException("No such kis: " + kisIdStr);
 		}
 		catch (SQLException sqle) {
-			String mesg = "KISDatabase.retrieve | Cannot retrieve kis " + kisIdStr;
+			String mesg = "KISDatabase.retrieveKIS | Cannot retrieve kis " + kisIdStr;
 			throw new RetrieveObjectException(mesg, sqle);
 		}
 		finally {
@@ -135,13 +120,58 @@ public class KISDatabase extends StorableObjectDatabase {
 		}
 	}	
 	
-	public Object retrieveObject(StorableObject storableObject, int retrieve_kind, Object arg)
-			throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
+	public Object retrieveObject(StorableObject storableObject, int retrieve_kind, Object arg) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
 		KIS kis = this.fromStorableObject(storableObject);
 		switch (retrieve_kind) {
+			case KIS.RETRIEVE_MONITORED_ELEMENTS:
+				return this.retrieveMonitoredElements(kis);
 			default:
 				return null;
 		}
+	}
+	
+	private List retrieveMonitoredElements(KIS kis) throws RetrieveObjectException {
+		List monitoredElements = new ArrayList();
+
+		String kisIdStr = kis.getId().toSQLString();
+		String sql = SQL_SELECT
+			+ COLUMN_ID
+			+ SQL_FROM + ObjectEntities.ME_ENTITY
+			+ SQL_WHERE + MonitoredElementDatabase.COLUMN_MEASUREMENT_PORT_ID + SQL_IN + OPEN_BRACKET
+				+ SQL_SELECT
+				+ COLUMN_ID
+				+ SQL_FROM + ObjectEntities.MEASUREMENTPORT_ENTITY
+				+ SQL_WHERE + MeasurementPortDatabase.COLUMN_KIS_ID + EQUALS + kisIdStr
+			+ CLOSE_BRACKET;
+
+		Statement statement = null;
+		ResultSet resultSet = null;
+		try {
+			statement = connection.createStatement();
+			Log.debugMessage("KISDatabase.retrieveMonitoredElements | Trying: " + sql, Log.DEBUGLEVEL05);
+			resultSet = statement.executeQuery(sql);
+			while (resultSet.next()) {
+				monitoredElements.add((MonitoredElement)ConfigurationStorableObjectPool.getStorableObject(new Identifier(resultSet.getString(COLUMN_ID)), true));
+			}
+		}
+		catch (SQLException sqle) {
+			String mesg = "KISDatabase.retrieveMonitoredElements | Cannot retrieve monitored elements for kis " + kisIdStr;
+			throw new RetrieveObjectException(mesg, sqle);
+		}
+		finally {
+			try {
+				if (statement != null)
+					statement.close();
+				if (resultSet != null)
+					resultSet.close();
+				statement = null;
+				resultSet = null;
+			}
+			catch (SQLException sqle1) {
+				Log.errorException(sqle1);
+			}
+		}
+		return monitoredElements;
 	}
 
 	public void insert(StorableObject storableObject) throws IllegalDataException, CreateObjectException {
@@ -241,12 +271,12 @@ public class KISDatabase extends StorableObjectDatabase {
 			  */
 			preparedStatement.setString(9, (mcmId != null)?mcmId.getCode():Identifier.getNullSQLString());
 										
-			Log.debugMessage("KISDatabase.insert | Trying: " + sql, Log.DEBUGLEVEL05);
+			Log.debugMessage("KISDatabase.insertKIS | Trying: " + sql, Log.DEBUGLEVEL05);
 			preparedStatement.executeUpdate();
 			connection.commit();
 		}
 		catch (SQLException sqle) {
-			String mesg = "KISDatabase.insert | Cannot insert kis " + kisIdCode;
+			String mesg = "KISDatabase.insertKIS | Cannot insert kis " + kisIdCode;
 			throw new CreateObjectException(mesg, sqle);
 		}
 		finally {

@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicDatabase.java,v 1.10 2004/08/18 08:46:04 arseniy Exp $
+ * $Id: CharacteristicDatabase.java,v 1.11 2004/08/18 12:37:48 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,7 +27,7 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.configuration.corba.CharacteristicSort;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2004/08/18 08:46:04 $
+ * @version $Revision: 1.11 $, $Date: 2004/08/18 12:37:48 $
  * @author $Author: arseniy $
  * @module configuration_v1
  */
@@ -44,6 +44,8 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
     public static final String COLUMN_VALUE = "value";
     // sort NUMBER(2) NOT NULL,
     public static final String COLUMN_SORT  = "sort";
+		// domain_id VARCHAR2(32),
+    public static final String COLUMN_DOMAIN_ID        = "domain_id";
     // mcm_id VARCHAR2(32),
     public static final String COLUMN_MCM_ID        = "mcm_id";
     // equipment_id VARCHAR2(32),
@@ -98,6 +100,13 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
 				Identifier characterizedId;
 				
 				switch (sort) {
+					case CharacteristicSort._CHARACTERISTIC_SORT_DOMAIN:
+						/**
+						* @todo when change DB Identifier model ,change getString() to
+						*       getLong()
+						*/
+					characterizedId = new Identifier(resultSet.getString(COLUMN_DOMAIN_ID));
+					break;
 					case CharacteristicSort._CHARACTERISTIC_SORT_SERVER:
 						/**
 						* @todo when change DB Identifier model ,change getString() to
@@ -245,6 +254,8 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
 			buffer.append(COMMA);
 			buffer.append(COLUMN_SORT);
 			buffer.append(COMMA);
+			buffer.append(COLUMN_DOMAIN_ID);
+			buffer.append(COMMA);
 			buffer.append(COLUMN_SERVER_ID);
 			buffer.append(COMMA);
 			buffer.append(COLUMN_MCM_ID);
@@ -285,7 +296,22 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
 			buffer.append(COMMA);
 			String characterizedIdStr = characteristic.getCharacterizedId().toString();
 			switch (sort) {
+				case CharacteristicSort._CHARACTERISTIC_SORT_DOMAIN:
+					buffer.append(characterizedIdStr);
+					buffer.append(COMMA);
+					buffer.append(Identifier.getNullSQLString());
+					buffer.append(COMMA);
+					buffer.append(Identifier.getNullSQLString());
+					buffer.append(COMMA);
+					buffer.append(Identifier.getNullSQLString());
+					buffer.append(COMMA);
+					buffer.append(Identifier.getNullSQLString());
+					buffer.append(COMMA);
+					buffer.append(Identifier.getNullSQLString());
+					break;
 				case CharacteristicSort._CHARACTERISTIC_SORT_SERVER:
+					buffer.append(Identifier.getNullSQLString());
+					buffer.append(COMMA);
 					buffer.append(characterizedIdStr);
 					buffer.append(COMMA);
 					buffer.append(Identifier.getNullSQLString());
@@ -299,6 +325,8 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
 				case CharacteristicSort._CHARACTERISTIC_SORT_MCM:
 					buffer.append(Identifier.getNullSQLString());
 					buffer.append(COMMA);
+					buffer.append(Identifier.getNullSQLString());
+					buffer.append(COMMA);
 					buffer.append(characterizedIdStr);
 					buffer.append(COMMA);
 					buffer.append(Identifier.getNullSQLString());
@@ -308,6 +336,8 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
 					buffer.append(Identifier.getNullSQLString());
 					break;
 				case CharacteristicSort._CHARACTERISTIC_SORT_EQUIPMENT:
+					buffer.append(Identifier.getNullSQLString());
+					buffer.append(COMMA);
 					buffer.append(Identifier.getNullSQLString());
 					buffer.append(COMMA);
 					buffer.append(Identifier.getNullSQLString());
@@ -325,11 +355,15 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
 					buffer.append(COMMA);
 					buffer.append(Identifier.getNullSQLString());
 					buffer.append(COMMA);
+					buffer.append(Identifier.getNullSQLString());
+					buffer.append(COMMA);
 					buffer.append(characterizedIdStr);			
 					buffer.append(COMMA);
 					buffer.append(Identifier.getNullSQLString());
 					break;
 				case CharacteristicSort._CHARACTERISTIC_SORT_PORT:
+					buffer.append(Identifier.getNullSQLString());
+					buffer.append(COMMA);
 					buffer.append(Identifier.getNullSQLString());
 					buffer.append(COMMA);
 					buffer.append(Identifier.getNullSQLString());
@@ -392,6 +426,9 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
 			buffer.append(sortValue);
 			buffer.append(SQL_AND);
 			switch (sortValue) {
+				case CharacteristicSort._CHARACTERISTIC_SORT_DOMAIN:
+					buffer.append(COLUMN_DOMAIN_ID);
+					break;
 				case CharacteristicSort._CHARACTERISTIC_SORT_SERVER:
 					buffer.append(COLUMN_SERVER_ID);
 					break;

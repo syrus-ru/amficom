@@ -1,5 +1,5 @@
 /*
- * $Id: Domain.java,v 1.3 2004/08/18 08:46:04 arseniy Exp $
+ * $Id: Domain.java,v 1.4 2004/08/18 12:37:48 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,7 +9,7 @@
 package com.syrus.AMFICOM.configuration;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2004/08/18 08:46:04 $
+ * @version $Revision: 1.4 $, $Date: 2004/08/18 12:37:48 $
  * @author $Author: arseniy $
  * @module configuration_v1
  */
@@ -52,7 +52,7 @@ public class Domain extends DomainMember implements Characterized {
 					new Date(dt.modified),
 					new Identifier(dt.creator_id),
 					new Identifier(dt.modifier_id),
-					(dt.domain_id.identifier_string != "") ? (new Identifier(dt.domain_id)) : null);
+					(dt.domain_id.identifier_string.length() != 0) ? (new Identifier(dt.domain_id)) : null);
 		this.name = new String(dt.name);
 		this.description = new String(dt.description);
 
@@ -98,7 +98,7 @@ public class Domain extends DomainMember implements Characterized {
 																	 super.modified.getTime(),
 																	 (Identifier_Transferable)super.creatorId.getTransferable(),
 																	 (Identifier_Transferable)super.modifierId.getTransferable(),
-																	 (super.domainId != null) ? (Identifier_Transferable)super.domainId.getTransferable() : new Identifier_Transferable(""),
+																	 (super.domainId != null) ? (Identifier_Transferable)super.domainId.getTransferable() : (new Identifier_Transferable("")),
 																	 new String(this.name),
 																	 new String(this.description),
 																	 charIds);
