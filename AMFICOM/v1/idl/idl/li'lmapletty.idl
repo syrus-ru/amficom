@@ -1,5 +1,5 @@
 /*
- * $Id: li'lmapletty.idl,v 1.11 2004/12/17 14:49:09 bass Exp $
+ * $Id: li'lmapletty.idl,v 1.12 2004/12/20 09:56:03 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -202,9 +202,11 @@ module com {
 
 							general::corba::IdentifierSeq_Transferable characteristicIds;
 					};					
-					
+
 					typedef sequence<PhysicalLink_Transferable> PhysicalLinkSeq_Transferable;
-					
+					typedef PhysicalLink_Transferable PhysicalLink;
+					typedef sequence<PhysicalLink> PhysicalLinkSeq;
+
 					// was MapPipePathElement
 					// MapPipePathElement is collector
 					struct Collector_Transferable {
