@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectPool.java,v 1.36 2005/02/25 12:54:47 bass Exp $
+ * $Id: StorableObjectPool.java,v 1.37 2005/02/28 09:32:02 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,8 +28,8 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.36 $, $Date: 2005/02/25 12:54:47 $
- * @author $Author: bass $
+ * @version $Revision: 1.37 $, $Date: 2005/02/28 09:32:02 $
+ * @author $Author: arseniy $
  * @module general_v1
  */
 public abstract class StorableObjectPool {
@@ -45,7 +45,8 @@ public abstract class StorableObjectPool {
 	private short 	selfGroupCode;
 	private String  selfGroupName;
 	
-	private List savingObjects;	//List <Map <Short entityKey, Collection <StorableObject> levelEntitySavingObjects > >
+	//private List savingObjects;	//List <Map <Short entityKey, Collection <StorableObject> levelEntitySavingObjects > >
+	private Map savingObjectsMap;	//Map < Integer dependencyLevel, < Map <Short entityCode, Collection <StorableObject> levelEntitySavingObjects > > >
 	private HashSet savingObjectIds; //HashSet <Identifier>
 	
 	private Collection deletedIds;
@@ -214,10 +215,10 @@ public abstract class StorableObjectPool {
 			this.savingObjectIds.clear();
 		else
 			this.savingObjectIds = new HashSet();
-		if (this.savingObjects != null)
-			this.savingObjects.clear();
+		if (this.savingObjectsMap != null)
+			this.savingObjectsMap.clear();
 		else
-			this.savingObjects = new LinkedList();
+			this.savingObjectsMap = new HashMap();
 
 		/*	Prepare savingObjectsMap from all objects in pool */
 		for (final Iterator entityCodeIterator = this.objectPoolMap.keySet().iterator(); entityCodeIterator.hasNext();) {
@@ -225,7 +226,7 @@ public abstract class StorableObjectPool {
 			LRUMap objectPool = (LRUMap) this.objectPoolMap.get(entityCode);
 			if (objectPool != null) {
 				for (Iterator poolIterator = objectPool.iterator(); poolIterator.hasNext();)
-					this.saveWithDependencies((StorableObject) poolIterator.next()/*, force*/, 0);
+					this.saveWithDependencies((StorableObject) poolIterator.next(), 0);
 			}
 			else
 				Log.errorMessage(this.selfGroupName + "StorableObjectPool.flushImpl | Cannot find object pool for entity code: '"
@@ -233,13 +234,13 @@ public abstract class StorableObjectPool {
 		}
 
 		/*	Save objects in order from savingObjectsMap */
-		int dependencyLevel;
+		Integer dependencyKey;
 		Short entityKey;
 		Map levelSavingObjectsMap;
 		Collection levelEntitySavingObjects;
-		for (ListIterator levelIt = this.savingObjects.listIterator(this.savingObjects.size()); levelIt.hasPrevious();) {
-			dependencyLevel = levelIt.previousIndex();
-			levelSavingObjectsMap = (Map) levelIt.previous();
+		for (Iterator levelIt = this.savingObjectsMap.keySet().iterator(); levelIt.hasNext();) {
+			dependencyKey = (Integer) levelIt.next();
+			levelSavingObjectsMap = (Map) this.savingObjectsMap.get(dependencyKey);
 
 			if (levelSavingObjectsMap != null) {
 				for (Iterator entityIt = levelSavingObjectsMap.keySet().iterator(); entityIt.hasNext();) {
@@ -250,11 +251,13 @@ public abstract class StorableObjectPool {
 						this.saveStorableObjects(entityKey.shortValue(), levelEntitySavingObjects, force);
 					}
 					else
-						Log.errorMessage("Cannot find levelEntitySavingObjects for entity code " + entityKey + ", dependency level " + dependencyLevel);
+						Log.errorMessage("Cannot find levelEntitySavingObjects for entity code "
+								+ entityKey + ", dependency level " + (-dependencyKey.intValue()));
+
 				}
 			}
 			else
-				Log.errorMessage("Cannot find levelSavingMap for dependency level " + dependencyLevel);
+				Log.errorMessage("Cannot find levelSavingMap for dependency level " + (-dependencyKey.intValue()));
 
 		}
 	}
@@ -281,16 +284,15 @@ public abstract class StorableObjectPool {
 					throw new IllegalDataException("dependency for object '" + id + "' neither Identifier nor StorableObject");
 
 			if (dependencyObject != null)
-				this.saveWithDependencies(dependencyObject/*, force*/, dependencyLevel + 1);
+				this.saveWithDependencies(dependencyObject, dependencyLevel + 1);
 		}
 
 		if (storableObject.isChanged()) {
-			Map levelSavingObjectsMap;
-			if (this.savingObjects.size() > dependencyLevel)
-				levelSavingObjectsMap = (Map) this.savingObjects.get(dependencyLevel);
-			else {
+			Integer dependencyKey = new Integer(-dependencyLevel);
+			Map levelSavingObjectsMap = (Map) this.savingObjectsMap.get(dependencyKey);
+			if (levelSavingObjectsMap == null) {
 				levelSavingObjectsMap = new HashMap();
-				this.savingObjects.add(dependencyLevel, levelSavingObjectsMap);
+				this.savingObjectsMap.put(dependencyKey, levelSavingObjectsMap);
 			}
 			Short entityKey = new Short(storableObject.getId().getMajor());
 			Collection levelEntitySavingObjects = (Collection) levelSavingObjectsMap.get(entityKey);
@@ -299,8 +301,6 @@ public abstract class StorableObjectPool {
 				levelSavingObjectsMap.put(entityKey, levelEntitySavingObjects);
 			}
 			levelEntitySavingObjects.add(storableObject);
-
-//			this.saveStorableObjects(id.getMajor(), Collections.singleton(storableObject), force);
 		}
 	}
 
