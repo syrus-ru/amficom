@@ -1,5 +1,5 @@
 /*
- * $Id: StringFieldCondition.java,v 1.8 2004/10/20 07:51:40 bob Exp $
+ * $Id: StringFieldCondition.java,v 1.9 2004/10/20 13:21:10 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,7 +13,7 @@ import com.syrus.AMFICOM.general.ApplicationException;
 
 
 /**
- * @version $Revision: 1.8 $, $Date: 2004/10/20 07:51:40 $
+ * @version $Revision: 1.9 $, $Date: 2004/10/20 13:21:10 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -64,18 +64,18 @@ public class StringFieldCondition extends com.syrus.AMFICOM.configuration.String
 		boolean condition = false;		
 		if (object instanceof ParameterType){
 			ParameterType parameterType = (ParameterType)object;
-			switch(getSort().value()){
+			switch(this.sort){
 				case StringFieldSort._STRINGSORT_BASE:
-					if (parameterType.getCodename().equals(getString())){
+					if (parameterType.getCodename().equals(this.string)){
 						condition = true;
 					}
 					break;
 			}
 		} else if (object instanceof MeasurementType){
 			MeasurementType measurementType = (MeasurementType)object;
-			switch(getSort().value()){
+			switch(this.sort){
 				case StringFieldSort._STRINGSORT_BASE:
-					if (measurementType.getCodename().equals(getString())){
+					if (measurementType.getCodename().equals(this.string)){
 						condition = true;
 					}
 				break;

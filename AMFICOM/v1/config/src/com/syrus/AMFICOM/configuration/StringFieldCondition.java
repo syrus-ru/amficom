@@ -1,5 +1,5 @@
 /*
- * $Id: StringFieldCondition.java,v 1.5 2004/10/20 10:18:26 bob Exp $
+ * $Id: StringFieldCondition.java,v 1.6 2004/10/20 13:21:02 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,15 +14,15 @@ import com.syrus.AMFICOM.general.StorableObjectCondition;
 
 
 /**
- * @version $Revision: 1.5 $, $Date: 2004/10/20 10:18:26 $
+ * @version $Revision: 1.6 $, $Date: 2004/10/20 13:21:02 $
  * @author $Author: bob $
  * @module measurement_v1
  */
 public class StringFieldCondition implements StorableObjectCondition {
 
-	private Short entityCode;
-	private String string;
-	private int sort;
+	protected Short entityCode;
+	protected String string;
+	protected int sort;
 
 	public StringFieldCondition(StringFieldCondition_Transferable transferable){
 		this.string = transferable.field_string;
