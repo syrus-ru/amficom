@@ -973,7 +973,7 @@ public class RISDMapDataSource
 
 		links = new MapPhysicalLinkElement_Transferable[count];
 		i = 0;
-		for(Iterator it = mc.getPhysicalLinks().iterator(); it.hasNext();)
+		for(Iterator it = mc.getPhysicalLinks().iterator(); it.hasNext(); i++)
 		{
 			os = (ObjectResource )it.next();
 			os.setTransferableFromLocal();
@@ -982,7 +982,7 @@ public class RISDMapDataSource
 
 		paths = new MapPathElement_Transferable[count];
 		i = 0;
-		for(Iterator it = mc.getTransmissionPath().iterator(); it.hasNext();)
+		for(Iterator it = mc.getTransmissionPath().iterator(); it.hasNext(); i++)
 		{
 			os = (ObjectResource )it.next();
 			os.setTransferableFromLocal();
@@ -992,7 +992,7 @@ public class RISDMapDataSource
 		count = image_vec.size();
 		images = new ImageResource_Transferable[image_vec.size()];
 		i = 0;
-		for(Enumeration enum = image_vec.elements(); enum.hasMoreElements();)
+		for(Enumeration enum = image_vec.elements(); enum.hasMoreElements(); i++)
 		{
 			os = (ObjectResource )enum.nextElement();
 			os.setTransferableFromLocal();

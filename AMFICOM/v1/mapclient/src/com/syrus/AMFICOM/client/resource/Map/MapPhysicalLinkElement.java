@@ -53,8 +53,8 @@ public class MapPhysicalLinkElement extends MapLinkElement implements Serializab
 	public Vector nodeLink_ids = new Vector();
 	public MapPhysicalLinkElement_Transferable transferable;
 
-	public MapNodeElement startNode;
-	public MapNodeElement endNode;
+//	public MapNodeElement startNode;
+//	public MapNodeElement endNode;
 	protected boolean selected = false;
 	public String LINK_ID = "";
 	public String link_type_id = "";
