@@ -1,5 +1,5 @@
 /*
- * $Id: CMServerImpl.java,v 1.23 2004/09/27 11:59:10 bob Exp $
+ * $Id: CMServerImpl.java,v 1.24 2004/09/29 06:55:02 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -37,6 +37,9 @@ import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.general.StorableObjectDatabase;
+import com.syrus.AMFICOM.general.UpdateObjectException;
+import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.general.corba.CompletionStatus;
 import com.syrus.AMFICOM.general.corba.ErrorCode;
@@ -82,7 +85,7 @@ import com.syrus.AMFICOM.measurement.corba.Test_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.23 $, $Date: 2004/09/27 11:59:10 $
+ * @version $Revision: 1.24 $, $Date: 2004/09/29 06:55:02 $
  * @author $Author: bob $
  * @module cmserver_v1
  */
@@ -90,7 +93,7 @@ public class CMServerImpl implements CMServerOperations {
 
 	////////////////////////////////////////////Measurement Receive
 	// //////////////////////////////////////////////
-	public void receiveAnalysisTypes(	AnalysisType_Transferable[] analysisType_Transferables,
+	public void receiveAnalysisTypes(	AnalysisType_Transferable[] analysisType_Transferables, boolean force,
 						AccessIdentifier_Transferable accessIdentifier)
 			throws AMFICOMRemoteException {
 		/**
@@ -98,20 +101,20 @@ public class CMServerImpl implements CMServerOperations {
 		 */
 		Log.debugMessage("CMServerImpl.receiveAnalysisTypes | Received " + analysisType_Transferables.length
 				+ " analysisTypes", Log.DEBUGLEVEL07);
-		List testList = new ArrayList(analysisType_Transferables.length);
+		List analysisTypeList = new ArrayList(analysisType_Transferables.length);
 		try {
 
 			for (int i = 0; i < analysisType_Transferables.length; i++) {
 				AnalysisType analysisType = new AnalysisType(analysisType_Transferables[i]);
 				MeasurementStorableObjectPool.putStorableObject(analysisType);
-				testList.add(analysisType);
+				analysisTypeList.add(analysisType);
 			}
 
 			AnalysisTypeDatabase analysisTypeDatabase = (AnalysisTypeDatabase) MeasurementDatabaseContext
 					.getAnalysisTypeDatabase();
-			analysisTypeDatabase.insert(testList);
+			analysisTypeDatabase.update(analysisTypeList, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
 
-		} catch (CreateObjectException e) {
+		} catch (UpdateObjectException e) {
 			Log.errorException(e);
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_SAVE, CompletionStatus.COMPLETED_NO, e
 					.getMessage());
@@ -123,10 +126,18 @@ public class CMServerImpl implements CMServerOperations {
 			Log.errorException(e);
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_ILLEGAL_OBJECT_ENTITY,
 								CompletionStatus.COMPLETED_NO, e.getMessage());
+		} catch (VersionCollisionException e){
+			Log.errorException(e);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_VERSION_COLLISION,
+												CompletionStatus.COMPLETED_NO, e.getMessage());
+		} catch (CreateObjectException e) {
+			Log.errorException(e);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_SAVE, CompletionStatus.COMPLETED_NO, e
+					.getMessage());
 		}
 	}
 
-	public void receiveEvaluationTypes(	EvaluationType_Transferable[] evaluationType_Transferables,
+	public void receiveEvaluationTypes(	EvaluationType_Transferable[] evaluationType_Transferables, boolean force,
 						AccessIdentifier_Transferable accessIdentifier)
 			throws AMFICOMRemoteException {
 		/**
@@ -145,9 +156,9 @@ public class CMServerImpl implements CMServerOperations {
 
 			EvaluationTypeDatabase evaluationTypeDatabase = (EvaluationTypeDatabase) MeasurementDatabaseContext
 					.getEvaluationTypeDatabase();
-			evaluationTypeDatabase.insert(evaluationTypeList);
+			evaluationTypeDatabase.update(evaluationTypeList, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
 
-		} catch (CreateObjectException e) {
+		}  catch (UpdateObjectException e) {
 			Log.errorException(e);
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_SAVE, CompletionStatus.COMPLETED_NO, e
 					.getMessage());
@@ -159,10 +170,18 @@ public class CMServerImpl implements CMServerOperations {
 			Log.errorException(e);
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_ILLEGAL_OBJECT_ENTITY,
 								CompletionStatus.COMPLETED_NO, e.getMessage());
+		} catch (VersionCollisionException e){
+			Log.errorException(e);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_VERSION_COLLISION,
+												CompletionStatus.COMPLETED_NO, e.getMessage());
+		} catch (CreateObjectException e) {
+			Log.errorException(e);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_SAVE, CompletionStatus.COMPLETED_NO, e
+					.getMessage());
 		}
 	}
 
-	public void receiveMeasurementTypes(	MeasurementType_Transferable[] measurementType_Transferables,
+	public void receiveMeasurementTypes(	MeasurementType_Transferable[] measurementType_Transferables, boolean force,
 						AccessIdentifier_Transferable accessIdentifier)
 			throws AMFICOMRemoteException {
 		/**
@@ -181,9 +200,9 @@ public class CMServerImpl implements CMServerOperations {
 
 			MeasurementTypeDatabase measurementTypeDatabase = (MeasurementTypeDatabase) MeasurementDatabaseContext
 					.getMeasurementTypeDatabase();
-			measurementTypeDatabase.insert(measurementTypeList);
+			measurementTypeDatabase.update(measurementTypeList, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
 
-		} catch (CreateObjectException e) {
+		}  catch (UpdateObjectException e) {
 			Log.errorException(e);
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_SAVE, CompletionStatus.COMPLETED_NO, e
 					.getMessage());
@@ -195,10 +214,18 @@ public class CMServerImpl implements CMServerOperations {
 			Log.errorException(e);
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_ILLEGAL_OBJECT_ENTITY,
 								CompletionStatus.COMPLETED_NO, e.getMessage());
+		} catch (VersionCollisionException e){
+			Log.errorException(e);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_VERSION_COLLISION,
+												CompletionStatus.COMPLETED_NO, e.getMessage());
+		} catch (CreateObjectException e) {
+			Log.errorException(e);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_SAVE, CompletionStatus.COMPLETED_NO, e
+					.getMessage());
 		}
 	}
 
-	public void receiveParameterTypes(	ParameterType_Transferable[] parameterType_Transferables,
+	public void receiveParameterTypes(	ParameterType_Transferable[] parameterType_Transferables, boolean force,
 						AccessIdentifier_Transferable accessIdentifier)
 			throws AMFICOMRemoteException {
 		/**
@@ -217,9 +244,9 @@ public class CMServerImpl implements CMServerOperations {
 
 			ParameterTypeDatabase parameterTypeDatabase = (ParameterTypeDatabase) MeasurementDatabaseContext
 					.getParameterTypeDatabase();
-			parameterTypeDatabase.insert(parameterTypeList);
+			parameterTypeDatabase.update(parameterTypeList, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
 
-		} catch (CreateObjectException e) {
+		} catch (UpdateObjectException e) {
 			Log.errorException(e);
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_SAVE, CompletionStatus.COMPLETED_NO, e
 					.getMessage());
@@ -231,10 +258,18 @@ public class CMServerImpl implements CMServerOperations {
 			Log.errorException(e);
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_ILLEGAL_OBJECT_ENTITY,
 								CompletionStatus.COMPLETED_NO, e.getMessage());
+		} catch (VersionCollisionException e){
+			Log.errorException(e);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_VERSION_COLLISION,
+												CompletionStatus.COMPLETED_NO, e.getMessage());
+		} catch (CreateObjectException e) {
+			Log.errorException(e);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_SAVE, CompletionStatus.COMPLETED_NO, e
+					.getMessage());
 		}
 	}
 
-	public void receiveTests(Test_Transferable[] test_Transferables, AccessIdentifier_Transferable accessIdentifier)
+	public void receiveTests(Test_Transferable[] test_Transferables, boolean force, AccessIdentifier_Transferable accessIdentifier)
 			throws AMFICOMRemoteException {
 		/**
 		 * TODO check user for access
@@ -251,9 +286,9 @@ public class CMServerImpl implements CMServerOperations {
 			}
 
 			TestDatabase testDatabase = (TestDatabase) MeasurementDatabaseContext.getTestDatabase();
-			testDatabase.insert(testList);
+			testDatabase.update(testList, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
 
-		} catch (CreateObjectException e) {
+		} catch (UpdateObjectException e) {
 			Log.errorException(e);
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_SAVE, CompletionStatus.COMPLETED_NO, e
 					.getMessage());
@@ -265,10 +300,18 @@ public class CMServerImpl implements CMServerOperations {
 			Log.errorException(e);
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_ILLEGAL_OBJECT_ENTITY,
 								CompletionStatus.COMPLETED_NO, e.getMessage());
+		} catch (VersionCollisionException e){
+			Log.errorException(e);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_VERSION_COLLISION,
+												CompletionStatus.COMPLETED_NO, e.getMessage());
+		} catch (CreateObjectException e) {
+			Log.errorException(e);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_SAVE, CompletionStatus.COMPLETED_NO, e
+					.getMessage());
 		}
 	}
 
-	public void receiveSets(Set_Transferable[] set_Transferables, AccessIdentifier_Transferable accessIdentifier)
+	public void receiveSets(Set_Transferable[] set_Transferables, boolean force, AccessIdentifier_Transferable accessIdentifier)
 			throws AMFICOMRemoteException {
 		/**
 		 * TODO check user for access
@@ -285,9 +328,9 @@ public class CMServerImpl implements CMServerOperations {
 			}
 
 			SetDatabase setDatabase = (SetDatabase) MeasurementDatabaseContext.getSetDatabase();
-			setDatabase.insert(setList);
+			setDatabase.update(setList, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
 
-		} catch (CreateObjectException e) {
+		} catch (UpdateObjectException e) {
 			Log.errorException(e);
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_SAVE, CompletionStatus.COMPLETED_NO, e
 					.getMessage());
@@ -299,6 +342,14 @@ public class CMServerImpl implements CMServerOperations {
 			Log.errorException(e);
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_ILLEGAL_OBJECT_ENTITY,
 								CompletionStatus.COMPLETED_NO, e.getMessage());
+		} catch (VersionCollisionException e){
+			Log.errorException(e);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_VERSION_COLLISION,
+												CompletionStatus.COMPLETED_NO, e.getMessage());
+		} catch (CreateObjectException e) {
+			Log.errorException(e);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_SAVE, CompletionStatus.COMPLETED_NO, e
+					.getMessage());
 		}
 	}
 

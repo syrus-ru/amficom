@@ -1,5 +1,5 @@
 /*
- * $Id: ClientMeasurementObjectLoader.java,v 1.9 2004/09/29 06:27:26 bob Exp $
+ * $Id: ClientMeasurementObjectLoader.java,v 1.10 2004/09/29 06:55:02 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -50,7 +50,7 @@ import com.syrus.AMFICOM.measurement.corba.TemporalPattern_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Test_Transferable;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2004/09/29 06:27:26 $
+ * @version $Revision: 1.10 $, $Date: 2004/09/29 06:55:02 $
  * @author $Author: bob $
  * @module cmserver_v1
  */
@@ -569,14 +569,14 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
              transferables[i] = (MeasurementType_Transferable)( (MeasurementType)it.next() ).getTransferable();                        
          }
          try {
-             this.server.receiveMeasurementTypes(transferables, accessIdentifierTransferable);         
+             this.server.receiveMeasurementTypes(transferables, force, accessIdentifierTransferable);         
          } catch (AMFICOMRemoteException e) {
              String msg = "ClientMeasurementObjectLoader.saveMeasurementType | receiveMeasurementTypes";
           	
           	if (e.error_code.equals(ErrorCode.ERROR_VERSION_COLLISION))
           	 	throw new VersionCollisionException(msg, e);
-          	else
-          	 	throw new CommunicationException(msg, e);       
+          	
+       	 	throw new CommunicationException(msg, e);       
          }
      }    
 
@@ -591,15 +591,15 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
              transferables[i] = (EvaluationType_Transferable)( (EvaluationType)it.next() ).getTransferable();                        
          }
          try {
-             this.server.receiveEvaluationTypes(transferables, accessIdentifierTransferable);         
+             this.server.receiveEvaluationTypes(transferables, force, accessIdentifierTransferable);         
          } catch (AMFICOMRemoteException e) {
          	
          	String msg = "ClientMeasurementObjectLoader.saveEvaluationType | receiveEvaluationTypes";
          	
          	if (e.error_code.equals(ErrorCode.ERROR_VERSION_COLLISION))
          	 	throw new VersionCollisionException(msg, e);
-         	else
-         	 	throw new CommunicationException(msg, e);       
+         	
+       	 	throw new CommunicationException(msg, e);       
          }
      }
 
