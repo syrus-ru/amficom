@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectDatabase.java,v 1.30 2004/09/20 13:16:08 bob Exp $
+ * $Id: StorableObjectDatabase.java,v 1.31 2004/09/21 05:43:05 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -24,7 +24,7 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.30 $, $Date: 2004/09/20 13:16:08 $
+ * @version $Revision: 1.31 $, $Date: 2004/09/21 05:43:05 $
  * @author $Author: bob $
  * @module general_v1
  */
@@ -526,31 +526,33 @@ public abstract class StorableObjectDatabase {
 			StringBuffer buffer = new StringBuffer("1=1");
 			if (ids != null) {
 				int idsLength = ids.size();
-				buffer.append(SQL_AND);
-				buffer.append(COLUMN_ID);				
-				buffer.append(NOT);
-				buffer.append(SQL_IN);
-				buffer.append(OPEN_BRACKET);
-
-				int i = 1;
-				for (Iterator it = ids.iterator(); it.hasNext(); i++) {
-					Object object = it.next();
-					Identifier id = null;
-					if (object instanceof Identifier)
-						id = (Identifier) object;
-					else if (object instanceof Identified)
-						id = ((Identified)object).getId();
-					else throw new IllegalDataException("StorableObjectDatabase.retrieveButIds | Object " +
-														object.getClass().getName()
-														+ " isn't Identifier or Identified");
-
-					if (id != null){
-						buffer.append(id.toSQLString());
-						if (i < idsLength)
-							buffer.append(COMMA);
+				if (idsLength > 0){
+					buffer.append(SQL_AND);
+					buffer.append(COLUMN_ID);				
+					buffer.append(NOT);
+					buffer.append(SQL_IN);
+					buffer.append(OPEN_BRACKET);
+	
+					int i = 1;
+					for (Iterator it = ids.iterator(); it.hasNext(); i++) {
+						Object object = it.next();
+						Identifier id = null;
+						if (object instanceof Identifier)
+							id = (Identifier) object;
+						else if (object instanceof Identified)
+							id = ((Identified)object).getId();
+						else throw new IllegalDataException("StorableObjectDatabase.retrieveButIds | Object " +
+															object.getClass().getName()
+															+ " isn't Identifier or Identified");
+	
+						if (id != null){
+							buffer.append(id.toSQLString());
+							if (i < idsLength)
+								buffer.append(COMMA);
+						}
 					}
+					buffer.append(CLOSE_BRACKET);
 				}
-				buffer.append(CLOSE_BRACKET);
 			}
 			if ((condition != null) && (condition.length() > 0)) {
 				buffer.append(SQL_AND);
