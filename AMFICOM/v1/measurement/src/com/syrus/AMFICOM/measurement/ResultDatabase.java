@@ -1,5 +1,5 @@
 /*
- * $Id: ResultDatabase.java,v 1.55 2005/01/26 15:38:41 arseniy Exp $
+ * $Id: ResultDatabase.java,v 1.56 2005/01/27 16:35:36 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -45,7 +45,7 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.55 $, $Date: 2005/01/26 15:38:41 $
+ * @version $Revision: 1.56 $, $Date: 2005/01/27 16:35:36 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -646,7 +646,7 @@ public class ResultDatabase extends StorableObjectDatabase {
 
 		String condition = COLUMN_MEASUREMENT_ID + SQL_IN + OPEN_BRACKET + SQL_SELECT + COLUMN_ID + SQL_FROM
 				+ ObjectEntities.MEASUREMENT_ENTITY + SQL_WHERE
-				+ MeasurementDatabase.COLUMN_MONITORED_ELEMENT_ID + SQL_IN + OPEN_BRACKET + SQL_SELECT
+				+ MeasurementWrapper.COLUMN_MONITORED_ELEMENT_ID + SQL_IN + OPEN_BRACKET + SQL_SELECT
 				+ COLUMN_ID + SQL_FROM + ObjectEntities.ME_ENTITY + SQL_WHERE
 				+ DomainMember.COLUMN_DOMAIN_ID + EQUALS + DatabaseIdentifier.toSQLString(domain.getId()) + CLOSE_BRACKET
 				+ CLOSE_BRACKET;
