@@ -1,5 +1,5 @@
 /*
- * $Id: ConfigurationStorableObjectPool.java,v 1.23 2004/11/02 12:42:02 bob Exp $
+ * $Id: ConfigurationStorableObjectPool.java,v 1.24 2004/11/04 14:02:31 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,7 +32,7 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.23 $, $Date: 2004/11/02 12:42:02 $
+ * @version $Revision: 1.24 $, $Date: 2004/11/04 14:02:31 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -274,6 +274,14 @@ public class ConfigurationStorableObjectPool {
 		return list;
 	}
 
+	/**
+	 * @deprecated
+	 * @param entityCode
+	 * @param ids
+	 * @param useLoader
+	 * @return
+	 * @throws ApplicationException
+	 */
 	public static List getStorableObjectsButIds(Short entityCode, List ids, boolean useLoader)
 			throws ApplicationException {
 		List list = null;
@@ -594,147 +602,200 @@ public class ConfigurationStorableObjectPool {
 									+ objectId.getObjectEntity() + "'",
 							IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
 	}
-
-	public static void flush(boolean force) throws VersionCollisionException, DatabaseException,
-			CommunicationException {
+	
+	public static void flush(boolean force) throws VersionCollisionException, DatabaseException, CommunicationException{		 
 		List list = new LinkedList();
 		for (Iterator it = objectPoolMap.keySet().iterator(); it.hasNext();) {
 			Short entityCode = (Short) it.next();
 			LRUMap objectPool = (LRUMap) objectPoolMap.get(entityCode);
-			if (objectPool != null) {
+			if (objectPool != null){
 				list.clear();
-				for (Iterator poolIt = objectPool.iterator(); poolIt.hasNext();) {
-					StorableObject storableObject = (StorableObject) poolIt.next();
-					if (storableObject.isChanged())
-						list.add(storableObject);
-				}
-
-				short code = entityCode.shortValue();
-				if (!list.isEmpty()) {
-					boolean alone = (list.size() == 1);
-					switch (code) {
-						case ObjectEntities.CHARACTERISTICTYPE_ENTITY_CODE:
-							if (alone)
-								cObjectLoader
-										.saveCharacteristicType(
-													(CharacteristicType) list
-															.get(0),
-													force);
-							else
-								cObjectLoader.saveCharacteristicTypes(list, force);
-							break;
-						case ObjectEntities.EQUIPMENTTYPE_ENTITY_CODE:
-							if (alone)
-								cObjectLoader.saveEquipmentType((EquipmentType) list
-										.get(0), force);
-							else
-								cObjectLoader.saveEquipmentTypes(list, force);
-							break;
-						case ObjectEntities.KISTYPE_ENTITY_CODE:
-							if (alone)
-								cObjectLoader.saveKISType((KISType) list
-										.get(0), force);
-							else
-								cObjectLoader.saveKISTypes(list, force);
-							break;
-						case ObjectEntities.PORTTYPE_ENTITY_CODE:
-							if (alone)
-								cObjectLoader.savePortType((PortType) list.get(0),
-												force);
-							else
-								cObjectLoader.savePortTypes(list, force);
-							break;
-						case ObjectEntities.MEASUREMENTPORTTYPE_ENTITY_CODE:
-							if (alone)
-								cObjectLoader
-										.saveMeasurementPortType(
-														(MeasurementPortType) list
-																.get(0),
-														force);
-							else
-								cObjectLoader.saveMeasurementPortTypes(list, force);
-							break;
-						case ObjectEntities.CHARACTERISTIC_ENTITY_CODE:
-							if (alone)
-								cObjectLoader.saveCharacteristic((Characteristic) list
-										.get(0), force);
-							else
-								cObjectLoader.saveCharacteristics(list, force);
-							break;
-						case ObjectEntities.USER_ENTITY_CODE:
-							if (alone)
-								cObjectLoader.saveUser((User) list.get(0), force);
-							else
-								cObjectLoader.saveUsers(list, force);
-							break;
-						case ObjectEntities.DOMAIN_ENTITY_CODE:
-							if (alone)
-								cObjectLoader.saveDomain((Domain) list.get(0), force);
-							else
-								cObjectLoader.saveDomains(list, force);
-							break;
-						case ObjectEntities.SERVER_ENTITY_CODE:
-							if (alone)
-								cObjectLoader.saveServer((Server) list.get(0), force);
-							else
-								cObjectLoader.saveServers(list, force);
-							break;
-						case ObjectEntities.MCM_ENTITY_CODE:
-							if (alone)
-								cObjectLoader.saveMCM((MCM) list.get(0), force);
-							else
-								cObjectLoader.saveMCMs(list, force);
-							break;
-						case ObjectEntities.EQUIPMENT_ENTITY_CODE:
-							if (alone)
-								cObjectLoader.saveEquipment((Equipment) list.get(0),
-												force);
-							else
-								cObjectLoader.saveEquipments(list, force);
-							break;
-						case ObjectEntities.PORT_ENTITY_CODE:
-							if (alone)
-								cObjectLoader.savePort((Port) list.get(0), force);
-							else
-								cObjectLoader.savePorts(list, force);
-							break;
-						case ObjectEntities.KIS_ENTITY_CODE:
-							if (alone)
-								cObjectLoader.saveKIS((KIS) list.get(0), force);
-							else
-								cObjectLoader.saveKISs(list, force);
-							break;
-						case ObjectEntities.MEASUREMENTPORT_ENTITY_CODE:
-							if (alone)
-								cObjectLoader
-										.saveMeasurementPort(
-													(MeasurementPort) list
-															.get(0),
-													force);
-							else
-								cObjectLoader.saveMeasurementPorts(list, force);
-							break;
-						case ObjectEntities.ME_ENTITY_CODE:
-							if (alone)
-								cObjectLoader
-										.saveMonitoredElement(
-													(MonitoredElement) list
-															.get(0),
-													force);
-							else
-								cObjectLoader.saveMonitoredElements(list, force);
-							break;
-
-						default:
-							Log
-									.errorMessage("ConfigurationStorableObjectPool.flush | Unknown entityCode : "
-											+ entityCode);
+				for(Iterator poolIt = objectPool.iterator();poolIt.hasNext();){
+					StorableObject storableObject = (StorableObject)poolIt.next();
+					if (storableObject.isChanged()){
+						if (!list.contains(storableObject)){
+							list.add(storableObject);
+							Log.debugMessage("'" + storableObject.getId() + "' is changed", Log.DEBUGLEVEL10);
+						}
 					}
-
-				}
+				} 
+				short code = entityCode.shortValue();
+				saveStorableObjects(code, list, force);
+				
+			} else {
+				Log
+				.errorMessage("ConfigurationStorableObjectPool.flush | Cannot find object pool for entity code: '"
+						+ ObjectEntities.codeToString(entityCode.shortValue())
+						+ "'");
 			}
 		}
 	}
+	
+	private static void saveStorableObjects(short code, List list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException{
+		if (!list.isEmpty()){
+			boolean alone = (list.size()==1);
+			
+			// calculate dependencies to save
+			Map dependenciesMap = new HashMap();
+			for (Iterator it = list.iterator(); it.hasNext();) {
+				StorableObject storableObject = (StorableObject) it.next();
+				Log.debugMessage("ConfigurationStorableObjectPool.saveStorableObjects | calculate dependencies for '" 
+								 + storableObject.getId() + "'", Log.DEBUGLEVEL08);
+				List dependencies = storableObject.getDependencies();
+				for (Iterator depIt = dependencies.iterator(); depIt.hasNext();) {
+					Identifier id = (Identifier) depIt.next();
+					Short major = new Short(id.getMajor());
+					List depList = (List)dependenciesMap.get(major);
+					if (depList == null){
+						depList = new LinkedList();
+						dependenciesMap.put(major, depList);
+					}
+					StorableObject stObj = getStorableObject(id, true);
+					if (stObj != null && stObj.isChanged() && !depList.contains(stObj))
+						depList.add(stObj);
+				}
+			}
+			
+			
+			// recursieve save dependencies
+			for (Iterator it = dependenciesMap.keySet().iterator(); it.hasNext();) {
+				Short major = (Short) it.next();
+				List depList = (List)dependenciesMap.get(major);
+				if (depList != null && !depList.isEmpty()){
+					Log.debugMessage("ConfigurationStorableObjectPool.saveStorableObjects | recursieve save '" 
+									 + ObjectEntities.codeToString(major.shortValue()) + "'", Log.DEBUGLEVEL08);
+					saveStorableObjects(major.shortValue(), depList, force);
+				}
+			}
+			
+			for (Iterator it = list.iterator(); it.hasNext();) {
+				StorableObject storableObject = (StorableObject) it.next();
+				Log.debugMessage("MeasurementStorableObjectPool.saveStorableObjects | save '" 
+								 + storableObject.getId() + "'", Log.DEBUGLEVEL08);
+			}
+			
+			switch (code) {
+				case ObjectEntities.CHARACTERISTICTYPE_ENTITY_CODE:
+					if (alone)
+						cObjectLoader
+								.saveCharacteristicType(
+											(CharacteristicType) list
+													.get(0),
+											force);
+					else
+						cObjectLoader.saveCharacteristicTypes(list, force);
+					break;
+				case ObjectEntities.EQUIPMENTTYPE_ENTITY_CODE:
+					if (alone)
+						cObjectLoader.saveEquipmentType((EquipmentType) list
+								.get(0), force);
+					else
+						cObjectLoader.saveEquipmentTypes(list, force);
+					break;
+				case ObjectEntities.KISTYPE_ENTITY_CODE:
+					if (alone)
+						cObjectLoader.saveKISType((KISType) list
+								.get(0), force);
+					else
+						cObjectLoader.saveKISTypes(list, force);
+					break;
+				case ObjectEntities.PORTTYPE_ENTITY_CODE:
+					if (alone)
+						cObjectLoader.savePortType((PortType) list.get(0),
+										force);
+					else
+						cObjectLoader.savePortTypes(list, force);
+					break;
+				case ObjectEntities.MEASUREMENTPORTTYPE_ENTITY_CODE:
+					if (alone)
+						cObjectLoader
+								.saveMeasurementPortType(
+												(MeasurementPortType) list
+														.get(0),
+												force);
+					else
+						cObjectLoader.saveMeasurementPortTypes(list, force);
+					break;
+				case ObjectEntities.CHARACTERISTIC_ENTITY_CODE:
+					if (alone)
+						cObjectLoader.saveCharacteristic((Characteristic) list
+								.get(0), force);
+					else
+						cObjectLoader.saveCharacteristics(list, force);
+					break;
+				case ObjectEntities.USER_ENTITY_CODE:
+					if (alone)
+						cObjectLoader.saveUser((User) list.get(0), force);
+					else
+						cObjectLoader.saveUsers(list, force);
+					break;
+				case ObjectEntities.DOMAIN_ENTITY_CODE:
+					if (alone)
+						cObjectLoader.saveDomain((Domain) list.get(0), force);
+					else
+						cObjectLoader.saveDomains(list, force);
+					break;
+				case ObjectEntities.SERVER_ENTITY_CODE:
+					if (alone)
+						cObjectLoader.saveServer((Server) list.get(0), force);
+					else
+						cObjectLoader.saveServers(list, force);
+					break;
+				case ObjectEntities.MCM_ENTITY_CODE:
+					if (alone)
+						cObjectLoader.saveMCM((MCM) list.get(0), force);
+					else
+						cObjectLoader.saveMCMs(list, force);
+					break;
+				case ObjectEntities.EQUIPMENT_ENTITY_CODE:
+					if (alone)
+						cObjectLoader.saveEquipment((Equipment) list.get(0),
+										force);
+					else
+						cObjectLoader.saveEquipments(list, force);
+					break;
+				case ObjectEntities.PORT_ENTITY_CODE:
+					if (alone)
+						cObjectLoader.savePort((Port) list.get(0), force);
+					else
+						cObjectLoader.savePorts(list, force);
+					break;
+				case ObjectEntities.KIS_ENTITY_CODE:
+					if (alone)
+						cObjectLoader.saveKIS((KIS) list.get(0), force);
+					else
+						cObjectLoader.saveKISs(list, force);
+					break;
+				case ObjectEntities.MEASUREMENTPORT_ENTITY_CODE:
+					if (alone)
+						cObjectLoader
+								.saveMeasurementPort(
+											(MeasurementPort) list
+													.get(0),
+											force);
+					else
+						cObjectLoader.saveMeasurementPorts(list, force);
+					break;
+				case ObjectEntities.ME_ENTITY_CODE:
+					if (alone)
+						cObjectLoader
+								.saveMonitoredElement(
+											(MonitoredElement) list
+													.get(0),
+											force);
+					else
+						cObjectLoader.saveMonitoredElements(list, force);
+					break;
+
+				default:
+					Log
+							.errorMessage("ConfigurationStorableObjectPool.saveStorableObjects | Unknown entity : '"
+									+ ObjectEntities.codeToString(code) + "'");
+			}
+
+		}
+	}
+
 
 	public static void cleanChangedStorableObject(Short entityCode) {
 		LRUMap objectPool = (LRUMap) objectPoolMap.get(entityCode);

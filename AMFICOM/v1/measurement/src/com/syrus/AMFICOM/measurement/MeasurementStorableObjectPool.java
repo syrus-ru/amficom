@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementStorableObjectPool.java,v 1.40 2004/11/04 13:16:30 bob Exp $
+ * $Id: MeasurementStorableObjectPool.java,v 1.41 2004/11/04 14:03:06 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,7 +33,7 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.40 $, $Date: 2004/11/04 13:16:30 $
+ * @version $Revision: 1.41 $, $Date: 2004/11/04 14:03:06 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -514,7 +514,7 @@ public class MeasurementStorableObjectPool {
 						depList = new LinkedList();
 						dependenciesMap.put(major, depList);
 					}
-					StorableObject stObj = MeasurementStorableObjectPool.getStorableObject(id, true);
+					StorableObject stObj = getStorableObject(id, true);
 					if (stObj != null && stObj.isChanged() && !depList.contains(stObj))
 						depList.add(stObj);
 				}
@@ -613,8 +613,8 @@ public class MeasurementStorableObjectPool {
 					break;
 				default:
 					Log
-							.errorMessage("MeasurementStorableObjectPool.saveStorableObjects | Unknown entityCode : "
-									+ code);
+							.errorMessage("MeasurementStorableObjectPool.saveStorableObjects | Unknown Unknown entity : '"
+									+ ObjectEntities.codeToString(code) + "'");
 			}
 
 		}
