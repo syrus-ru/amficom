@@ -1,7 +1,7 @@
 SRC=./src
 CLASSES=./classes
 LOAD=../load
-LIB=../../lib
+LIB=../lib
 
 LIBNAME=util.jar
 LIBNAMESERVER=utilserver.jar
