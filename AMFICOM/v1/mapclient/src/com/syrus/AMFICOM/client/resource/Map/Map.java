@@ -1,5 +1,5 @@
 /**
- * $Id: Map.java,v 1.17 2004/11/11 18:08:57 krupenn Exp $
+ * $Id: Map.java,v 1.18 2004/11/25 13:00:23 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -34,7 +34,7 @@ import java.util.Set;
  * 
  * 
  * 
- * @version $Revision: 1.17 $, $Date: 2004/11/11 18:08:57 $
+ * @version $Revision: 1.18 $, $Date: 2004/11/25 13:00:23 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -482,8 +482,8 @@ public final class Map extends StubResource implements Serializable
 	{
 		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "removeNode(" + ob + ")");
 		
-		nodes.remove(ob);
 		ob.setSelected(false);
+		nodes.remove(ob);
 		ob.setRemoved(true);
 		removedElements.add(ob);
 	}
@@ -527,8 +527,8 @@ public final class Map extends StubResource implements Serializable
 	{
 		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "removeNodeLink(" + ob + ")");
 		
-		nodeLinks.remove(ob);
 		ob.setSelected(false);
+		nodeLinks.remove(ob);
 		ob.setRemoved(true);
 		removedElements.add(ob);
 	}
@@ -629,8 +629,8 @@ public final class Map extends StubResource implements Serializable
 	{
 		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "removePhysicalLink(" + ob + ")");
 		
-		physicalLinks.remove(ob);
 		ob.setSelected(false);
+		physicalLinks.remove(ob);
 		ob.setRemoved(true);
 		removedElements.add(ob);
 		
@@ -715,8 +715,8 @@ public final class Map extends StubResource implements Serializable
 	{
 		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "removeCollector(" + ob + ")");
 		
-		collectors.remove(ob);
 		ob.setSelected(false);
+		collectors.remove(ob);
 		ob.setRemoved(true);
 		removedElements.add(ob);
 	}

@@ -1,5 +1,5 @@
 /*
- * $Id: MapSaveAsCommand.java,v 1.7 2004/10/19 14:10:03 krupenn Exp $
+ * $Id: MapSaveAsCommand.java,v 1.8 2004/11/25 13:00:49 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -33,7 +33,7 @@ import java.awt.Toolkit;
  * 
  * 
  * 
- * @version $Revision: 1.7 $, $Date: 2004/10/19 14:10:03 $
+ * @version $Revision: 1.8 $, $Date: 2004/11/25 13:00:49 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -103,31 +103,6 @@ public class MapSaveAsCommand extends VoidCommand
 
 		if ( dialog.ifAccept())
 		{
-/*
-			if(!mc2.scheme_id.equals(mc.scheme_id))
-			{
-				Scheme scheme = (Scheme )Pool.get( Scheme.typ, mc2.scheme_id);
-				
-				if(scheme.clones == null)
-				{
-					aContext.getDispatcher().notify(new StatusMessageEvent(LangModelMap.getString("SchemesNonCoincident")));
-					return;
-				}
-				String new_scheme_id = (String )scheme.clones.get(mc.scheme_id);
-				if(new_scheme_id == null)
-				{
-					aContext.getDispatcher().notify(new StatusMessageEvent(LangModelMap.getString("SchemesNonCoincident")));
-					return;
-				}
-				if(!new_scheme_id.equals(scheme.id))
-				{
-					aContext.getDispatcher().notify(new StatusMessageEvent(LangModel.getString("SchemeSavedWithError")));
-					return;
-				}
-
-				Pool.putHash("schemeclonedids", scheme.clones);
-			}
-*/			
 			try
 			{
 				mc2 = (Map )mc.clone(dataSource);

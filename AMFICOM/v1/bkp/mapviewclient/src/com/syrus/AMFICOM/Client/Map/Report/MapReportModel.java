@@ -7,12 +7,10 @@ import com.syrus.AMFICOM.Client.General.Report.AMTReport;
 import com.syrus.AMFICOM.Client.General.Report.APOReportModel;
 import com.syrus.AMFICOM.Client.General.Report.CreateReportException;
 import com.syrus.AMFICOM.Client.General.Report.ImagePanel;
-import com.syrus.AMFICOM.Client.General.Report.ObjectResourceDivList;
 import com.syrus.AMFICOM.Client.General.Report.ObjectsReport;
 import com.syrus.AMFICOM.Client.General.Report.ReportResultsTablePanel;
 import com.syrus.AMFICOM.Client.General.Report.ReportTemplate;
 import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
-import com.syrus.AMFICOM.client_.general.ui_.ObjectResourceTableModel;
 
 import java.awt.Image;
 
@@ -137,18 +135,29 @@ public class MapReportModel extends APOReportModel
 				CreateReportException.cantImplement);
 
 		JComponent returnValue = null;
-		if (rp.getReserve() instanceof ObjectResourceTableModel)
+		if (rp.field.equals(MapReportModel.cableLayout))
 		{
-			ObjectResourceDivList er = new ObjectResourceDivList(rp, divisionsNumber);
+			CableLayoutReport clReport = new CableLayoutReport(rp, divisionsNumber);
 			returnValue = new ReportResultsTablePanel(
-				er.columnModel,
-				er.tableModel,
+				clReport.columnModel,
+				clReport.tableModel,
 				rt.findROforReport(rp));
 		}
-		else if (rp.getReserve() instanceof Image)
+		else if (rp.field.equals(MapReportModel.tunnelCableList))
+		{
+			TunnelCableListReport tclReport =
+        new TunnelCableListReport(rp, divisionsNumber);
+        
+			returnValue = new ReportResultsTablePanel(
+				tclReport.columnModel,
+				tclReport.tableModel,
+				rt.findROforReport(rp));
+		}
+		else if (rp.field.equals(MapReportModel.topology))
 		{
       returnValue = new ImagePanel((Image)rp.getReserve(),rt.findROforReport(rp));
 		}
+    
 		return returnValue;
 	}
 

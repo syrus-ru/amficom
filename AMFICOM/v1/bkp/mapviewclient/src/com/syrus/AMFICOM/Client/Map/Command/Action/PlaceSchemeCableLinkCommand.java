@@ -1,5 +1,5 @@
 /**
- * $Id: PlaceSchemeCableLinkCommand.java,v 1.6 2004/11/01 15:40:10 krupenn Exp $
+ * $Id: PlaceSchemeCableLinkCommand.java,v 1.7 2004/11/25 13:00:49 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -28,7 +28,7 @@ import java.util.List;
 /**
  * Разместить кабель на карте.
  * 
- * @version $Revision: 1.6 $, $Date: 2004/11/01 15:40:10 $
+ * @version $Revision: 1.7 $, $Date: 2004/11/25 13:00:49 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -122,7 +122,7 @@ public class PlaceSchemeCableLinkCommand extends MapActionCommandBundle
 				exists = true;
 			}
 			else
-			if(bufferStartSite.equals(smsne))
+			if(bufferStartSite.equals(emsne))
 			{
 				bufferStartSite = smsne;
 				exists = true;
@@ -140,22 +140,27 @@ public class PlaceSchemeCableLinkCommand extends MapActionCommandBundle
 
 				bufferStartSite = emsne;
 			}
-			else
-			// в противном случае привязать кабель ксуществующей линии
+			// в противном случае привязать кабель к существующей линии
 			{
 				
 				MapPhysicalLinkElement link = map.getPhysicalLink(cci.physicalLinkId);
 				
 				// если линия не существует, опустить данный элемент привязки
 				if(link == null)
-					continue;
-
-				link.getBinding().add(cablePath);
-				if(cci.row_x != -1
-					&& cci.place_y != -1)
-					link.getBinding().bind(cablePath, cci.row_x, cci.place_y);
-	
-				cablePath.addLink(link);
+				{
+					MapUnboundLinkElement unbound = super.createUnboundLinkWithNodeLink(smsne, emsne);
+					cablePath.addLink(unbound);
+					unbound.setCablePath(cablePath);
+				}
+				else
+				{
+					link.getBinding().add(cablePath);
+					if(cci.row_x != -1
+						&& cci.place_y != -1)
+						link.getBinding().bind(cablePath, cci.row_x, cci.place_y);
+		
+					cablePath.addLink(link);
+				}
 			}
 		}
 

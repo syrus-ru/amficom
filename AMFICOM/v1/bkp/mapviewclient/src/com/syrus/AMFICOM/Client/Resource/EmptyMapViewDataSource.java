@@ -42,8 +42,12 @@ public class EmptyMapViewDataSource
 		LoadSchemes();
 	}
 	
+	static boolean loaded = false;
+	
 	public void LoadSchemes()
 	{
+		if(loaded)
+			return;
 		if(getSession() == null)
 			return;
 		if(!getSession().isOpened())
@@ -51,6 +55,7 @@ public class EmptyMapViewDataSource
 
 		scheme1();
 		scheme2();
+		loaded = true;
 	}
 	
 	private void scheme1()

@@ -1,9 +1,3 @@
-/*
- * TestResourceController.java
- * Created on 20.08.2004 10:38:55
- * 
- */
-
 package com.syrus.AMFICOM.Client.Map.UI;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;

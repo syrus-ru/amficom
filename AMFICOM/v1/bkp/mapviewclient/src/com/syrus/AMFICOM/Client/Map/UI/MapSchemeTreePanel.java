@@ -238,6 +238,8 @@ public final class MapSchemeTreePanel extends JPanel
 		mapView = mv;
 		model.setMapView(mv);
 		treePanel.setModel(model);
+
+		this.menuSchemeRemoveFromView.setEnabled(false);
 	}
 
 	private void placeSelection()
@@ -338,6 +340,7 @@ public final class MapSchemeTreePanel extends JPanel
 					mapFrame.getContext().getDispatcher().notify(new MapEvent(
 							mapFrame.getMapView(),
 							MapEvent.MAP_VIEW_CHANGED));
+					mapFrame.getMapViewer().getLogicalNetLayer().repaint();
 				}
 			}
 			aContext.getDispatcher().notify(new StatusMessageEvent(

@@ -1,5 +1,5 @@
 /**
- * $Id: MapMouseMotionListener.java,v 1.6 2004/11/16 17:31:17 krupenn Exp $
+ * $Id: MapMouseMotionListener.java,v 1.7 2004/11/25 13:00:50 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -28,7 +28,7 @@ import java.awt.event.MouseMotionListener;
  * то обработка события передается текущему активному элементу карты
  * (посредством объекта MapStrategy)
  * 
- * @version $Revision: 1.6 $, $Date: 2004/11/16 17:31:17 $
+ * @version $Revision: 1.7 $, $Date: 2004/11/25 13:00:50 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -66,6 +66,7 @@ public final class MapMouseMotionListener implements MouseMotionListener
 				case MapState.MOVE_TO_CENTER:
 					break;
 				case MapState.ZOOM_TO_RECT:
+					logicalNetLayer.repaint();
 					break;
 				case MapState.NODELINK_SIZE_EDIT:
 					break;

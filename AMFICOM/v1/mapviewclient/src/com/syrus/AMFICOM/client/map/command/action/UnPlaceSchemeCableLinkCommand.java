@@ -1,5 +1,5 @@
 /**
- * $Id: UnPlaceSchemeCableLinkCommand.java,v 1.3 2004/10/19 10:07:43 krupenn Exp $
+ * $Id: UnPlaceSchemeCableLinkCommand.java,v 1.4 2004/11/25 13:00:49 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -12,12 +12,16 @@ package com.syrus.AMFICOM.Client.Map.Command.Action;
 
 import com.syrus.AMFICOM.Client.General.Event.MapEvent;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
+import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalLinkElement;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapCablePathElement;
+import com.syrus.AMFICOM.Client.Resource.MapView.MapUnboundLinkElement;
+import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeCableLink;
+import java.util.Iterator;
 
 /**
  * убрать кабельный путь с привязкой из карты
  * 
- * @version $Revision: 1.3 $, $Date: 2004/10/19 10:07:43 $
+ * @version $Revision: 1.4 $, $Date: 2004/11/25 13:00:49 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -39,6 +43,17 @@ public class UnPlaceSchemeCableLinkCommand extends MapActionCommandBundle
 				"method call", 
 				getClass().getName(), 
 				"execute()");
+
+		SchemeCableLink scl = cablePath.getSchemeCableLink();
+		scl.channelingItems.clear();
+
+		for(Iterator it = cablePath.getLinks().iterator(); it.hasNext();)
+		{
+			MapPhysicalLinkElement link = (MapPhysicalLinkElement )it.next();
+			if(link instanceof MapUnboundLinkElement)
+				continue;
+			scl.channelingItems.add(cablePath.getBinding().getCCI(link));
+		}
 
 		super.removeCablePathLinks(cablePath);
 

@@ -1,0 +1,179 @@
+package com.syrus.AMFICOM.Client.Map.Report;
+
+import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
+import com.syrus.AMFICOM.Client.General.Report.CreateReportException;
+import com.syrus.AMFICOM.Client.General.Report.DividableTableColumnModel;
+import com.syrus.AMFICOM.Client.General.Report.DividableTableModel;
+import com.syrus.AMFICOM.Client.General.Report.ObjectsReport;
+import com.syrus.AMFICOM.Client.General.Report.ReportData;
+import com.syrus.AMFICOM.Client.Resource.Map.Map;
+import com.syrus.AMFICOM.Client.Resource.Map.MapNodeProtoElement;
+import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalLinkElement;
+import com.syrus.AMFICOM.Client.Resource.Map.MapPipePathElement;
+import com.syrus.AMFICOM.Client.Resource.Map.MapSiteNodeElement;
+import com.syrus.AMFICOM.Client.Resource.MapView.MapCablePathElement;
+import com.syrus.AMFICOM.Client.Resource.MapView.MapMarker;
+import com.syrus.AMFICOM.Client.Resource.Pool;
+import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeCableLink;
+
+import java.awt.Point;
+
+import javax.swing.table.TableColumn;
+
+public class MarkerInfoReport extends ReportData
+{
+	public MarkerInfoReport(ObjectsReport report,int divisionsNumber)
+			throws CreateReportException
+	{
+		tableModel = new MarkerInfoReportTableModel(divisionsNumber,report);
+		columnModel = new MarkerInfoReportColumnModel(divisionsNumber);
+	}
+}
+
+class MarkerInfoReportColumnModel extends DividableTableColumnModel
+{
+	public MarkerInfoReportColumnModel(int divisionsNumber)
+	{
+		super (divisionsNumber);
+
+		for (int j = 0; j < this.getDivisionsNumber(); j++)
+		{
+			this.addColumn(new TableColumn(j * 2,150));//site name
+			this.addColumn(new TableColumn(j * 2 + 1,100));//cable reserve at entrance
+		}
+	}
+}
+
+class MarkerInfoReportTableModel extends DividableTableModel
+{
+	int length = 0;
+  String[][] tableData = null;
+
+	public MarkerInfoReportTableModel (int divisionsNumber,ObjectsReport report)
+			throws CreateReportException
+	{
+		super (divisionsNumber,4);
+
+		String markerId = (String)report.getReserve();
+		if (markerId == null)
+			throw new CreateReportException(report.getName(),CreateReportException.cantImplement);
+
+		MapMarker marker =
+      (MapMarker)Pool.get(MapMarker.typ,markerId);
+      
+		if (marker == null)
+			throw new CreateReportException(report.getName(),CreateReportException.poolObjNotExists);
+
+    MapCablePathElement cableLink = marker.getCablePath();
+
+    length = 12;
+    
+    tableData = new String[this.getBaseColumnCount()][];
+    for (int i = 0; i < this.getBaseColumnCount(); i++)
+      tableData[i] = new String[length + 1];
+    //+1 - reserve for name of tunnel in collector
+    
+    int curCCI = 0;
+    
+    tableData[0][curCCI] = LangModelMap.getString("Marker");
+    tableData[1][curCCI++] = marker.getName();
+
+    tableData[0][curCCI] = "";
+    tableData[1][curCCI++] = "";
+    
+    tableData[0][curCCI] = LangModelMap.getString("Cable");
+    tableData[1][curCCI++] = cableLink.getName();
+
+    tableData[0][curCCI] = "";
+    tableData[1][curCCI++] = "";
+
+    tableData[0][curCCI] = LangModelMap.getString("mapnodedistances");
+    tableData[1][curCCI++] = cableLink.getName();
+
+    tableData[0][curCCI] = "";
+    tableData[1][curCCI++] = "";
+
+    tableData[0][curCCI] = "fornode" + " " + marker.getLeft().getName();
+    tableData[1][curCCI++] = Double.toString(marker.getPhysicalDistanceFromLeft());
+
+    tableData[0][curCCI] = "fornode" + " " + marker.getRight().getName();
+    tableData[1][curCCI++] = Double.toString(marker.getPhysicalDistanceFromFight());
+    
+    tableData[0][curCCI] = "";
+    tableData[1][curCCI++] = "";
+
+    MapPhysicalLinkElement physicalLink = (MapPhysicalLinkElement )Pool.get(
+			MapPhysicalLinkElement.typ,
+			marker.getNodeLink().getPhysicalLinkId());
+
+    if (physicalLink == null)
+		throw new CreateReportException(
+				report.getName(),
+				CreateReportException.poolObjNotExists);
+      
+    Map map = physicalLink.getMap(); //Возможно лажа!!
+    MapPipePathElement pipePath =  map.getCollector(physicalLink);
+    if (pipePath != null)
+    {
+      tableData[0][curCCI] = LangModelMap.getString("Collector");
+      tableData[1][curCCI++] = pipePath.getName();
+      
+      tableData[0][curCCI] = LangModelMap.getString("Tunnel");
+      tableData[1][curCCI++] = physicalLink.getName();
+      length++;
+ 
+      tableData[0][curCCI] = LangModelMap.getString("maptunnelposit");
+    }
+    else
+    {
+      tableData[0][curCCI] = LangModelMap.getString("Tunnel");
+      tableData[1][curCCI++] = physicalLink.getName();
+      tableData[0][curCCI] = LangModelMap.getString("mapcollectorposit");
+    }
+    
+    Point binding = physicalLink.getBinding().getBinding(cableLink);
+    tableData[1][curCCI++] =
+      Integer.toString(binding.x) + ":" + Integer.toString(binding.y);
+  
+    tableData[0][curCCI] = LangModelMap.getString("geographicCoords");
+    tableData[1][curCCI++] =
+      Double.toString(marker.getAnchor().x) + ":" +
+      Double.toString(marker.getAnchor().y);
+	}
+
+  private String getSiteFullName(Map map,String id)
+  {
+      MapSiteNodeElement siteNode = map.getMapSiteNodeElement(id);
+      if (siteNode == null)
+        return null;
+        
+      MapNodeProtoElement nodeProto = (MapNodeProtoElement) Pool.get(
+        MapNodeProtoElement.typ,
+        siteNode.getMapProtoId());
+        
+      if (nodeProto == null)
+        return null;
+ 
+      return nodeProto.getName() + " " + siteNode.getName();
+  }
+
+	public int getRowCount()
+	{
+		// Если данные можно разложить поровну на такое количество столбцов
+		if (length % this.getDivisionsNumber() == 0)
+			return  (int)(length / this.getDivisionsNumber()); //+заголовок
+		//а если нельзя, то добавляем ещё ряд
+		return (int)(length / this.getDivisionsNumber()) + 1;
+	}
+
+	public Object getValueAt(int row, int col)
+	{
+		int index = (this.getRowCount()) *
+      (int) (col / this.getBaseColumnCount()) + row - 1;
+      
+		if (index >= this.length)
+			return "";
+
+		return this.tableData[col % this.getBaseColumnCount()][index];
+	}
+}
