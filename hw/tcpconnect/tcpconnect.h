@@ -29,8 +29,12 @@ SOCKET create_listening_socket(const short port);
 //Receive data from socket.
 //Waits on incoming event timeout seconds.
 //NOTE: Allocates new array of data and saves its size.
-//Return:
+//Return: 0 if no incoming events; 1 on successful read; -1 on error.
 int receive(const SOCKET sockfd, const int timeout, char*& data, unsigned int& size);
+
+//Read 'size' bytes from socket and store them in buffer 'buffer' (of size 'size').
+//Return: number of successfully read bytes.
+unsigned int receive_bytes(const SOCKET sockfd, char*& buffer, unsigned int size);
 
 #endif
 

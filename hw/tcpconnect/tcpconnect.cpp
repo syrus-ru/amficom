@@ -1,4 +1,3 @@
-#include <stdio.h>
 #include <string.h>
 #include <netdb.h>
 #include <unistd.h>
@@ -7,12 +6,20 @@
 #include <arpa/inet.h>
 #include "tcpconnect.h"
 
+#define DEBUG
+
+#ifdef DEBUG
+#include <stdio.h>
+#endif
+
 SOCKET create_and_connect_socket(const char* host_name, const short port) {
 	//Resolve remote host
 	hostent* he;
 	if ((he = gethostbyname(host_name)) == NULL) {
+#ifdef DEBUG
 		perror("(tcpconnect) Cannot resolve hostname");
 		printf("(tcpconnect) ERROR: Cannot find host: %s\n", host_name);
+#endif
 		return -1;
 	}
 
@@ -26,25 +33,39 @@ SOCKET create_and_connect_socket(const char* host_name, const short port) {
 	//Create socket
 	int sockfd;
 	if ((sockfd = socket(AF_INET, SOCK_STREAM, 0)) <= 0) {
+#ifdef DEBUG
 		perror("(tcpconnect) Cannot create socket");
+#endif
 		return -1;
 	}
 
 	//Connect socket to remote address
+#ifdef DEBUG
 	printf("(tcpconnect) Connecting to address: %s, port: %hd\n", inet_ntoa(remote_addr.sin_addr), ntohs(remote_addr.sin_port));
+#endif
 	if (connect(sockfd, (sockaddr*)&remote_addr, sizeof(sockaddr)) == -1) {
+#ifdef DEBUG
 		perror("(tcpconnect) Cannot connect socket");
 		printf("(tcpconnect) ERROR: Cannot connect to address: %s, port: %hd\n", inet_ntoa(remote_addr.sin_addr), ntohs(remote_addr.sin_port));
+#endif
 		return -1;
 	}
+#ifdef DEBUG
 	printf("(tcpconnect) Connected to address: %s, port: %hd\n", inet_ntoa(remote_addr.sin_addr), ntohs(remote_addr.sin_port));
+#endif
 
 	return (SOCKET)sockfd;
 }
 
 void close_socket(const SOCKET sockfd) {
-	if (close((int)sockfd) < 0)
+#ifdef DEBUG
+	printf("(tcpconnect) Closing socket\n");
+#endif
+	if (close((int)sockfd) < 0) {
+#ifdef DEBUG
 		perror("(tcpconnect) Cannot close socket");
+#endif
+	}
 
 }
 
@@ -62,7 +83,9 @@ unsigned int transmit(const SOCKET sockfd, const char* data, const unsigned int 
 	while (n_trans < segment_size) {
 		send_ret = send((int)sockfd, data_t + n_trans, segment_size - n_trans, 0);
 		if (send_ret < 0) {
+#ifdef DEBUG
 			perror("(tcpconnect) Cannot send segment");
+#endif
 			break;
 		}
 		n_trans += send_ret;
@@ -78,13 +101,17 @@ unsigned int transmit(const SOCKET sockfd, const char* data, const unsigned int 
 SOCKET create_listening_socket(const short port) {
 	int sockfd;
 	if ((sockfd = socket(AF_INET, SOCK_STREAM, 0)) <= 0) {
+#ifdef DEBUG
 		perror("(tcpconnect) Cannot create socket");
+#endif
 		return -1;
 	}
 
 	int yes=1;
     	if (setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof(int)) == -1) {
+#ifdef DEBUG
 		perror("(tcpconnect) Calling setsockopt failed");
+#endif
 		return -1;
 	}
 
@@ -93,15 +120,21 @@ SOCKET create_listening_socket(const short port) {
 	local_addr.sin_port = htons(port);
 	local_addr.sin_addr.s_addr = INADDR_ANY;
 	memset(local_addr.sin_zero, '\0', 8);
-	printf("address: %s, port: %hd\n", inet_ntoa(local_addr.sin_addr), ntohs(local_addr.sin_port));
+#ifdef DEBUG
+	printf("(tcpconnect) address: %s, port: %hd\n", inet_ntoa(local_addr.sin_addr), ntohs(local_addr.sin_port));
+#endif
 
 	if (bind(sockfd, (sockaddr*)&local_addr, sizeof(sockaddr)) != 0) {
+#ifdef DEBUG
 		perror("(tcpconnect) Calling bind failed");
+#endif
 		return -1;
 	}
 
 	if (listen(sockfd, 5) != 0) {
+#ifdef DEBUG
 		perror("(tcpconnect) Calling listen failed");
+#endif
 		return -1;
 	}
 
@@ -111,11 +144,15 @@ SOCKET create_listening_socket(const short port) {
 unsigned int receive_bytes(const SOCKET sockfd, char*& buffer, unsigned int size) {
 	unsigned int n_read = 0;
 	int recv_ret;
+#ifdef DEBUG
 	printf("(tcpconnect) Reading %d bytes from socket\n", size);
+#endif
 	while (n_read < size) {
 		recv_ret = recv(sockfd, buffer + n_read, size - n_read, 0);
 		if (recv_ret < 0) {
+#ifdef DEBUG
 			perror("(tcpconnect) Cannot recv %n bytes from socket");
+#endif
 			return 0;
 		}
 		n_read += recv_ret;
@@ -145,13 +182,17 @@ int receive(const SOCKET sockfd, const int timeout, char*& data, unsigned int& s
 	if (sel_ret > 0) {
 
 		if((temp_sockfd = accept(sockfd, (sockaddr*)&remote_addr, &addrlen)) < 0) {
+#ifdef DEBUG
 			perror("(tcpconnect) Cannot accept incoming connection");
+#endif
 			return -1;
 		}
 
 		data = new char[HEADERSIZE];
 		if (receive_bytes(temp_sockfd, data, HEADERSIZE) != HEADERSIZE) {
+#ifdef DEBUG
 			printf("(tcpconnect) Cannot read header of segment\n");
+#endif
 			delete[] data;
 			return -1;
 		}
@@ -161,15 +202,21 @@ int receive(const SOCKET sockfd, const int timeout, char*& data, unsigned int& s
 		size = ntohl(nsize);
 		data = new char[size];
 		if (receive_bytes(temp_sockfd, data, size) != size) {
+#ifdef DEBUG
 			printf("(tcpconnect) Cannot read data of segment\n");
+#endif
 			delete[] data;
 			return -1;
 		}
-		printf("Read data segment of size %d\n", size);
+#ifdef DEBUG
+		printf("(tcpconnect) Read data segment of size %d\n", size);
+#endif
 		return 1;
 	}
 	else {
+#ifdef DEBUG
 		perror("(tcpconnect) Cannot call select");
+#endif
 		return -1;
 	}
 }
