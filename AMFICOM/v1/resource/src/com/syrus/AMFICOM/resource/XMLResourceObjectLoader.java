@@ -1,5 +1,5 @@
 /*
- * $Id: XMLResourceObjectLoader.java,v 1.2 2005/02/24 16:10:22 bob Exp $
+ * $Id: XMLResourceObjectLoader.java,v 1.3 2005/02/25 06:47:52 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,22 +16,18 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.ObjectNotFoundException;
-import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.SessionContext;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectXML;
 import com.syrus.AMFICOM.general.StorableObjectXMLDriver;
-import com.syrus.AMFICOM.general.UpdateObjectException;
-import com.syrus.AMFICOM.general.VersionCollisionException;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/02/24 16:10:22 $
+ * @version $Revision: 1.3 $, $Date: 2005/02/25 06:47:52 $
  * @author $Author: bob $
  * @module resource_v1
  */
@@ -58,22 +54,11 @@ public class XMLResourceObjectLoader implements ResourceObjectLoader {
 
 	}
 
-	private StorableObject loadStorableObject(Identifier id) throws DatabaseException {
-		try {
-			return this.resourceXML.retrieve(id);
-		} catch (ObjectNotFoundException e) {
-			throw new DatabaseException("XMLResourceObjectLoader.load"
-					+ ObjectEntities.codeToString(id.getMajor()) + " | caught " + e.getMessage(), e);
-		} catch (RetrieveObjectException e) {
-			throw new DatabaseException("XMLResourceObjectLoader.load"
-					+ ObjectEntities.codeToString(id.getMajor()) + " | caught " + e.getMessage(), e);
-		} catch (IllegalDataException e) {
-			throw new DatabaseException("XMLResourceObjectLoader.load"
-					+ ObjectEntities.codeToString(id.getMajor()) + " | caught " + e.getMessage(), e);
-		}
+	private StorableObject loadStorableObject(Identifier id) throws ApplicationException {
+		return this.resourceXML.retrieve(id);
 	}
 	
-	private Collection loadStorableObjects(Collection ids) throws DatabaseException {
+	private Collection loadStorableObjects(Collection ids) throws ApplicationException {
 		Collection objects = new ArrayList(ids.size());
 		for (Iterator it = ids.iterator(); it.hasNext();) {
 			Identifier id = (Identifier) it.next();
@@ -82,36 +67,16 @@ public class XMLResourceObjectLoader implements ResourceObjectLoader {
 		return objects;
 	}
 
-	private List loadStorableObjectButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException {
-		try {
-			return this.resourceXML.retrieveByCondition(ids, condition);
-		} catch (RetrieveObjectException e) {
-			throw new DatabaseException("XMLResourceObjectLoader.loadStorableObjectButIds | caught "
-					+ e.getMessage(), e);
-		} catch (IllegalDataException e) {
-			throw new DatabaseException("XMLResourceObjectLoader.loadStorableObjectButIds | caught "
-					+ e.getMessage(), e);
-		}
+	private List loadStorableObjectButIds(StorableObjectCondition condition, Collection ids) throws ApplicationException {
+		return this.resourceXML.retrieveByCondition(ids, condition);
 	}
 
-	private void saveStorableObject(StorableObject storableObject, boolean force) throws DatabaseException {
-		Identifier id = storableObject.getId();
+	private void saveStorableObject(StorableObject storableObject, boolean force) throws ApplicationException {
 		Identifier modifierId = SessionContext.getAccessIdentity().getUserId();
-		try {
-			this.resourceXML.updateObject(storableObject, force, modifierId);
-		} catch (UpdateObjectException e) {
-			throw new DatabaseException("XMLResourceObjectLoader.save"
-					+ ObjectEntities.codeToString(id.getMajor()) + " | caught " + e.getMessage(), e);
-		} catch (IllegalDataException e) {
-			throw new DatabaseException("XMLResourceObjectLoader.save"
-					+ ObjectEntities.codeToString(id.getMajor()) + " | caught " + e.getMessage(), e);
-		} catch (VersionCollisionException e) {
-			throw new DatabaseException("XMLResourceObjectLoader.save"
-					+ ObjectEntities.codeToString(id.getMajor()) + " | caught " + e.getMessage(), e);
-		}
+		this.resourceXML.updateObject(storableObject, force, modifierId);
 	}
 	
-	private void saveStorableObjects(Collection storableObjects, boolean force) throws DatabaseException {
+	private void saveStorableObjects(Collection storableObjects, boolean force) throws ApplicationException {
 		for (Iterator it = storableObjects.iterator(); it.hasNext();) {
 			StorableObject storableObject = (StorableObject) it.next();
 			this.saveStorableObject(storableObject, force);
@@ -119,16 +84,16 @@ public class XMLResourceObjectLoader implements ResourceObjectLoader {
 		this.resourceXML.flush();
 	}
 	
-	public StorableObject loadImageResource(Identifier id) throws DatabaseException {
+	public StorableObject loadImageResource(Identifier id) throws ApplicationException {
 		return this.loadStorableObject(id);
 	}
 
-	public Collection loadImageResources(Collection ids) throws DatabaseException {
+	public Collection loadImageResources(Collection ids) throws ApplicationException {
 		return this.loadStorableObjects(ids);
 	}
 
 	public Collection loadImageResourcesButIds(	StorableObjectCondition condition,
-												Collection ids) throws DatabaseException {
+												Collection ids) throws ApplicationException {
 		return this.loadStorableObjectButIds(condition, ids);
 	}
 
@@ -138,12 +103,12 @@ public class XMLResourceObjectLoader implements ResourceObjectLoader {
 	}
 
 	public void saveImageResource(	AbstractImageResource abstractImageResource,
-									boolean force) throws DatabaseException {
+									boolean force) throws ApplicationException {
 		this.saveStorableObject(abstractImageResource, force);
 	}
 	
 	public void saveImageResources(	Collection collection,
-									boolean force) throws DatabaseException {
+									boolean force) throws ApplicationException {
 		this.saveStorableObjects(collection, force);
 	}
 
