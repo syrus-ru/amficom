@@ -493,7 +493,7 @@ public class ObjectResourceCatalogPanel extends JPanel
 
 	private void filterokButton_actionPerformed(ActionEvent e)
 	{
-//		DataSet ds = filter.filter(dataSet);
+//		DataSet ds = filter.filter(list);
 		setContents(dataSet);
 	}
 

@@ -158,7 +158,7 @@ public class ObjectResourceTablePane extends JScrollPane
 		tableModel = new ObjectResourceTableModel(displayModel, dataSet);
 		tableInit();
 //		tableModel.setDisplayModel(displayModel);
-//		tableModel.setContents(dataSet);
+//		tableModel.setContents(list);
 	}
 
 	public void setSorter(ObjectResourceSorter sorter)

@@ -169,14 +169,14 @@ public class ObjectResourceCatalogButtonsPanel extends JPanel
 		if(!propPane.delete())
 			return;
 
-		dataSet.remove(or);
+		list.remove(or);
 		listPane.tableModel.fireTableDataChanged();
 
 		dispatcher.notify(new OperationEvent(or.getTyp(), 0, "treelistrefreshevent"));
 		buttonCancel.setEnabled(true);
 		buttonSave.setEnabled(true);
 		jTabbedPane.setSelectedComponent(listPane);
-		if (dataSet.size() == 0)
+		if (list.size() == 0)
 		{
 			jTabbedPane.setDisabledIconAt(1, new TextIcon(((JComponent)propPane).getName(), jTabbedPane, false));
 			jTabbedPane.setEnabledAt(1, false);
@@ -185,7 +185,7 @@ public class ObjectResourceCatalogButtonsPanel extends JPanel
 		}
 		else
 		{
-			ObjectResource obj = (ObjectResource )dataSet.elements().nextElement();
+			ObjectResource obj = (ObjectResource )list.elements().nextElement();
 			listPane.setSelected(obj);
 			send_event = true;
 			dispatcher.notify(new OperationEvent(obj, 0, "treelistselectionevent"));
@@ -205,7 +205,7 @@ public class ObjectResourceCatalogButtonsPanel extends JPanel
 			return;
 
 		ObjectResource res = propPane.getObjectResource();
-		dataSet.add(res);
+		list.add(res);
 
 		listPane.tableModel.fireTableDataChanged();
 		dispatcher.notify(new OperationEvent(res.getTyp(), 0, "treelistrefreshevent"));

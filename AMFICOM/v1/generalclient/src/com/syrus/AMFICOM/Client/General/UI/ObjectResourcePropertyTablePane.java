@@ -129,7 +129,7 @@ public class ObjectResourcePropertyTablePane extends JScrollPane
 		tableModel = new ObjectResourcePropertyTableModel(cols, or);
 		tableInit();
 //		tableModel.setDisplayModel(displayModel);
-//		tableModel.setContents(dataSet);
+//		tableModel.setContents(list);
 	}
 
 	public void initialize(String [] cols, ObjectResource or)
@@ -137,7 +137,7 @@ public class ObjectResourcePropertyTablePane extends JScrollPane
 		tableModel = new ObjectResourcePropertyTableModel(cols, or);
 		tableInit();
 //		tableModel.setDisplayModel(displayModel);
-//		tableModel.setContents(dataSet);
+//		tableModel.setContents(list);
 	}
 
 	public void setTableModel(ObjectResourcePropertyTableModel tableModel)
@@ -174,9 +174,9 @@ public class ObjectResourcePropertyTablePane extends JScrollPane
 		tableModel.setContents((ObjectResource)o);
 //		int i = tableModel.getObjectIndex((ObjectResource )o);
 /*
-		DataSet dataSet = tableModel.getContents();
-		int i = dataSet.indexOf(o);
-		if(i < dataSet.size())
+		DataSet list = tableModel.getContents();
+		int i = list.indexOf(o);
+		if(i < list.size())
 			jTable.getSelectionModel().setSelectionInterval(i, i);
 */
 	}
