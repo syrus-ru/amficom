@@ -54,13 +54,13 @@ int BreakL_ChangeByThresh (ModelF &mf, ThreshDXArray &taDX, ThreshDYArray &taDY,
 
 // для mf
 void ChangeBreakLByThreshEx (ModelF &mf, ThreshDXArray &taX, ThreshDYArray &taY, int key,
-			   int xMin, int xMax, int autoThresh, TTDY *ttdyOut, TTDX *ttdxOut);
+			   int xMin, int xMax, int autoThresh, TTDX *ttdxOut, TTDY *ttdyOut);
 
 // для массива
 // yArr[0] ~ xMin; yArr[xMax - xMin] ~ xMax
 void ChangeArrayByThreshEx (double *yArr, THX *thX, THY *thY, int thNpX, int thNpY, int isUpper,
 						   int xMin, int xMax, int autoThresh,
-						   TTDY *ttdyOut, TTDX *ttdxOut);
+						   TTDX *ttdxOut, TTDY *ttdyOut);
 
 #endif //CANTTDXDY
 

@@ -270,7 +270,7 @@ static int isat(int x, int xMin, int xMax)
 // ttdxOut - null если не нужен
 void ChangeArrayByThreshEx (double *yArr, THX *thX, THY *thY, int thNpX, int thNpY, int isUpper,
 						   int xMin, int xMax, int autoThresh,
-						   TTDY *ttdyOut, TTDX *ttdxOut)
+						   TTDX *ttdxOut, TTDY *ttdyOut)
 {
 	prf_b("BreakL_ChangeByThresh: entered");
 
@@ -645,7 +645,7 @@ void ChangeArrayByThreshEx (double *yArr, THX *thX, THY *thY, int thNpX, int thN
 
 void ChangeBreakLByThreshEx (ModelF &mf, ThreshDXArray &taX, ThreshDYArray &taY, int key,
 						   int xMin, int xMax, int autoThresh,
-						   TTDY *ttdyOut, TTDX *ttdxOut)
+						   TTDX *ttdxOut, TTDY *ttdyOut)
 {
 	int Nx = xMax - xMin + 1;
 	// convert thresholds
@@ -666,7 +666,7 @@ void ChangeBreakLByThreshEx (ModelF &mf, ThreshDXArray &taX, ThreshDYArray &taY,
 	int isUpper = taX.isUpper(key);
 	ChangeArrayByThreshEx (unpk, thX, thY, thNpX, thNpY, isUpper,
 						   xMin, xMax, autoThresh,
-						   ttdyOut, ttdxOut);
+						   ttdxOut, ttdyOut);
 
 	// pack
 	prf_b("ChangeBreakLByThreshEx: BreakLFromArray");
@@ -712,7 +712,7 @@ int BreakL_ChangeByThresh (ModelF &mf, ThreshDXArray &taX, ThreshDYArray &taY, i
 	}
 
 	prf_b("Outer BreakL_ChangeByThresh: go inside");
-	ChangeBreakLByThreshEx (mf, taX, taY, key, xMin, xMax, 0, ttdyOut, ttdxOut);
+	ChangeBreakLByThreshEx (mf, taX, taY, key, xMin, xMax, 0, ttdxOut, ttdyOut);
 	prf_b("Outer BreakL_ChangeByThresh: back from inside");
 
 	int ret = -1;
