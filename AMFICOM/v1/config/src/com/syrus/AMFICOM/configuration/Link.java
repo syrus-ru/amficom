@@ -1,5 +1,5 @@
 /*
- * $Id: Link.java,v 1.15 2004/12/09 12:01:41 bob Exp $
+ * $Id: Link.java,v 1.16 2004/12/09 12:23:59 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -20,6 +20,7 @@ import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
@@ -30,7 +31,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 
 /**
- * @version $Revision: 1.15 $, $Date: 2004/12/09 12:01:41 $
+ * @version $Revision: 1.16 $, $Date: 2004/12/09 12:23:59 $
  * @author $Author: bob $
  * @module config_v1
  */
@@ -142,6 +143,7 @@ public class Link extends DomainMember implements Characterized, TypedObject {
 	
 	/**
 	 * create new instance for client
+	 * @throws CreateObjectException
 	 */ 
 
 	public static Link createInstance(Identifier creatorId,
@@ -155,25 +157,29 @@ public class Link extends DomainMember implements Characterized, TypedObject {
 									  LinkSort sort,
 									  Identifier linkId,
 									  String color,
-									  String mark){
+									  String mark) throws CreateObjectException{
 		if (creatorId == null || domainId == null || name == null || description == null || 
 				type == null || inventoryNo == null || supplier == null || supplierCode == null ||
 				sort == null || linkId == null || color == null || mark == null)
 			throw new IllegalArgumentException("Argument is 'null'");
 		
-		return new Link(IdentifierPool.getGeneratedIdentifier(ObjectEntities.LINK_ENTITY_CODE),
-				creatorId,
-				domainId,
-				name,
-				description,
-				type,
-				inventoryNo,
-				supplier,
-				supplierCode,
-				sort.value(),
-				linkId,
-				color,
-				mark);
+		try {
+			return new Link(IdentifierPool.getGeneratedIdentifier(ObjectEntities.LINK_ENTITY_CODE),
+					creatorId,
+					domainId,
+					name,
+					description,
+					type,
+					inventoryNo,
+					supplier,
+					supplierCode,
+					sort.value(),
+					linkId,
+					color,
+					mark);
+		} catch (IllegalObjectEntityException e) {
+			throw new CreateObjectException("Link.createInstance | cannot generate identifier ", e);
+		}
 	}
 	
 	public static Link getInstance(Link_Transferable lt) throws CreateObjectException{

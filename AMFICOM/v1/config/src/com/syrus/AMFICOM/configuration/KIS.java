@@ -1,5 +1,5 @@
 /*
- * $Id: KIS.java,v 1.40 2004/12/09 12:01:41 bob Exp $
+ * $Id: KIS.java,v 1.41 2004/12/09 12:23:55 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -20,6 +20,7 @@ import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
@@ -27,7 +28,7 @@ import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.40 $, $Date: 2004/12/09 12:01:41 $
+ * @version $Revision: 1.41 $, $Date: 2004/12/09 12:23:55 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -123,6 +124,7 @@ public class KIS extends DomainMember implements Characterized {
 	 * @param name
 	 * @param description
 	 * @param mcmId
+	 * @throws CreateObjectException
 	 */
 	public static KIS createInstance(Identifier creatorId,
 									 Identifier domainId,
@@ -131,20 +133,24 @@ public class KIS extends DomainMember implements Characterized {
 									 String hostname,
 									 short tcpPort,
 									 Identifier equipmentId,
-									 Identifier mcmId) {
+									 Identifier mcmId) throws CreateObjectException {
 		if (creatorId == null || domainId == null || name == null || 
 				description == null || hostname == null || equipmentId == null || mcmId == null)
 			throw new IllegalArgumentException("Argument is 'null'");
 
-		return new KIS(IdentifierPool.getGeneratedIdentifier(ObjectEntities.KIS_ENTITY_CODE),
-				creatorId,
-				domainId,
-				name,
-				description,
-				hostname,
-				tcpPort,
-				equipmentId,
-				mcmId);
+		try {
+			return new KIS(IdentifierPool.getGeneratedIdentifier(ObjectEntities.KIS_ENTITY_CODE),
+					creatorId,
+					domainId,
+					name,
+					description,
+					hostname,
+					tcpPort,
+					equipmentId,
+					mcmId);
+		} catch (IllegalObjectEntityException e) {
+			throw new CreateObjectException("KIS.createInstance | cannot generate identifier ", e);
+		}
 	}
 
 	public static KIS getInstance(KIS_Transferable kt) throws CreateObjectException{

@@ -1,5 +1,5 @@
 /*
- * $Id: User.java,v 1.18 2004/12/09 12:01:42 bob Exp $
+ * $Id: User.java,v 1.19 2004/12/09 12:24:00 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,6 +14,7 @@ import java.util.List;
 
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierPool;
+import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
@@ -25,7 +26,7 @@ import com.syrus.AMFICOM.configuration.corba.User_Transferable;
 import com.syrus.AMFICOM.configuration.corba.UserSort;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2004/12/09 12:01:42 $
+ * @version $Revision: 1.19 $, $Date: 2004/12/09 12:24:00 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -130,22 +131,27 @@ public class User extends StorableObject {
 	 * @param sort
 	 * @param name
 	 * @param description
+	 * @throws CreateObjectException
 	 */
 	public static User createInstance(Identifier creatorId,
 									  String login,
 									  UserSort sort,
 									  String name,
-									  String description) {
+									  String description) throws CreateObjectException {
 		if (creatorId == null || login == null || name == null || 
 				description == null || sort == null)
 			throw new IllegalArgumentException("Argument is 'null'");
 		
-		return new User(IdentifierPool.getGeneratedIdentifier(ObjectEntities.USER_ENTITY_CODE),
-							creatorId,
-							login,
-							sort.value(),
-							name,
-							description);
+		try {
+			return new User(IdentifierPool.getGeneratedIdentifier(ObjectEntities.USER_ENTITY_CODE),
+								creatorId,
+								login,
+								sort.value(),
+								name,
+								description);
+		} catch (IllegalObjectEntityException e) {
+			throw new CreateObjectException("User.createInstance | cannot generate identifier ", e);
+		}
 	}
 
 	protected synchronized void setAttributes(Date created,

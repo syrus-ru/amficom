@@ -1,5 +1,5 @@
 /*
- * $Id: LinkType.java,v 1.13 2004/12/09 12:01:41 bob Exp $
+ * $Id: LinkType.java,v 1.14 2004/12/09 12:23:59 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -21,6 +21,7 @@ import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
@@ -28,7 +29,7 @@ import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2004/12/09 12:01:41 $
+ * @version $Revision: 1.14 $, $Date: 2004/12/09 12:23:59 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -99,6 +100,7 @@ public class LinkType extends AbstractLinkType implements Characterized {
 
 	/**
 	 * create new instance for client
+	 * @throws CreateObjectException
 	 */
 	public static LinkType createInstance(	Identifier creatorId,
 											String codename,
@@ -107,13 +109,17 @@ public class LinkType extends AbstractLinkType implements Characterized {
 											LinkTypeSort sort,
 											String manufacturer,
 											String manufacturerCode,
-											Identifier imageId) {
+											Identifier imageId) throws CreateObjectException {
 		if (creatorId == null || codename == null || description == null || name == null ||
 				sort == null || manufacturer == null || manufacturerCode == null || imageId == null)
 			throw new IllegalArgumentException("Argument is 'null'");
 		
 
-		return new LinkType(IdentifierPool.getGeneratedIdentifier(ObjectEntities.LINKTYPE_ENTITY_CODE), creatorId, codename, description, name, sort.value(), manufacturer, manufacturerCode, imageId);
+		try {
+			return new LinkType(IdentifierPool.getGeneratedIdentifier(ObjectEntities.LINKTYPE_ENTITY_CODE), creatorId, codename, description, name, sort.value(), manufacturer, manufacturerCode, imageId);
+		} catch (IllegalObjectEntityException e) {
+			throw new CreateObjectException("LinkType.createInstance | cannot generate identifier ", e);
+		}
 	}
 
 	public static LinkType getInstance(LinkType_Transferable ltt) throws CreateObjectException {

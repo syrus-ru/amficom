@@ -1,5 +1,5 @@
 /*
- * $Id: EquipmentType.java,v 1.23 2004/12/09 12:01:41 bob Exp $
+ * $Id: EquipmentType.java,v 1.24 2004/12/09 12:23:55 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,6 +17,7 @@ import java.util.List;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierPool;
+import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
@@ -28,7 +29,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.configuration.corba.EquipmentType_Transferable;
 
 /**
- * @version $Revision: 1.23 $, $Date: 2004/12/09 12:01:41 $
+ * @version $Revision: 1.24 $, $Date: 2004/12/09 12:23:55 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -93,19 +94,24 @@ public class EquipmentType extends StorableObjectType implements Characterized {
 	 * @param creatorId
 	 * @param codename
 	 * @param description
+	 * @throws CreateObjectException
 	 */
 	public static EquipmentType createInstance(Identifier creatorId,
 											 String codename,
 											 String description,
-											 String name){
+											 String name) throws CreateObjectException{
 		if (creatorId == null || codename == null || description == null || name == null)
 			throw new IllegalArgumentException("Argument is 'null'");
 		
-		return new EquipmentType(IdentifierPool.getGeneratedIdentifier(ObjectEntities.EQUIPMENTTYPE_ENTITY_CODE),
-							creatorId,
-							codename,
-							description,
-							name);		
+		try {
+			return new EquipmentType(IdentifierPool.getGeneratedIdentifier(ObjectEntities.EQUIPMENTTYPE_ENTITY_CODE),
+								creatorId,
+								codename,
+								description,
+								name);
+		} catch (IllegalObjectEntityException e) {
+			throw new CreateObjectException("EquipmentType.createInstance | cannot generate identifier ", e);
+		}		
 	}
 	
 	public static EquipmentType getInstance(EquipmentType_Transferable ett) throws CreateObjectException {

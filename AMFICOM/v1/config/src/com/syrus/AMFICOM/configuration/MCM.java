@@ -1,5 +1,5 @@
 /*
- * $Id: MCM.java,v 1.31 2004/12/09 12:01:41 bob Exp $
+ * $Id: MCM.java,v 1.32 2004/12/09 12:23:59 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.ArrayList;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierPool;
+import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -26,7 +27,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.configuration.corba.MCM_Transferable;
 
 /**
- * @version $Revision: 1.31 $, $Date: 2004/12/09 12:01:41 $
+ * @version $Revision: 1.32 $, $Date: 2004/12/09 12:23:59 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -196,19 +197,23 @@ public class MCM extends DomainMember implements Characterized {
 									 String description,
 									 Identifier userId,
 									 Identifier serverId,
-									 short tcpPort) {
+									 short tcpPort) throws CreateObjectException {
 		if (creatorId == null || domainId == null || name == null || description == null || 
 				userId == null || serverId == null)
 			throw new IllegalArgumentException("Argument is 'null'");
 		
-		return new MCM(IdentifierPool.getGeneratedIdentifier(ObjectEntities.MCM_ENTITY_CODE),
-							creatorId,
-							domainId,
-							name,
-							description,
-							userId,
-							serverId,
-							tcpPort);
+		try {
+			return new MCM(IdentifierPool.getGeneratedIdentifier(ObjectEntities.MCM_ENTITY_CODE),
+								creatorId,
+								domainId,
+								name,
+								description,
+								userId,
+								serverId,
+								tcpPort);
+		} catch (IllegalObjectEntityException e) {
+			throw new CreateObjectException("MCM.createInstance | cannot generate identifier ", e);
+		}
 	}
 
 	protected synchronized void setAttributes(Date created,

@@ -1,5 +1,5 @@
 /*
- * $Id: Domain.java,v 1.23 2004/12/09 12:01:41 bob Exp $
+ * $Id: Domain.java,v 1.24 2004/12/09 12:23:55 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,7 +9,7 @@
 package com.syrus.AMFICOM.configuration;
 
 /**
- * @version $Revision: 1.23 $, $Date: 2004/12/09 12:01:41 $
+ * @version $Revision: 1.24 $, $Date: 2004/12/09 12:23:55 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierPool;
+import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -137,20 +138,25 @@ public class Domain extends DomainMember implements Characterized {
 	 * @param domainId
 	 * @param name
 	 * @param description
+	 * @throws CreateObjectException
 	 */
 	public static Domain createInstance(Identifier creatorId,
 										Identifier domainId,
 										String name,
-										String description) {
+										String description) throws CreateObjectException {
 		if (creatorId == null || name == null || 
 				description == null)
 			throw new IllegalArgumentException("Argument is 'null'");
 		
-		return new Domain(IdentifierPool.getGeneratedIdentifier(ObjectEntities.DOMAIN_ENTITY_CODE),
-					creatorId,
-					domainId,
-					name,
-					description);
+		try {
+			return new Domain(IdentifierPool.getGeneratedIdentifier(ObjectEntities.DOMAIN_ENTITY_CODE),
+						creatorId,
+						domainId,
+						name,
+						description);
+		} catch (IllegalObjectEntityException e) {
+			throw new CreateObjectException("Domain.createInstance | cannot generate identifier ", e);
+		}
 	}
 	
 	public static Domain getInstance(Domain_Transferable dt) throws CreateObjectException {

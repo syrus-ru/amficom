@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPath.java,v 1.28 2004/12/09 12:01:42 bob Exp $
+ * $Id: TransmissionPath.java,v 1.29 2004/12/09 12:24:00 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierPool;
+import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -27,7 +28,7 @@ import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.configuration.corba.TransmissionPath_Transferable;
 /**
- * @version $Revision: 1.28 $, $Date: 2004/12/09 12:01:42 $
+ * @version $Revision: 1.29 $, $Date: 2004/12/09 12:24:00 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -96,6 +97,7 @@ public class TransmissionPath extends MonitoredDomainMember implements Character
 	 * @param description
 	 * @param startPortId
 	 * @param finishPortId
+	 * @throws CreateObjectException
 	 */
 	public static TransmissionPath createInstance(Identifier creatorId,
 												  Identifier domainId,
@@ -103,19 +105,23 @@ public class TransmissionPath extends MonitoredDomainMember implements Character
 												  String description,
 												  TransmissionPathType type,
 												  Identifier startPortId,
-												  Identifier finishPortId) {
+												  Identifier finishPortId) throws CreateObjectException {
 		if (creatorId == null || domainId == null || name == null || description == null || 
 				type == null || startPortId == null || finishPortId == null)
 			throw new IllegalArgumentException("Argument is 'null'");
 		
-				return new TransmissionPath(IdentifierPool.getGeneratedIdentifier(ObjectEntities.TRANSPATH_ENTITY_CODE),
-					 creatorId,					 
-					 domainId,
-					 name,
-					 description,
-                     type,
-					 startPortId,
-					 finishPortId);
+				try {
+					return new TransmissionPath(IdentifierPool.getGeneratedIdentifier(ObjectEntities.TRANSPATH_ENTITY_CODE),
+						 creatorId,					 
+						 domainId,
+						 name,
+						 description,
+					     type,
+						 startPortId,
+						 finishPortId);
+				} catch (IllegalObjectEntityException e) {
+					throw new CreateObjectException("TransmissionPath.createInstance | cannot generate identifier ", e);
+				}
 		}
 
 

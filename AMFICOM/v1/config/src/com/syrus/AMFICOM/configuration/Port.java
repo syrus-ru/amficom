@@ -1,5 +1,5 @@
 /*
- * $Id: Port.java,v 1.23 2004/12/09 12:01:41 bob Exp $
+ * $Id: Port.java,v 1.24 2004/12/09 12:24:00 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -21,6 +21,7 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
@@ -31,7 +32,7 @@ import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.23 $, $Date: 2004/12/09 12:01:41 $
+ * @version $Revision: 1.24 $, $Date: 2004/12/09 12:24:00 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -113,22 +114,27 @@ public class Port extends StorableObject implements Characterized, TypedObject {
 	 * @param description
 	 * @param equipmentId
 	 * @param sort
+	 * @throws CreateObjectException
 	 */
 	public static Port createInstance(Identifier creatorId,
 									  PortType type,
 									  String description,
 									  Identifier equipmentId,
-									  PortSort sort) {
+									  PortSort sort) throws CreateObjectException {
 		if (creatorId == null || type == null || description == null || 
 				type == null || equipmentId == null || sort == null )
 			throw new IllegalArgumentException("Argument is 'null'");
 		
-		return new Port(IdentifierPool.getGeneratedIdentifier(ObjectEntities.PORT_ENTITY_CODE),
-					creatorId,
-					type,
-					description,
-					equipmentId,
-					sort.value());
+		try {
+			return new Port(IdentifierPool.getGeneratedIdentifier(ObjectEntities.PORT_ENTITY_CODE),
+						creatorId,
+						type,
+						description,
+						equipmentId,
+						sort.value());
+		} catch (IllegalObjectEntityException e) {
+			throw new CreateObjectException("Port.createInstance | cannot generate identifier ", e);
+		}
 	}
 	
 	public static Port getInstance(Port_Transferable pt) throws CreateObjectException {

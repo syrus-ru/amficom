@@ -1,5 +1,5 @@
 /*
- * $Id: CableThreadType.java,v 1.5 2004/12/09 12:01:41 bob Exp $
+ * $Id: CableThreadType.java,v 1.6 2004/12/09 12:23:55 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,6 +17,7 @@ import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
@@ -24,7 +25,7 @@ import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2004/12/09 12:01:41 $
+ * @version $Revision: 1.6 $, $Date: 2004/12/09 12:23:55 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -78,18 +79,23 @@ public class CableThreadType extends AbstractLinkType {
 
 	/**
 	 * create new instance for client
+	 * @throws CreateObjectException
 	 */
 	public static CableThreadType createInstance(	Identifier creatorId,
 													String codename,
 													String description,
 													String mark,
 													String color,			
-													Identifier linkTypeId) {
+													Identifier linkTypeId) throws CreateObjectException {
 		if (creatorId == null || codename == null || description == null || 
 				mark == null || color == null || linkTypeId == null)
 			throw new IllegalArgumentException("Argument is 'null'");
 		
-		return new CableThreadType(IdentifierPool.getGeneratedIdentifier(ObjectEntities.CABLETHREADTYPE_ENTITY_CODE), creatorId, codename, description, mark, color, linkTypeId);
+		try {
+			return new CableThreadType(IdentifierPool.getGeneratedIdentifier(ObjectEntities.CABLETHREADTYPE_ENTITY_CODE), creatorId, codename, description, mark, color, linkTypeId);
+		} catch (IllegalObjectEntityException e) {
+			throw new CreateObjectException("CableThreadType.createInstance | cannot generate identifier ", e);
+		}
 	}
 
 	public static CableThreadType getInstance(CableThreadType_Transferable ctt) throws CreateObjectException {

@@ -1,5 +1,5 @@
 /*
- * $Id: Equipment.java,v 1.41 2004/12/09 12:01:41 bob Exp $
+ * $Id: Equipment.java,v 1.42 2004/12/09 12:23:55 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierPool;
+import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
@@ -28,7 +29,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.configuration.corba.Equipment_Transferable;
 
 /**
- * @version $Revision: 1.41 $, $Date: 2004/12/09 12:01:41 $
+ * @version $Revision: 1.42 $, $Date: 2004/12/09 12:23:55 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -146,6 +147,7 @@ public class Equipment extends MonitoredDomainMember implements Characterized, T
 	 * @param name
 	 * @param description
 	 * @param imageId
+	 * @throws CreateObjectException
 	 */
 	public static Equipment createInstance(Identifier creatorId,
 										   Identifier domainId,
@@ -155,20 +157,24 @@ public class Equipment extends MonitoredDomainMember implements Characterized, T
 										   Identifier imageId,
                                            String supplier,
                                            double longitude,
-                                           double latitude) {
+                                           double latitude) throws CreateObjectException {
 		if (creatorId == null || domainId == null || type == null || name == null || 
 				description == null || imageId == null || supplier == null)
 			throw new IllegalArgumentException("Argument is 'null'");
-		return new Equipment(IdentifierPool.getGeneratedIdentifier(ObjectEntities.EQUIPMENT_ENTITY_CODE),
-							creatorId,
-							domainId,
-							type,
-							name,
-							description,
-							imageId,
-                            supplier,
-                            longitude,
-                            latitude);
+		try {
+			return new Equipment(IdentifierPool.getGeneratedIdentifier(ObjectEntities.EQUIPMENT_ENTITY_CODE),
+								creatorId,
+								domainId,
+								type,
+								name,
+								description,
+								imageId,
+			                    supplier,
+			                    longitude,
+			                    latitude);
+		} catch (IllegalObjectEntityException e) {
+			throw new CreateObjectException("Equipment.createInstance | cannot generate identifier ", e);
+		}
 	}
 	
 	public static Equipment getInstance(Equipment_Transferable et) throws CreateObjectException{

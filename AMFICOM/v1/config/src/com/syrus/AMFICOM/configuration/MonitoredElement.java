@@ -1,5 +1,5 @@
 /*
- * $Id: MonitoredElement.java,v 1.30 2004/12/09 12:01:41 bob Exp $
+ * $Id: MonitoredElement.java,v 1.31 2004/12/09 12:24:00 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierPool;
+import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
@@ -26,7 +27,7 @@ import com.syrus.AMFICOM.configuration.corba.MonitoredElement_Transferable;
 import com.syrus.AMFICOM.configuration.corba.MonitoredElementSort;
 
 /**
- * @version $Revision: 1.30 $, $Date: 2004/12/09 12:01:41 $
+ * @version $Revision: 1.31 $, $Date: 2004/12/09 12:24:00 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -102,6 +103,7 @@ public class MonitoredElement extends DomainMember {
 	 * @param measurementPortId
 	 * @param sort
 	 * @param localAddress
+	 * @throws CreateObjectException
 	 */
 	public static MonitoredElement createInstance(Identifier creatorId,
 												  Identifier domainId,
@@ -109,19 +111,23 @@ public class MonitoredElement extends DomainMember {
 												  Identifier measurementPortId,
 												  int sort,
 												  String localAddress,
-												  List monitoredDomainMemberIds) {
+												  List monitoredDomainMemberIds) throws CreateObjectException {
 		if (creatorId == null || domainId == null || name == null || measurementPortId == null || 
 				localAddress == null )
 			throw new IllegalArgumentException("Argument is 'null'");
 		
-		return new MonitoredElement(IdentifierPool.getGeneratedIdentifier(ObjectEntities.ME_ENTITY_CODE),
-							creatorId,
-							domainId,
-							name,
-							measurementPortId,
-							sort,
-							localAddress,
-							monitoredDomainMemberIds);
+		try {
+			return new MonitoredElement(IdentifierPool.getGeneratedIdentifier(ObjectEntities.ME_ENTITY_CODE),
+								creatorId,
+								domainId,
+								name,
+								measurementPortId,
+								sort,
+								localAddress,
+								monitoredDomainMemberIds);
+		} catch (IllegalObjectEntityException e) {
+			throw new CreateObjectException("MonitoredElement.createInstance | cannot generate identifier ", e);
+		}
 	}
 
 	public static MonitoredElement getInstance(MonitoredElement_Transferable met) throws CreateObjectException {

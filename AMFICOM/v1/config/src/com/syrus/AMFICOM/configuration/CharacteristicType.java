@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicType.java,v 1.23 2004/12/09 12:01:41 bob Exp $
+ * $Id: CharacteristicType.java,v 1.24 2004/12/09 12:23:55 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,6 +18,7 @@ import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
@@ -26,7 +27,7 @@ import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.corba.DataType;
 
 /**
- * @version $Revision: 1.23 $, $Date: 2004/12/09 12:01:41 $
+ * @version $Revision: 1.24 $, $Date: 2004/12/09 12:23:55 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -84,22 +85,27 @@ public class CharacteristicType extends StorableObjectType {
 	 * @param codename
 	 * @param description
 	 * @param dataType see {@link DataType} 
+	 * @throws CreateObjectException
 	 */
 	public static CharacteristicType createInstance(Identifier creatorId,
 							String codename,
 							String description,
 							int dataType,
-							CharacteristicTypeSort sort){
+							CharacteristicTypeSort sort) throws CreateObjectException{
 		if (creatorId == null || codename == null || description == null || 
 				sort == null)
 			throw new IllegalArgumentException("Argument is 'null'");
 
-		return new CharacteristicType(IdentifierPool.getGeneratedIdentifier(ObjectEntities.CHARACTERISTICTYPE_ENTITY_CODE),
-									  creatorId,
-									  codename,
-									  description,
-									  dataType,									  
-									  sort.value());	
+		try {
+			return new CharacteristicType(IdentifierPool.getGeneratedIdentifier(ObjectEntities.CHARACTERISTICTYPE_ENTITY_CODE),
+										  creatorId,
+										  codename,
+										  description,
+										  dataType,									  
+										  sort.value());
+		} catch (IllegalObjectEntityException e) {
+			throw new CreateObjectException("CharacteristicType.createInstance | cannot generate identifier ", e);
+		}	
 	}
 	
 	

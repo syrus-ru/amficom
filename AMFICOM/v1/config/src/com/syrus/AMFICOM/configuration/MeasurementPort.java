@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPort.java,v 1.24 2004/12/09 12:01:41 bob Exp $
+ * $Id: MeasurementPort.java,v 1.25 2004/12/09 12:24:00 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -20,6 +20,7 @@ import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
@@ -30,7 +31,7 @@ import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.24 $, $Date: 2004/12/09 12:01:41 $
+ * @version $Revision: 1.25 $, $Date: 2004/12/09 12:24:00 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -114,24 +115,29 @@ public class MeasurementPort extends StorableObject implements Characterized, Ty
 	 * @param description
 	 * @param kisId
 	 * @param portId
+	 * @throws CreateObjectException
 	 */
 	public static MeasurementPort createInstance(	Identifier creatorId,
 													MeasurementPortType type,
 													String name,
 													String description,	
 													Identifier kisId,
-													Identifier portId){
+													Identifier portId) throws CreateObjectException{
 		if (creatorId == null || type == null || name == null || description == null || 
 				kisId == null || portId == null)
 			throw new IllegalArgumentException("Argument is 'null'");
 		
-		return new MeasurementPort(IdentifierPool.getGeneratedIdentifier(ObjectEntities.MEASUREMENTPORT_ENTITY_CODE),
-								   creatorId,
-								   type,
-								   name,
-								   description,
-								   kisId,
-								   portId);
+		try {
+			return new MeasurementPort(IdentifierPool.getGeneratedIdentifier(ObjectEntities.MEASUREMENTPORT_ENTITY_CODE),
+									   creatorId,
+									   type,
+									   name,
+									   description,
+									   kisId,
+									   portId);
+		} catch (IllegalObjectEntityException e) {
+			throw new CreateObjectException("MeasurementPort.createInstance | cannot generate identifier ", e);
+		}
 	}
 
 	public static MeasurementPort getInstance(MeasurementPort_Transferable mpt) throws CreateObjectException {

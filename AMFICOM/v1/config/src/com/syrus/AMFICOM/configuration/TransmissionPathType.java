@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPathType.java,v 1.12 2004/12/09 12:01:42 bob Exp $
+ * $Id: TransmissionPathType.java,v 1.13 2004/12/09 12:24:00 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -19,6 +19,7 @@ import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
@@ -27,7 +28,7 @@ import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2004/12/09 12:01:42 $
+ * @version $Revision: 1.13 $, $Date: 2004/12/09 12:24:00 $
  * @author $Author: bob $
  * @module module_name
  */
@@ -86,19 +87,24 @@ public class TransmissionPathType extends StorableObjectType implements Characte
      * @param creatorId
      * @param codename
      * @param description
+     * @throws CreateObjectException
      */
     public static TransmissionPathType createInstance(Identifier creatorId,
             String codename,
             String description,
-            String name){
+            String name) throws CreateObjectException{
     	if (creatorId == null || codename == null || name == null || description == null)
 			throw new IllegalArgumentException("Argument is 'null'");
 		
-        return new TransmissionPathType(IdentifierPool.getGeneratedIdentifier(ObjectEntities.TRANSPATHTYPE_ENTITY_CODE),
-                creatorId,
-                codename,
-                description,
-                name);
+        try {
+			return new TransmissionPathType(IdentifierPool.getGeneratedIdentifier(ObjectEntities.TRANSPATHTYPE_ENTITY_CODE),
+			        creatorId,
+			        codename,
+			        description,
+			        name);
+		} catch (IllegalObjectEntityException e) {
+			throw new CreateObjectException("TransmissionPathType.createInstance | cannot generate identifier ", e);
+		}
     }
     public static TransmissionPathType getInstance(TransmissionPathType_Transferable ktt) throws CreateObjectException {
         TransmissionPathType transmissionPathType = new TransmissionPathType(ktt);

@@ -1,5 +1,5 @@
 /*
- * $Id: Characteristic.java,v 1.32 2004/12/09 12:01:41 bob Exp $
+ * $Id: Characteristic.java,v 1.33 2004/12/09 12:23:55 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,6 +14,7 @@ import java.util.List;
 
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierPool;
+import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectType;
@@ -29,7 +30,7 @@ import com.syrus.AMFICOM.configuration.corba.Characteristic_Transferable;
 import com.syrus.AMFICOM.configuration.corba.CharacteristicSort;
 
 /**
- * @version $Revision: 1.32 $, $Date: 2004/12/09 12:01:41 $
+ * @version $Revision: 1.33 $, $Date: 2004/12/09 12:23:55 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -116,6 +117,7 @@ public class Characteristic extends StorableObject implements TypedObject {
 	 * @param sort
 	 * @param value
 	 * @param characterizedId
+	 * @throws CreateObjectException
 	 */
 	public static Characteristic  createInstance(Identifier creatorId,
 												 CharacteristicType type,
@@ -125,22 +127,26 @@ public class Characteristic extends StorableObject implements TypedObject {
 												 String value,
 												 Identifier characterizedId,
 												 boolean editable,
-												 boolean visible){
+												 boolean visible) throws CreateObjectException{
 	
 		if (creatorId == null || type == null || name == null || description == null || 
 				value == null || characterizedId == null)
 			throw new IllegalArgumentException("Argument is 'null'");		
 		
-		return new Characteristic(IdentifierPool.getGeneratedIdentifier(ObjectEntities.CHARACTERISTIC_ENTITY_CODE),
-								  creatorId,
-								  type,
-								  name,
-								  description,
-								  sort,
-								  value,
-								  characterizedId,
-								  editable,
-								  visible);
+		try {
+			return new Characteristic(IdentifierPool.getGeneratedIdentifier(ObjectEntities.CHARACTERISTIC_ENTITY_CODE),
+									  creatorId,
+									  type,
+									  name,
+									  description,
+									  sort,
+									  value,
+									  characterizedId,
+									  editable,
+									  visible);
+		} catch (IllegalObjectEntityException e) {
+			throw new CreateObjectException("Characteristic.createInstance | cannot generate identifier ", e);
+		}
 	}
 	
 	public static Characteristic getInstance(Characteristic_Transferable ct) throws CreateObjectException {

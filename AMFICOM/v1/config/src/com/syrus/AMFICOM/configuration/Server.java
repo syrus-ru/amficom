@@ -1,5 +1,5 @@
 /*
- * $Id: Server.java,v 1.25 2004/12/09 12:01:42 bob Exp $
+ * $Id: Server.java,v 1.26 2004/12/09 12:24:00 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.ArrayList;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierPool;
+import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -26,7 +27,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.configuration.corba.Server_Transferable;
 
 /**
- * @version $Revision: 1.25 $, $Date: 2004/12/09 12:01:42 $
+ * @version $Revision: 1.26 $, $Date: 2004/12/09 12:24:00 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -164,17 +165,21 @@ public class Server extends DomainMember implements Characterized {
 										Identifier domainId,
 										String name,
 										String description,
-										Identifier userId) {
+										Identifier userId) throws CreateObjectException {
 		if (creatorId == null || domainId == null || name == null || description == null || 
 				userId == null)
 			throw new IllegalArgumentException("Argument is 'null'");
 		
-		return new Server(IdentifierPool.getGeneratedIdentifier(ObjectEntities.SERVER_ENTITY_CODE),
-					creatorId,
-					domainId,
-					name,
-					description,
-					userId);
+		try {
+			return new Server(IdentifierPool.getGeneratedIdentifier(ObjectEntities.SERVER_ENTITY_CODE),
+						creatorId,
+						domainId,
+						name,
+						description,
+						userId);
+		} catch (IllegalObjectEntityException e) {
+			throw new CreateObjectException("Server.createInstance | cannot generate identifier ", e);
+		}
 	}
 
 	protected synchronized void setAttributes(Date created,
