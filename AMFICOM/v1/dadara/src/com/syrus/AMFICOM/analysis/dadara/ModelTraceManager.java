@@ -1,5 +1,5 @@
 /*
- * $Id: ModelTraceManager.java,v 1.29 2005/03/28 09:53:12 saa Exp $
+ * $Id: ModelTraceManager.java,v 1.30 2005/03/28 12:01:36 bob Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,8 +18,8 @@ import java.util.LinkedList;
 import com.syrus.AMFICOM.analysis.CoreAnalysisManager;
 
 /**
- * @author $Author: saa $
- * @version $Revision: 1.29 $, $Date: 2005/03/28 09:53:12 $
+ * @author $Author: bob $
+ * @version $Revision: 1.30 $, $Date: 2005/03/28 12:01:36 $
  * @module
  */
 public class ModelTraceManager
@@ -300,7 +300,7 @@ public class ModelTraceManager
 			if (th instanceof ThreshDX)
 			{
 				ret.add(new ThreshEditor(
-					((ThreshDX )th).getRise()
+					((ThreshDX )th).isRise()
 						? ThreshEditor.TYPE_DXF
 						: ThreshEditor.TYPE_DXF,
 					th));
@@ -487,75 +487,96 @@ public class ModelTraceManager
 	protected ThreshDX[] tDX;
 	protected ThreshDY[] tDY;
 
-	public interface ThresholdHandle
-	{
-		void moveBy(double dx, double dy);
+	public interface ThresholdHandle {
+
+		final int	VERTICAL_UP_TYPE		= 1;
+		final int	VERTICAL_DOWN_TYPE		= 2;
+		final int	HORIZONTAL_LEFT_TYPE	= 3;
+		final int	HORIZONTAL_RIGHT_TYPE	= 4;
+
+		void moveBy(double dx,
+					double dy);
+
 		int getX();
 		double getY();
 		void release();
+		int getType();
 		boolean isRelevantToNEvent(int nEvent);
 	}
+	
+	protected abstract class AbstractThresholdHandle implements ThresholdHandle {
 
-	protected class ThresholdHandleDX
-	implements ThresholdHandle 
-	{
-		private ThreshDX th;
-		private int key;
-		private double dxFrac = 0; // сохраняем дробную часть dx 
-		protected int posX;
-		protected double posY;
-		protected ThresholdHandleDX(int thId, int key, int posX, double posY)
-		{
-			this.th = tDX[thId];
+		protected Thresh	th;
+		protected int		key;
+		protected int		posX;
+		protected double	posY;
+		protected int		type;
+
+		protected AbstractThresholdHandle(int key, int posX, double posY, int type) {
 			this.key = key;
 			this.posX = posX;
 			this.posY = posY;
+			this.type = type;
+		}
+
+		public int getX() {
+			return this.posX;
+		}
+
+		public double getY() {
+			return this.posY;
+		}
+
+		public void release() {
+			this.th.arrangeLimits(this.key);
+			invalidateThMTCache(); // сбрасываем кэш всех кривых
+		}
+
+		public boolean isRelevantToNEvent(int nEvent) {
+			return this.th.isRelevantToNEvent(nEvent);
+		}
+
+		public int getType() {
+			return this.type;
+		}
+
+	}
+
+	protected class ThresholdHandleDX
+	extends AbstractThresholdHandle 
+	{
+		private double dxFrac = 0; // сохраняем дробную часть dx 
+
+		protected ThresholdHandleDX(int thId, int key, int posX, double posY) {
+			super(key, posX, posY, Thresh.IS_KEY_UPPER[key] ? HORIZONTAL_LEFT_TYPE : HORIZONTAL_RIGHT_TYPE);
+			this.th = tDX[thId];
+			this.type = ((ThreshDX)this.th).isRise() ? (Thresh.IS_KEY_UPPER[key] ? HORIZONTAL_RIGHT_TYPE : HORIZONTAL_LEFT_TYPE) : this.type;
 		}
 		public void moveBy(double dx, double dy) // dy is ignored
 		{
-			dx += dxFrac;
-			double desiredValue = th.getDX(key) + dx;
-			th.setDX(key, desiredValue);
-			dxFrac = desiredValue - th.getDX(key);
-			posX += dx - dxFrac;
-			if (dxFrac != dx)
-				invalidateThMTByKey(key);
-		}
-		public int getX()
-		{
-			return posX;
-		}
-		public double getY()
-		{
-			return posY;
-		}
-		public void release()
-		{
-			th.arrangeLimits(key);
-			invalidateThMTCache(); // сбрасываем кэш всех кривых
-		}
-		public boolean isRelevantToNEvent(int nEvent)
-		{
-			return th.isRelevantToNEvent(nEvent);
-		}
+			dx += this.dxFrac;
+			ThreshDX thx = (ThreshDX)this.th;
+			double desiredValue = thx.getDX(this.key) + dx;
+			thx.setDX(this.key, desiredValue);
+			this.dxFrac = desiredValue - thx.getDX(this.key);
+			this.posX += dx - this.dxFrac;
+			if (this.dxFrac != dx)
+				invalidateThMTByKey(this.key);
+		}		
 	}
 
 	protected class ThresholdHandleDY
-	implements ThresholdHandle 
+	extends AbstractThresholdHandle 
 	{
-		private ThreshDY th;
-		private int key;
 		private double dyFrac = 0; // сохраненная дробная часть порога, не ложащаяся на допускаемую порогом сетку
-		protected int posX;
-		protected double posY;
 
 		protected ThresholdHandleDY(int thId, int key, int posX, double posY)
 		{
+			super(key, posX, posY, Thresh.IS_KEY_UPPER[key] ? VERTICAL_UP_TYPE :  VERTICAL_DOWN_TYPE);
 			this.th = tDY[thId];
-			this.key = key;
 			int posMin = th.xMin;
 			int posMax = th.xMax;
-			if (th.getTypeL() && thId > 0 && thId < tDY.length - 1)
+			if (((ThreshDY)th).getTypeL() && thId > 0 && thId < tDY.length - 1)
 			{
 				// уточняем положение точки привязки по ширине 98% максимума кривой
 				posMin = tDY[thId - 1].xMax;
@@ -596,36 +617,19 @@ public class ModelTraceManager
 				posX = posMin;
 			if (posX > posMax)
 				posX = posMax;
-			this.posX = posX;
-			this.posY = posY;
 		}
 		public void moveBy(double dx, double dy) // dx is ignored
 		{
-			dy += dyFrac;
-			double desiredValue = th.getDY(key) + dy;
-			th.setDY(key, desiredValue);
-			dyFrac = desiredValue - th.getDY(key);
-			posY += dy - dyFrac; // привязка к сетке значения самого порога
-			if (dy != dyFrac)
-				invalidateThMTByKey(key);
+			dy += this.dyFrac;
+			ThreshDY thy = (ThreshDY)this.th;
+			double desiredValue = thy.getDY(this.key) + dy;
+			thy.setDY(this.key, desiredValue);
+			this.dyFrac = desiredValue - thy.getDY(this.key);
+			this.posY += dy - this.dyFrac; // привязка к сетке значения самого порога
+			if (dy != this.dyFrac)
+				invalidateThMTByKey(this.key);
 		}
-		public int getX()
-		{
-			return posX;
-		}
-		public double getY()
-		{
-			return posY;
-		}
-		public void release()
-		{
-			th.arrangeLimits(key);
-			invalidateThMTCache(); // сбрасываем кэш всех кривых
-		}
-		public boolean isRelevantToNEvent(int nEvent)
-		{
-			return th.isRelevantToNEvent(nEvent);
-		}
+		
 	}
 
 	private ArrayList getAllThreshByNEvent(int nEvent)
