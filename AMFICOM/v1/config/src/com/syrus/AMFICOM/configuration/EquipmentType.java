@@ -1,5 +1,5 @@
 /*
- * $Id: EquipmentType.java,v 1.10 2004/10/12 05:23:41 max Exp $
+ * $Id: EquipmentType.java,v 1.11 2004/10/26 14:31:43 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -20,12 +20,14 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.configuration.corba.EquipmentType_Transferable;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2004/10/12 05:23:41 $
- * @author $Author: max $
+ * @version $Revision: 1.11 $, $Date: 2004/10/26 14:31:43 $
+ * @author $Author: bob $
  * @module configuration_v1
  */
 
 public class EquipmentType extends StorableObjectType {
+	
+	private String name;
 
 	private StorableObjectDatabase equipmentTypeDatabase;
 
@@ -49,12 +51,14 @@ public class EquipmentType extends StorableObjectType {
 					new Identifier(ett.modifier_id),
 					new String(ett.codename),
 					new String(ett.description));	
+		this.name = ett.name;
 	}
 	
 	protected EquipmentType(Identifier id,
 					 Identifier creatorId,
 					 String codename,
-					 String description){
+					 String description,
+					 String name){
 		super(id,
 				new Date(System.currentTimeMillis()),
 				new Date(System.currentTimeMillis()),
@@ -62,6 +66,7 @@ public class EquipmentType extends StorableObjectType {
 				creatorId,
 				codename,
 				description);
+		this.name = name;
 		
 		this.equipmentTypeDatabase = ConfigurationDatabaseContext.equipmentTypeDatabase;
 	}
@@ -78,11 +83,13 @@ public class EquipmentType extends StorableObjectType {
 	public static EquipmentType createInstance(Identifier id,
 											 Identifier creatorId,
 											 String codename,
-											 String description){
+											 String description,
+											 String name){
 		return new EquipmentType(id,
 							creatorId,
 							codename,
-							description);
+							description,
+							name);		
 	}
 	
 	public static EquipmentType getInstance(EquipmentType_Transferable ett) throws CreateObjectException {
@@ -107,7 +114,8 @@ public class EquipmentType extends StorableObjectType {
 																					(Identifier_Transferable)super.creatorId.getTransferable(),
 																					(Identifier_Transferable)super.modifierId.getTransferable(),
 																					new String(super.codename),
-																					(super.description != null) ? (new String(super.description)) : "");
+																					(super.description != null) ? (new String(super.description)) : "",
+																					(this.name != null) ? (new String(this.name)) : "");
 	}
 	
 	protected synchronized void setAttributes(Date created,
@@ -115,12 +123,23 @@ public class EquipmentType extends StorableObjectType {
 																						Identifier creatorId,
 																						Identifier modifierId,
 																						String codename,
-																						String description) {
+																						String description,
+																						String name) {
 		super.setAttributes(created,
 												modified,
 												creatorId,
 												modifierId,
 												codename,
 												description);
+		this.name = name;
+	}
+	
+	public String getName(){
+		return this.name;
+	}
+	
+	public void setName(String name){
+		this.currentVersion = super.getNextVersion();
+		this.name = name;
 	}
 }

@@ -1,5 +1,5 @@
 /*
- * $Id: KISType.java,v 1.1 2004/10/22 10:32:09 max Exp $
+ * $Id: KISType.java,v 1.2 2004/10/26 14:31:43 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -20,12 +20,14 @@ import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2004/10/22 10:32:09 $
- * @author $Author: max $
+ * @version $Revision: 1.2 $, $Date: 2004/10/26 14:31:43 $
+ * @author $Author: bob $
  * @module module_name
  */
 public class KISType extends StorableObjectType {
     
+	private String name;
+	
     private StorableObjectDatabase kisTypeDatabase;
     
     public KISType(Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
@@ -46,11 +48,13 @@ public class KISType extends StorableObjectType {
 				new Identifier(ktt.modifier_id),
 				new String(ktt.codename),
 				new String(ktt.description));
+    	this.name = ktt.name;
     }
     protected KISType(Identifier id,
              Identifier creatorId,
              String codename,
-             String description){
+             String description,
+			 String name){
         super(id,
                 new Date(System.currentTimeMillis()),
                 new Date(System.currentTimeMillis()),
@@ -58,6 +62,7 @@ public class KISType extends StorableObjectType {
                 creatorId,
                 codename,
                 description);
+        this.name = name;
         
         this.kisTypeDatabase = ConfigurationDatabaseContext.kisTypeDatabase;
     }
@@ -72,11 +77,13 @@ public class KISType extends StorableObjectType {
     public static KISType createInstance(Identifier id,
     		Identifier creatorId,
 			String codename,
-			String description){
+			String description,
+			String name){
         return new KISType(id,
         		creatorId,
 				codename,
-				description);
+				description,
+				name);
     }
     public static KISType getInstance(KISType_Transferable ktt) throws CreateObjectException {
         KISType kisType = new KISType(ktt);
@@ -100,19 +107,31 @@ public class KISType extends StorableObjectType {
 				(Identifier_Transferable)super.creatorId.getTransferable(),
 				(Identifier_Transferable)super.modifierId.getTransferable(),
 				new String(super.codename),
-				(super.description != null) ? (new String(super.description)) : "");
+				(super.description != null) ? (new String(super.description)) : "",
+				(this.name != null) ? (new String(this.name)) : "");
     }
     protected synchronized void setAttributes(Date created,
             Date modified,
             Identifier creatorId,
             Identifier modifierId,
             String codename,
-            String description) {
+            String description,
+			String name) {
         super.setAttributes(created,
                 modified,
                 creatorId,
                 modifierId,
                 codename,
                 description);
-    }
+        this.name = name;
+    }    
+	
+	public String getName(){
+		return this.name;
+	}
+	
+	public void setName(String name){
+		this.currentVersion = super.getNextVersion();
+		this.name = name;
+	}
 }

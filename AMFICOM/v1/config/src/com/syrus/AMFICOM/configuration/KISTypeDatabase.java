@@ -23,7 +23,7 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /*
- * $Id: KISTypeDatabase.java,v 1.1 2004/10/22 10:32:09 max Exp $
+ * $Id: KISTypeDatabase.java,v 1.2 2004/10/26 14:31:43 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,13 +31,15 @@ import com.syrus.util.database.DatabaseDate;
  */
 
 /**
- * @version $Revision: 1.1 $, $Date: 2004/10/22 10:32:09 $
- * @author $Author: max $
+ * @version $Revision: 1.2 $, $Date: 2004/10/26 14:31:43 $
+ * @author $Author: bob $
  * @module module_name
  */
 public class KISTypeDatabase extends StorableObjectDatabase {
     public static final String COLUMN_CODENAME              = "codename";
     public static final String COLUMN_DESCRIPTION           = "description";
+	public static final String COLUMN_NAME = "name";
+
     
     private String updateColumns;
     private String updateMultiplySQLValues;
@@ -54,7 +56,7 @@ public class KISTypeDatabase extends StorableObjectDatabase {
     }
     
     protected String getEnityName() {
-        return "KISType";
+        return ObjectEntities.KISTYPE_ENTITY;
     }
     
     protected String getTableName() {
@@ -65,7 +67,8 @@ public class KISTypeDatabase extends StorableObjectDatabase {
         if (this.updateColumns == null){
             this.updateColumns  = super.getUpdateColumns() + COMMA
                 + COLUMN_CODENAME + COMMA
-                + COLUMN_DESCRIPTION;                
+                + COLUMN_DESCRIPTION + COMMA
+				+ COLUMN_NAME;                
         }
         return this.updateColumns;
     }
@@ -73,8 +76,9 @@ public class KISTypeDatabase extends StorableObjectDatabase {
     protected String getUpdateMultiplySQLValues() {
         if (this.updateMultiplySQLValues == null){
             this.updateMultiplySQLValues = super.getUpdateMultiplySQLValues() + COMMA
-            + QUESTION + COMMA
-            + QUESTION;
+	            + QUESTION + COMMA
+	            + QUESTION + COMMA
+	            + QUESTION;
         }
         return this.updateMultiplySQLValues;
     }
@@ -82,19 +86,21 @@ public class KISTypeDatabase extends StorableObjectDatabase {
     protected String getUpdateSingleSQLValues(StorableObject storableObject)
             throws IllegalDataException, UpdateObjectException {
         KISType kisType = fromStorableObject(storableObject);
+        String name = kisType.getName();
         String sql = super.getUpdateSingleSQLValues(storableObject) + COMMA
             + APOSTOPHE + kisType.getCodename() + APOSTOPHE + COMMA
-            + APOSTOPHE + kisType.getDescription() + APOSTOPHE;
+            + APOSTOPHE + kisType.getDescription() + APOSTOPHE + COMMA
+			+ APOSTOPHE + (name != null ? name : "") + APOSTOPHE;
         return sql;
     }
     
     protected String retrieveQuery(String condition){
         return super.retrieveQuery(condition) + COMMA
-        + COLUMN_CODENAME + COMMA
-        + COLUMN_DESCRIPTION
-        + SQL_FROM + ObjectEntities.EQUIPMENTTYPE_ENTITY
-        + ( ((condition == null) || (condition.length() == 0) ) ? "" : SQL_WHERE + condition);
-
+	        + COLUMN_CODENAME + COMMA
+	        + COLUMN_DESCRIPTION + COMMA
+			+ COLUMN_NAME
+	        + SQL_FROM + ObjectEntities.EQUIPMENTTYPE_ENTITY
+	        + ( ((condition == null) || (condition.length() == 0) ) ? "" : SQL_WHERE + condition);
     }
     
     protected int setEntityForPreparedStatement(StorableObject storableObject,
@@ -106,6 +112,7 @@ public class KISTypeDatabase extends StorableObjectDatabase {
             i = super.setEntityForPreparedStatement(storableObject, preparedStatement);
             preparedStatement.setString( ++i, kisType.getCodename());
             preparedStatement.setString( ++i, kisType.getDescription());
+            preparedStatement.setString( ++i, kisType.getName());
         } catch (SQLException sqle) {
             throw new UpdateObjectException("KISTypeDatabase." +
                     "setEntityForPreparedStatement | Error " + sqle.getMessage(), sqle);
@@ -121,7 +128,7 @@ public class KISTypeDatabase extends StorableObjectDatabase {
             /**
              * @todo when change DB Identifier model ,change getString() to getLong()
              */
-            kisType = new KISType(new Identifier(resultSet.getString(COLUMN_ID)), null, null, null);            
+            kisType = new KISType(new Identifier(resultSet.getString(COLUMN_ID)), null, null, null, null);            
         }
         kisType.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
                                     DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
@@ -134,7 +141,8 @@ public class KISTypeDatabase extends StorableObjectDatabase {
                                         */
                                     new Identifier(resultSet.getString(COLUMN_MODIFIER_ID)),
                                     resultSet.getString(COLUMN_CODENAME),
-                                    resultSet.getString(COLUMN_DESCRIPTION));
+                                    resultSet.getString(COLUMN_DESCRIPTION),
+									resultSet.getString(COLUMN_NAME));
 
         
         return kisType;

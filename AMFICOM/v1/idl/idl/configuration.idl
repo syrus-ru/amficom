@@ -1,5 +1,5 @@
 /*
- * $Id: configuration.idl,v 1.40 2004/10/26 12:45:06 max Exp $
+ * $Id: configuration.idl,v 1.41 2004/10/26 14:31:35 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -68,6 +68,7 @@ module corba {
 
 		wstring codename;
 		wstring description;
+		wstring name;
 	};
 	
 	typedef sequence <EquipmentType_Transferable> EquipmentTypeSeq_Transferable;
@@ -82,6 +83,7 @@ module corba {
 
 		wstring codename;
 		wstring description;
+		wstring name;
 	};
 	
 	typedef sequence <KISType_Transferable> KISTypeSeq_Transferable;
@@ -96,6 +98,7 @@ module corba {
 
 		wstring codename;
 		wstring description;
+		wstring name;
 	};
 	
 	typedef sequence <PortType_Transferable> PortTypeSeq_Transferable;
@@ -109,6 +112,7 @@ module corba {
 
 		wstring codename;
 		wstring description;
+		wstring name;
 	};
 
 	typedef sequence <MeasurementPortType_Transferable> MeasurementPortTypeSeq_Transferable;
@@ -127,6 +131,7 @@ module corba {
 	  
 	  wstring codename;
 	  wstring description;
+	  wstring name;
 	  LinkTypeSort sort;
 	  wstring manufacturer;
 	  wstring manufacturerCode;

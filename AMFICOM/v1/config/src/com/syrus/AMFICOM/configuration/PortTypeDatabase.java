@@ -1,5 +1,5 @@
 /*
- * $Id: PortTypeDatabase.java,v 1.14 2004/10/19 07:48:58 bob Exp $
+ * $Id: PortTypeDatabase.java,v 1.15 2004/10/26 14:31:43 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,7 +28,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2004/10/19 07:48:58 $
+ * @version $Revision: 1.15 $, $Date: 2004/10/26 14:31:43 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -36,6 +36,7 @@ import com.syrus.util.database.DatabaseDate;
 public class PortTypeDatabase extends StorableObjectDatabase {
 	public static final String COLUMN_CODENAME				= "codename";
 	public static final String COLUMN_DESCRIPTION			= "description";
+	public static final String COLUMN_NAME = "name";
 
 	public static final int CHARACTER_NUMBER_OF_RECORDS = 1;
 	
@@ -50,7 +51,7 @@ public class PortTypeDatabase extends StorableObjectDatabase {
 	}
 
 	protected String getEnityName() {		
-		return "PortType";
+		return ObjectEntities.PORTTYPE_ENTITY;
 	}	
 	
 	protected String getTableName() {		
@@ -61,7 +62,8 @@ public class PortTypeDatabase extends StorableObjectDatabase {
 		if (this.updateColumns == null){
 			this.updateColumns = super.getUpdateColumns() + COMMA
 				+ COLUMN_CODENAME + COMMA
-				+ COLUMN_DESCRIPTION;		
+				+ COLUMN_DESCRIPTION + COMMA
+				+ COLUMN_NAME;		
 		}
 		return this.updateColumns;
 	}	
@@ -69,6 +71,7 @@ public class PortTypeDatabase extends StorableObjectDatabase {
 	protected String getUpdateMultiplySQLValues() {
 		if (this.updateMultiplySQLValues == null){
 			this.updateMultiplySQLValues = super.getUpdateMultiplySQLValues() + COMMA
+				+ QUESTION + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION;		
 		}
@@ -79,9 +82,11 @@ public class PortTypeDatabase extends StorableObjectDatabase {
 	protected String getUpdateSingleSQLValues(StorableObject storableObject) throws IllegalDataException,
 			UpdateObjectException {
 		PortType portType = fromStorableObject(storableObject);
+		String name = portType.getName();
 		return super.getUpdateSingleSQLValues(storableObject) + COMMA
 			+ APOSTOPHE + portType.getCodename() + APOSTOPHE + COMMA
-			+ APOSTOPHE + portType.getDescription() + APOSTOPHE;
+			+ APOSTOPHE + portType.getDescription() + APOSTOPHE + COMMA
+			+ APOSTOPHE + (name != null ? name : "") + APOSTOPHE;
 	}
 	
 	public void retrieve(StorableObject storableObject) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
@@ -92,7 +97,8 @@ public class PortTypeDatabase extends StorableObjectDatabase {
 	protected String retrieveQuery(String condition){
 		return super.retrieveQuery(condition) + COMMA
 			+ COLUMN_CODENAME + COMMA
-			+ COLUMN_DESCRIPTION
+			+ COLUMN_DESCRIPTION + COMMA
+			+ COLUMN_NAME
 			+ SQL_FROM + ObjectEntities.PORTTYPE_ENTITY
 			+ ( ((condition == null) || (condition.length() == 0) ) ? "" : SQL_WHERE + condition);
 	}
@@ -100,7 +106,7 @@ public class PortTypeDatabase extends StorableObjectDatabase {
 	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
 			throws IllegalDataException, RetrieveObjectException, SQLException {
 		PortType portType = (storableObject==null)?
-				new PortType(new Identifier(resultSet.getString(COLUMN_ID)), null, null, null):
+				new PortType(new Identifier(resultSet.getString(COLUMN_ID)), null, null, null, null):
 					fromStorableObject(storableObject);
 		portType.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
 								DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
@@ -113,7 +119,8 @@ public class PortTypeDatabase extends StorableObjectDatabase {
 									*/
 								new Identifier(resultSet.getString(COLUMN_MODIFIER_ID)),
 								resultSet.getString(COLUMN_CODENAME),
-								resultSet.getString(COLUMN_DESCRIPTION));
+								resultSet.getString(COLUMN_DESCRIPTION),
+								resultSet.getString(COLUMN_NAME));
 		return portType;
 	}	
 
@@ -188,6 +195,7 @@ public class PortTypeDatabase extends StorableObjectDatabase {
 		try {			
 			preparedStatement.setString(++i, portType.getCodename());
 			preparedStatement.setString(++i, portType.getDescription());
+			preparedStatement.setString(++i, portType.getName());
 		} catch (SQLException sqle) {
 			throw new UpdateObjectException(getEnityName() + "Database.setEntityForPreparedStatement | Error " + sqle.getMessage(), sqle);
 		}

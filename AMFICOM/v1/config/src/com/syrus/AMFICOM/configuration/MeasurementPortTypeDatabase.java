@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPortTypeDatabase.java,v 1.9 2004/10/19 07:48:58 bob Exp $
+ * $Id: MeasurementPortTypeDatabase.java,v 1.10 2004/10/26 14:31:43 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,7 +30,7 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2004/10/19 07:48:58 $
+ * @version $Revision: 1.10 $, $Date: 2004/10/26 14:31:43 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -38,6 +38,7 @@ import com.syrus.util.database.DatabaseDate;
 public class MeasurementPortTypeDatabase extends StorableObjectDatabase {
 	public static final String COLUMN_CODENAME				= "codename";
 	public static final String COLUMN_DESCRIPTION			= "description";
+	public static final String COLUMN_NAME = "name";
 
 	public static final int CHARACTER_NUMBER_OF_RECORDS = 1;
 	
@@ -51,7 +52,7 @@ public class MeasurementPortTypeDatabase extends StorableObjectDatabase {
 	}
 
 	protected String getEnityName() {
-		return "MeasurementPortType";
+		return ObjectEntities.MEASUREMENTPORTTYPE_ENTITY;
 	}
 	
 	protected String getTableName() {
@@ -62,7 +63,8 @@ public class MeasurementPortTypeDatabase extends StorableObjectDatabase {
 		if (this.updateColumns == null){
     		this.updateColumns = super.getUpdateColumns() + COMMA
 		    		+ COLUMN_CODENAME + COMMA
-					+ COLUMN_DESCRIPTION;
+					+ COLUMN_DESCRIPTION + COMMA
+					+ COLUMN_NAME;
 		}
 		return this.updateColumns;
 	}
@@ -70,6 +72,7 @@ public class MeasurementPortTypeDatabase extends StorableObjectDatabase {
 	protected String getUpdateMultiplySQLValues() {
 		if (this.updateMultiplySQLValues == null){
     		this.updateMultiplySQLValues = super.getUpdateMultiplySQLValues() + COMMA 
+					+ QUESTION + COMMA
 					+ QUESTION + COMMA
 					+ QUESTION;
     	}
@@ -79,9 +82,11 @@ public class MeasurementPortTypeDatabase extends StorableObjectDatabase {
 	protected String getUpdateSingleSQLValues(StorableObject storableObject)
 			throws IllegalDataException, UpdateObjectException {
 		MeasurementPortType measurementPortType = fromStorableObject(storableObject);
+		String name = measurementPortType.getName();
 		String sql = super.getUpdateSingleSQLValues(storableObject) + COMMA
 			+ APOSTOPHE + measurementPortType.getCodename() + APOSTOPHE + COMMA
-			+ APOSTOPHE + measurementPortType.getDescription() + APOSTOPHE;
+			+ APOSTOPHE + measurementPortType.getDescription() + APOSTOPHE + COMMA
+			+ APOSTOPHE + (name != null ? name : "") + APOSTOPHE;
 		return sql;
 	}
 	
@@ -94,6 +99,7 @@ public class MeasurementPortTypeDatabase extends StorableObjectDatabase {
 			i = super.setEntityForPreparedStatement(storableObject, preparedStatement);
 			preparedStatement.setString( ++i, measurementPortType.getCodename() );
 			preparedStatement.setString( ++i, measurementPortType.getDescription());
+			preparedStatement.setString( ++i, measurementPortType.getName());
 		}catch (SQLException sqle) {
 			throw new UpdateObjectException("MeasurmentPortTypeDatabase." +
 					"setEntityForPreparedStatement | Error " + sqle.getMessage(), sqle);
@@ -109,7 +115,8 @@ public class MeasurementPortTypeDatabase extends StorableObjectDatabase {
 	protected String retrieveQuery(String condition){
 		return super.retrieveQuery(condition) + COMMA
 			+ COLUMN_CODENAME + COMMA
-			+ COLUMN_DESCRIPTION
+			+ COLUMN_DESCRIPTION + COMMA
+			+ COLUMN_NAME
 			+ SQL_FROM + ObjectEntities.MEASUREMENTPORTTYPE_ENTITY
 			+ ( ((condition == null) || (condition.length() == 0) ) ? "" : SQL_WHERE + condition);
 	}
@@ -122,7 +129,7 @@ public class MeasurementPortTypeDatabase extends StorableObjectDatabase {
 			/**
 			 * @todo when change DB Identifier model ,change getString() to getLong()
 			 */
-			measurementPortType = new MeasurementPortType(new Identifier(resultSet.getString(COLUMN_ID)), null, null, null);			
+			measurementPortType = new MeasurementPortType(new Identifier(resultSet.getString(COLUMN_ID)), null, null, null, null);			
 		}
 		measurementPortType.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
 											DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
@@ -135,7 +142,8 @@ public class MeasurementPortTypeDatabase extends StorableObjectDatabase {
 												*/
 											new Identifier(resultSet.getString(COLUMN_MODIFIER_ID)),
 											resultSet.getString(COLUMN_CODENAME),
-											resultSet.getString(COLUMN_DESCRIPTION));
+											resultSet.getString(COLUMN_DESCRIPTION),
+											resultSet.getString(COLUMN_NAME));
 		return measurementPortType;
 	}
 

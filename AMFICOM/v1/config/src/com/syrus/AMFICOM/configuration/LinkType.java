@@ -1,5 +1,5 @@
 /*
- * $Id: LinkType.java,v 1.1 2004/10/22 13:03:43 bob Exp $
+ * $Id: LinkType.java,v 1.2 2004/10/26 14:31:43 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,13 +22,15 @@ import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2004/10/22 13:03:43 $
+ * @version $Revision: 1.2 $, $Date: 2004/10/26 14:31:43 $
  * @author $Author: bob $
  * @module configuration_v1
  */
 
 public class LinkType extends StorableObjectType {
 
+    
+	private String name;
 	private int						sort;
 	private String					manufacturer;
 	private String					manufacturerCode;
@@ -54,19 +56,21 @@ public class LinkType extends StorableObjectType {
 		this.manufacturer = ltt.manufacturer;
 		this.manufacturerCode = ltt.manufacturerCode;
 		this.imageId = new Identifier(ltt.image_id);
+		this.name = ltt.name;
 	}
 
 	protected LinkType(Identifier id,
 			Identifier creatorId,
 			String codename,
 			String description,
+			String name,
 			int sort,
 			String manufacturer,
 			String manufacturerCode,
 			Identifier imageId) {
 		super(id, new Date(System.currentTimeMillis()), new Date(System.currentTimeMillis()), creatorId, creatorId,
 				codename, description);
-
+		this.name = name;
 		this.sort = sort;
 		this.manufacturer = manufacturer;
 		this.manufacturerCode = manufacturerCode;
@@ -83,11 +87,12 @@ public class LinkType extends StorableObjectType {
 											Identifier creatorId,
 											String codename,
 											String description,
+											String name,
 											LinkTypeSort sort,
 											String manufacturer,
 											String manufacturerCode,
 											Identifier imageId) {
-		return new LinkType(id, creatorId, codename, description, sort.value(), manufacturer, manufacturerCode, imageId);
+		return new LinkType(id, creatorId, codename, description, name, sort.value(), manufacturer, manufacturerCode, imageId);
 	}
 
 	public static LinkType getInstance(LinkType_Transferable ltt) throws CreateObjectException {
@@ -110,6 +115,7 @@ public class LinkType extends StorableObjectType {
 													.getTransferable(), (Identifier_Transferable) super.modifierId
 													.getTransferable(), new String(super.codename),
 											(super.description != null) ? (new String(super.description)) : "",
+											(this.name != null) ? (new String(this.name)) : "",
 											LinkTypeSort.from_int(this.sort), this.manufacturer, this.manufacturerCode,
 											(Identifier_Transferable) this.imageId.getTransferable());
 	}
@@ -120,11 +126,13 @@ public class LinkType extends StorableObjectType {
 												Identifier modifierId,
 												String codename,
 												String description,
+												String name,
 												int sort,
 												String manufacturer,
 												String manufacturerCode,
 												Identifier imageId) {
 		super.setAttributes(created, modified, creatorId, modifierId, codename, description);
+		this.name = name;
 		this.sort = sort;
 		this.manufacturer = manufacturer;
 		this.manufacturerCode = manufacturerCode;
@@ -146,4 +154,14 @@ public class LinkType extends StorableObjectType {
 	public LinkTypeSort getSort() {
 		return LinkTypeSort.from_int(this.sort);
 	}
+	
+	public String getName(){
+		return this.name;
+	}
+	
+	public void setName(String name){
+		this.currentVersion = super.getNextVersion();
+		this.name = name;
+	}
 }
+

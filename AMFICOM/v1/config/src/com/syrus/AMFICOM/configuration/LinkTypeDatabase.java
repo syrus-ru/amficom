@@ -1,5 +1,5 @@
 /*
- * $Id: LinkTypeDatabase.java,v 1.1 2004/10/22 13:03:43 bob Exp $
+ * $Id: LinkTypeDatabase.java,v 1.2 2004/10/26 14:31:43 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,7 +31,7 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2004/10/22 13:03:43 $
+ * @version $Revision: 1.2 $, $Date: 2004/10/26 14:31:43 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -41,6 +41,7 @@ public class LinkTypeDatabase extends StorableObjectDatabase {
     public static final String COLUMN_CODENAME      = "codename";
     // description VARCHAR2(256),
     public static final String COLUMN_DESCRIPTION   = "description";
+	public static final String COLUMN_NAME = "name";
     // sort NUMBER(2,0),
     public static final String COLUMN_SORT  = "sort";
     // manufacturer VARCHAR2(64),
@@ -69,6 +70,7 @@ public class LinkTypeDatabase extends StorableObjectDatabase {
 			+ QUESTION + COMMA
 			+ QUESTION + COMMA
 			+ QUESTION + COMMA
+			+ QUESTION + COMMA
 			+ QUESTION;
 		}
 	return this.updateMultiplySQLValues;
@@ -79,6 +81,7 @@ public class LinkTypeDatabase extends StorableObjectDatabase {
 			this.updateColumns = super.getUpdateColumns() + COMMA
 				+ COLUMN_CODENAME + COMMA
 				+ COLUMN_DESCRIPTION + COMMA
+				+ COLUMN_NAME + COMMA
 				+ COLUMN_SORT + COMMA
 				+ COLUMN_MANUFACTURER + COMMA
 				+ COLUMN_MANUFACTURER_CODE + COMMA
@@ -90,9 +93,11 @@ public class LinkTypeDatabase extends StorableObjectDatabase {
 	protected String getUpdateSingleSQLValues(StorableObject storableObject)
 			throws IllegalDataException, UpdateObjectException {
 		LinkType linkType = fromStorableObject(storableObject);
+		String name = linkType.getName();
 		String sql = super.getUpdateSingleSQLValues(storableObject) + COMMA
 			+ APOSTOPHE + linkType.getCodename() + APOSTOPHE + COMMA
-			+ APOSTOPHE + linkType.getDescription() + APOSTOPHE +
+			+ APOSTOPHE + linkType.getDescription() + APOSTOPHE 
+			+ APOSTOPHE + (name != null ? name : "") + APOSTOPHE + COMMA
 			+ linkType.getSort().value() + COMMA
 			+ APOSTOPHE + linkType.getManufacturer() + APOSTOPHE + COMMA
 			+ APOSTOPHE + linkType.getManufacturerCode() + APOSTOPHE + COMMA
@@ -115,6 +120,7 @@ public class LinkTypeDatabase extends StorableObjectDatabase {
 		return super.retrieveQuery(condition) + COMMA
 			+ COLUMN_CODENAME + COMMA
 			+ COLUMN_DESCRIPTION + COMMA
+			+ COLUMN_NAME + COMMA
 			+ COLUMN_SORT + COMMA
 			+ COLUMN_MANUFACTURER + COMMA
 			+ COLUMN_MANUFACTURER_CODE + COMMA
@@ -133,6 +139,7 @@ public class LinkTypeDatabase extends StorableObjectDatabase {
 			i = super.setEntityForPreparedStatement(storableObject, preparedStatement);
 			preparedStatement.setString( ++i, linkType.getCodename());
 			preparedStatement.setString( ++i, linkType.getDescription());
+			preparedStatement.setString( ++i, linkType.getName());
 			preparedStatement.setInt( ++i, linkType.getSort().value());
 			preparedStatement.setString( ++i, linkType.getManufacturer());
 			preparedStatement.setString( ++i, linkType.getManufacturerCode());
@@ -152,7 +159,7 @@ public class LinkTypeDatabase extends StorableObjectDatabase {
 			/**
 			 * @todo when change DB Identifier model ,change getString() to getLong()
 			 */
-			linkType = new LinkType(new Identifier(resultSet.getString(COLUMN_ID)), null, null, null, 0,
+			linkType = new LinkType(new Identifier(resultSet.getString(COLUMN_ID)), null, null, null, null, 0,
 										 null, null, null);			
 		}
 		linkType.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
@@ -167,6 +174,7 @@ public class LinkTypeDatabase extends StorableObjectDatabase {
 									new Identifier(resultSet.getString(COLUMN_MODIFIER_ID)),
 									resultSet.getString(COLUMN_CODENAME),
 									resultSet.getString(COLUMN_DESCRIPTION),
+									resultSet.getString(COLUMN_NAME),
 									resultSet.getInt(COLUMN_SORT),
 									resultSet.getString(COLUMN_MANUFACTURER),
 									resultSet.getString(COLUMN_MANUFACTURER_CODE),

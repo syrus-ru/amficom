@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPortType.java,v 1.7 2004/09/01 15:08:01 bob Exp $
+ * $Id: MeasurementPortType.java,v 1.8 2004/10/26 14:31:43 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -20,12 +20,14 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.configuration.corba.MeasurementPortType_Transferable;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2004/09/01 15:08:01 $
+ * @version $Revision: 1.8 $, $Date: 2004/10/26 14:31:43 $
  * @author $Author: bob $
  * @module configuration_v1
  */
 
 public class MeasurementPortType extends StorableObjectType {
+
+	private String name;
 
 	private StorableObjectDatabase measurementPortTypeDatabase;
 
@@ -49,21 +51,23 @@ public class MeasurementPortType extends StorableObjectType {
 					new Identifier(ptt.modifier_id),
 					new String(ptt.codename),
 					new String(ptt.description));		
+		this.name = ptt.name;
 	}
 	
 	protected MeasurementPortType(Identifier id,
 								Identifier creatorId,
 								String codename,
-								String description){
-						super(id,
-								new Date(System.currentTimeMillis()),
-								new Date(System.currentTimeMillis()),
-								creatorId,
-								creatorId,
-								codename,
-								description);				
-						
-						this.measurementPortTypeDatabase = ConfigurationDatabaseContext.measurementPortTypeDatabase;
+								String description,
+								String name){
+			super(id,
+				  new Date(System.currentTimeMillis()),
+				  new Date(System.currentTimeMillis()),
+				  creatorId,
+				  creatorId,
+				  codename,
+				  description);				
+			this.name = name;
+			this.measurementPortTypeDatabase = ConfigurationDatabaseContext.measurementPortTypeDatabase;
 	}
 	
 	/**
@@ -77,11 +81,13 @@ public class MeasurementPortType extends StorableObjectType {
 	public static MeasurementPortType createInstance(Identifier id,
 													 Identifier creatorId,
 													 String codename,
-													 String description){
+													 String description,
+													 String name){
 		return new MeasurementPortType(id,
 									   creatorId,
 									   codename,
-									   description);
+									   description,
+									   name);
 	}
 	
 	public static MeasurementPortType getInstance(MeasurementPortType_Transferable mptt) throws CreateObjectException {
@@ -106,7 +112,8 @@ public class MeasurementPortType extends StorableObjectType {
 																								(Identifier_Transferable)super.creatorId.getTransferable(),
 																								(Identifier_Transferable)super.modifierId.getTransferable(),
 																								new String(super.codename),
-																								(super.description != null) ? (new String(super.description)) : "");
+																								(super.description != null) ? (new String(super.description)) : "",
+																								(this.name != null) ? (new String(this.name)) : "");
 	}
 	
 	protected synchronized void setAttributes(Date created,
@@ -114,12 +121,23 @@ public class MeasurementPortType extends StorableObjectType {
 																						Identifier creatorId,
 																						Identifier modifierId,
 																						String codename,
-																						String description) {
+																						String description,
+																						String name) {
 		super.setAttributes(created,
 												modified,
 												creatorId,
 												modifierId,
 												codename,
 												description);
+		this.name = name;
+	}
+	
+	public String getName(){
+		return this.name;
+	}
+	
+	public void setName(String name){
+		this.currentVersion = super.getNextVersion();
+		this.name = name;
 	}
 }

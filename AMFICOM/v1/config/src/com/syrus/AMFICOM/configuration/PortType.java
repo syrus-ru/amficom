@@ -1,5 +1,5 @@
 /*
- * $Id: PortType.java,v 1.7 2004/09/01 15:08:02 bob Exp $
+ * $Id: PortType.java,v 1.8 2004/10/26 14:31:43 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -20,13 +20,15 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.configuration.corba.PortType_Transferable;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2004/09/01 15:08:02 $
+ * @version $Revision: 1.8 $, $Date: 2004/10/26 14:31:43 $
  * @author $Author: bob $
  * @module configuration_v1
  */
 
 public class PortType extends StorableObjectType {
 
+	private String name;
+	
 	private StorableObjectDatabase portTypeDatabase;
 
 	public PortType(Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
@@ -49,13 +51,14 @@ public class PortType extends StorableObjectType {
 					new Identifier(ptt.modifier_id),
 					new String(ptt.codename),
 					new String(ptt.description));
-		
+		this.name = ptt.name;	
 	}
 	
 	protected PortType(Identifier id,
 						 Identifier creatorId,
 						 String codename,
-						 String description){
+						 String description,
+						 String name){
 		super(id,
 				new Date(System.currentTimeMillis()),
 				new Date(System.currentTimeMillis()),
@@ -63,6 +66,7 @@ public class PortType extends StorableObjectType {
 				creatorId,
 				codename,
 				description);
+		this.name = name;
 		
 		this.portTypeDatabase = ConfigurationDatabaseContext.portTypeDatabase;
 	}
@@ -79,11 +83,13 @@ public class PortType extends StorableObjectType {
 	public static PortType createInstance(Identifier id,
 											 Identifier creatorId,
 											 String codename,
-											 String description){
+											 String description,
+											 String name){
 		return new PortType(id,
 							creatorId,
 							codename,
-							description);
+							description,
+							name);
 	}
 	
 	public static PortType getInstance(PortType_Transferable ptt) throws CreateObjectException {
@@ -108,7 +114,8 @@ public class PortType extends StorableObjectType {
 																					(Identifier_Transferable)super.creatorId.getTransferable(),
 																					(Identifier_Transferable)super.modifierId.getTransferable(),
 																					new String(super.codename),
-																					(super.description != null) ? (new String(super.description)) : "");
+																					(super.description != null) ? (new String(super.description)) : "",
+																					(this.name != null) ? (new String(this.name)) : "");
 	}
 	
 	protected synchronized void setAttributes(Date created,
@@ -116,12 +123,24 @@ public class PortType extends StorableObjectType {
 																						Identifier creatorId,
 																						Identifier modifierId,
 																						String codename,
-																						String description) {
+																						String description,
+																						String name) {
 		super.setAttributes(created,
 												modified,
 												creatorId,
 												modifierId,
 												codename,
 												description);
+		this.name = name;
+	}
+	
+	
+	public String getName(){
+		return this.name;
+	}
+	
+	public void setName(String name){
+		this.currentVersion = super.getNextVersion();
+		this.name = name;
 	}
 }
