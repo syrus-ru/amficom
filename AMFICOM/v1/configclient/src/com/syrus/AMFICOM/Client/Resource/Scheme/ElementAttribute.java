@@ -122,6 +122,11 @@ public class ElementAttribute extends StubResource
 	{
 	}
 
+	public String getPropertyPaneClassName()
+	{
+		return "";
+	}
+
 	public String getName()
 	{
 		return name;

@@ -84,4 +84,9 @@ public class AlertingMessageUser extends StubResource
 //		setTransferableFromLocal();
 		return transferable;
 	}
+
+	public String getPropertyPaneClassName()
+	{
+		return "";
+	}
 }

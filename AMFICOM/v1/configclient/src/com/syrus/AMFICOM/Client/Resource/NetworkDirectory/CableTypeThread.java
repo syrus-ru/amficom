@@ -72,6 +72,11 @@ public class CableTypeThread extends StubResource implements Serializable
 	{
 	}
 
+	public String getPropertyPaneClassName()
+	{
+		return "";
+	}
+
 	public Object getTransferable()
 	{
 		return transferable;

@@ -65,4 +65,9 @@ public class AlarmType extends StubResource
 	{
 		return transferable;
 	}
+
+	public String getPropertyPaneClassName()
+	{
+		return "";
+	}
 }

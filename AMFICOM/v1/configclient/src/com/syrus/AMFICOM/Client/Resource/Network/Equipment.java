@@ -39,8 +39,7 @@ import java.io.*;
 import java.util.*;
 
 import com.syrus.AMFICOM.CORBA.Network.*;
-import com.syrus.AMFICOM.Client.Configure.UI.EquipmentPane;
-import com.syrus.AMFICOM.Client.General.UI.*;
+import com.syrus.AMFICOM.Client.General.UI.ObjectResourceDisplayModel;
 import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.Resource.ISM.*;
 import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.EquipmentType;
@@ -321,9 +320,9 @@ public class Equipment extends StubResource implements Serializable
 		return new EquipmentDisplayModel();
 	}
 
-	public static PropertiesPanel getPropertyPane()
+	public String getPropertyPaneClassName()
 	{
-		return new EquipmentPane();
+		return "com.syrus.AMFICOM.Client.Configure.UI.EquipmentPane";
 	}
 
 	private void writeObject(java.io.ObjectOutputStream out) throws IOException

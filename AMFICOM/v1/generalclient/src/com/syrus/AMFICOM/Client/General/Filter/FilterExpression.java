@@ -92,15 +92,19 @@ public class FilterExpression extends StubResource implements FilterExpressionIn
 		return fe.getColumnName();
 	}
 
+	public String getPropertyPaneClassName()
+	{
+		return "";
+	}
 
 	public Object clone()
 	{
 		FilterExpression fe = new FilterExpression();
 		fe.setName(getName());
 		fe.setId(getId());
-    
-    List cloneList = new ArrayList();
-    cloneList.addAll(getVec());
+
+		List cloneList = new ArrayList();
+		cloneList.addAll(getVec());
 		fe.setVec(cloneList);
 
 		fe.setListID(getListID());
@@ -113,7 +117,7 @@ public class FilterExpression extends StubResource implements FilterExpressionIn
 	{
 		List vec1 = getVec();
 		List vec = new ArrayList();
-    vec.addAll(vec1);
+		vec.addAll(vec1);
 		String type = (String )vec.get(0);
 		if(type.equals(LIST_EXPRESSION))
 		{

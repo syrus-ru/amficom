@@ -40,8 +40,7 @@ import java.util.*;
 
 import com.syrus.AMFICOM.CORBA.Network.Characteristic_Transferable;
 import com.syrus.AMFICOM.CORBA.NetworkDirectory.LinkType_Transferable;
-import com.syrus.AMFICOM.Client.Configure.UI.LinkTypePane;
-import com.syrus.AMFICOM.Client.General.UI.*;
+import com.syrus.AMFICOM.Client.General.UI.ObjectResourceDisplayModel;
 import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.Resource.Network.Characteristic;
 
@@ -196,9 +195,9 @@ public class LinkType extends StubResource implements Serializable
 		return new LinkTypeDisplayModel();
 	}
 
-	public static PropertiesPanel getPropertyPane()
+	public String getPropertyPaneClassName()
 	{
-		return new LinkTypePane();
+		return "com.syrus.AMFICOM.Client.Configure.UI.LinkTypePane";
 	}
 
 	private void writeObject(java.io.ObjectOutputStream out) throws IOException

@@ -39,8 +39,7 @@ import java.io.*;
 import java.util.*;
 
 import com.syrus.AMFICOM.CORBA.Network.*;
-import com.syrus.AMFICOM.Client.Configure.UI.CablePortPane;
-import com.syrus.AMFICOM.Client.General.UI.*;
+import com.syrus.AMFICOM.Client.General.UI.ObjectResourceDisplayModel;
 import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.CablePortType;
 
@@ -226,10 +225,9 @@ public class CablePort extends StubResource implements Serializable
 		return new CablePortDisplayModel();
 	}
 
-	public static PropertiesPanel getPropertyPane()
+	public String getPropertyPaneClassName()
 	{
-		return new CablePortPane();
-//		return new CablePortGeneralPanel();
+		return "com.syrus.AMFICOM.Client.Configure.UI.CablePortPane";
 	}
 
 	public Object clone()

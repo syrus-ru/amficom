@@ -460,7 +460,11 @@ public class ReportTemplate extends StubResource implements Serializable
 
 	public void updateLocalFromTransferable()
 	{
+	}
 
+	public String getPropertyPaneClassName()
+	{
+		return "";
 	}
 
 	private void writeObject(java.io.ObjectOutputStream out)

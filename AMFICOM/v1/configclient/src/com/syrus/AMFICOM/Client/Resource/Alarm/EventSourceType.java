@@ -134,6 +134,11 @@ public class EventSourceType extends StubResource
 	{
 	}
 
+	public String getPropertyPaneClassName()
+	{
+		return "";
+	}
+
 	public String getId()
 	{
 		return id;

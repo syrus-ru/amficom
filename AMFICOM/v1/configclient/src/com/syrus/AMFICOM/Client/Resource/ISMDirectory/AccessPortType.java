@@ -40,8 +40,7 @@ import java.util.*;
 
 import com.syrus.AMFICOM.CORBA.ISMDirectory.AccessPortType_Transferable;
 import com.syrus.AMFICOM.CORBA.Network.Characteristic_Transferable;
-import com.syrus.AMFICOM.Client.Configure.UI.AccessPortTypePane;
-import com.syrus.AMFICOM.Client.General.UI.*;
+import com.syrus.AMFICOM.Client.General.UI.ObjectResourceDisplayModel;
 import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.Resource.Network.Characteristic;
 
@@ -97,9 +96,9 @@ public class AccessPortType extends StubResource implements Serializable
 		return new AccessPortTypeDisplayModel();
 	}
 
-	public static PropertiesPanel getPropertyPane()
+	public String getPropertyPaneClassName()
 	{
-		return new AccessPortTypePane();
+		return "com.syrus.AMFICOM.Client.Configure.UI.AccessPortTypePane";
 	}
 
 	public void setLocalFromTransferable()

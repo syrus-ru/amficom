@@ -39,8 +39,7 @@ import java.io.*;
 import java.util.*;
 
 import com.syrus.AMFICOM.CORBA.ISMDirectory.TransmissionPathType_Transferable;
-import com.syrus.AMFICOM.Client.Configure.UI.TransmissionPathTypePane;
-import com.syrus.AMFICOM.Client.General.UI.*;
+import com.syrus.AMFICOM.Client.General.UI.ObjectResourceDisplayModel;
 import com.syrus.AMFICOM.Client.Resource.*;
 
 public class TransmissionPathType extends StubResource implements Serializable
@@ -90,9 +89,9 @@ public class TransmissionPathType extends StubResource implements Serializable
 		return new TransmissionPathTypeDisplayModel();
 	}
 
-	public static PropertiesPanel getPropertyPane()
+	public String getPropertyPaneClassName()
 	{
-		return new TransmissionPathTypePane();
+		return "com.syrus.AMFICOM.Client.Configure.UI.TransmissionPathTypePane";
 	}
 
 	public void setLocalFromTransferable()

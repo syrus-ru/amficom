@@ -39,8 +39,7 @@ import java.io.*;
 import java.util.*;
 
 import com.syrus.AMFICOM.CORBA.Network.*;
-import com.syrus.AMFICOM.Client.Configure.UI.PortPane;
-import com.syrus.AMFICOM.Client.General.UI.*;
+import com.syrus.AMFICOM.Client.General.UI.ObjectResourceDisplayModel;
 import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.Resource.ISM.KIS;
 import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.PortType;
@@ -238,10 +237,9 @@ public class Port extends StubResource implements Serializable
 		return new PortDisplayModel();
 	}
 
-	public static PropertiesPanel getPropertyPane()
+	public String getPropertyPaneClassName()
 	{
-		return new PortPane();
-//		return new PortGeneralPanel();
+		return "com.syrus.AMFICOM.Client.Configure.UI.PortPane";
 	}
 
 	public Object clone()

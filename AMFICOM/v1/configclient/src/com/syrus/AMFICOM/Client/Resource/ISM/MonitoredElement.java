@@ -159,6 +159,11 @@ public class MonitoredElement extends StubResource implements Serializable
 		return transferable;
 	}
 
+	public String getPropertyPaneClassName()
+	{
+		return "";
+	}
+
 	private void writeObject(java.io.ObjectOutputStream out) throws IOException
 	{
 		out.writeObject(id);

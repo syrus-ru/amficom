@@ -1,5 +1,5 @@
 /*
- * $Id: Server.java,v 1.2 2004/08/19 15:50:00 peskovsky Exp $
+ * $Id: Server.java,v 1.3 2004/09/10 14:13:35 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,7 +15,6 @@ import java.util.List;
 import java.util.ArrayList;
 
 import com.syrus.AMFICOM.CORBA.Admin.*;
-import com.syrus.AMFICOM.Client.Administrate.Object.UI.*;
 import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.Resource.Object.*;
@@ -25,8 +24,8 @@ import com.syrus.AMFICOM.Client.Resource.Object.*;
  * moved to <tt>generalclient_v1</tt> to resolve cross-module
  * dependencies between <tt>generalclient_v1</tt> and <tt>admin_1</tt>.
  *
- * @author $Author: peskovsky $
- * @version $Revision: 1.2 $, $Date: 2004/08/19 15:50:00 $
+ * @author $Author: stas $
+ * @version $Revision: 1.3 $, $Date: 2004/09/10 14:13:35 $
  * @module generalclient_v1
  */
 public class Server extends AdminObjectResource implements Serializable
@@ -147,27 +146,27 @@ public class Server extends AdminObjectResource implements Serializable
 		return new ArrayList();
 	}
 
-  public List getChildIds(String key)
-  {
-    return new ArrayList();
-  }
+	public List getChildIds(String key)
+	{
+		return new ArrayList();
+	}
 
-  public void addChildId(String key, String id)
-  {
-  }
-  public void removeChildId(String key, String id)
-  {
-  }
+	public void addChildId(String key, String id)
+	{
+	}
+	public void removeChildId(String key, String id)
+	{
+	}
 
 	public Collection getChildTypes()
 	{
 		return new ArrayList();
 	}
 
-  public static Collection getChildTypes_()
-  {
-    return new ArrayList();
-  }
+	public static Collection getChildTypes_()
+	{
+		return new ArrayList();
+	}
 
 	public static ObjectResourceDisplayModel getDefaultDisplayModel()
 	{
@@ -179,9 +178,9 @@ public class Server extends AdminObjectResource implements Serializable
 		return new ServerModel(this);
 	}
 
-	public static PropertiesPanel getPropertyPane()
+	public String getPropertyPaneClassName()
 	{
-		return new ServerPane();
+		return "com.syrus.AMFICOM.Client.Administrate.Object.UI.ServerPane";
 	}
 
 	private void writeObject(java.io.ObjectOutputStream out) throws IOException
@@ -216,23 +215,23 @@ public class Server extends AdminObjectResource implements Serializable
 		updateLocalFromTransferable();
 	}
 
-  public String getTyp()
-  {
-    return typ;
-  }
+	public String getTyp()
+	{
+		return typ;
+	}
 
-  public String getOwnerId()
-  {
-    return "";
-  }
+	public String getOwnerId()
+	{
+		return "";
+	}
 
-  public void setOwnerId(String ownerID)
-  {
-  }
+	public void setOwnerId(String ownerID)
+	{
+	}
 
-  public  void setModificationTime(long time)
-  {
-    modified = time;
-  }
+	public  void setModificationTime(long time)
+	{
+		modified = time;
+	}
 
 }

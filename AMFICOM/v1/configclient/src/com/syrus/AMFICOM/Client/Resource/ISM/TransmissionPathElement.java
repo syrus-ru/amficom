@@ -30,6 +30,11 @@ public class TransmissionPathElement extends StubResource implements Serializabl
 		return new TransmissionPathElement_Transferable(n, is_cable, link_id, thread_id);
 	}
 
+	public String getPropertyPaneClassName()
+	{
+		return "";
+	}
+
 	public ObjectResourceModel getModel()
 	{
 		return new TransmissionPathElementModel(this);

@@ -61,11 +61,11 @@ public class ObjectsReport extends StubResource
 		}
 
 		else if (reserve instanceof List)
-    {
-      List cloneList = new ArrayList();
-      cloneList.addAll((List)reserve);
+		{
+			List cloneList = new ArrayList();
+			cloneList.addAll((List)reserve);
 			newReport.reserve = cloneList;
-    }
+		}
 		return newReport;
 	}
 
@@ -97,6 +97,11 @@ public class ObjectsReport extends StubResource
 	public void setLocalFromTransferable(){}
 	public void setTransferableFromLocal(){}
 	public void updateLocalFromTransferable(){}
+
+	public String getPropertyPaneClassName()
+	{
+		return "";
+	}
 
 //////////////////////////////////////////////////
 	public Object getTransferData(DataFlavor flavor)

@@ -111,6 +111,11 @@ public class CharacteristicType extends StubResource implements Serializable
 	{
 	}
 
+	public String getPropertyPaneClassName()
+	{
+		return "";
+	}
+
 	public String getId()
 	{
 		return id;

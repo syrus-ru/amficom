@@ -40,7 +40,6 @@ import java.util.*;
 
 import com.syrus.AMFICOM.CORBA.Network.Characteristic_Transferable;
 import com.syrus.AMFICOM.CORBA.NetworkDirectory.EquipmentType_Transferable;
-import com.syrus.AMFICOM.Client.Configure.UI.EquipmentTypePane;
 import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.Resource.Network.Characteristic;
@@ -188,9 +187,9 @@ public class EquipmentType extends StubResource implements Serializable
 		return new EquipmentTypeDisplayModel();
 	}
 
-	public static PropertiesPanel getPropertyPane()
+	public String getPropertyPaneClassName()
 	{
-		return new EquipmentTypePane();
+		return "com.syrus.AMFICOM.Client.Configure.UI.EquipmentTypePane";
 	}
 
 	public Object clone()

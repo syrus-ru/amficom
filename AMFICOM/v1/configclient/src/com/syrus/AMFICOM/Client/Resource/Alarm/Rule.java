@@ -86,6 +86,11 @@ public class Rule extends StubResource
 		return transferable;
 	}
 
+	public String getPropertyPaneClassName()
+	{
+		return "";
+	}
+
 	public String getAlarmType()
 	{
 		int ind = logic_text.indexOf("GENERATE_ALARM");

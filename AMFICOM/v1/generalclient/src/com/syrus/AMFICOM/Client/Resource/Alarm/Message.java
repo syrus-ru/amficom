@@ -4,10 +4,10 @@ import com.syrus.AMFICOM.CORBA.Alarm.*;
 import com.syrus.AMFICOM.Client.Resource.*;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2004/08/17 11:07:23 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.4 $, $Date: 2004/09/10 14:13:39 $
+ * @author $Author: stas $
  * @module Survey
- * 
+ *
  * @see MessageModel
  * @see com.syrus.AMFICOM.Client.Object.UI.MessageDisplayModel
  * @deprecated
@@ -109,9 +109,14 @@ public class Message extends StubResource
 	{
 	}
 
+	public String getPropertyPaneClassName()
+	{
+		return "";
+	}
+
 	/**
 	 * Specified by {@link ObjectResource#getId() ObjectResource.getId()}
-	 * 
+	 *
 	 * @see #getAlertingId()
 	 */
 	public String getId()
@@ -127,19 +132,19 @@ public class Message extends StubResource
 
 	/**
 	 * Specified by {@link ObjectResource#getName() ObjectResource.getName()}
-	 * 
+	 *
 	 * @see #getText()
 	 */
 	public String getName()
 	{
 		return getText();
 	}
-	
+
 	public String getTyp()
 	{
 		return typ;
 	}
-	
+
 	public Object getTransferable()
 	{
 		return transferable;
@@ -151,7 +156,7 @@ public class Message extends StubResource
 	 * @param messageSeq the message sequence to be checked for validity.
 	 * @throws java.lang.IllegalArgumentException if message sequence is
 	 *         invalid.
-	 */	
+	 */
 	private static void checkValidMessageSeq(Message messageSeq[]) throws IllegalArgumentException
 	{
 		try
@@ -221,7 +226,7 @@ public class Message extends StubResource
 	 *        validity.
 	 * @throws java.lang.IllegalArgumentException if message sequence is
 	 *         invalid.
-	 */	
+	 */
 	private static void checkValidMessageSeq_Transferable(Message_Transferable messageSeq_Transferable[]) throws IllegalArgumentException
 	{
 		try

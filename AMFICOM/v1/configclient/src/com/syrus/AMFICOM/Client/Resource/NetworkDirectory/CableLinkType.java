@@ -197,10 +197,9 @@ public class CableLinkType extends StubResource implements Serializable
 		return new CableLinkTypeModel(this);
 	}
 
-	public static PropertiesPanel getPropertyPane()
+	public String getPropertyPaneClassName()
 	{
-		return new CableLinkTypePane();
-//		return new CableLinkGeneralPanel();
+		return "com.syrus.AMFICOM.Client.Configure.UI.CableLinkTypePane";
 	}
 
 	private void writeObject(java.io.ObjectOutputStream out) throws IOException

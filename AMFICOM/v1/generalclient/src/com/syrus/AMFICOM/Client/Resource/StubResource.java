@@ -45,7 +45,6 @@ import com.syrus.AMFICOM.Client.General.UI.PropertiesPanel;
 import com.syrus.AMFICOM.Client.General.UI.StubDisplayModel;
 import com.syrus.AMFICOM.Client.Resource.Object.ObjectPermissionAttributes;
 
-
 public class StubResource implements ObjectResource
 {
 	protected boolean changed = false;
@@ -54,38 +53,43 @@ public class StubResource implements ObjectResource
 	{
 		return this.changed;
 	}
-	
+
 	public void setChanged(boolean changed)
 	{
 		this.changed = changed;
 	}
 
-	public static PropertiesPanel getPropertyPane()
+//	public static PropertiesPanel getPropertyPane()
+//	{
+//		System.out.println("  ObjectResource: getPropertyPane");
+//		return new GeneralPanel();
+//	}
+
+	public String getPropertyPaneClassName()
 	{
-		System.out.println("  ObjectResource: getPropertyPane");
-		return new GeneralPanel();
+		return "com.syrus.AMFICOM.Client.General.UI.GeneralPanel";
 	}
 
 	public static ObjectResourceDisplayModel getDefaultDisplayModel()
 	{
 		return new StubDisplayModel(new String[] {"name"}, new String[] {"Название"});
 	}
-	
+
 	public static ObjectResourceDisplayModel getReportDisplayModel()
 	{
 		return new StubDisplayModel(new String[] {"name"}, new String[] {"Название"});
 	}
-	
+
 	public static ObjectResourceFilter getFilter()
 	{
 		return null;
 	}
-	
+
 	public static ObjectResourceSorter getSorter()
 	{
 		return getDefaultSorter();
 	}
-	
+
 	public static ObjectResourceSorter getDefaultSorter()
 	{
 		return new ObjectResourceNameSorter();
@@ -113,17 +117,17 @@ public class StubResource implements ObjectResource
 	{
 		throw new UnsupportedOperationException();
 	}
-	
+
 	public Object getTransferable()
 	{
 		return null;
 	}
-	
+
 	public String getName()
 	{
 		return "";
 	}
-	
+
 	public String getId()
 	{
 		return "";
@@ -133,15 +137,15 @@ public class StubResource implements ObjectResource
 	{
 		return "sysdomain";
 	}
-	
+
 	public void setLocalFromTransferable()
 	{
 	}
-	
+
 	public void setTransferableFromLocal()
 	{
 	}
-	
+
 	public void updateLocalFromTransferable()
 	{
 	}
@@ -160,7 +164,7 @@ public class StubResource implements ObjectResource
 	{
 		return "";
 	}
-	
+
 	public String getPropertyName(String col_id)
 	{
 		return "";

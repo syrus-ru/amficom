@@ -155,6 +155,11 @@ public class Characteristic extends StubResource
 		return transferable;
 	}
 
+	public String getPropertyPaneClassName()
+	{
+		return "";
+	}
+
 	public Object clone()
 	{
 		return new 	Characteristic(

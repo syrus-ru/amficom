@@ -1,5 +1,5 @@
 /*
- * $Id: OperatorProfile.java,v 1.3 2004/08/20 07:21:16 peskovsky Exp $
+ * $Id: OperatorProfile.java,v 1.4 2004/09/10 14:13:36 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,7 +17,6 @@ import java.util.HashMap;
 import java.util.ArrayList;
 
 import com.syrus.AMFICOM.CORBA.Admin.*;
-import com.syrus.AMFICOM.Client.Administrate.Object.UI.*;
 import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.Resource.*;
 
@@ -29,8 +28,8 @@ import java.util.Map;
  * moved to <tt>generalclient_v1</tt> to resolve cross-module
  * dependencies between <tt>generalclient_v1</tt> and <tt>admin_1</tt>.
  *
- * @author $Author: peskovsky $
- * @version $Revision: 1.3 $, $Date: 2004/08/20 07:21:16 $
+ * @author $Author: stas $
+ * @version $Revision: 1.4 $, $Date: 2004/09/10 14:13:36 $
  * @module generalclient_v1
  */
 public class OperatorProfile extends AdminObjectResource implements Serializable
@@ -38,7 +37,7 @@ public class OperatorProfile extends AdminObjectResource implements Serializable
 	private static final long serialVersionUID = 01L;
 
 	public OperatorProfile_Transferable transferable =
-	       new OperatorProfile_Transferable();
+				 new OperatorProfile_Transferable();
 
 // begin of the privilegies fields
 	public String id="";
@@ -231,11 +230,11 @@ public class OperatorProfile extends AdminObjectResource implements Serializable
 		for(i = 0; i < count; i++)
 			transferable.category_ids[i] = (String)category_ids.get(i);
 
-                count = group_ids.size();
+								count = group_ids.size();
 		transferable.group_ids = new String[count];
 		for(i=0; i<count; i++)
 		{
-		  transferable.group_ids[i] = (String)group_ids.get(i);
+			transferable.group_ids[i] = (String)group_ids.get(i);
 		}
 	}
 
@@ -256,48 +255,48 @@ public class OperatorProfile extends AdminObjectResource implements Serializable
 
 	public void updateLocalFromTransferable()
 	{
-    categories = new HashMap();
-    for(Iterator it = category_ids.iterator();it.hasNext();)
-    {
-      String str = (String)it.next();
-		  Object o = Pool.get(OperatorCategory.typ, str);
-		  if(o != null)
-        categories.put(str, o);
+		categories = new HashMap();
+		for(Iterator it = category_ids.iterator();it.hasNext();)
+		{
+			String str = (String)it.next();
+			Object o = Pool.get(OperatorCategory.typ, str);
+			if(o != null)
+				categories.put(str, o);
 		}
 
-    groups = new HashMap();
-    for(Iterator it = group_ids.iterator();it.hasNext();)
-    {
-      String str = (String)it.next();
-		  Object o = Pool.get(OperatorGroup.typ, str);
-		  if(o != null)
-        groups.put(str, o);
+		groups = new HashMap();
+		for(Iterator it = group_ids.iterator();it.hasNext();)
+		{
+			String str = (String)it.next();
+			Object o = Pool.get(OperatorGroup.typ, str);
+			if(o != null)
+				groups.put(str, o);
 		}
 	}
 
-  public List getChildIds(String key)
-  {
-    if(key.equals(OperatorGroup.typ))
-      return group_ids;
-    if(key.equals(OperatorCategory.typ))
-      return category_ids;
-    return new ArrayList();
-  }
+	public List getChildIds(String key)
+	{
+		if(key.equals(OperatorGroup.typ))
+			return group_ids;
+		if(key.equals(OperatorCategory.typ))
+			return category_ids;
+		return new ArrayList();
+	}
 
-  public void addChildId(String key, String id)
-  {
-    if(key.equals(OperatorGroup.typ))
-      group_ids.add(id);
-    if(key.equals(OperatorCategory.typ))
-      category_ids.add(id);
-  }
-  public void removeChildId(String key, String id)
-  {
-    if(key.equals(OperatorGroup.typ))
-      group_ids.remove(id);
-    if(key.equals(OperatorCategory.typ))
-      category_ids.remove(id);
-  }
+	public void addChildId(String key, String id)
+	{
+		if(key.equals(OperatorGroup.typ))
+			group_ids.add(id);
+		if(key.equals(OperatorCategory.typ))
+			category_ids.add(id);
+	}
+	public void removeChildId(String key, String id)
+	{
+		if(key.equals(OperatorGroup.typ))
+			group_ids.remove(id);
+		if(key.equals(OperatorCategory.typ))
+			category_ids.remove(id);
+	}
 
 
 	public Collection getChildren(String key)
@@ -315,37 +314,37 @@ public class OperatorProfile extends AdminObjectResource implements Serializable
 
 	public Collection getChildTypes()
 	{
-	  List ret = new ArrayList();
-	  ret.add(OperatorCategory.typ);
-	  ret.add(OperatorGroup.typ);
-	  return ret;
+		List ret = new ArrayList();
+		ret.add(OperatorCategory.typ);
+		ret.add(OperatorGroup.typ);
+		return ret;
 	}
 
-  public static Collection getChildTypes_()
-  {
-    List ret = new ArrayList();
-    ret.add(OperatorCategory.typ);
-    ret.add(OperatorGroup.typ);
-    return ret;
-  }
+	public static Collection getChildTypes_()
+	{
+		List ret = new ArrayList();
+		ret.add(OperatorCategory.typ);
+		ret.add(OperatorGroup.typ);
+		return ret;
+	}
 
 
 	public Class getChildClass(String type)
 	{
-	  if(type.equals(OperatorCategory.typ))
-	  {
-	    return OperatorCategory.class;
-	  }
-	  if(type.equals(OperatorGroup.typ))
-	  {
-	    return OperatorGroup.class;
-	  }
-	    return ObjectResource.class;
+		if(type.equals(OperatorCategory.typ))
+		{
+			return OperatorCategory.class;
+		}
+		if(type.equals(OperatorGroup.typ))
+		{
+			return OperatorGroup.class;
+		}
+			return ObjectResource.class;
 	}
 
-	public static  PropertiesPanel getPropertyPane()
+	public String getPropertyPaneClassName()
 	{
-		return new OperatorProfilePane();
+		return "com.syrus.AMFICOM.Client.Administrate.Object.UI.OperatorProfilePane";
 	}
 
 	public Object getTransferable()
@@ -354,24 +353,24 @@ public class OperatorProfile extends AdminObjectResource implements Serializable
 	}
 
 	public ObjectResourceModel getModel()
-        {
-          return new OperatorProfileModel(this);
-        }
+				{
+					return new OperatorProfileModel(this);
+				}
 
 	public static ObjectResourceDisplayModel getDefaultDisplayModel()
-	     {
-		    return new OperatorProfileDisplayModel();
-	     }
+			 {
+				return new OperatorProfileDisplayModel();
+			 }
 
-  public String getDomainId()
-  {
-    return null;
-  }
+	public String getDomainId()
+	{
+		return null;
+	}
 
-  public long getModified()
-  {
-    return modified;
-  }
+	public long getModified()
+	{
+		return modified;
+	}
 
 	private void writeObject(java.io.ObjectOutputStream out) throws IOException
 	{
@@ -459,20 +458,20 @@ public class OperatorProfile extends AdminObjectResource implements Serializable
 		updateLocalFromTransferable();
 	}
 
-  public String getOwnerId()
-  {
-    return owner_id;
-  }
+	public String getOwnerId()
+	{
+		return owner_id;
+	}
 
-  public  void setModificationTime(long time)
-  {
-    modified = time;
-  }
+	public  void setModificationTime(long time)
+	{
+		modified = time;
+	}
 
-  public void setOwnerId(String ownerID)
-  {
-    this.owner_id = ownerID;
-  }
+	public void setOwnerId(String ownerID)
+	{
+		this.owner_id = ownerID;
+	}
 
 
 }

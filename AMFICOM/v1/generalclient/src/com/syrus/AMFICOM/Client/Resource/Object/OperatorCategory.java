@@ -1,5 +1,5 @@
 /*
- * $Id: OperatorCategory.java,v 1.3 2004/08/20 07:21:16 peskovsky Exp $
+ * $Id: OperatorCategory.java,v 1.4 2004/09/10 14:13:36 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,7 +16,6 @@ import java.util.Iterator;
 import java.util.List;
 
 import com.syrus.AMFICOM.CORBA.Admin.*;
-import com.syrus.AMFICOM.Client.Administrate.Object.UI.*;
 import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.Resource.*;
 import java.util.Map;
@@ -26,234 +25,233 @@ import java.util.Map;
  * moved to <tt>generalclient_v1</tt> to resolve cross-module
  * dependencies between <tt>generalclient_v1</tt> and <tt>admin_1</tt>.
  *
- * @author $Author: peskovsky $
- * @version $Revision: 1.3 $, $Date: 2004/08/20 07:21:16 $
+ * @author $Author: stas $
+ * @version $Revision: 1.4 $, $Date: 2004/09/10 14:13:36 $
  * @module generalclient_v1
  */
 public class OperatorCategory extends AdminObjectResource implements Serializable
 {
 	private static final long serialVersionUID = 01L;
 
-  public static final String admin    = "admin";
-  public static final String sysadmin = "sysadmin";
-  public static final String designer = "designer";
-  public static final String analyst  = "analyst";
-  public static final String operator = "operator";
-  public static final String spec     = "spec";
-  public static final String subscriber     = "subscriber";
+	public static final String admin    = "admin";
+	public static final String sysadmin = "sysadmin";
+	public static final String designer = "designer";
+	public static final String analyst  = "analyst";
+	public static final String operator = "operator";
+	public static final String spec     = "spec";
+	public static final String subscriber     = "subscriber";
 
+	public OperatorCategory_Transferable transferable =
+			new OperatorCategory_Transferable();
 
-  public OperatorCategory_Transferable transferable =
-      new OperatorCategory_Transferable();
+	public String id="";
+	public String name="";
+	public String codename="";
+	public String description="";
+	public long modified = 0;
 
-  public String id="";
-  public String name="";
-  public String codename="";
-  public String description="";
-  public long modified = 0;
+	public List user_ids = new ArrayList();
+	public Map users = new HashMap();
 
-  public List user_ids = new ArrayList();
-  public Map users = new HashMap();
+	static final public String typ = "operatorcategory";
 
-  static final public String typ = "operatorcategory";
-
-  public OperatorCategory()
-  {
+	public OperatorCategory()
+	{
 //    super("operatorcategory");
-  }
+	}
 
-  public OperatorCategory(OperatorCategory_Transferable transferable)
-  {
+	public OperatorCategory(OperatorCategory_Transferable transferable)
+	{
 //    super("operatorcategory");
-    this.transferable = transferable;
-    setLocalFromTransferable();
-  }
+		this.transferable = transferable;
+		setLocalFromTransferable();
+	}
 
-  public OperatorCategory(
-      String id,
-      String name,
-      String codename,
-      String description,
-      List user_ids)
-  {
+	public OperatorCategory(
+			String id,
+			String name,
+			String codename,
+			String description,
+			List user_ids)
+	{
 //    super("operatorcategory");
-    this.id = id;
-    this.name = name;
-    this.codename = codename;
-    this.description = description;
-    this.user_ids = user_ids;
+		this.id = id;
+		this.name = name;
+		this.codename = codename;
+		this.description = description;
+		this.user_ids = user_ids;
 	this.modified = System.currentTimeMillis();
 
-    transferable = new OperatorCategory_Transferable();
-  }
+		transferable = new OperatorCategory_Transferable();
+	}
 
-  public void setLocalFromTransferable()
-  {
-    int l;
-    int i;
-    int count;
+	public void setLocalFromTransferable()
+	{
+		int l;
+		int i;
+		int count;
 
-    id = transferable.id;
-    name = transferable.name;
-    codename = transferable.codename;
-    description = transferable.description;
-  	modified = transferable.modified;
+		id = transferable.id;
+		name = transferable.name;
+		codename = transferable.codename;
+		description = transferable.description;
+		modified = transferable.modified;
 
-    count = transferable.user_ids.length;
-    user_ids = new ArrayList();
-    for(i = 0; i < count; i++)
-      user_ids.add(transferable.user_ids[i]);
-  }
+		count = transferable.user_ids.length;
+		user_ids = new ArrayList();
+		for(i = 0; i < count; i++)
+			user_ids.add(transferable.user_ids[i]);
+	}
 
-  public void setTransferableFromLocal()
-  {
-    int l;
-    int i;
-    int count;
+	public void setTransferableFromLocal()
+	{
+		int l;
+		int i;
+		int count;
 
-    transferable.id = id;
-    transferable.name = name;
-    transferable.codename = codename;
-    transferable.description = description;
-    transferable.modified = modified;
+		transferable.id = id;
+		transferable.name = name;
+		transferable.codename = codename;
+		transferable.description = description;
+		transferable.modified = modified;
 
-    count = user_ids.size();
-    transferable.user_ids = new String[count];
-    for(i = 0; i < count; i++)
-      transferable.user_ids[i] = (String)user_ids.get(i);
-  }
+		count = user_ids.size();
+		transferable.user_ids = new String[count];
+		for(i = 0; i < count; i++)
+			transferable.user_ids[i] = (String)user_ids.get(i);
+	}
 
-  public String getTyp()
-  {
-    return typ;
-  }
+	public String getTyp()
+	{
+		return typ;
+	}
 
-  public String getName()
-  {
-    return name;
-  }
+	public String getName()
+	{
+		return name;
+	}
 
-  public String getId()
-  {
-    return id;
-  }
+	public String getId()
+	{
+		return id;
+	}
 
-  public void updateLocalFromTransferable()
-  {
-    int l;
-    int i;
+	public void updateLocalFromTransferable()
+	{
+		int l;
+		int i;
 
 /*		int count = transferable.operator_ids.length;
-  operator_ids = new Vector(count);
-  for(i = 0; i < count; i++)
-   operator_ids.add(transferable.operator_ids[i]);
+	operator_ids = new Vector(count);
+	for(i = 0; i < count; i++)
+	 operator_ids.add(transferable.operator_ids[i]);
 */
-    l = user_ids.size();
-    users = new HashMap();
-    for(i = 0; i < l; i++)
-    {
-      Object o = Pool.get(User.typ, (String)user_ids.get(i));
-      if(o != null)
-        users.put(user_ids.get(i), o);
-    }
-  }
+		l = user_ids.size();
+		users = new HashMap();
+		for(i = 0; i < l; i++)
+		{
+			Object o = Pool.get(User.typ, (String)user_ids.get(i));
+			if(o != null)
+				users.put(user_ids.get(i), o);
+		}
+	}
 
-  public Collection getChildren(String key)
-  {
-    if(key.equals(User.typ))
-    {
-      return users.values();
-    }
-    return new ArrayList();
-  }
+	public Collection getChildren(String key)
+	{
+		if(key.equals(User.typ))
+		{
+			return users.values();
+		}
+		return new ArrayList();
+	}
 
-  public Collection getChildTypes()
-  {
-    List ret = new ArrayList();
-    ret.add(User.typ);
-    return ret;
-  }
+	public Collection getChildTypes()
+	{
+		List ret = new ArrayList();
+		ret.add(User.typ);
+		return ret;
+	}
 
-  public List getChildIds(String key)
-  {
-    if(key.equals(User.typ))
-      return user_ids;
-    return new ArrayList();
-  }
+	public List getChildIds(String key)
+	{
+		if(key.equals(User.typ))
+			return user_ids;
+		return new ArrayList();
+	}
 
-  public void addChildId(String key, String id)
-  {
-    if(key.equals(User.typ))
-      user_ids.add(id);
-  }
+	public void addChildId(String key, String id)
+	{
+		if(key.equals(User.typ))
+			user_ids.add(id);
+	}
 
-  public void removeChildId(String key, String id)
-  {
-    if(key.equals(User.typ))
-      user_ids.remove(id);
-  }
-
-
-  public static Collection getChildTypes_()
-  {
-    List ret = new ArrayList();
-    ret.add(User.typ);
-    return ret;
-  }
-
-  public static PropertiesPanel getPropertyPane()
-  {
-    return new OperatorCategoryPanel();
-  }
-
-  public Class getChildClass(String type)
-  {
-    if(type.equals(User.typ))
-      return User.class;
-    return ObjectResource.class;
-  }
+	public void removeChildId(String key, String id)
+	{
+		if(key.equals(User.typ))
+			user_ids.remove(id);
+	}
 
 
-  public ObjectResourceModel getModel()
-  {
-    return new OperatorCategoryModel(this);
-  }
+	public static Collection getChildTypes_()
+	{
+		List ret = new ArrayList();
+		ret.add(User.typ);
+		return ret;
+	}
 
-  public static ObjectResourceDisplayModel getDefaultDisplayModel()
-  {
-    return new OperatorCategoryDisplayModel();
-  }
+	public String getPropertyPaneClassName()
+	{
+		return "com.syrus.AMFICOM.Client.Administrate.Object.UI.OperatorCategoryPanel";
+	}
+
+	public Class getChildClass(String type)
+	{
+		if(type.equals(User.typ))
+			return User.class;
+		return ObjectResource.class;
+	}
 
 
-  static public String idByCodeName(String code)
-  {
-    Map hM = Pool.getMap(OperatorCategory.typ);
-    if (hM == null)
-      return "";
-      
-    for(Iterator it = hM.values().iterator(); it.hasNext();)
-    {
-      OperatorCategory cat = (OperatorCategory)it.next();
-      if(cat.codename.equals(code))
-        return cat.id;
-    }
-    return "";
-  }
+	public ObjectResourceModel getModel()
+	{
+		return new OperatorCategoryModel(this);
+	}
 
-  public Object getTransferable()
-  {
-    return transferable;
-  }
+	public static ObjectResourceDisplayModel getDefaultDisplayModel()
+	{
+		return new OperatorCategoryDisplayModel();
+	}
 
-  public String getDomainId()
-  {
-    return null;
-  }
 
-  public long getModified()
-  {
-    return modified;
-  }
+	static public String idByCodeName(String code)
+	{
+		Map hM = Pool.getMap(OperatorCategory.typ);
+		if (hM == null)
+			return "";
+
+		for(Iterator it = hM.values().iterator(); it.hasNext();)
+		{
+			OperatorCategory cat = (OperatorCategory)it.next();
+			if(cat.codename.equals(code))
+				return cat.id;
+		}
+		return "";
+	}
+
+	public Object getTransferable()
+	{
+		return transferable;
+	}
+
+	public String getDomainId()
+	{
+		return null;
+	}
+
+	public long getModified()
+	{
+		return modified;
+	}
 
 	private void writeObject(java.io.ObjectOutputStream out) throws IOException
 	{
@@ -279,18 +277,18 @@ public class OperatorCategory extends AdminObjectResource implements Serializabl
 		updateLocalFromTransferable();
 	}
 
-  public String getOwnerId()
-  {
-    return "";
-  }
+	public String getOwnerId()
+	{
+		return "";
+	}
 
-  public void setOwnerId(String ownerID)
-  {
-  }
+	public void setOwnerId(String ownerID)
+	{
+	}
 
-  public  void setModificationTime(long time)
-  {
-    modified = time;
-  }
+	public  void setModificationTime(long time)
+	{
+		modified = time;
+	}
 
 }

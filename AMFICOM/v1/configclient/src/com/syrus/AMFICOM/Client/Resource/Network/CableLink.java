@@ -39,8 +39,7 @@ import java.io.*;
 import java.util.*;
 
 import com.syrus.AMFICOM.CORBA.Network.*;
-import com.syrus.AMFICOM.Client.Configure.UI.CableLinkPane;
-import com.syrus.AMFICOM.Client.General.UI.*;
+import com.syrus.AMFICOM.Client.General.UI.ObjectResourceDisplayModel;
 import com.syrus.AMFICOM.Client.Resource.*;
 
 public class CableLink extends StubResource implements Serializable
@@ -298,10 +297,9 @@ public class CableLink extends StubResource implements Serializable
 		return new CableLinkDisplayModel();
 	}
 
-	public static PropertiesPanel getPropertyPane()
+	public String getPropertyPaneClassName()
 	{
-		return new CableLinkPane();
-//		return new CableLinkGeneralPanel();
+		return "com.syrus.AMFICOM.Client.Configure.UI.CableLinkPane";
 	}
 
 	private void writeObject(java.io.ObjectOutputStream out) throws IOException

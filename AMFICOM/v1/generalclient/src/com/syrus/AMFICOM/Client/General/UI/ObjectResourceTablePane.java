@@ -211,11 +211,11 @@ public class ObjectResourceTablePane extends JScrollPane
 	}
 */
 	public Object getObjectAt(int i)
-  {
+	{
 	 return tableModel.getObjectByIndex(i);
-  }
+	}
 
-  public Object getSelectedObject()
+	public Object getSelectedObject()
 	{
 		int ind = jTable.getSelectedRow();
 		if(ind == -1)

@@ -112,6 +112,11 @@ public class TestPortType extends StubResource
 		}
 	}
 
+	public String getPropertyPaneClassName()
+	{
+		return "";
+	}
+
 	public String getTyp()
 	{
 		return typ;

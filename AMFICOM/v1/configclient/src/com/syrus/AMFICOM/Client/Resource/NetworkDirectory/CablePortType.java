@@ -193,6 +193,11 @@ public class CablePortType extends StubResource implements Serializable
 		return new CablePortTypePane();
 	}
 
+	public static String getPropertyPaneClassName()
+	{
+		return "com.syrus.AMFICOM.Client.Configure.UI.PortTypePane";
+	}
+
 	private void writeObject(java.io.ObjectOutputStream out) throws IOException
 	{
 		out.writeObject(id);

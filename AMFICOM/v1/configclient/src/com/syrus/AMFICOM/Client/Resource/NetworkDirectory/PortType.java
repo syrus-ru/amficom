@@ -40,8 +40,7 @@ import java.util.*;
 
 import com.syrus.AMFICOM.CORBA.Network.Characteristic_Transferable;
 import com.syrus.AMFICOM.CORBA.NetworkDirectory.PortType_Transferable;
-import com.syrus.AMFICOM.Client.Configure.UI.PortTypePane;
-import com.syrus.AMFICOM.Client.General.UI.*;
+import com.syrus.AMFICOM.Client.General.UI.ObjectResourceDisplayModel;
 import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.Resource.Network.Characteristic;
 
@@ -188,9 +187,9 @@ public class PortType extends StubResource implements Serializable
 		return new PortTypeDisplayModel();
 	}
 
-	public static PropertiesPanel getPropertyPane()
+	public String getPropertyPaneClassName()
 	{
-		return new PortTypePane();
+		return "com.syrus.AMFICOM.Client.Configure.UI.PortTypePane";
 	}
 
 	private void writeObject(java.io.ObjectOutputStream out) throws IOException

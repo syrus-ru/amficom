@@ -40,8 +40,7 @@ import java.util.*;
 
 import com.syrus.AMFICOM.CORBA.ISM.AccessPort_Transferable;
 import com.syrus.AMFICOM.CORBA.Network.Characteristic_Transferable;
-import com.syrus.AMFICOM.Client.Configure.UI.AccessPortPane;
-import com.syrus.AMFICOM.Client.General.UI.*;
+import com.syrus.AMFICOM.Client.General.UI.ObjectResourceDisplayModel;
 import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.Resource.Network.Characteristic;
 
@@ -183,10 +182,9 @@ public class AccessPort extends StubResource implements Serializable
 		return new AccessPortDisplayModel();
 	}
 
-	public static PropertiesPanel getPropertyPane()
+	public String getPropertyPaneClassName()
 	{
-		return new AccessPortPane();
-//		return new AccessPortGeneralPanel();
+		return "com.syrus.AMFICOM.Client.Configure.UI.AccessPortPane";
 	}
 
 	private void writeObject(java.io.ObjectOutputStream out) throws IOException

@@ -1,5 +1,5 @@
 /*
- * $Id: OperatorGroup.java,v 1.3 2004/08/20 07:21:16 peskovsky Exp $
+ * $Id: OperatorGroup.java,v 1.4 2004/09/10 14:13:36 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,259 +9,251 @@
 package com.syrus.AMFICOM.Client.Resource.Object;
 
 import java.io.*;
-
-import java.util.Collection;
-import java.util.List;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.*;
 
 import com.syrus.AMFICOM.CORBA.Admin.*;
-import com.syrus.AMFICOM.Client.Administrate.Object.UI.*;
 import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.Resource.*;
-import java.util.ListIterator;
-import java.util.Map;
 
 /**
  * This class actually belongs to <tt>admin_v1</tt> module. It was
  * moved to <tt>generalclient_v1</tt> to resolve cross-module
  * dependencies between <tt>generalclient_v1</tt> and <tt>admin_1</tt>.
  *
- * @author $Author: peskovsky $
- * @version $Revision: 1.3 $, $Date: 2004/08/20 07:21:16 $
+ * @author $Author: stas $
+ * @version $Revision: 1.4 $, $Date: 2004/09/10 14:13:36 $
  * @module generalclient_v1
  */
 public class OperatorGroup extends AdminObjectResource implements Serializable
 {
 	private static final long serialVersionUID = 01L;
 
-  public OperatorGroup_Transferable transferable =
-      new OperatorGroup_Transferable();
+	public OperatorGroup_Transferable transferable =
+			new OperatorGroup_Transferable();
 
-  public String id="";
-  public String name="";
-  public String codename="";
-  public String owner_id="";
-  public String description="";
-  public long created;
-  public String created_by="";
-  public long modified;
-  public String modified_by="";
+	public String id="";
+	public String name="";
+	public String codename="";
+	public String owner_id="";
+	public String description="";
+	public long created;
+	public String created_by="";
+	public long modified;
+	public String modified_by="";
 
-  public List user_ids = new ArrayList();
-  public List exec_ids = new ArrayList();
+	public List user_ids = new ArrayList();
+	public List exec_ids = new ArrayList();
 
-  public Map users = new HashMap();
+	public Map users = new HashMap();
 	public Map execs = new HashMap();
 
 
-  static final public String typ = "operatorgroup";
+	static final public String typ = "operatorgroup";
 
-  public OperatorGroup()
-  {
+	public OperatorGroup()
+	{
 //    super("operatorgroup");
-  }
+	}
 
-  public OperatorGroup(OperatorGroup_Transferable transferable)
-  {
+	public OperatorGroup(OperatorGroup_Transferable transferable)
+	{
 //    super("operatorgroup");
-    this.transferable = transferable;
-    setLocalFromTransferable();
-  }
+		this.transferable = transferable;
+		setLocalFromTransferable();
+	}
 
-  public OperatorGroup(
-      String id,
-      String name,
-      String codename,
-      String owner_id,
-      String description,
-      long created,
-      String created_by,
-      long modified,
-      String modified_by,
-      List operator_ids,
-      List role_ids,
-      List privilege_ids,
-      List execIds)
-  {
+	public OperatorGroup(
+			String id,
+			String name,
+			String codename,
+			String owner_id,
+			String description,
+			long created,
+			String created_by,
+			long modified,
+			String modified_by,
+			List operator_ids,
+			List role_ids,
+			List privilege_ids,
+			List execIds)
+	{
 //    super("operatorgroup");
-    this.id = id;
-    this.name = name;
-    this.codename = codename;
-    this.owner_id = owner_id;
-    this.description = description;
-    this.created = created;
-    this.created_by = created_by;
-    this.modified = modified;
-    this.modified_by = modified_by;
-    this.user_ids = operator_ids;
-    this.exec_ids = execIds;
+		this.id = id;
+		this.name = name;
+		this.codename = codename;
+		this.owner_id = owner_id;
+		this.description = description;
+		this.created = created;
+		this.created_by = created_by;
+		this.modified = modified;
+		this.modified_by = modified_by;
+		this.user_ids = operator_ids;
+		this.exec_ids = execIds;
 
-    transferable = new OperatorGroup_Transferable();
-  }
+		transferable = new OperatorGroup_Transferable();
+	}
 
-  public void setLocalFromTransferable()
-  {
-    int l;
-    int i;
-    int count;
-
-
-    id = transferable.id;
-    name = transferable.name;
-    codename = transferable.codename;
-    owner_id = transferable.owner_id;
-    description = transferable.description;
-    created = transferable.created;
-    created_by = transferable.created_by;
-    modified = transferable.modified;
-    modified_by = transferable.modified_by;
-
-    count = transferable.user_ids.length;
-    user_ids = new ArrayList();
-    for(i = 0; i < count; i++)
-      user_ids.add(transferable.user_ids[i]);
-  }
-
-  public void setTransferableFromLocal()
-  {
-    int l;
-    int i;
-    int count;
-
-    transferable.id = id;
-    transferable.name = name;
-    transferable.codename = codename;
-    transferable.owner_id = owner_id;
-    transferable.description = description;
-    transferable.created = created;
-    transferable.created_by = created_by;
-    transferable.modified = modified;
-    transferable.modified_by = modified_by;
-
-    count = user_ids.size();
-    transferable.user_ids = new String[count];
-    for(i = 0; i < count; i++)
-      transferable.user_ids[i] = (String)user_ids.get(i);
-
-    count = exec_ids.size();
-    transferable.exec_ids = new String[count];
-    for(i=0; i<count; i++)
-      transferable.exec_ids[i] = (String)exec_ids.get(i);
-  }
-
-  public String getTyp()
-  {
-    return typ;
-  }
-
-  public String getName()
-  {
-    return name;
-  }
-
-  public String getId()
-  {
-    return id;
-  }
-
-  public void updateLocalFromTransferable()
-  {
-    int l;
-    int i;
-
-    l = user_ids.size();
-    users = new HashMap();
-    
-    ListIterator lIt = user_ids.listIterator();
-    for(; lIt.hasNext();)
-    {
-      String str = (String)lIt.next();
-      Object o = Pool.get(User.typ, str);
-      if(o != null)
-        users.put(str, o);
-    }
-  }
-
-  public Collection getChildren(String key)
-  {
-    if(key.equals(User.typ))
-      return users.values();
-
-    return new ArrayList();
-  }
-  public Collection getChildTypes()
-  {
-    ArrayList ret = new ArrayList();
-    ret.add(User.typ);
-    
-    return ret;
-  }
-
-  public List getChildIds(String key)
-  {
-    if(key.equals(User.typ))
-      return user_ids;
-    return new ArrayList();
-  }
-
-  public void addChildId(String key, String id)
-  {
-    if(key.equals(User.typ))
-      user_ids.add(id);
-  }
-  public void removeChildId(String key, String id)
-  {
-    if(key.equals(User.typ))
-      user_ids.remove(id);
-  }
+	public void setLocalFromTransferable()
+	{
+		int l;
+		int i;
+		int count;
 
 
-  public static List getChildTypes_()
-  {
-    ArrayList ret = new ArrayList();
-    ret.add(User.typ);
-    return ret;
-  }
+		id = transferable.id;
+		name = transferable.name;
+		codename = transferable.codename;
+		owner_id = transferable.owner_id;
+		description = transferable.description;
+		created = transferable.created;
+		created_by = transferable.created_by;
+		modified = transferable.modified;
+		modified_by = transferable.modified_by;
+
+		count = transferable.user_ids.length;
+		user_ids = new ArrayList();
+		for(i = 0; i < count; i++)
+			user_ids.add(transferable.user_ids[i]);
+	}
+
+	public void setTransferableFromLocal()
+	{
+		int l;
+		int i;
+		int count;
+
+		transferable.id = id;
+		transferable.name = name;
+		transferable.codename = codename;
+		transferable.owner_id = owner_id;
+		transferable.description = description;
+		transferable.created = created;
+		transferable.created_by = created_by;
+		transferable.modified = modified;
+		transferable.modified_by = modified_by;
+
+		count = user_ids.size();
+		transferable.user_ids = new String[count];
+		for(i = 0; i < count; i++)
+			transferable.user_ids[i] = (String)user_ids.get(i);
+
+		count = exec_ids.size();
+		transferable.exec_ids = new String[count];
+		for(i=0; i<count; i++)
+			transferable.exec_ids[i] = (String)exec_ids.get(i);
+	}
+
+	public String getTyp()
+	{
+		return typ;
+	}
+
+	public String getName()
+	{
+		return name;
+	}
+
+	public String getId()
+	{
+		return id;
+	}
+
+	public void updateLocalFromTransferable()
+	{
+		int l;
+		int i;
+
+		l = user_ids.size();
+		users = new HashMap();
+
+		ListIterator lIt = user_ids.listIterator();
+		for(; lIt.hasNext();)
+		{
+			String str = (String)lIt.next();
+			Object o = Pool.get(User.typ, str);
+			if(o != null)
+				users.put(str, o);
+		}
+	}
+
+	public Collection getChildren(String key)
+	{
+		if(key.equals(User.typ))
+			return users.values();
+
+		return new ArrayList();
+	}
+	public Collection getChildTypes()
+	{
+		ArrayList ret = new ArrayList();
+		ret.add(User.typ);
+
+		return ret;
+	}
+
+	public List getChildIds(String key)
+	{
+		if(key.equals(User.typ))
+			return user_ids;
+		return new ArrayList();
+	}
+
+	public void addChildId(String key, String id)
+	{
+		if(key.equals(User.typ))
+			user_ids.add(id);
+	}
+	public void removeChildId(String key, String id)
+	{
+		if(key.equals(User.typ))
+			user_ids.remove(id);
+	}
 
 
-  public Class getChildClass(String type)
-  {
-    if(type.equals(User.typ))
-      return User.class;
-    return ObjectResource.class;
-  }
+	public static List getChildTypes_()
+	{
+		ArrayList ret = new ArrayList();
+		ret.add(User.typ);
+		return ret;
+	}
 
 
-  public static PropertiesPanel getPropertyPane()
-  {
-    return new OperatorGroupPane();
-  }
+	public Class getChildClass(String type)
+	{
+		if(type.equals(User.typ))
+			return User.class;
+		return ObjectResource.class;
+	}
 
-  public Object getTransferable()
-  {
-    return transferable;
-  }
+	public String getPropertyPaneClassName()
+	{
+		return "com.syrus.AMFICOM.Client.Administrate.Object.UI.OperatorGroupPane";
+	}
 
-  public ObjectResourceModel getModel()
-  {
-    return new OperatorGroupModel(this);
-  }
+	public Object getTransferable()
+	{
+		return transferable;
+	}
 
-  public static ObjectResourceDisplayModel getDefaultDisplayModel()
-  {
-    return new OperatorGroupDisplayModel();
-  }
+	public ObjectResourceModel getModel()
+	{
+		return new OperatorGroupModel(this);
+	}
 
-  public String getDomainId()
-  {
-    return null;
-  }
+	public static ObjectResourceDisplayModel getDefaultDisplayModel()
+	{
+		return new OperatorGroupDisplayModel();
+	}
 
-  public long getModified()
-  {
-    return modified;
-  }
+	public String getDomainId()
+	{
+		return null;
+	}
+
+	public long getModified()
+	{
+		return modified;
+	}
 
 	private void writeObject(java.io.ObjectOutputStream out) throws IOException
 	{
@@ -297,20 +289,20 @@ public class OperatorGroup extends AdminObjectResource implements Serializable
 		updateLocalFromTransferable();
 	}
 
-  public String getOwnerId()
-  {
-    return owner_id;
-  }
+	public String getOwnerId()
+	{
+		return owner_id;
+	}
 
 
-  public void setOwnerId(String ownerID)
-  {
-    this.owner_id = ownerID;
-  }
+	public void setOwnerId(String ownerID)
+	{
+		this.owner_id = ownerID;
+	}
 
-  public  void setModificationTime(long time)
-  {
-    modified = time;
-  }
+	public  void setModificationTime(long time)
+	{
+		modified = time;
+	}
 
 }

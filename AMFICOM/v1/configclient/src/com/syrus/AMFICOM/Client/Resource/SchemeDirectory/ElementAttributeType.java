@@ -137,6 +137,11 @@ public class ElementAttributeType extends StubResource
 		return transferable;
 	}
 
+	public String getPropertyPaneClassName()
+	{
+		return "";
+	}
+
 	private void writeObject(java.io.ObjectOutputStream out) throws IOException
 	{
 		out.writeObject(id);

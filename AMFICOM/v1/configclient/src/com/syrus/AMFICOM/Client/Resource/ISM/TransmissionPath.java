@@ -40,8 +40,7 @@ import java.util.*;
 
 import com.syrus.AMFICOM.CORBA.ISM.*;
 import com.syrus.AMFICOM.CORBA.Network.Characteristic_Transferable;
-import com.syrus.AMFICOM.Client.Configure.UI.TransmissionPathPane;
-import com.syrus.AMFICOM.Client.General.UI.*;
+import com.syrus.AMFICOM.Client.General.UI.ObjectResourceDisplayModel;
 import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.Resource.Network.*;
 
@@ -203,10 +202,9 @@ public class TransmissionPath extends StubResource implements Serializable
 		return new TransmissionPathDisplayModel();
 	}
 
-	public static PropertiesPanel getPropertyPane()
+	public String getPropertyPaneClassName()
 	{
-//		return new TransmissionPathGeneralPanel();
-		return new TransmissionPathPane();
+		return "com.syrus.AMFICOM.Client.Configure.UI.TransmissionPathPane";
 	}
 
 	public List sortPorts()
