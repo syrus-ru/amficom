@@ -1,5 +1,5 @@
 /*
- * $Id: configuration.idl,v 1.64 2004/12/09 12:33:08 max Exp $
+ * $Id: configuration.idl,v 1.65 2004/12/09 15:39:19 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -475,7 +475,6 @@ module corba {
 		wstring supplier;
 		wstring supplierCode;
 		
-		com::syrus::AMFICOM::general::corba::Identifier_Transferable link_id;
 		wstring color;
 		wstring mark;
 		com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable characteristic_ids;		
