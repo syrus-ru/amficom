@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementSetup.java,v 1.48 2005/02/24 14:59:59 arseniy Exp $
+ * $Id: MeasurementSetup.java,v 1.49 2005/03/11 13:12:31 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,8 +33,8 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.corba.MeasurementSetup_Transferable;
 
 /**
- * @version $Revision: 1.48 $, $Date: 2005/02/24 14:59:59 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.49 $, $Date: 2005/03/11 13:12:31 $
+ * @author $Author: bass $
  * @module measurement_v1
  */
 
@@ -188,7 +188,7 @@ public class MeasurementSetup extends StorableObject {
 	public void attachToMonitoredElement(Identifier monitoredElementId, Identifier modifierId1) throws UpdateObjectException {
 		if (this.isAttachedToMonitoredElement(monitoredElementId))
 			return;
-		super.modifierId = (Identifier) modifierId1.clone();
+		super.modifierId = modifierId1;
 		this.monitoredElementIds.add(monitoredElementId);
 		try {
 			this.measurementSetupDatabase.update(this, modifierId1, StorableObjectDatabase.UPDATE_FORCE);
@@ -202,7 +202,7 @@ public class MeasurementSetup extends StorableObject {
 	public void detachFromMonitoredElement(Identifier monitoredElementId, Identifier modifierId1) throws UpdateObjectException {
 		if (!this.isAttachedToMonitoredElement(monitoredElementId))
 			return;
-		super.modifierId = (Identifier) modifierId1.clone();
+		super.modifierId = modifierId1;
 		this.monitoredElementIds.remove(monitoredElementId);
 		try {
 			this.measurementSetupDatabase.update(this, modifierId1, StorableObjectDatabase.UPDATE_FORCE);
