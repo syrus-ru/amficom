@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisType.java,v 1.52 2005/02/14 12:02:39 arseniy Exp $
+ * $Id: AnalysisType.java,v 1.53 2005/03/24 15:42:36 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,7 +33,7 @@ import com.syrus.AMFICOM.measurement.corba.AnalysisType_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.52 $, $Date: 2005/02/14 12:02:39 $
+ * @version $Revision: 1.53 $, $Date: 2005/03/24 15:42:36 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -51,6 +51,8 @@ public class AnalysisType extends ActionType {
 	private Collection etalonParameterTypes;
 	private Collection outParameterTypes;
 
+	private Collection measurementTypeIds;
+
 	private StorableObjectDatabase	analysisTypeDatabase;	
 
 	public AnalysisType(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
@@ -60,6 +62,8 @@ public class AnalysisType extends ActionType {
 		this.criteriaParameterTypes = new ArrayList();
 		this.etalonParameterTypes = new ArrayList();
 		this.outParameterTypes = new ArrayList();
+
+		this.measurementTypeIds = new ArrayList();
 
 		this.analysisTypeDatabase = MeasurementDatabaseContext.analysisTypeDatabase;
 		try {
@@ -109,6 +113,11 @@ public class AnalysisType extends ActionType {
 			for (int i = 0; i < att.out_parameter_type_ids.length; i++)
 				parTypIds.add(new Identifier(att.out_parameter_type_ids[i]));
 			this.outParameterTypes = GeneralStorableObjectPool.getStorableObjects(parTypIds, true);
+
+
+			this.measurementTypeIds = new ArrayList(att.measurement_type_ids.length);
+			for (int i = 0; i < att.measurement_type_ids.length; i++)
+				this.measurementTypeIds.add(new Identifier(att.measurement_type_ids[i]));
 		}
 		catch (ApplicationException ae) {
 			throw new CreateObjectException(ae);
@@ -122,10 +131,11 @@ public class AnalysisType extends ActionType {
 						   long version,
 						   String codename,
 						   String description,
-						   List inParameterTypes,
-						   List criteriaParameterTypes,
-						   List etalonParameterTypes,
-						   List outParameterTypes) {
+						   Collection inParameterTypes,
+						   Collection criteriaParameterTypes,
+						   Collection etalonParameterTypes,
+						   Collection outParameterTypes,
+						   Collection measurementTypeIds) {
 		super(id,
 				new Date(System.currentTimeMillis()),
 				new Date(System.currentTimeMillis()),
@@ -147,6 +157,10 @@ public class AnalysisType extends ActionType {
 		this.outParameterTypes = new ArrayList();
 		this.setOutParameterTypes0(outParameterTypes);
 
+
+		this.measurementTypeIds = new ArrayList();
+		this.setMeasurementTypeIds0(measurementTypeIds);
+
 		this.analysisTypeDatabase = MeasurementDatabaseContext.analysisTypeDatabase;
 	}
 	
@@ -159,28 +173,31 @@ public class AnalysisType extends ActionType {
 	 * @param criteriaParameterTypes
 	 * @param etalonParameterTypes
 	 * @param outParameterTypes
+	 * @param measurementTypeIds
 	 * @throws CreateObjectException
 	 */
 	public static AnalysisType createInstance(Identifier creatorId,
-											  String codename,
-											  String description,
-											  List inParameterTypes,
-											  List criteriaParameterTypes,
-											  List etalonParameterTypes,
-											  List outParameterTypes) throws CreateObjectException{
+			String codename,
+			String description,
+			Collection inParameterTypes,
+			Collection criteriaParameterTypes,
+			Collection etalonParameterTypes,
+			Collection outParameterTypes,
+			Collection measurementTypeIds) throws CreateObjectException {
 		if (creatorId == null || codename == null || codename.length() == 0 || description == null)
 			throw new IllegalArgumentException("Argument is 'null'");
-		
+
 		try {
 			AnalysisType analysisType = new AnalysisType(IdentifierPool.getGeneratedIdentifier(ObjectEntities.ANALYSISTYPE_ENTITY_CODE),
-										creatorId,
-										0L,
-										codename,
-										description,
-										inParameterTypes,
-										criteriaParameterTypes,
-										etalonParameterTypes,
-										outParameterTypes);
+					creatorId,
+					0L,
+					codename,
+					description,
+					inParameterTypes,
+					criteriaParameterTypes,
+					etalonParameterTypes,
+					outParameterTypes,
+					measurementTypeIds);
 			analysisType.changed = true;
 			return analysisType;
 		}
@@ -188,7 +205,7 @@ public class AnalysisType extends ActionType {
 			throw new CreateObjectException("AnalysisType.createInstance | cannot generate identifier ", e);
 		}
 	}
-	
+
 	public Object getTransferable() {
 		int i;
 
@@ -212,13 +229,20 @@ public class AnalysisType extends ActionType {
 		for (Iterator iterator = this.outParameterTypes.iterator(); iterator.hasNext();)
 			outParTypeIds[i++] = (Identifier_Transferable) ((ParameterType) iterator.next()).getId().getTransferable();
 
+
+		Identifier_Transferable[] measTypIds = new Identifier_Transferable[this.measurementTypeIds.size()];
+		i = 0;
+		for (Iterator iterator = this.measurementTypeIds.iterator(); iterator.hasNext();)
+			measTypIds[i++] = (Identifier_Transferable) ((Identifier) iterator.next()).getTransferable();
+
 		return new AnalysisType_Transferable(super.getHeaderTransferable(),
 											 new String(super.codename),
 											 (super.description != null) ? (new String(super.description)) : "",
 											 inParTypeIds,
 											 criteriaParTypeIds,
 											 etalonParTypeIds,
-											 outParTypeIds);
+											 outParTypeIds,
+											 measTypIds);
 	}
 
 	public Collection getInParameterTypes() {
@@ -235,6 +259,10 @@ public class AnalysisType extends ActionType {
 
 	public Collection getOutParameterTypes() {
 		return Collections.unmodifiableCollection(this.outParameterTypes);
+	}
+
+	public Collection getMeasurementTypeIds() {
+		return Collections.unmodifiableCollection(this.measurementTypeIds);
 	}
 
 	protected synchronized void setAttributes(Date created,
@@ -317,6 +345,7 @@ public class AnalysisType extends ActionType {
 		if (outParameterTypes != null)
 			this.outParameterTypes.addAll(outParameterTypes);
 	}
+
 	/**
 	 * client setter for outParameterTypes
 	 * 
@@ -327,21 +356,40 @@ public class AnalysisType extends ActionType {
 		this.setOutParameterTypes0(outParameterTypes);
 		super.changed = true;
 	}	
-	
+
+	protected void setMeasurementTypeIds0(Collection measurementTypeIds) {
+		this.measurementTypeIds.clear();
+		if (measurementTypeIds != null)
+			this.measurementTypeIds.addAll(measurementTypeIds);
+	}
+
+	/**
+	 * client setter for outParameterTypes
+	 * @param measurementTypeIds
+	 */
+	public void setMeasurementTypeIds(Collection measurementTypeIds) {
+		this.setMeasurementTypeIds0(measurementTypeIds);
+		super.changed = true;
+	}
+
 	public List getDependencies() {
 		List dependencies = new LinkedList();
 		if (this.inParameterTypes != null)
 			dependencies.addAll(this.inParameterTypes);
-			
+
 		if (this.criteriaParameterTypes != null)
 			dependencies.addAll(this.criteriaParameterTypes);
-        
+
 		if (this.etalonParameterTypes != null)
 			dependencies.addAll(this.etalonParameterTypes);
-				
+
 		if (this.outParameterTypes != null)
 			dependencies.addAll(this.outParameterTypes);
-				
+
+
+		if (this.measurementTypeIds != null)
+			dependencies.addAll(this.measurementTypeIds);
+
 		return dependencies;
 	}
 }
