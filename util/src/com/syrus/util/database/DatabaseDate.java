@@ -1,8 +1,8 @@
 package com.syrus.util.database;
 
 import java.util.Date;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.text.ParsePosition;
 import java.sql.SQLException;
 import java.sql.ResultSet;
 
@@ -15,11 +15,14 @@ public class DatabaseDate {
 	}
 
 	public static Date fromQuerySubString(ResultSet resultset, String column) throws SQLException {		
-		ParsePosition pp = new ParsePosition(0);
 		Date date = null;
+		try{
 		String dateStr = resultset.getString(column);
 		if(dateStr != null)
-			date = SDF.parse(dateStr, pp);
+			date = SDF.parse(dateStr);
+		}catch(ParseException pe){
+			//
+		}
 		return date;
 	}
 
