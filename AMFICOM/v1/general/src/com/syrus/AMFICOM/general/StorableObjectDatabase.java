@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectDatabase.java,v 1.86 2005/02/08 10:46:43 arseniy Exp $
+ * $Id: StorableObjectDatabase.java,v 1.87 2005/02/08 11:49:20 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,8 +33,8 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.86 $, $Date: 2005/02/08 10:46:43 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.87 $, $Date: 2005/02/08 11:49:20 $
+ * @author $Author: max $
  * @module general_v1
  */
 
@@ -88,7 +88,7 @@ public abstract class StorableObjectDatabase {
 	/**
 	 * @see "ORA-01795"
 	 */
-	protected static final int MAXIMUM_EXPRESSION_NUMBER = 1000;
+	public static final int MAXIMUM_EXPRESSION_NUMBER = 1000;
 
 
 	private static String columns;
