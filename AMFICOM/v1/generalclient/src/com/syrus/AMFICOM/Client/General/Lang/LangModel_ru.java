@@ -452,6 +452,13 @@ public class LangModel_ru extends LangModel
 		{ "label_editFilterTree", "Редактировать дерево фильтрации"},
 		{ "label_summaryExpression", "Суммарное выражение"},
 
+		{ "Error", "Ошибка"},
+		{ "Aborted", "Операция отменена"},
+		{ "Finished", "Операция завершена"},
+		{ "Initiating", "Инициализация данных..."},
+		{ "DataLoaded", "Данные загружены"},
+		{ "NotAllFieldsValid", "Невозможно создать объект - не все поля заданы"},
+
 //for filter and LogicScheme
 
 		};

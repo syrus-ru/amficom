@@ -44,7 +44,9 @@ jar:
 	$(JAR) -cf $(TARGET_SRC) -C $(SRC) com
 
 impl:
-	$(JAVAC) -d $(CLASSES) \
+	$(JAVAC) \
+		-deprecation \
+		-d $(CLASSES) \
 		-classpath $(SERVERCP);$(CLIENTCP);$(LAYOUTCP);$(SPATIALCP);$(REPORTCP);$(JGRAPHCP);$(VBJCP):$(ORBCP) \
 		-sourcepath $(SRC) \
 		@$(TARGET_CLASS_LIST)
