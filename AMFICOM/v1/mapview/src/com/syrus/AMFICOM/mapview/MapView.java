@@ -1,5 +1,5 @@
 /*
-* $Id: MapView.java,v 1.2 2004/12/27 13:42:36 bob Exp $
+* $Id: MapView.java,v 1.3 2004/12/30 16:16:41 krupenn Exp $
 *
 * Copyright ¿ 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -35,8 +35,8 @@ import com.syrus.AMFICOM.scheme.SchemeStorableObjectPool;
 import com.syrus.AMFICOM.scheme.corba.Scheme;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2004/12/27 13:42:36 $
- * @author $Author: bob $
+ * @version $Revision: 1.3 $, $Date: 2004/12/30 16:16:41 $
+ * @author $Author: krupenn $
  * @module mapview_v1
  */
 public class MapView extends StorableObject {
@@ -165,7 +165,7 @@ public class MapView extends StorableObject {
 			throw new IllegalArgumentException("Argument is 'null'");
 		try {
 			return new MapView(
-				IdentifierPool.getGeneratedIdentifier(ObjectEntities.MAP_ENTITY_CODE),
+				IdentifierPool.getGeneratedIdentifier(ObjectEntities.MAPVIEW_ENTITY_CODE),
 					creatorId,
 					domainId,
 					name,
@@ -208,6 +208,18 @@ public class MapView extends StorableObject {
 
 	public List getSchemes() {
 		return  Collections.unmodifiableList(this.schemes);
+	}
+	
+	public void addScheme(Scheme scheme)
+	{
+		this.schemes.add(scheme);
+		super.currentVersion = super.getNextVersion();
+	}
+	
+	public void removeScheme(Scheme scheme)
+	{
+		this.schemes.remove(scheme);
+		super.currentVersion = super.getNextVersion();
 	}
 	
 	protected void setSchemes0(List schemes) {
