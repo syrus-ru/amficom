@@ -1,5 +1,5 @@
 /*
- * $Id: ImageResourceDatabase.java,v 1.4 2005/01/17 17:13:04 max Exp $
+ * $Id: ImageResourceDatabase.java,v 1.5 2005/01/24 10:48:46 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,6 +27,7 @@ import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
+import com.syrus.AMFICOM.general.StringFieldCondition;
 import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.resource.corba.ImageResource_TransferablePackage.ImageResourceDataPackage.ImageResourceSort;
@@ -37,8 +38,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @author $Author: max $
- * @version $Revision: 1.4 $, $Date: 2005/01/17 17:13:04 $
+ * @author $Author: bob $
+ * @version $Revision: 1.5 $, $Date: 2005/01/24 10:48:46 $
  * @module resource_v1
  */
 

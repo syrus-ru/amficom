@@ -69,7 +69,7 @@ SOURCES := com/syrus/AMFICOM/resource/LangModelMeasurement.java \
 		com/syrus/AMFICOM/measurement/TemporalCondition.java \
 		com/syrus/AMFICOM/measurement/LinkedIdsConditionImpl.java \
 		com/syrus/AMFICOM/measurement/DomainCondition.java \
-		com/syrus/AMFICOM/measurement/StringFieldCondition.java \
+		com/syrus/AMFICOM/measurement/StringFieldConditionImpl.java \
 		com/syrus/AMFICOM/measurement/ResultCondition.java \
 		com/syrus/AMFICOM/measurement/ResultSortCondition.java 
 

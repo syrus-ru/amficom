@@ -56,7 +56,7 @@ SOURCES := com/syrus/AMFICOM/configuration/DatabaseConfigurationObjectLoader.jav
 		com/syrus/AMFICOM/configuration/TransmissionPathDatabase.java \
 		com/syrus/AMFICOM/configuration/TransmissionPathType.java \
 		com/syrus/AMFICOM/configuration/TransmissionPathTypeDatabase.java \
-		com/syrus/AMFICOM/configuration/StringFieldCondition.java \
+		com/syrus/AMFICOM/configuration/StringFieldConditionImpl.java \
 		com/syrus/AMFICOM/configuration/LinkedIdsConditionImpl.java
 
 
