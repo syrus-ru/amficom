@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseAdministrationObjectLoader.java,v 1.2 2005/02/04 12:07:29 arseniy Exp $
+ * $Id: DatabaseAdministrationObjectLoader.java,v 1.3 2005/02/04 12:52:27 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,7 +25,7 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/02/04 12:07:29 $
+ * @version $Revision: 1.3 $, $Date: 2005/02/04 12:52:27 $
  * @author $Author: arseniy $
  * @module administration_v1
  */
@@ -39,13 +39,13 @@ public class DatabaseAdministrationObjectLoader implements AdministrationObjectL
 				return;
 			Object obj = ids.iterator().next();
 			if (obj instanceof Identifier)
-				entityCode = ((Identifier)obj).getMajor();
+				entityCode = ((Identifier) obj).getMajor();
 			else
 				if (obj instanceof Identified)
-					entityCode = ((Identified)obj).getId().getMajor();
+					entityCode = ((Identified) obj).getId().getMajor();
 		}
 		try {
-			StorableObjectDatabase database = AdministrationDatabaseContext.getDatabase(entityCode); 
+			StorableObjectDatabase database = AdministrationDatabaseContext.getDatabase(entityCode);
 			if (database != null) {
 				if (id != null)
 					database.delete(id);
@@ -62,11 +62,11 @@ public class DatabaseAdministrationObjectLoader implements AdministrationObjectL
 	}
 
 	public void delete(Identifier id) throws CommunicationException, DatabaseException {
-		delete(id, null);       
+		delete(id, null);
 	}
 
 	public void delete(List ids) throws CommunicationException, DatabaseException {
-			delete(null, ids);
+		delete(null, ids);
 	}
 
 	public User loadUser(Identifier id) throws DatabaseException, CommunicationException {
@@ -85,12 +85,11 @@ public class DatabaseAdministrationObjectLoader implements AdministrationObjectL
 		return new MCM(id);
 	}
 
-//	public PermissionAttributes loadPermissionAttributes(Identifier id) throws DatabaseException, CommunicationException {
-//		return new PermissionAttributes(id);
-//	}
+	//	public PermissionAttributes loadPermissionAttributes(Identifier id) throws DatabaseException, CommunicationException {
+	//		return new PermissionAttributes(id);
+	//	}
 
-
-    // for multiple objects
+	// for multiple objects
 
 	public List loadUsers(List ids) throws DatabaseException, CommunicationException {
 		UserDatabase database = (UserDatabase) AdministrationDatabaseContext.userDatabase;
@@ -148,13 +147,11 @@ public class DatabaseAdministrationObjectLoader implements AdministrationObjectL
 		return list;
 	}
 
+	//  public PermissionAttributes loadPermissionAttributes(Identifier id) throws DatabaseException, CommunicationException {
+	//      return new PermissionAttributes(id);
+	//  }
 
-//  public PermissionAttributes loadPermissionAttributes(Identifier id) throws DatabaseException, CommunicationException {
-//      return new PermissionAttributes(id);
-//  }
-
-
-    /* Load Administration StorableObject but argument ids */
+	/* Load Administration StorableObject but argument ids */
 
 	public List loadUsersButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException {
 		UserDatabase database = (UserDatabase) AdministrationDatabaseContext.userDatabase;
@@ -212,10 +209,9 @@ public class DatabaseAdministrationObjectLoader implements AdministrationObjectL
 		return list;
 	}
 
-//  public PermissionAttributes loadPermissionAttributesButIds(Identifier id) throws DatabaseException, CommunicationException {
-//      return new PermissionAttributes(id);
-//  }
-
+	//  public PermissionAttributes loadPermissionAttributesButIds(Identifier id) throws DatabaseException, CommunicationException {
+	//      return new PermissionAttributes(id);
+	//  }
 
 	public void saveUser(User user, boolean force) throws DatabaseException, CommunicationException {
 		UserDatabase database = (UserDatabase) AdministrationDatabaseContext.userDatabase;
@@ -305,8 +301,7 @@ public class DatabaseAdministrationObjectLoader implements AdministrationObjectL
 		}
 	}
 
-//	public void savePermissionAttributes(PermissionAttributes permissionAttributes, boolean force) throws DatabaseException ;
-
+	//	public void savePermissionAttributes(PermissionAttributes permissionAttributes, boolean force) throws DatabaseException ;
 
 	public void saveUsers(List list, boolean force) throws DatabaseException, CommunicationException {
 		UserDatabase database = (UserDatabase) AdministrationDatabaseContext.userDatabase;
@@ -396,8 +391,7 @@ public class DatabaseAdministrationObjectLoader implements AdministrationObjectL
 		}
 	}
 
-//	public void savePermissionAttributes(PermissionAttributes permissionAttributes, boolean force) throws DatabaseException ;
-
+	//	public void savePermissionAttributes(PermissionAttributes permissionAttributes, boolean force) throws DatabaseException ;
 
 	public Set refresh(Set storableObjects) throws CommunicationException, DatabaseException {
 		if (storableObjects.isEmpty())

@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectDatabase.java,v 1.79 2005/02/04 12:48:10 arseniy Exp $
+ * $Id: StorableObjectDatabase.java,v 1.80 2005/02/04 12:50:18 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,7 +33,7 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.79 $, $Date: 2005/02/04 12:48:10 $
+ * @version $Revision: 1.80 $, $Date: 2005/02/04 12:50:18 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -666,7 +666,6 @@ public abstract class StorableObjectDatabase {
 	
 	
 	/**
-	 * 
 	 * @param storableObjects
 	 * @return List&lt;Identifier&gt; of changed storable objects
 	 * @throws RetrieveObjectException
@@ -693,10 +692,10 @@ public abstract class StorableObjectDatabase {
 				buffer.append(StorableObjectWrapper.COLUMN_MODIFIED);
 				buffer.append(StorableObjectDatabase.NOT_EQUALS);
 				buffer.append(DatabaseDate.toUpdateSubString(storableObject.getModified()));
-//				buffer.append(SQL_AND);
-//				buffer.append(COLUMN_MODIFIER_ID);
-//				buffer.append(EQUALS);
-//				buffer.append(DatabaseIdentifier.toSQLString(storableObject.getModifierId()));
+				// buffer.append(SQL_AND);
+				// buffer.append(COLUMN_MODIFIER_ID);
+				// buffer.append(EQUALS);
+				// buffer.append(DatabaseIdentifier.toSQLString(storableObject.getModifierId()));
 				buffer.append(CLOSE_BRACKET);
 			}
 			sql = buffer.toString();
@@ -708,28 +707,30 @@ public abstract class StorableObjectDatabase {
 		Connection connection = DatabaseConnection.getConnection();
 		try {
 			statement = connection.createStatement();
-			Log.debugMessage("StorableObjectDatabase.refresh | Trying: " + sql,
-						Log.DEBUGLEVEL09);
+			Log.debugMessage("StorableObjectDatabase.refresh | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql);
 			while (resultSet.next()) {
 				Identifier identifier = DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID);
 				ids.add(identifier);
 			}
-		} catch (SQLException sqle) {
-			String mesg = "StorableObjectDatabase.refresh | Cannot execute query "
-					+ sqle.getMessage();
+		}
+		catch (SQLException sqle) {
+			String mesg = "StorableObjectDatabase.refresh | Cannot execute query " + sqle.getMessage();
 			throw new RetrieveObjectException(mesg, sqle);
-		} finally {
+		}
+		finally {
 			try {
 				if (statement != null)
 					statement.close();
 				if (resultSet != null)
 					resultSet.close();
 				statement = null;
-				resultSet = null;				
-			} catch (SQLException sqle1) {
+				resultSet = null;
+			}
+			catch (SQLException sqle1) {
 				Log.errorException(sqle1);
-			} finally{
+			}
+			finally {
 				DatabaseConnection.releaseConnection(connection);
 			}
 		}
