@@ -1,5 +1,5 @@
 /*
- * $Id: EquipmentDatabase.java,v 1.38 2004/10/20 10:52:12 bob Exp $
+ * $Id: EquipmentDatabase.java,v 1.39 2004/10/22 13:00:19 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,7 +35,7 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.38 $, $Date: 2004/10/20 10:52:12 $
+ * @version $Revision: 1.39 $, $Date: 2004/10/22 13:00:19 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -490,7 +490,7 @@ public class EquipmentDatabase extends StorableObjectDatabase {
 			DomainCondition domainCondition = (DomainCondition)condition;
 			list = this.retrieveButIdsByDomain(ids, domainCondition.getDomain());
 		} else {
-			Log.errorMessage("DatabaseConfigurationObjectLoader.loadTransmissionPathsButIds | Unknown condition class: " + condition.getClass().getName());
+			Log.errorMessage("EquipmentDatabase.retrieveByCondition | Unknown condition class: " + condition.getClass().getName());
 			list = this.retrieveButIds(ids);
 		}
 		return list;
