@@ -34,6 +34,8 @@ public class MarkersInfoFrame extends JInternalFrame implements OperationListene
 	double sigma;
 	BellcoreStructure bs;
 
+	private String[] data = new String[10];
+
 	public MarkersInfoFrame()
 	{
 		this(new Dispatcher());
@@ -164,51 +166,53 @@ public class MarkersInfoFrame extends JInternalFrame implements OperationListene
 	void updTableModel(MarkersInfo mInfo)
 	{
 		// положение курсора А
-		tModel.setValueAt(new StringBuffer().append(Math.round(mInfo.a_pos_m)).append(mt).toString(), 0, 1);
-		if (mInfo.a_type == MarkersInfo.NONREFLECTIVE)
-		{// потери в А
-			tModel.setValueAt(LangModelAnalyse.getString("markerALoss"), 1, 0);
-			tModel.setValueAt(new StringBuffer().append(MathRef.round_4(mInfo.a_loss)).append(db).toString(), 1, 1);
-		}
-		if (mInfo.a_type == MarkersInfo.REFLECTIVE)
-		{// отражение в А
-			tModel.setValueAt(LangModelAnalyse.getString("markerAReflection"), 1, 0);
-			if (mInfo.a_reflectance > 0)
-				tModel.setValueAt(new StringBuffer().append(MathRef.round_4(MathRef.calcReflectance(sigma, mInfo.a_reflectance))).append(db).toString(), 1, 1);
-			else
-				tModel.setValueAt(dash, 1, 1);
-		}
+		data[0] = new StringBuffer().append(Math.round(mInfo.a_pos_m)).append(mt).toString();
 		if (mInfo.a_type == MarkersInfo.NOANALYSIS)
 		{
-			tModel.setValueAt(dash, 1, 1);
-			tModel.setValueAt(dash, 2, 1);
-			tModel.setValueAt(dash, 3, 1);
+			data[1] = dash;
+			data[2] = dash;
+			data[3] = dash;
 		}
 		else
-		{ // затухание в А
-			tModel.setValueAt(new StringBuffer().append(MathRef.round_4(mInfo.a_attfactor)).append(dbkm).toString(), 2, 1);
-		// накапливаемые потери в А
-			 tModel.setValueAt(new StringBuffer().append(MathRef.round_4(mInfo.a_cumulative_loss)).append(db).toString(), 3, 1);
+		{
+			if (mInfo.a_type == MarkersInfo.NONREFLECTIVE)
+			{// потери в А
+				tModel.setValueAt(LangModelAnalyse.getString("markerALoss"), 1, 0);
+				data[1] = new StringBuffer().append(MathRef.round_4(mInfo.a_loss)).append(db).toString();
+			}
+			else if (mInfo.a_type == MarkersInfo.REFLECTIVE)
+			{// отражение в А
+				tModel.setValueAt(LangModelAnalyse.getString("markerAReflection"), 1, 0);
+				if (mInfo.a_reflectance > 0)
+					data[1] = new StringBuffer().append(MathRef.round_4(MathRef.calcReflectance(sigma, mInfo.a_reflectance))).append(db).toString();
+				else
+					data[1] = dash;
+			}
+			// затухание в А
+			data[2] = new StringBuffer().append(MathRef.round_4(mInfo.a_attfactor)).append(dbkm).toString();
+			// накапливаемые потери в А
+			data[3] = new StringBuffer().append(MathRef.round_4(mInfo.a_cumulative_loss)).append(db).toString();
 		}
 		// положение курсора В
-		tModel.setValueAt(new StringBuffer().append(Math.round(mInfo.b_pos_m)).append(mt).toString(), 4, 1);
+		data[4] = new StringBuffer().append(Math.round(mInfo.b_pos_m)).append(mt).toString();
 		// расстояние А-В
 		if (mInfo.a_pos < mInfo.b_pos)
 			tModel.setValueAt(LangModelAnalyse.getString("markerBAdist"), 5, 0);
 		else
 			tModel.setValueAt(LangModelAnalyse.getString("markerABdist"), 5, 0);
-		tModel.setValueAt(new StringBuffer().append(Math.round(mInfo.a_b_distance_m)).append(mt).toString(), 5, 1);
+		data[5] = new StringBuffer().append(Math.round(mInfo.a_b_distance_m)).append(mt).toString();
 			// 2pt. loss
-			tModel.setValueAt(new StringBuffer().append(MathRef.round_4(mInfo.a_b_loss)).append(db).toString(), 6, 1);
+		data[6] = new StringBuffer().append(MathRef.round_4(mInfo.a_b_loss)).append(db).toString();
 			// 2pt. Att
-			tModel.setValueAt(new StringBuffer().append(MathRef.round_4(mInfo.a_b_attenuation)).append(dbkm).toString(), 7, 1);
+		data[7] = new StringBuffer().append(MathRef.round_4(mInfo.a_b_attenuation)).append(dbkm).toString();
 			// LSA Att
-			tModel.setValueAt(new StringBuffer().append(MathRef.round_4(mInfo.lsa_attenuation)).append(dbkm).toString(), 8, 1);
+		data[8] = new StringBuffer().append(MathRef.round_4(mInfo.lsa_attenuation)).append(dbkm).toString();
 			// 2pt. ORL
-			if (mInfo.a_b_orl > 0)
-				tModel.setValueAt(new StringBuffer().append(MathRef.round_4(mInfo.a_b_orl)).append(db).toString(), 9, 1);
-			else
-				tModel.setValueAt(dash, 9, 1);
+		if (mInfo.a_b_orl > 0)
+			data[9] = new StringBuffer().append(MathRef.round_4(mInfo.a_b_orl)).append(db).toString();
+		else
+			data[9] = dash;
+		tModel.updateColumn(data, 1);
 		jTable.updateUI();
 	}
 }
