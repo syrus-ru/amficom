@@ -13,10 +13,12 @@ module corba {
 
 	interface MServer : com::syrus::AMFICOM::general::corba::IdentifierGeneratorServer {
 
+////////////////////////////////////////////	Receive ///////////////////////////////////////////////////
 		void receiveResults(in com::syrus::AMFICOM::measurement::corba::ResultSeq_Transferable results)
 			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
 
 
+/////////////////////////////////////////	Configuration ////////////////////////////////////////////////
 		com::syrus::AMFICOM::configuration::corba::CharacteristicType_Transferable transmitCharacteristicType(in com::syrus::AMFICOM::general::corba::Identifier_Transferable id)
 			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
 
@@ -63,6 +65,11 @@ module corba {
 			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
 
 
+		com::syrus::AMFICOM::configuration::corba::MonitoredElementSeq_Transferable transmitKISMonitoredElements(in com::syrus::AMFICOM::general::corba::Identifier_Transferable kis_id)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+
+
+/////////////////////////////////////////	Measurement //////////////////////////////////////////////////
 		com::syrus::AMFICOM::measurement::corba::ParameterType_Transferable transmitParameterType(in com::syrus::AMFICOM::general::corba::Identifier_Transferable id)
 			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
 

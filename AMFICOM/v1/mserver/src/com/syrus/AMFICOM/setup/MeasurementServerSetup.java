@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementServerSetup.java,v 1.5 2004/08/17 18:23:15 arseniy Exp $
+ * $Id: MeasurementServerSetup.java,v 1.6 2004/08/18 18:11:53 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,27 +15,10 @@ import java.util.Iterator;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.IdentifierGenerator;
-import com.syrus.AMFICOM.configuration.User;
-import com.syrus.AMFICOM.configuration.Domain;
-import com.syrus.AMFICOM.configuration.Server;
-import com.syrus.AMFICOM.configuration.MCM;
-import com.syrus.AMFICOM.configuration.corba.User_Transferable;
-import com.syrus.AMFICOM.configuration.corba.UserSort;
-import com.syrus.AMFICOM.configuration.corba.Domain_Transferable;
-import com.syrus.AMFICOM.configuration.corba.Server_Transferable;
-import com.syrus.AMFICOM.configuration.corba.MCM_Transferable;
-import com.syrus.AMFICOM.measurement.ParameterType;
-import com.syrus.AMFICOM.measurement.ParameterTypeDatabase;
-import com.syrus.AMFICOM.measurement.MeasurementType;
-import com.syrus.AMFICOM.measurement.MeasurementTypeDatabase;
-import com.syrus.AMFICOM.measurement.AnalysisType;
-import com.syrus.AMFICOM.measurement.AnalysisTypeDatabase;
-import com.syrus.AMFICOM.measurement.EvaluationType;
-import com.syrus.AMFICOM.measurement.EvaluationTypeDatabase;
-import com.syrus.AMFICOM.measurement.corba.ParameterType_Transferable;
-import com.syrus.AMFICOM.measurement.corba.MeasurementType_Transferable;
-import com.syrus.AMFICOM.measurement.corba.AnalysisType_Transferable;
-import com.syrus.AMFICOM.measurement.corba.EvaluationType_Transferable;
+import com.syrus.AMFICOM.configuration.*;
+import com.syrus.AMFICOM.configuration.corba.*;
+import com.syrus.AMFICOM.measurement.*;
+import com.syrus.AMFICOM.measurement.corba.*;
 import com.syrus.AMFICOM.mserver.DatabaseContextSetup;
 import com.syrus.util.Application;
 import com.syrus.util.ApplicationProperties;
@@ -43,7 +26,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2004/08/17 18:23:15 $
+ * @version $Revision: 1.6 $, $Date: 2004/08/18 18:11:53 $
  * @author $Author: arseniy $
  * @module mserver_v1
  */
@@ -86,41 +69,54 @@ public class MeasurementServerSetup {
 		establishDatabaseConnection();
 		DatabaseContextSetup.initDatabaseContext();
 		DatabaseContextSetup.initObjectPools();
-		
+
 		Identifier sysAdminId = createSystemAdministrator();
 
-//		Identifier creatorId = new Identifier("Users_1");//Users_9
+		EquipmentType equipmentType = createEquipmentType(sysAdminId);
+
+		PortType portType = createPortType(sysAdminId);
+
+		MeasurementPortType mPortType = createMeasurementPortType(sysAdminId);
+
+
+		Identifier domainId = createDomain(sysAdminId);
+
 
 		Identifier serverUserId = createUser(sysAdminId,
 																				 "mserver",
 																				 UserSort.USER_SORT_SERVER,
 																				 "User Serverovich",
 																				 "User for measurement server");
+		Identifier serverId = createServer(sysAdminId,
+																			 domainId,
+																			 serverUserId);
 
 		Identifier mcmUserId = createUser(sysAdminId,
 																			"mcm",
 																			UserSort.USER_SORT_MCM,
 																			"User Mcmovich",
 																			"User for measurement control module");
-
-		Identifier domainId = createDomain(sysAdminId);
-//		checkDomain();
-
-//		Identifier serverUserId = new Identifier("Users_4");//Users_10
-//		Identifier mcmUserId = new Identifier("Users_3");//Users_11
-//		Identifier domainId = new Identifier("Domain_2");//Domain_26
-
-		Identifier serverId = createServer(sysAdminId,
-																			 domainId,
-																			 serverUserId);
-//		checkServer();
-
-//		Identifier serverId = new Identifier("Server_3");
-
 		Identifier mcmId = createMCM(sysAdminId, domainId, mcmUserId, serverId);
 
-//		createParameterTypes(creatorId);
-//		checkParameterTypes();
+		Identifier equipmentId = createEquipment(sysAdminId,
+																						 domainId,
+																						 equipmentType);
+
+		Identifier portId1 = createPort(sysAdminId, portType, equipmentId);
+		Identifier portId2 = createPort(sysAdminId, portType, equipmentId);
+
+		Identifier tpId = createTransmissionPath(sysAdminId, domainId, portId1, portId2);
+
+
+		Identifier kisId = createKIS(sysAdminId, domainId, equipmentId, mcmId);
+
+		Identifier mportId = createMeasurementPort(sysAdminId, mPortType, kisId, portId1);
+
+		Identifier me = createMonitoredElement(sysAdminId, domainId, mportId);
+
+
+		createParameterTypes(sysAdminId);
+
 
 		DatabaseConnection.closeConnection();
 	}
@@ -144,22 +140,15 @@ public class MeasurementServerSetup {
 		}
 	}
 
-	private static Identifier createUser(Identifier creatorId,
-																			 String login,
-																			 UserSort sort,
-																			 String name,
-																			 String description) {
+	private static EquipmentType createEquipmentType(Identifier creatorId) {
 		try {
-			Identifier id = IdentifierGenerator.generateIdentifier(ObjectEntities.USER_ENTITY_CODE);
-			User user = User.createInstance(id,
-																			creatorId,
-																			login,
-																			sort,
-																			name,
-																			description);
-																			
-			User user1 = new User((User_Transferable)user.getTransferable());
-			return id;
+			Identifier id = IdentifierGenerator.generateIdentifier(ObjectEntities.EQUIPMENTTYPE_ENTITY_CODE);
+			EquipmentType eqType = EquipmentType.createInstance(id,
+																													creatorId,
+																													"EqTypeKIS",
+																													"");
+			EquipmentType eqType1 = new EquipmentType((EquipmentType_Transferable)eqType.getTransferable());
+			return eqType;
 		}
 		catch (Exception e) {
 			Log.errorException(e);
@@ -167,14 +156,35 @@ public class MeasurementServerSetup {
 		}
 	}
 
-	private static void checkUser() {
+	private static PortType createPortType(Identifier creatorId) {
 		try {
-			Identifier id = new Identifier("Users_9");
-			User user = new User(id);
-			System.out.println("login: " + user.getLogin() + ", name: " + user.getName() + ", description: " + user.getDescription());
+			Identifier id = IdentifierGenerator.generateIdentifier(ObjectEntities.PORTTYPE_ENTITY_CODE);
+			PortType portType = PortType.createInstance(id,
+																									creatorId,
+																									"PortTypeReflectometry",
+																									"");
+			PortType portType1 = new PortType((PortType_Transferable)portType.getTransferable());
+			return portType;
 		}
 		catch (Exception e) {
 			Log.errorException(e);
+			return null;
+		}
+	}
+
+	private static MeasurementPortType createMeasurementPortType(Identifier creatorId) {
+		try {
+			Identifier id = IdentifierGenerator.generateIdentifier(ObjectEntities.MEASUREMENTPORTTYPE_ENTITY_CODE);
+			MeasurementPortType mportType = MeasurementPortType.createInstance(id,
+																																				 creatorId,
+																																				 "MeasurementPortTypeReflectometry",
+																																				 "");
+			MeasurementPortType mportType1 = new MeasurementPortType((MeasurementPortType_Transferable)mportType.getTransferable());
+			return mportType;
+		}
+		catch (Exception e) {
+			Log.errorException(e);
+			return null;
 		}
 	}
 
@@ -192,17 +202,6 @@ public class MeasurementServerSetup {
 		catch (Exception e) {
 			Log.errorException(e);
 			return null;
-		}
-	}
-
-	private static void checkDomain() {
-		try {
-			Identifier id = new Identifier("Domain_26");
-			Domain domain = new Domain(id);
-			System.out.println("creator: " + domain.getCreatorId() + ", domain_id: " + domain.getDomainId() + ", name: " + domain.getName() + ", description: " + domain.getDescription());
-		}
-		catch (Exception e) {
-			Log.errorException(e);
 		}
 	}
 
@@ -226,17 +225,6 @@ public class MeasurementServerSetup {
 		}
 	}
 
-	private static void checkServer() {
-		try {
-			Identifier id = new Identifier("Server_3");
-			Server server = new Server(id);
-			System.out.println("creator: " + server.getCreatorId() + ", domain_id: " + server.getDomainId() + ", name: " + server.getName() + ", description: " + server.getDescription() + ", user: " + server.getUserId());
-		}
-		catch (Exception e) {
-			Log.errorException(e);
-		}
-	}
-
 	private static Identifier createMCM(Identifier creatorId,
 																			Identifier domainId,
 																			Identifier mcmUserId,
@@ -251,6 +239,156 @@ public class MeasurementServerSetup {
 																	 mcmUserId,
 																	 serverId);
 			new MCM((MCM_Transferable)mcm.getTransferable());
+			return id;
+		}
+		catch (Exception e) {
+			Log.errorException(e);
+			return null;
+		}
+	}
+
+	private static Identifier createKIS(Identifier creatorId,
+																			Identifier domainId,
+																			Identifier equipmentId,
+																			Identifier mcmId) {
+		try {
+			Identifier id = IdentifierGenerator.generateIdentifier(ObjectEntities.KIS_ENTITY_CODE);
+			KIS kis = KIS.createInstance(id,
+																	 creatorId,
+																	 domainId,
+																	 "KIS",
+																	 "kis ",
+																	 equipmentId,
+																	 mcmId);
+			KIS kis1 = new KIS((KIS_Transferable)kis.getTransferable());
+			return id;
+		}
+		catch (Exception e) {
+			Log.errorException(e);
+			return null;
+		}
+	}
+
+	private static Identifier createEquipment(Identifier creatorId,
+																						Identifier domainId,
+																						EquipmentType eqType) {
+		try {
+			Identifier id = IdentifierGenerator.generateIdentifier(ObjectEntities.EQUIPMENT_ENTITY_CODE);
+			Equipment eq = Equipment.createInstance(id,
+																							creatorId,
+																							domainId,
+																							eqType,
+																							"Equipment",
+																							"equipment",
+																							new Identifier("Image_1"));
+			Equipment eq1 = new Equipment((Equipment_Transferable)eq.getTransferable());
+			return id;
+		}
+		catch (Exception e) {
+			Log.errorException(e);
+			return null;
+		}
+	}
+
+	private static Identifier createPort(Identifier creatorId,
+																			 PortType type,
+																			 Identifier equipmentId) {
+		try {
+			Identifier id = IdentifierGenerator.generateIdentifier(ObjectEntities.PORT_ENTITY_CODE);
+			Port port = Port.createInstance(id,
+																			creatorId,
+																			type,
+																			"Port",
+																			equipmentId,
+																			PortSort._PORT_SORT_PORT);
+			Port port1 = new Port((Port_Transferable)port.getTransferable()); 
+			return id;
+		}
+		catch (Exception e) {
+			Log.errorException(e);
+			return null;
+		}
+	}
+
+	private static Identifier createTransmissionPath(Identifier creatorId,
+																									 Identifier domainId,
+																									 Identifier startPortId,
+																									 Identifier finishPortId) {
+		try {
+			Identifier id = IdentifierGenerator.generateIdentifier(ObjectEntities.TRANSPATH_ENTITY_CODE);
+			TransmissionPath tp = TransmissionPath.createInstance(id,
+																														creatorId,
+																														domainId,
+																														"TransmissionPath",
+																														"TransmissionPath",
+																														startPortId,
+																														finishPortId);
+			TransmissionPath tp1 = new TransmissionPath((TransmissionPath_Transferable)tp.getTransferable());
+			return id;
+		}
+		catch (Exception e) {
+			Log.errorException(e);
+			return null;
+		}
+	}
+
+	private static Identifier createMeasurementPort(Identifier creatorId,
+																									MeasurementPortType type,
+																									Identifier kisId,
+																									Identifier portId) {
+		try {
+			Identifier id = IdentifierGenerator.generateIdentifier(ObjectEntities.MEASUREMENTPORT_ENTITY_CODE);
+			MeasurementPort mport = MeasurementPort.createInstance(id,
+																														 creatorId,
+																														 type,
+																														 "MeasurementPort",
+																														 "MeasurementPortTest",
+																														 kisId,
+																														 portId);
+			MeasurementPort mport1 = new MeasurementPort((MeasurementPort_Transferable)mport.getTransferable()); 
+			return id;
+		}
+		catch (Exception e) {
+			Log.errorException(e);
+			return null;
+		}
+	}
+
+	private static Identifier createMonitoredElement(Identifier creatorId,
+																									 Identifier domainId,
+																									 Identifier mPortId) {
+		try {
+			Identifier id = IdentifierGenerator.generateIdentifier(ObjectEntities.ME_ENTITY_CODE);
+			MonitoredElement me = MonitoredElement.createInstance(id,
+																														 creatorId,
+																														 domainId,
+																														 mPortId,
+																														 MonitoredElementSort._MONITOREDELEMENT_SORT_PORT,
+																														 "ME");
+			MonitoredElement me1 = new MonitoredElement((MonitoredElement_Transferable)me.getTransferable()); 
+			return id;
+		}
+		catch (Exception e) {
+			Log.errorException(e);
+			return null;
+		}
+	}
+
+	private static Identifier createUser(Identifier creatorId,
+																			 String login,
+																			 UserSort sort,
+																			 String name,
+																			 String description) {
+		try {
+			Identifier id = IdentifierGenerator.generateIdentifier(ObjectEntities.USER_ENTITY_CODE);
+			User user = User.createInstance(id,
+																			creatorId,
+																			login,
+																			sort,
+																			name,
+																			description);
+																			
+			User user1 = new User((User_Transferable)user.getTransferable());
 			return id;
 		}
 		catch (Exception e) {

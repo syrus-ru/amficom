@@ -1,5 +1,5 @@
 /*
- * $Id: MServerImplementation.java,v 1.7 2004/08/17 18:23:15 arseniy Exp $
+ * $Id: MServerImplementation.java,v 1.8 2004/08/18 18:11:53 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -7,6 +7,9 @@
  */
 
 package com.syrus.AMFICOM.mserver;
+
+import java.util.List;
+import java.util.Iterator;
 
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
@@ -74,7 +77,7 @@ import com.syrus.AMFICOM.mserver.corba.MServerPOA;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2004/08/17 18:23:15 $
+ * @version $Revision: 1.8 $, $Date: 2004/08/18 18:11:53 $
  * @author $Author: arseniy $
  * @module mserver_v1
  */
@@ -86,6 +89,7 @@ public class MServerImplementation extends MServerPOA {
 		
 	}
 
+/////////////////////////////////////////	Identifier Generator ////////////////////////////////////////////////
 	public Identifier_Transferable getGeneratedIdentifier(short entityCode) throws AMFICOMRemoteException {
 		try {
 			Identifier identifier = IdentifierGenerator.generateIdentifier(entityCode);
@@ -128,6 +132,7 @@ public class MServerImplementation extends MServerPOA {
 	}
 
 
+////////////////////////////////////////////	Receive ///////////////////////////////////////////////////
 	public void receiveResults(Result_Transferable[] resultsT) throws AMFICOMRemoteException {
 		Log.debugMessage("Received " + resultsT.length + " results", Log.DEBUGLEVEL03);
 		Result result;
@@ -143,6 +148,7 @@ public class MServerImplementation extends MServerPOA {
 	}
 
 
+/////////////////////////////////////////	Configuration ////////////////////////////////////////////////
 	public CharacteristicType_Transferable transmitCharacteristicType(Identifier_Transferable idT) throws AMFICOMRemoteException {
 		Identifier id = new Identifier(idT);
 		try {
@@ -204,6 +210,10 @@ public class MServerImplementation extends MServerPOA {
 		catch (RetrieveObjectException roe) {
 			Log.errorException(roe);
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, roe.getMessage());
+		}
+		catch (Exception e) {
+			Log.errorException(e);
+			throw new AMFICOMRemoteException();
 		}
 	}
 
@@ -349,6 +359,10 @@ public class MServerImplementation extends MServerPOA {
 			Log.errorException(roe);
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, roe.getMessage());
 		}
+		catch (Exception e) {
+			Log.errorException(e);
+			throw new AMFICOMRemoteException();
+		}
 	}
 
 	public MeasurementPort_Transferable transmitMeasurementPort(Identifier_Transferable idT) throws AMFICOMRemoteException {
@@ -384,6 +398,30 @@ public class MServerImplementation extends MServerPOA {
 	}
 
 
+	public MonitoredElement_Transferable[] transmitKISMonitoredElements(Identifier_Transferable kisId) throws AMFICOMRemoteException {
+		Identifier id = new Identifier(kisId);
+		try {
+			KIS kis = new KIS(id);
+			List monitoredElements = kis.retrieveMonitoredElements();
+			MonitoredElement_Transferable[] mesT = new MonitoredElement_Transferable[monitoredElements.size()];
+			int i = 0;
+			for (Iterator it = monitoredElements.iterator(); it.hasNext();)
+				mesT[i++] = (MonitoredElement_Transferable)((MonitoredElement)it.next()).getTransferable();
+			return mesT;
+		}
+		catch (ObjectNotFoundException onfe) {
+			Log.errorException(onfe);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_NOT_FOUND, CompletionStatus.COMPLETED_YES, onfe.getMessage());
+		}
+		catch (RetrieveObjectException roe) {
+			Log.errorException(roe);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, roe.getMessage());
+		}
+	}
+
+
+
+/////////////////////////////////////////	Measurement //////////////////////////////////////////////////
 	public ParameterType_Transferable transmitParameterType(Identifier_Transferable idT) throws AMFICOMRemoteException {
 		Identifier id = new Identifier(idT);
 		try {
