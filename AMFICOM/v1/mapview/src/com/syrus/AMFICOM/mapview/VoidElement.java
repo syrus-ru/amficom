@@ -1,5 +1,5 @@
 /**
- * $Id: VoidElement.java,v 1.5 2005/03/09 14:57:55 bass Exp $
+ * $Id: VoidElement.java,v 1.6 2005/04/01 13:16:07 bob Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,6 +11,8 @@
 
 package com.syrus.AMFICOM.mapview;
 
+import java.util.Set;
+
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.corba.CharacteristicSort;
@@ -20,13 +22,12 @@ import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.map.MapElementState;
 import com.syrus.AMFICOM.mapview.MapView;
 
-import java.util.*;
 
 /**
  * Пустой элемент.
  * 
- * @author $Author: bass $
- * @version $Revision: 1.5 $, $Date: 2005/03/09 14:57:55 $
+ * @author $Author: bob $
+ * @version $Revision: 1.6 $, $Date: 2005/04/01 13:16:07 $
  * @module mapviewclient_v1
  */
 public final class VoidElement implements MapElement 
@@ -177,7 +178,7 @@ public final class VoidElement implements MapElement
 	 * {@inheritDoc}
 	 * Suppress since this class is transient 
 	 */
-	public Collection getCharacteristics() 
+	public Set getCharacteristics() 
 	{
 		throw new UnsupportedOperationException();
 	}
@@ -238,9 +239,9 @@ public final class VoidElement implements MapElement
 
 	/**
 	 * @param characteristics
-	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics(java.util.Collection)
+	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics(Set)
 	 */
-	public void setCharacteristics(Collection characteristics) {
+	public void setCharacteristics(Set characteristics) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -253,9 +254,9 @@ public final class VoidElement implements MapElement
 
 	/**
 	 * @param characteristics
-	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics0(java.util.Collection)
+	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics0(Set)
 	 */
-	public void setCharacteristics0(Collection characteristics) {
+	public void setCharacteristics0(Set characteristics) {
 		throw new UnsupportedOperationException();
 	}
 }

@@ -1,5 +1,5 @@
 /**
- * $Id: Selection.java,v 1.5 2005/03/09 14:57:55 bass Exp $
+ * $Id: Selection.java,v 1.6 2005/04/01 13:16:07 bob Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -21,17 +21,16 @@ import com.syrus.AMFICOM.map.MapElementState;
 import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.map.TopologicalNode;
 
-import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.Set;
 
 /**
  * Набор выбранных элементов.
  * 
- * @author $Author: bass $
- * @version $Revision: 1.5 $, $Date: 2005/03/09 14:57:55 $
+ * @author $Author: bob $
+ * @version $Revision: 1.6 $, $Date: 2005/04/01 13:16:07 $
  * @module mapviewclient_v1
  * @todo copy/paste, properties
  */
@@ -41,7 +40,7 @@ public final class Selection
 	/**
 	 * Список выбранных элементов.
 	 */
-	protected List elements = new LinkedList();
+	protected Set elements = new HashSet();
 
 	/**
 	 * Общий центр выбранных элементов.
@@ -150,7 +149,7 @@ public final class Selection
 	 * Добавить в список множество выделенных элементов.
 	 * @param coll набор элементов
 	 */
-	public void addAll(Collection coll)
+	public void addAll(Set coll)
 	{
 		this.elements.addAll(coll);
 		recalcLocation();
@@ -293,7 +292,7 @@ public final class Selection
 	 * {@inheritDoc}
 	 * Suppress since this class is transient 
 	 */
-	public Collection getCharacteristics() 
+	public Set getCharacteristics() 
 	{
 		throw new UnsupportedOperationException();
 	}
@@ -353,9 +352,9 @@ public final class Selection
 	 * Получить список выделенных элементов.
 	 * @return список выделенных элементов
 	 */
-	public List getElements()
+	public Set getElements()
 	{
-		return Collections.unmodifiableList(this.elements);
+		return Collections.unmodifiableSet(this.elements);
 	}
 
 
@@ -429,9 +428,9 @@ public final class Selection
 
 	/**
 	 * @param characteristics
-	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics(java.util.Collection)
+	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics(java.util.Set)
 	 */
-	public void setCharacteristics(Collection characteristics) {
+	public void setCharacteristics(Set characteristics) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -444,9 +443,9 @@ public final class Selection
 
 	/**
 	 * @param characteristics
-	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics0(java.util.Collection)
+	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics0(java.util.Set)
 	 */
-	public void setCharacteristics0(Collection characteristics) {
+	public void setCharacteristics0(Set characteristics) {
 		throw new UnsupportedOperationException();
 	}
 }
