@@ -445,18 +445,14 @@ BellcoreStructure::FxdParams::FxdParams(const unsigned int DTS,
 	this->AOD = 0;
 
 	this->TPW = TPW;
-
 	this->PWU = new short[this->TPW];
-	for (int i = 0; i < this->TPW; i++)
-		this->PWU[i] = PWU[i];
-
 	this->DS = new int[this->TPW];
-	for (int i = 0; i < this->TPW; i++)
-		this->DS[i] = DS[i];
-
 	this->NPPW = new int[this->TPW];
-	for (int i = 0; i < this->TPW; i++)
+	for (int i = 0; i < this->TPW; i++) {
+		this->PWU[i] = PWU[i];
+		this->DS[i] = DS[i];
 		this->NPPW[i] = NPPW[i];
+	}
 
 	this->GI = GI;
 	this->BC = 800;
@@ -529,7 +525,10 @@ BellcoreStructure::KeyEvents::KeyEvents(const short TNKE,
 	this->EC = new char*[this->TNKE];
 	this->LMT = new char*[this->TNKE];
 	this->CMT = new char*[this->TNKE];
-	for (int i = 0; i < this->TNKE; i++) {
+
+	int i;
+
+	for (i = 0; i < this->TNKE; i++) {
 		this->EN[i] = EN[i];
 		this->EPT[i] = EPT[i];
 		this->ACI[i] = ACI[i];
@@ -543,11 +542,11 @@ BellcoreStructure::KeyEvents::KeyEvents(const short TNKE,
 	}
 	this->EEL = EEL;
 	this->ELMP = new int[LENGTH_ELMP];
-	for (int i = 0; i < LENGTH_ELMP; i++)
+	for (i = 0; i < LENGTH_ELMP; i++)
 		this->ELMP[i] = ELMP[i];
 	this->ORL = ORL;
 	this->RLMP = new int[LENGTH_RLMP];
-	for (int i = 0; i < LENGTH_RLMP; i++)
+	for (i = 0; i < LENGTH_RLMP; i++)
 		this->RLMP[i] = RLMP[i];
 }
 

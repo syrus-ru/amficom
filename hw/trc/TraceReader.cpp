@@ -182,11 +182,12 @@ void bellcore_from_nttrace(const NTTraceData* nttrace_data, BellcoreStructure* b
 	delete[] ds;
 	delete[] nppw;
 
+	unsigned int i;
 //	double km_per_data_point = (nttrace_data->_40072 * dbl_10050458)/(nttrace_data->_00012 / dbl_100504F0);
 	double dynamic_range = nttrace_data->_00048*8 + 24;
 	double d = dynamic_range_koeff * dynamic_range;
 	double* reflectogramma = new double[nttrace_data->_40066];
-	for (unsigned int i = 0; i < nttrace_data->_40066; i++) {
+	for (i = 0; i < nttrace_data->_40066; i++) {
 		if (nttrace_data->_40068[i] > 0) {
 			reflectogramma[i] = d - (nttrace_data->_40068[i]*dynamic_range_koeff / dbl_10050460);
 			if (reflectogramma[i] < min_refl_val)
@@ -197,7 +198,7 @@ void bellcore_from_nttrace(const NTTraceData* nttrace_data, BellcoreStructure* b
 	}
 //---------
 FILE* fi = fopen("reflectogramma", "wb");
-for (unsigned int i = 0; i < nttrace_data->_40066; i++)
+for (i = 0; i < nttrace_data->_40066; i++)
 	fprintf(fi, "%hd\n", nttrace_data->_40068[i]);//fprintf(fi, "%f\n", reflectogramma[i]);
 fclose(fi);
 //---------
@@ -208,7 +209,7 @@ fclose(fi);
 	sf[0] = 1000;
 	unsigned short** dsf = new unsigned short*[tsf];
 	dsf[0] = new unsigned short[nttrace_data->_40066];
-	for (int i = 0; i < nttrace_data->_40066; i++)
+	for (i = 0; i < nttrace_data->_40066; i++)
 		dsf[0][i] = (unsigned short)(reflectogramma[i] * 1000);
 	delete[] reflectogramma;
 	bs->add_field_data_pts(nttrace_data->_40066,
