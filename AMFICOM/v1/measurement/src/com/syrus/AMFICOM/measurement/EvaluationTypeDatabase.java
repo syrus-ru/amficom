@@ -1,5 +1,5 @@
 /*
- * $Id: EvaluationTypeDatabase.java,v 1.72 2005/03/11 09:08:23 bob Exp $
+ * $Id: EvaluationTypeDatabase.java,v 1.73 2005/03/24 15:43:09 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,6 +15,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -39,8 +40,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.72 $, $Date: 2005/03/11 09:08:23 $
- * @author $Author: bob $
+ * @version $Revision: 1.73 $, $Date: 2005/03/24 15:43:09 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -95,14 +96,15 @@ public class EvaluationTypeDatabase extends StorableObjectDatabase {
 		EvaluationType evaluationType = this.fromStorableObject(storableObject);
 		this.retrieveEntity(evaluationType);
 		this.retrieveParameterTypes(evaluationType);
+		this.retrieveMeasurementTypeIdsByOneQuery(Collections.singleton(evaluationType));
 	}
 
 	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
 		throws IllegalDataException, RetrieveObjectException, SQLException {
 		EvaluationType evaluationType = (storableObject == null) ?
 				new EvaluationType(DatabaseIdentifier.getIdentifier(
-			resultSet, StorableObjectWrapper.COLUMN_ID), null, 0L, null, null, null, null, null, null) : this
-				.fromStorableObject(storableObject);
+			resultSet, StorableObjectWrapper.COLUMN_ID), null, 0L, null, null, null, null, null, null, null) :
+				this.fromStorableObject(storableObject);
 		evaluationType.setAttributes(DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_CREATED),
 									 DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
 									 DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
@@ -305,6 +307,77 @@ public class EvaluationTypeDatabase extends StorableObjectDatabase {
 		} 
 	}
 
+	private void retrieveMeasurementTypeIdsByOneQuery(Collection evaluationTypes) throws RetrieveObjectException {
+		if ((evaluationTypes == null) || (evaluationTypes.isEmpty()))
+			return;
+
+		StringBuffer sql = new StringBuffer(SQL_SELECT
+				+ EvaluationTypeWrapper.LINK_COLUMN_EVALUATION_TYPE_ID + COMMA
+				+ MeasurementTypeWrapper.LINK_COLUMN_MEASUREMENT_TYPE_ID
+				+ SQL_FROM + ObjectEntities.MNTTYPANATYPEVATYP_ENTITY
+				+ SQL_WHERE);
+		try {
+			sql.append(idsEnumerationString(evaluationTypes, EvaluationTypeWrapper.LINK_COLUMN_EVALUATION_TYPE_ID, true));
+		}
+		catch (IllegalDataException e) {
+			throw new RetrieveObjectException(e);
+		}
+
+		Statement statement = null;
+		ResultSet resultSet = null;
+		Connection connection = DatabaseConnection.getConnection();
+		try {
+			statement = connection.createStatement();
+			Log.debugMessage("EvaluationTypeDatabase.retrieveMeasurementTypeIdsByOneQuery | Trying: " + sql, Log.DEBUGLEVEL09);
+			resultSet = statement.executeQuery(sql.toString());
+
+			Map measurementTypeIdsMap = new HashMap();
+			Identifier evaluationTypeId;
+			Identifier measurementTypeId;
+			Collection measurementTypeIds;
+			while (resultSet.next()) {
+				evaluationTypeId = DatabaseIdentifier.getIdentifier(resultSet, EvaluationTypeWrapper.LINK_COLUMN_EVALUATION_TYPE_ID);
+				measurementTypeId = DatabaseIdentifier.getIdentifier(resultSet, MeasurementTypeWrapper.LINK_COLUMN_MEASUREMENT_TYPE_ID);
+
+				measurementTypeIds = (Collection) measurementTypeIdsMap.get(evaluationTypeId);
+				if (measurementTypeIds == null) {
+					measurementTypeIds = new ArrayList();
+					measurementTypeIdsMap.put(evaluationTypeId, measurementTypeIds);
+				}
+				measurementTypeIds.add(measurementTypeId);
+			}
+
+			EvaluationType evaluationType;
+			for (Iterator it = evaluationTypes.iterator(); it.hasNext();) {
+				evaluationType = (EvaluationType) it.next();
+				evaluationTypeId = evaluationType.getId();
+				measurementTypeIds = (Collection) measurementTypeIdsMap.get(evaluationTypeId);
+
+				evaluationType.setMeasurementTypeIds0(measurementTypeIds);
+			}
+		}
+		catch (SQLException sqle) {
+			String mesg = "EvaluationTypeDatabase.retrieveMeasurementTypeIdsByOneQuery | Cannot retrieve parameter type ids for evaluation types -- " + sqle.getMessage();
+			throw new RetrieveObjectException(mesg, sqle);
+		}
+		finally {
+			try {
+				if (statement != null)
+					statement.close();
+				if (resultSet != null)
+					resultSet.close();
+				statement = null;
+				resultSet = null;
+			}
+			catch (SQLException sqle1) {
+				Log.errorException(sqle1);
+			}
+			finally {
+				DatabaseConnection.releaseConnection(connection);
+			}
+		}
+	}
+
 	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
 		EvaluationType evaluationType = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
@@ -459,6 +532,7 @@ public class EvaluationTypeDatabase extends StorableObjectDatabase {
 	protected Collection retrieveByCondition(String conditionQuery) throws RetrieveObjectException, IllegalDataException {
 		Collection collection = super.retrieveByCondition(conditionQuery);
 		this.retrieveParameterTypesByOneQuery(collection);
+		this.retrieveMeasurementTypeIdsByOneQuery(collection);
 		return collection;
 	}
 
