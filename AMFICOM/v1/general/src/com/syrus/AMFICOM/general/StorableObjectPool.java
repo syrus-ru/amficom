@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectPool.java,v 1.18 2005/02/08 09:12:28 arseniy Exp $
+ * $Id: StorableObjectPool.java,v 1.19 2005/02/08 10:50:01 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,8 +26,8 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2005/02/08 09:12:28 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.19 $, $Date: 2005/02/08 10:50:01 $
+ * @author $Author: bob $
  * @module general_v1
  */
 public abstract class StorableObjectPool {
@@ -602,38 +602,11 @@ public abstract class StorableObjectPool {
 					continue;
 
 				final short group = groupCode.shortValue();
-				String packageName;
-				switch (group) {
-					case ObjectGroupEntities.GENERAL_GROUP_CODE:
-						packageName = "general.General";
-						break;
-					case ObjectGroupEntities.EVENT_GROUP_CODE:
-						packageName = "event.Event";
-						break;
-					case ObjectGroupEntities.ADMINISTRATION_GROUP_CODE:
-						packageName = "administration.Administration";
-						break;
-					case ObjectGroupEntities.CONFIGURATION_GROUP_CODE:
-						packageName = "configuration.Configuration";
-						break;
-					case ObjectGroupEntities.MEASUREMENT_GROUP_CODE:
-						packageName = "measurement.Measurement";
-						break;
-					case ObjectGroupEntities.MAP_GROUP_CODE:
-						packageName = "map.Map";
-						break;
-					case ObjectGroupEntities.RESOURCE_GROUP_CODE:
-						packageName = "resource.Resource";
-						break;
-					case ObjectGroupEntities.MAPVIEW_GROUP_CODE:
-						packageName = "mapview.MapView";
-						break;
-					default:
-						throw new IllegalDataException("StorableObjectPool.save | Illegal dependencies Object group: "
-								+ ObjectGroupEntities.codeToString(group));
-				}
+				final String groupName = ObjectGroupEntities.codeToString(group);				
 
-				String className = "com.syrus.AMFICOM." + packageName + "StorableObjectPool";
+				String className = "com.syrus.AMFICOM." 
+					+ groupName.toLowerCase() + "." 
+					+ groupName + "StorableObjectPool";
 				try {
 					Class clazz = Class.forName(className);
 					Method flushMethod = clazz.getDeclaredMethod("flush", new Class[] {boolean.class});
