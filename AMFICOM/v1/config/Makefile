@@ -108,3 +108,7 @@ arch:
 		Makefile \
 		$(IDLDIR)/configuration.idl \
 		$(SRCDIR)/com/syrus/AMFICOM/configuration/*.java
+
+#### Compile and install jar to libdir
+lib: $(LIBNAME)
+	$(CP) $(LIBNAME) $(LIBDIR)	
