@@ -1,5 +1,5 @@
 /*
- * $Id: ModelTraceManager.java,v 1.10 2005/02/22 09:16:52 saa Exp $
+ * $Id: ModelTraceManager.java,v 1.11 2005/02/24 08:54:01 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ import com.syrus.AMFICOM.analysis.CoreAnalysisManager;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.10 $, $Date: 2005/02/22 09:16:52 $
+ * @version $Revision: 1.11 $, $Date: 2005/02/24 08:54:01 $
  * @module
  */
 public class ModelTraceManager
@@ -624,19 +624,6 @@ public class ModelTraceManager
 		}
 	}
 
-	// определяем, к какому DX-порогу относится данная точка,
-	// или не относится ни к одному (return -1)
-	// FIXME: плохой алгоритм - не учитывает реального хода кривой; оттого, кстати, и key не используется
-	private int getNearestThreshDXByX(int key, int x)
-	{
-		for (int i = 0; i < tDX.length; i++)
-		{
-			if (x >= tDX[i].xMin + tDX[i].dX[key] && x <= tDX[i].xMax + tDX[i].dX[key])
-				return i;
-		}
-		return -1;
-	}
-
 	// определяем, к какому DY-порогу лучше относится данная точка
 	// при выборе между A и A граница порога - посередине между порогами,
 	// при выборе между A и L - по уровню Y = (Y_A + Y_L)/2
@@ -782,7 +769,6 @@ public class ModelTraceManager
 
 		double bestY = getThresholdY(bestKey, bestX);
 
-		System.out.println("Button = " + button);
 		if (button == 0)
 		{
 			int thId = getNearestThreshDYByX(bestKey, bestX);
@@ -792,7 +778,9 @@ public class ModelTraceManager
 		}
 		else
 		{
-			int thId = getNearestThreshDXByX(bestKey, bestX);
+			int thId = mf.findResponsibleThreshDXID(tDX, tDY, bestKey, bestX);
+			if (thId == -1)
+				return null;
 			ThresholdHandleDX handle = new ThresholdHandleDX(thId, bestKey, bestX, bestY);
 			handle.posY = getThresholdY(bestKey, handle.posX);
 			return handle;

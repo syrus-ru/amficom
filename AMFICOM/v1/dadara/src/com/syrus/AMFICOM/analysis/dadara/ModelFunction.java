@@ -20,7 +20,7 @@ import java.io.*;
  * <p>Should be constructed as one of three AMFICOM-specific simple functions.
  * The modelling function will probably change when fit() will be called.</p>
  *
- * @version $Revision: 1.8 $, $Date: 2005/02/21 13:39:33 $
+ * @version $Revision: 1.9 $, $Date: 2005/02/24 08:54:01 $
  * @author $Author: saa $
  * @module analysis_v1
  */
@@ -33,7 +33,16 @@ public class ModelFunction {
 	private native double[] nFArray(double x0, double step, int length);
 	private native void nChangeByACXL(double dA, double dC, double dX, double dL); // преобразование к своему ACXL-порогу
 	private native void nChangeByThresh(ThreshDX[] threshDX, ThreshDY[] threshDY, int key); // изменение порогом Thresh
-	//private native void nFixThresh(Thresh[] thresh); // корректировка параметров Thresh в соответствии с м.ф.
+	
+	// определение, какой threshDX-порог отвечает за указанную позицию x
+	// Применяется к исходной м.ф., устроен аналогично nChangeByThresh,
+	// но:
+	// 1. дополнительно получает x,
+	// 2. не изменяет сам объект mf,
+	// 3. возвращает результат поиска:
+	// -1: порог не найден;
+	// >=0: индекс найденного порога в массиве threshDX
+	private native int nFindResponsibleThreshDXID(ThreshDX[] threshDX, ThreshDY[] threshDY, int key, int x);
 	private native double nRMS(double y[], int begin, int end); // end is included
 
 	private static final int FITMODE_VARY_ALL = 1; // фитируем кривую, варьируем все параметры
@@ -376,19 +385,16 @@ public class ModelFunction {
 		nChangeByACXL(ACXL[0], ACXL[1], ACXL[2], ACXL[3]);
 	}
 
-//	public void changeByOther0Threshold(double[] changePars)
-//	{
-//		//nChangeByOther(0, changePars);
-//	}
 	public void changeByThresh(ThreshDX[] threshDX, ThreshDY[] threshDY, int key)
 	{
 		nChangeByThresh(threshDX, threshDY, key);
 	}
 
-//	public void fixThresh(Thresh[] thresh)
-//	{
-//		nFixThresh(thresh);
-//	}
+	// no javadoc yet; see comment if nFindResponsibleThreshDXID
+	public int findResponsibleThreshDXID(ThreshDX[] threshDX, ThreshDY[] threshDY, int key, int x)
+	{
+		return nFindResponsibleThreshDXID(threshDX, threshDY, key, x);
+	}
 
 	public void writeToDOS(DataOutputStream dos) throws IOException {
 		dos.writeInt(shapeID);
