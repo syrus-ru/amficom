@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractSchemePortImpl.java,v 1.2 2004/11/23 15:46:47 bass Exp $
+ * $Id: AbstractSchemePortImpl.java,v 1.3 2004/11/24 12:40:57 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,11 +14,11 @@ import com.syrus.AMFICOM.scheme.corba.AbstractSchemePortPackage.DirectionType;
 
 /**
  * This class is never used directly, it was provided just in order for source
- * generated from IDL files to compile cleanly.
+ * generated from IDL files to compile cleanly. Use other implementations of
+ * {@link AbstractSchemePort} instead.
  *
  * @author $Author: bass $
- * @version $Revision: 1.2 $, $Date: 2004/11/23 15:46:47 $
- * @deprecated Use other implementations of {@link AbstractSchemePort} instead.
+ * @version $Revision: 1.3 $, $Date: 2004/11/24 12:40:57 $
  * @module schemecommon_v1
  */
 final class AbstractSchemePortImpl extends AbstractSchemePort {
