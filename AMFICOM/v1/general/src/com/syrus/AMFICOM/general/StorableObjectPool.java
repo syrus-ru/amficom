@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectPool.java,v 1.31 2005/02/18 16:35:32 arseniy Exp $
+ * $Id: StorableObjectPool.java,v 1.32 2005/02/18 17:42:49 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,7 +28,7 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.31 $, $Date: 2005/02/18 16:35:32 $
+ * @version $Revision: 1.32 $, $Date: 2005/02/18 17:42:49 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -134,7 +134,7 @@ public abstract class StorableObjectPool {
 		}
 	}
 
-	protected synchronized void deleteImpl(final Identifier id) throws DatabaseException, CommunicationException {
+	protected synchronized void deleteImpl(final Identifier id) {
 		Short entityCode = new Short(id.getMajor());
 		LRUMap lruMap = (LRUMap) this.objectPoolMap.get(entityCode);
 		if (lruMap != null)
@@ -150,7 +150,7 @@ public abstract class StorableObjectPool {
 		// this.deleteStorableObject(id);
 	}
 
-	protected synchronized void deleteImpl(final Collection objects) throws DatabaseException, CommunicationException, IllegalDataException {
+	protected synchronized void deleteImpl(final Collection objects) throws IllegalDataException {
 		Object object;
 		Identifier id;
 		for (Iterator it = objects.iterator(); it.hasNext();) {
@@ -180,9 +180,9 @@ public abstract class StorableObjectPool {
 		// this.deleteStorableObjects(objects);
 	}
 
-	protected abstract void deleteStorableObject(final Identifier id) throws DatabaseException, CommunicationException;
+	protected abstract void deleteStorableObject(final Identifier id) throws IllegalDataException;
 
-	protected abstract void deleteStorableObjects(final Collection objects) throws DatabaseException, CommunicationException, IllegalDataException;
+	protected abstract void deleteStorableObjects(final Collection objects) throws IllegalDataException;
 
 //	/**
 //	 * This method is only invoked by this class' descendants, using their
