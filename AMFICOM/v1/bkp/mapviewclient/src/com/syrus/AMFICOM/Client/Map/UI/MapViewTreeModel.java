@@ -1,5 +1,5 @@
 /**
- * $Id: MapViewTreeModel.java,v 1.7 2005/04/05 15:48:07 krupenn Exp $
+ * $Id: MapViewTreeModel.java,v 1.8 2005/04/06 17:41:12 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -13,28 +13,46 @@ package com.syrus.AMFICOM.Client.Map.UI;
 
 import java.awt.Image;
 import java.awt.Toolkit;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.ListIterator;
 
 import javax.swing.ImageIcon;
-import javax.swing.tree.DefaultTreeModel;
-import javax.swing.tree.TreeModel;
 
+import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
+import com.syrus.AMFICOM.Client.Map.Controllers.MapViewController;
+import com.syrus.AMFICOM.Client.Map.Controllers.NodeTypeController;
+import com.syrus.AMFICOM.client_.general.ui_.tree_.IconedNode;
+import com.syrus.AMFICOM.logic.Item;
+import com.syrus.AMFICOM.logic.ItemTreeModel;
+import com.syrus.AMFICOM.map.Collector;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.MapElement;
+import com.syrus.AMFICOM.map.PhysicalLink;
+import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.map.SiteNodeType;
+import com.syrus.AMFICOM.map.TopologicalNode;
 import com.syrus.AMFICOM.mapview.MapView;
 
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/04/05 15:48:07 $
+ * @version $Revision: 1.8 $, $Date: 2005/04/06 17:41:12 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */
-public class MapViewTreeModel extends DefaultTreeModel implements TreeModel {
+public class MapViewTreeModel extends ItemTreeModel 
+{
 	public static final String MAP_BRANCH = "Map";
 	public static final String MAPS_BRANCH = "innermaps";
 
 	MapView mapView = null;
+
+	Item topLevelItem;
 
 	static MapElementComparator mapElementComparator = new MapElementComparator();
 	static MapComparator mapComparator = new MapComparator();
@@ -86,28 +104,27 @@ public class MapViewTreeModel extends DefaultTreeModel implements TreeModel {
 						IMG_SIZE,
 						Image.SCALE_SMOOTH));
 
-	public MapViewTreeModel(MapView mapView) {
-		super(null);
+	public MapViewTreeModel(Item root) {
+		super(root);
 //		buildTree(mapView);
 	}
 	
 	public void setMapView(MapView mapView) {
-//		buildTree(mapView);
-	}
-/*
-	public StorableObjectTreeNode findNode(Object object)
-	{
-		return findNode((StorableObjectTreeNode )(this.root), object);
+		buildTree(mapView);
 	}
 
-	public StorableObjectTreeNode findNode(StorableObjectTreeNode node, Object object)
+	public Item findNode(Object object)
 	{
-		if(node.getUserObject().equals(object))
-			return node;
-		for (int i = node.getChildCount() - 1; i >= 0; i--)
-		{
-			StorableObjectTreeNode childNode = (StorableObjectTreeNode )node.getChildAt(i);
-			StorableObjectTreeNode foundNode = findNode(childNode, object);
+		return findNode((Item )getRoot(), object);
+	}
+
+	public Item findNode(Item item, Object object)
+	{
+		if(item.getObject().equals(object))
+			return item;
+		for(Iterator iter = item.getChildren().iterator(); iter.hasNext();) {
+			Item childNode = (Item )iter.next();
+			Item foundNode = findNode(childNode, object);
 			if(foundNode != null)
 				return foundNode;
 		}
@@ -117,35 +134,41 @@ public class MapViewTreeModel extends DefaultTreeModel implements TreeModel {
 
 	void buildTree(MapView mapView) {
 		if(mapView == null) {
-			this.root = new StorableObjectTreeNode("noname", getObjectName("noname"));
+			Item root = (Item )getRoot();
+			root.getChildren().clear();
+			this.topLevelItem = new IconedNode("noname", getObjectName("noname"));
+			root.addChild(this.topLevelItem);
 		}
 		else {
 			if(this.mapView != null && this.mapView.equals(mapView)) {
-				updateTree((StorableObjectTreeNode )this.root);
+				updateTree(this.topLevelItem);
 			}
 			else {
-				this.root = new StorableObjectTreeNode(mapView, getObjectName(mapView), mapViewIcon);
-				StorableObjectTreeNode mapNode = new StorableObjectTreeNode(
+				Item root = (Item )getRoot();
+				root.getChildren().clear();
+				this.topLevelItem = new IconedNode(mapView, getObjectName(mapView), mapViewIcon);
+				root.addChild(this.topLevelItem);
+				Item mapNode = new IconedNode(
 						MapViewTreeModel.MAP_BRANCH,
 						getObjectName(MapViewTreeModel.MAP_BRANCH),
 						folderIcon);
-				((StorableObjectTreeNode )this.root).add(mapNode);
-				mapNode.add(buildMapTree(mapView.getMap()));
+				this.topLevelItem.addChild(mapNode);
+				mapNode.addChild(buildMapTree(mapView.getMap()));
 			}
 		}
 		this.mapView = mapView;
 	}
 
-	StorableObjectTreeNode buildMapTree(Map map) {
-		StorableObjectTreeNode node;
+	Item buildMapTree(Map map) {
+		Item node;
 			
-		node = new StorableObjectTreeNode(map, getObjectName(map), mapIcon);
+		node = new IconedNode(map, getObjectName(map), mapIcon);
 
-		node.add(buildMapsTree(map));
-		node.add(buildSiteTree(map));
-		node.add(buildNodeTree(map));
-		node.add(buildLinkTree(map));
-		node.add(buildCollTree(map));
+		node.addChild(buildMapsTree(map));
+		node.addChild(buildSiteTree(map));
+		node.addChild(buildNodeTree(map));
+		node.addChild(buildLinkTree(map));
+		node.addChild(buildCollTree(map));
 		return node;
 	}
 
@@ -172,30 +195,30 @@ public class MapViewTreeModel extends DefaultTreeModel implements TreeModel {
 	}
 
 	
-	public String getNodeName(StorableObjectTreeNode node) {
-		if(node.getUserObject() instanceof String)
-			return LangModelMap.getString((String )(node.getUserObject()));
-		else if(node.getUserObject() instanceof MapView) {
-			MapView mapView = (MapView )node.getUserObject();
+	public String getNodeName(Item node) {
+		if(node.getObject() instanceof String)
+			return LangModelMap.getString((String )(node.getObject()));
+		else if(node.getObject() instanceof MapView) {
+			MapView mapView = (MapView )node.getObject();
 			return mapView.getName();
 		}
-		else if(node.getUserObject() instanceof Map) {
-			Map map = (Map )node.getUserObject();
+		else if(node.getObject() instanceof Map) {
+			Map map = (Map )node.getObject();
 			return map.getName();
 		}
-		else if(node.getUserObject() instanceof SiteNodeType) {
-			SiteNodeType type = (SiteNodeType )node.getUserObject();
+		else if(node.getObject() instanceof SiteNodeType) {
+			SiteNodeType type = (SiteNodeType )node.getObject();
 			return type.getName();
 		}
-		else if(node.getUserObject() instanceof MapElement) {
-			MapElement mapElement = (MapElement )node.getUserObject();
+		else if(node.getObject() instanceof MapElement) {
+			MapElement mapElement = (MapElement )node.getObject();
 			return mapElement.getName();
 		}
 		return LangModelMap.getString("noname");
 	}
 
-	StorableObjectTreeNode buildMapsTree(Map map) {
-		StorableObjectTreeNode mapChildrenNode = new StorableObjectTreeNode(
+	Item buildMapsTree(Map map) {
+		Item mapChildrenNode = new IconedNode(
 				MapViewTreeModel.MAPS_BRANCH, 
 				getObjectName(MapViewTreeModel.MAPS_BRANCH),
 				folderIcon);
@@ -207,14 +230,14 @@ public class MapViewTreeModel extends DefaultTreeModel implements TreeModel {
 		for(Iterator it = mapsChildren.iterator(); it.hasNext();)
 		{
 			Map innerMap = (Map )it.next();
-			mapChildrenNode.add(buildMapTree(innerMap));
+			mapChildrenNode.addChild(buildMapTree(innerMap));
 		}
 
 		return mapChildrenNode;
 	}
 
-	StorableObjectTreeNode buildSiteTree(Map map) {
-		StorableObjectTreeNode siteChildrenNode = new StorableObjectTreeNode(
+	Item buildSiteTree(Map map) {
+		Item siteChildrenNode = new IconedNode(
 				MapViewController.ELEMENT_SITENODE, 
 				getObjectName(MapViewController.ELEMENT_SITENODE),
 				folderIcon);
@@ -224,13 +247,13 @@ public class MapViewTreeModel extends DefaultTreeModel implements TreeModel {
 		{
 			SiteNodeType type = (SiteNodeType )it.next();
 			List siteNodes = (List )types.get(type);
-			siteChildrenNode.add(buildSiteTree(map, type, siteNodes));
+			siteChildrenNode.addChild(buildSiteTree(type, siteNodes));
 		}
 		return siteChildrenNode;
 	}
 
-	StorableObjectTreeNode buildSiteTree(Map map, SiteNodeType type, List siteNodes) {
-		StorableObjectTreeNode siteChildrenNode = new StorableObjectTreeNode(
+	Item buildSiteTree(SiteNodeType type, List siteNodes) {
+		IconedNode siteChildrenNode = new IconedNode(
 				type, 
 				getObjectName(type),
 				new ImageIcon(
@@ -242,15 +265,15 @@ public class MapViewTreeModel extends DefaultTreeModel implements TreeModel {
 		Collections.sort(siteNodes, MapViewTreeModel.mapElementComparator);
 		for(Iterator it = siteNodes.iterator(); it.hasNext();) {
 			SiteNode site = (SiteNode )it.next();
-			siteChildrenNode.add(new StorableObjectTreeNode(site, getObjectName(site), (ImageIcon)(siteChildrenNode.getIcon()), true));
+			siteChildrenNode.addChild(new IconedNode(site, getObjectName(site), siteChildrenNode.getIcon(), true));
 		}
 				
 		return siteChildrenNode;
 	}
 
 
-	StorableObjectTreeNode buildNodeTree(Map map) {
-		StorableObjectTreeNode nodeChildrenNode = new StorableObjectTreeNode(
+	Item buildNodeTree(Map map) {
+		Item nodeChildrenNode = new IconedNode(
 				MapViewController.ELEMENT_TOPOLOGICALNODE, 
 				getObjectName(MapViewController.ELEMENT_TOPOLOGICALNODE),
 				folderIcon);
@@ -258,13 +281,13 @@ public class MapViewTreeModel extends DefaultTreeModel implements TreeModel {
 		Collections.sort(nodes, MapViewTreeModel.mapElementComparator);
 		for(Iterator it = nodes.iterator(); it.hasNext();) {
 			TopologicalNode topologicalNode = (TopologicalNode )it.next();
-			nodeChildrenNode.add(new StorableObjectTreeNode(topologicalNode, getObjectName(topologicalNode), nodeIcon, true));
+			nodeChildrenNode.addChild(new IconedNode(topologicalNode, getObjectName(topologicalNode), nodeIcon, true));
 		}
 		return nodeChildrenNode;
 	}
 
-	StorableObjectTreeNode buildLinkTree(Map map) {
-		StorableObjectTreeNode linkChildrenNode = new StorableObjectTreeNode(
+	Item buildLinkTree(Map map) {
+		Item linkChildrenNode = new IconedNode(
 				MapViewController.ELEMENT_PHYSICALLINK, 
 				getObjectName(MapViewController.ELEMENT_PHYSICALLINK),
 				folderIcon);
@@ -272,13 +295,13 @@ public class MapViewTreeModel extends DefaultTreeModel implements TreeModel {
 		Collections.sort(links, MapViewTreeModel.mapElementComparator);
 		for(Iterator it = links.iterator(); it.hasNext();) {
 			PhysicalLink link = (PhysicalLink )it.next();
-			linkChildrenNode.add(new StorableObjectTreeNode(link, getObjectName(link), linkIcon, true));
+			linkChildrenNode.addChild(new IconedNode(link, getObjectName(link), linkIcon, true));
 		}
 		return linkChildrenNode;
 	}
 
-	StorableObjectTreeNode buildCollTree(Map map) {
-		StorableObjectTreeNode collChildrenNode = new StorableObjectTreeNode(
+	Item buildCollTree(Map map) {
+		Item collChildrenNode = new IconedNode(
 				MapViewController.ELEMENT_COLLECTOR, 
 				getObjectName(MapViewController.ELEMENT_COLLECTOR),
 				folderIcon);
@@ -286,7 +309,7 @@ public class MapViewTreeModel extends DefaultTreeModel implements TreeModel {
 		Collections.sort(collectors, MapViewTreeModel.mapElementComparator);
 		for(Iterator it = collectors.iterator(); it.hasNext();) {
 			Collector collector = (Collector )it.next();
-			collChildrenNode.add(new StorableObjectTreeNode(collector, getObjectName(collector), collIcon, true));
+			collChildrenNode.addChild(new IconedNode(collector, getObjectName(collector), collIcon, true));
 		}
 		return collChildrenNode;
 
@@ -306,37 +329,37 @@ public class MapViewTreeModel extends DefaultTreeModel implements TreeModel {
 		return types;
 	}
 
-	void updateTree(StorableObjectTreeNode node) {
-		StorableObjectTreeNode mapTopNode = (StorableObjectTreeNode )node.getChildAt(0);
+	void updateTree(Item node) {
+		Item mapTopNode = (Item )node.getChildren().iterator().next();
 		
-		StorableObjectTreeNode mapNode = (StorableObjectTreeNode )mapTopNode.getChildAt(0);
-		Map map = (Map )mapNode.getUserObject();
+		Item mapNode = (Item )mapTopNode.getChildren().iterator().next();
+		Map map = (Map )mapNode.getObject();
 		if(map.equals(this.mapView.getMap()))
 			updateMapTree(mapNode);
 		else {
-			mapTopNode.remove(mapNode);
-			mapTopNode.add(buildMapTree(this.mapView.getMap()));
+			mapTopNode.getChildren().remove(mapNode);
+			mapTopNode.addChild(buildMapTree(this.mapView.getMap()));
 		}
 	}
 
-	void updateMapTree(StorableObjectTreeNode node) {
-		Map map = (Map )node.getUserObject();
-		for (int i = 0; i < node.getChildCount(); i++) {
-			StorableObjectTreeNode childNode = (StorableObjectTreeNode )node.getChildAt(i);
-			if(childNode.getUserObject().equals(MapViewTreeModel.MAPS_BRANCH))
+	void updateMapTree(Item node) {
+		Map map = (Map )node.getObject();
+		for(Iterator iter = node.getChildren().iterator(); iter.hasNext();) {
+			Item childNode = (Item )iter.next();
+			if(childNode.getObject().equals(MapViewTreeModel.MAPS_BRANCH))
 				updateMapsTree(childNode, map);
-			else if(childNode.getUserObject().equals(MapViewController.ELEMENT_SITENODE))
+			else if(childNode.getObject().equals(MapViewController.ELEMENT_SITENODE))
 				updateSiteTree(childNode, map);
-			else if(childNode.getUserObject().equals(MapViewController.ELEMENT_TOPOLOGICALNODE))
+			else if(childNode.getObject().equals(MapViewController.ELEMENT_TOPOLOGICALNODE))
 				updateNodeTree(childNode, map);
-			else if(childNode.getUserObject().equals(MapViewController.ELEMENT_PHYSICALLINK))
+			else if(childNode.getObject().equals(MapViewController.ELEMENT_PHYSICALLINK))
 				updateLinkTree(childNode, map);
-			else if(childNode.getUserObject().equals(MapViewController.ELEMENT_COLLECTOR))
+			else if(childNode.getObject().equals(MapViewController.ELEMENT_COLLECTOR))
 				updateCollTree(childNode, map);
 		}
 	}
 
-	void updateMapsTree(StorableObjectTreeNode node, Map map) {
+	void updateMapsTree(Item node, Map map) {
 		List mapsChildren = new ArrayList();
 		mapsChildren.addAll(map.getMaps());
 		Collections.sort(mapsChildren, MapViewTreeModel.mapComparator);
@@ -345,9 +368,9 @@ public class MapViewTreeModel extends DefaultTreeModel implements TreeModel {
 		
 		List toRemove = new LinkedList();
 		
-		for (int i = 0; i < node.getChildCount(); i++) {
-			StorableObjectTreeNode childNode = (StorableObjectTreeNode )node.getChildAt(i);
-			Map innerMap = (Map )childNode.getUserObject();
+		for(Iterator iter = node.getChildren().iterator(); iter.hasNext();) {
+			Item childNode = (Item )iter.next();
+			Map innerMap = (Map )childNode.getObject();
 			if(mapsChildren.contains(innerMap)) {
 				updateMapTree(childNode);
 				nodePresense.put(innerMap, childNode);
@@ -357,32 +380,37 @@ public class MapViewTreeModel extends DefaultTreeModel implements TreeModel {
 		}
 		for(Iterator it = toRemove.iterator(); it.hasNext();)
 		{
-			node.remove((StorableObjectTreeNode )it.next());
+			node.getChildren().remove(it.next());
 		}
 		
 		int i = 0;
 		for(Iterator it = mapsChildren.iterator(); it.hasNext();) {
 			Map innerMap = (Map )it.next();
-			StorableObjectTreeNode childNode = (StorableObjectTreeNode )nodePresense.get(innerMap);
-			if(childNode == null)
-				insertNodeInto(buildMapTree(innerMap), node, i);
+			Item childNode = (Item )nodePresense.get(innerMap);
+			if(childNode == null) {
+				Item newItem = buildMapTree(innerMap);
+//				if(node.getChildren().isEmpty())
+					node.addChild(newItem);
+//				else
+//					node.getChildren().add(i, newItem);
+			}
 			i++;
 		}
 	}
 
-	void updateSiteTree(StorableObjectTreeNode node, Map map) {
+	void updateSiteTree(Item node, Map map) {
 		java.util.Map types = this.getSiteNodeTypes(map);
 
 		java.util.Map nodePresense = new HashMap();
 		
 		List toRemove = new LinkedList();
 		
-		for (int i = 0; i < node.getChildCount(); i++) {
-			StorableObjectTreeNode childNode = (StorableObjectTreeNode )node.getChildAt(i);
-			SiteNodeType type = (SiteNodeType )childNode.getUserObject();
+		for(Iterator iter = node.getChildren().iterator(); iter.hasNext();) {
+			Item childNode = (Item )iter.next();
+			SiteNodeType type = (SiteNodeType )childNode.getObject();
 			if(types.containsKey(type)) {
 				List siteNodes = (List )types.get(type);
-				updateSiteTree(childNode, type, siteNodes);
+				updateSiteTree(childNode, siteNodes);
 				nodePresense.put(type, childNode);
 			}
 			else
@@ -390,32 +418,35 @@ public class MapViewTreeModel extends DefaultTreeModel implements TreeModel {
 		}
 		for(Iterator it = toRemove.iterator(); it.hasNext();)
 		{
-			node.remove((StorableObjectTreeNode )it.next());
+			node.getChildren().remove(it.next());
 		}
 		
 		int i = 0;
-
 		for(Iterator it = types.keySet().iterator(); it.hasNext();) {
 			SiteNodeType type = (SiteNodeType )it.next();
-			StorableObjectTreeNode childNode = (StorableObjectTreeNode )nodePresense.get(type);
+			Item childNode = (Item )nodePresense.get(type);
 			if(childNode == null) {
 				List siteNodes = (List )types.get(type);
-				insertNodeInto(buildSiteTree(map, type, siteNodes), node, i);
+				Item newItem = buildSiteTree(type, siteNodes);
+//				if(node.getChildren().isEmpty())
+					node.addChild(newItem);
+//				else
+//					node.getChildren().add(i, newItem);
 			}
 			i++;
 		}
 	}
 
-	void updateSiteTree(StorableObjectTreeNode node, SiteNodeType type, List siteNodes) {
+	void updateSiteTree(Item node, List siteNodes) {
 		Collections.sort(siteNodes, MapViewTreeModel.mapElementComparator);
 
 		java.util.Map nodePresense = new HashMap();
 		
 		List toRemove = new LinkedList();
 		
-		for (int i = 0; i < node.getChildCount(); i++) {
-			StorableObjectTreeNode childNode = (StorableObjectTreeNode )node.getChildAt(i);
-			SiteNode site = (SiteNode )childNode.getUserObject();
+		for(Iterator iter = node.getChildren().iterator(); iter.hasNext();) {
+			Item childNode = (Item )iter.next();
+			SiteNode site = (SiteNode )childNode.getObject();
 			if(siteNodes.contains(site))
 				nodePresense.put(site, childNode);
 			else
@@ -423,22 +454,26 @@ public class MapViewTreeModel extends DefaultTreeModel implements TreeModel {
 		}
 		for(Iterator it = toRemove.iterator(); it.hasNext();)
 		{
-			node.remove((StorableObjectTreeNode )it.next());
+			node.getChildren().remove(it.next());
 		}
 		
 		int i = 0;
-
 		for(Iterator it = siteNodes.iterator(); it.hasNext();) {
 			SiteNode site = (SiteNode )it.next();
-			StorableObjectTreeNode childNode = (StorableObjectTreeNode )nodePresense.get(site);
-			if(childNode == null)
-				insertNodeInto(new StorableObjectTreeNode(site, getObjectName(site), (ImageIcon)(node.getIcon()), true), node, i);
+			Item childNode = (Item )nodePresense.get(site);
+			if(childNode == null) {
+				Item newItem = new IconedNode(site, getObjectName(site), ((IconedNode )node).getIcon(), true); 
+//				if(node.getChildren().isEmpty())
+					node.addChild(newItem);
+//				else
+//					node.getChildren().add(i, newItem);
+			}
 			i++;
 		}
 	}
 
 
-	void updateNodeTree(StorableObjectTreeNode node, Map map) {
+	void updateNodeTree(Item node, Map map) {
 		List nodes = new ArrayList(map.getTopologicalNodes());
 		Collections.sort(nodes, MapViewTreeModel.mapElementComparator);
 
@@ -446,9 +481,9 @@ public class MapViewTreeModel extends DefaultTreeModel implements TreeModel {
 		
 		List toRemove = new LinkedList();
 		
-		for (int i = 0; i < node.getChildCount(); i++) {
-			StorableObjectTreeNode childNode = (StorableObjectTreeNode )node.getChildAt(i);
-			TopologicalNode topologicalNode = (TopologicalNode )childNode.getUserObject();
+		for(Iterator iter = node.getChildren().iterator(); iter.hasNext();) {
+			Item childNode = (Item )iter.next();
+			TopologicalNode topologicalNode = (TopologicalNode )childNode.getObject();
 			if(nodes.contains(topologicalNode))
 				nodePresense.put(topologicalNode, childNode);
 			else
@@ -456,20 +491,25 @@ public class MapViewTreeModel extends DefaultTreeModel implements TreeModel {
 		}
 		for(Iterator it = toRemove.iterator(); it.hasNext();)
 		{
-			node.remove((StorableObjectTreeNode )it.next());
+			node.getChildren().remove(it.next());
 		}
 		
 		int i = 0;
 		for(Iterator it = nodes.iterator(); it.hasNext();) {
 			TopologicalNode topologicalNode = (TopologicalNode )it.next();
-			StorableObjectTreeNode childNode = (StorableObjectTreeNode )nodePresense.get(topologicalNode);
-			if(childNode == null)
-				insertNodeInto(new StorableObjectTreeNode(topologicalNode, getObjectName(topologicalNode), nodeIcon, true), node, i);
+			Item childNode = (Item )nodePresense.get(topologicalNode);
+			if(childNode == null) {
+				Item newItem = new IconedNode(topologicalNode, getObjectName(topologicalNode), nodeIcon, true);
+//				if(node.getChildren().isEmpty())
+					node.addChild(newItem);
+//				else
+//					node.getChildren().add(i, newItem);
+			}
 			i++;
 		}
 	}
 
-	void updateLinkTree(StorableObjectTreeNode node, Map map) {
+	void updateLinkTree(Item node, Map map) {
 		List links = new ArrayList(map.getPhysicalLinks());
 		Collections.sort(links, MapViewTreeModel.mapElementComparator);
 
@@ -477,9 +517,9 @@ public class MapViewTreeModel extends DefaultTreeModel implements TreeModel {
 		
 		List toRemove = new LinkedList();
 		
-		for (int i = 0; i < node.getChildCount(); i++) {
-			StorableObjectTreeNode childNode = (StorableObjectTreeNode )node.getChildAt(i);
-			PhysicalLink link = (PhysicalLink )childNode.getUserObject();
+		for(Iterator iter = node.getChildren().iterator(); iter.hasNext();) {
+			Item childNode = (Item )iter.next();
+			PhysicalLink link = (PhysicalLink )childNode.getObject();
 			if(links.contains(link))
 				nodePresense.put(link, childNode);
 			else
@@ -487,20 +527,25 @@ public class MapViewTreeModel extends DefaultTreeModel implements TreeModel {
 		}
 		for(Iterator it = toRemove.iterator(); it.hasNext();)
 		{
-			node.remove((StorableObjectTreeNode )it.next());
+			node.getChildren().remove(it.next());
 		}
 		
 		int i = 0;
 		for(Iterator it = links.iterator(); it.hasNext();) {
 			PhysicalLink link = (PhysicalLink )it.next();
-			StorableObjectTreeNode childNode = (StorableObjectTreeNode )nodePresense.get(link);
-			if(childNode == null)
-				insertNodeInto(new StorableObjectTreeNode(link, getObjectName(link), linkIcon, true), node, i);
+			Item childNode = (Item )nodePresense.get(link);
+			if(childNode == null) {
+				Item newItem = new IconedNode(link, getObjectName(link), linkIcon, true);
+//				if(node.getChildren().isEmpty())
+					node.addChild(newItem);
+//				else
+//					node.getChildren().add(i, newItem);
+			}
 			i++;
 		}
 	}
 
-	void updateCollTree(StorableObjectTreeNode node, Map map) {
+	void updateCollTree(Item node, Map map) {
 		List collectors = new ArrayList(map.getCollectors());
 		Collections.sort(collectors, MapViewTreeModel.mapElementComparator);
 
@@ -508,9 +553,9 @@ public class MapViewTreeModel extends DefaultTreeModel implements TreeModel {
 		
 		List toRemove = new LinkedList();
 		
-		for (int i = 0; i < node.getChildCount(); i++) {
-			StorableObjectTreeNode childNode = (StorableObjectTreeNode )node.getChildAt(i);
-			Collector collector = (Collector )childNode.getUserObject();
+		for(Iterator iter = node.getChildren().iterator(); iter.hasNext();) {
+			Item childNode = (Item )iter.next();
+			Collector collector = (Collector )childNode.getObject();
 			if(collectors.contains(collector))
 				nodePresense.put(collector, childNode);
 			else
@@ -518,19 +563,23 @@ public class MapViewTreeModel extends DefaultTreeModel implements TreeModel {
 		}
 		for(Iterator it = toRemove.iterator(); it.hasNext();)
 		{
-			node.remove((StorableObjectTreeNode )it.next());
+			node.getChildren().remove(it.next());
 		}
 		
 		int i = 0;
 		for(Iterator it = collectors.iterator(); it.hasNext();) {
 			Collector collector = (Collector )it.next();
-			StorableObjectTreeNode childNode = (StorableObjectTreeNode )nodePresense.get(collector);
-			if(childNode == null)
-				insertNodeInto(new StorableObjectTreeNode(collector, getObjectName(collector), collIcon, true), node, i);
+			Item childNode = (Item )nodePresense.get(collector);
+			if(childNode == null) {
+				Item newItem = new IconedNode(collector, getObjectName(collector), collIcon, true);
+//				if(node.getChildren().isEmpty())
+					node.addChild(newItem);
+//				else
+//					node.getChildren().add(i, newItem);
+			}
 			i++;
 		}
 	}
-*/
 }
 
 final class SiteNodeTypeComparator implements Comparator {

@@ -1,5 +1,5 @@
 /**
- * $Id: CableController.java,v 1.11 2005/03/28 08:25:11 bass Exp $
+ * $Id: CableController.java,v 1.12 2005/04/06 17:41:11 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -24,6 +24,9 @@ import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.Map.MapConnectionException;
 import com.syrus.AMFICOM.Client.Map.MapDataException;
 import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
+import com.syrus.AMFICOM.client_.general.ui_.StorableObjectEditor;
+import com.syrus.AMFICOM.client_.general.ui_.VisualManager;
+import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.DoublePoint;
@@ -40,11 +43,12 @@ import com.syrus.AMFICOM.scheme.SchemeStorableObjectPool;
 /**
  *  онтроллер кабел€.
  * 
- * @author $Author: bass $
- * @version $Revision: 1.11 $, $Date: 2005/03/28 08:25:11 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.12 $, $Date: 2005/04/06 17:41:11 $
  * @module mapviewclient_v1
  */
 public final class CableController extends AbstractLinkController
+		implements VisualManager
 {
 	/**
 	 * Instance.
@@ -54,15 +58,6 @@ public final class CableController extends AbstractLinkController
 	private static final String PROPERTY_PANE_CLASS_NAME = 
 			"com.syrus.AMFICOM.Client.Map.Props.MapCablePathPane";
 
-	/**
-	 * ѕолучить им€ класса панели, описывающей свойства кабельного пути.
-	 * @return им€ класса
-	 */
-	public static String getPropertyPaneClassName()
-	{
-		return CableController.PROPERTY_PANE_CLASS_NAME;
-	}
-	
 	/**
 	 * Private constructor.
 	 */
@@ -81,6 +76,28 @@ public final class CableController extends AbstractLinkController
 		return instance;
 	}
 
+	public StorableObjectEditor getCharacteristicPropertiesPanel() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	public ObjectResourceController getController() {
+//		return CablePathWrapper.getInstance();
+		return null;
+	}
+	public StorableObjectEditor getGeneralPropertiesPanel() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	/**
+	 * ѕолучить им€ класса панели, описывающей свойства кабельного пути.
+	 * @return им€ класса
+	 */
+	public static String getPropertyPaneClassName()
+	{
+		return CableController.PROPERTY_PANE_CLASS_NAME;
+	}
+	
 	/**
 	 * {@inheritDoc}
 	 */

@@ -1,5 +1,5 @@
 /**
- * $Id: MeasurementPathController.java,v 1.14 2005/03/28 08:25:12 bass Exp $
+ * $Id: MeasurementPathController.java,v 1.15 2005/04/06 17:41:12 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -23,6 +23,9 @@ import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.Map.MapConnectionException;
 import com.syrus.AMFICOM.Client.Map.MapDataException;
+import com.syrus.AMFICOM.client_.general.ui_.StorableObjectEditor;
+import com.syrus.AMFICOM.client_.general.ui_.VisualManager;
+import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
 import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 import com.syrus.AMFICOM.configuration.MonitoredElement;
 import com.syrus.AMFICOM.configuration.TransmissionPath;
@@ -41,12 +44,15 @@ import com.syrus.AMFICOM.scheme.corba.PathElementKind;
 
 /**
  *  онтроллер топологическиго пути.
- * @author $Author: bass $
- * @version $Revision: 1.14 $, $Date: 2005/03/28 08:25:12 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.15 $, $Date: 2005/04/06 17:41:12 $
  * @module mapviewclient_v1
  */
 public final class MeasurementPathController extends AbstractLinkController
+		implements VisualManager
 {
+	private static final String PROPERTY_PANE_CLASS_NAME = "";
+
 	/**
 	 * Instance.
 	 */
@@ -70,8 +76,18 @@ public final class MeasurementPathController extends AbstractLinkController
 		return instance;
 	}
 
-	private static final String PROPERTY_PANE_CLASS_NAME = "";
-
+	public StorableObjectEditor getCharacteristicPropertiesPanel() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	public ObjectResourceController getController() {
+//		return MeasurementPathWrapper.getInstance();
+		return null;
+	}
+	public StorableObjectEditor getGeneralPropertiesPanel() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 	/**
 	 * ѕолучить им€ класса панели, описывающей свойства кабельного пути.
 	 * @return им€ класса

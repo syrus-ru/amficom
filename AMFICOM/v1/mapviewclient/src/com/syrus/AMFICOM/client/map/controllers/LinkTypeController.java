@@ -1,5 +1,5 @@
 /**
- * $Id: LinkTypeController.java,v 1.12 2005/03/04 14:36:09 krupenn Exp $
+ * $Id: LinkTypeController.java,v 1.13 2005/04/06 17:41:11 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -27,6 +27,9 @@ import com.syrus.AMFICOM.Client.General.UI.LineComboBox;
 import com.syrus.AMFICOM.Client.Map.MapConnectionException;
 import com.syrus.AMFICOM.Client.Map.MapDataException;
 import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
+import com.syrus.AMFICOM.client_.general.ui_.StorableObjectEditor;
+import com.syrus.AMFICOM.client_.general.ui_.VisualManager;
+import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.CharacteristicType;
@@ -45,20 +48,17 @@ import com.syrus.AMFICOM.map.IntDimension;
 import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.map.MapStorableObjectPool;
 import com.syrus.AMFICOM.map.PhysicalLinkType;
+import com.syrus.AMFICOM.map.PhysicalLinkTypeWrapper;
 
 /**
  * Контроллер типа линейного элемента карты.
  * @author $Author: krupenn $
- * @version $Revision: 1.12 $, $Date: 2005/03/04 14:36:09 $
+ * @version $Revision: 1.13 $, $Date: 2005/04/06 17:41:11 $
  * @module mapviewclient_v1
  */
 public final class LinkTypeController extends AbstractLinkController
+		implements VisualManager
 {
-	/**
-	 * Instance
-	 */
-	private static LinkTypeController instance = null;
-	
 	/**
 	 * Хэш-таблица цветов типов линий. Для того, чтобы объект {@link Color} 
 	 * не создавался каждый раз из атрибута при вызове 
@@ -81,6 +81,11 @@ public final class LinkTypeController extends AbstractLinkController
 	/** Хэш-таблица размерности привязки для предустановленных типов линии. */
 	private static java.util.Map bindDimensions = new HashMap();
 
+	/**
+	 * Instance
+	 */
+	private static LinkTypeController instance = null;
+	
 	static
 	{
 		lineColors.put(PhysicalLinkType.COLLECTOR, Color.DARK_GRAY);
@@ -114,6 +119,18 @@ public final class LinkTypeController extends AbstractLinkController
 		return instance;
 	}
 
+	public StorableObjectEditor getCharacteristicPropertiesPanel() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	public ObjectResourceController getController() {
+//		return PhysicalLinkTypeWrapper.getInstance();
+		return null;
+	}
+	public StorableObjectEditor getGeneralPropertiesPanel() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 	/**
 	 * {@inheritDoc}
 	 * Suppress since PhysicalLinkType is not really a Map Element

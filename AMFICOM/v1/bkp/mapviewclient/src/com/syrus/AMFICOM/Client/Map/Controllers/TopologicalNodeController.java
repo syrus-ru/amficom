@@ -1,5 +1,5 @@
 /**
- * $Id: TopologicalNodeController.java,v 1.11 2005/03/04 14:36:54 krupenn Exp $
+ * $Id: TopologicalNodeController.java,v 1.12 2005/04/06 17:41:12 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -16,6 +16,9 @@ import com.syrus.AMFICOM.Client.Map.MapConnectionException;
 import com.syrus.AMFICOM.Client.Map.MapCoordinatesConverter;
 import com.syrus.AMFICOM.Client.Map.MapDataException;
 import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
+import com.syrus.AMFICOM.client_.general.ui_.StorableObjectEditor;
+import com.syrus.AMFICOM.client_.general.ui_.VisualManager;
+import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.MapElement;
@@ -34,10 +37,11 @@ import javax.swing.ImageIcon;
 /**
  *  онтроллер топологического узла.
  * @author $Author: krupenn $
- * @version $Revision: 1.11 $, $Date: 2005/03/04 14:36:54 $
+ * @version $Revision: 1.12 $, $Date: 2005/04/06 17:41:12 $
  * @module mapviewclient_v1
  */
 public class TopologicalNodeController extends AbstractNodeController
+		implements VisualManager
 {
 	/** –азмер пиктограммы поумолчанию. */
 	public static final Rectangle NODE_BOUNDS = new Rectangle(10, 10);
@@ -76,15 +80,6 @@ public class TopologicalNodeController extends AbstractNodeController
 	private static TopologicalNodeController instance = null;
 
 	/**
-	 * ѕолучить им€ класса панели, описывающей свойства кабельного пути.
-	 * @return им€ класса
-	 */
-	public static String getPropertyPaneClassName()
-	{
-		return PROPERTY_PANE_CLASS_NAME;
-	}
-	
-	/**
 	 * Private constructor.
 	 */
 	private TopologicalNodeController()
@@ -102,6 +97,29 @@ public class TopologicalNodeController extends AbstractNodeController
 		return instance;
 	}
 
+	public StorableObjectEditor getCharacteristicPropertiesPanel() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	public ObjectResourceController getController() {
+//		return PhysicalLinkWrapper.getInstance();
+		return null;
+	}
+	
+	public StorableObjectEditor getGeneralPropertiesPanel() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	/**
+	 * ѕолучить им€ класса панели, описывающей свойства кабельного пути.
+	 * @return им€ класса
+	 */
+	public static String getPropertyPaneClassName()
+	{
+		return PROPERTY_PANE_CLASS_NAME;
+	}
+	
 	/**
 	 * {@inheritDoc}
 	 */

@@ -1,5 +1,5 @@
 /**
- * $Id: MapViewController.java,v 1.22 2005/04/05 15:48:07 krupenn Exp $
+ * $Id: MapViewController.java,v 1.23 2005/04/06 17:41:11 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -35,6 +35,9 @@ import com.syrus.AMFICOM.Client.Map.Command.Action.RemoveNodeCommandAtomic;
 import com.syrus.AMFICOM.Client.Map.Command.Action.UnPlaceSchemeCableLinkCommand;
 import com.syrus.AMFICOM.Client.Map.Command.Action.UnPlaceSchemeElementCommand;
 import com.syrus.AMFICOM.Client.Map.Command.Action.UnPlaceSchemePathCommand;
+import com.syrus.AMFICOM.client_.general.ui_.StorableObjectEditor;
+import com.syrus.AMFICOM.client_.general.ui_.VisualManager;
+import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
 import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 import com.syrus.AMFICOM.configuration.Equipment;
 import com.syrus.AMFICOM.configuration.MonitoredElement;
@@ -57,10 +60,10 @@ import com.syrus.AMFICOM.scheme.SchemeUtils;
  * Класс используется для управления информацией о канализационной
  * прокладке кабелей и положении узлов и других топологических объектов.
  * @author $Author: krupenn $
- * @version $Revision: 1.22 $, $Date: 2005/04/05 15:48:07 $
+ * @version $Revision: 1.23 $, $Date: 2005/04/06 17:41:11 $
  * @module mapviewclient_v1
  */
-public final class MapViewController
+public final class MapViewController implements VisualManager
 {
 	public static final String ELEMENT_SITENODE = "sitenode";
 	public static final String ELEMENT_WELL = "well";
@@ -74,6 +77,19 @@ public final class MapViewController
 	public static final String ELEMENT_MARKER = "marker";
 	public static final String ELEMENT_CABLEINLET = "cableinlet";
 	public static final String ELEMENT_NODELINK = "nodelink";
+
+	public StorableObjectEditor getCharacteristicPropertiesPanel() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	public ObjectResourceController getController() {
+//		return MapViewWrapper.getInstance();
+		return null;
+	}
+	public StorableObjectEditor getGeneralPropertiesPanel() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 	public static String getMapElementReadableType(MapElement mapElement)
 	{

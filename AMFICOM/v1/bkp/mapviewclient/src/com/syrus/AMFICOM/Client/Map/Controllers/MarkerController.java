@@ -1,5 +1,5 @@
 /**
- * $Id: MarkerController.java,v 1.17 2005/04/05 15:48:07 krupenn Exp $
+ * $Id: MarkerController.java,v 1.18 2005/04/06 17:41:11 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -16,6 +16,8 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.geom.Rectangle2D;
 import java.util.Iterator;
+import java.util.List;
+import java.util.ListIterator;
 import java.util.SortedSet;
 
 import javax.swing.ImageIcon;
@@ -26,12 +28,14 @@ import com.syrus.AMFICOM.Client.Map.MapConnectionException;
 import com.syrus.AMFICOM.Client.Map.MapCoordinatesConverter;
 import com.syrus.AMFICOM.Client.Map.MapDataException;
 import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
+import com.syrus.AMFICOM.client_.general.ui_.StorableObjectEditor;
+import com.syrus.AMFICOM.client_.general.ui_.VisualManager;
+import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.DoublePoint;
 import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.map.NodeLink;
-import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.mapview.CablePath;
 import com.syrus.AMFICOM.mapview.Marker;
 import com.syrus.AMFICOM.mapview.MeasurementPath;
@@ -42,10 +46,11 @@ import com.syrus.AMFICOM.scheme.SchemeUtils;
 /**
  * Контроллер маркера.
  * @author $Author: krupenn $
- * @version $Revision: 1.17 $, $Date: 2005/04/05 15:48:07 $
+ * @version $Revision: 1.18 $, $Date: 2005/04/06 17:41:11 $
  * @module mapviewclient_v1
  */
 public class MarkerController extends AbstractNodeController
+		implements VisualManager
 {
 	/** Размер пиктограммы маркера. */
 	public static final Rectangle MARKER_BOUNDS = new Rectangle(20, 20);
@@ -54,6 +59,8 @@ public class MarkerController extends AbstractNodeController
 	public static final String IMAGE_NAME = "marker";
 	/** Пиктограмма. */
 	public static final String IMAGE_PATH = "images/marker.gif";
+
+	private static final String PROPERTY_PANE_CLASS_NAME = "";
 
 	/**
 	 * Флаг необходимости инициализировать изображения маркеров.
@@ -85,7 +92,19 @@ public class MarkerController extends AbstractNodeController
 		return instance;
 	}
 
-	private static final String PROPERTY_PANE_CLASS_NAME = "";
+	public StorableObjectEditor getCharacteristicPropertiesPanel() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	public ObjectResourceController getController() {
+//		return PhysicalLinkWrapper.getInstance();
+		return null;
+	}
+	
+	public StorableObjectEditor getGeneralPropertiesPanel() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 	/**
 	 * Получить имя класса панели, описывающей свойства кабельного пути.
@@ -180,33 +199,25 @@ public class MarkerController extends AbstractNodeController
 		throws MapConnectionException, MapDataException
 	{
 		NodeLink nodeLink = marker.getNodeLink();
-		PhysicalLink physicalLink = nodeLink.getPhysicalLink();
 		CablePath cablePath = marker.getCablePath();
 
 		double kd = cablePath.getKd();
 		double dist = startToThis(marker);
-		double distFromSite = 0D;
 
-		SortedSet nodeLinks = physicalLink.getNodeLinks();
-
-		if(cablePath.getSortedNodeLinks().headSet(nodeLink).contains(physicalLink.getNodeLinks().first())) {
-			for(Iterator Iterator = nodeLinks.headSet(nodeLink).iterator(); Iterator.hasNext();) {
-				NodeLink nodeLink1 = (NodeLink)Iterator.next();
-				if(nodeLink1.equals(nodeLink))
+		List pNodeLinks = nodeLink.getPhysicalLink().getNodeLinks();
+		
+		boolean doCount = false;
+		
+		for(Iterator iter = cablePath.getSortedNodeLinks().iterator(); iter.hasNext();) {
+			NodeLink curNodeLink = (NodeLink)iter.next();
+			if(pNodeLinks.contains(curNodeLink))
+				doCount = true;
+			if(doCount) {
+				if(curNodeLink.equals(nodeLink))
 					break;
-				distFromSite += nodeLink1.getLengthLt();
+				dist += curNodeLink.getLengthLt();
 			}
 		}
-		else {
-			for(Iterator Iterator = nodeLinks.headSet(nodeLink).iterator(); Iterator.hasNext();) {
-				NodeLink nodeLink1 = (NodeLink)Iterator.next();
-				if(nodeLink1.equals(nodeLink))
-					distFromSite = 0D;
-				else
-					distFromSite += nodeLink1.getLengthLt();
-			}
-		}
-		dist += distFromSite;
 
 		return dist * kd;
 	}
@@ -221,33 +232,26 @@ public class MarkerController extends AbstractNodeController
 		throws MapConnectionException, MapDataException
 	{
 		NodeLink nodeLink = marker.getNodeLink();
-		PhysicalLink physicalLink = nodeLink.getPhysicalLink();
 		CablePath cablePath = marker.getCablePath();
 
 		double kd = cablePath.getKd();
 		double dist = endToThis(marker);
-		double distFromSite = 0D;
 
-		SortedSet nodeLinks = physicalLink.getNodeLinks();
+		List pNodeLinks = nodeLink.getPhysicalLink().getNodeLinks();
+		List cNodeLinks = cablePath.getSortedNodeLinks();
 
-		if(cablePath.getSortedNodeLinks().headSet(nodeLink).contains(physicalLink.getNodeLinks().first())) {
-			for(Iterator Iterator = nodeLinks.headSet(nodeLink).iterator(); Iterator.hasNext();) {
-				NodeLink nodeLink1 = (NodeLink)Iterator.next();
-				if(nodeLink1.equals(nodeLink))
-					distFromSite = 0D;
-				else
-					distFromSite += nodeLink1.getLengthLt();
-			}
-		}
-		else {
-			for(Iterator Iterator = nodeLinks.headSet(nodeLink).iterator(); Iterator.hasNext();) {
-				NodeLink nodeLink1 = (NodeLink)Iterator.next();
-				if(nodeLink1.equals(nodeLink))
+		boolean doCount = false;
+
+		for(ListIterator liter = cNodeLinks.listIterator(cNodeLinks.size()); liter.hasPrevious();) {
+			NodeLink curNodeLink = (NodeLink)liter.previous();
+			if(pNodeLinks.contains(curNodeLink))
+				doCount = true;
+			if(doCount) {
+				if(curNodeLink.equals(nodeLink))
 					break;
-				distFromSite += nodeLink1.getLengthLt();
+				dist += curNodeLink.getLengthLt();
 			}
 		}
-		dist += distFromSite;
 
 		return dist * kd;
 	}
@@ -458,7 +462,7 @@ public class MarkerController extends AbstractNodeController
 		
 		AbstractNode sn = cablePath.getStartNode();
 		AbstractNode on = cablePath.getEndNode();
-		if(! cablePath.getSortedNodes().first().equals(sn))
+		if(! cablePath.getSortedNodes().iterator().next().equals(sn))
 			sn = on;
 		
 		// serch for a node link

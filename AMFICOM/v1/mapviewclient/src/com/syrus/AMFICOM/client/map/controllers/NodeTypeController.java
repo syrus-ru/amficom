@@ -1,5 +1,5 @@
 /**
- * $Id: NodeTypeController.java,v 1.12 2005/03/10 17:44:18 krupenn Exp $
+ * $Id: NodeTypeController.java,v 1.13 2005/04/06 17:41:12 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -25,6 +25,9 @@ import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.Map.MapConnectionException;
 import com.syrus.AMFICOM.Client.Map.MapDataException;
+import com.syrus.AMFICOM.client_.general.ui_.StorableObjectEditor;
+import com.syrus.AMFICOM.client_.general.ui_.VisualManager;
+import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.EquivalentCondition;
@@ -46,10 +49,11 @@ import com.syrus.AMFICOM.resource.corba.ImageResource_TransferablePackage.ImageR
 /**
  * контроллер типа сетевого узла.
  * @author $Author: krupenn $
- * @version $Revision: 1.12 $, $Date: 2005/03/10 17:44:18 $
+ * @version $Revision: 1.13 $, $Date: 2005/04/06 17:41:12 $
  * @module mapviewclient_v1
  */
 public class NodeTypeController extends AbstractNodeController
+		implements VisualManager
 {
 	private static final String PROPERTY_PANE_CLASS_NAME = "";
 
@@ -72,15 +76,6 @@ public class NodeTypeController extends AbstractNodeController
 	}
 
 	/**
-	 * Получить имя класса панели, описывающей свойства кабельного пути.
-	 * @return имя класса
-	 */
-	public static String getPropertyPaneClassName()
-	{
-		return PROPERTY_PANE_CLASS_NAME;
-	}
-	
-	/**
 	 * Private constructor.
 	 */
 	protected NodeTypeController()
@@ -98,6 +93,29 @@ public class NodeTypeController extends AbstractNodeController
 		return instance;
 	}
 
+	public StorableObjectEditor getCharacteristicPropertiesPanel() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	public ObjectResourceController getController() {
+//		return PhysicalLinkWrapper.getInstance();
+		return null;
+	}
+	
+	public StorableObjectEditor getGeneralPropertiesPanel() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	/**
+	 * Получить имя класса панели, описывающей свойства кабельного пути.
+	 * @return имя класса
+	 */
+	public static String getPropertyPaneClassName()
+	{
+		return PROPERTY_PANE_CLASS_NAME;
+	}
+	
 	/**
 	 * {@inheritDoc}
 	 * Suppress since SiteNodeType is not really a Map Element

@@ -1,5 +1,5 @@
 /**
- * $Id: CollectorController.java,v 1.4 2005/02/18 12:19:45 krupenn Exp $
+ * $Id: CollectorController.java,v 1.5 2005/04/06 17:41:11 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -13,6 +13,9 @@ package com.syrus.AMFICOM.Client.Map.Controllers;
 
 import com.syrus.AMFICOM.Client.Map.MapConnectionException;
 import com.syrus.AMFICOM.Client.Map.MapDataException;
+import com.syrus.AMFICOM.client_.general.ui_.StorableObjectEditor;
+import com.syrus.AMFICOM.client_.general.ui_.VisualManager;
+import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
 import com.syrus.AMFICOM.map.Collector;
 import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.map.PhysicalLink;
@@ -29,10 +32,11 @@ import java.util.Iterator;
 /**
  * Контроллер коллектора.
  * @author $Author: krupenn $
- * @version $Revision: 1.4 $, $Date: 2005/02/18 12:19:45 $
+ * @version $Revision: 1.5 $, $Date: 2005/04/06 17:41:11 $
  * @module mapviewclient_v1
  */
 public final class CollectorController extends AbstractLinkController
+		implements VisualManager
 {
 	/**
 	 * Instance.
@@ -55,6 +59,20 @@ public final class CollectorController extends AbstractLinkController
 		if(instance == null)
 			instance = new CollectorController();
 		return instance;
+	}
+
+	public StorableObjectEditor getCharacteristicPropertiesPanel() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	public ObjectResourceController getController() {
+//		return PhysicalLinkWrapper.getInstance();
+		return null;
+	}
+	
+	public StorableObjectEditor getGeneralPropertiesPanel() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	/**

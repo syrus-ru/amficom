@@ -1,5 +1,5 @@
 /**
- * $Id: DeleteNodeCommandBundle.java,v 1.19 2005/04/05 15:48:07 krupenn Exp $
+ * $Id: DeleteNodeCommandBundle.java,v 1.20 2005/04/06 17:41:11 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -33,12 +33,13 @@ import com.syrus.AMFICOM.mapview.MapView;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 /**
  *  Команда удаления элемента наследника класса MapNodeElement. Команда
  * состоит из  последовательности атомарных действий
  * @author $Author: krupenn $
- * @version $Revision: 1.19 $, $Date: 2005/04/05 15:48:07 $
+ * @version $Revision: 1.20 $, $Date: 2005/04/06 17:41:11 $
  * @module mapviewclient_v1
  */
 public class DeleteNodeCommandBundle extends MapActionCommandBundle
@@ -279,10 +280,11 @@ public class DeleteNodeCommandBundle extends MapActionCommandBundle
 		if ( topologicalNode.isActive() )
 		{
 			// получить смежные фрагменты линии
+			Iterator nodeLinksIterator = topologicalNode.getNodeLinks().iterator();
 			NodeLink nodeLinkLeft = 
-					(NodeLink)topologicalNode.getNodeLinks().first();
+					(NodeLink)nodeLinksIterator.next();
 			NodeLink nodeLinkRight = 
-					(NodeLink)topologicalNode.getNodeLinks().last();
+					(NodeLink)nodeLinksIterator.next();
 			
 			// получить концевые узлы смежных фрагментов
 			AbstractNode nodeLeft =

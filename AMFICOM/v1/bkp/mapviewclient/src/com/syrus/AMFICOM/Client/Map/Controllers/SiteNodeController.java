@@ -1,5 +1,5 @@
 /**
- * $Id: SiteNodeController.java,v 1.4 2005/02/18 12:19:45 krupenn Exp $
+ * $Id: SiteNodeController.java,v 1.5 2005/04/06 17:41:12 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -15,6 +15,9 @@ import com.syrus.AMFICOM.Client.Map.MapConnectionException;
 import com.syrus.AMFICOM.Client.Map.MapCoordinatesConverter;
 import com.syrus.AMFICOM.Client.Map.MapDataException;
 import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
+import com.syrus.AMFICOM.client_.general.ui_.StorableObjectEditor;
+import com.syrus.AMFICOM.client_.general.ui_.VisualManager;
+import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
 import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.map.SiteNode;
 
@@ -25,10 +28,11 @@ import java.awt.geom.Rectangle2D;
 /**
  *  онтроллер сетевого узла.
  * @author $Author: krupenn $
- * @version $Revision: 1.4 $, $Date: 2005/02/18 12:19:45 $
+ * @version $Revision: 1.5 $, $Date: 2005/04/06 17:41:12 $
  * @module mapviewclient_v1
  */
 public class SiteNodeController extends AbstractNodeController
+		implements VisualManager
 {
 	private static final String PROPERTY_PANE_CLASS_NAME = 
 			"com.syrus.AMFICOM.Client.Map.Props.MapSitePane";
@@ -38,15 +42,6 @@ public class SiteNodeController extends AbstractNodeController
 	 */
 	private static SiteNodeController instance = null;
 	
-	/**
-	 * ѕолучить им€ класса панели, описывающей свойства кабельного пути.
-	 * @return им€ класса
-	 */
-	public static String getPropertyPaneClassName()
-	{
-		return PROPERTY_PANE_CLASS_NAME;
-	}
-
 	/**
 	 * Private constructor.
 	 */
@@ -63,6 +58,29 @@ public class SiteNodeController extends AbstractNodeController
 		if(instance == null)
 			instance = new SiteNodeController();
 		return instance;
+	}
+
+	public StorableObjectEditor getCharacteristicPropertiesPanel() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	public ObjectResourceController getController() {
+//		return PhysicalLinkWrapper.getInstance();
+		return null;
+	}
+	
+	public StorableObjectEditor getGeneralPropertiesPanel() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	/**
+	 * ѕолучить им€ класса панели, описывающей свойства кабельного пути.
+	 * @return им€ класса
+	 */
+	public static String getPropertyPaneClassName()
+	{
+		return PROPERTY_PANE_CLASS_NAME;
 	}
 
 	/**
