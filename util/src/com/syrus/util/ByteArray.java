@@ -1,5 +1,5 @@
 /*
- * $Id: ByteArray.java,v 1.5 2005/03/04 08:05:49 bass Exp $
+ * $Id: ByteArray.java,v 1.6 2005/03/15 13:00:43 saa Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,27 +27,27 @@ public class ByteArray {
     this.bar[0] = b;
   }
 
-  public ByteArray(int a) throws IOException {
+  public ByteArray(int a) {
     this(toByteArray(a));
   }
 
-  public ByteArray(long l) throws IOException {
+  public ByteArray(long l) {
     this(toByteArray(l));
   }
 
-  public ByteArray(double d) throws IOException {
+  public ByteArray(double d) {
     this(toByteArray(d));
   }
 
-  public ByteArray(double[] dar) throws IOException {
+  public ByteArray(double[] dar) {
     this(toByteArray(dar));
   }
 
-  public ByteArray(String s) throws IOException {
+  public ByteArray(String s) {
     this(toByteArray(s));
   }
 
-	public ByteArray(String[] sar) throws IOException {
+	public ByteArray(String[] sar) {
     this(toByteArray(sar));
   }
   
@@ -154,49 +154,73 @@ public class ByteArray {
     return new ByteArray(bar1);
   }
 
-  public static byte[] toByteArray(int a) throws IOException {
+  public static byte[] toByteArray(int a) {
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
     DataOutputStream dos = new DataOutputStream(baos);
-    dos.writeInt(a);
+    try {
+    	dos.writeInt(a);
+    } catch (IOException e) {
+    	// IOExceptions are never thrown in ByteArrayOutputStream.write()
+    }
     return baos.toByteArray();
   }
 
-  public static byte[] toByteArray(long l) throws IOException {
+  public static byte[] toByteArray(long l) {
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
     DataOutputStream dos = new DataOutputStream(baos);
-    dos.writeLong(l);
+    try {
+    	dos.writeLong(l);
+    } catch (IOException e) {
+		// IOExceptions are never thrown in ByteArrayOutputStream.write()
+	}
     return baos.toByteArray();
   }
 
-  public static byte[] toByteArray(double d) throws IOException {
+  public static byte[] toByteArray(double d) {
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
     DataOutputStream dos = new DataOutputStream(baos);
-    dos.writeDouble(d);
+    try {
+    	dos.writeDouble(d);
+    } catch (IOException e) {
+    	// IOExceptions are never thrown in ByteArrayOutputStream.write()
+    }
     return baos.toByteArray();
   }
 
-  public static byte[] toByteArray(double[] dar) throws IOException{
+  public static byte[] toByteArray(double[] dar) {
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
     DataOutputStream dos = new DataOutputStream(baos);
-    for (int i = 0; i < dar.length; i++)
-      dos.writeDouble(dar[i]);
+    try {
+	    for (int i = 0; i < dar.length; i++)
+	      dos.writeDouble(dar[i]);
+    } catch (IOException e) {
+    	// IOExceptions are never thrown in ByteArrayOutputStream.write()
+    }
     return baos.toByteArray();
   }
 
-  public static byte[] toByteArray(String s) throws IOException {
+  public static byte[] toByteArray(String s) {
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
     DataOutputStream dos = new DataOutputStream(baos);
-    dos.writeUTF(s);
-//    dos.write((byte)\u0000);
+    try {
+	    dos.writeUTF(s);
+	    //dos.write((byte)\u0000);
+    } catch (IOException e) {
+    	// IOExceptions are never thrown in ByteArrayOutputStream.write()
+    }
     return baos.toByteArray();
   }
 
-	public static byte[] toByteArray(String[] sar) throws IOException {
+	public static byte[] toByteArray(String[] sar) {
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
     DataOutputStream dos = new DataOutputStream(baos);
+    try {
 		for (int i = 0; i < sar.length; i++)
 			dos.writeUTF(sar[i]);
-//    dos.write((byte)\u0000);
+		//dos.write((byte)\u0000);
+    } catch (IOException e) {
+    	// IOExceptions are never thrown in ByteArrayOutputStream.write()
+    }
     return baos.toByteArray();
   }
 }
