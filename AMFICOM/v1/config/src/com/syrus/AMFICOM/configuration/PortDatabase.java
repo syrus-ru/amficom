@@ -1,5 +1,5 @@
 /*
- * $Id: PortDatabase.java,v 1.36 2005/01/14 18:07:08 arseniy Exp $
+ * $Id: PortDatabase.java,v 1.37 2005/01/20 15:31:09 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -39,7 +39,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.36 $, $Date: 2005/01/14 18:07:08 $
+ * @version $Revision: 1.37 $, $Date: 2005/01/20 15:31:09 $
  * @author $Author: arseniy $
  * @module config_v1
  */
@@ -53,7 +53,7 @@ public class PortDatabase extends StorableObjectDatabase {
 	// equipment_id VARCHAR2(32),
 	public static final String COLUMN_EQUIPMENT_ID  = "equipment_id";
 	// sort NUMBER(2) NOT NULL,
-	public static final String COLUMN_SORT  = "sort";    
+	public static final String COLUMN_SORT  = "sort";
 
 	private static String columns;
 	private static String updateMultiplySQLValues;

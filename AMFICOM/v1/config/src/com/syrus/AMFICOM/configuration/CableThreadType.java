@@ -1,5 +1,5 @@
 /*
- * $Id: CableThreadType.java,v 1.15 2005/01/17 14:10:22 stas Exp $
+ * $Id: CableThreadType.java,v 1.16 2005/01/20 15:31:09 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,8 +11,6 @@ package com.syrus.AMFICOM.configuration;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
-import java.util.HashMap;
 
 import com.syrus.AMFICOM.configuration.corba.CableThreadType_Transferable;
 import com.syrus.AMFICOM.general.CreateObjectException;
@@ -29,8 +27,8 @@ import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2005/01/17 14:10:22 $
- * @author $Author: stas $
+ * @version $Revision: 1.16 $, $Date: 2005/01/20 15:31:09 $
+ * @author $Author: arseniy $
  * @module config_v1
  */
 
@@ -41,16 +39,13 @@ public class CableThreadType extends StorableObjectType {
 	 */
 	private static final long  serialVersionUID	= 3689355429075628086L;
 
-	public static final String COLUMN_ID = "id";
 	public static final String COLUMN_NAME = "name";
-	public static final String COLUMN_DESCRIPTION = "description";
 	public static final String COLUMN_COLOR = "color";
-	public static final String COLUMN_LINK_TYPE = "type";
-	private static Map exportColumns = null;
+	public static final String COLUMN_LINK_TYPE_ID = "link_type_id";
 
-	private String             name;
-	private int                color;
-	private LinkType           type;
+	private String name;
+	private int color;
+	private LinkType type;
 
 	private StorableObjectDatabase	cableThreadTypeDatabase;
 
@@ -192,16 +187,11 @@ public class CableThreadType extends StorableObjectType {
 		return Collections.singletonList(this.type);
 	}
 
-	public Map exportColumns() {
-		if (exportColumns == null) {
-			exportColumns = new HashMap(5);
-		}
-		exportColumns.put(COLUMN_ID, getId());
-		exportColumns.put(COLUMN_NAME, getName());
-		exportColumns.put(COLUMN_DESCRIPTION, getDescription());
-		exportColumns.put(COLUMN_COLOR, String.valueOf(getColor()));
-		exportColumns.put(COLUMN_LINK_TYPE, getLinkType().getId());
+	public synchronized void exportColumns() {
+		super.exportColumns();
 
-		return exportColumns;
+		this.exportedColumns.put(COLUMN_NAME, this.name);
+		this.exportedColumns.put(COLUMN_COLOR, Integer.toString(this.color));
+		this.exportedColumns.put(COLUMN_LINK_TYPE_ID, this.type.getId().toString());
 	}
 }

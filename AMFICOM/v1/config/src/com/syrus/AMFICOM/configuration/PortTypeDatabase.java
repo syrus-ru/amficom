@@ -1,5 +1,5 @@
 /*
- * $Id: PortTypeDatabase.java,v 1.28 2005/01/14 18:07:08 arseniy Exp $
+ * $Id: PortTypeDatabase.java,v 1.29 2005/01/20 15:31:09 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,16 +34,16 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.28 $, $Date: 2005/01/14 18:07:08 $
+ * @version $Revision: 1.29 $, $Date: 2005/01/20 15:31:09 $
  * @author $Author: arseniy $
  * @module config_v1
  */
 
 public class PortTypeDatabase extends StorableObjectDatabase {
-	public static final String COLUMN_CODENAME				= "codename";
-	public static final String COLUMN_DESCRIPTION			= "description";
-	public static final String COLUMN_NAME                  = "name";
-	public static final String COLUMN_SORT  = "sort";
+	public static final String COLUMN_CODENAME = "codename";
+	public static final String COLUMN_DESCRIPTION = "description";
+	public static final String COLUMN_NAME = "name";
+	public static final String COLUMN_SORT = "sort";
 
 	public static final int CHARACTER_NUMBER_OF_RECORDS = 1;
 

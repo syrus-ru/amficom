@@ -1,5 +1,5 @@
 /*
- * $Id: CableLinkType.java,v 1.9 2005/01/19 14:02:32 arseniy Exp $
+ * $Id: CableLinkType.java,v 1.10 2005/01/20 15:31:09 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,8 +13,6 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
-import java.util.*;
 
 import com.syrus.AMFICOM.configuration.corba.CableLinkType_Transferable;
 import com.syrus.AMFICOM.configuration.corba.LinkTypeSort;
@@ -34,7 +32,7 @@ import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/01/19 14:02:32 $
+ * @version $Revision: 1.10 $, $Date: 2005/01/20 15:31:09 $
  * @author $Author: arseniy $
  * @module config_v1
  */
@@ -42,25 +40,30 @@ public class CableLinkType extends AbstractLinkType implements Characterized {
 
 	private static final long   serialVersionUID    = 3257007652839372857L;
 
-	public static final String COLUMN_ID = "id";
 	public static final String COLUMN_NAME = "name";
-	public static final String COLUMN_DESCRIPTION = "description";
 	public static final String COLUMN_SORT = "sort";
 	public static final String COLUMN_MANUFACTURER = "manufacturer";
-	public static final String COLUMN_MANUFACTURER_CODE = "manufacturerCode";
-	public static final String COLUMN_IMAGE_ID = "imageId";
-	public static final String COLUMN_CHARACTERISTICS = "characteristics";
-	public static final String COLUMN_CABLE_THREAD_TYPES = "cableThreadTypes";
-	private static Map exportColumns = null;
+	public static final String COLUMN_MANUFACTURER_CODE = "manufacturer_code";
+	public static final String COLUMN_IMAGE_ID = "image_id";
+
+	private static final String LINK_COLUMN_CABLE_LINK_TYPE_ID = "cable_link_type_id";
+	private static final String LINK_COLUMN_CABLE_THREAD_TYPE_ID = "cable_thread_type_id";
+	private static final String CABLE_LINK_TYPE_LINK = "Cablethreadtypelink";
+
+	private static final int SIZE_MANUFACTURER_COLUMN = 64; 
+	private static final int SIZE_MANUFACTURER_CODE_COLUMN = 64;
 
 	private String name;
-	private int                     sort;
-	private String                  manufacturer;
-	private String                  manufacturerCode;
-	private Identifier              imageId;
-	private List                    characteristics;
-	private List                    cableThreadTypes;
-	private StorableObjectDatabase  cableLinkTypeDatabase;
+	private int sort;
+	private String manufacturer;
+	private String manufacturerCode;
+	private Identifier imageId;
+
+	private List cableThreadTypes;
+
+	private List characteristics;
+
+	private StorableObjectDatabase cableLinkTypeDatabase;
 
 	public CableLinkType(Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
 		super(id);
@@ -287,32 +290,19 @@ public class CableLinkType extends AbstractLinkType implements Characterized {
 		super.currentVersion = super.getNextVersion();
 	}
 
-	public Map exportColumns() {
-		if (exportColumns == null) {
-			exportColumns = new HashMap(7);
-		}
-		exportColumns.put(COLUMN_ID, getId());
-		exportColumns.put(COLUMN_NAME, getName());
-		exportColumns.put(COLUMN_DESCRIPTION, getDescription());
-		exportColumns.put(COLUMN_SORT, String.valueOf(getSort().value()));
-		exportColumns.put(COLUMN_MANUFACTURER, getManufacturer());
-		exportColumns.put(COLUMN_MANUFACTURER_CODE, getManufacturerCode());
-		exportColumns.put(COLUMN_IMAGE_ID, getImageId());
+	public synchronized void exportColumns() {
+		super.exportColumns();
 
-		List characts = new ArrayList(this.characteristics.size());
-		for (Iterator it = this.characteristics.iterator(); it.hasNext(); ) {
-			Characteristic ch = (Characteristic)it.next();
-			characts.add(ch.exportColumns());
-		}
-		exportColumns.put(COLUMN_CHARACTERISTICS, characts);
+		this.exportedColumns.put(COLUMN_NAME, this.name);
+		this.exportedColumns.put(COLUMN_SORT, Integer.toString(this.sort));
+		this.exportedColumns.put(COLUMN_MANUFACTURER, this.manufacturer);
+		this.exportedColumns.put(COLUMN_MANUFACTURER_CODE, this.manufacturerCode);
+		this.exportedColumns.put(COLUMN_IMAGE_ID, this.imageId.toString());
 
-		List ctTypes = new ArrayList(this.cableThreadTypes.size());
-		for (Iterator it = this.cableThreadTypes.iterator(); it.hasNext(); ) {
-			CableThreadType type = (CableThreadType)it.next();
-			ctTypes.add(type.getId());
-		}
-		exportColumns.put(COLUMN_CABLE_THREAD_TYPES, ctTypes);
+		for (Iterator it = this.cableThreadTypes.iterator(); it.hasNext();)
+			this.exportedColumns.put(LINK_COLUMN_CABLE_THREAD_TYPE_ID, ((CableThreadType)it.next()).getId().toString());
 
-		return exportColumns;
+		for (Iterator it = this.characteristics.iterator(); it.hasNext();)
+			this.exportedColumns.putAll(((Characteristic)it.next()).getExportedColumns());
 	}
 }

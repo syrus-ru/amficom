@@ -1,5 +1,5 @@
 /*
- * $Id: LinkTypeDatabase.java,v 1.14 2005/01/14 18:07:08 arseniy Exp $
+ * $Id: LinkTypeDatabase.java,v 1.15 2005/01/20 15:31:09 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,27 +32,27 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2005/01/14 18:07:08 $
+ * @version $Revision: 1.15 $, $Date: 2005/01/20 15:31:09 $
  * @author $Author: arseniy $
  * @module config_v1
  */
 
 public class LinkTypeDatabase extends StorableObjectDatabase {
 	// codename VARCHAR2(32) NOT NULL,
-	public static final String COLUMN_CODENAME      = "codename";
+	public static final String COLUMN_CODENAME = "codename";
 	// description VARCHAR2(256),
-	public static final String COLUMN_DESCRIPTION   = "description";
+	public static final String COLUMN_DESCRIPTION = "description";
 	public static final String COLUMN_NAME = "name";
 	// sort NUMBER(2,0),
-	public static final String COLUMN_SORT  = "sort";
+	public static final String COLUMN_SORT = "sort";
 	// manufacturer VARCHAR2(64),
 	private static final int SIZE_MANUFACTURER_COLUMN = 64;
-	public static final String COLUMN_MANUFACTURER  = "manufacturer";
+	public static final String COLUMN_MANUFACTURER = "manufacturer";
 	// manufacturer_code VARCHAR2(64),
 	private static final int SIZE_MANUFACTURER_CODE_COLUMN = 64;
-	public static final String COLUMN_MANUFACTURER_CODE     = "manufacturer_code";
+	public static final String COLUMN_MANUFACTURER_CODE = "manufacturer_code";
 	// image_id VARCHAR2(32),
-	public static final String COLUMN_IMAGE_ID      = "image_id";
+	public static final String COLUMN_IMAGE_ID = "image_id";
 
 	private static String columns;
 	private static String updateMultiplySQLValues;

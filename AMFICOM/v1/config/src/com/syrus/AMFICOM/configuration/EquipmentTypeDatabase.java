@@ -1,5 +1,5 @@
 /*
- * $Id: EquipmentTypeDatabase.java,v 1.28 2005/01/14 18:07:07 arseniy Exp $
+ * $Id: EquipmentTypeDatabase.java,v 1.29 2005/01/20 15:31:09 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,14 +34,14 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.28 $, $Date: 2005/01/14 18:07:07 $
+ * @version $Revision: 1.29 $, $Date: 2005/01/20 15:31:09 $
  * @author $Author: arseniy $
  * @module config_v1
  */
 
 public class EquipmentTypeDatabase extends StorableObjectDatabase {
-	public static final String COLUMN_CODENAME				= "codename";
-	public static final String COLUMN_DESCRIPTION			= "description";
+	public static final String COLUMN_CODENAME = "codename";
+	public static final String COLUMN_DESCRIPTION = "description";
 	public static final String COLUMN_NAME = "name";
 	//   manufacturer VARCHAR2(64),
 	private static final int SIZE_MANUFACTURER_COLUMN = 64; 

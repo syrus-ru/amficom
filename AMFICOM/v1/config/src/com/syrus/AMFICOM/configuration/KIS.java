@@ -1,5 +1,5 @@
 /*
- * $Id: KIS.java,v 1.51 2005/01/19 14:02:32 arseniy Exp $
+ * $Id: KIS.java,v 1.52 2005/01/20 15:31:09 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,8 +14,6 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
-import java.util.HashMap;
 
 import com.syrus.AMFICOM.configuration.corba.KIS_Transferable;
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -35,7 +33,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.administration.DomainMember;
 
 /**
- * @version $Revision: 1.51 $, $Date: 2005/01/19 14:02:32 $
+ * @version $Revision: 1.52 $, $Date: 2005/01/20 15:31:09 $
  * @author $Author: arseniy $
  * @module config_v1
  */
@@ -47,16 +45,13 @@ public class KIS extends DomainMember implements Characterized {
 	 */
 	private static final long	serialVersionUID	= 3257281422661466166L;
 
-	public static final String COLUMN_ID = "id";
+	public static final String COLUMN_EQUIPMENT_ID = "equipment_id";
+	public static final String COLUMN_MCM_ID = "mcm_id";
 	public static final String COLUMN_NAME = "name";
 	public static final String COLUMN_DESCRIPTION = "description";
-	public static final String COLUMN_EQUIPMENT_ID = "equipmentId";
-	public static final String COLUMN_MCM_ID = "mcmId";
 	public static final String COLUMN_HOSTNAME = "hostname";
-	public static final String COLUMN_TCP_PORT = "tcpPort";
+	public static final String COLUMN_TCP_PORT = "tcp_port";
 	public static final String COLUMN_MEASUREMENT_PORT_IDS = "measurementPortIds";
-	public static final String COLUMN_CHARACTERISTICS = "characteristics";
-	private static Map exportColumns = null;
 
 	protected static final int RETRIEVE_MONITORED_ELEMENTS = 1;
 
@@ -66,7 +61,9 @@ public class KIS extends DomainMember implements Characterized {
 	private String description;
 	private String hostname;
 	private short tcpPort;
-	private List measurementPortIds;	//List <MeasurementPort>
+
+	private List measurementPortIds;	//List <Identifier>
+
 	private List characteristics;
 	private StorableObjectDatabase kisDatabase;
 
@@ -327,27 +324,20 @@ public class KIS extends DomainMember implements Characterized {
 		super.currentVersion = super.getNextVersion();
 	}
 
-	public Map exportColumns() {
-		if (exportColumns == null) {
-			exportColumns = new HashMap(9);
-		}
-		exportColumns.put(COLUMN_ID, getId());
-		exportColumns.put(COLUMN_NAME, getName());
-		exportColumns.put(COLUMN_DESCRIPTION, getDescription());
+	public synchronized void exportColumns() {
+		super.exportColumns();
 
-		exportColumns.put(COLUMN_EQUIPMENT_ID, getEquipmentId());
-		exportColumns.put(COLUMN_MCM_ID, getMCMId());
-		exportColumns.put(COLUMN_HOSTNAME, getHostName());
-		exportColumns.put(COLUMN_TCP_PORT, String.valueOf(getTCPPort()));
-		exportColumns.put(COLUMN_MEASUREMENT_PORT_IDS, getMeasurementPortIds());
+		this.exportedColumns.put(COLUMN_EQUIPMENT_ID, this.equipmentId.toString());
+		this.exportedColumns.put(COLUMN_MCM_ID, this.mcmId.toString());
+		this.exportedColumns.put(COLUMN_NAME, this.name);
+		this.exportedColumns.put(COLUMN_DESCRIPTION, this.description);
+		this.exportedColumns.put(COLUMN_HOSTNAME, this.hostname);
+		this.exportedColumns.put(COLUMN_TCP_PORT, Short.toString(this.tcpPort));
 
-		List characts = new ArrayList(this.characteristics.size());
-		for (Iterator it = this.characteristics.iterator(); it.hasNext(); ) {
-			Characteristic ch = (Characteristic)it.next();
-			characts.add(ch.exportColumns());
-		}
-		exportColumns.put(COLUMN_CHARACTERISTICS, characts);
+		for (Iterator it = this.measurementPortIds.iterator(); it.hasNext();)
+			this.exportedColumns.put(COLUMN_MEASUREMENT_PORT_IDS, ((Identifier)it.next()).toString());
 
-		return exportColumns;
+		for (Iterator it = this.characteristics.iterator(); it.hasNext();)
+			this.exportedColumns.putAll(((Characteristic)it.next()).getExportedColumns());		
 	}
 }

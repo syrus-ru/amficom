@@ -1,5 +1,5 @@
 /*
- * $Id: Link.java,v 1.27 2005/01/19 14:02:32 arseniy Exp $
+ * $Id: Link.java,v 1.28 2005/01/20 15:31:09 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,8 +13,6 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
-import java.util.HashMap;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
@@ -37,34 +35,35 @@ import com.syrus.AMFICOM.configuration.corba.LinkSort;
 import com.syrus.AMFICOM.configuration.corba.Link_Transferable;
 
 /**
- * @version $Revision: 1.27 $, $Date: 2005/01/19 14:02:32 $
+ * @version $Revision: 1.28 $, $Date: 2005/01/20 15:31:09 $
  * @author $Author: arseniy $
  * @module config_v1
  */
 public class Link extends DomainMember implements Characterized, TypedObject {
 	private static final long serialVersionUID = -4235048398372768515L;
 
-	public static final String COLUMN_ID = "id";
+	public static final String COLUMN_TYPE_ID = "type_id";
 	public static final String COLUMN_NAME = "name";
 	public static final String COLUMN_DESCRIPTION = "description";
-	public static final String COLUMN_ABSTRACT_LINK_TYPE = "type";
-	public static final String COLUMN_INVENTORY_NO = "inventoryNo";
+	public static final String COLUMN_INVENTORY_NO = "inventory_no";
 	public static final String COLUMN_SUPPLIER = "supplier";
-	public static final String COLUMN_SUPPLIER_CODE = "supplierCode";
+	public static final String COLUMN_SUPPLIER_CODE = "supplier_code";
 	public static final String COLUMN_SORT = "sort";
-	public static final String COLUMN_MARK = "mark";
+	public static final String COLUMN_MARK  = "mark";
 	public static final String COLUMN_COLOR = "color";
-	public static final String COLUMN_CHARACTERISTICS = "characteristics";
-	private static Map exportColumns = null;
 
+	private static final int SIZE_INVENTORY_NO_COLUMN = 64;
+	private static final int SIZE_SUPPLIER_COLUMN = 128;
+	private static final int SIZE_SUPPLIER_CODE_COLUMN = 64;
+	private static final int SIZE_MARK_COLUMN = 32;
+
+	private AbstractLinkType type;
 	private String name;
 	private String description;
-	private AbstractLinkType type;
 	private String inventoryNo;
 	private String supplier;
 	private String supplierCode;
 	private int sort;
-
 	private String mark;
 	private int color;
 
@@ -328,27 +327,20 @@ public class Link extends DomainMember implements Characterized, TypedObject {
 		super.currentVersion = super.getNextVersion();
 	}
 
-	public Map exportColumns() {
-		if (exportColumns == null) {
-			exportColumns = new HashMap(10);
-		}
-		exportColumns.put(COLUMN_ID, getId());
-		exportColumns.put(COLUMN_NAME, getName());
-		exportColumns.put(COLUMN_DESCRIPTION, getDescription());
-		exportColumns.put(COLUMN_ABSTRACT_LINK_TYPE, getType().getId());
-		exportColumns.put(COLUMN_SUPPLIER, getSupplier());
-		exportColumns.put(COLUMN_SUPPLIER_CODE, getSupplierCode());
-		exportColumns.put(COLUMN_INVENTORY_NO, getInventoryNo());
-		exportColumns.put(COLUMN_COLOR, String.valueOf(getColor()));
-		exportColumns.put(COLUMN_SORT, String.valueOf(getSort().value()));
+	public synchronized void exportColumns() {
+		super.exportColumns();
 
-		List characts = new ArrayList(this.characteristics.size());
-		for (Iterator it = this.characteristics.iterator(); it.hasNext(); ) {
-			Characteristic ch = (Characteristic)it.next();
-			characts.add(ch.exportColumns());
-		}
-		exportColumns.put(COLUMN_CHARACTERISTICS, characts);
+		this.exportedColumns.put(COLUMN_TYPE_ID, this.type.getId().toString());
+		this.exportedColumns.put(COLUMN_NAME, this.name);
+		this.exportedColumns.put(COLUMN_DESCRIPTION, this.description);
+		this.exportedColumns.put(COLUMN_INVENTORY_NO, this.inventoryNo);
+		this.exportedColumns.put(COLUMN_SUPPLIER, this.supplier);
+		this.exportedColumns.put(COLUMN_SUPPLIER_CODE, this.supplierCode);
+		this.exportedColumns.put(COLUMN_SORT, Integer.toString(this.sort));
+		this.exportedColumns.put(COLUMN_MARK, this.mark);
+		this.exportedColumns.put(COLUMN_COLOR, Integer.toString(this.color));
 
-		return exportColumns;
+		for (Iterator it = this.characteristics.iterator(); it.hasNext();)
+			this.exportedColumns.putAll(((Characteristic)it.next()).getExportedColumns());
 	}
 }

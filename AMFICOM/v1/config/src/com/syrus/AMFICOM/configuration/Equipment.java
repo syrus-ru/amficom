@@ -1,5 +1,5 @@
 /*
- * $Id: Equipment.java,v 1.56 2005/01/19 14:02:32 arseniy Exp $
+ * $Id: Equipment.java,v 1.57 2005/01/20 15:31:09 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,9 +13,8 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ArrayList;
-import java.util.Map;
-import java.util.HashMap;
 import java.util.Iterator;
+
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
@@ -35,7 +34,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.configuration.corba.Equipment_Transferable;
 
 /**
- * @version $Revision: 1.56 $, $Date: 2005/01/19 14:02:32 $
+ * @version $Revision: 1.57 $, $Date: 2005/01/20 15:31:09 $
  * @author $Author: arseniy $
  * @module config_v1
  */
@@ -47,23 +46,28 @@ public class Equipment extends MonitoredDomainMember implements Characterized, T
 	protected static final int		UPDATE_ATTACH_ME	= 1;
 	protected static final int		UPDATE_DETACH_ME	= 2;
 
-	public static final String COLUMN_ID = "id";
+	public static final String COLUMN_TYPE_ID = "type_id";
 	public static final String COLUMN_NAME = "name";
 	public static final String COLUMN_DESCRIPTION = "description";
-	public static final String COLUMN_EQUIPMENT_TYPE = "type";
-	public static final String COLUMN_IMAGE_ID = "imageId";
-	public static final String COLUMN_LONGITUDE = "longitude";
+	public static final String COLUMN_IMAGE_ID = "image_id";
 	public static final String COLUMN_LATITUDE = "latitude";
+	public static final String COLUMN_LONGITUDE = "longitude";
 	public static final String COLUMN_SUPPLIER = "supplier";
-	public static final String COLUMN_SUPPLIER_CODE = "supplierCode";
-	public static final String COLUMN_HW_SERIAL = "hwSerial";
-	public static final String COLUMN_HW_VERSION = "hwVersion";
-	public static final String COLUMN_SW_SERIAL = "swSerial";
-	public static final String COLUMN_SW_VERSION = "swVersion";
-	public static final String COLUMN_INVENTORY_NUMBER = "inventoryNumber";
+	public static final String COLUMN_SUPPLIER_CODE = "supplier_code";
+	public static final String COLUMN_HW_SERIAL = "hw_serial";
+	public static final String COLUMN_HW_VERSION = "hw_version";
+	public static final String COLUMN_SW_SERIAL = "sw_serial";
+	public static final String COLUMN_SW_VERSION = "sw_version";
+	public static final String COLUMN_INVENTORY_NUMBER = "inventory_number";
 	public static final String COLUMN_PORT_IDS = "portIds";
-	public static final String COLUMN_CHARACTERISTICS = "characteristics";
-	private static Map exportColumns = null;
+
+	private static final int SIZE_SUPPLIER_COLUMN = 128;
+	private static final int SIZE_SUPPLIER_CODE_COLUMN = 128;
+	private static final int SIZE_HW_SERIAL_COLUMN = 64;
+	private static final int SIZE_HW_VERSION_COLUMN = 64;
+	private static final int SIZE_SW_SERIAL_COLUMN = 64;
+	private static final int SIZE_SW_VERSION_COLUMN = 64;
+	private static final int SIZE_INVENTOY_NUMBER_COLUMN = 64;
 
 	private EquipmentType          type;
 	private String                 name;
@@ -468,33 +472,27 @@ public class Equipment extends MonitoredDomainMember implements Characterized, T
 		this.swVersion = swVersion;
 	}
 
-	public Map exportColumns() {
-		if (exportColumns == null) {
-			exportColumns = new HashMap(16);
-		}
-		exportColumns.put(COLUMN_ID, getId());
-		exportColumns.put(COLUMN_NAME, getName());
-		exportColumns.put(COLUMN_DESCRIPTION, getDescription());
-		exportColumns.put(COLUMN_EQUIPMENT_TYPE, getType().getId());
-		exportColumns.put(COLUMN_IMAGE_ID, getImageId());
-		exportColumns.put(COLUMN_LONGITUDE, String.valueOf(getLatitude()));
-		exportColumns.put(COLUMN_LATITUDE, String.valueOf(getLatitude()));
-		exportColumns.put(COLUMN_SUPPLIER, getSupplier());
-		exportColumns.put(COLUMN_SUPPLIER_CODE, getSupplierCode());
-		exportColumns.put(COLUMN_HW_SERIAL, getHwSerial());
-		exportColumns.put(COLUMN_HW_VERSION, getHwVersion());
-		exportColumns.put(COLUMN_SW_SERIAL, getSwSerial());
-		exportColumns.put(COLUMN_SW_VERSION, getSwVersion());
-		exportColumns.put(COLUMN_INVENTORY_NUMBER, getInventoryNumber());
-		exportColumns.put(COLUMN_PORT_IDS, getPortIds());
+	public synchronized void exportColumns() {
+		super.exportColumns();
 
-		List characts = new ArrayList(this.characteristics.size());
-		for (Iterator it = this.characteristics.iterator(); it.hasNext(); ) {
-			Characteristic ch = (Characteristic)it.next();
-			characts.add(ch.exportColumns());
-		}
-		exportColumns.put(COLUMN_CHARACTERISTICS, characts);
+		this.exportedColumns.put(COLUMN_TYPE_ID, this.type.getId().toString());
+		this.exportedColumns.put(COLUMN_NAME, "");
+		this.exportedColumns.put(COLUMN_DESCRIPTION, this.description);
+		this.exportedColumns.put(COLUMN_IMAGE_ID, this.imageId.toString());
+		this.exportedColumns.put(COLUMN_LATITUDE, Float.toString(this.latitude));
+		this.exportedColumns.put(COLUMN_LONGITUDE, Float.toString(this.longitude));
+		this.exportedColumns.put(COLUMN_SUPPLIER, this.supplier);
+		this.exportedColumns.put(COLUMN_SUPPLIER_CODE, this.supplierCode);
+		this.exportedColumns.put(COLUMN_HW_SERIAL, this.hwSerial);
+		this.exportedColumns.put(COLUMN_HW_VERSION, this.hwVersion);
+		this.exportedColumns.put(COLUMN_SW_SERIAL, this.swSerial);
+		this.exportedColumns.put(COLUMN_SW_VERSION, this.swVersion);
+		this.exportedColumns.put(COLUMN_INVENTORY_NUMBER, this.inventoryNumber);
 
-		return exportColumns;
+		for (Iterator it = this.portIds.iterator(); it.hasNext();)
+			this.exportedColumns.put(COLUMN_PORT_IDS, ((Identifier)it.next()).toString());
+
+		for (Iterator it = this.characteristics.iterator(); it.hasNext();)
+			this.exportedColumns.putAll(((Characteristic)it.next()).getExportedColumns());		
 	}
 }

@@ -1,5 +1,5 @@
 /*
- * $Id: CableThreadTypeDatabase.java,v 1.9 2005/01/14 18:07:07 arseniy Exp $
+ * $Id: CableThreadTypeDatabase.java,v 1.10 2005/01/20 15:31:09 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,22 +30,22 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/01/14 18:07:07 $
+ * @version $Revision: 1.10 $, $Date: 2005/01/20 15:31:09 $
  * @author $Author: arseniy $
  * @module config_v1
  */
 
 public class CableThreadTypeDatabase extends StorableObjectDatabase {
-    // codename VARCHAR2(32) NOT NULL,
-    public static final String COLUMN_CODENAME      = "codename";
-    // description VARCHAR2(256),
-    public static final String COLUMN_DESCRIPTION   = "description";
-    // name VARCHAR2(64),
-    public static final String COLUMN_NAME = "name";
-    // color NUMBER(38),
-    public static final String COLUMN_COLOR = "color";
-    // cable_link_type_id VARCHAR2(32),
-    public static final String COLUMN_LINK_TYPE_ID    = "link_type_id";
+	// codename VARCHAR2(32) NOT NULL,
+	public static final String COLUMN_CODENAME = "codename";
+	// description VARCHAR2(256),
+	public static final String COLUMN_DESCRIPTION = "description";
+	// name VARCHAR2(64),
+	public static final String COLUMN_NAME = "name";
+	// color NUMBER(38),
+	public static final String COLUMN_COLOR = "color";
+	// cable_link_type_id VARCHAR2(32),
+	public static final String COLUMN_LINK_TYPE_ID = "link_type_id";
 	
 	private static String columns;
 	private static String updateMultiplySQLValues;
