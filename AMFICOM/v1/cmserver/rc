@@ -17,5 +17,5 @@ $LIB/util.jar
 
 $JAVA -Xloggc:./gc -Xmx256m -server -ea -classpath $APPCLASSPATH:$ORACLECLASSPATH com.syrus.AMFICOM.cmserver.ClientMeasurementServer &
 # Expands to the process ID of the most recently executed background (asynchronous) command. 
-echo $! > cmserver.pid
+echo $! > pid
 
