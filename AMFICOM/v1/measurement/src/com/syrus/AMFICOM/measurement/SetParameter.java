@@ -1,5 +1,5 @@
 /*
- * $Id: SetParameter.java,v 1.15 2004/12/24 13:41:27 arseniy Exp $
+ * $Id: SetParameter.java,v 1.16 2004/12/24 14:50:24 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -24,7 +24,7 @@ import com.syrus.AMFICOM.measurement.corba.Parameter_Transferable;
 import com.syrus.util.HashCodeGenerator;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2004/12/24 13:41:27 $
+ * @version $Revision: 1.16 $, $Date: 2004/12/24 14:50:24 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -75,8 +75,7 @@ public class SetParameter implements TransferableObject, TypedObject {
 			ptValue[i] = this.value[i];
 		return new Parameter_Transferable((Identifier_Transferable)this.id.getTransferable(),
 																			(Identifier_Transferable)this.type.getId().getTransferable(),
-																			ptValue,
-																			new String(this.type.getCodename()));
+																			ptValue);
 	}
 
 	public Identifier getId() {
