@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseMapObjectLoader.java,v 1.5 2005/02/11 15:14:50 bob Exp $
+ * $Id: DatabaseMapObjectLoader.java,v 1.6 2005/02/14 10:30:56 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,7 +9,7 @@
 package com.syrus.AMFICOM.map;
 
 import java.util.Collections;
-import java.util.List;
+import java.util.Collection;
 import java.util.Set;
 
 import com.syrus.AMFICOM.general.CommunicationException;
@@ -27,7 +27,7 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/02/11 15:14:50 $
+ * @version $Revision: 1.6 $, $Date: 2005/02/14 10:30:56 $
  * @author $Author: bob $
  * @module map_v1
  */
@@ -69,7 +69,7 @@ public class DatabaseMapObjectLoader implements MapObjectLoader {
 		return database;
 	}
 	
-	private void delete(Identifier id, List ids) throws DatabaseException {
+	private void delete(Identifier id, Collection ids) throws DatabaseException {
 		short entityCode = (id != null) ? id.getMajor() : 0;
 		if (id == null) {
 			if (ids.isEmpty())
@@ -99,7 +99,7 @@ public class DatabaseMapObjectLoader implements MapObjectLoader {
 		delete(id, null);
 	}
 
-	public void delete(List ids) throws CommunicationException, DatabaseException {
+	public void delete(Collection ids) throws CommunicationException, DatabaseException {
 		delete(null, ids);
 	}
 
@@ -107,9 +107,9 @@ public class DatabaseMapObjectLoader implements MapObjectLoader {
 		return new Collector(id);
 	}
 
-	public List loadCollectors(List ids) throws DatabaseException, CommunicationException {
+	public Collection loadCollectors(Collection ids) throws DatabaseException, CommunicationException {
 		CollectorDatabase database = (CollectorDatabase) MapDatabaseContext.getCollectorDatabase();
-		List list = null;
+		Collection list = null;
 		try {
 			list = database.retrieveByIds(ids, null);
 		} catch (IllegalDataException e) {
@@ -120,10 +120,10 @@ public class DatabaseMapObjectLoader implements MapObjectLoader {
 		return list;
 	}
 
-	public List loadCollectorsButIds(StorableObjectCondition condition, List ids) throws DatabaseException,
+	public Collection loadCollectorsButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException,
 			CommunicationException {
 		CollectorDatabase database = (CollectorDatabase) MapDatabaseContext.getCollectorDatabase();
-		List list = null;
+		Collection list = null;
 		try {
 			list = database.retrieveByCondition(ids, condition);
 		} catch (IllegalDataException e) {
@@ -138,9 +138,9 @@ public class DatabaseMapObjectLoader implements MapObjectLoader {
 		return new Map(id);
 	}
 
-	public List loadMaps(List ids) throws DatabaseException, CommunicationException {
+	public Collection loadMaps(Collection ids) throws DatabaseException, CommunicationException {
 		MapDatabase database = (MapDatabase) MapDatabaseContext.getMapDatabase();
-		List list = null;
+		Collection list = null;
 		try {
 			list = database.retrieveByIds(ids, null);
 		} catch (IllegalDataException e) {
@@ -150,10 +150,10 @@ public class DatabaseMapObjectLoader implements MapObjectLoader {
 		return list;
 	}
 	
-	public List loadMapsButIds(StorableObjectCondition condition, List ids) throws DatabaseException,
+	public Collection loadMapsButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException,
 			CommunicationException {
 		MapDatabase database = (MapDatabase) MapDatabaseContext.getMapDatabase();
-		List list = null;
+		Collection list = null;
 		try {
 			list = database.retrieveByCondition(ids, condition);
 		} catch (IllegalDataException e) {
@@ -167,9 +167,9 @@ public class DatabaseMapObjectLoader implements MapObjectLoader {
 		return new Mark(id);
 	}
 
-	public List loadMarks(List ids) throws DatabaseException, CommunicationException {
+	public Collection loadMarks(Collection ids) throws DatabaseException, CommunicationException {
 		MarkDatabase database = (MarkDatabase) MapDatabaseContext.getMarkDatabase();
-		List list = null;
+		Collection list = null;
 		try {
 			list = database.retrieveByIds(ids, null);
 		} catch (IllegalDataException e) {
@@ -180,10 +180,10 @@ public class DatabaseMapObjectLoader implements MapObjectLoader {
 		return list;
 	}
 	
-	public List loadMarksButIds(StorableObjectCondition condition, List ids) throws DatabaseException,
+	public Collection loadMarksButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException,
 			CommunicationException {
 		MarkDatabase database = (MarkDatabase) MapDatabaseContext.getMarkDatabase();
-		List list = null;
+		Collection list = null;
 		try {
 			list = database.retrieveByCondition(ids, condition);
 		} catch (IllegalDataException e) {
@@ -198,9 +198,9 @@ public class DatabaseMapObjectLoader implements MapObjectLoader {
 		return new NodeLink(id);
 	}
 
-	public List loadNodeLinks(List ids) throws DatabaseException, CommunicationException {
+	public Collection loadNodeLinks(Collection ids) throws DatabaseException, CommunicationException {
 		NodeLinkDatabase database = (NodeLinkDatabase) MapDatabaseContext.getNodeLinkDatabase();
-		List list = null;
+		Collection list = null;
 		try {
 			list = database.retrieveByIds(ids, null);
 		} catch (IllegalDataException e) {
@@ -211,10 +211,10 @@ public class DatabaseMapObjectLoader implements MapObjectLoader {
 		return list;
 	}
 
-	public List loadNodeLinksButIds(StorableObjectCondition condition, List ids) throws DatabaseException,
+	public Collection loadNodeLinksButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException,
 			CommunicationException {
 		NodeLinkDatabase database = (NodeLinkDatabase) MapDatabaseContext.getNodeLinkDatabase();
-		List list = null;
+		Collection list = null;
 		try {
 			list = database.retrieveByCondition(ids, condition);
 		} catch (IllegalDataException e) {
@@ -229,9 +229,9 @@ public class DatabaseMapObjectLoader implements MapObjectLoader {
 		return new PhysicalLink(id);
 	}
 
-	public List loadPhysicalLinks(List ids) throws DatabaseException, CommunicationException {
+	public Collection loadPhysicalLinks(Collection ids) throws DatabaseException, CommunicationException {
 		PhysicalLinkDatabase database = (PhysicalLinkDatabase) MapDatabaseContext.getPhysicalLinkDatabase();
-		List list = null;
+		Collection list = null;
 		try {
 			list = database.retrieveByIds(ids, null);
 		} catch (IllegalDataException e) {
@@ -242,10 +242,10 @@ public class DatabaseMapObjectLoader implements MapObjectLoader {
 		return list;
 	}
 	
-	public List loadPhysicalLinksButIds(StorableObjectCondition condition, List ids) throws DatabaseException,
+	public Collection loadPhysicalLinksButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException,
 			CommunicationException {
 		PhysicalLinkDatabase database = (PhysicalLinkDatabase) MapDatabaseContext.getPhysicalLinkDatabase();
-		List list = null;
+		Collection list = null;
 		try {
 			list = database.retrieveByCondition(ids, condition);
 		} catch (IllegalDataException e) {
@@ -260,9 +260,9 @@ public class DatabaseMapObjectLoader implements MapObjectLoader {
 		return new PhysicalLinkType(id);
 	}
 
-	public List loadPhysicalLinkTypes(List ids) throws DatabaseException, CommunicationException {
+	public Collection loadPhysicalLinkTypes(Collection ids) throws DatabaseException, CommunicationException {
 		PhysicalLinkTypeDatabase database = (PhysicalLinkTypeDatabase) MapDatabaseContext.getPhysicalLinkTypeDatabase();
-		List list = null;
+		Collection list = null;
 		try {
 			list = database.retrieveByIds(ids, null);
 		} catch (IllegalDataException e) {
@@ -274,10 +274,10 @@ public class DatabaseMapObjectLoader implements MapObjectLoader {
 		return list;
 	}	
 
-	public List loadPhysicalLinkTypesButIds(StorableObjectCondition condition, List ids) throws DatabaseException,
+	public Collection loadPhysicalLinkTypesButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException,
 			CommunicationException {
 		PhysicalLinkTypeDatabase database = (PhysicalLinkTypeDatabase) MapDatabaseContext.getPhysicalLinkTypeDatabase();
-		List list = null;
+		Collection list = null;
 		try {
 			list = database.retrieveByCondition(ids, condition);
 		} catch (IllegalDataException e) {
@@ -293,9 +293,9 @@ public class DatabaseMapObjectLoader implements MapObjectLoader {
 		return new SiteNode(id);
 	}
 
-	public List loadSiteNodes(List ids) throws DatabaseException, CommunicationException {
+	public Collection loadSiteNodes(Collection ids) throws DatabaseException, CommunicationException {
 		SiteNodeDatabase database = (SiteNodeDatabase) MapDatabaseContext.getSiteNodeDatabase();
-		List list = null;
+		Collection list = null;
 		try {
 			list = database.retrieveByIds(ids, null);
 		} catch (IllegalDataException e) {
@@ -306,10 +306,10 @@ public class DatabaseMapObjectLoader implements MapObjectLoader {
 		return list;
 	}
 	
-	public List loadSiteNodesButIds(StorableObjectCondition condition, List ids) throws DatabaseException,
+	public Collection loadSiteNodesButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException,
 			CommunicationException {
 		SiteNodeDatabase database = (SiteNodeDatabase) MapDatabaseContext.getSiteNodeDatabase();
-		List list = null;
+		Collection list = null;
 		try {
 			list = database.retrieveByCondition(ids, condition);
 		} catch (IllegalDataException e) {
@@ -324,9 +324,9 @@ public class DatabaseMapObjectLoader implements MapObjectLoader {
 		return new SiteNodeType(id);
 	}
 
-	public List loadSiteNodeTypes(List ids) throws DatabaseException, CommunicationException {
+	public Collection loadSiteNodeTypes(Collection ids) throws DatabaseException, CommunicationException {
 		SiteNodeTypeDatabase database = (SiteNodeTypeDatabase) MapDatabaseContext.getSiteNodeTypeDatabase();
-		List list = null;
+		Collection list = null;
 		try {
 			list = database.retrieveByIds(ids, null);
 		} catch (IllegalDataException e) {
@@ -336,10 +336,10 @@ public class DatabaseMapObjectLoader implements MapObjectLoader {
 		return list;
 	}	
 
-	public List loadSiteNodeTypesButIds(StorableObjectCondition condition, List ids) throws DatabaseException,
+	public Collection loadSiteNodeTypesButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException,
 			CommunicationException {
 		SiteNodeTypeDatabase database = (SiteNodeTypeDatabase) MapDatabaseContext.getSiteNodeTypeDatabase();
-		List list = null;
+		Collection list = null;
 		try {
 			list = database.retrieveByCondition(ids, condition);
 		} catch (IllegalDataException e) {
@@ -353,9 +353,9 @@ public class DatabaseMapObjectLoader implements MapObjectLoader {
 		return new TopologicalNode(id);
 	}
 
-	public List loadTopologicalNodes(List ids) throws DatabaseException, CommunicationException {
+	public Collection loadTopologicalNodes(Collection ids) throws DatabaseException, CommunicationException {
 		TopologicalNodeDatabase database = (TopologicalNodeDatabase) MapDatabaseContext.getTopologicalNodeDatabase();
-		List list = null;
+		Collection list = null;
 		try {
 			list = database.retrieveByIds(ids, null);
 		} catch (IllegalDataException e) {
@@ -367,10 +367,10 @@ public class DatabaseMapObjectLoader implements MapObjectLoader {
 		return list;
 	}
 	
-	public List loadTopologicalNodesButIds(StorableObjectCondition condition, List ids) throws DatabaseException,
+	public Collection loadTopologicalNodesButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException,
 			CommunicationException {
 		TopologicalNodeDatabase database = (TopologicalNodeDatabase) MapDatabaseContext.getTopologicalNodeDatabase();
-		List list = null;
+		Collection list = null;
 		try {
 			list = database.retrieveByCondition(ids, condition);
 		} catch (IllegalDataException e) {
@@ -552,7 +552,7 @@ public class DatabaseMapObjectLoader implements MapObjectLoader {
 		}
 	}
 
-	public void saveCollectors(List list, boolean force) throws VersionCollisionException, DatabaseException,
+	public void saveCollectors(Collection list, boolean force) throws VersionCollisionException, DatabaseException,
 			CommunicationException {
 		CollectorDatabase database = (CollectorDatabase) MapDatabaseContext.getCollectorDatabase();
 		try {
@@ -570,7 +570,7 @@ public class DatabaseMapObjectLoader implements MapObjectLoader {
 
 	}
 
-	public void saveMaps(List list, boolean force) throws VersionCollisionException, DatabaseException,
+	public void saveMaps(Collection list, boolean force) throws VersionCollisionException, DatabaseException,
 			CommunicationException {
 		MapDatabase database = (MapDatabase) MapDatabaseContext.getMapDatabase();
 		try {
@@ -585,7 +585,7 @@ public class DatabaseMapObjectLoader implements MapObjectLoader {
 
 	}
 
-	public void saveMarks(List list, boolean force) throws VersionCollisionException, DatabaseException,
+	public void saveMarks(Collection list, boolean force) throws VersionCollisionException, DatabaseException,
 			CommunicationException {
 		MarkDatabase database = (MarkDatabase) MapDatabaseContext.getMarkDatabase();
 		try {
@@ -599,7 +599,7 @@ public class DatabaseMapObjectLoader implements MapObjectLoader {
 		}
 	}
 
-	public void saveNodeLinks(List list, boolean force) throws VersionCollisionException, DatabaseException,
+	public void saveNodeLinks(Collection list, boolean force) throws VersionCollisionException, DatabaseException,
 			CommunicationException {
 		NodeLinkDatabase database = (NodeLinkDatabase) MapDatabaseContext.getNodeLinkDatabase();
 		try {
@@ -616,7 +616,7 @@ public class DatabaseMapObjectLoader implements MapObjectLoader {
 		}
 	}
 
-	public void savePhysicalLinks(List list, boolean force) throws VersionCollisionException, DatabaseException,
+	public void savePhysicalLinks(Collection list, boolean force) throws VersionCollisionException, DatabaseException,
 			CommunicationException {
 		PhysicalLinkDatabase database = (PhysicalLinkDatabase) MapDatabaseContext.getPhysicalLinkDatabase();
 		try {
@@ -633,7 +633,7 @@ public class DatabaseMapObjectLoader implements MapObjectLoader {
 		}
 	}
 
-	public void savePhysicalLinkTypes(List list, boolean force) throws VersionCollisionException, DatabaseException,
+	public void savePhysicalLinkTypes(Collection list, boolean force) throws VersionCollisionException, DatabaseException,
 			CommunicationException {
 		PhysicalLinkTypeDatabase database = (PhysicalLinkTypeDatabase) MapDatabaseContext.getPhysicalLinkTypeDatabase();
 		try {
@@ -651,7 +651,7 @@ public class DatabaseMapObjectLoader implements MapObjectLoader {
 		}
 	}
 
-	public void saveSiteNodes(List list, boolean force) throws VersionCollisionException, DatabaseException,
+	public void saveSiteNodes(Collection list, boolean force) throws VersionCollisionException, DatabaseException,
 			CommunicationException {
 		SiteNodeDatabase database = (SiteNodeDatabase) MapDatabaseContext.getSiteNodeDatabase();
 		try {
@@ -668,7 +668,7 @@ public class DatabaseMapObjectLoader implements MapObjectLoader {
 		}
 	}
 
-	public void saveSiteNodeTypes(List list, boolean force) throws VersionCollisionException, DatabaseException,
+	public void saveSiteNodeTypes(Collection list, boolean force) throws VersionCollisionException, DatabaseException,
 			CommunicationException {
 		SiteNodeTypeDatabase database = (SiteNodeTypeDatabase) MapDatabaseContext.getSiteNodeTypeDatabase();
 		try {
@@ -685,7 +685,7 @@ public class DatabaseMapObjectLoader implements MapObjectLoader {
 		}
 	}
 
-	public void saveTopologicalNodes(List list, boolean force) throws VersionCollisionException, DatabaseException,
+	public void saveTopologicalNodes(Collection list, boolean force) throws VersionCollisionException, DatabaseException,
 			CommunicationException {
 		TopologicalNodeDatabase database = (TopologicalNodeDatabase) MapDatabaseContext.getTopologicalNodeDatabase();
 		try {

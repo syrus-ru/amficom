@@ -1,5 +1,5 @@
 /*
- * $Id: MapStorableObjectPool.java,v 1.5 2005/02/08 12:01:28 bob Exp $
+ * $Id: MapStorableObjectPool.java,v 1.6 2005/02/14 10:30:56 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,9 +8,9 @@
 
 package com.syrus.AMFICOM.map;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Hashtable;
-import java.util.List;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CommunicationException;
@@ -26,7 +26,7 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/02/08 12:01:28 $
+ * @version $Revision: 1.6 $, $Date: 2005/02/14 10:30:56 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -134,17 +134,17 @@ public final class MapStorableObjectPool extends StorableObjectPool {
 		return instance.getStorableObjectImpl(objectId, useLoader);
 	}
 
-	public static List getStorableObjects(List objectIds, boolean useLoader) throws DatabaseException,
+	public static Collection getStorableObjects(Collection objectIds, boolean useLoader) throws DatabaseException,
 			CommunicationException {
 		return instance.getStorableObjectsImpl(objectIds, useLoader);
 	}
 
-	public static List getStorableObjectsByCondition(StorableObjectCondition condition, boolean useLoader)
+	public static Collection getStorableObjectsByCondition(StorableObjectCondition condition, boolean useLoader)
 			throws ApplicationException {
 		return instance.getStorableObjectsByConditionImpl(condition, useLoader);
 	}
 
-	public static List getStorableObjectsByConditionButIds(	List ids,
+	public static Collection getStorableObjectsByConditionButIds(	Collection ids,
 															StorableObjectCondition condition,
 															boolean useLoader) throws ApplicationException {
 		return instance.getStorableObjectsByConditionButIdsImpl(ids, condition, useLoader);
@@ -188,8 +188,8 @@ public final class MapStorableObjectPool extends StorableObjectPool {
 		return storableObject;
 	}
 
-	protected List loadStorableObjects(Short entityCode, List ids) throws DatabaseException, CommunicationException {
-		List storableObjects;
+	protected Collection loadStorableObjects(Short entityCode, Collection ids) throws DatabaseException, CommunicationException {
+		Collection storableObjects;
 		switch (entityCode.shortValue()) {
 			case ObjectEntities.SITE_NODE_TYPE_ENTITY_CODE:
 				storableObjects = mObjectLoader.loadSiteNodeTypes(ids);
@@ -225,47 +225,47 @@ public final class MapStorableObjectPool extends StorableObjectPool {
 		return storableObjects;
 	}
 
-	protected List loadStorableObjectsButIds(StorableObjectCondition condition, List ids) throws DatabaseException,
+	protected Collection loadStorableObjectsButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException,
 			CommunicationException {
-		List loadedList = null;
+		Collection loadedCollection = null;
 		short entityCode = condition.getEntityCode().shortValue();
 		switch (entityCode) {
 			case ObjectEntities.SITE_NODE_TYPE_ENTITY_CODE:
-				loadedList  = mObjectLoader.loadSiteNodeTypesButIds(condition, ids);
+				loadedCollection  = mObjectLoader.loadSiteNodeTypesButIds(condition, ids);
 				break;
 			case ObjectEntities.PHYSICAL_LINK_TYPE_ENTITY_CODE:
-				loadedList  = mObjectLoader.loadPhysicalLinkTypesButIds(condition, ids);
+				loadedCollection  = mObjectLoader.loadPhysicalLinkTypesButIds(condition, ids);
 				break;
 			case ObjectEntities.SITE_NODE_ENTITY_CODE:
-				loadedList  = mObjectLoader.loadSiteNodesButIds(condition, ids);
+				loadedCollection  = mObjectLoader.loadSiteNodesButIds(condition, ids);
 				break;
 			case ObjectEntities.TOPOLOGICAL_NODE_ENTITY_CODE:
-				loadedList  = mObjectLoader.loadTopologicalNodesButIds(condition, ids);
+				loadedCollection  = mObjectLoader.loadTopologicalNodesButIds(condition, ids);
 				break;
 			case ObjectEntities.NODE_LINK_ENTITY_CODE:
-				loadedList  = mObjectLoader.loadNodeLinksButIds(condition, ids);
+				loadedCollection  = mObjectLoader.loadNodeLinksButIds(condition, ids);
 				break;
 			case ObjectEntities.MARK_ENTITY_CODE:
-				loadedList  = mObjectLoader.loadMarksButIds(condition, ids);
+				loadedCollection  = mObjectLoader.loadMarksButIds(condition, ids);
 				break;
 			case ObjectEntities.PHYSICAL_LINK_ENTITY_CODE:
-				loadedList  = mObjectLoader.loadPhysicalLinksButIds(condition, ids);
+				loadedCollection  = mObjectLoader.loadPhysicalLinksButIds(condition, ids);
 				break;
 			case ObjectEntities.COLLECTOR_ENTITY_CODE:
-				loadedList  = mObjectLoader.loadCollectorsButIds(condition, ids);
+				loadedCollection  = mObjectLoader.loadCollectorsButIds(condition, ids);
 				break;
 			case ObjectEntities.MAP_ENTITY_CODE:
-				loadedList  = mObjectLoader.loadMapsButIds(condition, ids);
+				loadedCollection  = mObjectLoader.loadMapsButIds(condition, ids);
 				break;
 			default:
 				Log.errorMessage("MapStorableObjectPool.loadStorableObjectsButIds | Unknown entity: "
 						+ ObjectEntities.codeToString(entityCode));
-				loadedList = null;
+				loadedCollection = null;
 		}
-		return loadedList;
+		return loadedCollection;
 	}
 
-	protected void saveStorableObjects(short code, List list, boolean force) throws VersionCollisionException,
+	protected void saveStorableObjects(short code, Collection list, boolean force) throws VersionCollisionException,
 			DatabaseException, CommunicationException, IllegalDataException {
 		if (!list.isEmpty()) {
 			boolean alone = (list.size() == 1);
@@ -273,55 +273,55 @@ public final class MapStorableObjectPool extends StorableObjectPool {
 			switch (code) {				
 				case ObjectEntities.SITE_NODE_TYPE_ENTITY_CODE:
 					if (alone)
-						mObjectLoader.saveSiteNodeType((SiteNodeType)list.get(0), force);
+						mObjectLoader.saveSiteNodeType((SiteNodeType)list.iterator().next(), force);
 					else
 						mObjectLoader.saveSiteNodeTypes(list, force);
 					break;
 				case ObjectEntities.PHYSICAL_LINK_TYPE_ENTITY_CODE:
 					if (alone)
-						mObjectLoader.savePhysicalLinkType((PhysicalLinkType) list.get(0), force);
+						mObjectLoader.savePhysicalLinkType((PhysicalLinkType) list.iterator().next(), force);
 					else
 						mObjectLoader.savePhysicalLinkTypes(list, force);
 					break;
 				case ObjectEntities.SITE_NODE_ENTITY_CODE:
 					if (alone)
-						mObjectLoader.saveSiteNode((SiteNode)list.get(0), force);
+						mObjectLoader.saveSiteNode((SiteNode)list.iterator().next(), force);
 					else
 						mObjectLoader.saveSiteNodes(list, force);
 					break;
 				case ObjectEntities.TOPOLOGICAL_NODE_ENTITY_CODE:
 					if (alone)
-						mObjectLoader.saveTopologicalNode((TopologicalNode) list.get(0), force);
+						mObjectLoader.saveTopologicalNode((TopologicalNode) list.iterator().next(), force);
 					else
 						mObjectLoader.saveTopologicalNodes(list, force);
 					break;
 				case ObjectEntities.NODE_LINK_ENTITY_CODE:
 					if (alone)
-						mObjectLoader.saveNodeLink((NodeLink)list.get(0), force);
+						mObjectLoader.saveNodeLink((NodeLink)list.iterator().next(), force);
 					else
 						mObjectLoader.saveNodeLinks(list, force);
 					break;
 				case ObjectEntities.MARK_ENTITY_CODE:
 					if (alone)
-						mObjectLoader.saveMark((Mark)list.get(0), force);
+						mObjectLoader.saveMark((Mark)list.iterator().next(), force);
 					else
 						mObjectLoader.saveMarks(list, force);
 					break;
 				case ObjectEntities.PHYSICAL_LINK_ENTITY_CODE:
 					if (alone)
-						mObjectLoader.savePhysicalLink((PhysicalLink)list.get(0), force);
+						mObjectLoader.savePhysicalLink((PhysicalLink)list.iterator().next(), force);
 					else
 						mObjectLoader.savePhysicalLinks(list, force);
 					break;
 				case ObjectEntities.COLLECTOR_ENTITY_CODE:
 					if (alone)
-						mObjectLoader.saveCollector((Collector)list.get(0), force);
+						mObjectLoader.saveCollector((Collector)list.iterator().next(), force);
 					else
 						mObjectLoader.saveCollectors(list, force);
 					break;
 				case ObjectEntities.MAP_ENTITY_CODE:
 					if (alone)
-						mObjectLoader.saveMap((Map)list.get(0), force);
+						mObjectLoader.saveMap((Map)list.iterator().next(), force);
 					else
 						mObjectLoader.saveMaps(list, force);
 					break;
@@ -354,7 +354,7 @@ public final class MapStorableObjectPool extends StorableObjectPool {
 	 	mObjectLoader.delete(id);
 	}
 
-	protected void deleteStorableObjects(List ids) throws DatabaseException, CommunicationException {
+	protected void deleteStorableObjects(Collection ids) throws DatabaseException, CommunicationException {
 		mObjectLoader.delete(ids);
 	}
 
@@ -362,7 +362,7 @@ public final class MapStorableObjectPool extends StorableObjectPool {
 		instance.deleteImpl(id);
 	}
 
-	public static void delete(List ids) throws DatabaseException, CommunicationException, IllegalDataException {
+	public static void delete(Collection ids) throws DatabaseException, CommunicationException, IllegalDataException {
 		instance.deleteImpl(ids);
 	}
 

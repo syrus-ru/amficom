@@ -1,5 +1,5 @@
 /*
- * $Id: SiteNodeDatabase.java,v 1.12 2005/02/11 15:14:51 bob Exp $
+ * $Id: SiteNodeDatabase.java,v 1.13 2005/02/14 10:30:56 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,8 +10,8 @@ package com.syrus.AMFICOM.map;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Collection;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -35,7 +35,7 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/02/11 15:14:51 $
+ * @version $Revision: 1.13 $, $Date: 2005/02/14 10:30:56 $
  * @author $Author: bob $
  * @module map_v1
  */
@@ -187,7 +187,7 @@ public class SiteNodeDatabase extends StorableObjectDatabase {
 	}
 	
 	
-	public void insert(List storableObjects) throws IllegalDataException, CreateObjectException {
+	public void insert(Collection storableObjects) throws IllegalDataException, CreateObjectException {
 		insertEntities(storableObjects);
 		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)GeneralDatabaseContext.getCharacteristicDatabase();
 		try {
@@ -214,7 +214,7 @@ public class SiteNodeDatabase extends StorableObjectDatabase {
 	}
 	
 	
-	public void update(List storableObjects, Identifier modifierId, int updateKind) throws IllegalDataException,
+	public void update(Collection storableObjects, Identifier modifierId, int updateKind) throws IllegalDataException,
 		VersionCollisionException, UpdateObjectException {
 		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)GeneralDatabaseContext.getCharacteristicDatabase();
 		switch (updateKind) {
@@ -232,8 +232,8 @@ public class SiteNodeDatabase extends StorableObjectDatabase {
 	}
 	
 
-	public List retrieveByIds(List ids, String conditions) throws IllegalDataException, RetrieveObjectException {
-		List siteNodes;
+	public Collection retrieveByIds(Collection ids, String conditions) throws IllegalDataException, RetrieveObjectException {
+		Collection siteNodes;
 		if ((ids == null) || (ids.isEmpty()))
 			siteNodes = retrieveByIdsOneQuery(null, conditions);
 		else
@@ -242,7 +242,7 @@ public class SiteNodeDatabase extends StorableObjectDatabase {
         Map characteristicMap = characteristicDatabase.retrieveCharacteristicsByOneQuery(siteNodes, CharacteristicSort.CHARACTERISTIC_SORT_SITE_NODE);
         for (Iterator iter = siteNodes.iterator(); iter.hasNext();) {
             Collector collector = (Collector) iter.next();
-            List characteristics = (List)characteristicMap.get(collector);
+            Collection characteristics = (Collection)characteristicMap.get(collector);
             collector.setCharacteristics0(characteristics);
         }
         return siteNodes;

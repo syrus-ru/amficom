@@ -1,5 +1,5 @@
 /*
- * $Id: PhysicalLinkTypeDatabase.java,v 1.10 2005/02/11 15:14:51 bob Exp $
+ * $Id: PhysicalLinkTypeDatabase.java,v 1.11 2005/02/14 10:30:56 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,7 +10,7 @@ package com.syrus.AMFICOM.map;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.List;
+import java.util.Collection;
 
 import com.syrus.AMFICOM.general.CharacteristicDatabase;
 import com.syrus.AMFICOM.general.CreateObjectException;
@@ -31,7 +31,7 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/02/11 15:14:51 $
+ * @version $Revision: 1.11 $, $Date: 2005/02/14 10:30:56 $
  * @author $Author: bob $
  * @module map_v1
  */
@@ -149,7 +149,7 @@ public class PhysicalLinkTypeDatabase extends StorableObjectDatabase {
 	}
 	
 	
-	public void insert(List storableObjects) throws IllegalDataException, CreateObjectException {
+	public void insert(Collection storableObjects) throws IllegalDataException, CreateObjectException {
 		insertEntities(storableObjects);
 		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)GeneralDatabaseContext.getCharacteristicDatabase();
 		try {
@@ -176,7 +176,7 @@ public class PhysicalLinkTypeDatabase extends StorableObjectDatabase {
 	}
 	
 	
-	public void update(List storableObjects, Identifier modifierId, int updateKind) throws IllegalDataException,
+	public void update(Collection storableObjects, Identifier modifierId, int updateKind) throws IllegalDataException,
 		VersionCollisionException, UpdateObjectException {
 		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)GeneralDatabaseContext.getCharacteristicDatabase();
 		switch (updateKind) {
@@ -194,7 +194,7 @@ public class PhysicalLinkTypeDatabase extends StorableObjectDatabase {
 	}
 	
 
-	public List retrieveByIds(List ids, String conditions) throws IllegalDataException, RetrieveObjectException {
+	public Collection retrieveByIds(Collection ids, String conditions) throws IllegalDataException, RetrieveObjectException {
 		if ((ids == null) || (ids.isEmpty()))
 			return retrieveByIdsOneQuery(null, conditions);
 		return retrieveByIdsOneQuery(ids, conditions);	

@@ -1,5 +1,5 @@
 /**
- * $Id: Collector.java,v 1.22 2005/02/11 15:14:50 bob Exp $
+ * $Id: Collector.java,v 1.23 2005/02/14 10:30:56 bob Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -29,6 +29,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.map.corba.Collector_Transferable;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -41,7 +42,7 @@ import java.util.List;
  * в него линий. Линии не обязаны быть связными.
  * 
  * @author $Author: bob $
- * @version $Revision: 1.22 $, $Date: 2005/02/11 15:14:50 $
+ * @version $Revision: 1.23 $, $Date: 2005/02/14 10:30:56 $
  * @module map_v1
  */
 public class Collector 
@@ -210,7 +211,7 @@ public class Collector
 		this.changed = true;
 	}
 
-	protected void setCharacteristics0(final List characteristics) {
+	protected void setCharacteristics0(final Collection characteristics) {
 		this.characteristics.clear();
 		if (characteristics != null)
 			this.characteristics.addAll(characteristics);
@@ -251,7 +252,7 @@ public class Collector
 		return  Collections.unmodifiableList(this.physicalLinks);
 	}
 	
-	protected void setPhysicalLinks0(List physicalLinks) {
+	protected void setPhysicalLinks0(Collection physicalLinks) {
 		this.physicalLinks.clear();
 		if (physicalLinks != null)
 			this.physicalLinks.addAll(physicalLinks);

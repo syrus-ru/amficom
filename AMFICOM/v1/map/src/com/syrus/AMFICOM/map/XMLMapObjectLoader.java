@@ -1,5 +1,5 @@
 /*
- * $Id: XMLMapObjectLoader.java,v 1.2 2005/02/11 15:14:51 bob Exp $
+ * $Id: XMLMapObjectLoader.java,v 1.3 2005/02/14 10:30:56 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,6 +7,12 @@
  */
 
 package com.syrus.AMFICOM.map;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.Set;
 
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.DatabaseException;
@@ -23,15 +29,8 @@ import com.syrus.AMFICOM.general.StorableObjectXMLDriver;
 import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 
-import java.io.File;
-
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
-
 /**
- * @version $Revision: 1.2 $, $Date: 2005/02/11 15:14:51 $
+ * @version $Revision: 1.3 $, $Date: 2005/02/14 10:30:56 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -54,7 +53,7 @@ public final class XMLMapObjectLoader implements MapObjectLoader {
 		this.mapXML.flush();
 	}
 
-	public void delete(List ids) throws CommunicationException, DatabaseException {
+	public void delete(Collection ids) throws CommunicationException, DatabaseException {
 		try {
 			for (Iterator it = ids.iterator(); it.hasNext();) {
 				Identifier id = (Identifier) it.next();
@@ -86,7 +85,7 @@ public final class XMLMapObjectLoader implements MapObjectLoader {
 		}
 	}
 
-	private List loadStorableObjectButIds(StorableObjectCondition condition, List ids) throws CommunicationException {
+	private Collection loadStorableObjectButIds(StorableObjectCondition condition, Collection ids) throws CommunicationException {
 		try {
 			return this.mapXML.retrieveByCondition(ids, condition);
 		} catch (RetrieveObjectException e) {
@@ -114,7 +113,7 @@ public final class XMLMapObjectLoader implements MapObjectLoader {
 		}
 	}
 
-	private void saveStorableObjects(List storableObjects) throws CommunicationException {
+	private void saveStorableObjects(Collection storableObjects) throws CommunicationException {
 		for (Iterator it = storableObjects.iterator(); it.hasNext();) {
 			StorableObject storableObject = (StorableObject) it.next();
 			this.saveStorableObject(storableObject);
@@ -127,9 +126,9 @@ public final class XMLMapObjectLoader implements MapObjectLoader {
 		return (Collector) this.loadStorableObject(id);
 	}
 
-	public List loadCollectors(List ids) throws DatabaseException, CommunicationException
+	public Collection loadCollectors(Collection ids) throws DatabaseException, CommunicationException
 	{
-		List list = new ArrayList(ids.size());
+		Collection list = new ArrayList(ids.size());
 		for (Iterator it = ids.iterator(); it.hasNext();) {
 			Identifier id = (Identifier) it.next();
 			list.add(this.loadStorableObject(id));
@@ -142,9 +141,9 @@ public final class XMLMapObjectLoader implements MapObjectLoader {
 		return (Map) this.loadStorableObject(id);
 	}
 
-	public List loadMaps(List ids) throws DatabaseException, CommunicationException
+	public Collection loadMaps(Collection ids) throws DatabaseException, CommunicationException
 	{
-		List list = new ArrayList(ids.size());
+		Collection list = new ArrayList(ids.size());
 		for (Iterator it = ids.iterator(); it.hasNext();) {
 			Identifier id = (Identifier) it.next();
 			list.add(this.loadStorableObject(id));
@@ -157,9 +156,9 @@ public final class XMLMapObjectLoader implements MapObjectLoader {
 		return (Mark) this.loadStorableObject(id);
 	}
 
-	public List loadMarks(List ids) throws DatabaseException, CommunicationException
+	public Collection loadMarks(Collection ids) throws DatabaseException, CommunicationException
 	{
-		List list = new ArrayList(ids.size());
+		Collection list = new ArrayList(ids.size());
 		for (Iterator it = ids.iterator(); it.hasNext();) {
 			Identifier id = (Identifier) it.next();
 			list.add(this.loadStorableObject(id));
@@ -172,9 +171,9 @@ public final class XMLMapObjectLoader implements MapObjectLoader {
 		return (NodeLink) this.loadStorableObject(id);
 	}
 
-	public List loadNodeLinks(List ids) throws DatabaseException, CommunicationException
+	public Collection loadNodeLinks(Collection ids) throws DatabaseException, CommunicationException
 	{
-		List list = new ArrayList(ids.size());
+		Collection list = new ArrayList(ids.size());
 		for (Iterator it = ids.iterator(); it.hasNext();) {
 			Identifier id = (Identifier) it.next();
 			list.add(this.loadStorableObject(id));
@@ -187,9 +186,9 @@ public final class XMLMapObjectLoader implements MapObjectLoader {
 		return (PhysicalLink) this.loadStorableObject(id);
 	}
 
-	public List loadPhysicalLinks(List ids) throws DatabaseException, CommunicationException
+	public Collection loadPhysicalLinks(Collection ids) throws DatabaseException, CommunicationException
 	{
-		List list = new ArrayList(ids.size());
+		Collection list = new ArrayList(ids.size());
 		for (Iterator it = ids.iterator(); it.hasNext();) {
 			Identifier id = (Identifier) it.next();
 			list.add(this.loadStorableObject(id));
@@ -202,9 +201,9 @@ public final class XMLMapObjectLoader implements MapObjectLoader {
 		return (PhysicalLinkType) this.loadStorableObject(id);
 	}
 
-	public List loadPhysicalLinkTypes(List ids) throws DatabaseException, CommunicationException
+	public Collection loadPhysicalLinkTypes(Collection ids) throws DatabaseException, CommunicationException
 	{
-		List list = new ArrayList(ids.size());
+		Collection list = new ArrayList(ids.size());
 		for (Iterator it = ids.iterator(); it.hasNext();) {
 			Identifier id = (Identifier) it.next();
 			list.add(this.loadStorableObject(id));
@@ -217,9 +216,9 @@ public final class XMLMapObjectLoader implements MapObjectLoader {
 		return (SiteNode) this.loadStorableObject(id);
 	}
 
-	public List loadSiteNodes(List ids) throws DatabaseException, CommunicationException
+	public Collection loadSiteNodes(Collection ids) throws DatabaseException, CommunicationException
 	{
-		List list = new ArrayList(ids.size());
+		Collection list = new ArrayList(ids.size());
 		for (Iterator it = ids.iterator(); it.hasNext();) {
 			Identifier id = (Identifier) it.next();
 			list.add(this.loadStorableObject(id));
@@ -232,9 +231,9 @@ public final class XMLMapObjectLoader implements MapObjectLoader {
 		return (SiteNodeType) this.loadStorableObject(id);
 	}
 
-	public List loadSiteNodeTypes(List ids) throws DatabaseException, CommunicationException
+	public Collection loadSiteNodeTypes(Collection ids) throws DatabaseException, CommunicationException
 	{
-		List list = new ArrayList(ids.size());
+		Collection list = new ArrayList(ids.size());
 		for (Iterator it = ids.iterator(); it.hasNext();) {
 			Identifier id = (Identifier) it.next();
 			list.add(this.loadStorableObject(id));
@@ -247,9 +246,9 @@ public final class XMLMapObjectLoader implements MapObjectLoader {
 		return (TopologicalNode) this.loadStorableObject(id);
 	}
 
-	public List loadTopologicalNodes(List ids) throws DatabaseException, CommunicationException
+	public Collection loadTopologicalNodes(Collection ids) throws DatabaseException, CommunicationException
 	{
-		List list = new ArrayList(ids.size());
+		Collection list = new ArrayList(ids.size());
 		for (Iterator it = ids.iterator(); it.hasNext();) {
 			Identifier id = (Identifier) it.next();
 			list.add(this.loadStorableObject(id));
@@ -257,47 +256,47 @@ public final class XMLMapObjectLoader implements MapObjectLoader {
 		return list;
 	}
 
-	public List loadCollectorsButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException
+	public Collection loadCollectorsButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException, CommunicationException
 	{
 		return this.loadStorableObjectButIds(condition, ids);
 	}
 
-	public List loadMapsButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException
+	public Collection loadMapsButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException, CommunicationException
 	{
 		return this.loadStorableObjectButIds(condition, ids);
 	}
 
-	public List loadMarksButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException
+	public Collection loadMarksButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException, CommunicationException
 	{
 		return this.loadStorableObjectButIds(condition, ids);
 	}
 
-	public List loadNodeLinksButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException
+	public Collection loadNodeLinksButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException, CommunicationException
 	{
 		return this.loadStorableObjectButIds(condition, ids);
 	}
 
-	public List loadPhysicalLinksButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException
+	public Collection loadPhysicalLinksButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException, CommunicationException
 	{
 		return this.loadStorableObjectButIds(condition, ids);
 	}
 
-	public List loadPhysicalLinkTypesButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException
+	public Collection loadPhysicalLinkTypesButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException, CommunicationException
 	{
 		return this.loadStorableObjectButIds(condition, ids);
 	}
 
-	public List loadSiteNodesButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException
+	public Collection loadSiteNodesButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException, CommunicationException
 	{
 		return this.loadStorableObjectButIds(condition, ids);
 	}
 
-	public List loadSiteNodeTypesButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException
+	public Collection loadSiteNodeTypesButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException, CommunicationException
 	{
 		return this.loadStorableObjectButIds(condition, ids);
 	}
 
-	public List loadTopologicalNodesButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException
+	public Collection loadTopologicalNodesButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException, CommunicationException
 	{
 		return this.loadStorableObjectButIds(condition, ids);
 	}
@@ -356,47 +355,47 @@ public final class XMLMapObjectLoader implements MapObjectLoader {
 		this.mapXML.flush();
 	}
 
-	public void saveCollectors(List list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException
+	public void saveCollectors(Collection list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException
 	{
 		this.saveStorableObjects(list);
 	}
 
-	public void saveMaps(List list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException
+	public void saveMaps(Collection list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException
 	{
 		this.saveStorableObjects(list);
 	}
 
-	public void saveMarks(List list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException
+	public void saveMarks(Collection list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException
 	{
 		this.saveStorableObjects(list);
 	}
 
-	public void saveNodeLinks(List list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException
+	public void saveNodeLinks(Collection list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException
 	{
 		this.saveStorableObjects(list);
 	}
 
-	public void savePhysicalLinks(List list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException
+	public void savePhysicalLinks(Collection list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException
 	{
 		this.saveStorableObjects(list);
 	}
 
-	public void savePhysicalLinkTypes(List list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException
+	public void savePhysicalLinkTypes(Collection list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException
 	{
 		this.saveStorableObjects(list);
 	}
 
-	public void saveSiteNodes(List list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException
+	public void saveSiteNodes(Collection list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException
 	{
 		this.saveStorableObjects(list);
 	}
 
-	public void saveSiteNodeTypes(List list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException
+	public void saveSiteNodeTypes(Collection list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException
 	{
 		this.saveStorableObjects(list);
 	}
 
-	public void saveTopologicalNodes(List list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException
+	public void saveTopologicalNodes(Collection list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException
 	{
 		this.saveStorableObjects(list);
 	}

@@ -1,5 +1,5 @@
 /**
- * $Id: Map.java,v 1.18 2005/02/11 15:14:50 bob Exp $
+ * $Id: Map.java,v 1.19 2005/02/14 10:30:56 bob Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -32,6 +32,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
@@ -41,7 +42,7 @@ import java.util.Set;
  * линиях, коллекторов (объединяющих в себе линии).
  * 
  * @author $Author: bob $
- * @version $Revision: 1.18 $, $Date: 2005/02/11 15:14:50 $
+ * @version $Revision: 1.19 $, $Date: 2005/02/14 10:30:56 $
  * @module map_v1
  */
 public class Map extends StorableObject {
@@ -70,19 +71,19 @@ public class Map extends StorableObject {
 	private String					name;
 	private String					description;
 
-	private List					siteNodes;
-	private List					topologicalNodes;
-	private List					nodeLinks;
-	private List					physicalLinks;
-	private List					marks;
-	private List					collectors;
+	private Collection					siteNodes;
+	private Collection					topologicalNodes;
+	private Collection					nodeLinks;
+	private Collection					physicalLinks;
+	private Collection					marks;
+	private Collection					collectors;
 
 	private StorableObjectDatabase	mapDatabase;
 
 	protected transient Set selectedElements = new HashSet();
 
-	protected transient List allElements = new LinkedList();
-	protected transient List nodeElements = new LinkedList();
+	protected transient Collection allElements = new LinkedList();
+	protected transient Collection nodeElements = new LinkedList();
 
 	public Map(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
@@ -292,17 +293,17 @@ public class Map extends StorableObject {
 				collectorIds);
 	}
 
-	public List getCollectors() {
-		return  Collections.unmodifiableList(this.collectors);
+	public Collection getCollectors() {
+		return  Collections.unmodifiableCollection(this.collectors);
 	}
 	
-	protected void setCollectors0(List collectors) {
+	protected void setCollectors0(Collection collectors) {
 		this.collectors.clear();
 		if (collectors != null)
 			this.collectors.addAll(collectors);
 	}
 	
-	public void setCollectors(List collectors) {
+	public void setCollectors(Collection collectors) {
 		this.setCollectors0(collectors);
 		this.changed = true;
 	}
@@ -333,17 +334,17 @@ public class Map extends StorableObject {
 		this.changed = true;
 	}
 	
-	public List getMarks() {
-		return  Collections.unmodifiableList(this.marks);
+	public Collection getMarks() {
+		return  Collections.unmodifiableCollection(this.marks);
 	}
 	
-	protected void setMarks0(List marks) {
+	protected void setMarks0(Collection marks) {
 		this.marks.clear();
 		if (marks != null)
 			this.marks.addAll(marks);
 	}
 	
-	public void setMarks(List marks) {
+	public void setMarks(Collection marks) {
 		this.setMarks0(marks);
 		this.changed = true;
 	}
@@ -361,63 +362,63 @@ public class Map extends StorableObject {
 		this.changed = true;
 	}
 	
-	public List getNodeLinks() {
-		return  Collections.unmodifiableList(this.nodeLinks);
+	public Collection getNodeLinks() {
+		return  Collections.unmodifiableCollection(this.nodeLinks);
 	}
 	
-	protected void setNodeLinks0(List nodeLinks) {
+	protected void setNodeLinks0(Collection nodeLinks) {
 		this.nodeLinks.clear();
 		if (nodeLinks != null)
 			this.nodeLinks.addAll(nodeLinks);
 	}
 	
-	public void setNodeLinks(List nodeLinks) {
+	public void setNodeLinks(Collection nodeLinks) {
 		this.setNodeLinks0(nodeLinks);
 		this.changed = true;
 	}
 	
-	public List getPhysicalLinks() {
-		return  Collections.unmodifiableList(this.physicalLinks);
+	public Collection getPhysicalLinks() {
+		return  Collections.unmodifiableCollection(this.physicalLinks);
 	}
 	
-	protected void setPhysicalLinks0(List physicalLinks) {
+	protected void setPhysicalLinks0(Collection physicalLinks) {
 		this.physicalLinks.clear();
 		if (physicalLinks != null)
 			this.physicalLinks.addAll(physicalLinks);
 		this.changed = true;
 	}
 	
-	public void setPhysicalLinks(List physicalLinks) {
+	public void setPhysicalLinks(Collection physicalLinks) {
 		this.setPhysicalLinks0(physicalLinks);
 		this.changed = true;
 	}
 	
-	public List getSiteNodes() {
-		return  Collections.unmodifiableList(this.siteNodes);
+	public Collection getSiteNodes() {
+		return  Collections.unmodifiableCollection(this.siteNodes);
 	}
 	
-	protected void setSiteNodes0(List siteNodes) {
+	protected void setSiteNodes0(Collection siteNodes) {
 		this.siteNodes.clear();
 		if (siteNodes != null)
 			this.siteNodes.addAll(siteNodes);
 	}
 	
-	public void setSiteNodes(List siteNodes) {
+	public void setSiteNodes(Collection siteNodes) {
 		this.setSiteNodes0(siteNodes);
 		this.changed = true;
 	}
 	
-	public List getTopologicalNodes() {
-		return  Collections.unmodifiableList(this.topologicalNodes);
+	public Collection getTopologicalNodes() {
+		return  Collections.unmodifiableCollection(this.topologicalNodes);
 	}
 	
-	protected void setTopologicalNodes0(List topologicalNodes) {
+	protected void setTopologicalNodes0(Collection topologicalNodes) {
 		this.topologicalNodes.clear();
 		if (topologicalNodes != null)
 			this.topologicalNodes.addAll(topologicalNodes);
 	}
 	
-	public void setTopologicalNodes(List topologicalNodes) {
+	public void setTopologicalNodes(Collection topologicalNodes) {
 		this.setTopologicalNodes0(topologicalNodes);
 		this.changed = true;
 	}
@@ -444,7 +445,7 @@ public class Map extends StorableObject {
 	 * Получить список всех узловых элементов топологической схемы.
 	 * @return список узлов
 	 */
-	public List getNodes() {
+	public Collection getNodes() {
 		this.nodeElements.clear();
 		this.nodeElements.addAll(this.siteNodes);
 		this.nodeElements.addAll(this.topologicalNodes);
@@ -588,7 +589,7 @@ public class Map extends StorableObject {
 	 * @param node узел
 	 * @return список линий
 	 */
-	public List getPhysicalLinksAt(AbstractNode node) {
+	public Collection getPhysicalLinksAt(AbstractNode node) {
 		LinkedList returnNodeLink = new LinkedList();
 		Iterator e = this.getPhysicalLinks().iterator();
 
@@ -715,7 +716,7 @@ public class Map extends StorableObject {
 	 * Получить список всех топологических элементов карты ({@link MapElement}).
 	 * @return список всех элементов
 	 */
-	public List getAllElements() {
+	public Collection getAllElements() {
 		this.allElements.clear();
 
 		this.allElements.addAll(this.marks);
@@ -726,7 +727,7 @@ public class Map extends StorableObject {
 		this.allElements.addAll(this.nodeLinks);
 		this.allElements.addAll(this.collectors);
 
-		return Collections.unmodifiableList(this.allElements);
+		return Collections.unmodifiableCollection(this.allElements);
 	}
 
 	/**

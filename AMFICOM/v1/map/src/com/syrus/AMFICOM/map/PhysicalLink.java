@@ -1,5 +1,5 @@
 /**
- * $Id: PhysicalLink.java,v 1.28 2005/02/11 15:14:51 bob Exp $
+ * $Id: PhysicalLink.java,v 1.29 2005/02/14 10:30:56 bob Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -12,6 +12,7 @@
 package com.syrus.AMFICOM.map;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -52,7 +53,7 @@ import com.syrus.AMFICOM.map.corba.PhysicalLink_Transferable;
  * тоннель (<code>{@link PhysicalLinkType#TUNNEL}</code>) 
  * и коллектор (<code>{@link PhysicalLinkType#COLLECTOR}</code>).
  * @author $Author: bob $
- * @version $Revision: 1.28 $, $Date: 2005/02/11 15:14:51 $
+ * @version $Revision: 1.29 $, $Date: 2005/02/14 10:30:56 $
  * @module map_v1
  */
 public class PhysicalLink extends StorableObject implements Characterized, TypedObject, MapElement {
@@ -972,20 +973,20 @@ public class PhysicalLink extends StorableObject implements Characterized, Typed
 				ObjectEntities.PHYSICAL_LINK_TYPE_ENTITY_CODE,
 				StorableObjectWrapper.COLUMN_CODENAME);
 			
-			List list = MapStorableObjectPool.getStorableObjectsByCondition(condition, true);
-			if(list == null || list.size() == 0)
+			Collection collection = MapStorableObjectPool.getStorableObjectsByCondition(condition, true);
+			if(collection == null || collection.size() == 0)
 			{
 				typeCodeName = PhysicalLinkType.TUNNEL;
 
 				condition.setValue(typeCodeName);
 				
-				list = MapStorableObjectPool.getStorableObjectsByCondition(condition, true);
-				if(list == null || list.size() == 0)
+				collection = MapStorableObjectPool.getStorableObjectsByCondition(condition, true);
+				if(collection == null || collection.size() == 0)
 				{
 					throw new CreateObjectException("PhysicalLinkType \'" + PhysicalLinkType.TUNNEL + "\' not found");
 				}
 			}
-			physicalLinkType = (PhysicalLinkType ) list.get(0);
+			physicalLinkType = (PhysicalLinkType ) collection.iterator().next();
 
   			AbstractNode startNode = (AbstractNode)
   				MapStorableObjectPool.getStorableObject(

@@ -1,5 +1,5 @@
 /**
- * $Id: SiteNode.java,v 1.20 2005/02/11 15:14:51 bob Exp $
+ * $Id: SiteNode.java,v 1.21 2005/02/14 10:30:56 bob Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -12,6 +12,7 @@
 package com.syrus.AMFICOM.map;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -57,7 +58,7 @@ import com.syrus.AMFICOM.resource.ResourceStorableObjectPool;
  * {@link #city}, {@link #street}, {@link #building} для поиска по 
  * географическим параметрам. 
  * @author $Author: bob $
- * @version $Revision: 1.20 $, $Date: 2005/02/11 15:14:51 $
+ * @version $Revision: 1.21 $, $Date: 2005/02/14 10:30:56 $
  * @module map_v1
  */
 public class SiteNode extends AbstractNode implements TypedObject {
@@ -448,20 +449,20 @@ public class SiteNode extends AbstractNode implements TypedObject {
 						ObjectEntities.SITE_NODE_TYPE_ENTITY_CODE,
 						StorableObjectWrapper.COLUMN_CODENAME);
 				
-				List list = MapStorableObjectPool.getStorableObjectsByCondition(condition, true);
-				if(list == null || list.size() == 0)
+				Collection collection = MapStorableObjectPool.getStorableObjectsByCondition(condition, true);
+				if(collection == null || collection.size() == 0)
 				{
 					typeCodeName = SiteNodeType.BUILDING;
 	
 					condition.setValue(typeCodeName);
 					
-					list = MapStorableObjectPool.getStorableObjectsByCondition(condition, true);
-					if(list == null || list.size() == 0)
+					collection = MapStorableObjectPool.getStorableObjectsByCondition(condition, true);
+					if(collection == null || collection.size() == 0)
 					{
 						throw new CreateObjectException("SiteNodeType \'" + SiteNodeType.BUILDING + "\' not found");
 					}
 				}
-				siteNodeType = (SiteNodeType) list.get(0);
+				siteNodeType = (SiteNodeType) collection.iterator().next();
 
 				Identifier imageId;
 	
@@ -471,20 +472,20 @@ public class SiteNode extends AbstractNode implements TypedObject {
 					ObjectEntities.IMAGE_RESOURCE_ENTITY_CODE,
 					StorableObjectWrapper.COLUMN_CODENAME);
 				
-				list = ResourceStorableObjectPool.getStorableObjectsByCondition(condition, true);
-				if(list == null || list.size() == 0)
+				collection = ResourceStorableObjectPool.getStorableObjectsByCondition(condition, true);
+				if(collection == null || collection.size() == 0)
 				{
 					imageCodeName = SiteNodeType.BUILDING_IMAGE;
 	
 					condition.setValue(imageCodeName);
 					
-					list = ResourceStorableObjectPool.getStorableObjectsByCondition(condition, true);
-					if(list == null || list.size() == 0)
+					collection = ResourceStorableObjectPool.getStorableObjectsByCondition(condition, true);
+					if(collection == null || collection.size() == 0)
 					{
 						throw new CreateObjectException("ImageResource \'" + SiteNodeType.BUILDING_IMAGE + "\' not found");
 					}
 				}
-				imageId = ((AbstractImageResource ) list.get(0)).getId();
+				imageId = ((AbstractImageResource ) collection.iterator().next()).getId();
 
       			return new SiteNode(
       					id,

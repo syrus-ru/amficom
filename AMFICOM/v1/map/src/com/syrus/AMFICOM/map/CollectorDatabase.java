@@ -1,5 +1,5 @@
 /*
- * $Id: CollectorDatabase.java,v 1.14 2005/02/11 15:14:50 bob Exp $
+ * $Id: CollectorDatabase.java,v 1.15 2005/02/14 10:30:56 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,10 +13,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 
 import com.syrus.AMFICOM.general.CharacteristicDatabase;
@@ -43,7 +43,7 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.14 $, $Date: 2005/02/11 15:14:50 $
+ * @version $Revision: 1.15 $, $Date: 2005/02/14 10:30:56 $
  * @author $Author: bob $
  * @module map_v1
  */
@@ -69,13 +69,13 @@ public class CollectorDatabase extends StorableObjectDatabase {
 		collector.setCharacteristics0(characteristicDatabase.retrieveCharacteristics(collector.getId(), CharacteristicSort.CHARACTERISTIC_SORT_COLLECTOR));
 	}
 	
-	private void retrievePhysicalLinks(List collectors) throws RetrieveObjectException, IllegalDataException{
+	private void retrievePhysicalLinks(Collection collectors) throws RetrieveObjectException, IllegalDataException{
 		if (collectors == null || collectors.isEmpty())
 			return;
 		java.util.Map map = super.retrieveLinkedEntityIds(collectors, COLLECTOR_PHYSICAL_LINK, CollectorWrapper.LINK_COLUMN_COLLECTOR_ID, CollectorWrapper.LINK_COLUMN_PHYSICAL_LINK_ID);
 		for (Iterator it = map.keySet().iterator(); it.hasNext();) {
 			Collector collector = (Collector) it.next();
-			List physicalLinkIds = (List)map.get(collector);
+			Collection physicalLinkIds = (Collection)map.get(collector);
 			try {
 				collector.setPhysicalLinks0(MapStorableObjectPool.getStorableObjects(physicalLinkIds, true));
 			} catch (DatabaseException e) {
@@ -170,7 +170,7 @@ public class CollectorDatabase extends StorableObjectDatabase {
 	}
 	
 	
-	public void insert(List storableObjects) throws IllegalDataException, CreateObjectException {
+	public void insert(Collection storableObjects) throws IllegalDataException, CreateObjectException {
 		insertEntities(storableObjects);
 		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)GeneralDatabaseContext.getCharacteristicDatabase();
 		try {
@@ -199,7 +199,7 @@ public class CollectorDatabase extends StorableObjectDatabase {
 	}
 	
 	
-	public void update(List storableObjects, Identifier modifierId, int updateKind) throws IllegalDataException,
+	public void update(Collection storableObjects, Identifier modifierId, int updateKind) throws IllegalDataException,
 		VersionCollisionException, UpdateObjectException {
 		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)GeneralDatabaseContext.getCharacteristicDatabase();
 		switch (updateKind) {
@@ -216,14 +216,14 @@ public class CollectorDatabase extends StorableObjectDatabase {
 		this.updatePhysicalLinks(storableObjects);
 	}	
 	
-	private void updatePhysicalLinks(List collectors) throws UpdateObjectException, IllegalDataException {
+	private void updatePhysicalLinks(Collection collectors) throws UpdateObjectException, IllegalDataException {
 		if (collectors == null || collectors.isEmpty())
 			return;
 		java.util.Map collectorIdPhysicalLinkIdsMap = new HashMap();
 		for (Iterator it = collectors.iterator(); it.hasNext();) {
 			Collector collector = this.fromStorableObject((StorableObject)it.next());
-			List physicalLinks = collector.getPhysicalLinks();
-			List physicalLinkIds = new ArrayList(physicalLinks.size());
+			Collection physicalLinks = collector.getPhysicalLinks();
+			Collection physicalLinkIds = new ArrayList(physicalLinks.size());
 			for (Iterator iter = physicalLinks.iterator(); iter.hasNext();) {
 				PhysicalLink physicalLink = (PhysicalLink) iter.next();
 				physicalLinkIds.add(physicalLink.getId());
@@ -237,7 +237,7 @@ public class CollectorDatabase extends StorableObjectDatabase {
 		this.delete(Collections.singletonList(id));
 	}
 	
-	public void delete(List ids) throws IllegalDataException {	
+	public void delete(Collection ids) throws IllegalDataException {	
 		StringBuffer linkBuffer = new StringBuffer(CollectorWrapper.LINK_COLUMN_COLLECTOR_ID);
 		StringBuffer buffer = new StringBuffer(StorableObjectWrapper.COLUMN_ID);
 		
@@ -309,8 +309,8 @@ public class CollectorDatabase extends StorableObjectDatabase {
 		this.delete(Collections.singletonList(collector.getId()));		
 	}
 
-	public List retrieveByIds(List ids, String conditions) throws IllegalDataException, RetrieveObjectException {
-		List collectors;
+	public Collection retrieveByIds(Collection ids, String conditions) throws IllegalDataException, RetrieveObjectException {
+		Collection collectors;
 		if ((ids == null) || (ids.isEmpty()))
 			collectors = retrieveByIdsOneQuery(null, conditions);
 		else 
@@ -322,7 +322,7 @@ public class CollectorDatabase extends StorableObjectDatabase {
         Map characteristicMap = characteristicDatabase.retrieveCharacteristicsByOneQuery(collectors, CharacteristicSort.CHARACTERISTIC_SORT_COLLECTOR);
         for (Iterator iter = collectors.iterator(); iter.hasNext();) {
             Collector collector = (Collector) iter.next();
-            List characteristics = (List)characteristicMap.get(collector);
+            Collection characteristics = (Collection)characteristicMap.get(collector);
             collector.setCharacteristics0(characteristics);
         }
 		
