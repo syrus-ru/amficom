@@ -1,24 +1,37 @@
 /*
- * $Id: general.idl,v 1.27 2004/11/16 12:23:39 bass Exp $
+ * $Id: general.idl,v 1.28 2004/11/16 15:17:31 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
- * Научно-технический центр.
- * Проект: АМФИКОМ.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
+ *
+ *
+ * Defines that can be specified at compile time:
+ *
+ * SCHEME_COMMON (off by default) -- will turn on compilation of valuetyped
+ *  basic types, such as Identifier and StorableObject;
+ *
+ * NUMERIC_IDENTIFIER (off by default, implies SCHEME_COMMON) -- Identifier will
+ *  hold primitive major and minor fields rather than a string;
+ *
+ * REDUNDANT_DEPS (off by default, implies SCHEME_COMMON) -- StorableObject will
+ *  depend on User.
  */
 
 #ifndef GENERAL_IDL
 #define GENERAL_IDL
 
+#ifdef NUMERIC_IDENTIFIER
+#define SCHEME_COMMON
+#endif // NUMERIC_IDENTIFIER
+
 #ifdef REDUNDANT_DEPS
 #define SCHEME_COMMON
 #endif // REDUNDANT_DEPS
 
-module com
-{
-module syrus
-{
-module AMFICOM
-{
+module com {
+module syrus {
+module AMFICOM {
 
 #ifdef SCHEME_COMMON
 #ifdef REDUNDANT_DEPS
