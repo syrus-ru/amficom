@@ -1,5 +1,5 @@
 /*
- * $Id: ObjectEntities.java,v 1.31 2004/11/30 08:42:34 bob Exp $
+ * $Id: ObjectEntities.java,v 1.32 2004/12/01 10:35:46 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,8 +9,8 @@
 package com.syrus.AMFICOM.general;
 
 /**
- * @version $Revision: 1.31 $, $Date: 2004/11/30 08:42:34 $
- * @author $Author: bob $
+ * @version $Revision: 1.32 $, $Date: 2004/12/01 10:35:46 $
+ * @author $Author: bass $
  * @module general_v1
  */
 public final class ObjectEntities {
@@ -20,19 +20,19 @@ public final class ObjectEntities {
 	public static final String PORTTYPE_ENTITY = "PortType";
 	public static final String MEASUREMENTPORTTYPE_ENTITY = "MeasurementPortType";
 	public static final String LINKTYPE_ENTITY = "LinkType";
-	public static final String CABLETHREADTYPE_ENTITY = "CableThreadType";	
+	public static final String CABLETHREADTYPE_ENTITY = "CableThreadType";
 
 	public static final String PARAMETERTYPE_ENTITY = "ParameterType";
 	public static final String MEASUREMENTTYPE_ENTITY = "MeasurementType";
 	public static final String MNTTYPPARTYPLINK_ENTITY = "MntTypParTypLink";
-	public static final String MNTTYMEASPORTTYPELINK_ENTITY = "MntTypMeasPortTypLink";	
+	public static final String MNTTYMEASPORTTYPELINK_ENTITY = "MntTypMeasPortTypLink";
 	public static final String ANALYSISTYPE_ENTITY = "AnalysisType";
 	public static final String ANATYPPARTYPLINK_ENTITY = "AnaTypParTypLink";
 	public static final String EVALUATIONTYPE_ENTITY = "EvaluationType";
 	public static final String EVATYPPARTYPLINK_ENTITY = "EvaTypParTypLink";
 	//public static final String KISTYPE_ENTITY = "KISType";
 	public static final String TRANSPATHTYPE_ENTITY = "TransmissionPathType";
-	
+
 	public static final String SITE_NODE_TYPE_ENTITY = "SiteNodeType";
 	public static final String PHYSICAL_LINK_TYPE_ENTITY = "PhysicalLinkType";
 
@@ -49,7 +49,7 @@ public final class ObjectEntities {
 	public static final String EQUIPMENTMELINK_ENTITY = "EquipmentMELink";
 	public static final String PORT_ENTITY = "Port";
 	public static final String TRANSPATH_ENTITY = "TransmissionPath";
-	public static final String TRANSPATHMELINK_ENTITY = "TransmissionPathMELink";	
+	public static final String TRANSPATHMELINK_ENTITY = "TransmissionPathMELink";
 	public static final String KIS_ENTITY = "KIS";
 	public static final String MEASUREMENTPORT_ENTITY = "MeasurementPort";
 	public static final String ME_ENTITY = "MonitoredElement";
@@ -87,7 +87,7 @@ public final class ObjectEntities {
 	public static final String SCHEME_PORT_ENTITY = "SchemePort";
 	public static final String SCHEME_PROTO_ELEMENT_ENTITY = "SchemeProtoElement";
 	public static final String SCHEME_PROTO_GROUP_ENTITY = "SchemeProtoGroup";
-	
+
 	/*			Map			*/
 	public static final String SITE_NODE_ENTITY = "SiteNode";
 	public static final String TOPOLOGICAL_NODE_ENTITY = "TopologicalNode";
@@ -96,6 +96,9 @@ public final class ObjectEntities {
 	public static final String PHYSICAL_LINK_ENTITY = "PhysicalLink";
 	public static final String COLLECTOR_ENTITY = "Collector";
 	public static final String MAP_ENTITY = "Map";
+
+	/*       Resource       */
+	public static final String IMAGE_RESOURCE_ENTITY = "ImageResource";
 
 	/*        Updike        */
 	/**
@@ -115,15 +118,14 @@ public final class ObjectEntities {
 	public static final short PARAMETERTYPE_ENTITY_CODE = 0x0005;
 	public static final short MEASUREMENTTYPE_ENTITY_CODE = 0x0006;
 	public static final short ANALYSISTYPE_ENTITY_CODE = 0x0007;
-	public static final short EVALUATIONTYPE_ENTITY_CODE = 0x0008;	
+	public static final short EVALUATIONTYPE_ENTITY_CODE = 0x0008;
 	public static final short LINKTYPE_ENTITY_CODE = 0x0009;
 	//public static final short KISTYPE_ENTITY_CODE = 0x000A;
 	public static final short TRANSPATHTYPE_ENTITY_CODE = 0x000B;
 	public static final short CABLETHREADTYPE_ENTITY_CODE = 0x000C;
-	
+
 	public static final short SITE_NODE_TYPE_ENTITY_CODE = 0x000D;
 	public static final short PHYSICAL_LINK_TYPE_ENTITY_CODE = 0x000E;
-
 
 	/*	Administration 129 -- 256	*/
 
@@ -178,7 +180,7 @@ public final class ObjectEntities {
 
 	/*      Map 641 -- 768                    */
 	public static final short MAP_MIN_ENTITY_CODE = 0x0281;
-	
+
 	public static final short SITE_NODE_ENTITY_CODE = 0x0281;
 	public static final short TOPOLOGICAL_NODE_ENTITY_CODE = 0x0282;
 	public static final short NODE_LINK_ENTITY_CODE = 0x0283;
@@ -186,9 +188,16 @@ public final class ObjectEntities {
 	public static final short PHYSICAL_LINK_ENTITY_CODE = 0x0285;
 	public static final short COLLECTOR_ENTITY_CODE = 0x0286;
 	public static final short MAP_ENTITY_CODE = 0x0287;
-	
+
 	public static final short MAP_MAX_ENTITY_CODE = 0x0300;
-	
+
+	/*      Resource 769 -- 896               */
+	public static final short RESOURCE_MIN_ENTITY_CODE = 0x0301;
+
+	public static final short IMAGE_RESOURCE_ENTITY_CODE = RESOURCE_MIN_ENTITY_CODE;
+
+	public static final short RESOURCE_MAX_ENTITY_CODE = 0x0380;
+
 	/*      Updike 32767                      */
 	public static final short UPDIKE_ENTITY_CODE = Short.MAX_VALUE;
 
@@ -211,7 +220,7 @@ public final class ObjectEntities {
 		else if (entity.equals(MEASUREMENTTYPE_ENTITY)) return MEASUREMENTTYPE_ENTITY_CODE;
 		else if (entity.equals(ANALYSISTYPE_ENTITY)) return ANALYSISTYPE_ENTITY_CODE;
 		else if (entity.equals(EVALUATIONTYPE_ENTITY)) return EVALUATIONTYPE_ENTITY_CODE;
-		
+
 		else if (entity.equals(SITE_NODE_TYPE_ENTITY)) return SITE_NODE_TYPE_ENTITY_CODE;
 		else if (entity.equals(PHYSICAL_LINK_TYPE_ENTITY)) return PHYSICAL_LINK_TYPE_ENTITY_CODE;
 
@@ -273,14 +282,17 @@ public final class ObjectEntities {
 			return SCHEME_PROTO_ELEMENT_ENTITY_CODE;
 		else if (entity.equals(SCHEME_PROTO_GROUP_ENTITY))
 			return SCHEME_PROTO_GROUP_ENTITY_CODE;
-		
+
 		else if (entity.equals(SITE_NODE_ENTITY)) return SITE_NODE_ENTITY_CODE;
 		else if (entity.equals(TOPOLOGICAL_NODE_ENTITY)) return TOPOLOGICAL_NODE_ENTITY_CODE;
 		else if (entity.equals(NODE_LINK_ENTITY)) return NODE_LINK_ENTITY_CODE;
-		else if (entity.equals(MARK_ENTITY)) return MARK_ENTITY_CODE; 
+		else if (entity.equals(MARK_ENTITY)) return MARK_ENTITY_CODE;
 		else if (entity.equals(PHYSICAL_LINK_ENTITY)) return PHYSICAL_LINK_ENTITY_CODE;
 		else if (entity.equals(COLLECTOR_ENTITY)) return COLLECTOR_ENTITY_CODE;
 		else if (entity.equals(MAP_ENTITY)) return MAP_ENTITY_CODE;
+
+		else if (entity.equals(IMAGE_RESOURCE_ENTITY))
+			return IMAGE_RESOURCE_ENTITY_CODE;
 
 		else if (entity.equals(UPDIKE_ENTITY))
 			return UPDIKE_ENTITY_CODE;
@@ -314,11 +326,11 @@ public final class ObjectEntities {
 				return ANALYSISTYPE_ENTITY;
 			case EVALUATIONTYPE_ENTITY_CODE:
 				return EVALUATIONTYPE_ENTITY;
-				
+
 			case SITE_NODE_TYPE_ENTITY_CODE:
 				return SITE_NODE_ENTITY;
 			case PHYSICAL_LINK_TYPE_ENTITY_CODE:
-				return PHYSICAL_LINK_TYPE_ENTITY; 
+				return PHYSICAL_LINK_TYPE_ENTITY;
 
 			case CHARACTERISTIC_ENTITY_CODE:
 				return CHARACTERISTIC_ENTITY;
@@ -404,7 +416,7 @@ public final class ObjectEntities {
 				return SCHEME_PROTO_ELEMENT_ENTITY;
 			case SCHEME_PROTO_GROUP_ENTITY_CODE:
 				return SCHEME_PROTO_GROUP_ENTITY;
-				
+
 			case SITE_NODE_ENTITY_CODE:
 				return SITE_NODE_ENTITY;
 			case TOPOLOGICAL_NODE_ENTITY_CODE:
@@ -419,6 +431,9 @@ public final class ObjectEntities {
 				return COLLECTOR_ENTITY;
 			case MAP_ENTITY_CODE:
 				return MAP_ENTITY;
+
+			case IMAGE_RESOURCE_ENTITY_CODE:
+				return IMAGE_RESOURCE_ENTITY;
 
 			case UPDIKE_ENTITY_CODE:
 				return UPDIKE_ENTITY;
