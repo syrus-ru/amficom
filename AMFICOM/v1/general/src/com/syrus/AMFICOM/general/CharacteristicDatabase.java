@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicDatabase.java,v 1.1 2005/01/13 14:16:11 arseniy Exp $
+ * $Id: CharacteristicDatabase.java,v 1.2 2005/01/17 08:26:35 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,9 +27,9 @@ import com.syrus.util.database.DatabaseString;
 import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/01/13 14:16:11 $
- * @author $Author: arseniy $
- * @module configuration_v1
+ * @version $Revision: 1.2 $, $Date: 2005/01/17 08:26:35 $
+ * @author $Author: bob $
+ * @module general_v1
  */
 
 public class CharacteristicDatabase extends StorableObjectDatabase {
