@@ -1,5 +1,5 @@
 /*
- * $Id: ObjectEntities.java,v 1.49 2005/02/03 19:53:59 arseniy Exp $
+ * $Id: ObjectEntities.java,v 1.50 2005/02/07 09:56:05 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,7 +9,7 @@
 package com.syrus.AMFICOM.general;
 
 /**
- * @version $Revision: 1.49 $, $Date: 2005/02/03 19:53:59 $
+ * @version $Revision: 1.50 $, $Date: 2005/02/07 09:56:05 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -20,7 +20,7 @@ public final class ObjectEntities {
 
 	public static final String EVENTTYPE_ENTITY = "EventType";
 	public static final String EVENTTYPPARTYPLINK_ENTITY = "EventTypParTypLink";
-	public static final String ALARMTYPE_ENTITY = "AlarmType";
+//	public static final String ALARMTYPE_ENTITY = "AlarmType";
 
 	public static final String EQUIPMENTTYPE_ENTITY = "EquipmentType";
 	public static final String PORTTYPE_ENTITY = "PortType";
@@ -52,7 +52,7 @@ public final class ObjectEntities {
 	public static final String EVENT_SOURCE_ENTITY = "EventSource";
 	public static final String EVENT_SOURCE_LINK_ENTITY = "EventSourceLink";
 	public static final String EVENT_ENTITY = "Event";
-	public static final String ALARM_ENTITY = "Alarm";
+//	public static final String ALARM_ENTITY = "Alarm";
 
 	/*	Administration	*/
 	public static final String USER_ENTITY = "User";
@@ -157,10 +157,10 @@ public final class ObjectEntities {
 	public static final short EVENTPARAMETER_ENTITY_CODE = EVENT_MIN_ENTITY_CODE;
 	public static final short EVENT_SOURCE_ENTITY_CODE = 0x0082;
 	public static final short EVENT_ENTITY_CODE = 0x0083;
-	public static final short ALARM_ENTITY_CODE = 0x0084;
+//	public static final short ALARM_ENTITY_CODE = 0x0084;
 
 	public static final short EVENTTYPE_ENTITY_CODE = 0x00C1;
-	public static final short ALARMTYPE_ENTITY_CODE = 0x00C2;
+//	public static final short ALARMTYPE_ENTITY_CODE = 0x00C2;
 
 	public static final short EVENT_MAX_ENTITY_CODE = 0x0100;
 
@@ -310,7 +310,7 @@ public final class ObjectEntities {
 		else if (entity.equals(CHARACTERISTICTYPE_ENTITY)) return CHARACTERISTICTYPE_ENTITY_CODE;
 
 		else if (entity.equals(EVENTTYPE_ENTITY)) return EVENTTYPE_ENTITY_CODE;
-		else if (entity.equals(ALARMTYPE_ENTITY)) return ALARMTYPE_ENTITY_CODE;
+//		else if (entity.equals(ALARMTYPE_ENTITY)) return ALARMTYPE_ENTITY_CODE;
 	
 		else if (entity.equals(EQUIPMENTTYPE_ENTITY)) return EQUIPMENTTYPE_ENTITY_CODE;
 		else if (entity.equals(PORTTYPE_ENTITY)) return PORTTYPE_ENTITY_CODE;
@@ -332,7 +332,7 @@ public final class ObjectEntities {
 		else if (entity.equals(EVENTPARAMETER_ENTITY)) return EVENTPARAMETER_ENTITY_CODE;
 		else if (entity.equals(EVENT_SOURCE_ENTITY)) return EVENT_SOURCE_ENTITY_CODE;
 		else if (entity.equals(EVENT_ENTITY)) return EVENT_ENTITY_CODE;
-		else if (entity.equals(ALARM_ENTITY)) return ALARM_ENTITY_CODE;
+//		else if (entity.equals(ALARM_ENTITY)) return ALARM_ENTITY_CODE;
 
 		else if (entity.equals(USER_ENTITY)) return USER_ENTITY_CODE;
 		else if (entity.equals(DOMAIN_ENTITY)) return DOMAIN_ENTITY_CODE;
@@ -408,8 +408,8 @@ public final class ObjectEntities {
 
 			case EVENTTYPE_ENTITY_CODE:
 				return EVENTTYPE_ENTITY;
-			case ALARMTYPE_ENTITY_CODE:
-				return ALARMTYPE_ENTITY;
+//			case ALARMTYPE_ENTITY_CODE:
+//				return ALARMTYPE_ENTITY;
 
 			case EQUIPMENTTYPE_ENTITY_CODE:
 				return EQUIPMENTTYPE_ENTITY;
@@ -447,8 +447,8 @@ public final class ObjectEntities {
 				return EVENT_SOURCE_ENTITY;
 			case EVENT_ENTITY_CODE:
 				return EVENT_ENTITY;
-			case ALARM_ENTITY_CODE:
-				return ALARM_ENTITY;
+//			case ALARM_ENTITY_CODE:
+//				return ALARM_ENTITY;
 
 			case USER_ENTITY_CODE:
 				return USER_ENTITY;
