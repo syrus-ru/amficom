@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseEventObjectLoader.java,v 1.1 2005/02/04 14:03:08 arseniy Exp $
+ * $Id: DatabaseEventObjectLoader.java,v 1.2 2005/02/07 12:13:01 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,7 +28,7 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/02/04 14:03:08 $
+ * @version $Revision: 1.2 $, $Date: 2005/02/07 12:13:01 $
  * @author $Author: arseniy $
  * @module event_v1
  */
@@ -268,7 +268,7 @@ public class DatabaseEventObjectLoader implements EventObjectLoader {
 		for (Iterator it = map.keySet().iterator(); it.hasNext();) {
 			Short entityCode = (Short) it.next();
 			List list = (List) map.get(entityCode);
-			delete(null, list);
+			this.delete(null, list);
 		}
 	}
 

@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseAdministrationObjectLoader.java,v 1.5 2005/02/04 14:02:21 arseniy Exp $
+ * $Id: DatabaseAdministrationObjectLoader.java,v 1.6 2005/02/07 12:15:38 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,7 +29,7 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/02/04 14:02:21 $
+ * @version $Revision: 1.6 $, $Date: 2005/02/07 12:15:38 $
  * @author $Author: arseniy $
  * @module administration_v1
  */
@@ -439,7 +439,7 @@ public class DatabaseAdministrationObjectLoader implements AdministrationObjectL
 		for (Iterator it = map.keySet().iterator(); it.hasNext();) {
 			Short entityCode = (Short) it.next();
 			List list = (List) map.get(entityCode);
-			delete(null, list);
+			this.delete(null, list);
 		}
 	}
 

@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseMeasurementObjectLoader.java,v 1.34 2005/02/04 14:02:05 arseniy Exp $
+ * $Id: DatabaseMeasurementObjectLoader.java,v 1.35 2005/02/07 12:16:22 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,7 +28,7 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.34 $, $Date: 2005/02/04 14:02:05 $
+ * @version $Revision: 1.35 $, $Date: 2005/02/07 12:16:22 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -1146,7 +1146,7 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 		for (Iterator it = map.keySet().iterator(); it.hasNext();) {
 			Short entityCode = (Short) it.next();
 			List list = (List) map.get(entityCode);
-			delete(null, list);
+			this.delete(null, list);
 		}
 	}
 

@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseConfigurationObjectLoader.java,v 1.31 2005/02/04 13:57:52 arseniy Exp $
+ * $Id: DatabaseConfigurationObjectLoader.java,v 1.32 2005/02/07 12:16:04 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,7 +29,7 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.31 $, $Date: 2005/02/04 13:57:52 $
+ * @version $Revision: 1.32 $, $Date: 2005/02/07 12:16:04 $
  * @author $Author: arseniy $
  * @module config_v1
  */
@@ -1284,7 +1284,7 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
 		for (Iterator it = map.keySet().iterator(); it.hasNext();) {
 			Short entityCode = (Short) it.next();
 			List list = (List) map.get(entityCode);
-			delete(null, list);
+			this.delete(null, list);
 		}
 	}
 
