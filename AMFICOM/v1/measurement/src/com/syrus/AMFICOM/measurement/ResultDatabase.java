@@ -1,5 +1,5 @@
 /*
- * $Id: ResultDatabase.java,v 1.37 2004/11/16 15:48:45 bob Exp $
+ * $Id: ResultDatabase.java,v 1.38 2004/11/17 07:56:31 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -44,7 +44,7 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
 
 /**
- * @version $Revision: 1.37 $, $Date: 2004/11/16 15:48:45 $
+ * @version $Revision: 1.38 $, $Date: 2004/11/17 07:56:31 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -256,8 +256,7 @@ public class ResultDatabase extends StorableObjectDatabase {
 								true);
 
 					action = (Analysis) MeasurementStorableObjectPool
-							.getStorableObject(new Identifier(resultSet
-									.getString(COLUMN_ANALYSIS_ID)), true);
+							.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ANALYSIS_ID), true);
 				} catch (Exception e) {
 					throw new RetrieveObjectException(e);
 				}
@@ -268,8 +267,7 @@ public class ResultDatabase extends StorableObjectDatabase {
 					.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_MEASUREMENT_ID),
 								true);
 					action = (Evaluation) MeasurementStorableObjectPool
-							.getStorableObject(new Identifier(resultSet
-									.getString(COLUMN_EVALUATION_ID)), true);
+							.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_EVALUATION_ID), true);
 				} catch (Exception e) {
 					throw new RetrieveObjectException(e);
 				}
@@ -277,8 +275,7 @@ public class ResultDatabase extends StorableObjectDatabase {
 			case ResultSort._RESULT_SORT_MODELING:
 				try {
 					action = (Modeling) MeasurementStorableObjectPool
-							.getStorableObject(new Identifier(resultSet
-									.getString(COLUMN_MODELING_ID)), true);
+							.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_MODELING_ID), true);
 				} catch (Exception e) {
 					throw new RetrieveObjectException(e);
 				}

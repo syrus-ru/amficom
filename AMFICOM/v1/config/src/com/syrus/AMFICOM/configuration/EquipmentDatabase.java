@@ -1,5 +1,5 @@
 /*
- * $Id: EquipmentDatabase.java,v 1.43 2004/11/16 12:33:17 bob Exp $
+ * $Id: EquipmentDatabase.java,v 1.44 2004/11/17 07:56:25 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -40,7 +40,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.43 $, $Date: 2004/11/16 12:33:17 $
+ * @version $Revision: 1.44 $, $Date: 2004/11/17 07:56:25 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -252,17 +252,17 @@ public class EquipmentDatabase extends StorableObjectDatabase {
             Map epIdMap = new HashMap();
             while (resultSet.next()) {
                 Equipment equipment = null;
-                String equipmentId = resultSet.getString(PortDatabase.COLUMN_EQUIPMENT_ID);
+                Identifier equipmentId = DatabaseIdentifier.getIdentifier(resultSet, PortDatabase.COLUMN_EQUIPMENT_ID);
                 for (Iterator it = equipments.iterator(); it.hasNext();) {
                     Equipment equipmentToCompare = (Equipment) it.next();
-                    if (equipmentToCompare.getId().getIdentifierString().equals(equipmentId)){
+                    if (equipmentToCompare.getId().equals(equipmentId)){
                         equipment = equipmentToCompare;
                         break;
                     }                   
                 }
                 
                 if (equipment == null){
-                    String mesg = "EquipmentDatabase.retrieveEquipmentPortIdsByOneQuery | Cannot found correspond result for '" + equipmentId +"'" ;
+                    String mesg = "EquipmentDatabase.retrieveEquipmentPortIdsByOneQuery | Cannot found correspond result for '" + equipmentId.getIdentifierString() +"'" ;
                     throw new RetrieveObjectException(mesg);
                 }                    
                 
@@ -380,17 +380,17 @@ public class EquipmentDatabase extends StorableObjectDatabase {
             Map meIdMap = new HashMap();
             while (resultSet.next()) {
                 Equipment equipment = null;
-                String equipmentId = resultSet.getString(LINK_COLUMN_EQUIPMENT_ID);
+                Identifier equipmentId = DatabaseIdentifier.getIdentifier(resultSet, LINK_COLUMN_EQUIPMENT_ID);
                 for (Iterator it = equipments.iterator(); it.hasNext();) {
                     Equipment equipmentToCompare = (Equipment) it.next();
-                    if (equipmentToCompare.getId().getIdentifierString().equals(equipmentId)){
+                    if (equipmentToCompare.getId().equals(equipmentId)){
                         equipment = equipmentToCompare;
                         break;
                     }                   
                 }
                 
                 if (equipment == null){
-                    String mesg = "EquipmentDatabase.retrieveEquipmentMEIdsByOneQuery | Cannot found correspond result for '" + equipmentId +"'" ;
+                    String mesg = "EquipmentDatabase.retrieveEquipmentMEIdsByOneQuery | Cannot found correspond result for '" + equipmentId.getIdentifierString() +"'" ;
                     throw new RetrieveObjectException(mesg);
                 }
                     

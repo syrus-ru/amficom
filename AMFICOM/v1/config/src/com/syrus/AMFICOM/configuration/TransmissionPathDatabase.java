@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPathDatabase.java,v 1.26 2004/11/16 12:33:17 bob Exp $
+ * $Id: TransmissionPathDatabase.java,v 1.27 2004/11/17 07:56:25 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -40,7 +40,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.26 $, $Date: 2004/11/16 12:33:17 $
+ * @version $Revision: 1.27 $, $Date: 2004/11/17 07:56:25 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -253,17 +253,17 @@ public class TransmissionPathDatabase extends StorableObjectDatabase {
             Map meIdMap = new HashMap();
             while (resultSet.next()) {
                 TransmissionPath transmissionPath = null;
-                String transmissionPathId = resultSet.getString(LINK_COLUMN_TRANSMISSION_PATH_ID);
+                Identifier transmissionPathId = DatabaseIdentifier.getIdentifier(resultSet, LINK_COLUMN_TRANSMISSION_PATH_ID);
                 for (Iterator it = transmissionPaths.iterator(); it.hasNext();) {
                     TransmissionPath transmissionPathToCompare = (TransmissionPath) it.next();
-                    if (transmissionPathToCompare.getId().getIdentifierString().equals(transmissionPathId)){
+                    if (transmissionPathToCompare.getId().equals(transmissionPathId)){
                         transmissionPath = transmissionPathToCompare;
                         break;
                     }                   
                 }
                 
                 if (transmissionPath == null){
-                    String mesg = "TransmissionPathDatabase.retrieveTransmissionPathMELinkByOneQuery | Cannot found correspond result for '" + transmissionPathId +"'" ;
+                    String mesg = "TransmissionPathDatabase.retrieveTransmissionPathMELinkByOneQuery | Cannot found correspond result for '" + transmissionPathId.getIdentifierString() +"'" ;
                     throw new RetrieveObjectException(mesg);
                 }
                     

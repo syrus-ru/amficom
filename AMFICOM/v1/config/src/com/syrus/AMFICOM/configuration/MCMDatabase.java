@@ -1,5 +1,5 @@
 /*
- * $Id: MCMDatabase.java,v 1.30 2004/11/16 12:33:17 bob Exp $
+ * $Id: MCMDatabase.java,v 1.31 2004/11/17 07:56:25 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -42,7 +42,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.30 $, $Date: 2004/11/16 12:33:17 $
+ * @version $Revision: 1.31 $, $Date: 2004/11/17 07:56:25 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -114,11 +114,11 @@ public class MCMDatabase extends StorableObjectDatabase {
 		int i;
 		try {
 			i  = super.setEntityForPreparedStatement(storableObject, preparedStatement);
-			preparedStatement.setString( ++i, mcm.getDomainId().toString());
+			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, mcm.getDomainId());
 			preparedStatement.setString( ++i, mcm.getName());
 			preparedStatement.setString( ++i, mcm.getDescription());
-			preparedStatement.setString( ++i, mcm.getUserId().toString());
-			preparedStatement.setString( ++i, mcm.getServerId().toString());
+			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, mcm.getUserId());
+			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, mcm.getServerId());
 		}
 		catch (SQLException sqle) {
 			throw new UpdateObjectException("MCMDatabase." + "setEntityForPreparedStatement | Error " + sqle.getMessage(), sqle);
@@ -176,7 +176,7 @@ public class MCMDatabase extends StorableObjectDatabase {
 			Log.debugMessage("MCMDatabase.retrieveKISIds | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql);
 			while (resultSet.next())
-				kiss.add(ConfigurationStorableObjectPool.getStorableObject(new Identifier(resultSet.getString(COLUMN_ID)), true));
+				kiss.add(ConfigurationStorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID), true));
 		}
 		catch (SQLException sqle) {
 			String mesg = "MCMDatabase.retrieveKISIds | Cannot retrieve kis ids for mcm " + mcmIdStr;
@@ -247,28 +247,24 @@ public class MCMDatabase extends StorableObjectDatabase {
             Map kisMap = new HashMap();
             while (resultSet.next()) {
                 MCM mcm = null;
-                String mcmId = resultSet.getString(KISDatabase.COLUMN_MCM_ID);
+                Identifier mcmId = DatabaseIdentifier.getIdentifier(resultSet, KISDatabase.COLUMN_MCM_ID);
                 for (Iterator it = mcms.iterator(); it.hasNext();) {
                     MCM mcmToCompare = (MCM) it.next();
-                    if (mcmToCompare.getId().getIdentifierString().equals(mcmId)){
+                    if (mcmToCompare.getId().equals(mcmId)){
                         mcm = mcmToCompare;
                         break;
                     }                   
                 }
                 
                 if (mcm == null){
-                    String mesg = "MCMDatabase.retrieveKISIdsByOneQuery | Cannot found correspond result for '" + mcmId +"'" ;
+                    String mesg = "MCMDatabase.retrieveKISIdsByOneQuery | Cannot found correspond result for '" + mcmId.getIdentifierString() +"'" ;
                     throw new RetrieveObjectException(mesg);
                 }                    
                 
                                 
                 Identifier kisId = null;
 				try {
-					/**
-	                 * @todo when change DB Identifier model ,change getString() to
-	                 *       getLong()
-	                 */
-					kisId = new Identifier(resultSet.getString(COLUMN_ID));
+					kisId = DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID);
 					KIS kis = (KIS)ConfigurationStorableObjectPool.getStorableObject(kisId, true);
 					List kiss = (List)kisMap.get(mcm);
 	                if (kiss == null){

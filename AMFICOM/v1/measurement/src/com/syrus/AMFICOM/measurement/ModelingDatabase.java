@@ -1,5 +1,5 @@
 /*
- * $Id: ModelingDatabase.java,v 1.10 2004/11/16 15:48:45 bob Exp $
+ * $Id: ModelingDatabase.java,v 1.11 2004/11/17 07:56:31 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,7 +33,7 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2004/11/16 15:48:45 $
+ * @version $Revision: 1.11 $, $Date: 2004/11/17 07:56:31 $
  * @author $Author: bob $
  * @module module_name
  */
@@ -107,7 +107,10 @@ public class ModelingDatabase extends StorableObjectDatabase {
         	Identifier monitoredElementId = modeling.getMonitoredElementId();
         	String schemePathId = modeling.getSchemePathId();
             preparedStatement.setString(++i, modeling.getName());            
-            DatabaseIdentifier.setIdentifier(preparedStatement, ++i, monitoredElementId);            
+            DatabaseIdentifier.setIdentifier(preparedStatement, ++i, monitoredElementId);     
+            /**
+             * @TODO during schemePathId use old identifier as {@link java.lang.String} use setString, fix after modifications
+             */
             preparedStatement.setString(++i, (schemePathId != null) ? schemePathId : "");
             /**
              * TODO other fields!!!
@@ -159,6 +162,9 @@ public class ModelingDatabase extends StorableObjectDatabase {
 							   DatabaseIdentifier.getIdentifier(resultSet, COLUMN_MODIFIER_ID),
 							   DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_NAME)),
                                meId,
+                               /**
+                                * @TODO during schemePathId use old identifier as {@link java.lang.String} use getString, fix after modifications
+                                */
 							   resultSet.getString(COLUMN_SCHEME_PATH_ID),
 							   measurementType,
 							   argumentSet,

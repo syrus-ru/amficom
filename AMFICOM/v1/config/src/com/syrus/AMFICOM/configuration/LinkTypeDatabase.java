@@ -1,5 +1,5 @@
 /*
- * $Id: LinkTypeDatabase.java,v 1.5 2004/11/16 12:33:17 bob Exp $
+ * $Id: LinkTypeDatabase.java,v 1.6 2004/11/17 07:56:25 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,7 +32,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2004/11/16 12:33:17 $
+ * @version $Revision: 1.6 $, $Date: 2004/11/17 07:56:25 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -144,15 +144,15 @@ public class LinkTypeDatabase extends StorableObjectDatabase {
 		}
 		linkType.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
 									DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),									
-									DatabaseIdentifier.getIdentifier(resultSet,COLUMN_CREATOR_ID),
-									DatabaseIdentifier.getIdentifier(resultSet,COLUMN_MODIFIER_ID),
+									DatabaseIdentifier.getIdentifier(resultSet, COLUMN_CREATOR_ID),
+									DatabaseIdentifier.getIdentifier(resultSet, COLUMN_MODIFIER_ID),
 									DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_CODENAME)),
 									DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_DESCRIPTION)),
 									DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_NAME)),
 									resultSet.getInt(COLUMN_SORT),
 									DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_MANUFACTURER)),
 									DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_MANUFACTURER_CODE)),									
-									DatabaseIdentifier.getIdentifier(resultSet,COLUMN_IMAGE_ID));
+									DatabaseIdentifier.getIdentifier(resultSet, COLUMN_IMAGE_ID));
 
 		
 		return linkType;

@@ -1,5 +1,5 @@
 /*
- * $Id: MonitoredElementDatabase.java,v 1.26 2004/11/16 12:33:17 bob Exp $
+ * $Id: MonitoredElementDatabase.java,v 1.27 2004/11/17 07:56:25 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -39,7 +39,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.26 $, $Date: 2004/11/16 12:33:17 $
+ * @version $Revision: 1.27 $, $Date: 2004/11/17 07:56:25 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -282,17 +282,17 @@ public class MonitoredElementDatabase extends StorableObjectDatabase {
             Map meIdMap = new HashMap();
             while (resultSet.next()) {
                 MonitoredElement monitoredElement = null;
-                String monitoredElemntId = resultSet.getString(LINK_COLUMN_MONITORED_ELEMENT_ID);
+                Identifier monitoredElemntId = DatabaseIdentifier.getIdentifier(resultSet, LINK_COLUMN_MONITORED_ELEMENT_ID);
                 for (Iterator it = monitoredElementWithEquipmentList.iterator(); it.hasNext();) {
                     MonitoredElement monitoredElementToCompare = (MonitoredElement) it.next();
-                    if (monitoredElementToCompare.getId().getIdentifierString().equals(monitoredElemntId)){
+                    if (monitoredElementToCompare.getId().equals(monitoredElemntId)){
                         monitoredElement = monitoredElementToCompare;
                         break;
                     }                   
                 }
                 
                 if (monitoredElement == null){
-                    String mesg = "MonitoredElementDatabase.retrieveEquipmentIdsByOneQuery | Cannot found correspond result for '" + monitoredElemntId +"'" ;
+                    String mesg = "MonitoredElementDatabase.retrieveEquipmentIdsByOneQuery | Cannot found correspond result for '" + monitoredElemntId.getIdentifierString() +"'" ;
                     throw new RetrieveObjectException(mesg);
                 }                    
                 
@@ -368,17 +368,17 @@ public class MonitoredElementDatabase extends StorableObjectDatabase {
             Map tpIdMap = new HashMap();
             while (resultSet.next()) {
                 MonitoredElement monitoredElement = null;
-                String monitoredElemntId = resultSet.getString(LINK_COLUMN_MONITORED_ELEMENT_ID);
+                Identifier monitoredElemntId = DatabaseIdentifier.getIdentifier(resultSet, LINK_COLUMN_MONITORED_ELEMENT_ID);
                 for (Iterator it = transmissionPathList.iterator(); it.hasNext();) {
                     MonitoredElement monitoredElementToCompare = (MonitoredElement) it.next();
-                    if (monitoredElementToCompare.getId().getIdentifierString().equals(monitoredElemntId)){
+                    if (monitoredElementToCompare.getId().equals(monitoredElemntId)){
                         monitoredElement = monitoredElementToCompare;
                         break;
                     }                   
                 }
                 
                 if (monitoredElement == null){
-                    String mesg = "MonitoredElementDatabase.retrieveTransmissionPathListIdsByOneQuery | Cannot found correspond result for '" + monitoredElemntId +"'" ;
+                    String mesg = "MonitoredElementDatabase.retrieveTransmissionPathListIdsByOneQuery | Cannot found correspond result for '" + monitoredElemntId.getIdentifierString() +"'" ;
                     throw new RetrieveObjectException(mesg);
                 }
                     

@@ -1,5 +1,5 @@
 /*
- * $Id: UserDatabase.java,v 1.22 2004/11/16 12:33:17 bob Exp $
+ * $Id: UserDatabase.java,v 1.23 2004/11/17 07:56:25 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,7 +30,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.22 $, $Date: 2004/11/16 12:33:17 $
+ * @version $Revision: 1.23 $, $Date: 2004/11/17 07:56:25 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -107,8 +107,8 @@ public class UserDatabase extends StorableObjectDatabase {
 							DatabaseIdentifier.getIdentifier(resultSet, COLUMN_MODIFIER_ID),							
 							DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_LOGIN)),
 							resultSet.getInt(COLUMN_SORT),				
-							DatabaseString.fromQuerySubString(resultSet.getString(EquipmentDatabase.COLUMN_NAME)),
-							DatabaseString.fromQuerySubString(resultSet.getString(EquipmentDatabase.COLUMN_DESCRIPTION)));
+							DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_NAME)),
+							DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_DESCRIPTION)));
 		return user;
 	}
 

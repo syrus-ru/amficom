@@ -1,5 +1,5 @@
 /*
- * $Id: KISDatabase.java,v 1.36 2004/11/16 12:33:17 bob Exp $
+ * $Id: KISDatabase.java,v 1.37 2004/11/17 07:56:25 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -39,7 +39,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.36 $, $Date: 2004/11/16 12:33:17 $
+ * @version $Revision: 1.37 $, $Date: 2004/11/17 07:56:25 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -135,14 +135,14 @@ public class KISDatabase extends StorableObjectDatabase {
 			Identifier equipmentId = kis.getEquipmentId();
 			Identifier mcmId = kis.getMCMId();
 			i = super.setEntityForPreparedStatement(storableObject, preparedStatement);
-			preparedStatement.setString( ++i , kis.getDomainId().getCode());
-			preparedStatement.setString( ++i, kis.getType().getId().getCode());
+			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, kis.getDomainId());
+			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, kis.getType().getId());
 			preparedStatement.setString( ++i, kis.getName());
 			preparedStatement.setString( ++i, kis.getDescription());
 			preparedStatement.setString( ++i, kis.getHostName());
 			preparedStatement.setInt( ++i, kis.getTCPPort());
-			preparedStatement.setString( ++i, equipmentId != null ? equipmentId.getCode() : "");
-			preparedStatement.setString( ++i, mcmId != null ? mcmId.getCode() : "");            
+			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, equipmentId);
+			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, mcmId);
 		}
 		catch (SQLException sqle) {
 			throw new UpdateObjectException("KISDatabase." + "setEntityForPreparedStatement | Error " + sqle.getMessage(), sqle);
@@ -167,7 +167,7 @@ public class KISDatabase extends StorableObjectDatabase {
 		}
 		KISType kisType;
 		try {
-			kisType = (KISType)ConfigurationStorableObjectPool.getStorableObject(new Identifier(resultSet.getString(COLUMN_TYPE_ID)), true);
+			kisType = (KISType)ConfigurationStorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_TYPE_ID), true);
 		}
 		catch (ApplicationException ae) {
 			throw new RetrieveObjectException(ae);
@@ -205,7 +205,7 @@ public class KISDatabase extends StorableObjectDatabase {
 			Log.debugMessage("KISDatabase.retrieveKISMeasurementPortIds | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql);
 			while (resultSet.next()) {
-				measurementPortIds.add(new Identifier(resultSet.getString(COLUMN_ID)));
+				measurementPortIds.add(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID));
 			}
 		}
 		catch (SQLException sqle) {
@@ -279,17 +279,17 @@ public class KISDatabase extends StorableObjectDatabase {
 			Map mpIdMap = new HashMap();
 			while (resultSet.next()) {
 				KIS kis = null;
-				String kisId = resultSet.getString(MeasurementPortDatabase.COLUMN_KIS_ID);
+				Identifier kisId = DatabaseIdentifier.getIdentifier(resultSet, MeasurementPortDatabase.COLUMN_KIS_ID);
 				for (Iterator it = kiss.iterator(); it.hasNext();) {
 					KIS kisToCompare = (KIS) it.next();
-					if (kisToCompare.getId().getIdentifierString().equals(kisId)) {
+					if (kisToCompare.getId().equals(kisId)) {
 						kis = kisToCompare;
 						break;
 					}
 				}
 
 				if (kis == null) {
-					String mesg = "KISDatabase.retrieveKISMeasurementPortIdsByOneQuery | Cannot found correspond result for '" + kisId +"'" ;
+					String mesg = "KISDatabase.retrieveKISMeasurementPortIdsByOneQuery | Cannot found correspond result for '" + kisId.getIdentifierString() +"'" ;
 					throw new RetrieveObjectException(mesg);
 				}
 
@@ -420,17 +420,17 @@ public class KISDatabase extends StorableObjectDatabase {
 			Map mpIdMap = new HashMap();
 			while (resultSet.next()) {
 				KIS kis = null;
-				String kisId = resultSet.getString(MeasurementPortDatabase.COLUMN_KIS_ID);
+				Identifier kisId = DatabaseIdentifier.getIdentifier(resultSet, MeasurementPortDatabase.COLUMN_KIS_ID);
 				for (Iterator it = kiss.iterator(); it.hasNext();) {
 					KIS kisToCompare = (KIS) it.next();
-					if (kisToCompare.getId().getIdentifierString().equals(kisId)) {
+					if (kisToCompare.getId().equals(kisId)) {
 						kis = kisToCompare;
 						break;
 					}
 				}
 
 				if (kis == null) {
-					String mesg = "KISDatabase.retrieveKISMeasurementPortIdsByOneQuery | Cannot found correspond result for '" + kisId +"'" ;
+					String mesg = "KISDatabase.retrieveKISMeasurementPortIdsByOneQuery | Cannot found correspond result for '" + kisId.getIdentifierString() +"'" ;
 					throw new RetrieveObjectException(mesg);
 				}
 

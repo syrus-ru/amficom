@@ -1,5 +1,5 @@
 /*
- * $Id: LinkDatabase.java,v 1.6 2004/11/16 12:33:17 bob Exp $
+ * $Id: LinkDatabase.java,v 1.7 2004/11/17 07:56:25 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,7 +33,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2004/11/16 12:33:17 $
+ * @version $Revision: 1.7 $, $Date: 2004/11/17 07:56:25 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -143,7 +143,7 @@ public class LinkDatabase extends StorableObjectDatabase {
 		try {
 			i = super.setEntityForPreparedStatement(storableObject, preparedStatement);
 			Identifier linkId = link.getLinkId();
-			preparedStatement.setString( ++i , link.getDomainId().getCode());
+			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, link.getDomainId());
 			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, link.getType().getId());
 			preparedStatement.setInt( ++i, link.getSort().value());
 			preparedStatement.setString( ++i, link.getName());
