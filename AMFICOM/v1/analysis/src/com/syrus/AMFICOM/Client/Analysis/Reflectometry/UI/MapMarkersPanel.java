@@ -246,18 +246,18 @@ public class MapMarkersPanel extends ThresholdsPanel
 	}
 
 	protected void setPaintMode(boolean useXOR)
-{
-	if (useXOR)
 	{
-		paintMarkerXOR = true;
-		parent.repaint();
+		if (useXOR)
+		{
+			paintMarkerXOR = true;
+			parent.repaint();
+		}
 	}
-}
 
-protected void removePaintMode(boolean useXOR)
-{
-	paintMarkerXOR = false;
-	parent.repaint();
+	protected void removePaintMode(boolean useXOR)
+	{
+		paintMarkerXOR = false;
+		parent.repaint();
 	}
 
 	public void removeAllMarkers()

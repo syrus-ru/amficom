@@ -275,7 +275,7 @@ class AnalysisToolBar extends TraceEventsToolBar
 			group.add(button);
 		}
 
-		lossTButton.doClick();
+		noAnalysisTButton.doClick();
 		buttons.putAll(super.createGraphButtons());
 		return buttons;
 	}
@@ -283,40 +283,19 @@ class AnalysisToolBar extends TraceEventsToolBar
 	void lossTButton_actionPerformed(ActionEvent e)
 	{
 		AnalysisLayeredPanel panel = (AnalysisLayeredPanel)super.panel;
-		if (!lossTButton.isSelected())
-		{
-			lossTButton.setSelected(true);
-			return;
-		}
 		panel.setAnalysisType (AnalysisLayeredPanel.LOSS_ANALYSIS);
-		reflectionTButton.setSelected(false);
-		noAnalysisTButton.setSelected(false);
 	}
 
 	void reflectionTButton_actionPerformed(ActionEvent e)
 	{
 		AnalysisLayeredPanel panel = (AnalysisLayeredPanel)super.panel;
-		if(!reflectionTButton.isSelected())
-		{
-			reflectionTButton.setSelected(true);
-			return;
-		}
 		panel.setAnalysisType (AnalysisLayeredPanel.REFLECTION_ANALYSIS);
-		lossTButton.setSelected(false);
-		noAnalysisTButton.setSelected(false);
 	}
 
 	void noAnalysisTButton_actionPerformed(ActionEvent e)
 	{
 		AnalysisLayeredPanel panel = (AnalysisLayeredPanel)super.panel;
-		if (!noAnalysisTButton.isSelected())
-		{
-			noAnalysisTButton.setSelected(true);
-			return;
-		}
 		panel.setAnalysisType (AnalysisLayeredPanel.NO_ANALYSIS);
-		lossTButton.setSelected(false);
-		reflectionTButton.setSelected(false);
 	}
 
 	void centerAButton_actionPerformed(ActionEvent e)

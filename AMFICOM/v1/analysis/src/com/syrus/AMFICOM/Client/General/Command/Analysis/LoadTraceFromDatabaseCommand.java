@@ -1,7 +1,7 @@
 package com.syrus.AMFICOM.Client.General.Command.Analysis;
 
 import java.awt.Cursor;
-
+import javax.swing.*;
 
 import com.syrus.AMFICOM.Client.Analysis.*;
 import com.syrus.AMFICOM.Client.General.Checker;
@@ -71,14 +71,15 @@ public class LoadTraceFromDatabaseCommand extends VoidCommand
 
 
 		ReflectogrammLoadDialog dialog;
-		if(Pool.get("dialog", "TraceLoadDialog") == null)
+		JFrame parent = Environment.getActiveWindow();
+		if(Pool.get("dialog", parent.getName()) != null)
 		{
-			dialog = new ReflectogrammLoadDialog (this.aContext);
-			Pool.put("dialog", "TraceLoadDialog", dialog);
+			dialog = (ReflectogrammLoadDialog)Pool.get("dialog", parent.getName());
 		}
 		else
 		{
-			dialog = (ReflectogrammLoadDialog)Pool.get("dialog", "TraceLoadDialog");
+			dialog = new ReflectogrammLoadDialog (aContext);
+			Pool.put("dialog", parent.getName(), dialog);
 		}
 
 		//Environment.getActiveWindow()

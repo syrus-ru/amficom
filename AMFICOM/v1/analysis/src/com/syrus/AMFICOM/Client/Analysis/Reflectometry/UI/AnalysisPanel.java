@@ -208,7 +208,51 @@ public class AnalysisPanel extends MapMarkersPanel
 				}
 			}
 			else
-				parent.repaint();
+			{
+				//repaint marker
+				int x = Math.min(tmppos.x, currpos.x) - Math.round(marker_w) - 1;
+				int x2 = Math.max(tmppos.x, currpos.x) + Math.round(marker_w) + 1;
+				parent.repaint(x, 0, x2 - x, parent.getHeight());
+				//repaint marker label
+				int width = g.getFontMetrics().stringWidth(moving_marker.name) + 3;
+				int height = g.getFontMetrics().getHeight();
+				parent.repaint(x, 10, x2 - x + width, height);
+
+				if (moving_marker.equals(markerA))
+				{
+					if (loss_analysis)
+					{
+						int delta_left = currpos.x - index2coord(lines[0].point[0]) + 5;
+						x = x - delta_left;
+						int delta_right = index2coord(lines[1].point[1]) - currpos.x + 5;
+						x2 = x2 + delta_right;
+
+						int y1 = lindraw(lines[0].factor[0], lines[0].factor[1], lines[0].point[0]);
+						int y2 = lindraw(lines[0].factor[0], lines[0].factor[1], lines[0].point[1]);
+						int y3 = lindraw(lines[1].factor[0], lines[1].factor[1], lines[1].point[0]);
+						int y4 = lindraw(lines[1].factor[0], lines[1].factor[1], lines[1].point[1]);
+
+						parent.repaint(x, Math.min(Math.min(y1, y2), Math.min(y3, y4)),
+													 x2 - x, Math.max(Math.max(y1, y2), Math.max(y3, y4)));
+					}
+					if (reflection_analysis)
+					{
+						int delta_left = currpos.x - index2coord(lines[0].point[0]) + 5;
+						x = x - delta_left;
+						int delta_right = index2coord(lines[1].point[1]) - currpos.x + 5;
+						x2 = x2 + delta_right;
+
+						int y1 = lindraw(lines[0].factor[0], lines[0].factor[1], lines[0].point[0]);
+						int y2 = lindraw(lines[0].factor[0], lines[0].factor[1], lines[0].point[1]);
+						int y3 = (int)((max_y - y[lines[1].point[0]] - top)*scale_y);
+
+						parent.repaint(x, Math.min(Math.min(y1, y2), y3),
+													 x2 - x, Math.max(Math.max(y1, y2), y3));
+					}
+
+				}
+
+			}
 
 			updAnalysisMarkerInfo();
 /*		if (markers_pair_moving)
@@ -247,9 +291,22 @@ public class AnalysisPanel extends MapMarkersPanel
 						paint_reflection_ana(g);
 				}
 				else
-					parent.repaint();
-
-				return;
+				{
+					//parent.repaint();
+					if (loss_analysis)
+					{
+						int x = Math.min(index2coord(lines[0].point[0]), tmppos.x) - 5;
+						int x2 = Math.max(index2coord(lines[1].point[1]), tmppos.x) + 8;
+						parent.repaint(x, 0, x2 - x, parent.getHeight());
+					}
+					if (reflection_analysis)
+					{
+						int x = Math.min(index2coord(lines[0].point[0]), tmppos.x) - 5;
+						int x2 = Math.max(index2coord(lines[1].point[0]), tmppos.x) + 8;
+						parent.repaint(x, 0, x2 - x, parent.getHeight());
+					}
+					return;
+				}
 			}
 		}//else if
 

@@ -1,49 +1,20 @@
 package com.syrus.AMFICOM.Client.Analysis;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.Image;
-import java.awt.Toolkit;
+import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.util.Enumeration;
-import java.util.Iterator;
-import java.util.Hashtable;
-import java.util.Vector;
+import java.util.*;
 
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import com.syrus.AMFICOM.analysis.*;
-import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
-import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
-import com.syrus.AMFICOM.Client.General.Event.OperationListener;
-import com.syrus.AMFICOM.Client.General.Event.TreeDataSelectionEvent;
+import javax.swing.*;
+
+import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.Model.Environment;
-import com.syrus.AMFICOM.Client.General.UI.ObjectResourceTreeModel;
-import com.syrus.AMFICOM.Client.General.UI.ObjectResourceTreeNode;
-import com.syrus.AMFICOM.Client.General.UI.UniTreePanel;
-import com.syrus.AMFICOM.Client.Resource.ConfigDataSourceImage;
-import com.syrus.AMFICOM.Client.Resource.DataSet;
-import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
-import com.syrus.AMFICOM.Client.Resource.ObjectResource;
-import com.syrus.AMFICOM.Client.Resource.ObjectResourceSorter;
-import com.syrus.AMFICOM.Client.Resource.Pool;
-import com.syrus.AMFICOM.Client.Resource.SurveyDataSourceImage;
+import com.syrus.AMFICOM.Client.General.Model.*;
+import com.syrus.AMFICOM.Client.General.UI.*;
+import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.Resource.ISM.MonitoredElement;
-import com.syrus.AMFICOM.Client.Resource.Result.Modeling;
-import com.syrus.AMFICOM.Client.Resource.Result.Parameter;
-import com.syrus.AMFICOM.Client.Resource.Result.Result;
-import com.syrus.AMFICOM.Client.Resource.Result.Test;
-
+import com.syrus.AMFICOM.Client.Resource.Result.*;
 import com.syrus.AMFICOM.analysis.dadara.ReflectogramEvent;
-import com.syrus.io.BellcoreReader;
-import com.syrus.io.BellcoreStructure;
+import com.syrus.io.*;
 
 public class ReflectogrammLoadDialog extends JDialog implements OperationListener
 {
@@ -555,7 +526,7 @@ class ReflectogrammTreeModel extends ObjectResourceTreeModel
 					for(Enumeration e = h.elements(); e.hasMoreElements();)
 					{
 						Modeling m = (Modeling)e.nextElement();
-						if(m.getTypeId().equals("optprognosis") && m.getDomainId().equals(domainID))
+						if(m.getTypeId().equals("optprognosis"))// && m.getDomainId().equals(domainID))
 						{
 							String resultID = new SurveyDataSourceImage(dsi).GetModelingResult(m.getId());
 							v.add(resultID);
@@ -573,7 +544,7 @@ class ReflectogrammTreeModel extends ObjectResourceTreeModel
 					for(Enumeration e = h.elements(); e.hasMoreElements();)
 					{
 						Modeling m = (Modeling)e.nextElement();
-						if(m.getTypeId().equals(AnalysisUtil.DADARA) && m.getDomainId().equals(domainID))
+						if(m.getTypeId().equals(AnalysisUtil.DADARA))// && m.getDomainId().equals(domainID))
 						{
 							String resultID = new SurveyDataSourceImage(dsi).GetModelingResult(m.getId());
 							v.add(resultID);
@@ -756,7 +727,7 @@ class ReflectogrammTreeModel extends ObjectResourceTreeModel
 						for(Enumeration e = ht.elements(); e.hasMoreElements(); )
 						{
 							Test t = (Test)e.nextElement();
-							if(t.monitored_element_id.equals(me.id) && t.getDomainId().equals(domainID))
+							if(t.monitored_element_id.equals(me.id))// && t.getDomainId().equals(domainID))
 							{
 								testsHt.put(t.id, t);
 							}
