@@ -1,5 +1,5 @@
 /**
- * $Id: DeleteNodeLinkCommandBundle.java,v 1.12 2005/02/01 11:34:56 krupenn Exp $
+ * $Id: DeleteNodeLinkCommandBundle.java,v 1.13 2005/02/01 13:29:56 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -34,7 +34,7 @@ import java.util.Iterator;
  * состоит из последовательности атомарных действий
  * 
  * 
- * @version $Revision: 1.12 $, $Date: 2005/02/01 11:34:56 $
+ * @version $Revision: 1.13 $, $Date: 2005/02/01 13:29:56 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -347,9 +347,7 @@ public class DeleteNodeLinkCommandBundle extends MapActionCommandBundle
 						physicalLink.getStartNode(),
 						physicalLink.getEndNode());
 				unbound.setCablePath(cpath);
-				CableController cableController = (CableController )
-					getLogicalNetLayer().getMapViewController().getController(cpath);
-				cpath.addLink(unbound, cableController.generateCCI(unbound));
+				cpath.addLink(unbound, CableController.generateCCI(unbound));
 			}
 		}
 

@@ -1,5 +1,5 @@
 /**
- * $Id: BindPhysicalNodeToSiteCommandBundle.java,v 1.13 2005/02/01 11:34:55 krupenn Exp $
+ * $Id: BindPhysicalNodeToSiteCommandBundle.java,v 1.14 2005/02/01 13:29:56 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -32,7 +32,7 @@ import java.util.Iterator;
  *  принадлежит данный узел, делится на 2 части
  * 
  * 
- * @version $Revision: 1.13 $, $Date: 2005/02/01 11:34:55 $
+ * @version $Revision: 1.14 $, $Date: 2005/02/01 13:29:56 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -123,11 +123,9 @@ public class BindPhysicalNodeToSiteCommandBundle extends MapActionCommandBundle
 
 		// single cpath, as long as link is UnboundLink
 		CablePath cpath = (CablePath)(mapView.getCablePaths(link).get(0));
-		CableController cableController = (CableController )
-			getLogicalNetLayer().getMapViewController().getController(cpath);
 		
 		// новая линия добавляется в кабельный путь
-		cpath.addLink(newLink, cableController.generateCCI(newLink));
+		cpath.addLink(newLink, CableController.generateCCI(newLink));
 		newLink.setCablePath(cpath);
 
 		// переносим фрагменты в новую линию пока не наткнемся на

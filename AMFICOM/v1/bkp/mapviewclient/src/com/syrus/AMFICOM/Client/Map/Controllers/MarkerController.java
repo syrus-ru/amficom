@@ -1,5 +1,5 @@
 /**
- * $Id: MarkerController.java,v 1.6 2005/01/31 12:19:18 krupenn Exp $
+ * $Id: MarkerController.java,v 1.7 2005/02/01 13:29:56 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -44,7 +44,7 @@ import javax.swing.ImageIcon;
  * 
  * 
  * 
- * @version $Revision: 1.6 $, $Date: 2005/01/31 12:19:18 $
+ * @version $Revision: 1.7 $, $Date: 2005/02/01 13:29:56 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -52,7 +52,7 @@ import javax.swing.ImageIcon;
 public class MarkerController extends AbstractNodeController
 {
 	/** Размер пиктограммы маркера */
-	public static final Rectangle DEFAULT_BOUNDS = new Rectangle(20, 20);
+	public static final Rectangle MARKER_BOUNDS = new Rectangle(20, 20);
 	
 	public static final String IMAGE_NAME = "marker";
 	public static final String IMAGE_PATH = "images/marker.gif";
@@ -81,7 +81,7 @@ public class MarkerController extends AbstractNodeController
 	
 	public Rectangle getDefaultBounds()
 	{
-		return DEFAULT_BOUNDS;
+		return MARKER_BOUNDS;
 	}
 
 	public String getToolTipText(MapElement me)

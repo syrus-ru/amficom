@@ -340,9 +340,7 @@ public final class MapLinkBindPanel
 		UnboundLink unbound = command.getUnbound();
 		unbound.setCablePath(cablePath);
 
-		CableController cableController = (CableController )
-			getLogicalNetLayer().getMapViewController().getController(cablePath);
-		cablePath.addLink(unbound, cableController.generateCCI(unbound));
+		cablePath.addLink(unbound, CableController.generateCCI(unbound));
 		link.getBinding().remove(cablePath);
 		
 		((ObjListModel )cableList.getModel()).removeElement(cablePath);

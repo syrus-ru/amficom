@@ -1,5 +1,5 @@
 /**
- * $Id: ViewMapNavigatorCommand.java,v 1.5 2005/01/21 16:19:57 krupenn Exp $
+ * $Id: ViewMapNavigatorCommand.java,v 1.6 2005/02/01 13:29:56 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -30,14 +30,14 @@ import javax.swing.JDesktopPane;
  * 
  * 
  * 
- * @version $Revision: 1.5 $, $Date: 2005/01/21 16:19:57 $
+ * @version $Revision: 1.6 $, $Date: 2005/02/01 13:29:56 $
  * @module
  * @author $Author: krupenn $
  * @see
  */
 public class ViewMapNavigatorCommand extends ViewNavigatorCommand
 {
-	public MapSchemeTreeFrame frame;
+	public MapSchemeTreeFrame schemeTreeFrame;
 	
 	public ViewMapNavigatorCommand(JDesktopPane desktop, ApplicationContext aContext)
 	{
@@ -49,32 +49,32 @@ public class ViewMapNavigatorCommand extends ViewNavigatorCommand
 
 	public void execute()
 	{
-		frame = MapDesktopCommand.findMapSchemeTreeFrame(desktop);
+		schemeTreeFrame = MapDesktopCommand.findMapSchemeTreeFrame(desktop);
 
-		if(frame == null)
+		if(schemeTreeFrame == null)
 		{
-			frame = new MapSchemeTreeFrame();
+			schemeTreeFrame = new MapSchemeTreeFrame();
 			MapSchemeTreePanel panel = new MapSchemeTreePanel("", aContext);
 
-			frame.setTitle(title);
-			frame.setClosable(true);
-			frame.setResizable(true);
-			frame.setMaximizable(false);
-			frame.setIconifiable(false);
-			frame.setFrameIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/general.gif")));
-			frame.getContentPane().setLayout(new BorderLayout());
-			frame.getContentPane().add(panel, BorderLayout.CENTER);
+			schemeTreeFrame.setTitle(title);
+			schemeTreeFrame.setClosable(true);
+			schemeTreeFrame.setResizable(true);
+			schemeTreeFrame.setMaximizable(false);
+			schemeTreeFrame.setIconifiable(false);
+			schemeTreeFrame.setFrameIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/general.gif")));
+			schemeTreeFrame.getContentPane().setLayout(new BorderLayout());
+			schemeTreeFrame.getContentPane().add(panel, BorderLayout.CENTER);
 
-			desktop.add(frame);
+			desktop.add(schemeTreeFrame);
 
 			Dimension dim = desktop.getSize();
-			frame.setLocation(dim.width * 4 / 5, dim.height / 2);
-			frame.setSize(dim.width / 5, dim.height / 2);
+			schemeTreeFrame.setLocation(dim.width * 4 / 5, dim.height / 2);
+			schemeTreeFrame.setSize(dim.width / 5, dim.height / 2);
 		}
 
-		frame.setVisible(true);
-		frame.toFront();
-		frame.grabFocus();
+		schemeTreeFrame.setVisible(true);
+		schemeTreeFrame.toFront();
+		schemeTreeFrame.grabFocus();
 		setResult(Command.RESULT_OK);
 	}
 }

@@ -1,5 +1,5 @@
 /**
- * $Id: BindUnboundLinkToPhysicalLinkCommandBundle.java,v 1.7 2005/01/31 12:19:18 krupenn Exp $
+ * $Id: BindUnboundLinkToPhysicalLinkCommandBundle.java,v 1.8 2005/02/01 13:29:56 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -27,7 +27,7 @@ import com.syrus.AMFICOM.map.PhysicalLinkBinding;
  * 
  * 
  * 
- * @version $Revision: 1.7 $, $Date: 2005/01/31 12:19:18 $
+ * @version $Revision: 1.8 $, $Date: 2005/02/01 13:29:56 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -74,9 +74,7 @@ public class BindUnboundLinkToPhysicalLinkCommandBundle extends MapActionCommand
 		// одновл€етс€ информаци€ о прив€зке кабульного пути
 		CablePath cablePath = unbound.getCablePath();
 		cablePath.removeLink(unbound);
-		CableController cableController = (CableController )
-			getLogicalNetLayer().getMapViewController().getController(cablePath);
-		cablePath.addLink(link, cableController.generateCCI(link));
+		cablePath.addLink(link, CableController.generateCCI(link));
 		link.getBinding().add(cablePath);
 
 		logicalNetLayer.sendMapEvent(new MapEvent(this, MapEvent.MAP_CHANGED));

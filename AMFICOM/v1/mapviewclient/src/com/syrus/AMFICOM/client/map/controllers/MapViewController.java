@@ -1,5 +1,5 @@
 /**
- * $Id: MapViewController.java,v 1.5 2005/02/01 11:34:56 krupenn Exp $
+ * $Id: MapViewController.java,v 1.6 2005/02/01 13:29:56 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -63,7 +63,7 @@ import com.syrus.AMFICOM.mapview.UnboundLink;
  * прокладке кабелей и положении узлов и других топологических объектов.
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.5 $, $Date: 2005/02/01 11:34:56 $
+ * @version $Revision: 1.6 $, $Date: 2005/02/01 13:29:56 $
  * @module mapviewclient_v1
  */
 public final class MapViewController
@@ -274,7 +274,7 @@ public final class MapViewController
 	public static MapView createMapView(Identifier creatorId, Identifier domainId, Map map)
 		throws CreateObjectException
 	{
-		MapView mapView = com.syrus.AMFICOM.mapview.MapView.createInstance(
+		return com.syrus.AMFICOM.mapview.MapView.createInstance(
 			creatorId,
 			domainId,
 			LangModelMap.getString("New"),
@@ -284,8 +284,6 @@ public final class MapViewController
 			1.0D,
 			1.0D,
 			map);
-
-		return mapView;
 	}
 
 	/**

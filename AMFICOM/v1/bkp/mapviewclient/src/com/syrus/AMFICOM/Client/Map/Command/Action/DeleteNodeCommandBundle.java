@@ -1,5 +1,5 @@
 /**
- * $Id: DeleteNodeCommandBundle.java,v 1.15 2005/02/01 11:34:56 krupenn Exp $
+ * $Id: DeleteNodeCommandBundle.java,v 1.16 2005/02/01 13:29:56 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -39,7 +39,7 @@ import java.util.List;
  * 
  * 
  * 
- * @version $Revision: 1.15 $, $Date: 2005/02/01 11:34:56 $
+ * @version $Revision: 1.16 $, $Date: 2005/02/01 13:29:56 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -120,9 +120,7 @@ public class DeleteNodeCommandBundle extends MapActionCommandBundle
 						left.getOtherNode(node),
 						right.getOtherNode(node));
 				unbound.setCablePath(cablePath);
-				CableController cableController = (CableController )
-					getLogicalNetLayer().getMapViewController().getController(cablePath);
-				cablePath.addLink(unbound, cableController.generateCCI(unbound));
+				cablePath.addLink(unbound, CableController.generateCCI(unbound));
 
 				// если "левая" была непмривязанной, она удаляется (вместе 
 				// со своими фрагментами

@@ -1,5 +1,5 @@
 /**
- * $Id: MapViewAddSchemeCommand.java,v 1.3 2005/02/01 11:34:56 krupenn Exp $
+ * $Id: MapViewAddSchemeCommand.java,v 1.4 2005/02/01 13:29:56 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -42,7 +42,7 @@ import javax.swing.JDesktopPane;
  * 
  * 
  * 
- * @version $Revision: 1.3 $, $Date: 2005/02/01 11:34:56 $
+ * @version $Revision: 1.4 $, $Date: 2005/02/01 13:29:56 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -52,7 +52,7 @@ public class MapViewAddSchemeCommand extends VoidCommand
 	JDesktopPane desktop;
 	ApplicationContext aContext;
 
-	protected ObjectResource retObj;
+	protected Scheme retObj;
 
 	public MapViewAddSchemeCommand(JDesktopPane desktop, ApplicationContext aContext)
 	{
@@ -60,7 +60,7 @@ public class MapViewAddSchemeCommand extends VoidCommand
 		this.aContext = aContext;
 	}
 
-	public ObjectResource getReturnObject()
+	public Scheme getReturnObject()
 	{
 		return this.retObj;
 	}
@@ -120,7 +120,7 @@ public class MapViewAddSchemeCommand extends VoidCommand
 
 		if(mcd.getReturnCode() == ObjectResourceChooserDialog.RET_OK)
 		{
-			Scheme retObj = (Scheme )mcd.getReturnObject();
+			retObj = (Scheme )mcd.getReturnObject();
 
 			if(!mapView.getSchemes().contains(retObj))
 			{

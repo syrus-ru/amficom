@@ -1,5 +1,5 @@
 /**
- * $Id: MapMouseListener.java,v 1.20 2005/01/31 12:19:19 krupenn Exp $
+ * $Id: MapMouseListener.java,v 1.21 2005/02/01 13:29:57 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -54,7 +54,7 @@ import com.syrus.AMFICOM.Client.Map.Controllers.MapViewController;
  * 
  * 
  * 
- * @version $Revision: 1.20 $, $Date: 2005/01/31 12:19:19 $
+ * @version $Revision: 1.21 $, $Date: 2005/02/01 13:29:57 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -283,7 +283,8 @@ public final class MapMouseListener implements MouseListener
 							Environment.getActiveWindow(),
 							LangModelMap.getString("Distance") 
 								+ " = " 
-								+ MapPropertiesManager.getDistanceFormat().format(distance),
+								+ MapPropertiesManager.getDistanceFormat().format(distance)
+								+ MapPropertiesManager.getMetric(),
 							LangModelMap.getString("MeasureDistance"),
 							JOptionPane.PLAIN_MESSAGE);
 
@@ -365,7 +366,7 @@ public final class MapMouseListener implements MouseListener
 
 					if(!logicalNetLayer.isMenuShown())
 					{
-						// Контекстное меню показывать не надо и передеём управление 
+						// Контекстное меню показывать не надо и передаём управление 
 						// стратегии текущего объекта
 						MapElement mapElement = logicalNetLayer.getCurrentMapElement();
 		

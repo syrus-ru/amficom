@@ -1,5 +1,5 @@
 /**
- * $Id: GenerateUnboundLinkCablingCommandBundle.java,v 1.8 2005/01/31 12:19:18 krupenn Exp $
+ * $Id: GenerateUnboundLinkCablingCommandBundle.java,v 1.9 2005/02/01 13:29:56 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -29,7 +29,7 @@ import com.syrus.AMFICOM.map.PhysicalLinkBinding;
  * 
  * 
  * 
- * @version $Revision: 1.8 $, $Date: 2005/01/31 12:19:18 $
+ * @version $Revision: 1.9 $, $Date: 2005/02/01 13:29:56 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -88,9 +88,7 @@ public class GenerateUnboundLinkCablingCommandBundle extends MapActionCommandBun
 			mnle.setPhysicalLink(link);
 			link.addNodeLink(mnle);
 		}
-		CableController cableController = (CableController )
-			getLogicalNetLayer().getMapViewController().getController(path);
-		path.addLink(link, cableController.generateCCI(link));
+		path.addLink(link, CableController.generateCCI(link));
 		link.getBinding().add(path);
 
 		logicalNetLayer.sendMapEvent(new MapEvent(this, MapEvent.MAP_CHANGED));

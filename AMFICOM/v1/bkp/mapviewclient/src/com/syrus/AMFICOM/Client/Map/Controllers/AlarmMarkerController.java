@@ -1,5 +1,5 @@
 /**
- * $Id: AlarmMarkerController.java,v 1.3 2005/01/31 12:19:18 krupenn Exp $
+ * $Id: AlarmMarkerController.java,v 1.4 2005/02/01 13:29:56 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -31,18 +31,18 @@ import com.syrus.AMFICOM.mapview.MeasurementPath;
  * 
  * 
  * 
- * @version $Revision: 1.3 $, $Date: 2005/01/31 12:19:18 $
+ * @version $Revision: 1.4 $, $Date: 2005/02/01 13:29:56 $
  * @module
  * @author $Author: krupenn $
  * @see
  */
 public final class AlarmMarkerController extends MarkerController
 {
-	public static final String IMAGE_NAME = "alarmmarker";
-	public static final String IMAGE_PATH = "images/alarm_bell_green.gif";
+	public static final String ALARM_IMAGE_NAME = "alarmmarker";
+	public static final String ALARM_IMAGE_PATH = "images/alarm_bell_green.gif";
 
-	public static final String IMAGE2_NAME = "alarmmarker2";
-	public static final String IMAGE2_PATH = "images/alarm_bell_red.gif";
+	public static final String ALARM_IMAGE2_NAME = "alarmmarker2";
+	public static final String ALARM_IMAGE2_PATH = "images/alarm_bell_red.gif";
 
 	private static boolean needInit = true;
 
@@ -82,7 +82,7 @@ public final class AlarmMarkerController extends MarkerController
 			getLogicalNetLayer().getContext().getSessionInterface().getAccessIdentifier().user_id);
 
 		return MapPropertiesManager.getScaledImage(
-				NodeTypeController.getImageId(creatorId, IMAGE2_NAME, IMAGE2_PATH));
+				NodeTypeController.getImageId(creatorId, ALARM_IMAGE2_NAME, ALARM_IMAGE2_PATH));
 	}
 
 	public void paint(MapElement me, Graphics g, Rectangle2D.Double visibleBounds)
@@ -93,11 +93,11 @@ public final class AlarmMarkerController extends MarkerController
 				getLogicalNetLayer().getContext().getSessionInterface().getAccessIdentifier().user_id);
 
 			MapPropertiesManager.setOriginalImage(
-				NodeTypeController.getImageId(creatorId, IMAGE_NAME, IMAGE_PATH),
-				new ImageIcon(IMAGE_PATH).getImage());
+				NodeTypeController.getImageId(creatorId, ALARM_IMAGE_NAME, ALARM_IMAGE_PATH),
+				new ImageIcon(ALARM_IMAGE_PATH).getImage());
 			MapPropertiesManager.setOriginalImage(
-				NodeTypeController.getImageId(creatorId, IMAGE2_NAME, IMAGE2_PATH),
-				new ImageIcon(IMAGE2_PATH).getImage());
+				NodeTypeController.getImageId(creatorId, ALARM_IMAGE2_NAME, ALARM_IMAGE2_PATH),
+				new ImageIcon(ALARM_IMAGE2_PATH).getImage());
 		}
 		super.paint(me, g, visibleBounds);
 	}

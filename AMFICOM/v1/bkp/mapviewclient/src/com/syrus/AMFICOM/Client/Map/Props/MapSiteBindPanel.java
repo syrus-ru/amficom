@@ -65,8 +65,15 @@ public final class MapSiteBindPanel
 	
 	private List unboundElements = new LinkedList();
 
+	DefaultMutableTreeNode root = new DefaultMutableTreeNode("Объекты в узле");
+	DefaultMutableTreeNode elementsBranch = new DefaultMutableTreeNode("Элементы");
+	DefaultMutableTreeNode cablesBranch = new DefaultMutableTreeNode("Кабели");
+	
 	public MapSiteBindPanel()
 	{
+		root.add(elementsBranch);
+		root.add(cablesBranch);
+
 		try
 		{
 			jbInit();
@@ -266,9 +273,7 @@ public final class MapSiteBindPanel
 			UnboundLink unbound = command.getUnbound();
 			unbound.setCablePath(cablePath);
 
-			CableController cableController = (CableController )
-				getLogicalNetLayer().getMapViewController().getController(cablePath);
-			cablePath.addLink(unbound, cableController.generateCCI(unbound));
+			cablePath.addLink(unbound, CableController.generateCCI(unbound));
 		}
 		
 		elementsTree.updateUI();
@@ -276,8 +281,6 @@ public final class MapSiteBindPanel
 
 	private void unbindElement(Object or)
 	{
-		MapView mapView = getLogicalNetLayer().getMapView();
-			
 		if(or instanceof SchemeElement)
 		{
 			SchemeElement se = (SchemeElement )or;
@@ -405,15 +408,6 @@ public final class MapSiteBindPanel
 	public List getUnboundElements()
 	{
 		return unboundElements;
-	}
-
-	DefaultMutableTreeNode root = new DefaultMutableTreeNode("Объекты в узле");
-	DefaultMutableTreeNode elementsBranch = new DefaultMutableTreeNode("Элементы");
-	DefaultMutableTreeNode cablesBranch = new DefaultMutableTreeNode("Кабели");
-	
-	{
-		root.add(elementsBranch);
-		root.add(cablesBranch);
 	}
 
 	private DefaultMutableTreeNode createTree(SiteNode site)

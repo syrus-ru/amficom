@@ -1,5 +1,5 @@
 /**
- * $Id: TopologicalNodeController.java,v 1.5 2005/01/24 16:51:32 krupenn Exp $
+ * $Id: TopologicalNodeController.java,v 1.6 2005/02/01 13:29:56 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -36,16 +36,16 @@ import com.syrus.AMFICOM.Client.Map.Controllers.AbstractNodeController;
  * 
  * 
  * 
- * @version $Revision: 1.5 $, $Date: 2005/01/24 16:51:32 $
+ * @version $Revision: 1.6 $, $Date: 2005/02/01 13:29:56 $
  * @module
  * @author $Author: krupenn $
  * @see
  */
 public class TopologicalNodeController extends AbstractNodeController
 {
-	public static final Rectangle DEFAULT_BOUNDS = new Rectangle(10, 10);
-	public static final Rectangle MIN_BOUNDS = new Rectangle(2, 2);
-	public static final Rectangle MAX_BOUNDS = new Rectangle(15, 15);
+	public static final Rectangle NODE_BOUNDS = new Rectangle(10, 10);
+	public static final Rectangle MIN_NODE_BOUNDS = new Rectangle(2, 2);
+	public static final Rectangle MAX_NODE_BOUNDS = new Rectangle(15, 15);
 
 	public static final String CLOSED_NODE = "node";
 	public static final String OPEN_NODE = "void";
@@ -80,17 +80,17 @@ public class TopologicalNodeController extends AbstractNodeController
 
 	public Rectangle getDefaultBounds()
 	{
-		return DEFAULT_BOUNDS;
+		return NODE_BOUNDS;
 	}
 	
 	public Rectangle getMinBounds()
 	{
-		return MIN_BOUNDS;
+		return MIN_NODE_BOUNDS;
 	}
 	
 	public Rectangle getMaxBounds()
 	{
-		return MAX_BOUNDS;
+		return MAX_NODE_BOUNDS;
 	}
 
 	public void setActive(TopologicalNode node, boolean active)

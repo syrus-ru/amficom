@@ -1,5 +1,5 @@
 /**
- * $Id: PlaceSchemeCableLinkCommand.java,v 1.12 2005/02/01 11:34:56 krupenn Exp $
+ * $Id: PlaceSchemeCableLinkCommand.java,v 1.13 2005/02/01 13:29:56 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -30,7 +30,7 @@ import com.syrus.AMFICOM.map.PhysicalLinkBinding;
 /**
  * Разместить кабель на карте.
  * 
- * @version $Revision: 1.12 $, $Date: 2005/02/01 11:34:56 $
+ * @version $Revision: 1.13 $, $Date: 2005/02/01 13:29:56 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -135,9 +135,7 @@ public class PlaceSchemeCableLinkCommand extends MapActionCommandBundle
 			if(!exists)
 			{
 				UnboundLink unbound = super.createUnboundLinkWithNodeLink(bufferStartSite, smsne);
-				CableController cableController = (CableController )
-					getLogicalNetLayer().getMapViewController().getController(cablePath);
-				cablePath.addLink(unbound, cableController.generateCCI(unbound));
+				cablePath.addLink(unbound, CableController.generateCCI(unbound));
 				unbound.setCablePath(cablePath);
 
 				bufferStartSite = emsne;
@@ -151,9 +149,7 @@ public class PlaceSchemeCableLinkCommand extends MapActionCommandBundle
 				if(link == null)
 				{
 					UnboundLink unbound = super.createUnboundLinkWithNodeLink(smsne, emsne);
-					CableController cableController = (CableController )
-						getLogicalNetLayer().getMapViewController().getController(cablePath);
-					cablePath.addLink(unbound, cableController.generateCCI(unbound));
+					cablePath.addLink(unbound, CableController.generateCCI(unbound));
 					unbound.setCablePath(cablePath);
 				}
 				else
@@ -163,9 +159,7 @@ public class PlaceSchemeCableLinkCommand extends MapActionCommandBundle
 						&& cci.placeY() != -1)
 						link.getBinding().bind(cablePath, cci.rowX(), cci.placeY());
 		
-				CableController cableController = (CableController )
-					getLogicalNetLayer().getMapViewController().getController(cablePath);
-				cablePath.addLink(link, cableController.generateCCI(link));
+					cablePath.addLink(link, CableController.generateCCI(link));
 				}
 			}
 		}
@@ -175,9 +169,7 @@ public class PlaceSchemeCableLinkCommand extends MapActionCommandBundle
 		if(endNode != bufferStartSite)
 		{
 			UnboundLink unbound = super.createUnboundLinkWithNodeLink(bufferStartSite, endNode);
-			CableController cableController = (CableController )
-				getLogicalNetLayer().getMapViewController().getController(cablePath);
-			cablePath.addLink(unbound, cableController.generateCCI(unbound));
+			cablePath.addLink(unbound, CableController.generateCCI(unbound));
 			unbound.setCablePath(cablePath);
 		}
 
