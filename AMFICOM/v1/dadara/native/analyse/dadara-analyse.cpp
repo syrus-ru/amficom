@@ -63,13 +63,13 @@ Java_com_syrus_AMFICOM_analysis_CoreAnalysisManager_analyse3(
 	if (noiseL < traceLength)
 		noiseL = 0;
 
-	// корректируем параметры
+	// корректируем параметры. FIXME: не корректировать, а проверить валидатором
 	if (min_level < 0.01)
 		min_level =  0.01;
-	if (min_weld < 0.01)
-		min_weld = 0.01;
-	if (min_connector < 0.01)
-		min_connector = 0.01;
+	if (min_weld < min_level)
+		min_weld = min_level;
+	if (min_connector < min_weld)
+		min_connector = min_weld;
 
 	prf_b("analyse3() - starting IA");
 
