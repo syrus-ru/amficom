@@ -1,5 +1,5 @@
 /**
- * $Id: MapPhysicalLinkBinding.java,v 1.5 2004/11/18 14:13:43 krupenn Exp $
+ * $Id: MapPhysicalLinkBinding.java,v 1.6 2004/11/19 11:21:43 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -27,7 +27,7 @@ import java.util.List;
  * 
  * 
  * 
- * @version $Revision: 1.5 $, $Date: 2004/11/18 14:13:43 $
+ * @version $Revision: 1.6 $, $Date: 2004/11/19 11:21:43 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -151,6 +151,58 @@ public final class MapPhysicalLinkBinding
 			}
 		}
 		bindingMap = bindingMap2;
+	}
+	
+	public int getSequenceNumber(int ii, int jj)
+	{
+		int sequenceNumber = -1;
+		int m = getDimension().width;
+		int n = getDimension().height;
+		int counter = 1;
+		int limit = n * m;
+
+		int istart = isLeftToRight() ? 0 : m - 1;
+		int jstart = isTopToBottom() ? 0 : n - 1;
+
+		int iend = m - 1 - istart;
+		int jend = n - 1 - jstart;
+
+		int iincrement = isLeftToRight() ? 1 : -1;
+		int jincrement = isTopToBottom() ? 1 : -1;
+
+		int i = istart;
+		int j = jstart;
+
+		while(true)
+		{
+			if(i == ii && j == jj)
+				break;
+		
+			if(counter > limit)
+				break;
+
+			if(isHorizontalVertical())
+			{
+				if(i == iend)
+				{
+					i = istart;
+					j += jincrement;
+				}
+				else
+					i += iincrement;
+			}
+			else
+			{
+				if(j == jend)
+				{
+					j = jstart;
+					i += iincrement;
+				}
+				else
+					j += jincrement;
+			}
+		}
+		return sequenceNumber;
 	}
 	
 	/**
