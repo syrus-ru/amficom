@@ -2,6 +2,7 @@ package com.syrus.util.database;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.SQLException;
 import com.syrus.util.Log;
 
 public class DatabaseConnection {
@@ -18,7 +19,7 @@ public class DatabaseConnection {
 
 	public static void establishConnection(String db_hostname,
 																				 String db_sid,
-																				 long db_conn_timeout) throws Exception {
+																				 long db_conn_timeout) throws SQLException {
 		establishConnection(db_hostname,
 												db_sid,
 												db_conn_timeout,
@@ -29,7 +30,7 @@ public class DatabaseConnection {
 	public static void establishConnection(String db_hostname,
 																				 String db_sid,
 																				 long db_conn_timeout,
-																				 String db_login_name) throws Exception {
+																				 String db_login_name) throws SQLException {
 		establishConnection(db_hostname,
 												db_sid,
 												db_conn_timeout,
@@ -40,7 +41,7 @@ public class DatabaseConnection {
 	public static void establishConnection(String db_hostname,
 																				 String db_sid,
 																				 long db_conn_timeout,
-																				 boolean autocommit) throws Exception {
+																				 boolean autocommit) throws SQLException {
 		establishConnection(db_hostname,
 												db_sid,
 												db_conn_timeout,
@@ -52,13 +53,13 @@ public class DatabaseConnection {
 																				 String db_sid,
 																				 long db_conn_timeout,
 																				 String db_login_name,
-																				 boolean autocommit) throws Exception {
+																				 boolean autocommit) throws SQLException {
 		if (connection == null) {
 			try {
 				Class.forName(JDBCDRIVER);
 			}
-			catch (Exception e) {
-				throw new Exception("Cannot locate driver: " + JDBCDRIVER + ", " + e.getMessage());
+			catch (ClassNotFoundException e) {
+				throw new SQLException("Cannot locate driver: " + JDBCDRIVER + ", " + e.getMessage());
 			}
 
 			String url = URLPREFIX + db_hostname + ":" + Integer.toString(DBPORT) + ":" + db_sid;
@@ -71,7 +72,7 @@ public class DatabaseConnection {
 					connection.setAutoCommit(autocommit);
 					connected = true;
 				}
-				catch (Exception e) {
+				catch (SQLException e) {
 					Log.debugMessage("Cannot connect to database: " + url + ", " + e.getMessage(), Log.DEBUGLEVEL03);
 					Object obj = new Object();
 					try {
@@ -79,13 +80,13 @@ public class DatabaseConnection {
 							obj.wait(5*1000);
 						}
 					}
-					catch (Exception ex) {
+					catch (InterruptedException ex) {
 						Log.errorException(ex);
 					}
 				}
 			}
 			if (!connected)
-				throw new Exception("Unable to connect to database: " + url);
+				throw new SQLException("Unable to connect to database: " + url);
 			Log.debugMessage("Connected!", Log.DEBUGLEVEL03);
 		}
 	}
