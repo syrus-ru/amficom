@@ -69,7 +69,9 @@ public class ServiceItem extends AbstractItem implements Populatable {
 	
 	public void populate() {
 		if (!this.populated) {
-			this.childrenFactory.populate(this);
+			if (this.childrenFactory != null) {
+				this.childrenFactory.populate(this);
+			}
 			this.populated = true;
 		}
 	}
