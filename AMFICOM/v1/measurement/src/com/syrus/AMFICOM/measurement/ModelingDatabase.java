@@ -1,5 +1,5 @@
 /*
- * $Id: ModelingDatabase.java,v 1.3 2004/09/27 07:57:25 bob Exp $
+ * $Id: ModelingDatabase.java,v 1.4 2004/10/13 09:49:50 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,7 +30,7 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2004/09/27 07:57:25 $
+ * @version $Revision: 1.4 $, $Date: 2004/10/13 09:49:50 $
  * @author $Author: bob $
  * @module module_name
  */
@@ -40,7 +40,7 @@ public class ModelingDatabase extends StorableObjectDatabase {
 	// name VARCHAR(256),
     public static final String COLUMN_NAME  = "name";  
     // monitored_element_id VARCHAR2(32),
-    public static final String COLUMN_ME_ID  = "monitored_element_id";
+    public static final String COLUMN_SCHEME_PATH_ID  = "scheme_path_id";
     // measurement_type_id VARCHAR2(32) NOT NULL,
     public static final String COLUMN_MEASUREMENT_TYPE_ID   = "measurement_type_id";
     //  argument_set_id VARCHAR2(32) NOT NULL,
@@ -73,7 +73,7 @@ public class ModelingDatabase extends StorableObjectDatabase {
         if (this.updateColumns == null){
             this.updateColumns = super.getUpdateColumns() + COMMA
             + COLUMN_NAME + COMMA
-            + COLUMN_ME_ID + COMMA
+            + COLUMN_SCHEME_PATH_ID + COMMA
             + COLUMN_MEASUREMENT_TYPE_ID + COMMA
             + COLUMN_ARGUMENT_SET_ID;
         }
@@ -130,7 +130,7 @@ public class ModelingDatabase extends StorableObjectDatabase {
     protected String retrieveQuery(String condition){
         return super.retrieveQuery(condition) + COMMA
         + COLUMN_NAME + COMMA
-        + COLUMN_ME_ID + COMMA
+        + COLUMN_SCHEME_PATH_ID + COMMA
         + COLUMN_MEASUREMENT_TYPE_ID + COMMA
         + COLUMN_ARGUMENT_SET_ID
         + SQL_FROM + ObjectEntities.MODELING_ENTITY
@@ -172,7 +172,7 @@ public class ModelingDatabase extends StorableObjectDatabase {
                                                      /**
                                                       * @todo when change DB Identifier model ,change getString() to getLong()
                                                       */
-                                                     new Identifier(resultSet.getString(COLUMN_ME_ID)),												 
+                                                     resultSet.getString(COLUMN_SCHEME_PATH_ID),												 
                                                      
                                                      measurementType,													 
                                                      argumentSet);      
@@ -237,7 +237,7 @@ public class ModelingDatabase extends StorableObjectDatabase {
     public List retrieveButIdsByDomain(List ids, Domain domain) throws RetrieveObjectException {
         List list = null;
         
-        String condition = COLUMN_ME_ID + SQL_IN + OPEN_BRACKET
+        String condition = COLUMN_SCHEME_PATH_ID + SQL_IN + OPEN_BRACKET
                 + SQL_SELECT + COLUMN_ID + SQL_FROM + ObjectEntities.ME_ENTITY + SQL_WHERE
                 + DomainMember.COLUMN_DOMAIN_ID + EQUALS + domain.getId().toSQLString()
             + CLOSE_BRACKET;

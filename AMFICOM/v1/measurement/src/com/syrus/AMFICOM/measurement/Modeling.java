@@ -1,5 +1,5 @@
 /*
- * $Id: Modeling.java,v 1.6 2004/10/13 07:53:04 bass Exp $
+ * $Id: Modeling.java,v 1.7 2004/10/13 09:49:50 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,15 +25,15 @@ import com.syrus.AMFICOM.measurement.corba.ResultSort;
 import com.syrus.util.HashCodeGenerator;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2004/10/13 07:53:04 $
- * @author $Author: bass $
+ * @version $Revision: 1.7 $, $Date: 2004/10/13 09:49:50 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
 public class Modeling extends Action {
 	
 	private String name;
-	private Identifier meId;
+	private String schemePathId;
 	private MeasurementType measurementType;
 	private Set argumentSet;
 
@@ -53,7 +53,7 @@ public class Modeling extends Action {
 	
 	protected Modeling(Identifier id,
 							 Identifier creatorId,
-							 Identifier meId,
+							 String schemePathId,
 							 String name,
 							 Set argumentSet){
 		super(id);
@@ -62,7 +62,7 @@ public class Modeling extends Action {
 		super.modified = new Date(time);
 		super.creatorId = creatorId;
 		super.modifierId = creatorId;
-		this.meId = meId;
+		this.schemePathId = schemePathId;
 		this.name = name;
 		this.argumentSet = argumentSet;
 		
@@ -77,12 +77,12 @@ public class Modeling extends Action {
 
 	public static Modeling createInstance(Identifier id,
 																		Identifier creatorId,
-																		Identifier meId,
+																		String schemePathId,
 																		String name,
 																		Set argumentSet){
 		return new Modeling(id,
 										creatorId,
-										meId,
+										schemePathId,
 										name,
 										argumentSet);
 		
@@ -95,10 +95,10 @@ public class Modeling extends Action {
 					new Identifier(mt.creator_id),
 					new Identifier(mt.modifier_id),
 					null,
-					new Identifier(mt.monitored_element_id)
+					null
 					);
+		this.schemePathId = mt.scheme_path_id;
 		this.name = mt.name;
-		this.meId = new Identifier(mt.monitored_element_id);
 		/**
 		 * @todo when change DB Identifier model ,change identifier_string to
 		 *       identifier_code
@@ -163,7 +163,7 @@ public class Modeling extends Action {
 																 (Identifier_Transferable)super.creatorId.getTransferable(),
 																 (Identifier_Transferable)super.modifierId.getTransferable(),
 																 new String(this.name),																 
-																 (Identifier_Transferable)this.meId.getTransferable(),
+																 this.schemePathId,
 																 (Identifier_Transferable)this.measurementType.getId().getTransferable(),
 																 (Identifier_Transferable)this.argumentSet.getId().getTransferable()
 																 );
@@ -174,7 +174,7 @@ public class Modeling extends Action {
 																						Identifier creatorId,
 																						Identifier modifierId,
 																						String name,
-																						Identifier domainId,
+																						String schemePathId,
 																						MeasurementType measurementType,
 																						Set argumentSet) {
 		super.setAttributes(created,
@@ -182,7 +182,7 @@ public class Modeling extends Action {
 												creatorId,
 												modifierId);
 		this.name = name;
-		this.meId = domainId;
+		this.schemePathId = schemePathId;
 		this.measurementType = measurementType;
 		this.argumentSet = argumentSet;
 	}
@@ -196,7 +196,7 @@ public class Modeling extends Action {
 		hashCodeGenerator.addObject(this.modified);
 		hashCodeGenerator.addObject(this.modifierId);
 		hashCodeGenerator.addObject(this.name);
-		hashCodeGenerator.addObject(this.meId);
+		hashCodeGenerator.addObject(this.schemePathId);
 		hashCodeGenerator.addObject(this.measurementType);
 		hashCodeGenerator.addObject(this.argumentSet);
 		int result = hashCodeGenerator.getResult();
@@ -207,17 +207,17 @@ public class Modeling extends Action {
 	public boolean equals(Object obj) {
 		boolean equals = (this == obj);		
 		if ((!equals) && (obj instanceof Modeling)){
-			Modeling test = (Modeling)obj;
-			if (	(test.id.equals(this.id)) &&
-					HashCodeGenerator.equalsDate(this.created,test.created) &&
-					(this.creatorId.equals(test.creatorId))&&
-					HashCodeGenerator.equalsDate(this.modified,test.modified) &&
-					(this.modifierId.equals(test.modifierId))&&					
-					( ((test.name == null) && (this.name == null) ) 
-							|| (test.name.equals(this.name)) ) &&					
-					(test.getMeasurementType().equals(getMeasurementType())) &&
-					(test.meId.equals(this.meId)) &&					 
-					(test.argumentSet.equals(test.argumentSet)
+			Modeling modeling = (Modeling)obj;
+			if (	(modeling.id.equals(this.id)) &&
+					HashCodeGenerator.equalsDate(this.created,modeling.created) &&
+					(this.creatorId.equals(modeling.creatorId))&&
+					HashCodeGenerator.equalsDate(this.modified,modeling.modified) &&
+					(this.modifierId.equals(modeling.modifierId))&&					
+					( ((modeling.name == null) && (this.name == null) ) 
+							|| (modeling.name.equals(this.name)) ) &&					
+					(modeling.getMeasurementType().equals(getMeasurementType())) &&
+					(modeling.schemePathId.equals(this.schemePathId)) &&					 
+					(modeling.argumentSet.equals(modeling.argumentSet)
 					))
 					equals = true;
 		}
@@ -231,8 +231,8 @@ public class Modeling extends Action {
     public Set getArgumentSet() {
 		return this.argumentSet;
 	}
-	public Identifier getMonitoredElementId() {
-		return this.meId;
+	public String getSchemePathId() {
+		return this.schemePathId;
 	}
 	public String getName() {
 		return this.name;
