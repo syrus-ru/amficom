@@ -17,14 +17,14 @@ public class SchemePropsPanel extends JPanel
 	public JTextArea schemeDescrTextArea = new JTextArea();
 	private JTextField ugoNameTextField = new JTextField();
 	private JButton ugoIconButton = new JButton();
-	public AComboBox schemeTypeComboBox = new AComboBox(scheme_type_names);
+	public AComboBox schemeTypeComboBox = new AComboBox(schemeType_names);
 
 	Scheme scheme;
 	ApplicationContext aContext;
 	Dispatcher dispatcher;
 	boolean show_ugo;
 
-	static String[] scheme_type_names = new String[]
+	static String[] schemeType_names = new String[]
 	{
 		LangModelSchematics.getString(Scheme.NETWORK),
 		LangModelSchematics.getString(Scheme.CABLESUBNETWORK),
@@ -36,7 +36,7 @@ public class SchemePropsPanel extends JPanel
 //		Scheme.CARDCAGE
 	};
 
-	static String[] scheme_types = new String[]
+	static String[] schemeTypes = new String[]
 	{
 		Scheme.NETWORK,
 		Scheme.CABLESUBNETWORK,
@@ -172,7 +172,7 @@ public class SchemePropsPanel extends JPanel
 					return;
 				if (e.getStateChange() == ItemEvent.SELECTED)
 				{
-					scheme.scheme_type = scheme_types[schemeTypeComboBox.getSelectedIndex()];
+					scheme.schemeType = schemeTypes[schemeTypeComboBox.getSelectedIndex()];
 				}
 			}
 		});
@@ -187,26 +187,26 @@ public class SchemePropsPanel extends JPanel
 		ugoNameTextField.setText(scheme.label);
 		ugoNameTextField.setCaretPosition(0);
 
-		for (int i = 0; i < scheme_types.length; i++)
+		for (int i = 0; i < schemeTypes.length; i++)
 		{
-			if (scheme_types[i].equals(scheme.scheme_type))
+			if (schemeTypes[i].equals(scheme.schemeType))
 			{
 				schemeTypeComboBox.setSelectedIndex(i);
 				break;
 			}
 		}
 
-//		scheme.scheme_type = (String)schemeTypeComboBox.getSelectedItem();
+//		scheme.schemeType = (String)schemeTypeComboBox.getSelectedItem();
 
-		if (!scheme.symbol_id.equals(""))
+		if (!scheme.symbolId.equals(""))
 		{
-			ImageResource ir = ImageCatalogue.get(scheme.symbol_id);
+			ImageResource ir = ImageCatalogue.get(scheme.symbolId);
 
 			ImageIcon icon;
 			if (ir != null)
 				icon = new ImageIcon(ir.getImage());
 			else
-				icon = new ImageIcon(scheme.symbol_id);
+				icon = new ImageIcon(scheme.symbolId);
 
 			if (icon != null)
 			{
@@ -222,8 +222,8 @@ public class SchemePropsPanel extends JPanel
 	void ugoIconButton_actionPerformed()
 	{
 		ImagesDialog frame = new ImagesDialog(aContext);
-		if (!scheme.symbol_id.equals(""))
-			frame.setImageResource(ImageCatalogue.get(scheme.symbol_id));
+		if (!scheme.symbolId.equals(""))
+			frame.setImageResource(ImageCatalogue.get(scheme.symbolId));
 
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		Dimension frameSize = frame.getSize();
@@ -243,7 +243,7 @@ public class SchemePropsPanel extends JPanel
 			if (icon.getIconWidth() > 20 || icon.getIconHeight() > 20)
 				icon = new ImageIcon (icon.getImage().getScaledInstance(20,	20,	Image.SCALE_SMOOTH));
 			ugoIconButton.setIcon(icon);
-			scheme.symbol_id = ir.getId();
+			scheme.symbolId = ir.getId();
 
 			dispatcher.notify(new SchemeElementsEvent(scheme.getId(), icon, SchemeElementsEvent.UGO_ICON_UPDATE_EVENT));
 		}
@@ -270,7 +270,7 @@ public class SchemePropsPanel extends JPanel
 
 	public String getSchemeType()
 	{
-		return scheme_types[schemeTypeComboBox.getSelectedIndex()];
+		return schemeTypes[schemeTypeComboBox.getSelectedIndex()];
 	}
 }
 

@@ -165,8 +165,8 @@ public class SchemeElementPropsPanel extends JPanel
 			{
 				if (element == null)
 					return;
-				element.ugo_text = ugoNameTextField.getText();
-				aContext.getDispatcher().notify(new SchemeElementsEvent(element.getId(), element.ugo_text, SchemeElementsEvent.UGO_TEXT_UPDATE_EVENT));
+				element.ugoText = ugoNameTextField.getText();
+				aContext.getDispatcher().notify(new SchemeElementsEvent(element.getId(), element.ugoText, SchemeElementsEvent.UGO_TEXT_UPDATE_EVENT));
 			}
 			public void keyPressed(KeyEvent ae)
 					{}
@@ -191,7 +191,7 @@ public class SchemeElementPropsPanel extends JPanel
 		if (show_is_kis)
 			compPanel.add(cl2Panel, BorderLayout.SOUTH);
 
-		ProtoElement p = (ProtoElement)Pool.get(ProtoElement.typ, element.proto_element_id);
+		ProtoElement p = (ProtoElement)Pool.get(ProtoElement.typ, element.protoElementId);
 		if (p != null && p.scheme_proto_group != null)
 			mapProtoTextField.setText(p.scheme_proto_group.getName());
 		else
@@ -202,19 +202,19 @@ public class SchemeElementPropsPanel extends JPanel
 
 		titleTextField.setText(element.getName());
 		titleTextField.setCaretPosition(0);
-		if (!element.proto_element_id.equals(""))
-			nameTextField.setText(((ObjectResource)Pool.get(ProtoElement.typ, element.proto_element_id)).getName());
+		if (!element.protoElementId.equals(""))
+			nameTextField.setText(((ObjectResource)Pool.get(ProtoElement.typ, element.protoElementId)).getName());
 		else if (element.getInternalSchemeId().length() != 0)
 			nameTextField.setText(element.getInternalScheme().getName());
 		nameTextField.setCaretPosition(0);
 
 		descriptionTextArea.setText(element.description);
-		ugoNameTextField.setText(element.ugo_text);
+		ugoNameTextField.setText(element.ugoText);
 		ugoNameTextField.setCaretPosition(0);
 
 		if (p != null)
 		{
-			EquipmentType eqt = (EquipmentType)Pool.get(EquipmentType.typ, p.equipment_type_id);
+			EquipmentType eqt = (EquipmentType)Pool.get(EquipmentType.typ, p.equipmentTypeId);
 			if (eqt != null)
 				manufacturerTextField.setText(eqt.manufacturer);
 			else
@@ -227,7 +227,7 @@ public class SchemeElementPropsPanel extends JPanel
 
 		undoType = element.getName();
 		undoDescription = element.description;
-		undoUgoName = element.ugo_text;
+		undoUgoName = element.ugoText;
 		updateUI();
 	}
 
@@ -240,7 +240,7 @@ public class SchemeElementPropsPanel extends JPanel
 				return true;
 		}
 
-		for (Iterator it = proto.protoelement_ids.iterator(); it.hasNext();)
+		for (Iterator it = proto.protoelementIds.iterator(); it.hasNext();)
 		{
 			ProtoElement p = (ProtoElement)Pool.get(ProtoElement.typ, (String)it.next());
 			if (hasCablePort(p))
@@ -255,7 +255,7 @@ public class SchemeElementPropsPanel extends JPanel
 		{
 			element.name = undoType;
 			element.description = undoDescription;
-			element.ugo_text = undoUgoName;
+			element.ugoText = undoUgoName;
 		}
 	}
 

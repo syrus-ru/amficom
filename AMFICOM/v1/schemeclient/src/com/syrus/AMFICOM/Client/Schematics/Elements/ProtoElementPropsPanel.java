@@ -232,7 +232,7 @@ public class ProtoElementPropsPanel extends JPanel
 		if (show_is_kis)
 			compPanel.add(cl2Panel, BorderLayout.SOUTH);
 
-		eqt = (EquipmentType)Pool.get(EquipmentType.typ, proto.equipment_type_id);
+		eqt = (EquipmentType)Pool.get(EquipmentType.typ, proto.equipmentTypeId);
 
 		if (scheme_proto == null)
 			mapProtoTextField.setText("");
@@ -249,15 +249,15 @@ public class ProtoElementPropsPanel extends JPanel
 		manufacturerTextField.setCaretPosition(0);
 		ugoNameTextField.setCaretPosition(0);
 
-		if (!proto.symbol_id.equals(""))
+		if (!proto.symbolId.equals(""))
 		{
-			ImageResource ir = ImageCatalogue.get(proto.symbol_id);
+			ImageResource ir = ImageCatalogue.get(proto.symbolId);
 
 			ImageIcon icon;
 			if (ir != null)
 				icon = new ImageIcon(ir.getImage());
 			else
-				icon = new ImageIcon(proto.symbol_id);
+				icon = new ImageIcon(proto.symbolId);
 
 			if (icon != null)
 			{
@@ -285,7 +285,7 @@ public class ProtoElementPropsPanel extends JPanel
 				return true;
 		}
 
-		for (Iterator it = proto.protoelement_ids.iterator(); it.hasNext();)
+		for (Iterator it = proto.protoelementIds.iterator(); it.hasNext();)
 		{
 			ProtoElement p = (ProtoElement)Pool.get(ProtoElement.typ, (String)it.next());
 			if (hasCablePort(p))
@@ -323,8 +323,8 @@ public class ProtoElementPropsPanel extends JPanel
 	void ugoIconButton_actionPerformed()
 	{
 		ImagesDialog frame = new ImagesDialog(aContext);
-		if (!proto.symbol_id.equals(""))
-			frame.setImageResource(ImageCatalogue.get(proto.symbol_id));
+		if (!proto.symbolId.equals(""))
+			frame.setImageResource(ImageCatalogue.get(proto.symbolId));
 
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		Dimension frameSize = frame.getSize();
@@ -344,7 +344,7 @@ public class ProtoElementPropsPanel extends JPanel
 			if (icon.getIconWidth() > 20 || icon.getIconHeight() > 20)
 				icon = new ImageIcon (icon.getImage().getScaledInstance(20,	20,	Image.SCALE_SMOOTH));
 			ugoIconButton.setIcon(icon);
-			proto.symbol_id = ir.getId();
+			proto.symbolId = ir.getId();
 
 			aContext.getDispatcher().notify(new SchemeElementsEvent(proto.getId(), icon, SchemeElementsEvent.UGO_ICON_UPDATE_EVENT));
 		}
@@ -354,7 +354,7 @@ public class ProtoElementPropsPanel extends JPanel
 	{
 		EquipmentType eqt = new ChooseEqtDialog().init();
 		if (eqt != null)
-			proto.equipment_type_id = eqt.getId();
+			proto.equipmentTypeId = eqt.getId();
 
 	}
 

@@ -124,10 +124,10 @@ public class SaveComponentDialog extends JDialog
 		proto.scheme_proto_group = scheme_proto;
 
 		proto.name = componentPanel.getProtoName();
-		EquipmentType eqt = (EquipmentType)Pool.get(EquipmentType.typ, proto.equipment_type_id);
+		EquipmentType eqt = (EquipmentType)Pool.get(EquipmentType.typ, proto.equipmentTypeId);
 		eqt.name = proto.getName();
 
-		proto.domain_id = aContext.getSessionInterface().getDomainId();
+		proto.domainId = aContext.getSessionInterface().getDomainId();
 		String[] proto_ids = (String[])createProtoIdsList(proto).toArray(new String[0]);
 
 		for (int i = 0; i < proto_ids.length; i++)
@@ -176,7 +176,7 @@ public class SaveComponentDialog extends JDialog
 	ArrayList createProtoIdsList(ProtoElement proto)
 	{
 		ArrayList proto_ids = new ArrayList();
-		for (Iterator it = proto.protoelement_ids.iterator(); it.hasNext();)
+		for (Iterator it = proto.protoelementIds.iterator(); it.hasNext();)
 		{
 			ProtoElement p = (ProtoElement)Pool.get(ProtoElement.typ, (String)it.next());
 			proto_ids.addAll(createProtoIdsList(p));
@@ -188,19 +188,19 @@ public class SaveComponentDialog extends JDialog
 	ArrayList createEqTypesList(ProtoElement proto)
 	{
 		ArrayList eq_ids = new ArrayList();
-		for (Iterator it = proto.protoelement_ids.iterator(); it.hasNext();)
+		for (Iterator it = proto.protoelementIds.iterator(); it.hasNext();)
 		{
 			ProtoElement p = (ProtoElement)Pool.get(ProtoElement.typ, (String)it.next());
 			eq_ids.addAll(createEqTypesList(p));
 		}
-		eq_ids.add(proto.equipment_type_id);
+		eq_ids.add(proto.equipmentTypeId);
 		return eq_ids;
 	}
 
 	Map createLinkIdsList(ProtoElement proto)
 	{
 		Map l_ids = new HashMap();
-		for (Iterator it = proto.protoelement_ids.iterator(); it.hasNext();)
+		for (Iterator it = proto.protoelementIds.iterator(); it.hasNext();)
 		{
 			ProtoElement p = (ProtoElement)Pool.get(ProtoElement.typ, (String)it.next());
 			l_ids.putAll(createLinkIdsList(p));
@@ -208,7 +208,7 @@ public class SaveComponentDialog extends JDialog
 		for (Iterator it = proto.links.iterator(); it.hasNext();)
 		{
 			SchemeLink link = (SchemeLink)it.next();
-			l_ids.put(link.link_type_id, link.link_type_id);
+			l_ids.put(link.linkTypeId, link.linkTypeId);
 		}
 		return l_ids;
 	}
@@ -216,7 +216,7 @@ public class SaveComponentDialog extends JDialog
 	Map createPortIdsList(ProtoElement proto)
 	{
 		Map p_ids = new HashMap();
-		for (Iterator it = proto.protoelement_ids.iterator(); it.hasNext();)
+		for (Iterator it = proto.protoelementIds.iterator(); it.hasNext();)
 		{
 			ProtoElement p = (ProtoElement)Pool.get(ProtoElement.typ, (String)it.next());
 			p_ids.putAll(createPortIdsList(p));
@@ -227,7 +227,7 @@ public class SaveComponentDialog extends JDialog
 			for (Iterator pit = dev.ports.iterator(); pit.hasNext();)
 			{
 				SchemePort port = (SchemePort)pit.next();
-				p_ids.put(port.port_type_id, port.port_type_id);
+				p_ids.put(port.portTypeId, port.portTypeId);
 			}
 		}
 		return p_ids;
@@ -236,7 +236,7 @@ public class SaveComponentDialog extends JDialog
 	Map createCablePortIdsList(ProtoElement proto)
 	{
 		Map p_ids = new HashMap();
-		for (Iterator it = proto.protoelement_ids.iterator(); it.hasNext();)
+		for (Iterator it = proto.protoelementIds.iterator(); it.hasNext();)
 		{
 			ProtoElement p = (ProtoElement)Pool.get(ProtoElement.typ, (String)it.next());
 			p_ids.putAll(createCablePortIdsList(p));
@@ -247,7 +247,7 @@ public class SaveComponentDialog extends JDialog
 			for (Iterator pit = dev.cableports.iterator(); pit.hasNext();)
 			{
 				SchemeCablePort port = (SchemeCablePort)pit.next();
-				p_ids.put(port.cable_port_type_id, port.cable_port_type_id);
+				p_ids.put(port.cablePortTypeId, port.cablePortTypeId);
 			}
 		}
 		return p_ids;

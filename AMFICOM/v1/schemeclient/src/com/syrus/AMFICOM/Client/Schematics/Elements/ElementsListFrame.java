@@ -94,8 +94,8 @@ public class ElementsListFrame extends JInternalFrame implements OperationListen
 
 					SchemePath path = pathpanel.path;
 					if (!MiscUtil.validName(path.name) ||
-							path.end_device_id.equals("") ||
-							path.start_device_id.equals("") ||
+							path.endDeviceId.equals("") ||
+							path.startDeviceId.equals("") ||
 							path.links.isEmpty())
 					{
 						String err = new String();

@@ -79,7 +79,7 @@ public class SchemeReportsTreeModel extends ObjectResourceTreeModel
 			{
 				ObjectResourceTreeNode ortn = new ObjectResourceTreeNode(
 					"EquipmentChars",
-					LangModelConfig.getString("label_equipChars"),
+					LangModelConfig.getString("labelEquipChars"),
 					true);
 
 				vec.add(ortn);
@@ -178,7 +178,7 @@ public class SchemeReportsTreeModel extends ObjectResourceTreeModel
 				while (equipTypeEnum.hasNext())
 				{
 					EquipmentType eqType = (EquipmentType) equipTypeEnum.next();
-					if (eqType.eq_class.equals(s))
+					if (eqType.eqClass.equals(s))
 					{
 						ObjectsReport rep = new ObjectsReport(new
 							EquipFeaturesReportModel(),
@@ -230,7 +230,7 @@ public class SchemeReportsTreeModel extends ObjectResourceTreeModel
 					for(Iterator it = Pool.getMap(Scheme.typ).values().iterator(); it.hasNext();)
 					{
 						Scheme sch = (Scheme)it.next();
-						ht.add(sch.scheme_type);
+						ht.add(sch.schemeType);
 					}
 
 					for (Iterator it = ht.iterator(); it.hasNext(); )
@@ -264,7 +264,7 @@ public class SchemeReportsTreeModel extends ObjectResourceTreeModel
 				for (Iterator it = dSet.values().iterator(); it.hasNext(); )
 				{
 					Scheme scheme = (Scheme)it.next();
-					if (scheme.scheme_type.equals(s))
+					if (scheme.schemeType.equals(s))
 					{
 						ObjectsReport or = new ObjectsReport (
 							new SchemeReportModel(),
@@ -355,23 +355,23 @@ public class SchemeReportsTreeModel extends ObjectResourceTreeModel
 						"",
 						ObjectResourceReportModel.rt_objProperies,
 						toAskObjects(node));
-					if (!element.equipment_id.equals(""))
+					if (!element.equipmentId.equals(""))
 					{
 						try
 						{
-							rep.setReserve(Equipment.typ + ":" + element.equipment_id);
+							rep.setReserve(Equipment.typ + ":" + element.equipmentId);
 						}
 						catch (CreateReportException cre)
 						{}
 					}
-					else if (!element.proto_element_id.equals(""))
+					else if (!element.protoElementId.equals(""))
 					{
 						ProtoElement pe = (ProtoElement) Pool.get(ProtoElement.typ,
-							element.proto_element_id);
+							element.protoElementId);
 						try
 						{
 							rep.setReserve(EquipmentType.typ + ":"
-								+ pe.equipment_type_id);
+								+ pe.equipmentTypeId);
 						}
 						catch (CreateReportException cre)
 						{}
@@ -422,20 +422,20 @@ public class SchemeReportsTreeModel extends ObjectResourceTreeModel
 					"",
 					ObjectResourceReportModel.rt_objProperies,
 					toAskObjects(node));
-				if (!link.link_id.equals(""))
+				if (!link.linkId.equals(""))
 				{
 					try
 					{
-						rep.setReserve(Link.typ + ":" + link.link_id);
+						rep.setReserve(Link.typ + ":" + link.linkId);
 					}
 					catch (CreateReportException cre)
 					{}
 				}
-				else if (!link.link_type_id.equals(""))
+				else if (!link.linkTypeId.equals(""))
 				{
 					try
 					{
-						rep.setReserve(LinkType.typ + ":" + link.link_type_id);
+						rep.setReserve(LinkType.typ + ":" + link.linkTypeId);
 					}
 					catch (CreateReportException cre)
 					{}
@@ -462,21 +462,21 @@ public class SchemeReportsTreeModel extends ObjectResourceTreeModel
 					"",
 					ObjectResourceReportModel.rt_objProperies,
 					toAskObjects(node));
-				if (!link.cable_link_id.equals(""))
+				if (!link.cableLinkId.equals(""))
 				{
 					try
 					{
-						rep.setReserve(CableLink.typ + ":" + link.cable_link_id);
+						rep.setReserve(CableLink.typ + ":" + link.cableLinkId);
 					}
 					catch (CreateReportException cre)
 					{}
 				}
-				else if (!link.cable_link_type_id.equals(""))
+				else if (!link.cableLinkTypeId.equals(""))
 				{
 					try
 					{
 						rep.setReserve(CableLinkType.typ + ":"
-							+ link.cable_link_type_id);
+							+ link.cableLinkTypeId);
 					}
 					catch (CreateReportException cre)
 					{}
@@ -514,12 +514,12 @@ public class SchemeReportsTreeModel extends ObjectResourceTreeModel
 							ObjectResourceReportModel.rt_objProperies,
 							toAskObjects(node));
 
-						if (!element.equipment_id.equals(""))
+						if (!element.equipmentId.equals(""))
 						{
 							try
 							{
 								rep.setReserve(Equipment.typ + ":"
-									+ element.equipment_id);
+									+ element.equipmentId);
 							}
 							catch (CreateReportException cre)
 							{
@@ -527,14 +527,14 @@ public class SchemeReportsTreeModel extends ObjectResourceTreeModel
 									"Jokarnyj nasos pri realizatsii objecta otcheta!");
 							}
 						}
-						else if (!element.proto_element_id.equals(""))
+						else if (!element.protoElementId.equals(""))
 						{
 							ProtoElement pe = (ProtoElement) Pool.get(ProtoElement.typ,
-								element.proto_element_id);
+								element.protoElementId);
 							try
 							{
 								rep.setReserve(EquipmentType.typ + ":"
-									+ pe.equipment_type_id);
+									+ pe.equipmentTypeId);
 							}
 							catch (CreateReportException cre)
 							{

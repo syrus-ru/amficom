@@ -170,14 +170,14 @@ public class CablePortPropsPanel extends JPanel
 			for(Iterator it = Pool.getMap(CablePortType.typ).values().iterator(); it.hasNext();)
 			{
 				CablePortType pt = (CablePortType)it.next();
-				hash.put(pt.p_class, pt.p_class);
+				hash.put(pt.pClass, pt.pClass);
 			}
 			for(Iterator it = hash.values().iterator(); it.hasNext(); )
 				classComboBox.addItem(it.next());
 
 			if (pt != null)
 			{
-				classComboBox.setSelectedItem(pt.p_class);
+				classComboBox.setSelectedItem(pt.pClass);
 			}
 		}
 		skip_changes = false;
@@ -250,11 +250,11 @@ public class CablePortPropsPanel extends JPanel
 	public void init(SchemeCablePort[] ports)
 	{
 		this.ports = ports;
-		pt = (CablePortType)Pool.get(CablePortType.typ, ports[0].cable_port_type_id);
+		pt = (CablePortType)Pool.get(CablePortType.typ, ports[0].cablePortTypeId);
 		setDefaults();
 		if (pt != null)
 		{
-			classComboBox.setSelectedItem(pt.p_class);
+			classComboBox.setSelectedItem(pt.pClass);
 			typeComboBox.setSelectedItem(pt);
 			descriptionTextArea.setText(pt.description);
 
@@ -306,7 +306,7 @@ public class CablePortPropsPanel extends JPanel
 			for(Iterator it = Pool.getMap(CablePortType.typ).values().iterator(); it.hasNext();)
 			{
 				CablePortType pt = (CablePortType)it.next();
-				if (pt.p_class.equals(selected_class))
+				if (pt.pClass.equals(selected_class))
 					typeComboBox.addItem(pt);
 			}
 			if (pt != null)
@@ -324,7 +324,7 @@ public class CablePortPropsPanel extends JPanel
 		pt = cpt;
 
 		for (int i = 0; i < ports.length; i++)
-			ports[i].cable_port_type_id = cpt.getId();
+			ports[i].cablePortTypeId = cpt.getId();
 		descriptionTextArea.setText(cpt.description);
 //		aContext.getDispatcher().notify(new OperationEvent(cpt, 1, "elementslistvaluechanged"));
 		aContext.getDispatcher().notify(new SchemeElementsEvent(ports, cpt, SchemeElementsEvent.CABLE_PORT_TYPE_UPDATE_EVENT));
@@ -373,15 +373,15 @@ public class CablePortPropsPanel extends JPanel
 					return;
 				}
 			}
-			CablePortType type = (CablePortType)Pool.get(CablePortType.typ, ports[0].cable_port_type_id);
+			CablePortType type = (CablePortType)Pool.get(CablePortType.typ, ports[0].cablePortTypeId);
 			CablePortType new_type = new CablePortType();
 			new_type.is_modified = true;
 			new_type.name = name;
 			new_type.id = aContext.getDataSourceInterface().GetUId(CablePortType.typ);
-			new_type.p_class = (String)classComboBox.getSelectedItem();
+			new_type.pClass = (String)classComboBox.getSelectedItem();
 			for (int i = 0; i < ports.length; i++)
-				ports[i].cable_port_type_id = new_type.getId();
-			Pool.put(CablePortType.typ, ports[0].cable_port_type_id, new_type);
+				ports[i].cablePortTypeId = new_type.getId();
+			Pool.put(CablePortType.typ, ports[0].cablePortTypeId, new_type);
 
 			typeComboBox.addItem(new_type);
 			typeComboBox.setSelectedItem(new_type);

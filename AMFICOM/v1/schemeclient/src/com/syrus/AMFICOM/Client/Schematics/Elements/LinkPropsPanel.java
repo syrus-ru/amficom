@@ -212,7 +212,7 @@ public class LinkPropsPanel extends JPanel
 				try
 				{
 					double d = Double.parseDouble(optLen.getText());
-					links[0].optical_length = d;
+					links[0].opticalLength = d;
 					optLen.setForeground(nameText.getForeground());
 				}
 				catch (NumberFormatException e)
@@ -234,7 +234,7 @@ public class LinkPropsPanel extends JPanel
 				try
 				{
 					double d = Double.parseDouble(strLen.getText());
-					links[0].physical_length = d;
+					links[0].physicalLength = d;
 					strLen.setForeground(nameText.getForeground());
 				}
 				catch (NumberFormatException e)
@@ -262,14 +262,14 @@ public class LinkPropsPanel extends JPanel
 			for(Iterator it = Pool.getMap(LinkType.typ).values().iterator(); it.hasNext();)
 			{
 				LinkType pt = (LinkType)it.next();
-				hash.put(pt.link_class, pt.link_class);
+				hash.put(pt.linkClass, pt.linkClass);
 			}
 			for(Iterator it = hash.values().iterator(); it.hasNext(); )
 				classComboBox.addItem(it.next());
 
 			if (lt != null)
 			{
-				classComboBox.setSelectedItem(lt.link_class);
+				classComboBox.setSelectedItem(lt.linkClass);
 			}
 		}
 		skip_changes = false;
@@ -304,11 +304,11 @@ public class LinkPropsPanel extends JPanel
 	public void init(SchemeLink[] links)
 	{
 		this.links = links;
-		lt = (LinkType)Pool.get(LinkType.typ, links[0].link_type_id);
+		lt = (LinkType)Pool.get(LinkType.typ, links[0].linkTypeId);
 		setDefaults();
 		if (lt != null)
 		{
-			classComboBox.setSelectedItem(lt.link_class);
+			classComboBox.setSelectedItem(lt.linkClass);
 			typeComboBox.setSelected(lt);
 			descriptionTextArea.setText(lt.description);
 
@@ -322,8 +322,8 @@ public class LinkPropsPanel extends JPanel
 		{
 			nameText.setText(links[0].getName());
 			nameText.setCaretPosition(0);
-			optLen.setText(String.valueOf(links[0].optical_length));
-			strLen.setText(String.valueOf(links[0].physical_length));
+			optLen.setText(String.valueOf(links[0].opticalLength));
+			strLen.setText(String.valueOf(links[0].physicalLength));
 		}
 		else
 		{
@@ -362,7 +362,7 @@ public class LinkPropsPanel extends JPanel
 			for(Iterator it = Pool.getMap(LinkType.typ).values().iterator(); it.hasNext();)
 			{
 				LinkType lt = (LinkType)it.next();
-				if (lt.link_class.equals(selected_class))
+				if (lt.linkClass.equals(selected_class))
 					typeComboBox.add(lt);
 			}
 			if (lt != null)
@@ -381,7 +381,7 @@ public class LinkPropsPanel extends JPanel
 		LinkType lt = (LinkType)typeComboBox.getSelectedItem();
 		this.lt = lt;
 		for (int i = 0; i < links.length; i++)
-			links[i].link_type_id = lt.getId();
+			links[i].linkTypeId = lt.getId();
 
 		descriptionTextArea.setText(lt.description);
 		manufacturerTextField.setText(lt.manufacturer);
@@ -433,15 +433,15 @@ public class LinkPropsPanel extends JPanel
 					return;
 				}
 			}
-			LinkType type = (LinkType)Pool.get(LinkType.typ, links[0].link_type_id);
+			LinkType type = (LinkType)Pool.get(LinkType.typ, links[0].linkTypeId);
 			LinkType new_type = new LinkType();
 			new_type.is_modified = true;
 			new_type.name = name;
 			new_type.id = aContext.getDataSourceInterface().GetUId(LinkType.typ);
-			new_type.link_class = (String)classComboBox.getSelectedItem();
+			new_type.linkClass = (String)classComboBox.getSelectedItem();
 			for (int i = 0; i < links.length; i++)
-				links[i].link_type_id = new_type.getId();
-			Pool.put(LinkType.typ, links[0].link_type_id, new_type);
+				links[i].linkTypeId = new_type.getId();
+			Pool.put(LinkType.typ, links[0].linkTypeId, new_type);
 
 			typeComboBox.add(new_type);
 			typeComboBox.setSelected(new_type);

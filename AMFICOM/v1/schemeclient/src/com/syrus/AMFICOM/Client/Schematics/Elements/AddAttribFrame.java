@@ -10,7 +10,7 @@ import javax.swing.*;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.UI.AComboBox;
 import com.syrus.AMFICOM.Client.Resource.Pool;
-import com.syrus.AMFICOM.Client.Resource.SchemeDirectory.ElementAttributeType;
+import com.syrus.AMFICOM.Client.Resource.General.ElementAttributeType;
 
 public class AddAttribFrame extends JDialog
 {

@@ -214,11 +214,11 @@ public class CableLinkPropsPanel extends JPanel
 				try
 				{
 					double d = Double.parseDouble(optLen.getText());
-					links[0].optical_length = d;
+					links[0].opticalLength = d;
 					optLen.setForeground(nameText.getForeground());
 					if (smooth_length)
 					{
-						links[0].physical_length = d;
+						links[0].physicalLength = d;
 						strLen.setText(optLen.getText());
 						strLen.setForeground(nameText.getForeground());
 					}
@@ -242,11 +242,11 @@ public class CableLinkPropsPanel extends JPanel
 				try
 				{
 					double d = Double.parseDouble(strLen.getText());
-					links[0].physical_length = d;
+					links[0].physicalLength = d;
 					strLen.setForeground(nameText.getForeground());
 					if (smooth_length)
 					{
-						links[0].optical_length = d;
+						links[0].opticalLength = d;
 						optLen.setText(strLen.getText());
 						optLen.setForeground(nameText.getForeground());
 					}
@@ -276,13 +276,13 @@ public class CableLinkPropsPanel extends JPanel
 			for(Iterator it = Pool.getMap(CableLinkType.typ).values().iterator(); it.hasNext();)
 			{
 				CableLinkType pt = (CableLinkType)it.next();
-				hash.put(pt.link_class, pt.link_class);
+				hash.put(pt.linkClass, pt.linkClass);
 			}
 			for(Iterator it = hash.values().iterator(); it.hasNext(); )
 				classComboBox.addItem(it.next());
 
 			if (lt != null)
-				classComboBox.setSelectedItem(lt.link_class);
+				classComboBox.setSelectedItem(lt.linkClass);
 		}
 		skip_changes = false;
 	}
@@ -313,11 +313,11 @@ public class CableLinkPropsPanel extends JPanel
 	public void init(SchemeCableLink[] links)
 	{
 		this.links = links;
-		lt = (CableLinkType)Pool.get(CableLinkType.typ, links[0].cable_link_type_id);
+		lt = (CableLinkType)Pool.get(CableLinkType.typ, links[0].cableLinkTypeId);
 		setDefaults();
 		if (lt != null)
 		{
-			classComboBox.setSelectedItem(lt.link_class);
+			classComboBox.setSelectedItem(lt.linkClass);
 			typeComboBox.setSelected(lt);
 			descriptionTextArea.setText(lt.description);
 
@@ -329,13 +329,13 @@ public class CableLinkPropsPanel extends JPanel
 
 		if (links.length == 1)
 		{
-			if (links[0].optical_length == 0 || links[0].physical_length == 0)
+			if (links[0].opticalLength == 0 || links[0].physicalLength == 0)
 				smooth_length = true;
 
 			nameText.setText(links[0].getName());
 			nameText.setCaretPosition(0);
-			optLen.setText(String.valueOf(links[0].optical_length));
-			strLen.setText(String.valueOf(links[0].physical_length));
+			optLen.setText(String.valueOf(links[0].opticalLength));
+			strLen.setText(String.valueOf(links[0].physicalLength));
 		}
 		else
 		{
@@ -374,7 +374,7 @@ public class CableLinkPropsPanel extends JPanel
 			for(Iterator it = Pool.getMap(CableLinkType.typ).values().iterator(); it.hasNext();)
 			{
 				CableLinkType clt = (CableLinkType)it.next();
-				if (clt.link_class.equals(selected_class))
+				if (clt.linkClass.equals(selected_class))
 					typeComboBox.add(clt);
 			}
 			if (lt != null)
@@ -394,15 +394,15 @@ public class CableLinkPropsPanel extends JPanel
 		lt = clt;
 		for (int i = 0; i < links.length; i++)
 		{
-			links[i].cable_link_type_id = clt.getId();
-			links[i].cable_threads = new ArrayList();
-			for (int j = 0; j < clt.cable_threads.size(); j++)
+			links[i].cableLinkTypeId = clt.getId();
+			links[i].cableThreads = new ArrayList();
+			for (int j = 0; j < clt.cableThreads.size(); j++)
 			{
-				CableTypeThread ctt = (CableTypeThread)clt.cable_threads.get(j);
+				CableTypeThread ctt = (CableTypeThread)clt.cableThreads.get(j);
 				SchemeCableThread scheme_cable_thread = new SchemeCableThread(aContext.getDataSourceInterface().GetUId(SchemeCableThread.typ));
-				scheme_cable_thread.link_type_id = ctt.link_type_id;
+				scheme_cable_thread.linkTypeId = ctt.linkTypeId;
 				scheme_cable_thread.name = ctt.getName();
-				links[i].cable_threads.add(scheme_cable_thread);
+				links[i].cableThreads.add(scheme_cable_thread);
 			}
 		}
 		descriptionTextArea.setText(clt.description);
@@ -456,16 +456,16 @@ public class CableLinkPropsPanel extends JPanel
 					return;
 				}
 			}
-			CableLinkType type = (CableLinkType)Pool.get(CableLinkType.typ, links[0].cable_link_type_id);
+			CableLinkType type = (CableLinkType)Pool.get(CableLinkType.typ, links[0].cableLinkTypeId);
 			CableLinkType new_type = new CableLinkType();
-			new_type.is_modified = true;
+			new_type.setChanged(true);
 			new_type.name = name;
 			new_type.id = aContext.getDataSourceInterface().GetUId(CableLinkType.typ);
-			new_type.link_class = (String)classComboBox.getSelectedItem();
+			new_type.linkClass = (String)classComboBox.getSelectedItem();
 
 			for (int i = 0; i < links.length; i++)
-				links[i].cable_link_type_id = new_type.getId();
-			Pool.put(CableLinkType.typ, links[0].cable_link_type_id, new_type);
+				links[i].cableLinkTypeId = new_type.getId();
+			Pool.put(CableLinkType.typ, links[0].cableLinkTypeId, new_type);
 
 			typeComboBox.add(new_type);
 			typeComboBox.setSelected(new_type);

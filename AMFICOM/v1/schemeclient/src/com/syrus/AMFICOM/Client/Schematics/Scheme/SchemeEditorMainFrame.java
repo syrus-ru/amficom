@@ -23,6 +23,7 @@ import com.syrus.AMFICOM.Client.Resource.Network.*;
 import com.syrus.AMFICOM.Client.Resource.Scheme.*;
 import com.syrus.AMFICOM.Client.Schematics.Elements.*;
 import com.syrus.AMFICOM.Client.Schematics.UI.*;
+import com.syrus.AMFICOM.Client.Resource.MapDataSourceImage;
 
 public class SchemeEditorMainFrame extends JFrame
 																				implements OperationListener
@@ -215,7 +216,7 @@ public class SchemeEditorMainFrame extends JFrame
 		aModel.setCommand("menuSchemeSave", new SchemeSaveCommand(aContext, schemeTab, ugoPane));
 		aModel.setCommand("menuSchemeSaveAs", new SchemeSaveAsCommand(aContext, schemeTab, ugoPane));
 		//aModel.setCommand("menuInsertToCatalog", new InsertToCatalogCommand(aContext, epanel.getGraph()));
-		aModel.setCommand("menuInsertToCatalog", new InsertToCatalogCommand(aContext, schemeTab));
+//		aModel.setCommand("menuInsertToCatalog", new InsertToCatalogCommand(aContext, schemeTab));
 		aModel.setCommand("menuSchemeExport", new SchemeToFileCommand(Environment.getDispatcher(), aContext));
 		aModel.setCommand("menuSchemeImport", new SchemeFromFileCommand(Environment.getDispatcher(), aContext));
 

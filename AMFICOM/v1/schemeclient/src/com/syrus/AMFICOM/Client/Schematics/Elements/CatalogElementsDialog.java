@@ -1,4 +1,4 @@
-package com.syrus.AMFICOM.Client.Schematics.Elements;
+/*package com.syrus.AMFICOM.Client.Schematics.Elements;
 
 import java.util.Map;
 
@@ -100,3 +100,4 @@ public class CatalogElementsDialog extends JDialog
 	}
 }
 
+*/

@@ -11,7 +11,7 @@ import com.syrus.AMFICOM.Client.General.Event.SchemeElementsEvent;
 import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.Resource.Pool;
-import com.syrus.AMFICOM.Client.Resource.ISMDirectory.AccessPortType;
+import com.syrus.AMFICOM.Client.Resource.ISMDirectory.*;
 import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.PortType;
 import com.syrus.AMFICOM.Client.Resource.Scheme.SchemePort;
 
@@ -202,21 +202,21 @@ public class PortPropsPanel extends JPanel
 			for(Iterator it = Pool.getMap(PortType.typ).values().iterator(); it.hasNext();)
 			{
 				PortType pt = (PortType)it.next();
-				hash.put(pt.p_class, pt.p_class);
+				hash.put(pt.pClass, pt.pClass);
 			}
 			for(Iterator it = hash.values().iterator(); it.hasNext(); )
 				classComboBox.addItem(it.next());
 
 			if (pt != null)
 			{
-				classComboBox.setSelectedItem(pt.p_class);
+				classComboBox.setSelectedItem(pt.pClass);
 			}
 		}
 		skip_changes = false;
 
-		if (Pool.getMap(AccessPortType.typ) != null)
+		if (Pool.getMap(MeasurementPortType.typ) != null)
 		{
-			accessTypeComboBox.setContents(Pool.getMap(AccessPortType.typ).values().iterator(), false);
+			accessTypeComboBox.setContents(Pool.getMap(MeasurementPortType.typ).values().iterator(), false);
 		}
 	}
 
@@ -239,11 +239,11 @@ public class PortPropsPanel extends JPanel
 	public void init(SchemePort[] ports)
 	{
 		this.ports = ports;
-		pt = (PortType)Pool.get(PortType.typ, ports[0].port_type_id);
+		pt = (PortType)Pool.get(PortType.typ, ports[0].portTypeId);
 		setDefaults();
 		if (pt != null)
 		{
-			classComboBox.setSelectedItem(pt.p_class);
+			classComboBox.setSelectedItem(pt.pClass);
 			typeComboBox.setSelectedItem(pt);
 			descriptionTextArea.setText(pt.description);
 
@@ -256,10 +256,10 @@ public class PortPropsPanel extends JPanel
 
 		if (ports.length != 0)
 		{
-			boolean b = ports[0].is_access_port;
+			boolean b = ports[0].measurementPortTypeId.length() != 0;
 			for (int i = 0; i < ports.length; i++)
 			{
-				if (ports[i].is_access_port != b)
+				if (ports[i].measurementPortTypeId.length() != 0 != b)
 				{
 					isAccessCheckBox.setEnabled(false);
 					accessTypeComboBox.setEnabled(false);
@@ -316,18 +316,9 @@ public class PortPropsPanel extends JPanel
 		{
 			for (int i = 0; i < ports.length; i++)
 			{
-				ports[i].is_access_port = true;
 				//System.out.println("setting for " + ports[i].getId() + " access true");
-				ports[i].access_port_type_id =
-						((AccessPortType)accessTypeComboBox.getSelectedItem()).getId();
-			}
-		}
-		else
-		{
-			for (int i = 0; i < ports.length; i++)
-			{
-//				System.out.println("setting for " + ports[i].getId() + " access false");
-				ports[i].is_access_port = false;
+				ports[i].measurementPortTypeId =
+						((MeasurementPortType)accessTypeComboBox.getSelectedItem()).getId();
 			}
 		}
 	}
@@ -342,7 +333,7 @@ public class PortPropsPanel extends JPanel
 			for(Iterator it = Pool.getMap(PortType.typ).values().iterator(); it.hasNext();)
 			{
 				PortType pt = (PortType)it.next();
-				if (pt.p_class.equals(selected_class))
+				if (pt.pClass.equals(selected_class))
 					typeComboBox.addItem(pt);
 			}
 			if (pt != null)
@@ -360,7 +351,7 @@ public class PortPropsPanel extends JPanel
 		pt = cpt;
 
 		for (int i = 0; i < ports.length; i++)
-			ports[i].port_type_id = cpt.getId();
+			ports[i].portTypeId = cpt.getId();
 		descriptionTextArea.setText(cpt.description);
 		//aContext.getDispatcher().notify(new OperationEvent(cpt, 1, "elementslistvaluechanged"));
 		aContext.getDispatcher().notify(new SchemeElementsEvent(ports, cpt, SchemeElementsEvent.PORT_TYPE_UPDATE_EVENT));
@@ -409,15 +400,15 @@ public class PortPropsPanel extends JPanel
 					return;
 				}
 			}
-			PortType type = (PortType)Pool.get(PortType.typ, ports[0].port_type_id);
+			PortType type = (PortType)Pool.get(PortType.typ, ports[0].portTypeId);
 			PortType new_type = new PortType();
 			new_type.is_modified = true;
 			new_type.name = name;
 			new_type.id = aContext.getDataSourceInterface().GetUId(PortType.typ);
-			new_type.p_class = (String)classComboBox.getSelectedItem();
+			new_type.pClass = (String)classComboBox.getSelectedItem();
 			for (int i = 0; i < ports.length; i++)
-				ports[i].port_type_id = new_type.getId();
-			Pool.put(PortType.typ, ports[0].port_type_id, new_type);
+				ports[i].portTypeId = new_type.getId();
+			Pool.put(PortType.typ, ports[0].portTypeId, new_type);
 
 			typeComboBox.add(new_type);
 			typeComboBox.setSelected(new_type);

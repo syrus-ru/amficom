@@ -1,4 +1,4 @@
-package com.syrus.AMFICOM.Client.Schematics.Elements;
+/*package com.syrus.AMFICOM.Client.Schematics.Elements;
 
 import java.util.*;
 import java.util.List;
@@ -148,29 +148,29 @@ public class CatalogElementsPanel extends JPanel
 
 			if (obj instanceof SchemeElement)
 			{
-				if (!((SchemeElement)obj).equipment_id.equals(""))
-					setting_obj = (ObjectResource)Pool.get("kisequipment", ((SchemeElement)obj).equipment_id);
+				if (!((SchemeElement)obj).equipmentId.equals(""))
+					setting_obj = (ObjectResource)Pool.get("kisequipment", ((SchemeElement)obj).equipmentId);
 				else
 					setting_obj = ((SchemeElement)obj).getName();
 			}
 			if (obj instanceof SchemeLink)
 			{
-				if (!((SchemeLink)obj).link_id.equals(""))
-					setting_obj = (ObjectResource)Pool.get(Link.typ, ((SchemeLink)obj).link_id);
+				if (!((SchemeLink)obj).linkId.equals(""))
+					setting_obj = (ObjectResource)Pool.get(Link.typ, ((SchemeLink)obj).linkId);
 				else
 					setting_obj = ((SchemeLink)obj).getName();
 			}
 			if (obj instanceof SchemeCableLink)
 			{
-				if (!((SchemeCableLink)obj).cable_link_id.equals(""))
-					setting_obj = (ObjectResource)Pool.get(CableLink.typ, ((SchemeCableLink)obj).cable_link_id);
+				if (!((SchemeCableLink)obj).cableLinkId.equals(""))
+					setting_obj = (ObjectResource)Pool.get(CableLink.typ, ((SchemeCableLink)obj).cableLinkId);
 				else
 					setting_obj = ((SchemeCableLink)obj).getName();
 			}
 			if (obj instanceof SchemePath)
 			{
-				if (!((SchemePath)obj).path_id.equals(""))
-					setting_obj = (ObjectResource)Pool.get(TransmissionPath.typ, ((SchemePath)obj).path_id);
+				if (!((SchemePath)obj).pathId.equals(""))
+					setting_obj = (ObjectResource)Pool.get(TransmissionPath.typ, ((SchemePath)obj).pathId);
 				else
 					setting_obj = ((SchemePath)obj).getName();
 			}
@@ -280,3 +280,4 @@ class ObjectResourceTypSorter extends ObjectResourceSorter
 
 }
 
+*/

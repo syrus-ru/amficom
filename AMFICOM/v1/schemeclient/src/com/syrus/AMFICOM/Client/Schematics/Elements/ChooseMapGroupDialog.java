@@ -152,7 +152,7 @@ public class ChooseMapGroupDialog extends JDialog implements OperationListener
 			}
 
 			if (selectedObject instanceof SchemeProtoGroup &&
-					((SchemeProtoGroup)selectedObject).group_ids.isEmpty() &&
+					((SchemeProtoGroup)selectedObject).groupIds.isEmpty() &&
 					((SchemeProtoGroup)selectedObject).getProtoIds().isEmpty())
 				;
 		}
@@ -164,7 +164,7 @@ public class ChooseMapGroupDialog extends JDialog implements OperationListener
 		if (selectedObject instanceof SchemeProtoGroup)
 		{
 			SchemeProtoGroup group = (SchemeProtoGroup)selectedObject;
-			if (group.group_ids.isEmpty())
+			if (group.groupIds.isEmpty())
 			{
 				retCode = OK;
 				dispose();

@@ -20,6 +20,7 @@ import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.General.Scheme.DeviceGroup;
 import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.Resource.*;
+import com.syrus.AMFICOM.Client.Resource.General.*;
 import com.syrus.AMFICOM.Client.Resource.Network.*;
 import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.*;
 import com.syrus.AMFICOM.Client.Resource.Scheme.*;
@@ -37,10 +38,10 @@ public class PropsFrame extends JInternalFrame
 	protected PropsTableModel tModel;
 
 	public boolean can_be_editable = true;
-	boolean editable_property = false;
+	boolean editableProperty = false;
 	Object[] objs;
-	String selected_item = "";
-	String selected_type = "";
+	String selectedItem = "";
+	String selectedType = "";
 
 	ApplicationContext aContext;
 
@@ -89,7 +90,7 @@ public class PropsFrame extends JInternalFrame
 			{
 				if (e.getValueIsAdjusting())
 					return;
-				toolBar.setCancelButtonEnabled(!jTable.getSelectionModel().isSelectionEmpty() && editable_property);
+				toolBar.setCancelButtonEnabled(!jTable.getSelectionModel().isSelectionEmpty() && editableProperty);
 			}
 		});
 		jTable.getColumnModel().getColumn(0).setPreferredWidth(180);
@@ -106,13 +107,13 @@ public class PropsFrame extends JInternalFrame
 		utp.getTree().setRootVisible(false);
 		utp.setBorder(BorderFactory.createLoweredBevelBorder());
 
-		JPanel n_panel = new JPanel();
-		n_panel.setLayout(new BorderLayout());
-		n_panel.add(toolBar,  BorderLayout.NORTH);
-		n_panel.add(utp,  BorderLayout.CENTER);
+		JPanel nPanel = new JPanel();
+		nPanel.setLayout(new BorderLayout());
+		nPanel.add(toolBar,  BorderLayout.NORTH);
+		nPanel.add(utp,  BorderLayout.CENTER);
 
 		getContentPane().setLayout(new BorderLayout());
-		getContentPane().add(n_panel, BorderLayout.NORTH);
+		getContentPane().add(nPanel, BorderLayout.NORTH);
 		getContentPane().add(scrollPane, BorderLayout.CENTER);
 	}
 
@@ -147,7 +148,7 @@ public class PropsFrame extends JInternalFrame
 		{/*
 			ObjectResource res = (ObjectResource)ae.getSource();
 			String type = res.getTyp();
-			if (type == null || selected_type == null)
+			if (type == null || selectedType == null)
 				return;
 
 			if (type.equals(EquipmentType.typ))
@@ -159,22 +160,22 @@ public class PropsFrame extends JInternalFrame
 			else
 				return;
 
-			editable_property = ((ae.getID() == 0) ? false : true);
-			if (selected_item.equals(SchemeLink.typ) || selected_item.equals(SchemeCableLink.typ))
-				setPropsEditable(editable_property);
+			editableProperty = ((ae.getID() == 0) ? false : true);
+			if (selectedItem.equals(SchemeLink.typ) || selectedItem.equals(SchemeCableLink.typ))
+				setPropsEditable(editableProperty);
 			else
-				setPropsEditable(editable_property && can_be_editable);
+				setPropsEditable(editableProperty && can_be_editable);
 
 			elementSelected(char_hash);*/
 		}
 		else if (ae.getActionCommand().equals(SchemeNavigateEvent.type))
 		{
 			SchemeNavigateEvent ev = (SchemeNavigateEvent)ae;
-			editable_property = ev.isEditable;
+			editableProperty = ev.isEditable;
 //			setPropsEditable(ev.isEditable);
 			objs = (Object[])ev.getSource();
 
-			if (objs == null || selected_type == null)
+			if (objs == null || selectedType == null)
 			{
 				showNoSelection();
 				return;
@@ -192,19 +193,18 @@ public class PropsFrame extends JInternalFrame
 				SchemeElement element = (SchemeElement)objs[0];
 				attr_hash = element.attributes;
 
-				if (!element.equipment_id.equals(""))
+				if (element.equipment != null)
 				{
-					editable_property = true;
-					Equipment eq = (Equipment)Pool.get("kisequipment", element.equipment_id);
-					char_hash = eq.characteristics;
+					editableProperty = true;
+					char_hash = element.equipment.characteristics;
 				}
 				else
 				{
-					//editable_property = false;
-					ProtoElement proto = (ProtoElement)Pool.get(ProtoElement.typ, element.proto_element_id);
+					//editableProperty = false;
+					ProtoElement proto = (ProtoElement)Pool.get(ProtoElement.typ, element.protoElementId);
 					if (proto != null)
 					{
-						EquipmentType type = (EquipmentType)Pool.get(EquipmentType.typ, proto.equipment_type_id);
+						EquipmentType type = (EquipmentType)Pool.get(EquipmentType.typ, proto.equipmentTypeId);
 						if (type != null)
 							char_hash = type.characteristics;
 						else
@@ -219,7 +219,7 @@ public class PropsFrame extends JInternalFrame
 				ProtoElement element = (ProtoElement)objs[0];
 				attr_hash = element.attributes;
 
-				EquipmentType type = (EquipmentType)Pool.get(EquipmentType.typ, element.equipment_type_id);
+				EquipmentType type = (EquipmentType)Pool.get(EquipmentType.typ, element.equipmentTypeId);
 				if (type != null)
 					char_hash = type.characteristics;
 				else
@@ -230,16 +230,15 @@ public class PropsFrame extends JInternalFrame
 				SchemePort port = (SchemePort)objs[0];
 				attr_hash = port.attributes;
 
-				if (!port.port_id.equals(""))
+				if (port.port != null)
 				{
-					editable_property = true;
-					Port p = (Port)Pool.get(Port.typ, port.port_id);
-					char_hash = p.characteristics;
+					editableProperty = true;
+					char_hash = port.port.characteristics;
 				}
 				else
 				{
-//					editable_property = false;
-					PortType type = (PortType)Pool.get(PortType.typ, port.port_type_id);
+//					editableProperty = false;
+					PortType type = (PortType)Pool.get(PortType.typ, port.portTypeId);
 					if (type != null)
 						char_hash = type.characteristics;
 					else
@@ -251,16 +250,15 @@ public class PropsFrame extends JInternalFrame
 				SchemeCablePort port = (SchemeCablePort)objs[0];
 				attr_hash = port.attributes;
 
-				if (!port.cable_port_id.equals(""))
+				if (port.cablePort != null)
 				{
-					editable_property = true;
-					CablePort p = (CablePort)Pool.get(CablePort.typ, port.cable_port_id);
-					char_hash = p.characteristics;
+					editableProperty = true;
+					char_hash = port.cablePort.characteristics;
 				}
 				else
 				{
-//					editable_property = false;
-					CablePortType type = (CablePortType)Pool.get(CablePortType.typ, port.cable_port_type_id);
+//					editableProperty = false;
+					CablePortType type = (CablePortType)Pool.get(CablePortType.typ, port.cablePortTypeId);
 					if (type != null)
 						char_hash = type.characteristics;
 					else
@@ -272,16 +270,15 @@ public class PropsFrame extends JInternalFrame
 				SchemeLink link = (SchemeLink)objs[0];
 				attr_hash = link.attributes;
 
-				if (!link.link_id.equals(""))
+				if (link.link != null)
 				{
-					editable_property = true;
-					Link l = (Link)Pool.get(Link.typ, link.link_id);
-					char_hash = l.characteristics;
+					editableProperty = true;
+					char_hash = link.link.characteristics;
 				}
 				else
 				{
-//					editable_property = false;
-					LinkType type = (LinkType)Pool.get(LinkType.typ, link.link_type_id);
+//					editableProperty = false;
+					LinkType type = (LinkType)Pool.get(LinkType.typ, link.linkTypeId);
 					if (type != null)
 						char_hash = type.characteristics;
 					else
@@ -293,16 +290,15 @@ public class PropsFrame extends JInternalFrame
 				SchemeCableLink link = (SchemeCableLink)objs[0];
 				attr_hash = link.attributes;
 
-				if (!link.cable_link_id.equals(""))
+				if (link.cableLink != null)
 				{
-					editable_property = true;
-					CableLink l = (CableLink)Pool.get(CableLink.typ, link.cable_link_id);
-					char_hash = l.characteristics;
+					editableProperty = true;
+					char_hash = link.cableLink.characteristics;
 				}
 				else
 				{
-//					editable_property = false;
-					CableLinkType type = (CableLinkType)Pool.get(CableLinkType.typ, link.cable_link_type_id);
+//					editableProperty = false;
+					CableLinkType type = (CableLinkType)Pool.get(CableLinkType.typ, link.cableLinkTypeId);
 					if (type != null)
 						char_hash = type.characteristics;
 					else
@@ -316,7 +312,7 @@ public class PropsFrame extends JInternalFrame
 			else
 				showNoSelection();
 
-			if (selected_type.equals("attribute"))
+			if (selectedType.equals("attribute"))
 			{
 				elementSelected(attr_hash);
 				setPropsEditable(can_be_editable);
@@ -324,12 +320,12 @@ public class PropsFrame extends JInternalFrame
 			else
 			{
 				elementSelected(char_hash);
-				setPropsEditable(editable_property);
+				setPropsEditable(editableProperty);
 			}
 		}
 		else if (ae.getActionCommand().equals(TreeDataSelectionEvent.type))
 		{
-			if (selected_type == null)
+			if (selectedType == null)
 			{
 				showNoSelection();
 				return;
@@ -344,22 +340,22 @@ public class PropsFrame extends JInternalFrame
 					ProtoElement element = (ProtoElement)ev.getList().get(ev.getSelectionNumber());
 					attr_hash = element.attributes;
 
-					EquipmentType type = (EquipmentType)Pool.get(EquipmentType.typ, element.equipment_type_id);
+					EquipmentType type = (EquipmentType)Pool.get(EquipmentType.typ, element.equipmentTypeId);
 					if (type != null)
 						char_hash = type.characteristics;
 					else
 						showNoSelection();
 
-//					editable_property = false;
-					setPropsEditable(editable_property);
+//					editableProperty = false;
+					setPropsEditable(editableProperty);
 				}
 				else
 					showNoSelection();
 			}
 			else if (ev.getDataClass().equals(String.class))
 			{
-				selected_type = (String)ev.getSelectedObject();
-				setPropsEditable(editable_property);
+				selectedType = (String)ev.getSelectedObject();
+				setPropsEditable(editableProperty);
 			}
 			else if (ev.getDataClass().equals(SchemeElement.class))
 			{
@@ -368,17 +364,16 @@ public class PropsFrame extends JInternalFrame
 					SchemeElement element = (SchemeElement)ev.getList().get(ev.getSelectionNumber());
 					attr_hash = element.attributes;
 
-					if (!element.equipment_id.equals(""))
+					if (element.equipment != null)
 					{
-						Equipment eq = (Equipment)Pool.get("kisequipment", element.equipment_id);
-						char_hash = eq.characteristics;
+						char_hash = element.equipment.characteristics;
 					}
 					else
 					{
-						ProtoElement proto = (ProtoElement)Pool.get(ProtoElement.typ, element.proto_element_id);
+						ProtoElement proto = (ProtoElement)Pool.get(ProtoElement.typ, element.protoElementId);
 						if (proto != null)
 						{
-							EquipmentType type = (EquipmentType)Pool.get(EquipmentType.typ, proto.equipment_type_id);
+							EquipmentType type = (EquipmentType)Pool.get(EquipmentType.typ, proto.equipmentTypeId);
 							if (type != null)
 								char_hash = type.characteristics;
 							else
@@ -386,8 +381,8 @@ public class PropsFrame extends JInternalFrame
 						}
 						else
 							showNoSelection();
-//					editable_property = false;
-					setPropsEditable(editable_property);
+//					editableProperty = false;
+					setPropsEditable(editableProperty);
 					}
 				}
 				else
@@ -396,7 +391,7 @@ public class PropsFrame extends JInternalFrame
 			else
 				showNoSelection();
 
-			if (selected_type.equals("attribute"))
+			if (selectedType.equals("attribute"))
 			{
 				elementSelected(attr_hash);
 				setPropsEditable(can_be_editable);
@@ -404,14 +399,14 @@ public class PropsFrame extends JInternalFrame
 			else
 			{
 				elementSelected(char_hash);
-				setPropsEditable(editable_property);
+				setPropsEditable(editableProperty);
 			}
 		}
 	}
 
 	void setPropsEditable(boolean b)
 	{
-		toolBar.setAddButtonEnabled(b && !selected_type.equals(""));
+		toolBar.setAddButtonEnabled(b && !selectedType.equals(""));
 		toolBar.setCancelButtonEnabled(!jTable.getSelectionModel().isSelectionEmpty() && b);
 		if (b)
 			tModel.setEditableColumns(new int[] {1});
@@ -425,10 +420,10 @@ public class PropsFrame extends JInternalFrame
 			jTable.getCellEditor(jTable.getEditingRow(), jTable.getEditingColumn()).cancelCellEditing();
 
 		tModel.clearTable();
-		if (selected_type == null || t == null)
+		if (selectedType == null || t == null)
 			return;
 
-		if (selected_type.equals("attribute"))
+		if (selectedType.equals("attribute"))
 			for (Iterator it = t.values().iterator(); it.hasNext();)
 			{
 				ElementAttribute attr = (ElementAttribute)it.next();
@@ -451,7 +446,7 @@ public class PropsFrame extends JInternalFrame
 				{
 					System.err.println("CharacteristicType not found " + chr.type_id);
 				}
-				else if (ch.ch_class.equals(selected_type))
+				else if (ch.ch_class.equals(selectedType))
 				{
 					tModel.addRow(ch.getName(), new Object[] {chr.value});
 				}
@@ -461,10 +456,10 @@ public class PropsFrame extends JInternalFrame
 	void showNoSelection()
 	{
 		tModel.clearTable();
-		selected_item = "";
+		selectedItem = "";
 		char_hash = new HashMap(1);
 		attr_hash = new HashMap(1);
-		editable_property = false;
+		editableProperty = false;
 		setPropsEditable(false);
 	}
 
@@ -472,7 +467,7 @@ public class PropsFrame extends JInternalFrame
 	{
 		String name = (String)tModel.getValueAt(row, 0);
 
-		if (selected_type.equals("attribute"))
+		if (selectedType.equals("attribute"))
 			setAttributeAtHash(attr_hash, name, (String)value);
 		else
 			setCharacteristicAtHash(char_hash, name, (String)value);
@@ -626,7 +621,7 @@ public class PropsFrame extends JInternalFrame
 
 		void addButton_actionPerformed(ActionEvent e)
 		{
-			if (selected_type.equals("attribute"))
+			if (selectedType.equals("attribute"))
 			{
 				AddAttribFrame frame = new AddAttribFrame(null, getTitle(), this.aContext);
 				if (frame.showDialog(tModel.getData()) == AddPropFrame.OK)
@@ -645,7 +640,7 @@ public class PropsFrame extends JInternalFrame
 			else
 			{
 				AddPropFrame frame = new AddPropFrame(Environment.getActiveWindow(), getTitle(), this.aContext);
-				if (frame.showDialog(selected_type, tModel.getData()) == AddPropFrame.OK)
+				if (frame.showDialog(selectedType, tModel.getData()) == AddPropFrame.OK)
 				{
 					CharacteristicType type = frame.getSelectedType();
 					Characteristic ch = new Characteristic();
@@ -669,7 +664,7 @@ public class PropsFrame extends JInternalFrame
 
 			String name = (String)tModel.getValueAt(n, 0);
 
-			if (selected_type.equals("attribute"))
+			if (selectedType.equals("attribute"))
 				removeAttributeFromHash(attr_hash, name);
 			else
 				removeCharacterisricFromHash(char_hash, name);
