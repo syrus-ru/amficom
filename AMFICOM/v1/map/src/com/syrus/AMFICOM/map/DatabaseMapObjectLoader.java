@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseMapObjectLoader.java,v 1.2 2004/12/03 18:01:11 bob Exp $
+ * $Id: DatabaseMapObjectLoader.java,v 1.3 2004/12/07 08:20:11 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -19,13 +19,14 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObject;
+import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2004/12/03 18:01:11 $
+ * @version $Revision: 1.3 $, $Date: 2004/12/07 08:20:11 $
  * @author $Author: bob $
  * @module map_v1
  */
@@ -118,6 +119,20 @@ public final class DatabaseMapObjectLoader implements MapObjectLoader {
 		return list;
 	}
 
+	public List loadCollectorsButIds(StorableObjectCondition condition, List ids) throws DatabaseException,
+			CommunicationException {
+		CollectorDatabase database = (CollectorDatabase) MapDatabaseContext.getCollectorDatabase();
+		List list = null;
+		try {
+			list = database.retrieveByCondition(ids, condition);
+		} catch (IllegalDataException e) {
+			Log.errorMessage("DatabaseMapObjectLoader.loadCollectorsButIds | Illegal Storable Object: " + e.getMessage());
+			throw new DatabaseException("DatabaseMapObjectLoader.loadCollectorsButIds | Illegal Storable Object: "
+					+ e.getMessage());
+		}
+		return list;
+	}
+	
 	public Map loadMap(Identifier id) throws DatabaseException, CommunicationException {
 		return new Map(id);
 	}
@@ -130,6 +145,19 @@ public final class DatabaseMapObjectLoader implements MapObjectLoader {
 		} catch (IllegalDataException e) {
 			Log.errorMessage("DatabaseMapObjectLoader.loadMaps | Illegal Storable Object: " + e.getMessage());
 			throw new DatabaseException("DatabaseMapObjectLoader.loadMaps | Illegal Storable Object: " + e.getMessage());
+		}
+		return list;
+	}
+	
+	public List loadMapsButIds(StorableObjectCondition condition, List ids) throws DatabaseException,
+			CommunicationException {
+		MapDatabase database = (MapDatabase) MapDatabaseContext.getMapDatabase();
+		List list = null;
+		try {
+			list = database.retrieveByCondition(ids, condition);
+		} catch (IllegalDataException e) {
+			Log.errorMessage("DatabaseMapObjectLoader.loadMapsButIds | Illegal Storable Object: " + e.getMessage());
+			throw new DatabaseException("DatabaseMapObjectLoader.loadMapsButIds | Illegal Storable Object: " + e.getMessage());
 		}
 		return list;
 	}
@@ -146,6 +174,20 @@ public final class DatabaseMapObjectLoader implements MapObjectLoader {
 		} catch (IllegalDataException e) {
 			Log.errorMessage("DatabaseMapObjectLoader.loadMarks | Illegal Storable Object: " + e.getMessage());
 			throw new DatabaseException("DatabaseMapObjectLoader.loadMarks | Illegal Storable Object: "
+					+ e.getMessage());
+		}
+		return list;
+	}
+	
+	public List loadMarksButIds(StorableObjectCondition condition, List ids) throws DatabaseException,
+			CommunicationException {
+		MarkDatabase database = (MarkDatabase) MapDatabaseContext.getMarkDatabase();
+		List list = null;
+		try {
+			list = database.retrieveByCondition(ids, condition);
+		} catch (IllegalDataException e) {
+			Log.errorMessage("DatabaseMapObjectLoader.loadMarksButIds | Illegal Storable Object: " + e.getMessage());
+			throw new DatabaseException("DatabaseMapObjectLoader.loadMarksButIds | Illegal Storable Object: "
 					+ e.getMessage());
 		}
 		return list;
@@ -168,6 +210,20 @@ public final class DatabaseMapObjectLoader implements MapObjectLoader {
 		return list;
 	}
 
+	public List loadNodeLinksButIds(StorableObjectCondition condition, List ids) throws DatabaseException,
+			CommunicationException {
+		NodeLinkDatabase database = (NodeLinkDatabase) MapDatabaseContext.getNodeLinkDatabase();
+		List list = null;
+		try {
+			list = database.retrieveByCondition(ids, condition);
+		} catch (IllegalDataException e) {
+			Log.errorMessage("DatabaseMapObjectLoader.loadNodeLinksButIds | Illegal Storable Object: " + e.getMessage());
+			throw new DatabaseException("DatabaseMapObjectLoader.loadNodeLinksButIds | Illegal Storable Object: "
+					+ e.getMessage());
+		}
+		return list;
+	}
+
 	public PhysicalLink loadPhysicalLink(Identifier id) throws DatabaseException, CommunicationException {
 		return new PhysicalLink(id);
 	}
@@ -180,6 +236,20 @@ public final class DatabaseMapObjectLoader implements MapObjectLoader {
 		} catch (IllegalDataException e) {
 			Log.errorMessage("DatabaseMapObjectLoader.loadPhysicalLinks | Illegal Storable Object: " + e.getMessage());
 			throw new DatabaseException("DatabaseMapObjectLoader.loadPhysicalLinks | Illegal Storable Object: "
+					+ e.getMessage());
+		}
+		return list;
+	}
+	
+	public List loadPhysicalLinksButIds(StorableObjectCondition condition, List ids) throws DatabaseException,
+			CommunicationException {
+		PhysicalLinkDatabase database = (PhysicalLinkDatabase) MapDatabaseContext.getPhysicalLinkDatabase();
+		List list = null;
+		try {
+			list = database.retrieveByCondition(ids, condition);
+		} catch (IllegalDataException e) {
+			Log.errorMessage("DatabaseMapObjectLoader.loadPhysicalLinksButIds | Illegal Storable Object: " + e.getMessage());
+			throw new DatabaseException("DatabaseMapObjectLoader.loadPhysicalLinksButIds | Illegal Storable Object: "
 					+ e.getMessage());
 		}
 		return list;
@@ -201,6 +271,21 @@ public final class DatabaseMapObjectLoader implements MapObjectLoader {
 					+ e.getMessage());
 		}
 		return list;
+	}	
+
+	public List loadPhysicalLinkTypesButIds(StorableObjectCondition condition, List ids) throws DatabaseException,
+			CommunicationException {
+		PhysicalLinkTypeDatabase database = (PhysicalLinkTypeDatabase) MapDatabaseContext.getPhysicalLinkTypeDatabase();
+		List list = null;
+		try {
+			list = database.retrieveByCondition(ids, condition);
+		} catch (IllegalDataException e) {
+			Log.errorMessage("DatabaseMapObjectLoader.loadPhysicalLinkTypesButIds | Illegal Storable Object: "
+					+ e.getMessage());
+			throw new DatabaseException("DatabaseMapObjectLoader.loadPhysicalLinkTypesButIds | Illegal Storable Object: "
+					+ e.getMessage());
+		}
+		return list;
 	}
 
 	public SiteNode loadSiteNode(Identifier id) throws DatabaseException, CommunicationException {
@@ -214,7 +299,21 @@ public final class DatabaseMapObjectLoader implements MapObjectLoader {
 			list = database.retrieveByIds(ids, null);
 		} catch (IllegalDataException e) {
 			Log.errorMessage("DatabaseMapObjectLoader.loadSiteNodes | Illegal Storable Object: " + e.getMessage());
-			throw new DatabaseException("loadSiteNodes.loadPhysicalLinkTypes | Illegal Storable Object: "
+			throw new DatabaseException("loadSiteNodes.loadSiteNodes | Illegal Storable Object: "
+					+ e.getMessage());
+		}
+		return list;
+	}
+	
+	public List loadSiteNodesButIds(StorableObjectCondition condition, List ids) throws DatabaseException,
+			CommunicationException {
+		SiteNodeDatabase database = (SiteNodeDatabase) MapDatabaseContext.getSiteNodeDatabase();
+		List list = null;
+		try {
+			list = database.retrieveByCondition(ids, condition);
+		} catch (IllegalDataException e) {
+			Log.errorMessage("DatabaseMapObjectLoader.loadSiteNodesButIds | Illegal Storable Object: " + e.getMessage());
+			throw new DatabaseException("loadSiteNodes.loadSiteNodesButIds | Illegal Storable Object: "
 					+ e.getMessage());
 		}
 		return list;
@@ -234,6 +333,19 @@ public final class DatabaseMapObjectLoader implements MapObjectLoader {
 			throw new DatabaseException("loadSiteNodes.loadSiteNodeTypes | Illegal Storable Object: " + e.getMessage());
 		}
 		return list;
+	}	
+
+	public List loadSiteNodeTypesButIds(StorableObjectCondition condition, List ids) throws DatabaseException,
+			CommunicationException {
+		SiteNodeTypeDatabase database = (SiteNodeTypeDatabase) MapDatabaseContext.getSiteNodeTypeDatabase();
+		List list = null;
+		try {
+			list = database.retrieveByCondition(ids, condition);
+		} catch (IllegalDataException e) {
+			Log.errorMessage("DatabaseMapObjectLoader.loadSiteNodeTypesButIds | Illegal Storable Object: " + e.getMessage());
+			throw new DatabaseException("loadSiteNodes.loadSiteNodeTypesButIds | Illegal Storable Object: " + e.getMessage());
+		}
+		return list;
 	}
 
 	public TopologicalNode loadTopologicalNode(Identifier id) throws DatabaseException, CommunicationException {
@@ -249,6 +361,21 @@ public final class DatabaseMapObjectLoader implements MapObjectLoader {
 			Log.errorMessage("DatabaseMapObjectLoader.loadTopologicalNodes | Illegal Storable Object: "
 					+ e.getMessage());
 			throw new DatabaseException("loadSiteNodes.loadTopologicalNodes | Illegal Storable Object: "
+					+ e.getMessage());
+		}
+		return list;
+	}
+	
+	public List loadTopologicalNodesButIds(StorableObjectCondition condition, List ids) throws DatabaseException,
+			CommunicationException {
+		TopologicalNodeDatabase database = (TopologicalNodeDatabase) MapDatabaseContext.getTopologicalNodeDatabase();
+		List list = null;
+		try {
+			list = database.retrieveByCondition(ids, condition);
+		} catch (IllegalDataException e) {
+			Log.errorMessage("DatabaseMapObjectLoader.loadTopologicalNodesButIds | Illegal Storable Object: "
+					+ e.getMessage());
+			throw new DatabaseException("loadSiteNodes.loadTopologicalNodesButIds | Illegal Storable Object: "
 					+ e.getMessage());
 		}
 		return list;
