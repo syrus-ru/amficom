@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeCableThreadImpl.java,v 1.8 2004/12/21 15:35:01 bass Exp $
+ * $Id: SchemeCableThreadImpl.java,v 1.9 2004/12/21 16:41:17 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,7 +16,7 @@ import com.syrus.util.logging.ErrorHandler;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.8 $, $Date: 2004/12/21 15:35:01 $
+ * @version $Revision: 1.9 $, $Date: 2004/12/21 16:41:17 $
  * @module scheme_v1
  */
 final class SchemeCableThreadImpl extends SchemeCableThread implements Cloneable {
@@ -228,5 +228,36 @@ final class SchemeCableThreadImpl extends SchemeCableThread implements Cloneable
 		 * @todo Update the newly created object.
 		 */
 		return schemeCableThread;
+	}
+
+	/**
+	 * @param schemeDevice
+	 * @see SchemeCableThread#getSchemePort(SchemeDevice)
+	 */
+	public SchemePort getSchemePort(final SchemeDevice schemeDevice) {
+		assert schemeDevice != null;
+		final SchemePort sourceSchemePort = sourceSchemePort();
+		final SchemePort targetSchemePort = targetSchemePort();
+		final Identifier sourceSchemeDeviceId = sourceSchemePort.schemeDevice().id();
+		final Identifier targetSchemeDeviceId = targetSchemePort.schemeDevice().id();
+		final Identifier schemeDeviceId = schemeDevice.id();
+		if (schemeDeviceId.equals(sourceSchemeDeviceId))
+			return sourceSchemePort;
+		else if (schemeDeviceId.equals(targetSchemeDeviceId))
+			return targetSchemePort;
+		else
+			throw new IllegalArgumentException("This scheme cable thread is in no way connected to the scheme device specified.");
+	}
+
+	/**
+	 * @param schemeDevice
+	 * @param schemePort
+	 * @see SchemeCableThread#setSchemePort(SchemeDevice, SchemePort)
+	 */
+	public void setSchemePort(final SchemeDevice schemeDevice, final SchemePort schemePort) {
+		/**
+		 * @todo Update w/o notification.
+		 */
+		throw new UnsupportedOperationException();
 	}
 }
