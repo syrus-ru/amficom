@@ -1,5 +1,5 @@
 /*
- * $Id: CoreAnalysisManager.java,v 1.21 2005/03/10 17:00:01 saa Exp $
+ * $Id: CoreAnalysisManager.java,v 1.22 2005/03/15 13:46:34 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@ package com.syrus.AMFICOM.analysis;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.21 $, $Date: 2005/03/10 17:00:01 $
+ * @version $Revision: 1.22 $, $Date: 2005/03/15 13:46:34 $
  * @module
  */
 
@@ -53,7 +53,7 @@ public class CoreAnalysisManager
 			double dX, 
 			double minLevel,
 			double minWeld,
-			double minConnector, 
+			double minConnector,
 			double minEnd,
 			int reflSize,
 			int nReflSize,
@@ -110,12 +110,9 @@ public class CoreAnalysisManager
 	 * определения шума будет сделан уточненный IA.
 	 * @param y  Входная кривая рефлектограммы в дБ.
 	 * @param length Длина волокна, > 0
-	 * @param ev (Опционально) предварительные данные IA. Если не null,
-	 *   то могут использоваться, а могут не использоваться.
-	 *   Если null, то не используются.
 	 * @return относительная величина шума (дБ) по уровню 3 сигма, длина массива length  
 	 */
-	private static double[] calcNoiseArray(double[] y, int length, SimpleReflectogramEvent[] ev)
+	public static double[] calcNoiseArray(double[] y, int length)
 	{
 		double[] ret = nCalcNoiseArray(y, length);
 		for (int i = 0; i < ret.length; i++)
@@ -175,13 +172,35 @@ public class CoreAnalysisManager
 		return threshold;
 	}
 
+	public static SimpleReflectogramEventImpl[] createSimpleEvents(
+			double[] y,
+			double deltaX,
+			double minLevel,
+			double minWeld,
+			double minConnector,
+			double minEnd,
+			int reflSize,
+			int nReflSize,
+			int traceLength,
+			double[] noiseArray)
+	{
+		return analyse3(y, deltaX,
+			minLevel, minWeld, minConnector, minEnd,
+			reflSize, nReflSize, traceLength, noiseArray);
+	}
+	
+	public static ModelFunction fitTrace(double[] y, int traceLength, double[] noiseArray)
+	{
+		return ModelFunction.CreateFitedAsBreakL(y, 0, traceLength, noiseArray);
+	}
+
 	/**
-	 * Делает анализ. Скрывает от UI сложности, связанные с правильным
+	 * Делает анализ. Скрывает сложности, связанные с правильным
 	 * порядком вызова IA, fit, calcMutualParameters и выставлением нач. порогов.
 	 * 
 	 * @param strategy степень аппроксимации. Недокументировано.
 	 * @param bs рефлектограмма
-	 * @param pars недокументированный набор параметров для IA
+	 * @param pars набор параметров для IA: { level, weld, connector, end }
 	 * @param bellcoreTraces хэш всех открытых р/г для определения пределов колебаний
 	 * @return массив событий
 	 */
@@ -216,22 +235,24 @@ public class CoreAnalysisManager
 		long t1 = System.currentTimeMillis();
 
 		// определяем уровень шума для фитировки
-		double[] noiseArray = calcNoiseArray(y, traceLength, null);
+		double[] noiseArray = calcNoiseArray(y, traceLength);
 
 		long t2 = System.currentTimeMillis();
 
 		// формирование событий
-		SimpleReflectogramEventImpl[] se = analyse3(y, deltaX,
+		SimpleReflectogramEventImpl[] se = createSimpleEvents(
+				y, deltaX,
 				pars[0], pars[1], pars[2], pars[3],
 				reflSize, nReflSize, traceLength, noiseArray);
 
 		// теперь уточняем длину рефлектограммы по концу последнего события
+		// (длина может уменьшиться)
 		traceLength = se.length > 0
 			? se[se.length - 1].getEnd() + 1
 			: 0;
 
 		long t3 = System.currentTimeMillis();
-		ModelFunction mf = ModelFunction.CreateFitedAsBreakL(y, 0, traceLength, noiseArray);
+		ModelFunction mf = fitTrace(y, traceLength, noiseArray);
 
 		long t4 = System.currentTimeMillis();
 
