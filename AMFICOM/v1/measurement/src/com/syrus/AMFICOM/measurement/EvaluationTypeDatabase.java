@@ -1,5 +1,5 @@
 /*
- * $Id: EvaluationTypeDatabase.java,v 1.41 2004/12/23 12:27:13 bob Exp $
+ * $Id: EvaluationTypeDatabase.java,v 1.42 2004/12/24 12:52:00 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,6 +23,7 @@ import java.sql.SQLException;
 
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
@@ -40,7 +41,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.41 $, $Date: 2004/12/23 12:27:13 $
+ * @version $Revision: 1.42 $, $Date: 2004/12/24 12:52:00 $
  * @author $Author: bob $
  * @module measurement_v1
  */
