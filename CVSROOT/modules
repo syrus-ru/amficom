@@ -165,3 +165,7 @@ r6		hw/r6
 
 tools		tools
 util		util
+
+#DADARA module for modeling functions, analysis, etc
+dadara		dadara
+
