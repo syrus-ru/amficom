@@ -1,5 +1,5 @@
 /**
- * $Id: ViewMapAllCommand.java,v 1.4 2005/02/08 15:11:10 krupenn Exp $
+ * $Id: ViewMapAllCommand.java,v 1.5 2005/02/24 14:31:54 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -21,7 +21,7 @@ import javax.swing.JDesktopPane;
 /**
  * отобразить стандартный набор окон модуля "Редактор топологических схем"
  * @author $Author: krupenn $
- * @version $Revision: 1.4 $, $Date: 2005/02/08 15:11:10 $
+ * @version $Revision: 1.5 $, $Date: 2005/02/24 14:31:54 $
  * @module mapviewclient_v1
  */
 public class ViewMapAllCommand extends VoidCommand
@@ -41,8 +41,8 @@ public class ViewMapAllCommand extends VoidCommand
 	{
 		new ViewMapPropertiesCommand(this.desktop, this.aContext).execute();
 		new ViewMapElementsCommand(this.desktop, this.aContext).execute();
-		new ViewMapElementsBarCommand(this.desktop, this.aContext).execute();
 		new ViewMapNavigatorCommand(this.desktop, this.aContext).execute();
+		new ViewMapElementsBarCommand(this.desktop, this.aContext).execute();
 		new ViewMapWindowCommand(this.aContext.getDispatcher(), this.desktop, this.aContext, this.factory).execute();
 		setResult(Command.RESULT_OK);
 	}
