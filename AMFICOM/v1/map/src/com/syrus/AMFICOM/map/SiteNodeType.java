@@ -1,5 +1,5 @@
 /**
- * $Id: SiteNodeType.java,v 1.13 2005/01/27 14:43:37 krupenn Exp $
+ * $Id: SiteNodeType.java,v 1.14 2005/02/09 12:50:11 bob Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -41,8 +41,8 @@ import java.util.List;
  * {@link #codename}, соответствующим какому-либо значению {@link #WELL}, 
  * {@link #PIQUET}, {@link #ATS}, {@link #BUILDING}, {@link #UNBOUND}, 
  * {@link #CABLE_INLET}, {@link #TOWER}
- * @author $Author: krupenn $
- * @version $Revision: 1.13 $, $Date: 2005/01/27 14:43:37 $
+ * @author $Author: bob $
+ * @version $Revision: 1.14 $, $Date: 2005/02/09 12:50:11 $
  * @module map_v1
  */
 public class SiteNodeType extends StorableObjectType implements Characterized {
@@ -187,10 +187,7 @@ public class SiteNodeType extends StorableObjectType implements Characterized {
 	}
 
 	public List getDependencies() {
-		List dependencies = new LinkedList();
-		dependencies.add(this.imageId);
-		dependencies.addAll(this.characteristics);
-		return dependencies;
+		return Collections.singletonList(this.imageId);
 	}
 
 	public String getDescription() {

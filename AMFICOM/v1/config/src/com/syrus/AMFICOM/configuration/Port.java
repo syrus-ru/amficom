@@ -1,5 +1,5 @@
 /*
- * $Id: Port.java,v 1.41 2005/01/31 14:19:47 bob Exp $
+ * $Id: Port.java,v 1.42 2005/02/09 12:49:56 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,17 +12,16 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 
 import com.syrus.AMFICOM.configuration.corba.PortSort;
 import com.syrus.AMFICOM.configuration.corba.Port_Transferable;
-import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.Characterized;
-import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
-import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
+import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
@@ -36,7 +35,7 @@ import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.41 $, $Date: 2005/01/31 14:19:47 $
+ * @version $Revision: 1.42 $, $Date: 2005/02/09 12:49:56 $
  * @author $Author: bob $
  * @module config_v1
  */
@@ -246,10 +245,9 @@ public class Port extends StorableObject implements Characterized, TypedObject {
 	}
 
 	public List getDependencies() {
-		List dependencies = new LinkedList();
+		List dependencies = new ArrayList(2);
 		dependencies.add(this.type);
 		dependencies.add(this.equipmentId);
-		dependencies.addAll(this.characteristics);
 		return dependencies;
 	}	
 	/**

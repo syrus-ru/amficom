@@ -1,5 +1,5 @@
 /**
- * $Id: Collector.java,v 1.20 2005/02/02 14:48:45 krupenn Exp $
+ * $Id: Collector.java,v 1.21 2005/02/09 12:50:11 bob Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -40,8 +40,8 @@ import java.util.List;
  * Коллектор на топологической схеме, который характеризуется набором входящих
  * в него линий. Линии не обязаны быть связными.
  * 
- * @author $Author: krupenn $
- * @version $Revision: 1.20 $, $Date: 2005/02/02 14:48:45 $
+ * @author $Author: bob $
+ * @version $Revision: 1.21 $, $Date: 2005/02/09 12:50:11 $
  * @module map_v1
  */
 public class Collector 
@@ -171,7 +171,6 @@ public class Collector
 	public List getDependencies() {
 		List dependencies = new LinkedList();
 		dependencies.addAll(this.physicalLinks);
-		dependencies.addAll(this.characteristics);
 		return dependencies;
 	}
 

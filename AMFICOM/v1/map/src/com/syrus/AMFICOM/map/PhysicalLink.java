@@ -1,5 +1,5 @@
 /**
- * $Id: PhysicalLink.java,v 1.25 2005/02/08 12:01:47 bob Exp $
+ * $Id: PhysicalLink.java,v 1.26 2005/02/09 12:50:11 bob Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -52,7 +52,7 @@ import com.syrus.AMFICOM.map.corba.PhysicalLink_Transferable;
  * тоннель (<code>{@link PhysicalLinkType#TUNNEL}</code>) 
  * и коллектор (<code>{@link PhysicalLinkType#COLLECTOR}</code>).
  * @author $Author: bob $
- * @version $Revision: 1.25 $, $Date: 2005/02/08 12:01:47 $
+ * @version $Revision: 1.26 $, $Date: 2005/02/09 12:50:11 $
  * @module map_v1
  */
 public class PhysicalLink extends StorableObject implements Characterized, TypedObject, MapElement {
@@ -290,10 +290,7 @@ public class PhysicalLink extends StorableObject implements Characterized, Typed
 	}
 
 	public List getDependencies() {
-		List dependencies = new LinkedList();
-		dependencies.add(this.physicalLinkType);
-		dependencies.addAll(this.characteristics);
-		return dependencies;
+		return Collections.singletonList(this.physicalLinkType);
 	}
 	
 	public Object getTransferable() {

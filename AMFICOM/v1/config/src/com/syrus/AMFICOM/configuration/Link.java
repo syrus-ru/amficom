@@ -1,5 +1,5 @@
 /*
- * $Id: Link.java,v 1.32 2005/01/31 13:47:50 arseniy Exp $
+ * $Id: Link.java,v 1.33 2005/02/09 12:49:56 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,8 +35,8 @@ import com.syrus.AMFICOM.configuration.corba.LinkSort;
 import com.syrus.AMFICOM.configuration.corba.Link_Transferable;
 
 /**
- * @version $Revision: 1.32 $, $Date: 2005/01/31 13:47:50 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.33 $, $Date: 2005/02/09 12:49:56 $
+ * @author $Author: bob $
  * @module config_v1
  */
 public class Link extends DomainMember implements Characterized, TypedObject {
@@ -278,10 +278,7 @@ public class Link extends DomainMember implements Characterized, TypedObject {
 	}
 
 	public List getDependencies() {
-		List dependencies = new LinkedList();
-		dependencies.add(this.type);
-		dependencies.addAll(this.characteristics);
-		return dependencies;
+		return Collections.singletonList(this.type);
 	}
 
 	public void addCharacteristic(Characteristic characteristic) {

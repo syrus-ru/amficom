@@ -1,5 +1,5 @@
 /**
- * $Id: Mark.java,v 1.17 2005/02/02 14:48:45 krupenn Exp $
+ * $Id: Mark.java,v 1.18 2005/02/09 12:50:11 bob Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -43,8 +43,8 @@ import java.util.ListIterator;
  * в св€зи с чем методы класса {@link AbstractNode}, работающие с лини€ми и 
  * фрагментами линий, переопределены и бросают 
  * <code>{@link UnsupportedOperationException}</code>.
- * @author $Author: krupenn $
- * @version $Revision: 1.17 $, $Date: 2005/02/02 14:48:45 $
+ * @author $Author: bob $
+ * @version $Revision: 1.18 $, $Date: 2005/02/09 12:50:11 $
  * @module map_v1
  */
 public class Mark extends AbstractNode implements Characterized {
@@ -223,10 +223,7 @@ public class Mark extends AbstractNode implements Characterized {
 	}
 
 	public List getDependencies() {
-		List dependencies = new LinkedList();
-		dependencies.add(this.physicalLink);
-		dependencies.addAll(this.characteristics);
-		return dependencies;
+		return Collections.singletonList(this.physicalLink);
 	}
 
 	public Object getTransferable() {

@@ -1,5 +1,5 @@
 /*
- * $Id: KIS.java,v 1.57 2005/01/31 13:47:50 arseniy Exp $
+ * $Id: KIS.java,v 1.58 2005/02/09 12:49:56 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,8 +33,8 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.administration.DomainMember;
 
 /**
- * @version $Revision: 1.57 $, $Date: 2005/01/31 13:47:50 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.58 $, $Date: 2005/02/09 12:49:56 $
+ * @author $Author: bob $
  * @module config_v1
  */
 
@@ -283,7 +283,6 @@ public class KIS extends DomainMember implements Characterized {
 		dependencies.add(this.equipmentId);
 		dependencies.add(this.mcmId);
 		dependencies.addAll(this.measurementPortIds);
-		dependencies.addAll(this.characteristics);
 		return dependencies;
 	}
 

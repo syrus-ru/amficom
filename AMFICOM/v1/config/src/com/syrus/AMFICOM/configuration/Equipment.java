@@ -1,5 +1,5 @@
 /*
- * $Id: Equipment.java,v 1.63 2005/02/03 20:17:36 arseniy Exp $
+ * $Id: Equipment.java,v 1.64 2005/02/09 12:49:56 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,8 +34,8 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.configuration.corba.Equipment_Transferable;
 
 /**
- * @version $Revision: 1.63 $, $Date: 2005/02/03 20:17:36 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.64 $, $Date: 2005/02/09 12:49:56 $
+ * @author $Author: bob $
  * @module config_v1
  */
 
@@ -376,7 +376,6 @@ public class Equipment extends MonitoredDomainMember implements Characterized, T
 		List dependencies = new LinkedList();
 		dependencies.add(this.monitoredElementIds);
 		dependencies.add(this.portIds);
-		dependencies.addAll(this.characteristics);
 		return dependencies;
 	}
 

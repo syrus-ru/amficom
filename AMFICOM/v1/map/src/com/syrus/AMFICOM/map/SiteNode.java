@@ -1,5 +1,5 @@
 /**
- * $Id: SiteNode.java,v 1.18 2005/02/08 12:01:47 bob Exp $
+ * $Id: SiteNode.java,v 1.19 2005/02/09 12:50:11 bob Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -57,7 +57,7 @@ import com.syrus.AMFICOM.resource.ResourceStorableObjectPool;
  * {@link #city}, {@link #street}, {@link #building} для поиска по 
  * географическим параметрам. 
  * @author $Author: bob $
- * @version $Revision: 1.18 $, $Date: 2005/02/08 12:01:47 $
+ * @version $Revision: 1.19 $, $Date: 2005/02/09 12:50:11 $
  * @module map_v1
  */
 public class SiteNode extends AbstractNode implements TypedObject {
@@ -264,7 +264,6 @@ public class SiteNode extends AbstractNode implements TypedObject {
 		List dependencies = new LinkedList();
 		dependencies.add(this.type);
 		dependencies.add(this.imageId);
-		dependencies.addAll(this.characteristics);
 		return dependencies;
 	}
 

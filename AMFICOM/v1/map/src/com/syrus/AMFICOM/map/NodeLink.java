@@ -1,5 +1,5 @@
 /**
- * $Id: NodeLink.java,v 1.21 2005/02/02 14:48:45 krupenn Exp $
+ * $Id: NodeLink.java,v 1.22 2005/02/09 12:50:11 bob Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -43,8 +43,8 @@ import java.util.List;
  * отрезок, соединяющий два концевых узла ({@link AbstractNode}). Фрагменты 
  * не живут сами по себе, а входят в состав одной и только одной линии
  * ({@link PhysicalLink}).
- * @author $Author: krupenn $
- * @version $Revision: 1.21 $, $Date: 2005/02/02 14:48:45 $
+ * @author $Author: bob $
+ * @version $Revision: 1.22 $, $Date: 2005/02/09 12:50:11 $
  * @module map_v1
  */
 public class NodeLink extends StorableObject implements Characterized, MapElement {
@@ -207,7 +207,6 @@ public class NodeLink extends StorableObject implements Characterized, MapElemen
 		dependencies.add(this.physicalLink);
 		dependencies.add(this.startNode);
 		dependencies.add(this.endNode);
-		dependencies.addAll(this.characteristics);
 		return dependencies;
 	}
 

@@ -1,5 +1,5 @@
 /*
- * $Id: EquipmentType.java,v 1.42 2005/01/31 13:47:50 arseniy Exp $
+ * $Id: EquipmentType.java,v 1.43 2005/02/09 12:49:56 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,8 +32,8 @@ import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.42 $, $Date: 2005/01/31 13:47:50 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.43 $, $Date: 2005/02/09 12:49:56 $
+ * @author $Author: bob $
  * @module config_v1
  */
 
@@ -191,7 +191,7 @@ public class EquipmentType extends StorableObjectType implements Characterized {
 	}
 
 	public List getDependencies() {
-		return this.characteristics;
+		return Collections.EMPTY_LIST;
 	}
 
 	public void addCharacteristic(Characteristic characteristic) {

@@ -1,5 +1,5 @@
 /**
- * $Id: TopologicalNode.java,v 1.18 2005/02/04 06:44:07 bob Exp $
+ * $Id: TopologicalNode.java,v 1.19 2005/02/09 12:50:11 bob Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -43,7 +43,7 @@ import java.util.List;
  * топологический узел соответствует точке изгиба линии и не требует 
  * дополнительной описательной информации.
  * @author $Author: bob $
- * @version $Revision: 1.18 $, $Date: 2005/02/04 06:44:07 $
+ * @version $Revision: 1.19 $, $Date: 2005/02/09 12:50:11 $
  * @module map_v1
  */
 public class TopologicalNode extends AbstractNode {
@@ -271,7 +271,7 @@ public class TopologicalNode extends AbstractNode {
 	}
 
 	public List getDependencies() {
-		return this.characteristics;
+		return Collections.EMPTY_LIST;
 	}
 
 	public Object getTransferable() {
