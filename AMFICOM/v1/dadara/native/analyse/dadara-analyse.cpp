@@ -1,6 +1,5 @@
-#include "assert.h"
+#include <assert.h>
 #include <jni.h>
-#include <windows.h> // for APIENTRY #define
 #include <math.h>
 
 #include "dadara-analyse.h"
