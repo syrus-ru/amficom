@@ -89,7 +89,7 @@ public class FilterDialog extends JDialog
 		this.getContentPane().add(this.buttonPanel, null);
 	}
 
-	private void setFilter(ObjectResourceFilter filter){
+	public void setFilter(ObjectResourceFilter filter){
 		this.filter = filter;
 		this.filterPanel.setFilter(filter);
 		this.filterPanel.setContext(null);
