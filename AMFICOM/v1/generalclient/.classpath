@@ -4,7 +4,9 @@
 	<classpathentry kind="src" path="test"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="src" path="/filter_v1"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/AMFICOM library"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Extended library"/>
+	<classpathentry kind="src" path="/util"/>
+	<classpathentry kind="var" path="AMFICOM_HOME/lib/corbaportable.jar"/>
+	<classpathentry kind="var" path="AMFICOM_HOME/lib/corbaportable-common.jar"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>
