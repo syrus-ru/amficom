@@ -1,3 +1,11 @@
+/*
+ * $Id: KIS.java,v 1.9 2004/07/27 16:03:30 arseniy Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ.
+ */
+
 package com.syrus.AMFICOM.configuration;
 
 import java.util.Date;
@@ -11,6 +19,12 @@ import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.configuration.corba.Equipment_Transferable;
 import com.syrus.AMFICOM.configuration.corba.EquipmentSort;
+
+/**
+ * @version $ $, $ $
+ * @author $Author: arseniy $
+ * @module configuration_v1
+ */
 
 public class KIS extends Equipment {
 	private Identifier mcmId;

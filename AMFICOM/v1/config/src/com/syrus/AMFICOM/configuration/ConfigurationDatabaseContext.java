@@ -1,6 +1,20 @@
+/*
+ * $Id: ConfigurationDatabaseContext.java,v 1.9 2004/07/27 16:03:30 arseniy Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ.
+ */
+
 package com.syrus.AMFICOM.configuration;
 
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
+
+/**
+ * @version $ $, $ $
+ * @author $Author: arseniy $
+ * @module configuration_v1
+ */
 
 public abstract class ConfigurationDatabaseContext {
 	protected static StorableObjectDatabase characteristicDatabase;

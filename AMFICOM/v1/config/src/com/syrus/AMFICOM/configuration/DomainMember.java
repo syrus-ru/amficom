@@ -1,8 +1,22 @@
+/*
+ * $Id: DomainMember.java,v 1.5 2004/07/27 16:03:30 arseniy Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ.
+ */
+
 package com.syrus.AMFICOM.configuration;
 
 import java.util.Date;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObject;
+
+/**
+ * @version $ $, $ $
+ * @author $Author: arseniy $
+ * @module configuration_v1
+ */
 
 public abstract class DomainMember extends StorableObject {
 	

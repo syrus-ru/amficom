@@ -1,11 +1,33 @@
+/*
+ * $Id: MonitoredElementDatabase.java,v 1.5 2004/07/27 16:03:30 arseniy Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ.
+ */
+
 package com.syrus.AMFICOM.configuration;
 
 import java.sql.Statement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.StorableObject;
+import com.syrus.AMFICOM.general.StorableObjectDatabase;
+import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.UpdateObjectException;
+import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
-import com.syrus.AMFICOM.general.*;
+
+/**
+ * @version $ $, $ $
+ * @author $Author: arseniy $
+ * @module configuration_v1
+ */
 
 public class MonitoredElementDatabase extends StorableObjectDatabase {
     public static final String COLUMN_KIS_ID = "kis_id";

@@ -1,3 +1,11 @@
+/*
+ * $Id: CharacteristicTypeDatabase.java,v 1.4 2004/07/27 16:03:30 arseniy Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ.
+ */
+
 package com.syrus.AMFICOM.configuration;
 
 import java.sql.Statement;
@@ -14,6 +22,12 @@ import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.ObjectEntities;
+
+/**
+ * @version $ $, $ $
+ * @author $Author: arseniy $
+ * @module configuration_v1
+ */
 
 public class CharacteristicTypeDatabase extends StorableObjectDatabase {
 	public static final String COLUMN_CODENAME				= "codename";

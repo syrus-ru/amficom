@@ -1,3 +1,11 @@
+/*
+ * $Id: MCMDatabase.java,v 1.6 2004/07/27 16:03:30 arseniy Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ.
+ */
+
 package com.syrus.AMFICOM.configuration;
 
 import java.sql.Statement;
@@ -5,9 +13,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-
-import com.syrus.util.Log;
-import com.syrus.util.database.DatabaseDate;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
@@ -18,6 +23,14 @@ import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.configuration.corba.EquipmentSort;
+import com.syrus.util.Log;
+import com.syrus.util.database.DatabaseDate;
+
+/**
+ * @version $ $, $ $
+ * @author $Author: arseniy $
+ * @module configuration_v1
+ */
 
 public class MCMDatabase extends StorableObjectDatabase {
 
