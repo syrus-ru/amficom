@@ -1,14 +1,13 @@
-#ifndef TRANSCEIVER_H
-#define TRANSCEIVER_H
+#ifndef TRANSCEIVERMANAGER_H
+#define TRANSCEIVERMANAGER_H
 
-#include <sys/types.h>
 #include <termios.h>
 #include "AgentTransceiver.h"
 #include "RTUTransceiver.h"
 
 class TransceiverManager {
 	public:
-		TransceiverManager(char* kis_id, char* rtu_hostname, uint16_t rtu_port, unsigned int timeout);
+		TransceiverManager(char* kis_id, char* rtu_hostname, unsigned short rtu_port, unsigned int timeout);
 		virtual ~TransceiverManager();
 		void init();
 		unsigned int getTimeout() const;
@@ -19,7 +18,7 @@ class TransceiverManager {
 	private:
 		char* kis_id;
 		char* rtu_hostname;
-		uint16_t rtu_port;
+		unsigned short rtu_port;
 		unsigned int timeout;
 		AgentTransceiver* agentTransceiver;
 		RTUTransceiver* rtuTransceiver;
@@ -37,3 +36,4 @@ class TransceiverManager {
 };
 
 #endif
+

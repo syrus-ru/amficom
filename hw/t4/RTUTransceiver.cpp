@@ -120,8 +120,12 @@ int RTUTransceiver::processRTUMessage(char* mesg) {
 			if(!memcmp(mesg, "POWER UP", 8)) {
 				//printf("++++++++ Power up\n");
 			}
-			else
+			else {
+				/*Extra safety
+				 * */
+				this->comm_error = 1;
 				return 0;
+			}
 	return 1;
 }
 
@@ -388,7 +392,7 @@ void* RTUTransceiver::run(void* args) {
 	int rec_ret;
 	unsigned int rec_empty_count = 0;
 	char* mesgcomm;
-	char*mesgcomm_sav;
+	char* mesgcomm_sav;
 	unsigned int length;
 	unsigned int send_counter;
 	MeasurementSegment* measurementSegment;

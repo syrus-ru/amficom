@@ -6,7 +6,7 @@
 #include <arpa/inet.h>
 #include "TransceiverManager.h"
 
-TransceiverManager::TransceiverManager(char* kis_id, char* rtu_hostname, uint16_t rtu_port, unsigned int timeout) {
+TransceiverManager::TransceiverManager(char* kis_id, char* rtu_hostname, unsigned short rtu_port, unsigned int timeout) {
 	this->kis_id = kis_id;
 	this->rtu_hostname = rtu_hostname;
 	this->rtu_port = rtu_port;

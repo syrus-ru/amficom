@@ -5,10 +5,11 @@
 #include <pthread.h>
 #include "TransceiverManager.h"
 
+
 int main(int argc, char* argv[]) {
 	char* ID;
 	char* RTU_HOSTNAME;
-	uint16_t RTU_PORT;
+	unsigned short RTU_PORT;
 	unsigned int KISTIMEWAIT;
 
 	if (argc != 5) {
@@ -17,7 +18,7 @@ int main(int argc, char* argv[]) {
 	}
 	ID = argv[1];
 	RTU_HOSTNAME = argv[2];
-	RTU_PORT = (uint16_t)atoi(argv[3]);
+	RTU_PORT = (unsigned short)atoi(argv[3]);
 	KISTIMEWAIT = atoi(argv[4]);
 
 	TransceiverManager* transceiverManager = new TransceiverManager(ID, RTU_HOSTNAME, RTU_PORT, KISTIMEWAIT);
@@ -26,3 +27,4 @@ int main(int argc, char* argv[]) {
 	delete transceiverManager;
 	return 1;
 }
+

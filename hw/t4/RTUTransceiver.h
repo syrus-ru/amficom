@@ -47,3 +47,4 @@ class RTUTransceiver {
 };
 
 #endif
+

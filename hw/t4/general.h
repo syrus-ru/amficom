@@ -18,3 +18,4 @@ typedef deque<MeasurementSegment*> MeasurementQueueT;
 typedef deque<ResultSegment*> ResultQueueT;
 
 #endif
+

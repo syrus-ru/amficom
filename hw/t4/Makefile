@@ -3,19 +3,23 @@ AKP=../akp
 AKPA=$(AKP)/akp.a
 TRC=../trc
 TRCA=$(TRC)/tracedata.a
-CPP=g++#-3.4.1
-CFLAGS=-Wall -W -g -ggdb
-OBJS=t4.o \
+
+CXX=g++#-3.4.1
+CPPFLAGS=-I$(AKP) -I$(TRC)
+CXXFLAGS=-O3 -Wall -W
+#OBJS=t4.o \
 	TransceiverManager.o \
 	AgentTransceiver.o \
 	RTUTransceiver.o
+OBJS := $(patsubst %.cpp,%.o,$(wildcard *.cpp))
+
 ARCHFILE=t4.tar.gz
 
 t4:	$(OBJS) $(AKPA) $(TRCA)
-	$(CPP) $(CFLAGS) -o $(OUT) $(OBJS) $(AKPA) $(TRCA) -lpthread
+	$(CXX) $(CXXFLAGS) -o $(OUT) $(OBJS) $(AKPA) $(TRCA) -lpthread
 
-.cpp.o:
-	$(CPP) -c -I$(AKP) -I$(TRC) $(CFLAGS) -o $@ $<
+#.cpp.o:
+#	$(CPP) -c -I$(AKP) -I$(TRC) $(CFLAGS) -o $@ $<
 
 $(AKPA):
 	make -C $(AKP)
