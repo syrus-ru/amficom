@@ -1,5 +1,5 @@
 /*
- * $Id: AmficomImpl.java,v 1.1.2.3 2004/10/18 15:31:41 bass Exp $
+ * $Id: AmficomImpl.java,v 1.1.2.4 2004/10/19 10:31:54 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,7 +23,8 @@ import com.syrus.AMFICOM.CORBA.Report.*;
 import com.syrus.AMFICOM.CORBA.Resource.*;
 import com.syrus.AMFICOM.CORBA.Scheme.*;
 import com.syrus.AMFICOM.CORBA.Survey.*;
-import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
+import com.syrus.AMFICOM.general.corba.*;
+import com.syrus.AMFICOM.general.corba.CompletionStatus;
 import com.syrus.AMFICOM.server.ResourcedbInterface;
 import com.syrus.AMFICOM.server.event.AlarmType;
 import com.syrus.AMFICOM.server.measurement.*;
@@ -34,7 +35,7 @@ import javax.sql.DataSource;
 import org.omg.CORBA.*;
 
 /**
- * @version $Revision: 1.1.2.3 $, $Date: 2004/10/18 15:31:41 $
+ * @version $Revision: 1.1.2.4 $, $Date: 2004/10/19 10:31:54 $
  * @author $Author: bass $
  * @module server_v1
  */
@@ -3447,27 +3448,105 @@ public final class AmficomImpl implements AMFICOMOperations {
 		}
 	}
 
-	public String lookupDomainName(Identifier_Transferable id) throws com.syrus.AMFICOM.general.corba.AMFICOMRemoteException {
-		throw new UnsupportedOperationException();
+	public String lookupDomainName(final Identifier_Transferable id) throws com.syrus.AMFICOM.general.corba.AMFICOMRemoteException {
+		try {
+			Connection conn = null;
+			try {
+				conn = DATA_SOURCE.getConnection();
+				conn.setAutoCommit(false);
+				return AdminDbInterfaceLoad.lookupDomainName(conn, id);
+			} finally {
+				if (conn != null)
+					conn.close();
+			}
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new com.syrus.AMFICOM.general.corba.AMFICOMRemoteException(ErrorCode.ERROR_RISD_ERROR, CompletionStatus.COMPLETED_NO, t.toString());
+		}
 	}
 
-	public String lookupUserLogin(Identifier_Transferable id) throws com.syrus.AMFICOM.general.corba.AMFICOMRemoteException {
-		throw new UnsupportedOperationException();
+	public String lookupUserLogin(final Identifier_Transferable id) throws com.syrus.AMFICOM.general.corba.AMFICOMRemoteException {
+		try {
+			Connection conn = null;
+			try {
+				conn = DATA_SOURCE.getConnection();
+				conn.setAutoCommit(false);
+				return AdminDbInterfaceLoad.lookupUserLogin(conn, id);
+			} finally {
+				if (conn != null)
+					conn.close();
+			}
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new com.syrus.AMFICOM.general.corba.AMFICOMRemoteException(ErrorCode.ERROR_RISD_ERROR, CompletionStatus.COMPLETED_NO, t.toString());
+		}
 	}
 
-	public String lookupUserName(Identifier_Transferable id) throws com.syrus.AMFICOM.general.corba.AMFICOMRemoteException {
-		throw new UnsupportedOperationException();
+	public String lookupUserName(final Identifier_Transferable id) throws com.syrus.AMFICOM.general.corba.AMFICOMRemoteException {
+		try {
+			Connection conn = null;
+			try {
+				conn = DATA_SOURCE.getConnection();
+				conn.setAutoCommit(false);
+				return AdminDbInterfaceLoad.lookupUserName(conn, id);
+			} finally {
+				if (conn != null)
+					conn.close();
+			}
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new com.syrus.AMFICOM.general.corba.AMFICOMRemoteException(ErrorCode.ERROR_RISD_ERROR, CompletionStatus.COMPLETED_NO, t.toString());
+		}
 	}
 
-	public Identifier_Transferable reverseLookupDomainName(String domainName) throws com.syrus.AMFICOM.general.corba.AMFICOMRemoteException {
-		throw new UnsupportedOperationException();
+	public Identifier_Transferable reverseLookupDomainName(final String domainName) throws com.syrus.AMFICOM.general.corba.AMFICOMRemoteException {
+		try {
+			Connection conn = null;
+			try {
+				conn = DATA_SOURCE.getConnection();
+				conn.setAutoCommit(false);
+				return AdminDbInterfaceLoad.reverseLookupDomainName(conn, domainName);
+			} finally {
+				if (conn != null)
+					conn.close();
+			}
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new com.syrus.AMFICOM.general.corba.AMFICOMRemoteException(ErrorCode.ERROR_RISD_ERROR, CompletionStatus.COMPLETED_NO, t.toString());
+		}
 	}
 
-	public Identifier_Transferable reverseLookupUserLogin(String userLogin) throws com.syrus.AMFICOM.general.corba.AMFICOMRemoteException {
-		throw new UnsupportedOperationException();
+	public Identifier_Transferable reverseLookupUserLogin(final String userLogin) throws com.syrus.AMFICOM.general.corba.AMFICOMRemoteException {
+		try {
+			Connection conn = null;
+			try {
+				conn = DATA_SOURCE.getConnection();
+				conn.setAutoCommit(false);
+				return AdminDbInterfaceLoad.reverseLookupUserLogin(conn, userLogin);
+			} finally {
+				if (conn != null)
+					conn.close();
+			}
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new com.syrus.AMFICOM.general.corba.AMFICOMRemoteException(ErrorCode.ERROR_RISD_ERROR, CompletionStatus.COMPLETED_NO, t.toString());
+		}
 	}
 
-	public Identifier_Transferable reverseLookupUserName(String userName) throws com.syrus.AMFICOM.general.corba.AMFICOMRemoteException {
-		throw new UnsupportedOperationException();
+	public Identifier_Transferable reverseLookupUserName(final String userName) throws com.syrus.AMFICOM.general.corba.AMFICOMRemoteException {
+		try {
+			Connection conn = null;
+			try {
+				conn = DATA_SOURCE.getConnection();
+				conn.setAutoCommit(false);
+				return AdminDbInterfaceLoad.reverseLookupUserName(conn, userName);
+			} finally {
+				if (conn != null)
+					conn.close();
+			}
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new com.syrus.AMFICOM.general.corba.AMFICOMRemoteException(ErrorCode.ERROR_RISD_ERROR, CompletionStatus.COMPLETED_NO, t.toString());
+		}
 	}
 }

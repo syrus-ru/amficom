@@ -1,5 +1,5 @@
 /*
- * $Id: AdminDbInterfaceLoadTestCase.java,v 1.1.2.1 2004/10/18 15:31:42 bass Exp $
+ * $Id: AdminDbInterfaceLoadTestCase.java,v 1.1.2.2 2004/10/19 10:31:54 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,6 +9,7 @@
 package com.syrus.AMFICOM.server.object;
 
 import com.syrus.AMFICOM.CORBA.Admin.*;
+import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.server.SqlConstants;
 import com.syrus.AMFICOM.server.prefs.JdbcConnectionManager;
 import java.sql.*;
@@ -19,7 +20,7 @@ import junit.framework.*;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.1.2.1 $, $Date: 2004/10/18 15:31:42 $
+ * @version $Revision: 1.1.2.2 $, $Date: 2004/10/19 10:31:54 $
  * @module server_v1
  */
 public class AdminDbInterfaceLoadTestCase extends TestCase implements SqlConstants {
@@ -144,6 +145,66 @@ public class AdminDbInterfaceLoadTestCase extends TestCase implements SqlConstan
 			conn = dataSource.getConnection();
 			conn.setAutoCommit(false);
 			AdminDbInterfaceLoad.loadAgents(conn, new AgentSeq_TransferableHolder());
+		} finally {
+			if (conn != null)
+				conn.close();
+		}
+	}
+
+	public void testLokupDomainName() throws SQLException {
+		Connection conn = null;
+		try {
+			conn = dataSource.getConnection();
+			conn.setAutoCommit(false);
+			Statement stmt = conn.createStatement();
+			ResultSet resultSet = stmt.executeQuery(KEYWORD_SELECT + COLUMN_ID + KEYWORD_FROM + TABLE_DOMAINS);
+			while (resultSet.next()) {
+				String id = resultSet.getString(COLUMN_ID);
+				String domainName = AdminDbInterfaceLoad.lookupDomainName(conn, new Identifier_Transferable(id));
+				System.err.println(id + '\t' + domainName + '\t' + AdminDbInterfaceLoad.reverseLookupDomainName(conn, domainName).identifier_string);
+			}
+			resultSet.close();
+			stmt.close();
+		} finally {
+			if (conn != null)
+				conn.close();
+		}
+	}
+
+	public void testLokupUserLogin() throws SQLException {
+		Connection conn = null;
+		try {
+			conn = dataSource.getConnection();
+			conn.setAutoCommit(false);
+			Statement stmt = conn.createStatement();
+			ResultSet resultSet = stmt.executeQuery(KEYWORD_SELECT + COLUMN_ID + KEYWORD_FROM + TABLE_USERS);
+			while (resultSet.next()) {
+				String id = resultSet.getString(COLUMN_ID);
+				String userLogin = AdminDbInterfaceLoad.lookupUserLogin(conn, new Identifier_Transferable(id));
+				System.err.println(id + '\t' + userLogin + '\t' + AdminDbInterfaceLoad.reverseLookupUserLogin(conn, userLogin).identifier_string);
+			}
+			resultSet.close();
+			stmt.close();
+		} finally {
+			if (conn != null)
+				conn.close();
+		}
+	}
+
+	public void testLokupUserName() throws SQLException {
+		Connection conn = null;
+		try {
+			conn = dataSource.getConnection();
+			conn.setAutoCommit(false);
+			Statement stmt = conn.createStatement();
+			ResultSet resultSet = stmt.executeQuery(KEYWORD_SELECT + COLUMN_ID + KEYWORD_FROM + TABLE_USERS);
+			while (resultSet.next()) {
+				String id = resultSet.getString(COLUMN_ID);
+				String userName = AdminDbInterfaceLoad.lookupUserName(conn, new Identifier_Transferable(id));
+				System.err.println(id + '\t' + userName + '\t' + AdminDbInterfaceLoad.reverseLookupUserName(conn, userName).identifier_string);
+			}
+			resultSet.close();
+			stmt.close();
 		} finally {
 			if (conn != null)
 				conn.close();

@@ -1,5 +1,5 @@
 /*
- * $Id: AdminDbInterfaceLoad.java,v 1.1.2.2 2004/10/19 09:49:13 bass Exp $
+ * $Id: AdminDbInterfaceLoad.java,v 1.1.2.3 2004/10/19 10:31:54 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,7 +15,7 @@ import java.sql.*;
 import java.util.*;
 
 /**
- * @version $Revision: 1.1.2.2 $, $Date: 2004/10/19 09:49:13 $
+ * @version $Revision: 1.1.2.3 $, $Date: 2004/10/19 10:31:54 $
  * @author $Author: bass $
  * @module server_v1
  * @todo Rewrite per-id loaders to take advantage of prepared statements.
@@ -278,7 +278,7 @@ final class AdminDbInterfaceLoad implements SqlConstants {
 		}
 	}
 
-	public String lookupDomainName(final Connection conn, final Identifier_Transferable id) throws SQLException {
+	static String lookupDomainName(final Connection conn, final Identifier_Transferable id) throws SQLException {
 		Statement stmt = null;
 		ResultSet resultSet = null;
 		try {
@@ -305,7 +305,7 @@ final class AdminDbInterfaceLoad implements SqlConstants {
 		}
 	}
 
-	public String lookupUserLogin(final Connection conn, final Identifier_Transferable id) throws SQLException {
+	static String lookupUserLogin(final Connection conn, final Identifier_Transferable id) throws SQLException {
 		Statement stmt = null;
 		ResultSet resultSet = null;
 		try {
@@ -332,7 +332,7 @@ final class AdminDbInterfaceLoad implements SqlConstants {
 		}
 	}
 
-	public String lookupUserName(final Connection conn, final Identifier_Transferable id) throws SQLException {
+	static String lookupUserName(final Connection conn, final Identifier_Transferable id) throws SQLException {
 		Statement stmt = null;
 		ResultSet resultSet = null;
 		try {
@@ -359,7 +359,7 @@ final class AdminDbInterfaceLoad implements SqlConstants {
 		}
 	}
 
-	public Identifier_Transferable reverseLookupDomainName(final Connection conn, final String domainName) throws SQLException {
+	static Identifier_Transferable reverseLookupDomainName(final Connection conn, final String domainName) throws SQLException {
 		Statement stmt = null;
 		ResultSet resultSet = null;
 		try {
@@ -385,7 +385,7 @@ final class AdminDbInterfaceLoad implements SqlConstants {
 		}
 	}
 
-	public Identifier_Transferable reverseLookupUserLogin(final Connection conn, final String userLogin) throws SQLException {
+	static Identifier_Transferable reverseLookupUserLogin(final Connection conn, final String userLogin) throws SQLException {
 		Statement stmt = null;
 		ResultSet resultSet = null;
 		try {
@@ -411,7 +411,7 @@ final class AdminDbInterfaceLoad implements SqlConstants {
 		}
 	}
 
-	public Identifier_Transferable reverseLookupUserName(final Connection conn, final String userName) throws SQLException {
+	static Identifier_Transferable reverseLookupUserName(final Connection conn, final String userName) throws SQLException {
 		Statement stmt = null;
 		ResultSet resultSet = null;
 		try {
