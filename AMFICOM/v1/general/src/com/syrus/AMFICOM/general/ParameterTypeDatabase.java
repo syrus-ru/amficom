@@ -1,5 +1,5 @@
 /*
- * $Id: ParameterTypeDatabase.java,v 1.19 2005/03/10 15:16:07 arseniy Exp $
+ * $Id: ParameterTypeDatabase.java,v 1.20 2005/03/11 09:14:50 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -19,8 +19,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.19 $, $Date: 2005/03/10 15:16:07 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.20 $, $Date: 2005/03/11 09:14:50 $
+ * @author $Author: bob $
  * @module general_v1
  */
 
@@ -33,21 +33,19 @@ public class ParameterTypeDatabase extends StorableObjectDatabase  {
 		return ObjectEntities.PARAMETERTYPE_ENTITY;
 	}
 
-	protected String getColumns(int mode) {
+	protected String getColumnsTmpl() {
 		if (columns == null){
-			columns = COMMA
-				+ StorableObjectWrapper.COLUMN_CODENAME + COMMA
+			columns = StorableObjectWrapper.COLUMN_CODENAME + COMMA
 				+ StorableObjectWrapper.COLUMN_DESCRIPTION + COMMA
 				+ StorableObjectWrapper.COLUMN_NAME + COMMA
 				+ ParameterTypeWrapper.COLUMN_DATA_TYPE;
 		}
-		return super.getColumns(mode) + columns;
+		return columns;
 	}	
 	
-	protected String getUpdateMultipleSQLValues() {
+	protected String getUpdateMultipleSQLValuesTmpl() {
 		if (updateMultipleSQLValues == null){
-			updateMultipleSQLValues = super.getUpdateMultipleSQLValues() + COMMA
-				+ QUESTION + COMMA
+			updateMultipleSQLValues = QUESTION + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION;
@@ -56,10 +54,9 @@ public class ParameterTypeDatabase extends StorableObjectDatabase  {
 	}
 	
 	
-	protected String getUpdateSingleSQLValues(StorableObject storableObject) throws IllegalDataException {
+	protected String getUpdateSingleSQLValuesTmpl(StorableObject storableObject) throws IllegalDataException {
 		ParameterType parameterType = this.fromStorableObject(storableObject);
-		return super.getUpdateSingleSQLValues(storableObject) + COMMA
-			+ APOSTOPHE + DatabaseString.toQuerySubString(parameterType.getCodename(), SIZE_CODENAME_COLUMN) + APOSTOPHE + COMMA
+		return APOSTOPHE + DatabaseString.toQuerySubString(parameterType.getCodename(), SIZE_CODENAME_COLUMN) + APOSTOPHE + COMMA
 			+ APOSTOPHE + DatabaseString.toQuerySubString(parameterType.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTOPHE + COMMA
 			+ APOSTOPHE + DatabaseString.toQuerySubString(parameterType.getName(), SIZE_NAME_COLUMN) + APOSTOPHE + COMMA +
 			+ parameterType.getDataType().value();
@@ -118,15 +115,14 @@ public class ParameterTypeDatabase extends StorableObjectDatabase  {
 		this.insertEntities(storableObjects);
 	}	
 
-	protected int setEntityForPreparedStatement(StorableObject storableObject, PreparedStatement preparedStatement, int mode)
+	protected int setEntityForPreparedStatementTmpl(StorableObject storableObject, PreparedStatement preparedStatement, int startParameterNumber)
 			throws IllegalDataException, SQLException {
 		ParameterType parameterType = this.fromStorableObject(storableObject);
-		int i = super.setEntityForPreparedStatement(storableObject, preparedStatement, mode);
-		DatabaseString.setString(preparedStatement, ++i, parameterType.getCodename(), SIZE_CODENAME_COLUMN);
-		DatabaseString.setString(preparedStatement, ++i, parameterType.getDescription(), SIZE_DESCRIPTION_COLUMN);
-		DatabaseString.setString(preparedStatement, ++i, parameterType.getName(), SIZE_NAME_COLUMN);
-		preparedStatement.setInt(++i, parameterType.getDataType().value());
-		return i;
+		DatabaseString.setString(preparedStatement, ++startParameterNumber, parameterType.getCodename(), SIZE_CODENAME_COLUMN);
+		DatabaseString.setString(preparedStatement, ++startParameterNumber, parameterType.getDescription(), SIZE_DESCRIPTION_COLUMN);
+		DatabaseString.setString(preparedStatement, ++startParameterNumber, parameterType.getName(), SIZE_NAME_COLUMN);
+		preparedStatement.setInt(++startParameterNumber, parameterType.getDataType().value());
+		return startParameterNumber;
 	}
 	
 }

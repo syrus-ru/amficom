@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicDatabase.java,v 1.28 2005/03/10 15:16:07 arseniy Exp $
+ * $Id: CharacteristicDatabase.java,v 1.29 2005/03/11 09:14:50 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,8 +18,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.28 $, $Date: 2005/03/10 15:16:07 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.29 $, $Date: 2005/03/11 09:14:50 $
+ * @author $Author: bob $
  * @module general_v1
  */
 
@@ -33,10 +33,9 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
 		return ObjectEntities.CHARACTERISTIC_ENTITY;
 	}
 
-	protected String getColumns(int mode) {
+	protected String getColumnsTmpl() {
 		if (columns == null) {
-			columns = COMMA
-				+ StorableObjectWrapper.COLUMN_TYPE_ID + COMMA
+			columns = StorableObjectWrapper.COLUMN_TYPE_ID + COMMA
 			+ StorableObjectWrapper.COLUMN_NAME + COMMA
 			+ StorableObjectWrapper.COLUMN_DESCRIPTION + COMMA
 			+ CharacteristicWrapper.COLUMN_VALUE + COMMA
@@ -45,29 +44,27 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
 			+ CharacteristicWrapper.COLUMN_SORT +	COMMA
 			+ CharacteristicWrapper.COLUMN_CHARACTERIZABLE_ID;
 		}
-		return super.getColumns(mode) + columns;
+		return columns;
 	}
 
-	protected String getUpdateMultipleSQLValues() {
+	protected String getUpdateMultipleSQLValuesTmpl() {
 		if (updateMultipleSQLValues == null) {
-			updateMultipleSQLValues = super.getUpdateMultipleSQLValues() + COMMA 
-			+ QUESTION + COMMA
-			+ QUESTION + COMMA
-			+ QUESTION + COMMA
-			+ QUESTION + COMMA
-			+ QUESTION + COMMA
-			+ QUESTION + COMMA
-			+ QUESTION + COMMA
-			+ QUESTION;
+			updateMultipleSQLValues = QUESTION + COMMA
+				+ QUESTION + COMMA
+				+ QUESTION + COMMA
+				+ QUESTION + COMMA
+				+ QUESTION + COMMA
+				+ QUESTION + COMMA
+				+ QUESTION + COMMA
+				+ QUESTION;
 		}
 		return updateMultipleSQLValues;
 	}
 
-	protected String getUpdateSingleSQLValues(StorableObject storableObject) throws IllegalDataException {
+	protected String getUpdateSingleSQLValuesTmpl(StorableObject storableObject) throws IllegalDataException {
 		Characteristic characteristic = this.fromStorableObject(storableObject);
 		int sort = characteristic.getSort().value();
-		String sql = super.getUpdateSingleSQLValues(storableObject) + COMMA
-			+ DatabaseIdentifier.toSQLString(characteristic.getType().getId()) + COMMA
+		String sql = DatabaseIdentifier.toSQLString(characteristic.getType().getId()) + COMMA
 			+ APOSTOPHE + DatabaseString.toQuerySubString(characteristic.getName(), SIZE_NAME_COLUMN) + APOSTOPHE + COMMA
 			+ APOSTOPHE + DatabaseString.toQuerySubString(characteristic.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTOPHE  + COMMA
 			+ APOSTOPHE + DatabaseString.toQuerySubString(characteristic.getValue(), SIZE_VALUE_COLUMN) + APOSTOPHE + COMMA
@@ -81,21 +78,19 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
 		return sql;
 	}
 
-	protected int setEntityForPreparedStatement(StorableObject storableObject,
-			PreparedStatement preparedStatement, int mode) throws IllegalDataException, SQLException {
+	protected int setEntityForPreparedStatementTmpl(StorableObject storableObject,
+			PreparedStatement preparedStatement, int startParameterNumber) throws IllegalDataException, SQLException {
 		Characteristic characteristic = this.fromStorableObject(storableObject);
 		int sort = characteristic.getSort().value();
-		int i;
-		i = super.setEntityForPreparedStatement(storableObject, preparedStatement, mode);
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++i, characteristic.getType().getId());
-		DatabaseString.setString(preparedStatement, ++i, characteristic.getName(), SIZE_NAME_COLUMN);
-		DatabaseString.setString(preparedStatement, ++i, characteristic.getDescription(), SIZE_DESCRIPTION_COLUMN);
-		DatabaseString.setString(preparedStatement, ++i, characteristic.getValue(), SIZE_VALUE_COLUMN);
-		preparedStatement.setInt( ++i, characteristic.isEditable()? 1:0);
-		preparedStatement.setInt( ++i, characteristic.isVisible()? 1:0);
-		preparedStatement.setInt( ++i, sort);
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++i, characteristic.getCharacterizableId());
-		return i;
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, characteristic.getType().getId());
+		DatabaseString.setString(preparedStatement, ++startParameterNumber, characteristic.getName(), SIZE_NAME_COLUMN);
+		DatabaseString.setString(preparedStatement, ++startParameterNumber, characteristic.getDescription(), SIZE_DESCRIPTION_COLUMN);
+		DatabaseString.setString(preparedStatement, ++startParameterNumber, characteristic.getValue(), SIZE_VALUE_COLUMN);
+		preparedStatement.setInt( ++startParameterNumber, characteristic.isEditable()? 1:0);
+		preparedStatement.setInt( ++startParameterNumber, characteristic.isVisible()? 1:0);
+		preparedStatement.setInt( ++startParameterNumber, sort);
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, characteristic.getCharacterizableId());
+		return startParameterNumber;
 	}	
 
 	private Characteristic fromStorableObject(StorableObject storableObject) throws IllegalDataException {
