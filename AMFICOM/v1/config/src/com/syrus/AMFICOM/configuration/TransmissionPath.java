@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPath.java,v 1.3 2004/08/09 06:17:47 bob Exp $
+ * $Id: TransmissionPath.java,v 1.4 2004/08/09 08:38:48 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,28 +13,27 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.Iterator;
 import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
-import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
-import com.syrus.AMFICOM.configuration.corba.EquipmentSort;
-import com.syrus.AMFICOM.configuration.corba.Equipment_Transferable;
 import com.syrus.AMFICOM.configuration.corba.TransmissionPath_Transferable;
 /**
- * @version $Revision: 1.3 $, $Date: 2004/08/09 06:17:47 $
+ * @version $Revision: 1.4 $, $Date: 2004/08/09 08:38:48 $
  * @author $Author: bob $
  * @module configuration_v1
  */
 
 public class TransmissionPath extends MonitoredDomainMember implements Characterized {
+	
+	protected static final int		UPDATE_ATTACH_ME	= 1;
+	protected static final int		UPDATE_DETACH_ME	= 2;
+	
 	private List characteristicIds;
 	private String name;
-	private String description;
-	
+	private String description;	
 
 	private StorableObjectDatabase transmissionPathDatabase;
 
