@@ -411,12 +411,12 @@ public class AnalysisSelectionFrame extends ATableFrame
 	 {
 		 { LangModelAnalyse.getString("analysisMinConnector"), new Double(0) },
 		 { LangModelAnalyse.getString("analysisMinWeld"), new Double(0) },
-		 { LangModelAnalyse.getString("analysisMinEnd"), new Double(0) },
+		 { LangModelAnalyse.getString("analysisMinEnd"), new Double(0) }, // @todo: remove
 		 { LangModelAnalyse.getString("analysisMinEvent"), new Double(0) },
-		 { LangModelAnalyse.getString("analysisNSigma"), new Double(0) },
-		 { LangModelAnalyse.getString("analysisFormFactor"), ffComboBox },
-		 { LangModelAnalyse.getString("analysisStrategy"), strComboBox },
-		 { LangModelAnalyse.getString("analysisWavelet"), tactComboBox }
+		 { LangModelAnalyse.getString("analysisNSigma"), new Double(0) }, // @todo: remove
+		 { LangModelAnalyse.getString("analysisFormFactor"), ffComboBox }, // @todo: remove
+		 { LangModelAnalyse.getString("analysisStrategy"), strComboBox }, // @todo: remove
+		 { LangModelAnalyse.getString("analysisWavelet"), tactComboBox } // @todo: remove
 	 };
 
 	 ParamTableModel()
