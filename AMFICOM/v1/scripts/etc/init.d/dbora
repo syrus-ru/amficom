@@ -1,4 +1,6 @@
 #!/bin/sh
+# Start as 90 at runlevel 3
+# Kill as 02 at runlevel 0
 
 LSNRCTL_START="yes"
 DBSTART_START="yes"
