@@ -2,39 +2,65 @@
 package com.syrus.AMFICOM.mcm;
 
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.SleepButWorkThread;
+import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
+
+import java.net.UnknownServiceException;
 import java.util.Map;
 import java.util.HashMap;
 
-public class TCPServer implements Runnable {
+public class TCPServer extends SleepButWorkThread {
 
-	private class TCPAcceptingThread implements Runnable {
+	protected static Map	kissockets		= new HashMap();
 
-		private TCPServer	tcpServer	= null;
+	protected int			listeningSocket	= -1;
+	private boolean			active			= true;
 
-		public TCPAcceptingThread(TCPServer tcpServer) {
-			this.tcpServer = tcpServer;
+	public TCPServer(String hostName, String serviceName) throws UnknownServiceException  {
+		super(ApplicationProperties.getInt(MeasurementControlModule.KEY_TICK_TIME, 
+										   MeasurementControlModule.TICK_TIME) * 1000, 
+										   ApplicationProperties.getInt(MeasurementControlModule.KEY_MAX_FALLS, MAX_FALLS));
+		this.listeningSocket = this.getListeningSocket(hostName, serviceName);
+		if (this.listeningSocket <= 0) {
+			Log.errorMessage("Can't create listening socket for service (port) " + serviceName + "!");
+			throw new UnknownServiceException("Listening socket required for further work!");
 		}
+	}
 
-		public void run() {
-			while (true) {
-				//byte[] kisIDChars = new byte[MAX_KIS_ID_LENGTH];
-				Object[] objects = this.tcpServer.getConnectedSocket(this.tcpServer.listeningSocket);
+	public static int getSocketForKisID(Identifier kisId) {
+		Log.debugMessage("TCPServer.getSocketForKisID | try get kis for " + kisId, Log.DEBUGLEVEL05);
+		Integer socket = (Integer) TCPServer.kissockets.get(kisId);
+		if (socket == null)
+			return -1;
+		return socket.intValue();
+	}
+
+	private native int getConnectedSocket(int listeningSocket, Object[] object);
+
+	private native int getListeningSocket(String hostName, String serviceName);
+
+	public void run() {
+			while (this.active) {
 				
-				Integer connectedSocket = null;
+				Log.debugMessage("TCPAcceptingThread.run | ", Log.DEBUGLEVEL05);
+				Object[] objects = new Object[1];
+				Integer connectedSocket = new Integer(this.getConnectedSocket(this.listeningSocket, objects));
+				Log.debugMessage("TCPAcceptingThread.run | got " + ((objects==null)? "null":String.valueOf(objects.length)) + " ", Log.DEBUGLEVEL05);
+				
 				String id = null;
-				
-				if (objects == null){
+
+				if (objects == null) {
 					Log.errorMessage("Can't get data from connected socket!");
 					continue;
 				}
-				
-				for(int i=0;i<objects.length;i++){
-					if (objects[i] instanceof String){
-						id = (String)objects[i];
-					} else{
-						if (objects[i] instanceof Integer){
-							connectedSocket = (Integer)objects[i];
+
+				for (int i = 0; i < objects.length; i++) {
+					if (objects[i] instanceof String) {
+						id = (String) objects[i];
+					} else {
+						if (objects[i] instanceof Integer) {
+							connectedSocket = (Integer) objects[i];
 						}
 					}
 				}
@@ -48,68 +74,38 @@ public class TCPServer implements Runnable {
 					Log.errorMessage("Failed to get KIS_ID kis!");
 					continue;
 				}
-				
-				Log.debugMessage("Java got the string: " + id + ", length = "
-						+ id.length(), Log.DEBUGLEVEL05);
+
+				Log.debugMessage("Java got the string: " + id + ", length = " + id.length(), Log.DEBUGLEVEL05);
 				Identifier kisId = new Identifier(id);
 
 				TCPServer.kissockets.put(kisId, connectedSocket);
 
-				if (!this.tcpServer.transceivers.containsKey(kisId)){
+				if (!MeasurementControlModule.transceivers.containsKey(kisId)) {
 					Transceiver transceiver = new Transceiver(kisId);
 					transceiver.start();
-					this.tcpServer.transceivers.put(kisId, transceiver);
+					MeasurementControlModule.transceivers.put(kisId, transceiver);
 					Log.debugMessage("Started transceiver for kis '" + kisId.toString() + "'", Log.DEBUGLEVEL05);
 				}
-			}
-		}
-	}
-
-	protected static Map	kissockets			= new HashMap();
-
-	protected int			listeningSocket		= -1;
-	protected Map			transceivers		= null;
-
-	private Thread			acceptingThread		= null;
-	private boolean			active				= true;
-
-	public TCPServer(String hostName, String serviceName, Map transceivers) throws Exception {
-		this.transceivers = transceivers;
-
-		this.listeningSocket = this.getListeningSocket(hostName, serviceName);
-		if (this.listeningSocket <= 0) {
-			Log.errorMessage("Can't create listening socket for service (port) " + serviceName + "!");
-			throw new Exception("Listening socket required for further work!");
-		}
-
-		this.acceptingThread = new Thread(new TCPAcceptingThread(this));
-		this.acceptingThread.start();
-	}
-
-	public static int getSocketForKisID(Identifier kisId) {
-		Integer socket = (Integer) TCPServer.kissockets.get(kisId);
-		if (socket == null)
-			return -1;
-		return socket.intValue();
-	}
-
-	public native Object[] getConnectedSocket(int listeningSocket);
-
-	public native int getListeningSocket(String hostName, String serviceName);
-
-	public void run() {
-		try {
-			while (this.active) {
+			
+				try {
+				Log.debugMessage("TCPServer.sleep(1000)", Log.DEBUGLEVEL05);
+				Thread.interrupted();
 				Thread.sleep(1000);
-			}
-			this.acceptingThread.interrupt();
-		} catch (InterruptedException ie) {
-			Log.errorMessage("Thread has been interrupted");
-		}
+				} catch (InterruptedException ie) {
+					Log.errorMessage("Thread has been interrupted");
+				}
+			}			
 	}
 
 	public void shutdown() {
+		Log.debugMessage("TCPServer.shutdown", Log.DEBUGLEVEL05);
 		this.active = false;
+	}
+	
+	
+	protected void processFall() {
+		Log.errorMessage("TCPServer.processFall | fallCode:" + super.fallCode);
+		clearFalls();
 	}
 
 	public native void shutdownServer(int[] serverSockets);

@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementControlModule.java,v 1.33 2004/10/15 11:17:30 bob Exp $
+ * $Id: MeasurementControlModule.java,v 1.34 2004/10/15 15:38:13 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,6 +8,9 @@
 
 package com.syrus.AMFICOM.mcm;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.net.UnknownServiceException;
 import java.util.Date;
 import java.util.List;
 import java.util.ArrayList;
@@ -42,7 +45,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.33 $, $Date: 2004/10/15 11:17:30 $
+ * @version $Revision: 1.34 $, $Date: 2004/10/15 15:38:13 $
  * @author $Author: bob $
  * @module mcm_v1
  */
@@ -57,6 +60,7 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 	public static final String KEY_DB_LOGIN_NAME = "DBLoginName";
 	public static final String KEY_SETUP_SERVER_ID = "SetupServerID";
 	public static final String KEY_TICK_TIME = "TickTime";
+	public static final String KEY_TCP_PORT = "TCPPort";
 	public static final String KEY_MAX_FALLS = "MaxFalls";
 	public static final String KEY_FORWARD_PROCESSING = "ForwardProcessing";
 
@@ -101,6 +105,22 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 		super(ApplicationProperties.getInt(KEY_TICK_TIME, TICK_TIME) * 1000, ApplicationProperties.getInt(KEY_MAX_FALLS, MAX_FALLS));
 		this.forwardProcessing = ApplicationProperties.getInt(KEY_FORWARD_PROCESSING, FORWARD_PROCESSING)*1000;
 		this.running = true;
+		
+		String hostName = null;
+		String port = ApplicationProperties.getString(KEY_TCP_PORT, String.valueOf(7500) );	
+		
+		try {
+			hostName = InetAddress.getLocalHost().getHostAddress();			
+			TCPServer tcpServer = new TCPServer(hostName,port);
+			new Thread(tcpServer).start();			
+		}catch (UnknownHostException e) {
+			Log.errorMessage("Failed get local host ip ");
+			Log.errorException(e);
+		} 
+		catch (UnknownServiceException e) {
+			Log.errorMessage("Failed creating TCPServer at service " + hostName + ':' + port);
+			Log.errorException(e);
+		}
 	}
 
 	public static void main(String[] args) {
@@ -191,8 +211,11 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 	private static void activateKISTransceivers()
 	{
 	  transceivers = new Hashtable();
-	  String serviceName = "7500";
-	  String hostName = "bass";
+//	  try {
+//		hostName = InetAddress.getLocalHost().getCanonicalHostName();
+//	  } catch (UnknownHostException e) {		
+//		Log.errorException(e);
+//	  }
 
 /*
     try
@@ -209,12 +232,7 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 	 Log.errorMessage("Failed to find mcmtransceiver library at " +
                        System.getProperty("java.library.path"));
     }
- */   
-    try {
-    	TCPServer tcpServer = new TCPServer(hostName,serviceName,transceivers);  
-    } catch (Exception exc) {
-        Log.errorMessage("Failed creating TCPServer at service " + serviceName);
-    }
+ */     
 
  
 //		List kisIds = iAm.getKISIds();
@@ -330,7 +348,7 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 			else
 				resetMServerConnection();
 
-			try {
+			try {				
 				sleep(super.initialTimeToSleep);
 			}
 			catch (InterruptedException ie) {

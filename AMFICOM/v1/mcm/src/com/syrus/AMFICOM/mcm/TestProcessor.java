@@ -1,5 +1,5 @@
 /*
- * $Id: TestProcessor.java,v 1.23 2004/10/15 08:24:06 bass Exp $
+ * $Id: TestProcessor.java,v 1.24 2004/10/15 15:38:13 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,31 +9,32 @@
 package com.syrus.AMFICOM.mcm;
 
 import java.util.Collections;
-import java.util.List;
 import java.util.LinkedList;
-import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.ObjectNotFoundException;
-import com.syrus.AMFICOM.general.SleepButWorkThread;
-import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.DatabaseException;
-import com.syrus.AMFICOM.general.UpdateObjectException;
-import com.syrus.AMFICOM.general.IllegalObjectEntityException;
-import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
+import java.util.List;
+
 import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 import com.syrus.AMFICOM.configuration.MeasurementPort;
-import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
+import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.DatabaseException;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IllegalObjectEntityException;
+import com.syrus.AMFICOM.general.ObjectNotFoundException;
+import com.syrus.AMFICOM.general.SleepButWorkThread;
+import com.syrus.AMFICOM.general.UpdateObjectException;
+import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.Measurement;
-import com.syrus.AMFICOM.measurement.Test;
+import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
 import com.syrus.AMFICOM.measurement.Result;
-import com.syrus.AMFICOM.measurement.corba.TestStatus;
-import com.syrus.AMFICOM.measurement.corba.ResultSort;
+import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.AMFICOM.measurement.corba.MeasurementStatus;
-import com.syrus.util.Log;
+import com.syrus.AMFICOM.measurement.corba.ResultSort;
+import com.syrus.AMFICOM.measurement.corba.TestStatus;
 import com.syrus.util.ApplicationProperties;
+import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.23 $, $Date: 2004/10/15 08:24:06 $
- * @author $Author: bass $
+ * @version $Revision: 1.24 $, $Date: 2004/10/15 15:38:13 $
+ * @author $Author: bob $
  * @module mcm_v1
  */
 
@@ -76,17 +77,21 @@ public abstract class TestProcessor extends SleepButWorkThread {
 		this.numberOfScheduledMeasurements = this.numberOfReceivedMResults = 0;
 		this.lastMeasurementAcquisition = false;
 
-		switch (this.test.getStatus().value()) {
-			case TestStatus._TEST_STATUS_SCHEDULED:
-				//Normally
-				this.startWithScheduledTest();
-				break;
-			case TestStatus._TEST_STATUS_PROCESSING:
-				this.startWithProcessingTest();
-				break;
-			default:
-				Log.errorMessage("Unappropriate status " + this.test.getStatus().value() + " of test '" + this.test.getId() + "'");
-				this.abort();
+		if (this.test == null)
+			this.abort();
+		else {
+			switch (this.test.getStatus().value()) {
+				case TestStatus._TEST_STATUS_SCHEDULED:
+					//Normally
+					this.startWithScheduledTest();
+					break;
+				case TestStatus._TEST_STATUS_PROCESSING:
+					this.startWithProcessingTest();
+					break;
+				default:
+					Log.errorMessage("Unappropriate status " + this.test.getStatus().value() + " of test '" + this.test.getId() + "'");
+					this.abort();
+			}
 		}
 	}
 
