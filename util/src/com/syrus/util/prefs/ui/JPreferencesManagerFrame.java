@@ -1,5 +1,5 @@
 /*
- * $Id: JPreferencesManagerFrame.java,v 1.5 2004/08/05 12:35:38 arseniy Exp $
+ * $Id: JPreferencesManagerFrame.java,v 1.6 2004/12/08 12:37:14 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,8 +15,8 @@ import javax.swing.event.*;
 import javax.swing.tree.*;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2004/08/05 12:35:38 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.6 $, $Date: 2004/12/08 12:37:14 $
+ * @author $Author: bass $
  * @module util
  */
 public class JPreferencesManagerFrame extends JFrame {
@@ -188,23 +188,23 @@ public class JPreferencesManagerFrame extends JFrame {
 		setBounds((screenSize.width-512)/2, (screenSize.height-384)/2, 512, 384);
 	}//GEN-END:initComponents
 
-	private void jButton2ActionPerformed(java.awt.event.ActionEvent e) {//GEN-FIRST:event_jButton2ActionPerformed
+	void jButton2ActionPerformed(java.awt.event.ActionEvent e) {//GEN-FIRST:event_jButton2ActionPerformed
 		// Add your handling code here:
 	}//GEN-LAST:event_jButton2ActionPerformed
 
-	private void jButton1ActionPerformed(java.awt.event.ActionEvent e) {//GEN-FIRST:event_jButton1ActionPerformed
+	void jButton1ActionPerformed(java.awt.event.ActionEvent e) {//GEN-FIRST:event_jButton1ActionPerformed
 		// Add your handling code here:
 	}//GEN-LAST:event_jButton1ActionPerformed
 
-	private void jButton5ActionPerformed(java.awt.event.ActionEvent e) {//GEN-FIRST:event_jButton5ActionPerformed
+	void jButton5ActionPerformed(java.awt.event.ActionEvent e) {//GEN-FIRST:event_jButton5ActionPerformed
 		// Add your handling code here:
 	}//GEN-LAST:event_jButton5ActionPerformed
 
-	private void jButton4ActionPerformed(java.awt.event.ActionEvent e) {//GEN-FIRST:event_jButton4ActionPerformed
+	void jButton4ActionPerformed(java.awt.event.ActionEvent e) {//GEN-FIRST:event_jButton4ActionPerformed
 		exitForm(null);
 	}//GEN-LAST:event_jButton4ActionPerformed
 
-	private void jButton3ActionPerformed(java.awt.event.ActionEvent e) {//GEN-FIRST:event_jButton3ActionPerformed
+	void jButton3ActionPerformed(java.awt.event.ActionEvent e) {//GEN-FIRST:event_jButton3ActionPerformed
 		DefaultMutableTreeNode defaultMutableTreeNode = (DefaultMutableTreeNode) (jTree1.getSelectionPath().getLastPathComponent());
 		Preferences preferences = ((PreferencesManager.PreferencesHolder) (((DefaultMutableTreeNode) (defaultMutableTreeNode.getParent())).getUserObject())).getPreferences();
 		preferences.put((String) (defaultMutableTreeNode.getUserObject()), jTextField1.getText());
@@ -215,14 +215,14 @@ public class JPreferencesManagerFrame extends JFrame {
 		}
 	}//GEN-LAST:event_jButton3ActionPerformed
 
-	private void exitForm(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_exitForm
+	void exitForm(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_exitForm
 		System.exit(0);
 	}//GEN-LAST:event_exitForm
 
 	// Variables declaration - do not modify//GEN-BEGIN:variables
 	private javax.swing.JButton jButton1;
 	private javax.swing.JButton jButton2;
-	private javax.swing.JButton jButton3;
+	javax.swing.JButton jButton3;
 	private javax.swing.JButton jButton4;
 	private javax.swing.JButton jButton5;
 	private javax.swing.JPanel jPanel1;
@@ -231,7 +231,7 @@ public class JPreferencesManagerFrame extends JFrame {
 	private javax.swing.JScrollPane jScrollPane1;
 	private javax.swing.JSeparator jSeparator1;
 	private javax.swing.JSplitPane jSplitPane1;
-	private javax.swing.JTextField jTextField1;
+	javax.swing.JTextField jTextField1;
 	private javax.swing.JTree jTree1;
 	// End of variables declaration//GEN-END:variables
 }
