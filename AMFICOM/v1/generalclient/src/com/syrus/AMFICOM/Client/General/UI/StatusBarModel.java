@@ -50,6 +50,7 @@ package com.syrus.AMFICOM.Client.General.UI;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.GridBagLayout;
+import java.awt.BorderLayout;
 import java.awt.event.ComponentEvent;
 import java.awt.event.MouseEvent;
 
@@ -127,6 +128,7 @@ class StatusBarField
 
 public class StatusBarModel extends JPanel implements OperationListener
 {
+	public ProgressBar pbar = new ProgressBar();
 
 	StatusBarField fields[];
 	int field_num;
@@ -191,14 +193,14 @@ public class StatusBarModel extends JPanel implements OperationListener
 
 	public void setText(String field_id, String text)
 	{
-		try 
+		try
 		{
 			fields[getIndex(field_id)].label.setText(text);
-		} 
-		catch (Exception ex) 
+		}
+		catch (Exception ex)
 		{
 			// field not found
-		} 
+		}
 	}
 
 	public String getText(int index)
@@ -273,7 +275,6 @@ public class StatusBarModel extends JPanel implements OperationListener
 		{
 			new MyTimeDisplay(fields[index]).start();
 		}
-
 	}
 
 	public void add(int index)
@@ -336,6 +337,17 @@ public class StatusBarModel extends JPanel implements OperationListener
 //		this.setLayout(xYLayout1);
 //		this.setLayout(gridBagLayout1);
 		this.setLayout(new LineLayout());
+
+		Border border = BorderFactory.createBevelBorder(
+						BevelBorder.LOWERED,
+						Color.white,
+						Color.white,
+						new Color(142, 142, 142),
+						new Color(99, 99, 99));
+
+		pbar.setBorder(border);
+
+		this.add(pbar,new XYConstraints(0,0,-1,-1));
 	}
 
 	public void setVisible(boolean aFlag)
@@ -354,7 +366,8 @@ public class StatusBarModel extends JPanel implements OperationListener
 		int i;
 		int width = getWidth();
 		int f_width = width / field_num;
-		int f_start = 0;
+//		int f_start = 0;
+		int f_start = pbar.getWidth();
 		for(i = 0; i < field_num; i++)
 		{
 			if(i == field_num - 1)
@@ -526,6 +539,7 @@ class StatusBarModel_separator_mouseAdapter extends java.awt.event.MouseAdapter
 	{
 		adaptee.parent.separator_mouseExited(e);
 	}
+
 
 	public void mousePressed(MouseEvent e)
 	{

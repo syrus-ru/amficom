@@ -10,12 +10,13 @@ import javax.swing.JLabel;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 
-import oracle.jdeveloper.layout.XYConstraints;
-import oracle.jdeveloper.layout.XYLayout;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 
 public class GeneralEquationFilterPanel extends FilterPanel
 {
-	XYLayout xYLayout1 = new XYLayout();
+
 
 	JTextField textField = new JTextField();
 	JLabel jLabel1 = new JLabel();
@@ -41,7 +42,7 @@ public class GeneralEquationFilterPanel extends FilterPanel
 
 	private void jbInit() throws Exception
 	{
-		this.setLayout(xYLayout1);
+		this.setLayout(new GridBagLayout());
 		jLabel1.setText(LangModel.String("labelUslovie"));
 		jLabel2.setText(LangModel.String("labelZnachenie"));
 		eqButton.setText("=");
@@ -52,14 +53,20 @@ public class GeneralEquationFilterPanel extends FilterPanel
 		radio.add(eqButton);
 		radio.add(moreButton);
 
-		this.add(jLabel1, new XYConstraints(10, 20, 75, 20));
-		this.add(jLabel2, new XYConstraints(130, 20, 75, 20));
+		this.add(jLabel1,  new GridBagConstraints(0, 0, 3, 1, 0.0, 0.0
+				,GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(0, 10, 0, 10), 0, 0));
+		this.add(jLabel2,  new GridBagConstraints(3, 0, 1, 1, 0.0, 0.0
+				,GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(0, 0, 0, 10), 0, 0));
 
-		this.add(lessButton, new XYConstraints(5, 50, 40, 20));
-		this.add(eqButton, new XYConstraints(50, 50, 40, 20));
-		this.add(moreButton, new XYConstraints(95, 50, 40, 20));
+		this.add(lessButton, new GridBagConstraints(0, 1, 1, 1, 0.0, 0.0
+				,GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(0, 10, 0, 10), 0, 0));
+		this.add(eqButton, new GridBagConstraints(1, 1, 1, 1, 0.0, 0.0
+				,GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(0, 0, 0, 10), 0, 0));
+		this.add(moreButton, new GridBagConstraints(2, 1, 1, 1, 0.0, 0.0
+				,GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(0, 0, 0, 10), 0, 0));
 
-		this.add(textField, new XYConstraints(140, 50, 90, 20));
+		this.add(textField,  new GridBagConstraints(3, 1, 1, 1, 1.0, 0.0
+				,GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0, 10, 0, 10), 0, 0));
 //		this.setLayout(null);
 	}
 

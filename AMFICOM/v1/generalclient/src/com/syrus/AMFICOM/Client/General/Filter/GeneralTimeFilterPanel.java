@@ -4,7 +4,6 @@ import com.syrus.AMFICOM.Client.General.Lang.LangModel;
 import com.syrus.AMFICOM.Client.General.UI.DateSpinner;
 import com.syrus.AMFICOM.Client.General.UI.TimeSpinner;
 
-import java.awt.FontMetrics;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
 
@@ -22,21 +21,22 @@ import javax.swing.text.DateFormatter;
 import javax.swing.text.DefaultFormatterFactory;
 import javax.swing.JSpinner.DateEditor;
 
-import oracle.jdeveloper.layout.XYConstraints;
-import oracle.jdeveloper.layout.XYLayout;
 import com.syrus.AMFICOM.Client.General.Filter.FilterPanel;
+
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.awt.FontMetrics;
 
 public class GeneralTimeFilterPanel extends FilterPanel
 {
-	XYLayout xYLayout1 = new XYLayout();
-
 	JLabel jLabel1 = new JLabel();
 	JLabel jLabel2 = new JLabel();
 
 	public DateSpinner loDateSpin = new DateSpinner();
-	public TimeSpinner loTimeSpin = new TimeSpinner();  
+	public TimeSpinner loTimeSpin = new TimeSpinner();
 	public DateSpinner hiDateSpin = new DateSpinner();
-	public TimeSpinner hiTimeSpin = new TimeSpinner();    
+	public TimeSpinner hiTimeSpin = new TimeSpinner();
 
 	public GeneralTimeFilterPanel()
 	{
@@ -62,7 +62,7 @@ public class GeneralTimeFilterPanel extends FilterPanel
 					spinDate_mousePressed(e,loDateSpin);
 				}
 			});
-    
+
 		((DateEditor)loTimeSpin.getEditor()).getTextField().addMouseListener(
 			new java.awt.event.MouseAdapter()
 			{
@@ -71,7 +71,7 @@ public class GeneralTimeFilterPanel extends FilterPanel
 					spinDate_mousePressed(e,loTimeSpin);
 				}
 			});
-    
+
 		((DateEditor)hiDateSpin.getEditor()).getTextField().addMouseListener(
 			new java.awt.event.MouseAdapter()
 			{
@@ -80,7 +80,7 @@ public class GeneralTimeFilterPanel extends FilterPanel
 					spinDate_mousePressed(e,hiDateSpin);
 				}
 			});
-    
+
 		((DateEditor)hiTimeSpin.getEditor()).getTextField().addMouseListener(
 			new java.awt.event.MouseAdapter()
 			{
@@ -90,17 +90,23 @@ public class GeneralTimeFilterPanel extends FilterPanel
 				}
 			});
 
-		this.setLayout(xYLayout1);
+		this.setLayout(new GridBagLayout());
 		jLabel1.setText(LangModel.String("labelFrom"));
 		jLabel2.setText(LangModel.String("labelTo"));
 
-		this.add(jLabel1, new XYConstraints(2, 20, -1, 20));
-		this.add(loDateSpin, new XYConstraints(25, 20, 130, -1));
-		this.add(loTimeSpin, new XYConstraints(160, 20, 60, -1));    
+		this.add(jLabel1, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0
+				,GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(0, 10, 0, 10), 0, 0));
+		this.add(loDateSpin, new GridBagConstraints(1, 0, 1, 1, 1.0, 0.0
+				,GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 10), 0, 0));
+		this.add(loTimeSpin, new GridBagConstraints(2, 0, 1, 1, 1.0, 0.0
+				,GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 10), 0, 0));
 
-		this.add(jLabel2, new XYConstraints(2, 50, -1, 20));
-		this.add(hiDateSpin, new XYConstraints(25, 50, 130, -1));
-		this.add(hiTimeSpin, new XYConstraints(160, 50, 60, -1));
+		this.add(jLabel2, new GridBagConstraints(0, 1, 1, 1, 0.0, 0.0
+				,GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(0, 10, 0, 10), 0, 0));
+		this.add(hiDateSpin, new GridBagConstraints(1, 1, 1, 1, 1.0, 0.0
+				,GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 10), 0, 0));
+		this.add(hiTimeSpin, new GridBagConstraints(2, 1, 1, 1, 1.0, 0.0
+				,GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 10), 0, 0));
 //		this.setLayout(null);
 	}
 
@@ -108,39 +114,39 @@ public class GeneralTimeFilterPanel extends FilterPanel
 	{
 		Calendar cal1 = Calendar.getInstance();
 		cal1.setTime((Date)loDateSpin.getValue());
-		
+
 		Calendar cal2 = Calendar.getInstance();
 		cal2.setTime((Date)loTimeSpin.getValue());
-		
+
 		cal1.set(Calendar.HOUR_OF_DAY,cal2.HOUR_OF_DAY);
 		cal1.set(Calendar.MINUTE,cal2.MINUTE);
-	 
+
 		String fromDate = String.valueOf(cal1.getTime().getTime());
-	
-		
+
+
 		cal1 = Calendar.getInstance();
 		cal1.setTime((Date)hiDateSpin.getValue());
-		
+
 		cal2 = Calendar.getInstance();
 		cal2.setTime((Date)hiTimeSpin.getValue());
-		
+
 		cal1.set(Calendar.HOUR_OF_DAY,cal2.HOUR_OF_DAY);
 		cal1.set(Calendar.MINUTE,cal2.MINUTE);
-	 
+
 		String toDate = String.valueOf(cal1.getTime().getTime());
-		
+
 		FilterExpression fexp = new FilterExpression();
 
 		fexp.setName(LangModel.String("labelFiltration") +
-                    " \'" + col_name + "\' " +
-                    LangModel.String("labelTimeOt") + " " + fromDate + " " +
-                    LangModel.String("labelTimeDo") + " " + toDate);
+						  " \'" + col_name + "\' " +
+						  LangModel.String("labelTimeOt") + " " + fromDate + " " +
+						  LangModel.String("labelTimeDo") + " " + toDate);
 
 		Vector vec = new Vector();
 		vec.add("time");
 		vec.add(fromDate);
 		vec.add(toDate);
-		fexp.setVec(vec);    
+		fexp.setVec(vec);
 
 		fexp.setId(col_id);
 		return fexp;
@@ -166,7 +172,7 @@ public class GeneralTimeFilterPanel extends FilterPanel
 		else
 			sdf = new SimpleDateFormat(TimeSpinner.getPattern());
 		String fullString = sdf.format(spin.getValue());
-    
+
 		int x = e.getX();
 		int xl = 0;
 		for (int i = 0; i < fullString.length(); i++)
@@ -180,7 +186,7 @@ public class GeneralTimeFilterPanel extends FilterPanel
 					int spaceNumber = 0;
 					int from = 0;
 					int to = 0;
-				  
+
 					do
 					{
 						int temp = stringToConsider.indexOf("  ",from);
@@ -198,7 +204,7 @@ public class GeneralTimeFilterPanel extends FilterPanel
 						}
 					}
 					while (true);
-  
+
 					textField.select(from,to);
 					SpinnerDateModel sModel = (SpinnerDateModel) spin.getModel();
 					if (spaceNumber == 0)
@@ -207,7 +213,7 @@ public class GeneralTimeFilterPanel extends FilterPanel
 						sModel.setCalendarField(Calendar.MONTH);
 					if (spaceNumber == 2)
 						sModel.setCalendarField(Calendar.YEAR);
-					break;  
+					break;
 				}
 				else
 				{
@@ -222,9 +228,9 @@ public class GeneralTimeFilterPanel extends FilterPanel
 						textField.select(0,2);
 						sModel.setCalendarField(Calendar.HOUR_OF_DAY);
 					}
-					break;  
+					break;
 				}
-			}   
+			}
 		}
 	}
 }

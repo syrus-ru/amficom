@@ -283,7 +283,7 @@ public class ObjectResourceFilterPane extends JScrollPane
 		for (int i = 0; i < schemeEls.size(); i++)
 		{
 			LogicSchemeElement se = (LogicSchemeElement )schemeEls.get(i);
-			if (se.type.equals("Condition"))
+			if (se.type.equals(LogicSchemeElement.t_condition))
 			{
 				int thisID = Integer.parseInt(se.operandType);
 				if (thisID > removedIndex)

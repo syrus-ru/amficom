@@ -31,7 +31,7 @@ public class FilterExpression extends StubResource implements FilterExpressionIn
 
 	public String getName()
 	{
-		return fe.getName();
+		return "Условие " + Integer.toString(getListID()) + ": " + fe.getName();
 	}
 
 	public String getId()

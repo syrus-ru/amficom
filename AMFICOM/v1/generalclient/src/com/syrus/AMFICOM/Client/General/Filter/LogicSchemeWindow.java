@@ -42,7 +42,7 @@ public class LogicSchemeWindow extends JDialog//JInternalFrame
 	private JButton buttonClose = new JButton();
 
 	public LogicSchemeWindow(
-			Dialog parent, 
+			Dialog parent,
 			ObjectResourceFilter filter,
 			ObjectResourceFilterPane filterPane)
 	{
@@ -62,7 +62,7 @@ public class LogicSchemeWindow extends JDialog//JInternalFrame
 	}
 
 	public LogicSchemeWindow(
-			Frame parent, 
+			Frame parent,
 			ObjectResourceFilter filter,
 			ObjectResourceFilterPane filterPane)
 	{
@@ -90,9 +90,9 @@ public class LogicSchemeWindow extends JDialog//JInternalFrame
 
 	public LogicSchemeWindow(ObjectResourceFilterPane filterPane)
 	{
-		this(null, filterPane);	
+		this(null, filterPane);
 	}
-	
+
 	public void setFilter (ObjectResourceFilter orf)
 	{
 		this.filter = orf;
@@ -116,7 +116,7 @@ public class LogicSchemeWindow extends JDialog//JInternalFrame
 		});
 		contentPane.setLayout(gridBagLayout1);
 		this.setSize(new Dimension(610, 300));
-	
+
 		andToggleButton.setMargin(new Insets(2, 2, 2, 2));
 		andToggleButton.setText(LangModel.String("label_and"));
 		andToggleButton.addActionListener(new java.awt.event.ActionListener()
@@ -149,7 +149,7 @@ public class LogicSchemeWindow extends JDialog//JInternalFrame
 		contentPane.add(Box.createVerticalGlue(), new GridBagConstraints(3, 2, 1, 1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0));
 		contentPane.add(buttonClose, new GridBagConstraints(4, 2, 1, 1, 0.0, 0.0, GridBagConstraints.EAST, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
 		jScrollPane1.getViewport().add(logicSchemePanel);
-	
+
 		useStandartSchemeCheckBox.addActionListener(new java.awt.event.ActionListener()
 		{
 			public void actionPerformed(ActionEvent e)
@@ -193,7 +193,7 @@ public class LogicSchemeWindow extends JDialog//JInternalFrame
 		if (frameSize.width > screenSize.width)
 			frameSize.width = screenSize.width;
 		setLocation(
-				(screenSize.width - frameSize.width) / 2, 
+				(screenSize.width - frameSize.width) / 2,
 				(screenSize.height - frameSize.height) / 2);
 	}
 
@@ -205,8 +205,11 @@ public class LogicSchemeWindow extends JDialog//JInternalFrame
 
 	void andToggleButton_actionPerformed(ActionEvent e)
 	{
-	    if (andToggleButton.isSelected())
-			lsWindowButtonPressed = LangModel.String("label_and");
+		if (andToggleButton.isSelected())
+		{
+			lsWindowButtonPressed = LogicSchemeElement.ot_and;
+			orToggleButton.setSelected(false);
+		}
 		else
 			lsWindowButtonPressed = "";
 	}
@@ -214,7 +217,10 @@ public class LogicSchemeWindow extends JDialog//JInternalFrame
 	void orToggleButton_actionPerformed(ActionEvent e)
 	{
 		if (orToggleButton.isSelected())
-			lsWindowButtonPressed = LangModel.String("label_or");
+		{
+			lsWindowButtonPressed = LogicSchemeElement.ot_or;
+			andToggleButton.setSelected(false);
+		}
 		else
 			lsWindowButtonPressed = "";
 	}
@@ -231,9 +237,9 @@ public class LogicSchemeWindow extends JDialog//JInternalFrame
 			filter.logicScheme.getTextValue());
 	}
 
-	protected void processWindowEvent(WindowEvent e) 
+	protected void processWindowEvent(WindowEvent e)
 	{
-		if (e.getID() == WindowEvent.WINDOW_CLOSING) 
+		if (e.getID() == WindowEvent.WINDOW_CLOSING)
 		{
 			hide();
 			return;
@@ -243,6 +249,7 @@ public class LogicSchemeWindow extends JDialog//JInternalFrame
 
 	private void buttonClose_actionPerformed(ActionEvent e)
 	{
+		filterPane.tryToSaveChanges();
 		hide();
 	}
 }

@@ -8,14 +8,14 @@ import java.util.Vector;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 
-import oracle.jdeveloper.layout.XYConstraints;
-import oracle.jdeveloper.layout.XYLayout;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 
 public class GeneralStringFilterPanel extends FilterPanel
 {
 	JTextField textField = new JTextField();
 	JLabel jLabel1 = new JLabel();
-	XYLayout xYLayout1 = new XYLayout();
 
 	public GeneralStringFilterPanel()
 	{
@@ -33,11 +33,12 @@ public class GeneralStringFilterPanel extends FilterPanel
 
 	private void jbInit() throws Exception
 	{
-		this.setLayout(xYLayout1);
+		this.setLayout(new GridBagLayout());
 		jLabel1.setText(LangModel.String("labelStringForSearch"));
-		this.add(jLabel1, new XYConstraints(10, 20, 200, 20));
-		this.add(textField, new XYConstraints(10, 50, 200, 20));
-//		this.setLayout(null);
+		this.add(jLabel1,  new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0
+				,GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(0, 0, 5, 0), 0, 0));
+		this.add(textField,  new GridBagConstraints(0, 1, 1, 1, 1.0, 0.0
+				,GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0, 10, 0, 10), 0, 0));
 	}
 
 	public FilterExpression getExpression(String col_id, String col_name)

@@ -8,14 +8,14 @@ import java.util.Vector;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 
-import oracle.jdeveloper.layout.XYConstraints;
-import oracle.jdeveloper.layout.XYLayout;
 import com.syrus.AMFICOM.Client.General.Filter.FilterPanel;
+
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 
 public class GeneralRangeFilterPanel extends FilterPanel
 {
-	XYLayout xYLayout1 = new XYLayout();
-
 	JLabel jLabel1 = new JLabel();
 	JLabel jLabel2 = new JLabel();
 	JTextField loField = new JTextField();
@@ -37,16 +37,20 @@ public class GeneralRangeFilterPanel extends FilterPanel
 
 	private void jbInit() throws Exception
 	{
-		this.setLayout(xYLayout1);
+		this.setLayout(new GridBagLayout());
+
 		jLabel1.setText(LangModel.String("labelFrom"));
 		jLabel2.setText(LangModel.String("labelTo"));
 
-		this.add(jLabel1, new XYConstraints(10, 20, 100, 20));
-		this.add(loField, new XYConstraints(115, 20, 100, 20));
+		this.add(jLabel1,  new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0
+				,GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(0, 10, 0, 0), 0, 0));
+		this.add(loField, new GridBagConstraints(1, 0, 1, 1, 1.0, 0.0
+				,GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0, 10, 0, 10), 0, 0));
 
-		this.add(jLabel2, new XYConstraints(10, 50, 100, 20));
-		this.add(hiField, new XYConstraints(115, 50, 100, 20));
-//		this.setLayout(null);
+		this.add(jLabel2, new GridBagConstraints(0, 1, 1, 1, 0.0, 0.0
+				,GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(0, 10, 0, 0), 0, 0));
+		this.add(hiField, new GridBagConstraints(1, 1, 1, 1, 0.0, 0.0
+				,GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0, 10, 0, 10), 0, 0));
 	}
 
 	public FilterExpression getExpression(String col_id, String col_name)
