@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicTypeDatabase.java,v 1.28 2004/12/10 16:07:30 bob Exp $
+ * $Id: CharacteristicTypeDatabase.java,v 1.29 2004/12/29 09:18:21 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,7 +29,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.28 $, $Date: 2004/12/10 16:07:30 $
+ * @version $Revision: 1.29 $, $Date: 2004/12/29 09:18:21 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -203,4 +203,20 @@ public class CharacteristicTypeDatabase extends StorableObjectDatabase {
 			IllegalDataException {
 		return this.retrieveButIds(ids);
 	}
+	
+	public CharacteristicType retrieveForCodename(String codename) throws ObjectNotFoundException , RetrieveObjectException {		
+		List list = null;
+		
+		try {
+			list = retrieveByIds( null , COLUMN_CODENAME + EQUALS + APOSTOPHE + DatabaseString.toQuerySubString(codename, SIZE_CODENAME_COLUMN) + APOSTOPHE);
+		}  catch (IllegalDataException ide) {				
+			throw new RetrieveObjectException(ide);
+		}
+		
+		if ((list == null) || (list.isEmpty()))
+				throw new ObjectNotFoundException("No characteristic type with codename: '" + codename + "'");
+		
+		return (CharacteristicType) list.get(0);
+	}
+
 }
