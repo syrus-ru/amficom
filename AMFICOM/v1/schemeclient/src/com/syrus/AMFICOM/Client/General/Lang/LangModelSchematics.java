@@ -44,9 +44,9 @@ public class LangModelSchematics
 				try
 				{
 					throw new Exception("key '"
-												+ keyName
-												+ "' "
-												+ "not found");
+											  + keyName + "Text"
+											  + "' "
+											  + "not found");
 				}
 				catch (Exception exc)
 				{
