@@ -16,6 +16,7 @@ CREATE TABLE Characteristic (
  mcm_id VARCHAR2(32),
  equipment_id VARCHAR2(32),
  transmission_path_id VARCHAR2(32),
+ port_id VARCHAR2(32),
 --
  CONSTRAINT chc_pk PRIMARY KEY (id),
  CONSTRAINT chc_creator_fk FOREIGN KEY (creator_id)
