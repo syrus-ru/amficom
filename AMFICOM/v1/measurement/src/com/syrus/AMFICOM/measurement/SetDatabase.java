@@ -1,5 +1,5 @@
 /*
- * $Id: SetDatabase.java,v 1.55 2005/02/08 11:44:53 max Exp $
+ * $Id: SetDatabase.java,v 1.56 2005/02/08 19:43:01 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -46,8 +46,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.55 $, $Date: 2005/02/08 11:44:53 $
- * @author $Author: max $
+ * @version $Revision: 1.56 $, $Date: 2005/02/08 19:43:01 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -193,27 +193,19 @@ public class SetDatabase extends StorableObjectDatabase {
         if ((sets == null) || (sets.isEmpty()))
 			return;
 
-		StringBuffer sql = new StringBuffer(SQL_SELECT + StorableObjectWrapper.COLUMN_ID + COMMA
-				+ StorableObjectWrapper.COLUMN_TYPE_ID + COMMA + SetWrapper.LINK_COLUMN_PARAMETER_VALUE + COMMA
-				+ SetWrapper.LINK_COLUMN_SET_ID + SQL_FROM + ObjectEntities.SETPARAMETER_ENTITY
-				+ SQL_WHERE + SetWrapper.LINK_COLUMN_SET_ID + SQL_IN + OPEN_BRACKET);
-		int i = 1;
-		for (Iterator it = sets.iterator(); it.hasNext(); i++) {
-			Set set = (Set) it.next();
-			sql.append(DatabaseIdentifier.toSQLString(set.getId()));
-			if (it.hasNext()) {
-				if (((i + 1) % MAXIMUM_EXPRESSION_NUMBER != 0))
-					sql.append(COMMA);
-				else {
-					sql.append(CLOSE_BRACKET);
-					sql.append(SQL_OR);
-					sql.append(SetWrapper.LINK_COLUMN_SET_ID);
-					sql.append(SQL_IN);
-					sql.append(OPEN_BRACKET);
-				}
-			}
+		StringBuffer sql = new StringBuffer(SQL_SELECT
+				+ StorableObjectWrapper.COLUMN_ID + COMMA
+				+ StorableObjectWrapper.COLUMN_TYPE_ID + COMMA
+				+ SetWrapper.LINK_COLUMN_PARAMETER_VALUE + COMMA
+				+ SetWrapper.LINK_COLUMN_SET_ID
+				+ SQL_FROM + ObjectEntities.SETPARAMETER_ENTITY
+				+ SQL_WHERE);
+		try {
+			sql.append(this.idsInListString(sets, SetWrapper.LINK_COLUMN_SET_ID));
 		}
-		sql.append(CLOSE_BRACKET);
+		catch (IllegalDataException e) {
+			throw new RetrieveObjectException(e);
+		}
 
 		Statement statement = null;
 		ResultSet resultSet = null;
@@ -286,24 +278,13 @@ public class SetDatabase extends StorableObjectDatabase {
 
 		StringBuffer sql = new StringBuffer(SQL_SELECT + SetWrapper.LINK_COLUMN_ME_ID + COMMA
 				+ SetWrapper.LINK_COLUMN_SET_ID + SQL_FROM + ObjectEntities.SETMELINK_ENTITY
-				+ SQL_WHERE + SetWrapper.LINK_COLUMN_SET_ID + SQL_IN + OPEN_BRACKET);
-		int i = 1;
-		for (Iterator it = sets.iterator(); it.hasNext(); i++) {
-			Set set = (Set) it.next();
-			sql.append(DatabaseIdentifier.toSQLString(set.getId()));
-			if (it.hasNext()) {
-				if (((i + 1) % MAXIMUM_EXPRESSION_NUMBER != 0))
-					sql.append(COMMA);
-				else {
-					sql.append(CLOSE_BRACKET);
-					sql.append(SQL_OR);
-					sql.append(SetWrapper.LINK_COLUMN_SET_ID);
-					sql.append(SQL_IN);
-					sql.append(OPEN_BRACKET);
-				}
-			}
+				+ SQL_WHERE);
+		try {
+			sql.append(this.idsInListString(sets, SetWrapper.LINK_COLUMN_SET_ID));
 		}
-		sql.append(CLOSE_BRACKET);
+		catch (IllegalDataException e) {
+			throw new RetrieveObjectException(e);
+		}
 
 		Statement statement = null;
 		ResultSet resultSet = null;
