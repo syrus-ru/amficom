@@ -192,8 +192,8 @@ public class SchemeElementPropsPanel extends JPanel
 			compPanel.add(cl2Panel, BorderLayout.SOUTH);
 
 		ProtoElement p = (ProtoElement)Pool.get(ProtoElement.typ, element.proto_element_id);
-		if (p != null && p.map_proto != null)
-			mapProtoTextField.setText(p.map_proto.getName());
+		if (p != null && p.scheme_proto_group != null)
+			mapProtoTextField.setText(p.scheme_proto_group.getName());
 		else
 			mapProtoTextField.setText("");
 		mapProtoTextField.setCaretPosition(0);

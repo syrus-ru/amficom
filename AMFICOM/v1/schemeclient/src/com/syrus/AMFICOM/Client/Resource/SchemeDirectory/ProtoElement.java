@@ -9,7 +9,6 @@ import java.awt.datatransfer.*;
 import com.syrus.AMFICOM.CORBA.Scheme.*;
 import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.Resource.*;
-import com.syrus.AMFICOM.Client.Resource.Map.MapProtoElement;
 import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.EquipmentType;
 import com.syrus.AMFICOM.Client.Resource.Scheme.*;
 
@@ -38,7 +37,7 @@ public class ProtoElement extends StubResource
 	public Serializable serializable_ugo;
 	public byte[] ugo;
 
-	public transient MapProtoElement map_proto;
+	public transient SchemeProtoGroup scheme_proto_group;
 
 	public ProtoElement(SchemeProtoElement_Transferable transferable)
 	{
@@ -317,7 +316,7 @@ public class ProtoElement extends StubResource
 		proto.modified = modified;
 		proto.name = name;
 		proto.equipment_type_id = new_eqt.getId();
-		proto.map_proto = map_proto;
+		proto.scheme_proto_group = scheme_proto_group;
 		proto.label = label;
 		proto.symbol_id = symbol_id;
 		proto.domain_id = domain_id;

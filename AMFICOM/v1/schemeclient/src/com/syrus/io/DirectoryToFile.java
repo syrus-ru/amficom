@@ -5,7 +5,6 @@ import java.util.*;
 
 import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.Resource.ISMDirectory.AccessPortType;
-import com.syrus.AMFICOM.Client.Resource.Map.MapProtoElement;
 import com.syrus.AMFICOM.Client.Resource.Network.Characteristic;
 import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.*;
 import com.syrus.AMFICOM.Client.Resource.Scheme.*;
@@ -29,8 +28,8 @@ public class DirectoryToFile
 	public static final String proto_ugo_dir = "resources/proto/proto_ugo/";
 	public static final String proto_image_dir = "resources/proto/img/";
 	public static final String proto_type = "equipment";
-	public static final String map_proto_name = "mapprotoelement";
-	public static final String map_proto_group_name = "mapprotogroup";
+	public static final String map_proto_name = "SchemeProtoGroup";
+	public static final String map_proto_group_name = "SchemeProtoGroup";
 
 	public static final String scheme_dir = "resources/scheme/";
 	public static final String scheme_cell_dir = "resources/scheme/scheme_cell/";
@@ -67,8 +66,8 @@ public class DirectoryToFile
 		readProtoElements();
 		System.out.println("Reading mapprotos...");
 		readMapProto();
-		System.out.println("Reading mapprotogroups...");
-		readMapProtoGroups();
+		System.out.println("Reading SchemeProtoGroups...");
+		readSchemeProtoGroups();
 		System.out.println("Reading paths...");
 		readSchemePaths();
 		System.out.println("Reading elements...");
@@ -123,9 +122,9 @@ public class DirectoryToFile
 		System.out.println("Writing protos...");
 		writeProtoElements();
 		System.out.println("Writing mapprotos...");
-		writeMapProtoElements();
-		System.out.println("Writing mapprotogroups...");
-		writeMapProtoGroups();
+		writeSchemeProtoGroups();
+		System.out.println("Writing SchemeProtoGroups...");
+		writeSchemeProtoGroups();
 		System.out.println("Writing paths...");
 		writeSchemePaths();
 		System.out.println("Writing elements...");
@@ -883,13 +882,13 @@ public class DirectoryToFile
 		}
 	}
 
-	protected static void writeMapProtoElements()
+	protected static void writeSchemeProtoGroups()
 	{
-		MapProtoElement map_proto;
+	/*	SchemeProtoGroup map_proto;
 		new File (proto_dir).mkdirs();
 		new File (proto_image_dir).mkdirs();
 
-		if (Pool.getMap(MapProtoElement.typ) != null)
+		if (Pool.getMap(SchemeProtoGroup.typ) != null)
 		{
 			try
 			{
@@ -904,12 +903,12 @@ public class DirectoryToFile
 				PrintWriter pw = new PrintWriter(osw, true);
 
 				pw.println ("AMFICOM component description file");
-				pw.println ("@type " + MapProtoElement.typ);
+				pw.println ("@type " + SchemeProtoGroup.typ);
 				pw.println();
 
-				for(Iterator it = Pool.getMap(MapProtoElement.typ).values().iterator(); it.hasNext();)
+				for(Iterator it = Pool.getMap(SchemeProtoGroup.typ).values().iterator(); it.hasNext();)
 				{
-					map_proto = (MapProtoElement)it.next();
+					map_proto = (SchemeProtoGroup)it.next();
 					pw.println ("@id " + map_proto.getId());
 					pw.println ("@name " + map_proto.getName());
 					pw.println ("@description " + map_proto.description);
@@ -935,22 +934,22 @@ public class DirectoryToFile
 				pw.close();
 				osw.close();
 				fos.close();
-				System.out.println(counter + " MapProtoElements written");
+				System.out.println(counter + " SchemeProtoGroups written");
 			}
 			catch (Exception ex)
 			{
 				ex.printStackTrace();
 			}
-		}
+		}*/
 	}
-
-	protected static void writeMapProtoGroups()
+/*
+	protected static void writeSchemeProtoGroups()
 	{
-		MapProtoGroup map_proto;
+		SchemeProtoGroup map_proto;
 		new File (proto_dir).mkdirs();
 		new File (proto_image_dir).mkdirs();
 
-		if (Pool.getMap(MapProtoGroup.typ) != null)
+		if (Pool.getMap(SchemeProtoGroup.typ) != null)
 		{
 			try
 			{
@@ -965,12 +964,12 @@ public class DirectoryToFile
 				PrintWriter pw = new PrintWriter(osw, true);
 
 				pw.println ("AMFICOM component description file");
-				pw.println ("@type " + MapProtoGroup.typ);
+				pw.println ("@type " + SchemeProtoGroup.typ);
 				pw.println();
 
-				for(Iterator it = Pool.getMap(MapProtoGroup.typ).values().iterator(); it.hasNext();)
+				for(Iterator it = Pool.getMap(SchemeProtoGroup.typ).values().iterator(); it.hasNext();)
 				{
-					map_proto = (MapProtoGroup)it.next();
+					map_proto = (SchemeProtoGroup)it.next();
 					pw.println ("@id " + map_proto.getId());
 					pw.println ("@name " + map_proto.getName());
 					pw.println ("@parent_id " + map_proto.parent_id);
@@ -989,7 +988,7 @@ public class DirectoryToFile
 				pw.close();
 				osw.close();
 				fos.close();
-				System.out.println(counter + " MapProtoGroups written");
+				System.out.println(counter + " SchemeProtoGroups written");
 			}
 			catch (Exception ex)
 			{
@@ -997,7 +996,7 @@ public class DirectoryToFile
 			}
 		}
 	}
-
+*/
 	protected static void writeScheme()
 	{
 		Scheme scheme;
@@ -2272,7 +2271,7 @@ public class DirectoryToFile
 
 	protected static void readMapProto()
 	{
-		File[] files = new File(proto_dir).listFiles();
+/*		File[] files = new File(proto_dir).listFiles();
 		if (files == null)
 			return;
 		for (int i = 0; i < files.length; i++)
@@ -2286,16 +2285,16 @@ public class DirectoryToFile
 					FileInputStream fis = new FileInputStream(files[i]);
 					IntelStreamReader isr = new IntelStreamReader(fis, "UTF-16");
 
-					if (!getType(isr).equals(MapProtoElement.typ))
+					if (!getType(isr).equals(SchemeProtoGroup.typ))
 						return;
 
-					MapProtoElement mapproto = new MapProtoElement();
+					SchemeProtoGroup mapproto = new SchemeProtoGroup();
 					h = new HashMap();
 					while (isr.ready())
 					{
 						String[] s = analyseString(isr.readASCIIString());
 						if (s[0].equals(""))
-							mapproto = new MapProtoElement();
+							mapproto = new SchemeProtoGroup();
 						else if (s[0].equals("@name"))
 							mapproto.name = s[1];
 						else if (s[0].equals("@id"))
@@ -2346,9 +2345,9 @@ public class DirectoryToFile
 					}
 					isr.close();
 					fis.close();
-					Map old = Pool.getMap(MapProtoElement.typ);
+					Map old = Pool.getMap(SchemeProtoGroup.typ);
 					if (old == null)
-						Pool.putMap(MapProtoElement.typ, h);
+						Pool.putMap(SchemeProtoGroup.typ, h);
 					else
 						old.putAll(h);
 				}
@@ -2358,10 +2357,10 @@ public class DirectoryToFile
 					return;
 				}
 			}
-		}
+		}*/
 	}
 
-	protected static void readMapProtoGroups()
+	protected static void readSchemeProtoGroups()
 	{
 		File[] files = new File(proto_dir).listFiles();
 		if (files == null)
@@ -2377,16 +2376,16 @@ public class DirectoryToFile
 					FileInputStream fis = new FileInputStream(files[i]);
 					IntelStreamReader isr = new IntelStreamReader(fis, "UTF-16");
 
-					if (!getType(isr).equals(MapProtoGroup.typ))
+					if (!getType(isr).equals(SchemeProtoGroup.typ))
 						return;
 
-					MapProtoGroup mapproto = new MapProtoGroup();
+					SchemeProtoGroup mapproto = new SchemeProtoGroup();
 					h = new HashMap();
 					while (isr.ready())
 					{
 						String[] s = analyseString(isr.readASCIIString());
 						if (s[0].equals(""))
-							mapproto = new MapProtoGroup();
+							mapproto = new SchemeProtoGroup();
 						else if (s[0].equals("@name"))
 							mapproto.name = s[1];
 						else if (s[0].equals("@id"))
@@ -2408,20 +2407,19 @@ public class DirectoryToFile
 						}
 						else if (s[0].equals("@mapprotos"))
 						{
-							mapproto.mapproto_ids = new Vector();
 							s = analyseString(isr.readASCIIString());
 							while (!s[0].startsWith("@end"))
 							{
-								mapproto.mapproto_ids.add(s[0]);
+								mapproto.getProtoIds().add(s[0]);
 								s = analyseString(isr.readASCIIString());
 							}
 						}
 					}
 					isr.close();
 					fis.close();
-					Map old = Pool.getMap(MapProtoGroup.typ);
+					Map old = Pool.getMap(SchemeProtoGroup.typ);
 					if (old == null)
-						Pool.putMap(MapProtoGroup.typ, h);
+						Pool.putMap(SchemeProtoGroup.typ, h);
 					else
 						old.putAll(h);
 				}

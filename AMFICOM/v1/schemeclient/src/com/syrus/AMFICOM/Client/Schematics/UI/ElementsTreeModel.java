@@ -10,9 +10,8 @@ import com.syrus.AMFICOM.Client.General.Lang.LangModelConfig;
 import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.Resource.ISMDirectory.*;
-import com.syrus.AMFICOM.Client.Resource.Map.MapProtoElement;
 import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.*;
-import com.syrus.AMFICOM.Client.Resource.Scheme.MapProtoGroup;
+import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeProtoGroup;
 import com.syrus.AMFICOM.Client.Resource.SchemeDirectory.ProtoElement;
 
 public class ElementsTreeModel extends ObjectResourceTreeModel
@@ -91,10 +90,10 @@ public class ElementsTreeModel extends ObjectResourceTreeModel
 		if(node.getObject() instanceof String)
 		{
 			String s = (String )node.getObject();
-			if(s.equals(MapProtoGroup.typ))
-				return MapProtoGroup.class;
-			if(s.equals(MapProtoElement.typ))
-				return MapProtoElement.class;
+			if(s.equals(SchemeProtoGroup.typ))
+				return SchemeProtoGroup.class;
+			if(s.equals(SchemeProtoGroup.typ))
+				return SchemeProtoGroup.class;
 //			if(s.equals(EquipmentType.typ))
 //				return EquipmentType.class;
 			if(s.equals(LinkType.typ))
@@ -112,14 +111,14 @@ public class ElementsTreeModel extends ObjectResourceTreeModel
 			if(s.equals(AccessPortType.typ))
 				return AccessPortType.class;
 		}
-		else if (node.getObject() instanceof MapProtoGroup)
+		else if (node.getObject() instanceof SchemeProtoGroup)
 		{
-			if (!((MapProtoGroup)node.getObject()).group_ids.isEmpty())
-				return MapProtoGroup.class;
+			if (!((SchemeProtoGroup)node.getObject()).group_ids.isEmpty())
+				return SchemeProtoGroup.class;
 			else
-				return MapProtoElement.class;
+				return ProtoElement.class;
 		}
-		else if (node.getObject() instanceof MapProtoElement)
+		else if (node.getObject() instanceof SchemeProtoGroup)
 			return ProtoElement.class;
 		return null;
 	}
@@ -135,7 +134,7 @@ public class ElementsTreeModel extends ObjectResourceTreeModel
 			{
 				vec.add(new ObjectResourceTreeNode("configure", LangModelConfig.getString("label_configuration"), true,
 						new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/folder.gif"))));
-				vec.add(new ObjectResourceTreeNode (MapProtoGroup.typ, "Компоненты сети", true,
+				vec.add(new ObjectResourceTreeNode (SchemeProtoGroup.typ, "Компоненты сети", true,
 						new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/folder.gif"))));
 			}
 			else if(s.equals("configure"))
@@ -318,53 +317,54 @@ public class ElementsTreeModel extends ObjectResourceTreeModel
 				}
 			}
 
-			else if (s.equals(MapProtoGroup.typ))
+			else if (s.equals(SchemeProtoGroup.typ))
 			{
-				Map map_groups = Pool.getMap(MapProtoGroup.typ);
+				Map map_groups = Pool.getMap(SchemeProtoGroup.typ);
 				if (map_groups != null)
 					for (Iterator it = map_groups.values().iterator(); it.hasNext();)
 					{
-						MapProtoGroup map_group = (MapProtoGroup)it.next();
-						if (map_group.parent_id == null || map_group.parent_id.equals(""))
-							vec.add(new ObjectResourceTreeNode(map_group, map_group.getName(), true,
-									new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/folder.gif"))));
+						SchemeProtoGroup map_group = (SchemeProtoGroup)it.next();
+						if (map_group.parent_id.equals(""))
+						{
+							ImageIcon icon;
+							if (map_group.getImageID().equals(""))
+								icon = new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/folder.gif"));
+							else
+								icon = new ImageIcon(ImageCatalogue.get(map_group.getImageID()).getImage()
+										.getScaledInstance(16, 16, Image.SCALE_SMOOTH));
+							vec.add(new ObjectResourceTreeNode(map_group, map_group.getName(), true, icon,
+									map_group.group_ids.isEmpty() && map_group.getProtoIds().isEmpty()));
+						}
 					}
 			}
 		}
 		else
 		{
-			if(node.getObject() instanceof MapProtoGroup)
+			if(node.getObject() instanceof SchemeProtoGroup)
 			{
-				MapProtoGroup parent_group = (MapProtoGroup)node.getObject();
+				SchemeProtoGroup parent_group = (SchemeProtoGroup)node.getObject();
+				Iterator it = parent_group.group_ids.iterator();
 				for (int i = 0; i < parent_group.group_ids.size(); i++)
 				{
-					MapProtoGroup map_group = (MapProtoGroup)Pool.get(MapProtoGroup.typ, (String)parent_group.group_ids.get(i));
-					vec.add(new ObjectResourceTreeNode(map_group, map_group.getName(), true,
-							new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/folder.gif"))));
+					SchemeProtoGroup map_group = (SchemeProtoGroup)Pool.get(SchemeProtoGroup.typ, (String)it.next());
+					ImageIcon icon;
+					if (map_group.getImageID().equals(""))
+						icon = new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/folder.gif"));
+					else
+						icon = new ImageIcon(ImageCatalogue.get(map_group.getImageID()).getImage()
+								.getScaledInstance(16, 16, Image.SCALE_SMOOTH));
+					vec.add(new ObjectResourceTreeNode(map_group, map_group.getName(), true, icon,
+							map_group.group_ids.isEmpty() && map_group.getProtoIds().isEmpty()));
 				}
 				if (vec.isEmpty())
-					for (int i = 0; i < parent_group.mapproto_ids.size(); i++)
-					{
-						MapProtoElement map_proto = (MapProtoElement)Pool.get(MapProtoElement.typ, (String)parent_group.mapproto_ids.get(i));
-						String image_id = (map_proto.getImageID().equals("") ? "pc" : map_proto.getImageID());
-						map_proto.setImageID(image_id);
-						ImageResource ir = ImageCatalogue.get(image_id);
-
-						if (ir == null)
-							vec.add(new ObjectResourceTreeNode(map_proto, map_proto.getName(), true));
-						else
-							vec.add(new ObjectResourceTreeNode(map_proto, map_proto.getName(), true,
-									new ImageIcon(ir.getImage().getScaledInstance(16, 16, Image.SCALE_SMOOTH))));
-					}
-			}
-			else if(node.getObject() instanceof MapProtoElement)
-			{
-				MapProtoElement map_proto = (MapProtoElement)node.getObject();
-				for (int i = 0; i < map_proto.pe_ids.size(); i++)
 				{
-					ProtoElement proto = (ProtoElement)Pool.get(ProtoElement.typ, (String)map_proto.pe_ids.get(i));
-					proto.map_proto = map_proto;
-					vec.add(new ObjectResourceTreeNode(proto, proto.getName(), true, true));
+					it = parent_group.getProtoIds().iterator();
+					for (int i = 0; i < parent_group.getProtoIds().size(); i++)
+					{
+						ProtoElement proto = (ProtoElement)Pool.get(ProtoElement.typ, (String)it.next());
+						proto.scheme_proto_group = parent_group;
+						vec.add(new ObjectResourceTreeNode(proto, proto.getName().length() == 0 ? "Без названия" : proto.getName(), true, true));
+					}
 				}
 			}
 		}

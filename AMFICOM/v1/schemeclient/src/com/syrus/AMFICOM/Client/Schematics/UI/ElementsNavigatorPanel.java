@@ -11,7 +11,6 @@ import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.Resource.Pool;
-import com.syrus.AMFICOM.Client.Resource.Map.MapProtoElement;
 import com.syrus.AMFICOM.Client.Resource.Scheme.*;
 import com.syrus.AMFICOM.Client.Resource.SchemeDirectory.ProtoElement;
 import oracle.jdeveloper.layout.*;
@@ -120,12 +119,12 @@ public class ElementsNavigatorPanel extends JPanel implements OperationListener
 				loadButton.setEnabled(false);
 
 			delMapGroupButton.setEnabled(false);
-			if (selectedObject instanceof MapProtoGroup &&
-					((MapProtoGroup)selectedObject).group_ids.isEmpty() &&
-					((MapProtoGroup)selectedObject).mapproto_ids.isEmpty())
+			if (selectedObject instanceof SchemeProtoGroup &&
+					((SchemeProtoGroup)selectedObject).group_ids.isEmpty() &&
+					((SchemeProtoGroup)selectedObject).getProtoIds().isEmpty())
 				delMapGroupButton.setEnabled(true);
-			else if (selectedObject instanceof MapProtoElement &&
-							 ((MapProtoElement)selectedObject).pe_ids.isEmpty())
+			else if (selectedObject instanceof SchemeProtoGroup &&
+							 ((SchemeProtoGroup)selectedObject).getProtoIds().isEmpty())
 				delMapGroupButton.setEnabled(true);
 			else if (selectedObject instanceof ProtoElement)
 				delMapGroupButton.setEnabled(true);
@@ -163,9 +162,9 @@ public class ElementsNavigatorPanel extends JPanel implements OperationListener
 
 	void delMapGroupButton_actionPerformed()
 	{
-		if (selectedObject instanceof MapProtoGroup)
+		if (selectedObject instanceof SchemeProtoGroup)
 		{
-			MapProtoGroup group = (MapProtoGroup)selectedObject;
+			SchemeProtoGroup group = (SchemeProtoGroup)selectedObject;
 			int ret = JOptionPane.showConfirmDialog(Environment.getActiveWindow(),
 					"Вы действительно хотите удалить выбранную папку?",
 					"Удаление папки",
@@ -173,20 +172,20 @@ public class ElementsNavigatorPanel extends JPanel implements OperationListener
 			if (ret == JOptionPane.YES_OPTION)
 			{
 				aContext.getDataSourceInterface().RemoveMapProtoGroups(new String[] {group.getId()});
-				Pool.remove(MapProtoGroup.typ, group.getId());
+				Pool.remove(SchemeProtoGroup.typ, group.getId());
 				if (group.parent_id != null && !group.parent_id.equals(""))
 				{
-					MapProtoGroup parent_group = (MapProtoGroup)Pool.get(MapProtoGroup.typ, group.parent_id);
+					SchemeProtoGroup parent_group = (SchemeProtoGroup)Pool.get(SchemeProtoGroup.typ, group.parent_id);
 					parent_group.group_ids.remove(group.getId());
 				}
-				dispatcher.notify(new TreeListSelectionEvent(MapProtoGroup.typ, TreeListSelectionEvent.REFRESH_EVENT));
+				dispatcher.notify(new TreeListSelectionEvent(SchemeProtoGroup.typ, TreeListSelectionEvent.REFRESH_EVENT));
 			}
 			else
 				return;
 		}
-		else if (selectedObject instanceof MapProtoElement)
+		else if (selectedObject instanceof SchemeProtoGroup)
 		{
-			MapProtoElement map_proto = (MapProtoElement)selectedObject;
+			SchemeProtoGroup map_proto = (SchemeProtoGroup)selectedObject;
 			int ret = JOptionPane.showConfirmDialog(Environment.getActiveWindow(),
 					"Вы действительно хотите удалить выбранную группу?",
 					"Удаление группы",
@@ -194,16 +193,16 @@ public class ElementsNavigatorPanel extends JPanel implements OperationListener
 			if (ret == JOptionPane.YES_OPTION)
 			{
 				String id = map_proto.getId();
-				aContext.getDataSourceInterface().RemoveMapProtoElements(new String[] {id});
-				Pool.remove(MapProtoElement.typ, id);
+				aContext.getDataSourceInterface().RemoveMapProtoGroups(new String[] {id});
+				Pool.remove(SchemeProtoGroup.typ, id);
 
 				ArrayList groups = new ArrayList();
-				for(Iterator it = Pool.getMap(MapProtoGroup.typ).values().iterator(); it.hasNext();)
+				for(Iterator it = Pool.getMap(SchemeProtoGroup.typ).values().iterator(); it.hasNext();)
 				{
-					MapProtoGroup group = (MapProtoGroup)it.next();
-					if (group.mapproto_ids.contains(id));
+					SchemeProtoGroup group = (SchemeProtoGroup)it.next();
+					if (group.getProtoIds().contains(id));
 					{
-						group.mapproto_ids.remove(id);
+						group.getProtoIds().remove(id);
 						groups.add(group);
 					}
 				}
@@ -211,11 +210,11 @@ public class ElementsNavigatorPanel extends JPanel implements OperationListener
 				{
 					String[] ids = new String[groups.size()];
 					for (int i = 0; i < groups.size(); i++)
-						ids[i] = ((MapProtoGroup)groups.get(i)).getId();
+						ids[i] = ((SchemeProtoGroup)groups.get(i)).getId();
 
 					aContext.getDataSourceInterface().SaveMapProtoGroups(ids);
 					dispatcher.notify(new TreeListSelectionEvent(
-							((MapProtoGroup)groups.get(0)).getTyp(),
+							((SchemeProtoGroup)groups.get(0)).getTyp(),
 							TreeListSelectionEvent.REFRESH_EVENT));
 				}
 			}
@@ -235,13 +234,13 @@ public class ElementsNavigatorPanel extends JPanel implements OperationListener
 
 				aContext.getDataSourceInterface().RemoveSchemeProtos(new String[] {proto_id});
 
-				Map hash = Pool.getMap(MapProtoElement.typ);
+				Map hash = Pool.getMap(SchemeProtoGroup.typ);
 				for (Iterator it = hash.values().iterator(); it.hasNext();)
 				{
-					MapProtoElement map_proto = (MapProtoElement)it.next();
-					if (map_proto.pe_ids.contains(proto_id))
+					SchemeProtoGroup map_proto = (SchemeProtoGroup)it.next();
+					if (map_proto.getProtoIds().contains(proto_id))
 					{
-						map_proto.pe_ids.remove(proto_id);
+						map_proto.getProtoIds().remove(proto_id);
 						dispatcher.notify(new TreeListSelectionEvent(map_proto.getTyp(), TreeListSelectionEvent.REFRESH_EVENT));
 					}
 				}

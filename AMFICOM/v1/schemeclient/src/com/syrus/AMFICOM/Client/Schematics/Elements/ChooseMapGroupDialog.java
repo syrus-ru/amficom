@@ -6,8 +6,7 @@ import javax.swing.*;
 
 import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Model.*;
-import com.syrus.AMFICOM.Client.Resource.Map.MapProtoElement;
-import com.syrus.AMFICOM.Client.Resource.Scheme.MapProtoGroup;
+import com.syrus.AMFICOM.Client.Resource.Scheme.*;
 import com.syrus.AMFICOM.Client.Schematics.UI.*;
 
 public class ChooseMapGroupDialog extends JDialog implements OperationListener
@@ -22,8 +21,8 @@ public class ChooseMapGroupDialog extends JDialog implements OperationListener
 
 	JButton okButton;
 	JButton cancelButton;
-	JButton newButton;
-	MapProtoElementPropsPanel gpp;
+	JButton saveButton;
+	SchemeProtoGroupPropsPanel gpp;
 
 	public int retCode = CANCEL;
 
@@ -56,8 +55,8 @@ public class ChooseMapGroupDialog extends JDialog implements OperationListener
 
 		getContentPane().setLayout(new BorderLayout());
 
-		MapProtoGroupsTreeModel model = new MapProtoGroupsTreeModel(aContext.getDataSourceInterface());
-		MapProtoNavigatorPanel north_panel = new MapProtoNavigatorPanel(aContext, dispatcher, model);
+		SchemeProtoGroupsTreeModel model = new SchemeProtoGroupsTreeModel(aContext.getDataSourceInterface());
+		SchemeProtoGroupNavigatorPanel north_panel = new SchemeProtoGroupNavigatorPanel(aContext, dispatcher, model);
 		north_panel.setBorder(BorderFactory.createTitledBorder("Список"));
 		this.getContentPane().add(north_panel, BorderLayout.CENTER);
 
@@ -65,7 +64,7 @@ public class ChooseMapGroupDialog extends JDialog implements OperationListener
 		south_panel.setLayout(new BorderLayout());
 
 		// Group
-		gpp = new MapProtoElementPropsPanel(aContext);
+		gpp = new SchemeProtoGroupPropsPanel(aContext);
 		gpp.setBorder(BorderFactory.createTitledBorder("Группа"));
 		gpp.setPreferredSize(new Dimension(400, 125));
 		south_panel.add(gpp, BorderLayout.NORTH);
@@ -80,11 +79,11 @@ public class ChooseMapGroupDialog extends JDialog implements OperationListener
 
 		okButton = new JButton("OK");
 		cancelButton = new JButton("Отмена");
-		newButton = new JButton("Создать");
+		saveButton = new JButton("Сохранить");
 
 		r_buttonPanel.add(okButton, FlowLayout.LEFT);
 		r_buttonPanel.add(cancelButton, FlowLayout.CENTER);
-		l_buttonPanel.add(newButton, FlowLayout.LEFT);
+		l_buttonPanel.add(saveButton, FlowLayout.LEFT);
 		buttonPanel.add(r_buttonPanel, BorderLayout.EAST);
 		buttonPanel.add(l_buttonPanel, BorderLayout.WEST);
 		okButton.addActionListener(new ActionListener()
@@ -101,11 +100,11 @@ public class ChooseMapGroupDialog extends JDialog implements OperationListener
 				dispose();
 			}
 		});
-		newButton.addActionListener(new ActionListener()
+		saveButton.addActionListener(new ActionListener()
 		{
 			public void actionPerformed (ActionEvent ev)
 			{
-				createButton_actionPerformed();
+				saveButton_actionPerformed();
 			}
 		});
 		south_panel.add(buttonPanel, BorderLayout.CENTER);
@@ -119,10 +118,10 @@ public class ChooseMapGroupDialog extends JDialog implements OperationListener
 		dispatcher.register(this, TreeDataSelectionEvent.type);
 	}
 
-	public MapProtoElement getSelectedElement()
+	public SchemeProtoGroup getSelectedElement()
 	{
-		if (selectedObject instanceof MapProtoElement)
-			return (MapProtoElement)selectedObject;
+		if (selectedObject instanceof SchemeProtoGroup)
+			return (SchemeProtoGroup)selectedObject;
 		else
 			return null;
 	}
@@ -141,34 +140,20 @@ public class ChooseMapGroupDialog extends JDialog implements OperationListener
 			selectedObject = dse.getSelectedObject();
 			creating_class = dse.getDataClass();
 
-			if (creating_class.equals(MapProtoGroup.class))
-			{
-				if (dse.getSelectionNumber() != -1)
-				{
-					MapProtoGroup group = (MapProtoGroup)dse.getList().get(dse.getSelectionNumber());
-					if (group.mapproto_ids.isEmpty())
-						;
-				}
-				else
-					;
-			}
-			else if (creating_class.equals(MapProtoElement.class))
+			if (creating_class.equals(SchemeProtoGroup.class))
 			{
 				okButton.setEnabled(true);
 
 				if (dse.getSelectionNumber() != -1)
 				{
-					MapProtoElement map_proto = (MapProtoElement)dse.getList().get(dse.getSelectionNumber());
+					SchemeProtoGroup map_proto = (SchemeProtoGroup)dse.getList().get(dse.getSelectionNumber());
 					gpp.init(map_proto, aContext.getDataSourceInterface());
 				}
 			}
 
-			if (selectedObject instanceof MapProtoGroup &&
-					((MapProtoGroup)selectedObject).group_ids.isEmpty() &&
-					((MapProtoGroup)selectedObject).mapproto_ids.isEmpty())
-				;
-			else if (selectedObject instanceof MapProtoElement &&
-							 ((MapProtoElement)selectedObject).pe_ids.isEmpty())
+			if (selectedObject instanceof SchemeProtoGroup &&
+					((SchemeProtoGroup)selectedObject).group_ids.isEmpty() &&
+					((SchemeProtoGroup)selectedObject).getProtoIds().isEmpty())
 				;
 		}
 	}
@@ -176,31 +161,24 @@ public class ChooseMapGroupDialog extends JDialog implements OperationListener
 
 	void okButton_actionPerformed()
 	{
-		if (selectedObject instanceof MapProtoElement)
+		if (selectedObject instanceof SchemeProtoGroup)
 		{
-			retCode = OK;
-			dispose();
+			SchemeProtoGroup group = (SchemeProtoGroup)selectedObject;
+			if (group.group_ids.isEmpty())
+			{
+				retCode = OK;
+				dispose();
+			}
 		}
 	}
 
-	void createButton_actionPerformed()
+	void saveButton_actionPerformed()
 	{
-		if (selectedObject instanceof MapProtoGroup)
+		if (selectedObject instanceof SchemeProtoGroup)
 		{
-			MapProtoGroup group = (MapProtoGroup)selectedObject;
-			if (group.group_ids.isEmpty())
-			{
-				MapProtoElement new_proto = gpp.createMapProtoElement();
-				if (new_proto != null)
-				{
-					group.mapproto_ids.add(new_proto.getId());
-					aContext.getDataSourceInterface().SaveMapProtoElements(new String[] {new_proto.getId()});
-					aContext.getDataSourceInterface().SaveMapProtoGroups(new String[] {group.getId()});
-
-					new_proto.owner_id = aContext.getSessionInterface().getUserId();
-					dispatcher.notify(new TreeListSelectionEvent(group.getTyp(), TreeListSelectionEvent.REFRESH_EVENT));
-				}
-			}
+			SchemeProtoGroup group = gpp.getSchemeProtoGroup();
+//			aContext.getDataSourceInterface().SaveMapProtoGroups(new String[] {group.getId()});
+			dispatcher.notify(new TreeListSelectionEvent(group.getTyp(), TreeListSelectionEvent.REFRESH_EVENT));
 		}
 	}
 

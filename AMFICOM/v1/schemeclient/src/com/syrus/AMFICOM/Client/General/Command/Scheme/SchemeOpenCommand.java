@@ -1,6 +1,6 @@
 package com.syrus.AMFICOM.Client.General.Command.Scheme;
 
-import java.util.Map;
+import java.util.*;
 
 import java.awt.event.ActionEvent;
 import javax.swing.JOptionPane;
@@ -10,7 +10,6 @@ import com.syrus.AMFICOM.Client.General.Event.SchemeElementsEvent;
 import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.General.Scheme.*;
 import com.syrus.AMFICOM.Client.General.UI.*;
-import com.syrus.AMFICOM.Client.Map.UI.MapChooserDialog;
 import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.Resource.Scheme.*;
 
@@ -34,29 +33,27 @@ public class SchemeOpenCommand extends VoidCommand
 		if (dataSource == null)
 			return;
 
-		SchemeChooserDialog mcd = new SchemeChooserDialog(aContext.getDataSourceInterface());//mapFrame, "Выберите карту", true);
+		ObjectResourceChooserDialog mcd = new ObjectResourceChooserDialog(dataSource, Scheme.typ);
 
-		Map dataSet = Pool.getMap(Scheme.typ);
-		java.util.HashMap h;
-		ObjectResourceDisplayModel odm = new SchemeDisplayModel();
-		ObjectResourceSorter sorter = Scheme.getDefaultSorter();
-		sorter.setDataSet(dataSet);
-		mcd.setContents(odm, sorter.default_sort());
+		List dataSet = Pool.getList(Scheme.typ);
+		ObjectResourceDisplayModel odm = Scheme.getDefaultDisplayModel();
+		mcd.setContents(odm, dataSet);
 
 		// отфильтровываем по домену
-		ObjectResourceTableModel ortm = (ObjectResourceTableModel )mcd.listPane.getTable().getModel();
+		ObjectResourceTableModel ortm = mcd.getTableModel();
 		ortm.setDomainId(aContext.getSessionInterface().getDomainId());
-		ortm.restrictToDomain(true);//ф-я фильтрации схем по домену
+		ortm.restrictToDomain(true); //ф-я фильтрации схем по домену
+		ortm.fireTableDataChanged();
 
 		mcd.setModal(true);
 		mcd.setVisible(true);
 
-		if(mcd.retCode == mcd.RET_CANCEL)
+		if(mcd.getReturnCode() == mcd.RET_CANCEL)
 			return;
 
-		if(mcd.retCode == mcd.RET_OK)
+		if(mcd.getReturnCode() == mcd.RET_OK)
 		{
-			Scheme scheme = (Scheme)mcd.retObject;
+			Scheme scheme = (Scheme)mcd.getReturnObject();
 
 			if (scheme.schemecell == null || scheme.schemecell.length == 0)
 			{
@@ -70,26 +67,6 @@ public class SchemeOpenCommand extends VoidCommand
 
 			aContext.getDispatcher().notify(new SchemeElementsEvent(this, scheme,
 					SchemeElementsEvent.OPEN_PRIMARY_SCHEME_EVENT));
-		}
-	}
-
-	class SchemeChooserDialog extends MapChooserDialog
-	{
-		public SchemeChooserDialog(DataSourceInterface dsi)
-		{
-			super(dsi);
-		}
-
-		public void jbInit() throws Exception
-		{
-			super.jbInit();
-			this.setTitle("Cхема");
-		}
-
-		public void buttonDelete_actionPerformed(ActionEvent e)
-		{
-			Scheme scheme = (Scheme)listPane.getSelectedObject();
-			aContext.getDataSourceInterface().RemoveScheme(scheme.getId());
 		}
 	}
 }

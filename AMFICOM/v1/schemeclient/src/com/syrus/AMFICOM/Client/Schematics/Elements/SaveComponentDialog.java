@@ -9,7 +9,6 @@ import javax.swing.*;
 import com.syrus.AMFICOM.Client.General.Event.TreeListSelectionEvent;
 import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.Resource.*;
-import com.syrus.AMFICOM.Client.Resource.Map.MapProtoElement;
 import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.EquipmentType;
 import com.syrus.AMFICOM.Client.Resource.Scheme.*;
 import com.syrus.AMFICOM.Client.Resource.SchemeDirectory.ProtoElement;
@@ -106,8 +105,8 @@ public class SaveComponentDialog extends JDialog
 
 	void this_okButtonActionPerformed()
 	{
-		MapProtoElement map_proto = componentPanel.getMapProtoElement();
-		if (map_proto == null)
+		SchemeProtoGroup scheme_proto = componentPanel.getSchemeProtoGroup();
+		if (scheme_proto == null)
 		{
 			JOptionPane.showMessageDialog(Environment.getActiveWindow(), "Не задана группа компонентов.", "Ошибка", JOptionPane.OK_OPTION);
 			return;
@@ -120,9 +119,9 @@ public class SaveComponentDialog extends JDialog
 
 		//ComponentSaveCommand.saveTypes(aContext.getDataSourceInterface(), false);
 
-		if (!map_proto.pe_ids.contains(proto.getId()))
-			map_proto.pe_ids.add(proto.getId());
-		proto.map_proto = map_proto;
+		if (!scheme_proto.getProtoIds().contains(proto.getId()))
+			scheme_proto.getProtoIds().add(proto.getId());
+		proto.scheme_proto_group = scheme_proto;
 
 		proto.name = componentPanel.getProtoName();
 		EquipmentType eqt = (EquipmentType)Pool.get(EquipmentType.typ, proto.equipment_type_id);
@@ -138,8 +137,8 @@ public class SaveComponentDialog extends JDialog
 		}
 		dataSource.SaveSchemeProtos(proto_ids);
 
-		Pool.put(MapProtoElement.typ, map_proto.getId(), map_proto);
-		dataSource.SaveMapProtoElements(new String[] {map_proto.getId()});
+		Pool.put(SchemeProtoGroup.typ, scheme_proto.getId(), scheme_proto);
+		dataSource.SaveMapProtoGroups(new String[] {scheme_proto.getId()});
 
 		String[] eqtype_ids = (String[])createEqTypesList(proto).toArray(new String[0]);
 		dataSource.SaveEquipmentTypes(eqtype_ids);
@@ -164,7 +163,7 @@ public class SaveComponentDialog extends JDialog
 			dataSource.SavePortTypes(port_ids);
 		}
 
-		aContext.getDispatcher().notify(new TreeListSelectionEvent(map_proto.getTyp(), TreeListSelectionEvent.REFRESH_EVENT));
+		aContext.getDispatcher().notify(new TreeListSelectionEvent(scheme_proto.getTyp(), TreeListSelectionEvent.REFRESH_EVENT));
 		dispose();
 
 		JOptionPane.showMessageDialog(

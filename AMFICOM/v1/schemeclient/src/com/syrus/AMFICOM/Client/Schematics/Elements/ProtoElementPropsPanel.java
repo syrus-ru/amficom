@@ -10,9 +10,8 @@ import com.syrus.AMFICOM.Client.General.Event.SchemeElementsEvent;
 import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.Resource.*;
-import com.syrus.AMFICOM.Client.Resource.Map.MapProtoElement;
 import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.EquipmentType;
-import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeDevice;
+import com.syrus.AMFICOM.Client.Resource.Scheme.*;
 import com.syrus.AMFICOM.Client.Resource.SchemeDirectory.ProtoElement;
 
 public class ProtoElementPropsPanel extends JPanel
@@ -31,10 +30,10 @@ public class ProtoElementPropsPanel extends JPanel
 	private String undoDescription;
 	private String undoManufacturer;
 	private String undoUgoName;
-	MapProtoElement undo_map_proto;
+	SchemeProtoGroup undo_scheme_proto;
 
 	ProtoElement proto;
-	MapProtoElement map_proto;
+	SchemeProtoGroup scheme_proto;
 	EquipmentType eqt;
 	ApplicationContext aContext;
 
@@ -228,17 +227,17 @@ public class ProtoElementPropsPanel extends JPanel
 	public void init(ProtoElement proto, DataSourceInterface dataSource, boolean show_is_kis)
 	{
 		this.proto = proto;
-		this.map_proto = proto.map_proto;
+		this.scheme_proto = proto.scheme_proto_group;
 
 		if (show_is_kis)
 			compPanel.add(cl2Panel, BorderLayout.SOUTH);
 
 		eqt = (EquipmentType)Pool.get(EquipmentType.typ, proto.equipment_type_id);
 
-		if (map_proto == null)
+		if (scheme_proto == null)
 			mapProtoTextField.setText("");
 		else
-			mapProtoTextField.setText(map_proto.getName());
+			mapProtoTextField.setText(scheme_proto.getName());
 		mapProtoTextField.setCaretPosition(0);
 		mapProtoTextField.setEnabled(false);
 
@@ -269,7 +268,7 @@ public class ProtoElementPropsPanel extends JPanel
 			}
 		}
 
-		undo_map_proto = map_proto;
+		undo_scheme_proto = scheme_proto;
 		undoType = eqt.getName();
 		undoDescription = eqt.description;
 		undoManufacturer = eqt.manufacturer;
@@ -306,9 +305,9 @@ public class ProtoElementPropsPanel extends JPanel
 		if (proto != null)
 		{
 			proto.label = undoUgoName;
-			proto.map_proto = undo_map_proto;
+			proto.scheme_proto_group = undo_scheme_proto;
 		}
-		map_proto = undo_map_proto;
+		scheme_proto = undo_scheme_proto;
 	}
 
 	public String getProtoName()
@@ -316,9 +315,9 @@ public class ProtoElementPropsPanel extends JPanel
 		return nameTextField.getText();
 	}
 
-	public MapProtoElement getMapProtoElement ()
+	public SchemeProtoGroup getSchemeProtoGroup()
 	{
-		return map_proto;
+		return scheme_proto;
 	}
 
 	void ugoIconButton_actionPerformed()
@@ -365,9 +364,13 @@ public class ProtoElementPropsPanel extends JPanel
 		int ret = newMapProtoDialog.showDialog();
 		if (ret == ChooseMapGroupDialog.OK)
 		{
-			map_proto = newMapProtoDialog.getSelectedElement();
-			proto.map_proto = map_proto;
-			mapProtoTextField.setText(map_proto.getName());
+			if (proto.scheme_proto_group != null)
+				proto.scheme_proto_group.getProtoIds().remove(proto.getId());
+			scheme_proto = newMapProtoDialog.getSelectedElement();
+			if (!scheme_proto.getProtoIds().contains(proto.getId()))
+				scheme_proto.getProtoIds().add(proto.getId());
+			proto.scheme_proto_group = scheme_proto;
+			mapProtoTextField.setText(scheme_proto.getName());
 			mapProtoTextField.setCaretPosition(0);
 		}
 	}

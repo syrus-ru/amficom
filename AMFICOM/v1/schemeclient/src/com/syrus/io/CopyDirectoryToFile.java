@@ -5,7 +5,6 @@ import java.util.*;
 
 import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.Resource.ISMDirectory.AccessPortType;
-import com.syrus.AMFICOM.Client.Resource.Map.MapProtoElement;
 import com.syrus.AMFICOM.Client.Resource.Network.Characteristic;
 import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.*;
 import com.syrus.AMFICOM.Client.Resource.Scheme.*;
@@ -1056,7 +1055,7 @@ public class CopyDirectoryToFile
 
 	protected static void readMapProto(DataSourceInterface dataSource)
 	{
-		File[] files = new File(proto_dir).listFiles();
+	/*	File[] files = new File(proto_dir).listFiles();
 		if (files == null)
 			return;
 		for (int i = 0; i < files.length; i++)
@@ -1070,16 +1069,16 @@ public class CopyDirectoryToFile
 					FileInputStream fis = new FileInputStream(files[i]);
 					IntelStreamReader isr = new IntelStreamReader(fis, "UTF-16");
 
-					if (!getType(isr).equals(MapProtoElement.typ))
+					if (!getType(isr).equals(SchemeProtoGroup.typ))
 						return;
 
-					MapProtoElement mapproto = new MapProtoElement();
+					SchemeProtoGroup mapproto = new SchemeProtoGroup();
 					h = new HashMap();
 					while (isr.ready())
 					{
 						String[] s = analyseString(isr.readASCIIString());
 						if (s[0].equals(""))
-							mapproto = new MapProtoElement();
+							mapproto = new SchemeProtoGroup();
 						else if (s[0].equals("@name"))
 							mapproto.name = s[1];
 						else if (s[0].equals("@id"))
@@ -1087,7 +1086,7 @@ public class CopyDirectoryToFile
 							String new_id = (String)Pool.get("cl_ids", s[1]);
 							if (new_id == null)
 							{
-								new_id = dataSource.GetUId(MapProtoElement.typ);
+								new_id = dataSource.GetUId(SchemeProtoGroup.typ);
 								Pool.put("cl_ids", s[1], new_id);
 							}
 							mapproto.id = new_id;
@@ -1118,9 +1117,9 @@ public class CopyDirectoryToFile
 					}
 					isr.close();
 					fis.close();
-					Map old = Pool.getMap(MapProtoElement.typ);
+					Map old = Pool.getMap(SchemeProtoGroup.typ);
 					if (old == null)
-						Pool.putMap(MapProtoElement.typ, h);
+						Pool.putMap(SchemeProtoGroup.typ, h);
 					else
 						old.putAll(h);
 				}
@@ -1130,7 +1129,7 @@ public class CopyDirectoryToFile
 					return;
 				}
 			}
-		}
+		}*/
 	}
 
 	protected static void readScheme(DataSourceInterface dataSource)

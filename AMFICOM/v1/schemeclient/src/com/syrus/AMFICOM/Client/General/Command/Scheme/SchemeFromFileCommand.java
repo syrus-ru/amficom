@@ -9,7 +9,6 @@ import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.Resource.*;
-import com.syrus.AMFICOM.Client.Resource.Map.MapProtoElement;
 import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.*;
 import com.syrus.AMFICOM.Client.Resource.Scheme.*;
 import com.syrus.AMFICOM.Client.Resource.SchemeDirectory.ProtoElement;
@@ -61,8 +60,7 @@ public class SchemeFromFileCommand extends VoidCommand
 		dataSource.SaveCableLinkTypes(createCableLinkTypesList());
 		dataSource.SavePortTypes(createPortTypesList());
 		dataSource.SaveCablePortTypes(createCablePortTypesList());
-		dataSource.SaveMapProtoElements(createMapProtoIdsList());
-		dataSource.SaveMapProtoGroups(createMapProtoGroupsIdsList());
+		dataSource.SaveMapProtoGroups(createSchemeProtoGroupsIdsList());
 
 		if (Pool.getMap(Scheme.typ) != null)
 			for (Iterator it = Pool.getMap(Scheme.typ).keySet().iterator(); it.hasNext();)
@@ -128,17 +126,9 @@ public class SchemeFromFileCommand extends VoidCommand
 		return (String[])proto_ids.toArray(new String[proto_ids.size()]);
 	}
 
-	String[] createMapProtoIdsList()
+	String[] createSchemeProtoGroupsIdsList()
 	{
-		Map m = Pool.getMap(MapProtoElement.typ);
-		if (m != null)
-			return (String[])m.keySet().toArray(new String[m.size()]);
-		return new String[0];
-	}
-
-	String[] createMapProtoGroupsIdsList()
-	{
-		Map m = Pool.getMap(MapProtoGroup.typ);
+		Map m = Pool.getMap(SchemeProtoGroup.typ);
 		if (m != null)
 			return (String[])m.keySet().toArray(new String[m.size()]);
 		return new String[0];

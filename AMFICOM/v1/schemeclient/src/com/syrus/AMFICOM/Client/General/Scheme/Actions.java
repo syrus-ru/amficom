@@ -738,7 +738,7 @@ class CreateUgoAction
 			proto.symbol_id = old_proto.symbol_id;
 			proto.domain_id = old_proto.domain_id;
 			proto.label = old_proto.label;
-			proto.map_proto = old_proto.map_proto;
+			proto.scheme_proto_group = old_proto.scheme_proto_group;
 			proto.name = old_proto.name;
 
 			EquipmentType eqt = (EquipmentType)Pool.get(EquipmentType.typ, proto.equipment_type_id);

@@ -8,7 +8,6 @@ import com.syrus.AMFICOM.Client.General.Lang.LangModelSchematics;
 import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.General.Scheme.*;
 import com.syrus.AMFICOM.Client.Resource.*;
-import com.syrus.AMFICOM.Client.Resource.Map.MapProtoElement;
 import com.syrus.AMFICOM.Client.Resource.Scheme.*;
 import com.syrus.AMFICOM.Client.Resource.SchemeDirectory.ProtoElement;
 
@@ -282,9 +281,9 @@ public class ElementsListFrame extends JInternalFrame implements OperationListen
 						ProtoElement proto = (ProtoElement)ev.getList().get(ev.getSelectionNumber());
 						showProtoCharacteristics(proto, false);
 					}
-					else if (ev.getDataClass().equals(MapProtoElement.class))
+					else if (ev.getDataClass().equals(SchemeProtoGroup.class))
 					{
-						MapProtoElement map_proto = (MapProtoElement)ev.getList().get(ev.getSelectionNumber());
+						SchemeProtoGroup map_proto = (SchemeProtoGroup)ev.getList().get(ev.getSelectionNumber());
 						showGroupCharacteristics(map_proto, false);
 					}
 					else if (ev.getDataClass().equals(Scheme.class))
@@ -375,10 +374,10 @@ public class ElementsListFrame extends JInternalFrame implements OperationListen
 		panel.init(scheme);
 	}
 
-	void showGroupCharacteristics (MapProtoElement mapproto, boolean isEditable)
+	void showGroupCharacteristics (SchemeProtoGroup mapproto, boolean isEditable)
 	{
 		this.getContentPane().removeAll();
-		MapProtoElementPropsPanel panel = new MapProtoElementPropsPanel(aContext);
+		SchemeProtoGroupPropsPanel panel = new SchemeProtoGroupPropsPanel(aContext);
 		this.getContentPane().add(panel, BorderLayout.CENTER);
 		panel.setEditable(isEditable);
 		panel.init(mapproto, aContext.getDataSourceInterface());

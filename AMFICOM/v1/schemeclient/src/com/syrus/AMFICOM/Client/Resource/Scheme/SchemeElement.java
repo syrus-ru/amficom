@@ -10,7 +10,6 @@ import com.syrus.AMFICOM.CORBA.Scheme.*;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelSchematics;
 import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.Resource.*;
-import com.syrus.AMFICOM.Client.Resource.Map.MapProtoElement;
 import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.EquipmentType;
 import com.syrus.AMFICOM.Client.Resource.SchemeDirectory.ProtoElement;
 import com.syrus.AMFICOM.Client.Schematics.UI.SchemeElementPane;
@@ -41,7 +40,7 @@ public class SchemeElement extends StubResource
 	public byte[] schemecell;
 	public byte[] ugo = new byte[0];
 
-	public MapProtoElement mpe = null;
+	public SchemeProtoGroup mpe = null;
 	public String ugo_text = "";
 
 	public boolean alarmed = false;

@@ -194,18 +194,18 @@ public class SchemeEditorMainFrame extends JFrame
 		internal_dispatcher.register(this, "contextchange");
 		internal_dispatcher.register(this, "addschemeevent");
 		internal_dispatcher.register(this, "addschemeelementevent");
-		Environment.the_dispatcher.register(this, "contextchange");
+		Environment.getDispatcher().register(this, "contextchange");
 
 		setContext(aContext);
 		setDefaultModel (aModel);
 
-		aModel.setCommand("menuSessionNew", new SessionOpenCommand(Environment.the_dispatcher, aContext));
-		aModel.setCommand("menuSessionClose", new SessionCloseCommand(Environment.the_dispatcher, aContext));
+		aModel.setCommand("menuSessionNew", new SessionOpenCommand(Environment.getDispatcher(), aContext));
+		aModel.setCommand("menuSessionClose", new SessionCloseCommand(Environment.getDispatcher(), aContext));
 		aModel.setCommand("menuSessionOptions", new SessionOptionsCommand(aContext));
 
-		aModel.setCommand("menuSessionConnection", new SessionConnectionCommand(Environment.the_dispatcher, aContext));
-		aModel.setCommand("menuSessionChangePassword", new SessionChangePasswordCommand(Environment.the_dispatcher, aContext));
-		aModel.setCommand("menuSessionDomain", new SessionDomainCommand(Environment.the_dispatcher, aContext));
+		aModel.setCommand("menuSessionConnection", new SessionConnectionCommand(Environment.getDispatcher(), aContext));
+		aModel.setCommand("menuSessionChangePassword", new SessionChangePasswordCommand(Environment.getDispatcher(), aContext));
+		aModel.setCommand("menuSessionDomain", new SessionDomainCommand(Environment.getDispatcher(), aContext));
 		aModel.setCommand("menuExit", new ExitCommand(this));
 
 		SchemePanel epanel = (SchemePanel)schemeTab.getPanel();
@@ -216,8 +216,8 @@ public class SchemeEditorMainFrame extends JFrame
 		aModel.setCommand("menuSchemeSaveAs", new SchemeSaveAsCommand(aContext, schemeTab, ugoPane));
 		//aModel.setCommand("menuInsertToCatalog", new InsertToCatalogCommand(aContext, epanel.getGraph()));
 		aModel.setCommand("menuInsertToCatalog", new InsertToCatalogCommand(aContext, schemeTab));
-		aModel.setCommand("menuSchemeExport", new SchemeToFileCommand(Environment.the_dispatcher, aContext));
-		aModel.setCommand("menuSchemeImport", new SchemeFromFileCommand(Environment.the_dispatcher, aContext));
+		aModel.setCommand("menuSchemeExport", new SchemeToFileCommand(Environment.getDispatcher(), aContext));
+		aModel.setCommand("menuSchemeImport", new SchemeFromFileCommand(Environment.getDispatcher(), aContext));
 
 		aModel.setCommand("menuPathNew", new PathNewCommand(aContext, schemeTab));
 		aModel.setCommand("menuPathEdit", new PathEditCommand(aContext, schemeTab));
@@ -720,7 +720,7 @@ public class SchemeEditorMainFrame extends JFrame
 				return;
 		}
 		internal_dispatcher.unregister(this, "contextchange");
-		Environment.the_dispatcher.unregister(this, "contextchange");
+		Environment.getDispatcher().unregister(this, "contextchange");
 		aContext.getApplicationModel().getCommand("menuExit").execute();
 	}
 

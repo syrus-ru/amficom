@@ -7,20 +7,20 @@ import javax.swing.*;
 import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.General.UI.ImagesDialog;
 import com.syrus.AMFICOM.Client.Resource.*;
-import com.syrus.AMFICOM.Client.Resource.Map.MapProtoElement;
+import com.syrus.AMFICOM.Client.Resource.Scheme.*;
 
-public class MapProtoElementPropsPanel extends JPanel
+public class SchemeProtoGroupPropsPanel extends JPanel
 {
 	private JTextField mapProtoNameTextField = new JTextField();
 	private JTextArea groupDescrTextArea = new JTextArea();
-	private JButton imageButton = new JButton("icon");
+	private JButton imageButton = new JButton();
 	private JCheckBox isKisCheckBox = new JCheckBox();
-	String image_id = "pc";
+	String image_id = "";
 
-	MapProtoElement map_proto = new MapProtoElement();
+	SchemeProtoGroup scheme_proto = new SchemeProtoGroup();
 	ApplicationContext aContext;
 
-	public MapProtoElementPropsPanel(ApplicationContext aContext)
+	public SchemeProtoGroupPropsPanel(ApplicationContext aContext)
 	{
 		this.aContext = aContext;
 		try
@@ -98,29 +98,29 @@ public class MapProtoElementPropsPanel extends JPanel
 		isKisCheckBox.setEnabled(b);
 	}
 
-	public void init(MapProtoElement mapproto, DataSourceInterface dataSource)
+	public void init(SchemeProtoGroup scheme_proto, DataSourceInterface dataSource)
 	{
-		this.map_proto = mapproto;
-		mapProtoNameTextField.setText(map_proto.getName());
+		this.scheme_proto = scheme_proto;
+		mapProtoNameTextField.setText(scheme_proto.getName());
 		mapProtoNameTextField.setCaretPosition(0);
-		groupDescrTextArea.setText(map_proto.description);
-		isKisCheckBox.setSelected(map_proto.is_visual);
-		image_id = (map_proto.getImageID().equals("") ? "pc" : map_proto.getImageID());
-		map_proto.setImageID(image_id);
+		groupDescrTextArea.setText(scheme_proto.description);
+//		isKisCheckBox.setSelected(scheme_proto.is_visual);
 
-		ImageResource ir = ImageCatalogue.get(image_id);
-		imageButton.setText("");
-		if (ir != null)
-			imageButton.setIcon(new ImageIcon(ir.getImage().getScaledInstance(
-					50, 50, Image.SCALE_SMOOTH)));
+		ImageIcon icon;
+		if (scheme_proto.getImageID().equals(""))
+			icon = new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/folder.gif"));
+		else
+			icon = new ImageIcon(ImageCatalogue.get(scheme_proto.getImageID()).getImage()
+					.getScaledInstance(50, 50, Image.SCALE_SMOOTH));
 
+		imageButton.setIcon(icon);
 		updateUI();
 	}
 
 	private void imageButton_actionPerformed(ActionEvent e)
 	{
 		ImagesDialog frame = new ImagesDialog(aContext);
-		frame.setImageResource(ImageCatalogue.get(image_id));
+		frame.setImageResource(ImageCatalogue.get(image_id.equals("") ? "pc" : image_id));
 
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		Dimension frameSize = frame.getSize();
@@ -135,38 +135,29 @@ public class MapProtoElementPropsPanel extends JPanel
 		if(frame.ret_code == 1)
 		{
 			ImageResource ir = frame.getImageResource();
-			imageButton.setText("");
 			imageButton.setIcon(new ImageIcon(ir.getImage().getScaledInstance(
 					50,	50,	Image.SCALE_SMOOTH)));
 			image_id = ir.getId();
 		}
 	}
 
-	public MapProtoElement getMapProtoElement()
+	public SchemeProtoGroup getSchemeProtoGroup()
 	{
-		return map_proto;
+		updateSchemeProtoGroup();
+		return scheme_proto;
 	}
 
-	public MapProtoElement createMapProtoElement()
+	public void updateSchemeProtoGroup()
 	{
 		if (mapProtoNameTextField.getText().equals(""))
 		{
 			JOptionPane.showMessageDialog(Environment.getActiveWindow(), "Не задано название группы.", "Ошибка", JOptionPane.OK_OPTION);
-			return null;
+			return;
 		}
 
-		MapProtoElement new_proto = new MapProtoElement();
-		new_proto.id = aContext.getDataSourceInterface().GetUId(MapProtoElement.typ);
-		new_proto.name = mapProtoNameTextField.getText();
-		new_proto.description = groupDescrTextArea.getText();
-		new_proto.domain_id = aContext.getSessionInterface().getDomainId();
-		new_proto.is_visual = isKisCheckBox.isSelected();
-		new_proto.setImageID(((image_id == null || image_id.equals("")) ? "pc" : image_id));
-
-		Pool.put(MapProtoElement.typ, new_proto.getId(), new_proto);
-
-		map_proto = new_proto;
-		return new_proto;
+		scheme_proto.name = mapProtoNameTextField.getText();
+		scheme_proto.description = groupDescrTextArea.getText();
+		scheme_proto.setImageID(image_id);
 	}
 }
 
