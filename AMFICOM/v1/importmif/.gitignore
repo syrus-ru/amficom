@@ -2,3 +2,7 @@ classes
 jr.bat
 *.deploy
 *.jpr
+*.jpx
+*.tar
+*.gz
+*.swp

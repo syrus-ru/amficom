@@ -3,3 +3,7 @@ src
 load_corba.bat
 *.deploy
 *.jpr
+*.jpx
+*.tar
+*.gz
+*.swp
