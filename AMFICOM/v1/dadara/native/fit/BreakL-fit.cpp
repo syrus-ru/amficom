@@ -376,9 +376,9 @@ void BreakL_Fit_int (ModelF &mf, double *data, int x_begin,
 				break;
 			}
 		}
-		fprintf(stderr, "BreakL_Fit: final th_mult %g, points %d maxpoints %d\n",
-			th_mult, nPts, maxpoints);
-		fflush(stderr);
+		//fprintf(stderr, "BreakL_Fit: final th_mult %g, points %d maxpoints %d\n",
+		//	th_mult, nPts, maxpoints);
+		//fflush(stderr);
 
 		// убираем пост-всплески:
 		// просматриваем все смежные тройки звеньев.
@@ -463,7 +463,7 @@ void BreakL_Fit_int (ModelF &mf, double *data, int x_begin,
 					if (FindTwoLinApproxRMS(acc_y, acc_xy, acc_yy, i0, i1 - step, i2, y0, y1n, y2)
 							< FindTwoLinApproxRMS(acc_y, acc_xy, acc_yy, i0, i1, i2, y0, y1o, y2))
 					{
-						double temp1, temp2;
+						//double temp1, temp2;
 						//fprintf(stderr, "step: ev %d i %d -= %d RMS %g -> %g\n", k, i1, step,
 						//	FindTwoLinApproxRMS(acc_y, acc_xy, acc_yy, i0, i1, i2, y0, temp1, y2),
 						//	FindTwoLinApproxRMS(acc_y, acc_xy, acc_yy, i0, i1 - step, i2, y0, temp2, y2));
@@ -483,7 +483,7 @@ void BreakL_Fit_int (ModelF &mf, double *data, int x_begin,
 					if (FindTwoLinApproxRMS(acc_y, acc_xy, acc_yy, i0, i1 + step, i2, y0, y1n, y2)
 							< FindTwoLinApproxRMS(acc_y, acc_xy, acc_yy, i0, i1, i2, y0, y1o, y2))
 					{
-						double temp1, temp2;
+						//double temp1, temp2;
 						//fprintf(stderr, "step: ev %d i %d += %d RMS %g -> %g\n", k, i1, step,
 						//	FindTwoLinApproxRMS(acc_y, acc_xy, acc_yy, i0, i1, i2, y0, temp1, y2),
 						//	FindTwoLinApproxRMS(acc_y, acc_xy, acc_yy, i0, i1 + step, i2, y0, temp2, y2));
