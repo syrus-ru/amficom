@@ -1,5 +1,5 @@
 /*
- * $Id: ClientMeasurementObjectLoader.java,v 1.7 2004/09/28 09:44:25 max Exp $
+ * $Id: ClientMeasurementObjectLoader.java,v 1.8 2004/09/28 14:06:27 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -61,9 +61,10 @@ import com.syrus.AMFICOM.measurement.corba.Result_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Set_Transferable;
 import com.syrus.AMFICOM.measurement.corba.TemporalPattern_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Test_Transferable;
+import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2004/09/28 09:44:25 $
+ * @version $Revision: 1.8 $, $Date: 2004/09/28 14:06:27 $
  * @author $Author: max $
  * @module cmserver_v1
  */
@@ -524,12 +525,12 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 	}
     
     public void saveMeasurementType(MeasurementType measurementType, boolean force) throws DatabaseException, CommunicationException{
-//    TODO auto generated stub
-     }
+//    TODO auto generated stub        
+    }
 
      public void saveAnalysisType(AnalysisType analysisType, boolean force) throws DatabaseException, CommunicationException{
 //    TODO auto generated stub
-     }
+    }
 
      public void saveEvaluationType(EvaluationType evaluationType, boolean force) throws DatabaseException, CommunicationException{
 //    TODO auto generated stub
@@ -574,17 +575,37 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
      public void saveParameterTypes(List parameterTypes, boolean force) throws DatabaseException, CommunicationException{
 //    TODO auto generated stub
      }
-
-     public void saveMeasurementTypes(List measurementTypes, boolean force) throws DatabaseException, CommunicationException{
-//    TODO auto generated stub
-     }
+     
+     public void saveMeasurementTypes(List measurementTypes, boolean force) throws DatabaseException, CommunicationException {
+         MeasurementType_Transferable[] transferables = new MeasurementType_Transferable[measurementTypes.size()];
+         int i=0;
+         for (Iterator it = measurementTypes.iterator(); it.hasNext();i++) {
+             transferables[i] = (MeasurementType_Transferable)( (MeasurementType)it.next() ).getTransferable();                        
+         }
+         try {
+             this.server.receiveMeasurementTypes(transferables, accessIdentifierTransferable);         
+         } catch (AMFICOMRemoteException e) {
+             String msg = "ClientMeasurementObjectLoader.saveMeasurementType | receiveMeasurementTypes";
+             throw new CommunicationException(msg, e);       
+         }
+     }    
 
      public void saveAnalysisTypes(List analysisTypes, boolean force) throws DatabaseException, CommunicationException{
 //    TODO auto generated stub
      }
 
      public void saveEvaluationTypes(List evaluationTypes, boolean force) throws DatabaseException, CommunicationException{
-//    TODO auto generated stub
+         EvaluationType_Transferable[] transferables = new EvaluationType_Transferable[evaluationTypes.size()];
+         int i=0;
+         for (Iterator it = evaluationTypes.iterator(); it.hasNext();i++) {
+             transferables[i] = (EvaluationType_Transferable)( (EvaluationType)it.next() ).getTransferable();                        
+         }
+         try {
+             this.server.receiveEvaluationTypes(transferables, accessIdentifierTransferable);         
+         } catch (AMFICOMRemoteException e) {
+             String msg = "ClientMeasurementObjectLoader.saveEvaluationType | receiveEvaluationTypes";
+             throw new CommunicationException(msg, e);       
+         }
      }
 
      public void saveSets(List sets, boolean force) throws DatabaseException, CommunicationException{
