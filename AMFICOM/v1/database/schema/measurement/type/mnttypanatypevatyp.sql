@@ -3,7 +3,8 @@ CREATE TABLE MntTypAnaTypEvaTyp (
  analysis_type_id VARCHAR2(32) NOT NULL,
  evaluation_type_id VARCHAR2(32) NOT NULL,
 --
- CONSTRAINT mnttanatevat_uniq UNIQUE (measurement_type_id, analysis_type_id, evaluation_type_id),
+ CONSTRAINT mnttanatevat_uniq
+  UNIQUE (measurement_type_id, analysis_type_id, evaluation_type_id),
 --
  CONSTRAINT mnttanatevat_mntt_fk FOREIGN KEY (measurement_type_id)
   REFERENCES MeasurementType (id) ON DELETE CASCADE,

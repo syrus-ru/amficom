@@ -28,4 +28,3 @@ CREATE TABLE Characteristic (
 );
 
 CREATE SEQUENCE characteristic_seq ORDER;
-

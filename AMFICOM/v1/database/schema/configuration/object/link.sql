@@ -20,16 +20,16 @@ CREATE TABLE Link (
  color VARCHAR(32),
  mark VARCHAR(32),
 --
- CONSTRAINT linkp_pk PRIMARY KEY (id),
- CONSTRAINT linkp_creator_fk FOREIGN KEY (creator_id)
+ CONSTRAINT link_pk PRIMARY KEY (id),
+ CONSTRAINT link_creator_fk FOREIGN KEY (creator_id)
   REFERENCES Users (id) ON DELETE CASCADE,
- CONSTRAINT linkp_modifier_fk FOREIGN KEY (modifier_id)
+ CONSTRAINT link_modifier_fk FOREIGN KEY (modifier_id)
   REFERENCES Users (id) ON DELETE CASCADE,
 --
- CONSTRAINT linkp_domain_fk FOREIGN KEY (domain_id)
+ CONSTRAINT link_domain_fk FOREIGN KEY (domain_id)
   REFERENCES Domain (id) ON DELETE CASCADE,
 --
- CONSTRAINT linkp_lnktype_fk FOREIGN KEY (type_id)
+ CONSTRAINT link_lnktype_fk FOREIGN KEY (type_id)
   REFERENCES LinkType (id) ON DELETE CASCADE
 );
 

@@ -12,4 +12,4 @@ CREATE TABLE SetParameter (
   REFERENCES Sett (id) ON DELETE CASCADE
 );
 
-CREATE SEQUENCE setparameter_seq ORDER;
+CREATE SEQUENCE SetParameter_seq ORDER;

@@ -3,6 +3,8 @@ CREATE TABLE EvaTypParTypLink (
  parameter_type_id VARCHAR2(32) NOT NULL,
  parameter_mode VARCHAR2(3) NOT NULL,
 --
+ CONSTRAINT evatpartlnk_uniq
+  UNIQUE (evaluation_type_id, parameter_type_id),
  CONSTRAINT evatpartlnk_evat_fk FOREIGN KEY (evaluation_type_id)
   REFERENCES EvaluationType (id) ON DELETE CASCADE,
  CONSTRAINT evatpartlnk_part_fk FOREIGN KEY (parameter_type_id)

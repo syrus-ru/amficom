@@ -1,4 +1,3 @@
-@@parametertype
 @@measurementtype
 @@analysistype
 @@evaluationtype
