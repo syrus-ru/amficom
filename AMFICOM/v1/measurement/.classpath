@@ -3,13 +3,9 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="src" path="/general_v1"/>
-	<classpathentry kind="lib" path="/home/bob/src/amficom/libs/util.jar"/>
-	<classpathentry kind="lib" path="/home/bob/src/amficom/libs/aurora_client_orbdep.jar"/>
-	<classpathentry kind="lib" path="/home/bob/src/amficom/libs/aurora_client_orbindep.jar"/>
-	<classpathentry kind="lib" path="/home/bob/src/amficom/libs/vbjapp.jar"/>
-	<classpathentry kind="lib" path="/home/bob/src/amficom/libs/vbjorb.jar"/>
-	<classpathentry kind="lib" path="/home/bob/src/amficom/libs/Oracle9/classes12.jar"/>
 	<classpathentry kind="src" path="/database_v1"/>
-	<classpathentry kind="lib" path="/home/bob/src/amficom/libs/configuration.jar"/>
+	<classpathentry kind="var" path="AMFICOM_HOME/lib/configuration.jar"/>
+	<classpathentry kind="var" path="AMFICOM_HOME/lib/util.jar"/>
+	<classpathentry kind="var" path="ORACLE_HOME/jdbc/lib/classes12.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
