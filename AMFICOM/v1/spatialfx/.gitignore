@@ -1,6 +1,8 @@
 classes
 docs
 lib
+.classpath
+.project
 *.deploy
 *.jpr
 *.jpx

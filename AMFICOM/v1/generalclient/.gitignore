@@ -1,5 +1,7 @@
 bak
 classes
+classes_test
+docs
 *.deploy
 *.jpr
 *.jar
