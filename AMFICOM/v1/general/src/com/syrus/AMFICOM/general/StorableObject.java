@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObject.java,v 1.43 2005/03/16 16:36:37 bass Exp $
+ * $Id: StorableObject.java,v 1.44 2005/03/16 17:02:35 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,8 +17,8 @@ import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.43 $, $Date: 2005/03/16 16:36:37 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.44 $, $Date: 2005/03/16 17:02:35 $
  * @module general_v1
  */
 public abstract class StorableObject implements Identifiable, TransferableObject, Serializable {
@@ -94,13 +94,6 @@ public abstract class StorableObject implements Identifiable, TransferableObject
 		this.savedModifierId = null;
 		this.savedVersion = 0;
 	}
-
-//	/**
-//	 * @deprecated use
-//	 *             com.syrus.AMFICOM.general.corba.StorableObjectDatabase#update()
-//	 *             instead
-//	 */
-//	public abstract void insert() throws CreateObjectException;
 
 	public final Date getCreated() {
 		return this.created;
