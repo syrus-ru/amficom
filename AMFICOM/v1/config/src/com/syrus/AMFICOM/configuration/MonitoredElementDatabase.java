@@ -1,5 +1,5 @@
 /*
- * $Id: MonitoredElementDatabase.java,v 1.42 2005/02/10 08:29:19 bob Exp $
+ * $Id: MonitoredElementDatabase.java,v 1.43 2005/02/11 07:49:43 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -40,7 +40,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.42 $, $Date: 2005/02/10 08:29:19 $
+ * @version $Revision: 1.43 $, $Date: 2005/02/11 07:49:43 $
  * @author $Author: bob $
  * @module config_v1
  */
@@ -128,18 +128,19 @@ public class MonitoredElementDatabase extends StorableObjectDatabase {
 		MonitoredElement monitoredElement = (storableObject == null) ? null : this.fromStorableObject(storableObject);
 		if (monitoredElement == null) {
 			monitoredElement = new MonitoredElement(DatabaseIdentifier.getIdentifier(resultSet,
-				StorableObjectWrapper.COLUMN_ID), null, null, null, null, 0, null, null);
+				StorableObjectWrapper.COLUMN_ID), null, 0L, null, null, null, 0, null, null);
 		}
 		monitoredElement.setAttributes(
-			DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_CREATED), DatabaseDate
-					.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED), DatabaseIdentifier
-					.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID), DatabaseIdentifier
-					.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID), DatabaseIdentifier
-					.getIdentifier(resultSet, DomainMember.COLUMN_DOMAIN_ID), DatabaseString
-					.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_NAME)), DatabaseIdentifier
-					.getIdentifier(resultSet, MonitoredElementWrapper.COLUMN_MEASUREMENT_PORT_ID), resultSet
-					.getInt(MonitoredElementWrapper.COLUMN_SORT), DatabaseString.fromQuerySubString(resultSet
-					.getString(MonitoredElementWrapper.COLUMN_LOCAL_ADDRESS)));
+			DatabaseDate.fromQuerySubString(resultSet,StorableObjectWrapper.COLUMN_CREATED), 
+			DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED), 
+			DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
+			DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
+			resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION),
+			DatabaseIdentifier.getIdentifier(resultSet, DomainMember.COLUMN_DOMAIN_ID), 
+			DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_NAME)), 
+			DatabaseIdentifier.getIdentifier(resultSet, MonitoredElementWrapper.COLUMN_MEASUREMENT_PORT_ID), 
+			resultSet.getInt(MonitoredElementWrapper.COLUMN_SORT), 
+			DatabaseString.fromQuerySubString(resultSet.getString(MonitoredElementWrapper.COLUMN_LOCAL_ADDRESS)));
 		return monitoredElement;
 	}
 
@@ -437,28 +438,28 @@ public class MonitoredElementDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	public void update(StorableObject storableObject, int updateKind, Object obj) throws IllegalDataException,
+	public void update(StorableObject storableObject, Identifier modifierId, int updateKind) throws IllegalDataException,
 			VersionCollisionException, UpdateObjectException {
 		switch (updateKind) {
 			case UPDATE_FORCE:
-				super.checkAndUpdateEntity(storableObject, true);
+				super.checkAndUpdateEntity(storableObject, modifierId, true);
 				break;
 			case UPDATE_CHECK:
 			default:
-				super.checkAndUpdateEntity(storableObject, false);
+				super.checkAndUpdateEntity(storableObject, modifierId, false);
 				break;
 		}
 	}
 
-	public void update(List storableObjects, int updateKind, Object arg) throws IllegalDataException,
+	public void update(List storableObjects, Identifier modifierId, int updateKind) throws IllegalDataException,
 			VersionCollisionException, UpdateObjectException {
 		switch (updateKind) {
 			case UPDATE_FORCE:
-				super.checkAndUpdateEntities(storableObjects, true);
+				super.checkAndUpdateEntities(storableObjects, modifierId, true);
 				break;
 			case UPDATE_CHECK:
 			default:
-				super.checkAndUpdateEntities(storableObjects, false);
+				super.checkAndUpdateEntities(storableObjects, modifierId, false);
 				break;
 		}
 	}

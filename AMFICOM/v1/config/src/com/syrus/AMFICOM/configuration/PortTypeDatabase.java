@@ -1,5 +1,5 @@
 /*
- * $Id: PortTypeDatabase.java,v 1.34 2005/02/10 08:29:19 bob Exp $
+ * $Id: PortTypeDatabase.java,v 1.35 2005/02/11 07:49:44 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -19,6 +19,7 @@ import com.syrus.AMFICOM.general.CharacteristicDatabase;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.GeneralDatabaseContext;
+import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
@@ -34,7 +35,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.34 $, $Date: 2005/02/10 08:29:19 $
+ * @version $Revision: 1.35 $, $Date: 2005/02/11 07:49:44 $
  * @author $Author: bob $
  * @module config_v1
  */
@@ -99,6 +100,7 @@ public class PortTypeDatabase extends StorableObjectDatabase {
 		PortType portType = (storableObject==null) ?
 				new PortType(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
 									null,
+									0L,
 									null,
 									null,
 									null,
@@ -108,6 +110,7 @@ public class PortTypeDatabase extends StorableObjectDatabase {
 								DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
 								DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
 								DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
+								resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION),
 								DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_CODENAME)),
 								DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_DESCRIPTION)),
 								DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_NAME)),
@@ -146,31 +149,31 @@ public class PortTypeDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	public void update(StorableObject storableObject, int updateKind, Object obj)
+	public void update(StorableObject storableObject, Identifier modifierId, int updateKind)
 			throws IllegalDataException, VersionCollisionException, UpdateObjectException {
 		PortType portType = this.fromStorableObject(storableObject);
 		switch (updateKind) {
 			case UPDATE_CHECK:
-				super.checkAndUpdateEntity(portType, false);
+				super.checkAndUpdateEntity(portType, modifierId, false);
 				break;
 			case UPDATE_FORCE:					
 			default:
-				super.checkAndUpdateEntity(portType, true);		
+				super.checkAndUpdateEntity(portType, modifierId, true);		
 				return;
 		}
 		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(GeneralDatabaseContext.getCharacteristicDatabase());
 		characteristicDatabase.updateCharacteristics(portType);
 	}
 
-	public void update(List storableObjects, int updateKind, Object arg) throws IllegalDataException,
+	public void update(List storableObjects, Identifier modifierId, int updateKind) throws IllegalDataException,
 		VersionCollisionException, UpdateObjectException {
 		switch (updateKind) {	
 			case UPDATE_CHECK:
-				super.checkAndUpdateEntities(storableObjects, false);
+				super.checkAndUpdateEntities(storableObjects, modifierId, false);
 				break;
 			case UPDATE_FORCE:					
 			default:
-				super.checkAndUpdateEntities(storableObjects, true);		
+				super.checkAndUpdateEntities(storableObjects, modifierId, true);		
 				return;
 		}
 		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(GeneralDatabaseContext.getCharacteristicDatabase());

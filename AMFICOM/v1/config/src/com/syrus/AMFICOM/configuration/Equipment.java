@@ -1,5 +1,5 @@
 /*
- * $Id: Equipment.java,v 1.64 2005/02/09 12:49:56 bob Exp $
+ * $Id: Equipment.java,v 1.65 2005/02/11 07:49:43 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,7 +34,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.configuration.corba.Equipment_Transferable;
 
 /**
- * @version $Revision: 1.64 $, $Date: 2005/02/09 12:49:56 $
+ * @version $Revision: 1.65 $, $Date: 2005/02/11 07:49:43 $
  * @author $Author: bob $
  * @module config_v1
  */
@@ -122,29 +122,31 @@ public class Equipment extends MonitoredDomainMember implements Characterized, T
 	}
 
 	protected Equipment(Identifier id,
-										Identifier creatorId,
-										Identifier domainId,
-										EquipmentType type,
-										String name,
-										String description,
-										Identifier imageId,
-										String supplier,
-										String supplierCode,
-										float longitude,
-										float latitude,
-										String hwSerial,
-										String hwVersion,
-										String swSerial,
-										String swVersion,
-										String inventoryNumber) {
+						Identifier creatorId,
+						long version,
+						Identifier domainId,
+						EquipmentType type,
+						String name,
+						String description,
+						Identifier imageId,
+						String supplier,
+						String supplierCode,
+						float longitude,
+						float latitude,
+						String hwSerial,
+						String hwVersion,
+						String swSerial,
+						String swVersion,
+						String inventoryNumber) {
 				super(id,
-							new Date(System.currentTimeMillis()),
-							new Date(System.currentTimeMillis()),
-							creatorId,
-							creatorId,
-							domainId);
+					new Date(System.currentTimeMillis()),
+					new Date(System.currentTimeMillis()),
+					creatorId,
+					creatorId,
+					version,
+					domainId);
 
-				super.monitoredElementIds = new ArrayList();
+				super.monitoredElementIds = new LinkedList();
 
 				this.type = type;
 				this.name = name;
@@ -162,9 +164,7 @@ public class Equipment extends MonitoredDomainMember implements Characterized, T
 
 				this.portIds = new LinkedList();
 
-				this.characteristics = new ArrayList();
-
-				super.currentVersion = super.getNextVersion();
+				this.characteristics = new LinkedList();
 
 				this.equipmentDatabase = ConfigurationDatabaseContext.equipmentDatabase;
 	}
@@ -200,8 +200,9 @@ public class Equipment extends MonitoredDomainMember implements Characterized, T
 								|| inventoryNumber == null)
 			throw new IllegalArgumentException("Argument is 'null'");
 		try {
-			return new Equipment(IdentifierPool.getGeneratedIdentifier(ObjectEntities.EQUIPMENT_ENTITY_CODE),
+			Equipment equipment = new Equipment(IdentifierPool.getGeneratedIdentifier(ObjectEntities.EQUIPMENT_ENTITY_CODE),
 											creatorId,
+											0L,
 											domainId,
 											type,
 											name,
@@ -216,6 +217,8 @@ public class Equipment extends MonitoredDomainMember implements Characterized, T
 											swSerial,
 											swVersion,
 											inventoryNumber);
+			equipment.changed = true;
+			return equipment;
 		}
 		catch (IllegalObjectEntityException e) {
 			throw new CreateObjectException("Equipment.createInstance | cannot generate identifier ", e);
@@ -225,7 +228,7 @@ public class Equipment extends MonitoredDomainMember implements Characterized, T
 	public void insert() throws CreateObjectException {
 		try {
 			if (this.equipmentDatabase != null)
-				this.equipmentDatabase.update(this, StorableObjectDatabase.UPDATE_FORCE, null);
+				this.equipmentDatabase.update(this, this.creatorId, StorableObjectDatabase.UPDATE_FORCE);
 		}
 		catch (ApplicationException ae) {
 			throw new CreateObjectException(ae.getMessage(), ae);
@@ -283,7 +286,7 @@ public class Equipment extends MonitoredDomainMember implements Characterized, T
 
 	public void setDescription(String description) {
 		this.description = description;
-		super.currentVersion = super.getNextVersion();
+		super.changed = true;
 	}
 
 	public Identifier getImageId() {
@@ -297,14 +300,14 @@ public class Equipment extends MonitoredDomainMember implements Characterized, T
 	public void addCharacteristic(Characteristic characteristic) {
 		if (characteristic != null) {
 			this.characteristics.add(characteristic);
-			super.currentVersion = super.getNextVersion();
+			super.changed = true;
 		}
 	}
 
 	public void removeCharacteristic(Characteristic characteristic) {
 		if (characteristic != null) {
 			this.characteristics.remove(characteristic);
-			super.currentVersion = super.getNextVersion();
+			super.changed = true;
 		}
 	}
 
@@ -320,31 +323,33 @@ public class Equipment extends MonitoredDomainMember implements Characterized, T
 
 	public void setCharacteristics(final List characteristics) {
 		this.setCharacteristics0(characteristics);
-		super.currentVersion = super.getNextVersion();
+		super.changed = true;
 	}
 
 	protected synchronized void setAttributes(Date created,
-																	Date modified,
-																	Identifier creatorId,
-																	Identifier modifierId,
-																	Identifier domainId,
-																	EquipmentType type,
-																	String name,
-																	String description,
-																	Identifier imageId,
-																	String supplier,
-																	String supplierCode,
-																	float longitude,
-																	float latitude,
-																	String hwSerial,
-																	String hwVersion,
-																	String swSerial,
-																	String swVersion,
-																	String inventoryNumber) {
+											Date modified,
+											Identifier creatorId,
+											Identifier modifierId,
+											long version,
+											Identifier domainId,
+											EquipmentType type,
+											String name,
+											String description,
+											Identifier imageId,
+											String supplier,
+											String supplierCode,
+											float longitude,
+											float latitude,
+											String hwSerial,
+											String hwVersion,
+											String swSerial,
+											String swVersion,
+											String inventoryNumber) {
 		super.setAttributes(created,
 							modified,
 							creatorId,
 							modifierId,
+							version,
 							domainId);
 		this.type = type;
 		this.name = name;
@@ -369,7 +374,7 @@ public class Equipment extends MonitoredDomainMember implements Characterized, T
 	
 	public void setPortIds(final List portIds) {
 		this.setPortIds0(portIds);
-		super.currentVersion = super.getNextVersion();
+		super.changed = true;
 	}
 
 	public List getDependencies() {
@@ -385,7 +390,7 @@ public class Equipment extends MonitoredDomainMember implements Characterized, T
 
 	public void setSupplier(String supplier) {
 		this.supplier = supplier;
-		super.currentVersion = super.getNextVersion();
+		super.changed = true;
 	}
 
 	public float getLatitude() {
@@ -394,7 +399,7 @@ public class Equipment extends MonitoredDomainMember implements Characterized, T
 
 	public void setLatitude(float latitude) {
 		this.latitude = latitude;
-		super.currentVersion = super.getNextVersion();
+		super.changed = true;
 	}
 
 	public float getLongitude() {
@@ -403,7 +408,7 @@ public class Equipment extends MonitoredDomainMember implements Characterized, T
 
 	public void setLongitude(float longitude) {
 		this.longitude = longitude;
-		super.currentVersion = super.getNextVersion();
+		super.changed = true;
 	}
 
 	public String getHwSerial() {
@@ -412,7 +417,7 @@ public class Equipment extends MonitoredDomainMember implements Characterized, T
 
 	public void setHwSerial(String hwSerial) {
 		this.hwSerial = hwSerial;
-		super.currentVersion = super.getNextVersion();
+		super.changed = true;
 	}
 
 	public String getHwVersion() {
@@ -421,7 +426,7 @@ public class Equipment extends MonitoredDomainMember implements Characterized, T
 
 	public void setHwVersion(String hwVersion) {
 		this.hwVersion = hwVersion;
-		super.currentVersion = super.getNextVersion();
+		super.changed = true;
 	}
 
 	public String getInventoryNumber() {
@@ -430,7 +435,7 @@ public class Equipment extends MonitoredDomainMember implements Characterized, T
 
 	public void setInventoryNumber(String inventoryNumber) {
 		this.inventoryNumber = inventoryNumber;
-		super.currentVersion = super.getNextVersion();
+		super.changed = true;
 	}
 
 	public String getSupplierCode() {
@@ -439,7 +444,7 @@ public class Equipment extends MonitoredDomainMember implements Characterized, T
 
 	public void setSupplierCode(String supplierCode) {
 		this.supplierCode = supplierCode;
-		super.currentVersion = super.getNextVersion();
+		super.changed = true;
 	}
 
 	public String getSwSerial() {
@@ -448,7 +453,7 @@ public class Equipment extends MonitoredDomainMember implements Characterized, T
 
 	public void setSwSerial(String swSerial) {
 		this.swSerial = swSerial;
-		super.currentVersion = super.getNextVersion();
+		super.changed = true;
 	}
 
 	public String getSwVersion() {
@@ -457,27 +462,27 @@ public class Equipment extends MonitoredDomainMember implements Characterized, T
 
 	public void setSwVersion(String swVersion) {
 		this.swVersion = swVersion;
-		super.currentVersion = super.getNextVersion();
+		super.changed = true;
 	}	
 	/**
 	 * @param name The name to set.
 	 */
 	public void setName(String name) {
 		this.name = name;
-		super.currentVersion = super.getNextVersion();
+		super.changed = true;
 	}
 	/**
 	 * @param type The type to set.
 	 */
 	public void setType(EquipmentType type) {
 		this.type = type;
-		super.currentVersion = super.getNextVersion();
+		super.changed = true;
 	}
 	/**
 	 * @param imageId The imageId to set.
 	 */
 	public void setImageId(Identifier imageId) {
 		this.imageId = imageId;
-		super.currentVersion = super.getNextVersion();
+		super.changed = true;
 	}
 }

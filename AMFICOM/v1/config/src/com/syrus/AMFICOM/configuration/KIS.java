@@ -1,5 +1,5 @@
 /*
- * $Id: KIS.java,v 1.58 2005/02/09 12:49:56 bob Exp $
+ * $Id: KIS.java,v 1.59 2005/02/11 07:49:43 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,7 +33,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.administration.DomainMember;
 
 /**
- * @version $Revision: 1.58 $, $Date: 2005/02/09 12:49:56 $
+ * @version $Revision: 1.59 $, $Date: 2005/02/11 07:49:43 $
  * @author $Author: bob $
  * @module config_v1
  */
@@ -98,20 +98,22 @@ public class KIS extends DomainMember implements Characterized {
 	}
 
 	protected KIS(Identifier id,
-								Identifier creatorId,
-								Identifier domainId,
-								String name,
-								String description,
-								String hostname,
-								short tcpPort,
-								Identifier equipmentId,
-								Identifier mcmId) {
+					Identifier creatorId,
+					long version,
+					Identifier domainId,
+					String name,
+					String description,
+					String hostname,
+					short tcpPort,
+					Identifier equipmentId,
+					Identifier mcmId) {
 		super(id,
-					new Date(System.currentTimeMillis()),
-					new Date(System.currentTimeMillis()),
-					creatorId,
-					creatorId,
-					domainId);
+				new Date(System.currentTimeMillis()),
+				new Date(System.currentTimeMillis()),
+				creatorId,
+				creatorId,
+				version,
+				domainId);
 		this.name = name;
 		this.description = description;
 		this.hostname = hostname;
@@ -120,8 +122,6 @@ public class KIS extends DomainMember implements Characterized {
 		this.mcmId = mcmId;
 		this.measurementPortIds = new LinkedList();
 		this.characteristics = new ArrayList();
-
-		super.currentVersion = super.getNextVersion();
 
 		this.kisDatabase = ConfigurationDatabaseContext.kisDatabase;
 	}
@@ -148,8 +148,9 @@ public class KIS extends DomainMember implements Characterized {
 			throw new IllegalArgumentException("Argument is 'null'");
 
 		try {
-			return new KIS(IdentifierPool.getGeneratedIdentifier(ObjectEntities.KIS_ENTITY_CODE),
+			KIS kis = new KIS(IdentifierPool.getGeneratedIdentifier(ObjectEntities.KIS_ENTITY_CODE),
 					creatorId,
+					0L,
 					domainId,
 					name,
 					description,
@@ -157,6 +158,8 @@ public class KIS extends DomainMember implements Characterized {
 					tcpPort,
 					equipmentId,
 					mcmId);
+			kis.changed = true;
+			return kis;
 		}
 		catch (IllegalObjectEntityException e) {
 			throw new CreateObjectException("KIS.createInstance | cannot generate identifier ", e);
@@ -166,7 +169,7 @@ public class KIS extends DomainMember implements Characterized {
 	public void insert() throws CreateObjectException {
 		try {
 			if (this.kisDatabase != null)
-				this.kisDatabase.update(this, StorableObjectDatabase.UPDATE_FORCE, null);
+				this.kisDatabase.update(this, this.creatorId, StorableObjectDatabase.UPDATE_FORCE);
 		}
 		catch (ApplicationException ae) {
 			throw new CreateObjectException(ae.getMessage(), ae);
@@ -206,7 +209,7 @@ public class KIS extends DomainMember implements Characterized {
 
 	public void setDescription(String description) {
 		this.description = description;
-		super.currentVersion = super.getNextVersion();
+		super.changed = true;
 	}
 
 	public String getHostName() {
@@ -227,7 +230,7 @@ public class KIS extends DomainMember implements Characterized {
 
 	public void setMCMId(Identifier mcmId) {
 		this.mcmId = mcmId;
-		super.currentVersion = super.getNextVersion();
+		super.changed = true;
 	}
 
 	public List getMeasurementPortIds() {
@@ -244,20 +247,22 @@ public class KIS extends DomainMember implements Characterized {
 	}
 
 	protected synchronized void setAttributes(Date created,
-													Date modified,
-													Identifier creatorId,
-													Identifier modifierId,
-													Identifier domainId,
-													String name,
-													String description,
-													String hostname,
-													short tcpPort,
-													Identifier equipmentId,
-													Identifier mcmId) {
+											Date modified,
+											Identifier creatorId,
+											Identifier modifierId,
+											long version,
+											Identifier domainId,
+											String name,
+											String description,
+											String hostname,
+											short tcpPort,
+											Identifier equipmentId,
+											Identifier mcmId) {
 		super.setAttributes(created,
 							modified,
 							creatorId,
 							modifierId,
+							version,
 							domainId);
 		this.name = name;
 		this.description = description;
@@ -275,7 +280,7 @@ public class KIS extends DomainMember implements Characterized {
 
 	public void setMeasurementPortIds(List measurementPortIds) {
 		this.setMeasurementPortIds0(measurementPortIds);
-		super.currentVersion = super.getNextVersion();
+		super.changed = true;
 	}
 
 	public List getDependencies() {
@@ -289,14 +294,14 @@ public class KIS extends DomainMember implements Characterized {
 	public void addCharacteristic(Characteristic characteristic) {
 		if (characteristic != null) {
 			this.characteristics.add(characteristic);
-			super.currentVersion = super.getNextVersion();
+			super.changed = true;
 		}
 	}
 
 	public void removeCharacteristic(Characteristic characteristic) {
 		if (characteristic != null) {
 			this.characteristics.remove(characteristic);
-			super.currentVersion = super.getNextVersion();
+			super.changed = true;
 		}
 	}
 
@@ -312,34 +317,34 @@ public class KIS extends DomainMember implements Characterized {
 
 	public void setCharacteristics(final List characteristics) {
 		this.setCharacteristics0(characteristics);
-		super.currentVersion = super.getNextVersion();
+		super.changed = true;
 	}	
 	/**
 	 * @param name The name to set.
 	 */
 	public void setName(String name) {
 		this.name = name;
-		super.currentVersion = super.getNextVersion();
+		super.changed = true;
 	}
 	/**
 	 * @param equipmentId The equipmentId to set.
 	 */
 	public void setEquipmentId(Identifier equipmentId) {
 		this.equipmentId = equipmentId;
-		super.currentVersion = super.getNextVersion();
+		super.changed = true;
 	}
 	/**
 	 * @param hostname The hostname to set.
 	 */
 	public void setHostName(String hostname) {
 		this.hostname = hostname;
-		super.currentVersion = super.getNextVersion();
+		super.changed = true;
 	}
 	/**
 	 * @param tcpPort The tcpPort to set.
 	 */
 	public void setTCPPort(short tcpPort) {
 		this.tcpPort = tcpPort;
-		super.currentVersion = super.getNextVersion();
+		super.changed = true;
 	}
 }

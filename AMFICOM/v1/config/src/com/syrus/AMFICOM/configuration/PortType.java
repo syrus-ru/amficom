@@ -1,5 +1,5 @@
 /*
- * $Id: PortType.java,v 1.37 2005/02/09 12:49:56 bob Exp $
+ * $Id: PortType.java,v 1.38 2005/02/11 07:49:44 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 
 import com.syrus.AMFICOM.configuration.corba.PortTypeSort;
@@ -33,7 +34,7 @@ import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.37 $, $Date: 2005/02/09 12:49:56 $
+ * @version $Revision: 1.38 $, $Date: 2005/02/11 07:49:44 $
  * @author $Author: bob $
  * @module config_v1
  */
@@ -79,6 +80,7 @@ public class PortType extends StorableObjectType implements Characterized {
 
 	protected PortType(Identifier id,
 						 Identifier creatorId,
+						 long version,
 						 String codename,
 						 String description,
 						 String name,
@@ -88,13 +90,12 @@ public class PortType extends StorableObjectType implements Characterized {
 				new Date(System.currentTimeMillis()),
 				creatorId,
 				creatorId,
+				version,
 				codename,
 				description);
 		this.name = name;
 		this.sort = sort;
-		this.characteristics = new ArrayList();
-
-		super.currentVersion = super.getNextVersion();
+		this.characteristics = new LinkedList();
 
 		this.portTypeDatabase = ConfigurationDatabaseContext.portTypeDatabase;
 	}
@@ -117,12 +118,15 @@ public class PortType extends StorableObjectType implements Characterized {
 			throw new IllegalArgumentException("Argument is 'null'");
 
 		try {
-			return new PortType(IdentifierPool.getGeneratedIdentifier(ObjectEntities.PORTTYPE_ENTITY_CODE),
+			PortType portType = new PortType(IdentifierPool.getGeneratedIdentifier(ObjectEntities.PORTTYPE_ENTITY_CODE),
 								creatorId,
+								0L,
 								codename,
 								description,
 								name,
 								sort.value());
+			portType.changed = true;
+			return portType;
 		}
 		catch (IllegalObjectEntityException e) {
 			throw new CreateObjectException("PortType.createInstance | cannot generate identifier ", e);
@@ -132,7 +136,7 @@ public class PortType extends StorableObjectType implements Characterized {
 	public void insert() throws CreateObjectException {
 		try {
 			if (this.portTypeDatabase != null)
-				this.portTypeDatabase.update(this, StorableObjectDatabase.UPDATE_FORCE, null);
+				this.portTypeDatabase.update(this, this.creatorId, StorableObjectDatabase.UPDATE_FORCE);
 		}
 		catch (ApplicationException ae) {
 			throw new CreateObjectException(ae.getMessage(), ae);
@@ -157,6 +161,7 @@ public class PortType extends StorableObjectType implements Characterized {
 												Date modified,
 												Identifier creatorId,
 												Identifier modifierId,
+												long version,
 												String codename,
 												String description,
 												String name,
@@ -165,6 +170,7 @@ public class PortType extends StorableObjectType implements Characterized {
 				modified,
 				creatorId,
 				modifierId,
+				version,
 				codename,
 				description);
 		this.name = name;
@@ -184,7 +190,7 @@ public class PortType extends StorableObjectType implements Characterized {
 	}
 
 	public void setName(String name) {
-		this.currentVersion = super.getNextVersion();
+		super.changed = true;
 		this.name = name;
 	}
 
@@ -195,14 +201,14 @@ public class PortType extends StorableObjectType implements Characterized {
 	public void addCharacteristic(Characteristic characteristic) {
 		if (characteristic != null) {
 			this.characteristics.add(characteristic);
-			super.currentVersion = super.getNextVersion();
+			super.changed = true;
 		}
 	}
 
 	public void removeCharacteristic(Characteristic characteristic) {
 		if (characteristic != null) {
 			this.characteristics.remove(characteristic);
-			super.currentVersion = super.getNextVersion();
+			super.changed = true;
 		}
 	}
 
@@ -218,6 +224,6 @@ public class PortType extends StorableObjectType implements Characterized {
 
 	public void setCharacteristics(final List characteristics) {
 		this.setCharacteristics0(characteristics);
-		super.currentVersion = super.getNextVersion();
+		super.changed = true;
 	}	
 }

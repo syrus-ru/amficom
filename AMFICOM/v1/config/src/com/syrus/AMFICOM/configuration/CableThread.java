@@ -1,5 +1,5 @@
 /*
- * $Id: CableThread.java,v 1.11 2005/02/03 20:08:15 arseniy Exp $
+ * $Id: CableThread.java,v 1.12 2005/02/11 07:49:43 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,8 +28,8 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.administration.DomainMember;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/02/03 20:08:15 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.12 $, $Date: 2005/02/11 07:49:43 $
+ * @author $Author: bob $
  * @module config_v1
  */
 public class CableThread extends DomainMember implements TypedObject {
@@ -72,21 +72,21 @@ public class CableThread extends DomainMember implements TypedObject {
 
 	protected CableThread(Identifier id,
 						Identifier creatorId,
+						long version,
 						Identifier domainId,
 						String name,
 						String description,
 						CableThreadType type) {
 		super(id,
-					new Date(System.currentTimeMillis()),
-					new Date(System.currentTimeMillis()),
-					creatorId,
-					creatorId,
-					domainId);
+			new Date(System.currentTimeMillis()),
+			new Date(System.currentTimeMillis()),
+			creatorId,
+			creatorId,
+			version,
+			domainId);
 		this.name = name;
 		this.description = description;
 		this.type = type;
-	
-		super.currentVersion = super.getNextVersion();
 	
 		this.cableThreadDatabase = ConfigurationDatabaseContext.cableThreadDatabase;
 	}
@@ -100,12 +100,15 @@ public class CableThread extends DomainMember implements TypedObject {
 			throw new IllegalArgumentException("Argument is 'null'");
 
 		try {
-			return new CableThread(IdentifierPool.getGeneratedIdentifier(ObjectEntities.CABLETHREAD_ENTITY_CODE),
+			CableThread cableThread = new CableThread(IdentifierPool.getGeneratedIdentifier(ObjectEntities.CABLETHREAD_ENTITY_CODE),
 											creatorId,
+											0L,
 											domainId,
 											name,
 											description,
 											type);
+			cableThread.changed = true;
+			return cableThread;
 		}
 		catch (IllegalObjectEntityException e) {
 			throw new CreateObjectException("CableThread.createInstance | cannot generate identifier ", e);
@@ -115,7 +118,7 @@ public class CableThread extends DomainMember implements TypedObject {
 	public void insert() throws CreateObjectException {
 		try {
 			if (this.cableThreadDatabase != null)
-				this.cableThreadDatabase.update(this, StorableObjectDatabase.UPDATE_FORCE, null);
+				this.cableThreadDatabase.update(this, this.creatorId, StorableObjectDatabase.UPDATE_FORCE);
 		}
 		catch (ApplicationException ae) {
 			throw new CreateObjectException(ae.getMessage(), ae);
@@ -134,11 +137,12 @@ public class CableThread extends DomainMember implements TypedObject {
 					Date modified,
 					Identifier creatorId,
 					Identifier modifierId,
+					long version,
 					Identifier domainId,
 					String name,
 					String description,
 					CableThreadType type) {
-		super.setAttributes(created, modified, creatorId, modifierId, domainId);
+		super.setAttributes(created, modified, creatorId, modifierId, version, domainId);
 		this.name = name;
 		this.description = description;
 		this.type = type;
@@ -150,7 +154,7 @@ public class CableThread extends DomainMember implements TypedObject {
 
 	public void setDescription(String description){
 		this.description = description;
-		super.currentVersion = super.getNextVersion();
+		super.changed = true;
 	}
 
 	public String getName() {
@@ -169,13 +173,13 @@ public class CableThread extends DomainMember implements TypedObject {
 	 */
 	public void setName(String name) {
 		this.name = name;
-		super.currentVersion = super.getNextVersion();
+		super.changed = true;
 	}
 	/**
 	 * @param type The type to set.
 	 */
 	public void setType(CableThreadType type) {
 		this.type = type;
-		super.currentVersion = super.getNextVersion();
+		super.changed = true;
 	}
 }

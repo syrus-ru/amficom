@@ -1,5 +1,5 @@
 /*
- * $Id: EquipmentDatabase.java,v 1.64 2005/02/10 08:29:18 bob Exp $
+ * $Id: EquipmentDatabase.java,v 1.65 2005/02/11 07:49:43 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -44,7 +44,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.64 $, $Date: 2005/02/10 08:29:18 $
+ * @version $Revision: 1.65 $, $Date: 2005/02/11 07:49:43 $
  * @author $Author: bob $
  * @module config_v1
  */
@@ -184,6 +184,7 @@ public class EquipmentDatabase extends StorableObjectDatabase {
 		if (equipment == null){
 			equipment = new Equipment(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
 													null,
+													0L,
 													null,
 													null,
 													null,
@@ -211,7 +212,8 @@ public class EquipmentDatabase extends StorableObjectDatabase {
 		equipment.setAttributes(DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_CREATED),
 									DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
 									DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
-									DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),		
+									DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
+									resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION),
 									DatabaseIdentifier.getIdentifier(resultSet, DomainMember.COLUMN_DOMAIN_ID),
 									equipmentType,
 									(name != null) ? name : "",
@@ -425,16 +427,16 @@ public class EquipmentDatabase extends StorableObjectDatabase {
 		super.updateLinkedEntities(monitoredElementIdsMap, ObjectEntities.EQUIPMENTMELINK_ENTITY, LINK_COLUMN_EQUIPMENT_ID, LINK_COLUMN_MONITORED_ELEMENT_ID);
 	}
 
-	public void update(StorableObject storableObject, int updateKind, Object obj)
+	public void update(StorableObject storableObject, Identifier modifierId, int updateKind)
 			throws IllegalDataException, VersionCollisionException, UpdateObjectException {
 		Equipment equipment = this.fromStorableObject(storableObject);
 		switch (updateKind) {
 		case UPDATE_FORCE:
-			super.checkAndUpdateEntity(equipment, true);
+			super.checkAndUpdateEntity(equipment, modifierId, true);
 			break;
 		case UPDATE_CHECK: 					
 		default:
-			super.checkAndUpdateEntity(equipment, false);
+			super.checkAndUpdateEntity(equipment, modifierId, false);
 			break;
 		}
 		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(GeneralDatabaseContext.getCharacteristicDatabase());
@@ -442,15 +444,15 @@ public class EquipmentDatabase extends StorableObjectDatabase {
 		this.updateEquipmentMELinks(Collections.singletonList(equipment));
 	}
 
-	public void update(List storableObjects, int updateKind, Object arg)
+	public void update(List storableObjects, Identifier modifierId, int updateKind)
 		throws IllegalDataException, VersionCollisionException, UpdateObjectException {
 		switch (updateKind) {
 		case UPDATE_FORCE:
-			super.checkAndUpdateEntities(storableObjects, true);
+			super.checkAndUpdateEntities(storableObjects, modifierId, true);
 			break;
 		case UPDATE_CHECK: 					
 		default:
-			super.checkAndUpdateEntities(storableObjects, false);
+			super.checkAndUpdateEntities(storableObjects, modifierId, false);
 			break;
 		}		
 		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(GeneralDatabaseContext.getCharacteristicDatabase());

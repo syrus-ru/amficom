@@ -1,5 +1,5 @@
 /*
- * $Id: LinkType.java,v 1.31 2005/02/09 12:49:56 bob Exp $
+ * $Id: LinkType.java,v 1.32 2005/02/11 07:49:43 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,7 +32,7 @@ import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.31 $, $Date: 2005/02/09 12:49:56 $
+ * @version $Revision: 1.32 $, $Date: 2005/02/11 07:49:43 $
  * @author $Author: bob $
  * @module config_v1
  */
@@ -88,29 +88,29 @@ public class LinkType extends AbstractLinkType implements Characterized {
 	}
 
 	protected LinkType(Identifier id,
-								Identifier creatorId,
-								String codename,
-								String description,
-								String name,
-								int sort,
-								String manufacturer,
-								String manufacturerCode,
-								Identifier imageId) {
+						Identifier creatorId,
+						long version,
+						String codename,
+						String description,
+						String name,
+						int sort,
+						String manufacturer,
+						String manufacturerCode,
+						Identifier imageId) {
 		super(id,
-					new Date(System.currentTimeMillis()),
-					new Date(System.currentTimeMillis()),
-					creatorId,
-					creatorId,
-					codename,
-					description);
+				new Date(System.currentTimeMillis()),
+				new Date(System.currentTimeMillis()),
+				creatorId,
+				creatorId,
+				version,
+				codename,
+				description);
 		this.name = name;
 		this.sort = sort;
 		this.manufacturer = manufacturer;
 		this.manufacturerCode = manufacturerCode;
 		this.imageId = imageId;
 		this.characteristics = new ArrayList();
-
-		super.currentVersion = super.getNextVersion();
 
 		this.linkTypeDatabase = ConfigurationDatabaseContext.linkTypeDatabase;
 	}
@@ -120,19 +120,30 @@ public class LinkType extends AbstractLinkType implements Characterized {
 	 * @throws CreateObjectException
 	 */
 	public static LinkType createInstance(Identifier creatorId,
-														String codename,
-														String description,
-														String name,
-														LinkTypeSort sort,
-														String manufacturer,
-														String manufacturerCode,
-														Identifier imageId) throws CreateObjectException {
+										String codename,
+										String description,
+										String name,
+										LinkTypeSort sort,
+										String manufacturer,
+										String manufacturerCode,
+										Identifier imageId) throws CreateObjectException {
 		if (creatorId == null || codename == null || description == null || name == null ||
 				sort == null || manufacturer == null || manufacturerCode == null || imageId == null)
 			throw new IllegalArgumentException("Argument is 'null'");
 
 		try {
-			return new LinkType(IdentifierPool.getGeneratedIdentifier(ObjectEntities.LINKTYPE_ENTITY_CODE), creatorId, codename, description, name, sort.value(), manufacturer, manufacturerCode, imageId);
+			LinkType linkType = new LinkType(IdentifierPool.getGeneratedIdentifier(ObjectEntities.LINKTYPE_ENTITY_CODE), 
+						creatorId,
+						0L,
+						codename, 
+						description, 
+						name, 
+						sort.value(), 
+						manufacturer, 
+						manufacturerCode, 
+						imageId);
+			linkType.changed = true;
+			return linkType;
 		}
 		catch (IllegalObjectEntityException e) {
 			throw new CreateObjectException("LinkType.createInstance | cannot generate identifier ", e);
@@ -142,7 +153,7 @@ public class LinkType extends AbstractLinkType implements Characterized {
 	public void insert() throws CreateObjectException {
 		try {
 			if (this.linkTypeDatabase != null)
-				this.linkTypeDatabase.update(this, StorableObjectDatabase.UPDATE_FORCE, null);
+				this.linkTypeDatabase.update(this, this.creatorId, StorableObjectDatabase.UPDATE_FORCE);
 		}
 		catch (ApplicationException ae) {
 			throw new CreateObjectException(ae.getMessage(), ae);
@@ -165,20 +176,22 @@ public class LinkType extends AbstractLinkType implements Characterized {
 	}
 
 	protected synchronized void setAttributes(Date created,
-																Date modified,
-																Identifier creatorId,
-																Identifier modifierId,
-																String codename,
-																String description,
-																String name,
-																int sort,
-																String manufacturer,
-																String manufacturerCode,
-																Identifier imageId) {
+												Date modified,
+												Identifier creatorId,
+												Identifier modifierId,
+												long version,
+												String codename,
+												String description,
+												String name,
+												int sort,
+												String manufacturer,
+												String manufacturerCode,
+												Identifier imageId) {
 		super.setAttributes(created,
 							modified,
 							creatorId,
 							modifierId,
+							version,
 							codename,
 							description);
 		this.name = name;
@@ -217,7 +230,7 @@ public class LinkType extends AbstractLinkType implements Characterized {
 	}
 
 	public void setName(String name) {
-		this.currentVersion = super.getNextVersion();
+		super.changed = true;
 		this.name = name;
 	}
 
@@ -228,14 +241,14 @@ public class LinkType extends AbstractLinkType implements Characterized {
 	public void addCharacteristic(Characteristic characteristic) {
 		if (characteristic != null) {
 			this.characteristics.add(characteristic);
-			super.currentVersion = super.getNextVersion();
+			super.changed = true;
 		}
 	}
 
 	public void removeCharacteristic(Characteristic characteristic) {
 		if (characteristic != null) {
 			this.characteristics.remove(characteristic);
-			super.currentVersion = super.getNextVersion();
+			super.changed = true;
 		}
 	}
 
@@ -251,20 +264,20 @@ public class LinkType extends AbstractLinkType implements Characterized {
 
 	public void setCharacteristics(final List characteristics) {
 		this.setCharacteristics0(characteristics);
-		super.currentVersion = super.getNextVersion();
+		super.changed = true;
 	}	
 	/**
 	 * @param imageId The imageId to set.
 	 */
 	public void setImageId(Identifier imageId) {
 		this.imageId = imageId;
-		super.currentVersion = super.getNextVersion();
+		super.changed = true;
 	}
 	/**
 	 * @param sort The sort to set.
 	 */
 	public void setSort(LinkTypeSort sort) {
 		this.sort = sort.value();
-		super.currentVersion = super.getNextVersion();
+		super.changed = true;
 	}
 }

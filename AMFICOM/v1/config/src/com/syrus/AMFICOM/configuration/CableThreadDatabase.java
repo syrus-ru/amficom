@@ -1,5 +1,5 @@
 /*
- * $Id: CableThreadDatabase.java,v 1.10 2005/02/10 08:29:18 bob Exp $
+ * $Id: CableThreadDatabase.java,v 1.11 2005/02/11 07:49:43 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,6 +16,7 @@ import com.syrus.AMFICOM.administration.DomainMember;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
+import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
@@ -30,7 +31,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/02/10 08:29:18 $
+ * @version $Revision: 1.11 $, $Date: 2005/02/11 07:49:43 $
  * @author $Author: bob $
  * @module config_v1
  */
@@ -106,7 +107,7 @@ public class CableThreadDatabase extends StorableObjectDatabase  {
             throws IllegalDataException, RetrieveObjectException, SQLException {
         CableThread cableThread = this.fromStorableObject(storableObject);
         if (cableThread == null){          
-            cableThread = new CableThread(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID), null, null, null,
+            cableThread = new CableThread(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID), null, 0L, null, null,
                                        null, null);            
         }
         String name = DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_NAME));
@@ -122,6 +123,7 @@ public class CableThreadDatabase extends StorableObjectDatabase  {
                                                         DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
                                                         DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
                                                         DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
+                                                        resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION),
                                                         DatabaseIdentifier.getIdentifier(resultSet, DomainMember.COLUMN_DOMAIN_ID),
                                                         (name != null) ? name : "",
                                                         (description != null) ? description : "",
@@ -154,30 +156,30 @@ public class CableThreadDatabase extends StorableObjectDatabase  {
 		super.insertEntities(storableObjects);		
 	}
     
-    public void update(StorableObject storableObject, int updateKind, Object obj)
+    public void update(StorableObject storableObject, Identifier modifierId, int updateKind)
 			throws IllegalDataException, VersionCollisionException,
 			UpdateObjectException {
 		switch (updateKind) {
 		case UPDATE_FORCE:
-			super.checkAndUpdateEntity(storableObject, true);
+			super.checkAndUpdateEntity(storableObject, modifierId, true);
 			break;
 		case UPDATE_CHECK:
 		default:
-			super.checkAndUpdateEntity(storableObject, false);
+			super.checkAndUpdateEntity(storableObject, modifierId, false);
 			break;
 		}
     }
     
-    public void update(List storableObjects, int updateKind, Object arg)
+    public void update(List storableObjects, Identifier modifierId, int updateKind)
 			throws IllegalDataException, VersionCollisionException,
 			UpdateObjectException {
 		switch (updateKind) {
 		case UPDATE_FORCE:
-			super.checkAndUpdateEntities(storableObjects, true);
+			super.checkAndUpdateEntities(storableObjects, modifierId, true);
 			break;
 		case UPDATE_CHECK:
 		default:
-			super.checkAndUpdateEntities(storableObjects, false);
+			super.checkAndUpdateEntities(storableObjects, modifierId, false);
 			break;
 		}
     }

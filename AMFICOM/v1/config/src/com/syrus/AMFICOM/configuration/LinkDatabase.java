@@ -1,5 +1,5 @@
 /*
- * $Id: LinkDatabase.java,v 1.25 2005/02/10 08:29:19 bob Exp $
+ * $Id: LinkDatabase.java,v 1.26 2005/02/11 07:49:43 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -21,6 +21,7 @@ import com.syrus.AMFICOM.general.CharacteristicDatabase;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.GeneralDatabaseContext;
+import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
@@ -36,7 +37,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.25 $, $Date: 2005/02/10 08:29:19 $
+ * @version $Revision: 1.26 $, $Date: 2005/02/11 07:49:43 $
  * @author $Author: bob $
  * @module config_v1
  */
@@ -148,6 +149,7 @@ public class LinkDatabase extends StorableObjectDatabase {
 		if (link == null){			
 			link = new Link(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
 										null,
+										0L,
 										null,
 										null,
 										null,
@@ -175,6 +177,7 @@ public class LinkDatabase extends StorableObjectDatabase {
 								DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
 								DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
 								DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
+								resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION),
 								DatabaseIdentifier.getIdentifier(resultSet, DomainMember.COLUMN_DOMAIN_ID),
 								(name != null) ? name : "",
 								(description != null) ? description : "",
@@ -221,28 +224,28 @@ public class LinkDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	public void update(StorableObject storableObject, int updateKind, Object obj)
+	public void update(StorableObject storableObject, Identifier modifierId, int updateKind)
 			throws IllegalDataException, VersionCollisionException, UpdateObjectException {
 		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(GeneralDatabaseContext.getCharacteristicDatabase());
 		switch (updateKind) {
 			case UPDATE_FORCE:
-				super.checkAndUpdateEntity(storableObject, true);
+				super.checkAndUpdateEntity(storableObject, modifierId, true);
 				characteristicDatabase.updateCharacteristics(storableObject);
 				break;
 			case UPDATE_CHECK:
 			default:
-				super.checkAndUpdateEntity(storableObject, false);
+				super.checkAndUpdateEntity(storableObject, modifierId, false);
 				characteristicDatabase.updateCharacteristics(storableObject);
 				break;
 		}
 	}
 
-	public void update(List storableObjects, int updateKind, Object arg)
+	public void update(List storableObjects, Identifier modifierId, int updateKind)
 		throws IllegalDataException, VersionCollisionException, UpdateObjectException {
 		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(GeneralDatabaseContext.getCharacteristicDatabase());
 		switch (updateKind) {
 			case UPDATE_FORCE:
-				super.checkAndUpdateEntities(storableObjects, true);
+				super.checkAndUpdateEntities(storableObjects, modifierId, true);
 				for (Iterator it = storableObjects.iterator(); it.hasNext();) {
 					StorableObject storableObject = (StorableObject) it.next();
 					characteristicDatabase.updateCharacteristics(storableObject);
@@ -250,7 +253,7 @@ public class LinkDatabase extends StorableObjectDatabase {
 				break;
 			case UPDATE_CHECK:
 			default:
-				super.checkAndUpdateEntities(storableObjects, false);
+				super.checkAndUpdateEntities(storableObjects, modifierId, false);
 				for (Iterator it = storableObjects.iterator(); it.hasNext();) {
 					StorableObject storableObject = (StorableObject) it.next();
 					characteristicDatabase.updateCharacteristics(storableObject);

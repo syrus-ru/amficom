@@ -1,5 +1,5 @@
 /*
- * $Id: PortDatabase.java,v 1.42 2005/02/10 08:29:19 bob Exp $
+ * $Id: PortDatabase.java,v 1.43 2005/02/11 07:49:44 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -36,7 +36,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.42 $, $Date: 2005/02/10 08:29:19 $
+ * @version $Revision: 1.43 $, $Date: 2005/02/11 07:49:44 $
  * @author $Author: bob $
  * @module config_v1
  */
@@ -103,6 +103,7 @@ public class PortDatabase extends StorableObjectDatabase {
 		Port port = (storableObject==null) ?
 				new Port(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
 								null,
+								0L,
 								null,
 								null,
 								null,
@@ -121,7 +122,8 @@ public class PortDatabase extends StorableObjectDatabase {
 		port.setAttributes(DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_CREATED),
 							DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),								  
 							DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
-							DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),						  
+							DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),		
+							resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION),
 							portType,								  
 							(description != null) ? description : "",
 							DatabaseIdentifier.getIdentifier(resultSet, PortWrapper.COLUMN_EQUIPMENT_ID),
@@ -160,31 +162,31 @@ public class PortDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	public void update(StorableObject storableObject, int updateKind, Object obj)
+	public void update(StorableObject storableObject, Identifier modifierId, int updateKind)
 			throws IllegalDataException, VersionCollisionException, UpdateObjectException {
 		Port port = this.fromStorableObject(storableObject);
 			switch (updateKind) {
 				case UPDATE_CHECK:
-					super.checkAndUpdateEntity(port, false);
+					super.checkAndUpdateEntity(port, modifierId, false);
 					break;
 				case UPDATE_FORCE:					
 				default:
-					super.checkAndUpdateEntity(port, true);		
+					super.checkAndUpdateEntity(port, modifierId, true);		
 					return;
 			}
 		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(GeneralDatabaseContext.getCharacteristicDatabase());
 		characteristicDatabase.updateCharacteristics(port);
 	}
 
-	public void update(List storableObjects, int updateKind, Object arg)
+	public void update(List storableObjects, Identifier modifierId, int updateKind)
 			throws IllegalDataException, VersionCollisionException, UpdateObjectException {
 		switch (updateKind) {	
 			case UPDATE_CHECK:
-				super.checkAndUpdateEntities(storableObjects, false);
+				super.checkAndUpdateEntities(storableObjects, modifierId, false);
 				break;
 			case UPDATE_FORCE:					
 			default:
-				super.checkAndUpdateEntities(storableObjects, true);		
+				super.checkAndUpdateEntities(storableObjects, modifierId, true);		
 				return;
 		}
 		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(GeneralDatabaseContext.getCharacteristicDatabase());

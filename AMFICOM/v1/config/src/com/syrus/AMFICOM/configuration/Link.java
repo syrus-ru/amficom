@@ -1,5 +1,5 @@
 /*
- * $Id: Link.java,v 1.34 2005/02/10 08:29:19 bob Exp $
+ * $Id: Link.java,v 1.35 2005/02/11 07:49:43 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 
 import com.syrus.AMFICOM.administration.DomainMember;
@@ -34,7 +35,7 @@ import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.34 $, $Date: 2005/02/10 08:29:19 $
+ * @version $Revision: 1.35 $, $Date: 2005/02/11 07:49:43 $
  * @author $Author: bob $
  * @module config_v1
  */
@@ -103,6 +104,7 @@ public class Link extends DomainMember implements Characterized, TypedObject {
 
 	protected Link(Identifier id,
 					Identifier creatorId,
+					long version,
 					Identifier domainId,
 					String name,
 					String description,
@@ -114,11 +116,12 @@ public class Link extends DomainMember implements Characterized, TypedObject {
 					int color,
 					String mark) {
 		super(id,
-					new Date(System.currentTimeMillis()),
-					new Date(System.currentTimeMillis()),
-					creatorId,
-					creatorId,
-					domainId);
+				new Date(System.currentTimeMillis()),
+				new Date(System.currentTimeMillis()),
+				creatorId,
+				creatorId,
+				version,
+				domainId);
 		this.name = name;
 		this.description = description;
 		this.type = type;
@@ -129,9 +132,7 @@ public class Link extends DomainMember implements Characterized, TypedObject {
 		this.sort = sort;
 		this.color = color;
 		this.mark = mark;
-		this.characteristics = new ArrayList();
-
-		super.currentVersion = super.getNextVersion();
+		this.characteristics = new LinkedList();
 
 		this.linkDatabase = ConfigurationDatabaseContext.linkDatabase;
 	}
@@ -158,8 +159,9 @@ public class Link extends DomainMember implements Characterized, TypedObject {
 			throw new IllegalArgumentException("Argument is 'null'");
 
 		try {
-			return new Link(IdentifierPool.getGeneratedIdentifier(ObjectEntities.LINK_ENTITY_CODE),
+			Link link = new Link(IdentifierPool.getGeneratedIdentifier(ObjectEntities.LINK_ENTITY_CODE),
 					creatorId,
+					0L,
 					domainId,
 					name,
 					description,
@@ -170,6 +172,8 @@ public class Link extends DomainMember implements Characterized, TypedObject {
 					sort.value(),
 					color,
 					mark);
+			link.changed = true;
+			return link;
 		} catch (IllegalObjectEntityException e) {
 			throw new CreateObjectException("Link.createInstance | cannot generate identifier ", e);
 		}
@@ -178,7 +182,7 @@ public class Link extends DomainMember implements Characterized, TypedObject {
 	public void insert() throws CreateObjectException {
 		try {
 			if (this.linkDatabase != null)
-				this.linkDatabase.update(this, StorableObjectDatabase.UPDATE_FORCE, null);
+				this.linkDatabase.update(this, this.creatorId, StorableObjectDatabase.UPDATE_FORCE);
 		}
 		catch (ApplicationException ae) {
 			throw new CreateObjectException(ae.getMessage(), ae);
@@ -209,6 +213,7 @@ public class Link extends DomainMember implements Characterized, TypedObject {
 												Date modified,
 												Identifier creatorId,
 												Identifier modifierId,
+												long version,
 												Identifier domainId,
 												String name,
 												String description,
@@ -223,6 +228,7 @@ public class Link extends DomainMember implements Characterized, TypedObject {
 							modified,
 							creatorId,
 							modifierId,
+							version,
 							domainId);
 			this.name = name;
 			this.description = description;
@@ -241,7 +247,7 @@ public class Link extends DomainMember implements Characterized, TypedObject {
 
 	public void setDescription(String description) {
 		this.description = description;
-		super.currentVersion = super.getNextVersion();
+		super.changed = true;
 	}
 
 	public String getInventoryNo() {
@@ -283,14 +289,14 @@ public class Link extends DomainMember implements Characterized, TypedObject {
 	public void addCharacteristic(Characteristic characteristic) {
 		if (characteristic != null) {
 			this.characteristics.add(characteristic);
-			super.currentVersion = super.getNextVersion();
+			super.changed = true;
 		}
 	}
 
 	public void removeCharacteristic(Characteristic characteristic) {
 		if (characteristic != null) {
 			this.characteristics.remove(characteristic);
-			super.currentVersion = super.getNextVersion();
+			super.changed = true;
 		}
 	}
 
@@ -306,55 +312,55 @@ public class Link extends DomainMember implements Characterized, TypedObject {
 
 	public void setCharacteristics(final List characteristics) {
 		this.setCharacteristics0(characteristics);
-		super.currentVersion = super.getNextVersion();
+		super.changed = true;
 	}	
 	/**
 	 * @param name The name to set.
 	 */
 	public void setName(String name) {
 		this.name = name;
-		super.currentVersion = super.getNextVersion();
+		super.changed = true;
 	}
 	/**
 	 * @param sort The sort to set.
 	 */
 	public void setSort(LinkSort sort) {
 		this.sort = sort.value();
-		super.currentVersion = super.getNextVersion();
+		super.changed = true;
 	}
 	/**
 	 * @param supplier The supplier to set.
 	 */
 	public void setSupplier(String supplier) {
 		this.supplier = supplier;
-		super.currentVersion = super.getNextVersion();
+		super.changed = true;
 	}
 	/**
 	 * @param supplierCode The supplierCode to set.
 	 */
 	public void setSupplierCode(String supplierCode) {
 		this.supplierCode = supplierCode;
-		super.currentVersion = super.getNextVersion();
+		super.changed = true;
 	}
 	/**
 	 * @param type The type to set.
 	 */
 	public void setType(AbstractLinkType type) {
 		this.type = type;
-		super.currentVersion = super.getNextVersion();
+		super.changed = true;
 	}
 	/**
 	 * @param color The color to set.
 	 */
 	public void setColor(int color) {
 		this.color = color;
-		super.currentVersion = super.getNextVersion();
+		super.changed = true;
 	}
 	/**
 	 * @param mark The mark to set.
 	 */
 	public void setMark(String mark) {
 		this.mark = mark;
-		super.currentVersion = super.getNextVersion();
+		super.changed = true;
 	}
 }

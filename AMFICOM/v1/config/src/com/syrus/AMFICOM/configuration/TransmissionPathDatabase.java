@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPathDatabase.java,v 1.43 2005/02/10 08:29:19 bob Exp $
+ * $Id: TransmissionPathDatabase.java,v 1.44 2005/02/11 07:49:44 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -24,6 +24,7 @@ import com.syrus.AMFICOM.general.CharacteristicDatabase;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.GeneralDatabaseContext;
+import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
@@ -40,7 +41,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.43 $, $Date: 2005/02/10 08:29:19 $
+ * @version $Revision: 1.44 $, $Date: 2005/02/11 07:49:44 $
  * @author $Author: bob $
  * @module config_v1
  */
@@ -138,7 +139,7 @@ public class TransmissionPathDatabase extends StorableObjectDatabase {
 	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
 			throws IllegalDataException, RetrieveObjectException, SQLException {
 		TransmissionPath transmissionPath = (storableObject == null) ? new TransmissionPath(DatabaseIdentifier
-				.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID), null, null, null, null, null, null, null)
+				.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID), null, 0L, null, null, null, null, null, null)
 				: this.fromStorableObject(storableObject);
 		String name = DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_NAME));
 		String description = DatabaseString.fromQuerySubString(resultSet
@@ -152,14 +153,17 @@ public class TransmissionPathDatabase extends StorableObjectDatabase {
 			throw new RetrieveObjectException(ae);
 		}
 		transmissionPath.setAttributes(
-			DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_CREATED), DatabaseDate
-					.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED), DatabaseIdentifier
-					.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID), DatabaseIdentifier
-					.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID), DatabaseIdentifier
-					.getIdentifier(resultSet, DomainMember.COLUMN_DOMAIN_ID), (name != null) ? name : "",
-			(description != null) ? description : "", type, DatabaseIdentifier.getIdentifier(resultSet,
-				TransmissionPathWrapper.COLUMN_START_PORT_ID), DatabaseIdentifier.getIdentifier(resultSet,
-				TransmissionPathWrapper.COLUMN_FINISH_PORT_ID));
+			DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_CREATED), 
+			DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED), 
+			DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID), 
+			DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
+			resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION),
+			DatabaseIdentifier.getIdentifier(resultSet, DomainMember.COLUMN_DOMAIN_ID), 
+			(name != null) ? name : "",
+			(description != null) ? description : "", 
+			type, 
+			DatabaseIdentifier.getIdentifier(resultSet,	TransmissionPathWrapper.COLUMN_START_PORT_ID), 
+			DatabaseIdentifier.getIdentifier(resultSet,	TransmissionPathWrapper.COLUMN_FINISH_PORT_ID));
 		return transmissionPath;
 	}
 
@@ -212,16 +216,16 @@ public class TransmissionPathDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	public void update(StorableObject storableObject, int updateKind, Object obj) throws IllegalDataException,
+	public void update(StorableObject storableObject, Identifier modifierId, int updateKind) throws IllegalDataException,
 			VersionCollisionException, UpdateObjectException {
 		TransmissionPath transmissionPath = this.fromStorableObject(storableObject);
 		switch (updateKind) {
 			case UPDATE_CHECK:
-				super.checkAndUpdateEntity(transmissionPath, false);
+				super.checkAndUpdateEntity(transmissionPath, modifierId, false);
 				break;
 			case UPDATE_FORCE:
 			default:
-				super.checkAndUpdateEntity(transmissionPath, true);
+				super.checkAndUpdateEntity(transmissionPath, modifierId, true);
 				return;
 		}
 		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase) (GeneralDatabaseContext
@@ -229,15 +233,15 @@ public class TransmissionPathDatabase extends StorableObjectDatabase {
 		characteristicDatabase.updateCharacteristics(transmissionPath);
 	}
 
-	public void update(List storableObjects, int updateKind, Object arg) throws IllegalDataException,
+	public void update(List storableObjects, Identifier modifierId, int updateKind) throws IllegalDataException,
 			VersionCollisionException, UpdateObjectException {
 		switch (updateKind) {
 			case UPDATE_CHECK:
-				super.checkAndUpdateEntities(storableObjects, false);
+				super.checkAndUpdateEntities(storableObjects, modifierId, false);
 				break;
 			case UPDATE_FORCE:
 			default:
-				super.checkAndUpdateEntities(storableObjects, true);
+				super.checkAndUpdateEntities(storableObjects, modifierId, true);
 				return;
 		}
 		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase) (GeneralDatabaseContext

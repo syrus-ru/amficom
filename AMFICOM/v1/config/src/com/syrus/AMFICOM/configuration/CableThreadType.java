@@ -1,5 +1,5 @@
 /*
- * $Id: CableThreadType.java,v 1.19 2005/01/26 15:09:21 bob Exp $
+ * $Id: CableThreadType.java,v 1.20 2005/02/11 07:49:43 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,7 +27,7 @@ import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.19 $, $Date: 2005/01/26 15:09:21 $
+ * @version $Revision: 1.20 $, $Date: 2005/02/11 07:49:43 $
  * @author $Author: bob $
  * @module config_v1
  */
@@ -72,19 +72,24 @@ public class CableThreadType extends StorableObjectType {
 	}
 
 	protected CableThreadType(Identifier id,
-			Identifier creatorId,
-			String codename,
-			String description,
-			String name,
-						int color,
-						LinkType linkType) {
-		super(id, new Date(System.currentTimeMillis()), new Date(System.currentTimeMillis()), creatorId, creatorId,
-				codename, description);
+	                          Identifier creatorId,
+	                          long version,
+	                          String codename,
+	                          String description,
+	                          String name,
+	                          int color,
+	                          LinkType linkType) {
+		super(id, 
+			new Date(System.currentTimeMillis()), 
+			new Date(System.currentTimeMillis()), 
+			creatorId, 
+			creatorId,
+			version,
+			codename, 
+			description);
 		this.name = name;
 				this.color = color;
 		this.type = linkType;
-
-		super.currentVersion = super.getNextVersion();
 
 		this.cableThreadTypeDatabase = ConfigurationDatabaseContext.cableThreadTypeDatabase;
 
@@ -95,17 +100,26 @@ public class CableThreadType extends StorableObjectType {
 	 * @throws CreateObjectException
 	 */
 	public static CableThreadType createInstance(Identifier creatorId,
-																		String codename,
-																		String description,
-																		String name,
-																		int color,
-																		LinkType linkType) throws CreateObjectException {
+													String codename,
+													String description,
+													String name,
+													int color,
+													LinkType linkType) throws CreateObjectException {
 
 		if (creatorId == null || codename == null || description == null ||
 				name == null || linkType == null)
 			throw new IllegalArgumentException("Argument is 'null'");
 		try {
-			return new CableThreadType(IdentifierPool.getGeneratedIdentifier(ObjectEntities.CABLETHREADTYPE_ENTITY_CODE), creatorId, codename, description, name, color, linkType);
+			CableThreadType cableThreadType = new CableThreadType(IdentifierPool.getGeneratedIdentifier(ObjectEntities.CABLETHREADTYPE_ENTITY_CODE), 
+				creatorId, 
+				0L,
+				codename, 
+				description, 
+				name, 
+				color, 
+				linkType);
+			cableThreadType.changed = true;
+			return cableThreadType;
 		} catch (IllegalObjectEntityException e) {
 			throw new CreateObjectException("CableThreadType.createInstance | cannot generate identifier ", e);
 		}
@@ -115,7 +129,7 @@ public class CableThreadType extends StorableObjectType {
 	public void insert() throws CreateObjectException {
 		try {
 			if (this.cableThreadTypeDatabase != null)
-				this.cableThreadTypeDatabase.update(this, StorableObjectDatabase.UPDATE_FORCE, null);
+				this.cableThreadTypeDatabase.update(this, this.creatorId, StorableObjectDatabase.UPDATE_FORCE);
 		}
 		catch (ApplicationException ae) {
 			throw new CreateObjectException(ae.getMessage(), ae);
@@ -149,12 +163,19 @@ public class CableThreadType extends StorableObjectType {
 												Date modified,
 												Identifier creatorId,
 												Identifier modifierId,
+												long version,
 												String codename,
 												String description,
-																								String name,
+												String name,
 												int color,
 												LinkType linkType) {
-		super.setAttributes(created, modified, creatorId, modifierId, codename, description);
+		super.setAttributes(created, 
+			modified, 
+			creatorId, 
+			modifierId,
+			version,
+			codename, 
+			description);
 		this.name = name;
 				this.color = color;
 		this.type = linkType;
@@ -166,7 +187,7 @@ public class CableThreadType extends StorableObjectType {
 
 	public void setColor(int color) {
 		this.color = color;
-		super.currentVersion = super.getNextVersion();
+		super.changed = true;
 	}
 
 	public int getColor() {
@@ -179,12 +200,12 @@ public class CableThreadType extends StorableObjectType {
 
 	public void setName(String name) {
 		this.name = name;
-		super.currentVersion = super.getNextVersion();
+		super.changed = true;
 	}
 
 	public void setLinkType(LinkType type) {
 		this.type = type;
-		super.currentVersion = super.getNextVersion();
+		super.changed = true;
 	}
 	public List getDependencies() {
 		return Collections.singletonList(this.type);

@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPort.java,v 1.36 2005/02/09 12:49:56 bob Exp $
+ * $Id: MeasurementPort.java,v 1.37 2005/02/11 07:49:43 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,7 +35,7 @@ import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.36 $, $Date: 2005/02/09 12:49:56 $
+ * @version $Revision: 1.37 $, $Date: 2005/02/11 07:49:43 $
  * @author $Author: bob $
  * @module config_v1
  */
@@ -94,6 +94,7 @@ public class MeasurementPort extends StorableObject implements Characterized, Ty
 
 	protected MeasurementPort(Identifier id,
 							Identifier creatorId,
+							long version,
 							MeasurementPortType type,
 							String name,
 							String description,	
@@ -103,15 +104,14 @@ public class MeasurementPort extends StorableObject implements Characterized, Ty
 				new Date(System.currentTimeMillis()),
 				new Date(System.currentTimeMillis()),
 				creatorId,
-				creatorId);
+				creatorId,
+				version);
 		this.type = type;
 		this.name = name;
 		this.description = description;
 		this.kisId = kisId;
 		this.portId = portId;
 		this.characteristics = new ArrayList();
-
-		super.currentVersion = super.getNextVersion();
 
 		this.measurementPortDatabase = ConfigurationDatabaseContext.measurementPortDatabase;
 	}
@@ -137,13 +137,16 @@ public class MeasurementPort extends StorableObject implements Characterized, Ty
 			throw new IllegalArgumentException("Argument is 'null'");
 
 		try {
-			return new MeasurementPort(IdentifierPool.getGeneratedIdentifier(ObjectEntities.MEASUREMENTPORT_ENTITY_CODE),
+			MeasurementPort measurementPort = new MeasurementPort(IdentifierPool.getGeneratedIdentifier(ObjectEntities.MEASUREMENTPORT_ENTITY_CODE),
 									   creatorId,
+									   0L,
 									   type,
 									   name,
 									   description,
 									   kisId,
 									   portId);
+			measurementPort.changed = true;
+			return measurementPort;
 		}
 		catch (IllegalObjectEntityException e) {
 			throw new CreateObjectException("MeasurementPort.createInstance | cannot generate identifier ", e);
@@ -153,7 +156,7 @@ public class MeasurementPort extends StorableObject implements Characterized, Ty
 	public void insert() throws CreateObjectException {
 		try {
 			if (this.measurementPortDatabase != null)
-				this.measurementPortDatabase.update(this, StorableObjectDatabase.UPDATE_FORCE, null);
+				this.measurementPortDatabase.update(this, this.creatorId, StorableObjectDatabase.UPDATE_FORCE);
 		}
 		catch (ApplicationException ae) {
 			throw new CreateObjectException(ae.getMessage(), ae);
@@ -185,7 +188,7 @@ public class MeasurementPort extends StorableObject implements Characterized, Ty
 	
 	public void setDescription(String description){
 		this.description = description;
-		super.currentVersion = super.getNextVersion();
+		super.changed = true;
 	}
 	
 	public String getName() {
@@ -201,18 +204,20 @@ public class MeasurementPort extends StorableObject implements Characterized, Ty
 	}
 
 	protected synchronized void setAttributes(Date created,
-																	Date modified,
-																	Identifier creatorId,
-																	Identifier modifierId,
-																	MeasurementPortType type,
-																	String name,
-																	String description,	
-																	Identifier kisId,
-																	Identifier portId) {
+											Date modified,
+											Identifier creatorId,
+											Identifier modifierId,
+											long version,
+											MeasurementPortType type,
+											String name,
+											String description,	
+											Identifier kisId,
+											Identifier portId) {
 		super.setAttributes(created,
 						modified,
 						creatorId,
-						modifierId);
+						modifierId,
+						version);
 		this.type = type;
 		this.name = name;
 		this.description = description;
@@ -229,26 +234,26 @@ public class MeasurementPort extends StorableObject implements Characterized, Ty
 	}
 
 	public void setName(String name) {
-		this.currentVersion = super.getNextVersion();
+		super.changed = true;
 		this.name = name;
 	}
 	
 	public void setType(MeasurementPortType type) {
-		this.currentVersion = super.getNextVersion();
+		super.changed = true;
 		this.type = type;
 	}
     
 	public void addCharacteristic(Characteristic characteristic) {
 		if (characteristic != null) {
 			this.characteristics.add(characteristic);
-			super.currentVersion = super.getNextVersion();
+			super.changed = true;
 		}
 	}
 
 	public void removeCharacteristic(Characteristic characteristic) {
 		if (characteristic != null) {
 			this.characteristics.remove(characteristic);
-			super.currentVersion = super.getNextVersion();
+			super.changed = true;
 		}
 	}
 
@@ -264,20 +269,20 @@ public class MeasurementPort extends StorableObject implements Characterized, Ty
 
 	public void setCharacteristics(final List characteristics) {
 		this.setCharacteristics0(characteristics);
-		super.currentVersion = super.getNextVersion();
+		super.changed = true;
 	}
 	/**
 	 * @param kisId The kisId to set.
 	 */
 	public void setKISId(Identifier kisId) {
 		this.kisId = kisId;
-		super.currentVersion = super.getNextVersion();
+		super.changed = true;
 	}
 	/**
 	 * @param portId The portId to set.
 	 */
 	public void setPortId(Identifier portId) {
 		this.portId = portId;
-		super.currentVersion = super.getNextVersion();
+		super.changed = true;
 	}
 }

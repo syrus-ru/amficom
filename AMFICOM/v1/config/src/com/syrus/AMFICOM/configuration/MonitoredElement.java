@@ -1,5 +1,5 @@
 /*
- * $Id: MonitoredElement.java,v 1.36 2005/01/26 13:25:34 bob Exp $
+ * $Id: MonitoredElement.java,v 1.37 2005/02/11 07:49:43 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,7 +29,7 @@ import com.syrus.AMFICOM.configuration.corba.MonitoredElement_Transferable;
 import com.syrus.AMFICOM.configuration.corba.MonitoredElementSort;
 
 /**
- * @version $Revision: 1.36 $, $Date: 2005/01/26 13:25:34 $
+ * @version $Revision: 1.37 $, $Date: 2005/02/11 07:49:43 $
  * @author $Author: bob $
  * @module config_v1
  */
@@ -76,19 +76,21 @@ public class MonitoredElement extends DomainMember {
 	}
 	
 	protected MonitoredElement(Identifier id,
-													 Identifier creatorId,
-													 Identifier domainId,
-													 String name,
-													 Identifier measurementPortId,
-													 int sort,
-													 String localAddress,
-													 List monitoredDomainMemberIds) {
+								 Identifier creatorId,
+								 long version,
+								 Identifier domainId,
+								 String name,
+								 Identifier measurementPortId,
+								 int sort,
+								 String localAddress,
+								 List monitoredDomainMemberIds) {
 		super(id,
-					new Date(System.currentTimeMillis()),
-					new Date(System.currentTimeMillis()),
-					creatorId,
-					creatorId,
-					domainId);
+			new Date(System.currentTimeMillis()),
+			new Date(System.currentTimeMillis()),
+			creatorId,
+			creatorId,
+			version,
+			domainId);
 		this.name = name;
 		this.measurementPortId = measurementPortId;
 		this.sort = sort;
@@ -97,8 +99,6 @@ public class MonitoredElement extends DomainMember {
 			this.monitoredDomainMemberIds = monitoredDomainMemberIds;
 		else
 			this.monitoredDomainMemberIds = new LinkedList();
-
-		super.currentVersion = super.getNextVersion();
 
 		this.monitoredElementDatabase = ConfigurationDatabaseContext.monitoredElementDatabase;
 	}
@@ -124,14 +124,17 @@ public class MonitoredElement extends DomainMember {
 			throw new IllegalArgumentException("Argument is 'null'");
 		
 		try {
-			return new MonitoredElement(IdentifierPool.getGeneratedIdentifier(ObjectEntities.ME_ENTITY_CODE),
+			MonitoredElement monitoredElement =  new MonitoredElement(IdentifierPool.getGeneratedIdentifier(ObjectEntities.ME_ENTITY_CODE),
 								creatorId,
+								0L,
 								domainId,
 								name,
 								measurementPortId,
 								sort,
 								localAddress,
 								monitoredDomainMemberIds);
+			monitoredElement.changed = true;
+			return monitoredElement;
 		}
 		catch (IllegalObjectEntityException e) {
 			throw new CreateObjectException("MonitoredElement.createInstance | cannot generate identifier ", e);
@@ -141,7 +144,7 @@ public class MonitoredElement extends DomainMember {
 	public void insert() throws CreateObjectException {
 		try {
 			if (this.monitoredElementDatabase != null)
-				this.monitoredElementDatabase.update(this, StorableObjectDatabase.UPDATE_FORCE, null);
+				this.monitoredElementDatabase.update(this, this.creatorId, StorableObjectDatabase.UPDATE_FORCE);
 		}
 		catch (ApplicationException ae) {
 			throw new CreateObjectException(ae.getMessage(), ae);
@@ -175,7 +178,7 @@ public class MonitoredElement extends DomainMember {
 	}
 	
 	public void setLocalAddress(String localAddress){
-		this.currentVersion = super.getNextVersion();
+		super.changed = true;
 		this.localAddress = localAddress;
 	}
 
@@ -184,19 +187,21 @@ public class MonitoredElement extends DomainMember {
 	}
 
 	protected synchronized void setAttributes(Date created,
-																						Date modified,
-																						Identifier creator_id,
-																						Identifier modifier_id,
-																						Identifier domainId,
-																						String name,
-																						Identifier measurementPortId,
-																						int sort,
-																						String localAddress) {
+											Date modified,
+											Identifier creatorId,
+											Identifier modifierId,
+											long version,
+											Identifier domainId,
+											String name,
+											Identifier measurementPortId,
+											int sort,
+											String localAddress) {
 		super.setAttributes(created,
-												modified,
-												creator_id,
-												modifier_id,
-												domainId);
+							modified,
+							creatorId,
+							modifierId,
+							version,
+							domainId);
 		this.name = name;
 		this.measurementPortId = measurementPortId;
 		this.sort = sort;
@@ -207,7 +212,7 @@ public class MonitoredElement extends DomainMember {
 		this.monitoredDomainMemberIds.clear();
 		if (monitoredDomainMemberIds != null)
 			this.monitoredDomainMemberIds.addAll(monitoredDomainMemberIds);
-		super.currentVersion = super.getNextVersion();
+		super.changed = true;
 	}
 
 	public String getName() {
@@ -229,13 +234,13 @@ public class MonitoredElement extends DomainMember {
 	 */
 	public void setMeasurementPortId(Identifier measurementPortId) {
 		this.measurementPortId = measurementPortId;
-		super.currentVersion = super.getNextVersion();
+		super.changed = true;
 	}
 	/**
 	 * @param sort The sort to set.
 	 */
 	public void setSort(MonitoredElementSort sort) {
 		this.sort = sort.value();
-		super.currentVersion = super.getNextVersion();
+		super.changed = true;
 	}
 }
