@@ -8,6 +8,7 @@ import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObject_Database;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.util.Log;
+import com.syrus.util.database.DatabaseDate;
 
 public class ParameterTypeDatabase extends StorableObject_Database  {
 	
@@ -44,10 +45,23 @@ public class ParameterTypeDatabase extends StorableObject_Database  {
 			statement = connection.createStatement();
 			Log.debugMessage("ParameterTypeDatabase.retrieve | Trying: " + sql, Log.DEBUGLEVEL05);
 			resultSet = statement.executeQuery(sql);
-			if (resultSet.next())
-				parameterType.setAttributes(resultSet.getString(COLUMN_CODENAME),
-											resultSet.getString(COLUMN_NAME),
-											resultSet.getString(COLUMN_DESCRIPTION));
+			if (resultSet.next()){
+				parameterType.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
+											DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
+											/**
+											 * @todo when change DB Identifier model ,change getString() to
+											 *       getLong()
+											 */																			
+											new Identifier(resultSet.getString(COLUMN_CREATOR_ID)),
+											/**
+											 * @todo when change DB Identifier model ,change getString() to
+											 *       getLong()
+											 */
+											new Identifier(resultSet.getString(COLUMN_MODIFIER_ID)),
+											resultSet.getString(COLUMN_CODENAME),
+											resultSet.getString(COLUMN_DESCRIPTION),
+											resultSet.getString(COLUMN_NAME));
+			}
 			else
 				throw new Exception("No such parameter type: " + parameterTypeIdStr);
 		}
