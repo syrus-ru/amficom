@@ -11,11 +11,14 @@ import com.syrus.AMFICOM.CORBA.KIS.Parameter_Transferable;
 import com.syrus.AMFICOM.server.measurement.Result;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2004/07/19 14:01:34 $
+ * @version $Revision: 1.4 $, $Date: 2004/07/20 12:54:10 $
  * @author $Author: arseniy $
  * @module agent_v1
  */
 public abstract class AnalysisManager {
+
+	AnalysisManager() {}
+
 	public static AnalysisManager getAnalysisManager(String analysis_type_id) {
 		if (analysis_type_id.equals("dadara"))
 			return new DadaraAnalysisManager();

@@ -1,5 +1,5 @@
 /*
- * $Id: DadaraAnalysisManager.java,v 1.2 2004/07/19 14:01:34 arseniy Exp $
+ * $Id: DadaraAnalysisManager.java,v 1.3 2004/07/20 12:54:10 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,11 +22,12 @@ import java.util.Date;
 import java.io.FileOutputStream;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2004/07/19 14:01:34 $
+ * @version $Revision: 1.3 $, $Date: 2004/07/20 12:54:10 $
  * @author $Author: arseniy $
  * @module agent_v1
  */
 public class DadaraAnalysisManager extends AnalysisManager {
+
 	static {
 		try {
 			System.loadLibrary("dadara");
@@ -35,6 +36,8 @@ public class DadaraAnalysisManager extends AnalysisManager {
 			Log.errorMessage(ule.getMessage());
 		}
 	}
+
+	protected DadaraAnalysisManager() {}
 
 	public native double[] ana(int waveletType,
 														 double[] y,                  //the refl. itself

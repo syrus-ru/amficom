@@ -1,5 +1,5 @@
 /*
- * $Id: DadaraEvaluationManager.java,v 1.2 2004/07/19 14:01:34 arseniy Exp $
+ * $Id: DadaraEvaluationManager.java,v 1.3 2004/07/20 12:54:10 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,7 +8,6 @@
 
 package com.syrus.AMFICOM.agent;
 
-import java.io.FileOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Hashtable;
 import com.syrus.AMFICOM.CORBA.General.AlarmLevel;
@@ -24,7 +23,7 @@ import java.util.Date;
 import java.io.FileOutputStream;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2004/07/19 14:01:34 $
+ * @version $Revision: 1.3 $, $Date: 2004/07/20 12:54:10 $
  * @author $Author: arseniy $
  * @module agent_v1
  */

@@ -1,5 +1,5 @@
 /*
- * $Id: Agent.java,v 1.3 2004/07/19 14:01:34 arseniy Exp $
+ * $Id: Agent.java,v 1.4 2004/07/20 12:54:10 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,11 +26,11 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2004/07/19 14:01:34 $
+ * @version $Revision: 1.4 $, $Date: 2004/07/20 12:54:10 $
  * @author $Author: arseniy $
  * @module agent_v1
  */
-public class Agent extends Thread  {
+public class Agent extends Thread {
 	protected static final String MEASUREMENT_ID_DELIMITER = "*";
 
 	private static final long KISTIMEWAIT = 1000;
@@ -50,6 +50,8 @@ public class Agent extends Thread  {
 	static Hashtable testContainers;
 	static AMFICOMKIS amficomkis;
 	private static String[] kisIds;
+
+	protected Agent() {}
 
   public static void main(String[] args) {
 		//Initialize application
@@ -122,12 +124,20 @@ public class Agent extends Thread  {
 	        }
 		      else
 			      Log.debugMessage("curtime: " + new Timestamp(System.currentTimeMillis()).toString(), Log.DEBUGLEVEL05);
-				    try { sleep(kistimewait); }
-					  catch(InterruptedException ie) { System.out.println("Interrupted!"); }
+				    try {
+							sleep(kistimewait);
+						}
+					  catch(InterruptedException ie) {
+							System.out.println("Interrupted!");
+						}
 				}//if !taskQueue.isEmpty()
 				else {
-					try { sleep(risdtimewait); }
-	        catch(InterruptedException ie) { System.out.println("Interrupted!"); }
+					try {
+						sleep(risdtimewait);
+					}
+	        catch(InterruptedException ie) {
+						System.out.println("Interrupted!");
+					}
 		    }//else if !taskQueue.isEmpty()
 			}//synchronized (taskQueue)
 

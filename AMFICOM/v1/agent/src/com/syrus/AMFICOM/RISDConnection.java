@@ -1,5 +1,5 @@
 /*
- * $Id: RISDConnection.java,v 1.4 2004/07/19 14:01:34 arseniy Exp $
+ * $Id: RISDConnection.java,v 1.5 2004/07/20 12:54:10 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,7 +16,7 @@ import oracle.aurora.jndi.sess_iiop.ServiceCtx;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2004/07/19 14:01:34 $
+ * @version $Revision: 1.5 $, $Date: 2004/07/20 12:54:10 $
  * @author $Author: arseniy $
  * @module agent_v1
  */
@@ -61,4 +61,16 @@ public class RISDConnection {
     }
     return serverObject;
   }
+
+	public String getServiceURL() {
+		return this.serviceURL;
+	}
+
+	public String getUsername() {
+		return this.username;
+	}
+
+	public String getPassword() {
+		return this.password;
+	}
 }

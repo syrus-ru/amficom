@@ -10,13 +10,15 @@ import com.syrus.AMFICOM.CORBA.KIS.Parameter_Transferable;
 import com.syrus.AMFICOM.server.measurement.Result;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2004/07/19 14:01:34 $
+ * @version $Revision: 1.4 $, $Date: 2004/07/20 12:54:10 $
  * @author $Author: arseniy $
  * @module agent_v1
  */
 public abstract class EvaluationManager {
 	protected Hashtable evaluationresultparameters;
 	protected AlarmLevel alarmLevel;
+
+	EvaluationManager() {}
 
   public static EvaluationManager getEvaluationManager(String evaluation_type_id) {
     if (evaluation_type_id.equals("dadara"))
