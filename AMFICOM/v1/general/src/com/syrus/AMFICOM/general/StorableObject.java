@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObject.java,v 1.28 2005/02/11 09:10:53 bob Exp $
+ * $Id: StorableObject.java,v 1.29 2005/02/14 09:08:20 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,8 +16,8 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 
 /**
- * @version $Revision: 1.28 $, $Date: 2005/02/11 09:10:53 $
- * @author $Author: bob $
+ * @version $Revision: 1.29 $, $Date: 2005/02/14 09:08:20 $
+ * @author $Author: arseniy $
  * @module general_v1
  */
 public abstract class StorableObject implements Identified, TransferableObject, Serializable {
@@ -134,13 +134,14 @@ public abstract class StorableObject implements Identified, TransferableObject, 
 		return this.changed;
 	}
 
-	/**
-	 * Normally this method is not need to be invoked directly.
-	 * It is used by methods <code>createInstance</code> to charge "changed" flag
-	 */
-	public void setChanged() {
-		this.changed = true;
-	}
+// Use direct access to field instead
+//	/**
+//	 * Normally this method is not need to be invoked directly.
+//	 * It is used by methods <code>createInstance</code> to charge "changed" flag
+//	 */
+//	public void setChanged() {
+//		this.changed = true;
+//	}
 
 	protected void setUpdated(Identifier modifierId) {
 		this.incrementVersion();
