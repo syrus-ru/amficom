@@ -1,5 +1,5 @@
 /*
- * $Id: KIS.java,v 1.64 2005/03/16 12:49:10 bass Exp $
+ * $Id: KIS.java,v 1.65 2005/03/23 19:05:02 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -37,8 +37,8 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.64 $, $Date: 2005/03/16 12:49:10 $
- * @author $Author: bass $
+ * @version $Revision: 1.65 $, $Date: 2005/03/23 19:05:02 $
+ * @author $Author: arseniy $
  * @module config_v1
  */
 
@@ -171,14 +171,14 @@ public final class KIS extends DomainMember implements Characterizable {
 			charIds[i++] = (Identifier_Transferable)((Characteristic)iterator.next()).getId().getTransferable();
 
 		return new KIS_Transferable(super.getHeaderTransferable(),
-															(Identifier_Transferable)this.getDomainId().getTransferable(),
-															new String(this.name),
-															new String(this.description),
-															this.hostname,
-															this.tcpPort,
-															(Identifier_Transferable)this.equipmentId.getTransferable(),
-															(Identifier_Transferable)this.mcmId.getTransferable(),
-															charIds);
+				(Identifier_Transferable) this.getDomainId().getTransferable(),
+				new String(this.name),
+				new String(this.description),
+				this.hostname,
+				this.tcpPort,
+				(Identifier_Transferable) this.equipmentId.getTransferable(),
+				(Identifier_Transferable) this.mcmId.getTransferable(),
+				charIds);
 	}
 
 	public String getName() {
