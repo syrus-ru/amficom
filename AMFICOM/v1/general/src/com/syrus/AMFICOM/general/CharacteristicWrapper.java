@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicWrapper.java,v 1.7 2005/02/07 14:15:18 bob Exp $
+ * $Id: CharacteristicWrapper.java,v 1.8 2005/03/05 21:31:01 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,8 +16,8 @@ import java.util.List;
 import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/02/07 14:15:18 $
- * @author $Author: bob $
+ * @version $Revision: 1.8 $, $Date: 2005/03/05 21:31:01 $
+ * @author $Author: arseniy $
  * @module general_v1
  */
 public class CharacteristicWrapper implements StorableObjectWrapper {
@@ -31,7 +31,7 @@ public class CharacteristicWrapper implements StorableObjectWrapper {
 	// value VARCHAR2(256),
 	public static final String				COLUMN_VALUE			= "value";
 	// characterized_id VARCHAR2(32),
-	public static final String				COLUMN_CHARACTERIZED_ID	= "characterized_id";
+	public static final String				COLUMN_CHARACTERIZABLE_ID	= "characterizable_id";
 	public static final String				COLUMN_EDITABLE			= "editable";
 	public static final String				COLUMN_VISIBLE			= "visible";
 
@@ -42,7 +42,7 @@ public class CharacteristicWrapper implements StorableObjectWrapper {
 	private CharacteristicWrapper() {
 		// empty private constructor
 		String[] keysArray = new String[] { COLUMN_TYPE_ID, COLUMN_NAME, COLUMN_DESCRIPTION, COLUMN_SORT, COLUMN_VALUE,
-				COLUMN_CHARACTERIZED_ID, COLUMN_EDITABLE, COLUMN_VISIBLE};
+				COLUMN_CHARACTERIZABLE_ID, COLUMN_EDITABLE, COLUMN_VISIBLE};
 
 		this.keys = Collections.unmodifiableList(new ArrayList(Arrays.asList(keysArray)));
 
@@ -91,8 +91,8 @@ public class CharacteristicWrapper implements StorableObjectWrapper {
 				return characteristic.getDescription();
 			else if (key.equals(COLUMN_SORT))
 				return new Integer(characteristic.getSort().value());
-			else if (key.equals(COLUMN_CHARACTERIZED_ID))
-				return characteristic.getCharacterizedId();
+			else if (key.equals(COLUMN_CHARACTERIZABLE_ID))
+				return characteristic.getCharacterizableId();
 			else if (key.equals(COLUMN_EDITABLE))
 				return new Boolean(characteristic.isEditable());
 			else if (key.equals(COLUMN_VISIBLE))
@@ -118,8 +118,8 @@ public class CharacteristicWrapper implements StorableObjectWrapper {
 				characteristic.setDescription0((String) value);
 			else if (key.equals(COLUMN_SORT))
 				characteristic.setSort(CharacteristicSort.from_int(((Integer)value).intValue()));
-			else if (key.equals(COLUMN_CHARACTERIZED_ID))
-				characteristic.setCharacterizedId((Identifier) value);
+			else if (key.equals(COLUMN_CHARACTERIZABLE_ID))
+				characteristic.setCharacterizableId((Identifier) value);
 			else if (key.equals(COLUMN_EDITABLE))
 				characteristic.setEditable(((Boolean) value).booleanValue());
 			else if (key.equals(COLUMN_VISIBLE))
