@@ -26,7 +26,6 @@ src\com\syrus\AMFICOM\Client\General\Model\ResultApplicationModel.java
 src\com\syrus\AMFICOM\Client\General\Model\ResultApplicationModelFactory.java
 src\com\syrus\AMFICOM\Client\General\Model\SurveyApplicationModel.java
 src\com\syrus\AMFICOM\Client\General\Model\SurveyApplicationModelFactory.java
-src\com\syrus\AMFICOM\Client\Model\ModelRun.java
 src\com\syrus\AMFICOM\Client\Resource\EmptySurveyDataSource.java
 src\com\syrus\AMFICOM\Client\Resource\RISDActionDataSource.java
 src\com\syrus\AMFICOM\Client\Resource\RISDResultDataSource.java

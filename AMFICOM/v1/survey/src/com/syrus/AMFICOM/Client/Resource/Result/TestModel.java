@@ -30,13 +30,13 @@ public class TestModel extends ObjectResourceModel {
 			if (colId.equals(ConstStorage.COLUMN_NAME_STATUS)) {
 				switch (test.status.value()) {
 					case TestStatus._TEST_STATUS_PROCESSING:
-						s = LangModelSurvey.getString("labelDoing");
+						s = LangModelSurvey.getString("Running");
 						break;
 					case TestStatus._TEST_STATUS_COMPLETED:
 						s = LangModelSurvey.getString("Done");
 						break;
 					case TestStatus._TEST_STATUS_SCHEDULED:
-						s = LangModelSurvey.getString("labelReadyToDo");
+						s = LangModelSurvey.getString("ReadyToRun");
 						break;
 				}
 			} else if (colId.equals(ConstStorage.COLUMN_NAME_LOCAL_ID)) {
@@ -74,10 +74,10 @@ public class TestModel extends ObjectResourceModel {
 						s = LangModelSurvey.getString("Onetime");
 						break;
 					case TestTemporalType._TEST_TEMPORAL_TYPE_PERIODICAL:
-						s = LangModelSurvey.getString("labelPeriod");
+						s = LangModelSurvey.getString("Periodical");
 						break;
 					case TestTemporalType._TEST_TEMPORAL_TYPE_TIMETABLE:
-						s = LangModelSurvey.getString("labelTimeTable");
+						s = LangModelSurvey.getString("ByTimeTable");
 						break;
 				}
 			} else if (colId.equals(ConstStorage.COLUMN_NAME_TEST_TYPE_ID))
@@ -85,7 +85,7 @@ public class TestModel extends ObjectResourceModel {
 			else if (colId.equals(ConstStorage.COLUMN_NAME_REQUEST_ID))
 					s = Pool.getName(TestRequest.typ, test.request_id);
 		} catch (Exception e) {
-			System.out.println("error gettin field value - Test");
+//			System.out.println("error gettin field value - Test");
 			s = "";
 		}
 		return s;

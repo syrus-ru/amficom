@@ -46,13 +46,13 @@ public class ElementaryTestModel extends ObjectResourceModel {
 				switch(etest.status.value())
 				{
 					case TestStatus._TEST_STATUS_PROCESSING:
-						s = LangModelSchedule.getString("labelDoing");
+						s = LangModelSchedule.getString("Running");
 						break;
 					case TestStatus._TEST_STATUS_COMPLETED:
-						s = LangModelSchedule.getString("labelDone");
+						s = LangModelSchedule.getString("Done");
 						break;
 					case TestStatus._TEST_STATUS_SCHEDULED:
-						s = LangModelSchedule.getString("labelReadyToDo");
+						s = LangModelSchedule.getString("ReadyToRun");
 						break;
 				}
 			}
@@ -73,7 +73,7 @@ public class ElementaryTestModel extends ObjectResourceModel {
 		}
 		catch(Exception e)
 		{
-			System.out.println("error gettin field value - Test");
+//			System.out.println("error gettin field value - Test");
 			s = "";
 		}
 		return s;
