@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementControlModule.java,v 1.67 2005/03/25 22:23:01 arseniy Exp $
+ * $Id: MeasurementControlModule.java,v 1.68 2005/04/01 21:57:12 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,7 +32,6 @@ import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.CompoundCondition;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
@@ -51,14 +50,13 @@ import com.syrus.AMFICOM.measurement.corba.Result_Transferable;
 import com.syrus.AMFICOM.measurement.corba.TestStatus;
 import com.syrus.AMFICOM.measurement.corba.TestTemporalType;
 import com.syrus.AMFICOM.mserver.corba.MServer;
-import com.syrus.AMFICOM.mserver.corba.MServerHelper;
 import com.syrus.util.Application;
 import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.67 $, $Date: 2005/03/25 22:23:01 $
+ * @version $Revision: 1.68 $, $Date: 2005/04/01 21:57:12 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -66,15 +64,17 @@ import com.syrus.util.database.DatabaseConnection;
 public final class MeasurementControlModule extends SleepButWorkThread {
 	public static final String APPLICATION_NAME = "mcm";
 
-	public static final String KEY_ID = "ID";
+	public static final String KEY_MCM_ID = "MCMID";
 	public static final String KEY_DB_HOST_NAME = "DBHostName";
 	public static final String KEY_DB_SID = "DBSID";
 	public static final String KEY_DB_CONNECTION_TIMEOUT = "DBConnectionTimeout";
 	public static final String KEY_DB_LOGIN_NAME = "DBLoginName";
-	public static final String KEY_MAX_FALLS = "MaxFalls";
 	public static final String KEY_TICK_TIME = "TickTime";
 	public static final String KEY_FORWARD_PROCESSING = "ForwardProcessing";
-	public static final String KEY_TCP_PORT = "TCPPort";
+	public static final String KEY_FORGET_FRAME = "ForgetFrame";
+	public static final String KEY_MAX_FALLS = "MaxFalls";
+	public static final String KEY_MSERVER_SERVANT_NAME = "MServerServantName";
+	public static final String KEY_MSERVER_CHECK_TIMEOUT = "MServerCheckTimeout";
 	public static final String KEY_KIS_TICK_TIME = "KISTickTime";
 	public static final String KEY_KIS_MAX_FALLS = "KISMaxFalls";
 	public static final String KEY_KIS_HOST_NAME = "KISHostName";
@@ -82,28 +82,34 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 	public static final String KEY_KIS_MAX_OPENED_CONNECTIONS = "KISMaxOpenedConnections";
 	public static final String KEY_KIS_CONNECTION_TIMEOUT = "KISConnectionTimeout";
 
-	public static final String ID = "mcm_1";
+	public static final String MCM_ID = "MCM_1";
 	public static final String DB_SID = "amficom";
-	public static final int DB_CONNECTION_TIMEOUT = 120;
+	public static final int DB_CONNECTION_TIMEOUT = 120;	//sec
 	public static final String DB_LOGIN_NAME = "amficom";
-	public static final int TICK_TIME = 5;
+	public static final int TICK_TIME = 5;	//sec
 	public static final int FORWARD_PROCESSING = 2;
-	public static final short TCP_PORT = 7500;
-	public static final int KIS_TICK_TIME = 1;
+	public static final int FORGET_FRAME = 24 * 60 * 60;	//sec
+	public static final String MSERVER_SERVANT_NAME = "MServer";
+	public static final int MSERVER_CHECK_TIMEOUT = 10;		//min
+	public static final int KIS_TICK_TIME = 1;	//sec
 	public static final int KIS_MAX_FALLS = 10;
 	public static final String KIS_HOST_NAME = "127.0.0.1";
 	public static final short KIS_TCP_PORT = 7501;
 	public static final int KIS_MAX_OPENED_CONNECTIONS = 1;
-	public static final int KIS_CONNECTION_TIMEOUT = 120;
+	public static final int KIS_CONNECTION_TIMEOUT = 120;	//sec
 
 	/*	Error codes for method processFall()	(remove results, ...)*/
 	public static final int FALL_CODE_RECEIVE_RESULTS = 1;
 
-	/*	Information about myself*/
-	protected static MCM iAm;
 
-	/*	Identifiers of KISs, attached to me*/
-	//protected static Collection kisIds;	//Collection <Identifier kisId>
+	/*	Identifier of this MCM*/
+	protected static Identifier mcmId;
+
+	/*	CORBA server	*/
+	private static CORBAServer corbaServer;
+
+	/*	CORBA reference to Measurement Server*/
+	protected static MServerConnectionManager mServerConnectionManager;
 
 	/*	Scheduled tests transferred from server	*/
 	protected static List testList;	//List <Test>
@@ -113,12 +119,6 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 
 	/*	key - test_id, value - corresponding test processor	*/
 	protected static Map testProcessors;	//Map <Identifier testId, TestProcessor testProcessor>
-
-	/*	CORBA server	*/
-	private static CORBAServer corbaServer;
-
-	/*	object reference to Measurement Server	*/
-	protected static MServer mServerRef;
 
 	/*	Reference to KISConnectionManager*/
 	protected static KISConnectionManager kisConnectionManager;
@@ -141,11 +141,10 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 
 	public static void main(String[] args) {
 		Application.init(APPLICATION_NAME);
-
-		normalStartup();
+		startup();
 	}
 
-	private static void normalStartup() {
+	private static void startup() {
 		/*	Establish connection with database	*/
 		establishDatabaseConnection();
 
@@ -156,29 +155,48 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 		/*	Load object types*/
 		DatabaseContextSetup.initObjectPools();
 
-		/*	Retrieve information abot myself*/
+		/*	Activation, specific for this application	*/
+		activateSpecific();
+
+		/*	Start main loop	*/
+		final MeasurementControlModule measurementControlModule = new MeasurementControlModule();
+		measurementControlModule.start();
+
+		/*	Add shutdown hook	*/
+		Runtime.getRuntime().addShutdownHook(new Thread() {
+			public void run() {
+				measurementControlModule.shutdown();
+			}
+		});
+	}
+
+	private static void activateSpecific() {
+		/*	Retrieve information about MCM*/
+		mcmId = new Identifier(ApplicationProperties.getString(KEY_MCM_ID, MCM_ID));
+		MCM mcm = null;
+		Server server = null;
 		try {
-			iAm = new MCM(new Identifier(ApplicationProperties.getString(KEY_ID, ID)));
+			mcm = (MCM) AdministrationStorableObjectPool.getStorableObject(mcmId, true);
+			server = (Server) AdministrationStorableObjectPool.getStorableObject(mcm.getServerId(), true);
 		}
 		catch (Exception e) {
 			Log.errorException(e);
 			System.exit(-1);
 		}
 
-		/*	Activate session context*/
-		SessionContext.init(new AccessIdentity(new Date(System.currentTimeMillis()),
-				iAm.getDomainId(),
-				iAm.getUserId(),
-				null));
+		/* Activate session context */
+		SessionContext.init(new AccessIdentity(new Date(System.currentTimeMillis()), mcm.getDomainId(), mcm.getUserId(), null),
+				server.getHostName());
 
 		/*	Create CORBA server with servant(s)	*/
 		activateCORBAServer();
 
-		/*	Create reference to MServer*/
-		activateMServerReference();
+		/*	Activate Measurement Server connection manager*/
+		long mServerCheckTimeout = ApplicationProperties.getInt(KEY_MSERVER_CHECK_TIMEOUT, MSERVER_CHECK_TIMEOUT) * 60 * 1000;
+		String mServerServantName = ApplicationProperties.getString(KEY_MSERVER_SERVANT_NAME, MSERVER_SERVANT_NAME);
+		mServerConnectionManager = new MServerConnectionManager(corbaServer, mServerServantName, mServerCheckTimeout);
+		mServerConnectionManager.start();
 
-		/*	Initialize pool of Identifiers*/
-		IdentifierPool.init(mServerRef);
 
 		/*	Create map of test processors*/
 		testProcessors = Collections.synchronizedMap(new HashMap());
@@ -193,16 +211,6 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 		prepareTestList();
 		prepareResultList();
 
-		/*	Start main loop	*/
-		final MeasurementControlModule measurementControlModule = new MeasurementControlModule();
-		measurementControlModule.start();
-
-		/*	Add shutdown hook	*/
-		Runtime.getRuntime().addShutdownHook(new Thread() {
-			public void run() {
-				measurementControlModule.shutdown();
-			}
-		});
 	}
 
 	private static void establishDatabaseConnection() {
@@ -219,6 +227,59 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 		}
 	}
 
+	private static void activateCORBAServer() {
+		/*	Create local CORBA server and activate servant*/
+		try {
+			corbaServer = new CORBAServer(SessionContext.getServerHostName());	
+			corbaServer.activateServant(new MCMImplementation(), mcmId.toString());
+		}
+		catch (Exception e) {
+			Log.errorException(e);
+			DatabaseConnection.closeConnection();
+			System.exit(-1);
+		}
+	}
+
+	private static void deactivateCORBAServer() {
+		try {
+			corbaServer.deactivateServant(mcmId.toString());
+		}
+		catch (Exception e) {
+			Log.errorException(e);
+			System.err.println(e);
+			System.exit(-1);
+		}
+	}
+
+	private static void activateKISConnectionManager() {
+		kisConnectionManager = new KISConnectionManager();
+
+//		kisConnectionManager.start();
+	}
+
+	private static void activateKISTransceivers() {
+		try {
+			LinkedIdsCondition lic = new LinkedIdsCondition(mcmId, ObjectEntities.KIS_ENTITY_CODE);
+			Collection kiss = ConfigurationStorableObjectPool.getStorableObjectsByCondition(lic, true);
+
+			transceivers = Collections.synchronizedMap(new HashMap(kiss.size()));
+			KIS kis;
+			Identifier kisId;
+			Transceiver transceiver;
+			for (Iterator it = kiss.iterator(); it.hasNext();) {
+				kis = (KIS) it.next();
+				kisId = kis.getId();
+				transceiver = new Transceiver(kis);
+				transceiver.start();
+				transceivers.put(kisId, transceiver);
+				Log.debugMessage("Started transceiver for KIS '" + kisId + "'", Log.DEBUGLEVEL07);
+			}
+		}
+		catch (ApplicationException ae) {
+			Log.errorException(ae);
+		}
+	}
+
 	private static void prepareTestList() {
 		testList = Collections.synchronizedList(new ArrayList());
 		TypicalCondition tc;
@@ -230,7 +291,7 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 				OperationSort.OPERATION_EQUALS,
 				ObjectEntities.TEST_ENTITY_CODE,
 				TestWrapper.COLUMN_STATUS);
-		LinkedIdsCondition lic = new LinkedIdsCondition(iAm.getId(), ObjectEntities.TEST_ENTITY_CODE);
+		LinkedIdsCondition lic = new LinkedIdsCondition(mcmId, ObjectEntities.TEST_ENTITY_CODE);
 		try {
 			cc = new CompoundCondition(lic, CompoundConditionSort.AND, tc);
 		}
@@ -278,79 +339,9 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 		resultList = Collections.synchronizedList(new ArrayList());
 	}
 
-	private static void activateCORBAServer() {
-		/*	Create local CORBA server end activate servant*/
-		try {
-			Server server = (Server) AdministrationStorableObjectPool.getStorableObject(iAm.getServerId(), true);
-	
-			corbaServer = new CORBAServer(server.getHostName());
-			corbaServer.activateServant(new MCMImplementation(), iAm.getId().toString());
-		}
-		catch (Exception e) {
-			Log.errorException(e);
-			DatabaseConnection.closeConnection();
-			System.exit(-1);
-		}
-	}
-
-	private static void deactivateCORBAServer() {
-		try {
-			corbaServer.deactivateServant(iAm.getId().toString());
-		}
-		catch (Exception e) {
-			Log.errorException(e);
-			System.err.println(e);
-			System.exit(-1);
-		}
-	}
-
-	protected static void activateMServerReference() {
-		/*	Obtain reference to measurement server	*/
-		try {
-			mServerRef = MServerHelper.narrow(corbaServer.resolveReference(iAm.getServerId().toString()));
-		}
-		catch (CommunicationException ce) {
-			Log.errorException(ce);
-			mServerRef = null;
-		}
-	}
-
-	protected static void resetMServerConnection() {
-		activateMServerReference();
-		IdentifierPool.setIdentifierGeneratorServer(mServerRef);
-	}
-
-	private static void activateKISConnectionManager() {
-		kisConnectionManager = new KISConnectionManager();
-
-//		kisConnectionManager.start();
-	}
-
-	private static void activateKISTransceivers() {
-		try {
-			LinkedIdsCondition lic = new LinkedIdsCondition(iAm.getId(), ObjectEntities.KIS_ENTITY_CODE);
-			Collection kiss = ConfigurationStorableObjectPool.getStorableObjectsByCondition(lic, true);
-
-			transceivers = Collections.synchronizedMap(new HashMap(kiss.size()));
-			KIS kis;
-			Identifier kisId;
-			Transceiver transceiver;
-			for (Iterator it = kiss.iterator(); it.hasNext();) {
-				kis = (KIS) it.next();
-				kisId = kis.getId();
-				transceiver = new Transceiver(kis);
-				transceiver.start();
-				transceivers.put(kisId, transceiver);
-				Log.debugMessage("Started transceiver for KIS '" + kisId + "'", Log.DEBUGLEVEL07);
-			}
-		}
-		catch (ApplicationException ae) {
-			Log.errorException(ae);
-		}
-	}
-
 	public void run() {
 		Test test;
+		MServer mServerRef;
 		Result_Transferable[] resultsT;
 		while (this.running) {
 			if (!testList.isEmpty()) {
@@ -360,31 +351,33 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 					startTestProcessor(test);
 				}
 			}
-			
-			if (mServerRef != null) {
-				synchronized (resultList) {
+
+			synchronized (resultList) {
+				try {
+					mServerRef = mServerConnectionManager.getVerifiedMServerReference();
+
 					resultsT = createTransferables();
 					if (resultsT.length > 0) {
-						try {
-							mServerRef.receiveResults(resultsT, (Identifier_Transferable) iAm.getId().getTransferable());
-							resultList.clear();
-							super.clearFalls();
-						}
-						catch (org.omg.CORBA.COMM_FAILURE se) {
-							Log.errorException(se);
-							resetMServerConnection();
-						}
-						catch (AMFICOMRemoteException are) {
-							Log.errorMessage("Cannot transmit results: " + are.message + "; sleeping cause of fall");
-							super.fallCode = FALL_CODE_RECEIVE_RESULTS;
-							this.resultsToRemove = resultList;
-							super.sleepCauseOfFall();
-						}
+						mServerRef.receiveResults(resultsT, (Identifier_Transferable) mcmId.getTransferable());
+						resultList.clear();
+						super.clearFalls();
 					}
+
 				}
-			} // if (mServerRef != null)
-			else
-				resetMServerConnection();
+				catch (CommunicationException ce) {
+					Log.errorException(ce);
+					Log.errorMessage("Cannot transmit results; sleeping cause of fall");
+					super.fallCode = FALL_CODE_RECEIVE_RESULTS;
+					this.resultsToRemove = resultList;
+					super.sleepCauseOfFall();
+				}
+				catch (AMFICOMRemoteException are) {
+					Log.errorMessage("Cannot transmit results: " + are.message + "; sleeping cause of fall");
+					super.fallCode = FALL_CODE_RECEIVE_RESULTS;
+					this.resultsToRemove = resultList;
+					super.sleepCauseOfFall();
+				}
+			}
 
 			try {
 				sleep(super.initialTimeToSleep);
