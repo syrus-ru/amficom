@@ -364,7 +364,7 @@ ReportTemplate rT)
 							childs.nextElement();
 						try
 						{
-							((ObjectsReport) curChild.getObject()).setReserve(res.id);
+							((ObjectsReport) curChild.getObject()).setReserve(res.getId());
 						}
 						catch (CreateReportException cre)
 						{}
@@ -374,9 +374,7 @@ ReportTemplate rT)
 		}
 
 		if (oe.getActionCommand().equals(ObjectResourceFilterPane.
-													state_filterChanged) ||
-			 oe.getActionCommand().equals(ObjectResourceFilterPane.
-													state_filterClosed))
+													state_filterChanged))
 		{
 			ObjectResourceFilter newFilter = (ObjectResourceFilter) oe.getSource();
 
@@ -391,18 +389,17 @@ ReportTemplate rT)
 				reportTemplate.objectResourceFilters.remove(curFilterChanging);
 				curFilterChanging = null;
 			}
+		}
 
-
-			//Закрыто окно редактирования фильтра
-			if (oe.getActionCommand().equals(com.syrus.AMFICOM.Client.General.
-														Filter.
-														ObjectResourceFilterPane.
-														state_filterClosed))
-			{
-				curFilterChanging = null;
-				aContext.getDispatcher().notify(
-							  new OperationEvent("",0,ReportMDIMain.ev_closingAdditionalPanel));
-			}
+		//Закрыто окно редактирования фильтра
+		if (oe.getActionCommand().equals(com.syrus.AMFICOM.Client.General.
+													Filter.
+													ObjectResourceFilterPane.
+													state_filterClosed))
+		{
+			curFilterChanging = null;
+			aContext.getDispatcher().notify(
+				new OperationEvent("", 0, ReportMDIMain.ev_closingAdditionalPanel));
 		}
 	}
 
@@ -427,8 +424,6 @@ ReportTemplate rT)
 		aContext.getDispatcher().notify(
 			new OperationEvent(additionalPanel, 0,
 									 SelectReportsPanel.ev_additionalPaneCreated));
-
-		additionalPanel.setVisible(true);
 	}
 
 	public void setEnabled(boolean en)

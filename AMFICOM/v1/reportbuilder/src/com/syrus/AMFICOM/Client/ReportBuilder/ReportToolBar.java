@@ -114,7 +114,7 @@ public class ReportToolBar
 		buttonOpenSession.setText("");
 		buttonOpenSession.setMaximumSize(buttonSize);
 		buttonOpenSession.setPreferredSize(buttonSize);
-		buttonOpenSession.setToolTipText(LangModelSurvey.ToolTip("menuSessionNew"));
+		buttonOpenSession.setToolTipText(LangModelSurvey.getString("NewSession"));
 		buttonOpenSession.setName("menuSessionNew");
 		buttonOpenSession.addActionListener(actionAdapter);
 		importTemplateButton.addActionListener(new ReportToolBar_importTemplateButton_actionAdapter(this));

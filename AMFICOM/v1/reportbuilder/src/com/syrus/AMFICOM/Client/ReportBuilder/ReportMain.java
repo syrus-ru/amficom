@@ -60,7 +60,7 @@ public class ReportMain
 		}
 //		System.out.println(LangModel.resourceBundle + " vs " + LangModelAdmin.resourceBundle);
 		LangModelReport.initialize();
-		LangModelSurvey.initialize();
+//		LangModelSurvey.initialize();
 		LangModelConfig.initialize();
 		LangModelSchematics.initialize();
 		LangModelAnalyse.initialize();

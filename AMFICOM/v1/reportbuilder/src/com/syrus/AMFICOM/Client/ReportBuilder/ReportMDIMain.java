@@ -105,6 +105,7 @@ public class ReportMDIMain extends JFrame implements OperationListener
 	public ReportMDIMain(ApplicationContext aContext)
 	{
 		super();
+
 		try
 		{
 			jbInit();
@@ -391,6 +392,8 @@ public class ReportMDIMain extends JFrame implements OperationListener
 				additionalPanel.setLocation(
 						selectReportsPanel.getX(),
 						selectReportsPanel.getY() + selectReportsPanel.getHeight());
+
+				additionalPanel.setVisible(true);
 			}
 			catch (java.lang.IllegalArgumentException eee)
 			{

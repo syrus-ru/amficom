@@ -106,7 +106,7 @@ public class FontChooserDialog extends JDialog
 		fontParamsPanel.add(fontNameComboBox,        new GridBagConstraints(0, 1, 1, 1, 5.0, 1.0
 				,GridBagConstraints.NORTH, GridBagConstraints.HORIZONTAL, new Insets(0, 10, 0, 0), 0, 0));
 		fontParamsPanel.add(fontSizeComboBox,                   new GridBagConstraints(1, 1, 1, 2, 1.0, 1.0
-				,GridBagConstraints.NORTH, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 23, 0));
+				,GridBagConstraints.NORTH, GridBagConstraints.HORIZONTAL, new Insets(0, 10, 0, 10), 23, 0));
 
 		this.getContentPane().add(examplePanel,       new GridBagConstraints(0, 1, 2, 1, 1.0, 5.0
 				,GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
@@ -173,6 +173,7 @@ public class FontChooserDialog extends JDialog
 
 	void cancelButton_actionPerformed(ActionEvent e)
 	{
+		selectedFont = null;
 		dispose();
 	}
 
