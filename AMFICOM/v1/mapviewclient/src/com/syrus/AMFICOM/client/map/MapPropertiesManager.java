@@ -1,5 +1,5 @@
 /**
- * $Id: MapPropertiesManager.java,v 1.8 2005/02/10 11:48:39 krupenn Exp $
+ * $Id: MapPropertiesManager.java,v 1.9 2005/02/25 13:03:32 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -13,6 +13,7 @@ package com.syrus.AMFICOM.Client.Map;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.general.Identifier;
@@ -56,7 +57,7 @@ import javax.swing.ImageIcon;
  * <li>zoom
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.8 $, $Date: 2005/02/10 11:48:39 $
+ * @version $Revision: 1.9 $, $Date: 2005/02/25 13:03:32 $
  * @module mapviewclient_v1
  */
 public final class MapPropertiesManager 
@@ -463,11 +464,7 @@ public final class MapPropertiesManager
 				originalImages.put(imageId, img);
 				MapPropertiesManager.loadImage(img);
 			}
-			catch (CommunicationException e)
-			{
-				e.printStackTrace();
-			}
-			catch (DatabaseException e)
+			catch (ApplicationException e)
 			{
 				e.printStackTrace();
 			}
