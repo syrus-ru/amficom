@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPortDatabase.java,v 1.6 2004/08/23 20:48:15 arseniy Exp $
+ * $Id: MeasurementPortDatabase.java,v 1.7 2004/08/26 11:09:26 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,11 +8,9 @@
 
 package com.syrus.AMFICOM.configuration;
 
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,8 +29,8 @@ import com.syrus.util.database.DatabaseDate;
 
 
 /**
- * @version $Revision: 1.6 $, $Date: 2004/08/23 20:48:15 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.7 $, $Date: 2004/08/26 11:09:26 $
+ * @author $Author: bob $
  * @module configuration_v1
  */
 public class MeasurementPortDatabase extends StorableObjectDatabase {
@@ -213,74 +211,67 @@ public class MeasurementPortDatabase extends StorableObjectDatabase {
 		 * @todo when change DB Identifier model ,change String to long
 		 */
 		Identifier portId = measurementPort.getPortId();
-
-
-		String sql = SQL_INSERT_INTO
-			+ ObjectEntities.MEASUREMENTPORT_ENTITY
-			+ OPEN_BRACKET
-			+ COLUMN_ID + COMMA
-			+ COLUMN_CREATED + COMMA
-			+ COLUMN_MODIFIED + COMMA
-			+ COLUMN_CREATOR_ID + COMMA
-			+ COLUMN_MODIFIER_ID + COMMA
-			+ COLUMN_TYPE_ID + COMMA	
-			+ COLUMN_NAME + COMMA
-			+ COLUMN_DESCRIPTION + COMMA
-			+ COLUMN_KIS_ID + COMMA
-			+ COLUMN_PORT_ID  			
-			+ CLOSE_BRACKET
-			+ SQL_VALUES + OPEN_BRACKET
-			+ QUESTION + COMMA
-			+ QUESTION + COMMA
-			+ QUESTION + COMMA
-			+ QUESTION + COMMA
-			+ QUESTION + COMMA
-			+ QUESTION + COMMA
-			+ QUESTION + COMMA
-			+ QUESTION + COMMA
-			+ QUESTION + COMMA
-			+ QUESTION 
-			+ CLOSE_BRACKET;
 		
-		PreparedStatement preparedStatement = null;
+		String sql = null;
+		{
+			StringBuffer buffer = new StringBuffer(SQL_INSERT_INTO);
+			buffer.append(ObjectEntities.MEASUREMENTPORT_ENTITY);
+			buffer.append(OPEN_BRACKET);
+			buffer.append(COLUMN_ID);
+			buffer.append(COMMA);
+			buffer.append(COLUMN_CREATED); 
+			buffer.append(COMMA);
+			buffer.append(COLUMN_MODIFIED);
+			buffer.append(COMMA);
+			buffer.append(COLUMN_CREATOR_ID);
+			buffer.append(COMMA);
+			buffer.append(COLUMN_MODIFIER_ID);
+			buffer.append(COMMA);
+			buffer.append(COLUMN_TYPE_ID);
+			buffer.append(COMMA);
+			buffer.append(COLUMN_NAME);
+			buffer.append(COMMA);
+			buffer.append(COLUMN_DESCRIPTION);
+			buffer.append(COMMA);
+			buffer.append(COLUMN_KIS_ID);
+			buffer.append(COMMA);
+			buffer.append(COLUMN_PORT_ID);
+			buffer.append(CLOSE_BRACKET);
+			buffer.append(SQL_VALUES);
+			buffer.append(OPEN_BRACKET);
+			buffer.append(mpIdCode);
+			buffer.append(COMMA);			
+			buffer.append(DatabaseDate.toUpdateSubString(measurementPort.getCreated()));
+			buffer.append(COMMA);
+			buffer.append(DatabaseDate.toUpdateSubString(measurementPort.getModified()));
+			buffer.append(COMMA);
+			buffer.append(measurementPort.getCreatorId().toSQLString());
+			buffer.append(COMMA);
+			buffer.append(measurementPort.getModifierId().toSQLString());
+			buffer.append(COMMA);
+			buffer.append((typeId != null)?typeId.getCode():Identifier.getNullSQLString());
+			buffer.append(COMMA);
+			buffer.append(APOSTOPHE);
+			buffer.append(measurementPort.getName());
+			buffer.append(APOSTOPHE);
+			buffer.append(COMMA);
+			buffer.append(APOSTOPHE);
+			buffer.append(measurementPort.getDescription());
+			buffer.append(APOSTOPHE);
+			buffer.append(COMMA);
+			buffer.append((kisId != null)?kisId.getCode():Identifier.getNullSQLString());
+			buffer.append(COMMA);
+			buffer.append((portId != null)?portId.getCode():Identifier.getNullSQLString());
+			buffer.append(COMMA);
+			buffer.append(CLOSE_BRACKET);
+			sql = buffer.toString();
+		}
+		
+		Statement statement = null;
 		try {
-			preparedStatement = connection.prepareStatement(sql);
-			/**
-			  * @todo when change DB Identifier model ,change setString() to setLong()
-			  */
-			preparedStatement.setString(1, mpIdCode);
-			preparedStatement.setTimestamp(2, new Timestamp(measurementPort.getCreated().getTime()));
-			preparedStatement.setTimestamp(3, new Timestamp(measurementPort.getModified().getTime()));
-			/**
-			  * @todo when change DB Identifier model ,change setString() to setLong()
-			  */
-			preparedStatement.setString(4, measurementPort.getCreatorId().getCode());
-			/**
-			  * @todo when change DB Identifier model ,change setString() to setLong()
-			  */
-			preparedStatement.setString(5, measurementPort.getModifierId().getCode());
-			
-			/**
-			  * @todo when change DB Identifier model ,change setString() to setLong()
-			  */
-			preparedStatement.setString(6, (typeId != null)?typeId.getCode():Identifier.getNullSQLString());
-			
-			preparedStatement.setString(7, measurementPort.getName());
-			
-			preparedStatement.setString(8, measurementPort.getDescription());
-			
-			/**
-			  * @todo when change DB Identifier model ,change setString() to setLong()
-			  */
-			preparedStatement.setString(9, (kisId != null)?kisId.getCode():Identifier.getNullSQLString());
-			
-			/**
-			  * @todo when change DB Identifier model ,change setString() to setLong()
-			  */
-			preparedStatement.setString(10, (portId != null)?portId.getCode():Identifier.getNullSQLString());
-										
+			statement = connection.createStatement();										
 			Log.debugMessage("MeasurementPortDatabase.insertMeasurementPort | Trying: " + sql, Log.DEBUGLEVEL09);
-			preparedStatement.executeUpdate();
+			statement.executeUpdate(sql);
 			connection.commit();
 		}
 		catch (SQLException sqle) {
@@ -289,9 +280,9 @@ public class MeasurementPortDatabase extends StorableObjectDatabase {
 		}
 		finally {
 			try {
-				if (preparedStatement != null)
-					preparedStatement.close();
-				preparedStatement = null;
+				if (statement != null)
+					statement.close();
+				statement = null;
 			}
 			catch (SQLException sqle1) {
 				Log.errorException(sqle1);
