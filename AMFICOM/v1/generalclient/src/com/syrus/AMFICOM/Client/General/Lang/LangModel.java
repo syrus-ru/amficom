@@ -37,7 +37,7 @@ public class LangModel {
 																	.getBundle(BUNDLE_NAME);
 
 
-	private LangModel() {
+	public LangModel() {
 		//symbols = new DateFormatSymbols(locale);
 	}
 
@@ -72,31 +72,43 @@ public class LangModel {
 		//System.out.println("keyName:" + keyName);
 		keyName = keyName.replaceAll(" ", "_");
 		String string = null;
-		try {
+		try
+		{
 			string = RESOURCE_BUNDLE.getString(keyName);
-		} catch (MissingResourceException e) {			
-
-			try {
-				throw new Exception("key '"
-									+ keyName
-									+ "' "
-									+  "not found");
-			} catch (Exception exc) {
-				exc.printStackTrace();
+		}
+		catch (MissingResourceException e)
+		{
+			try
+			{
+				string = RESOURCE_BUNDLE.getString(keyName + "Text");
+				try
+				{
+					throw new Exception("key '"
+											  + keyName
+											  + "' "
+											  + "not found");
+				}
+				catch (Exception exc)
+				{
+					exc.printStackTrace();
+				}
+			}
+			catch (Exception exc)
+			{
 			}
 		}
 		return string;
 	}
 
 	/**
-	 * @deprecated 
+	 * @deprecated
 	 */
 	public static void initialize() {
 		//initialize("com.syrus.AMFICOM.Client.General.Lang.LangModelSurvey");
 	}
 
 	/**
-	 * @deprecated 
+	 * @deprecated
 	 */
 	public static void initialize(String rb) {
 		//System.out.println("initialize lang - " + rb);
@@ -105,7 +117,7 @@ public class LangModel {
 	}
 
 	/**
-	 * @deprecated 
+	 * @deprecated
 	 */
 	public static boolean setLangModel(String l, String c) {
 		return true;
