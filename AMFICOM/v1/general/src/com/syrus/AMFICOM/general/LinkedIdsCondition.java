@@ -1,5 +1,5 @@
 /*
- * $Id: LinkedIdsCondition.java,v 1.8 2005/01/28 12:25:21 arseniy Exp $
+ * $Id: LinkedIdsCondition.java,v 1.9 2005/02/08 11:53:13 max Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,8 +11,12 @@ package com.syrus.AMFICOM.general;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Hashtable;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.general.corba.LinkedIdsCondition_Transferable;
@@ -61,8 +65,8 @@ import com.syrus.util.Log;
  * {@link #isNeedMore(List)}and {@link #setEntityCode(Short)}.</li>
  * </ul>
  * 
- * @author $Author: arseniy $
- * @version $Revision: 1.8 $, $Date: 2005/01/28 12:25:21 $
+ * @author $Author: max $
+ * @version $Revision: 1.9 $, $Date: 2005/02/08 11:53:13 $
  * @module general_v1
  */
 public class LinkedIdsCondition implements StorableObjectCondition {
@@ -85,12 +89,7 @@ public class LinkedIdsCondition implements StorableObjectCondition {
 	 */
 
 	protected List linkedIds;
-
-	/**
-	 * Field is used by descendants only, and never directly.
-	 */
-	protected Identifier identifier;
-
+	
 	private LinkedIdsCondition delegate;
 
 	public LinkedIdsCondition(final Identifier identifier, final short entityCode) {
@@ -98,44 +97,29 @@ public class LinkedIdsCondition implements StorableObjectCondition {
 	}
 
 	public LinkedIdsCondition(final Identifier identifier, final Short entityCode) {
-		this(identifier, null, entityCode);
+		this(Collections.singletonList(identifier), entityCode);
 	}
 
 	public LinkedIdsCondition(final List linkedIds, final short entityCode) {
 		this(linkedIds, new Short(entityCode));
 	}
 
-	public LinkedIdsCondition(final List linkedIds, final Short entityCode) {
-		this(null, linkedIds, entityCode);
-	}
-
 	public LinkedIdsCondition(final LinkedIdsCondition_Transferable transferable) {
 		Short code = new Short(transferable.entity_code);
-		Identifier id = null;
+		//Identifier id = null;
 		List linkIds = null;
 		
-		if (transferable.linked_ids.length == 1) {
-			id = new Identifier(transferable.linked_ids[0]);
+		linkIds = new ArrayList(transferable.linked_ids.length);
+		for (int i = 0; i < transferable.linked_ids.length; i++) {
+			linkIds.add(new Identifier(transferable.linked_ids[i]));
 		}
-		else {
-			linkIds = new ArrayList(transferable.linked_ids.length);
-			for (int i = 0; i < transferable.linked_ids.length; i++) {
-				linkIds.add(new Identifier(transferable.linked_ids[i]));
-			}
-		}
+		
 		final String className = "com.syrus.AMFICOM." + ObjectGroupEntities.getGroupName(code.shortValue()).toLowerCase().replaceAll("group$", "") + ".LinkedIdsConditionImpl"; //$NON-NLS-1$
 		try {
 			Constructor ctor;
-			if (id == null) {
-				ctor = Class.forName(className).getDeclaredConstructor(new Class[] { List.class, Short.class});
-				ctor.setAccessible(true);
-				this.delegate = (LinkedIdsCondition) ctor.newInstance(new Object[] { linkIds, code});
-			}
-			else {
-				ctor = Class.forName(className).getDeclaredConstructor(new Class[] { Identifier.class, Short.class});
-				ctor.setAccessible(true);
-				this.delegate = (LinkedIdsCondition) ctor.newInstance(new Object[] { id, code});
-			}			
+			ctor = Class.forName(className).getDeclaredConstructor(new Class[] { List.class, Short.class});
+			ctor.setAccessible(true);
+			this.delegate = (LinkedIdsCondition) ctor.newInstance(new Object[] { linkIds, code});								
 		}
 		catch (ClassNotFoundException cnfe) {
 			Log.debugMessage(LINKED_IDS_CONDITION_INIT + "Class " + className //$NON-NLS-1$
@@ -197,7 +181,6 @@ public class LinkedIdsCondition implements StorableObjectCondition {
 						return false;
 					}
 				};
-				this.delegate.identifier = id;
 				this.delegate.entityCode = code;
 				this.delegate.linkedIds = linkIds;
 			}
@@ -211,20 +194,13 @@ public class LinkedIdsCondition implements StorableObjectCondition {
 		// Empty constructor used by descendants only.
 	}
 
-	private LinkedIdsCondition(final Identifier identifier, final List linkedIds, final Short entityCode) {
+	private LinkedIdsCondition(final List linkedIds, final Short entityCode) {
 		final String className = "com.syrus.AMFICOM." + ObjectGroupEntities.getGroupName(entityCode.shortValue()).toLowerCase().replaceAll("group$", "") + ".LinkedIdsConditionImpl"; //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 		try {
 			Constructor ctor;
-			if (identifier == null){
-				ctor = Class.forName(className).getDeclaredConstructor(new Class[] { List.class, Short.class});
-				ctor.setAccessible(true);
-				this.delegate = (LinkedIdsCondition) ctor.newInstance(new Object[] { linkedIds, entityCode});
-			}
-			else {
-				ctor = Class.forName(className).getDeclaredConstructor(new Class[] { Identifier.class, Short.class});
-				ctor.setAccessible(true);
-				this.delegate = (LinkedIdsCondition) ctor.newInstance(new Object[] { identifier, entityCode});
-			}
+			ctor = Class.forName(className).getDeclaredConstructor(new Class[] { List.class, Short.class});
+			ctor.setAccessible(true);
+			this.delegate = (LinkedIdsCondition) ctor.newInstance(new Object[] { linkedIds, entityCode});			
 		}
 		catch (ClassNotFoundException cnfe) {
 			Log.debugMessage(LINKED_IDS_CONDITION_INIT + "Class " + className //$NON-NLS-1$
@@ -286,7 +262,6 @@ public class LinkedIdsCondition implements StorableObjectCondition {
 						return false;
 					}
 				};
-				this.delegate.identifier = identifier;
 				this.delegate.entityCode = entityCode;
 				this.delegate.linkedIds = linkedIds;
 			}
@@ -308,19 +283,14 @@ public class LinkedIdsCondition implements StorableObjectCondition {
 	public final Object getTransferable() {
 		LinkedIdsCondition_Transferable transferable = new LinkedIdsCondition_Transferable();
 		Identifier_Transferable[] linkedIdTransferable;
-		if (this.delegate.linkedIds != null) {
-			linkedIdTransferable = new Identifier_Transferable[this.delegate.linkedIds.size()];
-			int i = 0;
+		linkedIdTransferable = new Identifier_Transferable[this.delegate.linkedIds.size()];
+		int i = 0;
 
-			for (Iterator it = this.delegate.linkedIds.iterator(); it.hasNext(); i++) {
-				Identifier id = (Identifier) it.next();
-				linkedIdTransferable[i] = (Identifier_Transferable) id.getTransferable();
-			}
-		} else {
-			linkedIdTransferable = new Identifier_Transferable[1];
-			linkedIdTransferable[0] = (Identifier_Transferable) this.delegate.identifier.getTransferable();
+		for (Iterator it = this.delegate.linkedIds.iterator(); it.hasNext(); i++) {
+			Identifier id = (Identifier) it.next();
+			linkedIdTransferable[i] = (Identifier_Transferable) id.getTransferable();
 		}
-
+		
 		transferable.linked_ids = linkedIdTransferable;
 		transferable.entity_code = this.delegate.entityCode.shortValue();
 
@@ -360,21 +330,61 @@ public class LinkedIdsCondition implements StorableObjectCondition {
 	}
 
 	public void setLinkedIds(List linkedIds) {
-		this.delegate.linkedIds = linkedIds;
-		this.delegate.identifier = null;
+		this.delegate.linkedIds = linkedIds;		
 	}
 
 	public List getLinkedIds() {
 		return this.delegate.linkedIds;
 	}
-
-	public Identifier getIdentifier() {
-		return this.delegate.identifier;
+	
+	public void setLinkedId(final Identifier linkedId) {
+		this.delegate.linkedIds = Collections.singletonList(linkedId);
 	}
-
-	public void setIdentifier(Identifier identifier) {
-		this.delegate.identifier = identifier;
-		this.delegate.linkedIds = null;
+	
+	public Map sort(List linkedIds) {
+		Map codeIdsMap = new Hashtable();
+		for (Iterator it = linkedIds.iterator(); it.hasNext();) {
+			Identifier id = (Identifier) it.next();
+			short code = id.getMajor();
+			List ids = (List) codeIdsMap.get(new Short(code));
+			if(ids == null) {
+				ids = new LinkedList();
+				ids.add(id);
+				codeIdsMap.put(new Short(code), ids);
+			} else {
+				ids.add(id);
+			}
+		}
+		return codeIdsMap;		
 	}
-
+	
+	public boolean conditionTest(List params) {
+		if (params != null) {
+			for (Iterator it = params.iterator(); it.hasNext();) {
+				Identified identified = (Identified) it.next();
+				Identifier id2 = identified.getId();
+				for (Iterator iter = this.linkedIds.iterator(); iter.hasNext();) {
+					Identifier id = (Identifier) iter.next();
+					if (id2.equals(id)) {
+						return true;
+						
+					}
+				}								
+			}
+		}
+		return false;
+	}
+	
+	public boolean conditionTest(Identifier paramId) {
+		if (paramId != null) {
+			for (Iterator it = this.linkedIds.iterator(); it.hasNext();) {
+				Identifier id = (Identifier) it.next();
+				if (paramId.equals(id)) {
+					return true;					
+				}
+			}	
+		}
+		return false;
+	}
+	
 }
